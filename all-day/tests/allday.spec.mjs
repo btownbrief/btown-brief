@@ -2099,6 +2099,15 @@ async function theWatch(browser, base) {
     await page.click('.sheet-body [data-seen="me"]');
     await page.waitForFunction(() => !Object.keys(JSON.parse(localStorage.getItem('allday-watch') || '{}').dirty || {}).length, null, { timeout: 4000 }).catch(() => {});
     check(server.seen.get(Dd) && server.seen.get(Dd)[0] === true && sets.length === 1, 'a dot set in the sheet goes to the account', JSON.stringify(sets));
+    /* "Delete my account and posts": the phone forgets them too, so the next sign-in sends nothing back up */
+    await page.evaluate(() => { localStorage.setItem('allday-watch', JSON.stringify({ ...JSON.parse(localStorage.getItem('allday-watch')), want: { 1: 1 } })); });
+    await page.reload();
+    await page.waitForSelector(wPanel + ' [data-grid]', { timeout: 15000 });
+    await page.evaluate(() => window.dispatchEvent(new CustomEvent('allday-boards', { detail: { board: null, id: null, what: 'deleteme' } })));
+    w = await local();
+    check(!Object.keys(w.seen).length && !w.partner && !w.syncedFor && !Object.keys(w.rated || {}).length && w.want && w.want[1] === 1,
+      'deleting the account clears this phone’s dots, partner and ratings; the want list stays', JSON.stringify(w));
+    check(!(await page.$$eval(wPanel + ' [data-grid] [data-dot].on', (d) => d.length)), 'and the grid shows no dots', '');
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
   });
