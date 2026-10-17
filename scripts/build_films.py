@@ -258,8 +258,16 @@ def show(detail, genres_by_id=None):
 
 def premiere(detail, today):
     """(season number, date) when a season premiered in the last
-    PREMIERE_DAYS days or premieres in the next PREMIERE_DAYS, else None."""
+    PREMIERE_DAYS days or premieres in the next PREMIERE_DAYS, else None.
+    The newest numbered season's air date first (it stays right after
+    episode two airs), then either side's episode one."""
     lo, hi = today_minus(today, PREMIERE_DAYS), today_minus(today, -PREMIERE_DAYS)
+    seasons = [s for s in detail.get("seasons") or [] if isinstance(s, dict) and isinstance(s.get("season_number"), int)
+               and s["season_number"] > 0 and DAY.match(str(s.get("air_date") or ""))]
+    if seasons:
+        s = max(seasons, key=lambda s: s["season_number"])
+        if lo <= s["air_date"] <= hi:
+            return s["season_number"], s["air_date"]
     for key in ("next_episode_to_air", "last_episode_to_air"):
         ep = detail.get(key) or {}
         day = str(ep.get("air_date") or "")
@@ -471,6 +479,11 @@ def selftest():
     assert premiere({"last_episode_to_air": ep("2026-10-10", 3, 2)}, "2026-10-16") is None, "episode two is not a premiere"
     assert premiere({"last_episode_to_air": ep("2026-09-01", 3, 1)}, "2026-10-16") is None, "six weeks ago is not new"
     assert premiere({"last_episode_to_air": ep("2026-10-10", 0, 1)}, "2026-10-16") is None, "specials are not a season"
+    seasons = [{"season_number": 0, "air_date": "2026-10-15"}, {"season_number": 1, "air_date": "2024-01-01"},
+               {"season_number": 2, "air_date": "2026-10-06"}]
+    assert premiere({"seasons": seasons, "last_episode_to_air": ep("2026-10-13", 2, 2)}, "2026-10-16") == (2, "2026-10-06"), \
+        "a season that premiered last week is new after episode two airs"
+    assert premiere({"seasons": seasons[:2]}, "2026-10-16") is None, "a special is never the new season"
     air = shelf_air([{**sh, "id": 1, "_raw": {}}, {**sh, "id": 2, "_raw": {"last_episode_to_air": ep("2026-10-02", 4, 1)}},
                      {**sh, "id": 3, "_raw": {"last_episode_to_air": ep("2026-10-12", 2, 1)}}], "2026-10-16")
     assert [(f["id"], f.get("ns"), f["d"]) for f in air] == [(3, 2, "2026-10-12"), (2, 4, "2026-10-02"), (1, None, "2011-04-17")], air

@@ -173,6 +173,21 @@ class Run(unittest.TestCase):
         self.assertEqual((th["essex"]["ok"], th["essex"]["days"]), (False, {}))
         self.assertTrue(th["majestic10"]["ok"])
 
+    def test_a_page_that_changed_shape_is_a_failure_not_an_empty_schedule(self):
+        pages = all_pages()
+        pages["essexcinemas.com"] = "<html><div id='app'></div></html>"           # a JavaScript shell
+        pages["majestic10.com/"] = "<html>Coming soon: a new website</html>"     # no date bar
+        pages["veezi.com/sessions/?siteToken=abc123tok"] = "<html>Maintenance</html>"
+        code, doc = self.go(web_for(pages))
+        self.assertEqual(code, 1)                                                # nothing left to publish
+        self.assertIsNone(doc)
+        pages = all_pages()
+        pages["date=10%2F18%2F2026"] = "<html>error</html>"
+        code, doc = self.go(web_for(pages))
+        th = {t["id"]: t for t in doc["theaters"]}
+        self.assertEqual((th["majestic10"]["ok"], th["majestic10"]["days"]), (False, {}))
+        self.assertTrue(th["essex"]["ok"])
+
     def test_every_theater_down_writes_nothing(self):
         code, doc = self.go(web_for({}, fail=("http",)))
         self.assertEqual(code, 1)

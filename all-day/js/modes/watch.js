@@ -1321,6 +1321,8 @@ function land() {
   const m = /^(f|tv)(\d+)$/.exec(k);
   if (m) {
     const id = m[1] === 'tv' ? TV_BASE + Number(m[2]) : Number(m[2]);
+    /* a title only the time machine knows may not have arrived yet */
+    if (!byId.has(id) && !extras) { pending = k; return; }
     const f = byId.get(id);
     if (f && f.kind !== V.kind) setKind(f.kind);
     let at = filtered().findIndex((x) => x.id === id);
@@ -1359,6 +1361,8 @@ app.register(KEY, {
       loadExtras(got).then(() => {
         extras = true;
         V.month = defaultMonth();
+        /* ratings counted before the time machine named its titles: count again */
+        if (P.state === 'ok') { tally(); draw('town'); draw('vote'); }
         draw('theaters');
         draw('back');
         if (app.activeTab() === KEY) app.paintSubnav();

@@ -99,9 +99,16 @@ jobs:
 
       - name: Start from the branch's current files
         run: |
-          git clone -q --depth 1 --branch films-data \
-            "https://github.com/${{ github.repository }}.git" /tmp/films-out \
-            || mkdir -p /tmp/films-out
+          # an empty start only when the branch truly does not exist: a clone
+          # that fails for any other reason stops here, before a push could
+          # replace the branch with this run's one file
+          repo="https://github.com/${{ github.repository }}.git"
+          if git ls-remote --exit-code --heads "$repo" films-data >/dev/null; then
+            git clone -q --depth 1 --branch films-data "$repo" /tmp/films-out
+          else
+            echo "no films-data branch yet: starting empty"
+            mkdir -p /tmp/films-out
+          fi
           rm -rf /tmp/films-out/.git
           mkdir -p /tmp/films-out/data /tmp/films-new/data
 

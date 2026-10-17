@@ -266,7 +266,10 @@ class Web:
 
 
 def read_theater(tid, web, today, wanted):
-    """(days, closed, back) for one theater."""
+    """(days, closed, back) for one theater.
+    A page that answers but no longer looks like what the parser knows
+    raises, so the theater is marked ok false instead of an empty success
+    that would replace its last good times."""
     days, closed, back = {}, False, ""
     if tid == "partizanfilm":
         home = web.get(PZ_HOME)
@@ -274,18 +277,34 @@ def read_theater(tid, web, today, wanted):
         token = pz_token(home)
         if not token:
             raise RuntimeError("no Veezi token on the homepage")
-        for day, rows in veezi(web.get(VEEZI.format(token=token)), today).items():
+        page = web.get(VEEZI.format(token=token))
+        if 'id="sessionsByDateConent"' not in page:
+            raise RuntimeError("the Veezi page has no sessions panel")
+        for day, rows in veezi(page, today).items():
             for title, when in rows:
                 add(days, day, title, when)
+        if not days and not closed:
+            raise RuntimeError("open, and no sessions read")
     elif tid == "majestic10":
-        mdys = [d for d in mj_dates(web.get(MJ_HOME))
+        home = web.get(MJ_HOME)
+        if "dates__item" not in home:
+            raise RuntimeError("no date bar on the homepage")
+        mdys = [d for d in mj_dates(home)
                 if f"{d[6:]}-{d[:2]}-{d[3:5]}" >= wanted[0]][:len(wanted) + 1]
         for mdy in mdys:
             day = f"{mdy[6:]}-{mdy[:2]}-{mdy[3:5]}"
-            for title, when in mj_day(web.get(MJ_DAY.format(mdy=urllib.parse.quote(mdy, safe="")))):
+            frag = web.get(MJ_DAY.format(mdy=urllib.parse.quote(mdy, safe="")))
+            if "nowPlaying" not in frag:
+                raise RuntimeError(f"the {mdy} fragment is not a showtimes list")
+            for title, when in mj_day(frag):
                 add(days, day, title, when)
+        if mdys and not days:
+            raise RuntimeError("days with shows, and no times read")
     elif tid == "essex":
-        for day, rows in essex(web.get(ESSEX)).items():
+        got = essex(web.get(ESSEX))
+        if not got:
+            raise RuntimeError("no ScreeningEvent on the showtimes page")
+        for day, rows in got.items():
             for title, when in rows:
                 add(days, day, title, when)
     return tidy(days, wanted), closed, back
@@ -336,8 +355,8 @@ def run(args, web=None, api=None, now=None):
             log(f"{th['name']}: {e}")
             row["ok"] = False
         theaters.append(row)
-    if not any(t["ok"] for t in theaters):
-        log("no theater could be read; keeping the last file")
+    if not any(t["ok"] and (t["days"] or t["closed"]) for t in theaters):
+        log("no theater gave times or a closure; keeping the last file")
         return 1
     key = os.environ.get("TMDB_API_KEY", "").strip()
     if api or key:

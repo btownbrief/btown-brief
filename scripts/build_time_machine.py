@@ -81,6 +81,7 @@ ATTEMPTS = 3
 CAP = {"theaters": 12, "streaming": 12, "tv": 12}
 OVERVIEW_MAX = 180
 MIN_TITLES = 6           # a copy with fewer titles than this is a wall, not a front page
+RETRY = 2                # older months that fell back to TMDB, asked of the Wayback Machine again per run
 
 # the shelves, in the order their titles are taken
 SECTIONS = {
@@ -301,17 +302,24 @@ def tkey(item):
     return ("m" if item["k"] == "movie" else "t") + str(item["id"])
 
 
-def build(months, wayback, matcher, prev=None, keep_from=2):
+def build(months, wayback, matcher, prev=None, keep_from=2, retry=None):
     """The file's titles and months. A month from `prev` is kept as it was
-    unless it is one of the newest `keep_from` months, which can still change."""
+    unless it is one of the newest `keep_from` months, which can still change,
+    or one of the first `retry` older months that fell back to TMDB, which
+    the Wayback Machine is asked about again (so a run never re-reads more
+    than keep_from + retry archived months)."""
+    retry = RETRY if retry is None else retry
     prev = prev if isinstance(prev, dict) else {}
     old_titles = prev.get("titles") if isinstance(prev.get("titles"), dict) else {}
     old = {m.get("m"): m for m in prev.get("months") or [] if isinstance(m, dict)}
     titles, out = {}, []
     for i, month in enumerate(months):
-        if i >= keep_from and month in old and old[month].get("src") == "rt":
-            o = old[month]
-            row = {"m": month, "src": "rt", "at": o.get("at", "")}
+        o = old.get(month)
+        again = i >= keep_from and o is not None and o.get("src") != "rt" and retry > 0
+        if again:
+            retry -= 1
+        if i >= keep_from and o is not None and not again:
+            row = {"m": month, "src": "rt" if o.get("src") == "rt" else "tmdb", "at": o.get("at", "")}
             for shelf in CAP:
                 row[shelf] = [k for k in o.get(shelf) or [] if k in old_titles]
                 for k in row[shelf]:

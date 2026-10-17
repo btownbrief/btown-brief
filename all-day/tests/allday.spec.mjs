@@ -3222,6 +3222,12 @@ async function theWatch(browser, base) {
     await page.reload();
     await page.waitForSelector(wPanel + ' [data-kind] button.on', { timeout: 15000 });
     check(kept === 'tv' && await page.$eval(wPanel + ' [data-kind] button.on', (b) => b.textContent) === 'TV', 'the switch is remembered on this phone', String(kept));
+    /* a title only the time machine knows: the link waits for it, then opens its sheet */
+    await page.goto(base + '/all-day/#watch/f' + t1.id);
+    await page.reload();
+    await page.waitForSelector('.sheet-head', { timeout: 6000 }).catch(() => {});
+    const head = await page.$eval('.sheet-head', (h) => h.textContent).catch(() => '');
+    check(head.includes('<img src=x onerror=alert(1)>') && !(await page.$('.sheet-head img')), 'a deep link to a title from back then opens its sheet once the time machine arrives', head);
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
   });

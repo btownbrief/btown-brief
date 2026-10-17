@@ -206,6 +206,15 @@ class Build(unittest.TestCase):
         self.assertEqual({m["m"]: m for m in out2}["2021-01"]["theaters"], ["m11", "m22"])
         self.assertIn("m22", titles2)
 
+        # with no retries left, an old TMDB month is kept as it was and the archive is not asked
+        way3 = FakeWayback({"2021-04": PAGE_2021, "2021-03": PAGE_2021, "2021-02": PAGE_2021, "2021-01": PAGE_2021})
+        with mock.patch.object(tm, "MIN_TITLES", 1):
+            titles3, out3 = tm.build(["2021-04"] + months, way3, tm.Matcher(fake_tmdb([])), prev, retry=0)
+        self.assertEqual(way3.asked, ["2021-04", "2021-03"])
+        self.assertEqual({m["m"]: m for m in out3}["2021-02"]["src"], "tmdb")
+        self.assertEqual({m["m"]: m for m in out3}["2021-02"]["theaters"], by["2021-02"]["theaters"])
+        self.assertTrue(all(k in titles3 for m in out3 for s in tm.CAP for k in m[s]))
+
     def test_december_allows_next_years_release(self):
         m = tm.Matcher(fake_tmdb([]))
         with mock.patch.dict(SEARCH, {("movie", "Snow Day"): [{"id": 61, "title": "Snow Day", "release_date": "2025-01-03", "popularity": 1}]}):
