@@ -6,20 +6,25 @@
      wire-audio branch). Today's clip when there is one, otherwise the most
      recent with its date, otherwise no card at all. A speed control on the
      card (1x, 1.25x, 1.5x; 1.25x unless the reader picked otherwise on this
-     phone) and a link to the newsletter itself beside "Read it instead".
+     phone); under it "Read the two-minute recap" (the script, as text) and
+     "Read the whole Brief at btownbrief.com" (the newsletter itself).
    - Btown TV tonight: the nightly curated edition (scripts/curate_tv.py, on
      the btown-tv branch). First rail, the picks: on Local, the pick and the
      Burlington & Vermont shelf with the reason under each; on Everything,
      three more from the wider shelf. Watched / not for me / more like this
      write to the same key tv.html used, so they still teach tomorrow's
      edition; "not for me" swaps in the editor's next one from the bench on
-     the next draw. Second rail, the rest of the edition, two rows deep.
+     the next draw. Straight under it, smaller and with no header of its own,
+     the rest of the edition, two rows deep; then "Watch the whole edition",
+     a filled card with the count that opens every video in a sheet.
      ‹ › on the header flip the block in place to earlier nights.
    - Live: the always-on cameras, smaller, because a lake at night is not
      competing with a documentary.
    - Podcasts: the Brief's own show first, always; then every local show
      (pulse.json sources with pod === 1), newest episode first, each a row
      that opens in place; on Everything, two shows from away as well.
+   - Playlists: Stephen's, then readers', from data/playlists.json, and a
+     "Share your playlist" email (see the playlists section below).
    - Past nights: the last two weeks of editions (tv-editions.json).
 
    All sound goes through the shell's one player and the one video box;
@@ -89,6 +94,12 @@ function load(key, ok, fail) {
   if (!demoP) demoP = app.demoData(KEY).then(redate);
   demoP.then((d) => (d[key] ? ok(d[key]) : fail()), fail);
 }
+/* Playlists are this app's own hand-edited file, not a wire payload: one
+   plain fetch, and the demo file's copy in the demo. */
+function loadPlaylists(ok, fail) {
+  if (app.demo) { load('playlists', ok, fail); return; }
+  fetch(PLAYLISTS_URL, { cache: 'no-cache' }).then((r) => (r.ok ? r.json() : Promise.reject(new Error(String(r.status))))).then(ok, fail);
+}
 const clipUrl = (file) => (app.demo ? '#onair/brief' : data.audioUrl(file));
 
 /* The demo file is written on 2026-10-16; move every date and timestamp by
@@ -118,7 +129,7 @@ function redate(d) {
 /* ----------------------------------------------------------------- state */
 const O = {
   root: null, slots: null, built: false,
-  tv: null, tvEditions: null, pulse: null, podcast: null, audio: null,
+  tv: null, tvEditions: null, pulse: null, podcast: null, audio: null, playlists: null,
   settled: Object.create(null), failed: Object.create(null),
   open: Object.create(null),   // show id -> opened in place
   pending: null,
@@ -153,6 +164,7 @@ function clipItem(c) {
   return {
     k: 'brief:' + c.date, kind: 'audio', src: 'The Brief', sid: 'btown-brief', show: 'The Brief, out loud',
     title: weekday(c.date) + '’s news in ' + words(mins) + (mins === 1 ? ' minute' : ' minutes'),
+    mins: words(mins) + '-minute',
     text: String(c.teaser || ''), media: BRIEF_ART, dur: c.duration ? mmss(c.duration) : '',
     src_audio: clipUrl(c.file), href: clipUrl(c.file),
     when: (today ? 'Today' : dayName(c.date)) + (c.made && today ? ' · ' + clock(Date.parse(c.made)) : '') + (c.duration ? ' · ' + mmss(c.duration) : ''),
@@ -304,10 +316,12 @@ function drawBrief(host) {
     esc(it.title) + '</h3><p>' + esc((it.text ? it.text + ' ' : '') + 'Read to you every morning at 7.') + '</p></div>' + wave() + speedRow();
   au.querySelector('.pb').addEventListener('click', () => { app.play(it); applyRate(); });
   host.appendChild(au);
-  /* the transcript, and the newsletter itself, side by side under the card */
+  /* the transcript, and the newsletter itself, under the card. Each label
+     says which it is (Stephen, 2026-10-17: "make it clear that the read it
+     instead is that 2 minute recap… and then you can read the whole brief"). */
   const links = el('div', 'linkrow brieflinks');
-  if (it.script) links.appendChild(button('Read it instead', 'ghost', () => readScript(it, c)));
-  const a = el('a', 'btn ghost', 'Read the Brief ' + ICON.ext);
+  if (it.script) links.appendChild(button(esc('Read the ' + it.mins + ' recap'), 'ghost', () => readScript(it, c)));
+  const a = el('a', 'btn ghost', 'Read the whole Brief at btownbrief.com ' + ICON.ext);
   a.href = NEWSLETTER; a.target = '_blank'; a.rel = 'noopener';
   a.dataset.newsletter = '1';
   links.appendChild(a);
@@ -472,17 +486,34 @@ function drawTV(host) {
   } else {
     host.appendChild(el('p', 'note pad', esc('No local picks ' + said(night) + '.')));
   }
+  /* the rest of the night, smaller, straight under the picks: one section,
+     no second header (Stephen, 2026-10-17: "it can still be big on the top
+     and small on the bottom") */
   const rest = restOf(ed, list).map((v) => videoItem(v)).filter(Boolean);
   if (rest.length) {
-    divider(host, isTop ? 'More from tonight' : 'More from that night', plural(rest.length, 'video', 'videos'));
     const r = rail(host, 'tworow');
     r.dataset.rail = 'rest';
     rest.forEach((it) => { items.push(it); r.appendChild(vcard(it, '', { noWhy: true })); });   // dense: title and channel
   }
   app.know(items);
   const n = editionCount(ed);
-  if (n) host.appendChild(button(esc('The whole edition · ' + plural(n, 'video', 'videos')), 'ghost more', () => editionSheet(ed, when)));
+  if (n) host.appendChild(wholeCard(ed, n, night, when));
   return true;
+}
+
+/* The whole edition, as a card that asks to be opened rather than a ghost
+   button people scrolled past (Stephen, 2026-10-17: "I want people to want
+   to click it… it's really important that people see all of them"): full
+   width, filled, three of the night's covers fanned on the left, the count. */
+function wholeCard(ed, n, night, when) {
+  const b = el('button', 'wholeed');
+  b.dataset.whole = String(n);
+  const covers = [ed.pick, ...shelvesOf(ed).flatMap((s) => arr(s.items))].map((v) => videoItem(v)).filter(Boolean).slice(0, 3);
+  b.innerHTML = '<span class="fan" aria-hidden="true">' + covers.map((it) => '<span class="th">' + art(it.media) + '</span>').join('') + '</span>' +
+    '<span class="w"><span class="t">Watch the whole edition</span><span class="s">' +
+    esc((n === 1 ? 'The one video' : 'All ' + n + ' videos') + ' from ' + said(night)) + '</span></span>' + ICON.right;
+  b.addEventListener('click', () => editionSheet(ed, when));
+  return b;
 }
 
 /* Flip the TV block in place, keeping the reader's place: the arrow they
@@ -720,6 +751,138 @@ function drawPods(host) {
   if (!local.length && !away.length && O.settled.pulse) host.appendChild(el('p', 'note pad', esc(O.failed.pulse ? 'The podcast feed didn’t load. It rides the same wire as the headlines and comes back on its own.' : 'No episodes right now.')));
 }
 
+/* -------------------------------------------------------------- playlists */
+/* Playlists (Stephen, 2026-10-17: "seed fire Spotify playlists of mines and
+   or playlists from YouTube. I'm the curator. Encourage people to share
+   theirs too."). data/playlists.json is edited by hand: Stephen's own under
+   `stephen`, then readers' under `readers`, each { title, by, service, url,
+   note, added }. An entry shows only when its url is a real playlist link on
+   its service (the patterns below), so the TODO placeholders the file ships
+   with stay off the page until he pastes real links. Spotify and YouTube
+   play in a sheet through their own embeds; Apple Music and SoundCloud open
+   on their own sites. Readers send theirs by email: the Square board's posts
+   carry no link field (boards-core.js), and adding one is a foundation change.
+   Every string is the file's, so all of it goes through esc(), and a url is
+   only ever used after its service's pattern has matched it whole. */
+const PLAYLISTS_URL = 'data/playlists.json';
+const SHARE_TO = 'btownbrief@gmail.com';
+const SERVICES = {
+  spotify: { name: 'Spotify', re: /^https:\/\/open\.spotify\.com\/(?:intl-[a-z]{2}(?:-[a-z]{2})?\/)?playlist\/([A-Za-z0-9]{22})(?:\?[A-Za-z0-9=&._-]*)?$/,
+    embed: (id) => 'https://open.spotify.com/embed/playlist/' + id + '?theme=0' },
+  youtube: { name: 'YouTube', re: /^https:\/\/(?:www\.|m\.|music\.)?youtube\.com\/playlist\?list=([A-Za-z0-9_-]{10,64})$/,
+    embed: (id) => 'https://www.youtube-nocookie.com/embed/videoseries?list=' + id + '&rel=0&playsinline=1' },
+  apple: { name: 'Apple Music', re: /^https:\/\/music\.apple\.com\/[a-z]{2}\/playlist\/(?:[A-Za-z0-9%._~-]+\/)?(pl\.[A-Za-z0-9-]+)(?:\?[A-Za-z0-9=&._-]*)?$/ },
+  soundcloud: { name: 'SoundCloud', re: /^https:\/\/(?:soundcloud\.com\/[A-Za-z0-9_-]+\/sets\/([A-Za-z0-9_-]+)|on\.soundcloud\.com\/([A-Za-z0-9]+))(?:\?[A-Za-z0-9=&._-]*)?$/ },
+};
+const clip = (v, n) => { const t = String(v == null ? '' : v).replace(/\s+/g, ' ').trim(); return t.length > n ? t.slice(0, n - 1).trimEnd() + '…' : t; };
+const isTodo = (v) => /^\s*TODO\b/i.test(String(v || ''));
+
+/* one entry, checked, or null */
+function playlistItem(p, own) {
+  if (!p || typeof p !== 'object') return null;
+  const svc = Object.prototype.hasOwnProperty.call(SERVICES, p.service) ? SERVICES[p.service] : null;   // never "constructor" and friends
+  const url = String(p.url || '').trim();
+  const m = svc && !isTodo(url) && url.match(svc.re);
+  const title = clip(p.title, 80);
+  if (!m || !title || isTodo(title)) return null;
+  const id = m[1] || m[2];
+  return {
+    k: 'pl:' + p.service + ':' + id, kind: 'playlist', title, href: url, service: p.service, svc, id,
+    by: isTodo(p.by) ? '' : clip(p.by, 40), text: isTodo(p.note) ? '' : clip(p.note, 140),
+    added: isDate(p.added) ? p.added : '', own: !!own, src: svc.name, sid: 'playlist:' + p.service,
+  };
+}
+function playlists() {
+  const P = O.playlists;
+  if (!P || typeof P !== 'object') return { own: [], readers: [] };
+  const seen = new Set();
+  const take = (list, own) => arr(list).map((p) => playlistItem(p, own)).filter((it) => it && !seen.has(it.k) && (seen.add(it.k), true));
+  const own = take(P.stephen, true);
+  /* readers' newest first; one with no date goes last */
+  const readers = take(P.readers, false).sort((a, b) => (a.added < b.added ? 1 : a.added > b.added ? -1 : 0));
+  return { own, readers };
+}
+
+function playlistRow(it) {
+  const r = el('div', 'lrow plrow');
+  r.dataset.k = it.k;
+  r.dataset.service = it.service;
+  if (it.own) r.dataset.own = '1';
+  const meta = [it.svc.name, it.by && !it.own ? 'from ' + it.by : ''].filter(Boolean).join(' · ');
+  r.innerHTML = '<span class="th svc">' + (it.service === 'youtube' ? ICON.play : ICON.listen) + '</span><div><div class="t">' + esc(it.title) + '</div><div class="s">' +
+    (it.own ? '<span class="tag tag-own">' + esc(it.by ? it.by + '’s pick' : 'Btown Brief') + '</span> ' : '') + esc(meta) + '</div>' +
+    (it.text ? '<div class="s pn">' + esc(it.text) + '</div>' : '') + '</div>';
+  if (it.svc.embed) {
+    r.setAttribute('role', 'button');
+    r.tabIndex = 0;
+    const b = el('button', 'pillbtn', ICON.play + ' Play');
+    b.setAttribute('aria-label', 'Play ' + it.title + ' on ' + it.svc.name);
+    b.dataset.playlist = it.k;
+    r.appendChild(b);
+  } else {
+    const a = el('a', 'pillbtn', esc(it.svc.name) + ' ' + ICON.ext);
+    a.href = safeHref(it.href); a.target = '_blank'; a.rel = 'noopener';
+    a.setAttribute('aria-label', 'Open ' + it.title + ' on ' + it.svc.name);
+    a.dataset.playlist = it.k;
+    if (app.demo) a.addEventListener('click', (e) => { e.preventDefault(); app.toast('Opens the playlist on ' + it.svc.name + ' in the real build'); });
+    r.appendChild(a);
+  }
+  return r;
+}
+
+/* A Spotify or YouTube playlist in a sheet, in the service's own player.
+   Opening it stops whatever the shell is playing, as the Brief's own show
+   does, and the frame registers with the shell so a later play stops it. */
+function playlistSheet(it) {
+  app.sheet(it.title, (body) => {
+    if (app.demo) {
+      body.appendChild(el('p', 'sheet-note', esc('Opens ' + it.svc.name + '’s player for this playlist in the real build.')));
+    } else {
+      app.stop();
+      app.closeVideo();
+      const frame = el('iframe', it.service === 'youtube' ? 'embed yt' : 'embed spotify list');
+      frame.title = it.title;
+      frame.loading = 'lazy';
+      frame.allow = 'autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture';
+      if (it.service === 'youtube') frame.setAttribute('allowfullscreen', '');
+      frame.src = it.svc.embed(it.id);
+      body.appendChild(frame);
+      registerEmbed(frame);
+    }
+    if (it.text) body.appendChild(el('p', 'sheet-note', esc(it.text)));
+    const row = el('div', 'linkrow');
+    const a = el('a', 'btn ghost', esc('Open in ' + it.svc.name) + ' ' + ICON.ext);
+    a.href = safeHref(it.href); a.target = '_blank'; a.rel = 'noopener';
+    if (app.demo) a.addEventListener('click', (e) => { e.preventDefault(); app.toast('Opens the playlist on ' + it.svc.name + ' in the real build'); });
+    row.appendChild(a);
+    body.appendChild(row);
+  });
+}
+
+/* "Share yours": an email to the Brief, the subject and the three things
+   Stephen needs already in it */
+function shareLink() {
+  const body = 'Playlist link:\n\nWhat it is (one line):\n\nName to credit:\n';
+  const a = el('a', 'btn ghost more', ICON.mail + ' Share your playlist');
+  a.href = 'mailto:' + SHARE_TO + '?subject=' + encodeURIComponent('A playlist for On Air') + '&body=' + encodeURIComponent(body);
+  a.dataset.sharePlaylist = '1';
+  return a;
+}
+
+function drawPlaylists(host) {
+  const { own, readers } = playlists();
+  if (!own.length && !readers.length) return false;   // nothing real yet: no section, not an empty one
+  sec(host, 'Playlists', '', 'lists');
+  own.forEach((it) => host.appendChild(playlistRow(it)));
+  if (readers.length) {
+    divider(host, 'From readers');
+    readers.forEach((it) => host.appendChild(playlistRow(it)));
+  }
+  app.know(own.concat(readers));
+  host.appendChild(shareLink());
+  return true;
+}
+
 function drawPast(host) {
   const tv = O.tv;
   const every = geo() === 'everything';
@@ -768,7 +931,7 @@ function render() {
        frame in it) is never torn down by a redraw */
     root.innerHTML = '';
     const mk = (name) => { const s = el('div'); s.dataset.slot = name; root.appendChild(s); return s; };
-    O.slots = { brief: mk('brief'), tv: mk('tv'), live: mk('live'), podsHead: mk('pods-head'), own: mk('own'), pods: mk('pods'), past: mk('past'), end: mk('end') };
+    O.slots = { brief: mk('brief'), tv: mk('tv'), live: mk('live'), podsHead: mk('pods-head'), own: mk('own'), pods: mk('pods'), lists: mk('lists'), past: mk('past'), end: mk('end') };
     O.built = true;
   }
   const S = O.slots;
@@ -781,6 +944,7 @@ function render() {
   S.podsHead.hidden = !anyPods && !O.failed.pulse;
   if (!S.podsHead.hidden) drawPodsHead(S.podsHead);
   drawPods(S.pods);
+  S.lists.hidden = !drawPlaylists(S.lists);
   S.past.hidden = !drawPast(S.past);
   S.end.appendChild(cards.caught({
     title: 'That’s On Air',
@@ -815,6 +979,13 @@ function onClick(e) {
     app.toast(now ? SAID[now] : 'Taken back.');
     return;
   }
+  const pl = e.target.closest('[data-k^="pl:"]');
+  if (pl && !e.target.closest('a')) {
+    const it = app.item(pl.dataset.k);
+    if (it && it.svc && it.svc.embed) { e.preventDefault(); playlistSheet(it); }
+    else if (it) { const a = pl.querySelector('a[data-playlist]'); if (a) a.click(); }
+    return;
+  }
   const night = e.target.closest('[data-night]');
   if (night) {
     e.preventDefault();
@@ -837,7 +1008,7 @@ function onClick(e) {
   }
 }
 function onKey(e) {
-  if ((e.key === 'Enter' || e.key === ' ') && e.target.matches('[data-show], [data-night] [role="button"]')) { e.preventDefault(); e.target.click(); }
+  if ((e.key === 'Enter' || e.key === ' ') && e.target.matches('[data-show], [data-night] [role="button"], .plrow[role="button"]')) { e.preventDefault(); e.target.click(); }
 }
 
 /* -------------------------------------------------------------- deep links */
@@ -846,7 +1017,7 @@ function onKey(e) {
    gone while a payload that might hold it is still on its way. */
 function land() {
   const k = O.pending;
-  if (!k || !O.root || !O.built || !FEEDS.every((f) => O.settled[f])) return;
+  if (!k || !O.root || !O.built || !FEEDS.every((f) => O.settled[f]) || !O.settled.playlists) return;
   O.pending = null;
   if (!app.flashHit(O.root, k)) app.toast('That one has moved on. Here’s what’s on now.');
 }
@@ -865,6 +1036,8 @@ function mount(root) {
     render();
     app.recount();
   }, () => { O.settled[key] = true; O.failed[key] = true; render(); }));
+  /* not in FEEDS: a playlist file that loads must not hide "Couldn't reach On Air" */
+  loadPlaylists((j) => { O.playlists = j; O.settled.playlists = true; render(); }, () => { O.settled.playlists = true; render(); });
 }
 
 function newSince(ts) {
@@ -897,7 +1070,7 @@ app.register(KEY, {
     const band = el('div', 'toolband');
     band.appendChild(localSwitch(() => { render(); app.scrollTop(); }));
     const S = O.slots;
-    const toc = [['brief', 'Out loud'], ['tv', 'Btown TV'], ['live', 'Live'], ['pods', 'Podcasts'], ['past', 'Past nights']]
+    const toc = [['brief', 'Out loud'], ['tv', 'Btown TV'], ['live', 'Live'], ['pods', 'Podcasts'], ['lists', 'Playlists'], ['past', 'Past nights']]
       .filter(([key]) => !S || O.root.querySelector('[data-sec="' + key + '"]'))
       .map(([key, label]) => ({ key, label }));
     band.appendChild(chips(toc, null, (k) => app.jumpTo(O.root.querySelector('[data-sec="' + k + '"]'))));

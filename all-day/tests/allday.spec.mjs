@@ -229,6 +229,29 @@ const tvPlay = (page) => page.evaluate(() => {
   const before = !!(row && head && railEl && (head.compareDocumentPosition(row) & 4) && (row.compareDocumentPosition(railEl) & 4));
   return { tonight: one('tonight'), past: one('past'), note: row ? row.innerText : '', before };
 });
+/* The clip: the fixture's two seconds of silence, its audio frames repeated
+   thirty times (about a minute), so a test can resume past the 30-second mark
+   and still be ten seconds from the end. The ID3 tag and the LAME Info frame
+   are dropped (the Info frame would claim 78 frames and the old length), so
+   the browser reads the length from the bitrate, as it does for a CBR file. */
+function longSilence(mp3) {
+  const id3 = mp3.subarray(0, 3).toString() === 'ID3' ? 10 + ((mp3[6] << 21) | (mp3[7] << 14) | (mp3[8] << 7) | mp3[9]) : 0;
+  let i = id3 + 4;
+  while (i < mp3.length - 1 && !(mp3[i] === 0xff && (mp3[i + 1] & 0xe0) === 0xe0)) i++;   // the frame after the Info frame
+  const frames = mp3.subarray(i);
+  return Buffer.concat(Array.from({ length: 30 }, () => frames));
+}
+/* raw.githubusercontent.com answers a Range request with 206 and the slice
+   (curl -r 0-1 on a real clip, 2026-10-17); the test server does the same */
+function fulfillBytes(r, body, type) {
+  const m = /^bytes=(\d*)-(\d*)$/.exec(r.request().headers().range || '');
+  if (!m || (!m[1] && !m[2])) return r.fulfill({ status: 200, body, contentType: type, headers: { 'accept-ranges': 'bytes', 'access-control-allow-origin': '*' } });
+  const start = m[1] ? Number(m[1]) : Math.max(0, body.length - Number(m[2]));
+  const end = m[1] && m[2] ? Math.min(Number(m[2]), body.length - 1) : body.length - 1;
+  if (start >= body.length) return r.fulfill({ status: 416, body: '', headers: { 'content-range': 'bytes */' + body.length } });
+  return r.fulfill({ status: 206, body: body.subarray(start, end + 1), contentType: type,
+    headers: { 'accept-ranges': 'bytes', 'content-range': 'bytes ' + start + '-' + end + '/' + body.length, 'access-control-allow-origin': '*' } });
+}
 async function onairFiles(opts = {}) {
   const audio = opts.audio || 'today';
   const playlist = opts.playlist || 'all';      // 'all', 'not-tonight' (tonight's upload failed) or 'none'
@@ -253,7 +276,7 @@ async function onairFiles(opts = {}) {
   const index = { v: 1, updated: new Date().toISOString(), clips: audio === 'none' ? [] : audio === 'yesterday' ? clips.slice(1) : clips };
   const files = { 'btown-tv.json': JSON.stringify(tv), 'tv-editions.json': JSON.stringify(d.tvEditions), 'index.json': JSON.stringify(index) };
   clips.forEach((c) => { files[c.script] = d.audio._script; });
-  const out = { files, tv, index, today, mp3: await readFile(path.join(HERE, 'fixtures/silence.mp3')) };
+  const out = { files, tv, index, today, mp3: longSilence(await readFile(path.join(HERE, 'fixtures/silence.mp3'))) };
   onairCache.set(key, out);
   return out;
 }
@@ -306,7 +329,7 @@ async function newPage(browser, base, opts = {}) {
   const onair = await onairFiles(opts.onair);
   await page.route(/raw\.githubusercontent\.com\/btownbrief\/btown-brief\/(btown-tv|wire-audio)\/data\/(?:audio\/)?([\w.-]+)$/, (r) => {
     const name = r.request().url().match(/([\w.-]+)$/)[1];
-    if (/\.mp3$/.test(name) && onair.index.clips.some((c) => c.file === name)) return r.fulfill({ status: 200, body: onair.mp3, contentType: 'audio/mpeg' });
+    if (/\.mp3$/.test(name) && onair.index.clips.some((c) => c.file === name)) return fulfillBytes(r, onair.mp3, 'audio/mpeg');
     const f = onair.files[name];
     return f ? r.fulfill({ status: 200, body: f, contentType: /\.txt$/.test(name) ? 'text/plain' : 'application/json' }) : r.fulfill({ status: 404, body: '' });
   });
@@ -1340,9 +1363,9 @@ async function onAir(browser, base) {
     await page.waitForSelector('#panel-onair [data-sec="past"]', { timeout: 8000 });
     check(await page.evaluate(() => document.querySelector('audio').paused && !document.querySelector('#panel-onair iframe')), 'nothing autoplays: the shell’s audio is paused and no frame is loaded', '');
     const toc = await page.$$eval('#subnav .chip', (cs) => cs.map((c) => c.innerText.trim()));
-    check(JSON.stringify(toc) === JSON.stringify(['Out loud', 'Btown TV', 'Live', 'Podcasts', 'Past nights']), 'the chip row is a table of contents: Out loud, Btown TV, Live, Podcasts, Past nights', JSON.stringify(toc));
+    check(JSON.stringify(toc) === JSON.stringify(['Out loud', 'Btown TV', 'Live', 'Podcasts', 'Playlists', 'Past nights']), 'the chip row is a table of contents: Out loud, Btown TV, Live, Podcasts, Playlists, Past nights', JSON.stringify(toc));
     const order = await page.$$eval('#panel-onair [data-sec]', (s) => s.map((x) => x.dataset.sec));
-    check(JSON.stringify(order) === JSON.stringify(['brief', 'tv', 'live', 'pods', 'past']), 'the sections run in that order', JSON.stringify(order));
+    check(JSON.stringify(order) === JSON.stringify(['brief', 'tv', 'live', 'pods', 'lists', 'past']), 'the sections run in that order', JSON.stringify(order));
     const subs = await page.$$eval('#panel-onair [data-sec] p', (p) => p.map((x) => x.textContent));
     check(!subs.length, 'no section carries an explanatory subtitle', JSON.stringify(subs));
     check(!/lands at 7 every morning/.test(await page.$eval('#panel-onair', (p) => p.innerText)), 'no end-of-tab line about when things land', '');
@@ -1400,18 +1423,22 @@ async function onAir(browser, base) {
     const eyebrow = await page.$eval('#panel-onair .audio .eyebrow', (e) => e.textContent);
     check(/^Today · /.test(eyebrow) && / · 3:27$/.test(eyebrow), 'today’s clip: the card says today and its length', eyebrow);
     check((await podRows(page))[0][0] === 'btown-brief', 'live: the Brief’s own show is first in Podcasts', '');
+    const repoLists = JSON.parse(await readFile(path.join(APP, 'data/playlists.json'), 'utf8'));
+    const realLists = [...repoLists.stephen, ...repoLists.readers].filter((p) => !/^\s*TODO/i.test(p.url)).length;
+    if (!realLists) check(!(await page.$('#panel-onair [data-sec="lists"]')) && !(await page.$$eval('#subnav .chip', (cs) => cs.map((c) => c.dataset.chip))).includes('lists'),
+      'live: data/playlists.json is still TODO placeholders, so no Playlists section and no chip', '');
     const play = await tvPlay(page);
     check(play.tonight && PLAYLIST.test(play.tonight.href) && play.tonight.href === tv.playlist.url && play.tonight.rel === 'noopener' && play.tonight.target === '_blank',
       'Btown TV: “Play tonight on your TV” opens tonight’s playlist in a new tab', JSON.stringify(play));
     check(play.tonight && play.tonight.text === 'Play tonight on your TV' && play.tonight.icons === 2 && play.before, 'under the Btown TV header, before the rail, with the play and external icons', JSON.stringify(play));
     check((await tvCards(page)).length === tv.shelves.find((x) => x.key === 'vt').items.length + 1, 'live: tonight’s local picks, the pick and the Burlington & Vermont shelf', '');
-    await page.click('#panel-onair .brieflinks .btn:text("Read it instead")');
+    await page.click('#panel-onair .brieflinks .btn:text("Read the three-minute recap")');
     await page.waitForFunction(() => /Morning\./.test(document.querySelector('.sheet-body')?.innerText || ''), null, { timeout: 4000 }).catch(() => {});
     const sheet = await page.$eval('.sheet-body', (b) => b.innerText);
     check(/Out on the water\.\.\./.test(sheet) && !/\[/.test(sheet), 'the transcript hides the voice’s pacing marks ([short pause])', sheet.slice(0, 300));
     check(!/\bAI\b|synthetic|artificial/i.test(sheet + await page.$eval('#panel-onair .audio', (a) => a.innerText)), 'no mention of AI on the card or the transcript', '');
     check(/Read to you every morning at 7\./.test(await page.$eval('#panel-onair .audio', (a) => a.innerText)), 'the card says when it is read', '');
-    check(/^Morning\./.test(await page.$eval('.sheet-body .script', (b) => b.innerText)), '“Read it instead” shows the script the voice read', '');
+    check(/^Morning\./.test(await page.$eval('.sheet-body .script', (b) => b.innerText)), '“Read the three-minute recap” shows the script the voice read', '');
     await page.keyboard.press('Escape');
 
     /* the player: the clip plays in the shell's one player and survives a tab switch */
@@ -1516,7 +1543,31 @@ async function onAir(browser, base) {
     const face = picks.concat(rest);
     check(face.length === all.length && new Set(face).size === face.length && all.every((k) => face.includes(k)),
       'Local: the whole edition is on the face, each video once (' + picks.length + ' picks + ' + rest.length + ' more = ' + all.length + ')', face.length + ' of ' + all.length);
-    check(await page.$eval('#panel-onair [data-slot="tv"] .tdiv', (t) => t.innerText.replace(/\s+/g, ' ').trim()) === 'More from tonight ' + rest.length + ' videos', 'the second rail is headed with its count', '');
+    const one = await page.$eval('#panel-onair [data-slot="tv"]', (slot) => {
+      const wraps = [...slot.children].filter((c) => c.classList.contains('rail-wrap'));
+      const picks = slot.querySelector('[data-rail="picks"]').closest('.rail-wrap');
+      const rest = slot.querySelector('[data-rail="rest"]').closest('.rail-wrap');
+      return { heads: slot.querySelectorAll('.sec').length, dividers: slot.querySelectorAll('.tdiv').length, next: picks.nextElementSibling === rest, wraps: wraps.length,
+        big: Math.round(picks.querySelector('.vcard').getBoundingClientRect().width), small: Math.round(rest.querySelector('.vcard').getBoundingClientRect().width) };
+    });
+    check(one.heads === 1 && !one.dividers && one.next && one.wraps === 2, 'one section: one header, the rest of the night straight under the picks, no second header', JSON.stringify(one));
+    check(one.big > one.small + 60, 'the picks big on top, the rest smaller below', JSON.stringify(one));
+    /* the whole edition: a filled card under the section, with the count, that opens every video */
+    const n = all.length;
+    const whole = await page.$eval('#panel-onair [data-slot="tv"] .wholeed', (b) => {
+      const r = b.getBoundingClientRect();
+      const rest = document.querySelector('#panel-onair [data-rail="rest"]').closest('.rail-wrap');
+      return { text: b.innerText.replace(/\s+/g, ' ').trim(), w: Math.round(r.width), h: Math.round(r.height), vw: innerWidth, last: b === b.parentElement.lastElementChild,
+        after: !!(rest.compareDocumentPosition(b) & 4), covers: b.querySelectorAll('.fan .th').length, filled: getComputedStyle(b).backgroundColor !== 'rgba(0, 0, 0, 0)', tag: b.tagName };
+    });
+    check(whole.text === 'Watch the whole edition All ' + n + ' videos from tonight', 'the whole edition says what it is and how many: “All ' + n + ' videos from tonight”', JSON.stringify(whole));
+    check(whole.tag === 'BUTTON' && whole.w >= whole.vw - 32 - 1 && whole.h >= 64 && whole.filled && whole.covers === 3, 'a full-width filled card, three covers fanned on it, not a ghost button', JSON.stringify(whole));
+    check(whole.last && whole.after, 'right under the section: after the second rail, the last thing in the Btown TV block', JSON.stringify(whole));
+    await page.click('#panel-onair .wholeed');
+    await page.waitForSelector('.sheet-card', { timeout: 3000 });
+    check(await page.$$eval('.sheet-body .card.video', (c) => c.length) === n, 'it opens all ' + n + ' videos', '');
+    await page.keyboard.press('Escape');
+    await page.waitForTimeout(200);
     const grid = await page.$$eval('#panel-onair [data-rail="rest"] .vcard', (cs) => {
       const rows = new Set(cs.map((c) => Math.round(c.getBoundingClientRect().top)));
       const seen = cs.filter((c) => { const r = c.getBoundingClientRect(); return r.left >= 0 && r.right <= innerWidth + 1; }).length;
@@ -1576,12 +1627,13 @@ async function onAir(browser, base) {
     await page.waitForSelector('#panel-onair .audio .speed', { timeout: 8000 });
     check(JSON.stringify(await speeds()) === JSON.stringify(['1x', '1.25x', '1.5x*']), 'still 1.5x after a reload', JSON.stringify(await speeds()));
     const link = await page.$eval('#panel-onair [data-newsletter]', (a) => ({ text: a.textContent.trim(), href: a.href, target: a.target, rel: a.rel, icons: a.querySelectorAll('svg').length }));
-    check(link.text === 'Read the Brief' && link.href === 'https://www.btownbrief.com/' && link.target === '_blank' && link.rel === 'noopener' && link.icons === 1,
-      '“Read the Brief” opens btownbrief.com in a new tab', JSON.stringify(link));
+    check(link.text === 'Read the whole Brief at btownbrief.com' && link.href === 'https://www.btownbrief.com/' && link.target === '_blank' && link.rel === 'noopener' && link.icons === 1,
+      '“Read the whole Brief at btownbrief.com” opens the newsletter in a new tab', JSON.stringify(link));
     const row = await page.$$eval('#panel-onair .brieflinks .btn', (b) => b.map((x) => x.textContent.trim()));
-    check(JSON.stringify(row) === JSON.stringify(['Read it instead', 'Read the Brief']), 'beside “Read it instead”, under the card', JSON.stringify(row));
-    const fits = await page.$eval('#panel-onair .brieflinks', (r) => { const a = [...r.children].map((c) => c.getBoundingClientRect()); return a.length === 2 && Math.abs(a[0].top - a[1].top) < 2 && a[1].right <= innerWidth; });
-    check(fits, 'one row at 390 wide', '');
+    check(JSON.stringify(row) === JSON.stringify(['Read the three-minute recap', 'Read the whole Brief at btownbrief.com']),
+      'the transcript says it is the recap, the newsletter says it is the whole Brief (Stephen, 2026-10-17)', JSON.stringify(row));
+    const fits = await page.$eval('#panel-onair .brieflinks', (r) => { const a = [...r.children].map((c) => c.getBoundingClientRect()); return a.length === 2 && a[1].top >= a[0].bottom && a.every((b) => b.left >= 15 && b.right <= innerWidth - 15 && b.width > innerWidth - 40); });
+    check(fits, 'stacked, each full width at 390, nothing cut off', '');
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
   });
@@ -1604,6 +1656,207 @@ async function onAir(browser, base) {
         check(/Read to you every morning at 7\./.test(await onairText(page)) && !(await page.$('#panel-onair [data-sec="brief"] p')), 'the card says when it is read; the header carries no subtitle', '');
       }
       check(!errors.length, audio + ': no console errors', errors.join(' | '));
+      await ctx.close();
+    }
+  });
+
+  /* Stephen, 2026-10-17: "the audio doesn't play; when you click the play
+     button, nothing happens." These start real playback of the clip, at the
+     real URL shape, served as raw.githubusercontent.com serves it (audio/mpeg,
+     byte ranges), and watch the clock move: a src attribute is not a sound. */
+  const RAW_CLIP = /^https:\/\/raw\.githubusercontent\.com\/btownbrief\/btown-brief\/wire-audio\/data\/audio\/\d{4}-\d{2}-\d{2}\.mp3$/;
+  const watchPlay = (page) => page.addInitScript(() => {
+    const play = HTMLMediaElement.prototype.play;
+    window.__plays = [];
+    HTMLMediaElement.prototype.play = function () {
+      const p = play.call(this);
+      const rec = { src: this.currentSrc || this.src, state: 'pending' };
+      window.__plays.push(rec);
+      p.then(() => { rec.state = 'resolved'; }, (e) => { rec.state = 'rejected ' + (e && e.name); });
+      return p;
+    };
+  });
+  const audioState = (page) => page.evaluate(() => { const a = document.getElementById('audio'); return { src: a.getAttribute('src'), t: a.currentTime, d: a.duration, paused: a.paused, ended: a.ended, rate: a.playbackRate, err: a.error && a.error.code, plays: window.__plays }; });
+  const clockPast = (page, s) => page.waitForFunction((s) => { const a = document.getElementById('audio'); return !a.paused && a.currentTime > s; }, s, { timeout: 8000 }).then(() => true, () => false);
+
+  await group('On Air, the Brief plays', async () => {
+    for (const audio of ['today', 'yesterday']) {
+      const { ctx, page, errors } = await newPage(browser, base, { onair: { audio } });
+      await watchPlay(page);
+      const types = [];
+      page.on('response', (r) => { if (/\.mp3$/.test(r.url())) types.push(r.status() + ' ' + (r.headers()['content-type'] || '')); });
+      await page.goto(base + '/all-day/#onair');
+      await page.waitForSelector('#panel-onair .audio .pb', { timeout: 15000 });
+      await page.waitForSelector('#panel-onair [data-sec="past"]', { timeout: 15000 });
+      const date = audio === 'today' ? etKey(Date.now()) : dayMinus(etKey(Date.now()), 1);
+      await page.tap('#panel-onair .audio .pb').catch(() => page.click('#panel-onair .audio .pb'));
+      const moved = await clockPast(page, 0.5);
+      const st = await audioState(page);
+      check(RAW_CLIP.test(st.src) && st.src.endsWith('/' + date + '.mp3'), audio + ': the play button loads ' + date + '.mp3 from the wire-audio branch', st.src);
+      check(st.plays.length && st.plays[st.plays.length - 1].state === 'resolved', audio + ': the play promise resolves', JSON.stringify(st.plays));
+      check(moved && !st.err, audio + ': and the clip is actually playing: its clock moves past half a second', JSON.stringify(st));
+      check(types.length && types.every((t) => /^20[06] audio\/mpeg$/.test(t)), audio + ': served as audio/mpeg', JSON.stringify(types));
+      check(st.rate === 1.25, audio + ': at the Brief’s 1.25x', st.rate);
+      check(await page.$eval('#panel-onair .audio .pb', (b) => b.classList.contains('is-playing')) && await page.$('#player:not([hidden])') !== null, audio + ': the button turns to pause and the player is up', '');
+      await page.click('#panel-onair .audio .pb');
+      check((await audioState(page)).paused, audio + ': a second tap pauses', '');
+      check(!errors.length, audio + ': no console errors', errors.join(' | '));
+      await ctx.close();
+    }
+
+    /* the same tap in WebKit, Safari's engine, as an iPhone (touch, 390 wide),
+       when the borrowed Playwright has it; the rest of the suite is Chromium */
+    {
+      let wk = null;
+      try { wk = await require('playwright').webkit.launch(); } catch (e) { wk = null; }
+      if (!wk) check(true, 'WebKit: not installed with the borrowed Playwright, skipped', '');
+      else {
+        const { ctx, page, errors } = await newPage(wk, base);
+        await watchPlay(page);
+        await page.goto(base + '/all-day/#onair');
+        await page.waitForSelector('#panel-onair .audio .pb', { timeout: 15000 });
+        await page.waitForSelector('#panel-onair [data-sec="past"]', { timeout: 15000 });
+        await page.click('#panel-onair .audio .pb');
+        const moved = await clockPast(page, 0.5);
+        const st = await audioState(page);
+        check(moved && RAW_CLIP.test(st.src) && st.plays.some((p) => p.state === 'resolved') && st.rate === 1.25, 'WebKit: the play button starts the clip at 1.25x and its clock moves', JSON.stringify(st));
+        check(!errors.length, 'WebKit: no console errors', errors.join(' | '));
+        await ctx.close();
+        await wk.close();
+      }
+    }
+
+    /* the bug as it was: a clip heard to its end came back parked at its
+       end, so the next play ran out at once and looked like a dead button */
+    const today = etKey(Date.now());
+    {
+      const { ctx, page, errors } = await newPage(browser, base);
+      await watchPlay(page);
+      await page.addInitScript((k) => { if (!sessionStorage.getItem('seeded')) { sessionStorage.setItem('seeded', '1'); localStorage.setItem('allday-heard', JSON.stringify({ [k]: 59 })); } }, 'brief:' + today);
+      await page.goto(base + '/all-day/#onair');
+      await page.waitForSelector('#panel-onair .audio .pb', { timeout: 15000 });
+      await page.click('#panel-onair .audio .pb');
+      const moved = await clockPast(page, 0.3);
+      await page.waitForTimeout(1200);
+      const st = await audioState(page);
+      check(st.d > 50, 'the test clip runs about a minute', st.d);
+      check(moved && !st.paused && !st.ended && st.t < 10, 'heard to its last second, it starts again from the top instead of running out at once', JSON.stringify(st));
+      /* to the end: the place is forgotten */
+      await page.evaluate(() => { const a = document.getElementById('audio'); a.currentTime = a.duration - 0.4; });
+      await page.waitForFunction(() => document.getElementById('audio').ended, null, { timeout: 8000 }).catch(() => {});
+      const heard = await page.evaluate((k) => JSON.parse(localStorage.getItem('allday-heard') || '{}')[k], 'brief:' + today);
+      check(heard === 0, 'played to the end, its place is cleared, so tomorrow’s visit and the next tap start at 0:00', heard);
+      check(!(await page.$eval('#panel-onair .audio .pb', (b) => b.classList.contains('is-playing'))), 'and the button is a play button again', '');
+      await page.click('#panel-onair .audio .pb');
+      check(await clockPast(page, 0.3) && (await audioState(page)).t < 5, 'pressing play again after the end plays it from the top', JSON.stringify(await audioState(page)));
+      check(!errors.length, 'no console errors', errors.join(' | '));
+      await ctx.close();
+    }
+    {
+      /* a reader who stopped part way still picks up where they were */
+      const { ctx, page, errors } = await newPage(browser, base);
+      await page.addInitScript((k) => localStorage.setItem('allday-heard', JSON.stringify({ [k]: 40 })), 'brief:' + today);
+      await page.goto(base + '/all-day/#onair');
+      await page.waitForSelector('#panel-onair .audio .pb', { timeout: 15000 });
+      await page.click('#panel-onair .audio .pb');
+      const at = await page.waitForFunction(() => { const a = document.getElementById('audio'); return !a.paused && a.currentTime > 40 && a.currentTime; }, null, { timeout: 8000 }).then((h) => h.jsonValue(), () => null);
+      check(at && at < 45, 'part way through (40 s), it resumes there', at);
+      check(!errors.length, 'resume: no console errors', errors.join(' | '));
+      await ctx.close();
+    }
+    {
+      /* a clip that will not load says so instead of doing nothing */
+      const { ctx, page } = await newPage(browser, base);
+      await page.route(RAW_CLIP, (r) => r.fulfill({ status: 404, body: '' }));
+      await page.goto(base + '/all-day/#onair');
+      await page.waitForSelector('#panel-onair .audio .pb', { timeout: 15000 });
+      await page.click('#panel-onair .audio .pb');
+      await page.waitForFunction(() => /didn’t start/.test(document.getElementById('toast')?.textContent || ''), null, { timeout: 6000 }).catch(() => {});
+      check(/The audio didn’t start\. Tap play to try again\./.test(await page.$eval('#toast', (t) => t.textContent)), 'a clip that fails to load says so in a toast', await page.$eval('#toast', (t) => t.textContent));
+      await page.waitForFunction(() => !document.querySelector('#panel-onair .audio .pb').classList.contains('is-playing'), null, { timeout: 3000 }).catch(() => {});
+      check(!(await page.$eval('#panel-onair .audio .pb', (b) => b.classList.contains('is-playing'))), 'and the button goes back to play', '');
+      await ctx.close();
+    }
+    /* the service worker (not registered today, so this is the source) never answers for sound */
+    const sw = await readFile(path.join(APP, 'sw.js'), 'utf8');
+    const guard = sw.indexOf("req.destination === 'audio'");
+    check(guard > 0 && /req\.headers\.has\('range'\)/.test(sw) && guard < sw.indexOf('if (isWire(url))'), 'sw.js lets audio, video and byte ranges past before the raw.githubusercontent.com branch', '');
+  });
+
+  await group('On Air, playlists', async () => {
+    /* demo: Stephen's first, then readers', newest first; Spotify and YouTube
+       play in a sheet, Apple Music and SoundCloud go out */
+    {
+      const { ctx, page, errors } = await newPage(browser, base);
+      await page.goto(base + '/all-day/?demo=1#onair');
+      await page.waitForSelector('#panel-onair [data-sec="lists"]', { timeout: 8000 });
+      const rows = await page.$$eval('#panel-onair [data-slot="lists"] .plrow', (rs) => rs.map((r) => [r.dataset.service, r.dataset.own || '', r.querySelector('.t').textContent]));
+      const d = JSON.parse(await readFile(path.join(APP, 'data/demo/onair.json'), 'utf8')).playlists;
+      const want = [...d.stephen.map((p) => [p.service, '1', p.title]), ...[...d.readers].sort((a, b) => (a.added < b.added ? 1 : -1)).map((p) => [p.service, '', p.title])];
+      check(JSON.stringify(rows) === JSON.stringify(want), 'Stephen’s playlists first, then readers’, newest first', JSON.stringify(rows));
+      check(await page.$$eval('#panel-onair [data-slot="lists"] [data-own] .tag-own', (t) => t.map((x) => x.textContent)).then((t) => t.length === d.stephen.length && t.every((x) => x === 'Stephen’s pick')), 'his are marked “Stephen’s pick”', '');
+      check(/From readers/.test(await page.$eval('#panel-onair [data-slot="lists"]', (s) => s.innerText)), 'readers’ under their own divider', '');
+      const outs = await page.$$eval('#panel-onair [data-slot="lists"] a[data-playlist]', (as) => as.map((a) => [a.closest('.plrow').dataset.service, a.target, a.rel, a.getAttribute('href')]));
+      check(outs.length === 2 && outs.every((o) => /^(apple|soundcloud)$/.test(o[0]) && o[1] === '_blank' && o[2] === 'noopener' && /^https:\/\/(music\.apple|soundcloud)\.com\//.test(o[3])), 'Apple Music and SoundCloud open on their own sites, in a new tab', JSON.stringify(outs));
+      const share = await page.$eval('#panel-onair [data-share-playlist]', (a) => ({ href: a.getAttribute('href'), text: a.textContent.trim() }));
+      check(share.text === 'Share your playlist' && /^mailto:btownbrief@gmail\.com\?subject=A%20playlist%20for%20On%20Air&body=Playlist%20link/.test(share.href), '“Share your playlist” opens an email to the Brief, filled in', JSON.stringify(share));
+      await page.click('#panel-onair .plrow[data-service="spotify"] .pillbtn');
+      await page.waitForSelector('.sheet-card', { timeout: 3000 });
+      check(/Spotify’s player/.test(await page.$eval('.sheet-body', (b) => b.innerText)) && !(await page.$('.sheet-body iframe')), 'demo: a Spotify playlist opens its sheet, and says the player comes in the real build', '');
+      await page.keyboard.press('Escape');
+      check(!errors.length, 'demo: no console errors', errors.join(' | '));
+      await ctx.close();
+    }
+    /* live, from data/playlists.json: only real playlist links show, and the file cannot inject anything */
+    {
+      const SP = 'https://open.spotify.com/playlist/37i9dQZF1DXcBWIGoYBM5M';
+      const YT = 'https://www.youtube.com/playlist?list=PLx0sYbCqOb8TBPRdmBHs5Iftvv9TPboYG';
+      const file = {
+        stephen: [
+          { title: 'Fall in the Old North End', by: 'Stephen', service: 'spotify', url: SP, note: 'Porch songs.', added: '2026-10-12' },
+          { title: 'TODO: the playlist’s name', by: 'Stephen', service: 'youtube', url: 'TODO: paste the YouTube playlist link', note: 'TODO', added: 'TODO' },
+          { title: 'Burlington bands, live', by: 'Stephen', service: 'youtube', url: YT, note: '', added: '2026-10-09' },
+        ],
+        readers: [
+          { title: '<img src=x onerror="window.__xss=1">Mine', by: '<b>Sam</b>', service: 'spotify', url: 'https://open.spotify.com/playlist/0123456789abcdefABCDEF', note: '<script>window.__xss=2</script>', added: '2026-10-16' },
+          { title: 'Script link', by: 'X', service: 'spotify', url: 'javascript:window.__xss=3', note: '', added: '2026-10-15' },
+          { title: 'Quote break', by: 'X', service: 'spotify', url: SP + '"><img src=x onerror=window.__xss=4>', note: '', added: '2026-10-15' },
+          { title: 'Plain http', by: 'X', service: 'youtube', url: 'http://www.youtube.com/playlist?list=PLx0sYbCqOb8TBPRdmBHs5Iftvv9TPboYG', note: '', added: '2026-10-15' },
+          { title: 'Wrong service', by: 'X', service: 'apple', url: SP, note: '', added: '2026-10-15' },
+          { title: 'Unknown service', by: 'X', service: 'myspace', url: 'https://myspace.com/x', note: '', added: '2026-10-15' },
+          { title: 'Inherited service', by: 'X', service: 'constructor', url: 'https://example.com/anything', note: '', added: '2026-10-15' },
+          { title: 'A video, not a playlist', by: 'X', service: 'youtube', url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ', note: '', added: '2026-10-15' },
+        ],
+      };
+      const { ctx, page, errors } = await newPage(browser, base, { routes: [[/\/all-day\/data\/playlists\.json/, file]] });
+      await page.route(/open\.spotify\.com\/embed|youtube-nocookie\.com\/embed/, (r) => r.fulfill({ status: 200, body: '<!doctype html><title>player</title>', contentType: 'text/html' }));
+      await page.goto(base + '/all-day/#onair');
+      await page.waitForSelector('#panel-onair [data-sec="lists"]', { timeout: 15000 });
+      await page.waitForSelector('#panel-onair [data-sec="past"]', { timeout: 15000 });
+      const rows = await page.$$eval('#panel-onair [data-slot="lists"] .plrow', (rs) => rs.map((r) => r.querySelector('.t').textContent));
+      check(JSON.stringify(rows) === JSON.stringify(['Fall in the Old North End', 'Burlington bands, live', '<img src=x onerror="window.__xss=1">Mine']),
+        'only real playlist links show: a TODO placeholder, javascript:, a broken quote, http, the wrong service, an unknown or inherited one (“constructor”) and a single video are all left out', JSON.stringify(rows));
+      await page.waitForTimeout(300);
+      const xss = await page.evaluate(() => ({ flag: window.__xss || 0, imgs: document.querySelectorAll('#panel-onair [data-slot="lists"] img').length, scripts: document.querySelectorAll('#panel-onair [data-slot="lists"] script, #panel-onair [data-slot="lists"] b').length }));
+      check(!xss.flag && !xss.imgs && !xss.scripts, 'a title, a name and a note from the file are text, never markup', JSON.stringify(xss));
+      check(await page.$$eval('#subnav .chip', (cs) => cs.map((c) => c.dataset.chip)).then((c) => c.indexOf('lists') === c.indexOf('pods') + 1), 'the Playlists chip sits after Podcasts', '');
+
+      /* play the Brief, then open a playlist: one sound at a time */
+      await page.click('#panel-onair .audio .pb');
+      await clockPast(page, 0.2);
+      await page.click('#panel-onair .plrow[data-service="spotify"] .t');
+      await page.waitForSelector('.sheet-body iframe', { timeout: 3000 }).catch(() => {});
+      const sp = await page.evaluate(() => { const f = document.querySelector('.sheet-body iframe'); const r = f && f.getBoundingClientRect(); return f && { src: f.src, h: Math.round(r.height), title: f.title, link: document.querySelector('.sheet-body a.btn')?.getAttribute('href') }; });
+      check(sp && sp.src === 'https://open.spotify.com/embed/playlist/37i9dQZF1DXcBWIGoYBM5M?theme=0' && sp.h >= 300, 'a tap on a Spotify playlist opens Spotify’s player for it in a sheet', JSON.stringify(sp));
+      check(sp && sp.link === SP, 'with a link out to Spotify', JSON.stringify(sp));
+      check(await page.evaluate(() => document.getElementById('audio').paused && document.getElementById('player').hidden), 'opening a player stops the Brief: one sound at a time', '');
+      await page.keyboard.press('Escape');
+      await page.click('#panel-onair .plrow[data-service="youtube"] .pillbtn');
+      await page.waitForSelector('.sheet-body iframe', { timeout: 3000 }).catch(() => {});
+      const yt = await page.evaluate(() => { const f = document.querySelector('.sheet-body iframe'); const r = f && f.getBoundingClientRect(); return f && { src: f.src, ratio: r.width / r.height }; });
+      check(yt && yt.src === 'https://www.youtube-nocookie.com/embed/videoseries?list=PLx0sYbCqOb8TBPRdmBHs5Iftvv9TPboYG&rel=0&playsinline=1' && Math.abs(yt.ratio - 16 / 9) < 0.05, 'a YouTube playlist plays in YouTube’s player, 16:9', JSON.stringify(yt));
+      await page.keyboard.press('Escape');
+      check(!errors.length, 'live: no console errors', errors.join(' | '));
       await ctx.close();
     }
   });
@@ -2835,8 +3088,36 @@ async function theFood(browser, base) {
     check(args.p_category === 'dish' && args.p_permission === true && args.p_spot === pick.name && args.p_caption === 'The cold sesame noodles, every time' && /^p_/.test(args.p_voter || ''),
       'and goes to the moderation queue as a dish, with consent, the place and the line', JSON.stringify(args));
     check(/Sent/.test(await page.$eval('#toast', (t) => t.textContent)), 'the reader is told it is in the queue', await page.$eval(form + ' .err', (e) => e.textContent));
+
+    /* both kinds of dish: one you loved somewhere, or one you made at home */
+    const kinds = await page.$eval(form, (f) => ({ line: f.querySelector('p.note').textContent, pills: [...f.querySelectorAll('.where .pills button')].map((b) => [b.textContent, b.classList.contains('on')]) }));
+    check(kinds.line === 'A dish you loved somewhere, or one you made at home.', 'the form says it covers both', kinds.line);
+    check(JSON.stringify(kinds.pills) === '[["At a place",true],["Made at home",false]]', 'and asks which: At a place (the default) or Made at home', JSON.stringify(kinds.pills));
+    await page.click(form + ' .where button:has-text("Made at home")');
+    check(await page.$eval(form + ' input[name=place]', (i) => i.closest('.row').hidden), 'made at home: the place field goes away', '');
+    await page.setInputFiles(form + ' input[type=file]', { name: 'dish.png', mimeType: 'image/png', buffer: photo });
+    await page.fill(form + ' input[name=line]', 'Sunday sauce, my grandmother’s way');
+    await page.check(form + ' input[name=consent]');
+    const before = sent.length;
+    await page.click(form + ' .send');
+    for (let i = 0; i < 60 && !sent.slice(before).some((x) => /btb_photos_submit/.test(x.url)); i++) await page.waitForTimeout(100);
+    const rpc2 = sent.slice(before).find((x) => /btb_photos_submit/.test(x.url));
+    const args2 = rpc2 ? JSON.parse(rpc2.body) : {};
+    check(args2.p_category === 'dish' && args2.p_spot === 'Made at home' && args2.p_area === 'Greater Burlington' && args2.p_caption === 'Sunday sauce, my grandmother’s way',
+      'a home dish needs no place: it goes to the same queue with “Made at home” in the place field (no SQL change)', JSON.stringify(args2));
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
+
+    /* a home dish as the Weekly Bite: made at home, no neighborhood, no place button */
+    const hm = await newPage(browser, base);
+    const homeDish = { ...dish, id: '31111111-2222-3333-4444-555555555555', caption: 'Sunday sauce', spot: 'Made at home', area: 'Greater Burlington' };
+    await hm.page.route(/\/rest\/v1\/rpc\/btb_photos_get/, (r) => r.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify([homeDish]) }));
+    await hm.page.goto(base + '/all-day/#food');
+    await hm.page.waitForSelector(foodPanel + ' .hero[data-k="bite"]', { timeout: 15000 });
+    const hh = await hm.page.$eval(foodPanel + ' .hero[data-k="bite"]', (h) => ({ p: h.querySelector('p').textContent, place: [...h.querySelectorAll('.btn')].some((b) => b.textContent === 'The place') }));
+    check(hh.p === 'Made at home · sent in by Sam' && !hh.place, 'a home dish as the Bite reads “Made at home”, with no area and no place button', JSON.stringify(hh));
+    check(!hm.errors.length, 'no console errors', hm.errors.join(' | '));
+    await hm.ctx.close();
 
     /* nobody approved yet: the slot invites the first one; the demo never sends */
     const d = await newPage(browser, base);
@@ -3461,15 +3742,22 @@ async function theWatch(browser, base) {
     check(JSON.stringify(toc) === JSON.stringify(['Theaters', 'The list', 'Town', 'Next screening', 'Chat']), 'and the table of contents leaves it out', toc.join(' / '));
     check((await wTiles(page)).length === 60, 'all sixty films', '');
     const dots = () => page.$$eval(wPanel + ' [data-grid] .poster', (n) => n.map((a) => [a.dataset.k, [...a.querySelectorAll('.seen i')].map((i) => (i.classList.contains('on') ? 1 : 0)).join('')]));
-    check((await dots()).every((d) => d[1] === '0'), 'Just me: one dot on every poster, none filled', JSON.stringify((await dots()).slice(0, 3)));
+    check((await dots()).every((d) => d[1] === '0'), 'alone: one dot on every poster, none filled', JSON.stringify((await dots()).slice(0, 3)));
+    const sw = await page.$eval(wPanel + ' [data-who]', (b) => ({ label: b.querySelector('label').textContent.trim(), role: b.querySelector('input[data-with]').getAttribute('role'),
+      on: b.querySelector('input[data-with]').checked, line: b.querySelector('.note').textContent, legend: !!b.querySelector('[data-legend]') }));
+    check(sw.label === 'Watching with someone' && sw.role === 'switch' && !sw.on, 'the partner mode is a switch that says what it is: Watching with someone, off', JSON.stringify(sw));
+    check(sw.line === 'Mark what each of you has seen, and find films neither of you has.' && !sw.legend, 'one line says what it is for; no legend while it is off', JSON.stringify(sw));
+    check(!/Just me|With partner/.test(await page.$eval(wPanel + ' [data-slot="list"]', (n) => n.innerText)), 'the old “With partner / Just me” words are gone', '');
 
-    await page.click(wPanel + ' [data-who] button:has-text("With")');
+    await page.click(wPanel + ' [data-who] input[data-with]');
     await page.waitForSelector('.sheet-body input[name=partner]');
     await page.fill('.sheet-body input[name=partner]', '  Sam  ');
     await page.click('.sheet-body button[type=submit]');
     await page.waitForSelector('#sheet[hidden]', { state: 'attached' });
     check((await dots()).every((d) => d[1] === '00'), 'With Sam: a second dot on every poster', JSON.stringify((await dots()).slice(0, 3)));
-    check(await page.$eval(wPanel + ' [data-who] button.on', (b) => b.textContent) === 'With Sam', 'the switch reads With Sam', '');
+    const on = await page.$eval(wPanel + ' [data-who]', (b) => ({ on: b.querySelector('input[data-with]').checked,
+      legend: [...b.querySelectorAll('[data-legend] .wwho')].map((w) => w.textContent + ':' + [...w.querySelectorAll('i')].map((i) => (i.classList.contains('on') ? 1 : 0)).join('')) }));
+    check(on.on && JSON.stringify(on.legend) === '["You:10","Sam:01"]', 'on: the legend names the two dots, first yours, second Sam’s', JSON.stringify(on));
 
     const k = (await wTiles(page))[4];
     await page.click(wPanel + ' [data-k="' + k + '"]');
@@ -3495,8 +3783,14 @@ async function theWatch(browser, base) {
     await page.click(wPanel + ' [data-show] button:has-text("Neither of us")');
     check((await wTiles(page)).length === 58 && !(await wTiles(page)).includes(k) && !(await wTiles(page)).includes(k2), 'Neither of us leaves out both seen films', (await wTiles(page)).length);
     await page.click(wPanel + ' [data-show] button:has-text("All")');
-    await page.click(wPanel + ' [data-who] button:has-text("Just me")');
-    check((await dots()).every((d) => d[1].length === 1) && Object.fromEntries(await dots())[k] === '1', 'Just me again: one dot, and yours is kept', '');
+    await page.click(wPanel + ' [data-who] [data-rename]');
+    await page.waitForSelector('.sheet-body input[name=partner]');
+    check(await page.$eval('.sheet-body input[name=partner]', (i) => i.value) === 'Sam', 'Change name opens the name, filled in', '');
+    await page.click('.sheet-head .iconbtn');
+    await page.waitForSelector('#sheet[hidden]', { state: 'attached' });
+    await page.click(wPanel + ' [data-who] input[data-with]');
+    check((await dots()).every((d) => d[1].length === 1) && Object.fromEntries(await dots())[k] === '1' && !(await page.$(wPanel + ' [data-legend]')),
+      'switched off: one dot, yours is kept, and the legend goes', '');
 
     /* rating, signed out: told it is one email, nothing sent */
     await page.click(wPanel + ' [data-k="' + k + '"]');
@@ -3879,6 +4173,22 @@ async function theWatch(browser, base) {
     let s = await shown();
     const ids = (m, kind) => (kind === 'tv' ? months.get(m).tv.map((k) => String(TV_BASE + Number(k.slice(1)))) : [...months.get(m).theaters, ...months.get(m).streaming].map((k) => k.slice(1)));
     check(s.m === yearAgo && s.title === name(yearAgo), 'Back then opens a year ago: ' + name(yearAgo), JSON.stringify(s));
+    const bhead = await page.$eval(wPanel + ' [data-sec="back"]', (h) => ({ title: h.querySelector('h2').textContent, sub: (h.querySelector('p') || {}).textContent, sub2: h.closest('[data-slot]').querySelector('.dateline .s').textContent }));
+    check(bhead.title === 'Back then' && bhead.sub === 'Rotten Tomatoes’ front page, month by month' && bhead.sub2 === '', 'it says what it is: Rotten Tomatoes’ front page, month by month', JSON.stringify(bhead));
+    const n0 = s.ids.length;
+    const allBtn = () => page.$eval(wPanel + ' [data-back-all]', (b) => [b.textContent, b.dataset.backAll, b.getAttribute('aria-expanded')]);
+    check(JSON.stringify(await allBtn()) === JSON.stringify(['Show all ' + n0, 'closed', 'false']) && await page.$(wPanel + ' [data-slot="back"] .rail[data-back]') !== null,
+      'a rail, with a Show all button', JSON.stringify(await allBtn()));
+    await page.click(wPanel + ' [data-back-all]');
+    const grid = await page.evaluate(() => { const g = document.querySelector('#panel-watch [data-slot="back"] [data-back]'); const r = [...g.querySelectorAll('.poster')].map((a) => a.getBoundingClientRect());
+      return { grid: g.classList.contains('wgrid'), rail: !!g.closest('.rail-wrap'), wrap: g.scrollWidth <= g.clientWidth + 1, rows: new Set(r.map((x) => Math.round(x.top))).size, n: r.length }; });
+    check(grid.grid && !grid.rail && grid.wrap && grid.n === n0 && grid.rows > 1, 'Show all opens every title in a wrapping grid that scrolls down', JSON.stringify(grid));
+    check(JSON.stringify(await allBtn()) === JSON.stringify(['Show less', 'open', 'true']), 'and the button says Show less', JSON.stringify(await allBtn()));
+    await page.click(wPanel + ' [data-slot="back"] .dateline .nav[aria-label="Earlier day"]');
+    check(await page.$(wPanel + ' [data-slot="back"] .wgrid[data-back]') !== null, 'it stays a grid from month to month', '');
+    await page.click(wPanel + ' [data-slot="back"] .dateline .nav[aria-label="Later day"]');
+    await page.click(wPanel + ' [data-back-all]');
+    check(await page.$(wPanel + ' [data-slot="back"] .rail[data-back]') !== null && (await allBtn())[1] === 'closed', 'Show less folds it back into the rail', '');
     check(JSON.stringify(s.ids) === JSON.stringify(ids(yearAgo)), 'that month’s big films, theaters then streaming', JSON.stringify(s.ids));
     await page.click(wPanel + ' [data-slot="back"] .dateline .nav[aria-label="Earlier day"]');
     s = await shown();
@@ -3921,6 +4231,14 @@ async function theWatch(browser, base) {
     check(order.indexOf('cta') === order.indexOf('soon') + 1, 'the screening call sits right under Coming soon', order.join(','));
     const cta = await page.$eval(wPanel + ' [data-cta="vote"]', (b) => b.textContent.trim());
     check(cta === 'Vote for the next screening', 'it says what it does, and nothing else', cta);
+    const host = await page.$$eval(wPanel + ' [data-host]', (n) => n.map((p) => ({ slot: p.closest('[data-slot]').dataset.slot, text: p.textContent, href: p.querySelector('a').getAttribute('href'),
+      target: p.querySelector('a').target, link: p.querySelector('a').textContent })));
+    check(JSON.stringify(host.map((h) => h.slot)) === '["cta","vote"]' && host.every((h) => h.text === 'Stephen hosts a movie night with a mixer after. Pick the next film.'),
+      'one line says who is screening, on the call and atop the ballot', JSON.stringify(host));
+    check(host.every((h) => h.href === 'https://www.meetup.com/burlington-social-activites-group/' && h.target === '_blank' && h.link === 'Stephen hosts a movie night'),
+      'and it links to his Meetup group', JSON.stringify(host));
+    const order2 = await page.$eval(wPanel + ' [data-slot="vote"]', (v) => [...v.children].map((c) => c.dataset.sec ? 'sec' : c.dataset.host ? 'host' : c.dataset.ballot ? 'ballot' : c.className));
+    check(order2[0] === 'sec' && order2[1] === 'host', 'the line sits right under the ballot’s title', JSON.stringify(order2));
     const names = await page.$$eval(wPanel + ' [data-theater] button', (n) => n.map((b) => [b.textContent, b.classList.contains('on')]));
     check(JSON.stringify(names.map((x) => x[0])) === '["Partizanfilm","Majestic 10","Essex Cinemas"]', 'the three theaters', JSON.stringify(names));
     check(names.find((x) => x[1])[0] === 'Majestic 10', 'Partizanfilm is closed, so the first open with shows today leads', JSON.stringify(names));
@@ -3980,7 +4298,7 @@ async function theWatch(browser, base) {
       ['m' + t1.id]: { id: t1.id, k: 'movie', t: '<img src=x onerror=alert(1)>', y: t1.y, d: t1.d, g: [], o: '', p: '/../../evil.jpg' },
       t1399: { id: 1399, k: 'tv', t: 'A Show', y: 2011, d: '2011-04-17', g: ['Drama'], o: '', p: '/sh.jpg' },
       m42: { id: 99, k: 'movie', t: 'Key and id disagree', y: 2020, d: '2020-01-01', g: [], o: '', p: '' } },
-      months: [{ m: m(12), src: 'rt', theaters: ['m' + t0.id, 'm42'], streaming: ['m' + t1.id], tv: ['t1399'] }, { m: 'not-a-month', theaters: ['m' + t0.id] }] };
+      months: [{ m: m(12), src: 'rt', theaters: ['m' + t0.id, 'm42'], streaming: ['m' + t1.id], tv: ['t1399'] }, { m: m(13), src: 'tmdb', theaters: ['m' + t0.id], tv: [] }, { m: 'not-a-month', theaters: ['m' + t0.id] }] };
     const showtimes = { v: 1, days: [today], theaters: [
       { id: 'majestic10', name: 'Majestic 10', town: 'Williston', url: 'https://www.majestic10.com/movies', ok: true, closed: false, back: '',
         days: { [today]: [{ t: films.now[0].t, id: films.now[0].id, p: films.now[0].p, times: ['23:59'] }, { t: '<b>Bold</b> Title', p: '/x.jpg', times: ['23:59', 'bad'] }] } },
@@ -3993,6 +4311,10 @@ async function theWatch(browser, base) {
     check(back.length === 2 && back[0][0] === String(t0.id) && back[0][2] === 'https://image.tmdb.org/t/p/w342' + t0.p, 'Back then: TMDB posters at w342, a key that disagrees with its id left out', JSON.stringify(back));
     check(back[1][1] === '<img src=x onerror=alert(1)>' && !back[1][2] && !(await page.$(wPanel + ' [data-back] img[src="x"]')), 'a title is text, never markup, and a bad poster path is dropped', JSON.stringify(back[1]));
     check(await page.$eval(wPanel + ' [data-slot="back"] .dateline b', (b) => b.textContent) === new Intl.DateTimeFormat('en-US', { timeZone: 'UTC', month: 'long', year: 'numeric' }).format(new Date(m(12) + '-15T12:00:00Z')), 'and the month is named', '');
+    check(!(await page.$(wPanel + ' [data-back-all]')), 'two titles fit the rail: no Show all', '');
+    await page.click(wPanel + ' [data-slot="back"] .dateline .nav[aria-label="Earlier day"]');
+    check(await page.$eval(wPanel + ' [data-slot="back"] .dateline .s', (n) => n.textContent) === 'Most popular on TMDB', 'a month the archive missed says it is TMDB’s most popular, not the front page', '');
+    await page.click(wPanel + ' [data-slot="back"] .dateline .nav[aria-label="Later day"]');
     const th = await page.$$eval(wPanel + ' [data-theater] button', (n) => n.map((b) => b.textContent));
     check(JSON.stringify(th) === '["Partizanfilm","Majestic 10","Essex Cinemas"]', 'theaters are the known three, whatever the file adds', JSON.stringify(th));
     const rows = await page.$$eval(wPanel + ' [data-showing] .lrow', (n) => n.map((r) => [r.querySelector('.t').textContent, r.querySelector('[data-times]').textContent, r.querySelector('img') && r.querySelector('img').getAttribute('src')]));
@@ -4543,19 +4865,19 @@ async function theVintage(browser, base) {
   await group('Vintage, signed out: the finds show, posting asks for the sign-in (demo)', async () => {
     const { ctx, page, errors, supabase } = await vintageDemo(browser, base);
     const grids = await page.evaluate(() => Object.fromEntries([...document.querySelectorAll('.panel:not([hidden]) [data-grid]')].map((g) => [g.dataset.grid, g.querySelectorAll('.card.board, .ftile').length])));
-    check(grids.spotted === 8 && grids.swaps === 3 && grids.fit === 3 && grids.sent === 1, 'eight finds, three swaps, three fit checks and one design sent in, from the demo', JSON.stringify(grids));
+    check(grids.spotted === 8 && grids.swaps === 3 && grids.fit === 3 && grids.sent === 3, 'eight finds, three swaps, three fit checks and three designs sent in, from the demo', JSON.stringify(grids));
     const lefts = await page.$$eval(vslot('spotted') + ' .card.board', (cs) => cs.map((c) => (c.querySelector('.tag-left') || {}).textContent || ''));
     check(lefts.every((t) => /^\d+d left$/.test(t)) && new Set(lefts).size > 4, 'every find shows its days left, and they differ', JSON.stringify(lefts));
     const votes = await page.$$eval(vslot('spotted') + ' [data-act=bvote]', (bs) => bs.map((b) => b.getAttribute('aria-label')));
     check(votes.every((v) => v === 'I’d want this'), 'the vote on a find is “I’d want this”', JSON.stringify(votes.slice(0, 2)));
     check(!(await page.$(vslot('spotted') + ' [data-act=vgot]')), 'nobody signed in owns a find, so no “Someone got it”', '');
     const chipsRow = await page.$$eval('#subnav .chip', (cs) => cs.map((c) => c.dataset.chip));
-    check(JSON.stringify(chipsRow) === JSON.stringify(['fit', 'spotted', 'newin', 'shops', 'swaps', 'tees']), 'the chip row is the table of contents: Fit checks, Spotted, New in, Shops, Swaps, Make a tee', JSON.stringify(chipsRow));
-    await page.click('#subnav .chip[data-chip="swaps"]');
-    /* a smooth scroll, and the six shops above Swaps make it a long one */
-    await page.waitForFunction((sel) => { const t = document.querySelector(sel).getBoundingClientRect().top; return t >= 0 && t < 300; }, vslot('swaps'), { timeout: 3000 }).catch(() => {});
-    const swapTop = await page.$eval(vslot('swaps'), (s) => Math.round(s.getBoundingClientRect().top));
-    check(swapTop >= 0 && swapTop < 300, 'a chip scrolls its section up under the mast', swapTop);
+    check(JSON.stringify(chipsRow) === JSON.stringify(['fit', 'spotted', 'swaps', 'newin', 'shops', 'tees']), 'the chip row is the table of contents: Fit checks, Spotted, Swaps (up top, by Spotted), New in, Shops, Make a tee', JSON.stringify(chipsRow));
+    await page.click('#subnav .chip[data-chip="tees"]');
+    /* a smooth scroll, and the fourteen shops above Make a tee make it a long one */
+    await page.waitForFunction((sel) => { const t = document.querySelector(sel).getBoundingClientRect().top; return t >= 0 && t < 300; }, vslot('tees'), { timeout: 4000 }).catch(() => {});
+    const teeTop = await page.$eval(vslot('tees'), (s) => Math.round(s.getBoundingClientRect().top));
+    check(teeTop >= 0 && teeTop < 300, 'a chip scrolls its section up under the mast', teeTop);
     await page.click(vslot('spotted') + ' .addrow button');
     await page.waitForSelector('.sheet-body .linkrow');
     check(/Sign in to post\./.test(await page.$eval('.sheet-body', (b) => b.innerText)) && !(await page.$('.sheet-body form')), 'Post a find, signed out: the sign-in note and no form', '');
@@ -4584,7 +4906,9 @@ async function theVintage(browser, base) {
         spotHead: q('spotted').querySelector('.sec h2').textContent, spotHeadBottom: q('spotted').querySelector('.sec').getBoundingClientRect().bottom,
         spotCard: q('spotted').querySelector('.card.board').getBoundingClientRect().top };
     });
-    check(JSON.stringify(top.order.slice(0, 3)) === '["fit","spotted","newin"]' && top.fitHead === 'Fit checks' && top.spotHead === 'Spotted this week', 'Fit checks leads the tab, then Spotted this week, then New in', JSON.stringify(top));
+    check(JSON.stringify(top.order.slice(0, 4)) === '["fit","spotted","swaps","newin"]' && top.fitHead === 'Fit checks' && top.spotHead === 'Spotted this week', 'Fit checks leads the tab, then Spotted this week, then Swaps (moved up from the bottom), then New in', JSON.stringify(top));
+    const why = await page.$eval(vslot('spotted') + ' .sec + p', (p) => p.textContent).catch(() => '');
+    check(why === 'Saw something great that wasn’t your size? Post it so someone else can grab it.', 'one plain line under Spotted this week says what it is for', why);
     check(top.fitBottom <= top.vh && top.spotHeadBottom <= top.vh && top.spotCard < top.vh, 'at 390 by 844 the fit tiles, the Spotted head and the first find are all on the first screen', JSON.stringify(top));
     const tiles = await page.$$eval(vslot('fit') + ' .ftile', (ts) => ts.map((t) => ({ k: t.dataset.k, pic: !!t.querySelector('.c-media.r45 .ph, .c-media.r45 img'), t: t.querySelector('.t').textContent, s: t.querySelector('.s').textContent })));
     check(tiles.length === 3 && tiles.every((t) => t.pic && /^b-/.test(t.k) && t.t && t.s), 'each fit check is a photo tile with its title and first name', JSON.stringify(tiles));
@@ -4780,6 +5104,9 @@ async function theVintage(browser, base) {
     const big = [];
     for (const x of d.designs) { const b = await readFile(path.join(APP, x.img)); if (b.length >= 60000) big.push(x.img); }
     check(d.designs.length >= 6 && !big.length, d.designs.length + ' previews in all-day/assets/merch, each under 60 KB', big.join(', '));
+    const builder = await readFile(path.join(REPO, 'scripts/build_merch_rail.py'), 'utf8');
+    check(/variant\.get\("file"\)/.test(builder) && !/front\.get\("prev"\)|design\.get\("front"\)/.test(builder),
+      'each preview is the full design (the merch data’s variant art), not the small left-chest patch it calls `front`', '');
     const { ctx, page, errors } = await newPage(browser, base, { viewport: { width: 1280, height: 800 } });
     await page.goto(base + '/all-day/#vintage/tees');
     await settle(page);
@@ -4927,6 +5254,199 @@ async function theVintage(browser, base) {
     check(/Camel’s Hump in gouache by Dev/.test(shirt.text) && !/Art wall/.test(shirt.text) && /submissions\/art-1\.jpg$/.test(shirt.img), 'an old Art “Put it on a shirt” link still opens the piece here, picture, title and maker, with no button to a wall that has gone', JSON.stringify(shirt));
     check(!/\$\s?\d|\bprice\b/i.test(shirt.text), 'and it names no price', shirt.text);
     check(calls.some((c) => c.fn === 'nn_posts_list' && c.args.p_board === 'art' && JSON.stringify(c.args.p_filter) === '{"meta":{"shirt":"yes"}}'), 'it looks only among Art posts whose maker said yes to a shirt', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  /* --------------------------------------------- colour in the shop guide */
+  /* The kind a shop's colour comes from: its first kind, as vintage.js reads it */
+  const vKind = (k) => (/vintage/i.test(k) ? 'vintage' : /thrift|restore/i.test(k) ? 'thrift' : /consign/i.test(k) ? 'consign' : /antique/i.test(k) ? 'antique' : /book/i.test(k) ? 'books' : 'thrift');
+  /* contrast of two computed colours (rgb() or color(srgb …)), WCAG's formula */
+  const CONTRAST = `(() => {
+    const lum = (c) => { const m = /rgba?\\(([^)]+)\\)/.exec(c); const n = /color\\(srgb ([^)]+)\\)/.exec(c);
+      const v = m ? m[1].split(/[\\s,\\/]+/).filter(Boolean).slice(0, 3).map((x) => Number(x) / 255) : n[1].split(/[\\s\\/]+/).filter(Boolean).slice(0, 3).map(Number);
+      const f = (x) => (x <= 0.04045 ? x / 12.92 : ((x + 0.055) / 1.055) ** 2.4); return 0.2126 * f(v[0]) + 0.7152 * f(v[1]) + 0.0722 * f(v[2]); };
+    return (a, b) => { const [x, y] = [lum(a), lum(b)].sort((p, q) => q - p); return (x + 0.05) / (y + 0.05); };
+  })()`;
+  for (const scheme of ['light', 'dark']) await group('Vintage, the shop guide in colour: a badge per kind, the kinds in colour, a divider per neighborhood (live, ' + scheme + ')', async () => {
+    const file = await vintageShops();
+    const { ctx, page, errors } = await newPage(browser, base, { scheme });
+    await page.goto(base + '/all-day/#vintage/shops');
+    await settle(page);
+    await page.waitForSelector(vslot('shops') + ' .lrow.vshop');
+    const g = await page.evaluate(([sel, contrast]) => {
+      const ratio = eval(contrast);
+      const probe = document.createElement('i'); probe.style.color = 'var(--paper)'; document.body.appendChild(probe);
+      const paper = getComputedStyle(probe).color; probe.remove();
+      const host = document.querySelector(sel);
+      const rows = [...host.querySelectorAll('.lrow.vshop')].map((r) => { const b = r.querySelector('.num.vbadge'), cs = getComputedStyle(b);
+        return { cls: b.className, bg: cs.backgroundColor, ink: cs.color, contrast: ratio(cs.backgroundColor, cs.color), weight: Number(getComputedStyle(r.querySelector('.t')).fontWeight),
+          kinds: [...r.querySelectorAll('[data-kinds] .vk')].map((k) => ({ cls: k.className, text: k.textContent, contrast: ratio(getComputedStyle(k).color, paper) })) }; });
+      const hoods = [...host.querySelectorAll('.tdiv.vhood')].map((d) => { const cs = getComputedStyle(d); return { name: d.dataset.hood, line: cs.borderBottomColor, w: cs.borderBottomWidth, ink: cs.color }; });
+      const plain = getComputedStyle(host.querySelector('.lrow.vshop')).borderBottomColor;
+      const keys = [...host.querySelectorAll('[data-keys] .vk')].map((k) => ({ text: k.textContent, dot: getComputedStyle(k.querySelector('i')).backgroundColor }));
+      return { rows, hoods, plain, keys, order: [...host.querySelector('.vshops').children].map((c) => (c.classList.contains('vhood') ? 'h:' + c.dataset.hood : c.classList.contains('vshop') ? 'r' : '')).filter(Boolean) };
+    }, [vslot('shops'), CONTRAST]);
+    check(g.rows.length === file.shops.length && g.rows.every((r, i) => r.cls.includes('k-' + vKind(file.shops[i].kinds[0]))), 'every number is a badge in its shop’s first kind’s colour', JSON.stringify(g.rows.slice(0, 3).map((r) => r.cls)));
+    const byKind = {};
+    g.rows.forEach((r) => { byKind[/k-(\w+)/.exec(r.cls)[1]] = r.bg; });
+    check(Object.keys(byKind).length === 5 && new Set(Object.values(byKind)).size === 5, 'five kinds, five colours: thrift, vintage, consignment, antiques, used books', JSON.stringify(byKind));
+    check(g.rows.every((r) => r.contrast >= 4.5), 'every badge’s number reads on its colour (4.5:1 or better)', JSON.stringify(g.rows.map((r) => r.contrast.toFixed(1))));
+    check(g.rows.every((r) => r.weight >= 700), 'the shop’s name is a touch bolder', JSON.stringify(g.rows.slice(0, 2).map((r) => r.weight)));
+    const allKinds = g.rows.flatMap((r) => r.kinds);
+    check(allKinds.length && allKinds.every((k) => /k-\w+/.test(k.cls) && k.contrast >= 4.5) && g.rows.every((r, i) => r.kinds.map((k) => k.text).join() === file.shops[i].kinds.join()),
+      'each kind is named in its own colour, readable on the page', JSON.stringify(allKinds.filter((k) => k.contrast < 4.5)));
+    const groups = file.shops.map((s) => (s.after_walk ? 'Used books' : s.neighborhood)).filter((x, i, a) => !i || x !== a[i - 1]);
+    check(JSON.stringify(g.hoods.map((h) => h.name)) === JSON.stringify(groups), 'a divider names each neighborhood as the walk enters it, Used books last', JSON.stringify(g.hoods.map((h) => h.name)));
+    check(g.order[0] === 'h:' + groups[0] && g.order.filter((x) => x === 'r').length === file.shops.length, 'the first shop sits under its neighborhood', g.order.slice(0, 3).join(','));
+    check(g.hoods.every((h) => h.w === '2px' && h.line !== g.plain && h.line === g.hoods[0].line), 'the dividers are one colour, not the grey hairline between shops', JSON.stringify([g.hoods[0], g.plain]));
+    check(JSON.stringify(g.keys.map((k) => k.text)) === JSON.stringify(['Vintage', 'Thrift', 'Consignment', 'Antiques', 'Used books']) && new Set(g.keys.map((k) => k.dot)).size === 5,
+      'a key under the head names the five colours', JSON.stringify(g.keys));
+    await pageRules(page, 'vintage', 390);
+    await page.$eval(vslot('shops'), (s) => s.scrollIntoView());
+    await page.screenshot({ path: path.join(SHOTS, 'live-vintage-guide-' + scheme + '.png') });
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  /* ------------------------------------------------------------- the shop map */
+  /* Leaflet is not on this machine, as for Food: the stand-in answers the
+     pinned URL, the integrity setter records the hashes, and the fake L
+     records what the map was told: markers with their number icons, the
+     bounds it was fitted to, any setView. */
+  const vFakeSri = `window.__sri = [];
+    Object.defineProperty(HTMLScriptElement.prototype, 'integrity', { configurable: true, set(v) { window.__sri.push(v); }, get() { return ''; } });
+    Object.defineProperty(HTMLLinkElement.prototype, 'integrity', { configurable: true, set(v) { window.__sri.push(v); }, get() { return ''; } });`;
+  const V_FAKE_L = `window.L = (() => {
+    const maps = [];
+    const layer = (kind, at, o) => ({ kind, at, o, addTo(m) { m.layers.push(this); return this; }, bindTooltip(t) { this.tip = t; return this; },
+      on(ev, fn) { this['on' + ev] = fn; return this; }, remove() { this.gone = true; } });
+    return { maps, map(el, opts) { const m = { el, opts, layers: [], fits: [], views: [], fitBounds(b, o) { this.fits.push(b); return this; }, setView(c, z) { this.views.push(c); return this; },
+      setZoom(z) { this.views.push(z); return this; }, getCenter() { return [44.47, -73.15]; }, getZoom() { return 12; },
+      invalidateSize() {}, remove() { this.removed = true; }, getContainer() { return el; } }; maps.push(m); return m; },
+      tileLayer(u, o) { return layer('tiles', u, o); }, circleMarker(c, o) { return layer('dot', c, o); }, marker(c, o) { return layer('pin', c, o); },
+      divIcon(o) { return { divIcon: o }; } };
+  })();`;
+  const vWithLeaflet = async (page, asked) => {
+    await page.addInitScript(vFakeSri);
+    await page.route(/unpkg\.com\/leaflet@1\.9\.4\/dist\/leaflet\.(js|css)$/, (r) => { asked.push(r.request().url());
+      return /\.js$/.test(r.request().url()) ? r.fulfill({ status: 200, body: V_FAKE_L, contentType: 'text/javascript' }) : r.fulfill({ status: 200, body: '', contentType: 'text/css' }); });
+  };
+  const vMap = (page) => page.evaluate(() => { const m = window.L && window.L.maps && window.L.maps[window.L.maps.length - 1]; if (!m) return null;
+    return { inSheet: !!m.el.closest('.sheet-body'), fits: m.fits, views: m.views, tiles: m.layers.filter((l) => l.kind === 'tiles').map((l) => ({ u: l.at, attr: l.o.attribution })),
+      pins: m.layers.filter((l) => l.kind === 'pin').map((l) => ({ at: l.at, tip: l.tip, title: l.o.title, html: l.o.icon.divIcon.html, cls: l.o.icon.divIcon.className })),
+      me: m.layers.filter((l) => l.kind === 'dot' && /vm-me/.test(l.o.className) && !l.gone).map((l) => l.at) }; });
+  const VCH = [44.4758, -73.2128];
+  const vMi = (a, b) => { const R = 3958.8, rad = Math.PI / 180, dLat = (b[0] - a[0]) * rad, dLon = (b[1] - a[1]) * rad;
+    return 2 * R * Math.asin(Math.sqrt(Math.sin(dLat / 2) ** 2 + Math.cos(a[0] * rad) * Math.cos(b[0] * rad) * Math.sin(dLon / 2) ** 2)); };
+
+  await group('Vintage, the shop map: a picture by the guide’s head, every shop a numbered pin, a pin opens its shop (live, location refused)', async () => {
+    const file = await vintageShops();
+    const pinned = file.shops.map((s, i) => ({ s, i })).filter(({ s }) => Array.isArray(s.coords) && s.coords.length === 2);
+    const town = pinned.filter(({ s }) => vMi(s.coords, VCH) <= 1).map(({ s }) => s.coords);
+    const { ctx, page, errors } = await newPage(browser, base);
+    const asked = [], out = [];
+    await vWithLeaflet(page, asked);
+    page.on('request', (q) => { if (!q.url().startsWith(base)) out.push(q.url()); });
+    await page.goto(base + '/all-day/#vintage/shops');
+    await settle(page);
+    await page.waitForSelector(vslot('shops') + ' .sec .mapbtn');
+    const btn = await page.evaluate((sel) => { const b = document.querySelector(sel + ' .sec .mapbtn'), sec = b.closest('.sec');
+      return { last: sec.lastElementChild === b, head: sec.querySelector('h2').textContent, label: b.getAttribute('aria-label'), text: b.innerText,
+        dots: [...b.querySelectorAll('.vm-dot')].map((d) => d.getAttribute('class')), fills: new Set([...b.querySelectorAll('.vm-dot')].map((d) => getComputedStyle(d).fill)).size }; }, vslot('shops'));
+    check(btn.last && btn.head === 'The shop guide' && /Map/.test(btn.text), 'a Map button sits beside “The shop guide”', JSON.stringify(btn));
+    check(btn.dots.length >= 8 && btn.dots.every((c) => /vm-dot k-\w+/.test(c)) && btn.fills >= 3, 'its picture is the walk as dots, each in its kind’s colour', JSON.stringify(btn));
+    check(btn.label === 'Map of ' + pinned.length + ' shops' && pinned.length === file.shops.length, 'it maps every shop in the guide (' + pinned.length + ')', btn.label);
+    check(!asked.length && !out.some((u) => /unpkg|tile\.openstreetmap/.test(u)) && await page.evaluate(() => !window.L), 'before a tap: no Leaflet, no tiles, nothing fetched', out.join(', '));
+    await page.click(vslot('shops') + ' .mapbtn');
+    await page.waitForFunction(() => window.L && window.L.maps && window.L.maps.length && window.L.maps[0].layers.length, null, { timeout: 6000 }).catch(() => {});
+    await page.waitForTimeout(150);
+    const m = await vMap(page);
+    check(asked.some((u) => /leaflet\.js$/.test(u)) && asked.some((u) => /leaflet\.css$/.test(u)), 'a tap loads Leaflet 1.9.4 and its stylesheet', asked.join(', '));
+    check(await page.evaluate(() => window.__sri.includes('sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=') && window.__sri.includes('sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=')),
+      'with the integrity hashes Food and the guide’s own map pages use', await page.evaluate(() => window.__sri.join(', ')));
+    check(m && m.inSheet && await page.$eval('.sheet-head h2', (h) => h.textContent) === 'Shop map', 'the map opens in a sheet', JSON.stringify(m && m.inSheet));
+    check(m && m.tiles.length === 1 && m.tiles[0].u === 'https://tile.openstreetmap.org/{z}/{x}/{y}.png' && /OpenStreetMap/.test(m.tiles[0].attr), 'on OpenStreetMap’s tiles from its one tile host, credited', JSON.stringify(m && m.tiles));
+    check(m && m.pins.length === pinned.length && m.pins.every((p, n) => { const { s, i } = pinned[n];
+      return p.html === String(i + 1) && p.title === (i + 1) + '. ' + s.name && JSON.stringify(p.at) === JSON.stringify(s.coords) && p.cls === 'vm-pin k-' + vKind(s.kinds[0]); }),
+      'every shop is a pin at its own spot, carrying its number from the guide, in its kind’s colour', JSON.stringify(m && m.pins.slice(0, 2)));
+    check(m && m.fits.length >= 1 && m.fits.every((f) => JSON.stringify(f) === JSON.stringify(town)) && !m.views.length && !m.me.length,
+      'it opens on the ' + town.length + ' shops a walk away, with no reader pin and no location asked', JSON.stringify(m && { fits: m.fits.length, first: m.fits[0] && m.fits[0].length, views: m.views }));
+    await page.click('.sheet-body .vspan');
+    const wide = await vMap(page);
+    check(/^On foot$/.test(await page.$eval('.sheet-body .vspan', (b) => b.textContent)) && wide.fits.length && wide.fits[wide.fits.length - 1].length === pinned.length,
+      '“All ' + pinned.length + '” fits every shop, Essex to Shelburne', JSON.stringify(wide.fits.map((f) => f.length)));
+    await page.click('.sheet-body .nearme');
+    await page.waitForSelector('#toast:not([hidden])', { timeout: 6000 }).catch(() => {});
+    check(/Location is off/.test(await page.$eval('#toast', (t) => t.textContent)) && !(await vMap(page)).me.length, 'Near me, refused: says so, and no dot', '');
+    const pick = pinned.find(({ i }) => i === 11) || pinned[pinned.length - 1];
+    await page.evaluate((title) => { const m = window.L.maps[window.L.maps.length - 1]; m.layers.find((l) => l.o && l.o.title === title).onclick(); }, (pick.i + 1) + '. ' + pick.s.name);
+    const sheet = await page.evaluate(() => ({ h: document.querySelector('.sheet-head h2').textContent, num: (document.querySelector('.sheet-body .vbadge') || {}).textContent,
+      cls: (document.querySelector('.sheet-body .vbadge') || {}).className, text: document.querySelector('.sheet-body').innerText, back: !!document.querySelector('.sheet-body [data-act=vmapback]') }));
+    check(sheet.h === pick.s.name && sheet.num === String(pick.i + 1) && sheet.cls.includes('k-' + vKind(pick.s.kinds[0])) && sheet.back, 'a pin opens its shop: the same number, its colour, and the way back to the map', JSON.stringify(sheet));
+    check(sheet.text.includes(pick.s.neighborhood) && (!pick.s.address || sheet.text.includes(pick.s.address.replace(/,\s*VT\s*\d{5}$/, ''))), 'with the shop’s neighborhood and street', sheet.text.slice(0, 160));
+    await page.click('.sheet-body [data-act=vmapback]');
+    await page.waitForTimeout(200);
+    const backTo = await vMap(page);
+    check(await page.$eval('.sheet-head h2', (h) => h.textContent) === 'Shop map' && backTo.pins.length === pinned.length, 'Back to the map puts the map back up', '');
+    check(JSON.stringify(backTo.views[0]) === '[44.47,-73.15]' && !backTo.fits.length && await page.$eval('.sheet-body .vspan', (b) => b.textContent) === 'On foot',
+      'where the reader left it: the same view, still on All', JSON.stringify({ views: backTo.views, fits: backTo.fits.length }));
+    await page.screenshot({ path: path.join(SHOTS, 'live-vintage-map.png') });
+    await page.goto(base + '/all-day/#vintage/map');
+    await page.reload();
+    await page.waitForSelector('.sheet-head h2', { timeout: 15000 }).catch(() => {});
+    check(await page.$eval('.sheet-head h2', (h) => h.textContent).catch(() => '') === 'Shop map', '#vintage/map opens the map', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Vintage, the shop map with location allowed: the reader’s dot, and the map stays put (live)', async () => {
+    const ME = { latitude: 44.4801, longitude: -73.2101 };   // up Church Street, by City Hall Park
+    const { ctx, page, errors } = await newPage(browser, base, { geo: ME });
+    const asked = [], sent = [];
+    await vWithLeaflet(page, asked);
+    page.on('request', (q) => sent.push(q.url() + ' ' + (q.postData() || '')));
+    await page.addInitScript(() => { const g = navigator.geolocation, ask = g.getCurrentPosition.bind(g); window.__geo = 0; g.getCurrentPosition = (...a) => { window.__geo++; return ask(...a); }; });
+    await page.goto(base + '/all-day/#vintage/shops');
+    await settle(page);
+    await page.waitForSelector(vslot('shops') + ' .sec .mapbtn');
+    check(await page.evaluate(() => window.__geo) === 0, 'nothing asks for the location on load', '');
+    await page.click(vslot('shops') + ' .mapbtn');
+    await page.waitForFunction(() => { const m = window.L && window.L.maps && window.L.maps[0]; return m && m.layers.some((l) => l.kind === 'dot'); }, null, { timeout: 6000 }).catch(() => {});
+    await page.waitForTimeout(200);
+    const m = await vMap(page);
+    check(m && m.me.length === 1 && JSON.stringify(m.me[0]) === JSON.stringify([ME.latitude, ME.longitude]), 'allowed before, the map shows the reader’s dot', JSON.stringify(m && m.me));
+    const first = m && JSON.stringify(m.fits[0]);
+    check(m && !m.views.length && m.fits.every((f) => JSON.stringify(f) === first) && !m.fits.some((f) => JSON.stringify(f).includes(String(ME.latitude))),
+      'but the map is never moved to the reader: it stays on the shops', JSON.stringify(m && { views: m.views, fits: m.fits.length }));
+    check(await page.$eval('.sheet-body .nearme', (b) => b.hidden), 'and Near me steps aside', '');
+    const lat = String(ME.latitude), lon = String(ME.longitude);
+    check(!sent.some((x) => x.includes(lat) || x.includes(lon)), 'the position is never sent anywhere', sent.filter((x) => x.includes(lat) || x.includes(lon)).join(', '));
+    const stored = await page.evaluate(() => JSON.stringify(Object.entries(localStorage)) + JSON.stringify(Object.entries(sessionStorage)) + document.cookie);
+    check(!stored.includes(lat) && !stored.includes(lon), 'and never stored', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Vintage, Top designs: the designs neighbors sent in, most “I’d wear this” first, and the vote works (demo)', async () => {
+    const { ctx, page, errors } = await vintageDemo(browser, base);
+    const row = await page.evaluate((sel) => { const host = document.querySelector(sel);
+      const r = host.querySelector('[data-grid=sent]');
+      return { head: host.querySelector('.tdiv').textContent, rail: r.classList.contains('rail') && r.classList.contains('vtop'),
+        cards: [...r.querySelectorAll('.card.board')].map((c) => ({ k: c.dataset.k, title: c.querySelector('.b-title').textContent, n: Number(c.querySelector('[data-act=bvote] .n').textContent) || 0, label: c.querySelector('[data-act=bvote]').getAttribute('aria-label') })) }; }, vslot('sent'));
+    check(row.head === 'Top designs' && row.rail, 'the designs sent in are a row called Top designs', JSON.stringify(row.head));
+    check(JSON.stringify(row.cards.map((c) => c.title)) === JSON.stringify(['Champ in the chop, linocut', 'Rainy Church Street, ink', 'Old North End porches']) && row.cards.every((c, i) => !i || c.n <= row.cards[i - 1].n),
+      'sorted by votes, most first', JSON.stringify(row.cards));
+    check(row.cards.every((c) => c.label === 'I’d wear this'), 'the vote on a design is “I’d wear this”', JSON.stringify(row.cards.map((c) => c.label)));
+    const last = row.cards[row.cards.length - 1];
+    await page.$eval(vslot('sent'), (s) => s.scrollIntoView());
+    await page.click(vslot('sent') + ' .card.board[data-k="' + last.k + '"] [data-act=bvote]');
+    await page.waitForTimeout(400);
+    const after = await page.$eval(vslot('sent') + ' .card.board[data-k="' + last.k + '"] [data-act=bvote]', (b) => ({ on: b.getAttribute('aria-pressed'), n: Number(b.querySelector('.n').textContent) }));
+    check(after.on === 'true' && after.n === last.n + 1, 'a tap on “I’d wear this” counts one more', JSON.stringify([last, after]));
+    const id = last.k.slice(2);
+    const votes = await fakeOf(page, `(f) => f._count('${id}')`);
+    check(votes === last.n + 1, 'and the board has it', String(votes));
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
   });
@@ -5734,7 +6254,7 @@ async function shellFixes(browser, base) {
     for (const f of ['modes/onair.js', 'modes/whatnow.js', 'modes/food.js']) {
       const src = (await readFile(path.join(APP, 'js', f), 'utf8')).replace(/\/\*[\s\S]*?\*\//g, '');
       const made = src.match(/el\('iframe'[^)]*\)|createElement\('iframe'\)/g) || [];
-      check(made.every((m) => /'embed (spotify|bandcamp)'/.test(m)), f + ': every iframe it builds is an .embed', made.join(' '));
+      check(made.every((m) => /'embed (spotify|bandcamp|yt)\b/.test(m)), f + ': every iframe it builds is an .embed', made.join(' '));
       check(!/\.(width|height|frameBorder)\s*=|setAttribute\('(frameborder|seamless)'/.test(src), f + ': and sizes none by hand', '');
     }
     const { ctx, page } = await newPage(browser, base);
