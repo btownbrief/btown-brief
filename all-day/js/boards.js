@@ -31,7 +31,11 @@
 
    put() and votesByWeek() need nn-ROUND2.sql; until it is pasted they
    answer { ok: false, error: 'off' } and the rest of the boards stay live,
-   so a tab can fall back to what it did before.
+   so a tab can fall back to what it did before. The kinds and fields round
+   two added (a Vintage design or fit, a plan's meetup and ages, a film id)
+   are refused by a server without it, so a tab asks boards.roundTwo()
+   (true once the server's rules are version 2) before posting one, and
+   posts the old shape until then.
 
    Every call resolves { ok: true, ... } or { ok: false, error, message } and
    never rejects; `message` is a sentence to show as is. Signed-out readers
@@ -103,6 +107,21 @@ function call(fn, args) {
 }
 
 const changed = (board, id, what) => window.dispatchEvent(new CustomEvent('allday-boards', { detail: { board, id, what } }));
+
+/* Has Stephen pasted nn-ROUND2.sql? The server's rules say: version 2 or
+   later. Asked once a visit, when a tab is about to post a round-two shape;
+   an unanswered ask (offline) is asked again next time. */
+let two = null;
+export function roundTwo() {
+  if (app.demo) return Promise.resolve(true);
+  if (!two) {
+    two = call('nn_rules').then((r) => {
+      if (!r.ok) { two = null; return false; }
+      return Number(r.data && r.data.version) >= 2;
+    });
+  }
+  return two;
+}
 
 /* --------------------------------------------------------------- photos */
 /* A post's photo path, as something art() can draw: the public bucket URL

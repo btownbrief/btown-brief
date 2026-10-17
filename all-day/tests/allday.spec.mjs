@@ -3306,7 +3306,7 @@ async function thePeople(browser, base) {
     await ctx.close();
   });
 
-  await group('People, live: a plan, its extras and posting, over the wire', async () => {
+  for (const v of [1, 2]) await group('People, live: a plan, its extras and posting, over the wire (server rules v' + v + ')', async () => {
     const seen = [];
     const now = new Date();
     const post = (id, title, meta, ago) => ({ id, board: 'people', kind: 'plan', title, body: '', place: 'Foam Brewers', meta, photo: null, author: 'Priya N.', author_arch: 'regular',
@@ -3318,6 +3318,7 @@ async function thePeople(browser, base) {
     const { ctx, page, errors } = await newPage(browser, base, {
       rpc: (fn, body) => {
         seen.push([fn, body]);
+        if (fn === 'nn_rules') return { version: v };
         if (fn === 'nn_posts_list') return body.p_board === 'people' ? [later, sooner, past].concat(created ? [created] : []) : [];
         if (fn === 'nn_people_plan_extras') return { [later.id]: { meetup: true, ages: 'thirties' } };
         if (fn === 'nn_profile_get') return { display_name: 'Robin', neighborhood: null, archetype: null };
@@ -3359,9 +3360,14 @@ async function thePeople(browser, base) {
     const extra = seen.find(([fn]) => fn === 'nn_people_plan_set');
     check(make && make[1].p_board === 'people' && make[1].p_kind === 'plan' && /, 6 pm$/.test(make[1].p_meta.when) && make[1].p_meta.spots === 3,
       'nn_post_create gets a people plan with when and spots', JSON.stringify(make && make[1]));
-    check(make && Object.keys(make[1].p_meta).every((k) => ['when', 'arch', 'spots'].includes(k)), 'its meta holds only the keys the people board’s rules allow', JSON.stringify(make && make[1].p_meta));
-    check(extra && extra[1].p_post === '11111111-aaaa-4aaa-8aaa-000000000009' && extra[1].p_meetup === true && extra[1].p_ages === 'forties',
-      'then nn_people_plan_set records the Meetup box and age band for that plan', JSON.stringify(extra && extra[1]));
+    if (v === 1) {
+      check(make && Object.keys(make[1].p_meta).every((k) => ['when', 'arch', 'spots'].includes(k)), 'on round one’s rules, its meta holds only the keys those rules allow', JSON.stringify(make && make[1].p_meta));
+      check(extra && extra[1].p_post === '11111111-aaaa-4aaa-8aaa-000000000009' && extra[1].p_meetup === true && extra[1].p_ages === 'forties',
+        'then nn_people_plan_set records the Meetup box and age band for that plan', JSON.stringify(extra && extra[1]));
+    } else {
+      check(make && make[1].p_meta.meetup === true && make[1].p_meta.ages === 'forties', 'on round two’s rules, the Meetup box and age band are the plan’s own fields', JSON.stringify(make && make[1].p_meta));
+      check(!extra, 'and the side table is not written', JSON.stringify(extra));
+    }
     check(/Stephen will see you’re down for Meetup/.test(await page.$eval('#toast', (t) => t.textContent)), 'and the toast says so', '');
     check(seen.every(([fn, b]) => !/@/.test(JSON.stringify(b))), 'no call carries an email', '');
     check(!errors.length, 'no console errors', errors.join(' | '));
@@ -3468,8 +3474,8 @@ async function thePeople(browser, base) {
     const mine = p.posts.find((x) => x.title === 'Sunset paddle from North Beach');
     check(mine && mine.meta.meetup === true && mine.meta.ages === 'forties' && /, 6 pm$/.test(mine.meta.when) && mine.meta.spots === 3,
       'it posts through the compose sheet, and the Meetup box lands in its meta', JSON.stringify(mine));
-    const board = await fakeOf(page, (f) => f.posts.filter((x) => x.board === 'people').map((x) => x.meta));
-    check(board.every((m) => !('meetup' in m) && !('ages' in m)), 'on the board itself the post keeps to the rules’ fields; the extras sit in the People table', JSON.stringify(board));
+    const board = await fakeOf(page, `(f) => f.posts.find((x) => x.id === '${mine.id}').meta`);
+    check(board.meetup === true && board.ages === 'forties', 'on the board itself: the box and the band are the plan’s own fields', JSON.stringify(board));
     const k = 'b-' + mine.id;
     const sel = peoplePanel + ' [data-plans] .card.board[data-k="' + k + '"]';
     check(await flashes(page, k), 'the new plan is on the tab, scrolled to and flashed', k);
@@ -3524,6 +3530,30 @@ async function thePeople(browser, base) {
     check(await page.$eval(peoplePanel + ' .arch button[data-arch="trail"]', (b) => b.classList.contains('on')), 'and the tile at the top lights', '');
     await page.click(peoplePanel + ' .arch button[data-arch="new"]');
     check((await peek(page)).arch === 'new', 'the reader can still pick another', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('People, demo: what you’re into follows your profile; who you are never leaves the phone', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/all-day/?demo=1#people');
+    await page.waitForSelector(peoplePanel + ' [data-plans] .card.board');
+    await page.click(peoplePanel + ' [data-tags="I’m into…"] .chip[data-chip="books"]');
+    await page.evaluate(() => import('/all-day/js/auth.js').then((a) => a.demoSignIn()));
+    await page.evaluate(() => import('/all-day/js/boards.js').then((b) => b.setProfile({ display_name: 'Robin' })));
+    const profileOf = () => page.evaluate(() => import('/all-day/js/boards.js').then((b) => (b._fake().profiles.get(b.demoReader) || {}).interests));
+    await page.waitForFunction(() => import('/all-day/js/boards.js').then((b) => ((b._fake().profiles.get(b.demoReader) || {}).interests || []).length === 1), null, { timeout: 4000 }).catch(() => {});
+    check(JSON.stringify(await profileOf()) === '["books"]', 'signing in with a name: the into-tag picked on this phone goes up to the profile', JSON.stringify(await profileOf()));
+    await page.click(peoplePanel + ' [data-tags="I’m into…"] .chip[data-chip="running"]');
+    await page.click(peoplePanel + ' [data-tags="I’m…"] .chip[data-chip="lgbtq"]');
+    await page.waitForTimeout(300);
+    check(JSON.stringify(await profileOf()) === '["running","books"]', 'a tag tapped on the tab is saved to the profile, in the list’s order', JSON.stringify(await profileOf()));
+    check(!/lgbtq/.test(JSON.stringify(await fakeOf(page, (f) => [...f.profiles.values()]))), 'a who-you-are tag never reaches the profile', '');
+    await page.evaluate(() => import('/all-day/js/boards.js').then((b) => b.setProfile({ display_name: 'Robin', interests: ['music'] })));
+    await page.waitForTimeout(300);
+    const p = await peek(page);
+    check(p.tags.includes('music') && !p.tags.includes('running') && !p.tags.includes('books') && p.tags.includes('lgbtq'), 'a change made in the profile sheet is the tab’s; who you are stays as it was', JSON.stringify(p.tags));
+    check(/What you’re into is saved to your profile too/.test(await page.$eval(peoplePanel + ' [data-sec="arch"]', (s) => s.innerText)), 'and the tab says where each kind of tag lives', '');
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
   });
