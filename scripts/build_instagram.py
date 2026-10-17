@@ -545,10 +545,15 @@ def load_ledger(path: pathlib.Path, now: float, budget: int) -> tuple[dict, bool
         out = {"month": month, "spent": spent, "last": last, "runs": runs}
         pend = doc.get("pending")
         if (isinstance(pend, dict) and isinstance(pend.get("handles"), list)
-                and isinstance(pend.get("at"), (int, float))
-                and 0 <= now - pend["at"] <= PENDING_MAX_H * 3600):
-            out["pending"] = {"handles": [norm_handle(h) for h in pend["handles"] if norm_handle(h)],
-                              "tagged": pend.get("tagged") is True, "at": int(pend["at"])}
+                and isinstance(pend.get("at"), (int, float))):
+            prev = pend.get("prev") if isinstance(pend.get("prev"), dict) else {}
+            out["pending"] = {
+                "handles": [norm_handle(h) for h in pend["handles"] if norm_handle(h)],
+                "tagged": pend.get("tagged") is True, "at": int(pend["at"]),
+                "month": pend.get("month"),
+                "prev": {norm_handle(h): int(t) for h, t in prev.items()
+                         if isinstance(t, (int, float)) and not isinstance(t, bool) and t >= 0},
+            }
         return out, True
     except FileNotFoundError:
         why = "no ledger"
@@ -659,16 +664,15 @@ def main() -> int:
                     help="write the payload here instead of all-day/data/instagram.json")
     ap.add_argument("--ledger", type=pathlib.Path, default=None,
                     help="read and write the ledger here instead of data/instagram-ledger.json")
-    ap.add_argument("--dry-run", action="store_true",
-                    help="print this run's plan and its cost; no request, no key, no write")
-    ap.add_argument("--reserve", action="store_true",
-                    help="plan this run and write its credits and its accounts to the "
-                         "ledger, then stop; no request (the workflow pushes it first)")
-    ap.add_argument("--execute", action="store_true",
-                    help="fetch exactly what the last --reserve wrote to the ledger")
+    step = ap.add_mutually_exclusive_group()
+    step.add_argument("--dry-run", action="store_true",
+                      help="print this run's plan and its cost; no request, no key, no write")
+    step.add_argument("--reserve", action="store_true",
+                      help="plan this run and write its credits and its accounts to the "
+                           "ledger, then stop; no request (the workflow pushes it first)")
+    step.add_argument("--execute", action="store_true",
+                      help="fetch exactly what the last --reserve wrote to the ledger")
     args = ap.parse_args()
-    if args.reserve and args.execute:
-        ap.error("--reserve and --execute are two steps, not one")
     ledger_path = args.ledger or LEDGER
 
     accounts = load_roster()
@@ -679,6 +683,21 @@ def main() -> int:
     ledger, ledger_ok = load_ledger(ledger_path, now, budget)
     if args.execute:
         return execute(args, ledger, ledger_path, accounts, now)
+    # A reservation still on the ledger was never executed (--execute clears
+    # it before its first request). Its credits stay counted, which is the
+    # safe side if it did run and its push was lost, but its accounts get
+    # their places in the rotation back, so they are not skipped for a day
+    # (tier 2) or a week (tier 3) without ever having been fetched.
+    old = ledger.pop("pending", None)
+    if old:
+        for h in old["handles"]:
+            if old["prev"].get(h):
+                ledger["last"][h] = old["prev"][h]
+            else:
+                ledger["last"].pop(h, None)
+        log(f"an unexecuted reservation of {len(old['handles'])} account(s) from "
+            f"{dt.datetime.fromtimestamp(old['at'], dt.timezone.utc):%Y-%m-%d %H:%M} UTC: "
+            f"credits kept as spent, rotation places restored")
     credits = allowance(ledger, now, budget)
     if args.only:
         want = {norm_handle(h) for h in args.only.split(",") if norm_handle(h)}
@@ -736,16 +755,16 @@ def main() -> int:
     # landed lets --execute spend it, so the next run can never read a ledger
     # that is missing these credits.
     ledger["spent"] += spend
+    prev_last = {a["h"]: ledger["last"].get(a["h"], 0) for a in picked}
     for a in picked:
         ledger["last"][a["h"]] = int(now)
     roster_h = {a["h"] for a in accounts}
     ledger["last"] = {h: t for h, t in ledger["last"].items() if h in roster_h}
     ledger["runs"].append({"at": dt.datetime.fromtimestamp(now, dt.timezone.utc)
                            .isoformat(timespec="seconds"), "credits": spend})
-    ledger.pop("pending", None)
     if args.reserve:
         ledger["pending"] = {"handles": [a["h"] for a in picked], "tagged": want_tagged,
-                             "at": int(now)}
+                             "at": int(now), "month": ledger["month"], "prev": prev_last}
     save_ledger(ledger_path, ledger)
     log(f"ledger: {spend} reserved for this run, {ledger['spent']} of {budget} this month")
     if args.reserve:
@@ -759,8 +778,16 @@ def execute(args, ledger: dict, ledger_path: pathlib.Path, accounts: list[dict],
     the reservation first, so it can never be spent twice."""
     pend = ledger.get("pending")
     if not pend:
-        log("--execute: no reservation in the ledger (none made, already spent, "
-            f"or older than {PENDING_MAX_H} hours) — nothing fetched")
+        log("--execute: no reservation in the ledger — nothing fetched")
+        return 0
+    # Only a reservation made this Burlington month, in the last few hours,
+    # is spent: last month's credits were counted against last month, and
+    # spending them now would be spending this month's money uncounted. A
+    # refused one stays on the ledger for the next --reserve to unwind.
+    age = now - pend["at"]
+    if pend.get("month") != ledger["month"] or not 0 <= age <= PENDING_MAX_H * 3600:
+        log(f"--execute: the reservation is from {pend.get('month')}, "
+            f"{age / 3600:.1f} hours ago — not spent")
         return 0
     if not api_key():
         log("no Scrape Creators key — set SCRAPECREATORS_API_KEY. Nothing written.")

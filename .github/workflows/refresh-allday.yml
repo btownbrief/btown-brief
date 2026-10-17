@@ -79,8 +79,11 @@ jobs:
       # step spend them, so no later run can read a ledger missing them. A
       # failed reservation (no key, a push race) skips Instagram this run and
       # leaves What Now and sports alone.
+      # Main only: the ledger that counts the credits lives on main, and a
+      # manual run from another branch would spend without counting.
       - name: Reserve Instagram credits
         id: reserve
+        if: github.ref == 'refs/heads/main'
         continue-on-error: true
         env:
           SCRAPECREATORS_API_KEY: ${{ secrets.SCRAPECREATORS_API_KEY }}
@@ -88,7 +91,7 @@ jobs:
         run: |
           git config user.name "btown-brief-bot"
           git config user.email "actions@users.noreply.github.com"
-          git pull --ff-only --quiet origin main || true
+          git pull --ff-only --quiet origin main
           python3 scripts/build_instagram.py --reserve
           if git diff --quiet -- data/instagram-ledger.json; then
             echo "Nothing reserved."
@@ -96,7 +99,7 @@ jobs:
           fi
           git add data/instagram-ledger.json
           git commit -m "Reserve Instagram credits"
-          git push
+          git push origin HEAD:main
           echo "reserved=1" >> "$GITHUB_OUTPUT"
 
       - name: Build What Now
@@ -108,7 +111,7 @@ jobs:
         run: python3 scripts/build_sports.py || echo "sports build skipped"
 
       - name: Build Instagram
-        if: steps.reserve.outputs.reserved == '1'
+        if: ${{ !cancelled() && steps.reserve.outputs.reserved == '1' }}
         timeout-minutes: 30
         env:
           SCRAPECREATORS_API_KEY: ${{ secrets.SCRAPECREATORS_API_KEY }}

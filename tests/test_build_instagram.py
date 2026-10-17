@@ -398,7 +398,8 @@ class Build(unittest.TestCase):
         self.assertIsNone(got)
         self.assertEqual(self.tagged_calls, [])
         self.assertEqual(led["spent"], 103)
-        self.assertEqual(led["pending"], {"handles": ["a", "b"], "tagged": True, "at": int(now)})
+        self.assertEqual(led["pending"], {"handles": ["a", "b"], "tagged": True, "at": int(now),
+                                          "month": "2026-10", "prev": {"a": 0, "b": 0}})
 
     def test_execute_spends_exactly_the_reservation_once(self):
         doc = answer()
@@ -412,7 +413,8 @@ class Build(unittest.TestCase):
             code, got, led = self.run_main(
                 tmp, roster, ["--execute", "--no-carry"], fetch, now,
                 {"month": month, "spent": 50, "last": {},
-                 "pending": {"handles": ["foambrewers", "gone"], "tagged": False, "at": int(now) - 600}})
+                 "pending": {"handles": ["foambrewers", "gone"], "tagged": False, "at": int(now) - 600,
+                             "month": month}})
             self.assertEqual(code, 0)
             self.assertEqual(calls, ["foambrewers"])           # not b, not c, not a handle since dropped
             self.assertEqual(self.tagged_calls, [])
@@ -430,10 +432,45 @@ class Build(unittest.TestCase):
                 tmp, [{"h": "a", "tier": 1, "category": "food"}], ["--execute"],
                 lambda h, k: self.fail("ran a stale reservation"), now,
                 {"month": "2026-10", "spent": 10, "last": {},
-                 "pending": {"handles": ["a"], "tagged": True, "at": int(now) - (bi.PENDING_MAX_H + 1) * 3600}})
+                 "pending": {"handles": ["a"], "tagged": True, "at": int(now) - (bi.PENDING_MAX_H + 1) * 3600,
+                             "month": "2026-10"}})
         self.assertEqual(code, 0)
         self.assertIsNone(got)
         self.assertEqual(self.tagged_calls, [])
+
+    def test_last_month_s_reservation_is_not_spent_in_this_one(self):
+        now = at(2026, 11, 1, 0) + 60
+        with tempfile.TemporaryDirectory() as tmp:
+            code, got, led = self.run_main(
+                tmp, [{"h": "a", "tier": 1, "category": "food"}], ["--execute"],
+                lambda h, k: self.fail("spent October's reservation in November"), now,
+                {"month": "2026-10", "spent": 5000, "last": {},
+                 "pending": {"handles": ["a"], "tagged": True, "at": int(now) - 300, "month": "2026-10"}})
+        self.assertEqual(code, 0)
+        self.assertEqual(self.tagged_calls, [])
+
+    def test_an_unexecuted_reservation_gives_back_its_rotation_places(self):
+        now = at(2026, 10, 17, 17)
+        morning = at(2026, 10, 17, 6)
+        last_week = at(2026, 10, 9, 6)
+        with tempfile.TemporaryDirectory() as tmp:
+            code, _, led = self.run_main(
+                tmp, [{"h": "t2", "tier": 2, "category": "pets"}, {"h": "t3", "tier": 3, "category": "pets"}],
+                ["--reserve", "--no-tagged"], lambda h, k: self.fail("fetched while reserving"), now,
+                {"month": "2026-10", "spent": 200, "last": {"t2": int(morning), "t3": int(morning)},
+                 "pending": {"handles": ["t2", "t3"], "tagged": True, "at": int(morning), "month": "2026-10",
+                             "prev": {"t2": 0, "t3": int(last_week)}}})
+        self.assertEqual(code, 0)
+        self.assertEqual(led["pending"]["handles"], ["t2", "t3"])   # both due again, not skipped
+        self.assertEqual(led["spent"], 202)                         # the morning's credits stay counted
+        self.assertEqual(led["pending"]["prev"], {"t2": 0, "t3": int(last_week)})
+
+    def test_the_steps_are_exclusive(self):
+        for argv in (["--dry-run", "--execute"], ["--reserve", "--execute"], ["--dry-run", "--reserve"]):
+            with mock.patch.object(sys, "argv", ["x"] + argv), mock.patch("sys.stderr"), \
+                    mock.patch.object(bi, "fetch_handle", lambda h, k: self.fail("fetched")):
+                with self.assertRaises(SystemExit):
+                    bi.main()
 
     def test_a_missing_ledger_fetches_nothing_and_writes_one(self):
         now = at(2026, 10, 17)
