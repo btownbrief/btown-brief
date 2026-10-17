@@ -6,6 +6,7 @@
   ok   source rules › nothing is position: sticky
   ok   source rules › js/app.js: no monospace
   ok   source rules › js/auth.js: no monospace
+  ok   source rules › js/clubs-week.js: no monospace
   ok   source rules › js/habits-core.js: no monospace
   ok   source rules › js/habits-fake.js: no monospace
   ok   source rules › js/liquid.js: no monospace
@@ -1108,7 +1109,7 @@
   ok   What Now, Spin (demo) › the chip row is the mode switch, Spin first
   ok   What Now, Spin (demo) › the weather line: feels like, the lake, sunset
   ok   What Now, Spin (demo) › the weather line is one line at 390
-  ok   What Now, Spin (demo) › the six path chips
+  ok   What Now, Spin (demo) › the seven path chips
   ok   What Now, Spin (demo) › Spin returns an answer
   ok   What Now, Spin (demo) › the answer spells out its reason
   ok   What Now, Spin (demo) › the answer says it is for right now
@@ -1123,6 +1124,7 @@
   ok   What Now, Spin (live, reduced motion) › the pool line says how many things fit
   ok   What Now, Spin (live, reduced motion) › no console errors
   ok   What Now, the missions under the spinner (demo) › Spin opens with the whole missions list right below it
+  ok   What Now, the missions under the spinner (demo) › and “Run with a club” leads the list, unnumbered
   ok   What Now, the missions under the spinner (demo) › and the Spin chip is the one lit
   ok   What Now, the missions under the spinner (demo) › the demo spins onto mission 2’s first place
   ok   What Now, the missions under the spinner (demo) › the spin marks its mission in the list and scrolls to it
@@ -1135,6 +1137,7 @@
   ok   What Now, Missions (live) › no dashes or exclamation points, a known theme, at least one place
   ok   What Now, Missions (live) › needs_check is counted honestly (10)
   ok   What Now, Missions (live) › the hundred, numbered 1 to 100
+  ok   What Now, Missions (live) › a theme shows its own missions only, not the club one
   ok   What Now, Missions (live) › a theme chip filters to its missions, and its count is right (10)
   ok   What Now, Missions (live) › Mark done marks it
   ok   What Now, Missions (live) › a mission marked done survives a reload
@@ -1343,6 +1346,84 @@
   ok   People, demo: the directory is opt-in and never shows an email › no email anywhere on the tab
   ok   People, demo: the directory is opt-in and never shows an email › leaving takes you out of the count
   ok   People, demo: the directory is opt-in and never shows an email › no console errors
+  ok   Run clubs, People: the week strip, the sheet and I’m going (demo, 390) › the section is “Run clubs this week”, a title and nothing under it
+  ok   Run clubs, People: the week strip, the sheet and I’m going (demo, 390) › no subtitle
+  ok   Run clubs, People: the week strip, the sheet and I’m going (demo, 390) › it sits near the top, under who you are
+  ok   Run clubs, People: the week strip, the sheet and I’m going (demo, 390) › seven days, starting today in Burlington
+  ok   Run clubs, People: the week strip, the sheet and I’m going (demo, 390) › one of each weekday, in order
+  ok   Run clubs, People: the week strip, the sheet and I’m going (demo, 390) › today is the day showing
+  ok   Run clubs, People: the week strip, the sheet and I’m going (demo, 390) › today: what is still to come (the 8 am run has gone)
+  ok   Run clubs, People: the week strip, the sheet and I’m going (demo, 390) › Monday’s runs, in time order
+  ok   Run clubs, People: the week strip, the sheet and I’m going (demo, 390) › a row: the club, the time, the place and the pace, the newcomer line
+  ok   Run clubs, People: the week strip, the sheet and I’m going (demo, 390) › each line under the name is one line
+  ok   Run clubs, People: the week strip, the sheet and I’m going (demo, 390) › the place is a map link
+  ok   Run clubs, People: the week strip, the sheet and I’m going (demo, 390) › a club out of season (Summer Track Nights) is never on the strip
+  ok   Run clubs, People: the week strip, the sheet and I’m going (demo, 390) › the switch: Fitness this week
+  ok   Run clubs, People: the week strip, the sheet and I’m going (demo, 390) › and no run club in it
+  ok   Run clubs, People: the week strip, the sheet and I’m going (demo, 390) › today’s fitness: yoga, then pickup
+  ok   Run clubs, People: the week strip, the sheet and I’m going (demo, 390) › A runner: the club week moves to the top of the tab
+  ok   Run clubs, People: the week strip, the sheet and I’m going (demo, 390) › and leads the chip row
+  ok   Run clubs, People: the week strip, the sheet and I’m going (demo, 390) › an athlete: first too
+  ok   Run clubs, People: the week strip, the sheet and I’m going (demo, 390) › and back under who you are once cleared
+  ok   Run clubs, People: the week strip, the sheet and I’m going (demo, 390) › a trail person sees it first as well
+  ok   Run clubs, People: the week strip, the sheet and I’m going (demo, 390) › tapping the row opens the club’s sheet: its name and what it is
+  ok   Run clubs, People: the week strip, the sheet and I’m going (demo, 390) › every meet, by weekday, with its place
+  ok   Run clubs, People: the week strip, the sheet and I’m going (demo, 390) › pace, cost, season, newcomers
+  ok   Run clubs, People: the week strip, the sheet and I’m going (demo, 390) › its links: site, Instagram, Meetup (no Strava, so none)
+  ok   Run clubs, People: the week strip, the sheet and I’m going (demo, 390) › and one button, I’m going
+  ok   Run clubs, People: the week strip, the sheet and I’m going (demo, 390) › signed out, I’m going asks for the sign-in like any plan
+  ok   Run clubs, People: the week strip, the sheet and I’m going (demo, 390) › I’m going opens the plan composer with the meet filled in: title, day, time, place
+  ok   Run clubs, People: the week strip, the sheet and I’m going (demo, 390) › a time off the half hour joins the list in its place
+  ok   Run clubs, People: the week strip, the sheet and I’m going (demo, 390) › and it posts as an open-to-strangers plan for that meet
+  ok   Run clubs, People: the week strip, the sheet and I’m going (demo, 390) › the plan is on the board
+  ok   Run clubs, People: the week strip, the sheet and I’m going (demo, 390) › people: nothing fixed or sticky inside the tab
+  ok   Run clubs, People: the week strip, the sheet and I’m going (demo, 390) › people: uppercase only in the caps roles
+  ok   Run clubs, People: the week strip, the sheet and I’m going (demo, 390) › people: no monospace
+  ok   Run clubs, People: the week strip, the sheet and I’m going (demo, 390) › people: no escaped markup, undefined or NaN on the page
+  ok   Run clubs, People: the week strip, the sheet and I’m going (demo, 390) › people: no sideways scroll at 390
+  ok   Run clubs, People: the week strip, the sheet and I’m going (demo, 390) › people: at most two subnav rows
+  ok   Run clubs, People: the week strip, the sheet and I’m going (demo, 390) › no console errors
+  ok   Run clubs, People: deep links (demo, 1280, dark) › an athlete who never touched the switch lands on Fitness
+  ok   Run clubs, People: deep links (demo, 1280, dark) › #people/clubs lands on the club week
+  ok   Run clubs, People: deep links (demo, 1280, dark) › a meet’s link picks its day
+  ok   Run clubs, People: deep links (demo, 1280, dark) › shows its row
+  ok   Run clubs, People: deep links (demo, 1280, dark) › and opens its sheet, I’m going set to that meet
+  ok   Run clubs, People: deep links (demo, 1280, dark) › a club’s link opens its sheet, on its side of the switch
+  ok   Run clubs, People: deep links (demo, 1280, dark) › a meet that has gone says so
+  ok   Run clubs, People: deep links (demo, 1280, dark) › people: nothing fixed or sticky inside the tab
+  ok   Run clubs, People: deep links (demo, 1280, dark) › people: uppercase only in the caps roles
+  ok   Run clubs, People: deep links (demo, 1280, dark) › people: no monospace
+  ok   Run clubs, People: deep links (demo, 1280, dark) › people: no escaped markup, undefined or NaN on the page
+  ok   Run clubs, People: deep links (demo, 1280, dark) › people: no sideways scroll at 1280
+  ok   Run clubs, People: deep links (demo, 1280, dark) › people: at most two subnav rows
+  ok   Run clubs, People: deep links (demo, 1280, dark) › no console errors
+  ok   Run clubs, What Now: a meet in each window, Move with people, the mission (demo, 390, dark) › Now: the meets starting in the next three hours
+  ok   Run clubs, What Now: a meet in each window, Move with people, the mission (demo, 390, dark) › all of them inside the window
+  ok   Run clubs, What Now: a meet in each window, Move with people, the mission (demo, 390, dark) › under a plain title
+  ok   Run clubs, What Now: a meet in each window, Move with people, the mission (demo, 390, dark) › Tonight: from 4 pm on
+  ok   Run clubs, What Now: a meet in each window, Move with people, the mission (demo, 390, dark) › Tomorrow: Sunday’s, saying tomorrow
+  ok   Run clubs, What Now: a meet in each window, Move with people, the mission (demo, 390, dark) › Move with people answers with a meet in the window
+  ok   Run clubs, What Now: a meet in each window, Move with people, the mission (demo, 390, dark) › for right now, and says when it starts
+  ok   Run clubs, What Now: a meet in each window, Move with people, the mission (demo, 390, dark) › it takes the other chips off
+  ok   Run clubs, What Now: a meet in each window, Move with people, the mission (demo, 390, dark) › the pool line counts meets
+  ok   Run clubs, What Now: a meet in each window, Move with people, the mission (demo, 390, dark) › Another gives the other one
+  ok   Run clubs, What Now: a meet in each window, Move with people, the mission (demo, 390, dark) › on Tomorrow it answers with tomorrow’s
+  ok   Run clubs, What Now: a meet in each window, Move with people, the mission (demo, 390, dark) › Do it ends the session as any answer does
+  ok   Run clubs, What Now: a meet in each window, Move with people, the mission (demo, 390, dark) › the missions lead with “Run with a club”
+  ok   Run clubs, What Now: a meet in each window, Move with people, the mission (demo, 390, dark) › and its action opens People’s club week (#people/clubs)
+  ok   Run clubs, What Now: a meet in each window, Move with people, the mission (demo, 390, dark) › a row opens the meet on People, its sheet up
+  ok   Run clubs, What Now: a meet in each window, Move with people, the mission (demo, 390, dark) › whatnow: nothing fixed or sticky inside the tab
+  ok   Run clubs, What Now: a meet in each window, Move with people, the mission (demo, 390, dark) › whatnow: uppercase only in the caps roles
+  ok   Run clubs, What Now: a meet in each window, Move with people, the mission (demo, 390, dark) › whatnow: no monospace
+  ok   Run clubs, What Now: a meet in each window, Move with people, the mission (demo, 390, dark) › whatnow: no escaped markup, undefined or NaN on the page
+  ok   Run clubs, What Now: a meet in each window, Move with people, the mission (demo, 390, dark) › whatnow: no sideways scroll at 390
+  ok   Run clubs, What Now: a meet in each window, Move with people, the mission (demo, 390, dark) › whatnow: at most two subnav rows
+  ok   Run clubs, What Now: a meet in each window, Move with people, the mission (demo, 390, dark) › no console errors
+  ok   Run clubs, What Now: nothing in the window says so and names the next (live, 1280) › no meet in the next three hours: no rows
+  ok   Run clubs, What Now: nothing in the window says so and names the next (live, 1280) › Move with people: “Nothing in the next few hours.”
+  ok   Run clubs, What Now: nothing in the window says so and names the next (live, 1280) › and the next one
+  ok   Run clubs, What Now: nothing in the window says so and names the next (live, 1280) › which opens on People, on Fitness, its sheet up
+  ok   Run clubs, What Now: nothing in the window says so and names the next (live, 1280) › no console errors
   ok   On Air, demo › nothing autoplays: the shell’s audio is paused and no frame is loaded
   ok   On Air, demo › the chip row is a table of contents: Out loud, Btown TV, Live, Podcasts, Past nights
   ok   On Air, demo › the sections run in that order
@@ -1581,7 +1662,7 @@
   ok   sign-in fails soft › a bad address is caught before any request
   ok   sign-in fails soft › no link was requested
   ok   sign-in fails soft › no console errors
-  ok   performance › the live Wire redraws 60 cards in 10ms (budget 100)
+  ok   performance › the live Wire redraws 60 cards in 9ms (budget 100)
   ok   shell fixes: a rail never snaps flush to the edge › 390: .rail carries scroll-padding of one gutter
   ok   shell fixes: a rail never snaps flush to the edge › 390: a card scrolled to the start stops at the gutter
   ok   shell fixes: a rail never snaps flush to the edge › 390: no console errors
@@ -1635,7 +1716,7 @@
   ok   cutover: every old tab’s link lands on the nearest new tab › a bare #reddit opens the Wire on its Reddit chip
   ok   cutover: every old tab’s link lands on the nearest new tab › an old Music link opens What Now on Tonight
   ok   cutover: every old tab’s link lands on the nearest new tab › no console errors
-  ok   shell fixes: the offline shell carries the new modules › sw.js VERSION is bumped for Habits taking Art’s slot, to v46
+  ok   shell fixes: the offline shell carries the new modules › sw.js VERSION is bumped for the run clubs’ week, to v47
   ok   shell fixes: the offline shell carries the new modules › every module in js/ is in the offline list
   ok   shell fixes: the offline shell carries the new modules › and nothing in the offline list is missing from js/
   ok   shell fixes: the offline shell carries the new modules › every file in the offline list exists
