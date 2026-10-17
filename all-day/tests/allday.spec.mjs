@@ -1321,7 +1321,13 @@ async function thePhotos(browser, base) {
 /* ---------------------------------------------------------------- On Air */
 const onairText = (page) => page.$eval('#panel-onair', (p) => p.innerText);
 const podRows = (page) => page.$$eval('#panel-onair [data-show]', (rs) => rs.map((r) => [r.dataset.show, r.dataset.national || '']));
-const tvCards = (page) => page.$$eval('#panel-onair [data-slot="tv"] .vcard', (cs) => cs.map((c) => [c.dataset.k, c.dataset.wider || '']));
+const tvCards = (page) => page.$$eval('#panel-onair [data-slot="tv"] [data-rail="picks"] .vcard', (cs) => cs.map((c) => [c.dataset.k, c.dataset.wider || '']));
+const tvRest = (page) => page.$$eval('#panel-onair [data-slot="tv"] [data-rail="rest"] .vcard', (cs) => cs.map((c) => c.dataset.k));
+const tvHead = (page) => page.$eval('#panel-onair [data-sec="tv"]', (h) => {
+  const b = (l) => { const x = h.querySelector('.wm-nav [aria-label="' + l + '"]'); if (!x) return null; const r = x.getBoundingClientRect(); return { disabled: x.disabled, w: Math.round(r.width), h: Math.round(r.height) }; };
+  return { title: h.querySelector('h2').textContent, sub: h.querySelector('p') ? h.querySelector('p').innerText : '', showing: h.dataset.showing,
+    prev: b('Earlier night'), next: b('Later night'), focus: document.activeElement && document.activeElement.getAttribute('aria-label') };
+});
 
 async function onAir(browser, base) {
   await group('On Air, demo', async () => {
@@ -1345,7 +1351,7 @@ async function onAir(browser, base) {
     const localTv = await tvCards(page);
     check(localRows[0] && localRows[0][0] === 'btown-brief', 'Local: the Brief’s own show is first in Podcasts', JSON.stringify(localRows.slice(0, 3)));
     check(localRows.length > 2 && localRows.every((r) => !r[1]), 'Local: every local show, no national ones', JSON.stringify(localRows));
-    check(localTv.length > 0 && localTv.every((c) => !c[1]), 'Local: Btown TV shows only the local picks', JSON.stringify(localTv));
+    check(localTv.length > 0 && localTv.every((c) => !c[1]), 'Local: the picks rail is only the local picks', JSON.stringify(localTv));
     check((await page.$$eval('#panel-onair [data-slot="tv"] .vcard .s', (s) => s.map((x) => x.textContent))).some((t) => /reason|matters|Watch this first/.test(t)), 'each pick carries its reason', '');
 
     await toTop(page);
@@ -1396,7 +1402,7 @@ async function onAir(browser, base) {
       'Btown TV: “Play tonight on your TV” opens tonight’s playlist in a new tab', JSON.stringify(play));
     check(play.tonight && play.tonight.text === 'Play tonight on your TV' && play.tonight.icons === 2 && play.before, 'under the Btown TV header, before the rail, with the play and external icons', JSON.stringify(play));
     check((await tvCards(page)).length === tv.shelves.find((x) => x.key === 'vt').items.length + 1, 'live: tonight’s local picks, the pick and the Burlington & Vermont shelf', '');
-    await page.click('#panel-onair .btn.more:text("Read it instead")');
+    await page.click('#panel-onair .brieflinks .btn:text("Read it instead")');
     await page.waitForFunction(() => /Morning\./.test(document.querySelector('.sheet-body')?.innerText || ''), null, { timeout: 4000 }).catch(() => {});
     const sheet = await page.$eval('.sheet-body', (b) => b.innerText);
     check(/Out on the water\.\.\./.test(sheet) && !/\[/.test(sheet), 'the transcript hides the voice’s pacing marks ([short pause])', sheet.slice(0, 300));
@@ -1410,6 +1416,12 @@ async function onAir(browser, base) {
     await page.waitForSelector('#player:not([hidden])', { timeout: 3000 }).catch(() => {});
     const src = await page.evaluate(() => document.querySelector('audio').getAttribute('src'));
     check(src === 'https://raw.githubusercontent.com/btownbrief/btown-brief/wire-audio/data/audio/' + today + '.mp3', 'play loads today’s MP3 from the wire-audio branch into the shell’s player', src);
+    await page.waitForFunction(() => document.querySelector('audio').playbackRate === 1.25, null, { timeout: 3000 }).catch(() => {});
+    const sped = await page.evaluate(() => { const a = document.querySelector('audio'); return [a.playbackRate, a.preservesPitch]; });
+    check(sped[0] === 1.25 && sped[1] === true, 'the Brief plays at 1.25x by default, pitch kept', JSON.stringify(sped));
+    await page.click('#panel-onair .audio [data-rate="1.5"]');
+    check(await page.evaluate(() => document.querySelector('audio').playbackRate) === 1.5, '1.5x speeds up the playing clip at once, no reload', '');
+    await page.click('#panel-onair .audio [data-rate="1.25"]');
     await goTab(page, 'wire');
     await goTab(page, 'food');
     check(await page.$('#player:not([hidden])') !== null && /news in/.test(await page.$eval('#p-title', (t) => t.textContent)), 'the player survives a tab switch', '');
@@ -1486,6 +1498,88 @@ async function onAir(browser, base) {
     await page.click('#panel-onair [data-tvplay="tonight"]');
     await page.waitForTimeout(300);
     check(ctx.pages().length === pages && /YouTube playlist/.test(await page.$eval('#toast', (t) => t.textContent)), 'demo: the button toasts instead of leaving', '');
+    await ctx.close();
+  });
+
+  await group('On Air, more of the edition and past nights', async () => {
+    const d = JSON.parse(await readFile(path.join(APP, 'data/demo/onair.json'), 'utf8'));
+    const all = [d.tv.pick, ...d.tv.shelves.flatMap((x) => x.items)].map((v) => 'yt:' + v.id);
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/all-day/?demo=1#onair');
+    await settle(page);
+    await page.waitForSelector('#panel-onair [data-sec="past"]', { timeout: 8000 });
+    const picks = (await tvCards(page)).map((c) => c[0]);
+    const rest = await tvRest(page);
+    const face = picks.concat(rest);
+    check(face.length === all.length && new Set(face).size === face.length && all.every((k) => face.includes(k)),
+      'Local: the whole edition is on the face, each video once (' + picks.length + ' picks + ' + rest.length + ' more = ' + all.length + ')', face.length + ' of ' + all.length);
+    check(await page.$eval('#panel-onair [data-slot="tv"] .tdiv', (t) => t.innerText.replace(/\s+/g, ' ').trim()) === 'More from tonight ' + rest.length + ' videos', 'the second rail is headed with its count', '');
+    const grid = await page.$$eval('#panel-onair [data-rail="rest"] .vcard', (cs) => {
+      const rows = new Set(cs.map((c) => Math.round(c.getBoundingClientRect().top)));
+      const seen = cs.filter((c) => { const r = c.getBoundingClientRect(); return r.left >= 0 && r.right <= innerWidth + 1; }).length;
+      const partial = cs.filter((c) => { const r = c.getBoundingClientRect(); return r.left < innerWidth && r.right > innerWidth; }).length;
+      const narrow = cs.filter((c) => c.getBoundingClientRect().width < 140).length;
+      return { rows: rows.size, seen, partial, narrow };
+    });
+    check(grid.rows === 2 && !grid.narrow, 'the second rail is two rows deep, every cover full width', JSON.stringify(grid));
+    check(grid.seen >= 4 && grid.partial >= 1, 'at 390 wide, four whole covers on screen and the next ones peeking (was one and a half)', JSON.stringify(grid));
+    check(await page.$eval('#panel-onair [data-rail="rest"]', (r) => r.scrollWidth > r.clientWidth + 100), 'and it scrolls sideways for the rest', '');
+
+    /* ‹ › on the header: tonight, then back through the archive, then home */
+    let h = await tvHead(page);
+    check(h.title === 'Btown TV tonight' && h.showing === 'tonight' && !h.sub, 'tonight: the header as before, no subtitle', JSON.stringify(h));
+    check(h.prev && h.next && h.prev.w >= 44 && h.prev.h >= 44 && h.next.w >= 44 && h.next.h >= 44, 'the arrows are 44 px targets with labels', JSON.stringify(h));
+    check(h.next.disabled && !h.prev.disabled, 'tonight: “Later night” is disabled, “Earlier night” is not', JSON.stringify(h));
+    await page.click('#panel-onair [data-sec="tv"] [aria-label="Earlier night"]');
+    h = await tvHead(page);
+    const nights = d.tvEditions.editions.length;   // the demo archive holds tonight and the nights before
+    const yKey = await page.evaluate(() => document.querySelector('#panel-onair [data-sec="tv"]').dataset.showing);
+    const yNight = d.tvEditions.editions[1];
+    const yIds = [yNight.pick, ...yNight.shelves.flatMap((x) => x.items)].map((v) => 'yt:' + v.id).sort();
+    const shown = (await tvCards(page)).map((c) => c[0]).concat(await tvRest(page)).sort();
+    check(h.title === 'Btown TV last night' && /· Tonight$/.test(h.sub) && h.showing === dayMinus(etKey(Date.now()), 1), 'one back: last night’s edition, its date and a way back to tonight', JSON.stringify(h));
+    check(JSON.stringify(shown) === JSON.stringify(yIds), 'and that night’s videos, in place', JSON.stringify(shown));
+    check(!h.next.disabled && !h.prev.disabled && h.focus === 'Earlier night', 'both arrows live now, focus stays on the one pressed', JSON.stringify(h));
+    check(await page.$('#panel-onair [data-sec="tv"] + .tvplay [data-tvplay="night"]') !== null, 'with that night’s own TV playlist', '');
+    for (let i = 2; i < nights; i++) await page.click('#panel-onair [data-sec="tv"] [aria-label="Earlier night"]');
+    h = await tvHead(page);
+    check(h.prev.disabled && !h.next.disabled && h.focus === 'Later night', 'the oldest night: “Earlier night” disabled, focus moves to the other arrow', JSON.stringify(h));
+    await page.click('#panel-onair [data-sec="tv"] [aria-label="Later night"]');
+    check((await tvHead(page)).showing === dayMinus(etKey(Date.now()), nights - 2), '“Later night” steps forward one', '');
+    await page.click('#panel-onair [data-sec="tv"] [data-tonight]');
+    h = await tvHead(page);
+    check(h.showing === 'tonight' && h.title === 'Btown TV tonight' && h.next.disabled && !h.sub, '“Tonight” comes back', JSON.stringify(h));
+    check(!!yKey && await page.$('#panel-onair [data-sec="past"]') !== null, 'Past nights stays below', '');
+    await toTop(page);
+    await page.click('#subnav .localsw-half:not(.on)');
+    await page.waitForTimeout(250);
+    await page.click('#panel-onair [data-sec="tv"] [aria-label="Earlier night"]');
+    check((await tvHead(page)).title === 'Last night, local and beyond', 'Everything: “Last night, local and beyond”', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('On Air, speed and the newsletter', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/all-day/?demo=1#onair');
+    await page.waitForSelector('#panel-onair .audio .speed', { timeout: 8000 });
+    const speeds = () => page.$$eval('#panel-onair .audio [data-rate]', (b) => b.map((x) => x.textContent + (x.getAttribute('aria-pressed') === 'true' ? '*' : '')));
+    check(JSON.stringify(await speeds()) === JSON.stringify(['1x', '1.25x*', '1.5x']), 'three speeds on the card, 1.25x unless chosen', JSON.stringify(await speeds()));
+    check(await page.$eval('#panel-onair .audio .speed', (g) => g.getAttribute('role') === 'group' && !!g.getAttribute('aria-label')), 'a labelled group', '');
+    await page.click('#panel-onair .audio [data-rate="1.5"]');
+    check(JSON.stringify(await speeds()) === JSON.stringify(['1x', '1.25x', '1.5x*']), '1.5x picked', JSON.stringify(await speeds()));
+    check(await page.evaluate(() => localStorage.getItem('allday-brief-rate')) === '1.5', 'and remembered on this phone', '');
+    await page.reload();
+    await page.waitForSelector('#panel-onair .audio .speed', { timeout: 8000 });
+    check(JSON.stringify(await speeds()) === JSON.stringify(['1x', '1.25x', '1.5x*']), 'still 1.5x after a reload', JSON.stringify(await speeds()));
+    const link = await page.$eval('#panel-onair [data-newsletter]', (a) => ({ text: a.textContent.trim(), href: a.href, target: a.target, rel: a.rel, icons: a.querySelectorAll('svg').length }));
+    check(link.text === 'Read the Brief' && link.href === 'https://www.btownbrief.com/' && link.target === '_blank' && link.rel === 'noopener' && link.icons === 1,
+      '“Read the Brief” opens btownbrief.com in a new tab', JSON.stringify(link));
+    const row = await page.$$eval('#panel-onair .brieflinks .btn', (b) => b.map((x) => x.textContent.trim()));
+    check(JSON.stringify(row) === JSON.stringify(['Read it instead', 'Read the Brief']), 'beside “Read it instead”, under the card', JSON.stringify(row));
+    const fits = await page.$eval('#panel-onair .brieflinks', (r) => { const a = [...r.children].map((c) => c.getBoundingClientRect()); return a.length === 2 && Math.abs(a[0].top - a[1].top) < 2 && a[1].right <= innerWidth; });
+    check(fits, 'one row at 390 wide', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
   });
 
@@ -4583,7 +4677,7 @@ async function shellFixes(browser, base) {
   await group('shell fixes: the offline shell carries the new modules', async () => {
     const sw = await readFile(path.join(APP, 'sw.js'), 'utf8');
     const main = await readFile(path.join(APP, 'js/main.js'), 'utf8');
-    check(/VERSION = 'all-day-v49'/.test(sw), 'sw.js VERSION is bumped for Watch’s TV, time machine and showtimes after the Wire’s Photo mode, to v49', (sw.match(/VERSION = '[^']+'/) || [''])[0]);
+    check(/VERSION = 'all-day-v50'/.test(sw), 'sw.js VERSION is bumped for Watch’s TV, time machine and showtimes after On Air’s past nights, to v50', (sw.match(/VERSION = '[^']+'/) || [''])[0]);
     const listed = [...sw.matchAll(/'\.\/(js\/[\w/.-]+\.js)'/g)].map((m) => m[1]);
     /* the offline list is exactly the modules that exist: none missing, none gone */
     const mods = [];
