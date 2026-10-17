@@ -473,7 +473,7 @@ function paintWall(host) {
     t.href = safeHref(it.href);
     t.dataset.k = it.k;
     t.setAttribute('aria-label', it.title + (it.author ? ', by ' + it.author : '') + (it.gallery ? ', from the gallery' : ', ' + plural(it.votes, 'vote', 'votes')));
-    t.innerHTML = art(it.media) + (it.gallery ? '<span class="lbl">' + esc(it.title) + '</span>'
+    t.innerHTML = art(it.media) + (it.gallery ? '<span class="lbl"><span class="t">' + esc(it.title) + '</span></span>'
       : '<span class="ct" data-vk="' + esc(it.k) + '">' + ICON.up + '<span class="vn">' + esc(it.votes || '') + '</span></span>');
     g.appendChild(t);
   });
