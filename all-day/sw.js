@@ -32,6 +32,8 @@ const SHELL_URLS = [
   './js/photo-wall.js',
   /* the run clubs' week, imported by ui.js, People and What Now */
   './js/clubs-week.js',
+  /* what People's tiles mean and which events are mixers, imported by People */
+  './js/people-match.js',
   /* the boards: imported by main.js, so every tab can draw one offline */
   './js/boards.js', './js/boards-core.js', './js/boards-fake.js',
   /* Watch's starter list, so the tab has films to show offline */
