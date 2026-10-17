@@ -213,7 +213,7 @@ export function bindFeed(host, h = {}) {
     if (e.target.closest('[data-zoom]') && it) { e.preventDefault(); lightbox(it); return; }
     if (e.target.closest('[data-cta]') && it) {
       e.preventDefault();
-      toast(user() ? '“' + (it.cta || 'Go') + '” comes with this tab’s build.' : '“' + (it.cta || 'Go') + '” needs the email sign-in. It’s in Settings.');
+      toast(user() ? '“' + (it.cta || 'Go') + '” comes with this tab’s build.' : 'Sign in to continue.');
     }
   });
   host.addEventListener('keydown', (e) => {
@@ -269,12 +269,11 @@ export function mute(sid, it) {
 function comments(it) {
   if (!demo) {
     if (it.open && /^https?:/.test(safeHref(it.href))) { window.open(safeHref(it.href), '_blank', 'noopener'); return; }
-    toast('Comments come to All Day with sign-in.');
+    toast('Comments are coming soon.');
     return;
   }
   sheet(it.kind === 'post' && it.comments ? (it.comments + ' replies') : 'Comments', (body, card) => {
     body.appendChild(el('p', 'sheet-note', esc(it.title || it.text)));
-    if (it.open) body.appendChild(el('p', 'sheet-note', 'This thread lives on ' + esc(it.open.replace(/^Open (on |the )?/, '')) + '. The first replies are here; the rest are one tap away.'));
     shellDemo.then((j) => {
       const sets = j.comments || [];
       const set = sets.length ? sets[it.k.charCodeAt(it.k.length - 1) % sets.length] : [];
@@ -289,7 +288,7 @@ function comments(it) {
       body.appendChild(r);
     }
     const compose = el('div', 'compose', '<input class="field" type="text" placeholder="Add a comment" aria-label="Add a comment">');
-    compose.appendChild(button('Post', '', () => toast('Posting needs the email sign-in. That comes with the real build.')));
+    compose.appendChild(button('Post', '', () => toast('Demo: posting is off.')));
     card.appendChild(compose);
   });
 }
@@ -430,7 +429,7 @@ function savedSheet() {
     const paint = () => {
       body.innerHTML = '';
       const list = store.saved();
-      if (!list.length) { body.appendChild(el('p', 'sheet-note', 'Nothing saved yet. Tap the star on a card, or swipe it to the right.')); return; }
+      if (!list.length) { body.appendChild(el('p', 'sheet-note', 'Nothing saved yet.')); return; }
       list.forEach((it) => {
         const r = el('div', 'sheet-row');
         const a = el('a', 't', esc(it.title) + '<div class="d">' + esc(it.from || '') + '</div>');
@@ -482,7 +481,7 @@ function settingsSheet() {
         return;
       }
       if (demo) {
-        const r = el('div', 'sheet-row', '<div class="t">Sign in<div class="d">The demo has a pretend account, so you can try posting. Real sign-in is one email link, no password.</div></div>');
+        const r = el('div', 'sheet-row', '<div class="t">Sign in<div class="d">Demo account</div></div>');
         r.appendChild(button('Sign in', 'ghost sm', () => { auth.demoSignIn(); paintAcct(); toast('Signed in to the demo account'); }));
         acct.appendChild(r);
         return;
@@ -490,10 +489,10 @@ function settingsSheet() {
       const st = auth.status();
       if (st !== 'on') {
         acct.appendChild(el('div', 'sheet-row', '<div class="t">Sign in<div class="d">' +
-          (st === 'checking' ? 'Checking…' : 'Coming soon. Everything here works without an account.') + '</div></div>'));
+          (st === 'checking' ? 'Checking…' : 'Coming soon.') + '</div></div>'));
         return;
       }
-      acct.appendChild(el('p', 'sheet-note', 'Optional. An email link signs you in; no password. Reading and voting never need it; posting on a board and reporting do.'));
+      acct.appendChild(el('p', 'sheet-note', 'An email link, no password.'));
       const f = el('form', 'signin');
       f.noValidate = true;   /* our own message, not the browser's bubble */
       const input = el('input', 'field');
@@ -515,7 +514,7 @@ function settingsSheet() {
 
     body.appendChild(el('div', 'sheet-h', 'Muted sources'));
     const muted = Object.keys(store.muted());
-    if (!muted.length) body.appendChild(el('p', 'sheet-note', 'None. Swipe a headline to the left, or open a source and tap Mute.'));
+    if (!muted.length) body.appendChild(el('p', 'sheet-note', 'None.'));
     muted.forEach((sid) => {
       const r = el('div', 'sheet-row', '<div class="t">' + esc(sourceName(sid)) + '</div>');
       r.appendChild(button('Unmute', 'ghost sm', () => { store.setMuted(sid, false); r.remove(); refreshAll(); }));
@@ -532,10 +531,19 @@ function settingsSheet() {
     });
     body.appendChild(links);
 
+    /* the one place for what stays where and whose data it is (DESIGN.md
+       section 10): the tabs say none of it */
     body.appendChild(el('div', 'sheet-h', 'About'));
     body.appendChild(el('p', 'sheet-note', demo
-      ? 'This is the demo. Every headline, post, event, person, film, dish, shop and score is invented, and nothing you do here is saved. Leave the demo by removing ?demo=1 from the address.'
-      : 'All Day is the Btown Brief’s app for the rest of the day: Burlington’s news, then what to watch, eat and do, people to do it with, vintage, art, On Air and games. Saves, mutes and what you have read stay on this phone.'));
+      ? 'This is the demo. Everything in it is invented, and nothing you do here is saved.'
+      : 'All Day is the Btown Brief’s app for the rest of the day.'));
+    body.appendChild(el('p', 'sheet-note', 'Saves, mutes, what you have read, your Watch dots and list, your People tile and quiz, your arcade name and your missions stay on this phone. '
+      + 'Signed in, your tile, interests, Watch dots and missions also go to your account. Your email is never shown to anyone.'));
+    const tmdb = el('p', 'sheet-note');
+    tmdb.dataset.credit = 'tmdb';
+    tmdb.innerHTML = '<a href="https://www.themoviedb.org/" target="_blank" rel="noopener"><img src="../assets/img/tmdb.svg" alt="TMDB" width="92" height="12" loading="lazy" decoding="async"></a><br>'
+      + esc('Watch’s film details, posters and trailers come from TMDB (The Movie Database). This product uses the TMDB API but is not endorsed or certified by TMDB.');
+    body.appendChild(tmdb);
   });
 }
 
@@ -633,7 +641,7 @@ export function play(it) {
   showDock(it);
   startFake();
   paintPlayButtons();
-  toast(it.kind === 'video' ? 'Playing in the shell’s player. Nothing autoplays.' : 'Playing. Keeps going when you change tabs.');
+  toast('Playing');
 }
 function startFake() {
   clearInterval(fakeTimer);
@@ -827,7 +835,7 @@ function bindPull(p) {
     const h = Math.min(88, dy * 0.5);
     ptr.classList.add('pulling');
     ptr.style.height = h + 'px';
-    ptr.firstElementChild.textContent = h >= 64 ? 'Release to check' : 'Pull to check for new';
+    ptr.firstElementChild.textContent = h >= 64 ? 'Release to check' : '';
   }, { passive: true });
   p.addEventListener('touchend', () => {
     if (!pulling) { y0 = null; return; }
@@ -848,9 +856,9 @@ function checkNew() {
   ptr.style.height = '56px';
   Promise.resolve(mod.pull ? mod.pull() : null).then((msg) => {
     checking = false;
-    if (msg) { toast(msg); ptr.style.height = '0px'; ptr.innerHTML = '<span>Pull to check for new</span>'; return; }
+    if (msg) { toast(msg); ptr.style.height = '0px'; ptr.innerHTML = '<span></span>'; return; }
     ptr.innerHTML = '<span>Nothing new</span>';
-    setTimeout(() => { ptr.style.height = '0px'; ptr.innerHTML = '<span>Pull to check for new</span>'; }, 700);
+    setTimeout(() => { ptr.style.height = '0px'; ptr.innerHTML = '<span></span>'; }, 700);
   });
 }
 
@@ -990,7 +998,7 @@ export function start() {
     p.setAttribute('role', 'tabpanel');
     p.setAttribute('aria-labelledby', 'tab-' + key);
     p.hidden = true;
-    const ptr = el('div', 'ptr', '<span>Pull to check for new</span>');
+    const ptr = el('div', 'ptr', '<span></span>');
     const body = el('div', 'panel-body');
     p.append(ptr, body);
     app.appendChild(p);
