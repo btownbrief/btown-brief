@@ -2330,7 +2330,7 @@ async function boards(browser, base) {
     await page.click('.bform button[type=submit]');
     await page.waitForSelector('#sheet[hidden]', { state: 'attached' });
     const p = await page.evaluate(() => import('/all-day/js/boards.js').then((b) => b.profile()));
-    check(p.ok && JSON.stringify(p.profile) === JSON.stringify({ display_name: 'Maya R.', neighborhood: 'old-north-end', archetype: 'trail' }), 'saved, tidied, and read back', JSON.stringify(p));
+    check(p.ok && JSON.stringify(p.profile) === JSON.stringify({ display_name: 'Maya R.', neighborhood: 'old-north-end', archetype: 'trail', interests: [] }), 'saved, tidied, and read back', JSON.stringify(p));
     check(/Signed in\s+as Maya R\./.test(await settingsText(page)), 'Settings names the reader by first name', '');
     await page.click('.sheet-body .sheet-row button:has-text("Edit")');
     await page.waitForSelector('input[name=display_name]');
@@ -2528,6 +2528,87 @@ async function boards(browser, base) {
     const real = errors.filter((e) => !/Failed to load resource: the server responded with a status of 400/.test(e));
     check(!real.length, 'no console errors beyond the browser logging the refusal', real.join(' | '));
     await ctx.close();
+  });
+
+  await group('boards: the profile sheet says what you’re into, activities only (demo)', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/all-day/?demo=1#vintage');
+    await settle(page);
+    await page.evaluate(() => import('/all-day/js/auth.js').then((a) => a.demoSignIn()));
+    await page.evaluate(() => import('/all-day/js/boards.js').then((b) => b.setProfile({ display_name: 'Maya', interests: ['books'] })));
+    await page.evaluate(() => import('/all-day/js/boards.js').then((b) => b.profileSheet()));
+    await page.waitForSelector('.sheet-body [data-interests] button');
+    const pills = await page.$$eval('.sheet-body [data-interests] button', (bs) => bs.map((b) => [b.dataset.k, b.getAttribute('aria-pressed')]));
+    check(pills.length === 10 && JSON.stringify(pills.find((x) => x[0] === 'books')) === '["books","true"]', 'the ten activities, with the one already chosen on', JSON.stringify(pills));
+    const words = await page.$eval('.sheet-body [data-interests]', (b) => b.parentNode.innerText);
+    check(!/LGBTQ|woman|student|gender|\bage\b/i.test(words) && /nobody sees them unless you join/i.test(words), 'activities only, never who someone is, and who sees them is said', words);
+    for (const k of ['running', 'games', 'music', 'dance', 'making', 'languages', 'food', 'sports', 'outdoors']) await page.click('.sheet-body [data-interests] button[data-k="' + k + '"]');
+    const on = await page.$$eval('.sheet-body [data-interests] button.on', (bs) => bs.length);
+    check(on === 8, 'eight at most: books and the first seven tapped; sports and outdoors, the ninth and tenth, do nothing', on);
+    await page.click('.sheet-body [data-interests] button[data-k="books"]');
+    await page.click('.sheet-body .bform button[type=submit]');
+    await page.waitForSelector('#sheet[hidden]', { state: 'attached', timeout: 4000 });
+    const saved = await page.evaluate(() => import('/all-day/js/boards.js').then((b) => b._fake().profiles.get(b.demoReader).interests));
+    check(JSON.stringify(saved) === '["running","games","music","dance","making","languages","food"]', 'books tapped off, the seven saved to the profile, in the list’s order', JSON.stringify(saved));
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('boards desk: People’s Meetup list and the stray-photo sweep (demo)', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/all-day/mod.html?demo=1');
+    await page.fill('#pass', 'demo');
+    await page.click('#gate button[type=submit]');
+    await page.waitForSelector('#desk:not([hidden]) [data-meetups]');
+    await page.waitForSelector('[data-sweep]', { timeout: 4000 }).catch(() => {});
+    const sweep = await page.$eval('[data-sweep]', (p) => p.textContent).catch(() => '');
+    check(/1 stray picture file cleared from the bucket/.test(sweep), 'opening the desk sweeps stray photos and says what went', sweep);
+    await page.click('[data-meetups]');
+    await page.waitForSelector('[data-meetup]');
+    const rows = await page.$$eval('[data-meetup]', (rs) => rs.map((r) => r.innerText));
+    check(rows.length === 1 && /Pickup soccer, need four more/.test(rows[0]) && /Sunday, 10 am · Leddy Park · 4 spots · mostly 30s · hosted by Dev K\. · 7 going/.test(rows[0]),
+      'the Meetup button lists the live plans down for Meetup: when, where, spots, ages, host, going', JSON.stringify(rows));
+    check(/Copy for Meetup/.test(rows[0]) && !/@/.test(rows[0]), 'each with a copy button, and no email', rows[0]);
+    await page.click('#desk [data-action="hide"]');
+    await page.waitForTimeout(200);
+    check(await page.$$eval('[data-sweep]', (n) => n.length) === 1, 'the sweep runs once a visit, and its note stays through a redraw', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('boards desk: the sweep removes strays through the Storage API, and says when it cannot (live)', async () => {
+    for (const ok of [true, false]) {
+      const asked = [];
+      const { ctx, page, errors } = await newPage(browser, base, {
+        rpc: (fn, args) => {
+          if (fn === 'nn_mod_list') return { waiting: [], reported: [], hidden: [], recent: [], bans: [] };
+          if (fn === 'nn_mod_photo_sweep') return { abandoned: 2, strays: ['submissions/lost-0001.jpg', 'submissions/lost-0002.jpg'] };
+          if (fn === 'nn_people_meetup_list') return { status: 404, body: { code: 'PGRST202', message: 'Could not find the function' } };
+          return undefined;
+        },
+      });
+      await page.route(/\/storage\/v1\/object\/btb-photos$/, (r) => {
+        asked.push({ method: r.request().method(), body: JSON.parse(r.request().postData() || '{}') });
+        return r.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(ok ? [{ name: 'submissions/lost-0001.jpg' }, { name: 'submissions/lost-0002.jpg' }] : []) });
+      });
+      await page.goto(base + '/all-day/mod.html');
+      await page.fill('#pass', 'test-pass');
+      await page.click('#gate button[type=submit]');
+      await page.waitForSelector('[data-sweep]', { timeout: 6000 }).catch(() => {});
+      const sweep = await page.$eval('[data-sweep]', (p) => p.textContent).catch(() => '');
+      check(asked.length === 1 && asked[0].method === 'DELETE' && JSON.stringify(asked[0].body) === '{"prefixes":["submissions/lost-0001.jpg","submissions/lost-0002.jpg"]}',
+        'the strays go to the Storage API’s remove, by path', JSON.stringify(asked));
+      if (ok) check(/2 board photos nobody posted left the photo queue; 2 stray picture files cleared/.test(sweep), 'removed: the note counts both', sweep);
+      else check(/2 stray picture files are waiting: the bucket would not let the desk remove them/.test(sweep), 'refused: the note says they are waiting and where to look', sweep);
+      if (!ok) {
+        await page.click('[data-meetups]');
+        await page.waitForSelector('[data-meetups] ~ *, #desk .sheet-note', { timeout: 3000 }).catch(() => {});
+        await page.waitForTimeout(200);
+        check(/paste all-day\/supabase\/nn-ROUND2\.sql/.test(await page.$eval('#desk', (d) => d.innerText)), 'the Meetup list before the paste says what to paste', '');
+      }
+      check(!errors.filter((e) => !/404/.test(e)).length, 'no console errors (beyond the 404 of a list not pasted yet)', errors.join(' | '));
+      await ctx.close();
+    }
   });
 }
 
@@ -3022,10 +3103,7 @@ async function theArt(browser, base) {
     const { ctx, page, errors } = await newPage(browser, base, { motion: 'reduce' });
     await page.goto(base + '/all-day/?demo=1#art/add');
     await settle(page);
-    /* signing in redraws the wall in the same tick; an awaited promise from
-       this evaluate can be collected by the browser mid-redraw, so fire it */
-    await page.evaluate(() => { import('/all-day/js/auth.js').then((a) => a.demoSignIn()); });
-    await page.waitForTimeout(300);
+    await page.evaluate(() => import('/all-day/js/auth.js').then((a) => a.demoSignIn()));
     await page.click(artPanel + ' [data-sec="add"] button:has-text("Add art")');
     await page.waitForSelector('.sheet-body form.bform');
     check(await page.$('input[name="m:medium"]') !== null && await page.$('select[name="m:shirt"]') !== null, 'Add art asks for the medium and the shirt', '');

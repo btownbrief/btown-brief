@@ -261,7 +261,8 @@ window.addEventListener('allday-boards', (e) => {
   if ((d.board && d.board !== BOARD) || d.what === 'profile') return;
   reload();
 });
-app.onAuth(() => reload());
+/* on the next task: sign-in's other listeners (the profile, the shell) go first */
+app.onAuth(() => setTimeout(reload));
 
 /* ------------------------------------------------------------ the picks */
 function ofTheWeek() {
