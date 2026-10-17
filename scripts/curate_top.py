@@ -60,6 +60,9 @@ WHY_MAX = 90
 MAX_TOKENS = 4000
 REASONING_MAX_TOKENS = 1024
 MODEL_ATTEMPTS = 2
+# Per-request cap. Must stay well under the workflow's timeout-minutes
+# divided by MODEL_ATTEMPTS, or a hang cancels the job instead of retrying.
+MODEL_TIMEOUT_SECONDS = 150.0
 
 # How stale the live list may get before this job stops pretending it is fine.
 # The schedule (10:35/15:35/20:35 UTC) has a 14h overnight gap, and GitHub
@@ -453,9 +456,18 @@ def ask_model(prompt):
     that is already the cheap one."""
     import anthropic
 
+    # The SDK's default request timeout is 600s, which is exactly this job's
+    # timeout-minutes: one hung provider therefore eats the whole run and the
+    # second attempt below never happens. The scheduled runs on 2026-09-05 and
+    # 2026-09-06 were both cancelled at 10m00s that way. A 150s cap leaves room
+    # for both attempts inside the job window; max_retries=0 because the retry
+    # loop below is the one we want (it re-rolls OpenRouter's provider route,
+    # which is what actually fixes a bad draw).
     client = anthropic.Anthropic(
         api_key=os.environ["OPENROUTER_API_KEY"],
         base_url=OPENROUTER_BASE_URL,
+        timeout=MODEL_TIMEOUT_SECONDS,
+        max_retries=0,
     )
     last = None
     for attempt in range(1, MODEL_ATTEMPTS + 1):
