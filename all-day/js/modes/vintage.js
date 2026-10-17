@@ -240,9 +240,6 @@ function grid(host, posts, o) {
     it.arch = '';                 // the People archetype says nothing on a rack, and a half-width head has no room for it
     const n = cards.board(it);
     if (!n) return;
-    /* a grid cell will not shrink below its content's widest line (the
-       card's one-line head) unless told; .grid2 was drawn for tiles */
-    n.style.minWidth = '0';
     const v = n.querySelector('[data-act="bvote"]');
     if (v) { v.setAttribute('aria-label', o.vote); v.title = o.vote; }
     if (o.got && it.mine) {
