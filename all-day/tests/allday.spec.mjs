@@ -100,7 +100,7 @@ async function staticChecks() {
     const walk = async (dir) => { for (const f of await readdir(dir, { withFileTypes: true })) { const p = path.join(dir, f.name); if (f.isDirectory()) await walk(p); else if (/\.(js|css|html)$/.test(f.name)) js.push(p); } };
     await walk(path.join(APP, 'js')); await walk(path.join(APP, 'css'));
     const NEW = ['app.js', 'ui.js', 'store.js', 'auth.js', 'liquid.js', 'main.js', 'wire.js', 'wire-demo.js', 'watch.js', 'food.js', 'people.js', 'whatnow.js', 'vintage.js', 'art.js', 'onair.js', 'games.js', 'tokens.css', 'app.css'];
-    const OLD = new Set(['reddit.js', 'ig.js', 'photos.js', 'music.js', 'wander.js', 'listen.js', 'rows.js', 'sun.js', 'whatnow-engine.js', 'whatnow-data.js']);
+    const OLD = new Set(['sun.js', 'whatnow-engine.js', 'whatnow-data.js']);
     for (const f of js) {
       const name = path.basename(f);
       const isMode = f.includes(path.sep + 'modes' + path.sep);
