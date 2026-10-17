@@ -710,12 +710,11 @@ body.chrome-away .mast { transform: translateY(-100%); }
 .wx b.sc { margin-right: 0; }
 .wx .when { margin-left: auto; }
 
-/* What Now at a glance: the lake and sunset over the window pills on the
-   left, the weather card on the right, Spin under both */
-.wxtop { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 10px; align-items: end; padding: 10px var(--gutter) 6px; }
-.wxleft { min-width: 0; display: flex; flex-direction: column; gap: 8px; }
-.wxtop .wx { padding: 0; gap: 4px 12px; }
-.wxtop .toolrow { padding: 0; }
+/* What Now at a glance: the lake and sunset across the top, the window
+   pills on the left and the weather card on the right, Spin under both */
+.wxtop { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px 10px; align-items: center; padding: 10px var(--gutter) 6px; }
+.wxtop .wx { grid-column: 1 / -1; padding: 0; }
+.wxtop .toolrow { padding: 0; min-width: 0; }
 .wxtop .toolrow .pills { gap: 2px; }
 .wxtop .toolrow .pills button { padding: 0 6px; font-size: var(--fs-meta); }
 .wxcard { display: flex; flex-direction: column; gap: 6px; width: 158px; padding: 8px 10px; border-radius: var(--r-box); background: var(--accent-soft); color: var(--ink); }

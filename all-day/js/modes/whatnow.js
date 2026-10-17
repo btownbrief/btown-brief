@@ -340,18 +340,17 @@ function weatherCard() {
 }
 
 /* ------------------------------------------------------------------ Spin */
-/* The top of the Spin view: the lake and sunset line over the window pills
-   on the left, the weather card on the right, then Spin under both. */
+/* The top of the Spin view: the lake and sunset line across the top (one
+   line at 390, sunset score and all), then the window pills on the left and
+   the weather card on the right, then Spin under both. */
 function renderSpin() {
   const top = el('div', 'wxtop');
-  const left = el('div', 'wxleft');
   const card = weatherCard();
   const line = weatherLine(!card);
-  if (line) left.appendChild(line);
+  if (line) top.appendChild(line);
   const tools = el('div', 'toolrow');
   tools.appendChild(pills(WINDOWS, S.window, (v) => { S.window = v; S.answer = null; S.did = false; if (moving()) spin(); else render(); }));
-  left.appendChild(tools);
-  top.appendChild(left);
+  top.appendChild(tools);
   if (card) top.appendChild(card);
   root.appendChild(top);
 

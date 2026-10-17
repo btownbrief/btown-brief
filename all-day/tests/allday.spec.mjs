@@ -2187,9 +2187,10 @@ async function theWhatNow(browser, base) {
       const p = document.querySelector('#panel-whatnow');
       const r = (s) => p.querySelector(s).getBoundingClientRect();
       const c = r('.wxcard'), pills = r('.wxtop .pills'), big = r('.spin .big'), wx = r('.wxtop .wx');
-      return { cardLeft: c.left, cardRight: c.right, cardBottom: c.bottom, pillsRight: pills.right, wxRight: wx.right, bigTop: big.top, bigW: big.width, vw: innerWidth, scroll: document.documentElement.scrollWidth };
+      return { cardLeft: c.left, cardRight: c.right, cardTop: c.top, cardBottom: c.bottom, pillsRight: pills.right, pillsTop: pills.top, pillsBottom: pills.bottom, wxBottom: wx.bottom, bigTop: big.top, bigW: big.width, vw: innerWidth, scroll: document.documentElement.scrollWidth };
     });
-    check(box.cardLeft > box.vw / 2 && box.cardRight <= box.vw - 15 && box.pillsRight <= box.cardLeft && box.wxRight <= box.cardLeft, 'at 390 the card sits to the right, beside the pills, overlapping nothing', JSON.stringify(box));
+    check(box.cardLeft > box.vw / 2 && box.cardRight <= box.vw - 15 && box.pillsRight <= box.cardLeft && box.pillsTop >= box.cardTop && box.pillsBottom <= box.cardBottom && box.wxBottom <= box.cardTop,
+      'at 390 the card sits to the right, beside the pills and under the lake and sunset line, overlapping nothing', JSON.stringify(box));
     check(box.cardBottom <= box.bigTop && box.bigW >= 350 && box.scroll <= box.vw, 'above Spin, which keeps its full width, and nothing scrolls sideways', JSON.stringify(box));
 
     const today = await page.evaluate(() => {
@@ -2376,6 +2377,9 @@ async function theWhatNow(browser, base) {
     await page.waitForSelector(wnPanel + ' [data-sec="challenges"]', { timeout: 15000 });
     const ks = await page.$$eval(wnPanel + ' .challenges [data-k]', (r) => r.map((x) => x.dataset.k));
     check(ks.length === 4 && !ks.includes('c-demo-bad'), 'a challenge without a real page never shows', ks.join(', '));
+    await page.evaluate(() => { const h = document.querySelector('#panel-whatnow [data-sec="challenges"]'); h.closest('.panel').scrollBy(0, h.getBoundingClientRect().top - 120); });
+    await page.waitForTimeout(300);
+    await page.screenshot({ path: path.join(SHOTS, 'demo-whatnow-challenges-390.png') });
     await page.click(wnPanel + ' .chweek .markdone');
     check(await page.$eval(wnPanel + ' .chweek', (r) => r.classList.contains('done')), 'demo: Mark done ticks', '');
     check(!(await page.evaluate(() => localStorage.getItem('allday-challenges'))), 'and never reaches localStorage', '');
@@ -2388,8 +2392,6 @@ async function theWhatNow(browser, base) {
       return { dot, num, week, ink3: plain };
     });
     check(colour.dot !== 'rgba(0, 0, 0, 0)' && colour.week !== 'rgba(0, 0, 0, 0)', 'theme chips carry a colour dot, and the week’s challenge a tint', JSON.stringify(colour));
-    await page.evaluate(() => document.querySelector('#panel-whatnow [data-sec="challenges"]').scrollIntoView());
-    await page.screenshot({ path: path.join(SHOTS, 'demo-whatnow-challenges-390.png') });
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
   });
