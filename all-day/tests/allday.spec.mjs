@@ -4075,7 +4075,7 @@ async function theHabits(browser, base) {
     await page.goto(base + '/all-day/?demo=1#habits');
     await settle(page);
     await page.waitForSelector(hbPanel + ' .hb-addbtn', { timeout: 6000 });
-    for (const name of ['Stretch', 'Gym']) {
+    for (const name of ['Stretch', 'Gym', 'Stretch']) {
       const k = (await hbRows(page)).length;
       await page.click(hbPanel + ' .hb-addbtn');
       await page.fill(hbPanel + ' .hb-form input[name=text]', name);
@@ -4085,10 +4085,10 @@ async function theHabits(browser, base) {
     await hbTap(page, 'Stretch');
     check(await page.evaluate(() => localStorage.getItem('allday-habits-local')) === null, 'the demo keeps the phone’s habits in memory only', '');
     await hbSignIn(page);
-    await page.waitForFunction(() => document.querySelectorAll('#panel-habits .hb-row').length === 5, null, { timeout: 4000 }).catch(() => {});
+    await page.waitForFunction(() => document.querySelectorAll('#panel-habits .hb-row').length === 6, null, { timeout: 4000 }).catch(() => {});
     let rows = await hbRows(page);
-    check(JSON.stringify(rows.map((r) => r.name)) === '["Morning walk","Read twenty pages","Gym","Stretch","Gym"]' && rows[3].on && rows[4].meta === 'Daily',
-      'the demo account had three: Stretch joins them with today’s tap; a daily Gym is not the account’s 3-a-week Gym', JSON.stringify(rows.map((r) => [r.name, r.on, r.meta])));
+    check(JSON.stringify(rows.map((r) => r.name)) === '["Morning walk","Read twenty pages","Gym","Stretch","Gym","Stretch"]' && rows[3].on && !rows[5].on && rows[4].meta === 'Daily',
+      'the demo account had three: Stretch joins them with today’s tap, the phone’s two Stretches stay two, and a daily Gym is not the account’s 3-a-week Gym', JSON.stringify(rows.map((r) => [r.name, r.on, r.meta])));
     await page.evaluate(() => import('/all-day/js/app.js').then((a) => a.signOut()));
     await page.waitForFunction(() => !document.querySelector('#panel-habits .hb-row'), null, { timeout: 4000 }).catch(() => {});
     check((await hbRows(page)).length === 0, 'everything came across, so signed out the phone’s list is empty', '');
@@ -4107,16 +4107,16 @@ async function theHabits(browser, base) {
     await page.click('.sheet-body button:has-text("Archive")');
     await page.waitForFunction(() => document.querySelectorAll('#panel-habits .hb-row').length === 1, null, { timeout: 4000 }).catch(() => {});
     await hbSignIn(page);
-    await page.waitForFunction(() => document.querySelectorAll('#panel-habits .hb-row').length === 6, null, { timeout: 4000 }).catch(() => {});
+    await page.waitForFunction(() => document.querySelectorAll('#panel-habits .hb-row').length === 7, null, { timeout: 4000 }).catch(() => {});
     rows = await hbRows(page);
-    check(rows.length === 6 && rows[5].name === 'Floss', 'Floss joins the account', JSON.stringify(rows.map((r) => r.name)));
+    check(rows.length === 7 && rows[6].name === 'Floss', 'Floss joins the account', JSON.stringify(rows.map((r) => r.name)));
     await page.evaluate(() => import('/all-day/js/app.js').then((a) => a.signOut()));
     await page.waitForSelector(hbPanel + ' .hb-row', { timeout: 4000 }).catch(() => {});
     check(JSON.stringify((await hbRows(page)).map((r) => r.name)) === '["Floss"]', 'and with the archived habit left behind, the phone keeps its copy', JSON.stringify((await hbRows(page)).map((r) => r.name)));
     await hbSignIn(page);
     await page.waitForTimeout(200);
     rows = await hbRows(page);
-    check(rows.filter((r) => r.name === 'Floss').length === 1 && rows.length === 6, 'signing in again sends nothing twice', JSON.stringify(rows.map((r) => r.name)));
+    check(rows.filter((r) => r.name === 'Floss').length === 1 && rows.length === 7, 'signing in again sends nothing twice', JSON.stringify(rows.map((r) => r.name)));
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
   });

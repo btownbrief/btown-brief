@@ -116,8 +116,8 @@ begin
       v_n := (x ->> 'n')::int;
       if v_n is null or v_n < (L ->> 'nMin')::int or v_n > (L ->> 'nMax')::int then raise exception 'bad_import'; end if;
     end if;
-    if jsonb_array_length(coalesce(x -> 'taps', '[]'::jsonb)) > 401 then raise exception 'bad_import'; end if;
-    for t in select value from jsonb_array_elements(coalesce(x -> 'taps', '[]'::jsonb)) loop
+    if jsonb_array_length(coalesce(nullif(x -> 'taps', 'null'::jsonb), '[]'::jsonb)) > 401 then raise exception 'bad_import'; end if;
+    for t in select value from jsonb_array_elements(coalesce(nullif(x -> 'taps', 'null'::jsonb), '[]'::jsonb)) loop
       if jsonb_typeof(t) <> 'string' or (t #>> '{}') !~ '^[0-9]{4}-[0-9]{2}-[0-9]{2}$' then raise exception 'bad_import'; end if;
       begin
         v_d := (t #>> '{}')::date;
@@ -138,7 +138,7 @@ begin
             case when coalesce((x ->> 'archived')::boolean, false) then now() end)
     returning * into h;
     insert into public.sz_taps (habit_id, user_id, date, source, note)
-    select distinct h.id, u, (d #>> '{}')::date, 'app', 'imported' from jsonb_array_elements(coalesce(x -> 'taps', '[]'::jsonb)) as e(d)
+    select distinct h.id, u, (d #>> '{}')::date, 'app', 'imported' from jsonb_array_elements(coalesce(nullif(x -> 'taps', 'null'::jsonb), '[]'::jsonb)) as e(d)
     on conflict (habit_id, date) do nothing;
   end loop;
   return public.sz_habits_get();

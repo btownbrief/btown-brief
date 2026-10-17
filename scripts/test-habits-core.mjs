@@ -115,6 +115,7 @@ test('sz-ROUND3.sql replaces sz_habit_add and adds sz_import_local, and nothing 
   assert.ok(!/no_member/.test(SQL.match(HABIT_ADD_RE)[0]), 'and it asks no name first');
   assert.match(ROUND3, new RegExp('v_d < v_today - ' + core.IMPORT_DAYS + ' '), 'the same window as IMPORT_DAYS');
   assert.match(ROUND3, new RegExp("'\\[\\]'::jsonb\\)\\) > " + (core.IMPORT_DAYS + 1) + ' '), 'at most a tap a day in the window');
+  assert.ok(!/coalesce\(x -> 'taps'/.test(ROUND3), 'taps: null reads as no taps, as the fake reads it');
   assert.match(ROUND3, /pg_advisory_xact_lock\(hashtext\('sz_habits:' \|\| u::text\)\)/, 'the same lock sz_habits_cap takes');
 });
 
@@ -457,7 +458,7 @@ test('the fake: sz_import_local, the same cases as the SQL', () => {
   const got = f.sz_import_local({ p_habits: [
     { text: '  Morning   walk ', frequency: 'daily', n: null, shared: false, archived: false, taps: walk },
     { text: 'Gym', frequency: 'n_per_week', n: 3, shared: true, taps: [core.addDays(today, -2)] },
-    { text: 'Read', frequency: 'weekdays', n: 4 },
+    { text: 'Read', frequency: 'weekdays', n: 4, taps: null },
     { text: 'Old habit', frequency: 'daily', archived: true, taps: [core.addDays(today, -30)] },
   ] });
   assert.deepEqual(got.map((h) => h.text), ['Morning walk', 'Gym', 'Read'], 'in the phone’s order, the archived one kept out of the list');
@@ -558,6 +559,12 @@ test('the phone: a broken, newer or refused store never loses or overwrites anyt
   q.call('sz_habit_add', { p_text: 'Read', p_frequency: 'daily' });
   assert.deepEqual(q.call('sz_habits_get').map((h) => h.text), ['Walk', 'Read'], 'every later call still sees them');
   assert.equal(q.call('sz_taps_get', { p_from: '2026-10-14', p_to: '2026-10-14' }).length, 1);
+  /* a phone that cannot even remove the key keeps its last state for the visit, not the stale copy */
+  let stale = JSON.stringify({ v: LOCAL_VERSION, habits: [{ id: 'a', text: 'Walk', frequency: 'daily', position: 1 }], taps: {} });
+  const stuck = { get: () => stale, set: () => false, remove: () => false };
+  const s1 = phone('2026-10-14 12:00', stuck);
+  s1.forget(['a']);
+  assert.equal(s1.has(), false, 'the account has it: it does not come back from the key');
   /* a disk that fills up part way: what was written stays, and nothing done after is lost for the visit */
   let room = true, kept = null;
   const filling = { get: () => kept, set: (v) => { if (!room) return false; kept = v; return true; }, remove: () => { kept = null; } };

@@ -49,12 +49,12 @@ export function browserStorage(key = LOCAL_KEY) {
   return {
     get() { try { return localStorage.getItem(key); } catch (e) { return null; } },
     set(v) { try { localStorage.setItem(key, v); return true; } catch (e) { return false; } },
-    remove() { try { localStorage.removeItem(key); } catch (e) { /* nothing to do */ } },
+    remove() { try { localStorage.removeItem(key); return true; } catch (e) { return false; } },
   };
 }
 export function memoryStorage(initial = null) {
   let v = initial;
-  return { get: () => v, set: (x) => { v = x; return true; }, remove: () => { v = null; } };
+  return { get: () => v, set: (x) => { v = x; return true; }, remove: () => { v = null; return true; } };
 }
 
 export class LocalHabits extends FakeHabits {
@@ -123,7 +123,7 @@ export class LocalHabits extends FakeHabits {
     Object.values(taps).forEach((l) => l.sort());
     const habits = this.habits.map((h) => ({ id: h.id, text: h.text, frequency: h.frequency, n: h.n, shared: h.shared,
       position: h.position, archived_at: h.archived_at, created_at: h.created_at }));
-    if (!habits.length) { this.storage.remove(); this.merged = {}; return; }
+    if (!habits.length) { if (this.storage.remove() === false) this.memOnly = true; this.merged = {}; return; }
     if (!this.storage.set(JSON.stringify({ v: LOCAL_VERSION, habits, taps, merged: this.merged }))) this.memOnly = true;
   }
 
@@ -189,7 +189,7 @@ export class LocalHabits extends FakeHabits {
   clear() {
     this._read();
     if (this.newer) return;
-    this.storage.remove();
+    if (this.storage.remove() === false) this.memOnly = true;
     this.habits = [];
     this.taps = new Map();
     this.merged = {};

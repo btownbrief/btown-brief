@@ -102,7 +102,7 @@ select pg_temp.ok(jsonb_array_length(public.sz_import_local(jsonb_build_array(
   jsonb_build_object('text', '  Morning   walk ', 'frequency', 'daily', 'n', null, 'shared', false, 'archived', false,
     'taps', (select jsonb_agg(to_jsonb((pg_temp.today() - d)::text)) from generate_series(0, 9) d) || jsonb_build_array((pg_temp.today())::text, (pg_temp.today() - 400)::text)),
   jsonb_build_object('text', 'Gym', 'frequency', 'n_per_week', 'n', 3, 'shared', true, 'taps', jsonb_build_array((pg_temp.today() - 2)::text)),
-  jsonb_build_object('text', 'Read', 'frequency', 'weekdays', 'n', 4),
+  jsonb_build_object('text', 'Read', 'frequency', 'weekdays', 'n', 4, 'taps', null),
   jsonb_build_object('text', 'Old habit', 'frequency', 'daily', 'archived', true, 'taps', jsonb_build_array((pg_temp.today() - 30)::text))
 ))) = 3, 'three habits in the list, the archived one kept out of it');
 select pg_temp.ok((select string_agg(h ->> 'text', ',') from jsonb_array_elements(public.sz_habits_get()) h) = 'Morning walk,Gym,Read', 'in the phone''s order, tidied as sz_habit_add tidies');

@@ -266,7 +266,7 @@ function remote(uid, fn, args) {
   return serverCall(fn, args);
 }
 function moveLocal(uid) {
-  if (moving && moving.uid === uid) return moving.p;
+  if (moving) return moving.uid === uid ? moving.p : moving.p.then(() => moveLocal(uid));   // one move at a time, whoever it is for
   const db = local();
   if (!db.pendingFor(uid)) return Promise.resolve();
   const snap = db.snapshot(uid);
@@ -283,7 +283,10 @@ const habitKey = (h) => clean(h.text).toLowerCase() + '|' + h.frequency + '|' + 
 async function mergeLocal(db, uid) {
   const got = await remote(uid, 'sz_habits_get');
   if (!got.ok) return;
-  const have = new Map((Array.isArray(got.data) ? got.data : []).filter((h) => !h.is_goal).map((h) => [habitKey(h), h]));
+  /* each of the account's habits stands for one of the phone's at most, so two
+     habits the phone keeps under one name stay two */
+  const have = new Map();
+  (Array.isArray(got.data) ? got.data : []).filter((h) => !h.is_goal).forEach((h) => { if (!have.has(habitKey(h))) have.set(habitKey(h), []); have.get(habitKey(h)).push(h); });
   const today = dayKey(Date.now());
   const snap = db.snapshot(uid);
   let whole = snap.whole;
@@ -292,19 +295,21 @@ async function mergeLocal(db, uid) {
     const h = snap.list[i];
     if (h.archived) { whole = false; continue; }
     if (h.taps.some((d) => d !== today)) whole = false;
-    let row = have.get(habitKey(h));
+    const same = have.get(habitKey(h)) || [];
+    let row = same.shift();
+    if (row && !!row.shared !== !!h.shared) whole = false;   // the account's setting stands; the phone keeps its own
     if (!row) {
       const r = await remote(uid, 'sz_habit_add', { p_text: h.text, p_frequency: h.frequency, p_n: h.n, p_shared: h.shared });
       if (!r.ok && TRANSIENT.has(r.error)) break;
       if (!r.ok) { whole = false; continue; }   // refused (the ceiling): it stays on the phone
       row = r.data;
-      have.set(habitKey(h), row);
     }
+    added.push(snap.ids[i]);
     if (h.taps.includes(today)) {
       const t = await remote(uid, 'sz_tap', { p_habit: row.id, p_date: today });
       if (!t.ok && TRANSIENT.has(t.error)) break;
+      if (!t.ok) whole = false;   // refused (midnight came): the phone keeps the tap
     }
-    added.push(snap.ids[i]);
   }
   if (!added.length) return;
   if (whole && added.length === snap.ids.length) db.forget(added);
