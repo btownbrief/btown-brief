@@ -18,9 +18,13 @@ own site wherever it publishes them:
     "hours": {"mon": null, "tue": "11:00-18:00", ..., "sun": "12:00-17:00"},
     "checked": {"date": "2026-10-17", "source": "https://...", "note": "..."}
 
-A day set to null is a closed day; `hours_note` carries what a
-shop says beside its hours ("Show nights run late"). An entry with no `hours` has none
-published, and the tab says to call ahead. Nothing is guessed. Every
+A day set to null is a closed day, and "unlisted" is one the shop's page
+leaves out (shown as "not listed", never as closed). `hours_note` carries
+what a shop says beside its hours ("Show nights run late"). An entry with
+no `hours` has none published, and the tab says to call ahead. The kinds
+shown come from the words in the entry unless it sets `guide_kinds` ("a
+used bookstore that mentions vintage" is not a vintage shop). Nothing is
+guessed. Every
 missing fact is listed in the shop's `gaps`, so the tab can say "hours not
 checked yet" instead of leaving a hole, and Stephen can see what to fill.
 
@@ -68,6 +72,8 @@ ROUTE = ["Downtown / Church St", "Waterfront", "South End", "Hill Section", "Old
 HOURS = re.compile(r"\bOpen ([^.]*?\b(daily|weekdays|weekends|mon|tue|wed|thu|fri|sat|sun)[^.]*)\.", re.I)
 DAYS = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"]
 DAY_LABEL = dict(zip(DAYS, ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]))
+UNLISTED = "unlisted"            # a day the shop's own page leaves out: not known to be closed
+ISO_DATE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 SPAN = re.compile(r"^([01]\d|2[0-3]):([0-5]\d)-([01]\d|2[0-3]):([0-5]\d)$")
 CHURCH_ST = [44.4759, -73.2121]
 WALK_MPH = 3.0
@@ -106,23 +112,36 @@ def clock(hh, mm):
 
 def week_of(t):
     """The entry's checked hours, day by day, or None. A malformed day stops the build: no guessing."""
-    hours, checked = t.get("hours"), t.get("checked")
-    if not hours:
+    hours = t.get("hours")
+    if hours is None:
         return None
-    if not (isinstance(checked, dict) and checked.get("date") and checked.get("source")):
-        sys.exit(f"{t['id']}: hours without checked.date and checked.source")
+    if not checked_of(t):
+        sys.exit(f"{t['id']}: hours without a checked date and source page")
     if not isinstance(hours, dict) or sorted(hours) != sorted(DAYS):
         sys.exit(f"{t['id']}: hours must give all seven days, mon to sun (null for closed)")
     for d in DAYS:
-        if hours[d] is not None and not SPAN.match(hours[d]):
-            sys.exit(f"{t['id']}: {d} hours {hours[d]!r} are not HH:MM-HH:MM")
+        if hours[d] is not None and hours[d] != UNLISTED and not SPAN.match(hours[d]):
+            sys.exit(f"{t['id']}: {d} hours {hours[d]!r} are not HH:MM-HH:MM, null or {UNLISTED!r}")
+    if not any(hours[d] not in (None, UNLISTED) for d in DAYS):
+        sys.exit(f"{t['id']}: hours with no open day; leave hours out instead")
     return {d: hours[d] for d in DAYS}
+
+
+def checked_of(t):
+    """The entry's checked record, if it is a real one: an ISO date and a web page."""
+    c = t.get("checked")
+    if c is None:
+        return None
+    if not (isinstance(c, dict) and ISO_DATE.match(str(c.get("date") or "")) and re.match(r"^https?://", str(c.get("source") or ""))):
+        sys.exit(f"{t['id']}: checked needs a YYYY-MM-DD date and an http(s) source")
+    return c
 
 
 def hours_line(week):
     """Mon to Sun grouped into runs: "Tue–Sat 11am to 6pm · Sun noon to 5pm · closed Mon"."""
     if not week:
         return None
+    label = lambda days: ", ".join(DAY_LABEL[d] for d in days)
 
     def say(span):
         m = SPAN.match(span)
@@ -134,14 +153,15 @@ def hours_line(week):
             runs[-1][1] = d
         else:
             runs.append([d, d, week[d]])
-    if not any(span for _, _, span in runs):
-        return None
     if len(runs) == 1:
         return "Daily " + say(runs[0][2])
-    parts = [(DAY_LABEL[a] if a == b else DAY_LABEL[a] + "–" + DAY_LABEL[b]) + " " + say(span) for a, b, span in runs if span]
-    closed = [DAY_LABEL[d] for d in DAYS if week[d] is None]
+    parts = [(DAY_LABEL[a] if a == b else DAY_LABEL[a] + "–" + DAY_LABEL[b]) + " " + say(span) for a, b, span in runs if span not in (None, UNLISTED)]
+    closed = [d for d in DAYS if week[d] is None]
+    unlisted = [d for d in DAYS if week[d] == UNLISTED]
     if closed:
-        parts.append("closed " + ", ".join(closed))
+        parts.append("closed " + label(closed))
+    if unlisted:
+        parts.append(label(unlisted) + " not listed")
     return " · ".join(parts)
 
 
@@ -150,11 +170,11 @@ def shop(t):
     coords = t.get("coords")
     coords = coords if isinstance(coords, list) and len(coords) == 2 and all(isinstance(c, (int, float)) for c in coords) else None
     week = week_of(t)
-    checked = t.get("checked") if isinstance(t.get("checked"), dict) else None
+    checked = checked_of(t)
     out = {
         "id": t["id"],
         "name": t["name"],
-        "kinds": [KIND_LABEL[k] for k in ks],
+        "kinds": t.get("guide_kinds") or [KIND_LABEL[k] for k in ks],
         "neighborhood": t.get("neighborhood") or None,
         "address": t.get("address") or None,
         "website": t.get("website") or None,
