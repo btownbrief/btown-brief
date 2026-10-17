@@ -387,6 +387,54 @@ class Build(unittest.TestCase):
         self.assertEqual(led["spent"], 104)
         self.assertEqual(set(led["last"]), {"a", "b", "c"})
 
+    def test_reserve_counts_and_names_the_run_without_a_request(self):
+        now = at(2026, 10, 17)
+        with tempfile.TemporaryDirectory() as tmp:
+            code, got, led = self.run_main(
+                tmp, [{"h": "a", "tier": 1, "category": "food"}, {"h": "b", "tier": 2, "category": "pets"}],
+                ["--reserve"], lambda h, k: self.fail("fetched while reserving"), now,
+                {"month": "2026-10", "spent": 100, "last": {}})
+        self.assertEqual(code, 0)
+        self.assertIsNone(got)
+        self.assertEqual(self.tagged_calls, [])
+        self.assertEqual(led["spent"], 103)
+        self.assertEqual(led["pending"], {"handles": ["a", "b"], "tagged": True, "at": int(now)})
+
+    def test_execute_spends_exactly_the_reservation_once(self):
+        doc = answer()
+        now = doc["fetched_at"]
+        month = bi.month_key(bi.local_day(now))
+        roster = [{"h": "foambrewers", "tier": 1, "category": "venue"}, {"h": "b", "tier": 1, "category": "pets"},
+                  {"h": "c", "tier": 2, "category": "pets"}]
+        calls = []
+        fetch = lambda h, k: calls.append(h) or (doc["items"] if h == "foambrewers" else [])
+        with tempfile.TemporaryDirectory() as tmp:
+            code, got, led = self.run_main(
+                tmp, roster, ["--execute", "--no-carry"], fetch, now,
+                {"month": month, "spent": 50, "last": {},
+                 "pending": {"handles": ["foambrewers", "gone"], "tagged": False, "at": int(now) - 600}})
+            self.assertEqual(code, 0)
+            self.assertEqual(calls, ["foambrewers"])           # not b, not c, not a handle since dropped
+            self.assertEqual(self.tagged_calls, [])
+            self.assertEqual(led["spent"], 50)                  # counted when it was reserved
+            self.assertNotIn("pending", led)
+            self.assertTrue(got["posts"])
+            code, _, led = self.run_main(tmp, roster, ["--execute"], fetch, now + 60, led)
+        self.assertEqual(code, 0)
+        self.assertEqual(calls, ["foambrewers"])                # a second --execute spends nothing
+
+    def test_a_stale_reservation_is_not_executed(self):
+        now = at(2026, 10, 17, 18)
+        with tempfile.TemporaryDirectory() as tmp:
+            code, got, led = self.run_main(
+                tmp, [{"h": "a", "tier": 1, "category": "food"}], ["--execute"],
+                lambda h, k: self.fail("ran a stale reservation"), now,
+                {"month": "2026-10", "spent": 10, "last": {},
+                 "pending": {"handles": ["a"], "tagged": True, "at": int(now) - (bi.PENDING_MAX_H + 1) * 3600}})
+        self.assertEqual(code, 0)
+        self.assertIsNone(got)
+        self.assertEqual(self.tagged_calls, [])
+
     def test_a_missing_ledger_fetches_nothing_and_writes_one(self):
         now = at(2026, 10, 17)
         with tempfile.TemporaryDirectory() as tmp:

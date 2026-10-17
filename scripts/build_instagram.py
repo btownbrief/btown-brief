@@ -24,11 +24,14 @@ budget * d / D, counted in data/instagram-ledger.json (credits spent this
 month, and when each account was last fetched). Tier 1 is served first, then
 the tagged shelf, then tier 2, then tier 3, and whatever does not fit waits
 for tomorrow. Credits are written to the ledger BEFORE the requests go out,
-so a run that dies halfway has already counted them. A missing or unreadable
-ledger fails CLOSED: the run assumes today's whole share is spent, fetches
-nothing, and writes a fresh ledger so tomorrow starts normally. (The one gap
-left: a ledger that was written but never pushed. The workflow's commit step
-runs even after a failure, and a failed push turns the job red.)
+so a run that dies halfway has already counted them. In the workflow that is
+two steps: `--reserve` writes the run's credits and its accounts into the
+ledger and stops, the workflow pushes the ledger, and only then does
+`--execute` fetch exactly what was reserved. A run that cannot push its
+reservation spends nothing, so no later run can read a ledger that is
+missing credits. A missing or unreadable ledger fails CLOSED: the run
+assumes today's whole share is spent, fetches nothing, and writes a fresh
+ledger so tomorrow starts normally.
 
 THREE FACTS ABOUT INSTAGRAM'S CDN SHAPE EVERYTHING HERE.
 
@@ -80,8 +83,10 @@ account's category when that account is rostered, else `other`.
 Env: SCRAPECREATORS_API_KEY (or SCRAPE_CREATORS_API_KEY), or
      ~/.config/btownbrief/secrets.env.
 
-Run: python3 scripts/build_instagram.py [--dry-run] [--only h1,h2] [--no-carry]
-                                        [--no-tagged] [--out PATH] [--ledger PATH]
+Run: python3 scripts/build_instagram.py [--dry-run | --reserve | --execute]
+                                        [--only h1,h2] [--no-carry] [--no-tagged]
+                                        [--out PATH] [--ledger PATH]
+     With no step flag it reserves and fetches in one go (for a local run).
      --dry-run prints what this run would fetch and what that costs. It makes
      no request and needs no key.
 """
@@ -125,6 +130,7 @@ MONTHLY_CREDIT_BUDGET = 5280
 RUNS_PER_DAY = 2              # refresh-allday.yml's two crons; for the projection only
 TIER3_PERIOD_DAYS = 7         # tier 3: each account once a week
 TIERS = (1, 2, 3)
+PENDING_MAX_H = 6             # a --reserve older than this is not executed
 CATEGORIES = ("food", "venue", "events", "shop", "pets", "scenic", "other")
 
 # One cap per category, so a chip never comes up empty because another kind
@@ -536,7 +542,14 @@ def load_ledger(path: pathlib.Path, now: float, budget: int) -> tuple[dict, bool
         else:
             raise ValueError(f"month is {doc.get('month')!r}")
         runs = [r for r in (doc.get("runs") or []) if isinstance(r, dict)]
-        return {"month": month, "spent": spent, "last": last, "runs": runs}, True
+        out = {"month": month, "spent": spent, "last": last, "runs": runs}
+        pend = doc.get("pending")
+        if (isinstance(pend, dict) and isinstance(pend.get("handles"), list)
+                and isinstance(pend.get("at"), (int, float))
+                and 0 <= now - pend["at"] <= PENDING_MAX_H * 3600):
+            out["pending"] = {"handles": [norm_handle(h) for h in pend["handles"] if norm_handle(h)],
+                              "tagged": pend.get("tagged") is True, "at": int(pend["at"])}
+        return out, True
     except FileNotFoundError:
         why = "no ledger"
     except Exception as e:  # corrupt, hand-edited, from the future
@@ -626,6 +639,8 @@ def save_ledger(path: pathlib.Path, ledger: dict) -> None:
         "runs": ledger["runs"][-62:],
         "last": dict(sorted(ledger["last"].items())),
     }
+    if ledger.get("pending"):
+        doc["pending"] = ledger["pending"]
     path.write_text(json.dumps(doc, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
 
 
@@ -646,18 +661,24 @@ def main() -> int:
                     help="read and write the ledger here instead of data/instagram-ledger.json")
     ap.add_argument("--dry-run", action="store_true",
                     help="print this run's plan and its cost; no request, no key, no write")
+    ap.add_argument("--reserve", action="store_true",
+                    help="plan this run and write its credits and its accounts to the "
+                         "ledger, then stop; no request (the workflow pushes it first)")
+    ap.add_argument("--execute", action="store_true",
+                    help="fetch exactly what the last --reserve wrote to the ledger")
     args = ap.parse_args()
-    out_path = args.out or OUT
+    if args.reserve and args.execute:
+        ap.error("--reserve and --execute are two steps, not one")
     ledger_path = args.ledger or LEDGER
 
     accounts = load_roster()
     cat_of = {a["h"]: a["category"] for a in accounts}
-    seg_of = {a["h"]: a["s"] for a in accounts}
-    food = {a["h"] for a in accounts if a["food"]}
     now = time.time()
     budget = MONTHLY_CREDIT_BUDGET
 
     ledger, ledger_ok = load_ledger(ledger_path, now, budget)
+    if args.execute:
+        return execute(args, ledger, ledger_path, accounts, now)
     credits = allowance(ledger, now, budget)
     if args.only:
         want = {norm_handle(h) for h in args.only.split(",") if norm_handle(h)}
@@ -703,11 +724,68 @@ def main() -> int:
         log("nothing to fetch inside the budget — payload left as it is")
         return 0
 
-    key = api_key()
-    if not key:
+    if not api_key():
         log("no Scrape Creators key — set SCRAPECREATORS_API_KEY. Nothing written.")
         return 1
 
+    # Every request is a credit, whatever comes back. The whole run's spend is
+    # written to the ledger BEFORE the first request: a run killed halfway
+    # has then over-counted, never under-counted, and a ledger that cannot be
+    # written stops the run before it costs anything. With --reserve that is
+    # all this run does: the workflow pushes the ledger, and only a push that
+    # landed lets --execute spend it, so the next run can never read a ledger
+    # that is missing these credits.
+    ledger["spent"] += spend
+    for a in picked:
+        ledger["last"][a["h"]] = int(now)
+    roster_h = {a["h"] for a in accounts}
+    ledger["last"] = {h: t for h, t in ledger["last"].items() if h in roster_h}
+    ledger["runs"].append({"at": dt.datetime.fromtimestamp(now, dt.timezone.utc)
+                           .isoformat(timespec="seconds"), "credits": spend})
+    ledger.pop("pending", None)
+    if args.reserve:
+        ledger["pending"] = {"handles": [a["h"] for a in picked], "tagged": want_tagged,
+                             "at": int(now)}
+    save_ledger(ledger_path, ledger)
+    log(f"ledger: {spend} reserved for this run, {ledger['spent']} of {budget} this month")
+    if args.reserve:
+        return 0
+    return fetch_and_build(args, picked, want_tagged, accounts, now)
+
+
+def execute(args, ledger: dict, ledger_path: pathlib.Path, accounts: list[dict], now: float) -> int:
+    """Spend what --reserve wrote, and nothing else. The credits were counted
+    when they were reserved, so this changes `spent` not at all; it clears
+    the reservation first, so it can never be spent twice."""
+    pend = ledger.get("pending")
+    if not pend:
+        log("--execute: no reservation in the ledger (none made, already spent, "
+            f"or older than {PENDING_MAX_H} hours) — nothing fetched")
+        return 0
+    if not api_key():
+        log("no Scrape Creators key — set SCRAPECREATORS_API_KEY. Nothing written.")
+        return 1
+    by_h = {a["h"]: a for a in accounts}
+    picked = [by_h[h] for h in dict.fromkeys(pend["handles"]) if h in by_h]
+    want_tagged = pend["tagged"] and not args.no_tagged
+    ledger.pop("pending", None)
+    save_ledger(ledger_path, ledger)
+    log(f"--execute: {len(picked)} account(s)" + (" + tagged" if want_tagged else "")
+        + " as reserved")
+    if not picked and not want_tagged:
+        return 0
+    return fetch_and_build(args, picked, want_tagged, accounts, now)
+
+
+def fetch_and_build(args, picked: list[dict], want_tagged: bool,
+                    accounts: list[dict], now: float) -> int:
+    """Fetch `picked` (and the tagged shelf), carry forward what is still
+    good, and write the payload. The credits are already on the ledger."""
+    out_path = args.out or OUT
+    key = api_key()
+    cat_of = {a["h"]: a["category"] for a in accounts}
+    seg_of = {a["h"]: a["s"] for a in accounts}
+    food = {a["h"] for a in accounts if a["food"]}
     cutoff = now - KEEP_DAYS * 86400
 
     # Read the previous payload. Which of its posts we KEEP is decided after
@@ -724,20 +802,6 @@ def main() -> int:
         except Exception as e:
             log(f"could not read the previous payload ({str(e)[:60]}) — "
                 f"building from this run alone")
-
-    # Every request is a credit, whatever comes back. The whole run's spend is
-    # written to the ledger BEFORE the first request: a run killed halfway
-    # has then over-counted, never under-counted, and a ledger that cannot be
-    # written stops the run before it costs anything.
-    ledger["spent"] += spend
-    for a in picked:
-        ledger["last"][a["h"]] = int(now)
-    roster_h = set(cat_of)
-    ledger["last"] = {h: t for h, t in ledger["last"].items() if h in roster_h}
-    ledger["runs"].append({"at": dt.datetime.fromtimestamp(now, dt.timezone.utc)
-                           .isoformat(timespec="seconds"), "credits": spend})
-    save_ledger(ledger_path, ledger)
-    log(f"ledger: {spend} reserved for this run, {ledger['spent']} of {budget} this month")
 
     fresh, failed, answered = [], [], set()
     for a in picked:
