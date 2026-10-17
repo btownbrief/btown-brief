@@ -835,7 +835,7 @@ function bindPull(p) {
     const h = Math.min(88, dy * 0.5);
     ptr.classList.add('pulling');
     ptr.style.height = h + 'px';
-    ptr.firstElementChild.textContent = h >= 64 ? 'Release to check' : '';
+    ptr.firstElementChild.textContent = '';
   }, { passive: true });
   p.addEventListener('touchend', () => {
     if (!pulling) { y0 = null; return; }

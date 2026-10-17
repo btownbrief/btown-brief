@@ -480,8 +480,7 @@ function paintDeals(host) {
     const hits = '<button class="hit l" aria-label="Previous deal"></button><button class="hit r" aria-label="Next deal"></button>';
     if (i === cards.length) {
       box.dataset.k = 'deals-end';
-      box.innerHTML = tint('deals-end') + segs + '<div class="body"><div class="eyebrow">' + esc('That’s today') + '</div><h3>' +
-        esc(plural(all.length, 'deal', 'deals') + ' on today') + '</h3><div class="row"></div></div>' + hits;
+      box.innerHTML = tint('deals-end') + segs + '<div class="body"><h3>' + esc('That’s all.') + '</h3><div class="row"></div></div>' + hits;
       box.querySelector('.row').append(outLink('All the deals', DEALS_PAGE, 'btn ghost sm', true), button('Start over', 'ghost sm', () => go(0)));
     } else {
       const x = cards[i];
@@ -702,7 +701,7 @@ app.register(KEY, {
       render();
       if (app.activeTab() === KEY) app.paintSubnav();
       land();
-    }).catch(() => { r.innerHTML = '<div class="errbox"><b>Food didn’t load.</b> Reload to try again.</div>'; });
+    }).catch(() => { r.innerHTML = '<div class="errbox"><b>Food didn’t load.</b></div>'; });
   },
   activate(param) {
     pending = param || null;

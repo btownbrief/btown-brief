@@ -282,6 +282,7 @@ function drawYou(host) {
     const best = m.hits.reduce((a, b) => (b.rank < a.rank ? b : a));
     const g = bySlug(best.slug);
     line = 'Playing as <b>' + esc(name) + '</b>: on ' + esc(plural(boards, 'board', 'boards')) + ' this month, best ' + esc(ORD(best.rank)) + (g ? ' in ' + esc(g.name) : '') + '.';
+    if (m.players > 1) line += ' ' + esc(plural(m.players, 'player uses', 'players use') + ' that name.');
   }
   card.innerHTML = '<p>' + line + '</p>';
   const row = el('div', 'row');
@@ -575,7 +576,7 @@ function land() {
 function mount(root) {
   G.root = root;
   render();
-  if (app.demo) loadDemo().then(render, () => { G.root.innerHTML = '<div class="errbox"><b>The demo didn’t load.</b> Reload to try again.</div>'; });
+  if (app.demo) loadDemo().then(render, () => { G.root.innerHTML = '<div class="errbox"><b>The demo didn’t load.</b></div>'; });
   else loadLive();
 }
 

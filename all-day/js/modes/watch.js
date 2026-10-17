@@ -779,7 +779,7 @@ function drawTown(host) {
   sec(host, 'Town ratings this week', null, 'town');
   if (P.state === 'loading') { host.appendChild(el('p', 'note pad', 'Counting…')); return; }
   if (P.state === 'off') { host.appendChild(el('p', 'note pad', 'Opening soon.')); return; }
-  if (P.state === 'fail') { host.appendChild(el('p', 'note pad', 'Didn’t load. Pull down to retry.')); return; }
+  if (P.state === 'fail') { host.appendChild(el('p', 'note pad', 'Didn’t load.')); return; }
   const rows = [...P.agg.values()].filter((a) => a.wn >= MIN_RATINGS)
     .sort((a, b) => b.wn - a.wn || avg(b.wsum, b.wn) - avg(a.wsum, a.wn)).slice(0, TOWN_ROWS);
   if (!rows.length) {
@@ -820,7 +820,7 @@ function drawVote(host) {
   sec(host, 'Vote for the next screening', null, 'vote');
   if (P.state === 'loading') { host.appendChild(el('p', 'note pad', 'Counting…')); return; }
   if (P.state === 'off') { host.appendChild(el('p', 'note pad', 'Opening soon.')); return; }
-  if (P.state === 'fail') { host.appendChild(el('p', 'note pad', 'Didn’t load. Pull down to retry.')); return; }
+  if (P.state === 'fail') { host.appendChild(el('p', 'note pad', 'Didn’t load.')); return; }
   const card = el('div', 'textcard');
   card.dataset.ballot = '1';
   const picks = ballot();
@@ -905,6 +905,7 @@ function suggestSheet() {
       body.appendChild(r);
       return;
     }
+    body.appendChild(el('p', 'sheet-note', 'A suggestion is up for 30 days.'));
     const q = el('input', 'field bf-in');
     q.type = 'search';
     q.placeholder = 'Search the list';
@@ -1009,7 +1010,7 @@ app.register(KEY, {
       loadPosts().then(land);
       pullSeen();
     }).catch(() => {
-      r.innerHTML = '<div class="errbox"><b>' + (app.demo ? 'The demo didn’t load.' : 'The film list didn’t load.') + '</b> Reload to try again.</div>';
+      r.innerHTML = '<div class="errbox"><b>' + (app.demo ? 'The demo didn’t load.' : 'The film list didn’t load.') + '</b></div>';
     });
   },
   activate(param) { pending = param || null; land(); },

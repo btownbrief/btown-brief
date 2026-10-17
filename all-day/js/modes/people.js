@@ -864,7 +864,8 @@ function drawDir() {
     return;
   }
   if (!d.me) {
-    if (S.prof) r.appendChild(button('Join the directory', '', join(true)));
+    /* the one line at the moment of joining: what neighbors will see */
+    if (S.prof) { tc.innerHTML = '<p>' + esc('Neighbors will see your first name, neighborhood, tile and interests.') + '</p>'; r.appendChild(button('Join the directory', '', join(true))); }
     else r.appendChild(button('Add your first name', '', () => boards.profileSheet()));
     tc.appendChild(r);
     s.appendChild(tc);
@@ -993,7 +994,7 @@ function planForm(body, close, prof) {
   const mu = el('label', 'consent', '<input type="checkbox" name="meetup"> ' +
     esc('Stephen may put this on Meetup, with me as host.'));
   f.appendChild(mu);
-  f.appendChild(el('p', 'bf-note', esc('Meet somewhere public.')));
+  f.appendChild(el('p', 'bf-note', esc('Up until it happens, two weeks at most. Meet somewhere public.')));
   const msg = el('p', 'bf-msg');
   msg.setAttribute('role', 'status');
   const go = button('Post the plan', '');
@@ -1084,7 +1085,7 @@ app.register(KEY, {
     root = r;
     slots = null;
     render();
-    if (app.demo) loadDemo().catch(() => { root.innerHTML = '<div class="errbox"><b>The demo didn’t load.</b> Reload to try again.</div>'; slots = null; });
+    if (app.demo) loadDemo().catch(() => { root.innerHTML = '<div class="errbox"><b>The demo didn’t load.</b></div>'; slots = null; });
     else loadLive();
   },
   activate(param) { pending = param || null; land(); },

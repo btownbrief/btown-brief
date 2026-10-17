@@ -659,7 +659,7 @@ app.register(KEY, {
       if (app.activeTab() === KEY) app.paintSubnav();
       app.recount();
       land();
-    }).catch(() => { r.innerHTML = '<div class="errbox"><b>Art didn’t load.</b> Reload to try again.</div>'; });
+    }).catch(() => { r.innerHTML = '<div class="errbox"><b>Art didn’t load.</b></div>'; });
   },
   activate(param) { pending = param || null; land(); },
   refresh() { if (ready) render(); },

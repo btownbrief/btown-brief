@@ -301,7 +301,7 @@ function composeFind() {
       { key: 'price', label: 'Price', type: 'int', placeholder: '28', hint: 'Whole dollars, no $ sign.' },
     ],
     body: 'Where in the shop', bodyPlaceholder: 'Back rack by the boots',
-    notes: ['The photo shows once approved.'],
+    notes: ['Up for three weeks. The photo shows once approved.'],
     cta: 'Post the find',
   });
   withShopList();
@@ -421,7 +421,7 @@ function paintSwaps(host) {
       { key: 'size', label: 'Size', placeholder: 'M, 32, 9', max: 12 },
     ],
     body: 'More', bodyPlaceholder: 'Condition, and when you can meet', place: 'Neighborhood', placePlaceholder: 'Old North End',
-    notes: ['A trade or free. No money.'],
+    notes: ['A trade or free, no money. Up for three weeks.'],
     cta: 'Post the swap',
   }));
 }
@@ -693,7 +693,7 @@ app.register(KEY, {
       render();
       if (app.activeTab() === KEY) app.paintSubnav();
       land();
-    }).catch(() => { r.innerHTML = '<div class="errbox"><b>The demo didn’t load.</b> Reload to try again.</div>'; });
+    }).catch(() => { r.innerHTML = '<div class="errbox"><b>The demo didn’t load.</b></div>'; });
   },
   activate(param) { route++; pending = param || null; land(); },
   refresh() { if (ready) SLOTS.forEach(paint); },

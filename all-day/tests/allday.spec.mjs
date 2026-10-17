@@ -992,7 +992,7 @@ async function theGames(browser, base) {
     check(JSON.stringify(marked.sort()) === JSON.stringify(['btown-wordle:3', 'trivia-ladder:15']), 'after the name, the reader’s rows are marked, matched without case or spaces', JSON.stringify(marked));
     check(/outside the top ten/.test(await page.$eval(gmPanel + ' [data-board="trivia-ladder"] [data-me]', (n) => n.innerText)), 'a place past tenth is shown, and called that', '');
     const said = await page.$eval(gmPanel + ' [data-you]', (n) => n.innerText);
-    check(/on 2 boards/.test(said) && !/players use that name/.test(said), 'two different players under one name: both rows marked, no explanation', said);
+    check(/on 2 boards/.test(said) && /2 players use that name\.$/.test(said.split('\n')[0].trim()), 'two different players under one name: it says so, in one count', said);
     check(await page.evaluate(() => localStorage.getItem('allday-arcade-name')) === '"Juniper"', 'the name stays on this device', '');
     await page.reload();
     await page.waitForSelector(gmPanel + ' [data-you="found"]', { timeout: 15000 });
@@ -1624,7 +1624,7 @@ async function theFood(browser, base) {
     await page.clock.setFixedTime(Date.parse('2026-10-16T12:00:00-04:00'));
     await page.goto(base + '/all-day/?demo=1#food/deals');
     await page.waitForSelector(foodPanel + ' .deck', { timeout: 15000 });
-    const card = () => page.$eval(foodPanel + ' .deck', (d) => ({ k: d.dataset.k, eyebrow: d.querySelector('.eyebrow').textContent, h: d.querySelector('h3').textContent,
+    const card = () => page.$eval(foodPanel + ' .deck', (d) => ({ k: d.dataset.k, eyebrow: (d.querySelector('.eyebrow') || {}).textContent || '', h: d.querySelector('h3').textContent,
       verified: d.querySelector('.verified')?.textContent || '', on: d.querySelectorAll('.segs i.on').length, segs: d.querySelectorAll('.segs i').length }));
     const first = await card();
     check(first.k === 'd-demo-diner-coffee' && /^Happening now/.test(first.eyebrow), 'the deal happening now comes first', JSON.stringify(first));
@@ -1640,7 +1640,7 @@ async function theFood(browser, base) {
     for (let i = 0; i < 6; i++) { const c = await card(); seen.push(c); await page.click(foodPanel + ' .deck .hit.r'); }
     check(seen.every((c) => /^Verified [A-Z][a-z]{2} \d{1,2}$/.test(c.verified)), 'every deal card has its verified date', seen.map((c) => c.verified).join(', '));
     const end = await card();
-    check(end.k === 'deals-end' && /That’s today/i.test(end.eyebrow), 'after the last deal, the deck says that’s today', JSON.stringify(end));
+    check(end.k === 'deals-end' && await page.$eval('#panel-food .deck h3', (h) => h.textContent) === 'That’s all.', 'after the last deal, the deck says that’s all', JSON.stringify(end));
     await page.click(foodPanel + ' .deck .hit.r');
     check((await card()).k === first.k, 'and the next tap starts over', '');
     await page.evaluate(() => document.querySelector('#panel-food .deck').scrollIntoView({ block: 'center' }));

@@ -398,7 +398,7 @@ function renderMissions() {
   root.appendChild(box);
   sur.addEventListener('click', () => surprise(box));
   root.appendChild(cards.caught({
-    title: S.theme === 'all' ? 'That’s the hundred' : 'That’s every ' + (THEME[S.theme] || S.theme).toLowerCase() + ' mission',
+    title: 'That’s all.',
     buttons: [button(ICON.shuffle + ' Surprise me', '', () => surprise(box))],
   }));
 }
@@ -594,7 +594,7 @@ function renderTonight() {
   root.appendChild(feed);
   app.bindFeed(feed);
   root.appendChild(cards.caught({
-    title: 'That’s tonight',
+    title: 'That’s all.',
     buttons: [openLink('Every event', EVENTS_URL, true)],
   }));
 }
@@ -723,7 +723,7 @@ app.register(KEY, {
       if (app.activeTab() === KEY) app.paintSubnav();
       land();
       app.recount();
-    }).catch(() => { r.innerHTML = '<div class="errbox"><b>What Now didn’t load.</b> Reload to try again.</div>'; });
+    }).catch(() => { r.innerHTML = '<div class="errbox"><b>What Now didn’t load.</b></div>'; });
   },
   activate(param) { pending = param || null; land(); },
   refresh() { if (ready) render(); },
