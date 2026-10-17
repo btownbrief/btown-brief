@@ -1,28 +1,28 @@
 {
- "updated": "2026-10-16T23:02:12+00:00",
+ "updated": "2026-10-17T00:16:14+00:00",
  "sections_updated": {
-  "now": "2026-10-16T23:02:12+00:00",
-  "forecast": "2026-10-16T23:02:12+00:00",
-  "hourly": "2026-10-16T23:02:12+00:00",
-  "alerts": "2026-10-16T23:02:12+00:00",
-  "afd": "2026-10-16T23:02:12+00:00",
-  "lake_forecast": "2026-10-16T23:02:12+00:00",
-  "lake_gage": "2026-10-16T23:02:12+00:00",
-  "air": "2026-10-16T23:02:12+00:00",
-  "sun": "2026-10-16T23:02:12+00:00",
-  "models": "2026-10-16T23:02:12+00:00"
+  "now": "2026-10-17T00:16:14+00:00",
+  "forecast": "2026-10-17T00:16:14+00:00",
+  "hourly": "2026-10-17T00:16:14+00:00",
+  "alerts": "2026-10-17T00:16:14+00:00",
+  "afd": "2026-10-17T00:16:14+00:00",
+  "lake_forecast": "2026-10-17T00:16:14+00:00",
+  "lake_gage": "2026-10-17T00:16:14+00:00",
+  "air": "2026-10-17T00:16:14+00:00",
+  "sun": "2026-10-17T00:16:14+00:00",
+  "models": "2026-10-17T00:16:14+00:00"
  },
  "now": {
-  "observed_at": "2026-10-16T22:45:00+00:00",
+  "observed_at": "2026-10-17T00:00:00+00:00",
   "station": "KBTV",
-  "description": "Cloudy",
-  "temp_f": 54,
-  "feels_like_f": 54,
-  "humidity": null,
-  "dewpoint_f": null,
-  "wind_mph": null,
-  "wind_gust_mph": 26,
-  "wind_dir": null,
+  "description": "Mostly Cloudy",
+  "temp_f": 50,
+  "feels_like_f": 50,
+  "humidity": 76,
+  "dewpoint_f": 43,
+  "wind_mph": 14,
+  "wind_gust_mph": 21,
+  "wind_dir": "NNW",
   "precip_last_hr_in": null
  },
  "forecast": {
@@ -30,13 +30,13 @@
   "periods": [
    {
     "name": "Tonight",
-    "start": "2026-10-16T19:00:00-04:00",
+    "start": "2026-10-16T20:00:00-04:00",
     "is_day": false,
     "temp_f": 36,
-    "pop": 36,
+    "pop": 17,
     "wind": "NW 15 to 18 mph",
-    "short": "Chance Rain Showers then Mostly Cloudy",
-    "detailed": "A chance of rain showers before 10pm. Mostly cloudy, with a low around 36. Northwest wind 15 to 18 mph, with gusts as high as 31 mph. Chance of precipitation is 40%. New rainfall amounts between a tenth and quarter of an inch possible."
+    "short": "Slight Chance Rain Showers then Mostly Cloudy",
+    "detailed": "A slight chance of rain showers before 10pm. Mostly cloudy, with a low around 36. Northwest wind 15 to 18 mph, with gusts as high as 31 mph. Chance of precipitation is 20%. New rainfall amounts less than a tenth of an inch possible."
    },
    {
     "name": "Saturday",
@@ -575,13 +575,13 @@
   "active": []
  },
  "afd": {
-  "issued": "2026-10-16T18:24:00+00:00",
+  "issued": "2026-10-16T23:29:00+00:00",
   "key_messages": [
    "Gusty winds to continue through Saturday with much cooler temperatures on the way. First round of snowfall expected for the high peaks tonight.",
    "Next week continues to trend very quiet as high pressure builds in across the area with temperatures near normal and high confidence in an extended dry period of weather."
   ],
   "what_changed": "As of 221 PM EDT Friday... The wind advisory has been cancelled. Winds will remain gusty tonight and on Saturday but will remain below advisory threshold.",
-  "raw": "\n000\nFXUS61 KBTV 161824\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n224 PM EDT Fri Oct 16 2026\n\n.WHAT HAS CHANGED...\nAs of 221 PM EDT Friday...\n\nThe wind advisory has been cancelled. Winds will remain gusty \ntonight and on Saturday but will remain below advisory threshold.\n\n&&\n\n.KEY MESSAGES...\nAs of 221 PM EDT Friday...\n\n1. Gusty winds to continue through Saturday with much cooler \ntemperatures on the way. First round of snowfall expected for the \nhigh peaks tonight.\n\n2. Next week continues to trend very quiet as high pressure \nbuilds in across the area with temperatures near normal and high \nconfidence in an extended dry period of weather.\n\n&&\n\n.DISCUSSION...\nAs of 221 PM EDT Friday...\n\nKEY MESSAGE 1: We are currently in the warm sector ahead of an \napproaching cold front with temperatures warming into the mid 50s to \nlower 60s. As of 1 PM, the approaching cold front was located in far \nwestern New York and will continue to quickly push east this \nafternoon and evening. A sharp thermal gradient will allow for \ntemperatures to plummet quickly in the wake of the cold front with \nan abrupt wind direction shift from the south to the northwest. With \nincreasing moisture in the warm sector, we should see rain showers \ncontinue into the evening ahead of the front but rainfall amounts \ndon't look to be anything impressive at this time. As rainfall taper \noff in the wake of the cold front, the northwesterly flow regime \nwill support upslope rain and/or snow showers across the western \nslopes of the Adirondacks and Green Mountains. Our current thinking \nis that locations above 2000 ft may be able to accumulate up to an \ninch of snow while a few flurries could be seen as low as 1500 ft. \nOverall impacts will be minimal and likely confined to grassy \nsurfaces as the ground temperature will remain above freezing \nthrough the period of possible snow.\n\nSaturday will be quite the transition to a more winter-like pattern \nas temperatures will struggle to climb into the 40s while winds \nremain gusty in the 20 to 30 mph range. This will lead to wind \nchills in the 20s and 30s throughout the day with wind chills as low \nas the single digits above and below zero across the high peaks. If \nyou plan to be outdoors tomorrow please dress for the weather as \nthis change in weather pattern may be surprising to many! Saturday \nnight will be the coldest night as winds finally abate and skies \nclear with lows falling into the 20s to near 30 degrees with the \nwarmest values in and around Lake Champlain. A rebound to more \nseasonal normal temperatures is expected for Sunday with highs \nwarming into the 50s.\n\nKEY MESSAGE 2: A rex block will begin to develop for the Northeast as \nsurface high pressure builds in from the west on Monday with a \ndeveloping coastal low across the southeast. High pressure will keep \nany moisture well to our south through the extended period, with \nhigh confidence in an extended dry period. That said, some high \nclouds and cirrus clouds will be possible early next week, \nespecially in southern Vermont. With the extended period of dry \nweather anticipated, and trees losing leaves, fire weather concerns \nmay increase towards the latter portion of next week as we dry out \nfrom this weeks rains early next week. Winds look to be on the weak \nside with light and terrain driven flow under high pressure, which \nshould be beneficial to lowering fire weather concerns. Temperatures \nwill return to normal levels by early next week with highs in the \nupper 50s to low 60s, and overnight lows in the upper 20s to mid 30s.\n\n&&\n\n.AVIATION /18Z FRIDAY THROUGH WEDNESDAY/...\nThrough 18Z Saturday...The first 6-8 hours will be the most complex\nperiod of this TAF period, with general improvements towards more\nstable and calm conditions by tomorrow. A cold front is slowly\nprogressing from west to east with winds already at MSS from the\nwest. Periods of high IFR to low MVFR will continue ahead of the\nfront for terrain TAF sites, not including BTV/PBG, with TEMPO IFR\ngroups for MPV for the next hour. As the boundary moves through each\nsite between now and 00Z, ceilings may briefly reduce towards IFR\nwith some intermittent IFR vis reductions, but conditions are\nexpected to trend towards VFR thereafter. Have used TEMPO and PROB30\ngroups to denote where confidence is highest in terminal reductions\nassociated with the boundary. SLK will likely see IFR cigs continue\nthrough 04Z before northwest flow helps scour out the low level\nclouds. Winds will also shift from the south to the west around\n20-22Z with a general weakening of wind gusts during the wind shift.\nLingering LLWS for all terminals will decrease with the passage of\nthe front at each terminal. As winds become more west to northwest\novernight tonight, mixing will continue with gusts returning to\naround 20-25 kts for most terminals, especially at BTV/PBG. Closer\nto sunrise tomorrow, some blocked flow will return to BTV with some\nMVFR cigs possible. Elsewhere scattered to broken ceilings\n2500-3500ft agl will linger behind the cold front before trending\nVFR to 4000-5000ft agl by the end of the TAF period.\n\nOutlook...\n\nSaturday Night: VFR. NO SIG WX.\nSunday: VFR. NO SIG WX.\nSunday Night: VFR. NO SIG WX.\nMonday: VFR. NO SIG WX.\nMonday Night: VFR. NO SIG WX.\nTuesday: VFR. NO SIG WX.\nTuesday Night: VFR. NO SIG WX.\nWednesday: VFR. NO SIG WX.\n\n&&\n\n.MARINE...\nA Lake Wind Advisory remains in effect for much of Lake\nChamplain through Saturday afternoon. Although the strongest\nwinds have ended, we will continue to see 15 to 30 knot winds\nacross the lake through Saturday. Winds are from the south at\nthe moment but will switch to the north after sunset following\nthe passage of a cold front. Winds may briefly weaken below 25\nknots as the wind shift occurs but winds are expected to ramp\nback up during the overnight hours. Wave have subsided to 2 to 4\nfeet and will likely subside further as the wind shift occurs\nbut waves in the 2 to 4 ft range will likely develop again on\nSaturday with the persistent northerly winds.\n\n&&\n\n.CLIMATE...\nDaily low maximum temperatures will likely be broken on Saturday.\nCurrent records at some climate sites in our region are as\nfollows:\n\nRecord Low Maximum Temperatures:\n\nOctober 17:\nKBTV: 42/1970\nKPBG: 44/2015\nKSLK: 36/1970\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Clay\nDISCUSSION...Danzig/Clay\nAVIATION...Danzig\nMARINE...Clay\nCLIMATE...NWS BTV\n"
+  "raw": "\n000\nFXUS61 KBTV 162329\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n729 PM EDT Fri Oct 16 2026\n\n.WHAT HAS CHANGED...\nAs of 221 PM EDT Friday...\n\nThe wind advisory has been cancelled. Winds will remain gusty \ntonight and on Saturday but will remain below advisory threshold.\n\n&&\n\n.KEY MESSAGES...\nAs of 221 PM EDT Friday...\n\n1. Gusty winds to continue through Saturday with much cooler \ntemperatures on the way. First round of snowfall expected for the \nhigh peaks tonight.\n\n2. Next week continues to trend very quiet as high pressure \nbuilds in across the area with temperatures near normal and high \nconfidence in an extended dry period of weather.\n\n&&\n\n.DISCUSSION...\nAs of 221 PM EDT Friday...\n\nKEY MESSAGE 1: We are currently in the warm sector ahead of an \napproaching cold front with temperatures warming into the mid 50s to \nlower 60s. As of 1 PM, the approaching cold front was located in far \nwestern New York and will continue to quickly push east this \nafternoon and evening. A sharp thermal gradient will allow for \ntemperatures to plummet quickly in the wake of the cold front with \nan abrupt wind direction shift from the south to the northwest. With \nincreasing moisture in the warm sector, we should see rain showers \ncontinue into the evening ahead of the front but rainfall amounts \ndon't look to be anything impressive at this time. As rainfall taper \noff in the wake of the cold front, the northwesterly flow regime \nwill support upslope rain and/or snow showers across the western \nslopes of the Adirondacks and Green Mountains. Our current thinking \nis that locations above 2000 ft may be able to accumulate up to an \ninch of snow while a few flurries could be seen as low as 1500 ft. \nOverall impacts will be minimal and likely confined to grassy \nsurfaces as the ground temperature will remain above freezing \nthrough the period of possible snow.\n\nSaturday will be quite the transition to a more winter-like pattern \nas temperatures will struggle to climb into the 40s while winds \nremain gusty in the 20 to 30 mph range. This will lead to wind \nchills in the 20s and 30s throughout the day with wind chills as low \nas the single digits above and below zero across the high peaks. If \nyou plan to be outdoors tomorrow please dress for the weather as \nthis change in weather pattern may be surprising to many! Saturday \nnight will be the coldest night as winds finally abate and skies \nclear with lows falling into the 20s to near 30 degrees with the \nwarmest values in and around Lake Champlain. A rebound to more \nseasonal normal temperatures is expected for Sunday with highs \nwarming into the 50s.\n\nKEY MESSAGE 2: A rex block will begin to develop for the Northeast as \nsurface high pressure builds in from the west on Monday with a \ndeveloping coastal low across the southeast. High pressure will keep \nany moisture well to our south through the extended period, with \nhigh confidence in an extended dry period. That said, some high \nclouds and cirrus clouds will be possible early next week, \nespecially in southern Vermont. With the extended period of dry \nweather anticipated, and trees losing leaves, fire weather concerns \nmay increase towards the latter portion of next week as we dry out \nfrom this weeks rains early next week. Winds look to be on the weak \nside with light and terrain driven flow under high pressure, which \nshould be beneficial to lowering fire weather concerns. Temperatures \nwill return to normal levels by early next week with highs in the \nupper 50s to low 60s, and overnight lows in the upper 20s to mid 30s.\n\n&&\n\n.AVIATION /00Z SATURDAY THROUGH WEDNESDAY/...\nThrough 00Z Sunday...A mix of flight conditions currently\nprevail across the region as a cold front continues to push\nthrough the region. MVFR ceilings mostly prevail, although some\nIFR continues at KSLK and KMPV. In general, MVFR ceilings are\nexpected to prevail for much of the night, with an improvement\ntowards VFR towards 12Z. A few rain showers continue across the\nregion, although they are expected to diminish and become more\nscattered, with PROB30 groups utilized and the potential for\nsome snow to mix in at mountain sites which may impact\nvisibilities. Winds will continue to become more west to\nnorthwesterly over the next few hours, although they will remain\nbreezy through much of the forecast period, with wind gusts of\n20 to 25 knots possible, especially at KBTV/KPBG. Gusts look to\ndiminish towards the very end of the forecast period. \n\nOutlook...\n\nSaturday Night: VFR. NO SIG WX.\nSunday: VFR. NO SIG WX.\nSunday Night: VFR. NO SIG WX.\nMonday: VFR. NO SIG WX.\nMonday Night: VFR. NO SIG WX.\nTuesday: VFR. NO SIG WX.\nTuesday Night: VFR. NO SIG WX.\nWednesday: VFR. NO SIG WX.\n\n&&\n\n.MARINE...\nA Lake Wind Advisory remains in effect for much of Lake\nChamplain through Saturday afternoon. Although the strongest\nwinds have ended, we will continue to see 15 to 30 knot winds\nacross the lake through Saturday. Winds are from the south at\nthe moment but will switch to the north after sunset following\nthe passage of a cold front. Winds may briefly weaken below 25\nknots as the wind shift occurs but winds are expected to ramp\nback up during the overnight hours. Wave have subsided to 2 to 4\nfeet and will likely subside further as the wind shift occurs\nbut waves in the 2 to 4 ft range will likely develop again on\nSaturday with the persistent northerly winds.\n\n&&\n\n.CLIMATE...\nDaily low maximum temperatures will likely be broken on Saturday.\nCurrent records at some climate sites in our region are as\nfollows:\n\nRecord Low Maximum Temperatures:\n\nOctober 17:\nKBTV: 42/1970\nKPBG: 44/2015\nKSLK: 36/1970\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Clay\nDISCUSSION...Danzig/Clay\nAVIATION...Kremer\nMARINE...NWS BTV\nCLIMATE...NWS BTV\n"
  },
  "lake_forecast": {
   "issued": "2026-10-16T18:25:00+00:00",
@@ -869,17 +869,17 @@
  },
  "lake_gage": {
   "water_temp_f": 57,
-  "water_temp_at": "2026-10-16T18:00:00.000-04:00",
-  "level_ft": 94.11,
-  "level_at": "2026-10-16T18:00:00.000-04:00",
+  "water_temp_at": "2026-10-16T20:00:00.000-04:00",
+  "level_ft": 94.07,
+  "level_at": "2026-10-16T20:00:00.000-04:00",
   "level_status": "normal"
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 19,
+  "aqi": 17,
   "category": "Good",
   "pollutant": "OZONE",
-  "observed": "10/16/26 18:00",
+  "observed": "10/16/26 20:00",
   "discussion": "On Saturday, October 17th, expect generally good air quality across Vermont."
  },
  "sun": {
@@ -919,7 +919,7 @@
     },
     "pop_max": {
      "GFS": 3,
-     "Euro": 4,
+     "Euro": 0,
      "ICON": 30
     },
     "precip_in": {
