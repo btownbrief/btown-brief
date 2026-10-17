@@ -883,6 +883,29 @@ body.chrome-away .mast { transform: translateY(-100%); }
    pitch, this month's champ, and Play beside Invite. The emoji is drawn at
    the emoji token and scaled up as artwork. */
 .gm-filters { padding-top: 0; }
+.gm-quiz { display: grid; grid-template-columns: 96px minmax(0, 1fr); gap: var(--s3); margin: var(--s3) var(--gutter) var(--s5); padding: var(--s3); border: 1px solid var(--line); border-radius: var(--r-media); background: var(--accent-soft); }
+.gm-quiz .gm-scr { aspect-ratio: 1; align-self: start; border-radius: var(--r-tile); }
+.gm-quiz .gm-emo { transform: scale(1.5); }
+.gm-quiz .gm-cab-b { padding: 0; }
+.gm-quiz .gm-name { font-family: var(--serif); font-size: var(--fs-display); font-weight: 500; }
+.gm-quiz .gm-pitch { font-size: var(--fs-body); color: var(--ink); }
+.gm-quiz .gm-acts { padding-top: var(--s1); }
+.gm-quiz .gm-acts .pillbtn { flex: 0 0 auto; padding: 0 16px; }
+/* the leaderboard: each game is a headline (name, Play) and its scores sit
+   under it, smaller and sunk, with a label that names the game */
+.gm-lb { padding-bottom: var(--s5); }
+.gm-lb .lrow { border-bottom: 0; padding-bottom: var(--s2); }
+.gm-lb .lrow .t { font-family: var(--serif); font-size: var(--fs-sub); font-weight: 500; }
+.gm-lb .lrow .pillbtn { height: 34px; padding: 0 14px; }
+.gm-lb-label { padding: 0 var(--gutter); margin-bottom: var(--s1); font-size: var(--fs-small); color: var(--ink-3); }
+.gm-lb .board { margin: 0 var(--gutter); padding: var(--s1) var(--s3); background: var(--paper-2); border-radius: var(--r-tile); }
+.gm-lb .board .r { padding: 6px 0; border-bottom-color: var(--line); }
+.gm-lb .board .r:last-child { border-bottom: 0; }
+.gm-lb .board .r .t { font-size: var(--fs-meta); font-weight: 500; }
+.gm-lb .board .r .sc { font-size: var(--fs-meta); font-weight: 600; }
+.gm-lb .board .r .rank { font-size: var(--fs-meta); }
+.gm-lb .board .r.me { margin: 0 calc(-1 * var(--s2)); }
+.gm-lb .btn.more { margin-top: var(--s2); }
 .gm-feat { padding: 0 var(--gutter) var(--s3); }
 .gm-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s3) 10px; padding: 0 var(--gutter); }
 .gm-cab { min-width: 0; display: flex; flex-direction: column; border: 1px solid var(--line); border-radius: var(--r-media); overflow: hidden; background: var(--raised); }

@@ -13,7 +13,7 @@
    audio — episodes are large and the browser's own HTTP cache handles them
    better than we would. */
 
-const VERSION = 'all-day-v56';   // v56: Habits works without signing in, habits-local.js (main was at v55)
+const VERSION = 'all-day-v57';   // v57: Games leads with the News Quiz, clearer leaderboards, one row per name (main was at v56)
 const SHELL = VERSION + '-shell';
 const DATA = 'all-day-data';   // unversioned on purpose: survives shell bumps
 
