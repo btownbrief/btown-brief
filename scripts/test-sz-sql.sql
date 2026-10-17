@@ -61,7 +61,7 @@ select pg_temp.expect_denied('insert into public.sz_taps (habit_id, user_id, dat
 select pg_temp.expect_denied('select public.sz_today()');
 select pg_temp.expect_denied('select public.sz_clean(''x'')');
 select pg_temp.expect_denied('select public.sz_range_ok(current_date, current_date)');
-select pg_temp.ok(public.sz_rules() -> 'limits' ->> 'habitsMax' = '5', 'anon can read the rules');
+select pg_temp.ok(public.sz_rules() -> 'limits' ->> 'habitsMax' = '100', 'anon can read the rules, with sz-ROUND2.sql''s ceiling of 100');
 select pg_temp.expect_error('select public.sz_me_get()', 'not_signed_in');
 select pg_temp.expect_error($q$select public.sz_me_set('Dana', '802-555-0199')$q$, 'not_signed_in');
 select pg_temp.expect_error('select public.sz_habits_get()', 'not_signed_in');
@@ -102,8 +102,6 @@ select pg_temp.ok(public.sz_habit_add('Floss', 'weekdays', 4) @> '{"frequency":"
 select pg_temp.ok((select (h ->> 'n') is null from jsonb_array_elements(public.sz_habits_get()) h where h ->> 'text' = 'Floss'), 'N is dropped for a habit that is not N-a-week');
 select public.sz_habit_add('Journal', 'daily');
 insert into pg_temp.ids select 'h5', (public.sz_habit_add('Water the plants', 'daily') ->> 'id')::uuid;
-select pg_temp.expect_error($q$select public.sz_habit_add('A sixth', 'daily')$q$, 'too_many_habits');
-select pg_temp.ok(jsonb_array_length(public.sz_habits_get()) = 5, 'five habits, the limit');
 
 -- move, archive, bring back
 select public.sz_habit_set(p_habit => (select id from pg_temp.ids where k = 'h5'), p_position => 1);
@@ -117,6 +115,10 @@ select pg_temp.ok(public.sz_habit_set(p_habit => (select id from pg_temp.ids whe
 select public.sz_habit_set(p_habit => (select id from pg_temp.ids where k = 'h1'), p_archived => true);
 select pg_temp.ok(jsonb_array_length(public.sz_habits_get()) = 4, 'archived: out of the list');
 select public.sz_habit_add('Call home', 'n_per_week', 1);
+-- no limit a reader meets: a sixth, and on to the abuse ceiling of 100
+select public.sz_habit_add('Habit ' || i, 'daily') from generate_series(6, 100) i;
+select pg_temp.ok(jsonb_array_length(public.sz_habits_get()) = 100, 'a hundred habits of your own');
+select pg_temp.expect_error($q$select public.sz_habit_add('One too many', 'daily')$q$, 'too_many_habits');
 select pg_temp.expect_error('select public.sz_habit_set(p_habit => (select id from pg_temp.ids where k = ''h1''), p_archived => false)', 'too_many_habits');
 select pg_temp.expect_error('select public.sz_tap((select id from pg_temp.ids where k = ''h1''), pg_temp.today())', 'not_found');
 
@@ -181,7 +183,7 @@ select pg_temp.ok(public.sz_habit_set(:MAYA_GOAL, p_position => 1) ->> 'position
 
 -- ---------------------------------------------- the operator's guards
 reset role;
-select pg_temp.expect_error($q$insert into public.sz_habits (user_id, text, frequency) select '59000000-0000-4000-8000-000000000001', 'A sixth, by hand', 'daily'$q$, 'too_many_habits');
+select pg_temp.expect_error($q$insert into public.sz_habits (user_id, text, frequency) select '59000000-0000-4000-8000-000000000001', 'One too many, by hand', 'daily'$q$, 'too_many_habits');
 select pg_temp.expect_error($q$insert into public.sz_habits (user_id, goal_id, text, frequency, is_goal) values ('51000000-0000-4000-8000-000000000001', '55000000-0000-4000-8000-000000000001', 'A second goal habit', 'daily', true)$q$,
   'duplicate key value violates unique constraint "sz_habits_goal_idx"');
 select pg_temp.expect_error($q$insert into public.sz_habits (user_id, text, frequency, n, archived_at) values ('51000000-0000-4000-8000-000000000001', 'Seven a week', 'n_per_week', 7, now())$q$,

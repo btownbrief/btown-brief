@@ -8,12 +8,14 @@
 
    - Today. The goal tile on top: with no goal live it says when the next
      season starts, with a sign-up button, or that none is scheduled. Below
-     it, up to five habits of your own, each a row with its name, its streak,
-     this week as seven dots and a 48px tap target. Tap to mark today done,
-     tap again to un-mark. Swipe a row left to archive it (the toast has
-     Undo); drag it by its grip to reorder; tap its name to edit it. An Add
-     habit row at the bottom: a name, how often (daily, weekdays, N times a
-     week) and sharing with your pod, off unless you turn it on.
+     it, your own habits, as many as you keep, each a row with its name, its
+     streak, this week as seven dots and a 48px tap target. Tap to mark
+     today done, tap again to un-mark. Swipe a row left to archive it (the
+     toast has Undo); drag it by its grip to reorder (held near the top or
+     bottom of the screen, the list scrolls with it); tap its name to edit
+     it. An Add habit row at the bottom: a name, how often (daily,
+     weekdays, N times a week) and sharing with your pod, off unless you
+     turn it on.
    - Goal, Season and Wall are chips that say Season 0 is coming.
 
    Signed out: the tile and a sign-in button, nothing else. The first
@@ -46,6 +48,7 @@ const VIEWS = [['today', 'Today'], ['goal', 'Goal'], ['season', 'Season'], ['wal
 const PENDING = 'allday-habits-pending';
 const HISTORY_DAYS = HABIT_RULES.limits.tapsRangeMaxDays - 1;
 const SWIPE_START = 24, SWIPE_COMMIT = 72, SWIPE_CANCEL_Y = 14;
+const DRAG_EDGE = 56, DRAG_SPEED = 18;   // the band where a drag scrolls the list, and its top speed in px a frame
 const DOW = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 const FREQ_WORD = { daily: 'Daily', weekdays: 'Weekdays' };
 const freqWord = (h) => (h.frequency === 'n_per_week' ? h.n + ' a week' : FREQ_WORD[h.frequency] || '');
@@ -412,7 +415,50 @@ function move(id, k, focus) {
 /* One set of handlers on the list: tap, name, the swipe left to archive,
    and the drag by the grip. */
 function bindList(list) {
-  let sw = null, drag = null, deadUntil = 0, deadRow = null;
+  let sw = null, drag = null, deadUntil = 0, deadRow = null, rolling = 0;
+  /* The dragged row follows the finger. Past a neighbour's middle the rows
+     swap, and the dragged one keeps its place under the finger. The
+     neighbour is the one moved in the page, both ways: moving the dragged
+     row itself would drop its pointer capture, and a finger let go over the
+     mast would then never end the drag. */
+  const follow = () => {
+    const li = drag.li;
+    li.style.transform = 'translateY(' + (drag.cy - drag.y0) + 'px)';
+    const mid = li.getBoundingClientRect().top + li.offsetHeight / 2;
+    const prev = li.previousElementSibling, next = li.nextElementSibling;
+    if (next && mid > next.getBoundingClientRect().top + next.offsetHeight / 2) {
+      drag.y0 += next.offsetHeight;
+      list.insertBefore(next, li);
+    } else if (prev && mid < prev.getBoundingClientRect().top + prev.offsetHeight / 2) {
+      drag.y0 -= prev.offsetHeight;
+      li.after(prev);
+    } else return;
+    li.style.transform = 'translateY(' + (drag.cy - drag.y0) + 'px)';
+  };
+  /* Held near the top or the bottom of the screen (under the mast, above
+     the tab bar), a drag scrolls the panel, faster the closer it gets, so a
+     habit can travel the whole of a long list. The row stays under the
+     finger while the list moves past it. */
+  const roll = () => {
+    rolling = 0;
+    const p = drag && list.closest('.panel');
+    if (!p) return;
+    const mast = document.getElementById('mast'), bar = document.getElementById('tabbar');
+    const top = Math.max(0, mast ? mast.getBoundingClientRect().bottom : 0) + DRAG_EDGE;
+    const b = bar && bar.getBoundingClientRect();
+    const bottom = (b && b.height && b.top > innerHeight / 2 ? b.top : innerHeight) - DRAG_EDGE;
+    const v = drag.cy < top ? -Math.min(DRAG_SPEED, Math.ceil((top - drag.cy) / 3))
+      : drag.cy > bottom ? Math.min(DRAG_SPEED, Math.ceil((drag.cy - bottom) / 3)) : 0;
+    if (!v) return;
+    const s0 = p.scrollTop;
+    p.scrollTop = s0 + v;
+    const d = p.scrollTop - s0;
+    if (!d) return;
+    drag.y0 -= d;
+    drag.moved = true;
+    follow();
+    rolling = requestAnimationFrame(roll);
+  };
   list.addEventListener('click', (e) => {
     const li = e.target.closest('.hb-row');
     if (!li) return;
@@ -434,7 +480,7 @@ function bindList(list) {
     if (!li) return;
     if (e.target.closest('.hb-grip')) {
       e.preventDefault();
-      drag = { li, id: li.dataset.id, pid: e.pointerId, y0: e.clientY, moved: false };
+      drag = { li, id: li.dataset.id, pid: e.pointerId, y0: e.clientY, cy: e.clientY, moved: false };
       try { li.setPointerCapture(e.pointerId); } catch (err) { /* optional */ }
       li.classList.add('is-drag');
       return;
@@ -445,24 +491,10 @@ function bindList(list) {
   list.addEventListener('pointermove', (e) => {
     if (drag && e.pointerId === drag.pid) {
       e.preventDefault();
-      const dy = e.clientY - drag.y0;
-      if (Math.abs(dy) > 4) drag.moved = true;
-      drag.li.style.transform = 'translateY(' + dy + 'px)';
-      /* past a neighbour's middle: the rows swap, and the dragged one keeps
-         its place under the finger */
-      const mid = drag.li.getBoundingClientRect().top + drag.li.offsetHeight / 2;
-      const prev = drag.li.previousElementSibling, next = drag.li.nextElementSibling;
-      if (next && mid > next.getBoundingClientRect().top + next.offsetHeight / 2) {
-        const h = next.offsetHeight;
-        list.insertBefore(next, drag.li);
-        drag.y0 += h;
-        drag.li.style.transform = 'translateY(' + (e.clientY - drag.y0) + 'px)';
-      } else if (prev && mid < prev.getBoundingClientRect().top + prev.offsetHeight / 2) {
-        const h = prev.offsetHeight;
-        list.insertBefore(drag.li, prev);
-        drag.y0 -= h;
-        drag.li.style.transform = 'translateY(' + (e.clientY - drag.y0) + 'px)';
-      }
+      drag.cy = e.clientY;
+      if (Math.abs(e.clientY - drag.y0) > 4) drag.moved = true;
+      follow();
+      if (!rolling && drag.moved) rolling = requestAnimationFrame(roll);
       return;
     }
     if (!sw || e.pointerId !== sw.pid) return;
@@ -489,6 +521,8 @@ function bindList(list) {
     if (drag && e.pointerId === drag.pid) {
       const d = drag;
       drag = null;
+      cancelAnimationFrame(rolling);
+      rolling = 0;
       d.li.classList.remove('is-drag');
       d.li.style.transform = '';
       if (!d.moved) return;
@@ -595,7 +629,6 @@ function habitForm(h, onDone, extra) {
 
 function addRow() {
   const w = el('div', 'hb-add');
-  if (mine().length >= HABIT_RULES.limits.habitsMax) return w;
   if (!S.adding) {
     w.appendChild(button(ICON.plus + ' Add habit', 'ghost hb-addbtn', () => { S.adding = true; paint(); }));
     return w;

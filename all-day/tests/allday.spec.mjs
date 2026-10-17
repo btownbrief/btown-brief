@@ -3420,7 +3420,8 @@ async function theHabits(browser, base) {
     await page.waitForFunction(() => document.querySelectorAll('#panel-habits .hb-row').length === 5, null, { timeout: 4000 }).catch(() => {});
     rows = await hbRows(page);
     check(rows[4] && rows[4].meta === '4 a week · Shared' && rows[4].dots.every((d) => d !== 'missed'), 'an N-a-week habit: no set days, so no missed rings', JSON.stringify(rows[4]));
-    check(!(await page.$(hbPanel + ' .hb-addbtn')), 'five habits: the Add habit row steps aside', '');
+    check(!!(await page.$(hbPanel + ' .hb-addbtn')), 'five habits and the Add habit row stays: there is no limit to meet', '');
+    check(!/up to|at most|limit/i.test(await page.$eval(hbPanel, (x) => x.innerText)), 'and the tab never mentions a limit', '');
     await pageRules(page, 'habits', 390);
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
@@ -3481,6 +3482,99 @@ async function theHabits(browser, base) {
     check(rows[0].name === 'Gym, or a long run' && /Weekdays$/.test(rows[0].meta), 'renamed, and now weekdays', JSON.stringify(rows[0]));
     await pageRules(page, 'habits', 1280);
     await page.screenshot({ path: path.join(SHOTS, 'demo-habits-desktop-dark.png') });
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390)', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/all-day/?demo=1#habits');
+    await settle(page);
+    /* seventeen more on the server before signing in: twenty in all */
+    await hbFake(page, `(f) => { f.as('${HB_ME}'); for (let i = 4; i <= 20; i++) f.sz_habit_add({ p_text: 'Habit ' + i, p_frequency: 'daily' }); f.as(null); }`);
+    await hbSignIn(page);
+    let rows = await hbRows(page);
+    const names0 = rows.map((r) => r.name);
+    check(rows.length === 20 && names0[3] === 'Habit 4' && names0[19] === 'Habit 20', 'twenty habits, in order', JSON.stringify(names0));
+    check(rows.every((r) => r.dots.length === 7 && r.tap >= 48), 'every row keeps its seven dots and its 48px tap', '');
+    const scroll = () => page.$eval(hbPanel, (p) => ({ top: Math.round(p.scrollTop), max: p.scrollHeight - p.clientHeight }));
+    check((await scroll()).max > 600, 'the list is longer than the screen, and the panel scrolls', JSON.stringify(await scroll()));
+    check(!!(await page.$(hbPanel + ' .hb-addbtn')), 'the Add habit row is still there at twenty', '');
+    const order = () => hbFake(page, `(f) => f.as('${HB_ME}').sz_habits_get().filter((h) => !h.is_goal).map((h) => h.text)`);
+
+    /* swipe a row far down the list */
+    const at = async (name, sel) => page.evaluate(([name, sel]) => {
+      const r = [...document.querySelectorAll('#panel-habits .hb-row')].find((x) => x.querySelector('.hb-name').textContent === name);
+      r.scrollIntoView({ block: 'center' });
+      const b = r.querySelector(sel).getBoundingClientRect();
+      return { x: b.left + b.width / 2, y: b.top + b.height / 2, left: b.left };
+    }, [name, sel]);
+    const sb = await at('Habit 17', '.hb-name');
+    await page.mouse.move(sb.left + 220, sb.y);
+    await page.mouse.down();
+    await page.mouse.move(sb.left + 180, sb.y, { steps: 4 });
+    await page.mouse.move(sb.left + 80, sb.y, { steps: 6 });
+    await page.mouse.up();
+    await page.waitForSelector('#toast:not([hidden])', { timeout: 4000 }).catch(() => {});
+    rows = await hbRows(page);
+    check(rows.length === 19 && !rows.some((r) => r.name === 'Habit 17') && /Archived Habit 17/.test(await page.$eval('#toast', (x) => x.textContent)), 'a swipe left on the seventeenth row archives it', JSON.stringify(rows.length));
+    await page.click('#toast button');
+    await page.waitForFunction(() => document.querySelectorAll('#panel-habits .hb-row').length === 20, null, { timeout: 4000 }).catch(() => {});
+    rows = await hbRows(page);
+    check(rows.length === 20 && rows[19].name === 'Habit 17', 'Undo brings it back, at the bottom', JSON.stringify(rows.map((r) => r.name).slice(-3)));
+
+    /* drag a row from the top of the list to the bottom: held above the tab bar, the list scrolls under it */
+    await page.evaluate(() => document.querySelector('#panel-habits').scrollTo(0, 0));
+    const g = await at('Habit 4', '.hb-grip');
+    const vh = page.viewportSize().height;
+    await page.mouse.move(g.x, g.y);
+    await page.mouse.down();
+    for (let i = 1; i <= 10; i++) await page.mouse.move(g.x, g.y + (vh - 70 - g.y) * i / 10);
+    await page.waitForFunction(() => { const p = document.querySelector('#panel-habits'); return p.scrollTop >= p.scrollHeight - p.clientHeight - 1; }, null, { timeout: 8000 }).catch(() => {});
+    await page.waitForTimeout(150);
+    const s1 = await scroll();
+    await page.mouse.up();
+    await page.waitForTimeout(150);
+    rows = await hbRows(page);
+    const k4 = rows.findIndex((r) => r.name === 'Habit 4');
+    check(s1.top > 300, 'held near the bottom, the drag scrolls the list (' + s1.top + 'px)', JSON.stringify(s1));
+    check(k4 >= 15, 'and Habit 4 travels down the list, to row ' + (k4 + 1), JSON.stringify(rows.map((r) => r.name)));
+    check(rows.length === 20 && new Set(rows.map((r) => r.name)).size === 20, 'no row lost or doubled on the way', '');
+    check(JSON.stringify(await order()) === JSON.stringify(rows.map((r) => r.name)), 'and the server keeps the order', JSON.stringify(await order()));
+
+    /* and back up: held under the mast, the list scrolls the other way */
+    const g2 = await at('Habit 20', '.hb-grip');
+    const k20 = (await hbRows(page)).findIndex((r) => r.name === 'Habit 20');
+    await page.mouse.move(g2.x, g2.y);
+    await page.mouse.down();
+    for (let i = 1; i <= 10; i++) await page.mouse.move(g2.x, g2.y + (30 - g2.y) * i / 10);
+    await page.waitForFunction(() => document.querySelector('#panel-habits').scrollTop <= 0, null, { timeout: 8000 }).catch(() => {});
+    await page.waitForTimeout(150);
+    await page.mouse.up();
+    await page.waitForTimeout(150);
+    rows = await hbRows(page);
+    const k20b = rows.findIndex((r) => r.name === 'Habit 20');
+    check((await scroll()).top === 0 && k20b <= 4 && k20b < k20, 'dragged up past the top, Habit 20 goes from row ' + (k20 + 1) + ' to row ' + (k20b + 1), JSON.stringify(rows.map((r) => r.name)));
+    const o2 = await order();
+    check(JSON.stringify(o2) === JSON.stringify(rows.map((r) => r.name)), 'and the server keeps that order too', JSON.stringify(o2) + ' vs ' + JSON.stringify(rows.map((r) => r.name)));
+
+    /* the arrow keys, far down the list */
+    const last = rows[19].name, before = rows[18].name;
+    await page.focus(hbPanel + ' .hb-row:nth-child(20) .hb-grip');
+    await page.keyboard.press('ArrowUp');
+    await page.waitForTimeout(100);
+    rows = await hbRows(page);
+    check(rows[18].name === last && rows[19].name === before, 'the grip’s arrow keys move the last of twenty up one', JSON.stringify(rows.map((r) => r.name).slice(-2)));
+    check(await page.evaluate((n) => document.activeElement && document.activeElement.classList.contains('hb-grip') && document.activeElement.closest('.hb-row').querySelector('.hb-name').textContent === n, last), 'and keeps the focus on it', '');
+
+    /* and a twenty-first, through the form */
+    await page.click(hbPanel + ' .hb-addbtn');
+    await page.fill(hbPanel + ' .hb-form input[name=text]', 'Habit 21');
+    await page.click(hbPanel + ' .hb-form button[type=submit]');
+    await page.waitForFunction(() => document.querySelectorAll('#panel-habits .hb-row').length === 21, null, { timeout: 4000 }).catch(() => {});
+    rows = await hbRows(page);
+    check(rows.length === 21 && rows[20].name === 'Habit 21', 'a twenty-first habit adds like any other', JSON.stringify(rows.length));
+    await pageRules(page, 'habits', 390);
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
   });
