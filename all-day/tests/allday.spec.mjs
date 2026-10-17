@@ -35,6 +35,7 @@ import { readFile, readdir, mkdir, writeFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import net from 'node:net';
 import path from 'node:path';
+import { FakeHabits } from '../js/habits-fake.js';
 
 const require = createRequire(import.meta.url);
 let chromium;
@@ -3359,14 +3360,17 @@ async function theHabits(browser, base) {
     const { ctx, page, errors } = await newPage(browser, base);
     await page.goto(base + '/all-day/?demo=1#habits');
     await settle(page);
-    const out = await page.$eval(hbPanel, (p) => ({ tile: p.querySelector('.hb-tile').innerText.replace(/\s+/g, ' '), gate: [...p.querySelectorAll('.hb-gate button')].map((b) => b.textContent),
+    await page.waitForSelector(hbPanel + ' .hb-addbtn', { timeout: 6000 });
+    const out = await page.$eval(hbPanel, (p) => ({ tile: p.querySelector('.hb-tile').innerText.replace(/\s+/g, ' '), buttons: [...p.querySelectorAll('button')].map((b) => b.textContent.trim()),
       rows: p.querySelectorAll('.hb-row').length, notes: [...p.querySelectorAll('p')].map((x) => x.textContent).filter((t) => !/^Season 0 ·/.test(t)) }));
     check(/Next season starts in 23 days/.test(out.tile) && /Sign up/.test(out.tile), 'the between-seasons tile: when the next season starts, and a sign-up button', out.tile);
-    check(JSON.stringify(out.gate) === '["Sign in"]' && out.rows === 0 && !out.notes.length, 'signed out: the tile and a sign-in button, and no explanation', JSON.stringify(out));
+    check(JSON.stringify(out.buttons) === '["Sign up","Add habit"]' && out.rows === 0 && JSON.stringify(out.notes) === '["No habits yet."]',
+      'signed out, a first visit: one line and the Add habit row, no sign-in wall', JSON.stringify(out));
     check(JSON.stringify(await page.$$eval('#subnav .chip', (c) => c.map((x) => x.textContent))) === '["Today","Goal","Season","Wall"]', 'the chips: Today, Goal, Season, Wall', '');
-    await page.click(hbPanel + ' .hb-gate button');
+    await page.click(hbPanel + ' .hb-tile .hb-go');
     await page.waitForSelector('.sheet-card[aria-label="Settings"]', { timeout: 4000 }).catch(() => {});
-    check(!!(await page.$('.sheet-card[aria-label="Settings"]')), 'Sign in opens the sign-in in Settings', '');
+    check(!!(await page.$('.sheet-card[aria-label="Settings"]')) && /Sign in to join a season/.test(await page.$eval('#toast', (t) => t.textContent)),
+      'the season is signed-in only, and says so only when Sign up is tapped', '');
     await page.keyboard.press('Escape');
 
     await hbSignIn(page);
@@ -3574,25 +3578,36 @@ async function theHabits(browser, base) {
     await ctx.close();
   });
 
-  await group('Habits, the first sign-in asks a name and a phone, once (demo)', async () => {
+  await group('Habits, no name or phone for the tracker: they are asked when you join a season (demo)', async () => {
     const { ctx, page, errors } = await newPage(browser, base);
     await page.goto(base + '/all-day/?demo=1#habits');
     await settle(page);
     await hbFake(page, `(f) => { f.members.delete('${HB_ME}'); return true; }`);
     await hbSignIn(page);
-    check(!!(await page.$(hbPanel + ' .hb-me input[name=name]')) && !!(await page.$(hbPanel + ' .hb-me input[name=phone]')) && !(await page.$(hbPanel + ' .hb-row')), 'no member yet: a first name and a phone, before any habit', '');
-    await page.fill(hbPanel + ' .hb-me input[name=name]', 'Alex');
-    await page.fill(hbPanel + ' .hb-me input[name=phone]', 'call me');
-    await page.click(hbPanel + ' .hb-me button[type=submit]');
-    check(/phone number/.test(await page.$eval(hbPanel + ' .hb-me .bf-msg', (m) => m.textContent)), 'a phone that is not one: refused', '');
-    await page.fill(hbPanel + ' .hb-me input[name=phone]', '(802) 555-0142');
-    await page.click(hbPanel + ' .hb-me button[type=submit]');
-    await page.waitForSelector(hbPanel + ' .hb-row', { timeout: 4000 }).catch(() => {});
-    check((await hbRows(page)).length === 3 && await hbFake(page, `(f) => f.members.get('${HB_ME}').phone === '(802) 555-0142'`), 'saved: the habits appear', '');
+    check(!(await page.$(hbPanel + ' .hb-me')) && (await hbRows(page)).length === 3, 'no member yet: the habits, and no form in the way', '');
+    await page.click(hbPanel + ' .hb-addbtn');
+    await page.fill(hbPanel + ' .hb-form input[name=text]', 'Stretch');
+    await page.click(hbPanel + ' .hb-form button[type=submit]');
+    await page.waitForFunction(() => document.querySelectorAll('#panel-habits .hb-row').length === 4, null, { timeout: 4000 }).catch(() => {});
+    check((await hbRows(page)).length === 4 && await hbFake(page, `(f) => !f.members.has('${HB_ME}')`), 'a habit adds with no name given', '');
+    await page.click(hbPanel + ' .hb-tile .hb-go');
+    await page.waitForSelector('.sheet-card[aria-label="Join Season 0"]', { timeout: 4000 }).catch(() => {});
+    check(!!(await page.$('.sheet-body .hb-me input[name=name]')) && !!(await page.$('.sheet-body .hb-me input[name=phone]')), 'Sign up asks a first name and a phone', '');
+    await page.fill('.sheet-body .hb-me input[name=name]', 'Alex');
+    await page.fill('.sheet-body .hb-me input[name=phone]', 'call me');
+    await page.click('.sheet-body .hb-me button[type=submit]');
+    check(/phone number/.test(await page.$eval('.sheet-body .hb-me .bf-msg', (m) => m.textContent)), 'a phone that is not one: refused', '');
+    await page.fill('.sheet-body .hb-me input[name=phone]', '(802) 555-0142');
+    await page.click('.sheet-body .hb-me button[type=submit]');
+    await page.waitForSelector('#sheet[hidden]', { state: 'attached', timeout: 4000 }).catch(() => {});
+    check(await hbFake(page, `(f) => f.members.get('${HB_ME}') && f.members.get('${HB_ME}').phone === '(802) 555-0142'`) && /Sign-up opens/.test(await page.$eval('#toast', (t) => t.textContent)),
+      'saved, and on to the sign-up', '');
     await page.evaluate(() => import('/all-day/js/app.js').then((a) => a.signOut()));
-    await page.waitForSelector(hbPanel + ' .hb-gate', { timeout: 4000 });
+    await page.waitForFunction(() => !document.querySelector('#panel-habits .hb-row') && document.querySelector('#panel-habits .hb-addbtn'), null, { timeout: 4000 });
     await hbSignIn(page);
-    check(!(await page.$(hbPanel + ' .hb-me')) && (await hbRows(page)).length === 3, 'signed in again: not asked twice', '');
+    await page.click(hbPanel + ' .hb-tile .hb-go');
+    await page.waitForTimeout(150);
+    check(!(await page.$('.sheet-card[aria-label="Join Season 0"]')) && (await hbRows(page)).length === 4, 'signed in again: not asked twice', '');
     await page.click('#subnav .chip[data-chip="season"]');
     check(await page.$eval(hbPanel, (p) => p.innerText.trim()) === 'Season 0 is coming' && /#habits\/season$/.test(await page.evaluate(() => location.hash)), 'Season: one line, and the address says where', '');
     await page.goto(base + '/all-day/?demo=1#habits/wall');
@@ -3619,6 +3634,116 @@ async function theHabits(browser, base) {
     check(!rows[1].on && !(await hbTap(page, 'Read twenty pages')).meta.includes('NaN'), 'a fresh day starts untapped', '');
     await page.waitForTimeout(100);
     check(await hbFake(page, `(f) => [...f.taps.keys()].some((k) => k.endsWith('|2026-10-15'))`), 'and a tap now is Thursday’s', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  /* live, the account a real Supabase would keep: the fake behind the RPC
+     doors, signed in as u-1 when the request carries a token */
+  const hbAccount = () => {
+    const f = new FakeHabits();
+    const calls = [];
+    const rpc = (fn, args, headers) => {
+      if (!/^sz_/.test(fn)) return undefined;
+      calls.push(fn);
+      if (fn === 'sz_season_next') return null;
+      try { return f.as(/^Bearer /.test((headers && headers.authorization) || '') ? 'u-1' : null).call(fn, args || {}) ?? null; }
+      catch (e) { return { status: 400, body: { code: 'P0001', message: e.code || 'boom' } }; }
+    };
+    return { f, calls, rpc };
+  };
+  for (const [width, scheme] of [[390, 'light'], [1280, 'dark']]) {
+    await group('Habits, signed out it just works on this phone, and signing in moves it to the account once (live, ' + width + ', ' + scheme + ')', async () => {
+      const acct = hbAccount();
+      const { ctx, page, errors } = await newPage(browser, base, { viewport: { width, height: 844 }, scheme, rpc: acct.rpc });
+      await page.goto(base + '/all-day/#habits');
+      await settle(page);
+      await page.waitForSelector(hbPanel + ' .hb-addbtn', { timeout: 6000 });
+      check(await page.$eval(hbPanel + ' .hb-empty', (e) => e.textContent).catch(() => '') === 'No habits yet.' && !(await page.$(hbPanel + ' .hb-sync')) && !(await page.$(hbPanel + ' .hb-gate')),
+        'a first visit: one line and Add habit, nothing seeded, no sign-in wall', '');
+      const add = async (name, freq, n) => {
+        const k = (await hbRows(page)).length;
+        await page.click(hbPanel + ' .hb-addbtn');
+        await page.fill(hbPanel + ' .hb-form input[name=text]', name);
+        if (freq) await page.click(hbPanel + ' .hb-form .hb-freq [data-freq="' + freq + '"]');
+        if (n) await page.selectOption(hbPanel + ' .hb-form .hb-n', String(n));
+        await page.click(hbPanel + ' .hb-form button[type=submit]');
+        await page.waitForFunction((k) => document.querySelectorAll('#panel-habits .hb-row').length === k + 1, k, { timeout: 4000 }).catch(() => {});
+      };
+      await add('Walk');
+      await add('Read', 'weekdays');
+      await add('Gym', 'n_per_week', 3);
+      const tw = await hbTap(page, 'Walk');
+      const tg = await hbTap(page, 'Gym');
+      check(tw.on && tg.on && tw.ms < 100 && tw.meta === '1 day · Daily' && /^1 week · 3 a week$|^3 a week$/.test(tg.meta), 'three habits, two tapped, at once (' + Math.round(tw.ms) + ' ms)', JSON.stringify([tw, tg]));
+      check(!acct.calls.some((c) => c !== 'sz_season_next'), 'and nothing personal went to the server', acct.calls.join(', '));
+      const kept = await page.evaluate(() => JSON.parse(localStorage.getItem('allday-habits-local') || 'null'));
+      check(kept && kept.v === 1 && kept.habits.length === 3 && Object.values(kept.taps).flat().length === 2, 'kept on this phone, under one versioned key', JSON.stringify(kept).slice(0, 200));
+      check(await page.$eval(hbPanel + ' .hb-sync', (b) => b.textContent).catch(() => '') === 'Sync across devices', 'one quiet line under the list: Sync across devices', '');
+      await pageRules(page, 'habits', width);
+      if (width === 390) await page.screenshot({ path: path.join(SHOTS, 'live-habits-signed-out.png') });
+
+      await page.reload();
+      await page.waitForSelector(hbPanel + ' .hb-row', { timeout: 6000 });
+      let rows = await hbRows(page);
+      check(JSON.stringify(rows.map((r) => [r.name, r.on])) === '[["Walk",true],["Read",false],["Gym",true]]' && rows[0].meta === '1 day · Daily' && rows[0].dots[hbTodayCol()] === 'done',
+        'after a reload: the same three, the same two tapped, the streak and the dot', JSON.stringify(rows.map((r) => [r.name, r.on, r.meta])));
+      await page.click(hbPanel + ' .hb-sync');
+      await page.waitForSelector('.sheet-card[aria-label="Settings"]', { timeout: 4000 }).catch(() => {});
+      check(!!(await page.$('.sheet-card[aria-label="Settings"]')), 'Sync across devices opens the sign-in', '');
+      await page.keyboard.press('Escape');
+
+      /* sign in: the phone's habits move to the account, once */
+      await page.evaluate(() => localStorage.setItem('allday-auth', JSON.stringify({ refresh_token: 'r', user: { id: 'u-1' } })));
+      await page.reload();
+      await page.waitForFunction(() => document.querySelectorAll('#panel-habits .hb-row').length === 3 && !localStorage.getItem('allday-habits-local'), null, { timeout: 6000 }).catch(() => {});
+      const today = etKey(Date.now());
+      const server = acct.f.as('u-1').sz_habits_get();
+      const serverTaps = acct.f.sz_taps_get({ p_from: today, p_to: today }).map((t) => server.find((h) => h.id === t.habit).text).sort();
+      check(JSON.stringify(server.map((h) => [h.text, h.frequency, h.n])) === '[["Walk","daily",null],["Read","weekdays",null],["Gym","n_per_week",3]]' && JSON.stringify(serverTaps) === '["Gym","Walk"]',
+        'signed in: the account has the three habits and the two taps', JSON.stringify(server.map((h) => h.text)) + ' ' + JSON.stringify(serverTaps));
+      check(acct.calls.filter((c) => c === 'sz_import_local').length === 1 && !acct.calls.includes('sz_habit_add'), 'in one sz_import_local call', acct.calls.join(', '));
+      check(await page.evaluate(() => localStorage.getItem('allday-habits-local')) === null, 'and the phone forgets them: the account is the one copy', '');
+      rows = await hbRows(page);
+      check(JSON.stringify(rows.map((r) => [r.name, r.on])) === '[["Walk",true],["Read",false],["Gym",true]]' && !(await page.$(hbPanel + ' .hb-sync')),
+        'the list is the account’s now, and the sync line is gone', JSON.stringify(rows.map((r) => [r.name, r.on])));
+      await page.reload();
+      await page.waitForSelector(hbPanel + ' .hb-row', { timeout: 6000 });
+      check((await hbRows(page)).length === 3 && acct.calls.filter((c) => c === 'sz_import_local').length === 1, 'a reload signed in imports nothing again', acct.calls.join(', '));
+
+      /* sign out: the account keeps them, the phone's own list is empty */
+      await page.evaluate(() => import('/all-day/js/app.js').then((a) => a.signOut()));
+      await page.waitForFunction(() => !document.querySelector('#panel-habits .hb-row') && document.querySelector('#panel-habits .hb-addbtn'), null, { timeout: 4000 }).catch(() => {});
+      check((await hbRows(page)).length === 0 && await page.$eval(hbPanel + ' .hb-empty', (e) => e.textContent).catch(() => '') === 'No habits yet.' && acct.f.as('u-1').sz_habits_get().length === 3,
+        'signed out again: an empty list here, the three still on the account', '');
+      await pageRules(page, 'habits', width);
+      check(!errors.length, 'no console errors', errors.join(' | '));
+      await ctx.close();
+    });
+  }
+
+  await group('Habits, signing in to an account that already has habits adds this phone’s by name, never twice (demo, 390)', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/all-day/?demo=1#habits');
+    await settle(page);
+    await page.waitForSelector(hbPanel + ' .hb-addbtn', { timeout: 6000 });
+    for (const name of ['Stretch', 'Gym']) {
+      const k = (await hbRows(page)).length;
+      await page.click(hbPanel + ' .hb-addbtn');
+      await page.fill(hbPanel + ' .hb-form input[name=text]', name);
+      await page.click(hbPanel + ' .hb-form button[type=submit]');
+      await page.waitForFunction((k) => document.querySelectorAll('#panel-habits .hb-row').length === k + 1, k, { timeout: 4000 }).catch(() => {});
+    }
+    await hbTap(page, 'Stretch');
+    check(await page.evaluate(() => localStorage.getItem('allday-habits-local')) === null, 'the demo keeps the phone’s habits in memory only', '');
+    await hbSignIn(page);
+    await page.waitForFunction(() => document.querySelectorAll('#panel-habits .hb-row').length === 4, null, { timeout: 4000 }).catch(() => {});
+    const rows = await hbRows(page);
+    check(JSON.stringify(rows.map((r) => r.name)) === '["Morning walk","Read twenty pages","Gym","Stretch"]' && rows[3].on,
+      'the demo account had three: Stretch joins them with today’s tap, and Gym is not doubled', JSON.stringify(rows.map((r) => [r.name, r.on])));
+    await page.evaluate(() => import('/all-day/js/app.js').then((a) => a.signOut()));
+    await page.waitForFunction(() => !document.querySelector('#panel-habits .hb-row'), null, { timeout: 4000 }).catch(() => {});
+    check((await hbRows(page)).length === 0, 'signed out: the phone’s list is empty', '');
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
   });

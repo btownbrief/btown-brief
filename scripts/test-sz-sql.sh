@@ -1,19 +1,20 @@
 #!/usr/bin/env bash
 # Applies all-day/supabase/sz-SETUP.sql (the Habits tab), then sz-ROUND2.sql
-# (the rules with only the abuse ceiling of 100) over it, to a scratch LOCAL
+# (the rules with only the abuse ceiling of 100) and sz-ROUND3.sql (no name
+# wall, and sz_import_local) over it, to a scratch LOCAL
 # Postgres database, seeds it with scripts/sz-seed.sql, and runs the checks
-# in scripts/test-sz-sql.sql against it as the anon and authenticated roles,
+# in scripts/test-sz-sql.sql and scripts/test-sz-import.sql against it as the anon and authenticated roles,
 # the way the app's publishable key reaches Supabase. It never touches the
 # live project.
 #
 #   bash scripts/test-sz-sql.sh
 #
-# sz-SETUP.sql is applied twice, then sz-ROUND2.sql twice, and the seed
+# sz-SETUP.sql is applied twice, then sz-ROUND2.sql and sz-ROUND3.sql twice each, and the seed
 # twice: each must be safe to paste again. Then once more on a database
 # that already has the boards (nn-SETUP.sql), to show the two never step on
 # each other. Then once more the way the live project got there:
-# sz-SETUP.sql as first pasted (a ceiling of 5 habits), then sz-ROUND2.sql
-# over it.
+# sz-SETUP.sql as first pasted (a ceiling of 5 habits, and the name wall in
+# sz_habit_add), then sz-ROUND2.sql and sz-ROUND3.sql over it.
 #
 # Needs a local Postgres you can reach with psql (Homebrew's postgresql@17:
 # brew services start postgresql@17). When there is none, it says so and
@@ -61,9 +62,12 @@ apply all-day/supabase/sz-SETUP.sql
 apply all-day/supabase/sz-SETUP.sql
 apply all-day/supabase/sz-ROUND2.sql
 apply all-day/supabase/sz-ROUND2.sql
+apply all-day/supabase/sz-ROUND3.sql
+apply all-day/supabase/sz-ROUND3.sql
 apply scripts/sz-seed.sql
 apply scripts/sz-seed.sql
 check scripts/test-sz-sql.sql
+check scripts/test-sz-import.sql
 
 # 2. the same, on a database that already has the boards
 fresh
@@ -76,21 +80,29 @@ apply all-day/supabase/sz-SETUP.sql
 apply all-day/supabase/sz-SETUP.sql
 apply all-day/supabase/sz-ROUND2.sql
 apply all-day/supabase/sz-ROUND2.sql
+apply all-day/supabase/sz-ROUND3.sql
+apply all-day/supabase/sz-ROUND3.sql
 apply scripts/sz-seed.sql
 check scripts/test-sz-sql.sql
+check scripts/test-sz-import.sql
 
-# 3. the live project's way: the first sz-SETUP.sql (ceiling 5), then sz-ROUND2.sql
+# 3. the live project's way: the first sz-SETUP.sql (ceiling 5, the name wall), then sz-ROUND2.sql and sz-ROUND3.sql
 fresh
 FIRST=$(mktemp -t sz-first.XXXXXX)
 trap 'rm -f "$FIRST"' EXIT
-sed 's/"habitsMax":100,/"habitsMax":5,/' all-day/supabase/sz-SETUP.sql > "$FIRST"
+perl -pe 's/"habitsMax":100,/"habitsMax":5,/; s/^(  if v_text = .. or char_length\(v_text\) > \(L ->> .habitTextMax.\)::int then raise exception .bad_text.; end if;)$/  if not exists (select 1 from public.sz_members where user_id = u) then raise exception \x27no_member\x27; end if;\n$1/' \
+  all-day/supabase/sz-SETUP.sql > "$FIRST"
 grep -q '"habitsMax":5,' "$FIRST"
+grep -q "raise exception 'no_member'" "$FIRST"
 apply "$FIRST"
 [ "$(psql -d "$DB" -Atqc "select public.sz_rules() -> 'limits' ->> 'habitsMax'")" = 5 ]
 apply all-day/supabase/sz-ROUND2.sql
 apply all-day/supabase/sz-ROUND2.sql
+apply all-day/supabase/sz-ROUND3.sql
+apply all-day/supabase/sz-ROUND3.sql
 apply scripts/sz-seed.sql
 check scripts/test-sz-sql.sql
+check scripts/test-sz-import.sql
 
 psql -d postgres -qc "drop database if exists $DB" >/dev/null
 echo "test-sz-sql: OK"

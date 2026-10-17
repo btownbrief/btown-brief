@@ -807,6 +807,9 @@ select.bf-in { appearance: none; -webkit-appearance: none; }
 @keyframes hb-press { 50% { transform: scale(.97); } }
 .hb-add { padding: var(--s4) var(--gutter) 0; }
 .btn.hb-addbtn { height: var(--hit); }
+/* signed out: the one quiet line under the list; a full 44px target, small type */
+.btn.hb-sync { display: flex; height: var(--hit); margin: var(--s4) var(--gutter) 0; padding: 0; background: transparent; color: var(--ink-3);
+  font-size: var(--fs-meta); font-weight: 500; text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; }
 .hb-form { padding-top: 0; }
 .hb-freq { align-self: stretch; }
 .hb-n { margin-top: var(--s2); }

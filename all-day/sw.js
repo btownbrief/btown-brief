@@ -13,7 +13,7 @@
    audio — episodes are large and the browser's own HTTP cache handles them
    better than we would. */
 
-const VERSION = 'all-day-v46';   // v46: Habits takes Art's slot
+const VERSION = 'all-day-v47';   // v47: Habits works without signing in (habits-local.js)
 const SHELL = VERSION + '-shell';
 const DATA = 'all-day-data';   // unversioned on purpose: survives shell bumps
 
@@ -26,8 +26,8 @@ const SHELL_URLS = [
   './js/modes/onair.js', './js/modes/games.js',
   /* What Now's engine and its feeds' loader, imported by modes/whatnow.js */
   './js/whatnow-engine.js', './js/whatnow-data.js', './js/sun.js',
-  /* Habits' rules and its demo server, imported by modes/habits.js */
-  './js/habits-core.js', './js/habits-fake.js',
+  /* Habits' rules, its demo server and the signed-out phone's copy, imported by modes/habits.js */
+  './js/habits-core.js', './js/habits-fake.js', './js/habits-local.js',
   /* the photo wall's drawing code, kept for the Wire's Photo mode (not imported yet) */
   './js/photo-wall.js',
   /* the boards: imported by main.js, so every tab can draw one offline */
