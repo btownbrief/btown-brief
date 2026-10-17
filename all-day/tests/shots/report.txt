@@ -1228,6 +1228,10 @@
   ok   Photo mode: an Instagram account’s kind comes from the roster (live) › an account the food directory says is not food is not food
   ok   Photo mode: an Instagram account’s kind comes from the roster (live) › a restaurant in the food directory is food
   ok   Photo mode: an Instagram account’s kind comes from the roster (live) › a photographer is just Instagram
+  ok   Photo mode: an Instagram account’s kind comes from the roster (live) › the new roster adds pets without mislabeling them event posters
+  ok   Photo mode: an Instagram account’s kind comes from the roster (live) › new food categories work without the legacy food flag
+  ok   Photo mode: an Instagram account’s kind comes from the roster (live) › venue posts enter Vibe checks
+  ok   Photo mode: an Instagram account’s kind comes from the roster (live) › event accounts enter Event posters
   ok   Photo mode: an Instagram account’s kind comes from the roster (live) › no console errors
   ok   Photo mode: a picture opens in its sheet, and a vote counts (demo) › a neighbor’s picture shows its board votes
   ok   Photo mode: a picture opens in its sheet, and a vote counts (demo) › the sheet: the big picture, its maker and their line
@@ -2370,7 +2374,7 @@
   ok   sign-in fails soft › a bad address is caught before any request
   ok   sign-in fails soft › no link was requested
   ok   sign-in fails soft › no console errors
-  ok   performance › the live Wire redraws 60 cards in 11ms (budget 100)
+  ok   performance › the live Wire redraws 60 cards in 12ms (budget 100)
   ok   shell fixes: a rail never snaps flush to the edge › 390: .rail carries scroll-padding of one gutter
   ok   shell fixes: a rail never snaps flush to the edge › 390: a card scrolled to the start stops at the gutter
   ok   shell fixes: a rail never snaps flush to the edge › 390: no console errors
@@ -2580,7 +2584,7 @@
   ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › shared with the pod is off by default
   ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › it lands at the bottom: Daily, no streak yet, not done
   ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › today’s dot is today’s, in Burlington
-  ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › a tap shows at once (1 ms)
+  ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › a tap shows at once (0 ms)
   ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › the streak ticks up to 1 day
   ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › and today’s dot fills
   ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › the server has the tap, for today in Burlington
@@ -2651,7 +2655,7 @@
   ok   Habits, the day turns at midnight New York, not the phone’s (demo, a reader in Tokyo) › and a tap now is Thursday’s
   ok   Habits, the day turns at midnight New York, not the phone’s (demo, a reader in Tokyo) › no console errors
   ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 390, light) › a first visit: one line and Add habit, nothing seeded, no sign-in wall
-  ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 390, light) › three habits, two tapped, at once (1 ms)
+  ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 390, light) › three habits, two tapped, at once (0 ms)
   ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 390, light) › and nothing personal went to the server
   ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 390, light) › kept on this phone, under one versioned key
   ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 390, light) › one quiet line under the list: Sync across devices
@@ -2677,7 +2681,7 @@
   ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 390, light) › habits: at most 2 subnav rows
   ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 390, light) › no console errors
   ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 1280, dark) › a first visit: one line and Add habit, nothing seeded, no sign-in wall
-  ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 1280, dark) › three habits, two tapped, at once (0 ms)
+  ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 1280, dark) › three habits, two tapped, at once (1 ms)
   ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 1280, dark) › and nothing personal went to the server
   ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 1280, dark) › kept on this phone, under one versioned key
   ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 1280, dark) › one quiet line under the list: Sync across devices
