@@ -1,132 +1,352 @@
 {
- "_": "Demo data for ?demo=1. Every item is invented; real outlet and venue names are placeholders.",
- "archetypes": [
-  {
-   "key": "new",
-   "name": "New in town",
-   "line": "Arrived in the last year. Wants the lay of the land and three names.",
-   "icon": "pin"
-  },
-  {
-   "key": "regular",
-   "name": "Weeknight regular",
-   "line": "Has a bar, a trivia night and a standing Tuesday. Room for one more.",
-   "icon": "clock"
-  },
-  {
-   "key": "trail",
-   "name": "Trail person",
-   "line": "Red Rocks before work, Camel’s Hump on Sunday. Coffee after.",
-   "icon": "whatnow"
-  },
-  {
-   "key": "games",
-   "name": "Game night",
-   "line": "Board games, pickup soccer, the arcade. Competitive but kind.",
-   "icon": "games"
-  }
- ],
+ "_": "Demo data for ?demo=1, in the shapes the live tab reads. Every person and plan is invented. Plans are what nn_post_create takes (author, title, body, place, meta) plus the People table's extras (ages, meetup) and how many said they'd go; seeded into the demo board when the tab opens, dated hours ago. Events are all-day/data/whatnow.json's shape, dated from _anchor and moved to the reader's day; four are Stephen's own Meetup group and one is not, so the filter shows. Clubs are data/clubs.json's shape. Directory rows are what nn_people_directory() reads (the opt-in table joined to the profile), with `on` saying whether they joined: only the on ones may ever show.",
+ "_anchor": "2026-10-16",
  "plans": [
   {
-   "kind": "person",
-   "name": "Maya R.",
-   "arch": "Trail person",
-   "ago": "2h",
-   "line": "Open to strangers: Sunday trail run, 5 to 8 miles",
-   "text": "Moved here in August from Portland, the Maine one. Red Rocks, Niquette Bay, anything with a view. Coffee after is not optional.",
-   "cta": "I’d go",
-   "going": "3 going",
-   "k": "pp1"
+   "author": {
+    "name": "Priya N.",
+    "neighborhood": "old-north-end",
+    "archetype": "regular"
+   },
+   "title": "Trivia at Three Needs, need a fifth",
+   "body": "We’re decent at sports and hopeless at geography. Look for the table with the green notebook.",
+   "place": "Three Needs, College St",
+   "meta": {
+    "when": "Tonight, 7:30 pm",
+    "arch": "regular",
+    "spots": 2
+   },
+   "ages": "thirties",
+   "meetup": false,
+   "going": 4,
+   "ago": 3
   },
   {
-   "kind": "person",
-   "name": "Dev K.",
-   "arch": "Game night",
-   "ago": "4h",
-   "line": "Open to strangers: pickup soccer at Leddy, Sunday 10 am",
-   "text": "We have seven. Need four more and a second goalie who does not mind the cold.",
-   "cta": "I’d go",
-   "going": "7 going",
-   "k": "pp2"
+   "author": {
+    "name": "Ben S.",
+    "neighborhood": "south-end",
+    "archetype": "trail"
+   },
+   "title": "Sunrise hike up Mount Philo",
+   "body": "Carpool from the Shelburne Road grocery store at 6. Headlamps optional, coffee after mandatory.",
+   "place": "Mount Philo State Park",
+   "meta": {
+    "when": "Saturday, 6:30 am",
+    "arch": "trail",
+    "spots": 5
+   },
+   "ages": "any",
+   "meetup": true,
+   "going": 6,
+   "ago": 9
   },
   {
-   "kind": "person",
-   "name": "Tom A.",
-   "arch": "New in town",
-   "ago": "6h",
-   "line": "Open to strangers: a slow walk through the Intervale, Saturday at 9",
-   "text": "Two months in, know nobody, like trees. Will bring a thermos.",
-   "cta": "I’d go",
-   "going": "1 going",
-   "k": "pp3"
+   "author": {
+    "name": "Jules O.",
+    "neighborhood": "downtown",
+    "archetype": "new"
+   },
+   "title": "First-timers’ walk down Church Street, then dumplings",
+   "body": "Moved here in September. If you also know nobody yet, come walk around with me.",
+   "place": "Church Street, by the Unitarian church",
+   "meta": {
+    "when": "Tomorrow, 12:30 pm",
+    "arch": "new",
+    "spots": 4
+   },
+   "ages": "twenties",
+   "meetup": false,
+   "going": 2,
+   "ago": 5
+  },
+  {
+   "author": {
+    "name": "Nora L.",
+    "neighborhood": "winooski",
+    "archetype": "games"
+   },
+   "title": "Board game night, every skill level",
+   "body": "I’ll bring two games I can teach in ten minutes. Teaching is half the fun.",
+   "place": "The Boardroom, Mill St",
+   "meta": {
+    "when": "Sunday, 6:30 pm",
+    "arch": "games",
+    "spots": 6
+   },
+   "ages": "any",
+   "meetup": true,
+   "going": 9,
+   "ago": 20
+  },
+  {
+   "author": {
+    "name": "Sam P.",
+    "neighborhood": "hill",
+    "archetype": "regular"
+   },
+   "title": "Open mic, mostly to listen",
+   "body": "Not performing. Want company in the back row and someone to rate the sets with.",
+   "place": "Radio Bean, N Winooski Ave",
+   "meta": {
+    "when": "Thursday, 8 pm",
+    "arch": "regular",
+    "spots": 3
+   },
+   "ages": "twenties",
+   "meetup": false,
+   "going": 1,
+   "ago": 26
   }
  ],
- "mixers": [
+ "events": [
   {
-   "kind": "event",
-   "src": "Btown Brief",
-   "own": true,
-   "ago": "Thu",
-   "dow": "Thu",
-   "dom": "23",
-   "title": "New in Town mixer at Foam",
-   "when": "6:30 pm",
-   "where": "Foam Brewers, Lake St",
-   "price": "Free",
-   "going": 14,
-   "cta": "Going",
-   "text": "Name tags, one icebreaker, then we leave you alone.",
-   "votes": 12,
-   "comments": 3,
-   "k": "mx1",
-   "sid": "Btown Brief"
+   "id": "dm1",
+   "title": "BTown Coffee Club",
+   "start": "2026-10-17T10:00:00-04:00",
+   "date": "2026-10-17",
+   "end": "2026-10-17T12:00:00-04:00",
+   "url": "https://www.meetup.com/burlington-social-activites-group/events/demo-1/",
+   "category": "food-drink",
+   "allDay": false,
+   "venue": "Zero Gravity Craft Brewery",
+   "town": "Burlington",
+   "tags": [
+    "social"
+   ]
   },
   {
-   "kind": "event",
-   "src": "Burlington Social Activities Group",
-   "via": "Meetup",
-   "ago": "Sat",
-   "dow": "Sat",
-   "dom": "25",
-   "title": "Game Night archetype: board games at the Archives",
-   "when": "7:00 pm",
-   "where": "The Archives, Main St",
-   "price": "Free",
-   "going": 22,
-   "cta": "Going",
-   "text": "Bring a game or play ours.",
-   "votes": 9,
-   "comments": 5,
-   "k": "mx2",
-   "sid": "Burlington Social Activities Group"
+   "id": "dm2",
+   "title": "Trivia night with the Btown Brief",
+   "start": "2026-10-20T19:00:00-04:00",
+   "date": "2026-10-20",
+   "end": "2026-10-20T21:00:00-04:00",
+   "url": "https://www.meetup.com/burlington-social-activites-group/events/demo-2/",
+   "category": "games",
+   "allDay": false,
+   "venue": "Burlington Beer Company",
+   "town": "Burlington",
+   "tags": [
+    "social"
+   ]
+  },
+  {
+   "id": "dm3",
+   "title": "Pick-up Basketball",
+   "start": "2026-10-21T17:30:00-04:00",
+   "date": "2026-10-21",
+   "end": "2026-10-21T19:30:00-04:00",
+   "url": "https://www.meetup.com/burlington-social-activites-group/events/demo-3/",
+   "category": "sports",
+   "allDay": false,
+   "venue": "Gutterson Fieldhouse",
+   "town": "Burlington",
+   "tags": [
+    "social"
+   ]
+  },
+  {
+   "id": "dm4",
+   "title": "New in town mixer",
+   "start": "2026-10-22T18:30:00-04:00",
+   "date": "2026-10-22",
+   "end": "2026-10-22T20:30:00-04:00",
+   "url": "https://www.meetup.com/burlington-social-activites-group/events/demo-4/",
+   "category": "community",
+   "allDay": false,
+   "venue": "Foam Brewers",
+   "town": "Burlington",
+   "tags": [
+    "social"
+   ]
+  },
+  {
+   "id": "dm5",
+   "title": "Lunch with the Poets",
+   "start": "2026-10-19T11:45:00-04:00",
+   "date": "2026-10-19",
+   "end": "2026-10-19T13:15:00-04:00",
+   "url": "https://www.meetup.com/burlington-writers/events/demo-5/",
+   "category": "words",
+   "allDay": false,
+   "venue": "The Innovation Café",
+   "town": "Burlington",
+   "tags": [
+    "social"
+   ]
+  }
+ ],
+ "clubs": [
+  {
+   "name": "Burlington Social Activities Group (BTown Brief IRL)",
+   "what": "Our own Meetup — trivia nights, food crawls, kayak outings, beach hangs, and board games, plus a Saturday morning Coffee Club at Zero Gravity that draws 15-30 people. Free and open to all.",
+   "when": "Several events most weeks · Coffee Club Saturdays",
+   "category": "Social",
+   "url": "https://www.meetup.com/burlington-social-activites-group/",
+   "featured": true
+  },
+  {
+   "name": "Burlington Run Club",
+   "what": "A free community fun-run group that meets at Foam Brewers for a social run followed by a beer.",
+   "when": "Fridays 5pm at Foam Brewers",
+   "category": "Running",
+   "url": "https://www.instagram.com/burlingtonrunclub/"
+  },
+  {
+   "name": "Green Mountain Bicycle Club",
+   "what": "Vermont's oldest and largest road cycling club, with speed-grouped evening rides, weekend rides, and beginner-friendly intro rides each spring.",
+   "when": "Wednesday evenings + Saturdays, in season",
+   "category": "Biking",
+   "url": "https://thegmbc.com/"
+  },
+  {
+   "name": "Green Mountain Club — Burlington Section",
+   "what": "The original 1910 chapter of Vermont's hiking club: group hikes, snowshoes, and paddles year-round, easy walks to big Long Trail days. Membership not required to join an outing.",
+   "when": "Multiple outings monthly, year-round",
+   "category": "Hiking & Outdoors",
+   "url": "https://gmcburlington.org/"
+  },
+  {
+   "name": "The Friendly Tabletop Gamers",
+   "what": "Burlington's big board game Meetup, run by The Boardroom game café — learn-to-play sessions, mixers, and open gaming several times a week. 1,300+ members.",
+   "when": "Multiple events weekly at The Boardroom (3 Mill St)",
+   "category": "Games & Puzzles",
+   "url": "https://www.meetup.com/friendlytabletopgamers/"
+  },
+  {
+   "name": "Tuesday Trivia at Vermont Comedy Club",
+   "what": "A long-running weekly trivia night in the comedy club's lounge, with rotating themes and show tickets as prizes — an easy standing date for a team of friends.",
+   "when": "Tuesday evenings",
+   "category": "Games & Puzzles",
+   "url": "https://www.vermontcomedyclub.com/"
+  },
+  {
+   "name": "Phoenix Books Book Groups",
+   "what": "Burlington's downtown indie bookstore hosts recurring book groups — including 'Trash for the Trope,' a romance readers' group tackling a different trope each month.",
+   "when": "Monthly — see events page",
+   "category": "Books",
+   "url": "https://phoenixbooks.biz/events"
+  },
+  {
+   "name": "Vermont Ultimate (Green Mountain Disc Alliance)",
+   "what": "The hub for ultimate frisbee around Burlington — free summer pickup, a mixed summer league, and women/nonbinary sessions. All levels welcome.",
+   "when": "Summer: pickup Thursdays · women/nonbinary Wednesdays · Saturday league",
+   "category": "Sports & Rec",
+   "url": "https://vermontultimate.org/pickup"
+  },
+  {
+   "name": "Game On VT",
+   "what": "Chittenden County's adult rec-sports outfit — join solo or with a team for kickball, grass volleyball, floor hockey, and beginner pickleball leagues.",
+   "when": "Seasonal — kickball Mondays at Leddy · volleyball Wednesdays at UVM",
+   "category": "Sports & Rec",
+   "url": "https://www.gameonvt.com/programs.php"
+  },
+  {
+   "name": "Vermont Womxn's Pick-up Soccer",
+   "what": "Friendly women's pickup soccer in Burlington, overseen by Parks & Rec — show up and play.",
+   "when": "See Meetup schedule",
+   "category": "Sports & Rec",
+   "url": "https://www.meetup.com/womens-soccer-vermont/"
+  },
+  {
+   "name": "Generator Makerspace",
+   "what": "Burlington's community makerspace on Sears Lane — woodshop, metal shop, laser cutters, 3D printers, jewelry and sewing studios, and a built-in community of makers.",
+   "when": "Member access daily · enrollment sessions Thursdays & Saturdays",
+   "category": "Making & Crafts",
+   "url": "https://generatorvt.com/"
+  },
+  {
+   "name": "Spanish Conversation Group at Fletcher Free",
+   "what": "A weekly drop-in Spanish conversation circle at the library that explicitly welcomes beginners.",
+   "when": "Thursdays 4:30-6pm (resumes Sept 10)",
+   "category": "Language",
+   "url": "https://fletcherfree.org/languages"
+  },
+  {
+   "name": "Queen City Contras",
+   "what": "Burlington's thirty-year-old contra dance series — every dance is taught, no partner or experience needed, live bands and callers at Shelburne Town Hall.",
+   "when": "Monthly Fridays 6:45-10pm",
+   "category": "Dance",
+   "url": "https://queencitycontras.com/schedule/"
   }
  ],
  "directory": [
   {
    "name": "Priya N.",
-   "arch": "Weeknight regular"
+   "neighborhood": "old-north-end",
+   "archetype": "regular",
+   "interests": [
+    "games",
+    "music"
+   ],
+   "on": true
   },
   {
    "name": "Ben S.",
-   "arch": "Trail person"
+   "neighborhood": "south-end",
+   "archetype": "trail",
+   "interests": [
+    "outdoors",
+    "running"
+   ],
+   "on": true
   },
   {
    "name": "Jules O.",
-   "arch": "New in town"
+   "neighborhood": "downtown",
+   "archetype": "new",
+   "interests": [
+    "food",
+    "books"
+   ],
+   "on": true
   },
   {
    "name": "Nora L.",
-   "arch": "Game night"
+   "neighborhood": "winooski",
+   "archetype": "games",
+   "interests": [
+    "games",
+    "making"
+   ],
+   "on": true
   },
   {
    "name": "Sam P.",
-   "arch": "Weeknight regular"
+   "neighborhood": "hill",
+   "archetype": "regular",
+   "interests": [
+    "music",
+    "dance"
+   ],
+   "on": true
   },
   {
    "name": "Kara M.",
-   "arch": "Trail person"
+   "neighborhood": "new-north-end",
+   "archetype": "trail",
+   "interests": [
+    "outdoors",
+    "sports"
+   ],
+   "on": true
+  },
+  {
+   "name": "Theo W.",
+   "neighborhood": "essex",
+   "archetype": "games",
+   "interests": [
+    "games"
+   ],
+   "on": false
+  },
+  {
+   "name": "Rhea D.",
+   "neighborhood": "shelburne",
+   "archetype": "new",
+   "interests": [
+    "languages"
+   ],
+   "on": false
   }
- ],
- "directoryCount": 124,
- "newSince": 0
+ ]
 }
