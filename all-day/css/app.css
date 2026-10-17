@@ -275,29 +275,28 @@ body.chrome-away .mast { transform: translateY(-100%); }
   display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)) auto repeat(4, minmax(0, 1fr));
   height: var(--tab-h); padding: var(--s1);
   background: linear-gradient(var(--dock-sheen), var(--dock-clear)), var(--dock-glass);
-  backdrop-filter: saturate(150%) blur(20px); -webkit-backdrop-filter: saturate(150%) blur(20px);
+  backdrop-filter: saturate(115%) blur(18px); -webkit-backdrop-filter: saturate(115%) blur(18px);
   border: 1px solid var(--dock-edge); border-radius: var(--r-dock); box-shadow: var(--dock-shadow);
 }
 .tabbar button { position: relative; display: grid; justify-items: center; align-content: center; gap: 4px;
   min-width: 0; padding: 0 2px; color: var(--dock-muted); font-size: var(--fs-label); font-weight: 500;
   line-height: 1; letter-spacing: .01em; border-radius: var(--r-pill); transition: color .15s ease, background .15s ease; }
 .tabbar button span { white-space: nowrap; }
-.tabbar button:hover { color: var(--lake-ink); background: var(--lake-hover); }
+.tabbar button:hover { color: var(--dock-ink); background: var(--dock-hover); }
 .tabbar button > .i { width: var(--dock-icon); height: var(--dock-icon); }
-.tabbar button.on { color: var(--sunset-ink); background: var(--sunset); }
+.tabbar button.on { color: var(--dock-ink); background: var(--dock-selected); }
 .tabbar button.on .i { stroke-width: 2.3; }
 .tabbar .nd { position: absolute; top: 8px; left: calc(50% + 6px); width: 8px; height: 8px; border-radius: var(--r-round);
   background: var(--sunset); border: 2px solid var(--lake); }
 /* What Now is the bar's centre (the fifth of nine, the one auto-width
    column): its icon sits in a filled disc and its label is bold, in both
    themes and on the wide rail. The disc stays filled whether or not the tab
-   is active; active fills the cell and outlines the disc. border-box keeps
+   is active; active adds the soft glass highlight behind it. border-box keeps
    the 25px disc from making this cell taller than the other eight. */
-.tabbar #tab-whatnow { color: var(--sunset); }
+.tabbar #tab-whatnow { color: var(--dock-ink); }
 .tabbar #tab-whatnow .i { background: var(--sunset); color: var(--sunset-ink); border-radius: var(--r-round);
   padding: 4px; width: 25px; height: 25px; box-sizing: border-box; stroke-width: 2; flex: 0 0 auto; }
-.tabbar #tab-whatnow.on { color: var(--sunset-ink); background: var(--sunset); }
-.tabbar #tab-whatnow.on .i { box-shadow: 0 0 0 1px var(--lake); }
+.tabbar #tab-whatnow.on { color: var(--dock-ink); background: var(--dock-selected); }
 .tabbar #tab-whatnow.on .i { stroke-width: 2.2; }
 .tabbar #tab-whatnow > span { font-weight: 700; letter-spacing: -.01em; white-space: nowrap; padding: 0 3px; }
 .rail-brand { display: none; }
@@ -421,6 +420,7 @@ body.chrome-away .mast { transform: translateY(-100%); }
   .tabbar button.on { background: var(--sunset); color: var(--sunset-ink); font-weight: 600; }
   .tabbar button:hover { color: var(--ink); background: var(--paper-2); }
   .tabbar #tab-whatnow { color: var(--accent); }
+  .tabbar #tab-whatnow.on { color: var(--sunset-ink); background: var(--sunset); }
   .tabbar button.on::before { display: none; }
   .tabbar .nd { position: static; margin-left: auto; border-color: transparent; }
   .toast { bottom: calc(28px + var(--player-h, 0px)); }
@@ -1331,7 +1331,7 @@ body.desk { overflow: auto; }
 .mast .chip.on { background: var(--sunset); color: var(--sunset-ink); }
 
 @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
-  @media (max-width: 899px) { .tabbar { background: var(--lake); } }
+  @media (max-width: 899px) { .tabbar { background: var(--dock-solid); } }
 }
 
 .mast .localsw .localsw-half:not(.on) { color: var(--lake-muted); }

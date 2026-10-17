@@ -26,15 +26,19 @@
   --sunset: #F5B04B;
   --sunset-ink: #2B1606;
   --ember: #B74117; /* darkened from #D9531E for 4.5:1 text on paper */
-  --dock-glass: rgba(14, 42, 71, .88);
-  --dock-sheen: rgba(247, 244, 238, .08);
+  --dock-glass: rgba(12, 16, 18, .82);
+  --dock-solid: #101416;
+  --dock-ink: #F7F8F9;
+  --dock-selected: rgba(255, 255, 255, .20);
+  --dock-hover: rgba(255, 255, 255, .10);
+  --dock-sheen: rgba(255, 255, 255, .045);
   --dock-clear: rgba(247, 244, 238, 0);
-  --dock-edge: rgba(247, 244, 238, .28);
-  --dock-muted: #C5D1DD;
-  --dock-shadow: 0 8px 28px rgba(8, 24, 42, .26), inset 0 1px 0 rgba(255, 255, 255, .12);
+  --dock-edge: rgba(255, 255, 255, .22);
+  --dock-muted: #F7F8F9;
+  --dock-shadow: 0 6px 18px rgba(0, 0, 0, .22), inset 0 1px 1px rgba(255, 255, 255, .12);
   --dock-lift: 8px;
   --dock-inset: 6px;
-  --r-dock: 26px;
+  --r-dock: 999px;
   --dock-max: 520px;
   --dock-icon: 20px;
   --row-tint: rgba(14, 42, 71, .025);
@@ -182,10 +186,10 @@
   :root:not([data-theme="light"]) {
     color-scheme: dark;
     --lake: #16334F;
-    --dock-glass: rgba(22, 51, 79, .90);
-    --dock-sheen: rgba(247, 244, 238, .07);
-    --dock-edge: rgba(185, 205, 224, .25);
-    --dock-shadow: 0 8px 28px rgba(0, 0, 0, .45), inset 0 1px 0 rgba(255, 255, 255, .10);
+    --dock-glass: rgba(12, 16, 18, .78);
+    --dock-sheen: rgba(255, 255, 255, .045);
+    --dock-edge: rgba(255, 255, 255, .22);
+    --dock-shadow: 0 6px 18px rgba(0, 0, 0, .32), inset 0 1px 1px rgba(255, 255, 255, .12);
     --ember: #F39872;
     --row-tint: rgba(185, 205, 224, .035);
     --paper: #0C1520;
@@ -225,10 +229,10 @@
 :root[data-theme="dark"] {
   color-scheme: dark;
   --lake: #16334F;
-  --dock-glass: rgba(22, 51, 79, .90);
-  --dock-sheen: rgba(247, 244, 238, .07);
-  --dock-edge: rgba(185, 205, 224, .25);
-  --dock-shadow: 0 8px 28px rgba(0, 0, 0, .45), inset 0 1px 0 rgba(255, 255, 255, .10);
+  --dock-glass: rgba(12, 16, 18, .78);
+  --dock-sheen: rgba(255, 255, 255, .045);
+  --dock-edge: rgba(255, 255, 255, .22);
+  --dock-shadow: 0 6px 18px rgba(0, 0, 0, .32), inset 0 1px 1px rgba(255, 255, 255, .12);
   --ember: #F39872;
   --row-tint: rgba(185, 205, 224, .035);
   --paper: #0C1520;
