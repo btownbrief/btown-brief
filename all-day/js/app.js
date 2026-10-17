@@ -535,7 +535,7 @@ function settingsSheet() {
     body.appendChild(el('div', 'sheet-h', 'About'));
     body.appendChild(el('p', 'sheet-note', demo
       ? 'This is the demo. Every headline, post, event, person, film, dish, shop and score is invented, and nothing you do here is saved. Leave the demo by removing ?demo=1 from the address.'
-      : 'All Day is the Btown Brief’s app for the rest of the day: Burlington’s news, and soon eight more tabs. Saves, mutes and what you have read stay on this phone.'));
+      : 'All Day is the Btown Brief’s app for the rest of the day: Burlington’s news, then what to watch, eat and do, people to do it with, vintage, art, On Air and games. Saves, mutes and what you have read stay on this phone.'));
   });
 }
 
@@ -884,13 +884,21 @@ window.addEventListener('allday-geo', () => {
 });
 
 /* ----------------------------------------------------------------- routing */
-/* Links from before the New Nine: the old Listen tab and Btown TV videos
-   shared as #watch/yt:<id> both live in On Air now. The address bar is
-   rewritten so the next share carries the new link. */
+/* Links from before the New Nine, each to the nearest new tab. The old
+   Listen tab and Btown TV videos shared as #watch/yt:<id> live in On Air and
+   keep their key. An old Reddit card's key is its URL, the key the Wire's
+   Unfiltered view still answers to; a bare #reddit opens the Wire's Reddit
+   chip. Instagram goes to the Wire, Music and Wander to What Now, Photos to
+   Art; their old keys mean nothing there, so they are dropped. The address
+   bar is rewritten so the next share carries the new link. */
+const MOVED = { ig: 'wire', music: 'whatnow', wander: 'whatnow', photos: 'art' };
 function legacy(h) {
   if (h === 'listen' || h.startsWith('listen/')) return 'onair' + h.slice(6);
   if (/^watch\/yt:/.test(h)) return 'onair/' + h.slice(6);
-  return null;
+  if (h === 'reddit' || h === 'reddit/') return 'wire/reddit';
+  if (h.startsWith('reddit/')) return 'wire/' + h.slice(7);
+  const m = h.match(/^([a-z]+)(\/|$)/);
+  return m && MOVED[m[1]] ? MOVED[m[1]] : null;
 }
 
 function parseHash() {
