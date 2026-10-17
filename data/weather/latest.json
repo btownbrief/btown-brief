@@ -1,28 +1,28 @@
 {
- "updated": "2026-10-17T20:36:56+00:00",
+ "updated": "2026-10-17T21:46:20+00:00",
  "sections_updated": {
-  "now": "2026-10-17T20:36:56+00:00",
-  "forecast": "2026-10-17T20:36:56+00:00",
-  "hourly": "2026-10-17T20:36:56+00:00",
-  "alerts": "2026-10-17T20:36:56+00:00",
-  "afd": "2026-10-17T20:36:56+00:00",
-  "lake_forecast": "2026-10-17T20:36:56+00:00",
-  "lake_gage": "2026-10-17T20:36:56+00:00",
-  "air": "2026-10-17T20:36:56+00:00",
-  "sun": "2026-10-17T20:36:56+00:00",
-  "models": "2026-10-17T20:36:56+00:00"
+  "now": "2026-10-17T21:46:20+00:00",
+  "forecast": "2026-10-17T21:46:20+00:00",
+  "hourly": "2026-10-17T21:46:20+00:00",
+  "alerts": "2026-10-17T21:46:20+00:00",
+  "afd": "2026-10-17T21:46:20+00:00",
+  "lake_forecast": "2026-10-17T21:46:20+00:00",
+  "lake_gage": "2026-10-17T21:46:20+00:00",
+  "air": "2026-10-17T21:46:20+00:00",
+  "sun": "2026-10-17T21:46:20+00:00",
+  "models": "2026-10-17T21:46:20+00:00"
  },
  "now": {
-  "observed_at": "2026-10-17T20:20:00+00:00",
+  "observed_at": "2026-10-17T21:30:00+00:00",
   "station": "KBTV",
-  "description": "Mostly Clear",
+  "description": "Clear",
   "temp_f": 45,
-  "feels_like_f": 39,
+  "feels_like_f": 40,
   "humidity": 36,
   "dewpoint_f": 19,
-  "wind_mph": 11,
-  "wind_gust_mph": 17,
-  "wind_dir": "N",
+  "wind_mph": 8,
+  "wind_gust_mph": null,
+  "wind_dir": "NNW",
   "precip_last_hr_in": null
  },
  "forecast": {
@@ -30,13 +30,13 @@
   "periods": [
    {
     "name": "This Afternoon",
-    "start": "2026-10-17T16:00:00-04:00",
+    "start": "2026-10-17T17:00:00-04:00",
     "is_day": true,
     "temp_f": 45,
     "pop": 0,
-    "wind": "NW 13 mph",
+    "wind": "NW 10 mph",
     "short": "Sunny",
-    "detailed": "Sunny, with a high near 45. Northwest wind around 13 mph."
+    "detailed": "Sunny, with a high near 45. Northwest wind around 10 mph, with gusts as high as 22 mph."
    },
    {
     "name": "Tonight",
@@ -173,17 +173,6 @@
  "hourly": {
   "updated": "2026-10-17T18:17:09+00:00",
   "hours": [
-   {
-    "t": "2026-10-17T16:00:00-04:00",
-    "temp_f": 45,
-    "feels_f": 39,
-    "pop": 0,
-    "humidity": 40,
-    "wind_mph": 13,
-    "wind_dir": "NW",
-    "sky": 22,
-    "short": "Sunny"
-   },
    {
     "t": "2026-10-17T17:00:00-04:00",
     "temp_f": 45,
@@ -568,6 +557,17 @@
     "wind_dir": "S",
     "sky": 0,
     "short": "Clear"
+   },
+   {
+    "t": "2026-10-19T04:00:00-04:00",
+    "temp_f": 41,
+    "feels_f": 35,
+    "pop": 0,
+    "humidity": 85,
+    "wind_mph": 10,
+    "wind_dir": "S",
+    "sky": 2,
+    "short": "Clear"
    }
   ]
  },
@@ -584,23 +584,15 @@
   "raw": "\n000\nFXUS61 KBTV 171808\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n208 PM EDT Sat Oct 17 2026\n\n.WHAT HAS CHANGED...\nAs of 207 PM EDT Saturday...\n\nNo significant changes to the current forecast.\n\n&&\n\n.KEY MESSAGES...\nAs of 207 PM EDT Saturday...\n\n1. A chilly overnight period tonight will be followed by quiet \nand dry weather well into mid week.\n\n2. High probability of dry weather and seasonable temperatures \ncontinuing through next weekend.\n\n&&\n\n.DISCUSSION...\nAs of 207 PM EDT Saturday...\n\nKEY MESSAGE 1: Ridging will begin to nose in this evening with the \napproach of an anomalously strong area of high pressure building \nover the Midwest. This 1037mb high will slide east tonight \ncontinuing to dry out the region, and leading to a cold start to \nSunday. Tonight will be the coldest night of the forecast period as \nwinds abate  and skies become mainly clear. Contrary to previous \nforecasts, new guidance has trended towards slightly warmer lows for \ntonight, albeit still cold for this time of year. Lows in the mid to \nupper 20s are expected for the Adirondacks and east of the Greens \nwith low 30s elsewhere. A weak shortwave will ride north of our \narea, but could bring some increased mid clouds to portions of the \nthe Adirondacks and near the International Border, stifling strong \nradiational cooling. Many sites will still fall below freezing \ntonight regardless of cloud coverage due to ongoing advective cold \nprocesses under light west winds. Wind by tomorrow morning will turn \nslightly southwesterly drawing slightly warmer air into the region \nhelping to rebound our temperatures with highs tomorrow into the mid \n50s. Some light breezes around 10-15 mph in the wider valleys will \nbe possible tomorrow as well. \n\nSouthwest flow will continue to advect some warmer air in by \nMonday as highs reach their peak for the week, into the upper \n50s to low 60s across the area with clear skies. Through the \nentire near and short term period towards mid week, there is \nhigh confidence in no precipitation areawide.\n\nKEY MESSAGE 2: Large scale upper level ridging either upstream or \noverhead from Tuesday night through Saturday will bring us \nseasonable temperatures and mainly clear skies as low humidity and \nlight wind dominates the period. One exception to the completely \nquiet weather will probably be associated with a moisture-starved \ncold front on Thursday, which could bring a band of clouds through \nthe region and support a modest north wind into Friday. Our quasi-\nstationary weather pattern will include an ocean storm well to our \nsouth and east while Canadian/polar lows track well to our east and \nnorth, keeping any unseasonable cold locked up as well as any push \nof warm air from the southwest from moving in. \n\nNote ensemble guidance does show a very low (6 hourly PoP peaking \nnear 10%) chance of rain squeaking into southeastern portions of \nWindsor County early Thursday in the event, probably associated with \nthe aforementioned ocean storm if it was to track much farther west \nthan the strong consensus.\n\n&&\n\n.AVIATION /18Z SATURDAY THROUGH THURSDAY/...\nThrough 18Z Sunday...Mainly a wind forecast with VFR conditions\nprevailing.  A possible exception is for SLK, where a lake-induced\ncloud layer could form due to cold westerly flow off of the eastern\nGreat Lakes. It is currently favored to arrive roughly 09Z and\npossibly linger at times through about 17Z; cloud bases will likely\nbe in the MVFR range at about 1500-3000 feet if ceilings develop.\nOtherwise, diurnally driven clouds early in the period will trend\nSKC at most sites. Gusty west to northwest winds will likewise\ndiminish towards sunset. Overnight, light winds will trend\nsouthwesterly to southerly and increase to around 10 knots by 15-17Z\nat MSS/SLK/PBG/BTV, with gusts near or above 20 knots towards the\nend of the period favored at MSS and BTV.\n\nOutlook...\n\nSunday Night: VFR. NO SIG WX.\nMonday: VFR. NO SIG WX.\nMonday Night: VFR. NO SIG WX.\nTuesday: VFR. NO SIG WX.\nTuesday Night: VFR. NO SIG WX.\nWednesday: VFR. NO SIG WX.\nWednesday Night: VFR. NO SIG WX.\nThursday: VFR. NO SIG WX.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Danzig\nDISCUSSION...Danzig/Kutikoff\nAVIATION...Kutikoff\n"
  },
  "lake_forecast": {
-  "issued": "2026-10-17T18:13:00+00:00",
+  "issued": "2026-10-17T21:22:00+00:00",
   "suspended": false,
   "broad": [
    {
-    "period": "Rest Of Today",
-    "text": "Northwest winds 15 to 20 knots, decreasing to 10 to 15 knots. Mostly sunny. Waves 1 to 3 feet.",
-    "wind_knots_max": 20,
-    "gust_knots": null,
-    "waves_ft_max": 3,
-    "calm": false
-   },
-   {
     "period": "Tonight",
-    "text": "Northwest winds 10 to 15 knots, becoming south 10 knots or less. Clear. Waves 1 to 2 feet.",
+    "text": "Northwest winds 10 to 15 knots, becoming south 10 knots or less. Clear. Waves 1 to 3 feet.",
     "wind_knots_max": 15,
     "gust_knots": null,
-    "waves_ft_max": 2,
+    "waves_ft_max": 3,
     "calm": false
    },
    {
@@ -658,17 +650,25 @@
     "gust_knots": null,
     "waves_ft_max": 2,
     "calm": false
+   },
+   {
+    "period": "Wednesday Night",
+    "text": "Light and variable winds. Mostly clear. Waves 1 foot or less.",
+    "wind_knots_max": null,
+    "gust_knots": null,
+    "waves_ft_max": 1,
+    "calm": true
+   },
+   {
+    "period": "Thursday",
+    "text": "Southwest winds less than 10 knots, becoming north. Mostly sunny. Waves 1 foot or less.",
+    "wind_knots_max": 10,
+    "gust_knots": null,
+    "waves_ft_max": 1,
+    "calm": false
    }
   ],
   "northern": [
-   {
-    "period": "Rest Of Today",
-    "text": "Northwest winds 10 to 15 knots. Mostly sunny. Waves 1 to 2 feet.",
-    "wind_knots_max": 15,
-    "gust_knots": null,
-    "waves_ft_max": 2,
-    "calm": false
-   },
    {
     "period": "Tonight",
     "text": "Northwest winds 10 to 15 knots, becoming south 5 to 10 knots. Clear. Waves 1 to 2 feet.",
@@ -732,23 +732,31 @@
     "gust_knots": null,
     "waves_ft_max": 2,
     "calm": true
+   },
+   {
+    "period": "Wednesday Night",
+    "text": "Light and variable winds. Mostly clear. Waves 1 foot or less.",
+    "wind_knots_max": null,
+    "gust_knots": null,
+    "waves_ft_max": 1,
+    "calm": true
+   },
+   {
+    "period": "Thursday",
+    "text": "Light and variable winds. Mostly sunny. Waves 1 foot or less.",
+    "wind_knots_max": null,
+    "gust_knots": null,
+    "waves_ft_max": 1,
+    "calm": true
    }
   ],
   "southern": [
    {
-    "period": "Rest Of Today",
-    "text": "North winds 10 to 15 knots. Mostly sunny. Waves 1 to 2 feet.",
-    "wind_knots_max": 15,
-    "gust_knots": null,
-    "waves_ft_max": 2,
-    "calm": false
-   },
-   {
     "period": "Tonight",
-    "text": "Northwest winds 10 to 15 knots, becoming south 10 knots or less. Clear. Waves 1 to 2 feet.",
+    "text": "Northwest winds 10 to 15 knots, becoming south 10 knots or less. Clear. Waves 1 to 3 feet.",
     "wind_knots_max": 15,
     "gust_knots": null,
-    "waves_ft_max": 2,
+    "waves_ft_max": 3,
     "calm": false
    },
    {
@@ -801,42 +809,61 @@
    },
    {
     "period": "Wednesday",
-    "text": "North winds less than 10 knots. Mostly sunny. Waves 1 to 2 feet. Latest Level and Temperature Data from Around Lake Champlain Level Temperature USGS gage at Rouses Point NY 93.46 feet 49 degrees USGS gage at Burlington VT 93.52 feet 55 degrees USGS gage at Port Henry NY 93.44 feet 53 degrees",
+    "text": "North winds less than 10 knots. Mostly sunny. Waves 1 to 2 feet.",
     "wind_knots_max": 10,
     "gust_knots": null,
     "waves_ft_max": 2,
     "calm": false
+   },
+   {
+    "period": "Wednesday Night",
+    "text": "Light and variable winds. Mostly clear. Waves 1 foot or less.",
+    "wind_knots_max": null,
+    "gust_knots": null,
+    "waves_ft_max": 1,
+    "calm": true
+   },
+   {
+    "period": "Thursday",
+    "text": "Light and variable winds, becoming north 5 to 10 knots. Mostly sunny. Waves 1 foot or less. The ultraviolet index for Sunday will be a 3. This is in the moderate category. Latest Level and Temperature Data from Around Lake Champlain Level Temperature USGS gage at Rouses Point NY 93.51 feet 50 degrees USGS gage at Burlington VT 93.56 feet 55 degrees USGS gage at Port Henry NY 93.43 feet 52 degrees",
+    "wind_knots_max": 10,
+    "gust_knots": null,
+    "waves_ft_max": 1,
+    "calm": true
    }
   ],
-  "uv": null,
+  "uv": {
+   "day": "Sunday",
+   "index": 3
+  },
   "gage_table": {
    "Rouses Point NY": {
-    "level_ft": 93.46,
-    "temp_f": 49
+    "level_ft": 93.51,
+    "temp_f": 50
    },
    "Burlington VT": {
-    "level_ft": 93.52,
+    "level_ft": 93.56,
     "temp_f": 55
    },
    "Port Henry NY": {
-    "level_ft": 93.44,
-    "temp_f": 53
+    "level_ft": 93.43,
+    "temp_f": 52
    }
   }
  },
  "lake_gage": {
   "water_temp_f": 55,
-  "water_temp_at": "2026-10-17T16:00:00.000-04:00",
+  "water_temp_at": "2026-10-17T17:00:00.000-04:00",
   "level_ft": 94.08,
-  "level_at": "2026-10-17T16:00:00.000-04:00",
+  "level_at": "2026-10-17T17:00:00.000-04:00",
   "level_status": "normal"
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 28,
+  "aqi": 29,
   "category": "Good",
   "pollutant": "OZONE",
-  "observed": "10/17/26 16:00",
+  "observed": "10/17/26 17:00",
   "discussion": "On Sunday, October 18th, expect generally good air quality across Vermont."
  },
  "sun": {
@@ -872,7 +899,7 @@
     "high_f": {
      "GFS": 55,
      "Euro": 55,
-     "ICON": 55
+     "ICON": 56
     },
     "pop_max": {
      "GFS": 1,
@@ -884,7 +911,7 @@
      "Euro": 0.0,
      "ICON": 0.0
     },
-    "high_spread_f": 0
+    "high_spread_f": 1
    },
    {
     "date": "2026-10-19",
