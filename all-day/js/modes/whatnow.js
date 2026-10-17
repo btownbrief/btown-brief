@@ -357,7 +357,10 @@ function skyAt(now = Date.now()) {
   if (!rise || !set || set <= rise) return null;
   let next = Date.parse((s && s.sunrise_tomorrow) || '') || rise + DAY_MS;
   if (next <= set) next = rise + DAY_MS;
-  for (let i = 0; i < 3 && now >= next; i++) { rise += DAY_MS; set += DAY_MS; next += DAY_MS; }
+  /* past tomorrow's sunrise: tomorrow's own times first, then whole days */
+  const set2 = Date.parse((s && s.sunset_tomorrow) || '');
+  if (now >= next) { set = set2 > next ? set2 : set + DAY_MS; rise = next; next = rise + DAY_MS; }
+  for (let i = 0; i < 2 && now >= next; i++) { rise += DAY_MS; set += DAY_MS; next += DAY_MS; }
   if (now >= rise && now < set) {
     const p = (now - rise) / (set - rise);
     const phase = now - rise < SUNRISE_MS ? 'sunrise' : set - now <= SUNSET_MS ? 'sunset' : set - now <= GOLDEN_MS ? 'golden' : 'day';
@@ -369,10 +372,12 @@ function skyAt(now = Date.now()) {
   return { body: 'moon', p, phase, low: false, ...skyPos(p, SKY.moonLift) };
 }
 
-/* the card's icon kind, as the overlay on the sky */
+/* the overlay on the sky, from the forecast's own words: read as if by day,
+   so a partly cloudy night keeps its clouds (the icon shows the moon) */
 const SKY_WX = { sun: 'clear', moon: 'clear', partly: 'partly', cloud: 'cloud', rain: 'rain', snow: 'snow', storm: 'storm', fog: 'fog' };
 
-function skyStrip(kind) {
+function skyStrip(said) {
+  const kind = wxKind(said, true);
   const at = skyAt();
   if (!at) return '';
   const cloud = (x, y, s) => '<path transform="translate(' + x + ' ' + y + ') scale(' + s + ')" d="M0 8h16a4 4 0 0 0 .4-8A6 6 0 0 0 5 1.6 3.4 3.4 0 0 0 0 8z"/>';
@@ -420,7 +425,7 @@ function weatherCard() {
   a.dataset.wxicon = x.icon;
   const hl = [x.hi != null ? 'H ' + x.hi + '°' : '', x.lo != null ? 'L ' + x.lo + '°' : ''].filter(Boolean).join(' ');
   a.setAttribute('aria-label', [x.said, x.temp + '°', x.feels != null ? 'feels like ' + x.feels + '°' : '', hl.replace('H ', 'high ').replace('L ', 'low ')].filter(Boolean).join(', ') + '. The full forecast');
-  a.innerHTML = skyStrip(x.icon) + '<span class="wxc-top"><span class="wxc-ic">' + WX_ICON[x.icon] + '</span><b class="wxc-t">' + esc(x.temp) + '°</b>' +
+  a.innerHTML = skyStrip(x.said) + '<span class="wxc-top"><span class="wxc-ic">' + WX_ICON[x.icon] + '</span><b class="wxc-t">' + esc(x.temp) + '°</b>' +
     '<span class="wxc-m">' + (x.feels != null ? '<span class="wxc-feels">Feels ' + esc(x.feels) + '°</span>' : '') +
     (hl ? '<span class="wxc-hl">' + esc(hl) + '</span>' : '') + '</span></span>' +
     (x.hours.length ? '<span class="wxc-hrs">' + x.hours.map((h) => '<span class="wxc-h" data-wxicon="' + esc(h.icon) + '"><i>' + esc(h.label) + '</i>' +

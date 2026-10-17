@@ -47,11 +47,13 @@
   var FRAME_MS = 550;            // one frame on screen
   var HOLD_MS = 1800;            // the newest frame, before the loop starts over
   var OPACITY = 0.78;
-  var MAX_PX = 2048;             // the largest frame image asked for, per side
+  var MAX_PX = 1600;             // the largest frame image asked for, per side
+  var REFRESH_MS = 10 * 60000;   // a fresh frame list while the radar is on screen
+  var SETTLE_MS = 8000;          // the loop starts by then even if a frame is slow
 
   var root, mapEl, controls, playBtn, scrub, timeEl, stamp, failEl;
   var map = null, frames = [], overlays = [], idx = 0, playing = false, timer = null;
-  var onScreen = false, started = false, rebuildT = null;
+  var onScreen = false, started = false, rebuildT = null, gen = 0, settled = false, shown = false, lastCheck = 0;
   var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   var clockFmt = new Intl.DateTimeFormat('en-US', { hour: 'numeric', minute: '2-digit', timeZone: 'America/New_York' });
@@ -123,25 +125,67 @@
       '&TIME=' + encodeURIComponent(iso);
   }
 
+  /* One CSS pixel per image pixel, not two: MRMS is a one-kilometre grid,
+     coarser than a pixel at the zooms this map opens on, so a 2x image
+     would be four times the bytes for nothing. */
   function frameSize() {
     var s = map.getSize();
-    var dpr = Math.min(window.devicePixelRatio || 1, 2);
-    var scale = Math.min(dpr, MAX_PX / Math.max(s.x, s.y, 1));
+    var scale = Math.min(1, MAX_PX / Math.max(s.x, s.y, 1));
     return { w: Math.max(1, Math.round(s.x * scale)), h: Math.max(1, Math.round(s.y * scale)) };
   }
 
+  /* The frame on screen loads first, the other twelve once it has, so the
+     map shows rain at once and the loop fills in behind it. A pan or zoom
+     starts a new generation; answers from an old one are ignored. */
   function buildOverlays() {
     if (!map || !frames.length) return;
+    var my = ++gen;
     var b = map.getBounds(), size = frameSize();
     var old = overlays;
+    var left = frames.length, failed = 0;
+    var done = function (ok) {
+      if (my !== gen) return;
+      if (!ok) failed++;
+      if (--left === 0) {
+        if (failed === frames.length) fail();
+        else settle();
+      }
+    };
     overlays = frames.map(function (f, i) {
       var o = window.L.imageOverlay(frameUrl(f.iso, b, size), b, {
         opacity: i === idx ? OPACITY : 0, interactive: false,
         className: 'radar-frame', attribution: i === 0 ? RADAR_CREDIT : undefined
       });
-      return o.addTo(map);
+      o.on('load', function () { done(true); });
+      o.on('error', function () { done(false); });
+      return o;
     });
-    old.forEach(function (o) { map.removeLayer(o); });
+    var first = overlays[idx];
+    var rest = function () {
+      if (my !== gen) return;
+      old.forEach(function (o) { map.removeLayer(o); });
+      old = [];
+      overlays.forEach(function (o) { if (o !== first) o.addTo(map); });
+    };
+    first.on('load', function () {
+      if (my !== gen) return;
+      root.classList.remove('is-loading');
+      rest();
+    });
+    first.on('error', function () {
+      if (my !== gen) return;
+      if (!shown) { fail(); return; }   // the very first picture did not come: say so
+      rest();
+    });
+    first.addTo(map);
+  }
+
+  /* every frame has answered (or SETTLE_MS has passed): the loop may run */
+  function settle() {
+    if (settled || root.classList.contains('is-failed')) return;
+    settled = true;
+    shown = true;
+    setPlaying(!reduced);
   }
 
   function show(i) {
@@ -177,21 +221,45 @@
 
   /* ---------------- mount ---------------- */
   function fail() {
+    gen++;
+    setPlaying(false);
+    root.classList.remove('is-loading');
     root.classList.add('is-failed');
     if (mapEl) mapEl.hidden = true;
     controls.hidden = true;
     failEl.hidden = false;
   }
 
+  function frameList() {
+    lastCheck = Date.now();
+    return fetch(WMS + '?service=WMS&version=1.3.0&request=GetCapabilities', { cache: 'no-cache' })
+      .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.text(); })
+      .then(function (xml) { return pickFrames(readTimes(xml)); });
+  }
+
+  /* NOAA adds a scan every two minutes. While the radar is on screen the
+     list is read again every ten, so an open page keeps moving forward;
+     a reader on the newest frame stays on the newest. */
+  function refresh() {
+    if (!map || !onScreen || document.hidden || root.classList.contains('is-failed') || Date.now() - lastCheck < REFRESH_MS) return;
+    frameList().then(function (next) {
+      if (!next.length || next[next.length - 1].iso === frames[frames.length - 1].iso) return;
+      var atNewest = idx === frames.length - 1;
+      frames = next;
+      idx = atNewest ? frames.length - 1 : Math.min(idx, frames.length - 1);
+      scrub.max = String(frames.length - 1);
+      buildOverlays();
+      show(idx);
+    }).catch(function () { /* keep looping what we have */ });
+  }
+
   function start() {
     if (started) return;
     started = true;
     root.classList.add('is-loading');
-    var timesP = fetch(WMS + '?service=WMS&version=1.3.0&request=GetCapabilities', { cache: 'no-cache' })
-      .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.text(); });
-    Promise.all([loadLeaflet(), timesP]).then(function (got) {
+    Promise.all([loadLeaflet(), frameList()]).then(function (got) {
       var L = got[0];
-      frames = pickFrames(readTimes(got[1]));
+      frames = got[1];
       if (!frames.length) throw new Error('no frames');
       idx = frames.length - 1;
       map = L.map(mapEl, {
@@ -210,13 +278,14 @@
       });
       scrub.max = String(frames.length - 1);
       controls.hidden = false;
-      root.classList.remove('is-loading');
       show(idx);
-      setPlaying(!reduced);
+      setTimeout(settle, SETTLE_MS);
+      setInterval(refresh, 60000);
       window.btownRadar = {
-        frames: frames.map(function (f) { return f.iso; }),
+        frames: function () { return frames.map(function (f) { return f.iso; }); },
         index: function () { return idx; },
         playing: function () { return playing; },
+        ready: function () { return settled; },
         map: map
       };
     }).catch(fail);
@@ -241,7 +310,7 @@
       setPlaying(false);
       show(parseInt(scrub.value, 10) || 0);
     });
-    document.addEventListener('visibilitychange', schedule);
+    document.addEventListener('visibilitychange', function () { schedule(); refresh(); });
 
     /* nothing loads until the radar is about to come into view */
     if ('IntersectionObserver' in window) {
