@@ -613,8 +613,9 @@ function poolLine() {
 /* The rest of today's calendar in Burlington's clock: what is still to
    start (or started in the last 15 minutes), plus what is on now and began
    within two hours, daytime first and then tonight's, soonest first. All-day
-   listings are exhibits, not plans, and stay on the calendar page. After
-   the last one tonight, tomorrow's take the strip. */
+   listings are exhibits, not plans, and stay on the calendar page. One that
+   began last night and is still on (11:30 pm to 1:30 am, at 12:30 am)
+   counts as on now. After the last one tonight, tomorrow's take the strip. */
 const usableEvent = (e) => !!e && !!e.id && !!e.title && /^(https?:|#)/i.test(String(e.url || '')) && !e.allDay &&
   !(e.status && e.status !== 'active') && !/^\s*(cancel+ed|postponed)\b/i.test(e.title);
 function eventsOn(date, now) {
@@ -623,9 +624,10 @@ function eventsOn(date, now) {
   return evs.filter((e) => {
     if (!usableEvent(e)) return false;
     const start = Date.parse(e.start);
-    if (!start || et(start).date !== date) return false;
+    if (!start) return false;
     const end = Date.parse(e.end) || 0;
-    const on = end > now && start <= now && start >= now - 2 * 3600000;
+    const on = end > now && start <= now && start >= now - 2 * 3600000 && date === et(now).date;
+    if (et(start).date !== date && !on) return false;
     if (!(start >= now - 15 * 60000 || on)) return false;
     const sig = e.title.toLowerCase().replace(/[^a-z0-9]+/g, '') + '|' + start;
     if (seenK.has(sig)) return false;
@@ -639,7 +641,10 @@ function happening(now = Date.now()) {
   const today = et(now).date;
   let list = eventsOn(today, now).filter(keep);
   let day = 'today';
-  if (!list.length) { list = eventsOn(addDays(today, 1), now).filter(keep); day = 'tomorrow'; }
+  if (!list.length) {
+    const next = eventsOn(addDays(today, 1), now).filter(keep);
+    if (next.length) { list = next; day = 'tomorrow'; }
+  }
   const isNight = (e) => et(Date.parse(e.start)).hour >= EVENING;
   const early = list.filter((e) => !isNight(e)).slice(0, day === 'today' ? DAY_SHOWN : TODAY_SHOWN);
   const late = list.filter(isNight).slice(0, TODAY_SHOWN - early.length);

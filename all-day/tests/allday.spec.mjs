@@ -2287,6 +2287,28 @@ async function theWhatNow(browser, base) {
     check(lt.h === 'Happening tomorrow' && lt.k.join(',') === 'd-tmrw', 'after the last one tonight, the strip turns to tomorrow', JSON.stringify(lt));
     check(!l.errors.length, 'no console errors', l.errors.join(' | '));
     await l.ctx.close();
+
+    /* just after Burlington midnight: last night's late set is still on, and
+       with nothing after it and nothing tomorrow the strip says so */
+    const midnight = Date.parse(dayMinus(day, -1) + 'T00:30:00' + etOffset(Date.parse(dayMinus(day, -1) + 'T12:00:00Z')));
+    const mEvents = [ev('night', 'Still going', day, '23:30', null, { end: new Date(midnight + 3600000).toISOString() })];
+    const m = await newPage(browser, base, { timezoneId: 'America/Los_Angeles', routes: [[/\/all-day\/data\/whatnow\.json/, { generated: new Date(frozen).toISOString(), days: 10, counts: {}, events: mEvents }], routes[1]] });
+    await m.page.clock.setFixedTime(midnight);
+    await m.page.goto(base + '/all-day/#whatnow');
+    await m.page.waitForSelector(wnPanel + ' [data-sec="today"]', { timeout: 15000 });
+    const mt = await m.page.evaluate(() => ({ h: document.querySelector('#panel-whatnow [data-sec="today"] h2').textContent,
+      k: [...document.querySelectorAll('#panel-whatnow .rail.today [data-k]')].map((t) => t.dataset.k + ' ' + t.querySelector('.tw').textContent) }));
+    check(mt.h === 'Happening today' && mt.k.join(',') === 'd-night On now', 'at 12:30 am, last night’s late set still on shows as on now', JSON.stringify(mt));
+    check(!m.errors.length, 'no console errors', m.errors.join(' | '));
+    await m.ctx.close();
+    const e2 = await newPage(browser, base, { timezoneId: 'America/Los_Angeles', routes: [[/\/all-day\/data\/whatnow\.json/, { generated: new Date(frozen).toISOString(), days: 10, counts: {}, events: [] }], routes[1]] });
+    await e2.page.clock.setFixedTime(frozen);
+    await e2.page.goto(base + '/all-day/#whatnow');
+    await e2.page.waitForSelector(wnPanel + ' [data-sec="today"]', { timeout: 15000 });
+    const et2 = await e2.page.evaluate(() => document.querySelector('#panel-whatnow [data-sec="today"]').parentElement.innerText);
+    check(/Happening today/.test(et2) && /Nothing else today\./.test(et2) && !/Happening tomorrow/.test(et2), 'nothing today and nothing tomorrow: Happening today, “Nothing else today.”', '');
+    check(!e2.errors.length, 'no console errors', e2.errors.join(' | '));
+    await e2.ctx.close();
   });
 
   await group('What Now, Btown Challenges (live)', async () => {
