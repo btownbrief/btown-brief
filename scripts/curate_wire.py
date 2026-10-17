@@ -5,11 +5,14 @@ Reads pulse.json (the firehose, plus the X and Facebook inbox), the tags
 tag_wire.py left in data/wire-tags.json, and the day so far, then asks the
 editor model, with prompts/wire-taste.md as its doctrine, for:
 
-  * "What matters today": 25 ranked picks, each with a one-line reason and a
-    local flag, so the page shows ten local picks and adds national ones when
+  * "What matters today": 40 ranked picks, each with a one-line reason and a
+    local flag, so the page shows the local picks on Local and all of them when
     the switch is on Everything. Re-ranked at most every PICKS_EVERY_HOURS
     (and at once when a score-9 local story lands); between re-ranks the
-    picks stand.
+    picks stand. A day keeps every story the editor ranked: one that falls
+    out of a re-rank moves to `picks_earlier` with its last rank, its reason
+    and the time of that ranking, so the evening page can still show the
+    morning's picks.
   * This hour's additions to the river ("The rest of today"), the lead of
     the current update with its reason, and which running items to drop if
     the day passes RIVER_MAX (300: the river is meant to feel almost endless).
@@ -19,7 +22,10 @@ Output, data/wire-today.json:
   {"v": 1, "date": "2026-10-16", "tz": "America/New_York", "final": false,
    "updated": "...", "checked": "...", "count": 52,
    "counts": {"local": {"all": 40, "x": 3, ...}, "everything": {...}},
-   "picks": [{"rank": 1, "why": "...", ...item}, ...],
+   "picks": [{"rank": 1, "why": "...", "ranked_at": "...", ...item}, ...],
+   "picks_earlier": [{"rank": 4, "why": "...", "ranked_at": "...", ...item}, ...]
+                     (ranked earlier today, out of the current ranking; newest
+                     ranking first, then by rank; never also in `picks`)
    "brief": {...item, "own": true}            (only on days the Brief went out)
    "updates": [{"key": "afternoon", "label": "Afternoon", "time": "2:10 pm",
                 "updated": "...", "lead": {"id": "...", "why": "..."},
@@ -83,8 +89,10 @@ RIVER_MAX = 300
 ADD_MAX = 60               # per hourly update (Stephen, 2026-10-17: the river runs to hundreds)
 ADD_MAX_FIRST = 100        # the day's first update can catch up on the night
 RIVER_SHOWN_HOURLY = 60    # between re-ranks the editor sees the newest river items only
-PICK_COUNT = 25
-NATIONAL_PICKS = 10        # the rest of the 25 are local
+PICK_COUNT = 40            # Stephen, 2026-10-17: 25 was too few
+NATIONAL_PICKS = 25        # at most this many national picks in a ranking of 40
+LOCAL_PICKS = 25           # and at most this many local: half and half on an ordinary day,
+                           # the news deciding the split within the band (Stephen, 2026-10-17)
 WHY_MAX = 90
 NEW_MAX_LOCAL = 120        # candidates shown to the editor per run
 NEW_MAX_WORLD = 80
@@ -125,7 +133,8 @@ rewrite a headline: the page shows each one exactly as the outlet wrote it.
 - `drop`: numbers from TODAY'S RIVER to remove, only when the river would pass
   300 items. Otherwise an empty list.
 - `picks`, only when asked for: the ranked "What matters today" list from the
-  river and NEW together: 25 picks, about 15 local and up to 10 national,
+  river and NEW together: 40 picks, about half local and half national (the
+  news decides the split, fifteen to twenty-five each),
   fewer only when the day truly lacks them. Each has a reason under 90
   characters. A pick from NEW is added to the river for you.
 """
@@ -159,7 +168,7 @@ def clock(et):
 def empty_day(date):
     return {"v": 1, "date": date, "tz": "America/New_York", "final": False,
             "updated": None, "checked": None, "count": 0, "counts": {},
-            "picks": [], "updates": [], "sources": {}}
+            "picks": [], "picks_earlier": [], "updates": [], "sources": {}}
 
 
 def river(day):
@@ -200,8 +209,9 @@ def prune_and_index(data_dir, today):
             os.remove(path)
             continue
         day = wc.load_json(path, {})
-        editions.append({"date": date, "count": day.get("count", 0),
-                         "picks": len(day.get("picks") or [])})
+        picks = len(day.get("picks") or [])
+        editions.append({"date": date, "count": day.get("count", 0), "picks": picks,
+                         "picks_total": picks + len(day.get("picks_earlier") or [])})
     if editions:
         wc.write_json(os.path.join(archive, "index.json"), {"v": 1, "editions": editions})
     return editions
@@ -237,7 +247,7 @@ def reserved(data_dir, today):
         day = wc.load_json(os.path.join(archive, f"{date}.json"), None)
         if not isinstance(day, dict):
             continue
-        for item in river(day) + list(day.get("picks") or []):
+        for item in river(day) + list(day.get("picks") or []) + list(day.get("picks_earlier") or []):
             ids.add(item.get("id"))
             urls.add(item.get("url"))
         if back <= 2:
@@ -469,8 +479,26 @@ def order_picks(picks):
     return rest
 
 
-def apply_answer(day, answer, numbered_river, new, want_picks, et, now):
-    """Fold a validated answer into the day. Returns a dict of what changed."""
+def retire_picks(old, earlier, new, previous_at=None):
+    """The day keeps every story the editor ranked. Returns `picks_earlier`
+    after a re-rank: the stories of the old ranking that the new one left
+    out, with their last rank, reason and `ranked_at`, plus what was already
+    there, minus anything back in the new ranking. Newest ranking first,
+    then by rank; one row per story."""
+    now_in = {pick["id"] for pick in new}
+    by_id = {}
+    for pick in list(earlier or []) + list(old or []):   # the old ranking is the newer one
+        if pick.get("id") in now_in or pick.get("own"):
+            continue
+        by_id[pick["id"]] = dict(pick, ranked_at=pick.get("ranked_at") or previous_at)
+    out = sorted(by_id.values(), key=lambda pick: pick.get("rank") or 0)
+    return sorted(out, key=lambda pick: pick.get("ranked_at") or "", reverse=True)
+
+
+def apply_answer(day, answer, numbered_river, new, want_picks, et, now, previous_at=None):
+    """Fold a validated answer into the day. Returns a dict of what changed.
+    `previous_at` is when the standing picks were ranked, for picks written
+    before they carried their own `ranked_at`."""
     offset, total = len(numbered_river), len(numbered_river) + len(new)
     key, label = label_for(et)
     stamp = now.replace(microsecond=0).isoformat()
@@ -527,9 +555,11 @@ def apply_answer(day, answer, numbered_river, new, want_picks, et, now):
             and by_index[lead_index]["id"] in lead_ok:
         current["lead"] = {"id": by_index[lead_index]["id"], "why": lead_why}
 
-    # drops: only past RIVER_MAX, never a pick, a lead or the Brief's own edition
-    protected = {by_index[index]["id"] for index, _ in picks} if want_picks else \
-        {pick["id"] for pick in day.get("picks") or []}
+    # drops: only past RIVER_MAX, never a pick (current, or any the day ranked
+    # earlier: they stay river items, so the counts and chips include them),
+    # a lead or the Brief's own edition
+    protected = {by_index[index]["id"] for index, _ in picks} if want_picks else set()
+    protected |= {pick["id"] for pick in (day.get("picks") or []) + (day.get("picks_earlier") or [])}
     protected |= {update["lead"]["id"] for update in updates if update.get("lead")}
     protected |= {item["id"] for item in river(day) if item.get("own")}   # the Brief stays
     dropped = []
@@ -567,19 +597,27 @@ def apply_answer(day, answer, numbered_river, new, want_picks, et, now):
         current["time"] = clock(et)
 
     if want_picks and picks:
-        # at most NATIONAL_PICKS national picks, so the Local list stays long
-        kept, national = [], 0
+        # at most NATIONAL_PICKS national and LOCAL_PICKS local picks: half and
+        # half on an ordinary day, the news deciding the split within the band
+        kept, national, local_n = [], 0, 0
         for index, why in picks:
             if not by_index[index].get("local"):
                 national += 1
                 if national > NATIONAL_PICKS:
                     continue
+            else:
+                local_n += 1
+                if local_n > LOCAL_PICKS:
+                    continue
             kept.append((index, why))
         ranked = order_picks([dict(by_index[index], why=why) for index, why in kept])
         ranked = [dict(public(pick), why=pick["why"]) for pick in ranked]
         in_river = {item["id"] for item in river(day)}
-        day["picks"] = [dict(pick, rank=rank) for rank, pick in
-                        enumerate((p for p in ranked if p["id"] in in_river), start=1)]
+        fresh = [dict(pick, rank=rank, ranked_at=stamp) for rank, pick in
+                 enumerate((p for p in ranked if p["id"] in in_river), start=1)]
+        day["picks_earlier"] = retire_picks(day.get("picks"), day.get("picks_earlier"),
+                                            fresh, previous_at)
+        day["picks"] = fresh
     return {"added": added_ids, "dropped": dropped, "picks": len(picks) if want_picks else None}
 
 
@@ -753,6 +791,11 @@ def finish(day, pulse, now, changed):
     if any(pick.get("own") for pick in day.get("picks") or []):
         kept = [pick for pick in day["picks"] if not pick.get("own")]
         day["picks"] = [dict(pick, rank=rank) for rank, pick in enumerate(kept, start=1)]
+    current = {pick["id"] for pick in day.get("picks") or []}
+    in_river = {item["id"] for item in items}
+    day["picks_earlier"] = [pick for pick in day.get("picks_earlier") or []
+                            if pick["id"] not in current and pick["id"] in in_river
+                            and not pick.get("own")]
     brief = brief_of(items)
     if brief:
         day["brief"] = brief
@@ -765,7 +808,7 @@ def finish(day, pulse, now, changed):
         day["updated"] = stamp
     # every source on today's page: id -> how a reader knows it
     sources = {}
-    for item in items + list(day.get("picks") or []):
+    for item in items + list(day.get("picks") or []) + day["picks_earlier"]:
         entry = sources.setdefault(item["src"], {"name": item.get("name"), "ch": item.get("ch")})
         if item.get("site") and not entry.get("site"):
             entry["site"] = item["site"]
@@ -945,7 +988,8 @@ def run(args):
     if not isinstance(answer, dict):
         return give_up("the answer was not an object", args.data_dir, now)
 
-    result = apply_answer(day, answer, numbered_river, new, want_picks, et, now)
+    result = apply_answer(day, answer, numbered_river, new, want_picks, et, now,
+                          previous_at=state.get("picks_at"))
     if want_picks and not result["picks"]:
         return give_up("asked for picks and got no usable ones", args.data_dir, now)
     polish_usage, rewritten, emptied = polish_reasons(day, engine, want_picks)
@@ -966,7 +1010,8 @@ def run(args):
     local_picks = sum(1 for pick in day["picks"] if pick.get("local"))
     line_ = (f"curate_wire: {why} · {len(new)} new shown · {len(result['added'])} added, "
              f"{len(result['dropped'])} dropped · river {day['count']} · "
-             f"picks {len(day['picks'])} ({local_picks} local)"
+             f"picks {len(day['picks'])} (+{len(day['picks_earlier'])} earlier today), "
+             f"{local_picks} local"
              + (" re-ranked" if want_picks else " standing"))
     print(line_)
     wc.step_summary("- " + line_)
@@ -1010,6 +1055,17 @@ def selftest():
     assert [p["rank"] for p in day["picks"]] == [1, 2, 3]
     assert all(p["title"].startswith("Headline") for p in day["picks"])   # verbatim
     print("curate_wire: answer mapping ok (indices, dupes, types, why length, picks join river)")
+
+    # a re-rank keeps the stories it drops, as picks_earlier, never twice
+    later = now + timedelta(hours=6)
+    keep = [item["id"] for item in river(day)].index("id1")
+    apply_answer(day, {"add": [], "picks": [{"i": keep, "why": "Still."}]}, river(day), [], True,
+                 wc.et_now(later), later)
+    assert [p["id"] for p in day["picks"]] == ["id1"]
+    assert [(p["id"], p["rank"]) for p in day["picks_earlier"]] == [("id3", 1), ("id5", 2)], \
+        day["picks_earlier"]
+    assert all(p["ranked_at"] == now.isoformat() for p in day["picks_earlier"])
+    print("curate_wire: dropped picks move to picks_earlier ok")
 
     # lead must be this hour's add or the current update's own item
     day2 = empty_day("2026-10-16")

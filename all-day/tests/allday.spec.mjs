@@ -171,8 +171,14 @@ function wireDay(date, n, opts) {
       lead: list[0] ? { id: list[0].id, why: 'Why update ' + u + ' leads with this.' } : null, items: list };
   }).filter((u) => u.items.length);
   const ranked = items.filter((it) => !it.own && (it.ch === 'local' || it.ch === 'world'));
-  const picks = ranked.filter((it) => it.local).slice(0, 15).concat(ranked.filter((it) => !it.local).slice(0, 10))
+  const picks = ranked.filter((it) => it.local).slice(0, 25).concat(ranked.filter((it) => !it.local).slice(0, 15))
     .map((it, r) => ({ ...it, rank: r + 1, why: r === 2 ? '' : 'Reason ' + (r + 1) + ': why this one matters.' }));
+  /* the stories an earlier ranking held and the current one dropped: their
+     last rank and reason, newest ranking first, never also in `picks` */
+  const morning = new Date(top - (top - bottom) * 0.8).toISOString(), noon = new Date(top - (top - bottom) * 0.4).toISOString();
+  const picksEarlier = ranked.filter((it) => it.local).slice(25, 29).concat(ranked.filter((it) => !it.local).slice(15, 17))
+    .map((it, i) => ({ ...it, rank: [4, 9, 2, 7, 28, 33][i], why: 'Earlier reason ' + i + ': it led the morning.', ranked_at: i % 2 ? morning : noon }))
+    .sort((a, b) => (a.ranked_at === b.ranked_at ? a.rank - b.rank : a.ranked_at < b.ranked_at ? 1 : -1));
   const counts = {};
   for (const scope of ['local', 'everything']) {
     const pool = items.filter((it) => scope === 'everything' || it.local);
@@ -183,7 +189,7 @@ function wireDay(date, n, opts) {
   items.forEach((it) => { sources[it.src] = { name: it.name, ch: it.ch, site: 'https://example.org/site/' + it.src }; });
   const paused = { paused: !opts.inbox, reason: opts.inbox ? null : 'the inbox reader is not live yet', updated_at: null };
   const day = { v: 1, date, tz: 'America/New_York', final: !isToday, updated: updates[0].updated, checked: new Date(now).toISOString(), count: items.length,
-    counts, picks, updates, sources, status: { x: paused, facebook: { ...paused }, reddit: { paused: false, last_post: null } } };
+    counts, picks, picks_earlier: picksEarlier, updates, sources, status: { x: paused, facebook: { ...paused }, reddit: { paused: false, last_post: null } } };
   if (opts.brief) day.brief = items.find((it) => it.own);
   return day;
 }
@@ -194,8 +200,9 @@ function wireFiles(opts = {}) {
   if (!wireCache.has(key)) {
     const today = etKey(Date.now());
     const y1 = dayMinus(today, 1), y2 = dayMinus(today, 2);
-    const files = { 'wire-today.json': wireDay(today, 160, o), [y1 + '.json']: wireDay(y1, 40, { ...o, brief: true }), [y2 + '.json']: wireDay(y2, 40, { ...o, brief: false }) };
-    files['index.json'] = { v: 1, editions: [y1, y2].map((d) => ({ date: d, count: files[d + '.json'].count, picks: files[d + '.json'].picks.length })) };
+    const files = { 'wire-today.json': wireDay(today, 160, o), [y1 + '.json']: wireDay(y1, 90, { ...o, brief: true }), [y2 + '.json']: wireDay(y2, 90, { ...o, brief: false }) };
+    files['index.json'] = { v: 1, editions: [y1, y2].map((d) => ({ date: d, count: files[d + '.json'].count, picks: files[d + '.json'].picks.length,
+      picks_total: files[d + '.json'].picks.length + files[d + '.json'].picks_earlier.length })) };
     wireCache.set(key, files);
   }
   return wireCache.get(key);
@@ -206,9 +213,20 @@ function wireFiles(opts = {}) {
    shapes: the demo file's payloads, moved from its _anchor to today in
    Burlington. `audio` picks the clip state: 'today', 'yesterday' or 'none'. */
 const onairCache = new Map();
+const PLAYLIST = /^https:\/\/www\.youtube\.com\/playlist\?list=[A-Za-z0-9_-]+$/;   // onair.js PLAYLIST_RE
+/* the Play-on-your-TV row under the Btown TV header: tonight's button, or the fallback past night */
+const tvPlay = (page) => page.evaluate(() => {
+  const one = (w) => { const a = document.querySelector('#panel-onair [data-tvplay="' + w + '"]'); return a && { href: a.getAttribute('href'), text: a.textContent.trim(), rel: a.rel, target: a.target, icons: a.querySelectorAll('svg').length }; };
+  const row = document.querySelector('#panel-onair .tvplay');
+  const head = document.querySelector('#panel-onair [data-sec="tv"]');
+  const railEl = document.querySelector('#panel-onair [data-slot="tv"] .rail-wrap');
+  const before = !!(row && head && railEl && (head.compareDocumentPosition(row) & 4) && (row.compareDocumentPosition(railEl) & 4));
+  return { tonight: one('tonight'), past: one('past'), note: row ? row.innerText : '', before };
+});
 async function onairFiles(opts = {}) {
   const audio = opts.audio || 'today';
-  const key = audio + etKey(Date.now());
+  const playlist = opts.playlist || 'all';      // 'all', 'not-tonight' (tonight's upload failed) or 'none'
+  const key = audio + playlist + etKey(Date.now());
   if (onairCache.has(key)) return onairCache.get(key);
   const d = JSON.parse(await readFile(path.join(APP, 'data/demo/onair.json'), 'utf8'));
   const today = etKey(Date.now());
@@ -217,6 +235,8 @@ async function onairFiles(opts = {}) {
   const secs = days * 86400;
   const tv = d.tv;
   tv.edition = shift(tv.edition);
+  if (playlist !== 'all') delete tv.playlist;
+  if (playlist === 'none') d.tvEditions.editions.forEach((e) => { delete e.playlist; });
   const vids = [tv.pick, ...tv.pick_more, ...tv.live, ...tv.shelves.flatMap((x) => [...x.items, ...(x.more || [])])];
   vids.forEach((v) => { v.d += secs; delete v.art; });
   d.tvEditions.editions.forEach((e) => {
@@ -608,12 +628,28 @@ async function theWire(browser, base) {
     });
     check(brief && brief.k === today.brief.id && /The Brief/i.test(brief.eyebrow) && brief.before, 'the Brief is pinned above What matters today', JSON.stringify(brief));
 
-    /* What matters today: ten local picks, five open, the rest on request */
+    /* What matters today: every local pick, five open, the rest and the
+       earlier rankings' picks behind one button */
+    const localPicks = today.picks.filter((x) => x.local).map((x) => x.id);
+    const localEarlier = today.picks_earlier.filter((x) => x.local);
     check(await page.$$eval('.wm .card', (c) => c.length) === 5, 'one pick card and four ranked rows to start', '');
     check(await page.$$eval('.wm .wm-row', (rs) => rs.filter((r) => !r.querySelector('.why')).length) === 1, 'an empty why draws no reason line', '');
+    check(!(await page.$('.wm .wm-row.was')) && !/Earlier today/.test(await page.$eval('.wm', (w) => w.innerText)), 'the earlier picks wait behind the button', '');
+    const moreLabel = await page.$eval('.wm .btn.more', (b) => b.textContent);
+    const hiddenN = localPicks.length - 5 + localEarlier.length;
+    check(moreLabel === hiddenN + ' more picks', 'the button counts the rest of the ranking and the earlier picks (' + hiddenN + ')', moreLabel);
     await page.click('.wm .btn.more');
-    check(await page.$$eval('.wm .card', (c) => c.length) === 10, '“5 more picks” opens six to ten in place', '');
-    check(/That’s the ten\./.test(await page.$eval('.wm', (w) => w.innerText)), 'and the list ends “That’s the ten.”', '');
+    const block = await page.$$eval('.wm [data-k]', (c) => c.map((x) => ({ k: x.dataset.k, was: x.classList.contains('was'), num: (x.querySelector('.num') || {}).textContent || '', why: (x.querySelector('.why') || {}).textContent || '' })));
+    check(JSON.stringify(block.filter((x) => !x.was).map((x) => x.k)) === JSON.stringify(localPicks), 'opened, the block shows every local pick of the ranking, in order (' + localPicks.length + ')', JSON.stringify(block.map((x) => x.k)));
+    const wasRows = block.filter((x) => x.was);
+    check(JSON.stringify(wasRows.map((x) => [x.k, x.num, x.why])) === JSON.stringify(localEarlier.map((x) => [x.id, String(x.rank), x.why])),
+      'then the earlier picks, newest ranking first, each with its last rank and its reason', JSON.stringify(wasRows));
+    const wmText = await page.$eval('.wm', (w) => w.innerText);
+    check(/Earlier today, these mattered too/.test(wmText), 'under “Earlier today, these mattered too”', '');
+    const ONES = ['', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen'];
+    const inWords = (n) => (n < 20 ? ONES[n] : ['', '', 'twenty', 'thirty', 'forty', 'fifty'][Math.floor(n / 10)] + (n % 10 ? '-' + ONES[n % 10] : ''));
+    const totalWord = inWords(localPicks.length + localEarlier.length);
+    check(wmText.includes('That’s all ' + totalWord + '.'), 'and the list ends “That’s all ' + totalWord + '.”', wmText.slice(-80));
 
     /* the river leaves the shown picks out and counts add up */
     await drawToday(page);
@@ -654,6 +690,38 @@ async function theWire(browser, base) {
     });
     await page.waitForTimeout(250);
     check(await page.$eval('#subnav .dl b', (b) => b.textContent) === nameOf(y1), 'scrolled into yesterday, the dateline names it', await page.$eval('#subnav .dl b', (b) => b.textContent));
+
+    /* yesterday opens with its own What mattered block, as the arrow view draws it */
+    const yday = files[y1 + '.json'];
+    const yBlock = await page.evaluate((date) => {
+      const head = document.querySelector('.panel:not([hidden]) [data-day="' + date + '"]');
+      let n = head && head.nextElementSibling;
+      while (n && !n.classList.contains('wm') && !n.dataset.day) n = n.nextElementSibling;
+      if (!n || !n.classList.contains('wm')) return null;
+      return { title: n.querySelector('h2').textContent, keys: [...n.querySelectorAll('[data-k]')].map((x) => x.dataset.k), more: (n.querySelector('.btn.more') || {}).textContent || '' };
+    }, y1);
+    const yWeek = nameOf(y1).split(',')[0];
+    check(yBlock && yBlock.title === 'What mattered ' + yWeek, 'scrolling into yesterday draws “What mattered ' + yWeek + '” under its head', JSON.stringify(yBlock));
+    const yPin = await page.evaluate((date) => {
+      const n = document.querySelector('.panel:not([hidden]) [data-day="' + date + '"]').nextElementSibling;
+      return n && n.matches('.card.pick') ? { k: n.dataset.k, eyebrow: n.querySelector('.eyebrow').textContent } : null;
+    }, y1);
+    check(yPin && yPin.k === yday.brief.id && /The Brief/i.test(yPin.eyebrow), 'yesterday’s Brief is pinned above its block, as the arrow view pins it', JSON.stringify(yPin));
+    const yAll = yday.picks.map((x) => x.id);   /* the switch is on Everything here */
+    check(yBlock && JSON.stringify(yBlock.keys) === JSON.stringify(yAll.slice(0, 5)), 'with its picks: the card and four rows, in rank order', JSON.stringify(yBlock && yBlock.keys));
+    check(yBlock && yBlock.more === (yAll.length - 5 + yday.picks_earlier.length) + ' more picks', 'and its own button for the rest and the earlier picks', yBlock && yBlock.more);
+    await page.click('.panel:not([hidden]) [data-day="' + y1 + '"] ~ .wm .btn.more');
+    const yOpen = await page.evaluate((date) => {
+      const head = document.querySelector('.panel:not([hidden]) [data-day="' + date + '"]');
+      let n = head.nextElementSibling;
+      while (n && !n.classList.contains('wm')) n = n.nextElementSibling;
+      return { text: n.innerText, keys: [...n.querySelectorAll('[data-k]')].map((x) => x.dataset.k) };
+    }, y1);
+    check(JSON.stringify(yOpen.keys) === JSON.stringify(yAll.concat(yday.picks_earlier.map((x) => x.id))) && /Earlier that day/.test(yOpen.text),
+      'opened in place: the whole ranking, then “Earlier that day” and the earlier picks', JSON.stringify(yOpen.keys));
+    const pageKeys = await page.$$eval('.panel:not([hidden]) .feed [data-k]', (c) => c.map((x) => x.dataset.k));
+    const dupes = pageKeys.filter((k, i) => pageKeys.indexOf(k) !== i);
+    check(!dupes.length, 'no key appears twice on the page, today through the archive (' + pageKeys.length + ' cards)', JSON.stringify(dupes.slice(0, 5)));
 
     /* a mute leaves the river */
     await toTop(page);
@@ -786,6 +854,9 @@ async function onAir(browser, base) {
     check(JSON.stringify(toc) === JSON.stringify(['Out loud', 'Btown TV', 'Live', 'Podcasts', 'Past nights']), 'the chip row is a table of contents: Out loud, Btown TV, Live, Podcasts, Past nights', JSON.stringify(toc));
     const order = await page.$$eval('#panel-onair [data-sec]', (s) => s.map((x) => x.dataset.sec));
     check(JSON.stringify(order) === JSON.stringify(['brief', 'tv', 'live', 'pods', 'past']), 'the sections run in that order', JSON.stringify(order));
+    const subs = await page.$$eval('#panel-onair [data-sec] p', (p) => p.map((x) => x.textContent));
+    check(!subs.length, 'no section carries an explanatory subtitle', JSON.stringify(subs));
+    check(!/lands at 7 every morning/.test(await page.$eval('#panel-onair', (p) => p.innerText)), 'no end-of-tab line about when things land', '');
     await page.click('#subnav .chip[data-chip="pods"]');
     await page.waitForTimeout(600);
     check(await page.$eval('#panel-onair [data-sec="pods"]', (h) => { const r = h.getBoundingClientRect(); return r.top >= 0 && r.top < innerHeight / 2; }), 'a chip scrolls to its section', '');
@@ -840,10 +911,18 @@ async function onAir(browser, base) {
     const eyebrow = await page.$eval('#panel-onair .audio .eyebrow', (e) => e.textContent);
     check(/^Today · /.test(eyebrow) && / · 3:27$/.test(eyebrow), 'today’s clip: the card says today and its length', eyebrow);
     check((await podRows(page))[0][0] === 'btown-brief', 'live: the Brief’s own show is first in Podcasts', '');
+    const play = await tvPlay(page);
+    check(play.tonight && PLAYLIST.test(play.tonight.href) && play.tonight.href === tv.playlist.url && play.tonight.rel === 'noopener' && play.tonight.target === '_blank',
+      'Btown TV: “Play tonight on your TV” opens tonight’s playlist in a new tab', JSON.stringify(play));
+    check(play.tonight && play.tonight.text === 'Play tonight on your TV' && play.tonight.icons === 2 && play.before, 'under the Btown TV header, before the rail, with the play and external icons', JSON.stringify(play));
     check((await tvCards(page)).length === tv.shelves.find((x) => x.key === 'vt').items.length + 1, 'live: tonight’s local picks, the pick and the Burlington & Vermont shelf', '');
     await page.click('#panel-onair .btn.more:text("Read it instead")');
-    await page.waitForFunction(() => /Good morning/.test(document.querySelector('.sheet-body')?.innerText || ''), null, { timeout: 4000 }).catch(() => {});
-    check(/Good morning/.test(await page.$eval('.sheet-body', (b) => b.innerText)), '“Read it instead” shows the script the voice read', '');
+    await page.waitForFunction(() => /Morning\./.test(document.querySelector('.sheet-body')?.innerText || ''), null, { timeout: 4000 }).catch(() => {});
+    const sheet = await page.$eval('.sheet-body', (b) => b.innerText);
+    check(/Out on the water\.\.\./.test(sheet) && !/\[/.test(sheet), 'the transcript hides the voice’s pacing marks ([short pause])', sheet.slice(0, 300));
+    check(!/\bAI\b|synthetic|artificial/i.test(sheet + await page.$eval('#panel-onair .audio', (a) => a.innerText)), 'no mention of AI on the card or the transcript', '');
+    check(/Read to you every morning at 7\./.test(await page.$eval('#panel-onair .audio', (a) => a.innerText)), 'the card says when it is read', '');
+    check(/^Morning\./.test(await page.$eval('.sheet-body .script', (b) => b.innerText)), '“Read it instead” shows the script the voice read', '');
     await page.keyboard.press('Escape');
 
     /* the player: the clip plays in the shell's one player and survives a tab switch */
@@ -907,6 +986,29 @@ async function onAir(browser, base) {
     await ctx.close();
   });
 
+  await group('On Air, Play on your TV', async () => {
+    for (const playlist of ['not-tonight', 'none']) {
+      const { ctx, page, errors } = await newPage(browser, base, { onair: { playlist } });
+      await page.goto(base + '/all-day/#onair');
+      await page.waitForSelector('#panel-onair [data-slot="tv"] .vcard', { timeout: 15000 });
+      await page.waitForSelector('#panel-onair [data-sec="past"]', { timeout: 15000 });
+      const play = await tvPlay(page);
+      check(!play.tonight, playlist + ': no playlist tonight, no “Play tonight” button', JSON.stringify(play));
+      if (playlist === 'not-tonight') check(play.past && PLAYLIST.test(play.past.href) && /on your TV$/.test(play.past.text) && /isn’t up yet/.test(play.note), 'and a quiet link to the latest night that has one, said plainly', JSON.stringify(play));
+      else check(!play.past, 'none anywhere: no link at all', JSON.stringify(play));
+      check(!errors.length, playlist + ': no console errors', errors.join(' | '));
+      await ctx.close();
+    }
+    const { ctx, page } = await newPage(browser, base);
+    await page.goto(base + '/all-day/?demo=1#onair');
+    await page.waitForSelector('#panel-onair [data-tvplay="tonight"]', { timeout: 8000 });
+    const pages = ctx.pages().length;
+    await page.click('#panel-onair [data-tvplay="tonight"]');
+    await page.waitForTimeout(300);
+    check(ctx.pages().length === pages && /YouTube playlist/.test(await page.$eval('#toast', (t) => t.textContent)), 'demo: the button toasts instead of leaving', '');
+    await ctx.close();
+  });
+
   await group('On Air, the audio card', async () => {
     for (const audio of ['none', 'yesterday']) {
       const { ctx, page, errors } = await newPage(browser, base, { onair: { audio } });
@@ -922,7 +1024,7 @@ async function onAir(browser, base) {
         const y = dayMinus(etKey(Date.now()), 1);
         const eyebrow = await page.$eval('#panel-onair .audio .eyebrow', (e) => e.textContent);
         check(card && eyebrow.startsWith(nameOf(y)), 'no clip today: the latest one, with its date (' + nameOf(y) + ')', eyebrow);
-        check(/Today’s lands at 7 am/.test(await onairText(page)), 'and it says when today’s lands', '');
+        check(/Read to you every morning at 7\./.test(await onairText(page)) && !(await page.$('#panel-onair [data-sec="brief"] p')), 'the card says when it is read; the header carries no subtitle', '');
       }
       check(!errors.length, audio + ': no console errors', errors.join(' | '));
       await ctx.close();

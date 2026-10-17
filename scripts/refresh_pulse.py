@@ -1156,11 +1156,22 @@ def run(args):
         sys.exit("data/pulse-topics.json missing or empty — refusing to run")
 
     folder_outlines = []
+    empty_folders = []
     for label, kind in FOLDERS:
         outlines = parse_opml(fetch_bytes(folder_opml_url(label)))
         if not outlines:
-            sys.exit(f"OPML for folder {label!r} came back empty")
+            # An empty folder is Stephen's Inoreader, not a broken run: on
+            # 2026-10-17 the Newsletters folder lost its feeds and the Pulse
+            # failed every ten minutes for hours, emailing him each time.
+            # Carry on without the folder and say so; only every folder
+            # empty at once means Inoreader itself is down.
+            empty_folders.append(label)
+            print(f"WARNING: OPML for folder {label!r} came back empty; carrying on "
+                  "without it (check the folder in Inoreader)", file=sys.stderr)
+            continue
         folder_outlines.extend((outline, kind) for outline in outlines)
+    if len(empty_folders) == len(FOLDERS):
+        sys.exit("every Inoreader folder came back empty — refusing to run")
 
     folder_sites = {key for outline, _ in folder_outlines
                     for key in topic_keys(outline["html"] or outline["xml"])}

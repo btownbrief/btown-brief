@@ -561,18 +561,31 @@ class CapTests(Workdir):
         ids = {item["id"] for item in cw.river(day)}
         self.assertTrue({pick["id"] for pick in day["picks"]} <= ids)
 
-    def test_no_more_than_ten_national_picks(self):
-        self.write_pulse(pulse(n_local=6, n_world=20))
+    def test_national_picks_capped_at_the_band(self):
+        self.write_pulse(pulse(n_local=6, n_world=32))
 
         def national_first(numbers, river_n, schema):
             answer = take_all(numbers, river_n, schema)
-            answer["picks"] = [{"i": n, "why": "R."} for n in numbers[6:26]] + \
+            answer["picks"] = [{"i": n, "why": "R."} for n in numbers[6:38]] + \
                               [{"i": n, "why": "R."} for n in numbers[:5]]
             return answer
         self.run_curate(Stub(national_first))
         picks = self.today()["picks"]
         self.assertEqual(sum(1 for pick in picks if not pick["local"]), cw.NATIONAL_PICKS)
         self.assertEqual(sum(1 for pick in picks if pick["local"]), 5)
+
+    def test_local_picks_capped_at_the_band(self):
+        self.write_pulse(pulse(n_local=32, n_world=6))
+
+        def local_first(numbers, river_n, schema):
+            answer = take_all(numbers, river_n, schema)
+            answer["picks"] = [{"i": n, "why": "R."} for n in numbers[:32]] + \
+                              [{"i": n, "why": "R."} for n in numbers[32:37]]
+            return answer
+        self.run_curate(Stub(local_first))
+        picks = self.today()["picks"]
+        self.assertEqual(sum(1 for pick in picks if pick["local"]), cw.LOCAL_PICKS)
+        self.assertEqual(sum(1 for pick in picks if not pick["local"]), 5)
 
 
 class FreezeTests(Workdir):
@@ -630,6 +643,137 @@ class FreezeTests(Workdir):
             wc.write_json(os.path.join(self.data, "wire", f"{date}.json"), cw.empty_day(date))
         editions = cw.prune_and_index(self.data, "2026-10-16")
         self.assertEqual([e["date"] for e in editions], ["2026-10-15", "2026-09-17", "2026-09-16"])
+
+
+def titled(user):
+    """number -> headline, from the numbered lines a prompt showed."""
+    out = {}
+    for row in user.splitlines():
+        if row[:1].isdigit():
+            out[int(row.split(".")[0])] = row.rsplit(" · ", 1)[1]
+    return out
+
+
+class Rerank(Stub):
+    """Ranks every numbered line except the headlines in `leave_out`."""
+
+    def __init__(self, leave_out=()):
+        super().__init__(self.rank)
+        self.leave_out = set(leave_out)
+
+    def rank(self, numbers, river_n, schema):
+        answer = take_all(numbers, river_n, schema)
+        if "picks" in answer:
+            titles = titled(self.prompts[-1][1])
+            answer["picks"] = [{"i": n, "why": f"Reason {n}."} for n in numbers
+                               if titles[n] not in self.leave_out][:cw.PICK_COUNT]
+        return answer
+
+
+class PicksEarlierTests(Workdir):
+    """A day keeps every story the editor ranked (Stephen, 2026-10-17)."""
+
+    def setUp(self):
+        super().setUp()
+        self.cadence = mock.patch.object(cw, "PICKS_EVERY_HOURS", 1)
+        self.cadence.start()
+        self.addCleanup(self.cadence.stop)
+
+    def fresh_items(self, start):
+        # a few new stories, so the next hour has something to rank
+        self.write_pulse(pulse(n_local=3, n_world=0, start=start))
+
+    def rerank(self, hours, leave_out=(), start=50):
+        self.fresh_items(start)
+        self.assertEqual(self.run_curate(Rerank(leave_out), now=NOW + timedelta(hours=hours)), 0)
+        return self.today()
+
+    def test_a_rerank_that_drops_three_moves_them_to_earlier(self):
+        self.run_curate(Stub(take_all))
+        first = self.today()
+        self.assertEqual(first["picks_earlier"], [])
+        gone = [pick["title"] for pick in first["picks"][2:5]]
+        day = self.rerank(1, leave_out=gone)
+        earlier = day["picks_earlier"]
+        self.assertEqual([pick["title"] for pick in earlier], gone)       # by last rank
+        old = {pick["id"]: pick for pick in first["picks"]}
+        for pick in earlier:
+            self.assertEqual(pick["rank"], old[pick["id"]]["rank"])       # its last rank
+            self.assertEqual(pick["why"], old[pick["id"]]["why"])         # and its reason
+            self.assertEqual(pick["ranked_at"], NOW.isoformat())          # the 2:10 ranking
+        self.assertEqual({p["ranked_at"] for p in day["picks"]},
+                         {(NOW + timedelta(hours=1)).isoformat()})
+        self.assertFalse({p["id"] for p in earlier} & {p["id"] for p in day["picks"]})
+        # newest ranking first: a later drop sorts above the 2:10 ones
+        later_gone = [day["picks"][0]["title"]]
+        day = self.rerank(2, leave_out=gone + later_gone, start=60)
+        self.assertEqual([p["title"] for p in day["picks_earlier"]], later_gone + gone)
+        ids = [p["id"] for p in day["picks_earlier"]]
+        self.assertEqual(len(ids), len(set(ids)))                          # one row per story
+
+    def test_a_story_picked_again_leaves_earlier(self):
+        self.run_curate(Stub(take_all))
+        gone = [pick["title"] for pick in self.today()["picks"][:3]]
+        self.assertEqual(len(self.rerank(1, leave_out=gone)["picks_earlier"]), 3)
+        day = self.rerank(2, leave_out=gone[1:], start=60)                 # gone[0] is back
+        self.assertEqual([p["title"] for p in day["picks_earlier"]], gone[1:])
+        self.assertIn(gone[0], [p["title"] for p in day["picks"]])
+        self.assertFalse({p["id"] for p in day["picks_earlier"]} & {p["id"] for p in day["picks"]})
+
+    def test_the_freeze_carries_both_and_the_index_counts_them(self):
+        self.run_curate(Stub(take_all))
+        gone = [pick["title"] for pick in self.today()["picks"][:7]]
+        yesterday = self.rerank(1, leave_out=gone)
+        self.assertEqual(len(yesterday["picks_earlier"]), 7)
+        after_midnight = datetime(2026, 10, 17, 4, 20, tzinfo=timezone.utc)
+        self.run_curate(Stub(take_all), now=after_midnight)
+        frozen = wc.load_json(os.path.join(self.data, "wire", "2026-10-16.json"), None)
+        self.assertTrue(frozen["final"])
+        self.assertEqual(frozen["picks"], yesterday["picks"])
+        self.assertEqual(frozen["picks_earlier"], yesterday["picks_earlier"])
+        index = wc.load_json(os.path.join(self.data, "wire", "index.json"), None)
+        entry = index["editions"][0]
+        self.assertEqual(entry["date"], "2026-10-16")
+        self.assertEqual(entry["picks"], len(yesterday["picks"]))
+        self.assertEqual(entry["picks_total"], len(yesterday["picks"]) + 7)
+        self.assertEqual(self.today()["picks_earlier"], [])               # the new day starts clean
+
+    def test_the_summary_counts_the_earlier_picks(self):
+        self.run_curate(Stub(take_all))
+        gone = [pick["title"] for pick in self.today()["picks"][:7]]
+        out = io.StringIO()
+        self.fresh_items(50)
+        with redirect_stdout(out):
+            self.run_curate(Rerank(gone), now=NOW + timedelta(hours=1))
+        self.assertRegex(out.getvalue(), r"picks \d+ \(\+7 earlier today\)")
+
+    def test_the_cap_never_drops_an_earlier_pick(self):
+        self.run_curate(Stub(take_all))
+        gone = [pick["title"] for pick in self.today()["picks"][:3]]
+        before = self.rerank(1, leave_out=gone)["count"]
+        # a flood past the cap: the earlier picks stay river items, so counted
+        flood = pulse(n_local=40, n_world=0, start=100)
+        for k, item in enumerate(flood["items"]):
+            item["d"] = NOW_TS + 7000 - k * 10      # newer than the picks: the oldest go first
+        self.write_pulse(flood)
+        with mock.patch.object(cw, "RIVER_MAX", before + 1), mock.patch.object(cw, "ADD_MAX", 40):
+            self.run_curate(Rerank(gone), now=NOW + timedelta(hours=2))
+        day = self.today()
+        self.assertLess(day["count"], before + 40)                         # the cap did drop
+        ids = {item["id"] for item in cw.river(day)}
+        self.assertEqual(len(day["picks_earlier"]), 3)
+        self.assertTrue({pick["id"] for pick in day["picks_earlier"]} <= ids)
+
+    def test_retire_picks_dedupes_and_never_keeps_a_current_pick(self):
+        old = [{"id": "a", "rank": 1, "ranked_at": "2026-10-16T16:00:00+00:00"},
+               {"id": "b", "rank": 2, "ranked_at": "2026-10-16T16:00:00+00:00"}]
+        earlier = [{"id": "b", "rank": 9, "ranked_at": "2026-10-16T10:00:00+00:00"},
+                   {"id": "c", "rank": 3, "ranked_at": "2026-10-16T10:00:00+00:00"}]
+        out = cw.retire_picks(old, earlier, [{"id": "a"}])
+        self.assertEqual([(p["id"], p["rank"]) for p in out], [("b", 2), ("c", 3)])
+        # a pick from before `ranked_at` existed takes the standing ranking's time
+        out = cw.retire_picks([{"id": "z", "rank": 1}], [], [], previous_at="T")
+        self.assertEqual(out[0]["ranked_at"], "T")
 
 
 class FailurePostureTests(Workdir):

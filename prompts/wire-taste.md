@@ -86,9 +86,13 @@ rank 6, at most two; otherwise they live in the river.
 Put **one genuinely positive local story in the top three** when the day has one. Never
 fake it: a weak happy story does not beat a strong consequential one.
 
-Rank about fifteen local picks and up to ten national. National picks pass the same
-consequence test at national scale (a Fed decision, a shutdown clock, a major ruling, a
-public-health finding). Skip politics as theater, celebrity, scores and outrage.
+Rank up to forty: about half local and half national on an ordinary day, and let the
+news decide the exact split, from fifteen to twenty-five each. Stephen's readers get
+their fill of local news from the newsletter itself, so the picks are where they catch
+the big national stories, and where the big local stories show up first, before they
+reach Monday's or Friday's edition. National picks pass the same consequence test at
+national scale (a Fed decision, a shutdown clock, a major ruling, a public-health
+finding). Skip politics as theater, celebrity, scores and outrage.
 
 Lines marked **river only** (single crime stories, threads without a conversation,
 places outside the area) may join the river but never the picks.
@@ -151,8 +155,8 @@ clearest, most complete account, and the local outlet over a wire rewrite.
   matters; it never states a fact (a number, a date, a name) the headline does not give.
 - **Never shame or expose a private person.** A thread about a named neighbor, a
   mugshot story about a minor crime, a fundraiser for a named family: leave it out.
-- **Never fill with junk.** A thin day gets fewer picks: twelve real local picks beat
-  fifteen padded with press releases (an award gathering, an expo, a company's stunt
+- **Never fill with junk.** A thin day gets fewer picks: twenty real local picks beat
+  twenty-five padded with press releases (an award gathering, an expo, a company's stunt
   abroad) or event listings. The river is different: on a normal day it runs long,
   and a short river means stories were left out, not that the day was quiet.
 - **The picks are re-ranked three times a day** (morning, noon, evening) and stand

@@ -1017,8 +1017,12 @@
   ok   the Wire, live › the Brief is pinned above What matters today
   ok   the Wire, live › one pick card and four ranked rows to start
   ok   the Wire, live › an empty why draws no reason line
-  ok   the Wire, live › “5 more picks” opens six to ten in place
-  ok   the Wire, live › and the list ends “That’s the ten.”
+  ok   the Wire, live › the earlier picks wait behind the button
+  ok   the Wire, live › the button counts the rest of the ranking and the earlier picks (24)
+  ok   the Wire, live › opened, the block shows every local pick of the ranking, in order (25)
+  ok   the Wire, live › then the earlier picks, newest ranking first, each with its last rank and its reason
+  ok   the Wire, live › under “Earlier today, these mattered too”
+  ok   the Wire, live › and the list ends “That’s all twenty-nine.”
   ok   the Wire, live › nothing shows twice on today’s page
   ok   the Wire, live › today’s page draws every local story once: Brief + picks + river = the count
   ok   the Wire, live › the reddit chip shows exactly its count today (7)
@@ -1027,12 +1031,18 @@
   ok   the Wire, live › on Everything the chips are counts.everything
   ok   the Wire, live › and the dateline counts everything
   ok   the Wire, live › Everything keeps the picks
-  ok   the Wire, live › the river keeps rendering past 120 items (242)
+  ok   the Wire, live › the river keeps rendering past 120 items (219)
   ok   the Wire, live › today flows into yesterday, then the day before, each with its own head
   ok   the Wire, live › when the editions run out, the end says so
   ok   the Wire, live › scrolled into yesterday, the dateline names it
+  ok   the Wire, live › scrolling into yesterday draws “What mattered Friday” under its head
+  ok   the Wire, live › yesterday’s Brief is pinned above its block, as the arrow view pins it
+  ok   the Wire, live › with its picks: the card and four rows, in rank order
+  ok   the Wire, live › and its own button for the rest and the earlier picks
+  ok   the Wire, live › opened in place: the whole ranking, then “Earlier that day” and the earlier picks
+  ok   the Wire, live › no key appears twice on the page, today through the archive (260 cards)
   ok   the Wire, live › the source sheet: its stories today, Mute, Open the site
-  ok   the Wire, live › a muted source leaves the river (reuters)
+  ok   the Wire, live › a muted source leaves the river (r-burlington)
   ok   the Wire, live › the chip counts are recounted without the muted source
   ok   the Wire, live › Settings lists mutes
   ok   the Wire, live › no console errors
@@ -1299,6 +1309,8 @@
   ok   On Air, demo › nothing autoplays: the shell’s audio is paused and no frame is loaded
   ok   On Air, demo › the chip row is a table of contents: Out loud, Btown TV, Live, Podcasts, Past nights
   ok   On Air, demo › the sections run in that order
+  ok   On Air, demo › no section carries an explanatory subtitle
+  ok   On Air, demo › no end-of-tab line about when things land
   ok   On Air, demo › a chip scrolls to its section
   ok   On Air, demo › Local: the Brief’s own show is first in Podcasts
   ok   On Air, demo › Local: every local show, no national ones
@@ -1319,7 +1331,12 @@
   ok   On Air, live › nothing autoplays
   ok   On Air, live › today’s clip: the card says today and its length
   ok   On Air, live › live: the Brief’s own show is first in Podcasts
+  ok   On Air, live › Btown TV: “Play tonight on your TV” opens tonight’s playlist in a new tab
+  ok   On Air, live › under the Btown TV header, before the rail, with the play and external icons
   ok   On Air, live › live: tonight’s local picks, the pick and the Burlington & Vermont shelf
+  ok   On Air, live › the transcript hides the voice’s pacing marks ([short pause])
+  ok   On Air, live › no mention of AI on the card or the transcript
+  ok   On Air, live › the card says when it is read
   ok   On Air, live › “Read it instead” shows the script the voice read
   ok   On Air, live › play loads today’s MP3 from the wire-audio branch into the shell’s player
   ok   On Air, live › the player survives a tab switch
@@ -1338,10 +1355,17 @@
   ok   On Air, Live is cameras › Everything: still no ambience streams
   ok   On Air, Live is cameras › Everything: the other live streams come back
   ok   On Air, Live is cameras › no console errors
+  ok   On Air, Play on your TV › not-tonight: no playlist tonight, no “Play tonight” button
+  ok   On Air, Play on your TV › and a quiet link to the latest night that has one, said plainly
+  ok   On Air, Play on your TV › not-tonight: no console errors
+  ok   On Air, Play on your TV › none: no playlist tonight, no “Play tonight” button
+  ok   On Air, Play on your TV › none anywhere: no link at all
+  ok   On Air, Play on your TV › none: no console errors
+  ok   On Air, Play on your TV › demo: the button toasts instead of leaving
   ok   On Air, the audio card › no clip: no audio card, no section, no chip
   ok   On Air, the audio card › none: no console errors
   ok   On Air, the audio card › no clip today: the latest one, with its date (Friday, October 16)
-  ok   On Air, the audio card › and it says when today’s lands
+  ok   On Air, the audio card › the card says when it is read; the header carries no subtitle
   ok   On Air, the audio card › yesterday: no console errors
   ok   Games, live › one get_leaderboard call per live board, for this month in Burlington
   ok   Games, live › the tab only ever reads

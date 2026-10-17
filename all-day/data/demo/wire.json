@@ -760,7 +760,52 @@
    "posted_at": "2026-10-16T11:20:00+00:00",
    "thumb": "coffee",
    "votes": 33
-  }
+  },
+  "picks_earlier": [
+   {
+    "id": "w12",
+    "ch": "local",
+    "local": true,
+    "src": "nbc5",
+    "name": "NBC5",
+    "title": "Lake Champlain is still 61 degrees, which is warm for the middle of October",
+    "url": "https://example.org/wire/w12",
+    "posted_at": "2026-10-16T13:20:00+00:00",
+    "thumb": "lake",
+    "votes": 11,
+    "rank": 6,
+    "why": "One more swim, if you are brave, before the lake turns for good.",
+    "ranked_at": "2026-10-16T16:05:00+00:00"
+   },
+   {
+    "id": "w14",
+    "ch": "world",
+    "local": false,
+    "src": "npr",
+    "name": "NPR",
+    "title": "A new study puts a number on the sleep teenagers lose to their phones",
+    "url": "https://example.org/wire/w14",
+    "posted_at": "2026-10-16T13:20:00+00:00",
+    "votes": 9,
+    "rank": 11,
+    "why": "Worth a talk at the dinner table if there is a teenager in the house.",
+    "ranked_at": "2026-10-16T16:05:00+00:00"
+   },
+   {
+    "id": "w20",
+    "ch": "local",
+    "local": true,
+    "src": "seven-days",
+    "name": "Seven Days",
+    "title": "Foam’s lakeside lot closes for the season after this weekend",
+    "url": "https://example.org/wire/w20",
+    "posted_at": "2026-10-16T09:20:00+00:00",
+    "votes": 13,
+    "rank": 3,
+    "why": "The last weekend to eat by the water this year.",
+    "ranked_at": "2026-10-16T10:05:00+00:00"
+   }
+  ]
  },
  "index": {
   "v": 1,
@@ -768,12 +813,14 @@
    {
     "date": "2026-10-15",
     "count": 9,
-    "picks": 4
+    "picks": 4,
+    "picks_total": 5
    },
    {
     "date": "2026-10-14",
     "count": 6,
-    "picks": 3
+    "picks": 3,
+    "picks_total": 3
    }
   ]
  },
@@ -1060,7 +1107,23 @@
      "paused": false,
      "last_post": "2026-10-16T18:20:00+00:00"
     }
-   }
+   },
+   "picks_earlier": [
+    {
+     "id": "y5",
+     "ch": "local",
+     "local": true,
+     "src": "wcax",
+     "name": "WCAX",
+     "title": "Leaf pickup in the Old North End starts Monday; bags on the curb by 7 am",
+     "url": "https://example.org/wire/y5",
+     "posted_at": "2026-10-15T18:52:00+00:00",
+     "votes": 3,
+     "rank": 2,
+     "why": "Rake this weekend, and have the bags out early Monday.",
+     "ranked_at": "2026-10-15T16:05:00+00:00"
+    }
+   ]
   },
   "2026-10-14": {
    "v": 1,
@@ -1265,7 +1328,8 @@
      "paused": false,
      "last_post": "2026-10-16T18:20:00+00:00"
     }
-   }
+   },
+   "picks_earlier": []
   }
  },
  "fresh": [
