@@ -721,7 +721,10 @@ class DecideTests(unittest.TestCase):
         self.assertEqual(cw.decide(day, state, [self.item(9)], self.et(9), NOW)[:2], (True, True))
         self.assertEqual(cw.decide(day, state, [self.item(9)], self.et(2), NOW)[:2], (True, True))
         self.assertEqual(cw.decide(day, state, [self.item(2, False)], self.et(9), NOW)[:2], (False, False))
-        state = {"picks_at": (NOW - timedelta(hours=5)).isoformat()}
+        # picks are due once PICKS_EVERY_HOURS have passed (three a day), not an hour sooner
+        state = {"picks_at": (NOW - timedelta(hours=cw.PICKS_EVERY_HOURS - 1)).isoformat()}
+        self.assertEqual(cw.decide(day, state, new, self.et(12), NOW)[:2], (True, False))
+        state = {"picks_at": (NOW - timedelta(hours=cw.PICKS_EVERY_HOURS)).isoformat()}
         self.assertEqual(cw.decide(day, state, new, self.et(12), NOW)[:2], (True, True))
 
 

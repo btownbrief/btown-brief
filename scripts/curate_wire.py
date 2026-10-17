@@ -80,16 +80,16 @@ KEEP_DAYS = 30             # frozen editions kept on the branch
 # Stephen, 2026-10-16: the river should feel almost endless, curated well down
 # from the ~1,000 items a day, not a 40-to-80-item digest.
 RIVER_MAX = 300
-ADD_MAX = 40               # per hourly update
-ADD_MAX_FIRST = 60         # the day's first update can catch up on the night
+ADD_MAX = 60               # per hourly update (Stephen, 2026-10-17: the river runs to hundreds)
+ADD_MAX_FIRST = 100        # the day's first update can catch up on the night
 RIVER_SHOWN_HOURLY = 60    # between re-ranks the editor sees the newest river items only
 PICK_COUNT = 25
 NATIONAL_PICKS = 10        # the rest of the 25 are local
 WHY_MAX = 90
-NEW_MAX_LOCAL = 80         # candidates shown to the editor per run
-NEW_MAX_WORLD = 60
+NEW_MAX_LOCAL = 120        # candidates shown to the editor per run
+NEW_MAX_WORLD = 80
 WORLD_MIN_SCORE = 3        # national items the tagger scored lower never reach the editor
-PICKS_EVERY_HOURS = 5      # re-rank cadence: about 7am, noon, 5pm, 10pm
+PICKS_EVERY_HOURS = 6      # re-rank cadence: about 6am, noon, 6pm (Stephen, 2026-10-17: one to three a day, not hourly)
 PICKS_MIN_POOL = 8         # the first ranking of the day waits for this many items
 URGENT_SCORE = 9           # a local story this big re-ranks the picks at once
 QUIET_BEFORE_HOUR = 6      # overnight the editor sleeps unless something is urgent
