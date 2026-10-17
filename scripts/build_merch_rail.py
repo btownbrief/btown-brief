@@ -86,6 +86,8 @@ def main():
             "id": d["id"], "name": d["name"], "idea": d.get("idea") or "",
             "img": "assets/merch/" + name, "href": f"{SHOP}#/p/huba/d/{d['id']}",
         })
+    if not rail or skipped:
+        raise SystemExit(f"stopped before writing: core designs without a preview: {skipped or 'all'}")
     OUT.write_text(json.dumps({
         "_": "Built by scripts/build_merch_rail.py from the merch repo's data.js (its core list: always in stock). "
              "href is the design's page on merch.btownbrief.com, where the Printify mockups are. No prices on purpose.",

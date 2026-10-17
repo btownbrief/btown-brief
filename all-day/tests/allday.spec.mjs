@@ -2229,7 +2229,7 @@ async function theVintage(browser, base) {
     await page.click('#confirm [data-yes]');
     await page.waitForFunction((n) => Number(document.querySelector('.panel:not([hidden]) [data-thanks]').dataset.thanks) === n + 1, t0.n);
     const t1 = await thanksOf(page);
-    check(t1.n === t0.n + 1 && new RegExp(t1.n + ' finds you posted found a home this month').test(t1.text), 'the thank-you line counts one more find gone home', JSON.stringify([t0, t1]));
+    check(t1.n === t0.n + 1 && new RegExp(t1.n + ' finds posted from this device found a home this month').test(t1.text), 'the thank-you line counts one more find gone home', JSON.stringify([t0, t1]));
     check(/No points and no prizes/.test(t1.text) && !/raffle|enter to win|\bearn|\bdraw\b/i.test(t1.text), 'a thank-you, not points, prizes or a raffle', t1.text);
     check(!(await page.$(vslot('spotted') + ' .card.board[data-k="b-' + id + '"]')), 'and the find leaves the board', '');
     const gone = await fakeOf(page, `(f) => f.posts.some((p) => p.id === '${id}')`);

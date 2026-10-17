@@ -56,6 +56,7 @@ ROUTE = ["Downtown / Church St", "Waterfront", "South End", "Hill Section", "Old
          "New North End", "Winooski", "South Burlington", "Shelburne", "Colchester", "Essex / Essex Jct"]
 
 HOURS = re.compile(r"\bOpen ([^.]*?\b(daily|weekdays|weekends|mon|tue|wed|thu|fri|sat|sun)[^.]*)\.", re.I)
+CHURCH_ST = [44.4759, -73.2121]
 WALK_MPH = 3.0
 STREET_FACTOR = 1.3
 DRIVE_OVER_MILES = 2.0
@@ -119,7 +120,7 @@ def walk_order(shops):
     for s in shops:
         by_hood.setdefault(s["neighborhood"], []).append(s)
     hoods = sorted(by_hood, key=lambda h: (rank.get(h, len(ROUTE)), h or ""))
-    ordered, last = [], None
+    ordered, last = [], CHURCH_ST      # the walk starts on Church Street
     for h in hoods:
         group = sorted(by_hood[h], key=lambda s: s["name"])
         # nearest-first from the previous stop, for the shops that can be placed
@@ -127,8 +128,7 @@ def walk_order(shops):
         unplaced = [s for s in group if not s["coords"]]
         seq = []
         while placed:
-            if last:
-                placed.sort(key=lambda s: miles(last, s["coords"]))
+            placed.sort(key=lambda s: miles(last, s["coords"]))
             nxt = placed.pop(0)
             seq.append(nxt)
             last = nxt["coords"]

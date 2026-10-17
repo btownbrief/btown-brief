@@ -112,19 +112,25 @@ const SPECIAL = new Set([FIT.toLowerCase(), TEE.toLowerCase()]);
 
 /* Two lists cover the board: spotted (which also carries the fit checks and
    the designs, by their shop tag) and swaps. Newest first, as listed. */
+let loads = 0;                // only the newest load lands: an older, slower one never overwrites it
 function loadPosts() {
+  const mine = ++loads;
   return Promise.all([boards.list(KEY, { kind: 'spotted', limit: 60 }), boards.list(KEY, { kind: 'swap', limit: 60 })]).then(([sp, sw]) => {
-    S.off = sp.error === 'off';
-    S.failed = !sp.ok && !S.off;
+    if (mine !== loads) return false;
+    S.off = sp.error === 'off' || sw.error === 'off';
+    S.failed = !S.off && !sp.ok;
+    S.swapsFailed = !S.off && !sw.ok;
     S.spotted = sp.posts.filter((p) => !SPECIAL.has(tagOf(p)));
     S.fit = sp.posts.filter((p) => tagOf(p) === FIT.toLowerCase() && p.photo);
     S.sent = sp.posts.filter((p) => tagOf(p) === TEE.toLowerCase() && p.photo);
     S.swaps = sw.posts;
+    return true;
   });
 }
 
 function postsChanged() {
-  return loadPosts().then(() => {
+  return loadPosts().then((fresh) => {
+    if (!fresh) return;
     ['spotted', 'swaps', 'sent', 'fit'].forEach(paint);
     if (app.activeTab() === KEY) app.paintSubnav();
     land();
@@ -240,9 +246,9 @@ const findMeta = (p) => [p.meta.shop, p.meta.size ? 'Size ' + p.meta.size : '', 
 const swapMeta = (p) => [p.meta.want ? 'For ' + p.meta.want : '', p.meta.size ? 'Size ' + p.meta.size : ''].filter(Boolean).join(' · ');
 const noMeta = () => '';
 
-function boardNote(host, what) {
+function boardNote(host, what, failed) {
   if (S.off) host.appendChild(el('p', 'note pad', esc('Posting opens soon: the board is still being set up. Everything else here works.')));
-  else if (S.failed) host.appendChild(el('p', 'note pad', esc('The board didn’t load. Try again in a bit.')));
+  else if (failed) host.appendChild(el('p', 'note pad', esc('The board didn’t load. Try again in a bit.')));
   else host.appendChild(el('p', 'note pad', esc(what)));
 }
 
@@ -256,7 +262,7 @@ function addRow(host, label, fn) {
 function thanksLine() {
   const n = homes();
   const p = el('p', 'note pad', n
-    ? '<b>' + esc('Thank you.') + '</b> ' + esc(plural(n, 'find', 'finds') + ' you posted found a home this month. No points and no prizes, just the right size in the right hands.')
+    ? '<b>' + esc('Thank you.') + '</b> ' + esc(plural(n, 'find', 'finds') + ' posted from this device found a home this month. No points and no prizes, just the right size in the right hands.')
     : esc('When someone gets a find you posted, tap “Someone got it” on it and it comes down. No points and no prizes: just a thank-you, right here.'));
   p.dataset.thanks = String(n);
   return p;
@@ -267,7 +273,7 @@ function paintSpotted(host) {
   host.appendChild(thanksLine());
   host.appendChild(el('div', 'spacer'));
   if (S.spotted === null) host.appendChild(el('p', 'note pad', esc('Checking the racks…')));
-  else if (!S.spotted.length) boardNote(host, 'Nothing spotted right now. Seen something good that wasn’t your size? Post it.');
+  else if (!S.spotted.length) boardNote(host, 'Nothing spotted right now. Seen something good that wasn’t your size? Post it.', S.failed);
   else grid(host, S.spotted, { name: 'spotted', meta: findMeta, vote: 'I’d want this', got: true });
   addRow(host, 'Post a find', composeFind);
 }
@@ -353,7 +359,7 @@ function paintShops(host) {
   const list = S.shops;
   const checked = list ? list.filter((s) => s.hours).length : 0;
   section(host, 'The shop guide', list && list.length
-    ? esc(plural(list.length, 'shop', 'shops') + ' in walking order from Church Street. ' +
+    ? esc(plural(list.length, 'shop', 'shops') + ' in walking order, neighborhood by neighborhood from Church Street out. ' +
       (checked ? 'Hours where we have checked them; call ahead for the rest.' : 'Hours aren’t checked yet; call ahead.'))
     : esc('Every vintage, thrift and record shop in the Brief’s guide.'));
   if (!list) {
@@ -379,7 +385,7 @@ function paintShops(host) {
 function paintSwaps(host) {
   section(host, 'Swaps', esc('Trade it or give it away. No money changes hands: say what you’d take, or “free”.'));
   if (S.swaps === null) host.appendChild(el('p', 'note pad', esc('Checking the swap shelf…')));
-  else if (!S.swaps.length) boardNote(host, 'No swaps up right now. Got something good that doesn’t fit?');
+  else if (!S.swaps.length) boardNote(host, 'No swaps up right now. Got something good that doesn’t fit?', S.swapsFailed);
   else grid(host, S.swaps, { name: 'swaps', meta: swapMeta, vote: 'I’d take this' });
   addRow(host, 'Post a swap', () => boards.compose({
     board: KEY, kind: 'swap', heading: 'Post a swap', title: 'What you have', titlePlaceholder: 'M crewneck, forest green',
@@ -462,7 +468,7 @@ function paintSent(host) {
 function paintFit(host) {
   section(host, 'Fit check', esc('Show off a find, or a tee from the shop. Newest first.'));
   if (S.fit === null) host.appendChild(el('p', 'note pad', esc('Loading the fits…')));
-  else if (!S.fit.length) boardNote(host, 'No fit checks yet. Thrifted something great? Show it.');
+  else if (!S.fit.length) boardNote(host, 'No fit checks yet. Thrifted something great? Show it.', S.failed);
   else grid(host, S.fit, { name: 'fit', meta: noMeta, vote: 'Love this fit' });
   addRow(host, 'Post a fit check', fitSheet);
 }
@@ -592,6 +598,7 @@ function photoForm(o) {
    looked up: up to three pages of the Art wall's shirt-yes posts. */
 function artForShirt(id, before, page) {
   return boards.list('art', { meta: { shirt: 'yes' }, limit: 60, before }).then((r) => {
+    if (!r.ok) return { error: r.message };
     const hit = r.posts.find((p) => p.id === id);
     if (hit || !r.posts.length || page >= 2) return hit || null;
     return artForShirt(id, r.posts[r.posts.length - 1].created_at, page + 1);
@@ -613,7 +620,10 @@ function shirtSheet(p) {
 /* #vintage/spotted|shops|swaps|tees|fit jumps to a section; b-<id> is a
    post (or an Art post on its way to a shirt), s-<id> a shop, d-<id> a
    design. A key waits for its list to load. */
-const GONE = 'That post has gone: someone got it, or its three weeks ran out.';
+/* a find comes down when someone gets it or its three weeks end; an Art
+   piece can be taken down by its maker: the words fit both */
+const GONE = 'That post has gone.';
+let route = 0;                // bumped on every landing and leaving, so a slow lookup never opens over the wrong page
 function land() {
   if (!pending || !ready) return;
   const k = pending;
@@ -623,7 +633,13 @@ function land() {
   pending = null;
   if (app.flashHit(root, k)) return;
   if (/^b-/.test(k)) {
-    artForShirt(k.slice(2), null, 0).then((p) => { if (p) shirtSheet(p); else app.toast(GONE); });
+    const at = route;
+    artForShirt(k.slice(2), null, 0).then((p) => {
+      if (at !== route || app.activeTab() !== KEY) return;
+      if (p && p.error) app.toast(p.error);
+      else if (p) shirtSheet(p);
+      else app.toast(GONE);
+    });
     return;
   }
   app.toast('That one has moved on.');
@@ -651,9 +667,9 @@ app.register(KEY, {
       land();
     }).catch(() => { r.innerHTML = '<div class="errbox"><b>The demo didn’t load.</b> Reload to try again.</div>'; });
   },
-  activate(param) { pending = param || null; land(); },
+  activate(param) { route++; pending = param || null; land(); },
   refresh() { if (ready) SLOTS.forEach(paint); },
-  deactivate() {},
+  deactivate() { route++; },
   subnav() {
     if (!ready) return null;
     const n = { spotted: S.spotted && S.spotted.length, shops: S.shops && S.shops.length, swaps: S.swaps && S.swaps.length, fit: S.fit && S.fit.length };
