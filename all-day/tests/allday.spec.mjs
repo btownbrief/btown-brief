@@ -499,7 +499,7 @@ async function flashes(page, key) {
 
 async function deepLinks(browser, base) {
   await group('deep links, demo', async () => {
-    const cases = [['wire', 'w13'], ['wire', 'y4'], ['watch', 'f9003'], ['food', 'r-demo-all-night-diner'], ['people', 'mx-dm2'], ['whatnow', 'e-tn3'], ['vintage', 's-resource-burlington'], ['habits', 'next-season'], ['onair', 'yt:demo-tv-003'], ['games', 'g:trivia-ladder'], ['games', 'champ:btown-riddle']];
+    const cases = [['wire', 'w13'], ['wire', 'y4'], ['watch', 'f9003'], ['food', 'r-demo-all-night-diner'], ['people', 'mx-dm2'], ['whatnow', 'e-tn3'], ['vintage', 's-battery-street-jeans'], ['habits', 'next-season'], ['onair', 'yt:demo-tv-003'], ['games', 'g:trivia-ladder'], ['games', 'champ:btown-riddle']];
     for (const [tab, key] of cases) {
       const { ctx, page, errors } = await newPage(browser, base);
       await page.goto(base + '/all-day/?demo=1#' + tab + '/' + key);
@@ -3202,7 +3202,7 @@ async function theVintage(browser, base) {
     check(firstAfter > 0 && file.shops.slice(firstAfter).every((s) => s.after_walk) && file.shops[firstAfter - 1].next === null && file.shops.find((s) => s.id === 'speaking-volumes').after_walk,
       'used books (Speaking Volumes) come last, after the walk, with no leg into them', JSON.stringify(file.shops.slice(firstAfter - 1).map((s) => s.name)));
     const towns = new Set(walk.map((s) => s.neighborhood));
-    check(['Williston', 'South Burlington', 'Winooski'].every((t) => towns.has(t)) && file.shops.some((s) => /plato/i.test(s.name)), 'greater Burlington, not just the city: Williston (Plato’s Closet), South Burlington, Winooski', JSON.stringify([...towns]));
+    check(['Essex / Essex Jct', 'Williston', 'South Burlington', 'Shelburne'].every((t) => towns.has(t)) && file.shops.some((s) => /plato/i.test(s.name)), 'greater Burlington, not just the city: Essex, Williston (Plato’s Closet), South Burlington, Shelburne', JSON.stringify([...towns]));
     const byId = Object.fromEntries(things.map((t) => [t.id, t]));
     check(file.shops.every((s) => byId[s.id] && byId[s.id].group === 'Shopping' && byId[s.id].name === s.name), 'every shop is one of things.json’s Shopping entries: none invented', '');
     const records = things.filter((t) => t.category === 'Record Store').map((t) => t.id);
