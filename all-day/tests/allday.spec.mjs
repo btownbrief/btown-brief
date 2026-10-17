@@ -3519,10 +3519,21 @@ async function boards(browser, base) {
     await page.goto(base + '/all-day/?demo=1#vintage');
     await settle(page);
     await page.evaluate(() => import('/all-day/js/auth.js').then((a) => a.demoSignIn()));
-    await page.evaluate(() => import('/all-day/js/boards.js').then(async (b) => {
-      await b.setProfile({ display_name: 'Jess' });
-      await b.create('vintage', { kind: 'swap', title: 'Two band tees for denim', meta: { want: 'Denim, 32' } });
-    }));
+    /* signing in redraws the tab, and an evaluate that awaits the setup across that
+       redraw can lose its promise ("Resulting promise was garbage collected", seen on
+       2026-10-17) even though the setup ran. Start the setup in the page without
+       awaiting it there, then wait for its done flag, so it runs exactly once. */
+    await settle(page);
+    await page.evaluate(() => {
+      window.__boardsSetup = 'running';
+      import('/all-day/js/boards.js').then(async (b) => {
+        await b.setProfile({ display_name: 'Jess' });
+        await b.create('vintage', { kind: 'swap', title: 'Two band tees for denim', meta: { want: 'Denim, 32' } });
+        window.__boardsSetup = 'done';
+      }, (e) => { window.__boardsSetup = 'failed: ' + e; });
+    });
+    await page.waitForFunction(() => window.__boardsSetup !== 'running', null, { timeout: 15000 });
+    check(await page.evaluate(() => window.__boardsSetup) === 'done', 'the demo profile and swap post are set up', await page.evaluate(() => String(window.__boardsSetup)));
     await openCompose(page, { board: 'art', kind: 'photo', heading: 'Add a photo', title: 'What is it?', body: false, notes: ['Photos are checked before they show.'] });
     await page.fill('input[name=title]', 'Oakledge, low water');
     await page.click('.bform button[type=submit]');
