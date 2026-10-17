@@ -17,7 +17,18 @@ file. It refuses the file when:
 - a club has no weekly meet and no `schedule_note` telling a reader where
   to look,
 - two clubs share a name, or a field holds the wrong type,
-- a field name is not one the directory uses (catches typos like "meet").
+- a field name is not one the directory uses (catches typos like "meet"),
+- `months` is not a list of month numbers 1-12, `from` / `until` is not a
+  real YYYY-MM-DD date, `from` comes after `until`, or `skip` is not a list
+  of real YYYY-MM-DD dates.
+
+`season` is the page's own words, for people. `months`, `from`, `until` and
+`skip` (on the club, or on one meet) are what the All Day app reads to decide
+whether a meet is on a given day: a meet's months replace its club's, and
+every from/until/skip on the club and the meet applies (from and until are
+both kept; a skip day has no meet). A club whose season text says
+it is not year-round but which has none of the three gets a warning, since
+the app would then show it all year.
 
 It cannot tell whether a source page really says what checked.note quotes,
 or whether coordinates sit on the right building: that is the human (or
@@ -51,9 +62,10 @@ BBOX = {"lat": (44.25, 44.75), "lng": (-73.40, -72.85)}
 STALE_DAYS = 120
 
 CLUB_KEYS = {"id", "name", "kind", "what", "meets", "schedule_note", "level", "cost", "season",
-             "newcomers", "url", "instagram", "meetup", "strava", "checked"}
+             "months", "from", "until", "skip", "newcomers", "url", "instagram", "meetup", "strava", "checked"}
 REQUIRED_TEXT = ("id", "name", "kind", "what", "url")
-MEET_KEYS = {"day", "time", "where", "address", "lat", "lng", "note", "season"}
+MEET_KEYS = {"day", "time", "where", "address", "lat", "lng", "note", "season", "months", "from", "until", "skip"}
+WHEN_KEYS = ("months", "from", "until", "skip")
 CHECKED_KEYS = {"date", "source", "note", "also"}
 LINK_KEYS = ("url", "instagram", "meetup", "strava")
 
@@ -69,6 +81,39 @@ def is_number(value):
     return isinstance(value, (int, float)) and not isinstance(value, bool)
 
 
+def check_when(entry, label, errors):
+    """The machine-readable season: months 1-12, from/until and skip as YYYY-MM-DD."""
+    months = entry.get("months")
+    if months is not None:
+        if (not isinstance(months, list) or not months
+                or not all(isinstance(m, int) and not isinstance(m, bool) and 1 <= m <= 12 for m in months)):
+            errors.append(f"{label}: months must be a non-empty list of month numbers 1-12")
+        elif len(set(months)) != len(months):
+            errors.append(f"{label}: months lists a month twice")
+    skip = entry.get("skip")
+    if skip is not None:
+        def real_day(v):
+            try:
+                return isinstance(v, str) and len(v) == 10 and dt.date.fromisoformat(v) is not None
+            except ValueError:
+                return False
+        if not isinstance(skip, list) or not skip or not all(real_day(v) for v in skip):
+            errors.append(f"{label}: skip must be a non-empty list of YYYY-MM-DD dates")
+    dates = {}
+    for key in ("from", "until"):
+        if key not in entry:
+            continue
+        value = entry[key]
+        try:
+            dates[key] = dt.date.fromisoformat(value) if isinstance(value, str) and len(value) == 10 else None
+        except ValueError:
+            dates[key] = None
+        if dates[key] is None:
+            errors.append(f"{label}: {key} {value!r} is not YYYY-MM-DD")
+    if dates.get("from") and dates.get("until") and dates["from"] > dates["until"]:
+        errors.append(f"{label}: from {entry['from']} is after until {entry['until']}")
+
+
 def check_meet(meet, where_label, errors):
     if not isinstance(meet, dict):
         errors.append(f"{where_label}: a meet must be an object")
@@ -79,6 +124,7 @@ def check_meet(meet, where_label, errors):
         errors.append(f"{where_label}: day {meet.get('day')!r} is not one of {', '.join(DAYS)}")
     if not isinstance(meet.get("time"), str) or not TIME_RE.match(meet["time"]):
         errors.append(f"{where_label}: time {meet.get('time')!r} is not 24-hour HH:MM")
+    check_when(meet, where_label, errors)
     for key in ("address", "note", "season"):
         if key in meet and not isinstance(meet[key], str):
             errors.append(f"{where_label}: {key} must be text")
@@ -151,6 +197,7 @@ def validate(doc, today=None):
         for key in ("schedule_note", "level", "cost", "season", "newcomers"):
             if key in club and not isinstance(club[key], str):
                 errors.append(f"{label}: {key} must be text")
+        check_when(club, label, errors)
 
         checked = club.get("checked")
         if not isinstance(checked, dict):
@@ -188,6 +235,12 @@ def validate(doc, today=None):
                     warnings.append(f"{label} meets[{j}]: same day, time and place as {other}; "
                                     "is this one group listed twice?")
                 slots_seen.setdefault(slot, label)
+        season = str(club.get("season", "")).strip().lower()
+        has_when = any(k in club for k in WHEN_KEYS) or any(
+            isinstance(m, dict) and any(k in m for k in WHEN_KEYS) for m in meets)
+        if meets and season and not season.startswith("year-round") and not has_when:
+            warnings.append(f"{label}: season says {club['season']!r} but there are no months/from/until, "
+                            "so the app shows it all year")
         if not meets and not str(club.get("schedule_note", "")).strip():
             errors.append(f"{label}: no weekly meet, so 'schedule_note' must say where to find the schedule")
     return errors, warnings
