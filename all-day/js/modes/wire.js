@@ -32,6 +32,12 @@
    Unfiltered is a sub-view of this tab, not a tab: every headline on
    pulse.json, newest first or by outlet, the outlet chips, search.
 
+   Photo mode (wire-photos.js) is the other way to read the tab: a list ⟷
+   photos switch at the end of the dateline row turns the paper into one
+   feed of every picture (neighbors' photos and art, local Instagram, the
+   stories' lead images), newest first. The choice is kept on the phone;
+   #wire/photos opens it, and the old #art and #photos land there too.
+
    ?demo=1 runs exactly this file on wire-demo.js's fake payloads, which have
    the same shape as the real ones. */
 
@@ -39,6 +45,7 @@ import * as app from '../app.js';
 import * as store from '../store.js';
 import * as data from '../wire.js';
 import * as demo from './wire-demo.js';
+import * as photos from './wire-photos.js';
 import { el, esc, safeHref, ICON, mark, cards, chips, pills, button, divider, section, localSwitch, geo, setGeo, put } from '../ui.js';
 
 const FIRST = 60;        // cards on the first screenful (DESIGN.md §9 rule 14: sixty in under 100ms)
@@ -86,6 +93,9 @@ const W = {
   open: new Set(),      // the days whose What matters list is opened past five
   flip: null,           // the earlier day today's What matters block shows, or null (never stored)
   view: 'paper',        // or 'raw', Unfiltered
+  mode: photos.remembered() ? 'photos' : 'list',   // the paper as a list, or Photo mode
+  photoOpen: null,      // a picture a deep link asked for, opened once the photos are drawn
+  pulseTried: false,    // the Unfiltered wire was asked for and did not come
   run: null,            // the river being drawn
   pending: null, queued: [],
   raw: { outlet: '', q: '', run: null, list: null, until: null, keep: 0 },
@@ -256,6 +266,7 @@ function loadEdition(date) {
 /* --------------------------------------------------------------- subnav */
 let DL = null;
 function subnav() {
+  if (W.view === 'paper' && W.mode === 'photos') return photoSubnav();
   if (!W.today && !W.failed) return null;
   loadMutes();
   const frag = document.createDocumentFragment();
@@ -266,7 +277,7 @@ function subnav() {
   const label = el('span', 'dl', '<b></b><span class="s"></span>');
   prev.addEventListener('click', () => { const d = olderThan(W.reading || todayKey()); if (d) goDay(d); });
   next.addEventListener('click', () => { const d = newerThan(W.reading || todayKey()); if (d) goDay(d); });
-  dl.append(prev, label, next);
+  dl.append(prev, label, next, photos.viewSwitch(false, () => setMode(true)));
   frag.appendChild(dl);
   DL = { prev, next, label };
   paintDateline(W.reading || W.start || todayKey());
@@ -288,6 +299,86 @@ function subnav() {
   frag.appendChild(band);
   return frag;
 }
+
+/* ----------------------------------------------------------- Photo mode */
+/* The dateline row says "Photos" and how many, with the switch where the
+   list has it; the band keeps the Local / Everything switch and puts "Add a
+   photo" where the kind chips were. */
+let PDL = null;
+function photoSubnav() {
+  loadMutes();
+  const frag = document.createDocumentFragment();
+  const dl = el('div', 'dateline every pm-dl');
+  const label = el('span', 'dl', '<b>Photos</b><span class="s"></span>');
+  dl.append(label, photos.viewSwitch(true, () => setMode(false)));
+  frag.appendChild(dl);
+  PDL = label.lastChild;
+  paintPhotoCount();
+  const band = el('div', 'toolband');
+  band.append(localSwitch(() => { app.paintSubnav(); render(); app.scrollTop(); }), photos.addBtn('photo', 'sm'));
+  frag.appendChild(band);
+  return frag;
+}
+function paintPhotoCount() {
+  const n = photos.count();
+  if (PDL) PDL.textContent = n == null ? '' : plural(n, 'photo', 'photos');
+}
+
+/* The switch: the choice is kept on the phone, and the address says which
+   view this is, so it can be shared. Focus stays on the switch. */
+function setMode(on) {
+  W.mode = on ? 'photos' : 'list';
+  photos.remember(on);
+  W.view = 'paper';
+  W.photoOpen = null;
+  history.replaceState(null, '', location.search + '#wire' + (on ? '/photos' : W.start ? '/' + W.start : W.ch !== 'all' ? '/' + W.ch : ''));
+  app.paintSubnav(); render(); app.scrollTop();
+  const b = document.querySelector('#subnav .viewsw-b[data-view="' + (on ? 'photos' : 'list') + '"]');
+  if (b) b.focus({ preventScroll: true });
+}
+
+/* Photo mode draws once its pictures are in: the art board, the gallery and
+   Instagram (wire-photos.js), and the Unfiltered wire for the Facebook,
+   Reddit and local outlets' pictures. Drawn at once when they are, so a
+   redraw keeps the reader's place. */
+let photoSeq = 0;
+const pulseSettled = () => !!W.pulse || W.pulseTried;
+function renderPhotos(opts = {}) {
+  const root = W.root;
+  const seq = ++photoSeq;
+  loadMutes();
+  const draw = () => {
+    if (seq !== photoSeq || W.mode !== 'photos' || W.view !== 'paper') return;
+    photos.render(root, { limit: opts.limit, until: W.photoOpen || opts.until });
+    paintPhotoCount();
+    landPhoto();
+  };
+  if (photos.loaded() && pulseSettled()) { draw(); return; }
+  root.innerHTML = '<p class="loading">Loading photos…</p>';
+  Promise.all([photos.ensure(), new Promise((res) => withPulse(() => res()))]).then(draw);
+}
+function landPhoto() {
+  const k = W.photoOpen;
+  if (!k) return;
+  W.photoOpen = null;
+  if (app.flashHit(W.root, k) && photos.openPicture(k)) return;
+  app.toast('That photo has moved on.');
+}
+
+photos.init({
+  now: () => SRC.now(),
+  clockReady: () => (app.demo ? demo.init() : Promise.resolve()),
+  ago,
+  today: () => (W.today ? dayOf(W.today).cards : []),
+  pulse: () => W.pulse,
+  visible: (v) => !(v.sid && MUTE[v.sid]) && (geo() === 'everything' || v.local || !!(v.sid && follows[v.sid])),
+  green: () => geo() === 'everything',
+  hydrate: (host, keys) => hydrateVotes(host, keys),
+  panel: () => W.panel,
+  showing: () => W.mode === 'photos' && W.view === 'paper' && panelOn(),
+  redraw: () => redraw(),
+  onMute: (sid, it) => muteSource(sid, it),
+});
 
 /* The dateline names one day: today, or the edition you opened, or the
    earlier day you have scrolled down into. It is repainted in place as you
@@ -344,6 +435,7 @@ function render(opts = {}) {
   if (!root) return;
   stopRun();
   if (W.view === 'raw') { renderRaw(); return; }
+  if (W.mode === 'photos') { renderPhotos(opts); return; }
   if (W.failed && !W.today) {
     root.innerHTML = '<div class="errbox"><b>Couldn’t reach the wire.</b><br>The paper is served from GitHub. If you are offline it will come back on its own.</div>';
     return;
@@ -714,6 +806,7 @@ function watch(run) {
   observer.observe(run.sentinel);
 }
 function stopRun() {
+  photos.stop();
   if (observer) { observer.disconnect(); observer = null; }
   if (W.raw.run) W.raw.run.dead = true;
   W.run = null;
@@ -722,7 +815,9 @@ function stopRun() {
 /* which day is under the mast: the dateline follows the scroll */
 let tracking = 0;
 function track() {
-  if (tracking || W.view !== 'paper' || !W.run) return;
+  if (tracking) return;
+  if (W.view === 'paper' && W.mode === 'photos') { tracking = requestAnimationFrame(() => { tracking = 0; photos.topUp(); }); return; }
+  if (W.view !== 'paper' || !W.run) return;
   tracking = requestAnimationFrame(() => {
     tracking = 0;
     const run = W.run;
@@ -842,7 +937,7 @@ function pulseReady(j) {
 }
 function withPulse(then) {
   if (W.pulse) { then(); return; }
-  SRC.pulse((j) => { pulseReady(j); then(); }, () => then(true));
+  SRC.pulse((j) => { pulseReady(j); then(); }, () => { W.pulseTried = true; then(true); });
 }
 
 function openRaw() {
@@ -1005,11 +1100,28 @@ function rawSourceSheet(sid, from) {
 /* #wire/local|everything, #wire/<kind>, #wire/unfiltered, #wire/2026-10-15
    for an edition, #wire/<key> for a card: on the page, further down today,
    in an earlier edition, or on the raw wire (old links are URLs). */
+/* A picture's key (a neighbor's post b-…, a gallery photo g-…, an Instagram
+   post ig:…) belongs to Photo mode, as does #wire/photos/<key>. */
+const PHOTO_KEY = /^(b-|g-|ig:)/;
+const isPhotoParam = (p) => p === 'photos' || p.startsWith('photos/') || PHOTO_KEY.test(p);
+function landPhotos(p) {
+  const k = p === 'photos' ? '' : p.startsWith('photos/') ? p.slice(7) : p;
+  W.view = 'paper';
+  if (W.mode !== 'photos') { W.mode = 'photos'; photos.remember(true); }
+  W.photoOpen = k || null;
+  app.paintSubnav(); render();
+  if (!k) app.scrollTop();
+}
+
 function land() {
   const p = W.pending;
+  if (p && isPhotoParam(p)) { W.pending = null; landPhotos(p); return; }
   if (!p || (!W.today && !W.failed) || !W.idxDone) return;
   W.pending = null;
   if (p === 'local' || p === 'everything') { setGeo(p); W.view = 'paper'; app.paintSubnav(); render(); return; }
+  /* anything else is the paper's: a kind, Unfiltered, a day or a story,
+     shown as the list for this visit (the kept choice is not changed) */
+  if (W.mode === 'photos') { W.mode = 'list'; W.view = 'paper'; app.paintSubnav(); render(); }
   if (KINDS.some(([k]) => k === p)) { W.ch = p; W.view = 'paper'; app.paintSubnav(); render(); return; }
   if (p === 'unfiltered') { openRaw(); return; }
   if (isDate(p)) {
@@ -1111,6 +1223,16 @@ function mount(root) {
   }, () => { W.idxDone = true; land(); });
 }
 
+/* a mute, a follow or the switch: redraw as far down as the reader was */
+function redraw() {
+  const y = W.panel ? W.panel.scrollTop : 0;
+  const shown = W.view === 'paper' && W.mode === 'photos' ? photos.drawn() : W.run ? W.run.shown : 0;
+  if (W.view === 'raw' && W.raw.run) W.raw.keep = W.raw.run.i;
+  app.paintSubnav();
+  render({ limit: shown });
+  if (W.panel) W.panel.scrollTop = y;
+}
+
 function newSince(ts) {
   if (SRC.newSince) return SRC.newSince();
   if (!W.today || W.today.date !== todayKey()) return 0;
@@ -1124,21 +1246,13 @@ app.register('wire', {
   promise: 'Today’s Burlington news, picked from everything that arrived, with a reason on the ones that matter.',
   mount,
   activate(param) { if (param) { W.pending = param; land(); } },
-  refresh() {
-    /* a mute, a follow or the switch: redraw as far down as the reader was */
-    const y = W.panel ? W.panel.scrollTop : 0;
-    const shown = W.run ? W.run.shown : 0;
-    if (W.view === 'raw' && W.raw.run) W.raw.keep = W.raw.run.i;
-    app.paintSubnav();
-    render({ limit: shown });
-    if (W.panel) W.panel.scrollTop = y;
-  },
+  refresh: redraw,
   deactivate() { app.closePeek(); },
   subnav,
   newSince,
   pull() {
     if (applyQueued()) return 'Fresh stories are in';
-    if (W.view !== 'paper' || W.start) return null;
+    if (W.view !== 'paper' || W.start || W.mode === 'photos') return null;
     return SRC.check();
   },
 });
