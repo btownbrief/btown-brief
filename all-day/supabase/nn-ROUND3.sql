@@ -23,7 +23,7 @@
 --                    every post, and the votes, reports and People plan
 --                      details hanging off those posts
 --                    every vote and report they made (the posts they
---                      reported are recounted, as before)
+--                      reported are recounted, as before, and now only those)
 --                    their What Now missions
 --                    their place in the People directory
 --                    their Watch seen-dots and their partner's first name
@@ -39,8 +39,10 @@
 --                  with no post using it, now counts as a stray picture
 --                  file, so the boards desk's existing cleanup clears the
 --                  file from the bucket. Before, any queue row at all kept
---                  the file forever. Photos sent from the gallery form and
---                  photos Stephen rejected are left exactly as they were.
+--                  the file forever. The same goes for a board photo whose
+--                  reader deleted the post, or whose post never went up.
+--                  Photos sent from the gallery form and photos Stephen
+--                  rejected are left exactly as they were.
 --
 -- Security model, unchanged: RLS on, no table policies, every door a
 -- security-definer function. Nothing here opens a new door.
@@ -55,7 +57,7 @@
 -- the project.
 create or replace function public.nn_delete_me() returns jsonb
 language plpgsql security definer set search_path = public as $$
-declare u uuid := auth.uid(); v_paths text[];
+declare u uuid := auth.uid(); v_paths text[]; v_reported uuid[];
 begin
   if u is null then raise exception 'not_signed_in'; end if;
   -- wait out this reader's post, report or seen-dot already in flight
@@ -83,12 +85,13 @@ begin
   -- the votes they cast while signed in
   delete from public.nn_votes where voter = 'u:' || u::text;
 
-  -- their reports stop counting: each post they reported is recounted from
-  -- the reports that remain since Stephen last cleared it
-  delete from public.nn_reports where reporter = u;
+  -- their reports stop counting: each post they reported (and only those)
+  -- is recounted from the reports that remain since Stephen last cleared it
+  with gone as (delete from public.nn_reports where reporter = u returning post_id)
+  select coalesce(array_agg(post_id), '{}') into v_reported from gone;
   update public.nn_posts p set reports = (select count(*) from public.nn_reports r
      where r.post_id = p.id and (p.cleared_at is null or r.created_at > p.cleared_at))
-   where p.reports > 0;
+   where p.id = any (v_reported);
 
   delete from public.nn_mission_done where user_id = u;
 

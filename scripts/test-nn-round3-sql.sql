@@ -162,6 +162,9 @@ select public.nn_vote((select id from pg_temp.ids where k = 's_find'), 'p_reader
 
 -- what everyone has right now
 reset role;
+-- a post Maya never reported keeps whatever count it has, even one the
+-- recount would change (here, one left over from before cleared_at)
+update public.nn_posts set reports = 5 where id = (select id from pg_temp.ids where k = 's_plan');
 -- Stephen banned Maya before she deleted her account
 insert into public.nn_bans (user_id) values ('11111111-1111-1111-1111-111111111111');
 create temp table maya_posts as select array_agg(id) as ids from pg_temp.ids where k like 'm\_%';
@@ -188,6 +191,7 @@ select pg_temp.ok(pg_temp.rows_of('33333333-3333-3333-3333-333333333333', '{}', 
 select pg_temp.ok((select jsonb_agg(to_jsonb(v) order by v.post_id, v.voter) from public.nn_votes v) = (select others_votes from before),
   'every vote not Maya''s and not on her posts is as it was, signed in or not');
 select pg_temp.ok((select reports from public.nn_posts where id = (select id from pg_temp.ids where k = 'k_note')) = 0, 'Kim''s post no longer counts Maya''s report');
+select pg_temp.ok((select reports from public.nn_posts where id = (select id from pg_temp.ids where k = 's_plan')) = 5, 'a post she never reported is not recounted');
 select pg_temp.ok(exists (select 1 from public.nn_bans where user_id = '11111111-1111-1111-1111-111111111111'), 'a ban stays: deleting is no way around one');
 select pg_temp.ok(exists (select 1 from auth.users where id = '11111111-1111-1111-1111-111111111111'), 'the shared email sign-in stays');
 \if :has_watch
