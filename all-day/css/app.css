@@ -1403,3 +1403,5 @@ body.desk { overflow: auto; }
 .btn.tip-link { color: var(--ember); }
 
 :is(.vshops, .vmap, .mapbtn) .k-antique { --vc: var(--sunset); --vc-ink: var(--sunset-ink); }
+
+.vshops .vk.k-antique { color: var(--accent); }
