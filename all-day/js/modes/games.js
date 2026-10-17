@@ -33,7 +33,7 @@
 import * as app from '../app.js';
 import * as store from '../store.js';
 import * as data from '../wire.js';
-import { el, esc, safeHref, ICON, mark, section, chips, button, divider, cards } from '../ui.js';
+import { el, esc, safeHref, ICON, mark, section, chips, button, divider } from '../ui.js';
 
 const KEY = 'games';
 const ARCADE = 'https://play.btownbrief.com/';
@@ -243,7 +243,7 @@ function drawYou(host) {
   if (!name || G.editing) {
     const card = el('div', 'textcard');
     card.dataset.you = 'ask';
-    card.innerHTML = '<h3>Which name do you play under?</h3><p>The arcade keeps your name on its own site, where this app can’t see it. Type the name you put on your scores once and your rows light up on every board. It stays on this phone.</p>';
+    card.innerHTML = '<h3>Which name do you play under?</h3>';
     const form = el('form', 'signin');
     const input = el('input', 'field');
     input.type = 'text'; input.name = 'arcade-name'; input.maxLength = 24; input.autocomplete = 'nickname';
@@ -276,13 +276,12 @@ function drawYou(host) {
   card.dataset.you = m.hits.length ? 'found' : 'none';
   let line;
   if (!G.settled.boards) line = 'Looking for <b>' + esc(name) + '</b> on the boards…';
-  else if (!m.hits.length) line = 'No score this month is under <b>' + esc(name) + '</b>. The name has to match the one you typed in a game, letter for letter. Play one and it will show up here.';
+  else if (!m.hits.length) line = 'No score this month under <b>' + esc(name) + '</b>.';
   else {
     const boards = new Set(m.hits.map((h) => h.slug)).size;
     const best = m.hits.reduce((a, b) => (b.rank < a.rank ? b : a));
     const g = bySlug(best.slug);
     line = 'Playing as <b>' + esc(name) + '</b>: on ' + esc(plural(boards, 'board', 'boards')) + ' this month, best ' + esc(ORD(best.rank)) + (g ? ' in ' + esc(g.name) : '') + '.';
-    if (m.players > 1) line += ' ' + esc(plural(m.players, 'player uses', 'players use')) + ' that name, so some of the marked rows may be someone else’s.';
   }
   card.innerHTML = '<p>' + line + '</p>';
   const row = el('div', 'row');
@@ -295,8 +294,7 @@ function drawYou(host) {
 function drawBoardHead(host) {
   const r = nextReset();
   const all = extLink('All boards ' + ICON.ext, BOARDS_PAGE, 'ghost sm');
-  sec(host, 'This month’s leaderboard', esc(monthName(G.boardMonth || monthKey()) + '’s top ten in every game. Boards reset ' + dayName(r.date) +
-    (r.days === 1 ? ', tomorrow.' : ', in ' + r.days + ' days.')), 'board', all);
+  sec(host, 'This month’s leaderboard', esc('Resets ' + (r.days === 1 ? 'tomorrow' : 'in ' + r.days + ' days')), 'board', all);
 }
 
 /* The boards come in groups, the arcade's own sections, one group at a time:
@@ -326,9 +324,9 @@ function groups() {
 
 function drawBoards(host) {
   if (!G.settled.catalog) return;
-  if (G.failed.catalog) { host.appendChild(el('p', 'note pad', esc('The arcade’s game list didn’t load, so the boards can’t either. It comes back on its own.'))); return; }
+  if (G.failed.catalog) { host.appendChild(el('p', 'note pad', esc('The game list didn’t load.'))); return; }
   if (!G.settled.boards) { host.appendChild(el('p', 'note pad', esc('Loading ' + plural(boardGames().length, 'board', 'boards') + '…'))); return; }
-  if (G.failed.boards) { host.appendChild(el('p', 'note pad', esc('The scoreboard didn’t answer. It’s the arcade’s own; try again in a minute.'))); return; }
+  if (G.failed.boards) { host.appendChild(el('p', 'note pad', esc('The scoreboard didn’t load.'))); return; }
   const list = groups();
   if (!list.length) return;
   if (!list.some((x) => x.id === G.group)) G.group = list[0].id;
@@ -372,7 +370,7 @@ function drawBoards(host) {
   });
   if (quiet.length) {
     const p = el('p', 'note pad');
-    p.innerHTML = esc('No scores yet this month: ') + quiet.map(([g, why]) => '<a href="' + esc(playUrl(g.slug)) + '" target="_blank" rel="noopener">' + esc(g.name) + '</a>' + (why ? ' (' + esc(why) + ')' : '')).join(', ') + '.';
+    p.innerHTML = esc('No scores yet: ') + quiet.map(([g, why]) => '<a href="' + esc(playUrl(g.slug)) + '" target="_blank" rel="noopener">' + esc(g.name) + '</a>' + (why ? ' (' + esc(why) + ')' : '')).join(', ') + '.';
     host.appendChild(el('div', 'spacer'));
     host.appendChild(p);
   }
@@ -381,16 +379,16 @@ function drawBoards(host) {
 /* ------------------------------------------------------------ challenge */
 function drawChallenge(host) {
   if (!G.catalog) return false;
-  sec(host, 'Challenge a neighbor', esc('Pick a game, send the link. Two phones, no download.'), 'challenge');
+  sec(host, 'Challenge a neighbor', null, 'challenge');
   const list = roomGames();
   const card = el('div', 'textcard');
   card.dataset.challenge = '1';
   if (G.refused) {
-    card.appendChild(el('p', 'fine', esc((G.refused.name || 'That game') + ' can’t host a room right now.' + (list.length ? ' These can:' : ''))));
+    card.appendChild(el('p', 'fine', esc((G.refused.name || 'That game') + ' can’t host a room right now.')));
     card.lastChild.dataset.refused = G.refused.slug || '';
   }
   if (!list.length) {
-    card.appendChild(el('p', '', esc('No game can host a room right now. The two-player games come back on the arcade as soon as their rooms do.')));
+    card.appendChild(el('p', '', esc('No room games right now.')));
     host.appendChild(card);
     return true;
   }
@@ -413,7 +411,6 @@ function drawChallenge(host) {
   a.dataset.host = g.slug;
   go.appendChild(a);
   card.appendChild(go);
-  card.appendChild(el('p', 'fine', esc('The game opens on the arcade, where you host a room online and send your neighbor the invite link it gives you.')));
   host.appendChild(card);
   return true;
 }
@@ -421,9 +418,9 @@ function drawChallenge(host) {
 /* --------------------------------------------------------- new and party */
 function drawNew(host) {
   if (!G.catalog) return false;
-  sec(host, 'New this month', esc('Added to the arcade in the last ' + NEW_DAYS + ' days.'), 'new');
+  sec(host, 'New this month', null, 'new');
   const list = newGames();
-  if (!list.length) { host.appendChild(el('p', 'note pad', esc('Nothing new this month. Everything below the boards is still there to play.'))); return true; }
+  if (!list.length) { host.appendChild(el('p', 'note pad', esc('Nothing new this month.'))); return true; }
   list.forEach((g) => {
     const ago = daysBetween(since(g), todayKey());
     const when = ago === 0 ? 'Added today' : ago === 1 ? 'Added yesterday' : 'Added ' + dayName(since(g));
@@ -436,21 +433,19 @@ function drawParty(host) {
   if (!G.catalog) return false;
   const list = live().filter((g) => g.section === 'party-night');
   if (!list.length) return false;
-  const s = arr(G.catalog.sections).find((x) => x.id === 'party-night');
-  sec(host, 'Party night', esc('Games for a whole room: one screen, everyone’s phone.'), 'party');
-  if (s && s.description) host.appendChild(el('p', 'note pad', esc(s.description)));
+  sec(host, 'Party night', null, 'party');
   list.forEach((g) => host.appendChild(gameRow(g, 'party:' + g.slug, esc(g.pitch || ''))));
   return true;
 }
 
 /* ----------------------------------------------------------------- chat */
 function drawChat(host) {
-  sec(host, 'Arcade chat', esc('Trash talk, bug reports, game ideas.'), 'chat');
+  sec(host, 'Arcade chat', null, 'chat');
   const card = el('div', 'textcard');
   card.dataset.chat = '1';
-  card.innerHTML = '<p>The talk lives in the community’s Btown Arcade channel, with notifications and a moderator. Sign in there with your newsletter email. For right-now chat, the Brief’s Telegram is where people are.</p>';
   const row = el('div', 'row');
-  const ch = extLink('Btown Arcade channel ' + ICON.ext, CHAT_URL);
+  const ch = extLink('Talk ' + ICON.ext, CHAT_URL);
+  ch.setAttribute('aria-label', 'Talk, in the Btown Arcade channel');
   ch.dataset.door = 'community';
   const tg = el('a', 'btn ghost', 'Telegram');
   tg.href = TELEGRAM_URL;
@@ -471,12 +466,10 @@ function drawChamps(host) {
   const young = month !== monthKey();
   const label = String(C.monthLabel || monthName(month));
   const stamp = Date.parse(C.updated);
-  sec(host, 'Champions', esc(young
-    ? label + '’s, reigning until this month’s boards fill in.'
-    : 'Who tops each board so far in ' + label + (stamp ? ', as of ' + clock(stamp) : '') + '.'), 'champs', extLink('All boards ' + ICON.ext, BOARDS_PAGE, 'ghost sm'));
+  sec(host, 'Champions', esc(young ? label : stamp ? 'Updated ' + clock(stamp) : ''), 'champs', extLink('All boards ' + ICON.ext, BOARDS_PAGE, 'ghost sm'));
   const want = norm(readerName());
   if (royalty.length) {
-    divider(host, 'The whole arcade', 'most boards topped');
+    divider(host, 'The whole arcade');
     const b = el('div', 'board');
     b.dataset.royalty = '1';
     royalty.slice(0, 5).forEach((p, i) => {
@@ -487,7 +480,7 @@ function drawChamps(host) {
     host.appendChild(b);
   }
   if (boards.length) {
-    divider(host, 'Every board', 'the one on top');
+    divider(host, 'Every board');
     const b = el('div', 'board');
     b.dataset.champs = '1';
     boards.forEach((x) => {
@@ -517,18 +510,18 @@ function render() {
   if (!PARTS.some((k) => G.settled[k])) { root.innerHTML = '<p class="loading">Warming up the cabinets…</p>'; return; }
   if (G.settled.catalog && G.failed.catalog && G.settled.champions && G.failed.champions) {
     G.slots = null;
-    root.innerHTML = '<div class="errbox"><b>Couldn’t reach the arcade.</b><br>The game list and the champions are served from GitHub. If you are offline they will come back on their own.</div>';
+    root.innerHTML = '<div class="errbox"><b>Couldn’t reach the arcade.</b></div>';
     return;
   }
   if (!G.slots) {
     /* made once, so a board arriving never redraws the name you are typing */
     root.innerHTML = '';
     const mk = (name) => { const s = el('div'); s.dataset.slot = name; root.appendChild(s); return s; };
-    G.slots = { head: mk('head'), you: mk('you'), boards: mk('boards'), challenge: mk('challenge'), new: mk('new'), party: mk('party'), chat: mk('chat'), champs: mk('champs'), end: mk('end') };
+    G.slots = { head: mk('head'), you: mk('you'), boards: mk('boards'), challenge: mk('challenge'), new: mk('new'), party: mk('party'), chat: mk('chat'), champs: mk('champs') };
     drawYouSlot();
   }
   const S = G.slots;
-  ['head', 'boards', 'challenge', 'new', 'party', 'chat', 'champs', 'end'].forEach((k) => { S[k].innerHTML = ''; });
+  ['head', 'boards', 'challenge', 'new', 'party', 'chat', 'champs'].forEach((k) => { S[k].innerHTML = ''; });
   if (!S.you.firstChild || S.you.firstChild.dataset.you !== 'ask') drawYouSlot();
   S.head.hidden = !(G.catalog && boardGames().length) && !G.failed.catalog;
   if (!S.head.hidden) drawBoardHead(S.head);
@@ -538,11 +531,6 @@ function render() {
   S.party.hidden = !drawParty(S.party);
   drawChat(S.chat);
   S.champs.hidden = !drawChamps(S.champs);
-  S.end.appendChild(cards.caught({
-    title: 'That’s the arcade',
-    text: 'Boards reset on the 1st. New games land when they’re ready, and they show up here first.',
-    check: false,
-  }));
   if (app.activeTab() === KEY) app.paintSubnav();
   land();
 }
