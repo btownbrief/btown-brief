@@ -1,30 +1,30 @@
 {
- "generated": "2026-10-17T09:09:14-04:00",
+ "generated": "2026-10-17T18:39:26-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
    "count": 8,
-   "seconds": 5.9
+   "seconds": 5.7
   },
   "breweries": {
    "label": "Breweries & Taprooms",
    "count": 81,
-   "seconds": 5.6
+   "seconds": 2.3
   },
   "brownell": {
    "label": "Brownell Library",
    "count": 90,
-   "seconds": 2.9
+   "seconds": 4.1
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
    "count": 222,
-   "seconds": 4.0
+   "seconds": 4.5
   },
   "churchst": {
    "label": "Church Street Marketplace",
    "count": 76,
-   "seconds": 1.9
+   "seconds": 1.7
   },
   "echo": {
    "label": "ECHO Leahy Center",
@@ -44,17 +44,17 @@
   "farmersmarket": {
    "label": "Burlington Farmers Market",
    "count": 3,
-   "seconds": 0.2
+   "seconds": 0.3
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
    "count": 223,
-   "seconds": 71.3
+   "seconds": 65.3
   },
   "flynn": {
    "label": "The Flynn",
    "count": 18,
-   "seconds": 0.4
+   "seconds": 0.3
   },
   "greenfc": {
    "label": "Vermont Green FC",
@@ -64,39 +64,38 @@
   "helloburlington": {
    "label": "Hello Burlington",
    "count": 637,
-   "seconds": 33.1
+   "seconds": 31.9
   },
   "higherground": {
    "label": "Higher Ground",
    "count": 0,
    "error": "HTTP Error 403: Forbidden",
-   "staleDays": 16
+   "staleDays": 17
   },
   "instagram": {
    "label": "Instagram (Scrape Creators)",
-   "count": 0,
-   "error": "skipped by design: once-daily gate, Instagram fetches on the afternoon run only",
-   "staleDays": 0
+   "count": 1,
+   "seconds": 35.7
   },
   "loveburlington": {
    "label": "Love Burlington",
    "count": 395,
-   "seconds": 81.5
+   "seconds": 72.3
   },
   "meetup": {
    "label": "Meetup",
-   "count": 52,
-   "seconds": 104.6
+   "count": 54,
+   "seconds": 103.8
   },
   "monkeyhouse": {
    "label": "The Monkey House",
    "count": 20,
-   "seconds": 0.4
+   "seconds": 0.2
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
    "count": 71,
-   "seconds": 16.0
+   "seconds": 15.7
   },
   "radiobean": {
    "label": "Radio Bean",
@@ -106,18 +105,18 @@
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
-   "count": 86,
+   "count": 101,
    "seconds": 2.1
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
    "count": 18,
-   "seconds": 23.1
+   "seconds": 22.2
   },
   "sevendays": {
    "label": "Seven Days",
-   "count": 2420,
-   "seconds": 29.6
+   "count": 2383,
+   "seconds": 2.7
   },
   "shelburnemuseum": {
    "label": "Shelburne Museum",
@@ -127,7 +126,7 @@
   "uvm": {
    "label": "UVM & Colleges",
    "count": 476,
-   "seconds": 40.7
+   "seconds": 17.0
   },
   "uvmbored": {
    "label": "UVM Bored",
@@ -136,8 +135,8 @@
   },
   "vcc": {
    "label": "Vermont Comedy Club",
-   "count": 54,
-   "seconds": 75.7
+   "count": 53,
+   "seconds": 73.0
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
@@ -145,11 +144,11 @@
    "seconds": 0.3
   }
  },
- "gathered": 5288,
- "afterDedup": 2527,
- "duplicatesMerged": 2761,
- "final": 2615,
- "firecrawlCalls": 5,
+ "gathered": 5268,
+ "afterDedup": 2544,
+ "duplicatesMerged": 2724,
+ "final": 2625,
+ "firecrawlCalls": 1,
  "mergeLog": [
   {
    "kept": {
@@ -2400,17 +2399,26 @@
  ],
  "changes": [
   {
-   "id": "8310e85feeb2",
-   "title": "Ryan Hagen",
-   "date": "2026-10-17",
-   "change": "dropped"
+   "id": "8fb72f862d6d",
+   "title": "Craftytown! Stick Season Wands",
+   "date": "2026-11-10",
+   "change": "time",
+   "was": "2026-11-10T15:00:00-05:00",
+   "now": "2026-11-10T13:00:00-05:00"
   },
   {
-   "id": "aa390a42f8ba",
-   "title": "Live in the Orchard: Queen City Cut-Ups",
+   "id": "bcc601d05484",
+   "title": "BTown Coffee Club",
    "date": "2026-10-17",
    "change": "missing",
-   "lastSeen": "2026-10-16T19:00:50-04:00"
+   "lastSeen": "2026-10-17T09:09:14-04:00"
+  },
+  {
+   "id": "f7c4f3918dd6",
+   "title": "Champlain Valley Quilt Guild",
+   "date": "2026-10-17",
+   "change": "missing",
+   "lastSeen": "2026-10-17T09:09:14-04:00"
   },
   {
    "id": "616da66565b6",
@@ -2434,11 +2442,11 @@
    "lastSeen": "2026-10-14T19:26:16-04:00"
   },
   {
-   "id": "3d64326d0a42",
-   "title": "'Story Songs of the 70s'",
+   "id": "3e6237709b69",
+   "title": "Story Songs of the 70s - Fall Edition",
    "date": "2026-10-18",
    "change": "missing",
-   "lastSeen": "2026-10-16T19:00:50-04:00"
+   "lastSeen": "2026-10-17T09:09:14-04:00"
   },
   {
    "id": "375c196d3f76",
@@ -2462,10 +2470,11 @@
    "lastSeen": "2026-10-15T19:16:55-04:00"
   },
   {
-   "id": "2b254f834364",
-   "title": "Toddlertime",
+   "id": "07d91732d3fd",
+   "title": "Minecraft Meet-up",
    "date": "2026-10-22",
-   "change": "dropped"
+   "change": "missing",
+   "lastSeen": "2026-10-17T09:09:14-04:00"
   },
   {
    "id": "8b04c251576a",
@@ -2482,29 +2491,17 @@
    "lastSeen": "2026-10-14T19:26:16-04:00"
   },
   {
-   "id": "2c7a54f1c0d4",
-   "title": "LEGO Builders",
-   "date": "2026-10-23",
-   "change": "dropped"
-  },
-  {
    "id": "2ed76f357ecb",
    "title": "Food Challenge for Kids",
    "date": "2026-10-23",
+   "change": "dropped"
+  },
+  {
+   "id": "a80c9bb7a4f1-2030",
+   "title": "Sam Jay",
+   "date": "2026-10-23",
    "change": "missing",
-   "lastSeen": "2026-10-14T10:38:50-04:00"
-  },
-  {
-   "id": "b50b64299219",
-   "title": "Fire Safety Story Time",
-   "date": "2026-10-24",
-   "change": "dropped"
-  },
-  {
-   "id": "cb1c2ff30140",
-   "title": "'No Country for Mothers'",
-   "date": "2026-10-24",
-   "change": "dropped"
+   "lastSeen": "2026-10-17T09:09:14-04:00"
   },
   {
    "id": "a89af23cfc9f",
@@ -2531,8 +2528,7 @@
    "id": "57c0e56f579d",
    "title": "Lamplight & Fowl",
    "date": "2026-10-24",
-   "change": "missing",
-   "lastSeen": "2026-10-14T10:38:50-04:00"
+   "change": "dropped"
   },
   {
    "id": "b8da721be59d",
@@ -2563,29 +2559,11 @@
    "lastSeen": "2026-10-14T19:26:16-04:00"
   },
   {
-   "id": "6bf03d16161d",
-   "title": "Middle Grade Movie: 'How to Train Your Dragon'",
-   "date": "2026-10-26",
-   "change": "dropped"
-  },
-  {
-   "id": "3088e87d8e03",
-   "title": "Craftytown",
-   "date": "2026-10-27",
-   "change": "dropped"
-  },
-  {
    "id": "401a55755e51",
    "title": "Board Games for Ages 18+",
    "date": "2026-10-27",
    "change": "missing",
    "lastSeen": "2026-10-14T19:26:16-04:00"
-  },
-  {
-   "id": "a8e0b185f666",
-   "title": "Evening Book Group",
-   "date": "2026-10-27",
-   "change": "dropped"
   },
   {
    "id": "8a2b8d52f7e3",
@@ -2630,12 +2608,6 @@
    "lastSeen": "2026-09-30T12:03:45-04:00"
   },
   {
-   "id": "047fbcf1fd9c",
-   "title": "Toddlertime",
-   "date": "2026-10-29",
-   "change": "dropped"
-  },
-  {
    "id": "b4bab0564ff0",
    "title": "I'm Able: A Woman's Advice for Disability Change Agents ft. Sefakor G.M.A. Komabu-Pomeyie",
    "date": "2026-10-29",
@@ -2643,24 +2615,23 @@
    "lastSeen": "2026-10-16T10:12:13-04:00"
   },
   {
-   "id": "361f5b4d9984",
-   "title": "LEGO Builders",
-   "date": "2026-10-30",
-   "change": "dropped"
+   "id": "ddf471ea6d81",
+   "title": "Minecraft Meet-up",
+   "date": "2026-10-29",
+   "change": "missing",
+   "lastSeen": "2026-10-17T09:09:14-04:00"
   },
   {
    "id": "c5b35c44a50f",
    "title": "Live Music",
    "date": "2026-10-30",
-   "change": "missing",
-   "lastSeen": "2026-10-14T10:38:50-04:00"
+   "change": "dropped"
   },
   {
    "id": "2994140f1373",
    "title": "Madigan Linnane",
    "date": "2026-10-30",
-   "change": "missing",
-   "lastSeen": "2026-10-14T10:38:50-04:00"
+   "change": "dropped"
   },
   {
    "id": "177e0563aad6",
@@ -2722,8 +2693,7 @@
    "id": "b18957e04933",
    "title": "Trivia with Craig Mitchell",
    "date": "2026-11-02",
-   "change": "missing",
-   "lastSeen": "2026-10-14T10:38:50-04:00"
+   "change": "dropped"
   },
   {
    "id": "e7983a530899",
@@ -2782,6 +2752,13 @@
    "lastSeen": "2026-10-15T10:24:08-04:00"
   },
   {
+   "id": "619acdd842ae",
+   "title": "Minecraft Meet-up",
+   "date": "2026-11-05",
+   "change": "missing",
+   "lastSeen": "2026-10-17T09:09:14-04:00"
+  },
+  {
    "id": "2441eb96fed1",
    "title": "The Discussions",
    "date": "2026-11-05",
@@ -2834,13 +2811,6 @@
    "id": "f01377f7c5ea",
    "title": "Trivia with Craig Mitchell",
    "date": "2026-11-09",
-   "change": "missing",
-   "lastSeen": "2026-10-14T10:38:50-04:00"
-  },
-  {
-   "id": "1d9d9a1bc767",
-   "title": "Monthly Interfaith Breakfast",
-   "date": "2026-11-10",
    "change": "dropped"
   },
   {
@@ -2854,8 +2824,7 @@
    "id": "e6a003686b7d",
    "title": "Current Events",
    "date": "2026-11-10",
-   "change": "missing",
-   "lastSeen": "2026-10-14T10:38:50-04:00"
+   "change": "dropped"
   },
   {
    "id": "7ea7e41af17a",
@@ -2868,15 +2837,20 @@
    "id": "779b320f5d9a",
    "title": "Tech Help with Clif",
    "date": "2026-11-11",
-   "change": "missing",
-   "lastSeen": "2026-10-14T10:38:50-04:00"
+   "change": "dropped"
   },
   {
    "id": "779b320f5d9a-1300",
    "title": "Tech Help with Clif",
    "date": "2026-11-11",
+   "change": "dropped"
+  },
+  {
+   "id": "9c04ec9681cd",
+   "title": "Minecraft Meet-up",
+   "date": "2026-11-12",
    "change": "missing",
-   "lastSeen": "2026-10-14T10:38:50-04:00"
+   "lastSeen": "2026-10-17T09:09:14-04:00"
   },
   {
    "id": "78c5a0c15c0b",
@@ -2917,8 +2891,7 @@
    "id": "aba465097f1f",
    "title": "Trivia with Craig Mitchell",
    "date": "2026-11-16",
-   "change": "missing",
-   "lastSeen": "2026-10-14T10:38:50-04:00"
+   "change": "dropped"
   },
   {
    "id": "f5b1d775b170",
@@ -2931,8 +2904,7 @@
    "id": "3abf9a87b71c",
    "title": "Puzzle Swap",
    "date": "2026-11-18",
-   "change": "missing",
-   "lastSeen": "2026-10-14T10:38:50-04:00"
+   "change": "dropped"
   },
   {
    "id": "21ba712583ce",
@@ -2940,6 +2912,13 @@
    "date": "2026-11-19",
    "change": "missing",
    "lastSeen": "2026-10-16T10:12:13-04:00"
+  },
+  {
+   "id": "c8e388d5e4f9",
+   "title": "Minecraft Meet-up",
+   "date": "2026-11-19",
+   "change": "missing",
+   "lastSeen": "2026-10-17T09:09:14-04:00"
   },
   {
    "id": "ffe3843432b0",
@@ -2966,8 +2945,7 @@
    "id": "1275c2b45d1c",
    "title": "Trivia with Craig Mitchell",
    "date": "2026-11-23",
-   "change": "missing",
-   "lastSeen": "2026-10-14T10:38:50-04:00"
+   "change": "dropped"
   },
   {
    "id": "13caf4cc22fb",
@@ -3022,13 +3000,6 @@
    "id": "a44c61af6145",
    "title": "Trivia with Craig Mitchell",
    "date": "2026-11-30",
-   "change": "missing",
-   "lastSeen": "2026-10-14T10:38:50-04:00"
-  },
-  {
-   "id": "8617abd6f0b4",
-   "title": "Monthly Interfaith Breakfast",
-   "date": "2026-12-01",
    "change": "dropped"
   },
   {
