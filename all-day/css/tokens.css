@@ -13,13 +13,55 @@
 :root {
   color-scheme: light;
 
+  /* Lake and Sunset: shared chrome; content keeps its existing layout. */
+  --lake: #0E2A47;
+  --lake-ink: #F7F4EE;
+  --lake-muted: #B9CDE0;
+  --lake-hover: #234563;
+  --lake-line: rgba(247, 244, 238, .18);
+  --lake-green: #3FAE7A;
+  --lake-every: #F09B8A;
+  --lake-every-ink: #2C120C;
+  --lake-green-ink: #06251A;
+  --sunset: #F5B04B;
+  --sunset-ink: #2B1606;
+  --ember: #B74117; /* darkened from #D9531E for 4.5:1 text on paper */
+  --dock-glass: rgba(12, 16, 18, .82);
+  --dock-solid: #101416;
+  --dock-ink: #F7F8F9;
+  --dock-selected: rgba(255, 255, 255, .20);
+  --dock-hover: rgba(255, 255, 255, .10);
+  --dock-sheen: rgba(255, 255, 255, .045);
+  --dock-clear: rgba(247, 244, 238, 0);
+  --dock-edge: rgba(255, 255, 255, .22);
+  --dock-muted: #F7F8F9;
+  --dock-shadow: 0 6px 18px rgba(0, 0, 0, .22), inset 0 1px 1px rgba(255, 255, 255, .12);
+  --dock-lift: 8px;
+  --dock-inset: 6px;
+  --r-dock: 999px;
+  --dock-max: 520px;
+  --dock-icon: 20px;
+  --row-tint: rgba(14, 42, 71, .025);
+  --lake-blue: #2F6FB2;
+  --park: #26764E;
+  --lake-soft: #E5ECF3;
+  --park-soft: #E2EEE3;
+  --sunset-soft: #F7E5C9;
+  --tag-local-bg: #DDF0E5;
+  --tag-local-ink: #0F5A3E;
+  --tag-national-bg: #DCE7F5;
+  --tag-national-ink: #15467F;
+  --lead-muted: #50351F;
+  --lead-accent: #66320F;
+  --lead-soft: #F1CA8A;
+
   /* paper and ink */
-  --paper: #FBF9F5;                 /* the page; feed cards sit directly on it */
-  --paper-2: #F2EFE8;               /* sunk: date tiles, inputs, placeholders, sheet ground */
+  --paper: #F7F4EE;                 /* the page; feed cards sit directly on it */
+  --paper-2: #EEE8DD;               /* sunk: date tiles, inputs, placeholders, sheet ground */
   --raised: #FFFFFF;                /* sheets, peek card, confirm box */
   --ink: #16191D;
   --ink-2: #4A5058;                 /* captions, card body text */
-  --ink-3: #7B818A;                 /* timestamps, counts, idle icons, tab labels */
+  --ink-3: #5F656D;                 /* timestamps, counts, idle icons, tab labels */
   --line: rgba(26, 22, 14, .13);    /* hairline between cards */
   --line-soft: rgba(26, 22, 14, .07);
 
@@ -145,7 +187,7 @@
   /* chrome */
   --mast-h: 52px;
   --subnav-h: 44px;
-  --tab-h: 56px;
+  --tab-h: 64px;
   --hit: 44px;           /* minimum tap target */
   --icon: 22px;
   --safe-b: env(safe-area-inset-bottom, 0px);
@@ -155,12 +197,28 @@
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     color-scheme: dark;
-    --paper: #0D0E10;
-    --paper-2: #17191C;
-    --raised: #1C1E22;
+    --lake: #16334F;
+    --dock-glass: rgba(12, 16, 18, .78);
+    --dock-sheen: rgba(255, 255, 255, .045);
+    --dock-edge: rgba(255, 255, 255, .22);
+    --dock-shadow: 0 6px 18px rgba(0, 0, 0, .32), inset 0 1px 1px rgba(255, 255, 255, .12);
+    --ember: #F39872;
+    --row-tint: rgba(185, 205, 224, .035);
+    --lake-blue: #83B5E9;
+    --park: #77C99F;
+    --lake-soft: #1A2B3A;
+    --park-soft: #1B2D25;
+    --sunset-soft: #30271A;
+    --tag-local-bg: #193F30;
+    --tag-local-ink: #A4E4BD;
+    --tag-national-bg: #1B3653;
+    --tag-national-ink: #B8D6F8;
+    --paper: #0C1520;
+    --paper-2: #142230;
+    --raised: #1B2A39;
     --ink: #F2F0EA;
     --ink-2: rgba(242, 240, 234, .74);
-    --ink-3: rgba(242, 240, 234, .50);
+    --ink-3: #A2ADB8;
     --line: rgba(255, 255, 255, .13);
     --line-soft: rgba(255, 255, 255, .07);
     --accent: #E8A33D;
@@ -191,12 +249,28 @@
 
 :root[data-theme="dark"] {
   color-scheme: dark;
-  --paper: #0D0E10;
-  --paper-2: #17191C;
-  --raised: #1C1E22;
+  --lake: #16334F;
+  --dock-glass: rgba(12, 16, 18, .78);
+  --dock-sheen: rgba(255, 255, 255, .045);
+  --dock-edge: rgba(255, 255, 255, .22);
+  --dock-shadow: 0 6px 18px rgba(0, 0, 0, .32), inset 0 1px 1px rgba(255, 255, 255, .12);
+  --ember: #F39872;
+  --row-tint: rgba(185, 205, 224, .035);
+  --lake-blue: #83B5E9;
+  --park: #77C99F;
+  --lake-soft: #1A2B3A;
+  --park-soft: #1B2D25;
+  --sunset-soft: #30271A;
+  --tag-local-bg: #193F30;
+  --tag-local-ink: #A4E4BD;
+  --tag-national-bg: #1B3653;
+  --tag-national-ink: #B8D6F8;
+  --paper: #0C1520;
+  --paper-2: #142230;
+  --raised: #1B2A39;
   --ink: #F2F0EA;
   --ink-2: rgba(242, 240, 234, .74);
-  --ink-3: rgba(242, 240, 234, .50);
+  --ink-3: #A2ADB8;
   --line: rgba(255, 255, 255, .13);
   --line-soft: rgba(255, 255, 255, .07);
   --accent: #E8A33D;

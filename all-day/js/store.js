@@ -144,17 +144,13 @@ export function applyTheme(mode) {
   paintStatusBar();
 }
 
-/* Added to the home screen the app runs under the iOS clock, and iOS reads
-   theme-color to decide whether to draw that clock in black or white. The
-   shared network bar left All Day with the New Nine (design call 5), so the
-   strip under the clock is the mast, and the right answer is the theme's own
-   paper. These two values mirror --paper in tokens.css. */
+/* The iOS clock sits over the mast. Read the active navy token so the
+   status bar follows both the phone's theme and the reader's override. */
 export function paintStatusBar() {
   const meta = document.querySelector('meta[name="theme-color"]');
   if (!meta) return;
-  const t = theme();
-  const dark = t === 'dark' || (t === 'auto' && matchMedia('(prefers-color-scheme: dark)').matches);
-  meta.setAttribute('content', dark ? '#0D0E10' : '#FBF9F5');
+  const lake = getComputedStyle(document.documentElement).getPropertyValue('--lake').trim();
+  if (lake) meta.setAttribute('content', lake);
 }
 
 /* What the toggle should flip to: whatever you are NOT looking at now. */
