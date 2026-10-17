@@ -1930,7 +1930,8 @@ async function watchFilms() {
   const seed = JSON.parse(await readFile(path.join(APP, 'data/films-seed.json'), 'utf8'));
   const day = (n) => new Date(Date.now() + n * W_DAY).toISOString().slice(0, 10);
   const top = seed.top.slice(0, 12);
-  const now = [{ ...seed.top[20], where: 'theaters' }, { ...seed.top[21], where: 'theaters' }];
+  /* a new release, and a re-release TMDB lists under its first year */
+  const now = [{ ...seed.top[20], y: Number(day(-10).slice(0, 4)), d: day(-10), where: 'theaters' }, { ...seed.top[21], where: 'theaters', yt: '' }];
   const soon = [{ ...seed.top[22], id: 990001, t: 'Harbor Lights', d: day(9), where: 'theaters' },
     { ...seed.top[23], id: 990002, t: 'Plain Sight', d: day(16), where: 'streaming' },
     { ...seed.top[24], id: 990003, t: 'No Trailer Yet', d: day(30), where: 'theaters', yt: '' }];
@@ -1951,8 +1952,8 @@ async function theWatch(browser, base) {
     const toc = await page.$$eval('#subnav .chip', (c) => c.map((x) => x.textContent));
     check(JSON.stringify(toc) === JSON.stringify(['Coming soon', 'The list', 'Town', 'Next screening', 'Chat']), 'the chip row is the table of contents', toc.join(' / '));
     const soon = await page.$$eval(wPanel + ' [data-sec="soon"] + .rail-wrap .poster', (n) => n.map((a) => [a.dataset.k, a.querySelector('.s').textContent, !!a.querySelector('.play')]));
-    check(soon.length === 5 && soon[0][1] === 'In theaters now' && /· theaters$/.test(soon[2][1]) && /· streaming$/.test(soon[3][1]), 'Coming soon: in theaters now, then what opens, labelled theaters or streaming', JSON.stringify(soon));
-    check(!soon[4][2] && soon.slice(0, 4).every((x) => x[2]), 'a play disc only where TMDB has a trailer', JSON.stringify(soon));
+    check(soon.length === 5 && soon[0][1] === 'In theaters now' && soon[1][1] === 'Back in theaters' && /· theaters$/.test(soon[2][1]) && /· streaming$/.test(soon[3][1]), 'Coming soon: in theaters now (a 1966 re-release is back in theaters), then what opens, labelled theaters or streaming', JSON.stringify(soon));
+    check(JSON.stringify(soon.map((x) => x[2])) === '[true,false,true,true,false]', 'a play disc only where TMDB has a trailer', JSON.stringify(soon));
     const pics = await page.$$eval(wPanel + ' .poster img.pic', (n) => n.slice(0, 3).map((i) => [i.getAttribute('src'), i.loading]));
     check(pics.length && pics.every(([src, lazy]) => /^https:\/\/image\.tmdb\.org\/t\/p\/w342\/[A-Za-z0-9]+\.jpg$/.test(src) && lazy === 'lazy'), 'posters are TMDB paths at w342, loaded lazily', JSON.stringify(pics));
     const box = await page.$eval(wPanel + ' [data-grid] .poster .c-media', (m) => { const r = m.getBoundingClientRect(); return Math.round(r.height / r.width * 100) / 100; });
@@ -1971,6 +1972,11 @@ async function theWatch(browser, base) {
       'a tap plays that film’s TMDB trailer in the shell’s video box, and only there', JSON.stringify(v));
     await page.click('#vbox-close');
     check(await page.$eval('#vbox', (b) => b.hidden) && !(await page.$('iframe')), 'closing the box stops it', '');
+    await page.click(wPanel + ' [data-k="soon:' + films.now[1].id + '"]');
+    await page.waitForSelector('.sheet-body', { timeout: 4000 });
+    const back = await page.$eval('.sheet-body', (b) => b.innerText);
+    check(/Back in theaters/.test(back) && !/In theaters now/.test(back), 'the re-release’s sheet says it is back in theaters', back.slice(0, 120));
+    await page.click('.sheet-head .iconbtn');
     await page.click(wPanel + ' [data-k="soon:990003"]');
     await page.waitForSelector('.sheet-body', { timeout: 4000 });
     check(await page.$eval('#vbox', (b) => b.hidden) && /No trailer on TMDB yet\./.test(await page.$eval('.sheet-body', (b) => b.innerText)), 'a film with no trailer opens its sheet instead, and says so', '');
