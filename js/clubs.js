@@ -454,7 +454,7 @@
     if (!v.email) e.email = 'Add your email so I can ask a question if I have one. It’s never shown.';
     else if (v.email.length > 200 || !EMAIL_RE.test(v.email)) e.email = SERVER_ERRORS.bad_email[1];
     if (v.note.length > 500 || /[<>]/.test(v.note)) e.note = SERVER_ERRORS.bad_note[1];
-    if (!e.note && ((v.name + ' ' + v.when + ' ' + v.where + ' ' + v.note).match(LINKISH) || []).length > 1) e.note = SERVER_ERRORS.too_many_links[1];
+    if (!e.note && ((v.name + ' ' + v.when + ' ' + v.where + ' ' + v.note).match(LINKISH) || []).length > 0) e.note = SERVER_ERRORS.too_many_links[1];
     return e;
   }
   function showErrors(form, errors) {

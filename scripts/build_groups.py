@@ -74,6 +74,7 @@ CATEGORIES = {
     "art", "photography", "gardening", "other",
 }
 STALE_DAYS = 120
+SEASON_KEYS = ("months", "from", "until", "skip")
 
 GROUP_KEYS = {"id", "name", "kind", "category", "what", "meets", "schedule_note", "season",
               "months", "from", "until", "skip", "where", "town", "cost", "free", "level",
@@ -111,9 +112,16 @@ def name_key(name):
     return re.sub(r"[^a-z0-9]", "", str(name or "").lower())
 
 
+DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
+
+
 def parse_date(value):
+    """A YYYY-MM-DD date, or None. Python also parses 20261017 and 2026-W42-6,
+    which the page's plain string comparisons would get wrong, so those fail."""
+    if not isinstance(value, str) or not DATE_RE.match(value):
+        return None
     try:
-        return dt.date.fromisoformat(value) if isinstance(value, str) else None
+        return dt.date.fromisoformat(value)
     except ValueError:
         return None
 
@@ -320,7 +328,8 @@ def when_text(meets, schedule_note="", season=""):
             if text and text not in seen:
                 seen.add(text)
                 parts.append(text)
-        line = " · ".join(parts[:3]) + (f" · +{len(parts) - 3} more" if len(parts) > 3 else "")
+        # every day stays in: What Now matches a group to a night by these day words
+        line = " · ".join(parts)
         season = (season or "").strip()
         if season and not season.lower().startswith("year-round"):
             line += f" ({season})"
@@ -345,6 +354,8 @@ def build_clubs(doc, run_doc):
             "when": when_text(group["meets"], group.get("schedule_note", ""), group.get("season", "")),
             "category": legacy_category(group), "url": group["url"],
             **({"featured": True} if group.get("featured") else {}),
+            # the machine season, so a reader of this file can leave an off-season group out
+            **{key: group[key] for key in SEASON_KEYS if key in group},
         })
     for club in (run_doc or {}).get("clubs", []):
         rows.append({

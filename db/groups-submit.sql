@@ -56,12 +56,11 @@ create table if not exists public.groups_submissions (
   device_hash text not null,
   addr_hash   text not null default ''
 );
-do $$ begin
-  if not exists (select 1 from pg_constraint where conname = 'groups_submissions_status_check') then
-    alter table public.groups_submissions add constraint groups_submissions_status_check
-      check (status in ('pending', 'approved', 'rejected'));
-  end if;
-end $$;
+-- "spam" is a deleted row kept as a tombstone: its text is wiped, but its
+-- hashes and time stay so the rate limits below still count it.
+alter table public.groups_submissions drop constraint if exists groups_submissions_status_check;
+alter table public.groups_submissions add constraint groups_submissions_status_check
+  check (status in ('pending', 'approved', 'rejected', 'spam'));
 create index if not exists groups_submissions_status_idx on public.groups_submissions (status, created_at);
 create index if not exists groups_submissions_device_idx on public.groups_submissions (device_hash, created_at);
 create index if not exists groups_submissions_addr_idx on public.groups_submissions (addr_hash, created_at);
@@ -132,7 +131,7 @@ begin
   -- a link belongs in the link field; text fields with links in them are spam's shape
   select count(*) into v_links from regexp_matches(v_name || ' ' || v_when || ' ' || v_where || ' ' || v_note,
     '(https?://|www\.|\.(com|net|org|ru|xyz|top|io)\M)', 'gi');
-  if v_links > 1 then return jsonb_build_object('error', 'too_many_links'); end if;
+  if v_links > 0 then return jsonb_build_object('error', 'too_many_links'); end if;
 
   v_dev_hash := encode(extensions.digest('groups:dev:' || v_device, 'sha256'), 'hex');
   begin
@@ -144,17 +143,19 @@ begin
     v_addr_hash := encode(extensions.digest('groups:addr:' || v_addr, 'sha256'), 'hex');
   end if;
 
-  -- the same thing again (a double tap, or a second reader naming the same
-  -- group) is a quiet success: one row is enough for Stephen to look at
+  -- serialise the repeat and limit checks so parallel calls cannot all slip under them
+  perform pg_advisory_xact_lock(hashtext('groups_submit'));
+
+  -- the very same submission again (a double tap, a retry) is a quiet
+  -- success. Every field and the sender's email must match, so nobody can
+  -- pre-empt someone else's group by sending its name and night first.
   if exists (select 1 from public.groups_submissions s
-              where s.status in ('pending', 'approved')
+              where s.status = 'pending' and s.email = v_email
                 and lower(s.name) = lower(v_name) and lower(s.when_text) = lower(v_when)
-                and s.created_at > now() - interval '60 days') then
+                and lower(s.where_text) = lower(v_where) and s.url = v_url and s.note = v_note
+                and s.created_at > now() - interval '1 day') then
     return jsonb_build_object('ok', true, 'repeat', true);
   end if;
-
-  -- serialise the limit checks so parallel calls cannot all slip under them
-  perform pg_advisory_xact_lock(hashtext('groups_submit'));
   if (select count(*) from public.groups_submissions
        where device_hash = v_dev_hash and created_at > now() - interval '1 day') >= (r ->> 'perDevicePerDay')::int then
     return jsonb_build_object('error', 'slow_down'); end if;
@@ -186,17 +187,20 @@ $$;
 
 -- ---------------------------------------------------------------- moderator
 -- Everything waiting (oldest first) and the 60 most recent decisions, with
--- the contact email and note. Rejected rows older than 90 days are cleared.
+-- the contact email and note. Rejected rows older than 90 days are cleared,
+-- and spam tombstones once the one-day rate-limit windows are past.
 create or replace function public.groups_mod_list(p_secret text) returns jsonb
 language plpgsql security definer set search_path = public as $$
 begin
   if not public.nn_mod_ok(p_secret) then return jsonb_build_object('error', 'bad_secret'); end if;
-  delete from public.groups_submissions where status = 'rejected' and decided_at < now() - interval '90 days';
+  delete from public.groups_submissions
+   where (status = 'rejected' and decided_at < now() - interval '90 days')
+      or (status = 'spam' and created_at < now() - interval '2 days');
   return jsonb_build_object(
     'waiting', (select coalesce(jsonb_agg(public.groups_row_json(s) order by s.created_at), '[]'::jsonb)
                   from public.groups_submissions s where s.status = 'pending'),
     'decided', (select coalesce(jsonb_agg(public.groups_row_json(x) order by x.decided_at desc), '[]'::jsonb)
-                  from (select * from public.groups_submissions where status <> 'pending'
+                  from (select * from public.groups_submissions where status in ('approved', 'rejected')
                          order by decided_at desc nulls last limit 60) x));
 end $$;
 
@@ -208,7 +212,8 @@ language sql stable as $$
 $$;
 
 -- approve (it shows on clubs.html), reject (it doesn't), pending (back in
--- the queue), delete (gone; for spam)
+-- the queue), delete (for spam: off every list and its text wiped, kept as
+-- a tombstone for two days so the sender's rate limits still count it)
 create or replace function public.groups_mod_act(p_secret text, p_id uuid, p_action text) returns jsonb
 language plpgsql security definer set search_path = public as $$
 begin
@@ -222,7 +227,10 @@ begin
   elsif p_action = 'pending' then
     update public.groups_submissions set status = 'pending', decided_at = null where id = p_id;
   elsif p_action = 'delete' then
-    delete from public.groups_submissions where id = p_id;
+    update public.groups_submissions
+       set status = 'spam', decided_at = now(), name = '', when_text = '', where_text = '',
+           url = '', email = '', note = ''
+     where id = p_id;
   else
     return jsonb_build_object('error', 'bad_action');
   end if;

@@ -34,7 +34,8 @@ and never deletes a submission.
   link first. The email and the note are never shown to anyone but you.
 - **Reject**: it stays off the page. Rejected ones clear themselves after 90 days.
 - **Back to waiting**: undo either of the above.
-- **Delete (spam)**: gone for good.
+- **Delete (spam)**: off every list for good, with its text wiped. A blank placeholder stays for
+  two days so that sender's daily limit still counts it, then it is cleared.
 
 If a submission is a real group worth a full entry (a weekly time, a cost, a "how to join"),
 add it to `data/groups.json` the usual way, checked on its own page, and then reject or delete
@@ -43,8 +44,8 @@ the reader copy so it isn't listed twice.
 ## Limits, in plain words
 
 - One device can send 3 a day, one network address 6 a day, everyone together 30 an hour, and
-  at most 200 can wait at once. Repeats of something already waiting are accepted quietly and
-  not stored twice.
+  at most 200 can wait at once. The very same submission sent twice by the same person (a double tap) is
+  accepted quietly and not stored twice.
 - Links can only go in the Link box, and only `http(s)://` links are accepted. Text with `<` or
   `>` is refused, and everything is shown as plain text anyway.
 - These stop casual spam, not a determined script; nothing shows until you approve it, so the

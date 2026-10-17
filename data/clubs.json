@@ -1,272 +1,1409 @@
 {
-  "_comment": "Clubs & recurring groups. To add one: copy any entry, append to the list, done — the page groups by category automatically. featured: true pins it to the top.",
-  "clubs": [
-    {
-      "name": "Burlington Social Activities Group (BTown Brief IRL)",
-      "what": "Our own Meetup — trivia nights, food crawls, kayak outings, beach hangs, and board games, plus a Saturday morning Coffee Club at Zero Gravity that draws 15-30 people. Free and open to all.",
-      "when": "Several events most weeks · Coffee Club Saturdays",
-      "category": "Social",
-      "url": "https://www.meetup.com/burlington-social-activites-group/",
-      "featured": true
-    },
-    {
-      "name": "Burlington Run Club",
-      "what": "A free community fun-run group that meets at Foam Brewers for a social run followed by a beer.",
-      "when": "Fridays 5pm at Foam Brewers",
-      "category": "Running",
-      "url": "https://www.instagram.com/burlingtonrunclub/"
-    },
-    {
-      "name": "Green Mountain Athletic Association (GMAA)",
-      "what": "The area's long-standing running club — group long runs, track workouts, and a full calendar of low-key local races open to everyone.",
-      "when": "Sunday long runs 8am · summer track Thursdays 5:45pm",
-      "category": "Running",
-      "url": "https://gmaa.run/"
-    },
-    {
-      "name": "Long Trail Running Club",
-      "what": "Trail runners of all levels sharing 4-6 mile group runs around Burlington, Winooski, Colchester, and Richmond.",
-      "when": "See Meetup schedule",
-      "category": "Running",
-      "url": "https://www.meetup.com/longtrailrunning/"
-    },
-    {
-      "name": "Bolters Run Club",
-      "what": "A welcoming weekly social 5K where the point is showing up and meeting people, not pace.",
-      "when": "Weekly 5K — see Instagram",
-      "category": "Running",
-      "url": "https://www.instagram.com/boltersrun/"
-    },
-    {
-      "name": "Catamount Weekly Race Series",
-      "what": "The longest-running weekly race series in the country — casual trail runs and mountain bike races for all ages on Catamount's trails in Williston.",
-      "when": "Weekly, mid-May to mid-September",
-      "category": "Running",
-      "url": "https://catamountoutdoor.org/race-series-weekly-mtbtr/"
-    },
-    {
-      "name": "Green Mountain Bicycle Club",
-      "what": "Vermont's oldest and largest road cycling club, with speed-grouped evening rides, weekend rides, and beginner-friendly intro rides each spring.",
-      "when": "Wednesday evenings + Saturdays, in season",
-      "category": "Biking",
-      "url": "https://thegmbc.com/"
-    },
-    {
-      "name": "Fellowship of the Wheel",
-      "what": "Chittenden County's mountain bike chapter — group events, an enduro series, and volunteer trail days on singletrack they build themselves.",
-      "when": "Spring through fall — see calendar",
-      "category": "Biking",
-      "url": "https://www.fotwheel.org/"
-    },
-    {
-      "name": "Local Motion Community Rides",
-      "what": "Burlington's walk-bike nonprofit runs casual, no-drop group rides and bike events from its Trailside Center on the waterfront.",
-      "when": "See events calendar",
-      "category": "Biking",
-      "url": "https://www.localmotion.org/events"
-    },
-    {
-      "name": "Green Mountain Club — Burlington Section",
-      "what": "The original 1910 chapter of Vermont's hiking club: group hikes, snowshoes, and paddles year-round, easy walks to big Long Trail days. Membership not required to join an outing.",
-      "when": "Multiple outings monthly, year-round",
-      "category": "Hiking & Outdoors",
-      "url": "https://gmcburlington.org/"
-    },
-    {
-      "name": "Outdoors for Everyone VT",
-      "what": "A Meetup built to get people of all skill levels outside enjoying Vermont, with a deliberately low bar to entry.",
-      "when": "See Meetup schedule",
-      "category": "Hiking & Outdoors",
-      "url": "https://www.meetup.com/outdoors-for-everyone-vt/"
-    },
-    {
-      "name": "Chittenden County Chess Club",
-      "what": "Chess players of all ages and abilities — casual Saturday games, plus rated Thursday-night play with the UVM Chess Club.",
-      "when": "Saturdays 11am, South Burlington Public Library",
-      "category": "Games & Puzzles",
-      "url": "http://www.chittendenchess.org/"
-    },
-    {
-      "name": "The Friendly Tabletop Gamers",
-      "what": "Burlington's big board game Meetup, run by The Boardroom game café — learn-to-play sessions, mixers, and open gaming several times a week. 1,300+ members.",
-      "when": "Multiple events weekly at The Boardroom (3 Mill St)",
-      "category": "Games & Puzzles",
-      "url": "https://www.meetup.com/friendlytabletopgamers/"
-    },
-    {
-      "name": "Quarterstaff Games",
-      "what": "Vermont's oldest game store runs weekly in-store play — Friday Night Magic draws 20+ players, plus Wednesday drafts, RPGs, and casual game nights.",
-      "when": "Weekly — see events page",
-      "category": "Games & Puzzles",
-      "url": "https://www.quarterstaffgames.com/"
-    },
-    {
-      "name": "Tuesday Trivia at Vermont Comedy Club",
-      "what": "A long-running weekly trivia night in the comedy club's lounge, with rotating themes and show tickets as prizes — an easy standing date for a team of friends.",
-      "when": "Tuesday evenings",
-      "category": "Games & Puzzles",
-      "url": "https://www.vermontcomedyclub.com/"
-    },
-    {
-      "name": "Fletcher Free Library Book Discussion Group",
-      "what": "The downtown library's monthly book discussion — register with the librarian and they'll help you get the book. They also run the food-themed 'Food for Talk' club.",
-      "when": "Monthly",
-      "category": "Books",
-      "url": "https://fletcherfree.org/book-discussion-group"
-    },
-    {
-      "name": "Phoenix Books Book Groups",
-      "what": "Burlington's downtown indie bookstore hosts recurring book groups — including 'Trash for the Trope,' a romance readers' group tackling a different trope each month.",
-      "when": "Monthly — see events page",
-      "category": "Books",
-      "url": "https://phoenixbooks.biz/events"
-    },
-    {
-      "name": "Vermont Ultimate (Green Mountain Disc Alliance)",
-      "what": "The hub for ultimate frisbee around Burlington — free summer pickup, a mixed summer league, and women/nonbinary sessions. All levels welcome.",
-      "when": "Summer: pickup Thursdays · women/nonbinary Wednesdays · Saturday league",
-      "category": "Sports & Rec",
-      "url": "https://vermontultimate.org/pickup"
-    },
-    {
-      "name": "Game On VT",
-      "what": "Chittenden County's adult rec-sports outfit — join solo or with a team for kickball, grass volleyball, floor hockey, and beginner pickleball leagues.",
-      "when": "Seasonal — kickball Mondays at Leddy · volleyball Wednesdays at UVM",
-      "category": "Sports & Rec",
-      "url": "https://www.gameonvt.com/programs.php"
-    },
-    {
-      "name": "Burlington Adult Social Sports",
-      "what": "A 1,900-member Meetup running seasonal coed leagues — volleyball, kickball, dodgeball, soccer, flag football — built around meeting people as much as playing.",
-      "when": "Seasonal leagues year-round",
-      "category": "Sports & Rec",
-      "url": "https://www.meetup.com/burlington-social/"
-    },
-    {
-      "name": "Vermont Womxn's Pick-up Soccer",
-      "what": "Friendly women's pickup soccer in Burlington, overseen by Parks & Rec — show up and play.",
-      "when": "See Meetup schedule",
-      "category": "Sports & Rec",
-      "url": "https://www.meetup.com/womens-soccer-vermont/"
-    },
-    {
-      "name": "BVT Pickup Soccer",
-      "what": "The Facebook group Burlington players use to organize casual coed pickup games around town.",
-      "when": "Games posted in the group",
-      "category": "Sports & Rec",
-      "url": "https://www.facebook.com/groups/BTVSoccer/"
-    },
-    {
-      "name": "Greater Burlington YMCA Adult Group Sports",
-      "what": "Relaxed drop-in adult sports at the Y — including all-levels volleyball — no team required.",
-      "when": "Weekly drop-in — see YMCA schedule",
-      "category": "Sports & Rec",
-      "url": "https://www.gbymca.org/programs/wellness/adult-group-sports/"
-    },
-    {
-      "name": "Pickleball South Burlington",
-      "what": "The local pickleball community's home base for open play, courts, and clinics — an easy sport to pick up as a total beginner.",
-      "when": "Open play weekly — see site",
-      "category": "Sports & Rec",
-      "url": "https://pickleballsouthburlington.com/"
-    },
-    {
-      "name": "Generator Makerspace",
-      "what": "Burlington's community makerspace on Sears Lane — woodshop, metal shop, laser cutters, 3D printers, jewelry and sewing studios, and a built-in community of makers.",
-      "when": "Member access daily · enrollment sessions Thursdays & Saturdays",
-      "category": "Making & Crafts",
-      "url": "https://generatorvt.com/"
-    },
-    {
-      "name": "Knot Knite",
-      "what": "A bring-your-project craft night — knitting, crochet, sewing, weaving, whatever — that gathers at Burlington breweries and bars.",
-      "when": "See Facebook for upcoming nights",
-      "category": "Making & Crafts",
-      "url": "https://www.facebook.com/p/Knot-Knite-100069243484447/"
-    },
-    {
-      "name": "Must Love Yarn Crafters' Groups",
-      "what": "Free twice-weekly sit-and-stitch sessions at the Shelburne Road yarn shop — bring any fiber project and settle in.",
-      "when": "Wednesdays 5-7pm · Sundays 1-3pm",
-      "category": "Making & Crafts",
-      "url": "https://mustloveyarn.com/collections/classes"
-    },
-    {
-      "name": "Pause-Café Mardi (French at Fletcher Free)",
-      "what": "A drop-in table where Francophones and French learners of any level meet to speak French over coffee at the downtown library.",
-      "when": "Tuesdays 5-7pm (resumes Aug 5)",
-      "category": "Language",
-      "url": "https://www.fletcherfree.org/event/french-conversation-group"
-    },
-    {
-      "name": "Spanish Conversation Group at Fletcher Free",
-      "what": "A weekly drop-in Spanish conversation circle at the library that explicitly welcomes beginners.",
-      "when": "Thursdays 4:30-6pm (resumes Sept 10)",
-      "category": "Language",
-      "url": "https://fletcherfree.org/languages"
-    },
-    {
-      "name": "Alliance Française of the Lake Champlain Region",
-      "what": "The local French cultural nonprofit — classes, monthly conversation lunches, films, potlucks, and a Tuesday conversation meetup at Burlington Bay Café.",
-      "when": "Monthly events · Tuesday conversation 5-6:30pm",
-      "category": "Language",
-      "url": "https://www.aflcr.org/"
-    },
-    {
-      "name": "South Burlington Community Chorus",
-      "what": "A no-audition community chorus that welcomes anyone who likes to sing, rehearsing weekly toward a couple of concerts a year.",
-      "when": "Weekly rehearsals, fall & spring seasons",
-      "category": "Music",
-      "url": "https://sbchorusvt.org/"
-    },
-    {
-      "name": "Social Band",
-      "what": "Burlington's 'lively band of singers' — a friendly community chorus weaving song and poetry into seasonal concerts.",
-      "when": "Seasonal — see site for joining",
-      "category": "Music",
-      "url": "https://socialband.org/"
-    },
-    {
-      "name": "Irish Trad Session at Burlington Beer Company",
-      "what": "A weekly open Irish traditional music session — bring your fiddle, whistle, or just a pint and listen.",
-      "when": "Wednesdays 5:30-8pm",
-      "category": "Music",
-      "url": "https://thesession.org/sessions/9430"
-    },
-    {
-      "name": "Queen City Contras",
-      "what": "Burlington's thirty-year-old contra dance series — every dance is taught, no partner or experience needed, live bands and callers at Shelburne Town Hall.",
-      "when": "Monthly Fridays 6:45-10pm",
-      "category": "Dance",
-      "url": "https://queencitycontras.com/schedule/"
-    },
-    {
-      "name": "Vermont Swings",
-      "what": "The area's Lindy Hop community — weekly beginner-friendly lessons and social dancing at North Star Community Hall, plus a monthly Saturday dance.",
-      "when": "Tuesdays 6:30-9pm · second Saturdays",
-      "category": "Dance",
-      "url": "https://vermontswings.com/"
-    },
-    {
-      "name": "802 Westie Collective",
-      "what": "Vermont's West Coast Swing community, with recurring lessons and social dances around greater Burlington.",
-      "when": "See schedule",
-      "category": "Dance",
-      "url": "https://802westiecollective.org/"
-    },
-    {
-      "name": "Toastmasters of Greater Burlington",
-      "what": "A supportive club for practicing public speaking and leadership — guests can just show up and watch before joining.",
-      "when": "2nd & 4th Wednesdays 6-7:30pm, South Burlington",
-      "category": "Other",
-      "url": "https://toastmastersofgreaterburlingtonvermont.toastmastersclubs.org/"
-    },
-    {
-      "name": "Petra Cliffs Community Climbing Meetups",
-      "what": "Burlington's climbing gym hosts recurring community nights — Ladies Climbing Coalition meetups and Queer Climb Nights — that make it easy to find climbing partners.",
-      "when": "Monthly-ish — see events calendar",
-      "category": "Other",
-      "url": "https://www.petracliffs.com/events"
-    }
-  ]
+ "_comment": "GENERATED by scripts/build_groups.py from data/groups.json and data/run-clubs.json. Do not edit; edit those files and run the script. The All Day People tab and What Now read name, what, when, category, url and featured.",
+ "clubs": [
+  {
+   "id": "btown-brief-irl",
+   "kind": "social",
+   "name": "Btown Brief IRL (Burlington Social & Activities)",
+   "what": "The Btown Brief's own Meetup group: a free Saturday morning coffee hang every week plus rotating outings like pub crawls, movie nights and apple picking.",
+   "when": "Saturdays 10am",
+   "category": "Social",
+   "url": "https://www.meetup.com/burlington-social-activites-group/",
+   "featured": true
+  },
+  {
+   "id": "burlington-area-ladies-social-group",
+   "kind": "social",
+   "name": "Burlington Area Ladies Social Group",
+   "what": "A women's friendship group with a monthly book club that reads a chapter or two at a time, craft nights, potlucks, clothing swaps and workshops.",
+   "when": "Book club about once a month and craft nights a few times a month, usually 6:30pm at th...",
+   "category": "Social",
+   "url": "https://www.meetup.com/vtladiessocialgroup/"
+  },
+  {
+   "id": "forever-38",
+   "kind": "social",
+   "name": "Forever 38",
+   "what": "A Meetup social group for adults that does a little of everything: hikes, brewery outings, trivia, movie nights, bike rides and parties.",
+   "when": "Several events a month, posted on Meetup (October 2026 included trivia at Black Flannel...",
+   "category": "Social",
+   "url": "https://www.meetup.com/forever-38/"
+  },
+  {
+   "id": "old-and-new-friends-having-fun",
+   "kind": "social",
+   "name": "Old (And New!) Friends Having Fun",
+   "what": "A Meetup group of older adults (not for dating) who get together for hikes, bike rides, paddles, snowshoeing and shared meals, aiming for a few events a week.",
+   "when": "Events are posted on Meetup (recent: hikes at Preston Pond and Milton Town Forest, Wedn...",
+   "category": "Social",
+   "url": "https://www.meetup.com/old-and-new-friends-having-fun/"
+  },
+  {
+   "id": "out-in-the-802",
+   "kind": "social",
+   "name": "Out in the 802",
+   "what": "A Meetup group of social events for Vermont's LGBTQ+ community: happy hours, potlucks and game nights.",
+   "when": "Happy hours most Thursdays at 5pm, rotating between Lincolns in Burlington and bars in...",
+   "category": "Social",
+   "url": "https://www.meetup.com/out-in-the-802/"
+  },
+  {
+   "id": "petra-cliffs-community-climbing-meetups",
+   "kind": "social",
+   "name": "Petra Cliffs community climbing meetups",
+   "what": "Monthly evening meetups at Burlington's climbing gym: Ladies+ Climbing Coalition for women and nonbinary climbers, and Queer Climb Night, each with an icebreaker, warm-up game and group climbing.",
+   "when": "Ladies+ Climbing Coalition meets the third Monday of every month at 7pm (booked dates O...",
+   "category": "Social",
+   "url": "https://www.petracliffs.com/events"
+  },
+  {
+   "id": "bolters-run-club",
+   "kind": "run",
+   "name": "Bolters Run Club",
+   "what": "Weekly social 5K-ish run downtown that puts an emphasis on making room for women, nonbinary and trans runners; all are welcome.",
+   "when": "Runs are at 6 PM downtown, almost always from Union Station, but the day changes month...",
+   "category": "Running",
+   "url": "https://www.instagram.com/boltersrun/"
+  },
+  {
+   "id": "burlington-hash-house-harriers",
+   "kind": "run",
+   "name": "Burlington Hash House Harriers",
+   "what": "Weekly hash: hares lay a 2 to 5 mile flour-marked trail somewhere in Chittenden County and the pack follows it, with beer stops. Adults.",
+   "when": "Wednesdays 6:30pm (warm season (2026 Wednesday trails end Oct 28))",
+   "category": "Running",
+   "url": "https://www.burlingtonh3.com/"
+  },
+  {
+   "id": "catamount-trail-running-series",
+   "kind": "run",
+   "name": "Catamount Weekly Trail Running Series",
+   "what": "Low-key weekly 5K and 2.5K trail races for all ages on the Catamount Outdoor Family Center trails in Williston.",
+   "when": "Tuesdays 6pm (May-September)",
+   "category": "Running",
+   "url": "https://catamountoutdoor.org/race-series-weekly-mtbtr/"
+  },
+  {
+   "id": "dad-guild-run-club",
+   "kind": "run",
+   "name": "Dad Guild Run Club",
+   "what": "Dads-only Sunday morning 3.5-mile run on the bike path in the New North End.",
+   "when": "Sundays 7:30am",
+   "category": "Running",
+   "url": "https://www.dadguild.org/events"
+  },
+  {
+   "id": "fleet-feet-frosty-turtles",
+   "kind": "run",
+   "name": "Fleet Feet Frosty Turtles",
+   "what": "Fleet Feet's free weekly winter social run and walk from its Essex Junction store.",
+   "when": "Wednesdays 5:30pm (winter, through February (start date not stated))",
+   "category": "Running",
+   "url": "https://www.fleetfeet.com/s/burlington/training/weekly-runs"
+  },
+  {
+   "id": "getting-active-in-burlington",
+   "kind": "run",
+   "name": "Getting Active in Burlington!",
+   "what": "Meetup group with a weekly after-work 5K that starts from a different brewery or pub each week.",
+   "when": "5K runs start at 5:30 PM, usually on a Wednesday but some weeks on a Tuesday, from a ro...",
+   "category": "Running",
+   "url": "https://www.meetup.com/getting-active-in-burlington/"
+  },
+  {
+   "id": "gmaa",
+   "kind": "run",
+   "name": "Green Mountain Athletic Association (GMAA)",
+   "what": "The area's long-standing road running club: weekly group runs, a coached track workout, and a calendar of local races.",
+   "when": "Tuesdays 5:45pm · Thursdays 5:45pm · Sundays 8am",
+   "category": "Running",
+   "url": "https://gmaa.run/members/gmaa-member-group-runs/"
+  },
+  {
+   "id": "long-trail-running-club",
+   "kind": "run",
+   "name": "Long Trail Running Club",
+   "what": "Volunteer-run trail running club with a Thursday night social run that moves around Burlington, Winooski, Essex and nearby towns.",
+   "when": "Thursdays 6:15pm",
+   "category": "Running",
+   "url": "https://www.longtrailrunningclub.com/"
+  },
+  {
+   "id": "skirack-run-club",
+   "kind": "run",
+   "name": "Skirack Run Club",
+   "what": "Free Monday evening community run from the Skirack store on Main Street, 3 to 5 miles.",
+   "when": "Mondays 6pm (April-August (2026 dates); not running this fall)",
+   "category": "Running",
+   "url": "https://www.skirack.com/pages/events-calendar"
+  },
+  {
+   "id": "winooski-run-club",
+   "kind": "run",
+   "name": "Winooski Run Club",
+   "what": "Relaxed weekly evening run from the Monkey House in Winooski with 2-mile and 4-mile options.",
+   "when": "Wednesdays 5:30pm (May-October)",
+   "category": "Running",
+   "url": "https://www.instagram.com/winooskirunclub/"
+  },
+  {
+   "id": "catamount-guided-mtb-rides",
+   "kind": "bike",
+   "name": "Catamount Guided Mountain Bike Rides",
+   "what": "Guided mountain bike group rides on the Catamount Community Forest trails in Williston, a mellow beginner ride Mondays and a no-drop intermediate ride Thursdays.",
+   "when": "Mondays 6pm · Thursdays 6pm (mid-May to end of September)",
+   "category": "Biking",
+   "url": "https://catamountoutdoor.org/"
+  },
+  {
+   "id": "catamount-mtb-race-series",
+   "kind": "bike",
+   "name": "Catamount Weekly Mountain Bike Race Series",
+   "what": "Timed weekly evening mountain bike races on the Catamount trails in Williston, followed by a fall cyclocross series.",
+   "when": "Wednesdays 6pm (May-September (cyclocross September to mid-October))",
+   "category": "Biking",
+   "url": "https://catamountoutdoor.org/race-series-weekly-mtbtr/"
+  },
+  {
+   "id": "gmbc-wednesday-training-ride",
+   "kind": "bike",
+   "name": "Green Mountain Bicycle Club Wednesday Ride",
+   "what": "Weeknight road training ride from South Burlington, riders split into speed groups.",
+   "when": "Wednesdays 6pm (spring to October 24)",
+   "category": "Biking",
+   "url": "https://thegmbc.com/"
+  },
+  {
+   "id": "lcmm-burlington-rows",
+   "kind": "row-paddle",
+   "name": "Burlington Rows! (Maritime Museum rowing club)",
+   "what": "Weekly evening open-water rowing in the museum's rowing gigs, launching from Perkins Pier on the Burlington waterfront.",
+   "when": "Wednesdays 5:15pm (May-October)",
+   "category": "Hiking & Outdoors",
+   "url": "https://www.lcmm.org/adult-rowing/"
+  },
+  {
+   "id": "burlington-ski-and-outing-club",
+   "kind": "outdoors",
+   "name": "Burlington Ski and Outing Club (BSOC)",
+   "what": "A volunteer-run club since 1991, mostly active retirees, that organizes cross-country, downhill and snowshoe outings in winter and hikes, bike rides and paddles the rest of the year.",
+   "when": "Outings are posted on Meetup by members (recent: breakfasts at the Shelburne Inn in Oct...",
+   "category": "Hiking & Outdoors",
+   "url": "https://www.meetup.com/burlington-ski-and-outing-club-bsoc/"
+  },
+  {
+   "id": "dragonheart-vermont-catch-22",
+   "kind": "row-paddle",
+   "name": "Dragonheart Vermont Dragon Boat (Catch 22 crew)",
+   "what": "Dragon boat paddling on Lake Champlain; every new member starts on the mixed Catch 22 crew, which practices one weeknight a week.",
+   "when": "Thursdays 5:30pm (late May to September)",
+   "category": "Hiking & Outdoors",
+   "url": "https://dragonheartvermont.org/"
+  },
+  {
+   "id": "gmc-burlington-section",
+   "kind": "hike",
+   "name": "Green Mountain Club, Burlington Section",
+   "what": "Volunteer-led group hikes (plus some bike, paddle and trail-work outings), mostly weekend day trips to the Green Mountains and Adirondacks.",
+   "when": "Outings are posted individually on the section's events calendar (gmcburlington.org/eve...",
+   "category": "Hiking & Outdoors",
+   "url": "https://gmcburlington.org/"
+  },
+  {
+   "id": "outdoors-for-everyone-vt",
+   "kind": "outdoors",
+   "name": "Outdoors for Everyone VT",
+   "what": "A Meetup group for getting outside at any skill level, with beginners expected: easy hikes, waterfront walks, camping, picnics and paddling.",
+   "when": "Events are posted on Meetup a few times a month (recent: Mt",
+   "category": "Hiking & Outdoors",
+   "url": "https://www.meetup.com/outdoors-for-everyone-vt/"
+  },
+  {
+   "id": "csc-women-in-wind-club",
+   "kind": "outdoors",
+   "name": "Women in Wind Club",
+   "what": "A volunteer-led Monday evening sailing club for women at the Community Sailing Center, for sailors who are already comfortable on the water.",
+   "when": "Mondays 5:30pm (summer; the 2026 club ran Mondays June 22 to Sept 7)",
+   "category": "Hiking & Outdoors",
+   "url": "https://communitysailingcenter.org/women-in-wind/",
+   "months": [
+    6,
+    7,
+    8,
+    9
+   ]
+  },
+  {
+   "id": "burlington-bridge-club",
+   "kind": "games",
+   "name": "Burlington Bridge Club",
+   "what": "An ACBL duplicate bridge club in Williston with in-person games most days, some limited by masterpoints for newer players, plus a Monday evening online game.",
+   "when": "Tuesdays 12:30pm · Thursdays 12:30pm · Fridays 10am · Saturdays · Sundays 1pm",
+   "category": "Games & Puzzles",
+   "url": "https://www.bridgewebs.com/burlingtonacademy/"
+  },
+  {
+   "id": "burlington-scrabble-club",
+   "kind": "games",
+   "name": "Burlington Scrabble Club Wednesday Scrabble Night",
+   "what": "A weekly Scrabble night at The Boardroom game cafe, posted through the Friendly Tabletop Gamers Meetup; you do not need to be a club member to play.",
+   "when": "Wednesdays 6pm",
+   "category": "Games & Puzzles",
+   "url": "https://www.meetup.com/friendlytabletopgamers/events/316804225/"
+  },
+  {
+   "id": "chittenden-county-chess-club",
+   "kind": "games",
+   "name": "Chittenden County Chess Club",
+   "what": "A USCF-affiliated club that plays one serious tournament game every Saturday at the South Burlington library, rated or unrated, with casual blitz beforehand.",
+   "when": "Saturdays 11am",
+   "category": "Games & Puzzles",
+   "url": "http://www.chittendenchess.org/"
+  },
+  {
+   "id": "dad-guild-dads-dungeons-dragons",
+   "kind": "games",
+   "name": "Dad Guild Dads & Dungeons & Dragons",
+   "what": "A twice-monthly Dungeons & Dragons night for dads at Dad Guild's Guild Hall in Burlington, with premade characters and dice provided.",
+   "when": "Twice a month on Thursdays, 7 to 9pm, at The Guild Hall @ Soda Plant (Oct 1, Oct 15, No...",
+   "category": "Games & Puzzles",
+   "url": "https://www.dadguild.org/events"
+  },
+  {
+   "id": "venetian-house-trivia",
+   "kind": "trivia",
+   "name": "House Trivia Night at the Venetian Soda Lounge",
+   "what": "A weekly Wednesday community trivia night at the Venetian, a speakeasy-style cocktail and soda lounge on Pine Street.",
+   "when": "Wednesdays 7pm",
+   "category": "Games & Puzzles",
+   "url": "https://www.venetiansodalounge.com/events"
+  },
+  {
+   "id": "drml-mah-jongg",
+   "kind": "games",
+   "name": "Mah-Jongg at Deborah Rawson Memorial Library",
+   "what": "A monthly Thursday evening mah-jongg game at the Jericho library, open to all levels.",
+   "when": "Monthly on a Thursday, 6:30 to 8:30pm (Aug 13, Sept 10 and Oct 8 on the library calendar)",
+   "category": "Games & Puzzles",
+   "url": "https://www.drml.org/event/mah-jongg-145/"
+  },
+  {
+   "id": "pierson-mahjong-playing-society",
+   "kind": "games",
+   "name": "Mahjong Playing Society at Pierson Library",
+   "what": "A weekly Thursday afternoon mahjong group at Shelburne's Pierson Library that plays and teaches both Chinese and American mahjong.",
+   "when": "Thursdays 1pm",
+   "category": "Games & Puzzles",
+   "url": "https://piersonlibrary.org/event/mahjong-playing-society-47/"
+  },
+  {
+   "id": "grazers-trivia",
+   "kind": "trivia",
+   "name": "Monday Night Trivia at Grazers",
+   "what": "Monday night trivia at Grazers restaurant in Williston's Maple Tree Place, hosted by Top Hat Entertainment, with gift cards and swag as prizes.",
+   "when": "Mondays 7pm",
+   "category": "Games & Puzzles",
+   "url": "https://www.grazersvt.com/trivia"
+  },
+  {
+   "id": "einsteins-trivia",
+   "kind": "trivia",
+   "name": "Pub Style Trivia at Einstein's Tap House",
+   "what": "Weekly Thursday pub-style trivia at Einstein's Tap House on Church Street.",
+   "when": "Thursdays 8pm",
+   "category": "Games & Puzzles",
+   "url": "https://einsteinsvt.com/entertainment/"
+  },
+  {
+   "id": "quarterstaff-games",
+   "kind": "games",
+   "name": "Quarterstaff Games weekly play",
+   "what": "A downtown game store with a play space that runs weekly nights for Commander Magic, Pokemon, Warhammer and Star Wars miniatures, hobby painting and open tables.",
+   "when": "Tuesdays 5pm · Wednesdays 4pm · Thursdays 6pm · Fridays 6pm · Saturdays 11am · Sundays 11am",
+   "category": "Games & Puzzles",
+   "url": "https://www.quarterstaffgames.com/"
+  },
+  {
+   "id": "pjc-solarpunk-game-night",
+   "kind": "games",
+   "name": "Solarpunk Book Club & Game Night at the Peace & Justice Center",
+   "what": "A free every-other-Thursday hour at the Peace & Justice Center to read a solarpunk book together and play the cooperative storytelling game Solarpunk Futures.",
+   "when": "Every other Thursday, 5:30 to 6:30pm (Oct 22, Nov 5, Nov 19 and Dec 3 on the center's c...",
+   "category": "Games & Puzzles",
+   "url": "https://www.pjcvt.org/event/cooperative-storytelling-game-night-3-2/2026-10-22/"
+  },
+  {
+   "id": "sbpl-puzzle-swap",
+   "kind": "games",
+   "name": "South Burlington Library Puzzle Swap",
+   "what": "A monthly jigsaw puzzle swap at the South Burlington library: bring a finished puzzle of 250+ pieces and leave with a new one.",
+   "when": "Third Wednesday of every month, September to May, 2:30 to 5pm in the Community Room (Oc...",
+   "category": "Games & Puzzles",
+   "url": "https://southburlingtonlibrary.org/puzzle-swap",
+   "months": [
+    9,
+    10,
+    11,
+    12,
+    1,
+    2,
+    3,
+    4,
+    5
+   ]
+  },
+  {
+   "id": "the-boardroom-open-play",
+   "kind": "games",
+   "name": "The Boardroom board game cafe",
+   "what": "A board game cafe with a large game library where you pay one fee and play as long as you like, with food and drinks on the menu.",
+   "when": "Wednesdays 5pm · Thursdays 5pm · Fridays 5pm · Saturdays 12pm · Sundays 12pm",
+   "category": "Games & Puzzles",
+   "url": "https://www.theboardroomvt.com/"
+  },
+  {
+   "id": "friendly-tabletop-gamers",
+   "kind": "games",
+   "name": "The Friendly Tabletop Gamers",
+   "what": "A big Burlington board game Meetup that hosts learn-and-play nights, game-specific meetups and mixers, mostly at The Boardroom game cafe.",
+   "when": "Several events a month, posted on Meetup",
+   "category": "Games & Puzzles",
+   "url": "https://www.meetup.com/friendlytabletopgamers/"
+  },
+  {
+   "id": "burlington-beer-co-trivia",
+   "kind": "trivia",
+   "name": "Thursday Trivia at Burlington Beer Co.",
+   "what": "Free one-hour trivia every Thursday at Burlington Beer Co. on Flynn Avenue.",
+   "when": "Thursdays 7pm",
+   "category": "Games & Puzzles",
+   "url": "https://www.burlingtonbeercompany.com/bbcoevents"
+  },
+  {
+   "id": "vermont-cider-lab-trivia",
+   "kind": "trivia",
+   "name": "Thursday Trivia at Vermont Cider Lab",
+   "what": "Weekly Thursday evening trivia at Vermont Cider Lab's taproom in Essex.",
+   "when": "Thursdays 6pm",
+   "category": "Games & Puzzles",
+   "url": "https://www.vtciderlab.com/events"
+  },
+  {
+   "id": "four-quarters-trivia",
+   "kind": "trivia",
+   "name": "Trivia at Four Quarters Brewing",
+   "what": "Weekly Thursday evening trivia at Four Quarters Brewing's restaurant and taproom on Main Street in Winooski.",
+   "when": "Thursdays 6pm",
+   "category": "Games & Puzzles",
+   "url": "https://www.4qbc.com/eventcalendar"
+  },
+  {
+   "id": "black-flannel-trivia",
+   "kind": "trivia",
+   "name": "Trivia Monday at Black Flannel",
+   "what": "Weekly Monday trivia in Black Flannel's Barrel Room in Essex, hosted by DJ Big T of After Hours Entertainment.",
+   "when": "Mondays 6pm",
+   "category": "Games & Puzzles",
+   "url": "https://www.blackflannel.com/upcoming-events/"
+  },
+  {
+   "id": "on-tap-trivia",
+   "kind": "trivia",
+   "name": "Trivia Tuesday at On Tap Bar & Grill",
+   "what": "Free weekly Tuesday team trivia with picture and music rounds at On Tap Bar & Grill in Essex Junction, hosted by Top Hat Entertainment.",
+   "when": "Tuesdays 7pm",
+   "category": "Games & Puzzles",
+   "url": "http://www.ontapbargrill.com/"
+  },
+  {
+   "id": "monkey-house-trivia",
+   "kind": "trivia",
+   "name": "Trivia with Craig Mitchell at the Monkey House",
+   "what": "Free Monday trivia at the Monkey House bar in Winooski, hosted by DJ Craig Mitchell, played on your phone or laptop.",
+   "when": "Mondays 7pm",
+   "category": "Games & Puzzles",
+   "url": "https://www.monkeyhousevt.com/"
+  },
+  {
+   "id": "dumb-luck-trivia",
+   "kind": "trivia",
+   "name": "Trivia with DJ Big T at Dumb Luck Pub",
+   "what": "Wednesday trivia night with DJ Big T at Dumb Luck Pub, a pub and grill in Winooski.",
+   "when": "Wednesdays",
+   "category": "Games & Puzzles",
+   "url": "https://www.dumbluckpub.com/events"
+  },
+  {
+   "id": "burger-bar-trivia",
+   "kind": "trivia",
+   "name": "Tuesday Trivia at Burger Bar",
+   "what": "Weekly Tuesday bar trivia at Burger Bar in Colchester, hosted by Top Hat Entertainment, with prizes from local vendors.",
+   "when": "Tuesdays 7pm",
+   "category": "Games & Puzzles",
+   "url": "https://www.burgerbarvt.com/"
+  },
+  {
+   "id": "rira-trivia",
+   "kind": "trivia",
+   "name": "Wednesday Trivia at Rí Rá",
+   "what": "Weekly Wednesday trivia at Rí Rá Irish pub on Church Street.",
+   "when": "Wednesdays 7pm",
+   "category": "Games & Puzzles",
+   "url": "https://rira.com/burlington/"
+  },
+  {
+   "id": "burlington-brewery-book-club",
+   "kind": "books",
+   "name": "Burlington Brewery Book Club",
+   "what": "A monthly book club that meets at a different local brewery each time to talk about one book, with a different genre each month.",
+   "when": "Meets monthly, usually on a Saturday at 2pm, at a rotating brewery (Oct 17, 2026: Kraem...",
+   "category": "Books",
+   "url": "https://www.meetup.com/burlington-brewery-book-club/"
+  },
+  {
+   "id": "pierson-creative-writing",
+   "kind": "books",
+   "name": "Creative Writing Support Group (Pierson Library)",
+   "what": "A Saturday morning writing session at the Shelburne library with a generative exercise, project check-ins and quiet writing time together.",
+   "when": "Sessions are posted on the library calendar (most recent: Sat Oct 17, 10:15am to 12:15pm)",
+   "category": "Books",
+   "url": "https://piersonlibrary.org/event/creative-writing-support-group-19/"
+  },
+  {
+   "id": "dorothy-alling-library-book-clubs",
+   "kind": "books",
+   "name": "Dorothy Alling Library Book Clubs",
+   "what": "Williston's library runs two monthly lunchtime book clubs on popular titles from many genres: Reader's Roundtable in person and Book Club Buffet on Zoom.",
+   "when": "Reader's Roundtable meets in the library on the 4th Tuesday of the month, 12:30 to 1:30...",
+   "category": "Books",
+   "url": "https://damlvt.org/index.php/book-clubs"
+  },
+  {
+   "id": "ffl-book-discussion-group",
+   "kind": "books",
+   "name": "FFL Book Discussion Group (Zoom)",
+   "what": "A monthly Zoom book discussion run by Fletcher Free Library, mostly nonfiction and literary picks.",
+   "when": "Monthly on Zoom, Wednesday at 6:30pm (Oct 21 and Nov 18, 2026 are the third Wednesdays)",
+   "category": "Books",
+   "url": "https://fletcherfree.libcal.com/event/16171263"
+  },
+  {
+   "id": "ffl-fictional-book-club",
+   "kind": "books",
+   "name": "Fletcher Free's Fictional Book Club",
+   "what": "The library's newest book club talks through a novel each month over snacks and coffee.",
+   "when": "Monthly on a Tuesday at 5:30pm (Oct 20 and Nov 17, 2026 are the third Tuesdays)",
+   "category": "Books",
+   "url": "https://fletcherfree.libcal.com/event/16174665"
+  },
+  {
+   "id": "ffl-food-for-talk",
+   "kind": "books",
+   "name": "Food for Talk Cookbook Club",
+   "what": "A cookbook club for home cooks: everyone cooks from the month's cookbook and the group meets to share food and talk.",
+   "when": "Second Sunday of every month at 3pm",
+   "category": "Books",
+   "url": "https://fletcherfree.libcal.com/event/15949068"
+  },
+  {
+   "id": "lunch-with-the-poets",
+   "kind": "books",
+   "name": "Lunch with the Poets (Green Mountain Writers Group)",
+   "what": "A relaxed Friday lunch for poets, writers and readers with an open poetry reading in the middle; share a poem or just listen.",
+   "when": "Fridays 11:45am (weekly through Oct 30, 2026)",
+   "category": "Books",
+   "url": "https://www.meetup.com/burlington-writers/",
+   "until": "2026-10-30"
+  },
+  {
+   "id": "brownell-must-read-mondays",
+   "kind": "books",
+   "name": "Must Read Mondays (Brownell Library)",
+   "what": "Brownell Library's monthly book discussion group; the group picks the next month's book together.",
+   "when": "Fourth Monday of the month at 6:30pm in the Kolvoord Community Room (next: Oct 26, 2026...",
+   "category": "Books",
+   "url": "https://brownelllibrary.org/must-read-mondays/"
+  },
+  {
+   "id": "pierson-noontime-poetry",
+   "kind": "books",
+   "name": "Noontime Poetry Reading Society",
+   "what": "Poetry readers, writers and the poetically curious read a collection aloud together, then share their own poems, at the Shelburne library on Wednesdays at noon.",
+   "when": "Wednesdays 12pm",
+   "category": "Books",
+   "url": "https://piersonlibrary.org/event/noontime-poetry-reading-society-77/"
+  },
+  {
+   "id": "pierson-book-clubs",
+   "kind": "books",
+   "name": "Pierson Library Book Clubs",
+   "what": "Shelburne's library runs two monthly book clubs, a Monday morning group and a Tuesday night group, with copies at the front desk.",
+   "when": "Both meet in the third week of the month: Monday Morning Book Group at 10:30am (Nov 16,...",
+   "category": "Books",
+   "url": "https://piersonlibrary.org/book-clubs/"
+  },
+  {
+   "id": "ffl-queer-reads",
+   "kind": "books",
+   "name": "Queer Reads Book Club",
+   "what": "A monthly library book club reading hand-picked LGBTQIA+ books across genres; copies are available to borrow.",
+   "when": "Final Sunday of each month, 1:30 to 2:30pm (Oct 25, Nov 29, Dec 27, 2026)",
+   "category": "Books",
+   "url": "https://fletcherfree.libcal.com/event/15538312"
+  },
+  {
+   "id": "sbpl-cookbook-club",
+   "kind": "books",
+   "name": "SBPL Cookbook Club",
+   "what": "A monthly potluck book club: everyone cooks a recipe from the same cookbook and the group eats and talks about it.",
+   "when": "First Tuesday of the month, 5:30 to 6:45pm, Community Room (next: Nov 3, 2026, My Harve...",
+   "category": "Books",
+   "url": "https://southburlingtonlibrary.org/cookbook-club-my-harvest-kitchen"
+  },
+  {
+   "id": "sbpl-evening-book-group",
+   "kind": "books",
+   "name": "SBPL Evening Book Group",
+   "what": "South Burlington library's monthly evening book discussion, in person with a Zoom option.",
+   "when": "Fourth Tuesday of the month, 6 to 7pm, in the Community Room (Nov 17 this year because...",
+   "category": "Books",
+   "url": "https://southburlingtonlibrary.org/evening-book-group-monk-and-robot"
+  },
+  {
+   "id": "sbpl-morning-book-group",
+   "kind": "books",
+   "name": "SBPL Morning Book Group",
+   "what": "South Burlington library's monthly morning book group, with library copies set aside for members.",
+   "when": "Second Thursday of the month, 10 to 11am, in the Board Room (next: Nov 12, 2026)",
+   "category": "Books",
+   "url": "https://southburlingtonlibrary.org/morning-book-group-calling-for-a-blanket-dance"
+  },
+  {
+   "id": "ffl-shakespeare-out-loud",
+   "kind": "books",
+   "name": "Shakespeare Out Loud",
+   "what": "Adults gather on Monday afternoons to pick parts and read a Shakespeare play aloud; come to read or just listen.",
+   "when": "Mondays 4pm",
+   "category": "Books",
+   "url": "https://fletcherfree.libcal.com/event/17497824"
+  },
+  {
+   "id": "silent-book-club-burlington",
+   "kind": "books",
+   "name": "Silent Book Club Burlington",
+   "what": "The local chapter of Silent Book Club: bring any book, chat a bit, then read quietly together for an hour; no assigned reading.",
+   "when": "A monthly meetup whose venue moves around",
+   "category": "Books",
+   "url": "https://www.instagram.com/silentbookclubbtv/"
+  },
+  {
+   "id": "sobu-books-and-brews",
+   "kind": "books",
+   "name": "SoBu Books & Brews",
+   "what": "A book club for local 20-somethings that meets every couple of weeks at coffee shops, bars and breweries around Burlington, with books and times picked by member vote.",
+   "when": "Meets in person about every two weeks at rotating coffee shops, bars and breweries (nex...",
+   "category": "Books",
+   "url": "https://bookclubs.com/join-a-book-club/club/burlington-books-brews"
+  },
+  {
+   "id": "ffl-poetry-experience",
+   "kind": "books",
+   "name": "The Poetry Experience",
+   "what": "A writing and sharing circle for poets and creative people of all ages, hosted by Rajnii Eddins at the library.",
+   "when": "Second and fourth Saturdays, 1 to 3pm (Oct 24, 2026 is next",
+   "category": "Books",
+   "url": "https://fletcherfree.libcal.com/event/17119329"
+  },
+  {
+   "id": "burlington-miller-center-table-tennis",
+   "kind": "pickup",
+   "name": "Adult Drop-In Table Tennis at the Miller Center",
+   "what": "Burlington Parks' adult drop-in table tennis night at the Miller Center in the New North End.",
+   "when": "Mondays 6pm (Mondays Nov 9 to Dec 28, 2026 as posted)",
+   "category": "Sports & Rec",
+   "url": "https://www.burlingtonvt.gov/Calendar.aspx?EID=4647",
+   "from": "2026-11-09",
+   "until": "2026-12-28"
+  },
+  {
+   "id": "awasiwi-growth-league",
+   "kind": "league",
+   "name": "Awasiwi Growth League (disc golf)",
+   "what": "A weekly bring-your-own-partner doubles disc golf league on Tuesday evenings at the Awasiwi Woods course in South Burlington.",
+   "when": "Tuesdays 5pm (Weekly Jun 16 to Oct 27, 2026)",
+   "category": "Sports & Rec",
+   "url": "https://udisc.com/leagues/awasiwi-growth-league-CZIsaG"
+  },
+  {
+   "id": "ejrp-barcomb-basketball-league",
+   "kind": "league",
+   "name": "Barcomb Basketball League (Essex Junction Rec)",
+   "what": "Essex Junction Rec's fast-paced adult basketball league for ages 18 to 59, named for longtime director Dennis Barcomb, with games Monday or Wednesday nights at ADL.",
+   "when": "Mondays 6pm · Wednesdays 6pm (Fall, Sep 2 to Nov 18 2026)",
+   "category": "Sports & Rec",
+   "url": "https://www.ejrp.org"
+  },
+  {
+   "id": "btown-brief-pickup-basketball",
+   "kind": "pickup",
+   "name": "Btown Brief IRL Pickup Basketball",
+   "what": "Weekly pickup basketball run by the Btown Brief IRL Meetup group; indoors at UVM's Gutterson Fieldhouse for the cold months.",
+   "when": "Wednesdays 5:30pm",
+   "category": "Sports & Rec",
+   "url": "https://www.meetup.com/burlington-social-activites-group/"
+  },
+  {
+   "id": "colchester-rec-adult-pickup",
+   "kind": "pickup",
+   "name": "Colchester Rec adult pickup nights",
+   "what": "Town-run evening pickup basketball, volleyball and pickleball at the Colchester Recreation Center.",
+   "when": "Mondays 6:45pm · Mondays 7:15pm · Tuesdays 6:45pm · Tuesdays 7:15pm · Wednesdays 6:45pm · Wednesdays 7:15pm · Thursdays 6:45pm · Thursdays 7:15pm (fall blocks through mid-December 2026)",
+   "category": "Sports & Rec",
+   "url": "https://www.colchestervt.gov/3345/Adult-Sports"
+  },
+  {
+   "id": "csc-friday-night-dinghy-racing",
+   "kind": "pickup",
+   "name": "Community Sailing Center Friday Night Dinghy Racing",
+   "what": "Free, informal summer dinghy races off Burlington's waterfront for sailors who already know how to sail, including people learning to race.",
+   "when": "Fridays 6pm (summer; the 2026 series ran Fridays June 26 to Aug 28)",
+   "category": "Sports & Rec",
+   "url": "https://communitysailingcenter.org/adult-programs/",
+   "months": [
+    6,
+    7,
+    8
+   ]
+  },
+  {
+   "id": "cvu-rando-dubs",
+   "kind": "league",
+   "name": "CVU Rando Dubs (disc golf)",
+   "what": "A Wednesday evening doubles disc golf league at the CVU High School course in Hinesburg.",
+   "when": "Wednesdays 5:30pm (Weekly Jul 8 to Nov 18, 2026)",
+   "category": "Sports & Rec",
+   "url": "https://udisc.com/leagues/cvu-rando-dubs-D6QwGq"
+  },
+  {
+   "id": "dad-guild-basketball",
+   "kind": "pickup",
+   "name": "Dad Guild Open Gym Basketball",
+   "what": "Dads-only low-key pickup basketball on Tuesday nights.",
+   "when": "Tuesdays 7pm",
+   "category": "Sports & Rec",
+   "url": "https://www.dadguild.org/events"
+  },
+  {
+   "id": "edge-pickleball-open-play",
+   "kind": "pickup",
+   "name": "EDGE Pickleball Open Play",
+   "what": "Level-based, rotating-court open play at The EDGE's indoor and outdoor pickleball courts in South Burlington, from beginner socials to 4.25+ ladders.",
+   "when": "Two-hour open play sessions run most days and are grouped by level",
+   "category": "Sports & Rec",
+   "url": "https://edgevt.com/sports-fitness-3/sports/pickleball/"
+  },
+  {
+   "id": "elite-11-soccer-league",
+   "kind": "league",
+   "name": "Elite 11 Soccer League",
+   "what": "A summer 11v11 full-field men's soccer league for strong players 16+, with games mostly on Sundays at the Essex Tree Farm and under the lights at Saint Michael's College.",
+   "when": "Sundays (Summer only, roughly June to August)",
+   "category": "Sports & Rec",
+   "url": "https://www.elite11soccerleague.com"
+  },
+  {
+   "id": "elite-8-soccer-league",
+   "kind": "league",
+   "name": "Elite 8 Soccer League",
+   "what": "Competitive men's adult soccer leagues year-round: 8v8 for ages 25+, 7v7 for 40+, and an 18+ indoor league, indoors in winter and outdoors at the Essex Tree Farm in summer.",
+   "when": "Mondays 9pm · Tuesdays 9pm · Wednesdays 9pm · Thursdays 9pm · Tuesdays 6pm · Thursdays 6pm · Mondays 6pm",
+   "category": "Sports & Rec",
+   "url": "https://www.elite8soccerleague.com"
+  },
+  {
+   "id": "ejrp-mens-pickup-basketball",
+   "kind": "pickup",
+   "name": "Essex Junction men's pick-up basketball",
+   "what": "Essex Junction Rec's Tuesday night pick-up basketball for adults 18+.",
+   "when": "Tuesdays 7:30pm (Fall session Sep 1 to Nov 17 2026)",
+   "category": "Sports & Rec",
+   "url": "https://www.ejrp.org"
+  },
+  {
+   "id": "ejrp-womens-pickup-basketball",
+   "kind": "pickup",
+   "name": "Essex Junction women's pick-up basketball",
+   "what": "Essex Junction Rec's women-only, non-competitive pick-up basketball on Thursday nights.",
+   "when": "Thursdays 7pm (Fall session Sep 3 to Nov 19 2026)",
+   "category": "Sports & Rec",
+   "url": "https://www.ejrp.org"
+  },
+  {
+   "id": "vt-ultimate-essex-saturday-pickup",
+   "kind": "pickup",
+   "name": "Essex Pickup Ultimate (listed by Vermont Ultimate)",
+   "what": "Saturday-morning pickup ultimate frisbee at the AD Lawton School fields in Essex Junction.",
+   "when": "Saturdays 10am (listed as 2026 summer pickup; fall and winter not stated)",
+   "category": "Sports & Rec",
+   "url": "https://vermontultimate.org/current-pickups"
+  },
+  {
+   "id": "full-stride-adult-hockey",
+   "kind": "league",
+   "name": "Full Stride adult hockey leagues",
+   "what": "Adult recreational ice hockey leagues by skill division (Silver, D Mountain, D Lake, Beginner) with coed and women's play, games mostly at Cairns Arena and UVM's Gutterson rink.",
+   "when": "Game nights and times vary week to week (any night, starts from about 5pm to 10:10pm) a...",
+   "category": "Sports & Rec",
+   "url": "https://www.fullstride.com"
+  },
+  {
+   "id": "full-stride-learn-to-play-hockey",
+   "kind": "league",
+   "name": "Full Stride adult Learn to Play Hockey",
+   "what": "Sunday instructional ice hockey for adults: Learn to Play Hockey in the fall for brand new players, then the Instructional Hockey League in winter to get ready for the Beginner Division.",
+   "when": "Sundays 4:10pm (Fall course Nov to Dec; winter league Jan to Mar)",
+   "category": "Sports & Rec",
+   "url": "https://www.fullstride.com/adultprograms"
+  },
+  {
+   "id": "gameon-field-hockey",
+   "kind": "league",
+   "name": "Game On VT adult field hockey",
+   "what": "Adult field hockey leagues (rec and intermediate) from Game On VT: outdoors on Sunday afternoons in late summer and fall, then 7v7 on indoor turf at Shelburne Field House on Sundays.",
+   "when": "Sundays 3pm (Outdoor Aug to Oct; indoor Nov to Apr)",
+   "category": "Sports & Rec",
+   "url": "https://www.gameonvt.com/programs.php?sport=6"
+  },
+  {
+   "id": "gameon-cornhole",
+   "kind": "league",
+   "name": "Game On VT Bags and Brews cornhole",
+   "what": "A social cornhole league for 21+ played at Burlington-area breweries, run by Game On VT.",
+   "when": "Wednesdays 6pm · Mondays 6pm",
+   "category": "Sports & Rec",
+   "url": "https://www.gameonvt.com/programs.php?sport=52"
+  },
+  {
+   "id": "gameon-broomball",
+   "kind": "league",
+   "name": "Game On VT broomball",
+   "what": "Adult broomball league on the ice in shoes (no skates) at Leddy Park Arena's small rink, Friday nights.",
+   "when": "Fridays 7:30pm (Fall and winter sessions)",
+   "category": "Sports & Rec",
+   "url": "https://www.gameonvt.com/programs.php?sport=28"
+  },
+  {
+   "id": "gameon-softball",
+   "kind": "league",
+   "name": "Game On VT fall softball",
+   "what": "A coed recreational fall softball league on Sunday mornings, run by Game On VT.",
+   "when": "Sundays 10am (Fall, Sep 6 to Oct 25 2026)",
+   "category": "Sports & Rec",
+   "url": "https://www.gameonvt.com/programs.php?sport=2"
+  },
+  {
+   "id": "gameon-flag-football",
+   "kind": "league",
+   "name": "Game On VT flag football",
+   "what": "Coed flag football from Game On VT: a fall 7v7 outdoor league on Sunday mornings, then indoor pickup-style games on Sunday nights at Shelburne Field House with recreational and competitive options.",
+   "when": "Sundays 9am · Sundays 8pm (Outdoor league in the fall; indoor pickup Nov to Apr)",
+   "category": "Sports & Rec",
+   "url": "https://www.gameonvt.com/programs.php?sport=5"
+  },
+  {
+   "id": "gameon-floor-hockey",
+   "kind": "league",
+   "name": "Game On VT floor hockey",
+   "what": "Adult noncontact floor hockey league in sneakers, five skaters plus a goalie, run by Game On VT at Edmunds Elementary in Burlington.",
+   "when": "Tuesdays 7pm · Thursdays 7pm (Fall and winter sessions)",
+   "category": "Sports & Rec",
+   "url": "https://www.gameonvt.com/programs.php?sport=26"
+  },
+  {
+   "id": "gameon-indoor-lacrosse",
+   "kind": "pickup",
+   "name": "Game On VT indoor lacrosse pickup",
+   "what": "Men's and women's indoor lacrosse pickup on Sunday nights at Shelburne Field House, teams drawn each week, for players with some lacrosse experience.",
+   "when": "Sundays 7pm (Fall and spring sessions)",
+   "category": "Sports & Rec",
+   "url": "https://www.gameonvt.com/programs.php?sport=63"
+  },
+  {
+   "id": "gameon-pickleball",
+   "kind": "league",
+   "name": "Game On VT pickleball leagues",
+   "what": "Adult doubles pickleball leagues by skill level (2.5 to 4.0), indoors at The Pop in Essex on Monday and Wednesday nights, plus a fall outdoor league on Sunday mornings.",
+   "when": "Mondays 6pm · Wednesdays 6pm · Sundays 9am · Sundays 10am (Indoor sessions run year-round in two-month blocks; outdoor league in the fall)",
+   "category": "Sports & Rec",
+   "url": "https://www.gameonvt.com/programs.php?sport=245"
+  },
+  {
+   "id": "gameon-volleyball",
+   "kind": "league",
+   "name": "Game On VT volleyball leagues",
+   "what": "Adult coed 6v6 volleyball leagues run by Game On VT: indoor on Tuesday nights and a fall sand league on Sunday afternoons in Williston.",
+   "when": "Tuesdays 6:30pm · Sundays 3pm (Indoor sessions Sep-Oct, Nov-Dec, Mar-Apr; sand league in the fall)",
+   "category": "Sports & Rec",
+   "url": "https://www.gameonvt.com/programs.php?sport=18"
+  },
+  {
+   "id": "ymca-drop-in-gym",
+   "kind": "pickup",
+   "name": "Greater Burlington YMCA drop-in basketball, volleyball and pickleball",
+   "what": "Scheduled open gym times at the downtown Y for pickup basketball, relaxed volleyball and pickleball.",
+   "when": "The Y posts its gym schedule week by week and says times are subject to change, so no f...",
+   "category": "Sports & Rec",
+   "url": "https://www.gbymca.org/programs/wellness/adult-group-sports/"
+  },
+  {
+   "id": "green-mountain-apa-pool-league",
+   "kind": "league",
+   "name": "Green Mountain APA Pool League",
+   "what": "The local chapter of the American Poolplayers Association, running weekly 8-ball and 9-ball team leagues at VT Pool And Bar in Burlington.",
+   "when": "Sundays 3:30pm · Mondays 6pm · Tuesdays 6pm · Wednesdays 6pm · Thursdays 6pm",
+   "category": "Sports & Rec",
+   "url": "https://gm.apaleagues.com/Default.aspx"
+  },
+  {
+   "id": "lcyc-thursday-dinghy-racing",
+   "kind": "pickup",
+   "name": "LCYC Thursday Night Dinghy Racing",
+   "what": "Short, unscored, coaching-friendly dinghy races (mostly Lasers and RS Aeros) on Shelburne Bay on summer Thursday evenings, open to all comers.",
+   "when": "Thursdays 6pm (summer; the 2026 series ran 17 Thursdays, June 4 to Sept 24)",
+   "category": "Sports & Rec",
+   "url": "https://lcyc.info/racing/dinghy-racing",
+   "months": [
+    6,
+    7,
+    8,
+    9
+   ]
+  },
+  {
+   "id": "bpr-melanie-davidian-basketball",
+   "kind": "league",
+   "name": "Melanie Davidian Women's Basketball League",
+   "what": "Burlington Parks, Recreation and Waterfront's LGBTQIA+ inclusive women's basketball league for adults 18+, Sunday afternoons at the Miller Rec Center.",
+   "when": "Sundays 2:30pm (Winter, Nov to Mar)",
+   "category": "Sports & Rec",
+   "url": "https://www.gameonvt.com/program.php?id=149"
+  },
+  {
+   "id": "miller-center-drop-in-pickleball",
+   "kind": "pickup",
+   "name": "Miller Center Drop-in Pickleball",
+   "what": "City-run indoor drop-in pickleball by skill level at the Miller Center in the New North End.",
+   "when": "Mondays 11am · Wednesdays 11am · Fridays 11am · Tuesdays 11am · Thursdays 11am · Saturdays 8:30am · Mondays 1pm · Tuesdays 1pm · Fridays 1pm · Thursdays 1pm (October-May; the center is closed for renovation until November 6, 2026)",
+   "category": "Sports & Rec",
+   "url": "https://www.burlingtonvt.gov/985/Robert-Miller-Community-Recreation-Cente"
+  },
+  {
+   "id": "ymca-queerball",
+   "kind": "pickup",
+   "name": "QueerBALL at the YMCA",
+   "what": "Community basketball for LGBTQIA+ adults (18+): free shoot, games, then a scrimmage.",
+   "when": "Listed Sundays 2:30 to 4:30 PM (teams split at 3:00) on the Y's gym schedule for Oct 18...",
+   "category": "Sports & Rec",
+   "url": "https://www.gbymca.org/membership/hours-schedules/gym/"
+  },
+  {
+   "id": "revolution-mens-league",
+   "kind": "league",
+   "name": "Revolution Men's League",
+   "what": "A draft-style competitive men's basketball league run by Revolution Basketball, the organization behind the Burlington Revolution ABA team.",
+   "when": "Runs in seasons (a spring league started March 29, 2026",
+   "category": "Sports & Rec",
+   "url": "https://burlingtonrevolution.com/pages/contact"
+  },
+  {
+   "id": "shelburne-pickleball-open-play",
+   "kind": "pickup",
+   "name": "Shelburne Pickleball Drop-In Open Play",
+   "what": "Outdoor drop-in pickleball at Davis Park where players of all levels are matched with opponents of similar experience.",
+   "when": "Mondays 5:30pm · Wednesdays 5:30pm (outdoor season, from April 20, 2026)",
+   "category": "Sports & Rec",
+   "url": "https://www.shelburnevt.org/181/Adult-Programs",
+   "from": "2026-04-20"
+  },
+  {
+   "id": "shelburne-adult-volleyball",
+   "kind": "pickup",
+   "name": "Shelburne Rec Adult Volleyball",
+   "what": "Recreational 6-on-6 coed pickup volleyball twice a week in the Shelburne Town Gym, open to all levels.",
+   "when": "Wednesdays 7pm · Sundays 7pm (Sept 9, 2026 to May 30, 2027)",
+   "category": "Sports & Rec",
+   "url": "https://www.shelburnevt.org/181/Adult-Programs",
+   "from": "2026-09-09",
+   "until": "2027-05-30"
+  },
+  {
+   "id": "shelburne-mens-pickup-basketball",
+   "kind": "pickup",
+   "name": "Shelburne Rec Men's Pickup Basketball",
+   "what": "Twice-weekly pickup basketball for men 18 and older run by Shelburne Parks & Recreation during the school year.",
+   "when": "Mondays 7pm · Wednesdays 7pm (school year, Sept 14, 2026 to May 26, 2027)",
+   "category": "Sports & Rec",
+   "url": "https://www.shelburnevt.org/181/Adult-Programs",
+   "from": "2026-09-14",
+   "until": "2027-05-26"
+  },
+  {
+   "id": "shelburne-table-tennis",
+   "kind": "pickup",
+   "name": "Shelburne Rec table tennis",
+   "what": "Shelburne Parks and Rec's Friday night table tennis for ages 16 to 99 with informal instruction, organized play and matches.",
+   "when": "Fridays 6:30pm (School year, Sep 4 to May 28)",
+   "category": "Sports & Rec",
+   "url": "https://www.shelburnevt.org/181/Adult-Programs"
+  },
+  {
+   "id": "socialsports-coed-7v7-soccer",
+   "kind": "league",
+   "name": "Social Sports VT coed 7v7 soccer league",
+   "what": "A recreational coed 7v7 soccer league for adults 16+ in four divisions, indoors at Shelburne Field House in fall and winter and outdoors in Essex in summer.",
+   "when": "Wednesdays 6pm · Thursdays 6pm (Three seasons: fall Sep-Dec, winter Jan-Apr, spring/summer May-Aug)",
+   "category": "Sports & Rec",
+   "url": "https://www.socialsportsvt.com/soccer"
+  },
+  {
+   "id": "socialsports-friday-futsal",
+   "kind": "league",
+   "name": "Social Sports VT Friday Futsal",
+   "what": "A Friday night 5v5 futsal league at Shelburne Field House with adult open, women's, 35+, 50+ and walking futsal divisions (plus youth earlier in the evening).",
+   "when": "Fridays 8pm (Fall through spring in 8-week sessions)",
+   "category": "Sports & Rec",
+   "url": "https://www.socialsportsvt.com/indoor-futsal-league"
+  },
+  {
+   "id": "socialsports-sunday-pickup-soccer",
+   "kind": "pickup",
+   "name": "Social Sports VT Sunday morning pickup soccer",
+   "what": "Sign-up pickup soccer, 7v7 open to men and women 16+, early Sunday mornings at Shelburne Field House.",
+   "when": "Sundays 7am",
+   "category": "Sports & Rec",
+   "url": "https://www.socialsportsvt.com/recreational-pickup-soccer"
+  },
+  {
+   "id": "socialsports-womens-7v7-soccer",
+   "kind": "league",
+   "name": "Social Sports VT women's 7v7 soccer league",
+   "what": "A recreational women's 7v7 soccer league for adults 16+ of all skill levels, played year-round across three seasons.",
+   "when": "Mondays 6pm · Mondays 8pm · Tuesdays 8pm (Three seasons: fall Sep-Dec, winter Jan-Apr, spring/summer May-Aug)",
+   "category": "Sports & Rec",
+   "url": "https://www.socialsportsvt.com/womens-7v7-league"
+  },
+  {
+   "id": "south-burlington-monday-futsal",
+   "kind": "pickup",
+   "name": "South Burlington Rec Monday Indoor Soccer (Futsal)",
+   "what": "Co-ed adult (18+) pickup futsal open gym run by South Burlington Recreation & Parks.",
+   "when": "Mondays 6pm (fall and winter)",
+   "category": "Sports & Rec",
+   "url": "https://www.southburlingtonvt.gov/458/Adult-Drop-In-Sports-Calendar"
+  },
+  {
+   "id": "spare-time-colchester-bowling-leagues",
+   "kind": "league",
+   "name": "Spare Time Colchester bowling leagues",
+   "what": "Bowling leagues and casual social bowling programs at the area's only bowling alley, Spare Time in Colchester.",
+   "when": "Fall programs are forming now",
+   "category": "Sports & Rec",
+   "url": "https://www.sparetimeentertainment.com/colchester/lanes/leagues/"
+  },
+  {
+   "id": "cairns-arena-stick-and-puck",
+   "kind": "pickup",
+   "name": "Stick and Puck at Cairns Arena",
+   "what": "Open stick and puck ice time at South Burlington's twin-rink city arena, posted on the arena's online schedule.",
+   "when": "Sessions change week to week",
+   "category": "Sports & Rec",
+   "url": "https://www.cairnsarena.com/stick---puck5f114ba3"
+  },
+  {
+   "id": "leddy-stick-and-puck",
+   "kind": "pickup",
+   "name": "Stick and Puck at Leddy Arena",
+   "what": "Open ice at Burlington's city rink where you bring a stick, skates and a helmet to work on your shot or join a small game.",
+   "when": "Mondays 10:45am · Wednesdays 10:45am (Oct 2026 to Mar 2027 as posted)",
+   "category": "Sports & Rec",
+   "url": "https://www.burlingtonvt.gov/Facilities/Facility/Details/Gordon-H-Paquette-Ice-Arena-10",
+   "from": "2026-10-19",
+   "until": "2027-03-31"
+  },
+  {
+   "id": "talent-skatepark-sessions",
+   "kind": "pickup",
+   "name": "Talent Skatepark sessions",
+   "what": "Burlington's nonprofit indoor skatepark, open in reserved two-hour sessions, including a late Thursday session for skaters 25 and older and a Saturday morning session for beginners only.",
+   "when": "Session times are posted in two-week blocks on the Hours page",
+   "category": "Sports & Rec",
+   "url": "https://www.talentskatepark.org"
+  },
+  {
+   "id": "usta-greater-burlington-flex-league",
+   "kind": "league",
+   "name": "USTA Greater Burlington Flex League (tennis)",
+   "what": "A self-scheduled tennis ladder for the Burlington, Milton and Middlebury area: the USTA Flex app pairs you with a nearby opponent every two weeks and you book the court.",
+   "when": "No fixed night: you and your assigned opponent pick a time and court",
+   "category": "Sports & Rec",
+   "url": "https://www.usta.com/en/home/play/adult-tennis/programs/newengland/flex-leagues-.html"
+  },
+  {
+   "id": "usta-vermont-league-tennis",
+   "kind": "league",
+   "name": "USTA Vermont League tennis",
+   "what": "Team tennis for recreational adults 18+, singles and doubles, matched by NTRP rating against other Vermont teams, with Burlington-area clubs among the match sites.",
+   "when": "Teams play scheduled matches at member clubs",
+   "category": "Sports & Rec",
+   "url": "https://www.usta.com/en/home/play/adult-tennis/programs/newengland/vermont/vermont-usta-league.html"
+  },
+  {
+   "id": "vermont-dodgeball",
+   "kind": "pickup",
+   "name": "Vermont Dodgeball",
+   "what": "Pickup dodgeball every Monday night; teams are picked at random before games, no team needed.",
+   "when": "Mondays 7pm",
+   "category": "Sports & Rec",
+   "url": "http://www.vtdodgeball.com"
+  },
+  {
+   "id": "vt-mixed-masters-ultimate",
+   "kind": "pickup",
+   "name": "Vermont Mixed Masters Pickup (ultimate)",
+   "what": "Year-round weekly ultimate pickup for older players (women-matching 30+, men-matching 33+) in the Burlington area.",
+   "when": "'We play weekly year-round in the Burlington, VT area' but day, time and place are not...",
+   "category": "Sports & Rec",
+   "url": "https://groups.google.com/g/vt-mixed-masters"
+  },
+  {
+   "id": "vermont-ultimate-forever-summer-saturdays",
+   "kind": "pickup",
+   "name": "Vermont Ultimate Forever Summer Saturdays",
+   "what": "A Saturday series of ultimate at Forever Summer in Williston: a free community pickup day to start, then mostly one-day hat tournaments and themed events.",
+   "when": "Saturdays (Saturdays Nov 7 to Dec 19 2026)",
+   "category": "Sports & Rec",
+   "url": "https://www.vermontultimate.org/forever-summer-saturdays"
+  },
+  {
+   "id": "vermont-ultimate-rec-coed-league",
+   "kind": "league",
+   "name": "Vermont Ultimate recreational co-ed league",
+   "what": "Vermont Ultimate's relaxed co-ed ultimate league for new and experienced players: Thursday nights under the lights at Landry Park in the fall, Sunday afternoons indoors at Forever Summer in Williston in winter.",
+   "when": "Thursdays 7pm · Sundays 3:30pm (Fall league Sep-Oct; winter sessions from Nov)",
+   "category": "Sports & Rec",
+   "url": "https://www.vermontultimate.org/adult-playing-opportunities"
+  },
+  {
+   "id": "vermont-ultimate-tuesday-league",
+   "kind": "league",
+   "name": "Vermont Ultimate Tuesday competitive league",
+   "what": "Vermont Ultimate's competitive mixed ultimate league on Tuesday nights: outdoors at Landry Park in Winooski in the fall, then indoors at Shelburne Field House for the winter league.",
+   "when": "Tuesdays 6:30pm · Tuesdays 8pm (Fall league Sep-Oct outdoors; winter league Nov-Feb indoors)",
+   "category": "Sports & Rec",
+   "url": "https://www.vermontultimate.org/adult-playing-opportunities"
+  },
+  {
+   "id": "vermont-ultimate-womens-winter-league",
+   "kind": "league",
+   "name": "Vermont Ultimate women's winter league",
+   "what": "Vermont Ultimate's indoor 4v4 women's ultimate league on Sunday afternoons at Forever Summer in Williston, open to women and gender-diverse players.",
+   "when": "Sundays 3:30pm (Winter session 1, Nov 1 to Dec 13 2026)",
+   "category": "Sports & Rec",
+   "url": "https://www.vermontultimate.org/adult-playing-opportunities"
+  },
+  {
+   "id": "vermont-womxns-pickup-soccer",
+   "kind": "pickup",
+   "name": "Vermont Womxn's Pick-up Soccer",
+   "what": "Women's and LGBTQIA+ inclusive pickup soccer, overseen by Burlington Parks, Recreation & Waterfront; free outdoors in summer.",
+   "when": "Sundays 5pm (outdoor drop-in roughly late Apr-mid Sep (2026 events Apr 26-Sep 13))",
+   "category": "Sports & Rec",
+   "url": "https://www.meetup.com/womens-soccer-vermont/"
+  },
+  {
+   "id": "williston-coed-volleyball-league",
+   "kind": "league",
+   "name": "Williston Coed Volleyball League",
+   "what": "A volunteer-run coed adult volleyball league on Wednesday nights in Williston, with fall and spring sessions that end in a playoff tournament.",
+   "when": "Wednesdays 7pm (fall and spring sessions; sign-up deadlines Sept 1 (fall) and Jan 1 (spring))",
+   "category": "Sports & Rec",
+   "url": "https://willistonvt.myrec.com/info/activities/program_details.aspx?ProgramID=30003",
+   "months": [
+    9,
+    10,
+    11,
+    12,
+    1,
+    2,
+    3,
+    4,
+    5
+   ]
+  },
+  {
+   "id": "williston-table-tennis-pickup",
+   "kind": "pickup",
+   "name": "Williston Rec Adult Pickup Table Tennis",
+   "what": "Tuesday evening pickup table tennis for adults at Williston's R.E.C. Zone, open to all experience levels.",
+   "when": "Tuesdays 6:30pm (Oct 2026 to May 2027)",
+   "category": "Sports & Rec",
+   "url": "https://willistonvt.myrec.com/info/activities/program_details.aspx?ProgramID=30311",
+   "from": "2026-10-13",
+   "until": "2027-05-18"
+  },
+  {
+   "id": "williston-pickup-volleyball",
+   "kind": "pickup",
+   "name": "Williston Rec adult pickup volleyball",
+   "what": "Williston Rec's registration-only adult pickup volleyball, Monday nights at Allen Brook School.",
+   "when": "Mondays 7:10pm (School year, mid Oct to mid May)",
+   "category": "Sports & Rec",
+   "url": "https://willistonvt.myrec.com/info/activities/program_details.aspx?ProgramID=30236"
+  },
+  {
+   "id": "williston-mens-pickup-basketball",
+   "kind": "pickup",
+   "name": "Williston Rec men's pickup basketball",
+   "what": "Williston Rec's registration-only men's pickup basketball: a 20+ group on Tuesdays and a 30+ group on Thursdays at Williston Central School.",
+   "when": "Tuesdays 7:10pm · Thursdays 7:10pm (School year, mid Oct to mid May)",
+   "category": "Sports & Rec",
+   "url": "https://willistonvt.myrec.com/info/activities/program_details.aspx?ProgramID=29855"
+  },
+  {
+   "id": "williston-womens-pickup-basketball",
+   "kind": "pickup",
+   "name": "Williston Rec women's pickup basketball",
+   "what": "Williston Rec's registration-only women's pickup basketball for ages 19+, Thursday nights at Allen Brook School.",
+   "when": "Thursdays 7:10pm (School year, mid Oct to mid May)",
+   "category": "Sports & Rec",
+   "url": "https://willistonvt.myrec.com/info/activities/program_details.aspx?ProgramID=30238"
+  },
+  {
+   "id": "ffl-crafters-drop-in",
+   "kind": "making",
+   "name": "Crafters Drop-In at Fletcher Free",
+   "what": "Bring whatever you're knitting, crocheting, mending or embroidering and craft alongside neighbors on Tuesday evenings.",
+   "when": "Tuesdays 6pm",
+   "category": "Making & Crafts",
+   "url": "https://fletcherfree.libcal.com/event/16927753"
+  },
+  {
+   "id": "pierson-fiber-arts",
+   "kind": "making",
+   "name": "Fiber Arts Crafting Hour (Pierson Library)",
+   "what": "Knitters, needlepointers and other crafters bring a project and work together at the Shelburne library every Monday at noon.",
+   "when": "Mondays 12pm",
+   "category": "Making & Crafts",
+   "url": "https://piersonlibrary.org/event/fiber-arts-crafting-hour-45/"
+  },
+  {
+   "id": "generator-makerspace",
+   "kind": "making",
+   "name": "Generator Makerspace",
+   "what": "Burlington's nonprofit makerspace with wood and metal shops, sewing, electronics, jewelry and 3D printing; try it with a day pass after a free orientation.",
+   "when": "Day passes are sold in person Mondays 9am to 4pm and Tuesday to Saturday 9am to 6pm (no...",
+   "category": "Making & Crafts",
+   "url": "https://generatorvt.com/"
+  },
+  {
+   "id": "sbpl-knit-for-your-neighbors",
+   "kind": "making",
+   "name": "Knit for Your Neighbors",
+   "what": "A weekly drop-in where people of all ages knit or crochet hats and scarves for the South Burlington Food Shelf; yarn and needles provided.",
+   "when": "Thursdays 2pm",
+   "category": "Making & Crafts",
+   "url": "https://southburlingtonlibrary.org/knit-for-your-neighbors"
+  },
+  {
+   "id": "must-love-yarn-crafters-group",
+   "kind": "making",
+   "name": "Must Love Yarn Crafter's Group",
+   "what": "A twice-weekly knitting and crochet circle at the Shelburne Road yarn shop; bring your project and sit with other yarn crafters.",
+   "when": "Wednesdays 5pm · Sundays 1pm",
+   "category": "Making & Crafts",
+   "url": "https://mustloveyarn.com/"
+  },
+  {
+   "id": "alliance-francaise-social-hour",
+   "kind": "language",
+   "name": "Alliance Francaise Burlington Social Hour",
+   "what": "The Alliance Francaise's longest-running monthly French social hour, where speakers of every level chat in French over drinks downtown.",
+   "when": "Last Friday of every month, 5:30 to 7pm at the Hilton Garden Inn, 101 Main St (next: Oc...",
+   "category": "Language",
+   "url": "https://www.aflcr.org/events/social-hours/"
+  },
+  {
+   "id": "ffl-irish-conversation",
+   "kind": "language",
+   "name": "Irish Language Conversation Groups",
+   "what": "Weekly Irish (Gaelic) conversation at the library, with an advanced group followed by a beginner group.",
+   "when": "Wednesdays 10:30am",
+   "category": "Language",
+   "url": "https://fletcherfree.libcal.com/event/17497215"
+  },
+  {
+   "id": "ffl-italian-conversation",
+   "kind": "language",
+   "name": "Italian Conversation Group at Fletcher Free",
+   "what": "A Thursday lunchtime hour to practice Italian with learners and native speakers.",
+   "when": "Thursdays 12pm",
+   "category": "Language",
+   "url": "https://fletcherfree.libcal.com/event/16005869"
+  },
+  {
+   "id": "sbpl-italian-conversation",
+   "kind": "language",
+   "name": "Italian Conversation Group at South Burlington Library",
+   "what": "A twice-monthly Italian conversation morning led by a native speaker, brought by the Vermont Italian Cultural Association.",
+   "when": "Second and fourth Wednesday mornings, 10 to 11am in the Digital Lab (next: Oct 28, Nov...",
+   "category": "Language",
+   "url": "https://southburlingtonlibrary.org/italian-conversation-group"
+  },
+  {
+   "id": "sbpl-mandarin-conversation",
+   "kind": "language",
+   "name": "Mandarin Conversation Circle",
+   "what": "Learn or practice Mandarin with volunteers from the Vermont Chinese School, twice a month at the library.",
+   "when": "First and third Thursdays, 11am to noon, Community Room (next: Nov 5 and Nov 19, 2026)",
+   "category": "Language",
+   "url": "https://southburlingtonlibrary.org/mandarin-conversation-circle"
+  },
+  {
+   "id": "ffl-pause-cafe-french",
+   "kind": "language",
+   "name": "Pause-Cafe Mardi French Conversation",
+   "what": "A Tuesday evening French conversation hour at the library for francophones and French learners; drop-ins welcome.",
+   "when": "Tuesdays 5pm",
+   "category": "Language",
+   "url": "https://fletcherfree.libcal.com/event/17689551"
+  },
+  {
+   "id": "ffl-spanish-conversation",
+   "kind": "language",
+   "name": "Spanish Conversation at Fletcher Free",
+   "what": "A weekly library meetup to practice Spanish with other speakers and learners; beginners welcome.",
+   "when": "Tuesdays 4:30pm",
+   "category": "Language",
+   "url": "https://fletcherfree.libcal.com/event/17514811"
+  },
+  {
+   "id": "south-burlington-community-chorus",
+   "kind": "music",
+   "name": "South Burlington Community Chorus",
+   "what": "A no-audition community chorus founded in 1976 that rehearses Tuesday evenings each fall and spring and gives concerts.",
+   "when": "Rehearses Tuesday evenings 7 to 9pm in South Burlington during the fall and spring seme...",
+   "category": "Music",
+   "url": "https://sbchorusvt.org/"
+  },
+  {
+   "id": "802-westie-collective",
+   "kind": "dance",
+   "name": "802 Westie Collective",
+   "what": "A volunteer-run West Coast Swing group with drop-in classes and social dancing on Wednesday nights and a social dance on the first Saturday of some months.",
+   "when": "Wednesdays 7pm",
+   "category": "Dance",
+   "url": "https://802westiecollective.org/"
+  },
+  {
+   "id": "queen-city-contras",
+   "kind": "dance",
+   "name": "Queen City Contras",
+   "what": "A live-band contra dance on select Fridays where every dance is taught, so you can come solo with no experience.",
+   "when": "Select Fridays, 7 to 10pm with a beginner lesson at 6:45pm: Oct 23 at St",
+   "category": "Dance",
+   "url": "https://queencitycontras.com/"
+  },
+  {
+   "id": "queen-city-tango",
+   "kind": "dance",
+   "name": "Queen City Tango",
+   "what": "Burlington's Argentine tango community, which usually holds two events a month: milongas (social dances, often with a short intro class) plus classes and visiting-teacher workshops.",
+   "when": "About two events a month on dates posted on the Events page",
+   "category": "Dance",
+   "url": "https://www.queencitytango.org/"
+  },
+  {
+   "id": "snowmotion-latin-dance",
+   "kind": "dance",
+   "name": "SnowMotion Studios Latin Dance",
+   "what": "Salsa, bachata and kizomba classes you can drop into without a partner, plus Latin dance socials at Burlington and Winooski breweries.",
+   "when": "Weekly classes at GROW, 696 Pine St: Tuesdays Beginner Salsa 7pm and All-Levels Bachata...",
+   "category": "Dance",
+   "url": "https://www.snowmotionstudios.com"
+  },
+  {
+   "id": "vermont-swings",
+   "kind": "dance",
+   "name": "Vermont Swings",
+   "what": "Burlington's Lindy Hop and swing dance community, with a weekly Tuesday DJ social dance after its classes and monthly Saturday dances.",
+   "when": "Tuesdays 8pm",
+   "category": "Dance",
+   "url": "https://vermontswings.com/"
+  },
+  {
+   "id": "champ-masters-toastmasters",
+   "kind": "other",
+   "name": "Champ Masters Toastmasters",
+   "what": "A Toastmasters club meeting twice a month at Dealer.com in downtown Burlington, in person or online, to practice speeches, impromptu speaking and leading meetings.",
+   "when": "First and third Wednesdays of each month, 6 to 7:30pm, at Dealer.com, 1 Howard St (next...",
+   "category": "Other",
+   "url": "http://3368563.toastmastersclubs.org/"
+  },
+  {
+   "id": "brownell-current-events",
+   "kind": "other",
+   "name": "Current Events Discussion (Brownell Library)",
+   "what": "A weekly Tuesday morning group that steps back from the news feed to talk through what the week's events mean, in a non-judgmental setting.",
+   "when": "Tuesdays 10am",
+   "category": "Other",
+   "url": "https://brownelllibrary.org/event/current/2026-10-20/"
+  },
+  {
+   "id": "essex-junction-walking-club",
+   "kind": "run",
+   "name": "Essex Junction Rec Walking Club",
+   "what": "Free weekly walking group from Essex Junction Recreation & Parks' older-adults program.",
+   "when": "Wednesdays 10:30am",
+   "category": "Other",
+   "url": "https://www.ejrp.org/olderadults"
+  },
+  {
+   "id": "green-mountain-curling-club",
+   "kind": "other",
+   "name": "Green Mountain Curling Club",
+   "what": "Vermont's local curling club, based in Essex Junction, which curls at the Bedford Curling Club just over the Quebec border and runs monthly learn-to-curl clinics.",
+   "when": "Learn-to-curl clinics run one Sunday a month, 1 to 4pm, at Bedford Curling Club (15 Rue...",
+   "category": "Other",
+   "url": "https://www.greenmountaincurlingclub.org",
+   "from": "2026-11-01",
+   "until": "2027-04-04"
+  },
+  {
+   "id": "vca-improv-night",
+   "kind": "other",
+   "name": "Improv Night and Jam (Vermont Comedy Arts)",
+   "what": "A weekly long-form improv show by local teams that turns into an open improv jam afterward, where anyone can jump onstage and try it.",
+   "when": "Wednesdays 6:30pm",
+   "category": "Other",
+   "url": "https://www-vermontcomedyclub-com.seatengine.com/shows/386400"
+  },
+  {
+   "id": "metrorock-adult-climbing-team",
+   "kind": "other",
+   "name": "MetroRock Vermont Adult Climbing Team",
+   "what": "A coached weekly climbing group for adults of all skill levels at the MetroRock gym in Essex Junction.",
+   "when": "Wednesdays 5pm",
+   "category": "Other",
+   "url": "https://vt.metrorock.com/vt-adult-programs"
+  },
+  {
+   "id": "toastmasters-greater-burlington",
+   "kind": "other",
+   "name": "Toastmasters of Greater Burlington",
+   "what": "A Toastmasters club where members practice prepared speeches, impromptu speaking and giving feedback; guests can visit any meeting.",
+   "when": "Second and fourth Wednesdays of the month, 6 to 7:30pm",
+   "category": "Other",
+   "url": "https://toastmastersofgreaterburlingtonvermont.toastmastersclubs.org/"
+  }
+ ]
 }

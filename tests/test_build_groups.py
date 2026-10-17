@@ -142,7 +142,12 @@ class Clubs(unittest.TestCase):
         self.assertEqual(bg.when_text([{"day": "mon", "time": None, "note": "x"}], season="fall"), "Mondays (fall)")
         self.assertEqual(bg.when_text([], "Second Tuesday of each month. RSVP on Meetup."), "Second Tuesday of each month")
         many = [{"day": d, "time": "18:00"} for d in ("mon", "tue", "wed", "thu", "fri")]
-        self.assertTrue(bg.when_text(many).endswith("+2 more"))
+        self.assertEqual(bg.when_text(many), "Mondays 6pm · Tuesdays 6pm · Wednesdays 6pm · Thursdays 6pm · Fridays 6pm",
+                         "every day stays in, since What Now matches nights by these words")
+
+    def test_dates_must_be_plain_yyyy_mm_dd(self):
+        for bad in ("20261017", "2026-W42-6", "2026-10-17T00:00"):
+            self.assertTrue(any("not YYYY-MM-DD" in e for e in errors_for(group(until=bad))), bad)
 
     def test_build_keeps_the_old_shape(self):
         run = {"clubs": [{"id": "skirack-run-club", "name": "Skirack Run Club", "kind": "run", "what": "Mondays.",
@@ -158,6 +163,12 @@ class Clubs(unittest.TestCase):
         self.assertEqual(cats["chess"], "Games & Puzzles")
         self.assertEqual(cats["skirack-run-club"], "Running")
         self.assertEqual(sum(1 for r in rows if r.get("featured")), 1)
+
+    def test_build_carries_the_machine_season(self):
+        rows = bg.build_clubs({"groups": [group("sand", months=[6, 7, 8]), OWN]}, {"clubs": []})["clubs"]
+        row = next(r for r in rows if r["id"] == "sand")
+        self.assertEqual(row["months"], [6, 7, 8])
+        self.assertNotIn("until", row)
 
 
 class RealFiles(unittest.TestCase):

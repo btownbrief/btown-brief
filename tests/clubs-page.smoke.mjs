@@ -127,7 +127,7 @@ async function main() {
     check(/view=browse/.test(page.url()), 'the view is in the URL', page.url());
     check((await page.locator('.gx-section').first().textContent()).startsWith('Run clubs'), 'Run clubs is the first section');
     const featured = page.locator('.gx-card-featured');
-    check(await featured.count() === 1 && /Burlington Social Activities/i.test(await featured.textContent()), 'Stephen’s own group is featured');
+    check(await featured.count() === 1 && /Btown Brief IRL|Burlington Social/i.test(await featured.textContent()), 'Stephen’s own group is featured');
     await page.locator('.gx-card .gx-more summary').first().click();
     const over2 = await overflowing(page);
     check(over2.length === 0, 'no card pokes past the edge at 390', over2);

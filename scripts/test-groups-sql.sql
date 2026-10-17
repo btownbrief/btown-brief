@@ -53,8 +53,11 @@ select pg_temp.ok(pg_temp.err(pg_temp.sub('Chess club', 'games', 'Tuesdays', 'He
 -- ------------------------------------------------------------ submitting
 select pg_temp.ok(pg_temp.sub('  Tuesday   Night Chess ', 'Games', E'Tuesdays\t7pm', 'Fletcher Free Library', 'https://example.org/chess?x=1#a',
   'Organizer@Example.org', 'We are friendly.', 'device-0000001') = '{"ok": true}'::jsonb, 'a good submission');
-select pg_temp.ok(pg_temp.sub('Tuesday night chess', 'games', 'Tuesdays 7pm', 'Somewhere', '', 'b@c.co', '', 'device-0000099')
-  = '{"ok": true, "repeat": true}'::jsonb, 'the same group twice is a quiet success');
+select pg_temp.ok(pg_temp.sub('Tuesday night chess', 'games', 'Tuesdays 7pm', 'fletcher free library', 'https://example.org/chess?x=1#a',
+  'organizer@example.org', 'We are friendly.', 'device-0000099')
+  = '{"ok": true, "repeat": true}'::jsonb, 'the same submission twice is a quiet success');
+select pg_temp.ok(pg_temp.err(pg_temp.sub('Chess club', 'games', 'Tuesdays', 'Here', '', 'a@b.co', 'see chessclub.org', 'device-0000099')) = 'too_many_links',
+  'even one link in a text box is refused (it goes in the Link box)');
 select pg_temp.ok(public.groups_public() = '[]'::jsonb, 'nothing shows before Stephen approves it');
 
 -- per device: three a day
@@ -93,6 +96,11 @@ select pg_temp.ok(public.groups_public() = '[]'::jsonb, 'rejected leaves the pag
 select pg_temp.ok(public.groups_mod_act('test-secret', (select id from chess), 'pending') = '{"ok":true}'::jsonb, 'back to the queue');
 select pg_temp.ok(public.groups_mod_act('test-secret', (select id from chess), 'delete') = '{"ok":true}'::jsonb, 'delete');
 select pg_temp.ok(jsonb_array_length(public.groups_mod_list('test-secret') -> 'waiting') = 29, 'deleted is gone');
+reset role;
+select pg_temp.ok((select status = 'spam' and name = '' and email = '' and device_hash <> '' from public.groups_submissions where id = (select id from chess)),
+  'deleted is a wiped tombstone that still counts for the rate limits');
+set role anon;
+select pg_temp.ok(not (public.groups_mod_list('test-secret')::text like '%"spam"%'), 'and it is off the decided list');
 -- the queue cap
 reset role;
 insert into public.groups_submissions (name, kind, when_text, where_text, email, device_hash, created_at)
