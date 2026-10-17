@@ -289,8 +289,18 @@ export function report(id, reason) {
     return { ok: true, hidden: !!r.data.hidden };
   });
 }
+/* Other modules' own data goes with the account: each registers a
+   function that deletes it and resolves { ok } (Habits: sz_delete_me).
+   They run first, and any refusal but 'off' (their SQL not pasted, so
+   nothing to delete) stops the deletion with its message, so Settings never
+   says "Deleted" while something is left behind. */
+const alsoDelete = new Set();
+export function onDeleteMe(fn) { alsoDelete.add(fn); return () => alsoDelete.delete(fn); }
 export function deleteMe() {
-  return call('nn_delete_me').then((r) => {
+  return Promise.all([...alsoDelete].map((fn) => Promise.resolve().then(fn).catch(() => fail('offline')))).then((rs) => {
+    const bad = rs.find((r) => r && !r.ok && r.error !== 'off');
+    return bad || call('nn_delete_me');
+  }).then((r) => {
     if (!r.ok) return r;
     me = undefined;
     changed(null, null, 'deleteme');

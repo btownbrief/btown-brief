@@ -35,6 +35,7 @@
 
 import * as app from '../app.js';
 import * as store from '../store.js';
+import * as boards from '../boards.js';
 import { el, esc, ICON, button, chips } from '../ui.js';
 import { HABIT_RULES, dayKey, addDays, streak, streakUnit, weekDots, daysUntil, nextMidnight, checkHabit, checkMe, message } from '../habits-core.js';
 import { FakeHabits, seedDemo } from '../habits-fake.js';
@@ -140,9 +141,11 @@ function flush() {
     for (;;) {
       const p = app.demo ? demoQueue.shift() : pending()[0];
       if (!p) break;
-      /* a day gone by: the server would refuse it, so it is let go quietly */
+      /* a day gone by: the server would refuse it, so it is let go quietly,
+         and the screen goes back to what the server has */
       if (p.date !== dayKey(Date.now())) {
         if (!app.demo) setPending(pending().filter((x) => !(x.habit === p.habit && x.date === p.date && x.op === p.op)));
+        undo(p);
         continue;
       }
       const r = await call(p.op === 'tap' ? 'sz_tap' : 'sz_untap', { p_habit: p.habit, p_date: p.date });
@@ -153,8 +156,7 @@ function flush() {
       if (!app.demo) setPending(pending().filter((x) => !(x.habit === p.habit && x.date === p.date && x.op === p.op)));
       if (!r.ok) {
         /* refused (a day gone by, a habit gone): take it back on screen */
-        if (p.date === S.today) { if (p.op === 'tap') tapsOf(p.habit).delete(p.date); else tapsOf(p.habit).add(p.date); }
-        paintRow(p.habit);
+        undo(p);
         app.toast(r.message);
       }
     }
@@ -163,6 +165,11 @@ function flush() {
   return flushing;
 }
 const demoQueue = [];
+/* an op the server never took: put the row back as the server has it */
+function undo(p) {
+  if (p.op === 'tap') tapsOf(p.habit).delete(p.date); else tapsOf(p.habit).add(p.date);
+  paintRow(p.habit);
+}
 window.addEventListener('online', () => { if (S.uid) flush(); });
 
 /* --------------------------------------------------------------- loading */
@@ -654,14 +661,12 @@ function meForm() {
 }
 
 /* ----------------------------------------------- deleting your account */
-/* Settings' "Delete my account and posts" (boards.js) takes your habits
-   with it: the boards say so on this event, before they sign you out. */
-window.addEventListener('allday-boards', (e) => {
-  if (!e.detail || e.detail.what !== 'deleteme' || !app.user()) return;
-  call('sz_delete_me');
-  S.habits = []; S.taps = new Map(); S.me = null;
-  setPending([]);
-});
+/* Settings' "Delete my account and posts" (boards.js) deletes your habits,
+   taps and member row first, and stops if that fails. */
+boards.onDeleteMe(() => call('sz_delete_me').then((r) => {
+  if (r.ok) { S.habits = []; S.taps = new Map(); S.me = null; setPending([]); }
+  return r;
+}));
 
 app.onAuth(() => {
   if (!root) return;

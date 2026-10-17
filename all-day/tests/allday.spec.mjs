@@ -3489,6 +3489,34 @@ async function theHabits(browser, base) {
     check(!errors.filter((e) => !/status of 400/.test(e)).length, 'no console errors beyond the refusal', errors.join(' | '));
     await ctx.close();
   });
+  await group('Habits, live: deleting the account deletes the habits first, and stops if it cannot', async () => {
+    const asked = [];
+    let refuse = true;
+    const { ctx, page } = await newPage(browser, base, { rpc: (fn) => {
+      asked.push(fn);
+      if (fn === 'sz_delete_me') return refuse ? { status: 500, body: { message: 'boom' } } : { deleted: true };
+      if (fn === 'nn_delete_me') return { deleted: true };
+      if (fn === 'nn_profile_get') return { display_name: 'Maya', neighborhood: null, archetype: null };
+      return undefined;
+    } });
+    await signedIn(page);
+    await page.goto(base + '/all-day/#wire');
+    await settle(page);
+    await settingsText(page);
+    await page.click('.sheet-body button:has-text("Delete my account and posts")');
+    await page.click('#confirm [data-yes]');
+    await page.waitForSelector('#toast:not([hidden])', { timeout: 4000 }).catch(() => {});
+    check(asked.includes('sz_delete_me') && !asked.includes('nn_delete_me') && !/Deleted/.test(await page.$eval('#toast', (t) => t.textContent))
+      && await page.evaluate(() => import('/all-day/js/app.js').then((a) => !!a.user())), 'the habits could not be deleted: nothing else is, the reader stays signed in, and it says so', asked.join(', '));
+    refuse = false;
+    asked.length = 0;
+    await settingsText(page);
+    await page.click('.sheet-body button:has-text("Delete my account and posts")');
+    await page.click('#confirm [data-yes]');
+    await page.waitForFunction(() => /Deleted/.test(document.querySelector('#toast').textContent), null, { timeout: 4000 }).catch(() => {});
+    check(asked.indexOf('sz_delete_me') >= 0 && asked.indexOf('sz_delete_me') < asked.indexOf('nn_delete_me'), 'then: the habits first, then the posts and profile', asked.join(', '));
+    await ctx.close();
+  });
 }
 
 /* ---------------------------------------------- What Now's sunset line */
