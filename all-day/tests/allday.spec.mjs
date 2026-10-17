@@ -173,6 +173,12 @@ function wireDay(date, n, opts) {
   const ranked = items.filter((it) => !it.own && (it.ch === 'local' || it.ch === 'world'));
   const picks = ranked.filter((it) => it.local).slice(0, 15).concat(ranked.filter((it) => !it.local).slice(0, 10))
     .map((it, r) => ({ ...it, rank: r + 1, why: r === 2 ? '' : 'Reason ' + (r + 1) + ': why this one matters.' }));
+  /* the stories an earlier ranking held and the current one dropped: their
+     last rank and reason, newest ranking first, never also in `picks` */
+  const morning = new Date(top - (top - bottom) * 0.8).toISOString(), noon = new Date(top - (top - bottom) * 0.4).toISOString();
+  const picksEarlier = ranked.filter((it) => it.local).slice(15, 19).concat(ranked.filter((it) => !it.local).slice(10, 12))
+    .map((it, i) => ({ ...it, rank: [4, 9, 2, 7, 18, 21][i], why: 'Earlier reason ' + i + ': it led the morning.', ranked_at: i % 2 ? morning : noon }))
+    .sort((a, b) => (a.ranked_at === b.ranked_at ? a.rank - b.rank : a.ranked_at < b.ranked_at ? 1 : -1));
   const counts = {};
   for (const scope of ['local', 'everything']) {
     const pool = items.filter((it) => scope === 'everything' || it.local);
@@ -183,7 +189,7 @@ function wireDay(date, n, opts) {
   items.forEach((it) => { sources[it.src] = { name: it.name, ch: it.ch, site: 'https://example.org/site/' + it.src }; });
   const paused = { paused: !opts.inbox, reason: opts.inbox ? null : 'the inbox reader is not live yet', updated_at: null };
   const day = { v: 1, date, tz: 'America/New_York', final: !isToday, updated: updates[0].updated, checked: new Date(now).toISOString(), count: items.length,
-    counts, picks, updates, sources, status: { x: paused, facebook: { ...paused }, reddit: { paused: false, last_post: null } } };
+    counts, picks, picks_earlier: picksEarlier, updates, sources, status: { x: paused, facebook: { ...paused }, reddit: { paused: false, last_post: null } } };
   if (opts.brief) day.brief = items.find((it) => it.own);
   return day;
 }
@@ -195,7 +201,8 @@ function wireFiles(opts = {}) {
     const today = etKey(Date.now());
     const y1 = dayMinus(today, 1), y2 = dayMinus(today, 2);
     const files = { 'wire-today.json': wireDay(today, 160, o), [y1 + '.json']: wireDay(y1, 40, { ...o, brief: true }), [y2 + '.json']: wireDay(y2, 40, { ...o, brief: false }) };
-    files['index.json'] = { v: 1, editions: [y1, y2].map((d) => ({ date: d, count: files[d + '.json'].count, picks: files[d + '.json'].picks.length })) };
+    files['index.json'] = { v: 1, editions: [y1, y2].map((d) => ({ date: d, count: files[d + '.json'].count, picks: files[d + '.json'].picks.length,
+      picks_total: files[d + '.json'].picks.length + files[d + '.json'].picks_earlier.length })) };
     wireCache.set(key, files);
   }
   return wireCache.get(key);
@@ -600,12 +607,28 @@ async function theWire(browser, base) {
     });
     check(brief && brief.k === today.brief.id && /The Brief/i.test(brief.eyebrow) && brief.before, 'the Brief is pinned above What matters today', JSON.stringify(brief));
 
-    /* What matters today: ten local picks, five open, the rest on request */
+    /* What matters today: every local pick, five open, the rest and the
+       earlier rankings' picks behind one button */
+    const localPicks = today.picks.filter((x) => x.local).map((x) => x.id);
+    const localEarlier = today.picks_earlier.filter((x) => x.local);
     check(await page.$$eval('.wm .card', (c) => c.length) === 5, 'one pick card and four ranked rows to start', '');
     check(await page.$$eval('.wm .wm-row', (rs) => rs.filter((r) => !r.querySelector('.why')).length) === 1, 'an empty why draws no reason line', '');
+    check(!(await page.$('.wm .wm-row.was')) && !/Earlier today/.test(await page.$eval('.wm', (w) => w.innerText)), 'the earlier picks wait behind the button', '');
+    const moreLabel = await page.$eval('.wm .btn.more', (b) => b.textContent);
+    const hiddenN = localPicks.length - 5 + localEarlier.length;
+    check(moreLabel === hiddenN + ' more picks', 'the button counts the rest of the ranking and the earlier picks (' + hiddenN + ')', moreLabel);
     await page.click('.wm .btn.more');
-    check(await page.$$eval('.wm .card', (c) => c.length) === 10, '“5 more picks” opens six to ten in place', '');
-    check(/That’s the ten\./.test(await page.$eval('.wm', (w) => w.innerText)), 'and the list ends “That’s the ten.”', '');
+    const block = await page.$$eval('.wm [data-k]', (c) => c.map((x) => ({ k: x.dataset.k, was: x.classList.contains('was'), num: (x.querySelector('.num') || {}).textContent || '', why: (x.querySelector('.why') || {}).textContent || '' })));
+    check(JSON.stringify(block.filter((x) => !x.was).map((x) => x.k)) === JSON.stringify(localPicks), 'opened, the block shows every local pick of the ranking, in order (' + localPicks.length + ')', JSON.stringify(block.map((x) => x.k)));
+    const wasRows = block.filter((x) => x.was);
+    check(JSON.stringify(wasRows.map((x) => [x.k, x.num, x.why])) === JSON.stringify(localEarlier.map((x) => [x.id, String(x.rank), x.why])),
+      'then the earlier picks, newest ranking first, each with its last rank and its reason', JSON.stringify(wasRows));
+    const wmText = await page.$eval('.wm', (w) => w.innerText);
+    check(/Earlier today, these mattered too/.test(wmText), 'under “Earlier today, these mattered too”', '');
+    const ONES = ['', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen'];
+    const inWords = (n) => (n < 20 ? ONES[n] : ['', '', 'twenty', 'thirty', 'forty', 'fifty'][Math.floor(n / 10)] + (n % 10 ? '-' + ONES[n % 10] : ''));
+    const totalWord = inWords(localPicks.length + localEarlier.length);
+    check(wmText.includes('That’s all ' + totalWord + '.'), 'and the list ends “That’s all ' + totalWord + '.”', wmText.slice(-80));
 
     /* the river leaves the shown picks out and counts add up */
     await drawToday(page);
@@ -646,6 +669,33 @@ async function theWire(browser, base) {
     });
     await page.waitForTimeout(250);
     check(await page.$eval('#subnav .dl b', (b) => b.textContent) === nameOf(y1), 'scrolled into yesterday, the dateline names it', await page.$eval('#subnav .dl b', (b) => b.textContent));
+
+    /* yesterday opens with its own What mattered block, as the arrow view draws it */
+    const yday = files[y1 + '.json'];
+    const yBlock = await page.evaluate((date) => {
+      const head = document.querySelector('.panel:not([hidden]) [data-day="' + date + '"]');
+      let n = head && head.nextElementSibling;
+      while (n && !n.classList.contains('wm') && !n.dataset.day) n = n.nextElementSibling;
+      if (!n || !n.classList.contains('wm')) return null;
+      return { title: n.querySelector('h2').textContent, keys: [...n.querySelectorAll('[data-k]')].map((x) => x.dataset.k), more: (n.querySelector('.btn.more') || {}).textContent || '' };
+    }, y1);
+    const yWeek = nameOf(y1).split(',')[0];
+    check(yBlock && yBlock.title === 'What mattered ' + yWeek, 'scrolling into yesterday draws “What mattered ' + yWeek + '” under its head', JSON.stringify(yBlock));
+    const yAll = yday.picks.map((x) => x.id);   /* the switch is on Everything here */
+    check(yBlock && JSON.stringify(yBlock.keys) === JSON.stringify(yAll.slice(0, 5)), 'with its picks: the card and four rows, in rank order', JSON.stringify(yBlock && yBlock.keys));
+    check(yBlock && yBlock.more === (yAll.length - 5 + yday.picks_earlier.length) + ' more picks', 'and its own button for the rest and the earlier picks', yBlock && yBlock.more);
+    await page.click('.panel:not([hidden]) [data-day="' + y1 + '"] ~ .wm .btn.more');
+    const yOpen = await page.evaluate((date) => {
+      const head = document.querySelector('.panel:not([hidden]) [data-day="' + date + '"]');
+      let n = head.nextElementSibling;
+      while (n && !n.classList.contains('wm')) n = n.nextElementSibling;
+      return { text: n.innerText, keys: [...n.querySelectorAll('[data-k]')].map((x) => x.dataset.k) };
+    }, y1);
+    check(JSON.stringify(yOpen.keys) === JSON.stringify(yAll.concat(yday.picks_earlier.map((x) => x.id))) && /Earlier that day/.test(yOpen.text),
+      'opened in place: the whole ranking, then “Earlier that day” and the earlier picks', JSON.stringify(yOpen.keys));
+    const pageKeys = await page.$$eval('.panel:not([hidden]) .feed [data-k]', (c) => c.map((x) => x.dataset.k));
+    const dupes = pageKeys.filter((k, i) => pageKeys.indexOf(k) !== i);
+    check(!dupes.length, 'no key appears twice on the page, today through the archive (' + pageKeys.length + ' cards)', JSON.stringify(dupes.slice(0, 5)));
 
     /* a mute leaves the river */
     await toTop(page);
