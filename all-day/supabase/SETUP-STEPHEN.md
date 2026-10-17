@@ -163,7 +163,7 @@ posts" removes anything, and only their own.
 What changes:
 
 - **Watch.** A deleted reader's seen-dots and their partner's first name now go too (before,
-  they stayed on the server). Another reader whose partner shares the deleted reader's name
+  they stayed on the server). The phone they deleted from forgets them as well. Another reader whose partner shares the deleted reader's name
   keeps theirs: the partner is only a name someone typed, never a link to another account.
 - **People.** Their place in the People directory and their plans' Meetup details go, as before,
   and are now named in the delete itself rather than left to the database's tidy-up rules.
@@ -171,7 +171,8 @@ What changes:
   forgets the post's words and their first name. A day later the picture file itself counts as
   a stray, so the next time you open the boards desk it is cleared from the bucket. The day is
   your window to undo it in `photo-admin.html` if a photo was removed by mistake. This also
-  applies to any board photo whose post was deleted or never went up. Gallery photos and photos
+  applies to any board photo whose reader deleted the post, or whose post never went up (a post
+  you delete from the desk keeps its photo file, as before). Gallery photos and photos
   you rejected keep their files exactly as before.
 - **What stays.** Their email sign-in (shared with Small Talk and the other apps) and, if you
   banned them, the ban, so deleting an account is never a way around one.
