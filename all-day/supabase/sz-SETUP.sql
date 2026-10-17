@@ -349,10 +349,11 @@ begin
                      from public.sz_habits h where h.user_id = u and h.archived_at is null), '[]'::jsonb);
 end $$;
 
--- Add a habit of your own. Signed-in members only (the two questions come
--- first). Checks in habits-core.js checkHabit()'s order, then the ceiling
--- (sz_habits_cap). Shared with your pod only when you say so. It goes to the
--- bottom.
+-- Add a habit of your own. Signed in is enough: no name or phone is asked
+-- for the tracker (that comes when you join a season). Checks in
+-- habits-core.js checkHabit()'s order, then the ceiling (sz_habits_cap).
+-- Shared with your pod only when you say so. It goes to the bottom.
+-- sz-ROUND3.sql carries the same function, word for word.
 create or replace function public.sz_habit_add(p_text text, p_frequency text, p_n int default null, p_shared boolean default false)
 returns jsonb language plpgsql security definer set search_path = public as $$
 declare
@@ -363,7 +364,6 @@ declare
   h public.sz_habits;
 begin
   if u is null then raise exception 'not_signed_in'; end if;
-  if not exists (select 1 from public.sz_members where user_id = u) then raise exception 'no_member'; end if;
   if v_text = '' or char_length(v_text) > (L ->> 'habitTextMax')::int then raise exception 'bad_text'; end if;
   if p_frequency is null or not ((public.sz_rules() -> 'frequencies') ? p_frequency) then raise exception 'bad_frequency'; end if;
   if p_frequency = 'n_per_week' then

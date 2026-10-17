@@ -18,8 +18,14 @@
      turn it on.
    - Goal, Season and Wall are chips that say Season 0 is coming.
 
-   Signed out: the tile and a sign-in button, nothing else. The first
-   sign-in asks a first name and a phone, once (sz_me_set).
+   Signed out, it just works: the same Today, every habit and tap kept on
+   this phone (habits-local.js, the same doors and rules as the server),
+   and one quiet "Sync across devices" line under the list. Signing in only
+   adds things: the phone's habits and their taps move to the account once
+   (sz_import_local, sz-ROUND3.sql), the phone forgets them, and the account
+   is the one copy from then on. Signing out leaves them on the account and
+   shows this phone's own list again, empty. No name or phone is asked for
+   the tracker; they are asked when a reader joins a season (Sign up).
 
    A tap is optimistic: the row repaints in the click itself, well under
    100 ms, and the call goes behind it. A tap not yet confirmed is written
@@ -31,7 +37,9 @@
 
    Data: the sz_ functions in supabase/sz-SETUP.sql, through call() below,
    which talks to Supabase the way boards.js does; in ?demo=1 an in-memory
-   copy of the server (habits-fake.js) answers instead. Rules and streaks:
+   copy of the server (habits-fake.js) answers instead. Signed out, the
+   phone answers the tracker's doors itself (habits-local.js; in the demo,
+   in memory only). Rules and streaks:
    habits-core.js. Habit rows are not feed cards, so their swipe and drag
    are this tab's own (the shell's swipe means save and mute). */
 
@@ -39,8 +47,9 @@ import * as app from '../app.js';
 import * as store from '../store.js';
 import * as boards from '../boards.js';
 import { el, esc, ICON, button, chips } from '../ui.js';
-import { HABIT_RULES, dayKey, addDays, streak, streakUnit, weekDots, daysUntil, nextMidnight, checkHabit, checkMe, message } from '../habits-core.js';
+import { HABIT_RULES, dayKey, addDays, streak, streakUnit, weekDots, daysUntil, nextMidnight, checkHabit, checkMe, clean, message } from '../habits-core.js';
 import { FakeHabits, seedDemo } from '../habits-fake.js';
+import { LocalHabits, LOCAL_DOORS, browserStorage, memoryStorage } from '../habits-local.js';
 import { DEMO_ME } from '../boards-fake.js';
 
 const KEY = 'habits';
@@ -60,12 +69,26 @@ function demoBackend() {
   return fake;
 }
 
+/* this phone's habits, for a reader who has not signed in */
+let localDb = null;
+function local() {
+  if (!localDb) localDb = new LocalHabits({ storage: app.demo ? memoryStorage() : browserStorage() });
+  return localDb;
+}
+
 const fail = (error) => ({ ok: false, error, message: message(error) });
-/* One call to an sz_ function. Live, a POST to PostgREST with the reader's
-   token when signed in; a refusal arrives as {"message":"<our code>"}. A
-   function that does not exist yet (sz-SETUP.sql not pasted) is 404
-   PGRST202: 'off'. Never rejects. */
+/* One call to an sz_ function. Signed out, the tracker's doors are this
+   phone's own. Live, a POST to PostgREST with the reader's token when
+   signed in; a refusal arrives as {"message":"<our code>"}. A function that
+   does not exist yet (sz-SETUP.sql not pasted) is 404 PGRST202: 'off'.
+   Never rejects. */
 function call(fn, args) {
+  if (!S.uid && LOCAL_DOORS.has(fn)) {
+    return Promise.resolve().then(() => ({ ok: true, data: local().call(fn, args || {}) })).catch((e) => fail(e.code || 'offline'));
+  }
+  return serverCall(fn, args);
+}
+function serverCall(fn, args) {
   if (app.demo) {
     const u = app.user();
     return Promise.resolve().then(() => ({ ok: true, data: demoBackend().as(u ? u.id : null).call(fn, args || {}) }))
@@ -95,7 +118,7 @@ const S = {
   phase: 'loading',     // 'loading' | 'ready'
   uid: null,            // whose habits these are
   season: undefined,    // the next season, null for none, undefined while asking
-  me: undefined,        // the member row, null before the two questions
+  me: undefined,        // the member row (name and phone), null before joining a season
   habits: [],           // yours, not archived, goal habit first
   taps: new Map(),      // habit id -> Set of date keys
   off: false,           // the SQL is not pasted yet
@@ -186,32 +209,111 @@ function load() {
   S.off = false;
   paint();
   const season = call('sz_season_next', { p_city: 'burlington' }).then((r) => {
-    if (r.error === 'off') S.off = true;
+    if (my !== gen) return;
     S.season = r.ok && r.data && typeof r.data === 'object' && !Array.isArray(r.data) && r.data.kickoff_at ? r.data : null;
   });
-  const member = !u ? Promise.resolve() : call('sz_me_get').then((r) => {
-    if (!r.ok) { if (r.error === 'off') S.off = true; else S.failed = r.message; S.me = null; return; }
-    S.me = r.data && typeof r.data === 'object' && !Array.isArray(r.data) && r.data.name ? r.data : null;
-    if (!S.me) return;
-    return Promise.all([
-      call('sz_habits_get'),
-      call('sz_taps_get', { p_from: addDays(S.today, -HISTORY_DAYS), p_to: S.today }),
-    ]).then(([h, t]) => {
-      if (!h.ok || !t.ok) { S.failed = (h.ok ? t : h).message; return; }
-      S.habits = Array.isArray(h.data) ? h.data : [];
-      S.taps = new Map();
-      (Array.isArray(t.data) ? t.data : []).forEach((x) => tapsOf(x.habit).add(String(x.date).slice(0, 10)));
-      overlay();
-    });
+  S.me = undefined;
+  S.habits = [];
+  S.taps = new Map();
+  /* the member row only matters for Sign up; a missing one stops nothing */
+  const me = !u ? Promise.resolve() : call('sz_me_get').then((r) => {
+    if (my !== gen) return;
+    S.me = r.ok && r.data && typeof r.data === 'object' && !Array.isArray(r.data) && r.data.name ? r.data : (r.ok ? null : undefined);
   });
-  if (!u) { S.me = undefined; S.habits = []; S.taps = new Map(); }
-  return Promise.all([season, member]).then(() => {
+  /* signed in: this phone's habits move to the account first */
+  const habits = (u ? moveLocal(u.id) : Promise.resolve()).then(() => Promise.all([
+    call('sz_habits_get'),
+    call('sz_taps_get', { p_from: addDays(S.today, -HISTORY_DAYS), p_to: S.today }),
+  ])).then(([h, t]) => {
+    if (my !== gen) return;
+    if (!h.ok || !t.ok) {
+      const r = h.ok ? t : h;
+      if (r.error === 'off') S.off = true; else S.failed = r.message;
+      return;
+    }
+    S.habits = Array.isArray(h.data) ? h.data : [];
+    S.taps = new Map();
+    (Array.isArray(t.data) ? t.data : []).forEach((x) => tapsOf(x.habit).add(String(x.date).slice(0, 10)));
+    if (u) overlay();
+  });
+  return Promise.all([season, me, habits]).then(() => {
     if (my !== gen) return;
     S.phase = 'ready';
     paint();
     land();
     if (u && pending().length) flush();
   });
+}
+
+/* ------------------------------------------- moving this phone's habits */
+/* At sign-in, the habits this phone kept, with their taps, go to the
+   account in one call, and the phone lets go of exactly those. The server
+   takes them only into an account with nothing in it yet (the first
+   sign-in). An account that already has habits gets this phone's own,
+   matched by name and how often so nothing is doubled, with today's taps (a
+   day gone by cannot be tapped from the app); when that leaves anything
+   behind (an archived habit, a past day), the phone keeps its whole copy,
+   and remembers which habits that account has had, so they are never sent
+   twice. Offline, before the paste, or if the reader signs out or switches
+   account on the way, nothing is let go: it moves on the next visit. Every
+   call here goes to the server, never to the phone, and stops if the
+   signed-in reader is no longer the one it started for. Never rejects. */
+let moving = null;   // { uid, p }
+const TRANSIENT = new Set(['offline', 'off', 'not_signed_in']);
+function remote(uid, fn, args) {
+  const u = app.user();
+  if (!u || u.id !== uid) return Promise.resolve(fail('not_signed_in'));
+  return serverCall(fn, args);
+}
+function moveLocal(uid) {
+  if (moving) return moving.uid === uid ? moving.p : moving.p.then(() => moveLocal(uid));   // one move at a time, whoever it is for
+  const db = local();
+  if (!db.pendingFor(uid)) return Promise.resolve();
+  const snap = db.snapshot(uid);
+  const p = remote(uid, 'sz_import_local', { p_habits: snap.list }).then((r) => {
+    if (r.ok) { db.forget(snap.ids); return null; }
+    if (r.error === 'already_synced') return mergeLocal(db, uid);
+    if (!TRANSIENT.has(r.error)) app.toast(r.message);
+    return null;
+  }).then(() => { if (moving && moving.p === p) moving = null; }, () => { if (moving && moving.p === p) moving = null; });
+  moving = { uid, p };
+  return p;
+}
+const habitKey = (h) => clean(h.text).toLowerCase() + '|' + h.frequency + '|' + (h.frequency === 'n_per_week' ? h.n : '');
+async function mergeLocal(db, uid) {
+  const got = await remote(uid, 'sz_habits_get');
+  if (!got.ok) return;
+  /* each of the account's habits stands for one of the phone's at most, so two
+     habits the phone keeps under one name stay two */
+  const have = new Map();
+  (Array.isArray(got.data) ? got.data : []).filter((h) => !h.is_goal).forEach((h) => { if (!have.has(habitKey(h))) have.set(habitKey(h), []); have.get(habitKey(h)).push(h); });
+  const today = dayKey(Date.now());
+  const snap = db.snapshot(uid);
+  let whole = snap.whole;
+  const added = [];
+  for (let i = 0; i < snap.list.length; i++) {
+    const h = snap.list[i];
+    if (h.archived) { whole = false; continue; }
+    if (h.taps.some((d) => d !== today)) whole = false;
+    const same = have.get(habitKey(h)) || [];
+    let row = same.shift();
+    if (row && !!row.shared !== !!h.shared) whole = false;   // the account's setting stands; the phone keeps its own
+    if (!row) {
+      const r = await remote(uid, 'sz_habit_add', { p_text: h.text, p_frequency: h.frequency, p_n: h.n, p_shared: h.shared });
+      if (!r.ok && TRANSIENT.has(r.error)) break;
+      if (!r.ok) { whole = false; continue; }   // refused (the ceiling): it stays on the phone
+      row = r.data;
+    }
+    added.push(snap.ids[i]);
+    if (h.taps.includes(today)) {
+      const t = await remote(uid, 'sz_tap', { p_habit: row.id, p_date: today });
+      if (!t.ok && TRANSIENT.has(t.error)) break;
+      if (!t.ok) whole = false;   // refused (midnight came): the phone keeps the tap
+    }
+  }
+  if (!added.length) return;
+  if (whole && added.length === snap.ids.length) db.forget(added);
+  else db.markMerged(uid, added);
 }
 
 /* the day turns at midnight New York: repaint then, and on coming back */
@@ -242,13 +344,7 @@ function paint() {
   }
   body.appendChild(tile());
   if (S.phase === 'loading') { body.appendChild(skeleton()); return; }
-  if (!S.uid) {
-    const gate = el('div', 'hb-gate');
-    gate.appendChild(button('Sign in', '', () => app.openSettings()));
-    body.appendChild(gate);
-    return;
-  }
-  if (S.off) { body.appendChild(el('p', 'hb-empty', esc(message('off')))); return; }
+  if (S.off && S.uid) { body.appendChild(el('p', 'hb-empty', esc(message('off')))); return; }
   if (S.failed) {
     const box = el('div', 'hb-gate');
     box.appendChild(el('p', 'hb-empty', esc(S.failed)));
@@ -256,7 +352,6 @@ function paint() {
     body.appendChild(box);
     return;
   }
-  if (!S.me) { body.appendChild(meForm()); return; }
   const list = el('ul', 'hb-list');
   list.setAttribute('aria-label', 'Your habits');
   mine().forEach((h) => list.appendChild(row(h)));
@@ -264,6 +359,7 @@ function paint() {
   bindList(list);
   if (!mine().length && !S.adding) body.appendChild(el('p', 'hb-empty', 'No habits yet.'));
   body.appendChild(addRow());
+  if (!S.uid && mine().length) body.appendChild(button('Sync across devices', 'hb-sync', () => app.openSettings()));
 }
 
 /* a #habits/<key> link, or a habit just added: scroll to it and flash it */
@@ -297,11 +393,16 @@ function tile() {
   return t;
 }
 function signUp() {
-  if (!S.uid) { app.openSettings(); return; }
+  if (!S.uid) { app.toast('Sign in to join a season.'); app.openSettings(); return; }
+  if (!S.me) { joinSheet(); return; }
+  goSignUp();
+}
+function goSignUp() {
   const s = S.season;
   if (s && /^https:\/\//.test(s.stripe_link || '')) {
     if (app.demo) { app.toast('Opens the sign-up page in the real build'); return; }
-    window.open(s.stripe_link, '_blank', 'noopener');
+    const w = window.open(s.stripe_link, '_blank', 'noopener');
+    if (w === null && !app.demo) location.href = s.stripe_link;   // a blocked pop-up: go there in this tab
     return;
   }
   const opens = s && s.signup_opens && Date.parse(s.signup_opens) > Date.now()
@@ -365,8 +466,14 @@ function toggle(id) {
   paintRow(id);
   const b = rowOf(id) && rowOf(id).querySelector('.hb-tap');
   if (b && on) { b.classList.add('pop'); if (navigator.vibrate) navigator.vibrate(8); }
-  if (app.demo) demoQueue.push({ op: on ? 'tap' : 'untap', habit: id, date: day });
-  else queue(on ? 'tap' : 'untap', id, day);
+  const op = { op: on ? 'tap' : 'untap', habit: id, date: day };
+  /* signed out: the phone is the server, and it answers at once */
+  if (!S.uid) {
+    call(on ? 'sz_tap' : 'sz_untap', { p_habit: id, p_date: day }).then((r) => { if (!r.ok) { undo(op); app.toast(r.message); } });
+    return;
+  }
+  if (app.demo) demoQueue.push(op);
+  else queue(op.op, id, day);
   flush();
 }
 
@@ -661,8 +768,14 @@ function editSheet(id) {
   });
 }
 
-/* The first sign-in's two questions, asked once. */
-function meForm() {
+/* Joining a season asks a first name and a phone, once: pods meet on a
+   group chat Stephen sets up. The tracker never asks. */
+function joinSheet() {
+  app.sheet('Join ' + ((S.season && S.season.name) || 'the season'), (sheetBody, card, close) => {
+    sheetBody.appendChild(meForm(() => { close(); goSignUp(); }));
+  });
+}
+function meForm(onSaved) {
   const w = el('div', 'hb-me');
   const f = el('form', 'bform');
   f.noValidate = true;
@@ -686,7 +799,7 @@ function meForm() {
       go.disabled = false;
       if (!r.ok) { msg.textContent = r.message; msg.classList.add('err'); return; }
       S.me = r.data;
-      load();
+      onSaved();
     });
   });
   w.appendChild(f);

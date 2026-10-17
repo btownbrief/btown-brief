@@ -8,12 +8,16 @@
    member, or nobody. Pods, goals and seasons are plain arrays a test (or
    the demo seed) fills in, the way Stephen fills them in the database. */
 
-import { HABIT_RULES, dayKey, addDays, daysBetween, checkHabit, checkMe } from './habits-core.js';
+import { HABIT_RULES, IMPORT_DAYS, dayKey, addDays, daysBetween, isKey, checkHabit, checkMe } from './habits-core.js';
 
 const fail = (code) => { const e = new Error(code); e.code = code; return e; };
 let seq = 0;
 const newId = () => '00000000-0000-4000-8000-5a' + (++seq).toString(16).padStart(10, '0');
-const byOrder = (a, b) => (Number(b.is_goal) - Number(a.is_goal)) || (a.position - b.position) || (a.created_at - b.created_at) || (a.id < b.id ? -1 : 1);
+/* what one habit in sz_import_local's list may carry, and nothing else: no
+   id, no owner, so a list can never reach a habit that already exists */
+const IMPORT_KEYS = ['text', 'frequency', 'n', 'shared', 'archived', 'taps'];
+const isObj = (x) => !!x && typeof x === 'object' && !Array.isArray(x);
+export const byOrder = (a, b) => (Number(b.is_goal) - Number(a.is_goal)) || (a.position - b.position) || (a.created_at - b.created_at) || (a.id < b.id ? -1 : 1);
 
 export class FakeHabits {
   constructor({ now, rules } = {}) {
@@ -28,6 +32,7 @@ export class FakeHabits {
   }
 
   as(uid) { this.uid = uid || null; return this; }
+  _newId() { return newId(); }
   _need() { if (!this.uid) throw fail('not_signed_in'); return this.uid; }
   _today() { return dayKey(this.now()); }
   _json(h) {
@@ -80,12 +85,11 @@ export class FakeHabits {
   }
   sz_habit_add({ p_text, p_frequency, p_n = null, p_shared = false }) {
     const u = this._need();
-    if (!this.members.has(u)) throw fail('no_member');
     const c = checkHabit(this.rules, { text: p_text, frequency: p_frequency, n: p_n, shared: p_shared });
     if (!c.ok) throw fail(c.error);
     const active = this._active(u);
     if (active.length >= this.rules.limits.habitsMax) throw fail('too_many_habits');
-    const h = { id: newId(), user_id: u, goal_id: null, text: c.habit.text, frequency: c.habit.frequency, n: c.habit.n,
+    const h = { id: this._newId(), user_id: u, goal_id: null, text: c.habit.text, frequency: c.habit.frequency, n: c.habit.n,
       is_goal: false, shared: !!p_shared, position: Math.max(0, ...active.map((x) => x.position)) + 1, archived_at: null, created_at: this.now() };
     this.habits.push(h);
     return this._json(h);
@@ -119,6 +123,40 @@ export class FakeHabits {
       rest.forEach((x, i) => { x.position = i + 1; });
     }
     return this._json(h);
+  }
+
+  /* The habits this phone kept before its reader signed in, with their
+     taps, moved to the account once (sz-ROUND3.sql). Refused when the
+     account already has a habit or a tap of any kind, so it happens at the
+     first sign-in only. Everything is checked before anything is written:
+     the list (at most habitsMax), each habit as sz_habit_add checks it,
+     and each tap a real date, today or up to IMPORT_DAYS back. */
+  sz_import_local({ p_habits }) {
+    const u = this._need();
+    if (this.habits.some((h) => h.user_id === u) || [...this.taps.values()].some((t) => t.user === u)) throw fail('already_synced');
+    const L = this.rules.limits;
+    if (!Array.isArray(p_habits) || p_habits.length > L.habitsMax) throw fail('bad_import');
+    const today = this._today(), from = addDays(today, -IMPORT_DAYS);
+    const bad = () => { throw fail('bad_import'); };
+    const rows = p_habits.map((x) => {
+      if (!isObj(x) || Object.keys(x).some((k) => !IMPORT_KEYS.includes(k))) bad();
+      if (typeof x.text !== 'string' || typeof x.frequency !== 'string') bad();
+      if (x.n != null && !Number.isInteger(x.n)) bad();
+      if ((x.shared != null && typeof x.shared !== 'boolean') || (x.archived != null && typeof x.archived !== 'boolean')) bad();
+      const c = checkHabit(this.rules, { text: x.text, frequency: x.frequency, n: x.n, shared: x.shared });
+      if (!c.ok) bad();
+      const taps = x.taps == null ? [] : x.taps;
+      if (!Array.isArray(taps) || taps.length > IMPORT_DAYS + 1) bad();
+      if (taps.some((d) => !isKey(d) || d > today || d < from)) bad();
+      return { habit: c.habit, archived: x.archived === true, taps };
+    });
+    rows.forEach((r, i) => {
+      const h = { id: this._newId(), user_id: u, goal_id: null, text: r.habit.text, frequency: r.habit.frequency, n: r.habit.n,
+        is_goal: false, shared: r.habit.shared, position: i + 1, archived_at: r.archived ? this.now() : null, created_at: this.now() };
+      this.habits.push(h);
+      r.taps.forEach((d) => { const k = h.id + '|' + d; if (!this.taps.has(k)) this.taps.set(k, { habit: h.id, user: u, date: d, source: 'app' }); });
+    });
+    return this.sz_habits_get();
   }
 
   /* ----------------------------------------------------------------- taps */
