@@ -12,13 +12,16 @@
      chips by kind of source, counted, X and Facebook hidden while paused,
      then "Unfiltered ↗"
    - the Brief's own edition pinned on the days it went out
-   - What matters today: ten local picks (plus the national ones on
-     Everything), each with its reason; one to five shown, the rest on request
+   - What matters today: every local pick of the current ranking (plus the
+     national ones on Everything), each with its reason; one to five shown,
+     the rest behind one button, and after them the stories an earlier
+     ranking that day held (`picks_earlier`), with their last rank
    - The rest of today: the river by update, the update's label as the time
-     divider, lead first then newest first, the shown picks left out, the
+     divider, lead first then newest first, the picks left out, the
      "N new since you were here" line
    - then, with no stop, yesterday's frozen edition, the day before, and so on
-     as far as the archive goes (30 days). The river is long by design (up to
+     as far as the archive goes (30 days), each day under its head with its
+     own What mattered block first. The river is long by design (up to
      300 a day), so it is drawn in chunks as the reader nears the bottom; the
      time dividers and the day heads are the landmarks. When the editions run
      out the page says so.
@@ -38,7 +41,6 @@ import { el, esc, safeHref, ICON, mark, cards, chips, pills, button, divider, se
 const FIRST = 60;        // cards on the first screenful (DESIGN.md §9 rule 14: sixty in under 100ms)
 const CHUNK = 40;        // then forty at a time as the reader nears the bottom
 const AHEAD = 1600;      // how far below the screen the next chunk starts drawing, in px
-const PICKS_SHOWN = 10;  // local picks on the page; the pipeline ranks 25 (a knob, not a design)
 const PICKS_OPEN = 5;    // one as the pick card, two to five as ranked rows, the rest on request
 const RAW_PAGE = 60;
 const PER_OUTLET = 6;
@@ -47,8 +49,9 @@ const HUNT_AT_ONCE = 5;  // editions a shared link fetches at a time while it lo
 const KINDS = [['all', 'All'], ['x', 'X'], ['facebook', 'Facebook'], ['reddit', 'Reddit'], ['newsletters', 'Newsletters'], ['video', 'Video']];
 const KIND_LABEL = { local: 'Local news', world: 'News', x: 'X', facebook: 'Facebook group, via Muse', reddit: 'Reddit', newsletters: 'Newsletter', video: 'Video' };
 const NUMBER = ['none', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve', 'thirteen',
-  'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen', 'twenty'];
-const words = (n) => NUMBER[n] || String(n);
+  'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen'];
+const TENS = ['', '', 'twenty', 'thirty', 'forty', 'fifty', 'sixty', 'seventy', 'eighty', 'ninety'];
+const words = (n) => (n < 20 ? NUMBER[n] || String(n) : n < 100 ? TENS[Math.floor(n / 10)] + (n % 10 ? '-' + NUMBER[n % 10] : '') : String(n));
 const plural = (n, one, many) => n + ' ' + (n === 1 ? one : many);
 
 /* --------------------------------------------------------------- sources */
@@ -76,7 +79,8 @@ const W = {
   failed: false, idxDone: false, stale: false,
   start: null,          // null: the paper opens on today; else the edition it opens on
   reading: null,        // the day the dateline names (follows the scroll)
-  ch: 'all', more: false,
+  ch: 'all',
+  open: new Set(),      // the days whose What matters list is opened past five
   view: 'paper',        // or 'raw', Unfiltered
   run: null,            // the river being drawn
   pending: null, queued: [],
@@ -170,15 +174,22 @@ function dayOf(p) {
      until every payload carries it, the newest own edition stands in */
   const own = all.filter((c) => c.own).sort((a, b) => b.d - a.d);
   const brief = (p.brief && card(p.brief)) || own[0] || null;
-  const picks = (Array.isArray(p.picks) ? p.picks : [])
-    .filter((x) => x && !x.own)
-    .sort((a, b) => (Number(a.rank) || 99) - (Number(b.rank) || 99))
-    .map((x) => { const c = card(x); return c ? { c, why: String(x.why || '') } : null; })
+  const ranked = (list) => (Array.isArray(list) ? list : []).filter((x) => x && !x.own)
+    .map((x) => { const c = card(x); return c ? { c, why: String(x.why || ''), rank: Number(x.rank) || 0, at: String(x.ranked_at || '') } : null; })
     .filter(Boolean);
-  const d = { date: p.date, final: !!p.final, isToday, payload: p, updates, all, picks, brief,
+  const picks = ranked(p.picks).sort((a, b) => (a.rank || 99) - (b.rank || 99));
+  /* the stories an earlier ranking that day held: newest ranking first, then
+     by rank, once each, and never one that is in the current ranking */
+  const inPicks = new Set(picks.map((x) => x.c.k));
+  const earlier = ranked(p.picks_earlier).filter((x) => !inPicks.has(x.c.k) && (inPicks.add(x.c.k), true))
+    .sort((a, b) => (a.at === b.at ? (a.rank || 99) - (b.rank || 99) : a.at < b.at ? 1 : -1));
+  const d = { date: p.date, final: !!p.final, isToday, payload: p, updates, all, picks, earlier, brief,
     counts: p.counts || {}, status: p.status || {}, sources, updated: Date.parse(p.updated) || 0, count: Number(p.count) || all.length };
   app.know(all);
   if (brief) app.know([brief]);
+  /* every card the day can draw: a pick can outlive its river slot */
+  d.cards = [...new Set(all.concat(brief || [], picks.concat(earlier).map((x) => x.c)))];
+  app.know(d.cards);
   DAYS.set(p, d);
   return d;
 }
@@ -263,7 +274,7 @@ function subnav() {
     .map(([key, lab]) => ({ key, label: lab, n: key === 'all' ? null : (counts[key] || 0) }))
     .concat([{ key: '__raw', label: 'Unfiltered ↗', cls: 'every' }]);
   const band = el('div', 'toolband');
-  band.appendChild(localSwitch(() => { W.more = false; app.paintSubnav(); render(); app.scrollTop(); }));
+  band.appendChild(localSwitch(() => { W.open.clear(); app.paintSubnav(); render(); app.scrollTop(); }));
   band.appendChild(chips(items, W.ch, (k) => {
     if (k === '__raw') { openRaw(); return; }
     W.ch = k;
@@ -309,7 +320,7 @@ function goDay(date) {
   const tk = todayKey();
   W.start = !date || date >= tk ? null : date;
   W.reading = W.start || tk;
-  W.more = false;
+  W.open.clear();
   W.view = 'paper';
   history.replaceState(null, '', location.search + '#wire' + (W.start ? '/' + W.start : ''));
   if (W.start && !payloadFor(W.start)) {
@@ -345,9 +356,7 @@ function render(opts = {}) {
   const exclude = new Set();
   if (d && W.ch === 'all') {
     if (d.brief && seen(d.brief)) {
-      /* no picture: the Brief is a pin above the picks, not a second front page */
-      put(feed, cards.pick({ ...d.brief, media: '', thumb: '', own: false, eyebrow: 'The Brief',
-        why: date === tk ? 'Today’s newsletter, as it went out.' : 'That day’s newsletter, as it went out.' }, { greenLocal: greenOf(d.brief) }));
+      put(feed, briefPin(d));
       exclude.add(d.brief.k);
     }
     renderMatters(feed, d, date === tk).forEach((k) => exclude.add(k));
@@ -370,40 +379,65 @@ function render(opts = {}) {
 }
 
 /* What matters today: number one as the pick card, two to five as ranked
-   rows, the rest on request, and the list says when it is done. Returns
-   the keys it drew so the river leaves them out. */
-function renderMatters(feed, d, isToday) {
-  const local = d.picks.filter((x) => x.c.local && seen(x.c)).slice(0, PICKS_SHOWN);
-  const national = geo() === 'everything' ? d.picks.filter((x) => !x.c.local && seen(x.c)) : [];
-  const keep = new Set(local.concat(national));
-  const list = d.picks.filter((x) => keep.has(x));
-  if (!list.length) return [];
+   rows, then one button for the rest of the current ranking and, after a
+   small divider, the stories an earlier ranking that day held, each under
+   the rank it last had. The list says when it is done. Returns every key
+   in the block, open or not, so the river leaves them all out. */
+/* no picture: the Brief is a pin above the picks, not a second front page */
+function briefPin(d) {
+  return cards.pick({ ...d.brief, media: '', thumb: '', own: false, eyebrow: 'The Brief', why: '' }, { greenLocal: greenOf(d.brief) });
+}
+function mattersOf(d) {
+  const keep = (x) => seen(x.c) && (x.c.local || geo() === 'everything');
+  return { list: d.picks.filter(keep), earlier: d.earlier.filter(keep) };
+}
+function renderMatters(host, d, isToday) {
+  const { list, earlier } = mattersOf(d);
+  if (!list.length && !earlier.length) return [];
   const wm = el('div', 'wm');
-  section(wm, isToday ? 'What matters today' : 'What mattered ' + weekday(d.date),
-    esc(isToday ? 'Ranked, most important first.' : 'Ranked, as they stood at midnight.'));
+  section(wm, isToday ? 'What matters today' : 'What mattered ' + weekday(d.date));
   const [first] = list;
-  put(wm, cards.pick({ ...first.c, media: first.c.thumb, thumb: '', eyebrow: '1 of ' + list.length, why: first.why }, { greenLocal: greenOf(first.c) }));
+  if (first) put(wm, cards.pick({ ...first.c, media: first.c.thumb, thumb: '', eyebrow: '1 of ' + list.length, why: first.why }, { greenLocal: greenOf(first.c) }));
   list.slice(1, PICKS_OPEN).forEach((x, i) => wm.appendChild(wmRow(x.c, x.why, i + 2)));
   const rest = list.slice(PICKS_OPEN);
-  if (rest.length) {
-    if (W.more) {
-      rest.forEach((x, i) => wm.appendChild(wmRow(x.c, x.why, i + PICKS_OPEN + 1)));
-      wm.appendChild(el('p', 'wm-end', esc('That’s the ' + words(list.length) + '.')));
-    } else {
-      wm.appendChild(button(esc(plural(rest.length, 'more pick', 'more picks')), 'ghost more', () => { W.more = true; render({ limit: W.run ? W.run.shown : 0 }); }));
+  const total = list.length + earlier.length;
+  const end = () => el('p', 'wm-end', esc('That’s all ' + words(total) + '.'));
+  const behind = () => {
+    const f = document.createDocumentFragment();
+    rest.forEach((x, i) => f.appendChild(wmRow(x.c, x.why, i + PICKS_OPEN + 1)));
+    if (earlier.length) {
+      f.appendChild(el('p', 'wm-was', esc(isToday ? 'Earlier today, these mattered too' : 'Earlier that day')));
+      earlier.forEach((x) => f.appendChild(wmRow(x.c, x.why, x.rank || '·', true)));
     }
-  } else if (list.length > 1) {
-    wm.appendChild(el('p', 'wm-end', esc('That’s the ' + words(list.length) + '.')));
-  }
-  feed.appendChild(wm);
-  divider(feed, isToday ? 'The rest of today' : 'The rest of the day', geo() === 'local' ? 'local only' : 'every source');
-  return (W.more ? list : list.slice(0, PICKS_OPEN)).map((x) => x.c.k);
+    f.appendChild(end());
+    return f;
+  };
+  const hidden = rest.length + earlier.length;
+  /* nothing of the current ranking shows here (all muted, say): the earlier
+     picks stand on their own, open */
+  if (hidden && (W.open.has(d.date) || !list.length)) wm.appendChild(behind());
+  else if (hidden) {
+    const more = button(esc(plural(hidden, 'more pick', 'more picks')), 'ghost more', () => {
+      W.open.add(d.date);
+      const f = behind();
+      const rows = [...f.querySelectorAll('[data-k]')];
+      more.replaceWith(f);
+      /* the reader asked for these: move focus to the first, not the top */
+      const a = rows[0] && rows[0].querySelector('a');
+      if (a) a.focus({ preventScroll: true });
+      hydrateVotes(wm, rows.map((r) => r.dataset.k));
+    });
+    wm.appendChild(more);
+  } else if (list.length > 1) wm.appendChild(end());
+  host.appendChild(wm);
+  divider(host, isToday ? 'The rest of today' : 'The rest of the day', geo() === 'local' ? 'local only' : 'every source');
+  return list.concat(earlier).map((x) => x.c.k);
 }
 
 /* a ranked row: the numeral, the title, the reason, then the foot line */
-function wmRow(it, why, n) {
+function wmRow(it, why, n, was) {
   const on = store.hasVoted(it.k);
-  const r = el('article', 'wm-row card fi' + (store.isRead(it.k) ? ' is-read' : ''));
+  const r = el('article', 'wm-row card fi' + (was ? ' was' : '') + (store.isRead(it.k) ? ' is-read' : ''));
   r.dataset.k = it.k;
   const ext = /^https?:/.test(it.href || '');
   r.innerHTML = '<span class="num">' + esc(n) + '</span><div><a class="c-title" href="' + esc(safeHref(it.href)) + '"' + (ext ? ' target="_blank" rel="noopener"' : '') + ' data-open>' + esc(it.title || it.text) + '</a>' +
@@ -439,9 +473,21 @@ function entriesFor(run, date, p) {
       sub: plural(n, 'story', 'stories') + ' · ' + (!p || p.final ? 'final' : 'as it stood at ' + clock(Date.parse(p.updated))) });
   }
   const d = p ? dayOf(p) : null;
+  /* an earlier day opens with its own What mattered block, drawn as the
+     arrow view draws it, and its river leaves those stories out */
+  let exclude = isFirst ? run.exclude : new Set();
+  if (!isFirst && d && W.ch === 'all') {
+    /* and its Brief pinned above it, as the arrow view pins it */
+    if (d.brief && seen(d.brief)) { out.push({ pin: d }); exclude.add(d.brief.k); }
+    const { list, earlier } = mattersOf(d);
+    if (list.length || earlier.length) {
+      list.concat(earlier).forEach((x) => exclude.add(x.c.k));
+      out.push({ matters: d });
+    }
+  }
   const items = [];
   (d ? d.updates : []).forEach((u) => {
-    const list = u.items.filter((c) => shows(c) && !(isFirst && run.exclude.has(c.k)));
+    const list = u.items.filter((c) => shows(c) && !exclude.has(c.k));
     if (!list.length) return;
     out.push({ divider: u.label, sub: u.time ? 'updated ' + u.time : '' });
     list.forEach((c, i) => {
@@ -463,7 +509,7 @@ function entriesFor(run, date, p) {
   if (!items.length) {
     const kind = W.ch === 'all' ? '' : ' from ' + (KINDS.find((x) => x[0] === W.ch) || ['', W.ch])[1];
     out.push({ note: date === tk
-      ? (W.ch === 'all' && !(d && d.all.length) ? 'Nothing yet today. The first stories land in the morning; yesterday’s paper is right below.' : 'Nothing' + kind + ' today so far.')
+      ? (W.ch === 'all' && !(d && d.all.length) ? 'Nothing yet today.' : 'Nothing' + kind + ' today so far.')
       : 'Nothing' + (kind || (geo() === 'local' ? ' local' : '')) + ' that day.' });
   }
   return out;
@@ -509,6 +555,16 @@ function fill(run) {
       const h = el('div');
       divider(h, e.divider, e.sub);
       node = h.firstChild;
+    } else if (e.pin) {
+      node = briefPin(e.pin);
+      if (node) { run.shown++; added.push(e.pin.brief.k); }
+    } else if (e.matters) {
+      const box = el('div');
+      renderMatters(box, e.matters, false);
+      const keys = [...box.querySelectorAll('[data-k]')].map((n) => n.dataset.k);
+      while (box.firstChild) run.feed.insertBefore(box.firstChild, run.sentinel);
+      run.shown += keys.length;
+      added.push(...keys);
     } else if (e.newline) node = cards.newline(e.newline);
     else if (e.note) node = el('p', 'note pad', esc(e.note));
     else if (e.c) {
@@ -529,14 +585,12 @@ function finish(run) {
   run.until = null;
   run.sentinel.textContent = '';
   const days = editionDates().length;
-  const tk = todayKey();
   run.end = cards.caught(days ? {
     title: 'That’s the whole archive',
-    text: 'The Wire keeps its editions for 30 days. ' + dayName(run.lastDate || tk) + ' is the oldest one on file, and nothing goes further back.',
     buttons: [button('Back to today', '', () => goDay(null))], check: false,
   } : {
     title: 'That’s today so far',
-    text: W.idxDone ? 'New stories land through the day, above a line, never under your thumb.' : 'Earlier editions didn’t load. They come back when the connection does.',
+    text: W.idxDone ? '' : 'Earlier editions didn’t load. They come back when the connection does.',
     buttons: [button('Unfiltered ' + ICON.arrow, 'ghost', openRaw)],
   });
   run.feed.insertBefore(run.end, run.sentinel);
@@ -629,8 +683,8 @@ function openLink(label, href) {
 function sourceSheet(sid, from) {
   if (W.view === 'raw') { rawSourceSheet(sid, from); return; }
   const day = [startDay(), W.today && dayOf(W.today)].concat(Object.keys(W.eds).filter(isDate).map((dt) => payloadFor(dt)).filter(Boolean).map(dayOf))
-    .find((d) => d && (!from || d.all.includes(from) || d.brief === from)) || startDay();
-  const items = day ? day.all.filter((c) => c.sid === sid) : [];
+    .find((d) => d && (!from || d.cards.includes(from))) || startDay();
+  const items = day ? day.cards.filter((c) => c.sid === sid) : [];
   const first = from || items[0] || {};
   const info = (day && day.sources[sid]) || {};
   const name = first.src || info.name || app.sourceName(sid);
@@ -655,7 +709,6 @@ function sourceSheet(sid, from) {
     else if (/^https?:/i.test(info.site || '')) row.appendChild(openLink('Open the site', info.site));
     else if (first.href) row.appendChild(openLink('Open the post', first.href));
     body.appendChild(row);
-    if (!first.local) body.appendChild(el('p', 'sheet-note', esc('Follow, and ' + name + ' shows on Local too.')));
     if (items.length) {
       body.appendChild(el('div', 'sheet-h', esc((when === 'today' ? 'Today' : when) + ' from ' + name)));
       const f = el('div', 'feed tight');
@@ -720,7 +773,7 @@ function rawSubnav(frag) {
   const P = W.pulse;
   const tk = todayKey();
   const n = P ? P.items.filter((c) => etDay(c.d * 1000) === tk).length : 0;
-  dl.appendChild(el('span', 'dl', '<b>Unfiltered</b><span class="s">' + (P ? esc(n ? n.toLocaleString('en-US') + ' today' : P.items.length.toLocaleString('en-US') + ' headlines') + ' · every 10 min · nothing picked' : 'every headline, nothing picked') + '</span>'));
+  dl.appendChild(el('span', 'dl', '<b>Unfiltered</b><span class="s">' + (P ? esc(n ? n.toLocaleString('en-US') + ' today' : P.items.length.toLocaleString('en-US') + ' headlines') : '') + '</span>'));
   frag.appendChild(dl);
   if (P) {
     frag.appendChild(chips([{ key: '', label: 'All outlets' }].concat(outletsOf(P)), W.raw.outlet, (k) => {
@@ -812,7 +865,7 @@ function renderRawList() {
     if (added.length) hydrateVotes(list, added);
     if (run.i >= run.all.length) {
       run.sentinel.remove();
-      list.appendChild(cards.caught({ title: 'That’s every headline on the wire', text: 'The raw wire keeps about two days. Older stories live on in the paper’s past editions.',
+      list.appendChild(cards.caught({ title: 'That’s every headline on the wire',
         buttons: [button('Back to today’s paper', '', closeRaw)], check: false }));
       return;
     }
@@ -873,14 +926,19 @@ function hunt(k) {
   const id = ++W.hunt;
   const live = () => id === W.hunt;
   loadMutes();
-  const found = (date) => { const q = payloadFor(date); return q ? dayOf(q).all.concat(dayOf(q).brief || []).find((c) => c.k === k) : null; };
+  const found = (date) => {
+    const q = payloadFor(date);
+    if (!q) return null;
+    return dayOf(q).cards.find((c) => c.k === k) || null;
+  };
   const dates = [todayKey()].concat(editionDates());
   const show = (date, c) => {
     if (!live()) return;
     if (MUTE[c.sid]) { app.toast('That card is from ' + c.src + ', which you muted. Unmute it in Settings.'); return; }
     if (!seen(c)) setGeo('everything');
-    W.view = 'paper'; W.ch = 'all'; W.more = true;
+    W.view = 'paper'; W.ch = 'all';
     W.start = date >= todayKey() ? null : date;
+    W.open.add(W.start || todayKey());
     app.paintSubnav();
     render({ until: k });
     if (!app.flashHit(W.root, k)) app.toast('That card has moved on. Here’s today’s paper.');
@@ -932,7 +990,7 @@ function mount(root) {
        further down it waits for a pull or a tap on the tab */
     data.setFreshGate((apply) => {
       if (app.activeTab() !== 'wire' || !W.panel || W.panel.scrollTop < 120) apply();
-      else { W.queued.push(apply); app.toast('New stories on the Wire. Pull down or tap Wire to see them.'); }
+      else { W.queued.push(apply); app.toast('New stories on the Wire.'); }
     });
     data.setStaleHandler((s) => { if (W.stale !== s) { W.stale = s; if (app.activeTab() === 'wire') paintDateline(W.reading || todayKey()); } });
   }

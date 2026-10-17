@@ -965,8 +965,8 @@
   ok   deep links, demo › #people/mx-dm2: no console errors
   ok   deep links, demo › #whatnow/e-tn3 lands on its card and flashes
   ok   deep links, demo › #whatnow/e-tn3: no console errors
-  ok   deep links, demo › #vintage/s-junktiques lands on its card and flashes
-  ok   deep links, demo › #vintage/s-junktiques: no console errors
+  ok   deep links, demo › #vintage/s-resource-burlington lands on its card and flashes
+  ok   deep links, demo › #vintage/s-resource-burlington: no console errors
   ok   deep links, demo › #art/b-0000a000-0000-4000-8000-000000000002 lands on its card and flashes
   ok   deep links, demo › #art/b-0000a000-0000-4000-8000-000000000002: no console errors
   ok   deep links, demo › #onair/yt:demo-tv-003 lands on its card and flashes
@@ -997,8 +997,12 @@
   ok   the Wire, live › the Brief is pinned above What matters today
   ok   the Wire, live › one pick card and four ranked rows to start
   ok   the Wire, live › an empty why draws no reason line
-  ok   the Wire, live › “5 more picks” opens six to ten in place
-  ok   the Wire, live › and the list ends “That’s the ten.”
+  ok   the Wire, live › the earlier picks wait behind the button
+  ok   the Wire, live › the button counts the rest of the ranking and the earlier picks (24)
+  ok   the Wire, live › opened, the block shows every local pick of the ranking, in order (25)
+  ok   the Wire, live › then the earlier picks, newest ranking first, each with its last rank and its reason
+  ok   the Wire, live › under “Earlier today, these mattered too”
+  ok   the Wire, live › and the list ends “That’s all twenty-nine.”
   ok   the Wire, live › nothing shows twice on today’s page
   ok   the Wire, live › today’s page draws every local story once: Brief + picks + river = the count
   ok   the Wire, live › the reddit chip shows exactly its count today (7)
@@ -1007,12 +1011,18 @@
   ok   the Wire, live › on Everything the chips are counts.everything
   ok   the Wire, live › and the dateline counts everything
   ok   the Wire, live › Everything keeps the picks
-  ok   the Wire, live › the river keeps rendering past 120 items (242)
+  ok   the Wire, live › the river keeps rendering past 120 items (219)
   ok   the Wire, live › today flows into yesterday, then the day before, each with its own head
   ok   the Wire, live › when the editions run out, the end says so
   ok   the Wire, live › scrolled into yesterday, the dateline names it
+  ok   the Wire, live › scrolling into yesterday draws “What mattered Friday” under its head
+  ok   the Wire, live › yesterday’s Brief is pinned above its block, as the arrow view pins it
+  ok   the Wire, live › with its picks: the card and four rows, in rank order
+  ok   the Wire, live › and its own button for the rest and the earlier picks
+  ok   the Wire, live › opened in place: the whole ranking, then “Earlier that day” and the earlier picks
+  ok   the Wire, live › no key appears twice on the page, today through the archive (260 cards)
   ok   the Wire, live › the source sheet: its stories today, Mute, Open the site
-  ok   the Wire, live › a muted source leaves the river (reuters)
+  ok   the Wire, live › a muted source leaves the river (r-burlington)
   ok   the Wire, live › the chip counts are recounted without the muted source
   ok   the Wire, live › Settings lists mutes
   ok   the Wire, live › no console errors
@@ -1403,6 +1413,8 @@
   ok   Watch, a signed-in reader’s dots follow them, and a cleared dot stays cleared (live) › a dot cleared on the other phone stays cleared here
   ok   Watch, a signed-in reader’s dots follow them, and a cleared dot stays cleared (live) › and is not sent back up
   ok   Watch, a signed-in reader’s dots follow them, and a cleared dot stays cleared (live) › a dot set in the sheet goes to the account
+  ok   Watch, a signed-in reader’s dots follow them, and a cleared dot stays cleared (live) › deleting the account clears this phone’s dots, partner and ratings; the want list stays
+  ok   Watch, a signed-in reader’s dots follow them, and a cleared dot stays cleared (live) › and the grid shows no dots
   ok   Watch, a signed-in reader’s dots follow them, and a cleared dot stays cleared (live) › no console errors
   ok   Watch, a missing films branch falls back to the starter list (live) › a 404 from films-data: the starter list, labelled
   ok   Watch, a missing films branch falls back to the starter list (live) › and nothing but the 404 itself in the console
@@ -1489,7 +1501,7 @@
   ok   sign-in fails soft › a bad address is caught before any request
   ok   sign-in fails soft › no link was requested
   ok   sign-in fails soft › no console errors
-  ok   performance › the live Wire redraws 60 cards in 10ms (budget 100)
+  ok   performance › the live Wire redraws 60 cards in 11ms (budget 100)
   ok   shell fixes: a rail never snaps flush to the edge › 390: .rail carries scroll-padding of one gutter
   ok   shell fixes: a rail never snaps flush to the edge › 390: a card scrolled to the start stops at the gutter
   ok   shell fixes: a rail never snaps flush to the edge › 390: no console errors
@@ -1817,14 +1829,16 @@
   ok   Vintage, the design form: consent first, and no price or cash anywhere (demo) › vintage: no sideways scroll at 390
   ok   Vintage, the design form: consent first, and no price or cash anywhere (demo) › vintage: at most two subnav rows
   ok   Vintage, the design form: consent first, and no price or cash anywhere (demo) › no console errors
-  ok   Vintage, the shop guide walks in order and invents no hours (live) › the guide has at least six shops (7)
+  ok   Vintage, the shop guide walks in order and invents no hours (live) › the guide has at least six shops (12)
   ok   Vintage, the shop guide walks in order and invents no hours (live) › every shop in the file, numbered in its walking order
   ok   Vintage, the shop guide walks in order and invents no hours (live) › the walk goes downtown, the South End, the Old North End, Winooski, then Essex
   ok   Vintage, the shop guide walks in order and invents no hours (live) › every shop is one of things.json’s Shopping entries: none invented
-  ok   Vintage, the shop guide walks in order and invents no hours (live) › every hour comes from the shop’s own things.json entry
-  ok   Vintage, the shop guide walks in order and invents no hours (live) › hours show only where the guide has them; the rest say “Hours not checked yet”
+  ok   Vintage, the shop guide walks in order and invents no hours (live) › every hour comes from the shop’s own things.json entry, with the date and page it was checked on
+  ok   Vintage, the shop guide walks in order and invents no hours (live) › each shop’s week is its things.json hours, day by day
+  ok   Vintage, the shop guide walks in order and invents no hours (live) › hours show only where the guide has them; a checked shop without them says call ahead, the rest “Hours not checked yet”
   ok   Vintage, the shop guide walks in order and invents no hours (live) › Map opens a search on Google Maps
   ok   Vintage, the shop guide walks in order and invents no hours (live) › gaps are marked in the file for Stephen to fill
+  ok   Vintage, the shop guide walks in order and invents no hours (live) › every shop in the walk has a street address; a shop without one is named in left_out instead
   ok   Vintage, the shop guide walks in order and invents no hours (live) › no console errors
   ok   Vintage, the shop guide walks in order and invents no hours (live) › the walk to the next shop where both have coordinates; only the next stop where they don’t
   ok   Vintage, the designs rail links to the merch site (live) › 28 previews in all-day/assets/merch, each under 60 KB

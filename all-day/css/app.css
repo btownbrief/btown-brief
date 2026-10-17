@@ -526,6 +526,8 @@ body.chrome-away .mast { transform: translateY(-100%); }
 .wm-row .c-foot { margin-top: 4px; }
 .wm-row > .act.star { margin: -6px -10px 0 0; }
 .wm .btn.more { margin-top: 6px; }
+.wm-row.was .num { color: var(--ink-3); }
+.wm-was { font-size: var(--fs-meta); font-weight: 700; color: var(--ink-2); padding: 16px var(--gutter) 6px; border-bottom: 1px solid var(--line-soft); }
 .wm-end { text-align: center; font-size: var(--fs-meta); color: var(--ink-3); padding: 12px var(--gutter) 4px; }
 
 /* ============================================================ sections and shelves */
