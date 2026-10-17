@@ -1053,6 +1053,40 @@
   ok   the Wire, walking back › the edition is in the address, so it can be shared
   ok   the Wire, walking back › › › comes back to today
   ok   the Wire, walking back › no console errors
+  ok   the Wire, What matters flips through earlier days › on Everything the top five mix local and national
+  ok   the Wire, What matters flips through earlier days › in the editor’s one ranking, as given
+  ok   the Wire, What matters flips through earlier days › today: ‹ is live, › is disabled
+  ok   the Wire, What matters flips through earlier days › the arrows are 44px targets
+  ok   the Wire, What matters flips through earlier days › the river is drawn under the block (55)
+  ok   the Wire, What matters flips through earlier days › ‹ reads “What mattered Friday”, its date under it and a Today link
+  ok   the Wire, What matters flips through earlier days › ‹ flips the block in place to yesterday’s picks
+  ok   the Wire, What matters flips through earlier days › yesterday: both arrows live
+  ok   the Wire, What matters flips through earlier days › with a short fade when motion is allowed
+  ok   the Wire, What matters flips through earlier days › the river below does not change
+  ok   the Wire, What matters flips through earlier days › the dateline stays on today
+  ok   the Wire, What matters flips through earlier days › and the address does not change
+  ok   the Wire, What matters flips through earlier days › the oldest edition: its picks, ‹ disabled, › live
+  ok   the Wire, What matters flips through earlier days › › › returns to today’s picks, › disabled again
+  ok   the Wire, What matters flips through earlier days › and the river is still the same
+  ok   the Wire, What matters flips through earlier days › the Today link returns
+  ok   the Wire, What matters flips through earlier days › on Local the flipped block shows that day’s local picks, in their order
+  ok   the Wire, What matters flips through earlier days › a reload opens on today: the block remembers nothing
+  ok   the Wire, What matters flips through earlier days › no console errors
+  ok   the Wire, What matters flips through earlier days › no picks yet: the block says so
+  ok   the Wire, What matters flips through earlier days › and ‹ still reaches yesterday’s picks
+  ok   the Wire, What matters flips through earlier days › no console errors with no picks yet
+  ok   the Wire, What matters flips through earlier days › 390 light: the flipped head fits, with its Today link
+  ok   the Wire, What matters flips through earlier days › 390 light: reduced motion, no fade
+  ok   the Wire, What matters flips through earlier days › 390 light: no console errors
+  ok   the Wire, What matters flips through earlier days › 390 dark: the flipped head fits, with its Today link
+  ok   the Wire, What matters flips through earlier days › 390 dark: reduced motion, no fade
+  ok   the Wire, What matters flips through earlier days › 390 dark: no console errors
+  ok   the Wire, What matters flips through earlier days › 1280 light: the flipped head fits, with its Today link
+  ok   the Wire, What matters flips through earlier days › 1280 light: reduced motion, no fade
+  ok   the Wire, What matters flips through earlier days › 1280 light: no console errors
+  ok   the Wire, What matters flips through earlier days › 1280 dark: the flipped head fits, with its Today link
+  ok   the Wire, What matters flips through earlier days › 1280 dark: reduced motion, no fade
+  ok   the Wire, What matters flips through earlier days › 1280 dark: no console errors
   ok   the Wire, inbox live and no Brief › the X and Facebook chips come back when the inbox is live
   ok   the Wire, inbox live and no Brief › no `brief`, no pinned Brief card
   ok   the Wire, inbox live and no Brief › an X card links to the original post
@@ -1544,7 +1578,7 @@
   ok   sign-in fails soft › a bad address is caught before any request
   ok   sign-in fails soft › no link was requested
   ok   sign-in fails soft › no console errors
-  ok   performance › the live Wire redraws 60 cards in 10ms (budget 100)
+  ok   performance › the live Wire redraws 60 cards in 8ms (budget 100)
   ok   shell fixes: a rail never snaps flush to the edge › 390: .rail carries scroll-padding of one gutter
   ok   shell fixes: a rail never snaps flush to the edge › 390: a card scrolled to the start stops at the gutter
   ok   shell fixes: a rail never snaps flush to the edge › 390: no console errors

@@ -11,11 +11,12 @@ newsletter's news rules. All Day upvotes had no votes yet on 2026-10-16.
 ## Who it's for
 
 Someone in Burlington checking their phone in the coffee line. They want what happened
-in their town today, and on Everything the few national stories that reach their life.
+in their town today, and on Everything the national stories that reach their life too,
+mixed in where they matter.
 
 ## What the record says Stephen runs
 
-**Local first, and local means the Burlington area.** Of the 676 stories he ran since
+**Local means the Burlington area.** Of the 676 stories he ran since
 May, about 29% are about Burlington, 14% the rest of Chittenden County, 29% statewide
 news that lands here (the Legislature, the governor's race, utility rates), the rest
 regional or features. The newsletter runs no national news; national stories exist on
@@ -74,17 +75,26 @@ if they read only ten things today? Then order by these, in this order:
 5. **Statewide stories that land in Burlington.** Prefer the version with the local
    angle when one exists.
 
-**Burlington-area first.** When the day has Burlington or Chittenden County stories,
-they outrank statewide features, and statewide features never fill the top five while
-a Burlington story waits. A trip out of the area (a weekend road closure at the Notch)
-can be a pick, below every Burlington story.
+**One list, by importance (Stephen, 2026-10-17).** Rank all forty, local and national
+together, by what matters most to a Burlington reader this morning. A big national
+story (a Fed decision, a shutdown, a major ruling) may outrank a small local one, and a
+big local story outranks a small national one. On an ordinary day the top five mix
+both. Never put every local pick above every national pick: the Everything view reads
+the ranking top to bottom, and a reader there expects the most important headlines up
+top, whichever kind they are. The Local view shows only the local picks, in the same
+relative order, so the local picks must still read well on their own.
+
+**Burlington-area first, among the local picks.** When the day has Burlington or
+Chittenden County stories, they outrank statewide features, and a statewide feature
+never takes a higher local slot while a Burlington story waits. A trip out of the area
+(a weekend road closure at the Notch) can be a pick, below every Burlington story.
 
 **Threads** (Reddit, Facebook) can be picks only when the town is clearly talking: a
 real question answered or a real report, with the comment count to show it. Never above
 rank 6, at most two; otherwise they live in the river.
 
-Put **one genuinely positive local story in the top three** when the day has one. Never
-fake it: a weak happy story does not beat a strong consequential one.
+Put **one genuinely positive local story among the top three local picks** when the day
+has one. Never fake it: a weak happy story does not beat a strong consequential one.
 
 Rank up to forty: about half local and half national on an ordinary day, and let the
 news decide the exact split, from fifteen to twenty-five each. Stephen's readers get
@@ -92,7 +102,8 @@ their fill of local news from the newsletter itself, so the picks are where they
 the big national stories, and where the big local stories show up first, before they
 reach Monday's or Friday's edition. National picks pass the same consequence test at
 national scale (a Fed decision, a shutdown clock, a major ruling, a public-health
-finding). Skip politics as theater, celebrity, scores and outrage.
+finding), and take their place in the one list wherever that consequence puts them.
+Skip politics as theater, celebrity, scores and outrage.
 
 Lines marked **river only** (single crime stories, threads without a conversation,
 places outside the area) may join the river but never the picks.

@@ -543,6 +543,15 @@ body.chrome-away .mast { transform: translateY(-100%); }
 .wm-row.was .num { color: var(--ink-3); }
 .wm-was { font-size: var(--fs-meta); font-weight: 700; color: var(--ink-2); padding: 16px var(--gutter) 6px; border-bottom: 1px solid var(--line-soft); }
 .wm-end { text-align: center; font-size: var(--fs-meta); color: var(--ink-3); padding: 12px var(--gutter) 4px; }
+/* today's block flips through earlier days in place: ‹ › on its head, 44px each */
+.wm-top > .sec { align-items: center; padding-right: calc(var(--gutter) - 10px); }
+.wm-nav { display: flex; gap: 2px; flex: 0 0 auto; }
+.wm-nav .iconbtn.nav:disabled { opacity: .25; cursor: default; background: none; }
+.wm-today { color: var(--accent); font-weight: 600; padding: 12px 8px; margin: -12px -8px; }
+.wm-today:hover { text-decoration: underline; }
+.wm-top[aria-busy="true"] { opacity: .6; }
+.wm-top.flip-in { animation: wm-in .18s ease; }
+@keyframes wm-in { from { opacity: .4; } }
 
 /* ============================================================ sections and shelves */
 .sec { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; padding: 22px var(--gutter) 10px; }

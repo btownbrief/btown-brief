@@ -6,8 +6,9 @@ tag_wire.py left in data/wire-tags.json, and the day so far, then asks the
 editor model, with prompts/wire-taste.md as its doctrine, for:
 
   * "What matters today": 40 ranked picks, each with a one-line reason and a
-    local flag, so the page shows the local picks on Local and all of them when
-    the switch is on Everything. Re-ranked at most every PICKS_EVERY_HOURS
+    local flag, ranked as one list by importance with local and national
+    interleaved, so the page shows the local picks on Local (in their relative
+    order) and all of them, mixed, when the switch is on Everything. Re-ranked at most every PICKS_EVERY_HOURS
     (and at once when a score-9 local story lands); between re-ranks the
     picks stand. A day keeps every story the editor ranked: one that falls
     out of a re-rank moves to `picks_earlier` with its last rank, its reason
@@ -137,6 +138,8 @@ rewrite a headline: the page shows each one exactly as the outlet wrote it.
   news decides the split, fifteen to twenty-five each),
   fewer only when the day truly lacks them. Each has a reason under 90
   characters. A pick from NEW is added to the river for you.
+  The ranking is a single list by importance, not two lists: local and
+  national interleaved, the most important first, whichever kind it is.
 """
 
 
@@ -454,8 +457,11 @@ def order_picks(picks):
     """The house rules on the editor's ranking, applied in order:
 
     1. local picks sorted by tier (Burlington area and statewide decisions,
-       then statewide features, then trips out of the area), the editor's
-       order kept within a tier; national picks keep their slots
+       then statewide features, then trips out of the area) among the local
+       slots only, the editor's order kept within a tier; national picks
+       keep their slots, never moved down, so the editor's interleave of
+       local and national by importance stands (Stephen, 2026-10-17: the
+       Everything view should mix both, the most important up top)
     2. never two from one outlet back to back
     3. at most THREAD_PICKS_MAX threads, and none above THREAD_TOP_RANK"""
     slots = [i for i, pick in enumerate(picks) if pick.get("local")]
@@ -1076,6 +1082,16 @@ def selftest():
     spread = spread_outlets([{"src": "a"}, {"src": "a"}, {"src": "b"}])
     assert [p["src"] for p in spread] == ["a", "b", "a"]
     print("curate_wire: leads and outlet spread ok")
+
+    # one list by importance: national picks keep the editor's slots, so the
+    # Everything view's top five mix; the tier sort moves local picks only
+    mixed = [dict(mk(1), region="state", topic="environment"), mk(2, local=False, src="ap"),
+             dict(mk(3, src="vtd"), region="btv"), mk(4, local=False, src="reuters"), mk(5)]
+    ordered = order_picks(mixed)
+    assert [p["local"] for p in ordered] == [True, False, True, False, True], ordered
+    assert [p["id"] for p in ordered if not p["local"]] == ["id2", "id4"]
+    assert [p["id"] for p in ordered if p["local"]][0] == "id3"    # Burlington before the feature
+    print("curate_wire: local and national ranked as one list ok")
 
     with tempfile.TemporaryDirectory() as tmp:
         old = empty_day("2026-10-15")
