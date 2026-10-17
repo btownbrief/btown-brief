@@ -1,0 +1,335 @@
+{
+ "_": "Demo data for ?demo=1: run-clubs.json's shape, every club invented. A meet with in_hours instead of day and time is moved to that many hours from the moment the demo opens (clubs-week.js redateDemo), so What Now's Now always has one. Summer Track Nights ended in 2020 and must never show.",
+ "clubs": [
+  {
+   "id": "lakefront-run-crew",
+   "name": "Lakefront Run Crew",
+   "kind": "run",
+   "what": "An easy social run along the bike path and back, then coffee. Three and five mile loops.",
+   "meets": [
+    {
+     "day": "tue",
+     "time": "17:30",
+     "where": "Waterfront Park, by the boathouse",
+     "address": "College St & Lake St, Burlington",
+     "lat": 44.4797,
+     "lng": -73.2214,
+     "note": ""
+    },
+    {
+     "day": "thu",
+     "time": "17:30",
+     "where": "Waterfront Park, by the boathouse",
+     "address": "College St & Lake St, Burlington",
+     "lat": 44.4797,
+     "lng": -73.2214,
+     "note": ""
+    },
+    {
+     "day": "sat",
+     "time": "08:00",
+     "where": "Waterfront Park, by the boathouse",
+     "address": "College St & Lake St, Burlington",
+     "lat": 44.4797,
+     "lng": -73.2214,
+     "note": "Coffee after at the boathouse."
+    }
+   ],
+   "level": "Conversational, 10 to 12 minute miles",
+   "cost": "Free",
+   "season": "year-round",
+   "newcomers": "\"New faces every week.\" Someone always runs at the back.",
+   "url": "https://example.com/lakefront-run-crew",
+   "instagram": "https://www.instagram.com/example_lakefront/",
+   "meetup": "",
+   "strava": "https://www.strava.com/clubs/example-lakefront"
+  },
+  {
+   "id": "old-north-end-social-run",
+   "name": "Old North End Social Run",
+   "kind": "run",
+   "what": "Three miles through the Old North End, ending at the brewery for a pint.",
+   "meets": [
+    {
+     "day": "mon",
+     "time": "18:15",
+     "where": "Foam Brewers",
+     "address": "112 Lake St, Burlington",
+     "lat": 44.4789,
+     "lng": -73.2196,
+     "note": ""
+    },
+    {
+     "day": "fri",
+     "time": "17:30",
+     "where": "Foam Brewers",
+     "address": "112 Lake St, Burlington",
+     "lat": 44.4789,
+     "lng": -73.2196,
+     "note": ""
+    }
+   ],
+   "level": "All paces; the group regroups at every corner",
+   "cost": "Free",
+   "season": "year-round",
+   "newcomers": "\"Never run with a group before? Perfect.\" Look for the orange flag.",
+   "url": "https://example.com/one-social-run",
+   "instagram": "https://www.instagram.com/example_onesocial/",
+   "meetup": "https://www.meetup.com/example-one-social-run/",
+   "strava": ""
+  },
+  {
+   "id": "sunrise-striders",
+   "name": "Sunrise Striders",
+   "kind": "run",
+   "what": "Before-work miles at Oakledge, in the dark half the year. Headlamps when it calls for them.",
+   "meets": [
+    {
+     "day": "mon",
+     "time": "06:00",
+     "where": "Oakledge Park, main lot",
+     "address": "Flynn Ave, Burlington",
+     "lat": 44.4583,
+     "lng": -73.2265,
+     "note": ""
+    },
+    {
+     "day": "wed",
+     "time": "06:00",
+     "where": "Oakledge Park, main lot",
+     "address": "Flynn Ave, Burlington",
+     "lat": 44.4583,
+     "lng": -73.2265,
+     "note": ""
+    },
+    {
+     "day": "fri",
+     "time": "06:00",
+     "where": "Oakledge Park, main lot",
+     "address": "Flynn Ave, Burlington",
+     "lat": 44.4583,
+     "lng": -73.2265,
+     "note": ""
+    }
+   ],
+   "level": "Steady, 8:30 to 9:30 miles",
+   "cost": "Free",
+   "season": "year-round",
+   "newcomers": "Just show up; the group waits until 6:05.",
+   "url": "https://example.com/sunrise-striders",
+   "instagram": "",
+   "meetup": "",
+   "strava": "https://www.strava.com/clubs/example-sunrise"
+  },
+  {
+   "id": "sunday-long-run",
+   "name": "Sunday Long Run",
+   "kind": "run",
+   "what": "Eight to twelve miles on the bike path and the Causeway, with water stops.",
+   "meets": [
+    {
+     "day": "sun",
+     "time": "08:30",
+     "where": "Leddy Park",
+     "address": "216 Leddy Rd, Burlington",
+     "lat": 44.5046,
+     "lng": -73.2552,
+     "note": ""
+    }
+   ],
+   "level": "Long and slow; 9:30 to 11 minute miles",
+   "cost": "Free",
+   "season": "year-round",
+   "newcomers": "\"Shorter routes for anyone building up.\"",
+   "url": "https://example.com/sunday-long-run",
+   "instagram": "",
+   "meetup": "https://www.meetup.com/example-sunday-long-run/",
+   "strava": ""
+  },
+  {
+   "id": "red-rocks-trail-run",
+   "name": "Red Rocks Trail Run",
+   "kind": "run",
+   "what": "Two loops of the Red Rocks trails, with a stop at the cliffs for the view.",
+   "meets": [
+    {
+     "in_hours": 1.25,
+     "where": "Red Rocks Park, Central Ave lot",
+     "address": "Central Ave, South Burlington",
+     "lat": 44.4434,
+     "lng": -73.2238,
+     "note": ""
+    }
+   ],
+   "level": "Trail pace; hills walked",
+   "cost": "Free",
+   "season": "year-round",
+   "newcomers": "First trail run? Tell the leader and they stay with you.",
+   "url": "https://example.com/red-rocks-trail-run",
+   "instagram": "https://www.instagram.com/example_redrocks/",
+   "meetup": "",
+   "strava": ""
+  },
+  {
+   "id": "queen-city-pickup",
+   "name": "Queen City Pickup",
+   "kind": "pickup",
+   "what": "Pickup basketball, full court, teams made on the spot.",
+   "meets": [
+    {
+     "day": "tue",
+     "time": "19:00",
+     "where": "Miller Center gym",
+     "address": "130 Gosse Ct, Burlington",
+     "lat": 44.4906,
+     "lng": -73.2216,
+     "note": ""
+    },
+    {
+     "day": "thu",
+     "time": "19:00",
+     "where": "Miller Center gym",
+     "address": "130 Gosse Ct, Burlington",
+     "lat": 44.4906,
+     "lng": -73.2216,
+     "note": ""
+    },
+    {
+     "day": "sat",
+     "time": "18:00",
+     "where": "Miller Center gym",
+     "address": "130 Gosse Ct, Burlington",
+     "lat": 44.4906,
+     "lng": -73.2216,
+     "note": ""
+    }
+   ],
+   "level": "All levels; competitive but kind",
+   "cost": "$5 drop-in",
+   "season": "year-round",
+   "newcomers": "\"No team needed, just show up.\"",
+   "url": "https://example.com/queen-city-pickup",
+   "instagram": "",
+   "meetup": "https://www.meetup.com/example-qc-pickup/",
+   "strava": ""
+  },
+  {
+   "id": "gravel-and-coffee-ride",
+   "name": "Gravel & Coffee Ride",
+   "kind": "bike",
+   "what": "A no-drop gravel ride out through Shelburne and back to coffee.",
+   "meets": [
+    {
+     "day": "wed",
+     "time": "17:45",
+     "where": "Old Spokes Home",
+     "address": "331 N Winooski Ave, Burlington",
+     "lat": 44.4709,
+     "lng": -73.2126,
+     "note": ""
+    },
+    {
+     "day": "sat",
+     "time": "09:00",
+     "where": "Old Spokes Home",
+     "address": "331 N Winooski Ave, Burlington",
+     "lat": 44.4709,
+     "lng": -73.2126,
+     "note": ""
+    }
+   ],
+   "level": "No-drop, 12 to 14 mph",
+   "cost": "Free",
+   "season": "year-round",
+   "newcomers": "Any bike with wide tires; helmets required.",
+   "url": "https://example.com/gravel-and-coffee",
+   "instagram": "",
+   "meetup": "",
+   "strava": "https://www.strava.com/clubs/example-gravel"
+  },
+  {
+   "id": "lake-rowers",
+   "name": "Lake Rowers",
+   "kind": "row-paddle",
+   "what": "Open rows in the club's gigs, an hour on the lake.",
+   "meets": [
+    {
+     "day": "sun",
+     "time": "10:00",
+     "where": "Perkins Pier",
+     "address": "Maple St, Burlington",
+     "lat": 44.4733,
+     "lng": -73.2211,
+     "note": ""
+    }
+   ],
+   "level": "Beginners to experienced",
+   "cost": "Pay what you can",
+   "season": "year-round",
+   "newcomers": "\"Your first row is a trial row.\" Wear clothes that can get wet.",
+   "url": "https://example.com/lake-rowers",
+   "instagram": "",
+   "meetup": "",
+   "strava": ""
+  },
+  {
+   "id": "yoga-on-the-green",
+   "name": "Yoga on the Green",
+   "kind": "yoga",
+   "what": "An hour of easy flow on the grass, or upstairs when it rains.",
+   "meets": [
+    {
+     "in_hours": 2.5,
+     "where": "City Hall Park",
+     "address": "149 Church St, Burlington",
+     "lat": 44.4764,
+     "lng": -73.2131,
+     "note": ""
+    },
+    {
+     "day": "fri",
+     "time": "12:15",
+     "where": "City Hall Park",
+     "address": "149 Church St, Burlington",
+     "lat": 44.4764,
+     "lng": -73.2131,
+     "note": ""
+    }
+   ],
+   "level": "Gentle; every level",
+   "cost": "Free",
+   "season": "year-round",
+   "newcomers": "Bring a mat, or borrow one.",
+   "url": "https://example.com/yoga-on-the-green",
+   "instagram": "https://www.instagram.com/example_yogagreen/",
+   "meetup": "",
+   "strava": ""
+  },
+  {
+   "id": "summer-track-nights",
+   "name": "Summer Track Nights",
+   "kind": "run",
+   "what": "Intervals on the track. Over for the year in this demo, so it never shows.",
+   "meets": [
+    {
+     "day": "thu",
+     "time": "18:00",
+     "where": "The outdoor track",
+     "address": "",
+     "lat": 44.4673,
+     "lng": -73.193,
+     "note": ""
+    }
+   ],
+   "level": "Workout pace",
+   "cost": "Free",
+   "season": "summer",
+   "until": "2020-08-31",
+   "newcomers": "",
+   "url": "https://example.com/summer-track",
+   "instagram": "",
+   "meetup": "",
+   "strava": ""
+  }
+ ]
+}

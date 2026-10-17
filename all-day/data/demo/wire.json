@@ -1538,6 +1538,14 @@
     "short": "Stat",
     "site": "https://example.org/stat",
     "topic": "news"
+   },
+   {
+    "id": "r-burlington",
+    "name": "r/burlington",
+    "short": "r/burlington",
+    "site": "https://www.reddit.com/r/burlington/",
+    "topic": "local",
+    "local": 1
    }
   ],
   "items": [
@@ -1945,7 +1953,33 @@
     "d": 1792149600,
     "s": "burlington-free-press",
     "i": "field"
+   },
+   {
+    "t": "The fog rolling off the lake from the top of the Moran Plant",
+    "u": "https://www.reddit.com/r/burlington/comments/demo1/fog_from_moran/",
+    "d": 1792170000,
+    "s": "r-burlington",
+    "ch": "reddit",
+    "local": true,
+    "i": "slate"
+   },
+   {
+    "t": "Anyone know when the bike path bridge reopens?",
+    "u": "https://www.reddit.com/r/burlington/comments/demo2/bike_path_bridge/",
+    "d": 1792168000,
+    "s": "r-burlington",
+    "ch": "reddit",
+    "local": true
    }
-  ]
+  ],
+  "inbox": {
+   "facebook": {
+    "paused": false,
+    "items": [
+     { "u": "https://facebook.com/groups/demo/permalink/101/", "d": 1792166400, "from": "Burlington Gardeners", "name": "Burlington Gardeners", "summary": "Giant pumpkin weigh-in results from the Intervale, with a 640-pound winner.", "kind": "post", "ch": "facebook", "local": true, "i": "mustard" },
+     { "u": "https://facebook.com/groups/demo/permalink/102/", "d": 1792162800, "from": "Burlington Gardeners", "name": "Burlington Gardeners", "summary": "Who wants garlic starts? Free on the porch.", "kind": "post", "ch": "facebook", "local": true }
+    ]
+   }
+  }
  }
 }
