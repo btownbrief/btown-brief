@@ -101,8 +101,13 @@ const num = (n) => Number(n || 0).toLocaleString('en-US');
 const playUrl = (slug) => (SLUG.test(slug) ? ARCADE + slug + '/' : ARCADE);
 const norm = (s) => String(s || '').trim().replace(/\s+/g, ' ').toLowerCase();
 const ORD = (n) => n + (n % 100 >= 11 && n % 100 <= 13 ? 'th' : ['th', 'st', 'nd', 'rd'][n % 10] || 'th');
-/* one line of plain text: no control characters, no line breaks */
-const line1 = (s, max) => String(s == null ? '' : s).replace(/[\u0000-\u001f\u007f\u2028\u2029]+/g, ' ').replace(/\s+/g, ' ').trim().slice(0, max || 200);
+/* one line of plain text: no control characters, no line breaks, no
+   direction overrides (they could make a texted link read as another), no
+   half of an emoji; cut by characters, so the cut never splits one either */
+const unsafe = (c) => c < 0x20 || (c >= 0x7f && c <= 0x9f) || c === 0x61c || c === 0x200e || c === 0x200f || (c >= 0x202a && c <= 0x202e) ||
+  c === 0x2028 || c === 0x2029 || (c >= 0x2066 && c <= 0x2069) || (c >= 0xd800 && c <= 0xdfff);
+const line1 = (s, max) => [...[...String(s == null ? '' : s)].map((ch) => (unsafe(ch.codePointAt(0)) ? ' ' : ch)).join('').replace(/\s+/g, ' ').trim()]
+  .slice(0, max || 200).join('').trim();
 /* a stable colour for a game's cabinet screen, from the shell's mark hues */
 const hue = (s) => { let h = 7; for (const c of String(s)) h = (h * 31 + c.charCodeAt(0)) >>> 0; return h % 8; };
 
@@ -709,11 +714,19 @@ function playItem(p) {
   app.know([it]);
   return it;
 }
-function pollRow(p, it, max) {
+/* each row's bar is its share of everyone in the poll: the poster and the
+   "me too"s on it, over all of them; redrawn whenever a vote moves */
+function paintBars(box) {
+  if (!box) return;
+  const rows = [...box.querySelectorAll('.gm-poll')];
+  const people = rows.map((r) => 1 + ((app.item(r.dataset.k) || {}).votes || 0));
+  const total = people.reduce((a, b) => a + b, 0) || 1;
+  rows.forEach((r, i) => r.style.setProperty('--w', Math.round((people[i] / total) * 100) + '%'));
+}
+function pollRow(p, it) {
   const r = el('div', 'gm-poll' + (it.voted ? ' on' : ''));
   r.dataset.k = it.k;
   r.dataset.post = p.id;
-  r.style.setProperty('--w', Math.round(((it.votes + 1) / (max + 1)) * 100) + '%');
   const game = gameOf(p), pl = platOf(p);
   const note = sameText(p.title, game) ? '' : line1(p.title, 80);
   const who = [it.author, agoShort(it.created)].filter(Boolean).join(' · ');
@@ -742,7 +755,7 @@ function metoo(id, btn) {
     btn.classList.toggle('on', it.voted);
     btn.setAttribute('aria-pressed', it.voted ? 'true' : 'false');
     btn.querySelector('.n').textContent = it.votes || '';
-    if (row) row.classList.toggle('on', it.voted);
+    if (row) { row.classList.toggle('on', it.voted); paintBars(row.parentNode); }
   };
   it.voted = !it.voted;
   it.votes = Math.max(0, it.votes + (it.voted ? 1 : -1));
@@ -814,9 +827,9 @@ function drawPlaying(host) {
   const shown = posts.filter((p) => G.plat === 'all' || platOf(p) === G.plat)
     .map((p) => [p, playItem(p)])
     .sort((a, b) => b[1].votes - a[1].votes || b[1].created - a[1].created);
-  const max = Math.max(0, ...shown.map(([, it]) => it.votes));
   const box = el('div', 'gm-polls');
-  (G.pollOpen ? shown : shown.slice(0, POLL)).forEach(([p, it]) => box.appendChild(pollRow(p, it, max)));
+  (G.pollOpen ? shown : shown.slice(0, POLL)).forEach(([p, it]) => box.appendChild(pollRow(p, it)));
+  paintBars(box);
   host.appendChild(box);
   if (!G.pollOpen && shown.length > POLL) host.appendChild(button(plural(shown.length - POLL, 'more', 'more'), 'ghost more', () => { G.pollOpen = true; drawPostsSlots(); }));
 }
@@ -965,7 +978,7 @@ function drawVr(host) {
   const inVr = arr(G.posts && G.posts.playing).filter((p) => platOf(p) === 'vr').length;
   const row = el('div', 'linkrow gm-vr-go');
   if (inVr) {
-    const b = button(esc(plural(inVr, 'neighbor', 'neighbors') + ' in VR'), 'ghost sm', () => { G.plat = 'vr'; drawPostsSlots(); app.jumpTo(G.root.querySelector('[data-sec="playing"]')); });
+    const b = button(esc(plural(inVr, 'VR game', 'VR games') + ' in the poll'), 'ghost sm', () => { G.plat = 'vr'; drawPostsSlots(); app.jumpTo(G.root.querySelector('[data-sec="playing"]')); });
     b.dataset.invr = String(inVr);
     row.appendChild(b);
   }

@@ -1812,9 +1812,13 @@ async function theGames(browser, base) {
     await page.click(first);
     await page.waitForTimeout(200);
     check(await page.$eval(first, (b) => b.getAttribute('aria-pressed')) === 'true' && Number(await page.$eval(first + ' .n', (n) => n.textContent)) === before + 1, '“Me too” is a vote, signed out too', '');
+    const widths = () => page.$$eval(gmPanel + ' .gm-poll', (n) => n.map((x) => parseFloat(x.style.getPropertyValue('--w'))));
+    const w1 = await widths();
     await page.click(first);
     await page.waitForTimeout(200);
     check(Number(await page.$eval(first + ' .n', (n) => n.textContent || 0)) === before, 'and a second tap takes it back', '');
+    const w0 = await widths();
+    check(Math.abs(w0.reduce((a, b) => a + b, 0) - 100) <= 2 && w1[0] > w0[0], 'each bar is its share of everyone in the poll, and it moves with a vote', JSON.stringify([w0, w1]));
     /* signed out, the line asks you to sign in instead of posting */
     await page.fill(gmPanel + ' [data-say] input', 'Hades II');
     await page.selectOption(gmPanel + ' [data-say] select', 'pc');
@@ -1855,6 +1859,13 @@ async function theGames(browser, base) {
     await page.click(gmPanel + ' [data-addlfg]');
     await page.waitForSelector('#sheet:not([hidden])', { timeout: 4000 });
     check(/Sign in to post/.test(await page.$eval('#sheet', (n) => n.innerText)), 'signed out, it asks for a sign-in first', '');
+    /* a post built to break the invite: a direction override, a line break, and an emoji right at the 60-character cut */
+    await page.evaluate(() => import('/all-day/js/auth.js').then((a) => a.demoSignIn()));
+    await page.evaluate(() => import('/all-day/js/boards.js').then((b) => b.setProfile({ display_name: 'Juniper' })
+      .then(() => b.create('games', { kind: 'lfg', title: 'Bad invite', meta: { game: 'a'.repeat(59) + String.fromCodePoint(0x1F3AE), platform: 'pc', when: 'now' + String.fromCharCode(0x202E) + 'evil\nline' } }))));
+    await page.waitForFunction((p) => [...document.querySelectorAll(p + ' [data-lfg]')].some((c) => /Bad invite/.test(c.innerText)), gmPanel, { timeout: 6000 }).catch(() => {});
+    const bad = await page.$$eval(gmPanel + ' [data-lfg]', (n) => n.filter((c) => /Bad invite/.test(c.innerText)).map((c) => c.querySelector('[data-invite]').getAttribute('href')));
+    check(bad.length === 1 && !/%E2%80%AE|%0A|%0D/i.test(bad[0]) && decodeURIComponent(bad[0]).includes(String.fromCodePoint(0x1F3AE)), 'an invite drops direction overrides and line breaks, and keeps an emoji whole', bad.join(''));
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
   });
