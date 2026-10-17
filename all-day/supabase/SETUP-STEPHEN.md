@@ -1,7 +1,8 @@
 # All Day accounts and boards: what Stephen does in Supabase
 
-Three short jobs in the Supabase dashboard, about ten minutes in all. Do them in order. Until
-each one is done, All Day keeps working and says so plainly; nothing breaks.
+Four short jobs in the Supabase dashboard, about fifteen minutes in all. Do them in order. Until
+each one is done, All Day keeps working and says so plainly; nothing breaks. Parts A to C are
+done (October 2026); part D is the new one.
 
 Project: the shared one, **jnouvwxomrcffqwilqkq** (the same project Small Talk, Who's Playing,
 the games and the photo queue use). Sign in at https://supabase.com/dashboard and open it.
@@ -98,6 +99,54 @@ didn't open it." Posts still go up, and two reports still take a post down; it s
 you until the desk opens. Twenty wrong tries in 15 minutes shut the desk for everyone, you
 included, until they age out.
 
+## D. Round two of the boards (3 minutes)
+
+This adds what the People, Vintage, Art and Watch tabs asked for after they were built. It is
+one file, pasted once, and it only adds: no reader's post, vote or profile is touched.
+
+1. In the left sidebar, click **SQL Editor**.
+2. Click **New query** (the **+** at the top of the list).
+3. Open `all-day/supabase/nn-ROUND2.sql` from the repo, copy the **whole** file, and paste it in.
+4. Click **Run** (bottom right). It should end with "Success. No rows returned."
+5. It is safe to run again later.
+
+If the result also shows a line that starts **"nn-ROUND2: the two stray-photo policies were not
+added"**, everything else still installed. That line means this project would not let the SQL
+Editor give the photo bucket its two cleanup rules. Nothing is broken; stray picture files just
+stay in the bucket, and the boards desk will say "stray picture files are waiting". Tell Claude
+and it will walk you through adding the two rules in the Storage screen instead.
+
+**If you ever paste `nn-SETUP.sql` again**, paste `nn-ROUND2.sql` right after it. `nn-SETUP.sql`
+on its own puts back the round-one rules (and posting a Vintage design or a Meetup plan would be
+refused until round two goes back on).
+
+What it turns on, tab by tab:
+
+- **Vintage.** A design sent in for a tee and a fit check are now their own kinds of post (before,
+  they were finds tagged "Make a tee" and "Fit check"; those still show until they end). "Someone
+  got it" now ticks the find as gone instead of deleting it, so the thank-you line counts
+  everyone's finds, not one phone's.
+- **People.** A plan's "down to put it on Meetup" box and its rough age band are now part of the
+  plan itself. Plans posted before keep theirs and still show them.
+- **Art.** A week's photo of the week is now settled at Sunday midnight: votes cast after that no
+  longer change who won.
+- **Watch.** Ratings and picks remember the film's TMDB number, not just its title, and the
+  screening ballot allows one vote per reader on the server (before, only the phone kept to it).
+- **Profiles.** Settings → Your profile gains "What you're into" (running, games, live music and
+  the rest of the People tab's list; never who someone is). Nobody sees it; the People tab uses it
+  to suggest plans and clubs.
+- **The boards desk** (`mod.html`) gains a **Show the Meetup list** button: every live plan whose
+  host is down for Meetup, with the time, place, spots, age band, host's first name and how many
+  are going, and a "Copy for Meetup" button for each. Opening the desk also cleans up stray
+  photos: a board photo whose post never went up leaves the photo queue after a day, and a picture
+  file that never made it into the queue at all is removed from the bucket. The desk says what it
+  cleared.
+
+**Before part D is done:** everything above keeps working the round-one way. Designs and fit
+checks post as tagged finds, "Someone got it" takes the find down, a Meetup plan's box goes to the
+People table, Art's past winners can still shift, the profile sheet saves everything but "What
+you're into", and the desk's Meetup button says to paste this file.
+
 ## One trade-off to know about: the saved sign-in
 
 When a reader signs in, All Day keeps a **refresh token** in the browser so they stay signed in for
@@ -121,6 +170,7 @@ page (GoatCounter is a small, privacy-focused counter and the lower risk). Nothi
 | After A | Same; the link now lands in All Day | "Posting is coming soon." | Shows no boards yet |
 | After A and B | "Signed in as Maya" (or "Add your first name before you post"), Your profile, Your posts, Sign out, Delete my account and posts | Works; a reader names themselves once | Works signed in or out |
 | After C | Same | Same | Same; reported posts wait for you on the desk |
+| After D | Your profile also has "What you're into" | Designs, fit checks and Meetup plans post as their own kinds | One vote each on the Watch screening ballot |
 
 "Delete my account and posts" removes the reader's profile, posts, votes, reports and missions,
 and signs them out. It does not delete their email sign-in, because that sign-in is shared with
