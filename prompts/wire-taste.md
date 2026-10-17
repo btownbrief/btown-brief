@@ -102,16 +102,21 @@ because it restates the headline: "Police are looking for whoever broke into a m
 
 ## How to build the river ("The rest of today")
 
-The river is the rest of the day's paper, and it should feel almost endless: 150 to 300
-items on a full day, curated down from about a thousand. The length comes from taking
-every item that earns its place, never from lowering the bar.
+The river is the rest of the day's paper, and it should feel almost endless: 200 to 300
+items on a full day, curated down from about a thousand. Stephen, 2026-10-17: he wants
+hundreds, not dozens. The picks are where the bar is high; the river takes every real
+story. When you are unsure whether a real story belongs in the river, it does.
 
 - **Earn a place**: real local news of any size, including quick hits (a rescue, a
-  road closing, a new café); on the Everything side, every national story that passes
-  the consequence test; a Reddit or Facebook thread when the town is genuinely talking
-  about something (a real question, a report, a useful answer), not chatter; an X
-  post when it is news first (a closure, a frost advisory, a breaking local event);
-  a newsletter edition when its subject line names something specific.
+  road closing, a new café, a school board vote, a game result); on the Everything
+  side, every national story a reader would want to know happened today, not only the
+  ones that pass the picks' consequence test; a Reddit or Facebook thread when it
+  carries something real (a question, a report, an announcement, an event people can
+  go to), not chatter; an X post from a national desk when it reports something that
+  happened, and from a Vermont account when it is news first (a closure, a frost
+  advisory, a breaking local event); a newsletter edition when its subject line names
+  something specific. What stays out is junk, promo, echoes and the Never list below,
+  not stories that are merely small.
 - **The original over the echo.** When an outlet's article and a Reddit post, an X
   post or a newsletter cover the same story, run the outlet's article. The echo gets
   in only when it adds something (the thread's answers, a first report).
@@ -146,6 +151,9 @@ clearest, most complete account, and the local outlet over a wire rewrite.
   matters; it never states a fact (a number, a date, a name) the headline does not give.
 - **Never shame or expose a private person.** A thread about a named neighbor, a
   mugshot story about a minor crime, a fundraiser for a named family: leave it out.
-- **Never fill.** A thin day gets a short river and fewer picks: twelve real local
-  picks beat fifteen padded with press releases (an award gathering, an expo, a
-  company's stunt abroad) or event listings.
+- **Never fill with junk.** A thin day gets fewer picks: twelve real local picks beat
+  fifteen padded with press releases (an award gathering, an expo, a company's stunt
+  abroad) or event listings. The river is different: on a normal day it runs long,
+  and a short river means stories were left out, not that the day was quiet.
+- **The picks are re-ranked three times a day** (morning, noon, evening) and stand
+  between rankings; the river grows every hour.
