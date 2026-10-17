@@ -1437,7 +1437,9 @@ async function thePhotos(browser, base) {
     const ok = '&oe=' + Math.floor(now / 1000 + 3 * 86400).toString(16);
     const post = (h, n, extra) => ({ h, ts: Math.round(now / 1000) - n * 60, i: 'https://scontent.example.com/' + n + '.jpg?x=1' + ok, u: 'https://www.instagram.com/p/Roster' + n + '/', c: h, ...extra });
     const ig = { generated: new Date(now).toISOString(), posts: [post('queencitycatlounge', 1, { s: 'see' }), post('foambrewers', 2, { s: 'do', f: 1 }), post('theresnoaincreemee', 3, { s: 'see', f: 1 }),
-      post('atasteofabyssinia', 4, { s: 'see' }), post('jackthurstonvt', 5, { s: 'see' })] };
+      post('atasteofabyssinia', 4, { s: 'see' }), post('jackthurstonvt', 5, { s: 'see' }),
+      post('passion4pawsvt', 6, { s: 'do', category: 'pets' }), post('new_kitchen', 7, { s: 'do', category: 'food' }),
+      post('new_venue', 8, { s: 'do', category: 'venue' }), post('new_event', 9, { s: 'do', category: 'events' })] };
     const v = await newPage(browser, base);
     await v.page.route(/\/all-day\/data\/instagram\.json$/, (r) => r.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(ig) }));
     await v.page.goto(base + '/all-day/#wire/photos');
@@ -1450,6 +1452,10 @@ async function thePhotos(browser, base) {
     check(cats.Roster3 === 'instagram', 'an account the food directory says is not food is not food', JSON.stringify(cats));
     check(cats.Roster4 === 'food instagram', 'a restaurant in the food directory is food', JSON.stringify(cats));
     check(cats.Roster5 === 'instagram', 'a photographer is just Instagram', JSON.stringify(cats));
+    check(cats.Roster6 === 'instagram pets', 'the new roster adds pets without mislabeling them event posters', JSON.stringify(cats));
+    check(cats.Roster7 === 'food instagram', 'new food categories work without the legacy food flag', JSON.stringify(cats));
+    check(cats.Roster8 === 'instagram vibe', 'venue posts enter Vibe checks', JSON.stringify(cats));
+    check(cats.Roster9 === 'instagram posters', 'event accounts enter Event posters', JSON.stringify(cats));
     check(!v.errors.length, 'no console errors', v.errors.join(' | '));
     await v.ctx.close();
   });
