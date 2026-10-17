@@ -98,7 +98,7 @@ function call(fn, args) {
     let j = null;
     try { j = t ? JSON.parse(t) : null; } catch (e) { j = null; }
     if (r.ok) { state = 'live'; return { ok: true, data: j }; }
-    if (r.status === 404 && j && j.code === 'PGRST202') { if (!ROUND2.has(fn) && !('p_interests' in (args || {}))) state = 'off'; return fail('off'); }
+    if (r.status === 404 && j && j.code === 'PGRST202') { if (!ROUND2.has(fn)) state = 'off'; return fail('off'); }
     if (r.status === 401) return fail('not_signed_in');
     const code = j && typeof j.message === 'string' && /^[a-z_]+$/.test(j.message) ? j.message : 'offline';
     if (code !== 'offline') state = 'live';
@@ -195,17 +195,15 @@ export function setProfile(input) {
   if (!c.ok) return Promise.resolve(fail(c.error));
   const args = { p_display_name: c.profile.display_name, p_neighborhood: c.profile.neighborhood, p_archetype: c.profile.archetype };
   const had = me && me.interests;
-  const send = (a) => call('nn_profile_set', a);
   /* with interests it is round two's call; before nn-ROUND2.sql is pasted
-     that call is missing, so the rest is saved without them */
-  const go = c.profile.interests ? send({ ...args, p_interests: c.profile.interests }).then((r) => (r.ok || r.error !== 'off' ? r : send(args).then((x) => (x.ok ? { ...x, interestsLost: true } : x))))
-    : send(args);
-  return go.then((r) => {
+     there is no such call, so the rest is saved without them */
+  const want = !!c.profile.interests;
+  return (want ? roundTwo() : Promise.resolve(false)).then((two) => call('nn_profile_set', two ? { ...args, p_interests: c.profile.interests } : args).then((r) => {
     if (!r.ok) return r;
     me = withInterests(r.data, had);
     changed(null, null, 'profile');
-    return r.interestsLost ? { ok: true, profile: me, interestsSaved: false } : { ok: true, profile: me };
-  });
+    return want && !two ? { ok: true, profile: me, interestsSaved: false } : { ok: true, profile: me };
+  }));
 }
 
 /* ---------------------------------------------------------------- posts */
