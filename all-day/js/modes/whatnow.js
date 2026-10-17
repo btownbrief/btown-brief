@@ -43,6 +43,10 @@
      temperature, feels like, today's high and low, a condition icon and the
      next six hours, from the same data/weather/latest.json the guide's
      weather page reads (refreshed hourly on main), and it opens that page.
+     Over it, a strip of sky (2026-10-17, Stephen: "recreate it, with how
+     the sun moves"): weather.html's sun arc in miniature, the sun or the
+     moon where it really is, the sky's colour by the hour and a light
+     overlay for what the weather is doing.
      Under the answer, Happening today: the rest of today's calendar from
      data/whatnow.json (the events calendar, trimmed), in Burlington's clock,
      daytime first and then tonight's, each opening its own listing, and a
@@ -323,6 +327,96 @@ function wxNow(now = Date.now()) {
   };
 }
 
+/* ------------------------------------------------------------ the sky on the card */
+/* The guide's weather page draws the day as a scene (js/sun.js): the sun
+   rides an arc from sunrise on the left to sunset on the right, across in
+   step with the day's fraction and up by its sine, and after sunset the
+   moon takes a lower arc across the night. The card carries that arc in
+   miniature: a strip of sky over the temperature, the sun or the moon where
+   it really is, the sky's colour by the time of day (data-sky) and a light
+   overlay for the condition the card's icon shows (is-cloud, is-rain …).
+   Every time here is an absolute instant from the payload's sun block, so
+   the reader's own time zone never enters it. */
+const SKY = { w: 160, h: 30, left: 12, right: 148, base: 25, top: 6, moonLift: 0.82 };
+const DAY_MS = 86400000;
+const DAWN_MS = 40 * 60000;              // the colour before sunrise and after sunset
+const SUNRISE_MS = 45 * 60000, SUNSET_MS = 30 * 60000, GOLDEN_MS = 100 * 60000;
+const SKY_TICK = 60000;
+const skyPos = (p, lift) => ({
+  x: SKY.left + (SKY.right - SKY.left) * p,
+  y: SKY.base - (SKY.base - SKY.top) * Math.sin(Math.PI * p) * lift,
+});
+const ARC_D = Array.from({ length: 25 }, (_, i) => { const q = skyPos(i / 24, 1); return (i ? 'L' : 'M') + q.x.toFixed(1) + ' ' + q.y.toFixed(1); }).join('');
+
+/* Where the sun or the moon is at `now`, and what colour the sky is: null
+   without today's sunrise and sunset. A payload a day or two old (the
+   refresh skipped a night) carries its times forward whole days. */
+function skyAt(now = Date.now()) {
+  const s = S.weather && S.weather.sun;
+  let rise = Date.parse((s && s.sunrise) || ''), set = Date.parse((s && s.sunset) || '');
+  if (!rise || !set || set <= rise) return null;
+  let next = Date.parse((s && s.sunrise_tomorrow) || '') || rise + DAY_MS;
+  if (next <= set) next = rise + DAY_MS;
+  /* past tomorrow's sunrise: tomorrow's own times first, then whole days */
+  const set2 = Date.parse((s && s.sunset_tomorrow) || '');
+  if (now >= next) { set = set2 > next ? set2 : set + DAY_MS; rise = next; next = rise + DAY_MS; }
+  for (let i = 0; i < 2 && now >= next; i++) { rise += DAY_MS; set += DAY_MS; next += DAY_MS; }
+  if (now >= rise && now < set) {
+    const p = (now - rise) / (set - rise);
+    const phase = now - rise < SUNRISE_MS ? 'sunrise' : set - now <= SUNSET_MS ? 'sunset' : set - now <= GOLDEN_MS ? 'golden' : 'day';
+    return { body: 'sun', p, phase, low: Math.sin(Math.PI * p) < 0.3, ...skyPos(p, 1) };
+  }
+  const from = now < rise ? set - DAY_MS : set, to = now < rise ? rise : next;
+  const p = Math.min(1, Math.max(0, (now - from) / (to - from)));
+  const phase = now - from < DAWN_MS ? 'dusk' : to - now <= DAWN_MS ? 'dawn' : 'night';
+  return { body: 'moon', p, phase, low: false, ...skyPos(p, SKY.moonLift) };
+}
+
+/* the overlay on the sky, from the forecast's own words: read as if by day,
+   so a partly cloudy night keeps its clouds (the icon shows the moon) */
+const SKY_WX = { sun: 'clear', moon: 'clear', partly: 'partly', cloud: 'cloud', rain: 'rain', snow: 'snow', storm: 'storm', fog: 'fog' };
+
+function skyStrip(said) {
+  const kind = wxKind(said, true);
+  const at = skyAt();
+  if (!at) return '';
+  const cloud = (x, y, s) => '<path transform="translate(' + x + ' ' + y + ') scale(' + s + ')" d="M0 8h16a4 4 0 0 0 .4-8A6 6 0 0 0 5 1.6 3.4 3.4 0 0 0 0 8z"/>';
+  const drops = [18, 34, 50, 66, 82, 98, 114, 130, 146].map((x, i) => '<path d="M' + x + ' ' + (11 + (i % 3) * 3) + 'l-2 5"/>').join('');
+  const flakes = [16, 30, 46, 60, 76, 92, 106, 122, 138, 150].map((x, i) => '<circle cx="' + x + '" cy="' + (9 + (i % 4) * 3.5) + '" r="1.1"/>').join('');
+  return '<span class="wxsky is-' + SKY_WX[kind] + '" data-sky="' + at.phase + '" aria-hidden="true">' +
+    '<svg viewBox="0 0 ' + SKY.w + ' ' + SKY.h + '" preserveAspectRatio="xMidYMid meet" focusable="false">' +
+      '<path class="arc" d="' + ARC_D + '"/>' +
+      '<rect class="lake" x="0" y="' + SKY.base + '" width="' + SKY.w + '" height="' + (SKY.h - SKY.base) + '"/>' +
+      '<rect class="gloom" x="0" y="0" width="' + SKY.w + '" height="' + SKY.base + '"/>' +
+      '<circle class="body ' + at.body + (at.low ? ' low' : '') + '" data-body="' + at.body + '" cx="' + at.x.toFixed(1) + '" cy="' + at.y.toFixed(1) + '" r="' + (at.body === 'sun' ? 5 : 4) + '"/>' +
+      '<g class="ov cl">' + cloud(24, 3, 1.05) + cloud(96, 1, 1.2) + '<g class="more">' + cloud(58, 7, 0.95) + cloud(126, 6, 1) + '</g></g>' +
+      '<g class="ov rn">' + drops + '</g>' +
+      '<g class="ov sn">' + flakes + '</g>' +
+      '<g class="ov fg"><rect x="0" y="12" width="' + SKY.w + '" height="3"/><rect x="0" y="18" width="' + SKY.w + '" height="3"/></g>' +
+    '</svg></span>';
+}
+
+/* the strip moves the sun once a minute while the tab is up (not for
+   readers who asked for less motion: theirs stays where it was drawn) */
+let skyTimer = null;
+function paintSky() {
+  const strip = root && root.querySelector('.wxcard .wxsky');
+  const at = strip && skyAt();
+  if (!at) return;
+  strip.dataset.sky = at.phase;
+  const b = strip.querySelector('.body');
+  b.setAttribute('class', 'body ' + at.body + (at.low ? ' low' : ''));
+  b.dataset.body = at.body;
+  b.setAttribute('cx', at.x.toFixed(1));
+  b.setAttribute('cy', at.y.toFixed(1));
+  b.setAttribute('r', at.body === 'sun' ? '5' : '4');
+}
+function skyTick(on) {
+  clearInterval(skyTimer);
+  skyTimer = null;
+  if (on && !matchMedia('(prefers-reduced-motion: reduce)').matches) skyTimer = setInterval(paintSky, SKY_TICK);
+}
+
 function weatherCard() {
   const x = wxNow();
   if (!x) return null;
@@ -331,7 +425,7 @@ function weatherCard() {
   a.dataset.wxicon = x.icon;
   const hl = [x.hi != null ? 'H ' + x.hi + '°' : '', x.lo != null ? 'L ' + x.lo + '°' : ''].filter(Boolean).join(' ');
   a.setAttribute('aria-label', [x.said, x.temp + '°', x.feels != null ? 'feels like ' + x.feels + '°' : '', hl.replace('H ', 'high ').replace('L ', 'low ')].filter(Boolean).join(', ') + '. The full forecast');
-  a.innerHTML = '<span class="wxc-top"><span class="wxc-ic">' + WX_ICON[x.icon] + '</span><b class="wxc-t">' + esc(x.temp) + '°</b>' +
+  a.innerHTML = skyStrip(x.said) + '<span class="wxc-top"><span class="wxc-ic">' + WX_ICON[x.icon] + '</span><b class="wxc-t">' + esc(x.temp) + '°</b>' +
     '<span class="wxc-m">' + (x.feels != null ? '<span class="wxc-feels">Feels ' + esc(x.feels) + '°</span>' : '') +
     (hl ? '<span class="wxc-hl">' + esc(hl) + '</span>' : '') + '</span></span>' +
     (x.hours.length ? '<span class="wxc-hrs">' + x.hours.map((h) => '<span class="wxc-h" data-wxicon="' + esc(h.icon) + '"><i>' + esc(h.label) + '</i>' +
@@ -1157,9 +1251,9 @@ app.register(KEY, {
       app.recount();
     }).catch(() => { r.innerHTML = '<div class="errbox"><b>What Now didn’t load.</b></div>'; });
   },
-  activate(param) { pending = param || null; land(); },
+  activate(param) { pending = param || null; land(); paintSky(); skyTick(true); },
   refresh() { if (ready) render(); },
-  deactivate() { stopReel(); closeBandcamp(); app.closePeek(); },
+  deactivate() { stopReel(); closeBandcamp(); app.closePeek(); skyTick(false); },
   subnav() {
     if (!ready) return null;
     return chips([

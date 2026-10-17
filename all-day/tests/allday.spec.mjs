@@ -3091,7 +3091,7 @@ async function theWhatNow(browser, base) {
     await d.page.goto(base + '/all-day/?demo=1#whatnow');
     await d.page.waitForSelector(wnPanel + ' .wxcard', { timeout: 15000 });
     const dk = await d.page.$eval(wnPanel + ' .wxcard', (a) => ({ bg: getComputedStyle(a).backgroundColor, ink: getComputedStyle(a).color, h: a.getBoundingClientRect().height }));
-    check(dk.bg !== 'rgba(0, 0, 0, 0)' && dk.h < 110, 'dark and 1280: the card keeps its fill and its height', JSON.stringify(dk));
+    check(dk.bg !== 'rgba(0, 0, 0, 0)' && dk.h < 140, 'dark and 1280: the card keeps its fill and its height, sky and all', JSON.stringify(dk));
     await d.page.screenshot({ path: path.join(SHOTS, 'demo-whatnow-glance-desktop-dark.png') });
     check(!d.errors.length, 'no console errors', d.errors.join(' | '));
     await d.ctx.close();
@@ -7622,6 +7622,317 @@ async function lakeSunset(browser, base) {
   });
 }
 
+/* ------------------------------------------------------------- the weather */
+/* Stephen, 2026-10-17: "radar that shows the showers actively moving", and
+   weather.html's sun recreated on What Now's card, changing with the weather.
+   weather.html is the guide's page, not a tab: its radar is tested here with
+   a stand-in Leaflet and a capabilities file in NOAA's shape, its live feeds
+   answered locally. */
+async function theWeather(browser, base) {
+  const MIN = 60000;
+  /* NOAA's GetCapabilities in its real shape: a scan every two minutes for
+     the last two hours and a bit, the newest four minutes old */
+  const capsFor = (now) => {
+    const times = [];
+    for (let t = now - 130 * MIN; t <= now - 4 * MIN; t += 2 * MIN) times.push(new Date(t).toISOString().replace(/\.\d+Z$/, '.000Z'));
+    return '<?xml version="1.0" encoding="UTF-8"?><WMS_Capabilities version="1.3.0"><Capability><Layer><Layer queryable="1"><Name>conus_bref_qcd</Name>' +
+      '<Dimension name="time" default="' + times[times.length - 1] + '" units="ISO8601" nearestValue="1">' + times.join(',') + '</Dimension></Layer></Layer></Capability></WMS_Capabilities>';
+  };
+  const FAKE_RADAR_L = `window.L = (() => {
+    const maps = [];
+    /* a frame answers load (or error, for a URL window.__frameFail matches) a moment after it is added */
+    const layer = (kind, at, o) => ({ kind, at, o, op: o && o.opacity, h: {}, on(ev, fn) { (this.h[ev] = this.h[ev] || []).push(fn); return this; },
+      addTo(m) { m.layers.push(this); if (kind === 'frame') setTimeout(() => (this.h[window.__frameFail && window.__frameFail.test(at) ? 'error' : 'load'] || []).forEach((f) => f()), 15); return this; },
+      setOpacity(v) { this.op = v; return this; } });
+    const ll = (lat, lng) => ({ lat, lng });
+    return { maps, Browser: { mobile: false },
+      CRS: { EPSG3857: { project: (p) => ({ x: p.lng * 111319.49, y: p.lat * 111319.49 }) } },
+      map(el, opts) { const m = { el, opts, layers: [], handlers: {}, shift: 0,
+        on(ev, fn) { this.handlers[ev] = fn; return this; },
+        getBounds() { const s = this.shift; return { getSouthWest: () => ll(43 + s, -75), getNorthEast: () => ll(46 + s, -71) }; },
+        getSize() { return { x: 358, y: 340 }; },
+        removeLayer(l) { l.gone = true; this.layers = this.layers.filter((x) => x !== l); return this; } };
+        maps.push(m); return m; },
+      tileLayer(u, o) { return layer('tiles', u, o); }, circleMarker(c, o) { return layer('pin', c, o); },
+      imageOverlay(u, b, o) { return layer('frame', u, o); } };
+  })();`;
+  const sriSpy = `window.__sri = [];
+    Object.defineProperty(HTMLScriptElement.prototype, 'integrity', { configurable: true, set(v) { window.__sri.push(v); }, get() { return ''; } });
+    Object.defineProperty(HTMLLinkElement.prototype, 'integrity', { configurable: true, set(v) { window.__sri.push(v); }, get() { return ''; } });`;
+  /* weather.html with its outside world answered here: Leaflet, NOAA, the
+     live NWS reads the page makes on top of latest.json, the fleet nav */
+  const weatherPage = async (opts, caps) => {
+    const w = await newPage(browser, base, opts);
+    w.asked = [];
+    await w.page.addInitScript(sriSpy);
+    await w.page.route(/play\.btownbrief\.com\/nav\.js/, (r) => r.fulfill({ status: 200, body: '', contentType: 'text/javascript' }));
+    await w.page.route(/api\.weather\.gov/, (r) => r.fulfill({ status: 200, body: '{}', contentType: 'application/geo+json' }));
+    await w.page.route(/unpkg\.com\/leaflet@1\.9\.4\/dist\/leaflet\.(js|css)$/, (r) => { w.asked.push(r.request().url());
+      return /\.js$/.test(r.request().url()) ? r.fulfill({ status: 200, body: FAKE_RADAR_L, contentType: 'text/javascript' }) : r.fulfill({ status: 200, body: '', contentType: 'text/css' }); });
+    await w.page.route(/opengeo\.ncep\.noaa\.gov\/.*GetCapabilities/i, (r) => { w.asked.push(r.request().url());
+      const body = typeof caps === 'function' ? caps() : caps;
+      return body === null ? r.fulfill({ status: 503, body: '' }) : r.fulfill({ status: 200, body, contentType: 'text/xml' }); });
+    return w;
+  };
+  const radarState = (page) => page.evaluate(() => {
+    const m = window.L && window.L.maps && window.L.maps[0];
+    /* in frame order (the newest is added to the map first) */
+    const when = (l) => decodeURIComponent((l.at.match(/TIME=([^&]+)/) || [])[1] || '');
+    const fr = m ? m.layers.filter((l) => l.kind === 'frame').sort((a, b) => (when(a) < when(b) ? -1 : 1)) : [];
+    return { frames: window.btownRadar ? window.btownRadar.frames() : null, idx: window.btownRadar ? window.btownRadar.index() : null,
+      playing: window.btownRadar ? window.btownRadar.playing() : null,
+      center: m && m.opts.center, zoom: m && m.opts.zoom, wheel: m && m.opts.scrollWheelZoom,
+      tiles: m ? m.layers.filter((l) => l.kind === 'tiles').map((l) => l.at + ' ' + l.o.attribution) : [],
+      overlays: fr.map((l) => ({ u: l.at, op: l.op, attr: l.o.attribution || '' })),
+      time: document.getElementById('radar-time').textContent, stamp: document.getElementById('radar-stamp').textContent,
+      scrub: document.getElementById('radar-scrub').value, max: document.getElementById('radar-scrub').max,
+      pressed: document.getElementById('radar-play').getAttribute('aria-pressed'), label: document.getElementById('radar-play').getAttribute('aria-label'),
+      controls: !document.getElementById('radar-controls').hidden, fail: !document.getElementById('radar-fail').hidden,
+      links: [...document.querySelectorAll('#radar .radar-links a')].map((a) => a.textContent + ' ' + a.href + ' ' + a.target) };
+  });
+  const clockET = (ms) => new Intl.DateTimeFormat('en-US', { hour: 'numeric', minute: '2-digit', timeZone: 'America/New_York' }).format(new Date(ms)).replace(' AM', ' am').replace(' PM', ' pm');
+
+  await group('Weather page: the radar mounts lazily and moves (390, a stand-in Leaflet)', async () => {
+    const NOW = Math.floor(Date.now() / MIN) * MIN;
+    const w = await weatherPage({ clock: NOW, viewport: { width: 390, height: 480 }, dpr: 2 }, capsFor(NOW));
+    const { page, errors } = w;
+    await page.goto(base + '/weather.html');
+    await page.waitForSelector('#radar', { state: 'visible', timeout: 15000 });
+    await page.waitForTimeout(400);
+    const top = await page.$eval('#radar', (s) => s.getBoundingClientRect().top - innerHeight);
+    check(top > 300 && !w.asked.length && await page.evaluate(() => !window.L && !window.btownRadar),
+      'far below the fold: no Leaflet, no NOAA, nothing fetched', top + ' / ' + w.asked.join(', '));
+
+    await page.$eval('#radar', (s) => s.scrollIntoView());
+    await page.waitForFunction(() => window.btownRadar, null, { timeout: 8000 }).catch(() => {});
+    const order = await page.evaluate(() => window.L.maps[0].layers.filter((l) => l.kind === 'frame').map((l) => l.at.match(/TIME=([^&]+)/)[1]));
+    await page.waitForFunction(() => window.btownRadar.ready(), null, { timeout: 8000 }).catch(() => {});
+    const s = await radarState(page);
+    check(w.asked.some((u) => /leaflet\.js$/.test(u)) && w.asked.some((u) => /leaflet\.css$/.test(u)) && w.asked.some((u) => /GetCapabilities/.test(u)),
+      'in view, it loads Leaflet 1.9.4 and NOAA’s frame list', w.asked.join(', '));
+    check(await page.evaluate(() => window.__sri.join(' ')) === 'sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY= sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=',
+      'with the integrity hashes events.html and Food pin', await page.evaluate(() => window.__sri.join(' ')));
+    const want = Array.from({ length: 13 }, (_, i) => new Date(NOW - 4 * MIN - (12 - i) * 10 * MIN).toISOString().replace(/\.\d+Z$/, '.000Z'));
+    check(s.frames && s.frames.join(',') === want.join(','), 'thirteen frames, ten minutes apart, the newest last', JSON.stringify(s.frames));
+    check(String(s.center) === '44.4759,-73.2121' && s.zoom === 7 && s.wheel === false, 'centred on Burlington at zoom 7; the wheel scrolls the page', JSON.stringify([s.center, s.zoom, s.wheel]));
+    check(s.tiles.length === 1 && /tile\.openstreetmap\.org/.test(s.tiles[0]) && /OpenStreetMap/.test(s.tiles[0]), 'OpenStreetMap under it, credited', s.tiles.join(' | '));
+    check(s.overlays.length === 13 && s.overlays.every((o, i) => o.u.includes('LAYERS=conus_bref_qcd') && o.u.includes('TIME=' + encodeURIComponent(want[i])) &&
+      /BBOX=-8348[0-9]{3},4786[0-9]{3},-7903[0-9]{3},5120[0-9]{3}/.test(o.u) && /WIDTH=\d+&HEIGHT=\d+/.test(o.u)),
+      'one image per frame for the whole view, at its time', s.overlays.slice(0, 2).map((o) => o.u).join(' | '));
+    check(/NOAA MRMS/.test(s.overlays.map((o) => o.attr).join(' ')), 'the radar credited to NOAA MRMS on the map', s.overlays.map((o) => o.attr).join('|'));
+    check(s.overlays.filter((o) => o.op > 0).length === 1 && s.overlays[12].op > 0 && s.idx === 12, 'it opens on the newest frame, the only one showing', JSON.stringify(s.overlays.map((o) => o.op)));
+    check(decodeURIComponent(order[0]) === want[12], 'the newest frame is asked for first, the other twelve after it', order.join(', '));
+    check(s.overlays.every((o) => /WIDTH=358&HEIGHT=340/.test(o.u)), 'one image pixel per screen pixel (MRMS is a 1 km grid), even on a 2x screen', (s.overlays[0] || {}).u);
+    check(s.time === clockET(NOW - 4 * MIN) && s.stamp === 'Latest, 4 min ago', 'the frame’s time in Burlington’s clock, and how old it is', s.time + ' / ' + s.stamp);
+    check(s.controls && s.playing === true && s.pressed === 'true' && s.label === 'Pause' && s.max === '12', 'it loops by default: Pause showing, the scrubber spans the frames', JSON.stringify(s));
+    check(s.links.length === 2 && /NWS Burlington radar https:\/\/radar\.weather\.gov\/station\/kcxx\/standard _blank/.test(s.links[0]) && /Windy radar https:\/\/www\.windy\.com\/.*radar.*_blank/.test(s.links[1]),
+      'and the two radars worth opening under the map', s.links.join(' | '));
+
+    /* the loop: it holds the newest frame, then starts over */
+    await page.waitForFunction(() => window.btownRadar.index() >= 1 && window.btownRadar.index() < 12, null, { timeout: 6000 }).catch(() => {});
+    const moved = await radarState(page);
+    check(moved.idx >= 1 && moved.idx < 12 && moved.overlays.filter((o) => o.op > 0).length === 1 && moved.overlays[moved.idx].op > 0 && moved.time === clockET(Date.parse(moved.frames[moved.idx])),
+      'the frames move: one showing at a time, its time under the map', JSON.stringify({ idx: moved.idx, time: moved.time }));
+    await page.screenshot({ path: path.join(SHOTS, 'weather-radar-390.png') });
+
+    /* pause holds the frame */
+    await page.click('#radar-play');
+    const p1 = await radarState(page);
+    await page.waitForTimeout(1300);
+    const p2 = await radarState(page);
+    check(p1.playing === false && p1.pressed === 'false' && p1.label === 'Play' && p2.idx === p1.idx, 'Pause stops it on the frame it was on', JSON.stringify([p1.idx, p2.idx, p1.label]));
+
+    /* the scrubber picks a frame, and stays paused */
+    await page.click('#radar-play');
+    await page.$eval('#radar-scrub', (r) => { r.value = '3'; r.dispatchEvent(new Event('input', { bubbles: true })); });
+    const sc = await radarState(page);
+    check(sc.idx === 3 && sc.playing === false && sc.overlays[3].op > 0 && sc.overlays.filter((o) => o.op > 0).length === 1 &&
+      sc.time === clockET(Date.parse(want[3])) && sc.stamp === (94) + ' min ago', 'scrubbing pauses and shows that frame, its time and age', JSON.stringify({ idx: sc.idx, time: sc.time, stamp: sc.stamp }));
+    await page.focus('#radar-scrub');
+    await page.keyboard.press('ArrowRight');
+    check((await radarState(page)).idx === 4, 'the arrow keys step it', '');
+
+    /* a pan asks for the frames again at the new view, once, and drops the old */
+    await page.evaluate(() => { const m = window.L.maps[0]; m.shift = 1; m.handlers.moveend(); m.handlers.moveend(); });
+    await page.waitForTimeout(450);
+    const pan = await radarState(page);
+    check(pan.overlays.length === 13 && pan.overlays.every((o) => /BBOX=-8348[0-9]{3},4898[0-9]{3}/.test(o.u)) && pan.overlays[4].op > 0,
+      'a pan redraws the thirteen at the new view, on the same frame', pan.overlays.length + ' ' + (pan.overlays[0] || {}).u);
+
+    /* the page's own picture of the radar, in dark */
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await w.ctx.close();
+  });
+
+  await group('Weather page: the radar for reduced motion, a fresh list, and when NOAA is down', async () => {
+    const NOW = Math.floor(Date.now() / MIN) * MIN;
+    /* the second read of the frame list, ten minutes on, has newer scans */
+    let reads = 0;
+    const r = await weatherPage({ motion: 'reduce', scheme: 'dark' }, () => capsFor(NOW + (reads++ ? 12 * MIN : 0)));
+    await r.page.clock.install({ time: NOW });
+    await r.page.goto(base + '/weather.html');
+    await r.page.waitForSelector('#radar', { state: 'visible', timeout: 15000 });
+    await r.page.$eval('#radar', (s) => s.scrollIntoView());
+    await r.page.waitForFunction(() => window.btownRadar && window.btownRadar.ready(), null, { timeout: 8000 }).catch(() => {});
+    await r.page.waitForTimeout(1500);
+    const s = await radarState(r.page);
+    check(s.playing === false && s.idx === 12 && s.label === 'Play', 'reduced motion: it waits on the newest frame for a tap', JSON.stringify({ playing: s.playing, idx: s.idx }));
+    await r.page.clock.fastForward('11:00');
+    await r.page.waitForFunction((t) => window.btownRadar.frames()[12] === t, new Date(NOW + 8 * MIN).toISOString().replace(/\.\d+Z$/, '.000Z'), { timeout: 5000 }).catch(() => {});
+    await r.page.waitForTimeout(400);
+    const f2 = await radarState(r.page);
+    check(reads === 2 && f2.frames[12] === new Date(NOW + 8 * MIN).toISOString().replace(/\.\d+Z$/, '.000Z') && f2.idx === 12 && f2.overlays.length === 13 && /^Latest/.test(f2.stamp),
+      'ten minutes on screen: it reads the list again and moves to the new newest frame', JSON.stringify({ reads, last: f2.frames && f2.frames[12], idx: f2.idx, stamp: f2.stamp }));
+    await r.page.click('#radar-play');
+    const s2 = await radarState(r.page);
+    check(s2.playing === true && s2.idx === 0, 'and Play from the newest starts at the oldest', JSON.stringify({ playing: s2.playing, idx: s2.idx }));
+    check(!r.errors.length, 'no console errors', r.errors.join(' | '));
+    await r.ctx.close();
+
+    const f = await weatherPage({}, null);
+    await f.page.goto(base + '/weather.html');
+    await f.page.waitForSelector('#radar', { state: 'visible', timeout: 15000 });
+    await f.page.$eval('#radar', (s) => s.scrollIntoView());
+    await f.page.waitForSelector('#radar.is-failed', { timeout: 8000 }).catch(() => {});
+    const fs = await radarState(f.page);
+    check(fs.fail && !fs.controls && fs.links.length === 2 && await f.page.$eval('#radar-map', (m) => m.hidden), 'NOAA down: the map steps aside, a line says so, the two radars stay', JSON.stringify(fs));
+    check(!f.errors.filter((e) => !/503/.test(e)).length, 'no console errors beyond the 503 itself', f.errors.join(' | '));
+    await f.ctx.close();
+
+    /* the list loads but NOAA's images do not: the same, not an empty map that seems to play */
+    const NOW2 = Math.floor(Date.now() / MIN) * MIN;
+    const g = await weatherPage({ clock: NOW2 }, capsFor(NOW2));
+    await g.page.addInitScript(() => { window.__frameFail = /GetMap/; });
+    await g.page.goto(base + '/weather.html');
+    await g.page.waitForSelector('#radar', { state: 'visible', timeout: 15000 });
+    await g.page.$eval('#radar', (s) => s.scrollIntoView());
+    await g.page.waitForSelector('#radar.is-failed', { timeout: 8000 }).catch(() => {});
+    const gs = await radarState(g.page);
+    check(gs.fail && !gs.controls && gs.playing === false && await g.page.$eval('#radar-map', (m) => m.hidden), 'images failing: the map steps aside and nothing pretends to play', JSON.stringify({ fail: gs.fail, controls: gs.controls, playing: gs.playing }));
+    check(!g.errors.length, 'no console errors', g.errors.join(' | '));
+    await g.ctx.close();
+  });
+
+  /* ---- What Now's card: weather.html's sun arc in miniature ---- */
+  const SKY = { left: 12, right: 148, base: 25, top: 6 };
+  const arcAt = (p, lift) => ({ x: SKY.left + (SKY.right - SKY.left) * p, y: SKY.base - (SKY.base - SKY.top) * Math.sin(Math.PI * p) * lift });
+  const skyOf = (page) => page.$eval(wnPanel + ' .wxcard', (a) => {
+    const s = a.querySelector('.wxsky'), b = s && s.querySelector('.body');
+    const vis = (sel) => { const n = s.querySelector(sel); return n ? Number(getComputedStyle(n).opacity) > 0 : false; };
+    return s && { sky: s.dataset.sky, cls: s.className.replace('wxsky ', ''), body: b.dataset.body, low: b.classList.contains('low'), x: Number(b.getAttribute('cx')), y: Number(b.getAttribute('cy')),
+      clouds: vis('.cl'), rain: vis('.rn'), snow: vis('.sn'), fog: vis('.fg'), icon: a.dataset.wxicon,
+      rainAnim: getComputedStyle(s.querySelector('.rn')).animationName, h: a.getBoundingClientRect().height, sh: s.getBoundingClientRect().height,
+      bg: getComputedStyle(s).backgroundImage };
+  });
+  const near = (a, b) => Math.abs(a - b) < 0.11;
+  const close = (a, b) => Math.abs(a - b) < 0.35;   // the page's clock runs on while the test reads it
+
+  await group('What Now, the sky on the weather card: the sun where it really is (demo, 2 pm)', async () => {
+    /* an installed clock, so the minute timer can be run forward */
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.clock.install({ time: etAt(14) });
+    await page.goto(base + '/all-day/?demo=1#whatnow');
+    await page.waitForSelector(wnPanel + ' .wxcard .wxsky', { timeout: 15000 });
+    const t0 = await page.evaluate(() => Date.now());
+    const s = await skyOf(page);
+    /* the demo's day, moved to today: sunrise 7:09, sunset 6:06 */
+    const day = etKey(Date.now()), off = etOffset(etAt(12));
+    const rise = Date.parse(day + 'T07:09:00' + off), set = Date.parse(day + 'T18:06:00' + off);
+    const want = arcAt((t0 - rise) / (set - rise), 1);
+    check(s.body === 'sun' && close(s.x, want.x) && close(s.y, want.y), 'at 2 pm the sun is on its arc, 63% of the way from sunrise to sunset', JSON.stringify({ got: [s.x, s.y], want: [want.x.toFixed(1), want.y.toFixed(1)] }));
+    check(s.sky === 'day' && s.cls === 'is-clear' && !s.clouds && !s.rain && !s.snow && !s.fog && /gradient/.test(s.bg), 'a clear day sky: no clouds, nothing falling', JSON.stringify(s));
+    check(s.sh <= 30 && s.h < 140, 'the strip is 30px; the card stays compact', s.sh + ' / ' + s.h);
+    const box = await page.evaluate(() => { const p = document.querySelector('#panel-whatnow'); const c = p.querySelector('.wxcard').getBoundingClientRect(), big = p.querySelector('.spin .big').getBoundingClientRect();
+      return { right: c.right, bottom: c.bottom, bigTop: big.top, vw: innerWidth, scroll: document.documentElement.scrollWidth }; });
+    check(box.right <= box.vw - 15 && box.bottom <= box.bigTop && box.scroll <= box.vw, 'at 390 it still sits above Spin with nothing sideways', JSON.stringify(box));
+    await (await page.$(wnPanel + ' .wxtop')).screenshot({ path: path.join(SHOTS, 'demo-whatnow-sky-390.png') });
+
+    /* the minute hand: the tab moves the sun while it is up */
+    await page.clock.fastForward('02:00:00');
+    const t1 = await page.evaluate(() => Date.now());
+    const later = await skyOf(page);
+    const want4 = arcAt((t1 - rise) / (set - rise), 1);
+    check(close(later.x, want4.x) && close(later.y, want4.y) && later.x > s.x + 20, 'two hours on, the sun has moved down the arc without a redraw', JSON.stringify({ got: [later.x, later.y], want: [want4.x.toFixed(1), want4.y.toFixed(1)] }));
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+
+    /* reduced motion: drawn where it is, and nothing falls */
+    const r = await newPage(browser, base, { motion: 'reduce' });
+    await r.page.clock.install({ time: etAt(14) });
+    await r.page.goto(base + '/all-day/?demo=1#whatnow');
+    await r.page.waitForSelector(wnPanel + ' .wxcard .wxsky', { timeout: 15000 });
+    const r1 = await skyOf(r.page);
+    await r.page.clock.fastForward('02:00:00');
+    const r2 = await skyOf(r.page);
+    check(close(r1.x, want.x) && r2.x === r1.x && r2.y === r1.y, 'reduced motion: the sun at its real place, held there', JSON.stringify([r1.x, r2.x]));
+    check(!r.errors.length, 'no console errors', r.errors.join(' | '));
+    await r.ctx.close();
+  });
+
+  await group('What Now, the sky on the weather card: the hour’s colour and the weather’s overlay (live, a reader in Los Angeles)', async () => {
+    const day = etKey(Date.now());
+    const off = etOffset(Date.parse(day + 'T12:00:00Z'));
+    const at = (d, hm) => d + 'T' + hm + ':00' + off;
+    const tomorrow = dayMinus(day, -1);
+    const sun = { sunrise: at(day, '07:10'), sunset: at(day, '18:05'), sunrise_tomorrow: at(tomorrow, '07:11'), sunset_tomorrow: at(tomorrow, '18:03') };
+    const payload = (frozen, said, sunBlock) => ({
+      updated: new Date(frozen).toISOString(),
+      now: { observed_at: new Date(frozen - 20 * MIN).toISOString(), description: said, temp_f: 41, feels_like_f: 35 },
+      forecast: { periods: [] },
+      hourly: { hours: Array.from({ length: 8 }, (_, i) => ({ t: new Date(frozen + (i + 1) * 3600000).toISOString(), temp_f: 40, feels_f: 35, pop: 10, short: said })) },
+      sun: sunBlock || sun,
+    });
+    const rise = Date.parse(sun.sunrise), set = Date.parse(sun.sunset), next = Date.parse(sun.sunrise_tomorrow);
+    const cases = [
+      ['06:45', 'Light Rain', 'dawn', 'is-rain', 'moon', { rain: true, clouds: true }],
+      ['07:30', 'Thunderstorm', 'sunrise', 'is-storm', 'sun', { rain: true, clouds: true }],
+      ['12:00', 'Partly Cloudy', 'day', 'is-partly', 'sun', { clouds: true }],
+      ['16:45', 'Snow', 'golden', 'is-snow', 'sun', { snow: true, clouds: true }],
+      ['17:50', 'Fog/Mist', 'sunset', 'is-fog', 'sun', { fog: true }],
+      ['18:30', 'Mostly Cloudy', 'dusk', 'is-cloud', 'moon', { clouds: true }],
+      ['22:00', 'Clear', 'night', 'is-clear', 'moon', {}],
+      ['02:00', 'Partly Cloudy', 'night', 'is-partly', 'moon', { clouds: true }],
+    ];
+    for (const [hm, said, sky, cls, body, ov] of cases) {
+      const frozen = Date.parse(at(day, hm));
+      const routes = [[/\/all-day\/data\/whatnow\.json/, { generated: new Date(frozen).toISOString(), days: 10, counts: {}, events: [] }], [/\/data\/weather\/latest\.json/, payload(frozen, said)]];
+      const { ctx, page, errors } = await newPage(browser, base, { timezoneId: 'America/Los_Angeles', routes });
+      await page.clock.setFixedTime(frozen);
+      await page.goto(base + '/all-day/#whatnow');
+      await page.waitForSelector(wnPanel + ' .wxcard .wxsky', { timeout: 15000 });
+      const s = await skyOf(page);
+      let want;
+      if (body === 'sun') want = arcAt((frozen - rise) / (set - rise), 1);
+      else want = frozen < rise ? arcAt((frozen - (set - 86400000)) / (rise - (set - 86400000)), 0.82) : arcAt((frozen - set) / (next - set), 0.82);
+      const ovOk = ['clouds', 'rain', 'snow', 'fog'].every((k) => !!ov[k] === s[k]);
+      check(s.sky === sky && s.cls === cls && s.body === body && near(s.x, want.x) && near(s.y, want.y) && ovOk,
+        hm + ' Burlington, “' + said + '”: a ' + sky + ' sky, ' + cls + ', the ' + body + ' on its arc', JSON.stringify({ s, want }));
+      if (hm === '07:30' || hm === '17:50') check(s.low, hm + ': the sun low and orange near the horizon', '');
+      if (hm === '12:00') check(!s.low && s.rainAnim === 'none', 'noon: the sun high, nothing falling', '');
+      if (hm === '06:45') check(s.rainAnim !== 'none', 'rain falls (when motion is allowed)', s.rainAnim);
+      if (hm === '22:00' || hm === '07:30') await (await page.$(wnPanel + ' .wxtop')).screenshot({ path: path.join(SHOTS, 'live-whatnow-sky-' + hm.replace(':', '') + '.png') });
+      check(!errors.length, 'no console errors', errors.join(' | '));
+      await ctx.close();
+    }
+
+    /* a payload a day old (the hourly refresh missed the night): its sun
+       times carry forward a day rather than calling 2 pm night */
+    const frozen = Date.parse(at(day, '14:00'));
+    const y = dayMinus(day, 1);
+    const old = { sunrise: at(y, '07:10'), sunset: at(y, '18:05'), sunrise_tomorrow: at(day, '07:10') };
+    const routes = [[/\/all-day\/data\/whatnow\.json/, { generated: new Date(frozen).toISOString(), days: 10, counts: {}, events: [] }], [/\/data\/weather\/latest\.json/, payload(frozen, 'Sunny', old)]];
+    const { ctx, page, errors } = await newPage(browser, base, { timezoneId: 'America/Los_Angeles', routes });
+    await page.clock.setFixedTime(frozen);
+    await page.goto(base + '/all-day/#whatnow');
+    await page.waitForSelector(wnPanel + ' .wxcard .wxsky', { timeout: 15000 });
+    const s = await skyOf(page);
+    const want = arcAt((frozen - rise) / (set - rise), 1);
+    check(s.body === 'sun' && s.sky === 'day' && near(s.x, want.x) && near(s.y, want.y), 'yesterday’s sun times still put today’s 2 pm sun in the right place', JSON.stringify({ s, want }));
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+}
+
 /* ----------------------------------------------------------------- run */
 const t0 = Date.now();
 await mkdir(SHOTS, { recursive: true });
@@ -7653,6 +7964,7 @@ try {
   await run(theHabits);
   await run(sunsetLine);
   await run(theVintage);
+  await run(theWeather);
 } finally {
   await browser.close();
   proc.kill();

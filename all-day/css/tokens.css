@@ -91,6 +91,27 @@
   --lightbox: #000000;
   --mask: #000000;                   /* alpha for a fade mask; never painted */
 
+  /* What Now: the sky strip over the weather card. A picture, so the same in
+     both themes; the colours are weather.html's scene (js/sun.js), top and
+     bottom of the sky at each time of day. */
+  --sky-night-a: #040A1C; --sky-night-b: #16294C;
+  --sky-dawn-a: #2B3D68;  --sky-dawn-b: #F0B088;
+  --sky-sunrise-a: #4A6EA8; --sky-sunrise-b: #FFC48A;
+  --sky-day-a: #2F74C0;   --sky-day-b: #C6E2F2;
+  --sky-golden-a: #3F74B4; --sky-golden-b: #FFCE93;
+  --sky-sunset-a: #42477F; --sky-sunset-b: #FF9A5E;
+  --sky-dusk-a: #161F48;  --sky-dusk-b: #C4707A;
+  --sky-gloom: #8D9AA7;             /* an overcast sky laid over the colour */
+  --sky-lake: rgba(5, 11, 23, .38);
+  --sky-arc: rgba(255, 255, 255, .5);
+  --sky-sun: #FFF6D8;
+  --sky-sun-low: #FF8A45;           /* the sun near the horizon */
+  --sky-moon: #E2ECFF;
+  --sky-cloud: rgba(255, 255, 255, .88);
+  --sky-rain: rgba(214, 230, 255, .9);
+  --sky-snow: #FFFFFF;
+  --sky-fog: rgba(236, 241, 245, .72);
+
   /* shell: source marks. A hash of the source name picks one of eight, so a
      source keeps its colour everywhere without anyone choosing it. */
   --mark-0: hsl(18 28% 42%);
