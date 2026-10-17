@@ -13,7 +13,7 @@
    audio — episodes are large and the browser's own HTTP cache handles them
    better than we would. */
 
-const VERSION = 'all-day-v55';   // v55: On Air's playlists, and media never through the worker (v54: main's merged bumps, v52: Watch, v51: Vintage, v50: Food, v49: On Air)
+const VERSION = 'all-day-v56';   // v56: On Air's playlists, and media never through the worker (v55: main's merged bumps, v52: Watch, v51: Vintage, v50: Food, v49: On Air)
 const SHELL = VERSION + '-shell';
 const DATA = 'all-day-data';   // unversioned on purpose: survives shell bumps
 

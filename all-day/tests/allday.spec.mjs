@@ -2391,7 +2391,7 @@ async function theWhatNow(browser, base) {
     await page.waitForSelector(wnPanel + ' .spin .big:not([disabled])', { timeout: 15000 });
     check(await page.$eval('#subnav .chip.on', (b) => /Spin/.test(b.innerText)), 'the chip row is the mode switch, Spin first', '');
     const wx = await page.$eval(wnPanel + ' .wx', (w) => w.innerText.replace(/\s+/g, ' '));
-    check(/59° feels like/.test(wx) && /61° lake/.test(wx) && /6:06 sunset/.test(wx), 'the weather line: feels like, the lake, sunset', wx);
+    check(!/feels like/.test(wx) && /61° lake/.test(wx) && /6:06 sunset/.test(wx), 'the weather line: the lake and sunset (feels like is on the card)', wx);
     check(await page.$eval(wnPanel + ' .wx', (w) => w.getBoundingClientRect().height < 40), 'the weather line is one line at 390', '');
     check(await page.$$eval(wnPanel + ' .chips.paths .chip', (c) => c.map((x) => x.innerText).join('|')) === 'I’m broke|Get me outside|People, please|Two hours|Close by|Teach me something|Move with people', 'the seven path chips', '');
     const first = await spinAnswer(page);
@@ -2604,6 +2604,231 @@ async function theWhatNow(browser, base) {
     check(/6:06 sunset/.test(await w.page.$eval(wnPanel + ' .wx', (x) => x.innerText.replace(/\s+/g, ' '))), 'and its sunset still reads 6:06', '');
     check(!w.errors.length, 'no console errors', w.errors.join(' | '));
     await w.ctx.close();
+  });
+
+  await group('What Now, at a glance: the weather card and Happening today (demo, 2 pm)', async () => {
+    /* Stephen, 2026-10-17: a weather preview in the open spot right of the
+       window pills, above Spin, and a preview of the events calendar */
+    const { ctx, page, errors } = await newPage(browser, base, { clock: etAt(14), seed: 3 });
+    await page.goto(base + '/all-day/?demo=1#whatnow');
+    await page.waitForSelector(wnPanel + ' .spin .big:not([disabled])', { timeout: 15000 });
+    const card = await page.$eval(wnPanel + ' .wxcard', (a) => ({ href: a.getAttribute('href'), t: a.querySelector('.wxc-t').textContent, feels: a.querySelector('.wxc-feels')?.textContent,
+      hl: a.querySelector('.wxc-hl')?.textContent, icon: a.dataset.wxicon, hrs: [...a.querySelectorAll('.wxc-h i')].map((i) => i.textContent), label: a.getAttribute('aria-label') }));
+    check(card.t === '61°' && card.feels === 'Feels 59°' && card.hl === 'H 62° L 48°', 'the card: the temperature, feels like, today’s high and low', JSON.stringify(card));
+    check(card.icon === 'sun' && /^Clear, 61°/.test(card.label), 'a condition icon, and the card says it all to a screen reader', card.icon + ' / ' + card.label);
+    check(card.hrs.join(' ') === '3p 4p 5p 6p 7p 8p', 'the next six hours, from the hour after now', card.hrs.join(' '));
+    check(card.href === '../weather.html', 'the card opens the guide’s weather page', card.href);
+    const box = await page.evaluate(() => {
+      const p = document.querySelector('#panel-whatnow');
+      const r = (s) => p.querySelector(s).getBoundingClientRect();
+      const c = r('.wxcard'), pills = r('.wxtop .pills'), big = r('.spin .big'), wx = r('.wxtop .wx');
+      return { cardLeft: c.left, cardRight: c.right, cardTop: c.top, cardBottom: c.bottom, pillsRight: pills.right, pillsTop: pills.top, pillsBottom: pills.bottom, wxBottom: wx.bottom, bigTop: big.top, bigW: big.width, vw: innerWidth, scroll: document.documentElement.scrollWidth };
+    });
+    check(box.cardLeft > box.vw / 2 && box.cardRight <= box.vw - 15 && box.pillsRight <= box.cardLeft && box.pillsTop >= box.cardTop && box.pillsBottom <= box.cardBottom && box.wxBottom <= box.cardTop,
+      'at 390 the card sits to the right, beside the pills and under the lake and sunset line, overlapping nothing', JSON.stringify(box));
+    check(box.cardBottom <= box.bigTop && box.bigW >= 350 && box.scroll <= box.vw, 'above Spin, which keeps its full width, and nothing scrolls sideways', JSON.stringify(box));
+
+    const today = await page.evaluate(() => {
+      const p = document.querySelector('#panel-whatnow');
+      const sec = p.querySelector('[data-sec="today"]');
+      const tiles = [...p.querySelectorAll('.rail.today > *')].map((t) => (t.classList.contains('tdsep') ? '|' + t.textContent : t.dataset.k + ' ' + t.querySelector('.tw').textContent));
+      const full = p.querySelector('.todaylinks a');
+      const spin = p.querySelector('.spin'), ch = p.querySelector('[data-sec="challenges"]');
+      return { title: sec && sec.querySelector('h2').textContent, tiles, full: full && full.textContent.trim(), fullHref: full && full.getAttribute('href'),
+        order: !!(spin && sec && ch && (spin.compareDocumentPosition(sec) & 4) && (sec.compareDocumentPosition(ch) & 4)), href: p.querySelector('.rail.today a').getAttribute('href') };
+    });
+    check(today.title === 'Happening today' && today.order, 'Happening today sits under Spin and above the challenges', JSON.stringify(today));
+    check(today.tiles.join(', ') === 'd-pm1 4:30 pm, |Tonight, d-tn4 5:45 pm, d-tn3 6 pm, d-tn1 8 pm, d-tn2 9:30 pm, d-tn5 11:30 pm',
+      'the rest of today in time order, the morning’s gone, then tonight’s under a Tonight mark', today.tiles.join(', '));
+    check(today.href === '#whatnow/e-pm1', 'a tile opens its own listing', today.href);
+    check(/^Full events calendar/.test(today.full) && /\/events\.html$/.test(today.fullHref), 'and a link to the full events calendar', JSON.stringify(today));
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await page.screenshot({ path: path.join(SHOTS, 'demo-whatnow-glance-390.png') });
+    await ctx.close();
+
+    /* dark, and wide: the card holds its shape */
+    const d = await newPage(browser, base, { clock: etAt(14), scheme: 'dark', viewport: { width: 1280, height: 800 } });
+    await d.page.goto(base + '/all-day/?demo=1#whatnow');
+    await d.page.waitForSelector(wnPanel + ' .wxcard', { timeout: 15000 });
+    const dk = await d.page.$eval(wnPanel + ' .wxcard', (a) => ({ bg: getComputedStyle(a).backgroundColor, ink: getComputedStyle(a).color, h: a.getBoundingClientRect().height }));
+    check(dk.bg !== 'rgba(0, 0, 0, 0)' && dk.h < 110, 'dark and 1280: the card keeps its fill and its height', JSON.stringify(dk));
+    await d.page.screenshot({ path: path.join(SHOTS, 'demo-whatnow-glance-desktop-dark.png') });
+    check(!d.errors.length, 'no console errors', d.errors.join(' | '));
+    await d.ctx.close();
+  });
+
+  await group('What Now, at a glance on Burlington’s clock (live, a reader in Los Angeles)', async () => {
+    /* 2 pm in Burlington is 11 am in Los Angeles: the hours, today, tonight
+       and the high and low are all Burlington's */
+    const day = etKey(Date.now());
+    const off = etOffset(Date.parse(day + 'T12:00:00Z'));
+    const frozen = Date.parse(day + 'T14:00:00' + off);
+    const at = (d, hm) => d + 'T' + hm + ':00' + off;
+    const ev = (id, title, d, start, end, extra) => ({ id, title, date: d, start: at(d, start), ...(end ? { end: at(d, end) } : {}), url: 'https://example.com/' + id,
+      category: 'music', allDay: false, venue: 'Hall ' + id, town: 'Burlington', free: true, ...(extra || {}) });
+    const events = [
+      ev('gone', 'This morning', day, '09:00', '10:00'),
+      ev('on', 'Started at one', day, '13:00', '16:00'),
+      ev('long', 'All afternoon fair', day, '10:00', '17:00'),
+      ev('soon', 'Half past two', day, '14:30', null),
+      ev('xss', '<img src=x onerror="window.__wnxss=1">Bad title', day, '15:00', null),
+      ev('cxl', 'Cancelled: the show', day, '15:30', null),
+      ev('allday', 'An exhibit', day, '00:00', null, { allDay: true }),
+      ev('eve', 'Seven o’clock', day, '19:00', null),
+      ev('late', 'Late set', day, '23:30', null),
+      ev('yday', 'Last night late', dayMinus(day, 1), '23:30', null),
+      ev('tmrw', 'Just after midnight', dayMinus(day, -1), '00:30', null),
+    ];
+    const hours = Array.from({ length: 12 }, (_, i) => ({ t: at(day, String(12 + i).padStart(2, '0') + ':00'), temp_f: 40 + i, feels_f: 35 + i, pop: i === 3 ? 70 : 5, short: i === 3 ? 'Rain Showers Likely' : 'Partly Sunny' }));
+    const weather = {
+      updated: new Date(frozen).toISOString(),
+      now: { observed_at: new Date(frozen - 20 * 60000).toISOString(), description: 'Mostly Cloudy', temp_f: 41, feels_like_f: 33 },
+      forecast: { periods: [
+        { name: 'Overnight', start: at(day, '02:00'), is_day: false, temp_f: 25, short: 'Clear' },
+        { name: 'Today', start: at(day, '06:00'), is_day: true, temp_f: 44, short: 'Mostly Sunny' },
+        { name: 'Tonight', start: at(day, '18:00'), is_day: false, temp_f: 30, short: 'Clear' },
+        { name: 'Tomorrow', start: at(dayMinus(day, -1), '06:00'), is_day: true, temp_f: 52, short: 'Sunny' }] },
+      hourly: { hours },
+      sun: { sunrise: at(day, '07:10'), sunset: at(day, '18:05') },
+    };
+    const routes = [[/\/all-day\/data\/whatnow\.json/, { generated: new Date(frozen).toISOString(), days: 10, counts: {}, events }], [/\/data\/weather\/latest\.json/, weather]];
+    const { ctx, page, errors } = await newPage(browser, base, { timezoneId: 'America/Los_Angeles', routes });
+    await page.clock.setFixedTime(frozen);
+    await page.goto(base + '/all-day/#whatnow');
+    await page.waitForSelector(wnPanel + ' .wxcard', { timeout: 15000 });
+    const card = await page.$eval(wnPanel + ' .wxcard', (a) => ({ t: a.querySelector('.wxc-t').textContent, feels: a.querySelector('.wxc-feels')?.textContent, hl: a.querySelector('.wxc-hl')?.textContent,
+      icon: a.dataset.wxicon, hrs: [...a.querySelectorAll('.wxc-h')].map((h) => h.querySelector('i').textContent + ':' + h.dataset.wxicon + ':' + h.querySelector('b').textContent) }));
+    check(card.t === '41°' && card.feels === 'Feels 33°' && card.icon === 'cloud', 'the card leads with the fresh observation, mostly cloudy', JSON.stringify(card));
+    check(card.hl === 'H 44° L 30°', 'today’s high, and tonight’s low rather than last night’s', card.hl);
+    check(card.hrs.join(' ') === '3p:rain:43° 4p:partly:44° 5p:partly:45° 6p:partly:46° 7p:moon:47° 8p:moon:48°', 'the next six hours in Burlington’s clock, with rain where it is forecast and the moon after the 6:05 sunset', card.hrs.join(' '));
+    await page.waitForSelector(wnPanel + ' .rail.today', { timeout: 15000 });
+    const tiles = await page.$$eval(wnPanel + ' .rail.today > *', (t) => t.map((x) => (x.classList.contains('tdsep') ? '|' : x.dataset.k + ' ' + x.querySelector('.tw').textContent)));
+    check(tiles.join(', ') === 'd-on On now, d-soon 2:30 pm, d-xss 3 pm, |, d-eve 7 pm, d-late 11:30 pm',
+      'today in Burlington: on now, then what’s next, then tonight; not the morning, the all-afternoon fair, the all-day exhibit, the cancelled show, last night or tomorrow', tiles.join(', '));
+    const xss = await page.evaluate(() => ({ fired: !!window.__wnxss, imgs: document.querySelectorAll('#panel-whatnow .rail.today img').length,
+      text: document.querySelector('#panel-whatnow [data-k="d-xss"] .tt').textContent }));
+    check(!xss.fired && !xss.imgs && /^<img src=x/.test(xss.text), 'a title with markup in it prints as text', JSON.stringify(xss));
+    check(await page.$eval(wnPanel + ' [data-k="d-soon"]', (a) => a.target === '_blank' && a.rel === 'noopener' && a.href === 'https://example.com/soon'), 'a tile opens its listing in a new tab', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+
+    /* late at night, with nothing left today, tomorrow's take the strip */
+    const late = Date.parse(day + 'T23:50:00' + off);
+    const l = await newPage(browser, base, { timezoneId: 'America/Los_Angeles', routes });
+    await l.page.clock.setFixedTime(late);
+    await l.page.goto(base + '/all-day/#whatnow');
+    await l.page.waitForSelector(wnPanel + ' [data-sec="today"]', { timeout: 15000 });
+    const lt = await l.page.evaluate(() => ({ h: document.querySelector('#panel-whatnow [data-sec="today"] h2').textContent,
+      k: [...document.querySelectorAll('#panel-whatnow .rail.today [data-k]')].map((t) => t.dataset.k) }));
+    check(lt.h === 'Happening tomorrow' && lt.k.join(',') === 'd-tmrw', 'after the last one tonight, the strip turns to tomorrow', JSON.stringify(lt));
+    check(!l.errors.length, 'no console errors', l.errors.join(' | '));
+    await l.ctx.close();
+
+    /* just after Burlington midnight: last night's late set is still on, and
+       with nothing after it and nothing tomorrow the strip says so */
+    const midnight = Date.parse(dayMinus(day, -1) + 'T00:30:00' + etOffset(Date.parse(dayMinus(day, -1) + 'T12:00:00Z')));
+    const mEvents = [ev('night', 'Still going', day, '23:30', null, { end: new Date(midnight + 3600000).toISOString() })];
+    const m = await newPage(browser, base, { timezoneId: 'America/Los_Angeles', routes: [[/\/all-day\/data\/whatnow\.json/, { generated: new Date(frozen).toISOString(), days: 10, counts: {}, events: mEvents }], routes[1]] });
+    await m.page.clock.setFixedTime(midnight);
+    await m.page.goto(base + '/all-day/#whatnow');
+    await m.page.waitForSelector(wnPanel + ' [data-sec="today"]', { timeout: 15000 });
+    const mt = await m.page.evaluate(() => ({ h: document.querySelector('#panel-whatnow [data-sec="today"] h2').textContent,
+      k: [...document.querySelectorAll('#panel-whatnow .rail.today [data-k]')].map((t) => t.dataset.k + ' ' + t.querySelector('.tw').textContent) }));
+    check(mt.h === 'Happening today' && mt.k.join(',') === 'd-night On now', 'at 12:30 am, last night’s late set still on shows as on now', JSON.stringify(mt));
+    check(!m.errors.length, 'no console errors', m.errors.join(' | '));
+    await m.ctx.close();
+    const e2 = await newPage(browser, base, { timezoneId: 'America/Los_Angeles', routes: [[/\/all-day\/data\/whatnow\.json/, { generated: new Date(frozen).toISOString(), days: 10, counts: {}, events: [] }], routes[1]] });
+    await e2.page.clock.setFixedTime(frozen);
+    await e2.page.goto(base + '/all-day/#whatnow');
+    await e2.page.waitForSelector(wnPanel + ' [data-sec="today"]', { timeout: 15000 });
+    const et2 = await e2.page.evaluate(() => document.querySelector('#panel-whatnow [data-sec="today"]').parentElement.innerText);
+    check(/Happening today/.test(et2) && /Nothing else today\./.test(et2) && !/Happening tomorrow/.test(et2), 'nothing today and nothing tomorrow: Happening today, “Nothing else today.”', '');
+    check(!e2.errors.length, 'no console errors', e2.errors.join(' | '));
+    await e2.ctx.close();
+  });
+
+  await group('What Now, Btown Challenges (live)', async () => {
+    const real = JSON.parse(await readFile(path.join(APP, 'data/challenges.json'), 'utf8'));
+    const all = real.weekly.concat(real.evergreen);
+    const kinds = ['eat', 'climb', 'explore', 'streak'];
+    check(real.weekly.length >= 4 && real.evergreen.length >= 3, 'challenges.json holds weekly and evergreen challenges', real.weekly.length + ' / ' + real.evergreen.length);
+    check(all.every((c) => /^[a-z0-9-]+$/.test(c.id) && c.title && c.line && kinds.includes(c.kind) && /^(https:\/\/|\.\.\/[\w.-]+\.html$)/.test(c.url)), 'every one has an id, a title, a line, a known kind and a page', '');
+    check(new Set(all.map((c) => c.id)).size === all.length, 'no id twice', '');
+    check(all.every((c) => !/[—–!]/.test(c.title + c.line)), 'no dashes or exclamation points', '');
+    for (const c of all.filter((x) => /^\.\.\//.test(x.url))) {
+      const f = await readFile(path.join(REPO, c.url.slice(3))).then(() => true, () => false);
+      check(f, c.id + ': its guide page exists (' + c.url + ')', '');
+    }
+    /* which weekly one is up, worked out here the way the tab does: Burlington's Monday */
+    const key = etKey(Date.now());
+    const [y, m, d] = key.split('-').map(Number);
+    const noon = Date.UTC(y, m - 1, d, 12);
+    const dow = (new Date(noon).getUTCDay() + 6) % 7;
+    const monday = new Date(noon - dow * 86400000).toISOString().slice(0, 10);
+    const wk = Math.floor((noon - dow * 86400000 - Date.UTC(1970, 0, 5, 12)) / (7 * 86400000));
+    const loose = real.weekly.filter((c) => !c.week);
+    const want = real.weekly.find((c) => c.week === monday) || loose[wk % loose.length];
+
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/all-day/#whatnow');
+    await page.waitForSelector(wnPanel + ' [data-sec="challenges"]', { timeout: 15000 });
+    const got = await page.evaluate(() => {
+      const p = document.querySelector('#panel-whatnow');
+      const ch = p.querySelector('[data-sec="challenges"]'), mi = p.querySelector('[data-sec="missions"]');
+      return { above: !!(ch && mi && (ch.compareDocumentPosition(mi) & 4)), week: p.querySelector('.chweek h3')?.textContent, weekK: p.querySelector('.chweek')?.dataset.k,
+        rows: [...p.querySelectorAll('.lrow.chal')].map((r) => r.dataset.k), suggest: ch.querySelector('a.suggest')?.getAttribute('href'),
+        more: p.querySelector('.chlinks a')?.getAttribute('href') };
+    });
+    check(got.above, 'Btown Challenges sits above the Top 100', JSON.stringify(got));
+    check(got.week === want.title && got.weekK === 'c-' + want.id, 'this week’s challenge is the one for Burlington’s week', got.week + ' vs ' + want.title);
+    check(got.rows.length === 3 && got.rows.every((k) => real.evergreen.some((c) => 'c-' + c.id === k)), 'and three evergreen ones under it', got.rows.join(', '));
+    check(/^mailto:btownbrief@gmail\.com\?subject=/.test(got.suggest || ''), 'Suggest one writes to btownbrief@gmail.com', got.suggest);
+    check(got.more === 'https://play.btownbrief.com/challenges/', 'All challenges opens the challenge board', got.more);
+    const k = got.rows[1];
+    await page.click(wnPanel + ' .lrow.chal[data-k="' + k + '"] .markdone');
+    check(await page.$eval(wnPanel + ' .lrow.chal[data-k="' + k + '"]', (r) => r.classList.contains('done')), 'Mark done ticks it', '');
+    await page.click(wnPanel + ' .chweek .markdone');
+    await page.reload();
+    await page.waitForSelector(wnPanel + ' [data-sec="challenges"]', { timeout: 15000 });
+    check(await page.$eval(wnPanel + ' .lrow.chal[data-k="' + k + '"]', (r) => r.classList.contains('done')) && await page.$eval(wnPanel + ' .chweek', (r) => r.classList.contains('done')),
+      'and both survive a reload, on this device', '');
+    const stored = await page.evaluate(() => JSON.parse(localStorage.getItem('allday-challenges') || '{}'));
+    check(stored[k.slice(2)] && stored[want.id], 'kept under allday-challenges, like the missions’ marks', JSON.stringify(stored));
+    await page.click(wnPanel + ' .lrow.chal[data-k="' + k + '"] .open');
+    await page.waitForSelector('.sheet-card');
+    const sheet = await page.$eval('.sheet-card', (c) => ({ h: c.querySelector('h2').textContent, link: c.querySelector('a.btn')?.href }));
+    const c1 = real.evergreen.find((c) => 'c-' + c.id === k);
+    check(sheet.h === c1.title && sheet.link === c1.url, 'tapping one opens its line and its page', JSON.stringify(sheet));
+    await page.keyboard.press('Escape');
+    await page.evaluate((kk) => { location.hash = 'whatnow/' + kk; }, got.weekK);
+    check(await flashes(page, got.weekK), '#whatnow/c-<id> lands on the challenge', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('What Now, challenges and colour (demo)', async () => {
+    const { ctx, page, errors } = await newPage(browser, base, { clock: etAt(11) });
+    await page.goto(base + '/all-day/?demo=1#whatnow');
+    await page.waitForSelector(wnPanel + ' [data-sec="challenges"]', { timeout: 15000 });
+    const ks = await page.$$eval(wnPanel + ' .challenges [data-k]', (r) => r.map((x) => x.dataset.k));
+    check(ks.length === 4 && !ks.includes('c-demo-bad'), 'a challenge without a real page never shows', ks.join(', '));
+    await page.evaluate(() => { const h = document.querySelector('#panel-whatnow [data-sec="challenges"]'); h.closest('.panel').scrollBy(0, h.getBoundingClientRect().top - 120); });
+    await page.waitForTimeout(300);
+    await page.screenshot({ path: path.join(SHOTS, 'demo-whatnow-challenges-390.png') });
+    await page.click(wnPanel + ' .chweek .markdone');
+    check(await page.$eval(wnPanel + ' .chweek', (r) => r.classList.contains('done')), 'demo: Mark done ticks', '');
+    check(!(await page.evaluate(() => localStorage.getItem('allday-challenges'))), 'and never reaches localStorage', '');
+    const colour = await page.evaluate(() => {
+      const p = document.querySelector('#panel-whatnow');
+      const dot = getComputedStyle(p.querySelector('.chips.themes .chip.th-water'), '::before').backgroundColor;
+      const num = getComputedStyle(p.querySelector('.lrow.mission.th-drink .num')).color;
+      const plain = getComputedStyle(p.querySelector('.lrow.mission .num')).color;
+      const week = getComputedStyle(p.querySelector('.chweek')).backgroundColor;
+      return { dot, num, week, ink3: plain };
+    });
+    check(colour.dot !== 'rgba(0, 0, 0, 0)' && colour.week !== 'rgba(0, 0, 0, 0)', 'theme chips carry a colour dot, and the week’s challenge a tint', JSON.stringify(colour));
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
   });
 }
 

@@ -1251,7 +1251,7 @@
   ok   Photo mode on live payloads: each source, once, while its picture works (live) › a picture that will not load takes its card with it
   ok   Photo mode on live payloads: each source, once, while its picture works (live) › no console errors
   ok   What Now, Spin (demo) › the chip row is the mode switch, Spin first
-  ok   What Now, Spin (demo) › the weather line: feels like, the lake, sunset
+  ok   What Now, Spin (demo) › the weather line: the lake and sunset (feels like is on the card)
   ok   What Now, Spin (demo) › the weather line is one line at 390
   ok   What Now, Spin (demo) › the seven path chips
   ok   What Now, Spin (demo) › Spin returns an answer
@@ -1317,6 +1317,60 @@
   ok   What Now, deep links and wide › in December the demo’s 5:45 pm and 6 pm listings are still tonight
   ok   What Now, deep links and wide › and its sunset still reads 6:06
   ok   What Now, deep links and wide › no console errors
+  ok   What Now, at a glance: the weather card and Happening today (demo, 2 pm) › the card: the temperature, feels like, today’s high and low
+  ok   What Now, at a glance: the weather card and Happening today (demo, 2 pm) › a condition icon, and the card says it all to a screen reader
+  ok   What Now, at a glance: the weather card and Happening today (demo, 2 pm) › the next six hours, from the hour after now
+  ok   What Now, at a glance: the weather card and Happening today (demo, 2 pm) › the card opens the guide’s weather page
+  ok   What Now, at a glance: the weather card and Happening today (demo, 2 pm) › at 390 the card sits to the right, beside the pills and under the lake and sunset line, overlapping nothing
+  ok   What Now, at a glance: the weather card and Happening today (demo, 2 pm) › above Spin, which keeps its full width, and nothing scrolls sideways
+  ok   What Now, at a glance: the weather card and Happening today (demo, 2 pm) › Happening today sits under Spin and above the challenges
+  ok   What Now, at a glance: the weather card and Happening today (demo, 2 pm) › the rest of today in time order, the morning’s gone, then tonight’s under a Tonight mark
+  ok   What Now, at a glance: the weather card and Happening today (demo, 2 pm) › a tile opens its own listing
+  ok   What Now, at a glance: the weather card and Happening today (demo, 2 pm) › and a link to the full events calendar
+  ok   What Now, at a glance: the weather card and Happening today (demo, 2 pm) › no console errors
+  ok   What Now, at a glance: the weather card and Happening today (demo, 2 pm) › dark and 1280: the card keeps its fill and its height
+  ok   What Now, at a glance: the weather card and Happening today (demo, 2 pm) › no console errors
+  ok   What Now, at a glance on Burlington’s clock (live, a reader in Los Angeles) › the card leads with the fresh observation, mostly cloudy
+  ok   What Now, at a glance on Burlington’s clock (live, a reader in Los Angeles) › today’s high, and tonight’s low rather than last night’s
+  ok   What Now, at a glance on Burlington’s clock (live, a reader in Los Angeles) › the next six hours in Burlington’s clock, with rain where it is forecast and the moon after the 6:05 sunset
+  ok   What Now, at a glance on Burlington’s clock (live, a reader in Los Angeles) › today in Burlington: on now, then what’s next, then tonight; not the morning, the all-afternoon fair, the all-day exhibit, the cancelled show, last night or tomorrow
+  ok   What Now, at a glance on Burlington’s clock (live, a reader in Los Angeles) › a title with markup in it prints as text
+  ok   What Now, at a glance on Burlington’s clock (live, a reader in Los Angeles) › a tile opens its listing in a new tab
+  ok   What Now, at a glance on Burlington’s clock (live, a reader in Los Angeles) › no console errors
+  ok   What Now, at a glance on Burlington’s clock (live, a reader in Los Angeles) › after the last one tonight, the strip turns to tomorrow
+  ok   What Now, at a glance on Burlington’s clock (live, a reader in Los Angeles) › no console errors
+  ok   What Now, at a glance on Burlington’s clock (live, a reader in Los Angeles) › at 12:30 am, last night’s late set still on shows as on now
+  ok   What Now, at a glance on Burlington’s clock (live, a reader in Los Angeles) › no console errors
+  ok   What Now, at a glance on Burlington’s clock (live, a reader in Los Angeles) › nothing today and nothing tomorrow: Happening today, “Nothing else today.”
+  ok   What Now, at a glance on Burlington’s clock (live, a reader in Los Angeles) › no console errors
+  ok   What Now, Btown Challenges (live) › challenges.json holds weekly and evergreen challenges
+  ok   What Now, Btown Challenges (live) › every one has an id, a title, a line, a known kind and a page
+  ok   What Now, Btown Challenges (live) › no id twice
+  ok   What Now, Btown Challenges (live) › no dashes or exclamation points
+  ok   What Now, Btown Challenges (live) › w-new-sunset: its guide page exists (../sunset.html)
+  ok   What Now, Btown Challenges (live) › w-solo-event: its guide page exists (../events.html)
+  ok   What Now, Btown Challenges (live) › w-walked-past: its guide page exists (../restaurants.html)
+  ok   What Now, Btown Challenges (live) › w-give-an-hour: its guide page exists (../volunteer.html)
+  ok   What Now, Btown Challenges (live) › w-coffee-week: its guide page exists (../restaurants.html)
+  ok   What Now, Btown Challenges (live) › w-go-to-a-game: its guide page exists (../sports.html)
+  ok   What Now, Btown Challenges (live) › w-take-a-class: its guide page exists (../hobbies.html)
+  ok   What Now, Btown Challenges (live) › w-walking-tour: its guide page exists (../walking-tour.html)
+  ok   What Now, Btown Challenges (live) › Btown Challenges sits above the Top 100
+  ok   What Now, Btown Challenges (live) › this week’s challenge is the one for Burlington’s week
+  ok   What Now, Btown Challenges (live) › and three evergreen ones under it
+  ok   What Now, Btown Challenges (live) › Suggest one writes to btownbrief@gmail.com
+  ok   What Now, Btown Challenges (live) › All challenges opens the challenge board
+  ok   What Now, Btown Challenges (live) › Mark done ticks it
+  ok   What Now, Btown Challenges (live) › and both survive a reload, on this device
+  ok   What Now, Btown Challenges (live) › kept under allday-challenges, like the missions’ marks
+  ok   What Now, Btown Challenges (live) › tapping one opens its line and its page
+  ok   What Now, Btown Challenges (live) › #whatnow/c-<id> lands on the challenge
+  ok   What Now, Btown Challenges (live) › no console errors
+  ok   What Now, challenges and colour (demo) › a challenge without a real page never shows
+  ok   What Now, challenges and colour (demo) › demo: Mark done ticks
+  ok   What Now, challenges and colour (demo) › and never reaches localStorage
+  ok   What Now, challenges and colour (demo) › theme chips carry a colour dot, and the week’s challenge a tint
+  ok   What Now, challenges and colour (demo) › no console errors
   ok   Food, Open now on a frozen Burlington clock (live, a reader in Los Angeles) › the data has a place that closes at 10 pm on Fridays
   ok   Food, Open now on a frozen Burlington clock (live, a reader in Los Angeles) › 9 pm Friday: 99 Restaurants is open
   ok   Food, Open now on a frozen Burlington clock (live, a reader in Los Angeles) › and says it is open until 10 pm
@@ -2328,7 +2382,7 @@
   ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › shared with the pod is off by default
   ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › it lands at the bottom: Daily, no streak yet, not done
   ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › today’s dot is today’s, in Burlington
-  ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › a tap shows at once (1 ms)
+  ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › a tap shows at once (0 ms)
   ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › the streak ticks up to 1 day
   ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › and today’s dot fills
   ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › the server has the tap, for today in Burlington
