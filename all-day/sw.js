@@ -13,7 +13,7 @@
    audio — episodes are large and the browser's own HTTP cache handles them
    better than we would. */
 
-const VERSION = 'all-day-v53';   // v53: People's tiles, mixers and handles (v52: Watch's TV, time machine and local showtimes; v51: Vintage, v50: Food, v49: On Air, v48: the Wire's Photo mode)
+const VERSION = 'all-day-v54';   // merged: both branches bumped
 const SHELL = VERSION + '-shell';
 const DATA = 'all-day-data';   // unversioned on purpose: survives shell bumps
 
