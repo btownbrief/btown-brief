@@ -8,8 +8,6 @@
      falling back to it marks the app STALE, says so, and keeps retrying the
      live branch on a [8s, 20s, 60s] backoff.
    - local dev: same-origin first, so the app works with no network.
-   - pulse-top and pulse-youtube have no same-origin copy. They fail soft:
-     the strip they feed simply is not rendered.
 
    Every ten minutes a poll re-checks. It never re-renders underneath
    someone: the swap goes through freshGate(), which the shell answers with
@@ -27,12 +25,6 @@ const FILES = {
     local: '../data/pulse.json',
     poll: true,
     ok: (j) => j && Array.isArray(j.sources) && Array.isArray(j.items),
-  },
-  top: {
-    live: LIVE + 'pulse-top/data/pulse-top.json',
-    local: null,
-    poll: true,
-    ok: (j) => j && Array.isArray(j.picks),
   },
   /* The Wire's daily paper (scripts/curate_wire.py, hourly, on the orphan
      wire-data branch). The same-origin path only exists on a dev machine
@@ -86,18 +78,6 @@ const FILES = {
     poll: true,
     ok: (j) => j && Array.isArray(j.clips),
   },
-  youtube: {
-    live: LIVE + 'pulse-youtube/data/pulse-youtube.json',
-    local: null,
-    ok: (j) => j && Array.isArray(j.videos),
-  },
-  /* The Brief's own stories, pulled out of the newsletter. Same-origin: the
-     file is committed to main by its workflow and main is what Pages serves. */
-  newsletter: {
-    live: null,
-    local: '../data/newsletter-picks.json',
-    ok: (j) => j && Array.isArray(j.editions),
-  },
   /* Weather is committed to main by its own workflow, and main is what Pages
      serves — so same-origin is already the freshest copy there is. No poll:
      the poller only re-fetches `live`, and a temperature is fine until the
@@ -119,20 +99,12 @@ const FILES = {
      get_leaderboard() is one call per board, so computing this in the client
      would be 32 requests. Lives in the btownbrief.github.io repo, hence the
      full URL rather than LIVE + a path. No same-origin copy, so it fails
-     soft the way `top` and `youtube` do: no payload, no card. */
+     soft: no payload, no card. */
   champions: {
     live: 'https://raw.githubusercontent.com/btownbrief/btownbrief.github.io/' +
       'champions-data/data/champions.json',
     local: null,
     ok: (j) => j && Array.isArray(j.royalty) && Array.isArray(j.games),
-  },
-  /* Just the games. What Now shows the next couple of days and hands off to
-     sports.html for the rest — a schedule is something you act on, so it lives
-     with the calendar rather than in a tab you scroll. */
-  sports: {
-    live: null,
-    local: '../data/sports.json',
-    ok: (j) => j && Array.isArray(j.games),
   },
   whatnow: {
     live: null,
