@@ -3354,7 +3354,7 @@
     "id": "burlington-records",
     "name": "Burlington Records",
     "group": "Shopping",
-    "category": "Shop",
+    "category": "Record Store",
     "neighborhood": "Downtown / Church St",
     "cost_tier": "$",
     "cost_note": "Used vinyl from $1; new from $25",
@@ -3408,7 +3408,7 @@
     "id": "autumn-records",
     "name": "Autumn Records",
     "group": "Shopping",
-    "category": "Shop",
+    "category": "Record Store",
     "neighborhood": "Winooski",
     "cost_tier": "$",
     "cost_note": "Used vinyl from $3",
@@ -8128,6 +8128,1469 @@
     "guide_id": null,
     "source": "user-provided — TODO: verify website",
     "last_verified": "2026-07"
+  },
+  {
+    "id": "shakurs-vintage",
+    "name": "Shakur's Vintage",
+    "group": "Shopping",
+    "category": "Shop",
+    "neighborhood": "Downtown / Church St",
+    "cost_tier": "$$",
+    "cost_note": null,
+    "season": [
+      "Year-Round"
+    ],
+    "time_of_day": [
+      "Morning",
+      "Afternoon"
+    ],
+    "indoor_outdoor": "Indoor",
+    "good_for": [
+      "Rainy Day",
+      "Quick Stop",
+      "Groups & Friends"
+    ],
+    "vibe": [
+      "Laid-back"
+    ],
+    "blurb": "A vintage and secondhand shop on College Street selling Y2K and vintage clothing, accessories and gifts. It opened October 9, 2026.",
+    "why_special": null,
+    "address": "209 College St, Burlington, VT 05401",
+    "coords": [
+      44.47695,
+      -73.21146
+    ],
+    "website": "https://www.instagram.com/shakursvintage/",
+    "image": null,
+    "has_guide": false,
+    "guide_id": null,
+    "source": "https://www.instagram.com/shakursvintage/",
+    "last_verified": "2026-10",
+    "guide_kinds": [
+      "Vintage"
+    ],
+    "hours": {
+      "mon": null,
+      "tue": null,
+      "wed": "11:00-18:00",
+      "thu": "11:00-18:00",
+      "fri": "11:00-18:00",
+      "sat": "11:00-18:00",
+      "sun": "11:00-17:00"
+    },
+    "hours_note": "Second floor",
+    "phone": null,
+    "checked": {
+      "date": "2026-10-17",
+      "source": "https://www.instagram.com/shakursvintage/",
+      "note": "No website (bio links only a Depop shop, depop.com/shakursnyc). Hours and address from the shop's own Instagram bio, read via the Scrape Creators profile API: 'closed mon/tues | wed-sat 11-6 | sun 11-5' and '209 college st ⭑ burlington vt'; bio also says 'vintage, secondhand, gift'. Second floor and the Oct 9, 2026 opening date from a Burlington Vintage Market collab post that also appears on the shop's feed (https://www.instagram.com/p/DeNTSAjqwmh/): 'opens this Friday, October 9th, at 209 College St (Second Floor)... Regular hours are Wednesday to Saturday from 11AM to 6PM and Sunday from 11AM to 5PM', which matches the bio. Shop's own posts confirm opening day Oct 9 and 'open this weekend 11-6 Saturday & 11-5 Sunday' (Oct 16). One-off: it was closed Sunday Oct 11 for a pop-up. ZIP 05401 added (not in bio). Stephen spelled it 'Shakar Vintage'. Coordinates: Nominatim house-number match (OSM building 'Hark, 209 College Street')."
+    },
+    "instagram": "shakursvintage"
+  },
+  {
+    "id": "vault-collective",
+    "name": "The Vault Collective",
+    "group": "Shopping",
+    "category": "Shop",
+    "neighborhood": "Downtown / Church St",
+    "cost_tier": "$$",
+    "cost_note": null,
+    "season": [
+      "Year-Round"
+    ],
+    "time_of_day": [
+      "Morning",
+      "Afternoon",
+      "Evening"
+    ],
+    "indoor_outdoor": "Indoor",
+    "good_for": [
+      "Rainy Day",
+      "Groups & Friends",
+      "Half Day"
+    ],
+    "vibe": [
+      "Laid-back"
+    ],
+    "blurb": "A multi-vendor vintage clothing shop on Cherry Street with racks from local Vermont sellers such as Project Object Vintage and Stay Gold Vintage. It also carries vintage home goods.",
+    "why_special": null,
+    "address": "145 Cherry Street, Burlington, VT 05401",
+    "coords": [
+      44.4792,
+      -73.21215
+    ],
+    "website": "https://www.thevaultcollective.com/pages/vermont-1",
+    "image": null,
+    "has_guide": false,
+    "guide_id": null,
+    "source": "https://www.thevaultcollective.com/pages/vermont-1",
+    "last_verified": "2026-10",
+    "guide_kinds": [
+      "Vintage"
+    ],
+    "hours": {
+      "mon": "11:00-19:00",
+      "tue": "11:00-19:00",
+      "wed": "11:00-19:00",
+      "thu": "11:00-19:00",
+      "fri": "11:00-19:00",
+      "sat": "11:00-19:00",
+      "sun": "11:00-19:00"
+    },
+    "phone": "802-448-0651",
+    "checked": {
+      "date": "2026-10-17",
+      "source": "https://www.thevaultcollective.com/pages/vermont-1",
+      "note": "Hours, address and phone from the Vermont location page: 'Open 11-7 Daily', '145 Cherry Street, Burlington VT 05401', '802-448-0651'. Vendor names from the site's 'Shop Vermont' collection menu. The business also has a Rhode Island store; this entry is the Vermont one only. Coordinates: Nominatim house-number match (OSM shop node 'The Vault Collective')."
+    },
+    "instagram": "thevaultvt"
+  },
+  {
+    "id": "billie-jean-vintage",
+    "name": "Billie Jean Vintage",
+    "group": "Shopping",
+    "category": "Shop",
+    "neighborhood": "Waterfront",
+    "cost_tier": "$$",
+    "cost_note": null,
+    "season": [
+      "Year-Round"
+    ],
+    "time_of_day": [
+      "Morning",
+      "Afternoon"
+    ],
+    "indoor_outdoor": "Indoor",
+    "good_for": [
+      "Rainy Day",
+      "Quick Stop"
+    ],
+    "vibe": [
+      "Laid-back"
+    ],
+    "blurb": "A women-owned vintage clothing shop on Battery Street, near the waterfront. It also sells online through Instagram and Etsy.",
+    "why_special": null,
+    "address": "152 Battery Street, Burlington, VT 05401",
+    "coords": [
+      44.47536,
+      -73.21839
+    ],
+    "website": "https://www.billiejeanvintage.com/",
+    "image": null,
+    "has_guide": false,
+    "guide_id": null,
+    "source": "https://www.billiejeanvintage.com/",
+    "last_verified": "2026-10",
+    "guide_kinds": [
+      "Vintage"
+    ],
+    "hours": {
+      "mon": null,
+      "tue": null,
+      "wed": null,
+      "thu": "11:00-17:00",
+      "fri": "11:00-17:00",
+      "sat": "11:00-17:00",
+      "sun": "11:00-16:00"
+    },
+    "phone": "802-860-6152",
+    "checked": {
+      "date": "2026-10-17",
+      "source": "https://www.billiejeanvintage.com/",
+      "note": "Hours from the home page 'Shop Hours' block: 'Thursday 11 - 5 / Friday 11 - 5 / Saturday 11 - 5 / sunday 11 - 4 / Closed Monday - Wednesday'; address '152 Battery Street Burlington, VT right by the waterfront!!'. Phone from https://www.billiejeanvintage.com/contact. Women-owned from the About page. ZIP 05401 added (site omits it). Coordinates: Nominatim house-number match (OSM building at 152 Battery St)."
+    },
+    "instagram": "billiejeanvintage"
+  },
+  {
+    "id": "fear-and-cloathing",
+    "name": "Fear & Cloathing Vintage",
+    "group": "Shopping",
+    "category": "Shop",
+    "neighborhood": "Downtown / Church St",
+    "cost_tier": "$$",
+    "cost_note": null,
+    "season": [
+      "Year-Round"
+    ],
+    "time_of_day": [
+      "Afternoon"
+    ],
+    "indoor_outdoor": "Indoor",
+    "good_for": [
+      "Rainy Day",
+      "Quick Stop"
+    ],
+    "vibe": [
+      "Quirky"
+    ],
+    "blurb": "A vintage clothing shop on Church Street that buys, sells and trades, with new items weekly.",
+    "why_special": null,
+    "address": "33 Church St, Burlington, VT 05401",
+    "coords": [
+      44.47952,
+      -73.21292
+    ],
+    "website": "https://fearandcloathing.com/",
+    "image": null,
+    "has_guide": false,
+    "guide_id": null,
+    "source": "https://fearandcloathing.com/",
+    "last_verified": "2026-10",
+    "guide_kinds": [
+      "Vintage"
+    ],
+    "phone": null,
+    "checked": {
+      "date": "2026-10-17",
+      "source": "https://fearandcloathing.com/",
+      "note": "No weekly hours published: the website is a 'Coming Soon... website undergoing renovation' page giving only '33 Church St · Burlington, VT 05401' and an Instagram link; the Instagram bio (@fearandcloathingvt) says 'New items weekly / Located at 33 Church St, Burlington Vermont / Buy Sell Trade' with no hours. Hello Burlington (June 2026) gives 32 Church St and hours, but the shop's own pages say 33 and give no hours, so hours are omitted. Shop is active: own posts of sold items dated Oct 1, 7 and 8, 2026. Coordinates: Nominatim house-number match (OSM shop node 'Fear and Cloathing')."
+    },
+    "instagram": "fearandcloathingvt"
+  },
+  {
+    "id": "hunnymusturd-shop",
+    "name": "HunnyMusturd Shop",
+    "group": "Shopping",
+    "category": "Shop",
+    "neighborhood": "Downtown / Church St",
+    "cost_tier": "$$",
+    "cost_note": null,
+    "season": [
+      "Year-Round"
+    ],
+    "time_of_day": [
+      "Afternoon",
+      "Evening"
+    ],
+    "indoor_outdoor": "Indoor",
+    "good_for": [
+      "Rainy Day",
+      "Groups & Friends",
+      "Half Day"
+    ],
+    "vibe": [
+      "Quirky"
+    ],
+    "blurb": "A vintage clothing and local art shop above Leunig's on Church Street, now an eight-room vintage mall with vintage racks for all genders in sizes XS to 4X. It also stocks work from 50-plus Vermont artists.",
+    "why_special": null,
+    "address": "113 Church Street, Second Floor, Burlington, VT 05401",
+    "coords": [
+      44.47727,
+      -73.21274
+    ],
+    "website": "https://www.hunnymusturdshop.com/",
+    "image": null,
+    "has_guide": false,
+    "guide_id": null,
+    "source": "https://www.hunnymusturdshop.com/about",
+    "last_verified": "2026-10",
+    "guide_kinds": [
+      "Vintage"
+    ],
+    "hours": {
+      "mon": "12:00-18:00",
+      "tue": "unlisted",
+      "wed": "12:00-18:00",
+      "thu": "12:00-18:00",
+      "fri": "13:00-19:00",
+      "sat": "11:00-18:00",
+      "sun": "12:00-17:00"
+    },
+    "hours_note": "Second floor, above Leunig's",
+    "phone": "(508) 330-7946",
+    "checked": {
+      "date": "2026-10-17",
+      "source": "https://www.hunnymusturdshop.com/about",
+      "note": "Two of the shop's own pages disagree; used the newer. About page (Squarespace updatedOn 2026-05-14) 'Visit Us / 113 Church Street Second Floor': 'Friday 1pm-7pm, Saturday 11am-6pm, Sunday 12pm-5pm, Monday 12pm-6pm, Wednesday 12pm-6pm, Thursday 12pm-6pm', Phone (508) 330-7946; Tuesday not mentioned so recorded unlisted. The older /hours page (updatedOn 2025-09-12) says Mon 12-4, Tue Closed, Wed 12-4, Thu Closed, Fri 1-7, Sat 11-7, Sun 12-5. About page says in 2026 they moved down from the third floor to the second and became a '1,500+ sq/ft, 8 room, vintage mall'; Instagram bio says '60+ Vintage Vendors & Artists'. Consignment page says they are currently closed for consignment. ZIP added. Coordinates: Nominatim house-number match for 113 Church St (first of three close OSM points)."
+    },
+    "instagram": "hunny.musturd"
+  },
+  {
+    "id": "milk-moth",
+    "name": "Milk Moth",
+    "group": "Shopping",
+    "category": "Shop",
+    "neighborhood": "Old North End",
+    "cost_tier": "$",
+    "cost_note": null,
+    "season": [
+      "Year-Round"
+    ],
+    "time_of_day": [
+      "Morning",
+      "Afternoon"
+    ],
+    "indoor_outdoor": "Indoor",
+    "good_for": [
+      "Rainy Day",
+      "Half Day",
+      "Groups & Friends"
+    ],
+    "vibe": [
+      "Quirky",
+      "Underrated"
+    ],
+    "blurb": "A vintage, antique and secondhand shop on Archibald Street in the Old North End. It also hosts occasional music nights.",
+    "why_special": null,
+    "address": "168 Archibald St, Burlington, VT 05401",
+    "coords": [
+      44.48818,
+      -73.20677
+    ],
+    "website": "https://www.instagram.com/milkmoth.andspider/",
+    "image": null,
+    "has_guide": false,
+    "guide_id": null,
+    "source": "https://www.instagram.com/milkmoth.andspider/",
+    "last_verified": "2026-10",
+    "guide_kinds": [
+      "Thrift",
+      "Vintage"
+    ],
+    "hours": {
+      "mon": "11:00-18:00",
+      "tue": "11:00-18:00",
+      "wed": "11:00-18:00",
+      "thu": "11:00-18:00",
+      "fri": "11:00-18:00",
+      "sat": "11:00-18:00",
+      "sun": "11:00-18:00"
+    },
+    "phone": null,
+    "checked": {
+      "date": "2026-10-17",
+      "source": "https://www.instagram.com/milkmoth.andspider/",
+      "note": "No website. Hours and address from the shop's own Instagram bio (via Scrape Creators profile API): 'vintage antique secondhand', '11-6pm 7 days a week', '168 archibald st * burlington vt'. A Dec 2025 collab post on its feed said 'open 11-6 every day but tuesday'; the current bio is newer and says 7 days. Music night Oct 5, 2026 from its own post. Active: own posts dated Oct 2, 5, 12, 2026. ZIP added. Coordinates: Nominatim house-number match (OSM 'Synagogue Ahavath Gerim, 168 Archibald Street', the old synagogue building the shop occupies)."
+    },
+    "instagram": "milkmoth.andspider"
+  },
+  {
+    "id": "anjou-burlington",
+    "name": "Anjou & the Little Pear",
+    "group": "Shopping",
+    "category": "Shop",
+    "neighborhood": "Downtown / Church St",
+    "cost_tier": "$$$",
+    "cost_note": null,
+    "season": [
+      "Year-Round"
+    ],
+    "time_of_day": [
+      "Morning",
+      "Afternoon"
+    ],
+    "indoor_outdoor": "Indoor",
+    "good_for": [
+      "Half Day",
+      "Locals' Pick"
+    ],
+    "vibe": [
+      "Local Institution"
+    ],
+    "blurb": "An antique, vintage and modern home furnishings shop on lower Main Street. Purchases, viewings and pickups are arranged by Instagram message.",
+    "why_special": null,
+    "address": "53 Main Street, Burlington, VT 05401",
+    "coords": [
+      44.47559,
+      -73.21765
+    ],
+    "website": "https://www.facebook.com/AnjouVT/",
+    "image": null,
+    "has_guide": false,
+    "guide_id": null,
+    "source": "https://www.instagram.com/anjouvt/",
+    "last_verified": "2026-10",
+    "guide_kinds": [
+      "Antiques",
+      "Vintage"
+    ],
+    "hours": {
+      "mon": "unlisted",
+      "tue": "unlisted",
+      "wed": "unlisted",
+      "thu": "unlisted",
+      "fri": "unlisted",
+      "sat": "10:00-17:00",
+      "sun": "11:00-15:00"
+    },
+    "hours_note": "Other times by appointment",
+    "phone": null,
+    "checked": {
+      "date": "2026-10-17",
+      "source": "https://www.instagram.com/anjouvt/",
+      "note": "Its old site anjouvt.com now redirects to an unrelated gambling page, so the website field uses its Facebook page. Hours from the Instagram bio (via Scrape Creators): 'Antique Vintage & Modern Home Furnishings • DM For Purchases Viewings + Pickups. Open Saturday 10-5 + Sunday 11-3 and ANYTIME by appointment'. Facebook Open Graph text agrees: 'Open Sat & Sun Reg hours. Weekdays by appointment.' Address from its own posts, latest Oct 17, 2026: '53 Main Street • Burlington VT'. A Sept 20, 2026 post also listed 'Friday 12-3'; the current bio does not, so Friday is unlisted. ZIP added. Coordinates: Nominatim house-number match (OSM shop node 'Anjou')."
+    },
+    "instagram": "anjouvt"
+  },
+  {
+    "id": "stay-gold-vintage",
+    "name": "Stay Gold Vintage",
+    "group": "Shopping",
+    "category": "Shop",
+    "neighborhood": "South End",
+    "cost_tier": "$$",
+    "cost_note": null,
+    "season": [
+      "Year-Round"
+    ],
+    "time_of_day": [
+      "Morning",
+      "Afternoon"
+    ],
+    "indoor_outdoor": "Indoor",
+    "good_for": [
+      "Quick Stop",
+      "Rainy Day"
+    ],
+    "vibe": [
+      "Laid-back"
+    ],
+    "blurb": "A vintage clothing studio shop in the Soda Plant on Pine Street. It also sells at local vintage markets.",
+    "why_special": null,
+    "address": "266 Pine St, Burlington, VT 05401",
+    "coords": [
+      44.47182,
+      -73.21505
+    ],
+    "website": "https://www.instagram.com/stay.gold.vintage/",
+    "image": null,
+    "has_guide": false,
+    "guide_id": null,
+    "source": "https://www.instagram.com/stay.gold.vintage/",
+    "last_verified": "2026-10",
+    "guide_kinds": [
+      "Vintage"
+    ],
+    "hours": {
+      "mon": "unlisted",
+      "tue": "unlisted",
+      "wed": "unlisted",
+      "thu": "10:30-15:00",
+      "fri": "10:30-17:00",
+      "sat": "10:30-17:00",
+      "sun": "unlisted"
+    },
+    "hours_note": "In the Soda Plant studio",
+    "phone": null,
+    "checked": {
+      "date": "2026-10-17",
+      "source": "https://www.instagram.com/stay.gold.vintage/",
+      "note": "No website. Hours and address from the Instagram bio (via Scrape Creators): 'Shop our studio @thesodaplant 266 Pine St Burlington Vermont / Thursday 10:30-3 / Friday 10:30-5 / Saturday 10:30-5'. Caution: an Aug 6, 2026 post said that after the owner's baby arrived (late Aug/early Sept) the shop would be 'open by appointment or by chance for a few weeks'; an Oct 16, 2026 post describes the owner at the studio 'conversing with customers', and the bio lists regular hours, so recorded as open. Hello Burlington (June 2026) had Fri-Sat 10-3, which the bio supersedes. ZIP added. Coordinates: Nominatim house-number match (OSM address point for 266 Pine St)."
+    },
+    "instagram": "stay.gold.vintage"
+  },
+  {
+    "id": "project-object-vintage",
+    "name": "Project Object Vintage",
+    "group": "Shopping",
+    "category": "Shop",
+    "neighborhood": "South End",
+    "cost_tier": "$$",
+    "cost_note": null,
+    "season": [
+      "Year-Round"
+    ],
+    "time_of_day": [
+      "Afternoon"
+    ],
+    "indoor_outdoor": "Indoor",
+    "good_for": [
+      "Rainy Day",
+      "Quick Stop"
+    ],
+    "vibe": [
+      "Laid-back"
+    ],
+    "blurb": "A small vintage clothing shop in the South End with a curated collection from the 1920s to the 2000s. It also buys vintage and offers denim fittings.",
+    "why_special": null,
+    "address": "28 Howard Street, Unit 106, Burlington, VT 05401",
+    "coords": [
+      44.46754,
+      -73.21401
+    ],
+    "website": "https://povintage.com/",
+    "image": null,
+    "has_guide": false,
+    "guide_id": null,
+    "source": "https://povintage.com/",
+    "last_verified": "2026-10",
+    "guide_kinds": [
+      "Vintage"
+    ],
+    "hours": {
+      "mon": "unlisted",
+      "tue": "unlisted",
+      "wed": "unlisted",
+      "thu": "12:00-18:00",
+      "fri": "12:00-18:00",
+      "sat": "10:00-17:00",
+      "sun": "11:00-17:00"
+    },
+    "phone": null,
+    "checked": {
+      "date": "2026-10-17",
+      "source": "https://povintage.com/",
+      "note": "Address and hours from the site footer 'VISIT THE STUDIO': '28 Howard Street Unit 106 Burlington, VT 05401 / STUDIO HOURS Thursday 12–6 Friday 12–6 Saturday 10–5 Sunday 11–5'. Description from https://povintage.com/pages/about ('Founded in 2014... a small vintage shop in the South End... pieces from the 1920s–2000s'). No phone (email only). Coordinates: Nominatim house-number match."
+    },
+    "instagram": "projectobject_vintage"
+  },
+  {
+    "id": "possibility-shop",
+    "name": "The Possibility Shop",
+    "group": "Shopping",
+    "category": "Shop",
+    "neighborhood": "Downtown / Church St",
+    "cost_tier": "$",
+    "cost_note": null,
+    "season": [
+      "Year-Round"
+    ],
+    "time_of_day": [
+      "Morning",
+      "Afternoon"
+    ],
+    "indoor_outdoor": "Indoor",
+    "good_for": [
+      "Quick Stop",
+      "Rainy Day"
+    ],
+    "vibe": [
+      "Underrated"
+    ],
+    "blurb": "A volunteer-run thrift store at First Congregational Church selling affordable clothing and household items to raise money for church ministries.",
+    "why_special": null,
+    "address": "38 South Winooski Ave, Burlington, VT 05401",
+    "coords": [
+      44.47955,
+      -73.21029
+    ],
+    "website": "https://firstchurchburlington.org/service-outreach/",
+    "image": null,
+    "has_guide": false,
+    "guide_id": null,
+    "source": "https://firstchurchburlington.org/service-outreach/",
+    "last_verified": "2026-10",
+    "guide_kinds": [
+      "Thrift"
+    ],
+    "hours": {
+      "mon": "unlisted",
+      "tue": "unlisted",
+      "wed": "10:00-15:00",
+      "thu": "unlisted",
+      "fri": "10:00-15:00",
+      "sat": "unlisted",
+      "sun": "unlisted"
+    },
+    "phone": "(802) 862-5010",
+    "checked": {
+      "date": "2026-10-17",
+      "source": "https://firstchurchburlington.org/service-outreach/",
+      "note": "Hours from the church's Service Outreach page: 'The Possibility Shop, our volunteer-run thrift store, offers affordable clothing and household items... Open Wednesdays and Fridays from 10am – 3pm.' Address and phone are the church's, from https://firstchurchburlington.org/contact/ ('38 South Winooski Ave Burlington, VT 05401', '(802) 862-5010'); the page does not give a separate shop phone. Coordinates: Nominatim house-number match (OSM 'First Congregational Church')."
+    }
+  },
+  {
+    "id": "shalom-shuk",
+    "name": "Shalom Shuk",
+    "group": "Shopping",
+    "category": "Shop",
+    "neighborhood": "Hill Section",
+    "cost_tier": "$",
+    "cost_note": null,
+    "season": [
+      "Year-Round"
+    ],
+    "time_of_day": [
+      "Morning",
+      "Afternoon"
+    ],
+    "indoor_outdoor": "Indoor",
+    "good_for": [
+      "Quick Stop",
+      "Rainy Day"
+    ],
+    "vibe": [
+      "Underrated"
+    ],
+    "blurb": "A thrift store in Ohavi Zedek Synagogue's renovated carriage barn selling gently used clothes, household wares and small goods. Proceeds help new immigrants and people in need.",
+    "why_special": null,
+    "address": "188 North Prospect Street, Burlington, VT 05401",
+    "coords": [
+      44.48631,
+      -73.20123
+    ],
+    "website": "https://ohavizedek.org/about-ohavi-zedek-synagogue/shalom-shuk-thrift-store/",
+    "image": null,
+    "has_guide": false,
+    "guide_id": null,
+    "source": "https://ohavizedek.org/about-ohavi-zedek-synagogue/shalom-shuk-thrift-store/",
+    "last_verified": "2026-10",
+    "guide_kinds": [
+      "Thrift"
+    ],
+    "hours": {
+      "mon": "10:00-16:00",
+      "tue": "10:00-16:00",
+      "wed": "10:00-16:00",
+      "thu": "10:00-16:00",
+      "fri": "10:00-16:00",
+      "sat": null,
+      "sun": "10:00-16:00"
+    },
+    "hours_note": "Donations 10am to 4pm during open hours",
+    "phone": "(802) 373-4784",
+    "checked": {
+      "date": "2026-10-17",
+      "source": "https://ohavizedek.org/about-ohavi-zedek-synagogue/shalom-shuk-thrift-store/",
+      "note": "Hours from the synagogue's Shalom Shuk page (WordPress modified 2025-04-21): 'Monday 10AM – 4PM ... Friday 10AM – 4PM / Saturday CLOSED / Sunday 10AM – 4PM / Phone: (802) 373-4784'. Address is the synagogue's from the page header ('188 North Prospect Street'); ZIP 05401 from the page footer. Hello Burlington (June 2026) wrongly calls it periodic sales only; the shop's own Instagram (@shalomshuk) shows ongoing activity (Aug 30, 2026 bag sale; Sept 9, 2026 item post) and a May 2026 post noted holiday closures (closed for Shavuot). Coordinates: Nominatim house-number match (OSM 'Ohavi Zedek Synagogue'; OSM puts it in North Hill Section)."
+    },
+    "instagram": "shalomshuk"
+  },
+  {
+    "id": "platos-closet-williston",
+    "name": "Plato's Closet Williston",
+    "group": "Shopping",
+    "category": "Shop",
+    "neighborhood": "Williston",
+    "cost_tier": "$",
+    "cost_note": null,
+    "season": [
+      "Year-Round"
+    ],
+    "time_of_day": [
+      "Morning",
+      "Afternoon",
+      "Evening"
+    ],
+    "indoor_outdoor": "Indoor",
+    "good_for": [
+      "Rainy Day",
+      "Quick Stop",
+      "Groups & Friends"
+    ],
+    "vibe": [
+      "Laid-back"
+    ],
+    "blurb": "A teen and young-adult resale shop at Taft Corners that, unlike a typical thrift store, curates current, on-trend brand-name clothing. It buys gently used clothes all day and pays in cash or Venmo.",
+    "why_special": null,
+    "address": "34 Taft Corners Shopping Center, Williston, VT 05495",
+    "coords": [
+      44.45087,
+      -73.10922
+    ],
+    "website": "https://platoscloset.com/locations/williston-vt/",
+    "image": null,
+    "has_guide": false,
+    "guide_id": null,
+    "source": "https://platoscloset.com/locations/williston-vt/",
+    "last_verified": "2026-10",
+    "guide_kinds": [
+      "Consignment"
+    ],
+    "hours": {
+      "mon": "10:00-21:00",
+      "tue": "10:00-21:00",
+      "wed": "10:00-21:00",
+      "thu": "10:00-21:00",
+      "fri": "10:00-21:00",
+      "sat": "10:00-21:00",
+      "sun": "11:00-18:00"
+    },
+    "hours_note": "Halloween (Oct 31) 10am to 6pm. Bring items to sell no later than an hour before close.",
+    "phone": "802-878-0001",
+    "checked": {
+      "date": "2026-10-17",
+      "source": "https://platoscloset.com/locations/williston-vt/",
+      "note": "The location page renders hours, address and phone with JavaScript from the site's own store-data feed (https://storefront-middleware-a2hgfzc0fmb0byc6.z02.azurefd.net/api/v1/store/8?slug=williston-vt); that feed was read directly. dayId 0 is Sunday per the page script's weekday array. Feed hours: Sun '11:00'-'18:00', Mon-Sat '10:00'-'21:00'; holiday 'Halloween 2026-10-31 10:00-18:00'. Contact '34 Taft Corners Shopping Center, Williston, VT 05495, 802-878-0001'. Blurb wording ('Unlike a typical thrift store, we curate', 'Get paid in CASH or VENMO', 'We Buy All Day, Every Day') is on the static page. Plato's buys outright rather than taking items on consignment; 'Consignment' is the closest guide_kind. Coordinates: Nominatim matched house 34, Taft Corners Shopping Center (the feed's own lat/long 44.45075,-73.10930 agrees)."
+    },
+    "instagram": "platosclosetwilliston"
+  },
+  {
+    "id": "style-encore-williston",
+    "name": "Style Encore Williston",
+    "group": "Shopping",
+    "category": "Shop",
+    "neighborhood": "Williston",
+    "cost_tier": "$",
+    "cost_note": null,
+    "season": [
+      "Year-Round"
+    ],
+    "time_of_day": [
+      "Morning",
+      "Afternoon",
+      "Evening"
+    ],
+    "indoor_outdoor": "Indoor",
+    "good_for": [
+      "Rainy Day",
+      "Quick Stop"
+    ],
+    "vibe": [
+      "Laid-back"
+    ],
+    "blurb": "A women's resale shop at Taft Corners that, unlike a typical thrift store, curates high-quality, gently used, current fashion at a fraction of retail price.",
+    "why_special": null,
+    "address": "31 Taft Corners Shopping Center, Williston, VT 05495",
+    "coords": [
+      44.45064,
+      -73.10934
+    ],
+    "website": "https://styleencore.com/locations/williston-vt/",
+    "image": null,
+    "has_guide": false,
+    "guide_id": null,
+    "source": "https://styleencore.com/locations/williston-vt/",
+    "last_verified": "2026-10",
+    "guide_kinds": [
+      "Consignment"
+    ],
+    "hours": {
+      "mon": "10:00-20:00",
+      "tue": "10:00-20:00",
+      "wed": "10:00-20:00",
+      "thu": "10:00-20:00",
+      "fri": "10:00-20:00",
+      "sat": "10:00-20:00",
+      "sun": "11:00-18:00"
+    },
+    "phone": "802-876-7113",
+    "checked": {
+      "date": "2026-10-17",
+      "source": "https://styleencore.com/locations/williston-vt/",
+      "note": "The location page renders hours, address and phone with JavaScript from the site's own store-data feed (https://storefront-middleware-a2hgfzc0fmb0byc6.z02.azurefd.net/api/v1/store/6?slug=williston-vt); that feed was read directly. dayId 0 is Sunday per the page script's weekday array. Feed hours: Sun '11:00'-'18:00', Mon-Sat '10:00'-'20:00'; no holiday hours. Contact '31 Taft Corners Shopping Center, Williston, VT 05495, 802-876-7113'. Blurb wording ('premier resale store for women looking for high-quality, gently used fashion', 'Unlike a typical thrift store, we curate') is on the static page. Buys outright, not consignment; 'Consignment' is the closest guide_kind. Coordinates: Nominatim matched house 31, Taft Corners Shopping Center."
+    },
+    "instagram": "styleencorewilliston"
+  },
+  {
+    "id": "once-upon-a-child-williston",
+    "name": "Once Upon A Child Williston",
+    "group": "Shopping",
+    "category": "Shop",
+    "neighborhood": "Williston",
+    "cost_tier": "$",
+    "cost_note": null,
+    "season": [
+      "Year-Round"
+    ],
+    "time_of_day": [
+      "Morning",
+      "Afternoon",
+      "Evening"
+    ],
+    "indoor_outdoor": "Indoor",
+    "good_for": [
+      "Family & Kids",
+      "Rainy Day",
+      "Quick Stop"
+    ],
+    "vibe": [
+      "Kid-Friendly"
+    ],
+    "blurb": "A kids' resale shop at Taft Corners that buys and sells gently used kids' clothes, shoes, toys and baby gear, paying cash on the spot rather than on consignment.",
+    "why_special": null,
+    "address": "38 Taft Corners Shopping Center, Williston, VT 05495",
+    "coords": [
+      44.45094,
+      -73.10915
+    ],
+    "website": "https://onceuponachild.com/locations/williston-vt/",
+    "image": null,
+    "has_guide": false,
+    "guide_id": null,
+    "source": "https://onceuponachild.com/locations/williston-vt/",
+    "last_verified": "2026-10",
+    "guide_kinds": [
+      "Kids' consignment"
+    ],
+    "hours": {
+      "mon": "09:00-20:00",
+      "tue": "09:00-20:00",
+      "wed": "09:00-20:00",
+      "thu": "09:00-20:00",
+      "fri": "09:00-20:00",
+      "sat": "10:00-20:00",
+      "sun": "10:00-18:00"
+    },
+    "phone": "802-878-5434",
+    "checked": {
+      "date": "2026-10-17",
+      "source": "https://onceuponachild.com/locations/williston-vt/",
+      "note": "The location page renders hours, address and phone with JavaScript from the site's own store-data feed (https://storefront-middleware-a2hgfzc0fmb0byc6.z02.azurefd.net/api/v1/store/2?slug=williston-vt); that feed was read directly. dayId 0 is Sunday per the page script's weekday array. Feed hours: Sun '10:00'-'18:00', Mon-Fri '9:00'-'20:00', Sat '10:00'-'20:00'. Contact '38 Taft Corners Shopping Center, Williston, VT 05495, 802-878-5434'. Static page says 'We are now under NEW OWNERSHIP!' and 'Bring in your gently used kids' items and get cash on the spot'. Coordinates: Nominatim matched house 38, Taft Corners Shopping Center; the feed's own lat/long (44.42766,-73.08798) is about 3 km off and was NOT used."
+    },
+    "instagram": "onceuponachildwilliston"
+  },
+  {
+    "id": "play-it-again-sports-south-burlington",
+    "name": "Play It Again Sports South Burlington",
+    "group": "Shopping",
+    "category": "Shop",
+    "neighborhood": "South Burlington",
+    "cost_tier": "$$",
+    "cost_note": null,
+    "season": [
+      "Year-Round"
+    ],
+    "time_of_day": [
+      "Morning",
+      "Afternoon",
+      "Evening"
+    ],
+    "indoor_outdoor": "Indoor",
+    "good_for": [
+      "Family & Kids",
+      "Quick Stop"
+    ],
+    "vibe": [
+      "Laid-back"
+    ],
+    "blurb": "A sports resale shop on Dorset Street that buys and sells quality used sports and fitness gear, paying on the spot or in trade rather than on consignment.",
+    "why_special": null,
+    "address": "150 Dorset Street, South Burlington, VT 05403",
+    "coords": [
+      44.46476,
+      -73.17893
+    ],
+    "website": "https://playitagainsports.com/locations/south-burlington-vt/",
+    "image": null,
+    "has_guide": false,
+    "guide_id": null,
+    "source": "https://playitagainsports.com/locations/south-burlington-vt/",
+    "last_verified": "2026-10",
+    "guide_kinds": [
+      "Sports consignment"
+    ],
+    "hours": {
+      "mon": "10:00-20:00",
+      "tue": "10:00-20:00",
+      "wed": "10:00-20:00",
+      "thu": "10:00-20:00",
+      "fri": "10:00-20:00",
+      "sat": "09:00-19:00",
+      "sun": "11:00-17:00"
+    },
+    "phone": "802-865-3021",
+    "checked": {
+      "date": "2026-10-17",
+      "source": "https://playitagainsports.com/locations/south-burlington-vt/",
+      "note": "The location page renders hours, address and phone with JavaScript from the site's own store-data feed (https://storefront-middleware-a2hgfzc0fmb0byc6.z02.azurefd.net/api/v1/store/1?slug=south-burlington-vt); that feed was read directly. dayId 0 is Sunday per the page script's weekday array. Feed hours: Sun '11:00'-'17:00', Mon-Fri '10:00'-'20:00', Sat '9:00'-'19:00'. Contact '150 Dorset Street, South Burlington, VT 05403, 802-865-3021'. Static page: 'buys and sells quality used sports and fitness gear. Bring in your quality used gear and get paid on the spot, or trade up'. Coordinates: Nominatim matched the Play It Again Sports node at 150 Dorset Street (OSM calls the building the Blue Mall)."
+    },
+    "instagram": "playitagainsportsvt"
+  },
+  {
+    "id": "goodwill-williston",
+    "name": "Goodwill Williston",
+    "group": "Shopping",
+    "category": "Shop",
+    "neighborhood": "Williston",
+    "cost_tier": "$",
+    "cost_note": null,
+    "season": [
+      "Year-Round"
+    ],
+    "time_of_day": [
+      "Morning",
+      "Afternoon"
+    ],
+    "indoor_outdoor": "Indoor",
+    "good_for": [
+      "Rainy Day",
+      "Half Day"
+    ],
+    "vibe": [
+      "Laid-back"
+    ],
+    "blurb": "A Goodwill thrift store and donation center on Harvest Lane near Taft Corners.",
+    "why_special": null,
+    "address": "64 Harvest Lane, Williston, VT 05495",
+    "coords": [
+      44.45162,
+      -73.11876
+    ],
+    "website": "https://goodwillnne.org/locations/",
+    "image": null,
+    "has_guide": false,
+    "guide_id": null,
+    "source": "https://goodwillnne.org/locations/",
+    "last_verified": "2026-10",
+    "guide_kinds": [
+      "Thrift"
+    ],
+    "hours": {
+      "mon": "09:00-18:00",
+      "tue": "09:00-18:00",
+      "wed": "09:00-18:00",
+      "thu": "09:00-18:00",
+      "fri": "09:00-18:00",
+      "sat": "09:00-18:00",
+      "sun": "09:00-18:00"
+    },
+    "hours_note": "Donations 9am to 4:30pm daily",
+    "phone": "802-879-0088",
+    "checked": {
+      "date": "2026-10-17",
+      "source": "https://goodwillnne.org/locations/",
+      "note": "Address, phone and hours from the Williston, VT row of Goodwill NNE's locations page: '64 Harvest Lane, Williston, VT 05495 | 802-879-0088 Store Hours | 9 a.m. – 6 p.m. daily | Donation Hours | 9 a.m. – 4:30 p.m. daily'. The attached Buy The Pound Outlet is NOT on the current page's outlet list (only Gorham ME and Hudson NH), so it is left out. Coordinates: Nominatim matched the Goodwill node at 64 Harvest Lane."
+    }
+  },
+  {
+    "id": "habitat-restore-williston",
+    "name": "Green Mountain Habitat ReStore Williston",
+    "group": "Shopping",
+    "category": "Shop",
+    "neighborhood": "Williston",
+    "cost_tier": "$",
+    "cost_note": null,
+    "season": [
+      "Year-Round"
+    ],
+    "time_of_day": [
+      "Morning",
+      "Afternoon"
+    ],
+    "indoor_outdoor": "Indoor",
+    "good_for": [
+      "Half Day",
+      "Rainy Day"
+    ],
+    "vibe": [
+      "Underrated"
+    ],
+    "blurb": "A nonprofit thrift-style ReStore on Route 2A selling new and gently used furniture, appliances, cabinets, home decor, clothing and more at discounted prices. Proceeds help Green Mountain Habitat for Humanity build affordable homes.",
+    "why_special": null,
+    "address": "528 Essex Rd/Route 2A, Williston, VT",
+    "coords": [
+      44.4746,
+      -73.11441
+    ],
+    "website": "https://vermonthabitat.org/restore/restore-locations.html",
+    "image": null,
+    "has_guide": false,
+    "guide_id": null,
+    "source": "https://vermonthabitat.org/restore/restore-locations.html",
+    "last_verified": "2026-10",
+    "guide_kinds": [
+      "ReStore"
+    ],
+    "hours": {
+      "mon": "10:00-18:00",
+      "tue": "10:00-18:00",
+      "wed": "10:00-18:00",
+      "thu": "10:00-18:00",
+      "fri": "10:00-18:00",
+      "sat": "10:00-17:00",
+      "sun": "10:00-17:00"
+    },
+    "hours_note": "Donations Tue to Fri 10am to 5pm, Sat and Sun 10am to 4pm; donation lane closed Mondays",
+    "phone": "(802) 857-5296 x2",
+    "checked": {
+      "date": "2026-10-17",
+      "source": "https://vermonthabitat.org/restore/restore-locations.html",
+      "note": "From the Williston ReStore block on the ReStore Locations page: '528 Essex Rd/Route 2A, Williston, VT | Shop: Mon-Fri 10-6, Sat-Sun 10-5 | Donate: Tues-Fri 10-5, Sat-Sun 10-4, Closed Mondays* | (802) 857-5296 x2', with '*Donation lane temporarily closed on Mondays.' Merchandise list from the 'Shop at the ReStore' text on vermonthabitat.org/restore/. The page gives no ZIP, so none is added. Context: press (WCAX 2026-08-14, Williston Observer) reported the store closed after an April 2026 fire and reopened mid-August 2026; the site's hours are presumably the post-reopening ones. Coordinates: Nominatim matched building 528 Essex Road (it tags the ZIP as 05452, the point is in Williston near Taft Corners)."
+    }
+  },
+  {
+    "id": "resource-williston",
+    "name": "ReSOURCE Williston",
+    "group": "Shopping",
+    "category": "Shop",
+    "neighborhood": "Williston",
+    "cost_tier": "$",
+    "cost_note": null,
+    "season": [
+      "Year-Round"
+    ],
+    "time_of_day": [
+      "Morning",
+      "Afternoon"
+    ],
+    "indoor_outdoor": "Indoor",
+    "good_for": [
+      "Quick Stop"
+    ],
+    "vibe": [
+      "Laid-back"
+    ],
+    "blurb": "A nonprofit thrift and reuse store from ReSOURCE on Harvest Lane, focused on quality used electronics and appliances.",
+    "why_special": null,
+    "address": "329 Harvest Lane, Suite 200, Williston, VT",
+    "coords": [
+      44.44834,
+      -73.11526
+    ],
+    "website": "https://resourcevt.org/store-location-hours/",
+    "image": null,
+    "has_guide": false,
+    "guide_id": null,
+    "source": "https://resourcevt.org/store-location-hours/",
+    "last_verified": "2026-10",
+    "guide_kinds": [
+      "Thrift"
+    ],
+    "hours": {
+      "mon": "10:00-18:00",
+      "tue": "10:00-18:00",
+      "wed": "10:00-18:00",
+      "thu": "10:00-18:00",
+      "fri": "10:00-18:00",
+      "sat": "10:00-18:00",
+      "sun": "10:00-17:00"
+    },
+    "hours_note": "Donations Tue to Fri 11am to 4pm, Sat 11am to 2pm",
+    "phone": "802.857.4361",
+    "checked": {
+      "date": "2026-10-17",
+      "source": "https://resourcevt.org/store-location-hours/",
+      "note": "From the 'ReSOURCE Williston' block: '329 Harvest Lane, Suite 200 Williston, VT | 802.857.4361 | Mon-Sat: 10 AM-6 PM | Sun: 10 AM-5 PM | Donation hours: Tuesday-Friday, 11 AM-4 PM | Saturday Donation hours: 11 AM-2 PM', described as 'your go-to destination for quality used electronics and appliances'. This is a separate store from the Pine St ReSOURCE already in the guide. The page itself never uses the word thrift (the Morrisville blurb says 'thrifty finds'); 'thrift and reuse' is our category label. Coordinates: Nominatim matched the ReSOURCE second_hand shop node at 329 Harvest Lane."
+    }
+  },
+  {
+    "id": "boho-baby-williston",
+    "name": "Boho Baby",
+    "group": "Shopping",
+    "category": "Shop",
+    "neighborhood": "Williston",
+    "cost_tier": "$",
+    "cost_note": null,
+    "season": [
+      "Year-Round"
+    ],
+    "time_of_day": [
+      "Morning",
+      "Afternoon"
+    ],
+    "indoor_outdoor": "Indoor",
+    "good_for": [
+      "Family & Kids",
+      "Quick Stop"
+    ],
+    "vibe": [
+      "Kid-Friendly",
+      "Cozy"
+    ],
+    "blurb": "A children's consignment shop for preemie through size 14 clothing and baby gear, with consignor intake by appointment.",
+    "why_special": null,
+    "address": "34 Blair Park Rd Suite 103, Williston, VT 05495",
+    "coords": [
+      44.45285,
+      -73.11627
+    ],
+    "website": "https://www.bohobabyvt.com/",
+    "image": null,
+    "has_guide": false,
+    "guide_id": null,
+    "source": "https://www.bohobabyvt.com/contact",
+    "last_verified": "2026-10",
+    "guide_kinds": [
+      "Kids' consignment"
+    ],
+    "hours": {
+      "mon": "09:30-17:00",
+      "tue": "09:30-17:00",
+      "wed": "09:30-17:00",
+      "thu": "09:30-17:00",
+      "fri": "09:30-17:00",
+      "sat": "10:00-17:00",
+      "sun": "11:00-16:00"
+    },
+    "hours_note": "Check its social pages for store closures or intake pauses",
+    "phone": "802-764-3023",
+    "checked": {
+      "date": "2026-10-17",
+      "source": "https://www.bohobabyvt.com/",
+      "note": "Address, phone and hours from the site footer (home and contact pages): '34 Blair Park Rd Suite 103, Williston, VT 05495 802-764-3023 ... Store Hours: Monday-Friday 9:30-5:00 Saturday 10:00-5:00 Sunday 11:00-4:00'. The contact page body says 'Mon - Sat 9:30am – 5:00pm | Saturday 10:00am-5:00pm | Sunday 11:00am – 4:00pm', which contradicts itself on Saturday; the footer's Mon-Fri reading was used. Home page: 'Vermont's Premier Consignment Shop For Children Preemie- Size 14', 'Make an Intake Appointment', and '*Please visit our social media pages for updates concerning store closures or intake pauses!*'. Coordinates: Nominatim matched house 34 Blair Park Road."
+    },
+    "instagram": "bohobabyvt"
+  },
+  {
+    "id": "replays-south-burlington",
+    "name": "Replays Resale Shop",
+    "group": "Shopping",
+    "category": "Shop",
+    "neighborhood": "South Burlington",
+    "cost_tier": "$",
+    "cost_note": null,
+    "season": [
+      "Year-Round"
+    ],
+    "time_of_day": [
+      "Morning",
+      "Afternoon"
+    ],
+    "indoor_outdoor": "Indoor",
+    "good_for": [
+      "Rainy Day",
+      "Quick Stop"
+    ],
+    "vibe": [
+      "Underrated"
+    ],
+    "blurb": "A nonprofit thrift and resale store staffed by UVM Medical Center Auxiliary volunteers and a small staff. Net proceeds are donated to UVM Medical Center.",
+    "why_special": null,
+    "address": "150 Dorset St Ste 265, South Burlington, VT",
+    "coords": [
+      44.46491,
+      -73.17893
+    ],
+    "website": "https://www.uvmhealth.org/locations/university-of-vermont-medical-center/community-impact/uvm-medical-center-auxiliary",
+    "image": null,
+    "has_guide": false,
+    "guide_id": null,
+    "source": "https://www.uvmhealth.org/locations/university-of-vermont-medical-center/community-impact/uvm-medical-center-auxiliary",
+    "last_verified": "2026-10",
+    "guide_kinds": [
+      "Thrift"
+    ],
+    "hours_note": "No hours published; call 802-660-8420",
+    "phone": "802-660-8420",
+    "checked": {
+      "date": "2026-10-17",
+      "source": "https://www.uvmhealth.org/locations/university-of-vermont-medical-center/community-impact/uvm-medical-center-auxiliary",
+      "note": "Re-checked 2026-10-17: the UVM Medical Center Auxiliary page (uvmhealth.org/uvm-medical-center-auxiliary redirects here) says 'Replays Resale Shop is a nonprofit quality resale store staffed by Auxiliary volunteers and a small staff ... the net proceeds of Replays sales are donated to UVM Medical Center. | Visit us: 150 Dorset St Ste 265, South Burlington, VT | Call us: 802-660-8420'. NO weekly hours on this or any other own page; no own Facebook/website found. hours omitted. The page says 'resale', not 'thrift'; 'thrift' is our category label. time_of_day is a default since no hours are published. Coordinates: Nominatim matched 150 Dorset Street (OSM: Blue Mall); suite not geocoded."
+    }
+  },
+  {
+    "id": "schip-upscale-resale-shelburne",
+    "name": "SCHIP Upscale Resale",
+    "group": "Shopping",
+    "category": "Shop",
+    "neighborhood": "Shelburne",
+    "cost_tier": "$$",
+    "cost_note": null,
+    "season": [
+      "Year-Round"
+    ],
+    "time_of_day": [
+      "Morning",
+      "Afternoon"
+    ],
+    "indoor_outdoor": "Indoor",
+    "good_for": [
+      "Rainy Day",
+      "Locals' Pick"
+    ],
+    "vibe": [
+      "Local Institution",
+      "Cozy"
+    ],
+    "blurb": "A nonprofit resale shop in the yellow house by the Shelburne library selling locally donated designer clothing, jewelry, art, housewares and occasional antique pieces. All proceeds go back to the community as grants.",
+    "why_special": null,
+    "address": "5404 Shelburne Road, Shelburne, VT 05482",
+    "coords": [
+      44.37887,
+      -73.22854
+    ],
+    "website": "https://www.theschip.org/",
+    "image": null,
+    "has_guide": false,
+    "guide_id": null,
+    "source": "https://www.theschip.org/",
+    "last_verified": "2026-10",
+    "guide_kinds": [
+      "Thrift"
+    ],
+    "hours": {
+      "mon": "10:00-17:00",
+      "tue": "10:00-17:00",
+      "wed": "10:00-17:00",
+      "thu": "10:00-17:00",
+      "fri": "10:00-17:00",
+      "sat": "10:00-17:00",
+      "sun": "unlisted"
+    },
+    "hours_note": "Donations Mon to Sat 10am to 5pm, two bags or boxes at a time",
+    "phone": "(802) 985-3595",
+    "checked": {
+      "date": "2026-10-17",
+      "source": "https://www.theschip.org/",
+      "note": "Home page: 'SCHIP upscale resale hours: Monday- Saturday 10am-5pm' and 'Visit us at the Yellow House by the Library! | 5404 Shelburne Road, Shelburne, VT 05482 | (802) 985-3595'; inventory from 'designer clothes for men and women, gifts, jewelry ... Collectibles and occasionally also antique pieces'. Sunday not mentioned, so 'unlisted'. Donation hours from /home/donations-we-take. Older name in press and 2013 guides: SCHIP's Treasure Resale Shop (schipstreasure.org now redirects to theschip.org). Run by Shelburne Charlotte Hinesburg Interfaith Projects. Coordinates: Nominatim matched building 5404 Shelburne Road in Shelburne Village."
+    },
+    "instagram": "schipstore"
+  },
+  {
+    "id": "bittner-antiques-shelburne",
+    "name": "Bittner Antiques",
+    "group": "Shopping",
+    "category": "Shop",
+    "neighborhood": "Shelburne",
+    "cost_tier": "$$$",
+    "cost_note": null,
+    "season": [
+      "Year-Round"
+    ],
+    "time_of_day": [
+      "Morning",
+      "Afternoon"
+    ],
+    "indoor_outdoor": "Indoor",
+    "good_for": [
+      "Solo"
+    ],
+    "vibe": [
+      "Historic"
+    ],
+    "blurb": "An antiques showroom on Shelburne Road run by third-generation Vermont antique dealer Brian Bittner. Walk-ins can bring items to sell on Thursdays.",
+    "why_special": null,
+    "address": "2997 Shelburne Rd, Shelburne VT 05482",
+    "coords": [
+      44.41192,
+      -73.2142
+    ],
+    "website": "https://www.bittnerantiques.com/",
+    "image": null,
+    "has_guide": false,
+    "guide_id": null,
+    "source": "https://www.bittnerantiques.com/contact-us.html",
+    "last_verified": "2026-10",
+    "guide_kinds": [
+      "Antiques"
+    ],
+    "hours": {
+      "mon": "unlisted",
+      "tue": "unlisted",
+      "wed": "10:00-16:00",
+      "thu": "10:00-16:00",
+      "fri": "10:00-16:00",
+      "sat": "unlisted",
+      "sun": "unlisted"
+    },
+    "hours_note": "Bring items to sell Thursdays 10am to 4pm, no appointment needed",
+    "phone": "(802) 489-5210",
+    "checked": {
+      "date": "2026-10-17",
+      "source": "https://www.bittnerantiques.com/contact-us.html",
+      "note": "Contact page: 'Visit our new showroom: ... 2997 Shelburne Rd, Shelburne VT 05482 | Shop hours: Wed-Fri 10am-4pm' and 'Bring in your items to sell every Thursday from 10am-4pm, no appointment necessary'; home page agrees ('Wed-Fri 10am-4pm', '(802) 489-5210'). Site footer says (c) 2024, but hours match on both pages. A single-dealer showroom, not a multi-dealer center. Coordinates: Nominatim matched the retail building at 2997 Shelburne Road, Shelburne."
+    }
+  },
+  {
+    "id": "ardesh-shelburne",
+    "name": "ARDESH Finds & Furnishings",
+    "group": "Shopping",
+    "category": "Shop",
+    "neighborhood": "Shelburne",
+    "cost_tier": "$$",
+    "cost_note": null,
+    "season": [
+      "Year-Round"
+    ],
+    "time_of_day": [
+      "Morning",
+      "Afternoon"
+    ],
+    "indoor_outdoor": "Indoor",
+    "good_for": [
+      "Half Day",
+      "Rainy Day"
+    ],
+    "vibe": [
+      "Quirky"
+    ],
+    "blurb": "An antique and vintage furniture and home decor shop on Shelburne Road with over 10,000 square feet of furniture and finds, plus china, art and jewelry.",
+    "why_special": null,
+    "address": "3093 Shelburne Rd, Shelburne, VT 05482",
+    "coords": [
+      44.41128,
+      -73.21521
+    ],
+    "website": "https://www.ardesh.com/",
+    "image": null,
+    "has_guide": false,
+    "guide_id": null,
+    "source": "https://www.ardesh.com/about",
+    "last_verified": "2026-10",
+    "guide_kinds": [
+      "Antiques",
+      "Vintage"
+    ],
+    "hours": {
+      "mon": "10:00-17:00",
+      "tue": "10:00-17:00",
+      "wed": "10:00-17:00",
+      "thu": "10:00-17:00",
+      "fri": "10:00-17:00",
+      "sat": "10:00-17:00",
+      "sun": "11:00-16:00"
+    },
+    "phone": "(802) 497-3342",
+    "checked": {
+      "date": "2026-10-17",
+      "source": "https://www.ardesh.com/about",
+      "note": "About page: 'Phone: (802) 497-3342 | ... Address: 3093 Shelburne Rd Shelburne, VT 05482 | Hours | Mon. - Sat. 10am - 5pm | Sun. 11am - 4pm'. Home page: 'ARDESH is over 10,000 square feet of unique furniture and finds' and 'explore ARDESH Finds & Furnishings at 3093 Shelburne Road'; the site sells items labeled Antique and Vintage (majolica, Wedgwood, art, jewelry). It buys outright (email photos), not consignment. Coordinates: Nominatim house point for 3093 Shelburne Road, Shelburne (OSM also puts a veterinary hospital at that number, 70 m away)."
+    },
+    "instagram": "ardeshgallery"
+  },
+  {
+    "id": "the-exchange-essex-junction",
+    "name": "The Exchange",
+    "group": "Shopping",
+    "category": "Shop",
+    "neighborhood": "Essex / Essex Jct",
+    "cost_tier": "$$",
+    "cost_note": null,
+    "season": [
+      "Year-Round"
+    ],
+    "time_of_day": [
+      "Morning",
+      "Afternoon"
+    ],
+    "indoor_outdoor": "Indoor",
+    "good_for": [
+      "Rainy Day",
+      "Quick Stop"
+    ],
+    "vibe": [
+      "Laid-back",
+      "Local Institution"
+    ],
+    "blurb": "A women's consignment boutique on Pearl Street in Essex Junction, now with select men's items, selling clothing, jewelry, purses and home decor. The shop says it has been outfitting women for more than 45 years and also carries activewear and plus sizes.",
+    "why_special": null,
+    "address": "167 Pearl St., Essex Junction, VT 05452",
+    "coords": [
+      44.49885,
+      -73.12884
+    ],
+    "website": "https://exchangevt.com/",
+    "image": null,
+    "has_guide": false,
+    "guide_id": null,
+    "source": "https://exchangevt.com/contact-info-and-hours",
+    "last_verified": "2026-10",
+    "guide_kinds": [
+      "Consignment"
+    ],
+    "hours": {
+      "mon": "10:00-17:00",
+      "tue": "10:00-18:00",
+      "wed": "10:00-17:00",
+      "thu": "10:00-17:00",
+      "fri": "10:00-17:00",
+      "sat": "10:00-16:00",
+      "sun": null
+    },
+    "hours_note": "Check its Facebook and Instagram for last minute changes",
+    "phone": "(802) 878-3848",
+    "checked": {
+      "date": "2026-10-17",
+      "source": "https://exchangevt.com/contact-info-and-hours",
+      "note": "Address, phone and hours from the shop's Contact Info and Hours page: 'Business Hours-Check Facebook and Instagram for last minute changes Monday 10:00am - 05:00pm Tuesday 10:00am - 06:00pm Wednesday - Friday 10:00am - 05:00pm Saturday 10:00am - 04:00pm Sunday Closed'. Footer says (c) 2026. Description from the home and About pages (fine women's and select men's consignment; 45 years; activewear and plus sizes 1X-3X). Its Facebook page (facebook.com/theexchangevt) OG meta also reads 'The Exchange | Essex Junction VT'. Coordinates: Nominatim, exact house-number match for 167 Pearl Street, Essex Junction."
+    },
+    "instagram": "theexchangevt"
+  },
+  {
+    "id": "heavenly-cents-thrift-shop",
+    "name": "Heavenly Cents Thrift Shop",
+    "group": "Shopping",
+    "category": "Shop",
+    "neighborhood": "Essex / Essex Jct",
+    "cost_tier": "$",
+    "cost_note": null,
+    "season": [
+      "Year-Round"
+    ],
+    "time_of_day": [
+      "Morning",
+      "Afternoon"
+    ],
+    "indoor_outdoor": "Indoor",
+    "good_for": [
+      "Rainy Day",
+      "Quick Stop",
+      "Family & Kids"
+    ],
+    "vibe": [
+      "Laid-back",
+      "Underrated"
+    ],
+    "blurb": "A volunteer-run thrift shop at the First Congregational Church of Essex Junction selling affordable clothing, linens and household items, with all proceeds donated to community organizations. Donations of men's, women's and children's clothing, linens, jewelry, vintage clothing and housewares are taken during open hours.",
+    "why_special": null,
+    "address": "37 Main St., Essex Junction, VT 05452",
+    "coords": [
+      44.49167,
+      -73.10869
+    ],
+    "website": "https://www.fccej.org/v5/serving-others/heavenly-cents-thrift-shop/",
+    "image": null,
+    "has_guide": false,
+    "guide_id": null,
+    "source": "https://www.fccej.org/v5/serving-others/heavenly-cents-thrift-shop/",
+    "last_verified": "2026-10",
+    "guide_kinds": [
+      "Thrift"
+    ],
+    "hours": {
+      "mon": "unlisted",
+      "tue": "10:00-13:00",
+      "wed": "unlisted",
+      "thu": "15:00-18:00",
+      "fri": "unlisted",
+      "sat": "10:00-13:00",
+      "sun": "unlisted"
+    },
+    "hours_note": "Donations accepted during open hours",
+    "phone": "879-6552",
+    "checked": {
+      "date": "2026-10-17",
+      "source": "https://www.fccej.org/v5/serving-others/heavenly-cents-thrift-shop/",
+      "note": "Address, phone and hours from the shop's page on the church website: 'Hours: Tuesday: 10am – 1pm Thursday: 3 – 6pm Saturday: 10am – 1pm Location: Heavenly Cents Thrift Shop 37 Main St. Essex Junction, VT 05452 Phone: 879-6552' (phone printed without area code; 802 is implied). Days the page does not mention are marked unlisted. Vermont 211 (verified Feb 2025) still shows Wednesday 4-7pm instead of Thursday 3-6pm; the church's own page is used. The church's homepage (fall 2026 content) also links the shop. Coordinates: Nominatim, exact house-number match for 37 Main Street, Essex Junction."
+    }
+  },
+  {
+    "id": "karens-kloset-essex-junction",
+    "name": "Karen's Kloset",
+    "group": "Shopping",
+    "category": "Shop",
+    "neighborhood": "Essex / Essex Jct",
+    "cost_tier": "$",
+    "cost_note": null,
+    "season": [
+      "Year-Round"
+    ],
+    "time_of_day": [
+      "Morning",
+      "Afternoon"
+    ],
+    "indoor_outdoor": "Indoor",
+    "good_for": [
+      "Rainy Day",
+      "Quick Stop"
+    ],
+    "vibe": [
+      "Laid-back",
+      "Underrated"
+    ],
+    "blurb": "A women's resale and thrift shop near the Five Corners selling new and gently worn name-brand clothing in sizes 0 to 5x, plus vintage, petites, shoes, bags, jewelry, nurses' scrubs and what it calls the largest used maternity selection in Vermont. The entrance is off the Railroad Street connector road; look for the mannequin by the door.",
+    "why_special": null,
+    "address": "34 Park Street, Essex Junction, VT 05452",
+    "coords": [
+      44.48881,
+      -73.11196
+    ],
+    "website": "https://sites.google.com/site/karensklosetvt/",
+    "image": null,
+    "has_guide": false,
+    "guide_id": null,
+    "source": "https://sites.google.com/site/karensklosetvt/",
+    "last_verified": "2026-10",
+    "guide_kinds": [
+      "Thrift"
+    ],
+    "hours": {
+      "mon": null,
+      "tue": "11:00-18:00",
+      "wed": "11:00-18:00",
+      "thu": "11:00-18:00",
+      "fri": "11:00-18:00",
+      "sat": "11:00-16:00",
+      "sun": "11:00-15:00"
+    },
+    "hours_note": "Closed Oct 29 to Nov 1; call first in bad weather",
+    "phone": "802-878-1166",
+    "checked": {
+      "date": "2026-10-17",
+      "source": "https://sites.google.com/site/karensklosetvt/",
+      "note": "Address, phone and hours from the shop's own Google Sites page: 'NORMAL HOURS: Tuesday - Friday 11 am - 6 pm (closed Mondays) Saturday 11 am - 4 pm Sunday 11 am - 3 pm', 'Location: 34 Park Street Essex Junction VT, 05452', 'Questions? Call 802-878-1166'. The page also says 'Store will be closed 10/29, 10/30, 10/31 and 11/1'. Its Instagram bio (@karensklosetvt, posting as recently as 2026-10-16) matches: 'Tu-F 11-6, Sat 11-4, Sun 11-3. Closed 10/29-11/2.' An older self-written Front Porch Forum profile says Tue-Fri 10-6, Sat 10-4; the newer site and bio win. The shop says incoming clothing is now donation based with small consignment exceptions, so it is filed as Thrift. Coordinates: Nominatim, the OSM node tagged Karen's Kloset at 34 Park Street, Essex Junction."
+    }
   },
   {
     "id": "one-farmers-market",

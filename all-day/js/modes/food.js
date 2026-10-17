@@ -14,16 +14,32 @@
    - Open now. data/restaurants.json through js/food-lib.js (the hours engine
      restaurants.html uses, loaded as is), always in Burlington's clock.
      Filter chips: Open now, Open late, Patios, Happy hour, Under $15, Deals,
-     each the same test restaurants.html runs, each with its count. Nearest
-     Church Street first: a distance, never a judgement. A row opens a sheet
-     with today's hours, the menu (data/small-bites.json), the website and
-     "Full reviews on Google" by the place's Google id.
+     each the same test restaurants.html runs, each with its count; then a
+     Breakfast / Lunch / Dinner toggle read off today's hours, and a sort:
+     nearest Church Street (the default, a distance, never a judgement),
+     closest to the reader (only after they allow it), open latest, price,
+     newest. The Map button at the head draws the list as dots with no
+     network at all; tapping it loads Leaflet and OpenStreetMap tiles (the
+     guide's own map stack) into a sheet centred on Church Street, pins the
+     list, and draws the reader's dot once they allow it. The reader's
+     position lives in this module's memory only: never stored, never sent,
+     and the map is never turned to it on its own, so no tile request
+     carries it either. A row opens a sheet with today's
+     hours, the menu (data/small-bites.json), the website and "Full reviews
+     on Google" by the place's Google id.
+   - The directory. all-day/data/food-directory.json maps a place to its own
+     Instagram handle (linked from its own website). A place with its own
+     posts, or with dishes readers sent in through the Weekly Bite, gets a
+     "Their food" button and its newest picture as the row's thumbnail;
+     owners without Instagram get "Feature your restaurant", a mailto.
    - Deals. data/deals.json as a story deck: today's deals that carry a
      verified date and no open conflict between sources, happening-now first,
-     then later today, then the untimed ones. Tap the right side for the next
-     card, the left for the previous. The verified date is on every card.
+     then later today, then the untimed ones. Tap the right side (or the ›)
+     for the next card, the left for the previous. The verified date is on
+     every card, and the place's own food picture behind it when it has one.
    - In their own words. Reels from the kitchens and food accounts tagged in
-     data/instagram-handles.json (`food`), from all-day/data/instagram.json.
+     data/instagram-handles.json (`food`) or listed in the directory, from
+     all-day/data/instagram.json, minus the directory's `not_food` accounts.
      A reel plays only on a tap, in the shell's one video box. Its MP4 is
      signed for about a day and a half, so one about to lapse is shown as a
      photo instead; with no reels at all, the accounts' latest photos.
@@ -37,7 +53,7 @@
 import * as app from '../app.js';
 import * as store from '../store.js';
 import * as data from '../wire.js';
-import { el, esc, safeHref, ICON, art, mark, section, rail, chips, button, agoShort } from '../ui.js';
+import { el, esc, safeHref, ICON, art, mark, section, rail, chips, pills, button, agoShort } from '../ui.js';
 
 const KEY = 'food';
 const RESTAURANTS_URL = '../data/restaurants.json';
@@ -47,7 +63,19 @@ const ROSTER_URL = '../data/instagram-handles.json';
 const FOOD_LIB = '../js/food-lib.js';
 const PHOTOS_LIB = '../js/photos-lib.js';
 const GUIDE_URL = '../restaurants.html';
-const DEALS_PAGE = '../restaurants.html?view=deals';
+const DEALS_PAGE = '../restaurants.html?view=deals';   // deals.html redirects here
+const DIRECTORY_URL = './data/food-directory.json';
+/* the guide's own map stack (events.html, things-to-do.html): Leaflet from
+   unpkg with its integrity hashes, OpenStreetMap's tiles, loaded on the
+   first tap of Map and never before */
+const LEAFLET = {
+  js: 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js', jsSri: 'sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=',
+  css: 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css', cssSri: 'sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=',
+};
+const TILES = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+const TILE_CREDIT = '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>';
+const OWNER_MAIL = 'btownbrief@gmail.com';
+const FAR_MI = 40;                         // a reader further than this from Church St is not "near" anything here
 const CHURCH_ST = [44.4758, -73.2128];   // food-lib's anchor for "walkable"
 const FIRST_ROWS = 12;                     // the list opens in place past these
 const DECK_MAX = 12;                       // cards before the deck's end card
@@ -61,8 +89,10 @@ const SECTIONS = [['bite', 'The Bite'], ['open', 'Open now'], ['deals', 'Deals']
 
 /* ------------------------------------------------------------------ state */
 const S = {
-  f: 'open', all: false, deal: 0,
-  places: null, byId: null, deals: null, menus: null, foodSet: null, posts: null, dish: undefined,
+  f: 'open', all: false, deal: 0, sort: 'near', meal: 'any',
+  places: null, byId: null, deals: null, menus: null, foodSet: null, posts: null, dish: undefined, dishes: [],
+  dir: null, igBy: new Map(), dishBy: new Map(),
+  me: null,                  // [lat, lon] once the reader allows it; memory only
   menusFailed: false, igFailed: false, drawn: 0,
 };
 let F = null;                // window.BTFood, the hours engine
@@ -108,22 +138,23 @@ function load() {
 function loadLater() {
   if (app.demo) {
     demoFile().then((d) => {
-      takeMenus(d.menus); takeRoster(d.roster); takeInstagram(d.instagram);
-      S.dish = d.dish && d.dish.category === 'dish' ? d.dish : null;
-      paint('open'); paint('kitchens'); paint('bite');
+      takeMenus(d.menus); takeRoster(d.roster); takeDirectory(d.directory); takeInstagram(d.instagram);
+      takeDishes(d.dishes);
+      paint('bite'); paint('open'); paint('deals'); paint('kitchens');
     });
     return;
   }
   data.fetchJSON(MENUS_URL, 15000).then((j) => { takeMenus(j); paint('open'); })
     .catch(() => { S.menusFailed = true; });
   const roster = data.fetchJSON(ROSTER_URL, 8000).then(takeRoster).catch(() => takeRoster({}));
-  const ig = new Promise((res) => data.load('instagram', (j) => { takeInstagram(j); res(); if (ready && S.foodSet) paint('kitchens'); },
+  const dir = data.fetchJSON(DIRECTORY_URL, 8000).then(takeDirectory).catch(() => takeDirectory({}));
+  const ig = new Promise((res) => data.load('instagram', (j) => { takeInstagram(j); res(); if (ready && S.foodSet && S.dir) { paint('kitchens'); paint('open'); paint('deals'); } },
     () => { S.igFailed = true; res(); }));
-  Promise.all([roster, ig]).then(() => paint('kitchens'));
+  Promise.all([roster, dir, ig]).then(() => { paint('kitchens'); paint('open'); paint('deals'); });
   script(PHOTOS_LIB).then(() => window.BTBP.getApproved())
-    .then(({ photos }) => { S.dish = (photos || []).find((p) => p && p.category === 'dish' && p.url) || null; })
-    .catch(() => { S.dish = null; })
-    .then(() => paint('bite'));
+    .then(({ photos }) => takeDishes(photos))
+    .catch(() => takeDishes([]))
+    .then(() => { paint('bite'); paint('open'); paint('deals'); });
 }
 
 /* restaurants.json lists a dozen places twice (two names for one Google
@@ -174,8 +205,46 @@ function takeRoster(j) {
   S.foodSet = new Set((j && Array.isArray(j.food) ? j.food : []).map((h) => String(h).replace(/^@/, '').toLowerCase()));
 }
 
+/* The directory: restaurant id to the place's own handle, and the accounts
+   tagged food that are not about food. */
+const handle = (h) => String(h || '').replace(/^@/, '').trim().toLowerCase();
+function takeDirectory(j) {
+  const places = Object.create(null);
+  const src = j && j.places && typeof j.places === 'object' ? j.places : {};
+  Object.keys(src).forEach((id) => { const h = handle(src[id]); if (/^[a-z0-9_.]{1,30}$/.test(h)) places[id] = h; });
+  const nf = j && j.not_food && typeof j.not_food === 'object' ? Object.keys(j.not_food) : [];
+  S.dir = { places, handles: new Set(Object.values(places)), notFood: new Set(nf.map(handle)) };
+  indexFood();
+}
+
 function takeInstagram(j) {
   S.posts = j && Array.isArray(j.posts) ? j.posts.filter((p) => p && p.h && p.u && p.i) : [];
+  indexFood();
+}
+
+/* every approved reader dish, newest first; the first is the Weekly Bite */
+function takeDishes(list) {
+  S.dishes = (Array.isArray(list) ? list : []).filter((p) => p && p.category === 'dish' && p.url);
+  S.dish = S.dishes[0] || null;
+  indexFood();
+}
+
+/* Who posted what, and which dishes belong to which place, worked out once
+   per payload rather than once per row. */
+function indexFood() {
+  S.igBy = new Map();
+  (S.posts || []).slice().sort((a, b) => b.ts - a.ts).forEach((p) => {
+    const h = handle(p.h);
+    if (!S.igBy.has(h)) S.igBy.set(h, []);
+    S.igBy.get(h).push(p);
+  });
+  S.dishBy = new Map();
+  if (S.places) S.dishes.forEach((d) => {
+    const r = placeByName(d.spot);
+    if (!r) return;
+    if (!S.dishBy.has(r.id)) S.dishBy.set(r.id, []);
+    S.dishBy.get(r.id).push(d);
+  });
 }
 
 /* The demo file is written on 2026-10-16: its Instagram times and the reels'
@@ -237,7 +306,72 @@ const FILTERS = [
   { key: 'deal', label: 'Deals', test: (r, t) => dealsAt(r).some((d) => F.dealAppliesToday(d, t)) },
 ];
 const filterOf = (k) => FILTERS.find((f) => f.key === k) || FILTERS[0];
-const listFor = (k, t) => S.places.filter((r) => filterOf(k).test(r, t));
+const listFor = (k, t) => S.places.filter((r) => filterOf(k).test(r, t) && servesMeal(r, S.meal, t.day));
+
+/* Breakfast, lunch, dinner: read off today's hours. A place serves the meal
+   when it is open for at least half of the meal's window (7 to 10 am,
+   11 am to 2 pm, 5 to 9 pm). A window whose close is not after its open
+   runs past midnight; the same open and close is around the clock. */
+const MEALS = [['any', 'Any time'], ['breakfast', 'Breakfast'], ['lunch', 'Lunch'], ['dinner', 'Dinner']];
+const MEAL_WIN = { breakfast: [7 * 60, 10 * 60], lunch: [11 * 60, 14 * 60], dinner: [17 * 60, 21 * 60] };
+function servesMeal(r, meal, day) {
+  const w = MEAL_WIN[meal];
+  if (!w) return true;
+  if (!hasHours(r)) return false;
+  const enough = (a, b) => Math.min(b, w[1]) - Math.max(a, w[0]) >= (w[1] - w[0]) / 2;
+  const win = (o, c) => { const a = F.toMin(o), b = F.toMin(c); return a === null || b === null ? null : [a, b]; };
+  /* last night's window that runs past midnight counts this morning */
+  const spill = (r.hours[DAYS[(DAYS.indexOf(day) + 6) % 7]] || []).some(([o, c]) => { const x = win(o, c); return x && x[1] < x[0] && enough(0, x[1]); });
+  return spill || (r.hours[day] || []).some(([o, c]) => { const x = win(o, c); return x && enough(x[0], x[1] > x[0] ? x[1] : x[1] + 1440); });
+}
+const DAYS = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
+
+/* The sorts. Nearest Church Street is the list's own order (takePlaces);
+   the rest keep it as the tiebreak. */
+const PRICE = { '$': 1, '$$': 2, '$$$': 3, '$$$$': 4 };
+const SORTS = [
+  { key: 'near', label: 'Nearest Church St', sub: 'nearest first' },
+  { key: 'me', label: 'Closest to me', sub: 'closest to you' },
+  { key: 'late', label: 'Open latest', sub: 'open latest first' },
+  { key: 'price', label: 'Price', sub: 'cheapest first' },
+  { key: 'new', label: 'Newest', sub: 'newest first', when: () => S.places.some((r) => r.opened) },
+];
+const sortOf = (k) => SORTS.find((x) => x.key === k) || SORTS[0];
+const fromMe = (r) => (S.me && r.coords && r.coords.length === 2 ? miles(r.coords, S.me) : null);
+function sorted(list, t) {
+  const k = S.sort === 'me' && !S.me ? 'near' : S.sort;
+  if (k === 'near') return list;
+  const key = {
+    me: (r) => { const m = fromMe(r); return m == null ? 1e6 : m; },
+    late: (r) => { const c = hasHours(r) ? F.latestCloseTonight(r.hours, t.day) : null; return c == null ? 1e6 : -c; },
+    price: (r) => PRICE[r.price] || 9,
+    new: (r) => (/^\d{4}-\d{2}/.test(r.opened || '') ? -Number(r.opened.slice(0, 4) + r.opened.slice(5, 7)) : 1e6),
+  }[k];
+  const at = new Map(list.map((r, i) => [r, i]));
+  return list.slice().sort((a, b) => key(a) - key(b) || at.get(a) - at.get(b));
+}
+const openedText = (ym) => { const [y, m] = String(ym || '').split('-').map(Number); return y && m ? 'opened ' + MONTHS[m - 1] + ' ' + y : ''; };
+
+/* --------------------------------------------------------- the directory */
+/* A place's own handle(s), its own posts (newest first, pictures that have
+   not lapsed) and the dishes readers sent in for it. */
+function handlesOf(r) {
+  if (!S.dir) return [];
+  return [...new Set(r.aka.map((id) => S.dir.places[id]).filter(Boolean))].filter((h) => !S.dir.notFood.has(h));
+}
+function foodOf(r) {
+  const nowS = Date.now() / 1000;
+  const hs = handlesOf(r);
+  const posts = hs.flatMap((h) => S.igBy.get(h) || []).filter((p) => pictureOk(p, nowS)).sort((a, b) => b.ts - a.ts);
+  return { handle: hs[0] || '', posts, dishes: S.dishBy.get(r.id) || [] };
+}
+/* the newest of its reader dishes and its own posts */
+function thumbOf(f) {
+  const d = f.dishes[0], p = f.posts[0];
+  const dTs = d ? (Date.parse(d.approved_on || '') / 1000 || 0) : -1;
+  if (d && (!p || dTs >= Number(p.ts || 0))) return d.url;
+  return p ? p.i : '';
+}
 
 /* What it is: the first cuisine that names a kind of food, else the category. */
 const NOT_A_KIND = new Set(['lunch', 'outdoor dining', 'other', 'romantic', 'activities']);
@@ -355,10 +489,25 @@ function placeByName(name) {
 function paintOpen(host) {
   const t = now();
   const f = filterOf(S.f);
-  const list = listFor(f.key, t);
-  section(host, 'Open now', '<b>' + esc(plural(list.length, 'place', 'places')) + '</b> · nearest first');
+  const list = sorted(listFor(f.key, t), t);
+  const by = S.sort === 'me' && !S.me ? sortOf('near') : sortOf(S.sort);
+  section(host, 'Open now', '<b>' + esc(plural(list.length, 'place', 'places')) + '</b> · ' + esc(by.sub), mapButton(list));
   host.appendChild(chips(FILTERS.map((x) => ({ key: x.key, label: x.label, n: listFor(x.key, t).length })), S.f,
     (k) => { S.f = k; S.all = false; paint('open'); }, 'filters'));
+  const tools = el('div', 'toolrow foodtools');
+  const meal = pills(MEALS, S.meal, (v) => { S.meal = v; S.all = false; paint('open'); }, 'meals');
+  meal.setAttribute('aria-label', 'Meal');
+  const sel = el('select', 'field fsort');
+  sel.setAttribute('aria-label', 'Sort');
+  SORTS.filter((x) => !x.when || x.when()).forEach((x) => {
+    const o = el('option', '', esc(x.label));
+    o.value = x.key;
+    o.selected = x.key === by.key;
+    sel.appendChild(o);
+  });
+  sel.addEventListener('change', () => setSort(sel.value));
+  tools.append(meal, sel);
+  host.appendChild(tools);
   const box = el('div', 'places');
   const shown = S.all ? list : list.slice(0, FIRST_ROWS);
   shown.forEach((r) => box.appendChild(placeRow(r, t)));
@@ -367,31 +516,160 @@ function paintOpen(host) {
     host.appendChild(el('p', 'note pad', esc(f.key === 'open' || f.key === 'patio' ? 'Nothing open right now.' : 'Nothing fits that today.')));
   } else if (list.length > shown.length) {
     host.appendChild(button('All ' + list.length + ' ' + ICON.arrow, 'ghost more', () => { S.all = true; paint('open'); }));
-  } else {
-    const r = el('div', 'addrow');
-    r.appendChild(outLink('All restaurants', GUIDE_URL, 'btn ghost sm', true));
-    host.appendChild(r);
   }
+  const r = el('div', 'addrow linkrow');
+  if (list.length <= shown.length) r.appendChild(outLink('All restaurants', GUIDE_URL, 'btn ghost sm', true));
+  r.appendChild(button('Feature your restaurant', 'ghost sm owner', () => ownerSheet(null)));
+  host.appendChild(r);
+}
+
+/* Closest to me asks for the reader's position the first time; if they say
+   no (or are nowhere near), the list stays on Church Street and says so. */
+function setSort(k) {
+  if (k !== 'me') { S.sort = k; S.all = false; paint('open'); return; }
+  locate().then(() => { S.sort = 'me'; S.all = false; paint('open'); })
+    .catch((e) => {
+      S.sort = 'near'; paint('open');
+      app.toast(e && e.far ? 'You’re not near Burlington. Sorted from Church St.' : 'Location is off. Sorted from Church St.');
+    });
+}
+
+/* The reader's position: asked for only on a tap, kept in this module for
+   the visit, never written down, never sent anywhere. */
+function locate() {
+  if (S.me) return Promise.resolve(S.me);
+  if (!navigator.geolocation) return Promise.reject(new Error('no location'));
+  return new Promise((resolve, reject) => {
+    navigator.geolocation.getCurrentPosition((pos) => {
+      const at = [pos.coords.latitude, pos.coords.longitude];
+      if (!at.every(Number.isFinite)) { reject(new Error('no location')); return; }
+      if (miles(at, CHURCH_ST) > FAR_MI) { const e = new Error('far'); e.far = true; reject(e); return; }
+      S.me = at;
+      resolve(at);
+    }, reject, { enableHighAccuracy: false, timeout: 10000, maximumAge: 300000 });
+  });
 }
 
 function placeRow(r, t) {
   const st = status(r, t);
   const row = el('div', 'lrow place');
   row.dataset.k = 'r-' + r.id;
-  const meta = [r.neighborhood, kind(r), milesText(r.mi)].filter(Boolean).map(esc).join(' · ');
+  const mi = S.sort === 'me' && S.me ? fromMe(r) : r.mi;
+  const extra = S.sort === 'price' ? r.price : S.sort === 'new' ? openedText(r.opened) : '';
+  const meta = [r.neighborhood, kind(r), extra, milesText(mi)].filter(Boolean).map(esc).join(' · ');
   const order = orderLine(r);
   const open = el('button', 'open', '<div class="t">' + esc(r.name) + '</div><div class="s">' + meta + ' · <span class="' + (st.open ? 'ok' : '') + '">' + esc(st.text) + '</span></div>' +
     (order ? '<div class="s">' + esc(order) + '</div>' : ''));
   open.setAttribute('aria-label', r.name + ', ' + st.text + '. More about it');
   open.addEventListener('click', () => placeSheet(r));
-  row.append(el('span', 'th bare', mark(r.name, 'round')), open);
+  const fd = foodOf(r);
+  const pic = thumbOf(fd);
+  row.append(pic ? el('span', 'th', art(pic)) : el('span', 'th bare', mark(r.name, 'round')), open);
+  const acts = el('div', 'placeacts');
+  if (fd.posts.length || fd.dishes.length) {
+    const b = el('button', 'pillbtn theirs', esc('Their food'));
+    b.setAttribute('aria-label', 'Their food at ' + r.name);
+    b.addEventListener('click', () => foodSheet(r));
+    acts.appendChild(b);
+  }
   const menu = menuOf(r);
   if (menu) {
     const a = outLink('Menu', menu, 'pillbtn');
     a.setAttribute('aria-label', 'Menu for ' + r.name);
-    row.appendChild(a);
+    acts.appendChild(a);
   }
+  if (acts.children.length) row.appendChild(acts);
   return row;
+}
+
+/* ---------------------------------------------------------------- the map */
+/* The button's picture is the list itself: a dot per place around Church
+   Street (or the reader, once they have allowed it), drawn here with no
+   tiles and no library, so it costs nothing until it is tapped. */
+function mapButton(list) {
+  const c = S.me || CHURCH_ST;
+  const W = 72, H = 44, halfLon = 0.022, halfLat = halfLon * Math.cos(c[0] * Math.PI / 180) * H / W;
+  const dots = list.filter((r) => r.coords && Math.abs(r.coords[0] - c[0]) < halfLat && Math.abs(r.coords[1] - c[1]) < halfLon).slice(0, 60)
+    .map((r) => '<circle class="fm-dot" r="2.2" cx="' + (W / 2 + (r.coords[1] - c[1]) / halfLon * W / 2).toFixed(1) + '" cy="' + (H / 2 - (r.coords[0] - c[0]) / halfLat * H / 2).toFixed(1) + '"/>').join('');
+  const b = el('button', 'mapbtn', '<svg class="fm-mini" viewBox="0 0 ' + W + ' ' + H + '" aria-hidden="true"><rect class="fm-ground" width="' + W + '" height="' + H + '"/>' +
+    '<path class="fm-street" d="M0 ' + H / 2 + 'H' + W + 'M' + W / 2 + ' 0V' + H + '"/>' + dots + '<circle class="fm-here" r="3.6" cx="' + W / 2 + '" cy="' + H / 2 + '"/></svg><span>' + esc('Map') + '</span>');
+  b.setAttribute('aria-label', 'Map of ' + plural(list.length, 'place', 'places'));
+  b.addEventListener('click', () => openMap());
+  return b;
+}
+
+let leafletP = null;
+function loadLeaflet() {
+  if (window.L && window.L.map) return Promise.resolve(window.L);
+  if (!leafletP) {
+    if (!document.querySelector('link[data-leaflet]')) {
+      const css = document.createElement('link');
+      css.rel = 'stylesheet'; css.href = LEAFLET.css; css.integrity = LEAFLET.cssSri; css.crossOrigin = '';
+      css.dataset.leaflet = '1';
+      document.head.appendChild(css);
+    }
+    leafletP = new Promise((resolve, reject) => {
+      const js = document.createElement('script');
+      js.src = LEAFLET.js; js.integrity = LEAFLET.jsSri; js.crossOrigin = '';
+      js.onload = () => (window.L && window.L.map ? resolve(window.L) : reject(new Error('no Leaflet')));
+      js.onerror = () => { leafletP = null; js.remove(); reject(new Error('no Leaflet')); };
+      document.head.appendChild(js);
+    });
+  }
+  return leafletP;
+}
+
+let M = null;                // the Leaflet map while its sheet is up
+function dropMap() { if (M) { try { M.remove(); } catch (e) { /* already gone */ } M = null; } }
+
+function openMap() {
+  const t = now();
+  const f = filterOf(S.f);
+  const list = sorted(listFor(f.key, t), t).filter((r) => r.coords && r.coords.length === 2);
+  app.sheet('Map', (body) => {
+    body.appendChild(el('p', 'sheet-note', '<b>' + esc(plural(list.length, 'place', 'places')) + '</b> · ' + esc(f.label.toLowerCase())));
+    const box = el('div', 'foodmap');
+    box.dataset.k = 'map';
+    const bar = el('div', 'linkrow');
+    const near = button(ICON.pin + ' ' + esc('Near me'), 'ghost sm nearme', () => {
+      locate().then(() => { placeMe(); paint('open'); })
+        .catch((e) => app.toast(e && e.far ? 'You’re not near Burlington.' : 'Location is off.'));
+    });
+    bar.appendChild(near);
+    body.append(box, bar);
+    dropMap();
+    loadLeaflet().then((L) => {
+      if (!box.isConnected) return;
+      M = L.map(box, { zoomControl: true, attributionControl: true }).setView(CHURCH_ST, S.me ? 14 : 15);
+      L.tileLayer(TILES, { maxZoom: 19, attribution: TILE_CREDIT }).addTo(M);
+      list.forEach((r) => {
+        const pin = L.circleMarker(r.coords, { radius: 7, weight: 2, className: 'fm-pin' + (isOpen(r, t) ? ' open' : '') }).addTo(M);
+        pin.bindTooltip(esc(r.name));
+        pin.on('click', () => placeSheet(r));
+      });
+      if (S.me) placeMe();
+      else if (navigator.permissions && navigator.permissions.query) {
+        /* already allowed on an earlier visit: no need to ask again */
+        navigator.permissions.query({ name: 'geolocation' }).then((p) => { if (p.state === 'granted') locate().then(() => { placeMe(); paint('open'); }).catch(() => {}); }).catch(() => {});
+      }
+      setTimeout(() => { if (M) M.invalidateSize(); }, 80);
+    }).catch(() => {
+      if (box.isConnected) box.replaceWith(el('p', 'note pad', esc('The map didn’t load.')));
+    });
+  });
+}
+
+/* the reader's own dot, and the map turned to it */
+let mePin = null;
+function placeMe() {
+  if (!M || !S.me || !window.L || !M.getContainer().isConnected) return;
+  if (mePin) { try { mePin.remove(); } catch (e) { /* gone with its map */ } }
+  mePin = window.L.circleMarker(S.me, { radius: 8, weight: 3, className: 'fm-me', interactive: false }).addTo(M);
+  /* the map stays on Church Street and the dot is drawn here: turning the
+     map to the reader would ask the tile server for their neighbourhood */
+  M.setZoom(14);
+  const near = document.querySelector('.sheet-body .nearme');
+  if (near) near.hidden = true;
 }
 
 function placeSheet(r) {
@@ -432,6 +710,67 @@ function placeSheet(r) {
     links.appendChild(g);
     links.appendChild(button(ICON.share + ' Share', 'ghost sm', () => app.share(KEY, 'r-' + r.id, r.name)));
     body.appendChild(links);
+    const own = el('div', 'linkrow');
+    const fd = foodOf(r);
+    if (fd.posts.length || fd.dishes.length) own.appendChild(button('Their food', 'ghost sm theirs', () => foodSheet(r)));
+    own.appendChild(button('Feature your restaurant', 'ghost sm owner', () => ownerSheet(r)));
+    body.appendChild(own);
+  });
+}
+
+/* Their food: the place in its own words. Dishes readers sent in through the
+   Weekly Bite first (a place with no Instagram still has these), then its
+   own posts and reels. A reel plays in the shell's one video box. */
+function foodSheet(r) {
+  const fd = foodOf(r);
+  app.sheet(r.name, (body, card, close) => {
+    card.classList.add('theirfood');
+    const grid = el('div', 'fgrid');
+    fd.dishes.forEach((d) => grid.appendChild(dishTile(d)));
+    fd.posts.slice(0, RAIL_MAX).forEach((p) => grid.appendChild(postTile(p, close)));
+    body.appendChild(grid.children.length ? grid : el('p', 'sheet-note', esc('No dishes here yet.')));
+    const links = el('div', 'linkrow');
+    if (fd.handle) links.appendChild(outLink('@' + fd.handle, 'https://www.instagram.com/' + encodeURIComponent(fd.handle) + '/', 'btn ghost sm insta'));
+    links.appendChild(button('Feature a dish', 'ghost sm', () => { close(); jump('add'); }));
+    links.appendChild(button('Feature your restaurant', 'ghost sm owner', () => ownerSheet(r)));
+    body.appendChild(links);
+  });
+}
+
+function dishTile(d) {
+  const b = el('button', 'ftile dish', '<span class="c-media r11">' + art(d.url) + '</span><span class="s">' +
+    esc([trim(d.caption, 60), d.credit ? 'sent in by ' + d.credit : ''].filter(Boolean).join(' · ')) + '</span>');
+  b.dataset.k = 'dish-' + String(d.id || '');
+  b.setAttribute('aria-label', trim(d.caption, 60) || 'A dish');
+  b.addEventListener('click', () => app.lightbox({ media: d.url, title: d.caption, text: d.caption }));
+  return b;
+}
+
+function postTile(p, close) {
+  const clip = hasClip(p, Date.now() / 1000);
+  const a = el('a', 'ftile post' + (clip ? ' clip' : ''), '<span class="c-media r11">' + art(p.i) + (clip ? '<span class="play">' + ICON.play + '</span>' : '') + '</span>' +
+    '<span class="s">' + esc([trim(p.c, 50), when(p)].filter(Boolean).join(' · ')) + '</span>');
+  a.href = safeHref(p.u);
+  a.dataset.k = keyOf(p);
+  if (clip) {
+    a.setAttribute('aria-label', 'Play the video from ' + who(p));
+    a.addEventListener('click', (e) => { e.preventDefault(); close(); openClip(p); });
+  } else {
+    a.target = '_blank'; a.rel = 'noopener';
+    if (app.demo) a.addEventListener('click', (e) => { e.preventDefault(); app.toast('Opens the post on Instagram in the real build'); });
+  }
+  return a;
+}
+
+/* Owners: send a clip of your own dishes, we add it free. A mailto, no form. */
+function ownerSheet(r) {
+  app.sheet('Feature your restaurant', (body) => {
+    body.appendChild(el('p', 'sheet-note', esc('Send a clip of your own dishes. We add it free.')));
+    const row = el('div', 'linkrow');
+    const a = el('a', 'btn mailto', ICON.mail + ' ' + esc('Email a clip'));
+    a.href = 'mailto:' + OWNER_MAIL + '?subject=' + encodeURIComponent('Feature my restaurant' + (r ? ': ' + r.name : ''));
+    row.appendChild(a);
+    body.appendChild(row);
   });
 }
 
@@ -462,13 +801,14 @@ function paintDeals(host) {
   const t = now();
   const all = deck(t);
   const cards = all.slice(0, DECK_MAX);
-  section(host, 'Deals today', all.length ? '<b>' + esc(plural(all.length, 'deal', 'deals')) + '</b> · now first' : null);
+  const every = outLink('See all deals', DEALS_PAGE, 'btn ghost sm alldeals', true);
+  section(host, 'Deals today', all.length ? '<b>' + esc(plural(all.length, 'deal', 'deals')) + '</b> · now first' : null, every);
   if (!cards.length) {
     host.appendChild(el('p', 'note pad', esc('No deals on today.')));
     return;
   }
   if (S.deal > cards.length) S.deal = 0;
-  const box = el('div', 'deck');
+  const box = el('div', 'deck deals');
   box.setAttribute('role', 'region');
   box.setAttribute('aria-roledescription', 'deck');
   box.setAttribute('aria-label', 'Deals today');
@@ -477,7 +817,8 @@ function paintDeals(host) {
   const draw = () => {
     const i = S.deal;
     const segs = '<div class="segs">' + Array.from({ length: n }, (_, j) => '<i class="' + (j <= i ? 'on' : '') + '"></i>').join('') + '</div>';
-    const hits = '<button class="hit l" aria-label="Previous deal"></button><button class="hit r" aria-label="Next deal"></button>';
+    const hits = '<button class="hit l" aria-label="Previous deal"></button><button class="hit r" aria-label="Next deal"></button>' +
+      '<button class="next" tabindex="-1" aria-hidden="true">' + ICON.right + '</button>';
     if (i === cards.length) {
       box.dataset.k = 'deals-end';
       box.innerHTML = tint('deals-end') + segs + '<div class="body"><h3>' + esc('That’s all.') + '</h3><div class="row"></div></div>' + hits;
@@ -486,7 +827,8 @@ function paintDeals(host) {
       const x = cards[i];
       box.dataset.k = 'd-' + x.d.id;
       const where = [x.d.business, x.r && x.r.neighborhood].filter(Boolean).join(' · ');
-      box.innerHTML = tint(x.d.id) + segs + '<div class="body"><div class="eyebrow">' + esc(eyebrowOf(x)) + '</div><h3>' + esc(x.d.title) + '</h3>' +
+      const pic = x.r ? thumbOf(foodOf(x.r)) : '';
+      box.innerHTML = (pic ? art(pic) : tint(x.d.id)) + segs + '<div class="body"><div class="eyebrow">' + esc(eyebrowOf(x)) + '</div><h3>' + esc(x.d.title) + '</h3>' +
         '<p>' + esc(where) + '</p><p class="verified">' + esc(verified(x.d.last_verified, t)) + '</p><div class="row"></div></div>' + hits;
       const row = box.querySelector('.row');
       if (x.r) row.appendChild(button('The place', 'ghost sm', () => placeSheet(x.r)));
@@ -494,6 +836,7 @@ function paintDeals(host) {
     }
     box.querySelector('.hit.l').addEventListener('click', () => go(S.deal - 1));
     box.querySelector('.hit.r').addEventListener('click', () => go(S.deal + 1));
+    box.querySelector('.next').addEventListener('click', () => go(S.deal + 1));
   };
   draw();
   box.addEventListener('keydown', (e) => {
@@ -516,12 +859,18 @@ function tint(id) {
 /* ------------------------------------------------------- In their own words */
 const sigExpiry = (u) => { const m = /[?&]oe=([0-9a-f]+)/i.exec(String(u || '')); return m ? parseInt(m[1], 16) : null; };
 const pictureOk = (p, nowS) => { const e = sigExpiry(p.i); return e === null || e > nowS; };
-const isFood = (p) => p.f === 1 || (S.foodSet && S.foodSet.has(String(p.h).toLowerCase()));
+/* food: tagged by the builder, tagged in the roster, or a place's own
+   account in the directory; never one the directory says is not food */
+const isFood = (p) => {
+  const h = handle(p.h);
+  if (S.dir && S.dir.notFood.has(h)) return false;
+  return p.f === 1 || !!(S.foodSet && S.foodSet.has(h)) || !!(S.dir && S.dir.handles.has(h));
+};
 const keyOf = (p) => { const m = /\/(?:p|reel)\/([A-Za-z0-9_-]+)/.exec(p.u); return 'ig-' + (m ? m[1] : p.h + '-' + p.ts); };
 const hasClip = (p, nowS) => typeof p.vu === 'string' && /^https:\/\//.test(p.vu) && Number(p.ve) - nowS > VIDEO_MARGIN;
 
 function paintKitchens(host) {
-  if (!S.posts || !S.foodSet) {
+  if (!S.posts || !S.foodSet || !S.dir) {
     section(host, 'In their own words');
     host.appendChild(S.igFailed ? el('p', 'note pad', esc('Didn’t load. Try again later.')) : el('p', 'loading', 'Loading the kitchens…'));
     return;
@@ -658,13 +1007,15 @@ function submitDish(form) {
 const panel = () => (root ? root.closest('.panel') : null);
 function jump(k) { if (slots && slots[k]) app.jumpTo(slots[k]); }
 
-/* #food/bite|open|deals|kitchens|add jumps to a section; a filter key
+/* #food/bite|open|deals|kitchens|add jumps to a section; #food/map opens
+   the map; a filter key
    (late, patio, hh, cheap, deal) sets the filter; r-<id> opens a place;
    d-<id> turns the deck to that deal; ig-<code> a kitchen's post. */
 function land() {
   if (!pending || !ready) return;
   const k = pending; pending = null;
   if (SECTIONS.some(([s]) => s === k) && k !== 'open') { jump(k); return; }
+  if (k === 'map') { jump('open'); openMap(); return; }
   if (FILTERS.some((f) => f.key === k)) { S.f = k; S.all = false; paint('open'); jump('open'); return; }
   if (/^r-/.test(k)) {
     const r = S.byId[k.slice(2)];
@@ -710,7 +1061,7 @@ app.register(KEY, {
     land();
   },
   refresh() { if (ready) { paint('bite'); paint('open'); paint('deals'); paint('kitchens'); } },
-  deactivate() { app.closeVideo(); },
+  deactivate() { app.closeVideo(); if (M && !M.getContainer().isConnected) dropMap(); },
   subnav() {
     if (!ready) return null;
     const t = now();

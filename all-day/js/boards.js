@@ -1,9 +1,10 @@
 /* boards.js — reader posts, for every tab that has them, built once.
 
-   The People, Vintage, Art and Watchlist tabs all need the same few things:
-   a reader who is known, a place to post, votes, reports, an expiry and a
-   way to take a post down. This module is that, on the fleet's Supabase
-   project under the nn_ prefix (supabase/nn-SETUP.sql, then nn-ROUND2.sql), with the rules in
+   The People, Vintage, Art, Watchlist, Games, Square and Gatherings boards
+   all need the same few things: a reader who is known, a place to post,
+   votes, reports, an expiry and a way to take a post down. This module is
+   that, on the fleet's Supabase project under the nn_ prefix
+   (supabase/nn-SETUP.sql, then nn-ROUND2.sql to nn-ROUND4.sql), with the rules in
    boards-core.js and an in-memory copy of the server in boards-fake.js for
    ?demo=1. A tab never talks to Supabase about posts itself.
 
@@ -25,9 +26,29 @@
      boards.votesByWeek(board, weeks)  -> { ok, weeks: [{ post, week: '2026-W42', votes }] }
                                        votes counted by the Burlington week they were cast
      boards.report(id, reason)          -> { ok, hidden }
-     boards.profile() -> { ok, profile } boards.setProfile({ display_name, neighborhood, archetype, interests })
-                                       interests left out: the server keeps the ones it has
+     boards.profile() -> { ok, profile } boards.setProfile({ display_name, neighborhood, archetype, interests, handles, handles_public })
+                                       interests, handles or the switch left out: the server keeps what it has
+                                       profile: { display_name, neighborhood, archetype, interests: [],
+                                                  handles: { strava: 'maya_runs', … }, handles_public: false }
+     boards.setHandles(handles, isPublic) -> { ok, profile }
+                                       handles: { instagram, spotify, strava, letterboxd, goodreads, beli,
+                                       untappd, psn, xbox, steam, switch, discord, epic, riot, chess, linkedin }
+                                       (any of them; '' or null drops one; the map replaces the old one;
+                                       null keeps it). isPublic: the "show my handles" switch (null keeps it).
+     boards.handlesRecent(kinds, limit) -> { ok, people: [{ display_name, neighborhood, handles, updated_at, me }] }
+                                       signed in only: the most recently updated profiles whose switch is
+                                       on, with their handles of those kinds (all kinds when none are
+                                       given; limit 20 by default, 60 at most). updated_at is a day,
+                                       '2026-10-17'. Never an email or an account id.
+     boards.roundTwo() / boards.roundFour() -> true | false | null (could not ask)
      boards.status()  'unknown' | 'live' | 'off' (the SQL is not pasted yet)
+
+   The Games ('playing', 'lfg'), Square ('post', 'show', 'ask', 'free',
+   'pets') and Gatherings ('gathering') boards go through the same list,
+   create, put, vote and report calls; their fields are in boards-core.js
+   RULES. A gathering waits for Stephen before it shows (create() answers
+   post.status 'pending'), and ends the day after the date its `when` starts
+   with ('2026-10-24, 7 pm'), so a tab should start `when` with that date.
 
    put() and votesByWeek() need nn-ROUND2.sql; until it is pasted they
    answer { ok: false, error: 'off' } and the rest of the boards stay live,
@@ -35,7 +56,11 @@
    two added (a Vintage design or fit, a plan's meetup and ages, a film id)
    are refused by a server without it, so a tab asks boards.roundTwo()
    (true once the server's rules are version 2) before posting one, and
-   posts the old shape until then.
+   posts the old shape until then. Likewise the three new boards and the
+   handles need nn-ROUND4.sql: a tab asks boards.roundFour() (rules version
+   3) before offering to post on one, handlesRecent() answers 'off' until
+   it is pasted, and setProfile() saves everything else and answers
+   handlesSaved: false.
 
    Every call resolves { ok: true, ... } or { ok: false, error, message } and
    never rejects; `message` is a sentence to show as is. Signed-out readers
@@ -50,7 +75,8 @@
 import * as app from './app.js';
 import * as store from './store.js';
 import { el, esc, ICON, agoShort, pills, button, cards } from './ui.js';
-import { RULES, BOARD_LABELS, NEIGHBORHOOD_LABELS, ARCHETYPE_LABELS, REASON_LABELS, INTEREST_LABELS, message, checkPost, checkProfile, leftLabel } from './boards-core.js';
+import { RULES, BOARD_LABELS, NEIGHBORHOOD_LABELS, ARCHETYPE_LABELS, REASON_LABELS, INTEREST_LABELS, HANDLE_LABELS, HANDLE_GROUPS, HANDLE_HINTS,
+  message, checkPost, checkProfile, checkHandles, dateError, leftLabel } from './boards-core.js';
 import { FakeBoards, seedDemo, DEMO_ME } from './boards-fake.js';
 
 const PHOTOS_LIB = '../js/photos-lib.js';
@@ -70,9 +96,9 @@ let state = 'unknown';
 export const status = () => state;
 
 const fail = (error) => ({ ok: false, error, message: message(error) });
-/* round two's own doors (nn-ROUND2.sql): missing, they are 'off' for the
-   call, never for the boards */
-const ROUND2 = new Set(['nn_post_meta_set', 'nn_votes_by_week']);
+/* later rounds' own doors (nn-ROUND2.sql, nn-ROUND4.sql): missing, they
+   are 'off' for the call, never for the boards */
+const ROUND2 = new Set(['nn_post_meta_set', 'nn_votes_by_week', 'nn_handles_recent']);
 
 /* One call to an nn_ function, as the reader. Live, it is a POST to
    PostgREST with the reader's token when signed in; the server's refusal
@@ -108,22 +134,25 @@ function call(fn, args) {
 
 const changed = (board, id, what) => window.dispatchEvent(new CustomEvent('allday-boards', { detail: { board, id, what } }));
 
-/* Has Stephen pasted nn-ROUND2.sql? The server's rules say: version 2 or
-   later. Resolves true or false once the server has answered, and null
-   when it could not be asked (offline): a tab then posts the old shape,
-   which both servers take, and does nothing it cannot undo. Asked once a
-   visit; an unanswered ask is asked again next time. */
-let two = null;
-export function roundTwo() {
-  if (app.demo) return Promise.resolve(true);
-  if (!two) {
-    two = call('nn_rules').then((r) => {
-      if (!r.ok) { two = null; return null; }
-      return Number(r.data && r.data.version) >= 2;
+/* Which rounds has Stephen pasted? The server's rules say: version 2 is
+   nn-ROUND2.sql, version 3 is nn-ROUND4.sql. Each resolves true or false
+   once the server has answered, and null when it could not be asked
+   (offline): a tab then posts the old shape, which every server takes, and
+   does nothing it cannot undo. Asked once a visit; an unanswered ask is
+   asked again next time. */
+let ver = null;
+function rulesVersion() {
+  if (app.demo) return Promise.resolve(RULES.version);
+  if (!ver) {
+    ver = call('nn_rules').then((r) => {
+      if (!r.ok) { ver = null; return null; }
+      return Number(r.data && r.data.version) || 1;
     });
   }
-  return two;
+  return ver;
 }
+export const roundTwo = () => rulesVersion().then((v) => (v == null ? null : v >= 2));
+export const roundFour = () => rulesVersion().then((v) => (v == null ? null : v >= 3));
 
 /* --------------------------------------------------------------- photos */
 /* A post's photo path, as something art() can draw: the public bucket URL
@@ -176,8 +205,15 @@ function sendPhoto(board, file, title, prof) {
 let me;              // undefined: not asked yet; null: no profile; else the profile
 let meAsk = null;
 app.onAuth(() => { me = undefined; meAsk = null; });
-/* a profile always has its interests, [] before nn-ROUND2.sql */
-const withInterests = (p, keep) => (p ? { ...p, interests: Array.isArray(p.interests) ? p.interests : (keep || []) } : null);
+/* a profile always has its interests ([] before nn-ROUND2.sql) and its
+   handles ({} and the switch off before nn-ROUND4.sql); an answer without
+   them (an older call) keeps the ones the visit already knew */
+const normal = (p, prev) => (p ? {
+  ...p,
+  interests: Array.isArray(p.interests) ? p.interests : ((prev && prev.interests) || []),
+  handles: p.handles && typeof p.handles === 'object' && !Array.isArray(p.handles) ? p.handles : ((prev && prev.handles) || {}),
+  handles_public: typeof p.handles_public === 'boolean' ? p.handles_public : !!(prev && prev.handles_public),
+} : null);
 
 export function profile() {
   if (!app.user()) return Promise.resolve(fail('not_signed_in'));
@@ -186,7 +222,7 @@ export function profile() {
     meAsk = call('nn_profile_get').then((r) => {
       meAsk = null;
       if (!r.ok) return r;
-      me = withInterests(r.data);
+      me = normal(r.data);
       return { ok: true, profile: me };
     });
   }
@@ -196,16 +232,56 @@ export function setProfile(input) {
   const c = checkProfile(RULES, input || {});
   if (!c.ok) return Promise.resolve(fail(c.error));
   const args = { p_display_name: c.profile.display_name, p_neighborhood: c.profile.neighborhood, p_archetype: c.profile.archetype };
-  const had = me && me.interests;
-  /* with interests it is round two's call; before nn-ROUND2.sql is pasted
-     there is no such call, so the rest is saved without them */
-  const want = !!c.profile.interests;
-  return (want ? roundTwo() : Promise.resolve(false)).then((two) => call('nn_profile_set', two ? { ...args, p_interests: c.profile.interests } : args).then((r) => {
-    if (!r.ok) return r;
-    me = withInterests(r.data, had);
-    changed(null, null, 'profile');
-    return want && !two ? { ok: true, profile: me, interestsSaved: false } : { ok: true, profile: me };
-  }));
+  const prev = me;
+  /* with interests it is round two's call, with handles or the switch
+     round four's (which takes interests too: null keeps them); before
+     those are pasted there is no such call, so the rest is saved without */
+  const wantI = !!c.profile.interests;
+  const wantH = !!c.profile.handles || c.profile.handles_public !== undefined;
+  return (wantI || wantH ? rulesVersion() : Promise.resolve(1)).then((v) => {
+    const two = v >= 2, four = v >= 3;
+    let a = args;
+    if (wantH && four) {
+      a = { ...args, p_interests: wantI ? c.profile.interests : null, p_handles: c.profile.handles || null,
+        p_handles_public: c.profile.handles_public === undefined ? null : c.profile.handles_public };
+    } else if (wantI && two) a = { ...args, p_interests: c.profile.interests };
+    return call('nn_profile_set', a).then((r) => {
+      if (!r.ok) return r;
+      me = normal(r.data, prev);
+      changed(null, null, 'profile');
+      const out = { ok: true, profile: me };
+      if (wantI && !two) out.interestsSaved = false;
+      if (wantH && !four) out.handlesSaved = false;
+      return out;
+    });
+  });
+}
+
+/* Your handles and the "show my handles" switch, keeping the rest of your
+   profile as it is. Needs a profile (a first name) and nn-ROUND4.sql. */
+export function setHandles(handles, isPublic) {
+  if (!app.user()) return Promise.resolve(fail('not_signed_in'));
+  if (handles != null) { const h = checkHandles(RULES, handles); if (!h.ok) return Promise.resolve(Object.assign(fail(h.error), { key: h.key })); }
+  return Promise.all([profile(), rulesVersion()]).then(([p, v]) => {
+    if (!p.ok) return p;
+    if (!p.profile) return fail('no_name');
+    if (v == null) return fail('offline');
+    if (v < 3) return fail('off');
+    const cur = p.profile;
+    return setProfile({ display_name: cur.display_name, neighborhood: cur.neighborhood, archetype: cur.archetype,
+      handles: handles == null ? undefined : handles, handles_public: isPublic == null ? null : !!isPublic })
+      .then((r) => (r.ok ? { ok: true, profile: r.profile } : r));
+  });
+}
+
+/* For a signed-in reader, the most recently updated profiles whose
+   "show my handles" switch is on, with their handles of these kinds. */
+export function handlesRecent(kinds, limit) {
+  if (!app.user()) return Promise.resolve(Object.assign(fail('not_signed_in'), { people: [] }));
+  const list = Array.isArray(kinds) ? kinds : kinds ? [kinds] : [];
+  if (list.some((k) => !RULES.handles[k])) return Promise.resolve(Object.assign(fail('bad_handle'), { people: [] }));
+  return call('nn_handles_recent', { p_kinds: list.length ? list : null, p_limit: limit || 20 })
+    .then((r) => (r.ok ? { ok: true, people: Array.isArray(r.data) ? r.data : [] } : Object.assign(r, { people: [] })));
 }
 
 /* ---------------------------------------------------------------- posts */
@@ -225,6 +301,8 @@ export function create(board, input = {}) {
   /* the same checks the server runs, before anything is uploaded */
   const pre = checkPost(RULES, board, { ...input, photo_path: input.photo ? 'submissions/check.jpg' : null });
   if (!pre.ok) return Promise.resolve(fail(pre.error));
+  const late = dateError(RULES, board, pre.post.kind, pre.post.meta, Date.now());
+  if (late) return Promise.resolve(fail(late));
   return profile().then((p) => {
     if (!p.ok) return p;
     if (!p.profile) return fail('no_name');
@@ -394,7 +472,7 @@ app.onAct('bdelete', (it) => {
 /* The one compose sheet. A tab passes its board and kind, the words for
    its title and body, its own fields as a small schema, and its notes
    ("We feature, we don't review."). Fields:
-     { key, label, type: 'text' | 'int' | 'enum', options: [[value, label]], placeholder, required }
+     { key, label, type: 'text' | 'int' | 'enum' | 'url', options: [[value, label]], placeholder, required }
    Only keys the board's rules know are accepted by the server. */
 export function compose(opts) {
   const board = opts.board, kind = opts.kind;
@@ -459,7 +537,7 @@ function form(body, card, close, opts, rule, prof) {
   (opts.fields || []).forEach((fd) => {
     const need = (rule.needs || []).includes(fd.key) || fd.required;
     const ctl = fd.type === 'enum' ? select('m:' + fd.key, [['', need ? 'Choose one' : 'None']].concat(fd.options || []), '')
-      : input(fd.type === 'int' ? 'number' : 'text', 'm:' + fd.key, { max: fd.max || L.metaTextMax, placeholder: fd.placeholder });
+      : input(fd.type === 'int' ? 'number' : fd.type === 'url' ? 'url' : 'text', 'm:' + fd.key, { max: fd.max || L.metaTextMax, placeholder: fd.placeholder });
     f.appendChild(labelled(fd.label, ctl, fd.hint, need));
   });
   if (opts.body !== false) f.appendChild(labelled(opts.body || 'More', input('textarea', 'body', { max: L.bodyMax, placeholder: opts.bodyPlaceholder }), null, false));
@@ -567,6 +645,34 @@ export function profileSheet() {
       iw.appendChild(box);
       iw.appendChild(el('p', 'bf-hint', esc('Up to eight. Private unless you join the directory.')));
       f.appendChild(iw);
+      /* handles: one box per service, in three folds that open when they
+         hold one; and the switch */
+      const hw = el('div', 'bf-row');
+      hw.dataset.handles = '';
+      hw.appendChild(el('div', 'bf-label', 'Handles <span class="bf-opt">optional</span>'));
+      const had = cur.handles || {};
+      HANDLE_GROUPS.forEach(([group, kinds]) => {
+        const d = el('details');
+        d.open = kinds.some((k) => had[k]);
+        d.appendChild(el('summary', 'bf-opt', esc(group)));
+        const grid = el('div');
+        grid.style.cssText = 'display:grid;grid-template-columns:7em minmax(0,1fr);gap:var(--s2) var(--s3);align-items:center;padding-top:var(--s2)';
+        kinds.forEach((k) => {
+          const i = input('text', 'h:' + k, { max: RULES.limits.handleMax, placeholder: HANDLE_HINTS[k] || '', value: had[k] || '' });
+          i.id = fieldId();
+          i.autocapitalize = 'none'; i.autocomplete = 'off'; i.spellcheck = false;
+          i.setAttribute('autocorrect', 'off');
+          const l = el('label', 'bf-opt', esc(HANDLE_LABELS[k]));
+          l.htmlFor = i.id;
+          grid.append(l, i);
+        });
+        d.appendChild(grid);
+        hw.appendChild(d);
+      });
+      const sw = el('label', 'consent', '<input type="checkbox" role="switch" name="handles_public"> ' + esc('Show my handles in the directory'));
+      sw.querySelector('input').checked = !!cur.handles_public;
+      hw.appendChild(sw);
+      f.appendChild(hw);
       const msg = el('p', 'bf-msg');
       const go = button('Save', '');
       go.type = 'submit';
@@ -579,11 +685,26 @@ export function profileSheet() {
         const fd = new FormData(f);
         go.disabled = true;
         const interests = RULES.interests.filter((k) => into.has(k));
-        setProfile({ display_name: fd.get('display_name'), neighborhood: fd.get('neighborhood'), archetype: arch, interests }).then((r) => {
+        /* a leading @ is how people write a handle; the server wants it without */
+        const handles = {};
+        Object.keys(RULES.handles).forEach((k) => { const v = String(fd.get('h:' + k) || '').trim().replace(/^@/, ''); if (v) handles[k] = v; });
+        f.querySelectorAll('[name^="h:"]').forEach((i) => i.removeAttribute('aria-invalid'));
+        const h = checkHandles(RULES, handles);
+        if (!h.ok) {
+          go.disabled = false;
+          const bad = h.key && f.querySelector('[name="h:' + h.key + '"]');
+          if (bad) { bad.setAttribute('aria-invalid', 'true'); bad.closest('details').open = true; bad.focus(); }
+          msg.textContent = (h.key && HANDLE_LABELS[h.key] ? HANDLE_LABELS[h.key] + ': ' : '') + message('bad_handle');
+          msg.classList.add('err');
+          return;
+        }
+        setProfile({ display_name: fd.get('display_name'), neighborhood: fd.get('neighborhood'), archetype: arch, interests,
+          handles: h.handles, handles_public: !!fd.get('handles_public') }).then((r) => {
           go.disabled = false;
           if (!r.ok) { msg.textContent = r.message; msg.classList.add('err'); return; }
           close();
-          app.toast(r.interestsSaved === false ? 'Saved. What you’re into saves once the boards’ next update is in.' : 'Saved');
+          const later = [r.interestsSaved === false && 'what you’re into', r.handlesSaved === false && 'your handles'].filter(Boolean).join(' and ');
+          app.toast(later ? 'Saved. ' + later[0].toUpperCase() + later.slice(1) + ' save once the boards’ next update is in.' : 'Saved');
         });
       });
     });
@@ -631,7 +752,7 @@ app.registerAccount((host, repaint) => {
     if (!p.ok) { d.textContent = p.error === 'off' ? 'Posting is coming soon.' : p.message; return; }
     d.textContent = p.profile ? 'as ' + p.profile.display_name : 'Add your first name before you post';
   });
-  const prof = el('div', 'sheet-row', '<div class="t">Your profile<div class="d">Name, neighborhood, tile, interests</div></div>');
+  const prof = el('div', 'sheet-row', '<div class="t">Your profile<div class="d">Name, neighborhood, tile, interests, handles</div></div>');
   prof.appendChild(button('Edit', 'ghost sm', profileSheet));
   const posts = el('div', 'sheet-row', '<div class="t">Your posts</div>');
   posts.appendChild(button('Open', 'ghost sm', mineSheet));

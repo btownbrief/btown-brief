@@ -1,13 +1,26 @@
 #!/usr/bin/env python3
 """All Day's Watch tab — the film list: data/films.json, from TMDB.
 
-Three shelves, every film in the same small shape:
+Seven shelves, every title in the same small shape:
 
-  top    the 300 best-rated films on The Movie Database (TMDB's own
-         /movie/top_rated list, in its order). The tab's "The list".
-  soon   upcoming in the US (/movie/upcoming?region=US), soonest first,
-         labelled theaters or streaming from TMDB's US release dates.
-  now    in US theaters now (/movie/now_playing?region=US).
+  top       the 300 best-rated films on The Movie Database (TMDB's own
+            /movie/top_rated list, in its order). The tab's "Top rated".
+  trend     the films trending on TMDB this week (/trending/movie/week),
+            in its order. The tab's "Trending".
+  soon      upcoming in the US (/movie/upcoming?region=US), soonest first,
+            labelled theaters or streaming from TMDB's US release dates.
+  now       in US theaters now (/movie/now_playing?region=US).
+  tv_top    the 200 best-rated shows (/tv/top_rated).
+  tv_trend  the shows trending this week (/trending/tv/week).
+  tv_air    shows with an episode out this week (/tv/on_the_air), a
+            season that premiered in the last two weeks (or premieres in
+            the next two) first, marked `ns` (its season number) and `d`
+            (the premiere date).
+
+A show has the same shape as a film (`d` and `y` from its first air date,
+`rt` its episode length) plus `sn`, its number of seasons. Show ids are
+TMDB's TV ids, a separate number space from films: the page keeps them
+apart (see watch.js, TV_BASE).
 
 A film is { id, t (title), y (year), d (US release date, YYYY-MM-DD), g
 (genre names), o (overview, trimmed), rt (minutes), p (poster PATH), yt
@@ -62,6 +75,13 @@ SOON_PAGES = 2
 NOW_PAGES = 2
 SOON_MAX = 30
 NOW_MAX = 30
+TREND_PAGES = 3          # 60 trending films
+TV_TOP_COUNT = 200       # 10 pages
+MIN_TV_TOP = 100
+TV_TREND_PAGES = 2
+TV_AIR_PAGES = 2
+TV_AIR_MAX = 30
+PREMIERE_DAYS = 14       # a season premiere this close to today is "new"
 OVERVIEW_MAX = 420
 PAUSE = 0.06             # TMDB allows about 40 requests a second; we use ~15
 ATTEMPTS = 3
@@ -208,6 +228,55 @@ def film(detail, genres_by_id=None):
     }
 
 
+def show(detail, genres_by_id=None):
+    """One show in the same shape as a film, plus sn (seasons), or None."""
+    if not isinstance(detail, dict) or not isinstance(detail.get("id"), int):
+        return None
+    title = trim(str(detail.get("name") or ""), 120)
+    if not title:
+        return None
+    day = str(detail.get("first_air_date") or "")
+    names = [g.get("name") for g in detail.get("genres") or [] if isinstance(g, dict) and g.get("name")]
+    if not names and genres_by_id:
+        names = [genres_by_id[i] for i in detail.get("genre_ids") or [] if i in genres_by_id]
+    poster = str(detail.get("poster_path") or "")
+    runs = [r for r in detail.get("episode_run_time") or [] if isinstance(r, int) and r > 0]
+    seasons = detail.get("number_of_seasons")
+    return {
+        "id": detail["id"],
+        "t": title,
+        "y": int(day[:4]) if DAY.match(day) else None,
+        "d": day if DAY.match(day) else "",
+        "g": names[:4],
+        "o": trim(str(detail.get("overview") or ""), OVERVIEW_MAX),
+        "rt": runs[0] if runs else None,
+        "p": poster if POSTER.match(poster) else "",
+        "yt": pick_trailer((detail.get("videos") or {}).get("results")),
+        "sn": seasons if isinstance(seasons, int) and seasons > 0 else None,
+    }
+
+
+def premiere(detail, today):
+    """(season number, date) when a season premiered in the last
+    PREMIERE_DAYS days or premieres in the next PREMIERE_DAYS, else None.
+    The newest numbered season's air date first (it stays right after
+    episode two airs), then either side's episode one."""
+    lo, hi = today_minus(today, PREMIERE_DAYS), today_minus(today, -PREMIERE_DAYS)
+    seasons = [s for s in detail.get("seasons") or [] if isinstance(s, dict) and isinstance(s.get("season_number"), int)
+               and s["season_number"] > 0 and DAY.match(str(s.get("air_date") or ""))]
+    if seasons:
+        s = max(seasons, key=lambda s: s["season_number"])
+        if lo <= s["air_date"] <= hi:
+            return s["season_number"], s["air_date"]
+    for key in ("next_episode_to_air", "last_episode_to_air"):
+        ep = detail.get(key) or {}
+        day = str(ep.get("air_date") or "")
+        if ep.get("episode_number") == 1 and isinstance(ep.get("season_number"), int) and ep["season_number"] > 0 \
+                and DAY.match(day) and lo <= day <= hi:
+            return ep["season_number"], day
+    return None
+
+
 def listing(api, path, pages, **params):
     """The ids on a TMDB list, in its order, without repeats."""
     seen, out = set(), []
@@ -233,6 +302,33 @@ def details(api, ids, cache):
             f["_raw"] = cache[i]
             out.append(f)
     return out
+
+
+def show_details(api, ids, cache):
+    out = []
+    for i in ids:
+        key = "tv", i
+        if key not in cache:
+            cache[key] = api.get(f"/tv/{i}", language="en-US", append_to_response="videos")
+        f = show(cache[key])
+        if f:
+            f["_raw"] = cache[key]
+            out.append(f)
+    return out
+
+
+def shelf_air(shows, today):
+    """Airing this week: new seasons first (newest premiere first), then
+    the rest in TMDB's order."""
+    fresh, rest = [], []
+    for f in shows:
+        p = premiere(f["_raw"], today)
+        if p:
+            fresh.append({**f, "ns": p[0], "d": p[1], "where": "tv"})
+        else:
+            rest.append({**f, "where": "tv"})
+    fresh.sort(key=lambda f: f["d"], reverse=True)
+    return (fresh + rest)[:TV_AIR_MAX]
 
 
 def shelf_soon(films, today):
@@ -261,7 +357,7 @@ def clean(films):
     return [{k: v for k, v in f.items() if k != "_raw"} for f in films]
 
 
-def build_payload(top, soon, now, built):
+def build_payload(top, soon, now, built, trend=(), tv_top=(), tv_trend=(), tv_air=()):
     return {
         "v": 1,
         "built": built.strftime("%Y-%m-%dT%H:%M:%SZ"),
@@ -271,6 +367,10 @@ def build_payload(top, soon, now, built):
         "top": clean(top),
         "soon": clean(soon),
         "now": clean(now),
+        "trend": clean(trend),
+        "tv_top": clean(tv_top),
+        "tv_trend": clean(tv_trend),
+        "tv_air": clean(tv_air),
     }
 
 
@@ -285,9 +385,15 @@ def run(args, api=None):
         top_ids = listing(api, "/movie/top_rated", TOP_COUNT // 20)[:TOP_COUNT]
         soon_ids = listing(api, "/movie/upcoming", SOON_PAGES, region="US")
         now_ids = listing(api, "/movie/now_playing", NOW_PAGES, region="US")
+        trend_ids = listing(api, "/trending/movie/week", TREND_PAGES)
         top = details(api, top_ids, cache)
-        soon = shelf_soon(details(api, soon_ids, cache), utcnow().date().isoformat())
+        today = utcnow().date().isoformat()
+        soon = shelf_soon(details(api, soon_ids, cache), today)
         now = shelf_now(details(api, now_ids, cache))
+        trend = details(api, trend_ids, cache)
+        tv_top = show_details(api, listing(api, "/tv/top_rated", TV_TOP_COUNT // 20)[:TV_TOP_COUNT], cache)
+        tv_trend = show_details(api, listing(api, "/trending/tv/week", TV_TREND_PAGES), cache)
+        tv_air = shelf_air(show_details(api, listing(api, "/tv/on_the_air", TV_AIR_PAGES), cache), today)
     except urllib.error.HTTPError as e:
         log(f"TMDB said HTTP {e.code}" + (" (is the key right?)" if e.code == 401 else "") + "; keeping the last file")
         return 1
@@ -297,8 +403,12 @@ def run(args, api=None):
     if len(top) < MIN_TOP:
         log(f"only {len(top)} top films came back; keeping the last file")
         return 1
-    write_json(args.out, build_payload(top, soon, now, utcnow()))
-    log(f"wrote {args.out}: {len(top)} top, {len(soon)} soon, {len(now)} now, "
+    if len(tv_top) < MIN_TV_TOP:
+        log(f"only {len(tv_top)} top shows came back; keeping the last file")
+        return 1
+    write_json(args.out, build_payload(top, soon, now, utcnow(), trend, tv_top, tv_trend, tv_air))
+    log(f"wrote {args.out}: {len(top)} top, {len(trend)} trending, {len(soon)} soon, {len(now)} now, "
+        f"{len(tv_top)} top shows, {len(tv_trend)} trending shows, {len(tv_air)} airing, "
         f"{sum(1 for f in top if f['yt'])} top trailers, {api.calls} calls")
     return 0
 
@@ -356,11 +466,39 @@ def selftest():
     assert us_release({}) == ("", "")
     print("build_films: release labels ok (US only; theaters before streaming)")
 
+    # a show: the same shape plus seasons; a new season is found from either side
+    sh = show({"id": 1399, "name": " Long  Winter ", "first_air_date": "2011-04-17", "episode_run_time": [0, 57],
+               "number_of_seasons": 8, "poster_path": "/sh.jpg", "genres": [{"id": 18, "name": "Drama"}],
+               "overview": "Snow.", "videos": {"results": [vids[4]]}})
+    assert sh == {"id": 1399, "t": "Long Winter", "y": 2011, "d": "2011-04-17", "g": ["Drama"], "o": "Snow.", "rt": 57,
+                  "p": "/sh.jpg", "yt": "newtrailer1", "sn": 8}, sh
+    assert show({"id": 2, "title": "A film, not a show"}) is None and show({"id": "x", "name": "No"}) is None
+    ep = lambda day, s, e: {"air_date": day, "season_number": s, "episode_number": e}
+    assert premiere({"last_episode_to_air": ep("2026-10-10", 3, 1)}, "2026-10-16") == (3, "2026-10-10")
+    assert premiere({"next_episode_to_air": ep("2026-10-23", 2, 1), "last_episode_to_air": ep("2025-01-01", 1, 8)}, "2026-10-16") == (2, "2026-10-23")
+    assert premiere({"last_episode_to_air": ep("2026-10-10", 3, 2)}, "2026-10-16") is None, "episode two is not a premiere"
+    assert premiere({"last_episode_to_air": ep("2026-09-01", 3, 1)}, "2026-10-16") is None, "six weeks ago is not new"
+    assert premiere({"last_episode_to_air": ep("2026-10-10", 0, 1)}, "2026-10-16") is None, "specials are not a season"
+    seasons = [{"season_number": 0, "air_date": "2026-10-15"}, {"season_number": 1, "air_date": "2024-01-01"},
+               {"season_number": 2, "air_date": "2026-10-06"}]
+    assert premiere({"seasons": seasons, "last_episode_to_air": ep("2026-10-13", 2, 2)}, "2026-10-16") == (2, "2026-10-06"), \
+        "a season that premiered last week is new after episode two airs"
+    assert premiere({"seasons": seasons[:2]}, "2026-10-16") is None, "a special is never the new season"
+    air = shelf_air([{**sh, "id": 1, "_raw": {}}, {**sh, "id": 2, "_raw": {"last_episode_to_air": ep("2026-10-02", 4, 1)}},
+                     {**sh, "id": 3, "_raw": {"last_episode_to_air": ep("2026-10-12", 2, 1)}}], "2026-10-16")
+    assert [(f["id"], f.get("ns"), f["d"]) for f in air] == [(3, 2, "2026-10-12"), (2, 4, "2026-10-02"), (1, None, "2011-04-17")], air
+    assert all(f["where"] == "tv" for f in air)
+    print("build_films: shows ok (shape, seasons, new seasons first)")
+
     # a whole run against a fake TMDB: lists, paging, details, shelves, the file
     lists = {
         "/movie/top_rated": [[{"id": i} for i in range(1, 21)], [{"id": i} for i in range(21, 25)] + [{"id": 3}]],
         "/movie/upcoming": [[{"id": 101}, {"id": 102}, {"id": 103, "adult": True}]],
         "/movie/now_playing": [[{"id": 201}, {"id": 1}]],
+        "/trending/movie/week": [[{"id": 2}, {"id": 301}]],
+        "/tv/top_rated": [[{"id": 500 + i} for i in range(20)], [{"id": 520}]],
+        "/trending/tv/week": [[{"id": 501}, {"id": 600}]],
+        "/tv/on_the_air": [[{"id": 600}, {"id": 601}]],
     }
     asked = []
 
@@ -373,6 +511,13 @@ def selftest():
             pages = lists[path]
             p = int(q.get("page", 1))
             return {"results": pages[p - 1] if p <= len(pages) else [], "total_pages": len(pages)}
+        m = re.match(r"^/tv/(\d+)$", path)
+        if m:
+            i = int(m.group(1))
+            last = {"air_date": today_minus(utcnow().date().isoformat(), 3), "season_number": 2, "episode_number": 1} if i == 601 else {}
+            return {"id": i, "name": f"Show {i}", "first_air_date": "2010-01-01", "number_of_seasons": 2,
+                    "poster_path": f"/s{i}.jpg", "genres": [{"id": 18, "name": "Drama"}], "last_episode_to_air": last,
+                    "videos": {"results": []}}
         m = re.match(r"^/movie/(\d+)$", path)
         if m:
             i = int(m.group(1))
@@ -448,6 +593,25 @@ def selftest():
     finally:
         PAUSE = pause
     print("build_films: a refused key or a short list fails the run and keeps the last file ok")
+
+    # a whole run with the floors lowered: every shelf lands in the file
+    global MIN_TOP, MIN_TV_TOP
+    floors, (MIN_TOP, MIN_TV_TOP) = (MIN_TOP, MIN_TV_TOP), (20, 20)
+    pause, PAUSE = PAUSE, 0
+    try:
+        assert run(argparse.Namespace(out=out), Tmdb("k", opener)) == 0
+        with open(out, encoding="utf-8") as src:
+            whole = json.load(src)
+    finally:
+        MIN_TOP, MIN_TV_TOP = floors
+        PAUSE = pause
+        if os.path.exists(out):
+            os.remove(out)
+    assert [f["id"] for f in whole["trend"]] == [2, 301]
+    assert len(whole["tv_top"]) == 21 and set(whole["tv_top"][0]) == {"id", "t", "y", "d", "g", "o", "rt", "p", "yt", "sn"}
+    assert [f["id"] for f in whole["tv_trend"]] == [501, 600]
+    assert [(f["id"], f.get("ns")) for f in whole["tv_air"]] == [(601, 2), (600, None)], whole["tv_air"]
+    print("build_films: a whole run writes films, trending and the three TV shelves ok")
 
     # the baked starter list the tab falls back to keeps the same shape
     seed_path = os.path.join(ROOT, "all-day", "data", "films-seed.json")

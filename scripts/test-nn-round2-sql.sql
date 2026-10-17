@@ -41,7 +41,7 @@ grant all on pg_temp.ids to anon, authenticated;
 
 -- ------------------------------------------------------------ the locks
 set role anon; select pg_temp.who(null);
-select pg_temp.ok((public.nn_rules() ->> 'version')::int = 2, 'the round-two rules are the live ones');
+select pg_temp.ok((public.nn_rules() ->> 'version')::int >= 2, 'the round-two rules (or a later round''s, which keep them) are the live ones');
 select pg_temp.ok(public.nn_rules() -> 'boards' -> 'vintage' -> 'kinds' ? 'spotted', 'and round one''s kinds are still there');
 select pg_temp.expect_denied('select public.nn_photo_sweep()');
 select pg_temp.expect_denied('select public.nn_sweep()');
@@ -64,7 +64,9 @@ select pg_temp.expect_error($q$select public.nn_profile_set(p_display_name => 'M
 select pg_temp.expect_error($q$select public.nn_profile_set(p_display_name => 'Maya', p_interests => array['running'], p_neighborhood => 'mars')$q$, 'bad_neighborhood');
 select pg_temp.ok(public.nn_profile_set(p_display_name => 'Maya', p_interests => array['running', 'books', 'running'], p_neighborhood => 'old-north-end', p_archetype => 'trail') -> 'interests'
   = '["running","books"]'::jsonb, 'a list, each once');
-select pg_temp.ok(public.nn_profile_get() = '{"display_name":"Maya","neighborhood":"old-north-end","archetype":"trail","interests":["running","books"]}'::jsonb, 'and read back');
+select pg_temp.ok(public.nn_profile_get() @> '{"display_name":"Maya","neighborhood":"old-north-end","archetype":"trail","interests":["running","books"]}'::jsonb
+              and public.nn_profile_get() - 'handles' - 'handles_public' = '{"display_name":"Maya","neighborhood":"old-north-end","archetype":"trail","interests":["running","books"]}'::jsonb,
+  'and read back (round four adds the handles beside them)');
 select pg_temp.ok(public.nn_profile_set(p_display_name => 'Maya R.', p_neighborhood => 'old-north-end', p_archetype => 'trail') -> 'interests' = '["running","books"]'::jsonb,
   'the round-one call keeps them');
 select pg_temp.ok(public.nn_profile_set(p_display_name => 'Maya R.', p_interests => null, p_neighborhood => 'old-north-end') -> 'interests' = '["running","books"]'::jsonb, 'a null keeps them');

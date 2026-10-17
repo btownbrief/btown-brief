@@ -13,7 +13,7 @@
    audio — episodes are large and the browser's own HTTP cache handles them
    better than we would. */
 
-const VERSION = 'all-day-v49';   // v49: Habits works without signing in, habits-local.js (v48: the Wire's Photo mode; v47: the run clubs' week)
+const VERSION = 'all-day-v56';   // v56: Habits works without signing in, habits-local.js (main was at v55)
 const SHELL = VERSION + '-shell';
 const DATA = 'all-day-data';   // unversioned on purpose: survives shell bumps
 
@@ -32,6 +32,8 @@ const SHELL_URLS = [
   './js/photo-wall.js',
   /* the run clubs' week, imported by ui.js, People and What Now */
   './js/clubs-week.js',
+  /* what People's tiles mean and which events are mixers, imported by People */
+  './js/people-match.js',
   /* the boards: imported by main.js, so every tab can draw one offline */
   './js/boards.js', './js/boards-core.js', './js/boards-fake.js',
   /* Watch's starter list, so the tab has films to show offline */
