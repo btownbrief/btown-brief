@@ -1,7 +1,8 @@
 /* What Now: one answer, then put the phone down.
 
    A weather line at the top (feels like, the lake when the gage is fresh,
-   sunset), then three modes behind the chip row:
+   sunset), then two views behind the chip row: Spin with the Missions list
+   right under it (the Missions chip jumps down to the list), and Tonight.
 
    - Spin. The standalone What Now app's engine (whatnow-engine.js, ported
      verbatim and not touched here) behind one big button. It builds a pool
@@ -18,7 +19,8 @@
      (kept on this device, and on the reader's account when signed in, which
      fails soft), and Surprise me, which scrolls the list to a mission you
      have not done and lets it glow, rather than opening a modal. Tap a
-     mission for its paragraph and its places.
+     mission for its paragraph and its places. A spin that lands on a
+     mission's own place marks that row and scrolls the list to it.
    - Tonight. The local artists with a show tonight or this week
      (all-day/data/music.json), the job the old Music tab did, why lines
      kept, then today's calendar from 5 pm on (all-day/data/whatnow.json, in
@@ -164,9 +166,8 @@ function render() {
   root.innerHTML = '';
   const wx = weatherLine();
   if (wx) root.appendChild(wx);
-  if (S.mode === 'spin') renderSpin();
-  else if (S.mode === 'missions') renderMissions();
-  else renderTonight();
+  if (S.mode === 'tonight') renderTonight();
+  else { renderSpin(); renderMissions(); }
 }
 
 /* One line: what it feels like, the lake when the gage is fresh, sunset. */
@@ -198,8 +199,7 @@ function renderSpin() {
   big.addEventListener('click', roll);
   big.disabled = !S.feeds;
   s.appendChild(big);
-  s.appendChild(el('p', 'sub', esc(!S.feeds ? (S.feedsFailed ? 'Couldn’t read the moment. The feeds are the guide’s own; try again in a bit.' : 'Reading the sky…')
-    : 'One answer for ' + windowWord() + '. Then put the phone down.')));
+  if (!S.feeds) s.appendChild(el('p', 'sub', esc(S.feedsFailed ? 'Couldn’t load. Try again later.' : 'Reading the sky…')));
   root.appendChild(s);
 
   const paths = chips(PATHS.map(([key, label]) => ({ key, label })), null, (k) => {
@@ -254,6 +254,20 @@ function spin() {
   S.answer = pick(pool, recent);
   if (S.answer) remember(S.answer.id);
   render();
+  const m = missionOf(S.answer);
+  if (m) showMission(m);
+}
+
+/* An answer that is a mission's own place (its first one) is that mission:
+   the list below marks the row and scrolls to it. */
+function missionOf(c) {
+  if (!c || c.kind !== 'thing' || !/^thing-/.test(c.id || '')) return null;
+  const id = c.id.slice(6);
+  return missions().find((m) => Array.isArray(m.places) && m.places[0] && m.places[0].id === id) || null;
+}
+function showMission(m) {
+  if (S.theme !== 'all' && S.theme !== m.theme) { S.theme = 'all'; render(); }
+  app.flashHit(root.querySelector('.missions'), m.k);
 }
 
 function seen() {
@@ -317,7 +331,7 @@ function answerCard() {
     const ctx = S.ctx;
     const walkable = ctx && !ctx.darkAtTarget && !ctx.rainT && ctx.tempT != null && ctx.tempT >= 40 && !outdoorRisks(ctx).length;
     r.innerHTML = '<div class="in"><div class="eyebrow">Honestly</div><h3>Nothing fits all that.</h3><p>' +
-      esc(walkable ? 'Loosen a chip, or skip the plan and take the waterfront walk.' : 'Loosen a chip, or call it: some hours are for staying in.') + '</p></div>';
+      esc(walkable ? 'Take the waterfront walk.' : 'Some hours are for staying in.') + '</p></div>';
     return r;
   }
   const blurb = blurbFor(c);
@@ -343,7 +357,7 @@ function doneCard(c) {
   return r;
 }
 
-/* A thin pool at a rainy 2 am is honesty, not failure, so it says why. */
+/* "12 things fit right now", and for a thin pool the reason (it's late) */
 function poolLine() {
   const ctx = S.ctx;
   const why = [];
@@ -354,8 +368,8 @@ function poolLine() {
     if (ctx.tempT == null) why.push('the sky can’t be read');
     if (S.chips.size >= 2) why.push('the chips are tight');
   }
-  const tail = why.length ? ', and it’s a small hat because ' + why.slice(0, 2).join(' and ') : '';
-  return (S.pool ? 'Picked from ' + plural(S.pool, 'thing', 'things') + ' that fit ' : 'Nothing in the hat for ') + windowWord() + tail + '.';
+  const tail = why.length ? ' · ' + why.slice(0, 2).join(' and ') : '';
+  return (S.pool ? plural(S.pool, 'thing', 'things') + ' fit ' : 'Nothing fits ') + windowWord() + tail;
 }
 
 /* --------------------------------------------------------------- Missions */
@@ -365,13 +379,13 @@ const doneCount = () => missions().filter((m) => isDone(m.k)).length;
 
 function renderMissions() {
   if (!S.missions) {
-    root.appendChild(S.missionsFailed ? el('div', 'errbox', '<b>The missions didn’t load.</b><br>They come from the guide’s own Top 100. Pull down or come back in a bit.')
+    root.appendChild(S.missionsFailed ? el('div', 'errbox', '<b>The missions didn’t load.</b>')
       : el('p', 'loading', 'Loading the missions…'));
     return;
   }
   const all = missions();
   const sur = el('button', 'pillbtn on surprise', ICON.shuffle + ' Surprise me');
-  const head = section(root, 'The Top 100, as missions', '<b>' + esc(doneCount()) + '</b> of ' + esc(all.length) + ' done. Surprise me finds one you haven’t done.', sur);
+  const head = section(root, 'The Top 100, as missions', null, sur);
   head.dataset.sec = 'missions';
   const themes = (S.missions.themes || Object.keys(THEME)).filter((t) => all.some((m) => m.theme === t));
   if (S.theme !== 'all' && !themes.includes(S.theme)) S.theme = 'all';
@@ -379,12 +393,12 @@ function renderMissions() {
     S.theme, (k) => { S.theme = k; history.replaceState(null, '', location.search + '#whatnow/missions'); render(); }, 'themes'));
   const list = all.filter((m) => S.theme === 'all' || m.theme === S.theme);
   const box = el('div', 'missions');
-  list.forEach((m) => box.appendChild(missionRow(m)));
+  const spun = S.rolling ? null : missionOf(S.answer);
+  list.forEach((m) => { const r = missionRow(m); if (spun && spun.k === m.k) r.classList.add('spun'); box.appendChild(r); });
   root.appendChild(box);
   sur.addEventListener('click', () => surprise(box));
   root.appendChild(cards.caught({
     title: S.theme === 'all' ? 'That’s the hundred' : 'That’s every ' + (THEME[S.theme] || S.theme).toLowerCase() + ' mission',
-    text: plural(doneCount(), 'mission', 'missions') + ' done so far. They come from the Brief’s Top 100 guide, ranked by how essential each one is to Burlington.',
     buttons: [button(ICON.shuffle + ' Surprise me', '', () => surprise(box))],
   }));
 }
@@ -565,23 +579,22 @@ function renderTonight() {
      which would be lost under a long night of listings */
   const acts = artists();
   if (acts.length) {
-    const sec = section(root, 'Playing this week', esc('Local artists with a show in the next seven days. Listen opens their Bandcamp player; nothing plays until you press play.'));
+    const sec = section(root, 'Playing this week');
     sec.dataset.sec = 'artists';
     const box = el('div', 'artists');
     acts.forEach((x) => box.appendChild(artistRow(x.a, x.s)));
     root.appendChild(box);
   }
-  const head = section(root, 'Tonight', esc(list.length ? plural(list.length, 'thing', 'things') + ' from 5 pm on, from the calendar the newsletter uses.' : 'From 5 pm on, from the calendar the newsletter uses.'));
+  const head = section(root, 'Tonight', list.length ? '<b>' + esc(plural(list.length, 'thing', 'things')) + '</b> from 5 pm on' : null);
   head.dataset.sec = 'tonight';
   if (!S.events) root.appendChild(el('p', 'loading', 'Loading tonight…'));
-  else if (!list.length) root.appendChild(el('p', 'note pad', esc('Nothing else on the calendar tonight.')));
+  else if (!list.length) root.appendChild(el('p', 'note pad', esc('Nothing else tonight.')));
   const feed = el('div', 'feed');
   list.forEach((c) => put(feed, cards.event(c)));
   root.appendChild(feed);
   app.bindFeed(feed);
   root.appendChild(cards.caught({
     title: 'That’s tonight',
-    text: 'The whole calendar, further out than tonight, is on the events page.',
     buttons: [openLink('Every event', EVENTS_URL, true)],
   }));
 }
@@ -636,7 +649,7 @@ function toggleBandcamp(wrap, btn, a, album) {
   const dark = doc.getAttribute('data-theme') === 'dark' || (!doc.hasAttribute('data-theme') && matchMedia('(prefers-color-scheme: dark)').matches);
   const box = el('div', 'hero bc');
   if (app.demo) {
-    box.appendChild(el('p', 'note', esc('The Bandcamp player for “' + ((a.bandcamp && a.bandcamp.title) || a.name) + '” goes here in the real build.')));
+    box.appendChild(el('p', 'note', esc('Demo: no player.')));
   } else {
     const f = el('iframe', 'embed bandcamp');
     f.src = 'https://bandcamp.com/EmbeddedPlayer/album=' + encodeURIComponent(album) + '/size=large/bgcol=' + (dark ? '181a1f' : 'ffffff') +
@@ -672,13 +685,17 @@ function stopReel() {
   S.answer = null;
 }
 
+/* Spin and Missions are one view, so moving between them is a scroll;
+   Tonight is the other view. */
+const jumpMissions = () => { const s = root && root.querySelector('[data-sec="missions"]'); if (s) app.jumpTo(s); };
 function setMode(mode) {
-  stopReel();
+  const sameView = mode !== 'tonight' && S.mode !== 'tonight';
+  if (!sameView) stopReel();
   S.mode = mode;
   history.replaceState(null, '', location.search + '#whatnow/' + mode);
   app.paintSubnav();
-  render();
-  app.scrollTop();
+  if (!sameView) render();
+  if (mode === 'missions') jumpMissions(); else app.scrollTop();
 }
 
 /* #whatnow/spin|missions|tonight picks the mode; #whatnow/m14 opens a
@@ -717,7 +734,7 @@ app.register(KEY, {
       { key: 'spin', label: 'Spin', icon: ICON.shuffle },
       { key: 'missions', label: 'Missions', n: S.missions ? doneCount() + '/' + missions().length : null },
       { key: 'tonight', label: 'Tonight', n: S.events ? tonight().length : null },
-    ], S.mode, (k) => { if (k !== S.mode) setMode(k); else app.scrollTop(true); });
+    ], S.mode, (k) => { if (k !== S.mode) setMode(k); else if (k === 'missions') jumpMissions(); else app.scrollTop(true); });
   },
   /* Nothing here is a feed that grows while you are away, so the dot stays off. */
   newSince() { return 0; },

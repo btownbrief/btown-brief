@@ -526,6 +526,8 @@ body.chrome-away .mast { transform: translateY(-100%); }
 .wm-row .c-foot { margin-top: 4px; }
 .wm-row > .act.star { margin: -6px -10px 0 0; }
 .wm .btn.more { margin-top: 6px; }
+.wm-row.was .num { color: var(--ink-3); }
+.wm-was { font-size: var(--fs-meta); font-weight: 700; color: var(--ink-2); padding: 16px var(--gutter) 6px; border-bottom: 1px solid var(--line-soft); }
 .wm-end { text-align: center; font-size: var(--fs-meta); color: var(--ink-3); padding: 12px var(--gutter) 4px; }
 
 /* ============================================================ sections and shelves */
@@ -589,6 +591,9 @@ body.chrome-away .mast { transform: translateY(-100%); }
 .lrow .num { width: 32px; font-family: var(--serif); font-size: var(--fs-section); color: var(--ink-3); text-align: center; }
 .lrow.done .t { color: var(--ink-3); text-decoration: line-through; text-decoration-thickness: 1px; }
 .lrow.hl { animation: flash 2.4s ease; }
+/* What Now: the mission a spin landed on, for as long as that answer stands */
+.lrow.spun { background: var(--accent-soft); }
+.lrow.spun .num { color: var(--accent); }
 .pillbtn { height: 30px; padding: 0 10px; white-space: nowrap; flex: 0 0 auto; border-radius: var(--r-pill); border: 1px solid var(--line); font-size: var(--fs-meta); font-weight: 600; color: var(--ink-2); display: inline-flex; align-items: center; gap: 4px; }
 .pillbtn .i { width: 16px; height: 16px; }
 .pillbtn.on { background: var(--ink); color: var(--on-ink); border-color: var(--ink); }
