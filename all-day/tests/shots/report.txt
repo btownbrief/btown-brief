@@ -1052,6 +1052,9 @@
   ok   the Wire, What matters flips through earlier days › on Local the flipped block shows that day’s local picks, in their order
   ok   the Wire, What matters flips through earlier days › a reload opens on today: the block remembers nothing
   ok   the Wire, What matters flips through earlier days › no console errors
+  ok   the Wire, What matters flips through earlier days › no picks yet: the block says so
+  ok   the Wire, What matters flips through earlier days › and ‹ still reaches yesterday’s picks
+  ok   the Wire, What matters flips through earlier days › no console errors with no picks yet
   ok   the Wire, What matters flips through earlier days › 390 light: the flipped head fits, with its Today link
   ok   the Wire, What matters flips through earlier days › 390 light: reduced motion, no fade
   ok   the Wire, What matters flips through earlier days › 390 light: no console errors
@@ -1546,7 +1549,7 @@
   ok   sign-in fails soft › a bad address is caught before any request
   ok   sign-in fails soft › no link was requested
   ok   sign-in fails soft › no console errors
-  ok   performance › the live Wire redraws 60 cards in 7ms (budget 100)
+  ok   performance › the live Wire redraws 60 cards in 13ms (budget 100)
   ok   shell fixes: a rail never snaps flush to the edge › 390: .rail carries scroll-padding of one gutter
   ok   shell fixes: a rail never snaps flush to the edge › 390: a card scrolled to the start stops at the gutter
   ok   shell fixes: a rail never snaps flush to the edge › 390: no console errors

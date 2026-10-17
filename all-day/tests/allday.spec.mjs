@@ -852,6 +852,22 @@ async function theWire(browser, base) {
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
 
+    /* before the day's first ranking: the block stands, says so, and still flips back */
+    {
+      const v = await newPage(browser, base);
+      const bare = { ...today, picks: [], picks_earlier: [] };
+      await v.page.route(/wire-data\/data\/wire-today\.json$/, (r) => r.fulfill({ status: 200, body: JSON.stringify(bare), contentType: 'application/json' }));
+      await v.page.goto(base + '/all-day/');
+      await v.page.waitForSelector('.panel:not([hidden]) .wm-top', { timeout: 15000 });
+      await v.page.waitForFunction(() => { const b = document.querySelector('.panel:not([hidden]) .wm-top [aria-label="Earlier day\'s picks"]'); return b && !b.disabled; }, null, { timeout: 6000 }).catch(() => {});
+      check(/No local picks yet today\./.test(await v.page.$eval('.panel:not([hidden]) .wm-top', (w) => w.innerText)), 'no picks yet: the block says so', '');
+      await v.page.click(PREV);
+      await v.page.waitForFunction((d) => document.querySelector('.panel:not([hidden]) .wm-top')?.dataset.showing === d, y1, { timeout: 6000 }).catch(() => {});
+      check(await v.page.$eval('.panel:not([hidden]) .wm-top h2', (h) => h.textContent) === 'What mattered ' + yWeek, 'and ‹ still reaches yesterday’s picks', '');
+      check(!v.errors.length, 'no console errors with no picks yet', v.errors.join(' | '));
+      await v.ctx.close();
+    }
+
     /* both themes, 390 and 1280: the head fits, nothing scrolls sideways; reduced motion: no fade */
     for (const [w, h] of [[390, 844], [1280, 800]]) {
       for (const scheme of ['light', 'dark']) {

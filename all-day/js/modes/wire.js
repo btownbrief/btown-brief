@@ -414,7 +414,7 @@ function mattersBlock(d, isToday, nav) {
   const wm = el('div', 'wm');
   section(wm, isToday ? 'What matters today' : 'What mattered ' + weekday(d.date), nav && !isToday ? esc(dayName(d.date).split(', ')[1] || '') : '', nav || null);
   if (!list.length && !earlier.length) {
-    wm.appendChild(el('p', 'wm-end', esc('No picks ' + (geo() === 'local' ? 'from here ' : '') + 'that day.')));
+    wm.appendChild(el('p', 'wm-end', esc('No ' + (geo() === 'local' ? 'local ' : '') + 'picks ' + (isToday ? 'yet today.' : 'that day.'))));
     return wm;
   }
   const [first] = list;
@@ -460,10 +460,12 @@ function mattersBlock(d, isToday, nav) {
    picks, whatever the block shows, so flipping never changes it (a past
    pick that recurs today can show in the river, which is fine). W.flip is
    the day shown, kept for the visit only: a reload opens on today. Returns
-   today's keys, for the river to leave out. */
+   today's keys, for the river to leave out. Before the day's first ranking
+   (or with every pick muted) the block still stands, saying so, while there
+   may be earlier days to flip to. */
 function topMatters(host, d) {
   const keys = mattersKeys(d);
-  if (!keys.length) { W.flip = null; return []; }
+  if (!keys.length && W.idxDone && !olderThan(d.date)) { W.flip = null; return []; }
   const past = W.flip && payloadFor(W.flip);
   if (!past) W.flip = null;
   host.appendChild(flipBlock(past ? dayOf(past) : d, d));
