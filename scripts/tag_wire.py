@@ -67,10 +67,20 @@ TOPICS = (
     "national-politics", "world", "economy", "tech", "science", "media", "other",
 )
 FIXED = ("x", "facebook", "reddit", "newsletters", "video")
-TUNEIN_CHECKED = ("local", "world", "facebook", "reddit")
 TUNEIN_RE = re.compile(r"tune in|watch live|live ?stream|listen live|on air|join us|"
                        r"streaming now|tonight at \d|tonight on|this week on|"
                        r"(?-i:\bLIVE\b)", re.I)   # "LIVE:" is a broadcast; "live music" is a show
+# A person's post says "join us tonight at 7" about a show in a room; only
+# these words make it a broadcast
+BROADCAST_RE = re.compile(r"tune in|watch live|live ?stream|listen live|on air|streaming now|"
+                          r"(?-i:\bLIVE\b)", re.I)
+# which words make a `tunein` verdict stand, by channel (X is judged as a headline)
+TUNEIN_WORDS = {"local": TUNEIN_RE, "world": TUNEIN_RE, "x": TUNEIN_RE,
+                "facebook": BROADCAST_RE, "reddit": BROADCAST_RE}
+# A post's `tunein` is undone only when the model did not file it under
+# selling: every show mislabeled `tunein` on 2026-10-17 was music or arts, every
+# ad business or food-drink, so an ad mislabeled `tunein` stays junk
+SELLING_TOPICS = ("business", "food-drink")
 
 SCHEMA_ITEM = {
     "type": "object",
@@ -168,13 +178,15 @@ def validate_tags(raw, batch, now_ts):
         if item["id"] in out:
             continue
         junk = entry.get("junk") if entry.get("junk") in JUNK else None
-        if junk == "tunein" and item["ch"] in TUNEIN_CHECKED and not TUNEIN_RE.search(item["title"]):
+        topic = entry.get("topic") if entry.get("topic") in TOPICS else "other"
+        words = TUNEIN_WORDS.get(item["ch"])
+        if junk == "tunein" and words and not words.search(item["title"]) \
+                and (item["ch"] in ("local", "world") or topic not in SELLING_TOPICS):
             # a story about an event is news; "tune in" means a broadcast or
             # livestream notice, and only a headline that says so is one. A
             # neighbor's post about a show is the event itself (2026-10-17:
             # nine Facebook band and venue posts were junked as "tunein")
             junk = "none"
-        topic = entry.get("topic") if entry.get("topic") in TOPICS else "other"
         score = entry.get("score")
         if junk is None or not isinstance(score, int) or isinstance(score, bool):
             continue

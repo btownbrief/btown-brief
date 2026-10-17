@@ -265,6 +265,27 @@ class NeighborPostTests(unittest.TestCase):
                   "title": "Live music returns to the Church Street Marketplace"}]
         self.assertEqual(list(self.verdicts(heads, "tunein").values()), ["tunein", "none"])
 
+    def test_join_us_tonight_is_a_show_on_a_neighbors_post(self):
+        batch = posts({"facebook": ["Join us tonight at 7 for live music at the taproom"]})
+        self.assertEqual(list(self.verdicts(batch, "tunein").values()), ["none"])
+
+    def test_an_ad_mislabeled_tunein_stays_junk(self):
+        # Codex review: the rescue must never let an ad through; the model files
+        # ads under business or food-drink (all nine on 2026-10-17 did)
+        batch = posts(BUSINESS_ADS)
+        answer = [{"i": k, "junk": "tunein", "local": True, "ch": item["ch"],
+                   "topic": "food-drink" if k % 2 else "business", "score": 1}
+                  for k, item in enumerate(batch)]
+        tags = tw.validate_tags(answer, batch, 1)
+        self.assertEqual({tag["junk"] for tag in tags.values()}, {"tunein"})
+
+    def test_x_is_judged_as_a_headline(self):
+        batch = [{"id": "a", "ch": "x", "local": True, "name": "@band", "handle": "@band", "d": 1,
+                  "title": "The band plays The Old Post tonight"},
+                 {"id": "b", "ch": "x", "local": True, "name": "@wcax", "handle": "@wcax", "d": 1,
+                  "title": "Join us tonight at 6 for the debate"}]
+        self.assertEqual(list(self.verdicts(batch, "tunein").values()), ["none", "tunein"])
+
     def test_business_ads_stay_promo(self):
         # no code path softens promo: the model's verdict on an ad stands
         got = self.verdicts(posts(BUSINESS_ADS), "promo")

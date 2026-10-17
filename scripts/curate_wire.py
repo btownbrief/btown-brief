@@ -18,9 +18,10 @@ editor model, with prompts/wire-taste.md as its doctrine, for:
     the current update with its reason, and which running items to drop if
     the day passes RIVER_MAX (300: the river is meant to feel almost endless).
     Inside an update the code sets the order: the lead, then this hour's
-    additions by importance with local and national mixed (never more than
-    KIND_RUN_MAX of one kind in a row), never two from one outlet back to
-    back, and an X desk's bunch of posts spread out (order_update).
+    additions in the editor's order of importance, local and national mixed
+    (never more than KIND_RUN_MAX of one kind in a row), never two from one
+    outlet back to back, and an X desk's bunch of posts spread out
+    (order_update).
 
 Output, data/wire-today.json:
 
@@ -465,19 +466,25 @@ def spread_outlets(picks):
 
 def _fits(out, item, waiting, kind=True, outlet=True, posts=True):
     """May `item` go next after `out`? `waiting` counts the items still to
-    place by kind ({True: local, False: national}), `item` included."""
+    place, `item` included: by kind (True local, False national), by channel
+    ("ch:x"), and in all ("all")."""
     if not out:
         return True
-    local = bool(item.get("local"))
+    local, ch = bool(item.get("local")), item.get("ch")
     if kind and waiting[not local] and len(out) >= KIND_RUN_MAX \
             and all(bool(o.get("local")) == local for o in out[-KIND_RUN_MAX:]):
         return False
     if outlet and item.get("src") == out[-1].get("src"):
         return False
-    if posts and item.get("ch") in SPREAD_CHANNELS and len(out) >= POST_RUN_MAX \
-            and all(o.get("ch") == item["ch"] for o in out[-POST_RUN_MAX:]):
+    if posts and ch in SPREAD_CHANNELS and waiting["all"] > waiting["ch:" + ch] \
+            and len(out) >= POST_RUN_MAX and all(o.get("ch") == ch for o in out[-POST_RUN_MAX:]):
         return False
     return True
+
+
+def _count(waiting, item, step):
+    for key in (bool(item.get("local")), "ch:" + str(item.get("ch")), "all"):
+        waiting[key] = waiting.get(key, 0) + step
 
 
 def spread_river(queue, placed=()):
@@ -489,20 +496,34 @@ def spread_river(queue, placed=()):
        other kind still has items to place
     2. never two from one outlet back to back
     3. never more than POST_RUN_MAX X posts (or Facebook, or Reddit) in a row
+       while anything else waits
 
-    When no item keeps all three, the softest gives way first. An order that
-    already keeps them comes back unchanged, so a settled update stays put."""
+    It looks one slot ahead, so a choice does not leave the next slot no way
+    to keep them (AP, Reuters, AP, then only an AP and a local left). When no
+    item keeps all three, the softest gives way first. An order that already
+    keeps them comes back unchanged, so a settled update stays put."""
     queue, out = list(queue), list(placed)
-    waiting = {True: 0, False: 0}
+    waiting = {True: 0, False: 0, "all": 0}
     for item in queue:
-        waiting[bool(item.get("local"))] += 1
+        _count(waiting, item, 1)
+
+    def leaves_a_move(k):
+        if len(queue) == 1:
+            return True
+        _count(waiting, queue[k], -1)
+        after = out + [queue[k]]
+        ok = any(_fits(after, item, waiting) for j, item in enumerate(queue) if j != k)
+        _count(waiting, queue[k], 1)
+        return ok
+
     while queue:
-        for rules in ((True, True, True), (True, True, False), (True, False, False)):
-            at = next((k for k, item in enumerate(queue) if _fits(out, item, waiting, *rules)), None)
-            if at is not None:
-                break
+        fitting = [k for k, item in enumerate(queue) if _fits(out, item, waiting)]
+        at = next((k for k in fitting if leaves_a_move(k)), fitting[0] if fitting else None)
+        for rules in ((True, True, False), (True, False, False)):
+            if at is None:
+                at = next((k for k, item in enumerate(queue) if _fits(out, item, waiting, *rules)), None)
         item = queue.pop(at if at is not None else 0)
-        waiting[bool(item.get("local"))] -= 1
+        _count(waiting, item, -1)
         out.append(item)
     return out[len(placed):]
 
@@ -659,14 +680,12 @@ def apply_answer(day, answer, numbered_river, new, want_picks, et, now, previous
                     excess -= 1
         day["updates"] = updates = [u for u in updates if u["items"]]
 
-    # order inside each update: the lead first, then this hour's additions by
-    # importance (the tagger's score, the editor's order breaking ties), then
-    # the update's earlier items; local and national mixed, outlets and X
-    # bunches spread (order_update). An update that already reads well is
-    # left as it is, so only the current one really moves.
-    score = lambda index: by_index[index].get("_score", default_score(by_index[index]))  # noqa: E731
-    fresh = [by_index[index]["id"] for _, index in
-             sorted(enumerate(adds), key=lambda pair: (-score(pair[1]), pair[0]))]
+    # order inside each update: the lead first, then this hour's additions in
+    # the editor's order (most important first), then the update's earlier
+    # items; local and national mixed, outlets and X bunches spread
+    # (order_update). An update that already reads well is left as it is, so
+    # only the current one really moves.
+    fresh = [by_index[index]["id"] for index in adds]
     for update in updates:
         update["items"] = order_update(update["items"], (update.get("lead") or {}).get("id"),
                                        fresh if update is current else ())

@@ -1000,6 +1000,18 @@ class RiverOrderTests(Workdir):
         self.assertEqual(rule_breaks(out), [])
         self.assertEqual("".join("x" if i["ch"] == "x" else "." for i in out)[:6], "xx.xx.")
 
+    def test_a_choice_never_corners_the_next_slot(self):
+        # Codex review: AP, Reuters, AP left only an AP and a local, and two AP
+        # posts sat together. Looking one slot ahead keeps every rule.
+        items = [river_item(1, local=False, src="x:@AP", ch="x"),
+                 river_item(2, local=False, src="x:@AP", ch="x"),
+                 river_item(3, local=False, src="x:@Reuters", ch="x"),
+                 river_item(4, local=False, src="x:@Reuters", ch="x"),
+                 river_item(5, src="x:@AP", ch="x")]
+        out = cw.order_update(items, None, [i["id"] for i in items])
+        self.assertEqual(rule_breaks(out), [])
+        self.assertTrue(all(a["src"] != b["src"] for a, b in zip(out, out[1:])), out)
+
     def test_a_settled_update_stays_put(self):
         local = [river_item(k, src=("wcax", "vtd")[k % 2]) for k in range(7)]
         national = [river_item(10 + k, local=False, src="ap" if k % 2 else "npr") for k in range(4)]
