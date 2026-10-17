@@ -308,6 +308,8 @@ body.chrome-away .mast { transform: translateY(-100%); }
 .field::placeholder { color: var(--ink-3); }
 .signin { display: flex; gap: var(--s2); padding: var(--s1) 0 var(--s2); }
 .linkrow { display: flex; flex-wrap: wrap; gap: 8px; padding: 4px 0 8px; }
+.linkrow.tvplay { padding: 0 var(--gutter) 12px; align-items: center; }
+.linkrow.tvplay .note { font-size: var(--fs-meta); color: var(--ink-3); }
 
 /* ============================================================ peek */
 .peek { position: fixed; z-index: 96; left: 12px; right: 12px;

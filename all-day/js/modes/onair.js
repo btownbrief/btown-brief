@@ -288,27 +288,28 @@ function drawBrief(host) {
   if (!c) return false;
   const it = clipItem(c);
   app.know([it]);
-  const today = c.date === todayKey();
-  sec(host, 'The Brief, out loud', esc(today ? 'This morning’s top local stories, read to you.' : 'The latest one, from ' + weekday(c.date) + '. Today’s lands at 7 am.'), 'brief');
+  sec(host, 'The Brief, out loud', '', 'brief');
   const au = el('div', 'audio');
   au.dataset.k = it.k;
   au.innerHTML = '<button class="pb" data-pk="' + esc(it.k) + '" aria-label="Play the Brief, out loud">' + ICON.play + '</button><div><div class="eyebrow">' + esc(it.when) + '</div><h3>' +
-    esc(it.title) + '</h3><p>' + esc((it.text ? it.text + ' ' : '') + 'Read by an AI voice.') + '</p></div>' + wave();
+    esc(it.title) + '</h3><p>' + esc((it.text ? it.text + ' ' : '') + 'Read to you every morning at 7.') + '</p></div>' + wave();
   au.querySelector('.pb').addEventListener('click', () => app.play(it));
   host.appendChild(au);
   if (it.script) host.appendChild(button('Read it instead', 'ghost more', () => readScript(it, c)));
   return true;
 }
 
-/* the script the voice read, as text: the transcript, for reading or for anyone who cannot listen */
+/* the script the voice read, as text: the transcript, for reading or for anyone who cannot listen.
+   The script carries pacing marks for the voice ([pause], [softly]: build_wire_audio.py TAGS),
+   which are direction, never words, so the reader never sees them. */
+const PACING_RE = /[ \t]*\[[a-z ]{1,20}\][ \t]*/g;
 function readScript(it, c) {
   app.sheet(it.title, (body) => {
-    body.appendChild(el('p', 'sheet-note', esc(dayName(c.date) + ' · written from the Wire’s top local picks and read by an AI voice.')));
     const t = el('div', 'script');
     body.appendChild(t);
     const show = (text) => {
       t.innerHTML = '';
-      String(text || '').split(/\n\s*\n/).map((p) => p.trim()).filter(Boolean).forEach((p, i) => {
+      String(text || '').replace(PACING_RE, ' ').split(/\n\s*\n/).map((p) => p.trim()).filter(Boolean).forEach((p, i) => {
         if (i) t.appendChild(el('div', 'spacer'));
         t.appendChild(el('p', '', esc(p)));
       });
@@ -328,9 +329,8 @@ function drawTV(host) {
   const when = night + '’s edition';
   const local = localTonight(tv);
   const wider = every ? widerTonight(tv, local) : [];
-  sec(host, every ? 'Tonight, local and beyond' : 'Btown TV tonight', esc(every
-    ? when + ': the local picks, then three from the wider shelf. Each with a reason.'
-    : when + ': filmed here, made here, about here. Each with a reason.'), 'tv');
+  sec(host, every ? 'Tonight, local and beyond' : 'Btown TV tonight', '', 'tv');
+  drawTVPlay(host, tv, night);
   const list = local.concat(wider.map((x) => ({ ...x, wider: true })));
   if (list.length) {
     const r = rail(host);
@@ -345,7 +345,7 @@ function drawTV(host) {
     });
     app.know(items);
   } else {
-    host.appendChild(el('p', 'note pad', esc('Nothing filmed here made ' + night.toLowerCase() + '’s edition. The cameras below are still running, and Past nights has the last two weeks.')));
+    host.appendChild(el('p', 'note pad', esc('No local picks ' + said(night) + '.')));
   }
   const n = editionCount(tv);
   if (n) host.appendChild(button(esc('The whole edition · ' + plural(n, 'video', 'videos')), 'ghost more', () => editionSheet(tv, when)));
@@ -355,12 +355,44 @@ function drawTV(host) {
 function drawLive(host) {
   const live = arr(O.tv && O.tv.live).filter((v) => v && app.isVideoId(v.id) && !isAmbience(v) && (geo() === 'everything' || isLocalCam(v)));
   if (!live.length) return false;
-  sec(host, 'Live', esc(geo() === 'everything' ? 'Always on, here and elsewhere. Tap to watch.' : 'Always on, around here. A lake at night is not competing with anything.'), 'live');
+  sec(host, 'Live', '', 'live');
   const r = rail(host);
   const items = live.map((v) => videoItem(v, { live: true })).filter(Boolean);
   items.forEach((it) => r.appendChild(vcard(it, 'w220')));
   app.know(items);
   return true;
+}
+
+/* Play the night on your TV, on the tab face (it lived only in the edition's
+   sheet, and the old Watch tab had it filled under its masthead: sending the
+   whole night to a TV is the best thing Btown TV does). Tonight's playlist,
+   or, when tonight's did not publish (a dropped upload has done it), a quiet
+   link to the most recent past night that has one, said plainly. */
+function drawTVPlay(host, tv, night) {
+  const row = el('div', 'linkrow tvplay');
+  const url = playlistOf(tv);
+  if (url) {
+    row.appendChild(playLink(url, 'Play ' + said(night) + ' on your TV', 'btn', 'tonight'));
+  } else {
+    const prev = arr(O.tvEditions && O.tvEditions.editions)
+      .filter((e) => e && isDate(e.edition) && e.edition !== tv.edition && playlistOf(e))
+      .sort((a, b) => (a.edition < b.edition ? 1 : -1))[0];
+    if (!prev) return;
+    row.appendChild(playLink(playlistOf(prev), 'Play ' + said(nightOf(prev.edition)) + ' on your TV', 'btn ghost', 'past'));
+    row.appendChild(el('span', 'note', esc(night + '’s playlist isn’t up yet')));
+  }
+  host.appendChild(row);
+}
+
+const said = (night) => (/^(Tonight|Last night)$/.test(night) ? night.toLowerCase() : night);   // mid-sentence: “Play tonight”, “Play Friday night”
+
+function playLink(url, label, cls, which) {
+  const a = el('a', cls, ICON.play + ' ' + esc(label) + ' ' + ICON.ext);
+  a.href = url; a.target = '_blank'; a.rel = 'noopener';
+  a.dataset.tvplay = which;
+  a.title = 'Opens the playlist in YouTube: cast it, or open it on your TV';
+  if (app.demo) a.addEventListener('click', (e) => { e.preventDefault(); app.toast('Opens the night’s YouTube playlist in the real build'); });
+  return a;
 }
 
 /* One edition, in a sheet: the pick and every shelf, as video cards that
@@ -380,12 +412,10 @@ function editionSheet(ed, title) {
     const groups = [];
     if (ed.pick) groups.push({ title: 'The pick', items: [ed.pick] });
     shelvesOf(ed).forEach((s) => groups.push({ title: String(s.title || 'Shelf'), sub: String(s.sub || ''), items: arr(s.items) }));
-    let hidden = 0;
     const known = [];
     groups.forEach((g) => {
       const vids = g.items.filter((v) => v && app.isVideoId(v.id));
       const shown = every ? vids : vids.filter(isLocalVideo);
-      hidden += vids.length - shown.length;
       if (!shown.length) return;
       body.appendChild(el('div', 'sheet-h', esc(g.title) + (g.sub ? ' · <span>' + esc(g.sub) + '</span>' : '')));
       const f = el('div', 'feed tight');
@@ -394,7 +424,6 @@ function editionSheet(ed, title) {
     });
     app.know(known);
     if (!known.length) body.appendChild(el('p', 'sheet-note', 'Nothing filmed here that night.'));
-    if (hidden) body.appendChild(el('p', 'sheet-note', esc(plural(hidden, 'more video', 'more videos') + ' from the wider shelf. Flip the switch to Everything to see them.')));
     app.bindFeed(body, {});
   });
 }
@@ -525,9 +554,7 @@ function registerEmbed(frame) {
 
 function drawPodsHead(host) {
   const every = geo() === 'everything';
-  sec(host, every ? 'Podcasts' : 'Local podcasts', esc(every
-    ? 'Our own show, every show made here, then two from away.'
-    : 'Our own show first, then every show made here, newest episode first.'), 'pods');
+  sec(host, every ? 'Podcasts' : 'Local podcasts', '', 'pods');
 }
 
 function drawPods(host) {
@@ -540,10 +567,10 @@ function drawPods(host) {
   };
   local.forEach((s) => add(s));
   if (away.length) {
-    divider(host, 'From away', 'whichever published most recently');
+    divider(host, 'From away');
     away.forEach((s) => add(s, { national: true }));
   }
-  if (!local.length && !away.length && O.settled.pulse) host.appendChild(el('p', 'note pad', esc(O.failed.pulse ? 'The podcast feed didn’t load. It rides the same wire as the headlines and comes back on its own.' : 'No episodes on the wire right now.')));
+  if (!local.length && !away.length && O.settled.pulse) host.appendChild(el('p', 'note pad', esc(O.failed.pulse ? 'The podcast feed didn’t load. It rides the same wire as the headlines and comes back on its own.' : 'No episodes right now.')));
 }
 
 function drawPast(host) {
@@ -561,7 +588,7 @@ function drawPast(host) {
     })
     .filter((x) => x.n && x.lead);
   if (!nights.length) return false;
-  sec(host, 'Past nights', esc(every ? 'Every edition from the last two weeks.' : 'The local picks from the last two weeks.'), 'past');
+  sec(host, 'Past nights', '', 'past');
   const r = rail(host);
   const items = nights.map(({ e, n, lead }) => {
     const v = videoItem(lead);
@@ -610,7 +637,6 @@ function render() {
   S.past.hidden = !drawPast(S.past);
   S.end.appendChild(cards.caught({
     title: 'That’s On Air',
-    text: 'The Brief, out loud lands at 7 every morning, and Btown TV’s new edition around 8 every evening.',
     check: false,
   }));
   app.paintPlayButtons();
@@ -696,7 +722,7 @@ function newSince(ts) {
 app.register(KEY, {
   label: 'On Air',
   icon: ICON.onair,
-  promise: 'The Brief read aloud, tonight’s Btown TV, live cams and every local podcast, in one player.',
+  promise: '',
   mount,
   activate(param) {
     if (param === 'local' || param === 'everything') {
