@@ -798,6 +798,73 @@ body.chrome-away .mast { transform: translateY(-100%); }
 .spacer { height: 12px; }
 .addrow { padding: 12px var(--gutter) 0; }
 
+/* ======================================================= Games */
+/* The arcade's cabinets (modes/games.js): a coloured screen with the game's
+   emoji over faint scanlines, as on play.btownbrief.com, then the name, the
+   pitch, this month's champ, and Play beside Invite. The emoji is drawn at
+   the emoji token and scaled up as artwork. */
+.gm-filters { padding-top: 0; }
+.gm-feat { padding: 0 var(--gutter) var(--s3); }
+.gm-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s3) 10px; padding: 0 var(--gutter); }
+.gm-cab { min-width: 0; display: flex; flex-direction: column; border: 1px solid var(--line); border-radius: var(--r-media); overflow: hidden; background: var(--raised); }
+.gm-scr { position: relative; display: flex; align-items: center; justify-content: center; aspect-ratio: 4 / 3; background: var(--mk); overflow: hidden; }
+.gm-scr::before { content: ""; position: absolute; inset: 0; background-image: repeating-linear-gradient(to bottom, var(--media-line) 0 1px, transparent 1px 3px); opacity: .45; }
+.gm-scr::after { content: ""; position: absolute; inset: 0; background: radial-gradient(ellipse at 30% 20%, var(--media-sheen), transparent 60%); }
+.gm-emo { position: relative; z-index: 1; font-size: var(--fs-emoji); line-height: 1; transform: scale(1.6); filter: drop-shadow(0 3px 5px var(--media-line)); }
+.gm-cab.feat .gm-scr { aspect-ratio: 2 / 1; }
+.gm-cab.feat .gm-emo { transform: scale(2.4); }
+.tag.gm-new { position: absolute; z-index: 1; left: 8px; top: 8px; color: var(--on-media); background: var(--media-chip); }
+.gm-cab-b { flex: 1; display: flex; flex-direction: column; gap: var(--s1); padding: 10px 12px 12px; min-width: 0; }
+.gm-name { font-size: var(--fs-sub); font-weight: 600; line-height: var(--lh-title); }
+.gm-cab.feat .gm-name { font-family: var(--serif); font-size: var(--fs-display); font-weight: 500; }
+.gm-pitch { font-size: var(--fs-small); color: var(--ink-2); line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.gm-cab.feat .gm-pitch { font-size: var(--fs-body); line-height: var(--lh-body); -webkit-line-clamp: 3; }
+.gm-champ { display: flex; align-items: center; gap: var(--s1); font-size: var(--fs-small); color: var(--ink-3); min-width: 0; }
+.gm-champ .i { width: 14px; height: 14px; flex: 0 0 auto; color: var(--accent); }
+.gm-champ span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.gm-champ b { color: var(--ink-2); font-weight: 600; }
+.gm-acts { display: flex; gap: 6px; margin-top: auto; padding-top: var(--s2); }
+.gm-acts .pillbtn { flex: 1 1 0; min-width: 0; justify-content: center; }
+.gm-cab.feat .gm-acts .pillbtn { flex: 0 0 auto; padding: 0 18px; }
+.btn.gm-share { width: 36px; padding: 0; }
+
+/* what people are playing: a poll, each row's bar its share of the "me too"s */
+.gm-say { display: flex; gap: var(--s2); padding: 0 var(--gutter) var(--s3); }
+.gm-say select.field { flex: 0 0 auto; width: 100px; padding: 0 14px; appearance: none; -webkit-appearance: none; }
+.gm-say input.field { padding: 0 14px; }
+.gm-polls { padding: 0 var(--gutter); }
+.gm-poll { position: relative; isolation: isolate; display: grid; grid-template-columns: minmax(0, 1fr) auto auto; align-items: center; gap: var(--s2);
+  padding: 9px 4px 9px 12px; margin-bottom: 6px; border-radius: var(--r-tile); overflow: hidden; }
+.gm-bar { position: absolute; z-index: -1; left: 0; top: 0; bottom: 0; width: var(--w); background: var(--paper-2); border-radius: var(--r-tile); }
+.gm-poll.on .gm-bar { background: var(--accent-soft); }
+.gm-pl { min-width: 0; }
+.gm-pl .t { font-size: var(--fs-body); font-weight: 600; line-height: 1.3; }
+.gm-pl .s { font-size: var(--fs-small); color: var(--ink-3); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tag.gm-plat { color: var(--ink-2); background: var(--line-soft); vertical-align: 1px; }
+.gm-metoo { height: 32px; padding: 0 12px; display: inline-flex; align-items: center; gap: 6px; border: 1px solid var(--line); border-radius: var(--r-pill);
+  background: var(--paper); font-size: var(--fs-meta); font-weight: 600; color: var(--ink-2); white-space: nowrap; }
+.gm-metoo .n { font-variant-numeric: tabular-nums; color: var(--ink-3); }
+.gm-metoo .n:empty { display: none; }
+.gm-metoo.on { background: var(--accent); border-color: var(--accent); color: var(--on-ink); }
+.gm-metoo.on .n { color: var(--on-ink); }
+.gm-poll .act { height: 32px; min-width: 32px; padding: 0 6px; color: var(--ink-3); }
+.gm-inv { padding: 0 0 var(--s2); }
+
+/* gamertags: a member, then a chip per gaming handle that copies it */
+.gm-signin { display: flex; align-items: center; justify-content: space-between; gap: var(--s3); padding: 0 var(--gutter); }
+.gm-signin p { font-size: var(--fs-body); color: var(--ink-2); line-height: 1.35; }
+.gm-tags { padding: 0 var(--gutter); }
+.gm-tag { display: grid; grid-template-columns: 30px minmax(0, 1fr); align-items: start; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--line-soft); }
+.gm-tag-b { min-width: 0; }
+.gm-tag .t { font-size: var(--fs-body); font-weight: 600; line-height: 1.3; }
+.gm-tag .t .s { font-size: var(--fs-meta); font-weight: 400; color: var(--ink-3); }
+.gm-hs { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+.gm-h { display: inline-flex; align-items: center; gap: 6px; max-width: 100%; height: 28px; padding: 0 10px; border-radius: var(--r-pill); background: var(--paper-2); font-size: var(--fs-meta); }
+.gm-h span { color: var(--ink-3); flex: 0 0 auto; }
+.gm-h b { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 600; color: var(--ink); }
+.gm-vr-go { padding: var(--s2) var(--gutter) 0; }
+@media (min-width: 900px) { .gm-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } .gm-cab.feat .gm-scr { aspect-ratio: 3 / 1; } }
+
 /* ======================================================= board posts */
 /* A reader's post on a tab's board (cards.board, boards.js): the author where
    a source would be, then the post, then the board's own action row. */
