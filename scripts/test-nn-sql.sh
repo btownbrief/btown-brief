@@ -1,19 +1,25 @@
 #!/usr/bin/env bash
-# Applies all-day/supabase/nn-SETUP.sql (and then nn-ROUND2.sql over it) to
+# Applies all-day/supabase/nn-SETUP.sql (then nn-ROUND2.sql and nn-ROUND3.sql) to
 # scratch LOCAL Postgres databases and runs the checks against them as the
 # anon and authenticated roles, the way the app's publishable key reaches
 # Supabase. It never touches the live project.
 #
 #   bash scripts/test-nn-sql.sh
 #
-# Five scratch databases, each built the way Stephen's project was:
+# Seven scratch databases, each built the way Stephen's project was:
 #   1. nn-SETUP.sql alone: scripts/test-nn-sql.sql (round one).
-#   2. nn-SETUP.sql, then nn-ROUND2.sql with nothing else installed (no
-#      People, no Watch, no storage): round one's checks still pass.
-#   3. nn-SETUP.sql, nn-people.sql, nn-watch.sql, then nn-ROUND2.sql: the
-#      People and Watch tabs' own checks still pass (one database each).
+#   2. nn-SETUP.sql, then nn-ROUND2.sql and nn-ROUND3.sql with nothing else
+#      installed (no People, no Watch, no storage): round one's checks
+#      still pass.
+#   3. nn-SETUP.sql, nn-people.sql, nn-watch.sql, then nn-ROUND2.sql and
+#      nn-ROUND3.sql: the People and Watch tabs' own checks still pass (one
+#      database each).
 #   4. the same plus a storage stand-in: scripts/test-nn-round2-sql.sql.
-# nn-ROUND2.sql is applied twice every time: it must be safe to paste again.
+#   5. round three's own checks, scripts/test-nn-round3-sql.sql, twice:
+#      with People, Watch, the photo queue and storage all installed, and
+#      with none of them (no photo queue either).
+# nn-ROUND2.sql and nn-ROUND3.sql are applied twice every time: each must
+# be safe to paste again.
 #
 # Needs a local Postgres you can reach with psql (Homebrew's postgresql@17:
 # brew services start postgresql@17). When there is none, it says so and
@@ -37,6 +43,8 @@ fi
 apply() { psql -v ON_ERROR_STOP=1 -d "$DB" -q -f "$1" >/dev/null; }
 check() { psql -v ON_ERROR_STOP=1 -d "$DB" -q -o /dev/null -f "$1"; }
 
+# fresh [nophotos]: a new scratch database with round one on it; nophotos
+# leaves out the photo queue stand-in (and db/photos-board.sql with it)
 fresh() {
 psql -v ON_ERROR_STOP=1 -d postgres -qc "drop database if exists $DB" -qc "create database $DB" >/dev/null
 psql -v ON_ERROR_STOP=1 -d "$DB" -q <<'SQL'
@@ -54,6 +62,9 @@ grant execute on function auth.uid() to anon, authenticated;
 -- default; do the same here so the file's own revokes are what is tested.
 alter default privileges in schema public grant all on tables to anon, authenticated;
 alter default privileges in schema public grant all on functions to anon, authenticated;
+SQL
+if [ "${1:-}" != nophotos ]; then
+psql -v ON_ERROR_STOP=1 -d "$DB" -q <<'SQL'
 create table public.btb_photos (id uuid primary key default gen_random_uuid(), storage_path text unique not null,
   status text not null default 'pending', decided_at timestamptz, spot text not null default '', created_at timestamptz not null default now(),
   caption text not null default '', category text not null default 'other' constraint btb_photos_category_check check (category in ('other')),
@@ -61,12 +72,23 @@ create table public.btb_photos (id uuid primary key default gen_random_uuid(), s
 create table public.btb_photo_votes (photo_id uuid references public.btb_photos(id) on delete cascade, voter text, primary key (photo_id, voter));
 revoke all on table public.btb_photos, public.btb_photo_votes from anon, authenticated;
 SQL
+fi
 apply all-day/supabase/nn-SETUP.sql
 # Twice: the file must be safe to paste again.
 apply all-day/supabase/nn-SETUP.sql
 # the photo queue's gallery filter for board photos, also twice
-apply db/photos-board.sql
-apply db/photos-board.sql
+if [ "${1:-}" != nophotos ]; then
+  apply db/photos-board.sql
+  apply db/photos-board.sql
+fi
+}
+
+# rounds two and three over round one, each pasted twice
+rounds() {
+  apply all-day/supabase/nn-ROUND2.sql
+  apply all-day/supabase/nn-ROUND2.sql
+  apply all-day/supabase/nn-ROUND3.sql
+  apply all-day/supabase/nn-ROUND3.sql
 }
 
 storage() {
@@ -84,20 +106,18 @@ SQL
 fresh
 check scripts/test-nn-sql.sql
 
-# 2. round two over round one, nothing else installed
+# 2. rounds two and three over round one, nothing else installed
 fresh
-apply all-day/supabase/nn-ROUND2.sql
-apply all-day/supabase/nn-ROUND2.sql
+rounds
 check scripts/test-nn-sql.sql
 
-# 3. round two over round one, People and Watch: their checks still pass
+# 3. rounds two and three over round one, People and Watch: their checks still pass
 # (each on its own database, since both make the same test readers)
 for tab in people watch; do
   fresh
   apply all-day/supabase/nn-people.sql
   apply all-day/supabase/nn-watch.sql
-  apply all-day/supabase/nn-ROUND2.sql
-  apply all-day/supabase/nn-ROUND2.sql
+  rounds
   check scripts/test-nn-$tab-sql.sql
 done
 
@@ -106,9 +126,19 @@ fresh
 apply all-day/supabase/nn-people.sql
 apply all-day/supabase/nn-watch.sql
 storage
-apply all-day/supabase/nn-ROUND2.sql
-apply all-day/supabase/nn-ROUND2.sql
+rounds
 check scripts/test-nn-round2-sql.sql
+
+# 5. round three's own checks: everything installed, then nothing optional
+fresh
+apply all-day/supabase/nn-people.sql
+apply all-day/supabase/nn-watch.sql
+storage
+rounds
+check scripts/test-nn-round3-sql.sql
+fresh nophotos
+rounds
+check scripts/test-nn-round3-sql.sql
 
 psql -d postgres -qc "drop database if exists $DB" >/dev/null
 echo "test-nn-sql: OK"
