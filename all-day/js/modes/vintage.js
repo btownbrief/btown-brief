@@ -585,9 +585,35 @@ function photoForm(o) {
   return f;
 }
 
+/* ------------------------------------------------------ put it on a shirt */
+/* The Art tab's "Put it on a shirt" lands here as #vintage/b-<art post id>
+   (post ids are uuids, so it never matches a Vintage post). Only posts
+   whose maker ticked the shirt box carry that button, so only those are
+   looked up: up to three pages of the Art wall's shirt-yes posts. */
+function artForShirt(id, before, page) {
+  return boards.list('art', { meta: { shirt: 'yes' }, limit: 60, before }).then((r) => {
+    const hit = r.posts.find((p) => p.id === id);
+    if (hit || !r.posts.length || page >= 2) return hit || null;
+    return artForShirt(id, r.posts[r.posts.length - 1].created_at, page + 1);
+  });
+}
+function shirtSheet(p) {
+  app.sheet('Put it on a shirt', (body) => {
+    if (p.photo) body.appendChild(el('span', 'c-media r45', art(boards.photoUrl(p.photo))));
+    body.appendChild(el('p', 'pick-why', '<b>' + esc(p.title) + '</b>' + esc(' by ' + (p.author || 'a neighbor'))));
+    body.appendChild(el('p', 'sheet-note', esc((p.author || 'The maker') + ' said yes to a shirt. Stephen picks neighbors’ art for the shop and prints it; the maker gets free shirts or store credit, never cash. Votes on the Art wall put it at the top of his list.')));
+    const links = el('div', 'linkrow');
+    links.appendChild(button('Vote for it on the Art wall', '', () => app.go('art', 'b-' + p.id)));
+    links.appendChild(outLink('Browse the shop', SHOP_URL));
+    body.appendChild(links);
+  });
+}
+
 /* -------------------------------------------------------------- deep links */
 /* #vintage/spotted|shops|swaps|tees|fit jumps to a section; b-<id> is a
-   post, s-<id> a shop, d-<id> a design. A key waits for its list to load. */
+   post (or an Art post on its way to a shirt), s-<id> a shop, d-<id> a
+   design. A key waits for its list to load. */
+const GONE = 'That post has gone: someone got it, or its three weeks ran out.';
 function land() {
   if (!pending || !ready) return;
   const k = pending;
@@ -596,7 +622,11 @@ function land() {
   if (!loaded) return;
   pending = null;
   if (app.flashHit(root, k)) return;
-  app.toast(/^b-/.test(k) ? 'That post has gone: someone got it, or its three weeks ran out.' : 'That one has moved on.');
+  if (/^b-/.test(k)) {
+    artForShirt(k.slice(2), null, 0).then((p) => { if (p) shirtSheet(p); else app.toast(GONE); });
+    return;
+  }
+  app.toast('That one has moved on.');
 }
 
 app.register(KEY, {

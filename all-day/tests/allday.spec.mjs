@@ -2352,11 +2352,13 @@ async function theVintage(browser, base) {
       { ...base0, id: '0000cccc-0000-4000-8000-000000000004', board: 'vintage', kind: 'spotted', title: 'Lake ink', body: 'Pen and ink\n\nThanks in: store credit', meta: { shop: 'Make a tee' }, photo: 'submissions/abcd-4.jpg', created_at: at(5), expires_at: ends(18) },
     ];
     const swap = { ...base0, id: '0000cccc-0000-4000-8000-000000000005', board: 'vintage', kind: 'swap', title: 'Band tees', meta: { want: 'Denim', size: 'M' }, photo: null, created_at: at(6), expires_at: ends(17) };
+    const artPost = { ...base0, id: '0000dddd-0000-4000-8000-000000000001', board: 'art', kind: 'art', title: 'Camel’s Hump in gouache', author: 'Dev', meta: { shirt: 'yes' }, photo: 'submissions/art-1.jpg', created_at: at(8), expires_at: null };
     const calls = [];
     const { ctx, page, errors } = await newPage(browser, base, {
       rpc: (fn, args) => {
         if (!/^nn_/.test(fn)) return undefined;
         calls.push({ fn, args });
+        if (fn === 'nn_posts_list' && args.p_board === 'art') return args.p_filter.meta && args.p_filter.meta.shirt === 'yes' ? [artPost] : [];
         if (fn === 'nn_posts_list') return args.p_filter.kind === 'swap' ? [swap] : spotted;
         return undefined;
       },
@@ -2377,6 +2379,12 @@ async function theVintage(browser, base) {
     await page.goto(base + '/all-day/#vintage/b-0000cccc-0000-4000-8000-00000000dead');
     await page.waitForSelector('#toast:not([hidden])', { timeout: 6000 }).catch(() => {});
     check(/That post has gone/.test(await page.$eval('#toast', (t) => t.textContent)), 'a post that has gone says so', await page.$eval('#toast', (t) => t.textContent));
+    await page.goto(base + '/all-day/#vintage/b-0000dddd-0000-4000-8000-000000000001');
+    await page.waitForSelector('.sheet-card[aria-label="Put it on a shirt"]', { timeout: 6000 }).catch(() => {});
+    const shirt = await page.$eval('.sheet-body', (b) => ({ text: b.innerText, img: (b.querySelector('img') || {}).src || '' })).catch(() => ({ text: '', img: '' }));
+    check(/Camel’s Hump in gouache by Dev/.test(shirt.text) && /said yes to a shirt/.test(shirt.text) && /submissions\/art-1\.jpg$/.test(shirt.img), 'Art’s “Put it on a shirt” link opens the piece here, picture, title and maker', JSON.stringify(shirt));
+    check(!/\$\s?\d|\bprice\b/i.test(shirt.text), 'and it names no price', shirt.text);
+    check(calls.some((c) => c.fn === 'nn_posts_list' && c.args.p_board === 'art' && JSON.stringify(c.args.p_filter) === '{"meta":{"shirt":"yes"}}'), 'it looks only among Art posts whose maker said yes to a shirt', '');
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
   });
