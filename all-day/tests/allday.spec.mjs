@@ -3104,7 +3104,8 @@ async function theArt(browser, base) {
     await page.goto(base + '/all-day/?demo=1#art/wall');
     await settle(page);
     const grid = await page.$$eval(artPanel + ' .grid3 .tile', (ts) => ts.map((t, i) => ({ i, tall: t.classList.contains('tall'), ct: !!t.querySelector('.ct'), lbl: t.querySelector('.lbl') && t.querySelector('.lbl').textContent })));
-    check(grid.length === 17 && grid.filter((t) => t.ct).length === 14 && grid.filter((t) => t.lbl === 'From the gallery').length === 3, 'fourteen posts with votes and three gallery photos', JSON.stringify(grid.length));
+    check(grid.length === 17 && grid.filter((t) => t.ct).length === 14 && JSON.stringify(grid.filter((t) => t.lbl).map((t) => t.lbl)) === '["Sunset from Waterfront Park","The Church Street lights","Morning coffee on Pine Street"]',
+      'fourteen posts with votes and three gallery photos, each labelled with its own caption', JSON.stringify(grid.filter((t) => t.lbl).map((t) => t.lbl)));
     check(JSON.stringify(grid.filter((t) => t.tall).map((t) => t.i)) === '[0,7,10]', 'two tall tiles in every ten, none where it would leave a hole', JSON.stringify(grid.filter((t) => t.tall).map((t) => t.i)));
     const holes = await page.$eval(artPanel + ' .grid3', (g) => {
       const r = [...g.children].map((t) => t.getBoundingClientRect());
@@ -3250,7 +3251,7 @@ async function theArt(browser, base) {
     const rows = [
       ['11111111-0000-4000-8000-000000000001', 'Sunset from Waterfront Park', 'sunsets', 'Waterfront Park', '2026-04-02'],
       ['11111111-0000-4000-8000-000000000002', 'Church Street lights', 'street', 'Church Street', '2026-04-02'],
-      ['11111111-0000-4000-8000-000000000003', 'The ferry dock', 'other', 'King Street dock', '2026-04-01'],
+      ['11111111-0000-4000-8000-000000000003', '', 'other', 'King Street dock', '2026-04-01'],
       ['11111111-0000-4000-8000-000000000004', 'Leddy in June', 'sunsets', 'Leddy Park', '2026-06-20'],
       ['11111111-0000-4000-8000-000000000005', 'Pine Street mural', 'street', 'Pine Street', '2026-08-03'],
       ['11111111-0000-4000-8000-000000000006', 'A board photo', 'other', 'All Day · Art', at('2026-10-10')],
@@ -3265,7 +3266,9 @@ async function theArt(browser, base) {
     await page.waitForSelector(artPanel + ' .grid3 .tile', { timeout: 6000 }).catch(() => {});
     const tiles = await page.$$eval(artPanel + ' .grid3 .tile', (ts) => ts.map((t) => ({ label: t.getAttribute('aria-label'), lbl: t.querySelector('.lbl') && t.querySelector('.lbl').textContent,
       votes: !!t.querySelector('.ct'), src: t.querySelector('img') && t.querySelector('img').getAttribute('src'), lazy: t.querySelector('img') && t.querySelector('img').getAttribute('loading') })));
-    check(tiles.length === 5 && tiles.every((t) => t.lbl === 'From the gallery' && !t.votes), 'the five gallery photos, labelled from the gallery, without votes', JSON.stringify(tiles.map((t) => t.label)));
+    check(tiles.length === 5 && tiles.every((t) => !t.votes && /, from the gallery$/.test(t.label)), 'the five gallery photos, said to be from the gallery, without votes', JSON.stringify(tiles.map((t) => t.label)));
+    check(JSON.stringify(tiles.map((t) => t.lbl)) === '["Pine Street mural","Leddy in June","Sunset from Waterfront Park","Church Street lights","King Street dock"]',
+      'each tile is labelled with its caption, or where it was taken when it has none, never six of the same', JSON.stringify(tiles.map((t) => t.lbl)));
     check(/^Pine Street mural/.test(tiles[0].label) && tiles.every((t) => /\/storage\/v1\/object\/public\/btb-photos\/submissions\/\w+\.jpg$/.test(t.src) && t.lazy === 'lazy'), 'newest approved first, lazy, from the public bucket', JSON.stringify(tiles[0]));
     check(!tiles.some((t) => /A board photo|Tacos/.test(t.label)), 'a board post’s photo and Food’s dishes stay off the gallery half', '');
     const invite = await page.$eval(artPanel + ' [data-sec="week"]', (s) => ({ text: s.innerText, k: s.querySelector('[data-k]') && s.querySelector('[data-k]').dataset.k }));
