@@ -4598,7 +4598,7 @@ async function shellFixes(browser, base) {
   await group('shell fixes: the offline shell carries the new modules', async () => {
     const sw = await readFile(path.join(APP, 'sw.js'), 'utf8');
     const main = await readFile(path.join(APP, 'js/main.js'), 'utf8');
-    check(/VERSION = 'all-day-v48'/.test(sw), 'sw.js VERSION is bumped for the Wire’s Photo mode after the run clubs’ week, to v48', (sw.match(/VERSION = '[^']+'/) || [''])[0]);
+    check(/VERSION = 'all-day-v49'/.test(sw), 'sw.js VERSION is bumped for Food’s map and directory after the Wire’s Photo mode, to v49', (sw.match(/VERSION = '[^']+'/) || [''])[0]);
     const listed = [...sw.matchAll(/'\.\/(js\/[\w/.-]+\.js)'/g)].map((m) => m[1]);
     /* the offline list is exactly the modules that exist: none missing, none gone */
     const mods = [];
