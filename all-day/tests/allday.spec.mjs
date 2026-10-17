@@ -467,6 +467,8 @@ async function matrix(browser, base) {
         if (combo.viewport.width >= 900) {
           const rail = await page.evaluate(() => { const r = document.querySelector('#tabbar').getBoundingClientRect(); return { w: r.width, h: r.height }; });
           check(rail.w === 208 && rail.h > 600, 'the tab bar is a 208px left rail', JSON.stringify(rail));
+          const titleColor = await page.$eval('.mast-title', n => getComputedStyle(n).color);
+          check(titleColor === 'rgb(247, 244, 238)', 'desktop tab title stays cream on the navy mast', titleColor);
           const over = await page.$$eval('#tabbar button[data-tab]', (bs) => bs.filter((b) => b.scrollWidth > b.clientWidth + 1).map((b) => b.dataset.tab));
           check(!over.length, 'no tab label overflows the rail', over.join(', '));
         } else {

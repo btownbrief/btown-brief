@@ -36,7 +36,7 @@ a { color: inherit; text-decoration: none; }
 .mast {
   position: fixed; top: 0; left: 0; right: 0; z-index: 40;
   padding-top: var(--safe-t);
-  background: var(--lake);
+  background: var(--lake); color: var(--lake-ink);
   --ink: var(--lake-ink);
   --ink-2: var(--lake-muted);
   --ink-3: var(--lake-muted);
