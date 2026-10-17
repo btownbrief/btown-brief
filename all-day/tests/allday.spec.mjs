@@ -1691,6 +1691,11 @@ async function theGames(browser, base) {
     const champs = await page.$$eval(gmPanel + ' [data-champs] [data-k]', (n) => n.length);
     check(champs === (await gamesDemo()).champions.games.length, 'Champions: the reigning champ on every board', champs);
     check(await page.$$eval(gmPanel + ' [data-royalty] .r', (n) => n.length) === 5, 'and the five all-arcade leaders', '');
+    /* live, before nn-ROUND4.sql: the arcade still leads, the board is empty and offers no posting */
+    check(await page.$eval(gmPanel + ' [data-sec]', (n) => n.dataset.sec) === 'arcade' && await page.$$eval(gmPanel + ' .gm-cab', (n) => n.length) === 5, 'live: the arcade’s cabinets come first', '');
+    check(/Nobody’s posted yet/.test(await page.$eval(gmPanel + ' [data-slot="playing"]', (n) => n.innerText)) && !(await page.$(gmPanel + ' [data-say]')) && !(await page.$(gmPanel + ' [data-addlfg]')), 'live, older server: an empty poll and no posting until the board can take it', '');
+    check(supabase.some((u) => /nn_posts_list/.test(u)) && !supabase.some((u) => /nn_handles_recent/.test(u)), 'it reads the games board; signed out, it never asks for gamertags', supabase.filter((u) => /nn_/.test(u)).join(', '));
+    check(!!(await page.$(gmPanel + ' [data-tags="out"]')), 'signed out: the gamertags ask for a sign-in', '');
     /* the one board stubbed to fail logs its 500, once per load; nothing else may */
     const other = errors.filter((e) => !/status of 500/.test(e));
     check(!other.length, 'no console errors beyond the board stubbed to fail', other.join(' | '));
@@ -1734,39 +1739,216 @@ async function theGames(browser, base) {
     const old = await catalogAged(31);
     const a = await newPage(browser, base, { routes: [[/\/data\/games-catalog\.json/, old]] });
     await a.page.goto(base + '/all-day/#games/new');
-    await a.page.waitForSelector(gmPanel + ' [data-sec="new"]', { timeout: 15000 });
-    check(/Nothing new this month/.test(await gmText(a.page)) && !(await a.page.$(gmPanel + ' [data-k^="new:"]')), 'nothing within 30 days: “nothing new this month”', '');
+    await a.page.waitForSelector(gmPanel + ' [data-sec="arcade"]', { timeout: 15000 });
+    await a.page.waitForSelector('#toast:not([hidden])', { timeout: 6000 }).catch(() => {});
+    check(/Nothing new this month/.test(await a.page.$eval('#toast', (t) => t.textContent)), 'nothing within 30 days: #games/new says “nothing new this month”', '');
+    check(!(await a.page.$(gmPanel + ' [data-arcade] [data-chip="new"]')) && !(await a.page.$(gmPanel + ' .gm-new')), 'and there is no New chip and no New tag', '');
     await a.ctx.close();
     const fresh = await catalogAged(3);
     const b = await newPage(browser, base, { routes: [[/\/data\/games-catalog\.json/, fresh]] });
     await b.page.goto(base + '/all-day/#games/new');
-    await b.page.waitForSelector(gmPanel + ' [data-k^="new:"]', { timeout: 15000 });
-    const keys = await b.page.$$eval(gmPanel + ' [data-k^="new:"]', (n) => n.map((x) => x.dataset.k));
-    const want = fresh.games.filter((g) => g.live && g.live_since > dayMinus(etKey(Date.now()), 30)).map((g) => 'new:' + g.slug);
-    check(JSON.stringify(keys) === JSON.stringify(want), 'within 30 days: those games, newest first', keys.length + ' vs ' + want.length);
+    await b.page.waitForSelector(gmPanel + ' [data-arcade] [data-chip="new"].on', { timeout: 15000 });
+    await b.page.click(gmPanel + ' [data-allgames]');
+    const keys = await b.page.$$eval(gmPanel + ' .gm-grid .gm-cab', (n) => n.map((x) => x.dataset.k));
+    const want = fresh.games.filter((g) => g.live && g.live_since > dayMinus(etKey(Date.now()), 30)).map((g) => 'cab:' + g.slug);
+    check(keys.length > 4 && JSON.stringify(keys) === JSON.stringify(want), 'within 30 days: the New chip holds those games, newest first, every one after “All”', keys.length + ' vs ' + want.length);
+    check(await b.page.$$eval(gmPanel + ' .gm-grid .gm-cab .gm-new', (n) => n.length) === want.length, 'and each wears a New tag', '');
     check(b.page.url().endsWith('#games/new'), 'a #games/new link lands there', b.page.url());
     check(!a.errors.length && !b.errors.length, 'no console errors', a.errors.concat(b.errors).join(' | '));
     await b.ctx.close();
+  });
+
+  await group('Games, the arcade up front', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/all-day/?demo=1#games');
+    await page.waitForSelector(gmPanel + ' .gm-cab.feat', { timeout: 15000 });
+    const order = await page.$$eval(gmPanel + ' [data-sec]', (n) => n.map((x) => x.dataset.sec));
+    check(JSON.stringify(order.slice(0, 5)) === JSON.stringify(['arcade', 'playing', 'lfg', 'tags', 'vr']) && order.indexOf('board') > order.indexOf('challenge'),
+      'the games come first, then the people, then VR; the leaderboard moved below', order.join(' / '));
+    const demo = await gamesDemo();
+    const live = demo.catalog.games.filter((g) => g.live);
+    const cabs = await page.$$eval(gmPanel + ' .gm-cab', (n) => n.map((x) => ({ k: x.dataset.k, play: x.querySelector('.gm-acts a').href, scr: x.querySelector('.gm-scr').href, inv: x.querySelector('[data-invite]').getAttribute('href') })));
+    check(cabs.length === 5 && cabs[0].k === 'cab:pothole-patrol', 'one big cabinet (the newest game) and four more', cabs.map((c) => c.k).join(', '));
+    check(cabs.every((c) => c.play === 'https://play.btownbrief.com/' + c.k.slice(4) + '/' && c.scr === c.play), 'the screen and Play both open the game on the arcade', JSON.stringify(cabs[0]));
+    const body = decodeURIComponent(cabs[0].inv.replace(/^sms:\?&body=/, ''));
+    check(/^sms:\?&body=/.test(cabs[0].inv) && body === 'Play Pothole Patrol with me? https://play.btownbrief.com/pothole-patrol/', 'Invite is a text message with the game’s link and no number', cabs[0].inv);
+    check(/Dev K\./.test(await page.$eval(gmPanel + ' .gm-cab.feat', (n) => n.innerText)), 'a cabinet shows this month’s champ', '');
+    await page.click(gmPanel + ' [data-allgames]');
+    check(await page.$$eval(gmPanel + ' .gm-cab', (n) => n.length) === live.length, '“All n games” opens every live game', '');
+    const chipKeys = await page.$$eval(gmPanel + ' [data-arcade] .chip', (n) => n.map((x) => x.dataset.chip));
+    check(chipKeys[0] === 'all' && chipKeys[1] === 'new' && chipKeys.includes('out') && chipKeys.includes('board-card'), 'chips: All, New, the arcade’s sections, Out in Burlington', chipKeys.join(', '));
+    await page.click(gmPanel + ' [data-arcade] [data-chip="out"]');
+    const out = await page.$$eval(gmPanel + ' .gm-cab', (n) => n.map((x) => x.dataset.slug));
+    check(JSON.stringify(out.sort()) === JSON.stringify(live.filter((g) => g.where === 'out').map((g) => g.slug).sort()) && !(await page.$(gmPanel + ' .gm-cab.feat')), 'Out in Burlington: only the games that need real streets', out.join(', '));
+    await page.click(gmPanel + ' [data-arcade] [data-chip="party-night"]');
+    check(JSON.stringify(await page.$$eval(gmPanel + ' .gm-cab', (n) => n.map((x) => x.dataset.slug))) === '["btown-party"]', 'Party Night is a chip now, with its game', '');
+    /* the old links still land: #games/party opens that chip, new:<slug> flashes the cabinet */
+    await page.goto(base + '/all-day/?demo=1#games/new:tap-the-maple');
+    check(await flashes(page, 'cab:tap-the-maple'), 'an old #games/new:<slug> link lands on the cabinet', '');
+    await page.goto(base + '/all-day/?demo=1#games/party');
+    await page.reload();
+    await page.waitForSelector(gmPanel + ' [data-arcade] [data-chip="party-night"].on', { timeout: 8000 }).catch(() => {});
+    check(!!(await page.$(gmPanel + ' [data-arcade] [data-chip="party-night"].on')), '#games/party opens the arcade on Party Night', '');
+    /* on a screen without touch, Invite hands the words to the share sheet, or copies them */
+    await page.evaluate(() => { window.__copied = null; Object.defineProperty(navigator, 'share', { value: undefined, configurable: true }); navigator.clipboard.writeText = (t) => { window.__copied = t; return Promise.resolve(); }; });
+    await page.click(gmPanel + ' .gm-cab [data-invite]');
+    check(/with me\? https:\/\/play\.btownbrief\.com\/btown-party\/$/.test(await page.evaluate(() => window.__copied || '')), 'without touch, Invite copies the same words', await page.evaluate(() => window.__copied));
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Games, what people are playing', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/all-day/?demo=1#games/playing');
+    await page.waitForSelector(gmPanel + ' .gm-poll', { timeout: 15000 });
+    const rows = await page.$$eval(gmPanel + ' .gm-poll', (n) => n.map((x) => ({ t: x.querySelector('.t').innerText, n: Number(x.querySelector('.gm-metoo .n').textContent || 0) })));
+    check(rows.length === 8 && rows.every((r, i) => !i || rows[i - 1].n >= r.n), 'a poll: the most “me too”s first, eight before “more”', JSON.stringify(rows.map((r) => r.n)));
+    check(/EA Sports FC 26/.test(rows[0].t) && /PS5/.test(rows[0].t), 'each row is the game and its platform', rows[0].t);
+    await page.click(gmPanel + ' [data-plats] [data-chip="vr"]');
+    const vr = await page.$$eval(gmPanel + ' .gm-poll .t', (n) => n.map((x) => x.innerText));
+    check(vr.length === 2 && vr.every((t) => /VR/.test(t)), 'a platform chip narrows the poll', vr.join(' / '));
+    const first = gmPanel + ' .gm-poll:first-child [data-metoo]';
+    const before = Number(await page.$eval(first + ' .n', (n) => n.textContent || 0));
+    await page.click(first);
+    await page.waitForTimeout(200);
+    check(await page.$eval(first, (b) => b.getAttribute('aria-pressed')) === 'true' && Number(await page.$eval(first + ' .n', (n) => n.textContent)) === before + 1, '“Me too” is a vote, signed out too', '');
+    const widths = () => page.$$eval(gmPanel + ' .gm-poll', (n) => n.map((x) => parseFloat(x.style.getPropertyValue('--w'))));
+    const w1 = await widths();
+    await page.click(first);
+    await page.waitForTimeout(200);
+    check(Number(await page.$eval(first + ' .n', (n) => n.textContent || 0)) === before, 'and a second tap takes it back', '');
+    const w0 = await widths();
+    check(w0[0] === 100 && w1[0] === 100 && w1[1] < w0[1] && w0.every((w, i) => !i || w <= w0[i - 1]), 'each bar is drawn against the most-played game, and it moves with a vote', JSON.stringify([w0, w1]));
+    /* signed out, the line asks you to sign in instead of posting */
+    await page.fill(gmPanel + ' [data-say] input', 'Hades II');
+    await page.selectOption(gmPanel + ' [data-say] select', 'pc');
+    await page.click(gmPanel + ' [data-say] button[type="submit"]');
+    await page.waitForSelector('#sheet:not([hidden])', { timeout: 4000 }).catch(() => {});
+    check(!!(await page.$('#sheet:not([hidden])')), 'signed out, Post opens Settings to sign in', '');
+    await page.click('#sheet .sheet-head .iconbtn');
+    await page.evaluate(() => import('/all-day/js/auth.js').then((a) => a.demoSignIn()));
+    await page.evaluate(() => import('/all-day/js/boards.js').then((b) => b.setProfile({ display_name: 'Juniper' })));
+    await page.waitForTimeout(300);
+    await page.fill(gmPanel + ' [data-say] input', '<img src=x onerror="window.__xss=1">Hades II');
+    await page.selectOption(gmPanel + ' [data-say] select', 'pc');
+    await page.click(gmPanel + ' [data-say] button[type="submit"]');
+    await page.waitForFunction((p) => [...document.querySelectorAll(p + ' .gm-poll .t')].some((t) => /Hades II/.test(t.innerText)), gmPanel, { timeout: 6000 }).catch(() => {});
+    const mine = await page.$$eval(gmPanel + ' .gm-poll', (n) => n.filter((x) => /Hades II/.test(x.innerText)).map((x) => ({ img: !!x.querySelector('img'), del: !!x.querySelector('[data-act="bdelete"]'), t: x.querySelector('.t').innerText })));
+    check(mine.length === 1 && !mine[0].img && /<img/.test(mine[0].t) && mine[0].del, 'posted: it shows as text, never markup, with a delete on your own row', JSON.stringify(mine));
+    check(await page.evaluate(() => !window.__xss), 'and nothing ran', '');
+    /* Balatro has the fewest "me too"s: ninth, behind "more" on a fresh visit */
+    const k = await page.$$eval(gmPanel + ' .gm-poll', (n) => n.find((x) => /Balatro/.test(x.innerText)).dataset.k);
+    await page.goto(base + '/all-day/?demo=1#games/' + k);
+    await page.reload();
+    check(await flashes(page, k), 'a #games/b-<id> link lands on its row, even one behind “more”', k);
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Games, looking for a group', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/all-day/?demo=1#games/lfg');
+    await page.waitForSelector(gmPanel + ' [data-lfg]', { timeout: 15000 });
+    const cards = await page.$$eval(gmPanel + ' [data-lfg]', (n) => n.map((c) => ({ vote: c.querySelector('[data-act="bvote"]').innerText.trim(), meta: c.querySelector('.b-meta').innerText, inv: c.querySelector('[data-invite]').getAttribute('href'), k: c.dataset.k })));
+    check(cards.length === 4 && cards.every((c) => /^I’m in/.test(c.vote)), 'each group is a board card whose vote reads “I’m in”', cards.map((c) => c.vote).join(' / '));
+    const v = cards.find((c) => /Valorant/.test(c.meta));
+    const body = decodeURIComponent(v.inv.replace(/^sms:\?&body=/, ''));
+    check(/^Want in\? Valorant on PC, Weeknights after 9\. http:\/\/[^ ]+\?demo=1#games\/b-[\w-]+$/.test(body) && body.endsWith('#games/' + encodeURIComponent(v.k)), 'Invite by text: the game, the platform, when, and the link back to the post', body);
+    check(!/[\n\r]/.test(body) && /^sms:\?&body=[^&#]*$/.test(v.inv), 'the message is encoded whole: no raw &, # or line break can end it', v.inv);
+    check(!(await page.$(gmPanel + ' [data-addlfg]')) === false, '“Find a group” is offered', '');
+    await page.click(gmPanel + ' [data-addlfg]');
+    await page.waitForSelector('#sheet:not([hidden])', { timeout: 4000 });
+    check(/Sign in to post/.test(await page.$eval('#sheet', (n) => n.innerText)), 'signed out, it asks for a sign-in first', '');
+    /* a post built to break the invite: a direction override, a line break, and an emoji right at the 60-character cut */
+    await page.evaluate(() => import('/all-day/js/auth.js').then((a) => a.demoSignIn()));
+    await page.evaluate(() => import('/all-day/js/boards.js').then((b) => b.setProfile({ display_name: 'Juniper' })
+      .then(() => b.create('games', { kind: 'lfg', title: 'Bad invite', meta: { game: 'a'.repeat(59) + String.fromCodePoint(0x1F3AE), platform: 'pc', when: 'now' + String.fromCharCode(0x202E) + 'evil\nline' } }))));
+    await page.waitForFunction((p) => [...document.querySelectorAll(p + ' [data-lfg]')].some((c) => /Bad invite/.test(c.innerText)), gmPanel, { timeout: 6000 }).catch(() => {});
+    const bad = await page.$$eval(gmPanel + ' [data-lfg]', (n) => n.filter((c) => /Bad invite/.test(c.innerText)).map((c) => c.querySelector('[data-invite]').getAttribute('href')));
+    check(bad.length === 1 && !/%E2%80%AE|%0A|%0D/i.test(bad[0]) && decodeURIComponent(bad[0]).includes(String.fromCodePoint(0x1F3AE)), 'an invite drops direction overrides and line breaks, and keeps an emoji whole', bad.join(''));
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Games, gamertags', async () => {
+    const { ctx, page, errors, supabase } = await newPage(browser, base);
+    await page.goto(base + '/all-day/?demo=1#games/tags');
+    await page.waitForSelector(gmPanel + ' [data-tags="out"]', { timeout: 15000 });
+    check(/Sign in/.test(await page.$eval(gmPanel + ' [data-tags="out"]', (n) => n.innerText)) && !(await page.$(gmPanel + ' .gm-h')), 'signed out: one line and Sign in, and no handles', '');
+    await page.evaluate(() => import('/all-day/js/auth.js').then((a) => a.demoSignIn()));
+    await page.waitForSelector(gmPanel + ' [data-tags="ok"]', { timeout: 6000 });
+    const people = await page.$$eval(gmPanel + ' .gm-tag', (n) => n.map((x) => ({ name: x.querySelector('.t').innerText, kinds: [...x.querySelectorAll('.gm-h')].map((h) => h.dataset.kind) })));
+    const kinds = new Set(people.flatMap((p) => p.kinds));
+    check(people.length >= 3 && [...kinds].every((k) => ['psn', 'xbox', 'steam', 'switch', 'discord', 'epic', 'riot', 'chess'].includes(k)), 'signed in: members with gaming handles, and only their gaming handles', JSON.stringify(people));
+    const text = await page.$eval(gmPanel + ' [data-sec="tags"]', (n) => n.parentNode.innerText);
+    check(!/maya\.outside|kara\.thrifts|strava|Instagram/i.test(text), 'no Instagram, Strava or other non-gaming handle shows here', '');
+    check(!people.some((p) => /Tom A\./.test(p.name)), 'a member whose switch is off is not listed', '');
+    check(!/DevKplays/.test(await page.evaluate(() => JSON.stringify(localStorage))), 'nothing here keeps a handle on the device', '');
+    await page.evaluate(() => { window.__copied = null; navigator.clipboard.writeText = (t) => { window.__copied = t; return Promise.resolve(); }; });
+    await page.click(gmPanel + ' .gm-h[data-kind="psn"]');
+    check(await page.evaluate(() => window.__copied) === 'DevKplays', 'a handle chip copies the handle', await page.evaluate(() => window.__copied));
+    await page.click(gmPanel + ' [data-addtag]');
+    await page.waitForFunction(() => [...document.querySelectorAll('#sheet [data-handles] details')].some((d) => d.open && /Games/.test(d.querySelector('summary').textContent)), null, { timeout: 6000 }).catch(() => {});
+    const fold = await page.evaluate(() => [...document.querySelectorAll('#sheet [data-handles] details')].map((d) => d.querySelector('summary').textContent + ':' + d.open));
+    check(fold.includes('Games:true') && await page.evaluate(() => document.activeElement && document.activeElement.name === 'h:psn'), '“Add your gamertag” opens the profile at its Games fold, on the first box', fold.join(', '));
+    check(!supabase.length, 'the demo never calls Supabase', supabase.join(', '));
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Games, VR corner', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/all-day/?demo=1#games/vr');
+    await page.waitForSelector(gmPanel + ' [data-invr]', { timeout: 15000 });
+    const picks = await page.$$eval(gmPanel + ' .gm-vr', (n) => n.map((x) => [x.querySelector('.t').textContent, x.querySelector('a').href, x.querySelector('a').target]));
+    check(picks.length === 4 && picks.slice(0, 3).every(([, h, t]) => /^https:\/\/www\.meta\.com\/experiences\/[a-z0-9-]+\/\d+\/$/.test(h) && t === '_blank'), 'three picks, each on its official Meta store page, and the headsets', JSON.stringify(picks));
+    check(/Thrill of the Fight/.test(picks[0][0]) && /Eleven Table Tennis/.test(picks[1][0]), 'boxing and ping pong lead', '');
+    check(!/\$\d|sale|% off/i.test(await page.$eval(gmPanel + ' [data-slot="vr"]', (n) => n.innerText)), 'no prices and no sale claims', '');
+    check(await page.$eval(gmPanel + ' [data-invr]', (b) => b.dataset.invr) === '2', 'it counts the neighbors who posted a VR game', '');
+    await page.click(gmPanel + ' [data-invr]');
+    check(await page.$eval(gmPanel + ' [data-plats] .chip.on', (b) => b.dataset.chip) === 'vr', 'and that count opens the poll on VR', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
   });
 
   await group('Games, demo', async () => {
     const { ctx, page, errors, supabase } = await newPage(browser, base, { viewport: { width: 1280, height: 800 }, scheme: 'dark' });
     await page.goto(base + '/all-day/?demo=1#games');
     await page.waitForSelector(gmPanel + ' [data-you="ask"]', { timeout: 15000 });
+    await page.waitForSelector(gmPanel + ' .gm-poll', { timeout: 15000 });
     const chipsAt = await page.$$eval('#subnav .chip', (c) => c.map((x) => x.textContent));
-    check(JSON.stringify(chipsAt) === JSON.stringify(['This month', 'Challenge', 'New', 'Party night', 'Champions']), 'the chip row is the table of contents', chipsAt.join(' / '));
+    check(JSON.stringify(chipsAt) === JSON.stringify(['Arcade', 'Playing', 'Groups', 'Gamertags', 'VR', 'Challenge', 'Leaderboard', 'Champions']), 'the chip row is the table of contents', chipsAt.join(' / '));
     check(await page.$$eval(gmPanel + ' [data-me]', (n) => n.length) === 0, 'before a name, nothing is marked', '');
     await findMe(page, 'Juniper');
     check(await page.$$eval(gmPanel + ' [data-me]', (n) => n.length) === 3, 'the demo reader is on three boards', '');
     check(await page.evaluate(() => localStorage.getItem('allday-arcade-name')) === null, 'the demo keeps the name to the visit', '');
-    const newRows = await page.$$eval(gmPanel + ' [data-k^="new:"]', (n) => n.length);
-    check(newRows === 3, 'three new games', newRows);
-    check(await page.$$eval(gmPanel + ' [data-k^="party:"]', (n) => n.length) >= 1, 'Party night lists its games', '');
+    check(await page.$eval(gmPanel + ' [data-arcade] [data-chip="new"] .n', (n) => n.textContent) === '3', 'three new games', '');
+    /* finding the name scrolled down the page, which tucks the subnav away; back to the top */
+    await page.evaluate(() => document.querySelector('#panel-games').scrollTo(0, 0));
+    await page.waitForTimeout(400);
     await page.click('#subnav .chip[data-chip="champs"]');
-    await page.waitForTimeout(700);
+    await page.waitForFunction(() => { const r = document.querySelector('#panel-games [data-sec="champs"]').getBoundingClientRect(); return r.top >= 0 && r.top < 300; }, null, { timeout: 4000 }).catch(() => {});
     check(await page.evaluate(() => { const r = document.querySelector('#panel-games [data-sec="champs"]').getBoundingClientRect(); return r.top >= 0 && r.top < 300; }), 'a chip scrolls to its section', '');
+    await page.evaluate(() => document.querySelector('#panel-games').scrollTo(0, 0));
+    await page.waitForTimeout(400);
     await page.screenshot({ path: path.join(SHOTS, 'demo-games-desktop-dark.png') });
     check(!supabase.length, 'the demo never calls Supabase', supabase.join(', '));
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Games, 390 shots', async () => {
+    /* the tab top to bottom at phone width, signed in, for the PR */
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/all-day/?demo=1#games');
+    await page.waitForSelector(gmPanel + ' .gm-poll', { timeout: 15000 });
+    await page.evaluate(() => import('/all-day/js/auth.js').then((a) => a.demoSignIn()));
+    await page.waitForSelector(gmPanel + ' [data-tags="ok"]', { timeout: 6000 }).catch(() => {});
+    for (const key of ['arcade', 'playing', 'lfg', 'tags', 'vr']) {
+      await page.evaluate((k) => { const s = document.querySelector('#panel-games [data-sec="' + k + '"]'); const p = document.querySelector('#panel-games'); p.scrollTo(0, s.getBoundingClientRect().top + p.scrollTop - 100); }, key);
+      await page.waitForTimeout(200);
+      await page.screenshot({ path: path.join(SHOTS, 'demo-games-390-' + key + '.png') });
+    }
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
   });

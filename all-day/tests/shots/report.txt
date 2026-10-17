@@ -1102,7 +1102,7 @@
   ok   the Wire, Unfiltered › Unfiltered opens inside the tab
   ok   the Wire, Unfiltered › the raw wire draws sixty headlines to start
   ok   the Wire, Unfiltered › an outlet chip narrows the wire to that outlet
-  ok   the Wire, Unfiltered › search keeps only matching headlines (“Family”)
+  ok   the Wire, Unfiltered › search keeps only matching headlines (“HomeView”)
   ok   the Wire, Unfiltered › and the search field keeps the caret
   ok   the Wire, Unfiltered › By outlet draws a section per outlet
   ok   the Wire, Unfiltered › hold to peek works on the raw wire
@@ -1447,7 +1447,7 @@
   ok   Food, the directory over the wire (live) › no console errors
   ok   People: the rules in the module and the SQL agree › PEOPLE_RULES in people.js is nn_people_rules() in nn-people.sql
   ok   People: the rules in the module and the SQL agree › the tab never imports boards-fake.js; its mirror is its own
-  ok   People, live: Stephen’s meetups, the clubs, an empty board › every one of Stephen’s own events in the next two weeks shows (5)
+  ok   People, live: Stephen’s meetups, the clubs, an empty board › every one of Stephen’s own events in the next two weeks shows (4)
   ok   People, live: Stephen’s meetups, the clubs, an empty board › none is missed
   ok   People, live: Stephen’s meetups, the clubs, an empty board › and nothing that isn’t his
   ok   People, live: Stephen’s meetups, the clubs, an empty board › one thirteen days out, only on his Meetup calendar, shows (place: on Meetup, never guessed)
@@ -1516,7 +1516,7 @@
   ok   People, demo: posting a plan, the Meetup box, I’d go › its card says Down for Meetup, the band and the spots
   ok   People, demo: posting a plan, the Meetup box, I’d go › by first name, yours to delete, with I’d go and no one going yet
   ok   People, demo: posting a plan, the Meetup box, I’d go › I’d go: the going count goes to 1
-  ok   People, demo: posting a plan, the Meetup box, I’d go › on someone else’s plan too: 1 going becomes 2
+  ok   People, demo: posting a plan, the Meetup box, I’d go › on someone else’s plan too: 4 going becomes 5
   ok   People, demo: posting a plan, the Meetup box, I’d go › and tapping again takes it back
   ok   People, demo: posting a plan, the Meetup box, I’d go › people: nothing fixed or sticky inside the tab
   ok   People, demo: posting a plan, the Meetup box, I’d go › people: uppercase only in the caps roles
@@ -1743,6 +1743,10 @@
   ok   Games, live › no chat is built here
   ok   Games, live › Champions: the reigning champ on every board
   ok   Games, live › and the five all-arcade leaders
+  ok   Games, live › live: the arcade’s cabinets come first
+  ok   Games, live › live, older server: an empty poll and no posting until the board can take it
+  ok   Games, live › it reads the games board; signed out, it never asks for gamertags
+  ok   Games, live › signed out: the gamertags ask for a sign-in
   ok   Games, live › no console errors beyond the board stubbed to fail
   ok   Games, challenge fails soft › a game off the allowlist: that game can’t host a room right now
   ok   Games, challenge fails soft › and the ones that can are still offered
@@ -1752,19 +1756,67 @@
   ok   Games, one board stalls › a deep link that needs only the catalog lands while a board is still stuck
   ok   Games, one board stalls › the stuck board gives up and says it didn’t load; the rest drew
   ok   Games, one board stalls › no console errors
-  ok   Games, new this month › nothing within 30 days: “nothing new this month”
-  ok   Games, new this month › within 30 days: those games, newest first
+  ok   Games, new this month › nothing within 30 days: #games/new says “nothing new this month”
+  ok   Games, new this month › and there is no New chip and no New tag
+  ok   Games, new this month › within 30 days: the New chip holds those games, newest first, every one after “All”
+  ok   Games, new this month › and each wears a New tag
   ok   Games, new this month › a #games/new link lands there
   ok   Games, new this month › no console errors
+  ok   Games, the arcade up front › the games come first, then the people, then VR; the leaderboard moved below
+  ok   Games, the arcade up front › one big cabinet (the newest game) and four more
+  ok   Games, the arcade up front › the screen and Play both open the game on the arcade
+  ok   Games, the arcade up front › Invite is a text message with the game’s link and no number
+  ok   Games, the arcade up front › a cabinet shows this month’s champ
+  ok   Games, the arcade up front › “All n games” opens every live game
+  ok   Games, the arcade up front › chips: All, New, the arcade’s sections, Out in Burlington
+  ok   Games, the arcade up front › Out in Burlington: only the games that need real streets
+  ok   Games, the arcade up front › Party Night is a chip now, with its game
+  ok   Games, the arcade up front › an old #games/new:<slug> link lands on the cabinet
+  ok   Games, the arcade up front › #games/party opens the arcade on Party Night
+  ok   Games, the arcade up front › without touch, Invite copies the same words
+  ok   Games, the arcade up front › no console errors
+  ok   Games, what people are playing › a poll: the most “me too”s first, eight before “more”
+  ok   Games, what people are playing › each row is the game and its platform
+  ok   Games, what people are playing › a platform chip narrows the poll
+  ok   Games, what people are playing › “Me too” is a vote, signed out too
+  ok   Games, what people are playing › and a second tap takes it back
+  ok   Games, what people are playing › each bar is drawn against the most-played game, and it moves with a vote
+  ok   Games, what people are playing › signed out, Post opens Settings to sign in
+  ok   Games, what people are playing › posted: it shows as text, never markup, with a delete on your own row
+  ok   Games, what people are playing › and nothing ran
+  ok   Games, what people are playing › a #games/b-<id> link lands on its row, even one behind “more”
+  ok   Games, what people are playing › no console errors
+  ok   Games, looking for a group › each group is a board card whose vote reads “I’m in”
+  ok   Games, looking for a group › Invite by text: the game, the platform, when, and the link back to the post
+  ok   Games, looking for a group › the message is encoded whole: no raw &, # or line break can end it
+  ok   Games, looking for a group › “Find a group” is offered
+  ok   Games, looking for a group › signed out, it asks for a sign-in first
+  ok   Games, looking for a group › an invite drops direction overrides and line breaks, and keeps an emoji whole
+  ok   Games, looking for a group › no console errors
+  ok   Games, gamertags › signed out: one line and Sign in, and no handles
+  ok   Games, gamertags › signed in: members with gaming handles, and only their gaming handles
+  ok   Games, gamertags › no Instagram, Strava or other non-gaming handle shows here
+  ok   Games, gamertags › a member whose switch is off is not listed
+  ok   Games, gamertags › nothing here keeps a handle on the device
+  ok   Games, gamertags › a handle chip copies the handle
+  ok   Games, gamertags › “Add your gamertag” opens the profile at its Games fold, on the first box
+  ok   Games, gamertags › the demo never calls Supabase
+  ok   Games, gamertags › no console errors
+  ok   Games, VR corner › three picks, each on its official Meta store page, and the headsets
+  ok   Games, VR corner › boxing and ping pong lead
+  ok   Games, VR corner › no prices and no sale claims
+  ok   Games, VR corner › it counts the neighbors who posted a VR game
+  ok   Games, VR corner › and that count opens the poll on VR
+  ok   Games, VR corner › no console errors
   ok   Games, demo › the chip row is the table of contents
   ok   Games, demo › before a name, nothing is marked
   ok   Games, demo › the demo reader is on three boards
   ok   Games, demo › the demo keeps the name to the visit
   ok   Games, demo › three new games
-  ok   Games, demo › Party night lists its games
   ok   Games, demo › a chip scrolls to its section
   ok   Games, demo › the demo never calls Supabase
   ok   Games, demo › no console errors
+  ok   Games, 390 shots › no console errors
   ok   Watch, live from films.json › films.json is the list, and its subtitle is only the count to go
   ok   Watch, live from films.json › every film in its TMDB order
   ok   Watch, live from films.json › the chip row is the table of contents
@@ -1979,7 +2031,7 @@
   ok   sign-in fails soft › a bad address is caught before any request
   ok   sign-in fails soft › no link was requested
   ok   sign-in fails soft › no console errors
-  ok   performance › the live Wire redraws 60 cards in 15ms (budget 100)
+  ok   performance › the live Wire redraws 60 cards in 9ms (budget 100)
   ok   shell fixes: a rail never snaps flush to the edge › 390: .rail carries scroll-padding of one gutter
   ok   shell fixes: a rail never snaps flush to the edge › 390: a card scrolled to the start stops at the gutter
   ok   shell fixes: a rail never snaps flush to the edge › 390: no console errors
@@ -2189,7 +2241,7 @@
   ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › shared with the pod is off by default
   ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › it lands at the bottom: Daily, no streak yet, not done
   ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › today’s dot is today’s, in Burlington
-  ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › a tap shows at once (1 ms)
+  ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › a tap shows at once (0 ms)
   ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › the streak ticks up to 1 day
   ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › and today’s dot fills
   ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › the server has the tap, for today in Burlington
