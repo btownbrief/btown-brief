@@ -6,6 +6,12 @@
 
    Top to bottom, and the chip row is the table of contents:
 
+   - Fit checks. `fit` posts with an approved photo, newest first, as a row
+     of photo tiles at the very top, so the first screen at 390 wide shows
+     the fits and the start of Spotted this week. A tile opens the post's
+     own board card in a sheet, where the vote ("Love this fit"), share,
+     report and delete live. "Post" in the row's head is the same fit
+     check form as before; a fit check needs a photo and lasts 60 days.
    - Spotted this week. Vintage board posts of kind `spotted` (boards.js):
      a reader saw something on a rack that wasn't their size and posted it
      so someone else can get it. Two up, the shop, size and price, days
@@ -16,12 +22,16 @@
      posted here found a home lately (the board's got finds, plus, for this
      month, ones this device took down before the box existed). That line
      is the whole of "thrift points" at launch.
+   - New in. The shops' own Instagram posts from the last two weeks
+     (all-day/data/instagram.json, the accounts data/vintage-shops.json
+     names), each a photo credited to its account and linked to the post.
+     No posts, no section.
    - The shop guide. data/vintage-shops.json (scripts/build_vintage_shops.py
-     from data/things.json): every vintage, thrift, consignment, antique and
-     record shop the Brief's guide has a street address for, numbered in
-     walking order, with the
+     from data/things.json): every vintage, thrift, consignment and antique
+     shop in greater Burlington the Brief's guide has a street address for,
+     numbered in walking order downtown and then by drive, with the
      way to the next one when both have coordinates, a map and the shop's
-     own site. Hours only where someone has read them off the shop's own
+     own site. Used books come last, after the walk. Hours only where someone has read them off the shop's own
      page (the shop's `checked` date and source); a checked shop that posts
      none says to call ahead, and an unchecked one "Hours not checked yet".
    - Swaps. Board posts of kind `swap`: what I have, what I'd take, size.
@@ -33,8 +43,6 @@
      (never cash): a `design` post, the choice in its `thanks` field.
      Stephen sees it in the photo desk and the boards desk. Approved ones
      show under "Sent in".
-   - Fit check. `fit` posts with an approved photo, newest first; a fit
-     check needs a photo and lasts 60 days.
 
    Before the board had those two kinds, a design was a `spotted` post with
    shop "Make a tee" (the choice in its body) and a fit check one with shop
@@ -43,14 +51,14 @@
 
    ?demo=1 runs this same file: data/demo/vintage.json adds its finds, swaps
    and fit checks to the demo boards (boards-fake.js) and carries six of the
-   real shops and designs. */
+   real shops and designs, and invented shop posts for New in. */
 
 import * as app from '../app.js';
 import * as store from '../store.js';
 import * as data from '../wire.js';
 import * as boards from '../boards.js';
 import { message } from '../boards-core.js';
-import { el, esc, safeHref, ICON, art, section, rail, chips, button, pills, cards } from '../ui.js';
+import { el, esc, safeHref, ICON, art, section, rail, chips, button, pills, cards, agoShort } from '../ui.js';
 
 const KEY = 'vintage';
 const SHOPS_URL = '../data/vintage-shops.json';
@@ -61,18 +69,21 @@ const TEE = 'Make a tee';
 const HOMES_KEY = 'allday-vintage-homes';     // { 'YYYY-MM': finds this device took down as "someone got it", before the got box }
 const NOTE_MAX = 140;
 const DAY = 86400000;
+const NEW_IN_DAYS = 14;
+const NEW_IN_MAX = 12;
 const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
-const SECTIONS = [['spotted', 'Spotted'], ['shops', 'Shops'], ['swaps', 'Swaps'], ['tees', 'Make a tee'], ['fit', 'Fit check']];
+const SECTIONS = [['fit', 'Fit checks'], ['spotted', 'Spotted'], ['newin', 'New in'], ['shops', 'Shops'], ['swaps', 'Swaps'], ['tees', 'Make a tee']];
 /* the slots, top to bottom: `make` is the design pitch, `sent` the designs
    neighbors sent in */
-const SLOTS = ['spotted', 'shops', 'swaps', 'tees', 'make', 'sent', 'fit'];
-const FEEDS = new Set(['spotted', 'swaps', 'sent', 'fit']);
+const SLOTS = ['fit', 'spotted', 'newin', 'shops', 'swaps', 'tees', 'make', 'sent'];
+const FEEDS = new Set(['spotted', 'swaps', 'sent']);
 
 /* ------------------------------------------------------------------ state */
 const S = {
   shops: null, shopsFailed: false, designs: null, designsTotal: null, designsFailed: false,
   spotted: null, swaps: null, fit: null, sent: null, got: 0, off: false, failed: false, homesDemo: 0,
+  handles: null, posts: null,
 };
 let root = null, slots = null, pending = null, ready = false;
 
@@ -147,16 +158,26 @@ function loadPosts() {
 function postsChanged() {
   return loadPosts().then((fresh) => {
     if (!fresh) return;
-    ['spotted', 'swaps', 'sent', 'fit'].forEach(paint);
+    ['fit', 'spotted', 'swaps', 'sent'].forEach(paint);
     if (app.activeTab() === KEY) app.paintSubnav();
     land();
   });
 }
 
+function takeShops(j) {
+  S.shops = Array.isArray(j && j.shops) ? j.shops : [];
+  S.handles = new Set((Array.isArray(j && j.instagram) ? j.instagram : []).map((h) => String(h).replace(/^@/, '').toLowerCase()));
+}
+
 function loadLive() {
-  data.fetchJSON(SHOPS_URL, 8000).then((j) => { S.shops = Array.isArray(j && j.shops) ? j.shops : []; })
+  data.fetchJSON(SHOPS_URL, 8000).then(takeShops)
     .catch(() => { S.shopsFailed = true; })
-    .then(() => { paint('shops'); fillShopList(); app.paintSubnav(); land(); });
+    .then(() => { paint('shops'); paint('newin'); fillShopList(); app.paintSubnav(); land(); });
+  data.load('instagram', (j) => {
+    S.posts = j && Array.isArray(j.posts) ? j.posts.filter((p) => p && p.h && p.u && p.i) : [];
+    paint('newin');
+    if (app.activeTab() === KEY) app.paintSubnav();
+  }, () => { S.posts = []; });
   data.fetchJSON(DESIGNS_URL, 8000).then((j) => { S.designs = Array.isArray(j && j.designs) ? j.designs : []; S.designsTotal = Number(j && j.total) || null; })
     .catch(() => { S.designsFailed = true; })
     .then(() => { paint('tees'); land(); });
@@ -227,7 +248,7 @@ function paint(k) {
   const host = slots[k];
   const y = panel() ? panel().scrollTop : 0;
   host.innerHTML = '';
-  ({ spotted: paintSpotted, shops: paintShops, swaps: paintSwaps, tees: paintTees, make: paintMake, sent: paintSent, fit: paintFit })[k](host);
+  ({ fit: paintFit, spotted: paintSpotted, newin: paintNewIn, shops: paintShops, swaps: paintSwaps, tees: paintTees, make: paintMake, sent: paintSent })[k](host);
   if (panel() && app.activeTab() === KEY) panel().scrollTop = y;
 }
 
@@ -387,6 +408,7 @@ function paintShops(host) {
     return;
   }
   list.forEach((s, i) => {
+    if (s.after_walk && !(list[i - 1] || {}).after_walk) host.appendChild(el('div', 'tdiv', '<span>' + esc('Used books') + '</span>'));
     const row = el('div', 'lrow');
     row.dataset.k = 's-' + s.id;
     const facts = [(s.kinds || []).join(', '), s.neighborhood].filter(Boolean).join(' · ');
@@ -490,12 +512,86 @@ function paintSent(host) {
 }
 
 /* --------------------------------------------------------------- Fit check */
+/* A row of photo tiles at the top. A tile is the post's picture, title and
+   first name; tapping it opens the post's own board card in a sheet, so
+   the vote, share, report and delete are the board's, as everywhere. */
 function paintFit(host) {
-  section(host, 'Fit check');
-  if (S.fit === null) host.appendChild(el('p', 'note pad', esc('Loading the fits…')));
-  else if (!S.fit.length) boardNote(host, 'No fit checks yet.', S.failed);
-  else grid(host, S.fit, { name: 'fit', meta: noMeta, vote: 'Love this fit' });
-  addRow(host, 'Post a fit check', fitSheet);
+  const post = button(ICON.plus + ' ' + esc('Post'), 'ghost sm', fitSheet);
+  post.dataset.act = 'vfitpost';
+  post.setAttribute('aria-label', 'Post a fit check');
+  section(host, 'Fit checks', null, post);
+  if (S.fit === null) { host.appendChild(el('p', 'note pad', esc('Loading the fits…'))); return; }
+  if (!S.fit.length) { boardNote(host, 'No fit checks yet.', S.failed); return; }
+  const items = S.fit.map((p) => boards.item(p, { tab: KEY, ratio: 'r45', meta: noMeta }));
+  app.know(items);
+  const r = rail(host);
+  r.dataset.grid = 'fit';
+  items.forEach((it) => {
+    if (!it.media) return;
+    const a = el('a', 'vcard w150 ftile');
+    a.href = it.href;
+    a.dataset.k = it.k;
+    a.setAttribute('aria-label', it.title + ', by ' + it.author);
+    a.innerHTML = '<span class="c-media r45">' + art(it.media) + '</span><span class="t">' + esc(it.title) + '</span>' +
+      '<span class="s">' + esc(it.author) + '</span>';
+    a.addEventListener('click', (e) => { e.preventDefault(); fitOpen(it.k); });
+    r.appendChild(a);
+  });
+}
+
+/* The fit check's own card, in a sheet. The item is read again by its key,
+   so a vote cast here and the board's reload agree. */
+function fitOpen(k) {
+  const it = app.item(k);
+  if (!it) return;
+  app.sheet('Fit check', (body) => {
+    it.arch = '';
+    const n = cards.board(it);
+    if (!n) return;
+    const v = n.querySelector('[data-act="bvote"]');
+    if (v) { v.setAttribute('aria-label', 'Love this fit'); v.title = 'Love this fit'; }
+    const feed = el('div', 'feed');
+    feed.appendChild(n);
+    body.appendChild(feed);
+    app.bindFeed(feed);
+  });
+}
+
+/* ------------------------------------------------------------------ New in */
+/* The shops' own Instagram posts from the last two weeks, newest first,
+   each credited to its account and linked to the post. A picture whose
+   signed link has lapsed is left out rather than shown broken. */
+const sigExpiry = (u) => { const m = /[?&]oe=([0-9a-f]+)/i.exec(String(u || '')); return m ? parseInt(m[1], 16) : null; };
+const trim = (t, n) => { const v = String(t || '').replace(/\s+/g, ' ').trim(); return v.length > n ? v.slice(0, n - 1).trimEnd() + '…' : v; };
+const igKey = (p) => { const m = /\/(?:p|reel)\/([A-Za-z0-9_-]+)/.exec(p.u); return 'ig-' + (m ? m[1] : p.h + '-' + p.ts); };
+
+function newIn() {
+  if (!S.posts || !S.handles) return [];
+  const nowS = Date.now() / 1000;
+  const since = nowS - NEW_IN_DAYS * 86400;
+  return S.posts.filter((p) => S.handles.has(String(p.h).toLowerCase()) && Number(p.ts) > since)
+    .filter((p) => { const e = sigExpiry(p.i); return e === null || e > nowS; })
+    .sort((a, b) => b.ts - a.ts).slice(0, NEW_IN_MAX);
+}
+
+function paintNewIn(host) {
+  const posts = newIn();
+  if (!posts.length) return;
+  section(host, 'New in');
+  const r = rail(host);
+  r.dataset.rail = 'newin';
+  posts.forEach((p) => {
+    const a = el('a', 'vcard w150');
+    a.href = safeHref(p.u);
+    a.target = '_blank';
+    a.rel = 'noopener';
+    a.dataset.k = igKey(p);
+    a.setAttribute('aria-label', 'Post by @' + p.h + ' on Instagram');
+    a.innerHTML = '<span class="c-media r11">' + art(p.i) + '</span><span class="t">' + esc(trim('@' + p.h, 22)) + '</span>' +
+      '<span class="s">' + esc([trim(p.c, 50), Number(p.ts) ? agoShort(p.ts) : ''].filter(Boolean).join(' · ')) + '</span>';
+    if (app.demo) a.addEventListener('click', (e) => { e.preventDefault(); app.toast('Opens the post on Instagram in the real build'); });
+    r.appendChild(a);
+  });
 }
 
 function signInNote(body) {
@@ -645,7 +741,7 @@ function shirtSheet(p) {
 }
 
 /* -------------------------------------------------------------- deep links */
-/* #vintage/spotted|shops|swaps|tees|fit jumps to a section; b-<id> is a
+/* #vintage/fit|spotted|newin|shops|swaps|tees jumps to a section; b-<id> is a
    post (or an Art post on its way to a shirt), s-<id> a shop, d-<id> a
    design. A key waits for its list to load. */
 /* a find comes down when someone gets it or its three weeks end; an Art
@@ -676,14 +772,16 @@ function land() {
 app.register(KEY, {
   label: 'Vintage',
   icon: ICON.vintage,
-  promise: 'Every vintage shop in town, what is on the racks this week, and tees designed by neighbors.',
+  promise: 'Every thrift and vintage shop around Burlington, fit checks, and what is on the racks this week.',
   mount(r) {
     root = r;
     if (!app.demo) { ready = true; render(); loadLive(); return; }
     /* the demo is all local: draw once, with the demo boards seeded */
     r.innerHTML = '<p class="loading">Loading…</p>';
     demoFile().then((d) => {
-      S.shops = d.shops || [];
+      takeShops(d);
+      const shift = Math.round(Date.now() / 1000 - Date.parse(d.anchor || '2026-10-16T12:00:00-04:00') / 1000);
+      S.posts = (d.instagramPosts || []).map((p) => ({ ...p, ts: Number(p.ts) + shift }));
       S.designs = d.designs || [];
       S.designsTotal = Number(d.designsTotal) || null;
       S.homesDemo = Number(d.homesThisMonth) || 0;
@@ -701,7 +799,8 @@ app.register(KEY, {
   subnav() {
     if (!ready) return null;
     const n = { spotted: S.spotted && S.spotted.length, shops: S.shops && S.shops.length, swaps: S.swaps && S.swaps.length, fit: S.fit && S.fit.length };
-    return chips(SECTIONS.map(([key, label]) => ({ key, label, n: n[key] || null })), null, (k) => jump(k));
+    const fresh = newIn().length;
+    return chips(SECTIONS.filter(([key]) => key !== 'newin' || fresh).map(([key, label]) => ({ key, label, n: key === 'newin' ? fresh : n[key] || null })), null, (k) => jump(k));
   },
   /* reader posts newer than the last visit: finds, swaps and fit checks */
   newSince(ts) {

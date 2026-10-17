@@ -3,8 +3,13 @@
 data/things.json.
 
 Which places: things.json entries in the Shopping group whose category,
-name or blurb says they are a vintage, thrift, consignment, antique or
-record shop. A shopping street ("Pine Street (South End Shopping)") is not
+name or blurb says they are a vintage, thrift, consignment or antique shop,
+anywhere in greater Burlington (Burlington, Winooski, South Burlington,
+Williston, Essex, Colchester, Shelburne). The guide is for thrifting, so a
+category decides two things: a "Record Store" is not a thrift and stays
+out (it keeps its things.json entry for the rest of the site), and a
+"Library & Bookstore" (used books) goes at the very bottom, after the walk,
+with no leg into it. A shopping street ("Pine Street (South End Shopping)") is not
 a shop and is left out, and so is a shop with no verified street address:
 a walking guide can't send anyone to it. Those are named in `left_out` so
 Stephen can see who is waiting on an address. Nothing is added by hand: a shop that is not in
@@ -30,12 +35,18 @@ guessed. Every
 missing fact is listed in the shop's `gaps`, so the tab can say "hours not
 checked yet" instead of leaving a hole, and Stephen can see what to fill.
 
-The order is a walk: downtown first, then the South End along Pine Street,
-the Old North End, Winooski, and Essex last (a drive). Within a
+The order is a walk, then a drive: downtown first, the South End along
+Pine Street, the Old North End and Winooski on foot, then a loop by car
+through Colchester, Essex, Williston, South Burlington and Shelburne. Within a
 neighborhood, shops with coordinates go nearest-first from the previous
 stop. Between two shops that both have coordinates the file carries the
 walk (straight-line distance times 1.3 for the street grid, at 3 mph);
 where either end has none, the leg says so rather than guessing.
+
+Instagram: an entry may carry `instagram`, the shop's handle as its own
+site links it. The file lists those handles (plus the vintage markets in
+MARKETS, which are not shops) so the tab's "New in" rail can pick the
+shops' own posts out of all-day/data/instagram.json.
 
     python3 scripts/build_vintage_shops.py          # writes the file
     python3 scripts/build_vintage_shops.py --check  # exits 1 if it is stale
@@ -67,9 +78,19 @@ KIND_LABEL = {"record": "Records", "antique": "Antiques", "consignment": "Consig
 # itself a marketplace ("Vintage Inspired Marketplace").
 NOT_A_SHOP = re.compile(r"\bstreet marketplace\b|\bdistrict\b|\(.*shopping\)", re.I)
 
-# The walk, neighborhood by neighborhood. Anything not listed goes last.
+# Categories that are not thrifting: left out, or put after the walk.
+NOT_THRIFT = {"Record Store"}
+AFTER_THE_WALK = {"Library & Bookstore"}
+# Instagram accounts that are vintage markets rather than shops: their
+# posts are "new in" too. Each was read on its own profile.
+MARKETS = ["burlingtonvintagemarket"]
+
+# The walk, neighborhood by neighborhood, then the drive. Anything not
+# listed goes last.
 ROUTE = ["Downtown / Church St", "Waterfront", "South End", "Hill Section", "Old North End",
-         "New North End", "Winooski", "South Burlington", "Shelburne", "Colchester", "Essex / Essex Jct"]
+         "New North End", "Winooski", "Colchester", "Essex / Essex Jct", "Williston",
+         "South Burlington", "Shelburne", "Greater Burlington"]
+HANDLE = re.compile(r"^[a-z0-9._]{1,30}$")
 
 HOURS = re.compile(r"\bOpen ([^.]*?\b(daily|weekdays|weekends|mon|tue|wed|thu|fri|sat|sun)[^.]*)\.", re.I)
 DAYS = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"]
@@ -189,6 +210,13 @@ def shop(t):
         "verified": (checked or {}).get("date") or t.get("last_verified") or None,
         "checked": checked,
     }
+    ig = t.get("instagram")
+    if ig is not None:
+        if not (isinstance(ig, str) and HANDLE.match(ig)):
+            sys.exit(f"{t['id']}: instagram must be a bare lowercase handle, got {ig!r}")
+        out["instagram"] = ig
+    if t.get("category") in AFTER_THE_WALK:
+        out["after_walk"] = True
     # An address that only names a street area is not an address to walk to.
     if out["address"] and re.match(r"^[A-Za-z .]+ (area|street|st)\b,", out["address"], re.I) and not re.match(r"^\d", out["address"]):
         out["address_note"] = out["address"]
@@ -220,9 +248,12 @@ def walk_order(shops):
 
 
 def legs(ordered):
-    """The way from each shop to the next one."""
+    """The way from each shop to the next one. Nothing leads into the shops
+    after the walk: the used bookstore is not the next stop on a thrift run."""
     for a, b in zip(ordered, ordered[1:]):
-        if a["coords"] and b["coords"]:
+        if b.get("after_walk") and not a.get("after_walk"):
+            a["next"] = None
+        elif a["coords"] and b["coords"]:
             mi = miles(a["coords"], b["coords"]) * STREET_FACTOR
             a["next"] = {"miles": round(mi, 2), "minutes": max(1, round(mi / WALK_MPH * 60)), "mode": "drive" if mi > DRIVE_OVER_MILES else "walk"}
         elif a["neighborhood"] and a["neighborhood"] == b["neighborhood"]:
@@ -235,19 +266,25 @@ def legs(ordered):
 
 def build():
     things = json.loads(SRC.read_text())
-    picked = [t for t in things if t.get("group") == "Shopping" and kinds_of(t) and not NOT_A_SHOP.search(t.get("name") or "")]
+    picked = [t for t in things if t.get("group") == "Shopping" and t.get("category") not in NOT_THRIFT
+              and (kinds_of(t) or t.get("guide_kinds")) and not NOT_A_SHOP.search(t.get("name") or "")]
+    ids = [t["id"] for t in picked]
+    if len(ids) != len(set(ids)):
+        sys.exit("duplicate ids: " + ", ".join(sorted({i for i in ids if ids.count(i) > 1})))
     every = [shop(t) for t in picked]
-    shops = walk_order([s for s in every if s["address"]])
+    placed = [s for s in every if s["address"]]
+    shops = walk_order([s for s in placed if not s.get("after_walk")]) + walk_order([s for s in placed if s.get("after_walk")])
     left_out = [{"id": s["id"], "name": s["name"], "why": "no verified street address"} for s in every if not s["address"]]
     legs(shops)
     gaps = {g: sum(1 for s in shops if g in s["gaps"]) for g in ("address", "coords", "hours", "website")}
     return {
-        "_": "Built by scripts/build_vintage_shops.py from data/things.json (Shopping group: vintage, thrift, consignment, antique and record shops). "
-             "Walking order. Nothing here is typed by hand; a fact things.json lacks is listed in the shop's gaps. Add or fix a shop in things.json and rebuild.",
+        "_": "Built by scripts/build_vintage_shops.py from data/things.json (Shopping group: vintage, thrift, consignment and antique shops in greater Burlington). "
+             "Walking order downtown, then a drive; used books last. Nothing here is typed by hand; a fact things.json lacks is listed in the shop's gaps. Add or fix a shop in things.json and rebuild.",
         "source": "data/things.json",
         "count": len(shops),
         "gaps": gaps,
         "left_out": left_out,
+        "instagram": sorted({s["instagram"] for s in shops if s.get("instagram")} | set(MARKETS)),
         "shops": shops,
     }
 
@@ -265,7 +302,7 @@ def main():
     for s in data["left_out"]:
         print(f"left out {s['name']}: {s['why']}")
     if data["count"] < 6:
-        print("fewer than six shops: add more vintage, thrift or record shops to data/things.json")
+        print("fewer than six shops: add more vintage, thrift or consignment shops to data/things.json")
 
 
 if __name__ == "__main__":

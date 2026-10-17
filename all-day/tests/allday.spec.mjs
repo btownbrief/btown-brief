@@ -3013,7 +3013,7 @@ const signInAs = (page, name) => page.evaluate((n) => import('/all-day/js/auth.j
 async function theVintage(browser, base) {
   await group('Vintage, signed out: the finds show, posting asks for the sign-in (demo)', async () => {
     const { ctx, page, errors, supabase } = await vintageDemo(browser, base);
-    const grids = await page.evaluate(() => Object.fromEntries([...document.querySelectorAll('.panel:not([hidden]) [data-grid]')].map((g) => [g.dataset.grid, g.querySelectorAll('.card.board').length])));
+    const grids = await page.evaluate(() => Object.fromEntries([...document.querySelectorAll('.panel:not([hidden]) [data-grid]')].map((g) => [g.dataset.grid, g.querySelectorAll('.card.board, .ftile').length])));
     check(grids.spotted === 8 && grids.swaps === 3 && grids.fit === 3 && grids.sent === 1, 'eight finds, three swaps, three fit checks and one design sent in, from the demo', JSON.stringify(grids));
     const lefts = await page.$$eval(vslot('spotted') + ' .card.board', (cs) => cs.map((c) => (c.querySelector('.tag-left') || {}).textContent || ''));
     check(lefts.every((t) => /^\d+d left$/.test(t)) && new Set(lefts).size > 4, 'every find shows its days left, and they differ', JSON.stringify(lefts));
@@ -3021,7 +3021,7 @@ async function theVintage(browser, base) {
     check(votes.every((v) => v === 'I’d want this'), 'the vote on a find is “I’d want this”', JSON.stringify(votes.slice(0, 2)));
     check(!(await page.$(vslot('spotted') + ' [data-act=vgot]')), 'nobody signed in owns a find, so no “Someone got it”', '');
     const chipsRow = await page.$$eval('#subnav .chip', (cs) => cs.map((c) => c.dataset.chip));
-    check(JSON.stringify(chipsRow) === JSON.stringify(['spotted', 'shops', 'swaps', 'tees', 'fit']), 'the chip row is the table of contents: Spotted, Shops, Swaps, Make a tee, Fit check', JSON.stringify(chipsRow));
+    check(JSON.stringify(chipsRow) === JSON.stringify(['fit', 'spotted', 'newin', 'shops', 'swaps', 'tees']), 'the chip row is the table of contents: Fit checks, Spotted, New in, Shops, Swaps, Make a tee', JSON.stringify(chipsRow));
     await page.click('#subnav .chip[data-chip="swaps"]');
     await page.waitForTimeout(700);
     const swapTop = await page.$eval(vslot('swaps'), (s) => Math.round(s.getBoundingClientRect().top));
@@ -3030,7 +3030,7 @@ async function theVintage(browser, base) {
     await page.waitForSelector('.sheet-body .linkrow');
     check(/Sign in to post\./.test(await page.$eval('.sheet-body', (b) => b.innerText)) && !(await page.$('.sheet-body form')), 'Post a find, signed out: the sign-in note and no form', '');
     await page.click('.sheet-head .iconbtn');
-    await page.click(vslot('fit') + ' .addrow button');
+    await page.click(vslot('fit') + ' [data-act=vfitpost]');
     await page.waitForSelector('.sheet-body .linkrow');
     check(/Sign in to post\./.test(await page.$eval('.sheet-body', (b) => b.innerText)) && !(await page.$('.sheet-body form')), 'Post a fit check, signed out: the same', '');
     await page.click('.sheet-head .iconbtn');
@@ -3041,6 +3041,63 @@ async function theVintage(browser, base) {
     await pageRules(page, 'vintage', 390);
     check(!errors.length, 'no console errors', errors.join(' | '));
     check(!supabase.length, 'demo mode never calls Supabase', supabase.join(', '));
+    await ctx.close();
+  });
+
+  await group('Vintage, fit checks and Spotted share the first screen at 390; a tile opens the fit’s own card; New in is the shops’ own posts (demo)', async () => {
+    const { ctx, page, errors } = await vintageDemo(browser, base, { viewport: { width: 390, height: 844 } });
+    await page.waitForSelector(vslot('fit') + ' .ftile');
+    const top = await page.evaluate(() => {
+      const q = (k) => document.querySelector('.panel:not([hidden]) [data-sec="' + k + '"]');
+      return { vh: innerHeight, order: [...q('fit').parentElement.children].map((c) => c.dataset.sec).filter(Boolean),
+        fitHead: q('fit').querySelector('.sec h2').textContent, fitBottom: q('fit').querySelector('.ftile').getBoundingClientRect().bottom,
+        spotHead: q('spotted').querySelector('.sec h2').textContent, spotHeadBottom: q('spotted').querySelector('.sec').getBoundingClientRect().bottom,
+        spotCard: q('spotted').querySelector('.card.board').getBoundingClientRect().top };
+    });
+    check(JSON.stringify(top.order.slice(0, 3)) === '["fit","spotted","newin"]' && top.fitHead === 'Fit checks' && top.spotHead === 'Spotted this week', 'Fit checks leads the tab, then Spotted this week, then New in', JSON.stringify(top));
+    check(top.fitBottom <= top.vh && top.spotHeadBottom <= top.vh && top.spotCard < top.vh, 'at 390 by 844 the fit tiles, the Spotted head and the first find are all on the first screen', JSON.stringify(top));
+    const tiles = await page.$$eval(vslot('fit') + ' .ftile', (ts) => ts.map((t) => ({ k: t.dataset.k, pic: !!t.querySelector('.c-media.r45 .ph, .c-media.r45 img'), t: t.querySelector('.t').textContent, s: t.querySelector('.s').textContent })));
+    check(tiles.length === 3 && tiles.every((t) => t.pic && /^b-/.test(t.k) && t.t && t.s), 'each fit check is a photo tile with its title and first name', JSON.stringify(tiles));
+    await page.click(vslot('fit') + ' .ftile');
+    await page.waitForSelector('.sheet-body .card.board');
+    const open = await page.$eval('.sheet-body .card.board', (c) => ({ k: c.dataset.k, title: c.querySelector('.b-title').textContent, vote: c.querySelector('[data-act=bvote]').getAttribute('aria-label'), rep: !!c.querySelector('[data-act=breport]'), media: !!c.querySelector('.c-media') }));
+    check(open.k === tiles[0].k && open.title === tiles[0].t && open.vote === 'Love this fit' && open.rep && open.media, 'a tile opens the post’s own card: the photo, “Love this fit”, share and report', JSON.stringify(open));
+    await page.click('.sheet-body .card.board [data-act=bvote]');
+    await page.waitForTimeout(300);
+    check(await page.$eval('.sheet-body .card.board [data-act=bvote]', (b) => b.getAttribute('aria-pressed')) === 'true', 'and the vote works from the sheet', '');
+    await page.click('.sheet-head .iconbtn');
+    const d = await readFile(path.join(APP, 'data/demo/vintage.json'), 'utf8').then(JSON.parse);
+    const fresh = d.instagramPosts.filter((x) => d.instagram.includes(x.h) && Date.parse(d.anchor) / 1000 - x.ts < 14 * 86400).sort((a, b) => b.ts - a.ts);
+    const ig = await page.$$eval(vslot('newin') + ' [data-rail=newin] a.vcard', (as) => as.map((a) => ({ href: a.getAttribute('href'), who: a.querySelector('.t').textContent, s: a.querySelector('.s').textContent })));
+    check(ig.length === fresh.length && ig.length >= 3 && ig.every((x, i) => x.href === fresh[i].u && x.who === '@' + fresh[i].h), 'New in: the shops’ own posts from the last two weeks, newest first, each credited to its account and linked to the post', JSON.stringify(ig));
+    check(!ig.some((x) => /DemoVin5|DemoVin6/.test(x.href)), 'a three-week-old post and an account that is not a shop stay off', JSON.stringify(ig.map((x) => x.href)));
+    const chipN = await page.$eval('#subnav .chip[data-chip="newin"] .n', (n) => n.textContent);
+    check(chipN === String(fresh.length), 'the New in chip counts them', chipN);
+    await pageRules(page, 'vintage', 390);
+    await page.screenshot({ path: path.join(SHOTS, 'demo-vintage-top-390.png') });
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Vintage, New in reads the shops’ accounts from the guide and leaves the rest out (live)', async () => {
+    const file = await vintageShops();
+    const shopHandle = file.instagram.find((h) => h !== 'burlingtonvintagemarket') || file.instagram[0];
+    const now = Math.floor(Date.now() / 1000);
+    const lapsed = (now - 3600).toString(16);
+    const posts = [
+      { h: shopHandle, ts: now - 7200, i: 'https://scontent.example/a.jpg', u: 'https://www.instagram.com/p/LiveVin1/', w: 480, c: 'New rack', s: 'do' },
+      { h: 'not_a_thrift_shop', ts: now - 3600, i: 'https://scontent.example/b.jpg', u: 'https://www.instagram.com/p/LiveVin2/', w: 480, c: 'Brunch', s: 'see' },
+      { h: shopHandle, ts: now - 20 * 86400, i: 'https://scontent.example/c.jpg', u: 'https://www.instagram.com/p/LiveVin3/', w: 480, c: 'Old', s: 'do' },
+      { h: shopHandle, ts: now - 600, i: 'https://scontent.example/d.jpg?oe=' + lapsed, u: 'https://www.instagram.com/p/LiveVin4/', w: 480, c: 'Picture link lapsed', s: 'do' },
+    ];
+    const { ctx, page, errors } = await newPage(browser, base, { routes: [[/\/all-day\/data\/instagram\.json/, { generated: new Date().toISOString(), handles: [], posts }]] });
+    await page.route(/scontent\.example/, (r) => r.fulfill({ status: 200, body: PNG, contentType: 'image/png' }));
+    await page.goto(base + '/all-day/#vintage');
+    await settle(page);
+    await page.waitForSelector(vslot('newin') + ' [data-rail=newin] a.vcard', { timeout: 6000 }).catch(() => {});
+    const ig = await page.$$eval(vslot('newin') + ' [data-rail=newin] a.vcard', (as) => as.map((a) => ({ href: a.href, target: a.target })));
+    check(file.instagram.length >= 1 && ig.length === 1 && ig[0].href === 'https://www.instagram.com/p/LiveVin1/' && ig[0].target === '_blank', 'only the guide’s own account’s fresh post shows, opening Instagram in a new tab', JSON.stringify(ig));
+    check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
   });
 
@@ -3137,11 +3194,24 @@ async function theVintage(browser, base) {
       hours: r.querySelector('[data-hours]').textContent, map: r.querySelector('a.pillbtn').href })));
     check(file.count >= 6, 'the guide has at least six shops (' + file.count + ')', file.count);
     check(rows.length === file.shops.length && rows.every((r, i) => r.k === 's-' + file.shops[i].id && r.num === String(i + 1)), 'every shop in the file, numbered in its walking order', JSON.stringify(rows.map((r) => r.name)));
-    const ROUTE = ['Downtown / Church St', 'Waterfront', 'South End', 'Hill Section', 'Old North End', 'New North End', 'Winooski', 'South Burlington', 'Shelburne', 'Colchester', 'Essex / Essex Jct'];
-    const ranks = file.shops.map((s) => ROUTE.indexOf(s.neighborhood));
-    check(ranks.every((r, i) => i === 0 || r >= ranks[i - 1]), 'the walk goes downtown, the South End, the Old North End, Winooski, then Essex', JSON.stringify(file.shops.map((s) => s.neighborhood)));
+    const ROUTE = ['Downtown / Church St', 'Waterfront', 'South End', 'Hill Section', 'Old North End', 'New North End', 'Winooski', 'Colchester', 'Essex / Essex Jct', 'Williston', 'South Burlington', 'Shelburne', 'Greater Burlington'];
+    const walk = file.shops.filter((s) => !s.after_walk);
+    const ranks = walk.map((s) => ROUTE.indexOf(s.neighborhood));
+    check(ranks.every((r) => r >= 0) && ranks.every((r, i) => i === 0 || r >= ranks[i - 1]), 'the walk goes downtown, the South End, the Old North End and Winooski, then drives Colchester, Essex, Williston, South Burlington, Shelburne', JSON.stringify(walk.map((s) => s.neighborhood)));
+    const firstAfter = file.shops.findIndex((s) => s.after_walk);
+    check(firstAfter > 0 && file.shops.slice(firstAfter).every((s) => s.after_walk) && file.shops[firstAfter - 1].next === null && file.shops.find((s) => s.id === 'speaking-volumes').after_walk,
+      'used books (Speaking Volumes) come last, after the walk, with no leg into them', JSON.stringify(file.shops.slice(firstAfter - 1).map((s) => s.name)));
+    const towns = new Set(walk.map((s) => s.neighborhood));
+    check(['Williston', 'South Burlington', 'Winooski'].every((t) => towns.has(t)) && file.shops.some((s) => /plato/i.test(s.name)), 'greater Burlington, not just the city: Williston (Plato’s Closet), South Burlington, Winooski', JSON.stringify([...towns]));
     const byId = Object.fromEntries(things.map((t) => [t.id, t]));
     check(file.shops.every((s) => byId[s.id] && byId[s.id].group === 'Shopping' && byId[s.id].name === s.name), 'every shop is one of things.json’s Shopping entries: none invented', '');
+    const records = things.filter((t) => t.category === 'Record Store').map((t) => t.id);
+    check(records.includes('burlington-records') && !file.shops.some((s) => records.includes(s.id)), 'a record store is not a thrift: Burlington Records stays in things.json and out of the guide', JSON.stringify(records));
+    check(file.shops.every((s) => byId[s.id].checked && /^https?:\/\//.test(byId[s.id].checked.source) && byId[s.id].checked.note), 'every shop in the guide has a checked record: the date, the page and what was read there', JSON.stringify(file.shops.filter((s) => !byId[s.id].checked).map((s) => s.name)));
+    const byAddr = {};
+    file.shops.forEach((s) => { (byAddr[s.address] = byAddr[s.address] || []).push(s.id); });
+    const twice = Object.values(byAddr).filter((ids) => ids.length > 1 && ids.sort().join() !== 'barge-canal-market,speaking-volumes');
+    check(new Set(file.shops.map((s) => s.id)).size === file.shops.length && !twice.length, 'no shop twice: every id and every address once (Barge Canal Market and Speaking Volumes share 377 Pine St)', JSON.stringify(twice));
     const invented = file.shops.filter((s) => s.hours && !(byId[s.id].hours && byId[s.id].checked && byId[s.id].checked.date && /^https?:\/\//.test(byId[s.id].checked.source || '')));
     check(!invented.length, 'every hour comes from the shop’s own things.json entry, with the date and page it was checked on', JSON.stringify(invented.map((s) => s.name)));
     const DAYS = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
@@ -3229,7 +3299,7 @@ async function theVintage(browser, base) {
     await page.goto(base + '/all-day/#vintage');
     await settle(page);
     await page.waitForSelector(vslot('spotted') + ' [data-act=vgot]');
-    await page.click(vslot('fit') + ' .addrow button');
+    await page.click(vslot('fit') + ' [data-act=vfitpost]');
     const f = '.sheet-body form[data-form="fit"]';
     await page.waitForSelector(f);
     /* a real picture, so photos-lib.js can resize it to a jpeg */
@@ -3307,8 +3377,8 @@ async function theVintage(browser, base) {
     await page.waitForSelector(vslot('spotted') + ' [data-grid="spotted"]');
     const lists = calls.filter((c) => c.fn === 'nn_posts_list').map((c) => c.args.p_board + ':' + c.args.p_filter.kind + ':' + c.args.p_limit).sort();
     check(JSON.stringify(lists) === '["vintage:design:60","vintage:fit:60","vintage:spotted:60","vintage:swap:60"]', 'four lists, one per kind, the server’s most', JSON.stringify(lists));
-    const titles = await page.evaluate(() => Object.fromEntries([...document.querySelectorAll('.panel:not([hidden]) [data-grid]')].map((g) => [g.dataset.grid, [...g.querySelectorAll('.b-title')].map((t) => t.textContent)])));
-    check(JSON.stringify(titles) === JSON.stringify({ spotted: ['Barn jacket'], swaps: ['Band tees'], sent: ['Moth on the steeple', 'Lake ink'], fit: ['My Sunday fit', 'Head to toe Old Gold'] }),
+    const titles = await page.evaluate(() => Object.fromEntries([...document.querySelectorAll('.panel:not([hidden]) [data-grid]')].map((g) => [g.dataset.grid, [...g.querySelectorAll('.b-title, .ftile .t')].map((t) => t.textContent)])));
+    check(JSON.stringify(titles) === JSON.stringify({ fit: ['My Sunday fit', 'Head to toe Old Gold'], spotted: ['Barn jacket'], swaps: ['Band tees'], sent: ['Moth on the steeple', 'Lake ink'] }),
       'a find in Spotted, a swap in Swaps, designs in Sent in and fit checks with their photos in Fit check, newest first, the old tagged ones among them; a fit whose photo still waits, and a find someone got, nowhere', JSON.stringify(titles));
     const thanks = await page.$eval(vslot('spotted') + ' [data-thanks]', (p) => p.dataset.thanks);
     check(thanks === '1', 'the find someone got counts in the thank-you', thanks);
@@ -3961,7 +4031,7 @@ async function shellFixes(browser, base) {
   await group('shell fixes: the offline shell carries the new modules', async () => {
     const sw = await readFile(path.join(APP, 'sw.js'), 'utf8');
     const main = await readFile(path.join(APP, 'js/main.js'), 'utf8');
-    check(/VERSION = 'all-day-v46'/.test(sw), 'sw.js VERSION is bumped for Habits taking Art’s slot, to v46', (sw.match(/VERSION = '[^']+'/) || [''])[0]);
+    check(Number((sw.match(/VERSION = 'all-day-v(\d+)'/) || [])[1]) >= 47, 'sw.js VERSION is bumped for Vintage’s fit checks and New in, to v47 or later', (sw.match(/VERSION = '[^']+'/) || [''])[0]);
     const listed = [...sw.matchAll(/'\.\/(js\/[\w/.-]+\.js)'/g)].map((m) => m[1]);
     /* the offline list is exactly the modules that exist: none missing, none gone */
     const mods = [];

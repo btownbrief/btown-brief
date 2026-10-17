@@ -1,5 +1,6 @@
 {
- "_": "Demo data for ?demo=1. The people, finds, swaps and fit checks are invented; vintage.js adds them to the demo boards (boards-fake.js), which already holds three of the finds and one of the swaps by title. The shops are the first six of data/vintage-shops.json and the designs six of all-day/data/merch-designs.json, copied as they are, so the demo never shows an hour or an address that is not real. days is how long a post has left; photo is a placeholder palette.",
+ "_": "Demo data for ?demo=1. The people, finds, swaps and fit checks are invented; vintage.js adds them to the demo boards (boards-fake.js), which already holds three of the finds and one of the swaps by title. The shops are the first six of data/vintage-shops.json and the designs six of all-day/data/merch-designs.json, copied as they are, so the demo never shows an hour or an address that is not real. days is how long a post has left; photo is a placeholder palette. New in: instagram names the invented shop accounts as data/vintage-shops.json names the real ones, and instagramPosts are invented posts in all-day/data/instagram.json's shape; their times move with the reader's clock (anchor). One post is three weeks old and one is from an account that is not a shop: neither shows.",
+ "anchor": "2026-10-16T12:00:00-04:00",
  "homesThisMonth": 2,
  "people": [
   [
@@ -418,5 +419,66 @@
   }
  ],
  "designsTotal": 87,
- "shop": "https://merch.btownbrief.com/"
+ "shop": "https://merch.btownbrief.com/",
+ "instagram": [
+  "demo_ragsandrecords",
+  "demo_secondtimearound",
+  "demo_vintagemarket"
+ ],
+ "instagramPosts": [
+  {
+   "h": "demo_vintagemarket",
+   "ts": 1792148400,
+   "i": "mustard",
+   "u": "https://www.instagram.com/p/DemoVin1/",
+   "w": 480,
+   "c": "Fall flea this Saturday: wool coats, Y2K denim and the five dollar piles.",
+   "s": "do"
+  },
+  {
+   "h": "demo_ragsandrecords",
+   "ts": 1792094400,
+   "i": "plum",
+   "u": "https://www.instagram.com/p/DemoVin2/",
+   "w": 480,
+   "c": "Just in: a rack of 90s Carhartt and a box of band tees.",
+   "s": "do"
+  },
+  {
+   "h": "demo_secondtimearound",
+   "ts": 1792008000,
+   "i": "sand",
+   "u": "https://www.instagram.com/p/DemoVin3/",
+   "w": 480,
+   "c": "New to the floor: a mid-century dresser and two leather chairs.",
+   "s": "do"
+  },
+  {
+   "h": "demo_ragsandrecords",
+   "ts": 1791914400,
+   "i": "teal",
+   "u": "https://www.instagram.com/p/DemoVin4/",
+   "w": 480,
+   "c": "Sweater weather wall is fully stocked.",
+   "s": "do"
+  },
+  {
+   "h": "demo_secondtimearound",
+   "ts": 1790352000,
+   "i": "pine",
+   "u": "https://www.instagram.com/p/DemoVin5/",
+   "w": 480,
+   "c": "Three weeks old, so it stays off the rail.",
+   "s": "do"
+  },
+  {
+   "h": "demo_notashop",
+   "ts": 1792155600,
+   "i": "cherry",
+   "u": "https://www.instagram.com/p/DemoVin6/",
+   "w": 480,
+   "c": "A brewery post, not a shop: it stays off the rail.",
+   "s": "do"
+  }
+ ]
 }

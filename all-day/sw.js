@@ -13,7 +13,7 @@
    audio — episodes are large and the browser's own HTTP cache handles them
    better than we would. */
 
-const VERSION = 'all-day-v46';   // v46: Habits takes Art's slot
+const VERSION = 'all-day-v47';   // v47: Vintage, fit checks up top and New in
 const SHELL = VERSION + '-shell';
 const DATA = 'all-day-data';   // unversioned on purpose: survives shell bumps
 

@@ -1,7 +1,7 @@
 {
- "_": "Built by scripts/build_vintage_shops.py from data/things.json (Shopping group: vintage, thrift, consignment, antique and record shops). Walking order. Nothing here is typed by hand; a fact things.json lacks is listed in the shop's gaps. Add or fix a shop in things.json and rebuild.",
+ "_": "Built by scripts/build_vintage_shops.py from data/things.json (Shopping group: vintage, thrift, consignment and antique shops in greater Burlington). Walking order downtown, then a drive; used books last. Nothing here is typed by hand; a fact things.json lacks is listed in the shop's gaps. Add or fix a shop in things.json and rebuild.",
  "source": "data/things.json",
- "count": 12,
+ "count": 10,
  "gaps": {
   "address": 0,
   "coords": 0,
@@ -15,118 +15,10 @@
    "why": "no verified street address"
   }
  ],
+ "instagram": [
+  "burlingtonvintagemarket"
+ ],
  "shops": [
-  {
-   "id": "burlington-records",
-   "name": "Burlington Records",
-   "kinds": [
-    "Records"
-   ],
-   "neighborhood": "Downtown / Church St",
-   "address": "194 College St, Burlington, VT 05401",
-   "website": "https://www.burlingtonrecords.com/",
-   "coords": [
-    44.47723,
-    -73.21202
-   ],
-   "hours": "Mon–Wed 10am to 7pm · Thu–Fri 10am to 8pm · Sat 10am to 8:30pm · Sun 10am to 7pm",
-   "week": {
-    "mon": "10:00-19:00",
-    "tue": "10:00-19:00",
-    "wed": "10:00-19:00",
-    "thu": "10:00-20:00",
-    "fri": "10:00-20:00",
-    "sat": "10:00-20:30",
-    "sun": "10:00-19:00"
-   },
-   "hours_note": null,
-   "phone": "802-881-0303",
-   "blurb": "Downtown Burlington's independent vinyl shop with an extensive catalog organized by genre and era.",
-   "verified": "2026-10-17",
-   "checked": {
-    "date": "2026-10-17",
-    "source": "https://www.burlingtonrecords.com/",
-    "note": "Address, phone and hours from the Location & Hours block on the shop's site. Coordinates: OpenStreetMap's Burlington Records node at 194 College St. The shop has moved from the Church and Bank corner; older listings still give that address."
-   },
-   "gaps": [],
-   "next": {
-    "miles": 0.18,
-    "minutes": 4,
-    "mode": "walk"
-   }
-  },
-  {
-   "id": "old-gold",
-   "name": "Old Gold",
-   "kinds": [
-    "Vintage"
-   ],
-   "neighborhood": "Downtown / Church St",
-   "address": "151 Cherry St, Burlington, VT 05401",
-   "website": "https://www.facebook.com/OldGoldVT/",
-   "coords": [
-    44.4792,
-    -73.212
-   ],
-   "hours": null,
-   "week": null,
-   "hours_note": null,
-   "phone": "802-864-7786",
-   "blurb": "Vintage and new clothing on Cherry Street: costumes, boots, shoes, wigs and accessories for men and women.",
-   "verified": "2026-10-17",
-   "checked": {
-    "date": "2026-10-17",
-    "source": "https://www.facebook.com/OldGoldVT/about",
-    "note": "Address, phone and what it sells from the shop's own Facebook page (intro and About); it has no website of its own. No weekly hours are readable without a Facebook login, so hours are left empty and the guide says call ahead. Coordinates: OpenStreetMap's Old Gold node at 151 Cherry St. A 2018 Seven Days item gave 153 Cherry St for the move; the shop's own page says 151."
-   },
-   "gaps": [
-    "hours"
-   ],
-   "next": {
-    "miles": 0.08,
-    "minutes": 2,
-    "mode": "walk"
-   }
-  },
-  {
-   "id": "outdoor-gear-exchange",
-   "name": "Outdoor Gear Exchange",
-   "kinds": [
-    "Consignment"
-   ],
-   "neighborhood": "Downtown / Church St",
-   "address": "37 Church St, Burlington, VT 05401",
-   "website": "https://www.gearx.com/",
-   "coords": [
-    44.4791,
-    -73.21324
-   ],
-   "hours": "Mon–Fri 11am to 7pm · Sat 10am to 7pm · Sun 10am to 6pm",
-   "week": {
-    "mon": "11:00-19:00",
-    "tue": "11:00-19:00",
-    "wed": "11:00-19:00",
-    "thu": "11:00-19:00",
-    "fri": "11:00-19:00",
-    "sat": "10:00-19:00",
-    "sun": "10:00-18:00"
-   },
-   "hours_note": null,
-   "phone": "802-860-0190",
-   "blurb": "Church Street's legendary gear shop — new equipment up top, and a consignment section where patient people score serious deals on used outdoor kit.",
-   "verified": "2026-10-17",
-   "checked": {
-    "date": "2026-10-17",
-    "source": "https://www.gearx.com/pages/hours-location",
-    "note": "Hours and address from the shop's Hours & Location page; coordinates from the Google Maps link on that page."
-   },
-   "gaps": [],
-   "next": {
-    "miles": 0.24,
-    "minutes": 5,
-    "mode": "walk"
-   }
-  },
   {
    "id": "battery-street-jeans",
    "name": "Battery St. Jeans",
@@ -200,8 +92,80 @@
    },
    "gaps": [],
    "next": {
-    "miles": 0.52,
-    "minutes": 10,
+    "miles": 0.38,
+    "minutes": 8,
+    "mode": "walk"
+   }
+  },
+  {
+   "id": "outdoor-gear-exchange",
+   "name": "Outdoor Gear Exchange",
+   "kinds": [
+    "Consignment"
+   ],
+   "neighborhood": "Downtown / Church St",
+   "address": "37 Church St, Burlington, VT 05401",
+   "website": "https://www.gearx.com/",
+   "coords": [
+    44.4791,
+    -73.21324
+   ],
+   "hours": "Mon–Fri 11am to 7pm · Sat 10am to 7pm · Sun 10am to 6pm",
+   "week": {
+    "mon": "11:00-19:00",
+    "tue": "11:00-19:00",
+    "wed": "11:00-19:00",
+    "thu": "11:00-19:00",
+    "fri": "11:00-19:00",
+    "sat": "10:00-19:00",
+    "sun": "10:00-18:00"
+   },
+   "hours_note": null,
+   "phone": "802-860-0190",
+   "blurb": "Church Street's legendary gear shop — new equipment up top, and a consignment section where patient people score serious deals on used outdoor kit.",
+   "verified": "2026-10-17",
+   "checked": {
+    "date": "2026-10-17",
+    "source": "https://www.gearx.com/pages/hours-location",
+    "note": "Hours and address from the shop's Hours & Location page; coordinates from the Google Maps link on that page."
+   },
+   "gaps": [],
+   "next": {
+    "miles": 0.08,
+    "minutes": 2,
+    "mode": "walk"
+   }
+  },
+  {
+   "id": "old-gold",
+   "name": "Old Gold",
+   "kinds": [
+    "Vintage"
+   ],
+   "neighborhood": "Downtown / Church St",
+   "address": "151 Cherry St, Burlington, VT 05401",
+   "website": "https://www.facebook.com/OldGoldVT/",
+   "coords": [
+    44.4792,
+    -73.212
+   ],
+   "hours": null,
+   "week": null,
+   "hours_note": null,
+   "phone": "802-864-7786",
+   "blurb": "Vintage and new clothing on Cherry Street: costumes, boots, shoes, wigs and accessories for men and women.",
+   "verified": "2026-10-17",
+   "checked": {
+    "date": "2026-10-17",
+    "source": "https://www.facebook.com/OldGoldVT/about",
+    "note": "Address, phone and what it sells from the shop's own Facebook page (intro and About); it has no website of its own. No weekly hours are readable without a Facebook login, so hours are left empty and the guide says call ahead. Coordinates: OpenStreetMap's Old Gold node at 151 Cherry St. A 2018 Seven Days item gave 153 Cherry St for the move; the shop's own page says 151."
+   },
+   "gaps": [
+    "hours"
+   ],
+   "next": {
+    "miles": 0.88,
+    "minutes": 18,
     "mode": "walk"
    }
   },
@@ -241,45 +205,6 @@
    "next": {
     "miles": 0.1,
     "minutes": 2,
-    "mode": "walk"
-   }
-  },
-  {
-   "id": "speaking-volumes",
-   "name": "Speaking Volumes",
-   "kinds": [
-    "Used books"
-   ],
-   "neighborhood": "South End",
-   "address": "377 Pine St, Burlington, VT 05401",
-   "website": "https://www.speakingvolumesvt.com/",
-   "coords": [
-    44.46876,
-    -73.21642
-   ],
-   "hours": "Mon–Fri 10am to 5pm · Sat 9am to 5pm · Sun 10am to 3pm",
-   "week": {
-    "mon": "10:00-17:00",
-    "tue": "10:00-17:00",
-    "wed": "10:00-17:00",
-    "thu": "10:00-17:00",
-    "fri": "10:00-17:00",
-    "sat": "09:00-17:00",
-    "sun": "10:00-15:00"
-   },
-   "hours_note": "Tue and Wed may close early; one page of its site says Fri until 9pm",
-   "phone": "802-540-0107",
-   "blurb": "Tens of thousands of used and rare books on Pine Street, with vintage ephemera, magazines and art mixed in.",
-   "verified": "2026-10-17",
-   "checked": {
-    "date": "2026-10-17",
-    "source": "https://www.speakingvolumesvt.com/",
-    "note": "Hours from 'Bookstore Hours' on the home page. The site's /bookstore page says Friday 10 to 9 and drops the '(or earlier)' on Tue and Wed; the home page, which also carries the newer Randolph store, is used. Coordinates from the Google Maps link on the shop's site. The Marble Ave record store was sold in 2026 and is a separate shop now. What it sells is from https://www.speakingvolumesvt.com/bookstore ('tens of thousands of used titles')."
-   },
-   "gaps": [],
-   "next": {
-    "miles": 0.07,
-    "minutes": 1,
     "mode": "walk"
    }
   },
@@ -350,47 +275,8 @@
    },
    "gaps": [],
    "next": {
-    "miles": 1.37,
-    "minutes": 27,
-    "mode": "walk"
-   }
-  },
-  {
-   "id": "autumn-records",
-   "name": "Autumn Records",
-   "kinds": [
-    "Records"
-   ],
-   "neighborhood": "Winooski",
-   "address": "11 E. Allen St., Suite 2, Winooski, VT 05404",
-   "website": "https://www.autumnrecordsvt.com/",
-   "coords": [
-    44.49155,
-    -73.186
-   ],
-   "hours": "Daily noon to 6pm",
-   "week": {
-    "mon": "12:00-18:00",
-    "tue": "12:00-18:00",
-    "wed": "12:00-18:00",
-    "thu": "12:00-18:00",
-    "fri": "12:00-18:00",
-    "sat": "12:00-18:00",
-    "sun": "12:00-18:00"
-   },
-   "hours_note": null,
-   "phone": "802-399-2123",
-   "blurb": "A Winooski record store run by an internationally recognized experimental musician — the curation reflects that.",
-   "verified": "2026-10-17",
-   "checked": {
-    "date": "2026-10-17",
-    "source": "https://www.autumnrecordsvt.com/",
-    "note": "Address, phone and hours ('12-6pm / 7 days a week') from the Winooski block of the shop's site; its Waterbury store keeps different hours. Coordinates from the map on the shop's site; OpenStreetMap agrees."
-   },
-   "gaps": [],
-   "next": {
-    "miles": 2.11,
-    "minutes": 42,
+    "miles": 2.46,
+    "minutes": 49,
     "mode": "drive"
    }
   },
@@ -466,6 +352,42 @@
     "source": "https://goodwillnne.org/locations/",
     "note": "Address, phone and hours from the South Burlington entry on Goodwill of Northern New England's locations page. Coordinates: OpenStreetMap's Goodwill at 1080 Shelburne Rd. Store and donation hours as the page gives them: 'Store Hours 9 a.m. – 6 p.m. daily Donation Hours 9 a.m. – 4:30 p.m. daily'."
    },
+   "gaps": [],
+   "next": null
+  },
+  {
+   "id": "speaking-volumes",
+   "name": "Speaking Volumes",
+   "kinds": [
+    "Used books"
+   ],
+   "neighborhood": "South End",
+   "address": "377 Pine St, Burlington, VT 05401",
+   "website": "https://www.speakingvolumesvt.com/",
+   "coords": [
+    44.46876,
+    -73.21642
+   ],
+   "hours": "Mon–Fri 10am to 5pm · Sat 9am to 5pm · Sun 10am to 3pm",
+   "week": {
+    "mon": "10:00-17:00",
+    "tue": "10:00-17:00",
+    "wed": "10:00-17:00",
+    "thu": "10:00-17:00",
+    "fri": "10:00-17:00",
+    "sat": "09:00-17:00",
+    "sun": "10:00-15:00"
+   },
+   "hours_note": "Tue and Wed may close early; one page of its site says Fri until 9pm",
+   "phone": "802-540-0107",
+   "blurb": "Tens of thousands of used and rare books on Pine Street, with vintage ephemera, magazines and art mixed in.",
+   "verified": "2026-10-17",
+   "checked": {
+    "date": "2026-10-17",
+    "source": "https://www.speakingvolumesvt.com/",
+    "note": "Hours from 'Bookstore Hours' on the home page. The site's /bookstore page says Friday 10 to 9 and drops the '(or earlier)' on Tue and Wed; the home page, which also carries the newer Randolph store, is used. Coordinates from the Google Maps link on the shop's site. The Marble Ave record store was sold in 2026 and is a separate shop now. What it sells is from https://www.speakingvolumesvt.com/bookstore ('tens of thousands of used titles')."
+   },
+   "after_walk": true,
    "gaps": [],
    "next": null
   }
