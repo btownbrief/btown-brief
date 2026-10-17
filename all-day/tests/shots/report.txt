@@ -1271,7 +1271,7 @@
   ok   sign-in fails soft › a bad address is caught before any request
   ok   sign-in fails soft › no link was requested
   ok   sign-in fails soft › no console errors
-  ok   performance › the live Wire redraws 60 cards in 7ms (budget 100)
+  ok   performance › the live Wire redraws 60 cards in 8ms (budget 100)
   ok   shell fixes: a rail never snaps flush to the edge › 390: .rail carries scroll-padding of one gutter
   ok   shell fixes: a rail never snaps flush to the edge › 390: a card scrolled to the start stops at the gutter
   ok   shell fixes: a rail never snaps flush to the edge › 390: no console errors
@@ -1470,6 +1470,11 @@
   ok   Art, “Put it on a shirt” goes to Vintage with the post key (demo) › Vintage can find the picture from the key alone
   ok   Art, “Put it on a shirt” goes to Vintage with the post key (demo) › a maker who said no gets no shirt button
   ok   Art, “Put it on a shirt” goes to Vintage with the post key (demo) › no console errors
+  ok   Art, the empty wall’s sunset line says a score only when there is one (live) › a 0.0 (the forecast missing) is no score: the time and the best spot, and nothing about the sky
+  ok   Art, the empty wall’s sunset line says a score only when there is one (live) › a score worked out without the forecast is not shown either
+  ok   Art, the empty wall’s sunset line says a score only when there is one (live) › a real score of 5 or more is the headline
+  ok   Art, the empty wall’s sunset line says a score only when there is one (live) › under 5, it is said plainly, lower down
+  ok   Art, the empty wall’s sunset line says a score only when there is one (live) › no console errors
   ok   Art, the gallery fills the wall before anyone posts (live, the SQL not pasted) › the five gallery photos, labelled from the gallery, without votes
   ok   Art, the gallery fills the wall before anyone posts (live, the SQL not pasted) › newest approved first, lazy, from the public bucket
   ok   Art, the gallery fills the wall before anyone posts (live, the SQL not pasted) › a board post’s photo and Food’s dishes stay off the gallery half

@@ -2341,6 +2341,35 @@ async function theArt(browser, base) {
     await ctx.close();
   });
 
+  await group('Art, the empty wall’s sunset line says a score only when there is one (live)', async () => {
+    /* sunset-score.js stands in for the shared module: tomorrow at 6:05 pm, and
+       the score the page asks for. A 0.0 is what an empty forecast comes out as. */
+    const stub = 'window.BtownSunsetScore = { OPEN_METEO_URL: "https://api.open-meteo.com/v1/forecast?x=1", AIR_URL: "https://air-quality-api.open-meteo.com/v1/air-quality?x=1",' +
+      ' selectTarget: function () { return { sunsetMs: Date.parse("2026-10-17T22:05:00Z"), isTonight: false }; },' +
+      ' computeScore: function () { return { score: window.__score, degraded: !!window.__degraded }; } };';
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.route(/\/js\/sunset-score\.js$/, (r) => r.fulfill({ status: 200, body: stub, contentType: 'text/javascript' }));
+    const invite = async (score, degraded) => {
+      await page.addInitScript(([s, d]) => { window.__score = s; window.__degraded = d; }, [score, degraded]);
+      await page.goto(base + '/all-day/?s=' + score + (degraded ? 'd' : '') + '#art');
+      await settle(page);
+      await page.waitForFunction(() => /Sunset is at/.test(document.querySelector('#panel-art [data-k="invite"]')?.innerText || ''), null, { timeout: 6000 }).catch(() => {});
+      await page.waitForTimeout(200);
+      return page.$eval(artPanel + ' [data-k="invite"]', (c) => ({ head: c.querySelector('h3').textContent, text: c.innerText }));
+    };
+    let r = await invite(0, false);
+    check(r.head === 'The wall starts with you' && /Sunset is at 6:05 pm tomorrow\./.test(r.text) && !/scores|out of 10|gray/.test(r.text) && /Best spot: Waterfront Park/.test(r.text),
+      'a 0.0 (the forecast missing) is no score: the time and the best spot, and nothing about the sky', r.text);
+    r = await invite(6.2, true);
+    check(!/scores|out of 10/.test(r.text) && /Sunset is at 6:05 pm tomorrow\./.test(r.text), 'a score worked out without the forecast is not shown either', r.text);
+    r = await invite(7.4, false);
+    check(r.head === 'Tomorrow’s sunset scores 7.4 out of 10' && /Worth the walk\./.test(r.text), 'a real score of 5 or more is the headline', JSON.stringify(r));
+    r = await invite(3.2, false);
+    check(r.head === 'The wall starts with you' && /Tomorrow’s sunset scores 3\.2 out of 10\. Probably a quiet one\./.test(r.text), 'under 5, it is said plainly, lower down', r.text);
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
   await group('Art, the gallery fills the wall before anyone posts (live, the SQL not pasted)', async () => {
     const at = (d) => d;
     const rows = [

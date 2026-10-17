@@ -393,8 +393,11 @@ function paintInvite(host) {
   const ms = sun ? sun.sunsetMs : (iso ? Date.parse(iso) : null);
   const tonight = sun ? sun.isTonight : (ms ? ms > Date.now() : true);
   const spot = (S.spots || [])[0];
-  /* a score worked out without the cloud data is a guess; the time still holds */
-  const scored = !!sun && Number.isFinite(sun.score) && !sun.degraded;
+  /* A score is only a score with a forecast behind it. One worked out without
+     the cloud data is a guess, and a 0.0 is what an empty forecast for
+     tomorrow comes out as, not a gray sky: both are unknown, and the time
+     and the spot still hold. */
+  const scored = !!sun && Number.isFinite(sun.score) && sun.score > 0 && !sun.degraded;
   const tc = el('div', 'textcard gap');
   tc.dataset.k = 'invite';
   /* a good score is the headline; a gray one is said plainly, lower down */
