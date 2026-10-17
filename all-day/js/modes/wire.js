@@ -343,6 +343,23 @@ function setMode(on) {
    redraw keeps the reader's place. */
 let photoSeq = 0;
 const pulseSettled = () => !!W.pulse || W.pulseTried;
+/* Photo mode's own hold on the Unfiltered wire: every payload (the first
+   and each poll's) is taken in, and a feed already drawn without it, or
+   with an older one, is drawn again where the reader is. A failure lets the
+   feed draw without it and is tried again on the next visit to the mode. */
+let photoPulse = null;
+function pulseForPhotos() {
+  if (!photoPulse) {
+    photoPulse = new Promise((res) => SRC.pulse((j) => {
+      const fresh = !W.pulse || W.pulse.src !== j;
+      pulseReady(j);
+      W.pulseTried = false;
+      res();
+      if (fresh && W.mode === 'photos' && W.view === 'paper' && W.root && W.root.querySelector('.pm-feed')) redraw();
+    }, () => { W.pulseTried = true; photoPulse = null; res(); }));
+  }
+  return photoPulse;
+}
 function renderPhotos(opts = {}) {
   const root = W.root;
   const seq = ++photoSeq;
@@ -353,9 +370,10 @@ function renderPhotos(opts = {}) {
     paintPhotoCount();
     landPhoto();
   };
+  const pulseP = pulseForPhotos();
   if (photos.loaded() && pulseSettled()) { draw(); return; }
   root.innerHTML = '<p class="loading">Loading photos…</p>';
-  Promise.all([photos.ensure(), new Promise((res) => withPulse(() => res()))]).then(draw);
+  Promise.all([photos.ensure(), pulseP]).then(draw);
 }
 function landPhoto() {
   const k = W.photoOpen;

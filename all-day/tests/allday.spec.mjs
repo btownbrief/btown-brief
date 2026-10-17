@@ -1177,6 +1177,7 @@ async function thePhotos(browser, base) {
     check(r.photos && /Moonrise over the Adirondacks/.test(r.sheet), 'a shared Instagram key (#wire/ig:…) opens in Photo mode', JSON.stringify(r));
     r = await open('#wire/photos/b-0000a000-0000-4000-8000-00000000ffff');
     check(r.photos && !r.sheet && /moved on/.test(r.toast), 'a picture that is gone says so', JSON.stringify(r));
+    check(await page.$$eval(pmPanel + ' .card.pm', (c) => c.length) <= 10, 'and only the first screenful is drawn looking for it', '');
     /* the phone remembers Photos, but a story's link is the paper's */
     await page.goto(base + '/all-day/?demo=1#wire/w3');
     await settle(page);
@@ -1250,8 +1251,16 @@ async function thePhotos(browser, base) {
     ];
     const gallery = [{ id: 'live-g1', storage_path: 'submissions/g1.jpg', caption: 'Sunset "<script>"', category: 'sunsets', area: 'Waterfront', spot: 'Waterfront Park', credit: 'Ana', approved_on: '2026-10-01', votes: 3 },
       { id: 'live-g2', storage_path: 'submissions/g2.jpg', caption: 'A dish', category: 'dish', area: 'Old North End', credit: 'Sam', approved_on: '2026-10-01' }];
+    /* one a day back over two months: the board pages, sixty at a time, to its end */
+    for (let i = 0; i < 63; i++) posts.push(PM_POST({ id: '0000e000-0000-4000-8000-0000000001' + String(i).padStart(2, '0'), title: 'Day ' + i, at: new Date(now - (i + 2) * 86400000).toISOString(), votes: 1 }));
+    const lists = [];
     const rpc = (fn, args) => {
-      if (fn === 'nn_posts_list') return args.p_board === 'art' ? posts : [];
+      if (fn === 'nn_posts_list') {
+        if (args.p_board !== 'art') return [];
+        lists.push(args.p_before);
+        const before = args.p_before ? Date.parse(args.p_before) : Infinity;
+        return posts.filter((p) => Date.parse(p.created_at) < before).sort((a, b) => Date.parse(b.created_at) - Date.parse(a.created_at)).slice(0, args.p_limit);
+      }
       if (fn === 'btb_photos_get') return gallery;
       return undefined;
     };
@@ -1276,7 +1285,8 @@ async function thePhotos(browser, base) {
     check(keys.includes('https://facebook.com/groups/1/permalink/2/') && !keys.includes('https://facebook.com/groups/1/permalink/3/'), 'a Facebook group post with a picture, not one without', '');
     check(keys.includes(dupe.id) && st.list.filter((v) => v.url && v.url.toLowerCase().includes(dupe.url.replace('https://', '').toLowerCase())).length === 1, 'one story from two places shows once, by its link', JSON.stringify(st.list.filter((v) => v.url.includes(dupe.url.split('/').pop()))));
     check(!keys.includes(world.id), 'Local: the paper’s national pictures wait for Everything', world.id);
-    check(from.board === 2 && from.gallery === 1 && from.instagram === 1 && from.facebook === 1 && from.reddit >= 1 && from.paper > 10 && from.outlet === 1, 'every source gives its pictures', JSON.stringify(from));
+    check(lists.length === 2 && !lists[0] && lists[1], 'the art board is paged to its end', JSON.stringify(lists));
+    check(from.board === 65 && from.gallery === 1 && from.instagram === 1 && from.facebook === 1 && from.reddit >= 1 && from.paper > 10 && from.outlet === 1, 'every source gives its pictures', JSON.stringify(from));
     const html = await page.$eval(pmPanel + ' .pm-feed', (f) => f.innerHTML);
     check(!/<script>|<b>at dawn/.test(html), 'captions are escaped', '');
     const igCard = await page.$eval(pmPanel + ' [data-k="ig:LiveOne"]', (c) => ({ alt: c.querySelector('img.pic').alt, cap: c.querySelector('.pm-cap').textContent, href: c.querySelector('.pm-pic').getAttribute('href'),
@@ -1285,6 +1295,11 @@ async function thePhotos(browser, base) {
       'the picture’s alt text is its caption, lazy; one line under it', JSON.stringify(igCard));
     const keysAll = await page.$$eval(pmPanel + ' [data-k]', (n) => n.map((x) => x.dataset.k));
     check(new Set(keysAll).size === keysAll.length, 'no key twice on the page', '');
+    const far = await page.evaluate(() => { const img = document.querySelector('#panel-wire .card.pm img.pic'); return { src: img.getAttribute('src'), kept: img.dataset.src || '' }; });
+    check(!far.src && /^https:/.test(far.kept), 'at the bottom of the feed, the first card has let go of its picture', JSON.stringify(far));
+    await page.evaluate(() => { document.querySelector('#panel-wire').scrollTop = 0; });
+    await page.waitForFunction(() => !!document.querySelector('#panel-wire .card.pm img.pic').getAttribute('src'), null, { timeout: 4000 }).catch(() => {});
+    check(!!(await page.$eval(pmPanel + ' .card.pm img.pic', (i) => i.getAttribute('src'))), 'and takes it back on the way up', '');
     /* a broken picture takes its card with it */
     const k1 = 'https://example.org/live/sd1';
     await page.evaluate((k) => { const img = [...document.querySelectorAll('#panel-wire [data-k]')].find((n) => n.dataset.k === k).querySelector('img.pic'); img.src = 'data:image/png;base64,broken'; }, k1);

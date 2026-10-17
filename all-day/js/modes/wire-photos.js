@@ -41,6 +41,7 @@ const BOARD = 'art';
 const FIRST = 10;              // pictures on the first screenful
 const CHUNK = 10;              // then ten at a time as the reader nears the bottom
 const AHEAD = 1800;            // px below the screen where the next ten start drawing
+const FAR = 4000;              // px off screen past which a card lets go of its picture
 const NEWS_DAYS = 7;           // how far back the Unfiltered wire's pictures go
 const DAY = 86400000;
 
@@ -105,13 +106,27 @@ export function init(c) { ctx = c; }
 /* ------------------------------------------------------------ loading */
 const clockNow = () => (ctx ? ctx.now() : Date.now());
 
-/* The art board's pictures, one page (the list RPC's cap), newest first. */
+/* The art board's pictures, newest first: its posts never expire, so the
+   list is paged (the RPC's cap at a time) to the end, up to MAX_PAGES. */
+const MAX_PAGES = 10;
+async function boardPosts() {
+  const out = [];
+  let before = null;
+  for (let i = 0; i < MAX_PAGES; i++) {
+    const r = await boards.list(BOARD, { limit: RULES.limits.listMax, before });
+    if (!r.ok) break;
+    out.push(...r.posts);
+    if (r.posts.length < RULES.limits.listMax) break;
+    before = r.posts[r.posts.length - 1].created_at;
+  }
+  return out;
+}
 function loadBoard() {
   const seq = ++P.boardSeq;
-  return boards.list(BOARD, { limit: RULES.limits.listMax }).then((r) => {
+  return boardPosts().then((posts) => {
     if (seq !== P.boardSeq) return;
     const seen = new Set();
-    P.pics = (r.ok ? r.posts : []).filter((p) => p && p.id && (p.kind === 'photo' || p.kind === 'art') && p.photo && !seen.has(p.id) && seen.add(p.id))
+    P.pics = posts.filter((p) => p && p.id && (p.kind === 'photo' || p.kind === 'art') && p.photo && !seen.has(p.id) && seen.add(p.id))
       .map((p) => {
         const it = wall.boardPic(p, { tab: 'wire/photos', ratio: ratios.get(p.id) || 'r45' });
         it.ago = ctx ? ctx.ago(it.created * 1000) : it.ago;
@@ -334,12 +349,11 @@ export function build() {
   const keys = new Set(), links = new Set();
   const list = [];
   all.forEach((v) => {
-    if (!v || !v.k || !v.media || keys.has(v.k) || stock(v)) return;
+    if (!v || !v.k || !v.media || keys.has(v.k) || stock(v) || !ctx.visible(v)) return;
     const u = v.url ? norm(v.url) : '';
     if (u && links.has(u)) return;
     keys.add(v.k);
     if (u) links.add(u);
-    if (!ctx.visible(v)) return;
     v.ago = v.it.ago || (v.d ? ctx.ago(v.d * 1000) : '');
     list.push(v);
   });
@@ -435,6 +449,7 @@ export function openPicture(k) {
 let observer = null;
 export function stop() {
   if (observer) { observer.disconnect(); observer = null; }
+  if (P.run && P.run.far) P.run.far.disconnect();
   if (P.run) P.run.dead = true;
   P.run = null;
 }
@@ -460,11 +475,12 @@ export function render(root, opts = {}) {
   }
   const feed = el('div', 'feed pm-feed');
   root.appendChild(feed);
-  const run = { dead: false, i: 0, list, lead, feed, until: opts.until || null, sentinel: el('div', 'loading') };
+  /* draw on to a deep link's picture only when it is there to reach */
+  const until = opts.until && list.some((v) => v.k === opts.until) ? opts.until : null;
+  const run = { dead: false, i: 0, list, lead, feed, until, sentinel: el('div', 'loading') };
   run.sentinel.setAttribute('aria-hidden', 'true');
   feed.appendChild(run.sentinel);
   P.run = run;
-  step(run, Math.max(FIRST, opts.limit || 0));
   app.bindFeed(feed, { onSource() {}, onMute: (sid, it) => { if (sid && !it.pic && !it.gallery) ctx.onMute(sid, it); } });
   /* a tap on the picture or its caption opens the picture sheet; one
      listener for the feed, as the shell's own */
@@ -480,7 +496,18 @@ export function render(root, opts = {}) {
     observer = new IntersectionObserver((es) => { if (es.some((x) => x.isIntersecting)) step(run, CHUNK); },
       { root: panel, rootMargin: '0px 0px ' + AHEAD + 'px 0px' });
     observer.observe(run.sentinel);
+    /* A long feed holds hundreds of pictures. A card far from the screen
+       lets go of its picture (its box keeps its size, so nothing moves) and
+       takes it back on the way in, so memory follows the screen, not the
+       length of the scroll. */
+    run.far = new IntersectionObserver((es) => es.forEach((x) => {
+      const img = x.target.querySelector('img.pic');
+      if (!img) return;
+      if (x.isIntersecting) { if (img.dataset.src) { img.src = img.dataset.src; delete img.dataset.src; } }
+      else if (!img.dataset.src && img.getAttribute('src')) { img.dataset.src = img.getAttribute('src'); img.removeAttribute('src'); }
+    }), { root: panel, rootMargin: FAR + 'px 0px' });
   }
+  step(run, Math.max(FIRST, opts.limit || 0));
   return run;
 }
 
@@ -492,6 +519,7 @@ function step(run, n) {
     const node = card(v, v === run.lead);
     if (run.i === 1) node.querySelector('img.pic')?.setAttribute('loading', 'eager');   // the first picture is the page
     run.feed.insertBefore(node, run.sentinel);
+    if (run.far) run.far.observe(node);
     if (!v.pic) added.push(v.k);
     if (v.k === run.until) run.until = null;
   }
