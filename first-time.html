@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>First time? Here's the card — Burlington Brief</title>
+  <meta name="description" content="Everything you'd want to know before your first Btown Brief coffee or basketball run: cost, pace, coming alone is normal, how to get there without a car, how long it runs, who to look for.">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Btown Brief">
+  <meta property="og:title" content="First time? Here's the card">
+  <meta property="og:description" content="Everything you'd want to know before your first Btown Brief coffee or basketball run: cost, pace, coming alone is normal, how to get there without a car, how long it runs, who to look for.">
+  <meta property="og:url" content="https://guide.btownbrief.com/first-time.html">
+  <meta property="og:image" content="https://guide.btownbrief.com/assets/og/og-guide.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="First time? Here's the card">
+  <meta name="twitter:description" content="Everything you'd want to know before your first Btown Brief coffee or basketball run: cost, pace, coming alone is normal, how to get there without a car, how long it runs, who to look for.">
+  <meta name="twitter:image" content="https://guide.btownbrief.com/assets/og/og-guide.jpg">
+
+  <link rel="icon" href="assets/favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="icon" href="assets/favicon-16.png" sizes="16x16" type="image/png">
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+  <meta name="apple-mobile-web-app-title" content="City Guide">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css?v=20260904a">
+  <link rel="stylesheet" href="css/coffee-kit.css?v=20260906a">
+  <script>
+    /* Theme before first paint, from the cached sunrise/sunset (see js/auto-theme.js). */
+    (function () {
+      try {
+        var c = JSON.parse(localStorage.getItem('btown-sun') || 'null');
+        if (!c) return;
+        var today = new Intl.DateTimeFormat('en-CA', { timeZone: 'America/New_York',
+          year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date());
+        if (c.day !== today) return;
+        var n = Date.now();
+        document.documentElement.setAttribute('data-theme',
+          (n >= c.rise && n < c.set) ? 'light' : 'dark');
+      } catch (e) {}
+    })();
+  </script>
+<!-- Meta Pixel -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '2471867016612559');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
+/></noscript>
+<!-- End Meta Pixel -->
+<!-- GoatCounter -->
+<script data-goatcounter="https://btown-brief.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
+</head>
+<body data-standalone>
+
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="logo">
+        <button class="dark-toggle" id="dark-toggle" aria-label="Toggle dark mode" title="Toggle light / dark">
+          <svg class="icon-sun" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="5"/>
+            <line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+            <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+          </svg>
+          <svg class="icon-moon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+          </svg>
+        </button>
+        <span class="logo-sep"></span>
+        <span class="logo-title">Burlington Brief</span>
+      </div>
+      <nav class="mode-nav" aria-label="Community pages">
+        <a class="mode-btn" href="clubs.html">Clubs</a>
+        <a class="mode-btn" href="events.html">Events</a>
+        <a class="mode-btn" href="table.html">Table Talk</a>
+        <a class="mode-btn" href="telegram.html">Telegram</a>
+      </nav>
+    </div>
+  </header>
+
+  <a class="newsletter-bar" href="https://btownbrief.com?utm_source=guide&utm_medium=referral&utm_campaign=site_capture" target="_blank" rel="noopener">
+    <div class="newsletter-bar-inner">
+      <div class="newsletter-head">
+        <span class="newsletter-label">The Burlington Brief</span>
+        <span class="newsletter-issue">Free Burlington news &amp; events in your inbox</span>
+      </div>
+      <span class="newsletter-cta">Sign up free →</span>
+    </div>
+  </a>
+
+  <main class="page-wrap ft-wrap">
+    <div class="page-hero" id="ft-hero">
+      <span class="page-hero-kicker">First-time card</span>
+      <h1>Before your first one</h1>
+      <p class="page-hero-sub">The five things people wish someone had told them: what it costs, what the pace is, that coming alone is normal, how to get there without a car, and how long it runs. Pick an event.</p>
+    </div>
+
+    <nav class="ft-picker" id="ft-picker" aria-label="Choose an event"></nav>
+
+    <section class="ft-card" id="ft-card" hidden></section>
+
+    <div class="note-card ft-note" id="ft-hostnote" hidden>
+      <strong>Hosting something on the Btown Meetup?</strong>
+      Paste these five lines at the end of your event description, filled in. Nothing else is required.
+      <pre class="ft-checklist" id="ft-checklist"></pre>
+      <button type="button" class="ft-copy" id="ft-copy">Copy the five lines</button>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <span>A <a href="https://www.btownbrief.com" target="_blank" rel="noopener">Burlington Brief</a> project</span>
+      <span class="footer-sep">·</span>
+      <span>Burlington, Vermont</span>
+    </div>
+  </footer>
+
+  <script src="js/first-time.js"></script>
+  <script src="js/auto-theme.js"></script>
+  <script src="https://play.btownbrief.com/nav.js" defer></script>
+</body>
+</html>
