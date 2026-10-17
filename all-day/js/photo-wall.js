@@ -1,18 +1,15 @@
-/* photo-wall.js — the community photo wall's drawing helpers, kept when the
-   Art tab was folded (2026-10-17).
+/* photo-wall.js — the community photo wall's helpers, kept when the Art tab
+   was folded (2026-10-17) and now drawn by the Wire's Photo mode
+   (modes/wire-photos.js).
 
    Stephen wants All Day to become the new local Instagram: community photos
-   are not going away, they move into the Wire as a Photo mode in a later
-   build. The Art tab's slot went to Habits, but everything its wall stood
-   on stays: the photo queue (../js/photos-lib.js, btb_photos), the `art`
-   board with its photo, art and notice kinds and their votes (boards-core.js,
+   live in the Wire as a Photo mode. Everything the Art tab's wall stood on
+   stays: the photo queue (../js/photos-lib.js, btb_photos), the `art` board
+   with its photo, art and notice kinds and their votes (boards-core.js,
    nn_rules), the demo's art posts (data/demo/art.json, boards-fake.js), and
-   the votes counted by week (nn_votes_by_week) that pick a photo of the
-   week. This module is the Art tab's wall code with the tab taken out, so
-   the Photo mode can start from it. NOTHING IMPORTS IT YET; the Photo mode
-   build wires it up (and adds it to sw.js's offline list then).
+   the votes counted by week (nn_votes_by_week) that pick a photo of the week.
 
-   What is here, all as the Art tab had them:
+   What is here:
      weekStart(ms), prevWeek(start), weekLabel(start)
                                  Burlington weeks, Monday 00:00 New York
      rank(a, b)                  most votes first, a tie to the one posted first
@@ -26,11 +23,17 @@
                                  else the day it was approved
      loadGallery(tab)            the approved gallery photos that belong on the wall
      drawWall(host, list, onOpen)  the three-column grid, two tall tiles in ten
-     openSheet(it, onVote)       the whole picture in a sheet, with vote, share,
-                                 shirt and report or delete */
+     openSheet(it)               the whole picture in a sheet: a neighbor's with
+                                 vote, share, shirt and report or delete; a gallery
+                                 photo with share; any other picture (Instagram, a
+                                 story's lead image) with vote, share and the way
+                                 to the original
+     compose(kind, onPosted)     the photo-and-art submission sheet (boards.compose),
+                                 moderated by the photo queue */
 
 import * as app from './app.js';
 import * as boards from './boards.js';
+import * as store from './store.js';
 import { isoWeek } from './boards-core.js';
 import { el, esc, safeHref, ICON, art, agoShort } from './ui.js';
 
@@ -101,7 +104,7 @@ export function galleryPic(g, tab = 'wire') {
   const when = Date.parse(g.approved_on ? g.approved_on + 'T12:00:00Z' : '') || 0;
   const area = g.area && g.area !== 'Elsewhere' ? g.area : '';
   const day = when ? new Date(when).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' }) : '';
-  return { k: 'g-' + g.id, kind: 'image', gallery: true, href: '#' + tab + '/g-' + g.id,
+  return { k: 'g-' + g.id, kind: 'image', gallery: true, href: '#' + tab + '/g-' + g.id, local: g.area !== 'Elsewhere',
     title: g.caption || g.spot || area || g.taken_on || day || 'A photo from the gallery',
     text: g.caption || '', author: g.credit || '', spot: g.spot || '', area,
     media: g.url, ratio: 'r45', created: when / 1000, ago: when ? agoShort(when / 1000) : '' };
@@ -185,9 +188,11 @@ export function shirtLink(it, cls) {
 }
 
 /* The whole picture in a sheet. Its box is reserved at 4:5 and takes the
-   picture's own shape once it has loaded, so nothing is cropped. The vote
-   button carries data-act="photovote": the caller registers it with
-   app.onAct('photovote', …) when it wires the wall up. */
+   picture's own shape once it has loaded, so nothing is cropped. A
+   neighbor's vote button carries data-act="photovote", which the Photo mode
+   answers (app.onAct); any other picture's vote is the Wire's own
+   (data-act="up"). The sheet's title is the picture's short caption; a
+   longer caption follows the picture. */
 export function openSheet(it) {
   app.sheet(it.title, (body) => {
     const box = el('div');
@@ -195,7 +200,7 @@ export function openSheet(it) {
     const media = el('span', 'c-media ' + (it.ratio || 'r45'), art(it.media));
     const img = media.querySelector('img');
     if (img) {
-      img.alt = it.title;
+      img.alt = it.alt || it.title;
       img.loading = 'eager';
       img.addEventListener('load', () => {
         if (!img.naturalWidth) return;
@@ -209,8 +214,9 @@ export function openSheet(it) {
       const where = [it.spot, it.area].filter(Boolean).join(', ');
       box.appendChild(el('p', 'sheet-note', esc(['Photo by ' + (it.author || 'a neighbor'), where, it.ago].filter(Boolean).join(' · '))));
       if (it.text && it.text !== it.title) box.appendChild(el('p', 'c-text', esc(it.text)));
+      r.appendChild(upBtn(it));
       r.appendChild(actBtn('share', ICON.share + ' Share', 'ghost'));
-    } else {
+    } else if (it.pic) {
       box.appendChild(el('p', 'sheet-note', esc(['by ' + it.author, it.what + (it.medium ? ' · ' + it.medium : ''), it.ago].filter(Boolean).join(' · '))));
       if (it.text) box.appendChild(el('p', 'c-text', esc(it.text)));
       const up = voteBtn(it);
@@ -219,9 +225,48 @@ export function openSheet(it) {
       r.appendChild(actBtn('share', ICON.share + ' Share', 'ghost'));
       if (it.shirt) r.appendChild(shirtLink(it, 'btn ghost'));
       r.appendChild(it.mine ? actBtn('bdelete', ICON.trash + ' Delete', 'ghost') : actBtn('breport', ICON.flag + ' Report', 'ghost'));
+    } else {
+      box.appendChild(el('p', 'sheet-note', esc([it.src, it.ago].filter(Boolean).join(' · '))));
+      if (it.text && it.text !== it.title) box.appendChild(el('p', 'c-text pm-full', esc(it.text)));
+      r.appendChild(upBtn(it));
+      r.appendChild(actBtn('share', ICON.share + ' Share', 'ghost'));
+      if (/^https?:/i.test(it.href || '')) {
+        const a = el('a', 'btn ghost', esc(it.open || 'Open the original') + ' ' + ICON.ext);
+        a.href = safeHref(it.href);
+        a.target = '_blank'; a.rel = 'noopener';
+        a.dataset.open = '';   // the shell marks it read, and in the demo only toasts
+        r.appendChild(a);
+      }
     }
     box.appendChild(r);
     body.appendChild(box);
     app.bindFeed(body);
+  });
+}
+/* the Wire's own vote, as a sheet button: the shell's toggleVote paints it */
+function upBtn(it) {
+  const on = store.hasVoted(it.k);
+  const n = (Number(it.votes) || 0) + store.voteCount(it.k);
+  const b = el('button', 'btn ghost up' + (on ? ' on' : ''), ICON.up + '<span class="vl">Vote</span><span class="n">' + esc(n || '') + '</span>');
+  b.dataset.act = 'up';
+  b.setAttribute('aria-pressed', on ? 'true' : 'false');
+  return b;
+}
+
+/* ---------------------------------------------------------- add a photo */
+/* The boards compose sheet for a photo or a piece of art. A photo goes
+   through the reader photo queue, so the post shows once Stephen has
+   approved its picture, and the sheet says so in one line. */
+export function compose(kind, onPosted) {
+  const fields = [];
+  if (kind === 'art') fields.push({ key: 'medium', label: 'Medium', type: 'text', max: 40, placeholder: 'Gouache, linocut, oil, ink…' });
+  fields.push({ key: 'shirt', label: 'Could it go on a shirt?', type: 'enum', options: [['yes', 'Yes'], ['no', 'No']] });
+  return boards.compose({
+    board: 'art', kind, heading: kind === 'art' ? 'Add art' : 'Add a photo',
+    title: 'Title', titlePlaceholder: kind === 'art' ? 'The breakwater light, in fog' : 'North Beach, 6:52 am',
+    body: 'One line about it', bodyPlaceholder: kind === 'art' ? 'Where you made it, what with' : 'Where you stood, what you saw',
+    fields, cta: 'Send it in',
+    notes: ['Photos show once approved.'],
+    onPosted,
   });
 }
