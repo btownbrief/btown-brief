@@ -1662,7 +1662,7 @@
   ok   sign-in fails soft › a bad address is caught before any request
   ok   sign-in fails soft › no link was requested
   ok   sign-in fails soft › no console errors
-  ok   performance › the live Wire redraws 60 cards in 9ms (budget 100)
+  ok   performance › the live Wire redraws 60 cards in 8ms (budget 100)
   ok   shell fixes: a rail never snaps flush to the edge › 390: .rail carries scroll-padding of one gutter
   ok   shell fixes: a rail never snaps flush to the edge › 390: a card scrolled to the start stops at the gutter
   ok   shell fixes: a rail never snaps flush to the edge › 390: no console errors
@@ -1861,7 +1861,8 @@
   ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › tapping again un-marks it
   ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › and the server deletes the tap
   ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › an N-a-week habit: no set days, so no missed rings
-  ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › five habits: the Add habit row steps aside
+  ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › five habits and the Add habit row stays: there is no limit to meet
+  ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › and the tab never mentions a limit
   ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › habits: nothing fixed or sticky inside the tab
   ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › habits: uppercase only in the caps roles
   ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › habits: no monospace
@@ -1886,6 +1887,28 @@
   ok   Habits, swipe to archive with Undo, drag and keys to reorder, edit (demo, 1280, dark) › habits: no sideways scroll at 1280
   ok   Habits, swipe to archive with Undo, drag and keys to reorder, edit (demo, 1280, dark) › habits: at most two subnav rows
   ok   Habits, swipe to archive with Undo, drag and keys to reorder, edit (demo, 1280, dark) › no console errors
+  ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › twenty habits, in order
+  ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › every row keeps its seven dots and its 48px tap
+  ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › the list is longer than the screen, and the panel scrolls
+  ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › the Add habit row is still there at twenty
+  ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › a swipe left on the seventeenth row archives it
+  ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › Undo brings it back, at the bottom
+  ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › held near the bottom, the drag scrolls the list (1282px)
+  ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › and Habit 4 travels down the list, to row 20
+  ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › no row lost or doubled on the way
+  ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › and the server keeps the order
+  ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › dragged up past the top, Habit 20 goes from row 18 to row 1
+  ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › and the server keeps that order too
+  ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › the grip’s arrow keys move the last of twenty up one
+  ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › and keeps the focus on it
+  ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › a twenty-first habit adds like any other
+  ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › habits: nothing fixed or sticky inside the tab
+  ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › habits: uppercase only in the caps roles
+  ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › habits: no monospace
+  ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › habits: no escaped markup, undefined or NaN on the page
+  ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › habits: no sideways scroll at 390
+  ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › habits: at most two subnav rows
+  ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › no console errors
   ok   Habits, the first sign-in asks a name and a phone, once (demo) › no member yet: a first name and a phone, before any habit
   ok   Habits, the first sign-in asks a name and a phone, once (demo) › a phone that is not one: refused
   ok   Habits, the first sign-in asks a name and a phone, once (demo) › saved: the habits appear
