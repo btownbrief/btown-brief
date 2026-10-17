@@ -1,0 +1,184 @@
+/* All Day — design tokens. The only place a colour, a type size, a space or a
+   radius is defined. app.css and every tab use these names and nothing else.
+
+   Light is the base on :root. Dark is stated twice: once for phones set to
+   dark (guarded so an explicit "light" choice still wins), once for the
+   toggle. A colour never has its only definition inside a media query.
+
+   Lifted from the design prototype (DESIGN.md section 5) as is. The shell
+   added the groups marked "shell" below, so that nothing in app.css had to
+   carry a literal: the media overlays, the source-mark hues and the extra
+   type sizes the section heads, datelines and heroes already used. */
+
+:root {
+  color-scheme: light;
+
+  /* paper and ink */
+  --paper: #FBF9F5;                 /* the page; feed cards sit directly on it */
+  --paper-2: #F2EFE8;               /* sunk: date tiles, inputs, placeholders, sheet ground */
+  --raised: #FFFFFF;                /* sheets, peek card, confirm box */
+  --ink: #16191D;
+  --ink-2: #4A5058;                 /* captions, card body text */
+  --ink-3: #7B818A;                 /* timestamps, counts, idle icons, tab labels */
+  --line: rgba(26, 22, 14, .13);    /* hairline between cards */
+  --line-soft: rgba(26, 22, 14, .07);
+
+  /* the two colours that carry meaning */
+  --accent: #9A5B00;                /* selected: active tab, chosen segment, saved, voted */
+  --accent-soft: rgba(200, 126, 18, .14);
+  --local: #16704E;                 /* a Local item, and the Local water in the switch */
+  --local-soft: rgba(22, 112, 78, .10);
+  --local-ink: #FFFFFF;             /* text on the Local water */
+  --every: #A63A2C;                 /* the Everything water in the switch; used nowhere else */
+  --every-ink: #FFFFFF;
+  --good: #16704E;
+  --warn: #A33B2A;
+  --warn-soft: rgba(163, 59, 42, .12);
+
+  --scrim: rgba(28, 24, 16, .44);
+  --bar: rgba(251, 249, 245, .92);  /* mast and tab bar, blurred */
+  --on-ink: #FBF9F5;                /* text on an ink-filled button */
+  --toast-link: #F2B44F;            /* shell: Undo on the ink toast */
+  --shadow-sheet: 0 -8px 30px rgba(20, 16, 8, .14);
+  --shadow-float: 0 8px 30px rgba(20, 16, 8, .16), 0 1px 3px rgba(20, 16, 8, .08);
+  --shadow-pill: 0 1px 3px rgba(0, 0, 0, .14);   /* shell: the chosen pill in a segment */
+
+  /* shell: on top of a picture. The same in both themes, because the
+     picture is what is underneath, not the paper. */
+  --on-media: #FFFFFF;
+  --on-media-dim: rgba(255, 255, 255, .4);
+  --media-disc: rgba(0, 0, 0, .42);  /* the play disc */
+  --media-chip: rgba(0, 0, 0, .6);   /* a duration or rating on a poster */
+  --media-fade: rgba(0, 0, 0, .7);   /* the gradient under text on a picture */
+  --media-line: rgba(0, 0, 0, .25);
+  --media-glow: rgba(255, 255, 255, .5);
+  --media-sun: rgba(255, 238, 205, .95);
+  --media-sheen: rgba(255, 255, 255, .18);
+  --lightbox: #000000;
+  --mask: #000000;                   /* alpha for a fade mask; never painted */
+
+  /* shell: source marks. A hash of the source name picks one of eight, so a
+     source keeps its colour everywhere without anyone choosing it. */
+  --mark-0: hsl(18 28% 42%);
+  --mark-1: hsl(32 28% 42%);
+  --mark-2: hsl(150 28% 42%);
+  --mark-3: hsl(200 28% 42%);
+  --mark-4: hsl(225 28% 42%);
+  --mark-5: hsl(265 28% 42%);
+  --mark-6: hsl(330 28% 42%);
+  --mark-7: hsl(90 28% 42%);
+
+  /* type */
+  --serif: "Lora", Georgia, serif;
+  --sans: "Archivo", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --fs-wordmark: 24px;   /* Lora 500 */
+  --fs-display: 22px;    /* Lora 500: pick titles, date numerals, ranked numerals */
+  --fs-section: 20px;    /* Lora 500: sheet titles */
+  --fs-title: 17px;      /* Archivo 600: every card title */
+  --fs-body: 15px;       /* Archivo 400: captions, excerpts, the pick's reason */
+  --fs-meta: 13px;       /* Archivo 500/400: source, time, counts */
+  --fs-label: 10px;      /* Archivo 500: tab bar labels, date tile weekday */
+  --fs-button: 14px;     /* Archivo 600 */
+  --fs-caps: 12px;       /* Archivo 700, the only uppercase: eyebrow, new-since line, "Coming in the rebuild" */
+  --fs-tag: 11px;        /* Archivo 600: Local, Btown Brief */
+  /* shell: sizes the prototype's layouts use, named once */
+  --fs-hero: 24px;       /* Lora: a hero, a deal, a stat, the spin button */
+  --fs-empty: 26px;      /* Lora: an empty-state tab name */
+  --fs-sec: 21px;        /* Lora: a section head inside a tab */
+  --fs-date: 18px;       /* Lora: the dateline's date, weather numerals, ranks */
+  --fs-lead: 16px;       /* Archivo: a post with no title, a ranked title, the promise line */
+  --fs-sub: 14px;        /* Archivo: titles under posters and shelf cards */
+  --fs-small: 12px;      /* Archivo: lines under posters, fine print */
+  --fs-mark-xs: 8px;     /* initials inside the 18px source mark */
+  --fs-mark-xl: 17px;    /* initials inside the 48px avatar */
+  --fs-emoji: 30px;      /* shell: an emoji standing in for a picture (a game in a 52px list thumb) */
+  --lh-tight: 1.15;
+  --lh-title: 1.3;
+  --lh-body: 1.45;
+
+  /* space: 4 8 12 16 20 24 32 */
+  --s1: 4px; --s2: 8px; --s3: 12px; --s4: 16px; --s5: 20px; --s6: 24px; --s8: 32px;
+  --gutter: 16px;        /* side gutter on a phone, also the card's horizontal padding */
+  --col: 640px;          /* the feed column on a wide screen */
+
+  /* radius */
+  --r-media: 12px;       /* posters, image posts, pick art */
+  --r-thumb: 10px;       /* the 72px headline thumbnail */
+  --r-tile: 8px;         /* date tile */
+  --r-sheet: 20px;
+  --r-pill: 999px;
+  --r-box: 14px;         /* shell: the mini player, archetype tiles */
+  --r-sm: 6px;           /* shell: source mark, tags, counts on a picture */
+  --r-xs: 4px;           /* shell: focus ring, bars */
+  --r-hair: 2px;         /* shell: progress lines, the grabber */
+  --r-round: 50%;        /* avatars, discs, dots */
+
+  /* chrome */
+  --mast-h: 52px;
+  --subnav-h: 44px;
+  --tab-h: 56px;
+  --hit: 44px;           /* minimum tap target */
+  --icon: 22px;
+  --safe-b: env(safe-area-inset-bottom, 0px);
+  --safe-t: env(safe-area-inset-top, 0px);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --paper: #0D0E10;
+    --paper-2: #17191C;
+    --raised: #1C1E22;
+    --ink: #F2F0EA;
+    --ink-2: rgba(242, 240, 234, .74);
+    --ink-3: rgba(242, 240, 234, .50);
+    --line: rgba(255, 255, 255, .13);
+    --line-soft: rgba(255, 255, 255, .07);
+    --accent: #E8A33D;
+    --accent-soft: rgba(232, 163, 61, .18);
+    --local: #6FD79E;
+    --local-soft: rgba(111, 215, 158, .12);
+    --local-ink: #06251A;
+    --every: #F09B8A;
+    --every-ink: #2C120C;
+    --good: #6FD79E;
+    --warn: #F08A72;
+    --warn-soft: rgba(240, 138, 114, .16);
+    --scrim: rgba(0, 0, 0, .66);
+    --bar: rgba(13, 14, 16, .9);
+    --on-ink: #0D0E10;
+    --toast-link: #9A5B00;
+    --shadow-sheet: 0 -8px 30px rgba(0, 0, 0, .5);
+    --shadow-float: 0 12px 40px rgba(0, 0, 0, .6), 0 2px 8px rgba(0, 0, 0, .4);
+    --shadow-pill: 0 1px 3px rgba(0, 0, 0, .5);
+  }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --paper: #0D0E10;
+  --paper-2: #17191C;
+  --raised: #1C1E22;
+  --ink: #F2F0EA;
+  --ink-2: rgba(242, 240, 234, .74);
+  --ink-3: rgba(242, 240, 234, .50);
+  --line: rgba(255, 255, 255, .13);
+  --line-soft: rgba(255, 255, 255, .07);
+  --accent: #E8A33D;
+  --accent-soft: rgba(232, 163, 61, .18);
+  --local: #6FD79E;
+  --local-soft: rgba(111, 215, 158, .12);
+  --local-ink: #06251A;
+  --every: #F09B8A;
+  --every-ink: #2C120C;
+  --good: #6FD79E;
+  --warn: #F08A72;
+  --warn-soft: rgba(240, 138, 114, .16);
+  --scrim: rgba(0, 0, 0, .66);
+  --bar: rgba(13, 14, 16, .9);
+  --on-ink: #0D0E10;
+  --toast-link: #9A5B00;
+  --shadow-sheet: 0 -8px 30px rgba(0, 0, 0, .5);
+  --shadow-float: 0 12px 40px rgba(0, 0, 0, .6), 0 2px 8px rgba(0, 0, 0, .4);
+  --shadow-pill: 0 1px 3px rgba(0, 0, 0, .5);
+}

@@ -1,0 +1,89 @@
+name: Refresh Reddit intake
+
+# The Reddit bridge. Once an hour:
+#   scripts/reddit_intake.py -> data/reddit-intake.json  (every route, side by side)
+#   scripts/reddit_report.py -> data/reddit-report.json + .md (the daily comparison)
+# both on the `reddit-data` branch, force-pushed as one orphan commit each run
+# (same pattern and reasons as pulse-data: a rolling store has no useful
+# history, and hourly commits would bury main).
+#
+# Routes: Inoreader tag streams (work from Actions), Reddit's own RSS
+# (usually 403s GitHub's servers, so expect "blocked" in the report), and
+# Reddit's OAuth API, which switches on by itself once the repo secrets
+# REDDIT_CLIENT_ID and REDDIT_CLIENT_SECRET exist. Hourly keeps OAuth at
+# about 72 requests a day (token + two listings), inside the 50-100/day the
+# access request names.
+#
+# Readers: refresh-pulse.yml feeds the intake into the Pulse's subreddit
+# sources; the newsletter's gather_news.py and Wednesday City Pulse read it
+# from raw.githubusercontent.com; the secretary's morning brief reads the
+# report's brief_line.
+#
+# Failure posture: a dead route is data, not a failure. The intake only
+# exits non-zero on a bug, and then nothing is pushed and the last good
+# files stay up.
+
+on:
+  schedule:
+    - cron: '41 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: refresh-reddit
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Offline tests (fixtures only, no network)
+        run: python3 -m unittest discover -s tests -p 'test_reddit*.py' -v
+
+      - name: Pull the previous intake from the reddit-data branch
+        run: |
+          if git ls-remote --exit-code --heads origin reddit-data >/dev/null; then
+            # The branch exists, so a fetch failure must fail the run rather
+            # than restart the rolling store from nothing.
+            git fetch -q origin reddit-data --depth 1
+            git show FETCH_HEAD:data/reddit-intake.json > /tmp/reddit-prev.json
+            [ -s /tmp/reddit-prev.json ]
+          else
+            echo '{}' > /tmp/reddit-prev.json   # true first run
+          fi
+
+      - name: Collect from every route
+        env:
+          REDDIT_CLIENT_ID: ${{ secrets.REDDIT_CLIENT_ID }}
+          REDDIT_CLIENT_SECRET: ${{ secrets.REDDIT_CLIENT_SECRET }}
+          REDDIT_USER_AGENT: ${{ vars.REDDIT_USER_AGENT }}
+        run: |
+          mkdir -p /tmp/reddit-out/data
+          python3 scripts/reddit_intake.py \
+            --store /tmp/reddit-prev.json \
+            --out /tmp/reddit-out/data/reddit-intake.json
+
+      - name: Compare the routes
+        run: |
+          python3 scripts/reddit_report.py \
+            --intake /tmp/reddit-out/data/reddit-intake.json \
+            --json-out /tmp/reddit-out/data/reddit-report.json \
+            --md-out /tmp/reddit-out/data/reddit-report.md \
+            | tee -a "$GITHUB_STEP_SUMMARY"
+
+      - name: Force-push the single-commit reddit-data branch
+        run: |
+          cd /tmp/reddit-out
+          git init -q -b reddit-data
+          git config user.name "btown-brief-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data/reddit-intake.json data/reddit-report.json data/reddit-report.md
+          git commit -q -m "Reddit intake $(date -u +%FT%TZ)"
+          git push -q --force \
+            "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" \
+            reddit-data

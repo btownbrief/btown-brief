@@ -1,225 +1,299 @@
-/* whatnow.js — the middle button, and the only tab that asks a question.
+/* What Now: one answer, then put the phone down.
 
-   This is the standalone What Now app brought inside All Day, so that page can
-   retire. The decision engine is ported VERBATIM (whatnow-engine.js) — it read
-   the sky and the calendar and handed back one safe answer, it survived an
-   adversarial review, and its 38-test Node suite still passes against the
-   copy. Nothing about the rules was re-derived here.
+   A weather line at the top (feels like, the lake when the gage is fresh,
+   sunset), then three modes behind the chip row:
 
-   What the engine does, in one line: it builds a pool of real answers that are
-   safe and sensible FOR THE WINDOW BEING PLANNED — today's events, 213 curated
-   things, 38 clubs, 39 hobbies, tonight's sunset plan, a swim when the lake has
-   earned it — scores each against the moment, and picks weighted-random from
-   the top so a respin stays good without being the same.
+   - Spin. The standalone What Now app's engine (whatnow-engine.js, ported
+     verbatim and not touched here) behind one big button. It builds a pool
+     of answers that are safe and sensible for the window being planned (now,
+     tonight, tomorrow), scores them against the sky and the clock, and picks
+     weighted-random from the top. The safety gates live in the engine, where
+     the pool is built, so no chip and no respin can reach around them. The
+     answer card spells out the engine's reasons; Do it ends the session with
+     the app's own line; Another respins. The path chips (I'm broke, get me
+     outside, people please, two hours, close by, teach me something) are the
+     engine's own constraint keys.
+   - Missions. The Top 100 as missions (data/missions.json, built by
+     scripts/build_missions.py): a numbered list, theme chips, Mark done
+     (kept on this device, and on the reader's account when signed in, which
+     fails soft), and Surprise me, which scrolls the list to a mission you
+     have not done and lets it glow, rather than opening a modal. Tap a
+     mission for its paragraph and its places.
+   - Tonight. The local artists with a show tonight or this week
+     (all-day/data/music.json), the job the old Music tab did, why lines
+     kept, then today's calendar from 5 pm on (all-day/data/whatnow.json, in
+     Burlington's clock, not the reader's) as event cards. Listen builds that artist's
+     Bandcamp player in place; nothing plays until you press its play button,
+     and the shell's player steps aside for it (and silences it in turn).
 
-   The safety gates live where the pool is built, not in the UI, so no chip and
-   no respin can reach around them: dangerous cold or heat, high wind, bad air,
-   an active alert or NO CURRENT READING AT ALL remove everything outdoor. The
-   swim needs season, daylight, 74°+, a real recent lake gage, and a fresh
-   clean-water test. Any missing piece and it is not offered.
+   ?demo=1 runs this same file on data/demo/whatnow.json, which holds every
+   payload in its real shape; its dates are moved to today on load. */
 
-   THE SKY IS THE POINT, VISUALLY. The standalone app painted the whole page
-   with a gradient from the real sun times — night, dawn, morning, day, golden,
-   dusk. That is the thing that made it feel like Burlington rather than a
-   list, so it came too. It is scoped to this panel: All Day is a light app and
-   the other eight tabs must not inherit a night sky.
+import * as app from '../app.js';
+import * as store from '../store.js';
+import * as data from '../wire.js';
+import { el, esc, safeHref, ICON, art, section, chips, pills, button, cards, put } from '../ui.js';
+import { loadAll } from '../whatnow-data.js';
+import { buildContext, buildPool, pick, fmtTime, outdoorRisks } from '../whatnow-engine.js';
+import { sunScore } from '../sun.js';
 
-   Underneath the answer, the same ten-day calendar this tab already showed.
-   The question first, the list second — a calendar is what you scroll when the
-   answer was not the thing. */
-
-import * as store from './../store.js';
-import * as data from './../wire.js';
-import * as app from './../app.js';
-import { el, esc, safeHref, chip, shelfHead, scrollHint, tabStamp, stampOf, ICON } from './../ui.js';
-import { loadAll } from './../whatnow-data.js';
-import { buildContext, buildPool, pick, fmtTime, outdoorRisks } from './../whatnow-engine.js';
-import { sunScore } from './../sun.js';
-
+const KEY = 'whatnow';
+const MODES = ['spin', 'missions', 'tonight'];
+const MISSIONS_URL = '../data/missions.json';
 const EVENTS_URL = '../events.html';
-const PLANNER_URL = 'https://play.btownbrief.com/burlington-days/';
-const ARCADE_URL = 'https://play.btownbrief.com/';
-const SPORTS_URL = '../sports.html';
-
-/* ~20 hours, so tomorrow does not open with yesterday's answer. */
+const DONE_KEY = 'allday-missions';
 const SEEN_KEY = 'allday-wn-seen';
-const SEEN_MS = 20 * 3600 * 1000;
-
-const MODES = [['now', 'now'], ['tonight', 'tonight'], ['tomorrow', 'tomorrow']];
-const PATHS = [
-  ['free', "I'm broke"],
-  ['outside', 'get me outside'],
-  ['people', 'people, please'],
-  ['twohours', "I've got ~2 hours"],
-  ['closeby', 'close by'],
-  ['hobby', 'teach me something'],
-];
-
-const state = {
-  root: null, feeds: null, status: null,
-  mode: 'now', chips: new Set(),
-  answer: null, poolSize: 0, ctx: null,
-  spinning: false, loaded: false, listCat: null, games: null, champs: null,
-};
-
-export function mount(root) {
-  state.root = root;
-  root.innerHTML = '<p class="loading">Reading the sky…</p>';
-  /* Games ride alongside, and fail soft: no payload, no strip, and the rest
-     of the tab is unchanged. */
-  /* This payload can land BEFORE the engine's own feeds do, and render()
-     needs a context to describe the hat. Store it either way; only redraw once
-     the tab has actually rendered once. */
-  data.load('sports', (json) => {
-    state.games = json;
-    if (state.loaded) render();
-  }, () => {});
-  /* Same deal for the arcade standings — a bonus payload with no same-origin
-     copy, so no file, no card, and the rest of the tab is unchanged. */
-  data.load('champions', (json) => {
-    state.champs = json;
-    if (state.loaded) render();
-  }, () => {});
-  /* the engine's gray-night gate (ctx.sunsetScore) was dead until 9/2 —
-     nothing ever filled it. Fetch alongside the feeds; a spin that lands
-     before this resolves just goes ungated once, same as a fetch failure. */
-  sunScore(data).then((sun) => { state.sun = sun; });
-  loadAll().then(({ data: feeds, status }) => {
-    state.feeds = feeds;
-    state.status = status;
-    state.loaded = true;
-    spin(true);
-  }).catch(() => {
-    root.innerHTML = '';
-    root.appendChild(el('div', 'errbox',
-      '<b>Couldn’t read the moment.</b><br>The feeds it needs are the guide’s own.'));
-  });
-}
-
-export function activate() {}
-export function refresh() { if (state.loaded) render(); }
-export function deactivate() { app.closePeek(); }
-
-/* --------------------------------------------------------------- memory */
-
-function seen() {
-  const raw = store.read(SEEN_KEY, {});
-  const now = Date.now();
-  const live = {};
-  Object.keys(raw || {}).forEach((k) => {
-    if (now - raw[k] < SEEN_MS) live[k] = raw[k];
-  });
-  return live;
-}
-function remember(id) {
-  if (!id) return;
-  const m = seen();
-  m[id] = Date.now();
-  store.write(SEEN_KEY, m);
-}
-
-/* ---------------------------------------------------------------- spin */
-
-/* A slot machine, not a fade. The reel shows REAL candidates from the same
-   pool the answer comes from — showing nonsense and then a result would be a
-   lie about how the pick is made — and slows on an ease-out before it lands,
-   which is the whole feel of a machine coming to rest.
-
-   It never spins for longer than the reader will wait, and prefers-reduced-
-   motion skips straight to the answer. */
+const SEEN_MS = 20 * 3600 * 1000;       // about a day, so tomorrow does not open on today's answer
+const EVENING = 17;                      // Tonight starts at 5 pm in Burlington
+const WEEK = 7;
 const REEL_MS = [55, 60, 68, 78, 92, 110, 135, 170, 215, 275, 350];
 
+const WINDOWS = [['now', 'Now'], ['tonight', 'Tonight'], ['tomorrow', 'Tomorrow']];
+const PATHS = [['free', 'I’m broke'], ['outside', 'Get me outside'], ['people', 'People, please'],
+  ['twohours', 'Two hours'], ['closeby', 'Close by'], ['hobby', 'Teach me something']];
+const THEME = { eat: 'Eat', drink: 'Drink', outdoors: 'Outdoors', water: 'Water', culture: 'Culture',
+  play: 'Play', family: 'Family', winter: 'Winter', free: 'Free' };
+
+/* Signed-in Mark done goes to the fleet's Supabase project through two
+   functions this tab asks for (the SQL is in the pull request). Until they
+   exist the calls fail and the device copy is all there is. */
+const SB_URL = 'https://jnouvwxomrcffqwilqkq.supabase.co';
+const SB_KEY = 'sb_publishable_RkMJQopffWlV6DSwCRkndQ_Xw6GJMf3'; // anon, safe to ship
+
+/* ----------------------------------------------------------------- clock */
+const TZ = 'America/New_York';
+const partsFmt = new Intl.DateTimeFormat('en-US', { timeZone: TZ, year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' });
+const dowFmt = new Intl.DateTimeFormat('en-US', { timeZone: 'UTC', weekday: 'short' });
+const dayFmt = new Intl.DateTimeFormat('en-US', { timeZone: 'UTC', weekday: 'long' });
+function et(ms) {
+  const o = {};
+  partsFmt.formatToParts(new Date(ms)).forEach((p) => { o[p.type] = p.value; });
+  return { date: o.year + '-' + o.month + '-' + o.day, hour: Number(o.hour), minute: Number(o.minute), dom: Number(o.day) };
+}
+const utcNoon = (d) => { const [y, m, n] = d.split('-').map(Number); return new Date(Date.UTC(y, m - 1, n, 12)); };
+const addDays = (d, n) => { const t = utcNoon(d); t.setUTCDate(t.getUTCDate() + n); return t.toISOString().slice(0, 10); };
+const clock = (ms) => fmtTime(new Date(ms));                 // "6:06pm", the engine's own format
+const plural = (n, one, many) => n + ' ' + (n === 1 ? one : many);
+
+/* ----------------------------------------------------------------- state */
+const S = {
+  mode: 'spin', theme: 'all', window: 'now', chips: new Set(),
+  answer: null, pool: 0, ctx: null, rolling: false, did: false,
+  feeds: null, feedsFailed: false, sun: null,
+  weather: null, events: null, music: null, missions: null, missionsFailed: false,
+};
+let root = null, pending = null, ready = false, loaded = null, D = null, reel = 0;
+const done = app.demo ? Object.create(null) : { ...readMap(DONE_KEY) };
+const seenDemo = Object.create(null);
+
+function readMap(key) { const v = store.read(key, {}); return v && typeof v === 'object' && !Array.isArray(v) ? v : {}; }
+
+/* ---------------------------------------------------------------- loading */
+/* Everything is fetched on the first visit to the tab, never before:
+   things.json alone is 236 KB. Each piece paints when it lands. */
+function load() {
+  if (app.demo) {
+    return app.demoData(KEY).then((d) => {
+      D = redate(d);
+      S.weather = D.weather; S.events = D.events; S.music = D.music; S.missions = D.missions;
+      S.feeds = { ...D.feeds, weather: D.weather, events: D.events };
+    });
+  }
+  /* the wire may hand a payload over again later (a retry after a failed
+     first try, or a fresh copy): keep the engine's view of it current and
+     repaint the tab if it is showing */
+  const sub = (key, take) => new Promise((res) => data.load(key, (j) => { take(j); res(); if (ready) repaint(); }, res));
+  const parts = [
+    sub('weather', (j) => { S.weather = j; if (S.feeds) S.feeds.weather = j; }),
+    sub('whatnow', (j) => { S.events = j; if (S.feeds) S.feeds.events = j; }),
+    sub('music', (j) => { S.music = j; }),
+    data.fetchJSON(MISSIONS_URL, 8000).then((j) => {
+      if (!j || !Array.isArray(j.missions)) throw new Error('bad shape');
+      S.missions = j;
+    }).catch(() => { S.missionsFailed = true; }),
+    loadAll().then(({ data: feeds }) => { S.feeds = feeds; }).catch(() => { S.feedsFailed = true; }),
+  ];
+  sunScore(data).then((sun) => { S.sun = sun; });
+  pullDone();
+  return Promise.all(parts);
+}
+
+function repaint() {
+  if (!root || app.activeTab() !== KEY || S.rolling || (S.mode === 'tonight' && embed)) return;
+  const y = panel() ? panel().scrollTop : 0;
+  render();
+  app.paintSubnav();
+  if (panel()) panel().scrollTop = y;
+}
+
+/* The demo file is dated 2026-10-16. Its dates move to today (Burlington's)
+   and its weather reads as just observed, so the engine and Tonight see a
+   live day whenever the demo is opened. */
+function redate(d) {
+  const shift = Math.round((utcNoon(et(Date.now()).date) - utcNoon(d.anchor || '2026-10-16')) / 86400000);
+  /* a Burlington time keeps its wall clock: 5 pm in October is 5 pm in
+     December, so the offset is the one in force on the new date */
+  const offsetOn = (day) => {
+    const part = new Intl.DateTimeFormat('en-US', { timeZone: TZ, timeZoneName: 'longOffset' }).formatToParts(utcNoon(day)).find((x) => x.type === 'timeZoneName');
+    const m = part && /GMT([+-]\d{2}:\d{2})/.exec(part.value);
+    return m ? m[1] : '-05:00';
+  };
+  const walk = (v) => {
+    if (typeof v === 'string') {
+      if (!/^\d{4}-\d{2}-\d{2}/.test(v)) return v;
+      const day = addDays(v.slice(0, 10), shift);
+      const m = /^(T[\d:.]+)(-0[45]:00)$/.exec(v.slice(10));
+      return day + (m ? m[1] + offsetOn(day) : v.slice(10));
+    }
+    if (Array.isArray(v)) return v.map(walk);
+    if (v && typeof v === 'object') { const o = {}; Object.keys(v).forEach((k) => { o[k] = walk(v[k]); }); return o; }
+    return v;
+  };
+  const out = walk(d);
+  const now = new Date().toISOString();
+  out.weather.updated = now;
+  if (out.weather.now) out.weather.now.observed_at = now;
+  if (out.weather.lake_gage) out.weather.lake_gage.water_temp_at = now;
+  return out;
+}
+
+/* ---------------------------------------------------------------- the tab */
+function render() {
+  if (!root) return;
+  closeBandcamp();
+  root.innerHTML = '';
+  const wx = weatherLine();
+  if (wx) root.appendChild(wx);
+  if (S.mode === 'spin') renderSpin();
+  else if (S.mode === 'missions') renderMissions();
+  else renderTonight();
+}
+
+/* One line: what it feels like, the lake when the gage is fresh, sunset. */
+function weatherLine() {
+  const w = S.weather;
+  if (!w) return null;
+  const bits = [];
+  const feels = w.now && (w.now.feels_like_f != null ? w.now.feels_like_f : w.now.temp_f);
+  if (feels != null && Number.isFinite(Number(feels))) bits.push('<span><b>' + esc(Math.round(feels)) + '°</b> feels like</span>');
+  const g = w.lake_gage;
+  const fresh = g && g.water_temp_f != null && g.water_temp_at && Date.now() - Date.parse(g.water_temp_at) < 24 * 3600000;
+  if (fresh) bits.push('<span><b>' + esc(Math.round(g.water_temp_f)) + '°</b> lake</span>');
+  const set = w.sun && Date.parse(w.sun.sunset);
+  if (set) bits.push('<span><b>' + esc(clock(set).replace(/[ap]m$/, '')) + '</b> sunset</span>');
+  if (!bits.length) return null;
+  const line = el('div', 'wx', bits.join(''));
+  line.setAttribute('aria-label', 'Weather');
+  return line;
+}
+
+/* ------------------------------------------------------------------ Spin */
+function renderSpin() {
+  const tools = el('div', 'toolrow');
+  tools.appendChild(pills(WINDOWS, S.window, (v) => { S.window = v; S.answer = null; S.did = false; render(); }));
+  root.appendChild(tools);
+
+  const s = el('div', 'spin');
+  const big = el('button', 'big', ICON.shuffle + '<span>Spin</span>');
+  big.addEventListener('click', roll);
+  big.disabled = !S.feeds;
+  s.appendChild(big);
+  s.appendChild(el('p', 'sub', esc(!S.feeds ? (S.feedsFailed ? 'Couldn’t read the moment. The feeds are the guide’s own; try again in a bit.' : 'Reading the sky…')
+    : 'One answer for ' + windowWord() + '. Then put the phone down.')));
+  root.appendChild(s);
+
+  const paths = chips(PATHS.map(([key, label]) => ({ key, label })), null, (k) => {
+    if (S.chips.has(k)) S.chips.delete(k); else S.chips.add(k);
+    if (S.answer || S.did) spin(); else render();
+  }, 'paths');
+  [...paths.children].forEach((b) => { const on = S.chips.has(b.dataset.chip); b.classList.toggle('on', on); b.setAttribute('aria-pressed', on ? 'true' : 'false'); });
+  root.appendChild(paths);
+
+  if (S.did && S.answer) root.appendChild(doneCard(S.answer));
+  else if (S.answer || (S.ctx && !S.rolling)) root.appendChild(answerCard());
+  if (S.ctx && !S.did) root.appendChild(el('p', 'note pad', esc(poolLine())));
+}
+
+const windowWord = () => (S.window === 'tonight' ? 'tonight' : S.window === 'tomorrow' ? 'tomorrow' : 'right now');
+
+function context() {
+  const ctx = buildContext(S.feeds, new Date(), S.window);
+  ctx.sunsetScore = S.sun ? S.sun.score : null;
+  return ctx;
+}
+
+/* the reel shows real candidates from the same pool, slows, then the real
+   pick lands; reduced motion skips straight to it */
 function roll() {
-  if (state.spinning || !state.feeds) return;
-  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (reduced) { spin(); return; }
-
-  const ctx = buildContext(state.feeds, new Date(), state.mode);
-  ctx.sunsetScore = state.sun ? state.sun.score : null;
-  const pool = buildPool(state.feeds, ctx, state.chips);
+  if (S.rolling || !S.feeds) return;
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) { spin(); return; }
+  const ctx = context();
+  const pool = buildPool(S.feeds, ctx, S.chips);
   if (pool.length < 3) { spin(); return; }
-
-  state.spinning = true;
+  S.rolling = true; S.did = false; S.ctx = ctx; S.pool = pool.length;
+  const mine = ++reel;
   let i = 0;
   const step = () => {
-    if (i >= REEL_MS.length) {
-      state.spinning = false;
-      spin();                       // the real pick, with its own memory rules
-      return;
-    }
-    /* a different candidate each tick, never the one we are about to land on
-       twice in a row */
-    state.answer = pool[Math.floor(Math.random() * pool.length)];
-    state.poolSize = pool.length;
-    state.ctx = ctx;
+    if (mine !== reel) return;
+    if (!root || i >= REEL_MS.length) { S.rolling = false; spin(); return; }
+    S.answer = pool[Math.floor(Math.random() * pool.length)];
     render();
     setTimeout(step, REEL_MS[i++]);
   };
   step();
 }
 
-function spin(first) {
-  if (!state.feeds) return;
-  const ctx = buildContext(state.feeds, new Date(), state.mode);
-  ctx.sunsetScore = state.sun ? state.sun.score : null;
-  const pool = buildPool(state.feeds, ctx, state.chips);
-  state.ctx = ctx;
-  state.poolSize = pool.length;
-  state.answer = pick(pool, Object.keys(seen()));
-  if (state.answer && state.answer.id) remember(state.answer.id);
-  render(first);
+function spin() {
+  if (!S.feeds) return;
+  const ctx = context();
+  const pool = buildPool(S.feeds, ctx, S.chips);
+  S.ctx = ctx; S.pool = pool.length; S.did = false;
+  const prev = S.answer && S.answer.id;
+  const recent = Object.keys(seen());
+  if (prev && !recent.includes(prev)) recent.push(prev);
+  S.answer = pick(pool, recent);
+  if (S.answer) remember(S.answer.id);
+  render();
 }
 
-/* The sky, from the real sun times — the same six phases the standalone app
-   painted, scoped to this panel. */
-function phaseOf(ctx) {
-  const sun = state.feeds && state.feeds.weather && state.feeds.weather.sun;
-  if (sun && sun.sunrise && sun.sunset) {
-    const now = ctx.now;
-    const rise = new Date(sun.sunrise);
-    const set = new Date(sun.sunset);
-    const m = (a, b) => (a - b) / 60000;
-    if (m(now, rise) < -40) return 'night';
-    if (m(now, rise) < 40) return 'dawn';
-    if (now.getHours() < 11) return 'morning';
-    if (m(set, now) > 75) return 'day';
-    if (m(now, set) < 10) return 'golden';
-    if (m(now, set) < 50) return 'dusk';
-    return 'night';
-  }
-  const h = ctx.hour;   // Burlington hour, never the device's
-  return h < 6 || h >= 21 ? 'night' : h < 9 ? 'dawn' : h < 11 ? 'morning' : h < 19 ? 'day' : 'dusk';
+function seen() {
+  const raw = app.demo ? seenDemo : readMap(SEEN_KEY);
+  const out = {};
+  Object.keys(raw).forEach((k) => { if (Date.now() - raw[k] < SEEN_MS) out[k] = raw[k]; });
+  return out;
+}
+function remember(id) {
+  if (!id) return;
+  if (app.demo) { seenDemo[id] = Date.now(); return; }
+  const m = seen();
+  m[id] = Date.now();
+  store.write(SEEN_KEY, m);
 }
 
-/* ------------------------------------------------------- answer copy */
-/* metaLine and blurbFor are lifted from the standalone app so the answer
-   reads exactly as it did there. */
+/* The engine's reasons, as a sentence: "Because it starts in 40 min, it's
+   free and it's rain-proof." */
+function because(c) {
+  const why = (c.why_ || []).slice(0, 3);
+  if (!why.length) return '';
+  const list = why.length === 1 ? why[0] : why.slice(0, -1).join(', ') + ' and ' + why[why.length - 1];
+  return 'Because ' + list + '.';
+}
 
+/* lifted from the standalone app so the answer reads as it did there */
 function metaLine(c) {
   const bits = [];
   if (c.kind === 'event') {
-    bits.push(c.venue);
-    if (c.timeLabel) bits.push(c.timeLabel);
-    bits.push(c.free ? 'free' : (c.minPrice != null && c.minPrice > 0 ? 'from $' + c.minPrice : ''));
+    bits.push(c.venue, c.timeLabel, c.free ? 'free' : (c.minPrice != null && c.minPrice > 0 ? 'from $' + c.minPrice : ''));
   } else if (c.kind === 'thing') {
-    bits.push(c.venue);
-    if (c.costNote) bits.push(c.costNote);
-    else if (c.costTier) bits.push(c.costTier === 'Free' ? 'free' : c.costTier);
+    bits.push(c.venue, c.costNote || (c.costTier === 'Free' ? 'free' : c.costTier));
   } else if (c.kind === 'sunset') {
-    bits.push('be there by ' + c.arriveLabel);
-    if (c.walkMin != null) bits.push(c.walkMin + ' min walk from Church St');
-    bits.push("sun's down " + c.sunsetLabel);
+    bits.push('be there by ' + c.arriveLabel, c.walkMin != null ? c.walkMin + ' min walk from Church St' : '', 'sun’s down ' + c.sunsetLabel);
   } else if (c.kind === 'beach') {
-    bits.push(c.venue);
-    if (c.beach && c.beach.sampled) bits.push('water tested clean');
-  } else if (c.kind === 'club' || c.kind === 'hobby') {
-    bits.push(c.venue);
-  }
+    bits.push(c.venue, c.beach && c.beach.sampled ? 'water tested clean' : '');
+  } else bits.push(c.venue);
   return bits.filter(Boolean).join(' · ');
 }
-
 const trim = (s, n) => (!s ? '' : (s.length > n ? s.slice(0, n - 1).trimEnd() + '…' : s));
-
 function blurbFor(c) {
   if (c.kind === 'thing') return c.blurb || '';
   if (c.kind === 'club') return trim(c.what, 160);
@@ -229,342 +303,422 @@ function blurbFor(c) {
   return '';
 }
 
-const modeWord = () =>
-  state.mode === 'tonight' ? 'tonight' : state.mode === 'tomorrow' ? 'tomorrow' : 'right now';
+function eyebrow() {
+  if (S.window === 'tonight') return 'Tonight';
+  if (S.window === 'tomorrow') return 'Tomorrow';
+  return 'Right now · ' + clock(Date.now());
+}
 
-/* A thin pool at a rainy 2am is honesty, not failure — so it says why. */
-function smallHatNote() {
-  if (state.poolSize >= 8) return '';
-  const ctx = state.ctx;
-  if (!ctx) return '';
+function answerCard() {
+  const r = el('div', 'result' + (S.rolling ? ' rolling' : ''));
+  r.setAttribute('aria-live', 'polite');
+  const c = S.answer;
+  if (!c) {
+    const ctx = S.ctx;
+    const walkable = ctx && !ctx.darkAtTarget && !ctx.rainT && ctx.tempT != null && ctx.tempT >= 40 && !outdoorRisks(ctx).length;
+    r.innerHTML = '<div class="in"><div class="eyebrow">Honestly</div><h3>Nothing fits all that.</h3><p>' +
+      esc(walkable ? 'Loosen a chip, or skip the plan and take the waterfront walk.' : 'Loosen a chip, or call it: some hours are for staying in.') + '</p></div>';
+    return r;
+  }
+  const blurb = blurbFor(c);
+  const why = because(c);
+  r.innerHTML = '<div class="in"><div class="eyebrow">' + esc(eyebrow()) + '</div><h3>' + esc(c.title) + '</h3>' +
+    (why ? '<p class="because">' + esc(why) + '</p>' : '') +
+    '<p class="meta">' + esc(metaLine(c)) + '</p>' + (blurb && !S.rolling ? '<p>' + esc(blurb) + '</p>' : '') + '<div class="row"></div></div>';
+  if (!S.rolling) {
+    const row = r.querySelector('.row');
+    row.append(button('Do it ' + ICON.arrow, 'doit', () => { S.did = true; render(); }), button('Another', 'ghost another', roll));
+  }
+  return r;
+}
+
+/* Do it ends the session: the app's own line, and the way to the details. */
+function doneCard(c) {
+  const r = el('div', 'result did');
+  r.innerHTML = '<div class="in"><div class="eyebrow">' + esc(c.title) + '</div><h3>Now put the phone down.</h3><p>' +
+    esc(metaLine(c)) + '</p><div class="row"></div></div>';
+  const row = r.querySelector('.row');
+  if (c.url) row.appendChild(openLink('The details', c.url));
+  row.appendChild(button('Spin again later', 'ghost', () => { S.did = false; S.answer = null; render(); }));
+  return r;
+}
+
+/* A thin pool at a rainy 2 am is honesty, not failure, so it says why. */
+function poolLine() {
+  const ctx = S.ctx;
   const why = [];
-  if (ctx.block === 'Late Night' && state.mode === 'now') why.push("it's late");
-  if (ctx.rainT) why.push("it's raining");
-  else if (ctx.tempT != null && ctx.tempT <= 20) why.push("it's bitter out");
-  if (ctx.tempT == null) why.push("we can't read the sky");
-  if (state.chips.size >= 2) why.push('the filters are tight');
-  return why.length ? ' — the hat’s small because ' + why.slice(0, 2).join(' and ') : '';
+  if (S.pool < 8) {
+    if (ctx.block === 'Late Night' && S.window === 'now') why.push('it’s late');
+    if (ctx.rainT) why.push('it’s raining');
+    else if (ctx.tempT != null && ctx.tempT <= 20) why.push('it’s bitter out');
+    if (ctx.tempT == null) why.push('the sky can’t be read');
+    if (S.chips.size >= 2) why.push('the chips are tight');
+  }
+  const tail = why.length ? ', and it’s a small hat because ' + why.slice(0, 2).join(' and ') : '';
+  return (S.pool ? 'Picked from ' + plural(S.pool, 'thing', 'things') + ' that fit ' : 'Nothing in the hat for ') + windowWord() + tail + '.';
 }
 
-/* -------------------------------------------------------------- render */
+/* --------------------------------------------------------------- Missions */
+const missions = () => (S.missions && Array.isArray(S.missions.missions) ? S.missions.missions.filter((m) => m && m.k && m.title) : []);
+const isDone = (k) => !!done[k];
+const doneCount = () => missions().filter((m) => isDone(m.k)).length;
 
-export function render(first) {
-  const root = state.root;
-  const ctx = state.ctx;
-  root.innerHTML = '';
-  root.dataset.phase = ctx ? phaseOf(ctx) : 'day';
-
-  const sky = el('div', 'wn-sky');
-  root.appendChild(sky);
-
-  /* the conditions strip: what the engine is reading, said out loud */
-  const w = state.feeds && state.feeds.weather;
-  const bits = [];
-  if (ctx) bits.push(esc(ctx.block));
-  if (w && w.now && w.now.temp_f != null) bits.push(Math.round(w.now.temp_f) + '°');
-  if (w && w.now && w.now.summary) bits.push(esc(String(w.now.summary).toLowerCase()));
-  if (w && w.sun && w.sun.sunset) bits.push('sun’s down ' + esc(fmtTime(new Date(w.sun.sunset))));
-  root.appendChild(el('p', 'wn-strip', bits.join(' · ')));
-
-  /* window: now / tonight / tomorrow */
-  const modes = el('div', 'wn-modes');
-  MODES.forEach(([id, label]) => {
-    const b = el('button', 'wn-mode' + (state.mode === id ? ' on' : ''), esc(label));
-    b.setAttribute('aria-pressed', state.mode === id ? 'true' : 'false');
-    b.addEventListener('click', () => { if (state.mode !== id) { state.mode = id; spin(); } });
-    modes.appendChild(b);
-  });
-  root.appendChild(modes);
-
-  /* the answer */
-  const card = el('div', 'wn-answer' + (state.spinning ? ' is-spinning' : ''));
-  if (!state.answer) {
-    const walkable = ctx && !ctx.darkAtTarget && !ctx.rainT &&
-      ctx.tempT != null && ctx.tempT >= 40 && !outdoorRisks(ctx).length;
-    card.innerHTML =
-      '<p class="wn-kicker">honestly?</p>' +
-      '<h2 class="wn-title">Nothing fits all that.</h2>' +
-      '<p class="wn-meta">' + (walkable
-        ? 'Loosen a filter — or skip the plan and take the waterfront walk.'
-        : 'Loosen a filter — or call it: some hours are for staying in.') + '</p>';
-  } else {
-    const c = state.answer;
-    const blurb = blurbFor(c);
-    card.innerHTML =
-      '<p class="wn-kicker">' +
-        (c.why_ && c.why_.length ? 'because ' + esc(c.why_.slice(0, 3).join(' · ')) : 'why not') +
-      '</p>' +
-      '<h2 class="wn-title">' + esc(c.title) + '</h2>' +
-      '<p class="wn-meta">' + esc(metaLine(c)) + '</p>' +
-      (blurb ? '<p class="wn-blurb">' + esc(blurb) + '</p>' : '');
-    if (c.url) {
-      const a = el('a', 'wn-go', 'Open it ' + ICON.ext);
-      a.href = safeHref(c.url);
-      a.target = '_blank';
-      a.rel = 'noopener';
-      card.appendChild(a);
-    }
+function renderMissions() {
+  if (!S.missions) {
+    root.appendChild(S.missionsFailed ? el('div', 'errbox', '<b>The missions didn’t load.</b><br>They come from the guide’s own Top 100. Pull down or come back in a bit.')
+      : el('p', 'loading', 'Loading the missions…'));
+    return;
   }
-  root.appendChild(card);
+  const all = missions();
+  const sur = el('button', 'pillbtn on surprise', ICON.shuffle + ' Surprise me');
+  const head = section(root, 'The Top 100, as missions', '<b>' + esc(doneCount()) + '</b> of ' + esc(all.length) + ' done. Surprise me finds one you haven’t done.', sur);
+  head.dataset.sec = 'missions';
+  const themes = (S.missions.themes || Object.keys(THEME)).filter((t) => all.some((m) => m.theme === t));
+  if (S.theme !== 'all' && !themes.includes(S.theme)) S.theme = 'all';
+  root.appendChild(chips([{ key: 'all', label: 'All', n: all.length }].concat(themes.map((t) => ({ key: t, label: THEME[t] || t, n: all.filter((m) => m.theme === t).length }))),
+    S.theme, (k) => { S.theme = k; history.replaceState(null, '', location.search + '#whatnow/missions'); render(); }, 'themes'));
+  const list = all.filter((m) => S.theme === 'all' || m.theme === S.theme);
+  const box = el('div', 'missions');
+  list.forEach((m) => box.appendChild(missionRow(m)));
+  root.appendChild(box);
+  sur.addEventListener('click', () => surprise(box));
+  root.appendChild(cards.caught({
+    title: S.theme === 'all' ? 'That’s the hundred' : 'That’s every ' + (THEME[S.theme] || S.theme).toLowerCase() + ' mission',
+    text: plural(doneCount(), 'mission', 'missions') + ' done so far. They come from the Brief’s Top 100 guide, ranked by how essential each one is to Burlington.',
+    buttons: [button(ICON.shuffle + ' Surprise me', '', () => surprise(box))],
+  }));
+}
 
-  const acts = el('div', 'wn-acts');
-  const again = el('button', 'wn-again', 'Nah, spin again');
-  again.addEventListener('click', () => roll());
-  acts.appendChild(again);
-  if (state.answer) {
-    const going = el('button', 'wn-going', 'Whoa, that’s interesting');
-    going.addEventListener('click', () => {
-      app.toast('Good. Now put the phone down.');
+function missionRow(m) {
+  const on = isDone(m.k);
+  const r = el('div', 'lrow mission' + (on ? ' done' : ''));
+  r.dataset.k = m.k;
+  const hoods = [...new Set((m.places || []).map((p) => p.neighborhood).filter((h) => h && h !== 'Greater Burlington'))];
+  const meta = [THEME[m.theme] || m.theme, (m.places || []).length > 1 ? plural(m.places.length, 'place', 'places') : '', hoods.slice(0, 2).join(', ')].filter(Boolean).join(' · ');
+  const open = el('button', 'open', '<div class="t">' + esc(m.title) + '</div><div class="s">' + esc(meta) + '</div>');
+  open.setAttribute('aria-label', 'Mission ' + m.n + ': ' + m.title + '. Read it');
+  open.addEventListener('click', () => missionSheet(m));
+  r.append(el('span', 'num', esc(m.n)), open, doneButton(m));
+  return r;
+}
+
+function doneButton(m, after) {
+  const on = isDone(m.k);
+  const b = el('button', 'pillbtn markdone' + (on ? ' on' : ''), on ? ICON.check + ' Done' : 'Mark done');
+  b.setAttribute('aria-pressed', on ? 'true' : 'false');
+  b.setAttribute('aria-label', (on ? 'Done: ' : 'Mark done: ') + m.title);
+  b.addEventListener('click', () => { setDone(m, !isDone(m.k)); if (after) after(); });
+  return b;
+}
+
+function setDone(m, on) {
+  if (on) done[m.k] = Math.floor(Date.now() / 1000); else delete done[m.k];
+  if (!app.demo) { store.write(DONE_KEY, done); pushDone(m.k, on); }
+  app.toast(on ? 'Mission ' + m.n + ' done' : 'Mission ' + m.n + ' unmarked');
+  const y = panel() ? panel().scrollTop : 0;
+  render();
+  app.paintSubnav();
+  if (panel()) panel().scrollTop = y;
+}
+
+/* Surprise me: a mission you haven't done (any, once they all are), the list
+   scrolled to it, a short glow, and focus on it so a keyboard or a screen
+   reader lands there too. Under reduced motion there is no glow and no
+   smooth scroll; the focus ring marks it. */
+function surprise(box) {
+  const rows = [...box.querySelectorAll('.lrow')];
+  if (!rows.length) return;
+  const open = rows.filter((r) => !r.classList.contains('done'));
+  const pool = open.length ? open : rows;
+  const r = pool[Math.floor(Math.random() * pool.length)];
+  rows.forEach((x) => x.classList.remove('hl'));
+  void r.offsetWidth;
+  r.classList.add('hl');
+  app.jumpTo(r);
+  r.querySelector('.open').focus({ preventScroll: true });
+  setTimeout(() => r.classList.remove('hl'), 2400);
+}
+
+function missionSheet(m) {
+  app.sheet(m.n + '. ' + m.title, (body, card, close) => {
+    const paint = () => {
+      body.innerHTML = '';
+      body.appendChild(el('p', 'sheet-note', esc([THEME[m.theme] || m.theme, 'Mission ' + m.n + ' of ' + missions().length].join(' · '))));
+      body.appendChild(el('p', 'pick-why', esc(m.paragraph)));
+      const places = (m.places || []).filter((p) => p && p.name);
+      if (places.length) {
+        body.appendChild(el('div', 'sheet-h', esc(places.length === 1 ? 'The place' : 'The places')));
+        places.forEach((p) => {
+          const row = el('div', 'sheet-row');
+          const sub = [p.neighborhood, p.nearby ? 'nearby' : ''].filter(Boolean).join(' · ');
+          const label = esc(p.name) + (sub ? '<div class="d">' + esc(sub) + '</div>' : '');
+          if (/^https?:/i.test(p.url || '')) {
+            const a = el('a', 't', label);
+            a.href = safeHref(p.url); a.target = '_blank'; a.rel = 'noopener';
+            if (app.demo) a.addEventListener('click', (e) => { e.preventDefault(); app.toast('Opens ' + p.name + '’s site in the real build'); });
+            row.append(a, el('span', 'note', ICON.ext));
+          } else row.appendChild(el('div', 't', label));
+          body.appendChild(row);
+        });
+      }
+      const btns = el('div', 'linkrow');
+      btns.append(doneButton(m, paint), button(ICON.share + ' Share', 'ghost sm', () => app.share(KEY, m.k, m.title)));
+      body.appendChild(btns);
+    };
+    paint();
+  });
+}
+
+/* Signed in, Mark done also lives on the reader's account. Every call fails
+   soft: no session, no function yet, offline, it all leaves the device copy
+   standing. Marks from the account are merged in, never subtracted. */
+function rpcAs(fn, args) {
+  if (app.demo || !app.user()) return Promise.resolve(null);
+  return Promise.resolve(app.token()).then((tok) => {
+    if (!tok) return null;
+    const ctl = 'AbortController' in window ? new AbortController() : null;
+    const t = ctl && setTimeout(() => ctl.abort(), 8000);
+    return fetch(SB_URL + '/rest/v1/rpc/' + fn, {
+      method: 'POST',
+      headers: { apikey: SB_KEY, Authorization: 'Bearer ' + tok, 'Content-Type': 'application/json' },
+      body: JSON.stringify(args || {}),
+      ...(ctl ? { signal: ctl.signal } : {}),
+    }).then((r) => (r.ok ? r.json().catch(() => null) : null)).finally(() => { if (t) clearTimeout(t); });
+  }).catch(() => null);
+}
+const touched = new Set();
+const queue = Object.create(null);
+function pushDone(k, on) {
+  touched.add(k);
+  queue[k] = (queue[k] || Promise.resolve()).then(() => rpcAs('nn_mission_set', { p_key: k, p_done: !!on }));
+}
+function pullDone() {
+  rpcAs('nn_missions_done').then((rows) => {
+    if (!Array.isArray(rows)) return;
+    let added = 0;
+    rows.forEach((r) => {
+      const k = r && (r.key || r.mission);
+      if (typeof k === 'string' && /^m\d+$/.test(k) && !done[k] && !touched.has(k)) { done[k] = Math.floor(Date.now() / 1000); added++; }
     });
-    acts.appendChild(going);
+    if (added) { store.write(DONE_KEY, done); if (ready) repaint(); }
+  });
+}
+
+/* ---------------------------------------------------------------- Tonight */
+/* Today's events from 5 pm on, in Burlington's clock. One that has ended,
+   or started two hours ago with no end given, has gone. A cancelled one,
+   or the same listing twice, is left out. */
+function tonight() {
+  const evs = S.events && Array.isArray(S.events.events) ? S.events.events : [];
+  const now = Date.now();
+  const today = et(now).date;
+  const seenK = new Set();
+  return evs.filter((e) => {
+    if (!e || !e.id || !e.title || !e.url || e.allDay || (e.status && e.status !== 'active')) return false;
+    if (/^\s*(cancel+ed|postponed)\b/i.test(e.title)) return false;
+    const start = Date.parse(e.start);
+    if (!start) return false;
+    const t = et(start);
+    if (t.date !== today || t.hour < EVENING) return false;
+    const end = Date.parse(e.end) || 0;
+    if (end ? end < now : start < now - 2 * 3600000) return false;
+    const sig = e.title.toLowerCase().replace(/[^a-z0-9]+/g, '') + '|' + start;
+    if (seenK.has(sig)) return false;
+    seenK.add(sig);
+    return true;
+  }).sort((a, b) => Date.parse(a.start) - Date.parse(b.start));
+}
+
+const priceOf = (e) => {
+  if (e.free) return 'Free';
+  const p = String(e.price || '').split(/[;|]/)[0].replace(/\s+/g, ' ').trim().replace(/\.$/, '');
+  return trim(p, 36);
+};
+
+function eventCard(e) {
+  const start = Date.parse(e.start);
+  const t = et(start);
+  const where = (e.venue || e.town || 'Burlington') + (e.town && e.venue && e.town !== 'Burlington' ? ', ' + e.town : '');
+  return {
+    k: 'e-' + e.id, href: e.url, kind: 'event', title: e.title.replace(/^['‘’"“]+|['‘’"“]+$/g, ''),
+    src: e.venue || e.town || 'Calendar', sid: 'venue:' + (e.venue || e.town || 'calendar').toLowerCase(),
+    dow: dowFmt.format(utcNoon(t.date)), dom: String(t.dom), when: clock(start).replace(/(\d)([ap]m)$/, '$1 $2'), where, price: priceOf(e),
+  };
+}
+
+/* the artists with a show tonight or in the next seven days, soonest first */
+function artists() {
+  const list = S.music && Array.isArray(S.music.artists) ? S.music.artists : [];
+  const today = et(Date.now()).date;
+  const last = addDays(today, WEEK - 1);
+  return list.map((a) => {
+    const shows = (Array.isArray(a.shows) ? a.shows : []).filter((s) => s && s.date >= today && s.date <= last).sort((x, y) => (x.date < y.date ? -1 : 1));
+    return shows.length && a.id && a.name ? { a, s: shows[0] } : null;
+  }).filter(Boolean).sort((x, y) => (x.s.date < y.s.date ? -1 : x.s.date > y.s.date ? 1 : 0));
+}
+
+function renderTonight() {
+  const muted = store.muted();
+  const list = tonight().map(eventCard).filter((c) => !muted[c.sid]);
+  app.know(list);
+  /* the artists first: a short shelf, and the old Music tab's whole job,
+     which would be lost under a long night of listings */
+  const acts = artists();
+  if (acts.length) {
+    const sec = section(root, 'Playing this week', esc('Local artists with a show in the next seven days. Listen opens their Bandcamp player; nothing plays until you press play.'));
+    sec.dataset.sec = 'artists';
+    const box = el('div', 'artists');
+    acts.forEach((x) => box.appendChild(artistRow(x.a, x.s)));
+    root.appendChild(box);
   }
-  root.appendChild(acts);
-
-  root.appendChild(el('p', 'wn-pool',
-    state.poolSize
-      ? 'picked from ' + state.poolSize + ' things that fit ' + modeWord() + esc(smallHatNote())
-      : 'nothing in the hat for ' + modeWord() + esc(smallHatNote())));
-
-  /* the paths */
-  const paths = el('div', 'chips wn-paths');
-  PATHS.forEach(([id, label]) => {
-    paths.appendChild(chip(esc(label), state.chips.has(id), () => {
-      if (state.chips.has(id)) state.chips.delete(id); else state.chips.add(id);
-      spin();
-    }));
-  });
-  root.appendChild(paths);
-  scrollHint(paths);
-
-  /* The sky has to be exactly as tall as the content it colours. A fixed
-     height guesses, and it guessed wrong: the respin button, the pool note
-     and the path chips sit in white-on-sky ink, so when the gradient ran out
-     above them they went white-on-white. Measure the last sky-lit element
-     and end the fade below it. */
-  requestAnimationFrame(() => {
-    const last = root.querySelector('.wn-paths');
-    if (!last) return;
-    const h = last.offsetTop + last.offsetHeight;
-    sky.style.height = (h + 90) + 'px';
-  });
-
-  /* the jar sits here — under the answer, above the shelves — because every
-     other tab carries it in the first screen-and-a-bit, not four screens down */
-  app.jarRow(root, 'whatnow');
-
-  sportsStrip(root);
-  arcadeBoard(root);
-  renderList(root);
-  doors(root);
-
-  /* every render, not just the first — render() rebuilds the panel from
-     scratch, so a stamp gated on `first` vanished at the first respin */
-  tabStamp(root, stampOf(state.feeds && state.feeds.events &&
-    state.feeds.events.generated), 'the calendar, every morning');
+  const head = section(root, 'Tonight', esc(list.length ? plural(list.length, 'thing', 'things') + ' from 5 pm on, from the calendar the newsletter uses.' : 'From 5 pm on, from the calendar the newsletter uses.'));
+  head.dataset.sec = 'tonight';
+  if (!S.events) root.appendChild(el('p', 'loading', 'Loading tonight…'));
+  else if (!list.length) root.appendChild(el('p', 'note pad', esc('Nothing else on the calendar tonight.')));
+  const feed = el('div', 'feed');
+  list.forEach((c) => put(feed, cards.event(c)));
+  root.appendChild(feed);
+  app.bindFeed(feed);
+  root.appendChild(cards.caught({
+    title: 'That’s tonight',
+    text: 'The whole calendar, further out than tonight, is on the events page.',
+    buttons: [openLink('Every event', EVENTS_URL, true)],
+  }));
 }
 
-/* ------------------------------------------------- the calendar beneath */
-/* The answer is the product; this is what you scroll when it was not the
-   thing. Same ten-day slice, bucketed against the reader's clock. */
-
-function clock(e) {
-  if (e.allDay) return 'All day';
-  return new Date(e.start).toLocaleTimeString('en-US',
-    { hour: 'numeric', minute: '2-digit' }).replace(':00', '');
+function artistRow(a, s) {
+  const today = et(Date.now()).date;
+  const day = s.date === today ? 'Tonight' : s.date === addDays(today, 1) ? 'Tomorrow' : dayFmt.format(utcNoon(s.date));
+  const k = 'a-' + a.id;
+  const wrap = el('div', 'artist');
+  const r = el('div', 'lrow');
+  r.dataset.k = k;
+  const pic = a.bandcamp && a.bandcamp.art;
+  const show = [s.venue, s.time, s.free ? 'Free' : trim(s.price, 24)].filter(Boolean).join(' · ');
+  const why = a.why || (a.genre ? a.genre.charAt(0).toUpperCase() + a.genre.slice(1) : '');
+  const name = /^https?:/i.test(s.url || '') ? '<a class="t" href="' + esc(safeHref(s.url)) + '" target="_blank" rel="noopener">' + esc(a.name) + '</a>' : '<div class="t">' + esc(a.name) + '</div>';
+  r.innerHTML = (pic ? '<span class="th">' + art(pic) + '</span>' : '<span class="th bare">' + ICON.listen + '</span>') +
+    '<div>' + name + '<div class="s"><b>' + esc(day) + '</b> · ' + esc(show) + '</div>' + (why ? '<div class="s">' + esc(why) + '</div>' : '') + '</div>';
+  if (app.demo) r.querySelectorAll('a.t').forEach((x) => x.addEventListener('click', (e) => { e.preventDefault(); app.toast('Opens the show’s page in the real build'); }));
+  const album = a.bandcamp && /^\d+$/.test(String(a.bandcamp.album || '')) ? String(a.bandcamp.album) : '';
+  if (album) {
+    const b = el('button', 'pillbtn listen', ICON.play + ' Listen');
+    b.setAttribute('aria-label', 'Listen to ' + a.name + ' on Bandcamp');
+    b.setAttribute('aria-expanded', 'false');
+    b.addEventListener('click', () => toggleBandcamp(wrap, b, a, album));
+    r.appendChild(b);
+  }
+  wrap.appendChild(r);
+  return wrap;
 }
 
-function dayLabelFor(iso) {
-  const d = new Date(iso + 'T12:00:00');
-  const today = new Date(); today.setHours(12, 0, 0, 0);
-  const days = Math.round((d - today) / 86400000);
-  if (days === 0) return 'Today';
-  if (days === 1) return 'Tomorrow';
-  return d.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' });
+/* One Bandcamp player at a time, built on the tap, never playing until its
+   own play button is pressed. Opening it pauses the shell's player; the
+   shell playing anything resets it (registerForeign), so two things never
+   sound at once. Bandcamp paints its own player, so it is told the theme. */
+let embed = null;
+function closeBandcamp() {
+  if (!embed) return;
+  embed.unreg();
+  embed.box.remove();
+  embed.btn.innerHTML = ICON.play + ' Listen';
+  embed.btn.classList.remove('on');
+  embed.btn.setAttribute('aria-expanded', 'false');
+  embed = null;
+}
+function toggleBandcamp(wrap, btn, a, album) {
+  const same = embed && embed.btn === btn;
+  closeBandcamp();
+  if (same) return;
+  if (app.isPlaying()) app.stop();
+  app.closeVideo();
+  const doc = document.documentElement;
+  const dark = doc.getAttribute('data-theme') === 'dark' || (!doc.hasAttribute('data-theme') && matchMedia('(prefers-color-scheme: dark)').matches);
+  const box = el('div', 'hero bc');
+  if (app.demo) {
+    box.appendChild(el('p', 'note', esc('The Bandcamp player for “' + ((a.bandcamp && a.bandcamp.title) || a.name) + '” goes here in the real build.')));
+  } else {
+    const f = el('iframe', 'embed bandcamp');
+    f.src = 'https://bandcamp.com/EmbeddedPlayer/album=' + encodeURIComponent(album) + '/size=large/bgcol=' + (dark ? '181a1f' : 'ffffff') +
+      '/linkcol=' + (dark ? 'e8a33d' : '9a5b00') + '/artwork=small/transparent=true/';
+    f.title = a.name + ' on Bandcamp';
+    f.loading = 'lazy';
+    box.appendChild(f);
+  }
+  wrap.appendChild(box);
+  const unreg = app.registerForeign(() => closeBandcamp());
+  embed = { box, btn, unreg };
+  btn.innerHTML = ICON.x + ' Close';
+  btn.classList.add('on');
+  btn.setAttribute('aria-expanded', 'true');
 }
 
-function row(e) {
-  const a = el('a', 'wn-row');
-  a.href = safeHref(e.url);
-  a.target = '_blank';
-  a.rel = 'noopener';
-  a.innerHTML =
-    '<span class="wn-row-time">' + esc(clock(e)) + '</span>' +
-    '<span class="wn-row-body">' +
-      '<span class="wn-row-t">' + esc(e.title) + '</span>' +
-      '<span class="wn-row-v">' + esc(e.venue || '') +
-        (e.town && e.town !== 'Burlington' ? ', ' + esc(e.town) : '') +
-        (e.free ? ' · Free' : (e.price ? ' · ' + esc(e.price) : '')) + '</span>' +
-    '</span>';
+/* ------------------------------------------------------------------ bits */
+const panel = () => (root ? root.closest('.panel') : null);
+
+/* An "Open ↗" link. Demo links go nowhere, and say so; the events page is ours. */
+function openLink(label, href, ours) {
+  const a = el('a', 'btn ghost sm', esc(label) + ' ' + ICON.ext);
+  a.href = safeHref(href);
+  if (!ours) { a.target = '_blank'; a.rel = 'noopener'; }
+  if (app.demo && !ours) a.addEventListener('click', (e) => { e.preventDefault(); app.toast(label + ' opens in the real build'); });
   return a;
 }
 
-function renderList(root) {
-  const payload = state.feeds && state.feeds.events;
-  const all = (payload && Array.isArray(payload.events)) ? payload.events : [];
-  if (!all.length) return;
-
-  const counts = (payload && payload.counts) || {};
-  const cats = Object.keys(counts).sort((a, b) => counts[b] - counts[a]);
-  shelfHead(root, 'What else is on', all.length + ' over the next ten days');
-
-  const chips = el('div', 'chips');
-  chips.appendChild(chip('Everything', !state.listCat, () => { state.listCat = null; render(); }));
-  cats.slice(0, 10).forEach((c) => chips.appendChild(
-    chip(esc(c.replace('-', ' ')) + ' <span class="n">' + counts[c] + '</span>',
-      state.listCat === c, () => { state.listCat = state.listCat === c ? null : c; render(); })));
-  root.appendChild(chips);
-  scrollHint(chips);
-
-  const now = Date.now();
-  const list = all
-    .filter((e) => !state.listCat || e.category === state.listCat)
-    .filter((e) => e.allDay || new Date(e.start).getTime() >= now - 45 * 60000)
-    .slice(0, 90);
-
-  const holder = el('div', 'wn-list');
-  let day = null;
-  list.forEach((e) => {
-    if (e.date !== day) {
-      day = e.date;
-      holder.appendChild(el('p', 'wn-day', dayLabelFor(e.date)));
-    }
-    holder.appendChild(row(e));
-  });
-  root.appendChild(holder);
-
-  if (!list.length) root.appendChild(el('p', 'empty', 'Nothing left in that one today.'));
+function stopReel() {
+  if (!S.rolling) return;
+  reel++;
+  S.rolling = false;
+  S.answer = null;
 }
 
-function doors(root) {
-  const box = el('div', 'wn-doors');
-  const door = (href, title, sub) => {
-    const a = el('a', 'wn-door');
-    a.href = safeHref(href);
-    if (/^https?:/.test(href)) { a.target = '_blank'; a.rel = 'noopener'; }
-    a.innerHTML =
-      '<span><span class="wn-door-t">' + esc(title) + '</span>' +
-      '<span class="wn-door-s">' + esc(sub) + '</span></span>' + ICON.ext;
-    return a;
-  };
-  box.appendChild(door(EVENTS_URL, 'The whole calendar',
-    'Every event, filterable, further out than this'));
-  box.appendChild(door(PLANNER_URL, 'Build a day',
-    'Burlington Days turns a mood into an itinerary'));
-  box.appendChild(door(ARCADE_URL, 'Play something',
-    'The arcade — and five games you go outside for'));
-  root.appendChild(box);
+function setMode(mode) {
+  stopReel();
+  S.mode = mode;
+  history.replaceState(null, '', location.search + '#whatnow/' + mode);
+  app.paintSubnav();
+  render();
+  app.scrollTop();
 }
 
-
-/* ------------------------------------------------------------- the games */
-/* You are on this tab because you want something to do, and a game is one of
-   the better answers Burlington has. Two days' worth, then out to the full
-   page — this is a pointer, not a second sports tab. */
-function sportsStrip(root) {
-  const doc = state.games;
-  const games = (doc && Array.isArray(doc.games)) ? doc.games : [];
-  if (!games.length) return;
-
-  const now = Date.now();
-  const soon = games
-    .filter((g) => g.level !== 'national')
-    .filter((g) => {
-      const t = new Date(g.start).getTime();
-      return t >= now - 2 * 3600000 && t <= now + 48 * 3600000;
-    })
-    .slice(0, 4);
-
-  const box = el('div', 'wn-sport');
-  const link = el('a', 'wn-sport-hit');
-  link.href = safeHref(SPORTS_URL);
-
-  if (soon.length) {
-    link.innerHTML =
-      '<span class="wn-sport-k">Games in the next two days</span>' +
-      soon.map((g) => {
-        const t = g.allDay ? 'All day' : new Date(g.start).toLocaleTimeString('en-US',
-          { hour: 'numeric', minute: '2-digit' }).replace(':00', '');
-        return '<span class="wn-sport-g">' +
-          '<b>' + esc(t) + '</b> ' + esc(g.title) +
-          (g.venue ? ' <i>' + esc(g.venue) + '</i>' : '') + '</span>';
-      }).join('') +
-      '<span class="wn-sport-more">All Burlington sports ' + ICON.ext + '</span>';
-  } else {
-    /* Nothing in two days is normal here, not a failure — say what there IS. */
-    const next = games.filter((g) => g.level !== 'national' &&
-      new Date(g.start).getTime() > now)[0];
-    link.innerHTML =
-      '<span class="wn-sport-k">Sports</span>' +
-      '<span class="wn-sport-g">' + (next
-        ? 'Nothing tonight or tomorrow. Next up: <b>' + esc(next.title) + '</b>'
-        : 'Schedules for UVM, the high school and the clubs') + '</span>' +
-      '<span class="wn-sport-more">All Burlington sports ' + ICON.ext + '</span>';
-  }
-  box.appendChild(link);
-  root.appendChild(box);
+/* #whatnow/spin|missions|tonight picks the mode; #whatnow/m14 opens a
+   mission in the list and flashes it; #whatnow/e-<id> a card tonight. */
+function land() {
+  if (!pending || !ready) return;
+  const k = pending; pending = null;
+  if (MODES.includes(k)) { if (S.mode !== k) setMode(k); return; }
+  const want = /^m\d+$/.test(k) ? 'missions' : /^[ea]-/.test(k) ? 'tonight' : null;
+  if (want && (S.mode !== want || (want === 'missions' && S.theme !== 'all'))) { stopReel(); S.mode = want; S.theme = 'all'; app.paintSubnav(); render(); }
+  if (!app.flashHit(root, k)) app.toast(want === 'missions' ? 'That mission isn’t on the list any more.' : 'That one has passed.');
 }
 
-/* ----------------------------------------------------------- the arcade */
-/* Sports is what other people are playing; this is what YOU can play, and the
-   arcade is 32 cabinets deep with a leaderboard on every one. A wall of 32 is
-   a page of its own — this is the three names on top of the whole arcade, and
-   a way in.
-
-   ROYALTY, NOT A HIGH SCORE. Every game encodes its score differently — 101
-   minus shots, a box margin, a flat +1000 for beating the hard bot — so a raw
-   number lifted out of one cabinet and shown next to that cabinet's name is
-   somewhere between meaningless and misleading. Crowns are the one thing that
-   compares across the arcade: how many boards you are top of this month. That
-   is also the headline /leaderboards/ leads with, so the card and the page
-   agree.
-
-   It comes from champions.json, which the arcade's own workflow republishes
-   every six hours. Computing it here would be 32 requests — `scores` is not
-   readable by anon and get_leaderboard() is one call per board. */
-
-/* Two players can pick the same display name; the published file drops the
-   player id, so the only defence against "🥇 carb / 🥈 carb" is to show the
-   higher-ranked one and move on. */
-function topThree(royalty) {
-  const seen = new Set();
-  const out = [];
-  royalty.forEach((r) => {
-    const name = (r.name || '').trim() || 'Anonymous';
-    if (out.length >= 3 || seen.has(name.toLowerCase())) return;
-    seen.add(name.toLowerCase());
-    out.push({ name, crowns: Number(r.crowns) || 0, boards: Number(r.boards) || 0 });
-  });
-  return out;
-}
-
-const MEDALS = ['🥇', '🥈', '🥉'];
-
-function arcadeBoard(root) {
-  const doc = state.champs;
-  const rows = doc && Array.isArray(doc.royalty) ? topThree(doc.royalty) : [];
-  if (rows.length < 2) return;
-
-  const box = el('div', 'wn-arcade');
-  const link = el('a', 'wn-arcade-hit');
-  link.href = safeHref(ARCADE_URL);
-  link.target = '_blank';
-  link.rel = 'noopener';
-  link.innerHTML =
-    '<span class="wn-arcade-k">Arcade royalty' +
-      (doc.monthLabel ? ' · ' + esc(doc.monthLabel) : '') + '</span>' +
-    '<span class="wn-arcade-g">Whoever tops the most boards</span>' +
-    '<span class="wn-arcade-rows">' +
-    rows.map((r, i) => (
-      '<span class="wn-arcade-r">' +
-        '<i>' + MEDALS[i] + '</i>' +
-        '<em>' + esc(r.name) + '</em>' +
-        '<b>' + (r.crowns
-          ? r.crowns + ' board' + (r.crowns === 1 ? '' : 's')
-          : 'on ' + r.boards + ' board' + (r.boards === 1 ? '' : 's')) + '</b>' +
-      '</span>'
-    )).join('') +
-    '</span>' +
-    '<span class="wn-arcade-more">Go take a crown — the arcade ' + ICON.ext + '</span>';
-  box.appendChild(link);
-  root.appendChild(box);
-}
+app.register(KEY, {
+  label: 'What Now',
+  icon: ICON.whatnow,
+  promise: 'One answer for right now, a hundred missions for later, and what is on tonight.',
+  mount(r) {
+    root = r;
+    r.innerHTML = '<p class="loading">Reading the sky…</p>';
+    loaded = load();
+    loaded.then(() => {
+      ready = true;
+      render();
+      if (app.activeTab() === KEY) app.paintSubnav();
+      land();
+      app.recount();
+    }).catch(() => { r.innerHTML = '<div class="errbox"><b>What Now didn’t load.</b> Reload to try again.</div>'; });
+  },
+  activate(param) { pending = param || null; land(); },
+  refresh() { if (ready) render(); },
+  deactivate() { stopReel(); closeBandcamp(); app.closePeek(); },
+  subnav() {
+    if (!ready) return null;
+    return chips([
+      { key: 'spin', label: 'Spin', icon: ICON.shuffle },
+      { key: 'missions', label: 'Missions', n: S.missions ? doneCount() + '/' + missions().length : null },
+      { key: 'tonight', label: 'Tonight', n: S.events ? tonight().length : null },
+    ], S.mode, (k) => { if (k !== S.mode) setMode(k); else app.scrollTop(true); });
+  },
+  /* Nothing here is a feed that grows while you are away, so the dot stays off. */
+  newSince() { return 0; },
+});

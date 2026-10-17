@@ -163,7 +163,7 @@ language sql security definer stable set search_path = public as $$
          count(v.voter) as votes
   from btb_photos p
   left join btb_photo_votes v on v.photo_id = p.id
-  where p.status = 'approved'
+  where p.status = 'approved' and p.category <> 'board'   -- board photos stay on their board (db/photos-board.sql)
   group by p.id
   order by p.decided_at desc nulls last, p.created_at desc;
 $$;
@@ -203,7 +203,7 @@ language sql security definer stable set search_path = public as $$
     select p.*, count(v.voter) as n_votes
     from btb_photos p
     left join btb_photo_votes v on v.photo_id = p.id
-    where p.status = 'approved' and p.decided_at is not null
+    where p.status = 'approved' and p.decided_at is not null and p.category <> 'board'
     group by p.id
   )
   select r.id, r.storage_path, r.caption, r.category, r.area,

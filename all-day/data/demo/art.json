@@ -1,0 +1,34 @@
+{
+ "_": "Demo data for ?demo=1. Every name and picture is invented; each picture is a placeholder palette from shell.json. The Art tab seeds these into the boards demo backend, so votes, reports and posting run through boards.js as they do live. A post's week is 0 for this week (Monday to now, Burlington time) or 1 to 8 for the weeks before; f is how far through that week it was posted (0 to 1). ratio is the picture's shape, for the full view.",
+ "people": [
+  ["ben", "Ben S."], ["kara", "Kara M."], ["jess", "Jess T."], ["nora", "Nora L."], ["priya", "Priya N."],
+  ["jules", "Jules O."], ["dev", "Dev K."], ["tom", "Tom A."], ["maya", "Maya R."], ["sam", "Sam W."]
+ ],
+ "posts": [
+  { "who": "jess", "kind": "art", "title": "The breakwater light in fog", "body": "Ink and gouache from the bike path bench, on the one gray morning this week.", "medium": "Ink and gouache", "shirt": "yes", "palette": "teal", "ratio": "r45", "week": 0, "f": 0.3, "votes": 23 },
+  { "who": "ben", "kind": "photo", "title": "Aurora from the causeway", "body": "Eleven at night, three miles out, nobody else there.", "shirt": "yes", "palette": "night", "ratio": "r169", "week": 0, "f": 0.5, "votes": 23 },
+  { "who": "nora", "kind": "photo", "title": "Church Street in rain", "body": "", "shirt": "no", "palette": "slate", "ratio": "r45", "week": 0, "f": 0.7, "votes": 9 },
+  { "who": "priya", "kind": "art", "title": "The Flynn marquee", "body": "Three-color linocut. Prints at the next open studio.", "medium": "Linocut", "shirt": "yes", "palette": "cherry", "ratio": "r11", "week": 0, "f": 0.9, "votes": 4 },
+  { "who": "kara", "kind": "photo", "title": "The bike path, peak week", "body": "", "shirt": "yes", "palette": "foliage", "ratio": "r45", "week": 1, "f": 0.4, "votes": 31 },
+  { "who": "tom", "kind": "photo", "title": "Low water at Oakledge", "body": "The ledges you only see in October.", "shirt": "no", "palette": "sand", "ratio": "r169", "week": 1, "f": 0.8, "votes": 12 },
+  { "who": "jules", "kind": "art", "title": "Battery Park at dusk", "body": "", "medium": "Watercolor", "shirt": "yes", "palette": "plum", "ratio": "r11", "week": 2, "f": 0.5, "votes": 19 },
+  { "who": "maya", "kind": "photo", "title": "North Beach, 6:52 am", "body": "Worth the alarm.", "shirt": "yes", "palette": "dawn", "ratio": "r169", "week": 3, "f": 0.2, "votes": 40 },
+  { "who": "dev", "kind": "art", "title": "Camel’s Hump from the Intervale", "body": "", "medium": "Gouache", "shirt": "no", "palette": "pine", "ratio": "r45", "week": 3, "f": 0.6, "votes": 27 },
+  { "who": "sam", "kind": "photo", "title": "The ferry coming in", "body": "", "shirt": "no", "palette": "lake", "ratio": "r169", "week": 4, "f": 0.5, "votes": 15 },
+  { "who": "priya", "kind": "art", "title": "Corner store, North Winooski Ave", "body": "", "medium": "Pen and wash", "shirt": "yes", "palette": "brick", "ratio": "r11", "week": 5, "f": 0.3, "votes": 22 },
+  { "who": "nora", "kind": "photo", "title": "Late corn, Intervale fields", "body": "", "shirt": "no", "palette": "field", "ratio": "r45", "week": 6, "f": 0.6, "votes": 11 },
+  { "who": "jess", "kind": "art", "title": "Night swim, Leddy Beach", "body": "", "medium": "Oil on panel", "shirt": "yes", "palette": "rink", "ratio": "r45", "week": 7, "f": 0.4, "votes": 17 },
+  { "who": "ben", "kind": "photo", "title": "Mustard field off Route 7", "body": "", "shirt": "no", "palette": "mustard", "ratio": "r169", "week": 8, "f": 0.5, "votes": 14 }
+ ],
+ "notices": [
+  { "who": "kara", "title": "Looking for a model for a Saturday shoot at Oakledge", "body": "Two hours, golden light, prints for you after.", "place": "Oakledge Park", "days": 0.1 },
+  { "who": "tom", "title": "Free easel, first come", "body": "Wooden field easel, a little paint on it. On the porch from Friday.", "place": "Old North End", "days": 1.2 },
+  { "who": "priya", "title": "Figure drawing Tuesdays, 7 pm, $5", "body": "Bring your own paper. Every level welcome.", "place": "The Bird House", "days": 2.5 },
+  { "who": "jules", "title": "Open studio weekend, twelve artists on one floor", "body": "Saturday and Sunday, 11 to 5. Prints, ceramics and a lot of tea.", "place": "Soda Plant, Pine Street", "days": 6 }
+ ],
+ "gallery": [
+  { "id": "demo-g1", "caption": "Sunset from Waterfront Park", "credit": "Stephen", "spot": "Waterfront Park", "area": "Waterfront", "palette": "dawn", "days": 70 },
+  { "id": "demo-g2", "caption": "The Church Street lights", "credit": "Stephen", "spot": "Church Street", "area": "Downtown / Church St", "palette": "street", "days": 71 },
+  { "id": "demo-g3", "caption": "Morning coffee on Pine Street", "credit": "Stephen", "spot": "Pine Street", "area": "South End", "palette": "coffee", "days": 72 }
+ ]
+}

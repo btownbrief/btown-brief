@@ -10,8 +10,6 @@
    - local dev: same-origin first, so the app works with no network.
    - pulse-top and pulse-youtube have no same-origin copy. They fail soft:
      the strip they feed simply is not rendered.
-   - the wander pool is committed to the repo, so it is same-origin only and
-     always present — no branch to miss.
 
    Every ten minutes a poll re-checks. It never re-renders underneath
    someone: the swap goes through freshGate(), which the shell answers with
@@ -36,21 +34,62 @@ const FILES = {
     poll: true,
     ok: (j) => j && Array.isArray(j.picks),
   },
+  /* The Wire's daily paper (scripts/curate_wire.py, hourly, on the orphan
+     wire-data branch). The same-origin path only exists on a dev machine
+     that has the branch checked out into data/, so the live branch comes
+     first everywhere (`liveFirst`, or every dev load would log a 404) and
+     the same-origin copy is the fallback. `same` stops the
+     hourly `checked` stamp from reading as a new paper: a change of content
+     (`updated`), of day, of a source's paused state or of the Brief is. */
+  today: {
+    live: LIVE + 'wire-data/data/wire-today.json',
+    local: '../data/wire-today.json',
+    liveFirst: true,
+    poll: true,
+    ok: (j) => j && typeof j.date === 'string' && Array.isArray(j.updates),
+    same: (a, b) => a.date === b.date && a.updated === b.updated &&
+      JSON.stringify(a.status || null) === JSON.stringify(b.status || null) &&
+      (a.brief && a.brief.id) === (b.brief && b.brief.id),
+  },
+  /* the frozen editions, newest first; a new one appears after midnight */
+  wireIndex: {
+    live: LIVE + 'wire-data/data/wire/index.json',
+    local: '../data/wire/index.json',
+    liveFirst: true,
+    poll: true,
+    ok: (j) => j && Array.isArray(j.editions),
+  },
+  /* Btown TV's nightly edition (scripts/curate_tv.py, on the btown-tv
+     branch). main's same-origin copy is only as fresh as its daily sync, so
+     the live branch comes first everywhere and the copy is the fallback. */
   tv: {
     live: LIVE + 'btown-tv/data/btown-tv.json',
     local: '../data/btown-tv.json',
+    liveFirst: true,
     poll: true,
     ok: (j) => j && (j.pick || Array.isArray(j.shelves)),
+  },
+  /* The last two weeks of editions, for On Air's Past nights. Only on the
+     branch; a miss just leaves the section out. */
+  tvEditions: {
+    live: LIVE + 'btown-tv/data/tv-editions.json',
+    local: null,
+    poll: true,
+    ok: (j) => j && Array.isArray(j.editions),
+  },
+  /* The Brief, out loud (scripts/build_wire_audio.py, daily at 7 am, on the
+     orphan wire-audio branch): index.json lists the rolling 30 days of clips;
+     audioUrl() is where each MP3 and its script live. */
+  audio: {
+    live: LIVE + 'wire-audio/data/audio/index.json',
+    local: null,
+    poll: true,
+    ok: (j) => j && Array.isArray(j.clips),
   },
   youtube: {
     live: LIVE + 'pulse-youtube/data/pulse-youtube.json',
     local: null,
     ok: (j) => j && Array.isArray(j.videos),
-  },
-  pool: {
-    live: null,
-    local: 'data/wander-pool.json',
-    ok: (j) => j && j.pools && typeof j.pools === 'object',
   },
   /* The Brief's own stories, pulled out of the newsletter. Same-origin: the
      file is committed to main by its workflow and main is what Pages serves. */
@@ -106,8 +145,8 @@ const FILES = {
     ok: (j) => j && Array.isArray(j.posts),
   },
   /* Music is committed to main by its own workflow and lives inside
-     /all-day/, so the service worker can cache it — same reasoning as the
-     wander pool. No poll: the roster changes once a morning. */
+     /all-day/, so the service worker can cache it. No poll: the roster
+     changes once a morning. */
   music: {
     live: null,
     local: 'data/music.json',
@@ -119,6 +158,31 @@ const FILES = {
     ok: (j) => j && typeof j === 'object' && (j.now || j.lake_gage || j.sun),
   },
 };
+
+/* One frozen day of the Wire, data/wire/YYYY-MM-DD.json. Editions are final,
+   so they are fetched once and never polled. Returns the key for load(), or
+   null for anything that is not a date. */
+export function edition(date) {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(String(date || ''))) return null;
+  const key = 'wire:' + date;
+  if (!FILES[key]) {
+    FILES[key] = {
+      live: LIVE + 'wire-data/data/wire/' + date + '.json',
+      local: '../data/wire/' + date + '.json',
+      liveFirst: true,
+      ok: (j) => j && j.date === date && Array.isArray(j.updates),
+    };
+  }
+  return key;
+}
+
+/* A clip or its script on the wire-audio branch. raw.githubusercontent.com
+   serves .mp3 as audio/mpeg with byte ranges, so the shell's <audio> can
+   seek in it. Only a bare YYYY-MM-DD.mp3 / .txt name is accepted. */
+export function audioUrl(file) {
+  const f = String(file || '');
+  return /^\d{4}-\d{2}-\d{2}\.(mp3|txt)$/.test(f) ? LIVE + 'wire-audio/data/audio/' + f : '';
+}
 
 const STALE_RETRIES = [8000, 20000, 60000];
 const POLL_MS = 600000;
@@ -192,18 +256,20 @@ function bust(key) {
 const isDead = (key) => dead[key] && Date.now() - dead[key] < DEAD_FOR;
 
 /* A live payload arriving after first render must not yank the page out from
-   under a reader — the shell decides when it lands. */
+   under a reader — the shell decides when it lands. Returns whether a
+   different payload was offered. */
 function offerFresh(key, json) {
   const spec = FILES[key];
-  if (!spec.ok(json)) return;
+  if (!spec.ok(json)) return false;
   /* two payloads with no `generated` stamp would compare undefined ===
      undefined and read as identical forever — fall back to content */
-  const same = (json.generated != null || (cache[key] && cache[key].generated != null))
-    ? cache[key] && json.generated === cache[key].generated
-    : cache[key] && JSON.stringify(json) === JSON.stringify(cache[key]);
+  const same = !cache[key] ? false
+    : spec.same ? spec.same(json, cache[key])
+    : (json.generated != null || cache[key].generated != null) ? json.generated === cache[key].generated
+    : JSON.stringify(json) === JSON.stringify(cache[key]);
   if (!cache[key] || same) {
     if (stale[key]) { stale[key] = false; onStaleChange(anyStale()); }
-    return;
+    return false;
   }
   gate(() => {
     cache[key] = json;
@@ -211,6 +277,7 @@ function offerFresh(key, json) {
     onStaleChange(anyStale());
     emit(key, json);
   });
+  return true;
 }
 
 function retryLive(key, attempt) {
@@ -227,7 +294,7 @@ function retryLive(key, attempt) {
 function start(key) {
   const spec = FILES[key];
   const local = isLocalDev();
-  const preferLocal = local || !spec.live;
+  const preferLocal = (local && !spec.liveFirst) || !spec.live;
   const first = preferLocal && spec.local ? spec.local : spec.live;
   const second = preferLocal ? (spec.local ? spec.live : null) : spec.local;
   inflight[key] = true;
@@ -260,6 +327,18 @@ export function load(key, onOk, onFail) {
 }
 
 export const peek = (key) => cache[key] || null;
+
+/* Check the live copy now (a pull to refresh) rather than at the next poll.
+   Resolves true when a different payload came back and was offered to the
+   reader through the fresh gate. */
+export function check(key) {
+  const spec = FILES[key];
+  if (!spec || !spec.live || !cache[key]) return Promise.resolve(false);
+  return fetchJSON(spec.live, 8000).then((json) => {
+    if (!spec.ok(json)) return false;
+    return offerFresh(key, json);
+  }).catch(() => false);
+}
 
 setInterval(() => {
   if (document.hidden || isLocalDev()) return;

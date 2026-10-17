@@ -1,81 +1,166 @@
-/* app.js — the shell. Router, tab lifecycle, and everything that has to
-   outlive a tab switch: the one <audio>, the video box, the sheets, the
-   toast, the peek card.
+/* app.js — the shell. It owns the mast, the tab bar, theme, sheets, toast,
+   peek, gestures, routing, scroll memory, share, the one video box and the
+   one audio player. A tab owns its data and the order it shows things in,
+   and plugs in through register() (DESIGN.md section 9):
 
-   Boot order is not a problem here the way it was in the first pass: ES
-   modules import their tabs, so every register() has run before route()
-   is called. There is no window-global registry to race.
+     app.register('food', {
+       label: 'Food',            the tab bar word
+       icon: ICON.food,          a 24-box stroke icon from ui.js
+       promise: '…',             the one-line promise; the shell draws the empty state
+       mount(root) {},           first visit: fetch, then render with the shell's cards
+       activate(param, first) {},  every landing; #food/<key> arrives as param
+       refresh() {},             a setting changed (a mute, Local/Everything); redraw cheaply
+       deactivate() {},          the tab was left; stop anything that moves
+       subnav() {},              optional: up to two rows under the mast, or null
+       newSince(ts) {},          how many items are newer than ts (epoch seconds), for the tab dot
+       pull() {},                optional shell extension: pull-to-refresh asked; return a toast or null
+     });
 
    Each tab panel is its own scroll container, so per-tab scroll memory is
-   just saving and restoring scrollTop, and the top chrome can slide away
-   without the layout reflowing. */
+   just saving and restoring scrollTop, and the mast can slide away without
+   the layout reflowing. A tab renders into the root it is given (a body
+   inside the panel); the shell keeps the pull strip above it. */
 
 import * as store from './store.js';
-import * as wire from './wire.js';
-import { el, esc, safeHref, ICON } from './ui.js';
+import * as auth from './auth.js';
+import { bindGestures } from './gestures.js';
+import { el, esc, safeHref, ICON, art, mark, cards, pills, button, setPalette } from './ui.js';
 
 const $ = (id) => document.getElementById(id);
-/* What Now sits fifth of nine — dead centre, which is where the bar puts
-   its own button. */
-const TABS = ['wire', 'reddit', 'watch', 'listen', 'whatnow',
-              'music', 'photos', 'ig', 'wander'];
+const root = document.documentElement;
+
+/* ?demo=1: every tab shows its full prototype screen on baked fake data,
+   and nothing a reader does is saved or sent anywhere. */
+export const demo = new URLSearchParams(location.search).get('demo') === '1';
+store.setDemo(demo);
+
+/* The bar's order is the shell's call. What Now sits fifth of nine, dead
+   centre, in the one wider cell so its two words never wrap. */
+export const TABS = ['wire', 'watch', 'food', 'people', 'whatnow', 'vintage', 'art', 'onair', 'games'];
+const REQUIRED = ['label', 'icon', 'promise', 'mount', 'activate', 'refresh', 'newSince'];
 
 const registry = Object.create(null);
-let active = null;
 const mounted = Object.create(null);
+const stale = Object.create(null);
+const scrollMemory = Object.create(null);
+const panels = Object.create(null);
+const bodies = Object.create(null);
+const landed = new Set();
+let active = null;
+let started = false;
 
-export function register(tab, mod) { registry[tab] = mod; }
+export function register(key, mod) {
+  if (!TABS.includes(key)) throw new Error('[all-day] unknown tab ' + key);
+  const missing = REQUIRED.filter((f) => mod[f] == null);
+  if (missing.length) throw new Error('[all-day] tab ' + key + ' is missing ' + missing.join(', '));
+  registry[key] = mod;
+}
+export const activeTab = () => active;
+/* The signed-in reader as { id }, or null; never an email (auth.js keeps
+   none). onAuth(fn) runs fn(user) on every sign-in, sign-out and lost
+   session, and returns the unsubscribe. */
+export const user = () => auth.user();
+export const token = () => auth.token();
+export const onAuth = (fn) => auth.onChange(fn);
+export const signOut = () => auth.signOut();
 
-/* ------------------------------------------------------------------ hash */
+/* Card buttons a shell module answers (boards.js: bvote, breport,
+   bdelete). bindFeed() hands a data-act it does not know itself to the
+   function registered under its name, with the card's item. */
+const ACTS = Object.create(null);
+export function onAct(name, fn) { ACTS[name] = fn; }
+/* The signed-in half of Settings → Your account (boards.js draws it). */
+let accountPainter = null;
+export function registerAccount(fn) { accountPainter = fn; }
 
-function parseHash() {
-  const h = location.hash.replace(/^#/, '');
-  /* any tab can carry a /param now — wander opens an article, wire and
-     watch jump to a shared card; the rest just land on the tab */
-  const m = h.match(/^([a-z]+)\/(.+)$/);
-  if (m && TABS.includes(m[1])) {
-    /* a shared link can carry broken percent-encoding, and an uncaught
-       URIError here would take the whole router down */
-    let param;
-    try { param = decodeURIComponent(m[2]); } catch (e) { param = m[2]; }
-    return { tab: m[1], param };
+/* -------------------------------------------------------------- items */
+/* Every card a tab draws is known here by its key, so one delegated click
+   handler can vote, save, share or open it. A tab calls know() with the
+   items it is about to draw. */
+const ITEMS = new Map();
+const NAMES = Object.create(null);   // source id -> display name, for Settings
+export function know(items) {
+  (items || []).forEach((it) => {
+    if (!it || !it.k) return;
+    ITEMS.set(it.k, it);
+    if (it.sid && it.src) NAMES[it.sid] = it.src;
+  });
+  return items;
+}
+export const item = (k) => ITEMS.get(k) || null;
+export const sourceName = (sid) => NAMES[sid] || sid;
+const record = (it) => ({ k: it.k, kind: it.kind || 'wire', title: it.title || it.text || it.name || 'Untitled',
+  from: it.src || it.author || '', href: it.href || '', art: /^https?:/.test(it.thumb || it.media || '') ? (it.thumb || it.media) : '' });
+
+/* ------------------------------------------------------------- demo data */
+/* data/demo/<tab>.json, one file per tab, plus shell.json (the placeholder
+   palettes and the fake comments). Fetched once, cached. */
+const demoCache = Object.create(null);
+function fetchDemo(name) {
+  if (!demoCache[name]) {
+    demoCache[name] = fetch('data/demo/' + name + '.json').then((r) => {
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      return r.json();
+    });
   }
-  return { tab: TABS.includes(h) ? h : 'wire', param: null };
+  return demoCache[name];
+}
+let shellDemo = null;
+export function demoData(tab) {
+  if (!shellDemo) shellDemo = fetchDemo('shell').then((j) => { setPalette(j.palette); return j; });
+  return Promise.all([shellDemo, fetchDemo(tab)]).then(([, j]) => {
+    /* a demo item links to its own deep link, so rule 4 (every item has a
+       URL) holds for fake data too; opening one in demo mode only toasts */
+    const stamp = (it) => { if (it && typeof it === 'object' && it.k && !it.href) it.href = '#' + tab + '/' + it.k; };
+    const walk = (v) => { if (Array.isArray(v)) v.forEach(walk); else if (v && typeof v === 'object') { stamp(v); Object.values(v).forEach(walk); } };
+    walk(j);
+    return j;
+  });
+}
+
+/* ------------------------------------------------------------- empty state */
+/* A tab that is not built yet states its promise. In live mode that is all
+   eight tabs but the Wire, until each tab's own session ships it. */
+export function promise(host, key) {
+  const mod = registry[key];
+  host.innerHTML = '';
+  const p = el('div', 'promise');
+  p.innerHTML = '<div class="big">' + mod.icon + '</div><h2>' + esc(mod.label) + '</h2><p>' + esc(mod.promise) + '</p>' +
+    '<span class="soon">Coming in the rebuild</span>' +
+    '<a class="demo" href="?demo=1#' + esc(key) + '">See what it will look like</a>';
+  host.appendChild(p);
 }
 
 /* ------------------------------------------------------------------ share */
 /* One card, one link. The URL is this app with the tab and the card's key in
-   the hash, so a text from a neighbour lands the reader inside All Day rather
-   than on YouTube or an outlet's site. Native share sheet where phones have
-   one; the clipboard everywhere else. */
+   the hash, so a text from a neighbour lands the reader inside All Day. Native
+   share sheet where phones have one; the clipboard everywhere else. */
 export function share(tab, key, title) {
-  const url = 'https://guide.btownbrief.com/all-day/#' + tab +
-    (key ? '/' + encodeURIComponent(key) : '');
-  if (window.goatcounter && window.goatcounter.count) {
-    window.goatcounter.count({ path: 'all-day-share-' + tab,
-                               title: 'All Day share: ' + tab, event: true });
+  const base = demo ? location.origin + location.pathname + '?demo=1' : 'https://guide.btownbrief.com/all-day/';
+  const url = base + '#' + tab + (key ? '/' + encodeURIComponent(key) : '');
+  if (!demo && window.goatcounter && window.goatcounter.count) {
+    window.goatcounter.count({ path: 'all-day-share-' + tab, title: 'All Day share: ' + tab, event: true });
   }
   if (navigator.share) {
     navigator.share({ title: title || 'All Day — Burlington Brief', url }).catch(() => {});
     return;
   }
   if (navigator.clipboard && navigator.clipboard.writeText) {
-    navigator.clipboard.writeText(url)
-      .then(() => toast('Link copied'), () => toast('Couldn’t copy the link'));
-  } else {
-    toast('Couldn’t copy the link');
-  }
+    navigator.clipboard.writeText(url).then(() => toast('Link copied'), () => toast('Couldn’t copy the link'));
+  } else toast('Couldn’t copy the link');
 }
 
 /* Scroll a shared-in card into view and let it glow once. Returns whether the
    key was found, so the caller can say something honest when it wasn't. */
-export function flashHit(root, key) {
-  const hit = [...root.querySelectorAll('[data-k]')].find((n) => n.dataset.k === key);
+export function flashHit(host, key) {
+  const hit = [...(host || document).querySelectorAll('[data-k]')].find((n) => n.dataset.k === key);
   if (!hit) return false;
   requestAnimationFrame(() => {
     hit.scrollIntoView({ block: 'center' });
-    hit.classList.add('shared-hit');
-    setTimeout(() => hit.classList.remove('shared-hit'), 2600);
+    hit.classList.remove('flash');
+    void hit.offsetWidth;
+    hit.classList.add('flash');
+    setTimeout(() => hit.classList.remove('flash'), 2400);
   });
   return true;
 }
@@ -86,40 +171,794 @@ export function go(tab, param) {
   else location.hash = next;
 }
 
-function route() {
-  const { tab, param } = parseHash();
-  const panel = $('panel-' + tab);
-  if (!panel) return;
+/* ------------------------------------------------------------ feed events */
+/* One delegated handler per feed. Tabs never attach pointer handlers to
+   cards (DESIGN.md section 9 rule 7); they pass optional handlers here:
+   onSource(sid, item), onSave(item), onMute(sid, item), onPeek(item). */
+let holdFired = false, holdDead = 0;
 
-  if (active && active !== tab) {
-    const prev = $('panel-' + active);
-    if (prev) {
-      scrollMemory[active] = prev.scrollTop;
-      prev.hidden = true;
+export function bindFeed(host, h = {}) {
+  host.addEventListener('click', (e) => {
+    if (holdFired && Date.now() < holdDead) { e.preventDefault(); e.stopPropagation(); return; }
+    const c = e.target.closest('[data-k]');
+    const it = c && ITEMS.get(c.dataset.k);
+    const act = e.target.closest('[data-act]');
+    if (act && it) {
+      e.preventDefault();
+      const a = act.dataset.act;
+      if (a === 'up') toggleVote(it);
+      else if (a === 'comment') comments(it);
+      else if (a === 'share') share(active, it.k, it.title || it.text);
+      else if (a === 'save') (h.onSave || toggleSave)(it);
+      else if (ACTS[a]) ACTS[a](it, act);
+      return;
     }
-    registry[active]?.deactivate?.();
+    const srcb = e.target.closest('[data-src]');
+    if (srcb) {
+      e.preventDefault();
+      (h.onSource || sourceSheet)(srcb.dataset.src, it);
+      return;
+    }
+    if (e.target.closest('[data-open]') && it) {
+      store.markRead(it.k);
+      document.querySelectorAll('.card[data-k="' + CSS.escape(it.k) + '"]').forEach((n) => n.classList.add('is-read'));
+      if (demo || !/^https?:/.test(it.href || '')) {
+        e.preventDefault();
+        toast(it.open ? 'Opens the original on ' + it.open.replace(/^Open (on |the )?/, '') + ' in the real build'
+          : it.kind === 'event' ? 'Opens the event page in the real build' : 'Opens the article in the real build');
+      }
+      return;
+    }
+    if (e.target.closest('[data-play]') && it) { e.preventDefault(); play(it); return; }
+    if (e.target.closest('[data-zoom]') && it) { e.preventDefault(); lightbox(it); return; }
+    if (e.target.closest('[data-cta]') && it) {
+      e.preventDefault();
+      toast(user() ? '“' + (it.cta || 'Go') + '” comes with this tab’s build.' : '“' + (it.cta || 'Go') + '” needs the email sign-in. It’s in Settings.');
+    }
+  });
+  host.addEventListener('keydown', (e) => {
+    if ((e.key === 'Enter' || e.key === ' ') && e.target.matches('[data-play], [data-zoom]')) { e.preventDefault(); e.target.click(); }
+  });
+  bindGestures(host, {
+    onSave(k) { const it = ITEMS.get(k); if (it) (h.onSave || toggleSave)(it); },
+    onMute(k) { const it = ITEMS.get(k); if (it && (it.sid || it.src)) (h.onMute || mute)(it.sid || it.src, it); },
+  });
+  bindHold(host, h.onPeek || peek);
+}
+
+export function toggleVote(it) {
+  store.toggleVote(record(it));
+  const on = store.hasVoted(it.k);
+  const n = (Number(it.votes) || 0) + store.voteCount(it.k);
+  document.querySelectorAll('[data-k="' + CSS.escape(it.k) + '"] [data-act="up"]').forEach((b) => {
+    b.classList.toggle('on', on);
+    b.setAttribute('aria-pressed', on ? 'true' : 'false');
+    const c = b.querySelector('.n');
+    if (c) c.textContent = n || '';
+  });
+}
+
+export function toggleSave(it) {
+  const on = store.toggleSaved(record(it));
+  document.querySelectorAll('[data-k="' + CSS.escape(it.k) + '"] .act.star').forEach((b) => {
+    b.classList.toggle('on', on);
+    b.setAttribute('aria-pressed', on ? 'true' : 'false');
+  });
+  paintSavedBtn();
+  toast(on ? 'Saved' : 'Removed from saved');
+}
+
+/* Mute a source everywhere. Asks first; the toast carries Undo. */
+export function mute(sid, it) {
+  const name = (it && (it.src || it.author)) || sourceName(sid);
+  confirmBox({
+    title: 'Mute ' + name + '?',
+    body: 'You won’t see ' + name + ' anywhere in All Day. Bring it back any time in Settings.',
+    yes: 'Mute',
+    onYes() {
+      store.setMuted(sid, true);
+      refreshAll();
+      toast('Muted ' + name, () => { store.setMuted(sid, false); refreshAll(); });
+    },
+  });
+}
+
+/* Comments open over the feed, never away from it. On-site comments are a
+   later shell feature (sign-in, moderation); until then a card with a home
+   elsewhere links there, and demo mode shows the prototype's sheet. */
+function comments(it) {
+  if (!demo) {
+    if (it.open && /^https?:/.test(safeHref(it.href))) { window.open(safeHref(it.href), '_blank', 'noopener'); return; }
+    toast('Comments come to All Day with sign-in.');
+    return;
   }
+  sheet(it.kind === 'post' && it.comments ? (it.comments + ' replies') : 'Comments', (body, card) => {
+    body.appendChild(el('p', 'sheet-note', esc(it.title || it.text)));
+    if (it.open) body.appendChild(el('p', 'sheet-note', 'This thread lives on ' + esc(it.open.replace(/^Open (on |the )?/, '')) + '. The first replies are here; the rest are one tap away.'));
+    shellDemo.then((j) => {
+      const sets = j.comments || [];
+      const set = sets.length ? sets[it.k.charCodeAt(it.k.length - 1) % sets.length] : [];
+      set.forEach(([who, ago, text]) => {
+        body.insertBefore(el('div', 'cmt', mark(who, 'round lg') + '<div><div class="who"><b>' + esc(who) + '</b> · ' + esc(ago) + '</div><p>' + esc(text) + '</p></div>'), body.querySelector('.sheet-row'));
+      });
+    });
+    if (it.open) {
+      const r = el('div', 'sheet-row');
+      r.style.justifyContent = 'center';
+      r.appendChild(button(esc(it.open) + ' ' + ICON.ext, 'ghost', () => toast('Opens the original thread in the real build')));
+      body.appendChild(r);
+    }
+    const compose = el('div', 'compose', '<input class="field" type="text" placeholder="Add a comment" aria-label="Add a comment">');
+    compose.appendChild(button('Post', '', () => toast('Posting needs the email sign-in. That comes with the real build.')));
+    card.appendChild(compose);
+  });
+}
 
-  const first = !mounted[tab];
-  if (first) { mounted[tab] = true; registry[tab]?.mount?.(panel); }
-  else if (stale[tab]) { delete stale[tab]; registry[tab]?.refresh?.(); }
-  panel.hidden = false;
+/* The source sheet a tab gets for free: what the shell knows from that
+   source, and Mute. The Wire draws its own, richer one. */
+function sourceSheet(sid, it) {
+  const name = (it && (it.src || it.author)) || sourceName(sid);
+  const mine = [...ITEMS.values()].filter((x) => (x.sid || x.src) === sid).slice(0, 8);
+  sheet(name, (body) => {
+    const h = el('div', 'srchead', mark(name, 'xl') + '<div><div class="k">' + esc(name) + '</div><div class="n">' + mine.length + ' here today</div></div>');
+    body.appendChild(h);
+    const row = el('div', 'linkrow');
+    row.appendChild(button('Mute', 'ghost', () => mute(sid, it)));
+    body.appendChild(row);
+    if (mine.length) {
+      body.appendChild(el('div', 'sheet-h', 'Recent from ' + esc(name)));
+      const f = el('div', 'feed tight');
+      mine.forEach((x) => { const n = x.kind === 'headline' ? cards.row(x) : cards.any(x); if (n) f.appendChild(n); });
+      body.appendChild(f);
+      bindFeed(f, { onSource() {} });
+    }
+  });
+}
 
-  document.querySelectorAll('.tabbar button').forEach((b) => {
-    const on = b.dataset.tab === tab;
+/* ------------------------------------------------------------------ hold */
+/* Hold any card for 550ms and it rises as a peek. Moving 10px cancels; the
+   click that follows a peek is swallowed. */
+let holdTimer = 0, holdStart = null;
+function cancelHold() { clearTimeout(holdTimer); holdTimer = 0; holdStart = null; }
+function bindHold(host, onPeek) {
+  host.addEventListener('pointerdown', (e) => {
+    if (e.pointerType === 'mouse' && e.button !== 0) return;
+    const c = e.target.closest('[data-k]');
+    if (!c || e.target.closest('button, .rail')) return;
+    holdStart = { x: e.clientX, y: e.clientY };
+    holdFired = false;
+    clearTimeout(holdTimer);
+    holdTimer = setTimeout(() => {
+      const it = ITEMS.get(c.dataset.k);
+      if (!it) return;
+      holdFired = true; holdDead = Date.now() + 600;
+      if (navigator.vibrate) navigator.vibrate(8);
+      onPeek(it);
+    }, 550);
+  });
+  host.addEventListener('pointermove', (e) => {
+    if (!holdStart) return;
+    if (Math.abs(e.clientX - holdStart.x) > 10 || Math.abs(e.clientY - holdStart.y) > 10) cancelHold();
+  });
+  ['pointerup', 'pointercancel', 'pointerleave'].forEach((ev) => host.addEventListener(ev, cancelHold));
+  host.addEventListener('contextmenu', (e) => { if (e.target.closest('.card')) e.preventDefault(); });
+}
+
+/* ------------------------------------------------------------------ peek */
+let peekEl = null;
+export function closePeek() {
+  if (!peekEl) return;
+  peekEl.remove(); peekEl = null;
+  document.removeEventListener('pointerdown', onOutside, true);
+}
+function onOutside(e) { if (peekEl && !peekEl.contains(e.target)) closePeek(); }
+export function peek(it) {
+  if (!it) return;
+  closePeek();
+  const box = el('div', 'peek');
+  box.setAttribute('role', 'dialog');
+  const t = it.title || it.line || it.text;
+  const from = it.author || it.name || it.src;
+  const pic = it.media || it.thumb;
+  const words = it.kind === 'board' ? [it.metaLine, it.text].filter(Boolean).join('. ') : (it.text || it.why || '');
+  box.innerHTML = '<div class="peek-head"><span class="t">' + esc(t) + '</span><button class="iconbtn" aria-label="Close">' + ICON.x + '</button></div>' +
+    '<div class="peek-body">' + (pic ? '<span class="c-media r169">' + art(pic) + '</span>' : '') +
+    '<p class="from">' + esc(from) + (it.ago ? ' · ' + esc(it.ago) : '') + '</p><p>' + esc(words) + '</p></div>';
+  const foot = el('div', 'peek-foot');
+  /* a reader's board post lives here, in the card itself: nothing to open */
+  if (it.kind !== 'board') {
+    const open = el('a', 'btn', esc(it.open || 'Open') + ' ' + ICON.ext);
+    open.href = safeHref(it.href);
+    if (/^https?:/.test(it.href || '')) { open.target = '_blank'; open.rel = 'noopener'; }
+    open.addEventListener('click', (e) => {
+      store.markRead(it.k);
+      if (demo || !/^https?:/.test(it.href || '')) { e.preventDefault(); toast('Opens in the real build'); }
+      closePeek();
+    });
+    foot.appendChild(open);
+  }
+  foot.append(button(store.isSaved(it.k) ? 'Saved' : 'Save', 'ghost', () => { toggleSave(it); closePeek(); }));
+  box.appendChild(foot);
+  box.querySelector('.iconbtn').addEventListener('click', closePeek);
+  document.body.appendChild(box);
+  peekEl = box;
+  setTimeout(() => document.addEventListener('pointerdown', onOutside, true), 0);
+}
+
+/* -------------------------------------------------------------- lightbox */
+let lbEl = null;
+export function lightbox(it) {
+  closeLightbox();
+  const lb = el('div', 'lb');
+  lb.setAttribute('role', 'dialog');
+  lb.innerHTML = '<span class="c-media ' + esc(it.ratio || 'r45') + '">' + art(it.media || it.thumb) + '</span>' +
+    '<button class="iconbtn x" aria-label="Close">' + ICON.x + '</button><p class="cap">' + esc(it.text || it.title || '') + '</p>';
+  lb.addEventListener('click', closeLightbox);
+  document.body.appendChild(lb);
+  lbEl = lb;
+}
+function closeLightbox() { if (lbEl) { lbEl.remove(); lbEl = null; } }
+
+/* ----------------------------------------------------------------- sheets */
+let sheetClose = null;
+export function sheet(titleText, build) {
+  if (sheetClose) sheetClose();
+  const s = $('sheet');
+  s.innerHTML = '';
+  const scrim = el('div', 'sheet-scrim');
+  const card = el('div', 'sheet-card');
+  card.setAttribute('role', 'dialog');
+  card.setAttribute('aria-label', titleText);
+  const head = el('div', 'sheet-head', '<h2>' + esc(titleText) + '</h2>');
+  const x = el('button', 'iconbtn', ICON.x);
+  x.setAttribute('aria-label', 'Close');
+  head.appendChild(x);
+  const body = el('div', 'sheet-body');
+  card.append(el('div', 'grab'), head, body);
+  s.append(scrim, card);
+  s.hidden = false;
+  const close = () => { s.hidden = true; s.innerHTML = ''; if (sheetClose === close) sheetClose = null; };
+  sheetClose = close;
+  x.addEventListener('click', close);
+  scrim.addEventListener('click', close);
+  build(body, card, close);
+  return close;
+}
+
+function savedSheet() {
+  sheet('Saved', (body, card, close) => {
+    const paint = () => {
+      body.innerHTML = '';
+      const list = store.saved();
+      if (!list.length) { body.appendChild(el('p', 'sheet-note', 'Nothing saved yet. Tap the star on a card, or swipe it to the right.')); return; }
+      list.forEach((it) => {
+        const r = el('div', 'sheet-row');
+        const a = el('a', 't', esc(it.title) + '<div class="d">' + esc(it.from || '') + '</div>');
+        const internal = /^#/.test(it.href || '');
+        a.href = safeHref(it.href);
+        if (internal) a.addEventListener('click', close); else { a.target = '_blank'; a.rel = 'noopener'; }
+        const x = el('button', 'act star on', ICON.star);
+        x.setAttribute('aria-label', 'Remove from saved');
+        x.addEventListener('click', () => {
+          store.toggleSaved(it);
+          document.querySelectorAll('[data-k="' + CSS.escape(it.k) + '"] .act.star').forEach((b) => { b.classList.remove('on'); b.setAttribute('aria-pressed', 'false'); });
+          paintSavedBtn();
+          paint();
+        });
+        r.append(a, x);
+        body.appendChild(r);
+      });
+    };
+    paint();
+  });
+}
+
+const MORE = [
+  ['The newsletter', 'https://www.btownbrief.com/'],
+  ['The hub', 'https://hub.btownbrief.com/'],
+  ['Weather', '../weather.html'],
+  ['The board', '../live.html'],
+  ['The arcade', 'https://play.btownbrief.com/'],
+  ['Telegram chat', '../telegram.html'],
+];
+
+export function openSettings() { settingsSheet(); }
+function settingsSheet() {
+  sheet('Settings', (body) => {
+    body.appendChild(el('div', 'sheet-h', 'Appearance'));
+    body.appendChild(pills([['auto', 'Follow phone'], ['light', 'Light'], ['dark', 'Dark']], store.theme(), (v) => { store.setTheme(v); paintThemeBtn(); }));
+
+    body.appendChild(el('div', 'sheet-h', 'Your account'));
+    const acct = el('div');
+    body.appendChild(acct);
+    const paintAcct = () => {
+      acct.innerHTML = '';
+      const u = auth.user();
+      if (u && accountPainter) { accountPainter(acct, paintAcct); return; }
+      if (u) {
+        const r = el('div', 'sheet-row', '<div class="t">Signed in</div>');
+        r.appendChild(button('Sign out', 'ghost sm', () => { auth.signOut(); paintAcct(); toast('Signed out'); }));
+        acct.appendChild(r);
+        return;
+      }
+      if (demo) {
+        const r = el('div', 'sheet-row', '<div class="t">Sign in<div class="d">The demo has a pretend account, so you can try posting. Real sign-in is one email link, no password.</div></div>');
+        r.appendChild(button('Sign in', 'ghost sm', () => { auth.demoSignIn(); paintAcct(); toast('Signed in to the demo account'); }));
+        acct.appendChild(r);
+        return;
+      }
+      const st = auth.status();
+      if (st !== 'on') {
+        acct.appendChild(el('div', 'sheet-row', '<div class="t">Sign in<div class="d">' +
+          (st === 'checking' ? 'Checking…' : 'Coming soon. Everything here works without an account.') + '</div></div>'));
+        return;
+      }
+      acct.appendChild(el('p', 'sheet-note', 'Optional. An email link signs you in; no password. Reading and voting never need it; posting on a board and reporting do.'));
+      const f = el('form', 'signin');
+      f.noValidate = true;   /* our own message, not the browser's bubble */
+      const input = el('input', 'field');
+      input.type = 'email'; input.placeholder = 'you@example.com'; input.autocomplete = 'email';
+      input.setAttribute('aria-label', 'Email address');
+      const go = button('Send link', '');
+      go.type = 'submit';
+      f.append(input, go);
+      const msg = el('p', 'sheet-note');
+      f.addEventListener('submit', (e) => {
+        e.preventDefault();
+        go.disabled = true;
+        auth.sendLink(input.value).then((r) => { msg.textContent = r.message; go.disabled = false; });
+      });
+      acct.append(f, msg);
+    };
+    paintAcct();
+    auth.check().then(paintAcct);
+
+    body.appendChild(el('div', 'sheet-h', 'Muted sources'));
+    const muted = Object.keys(store.muted());
+    if (!muted.length) body.appendChild(el('p', 'sheet-note', 'None. Swipe a headline to the left, or open a source and tap Mute.'));
+    muted.forEach((sid) => {
+      const r = el('div', 'sheet-row', '<div class="t">' + esc(sourceName(sid)) + '</div>');
+      r.appendChild(button('Unmute', 'ghost sm', () => { store.setMuted(sid, false); r.remove(); refreshAll(); }));
+      body.appendChild(r);
+    });
+
+    body.appendChild(el('div', 'sheet-h', 'More from the Brief'));
+    const links = el('div', 'linkrow');
+    MORE.forEach(([label, href]) => {
+      const a = el('a', 'btn ghost sm', esc(label) + ' ' + ICON.ext);
+      a.href = href;
+      if (/^https?:/.test(href)) { a.target = '_blank'; a.rel = 'noopener'; }
+      links.appendChild(a);
+    });
+    body.appendChild(links);
+
+    body.appendChild(el('div', 'sheet-h', 'About'));
+    body.appendChild(el('p', 'sheet-note', demo
+      ? 'This is the demo. Every headline, post, event, person, film, dish, shop and score is invented, and nothing you do here is saved. Leave the demo by removing ?demo=1 from the address.'
+      : 'All Day is the Btown Brief’s app for the rest of the day: Burlington’s news, then what to watch, eat and do, people to do it with, vintage, art, On Air and games. Saves, mutes and what you have read stay on this phone.'));
+  });
+}
+
+/* ---------------------------------------------------------- toast, confirm */
+let toastTimer = 0;
+export function toast(msg, undo) {
+  const t = $('toast');
+  t.innerHTML = '';
+  t.appendChild(document.createTextNode(msg));
+  if (undo) {
+    const b = el('button', null, 'Undo');
+    b.addEventListener('click', () => { t.hidden = true; undo(); });
+    t.appendChild(b);
+  }
+  t.hidden = false;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { t.hidden = true; }, undo ? 6000 : 2400);
+}
+
+export function confirmBox({ title, body, yes, onYes }) {
+  const box = $('confirm');
+  box.innerHTML = '<div class="confirm-card" role="alertdialog"><h3>' + esc(title) + '</h3><p>' + esc(body) + '</p>' +
+    '<div class="confirm-btns"><button class="btn ghost" data-no>Cancel</button><button class="btn danger" data-yes>' + esc(yes) + '</button></div></div>';
+  box.hidden = false;
+  const close = () => { box.hidden = true; };
+  box.querySelector('[data-no]').addEventListener('click', close);
+  box.querySelector('[data-yes]').addEventListener('click', () => { close(); onYes(); });
+  box.onclick = (e) => { if (e.target === box) close(); };
+  box.querySelector('[data-yes]').focus();
+}
+
+/* ----------------------------------------------------------------- player */
+/* ONE <audio>, in the shell, so it keeps playing across every tab switch.
+   Anything else that can make a noise (a Bandcamp or YouTube embed a tab
+   opens) registers a stop function, and when this player or the video box
+   starts, all of them are torn down. Two things never play at once.
+   Demo items have no sound; the dock pretends, as the prototype did. */
+const audio = $('audio');
+const dock = $('player');
+let playing = null;        // the item in the dock
+let fakeTimer = 0, fakePos = 0;
+
+const foreign = new Set();
+export function registerForeign(stop) { foreign.add(stop); return () => foreign.delete(stop); }
+export function silenceForeign() { foreign.forEach((stop) => { try { stop(); } catch (e) { /* already gone */ } }); }
+
+export const nowPlaying = () => (playing ? playing.k : null);
+export const isPlaying = () => !!playing && (playing.src_audio ? !audio.paused : !!fakeTimer);
+
+export function paintPlayButtons() {
+  const on = isPlaying();
+  document.querySelectorAll('[data-pk]').forEach((b) => {
+    const me = on && playing && b.dataset.pk === playing.k;
+    b.classList.toggle('is-playing', me);
+    const label = b.dataset.label || '';
+    b.innerHTML = (me ? ICON.pause : ICON.play) + (label ? ' ' + esc(label) : '');
+  });
+  $('p-toggle').innerHTML = on ? ICON.pause : ICON.play;
+}
+
+function showDock(it) {
+  dock.hidden = false;
+  document.body.classList.add('has-player');
+  dock.querySelector('.p-art').innerHTML = art(it.media || it.thumb || 'coffee');
+  $('p-title').textContent = it.title || '';
+  $('p-show').textContent = (it.show || it.src || '') + (it.dur ? ' · ' + it.dur : '');
+  measure();
+}
+
+/* Play anything: a YouTube id opens the video box, an audio URL plays in the
+   dock, a demo item pretends. Pressing play on what is playing pauses it. */
+export function play(it) {
+  if (!it) return;
+  if (it.yt && !demo) { showVideo(it.yt, it.title); return; }
+  if (playing && playing.k === it.k) { togglePause(); return; }
+  stopFake();
+  if (it.src_audio && !demo) {
+    playing = it;
+    if (audio.getAttribute('src') !== it.src_audio) {
+      audio.src = it.src_audio;
+      const at = store.heardAt(it.k);
+      if (at > 30) audio.addEventListener('loadedmetadata', () => { try { audio.currentTime = at; } catch (e) { /* not seekable yet */ } }, { once: true });
+    }
+    closeVideo();
+    silenceForeign();
+    showDock(it);
+    audio.play().catch(() => {});
+    paintPlayButtons();
+    return;
+  }
+  /* demo, or an item with nothing playable behind it */
+  if (!demo) { toast('Nothing to play here yet.'); return; }
+  audio.pause();
+  playing = it; fakePos = 0;
+  showDock(it);
+  startFake();
+  paintPlayButtons();
+  toast(it.kind === 'video' ? 'Playing in the shell’s player. Nothing autoplays.' : 'Playing. Keeps going when you change tabs.');
+}
+function startFake() {
+  clearInterval(fakeTimer);
+  fakeTimer = setInterval(() => {
+    fakePos = Math.min(100, fakePos + 0.4);
+    dock.querySelector('.p-bar i').style.width = fakePos + '%';
+    if (fakePos >= 100) stopFake();
+  }, 200);
+}
+function stopFake() { clearInterval(fakeTimer); fakeTimer = 0; }
+function togglePause() {
+  if (!playing) return;
+  if (playing.src_audio && !demo) { if (audio.paused) { silenceForeign(); audio.play().catch(() => {}); } else audio.pause(); }
+  else if (fakeTimer) stopFake(); else startFake();
+  paintPlayButtons();
+}
+export function stop() {
+  stopFake();
+  audio.pause();
+  playing = null;
+  dock.hidden = true;
+  document.body.classList.remove('has-player');
+  paintPlayButtons();
+  measure();
+}
+let lastSave = 0;
+audio.addEventListener('timeupdate', () => {
+  if (!playing || !audio.duration) return;
+  dock.querySelector('.p-bar i').style.width = (audio.currentTime / audio.duration * 100) + '%';
+  if (Date.now() - lastSave > 5000) { lastSave = Date.now(); store.setHeardAt(playing.k, audio.currentTime); }
+});
+['play', 'pause', 'ended'].forEach((ev) => audio.addEventListener(ev, paintPlayButtons));
+$('p-toggle').addEventListener('click', togglePause);
+$('p-close').addEventListener('click', stop);
+$('p-bar').addEventListener('click', (e) => {
+  if (!playing || !playing.src_audio || !audio.duration) return;
+  const r = e.currentTarget.getBoundingClientRect();
+  audio.currentTime = Math.max(0, Math.min(1, (e.clientX - r.left) / r.width)) * audio.duration;
+});
+
+/* ------------------------------------------------------------------ video */
+/* The one video box. A tap opens it; YouTube's own player inside it starts on
+   that tap, never on its own. */
+const YT_RE = /^[A-Za-z0-9_-]{11}$/;
+export const isVideoId = (id) => YT_RE.test(String(id || ''));
+let hintTimer = 0;
+export function showVideo(id, title) {
+  if (!YT_RE.test(id)) return;
+  $('vbox-title').textContent = title || '';
+  const frame = $('vbox-frame');
+  frame.innerHTML = '';
+  const f = document.createElement('iframe');
+  f.src = 'https://www.youtube-nocookie.com/embed/' + id + '?autoplay=1&rel=0&playsinline=1';
+  f.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
+  f.setAttribute('allowfullscreen', '');
+  f.title = title || 'Video';
+  frame.appendChild(f);
+  $('vbox-open').href = 'https://www.youtube.com/watch?v=' + id;
+  $('vbox-open').textContent = 'Open in YouTube ↗';
+  $('vbox-hint').hidden = true;
+  $('vbox').hidden = false;
+  audio.pause();
+  stopFake();
+  silenceForeign();
+  paintPlayButtons();
+  clearTimeout(hintTimer);
+  hintTimer = setTimeout(() => { if (!$('vbox').hidden) $('vbox-hint').hidden = false; }, 3000);
+}
+/* The same box for a video that is a file, not a YouTube id: a reel from
+   Instagram, a clip from a kitchen. A <video> with controls, started by the
+   tap that opened it (never before), 9:16 when `vertical`. The Open link
+   names where the original lives. Demo items have no file; the box shows
+   the poster and says so. */
+const OPEN_ON = [[/(^|\.)instagram\.com$/, 'Open on Instagram'], [/(^|\.)(youtube\.com|youtu\.be)$/, 'Open in YouTube'],
+  [/(^|\.)facebook\.com$/, 'Open on Facebook'], [/(^|\.)tiktok\.com$/, 'Open on TikTok'], [/(^|\.)vimeo\.com$/, 'Open on Vimeo']];
+function openLabel(href) {
+  let host = '';
+  try { host = new URL(href, location.href).hostname; } catch (e) { host = ''; }
+  const hit = OPEN_ON.find(([re]) => re.test(host));
+  return hit ? hit[1] : 'Open the original';
+}
+export function showClip({ src, poster, title, href, vertical } = {}) {
+  closeVideo();
+  audio.pause();
+  stopFake();
+  silenceForeign();
+  paintPlayButtons();
+  $('vbox-title').textContent = title || '';
+  const frame = $('vbox-frame');
+  frame.classList.toggle('vertical', !!vertical);
+  const ok = /^https?:\/\//.test(String(src || ''));
+  if (demo || !ok) {
+    frame.innerHTML = art(poster || 'paper');
+    toast(demo ? 'The video plays here in the real build' : 'This video can’t play here. Open the original.');
+  } else {
+    const v = document.createElement('video');
+    v.src = src;
+    if (/^https?:\/\//.test(String(poster || ''))) v.poster = poster;
+    v.controls = true;
+    v.playsInline = true;
+    v.setAttribute('playsinline', '');
+    v.preload = 'none';
+    frame.appendChild(v);
+    v.play().catch(() => {});
+  }
+  const open = $('vbox-open');
+  open.href = safeHref(href || src);
+  open.textContent = openLabel(href || src) + ' ↗';
+  $('vbox-hint').hidden = true;
+  $('vbox').hidden = false;
+}
+/* Closing gives the box back as YouTube expects it: 16:9, its own label. */
+export function closeVideo() {
+  clearTimeout(hintTimer);
+  const frame = $('vbox-frame');
+  frame.querySelectorAll('video').forEach((v) => { try { v.pause(); } catch (e) { /* gone */ } v.removeAttribute('src'); });
+  frame.innerHTML = '';
+  frame.classList.remove('vertical');
+  $('vbox-open').textContent = 'Open in YouTube ↗';
+  $('vbox').hidden = true;
+}
+$('vbox-close').addEventListener('click', closeVideo);
+$('vbox').addEventListener('click', (e) => { if (e.target === $('vbox')) closeVideo(); });
+
+/* ------------------------------------------------------------------ theme */
+function paintThemeBtn() {
+  const dark = root.getAttribute('data-theme') === 'dark' ||
+    (!root.hasAttribute('data-theme') && matchMedia('(prefers-color-scheme: dark)').matches);
+  const b = $('theme-btn');
+  b.innerHTML = dark ? ICON.sun : ICON.moon;
+  b.setAttribute('aria-label', dark ? 'Switch to light mode' : 'Switch to dark mode');
+  root.style.background = '';
+}
+function paintSavedBtn() { $('saved-btn').classList.toggle('on', store.saved().length > 0); }
+
+/* ------------------------------------------------------------------ chrome */
+const mast = $('mast');
+export function measure() {
+  root.style.setProperty('--mast-total', mast.offsetHeight + 'px');
+  root.style.setProperty('--player-h', dock.hidden ? '0px' : (dock.offsetHeight + 8) + 'px');
+}
+function showChrome() { document.body.classList.remove('chrome-away'); }
+export function scrollTop(smooth) {
+  const p = panels[active];
+  if (p) p.scrollTo({ top: 0, behavior: smooth ? 'smooth' : 'auto' });
+  showChrome();
+}
+/* scroll a panel so a node lands just under the mast */
+export function jumpTo(node) {
+  const p = panels[active];
+  if (!p || !node) return;
+  const top = node.getBoundingClientRect().top - p.getBoundingClientRect().top + p.scrollTop - mast.offsetHeight - 4;
+  p.scrollTo({ top: Math.max(0, top), behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+}
+
+/* the slot under the mast: a tab hands back nothing, one row, or two */
+export function paintSubnav() {
+  const s = $('subnav');
+  s.innerHTML = '';
+  const mod = registry[active];
+  const n = mod && mod.subnav ? mod.subnav() : null;
+  if (n) s.appendChild(n);
+  measure();
+}
+
+function watchScroll(p) {
+  let last = 0, tick = 0;
+  p.addEventListener('scroll', () => {
+    if (tick) return;
+    tick = requestAnimationFrame(() => {
+      tick = 0;
+      const y = p.scrollTop;
+      if (y < 40 || y < last - 8) showChrome();
+      else if (y > last + 8 && y > 120 && !peekEl) document.body.classList.add('chrome-away');
+      last = y;
+    });
+  }, { passive: true });
+  bindPull(p);
+}
+
+/* pull down at the top to check for new */
+function bindPull(p) {
+  let y0 = null, pulling = false;
+  const ptr = p.querySelector('.ptr');
+  p.addEventListener('touchstart', (e) => { y0 = p.scrollTop <= 0 ? e.touches[0].clientY : null; pulling = false; }, { passive: true });
+  p.addEventListener('touchmove', (e) => {
+    if (y0 == null) return;
+    const dy = e.touches[0].clientY - y0;
+    if (dy <= 0) { if (pulling) { ptr.style.height = '0px'; pulling = false; } return; }
+    pulling = true;
+    const h = Math.min(88, dy * 0.5);
+    ptr.classList.add('pulling');
+    ptr.style.height = h + 'px';
+    ptr.firstElementChild.textContent = h >= 64 ? 'Release to check' : 'Pull to check for new';
+  }, { passive: true });
+  p.addEventListener('touchend', () => {
+    if (!pulling) { y0 = null; return; }
+    ptr.classList.remove('pulling');
+    const h = parseFloat(ptr.style.height) || 0;
+    if (h >= 64) checkNew(); else ptr.style.height = '0px';
+    y0 = null; pulling = false;
+  });
+}
+let checking = false;
+function checkNew() {
+  const mod = registry[active];
+  const p = panels[active];
+  if (checking || !mod || !p) return;
+  const ptr = p.querySelector('.ptr');
+  checking = true;
+  ptr.innerHTML = '<span class="spin"></span><span>Checking</span>';
+  ptr.style.height = '56px';
+  Promise.resolve(mod.pull ? mod.pull() : null).then((msg) => {
+    checking = false;
+    if (msg) { toast(msg); ptr.style.height = '0px'; ptr.innerHTML = '<span>Pull to check for new</span>'; return; }
+    ptr.innerHTML = '<span>Nothing new</span>';
+    setTimeout(() => { ptr.style.height = '0px'; ptr.innerHTML = '<span>Pull to check for new</span>'; }, 700);
+  });
+}
+
+/* ------------------------------------------------------------ tab dots */
+/* A dot on a tab you are not on, when it has something newer than your last
+   visit. The tab reports the number; landing on the tab clears the dot. */
+export function recount() {
+  const base = store.visitBase();
+  $('tabbar').querySelectorAll('button[data-tab]').forEach((b) => {
+    const t = b.dataset.tab;
+    const mod = registry[t];
+    let n = 0;
+    if (mod && t !== active && !landed.has(t)) { try { n = Number(mod.newSince(base)) || 0; } catch (e) { n = 0; } }
+    const dot = b.querySelector('.nd');
+    if (n > 0 && !dot) { const d = el('i', 'nd'); d.setAttribute('aria-label', 'New'); b.appendChild(d); }
+    else if (n <= 0 && dot) dot.remove();
+  });
+}
+
+/* --------------------------------------------------------------- refresh */
+/* Redraw the tab on screen because something it reads changed (a mute, the
+   Local switch). Tabs you cannot see are marked and redraw on the way in,
+   which keeps their scroll position until then. */
+export function refresh() { registry[active]?.refresh?.(); }
+function refreshAll() {
+  Object.keys(mounted).forEach((t) => { if (t !== active) stale[t] = true; });
+  refresh();
+}
+window.addEventListener('allday-geo', () => {
+  Object.keys(mounted).forEach((t) => { if (t !== active) stale[t] = true; });
+});
+
+/* ----------------------------------------------------------------- routing */
+/* Links from before the New Nine, each to the nearest new tab. The old
+   Listen tab and Btown TV videos shared as #watch/yt:<id> live in On Air and
+   keep their key. An old Reddit card's key is its URL, the key the Wire's
+   Unfiltered view still answers to; a bare #reddit opens the Wire's Reddit
+   chip. Instagram goes to the Wire, Music to What Now's Tonight (the Vermont
+   artists and their gigs), Wander to What Now, Photos to Art; their old keys
+   mean nothing there, so they are dropped. The address bar is rewritten so
+   the next share carries the new link. */
+function legacy(h) {
+  if (h === 'listen' || h.startsWith('listen/')) return 'onair' + h.slice(6);
+  if (/^watch\/yt:/.test(h)) return 'onair/' + h.slice(6);
+  if (h === 'reddit' || h === 'reddit/') return 'wire/reddit';
+  if (h.startsWith('reddit/')) return 'wire/' + h.slice(7);
+  const m = h.match(/^(ig|music|wander|photos)(\/|$)/);
+  if (!m) return null;
+  return { ig: 'wire', music: 'whatnow/tonight', wander: 'whatnow', photos: 'art' }[m[1]];
+}
+
+function parseHash() {
+  let h = location.hash.replace(/^#/, '');
+  const moved = legacy(h);
+  if (moved) { history.replaceState(null, '', location.pathname + location.search + '#' + moved); h = moved; }
+  const m = h.match(/^([a-z]+)\/(.*)$/);
+  if (m && TABS.includes(m[1]) && registry[m[1]]) {
+    /* a shared link can carry broken percent-encoding, and an uncaught
+       URIError here would take the whole router down. #food/ is #food. */
+    let param;
+    try { param = decodeURIComponent(m[2]); } catch (e) { param = m[2]; }
+    return { tab: m[1], param: param || null };
+  }
+  return { tab: TABS.includes(h) && registry[h] ? h : 'wire', param: null };
+}
+
+function paintTabs() {
+  $('tabbar').querySelectorAll('button[data-tab]').forEach((b) => {
+    const on = b.dataset.tab === active;
     b.classList.toggle('on', on);
     b.setAttribute('aria-selected', on ? 'true' : 'false');
+    b.tabIndex = on ? 0 : -1;
   });
+}
 
-  if (active !== tab) {
-    panel.scrollTop = scrollMemory[tab] || 0;
-    document.body.classList.remove('chrome-away');
-    paintReadbar(panel);
+export function route() {
+  const { tab, param } = parseHash();
+  const mod = registry[tab];
+  if (!mod) return;
+  /* a new address is a new place: a sheet left open (Settings, a mission,
+     a film) closes, as the peek already did; a tab that wants one for its
+     deep link opens it again in activate() below */
+  if (sheetClose) sheetClose();
+  const prev = active;
+  if (prev && prev !== tab) {
+    scrollMemory[prev] = panels[prev].scrollTop;
+    panels[prev].hidden = true;
+    try { registry[prev]?.deactivate?.(); } catch (e) { console.error('[all-day] ' + prev + ' deactivate threw', e); }
   }
-  const switched = active !== tab;
+  const switched = prev !== tab;
   active = tab;
-  registry[tab]?.activate?.(param, first);
+  landed.add(tab);
+  panels[tab].hidden = false;
+  const first = !mounted[tab];
+  try {
+    if (first) { mounted[tab] = true; mod.mount(bodies[tab]); }
+    else if (stale[tab]) { delete stale[tab]; mod.refresh(); }
+  } catch (e) { console.error('[all-day] ' + tab + ' mount threw', e); }
+  paintTabs();
+  paintSubnav();
+  $('mast-title').textContent = mod.label;
+  document.title = (tab === 'wire' ? 'All Day' : mod.label + ' · All Day') + ' — Burlington Brief';
+  if (switched) panels[tab].scrollTop = scrollMemory[tab] || 0;
+  showChrome();
+  closePeek();
+  try { mod.activate(param, first); } catch (e) { console.error('[all-day] ' + tab + ' activate threw', e); }
   store.touchVisit();
+  recount();
 
   /* Which feeds people actually live in. GoatCounter events, one per tab
      LANDING (first paint or a real switch, never a same-tab re-route), so
@@ -135,930 +974,95 @@ function route() {
   }
 }
 
-const scrollMemory = Object.create(null);
-export const activeTab = () => active;
-
-/* Redraw the tab on screen because something it reads has changed — a source
-   muted from Settings, Focus switched on. route() cannot do this: it only
-   calls activate(), which for most tabs is deliberately empty so that a plain
-   tab switch does not throw away scroll position and re-render. */
-export function refresh() { registry[active]?.refresh?.(); }
-
-/* A tab that mounted earlier does not re-render when you come back to it —
-   that is deliberate, it keeps your scroll position. But the Local switch is
-   one shared mode across all five tabs, so flipping it has to reach the four
-   you cannot see. Mark them; route() redraws on the way in. */
-const stale = Object.create(null);
-
-export function setLocal(on) {
-  store.setSetting('localOnly', !!on);
-  Object.keys(mounted).forEach((t) => { if (t !== active) stale[t] = true; });
-  refresh();
-}
-
-/* ----------------------------------------------------------------- chrome */
-
-const mast = $('mast');
-
-function measureChrome() {
-  const root = document.documentElement;
-  root.style.setProperty('--mast-h', mast.offsetHeight + 'px');
-  /* nav.js is deferred and prepends its bar to body — it can arrive after
-     first paint and wraps to two lines on a narrow phone, so measure it
-     rather than assume. It stays 0 if the bar never loads. */
-  const nav = document.querySelector('.btnav');
-  root.style.setProperty('--nav-h', (nav ? nav.offsetHeight : 0) + 'px');
-  /* The bar arriving changes what sits behind the iOS clock, which changes
-     the colour that keeps the clock readable. */
-  store.paintStatusBar();
-}
-
-function paintReadbar(panel) {
-  const max = panel.scrollHeight - panel.clientHeight;
-  const pct = max > 40 ? Math.min(100, (panel.scrollTop / max) * 100) : 0;
-  $('readbar').firstElementChild.style.width = pct + '%';
-}
-
-/* --------------------------------------------------------------- toasting */
-
-let toastTimer = 0;
-export function toast(msg, undo) {
-  const t = $('toast');
-  t.innerHTML = '';
-  t.appendChild(document.createTextNode(msg));
-  if (undo) {
-    const b = el('button', 'btn btn-quiet', 'Undo');
-    b.style.cssText = 'margin-left:12px;padding:5px 12px;min-height:0;font-size:.82rem';
-    b.addEventListener('click', () => { t.hidden = true; undo(); });
-    t.appendChild(b);
-  }
-  t.hidden = false;
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => { t.hidden = true; }, undo ? 6000 : 2600);
-}
-
-export function confirmBox({ title, body, yes, danger, onYes }) {
-  const box = $('confirm');
-  box.innerHTML = '';
-  const card = el('div', 'confirm-card');
-  card.appendChild(el('h3', null, esc(title)));
-  card.appendChild(el('p', null, esc(body)));
-  const btns = el('div', 'confirm-btns');
-  const no = el('button', 'btn btn-quiet', 'Cancel');
-  const ok = el('button', 'btn', esc(yes || 'OK'));
-  if (danger) ok.style.cssText = 'background:color-mix(in srgb,var(--warn) 16%,transparent);color:var(--warn)';
-  btns.append(no, ok);
-  card.appendChild(btns);
-  box.appendChild(card);
-  box.hidden = false;
-  const close = () => { box.hidden = true; };
-  no.addEventListener('click', close);
-  /* a property, not addEventListener — the box is persistent and every
-     confirm would otherwise stack one more listener on it forever */
-  box.onclick = (e) => { if (e.target === box) close(); };
-  ok.addEventListener('click', () => { close(); onYes(); });
-  ok.focus();
-}
-
-/* ------------------------------------------------------------------- peek */
-/* Hold any row and read it right there. This is the gesture worth keeping —
-   it is faster than opening the article and coming back, and it means the
-   feed is browsable without ever leaving. */
-
-let peekEl = null;
-
-export function closePeek() {
-  if (!peekEl) return;
-  peekEl.remove();
-  peekEl = null;
-  document.removeEventListener('pointerdown', onOutside, true);
-}
-
-function onOutside(e) {
-  if (peekEl && !peekEl.contains(e.target)) closePeek();
-}
-
-export function peek({ title, from, art, body, href, loading, actions }) {
-  closePeek();
-  const box = el('div', 'peek');
-  const head = el('div', 'peek-head');
-  head.appendChild(el('div', 't', esc(title)));
-  const x = el('button', 'iconbtn', ICON.x);
-  x.setAttribute('aria-label', 'Close');
-  x.addEventListener('click', closePeek);
-  head.appendChild(x);
-
-  const content = el('div', 'peek-body');
-  if (loading) content.appendChild(el('p', 'loading', 'Loading…'));
-  else {
-    if (art) {
-      const img = el('img');
-      img.src = art;
-      img.alt = '';
-      img.loading = 'lazy';
-      content.appendChild(img);
-    }
-    if (from) content.appendChild(el('p', 'eyebrow', esc(from)));
-    content.appendChild(el('p', null, esc(body || '')));
-  }
-
-  const foot = el('div', 'peek-foot');
-  (actions || []).forEach((a) => foot.appendChild(a));
-  if (href) {
-    const open = el('a', 'btn', 'Read it ' + ICON.ext);
-    open.href = safeHref(href);
-    open.target = '_blank';
-    open.rel = 'noopener';
-    open.addEventListener('click', closePeek);
-    foot.appendChild(open);
-  }
-
-  box.append(head, content, foot);
-  document.body.appendChild(box);
-  peekEl = box;
-  setTimeout(() => document.addEventListener('pointerdown', onOutside, true), 0);
-  return { box, content };
-}
-
-/* ------------------------------------------------------------------ sheet */
-
-/* The one open sheet's close(), so Escape and a sheet-over-sheet both run the
-   real teardown. Hiding the container instead of closing it strands
-   body.sheet-open (which hides the tab bar) and skips the caller's onClose. */
-let sheetClose = null;
-
-export function sheet(title, build, onClose) {
-  if (sheetClose) sheetClose();
-  const s = $('sheet');
-  s.innerHTML = '';
-  const scrim = el('div', 'sheet-scrim');
-  const card = el('div', 'sheet-card');
-  card.setAttribute('role', 'dialog');
-  card.setAttribute('aria-label', title);
-  const head = el('div', 'sheet-head');
-  head.appendChild(el('h2', null, esc(title)));
-  const x = el('button', 'iconbtn', ICON.x);
-  x.setAttribute('aria-label', 'Close');
-  head.appendChild(x);
-  const body = el('div', 'sheet-body');
-  card.append(head, body);
-  s.append(scrim, card);
-  s.hidden = false;
-  document.body.classList.add('sheet-open');
-  /* Emptying it is not tidiness. A sheet can hold a cross-origin iframe — the
-     Bandcamp player on an artist — and hiding its container does not stop the
-     music. Only removing the node does. Closing a sheet therefore destroys
-     what was in it, and any teardown the caller registered runs first. */
-  let closed = false;
-  const close = () => {
-    if (closed) return;
-    closed = true;
-    if (sheetClose === close) sheetClose = null;
-    s.hidden = true;
-    document.body.classList.remove('sheet-open');
-    /* empty BEFORE onClose: an onClose that opens another sheet would
-       otherwise build into `s` and be wiped when this close resumed */
-    s.innerHTML = '';
-    if (onClose) { try { onClose(); } catch (e) { /* never block the close */ } }
-  };
-  sheetClose = close;
-  x.addEventListener('click', close);
-  scrim.addEventListener('click', close);
-  build(body, close);
-  return { body, close };
-}
-
-/* --------------------------------------------------------------- lightbox */
-/* Full screen, one picture per screen, swipe between them. Items are
-   { src, alt, caption, meta, href, hrefLabel, gone }. A scroll-snap track
-   carries the swipe — the browser's flick physics, not ours — and the arrows
-   and arrow keys just scroll it by one screen. Slides fill in around the one
-   on screen, so opening a 400-post wall fetches five pictures, not 400. */
-const LB_ARROW_L = '<svg viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg>';
-const LB_ARROW_R = '<svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg>';
-let lbClose = null;
-
-export function lightbox(items, start = 0) {
-  if (!Array.isArray(items) || !items.length) return null;
-  if (lbClose) lbClose();
-  const box = $('lb');
-  box.innerHTML = '';
-  box.classList.remove('is-bare');
-  const track = el('div', 'lb-track');
-  const slides = items.map(() => { const sl = el('div', 'lb-slide'); track.appendChild(sl); return sl; });
-  const top = el('div', 'lb-top');
-  const count = el('span', 'lb-count');
-  const x = el('button', 'iconbtn', ICON.x);
-  x.setAttribute('aria-label', 'Close full screen');
-  top.append(count, x);
-  const cap = el('div', 'lb-cap');
-  const prev = el('button', 'lb-arrow lb-prev', LB_ARROW_L);
-  prev.setAttribute('aria-label', 'Previous picture');
-  const next = el('button', 'lb-arrow lb-next', LB_ARROW_R);
-  next.setAttribute('aria-label', 'Next picture');
-  box.append(track, top, cap, prev, next);
-  box.setAttribute('role', 'dialog');
-  box.setAttribute('aria-label', 'Full screen pictures');
-  box.hidden = false;
-  document.body.classList.add('lb-open');
-
-  let cur = -1;
-  const fill = (i) => {
-    const sl = slides[i];
-    if (!sl || sl.dataset.done) return;
-    sl.dataset.done = '1';
-    const it = items[i];
-    const img = el('img', 'lb-img');
-    img.alt = it.alt || '';
-    img.referrerPolicy = 'no-referrer';
-    img.decoding = 'async';
-    /* an expired Instagram signature, a pulled photo — say so in the slot
-       rather than leave a black screen that looks like a stuck load */
-    img.addEventListener('error', () => {
-      sl.classList.add('is-gone');
-      sl.textContent = it.gone || 'This picture is no longer available.';
-    });
-    img.src = it.src;
-    sl.appendChild(img);
-  };
-  const show = (i) => {
-    i = Math.max(0, Math.min(items.length - 1, i));
-    if (i === cur) return;
-    cur = i;
-    for (let k = i - 2; k <= i + 2; k++) fill(k);
-    count.textContent = (i + 1) + ' / ' + items.length;
-    const it = items[i];
-    cap.innerHTML = '';
-    if (it.caption) cap.appendChild(el('p', 'lb-cap-t', esc(it.caption)));
-    if (it.meta) cap.appendChild(el('p', 'lb-cap-m', esc(it.meta)));
-    if (it.href) {
-      const a = el('a', 'btn', esc(it.hrefLabel || 'Open'));
-      a.href = safeHref(it.href);
-      a.target = '_blank';
-      a.rel = 'noopener';
-      cap.appendChild(a);
-    }
-    prev.disabled = i === 0;
-    next.disabled = i === items.length - 1;
-  };
-  const jump = (i, smooth) => {
-    i = Math.max(0, Math.min(items.length - 1, i));
-    track.scrollTo({ left: track.clientWidth * i, behavior: smooth ? 'smooth' : 'auto' });
-  };
-  let tick = 0;
-  track.addEventListener('scroll', () => {
-    if (tick) return;
-    tick = requestAnimationFrame(() => {
-      tick = 0;
-      if (track.clientWidth) show(Math.round(track.scrollLeft / track.clientWidth));
-    });
-  }, { passive: true });
-  prev.addEventListener('click', () => jump(cur - 1, true));
-  next.addEventListener('click', () => jump(cur + 1, true));
-  /* tap the picture and the words step aside; tap again and they return */
-  track.addEventListener('click', (e) => {
-    if (e.target.closest('.lb-slide')) box.classList.toggle('is-bare');
-  });
-  const onKey = (e) => {
-    if (e.key === 'ArrowLeft') { jump(cur - 1, true); e.preventDefault(); }
-    else if (e.key === 'ArrowRight') { jump(cur + 1, true); e.preventDefault(); }
-  };
-  document.addEventListener('keydown', onKey);
-  /* a rotation changes the slide width; keep the same picture on screen */
-  const onResize = () => jump(cur, false);
-  window.addEventListener('resize', onResize);
-
-  const close = () => {
-    if (lbClose !== close) return;
-    lbClose = null;
-    document.removeEventListener('keydown', onKey);
-    window.removeEventListener('resize', onResize);
-    if (tick) { cancelAnimationFrame(tick); tick = 0; }
-    box.hidden = true;
-    box.innerHTML = '';
-    document.body.classList.remove('lb-open');
-  };
-  lbClose = close;
-  x.addEventListener('click', close);
-  show(start);
-  jump(start, false);
-  return close;
-}
-
-/* ----------------------------------------------------------------- player */
-/* ONE <audio>. It is in the shell, not in a tab, so it keeps playing across
-   every tab switch — which is the entire point of a listen tab in an app you
-   are also reading.
-
-   It is also the only sound in this app we actually control. A Bandcamp embed
-   and a YouTube embed are cross-origin iframes: they cannot be asked what they
-   are doing and they cannot be told to pause. So the rule is one-way and
-   absolute — anything that can make a noise registers a stop function here,
-   and when this player starts, all of them are torn down. Two players running
-   at once is the one thing a music app may never do. */
-
-const audio = $('audio');
-const player = $('player');
-let currentKey = null;
-let currentItem = null;
-let lastSave = 0;
-let pendingSeek = 0;
-
-const foreign = new Set();
-export function registerForeign(stop) {
-  foreign.add(stop);
-  return () => foreign.delete(stop);
-}
-export function silenceForeign() {
-  foreign.forEach((stop) => { try { stop(); } catch (e) { /* already gone */ } });
-}
-
-const RATE_KEY = 'allday-rate';
-const RATES = [1, 1.25, 1.5, 1.75, 2];
-const rate = () => {
-  const r = Number(store.read(RATE_KEY, 1));
-  return RATES.indexOf(r) === -1 ? 1 : r;
-};
-
-const two = (n) => (n < 10 ? '0' : '') + n;
-function clock(sec) {
-  if (!isFinite(sec) || sec < 0) return '0:00';
-  const s = Math.floor(sec % 60);
-  const m = Math.floor(sec / 60) % 60;
-  const h = Math.floor(sec / 3600);
-  return h ? h + ':' + two(m) + ':' + two(s) : m + ':' + two(s);
-}
-
-/* Every play button anywhere in the app carries data-pk="<key>" and the shell
-   paints it. A tab gets the playing state for free, and — the part that was
-   actually broken — a button pressed inside a sheet becomes a pause the
-   instant the audio starts, whether or not the dock is visible behind it. */
-export function paintPlayButtons() {
-  const live = currentKey && !audio.paused;
-  document.querySelectorAll('[data-pk]').forEach((b) => {
-    const on = !!live && b.dataset.pk === currentKey;
-    if (b.classList.contains('is-playing') === on) return;
-    b.classList.toggle('is-playing', on);
-    b.innerHTML = on ? ICON.pause : ICON.play;
-  });
-}
-
-function paintMeta() {
-  const it = currentItem || {};
-  $('p-title').textContent = it.title || '';
-  $('p-show').textContent = it.show || '';
-  const img = $('p-art');
-  if (it.art) { img.src = it.art; img.hidden = false; } else { img.removeAttribute('src'); img.hidden = true; }
-}
-
-export function playAudio(item) {
-  const { src, title, show, art, key, href } = item || {};
-  if (!src) return;
-  const k = key || src;
-  if (audio.getAttribute('src') !== src) {
-    audio.src = src;
-    const at = store.heardAt(k);
-    /* Safari throws on currentTime before the media is seekable, so set it
-       now if it takes and again on loadedmetadata if it did not */
-    pendingSeek = at > 30 ? at : 0;
-    if (pendingSeek) { try { audio.currentTime = pendingSeek; } catch (e) { /* retried below */ } }
-  }
-  currentKey = k;
-  currentItem = { src, title: title || '', show: show || '', art: art || '', key: k, href: href || '' };
-  audio.playbackRate = rate();
-  paintMeta();
-  player.hidden = false;
-  document.body.classList.add('has-player');
-  silenceForeign();
-  closeVideo();
-  audio.play().catch(() => {});
-  paintPlayButtons();
-  paintNowPlaying();
-  setMediaSession();
-}
-
-/* What a play button actually wants: press it on the thing already playing
-   and it pauses, press it again and it picks up where it stopped. Calling
-   playAudio twice used to just re-issue play() on a running element. */
-export function toggleAudio(item) {
-  const k = (item && (item.key || item.src)) || '';
-  if (k && k === currentKey && audio.getAttribute('src')) {
-    if (audio.paused) { silenceForeign(); audio.play().catch(() => {}); } else { audio.pause(); }
-    paintPlayButtons();
-    return;
-  }
-  playAudio(item);
-}
-
-export const nowPlaying = () => currentKey;
-export const isPlaying = () => !!currentKey && !audio.paused;
-/* for a foreign player that has just started and cannot be listened to */
-export function pauseAudio() { if (!audio.paused) audio.pause(); }
-
-function setMediaSession() {
-  if (!('mediaSession' in navigator) || !window.MediaMetadata) return;
-  const it = currentItem || {};
-  try {
-    navigator.mediaSession.metadata = new MediaMetadata({
-      title: it.title || '', artist: it.show || '', album: 'All Day',
-      artwork: it.art ? [{ src: it.art, sizes: '512x512' }] : [],
-    });
-    navigator.mediaSession.setActionHandler('play', () => audio.play());
-    navigator.mediaSession.setActionHandler('pause', () => audio.pause());
-    navigator.mediaSession.setActionHandler('seekbackward', () => back(15));
-    navigator.mediaSession.setActionHandler('seekforward', () => fwd(30));
-    /* the lock screen draws its own scrubber, but only if it is told where in
-       the track we are — without this it shows a dead bar on an hour-long set */
-    navigator.mediaSession.setActionHandler('seekto', (d) => {
-      if (d && d.seekTime != null) { try { audio.currentTime = d.seekTime; } catch (e) { /* ignore */ } }
-    });
-  } catch (e) { /* handler support varies */ }
-}
-
-function setPositionState() {
-  if (!('mediaSession' in navigator) || !navigator.mediaSession.setPositionState) return;
-  if (!audio.duration || !isFinite(audio.duration)) return;
-  try {
-    navigator.mediaSession.setPositionState({
-      duration: audio.duration,
-      playbackRate: audio.playbackRate || 1,
-      position: Math.min(audio.currentTime, audio.duration),
-    });
-  } catch (e) { /* Safari throws on a rate it does not like */ }
-}
-
-const back = (n) => { audio.currentTime = Math.max(0, audio.currentTime - n); };
-const fwd = (n) => {
-  const d = isFinite(audio.duration) ? audio.duration : Infinity;
-  audio.currentTime = Math.min(d, audio.currentTime + n);
-};
-
-audio.addEventListener('loadedmetadata', () => {
-  if (pendingSeek && Math.abs(audio.currentTime - pendingSeek) > 2) {
-    try { audio.currentTime = pendingSeek; } catch (e) { /* give up quietly */ }
-  }
-  pendingSeek = 0;
-  paintProgress();
-  setPositionState();
-});
-
-function paintProgress() {
-  const pct = audio.duration ? (audio.currentTime / audio.duration) * 100 : 0;
-  $('p-bar').firstElementChild.style.width = pct + '%';
-  $('p-time').textContent = audio.duration
-    ? clock(audio.currentTime) + ' / ' + clock(audio.duration)
-    : clock(audio.currentTime);
-  paintNowPlaying();
-}
-
-audio.addEventListener('timeupdate', () => {
-  const now = Date.now();
-  if (currentKey && now - lastSave >= 5000) {
-    lastSave = now;
-    store.setHeardAt(currentKey, audio.currentTime);
-    setPositionState();
-  }
-  paintProgress();
-});
-audio.addEventListener('ended', () => { if (currentKey) store.setHeardAt(currentKey, 0); });
-audio.addEventListener('error', () => { if (audio.getAttribute('src')) toast('That episode would not load'); });
-
-function paintPlayIcon() {
-  $('p-toggle').innerHTML = audio.paused ? ICON.play : ICON.pause;
-  paintPlayButtons();
-  paintNowPlaying();
-}
-audio.addEventListener('play', () => { silenceForeign(); paintPlayIcon(); });
-audio.addEventListener('pause', paintPlayIcon);
-audio.addEventListener('ratechange', setPositionState);
-
-$('p-toggle').addEventListener('click', () => {
-  if (audio.paused) { silenceForeign(); audio.play().catch(() => {}); } else { audio.pause(); }
-});
-$('p-back').addEventListener('click', () => back(15));
-$('p-fwd').addEventListener('click', () => fwd(30));
-function closePlayer() {
-  audio.pause();
-  audio.removeAttribute('src');
-  audio.load();
-  currentKey = null;
-  currentItem = null;
-  player.hidden = true;
-  document.body.classList.remove('has-player');
-  paintPlayButtons();
-}
-$('p-close').addEventListener('click', closePlayer);
-
-/* ------------------------------------------------------------------ scrub */
-/* The bar was two pixels of decoration. It is a control now: the strip across
-   the top of the player is 14px of hit area drawing a 3px line, and it takes
-   a drag, a tap and the arrow keys. An hour-long session is unusable without
-   it — which is what "there is no way to skip forward" actually meant. */
-
-function bindScrub(bar) {
-  let scrubbing = false;
-  const seek = (e) => {
-    if (!audio.duration || !isFinite(audio.duration)) return;
-    const r = bar.getBoundingClientRect();
-    const p = Math.min(1, Math.max(0, (e.clientX - r.left) / Math.max(1, r.width)));
-    audio.currentTime = p * audio.duration;
-    paintProgress();
-  };
-  bar.addEventListener('pointerdown', (e) => {
-    if (!audio.duration) return;
-    scrubbing = true;
-    bar.classList.add('scrubbing');
-    try { bar.setPointerCapture(e.pointerId); } catch (err) { /* older Safari */ }
-    seek(e);
-    e.preventDefault();
-    e.stopPropagation();
-  });
-  bar.addEventListener('pointermove', (e) => { if (scrubbing) seek(e); });
-  const stop = (e) => {
-    if (!scrubbing) return;
-    scrubbing = false;
-    bar.classList.remove('scrubbing');
-    try { bar.releasePointerCapture(e.pointerId); } catch (err) { /* ignore */ }
-  };
-  bar.addEventListener('pointerup', stop);
-  bar.addEventListener('pointercancel', stop);
-  bar.addEventListener('keydown', (e) => {
-    if (e.key === 'ArrowRight') { fwd(e.shiftKey ? 60 : 15); e.preventDefault(); }
-    else if (e.key === 'ArrowLeft') { back(e.shiftKey ? 60 : 15); e.preventDefault(); }
-    else if (e.key === ' ' || e.key === 'Enter') {
-      if (audio.paused) audio.play().catch(() => {}); else audio.pause();
-      e.preventDefault();
-    }
-  });
-}
-bindScrub($('p-bar'));
-
-/* ------------------------------------------------------------ now playing */
-/* The dock row is a handle, not the player. Tapping it opens the thing you
-   actually want on an hour-long recording: a bar wide enough to aim at, a
-   readable clock, and a speed control. */
-
-let npBody = null;
-
-function npRow(label, onClick, cls) {
-  const b = el('button', cls || 'np-btn', label);
-  b.addEventListener('click', onClick);
-  return b;
-}
-
-export function openNowPlaying() {
-  if (!currentItem) return;
-  sheet('Now playing', (body, close) => {
-    npBody = body;
-    const it = currentItem;
-    const head = el('div', 'np-head');
-    if (it.art) {
-      const img = el('img', 'np-art');
-      img.src = it.art; img.alt = ''; img.referrerPolicy = 'no-referrer';
-      head.appendChild(img);
-    }
-    const meta = el('div', 'np-meta');
-    meta.appendChild(el('h3', 'np-title', esc(it.title)));
-    if (it.show) meta.appendChild(el('p', 'np-show', esc(it.show)));
-    head.appendChild(meta);
-    body.appendChild(head);
-
-    const bar = el('div', 'np-bar');
-    bar.id = 'np-bar';
-    bar.setAttribute('role', 'slider');
-    bar.setAttribute('aria-label', 'Seek');
-    bar.tabIndex = 0;
-    bar.appendChild(el('i'));
-    body.appendChild(bar);
-    bindScrub(bar);
-
-    const times = el('div', 'np-times');
-    times.innerHTML = '<span id="np-at"></span><span id="np-left"></span>';
-    body.appendChild(times);
-
-    const row = el('div', 'np-transport');
-    row.appendChild(npRow(ICON.back15 + '<span>15</span>', () => back(15), 'np-btn np-skip'));
-    const toggle = npRow('', () => {
-      if (audio.paused) { silenceForeign(); audio.play().catch(() => {}); } else { audio.pause(); }
-    }, 'np-btn np-big');
-    toggle.id = 'np-toggle';
-    row.appendChild(toggle);
-    const f = npRow(ICON.back15 + '<span>30</span>', () => fwd(30), 'np-btn np-skip np-flip');
-    row.appendChild(f);
-    body.appendChild(row);
-
-    const foot = el('div', 'np-foot');
-    const speed = npRow('', () => {
-      const next = RATES[(RATES.indexOf(rate()) + 1) % RATES.length];
-      store.write(RATE_KEY, next);
-      audio.playbackRate = next;
-      paintNowPlaying();
-    }, 'np-btn np-rate');
-    speed.id = 'np-rate';
-    foot.appendChild(speed);
-    if (it.href) {
-      const open = el('a', 'np-btn np-open', 'Open ' + ICON.ext);
-      open.href = safeHref(it.href);
-      open.target = '_blank';
-      open.rel = 'noopener';
-      foot.appendChild(open);
-    }
-    /* the dock drops its close button under 360px, so the way out of a
-       playing session has to exist here too */
-    const stop = npRow(ICON.x, () => { closePlayer(); close(); }, 'np-btn np-stop');
-    stop.setAttribute('aria-label', 'Close the player');
-    foot.appendChild(stop);
-    body.appendChild(foot);
-    paintNowPlaying();
-  }, () => { npBody = null; });
-}
-
-function paintNowPlaying() {
-  if (!npBody || !npBody.isConnected) { npBody = null; return; }
-  const at = npBody.querySelector('#np-at');
-  const left = npBody.querySelector('#np-left');
-  const bar = npBody.querySelector('#np-bar');
-  const toggle = npBody.querySelector('#np-toggle');
-  const speed = npBody.querySelector('#np-rate');
-  if (at) at.textContent = clock(audio.currentTime);
-  if (left) left.textContent = audio.duration ? '-' + clock(audio.duration - audio.currentTime) : '';
-  if (bar) bar.firstElementChild.style.width =
-    (audio.duration ? (audio.currentTime / audio.duration) * 100 : 0) + '%';
-  if (toggle) toggle.innerHTML = audio.paused ? ICON.play : ICON.pause;
-  if (speed) speed.textContent = rate() + '×';
-}
-
-$('p-open').addEventListener('click', openNowPlaying);
-
-/* -------------------------------------------------------------------- jar */
-/* One control, two errands, because they are the same errand: this is a page
-   built by one person, and it gets better either by being told what is
-   missing or by being paid for. Splitting those into a feedback form and a
-   donate button would put two asks on every tab; this is one.
-
-   It lives beside the Local switch because that is the one control already on
-   every tab, in the same place, above the content — the spot a reader's eye
-   has already learned. */
-
-const SB = 'https://jnouvwxomrcffqwilqkq.supabase.co';
-const SB_KEY = 'sb_publishable_RkMJQopffWlV6DSwCRkndQ_Xw6GJMf3';
-const KOFI = 'https://ko-fi.com/btownbrief';
-
-/* What the jar asks depends on where you opened it — "what should be on the
-   music tab" gets a useful answer where "any feedback?" gets silence. */
-const JAR_ASK = {
-  wire: 'An outlet I should be pulling from? A story the wire keeps missing?',
-  reddit: 'A subreddit worth watching, or one that should go?',
-  watch: 'A channel worth watching, or a video that should have been tonight’s pick?',
-  listen: 'A podcast that should be on here?',
-  music: 'A band, a venue, a night I have missed? This one especially — the roster is only as good as who tells me about it.',
-  photos: 'A spot worth shooting, or a photo you want on the wall?',
-  ig: 'An account I should be following?',
-  wander: 'Something about Burlington that belongs in here?',
-  whatnow: 'Something to do that I never suggest?',
-};
-
-function rpc(fn, args) {
-  return fetch(SB + '/rest/v1/rpc/' + fn, {
-    method: 'POST',
-    headers: { apikey: SB_KEY, 'Content-Type': 'application/json' },
-    body: JSON.stringify(args || {}),
-  }).then((r) => (r.ok ? r.text().then((t) => (t ? JSON.parse(t) : true)) : null))
-    .catch(() => null);
-}
-
-export function openJar(tab) {
-  const where = tab || active || '';
-  sheet('The jar', (body, close) => {
-    body.appendChild(el('p', 'jar-lede',
-      'Two things in one, because they are the same thing. Tell me what is ' +
-      'missing, or chip in — both make this better.'));
-
-    const form = el('form', 'jar-form');
-    form.innerHTML =
-      '<label>What should be on here?' +
-        '<textarea name="text" rows="4" maxlength="600" required placeholder="' +
-        esc(JAR_ASK[where] || 'Anything missing, wrong, or worth adding.') +
-        '"></textarea></label>' +
-      '<label class="jar-who">Your name or email, if you want an answer' +
-        '<input type="text" name="who" maxlength="120" placeholder="Optional"></label>' +
-      '<p class="jar-err" hidden></p>' +
-      '<button class="btn btn-big" type="submit">Put it in the jar</button>';
-
-    form.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const f = new FormData(form);
-      const text = (f.get('text') || '').toString().trim();
-      const err = form.querySelector('.jar-err');
-      if (text.length < 4) { err.textContent = 'A few more words than that.'; err.hidden = false; return; }
-      err.hidden = true;
-      const btn = form.querySelector('button[type=submit]');
-      btn.disabled = true;
-      btn.textContent = 'Sending…';
-      rpc('ad_suggest', {
-        p_text: text,
-        p_who: (f.get('who') || '').toString().trim(),
-        p_tab: where,
-        p_sender: store.playerId(),
-      }).then((okay) => {
-        /* ad_suggest returns false on a server-side reject (rate limit,
-           validation) and null when the call itself failed — neither is a
-           success, and closing would throw away what they typed */
-        if (!okay) {
-          btn.disabled = false;
-          btn.textContent = 'Put it in the jar';
-          err.textContent = 'That didn’t send — try again in a minute.';
-          err.hidden = false;
-          return;
-        }
-        close();
-        toast('In the jar. Thank you — I read all of them.');
-      });
-    });
-    body.appendChild(form);
-
-    /* The tip half. It says who is behind this because that is the honest
-       reason to chip in: it is not a company with a team. */
-    const tip = el('div', 'jar-tip');
-    tip.innerHTML =
-      '<p class="jar-tip-lede">All of this — the guide, the arcade, the feed, the ' +
-      'newsletter — is <b>one person</b> in Burlington. No staff, no investors, no ads. ' +
-      'A coffee genuinely keeps it going.</p>';
-    const kofi = el('a', 'btn jar-kofi', 'Chip in on Ko-fi ' + ICON.ext);
-    kofi.href = KOFI;
-    kofi.target = '_blank';
-    kofi.rel = 'noopener';
-    tip.appendChild(kofi);
-    body.appendChild(tip);
-
-    body.appendChild(el('p', 'jar-fine',
-      'No promises. Most suggestions do not make it on, and I cannot answer ' +
-      'every one. I do read every one.'));
-  });
-}
-
-/* The button itself. Modes get it from here rather than from ui.js, because
-   ui.js is imported BY this file — a jar that lived there would have to
-   import back and close the loop. */
-export function jarBtn(tab) {
-  const b = el('button', 'jarbtn', ICON.jar + '<span>Jar</span>');
-  b.setAttribute('aria-label', 'Suggestion jar and tip jar');
-  b.title = 'Suggestions and tips';
-  b.addEventListener('click', () => openJar(tab));
-  return b;
-}
-
-/* For the tabs with no Local switch to sit beside. */
-export function jarRow(host, tab) {
-  const row = el('div', 'jarrow');
-  row.appendChild(jarBtn(tab));
-  host.appendChild(row);
-  return row;
-}
-
-/* ------------------------------------------------------------------ video */
-
-const YT_RE = /^[A-Za-z0-9_-]{11}$/;
-let hintTimer = 0;
-
-export const isVideoId = (id) => YT_RE.test(String(id || ''));
-
-export function showVideo(id, title) {
-  if (!YT_RE.test(id)) return;
-  $('vbox-title').textContent = title || '';
-  const frame = $('vbox-frame');
-  frame.innerHTML = '';
-  const f = document.createElement('iframe');
-  f.src = 'https://www.youtube-nocookie.com/embed/' + id + '?autoplay=1&rel=0&playsinline=1';
-  f.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
-  f.setAttribute('allowfullscreen', '');
-  f.title = title || 'Video';
-  frame.appendChild(f);
-  $('vbox-open').href = 'https://www.youtube.com/watch?v=' + id;
-  $('vbox-hint').hidden = true;
-  $('vbox').hidden = false;
-  audio.pause();
-  silenceForeign();
-  /* embed blocking is invisible cross-origin, so the escape hatch just fades
-     in after a few seconds rather than waiting for an error that never comes */
-  clearTimeout(hintTimer);
-  hintTimer = setTimeout(() => { if (!$('vbox').hidden) $('vbox-hint').hidden = false; }, 3000);
-}
-
-export function closeVideo() {
-  clearTimeout(hintTimer);
-  $('vbox-frame').innerHTML = '';
-  $('vbox').hidden = true;
-}
-$('vbox-close').addEventListener('click', closeVideo);
-$('vbox').addEventListener('click', (e) => { if (e.target === $('vbox')) closeVideo(); });
-
-/* ------------------------------------------------------------ fresh + stale */
-
-let pendingFresh = [];
-
-function applyFresh() {
-  const q = pendingFresh;
-  pendingFresh = [];
-  $('fresh')?.remove();
-  q.forEach((fn) => { try { fn(); } catch (e) { /* ignore */ } });
-}
-
-wire.setFreshGate((apply) => {
-  const panel = active && $('panel-' + active);
-  if (!panel || panel.scrollTop < 300) { apply(); return; }
-  pendingFresh.push(apply);
-  if ($('fresh')) return;
-  const pill = el('button', 'fresh', '↑ Fresh');
-  pill.id = 'fresh';
-  pill.addEventListener('click', () => {
-    applyFresh();
-    $('panel-' + active)?.scrollTo({ top: 0 });
-  });
-  document.body.appendChild(pill);
-});
-
-wire.setStaleHandler((isStale) => {
-  $('stale').hidden = !isStale;
-  measureChrome();
-});
-
 /* ------------------------------------------------------------------- boot */
+/* main.js imports every tab (each calls register()), then calls start(). */
+export function start() {
+  if (started) return;
+  started = true;
+  const app = $('app');
+  const bar = $('tabbar');
+  bar.appendChild(el('div', 'rail-brand', 'All Day'));
+  TABS.forEach((key) => {
+    const mod = registry[key];
+    if (!mod) return;
+    const p = el('section', 'panel');
+    p.id = 'panel-' + key;
+    p.setAttribute('role', 'tabpanel');
+    p.setAttribute('aria-labelledby', 'tab-' + key);
+    p.hidden = true;
+    const ptr = el('div', 'ptr', '<span>Pull to check for new</span>');
+    const body = el('div', 'panel-body');
+    p.append(ptr, body);
+    app.appendChild(p);
+    panels[key] = p;
+    bodies[key] = body;
+    watchScroll(p);
+
+    const b = el('button', null, mod.icon + '<span>' + esc(mod.label) + '</span>');
+    b.id = 'tab-' + key;
+    b.dataset.tab = key;
+    b.setAttribute('role', 'tab');
+    b.setAttribute('aria-selected', 'false');
+    b.setAttribute('aria-controls', 'panel-' + key);
+    b.addEventListener('click', () => {
+      if (active === key) { scrollTop(true); checkNew(); }
+      else go(key);
+    });
+    bar.appendChild(b);
+  });
+
+  /* the emailed sign-in link lands on a hash the router must not see */
+  const signin = auth.consumeHash();
+  if (signin) signin.then((msg) => { if (msg) toast(msg); });
+  else auth.refresh();
+
+  store.touchVisit();
+  route();
+}
 
 store.applyTheme(store.theme());
 matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
   if (store.theme() === 'auto') store.applyTheme('auto');
-});
-
-function paintThemeBtn() {
-  const dark = document.documentElement.getAttribute('data-theme') === 'dark' ||
-    (!document.documentElement.hasAttribute('data-theme') &&
-      matchMedia('(prefers-color-scheme: dark)').matches);
-  const b = $('theme-btn');
-  b.innerHTML = dark ? ICON.sun : ICON.moon;
-  b.setAttribute('aria-label', dark ? 'Switch to light mode' : 'Switch to dark mode');
-}
-paintThemeBtn();
-$('theme-btn').addEventListener('click', () => {
-  store.setTheme(store.nextTheme());
   paintThemeBtn();
 });
-/* Settings changes the theme too, and announces it with this event —
-   without a listener the mast's moon/sun shows the previous state. */
-window.addEventListener('allday-theme', paintThemeBtn);
+paintThemeBtn();
+$('theme-btn').addEventListener('click', () => { store.setTheme(store.nextTheme()); paintThemeBtn(); });
+$('saved-btn').innerHTML = ICON.star;
+$('settings-btn').innerHTML = ICON.gear;
+$('saved-btn').addEventListener('click', savedSheet);
+$('settings-btn').addEventListener('click', settingsSheet);
+$('p-close').innerHTML = ICON.x;
+$('vbox-close').innerHTML = ICON.x;
+paintSavedBtn();
+paintPlayButtons();
 
-let lastY = 0;
-TABS.forEach((tab) => {
-  const panel = $('panel-' + tab);
-  if (!panel) return;
-  panel.addEventListener('scroll', () => {
-    const y = panel.scrollTop;
-    const away = y > lastY && y > 90;
-    document.body.classList.toggle('chrome-away', away);
-    lastY = y;
-    paintReadbar(panel);
-    if ($('fresh') && y < 60) applyFresh();
-  }, { passive: true });
+$('wordmark').addEventListener('click', (e) => {
+  e.preventDefault();
+  if (active === 'wire') { scrollTop(true); checkNew(); } else go('wire');
 });
 
-document.querySelector('.tabbar').addEventListener('click', (e) => {
-  const b = e.target.closest('button');
-  if (!b) return;
-  const tab = b.dataset.tab;
-  /* tapping the tab you are on goes home within it — out of an article,
-     back to the top of a feed */
-  if (active === tab) {
-    if (tab === 'wander' && /^#wander\//.test(location.hash)) { go('wander'); return; }
-    $('panel-' + tab)?.scrollTo({ top: 0, behavior: 'smooth' });
-    return;
-  }
-  go(tab);
-});
+/* A picture that fails to load disappears instead of leaving a grey hole; a
+   row whose thumbnail fails reflows to full width. Error events do not
+   bubble, so this listens in the capture phase. */
+document.addEventListener('error', (e) => {
+  const img = e.target;
+  if (!img || img.tagName !== 'IMG' || !img.classList.contains('pic')) return;
+  const box = img.closest('.c-thumb, .c-media, .th, .tile, .p-art, .mark');
+  if (box && box.classList.contains('c-thumb')) { box.closest('.card')?.classList.remove('has-thumb'); box.remove(); }
+  else if (box && box.classList.contains('c-media') && !box.closest('.poster, .vcard, .hero, .result, .lb, .peek')) box.remove();
+  else img.remove();
+}, true);
 
 document.addEventListener('keydown', (e) => {
   if (e.key !== 'Escape') return;
-  if (lbClose) lbClose();
+  if (lbEl) closeLightbox();
   else if (peekEl) closePeek();
   else if (!$('vbox').hidden) closeVideo();
   else if (!$('confirm').hidden) $('confirm').hidden = true;
-  else if (!$('sheet').hidden) {
-    if (sheetClose) sheetClose(); else $('sheet').hidden = true;
-  }
+  else if (sheetClose) sheetClose();
 });
 
-if ('ResizeObserver' in window) {
-  const ro = new ResizeObserver(measureChrome);
-  ro.observe(mast);
-  new MutationObserver(() => {
-    const nav = document.querySelector('.btnav');
-    if (nav && !nav.dataset.measured) { nav.dataset.measured = '1'; ro.observe(nav); }
-    measureChrome();
-  }).observe(document.body, { childList: true });
-}
-window.addEventListener('resize', measureChrome);
-window.addEventListener('load', measureChrome);
-measureChrome();
-paintPlayIcon();
-
-window.addEventListener('hashchange', route);
-export { route };
+window.addEventListener('hashchange', () => { if (started) route(); });
+window.addEventListener('resize', measure);
+if ('ResizeObserver' in window) new ResizeObserver(measure).observe(mast);
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(measure);

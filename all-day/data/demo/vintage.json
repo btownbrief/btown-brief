@@ -1,0 +1,331 @@
+{
+ "_": "Demo data for ?demo=1. The people, finds, swaps and fit checks are invented; vintage.js adds them to the demo boards (boards-fake.js), which already holds three of the finds and one of the swaps by title. The shops are the first six of data/vintage-shops.json and the designs six of all-day/data/merch-designs.json, copied as they are, so the demo never shows an hour or an address that is not real. days is how long a post has left; photo is a placeholder palette.",
+ "homesThisMonth": 2,
+ "people": [
+  [
+   "demo-0000-4000-8000-0000000vin01",
+   "Priya N.",
+   "old-north-end"
+  ],
+  [
+   "demo-0000-4000-8000-0000000vin02",
+   "Ben S.",
+   "south-end"
+  ],
+  [
+   "demo-0000-4000-8000-0000000vin03",
+   "Nora L.",
+   "downtown"
+  ],
+  [
+   "demo-0000-4000-8000-0000000vin04",
+   "Sam W.",
+   "hill"
+  ]
+ ],
+ "spotted": [
+  {
+   "title": "1994 UVM crewneck"
+  },
+  {
+   "title": "Red barn jacket"
+  },
+  {
+   "title": "Suede boots, barely scuffed"
+  },
+  {
+   "who": 0,
+   "title": "70s floral wrap dress",
+   "shop": "Barge Canal Market",
+   "size": "S",
+   "price": 38,
+   "days": 15,
+   "photo": "plum",
+   "votes": 9,
+   "body": "On the rack by the mirrors, near the back."
+  },
+  {
+   "who": 1,
+   "title": "Levi's 501s, perfect fade",
+   "shop": "Junktiques Collective",
+   "size": "30",
+   "price": 24,
+   "days": 12,
+   "photo": "slate",
+   "votes": 6
+  },
+  {
+   "who": 2,
+   "title": "Patagonia Synchilla, teal",
+   "shop": "Outdoor Gear Exchange",
+   "size": "XL",
+   "price": 55,
+   "days": 9,
+   "photo": "teal",
+   "votes": 11,
+   "body": "Consignment rack, upstairs."
+  },
+  {
+   "who": 3,
+   "title": "Wool fisherman sweater",
+   "shop": "Barge Canal Market",
+   "size": "M",
+   "days": 5,
+   "photo": "mustard",
+   "votes": 3
+  },
+  {
+   "who": 0,
+   "title": "Doc Martens 1460, oxblood",
+   "shop": "Junktiques Collective",
+   "size": "8",
+   "price": 40,
+   "days": 2,
+   "votes": 5,
+   "body": "No photo, but they are in the shoe bin by the door."
+  }
+ ],
+ "swaps": [
+  {
+   "title": "Two band tees for anything denim"
+  },
+  {
+   "who": 0,
+   "title": "M crewneck, forest green",
+   "want": "An L flannel",
+   "size": "M",
+   "days": 16,
+   "votes": 2,
+   "place": "Old North End"
+  },
+  {
+   "who": 3,
+   "title": "Kids' snow boots, size 2",
+   "want": "Free to a good home",
+   "size": "2",
+   "days": 10,
+   "votes": 4,
+   "place": "Hill Section"
+  }
+ ],
+ "fit": [
+  {
+   "who": 2,
+   "title": "All thrifted except the socks",
+   "days": 18,
+   "photo": "brick",
+   "votes": 14,
+   "body": "Coat from Barge Canal, jeans from Junktiques."
+  },
+  {
+   "who": 1,
+   "title": "Last Light tee, Sunday edition",
+   "days": 11,
+   "photo": "lake",
+   "votes": 8,
+   "body": "The Brief's tee with a $6 cardigan."
+  },
+  {
+   "who": 3,
+   "title": "First fit of fall",
+   "days": 4,
+   "photo": "foliage",
+   "votes": 5
+  }
+ ],
+ "designsSent": [
+  {
+   "who": 2,
+   "title": "Rainy Church Street, ink",
+   "days": 13,
+   "photo": "street",
+   "votes": 7,
+   "body": "Thanks in: store credit"
+  }
+ ],
+ "shops": [
+  {
+   "id": "burlington-records",
+   "name": "Burlington Records",
+   "kinds": [
+    "Records"
+   ],
+   "neighborhood": "Downtown / Church St",
+   "address": null,
+   "website": null,
+   "coords": null,
+   "hours": null,
+   "blurb": "Downtown Burlington's independent vinyl shop with an extensive catalog organized by genre and era.",
+   "verified": "2026-06",
+   "address_note": "Church Street area, Burlington, VT",
+   "gaps": [
+    "address",
+    "coords",
+    "hours",
+    "website"
+   ],
+   "next": {
+    "same_neighborhood": true
+   }
+  },
+  {
+   "id": "outdoor-gear-exchange",
+   "name": "Outdoor Gear Exchange",
+   "kinds": [
+    "Consignment"
+   ],
+   "neighborhood": "Downtown / Church St",
+   "address": null,
+   "website": "https://www.gearx.com",
+   "coords": null,
+   "hours": null,
+   "blurb": "Church Street's legendary gear shop — new equipment up top, and a consignment section where patient people score serious deals on used outdoor kit.",
+   "verified": "2026-07",
+   "gaps": [
+    "address",
+    "coords",
+    "hours"
+   ],
+   "next": {
+    "unknown": true
+   }
+  },
+  {
+   "id": "barge-canal-market",
+   "name": "Barge Canal Market",
+   "kinds": [
+    "Vintage",
+    "Records"
+   ],
+   "neighborhood": "South End",
+   "address": null,
+   "website": null,
+   "coords": null,
+   "hours": null,
+   "blurb": "Pine Street's vintage anchor — mid-century furniture, records, and oddities from many sellers under one roof.",
+   "verified": "2026-07",
+   "gaps": [
+    "address",
+    "coords",
+    "hours",
+    "website"
+   ],
+   "next": {
+    "same_neighborhood": true
+   }
+  },
+  {
+   "id": "speaking-volumes",
+   "name": "Speaking Volumes",
+   "kinds": [
+    "Records"
+   ],
+   "neighborhood": "South End",
+   "address": null,
+   "website": null,
+   "coords": null,
+   "hours": null,
+   "blurb": "Used books, old maps, and vinyl sharing shelf space on Pine Street — the browse rewards patience and punishes schedules.",
+   "verified": "2026-07",
+   "gaps": [
+    "address",
+    "coords",
+    "hours",
+    "website"
+   ],
+   "next": {
+    "unknown": true
+   }
+  },
+  {
+   "id": "junktiques",
+   "name": "Junktiques Collective",
+   "kinds": [
+    "Thrift"
+   ],
+   "neighborhood": "Old North End",
+   "address": null,
+   "website": null,
+   "coords": null,
+   "hours": null,
+   "blurb": "North Winooski Avenue's dig-for-it thrift trove — furniture, oddities, and the occasional genuine score priced like nobody checked.",
+   "verified": "2026-07",
+   "gaps": [
+    "address",
+    "coords",
+    "hours",
+    "website"
+   ],
+   "next": {
+    "unknown": true
+   }
+  },
+  {
+   "id": "autumn-records",
+   "name": "Autumn Records",
+   "kinds": [
+    "Records"
+   ],
+   "neighborhood": "Winooski",
+   "address": "11 E. Allen Street, Winooski, VT",
+   "website": null,
+   "coords": [
+    44.4921,
+    -73.1855
+   ],
+   "hours": "Noon to 6 daily",
+   "blurb": "A Winooski record store run by an internationally recognized experimental musician — the curation reflects that.",
+   "verified": "2026-06",
+   "gaps": [
+    "website"
+   ],
+   "next": null
+  }
+ ],
+ "designs": [
+  {
+   "id": 2,
+   "name": "One More Minute",
+   "idea": "Reluctance to leave the lake after a good evening.",
+   "img": "assets/merch/2.webp",
+   "href": "https://merch.btownbrief.com/#/p/huba/d/2"
+  },
+  {
+   "id": 12,
+   "name": "Last Light on the Lake",
+   "idea": "A lakeside sunset reduced to the warmth of a small matchbook label.",
+   "img": "assets/merch/12.webp",
+   "href": "https://merch.btownbrief.com/#/p/huba/d/12"
+  },
+  {
+   "id": 33,
+   "name": "Gang Takes the Bike Ferry",
+   "idea": "A Sunny-like episode title for a very low-stakes Lake Champlain outing.",
+   "img": "assets/merch/33.webp",
+   "href": "https://merch.btownbrief.com/#/p/huba/d/33"
+  },
+  {
+   "id": 57,
+   "name": "Walk West Til Water",
+   "idea": "",
+   "img": "assets/merch/57.webp",
+   "href": "https://merch.btownbrief.com/#/p/huba/d/57"
+  },
+  {
+   "id": 68,
+   "name": "Sunset City Burlington",
+   "idea": "",
+   "img": "assets/merch/68.webp",
+   "href": "https://merch.btownbrief.com/#/p/huba/d/68"
+  },
+  {
+   "id": 79,
+   "name": "City of Sunsets",
+   "idea": "",
+   "img": "assets/merch/79.webp",
+   "href": "https://merch.btownbrief.com/#/p/huba/d/79"
+  }
+ ],
+ "designsTotal": 87,
+ "shop": "https://merch.btownbrief.com/"
+}
