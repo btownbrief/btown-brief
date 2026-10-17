@@ -6976,7 +6976,26 @@ async function thePeople(browser, base) {
       older: (fy) => fy[0].name === 'Second Wind Social Club',
       books: (fy) => fy.every((r) => r.kind === 'books'),
       food: (fy) => fy[0].name === 'Cookbook Club',
+      sober: (fy) => fy.length >= 1 && fy.every((r) => ['books', 'outdoors', 'making', 'games', 'run', 'fit'].includes(r.kind)),
     };
+    /* the labels: LGBTQ+ with its plus, and a Sober tile beside it */
+    const whoLabels = await page.$$eval(peoplePanel + ' [data-tags="I’m…"] .chip', (cs) => cs.map((c) => ({ k: c.dataset.chip, t: c.textContent.trim() })));
+    check(whoLabels.some((c) => c.k === 'lgbtq' && /^LGBTQ\+/.test(c.t)) && whoLabels.some((c) => c.k === 'sober' && c.t === 'Sober'), 'the tags read “LGBTQ+” and “Sober”', JSON.stringify(whoLabels));
+    check(!(await panelText(page)).match(/LGBTQ(?!\+)/), 'and nowhere on the tab is it LGBTQ without the plus', '');
+    /* a tap shows: the tile turns selected, and the strip says what it is showing */
+    await tap('[data-tags] .chip[data-chip="lgbtq"]');
+    check(await page.$eval(peoplePanel + ' [data-tags] .chip[data-chip="lgbtq"]', (b) => b.classList.contains('on') && b.getAttribute('aria-pressed') === 'true'), 'a tapped tile turns selected (on, pressed)', '');
+    check(await page.$eval(peoplePanel + ' [data-sec="foryou"] .sec', (h) => h.querySelector('h2').textContent + ' | ' + h.querySelector('p').textContent) === 'For you | Groups and clubs for LGBTQ+.', 'and the strip says what it is showing', '');
+    await tap('[data-tags] .chip[data-chip="sober"]');
+    check(/for LGBTQ\+ and Sober\.$/.test(await page.$eval(peoplePanel + ' [data-sec="foryou"] .sec p', (p) => p.textContent)), 'two picked: the line names both', '');
+    await tap('[data-tags] .chip[data-chip="lgbtq"]');
+    /* Sober: nothing built around drinking, and an explicit sober / recovery event counts */
+    const dry = await forYou(page);
+    check(dry && dry.every((r) => !/brew|brews|pint|beer|\bbar\b/i.test(r.name)), 'Sober: no brewery run, no book club at the bars', JSON.stringify(dry));
+    const PMs = await import(path.join(APP, 'js/people-match.js'));
+    check(PMs.fitsText('Sober Saturday: alcohol-free hike', ['sober']) && PMs.fitsText('Recovery book circle', ['sober']) && !PMs.fitsText('Wine walk', ['sober']) &&
+      !PMs.fitsText('Coffee and cocktails', ['sober']) && !PMs.fitsText('Book club at the brewery', ['sober']), 'Sober on events: sober and recovery events fit, wine walks and brewery nights do not', '');
+    await tap('[data-tags] .chip[data-chip="sober"]');
     for (const [k, ok] of Object.entries(want)) {
       const sel = '[data-tags] .chip[data-chip="' + k + '"]';
       await tap(sel);
@@ -7008,6 +7027,47 @@ async function thePeople(browser, base) {
     await pageRules(page, 'people', 390);
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
+  });
+
+  /* the group chat card: near the top, and only for a real t.me link. The constant lives in people.js; the test swaps it in the served file. */
+  await group('People: the group chat card shows only for a real t.me link, at the top', async () => {
+    const withChat = async (value) => {
+      const c = await newPage(browser, base, { clock: SAT_1PM });
+      await c.page.route(/\/all-day\/js\/modes\/people\.js(\?.*)?$/, async (route) => {
+        const res = await route.fetch();
+        const body = (await res.text()).replace(/const GROUP_CHAT_URL = '[^']*';/, "const GROUP_CHAT_URL = '" + value + "';");
+        await route.fulfill({ response: res, body });
+      });
+      await c.page.goto(base + '/all-day/?demo=1#people');
+      await c.page.waitForSelector(peoplePanel + ' [data-sec="arch"] .arch');
+      return c;
+    };
+    const card = (page) => page.evaluate((s) => { const x = document.querySelector(s + ' [data-sec="chat"]'); const a = x && x.querySelector('a.btn');
+      return { hidden: !x || x.hidden || !x.querySelector('[data-chat]'), href: a ? a.getAttribute('href') : null, text: x ? x.innerText : '' }; }, peoplePanel);
+    const todo = await withChat('TODO');
+    const t = await card(todo.page);
+    check(t.hidden && !t.href, 'with the TODO value the card is hidden', JSON.stringify(t));
+    await todo.ctx.close();
+    const bad = await withChat('https://example.com/join');
+    check((await card(bad.page)).hidden, 'a link that is not t.me is hidden too', '');
+    await bad.ctx.close();
+    const live = await withChat('https://t.me/+AbCdEf12345');
+    const l = await card(live.page);
+    check(!l.hidden && l.href === 'https://t.me/+AbCdEf12345' && /Join the group chat/.test(l.text) && /Join on Telegram/.test(l.text), 'with a real-looking t.me link the card shows, linking it', JSON.stringify(l));
+    const order = await secOrder(live.page);
+    check(order[0] === 'chat' && order[1] === 'arch', 'and it is the first thing on the tab, above who you are', order.join(' '));
+    check(await live.page.$eval(peoplePanel + ' [data-chat]', (c) => c.querySelectorAll('p').length) === 1, 'a title, one line and a button', '');
+    await live.ctx.close();
+    /* as shipped: the file's own value is a real t.me link, and it is not the movie / TV watch chat */
+    const js = await readFile(path.join(APP, 'js/modes/people.js'), 'utf8');
+    const shipped = (js.match(/const GROUP_CHAT_URL = '([^']*)';/) || [])[1] || '';
+    const watch = ((await readFile(path.join(APP, 'js/modes/watch.js'), 'utf8')).match(/const TELEGRAM_URL = '([^']*)';/) || [])[1];
+    const real = await newPage(browser, base, { clock: SAT_1PM });
+    await real.page.goto(base + '/all-day/?demo=1#people');
+    await real.page.waitForSelector(peoplePanel + ' [data-sec="arch"] .arch');
+    const r = await card(real.page);
+    check(/^https:\/\/t\.me\//.test(shipped) && shipped !== watch && !r.hidden && r.href === shipped, 'as shipped: a real group-chat link, not the watch chat, and the card shows', JSON.stringify({ shipped, r }));
+    await real.ctx.close();
   });
 
   await group('People, demo: mixers from everywhere, and the readers’ gatherings', async () => {
@@ -7327,6 +7387,8 @@ const clubRows = (page, sel) => page.$$eval(sel + ' .lrow.meet', (rs) => rs.map(
   map: (r.querySelector('a.map') || {}).href || '' })));
 const clubsSec = peoplePanel + ' [data-sec="clubs"]';
 const secOrder = (page) => page.$$eval(peoplePanel + ' [data-sec]', (ss) => ss.map((x) => x.dataset.sec));
+/* the same, without the group-chat card on top (it is first, and only there while the link is real) */
+const secOrderBelowChat = async (page) => (await secOrder(page)).filter((k) => k !== 'chat');
 
 async function theClubs(browser, base) {
   await group('Run clubs, People: the week strip, the sheet and I’m going (demo, 390)', async () => {
@@ -7366,7 +7428,7 @@ async function theClubs(browser, base) {
     /* a runner: the week stays put under the tiles, and For you brings a run club up to the tiles */
     await page.click(peoplePanel + ' [data-tags="I’m into…"] .chip[data-chip="running"]');
     await page.waitForTimeout(150);
-    const o2 = await secOrder(page);
+    const o2 = await secOrderBelowChat(page);
     check(o2[0] === 'arch' && o2[1] === 'foryou' && o2[2] === 'clubs', 'A runner: nothing jumps; For you, then the club week, right under the tiles', o2.join(' '));
     check(((await forYou(page)) || [])[0]?.kind === 'run', 'and For you leads with a run club', JSON.stringify(await forYou(page)));
     await page.evaluate(() => document.querySelector('#panel-people').scrollTo(0, 0));

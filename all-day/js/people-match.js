@@ -17,6 +17,7 @@
    score with it. */
 import * as cw from './clubs-week.js';
 
+const DRINKING = /brew|beer|\bpints?\b|\bpubs?\b|\bbars?\b|taproom|tap room|cocktail|\bwine|cider|distill|happy hour|\bale\b|\bipa\b/i;
 export const MATCH = {
   'a:new': { kinds: ['social', 'language', 'trivia'], words: /newcomer|new (?:in|to) (?:town|burlington|the area)|first connections/i,
     ev: /mixer|social|coffee club|newcomer|new in town|welcome|meet[- ]?up|happy hour/i },
@@ -31,6 +32,9 @@ export const MATCH = {
   older: { kinds: ['books', 'making'], words: /older adults|retire|seniors?\b|\b5[05]\+|old \(and new|bridge|mah-?j/i, ev: /book|bridge|mah-?j|chess|lecture|coffee/i },
   women: { words: /wom[ae]n|womxn|ladies|nonbinary|\bgirls?\b/i, ev: /wom[ae]n|womxn|ladies|nonbinary/i },
   lgbtq: { kinds: ['social'], words: /queer|lgbt|out in the 802|pride|nonbinary|womxn|\btrans\b/i, ev: /queer|lgbt|pride|drag|queeraoke/i },
+  /* Sober: things that are not built around drinking. `not` throws out anything that is (a brewery run, a book club at the bars). */
+  sober: { kinds: ['books', 'outdoors', 'making', 'games'], run: true, fit: true, words: /sober|alcohol[- ]free|no[- ]alcohol|mocktail|substance[- ]free|recovery/i,
+    ev: /sober|alcohol[- ]free|no[- ]alcohol|mocktail|non-?alcoholic|substance[- ]free|recovery|book|hike|game night|craft/i, not: DRINKING },
   sports: { kinds: ['league', 'pickup'], fit: true, ev: /basketball|soccer|pickleball|volleyball|kickball|ultimate|frisbee|hockey|softball|pick-?up/i },
   games: { kinds: ['games', 'trivia'], ev: /game|trivia|board|puzzle|scrabble|chess|d&d|dungeons|clocktower|quiz/i },
   running: { run: true, ev: /\brun\b|\bruns\b|running|\b5k\b/i },
@@ -49,6 +53,8 @@ export const KIND_WORDS = { league: 'League', pickup: 'Pickup', games: 'Games', 
 
 /* what a group says it is (not its newcomer line, which every group has) */
 const textOf = (g) => [g.what, g.category].filter(Boolean).join(' ');
+/* a tile that throws out anything built around something (Sober: drinking), by everything the group says about itself */
+const blocked = (m, g) => !!m.not && m.not.test([g.name, g.what, g.category, g.where, g.schedule_note].filter(Boolean).join(' '));
 
 /* How well a groups.json group fits the picked keys; 0 is not at all. A
    word in its name counts most, then a word in what it says it is, then
@@ -59,7 +65,7 @@ export function groupScore(g, keys) {
   let s = 0;
   keys.forEach((k) => {
     const m = MATCH[k];
-    if (!m) return;
+    if (!m || blocked(m, g)) return;
     if (m.kinds && m.kinds.includes(g.kind)) s += 3;
     if (m.words && m.words.test(String(g.name || ''))) s += 6;
     else if (m.words && m.words.test(text)) s += 4;
@@ -75,14 +81,14 @@ export function clubScore(c, keys) {
   let s = 0;
   keys.forEach((k) => {
     const m = MATCH[k];
-    if (!m) return;
+    if (!m || blocked(m, c)) return;
     if (m.run && cw.isRun(c)) s += 4;
     if (m.fit && cw.isFitness(c)) s += 2;
     if (m.words && (m.run || m.fit || !m.kinds) && m.words.test(String(c.name || '') + ' ' + text)) s += 2;
   });
   return s;
 }
-export const fitsText = (text, keys) => (keys || []).some((k) => MATCH[k] && MATCH[k].ev && MATCH[k].ev.test(String(text || '')));
+export const fitsText = (text, keys) => (keys || []).some((k) => MATCH[k] && MATCH[k].ev && MATCH[k].ev.test(String(text || '')) && !(MATCH[k].not && MATCH[k].not.test(String(text || ''))));
 
 /* The For you strip: the best few, a new kind before a second of one it
    has (unless that second fits clearly better), so "A gamer" gets trivia
