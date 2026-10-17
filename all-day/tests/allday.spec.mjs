@@ -2267,6 +2267,12 @@ async function theGames(browser, base) {
     check(groups.length >= 3 && !groups.includes('Yours'), 'the boards come in the arcade’s own sections', groups.join(' / '));
     await page.click(gmPanel + ' [data-group="daily-puzzles"]');
     check(await page.$(gmPanel + ' [data-board="btown-wordle"]') !== null, 'a board with scores draws its rows', '');
+    const lb = gmPanel + ' [data-board="trivia-ladder"]';
+    const label = await page.$eval(lb, (b) => b.parentNode.querySelector('.gm-lb-label').textContent);
+    check(label === 'Top scores · Trivia Ladder' && await page.$eval(lb, (b) => !!b.parentNode.querySelector('.lrow .t')), 'a board hangs under its game’s headline, labelled “Top scores” with the game’s name', label);
+    check(await page.$$eval(lb + ' .r', (n) => n.length) === 5, 'five rows to start', '');
+    await page.click(gmPanel + ' [data-more="trivia-ladder"]');
+    check(await page.$$eval(lb + ' .r', (n) => n.length) === 10 && !(await page.$(gmPanel + ' [data-more="trivia-ladder"]')), 'and “Show top 10” opens the rest of the top ten', '');
     check(/No scores yet:/.test(await gmText(page)), 'boards with no scores yet are named in one line', '');
     await page.click(gmPanel + ' [data-group="arcade-action"]');
     check(/FILED!? \(didn’t load\)/i.test(await gmText(page)), 'a board that failed says so, and the rest still draw', '');
@@ -2305,7 +2311,7 @@ async function theGames(browser, base) {
     check(champs === (await gamesDemo()).champions.games.length, 'Champions: the reigning champ on every board', champs);
     check(await page.$$eval(gmPanel + ' [data-royalty] .r', (n) => n.length) === 5, 'and the five all-arcade leaders', '');
     /* live, before nn-ROUND4.sql: the arcade still leads, the board is empty and offers no posting */
-    check(await page.$eval(gmPanel + ' [data-sec]', (n) => n.dataset.sec) === 'arcade' && await page.$$eval(gmPanel + ' .gm-cab', (n) => n.length) === 5, 'live: the arcade’s cabinets come first', '');
+    check(await page.$eval(gmPanel + ' [data-sec]', (n) => n.dataset.sec) === 'quiz' && await page.$$eval(gmPanel + ' [data-sec]', (n) => n[1].dataset.sec) === 'arcade' && await page.$$eval(gmPanel + ' .gm-cab', (n) => n.length) === 5, 'live: the News Quiz, then the arcade’s cabinets, come first', '');
     check(/Nobody’s posted yet/.test(await page.$eval(gmPanel + ' [data-slot="playing"]', (n) => n.innerText)) && !(await page.$(gmPanel + ' [data-say]')) && !(await page.$(gmPanel + ' [data-addlfg]')), 'live, older server: an empty poll and no posting until the board can take it', '');
     check(supabase.some((u) => /nn_posts_list/.test(u)) && !supabase.some((u) => /nn_handles_recent/.test(u)), 'it reads the games board; signed out, it never asks for gamertags', supabase.filter((u) => /nn_/.test(u)).join(', '));
     check(!!(await page.$(gmPanel + ' [data-tags="out"]')), 'signed out: the gamertags ask for a sign-in', '');
@@ -2363,7 +2369,7 @@ async function theGames(browser, base) {
     await b.page.waitForSelector(gmPanel + ' [data-arcade] [data-chip="new"].on', { timeout: 15000 });
     await b.page.click(gmPanel + ' [data-allgames]');
     const keys = await b.page.$$eval(gmPanel + ' .gm-grid .gm-cab', (n) => n.map((x) => x.dataset.k));
-    const want = fresh.games.filter((g) => g.live && g.live_since > dayMinus(etKey(Date.now()), 30)).map((g) => 'cab:' + g.slug);
+    const want = fresh.games.filter((g) => g.live && g.slug !== 'news-quiz' && g.live_since > dayMinus(etKey(Date.now()), 30)).map((g) => 'cab:' + g.slug);
     check(keys.length > 4 && JSON.stringify(keys) === JSON.stringify(want), 'within 30 days: the New chip holds those games, newest first, every one after “All”', keys.length + ' vs ' + want.length);
     check(await b.page.$$eval(gmPanel + ' .gm-grid .gm-cab .gm-new', (n) => n.length) === want.length, 'and each wears a New tag', '');
     check(b.page.url().endsWith('#games/new'), 'a #games/new link lands there', b.page.url());
@@ -2376,8 +2382,8 @@ async function theGames(browser, base) {
     await page.goto(base + '/all-day/?demo=1#games');
     await page.waitForSelector(gmPanel + ' .gm-cab.feat', { timeout: 15000 });
     const order = await page.$$eval(gmPanel + ' [data-sec]', (n) => n.map((x) => x.dataset.sec));
-    check(JSON.stringify(order.slice(0, 5)) === JSON.stringify(['arcade', 'playing', 'lfg', 'tags', 'vr']) && order.indexOf('board') > order.indexOf('challenge'),
-      'the games come first, then the people, then VR; the leaderboard moved below', order.join(' / '));
+    check(JSON.stringify(order.slice(0, 6)) === JSON.stringify(['quiz', 'arcade', 'playing', 'lfg', 'tags', 'vr']) && order.indexOf('board') > order.indexOf('challenge'),
+      'the News Quiz, then the games, then the people, then VR; the leaderboard below', order.join(' / '));
     const demo = await gamesDemo();
     const live = demo.catalog.games.filter((g) => g.live);
     const cabs = await page.$$eval(gmPanel + ' .gm-cab', (n) => n.map((x) => ({ k: x.dataset.k, play: x.querySelector('.gm-acts a').href, scr: x.querySelector('.gm-scr').href, inv: x.querySelector('[data-invite]').getAttribute('href') })));
@@ -2406,6 +2412,80 @@ async function theGames(browser, base) {
     await page.evaluate(() => { window.__copied = null; Object.defineProperty(navigator, 'share', { value: undefined, configurable: true }); navigator.clipboard.writeText = (t) => { window.__copied = t; return Promise.resolve(); }; });
     await page.click(gmPanel + ' .gm-cab [data-invite]');
     check(/with me\? https:\/\/play\.btownbrief\.com\/btown-party\/$/.test(await page.evaluate(() => window.__copied || '')), 'without touch, Invite copies the same words', await page.evaluate(() => window.__copied));
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Games, the News Quiz leads', async () => {
+    /* live: the repo's own catalog lists the quiz; the demo's does not, and the card is there either way */
+    for (const demo of [false, true]) {
+      const { ctx, page, errors } = await newPage(browser, base);
+      await page.goto(base + '/all-day/' + (demo ? '?demo=1' : '') + '#games');
+      await page.waitForSelector(gmPanel + ' .gm-quiz', { timeout: 15000 });
+      await page.waitForSelector(gmPanel + ' [data-sec="arcade"]', { timeout: 15000 });
+      const tag = demo ? 'demo: ' : 'live: ';
+      const q = await page.$eval(gmPanel + ' .gm-quiz', (n) => ({
+        name: n.querySelector('.gm-name').textContent, pitch: n.querySelector('.gm-pitch').textContent, k: n.dataset.k,
+        hrefs: [...n.querySelectorAll('a')].filter((a) => !a.dataset.invite).map((a) => a.href), play: n.querySelector('.pillbtn.on').textContent,
+        top: n.getBoundingClientRect().top,
+        arcadeTop: document.querySelector('#panel-games [data-sec="arcade"]').getBoundingClientRect().top,
+      }));
+      check(q.name === 'News Quiz' && q.hrefs.length === 2 && q.hrefs.every((h) => h === 'https://play.btownbrief.com/news-quiz/'), tag + 'the News Quiz card opens the quiz on the arcade, from its picture and its button', JSON.stringify(q));
+      check(q.play === 'Take the quiz' && /^Five questions from this week’s Brief\./.test(q.pitch) && q.pitch.length < 60, tag + 'one short line says what it is, and the button says what it does', q.pitch);
+      check(q.top < q.arcadeTop && await page.$eval(gmPanel + ' [data-sec]', (n) => n.dataset.sec) === 'quiz', tag + 'it sits above the arcade, first on the tab', JSON.stringify(q));
+      await page.goto(base + '/all-day/' + (demo ? '?demo=1' : '') + '#games/cab:news-quiz');
+      await page.reload();
+      /* live, the champions file can land after the catalog and redraw the card mid-flash (cabinets do the same), so only the demo, which has everything at once, can watch the flash */
+      check(demo ? await flashes(page, 'cab:news-quiz') : q.k === 'cab:news-quiz' && !!(await page.$(gmPanel + ' .gm-quiz[data-k="cab:news-quiz"]')), tag + 'an old #games/cab:news-quiz link still lands on the card', q.k);
+      await page.click(gmPanel + ' [data-allgames]').catch(() => {});
+      check(await page.$$eval(gmPanel + ' .gm-cab[data-slug="news-quiz"]', (n) => n.length) === 0 && await page.$$eval(gmPanel + ' [data-arcade] .chip', (n) => n.every((c) => c.dataset.chip !== 'news-quiz')), tag + 'and it is not also an arcade cabinet', '');
+      check(!errors.length, tag + 'no console errors', errors.join(' | '));
+      await ctx.close();
+    }
+    /* a retired quiz (the catalog says it is not live) is not featured */
+    const cat = await catalogAged(40);
+    cat.games.forEach((g) => { if (g.slug === 'news-quiz') g.live = false; });
+    const w = await newPage(browser, base, { routes: [[/\/data\/games-catalog\.json/, cat]] });
+    await w.page.goto(base + '/all-day/#games');
+    await w.page.waitForSelector(gmPanel + ' .gm-cab', { timeout: 15000 });
+    check(!(await w.page.$(gmPanel + ' .gm-quiz')), 'a quiz the catalog has retired is not featured', '');
+    await w.ctx.close();
+  });
+
+  await group('Games, one row per name', async () => {
+    const rows = (list) => list.map(([name, score], i) => ({ name, score, player_id: '00000000-0000-4000-8000-' + String(i).padStart(12, '0') }));
+    const rpc = (fn, body) => {
+      if (fn !== 'get_leaderboard') return undefined;
+      /* the same people over and over, in other cases and with stray spaces; the first of each is the best */
+      if (body.p_game === 'btown-wordle') return rows([['ADA W.', 900], ['Cy F.', 800], ['ada w.', 700], ['Juniper', 600], [' cy   f. ', 500], ['Ada  W.', 400], ['Max T.', 300]]);
+      /* twelve rows, but only seven different players: the top ten must fill from the players behind the repeats */
+      if (body.p_game === 'trivia-ladder') return rows([['P1', 990], ['p1', 980], ['P2', 970], ['P2 ', 960], ['P3', 950], ['P4', 940], ['P5', 930], ['p5', 920], ['P6', 910], ['P7', 900], ['P8', 890], ['P9', 880], ['P10', 870], ['P11', 860], ['P12', 850], ['p12', 840]]);
+      if (body.p_game === 'btown-riddle') return rows([['R1', 700], ['r1', 690], ['R2', 680], ['R3', 670], ['R4', 660], ['R5', 650], ['R6', 640], ['R7', 630]]);
+      return [];
+    };
+    const champions = JSON.parse(JSON.stringify((await gamesDemo()).champions));
+    champions.royalty = ['Priya N.', 'priya n.', 'Dev K.', 'Kara M.', 'KARA M.', 'Ivy R.', 'Ada W.', 'Max T.'].map((name, i) => ({ name, crowns: 5 - i % 4, podiums: 6, boards: 7 }));
+    const { ctx, page, errors } = await newPage(browser, base, { rpc, champions });
+    await page.goto(base + '/all-day/#games');
+    await page.waitForSelector(gmPanel + ' [data-you="ask"]', { timeout: 15000 });
+    await page.waitForFunction((p) => !/Loading \d+ boards/.test(document.querySelector(p).innerText), gmPanel, { timeout: 15000 });
+    await page.click(gmPanel + ' [data-group="daily-puzzles"]');
+    const board = (slug) => page.$$eval(gmPanel + ' [data-board="' + slug + '"] .r', (n) => n.map((r) => r.querySelector('.rank').textContent + ' ' + r.querySelector('.t').textContent.trim() + ' ' + r.querySelector('.sc').textContent));
+    check(JSON.stringify(await board('btown-wordle')) === JSON.stringify(['1 ADA W. 900', '2 Cy F. 800', '3 Juniper 600', '4 Max T. 300']),
+      'each name once, best score first, in the best row’s own spelling, whatever the case or spacing', JSON.stringify(await board('btown-wordle')));
+    const names = await board('trivia-ladder');
+    check(names.length === 5 && names.join('|') === ['1 P1 990', '2 P2 970', '3 P3 950', '4 P4 940', '5 P5 930'].join('|'), 'a repeat takes no place on the board: ranks run 1, 2, 3 with no gaps', names.join(' | '));
+    await page.click(gmPanel + ' [data-more="trivia-ladder"]');
+    const ten = await board('trivia-ladder');
+    check(ten.length === 10 && ten[9] === '10 P10 870', 'the top ten fills from the players behind the repeats', ten.join(' | '));
+    check(await page.$eval(gmPanel + ' [data-more="btown-riddle"]', (b) => b.textContent.trim()) === 'Show all 7' && await page.$eval(gmPanel + ' [data-more="trivia-ladder"]', () => true).catch(() => false) === false, 'a board of six to nine players offers “Show all 7”, not a top ten it does not have', '');
+    /* the reader's own rows are counted on the deduped board, so the rank they see is the rank they have */
+    await findMe(page, 'ada w.');
+    const me = await page.$$eval(gmPanel + ' [data-me]', (n) => n.map((x) => x.querySelector('.rank').textContent));
+    check(JSON.stringify(me) === '["1"]', 'a name that repeated is found once, at its best place', JSON.stringify(me));
+    check(/on 1 board this month, best 1st/.test(await page.$eval(gmPanel + ' [data-you]', (n) => n.innerText)) && !/players use that name/.test(await page.$eval(gmPanel + ' [data-you]', (n) => n.innerText)), 'and it is not counted as several players', '');
+    const royal = await page.$$eval(gmPanel + ' [data-royalty] .r .t', (n) => n.map((x) => x.textContent.trim()));
+    check(JSON.stringify(royal) === JSON.stringify(['Priya N.', 'Dev K.', 'Kara M.', 'Ivy R.', 'Ada W.']), 'the all-arcade leaders show each name once too', JSON.stringify(royal));
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
   });
