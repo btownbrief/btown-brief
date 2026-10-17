@@ -399,13 +399,21 @@ async function matrix(browser, base) {
         if (combo.viewport.width >= 900) {
           const rail = await page.evaluate(() => { const r = document.querySelector('#tabbar').getBoundingClientRect(); return { w: r.width, h: r.height }; });
           check(rail.w === 208 && rail.h > 600, 'the tab bar is a 208px left rail', JSON.stringify(rail));
+          const over = await page.$$eval('#tabbar button[data-tab]', (bs) => bs.filter((b) => b.scrollWidth > b.clientWidth + 1).map((b) => b.dataset.tab));
+          check(!over.length, 'no tab label overflows the rail', over.join(', '));
         } else {
           const cells = await page.$$eval('#tabbar button[data-tab]', (bs) => bs.map((b) => { const r = b.getBoundingClientRect(); return [b.dataset.tab, Math.round(r.width), Math.round(r.height), b.scrollWidth <= b.clientWidth + 1]; }));
           check(cells.every((c) => c[2] >= 55), 'tab cells are 56px tall', JSON.stringify(cells));
           check(cells.every((c) => c[3]), 'no tab label overflows its cell', JSON.stringify(cells.filter((c) => !c[3])));
           const wn = cells.find((c) => c[0] === 'whatnow');
           check(wn[1] > cells[0][1], 'What Now gets the wider cell', JSON.stringify(cells));
+          check(new Set(cells.map((c) => c[2])).size === 1, 'the disc grows no cell: all nine the same height', JSON.stringify(cells));
         }
+        /* What Now is the bar's centre: its icon in a filled disc, its label bold (Stephen, 2026-10-17) */
+        const disc = await page.$eval('#tab-whatnow .i', (i) => { const c = getComputedStyle(i), r = i.getBoundingClientRect();
+          return { radius: c.borderTopLeftRadius, bg: c.backgroundColor, w: Math.round(r.width), h: Math.round(r.height), weight: getComputedStyle(i.nextElementSibling).fontWeight }; });
+        check(disc.radius === '50%' && !/^(transparent|rgba\(0, 0, 0, 0\))$/.test(disc.bg) && disc.w === disc.h && disc.weight === '700', 'What Now’s icon sits in a filled disc, its label bold', JSON.stringify(disc));
+        if (!demo && combo.motion !== 'reduce') await page.locator('#tabbar').screenshot({ path: path.join(SHOTS, 'tabbar-' + combo.viewport.width + '-' + combo.scheme + '.png') });
         if (combo.motion === 'reduce') {
           const still = await page.evaluate(() => ({ canvas: !!document.querySelector('.lsw-canvas'), sw: !!document.querySelector('.localsw'),
             tr: getComputedStyle(document.querySelector('.mast')).transitionDuration }));
@@ -968,13 +976,13 @@ async function theGames(browser, base) {
     check(groups.length >= 3 && !groups.includes('Yours'), 'the boards come in the arcade’s own sections', groups.join(' / '));
     await page.click(gmPanel + ' [data-group="daily-puzzles"]');
     check(await page.$(gmPanel + ' [data-board="btown-wordle"]') !== null, 'a board with scores draws its rows', '');
-    check(/No scores yet this month:/.test(await gmText(page)), 'boards with no scores yet are named in one line', '');
+    check(/No scores yet:/.test(await gmText(page)), 'boards with no scores yet are named in one line', '');
     await page.click(gmPanel + ' [data-group="arcade-action"]');
     check(/FILED!? \(didn’t load\)/i.test(await gmText(page)), 'a board that failed says so, and the rest still draw', '');
 
     await findMe(page, 'Nobody Here');
     const none = await page.$eval(gmPanel + ' [data-you]', (n) => n.innerText);
-    check(/No score this month is under/.test(none) && /Nobody Here/.test(none), 'a name on no board says so plainly', none);
+    check(/No score this month under/.test(none) && /Nobody Here/.test(none), 'a name on no board says so plainly', none);
     check(await page.$$eval(gmPanel + ' [data-me]', (n) => n.length) === 0, 'and marks nothing', '');
 
     await page.click(gmPanel + ' [data-you] button');
@@ -984,7 +992,7 @@ async function theGames(browser, base) {
     check(JSON.stringify(marked.sort()) === JSON.stringify(['btown-wordle:3', 'trivia-ladder:15']), 'after the name, the reader’s rows are marked, matched without case or spaces', JSON.stringify(marked));
     check(/outside the top ten/.test(await page.$eval(gmPanel + ' [data-board="trivia-ladder"] [data-me]', (n) => n.innerText)), 'a place past tenth is shown, and called that', '');
     const said = await page.$eval(gmPanel + ' [data-you]', (n) => n.innerText);
-    check(/on 2 boards/.test(said) && /2 players use that name/.test(said), 'two different players under one name: it says some marks may be someone else’s', said);
+    check(/on 2 boards/.test(said) && !/players use that name/.test(said), 'two different players under one name: both rows marked, no explanation', said);
     check(await page.evaluate(() => localStorage.getItem('allday-arcade-name')) === '"Juniper"', 'the name stays on this device', '');
     await page.reload();
     await page.waitForSelector(gmPanel + ' [data-you="found"]', { timeout: 15000 });
@@ -1026,7 +1034,7 @@ async function theGames(browser, base) {
     const w = await newPage(browser, base, { routes: [[/\/data\/games-catalog\.json/, cat]] });
     await w.page.goto(base + '/all-day/#games/challenge');
     await w.page.waitForSelector(gmPanel + ' [data-challenge]', { timeout: 15000 });
-    check(/No game can host a room right now/.test(await w.page.$eval(gmPanel + ' [data-challenge]', (n) => n.innerText)), 'with no game able to host, it says so instead of offering a dead button', '');
+    check(/No room games right now/.test(await w.page.$eval(gmPanel + ' [data-challenge]', (n) => n.innerText)) && !(await w.page.$(gmPanel + ' [data-challenge] [data-host]')), 'with no game able to host, it says so instead of offering a dead button', '');
     check(!errors.length && !w.errors.length, 'no console errors', errors.concat(w.errors).join(' | '));
     await w.ctx.close();
   });
@@ -1303,8 +1311,50 @@ async function theWhatNow(browser, base) {
     check(await page.$(wnPanel + ' .result:not(.rolling)') !== null, 'reduced motion: the answer lands at once, no reel', '');
     const txt = await page.$eval(wnPanel + ' .result', (r) => r.innerText);
     check(/Do it|Nothing fits all that/.test(txt), 'live: the real engine answers (or says honestly that nothing fits)', txt.slice(0, 80));
-    check(/^(Picked from \d+ things? that fit|Nothing in the hat for) right now/.test(await page.$eval(wnPanel + ' .note.pad', (n) => n.textContent)), 'the pool line says what the answer was picked from', '');
+    check(/^(\d+ things? fit|Nothing fits) right now/.test(await page.$eval(wnPanel + ' .note.pad', (n) => n.textContent)), 'the pool line says how many things fit', '');
     await page.screenshot({ path: path.join(SHOTS, 'live-whatnow-spin.png') });
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('What Now, the missions under the spinner (demo)', async () => {
+    /* Stephen, 2026-10-17: the missions live under the Spin button, no tap
+       to get in. A spin that lands on a mission's own place marks that row
+       and scrolls the list to it; the Missions chip is a jump down to it. */
+    const { ctx, page, errors } = await newPage(browser, base, { clock: etAt(19), seed: 7, motion: 'reduce' });
+    await page.goto(base + '/all-day/?demo=1#whatnow');
+    await page.waitForSelector(wnPanel + ' .spin .big:not([disabled])', { timeout: 15000 });
+    const order = await page.evaluate(() => {
+      const p = document.querySelector('#panel-whatnow');
+      const spin = p.querySelector('.spin'), list = p.querySelector('.missions');
+      return { both: !!spin && !!list, below: !!spin && !!list && !!(spin.compareDocumentPosition(list) & Node.DOCUMENT_POSITION_FOLLOWING), rows: p.querySelectorAll('.lrow.mission').length };
+    });
+    check(order.both && order.below && order.rows === 6, 'Spin opens with the whole missions list right below it', JSON.stringify(order));
+    check(await page.$eval('#subnav .chip.on', (b) => /Spin/.test(b.innerText)), 'and the Spin chip is the one lit', '');
+    let hit = '';
+    for (let i = 0; i < 40 && hit !== 'A flight at the cider bar'; i++) {
+      await page.click(wnPanel + ' .spin .big');
+      await page.waitForSelector(wnPanel + ' .result h3');
+      hit = await page.$eval(wnPanel + ' .result h3', (h) => h.textContent);
+    }
+    check(hit === 'A flight at the cider bar', 'the demo spins onto mission 2’s first place', hit);
+    const spun = await page.waitForFunction(() => {
+      const r = document.querySelector('#panel-whatnow .lrow.spun');
+      if (!r) return false;
+      const b = r.getBoundingClientRect();
+      return b.top >= 0 && b.bottom <= innerHeight ? r.dataset.k : false;
+    }, null, { timeout: 4000 }).then((h) => h.jsonValue(), () => null);
+    check(spun === 'm2', 'the spin marks its mission in the list and scrolls to it', spun);
+    check(await page.$$eval(wnPanel + ' .lrow.spun', (r) => r.length) === 1, 'only that one row is marked', '');
+    await page.click('#subnav .chip[data-chip="spin"]');
+    await page.click('#subnav .chip[data-chip="missions"]');
+    await page.waitForTimeout(300);
+    /* the demo's six missions make a short page: the list comes up as far as the panel scrolls */
+    const head = await page.$eval(wnPanel + ' [data-sec="missions"]', (h) => { const p = h.closest('.panel');
+      /* the mast may slide away once the panel scrolls, so measure from the top against its height, as app.jumpTo() does */
+      return { y: Math.round(h.getBoundingClientRect().top), mast: document.querySelector('#mast').offsetHeight, end: p.scrollTop >= p.scrollHeight - p.clientHeight - 2, top: p.scrollTop }; });
+    check(head.top > 0 && head.y >= 0 && (head.y <= head.mast + 40 || head.end), 'the Missions chip jumps down to the list, just under the mast', JSON.stringify(head));
+    check(await page.$(wnPanel + ' .result h3') !== null, 'and the answer is still there above it', '');
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
   });
@@ -1642,8 +1692,8 @@ async function theFood(browser, base) {
     await p2.page.waitForFunction((p) => !document.querySelector(p + ' [data-sec="kitchens"] .loading'), foodPanel);
     const txt = await p2.page.$eval(foodPanel + ' [data-sec="kitchens"]', (s) => s.innerText);
     const tiles = await p2.page.$$eval(foodPanel + ' [data-sec="kitchens"] .vcard', (c) => c.map((x) => x.dataset.k + (x.classList.contains('clip') ? ':clip' : '')));
-    check(/No new videos from the kitchens/.test(txt) && tiles.length === 4 && !tiles.some((t) => /clip|NotFood/.test(t)),
-      'with no videos it says so and shows the food accounts’ latest photos', tiles.join(', '));
+    check(!/No new videos from the kitchens/.test(txt) && tiles.length === 4 && !tiles.some((t) => /clip|NotFood/.test(t)),
+      'with no videos it shows the food accounts’ latest photos, and no explanation', tiles.join(', '));
     check(!p2.errors.length, 'no console errors', p2.errors.join(' | '));
     await p2.ctx.close();
   });
@@ -1660,7 +1710,7 @@ async function theFood(browser, base) {
     await page.goto(base + '/all-day/#food');
     await page.waitForSelector(foodPanel + ' .hero[data-k="bite"]', { timeout: 15000 });
     const hero = await page.$eval(foodPanel + ' .hero[data-k="bite"]', (h) => h.innerText);
-    check(/featured, not reviewed/i.test(hero) && hero.includes(dish.caption) && hero.includes(pick.name) && /sent in by Sam/.test(hero),
+    check(/^The Weekly Bite$/im.test(hero) && !/featured, not reviewed/i.test(hero) && hero.includes(dish.caption) && hero.includes(pick.name) && /sent in by Sam/.test(hero),
       'the Weekly Bite is the newest approved dish: its line, the place, the reader', hero);
     check(!/\b7\b/.test(hero) && !/vote|score|rating|★/i.test(hero), 'featured, never rated: no votes or score on it', hero);
     await page.click(foodPanel + ' .hero .btn:text("The place")');
@@ -1670,7 +1720,7 @@ async function theFood(browser, base) {
     /* the form: we feature, we don't review; nothing goes without consent */
     const form = foodPanel + ' form.dish';
     const add = await page.$eval(foodPanel + ' [data-sec="add"]', (s) => s.innerText);
-    check(/We feature, we don’t review\./.test(add), 'the form says we feature, we don’t review', '');
+    check(!/We feature, we don’t review|No stars, no scores/.test(add), 'the form carries no policy paragraph (the negative-word check still refuses)', add.slice(0, 160));
     check(!/\b(rate|rating|stars? (out of|\/))\b/i.test(add), 'nothing on the form asks for a rating', '');
     await page.setInputFiles(form + ' input[type=file]', { name: 'dish.png', mimeType: 'image/png', buffer: photo });
     await page.fill(form + ' input[name=line]', 'The cold sesame noodles, every time');
@@ -1729,9 +1779,10 @@ async function theFood(browser, base) {
     const toc = await page.$$eval('#subnav .chip', (c) => c.map((x) => x.dataset.chip));
     check(JSON.stringify(toc) === JSON.stringify(['bite', 'open', 'deals', 'kitchens', 'add']), 'the chip row is the table of contents: Bite, Open now, Deals, Kitchens, Feature a dish', toc.join(', '));
     await page.click('#subnav .chip[data-chip="add"]');
-    await page.waitForTimeout(700);
-    const top = await page.$eval(foodPanel + ' [data-sec="add"]', (s) => s.getBoundingClientRect().top);
-    check(top >= 0 && top < 260, 'a chip scrolls to its section', top);
+    await page.waitForTimeout(1200);
+    /* the last section of a short page cannot reach the top; then the panel is scrolled to its end */
+    const top = await page.$eval(foodPanel + ' [data-sec="add"]', (s) => { const p = s.closest('.panel'); return { top: Math.round(s.getBoundingClientRect().top), end: p.scrollTop >= p.scrollHeight - p.clientHeight - 2 }; });
+    check(top.top >= 0 && (top.top < 260 || top.end), 'a chip scrolls to its section', JSON.stringify(top));
     await page.screenshot({ path: path.join(SHOTS, 'demo-food-desktop-dark.png') });
     await page.goto(base + '/all-day/?demo=1#food/late');
     await page.reload();
@@ -1770,7 +1821,7 @@ async function accounts(browser, base) {
     await out.page.goto(base + '/all-day/');
     await settle(out.page);
     const t = await settingsText(out.page);
-    check(await out.page.$('.signin input[type=email]') !== null && /posting on a board and reporting do/.test(t), 'signed out: the email field, and what it is for', t.slice(0, 200));
+    check(await out.page.$('.signin input[type=email]') !== null && /An email link, no password\./.test(t), 'signed out: the email field, and one line on how it works', t.slice(0, 200));
     await out.ctx.close();
 
     /* the emailed link lands with tokens in the hash; /auth/v1/user names the reader */
@@ -1884,7 +1935,7 @@ async function accounts(browser, base) {
     await page.keyboard.press('Escape');
     await page.evaluate(() => import('/all-day/js/boards.js').then((b) => b.compose({ board: 'vintage', kind: 'spotted', heading: 'Post a find' })));
     await page.waitForFunction(() => !/One moment/.test(document.querySelector('.sheet-body').innerText));
-    check(/Posting is coming soon\. Everything else here works\./.test(await page.$eval('.sheet-body', (b) => b.innerText)), 'the compose sheet says the same, and offers no form', '');
+    check(/Posting is coming soon\./.test(await page.$eval('.sheet-body', (b) => b.innerText)), 'the compose sheet says the same, and offers no form', '');
     const l = await page.evaluate(() => import('/all-day/js/boards.js').then((b) => b.list('vintage').then((r) => ({ ok: r.ok, n: r.posts.length, err: r.error, status: b.status() }))));
     check(!l.ok && l.n === 0 && l.err === 'off' && l.status === 'off', 'a list resolves empty with "off", never throws', JSON.stringify(l));
     const real = errors.filter((e) => !/Failed to load resource: the server responded with a status of 404/.test(e));
@@ -1946,8 +1997,8 @@ async function theWatch(browser, base) {
     await page.route(/youtube-nocookie\.com|youtube\.com\/embed/, (r) => r.fulfill({ status: 200, body: '<!doctype html><title>YouTube</title>', contentType: 'text/html' }));
     await page.goto(base + '/all-day/#watch');
     await page.waitForSelector(wPanel + ' [data-grid]', { timeout: 15000 });
-    check(!(await page.$(wPanel + ' [data-sec="list"][data-seed]')) && /The 12 best-rated films on TMDB\./.test(await page.$eval(wPanel + ' [data-sec="list"]', (s) => s.innerText)),
-      'films.json is the list, and it is not called a starter list', await page.$eval(wPanel + ' [data-sec="list"]', (s) => s.innerText));
+    check(!(await page.$(wPanel + ' [data-sec="list"][data-seed]')) && /12 of 12 to go/.test(await page.$eval(wPanel + ' [data-sec="list"]', (s) => s.innerText)),
+      'films.json is the list, and its subtitle is only the count to go', await page.$eval(wPanel + ' [data-sec="list"]', (s) => s.innerText));
     check(JSON.stringify(await wTiles(page)) === JSON.stringify(films.top.map((f) => 'f' + f.id)), 'every film in its TMDB order', '');
     const toc = await page.$$eval('#subnav .chip', (c) => c.map((x) => x.textContent));
     check(JSON.stringify(toc) === JSON.stringify(['Coming soon', 'The list', 'Town', 'Next screening', 'Chat']), 'the chip row is the table of contents', toc.join(' / '));
@@ -1959,7 +2010,10 @@ async function theWatch(browser, base) {
     const box = await page.$eval(wPanel + ' [data-grid] .poster .c-media', (m) => { const r = m.getBoundingClientRect(); return Math.round(r.height / r.width * 100) / 100; });
     check(box === 1.5, 'a poster reserves its 2:3 box', box);
     const credit = await page.$eval(wPanel + ' [data-credit]', (c) => ({ text: c.innerText, logo: c.querySelector('img') && c.querySelector('img').getAttribute('src'), href: c.querySelector('a').href }));
-    check(/not endorsed or certified by TMDB/.test(credit.text) && credit.logo === '../assets/img/tmdb.svg' && credit.href === 'https://www.themoviedb.org/', 'TMDB’s logo and notice are on the tab', JSON.stringify(credit));
+    check(!credit.text.trim() && credit.logo === '../assets/img/tmdb.svg' && credit.href === 'https://www.themoviedb.org/', 'TMDB’s logo mark is on the tab, and only the mark', JSON.stringify(credit));
+    const about = await settingsText(page);
+    check(/not endorsed or certified by TMDB/.test(about) && await page.$('.sheet-body [data-credit="tmdb"] img[src="../assets/img/tmdb.svg"]') !== null, 'TMDB’s logo and notice are in Settings, About', about.slice(-260));
+    await page.keyboard.press('Escape');
 
     /* nothing plays until a tap, and then in the shell's one video box */
     await page.waitForTimeout(400);
@@ -1979,7 +2033,7 @@ async function theWatch(browser, base) {
     await page.click('.sheet-head .iconbtn');
     await page.click(wPanel + ' [data-k="soon:990003"]');
     await page.waitForSelector('.sheet-body', { timeout: 4000 });
-    check(await page.$eval('#vbox', (b) => b.hidden) && /No trailer on TMDB yet\./.test(await page.$eval('.sheet-body', (b) => b.innerText)), 'a film with no trailer opens its sheet instead, and says so', '');
+    check(await page.$eval('#vbox', (b) => b.hidden) && /No trailer yet\./.test(await page.$eval('.sheet-body', (b) => b.innerText)), 'a film with no trailer opens its sheet instead, and says so', '');
     await page.click('.sheet-head .iconbtn');
     /* the film sheet's trailer button: the same box */
     await page.click(wPanel + ' [data-k="f' + films.top[1].id + '"]');
@@ -1987,7 +2041,7 @@ async function theWatch(browser, base) {
     const sheet = await page.$eval('.sheet-body', (b) => b.innerText);
     check(sheet.includes(films.top[1].o.slice(0, 40)) && sheet.includes(String(films.top[1].y)) && /\dh \d+m/.test(sheet) && sheet.includes(films.top[1].g[0]),
       'the film sheet: overview, year, runtime, genres', sheet.slice(0, 200));
-    check(/not endorsed or certified by TMDB/.test(sheet), 'and TMDB’s notice', '');
+    check(await page.$('.sheet-body [data-credit] img[alt="TMDB"]') !== null && !/not endorsed/.test(sheet), 'and TMDB’s mark (the notice is in Settings)', '');
     await page.click('.sheet-body [data-trailer]');
     await page.waitForSelector('#vbox:not([hidden]) #vbox-frame iframe', { timeout: 4000 }).catch(() => {});
     check(await page.$eval('#vbox-frame iframe', (f) => f.getAttribute('src')).catch(() => '') === 'https://www.youtube-nocookie.com/embed/' + films.top[1].yt + '?autoplay=1&rel=0&playsinline=1' &&
@@ -2020,7 +2074,7 @@ async function theWatch(browser, base) {
     await page.goto(base + '/all-day/#watch');
     await page.waitForSelector(wPanel + ' [data-grid]', { timeout: 15000 });
     const head = await page.$eval(wPanel + ' [data-sec="list"]', (s) => ({ seed: s.dataset.seed, text: s.innerText }));
-    check(head.seed === '1' && /A starter list: 60 well-known films to begin with\./.test(head.text), 'the seed is labelled as a starter list', head.text);
+    check(head.seed === '1' && /60 of 60 to go/.test(head.text), 'the seed list is marked as the seed, and counts what is left', head.text);
     check(!(await page.$(wPanel + ' [data-sec="soon"]')), 'with no films.json there is no Coming soon (the seed has none)', '');
     const toc = await page.$$eval('#subnav .chip', (c) => c.map((x) => x.textContent));
     check(JSON.stringify(toc) === JSON.stringify(['The list', 'Town', 'Next screening', 'Chat']), 'and the table of contents leaves it out', toc.join(' / '));
@@ -2068,7 +2122,7 @@ async function theWatch(browser, base) {
     await page.waitForSelector('.sheet-body [data-stars="4"]');
     await page.click('.sheet-body [data-stars="4"]');
     const said = await page.$eval('.sheet-body [data-msg]', (m) => m.textContent);
-    check(/one email/.test(said) && await page.$('.sheet-body [data-signin]') !== null, 'signed out, a star says rating is one email to sign in, with the button', said);
+    check(/Sign in to rate/.test(said) && await page.$('.sheet-body [data-signin]') !== null, 'signed out, a star says to sign in, with the button', said);
     check(!supabase.some((u) => /nn_post_create/.test(u)), 'and nothing is posted', supabase.join(', '));
     await page.click('.sheet-head .iconbtn');
 
@@ -2076,7 +2130,7 @@ async function theWatch(browser, base) {
     check(JSON.stringify(doors) === JSON.stringify([['community', WATCH_CHAT], ['telegram', '../telegram.html']]), 'Watch chat: a door to the community channel and to Telegram', JSON.stringify(doors));
     check(await page.$(wPanel + ' [data-chat] input, ' + wPanel + ' [data-chat] textarea') === null, 'no chat is built here', '');
     const town = await page.$eval(wPanel + ' [data-slot="town"]', (s) => s.innerText);
-    check(/No film has three ratings this week yet/.test(town), 'with no ratings yet, town ratings say so', town);
+    check(/No ratings this week yet/.test(town), 'with no ratings yet, town ratings say so', town);
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
   });
@@ -2209,7 +2263,7 @@ async function theWatch(browser, base) {
     const before = await opts();
     check(before.length === 5, 'five films on the ballot', JSON.stringify(before));
     check(before.every((o, i) => i === 0 || parseFloat(before[i - 1].n) >= parseFloat(o.n)), 'most votes first', JSON.stringify(before.map((o) => o.n)));
-    check(/At five votes Stephen books it, puts it on Meetup/.test(await page.$eval(wPanel + ' [data-sec="vote"]', (s) => s.innerText)), 'it says what five votes does', '');
+    check(before.every((o) => / of 5$|going on Meetup/.test(o.n)) && !/At five votes/.test(await page.$eval(wPanel + ' [data-sec="vote"]', (s) => s.innerText)), 'each film shows its count out of five, and no rule paragraph', JSON.stringify(before.map((o) => o.n)));
     const target = before[2];
     await page.click(wPanel + ' [data-k="' + target.k + '"]');
     await page.waitForFunction((k) => document.querySelector('#panel-watch [data-k="' + k + '"]').getAttribute('aria-pressed') === 'true', target.k);
@@ -2265,7 +2319,7 @@ async function theWatch(browser, base) {
     await page.click(wPanel + ' [data-k="f' + f.id + '"]');
     await page.waitForSelector('.sheet-body [data-stars="4"]');
     await page.click('.sheet-body [data-stars="4"]');
-    check(/one email/.test(await page.$eval('.sheet-body [data-msg]', (m) => m.textContent)), 'signed out: rating asks for the sign-in', '');
+    check(/Sign in to rate/.test(await page.$eval('.sheet-body [data-msg]', (m) => m.textContent)), 'signed out: rating asks for the sign-in', '');
     await page.click('.sheet-head .iconbtn');
     await page.evaluate(() => import('/all-day/js/auth.js').then((a) => a.demoSignIn()));
     const before = await fakeOf(page, (x) => x.posts.filter((p) => p.board === 'watch' && p.kind === 'rating').length);
@@ -2372,7 +2426,7 @@ async function boards(browser, base) {
     await page.goto(base + '/all-day/?demo=1#vintage');
     await settle(page);
     await openCompose(page);
-    check(/Posting needs the email sign-in/.test(await page.$eval('.sheet-body', (b) => b.innerText)) && await page.$('.sheet-body form') === null, 'signed out, compose asks for sign-in and shows no form', '');
+    check(/Sign in to post\./.test(await page.$eval('.sheet-body', (b) => b.innerText)) && await page.$('.sheet-body form') === null, 'signed out, compose asks for sign-in and shows no form', '');
     await page.click('.sheet-body .linkrow button:has-text("Sign in")');
     await page.waitForSelector('.sheet-body .sheet-row button:has-text("Sign in")');
     await page.click('.sheet-body .sheet-row button:has-text("Sign in")');
@@ -2459,7 +2513,7 @@ async function boards(browser, base) {
     await page.waitForTimeout(100);
     check(Number(await page.$eval(first + ' [data-act=bvote] .n', (n) => n.textContent || 0)) === n0, 'unvote takes it back', '');
     await page.click(first + ' [data-act=breport]');
-    check(/Reporting needs the email sign-in/.test(await page.$eval('#toast', (t) => t.textContent)), 'signed out, report asks for sign-in', '');
+    check(/Sign in to report/.test(await page.$eval('#toast', (t) => t.textContent)), 'signed out, report asks for sign-in', '');
 
     await page.evaluate(() => import('/all-day/js/auth.js').then((a) => a.demoSignIn()));
     const target = await page.$eval(first, (c) => c.dataset.k.slice(2));
@@ -2515,7 +2569,7 @@ async function boards(browser, base) {
     await page.check('.bform input[name=consent]');
     await page.click('.bform button[type=submit]');
     await page.waitForSelector('#sheet[hidden]', { state: 'attached', timeout: 4000 });
-    check(/The photo shows once it’s been checked/.test(await page.$eval('#toast', (t) => t.textContent)), 'with a photo and consent: posted, the photo waits for the queue', await page.$eval('#toast', (t) => t.textContent));
+    check(/The photo shows once approved/.test(await page.$eval('#toast', (t) => t.textContent)), 'with a photo and consent: posted, the photo waits for the queue', await page.$eval('#toast', (t) => t.textContent));
     const orphan = await page.evaluate(() => import('/all-day/js/boards.js').then(async (b) => {
       const f = b._fake();
       const ban = f.bans; ban.set('demo-0000-4000-8000-00000000me00', Date.now());
@@ -2600,7 +2654,7 @@ async function boards(browser, base) {
     const pills = await page.$$eval('.sheet-body [data-interests] button', (bs) => bs.map((b) => [b.dataset.k, b.getAttribute('aria-pressed')]));
     check(pills.length === 10 && JSON.stringify(pills.find((x) => x[0] === 'books')) === '["books","true"]', 'the ten activities, with the one already chosen on', JSON.stringify(pills));
     const words = await page.$eval('.sheet-body [data-interests]', (b) => b.parentNode.innerText);
-    check(!/LGBTQ|woman|student|gender|\bage\b/i.test(words) && /nobody sees them unless you join/i.test(words), 'activities only, never who someone is, and who sees them is said', words);
+    check(!/LGBTQ|woman|student|gender|\bage\b/i.test(words) && /Private unless you join the directory/i.test(words), 'activities only, never who someone is, and who sees them is said', words);
     for (const k of ['running', 'games', 'music', 'dance', 'making', 'languages', 'food', 'sports', 'outdoors']) await page.click('.sheet-body [data-interests] button[data-k="' + k + '"]');
     const on = await page.$$eval('.sheet-body [data-interests] button.on', (bs) => bs.length);
     check(on === 8, 'eight at most: books and the first seven tapped; sports and outdoors, the ninth and tenth, do nothing', on);
@@ -2741,15 +2795,15 @@ async function theVintage(browser, base) {
     check(swapTop >= 0 && swapTop < 300, 'a chip scrolls its section up under the mast', swapTop);
     await page.click(vslot('spotted') + ' .addrow button');
     await page.waitForSelector('.sheet-body .linkrow');
-    check(/Posting needs the email sign-in/.test(await page.$eval('.sheet-body', (b) => b.innerText)) && !(await page.$('.sheet-body form')), 'Post a find, signed out: the sign-in note and no form', '');
+    check(/Sign in to post\./.test(await page.$eval('.sheet-body', (b) => b.innerText)) && !(await page.$('.sheet-body form')), 'Post a find, signed out: the sign-in note and no form', '');
     await page.click('.sheet-head .iconbtn');
     await page.click(vslot('fit') + ' .addrow button');
     await page.waitForSelector('.sheet-body .linkrow');
-    check(/Posting needs the email sign-in/.test(await page.$eval('.sheet-body', (b) => b.innerText)) && !(await page.$('.sheet-body form')), 'Post a fit check, signed out: the same', '');
+    check(/Sign in to post\./.test(await page.$eval('.sheet-body', (b) => b.innerText)) && !(await page.$('.sheet-body form')), 'Post a fit check, signed out: the same', '');
     await page.click('.sheet-head .iconbtn');
     await page.click(vslot('make') + ' .textcard button');
     await page.waitForSelector('.sheet-body .linkrow');
-    check(/Posting needs the email sign-in/.test(await page.$eval('.sheet-body', (b) => b.innerText)) && !(await page.$('.sheet-body form')), 'Send in your design, signed out: the same', '');
+    check(/Sign in to post\./.test(await page.$eval('.sheet-body', (b) => b.innerText)) && !(await page.$('.sheet-body form')), 'Send in your design, signed out: the same', '');
     await page.click('.sheet-head .iconbtn');
     await pageRules(page, 'vintage', 390);
     check(!errors.length, 'no console errors', errors.join(' | '));
@@ -2769,7 +2823,7 @@ async function theVintage(browser, base) {
     check(JSON.stringify(list) === JSON.stringify(shops), 'the shop field suggests the guide’s shops; anything typed still goes', JSON.stringify(list));
     const fields = await page.$$eval('.sheet-body .bf-label', (ls) => ls.map((l) => l.textContent.replace(/\s+/g, ' ').trim()));
     check(fields.includes('Shop') && fields.includes('Size optional') && fields.includes('Price optional'), 'the fields are the kind’s: shop (needed), size and price (optional)', JSON.stringify(fields));
-    check(/Your photo goes to Stephen first/.test(await page.$eval('.sheet-body', (b) => b.innerText)), 'the sheet says the photo goes to Stephen first', '');
+    check(/The photo shows once approved\./.test(await page.$eval('.sheet-body', (b) => b.innerText)), 'the sheet says, in one line, the photo shows once approved', '');
     await page.fill('.sheet-body input[name=title]', 'Corduroy chore coat');
     await page.click('.sheet-body .bform button[type=submit]');
     check(/Fill in the required details first/.test(await page.$eval('.sheet-body .bf-msg', (m) => m.textContent)), 'no shop: refused, with the reason', '');
@@ -2790,8 +2844,8 @@ async function theVintage(browser, base) {
     await page.click('#confirm [data-yes]');
     await page.waitForFunction((n) => Number(document.querySelector('.panel:not([hidden]) [data-thanks]').dataset.thanks) === n + 1, t0.n);
     const t1 = await thanksOf(page);
-    check(t1.n === t0.n + 1 && new RegExp(t1.n + ' finds posted here found a home lately').test(t1.text), 'the thank-you line counts one more find gone home', JSON.stringify([t0, t1]));
-    check(/No points and no prizes/.test(t1.text) && !/raffle|enter to win|\bearn|\bdraw\b/i.test(t1.text), 'a thank-you, not points, prizes or a raffle', t1.text);
+    check(t1.n === t0.n + 1 && new RegExp(t1.n + ' finds found a home lately').test(t1.text), 'the thank-you line counts one more find gone home', JSON.stringify([t0, t1]));
+    check(/Thank you\./.test(t1.text) && !/raffle|enter to win|\bearn|\bdraw\b|points|prizes/i.test(t1.text), 'a thank-you, and nothing about points, prizes or a raffle', t1.text);
     check(!(await page.$(vslot('spotted') + ' .card.board[data-k="b-' + id + '"]')), 'and the find leaves the grid', '');
     const got = await fakeOf(page, `(f) => { const p = f.posts.find((x) => x.id === '${id}'); return p && { got: p.meta.got, shop: p.meta.shop }; }`);
     check(got && got.got === true && got.shop === 'A stall at the Saturday market', 'the post’s got box is ticked on the board (boards.put), so everyone’s thank-you counts it', JSON.stringify(got));
@@ -3036,7 +3090,7 @@ async function theVintage(browser, base) {
     await page.goto(base + '/all-day/#vintage/b-0000dddd-0000-4000-8000-000000000001');
     await page.waitForSelector('.sheet-card[aria-label="Put it on a shirt"]', { timeout: 6000 }).catch(() => {});
     const shirt = await page.$eval('.sheet-body', (b) => ({ text: b.innerText, img: (b.querySelector('img') || {}).src || '' })).catch(() => ({ text: '', img: '' }));
-    check(/Camel’s Hump in gouache by Dev/.test(shirt.text) && /said yes to a shirt/.test(shirt.text) && /submissions\/art-1\.jpg$/.test(shirt.img), 'Art’s “Put it on a shirt” link opens the piece here, picture, title and maker', JSON.stringify(shirt));
+    check(/Camel’s Hump in gouache by Dev/.test(shirt.text) && /Vote for it on the Art wall/.test(shirt.text) && /submissions\/art-1\.jpg$/.test(shirt.img), 'Art’s “Put it on a shirt” link opens the piece here, picture, title and maker', JSON.stringify(shirt));
     check(!/\$\s?\d|\bprice\b/i.test(shirt.text), 'and it names no price', shirt.text);
     check(calls.some((c) => c.fn === 'nn_posts_list' && c.args.p_board === 'art' && JSON.stringify(c.args.p_filter) === '{"meta":{"shirt":"yes"}}'), 'it looks only among Art posts whose maker said yes to a shirt', '');
     check(!errors.length, 'no console errors', errors.join(' | '));
@@ -3164,12 +3218,12 @@ async function theArt(browser, base) {
     check(JSON.stringify(sh.acts) === '["artvote","share","breport"]' && /^#vintage\/b-/.test(sh.shirt || ''), 'and vote, share, report, and the shirt', JSON.stringify(sh));
     await page.screenshot({ path: path.join(SHOTS, 'demo-art-sheet-desktop-dark.png') });
     await page.click('.sheet-body [data-act="breport"]');
-    check(/Reporting needs the email sign-in/.test(await page.$eval('#toast', (t) => t.textContent)), 'report goes to the boards’ own flow (signed out, it asks for sign-in)', '');
+    check(/Sign in to report/.test(await page.$eval('#toast', (t) => t.textContent)), 'report goes to the boards’ own flow (signed out, it asks for sign-in)', '');
     await page.click('.sheet-head .iconbtn');
     await page.click(artPanel + ' .tile:has(.lbl)');
     await page.waitForSelector('.sheet-card');
     const g = await page.$eval('.sheet-body', (b) => ({ text: b.innerText, acts: [...b.querySelectorAll('[data-act]')].map((x) => x.dataset.act) }));
-    check(/Photo by Stephen/.test(g.text) && /community gallery/.test(g.text) && JSON.stringify(g.acts) === '["share"]', 'a gallery photo’s sheet: who took it, where, share, and no votes', JSON.stringify(g));
+    check(/Photo by Stephen/.test(g.text) && JSON.stringify(g.acts) === '["share"]', 'a gallery photo’s sheet: who took it, where, share, and no votes', JSON.stringify(g));
     await page.click('.sheet-head .iconbtn');
     await pageRules(page, 'art', 1280);
     check(!errors.length, 'no console errors', errors.join(' | '));
@@ -3189,7 +3243,7 @@ async function theArt(browser, base) {
     await page.click(artPanel + ' [data-sec="add"] button:has-text("Add a photo")');
     await page.waitForSelector('.sheet-body form.bform');
     check(await page.$('input[name="m:medium"]') === null && await page.$('select[name="m:shirt"]') !== null, 'Add a photo asks for the shirt, not a medium', '');
-    check(/Stephen approves every photo before it shows/.test(await page.$eval('.bform', (f) => f.innerText)), 'and says Stephen approves photos first', '');
+    check(/Photos show once approved\./.test(await page.$eval('.bform', (f) => f.innerText)), 'and says, in one line, that photos show once approved', '');
     await page.fill('input[name=display_name]', 'Robin');
     await page.fill('input[name=title]', 'Leddy at dusk');
     await page.fill('textarea[name=body]', 'From the end of the pier.');
@@ -3200,11 +3254,11 @@ async function theArt(browser, base) {
     await page.check('.bform input[name=consent]');
     await page.click('.bform button[type=submit]');
     await page.waitForSelector('#sheet[hidden]', { state: 'attached', timeout: 4000 });
-    check(/The photo shows once it’s been checked/.test(await page.$eval('#toast', (t) => t.textContent)), 'with it: posted, and the toast says the photo waits', await page.$eval('#toast', (t) => t.textContent));
+    check(/The photo shows once approved/.test(await page.$eval('#toast', (t) => t.textContent)), 'with it: posted, and the toast says the photo waits', await page.$eval('#toast', (t) => t.textContent));
     const row = await fakeOf(page, `(f) => { const p = f.posts.find((x) => x.title === 'Leddy at dusk'); return p && { kind: p.kind, meta: p.meta, body: p.body, photo: f.photos.get(p.photo_path).status }; }`);
     check(row && row.kind === 'photo' && row.meta.shirt === 'yes' && row.body === 'From the end of the pier.' && row.photo === 'pending', 'it is on the board as a photo post, its picture pending in the queue', JSON.stringify(row));
     await page.waitForFunction(() => !document.querySelector('#panel-art .waiting').hidden, null, { timeout: 3000 }).catch(() => {});
-    check(await artText(page, '.waiting') === '1 picture of yours is waiting for Stephen’s look.', 'Add yours says one is waiting', await artText(page, '.waiting'));
+    check(await artText(page, '.waiting') === '1 picture of yours is waiting for approval.', 'Add yours says one is waiting', await artText(page, '.waiting'));
     check(await page.$$eval(artPanel + ' .grid3 .tile', (t) => t.length) === tiles0 && !(await page.$(artPanel + ' .tile[aria-label^="Leddy at dusk"]')), 'and the wall does not show it yet', '');
     await fakeOf(page, `(f) => { const p = f.posts.find((x) => x.title === 'Leddy at dusk'); f.setPhoto(p.photo_path, 'approved'); return 1; }`);
     await artReload(page);
@@ -3230,7 +3284,7 @@ async function theArt(browser, base) {
     check(b1.length === 3 && !b1.some((b) => /Free easel/.test(b[0])), 'a notice past its thirty days leaves the board', JSON.stringify(b1));
     await page.click(artPanel + ' [data-sec="board"] .sec button:has-text("Post")');
     await page.waitForSelector('.sheet-card[aria-label="Post a notice"]');
-    check(/Posting needs the email sign-in/.test(await page.$eval('.sheet-body', (b) => b.innerText)), 'posting a notice asks for the sign-in first', '');
+    check(/Sign in to post\./.test(await page.$eval('.sheet-body', (b) => b.innerText)), 'posting a notice asks for the sign-in first', '');
     await page.click('.sheet-head .iconbtn');
     await pageRules(page, 'art', 390);
     check(!errors.length, 'no console errors', errors.join(' | '));
@@ -3316,7 +3370,7 @@ async function theArt(browser, base) {
     check(/^Pine Street mural/.test(tiles[0].label) && tiles.every((t) => /\/storage\/v1\/object\/public\/btb-photos\/submissions\/\w+\.jpg$/.test(t.src) && t.lazy === 'lazy'), 'newest approved first, lazy, from the public bucket', JSON.stringify(tiles[0]));
     check(!tiles.some((t) => /A board photo|Tacos/.test(t.label)), 'a board post’s photo and Food’s dishes stay off the gallery half', '');
     const invite = await page.$eval(artPanel + ' [data-sec="week"]', (s) => ({ text: s.innerText, k: s.querySelector('[data-k]') && s.querySelector('[data-k]').dataset.k }));
-    check(invite.k === 'invite' && /Nobody has put a picture on the wall yet/.test(invite.text) && /Best spot: Waterfront Park/.test(invite.text),
+    check(invite.k === 'invite' && /The wall starts with you|sunset scores/.test(invite.text) && /Add the first photo/.test(invite.text) && /Best spot: Waterfront Park/.test(invite.text),
       'with no posts at all, the top invites the first, with the best spot for tonight’s light', invite.text);
     await page.click(artPanel + ' .tile');
     await page.waitForSelector('.sheet-card[aria-label="Pine Street mural"]');
@@ -3325,7 +3379,7 @@ async function theArt(browser, base) {
     await page.click('.sheet-head .iconbtn');
     await page.click(artPanel + ' [data-sec="add"] button:has-text("Add a photo")');
     await page.waitForSelector('.sheet-card[aria-label="Add a photo"]');
-    check(/Posting needs the email sign-in/.test(await page.$eval('.sheet-body', (b) => b.innerText)), 'Add a photo, signed out, asks for the sign-in', '');
+    check(/Sign in to post\./.test(await page.$eval('.sheet-body', (b) => b.innerText)), 'Add a photo, signed out, asks for the sign-in', '');
     await page.click('.sheet-head .iconbtn');
     await pageRules(page, 'art', 390);
     await page.screenshot({ path: path.join(SHOTS, 'live-art-gallery.png') });
@@ -3623,8 +3677,8 @@ async function thePeople(browser, base) {
     check(rows[0].name === clubs.find((c) => c.featured).name, 'with nothing picked, the featured club leads', rows[0] && rows[0].name);
     const txt = await panelText(page);
     check(/No plans yet this week/.test(txt), 'an empty board says so and offers the first plan', '');
-    check(/Posting one takes the email sign-in/.test(txt), 'signed out, the tab says posting is one email', '');
-    check(/12 neighbors are in it/.test(txt) && /Sign in to see who’s in it/.test(txt), 'the directory: the count for anyone, the people after sign-in', '');
+    check(!/email sign-in|one email/.test(txt), 'signed out, the tab says nothing about sign-in (the Post sheet does)', '');
+    check(/12 neighbors in it/.test(txt) && await page.$(peoplePanel + ' [data-dir="out"] button') !== null, 'the directory: the count for anyone, a Sign in button for the people', '');
     const doors = await page.$$eval(peoplePanel + ' [data-sec="talk"] a.btn', (as) => as.map((a) => [a.textContent.trim(), a.href]));
     check(doors.length === 3 && /^Find Each Other/.test(doors[0][0]) && doors[0][1] === 'https://www.btownbrief.com/community/channels/music' &&
       /^Plans & Meetups/.test(doors[1][0]) && doors[1][1] === 'https://www.btownbrief.com/community/channels/meetups-hangouts' &&
@@ -3632,9 +3686,9 @@ async function thePeople(browser, base) {
     const chipsTxt = await page.$$eval('#subnav .chip', (cs) => cs.map((c) => c.textContent));
     check(JSON.stringify(chipsTxt) === JSON.stringify(['Who you are', 'Open to strangers', 'Mixers', 'Quiz', 'Directory']), 'the chip row is the table of contents', JSON.stringify(chipsTxt));
     await page.click('#subnav .chip[data-chip="quiz"]');
-    await page.waitForTimeout(700);
-    const top = await page.$eval(peoplePanel + ' [data-sec="quiz"]', (s) => Math.round(s.getBoundingClientRect().top));
-    check(top < 260, 'a chip scrolls to its section', top);
+    await page.waitForTimeout(1200);
+    const top = await page.$eval(peoplePanel + ' [data-sec="quiz"]', (s) => { const p = s.closest('.panel'); return { top: Math.round(s.getBoundingClientRect().top), end: p.scrollTop >= p.scrollHeight - p.clientHeight - 2 }; });
+    check(top.top < 260 || top.end, 'a chip scrolls to its section', JSON.stringify(top));
     await page.screenshot({ path: path.join(SHOTS, 'live-people-quiz.png') });
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
@@ -3702,7 +3756,7 @@ async function thePeople(browser, base) {
       check(make && make[1].p_meta.meetup === true && make[1].p_meta.ages === 'forties', 'on round two’s rules, the Meetup box and age band are the plan’s own fields', JSON.stringify(make && make[1].p_meta));
       check(!extra, 'and the side table is not written', JSON.stringify(extra));
     }
-    check(/Stephen will see you’re down for Meetup/.test(await page.$eval('#toast', (t) => t.textContent)), 'and the toast says so', '');
+    check(/^Posted/.test(await page.$eval('#toast', (t) => t.textContent)), 'and the toast says it posted', '');
     check(seen.every(([fn, b]) => !/@/.test(JSON.stringify(b))), 'no call carries an email', '');
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
@@ -3779,7 +3833,7 @@ async function thePeople(browser, base) {
     check((await planCards(page)).length >= 5, 'signed out, the plans show', '');
     await page.click(peoplePanel + ' [data-post]');
     await page.waitForSelector('.sheet-body .linkrow');
-    check(/Posting a plan needs the email sign-in: one email, no password/.test(await page.$eval('.sheet-body', (b) => b.innerText)) && await page.$('.sheet-body form') === null,
+    check(/Sign in to post\./.test(await page.$eval('.sheet-body', (b) => b.innerText)) && await page.$('.sheet-body form') === null,
       'signed out, Post a plan gives the sign-in note and no form', '');
     await page.keyboard.press('Escape');
     await page.evaluate(() => import('/all-day/js/auth.js').then((a) => a.demoSignIn()));
@@ -3852,7 +3906,7 @@ async function thePeople(browser, base) {
     await page.waitForSelector(peoplePanel + ' [data-quiz="done"]');
     const res = await page.$eval(peoplePanel + ' [data-quiz="done"]', (c) => ({ text: c.innerText, clubs: c.querySelectorAll('[data-quiz-clubs] .lrow').length,
       channel: c.querySelector('[data-channel] a').getAttribute('href'), mixers: c.querySelectorAll('a.lrow[href*="meetup.com/burlington-social"]').length }));
-    check(/Probably: Trail person/.test(res.text) && /a guess, not a box/.test(res.text), 'it ends in a suggested archetype the reader can change', res.text.slice(0, 160));
+    check(/Probably: Trail person/.test(res.text) && !/a guess, not a box/.test(res.text) && await page.$(peoplePanel + ' [data-quiz="done"] button') !== null, 'it ends in a suggested archetype the reader can take or not', res.text.slice(0, 160));
     check(res.clubs === 3 && res.mixers >= 1, 'with three clubs and the next mixers', JSON.stringify(res));
     check(res.channel === 'https://www.btownbrief.com/community/channels/meetups-hangouts', 'and the community channel that fits (a doer: Plans & Meetups)', res.channel);
     await page.screenshot({ path: path.join(SHOTS, 'demo-people-quiz.png') });
@@ -3887,7 +3941,9 @@ async function thePeople(browser, base) {
     await page.waitForTimeout(300);
     const p = await peek(page);
     check(p.tags.includes('music') && !p.tags.includes('running') && !p.tags.includes('books') && p.tags.includes('lgbtq'), 'a change made in the profile sheet is the tab’s; who you are stays as it was', JSON.stringify(p.tags));
-    check(/What you’re into is saved to your profile too/.test(await page.$eval(peoplePanel + ' [data-sec="arch"]', (s) => s.innerText)), 'and the tab says where each kind of tag lives', '');
+    check(!/stays on this phone|saved to your profile/.test(await page.$eval(peoplePanel + ' [data-sec="arch"]', (s) => s.innerText)) && /People tile and quiz[^.]*stay on this phone/.test(await settingsText(page)),
+      'where each kind of tag lives is said once, in Settings, not on the tab', '');
+    await page.keyboard.press('Escape');
     await page.evaluate(() => import('/all-day/js/boards.js').then((b) => b.setProfile({ display_name: 'Robin', interests: [] })));
     await page.waitForTimeout(400);
     check(!(await peek(page)).tags.some((t) => ['music', 'running', 'books'].includes(t)) && JSON.stringify(await profileOf()) === '[]',
@@ -3903,7 +3959,7 @@ async function thePeople(browser, base) {
     await page.goto(base + '/all-day/?demo=1#people/dir');
     await page.waitForSelector(peoplePanel + ' [data-dir="out"]');
     let txt = await page.$eval(peoplePanel + ' [data-sec="dir"]', (s) => s.innerText);
-    check(new RegExp(on.length + ' neighbors are in it').test(txt) && !on.concat(off).some((n) => txt.includes(n)), 'signed out: how many, and nobody by name', txt.slice(0, 200));
+    check(new RegExp(on.length + ' neighbors in it').test(txt) && !on.concat(off).some((n) => txt.includes(n)), 'signed out: how many, and nobody by name', txt.slice(0, 200));
     await page.evaluate(() => import('/all-day/js/auth.js').then((a) => a.demoSignIn()));
     await page.waitForSelector(peoplePanel + ' [data-dir="join"]');
     check(/Add your first name/.test(await page.$eval(peoplePanel + ' [data-dir="join"]', (c) => c.innerText)), 'signed in with no name: asked for one first', '');
@@ -3924,7 +3980,7 @@ async function thePeople(browser, base) {
     check(!/@/.test(txt) && !/@/.test(await page.$eval(peoplePanel, (p) => p.innerHTML)), 'no email anywhere on the tab', '');
     await page.click(peoplePanel + ' [data-sec="dir"] button:has-text("Leave the directory")');
     await page.waitForSelector(peoplePanel + ' [data-dir="join"]');
-    check(new RegExp(on.length + ' neighbors are in it').test(await page.$eval(peoplePanel + ' [data-sec="dir"]', (s) => s.innerText)), 'leaving takes you out of the count', '');
+    check(new RegExp(on.length + ' neighbors in it').test(await page.$eval(peoplePanel + ' [data-sec="dir"]', (s) => s.innerText)), 'leaving takes you out of the count', '');
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
   });
