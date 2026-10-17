@@ -1,28 +1,50 @@
 name: Refresh the Watch tab's films
 
-# Builds the film list All Day's Watch tab reads:
-#   scripts/build_films.py -> data/films.json on the `films-data` branch
-# (the top 300 on TMDB, what is coming to theaters and streaming, and what
-# is in US theaters now, with a YouTube trailer key for each where TMDB has
-# one). About 250 KB, rebuilt once a week.
+# Builds the three files All Day's Watch tab reads off the `films-data` branch:
+#
+#   data/films.json         scripts/build_films.py, Mondays. TMDB's top 300
+#                           films, trending films, coming soon, in theaters
+#                           now, and the shows: top rated, trending, airing.
+#   data/time-machine.json  scripts/build_time_machine.py, the 2nd of each
+#                           month. What was big each month for five years:
+#                           titles from the Wayback Machine's copies of Rotten
+#                           Tomatoes' front page, matched to TMDB. Keeps the
+#                           finished months from the last file, so a monthly
+#                           run reads two archived pages, not sixty.
+#   data/showtimes.json     scripts/build_showtimes.py, every morning. Times
+#                           at Partizanfilm, Majestic 10 and Essex Cinemas,
+#                           from each theater's own showtimes page.
 #
 # Same publishing shape as curate-top.yml: a single orphan commit,
 # force-pushed, fetched by the page straight off raw.githubusercontent.com,
-# so a new list never queues a Pages deploy.
+# so new data never queues a Pages deploy. Each run starts from the branch's
+# current files and replaces only what it rebuilt, so the daily showtimes
+# never wipe the weekly films.
 #
-# The key: a repository secret named TMDB_API_KEY (Settings → Secrets and
-# variables → Actions). Until it exists every run skips quietly and the tab
-# reads its baked starter list (all-day/data/films-seed.json).
+# The key: a repository secret named TMDB_API_KEY. Without it the films and
+# the time machine skip quietly; showtimes still build (their TMDB match,
+# which adds posters, is skipped).
 #
-# Failure posture: no key skips quietly (green). With a key, a wrong key or
-# any TMDB trouble fails the build step (red, so it is seen) before anything
-# is pushed, and the branch keeps its last good list.
+# Failure posture: a builder that fails writes nothing and the branch keeps
+# that file's last good copy; whatever did build is still published, and
+# the run then fails (red, so it is seen). A manual run from any branch but
+# main never publishes: it uploads what it built as an artifact instead.
 
 on:
   schedule:
-    # Mondays, about 6:20 am Eastern: TMDB's "upcoming" turns over weekly
+    # films: Mondays, about 6:20 am Eastern (TMDB's "upcoming" turns over weekly)
     - cron: '20 10 * * 1'
+    # the time machine: the 2nd of the month, about 6:40 am Eastern
+    - cron: '40 10 2 * *'
+    # showtimes: every morning, about 6:05 am Eastern
+    - cron: '5 10 * * *'
   workflow_dispatch:
+    inputs:
+      what:
+        description: 'What to build'
+        type: choice
+        options: [all, films, time-machine, showtimes]
+        default: all
 
 concurrency:
   group: refresh-films
@@ -34,44 +56,117 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
 
-      - name: Check for a TMDB key
-        id: key
+      - name: Decide what this run builds
+        id: plan
         env:
           TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
+          EVENT: ${{ github.event_name }}
+          SCHEDULE: ${{ github.event.schedule }}
+          WHAT: ${{ inputs.what }}
         run: |
-          if [ -z "$TMDB_API_KEY" ]; then
-            echo "no TMDB_API_KEY secret yet, skipping (the tab reads its starter list)"
-            echo "ready=false" >> "$GITHUB_OUTPUT"
+          films=false; tm=false; shows=false
+          if [ "$EVENT" = "schedule" ]; then
+            case "$SCHEDULE" in
+              '20 10 * * 1') films=true ;;
+              '40 10 2 * *') tm=true ;;
+              *) shows=true ;;
+            esac
           else
-            echo "ready=true" >> "$GITHUB_OUTPUT"
+            case "${WHAT:-all}" in
+              films) films=true ;;
+              time-machine) tm=true ;;
+              showtimes) shows=true ;;
+              *) films=true; tm=true; shows=true ;;
+            esac
           fi
+          if [ -z "$TMDB_API_KEY" ]; then
+            echo "no TMDB_API_KEY secret: films and the time machine skip"
+            films=false; tm=false
+          fi
+          echo "films=$films" >> "$GITHUB_OUTPUT"
+          echo "tm=$tm" >> "$GITHUB_OUTPUT"
+          echo "shows=$shows" >> "$GITHUB_OUTPUT"
+          echo "films=$films time-machine=$tm showtimes=$shows"
 
-      - name: Build the film list
-        if: steps.key.outputs.ready == 'true'
-        env:
-          TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
+      - name: Run the builders' offline checks
         run: |
           python3 scripts/build_films.py --selftest
-          mkdir -p /tmp/films-out/data
-          python3 scripts/build_films.py --out /tmp/films-out/data/films.json
+          python3 -m unittest tests.test_build_time_machine tests.test_build_showtimes
+
+      - name: Start from the branch's current files
+        run: |
+          git clone -q --depth 1 --branch films-data \
+            "https://github.com/${{ github.repository }}.git" /tmp/films-out \
+            || mkdir -p /tmp/films-out
+          rm -rf /tmp/films-out/.git
+          mkdir -p /tmp/films-out/data /tmp/films-new/data
+
+      - name: Build the film list
+        id: films
+        if: steps.plan.outputs.films == 'true'
+        continue-on-error: true
+        env:
+          TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
+        run: python3 scripts/build_films.py --out /tmp/films-new/data/films.json
+
+      - name: Build the time machine
+        id: tm
+        if: steps.plan.outputs.tm == 'true'
+        continue-on-error: true
+        env:
+          TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
+        run: |
+          python3 scripts/build_time_machine.py \
+            --prev /tmp/films-out/data/time-machine.json \
+            --out /tmp/films-new/data/time-machine.json
+
+      - name: Build today's showtimes
+        id: shows
+        if: steps.plan.outputs.shows == 'true'
+        continue-on-error: true
+        env:
+          TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
+        run: python3 scripts/build_showtimes.py --out /tmp/films-new/data/showtimes.json
+
+      - name: Lay the new files over the old
+        id: lay
+        run: |
+          n=0
+          for f in /tmp/films-new/data/*.json; do
+            [ -s "$f" ] || continue
+            cp "$f" /tmp/films-out/data/
+            echo "new: $(basename "$f") ($(wc -c < "$f") bytes)"
+            n=$((n + 1))
+          done
+          echo "n=$n" >> "$GITHUB_OUTPUT"
 
       - name: Force-push the single-commit films-data branch
-        if: steps.key.outputs.ready == 'true'
+        if: steps.lay.outputs.n != '0' && github.ref == 'refs/heads/main'
         run: |
-          if [ ! -s /tmp/films-out/data/films.json ]; then
-            echo "nothing written this run — leaving the branch alone"
-            exit 0
-          fi
           cd /tmp/films-out
           git init -q -b films-data
           git config user.name "btown-brief-bot"
           git config user.email "actions@users.noreply.github.com"
-          git add data/films.json
+          git add data
           git commit -q -m "Films $(date -u +%FT%TZ)"
           git push -q --force \
             "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" \
             films-data
+
+      - name: Keep what a branch run built (it never publishes)
+        if: steps.lay.outputs.n != '0' && github.ref != 'refs/heads/main'
+        uses: actions/upload-artifact@v4
+        with:
+          name: films-data-preview
+          path: /tmp/films-new/data/
+          retention-days: 7
+
+      - name: Fail the run if a builder failed
+        if: steps.films.outcome == 'failure' || steps.tm.outcome == 'failure' || steps.shows.outcome == 'failure'
+        run: |
+          echo "films: ${{ steps.films.outcome }}, time machine: ${{ steps.tm.outcome }}, showtimes: ${{ steps.shows.outcome }}"
+          exit 1
