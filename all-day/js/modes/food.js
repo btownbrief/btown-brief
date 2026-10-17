@@ -228,13 +228,13 @@ const menuOf = (r) => (S.menus ? r.aka.map((id) => S.menus[id]).find(Boolean) ||
 
 /* the restaurants page's own tests, minus the ones this tab does not carry */
 const FILTERS = [
-  { key: 'open', label: 'Open now', note: 'Open at this minute.', test: (r, t) => isOpen(r, t) },
-  { key: 'late', label: 'Open late', note: 'Open until 11 pm or later tonight.',
+  { key: 'open', label: 'Open now', test: (r, t) => isOpen(r, t) },
+  { key: 'late', label: 'Open late',
     test: (r, t) => { if (!hasHours(r)) return false; const c = F.latestCloseTonight(r.hours, t.day); return c !== null && c >= LATE; } },
-  { key: 'patio', label: 'Patios', note: 'Outdoor seating, open right now.', test: (r, t) => r.patio === true && isOpen(r, t) },
-  { key: 'hh', label: 'Happy hour', note: 'A happy hour on today.', test: (r, t) => dealsAt(r).some((d) => d.type === 'happy-hour' && F.dealAppliesToday(d, t)) },
-  { key: 'cheap', label: 'Under $15', note: 'A real meal for under fifteen dollars.', test: (r) => r.under_15 === true },
-  { key: 'deal', label: 'Deals', note: 'A verified deal on today.', test: (r, t) => dealsAt(r).some((d) => F.dealAppliesToday(d, t)) },
+  { key: 'patio', label: 'Patios', test: (r, t) => r.patio === true && isOpen(r, t) },
+  { key: 'hh', label: 'Happy hour', test: (r, t) => dealsAt(r).some((d) => d.type === 'happy-hour' && F.dealAppliesToday(d, t)) },
+  { key: 'cheap', label: 'Under $15', test: (r) => r.under_15 === true },
+  { key: 'deal', label: 'Deals', test: (r, t) => dealsAt(r).some((d) => F.dealAppliesToday(d, t)) },
 ];
 const filterOf = (k) => FILTERS.find((f) => f.key === k) || FILTERS[0];
 const listFor = (k, t) => S.places.filter((r) => filterOf(k).test(r, t));
@@ -322,8 +322,7 @@ function paintBite(host) {
   if (S.dish === undefined) { host.appendChild(el('p', 'loading', 'Finding this week’s bite…')); return; }
   const p = S.dish;
   if (!p) {
-    const tc = el('div', 'textcard gap', '<h3 class="serif">The Weekly Bite starts with you</h3><p>' +
-      esc('One photo of something you ate here, one line about it, and the place. Each week one gets featured right here, with your name on it. We feature, we don’t review.') + '</p>');
+    const tc = el('div', 'textcard gap', '<h3 class="serif">The Weekly Bite starts with you</h3>');
     tc.dataset.k = 'bite';
     const row = el('div', 'row');
     row.appendChild(button('Feature a dish ' + ICON.arrow, '', () => jump('add')));
@@ -336,7 +335,7 @@ function paintBite(host) {
   hero.dataset.k = 'bite';
   const where = [p.spot, p.area && p.area !== 'Elsewhere' ? p.area : ''].filter(Boolean).join(' · ');
   hero.innerHTML = '<span class="c-media r45" data-zoom>' + art(p.url) + '</span>' +
-    '<span class="eyebrow">' + esc('The Weekly Bite · featured, not reviewed') + '</span>' +
+    '<span class="eyebrow">' + esc('The Weekly Bite') + '</span>' +
     '<h3>' + esc(trim(p.caption, LINE_MAX) || p.spot || 'This week’s dish') + '</h3>' +
     '<p>' + esc([where, p.credit ? 'sent in by ' + p.credit : '', p.label || ''].filter(Boolean).join(' · ')) + '</p>';
   const row = el('div', 'row');
@@ -357,7 +356,7 @@ function paintOpen(host) {
   const t = now();
   const f = filterOf(S.f);
   const list = listFor(f.key, t);
-  section(host, 'Open now', esc(f.note) + ' <b>' + esc(plural(list.length, 'place', 'places')) + '</b>, nearest Church Street first. Hours checked against Google.');
+  section(host, 'Open now', '<b>' + esc(plural(list.length, 'place', 'places')) + '</b> · nearest first');
   host.appendChild(chips(FILTERS.map((x) => ({ key: x.key, label: x.label, n: listFor(x.key, t).length })), S.f,
     (k) => { S.f = k; S.all = false; paint('open'); }, 'filters'));
   const box = el('div', 'places');
@@ -365,12 +364,13 @@ function paintOpen(host) {
   shown.forEach((r) => box.appendChild(placeRow(r, t)));
   host.appendChild(box);
   if (!list.length) {
-    host.appendChild(el('p', 'note pad', esc(f.key === 'open' || f.key === 'patio' ? 'Nothing with checked hours is open at this minute. Open late shows tonight’s late ones.' : 'Nothing fits that today.')));
+    host.appendChild(el('p', 'note pad', esc(f.key === 'open' || f.key === 'patio' ? 'Nothing open right now.' : 'Nothing fits that today.')));
   } else if (list.length > shown.length) {
     host.appendChild(button('All ' + list.length + ' ' + ICON.arrow, 'ghost more', () => { S.all = true; paint('open'); }));
   } else {
-    host.appendChild(el('p', 'note pad', esc('That’s all ' + plural(list.length, 'place', 'places') + '. Every filter and the whole guide are on ') +
-      '<a href="' + esc(GUIDE_URL) + '"><b>' + esc('the restaurants page') + '</b></a>.'));
+    const r = el('div', 'addrow');
+    r.appendChild(outLink('All restaurants', GUIDE_URL, 'btn ghost sm', true));
+    host.appendChild(r);
   }
 }
 
@@ -432,7 +432,6 @@ function placeSheet(r) {
     links.appendChild(g);
     links.appendChild(button(ICON.share + ' Share', 'ghost sm', () => app.share(KEY, 'r-' + r.id, r.name)));
     body.appendChild(links);
-    body.appendChild(el('p', 'sheet-note', esc('We feature, we don’t review. The reviews, good and otherwise, are on Google.')));
   });
 }
 
@@ -463,9 +462,9 @@ function paintDeals(host) {
   const t = now();
   const all = deck(t);
   const cards = all.slice(0, DECK_MAX);
-  section(host, 'Deals today', esc(all.length ? plural(all.length, 'deal', 'deals') + ' on today, happening now first. Tap the right side for the next one.' : 'Deals with a verified date, from the deals page.'));
+  section(host, 'Deals today', all.length ? '<b>' + esc(plural(all.length, 'deal', 'deals')) + '</b> · now first' : null);
   if (!cards.length) {
-    host.appendChild(el('p', 'note pad', esc('No verified deals on today. The week’s deals are on the deals page.')));
+    host.appendChild(el('p', 'note pad', esc('No deals on today.')));
     return;
   }
   if (S.deal > cards.length) S.deal = 0;
@@ -482,7 +481,7 @@ function paintDeals(host) {
     if (i === cards.length) {
       box.dataset.k = 'deals-end';
       box.innerHTML = tint('deals-end') + segs + '<div class="body"><div class="eyebrow">' + esc('That’s today') + '</div><h3>' +
-        esc(plural(all.length, 'deal', 'deals') + ' on today, each one verified') + '</h3><p>' + esc('Every day of the week is on the deals page.') + '</p><div class="row"></div></div>' + hits;
+        esc(plural(all.length, 'deal', 'deals') + ' on today') + '</h3><div class="row"></div></div>' + hits;
       box.querySelector('.row').append(outLink('All the deals', DEALS_PAGE, 'btn ghost sm', true), button('Start over', 'ghost sm', () => go(0)));
     } else {
       const x = cards[i];
@@ -524,21 +523,21 @@ const hasClip = (p, nowS) => typeof p.vu === 'string' && /^https:\/\//.test(p.vu
 
 function paintKitchens(host) {
   if (!S.posts || !S.foodSet) {
-    section(host, 'In their own words', esc('Short videos from the kitchens themselves.'));
-    host.appendChild(S.igFailed ? el('p', 'note pad', esc('The kitchens’ posts didn’t load. They come in once a day; try again in a bit.')) : el('p', 'loading', 'Loading the kitchens…'));
+    section(host, 'In their own words');
+    host.appendChild(S.igFailed ? el('p', 'note pad', esc('Didn’t load. Try again later.')) : el('p', 'loading', 'Loading the kitchens…'));
     return;
   }
   const nowS = Date.now() / 1000;
   const food = S.posts.filter((p) => isFood(p) && pictureOk(p, nowS)).sort((a, b) => b.ts - a.ts);
   const clipsList = food.filter((p) => hasClip(p, nowS)).slice(0, RAIL_MAX);
   if (clipsList.length) {
-    section(host, 'In their own words', esc('Short videos from the kitchens themselves, newest first. Nothing plays until you tap.'));
+    section(host, 'In their own words');
     const r = rail(host);
     clipsList.forEach((p) => r.appendChild(clipCard(p)));
     return;
   }
-  section(host, 'In their own words', esc(food.length ? 'No new videos from the kitchens this week, so here are their latest photos.' : 'Nothing new from the kitchens this week.'));
-  if (!food.length) return;
+  section(host, 'In their own words');
+  if (!food.length) { host.appendChild(el('p', 'note pad', 'Nothing new this week.')); return; }
   const r = rail(host);
   food.slice(0, RAIL_MAX).forEach((p) => r.appendChild(photoCard(p)));
 }
@@ -580,11 +579,9 @@ const AREA_OF = { 'Essex': 'Essex / Essex Jct', 'Burlington': 'Greater Burlingto
 const NEGATIVE = /\b(worst|terrible|awful|gross|disgusting|overpriced|bland|rude|avoid|never again|inedible|mid)\b/i;
 
 function paintAdd(host) {
-  section(host, 'Feature a dish', esc('What should the town taste next?'));
+  section(host, 'Feature a dish');
   const tc = el('div', 'textcard');
   tc.dataset.k = 'add-form';
-  tc.innerHTML = '<h3 class="serif">' + esc('We feature, we don’t review.') + '</h3><p>' +
-    esc('One photo of something you ate here, one line about it, and the place. No stars, no scores, nothing negative: if you wouldn’t tell a friend to order it, leave it out. Every place links to its Google reviews for the rest.') + '</p>';
   const form = el('form', 'dish');
   form.noValidate = true;
   const names = S.places.map((r) => '<option value="' + esc(r.name) + '"></option>').join('');
@@ -596,7 +593,7 @@ function paintAdd(host) {
       '<datalist id="food-places">' + names + '</datalist></div>' +
     '<div class="row"><input class="field" name="credit" maxlength="60" placeholder="' + esc('Your first name, for the credit (optional)') + '" aria-label="Your name for the credit" autocomplete="given-name"></div>' +
     '<div class="row"><label class="consent"><input type="checkbox" name="consent"> ' + esc('I took this photo, and the Brief may feature it on the site and in the newsletter.') + '</label></div>' +
-    '<div class="row"><button type="submit" class="btn send">' + esc('Send it in') + '</button><span class="fine">' + esc('Reviewed before it appears, usually within a day.') + '</span></div>' +
+    '<div class="row"><button type="submit" class="btn send">' + esc('Send it in') + '</button></div>' +
     '<p class="note err" role="alert" hidden></p>';
   const file = form.querySelector('input[type=file]');
   form.querySelector('.pick').addEventListener('click', () => file.click());
@@ -616,16 +613,16 @@ function submitDish(form) {
   const credit = String(fd.get('credit') || '').replace(/\s+/g, ' ').trim();
   if (!file || !file.size) return say('Choose a photo first.');
   if (!/^image\//.test(file.type || 'image/')) return say('That file isn’t a photo.');
-  if (!line) return say('Add one line about it: what it is, and why.');
-  if (NEGATIVE.test(line)) return say('We only feature what you’d recommend. Tell us what you liked about it.');
+  if (!line) return say('Add one line about it.');
+  if (NEGATIVE.test(line)) return say('We only feature what you’d recommend.');
   if (!place) return say('Which place is it from?');
-  if (!fd.get('consent')) return say('Tick the box first: we only feature photos you took and said we could use.');
+  if (!fd.get('consent')) return say('Tick the box first.');
   say('');
   const send = form.querySelector('.send');
   if (app.demo) {
     form.reset();
     form.querySelector('.fname').textContent = 'No photo yet';
-    app.toast('Demo: nothing was sent. In the real build it goes to the review queue.');
+    app.toast('Demo: nothing was sent.');
     return;
   }
   send.disabled = true;
@@ -647,7 +644,7 @@ function submitDish(form) {
     send.disabled = false;
     send.textContent = 'Send it in';
     say('');
-    app.toast('Sent. Thank you: it’s in the queue, and we’ll look today.');
+    app.toast('Sent. It shows once reviewed.');
   }).catch((e) => {
     send.disabled = false;
     send.textContent = 'Send it in';
