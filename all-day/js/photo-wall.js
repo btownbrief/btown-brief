@@ -29,7 +29,8 @@
                                  story's lead image) with vote, share and the way
                                  to the original
      compose(kind, onPosted)     the photo-and-art submission sheet (boards.compose),
-                                 moderated by the photo queue */
+                                 moderated by the photo queue; a photo asks what it
+                                 is (PHOTO_CATS) */
 
 import * as app from './app.js';
 import * as boards from './boards.js';
@@ -89,13 +90,31 @@ export function winners(pics, weekly, now = Date.now(), weeks = 8) {
   return out;
 }
 
+/* ------------------------------------------------------- photo kinds */
+/* What a reader's photo is, picked when they post it (Stephen, 2026-10-17:
+   vibe checks at bars, cafes and venues, event posters around town, food,
+   pets). The art board has no category field and boards-core.js is the
+   foundation's, so a photo post carries its kind in the board's `medium`
+   text field ("Pets"), which the sheet already shows as "Photo · Pets"; a
+   real medium only ever rides on an `art` post. The photo queue's own
+   category (btb_photos.category, db/photos.sql) stays 'other' for these,
+   because boards.js files every art-board photo that way.
+   Gallery photos (photos.html) carry the queue's own categories, mapped onto
+   these by GALLERY_CAT. */
+export const PHOTO_CATS = [['vibe', 'Vibe check'], ['posters', 'Event poster'], ['food', 'Food'], ['pets', 'Pets'], ['other', 'Other']];
+const CAT_OF_WORD = Object.fromEntries(PHOTO_CATS.map(([k, w]) => [w.toLowerCase(), k]));
+export const GALLERY_CAT = { pets: 'pets', food: 'food', events: 'vibe' };
+export const catOfMedium = (m) => CAT_OF_WORD[String(m || '').trim().toLowerCase()] || '';
+
 /* ------------------------------------------------------------ the items */
-const metaLine = (p) => [KIND_WORD[p.kind] || '', p.meta && p.meta.medium].filter(Boolean).join(' · ');
+const metaLine = (p) => [KIND_WORD[p.kind] || '', p.meta && p.meta.medium !== 'Other' && p.meta.medium].filter(Boolean).join(' · ');
 export function boardPic(post, opts = {}) {
   const it = boards.item(post, { tab: opts.tab || 'wire', ratio: opts.ratio || 'r45', meta: metaLine });
   it.pic = true;
   it.shirt = !!(post.meta && post.meta.shirt === 'yes');
-  it.medium = (post.meta && post.meta.medium) || '';
+  const medium = (post.meta && post.meta.medium) || '';
+  it.cat = post.kind === 'photo' ? catOfMedium(medium) : '';
+  it.medium = it.cat === 'other' ? '' : medium;
   it.what = KIND_WORD[post.kind];
   return it;
 }
@@ -104,7 +123,7 @@ export function galleryPic(g, tab = 'wire') {
   const when = Date.parse(g.approved_on ? g.approved_on + 'T12:00:00Z' : '') || 0;
   const area = g.area && g.area !== 'Elsewhere' ? g.area : '';
   const day = when ? new Date(when).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' }) : '';
-  return { k: 'g-' + g.id, kind: 'image', gallery: true, href: '#' + tab + '/g-' + g.id, local: g.area !== 'Elsewhere',
+  return { k: 'g-' + g.id, kind: 'image', gallery: true, href: '#' + tab + '/g-' + g.id, local: g.area !== 'Elsewhere', cat: GALLERY_CAT[g.category] || '',
     title: g.caption || g.spot || area || g.taken_on || day || 'A photo from the gallery',
     text: g.caption || '', author: g.credit || '', spot: g.spot || '', area,
     media: g.url, ratio: 'r45', created: when / 1000, ago: when ? agoShort(when / 1000) : '' };
@@ -260,9 +279,11 @@ function upBtn(it) {
 export function compose(kind, onPosted) {
   const fields = [];
   if (kind === 'art') fields.push({ key: 'medium', label: 'Medium', type: 'text', max: 40, placeholder: 'Gouache, linocut, oil, ink…' });
+  /* the photo's kind, stored as its word (see PHOTO_CATS) */
+  else fields.push({ key: 'medium', label: 'What is it?', type: 'enum', required: true, options: PHOTO_CATS.map(([, w]) => [w, w]) });
   fields.push({ key: 'shirt', label: 'Could it go on a shirt?', type: 'enum', options: [['yes', 'Yes'], ['no', 'No']] });
   return boards.compose({
-    board: 'art', kind, heading: kind === 'art' ? 'Add art' : 'Add a photo',
+    board: 'art', kind, heading: kind === 'art' ? 'Add art' : 'Post a photo',
     title: 'Title', titlePlaceholder: kind === 'art' ? 'The breakwater light, in fog' : 'North Beach, 6:52 am',
     body: 'One line about it', bodyPlaceholder: kind === 'art' ? 'Where you made it, what with' : 'Where you stood, what you saw',
     fields, cta: 'Send it in',
