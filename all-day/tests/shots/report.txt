@@ -1575,7 +1575,7 @@
   ok   On Air, demo › a chip scrolls to its section
   ok   On Air, demo › Local: the Brief’s own show is first in Podcasts
   ok   On Air, demo › Local: every local show, no national ones
-  ok   On Air, demo › Local: Btown TV shows only the local picks
+  ok   On Air, demo › Local: the picks rail is only the local picks
   ok   On Air, demo › each pick carries its reason
   ok   On Air, demo › Everything adds exactly three wider picks (5 + 3)
   ok   On Air, demo › and the local picks still lead
@@ -1600,6 +1600,8 @@
   ok   On Air, live › the card says when it is read
   ok   On Air, live › “Read it instead” shows the script the voice read
   ok   On Air, live › play loads today’s MP3 from the wire-audio branch into the shell’s player
+  ok   On Air, live › the Brief plays at 1.25x by default, pitch kept
+  ok   On Air, live › 1.5x speeds up the playing clip at once, no reload
   ok   On Air, live › the player survives a tab switch
   ok   On Air, live › a reaction says what it teaches
   ok   On Air, live › it is written to btown-tv-reacts, the key tv.html used
@@ -1623,6 +1625,33 @@
   ok   On Air, Play on your TV › none anywhere: no link at all
   ok   On Air, Play on your TV › none: no console errors
   ok   On Air, Play on your TV › demo: the button toasts instead of leaving
+  ok   On Air, more of the edition and past nights › Local: the whole edition is on the face, each video once (5 picks + 22 more = 27)
+  ok   On Air, more of the edition and past nights › the second rail is headed with its count
+  ok   On Air, more of the edition and past nights › the second rail is two rows deep, every cover full width
+  ok   On Air, more of the edition and past nights › at 390 wide, four whole covers on screen and the next ones peeking (was one and a half)
+  ok   On Air, more of the edition and past nights › and it scrolls sideways for the rest
+  ok   On Air, more of the edition and past nights › tonight: the header as before, no subtitle
+  ok   On Air, more of the edition and past nights › the arrows are 44 px targets with labels
+  ok   On Air, more of the edition and past nights › tonight: “Later night” is disabled, “Earlier night” is not
+  ok   On Air, more of the edition and past nights › one back: last night’s edition, its date and a way back to tonight
+  ok   On Air, more of the edition and past nights › and that night’s videos, in place
+  ok   On Air, more of the edition and past nights › both arrows live now, focus stays on the one pressed
+  ok   On Air, more of the edition and past nights › with that night’s own TV playlist
+  ok   On Air, more of the edition and past nights › the oldest night: “Earlier night” disabled, focus moves to the other arrow
+  ok   On Air, more of the edition and past nights › “Later night” steps forward one
+  ok   On Air, more of the edition and past nights › “Tonight” comes back
+  ok   On Air, more of the edition and past nights › Past nights stays below
+  ok   On Air, more of the edition and past nights › Everything: “Last night, local and beyond”
+  ok   On Air, more of the edition and past nights › no console errors
+  ok   On Air, speed and the newsletter › three speeds on the card, 1.25x unless chosen
+  ok   On Air, speed and the newsletter › a labelled group
+  ok   On Air, speed and the newsletter › 1.5x picked
+  ok   On Air, speed and the newsletter › and remembered on this phone
+  ok   On Air, speed and the newsletter › still 1.5x after a reload
+  ok   On Air, speed and the newsletter › “Read the Brief” opens btownbrief.com in a new tab
+  ok   On Air, speed and the newsletter › beside “Read it instead”, under the card
+  ok   On Air, speed and the newsletter › one row at 390 wide
+  ok   On Air, speed and the newsletter › no console errors
   ok   On Air, the audio card › no clip: no audio card, no section, no chip
   ok   On Air, the audio card › none: no console errors
   ok   On Air, the audio card › no clip today: the latest one, with its date (Friday, October 16)
@@ -1805,7 +1834,7 @@
   ok   sign-in fails soft › a bad address is caught before any request
   ok   sign-in fails soft › no link was requested
   ok   sign-in fails soft › no console errors
-  ok   performance › the live Wire redraws 60 cards in 7ms (budget 100)
+  ok   performance › the live Wire redraws 60 cards in 6ms (budget 100)
   ok   shell fixes: a rail never snaps flush to the edge › 390: .rail carries scroll-padding of one gutter
   ok   shell fixes: a rail never snaps flush to the edge › 390: a card scrolled to the start stops at the gutter
   ok   shell fixes: a rail never snaps flush to the edge › 390: no console errors
@@ -1859,7 +1888,7 @@
   ok   cutover: every old tab’s link lands on the nearest new tab › a bare #reddit opens the Wire on its Reddit chip
   ok   cutover: every old tab’s link lands on the nearest new tab › an old Music link opens What Now on Tonight
   ok   cutover: every old tab’s link lands on the nearest new tab › no console errors
-  ok   shell fixes: the offline shell carries the new modules › sw.js VERSION is bumped for the Wire’s Photo mode after the run clubs’ week, to v48
+  ok   shell fixes: the offline shell carries the new modules › sw.js VERSION is bumped for On Air’s past nights and speed after the Wire’s Photo mode, to v49
   ok   shell fixes: the offline shell carries the new modules › every module in js/ is in the offline list
   ok   shell fixes: the offline shell carries the new modules › and nothing in the offline list is missing from js/
   ok   shell fixes: the offline shell carries the new modules › every file in the offline list exists
