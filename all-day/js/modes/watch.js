@@ -1,139 +1,204 @@
-/* Watch: films for a couple and for the town. Top to bottom:
+/* Watch: films and shows for a couple and for the town. Top to bottom:
 
-   - Coming soon: a rail of 2:3 posters, what is in US theaters now and what
-     opens next, labelled theaters or streaming. A tap plays the trailer in
-     the shell's one video box (never on its own); a film with no trailer on
-     TMDB opens its sheet instead.
-   - The list: TMDB's 300 best-rated films (scripts/build_films.py, weekly,
-     on the films-data branch), or, until that has run, the baked starter
-     list of 60 (data/films-seed.json), which says so. A poster grid with two
-     seen-dots on every film, you and your person ("With Sam" / "Just me"),
-     the town rating, filters by how recent and by genre, and a sort by town
-     rating. The dots and the "want to watch" list live on this device; a
-     signed-in reader's dots also follow them (supabase/nn-watch.sql). The
-     partner is a first name typed once, never a second account.
-   - The film sheet: the overview, year, runtime, genres, the trailer, the
-     two seen toggles, want to watch, and a 1 to 5 star rating that posts a
-     rating to the watch board (boards.js: meta film, year, stars, where).
-     Signed-out readers can see everything and set their dots; rating asks
-     for the one-email sign-in.
-   - Town ratings this week: the films with the most ratings in the last
-     seven days, with their average. A film with fewer than three ratings is
-     never shown, here or on a poster.
+   - Movies | TV: one switch at the top. Everything below shows that kind;
+     the dots, the want list and the town ratings work the same for both.
+   - Coming soon (Movies): a rail of 2:3 posters, what is in US theaters now
+     and what opens next, labelled theaters or streaming. A tap plays the
+     trailer in the shell's one video box (never on its own); a film with no
+     trailer on TMDB opens its sheet instead. Right under it, the call to
+     vote for the next screening, which scrolls to the ballot.
+     On TV the rail is what is airing this week, new seasons first.
+   - In theaters near you (Movies): Partizanfilm, Majestic 10 and Essex
+     Cinemas, one at a time, with the rest of today's times read off each
+     theater's own page (scripts/build_showtimes.py, every morning), or the
+     next day it has shows, or that it is closed and until when. Every
+     theater keeps its Showtimes button to its own page.
+   - Back then: the time machine. ‹ October 2021 › and a row of years; the
+     month's big titles (scripts/build_time_machine.py, monthly: what Rotten
+     Tomatoes' front page listed that month, as archived by the Wayback
+     Machine, matched to TMDB; or TMDB's own most popular releases of a
+     month the archive missed). Titles only ever come from there; every
+     picture and word is TMDB's.
+   - The list: the ranking is chosen, and the chosen chip says what it is:
+     Top rated (TMDB's 300 best films or 200 best shows, in its order),
+     Trending (TMDB's this week), Town favorites (the town's ratings, three
+     or more), Newest (by release), By genre (a ranked shelf per genre),
+     Shuffle (the ones you have not seen, in a new order on every tap).
+     Seen dots for you and your person ("With Sam" / "Just me"), the town
+     rating, filters by how recent and by genre, and the want list. The
+     dots and the want list live on this device; a signed-in reader's dots
+     also follow them (supabase/nn-watch.sql). The partner is a first name
+     typed once, never a second account.
+   - The film sheet: the overview, year, runtime (or episode length and
+     seasons), genres, the trailer, the two seen toggles, want to watch,
+     and a 1 to 5 star rating that posts a rating to the watch board
+     (boards.js: meta film, year, stars, where). Signed-out readers can see
+     everything and set their dots; rating asks for the one-email sign-in.
+   - Town ratings this week: the titles with the most ratings in the last
+     seven days, with their average. A title with fewer than three ratings
+     is never shown, here or on a poster.
    - Vote for the next screening: the watch board's picks, one per film,
      voted with the board's own vote, a bar each toward five. One vote each:
      the server moves a reader's vote when they pick another (the pick
      kind's one_vote rule), and the tab takes the old one back first so the
-     bars move at once. At five
-     Stephen puts it on Meetup as a screening with a mixer after. A pick
-     Stephen posts with a `where` is the last (or next) screening's card.
-   - Watch chat: a door to the community channel and to Telegram. The talk
-     lives there; nothing is built here.
+     bars move at once. At five Stephen puts it on Meetup as a screening
+     with a mixer after. A pick Stephen posts with a `where` is the last (or
+     next) screening's card.
+   - Watch chat: Talk opens the Telegram watch chat; the community channel
+     is the second, smaller door. The talk lives there; nothing is built here.
 
-   Ratings and picks identify a film by its TMDB id (meta `film`). Posts
-   from before the board had that field, or posted while the server's rules
-   are still round one's (boards.roundTwo()), go by title and year, or the
-   title alone when the year has drifted and the title is unique.
+   One number per title. A film is its TMDB film id. A show is TV_BASE plus
+   its TMDB TV id, because TMDB numbers films and shows separately and the
+   two would otherwise collide. That one number is what the watch board's
+   `film` meta, the account's seen dots (nn_watch_seen.film) and this
+   device's dots and want list carry, so neither the board nor the database
+   changed to hold shows (`film` allows up to 99,999,999; TMDB's film ids
+   are near 1.6 million). Posts from before the board had `film`, or posted
+   while the server's rules are still round one's (boards.roundTwo()), go
+   by title and year, or the title alone when the year has drifted and the
+   title is unique.
 
-   ?demo=1 runs exactly this file on data/demo/watch.json: invented films,
-   re-dated to the reader's clock, with their ratings and picks seeded into
-   the boards' in-memory demo backend, so the counting below is the real
-   code. Nothing in the demo is saved or sent. */
+   ?demo=1 runs exactly this file on data/demo/watch.json: invented films
+   and shows, re-dated to the reader's clock, with their ratings and picks
+   seeded into the boards' in-memory demo backend, so the counting below is
+   the real code. Nothing in the demo is saved or sent. */
 
 import * as app from '../app.js';
 import * as store from '../store.js';
 import * as boards from '../boards.js';
 import { fetchJSON } from '../wire.js';
 import { RULES, expiresAt } from '../boards-core.js';
-import { el, esc, safeHref, ICON, art, section, rail, chips, pills, button, put } from '../ui.js';
+import { el, esc, safeHref, ICON, art, section, rail, chips, pills, button, put, dateline, divider } from '../ui.js';
 
 const KEY = 'watch';
-const FILMS_URL = 'https://raw.githubusercontent.com/btownbrief/btown-brief/films-data/data/films.json';
+const DATA = 'https://raw.githubusercontent.com/btownbrief/btown-brief/films-data/data/';
+const FILMS_URL = DATA + 'films.json';
+const TM_URL = DATA + 'time-machine.json';
+const SHOWTIMES_URL = DATA + 'showtimes.json';
 const SEED_URL = 'data/films-seed.json';
-/* the community's "Plans & Meetups" channel, until Stephen opens a Watch Club channel */
+/* Talk: the Telegram watch chat first, the community channel second */
+const TELEGRAM_URL = 'https://t.me/+39fLB9cqY684ZmVh';
 const CHAT_URL = 'https://www.btownbrief.com/community/channels/meetups-hangouts';
-const CHAT_NAME = 'Plans & Meetups';
-const TELEGRAM_URL = '../telegram.html';
 const TMDB_URL = 'https://www.themoviedb.org/';
 const TMDB_LOGO = '../assets/img/tmdb.svg';
 const LOCAL_KEY = 'allday-watch';
+const TV_BASE = 50000000;   // a show's number: TV_BASE + its TMDB TV id
 const PAGE = 60;            // posters drawn at a time
-const MIN_RATINGS = 3;      // a film shows a town rating only from three
+const SHELF = 20;           // posters on a genre shelf
+const MIN_RATINGS = 3;      // a title shows a town rating only from three
 const TOWN_ROWS = 8;
 const GOAL = 5;             // votes before Stephen books it
 const RATING_PAGES = 10;    // 600 ratings read back for the averages
 const DAY = 86400000;
 const WEEK = 7 * DAY;
-const SECTIONS = ['soon', 'list', 'town', 'vote', 'chat'];
 const YT = /^[A-Za-z0-9_-]{11}$/;
 const POSTER = /^\/[A-Za-z0-9_-]+\.(jpg|png)$/;
 const ISO_DAY = /^\d{4}-\d{2}-\d{2}$/;
+const MONTH = /^\d{4}-(0[1-9]|1[0-2])$/;
+const HHMM = /^([01]\d|2[0-3]):[0-5]\d$/;
+
+/* the three theaters, so their rows and Showtimes buttons show even before
+   (or without) showtimes.json */
+const THEATERS = [
+  { id: 'partizanfilm', name: 'Partizanfilm', town: 'Burlington', url: 'https://www.partizanfilm.org/' },
+  { id: 'majestic10', name: 'Majestic 10', town: 'Williston', url: 'https://www.majestic10.com/movies' },
+  { id: 'essex', name: 'Essex Cinemas', town: 'Essex', url: 'https://www.essexcinemas.com/vermont/essex/essex-cinemas-9/showtimes' },
+];
 
 const RECENCY = [
   ['any', 'Any time'], ['1m', 'Last month', 0, 31], ['6m', '6 months', 0, 183], ['1y', '1 year', 0, 366], ['2y', '2 years', 0, 731],
   ['5y', '5 years', 0, 1827], ['10y', '10 years', 0, 3653], ['15y', '15 years', 0, 5479], ['20y', '20 years', 0, 7305], ['20p', '20+ years', 7306, Infinity],
 ];
+const SORTS = [['top', 'Top rated'], ['trend', 'Trending'], ['town', 'Town favorites'], ['new', 'Newest'], ['genre', 'By genre'], ['shuffle', 'Shuffle']];
 
 const arr = (v) => (Array.isArray(v) ? v : []);
 const plural = (n, one, many) => n + ' ' + (n === 1 ? one : many);
 
 /* ---------------------------------------------------------------- clock */
 const dayFmt = new Intl.DateTimeFormat('en-CA', { timeZone: 'America/New_York', year: 'numeric', month: '2-digit', day: '2-digit' });
+const hmFmt = new Intl.DateTimeFormat('en-GB', { timeZone: 'America/New_York', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' });
 const todayKey = () => dayFmt.format(new Date());
-const dayNum = (key) => Math.round(Date.parse(key + 'T12:00:00Z') / DAY);
+const nowHM = () => hmFmt.format(new Date());
+const dayNum = (key) => Math.floor(Date.parse(key + 'T12:00:00Z') / DAY);
+const keyOf = (n) => new Date(n * DAY + 12 * 3600000).toISOString().slice(0, 10);
 const shortDate = new Intl.DateTimeFormat('en-US', { timeZone: 'UTC', month: 'short', day: 'numeric' });
+const dayName = new Intl.DateTimeFormat('en-US', { timeZone: 'UTC', weekday: 'short', month: 'short', day: 'numeric' });
+const monthName = new Intl.DateTimeFormat('en-US', { timeZone: 'UTC', month: 'long', year: 'numeric' });
 const dateLabel = (key) => shortDate.format(new Date(key + 'T12:00:00Z'));
+const monthLabel = (m) => monthName.format(new Date(m + '-15T12:00:00Z'));
+const monthIndex = (m) => Number(m.slice(0, 4)) * 12 + Number(m.slice(5, 7)) - 1;
+const monthOf = (i) => Math.floor(i / 12) + '-' + String((i % 12) + 1).padStart(2, '0');
 const runtime = (m) => (m >= 60 ? Math.floor(m / 60) + 'h ' + (m % 60 ? (m % 60) + 'm' : '') : m + 'm').trim();
 
 /* --------------------------------------------------------------- state */
-let root = null, pending = null, ready = false;
+let root = null, pending = null, ready = false, extras = false;
 let D = null;               // the demo file
-let F = null;               // the film payload: { seed, demo, images, notice, top, soon, now }
-const byId = new Map();     // id -> film
-const byKey = new Map();    // "title|year" -> film
-const byTitle = new Map();  // "title" -> film, or null when two films share it
+let F = null;               // the payload: films and shows, by shelf
+let TM = null;              // the time machine: { months: [{ m, movie: [..], tv: [..] }] }, newest first
+let ST = null;              // showtimes: { theaters: [...] }, or null
+const byId = new Map();     // id -> title (films and shows; a show's id is TV_BASE + its TMDB id)
+const byKey = new Map();    // "title|year" -> title
+const byTitle = new Map();  // "title" -> title, or null when two share it
 const slots = Object.create(null);
-const V = { recency: 'any', genre: 'all', sort: 'list', show: 'all', shown: PAGE };
+const V = { kind: 'movie', recency: 'any', genre: 'all', sort: 'top', show: 'all', shown: PAGE, seed: 1, month: '', theater: '', picked: false };
 const P = { state: 'loading', ratings: [], picks: [], agg: new Map() };
 let L = null;               // this device's dots, partner, want list, own ratings
 
-/* ------------------------------------------------------------ the films */
-function film(raw, extra) {
-  if (!raw || typeof raw !== 'object' || !Number.isInteger(raw.id) || raw.id < 1 || !raw.t) return null;
+/* ------------------------------------------------------------ the titles */
+function film(raw, extra, kind) {
+  const tv = kind === 'tv';
+  if (!raw || typeof raw !== 'object' || !Number.isInteger(raw.id) || raw.id < 1 || raw.id >= TV_BASE || !raw.t) return null;
   const d = ISO_DAY.test(String(raw.d || '')) ? raw.d : '';
   const y = Number.isInteger(raw.y) ? raw.y : d ? Number(d.slice(0, 4)) : null;
   return {
-    id: raw.id, k: 'f' + raw.id, t: String(raw.t), y, d: d || (y ? y + '-07-01' : ''),
+    id: tv ? TV_BASE + raw.id : raw.id, tmdb: raw.id, kind: tv ? 'tv' : 'movie', k: (tv ? 'tv' : 'f') + raw.id,
+    t: String(raw.t), y, d: d || (y ? y + '-07-01' : ''),
     g: arr(raw.g).filter((x) => typeof x === 'string').slice(0, 4), o: String(raw.o || ''),
     rt: Number.isInteger(raw.rt) && raw.rt > 0 ? raw.rt : null,
+    sn: tv && Number.isInteger(raw.sn) && raw.sn > 0 ? raw.sn : null,
+    ns: tv && Number.isInteger(raw.ns) && raw.ns > 0 ? raw.ns : null,
     p: POSTER.test(String(raw.p || '')) ? raw.p : '', yt: YT.test(String(raw.yt || '')) ? raw.yt : '',
     art: app.demo ? String(raw.art || 'paper') : '', where: String(raw.where || ''), dur: String(raw.dur || ''), ...extra,
   };
 }
 const norm = (t) => String(t || '').normalize('NFKD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '').slice(0, 80);
 const fkey = (t, y) => norm(t) + '|' + (y || '');
+const uniq = (list) => { const seen = new Set(); return list.filter((f) => f && !seen.has(f.id) && seen.add(f.id)); };
+
+function know(f) {
+  if (!byId.has(f.id)) byId.set(f.id, f);
+  const k = byId.get(f.id);
+  if (!byKey.has(fkey(f.t, f.y))) byKey.set(fkey(f.t, f.y), k);
+  const n = norm(f.t);
+  byTitle.set(n, byTitle.has(n) && (!byTitle.get(n) || byTitle.get(n).id !== f.id) ? null : k);
+}
 
 function setFilms(j) {
   F = { seed: !!j.seed, demo: !!j.demo, images: /^https:\/\/image\.tmdb\.org\//.test(String(j.images || '')) ? j.images : 'https://image.tmdb.org/t/p/',
-    notice: String(j.notice || 'This product uses the TMDB API but is not endorsed or certified by TMDB.'), top: [], soon: [], now: [] };
-  const seen = new Set();
-  F.top = arr(j.top).map((x) => film(x)).filter((f) => f && !seen.has(f.id) && seen.add(f.id));
-  F.now = arr(j.now).map((x) => film(x, { shelf: 'now' })).filter(Boolean);
-  F.soon = arr(j.soon).map((x) => film(x, { shelf: 'soon' })).filter(Boolean);
+    notice: String(j.notice || 'This product uses the TMDB API but is not endorsed or certified by TMDB.') };
+  const list = (key, kind, extra) => uniq(arr(j[key]).map((x) => film(x, extra, kind)));
+  F.top = list('top', 'movie');
+  F.trend = list('trend', 'movie');
+  F.now = arr(j.now).map((x) => film(x, { shelf: 'now' }, 'movie')).filter(Boolean);
+  F.soon = arr(j.soon).map((x) => film(x, { shelf: 'soon' }, 'movie')).filter(Boolean);
+  F.tvTop = list('tv_top', 'tv');
+  F.tvTrend = list('tv_trend', 'tv');
+  F.tvAir = list('tv_air', 'tv', { shelf: 'air' });
   byId.clear(); byKey.clear(); byTitle.clear();
-  [...F.top, ...F.now, ...F.soon].forEach((f) => {
-    if (!byId.has(f.id)) byId.set(f.id, f);
-    byKey.set(fkey(f.t, f.y), byId.get(f.id));
-    const n = norm(f.t);
-    byTitle.set(n, byTitle.has(n) && byTitle.get(n) && byTitle.get(n).id !== f.id ? null : byId.get(f.id));
-  });
+  [...F.top, ...F.trend, ...F.now, ...F.soon, ...F.tvTop, ...F.tvTrend, ...F.tvAir].forEach(know);
 }
-/* a board post's film: its TMDB id; else title and year, else the title alone when it is unique */
+const hasTV = () => F.tvTop.length > 0;
+const tops = () => (V.kind === 'tv' ? F.tvTop : F.top);
+const trends = () => (V.kind === 'tv' ? F.tvTrend : F.trend);
+/* everything of this kind the list can rank: the top list, then what is trending or showing that is not on it */
+const pool = () => uniq(V.kind === 'tv' ? [...F.tvTop, ...F.tvTrend, ...F.tvAir] : [...F.top, ...F.trend, ...F.now]);
+
+/* a board post's title: its id; else title and year, else the title alone when it is unique */
 const filmOf = (p) => {
   const m = (p && p.meta) || {};
   return (Number.isInteger(m.film) && byId.get(m.film)) || byKey.get(fkey(p.title, m.year)) || byTitle.get(norm(p.title)) || null;
 };
-/* the fields a new rating or pick carries for its film */
+/* the fields a new rating or pick carries for its title */
 function filmMeta(f, two) {
   const meta = {};
   if (two) meta.film = f.id;
@@ -143,7 +208,7 @@ function filmMeta(f, two) {
 
 const posterUrl = (f, size) => (app.demo ? f.art : f.p ? F.images + size + f.p : '');
 const picture = (f, size) => { const u = posterUrl(f, size); return u ? art(u) : ''; };
-const tmdbHref = (f) => TMDB_URL + 'movie/' + f.id;
+const tmdbHref = (f) => TMDB_URL + (f.kind === 'tv' ? 'tv/' : 'movie/') + f.tmdb;
 const trailer = (f) => ({ k: 'tr:' + f.id, kind: 'video', yt: f.yt, title: f.t + ' · trailer', src: 'Trailer', media: posterUrl(f, 'w342') || 'paper',
   dur: f.dur || '', href: f.yt ? 'https://www.youtube.com/watch?v=' + f.yt : '#watch/' + f.k });
 const hasTrailer = (f) => app.demo || !!f.yt;
@@ -152,29 +217,115 @@ function playTrailer(f) {
   app.play(trailer(f));
 }
 
+/* ------------------------------------------------------- the time machine */
+/* time-machine.json: { titles: { m603: {...}, t1399: {...} }, months: [{ m, theaters, streaming, tv }] } */
+function setTM(j) {
+  TM = null;
+  if (!j || typeof j !== 'object' || !j.titles || typeof j.titles !== 'object' || !Array.isArray(j.months)) return;
+  const titles = new Map();
+  Object.entries(j.titles).forEach(([key, raw]) => {
+    const tv = /^t\d+$/.test(key), mv = /^m\d+$/.test(key);
+    if (!(tv || mv) || !raw || Number(key.slice(1)) !== raw.id) return;
+    const f = film(raw, null, tv ? 'tv' : 'movie');
+    if (f) { know(f); titles.set(key, byId.get(f.id)); }
+  });
+  const pick = (keys) => uniq(arr(keys).map((k) => titles.get(k)));
+  const months = j.months.filter((m) => m && MONTH.test(String(m.m)))
+    .map((m) => ({ m: m.m, movie: pick([...arr(m.theaters), ...arr(m.streaming)]), tv: pick(m.tv) }))
+    .filter((m) => m.movie.length || m.tv.length)
+    .sort((a, b) => b.m.localeCompare(a.m));
+  if (months.length) TM = { months };
+}
+const tmMonths = () => (TM ? TM.months.filter((m) => m[V.kind].length) : []);
+/* a year back from this month, or the closest month there is */
+function defaultMonth() {
+  const list = tmMonths();
+  if (!list.length) return '';
+  const want = monthIndex(todayKey().slice(0, 7)) - 12;
+  return list.slice().sort((a, b) => Math.abs(monthIndex(a.m) - want) - Math.abs(monthIndex(b.m) - want))[0].m;
+}
+
+/* ----------------------------------------------------------- showtimes */
+function setShowtimes(j) {
+  ST = null;
+  if (!j || typeof j !== 'object' || !Array.isArray(j.theaters)) return;
+  const got = new Map();
+  j.theaters.forEach((t) => {
+    const known = t && THEATERS.find((x) => x.id === t.id);
+    if (!known) return;
+    const days = {};
+    Object.entries(t.days && typeof t.days === 'object' ? t.days : {}).forEach(([day, films]) => {
+      if (!ISO_DAY.test(day)) return;
+      const list = arr(films).filter((x) => x && typeof x.t === 'string' && x.t.trim())
+        .map((x) => ({ t: x.t.trim().slice(0, 120), id: Number.isInteger(x.id) && x.id > 0 && x.id < TV_BASE ? x.id : null,
+          p: POSTER.test(String(x.p || '')) ? x.p : '', art: app.demo ? String(x.art || '') : '',
+          times: arr(x.times).filter((h) => HHMM.test(String(h))).sort() }))
+        .filter((x) => x.times.length);
+      if (list.length) days[day] = list;
+    });
+    got.set(known.id, { ...known, ok: t.ok !== false, closed: !!t.closed, back: ISO_DAY.test(String(t.back || '')) ? t.back : '', days });
+  });
+  if (got.size) ST = { theaters: THEATERS.map((t) => got.get(t.id) || { ...t, ok: false, closed: false, back: '', days: {} }) };
+}
+const theaters = () => (ST ? ST.theaters : THEATERS.map((t) => ({ ...t, ok: false, closed: false, back: '', days: {} })));
+/* the day a theater's row shows: today if it has a show still to come, else its next day with shows */
+function showDay(t) {
+  const today = todayKey(), hm = nowHM();
+  const days = Object.keys(t.days).filter((d) => d >= today).sort();
+  for (const d of days) {
+    const films = t.days[d].map((f) => ({ ...f, times: d === today ? f.times.filter((h) => h >= hm) : f.times })).filter((f) => f.times.length);
+    if (films.length) return { day: d, films };
+  }
+  return null;
+}
+/* "11:00 am · 1:40 · 4:20 pm": the half of the day once, where it changes and at the end */
+function timesLabel(times) {
+  const parts = times.map((h) => { const [H, M] = h.split(':').map(Number); return { t: ((H + 11) % 12 + 1) + ':' + String(M).padStart(2, '0'), pm: H >= 12 }; });
+  return parts.map((p, i) => p.t + (i === parts.length - 1 || parts[i + 1].pm !== p.pm ? (p.pm ? ' pm' : ' am') : '')).join(' · ');
+}
+const dayLabel = (d) => (d === todayKey() ? 'Today' : dayNum(d) - dayNum(todayKey()) === 1 ? 'Tomorrow' : dayName.format(new Date(d + 'T12:00:00Z')));
+
 /* The demo file is written on _anchor; every date moves by the days since,
-   so "last month" always has films in it. */
+   and every time-machine month by the months since, so "last month" always
+   has films in it. */
 function redate(d) {
-  const shift = /^\d{4}-\d{2}-\d{2}$/.test(String(d._anchor || '')) ? dayNum(todayKey()) - dayNum(d._anchor) : 0;
+  const today = todayKey();
+  const shift = ISO_DAY.test(String(d._anchor || '')) ? dayNum(today) - dayNum(d._anchor) : 0;
+  const mshift = ISO_DAY.test(String(d._anchor || '')) ? monthIndex(today.slice(0, 7)) - monthIndex(d._anchor.slice(0, 7)) : 0;
+  const moveDay = (k) => keyOf(dayNum(k) + shift);
   const move = (f) => {
     if (!f || !ISO_DAY.test(String(f.d || ''))) return f;
-    const nd = new Date((dayNum(f.d) + shift) * DAY + 12 * 3600000).toISOString().slice(0, 10);
+    const nd = moveDay(f.d);
     return { ...f, d: nd, y: Number(nd.slice(0, 4)) };
   };
   const films = d.films || {};
-  return { ...films, top: arr(films.top).map(move), soon: arr(films.soon).map(move), now: arr(films.now).map(move) };
+  const out = { ...films };
+  ['top', 'soon', 'now', 'trend', 'tv_top', 'tv_trend', 'tv_air'].forEach((k) => { out[k] = arr(films[k]).map(move); });
+  const tm = d.tm && { ...d.tm, months: arr(d.tm.months).map((m) => ({ ...m, m: monthOf(monthIndex(m.m) + mshift) })) };
+  const st = d.showtimes && { ...d.showtimes, theaters: arr(d.showtimes.theaters).map((t) => ({ ...t, back: t.back ? moveDay(t.back) : '',
+    days: Object.fromEntries(Object.entries(t.days || {}).map(([k, v]) => [moveDay(k), v])) })) };
+  return { films: out, tm, st };
 }
 
 function loadFilms() {
   const ok = (j) => j && typeof j === 'object' && Array.isArray(j.top) && j.top.length > 0;
   if (app.demo) return app.demoData(KEY).then((d) => { D = d; return redate(d); });
   const seed = () => fetchJSON(SEED_URL, 8000).then((j) => { if (!ok(j)) throw new Error('bad seed'); return j; });
-  return fetchJSON(FILMS_URL, 8000).then((j) => { if (!ok(j)) throw new Error('bad films'); return j; }).catch(seed);
+  return fetchJSON(FILMS_URL, 8000).then((j) => { if (!ok(j)) throw new Error('bad films'); return j; }).catch(seed).then((films) => ({ films }));
+}
+/* the time machine and the showtimes come after the list, and each simply
+   leaves its section out when it does not load */
+function loadExtras(got) {
+  if (app.demo) { setTM(got.tm); setShowtimes(got.st); return Promise.resolve(); }
+  return Promise.all([
+    fetchJSON(TM_URL, 10000).then(setTM, () => setTM(null)),
+    fetchJSON(SHOWTIMES_URL, 8000).then(setShowtimes, () => setShowtimes(null)),
+  ]);
 }
 
 /* ------------------------------------------------------- this device */
 /* { mode: 'us' | 'me', partner: 'Sam', seen: { id: [me, them] }, want: { id: ts },
-   rated: { id: { post, stars } } }, plus the sync's own two: dirty (films
+   rated: { id: { post, stars } }, kind: 'movie' | 'tv' }, plus the sync's own two: dirty (films
    changed here and not yet saved to the account) and syncedFor (the account
    this phone last joined its dots with). The demo keeps its copy for the visit. */
 let memory = null;
@@ -185,7 +336,7 @@ function loadLocal() {
   const seen = {};
   Object.entries(obj(o.seen)).forEach(([id, v]) => { if (/^\d+$/.test(id) && Array.isArray(v) && (v[0] || v[1])) seen[id] = [v[0] ? 1 : 0, v[1] ? 1 : 0]; });
   const partner = cleanName(o.partner);
-  return { mode: o.mode === 'us' && partner ? 'us' : 'me', partner, seen, want: obj(o.want), rated: obj(o.rated),
+  return { mode: o.mode === 'us' && partner ? 'us' : 'me', partner, seen, want: obj(o.want), rated: obj(o.rated), kind: o.kind === 'tv' ? 'tv' : 'movie',
     nameDirty: !!o.nameDirty, dirty: obj(o.dirty), syncedFor: typeof o.syncedFor === 'string' ? o.syncedFor : '' };
 }
 function dotsOf(d) {
@@ -195,7 +346,7 @@ function dotsOf(d) {
 }
 function saveLocal() {
   if (app.demo) { memory = L; return; }
-  store.write(LOCAL_KEY, { mode: L.mode, partner: L.partner, seen: L.seen, want: L.want, rated: L.rated,
+  store.write(LOCAL_KEY, { mode: L.mode, partner: L.partner, seen: L.seen, want: L.want, rated: L.rated, kind: L.kind,
     nameDirty: L.nameDirty, dirty: L.dirty, syncedFor: L.syncedFor });
 }
 const cleanName = (s) => String(s || '').replace(/[@<>]/g, '').replace(/\s+/g, ' ').trim().slice(0, 32);
@@ -318,7 +469,7 @@ function loadPosts() {
     P.state = 'ok';
   }, (r) => { P.state = r && r.error === 'off' ? 'off' : 'fail'; }).then(() => {
     tally();
-    if (ready) { if (V.sort === 'town') draw('list'); else rateTiles(); draw('town'); draw('vote'); app.recount(); }
+    if (ready) { if (V.sort === 'town') draw('list'); rateTiles(); draw('town'); draw('vote'); app.recount(); }
   });
 }
 
@@ -376,12 +527,14 @@ function seedDemo() {
 
 /* ------------------------------------------------------------- drawing */
 const sec = (host, title, sub, key, right) => { const s = section(host, title, sub, right); s.dataset.sec = key; return s; };
+const SECTIONS = ['kind', 'soon', 'cta', 'theaters', 'back', 'list', 'town', 'vote', 'chat'];
 
 function draw(name) {
   const host = slots[name];
   if (!host) return;
   host.innerHTML = '';
-  ({ soon: drawSoon, list: drawList, town: drawTown, vote: drawVote, chat: drawChat })[name](host);
+  ({ kind: drawKind, soon: drawSoon, cta: drawCta, theaters: drawTheaters, back: drawBack, list: drawList,
+    town: drawTown, vote: drawVote, chat: drawChat })[name](host);
 }
 
 function render() {
@@ -389,6 +542,31 @@ function render() {
   SECTIONS.forEach((s) => { slots[s] = el('div'); slots[s].dataset.slot = s; root.appendChild(slots[s]); draw(s); });
   put(root, credit());
   root.appendChild(el('div', 'spacer'));
+}
+
+/* Movies or TV: everything below follows it */
+function setKind(k) {
+  if (k === V.kind || (k === 'tv' && !hasTV())) return;
+  V.kind = k;
+  V.genre = 'all';
+  V.shown = PAGE;
+  if (V.sort === 'trend' && !trends().length) V.sort = 'top';
+  V.month = defaultMonth();
+  L.kind = k;
+  saveLocal();
+  render();
+  if (app.activeTab() === KEY) app.paintSubnav();
+}
+function drawKind(host) {
+  if (!hasTV()) return;
+  const row = el('div', 'toolrow');
+  const p = pills([['movie', 'Movies'], ['tv', 'TV']], V.kind, (v) => setKind(v));
+  p.dataset.kind = '1';
+  p.style.flex = '1 1 auto';
+  p.setAttribute('role', 'group');
+  p.setAttribute('aria-label', 'Movies or TV');
+  row.appendChild(p);
+  host.appendChild(row);
 }
 
 /* TMDB's attribution, with its logo, wherever its data shows */
@@ -406,24 +584,119 @@ function credit(inSheet) {
    2019): a film three or more years old is back, not new */
 const BACK_YEARS = 3;
 const nowLabel = (f) => (f.y && f.y <= Number(todayKey().slice(0, 4)) - BACK_YEARS ? 'Back in theaters' : 'In theaters now');
+const airLabel = (f) => (f.ns ? (f.d > todayKey() ? 'Season ' + f.ns + ' · ' + dateLabel(f.d) : 'New season ' + f.ns) : 'Airing now');
+const railLabel = (f) => (f.shelf === 'air' ? airLabel(f) : f.shelf === 'now' ? nowLabel(f)
+  : (f.d ? dateLabel(f.d) + ' · ' : '') + (f.where === 'streaming' ? 'streaming' : 'theaters'));
 
 function drawSoon(host) {
-  const now = F.now, soon = F.soon;
-  if (!now.length && !soon.length) return;
-  sec(host, 'Coming soon', null, 'soon');
+  const list = V.kind === 'tv' ? F.tvAir : [...F.now, ...F.soon];
+  if (!list.length) return;
+  sec(host, V.kind === 'tv' ? 'On TV now' : 'Coming soon', null, 'soon');
   const r = rail(host);
-  const label = (f) => (f.shelf === 'now' ? nowLabel(f) : (f.d ? dateLabel(f.d) + ' · ' : '') + (f.where === 'streaming' ? 'streaming' : 'theaters'));
-  [...now, ...soon].forEach((f) => {
+  list.forEach((f) => {
     const a = el('a', 'poster');
     a.href = '#watch/soon:' + f.id;
     a.dataset.k = 'soon:' + f.id;
-    a.setAttribute('aria-label', (hasTrailer(f) ? 'Play the trailer for ' : '') + f.t + ', ' + label(f));
+    a.setAttribute('aria-label', (hasTrailer(f) ? 'Play the trailer for ' : '') + f.t + ', ' + railLabel(f));
     a.innerHTML = '<span class="c-media">' + picture(f, 'w342') +
       (hasTrailer(f) ? '<span class="play">' + ICON.play + '</span>' + (f.dur ? '<span class="dur">' + esc(f.dur) + '</span>' : '') : '') + '</span>' +
-      '<span class="t">' + esc(f.t) + '</span><span class="s">' + esc(label(f)) + '</span>';
+      '<span class="t">' + esc(f.t) + '</span><span class="s">' + esc(railLabel(f)) + '</span>';
     a.addEventListener('click', (e) => { e.preventDefault(); if (hasTrailer(f)) playTrailer(f); else filmSheet(f); });
     r.appendChild(a);
   });
+}
+
+/* the screening vote, right where people are: under Coming soon */
+function drawCta(host) {
+  if (V.kind !== 'movie') return;
+  const row = el('div', 'addrow');
+  const b = button('Vote for the next screening ' + ICON.arrow, '', () => app.jumpTo(root.querySelector('[data-sec="vote"]')));
+  b.dataset.cta = 'vote';
+  row.appendChild(b);
+  host.appendChild(row);
+}
+
+/* ---------------------------------------------- in theaters near you */
+function drawTheaters(host) {
+  if (V.kind !== 'movie') return;
+  const all = theaters();
+  sec(host, 'In theaters near you', null, 'theaters');
+  /* until the reader picks one: the first with a show still to come today */
+  if (!V.picked) V.theater = (all.find((t) => { const s = t.ok && showDay(t); return s && s.day === todayKey(); }) || all[0]).id;
+  const pick = pills(all.map((t) => [t.id, t.name]), V.theater, (v) => { V.theater = v; V.picked = true; draw('theaters'); });
+  pick.dataset.theater = '1';
+  pick.style.flex = '1 1 auto';
+  const pr = el('div', 'toolrow');
+  pr.appendChild(pick);
+  host.appendChild(pr);
+  const t = all.find((x) => x.id === V.theater);
+  const box = el('div');
+  box.dataset.k = 'th:' + t.id;
+  box.dataset.showing = t.id;
+  const show = t.ok ? showDay(t) : null;
+  const open = show && (!t.closed || (t.back && show.day >= t.back));
+  const line = [t.town];
+  if (t.closed) line.push(t.back ? 'Closed until ' + dateLabel(t.back) : 'Closed for now');
+  if (open && show.day !== t.back) line.push(dayLabel(show.day));
+  const head = el('p', 'note pad', esc(line.join(' · ')));
+  head.dataset.status = '1';
+  box.appendChild(head);
+  if (open) {
+    show.films.forEach((x) => {
+      const known = (x.id && byId.get(x.id)) || byTitle.get(norm(x.t)) || null;
+      const r = el('div', 'lrow');
+      r.dataset.film = x.t;
+      const pic = known ? picture(known, 'w185') : app.demo ? (x.art ? art(x.art) : '') : x.p ? art(F.images + 'w185' + x.p) : '';
+      r.innerHTML = '<span class="th">' + pic + '</span><div><div class="t">' + esc(known ? known.t : x.t) + '</div>' +
+        '<div class="s" data-times>' + esc(timesLabel(x.times)) + '</div></div>';
+      if (known) {
+        const b = el('button', 'pillbtn', hasTrailer(known) ? ICON.play : 'More');
+        b.setAttribute('aria-label', hasTrailer(known) ? 'Trailer for ' + known.t : 'More about ' + known.t);
+        b.addEventListener('click', (e) => { e.stopPropagation(); if (hasTrailer(known)) playTrailer(known); else filmSheet(known); });
+        r.appendChild(b);
+        r.addEventListener('click', () => filmSheet(known));
+      }
+      box.appendChild(r);
+    });
+  }
+  const links = el('div', 'addrow');
+  const a = el('a', 'btn ghost sm', 'Showtimes ' + ICON.ext);
+  a.href = safeHref(t.url);
+  a.target = '_blank';
+  a.rel = 'noopener';
+  a.dataset.showtimes = t.id;
+  links.appendChild(a);
+  box.appendChild(links);
+  host.appendChild(box);
+}
+
+/* ------------------------------------------------------- back then */
+function drawBack(host) {
+  const months = tmMonths();
+  if (!months.length) return;
+  if (!months.some((m) => m.m === V.month)) V.month = defaultMonth();
+  const at = months.findIndex((m) => m.m === V.month);
+  const cur = months[at];
+  sec(host, 'Back then', null, 'back');
+  const go = (m) => { V.month = m; draw('back'); };
+  /* months are newest first: ‹ is older, › is newer */
+  const dl = dateline({ title: monthLabel(cur.m), sub: '',
+    prev: at < months.length - 1 ? () => go(months[at + 1].m) : null, next: at > 0 ? () => go(months[at - 1].m) : null });
+  dl.dataset.month = cur.m;
+  host.appendChild(dl);
+  const years = [...new Set(months.map((m) => m.m.slice(0, 4)))];
+  if (years.length > 1) {
+    const yr = chips(years.map((y) => ({ key: y, label: y })), cur.m.slice(0, 4), (y) => {
+      const same = months.find((m) => m.m === y + cur.m.slice(4));
+      const near = months.filter((m) => m.m.startsWith(y)).sort((a, b) => Math.abs(monthIndex(a.m) - monthIndex(y + cur.m.slice(4))) - Math.abs(monthIndex(b.m) - monthIndex(y + cur.m.slice(4))))[0];
+      go((same || near).m);
+    });
+    yr.dataset.years = '1';
+    host.appendChild(yr);
+  }
+  const r = rail(host);
+  r.dataset.back = cur.m;
+  cur[V.kind].forEach((f) => r.appendChild(tile(f, 'back:' + cur.m + ':' + f.id)));
 }
 
 /* ----------------------------------------------------------- the list */
@@ -434,31 +707,49 @@ function inWindow(f, key) {
   const ago = dayNum(todayKey()) - dayNum(f.d);
   return ago >= w[2] && ago <= w[3];
 }
+const seenEnough = (f) => { const s = seenOf(f); return !!(s[0] || (us() && s[1])); };
 function shown(f) {
   if (V.show === 'want' && !L.want[f.id]) return false;
-  if (V.show === 'unseen') { const s = seenOf(f); if (s[0] || (us() && s[1])) return false; }
+  if (V.show === 'unseen' && seenEnough(f)) return false;
   return true;
 }
-function filtered(o = {}) {
-  const recency = o.recency || V.recency, genre = o.genre || V.genre;
-  let list = F.top.filter((f) => shown(f) && inWindow(f, recency) && (genre === 'all' || f.g.includes(genre)));
-  if (V.sort === 'town') {
-    const rank = new Map(F.top.map((f, i) => [f.id, i]));
-    list = list.slice().sort((a, b) => {
+/* a seeded shuffle, so a redraw keeps the order until Shuffle is tapped again */
+function shuffled(list, seed) {
+  let a = seed >>> 0;
+  const rnd = () => { a = (a + 0x6D2B79F5) | 0; let t = Math.imul(a ^ (a >>> 15), 1 | a); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+  const out = list.slice();
+  for (let i = out.length - 1; i > 0; i--) { const j = Math.floor(rnd() * (i + 1)); [out[i], out[j]] = [out[j], out[i]]; }
+  return out;
+}
+/* the titles a sort ranks, in its order, before the filters */
+function ranked(sort) {
+  const top = tops();
+  if (sort === 'trend') return trends();
+  if (sort === 'new') { const today = todayKey(); return pool().filter((f) => f.d && f.d <= today).sort((a, b) => b.d.localeCompare(a.d) || a.t.localeCompare(b.t)); }
+  if (sort === 'shuffle') return shuffled(pool().filter((f) => !seenEnough(f)), V.seed);
+  if (sort === 'town') {
+    const all = pool();
+    const rank = new Map(all.map((f, i) => [f.id, i]));
+    return all.slice().sort((a, b) => {
       const ta = town(a), tb = town(b);
       if (ta && tb) return avg(tb.sum, tb.n) - avg(ta.sum, ta.n) || tb.n - ta.n || rank.get(a.id) - rank.get(b.id);
       if (ta || tb) return ta ? -1 : 1;
       return rank.get(a.id) - rank.get(b.id);
     });
   }
-  return list;
+  return top;
+}
+function filtered(o = {}) {
+  const recency = o.recency || V.recency, genre = o.genre || V.genre;
+  return ranked(V.sort).filter((f) => shown(f) && inWindow(f, recency) && (genre === 'all' || f.g.includes(genre)));
 }
 
-function tile(f) {
+function tile(f, key) {
   const a = el('a', 'poster');
-  a.style.width = 'auto';
+  if (!key) a.style.width = 'auto';
   a.href = '#watch/' + f.k;
-  a.dataset.k = f.k;
+  a.dataset.k = key || f.k;
+  a.dataset.id = String(f.id);
   const s = seenOf(f), t = town(f);
   const who = us() ? [s[0] ? 'you have seen it' : 'you have not seen it', s[1] ? L.partner + ' has' : L.partner + ' has not']
     : [s[0] ? 'seen' : 'not seen'];
@@ -474,8 +765,8 @@ function tile(f) {
 /* the town ratings arrived or changed: paint them onto the posters already
    drawn, so a poster a deep link just flashed is not redrawn under it */
 function rateTiles() {
-  slots.list.querySelectorAll('[data-grid] .poster').forEach((a) => {
-    const f = byId.get(Number(a.dataset.k.slice(1)));
+  root.querySelectorAll('[data-slot="list"] .poster, [data-slot="back"] .poster').forEach((a) => {
+    const f = byId.get(Number(a.dataset.id));
     if (!f) return;
     const fresh = tile(f);
     a.setAttribute('aria-label', fresh.getAttribute('aria-label'));
@@ -488,9 +779,11 @@ function rateTiles() {
 }
 
 function drawList(host) {
-  const n = F.top.length;
-  const neither = F.top.filter((f) => { const s = seenOf(f); return !s[0] && !s[1]; }).length;
-  const left = F.top.filter((f) => !seenOf(f)[0]).length;
+  const top = tops();
+  const n = top.length;
+  const noun = V.kind === 'tv' ? ['show', 'shows'] : ['film', 'films'];
+  const neither = top.filter((f) => { const s = seenOf(f); return !s[0] && !s[1]; }).length;
+  const left = top.filter((f) => !seenOf(f)[0]).length;
   const sub = us() ? '<b>' + esc(neither) + '</b> ' + esc('neither of you has seen') : '<b>' + esc(left) + '</b> ' + esc('of ' + n + ' to go');
   const who = pills([['us', 'With ' + partnerName()], ['me', 'Just me']], us() ? 'us' : 'me', (v) => {
     if (v === 'us' && (!L.partner || us())) { draw('list'); nameSheet(); return; }
@@ -502,14 +795,26 @@ function drawList(host) {
   const head = sec(host, 'The list', sub, 'list', who);
   if (F.seed) head.dataset.seed = '1';
 
+  /* the ranking, chosen: the chip that is on says what the order is */
+  const sorts = SORTS.filter(([k]) => k !== 'trend' || trends().length);
+  const sort = chips(sorts.map(([key, label]) => ({ key, label, icon: key === 'shuffle' ? ICON.shuffle : '' })), V.sort, (k) => {
+    if (k === 'shuffle') V.seed = (Date.now() ^ (Math.random() * 4294967296)) >>> 0;
+    V.sort = k;
+    V.shown = PAGE;
+    if (k === 'genre') V.genre = 'all';
+    draw('list');
+  });
+  sort.dataset.sort = '1';
+  sort.setAttribute('aria-label', 'Order');
+  host.appendChild(sort);
+
   const tools = el('div', 'toolrow');
-  const wantN = F.top.filter((f) => L.want[f.id]).length;
+  const pl = pool();
+  const wantN = pl.filter((f) => L.want[f.id]).length;
   const show = pills([['all', 'All'], ['want', 'Want to watch' + (wantN ? ' ' + wantN : '')], ['unseen', us() ? 'Neither of us' : 'Not seen']], V.show,
     (v) => { V.show = v; V.shown = PAGE; draw('list'); });
   show.dataset.show = '1';
-  const sort = pills([['list', 'List order'], ['town', 'Town rating']], V.sort, (v) => { V.sort = v; V.shown = PAGE; draw('list'); });
-  sort.dataset.sort = '1';
-  tools.append(show, sort);
+  tools.append(show);
   host.appendChild(tools);
 
   /* a chip that would show nothing is left off, unless it is the one chosen */
@@ -519,31 +824,49 @@ function drawList(host) {
   rec.dataset.filter = 'recency';
   host.appendChild(rec);
   const counts = new Map();
-  F.top.forEach((f) => f.g.forEach((g) => counts.set(g, (counts.get(g) || 0) + 1)));
+  pl.forEach((f) => f.g.forEach((g) => counts.set(g, (counts.get(g) || 0) + 1)));
   const genres = [...counts.keys()].sort((a, b) => counts.get(b) - counts.get(a) || a.localeCompare(b));
-  const gen = chips([{ key: 'all', label: 'All genres' }, ...genres.map((g) => ({ key: g, label: g, n: filtered({ genre: g }).length }))
-    .filter((c) => c.n || c.key === V.genre)], V.genre,
-    (k) => { V.genre = k; V.shown = PAGE; draw('list'); });
-  gen.dataset.filter = 'genre';
-  host.appendChild(gen);
+  if (V.sort !== 'genre') {
+    const gen = chips([{ key: 'all', label: 'All genres' }, ...genres.map((g) => ({ key: g, label: g, n: filtered({ genre: g }).length }))
+      .filter((c) => c.n || c.key === V.genre)], V.genre,
+      (k) => { V.genre = k; V.shown = PAGE; draw('list'); });
+    gen.dataset.filter = 'genre';
+    host.appendChild(gen);
+  }
 
-  const list = filtered();
   const filters = V.recency !== 'any' || V.genre !== 'all' || V.show !== 'all';
-  const count = el('p', 'note pad');
-  count.dataset.count = String(list.length);
-  count.textContent = list.length === n && !filters ? '' : plural(list.length, 'film', 'films') + ' of ' + n;
-  if (count.textContent) host.appendChild(count);
-  if (!list.length) {
-    const e = el('div', 'empty', esc(V.show === 'want' ? 'Nothing on your list yet.' : 'No film matches those filters.'));
-    host.appendChild(e);
-    if (filters) {
-      const r = el('div', 'linkrow');
-      r.style.justifyContent = 'center';
-      r.appendChild(button('Clear the filters', 'ghost sm', () => { V.recency = 'any'; V.genre = 'all'; V.show = 'all'; draw('list'); }));
-      host.appendChild(r);
-    }
+  const clear = () => {
+    const r = el('div', 'linkrow');
+    r.style.justifyContent = 'center';
+    r.appendChild(button('Clear the filters', 'ghost sm', () => { V.recency = 'any'; V.genre = 'all'; V.show = 'all'; draw('list'); }));
+    host.appendChild(r);
+  };
+  const nothing = () => {
+    host.appendChild(el('div', 'empty', esc(V.show === 'want' ? 'Nothing on your list yet.' : 'Nothing matches those filters.')));
+    if (filters) clear();
+  };
+
+  /* By genre: a shelf per genre, most titles first, each in Top rated order */
+  if (V.sort === 'genre') {
+    const base = top.filter((f) => shown(f) && inWindow(f, V.recency));
+    const shelves = genres.map((g) => [g, base.filter((f) => f.g.includes(g))]).filter(([, l]) => l.length).sort((a, b) => b[1].length - a[1].length);
+    if (!shelves.length) { nothing(); return; }
+    shelves.forEach(([g, l]) => {
+      const d = divider(host, g, plural(l.length, noun[0], noun[1]));
+      d.dataset.shelf = g;
+      const r = rail(host);
+      r.dataset.genre = g;
+      l.slice(0, SHELF).forEach((f) => r.appendChild(tile(f, 'g:' + g + ':' + f.id)));
+    });
     return;
   }
+
+  const list = filtered();
+  const count = el('p', 'note pad');
+  count.dataset.count = String(list.length);
+  count.textContent = filters ? plural(list.length, noun[0], noun[1]) : '';
+  if (count.textContent) host.appendChild(count);
+  if (!list.length) { nothing(); return; }
   const grid = el('div', 'grid3');
   grid.style.gridTemplateColumns = 'repeat(auto-fill, minmax(104px, 1fr))';
   grid.style.gap = 'var(--s4) var(--s3)';
@@ -576,10 +899,12 @@ function filmSheet(f) {
     pic.innerHTML = '<span class="c-media">' + picture(f, 'w342') + '</span>';
     const facts = el('div');
     const t = town(f);
-    facts.innerHTML = '<p class="sheet-note">' + esc([f.y, f.rt ? runtime(f.rt) : '', f.g.join(', ')].filter(Boolean).join(' · ')) + '</p>' +
+    const len = f.kind === 'tv' ? [f.sn ? plural(f.sn, 'season', 'seasons') : '', f.rt ? runtime(f.rt) + ' episodes' : ''] : [f.rt ? runtime(f.rt) : ''];
+    facts.innerHTML = '<p class="sheet-note">' + esc([f.y, ...len, f.g.join(', ')].filter(Boolean).join(' · ')) + '</p>' +
       (t ? '<p class="sheet-note" data-town>Town rating <b>' + esc(avg(t.sum, t.n).toFixed(1)) + '</b> from ' + esc(plural(t.n, 'rating', 'ratings')) + '</p>' : '') +
       (f.shelf === 'soon' && f.d ? '<p class="sheet-note">' + esc((f.where === 'streaming' ? 'Streaming from ' : 'In theaters from ') + dateLabel(f.d)) + '</p>' : '') +
-      (f.shelf === 'now' ? '<p class="sheet-note">' + esc(nowLabel(f)) + '</p>' : '');
+      (f.shelf === 'now' ? '<p class="sheet-note">' + esc(nowLabel(f)) + '</p>' : '') +
+      (f.shelf === 'air' ? '<p class="sheet-note">' + esc(airLabel(f)) + '</p>' : '');
     const tr = el('div', 'linkrow');
     if (hasTrailer(f)) {
       const b = button(ICON.play + ' Trailer', '', () => { close(); playTrailer(f); });
@@ -787,7 +1112,7 @@ function drawTown(host) {
     return;
   }
   rows.forEach((a) => {
-    const f = a.f || { id: 0, k: '', t: a.title, y: a.year, g: [], o: '', rt: null, p: '', yt: '', art: 'paper' };
+    const f = a.f || { id: 0, k: '', kind: 'movie', t: a.title, y: a.year, g: [], o: '', rt: null, p: '', yt: '', art: 'paper' };
     const r = el('div', 'lrow');
     r.dataset.k = 'town:' + (a.f ? a.f.id : norm(a.title));
     r.dataset.n = String(a.wn);
@@ -917,7 +1242,7 @@ function suggestSheet() {
     const paint = () => {
       const s = norm(q.value);
       box.innerHTML = '';
-      const hits = [...F.top, ...F.now].filter((f, i, all) => all.findIndex((x) => x.id === f.id) === i && (!s || norm(f.t).includes(s))).slice(0, 30);
+      const hits = [...F.top, ...F.trend, ...F.now].filter((f, i, all) => all.findIndex((x) => x.id === f.id) === i && (!s || norm(f.t).includes(s))).slice(0, 30);
       if (!hits.length) box.appendChild(el('p', 'sheet-note', 'Nothing on the list by that name.'));
       hits.forEach((f) => {
         const r = el('div', 'sheet-row', '<div class="t">' + esc(f.t) + '<div class="d">' + esc([f.y, f.g[0]].filter(Boolean).join(' · ')) + '</div></div>');
@@ -954,38 +1279,63 @@ function suggest(f, body, close) {
 /* ---------------------------------------------------------------- chat */
 function drawChat(host) {
   sec(host, 'Watch chat', null, 'chat');
-  const card = el('div', 'textcard');
-  card.dataset.chat = '1';
-  const row = el('div', 'row');
-  const ch = el('a', 'btn', 'Talk ' + ICON.ext);
-  ch.setAttribute('aria-label', 'Talk, in ' + CHAT_NAME);
+  const row = el('div', 'linkrow');
+  row.style.padding = '0 var(--gutter)';
+  row.style.alignItems = 'center';
+  const tg = el('a', 'btn', 'Talk ' + ICON.ext);
+  tg.setAttribute('aria-label', 'Talk, in the Telegram watch chat');
+  tg.href = safeHref(TELEGRAM_URL);
+  tg.target = '_blank';
+  tg.rel = 'noopener';
+  tg.dataset.door = 'telegram';
+  const ch = el('a', 'btn ghost sm', 'Community');
   ch.href = safeHref(CHAT_URL);
   ch.target = '_blank';
   ch.rel = 'noopener';
   ch.dataset.door = 'community';
-  const tg = el('a', 'btn ghost', 'Telegram');
-  tg.href = TELEGRAM_URL;
-  tg.dataset.door = 'telegram';
-  row.append(ch, tg);
-  card.appendChild(row);
-  host.appendChild(card);
+  row.append(tg, ch);
+  row.dataset.chat = '1';
+  host.appendChild(row);
 }
 
 /* ------------------------------------------------------------ landing */
+const TOC = () => [['soon', V.kind === 'tv' ? 'On TV now' : 'Coming soon'], ['theaters', 'Theaters'], ['back', 'Back then'], ['list', 'The list'],
+  ['town', 'Town'], ['vote', 'Next screening'], ['chat', 'Chat']];
+
 function land() {
   if (!pending || !ready) return;
   const k = pending;
   pending = null;
+  /* #watch/tv and #watch/movies pick the kind */
+  if (k === 'tv' || k === 'movies') { setKind(k === 'tv' ? 'tv' : 'movie'); app.scrollTop(); return; }
+  const bm = /^back:(\d{4}-\d{2})$/.exec(k);
+  /* the time machine and the theaters' times arrive after the list */
+  if (!extras && (bm || k === 'back' || k === 'theaters')) { pending = k; return; }
   if (SECTIONS.includes(k)) { const s = root.querySelector('[data-sec="' + k + '"]'); if (s) { app.jumpTo(s); return; } }
-  const m = /^f(\d+)$/.exec(k);
+  /* #watch/back:2021-10 opens the time machine on that month */
+  if (bm) {
+    if (tmMonths().some((m) => m.m === bm[1])) { V.month = bm[1]; draw('back'); }
+    const s = root.querySelector('[data-sec="back"]');
+    if (s) { app.jumpTo(s); return; }
+  }
+  const m = /^(f|tv)(\d+)$/.exec(k);
   if (m) {
-    const id = Number(m[1]);
-    let at = filtered().findIndex((f) => f.id === id);
-    if (at < 0 && F.top.some((f) => f.id === id)) { V.recency = 'any'; V.genre = 'all'; V.show = 'all'; at = filtered().findIndex((f) => f.id === id); }
+    const id = m[1] === 'tv' ? TV_BASE + Number(m[2]) : Number(m[2]);
+    /* a title only the time machine knows may not have arrived yet */
+    if (!byId.has(id) && !extras) { pending = k; return; }
+    const f = byId.get(id);
+    if (f && f.kind !== V.kind) setKind(f.kind);
+    let at = filtered().findIndex((x) => x.id === id);
+    if (at < 0 && pool().some((x) => x.id === id)) { V.recency = 'any'; V.genre = 'all'; V.show = 'all'; if (V.sort === 'genre' || V.sort === 'shuffle') V.sort = 'top'; at = filtered().findIndex((x) => x.id === id); }
+    if (at < 0 && pool().some((x) => x.id === id) && V.sort !== 'top') { V.sort = 'top'; at = filtered().findIndex((x) => x.id === id); }
     if (at >= 0) {
       if (at >= V.shown) V.shown = Math.ceil((at + 1) / PAGE) * PAGE;
       draw('list');
-    } else if (byId.has(id)) { if (app.flashHit(root, 'soon:' + id)) return; }
+    } else if (f) {
+      if (app.flashHit(root, 'soon:' + id)) return;
+      filmSheet(f);
+      return;
+    }
   }
   if (/^pick:/.test(k) && P.state === 'loading') { pending = k; return; }
   if (!app.flashHit(root, k)) app.toast('That one has moved on.');
@@ -999,14 +1349,25 @@ app.register(KEY, {
   mount(r) {
     root = r;
     r.innerHTML = '<p class="loading">Loading…</p>';
-    loadFilms().then((j) => {
-      setFilms(j);
+    loadFilms().then((got) => {
+      setFilms(got.films);
       if (!F.top.length) throw new Error('no films');
       L = loadLocal();
+      V.kind = L.kind === 'tv' && hasTV() ? 'tv' : 'movie';
       ready = true;
       render();
       if (app.activeTab() === KEY) app.paintSubnav();
       land();
+      loadExtras(got).then(() => {
+        extras = true;
+        V.month = defaultMonth();
+        /* ratings counted before the time machine named its titles: count again */
+        if (P.state === 'ok') { tally(); draw('town'); draw('vote'); }
+        draw('theaters');
+        draw('back');
+        if (app.activeTab() === KEY) app.paintSubnav();
+        land();
+      });
       loadPosts().then(land);
       pullSeen();
     }).catch(() => {
@@ -1018,9 +1379,7 @@ app.register(KEY, {
   deactivate() {},
   subnav() {
     if (!ready || !root) return null;
-    const toc = [['soon', 'Coming soon'], ['list', 'The list'], ['town', 'Town'], ['vote', 'Next screening'], ['chat', 'Chat']]
-      .filter(([key]) => root.querySelector('[data-sec="' + key + '"]'))
-      .map(([key, label]) => ({ key, label }));
+    const toc = TOC().filter(([key]) => root.querySelector('[data-sec="' + key + '"]')).map(([key, label]) => ({ key, label }));
     return chips(toc, null, (key) => app.jumpTo(root.querySelector('[data-sec="' + key + '"]')));
   },
   /* new picks for the screening vote since the reader last looked */
