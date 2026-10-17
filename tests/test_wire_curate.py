@@ -504,6 +504,16 @@ class ReasonPassTests(unittest.TestCase):
         _, rewritten, emptied = cw.polish_reasons(day, {"provider": "anthropic"}, True, ask)
         self.assertEqual((rewritten, emptied, day["picks"][0]["why"]), (0, 1, ""))
 
+    def test_may_and_march_as_verbs_are_not_months(self):
+        title = "Burlington council weighs a new parking plan"
+        self.assertIsNone(cw.invented("The plan may raise what you pay downtown.", title))
+        self.assertIsNone(cw.invented("Students march downtown before the vote.", title + " as students rally downtown"))
+        self.assertIsNone(cw.invented("May end the first hour you count on.", title))
+        self.assertEqual(cw.invented("The vote comes in March, after the budget.", title), "March")
+        self.assertEqual(cw.invented("May 3 is when the new rates start.", title), "May")
+        self.assertEqual(cw.invented("It could start in may.", title + " in March"), None)
+        self.assertEqual(cw.invented("The vote comes in March.", title + " in March"), None)
+
     def test_a_reason_that_reuses_the_headlines_number_is_fine(self):
         title = "New $4.95M investment to strengthen suicide care across Vermont"
         self.assertIsNone(cw.invented("The $4.95M reaches crisis lines Burlington callers use.", title))
