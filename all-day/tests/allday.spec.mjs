@@ -466,7 +466,7 @@ async function flashes(page, key) {
 
 async function deepLinks(browser, base) {
   await group('deep links, demo', async () => {
-    const cases = [['wire', 'w13'], ['wire', 'y4'], ['watch', 'f9003'], ['food', 'r-demo-all-night-diner'], ['people', 'mx-dm2'], ['whatnow', 'e-tn3'], ['vintage', 's-speaking-volumes'], ['art', 'b-0000a000-0000-4000-8000-000000000002'], ['onair', 'yt:demo-tv-003'], ['games', 'g:trivia-ladder'], ['games', 'champ:btown-riddle']];
+    const cases = [['wire', 'w13'], ['wire', 'y4'], ['watch', 'f9003'], ['food', 'r-demo-all-night-diner'], ['people', 'mx-dm2'], ['whatnow', 'e-tn3'], ['vintage', 's-resource-burlington'], ['art', 'b-0000a000-0000-4000-8000-000000000002'], ['onair', 'yt:demo-tv-003'], ['games', 'g:trivia-ladder'], ['games', 'champ:btown-riddle']];
     for (const [tab, key] of cases) {
       const { ctx, page, errors } = await newPage(browser, base);
       await page.goto(base + '/all-day/?demo=1#' + tab + '/' + key);
@@ -2836,6 +2836,9 @@ async function theVintage(browser, base) {
     check(shown.every(Boolean), 'hours show only where the guide has them; a checked shop without them says call ahead, the rest “Hours not checked yet”', JSON.stringify(rows.map((r) => r.hours)));
     check(rows.every((r) => /^https:\/\/www\.google\.com\/maps\/search\//.test(r.map)), 'Map opens a search on Google Maps', rows[0].map);
     check(file.shops.every((s) => Array.isArray(s.gaps)) && file.gaps, 'gaps are marked in the file for Stephen to fill', JSON.stringify(file.gaps));
+    const noStreet = things.filter((t) => t.group === 'Shopping' && !/^\d/.test(t.address || '')).map((t) => t.id);
+    check(file.shops.every((s) => /^\d/.test(s.address || '')) && file.left_out.every((s) => noStreet.includes(s.id)),
+      'every shop in the walk has a street address; a shop without one is named in left_out instead', JSON.stringify(file.left_out));
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
 

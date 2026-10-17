@@ -3,11 +3,18 @@
  "source": "data/things.json",
  "count": 12,
  "gaps": {
-  "address": 1,
+  "address": 0,
   "coords": 0,
   "hours": 2,
-  "website": 1
+  "website": 0
  },
+ "left_out": [
+  {
+   "id": "five-corners-antiques",
+   "name": "Five Corners Antiques",
+   "why": "no verified street address"
+  }
+ ],
  "shops": [
   {
    "id": "burlington-records",
@@ -43,8 +50,41 @@
    },
    "gaps": [],
    "next": {
-    "miles": 0.19,
+    "miles": 0.18,
     "minutes": 4,
+    "mode": "walk"
+   }
+  },
+  {
+   "id": "old-gold",
+   "name": "Old Gold",
+   "kinds": [
+    "Vintage"
+   ],
+   "neighborhood": "Downtown / Church St",
+   "address": "151 Cherry St, Burlington, VT 05401",
+   "website": "https://www.facebook.com/OldGoldVT/",
+   "coords": [
+    44.4792,
+    -73.212
+   ],
+   "hours": null,
+   "week": null,
+   "hours_note": null,
+   "phone": "802-864-7786",
+   "blurb": "Vintage and new clothing on Cherry Street: costumes, boots, shoes, wigs and accessories for men and women.",
+   "verified": "2026-10-17",
+   "checked": {
+    "date": "2026-10-17",
+    "source": "https://www.facebook.com/OldGoldVT/about",
+    "note": "Address, phone and what it sells from the shop's own Facebook page (intro and About); it has no website of its own. No weekly hours are readable without a Facebook login, so hours are left empty and the guide says call ahead. Coordinates: OpenStreetMap's Old Gold node at 151 Cherry St. A 2018 Seven Days item gave 153 Cherry St for the move; the shop's own page says 151."
+   },
+   "gaps": [
+    "hours"
+   ],
+   "next": {
+    "miles": 0.08,
+    "minutes": 2,
     "mode": "walk"
    }
   },
@@ -427,41 +467,6 @@
     "note": "Address, phone and hours from the South Burlington entry on Goodwill of Northern New England's locations page. Coordinates: OpenStreetMap's Goodwill at 1080 Shelburne Rd. Store and donation hours as the page gives them: 'Store Hours 9 a.m. – 6 p.m. daily Donation Hours 9 a.m. – 4:30 p.m. daily'."
    },
    "gaps": [],
-   "next": {
-    "miles": 7.79,
-    "minutes": 156,
-    "mode": "drive"
-   }
-  },
-  {
-   "id": "five-corners-antiques",
-   "name": "Five Corners Antiques",
-   "kinds": [
-    "Antiques"
-   ],
-   "neighborhood": "Essex / Essex Jct",
-   "address": null,
-   "website": null,
-   "coords": [
-    44.48873,
-    -73.1101
-   ],
-   "hours": null,
-   "week": null,
-   "hours_note": null,
-   "phone": null,
-   "blurb": "A massive multi-dealer antique depot in Essex, fifteen minutes out — the kind of place you enter curious and exit two hours later carrying a lamp.",
-   "verified": "2026-10-17",
-   "checked": {
-    "date": "2026-10-17",
-    "source": "https://journalofantiques.com/wp-content/uploads/flipbook/89/files/basic-html/page61.html",
-    "note": "The shop's website (5cornersantiques.com) is a parked domain. Its last reachable listing is its own April 2024 ad in the Journal of Antiques: 11 Maple Street (Route 117), 802-878-6167, Mon-Sat 10-5, Sun 11-4. OpenStreetMap puts it at 156 Railroad St, Unit 3 and lists Mon-Sat 10-3. With no current page of its own and two addresses, address, phone and hours are left out until someone calls. It was a 2026 Seven Daysies finalist for best antique store. Coordinates: OpenStreetMap's Five Corners Antiques node."
-   },
-   "gaps": [
-    "address",
-    "hours",
-    "website"
-   ],
    "next": null
   }
  ]

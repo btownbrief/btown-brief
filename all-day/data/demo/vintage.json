@@ -178,8 +178,41 @@
    },
    "gaps": [],
    "next": {
-    "miles": 0.19,
+    "miles": 0.18,
     "minutes": 4,
+    "mode": "walk"
+   }
+  },
+  {
+   "id": "old-gold",
+   "name": "Old Gold",
+   "kinds": [
+    "Vintage"
+   ],
+   "neighborhood": "Downtown / Church St",
+   "address": "151 Cherry St, Burlington, VT 05401",
+   "website": "https://www.facebook.com/OldGoldVT/",
+   "coords": [
+    44.4792,
+    -73.212
+   ],
+   "hours": null,
+   "week": null,
+   "hours_note": null,
+   "phone": "802-864-7786",
+   "blurb": "Vintage and new clothing on Cherry Street: costumes, boots, shoes, wigs and accessories for men and women.",
+   "verified": "2026-10-17",
+   "checked": {
+    "date": "2026-10-17",
+    "source": "https://www.facebook.com/OldGoldVT/about",
+    "note": "Address, phone and what it sells from the shop's own Facebook page (intro and About); it has no website of its own. No weekly hours are readable without a Facebook login, so hours are left empty and the guide says call ahead. Coordinates: OpenStreetMap's Old Gold node at 151 Cherry St. A 2018 Seven Days item gave 153 Cherry St for the move; the shop's own page says 151."
+   },
+   "gaps": [
+    "hours"
+   ],
+   "next": {
+    "miles": 0.08,
+    "minutes": 2,
     "mode": "walk"
    }
   },
@@ -336,45 +369,6 @@
    "next": {
     "miles": 0.1,
     "minutes": 2,
-    "mode": "walk"
-   }
-  },
-  {
-   "id": "speaking-volumes",
-   "name": "Speaking Volumes",
-   "kinds": [
-    "Used books"
-   ],
-   "neighborhood": "South End",
-   "address": "377 Pine St, Burlington, VT 05401",
-   "website": "https://www.speakingvolumesvt.com/",
-   "coords": [
-    44.46876,
-    -73.21642
-   ],
-   "hours": "Mon–Fri 10am to 5pm · Sat 9am to 5pm · Sun 10am to 3pm",
-   "week": {
-    "mon": "10:00-17:00",
-    "tue": "10:00-17:00",
-    "wed": "10:00-17:00",
-    "thu": "10:00-17:00",
-    "fri": "10:00-17:00",
-    "sat": "09:00-17:00",
-    "sun": "10:00-15:00"
-   },
-   "hours_note": "Tue and Wed may close early; one page of its site says Fri until 9pm",
-   "phone": "802-540-0107",
-   "blurb": "Tens of thousands of used and rare books on Pine Street, with vintage ephemera, magazines and art mixed in.",
-   "verified": "2026-10-17",
-   "checked": {
-    "date": "2026-10-17",
-    "source": "https://www.speakingvolumesvt.com/",
-    "note": "Hours from 'Bookstore Hours' on the home page. The site's /bookstore page says Friday 10 to 9 and drops the '(or earlier)' on Tue and Wed; the home page, which also carries the newer Randolph store, is used. Coordinates from the Google Maps link on the shop's site. The Marble Ave record store was sold in 2026 and is a separate shop now. What it sells is from https://www.speakingvolumesvt.com/bookstore ('tens of thousands of used titles')."
-   },
-   "gaps": [],
-   "next": {
-    "miles": 0.07,
-    "minutes": 1,
     "mode": "walk"
    }
   }

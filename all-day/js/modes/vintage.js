@@ -18,7 +18,8 @@
      is the whole of "thrift points" at launch.
    - The shop guide. data/vintage-shops.json (scripts/build_vintage_shops.py
      from data/things.json): every vintage, thrift, consignment, antique and
-     record shop the Brief's guide knows, numbered in walking order, with the
+     record shop the Brief's guide has a street address for, numbered in
+     walking order, with the
      way to the next one when both have coordinates, a map and the shop's
      own site. Hours only where someone has read them off the shop's own
      page (the shop's `checked` date and source); a checked shop that posts

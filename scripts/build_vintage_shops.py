@@ -5,7 +5,9 @@ data/things.json.
 Which places: things.json entries in the Shopping group whose category,
 name or blurb says they are a vintage, thrift, consignment, antique or
 record shop. A shopping street ("Pine Street (South End Shopping)") is not
-a shop and is left out. Nothing is added by hand: a shop that is not in
+a shop and is left out, and so is a shop with no verified street address:
+a walking guide can't send anyone to it. Those are named in `left_out` so
+Stephen can see who is waiting on an address. Nothing is added by hand: a shop that is not in
 things.json is not in the guide, so the way to add one is to add it there.
 
 What each shop carries: name, neighborhood, address, website, coordinates
@@ -234,7 +236,9 @@ def legs(ordered):
 def build():
     things = json.loads(SRC.read_text())
     picked = [t for t in things if t.get("group") == "Shopping" and kinds_of(t) and not NOT_A_SHOP.search(t.get("name") or "")]
-    shops = walk_order([shop(t) for t in picked])
+    every = [shop(t) for t in picked]
+    shops = walk_order([s for s in every if s["address"]])
+    left_out = [{"id": s["id"], "name": s["name"], "why": "no verified street address"} for s in every if not s["address"]]
     legs(shops)
     gaps = {g: sum(1 for s in shops if g in s["gaps"]) for g in ("address", "coords", "hours", "website")}
     return {
@@ -243,6 +247,7 @@ def build():
         "source": "data/things.json",
         "count": len(shops),
         "gaps": gaps,
+        "left_out": left_out,
         "shops": shops,
     }
 
@@ -257,6 +262,8 @@ def main():
     OUT.write_text(text)
     print(f"wrote {OUT.relative_to(ROOT)}: {data['count']} shops; missing address {data['gaps']['address']}, "
           f"coordinates {data['gaps']['coords']}, hours {data['gaps']['hours']}, website {data['gaps']['website']}")
+    for s in data["left_out"]:
+        print(f"left out {s['name']}: {s['why']}")
     if data["count"] < 6:
         print("fewer than six shops: add more vintage, thrift or record shops to data/things.json")
 
