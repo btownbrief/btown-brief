@@ -278,6 +278,12 @@ class NeighborPostTests(unittest.TestCase):
                   for k, item in enumerate(batch)]
         tags = tw.validate_tags(answer, batch, 1)
         self.assertEqual({tag["junk"] for tag in tags.values()}, {"tunein"})
+        # and the same holds for an outlet's headline
+        head = [{"id": "h", "ch": "local", "local": True, "name": "WCAX", "d": 1,
+                 "title": "Fall specials at Sweet Basil"}]
+        tags = tw.validate_tags([{"i": 0, "junk": "tunein", "local": True, "ch": "local",
+                                  "topic": "food-drink", "score": 1}], head, 1)
+        self.assertEqual(tags["h"]["junk"], "tunein")
 
     def test_x_is_judged_as_a_headline(self):
         batch = [{"id": "a", "ch": "x", "local": True, "name": "@band", "handle": "@band", "d": 1,

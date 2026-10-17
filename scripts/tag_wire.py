@@ -74,10 +74,12 @@ TUNEIN_RE = re.compile(r"tune in|watch live|live ?stream|listen live|on air|join
 # these words make it a broadcast
 BROADCAST_RE = re.compile(r"tune in|watch live|live ?stream|listen live|on air|streaming now|"
                           r"(?-i:\bLIVE\b)", re.I)
-# which words make a `tunein` verdict stand, by channel (X is judged as a headline)
+# which words make a `tunein` verdict stand, by channel. X is judged as a
+# headline: the list is mostly outlets and news desks, and "join us tonight at
+# 6" from a station is a broadcast
 TUNEIN_WORDS = {"local": TUNEIN_RE, "world": TUNEIN_RE, "x": TUNEIN_RE,
                 "facebook": BROADCAST_RE, "reddit": BROADCAST_RE}
-# A post's `tunein` is undone only when the model did not file it under
+# A `tunein` is undone only when the model did not file it under
 # selling: every show mislabeled `tunein` on 2026-10-17 was music or arts, every
 # ad business or food-drink, so an ad mislabeled `tunein` stays junk
 SELLING_TOPICS = ("business", "food-drink")
@@ -181,7 +183,7 @@ def validate_tags(raw, batch, now_ts):
         topic = entry.get("topic") if entry.get("topic") in TOPICS else "other"
         words = TUNEIN_WORDS.get(item["ch"])
         if junk == "tunein" and words and not words.search(item["title"]) \
-                and (item["ch"] in ("local", "world") or topic not in SELLING_TOPICS):
+                and topic not in SELLING_TOPICS:
             # a story about an event is news; "tune in" means a broadcast or
             # livestream notice, and only a headline that says so is one. A
             # neighbor's post about a show is the event itself (2026-10-17:
