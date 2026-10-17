@@ -3434,6 +3434,10 @@ async function shellFixes(browser, base) {
   await group('cutover: every old tab’s link lands on the nearest new tab', async () => {
     const { ctx, page, errors } = await newPage(browser, base);
     const landed = async (hash, tab) => {
+      /* a fresh document each time: a hash-only goto keeps the last case's
+         tab mounted, and What Now writing its Tonight view back into the
+         address races the legacy rewrite (seen once in a full run) */
+      await page.goto('about:blank');
       await page.goto(base + '/all-day/?demo=1' + hash);
       await page.waitForFunction((t) => document.querySelector('#tab-' + t)?.getAttribute('aria-selected') === 'true', tab, { timeout: 15000 }).catch(() => {});
       return page.evaluate((t) => ({ on: document.querySelector('#tab-' + t).getAttribute('aria-selected') === 'true', hash: location.hash }), tab);
