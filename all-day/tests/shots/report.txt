@@ -1033,6 +1033,37 @@
   ok   the Wire, walking back › the edition is in the address, so it can be shared
   ok   the Wire, walking back › › › comes back to today
   ok   the Wire, walking back › no console errors
+  ok   the Wire, What matters flips through earlier days › on Everything the top five mix local and national
+  ok   the Wire, What matters flips through earlier days › in the editor’s one ranking, as given
+  ok   the Wire, What matters flips through earlier days › today: ‹ is live, › is disabled
+  ok   the Wire, What matters flips through earlier days › the arrows are 44px targets
+  ok   the Wire, What matters flips through earlier days › the river is drawn under the block (55)
+  ok   the Wire, What matters flips through earlier days › ‹ reads “What mattered Friday”, its date under it and a Today link
+  ok   the Wire, What matters flips through earlier days › ‹ flips the block in place to yesterday’s picks
+  ok   the Wire, What matters flips through earlier days › yesterday: both arrows live
+  ok   the Wire, What matters flips through earlier days › with a short fade when motion is allowed
+  ok   the Wire, What matters flips through earlier days › the river below does not change
+  ok   the Wire, What matters flips through earlier days › the dateline stays on today
+  ok   the Wire, What matters flips through earlier days › and the address does not change
+  ok   the Wire, What matters flips through earlier days › the oldest edition: its picks, ‹ disabled, › live
+  ok   the Wire, What matters flips through earlier days › › › returns to today’s picks, › disabled again
+  ok   the Wire, What matters flips through earlier days › and the river is still the same
+  ok   the Wire, What matters flips through earlier days › the Today link returns
+  ok   the Wire, What matters flips through earlier days › on Local the flipped block shows that day’s local picks, in their order
+  ok   the Wire, What matters flips through earlier days › a reload opens on today: the block remembers nothing
+  ok   the Wire, What matters flips through earlier days › no console errors
+  ok   the Wire, What matters flips through earlier days › 390 light: the flipped head fits, with its Today link
+  ok   the Wire, What matters flips through earlier days › 390 light: reduced motion, no fade
+  ok   the Wire, What matters flips through earlier days › 390 light: no console errors
+  ok   the Wire, What matters flips through earlier days › 390 dark: the flipped head fits, with its Today link
+  ok   the Wire, What matters flips through earlier days › 390 dark: reduced motion, no fade
+  ok   the Wire, What matters flips through earlier days › 390 dark: no console errors
+  ok   the Wire, What matters flips through earlier days › 1280 light: the flipped head fits, with its Today link
+  ok   the Wire, What matters flips through earlier days › 1280 light: reduced motion, no fade
+  ok   the Wire, What matters flips through earlier days › 1280 light: no console errors
+  ok   the Wire, What matters flips through earlier days › 1280 dark: the flipped head fits, with its Today link
+  ok   the Wire, What matters flips through earlier days › 1280 dark: reduced motion, no fade
+  ok   the Wire, What matters flips through earlier days › 1280 dark: no console errors
   ok   the Wire, inbox live and no Brief › the X and Facebook chips come back when the inbox is live
   ok   the Wire, inbox live and no Brief › no `brief`, no pinned Brief card
   ok   the Wire, inbox live and no Brief › an X card links to the original post
@@ -1281,6 +1312,8 @@
   ok   On Air, demo › nothing autoplays: the shell’s audio is paused and no frame is loaded
   ok   On Air, demo › the chip row is a table of contents: Out loud, Btown TV, Live, Podcasts, Past nights
   ok   On Air, demo › the sections run in that order
+  ok   On Air, demo › no section carries an explanatory subtitle
+  ok   On Air, demo › no end-of-tab line about when things land
   ok   On Air, demo › a chip scrolls to its section
   ok   On Air, demo › Local: the Brief’s own show is first in Podcasts
   ok   On Air, demo › Local: every local show, no national ones
@@ -1301,7 +1334,12 @@
   ok   On Air, live › nothing autoplays
   ok   On Air, live › today’s clip: the card says today and its length
   ok   On Air, live › live: the Brief’s own show is first in Podcasts
+  ok   On Air, live › Btown TV: “Play tonight on your TV” opens tonight’s playlist in a new tab
+  ok   On Air, live › under the Btown TV header, before the rail, with the play and external icons
   ok   On Air, live › live: tonight’s local picks, the pick and the Burlington & Vermont shelf
+  ok   On Air, live › the transcript hides the voice’s pacing marks ([short pause])
+  ok   On Air, live › no mention of AI on the card or the transcript
+  ok   On Air, live › the card says when it is read
   ok   On Air, live › “Read it instead” shows the script the voice read
   ok   On Air, live › play loads today’s MP3 from the wire-audio branch into the shell’s player
   ok   On Air, live › the player survives a tab switch
@@ -1320,10 +1358,17 @@
   ok   On Air, Live is cameras › Everything: still no ambience streams
   ok   On Air, Live is cameras › Everything: the other live streams come back
   ok   On Air, Live is cameras › no console errors
+  ok   On Air, Play on your TV › not-tonight: no playlist tonight, no “Play tonight” button
+  ok   On Air, Play on your TV › and a quiet link to the latest night that has one, said plainly
+  ok   On Air, Play on your TV › not-tonight: no console errors
+  ok   On Air, Play on your TV › none: no playlist tonight, no “Play tonight” button
+  ok   On Air, Play on your TV › none anywhere: no link at all
+  ok   On Air, Play on your TV › none: no console errors
+  ok   On Air, Play on your TV › demo: the button toasts instead of leaving
   ok   On Air, the audio card › no clip: no audio card, no section, no chip
   ok   On Air, the audio card › none: no console errors
   ok   On Air, the audio card › no clip today: the latest one, with its date (Friday, October 16)
-  ok   On Air, the audio card › and it says when today’s lands
+  ok   On Air, the audio card › the card says when it is read; the header carries no subtitle
   ok   On Air, the audio card › yesterday: no console errors
   ok   Games, live › one get_leaderboard call per live board, for this month in Burlington
   ok   Games, live › the tab only ever reads
@@ -1501,7 +1546,7 @@
   ok   sign-in fails soft › a bad address is caught before any request
   ok   sign-in fails soft › no link was requested
   ok   sign-in fails soft › no console errors
-  ok   performance › the live Wire redraws 60 cards in 11ms (budget 100)
+  ok   performance › the live Wire redraws 60 cards in 7ms (budget 100)
   ok   shell fixes: a rail never snaps flush to the edge › 390: .rail carries scroll-padding of one gutter
   ok   shell fixes: a rail never snaps flush to the edge › 390: a card scrolled to the start stops at the gutter
   ok   shell fixes: a rail never snaps flush to the edge › 390: no console errors

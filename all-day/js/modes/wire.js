@@ -13,9 +13,12 @@
      then "Unfiltered ↗"
    - the Brief's own edition pinned on the days it went out
    - What matters today: every local pick of the current ranking (plus the
-     national ones on Everything), each with its reason; one to five shown,
-     the rest behind one button, and after them the stories an earlier
-     ranking that day held (`picks_earlier`), with their last rank
+     national ones on Everything, ranked with them as one list), each with
+     its reason; one to five shown, the rest behind one button, and after
+     them the stories an earlier ranking that day held (`picks_earlier`),
+     with their last rank. ‹ › on its head flip the block in place through
+     the frozen editions' picks ("What mattered Friday", a Today link back);
+     the river below stays today's
    - The rest of today: the river by update, the update's label as the time
      divider, lead first then newest first, the picks left out, the
      "N new since you were here" line
@@ -81,6 +84,7 @@ const W = {
   reading: null,        // the day the dateline names (follows the scroll)
   ch: 'all',
   open: new Set(),      // the days whose What matters list is opened past five
+  flip: null,           // the earlier day today's What matters block shows, or null (never stored)
   view: 'paper',        // or 'raw', Unfiltered
   run: null,            // the river being drawn
   pending: null, queued: [],
@@ -319,6 +323,7 @@ function startDay() {
 function goDay(date) {
   const tk = todayKey();
   W.start = !date || date >= tk ? null : date;
+  W.flip = null;
   W.reading = W.start || tk;
   W.open.clear();
   W.view = 'paper';
@@ -359,7 +364,7 @@ function render(opts = {}) {
       put(feed, briefPin(d));
       exclude.add(d.brief.k);
     }
-    renderMatters(feed, d, date === tk).forEach((k) => exclude.add(k));
+    (date === tk ? topMatters(feed, d) : renderMatters(feed, d, false)).forEach((k) => exclude.add(k));
   }
   /* the Brief and the open picks count toward the first sixty */
   const above = feed.querySelectorAll('[data-k]').length;
@@ -391,11 +396,27 @@ function mattersOf(d) {
   const keep = (x) => seen(x.c) && (x.c.local || geo() === 'everything');
   return { list: d.picks.filter(keep), earlier: d.earlier.filter(keep) };
 }
+const mattersKeys = (d) => { const { list, earlier } = mattersOf(d); return list.concat(earlier).map((x) => x.c.k); };
 function renderMatters(host, d, isToday) {
+  const wm = mattersBlock(d, isToday);
+  if (!wm) return [];
+  host.appendChild(wm);
+  divider(host, isToday ? 'The rest of today' : 'The rest of the day', geo() === 'local' ? 'local only' : 'every source');
+  return mattersKeys(d);
+}
+
+/* The block itself. `nav`, on today's block only, goes on its head: the
+   ‹ › that flip it through earlier days. A flipped day with nothing to show
+   in this view still draws its head, so the arrows stay where they were. */
+function mattersBlock(d, isToday, nav) {
   const { list, earlier } = mattersOf(d);
-  if (!list.length && !earlier.length) return [];
+  if (!list.length && !earlier.length && !nav) return null;
   const wm = el('div', 'wm');
-  section(wm, isToday ? 'What matters today' : 'What mattered ' + weekday(d.date));
+  section(wm, isToday ? 'What matters today' : 'What mattered ' + weekday(d.date), nav && !isToday ? esc(dayName(d.date).split(', ')[1] || '') : '', nav || null);
+  if (!list.length && !earlier.length) {
+    wm.appendChild(el('p', 'wm-end', esc('No picks ' + (geo() === 'local' ? 'from here ' : '') + 'that day.')));
+    return wm;
+  }
   const [first] = list;
   if (first) put(wm, cards.pick({ ...first.c, media: first.c.thumb, thumb: '', eyebrow: '1 of ' + list.length, why: first.why }, { greenLocal: greenOf(first.c) }));
   list.slice(1, PICKS_OPEN).forEach((x, i) => wm.appendChild(wmRow(x.c, x.why, i + 2)));
@@ -429,9 +450,85 @@ function renderMatters(host, d, isToday) {
     });
     wm.appendChild(more);
   } else if (list.length > 1) wm.appendChild(end());
-  host.appendChild(wm);
-  divider(host, isToday ? 'The rest of today' : 'The rest of the day', geo() === 'local' ? 'local only' : 'every source');
-  return list.concat(earlier).map((x) => x.c.k);
+  return wm;
+}
+
+/* Today's block, with ‹ › on its head (Stephen, 2026-10-17: "an arrow next
+   to it as well so people can easily see past What Matters picks"). The
+   arrows swap the block in place to an earlier day's picks from the frozen
+   editions; the river below stays today's and still leaves out today's
+   picks, whatever the block shows, so flipping never changes it (a past
+   pick that recurs today can show in the river, which is fine). W.flip is
+   the day shown, kept for the visit only: a reload opens on today. Returns
+   today's keys, for the river to leave out. */
+function topMatters(host, d) {
+  const keys = mattersKeys(d);
+  if (!keys.length) { W.flip = null; return []; }
+  const past = W.flip && payloadFor(W.flip);
+  if (!past) W.flip = null;
+  host.appendChild(flipBlock(past ? dayOf(past) : d, d));
+  divider(host, 'The rest of today', geo() === 'local' ? 'local only' : 'every source');
+  return keys;
+}
+const FLIP_PREV = 'Earlier day\'s picks';
+const FLIP_NEXT = 'Later day\'s picks';
+function flipBlock(shown, today) {
+  const isToday = shown === today;
+  const nav = el('div', 'wm-nav');
+  const prev = el('button', 'iconbtn nav', ICON.left); prev.setAttribute('aria-label', FLIP_PREV);
+  const next = el('button', 'iconbtn nav', ICON.right); next.setAttribute('aria-label', FLIP_NEXT);
+  /* the archive's index can land after the block: asked at the click, and
+     the disabled state repainted when it lands (paintFlip) */
+  prev.disabled = !olderThan(shown.date);
+  next.disabled = isToday;
+  prev.addEventListener('click', () => { const d = olderThan(shown.date); if (d) flipTo(d, FLIP_PREV); });
+  next.addEventListener('click', () => { if (!isToday) flipTo(newerThan(shown.date), FLIP_NEXT); });
+  nav.append(prev, next);
+  const wm = mattersBlock(shown, isToday, nav);
+  wm.classList.add('wm-top');
+  wm.dataset.showing = shown.date;
+  if (!isToday) {
+    const sub = wm.querySelector('.sec p');
+    const back = el('button', 'wm-today', 'Today');
+    back.addEventListener('click', () => flipTo(null, FLIP_NEXT));
+    if (sub) sub.append(' · ', back);
+  }
+  return wm;
+}
+function paintFlip() {
+  const wm = W.root && W.root.querySelector('.wm.wm-top');
+  const prev = wm && !wm.hasAttribute('aria-busy') && wm.querySelector('.wm-nav .nav[aria-label="' + FLIP_PREV + '"]');
+  if (prev) prev.disabled = !olderThan(wm.dataset.showing);
+}
+let flipSeq = 0;
+function flipTo(date, again) {
+  const tk = todayKey();
+  const target = !date || date >= tk ? null : date;
+  const seq = ++flipSeq;
+  const swap = (to) => {
+    const old = W.root && W.root.querySelector('.wm.wm-top');
+    const tp = payloadFor(tk);
+    if (seq !== flipSeq || !old || !tp) return;
+    const today = dayOf(tp);
+    const past = to && payloadFor(to);
+    W.flip = past ? to : null;
+    const node = flipBlock(past ? dayOf(past) : today, today);
+    node.classList.add('flip-in');   /* a short fade; none under reduced motion */
+    old.replaceWith(node);
+    hydrateVotes(node, [...node.querySelectorAll('[data-k]')].map((n) => n.dataset.k));
+    /* keep the reader's place: the arrow they pressed, or the other one at an end */
+    const btn = [...node.querySelectorAll('.wm-nav .nav')];
+    const want = btn.find((b) => b.getAttribute('aria-label') === again && !b.disabled) || btn.find((b) => !b.disabled);
+    if (want) want.focus({ preventScroll: true });
+  };
+  if (!target || payloadFor(target)) { swap(target); return; }
+  const old = W.root && W.root.querySelector('.wm.wm-top');
+  if (old) { old.setAttribute('aria-busy', 'true'); old.querySelectorAll('.wm-nav .nav').forEach((b) => { b.disabled = true; }); }
+  loadEdition(target).then(() => swap(target), () => {
+    if (seq !== flipSeq) return;
+    app.toast('That day’s picks didn’t load.');
+    swap(W.flip);
+  });
 }
 
 /* a ranked row: the numeral, the title, the reason, then the foot line */
@@ -1007,6 +1104,7 @@ function mount(root) {
     /* the archive arrived after the page: let the river run on into it */
     if (run && run.done && run.end) { run.end.remove(); run.end = null; run.done = false; fill(run); }
     if (app.activeTab() === 'wire' && DL) paintDateline(W.reading || todayKey());
+    paintFlip();
     land();
   }, () => { W.idxDone = true; land(); });
 }

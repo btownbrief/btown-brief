@@ -45,6 +45,20 @@
     "rank": 1
    },
    {
+    "id": "w8",
+    "ch": "world",
+    "local": false,
+    "src": "ap",
+    "name": "AP",
+    "title": "Fed holds rates steady and signals one more cut before the year ends",
+    "url": "https://example.org/wire/w8",
+    "posted_at": "2026-10-16T16:20:00+00:00",
+    "thumb": "paper",
+    "votes": 12,
+    "why": "The national story that reaches your mortgage. One line is enough: rates hold, one cut likely by December.",
+    "rank": 2
+   },
+   {
     "id": "w9",
     "ch": "x",
     "local": true,
@@ -57,7 +71,7 @@
     "posted_at": "2026-10-16T15:20:00+00:00",
     "votes": 14,
     "why": "First frost of the fall tonight. If you have plants or pipes, this is the headline.",
-    "rank": 2
+    "rank": 3
    },
    {
     "id": "w3",
@@ -71,7 +85,20 @@
     "thumb": "brick",
     "votes": 31,
     "why": "The tables stay out two more weeks, and the city picks up the snow bill.",
-    "rank": 3
+    "rank": 4
+   },
+   {
+    "id": "p12",
+    "ch": "world",
+    "local": false,
+    "src": "reuters",
+    "name": "Reuters",
+    "title": "The Senate advances the stopgap spending bill with ten days to spare",
+    "url": "https://example.org/wire/p12",
+    "posted_at": "2026-10-16T13:20:00+00:00",
+    "votes": 4,
+    "why": "The shutdown clock, in one sentence, so you can stop checking.",
+    "rank": 5
    },
    {
     "id": "w5",
@@ -85,7 +112,7 @@
     "thumb": "night",
     "votes": 22,
     "why": "A 90-minute later bus is the difference between a show and a cab for anyone in Winooski.",
-    "rank": 4
+    "rank": 6
    },
    {
     "id": "w18",
@@ -99,7 +126,7 @@
     "thumb": "paper",
     "votes": 9,
     "why": "The number in the school budget gap is the number that decides March.",
-    "rank": 5
+    "rank": 7
    },
    {
     "id": "p6",
@@ -112,21 +139,7 @@
     "posted_at": "2026-10-16T15:20:00+00:00",
     "votes": 12,
     "why": "Your bill, your meeting. Four weeks to say something.",
-    "rank": 6
-   },
-   {
-    "id": "w8",
-    "ch": "world",
-    "local": false,
-    "src": "ap",
-    "name": "AP",
-    "title": "Fed holds rates steady and signals one more cut before the year ends",
-    "url": "https://example.org/wire/w8",
-    "posted_at": "2026-10-16T16:20:00+00:00",
-    "thumb": "paper",
-    "votes": 12,
-    "why": "The national story that reaches your mortgage. One line is enough: rates hold, one cut likely by December.",
-    "rank": 7
+    "rank": 8
    },
    {
     "id": "p8",
@@ -140,7 +153,7 @@
     "thumb": "night",
     "votes": 21,
     "why": "Tickets go on sale Friday at 10. You will want to know that before Friday at 10.",
-    "rank": 8
+    "rank": 9
    },
    {
     "id": "p9",
@@ -153,7 +166,7 @@
     "posted_at": "2026-10-16T11:20:00+00:00",
     "votes": 5,
     "why": "Three nights of one lane on the only bridge that matters at 11 pm.",
-    "rank": 9
+    "rank": 10
    },
    {
     "id": "p10",
@@ -167,20 +180,6 @@
     "thumb": "field",
     "votes": 17,
     "why": "This is the weekend. Everyone will ask; now you know.",
-    "rank": 10
-   },
-   {
-    "id": "p13",
-    "ch": "local",
-    "local": true,
-    "src": "vermont-public",
-    "name": "Vermont Public",
-    "title": "The Intervale’s fall share closes Sunday with 30 slots left",
-    "url": "https://example.org/wire/p13",
-    "posted_at": "2026-10-16T08:20:00+00:00",
-    "thumb": "field",
-    "votes": 8,
-    "why": "Last call for the winter share. Thirty slots, and the pickup is the Thursday CSA people were splitting on Facebook this morning.",
     "rank": 11
    },
    {
@@ -198,16 +197,17 @@
     "rank": 12
    },
    {
-    "id": "p12",
-    "ch": "world",
-    "local": false,
-    "src": "reuters",
-    "name": "Reuters",
-    "title": "The Senate advances the stopgap spending bill with ten days to spare",
-    "url": "https://example.org/wire/p12",
-    "posted_at": "2026-10-16T13:20:00+00:00",
-    "votes": 4,
-    "why": "The shutdown clock, in one sentence, so you can stop checking.",
+    "id": "p13",
+    "ch": "local",
+    "local": true,
+    "src": "vermont-public",
+    "name": "Vermont Public",
+    "title": "The Intervale’s fall share closes Sunday with 30 slots left",
+    "url": "https://example.org/wire/p13",
+    "posted_at": "2026-10-16T08:20:00+00:00",
+    "thumb": "field",
+    "votes": 8,
+    "why": "Last call for the winter share. Thirty slots, and the pickup is the Thursday CSA people were splitting on Facebook this morning.",
     "rank": 13
    }
   ],
