@@ -66,7 +66,8 @@ revoke all on table public.nn_people_dir, public.nn_people_plans from anon, auth
 
 -- Join or leave the directory, signed in, with a first name. p_interests is
 -- what you're into, from the list in nn_people_rules() (at most 8, each
--- once); joining again replaces it. Leaving deletes your row.
+-- once); joining again replaces it. Leaving deletes your row, and anyone
+-- may leave, a banned reader included; a banned reader may not join.
 create or replace function public.nn_people_optin(p_on boolean, p_interests text[] default null)
 returns jsonb language plpgsql security definer set search_path = public as $$
 declare
@@ -76,12 +77,12 @@ declare
   t text;
 begin
   if u is null then raise exception 'not_signed_in'; end if;
-  if exists (select 1 from public.nn_bans where user_id = u) then raise exception 'banned'; end if;
-  if not exists (select 1 from public.nn_profiles where user_id = u) then raise exception 'no_name'; end if;
   if not coalesce(p_on, false) then
     delete from public.nn_people_dir where user_id = u;
     return jsonb_build_object('on', false, 'interests', '[]'::jsonb);
   end if;
+  if exists (select 1 from public.nn_bans where user_id = u) then raise exception 'banned'; end if;
+  if not exists (select 1 from public.nn_profiles where user_id = u) then raise exception 'no_name'; end if;
   foreach t in array coalesce(p_interests, '{}') loop
     if t is null or not ((rules -> 'interests') ? t) then raise exception 'bad_interest'; end if;
     if not (t = any (v_out)) then v_out := v_out || t; end if;
@@ -93,14 +94,16 @@ begin
 end $$;
 
 -- The directory. Everyone gets the count of readers in it; a signed-in
--- reader who is in it also gets the people: first name, neighborhood,
--- archetype, interests, and `me` on their own row. Never an email, never an
--- account id. Banned readers drop out. Newest updates first, 200 at most.
+-- reader who is in it (and not banned) also gets the people: first name,
+-- neighborhood, archetype, interests, and `me` on their own row. Never an
+-- email, never an account id. Banned readers drop out of it and can no
+-- longer read it. Newest updates first, 200 at most.
 create or replace function public.nn_people_directory() returns jsonb
 language plpgsql stable security definer set search_path = public as $$
 declare
   u uuid := auth.uid();
-  v_me boolean := u is not null and exists (select 1 from public.nn_people_dir where user_id = u);
+  v_me boolean := u is not null and exists (select 1 from public.nn_people_dir where user_id = u)
+                  and not exists (select 1 from public.nn_bans where user_id = u);
 begin
   return jsonb_build_object(
     'count', (select count(*) from public.nn_people_dir d join public.nn_profiles pr on pr.user_id = d.user_id
@@ -118,7 +121,7 @@ end $$;
 -- -------------------------------------------------------------------- plans
 
 -- Your own People plan's age band and Meetup box. Only the plan's author,
--- signed in, on a plan that is still theirs. An empty age band is none;
+-- signed in and not banned, on a plan that is still theirs. An empty age band is none;
 -- no band and no box removes the row.
 create or replace function public.nn_people_plan_set(p_post uuid, p_meetup boolean default false, p_ages text default null)
 returns jsonb language plpgsql security definer set search_path = public as $$
@@ -127,6 +130,7 @@ declare
   v_ages text := nullif(p_ages, '');
 begin
   if u is null then raise exception 'not_signed_in'; end if;
+  if exists (select 1 from public.nn_bans where user_id = u) then raise exception 'banned'; end if;
   if not exists (select 1 from public.nn_posts where id = p_post and user_id = u and board = 'people' and status <> 'deleted') then
     raise exception 'not_found';
   end if;

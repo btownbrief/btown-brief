@@ -123,7 +123,14 @@ insert into public.nn_bans (user_id) values ('11111111-1111-1111-1111-1111111111
 set role authenticated; select pg_temp.who('22222222-2222-2222-2222-222222222222');
 select pg_temp.ok((public.nn_people_directory() ->> 'count')::int = 1 and jsonb_array_length(public.nn_people_directory() -> 'people') = 1, 'a banned reader drops out of the directory');
 select pg_temp.who('11111111-1111-1111-1111-111111111111');
+select pg_temp.ok(public.nn_people_directory() -> 'people' = '[]'::jsonb and not (public.nn_people_directory() ->> 'me')::boolean, 'a banned reader still in it can no longer read it');
 select pg_temp.expect_error('select public.nn_people_optin(true)', 'banned');
+select pg_temp.expect_error($q$select public.nn_people_plan_set(gen_random_uuid(), true)$q$, 'banned');
+select pg_temp.ok(public.nn_people_optin(false) ->> 'on' = 'false', 'but can always leave');
+reset role;
+select pg_temp.ok(not exists (select 1 from public.nn_people_dir where user_id = '11111111-1111-1111-1111-111111111111'), 'and leaving removes the row');
+insert into public.nn_people_dir (user_id, interests) values ('11111111-1111-1111-1111-111111111111', '{games}');
+set role authenticated;
 select pg_temp.who('22222222-2222-2222-2222-222222222222');
 select public.nn_delete_me();
 reset role;
