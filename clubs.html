@@ -3,19 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Burlington Clubs &amp; Groups — Burlington Brief</title>
-  <meta name="description" content="A directory of Burlington, VT clubs and recurring groups — run clubs, board games, book clubs, hiking, pickup sports, maker groups, language exchanges, and more.">
+  <title>Clubs, Leagues &amp; Pickup Games in Burlington | Burlington Brief</title>
+  <meta name="description" content="Every league, pickup game and recurring group around Burlington, VT, checked on its own page: run clubs, rec leagues, pickup basketball, volleyball and soccer, board games, trivia, book clubs, choirs and more. Add yours.">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Btown Brief">
   <meta property="og:title" content="Burlington Clubs &amp; Groups">
-  <meta property="og:description" content="A directory of Burlington, VT clubs and recurring groups — run clubs, board games, book clubs, hiking, pickup sports, maker groups, language exchanges, and more.">
+  <meta property="og:description" content="Every league, pickup game and recurring group around Burlington, VT, checked on its own page: run clubs, rec leagues, pickup basketball, volleyball and soccer, board games, trivia, book clubs, choirs and more. Add yours.">
   <meta property="og:url" content="https://guide.btownbrief.com/clubs.html">
   <meta property="og:image" content="https://guide.btownbrief.com/assets/og/og-guide.jpg">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Burlington Clubs &amp; Groups">
-  <meta name="twitter:description" content="A directory of Burlington, VT clubs and recurring groups — run clubs, board games, book clubs, hiking, pickup sports, maker groups, language exchanges, and more.">
+  <meta name="twitter:description" content="Every league, pickup game and recurring group around Burlington, VT, checked on its own page: run clubs, rec leagues, pickup basketball, volleyball and soccer, board games, trivia, book clubs, choirs and more. Add yours.">
   <meta name="twitter:image" content="https://guide.btownbrief.com/assets/og/og-guide.jpg">
 
   <link rel="icon" href="assets/favicon-32.png" sizes="32x32" type="image/png">
@@ -27,6 +27,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css?v=20260904a">
+  <link rel="stylesheet" href="css/clubs.css?v=20261017a">
   <script>
     /* Theme before first paint, from the cached sunrise/sunset. js/auto-theme.js
        refreshes the cache; this only avoids the white flash after dark. */
@@ -104,23 +105,103 @@ src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
     </div>
   </a>
 
-  <main class="page-wrap">
+  <main class="page-wrap clubs-page">
     <div class="page-hero">
       <span class="page-hero-kicker">Clubs &amp; Groups</span>
       <h1>Find your people in Burlington</h1>
-      <p class="page-hero-sub">Recurring groups you can just show up to — run clubs, board games, book clubs, pickup sports, choirs, craft nights. Schedules shift with the seasons, so click through and confirm before you lace up.</p>
+      <p class="page-hero-sub">Run clubs, rec leagues, pickup games, board game nights, trivia, book clubs, choirs. Every one checked on its own page, with when it meets and how to join.</p>
+      <p class="gx-stats" id="gx-stats" aria-live="polite"></p>
     </div>
 
-    <p class="result-count" id="clubs-count" aria-live="polite"></p>
+    <section class="gx-run" id="gx-run" aria-labelledby="gx-run-title">
+      <div class="gx-run-head">
+        <h2 class="gx-run-title" id="gx-run-title">Run clubs</h2>
+        <span class="gx-run-count" id="gx-run-count"></span>
+      </div>
+      <p class="gx-run-sub">The easiest way to meet people here: show up, run a few miles, get a coffee or a beer after. Most are free and no one gets left behind.</p>
+      <ol class="gx-run-list" id="gx-run-list"></ol>
+      <div class="gx-run-links">
+        <a class="gx-btn gx-btn-primary" href="/all-day/#people/clubs">The run week in All Day →</a>
+        <button class="gx-btn" type="button" data-kind-jump="run">Every run club here</button>
+      </div>
+    </section>
 
-    <div id="clubs-list">
-      <p class="page-empty">Loading groups…</p>
+    <div class="gx-tools" id="gx-tools" role="search">
+      <div class="search-wrap">
+        <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="21" y2="21"/></svg>
+        <input class="search-input" id="gx-q" type="search" placeholder="Search: volleyball, chess, Winooski, Tuesday…" aria-label="Search groups" autocomplete="off">
+      </div>
+      <div class="gx-toggles">
+        <div class="gx-view" role="group" aria-label="View">
+          <button type="button" class="gx-seg" data-view="week" aria-pressed="true">This week</button>
+          <button type="button" class="gx-seg" data-view="browse" aria-pressed="false">Browse all</button>
+        </div>
+        <label class="quick-chip"><input type="checkbox" id="gx-free"> Free</label>
+        <label class="quick-chip"><input type="checkbox" id="gx-beginner"> Beginner friendly</label>
+      </div>
+      <div class="gx-kinds" id="gx-kinds" role="group" aria-label="Kind of group"></div>
     </div>
 
-    <div class="note-card">
-      <strong>Run a club or recurring group around Burlington?</strong>
-      Email <a href="mailto:BtownBrief@gmail.com?subject=Add%20our%20club%20to%20the%20directory">BtownBrief@gmail.com</a> with your name, what it is, when you meet, and a link — I'll add you.
-    </div>
+    <section id="gx-week" class="gx-week" aria-label="This week">
+      <div class="gx-days" id="gx-days" role="tablist" aria-label="Day"></div>
+      <p class="gx-day-title" id="gx-day-title"></p>
+      <ol class="gx-rows" id="gx-rows"></ol>
+      <p class="gx-week-foot" id="gx-week-foot"></p>
+    </section>
+
+    <section id="gx-browse" class="gx-browse" aria-label="All groups" hidden>
+      <div id="gx-list"><p class="page-empty">Loading groups…</p></div>
+    </section>
+
+    <section class="gx-add" id="add" aria-labelledby="gx-add-title">
+      <h2 class="gx-add-title" id="gx-add-title">Add your group or gathering</h2>
+      <p class="gx-add-sub">A league, a pickup game, a club, a standing Tuesday thing. Tell me when and where and I’ll check it and put it up. Your email is only for me, in case I have a question.</p>
+      <form id="gx-form" class="gx-form" novalidate>
+        <div class="gx-field">
+          <label for="gx-f-name">Name of the group</label>
+          <input id="gx-f-name" name="name" type="text" maxlength="80" required placeholder="Sunday pickup soccer at Starr Farm">
+          <p class="gx-err" data-for="name"></p>
+        </div>
+        <div class="gx-field">
+          <label for="gx-f-kind">What kind</label>
+          <select id="gx-f-kind" name="kind" required></select>
+          <p class="gx-err" data-for="kind"></p>
+        </div>
+        <div class="gx-field">
+          <label for="gx-f-when">When</label>
+          <input id="gx-f-when" name="when" type="text" maxlength="120" required placeholder="Sundays 10am, May to October">
+          <p class="gx-err" data-for="when"></p>
+        </div>
+        <div class="gx-field">
+          <label for="gx-f-where">Where</label>
+          <input id="gx-f-where" name="where" type="text" maxlength="120" required placeholder="Starr Farm Park, Burlington">
+          <p class="gx-err" data-for="where"></p>
+        </div>
+        <div class="gx-field">
+          <label for="gx-f-url">Link <span class="gx-opt">(website, Instagram, Meetup, signup)</span></label>
+          <input id="gx-f-url" name="url" type="url" maxlength="300" placeholder="https://">
+          <p class="gx-err" data-for="url"></p>
+        </div>
+        <div class="gx-field">
+          <label for="gx-f-email">Your email <span class="gx-opt">(never shown)</span></label>
+          <input id="gx-f-email" name="email" type="email" maxlength="200" required autocomplete="email">
+          <p class="gx-err" data-for="email"></p>
+        </div>
+        <div class="gx-field gx-field-wide">
+          <label for="gx-f-note">Anything else <span class="gx-opt">(optional: cost, level, how newcomers join)</span></label>
+          <textarea id="gx-f-note" name="note" rows="3" maxlength="500"></textarea>
+          <p class="gx-err" data-for="note"></p>
+        </div>
+        <div class="gx-hp" aria-hidden="true">
+          <label for="gx-f-company">Company</label>
+          <input id="gx-f-company" name="company" type="text" tabindex="-1" autocomplete="off">
+        </div>
+        <div class="gx-form-foot">
+          <button class="gx-btn gx-btn-primary" type="submit" id="gx-submit">Send it to Stephen</button>
+          <p class="gx-form-msg" id="gx-form-msg" role="status" aria-live="polite"></p>
+        </div>
+      </form>
+    </section>
   </main>
 
   <footer class="site-footer">
@@ -132,7 +213,7 @@ src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
   </footer>
 
   <script src="js/community.js"></script>
-  <script src="js/clubs.js"></script>
+  <script src="js/clubs.js?v=20261017a"></script>
   <script src="js/auto-theme.js"></script>
   <script src="https://play.btownbrief.com/nav.js" defer></script>
 </body>

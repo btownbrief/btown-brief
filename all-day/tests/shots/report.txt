@@ -991,8 +991,8 @@
   ok   deep links, demo › #people/mx-dm2: no console errors
   ok   deep links, demo › #whatnow/e-tn3 lands on its card and flashes
   ok   deep links, demo › #whatnow/e-tn3: no console errors
-  ok   deep links, demo › #vintage/s-resource-burlington lands on its card and flashes
-  ok   deep links, demo › #vintage/s-resource-burlington: no console errors
+  ok   deep links, demo › #vintage/s-battery-street-jeans lands on its card and flashes
+  ok   deep links, demo › #vintage/s-battery-street-jeans: no console errors
   ok   deep links, demo › #habits/next-season lands on its card and flashes
   ok   deep links, demo › #habits/next-season: no console errors
   ok   deep links, demo › #onair/yt:demo-tv-003 lands on its card and flashes
@@ -1381,6 +1381,70 @@
   ok   Food, deep links and the chip row › #food/d-<id> turns the deck to that deal
   ok   Food, deep links and the chip row › an unknown place says so
   ok   Food, deep links and the chip row › no console errors
+  ok   Food, the map with location refused (demo, noon) › a Map button sits at the far right of the Open now head
+  ok   Food, the map with location refused (demo, noon) › its preview is the list as dots around Church Street
+  ok   Food, the map with location refused (demo, noon) › and it says how many places it maps
+  ok   Food, the map with location refused (demo, noon) › before a tap: no Leaflet, no tiles, nothing fetched
+  ok   Food, the map with location refused (demo, noon) › a tap loads Leaflet 1.9.4 and its stylesheet
+  ok   Food, the map with location refused (demo, noon) › with the integrity hashes the guide’s own map pages use
+  ok   Food, the map with location refused (demo, noon) › the map opens in a sheet
+  ok   Food, the map with location refused (demo, noon) › on OpenStreetMap’s tiles, credited
+  ok   Food, the map with location refused (demo, noon) › with no location it is centred on Church Street
+  ok   Food, the map with location refused (demo, noon) › a pin for each place open now, and no reader pin
+  ok   Food, the map with location refused (demo, noon) › each pin is a place, at its own spot, named
+  ok   Food, the map with location refused (demo, noon) › Near me, refused: says so, and the map stays on Church Street
+  ok   Food, the map with location refused (demo, noon) › a pin opens its place
+  ok   Food, the map with location refused (demo, noon) › Closest to me, refused: the list stays nearest Church Street and says why
+  ok   Food, the map with location refused (demo, noon) › #food/map opens the map
+  ok   Food, the map with location refused (demo, noon) › no console errors
+  ok   Food, the map and Closest to me with location allowed (demo, noon) › nothing asks for the location on load
+  ok   Food, the map and Closest to me with location allowed (demo, noon) › Closest to me: allowed, the list runs from the reader outward
+  ok   Food, the map and Closest to me with location allowed (demo, noon) › and the head says so
+  ok   Food, the map and Closest to me with location allowed (demo, noon) › the map puts the reader on it
+  ok   Food, the map and Closest to me with location allowed (demo, noon) › but stays centred on Church Street, so no tile request is for the reader’s own block
+  ok   Food, the map and Closest to me with location allowed (demo, noon) › and Near me steps aside
+  ok   Food, the map and Closest to me with location allowed (demo, noon) › it was asked for only once the reader picked Closest to me
+  ok   Food, the map and Closest to me with location allowed (demo, noon) › the position is never sent anywhere
+  ok   Food, the map and Closest to me with location allowed (demo, noon) › and never stored
+  ok   Food, the map and Closest to me with location allowed (demo, noon) › no console errors
+  ok   Food, the map and Closest to me with location allowed (demo, noon) › a reader in Los Angeles is told, and the list stays on Church Street
+  ok   Food, the sorts and the meal toggle (demo, noon) › the sort offers nearest, closest to me, open latest, price, newest
+  ok   Food, the sorts and the meal toggle (demo, noon) › Nearest Church St: the default, nearest first
+  ok   Food, the sorts and the meal toggle (demo, noon) › Open latest: the latest close tonight first
+  ok   Food, the sorts and the meal toggle (demo, noon) › Price: cheapest first
+  ok   Food, the sorts and the meal toggle (demo, noon) › and each row shows its price
+  ok   Food, the sorts and the meal toggle (demo, noon) › Newest: the most recently opened first
+  ok   Food, the sorts and the meal toggle (demo, noon) › and says when it opened
+  ok   Food, the sorts and the meal toggle (demo, noon) › breakfast: the places open for it today (2), and the chip counts them
+  ok   Food, the sorts and the meal toggle (demo, noon) › lunch: the places open for it today (6), and the chip counts them
+  ok   Food, the sorts and the meal toggle (demo, noon) › dinner: the places open for it today (5), and the chip counts them
+  ok   Food, the sorts and the meal toggle (demo, noon) › the three meals really differ: the bakery is breakfast, not dinner
+  ok   Food, the sorts and the meal toggle (demo, noon) › Any time puts them all back
+  ok   Food, the sorts and the meal toggle (demo, noon) › no console errors
+  ok   Food, Deals today: smaller, a › arrow, See all deals (demo, noon) › the deck is a strip now, wider than it is tall
+  ok   Food, Deals today: smaller, a › arrow, See all deals (demo, noon) › with a visible › arrow on its right side
+  ok   Food, Deals today: smaller, a › arrow, See all deals (demo, noon) › the arrow turns to the next deal
+  ok   Food, Deals today: smaller, a › arrow, See all deals (demo, noon) › “See all deals” sits in the head and opens the guide’s deals page
+  ok   Food, Deals today: smaller, a › arrow, See all deals (demo, noon) › a deal at a place with its own food picture shows it behind the card
+  ok   Food, Deals today: smaller, a › arrow, See all deals (demo, noon) › no console errors
+  ok   Food, the directory: Their food, with and without Instagram (demo) › a place with its own posts has “Their food” beside Menu
+  ok   Food, the directory: Their food, with and without Instagram (demo) › a place with no Instagram but a reader’s dish has it too
+  ok   Food, the directory: Their food, with and without Instagram (demo) › a place with neither has no button and keeps its initials
+  ok   Food, the directory: Their food, with and without Instagram (demo) › and a place with food to show leads its row with it
+  ok   Food, the directory: Their food, with and without Instagram (demo) › Their food: the reader’s dish first, then its own reels and posts
+  ok   Food, the directory: Their food, with and without Instagram (demo) › with its Instagram and the reader’s credit
+  ok   Food, the directory: Their food, with and without Instagram (demo) › a reel there plays in the one video box, the sheet out of its way
+  ok   Food, the directory: Their food, with and without Instagram (demo) › no Instagram: its submitted dish still shows, and no Instagram link
+  ok   Food, the directory: Their food, with and without Instagram (demo) › “Feature your restaurant” opens a mailto with a subject
+  ok   Food, the directory: Their food, with and without Instagram (demo) › no form and no paragraph
+  ok   Food, the directory: Their food, with and without Instagram (demo) › and owners find it under the list too
+  ok   Food, the directory: Their food, with and without Instagram (demo) › an account the directory marks not-food never reaches In their own words
+  ok   Food, the directory: Their food, with and without Instagram (demo) › no console errors
+  ok   Food, the directory over the wire (live) › the directory names the creemee podcast as not food
+  ok   Food, the directory over the wire (live) › Waterworks: its own post from instagram.json, by the handle its website links
+  ok   Food, the directory over the wire (live) › A Single Pebble, no Instagram: the dish a reader sent in is its food
+  ok   Food, the directory over the wire (live) › the podcast stays out of In their own words even tagged food
+  ok   Food, the directory over the wire (live) › no console errors
   ok   People: the rules in the module and the SQL agree › PEOPLE_RULES in people.js is nn_people_rules() in nn-people.sql
   ok   People: the rules in the module and the SQL agree › the tab never imports boards-fake.js; its mirror is its own
   ok   People, live: Stephen’s meetups, the clubs, an empty board › every one of Stephen’s own events in the next two weeks shows (5)
@@ -1834,7 +1898,7 @@
   ok   sign-in fails soft › a bad address is caught before any request
   ok   sign-in fails soft › no link was requested
   ok   sign-in fails soft › no console errors
-  ok   performance › the live Wire redraws 60 cards in 6ms (budget 100)
+  ok   performance › the live Wire redraws 60 cards in 8ms (budget 100)
   ok   shell fixes: a rail never snaps flush to the edge › 390: .rail carries scroll-padding of one gutter
   ok   shell fixes: a rail never snaps flush to the edge › 390: a card scrolled to the start stops at the gutter
   ok   shell fixes: a rail never snaps flush to the edge › 390: no console errors
@@ -1888,7 +1952,7 @@
   ok   cutover: every old tab’s link lands on the nearest new tab › a bare #reddit opens the Wire on its Reddit chip
   ok   cutover: every old tab’s link lands on the nearest new tab › an old Music link opens What Now on Tonight
   ok   cutover: every old tab’s link lands on the nearest new tab › no console errors
-  ok   shell fixes: the offline shell carries the new modules › sw.js VERSION is bumped for On Air’s past nights and speed after the Wire’s Photo mode, to v49
+  ok   shell fixes: the offline shell carries the new modules › sw.js VERSION is bumped past Food (v50) for Vintage, to v51 or later
   ok   shell fixes: the offline shell carries the new modules › every module in js/ is in the offline list
   ok   shell fixes: the offline shell carries the new modules › and nothing in the offline list is missing from js/
   ok   shell fixes: the offline shell carries the new modules › every file in the offline list exists
@@ -1974,6 +2038,7 @@
   ok   boards: votes, reports, delete, expiry (demo) › boards: no sideways scroll at 1280
   ok   boards: votes, reports, delete, expiry (demo) › boards: at most two subnav rows
   ok   boards: votes, reports, delete, expiry (demo) › no console errors
+  ok   boards: Your posts, and delete my account (demo) › the demo profile and swap post are set up
   ok   boards: Your posts, and delete my account (demo) › an Art photo without a photo: refused
   ok   boards: Your posts, and delete my account (demo) › with a photo and consent: posted, the photo waits for the queue
   ok   boards: Your posts, and delete my account (demo) › a photo whose post is refused is taken back out of the queue
@@ -1997,6 +2062,23 @@
   ok   boards: the profile sheet says what you’re into, activities only (demo) › eight at most: books and the first seven tapped; sports and outdoors, the ninth and tenth, do nothing
   ok   boards: the profile sheet says what you’re into, activities only (demo) › books tapped off, the seven saved to the profile, in the list’s order
   ok   boards: the profile sheet says what you’re into, activities only (demo) › no console errors
+  ok   boards: handles on the profile sheet, and the three new boards (demo) › sixteen handle boxes, each labelled, in Social, Fitness and Games
+  ok   boards: handles on the profile sheet, and the three new boards (demo) › folded while empty
+  ok   boards: handles on the profile sheet, and the three new boards (demo) › one switch, off, and no subtext
+  ok   boards: handles on the profile sheet, and the three new boards (demo) › a link is refused, naming the box
+  ok   boards: handles on the profile sheet, and the three new boards (demo) › saved without the @, the switch on
+  ok   boards: handles on the profile sheet, and the three new boards (demo) › the sheet opens on what was saved, the folds with handles open
+  ok   boards: handles on the profile sheet, and the three new boards (demo) › handlesRecent: newest first, only the kinds asked for, no account ids
+  ok   boards: handles on the profile sheet, and the three new boards (demo) › the demo has posts on Games, the Square and Gatherings
+  ok   boards: handles on the profile sheet, and the three new boards (demo) › a gathering in the past is refused; a coming one waits for Stephen, its link kept
+  ok   boards: handles on the profile sheet, and the three new boards (demo) › no console errors
+  ok   boards: handles over the wire, and before round four (live) › setHandles sends round four’s call, keeping the rest of the profile, with the reader’s token
+  ok   boards: handles over the wire, and before round four (live) › and the profile comes back whole
+  ok   boards: handles over the wire, and before round four (live) › a bad handle never leaves the phone
+  ok   boards: handles over the wire, and before round four (live) › handlesRecent asks for the kinds and the limit
+  ok   boards: handles over the wire, and before round four (live) › before round four: handles are “off”, the boards are not
+  ok   boards: handles over the wire, and before round four (live) › setProfile saves the rest with round two’s call and says the handles wait
+  ok   boards: handles over the wire, and before round four (live) › no console errors beyond the browser logging the 404
   ok   boards desk: People’s Meetup list and the stray-photo sweep (demo) › opening the desk sweeps stray photos and says what went
   ok   boards desk: People’s Meetup list and the stray-photo sweep (demo) › the Meetup button lists the live plans down for Meetup: when, where, spots, ages, host, going
   ok   boards desk: People’s Meetup list and the stray-photo sweep (demo) › each with a copy button, and no email
@@ -2125,7 +2207,7 @@
   ok   Vintage, signed out: the finds show, posting asks for the sign-in (demo) › every find shows its days left, and they differ
   ok   Vintage, signed out: the finds show, posting asks for the sign-in (demo) › the vote on a find is “I’d want this”
   ok   Vintage, signed out: the finds show, posting asks for the sign-in (demo) › nobody signed in owns a find, so no “Someone got it”
-  ok   Vintage, signed out: the finds show, posting asks for the sign-in (demo) › the chip row is the table of contents: Spotted, Shops, Swaps, Make a tee, Fit check
+  ok   Vintage, signed out: the finds show, posting asks for the sign-in (demo) › the chip row is the table of contents: Fit checks, Spotted, New in, Shops, Swaps, Make a tee
   ok   Vintage, signed out: the finds show, posting asks for the sign-in (demo) › a chip scrolls its section up under the mast
   ok   Vintage, signed out: the finds show, posting asks for the sign-in (demo) › Post a find, signed out: the sign-in note and no form
   ok   Vintage, signed out: the finds show, posting asks for the sign-in (demo) › Post a fit check, signed out: the same
@@ -2138,6 +2220,23 @@
   ok   Vintage, signed out: the finds show, posting asks for the sign-in (demo) › vintage: at most two subnav rows
   ok   Vintage, signed out: the finds show, posting asks for the sign-in (demo) › no console errors
   ok   Vintage, signed out: the finds show, posting asks for the sign-in (demo) › demo mode never calls Supabase
+  ok   Vintage, fit checks and Spotted share the first screen at 390; a tile opens the fit’s own card; New in is the shops’ own posts (demo) › Fit checks leads the tab, then Spotted this week, then New in
+  ok   Vintage, fit checks and Spotted share the first screen at 390; a tile opens the fit’s own card; New in is the shops’ own posts (demo) › at 390 by 844 the fit tiles, the Spotted head and the first find are all on the first screen
+  ok   Vintage, fit checks and Spotted share the first screen at 390; a tile opens the fit’s own card; New in is the shops’ own posts (demo) › each fit check is a photo tile with its title and first name
+  ok   Vintage, fit checks and Spotted share the first screen at 390; a tile opens the fit’s own card; New in is the shops’ own posts (demo) › a tile opens the post’s own card: the photo, “Love this fit”, share and report
+  ok   Vintage, fit checks and Spotted share the first screen at 390; a tile opens the fit’s own card; New in is the shops’ own posts (demo) › and the vote works from the sheet
+  ok   Vintage, fit checks and Spotted share the first screen at 390; a tile opens the fit’s own card; New in is the shops’ own posts (demo) › New in: the shops’ own posts from the last two weeks, newest first, each credited to its account and linked to the post
+  ok   Vintage, fit checks and Spotted share the first screen at 390; a tile opens the fit’s own card; New in is the shops’ own posts (demo) › a three-week-old post and an account that is not a shop stay off
+  ok   Vintage, fit checks and Spotted share the first screen at 390; a tile opens the fit’s own card; New in is the shops’ own posts (demo) › the New in chip counts them
+  ok   Vintage, fit checks and Spotted share the first screen at 390; a tile opens the fit’s own card; New in is the shops’ own posts (demo) › vintage: nothing fixed or sticky inside the tab
+  ok   Vintage, fit checks and Spotted share the first screen at 390; a tile opens the fit’s own card; New in is the shops’ own posts (demo) › vintage: uppercase only in the caps roles
+  ok   Vintage, fit checks and Spotted share the first screen at 390; a tile opens the fit’s own card; New in is the shops’ own posts (demo) › vintage: no monospace
+  ok   Vintage, fit checks and Spotted share the first screen at 390; a tile opens the fit’s own card; New in is the shops’ own posts (demo) › vintage: no escaped markup, undefined or NaN on the page
+  ok   Vintage, fit checks and Spotted share the first screen at 390; a tile opens the fit’s own card; New in is the shops’ own posts (demo) › vintage: no sideways scroll at 390
+  ok   Vintage, fit checks and Spotted share the first screen at 390; a tile opens the fit’s own card; New in is the shops’ own posts (demo) › vintage: at most two subnav rows
+  ok   Vintage, fit checks and Spotted share the first screen at 390; a tile opens the fit’s own card; New in is the shops’ own posts (demo) › no console errors
+  ok   Vintage, New in reads the shops’ accounts from the guide and leaves the rest out (live) › only the guide’s own account’s fresh post shows, opening Instagram in a new tab
+  ok   Vintage, New in reads the shops’ accounts from the guide and leaves the rest out (live) › no console errors
   ok   Vintage, a find posts with its fields and shows days left; “Someone got it” thanks you (demo) › the shop field suggests the guide’s shops; anything typed still goes
   ok   Vintage, a find posts with its fields and shows days left; “Someone got it” thanks you (demo) › the fields are the kind’s: shop (needed), size and price (optional)
   ok   Vintage, a find posts with its fields and shows days left; “Someone got it” thanks you (demo) › the sheet says, in one line, the photo shows once approved
@@ -2174,10 +2273,15 @@
   ok   Vintage, the design form: consent first, and no price or cash anywhere (demo) › vintage: no sideways scroll at 390
   ok   Vintage, the design form: consent first, and no price or cash anywhere (demo) › vintage: at most two subnav rows
   ok   Vintage, the design form: consent first, and no price or cash anywhere (demo) › no console errors
-  ok   Vintage, the shop guide walks in order and invents no hours (live) › the guide has at least six shops (12)
+  ok   Vintage, the shop guide walks in order and invents no hours (live) › the guide has at least six shops (36)
   ok   Vintage, the shop guide walks in order and invents no hours (live) › every shop in the file, numbered in its walking order
-  ok   Vintage, the shop guide walks in order and invents no hours (live) › the walk goes downtown, the South End, the Old North End, Winooski, then Essex
+  ok   Vintage, the shop guide walks in order and invents no hours (live) › the walk goes downtown, the South End, the Old North End and Winooski, then drives Colchester, Essex, Williston, South Burlington, Shelburne
+  ok   Vintage, the shop guide walks in order and invents no hours (live) › used books (Speaking Volumes) come last, after the walk, with no leg into them
+  ok   Vintage, the shop guide walks in order and invents no hours (live) › greater Burlington, not just the city: Essex, Williston (Plato’s Closet), South Burlington, Shelburne
   ok   Vintage, the shop guide walks in order and invents no hours (live) › every shop is one of things.json’s Shopping entries: none invented
+  ok   Vintage, the shop guide walks in order and invents no hours (live) › a record store is not a thrift: Burlington Records stays in things.json and out of the guide
+  ok   Vintage, the shop guide walks in order and invents no hours (live) › every shop in the guide has a checked record: the date, the page and what was read there
+  ok   Vintage, the shop guide walks in order and invents no hours (live) › no shop twice: every id and every address once (Barge Canal Market and Speaking Volumes share 377 Pine St)
   ok   Vintage, the shop guide walks in order and invents no hours (live) › every hour comes from the shop’s own things.json entry, with the date and page it was checked on
   ok   Vintage, the shop guide walks in order and invents no hours (live) › each shop’s week is its things.json hours, day by day
   ok   Vintage, the shop guide walks in order and invents no hours (live) › hours show only where the guide has them; a checked shop without them says call ahead, the rest “Hours not checked yet”

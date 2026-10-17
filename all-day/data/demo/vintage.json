@@ -1,5 +1,6 @@
 {
- "_": "Demo data for ?demo=1. The people, finds, swaps and fit checks are invented; vintage.js adds them to the demo boards (boards-fake.js), which already holds three of the finds and one of the swaps by title. The shops are the first six of data/vintage-shops.json and the designs six of all-day/data/merch-designs.json, copied as they are, so the demo never shows an hour or an address that is not real. days is how long a post has left; photo is a placeholder palette.",
+ "_": "Demo data for ?demo=1. The people, finds, swaps and fit checks are invented; vintage.js adds them to the demo boards (boards-fake.js), which already holds three of the finds and one of the swaps by title. The shops are the first six of data/vintage-shops.json and the designs six of all-day/data/merch-designs.json, copied as they are, so the demo never shows an hour or an address that is not real. days is how long a post has left; photo is a placeholder palette. New in: instagram names the invented shop accounts as data/vintage-shops.json names the real ones, and instagramPosts are invented posts in all-day/data/instagram.json's shape; their times move with the reader's clock (anchor). One post is three weeks old and one is from an account that is not a shop: neither shows.",
+ "anchor": "2026-10-16T12:00:00-04:00",
  "homesThisMonth": 2,
  "people": [
   [
@@ -145,113 +146,82 @@
  ],
  "shops": [
   {
-   "id": "burlington-records",
-   "name": "Burlington Records",
-   "kinds": [
-    "Records"
-   ],
-   "neighborhood": "Downtown / Church St",
-   "address": "194 College St, Burlington, VT 05401",
-   "website": "https://www.burlingtonrecords.com/",
-   "coords": [
-    44.47723,
-    -73.21202
-   ],
-   "hours": "Mon–Wed 10am to 7pm · Thu–Fri 10am to 8pm · Sat 10am to 8:30pm · Sun 10am to 7pm",
-   "week": {
-    "mon": "10:00-19:00",
-    "tue": "10:00-19:00",
-    "wed": "10:00-19:00",
-    "thu": "10:00-20:00",
-    "fri": "10:00-20:00",
-    "sat": "10:00-20:30",
-    "sun": "10:00-19:00"
-   },
-   "hours_note": null,
-   "phone": "802-881-0303",
-   "blurb": "Downtown Burlington's independent vinyl shop with an extensive catalog organized by genre and era.",
-   "verified": "2026-10-17",
-   "checked": {
-    "date": "2026-10-17",
-    "source": "https://www.burlingtonrecords.com/",
-    "note": "Address, phone and hours from the Location & Hours block on the shop's site. Coordinates: OpenStreetMap's Burlington Records node at 194 College St. The shop has moved from the Church and Bank corner; older listings still give that address."
-   },
-   "gaps": [],
-   "next": {
-    "miles": 0.18,
-    "minutes": 4,
-    "mode": "walk"
-   }
-  },
-  {
-   "id": "old-gold",
-   "name": "Old Gold",
+   "id": "shakurs-vintage",
+   "name": "Shakur's Vintage",
    "kinds": [
     "Vintage"
    ],
    "neighborhood": "Downtown / Church St",
-   "address": "151 Cherry St, Burlington, VT 05401",
-   "website": "https://www.facebook.com/OldGoldVT/",
+   "address": "209 College St, Burlington, VT 05401",
+   "website": "https://www.instagram.com/shakursvintage/",
    "coords": [
-    44.4792,
-    -73.212
+    44.47695,
+    -73.21146
    ],
-   "hours": null,
-   "week": null,
-   "hours_note": null,
-   "phone": "802-864-7786",
-   "blurb": "Vintage and new clothing on Cherry Street: costumes, boots, shoes, wigs and accessories for men and women.",
+   "hours": "Wed–Sat 11am to 6pm · Sun 11am to 5pm · closed Mon, Tue",
+   "week": {
+    "mon": null,
+    "tue": null,
+    "wed": "11:00-18:00",
+    "thu": "11:00-18:00",
+    "fri": "11:00-18:00",
+    "sat": "11:00-18:00",
+    "sun": "11:00-17:00"
+   },
+   "hours_note": "Second floor",
+   "phone": null,
+   "blurb": "A vintage and secondhand shop on College Street selling Y2K and vintage clothing, accessories and gifts.",
    "verified": "2026-10-17",
    "checked": {
     "date": "2026-10-17",
-    "source": "https://www.facebook.com/OldGoldVT/about",
-    "note": "Address, phone and what it sells from the shop's own Facebook page (intro and About); it has no website of its own. No weekly hours are readable without a Facebook login, so hours are left empty and the guide says call ahead. Coordinates: OpenStreetMap's Old Gold node at 151 Cherry St. A 2018 Seven Days item gave 153 Cherry St for the move; the shop's own page says 151."
+    "source": "https://www.instagram.com/shakursvintage/",
+    "note": "No website (bio links only a Depop shop, depop.com/shakursnyc). Hours and address from the shop's own Instagram bio, read via the Scrape Creators profile API: 'closed mon/tues | wed-sat 11-6 | sun 11-5' and '209 college st ⭑ burlington vt'; bio also says 'vintage, secondhand, gift'. Second floor and the Oct 9, 2026 opening date from a Burlington Vintage Market collab post that also appears on the shop's feed (https://www.instagram.com/p/DeNTSAjqwmh/): 'opens this Friday, October 9th, at 209 College St (Second Floor)... Regular hours are Wednesday to Saturday from 11AM to 6PM and Sunday from 11AM to 5PM', which matches the bio. Shop's own posts confirm opening day Oct 9 and 'open this weekend 11-6 Saturday & 11-5 Sunday' (Oct 16). One-off: it was closed Sunday Oct 11 for a pop-up. ZIP 05401 added (not in bio). Stephen spelled it 'Shakar Vintage'. Coordinates: Nominatim house-number match (OSM building 'Hark, 209 College Street')."
    },
-   "gaps": [
-    "hours"
-   ],
+   "instagram": "shakursvintage",
+   "gaps": [],
    "next": {
-    "miles": 0.08,
+    "miles": 0.09,
     "minutes": 2,
     "mode": "walk"
    }
   },
   {
-   "id": "outdoor-gear-exchange",
-   "name": "Outdoor Gear Exchange",
+   "id": "hunnymusturd-shop",
+   "name": "HunnyMusturd Shop",
    "kinds": [
-    "Consignment"
+    "Vintage"
    ],
    "neighborhood": "Downtown / Church St",
-   "address": "37 Church St, Burlington, VT 05401",
-   "website": "https://www.gearx.com/",
+   "address": "113 Church Street, Second Floor, Burlington, VT 05401",
+   "website": "https://www.hunnymusturdshop.com/",
    "coords": [
-    44.4791,
-    -73.21324
+    44.47727,
+    -73.21274
    ],
-   "hours": "Mon–Fri 11am to 7pm · Sat 10am to 7pm · Sun 10am to 6pm",
+   "hours": "Mon noon to 6pm · Wed–Thu noon to 6pm · Fri 1pm to 7pm · Sat 11am to 6pm · Sun noon to 5pm · Tue not listed",
    "week": {
-    "mon": "11:00-19:00",
-    "tue": "11:00-19:00",
-    "wed": "11:00-19:00",
-    "thu": "11:00-19:00",
-    "fri": "11:00-19:00",
-    "sat": "10:00-19:00",
-    "sun": "10:00-18:00"
+    "mon": "12:00-18:00",
+    "tue": "unlisted",
+    "wed": "12:00-18:00",
+    "thu": "12:00-18:00",
+    "fri": "13:00-19:00",
+    "sat": "11:00-18:00",
+    "sun": "12:00-17:00"
    },
-   "hours_note": null,
-   "phone": "802-860-0190",
-   "blurb": "Church Street's legendary gear shop — new equipment up top, and a consignment section where patient people score serious deals on used outdoor kit.",
+   "hours_note": "Second floor, above Leunig's",
+   "phone": "(508) 330-7946",
+   "blurb": "A vintage clothing and local art shop above Leunig's on Church Street, now an eight-room vintage mall with vintage racks for all genders in sizes XS to 4X.",
    "verified": "2026-10-17",
    "checked": {
     "date": "2026-10-17",
-    "source": "https://www.gearx.com/pages/hours-location",
-    "note": "Hours and address from the shop's Hours & Location page; coordinates from the Google Maps link on that page."
+    "source": "https://www.hunnymusturdshop.com/about",
+    "note": "Two of the shop's own pages disagree; used the newer. About page (Squarespace updatedOn 2026-05-14) 'Visit Us / 113 Church Street Second Floor': 'Friday 1pm-7pm, Saturday 11am-6pm, Sunday 12pm-5pm, Monday 12pm-6pm, Wednesday 12pm-6pm, Thursday 12pm-6pm', Phone (508) 330-7946; Tuesday not mentioned so recorded unlisted. The older /hours page (updatedOn 2025-09-12) says Mon 12-4, Tue Closed, Wed 12-4, Thu Closed, Fri 1-7, Sat 11-7, Sun 12-5. About page says in 2026 they moved down from the third floor to the second and became a '1,500+ sq/ft, 8 room, vintage mall'; Instagram bio says '60+ Vintage Vendors & Artists'. Consignment page says they are currently closed for consignment. ZIP added. Coordinates: Nominatim house-number match for 113 Church St (first of three close OSM points)."
    },
+   "instagram": "hunny.musturd",
    "gaps": [],
    "next": {
-    "miles": 0.24,
-    "minutes": 5,
+    "miles": 0.16,
+    "minutes": 3,
     "mode": "walk"
    }
   },
@@ -328,47 +298,88 @@
    },
    "gaps": [],
    "next": {
-    "miles": 0.52,
-    "minutes": 10,
+    "miles": 0.06,
+    "minutes": 1,
     "mode": "walk"
    }
   },
   {
-   "id": "resource-burlington",
-   "name": "ReSOURCE",
+   "id": "anjou-burlington",
+   "name": "Anjou & the Little Pear",
    "kinds": [
-    "Thrift"
+    "Antiques",
+    "Vintage"
    ],
-   "neighborhood": "South End",
-   "address": "339 Pine St, Burlington, VT 05401",
-   "website": "https://resourcevt.org/store-location-hours/",
+   "neighborhood": "Downtown / Church St",
+   "address": "53 Main Street, Burlington, VT 05401",
+   "website": "https://www.facebook.com/AnjouVT/",
    "coords": [
-    44.46985,
-    -73.21633
+    44.47559,
+    -73.21765
    ],
-   "hours": "Tue 10am to 5pm · Thu–Sat 10am to 5pm · closed Mon, Wed, Sun",
+   "hours": "Sat 10am to 5pm · Sun 11am to 3pm · Mon, Tue, Wed, Thu, Fri not listed",
    "week": {
-    "mon": null,
-    "tue": "10:00-17:00",
-    "wed": null,
-    "thu": "10:00-17:00",
-    "fri": "10:00-17:00",
+    "mon": "unlisted",
+    "tue": "unlisted",
+    "wed": "unlisted",
+    "thu": "unlisted",
+    "fri": "unlisted",
     "sat": "10:00-17:00",
-    "sun": null
+    "sun": "11:00-15:00"
    },
-   "hours_note": "Donations 10am to 4pm",
-   "phone": "802-846-4015",
-   "blurb": "The nonprofit ReSOURCE's thrift store on Pine Street, stocked with donated secondhand goods.",
+   "hours_note": "Other times by appointment",
+   "phone": null,
+   "blurb": "An antique, vintage and modern home furnishings shop on lower Main Street.",
    "verified": "2026-10-17",
    "checked": {
     "date": "2026-10-17",
-    "source": "https://resourcevt.org/store-location-hours/",
-    "note": "Address, phone and hours from the ReSOURCE Burlington block of the nonprofit's Store Location & Hours page; its Williston and Morrisville stores keep other hours. Coordinates: OpenStreetMap's ReSOURCE node at 339 Pine St. It is the Burlington store of ReSOURCE, a Vermont nonprofit; the store page lists its four open days."
+    "source": "https://www.instagram.com/anjouvt/",
+    "note": "Its old site anjouvt.com now redirects to an unrelated gambling page, so the website field uses its Facebook page. Hours from the Instagram bio (via Scrape Creators): 'Antique Vintage & Modern Home Furnishings • DM For Purchases Viewings + Pickups. Open Saturday 10-5 + Sunday 11-3 and ANYTIME by appointment'. Facebook Open Graph text agrees: 'Open Sat & Sun Reg hours. Weekdays by appointment.' Address from its own posts, latest Oct 17, 2026: '53 Main Street • Burlington VT'. A Sept 20, 2026 post also listed 'Friday 12-3'; the current bio does not, so Friday is unlisted. ZIP added. Coordinates: Nominatim house-number match (OSM shop node 'Anjou')."
+   },
+   "instagram": "anjouvt",
+   "gaps": [],
+   "next": {
+    "miles": 0.42,
+    "minutes": 8,
+    "mode": "walk"
+   }
+  },
+  {
+   "id": "outdoor-gear-exchange",
+   "name": "Outdoor Gear Exchange",
+   "kinds": [
+    "Consignment"
+   ],
+   "neighborhood": "Downtown / Church St",
+   "address": "37 Church St, Burlington, VT 05401",
+   "website": "https://www.gearx.com/",
+   "coords": [
+    44.4791,
+    -73.21324
+   ],
+   "hours": "Mon–Fri 11am to 7pm · Sat 10am to 7pm · Sun 10am to 6pm",
+   "week": {
+    "mon": "11:00-19:00",
+    "tue": "11:00-19:00",
+    "wed": "11:00-19:00",
+    "thu": "11:00-19:00",
+    "fri": "11:00-19:00",
+    "sat": "10:00-19:00",
+    "sun": "10:00-18:00"
+   },
+   "hours_note": null,
+   "phone": "802-860-0190",
+   "blurb": "Church Street's legendary gear shop — new equipment up top, and a consignment section where patient people score serious deals on used outdoor kit.",
+   "verified": "2026-10-17",
+   "checked": {
+    "date": "2026-10-17",
+    "source": "https://www.gearx.com/pages/hours-location",
+    "note": "Hours and address from the shop's Hours & Location page; coordinates from the Google Maps link on that page."
    },
    "gaps": [],
    "next": {
-    "miles": 0.1,
-    "minutes": 2,
+    "miles": 0.04,
+    "minutes": 1,
     "mode": "walk"
    }
   }
@@ -418,5 +429,66 @@
   }
  ],
  "designsTotal": 87,
- "shop": "https://merch.btownbrief.com/"
+ "shop": "https://merch.btownbrief.com/",
+ "instagram": [
+  "demo_ragsandrecords",
+  "demo_secondtimearound",
+  "demo_vintagemarket"
+ ],
+ "instagramPosts": [
+  {
+   "h": "demo_vintagemarket",
+   "ts": 1792148400,
+   "i": "mustard",
+   "u": "https://www.instagram.com/p/DemoVin1/",
+   "w": 480,
+   "c": "Fall flea this Saturday: wool coats, Y2K denim and the five dollar piles.",
+   "s": "do"
+  },
+  {
+   "h": "demo_ragsandrecords",
+   "ts": 1792094400,
+   "i": "plum",
+   "u": "https://www.instagram.com/p/DemoVin2/",
+   "w": 480,
+   "c": "Just in: a rack of 90s Carhartt and a box of band tees.",
+   "s": "do"
+  },
+  {
+   "h": "demo_secondtimearound",
+   "ts": 1792008000,
+   "i": "sand",
+   "u": "https://www.instagram.com/p/DemoVin3/",
+   "w": 480,
+   "c": "New to the floor: a mid-century dresser and two leather chairs.",
+   "s": "do"
+  },
+  {
+   "h": "demo_ragsandrecords",
+   "ts": 1791914400,
+   "i": "teal",
+   "u": "https://www.instagram.com/p/DemoVin4/",
+   "w": 480,
+   "c": "Sweater weather wall is fully stocked.",
+   "s": "do"
+  },
+  {
+   "h": "demo_secondtimearound",
+   "ts": 1790352000,
+   "i": "pine",
+   "u": "https://www.instagram.com/p/DemoVin5/",
+   "w": 480,
+   "c": "Three weeks old, so it stays off the rail.",
+   "s": "do"
+  },
+  {
+   "h": "demo_notashop",
+   "ts": 1792155600,
+   "i": "cherry",
+   "u": "https://www.instagram.com/p/DemoVin6/",
+   "w": 480,
+   "c": "A brewery post, not a shop: it stays off the rail.",
+   "s": "do"
+  }
+ ]
 }

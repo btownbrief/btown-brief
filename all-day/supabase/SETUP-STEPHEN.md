@@ -1,8 +1,8 @@
 # All Day accounts and boards: what Stephen does in Supabase
 
-Five short jobs in the Supabase dashboard, about eighteen minutes in all. Do them in order. Until
+Six short jobs in the Supabase dashboard, about twenty-one minutes in all. Do them in order. Until
 each one is done, All Day keeps working and says so plainly; nothing breaks. Parts A to D are
-done (October 2026); part E is the new one.
+done (October 2026); parts E and F are the new ones.
 
 Project: the shared one, **jnouvwxomrcffqwilqkq** (the same project Small Talk, Who's Playing,
 the games and the photo queue use). Sign in at https://supabase.com/dashboard and open it.
@@ -116,8 +116,8 @@ Editor give the photo bucket its two cleanup rules. Nothing is broken; stray pic
 stay in the bucket, and the boards desk will say "stray picture files are waiting". Tell Claude
 and it will walk you through adding the two rules in the Storage screen instead.
 
-**If you ever paste `nn-SETUP.sql` again**, paste `nn-ROUND2.sql` and then `nn-ROUND3.sql` right
-after it. `nn-SETUP.sql` on its own puts back the round-one rules (and posting a Vintage design or
+**If you ever paste `nn-SETUP.sql` again**, paste `nn-ROUND2.sql`, `nn-ROUND3.sql` and then
+`nn-ROUND4.sql` right after it. `nn-SETUP.sql` on its own puts back the round-one rules (and posting a Vintage design or
 a Meetup plan would be refused until round two goes back on).
 
 What it turns on, tab by tab:
@@ -182,6 +182,48 @@ People rows, but a reader's Watch dots and partner name stay on the server. The 
 the server to forget them right after the delete, but that is best effort; part E makes it certain.
 A deleted reader's photo files stay in the bucket, out of sight.
 
+## F. Handles, and the Games, Square and Gatherings boards (3 minutes)
+
+One paste. It only adds: no reader's post, vote or profile is changed by pasting it.
+
+1. In the left sidebar, click **SQL Editor**.
+2. Click **New query** (the **+** at the top of the list).
+3. Open `all-day/supabase/nn-ROUND4.sql` from the repo, copy the **whole** file, and paste it in.
+4. Click **Run** (bottom right). It should end with "Success. No rows returned."
+5. It is safe to run again later. If you ever paste `nn-ROUND2.sql` again on its own, paste this one
+   after it, since round two's file carries the older rules.
+
+What it turns on:
+
+- **Handles.** Settings → Your profile gains a **Handles** section: a box each for Instagram,
+  Spotify, Letterboxd, Goodreads, Beli, Untappd and LinkedIn (Social), Strava (Fitness), and
+  PlayStation, Xbox, Steam, Switch, Discord, Epic, Riot and chess.com or lichess (Games), plus a
+  **Show my handles in the directory** switch. Each box takes only that service's name shape: no
+  links, no @ (the sheet drops a typed @ for them), a Switch friend code as SW-1234-5678-9012.
+  The server checks them again, because the app's key is public.
+- **Who sees handles.** Only the handles of readers who turned the switch on, and only to readers
+  who are signed in. Switch off, nobody sees them, People directory or not. They come with a first
+  name, a neighborhood and the day the profile was last saved (never the time), and never with an
+  email. "Delete my account" already takes them, since they live on the profile.
+- **Games.** "What I'm playing" (a game and a platform; two weeks) and "looking for a group"
+  (the game, the platform and when; one week). A vote means "me too".
+- **The Square.** A community board: posts (30 days), show and tell (photo needed, 30 days),
+  questions (two weeks), free stuff (two weeks) and pets (photo needed, 30 days). Photos go
+  through the photo desk like every other board photo.
+- **Gatherings.** Events readers send in: when, where, what sort (pickup, league, board games, a
+  run, social, music, other) and an optional link. **Every one waits for you on the boards desk**
+  (`mod.html`, under Waiting) and shows only once you approve it; an edit to the date sends it back
+  to you. It comes down the day after its date, and a date in the past or more than six months out
+  is refused, as is a date that isn't on the calendar. This is the only place a reader can put a
+  link, which is why you see each one first.
+
+The tabs that use these come in their own updates; until then nothing on screen changes except the
+Handles section.
+
+**Before part F is done:** the Handles section still shows, but saving says "Your handles save
+once the boards' next update is in." (the rest of the profile saves), and the new boards stay
+closed.
+
 ## One trade-off to know about: the saved sign-in
 
 When a reader signs in, All Day keeps a **refresh token** in the browser so they stay signed in for
@@ -207,6 +249,7 @@ page (GoatCounter is a small, privacy-focused counter and the lower risk). Nothi
 | After C | Same | Same | Same; reported posts wait for you on the desk |
 | After D | Your profile also has "What you're into" | Designs, fit checks and Meetup plans post as their own kinds | One vote each on the Watch screening ballot |
 | After E | "Delete my account and posts" also clears Watch dots and the partner's name | Same | Same |
+| After F | Your profile also has Handles and the "show my handles" switch | Games, the Square and Gatherings open; gatherings wait for you | Same |
 
 "Delete my account and posts" removes the reader's profile, posts, votes, reports, missions, People
 directory listing and (after part E) Watch dots and partner name, takes their photos out of the

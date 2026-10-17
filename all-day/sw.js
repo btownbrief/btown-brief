@@ -13,7 +13,7 @@
    audio — episodes are large and the browser's own HTTP cache handles them
    better than we would. */
 
-const VERSION = 'all-day-v50';   // v50: Watch's TV, time machine and local showtimes (v49: On Air's past nights, two rails, the Brief's speed)
+const VERSION = 'all-day-v52';   // v52: Watch's TV, time machine and local showtimes (v51: Vintage, v50: Food, v49: On Air, v48: the Wire's Photo mode)
 const SHELL = VERSION + '-shell';
 const DATA = 'all-day-data';   // unversioned on purpose: survives shell bumps
 
