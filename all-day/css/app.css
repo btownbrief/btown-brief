@@ -659,6 +659,7 @@ body.chrome-away .mast { transform: translateY(-100%); }
 .result.rolling h3 { color: var(--ink-3); }
 .wx { display: flex; gap: 14px; align-items: baseline; padding: 10px var(--gutter) 0; font-size: var(--fs-meta); color: var(--ink-3); flex-wrap: wrap; }
 .wx b { font-family: var(--serif); font-size: var(--fs-date); font-weight: 500; color: var(--ink); margin-right: 3px; }
+.wx b.sc { margin-right: 0; }
 .wx .when { margin-left: auto; }
 
 /* archetype tiles */
@@ -758,6 +759,70 @@ select.bf-in { appearance: none; -webkit-appearance: none; }
 .bf-msg:empty { display: none; }
 .pills.wrap { flex-wrap: wrap; border-radius: var(--r-box); }
 .pills.wrap button { flex: 0 0 auto; }
+
+/* ======================================================= Habits */
+/* The accountability club's tracker (modes/habits.js). A paper planner, not
+   a game: one accent (--habit), near-black and near-white, habit names at
+   17px, the goal tile's line at 24px, nothing under 13px. */
+.hb { max-width: var(--col); margin: 0 auto; padding-bottom: var(--s6); }
+.hb-tile { margin: var(--s4) var(--gutter) var(--s2); padding: var(--s5) var(--s4); background: var(--paper-2); border-radius: var(--r-media);
+  display: flex; flex-direction: column; align-items: flex-start; gap: var(--s2); }
+.hb-kicker { font-size: var(--fs-meta); font-weight: 500; color: var(--ink-3); }
+.hb-big { font-family: var(--sans); font-size: var(--fs-hero); font-weight: 600; line-height: var(--lh-tight); letter-spacing: -.005em; color: var(--ink); }
+.btn.hb-go { height: var(--hit); padding: 0 22px; margin-top: var(--s2); background: var(--habit); color: var(--habit-ink); }
+.hb-gate { display: flex; flex-direction: column; align-items: flex-start; gap: var(--s3); padding: var(--s4) var(--gutter); }
+.hb-gate .btn { height: var(--hit); padding: 0 22px; }
+.hb-empty { padding: var(--s4) var(--gutter) 0; color: var(--ink-2); }
+.hb-gate .hb-empty { padding: 0; }
+.hb-soon { padding: var(--s8) var(--gutter); text-align: center; }
+.hb-soon p { font-size: var(--fs-lead); color: var(--ink-2); }
+
+.hb-list { list-style: none; margin-top: var(--s3); border-top: 1px solid var(--line); }
+.hb-row { position: relative; overflow: hidden; border-bottom: 1px solid var(--line); background: var(--paper); touch-action: pan-y; }
+.hb-in { position: relative; z-index: 1; display: grid; grid-template-columns: 32px minmax(0, 1fr) 48px; align-items: center; gap: var(--s2);
+  padding: var(--s3) var(--gutter) var(--s3) var(--s1); background: var(--paper); transform: translateX(var(--swipe, 0)); }
+.hb-row:not(.is-swiping) .hb-in { transition: transform .18s cubic-bezier(.2, .8, .3, 1); }
+.hb-arch { position: absolute; top: 0; bottom: 0; right: var(--gutter); display: flex; align-items: center;
+  font-size: var(--fs-small); font-weight: 700; color: var(--ink-3); }
+.hb-row.will-commit .hb-arch { color: var(--warn); }
+.hb-row.is-drag { z-index: 2; box-shadow: var(--shadow-float); }
+.hb-grip { width: 32px; height: var(--hit); display: flex; align-items: center; justify-content: center; color: var(--ink-3); cursor: grab; touch-action: none; }
+.hb-grip .i { width: 18px; height: 18px; fill: currentColor; stroke: none; }
+.hb-row.is-drag .hb-grip { cursor: grabbing; }
+.hb-main { display: flex; flex-direction: column; align-items: flex-start; gap: 3px; min-width: 0; }
+.hb-name { font-size: var(--fs-title); font-weight: 600; line-height: var(--lh-title); color: var(--ink); overflow-wrap: anywhere; }
+.hb-meta { font-size: var(--fs-meta); color: var(--ink-3); line-height: 1.3; }
+.hb-meta b { font-weight: 700; color: var(--ink); font-variant-numeric: tabular-nums; }
+.hb-dots { display: flex; gap: 7px; margin-top: 4px; }
+.hb-dots .d { display: block; width: 10px; height: 10px; border-radius: var(--r-round); }
+.hb-dots .d.done { background: var(--habit); }
+.hb-dots .d.missed { border: 1.5px solid var(--ink-3); }
+.hb-dots .d.today { border: 1.5px solid var(--habit); }
+.hb-dots .d.off, .hb-dots .d.later { background: var(--line); transform: scale(.55); }
+.hb-tap { width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; border-radius: var(--r-round);
+  border: 2px solid var(--line); color: var(--ink-3); transition: background-color .15s ease, border-color .15s ease, transform .15s ease; }
+.hb-tap .i { width: 24px; height: 24px; stroke-width: 2.4; }
+.hb-tap.on { background: var(--habit); border-color: var(--habit); color: var(--habit-ink); }
+.hb-tap.pop { animation: hb-press .15s ease; }
+@keyframes hb-press { 50% { transform: scale(.97); } }
+.hb-add { padding: var(--s4) var(--gutter) 0; }
+.btn.hb-addbtn { height: var(--hit); }
+.hb-form { padding-top: 0; }
+.hb-freq { align-self: stretch; }
+.hb-n { margin-top: var(--s2); }
+.hb-share { display: flex; align-items: center; gap: var(--s2); font-size: var(--fs-body); color: var(--ink); }
+.hb-share input { width: 20px; height: 20px; flex: 0 0 auto; accent-color: var(--habit); }
+.hb-me { padding: var(--s2) var(--gutter) 0; }
+
+/* loading: the same layout, in grey */
+.skel { display: block; height: 12px; border-radius: var(--r-xs); background: var(--line-soft); animation: hb-fade 1.2s ease-in-out infinite alternate; }
+.hb-tile .skel { background: var(--line); }
+.skel.w30 { width: 30%; } .skel.w40 { width: 40%; } .skel.w60 { width: 60%; }
+.skel.big { width: 80%; height: 26px; }
+.skel.pill { width: 104px; height: var(--hit); border-radius: var(--r-pill); }
+.hb-list.is-skel .hb-tap.skel { width: 48px; height: 48px; border: 0; border-radius: var(--r-round); }
+.hb-list.is-skel .hb-main { gap: var(--s2); width: 100%; }
+@keyframes hb-fade { to { opacity: .55; } }
 
 /* mod.html, the boards desk: one column of posts with their buttons */
 body.desk { overflow: auto; }

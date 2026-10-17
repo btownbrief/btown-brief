@@ -289,8 +289,18 @@ export function report(id, reason) {
     return { ok: true, hidden: !!r.data.hidden };
   });
 }
+/* Other modules' own data goes with the account: each registers a
+   function that deletes it and resolves { ok } (Habits: sz_delete_me).
+   They run first, and any refusal but 'off' (their SQL not pasted, so
+   nothing to delete) stops the deletion with its message, so Settings never
+   says "Deleted" while something is left behind. */
+const alsoDelete = new Set();
+export function onDeleteMe(fn) { alsoDelete.add(fn); return () => alsoDelete.delete(fn); }
 export function deleteMe() {
-  return call('nn_delete_me').then((r) => {
+  return Promise.all([...alsoDelete].map((fn) => Promise.resolve().then(fn).catch(() => fail('offline')))).then((rs) => {
+    const bad = rs.find((r) => r && !r.ok && r.error !== 'off');
+    return bad || call('nn_delete_me');
+  }).then((r) => {
     if (!r.ok) return r;
     me = undefined;
     changed(null, null, 'deleteme');
@@ -629,7 +639,7 @@ app.registerAccount((host, repaint) => {
   const del = el('div', 'linkrow');
   del.appendChild(button('Delete my account and posts', 'danger sm', () => app.confirmBox({
     title: 'Delete your account and posts?',
-    body: 'Your profile, every post and its photo, your votes, your reports, your missions, your People directory listing and your Watch dots go for good, and you are signed out. Your email sign-in is shared with other Btown Brief apps, so it stays; email Stephen to remove that too.',
+    body: 'Your profile, every post and its photo, your votes, your reports, your missions, your People directory listing, your Watch dots and your habits go for good, and you are signed out. Your email sign-in is shared with other Btown Brief apps, so it stays; email Stephen to remove that too.',
     yes: 'Delete everything',
     onYes() {
       deleteMe().then((r) => {

@@ -54,7 +54,7 @@ export const ICON = {
   people: svg('<circle cx="9" cy="8" r="3.2"/><path d="M3.4 19.5a5.6 5.6 0 0 1 11.2 0"/><circle cx="17" cy="9.2" r="2.5"/><path d="M15.6 19.5a4.8 4.8 0 0 1 5-4.6"/>'),
   whatnow: svg('<path d="M13 3 5.2 13.4h6L10.4 21 19 10.6h-6z"/>'),
   vintage: svg('<path d="M8 4 3.5 7.3 6 10.5l2-1.1V20h8V9.4l2 1.1 2.5-3.2L16 4a4 4 0 0 1-8 0z"/>'),
-  art: svg('<rect x="3.5" y="4.5" width="17" height="15" rx="2"/><path d="m5.5 17 4.2-5 3 3.5 2.4-2.6 3.4 4.1"/><circle cx="15.6" cy="9" r="1.3"/>'),
+  habits: svg('<circle cx="12" cy="12" r="8.5"/><path d="m8.2 12.4 2.6 2.6 5-5.4"/>'),
   onair: svg('<circle cx="12" cy="12" r="3" fill="currentColor" stroke="none"/><path d="M6.3 6.3a8 8 0 0 0 0 11.4M17.7 6.3a8 8 0 0 1 0 11.4"/>'),
   games: svg('<path d="M7.2 8h9.6a5 5 0 0 1 4.8 6.4l-1 3.3a2.4 2.4 0 0 1-4.2.7L14.8 16H9.2l-1.6 2.4a2.4 2.4 0 0 1-4.2-.7l-1-3.3A5 5 0 0 1 7.2 8z"/><path d="M8.2 11.3v3.2M6.6 12.9h3.2"/><circle cx="15.6" cy="12" r=".9" fill="currentColor"/><circle cx="17.8" cy="14" r=".9" fill="currentColor"/>'),
   listen: svg('<path d="M4.5 15v-3a7.5 7.5 0 0 1 15 0v3"/><rect x="3.5" y="13.5" width="4" height="6" rx="2"/><rect x="16.5" y="13.5" width="4" height="6" rx="2"/>'),
