@@ -1,0 +1,984 @@
+{
+ "_about": [
+  "Run and fitness clubs in the Burlington area (Burlington, Winooski, South Burlington, Essex, Williston, Shelburne, Colchester) with the days and places they meet. Read by the People tab; checked by scripts/build_run_clubs.py.",
+  "VERIFIED means: every fact in an entry was read on the club's OWN page (its website, Meetup group or event page, Instagram bio or post, Facebook page, Strava club, or the host venue's or town's own schedule page) on checked.date, and checked.source is that page's URL, with checked.note quoting what it says. Aggregators (RunGroop, Great Runs, Seven Days listings, Yelp) are leads only. Nothing is guessed: a field the page does not support is left empty.",
+  "A meet is a standing WEEKLY slot (same weekday, same time). A club whose day or place changes week to week gets meets: [] and a schedule_note saying where to look. A start point that moves gets where: 'Varies ...' with lat/lng null. Monthly or one-off events never become meets.",
+  "To add a club: read its own page, add an entry (id, name, kind, what, meets[{day mon..sun, time 'HH:MM' 24h, where, address, lat, lng, note, optional season}], schedule_note, level, cost, season, newcomers, url, instagram, meetup, strava, checked{date, source, note, optional also[]}), geocode the meeting place to 4 decimals, then run python3 scripts/build_run_clubs.py. It must print OK. Re-read any club the script warns is stale (over 120 days).",
+  "kind is one of: run, hike, bike, climb, pickup, yoga, row-paddle, other. Seasonal meets carry season so the tab can say 'summer only' instead of sending people to an empty parking lot."
+ ],
+ "clubs": [
+  {
+   "id": "bolters-run-club",
+   "name": "Bolters Run Club",
+   "kind": "run",
+   "what": "Weekly social 5K-ish run downtown that puts an emphasis on making room for women, nonbinary and trans runners; all are welcome.",
+   "meets": [],
+   "schedule_note": "Runs are at 6 PM downtown, almost always from Union Station, but the day changes month to month (August 2026: three Tuesdays and a Wednesday). The monthly schedule is posted on Instagram and the meeting spot goes up in stories and on Strava before each run.",
+   "level": "about 3 miles at a 10:30 to 10:45 pace; no pets",
+   "cost": "free",
+   "season": "",
+   "newcomers": "\"All are welcome.\" New runners are pointed to the pinned FAQ and club rules.",
+   "url": "https://www.instagram.com/boltersrun/",
+   "instagram": "https://www.instagram.com/boltersrun/",
+   "meetup": "",
+   "strava": "",
+   "checked": {
+    "date": "2026-10-17",
+    "source": "https://www.instagram.com/boltersrun/",
+    "note": "Post 2026-08-04 (August schedule): \"always downtown BTV at 6 PM and almost always leaving from Union Station. 3ish miles at a 10:45ish pace. All are welcome.\" The schedule graphic lists Tue Aug 4, Tue Aug 18, Wed Aug 26 and a Sunday run. Pinned FAQ (2023) says runs are typically Tuesday early evenings. No September or October schedule post found."
+   }
+  },
+  {
+   "id": "burlington-hash-house-harriers",
+   "name": "Burlington Hash House Harriers",
+   "kind": "run",
+   "what": "Weekly hash: hares lay a 2 to 5 mile flour-marked trail somewhere in Chittenden County and the pack follows it, with beer stops. Adults.",
+   "meets": [
+    {
+     "day": "wed",
+     "time": "18:30",
+     "where": "Varies (posted on the hareline)",
+     "address": "",
+     "lat": null,
+     "lng": null,
+     "note": "Trail can be downtown or on a mountain. The 2026 warm-season finale is Wed Oct 28."
+    }
+   ],
+   "schedule_note": "Wednesdays in the warm season, plus some weekend trails. The start location for each trail is posted on the hareline page.",
+   "level": "\"You do not need to run and we never leave anyone behind.\" Walkers catch up at the song and joke stops.",
+   "cost": "$6.90 per trail",
+   "season": "warm season (2026 Wednesday trails end Oct 28)",
+   "newcomers": "\"Our community is very welcoming and inclusive.\" Drinking is not required. The site has a beginner's hashing guide.",
+   "url": "https://www.burlingtonh3.com/",
+   "instagram": "",
+   "meetup": "",
+   "strava": "",
+   "checked": {
+    "date": "2026-10-17",
+    "source": "https://www.burlingtonh3.com/hareline",
+    "note": "Hareline page: \"Meeting every Wednesday at 6:30pm in the warm season\"; trails #877 (Oct 21, location TBD) and #878 Season Finale (Oct 28, 2 Main St, Winooski), cost $6.90. Hashing guide: \"The Burlington group hashes every Wednesday in the warm season.\"",
+    "also": [
+     "https://www.burlingtonh3.com/hashing-guide"
+    ]
+   }
+  },
+  {
+   "id": "catamount-trail-running-series",
+   "name": "Catamount Weekly Trail Running Series",
+   "kind": "run",
+   "what": "Low-key weekly 5K and 2.5K trail races for all ages on the Catamount Outdoor Family Center trails in Williston.",
+   "meets": [
+    {
+     "day": "tue",
+     "time": "18:00",
+     "where": "Catamount Outdoor Family Center",
+     "address": "592 Governor Chittenden Rd, Williston",
+     "lat": 44.4482,
+     "lng": -73.0492,
+     "note": "Race night: 2.5K half lap or 5K (10K on the first Tuesday of each month). Day-of sign-up at the Hub 4:30 to 5:45 PM.",
+     "season": "May-September"
+    }
+   ],
+   "schedule_note": "2026 series ran May 12 to September 1. Catamount's Wednesday mountain bike race series is listed separately.",
+   "level": "all ages; adult and youth categories",
+   "cost": "$20 adult per night online ($15 student/senior); $5 more day-of; season passes available",
+   "season": "May-September",
+   "newcomers": "\"Whether you're new to racing or a seasoned pro\"; youth and adult categories.",
+   "url": "https://catamountoutdoor.org/race-series-weekly-mtbtr/",
+   "instagram": "",
+   "meetup": "",
+   "strava": "",
+   "checked": {
+    "date": "2026-10-17",
+    "source": "https://catamountoutdoor.org/race-series-weekly-mtbtr/",
+    "note": "\"2026 Green City Garage Weekly Trail Running Series Schedule May 12th to September 1st ... All race nights start at 6pm\"; single-night online entry $20 adult / $15 student-senior; \"Day-of registration is available at Catamount's Hub between 4:30 PM and 5:45 PM for $5 more\"."
+   }
+  },
+  {
+   "id": "dad-guild-run-club",
+   "name": "Dad Guild Run Club",
+   "kind": "run",
+   "what": "Dads-only Sunday morning 3.5-mile run on the bike path in the New North End.",
+   "meets": [
+    {
+     "day": "sun",
+     "time": "07:30",
+     "where": "Bike path at Staniford Road",
+     "address": "Staniford Rd and the Burlington Greenway, Burlington",
+     "lat": 44.508,
+     "lng": -73.2603,
+     "note": "Out to the Winooski River bike/ped bridge and back. Runs in any weather. Dads only."
+    }
+   ],
+   "schedule_note": "",
+   "level": "\"casual\"; \"All experience levels welcome\"",
+   "cost": "free",
+   "season": "",
+   "newcomers": "Drop in. A WhatsApp group is available through dan@dadguild.org.",
+   "url": "https://www.dadguild.org/events",
+   "instagram": "https://www.instagram.com/dadguild/",
+   "meetup": "",
+   "strava": "",
+   "checked": {
+    "date": "2026-10-17",
+    "source": "https://www.dadguild.org/events",
+    "note": "Events for Sun Oct 18 and Oct 25, 2026: \"Dads Only Run Club ... 7:30 AM 8:30 AM Intersection of Staniford Rd & Bike Path ... Join us for a casual 3.5 mile run! All experience levels welcome ... we run to the bike/ped bridge at the Winooski River and back. We run in any weather\". Weekly Instagram schedules list it every Sunday since August 2026."
+   }
+  },
+  {
+   "id": "fleet-feet-frosty-turtles",
+   "name": "Fleet Feet Frosty Turtles",
+   "kind": "run",
+   "what": "Fleet Feet's free weekly winter social run and walk from its Essex Junction store.",
+   "meets": [
+    {
+     "day": "wed",
+     "time": "17:30",
+     "where": "Fleet Feet",
+     "address": "77 Pearl St, Essex Junction",
+     "lat": 44.4947,
+     "lng": -73.1192,
+     "note": "Wear reflective clothing with front and rear lights.",
+     "season": "winter"
+    }
+   ],
+   "schedule_note": "The store page says the group meets every Wednesday \"through February\" but does not give a start date for this winter.",
+   "level": "run or walk",
+   "cost": "free",
+   "season": "winter, through February (start date not stated)",
+   "newcomers": "Open to runners and walkers.",
+   "url": "https://www.fleetfeet.com/s/burlington/training/weekly-runs",
+   "instagram": "",
+   "meetup": "",
+   "strava": "",
+   "checked": {
+    "date": "2026-10-17",
+    "source": "https://www.fleetfeet.com/s/burlington/training/weekly-runs",
+    "note": "\"Program Schedule: Every Wednesday at 5:30 PM Program Fee: Free ... Our Frosty Turtles weekly winter social run and walk group will meet every Wednesday through February at 5:30 from Fleet Feet.\" Store address from https://www.fleetfeet.com/s/burlington/about (77 Pearl Street, Essex Junction). The page itself is undated."
+   }
+  },
+  {
+   "id": "getting-active-in-burlington",
+   "name": "Getting Active in Burlington!",
+   "kind": "run",
+   "what": "Meetup group with a weekly after-work 5K that starts from a different brewery or pub each week.",
+   "meets": [],
+   "schedule_note": "5K runs start at 5:30 PM, usually on a Wednesday but some weeks on a Tuesday, from a rotating brewery (recent: Burlington Beer Co, Four Quarters, 1st Republic, Howl Bier, Zero Gravity, Olde Northender). Check the Meetup page for this week's day and spot. Summer weeks sometimes switch to a bike ride.",
+   "level": "",
+   "cost": "free",
+   "season": "",
+   "newcomers": "The group describes itself as a way \"to meet some fellow active folks.\"",
+   "url": "https://www.meetup.com/getting-active-in-burlington/",
+   "instagram": "",
+   "meetup": "https://www.meetup.com/getting-active-in-burlington/",
+   "strava": "",
+   "checked": {
+    "date": "2026-10-17",
+    "source": "https://www.meetup.com/getting-active-in-burlington/events/",
+    "note": "Events at 5:30 PM: Wed Sep 16 Zero Gravity, Wed Sep 23 Old Post, Wed Sep 30 Black Flannel, Tue Oct 6 Howl Bier, Wed Oct 14 1st Republic, Tue Oct 20 Burlington Beer Co, Wed Oct 28 Four Quarters, Wed Nov 4 Olde Northender, Wed Nov 11 Switchback."
+   }
+  },
+  {
+   "id": "gmaa",
+   "name": "Green Mountain Athletic Association (GMAA)",
+   "kind": "run",
+   "what": "The area's long-standing road running club: weekly group runs, a coached track workout, and a calendar of local races.",
+   "meets": [
+    {
+     "day": "tue",
+     "time": "17:45",
+     "where": "ECHO Leahy Center",
+     "address": "1 College St, Burlington",
+     "lat": 44.4766,
+     "lng": -73.221,
+     "note": "About 6 miles on the bike path and neighborhood streets; the club calls this one the fast group (around 7:30 per mile)."
+    },
+    {
+     "day": "thu",
+     "time": "17:45",
+     "where": "UVM outdoor track",
+     "address": "Virtue Field area, UVM, Burlington",
+     "lat": 44.4673,
+     "lng": -73.193,
+     "note": "Track workout led by the club coach. Summer season only; winter workouts move days (see the club newsletter or socials).",
+     "season": "summer"
+    },
+    {
+     "day": "sun",
+     "time": "08:00",
+     "where": "Volunteers Green",
+     "address": "Bridge St, Richmond",
+     "lat": 44.4026,
+     "lng": -72.9991,
+     "note": "Long run on back roads around Richmond, Huntington and Jericho; route changes weekly."
+    }
+   ],
+   "schedule_note": "The club page says to check the weekly member email for Tuesday and Sunday run updates. A monthly social run is announced in Instagram stories only.",
+   "level": "Thursday track: all paces welcome. Sunday: choose your own pace, beginner friendly. Tuesday: fast, around 7:30 per mile.",
+   "cost": "club membership (dues paid on RunSignUp); the group runs are listed as a member benefit",
+   "season": "year-round (track Thursdays are summer only)",
+   "newcomers": "Sunday run: \"Beginner friendly. All are welcome!\"",
+   "url": "https://gmaa.run/members/gmaa-member-group-runs/",
+   "instagram": "https://www.instagram.com/gmaavt/",
+   "meetup": "",
+   "strava": "",
+   "checked": {
+    "date": "2026-10-17",
+    "source": "https://gmaa.run/members/gmaa-member-group-runs/",
+    "note": "Page lists \"GMAA Tuesday Evening Group Run ... Every Tuesday Time: 5:45 PM Place: ECHO, 1 College St\", track \"Summer Season: Thursdays, 5:45 PM at Outdoor Track ... UVM Track\", and \"GMAA Sunday Group Run ... Every Sunday Time: 8:00 AM Place: Volunteers Green in Richmond\". Page footer shows the 2026 race schedule, so it is current.",
+    "also": [
+     "https://gmaa.run/members/"
+    ]
+   }
+  },
+  {
+   "id": "long-trail-running-club",
+   "name": "Long Trail Running Club",
+   "kind": "run",
+   "what": "Volunteer-run trail running club with a Thursday night social run that moves around Burlington, Winooski, Essex and nearby towns.",
+   "meets": [
+    {
+     "day": "thu",
+     "time": "18:15",
+     "where": "Varies week to week (start point posted on Meetup for members)",
+     "address": "",
+     "lat": null,
+     "lng": null,
+     "note": "Recent starts: Switchback Beer Garden, Foam, Sparky's in Essex Junction, the Wildways. Headlamps needed in fall and winter."
+    }
+   ],
+   "schedule_note": "Thursday social runs are year-round. Weekend trail runs and special events are posted on Meetup; exact start locations are visible to members only.",
+   "level": "\"All paces welcome\"; the group usually runs 6:00 to 12:00 min/mile and waits at turns and hilltops so no one is left behind.",
+   "cost": "$5 per year membership, charged through Meetup",
+   "season": "year-round",
+   "newcomers": "\"Every single one of us started as beginners\"; if you are not up to the distance you can run a mile or two, turn back and hang out after.",
+   "url": "https://www.longtrailrunningclub.com/",
+   "instagram": "",
+   "meetup": "https://www.meetup.com/longtrailrunning/",
+   "strava": "",
+   "checked": {
+    "date": "2026-10-17",
+    "source": "https://www.meetup.com/longtrailrunning/events/",
+    "note": "Meetup lists \"Thursday Social Run\" events at 6:15 PM on Sep 3, 10, 17, 24, Oct 1 and Oct 8, 2026, each at a different spot. Club FAQ (https://www.longtrailrunningclub.com/faqs): \"Our Thursday night social runs continue throughout the year\"; time and location are kept on Meetup for member privacy; $5 annual fee."
+   }
+  },
+  {
+   "id": "skirack-run-club",
+   "name": "Skirack Run Club",
+   "kind": "run",
+   "what": "Free Monday evening community run from the Skirack store on Main Street, 3 to 5 miles.",
+   "meets": [
+    {
+     "day": "mon",
+     "time": "18:00",
+     "where": "Skirack (Run Center inside the store)",
+     "address": "85 Main St, Burlington",
+     "lat": 44.4756,
+     "lng": -73.2159,
+     "note": "Arrive 15 minutes early; the run leaves at 6 sharp. Park in the store's back lot.",
+     "season": "spring-summer"
+    }
+   ],
+   "schedule_note": "The 2026 Monday runs ran from April 13 to August 31; none are on Skirack's calendar for fall. Skirack and August First also ran an every-other-Friday 7am run from August First (149 S. Champlain St) through September.",
+   "level": "\"casual paced\"; 3 to 5 miles, may split into pace groups",
+   "cost": "free",
+   "season": "April-August (2026 dates); not running this fall",
+   "newcomers": "\"you can run any distance\"",
+   "url": "https://www.skirack.com/pages/events-calendar",
+   "instagram": "https://www.instagram.com/skirackvt/",
+   "meetup": "",
+   "strava": "",
+   "checked": {
+    "date": "2026-10-17",
+    "source": "https://www.skirack.com/pages/events-calendar",
+    "note": "Skirack's embedded public Google Calendar has \"Skirack Run Club\" weekly on Mondays, Apr 13 to Jun 29 and Aug 10 to Aug 31, 2026: \"Join us every Monday for a casual paced community run. We'll shoot for 3-5 miles ... the run will leave promptly at 6PM. Meet in Skirack's Run Center inside the store.\" No Monday runs after Aug 31."
+   }
+  },
+  {
+   "id": "winooski-run-club",
+   "name": "Winooski Run Club",
+   "kind": "run",
+   "what": "Relaxed weekly evening run from the Monkey House in Winooski with 2-mile and 4-mile options.",
+   "meets": [
+    {
+     "day": "wed",
+     "time": "17:30",
+     "where": "Monkey House",
+     "address": "30 Main St, Winooski",
+     "lat": 44.4905,
+     "lng": -73.1867,
+     "note": "2 and 4 mile options every week."
+    }
+   ],
+   "schedule_note": "On break November through April. The club posted on 2026-09-29 that it \"meets through the month of October before going on hiatus until May.\"",
+   "level": "\"relaxed, welcoming\"; 2 and 4 mile options",
+   "cost": "free",
+   "season": "May-October",
+   "newcomers": "\"New folks welcome!\" (Instagram bio)",
+   "url": "https://www.instagram.com/winooskirunclub/",
+   "instagram": "https://www.instagram.com/winooskirunclub/",
+   "meetup": "",
+   "strava": "",
+   "checked": {
+    "date": "2026-10-17",
+    "source": "https://www.instagram.com/winooskirunclub/",
+    "note": "Bio: \"We are a relaxed, welcoming run club that meets at the Monkey House every Wednesday at 5:30. 2 and 4 mile options every week! New folks welcome!\" Post of 2026-09-29: meets through October, then hiatus until May. Read via the Scrape Creators profile API."
+   }
+  },
+  {
+   "id": "catamount-guided-mtb-rides",
+   "name": "Catamount Guided Mountain Bike Rides",
+   "kind": "bike",
+   "what": "Guided mountain bike group rides on the Catamount Community Forest trails in Williston, a mellow beginner ride Mondays and a no-drop intermediate ride Thursdays.",
+   "meets": [
+    {
+     "day": "mon",
+     "time": "18:00",
+     "where": "Catamount Outdoor Family Center parking lot",
+     "address": "592 Governor Chittenden Rd, Williston",
+     "lat": 44.4482,
+     "lng": -73.0492,
+     "note": "Novice Monday: meet 6:00, ride 6:15, done ~7:30; beginner/novice, mellow pace, double-track and green single-track only. Not a lesson, not for learning to ride a bike. May 11 to end of September 2026."
+    },
+    {
+     "day": "thu",
+     "time": "18:00",
+     "where": "Catamount Outdoor Family Center (the Hub)",
+     "address": "592 Governor Chittenden Rd, Williston",
+     "lat": 44.4482,
+     "lng": -73.0492,
+     "note": "Social Thursday: meet 6:00, ride 6:15, until 8:00; intermediate and above, no-drop, green/blue/some black trails. May 14 to end of September 2026."
+    }
+   ],
+   "schedule_note": "Summer series only; the 2026 rides ended in late September (last listed Novice Monday 9/28, Social Thursday 9/24). Both series 'increase in difficulty each week and then reset at the start of the following month.' Rides are weather dependent. Watch catamountoutdoor.org/summer/summer-lessons-clinics/ and the events calendar for the 2027 start (2026 started mid-May).",
+   "level": "Monday: 'Beginner & Novice Riders', pace 'Mellow'. Thursday: 'Intermediate & Above', 'no-drop ride'.",
+   "cost": "free to Catamount members; $10 for non-members",
+   "season": "mid-May to end of September",
+   "newcomers": "Monday rides are 'perfect for those new to mountain biking or those looking for a mellow, group ride'; both pages say it is 'a group ride and NOT a clinic or lesson'.",
+   "url": "https://catamountoutdoor.org/",
+   "instagram": "",
+   "meetup": "",
+   "strava": "",
+   "checked": {
+    "date": "2026-10-17",
+    "source": "https://catamountoutdoor.org/summer/summer-lessons-clinics/",
+    "note": "Lessons page (modified 2026-06-10): 'WEEKLY GUIDED RIDES Novice Mondays 6pm-7:30pm Social Thursday 6pm-8pm *Free to members; $10 for non-members*'. Event pages (e.g. https://catamountoutdoor.org/events/novice-monday-guided-ride-2-3/2026-09-21/ and https://catamountoutdoor.org/events/social-thursday-guided-ride-3/2026-09-24/): 'Starting on May 11th, and running each Monday (weather dependent) until the end of September'; 'Meet: 6:00 / Ride: 6:15 Where: Meet up at COFC parking lot'; Thursday: 'Starting on May 14th ,and running each Thursday (weather dependent) until end of September'; 'Meet: 6:00 / Ride: 6:15 Where: Meet up at COFC HUB'. Events API shows the last 2026 dates as 9/28 (Mon) and 9/24 (Thu). Geocode is the Catamount unpaved parking lot (OSM way 34856374); the Hub is next to it."
+   }
+  },
+  {
+   "id": "catamount-mtb-race-series",
+   "name": "Catamount Weekly Mountain Bike Race Series",
+   "kind": "bike",
+   "what": "Timed weekly evening mountain bike races on the Catamount trails in Williston, followed by a fall cyclocross series.",
+   "meets": [
+    {
+     "day": "wed",
+     "time": "18:00",
+     "where": "Catamount Outdoor Family Center",
+     "address": "592 Governor Chittenden Rd, Williston",
+     "lat": 44.4482,
+     "lng": -73.0492,
+     "note": "Race night: half lap up to four 5K laps; starts 6:00 (1 lap) to 6:30 (3 laps). Fall cyclocross also ran Wednesdays at 5:30 PM, Sept 9 to Oct 14, 2026.",
+     "season": "May-September"
+    }
+   ],
+   "schedule_note": "2026 mountain bike series ran May 13 to September 2; the fall cyclocross series ran Wednesdays at 5:30 PM, September 9 to October 14. The course for each week is announced Sunday night on the series page.",
+   "level": "'riders and runners of all levels'; 'Whether you're new to racing or a seasoned pro'.",
+   "cost": "$25 adult per night online ($20 student/senior), $5 more day-of, plus tax; season passes available; cyclocross $25 online / $30 day-of",
+   "season": "May-September (cyclocross September to mid-October)",
+   "newcomers": "'Whether you're new to racing or a seasoned pro, you won't want to miss the excitement at Catamount!' Cyclocross page: 'Catamount always has a supportive environment for those who are just getting introduced to the sport.'",
+   "url": "https://catamountoutdoor.org/race-series-weekly-mtbtr/",
+   "instagram": "",
+   "meetup": "",
+   "strava": "",
+   "checked": {
+    "date": "2026-10-17",
+    "source": "https://catamountoutdoor.org/race-series-weekly-mtbtr/",
+    "note": "Page (modified 2026-09-14): '2026 Green City Garage Weekly Trail Running Series Schedule May 12th to September 1st ... All race nights start at 6pm'; '2026 Mavic and Frost Beer Works Weekly MTB Series Schedule May 13th to September 2nd ... All race nights start at 6pm'; FAQ: 'Tuesday Trail Running start times are: 6:00 Half Lap race ... 6:15 5k' and 'Wednesday MTB start times are: 6:00 1 lap ...'. Single night: 'Mountain Biking $25: Adult', 'Trail Running $20: Adult', day-of 'for $5 more'. Cyclocross page https://catamountoutdoor.org/race-series-cyclocross/ (modified 2026-09-08): 'Week 1: September 9th @5:30pm ... Week 6: October 14th @5:30pm & End of Season Celebration!'. paid race entry ($20-$30 per night), not a free club meet."
+   }
+  },
+  {
+   "id": "gmbc-wednesday-training-ride",
+   "name": "Green Mountain Bicycle Club Wednesday Ride",
+   "kind": "bike",
+   "what": "Weeknight road training ride from South Burlington, riders split into speed groups.",
+   "meets": [
+    {
+     "day": "wed",
+     "time": "18:00",
+     "where": "Wheeler dirt lot on Swift St.",
+     "address": "Swift St (Wheeler Nature Park lot, near 1715 Swift St), South Burlington",
+     "lat": 44.4433,
+     "lng": -73.1758,
+     "note": "Prime season May through August: 'on the road at 6:00 PM'",
+     "season": "May-August"
+    }
+   ],
+   "schedule_note": "Outside May-August the Wednesday ride leaves \"at 5:30 PM or earlier\", moving with sunset (through April, and September to October 24); the exact time goes out on the club email list. GMBC also runs Saturday (VP) training rides whose 'start times and locations vary during the year' (announced on the GMBC email list, usually by Thursday), Sunday-morning day touring rides from varying starts (informal/leaderless in April, late September and October), introductory rides on Saturdays from Veterans Memorial Park in May-June ('every other Saturday' in a usual year), and occasional gravel rides. The training-rides page says no Tuesday night training rides are planned this season. Check thegmbc.com/events/ and join the email list.",
+   "level": "Groups by average speed: A 20-22+ mph, B 17-20+ mph, C 15-17 mph; riders should be 'able to maintain at least a 15 mph average'; some group-riding experience recommended.",
+   "cost": "free; membership not required (membership $25/yr single, $30 family, $10 age 17 and under); waiver once per season",
+   "season": "spring to October 24",
+   "newcomers": "Page says the rides are 'for anyone who likes a good workout' and non-racers are welcome; 'Membership is not required for participation, however it has benefits.' All participants sign a GMBC waiver once per season. Front and rear lights recommended all season.",
+   "url": "https://thegmbc.com/",
+   "instagram": "",
+   "meetup": "",
+   "strava": "",
+   "checked": {
+    "date": "2026-10-17",
+    "source": "https://thegmbc.com/wed-training-rides/",
+    "note": "Page quotes: 'Start and park at the Wheeler Dirt Lot on Swift St. in South Burlington.' Early season (through April): 'on the road at 5:30 PM or earlier'; Prime season (May through August): 'on the road at 6:00 PM'; Late season (September until 24 October): 'on the road at 5:30 PM or earlier'. 'Membership is not required for participation, however it has benefits.' Site is 2026 (gmbcmembership-2026 link, October 2026 calendar). thegmbc.com is behind a bot check that blocks curl; read via WebFetch, so quotes came through that tool's extraction. Lot geocoded to the City of South Burlington public lot at Swift St / Wheeler Nature Park (OSM way 125838062), which matches the '1715-1797 Swift St' Wheeler trailhead address a local Meetup uses."
+   }
+  },
+  {
+   "id": "gmc-burlington-section",
+   "name": "Green Mountain Club, Burlington Section",
+   "kind": "hike",
+   "what": "Volunteer-led group hikes (plus some bike, paddle and trail-work outings), mostly weekend day trips to the Green Mountains and Adirondacks.",
+   "meets": [],
+   "schedule_note": "Outings are posted individually on the section's events calendar (gmcburlington.org/events/), usually several weekend hikes a month from varying trailheads; sign up by contacting each trip leader. Upcoming listed: Taylor Lodge (Nov 7), Tillotson and Belvidere (Nov 15), Sterling Pond (Dec 5), Belvidere (Dec 13), Mt. Hunger and White Rock (Dec 27).",
+   "level": "varies by outing (each listing gives its own difficulty)",
+   "cost": "free; carpool gas share suggested ($.05 per mile round trip)",
+   "season": "year-round",
+   "newcomers": "'You don't need to be a GMC member to join a hike. Guests are welcome.' 'please call the trip leader to sign up.'",
+   "url": "https://gmcburlington.org/",
+   "instagram": "",
+   "meetup": "",
+   "strava": "",
+   "checked": {
+    "date": "2026-10-17",
+    "source": "https://gmcburlington.org/events/",
+    "note": "Events calendar (The Events Calendar API) lists 40 one-off outings June-December 2026 on varying dates and trailheads, no recurring weekly series. Before You Go page https://gmcburlington.org/before-you-go/: 'You don't need to be a GMC member to join a hike. Guests are welcome.' Home page shows posts dated July 19, 2026, so the site is current."
+   }
+  },
+  {
+   "id": "lcmm-burlington-rows",
+   "name": "Burlington Rows! (Maritime Museum rowing club)",
+   "kind": "row-paddle",
+   "what": "Weekly evening open-water rowing in the museum's rowing gigs, launching from Perkins Pier on the Burlington waterfront.",
+   "meets": [
+    {
+     "day": "wed",
+     "time": "17:15",
+     "where": "Perkins Pier",
+     "address": "Perkins Pier, Lake St / Maple St, Burlington",
+     "lat": 44.4739,
+     "lng": -73.2207,
+     "note": "Two back-to-back 1.25-hour sessions (one fitness, one recreational) inside the 5:15 to 7:45 PM window; sign up for a session on the club sheet."
+    }
+   ],
+   "schedule_note": "The museum's rowing clubs meet 5:15 to 7:45 PM; the start of each Burlington session is on the sign-up sheet for registered rowers. The museum's other two clubs (Tuesday and Thursday) meet in Vergennes, outside the area.",
+   "level": "'open to adult rowers of all ages (18-99+) and of all levels (beginner to experienced)'",
+   "cost": "pay-what-you-can season registration (listed dues $175 for one club, $250 for all three); one free trial row",
+   "season": "May-October",
+   "newcomers": "'If this is your first time rowing with us and you would like to do a trial row, you may row once free of charge but must fill out a physical liability waiver provided by our rowing club captains prior to getting on the water.' After that, register for the season and sign up for each practice.",
+   "url": "https://www.lcmm.org/adult-rowing/",
+   "instagram": "",
+   "meetup": "",
+   "strava": "",
+   "checked": {
+    "date": "2026-10-17",
+    "source": "https://www.lcmm.org/adult-rowing/",
+    "note": "Adult rowing page: \"Rowing clubs meet on Tuesdays, Wednesdays, and Thursdays from 5:15pm to 7:45pm\" and \"The Burlington Rows! club, meets at Perkins Pier in Burlington, VT every Wednesday evening, weather permitting ... open to adult rowers of all ages (18-99+) and of all levels (beginner to experienced). New for 2025, we will offer two, back-to-back, 1.25-hour sessions.\" Pay-what-you-can model; one free trial row."
+   }
+  },
+  {
+   "id": "dragonheart-vermont-catch-22",
+   "name": "Dragonheart Vermont Dragon Boat (Catch 22 crew)",
+   "kind": "row-paddle",
+   "what": "Dragon boat paddling on Lake Champlain; every new member starts on the mixed Catch 22 crew, which practices one weeknight a week.",
+   "meets": [
+    {
+     "day": "thu",
+     "time": "17:30",
+     "where": "Community Boat Launch (Dyer Docks)",
+     "address": "20 Lake St, Burlington",
+     "lat": 44.4772,
+     "lng": -73.2198,
+     "note": "Catch 22 (new paddlers, mixed gender/ability), 5:30-7:00 PM, late May through September. Club says the schedule is 'subject to change'. Members-only; join first.",
+     "season": "late May-September"
+    }
+   ],
+   "schedule_note": "Other crews practice Monday, Wednesday and Thursday weeknights 5:30-7:00 PM from the same docks. The club holds 'Try Paddling nights' and spring information sessions (a membership info session was listed for October 7 at FUMC, South Burlington). Off-season fitness training (November-April, Faith United Methodist Church, South Burlington) is members-only at extra cost. 2026 on-water season is over.",
+   "level": "Catch 22: 'Mixed gender, mixed ability. Where every new paddler starts.'",
+   "cost": "membership $300/yr standard paddler; $100/yr breast cancer survivors; $25/yr youth/student 14-24; $25 end-of-season intro membership for new members",
+   "season": "late May to September",
+   "newcomers": "'You don't need to have paddled before. You just need to be at least 14 years old.' 'The club provides paddles, PFDs (life jackets), and seat pads. Just show up in clothes and shoes you don't mind getting wet.'",
+   "url": "https://dragonheartvermont.org/",
+   "instagram": "",
+   "meetup": "",
+   "strava": "",
+   "checked": {
+    "date": "2026-10-17",
+    "source": "https://dragonheartvermont.org/teams-and-training",
+    "note": "Teams page: 'Catch 22 - Mixed gender, mixed ability. Where every new paddler starts. Currently Practices Thursday nights.' 'We practice on Lake Champlain from late May through September, launching from Dyer Docks at the Community Boat Launch (20 Lake Street, Burlington). Practices run weeknights from 5:30 to 7:00 PM. Our current practice schedule is listed below, but subject to change.' Membership page https://dragonheartvermont.org/membership-overview: 'Standard Paddler ... $300/year'. https://dragonheartvermont.org/be-part-of-our-crew: 'At the end of our paddling season, we offer $25 memberships to new members'. membership required (not drop-in), standard dues $300/yr. Geocode is Nominatim's point for 20 Lake Street; the exact position of the 'Dyer Docks' within the waterfront was not independently confirmed."
+   }
+  },
+  {
+   "id": "btown-brief-pickup-basketball",
+   "name": "Btown Brief IRL Pickup Basketball",
+   "kind": "pickup",
+   "what": "Weekly pickup basketball run by the Btown Brief IRL Meetup group; indoors at UVM's Gutterson Fieldhouse for the cold months.",
+   "meets": [
+    {
+     "day": "wed",
+     "time": "17:30",
+     "where": "Gutterson Fieldhouse (UVM indoor track & basketball courts)",
+     "address": "147 Spear St, Burlington",
+     "lat": 44.4693,
+     "lng": -73.1945,
+     "note": "5:30-7:30 PM; indoor series runs weekly through Mar 10, 2027. Summer runs were outdoors at Pomeroy Park, 31 Booth St (44.4845, -73.2072)."
+    }
+   ],
+   "schedule_note": "Organizer says 'competitive pick-up basketball every week on Wednesday evenings.' Moved indoors starting Oct 14, 2026 (Oct 7 and earlier were at Pomeroy Park). RSVP on Meetup.",
+   "level": "'competitive pick-up basketball'; 'Runs see anywhere from 10-35 people.'",
+   "cost": "$12 UVM Campus Rec day pass indoors ('paid at the Campus Rec front desk in the Gucciardi Fitness Center'); outdoor summer runs free",
+   "season": "year-round (outdoors at Pomeroy Park in warm months, Gutterson Fieldhouse Oct 14, 2026-Mar 10, 2027)",
+   "newcomers": "'Come join!'",
+   "url": "https://www.meetup.com/burlington-social-activites-group/",
+   "instagram": "",
+   "meetup": "https://www.meetup.com/burlington-social-activites-group/",
+   "strava": "",
+   "checked": {
+    "date": "2026-10-17",
+    "source": "https://www.meetup.com/burlington-social-activites-group/events/316803943/",
+    "note": "Event page: 'Wednesday, Oct 21 · 5:30 PM to 7:30 PM EDT Every week on Wednesday until March 10, 2027 Gutterson Fieldhouse 147 Spear St' ... 'We're moving indoors to UVM's Indoor Track & Basketball Courts at Gutterson Fieldhouse. A day pass is $12 per person.' Group events list shows the series weekly Oct 14 through Mar 10, 2027. This is the Btown Brief's own Meetup group. FPF 502211 (Oct 7) still shows the old Pomeroy Park location."
+   }
+  },
+  {
+   "id": "colchester-rec-adult-pickup",
+   "name": "Colchester Rec adult pickup nights",
+   "kind": "pickup",
+   "what": "Town-run evening pickup basketball, volleyball and pickleball at the Colchester Recreation Center.",
+   "meets": [
+    {
+     "day": "mon",
+     "time": "18:45",
+     "where": "Colchester Recreation Center",
+     "address": "80 Dick Mazza Dr, Colchester",
+     "lat": 44.5435,
+     "lng": -73.2118,
+     "note": "Basketball: Ages 15+, 6:45-8:45 PM (7:15 start Nov 30-Dec 14)"
+    },
+    {
+     "day": "tue",
+     "time": "18:45",
+     "where": "Colchester Recreation Center",
+     "address": "80 Dick Mazza Dr, Colchester",
+     "lat": 44.5435,
+     "lng": -73.2118,
+     "note": "Pickleball: Ages 18+, 6:45-8:45 PM (7:15 start Dec 1-15)"
+    },
+    {
+     "day": "wed",
+     "time": "18:45",
+     "where": "Colchester Recreation Center",
+     "address": "80 Dick Mazza Dr, Colchester",
+     "lat": 44.5435,
+     "lng": -73.2118,
+     "note": "Volleyball: Ages 18+, 6:45-8:45 PM (7:15 start Dec 2-16)"
+    },
+    {
+     "day": "thu",
+     "time": "18:45",
+     "where": "Colchester Recreation Center",
+     "address": "80 Dick Mazza Dr, Colchester",
+     "lat": 44.5435,
+     "lng": -73.2118,
+     "note": "Basketball: Ages 25+, 'competitive', 6:45-8:45 PM (7:15 start Dec 3-17)"
+    }
+   ],
+   "schedule_note": "Fall sessions run in three blocks through mid-December (Mon 9/14-12/14, Tue 9/15-12/15, Wed 9/16-12/16, Thu 9/17-12/17), with a 7:15 start in the last block. Registering for a block guarantees a spot; drop-ins only if space allows.",
+   "level": "Monday basketball: \"All skill levels are welcome.\" Thursday basketball is for ages 25+ and \"competitive\". Pickleball: \"All levels welcome.\"",
+   "cost": "$7 drop-in per night if space allows (pickleball's drop-in fee is not stated); a block is $25 resident / $30 non-resident",
+   "season": "fall blocks through mid-December 2026",
+   "newcomers": "\"Drop-in fee available, if space allows for those not registered.\" Bring a light and a dark shirt.",
+   "url": "https://www.colchestervt.gov/3345/Adult-Sports",
+   "instagram": "",
+   "meetup": "",
+   "strava": "",
+   "checked": {
+    "date": "2026-10-17",
+    "source": "https://www.colchestervt.gov/3345/Adult-Sports",
+    "note": "'15+ BASKETBALL... MONDAYS 6:45-8:45 p.m. Beginning September 14, 2026... Drop-In's: $7 per night if space allows' and '25+ BASKETBALL... THURSDAYS 6:45-8:45 p.m. Beginning September 15, 2026 A:9/17-10/15... B:10/22-11/19... C:12/3-12/17'. Address from https://www.colchestervt.gov/3338/Colchester-Recreation-Center: '80 Dick Mazza Drive'. | 'PICK-UP VOLLEYBALL Ages 18+... WEDNESDAYS 6:45-8:45 p.m. Beginning September 16, 2026 A:9/16-10/14... B:10/21-11/18... C:12/2-12/16... Drop-In's: $7 per night if space allows' | Pickleball (https://www.colchestervt.gov/3344/Pickleball-Programs-Rentals): 'ADULT PICK UP PICKLEBALL All levels welcome... Drop-in fee available, if space allows for those not registered. Minimum: 8, Maximum: 20. TUESDAYS 6:45 - 8:45 PM BEGINNING SEPTEMBER 15 A:9/15-10/13... B:10/20-11/17... C:12/1-12/15'",
+    "also": [
+     "https://www.colchestervt.gov/3344/Pickleball-Programs-Rentals"
+    ]
+   }
+  },
+  {
+   "id": "dad-guild-basketball",
+   "name": "Dad Guild Open Gym Basketball",
+   "kind": "pickup",
+   "what": "Dads-only low-key pickup basketball on Tuesday nights.",
+   "meets": [
+    {
+     "day": "tue",
+     "time": "19:00",
+     "where": "Mater Christi School gym",
+     "address": "50 Mansfield Ave, Burlington",
+     "lat": 44.4823,
+     "lng": -73.1981,
+     "note": "7 to 9 PM, \"most Tuesdays\". Dads only."
+    }
+   ],
+   "schedule_note": "The club says \"most Tuesdays\"; check the Dad Guild events page for skipped weeks.",
+   "level": "\"very low-key\"",
+   "cost": "free",
+   "season": "",
+   "newcomers": "Drop in.",
+   "url": "https://www.dadguild.org/events",
+   "instagram": "https://www.instagram.com/dadguild/",
+   "meetup": "",
+   "strava": "",
+   "checked": {
+    "date": "2026-10-17",
+    "source": "https://www.dadguild.org/events",
+    "note": "Event for Tue Oct 20, 2026: \"Open Gym Basketball ... 7:00 PM 9:00 PM Mater Christi School ... Join for Dad Guild's (very low-key) pick-up basketball, most Tuesdays from 7pm-9pm at the Mater Christi School Gymnasium.\" Listed every Tuesday in Dad Guild's weekly Instagram schedules since July 2026."
+   }
+  },
+  {
+   "id": "vt-ultimate-essex-saturday-pickup",
+   "name": "Essex Pickup Ultimate (listed by Vermont Ultimate)",
+   "kind": "pickup",
+   "what": "Saturday-morning pickup ultimate frisbee at the AD Lawton School fields in Essex Junction.",
+   "meets": [
+    {
+     "day": "sat",
+     "time": "10:00",
+     "where": "Albert D. Lawton School fields",
+     "address": "104 Maple St, Essex Junction",
+     "lat": 44.4871,
+     "lng": -73.0976,
+     "note": "10 AM 'until noonish'; 'unless there is extreme weather'. Bring a light and a dark shirt and water."
+    }
+   ],
+   "schedule_note": "Listed on Vermont Ultimate's 'Current Pickups' page under '2026 Summer Pickup'. The page says 'We play every Saturday' but does not say whether it continues into late fall/winter; Vermont Ultimate notes it is 'not responsible for these pickup games.' No organizer contact page beyond this listing.",
+   "level": "'good place to get moving if you haven't played in a while.' 'Most folks play with cleats.'",
+   "cost": "",
+   "season": "listed as 2026 summer pickup; fall and winter not stated",
+   "newcomers": "'Our game is good place to get moving if you haven't played in a while.'",
+   "url": "https://vermontultimate.org/current-pickups",
+   "instagram": "",
+   "meetup": "",
+   "strava": "",
+   "checked": {
+    "date": "2026-10-17",
+    "source": "https://vermontultimate.org/current-pickups",
+    "note": "'ESSEX PICKUP: Pickup on Saturday mornings from 10:00 a.m. until noonish at the AD Lawton School on Maple Street in Essex Junction... We play every Saturday, from 10 am until noonish, unless there is extreme weather. Please bring a light shirt, a dark shirt, and water.' (under heading '2026 Summer Pickup'). /pickup redirects here."
+   }
+  },
+  {
+   "id": "ymca-drop-in-gym",
+   "name": "Greater Burlington YMCA drop-in basketball, volleyball and pickleball",
+   "kind": "pickup",
+   "what": "Scheduled open gym times at the downtown Y for pickup basketball, relaxed volleyball and pickleball.",
+   "meets": [],
+   "schedule_note": "The Y posts its gym schedule week by week and says times are subject to change, so no fixed slot is listed here. The week of Oct 18-24, 2026 had pickup basketball Sun 4:45 PM, Mon 6 PM and Tue/Thu/Fri 6 AM; volleyball Thu 6 PM (by reservation); pickleball Sun 8 AM, Mon/Wed 5 AM and Wed 6 PM. Check the gym schedule page.",
+   "level": "Volleyball: \"relaxed and intended to be for individuals of all ability levels.\"",
+   "cost": "free for Y members; non-members buy an adult day pass ($15)",
+   "season": "year-round",
+   "newcomers": "Basketball: \"This group is open to everyone... Bring a friend or make some new ones!\"",
+   "url": "https://www.gbymca.org/programs/wellness/adult-group-sports/",
+   "instagram": "",
+   "meetup": "",
+   "strava": "",
+   "checked": {
+    "date": "2026-10-17",
+    "source": "https://www.gbymca.org/membership/hours-schedules/gym/",
+    "note": "Gym Schedule (GroupEx Pro feed) for Oct 18-24, 2026: 'Sunday 4:45pm-5:45pm Pickup Basketball', 'Monday 6:00pm-8:45pm Pickup Basketball', 'Tuesday 6:00am-8:00am Pickup Basketball', 'Thursday 6:00am-8:00am', 'Friday 6:00am-8:00am'. Adult Group Sports page: 'Pickup Basketball + Open Recreation... This group is open to everyone, please check the Gym schedule for current times.' Day rates page: 'Adult 18-64 $15'. | Gym Schedule: 'Thursday 6:00pm-8:45pm Recreation Volleyball'. Class description: 'Drop in sessions for Volleyball play is relaxed... Cost: Free for members.' Adult Group Sports page: 'Participation is by reservation only and is for Y members, and non-members that purchase a day pass.' | Gym Schedule Oct 18-24, 2026: 'Sunday 8:00am-10:00am Pickleball', 'Monday 5:00am-8:00am Pickleball', 'Wednesday 5:00am-8:00am Pickleball', 'Wednesday 6:00pm-8:45pm Pickleball'.",
+    "also": [
+     "https://www.gbymca.org/programs/wellness/adult-group-sports/"
+    ]
+   }
+  },
+  {
+   "id": "miller-center-drop-in-pickleball",
+   "name": "Miller Center Drop-in Pickleball",
+   "kind": "pickup",
+   "what": "City-run indoor drop-in pickleball by skill level at the Miller Center in the New North End.",
+   "meets": [
+    {
+     "day": "mon",
+     "time": "11:00",
+     "where": "Robert Miller Community & Recreation Center",
+     "address": "130 Gosse Ct, Burlington",
+     "lat": 44.5134,
+     "lng": -73.2467,
+     "note": "Advanced, 11 AM-1 PM",
+     "season": "Oct-May; closed until Nov 6, 2026"
+    },
+    {
+     "day": "wed",
+     "time": "11:00",
+     "where": "Robert Miller Community & Recreation Center",
+     "address": "130 Gosse Ct, Burlington",
+     "lat": 44.5134,
+     "lng": -73.2467,
+     "note": "Advanced, 11 AM-1 PM",
+     "season": "Oct-May; closed until Nov 6, 2026"
+    },
+    {
+     "day": "fri",
+     "time": "11:00",
+     "where": "Robert Miller Community & Recreation Center",
+     "address": "130 Gosse Ct, Burlington",
+     "lat": 44.5134,
+     "lng": -73.2467,
+     "note": "Advanced, 11 AM-1 PM",
+     "season": "Oct-May; closed until Nov 6, 2026"
+    },
+    {
+     "day": "tue",
+     "time": "11:00",
+     "where": "Robert Miller Community & Recreation Center",
+     "address": "130 Gosse Ct, Burlington",
+     "lat": 44.5134,
+     "lng": -73.2467,
+     "note": "High Intermediate, 11 AM-1 PM",
+     "season": "Oct-May; closed until Nov 6, 2026"
+    },
+    {
+     "day": "thu",
+     "time": "11:00",
+     "where": "Robert Miller Community & Recreation Center",
+     "address": "130 Gosse Ct, Burlington",
+     "lat": 44.5134,
+     "lng": -73.2467,
+     "note": "High Intermediate, 11 AM-1 PM",
+     "season": "Oct-May; closed until Nov 6, 2026"
+    },
+    {
+     "day": "sat",
+     "time": "08:30",
+     "where": "Robert Miller Community & Recreation Center",
+     "address": "130 Gosse Ct, Burlington",
+     "lat": 44.5134,
+     "lng": -73.2467,
+     "note": "High Intermediate, 8:30-10:30 AM",
+     "season": "Oct-May; closed until Nov 6, 2026"
+    },
+    {
+     "day": "mon",
+     "time": "13:00",
+     "where": "Robert Miller Community & Recreation Center",
+     "address": "130 Gosse Ct, Burlington",
+     "lat": 44.5134,
+     "lng": -73.2467,
+     "note": "Intermediate, 1-3 PM",
+     "season": "Oct-May; closed until Nov 6, 2026"
+    },
+    {
+     "day": "tue",
+     "time": "13:00",
+     "where": "Robert Miller Community & Recreation Center",
+     "address": "130 Gosse Ct, Burlington",
+     "lat": 44.5134,
+     "lng": -73.2467,
+     "note": "Intermediate, 1-3 PM",
+     "season": "Oct-May; closed until Nov 6, 2026"
+    },
+    {
+     "day": "fri",
+     "time": "13:00",
+     "where": "Robert Miller Community & Recreation Center",
+     "address": "130 Gosse Ct, Burlington",
+     "lat": 44.5134,
+     "lng": -73.2467,
+     "note": "Intermediate, 1-3 PM",
+     "season": "Oct-May; closed until Nov 6, 2026"
+    },
+    {
+     "day": "thu",
+     "time": "13:00",
+     "where": "Robert Miller Community & Recreation Center",
+     "address": "130 Gosse Ct, Burlington",
+     "lat": 44.5134,
+     "lng": -73.2467,
+     "note": "Beginner, 1-3 PM",
+     "season": "Oct-May; closed until Nov 6, 2026"
+    }
+   ],
+   "schedule_note": "IMPORTANT: 'Robert Miller Community & Recreation Center will be CLOSED for renovations: September 21 through November 6, 2026.' Drop-in pickleball 'runs from October to May (no play scheduled during the summer months)', so expect it to resume after Nov 6. The page also says 'Drop-In Programs Schedule Varies!' Call 802-540-1058.",
+   "level": "by skill level: Beginner, Intermediate, High Intermediate, Advanced",
+   "cost": "$7 per player; 10-visit punch card $50; 25-visit $100",
+   "season": "October-May; the center is closed for renovation until November 6, 2026",
+   "newcomers": "Beginner session Thursdays 1-3 PM.",
+   "url": "https://www.burlingtonvt.gov/985/Robert-Miller-Community-Recreation-Cente",
+   "instagram": "",
+   "meetup": "",
+   "strava": "",
+   "checked": {
+    "date": "2026-10-17",
+    "source": "https://www.burlingtonvt.gov/985/Robert-Miller-Community-Recreation-Cente",
+    "note": "'Drop-in Pickleball runs from October to May... Beginner Pickleball - Thursdays from 1 to 3 p.m. Advanced Pickleball - Mondays, Wednesdays and Fridays from 11 a.m. to 1 p.m. High Intermediate Pickleball - Tuesdays and Thursdays from 11 a.m. to 1 p.m., and Saturdays from 8:30 to 10:30 a.m. Intermediate Pickleball - Mondays, Tuesdays and Fridays from 1 to 3 p.m. Cost: $7 per player'. Also: 'CLOSED for renovations: September 21 through November 6, 2026.' (enjoyburlington.com, the old Parks site, is unreachable; Parks moved to burlingtonvt.gov.)"
+   }
+  },
+  {
+   "id": "ymca-queerball",
+   "name": "QueerBALL at the YMCA",
+   "kind": "pickup",
+   "what": "Community basketball for LGBTQIA+ adults (18+): free shoot, games, then a scrimmage.",
+   "meets": [],
+   "schedule_note": "Listed Sundays 2:30 to 4:30 PM (teams split at 3:00) on the Y's gym schedule for Oct 18-24, 2026. The Y publishes the gym schedule one week at a time, so check it before you go.",
+   "level": "'Beginners and all levels welcome. Come to watch, play, or simply be in community.'",
+   "cost": "$5 drop-in for non-members; free for Y members (pass includes the whole facility)",
+   "season": "",
+   "newcomers": "'Beginners and all levels welcome.'",
+   "url": "https://www.gbymca.org/membership/hours-schedules/gym/",
+   "instagram": "",
+   "meetup": "",
+   "strava": "",
+   "checked": {
+    "date": "2026-10-17",
+    "source": "https://www.gbymca.org/membership/hours-schedules/gym/",
+    "note": "Gym Schedule: 'Sunday 2:30pm-4:30pm QueerBALL'. Description: 'Community Basketball for LGBTQIA+ identifying folks age 18+. Court reserved from 2:30-4:30 We divide into teams at 3:00... $5 drop-in fee for non-members Free for YMCA members... Facilitated by Hayes'."
+   }
+  },
+  {
+   "id": "south-burlington-monday-futsal",
+   "name": "South Burlington Rec Monday Indoor Soccer (Futsal)",
+   "kind": "pickup",
+   "what": "Co-ed adult (18+) pickup futsal open gym run by South Burlington Recreation & Parks.",
+   "meets": [
+    {
+     "day": "mon",
+     "time": "18:00",
+     "where": "Rick Marcotte Central School gym",
+     "address": "200 Market St, South Burlington",
+     "lat": 44.4668,
+     "lng": -73.1763,
+     "note": "6:00-8:00 PM. Does not meet during school vacations or when there is no school."
+    }
+   ],
+   "schedule_note": "Listed on the city's Adult Drop-In Sports Calendar (Oct 19 and Oct 26 shown). 'Join our adult pick-up games on Mondays throughout the Fall and Winter.' Sign a waiver; no spectators.",
+   "level": "'Players of all skill levels are invited to join.'",
+   "cost": "$5 nightly drop-in, cash only, paid to the program coordinator",
+   "season": "fall and winter",
+   "newcomers": "'Registration via website is not required.'",
+   "url": "https://www.southburlingtonvt.gov/458/Adult-Drop-In-Sports-Calendar",
+   "instagram": "",
+   "meetup": "",
+   "strava": "",
+   "checked": {
+    "date": "2026-10-17",
+    "source": "https://www.southburlingtonvt.gov/Calendar.aspx?EID=1733&month=10&year=2026&day=17&calType=0",
+    "note": "'October 19, 2026 Time: 6:00 PM - 8:00 PM Location: Rick Marcotte Central School Address: 200 Market Street South Burlington... Cost: $5/ nightly drop-in fee paid to program coordinator (cash only)... Join our adult pick-up games on Mondays throughout the Fall and Winter... co-ed and for those 18 years and older... Does not meet during vacations and when there is no school.'"
+   }
+  },
+  {
+   "id": "vermont-dodgeball",
+   "name": "Vermont Dodgeball",
+   "kind": "pickup",
+   "what": "Pickup dodgeball every Monday night; teams are picked at random before games, no team needed.",
+   "meets": [
+    {
+     "day": "mon",
+     "time": "19:00",
+     "where": "C. P. Smith Elementary School gym",
+     "address": "332 Ethan Allen Pkwy, Burlington",
+     "lat": 44.5132,
+     "lng": -73.2439,
+     "note": "7:00-8:15 PM. Moved here Oct 12, 2026 (Miller Center closed for renovation). No game Nov 2 (gym closed for voting set-up) or Dec 28 (holidays)."
+    }
+   ],
+   "schedule_note": "Location changes are posted on the club's Google Calendar (linked from vtdodgeball.com) and Facebook page ('Follow our page for updated event locations!'). The vtdodgeball.com 'Next Game' fallback text and FPF 510538 still say Robert Miller Center; the calendar (last modified 2026-10-05) moved the series to C. P. Smith from Oct 12 through June 2027.",
+   "level": "'No team needed — just show up.' Rules based on American Dodgeball Association guidelines; 'Prepare to be sore.'",
+   "cost": "$5 per game",
+   "season": "year-round (current series Oct 12, 2026 - June 2027)",
+   "newcomers": "'you can just show up and play without a team. The teams are random and put together before we play.'",
+   "url": "http://www.vtdodgeball.com",
+   "instagram": "",
+   "meetup": "",
+   "strava": "",
+   "checked": {
+    "date": "2026-10-17",
+    "source": "https://calendar.google.com/calendar/ical/ee18b76dc98c4c425806765d127b9a71a3f376616ffc758710d55be684a66225%40group.calendar.google.com/public/basic.ics",
+    "note": "Club's public Google Calendar (the one vtdodgeball.com/js/calendar.js reads): 'Dodgeball' DTSTART 2026-10-12 19:00, DTEND 20:15, RRULE weekly on MO until 2027-06-29, LOCATION 'C. P. Smith Elementary School, 332 Ethan Allen Pkwy, Burlington, VT 05408'; LAST-MODIFIED 2026-10-05. vtdodgeball.com: 'playing every Monday night in Burlington. No team needed — just show up. $5 per game.'"
+   }
+  },
+  {
+   "id": "vt-mixed-masters-ultimate",
+   "name": "Vermont Mixed Masters Pickup (ultimate)",
+   "kind": "pickup",
+   "what": "Year-round weekly ultimate pickup for older players (women-matching 30+, men-matching 33+) in the Burlington area.",
+   "meets": [],
+   "schedule_note": "'We play weekly year-round in the Burlington, VT area' but day, time and place are not published; they go out on the email group https://groups.google.com/g/vt-mixed-masters.",
+   "level": "'Female matching players turning 30 years old, Male matching turning 33 and up.'",
+   "cost": "",
+   "season": "year-round",
+   "newcomers": "'Everyone old enough to play is welcome.' 'Join the email group for updates on playing times and locations.'",
+   "url": "https://groups.google.com/g/vt-mixed-masters",
+   "instagram": "",
+   "meetup": "",
+   "strava": "",
+   "checked": {
+    "date": "2026-10-17",
+    "source": "https://vermontultimate.org/current-pickups",
+    "note": "'VERMONT MIXED MASTERS PICKUP: We play weekly year-round in the Burlington, VT area and send teams to compete in the USA Ultimate Masters Series... Join the email group for updates on playing times and locations.'"
+   }
+  },
+  {
+   "id": "vermont-womxns-pickup-soccer",
+   "name": "Vermont Womxn's Pick-up Soccer",
+   "kind": "pickup",
+   "what": "Women's and LGBTQIA+ inclusive pickup soccer, overseen by Burlington Parks, Recreation & Waterfront; free outdoors in summer.",
+   "meets": [
+    {
+     "day": "sun",
+     "time": "17:00",
+     "where": "Starr Farm Park",
+     "address": "Starr Farm Rd, Burlington",
+     "lat": 44.514,
+     "lng": -73.2662,
+     "note": "Outdoor season only. 2026 event pages say 5:00-7:00 PM ('Note the 5pm start time!'); the group's About page still says 6:00-8:00 PM.",
+     "season": "late April-mid September"
+    }
+   ],
+   "schedule_note": "Outdoor season is over: the last 2026 outdoor date listed was Sep 13 (canceled); no upcoming Meetup events as of Oct 17. Winter is held at the Miller Center (130 Gosse Ct) by registration only: '$80 per session (8 visits per session)... There is NO DROP-IN ALLOWED during the winter sessions.' RSVP on Meetup; weather cancellations posted there.",
+   "level": "'accepts players of all skill levels, who are over the age of 18.' For cis-women, trans, intersex, non-binary and gender non-conforming players.",
+   "cost": "free outdoors in summer; winter indoor sessions $80 for 8 visits via Burlington Parks registration (no drop-in)",
+   "season": "outdoor drop-in roughly late Apr-mid Sep (2026 events Apr 26-Sep 13)",
+   "newcomers": "'a welcoming, inclusive group of people'; 'If you plan to attend, please RSVP on Meetup.'",
+   "url": "https://www.meetup.com/womens-soccer-vermont/",
+   "instagram": "",
+   "meetup": "https://www.meetup.com/womens-soccer-vermont/",
+   "strava": "",
+   "checked": {
+    "date": "2026-10-17",
+    "source": "https://www.meetup.com/womens-soccer-vermont/",
+    "note": "About: 'When: Sundays, 6:00 PM - 8:00 PM Where in the Summer: Starr Farm Park... Where in the Winter: Miller Center, 130 Gosse Court... Summer - outside it is FREE! Winter - registration is REQUIRED - $80 per session'. Event pages (e.g. /events/316294938/, Sun Aug 30, 2026) show 5:00 PM to 7:00 PM at Starr Farm Park: 'Note the 5pm start time!'"
+   }
+  },
+  {
+   "id": "essex-junction-walking-club",
+   "name": "Essex Junction Rec Walking Club",
+   "kind": "other",
+   "what": "Free weekly walking group from Essex Junction Recreation & Parks' older-adults program.",
+   "meets": [
+    {
+     "day": "wed",
+     "time": "10:30",
+     "where": "Maple Street Park (benches past the building at the main entrance)",
+     "address": "75 Maple St, Essex Junction",
+     "lat": 44.4856,
+     "lng": -73.1026,
+     "note": "Meet at the benches just beyond the building at the park's main entrance."
+    }
+   ],
+   "schedule_note": "Listed among the Senior Center's weekly activities on the EJRP Older Adults page.",
+   "level": "",
+   "cost": "free",
+   "season": "",
+   "newcomers": "'Free! No registration required'",
+   "url": "https://www.ejrp.org/olderadults",
+   "instagram": "",
+   "meetup": "",
+   "strava": "",
+   "checked": {
+    "date": "2026-10-17",
+    "source": "https://www.ejrp.org/olderadults",
+    "note": "'Wednesdays: Walking Club 10:30am Maple Street Park — Meet at the benches just beyond the building at the park's main entrance Free! No registration required' (under 'Senior Center Activities and Locations')."
+   }
+  }
+ ]
+}
