@@ -2172,7 +2172,7 @@
   ok   sign-in fails soft › a bad address is caught before any request
   ok   sign-in fails soft › no link was requested
   ok   sign-in fails soft › no console errors
-  ok   performance › the live Wire redraws 60 cards in 9ms (budget 100)
+  ok   performance › the live Wire redraws 60 cards in 6ms (budget 100)
   ok   shell fixes: a rail never snaps flush to the edge › 390: .rail carries scroll-padding of one gutter
   ok   shell fixes: a rail never snaps flush to the edge › 390: a card scrolled to the start stops at the gutter
   ok   shell fixes: a rail never snaps flush to the edge › 390: no console errors
@@ -2477,11 +2477,11 @@
   ok   What Now, the sunset in the weather line says a score only when there is one (live) › a real score is shown beside the time
   ok   What Now, the sunset in the weather line says a score only when there is one (live) › and the line stays one line at 390
   ok   What Now, the sunset in the weather line says a score only when there is one (live) › no console errors
-  ok   Vintage, signed out: the finds show, posting asks for the sign-in (demo) › eight finds, three swaps, three fit checks and one design sent in, from the demo
+  ok   Vintage, signed out: the finds show, posting asks for the sign-in (demo) › eight finds, three swaps, three fit checks and three designs sent in, from the demo
   ok   Vintage, signed out: the finds show, posting asks for the sign-in (demo) › every find shows its days left, and they differ
   ok   Vintage, signed out: the finds show, posting asks for the sign-in (demo) › the vote on a find is “I’d want this”
   ok   Vintage, signed out: the finds show, posting asks for the sign-in (demo) › nobody signed in owns a find, so no “Someone got it”
-  ok   Vintage, signed out: the finds show, posting asks for the sign-in (demo) › the chip row is the table of contents: Fit checks, Spotted, New in, Shops, Swaps, Make a tee
+  ok   Vintage, signed out: the finds show, posting asks for the sign-in (demo) › the chip row is the table of contents: Fit checks, Spotted, Swaps (up top, by Spotted), New in, Shops, Make a tee
   ok   Vintage, signed out: the finds show, posting asks for the sign-in (demo) › a chip scrolls its section up under the mast
   ok   Vintage, signed out: the finds show, posting asks for the sign-in (demo) › Post a find, signed out: the sign-in note and no form
   ok   Vintage, signed out: the finds show, posting asks for the sign-in (demo) › Post a fit check, signed out: the same
@@ -2494,7 +2494,8 @@
   ok   Vintage, signed out: the finds show, posting asks for the sign-in (demo) › vintage: at most two subnav rows
   ok   Vintage, signed out: the finds show, posting asks for the sign-in (demo) › no console errors
   ok   Vintage, signed out: the finds show, posting asks for the sign-in (demo) › demo mode never calls Supabase
-  ok   Vintage, fit checks and Spotted share the first screen at 390; a tile opens the fit’s own card; New in is the shops’ own posts (demo) › Fit checks leads the tab, then Spotted this week, then New in
+  ok   Vintage, fit checks and Spotted share the first screen at 390; a tile opens the fit’s own card; New in is the shops’ own posts (demo) › Fit checks leads the tab, then Spotted this week, then Swaps (moved up from the bottom), then New in
+  ok   Vintage, fit checks and Spotted share the first screen at 390; a tile opens the fit’s own card; New in is the shops’ own posts (demo) › one plain line under Spotted this week says what it is for
   ok   Vintage, fit checks and Spotted share the first screen at 390; a tile opens the fit’s own card; New in is the shops’ own posts (demo) › at 390 by 844 the fit tiles, the Spotted head and the first find are all on the first screen
   ok   Vintage, fit checks and Spotted share the first screen at 390; a tile opens the fit’s own card; New in is the shops’ own posts (demo) › each fit check is a photo tile with its title and first name
   ok   Vintage, fit checks and Spotted share the first screen at 390; a tile opens the fit’s own card; New in is the shops’ own posts (demo) › a tile opens the post’s own card: the photo, “Love this fit”, share and report
@@ -2565,6 +2566,7 @@
   ok   Vintage, the shop guide walks in order and invents no hours (live) › no console errors
   ok   Vintage, the shop guide walks in order and invents no hours (live) › the walk to the next shop where both have coordinates; only the next stop where they don’t
   ok   Vintage, the designs rail links to the merch site (live) › 28 previews in all-day/assets/merch, each under 60 KB
+  ok   Vintage, the designs rail links to the merch site (live) › each preview is the full design (the merch data’s variant art), not the small left-chest patch it calls `front`
   ok   Vintage, the designs rail links to the merch site (live) › every design links to its own page on merch.btownbrief.com, where it is shown on a model
   ok   Vintage, the designs rail links to the merch site (live) › they open in a new tab, with the small local preview
   ok   Vintage, the designs rail links to the merch site (live) › the previews load
@@ -2603,3 +2605,66 @@
   ok   Vintage, live posts land in their sections (live) › and it names no price
   ok   Vintage, live posts land in their sections (live) › it looks only among Art posts whose maker said yes to a shirt
   ok   Vintage, live posts land in their sections (live) › no console errors
+  ok   Vintage, the shop guide in colour: a badge per kind, the kinds in colour, a divider per neighborhood (live, light) › every number is a badge in its shop’s first kind’s colour
+  ok   Vintage, the shop guide in colour: a badge per kind, the kinds in colour, a divider per neighborhood (live, light) › five kinds, five colours: thrift, vintage, consignment, antiques, used books
+  ok   Vintage, the shop guide in colour: a badge per kind, the kinds in colour, a divider per neighborhood (live, light) › every badge’s number reads on its colour (4.5:1 or better)
+  ok   Vintage, the shop guide in colour: a badge per kind, the kinds in colour, a divider per neighborhood (live, light) › the shop’s name is a touch bolder
+  ok   Vintage, the shop guide in colour: a badge per kind, the kinds in colour, a divider per neighborhood (live, light) › each kind is named in its own colour, readable on the page
+  ok   Vintage, the shop guide in colour: a badge per kind, the kinds in colour, a divider per neighborhood (live, light) › a divider names each neighborhood as the walk enters it, Used books last
+  ok   Vintage, the shop guide in colour: a badge per kind, the kinds in colour, a divider per neighborhood (live, light) › the first shop sits under its neighborhood
+  ok   Vintage, the shop guide in colour: a badge per kind, the kinds in colour, a divider per neighborhood (live, light) › the dividers are one colour, not the grey hairline between shops
+  ok   Vintage, the shop guide in colour: a badge per kind, the kinds in colour, a divider per neighborhood (live, light) › a key under the head names the five colours
+  ok   Vintage, the shop guide in colour: a badge per kind, the kinds in colour, a divider per neighborhood (live, light) › vintage: nothing fixed or sticky inside the tab
+  ok   Vintage, the shop guide in colour: a badge per kind, the kinds in colour, a divider per neighborhood (live, light) › vintage: uppercase only in the caps roles
+  ok   Vintage, the shop guide in colour: a badge per kind, the kinds in colour, a divider per neighborhood (live, light) › vintage: no monospace
+  ok   Vintage, the shop guide in colour: a badge per kind, the kinds in colour, a divider per neighborhood (live, light) › vintage: no escaped markup, undefined or NaN on the page
+  ok   Vintage, the shop guide in colour: a badge per kind, the kinds in colour, a divider per neighborhood (live, light) › vintage: no sideways scroll at 390
+  ok   Vintage, the shop guide in colour: a badge per kind, the kinds in colour, a divider per neighborhood (live, light) › vintage: at most two subnav rows
+  ok   Vintage, the shop guide in colour: a badge per kind, the kinds in colour, a divider per neighborhood (live, light) › no console errors
+  ok   Vintage, the shop guide in colour: a badge per kind, the kinds in colour, a divider per neighborhood (live, dark) › every number is a badge in its shop’s first kind’s colour
+  ok   Vintage, the shop guide in colour: a badge per kind, the kinds in colour, a divider per neighborhood (live, dark) › five kinds, five colours: thrift, vintage, consignment, antiques, used books
+  ok   Vintage, the shop guide in colour: a badge per kind, the kinds in colour, a divider per neighborhood (live, dark) › every badge’s number reads on its colour (4.5:1 or better)
+  ok   Vintage, the shop guide in colour: a badge per kind, the kinds in colour, a divider per neighborhood (live, dark) › the shop’s name is a touch bolder
+  ok   Vintage, the shop guide in colour: a badge per kind, the kinds in colour, a divider per neighborhood (live, dark) › each kind is named in its own colour, readable on the page
+  ok   Vintage, the shop guide in colour: a badge per kind, the kinds in colour, a divider per neighborhood (live, dark) › a divider names each neighborhood as the walk enters it, Used books last
+  ok   Vintage, the shop guide in colour: a badge per kind, the kinds in colour, a divider per neighborhood (live, dark) › the first shop sits under its neighborhood
+  ok   Vintage, the shop guide in colour: a badge per kind, the kinds in colour, a divider per neighborhood (live, dark) › the dividers are one colour, not the grey hairline between shops
+  ok   Vintage, the shop guide in colour: a badge per kind, the kinds in colour, a divider per neighborhood (live, dark) › a key under the head names the five colours
+  ok   Vintage, the shop guide in colour: a badge per kind, the kinds in colour, a divider per neighborhood (live, dark) › vintage: nothing fixed or sticky inside the tab
+  ok   Vintage, the shop guide in colour: a badge per kind, the kinds in colour, a divider per neighborhood (live, dark) › vintage: uppercase only in the caps roles
+  ok   Vintage, the shop guide in colour: a badge per kind, the kinds in colour, a divider per neighborhood (live, dark) › vintage: no monospace
+  ok   Vintage, the shop guide in colour: a badge per kind, the kinds in colour, a divider per neighborhood (live, dark) › vintage: no escaped markup, undefined or NaN on the page
+  ok   Vintage, the shop guide in colour: a badge per kind, the kinds in colour, a divider per neighborhood (live, dark) › vintage: no sideways scroll at 390
+  ok   Vintage, the shop guide in colour: a badge per kind, the kinds in colour, a divider per neighborhood (live, dark) › vintage: at most two subnav rows
+  ok   Vintage, the shop guide in colour: a badge per kind, the kinds in colour, a divider per neighborhood (live, dark) › no console errors
+  ok   Vintage, the shop map: a picture by the guide’s head, every shop a numbered pin, a pin opens its shop (live, location refused) › a Map button sits beside “The shop guide”
+  ok   Vintage, the shop map: a picture by the guide’s head, every shop a numbered pin, a pin opens its shop (live, location refused) › its picture is the walk as dots, each in its kind’s colour
+  ok   Vintage, the shop map: a picture by the guide’s head, every shop a numbered pin, a pin opens its shop (live, location refused) › it maps every shop in the guide (36)
+  ok   Vintage, the shop map: a picture by the guide’s head, every shop a numbered pin, a pin opens its shop (live, location refused) › before a tap: no Leaflet, no tiles, nothing fetched
+  ok   Vintage, the shop map: a picture by the guide’s head, every shop a numbered pin, a pin opens its shop (live, location refused) › a tap loads Leaflet 1.9.4 and its stylesheet
+  ok   Vintage, the shop map: a picture by the guide’s head, every shop a numbered pin, a pin opens its shop (live, location refused) › with the integrity hashes Food and the guide’s own map pages use
+  ok   Vintage, the shop map: a picture by the guide’s head, every shop a numbered pin, a pin opens its shop (live, location refused) › the map opens in a sheet
+  ok   Vintage, the shop map: a picture by the guide’s head, every shop a numbered pin, a pin opens its shop (live, location refused) › on OpenStreetMap’s tiles from its one tile host, credited
+  ok   Vintage, the shop map: a picture by the guide’s head, every shop a numbered pin, a pin opens its shop (live, location refused) › every shop is a pin at its own spot, carrying its number from the guide, in its kind’s colour
+  ok   Vintage, the shop map: a picture by the guide’s head, every shop a numbered pin, a pin opens its shop (live, location refused) › it opens on the 19 shops a walk away, with no reader pin and no location asked
+  ok   Vintage, the shop map: a picture by the guide’s head, every shop a numbered pin, a pin opens its shop (live, location refused) › “All 36” fits every shop, Essex to Shelburne
+  ok   Vintage, the shop map: a picture by the guide’s head, every shop a numbered pin, a pin opens its shop (live, location refused) › Near me, refused: says so, and no dot
+  ok   Vintage, the shop map: a picture by the guide’s head, every shop a numbered pin, a pin opens its shop (live, location refused) › a pin opens its shop: the same number, its colour, and the way back to the map
+  ok   Vintage, the shop map: a picture by the guide’s head, every shop a numbered pin, a pin opens its shop (live, location refused) › with the shop’s neighborhood and street
+  ok   Vintage, the shop map: a picture by the guide’s head, every shop a numbered pin, a pin opens its shop (live, location refused) › Back to the map puts the map back up
+  ok   Vintage, the shop map: a picture by the guide’s head, every shop a numbered pin, a pin opens its shop (live, location refused) › where the reader left it: the same view, still on All
+  ok   Vintage, the shop map: a picture by the guide’s head, every shop a numbered pin, a pin opens its shop (live, location refused) › #vintage/map opens the map
+  ok   Vintage, the shop map: a picture by the guide’s head, every shop a numbered pin, a pin opens its shop (live, location refused) › no console errors
+  ok   Vintage, the shop map with location allowed: the reader’s dot, and the map stays put (live) › nothing asks for the location on load
+  ok   Vintage, the shop map with location allowed: the reader’s dot, and the map stays put (live) › allowed before, the map shows the reader’s dot
+  ok   Vintage, the shop map with location allowed: the reader’s dot, and the map stays put (live) › but the map is never moved to the reader: it stays on the shops
+  ok   Vintage, the shop map with location allowed: the reader’s dot, and the map stays put (live) › and Near me steps aside
+  ok   Vintage, the shop map with location allowed: the reader’s dot, and the map stays put (live) › the position is never sent anywhere
+  ok   Vintage, the shop map with location allowed: the reader’s dot, and the map stays put (live) › and never stored
+  ok   Vintage, the shop map with location allowed: the reader’s dot, and the map stays put (live) › no console errors
+  ok   Vintage, Top designs: the designs neighbors sent in, most “I’d wear this” first, and the vote works (demo) › the designs sent in are a row called Top designs
+  ok   Vintage, Top designs: the designs neighbors sent in, most “I’d wear this” first, and the vote works (demo) › sorted by votes, most first
+  ok   Vintage, Top designs: the designs neighbors sent in, most “I’d wear this” first, and the vote works (demo) › the vote on a design is “I’d wear this”
+  ok   Vintage, Top designs: the designs neighbors sent in, most “I’d wear this” first, and the vote works (demo) › a tap on “I’d wear this” counts one more
+  ok   Vintage, Top designs: the designs neighbors sent in, most “I’d wear this” first, and the vote works (demo) › and the board has it
+  ok   Vintage, Top designs: the designs neighbors sent in, most “I’d wear this” first, and the vote works (demo) › no console errors
