@@ -1341,3 +1341,65 @@ body.desk { overflow: auto; }
 }
 /* Small counts remain readable against the navy chip fill. */
 .mast .chip .n { opacity: 1; }
+
+
+/* Lake and Sunset, content pass: keep each tab's existing composition. */
+.feed.wire .wm > .card.pick, #panel-food [data-k="bite"] {
+  --paper: var(--sunset);
+  --paper-2: var(--lead-soft);
+  --ink: var(--sunset-ink);
+  --ink-2: var(--lead-muted);
+  --ink-3: var(--lead-muted);
+  --on-ink: var(--lake-ink);
+  --accent: var(--lead-accent);
+  --accent-soft: var(--lead-soft);
+  --local: var(--tag-local-ink);
+  background: var(--sunset); color: var(--sunset-ink);
+}
+/* The source name on a sunset lead stays dark in both themes; the
+   independent Local badge keeps its own theme palette. */
+.wm > .card.pick .c-src.is-local { color: var(--lead-muted); }
+.spin .big { background: var(--sunset); color: var(--sunset-ink); }
+#panel-watch [data-slot="soon"] { background: var(--sunset-soft); }
+#panel-watch [data-cta="vote"] { background: var(--sunset); color: var(--sunset-ink); }
+#panel-people [data-chat] { background: var(--lake-soft); border-color: var(--line); }
+#panel-people .arch button.on { background: var(--lake); color: var(--lake-ink); }
+#panel-people .arch button.on span { color: var(--lake-ink); opacity: 1; }
+.hb-tile { background: var(--park-soft); }
+.audio, .wholeed { --ink: var(--lake); --on-ink: var(--lake-ink); }
+.gm-quiz { background: var(--sunset-soft); }
+.gm-cab.feat .gm-cab-b { background: var(--lake-soft); }
+.vshops .tdiv.vhood { color: var(--ember); border-bottom-color: var(--ember); }
+.wm-row .num, .board .r:nth-child(-n+3) .rank { color: var(--ember); }
+.wm-row.was .num { color: var(--ink-3); }
+.th-water, .th-winter { --th: var(--lake-blue); }
+.th-outdoors, .th-free { --th: var(--park); }
+.th-eat, .th-family { --th: var(--accent); }
+.lrow.meet .th.tm { background: var(--park-soft); }
+.lrow.meet .th.tm b { color: var(--park); }
+
+/* Quiet stripes only on lists; photos, posters and swipe decks stay distinct. */
+.wm-row:nth-of-type(even), .panel-body .lrow:nth-of-type(even) { background: var(--row-tint); }
+.panel-body .lrow.spun { background: var(--accent-soft); }
+.hb-row:nth-child(even) .hb-in { background: color-mix(in srgb, var(--row-tint), var(--paper)); }
+.feed.wire .card.w-alt { background: var(--row-tint); }
+.feed.wire .card.w-local { background: var(--w-local-tint); }
+.tag-local { background: var(--tag-local-bg); color: var(--tag-local-ink); }
+.tag-national { background: var(--tag-national-bg); color: var(--tag-national-ink); }
+#panel-wire .card .c-head { flex-wrap: wrap; }
+#panel-wire .card .c-foot { height: auto; min-height: 24px; flex-wrap: wrap; }
+#panel-wire .card .geo-tag { white-space: nowrap; }
+
+/* Feedback follows a deliberate tap or pointer, never a looping entrance. */
+@media (prefers-reduced-motion: no-preference) {
+  .tabbar button, .pillbtn, .poster .c-media, .vcard .c-media {
+    transition: color .16s ease, background-color .16s ease, transform .16s ease;
+  }
+  .tabbar button:active, .pillbtn:active { transform: scale(.96); }
+  @media (hover: hover) {
+    .poster:hover .c-media, .vcard:hover .c-media { transform: translateY(-2px); }
+  }
+}
+.btn.tip-link { color: var(--ember); }
+
+:is(.vshops, .vmap, .mapbtn) .k-antique { --vc: var(--sunset); --vc-ink: var(--sunset-ink); }

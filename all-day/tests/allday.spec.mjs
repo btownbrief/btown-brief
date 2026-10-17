@@ -7601,6 +7601,39 @@ async function theClubs(browser, base) {
   });
 }
 
+/* New geography labels and the support link must stay usable on a narrow phone. */
+async function lakePalette(browser, base) {
+  for (const scheme of ['light', 'dark']) await group('Lake and Sunset content ' + scheme, async () => {
+    const {ctx, page} = await newPage(browser, base, {scheme, viewport:{width:375,height:844}, motion:'reduce'});
+    try {
+      await page.goto(base + '/all-day/?demo=1#wire'); await settle(page);
+      const local = await page.$$eval('#panel-wire .geo-tag', ns => ns.map(n => n.textContent));
+      check(local.length > 0 && local.every(x => x === 'Local'), 'Local view labels its stories Local', local.join(','));
+      await page.click('.mast .localsw-half:last-child'); await settle(page);
+      const tags = await page.$$eval('#panel-wire .geo-tag', ns => ns.map(n => n.textContent));
+      check(tags.includes('Local') && tags.includes('National'), 'Everything distinguishes local and national stories', tags.join(','));
+      const audit = await page.evaluate(() => {
+        const rows = [...document.querySelectorAll('#panel-wire .card.fi')];
+        const lum = rgb => rgb.map(n => { n/=255; return n<=.04045 ? n/12.92 : ((n+.055)/1.055)**2.4; }).reduce((sum,n,i)=>sum+n*[.2126,.7152,.0722][i],0);
+        const ratio = (a,b) => { const x=lum(a), y=lum(b); return (Math.max(x,y)+.05)/(Math.min(x,y)+.05); };
+        const rgb = s => (s.match(/[\d.]+/g)||[]).slice(0,3).map(Number);
+        const badges = [...document.querySelectorAll('#panel-wire .geo-tag')];
+        return { missing: rows.filter(r => !r.querySelector('.geo-tag')).map(r=>r.dataset.k),
+          overflow: rows.filter(r => r.scrollWidth > r.clientWidth+1).map(r=>r.dataset.k),
+          contrast: badges.map(n => { const s=getComputedStyle(n); return ratio(rgb(s.color),rgb(s.backgroundColor)); }),
+          transition: getComputedStyle(document.querySelector('#tabbar button')).transitionDuration };
+      });
+      check(!audit.missing.length, 'every Wire story carries a geography label', audit.missing.join(','));
+      check(!audit.overflow.length, 'geography labels fit the existing metadata area at 375px', audit.overflow.join(','));
+      check(audit.contrast.every(n=>n>=4.5), 'Local and National labels meet 4.5:1 contrast', JSON.stringify(audit.contrast));
+      check(audit.transition === '0s', 'reduced motion disables new tab feedback', audit.transition);
+      await page.click('#settings-btn');
+      const tip = await page.$eval('[data-tip]', a=>({href:a.href,text:a.innerText,rel:a.rel}));
+      check(tip.href==='https://ko-fi.com/btownbrief' && /Tip jar/.test(tip.text) && /noopener/.test(tip.rel), 'Settings restores the existing Btown Brief tip jar', JSON.stringify(tip));
+    } finally { await ctx.close(); }
+  });
+}
+
 /* A floating bar must never cover the last row, even with an iPhone safe area. */
 async function lakeSunset(browser, base) {
   for (const scheme of ['light', 'dark']) for (const width of [375, 390, 430]) await group('floating bar ' + width + ' ' + scheme, async () => {
@@ -7951,6 +7984,7 @@ const run = (fn) => (!ONLY.length || ONLY.includes(fn.name) ? fn(browser, base) 
 try {
   await run(matrix);
   await run(lakeSunset);
+  await run(lakePalette);
   await run(deepLinks);
   await run(theWire);
   await run(thePhotos);

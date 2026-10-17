@@ -530,6 +530,11 @@ function settingsSheet() {
       links.appendChild(a);
     });
     body.appendChild(links);
+    const tip = el('a', 'btn ghost tip-link', ICON.heart + ' Tip jar ' + ICON.ext);
+    tip.href = 'https://ko-fi.com/btownbrief';
+    tip.target = '_blank'; tip.rel = 'noopener';
+    tip.dataset.tip = '1';
+    body.appendChild(tip);
 
     /* the one place for what stays where and whose data it is (DESIGN.md
        section 10): the tabs say none of it */

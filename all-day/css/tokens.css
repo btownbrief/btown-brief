@@ -42,6 +42,18 @@
   --dock-max: 520px;
   --dock-icon: 20px;
   --row-tint: rgba(14, 42, 71, .025);
+  --lake-blue: #2F6FB2;
+  --park: #26764E;
+  --lake-soft: #E5ECF3;
+  --park-soft: #E2EEE3;
+  --sunset-soft: #F7E5C9;
+  --tag-local-bg: #DDF0E5;
+  --tag-local-ink: #0F5A3E;
+  --tag-national-bg: #DCE7F5;
+  --tag-national-ink: #15467F;
+  --lead-muted: #50351F;
+  --lead-accent: #66320F;
+  --lead-soft: #F1CA8A;
 
   /* paper and ink */
   --paper: #F7F4EE;                 /* the page; feed cards sit directly on it */
@@ -49,7 +61,7 @@
   --raised: #FFFFFF;                /* sheets, peek card, confirm box */
   --ink: #16191D;
   --ink-2: #4A5058;                 /* captions, card body text */
-  --ink-3: #656B73;                 /* timestamps, counts, idle icons, tab labels */
+  --ink-3: #5F656D;                 /* timestamps, counts, idle icons, tab labels */
   --line: rgba(26, 22, 14, .13);    /* hairline between cards */
   --line-soft: rgba(26, 22, 14, .07);
 
@@ -192,6 +204,15 @@
     --dock-shadow: 0 6px 18px rgba(0, 0, 0, .32), inset 0 1px 1px rgba(255, 255, 255, .12);
     --ember: #F39872;
     --row-tint: rgba(185, 205, 224, .035);
+    --lake-blue: #83B5E9;
+    --park: #77C99F;
+    --lake-soft: #1A2B3A;
+    --park-soft: #1B2D25;
+    --sunset-soft: #30271A;
+    --tag-local-bg: #193F30;
+    --tag-local-ink: #A4E4BD;
+    --tag-national-bg: #1B3653;
+    --tag-national-ink: #B8D6F8;
     --paper: #0C1520;
     --paper-2: #142230;
     --raised: #1B2A39;
@@ -235,6 +256,15 @@
   --dock-shadow: 0 6px 18px rgba(0, 0, 0, .32), inset 0 1px 1px rgba(255, 255, 255, .12);
   --ember: #F39872;
   --row-tint: rgba(185, 205, 224, .035);
+  --lake-blue: #83B5E9;
+  --park: #77C99F;
+  --lake-soft: #1A2B3A;
+  --park-soft: #1B2D25;
+  --sunset-soft: #30271A;
+  --tag-local-bg: #193F30;
+  --tag-local-ink: #A4E4BD;
+  --tag-national-bg: #1B3653;
+  --tag-national-ink: #B8D6F8;
   --paper: #0C1520;
   --paper-2: #142230;
   --raised: #1B2A39;
