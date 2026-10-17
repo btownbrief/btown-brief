@@ -13,7 +13,7 @@
    audio — episodes are large and the browser's own HTTP cache handles them
    better than we would. */
 
-const VERSION = 'all-day-v52';   // v52: Watch's TV, time machine and local showtimes (v51: Vintage, v50: Food, v49: On Air, v48: the Wire's Photo mode)
+const VERSION = 'all-day-v55';   // v55: the Wire's News · Photos · Square, source colours, the Square (v54: merged: both branches bumped)
 const SHELL = VERSION + '-shell';
 const DATA = 'all-day-data';   // unversioned on purpose: survives shell bumps
 
@@ -21,7 +21,7 @@ const SHELL_URLS = [
   './', './index.html', './manifest.webmanifest', './css/tokens.css', './css/app.css',
   './js/main.js', './js/app.js', './js/store.js', './js/wire.js', './js/ui.js',
   './js/liquid.js', './js/gestures.js', './js/auth.js',
-  './js/modes/wire.js', './js/modes/wire-demo.js', './js/modes/wire-photos.js', './js/modes/watch.js', './js/modes/food.js',
+  './js/modes/wire.js', './js/modes/wire-demo.js', './js/modes/wire-photos.js', './js/modes/wire-square.js', './js/modes/watch.js', './js/modes/food.js',
   './js/modes/people.js', './js/modes/whatnow.js', './js/modes/vintage.js', './js/modes/habits.js',
   './js/modes/onair.js', './js/modes/games.js',
   /* What Now's engine and its feeds' loader, imported by modes/whatnow.js */
@@ -32,6 +32,8 @@ const SHELL_URLS = [
   './js/photo-wall.js',
   /* the run clubs' week, imported by ui.js, People and What Now */
   './js/clubs-week.js',
+  /* what People's tiles mean and which events are mixers, imported by People */
+  './js/people-match.js',
   /* the boards: imported by main.js, so every tab can draw one offline */
   './js/boards.js', './js/boards-core.js', './js/boards-fake.js',
   /* Watch's starter list, so the tab has films to show offline */

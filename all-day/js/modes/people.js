@@ -11,44 +11,46 @@
      you are signed in, and kept on this device either way. The what-you're-
      into tags are the profile's interests when you are signed in (nobody
      sees them there; the directory shows them only if you join it), and
-     the who-you-are tags never leave this device. The rest of the tab
-     reorders by them: plans for your kind of person first, then the clubs
-     and mixers that fit.
+     the who-you-are tags never leave this device.
+   - For you. The moment anything above is picked, a strip right under the
+     tiles with the three best groups for it (people-match.js's MATCH table,
+     over data/groups.json and data/run-clubs.json), one per kind first; and
+     the rest of the tab reorders: plans, mixers and clubs that fit come
+     first. Unpicking everything takes the strip away.
    - Run clubs this week (and Fitness this week, behind a Run / Fitness
      switch): data/run-clubs.json through clubs-week.js, seven Burlington
      days from today as a strip, the chosen day's meets in time order as
-     rows (club, time, place with its map, pace, the newcomer line), a meet
-     out of its club's season left off. A row opens the club's sheet: what,
-     every meet, pace, cost, season, newcomers, its links, and "I'm going",
-     which opens the plan composer below with the meet's title, day, time and
-     place filled in. A runner, an athlete, an outdoorsy reader or a trail
-     person sees this section first; everyone sees it. #people/clubs lands
-     on it; #people/rc-<club>-<date>-<hhmm> (What Now's cards) picks that
-     day, flashes the row and opens the sheet; #people/club-<id> opens the
-     sheet.
+     rows. A row opens the club's sheet, whose "I'm going" opens the plan
+     composer filled in. Under it, "Every club and league in town" opens
+     clubs.html. #people/clubs lands on it; #people/rc-<club>-<date>-<hhmm>
+     (What Now's cards) picks that day, flashes the row and opens the sheet;
+     #people/club-<id> opens the sheet.
    - Open to strangers this week. Readers' plans on the people board (kind
      "plan": what, when, where, how many spots, who it is for, a rough age
-     band) sorted soonest first, past ones gone. "I'd go" is the board's vote,
-     shown as a going count. Posting needs the email sign-in; reading and
-     "I'd go" never do. The compose sheet's "I'm down to put this on Meetup"
-     box marks the plan for Stephen's Meetup group (613 members), so he can
-     find hosts (the boards desk lists them); the plans that ticked it are
-     one chip away.
-   - Mixers. Stephen's own Meetup events from all-day/data/whatnow.json:
-     his group's URL (burlington-social-activites-group, misspelled at the
-     source) or the Btown Brief / Btown Coffee Club name. The newsletter's
-     golden rule is that his own events are never missed, so every one in
-     the next two weeks shows, with no Meetup interest counts (the other
-     golden rule). Then the clubs from data/clubs.json that fit the reader.
-   - The quiz. Seven plain questions (weeknights or weekends, outside or in,
-     a crowd or three people, talk or do, new here or settled, what you'd
-     leave the house for, how you like to meet people). It never asks age,
-     gender or orientation. It ends in a suggested archetype the reader can
-     take or change, three clubs, the next mixers, and the community channel
-     that fits.
-   - The directory. Opt in, signed in: first name, neighborhood, archetype
-     and what you're into. Never an email or an account id. You see who is
-     in it once you are in it yourself; everyone sees how many.
+     band) sorted soonest first, past ones gone, the ones that fit the
+     reader first. Chips filter by Meetup, by age band and by activity (the
+     activity is read off the plan's words with MATCH; the board has no
+     field for it). "I'd go" is the board's vote, shown as a going count.
+   - Mixers. Stephen's own Meetup events first, as a short row (the
+     newsletter's golden rule: his own events are never missed, with no
+     Meetup interest counts), then a seven-day strip of every mixer on the
+     guide's events calendar (all-day/data/whatnow.json, which
+     refresh-allday rebuilds daily: socials, singles, networking and tech
+     meetups, trivia and game nights, run club socials, pickup, language
+     tables, other Meetup groups; people-match.js's mixerKind) and the
+     readers' approved gatherings, marked as reader-posted. A link to the
+     full events calendar, and a card asking people to host.
+   - Clubs. data/groups.json's groups that fit the reader, or a featured one
+     and a fresh handful each visit, and the clubs page.
+   - The quiz. Seven plain questions; it never asks age, gender or
+     orientation. It ends in a suggested archetype, your three groups, your
+     best upcoming mixer and a plan composer filled in for your kind of
+     thing.
+   - People here. Signed in: the people who switched their handles on
+     (boards.handlesRecent: first name, neighborhood, handles that open the
+     app), newest first in a "Just joined" row, and the opt-in directory
+     (first name, neighborhood, archetype, what you're into). Never an email
+     or an account id. Signed out: one line and Sign in.
    - Where the talking happens: one card with the two community channels and
      Telegram. Nothing on this tab is a chat.
 
@@ -68,13 +70,18 @@ import * as app from '../app.js';
 import * as store from '../store.js';
 import * as data from '../wire.js';
 import * as boards from '../boards.js';
-import { el, esc, safeHref, ICON, mark, section, chips, pills, button, cards, meetRow } from '../ui.js';
+import { el, esc, safeHref, ICON, mark, section, chips, pills, button, cards, meetRow, rail } from '../ui.js';
 import * as cw from '../clubs-week.js';
-import { RULES, ARCHETYPE_LABELS, NEIGHBORHOOD_LABELS, message, checkPost } from '../boards-core.js';
+import { MATCH, KIND_WORDS, bestFor, fitsText, mixerKind, MIXER_WORDS, handleLink, gatheringWhen } from '../people-match.js';
+import { RULES, ARCHETYPE_LABELS, NEIGHBORHOOD_LABELS, HANDLE_LABELS, message, checkPost } from '../boards-core.js';
 
 const KEY = 'people';
-const CLUBS_URL = '../data/clubs.json';
+const GROUPS_URL = '../data/groups.json';
 const CLUBS_PAGE = '../clubs.html';
+const EVENTS_PAGE = '../events.html';   // the guide's full events calendar
+/* Becoming a host starts with an email to Stephen; coffee, then the calendar */
+const HOST_MAIL = 'mailto:btownbrief@gmail.com?subject=' + encodeURIComponent('I’d like to host something with the crew') + '&body=' +
+  encodeURIComponent('Hi Stephen,\n\nI’d like to host something for the Btown Brief crew.\n\nWhat I’d host:\nWhen:\nWhere:\n\nA good time for coffee:\n');
 const RUN_CLUBS_URL = '../data/run-clubs.json';
 const MEETUP_GROUP = 'https://www.meetup.com/burlington-social-activites-group/';
 /* Stephen's own Meetup calendar: Up For It's copy of the group's iCal,
@@ -88,8 +95,11 @@ const TELEGRAM_URL = '../telegram.html';
 const STORE_KEY = 'allday-people';
 const DAY = 86400000;
 const MIX_DAYS = 14;          // Stephen's events this far ahead, every one of them
+const CAL_DAYS = 7;           // the calendar's mixers: today and the six days after
 const PAST_GRACE = 3 * 3600000;   // a plan stays up this long after its start
-const CLUBS_SHOWN = 4;
+const CLUBS_SHOWN = 6;
+const FOR_YOU = 3;
+const HANDLES_SHOWN = 40, JUST_JOINED = 8;
 
 /* The People table's rules. nn_people_rules() in supabase/nn-people.sql
    returns this same JSON; the test matrix fails when the two differ. Only
@@ -120,19 +130,15 @@ const INTEREST_WORDS = { sports: 'pickup sports', running: 'running', outdoors: 
   books: 'books', making: 'making things', languages: 'languages', food: 'food and drink' };
 const AGES = { twenties: 'Mostly 20s', thirties: 'Mostly 30s', forties: 'Mostly 40s', fifties: '50 and up', any: 'Any age' };
 
-/* clubs.json categories each archetype and tag leans toward */
-const ARCH_CATS = { new: ['Social', 'Language', 'Other'], regular: ['Games & Puzzles', 'Music', 'Dance'], trail: ['Hiking & Outdoors', 'Running', 'Biking'], games: ['Games & Puzzles', 'Sports & Rec'] };
-const TAG_CATS = { sports: ['Sports & Rec'], running: ['Running'], outdoors: ['Hiking & Outdoors', 'Biking'], games: ['Games & Puzzles'], music: ['Music'],
-  dance: ['Dance'], books: ['Books'], making: ['Making & Crafts'], languages: ['Language'], food: ['Social'],
-  student: ['Social', 'Sports & Rec'], grad: ['Social', 'Sports & Rec'], moved: ['Social'], older: ['Social'] };
-/* a few tags are about who a club is for, which only its own words say */
-const TAG_TEXT = { women: /wom[ae]n|womxn|nonbinary/i, lgbtq: /queer|lgbt|pride|nonbinary|womxn/i };
-/* event titles that fit each archetype and tag */
-const ARCH_WORDS = { new: /coffee|mixer|new in town|social|welcome|walk/i, regular: /trivia|music|movie|film|coffee|dinner|drink|karaoke|open mic/i,
-  trail: /run|hike|walk|paddle|kayak|bike|ski|basketball|soccer|beach/i, games: /game|trivia|board|puzzle|basketball|pickleball|bowling/i };
-const TAG_WORDS = { sports: /basketball|soccer|pickleball|volleyball|kickball|ultimate|frisbee/i, running: /\brun|5k/i, outdoors: /hike|walk|paddle|kayak|beach|trail/i,
-  games: /game|trivia|puzzle/i, music: /music|concert|open mic|karaoke/i, dance: /danc|contra|swing/i, books: /book|poet|read/i,
-  making: /craft|make|carv|paint/i, languages: /language|french|spanish|conversation/i, food: /coffee|food|dinner|brunch|crawl|drink|lunch/i, moved: /new in town|mixer|coffee/i };
+const AGE_CHIP = { twenties: '20s', thirties: '30s', forties: '40s', fifties: '50+' };
+const ACT_CHIP = { sports: 'Sports', running: 'Running', outdoors: 'Outdoors', games: 'Games', music: 'Music', dance: 'Dancing', books: 'Books',
+  making: 'Making', languages: 'Languages', food: 'Food & drink' };
+/* the plan the quiz suggests posting, by what it learned (first tag, else the archetype) */
+const PLAN_IDEAS = { new: 'Coffee and a walk, new in town', regular: 'Trivia night, need a team', trail: 'Saturday hike, who’s in?',
+  games: 'Board game night, need players', running: 'Easy group run, all paces', sports: 'Pickup game, need a few more',
+  outdoors: 'Sunset walk on the bike path', music: 'Live music this week, who’s going?', dance: 'Going dancing, come along',
+  books: 'Bookstore browse, then coffee', making: 'Craft night, bring a project', languages: 'Language swap over coffee', food: 'Trying a new spot, join me' };
+const GATH_WORDS = { pickup: 'Pickup', league: 'League', 'board-games': 'Board games', run: 'Run', social: 'Social', music: 'Music', other: 'Gathering' };
 
 /* Stephen's own events (newsletter AGENTS.md, "Stephen's OWN events are never missed") */
 const OWN_URL = /meetup\.com\/burlington-social-activiti?es-group\//i;
@@ -141,8 +147,8 @@ export const isOwnEvent = (e) => !!e && (OWN_URL.test(String(e.url || '')) ||
   OWN_NAME.test([e.title, e.venue, (Array.isArray(e.tags) ? e.tags : []).join(' ')].join(' ')));
 
 /* ----------------------------------------------------------------- the quiz */
-/* Each answer leans toward archetypes (a) and adds what you're into (t);
-   `talk` says which community channel fits. Never age, gender or orientation. */
+/* Each answer leans toward archetypes (a) and adds what you're into (t).
+   Never age, gender or orientation. */
 const QUIZ = [
   { q: 'When are you most free to go out?', o: [
     ['Weeknights', { a: { regular: 2, games: 1 } }], ['Weekends', { a: { trail: 2, new: 1 } }], ['Whenever', { a: { new: 1, regular: 1 } }]] },
@@ -151,7 +157,7 @@ const QUIZ = [
   { q: 'A big friendly crowd, or three people?', o: [
     ['A big friendly crowd', { a: { new: 2, regular: 1 } }], ['Three or four people', { a: { games: 2, trail: 1 } }], ['One or two others', { a: { trail: 1, regular: 1 } }]] },
   { q: 'Talk, or do something?', o: [
-    ['Talk: coffee, a drink', { a: { regular: 2, new: 1 }, talk: true }], ['Do: a game, a run, a project', { a: { games: 1, trail: 1 }, talk: false }], ['A bit of both', { a: { new: 1 } }]] },
+    ['Talk: coffee, a drink', { a: { regular: 2, new: 1 } }], ['Do: a game, a run, a project', { a: { games: 1, trail: 1 } }], ['A bit of both', { a: { new: 1 } }]] },
   { q: 'New here, or settled?', o: [
     ['Here less than a year', { a: { new: 3 } }], ['A few years', { a: { regular: 1 } }], ['Here a long time', { a: { regular: 2 } }]] },
   { q: 'What would get you out of the house?', o: [
@@ -160,22 +166,20 @@ const QUIZ = [
     ['A book club or a language table', { a: { regular: 1, new: 1 }, t: ['books', 'languages'] }], ['Making something', { a: { new: 1, regular: 1 }, t: ['making'] }],
     ['Good food with new people', { a: { new: 2 }, t: ['food'] }]] },
   { q: 'How do you like to meet people?', o: [
-    ['The same thing every week', { a: { regular: 2 } }], ['Try something once', { a: { new: 2 } }], ['Someone else plans it, I show up', { a: { new: 1, games: 1 }, talk: false }]] },
+    ['The same thing every week', { a: { regular: 2 } }], ['Try something once', { a: { new: 2 } }], ['Someone else plans it, I show up', { a: { new: 1, games: 1 } }]] },
 ];
 const ORDER = ['new', 'regular', 'trail', 'games'];
 export function quizResult(picks) {
   const score = { new: 0, regular: 0, trail: 0, games: 0 };
   const tags = [];
-  let talk = null;
   picks.forEach((p, i) => {
     const o = QUIZ[i] && QUIZ[i].o[p] && QUIZ[i].o[p][1];
     if (!o) return;
     Object.entries(o.a || {}).forEach(([k, n]) => { score[k] += n; });
     (o.t || []).forEach((t) => { if (!tags.includes(t)) tags.push(t); });
-    if (typeof o.talk === 'boolean' && talk === null) talk = o.talk;
   });
   const arch = ORDER.reduce((best, k) => (score[k] > score[best] ? k : best), ORDER[0]);
-  return { arch, tags: tags.slice(0, PEOPLE_RULES.interestsMax), channel: talk ? 'find' : 'plans' };
+  return { arch, tags: tags.slice(0, PEOPLE_RULES.interestsMax) };
 }
 export const QUIZ_TEXT = () => QUIZ.map((x) => [x.q].concat(x.o.map((o) => o[0])).join(' | ')).join('\n');
 
@@ -185,18 +189,22 @@ const S = {
   intoUp: [],                          // readers whose into-tags this device has squared with their profile once
   prof: undefined,                     // the profile when signed in: undefined not asked, null none
   posts: [], plansState: 'loading',    // 'loading' | 'ok' | 'off' | 'fail'
-  events: null, eventsFailed: false, feed: null, clubs: null, clubsFailed: false,
+  events: null, eventsFailed: false, feed: null, groups: null, groupsFailed: false,
+  gath: [], gathDone: false,           // approved reader gatherings (the gatherings board)
+  mixDay: null,                        // the day picked on the mixers' strip, for the visit
   dir: null,                           // { count, me, people } | { error }
-  filter: 'all', q: null,              // the plans chip; the quiz in progress or done
+  handles: null,                       // signed in: { state: 'loading' | 'ok' | 'off' | 'fail', people }
+  filter: 'all', fAge: null, fAct: null, // the plans' chips: Meetup, an age band, an activity
+  q: null,                             // the quiz in progress or done
   rc: null, rcFailed: false,           // data/run-clubs.json's clubs
   rcKind: null, rcDay: null,           // the Run / Fitness switch and the day picked on the strip, for the visit
 };
 let root = null, slots = null, pending = null, demoD = null, plansRun = 0;
-const SECS = [['arch', 'Who you are'], ['clubs', 'Run clubs'], ['plans', 'Open to strangers'], ['mix', 'Mixers'], ['quiz', 'Quiz'], ['dir', 'Directory']];
-/* a runner, an athlete, an outdoorsy reader or a trail person: the club week leads the tab */
-const MOVERS = ['running', 'sports', 'outdoors'];
-const clubsFirst = () => S.arch === 'trail' || MOVERS.some((t) => S.tags.includes(t) || S.quizTags.includes(t));
-const secsInOrder = () => (clubsFirst() ? [SECS[1], SECS[0]].concat(SECS.slice(2)) : SECS);
+const SECS = [['arch', 'Who you are'], ['clubs', 'Run clubs'], ['plans', 'Open to strangers'], ['mix', 'Mixers'], ['groups', 'Clubs'], ['quiz', 'Quiz'], ['dir', 'People here']];
+/* every tile and tag the reader has picked, as MATCH keys: the archetype
+   as 'a:<tile>', then the tags, then what the quiz learned */
+const picks = () => (S.arch ? ['a:' + S.arch] : []).concat(S.tags, S.quizTags.filter((t) => !S.tags.includes(t))).filter((k) => MATCH[k]);
+const quizKeys = (res) => ['a:' + res.arch].concat(res.tags).filter((k) => MATCH[k]);
 
 /* the reader's picks, on this device; in the demo, for the visit only */
 let memo = {};
@@ -485,6 +493,45 @@ function loadDir() {
   });
 }
 
+/* The people who switched their handles on, newest first: the foundation
+   answers only a signed-in reader, and only with switched-on profiles. A
+   handle that isn't the shape its service allows is dropped here too. */
+let hRun = 0;
+const HANDLE_RE = Object.fromEntries(Object.entries(RULES.handles).map(([k, p]) => [k, new RegExp(p)]));
+const handleRow = (p) => {
+  const h = {};
+  Object.entries(p && p.handles && typeof p.handles === 'object' ? p.handles : {}).forEach(([k, v]) => {
+    if (HANDLE_LABELS[k] && HANDLE_RE[k] && typeof v === 'string' && HANDLE_RE[k].test(v.trim())) h[k] = v.trim();
+  });
+  return { name: String(p.display_name || '').trim(), neighborhood: NEIGHBORHOOD_LABELS[p.neighborhood] ? p.neighborhood : null, handles: h,
+    day: typeof p.updated_at === 'string' ? p.updated_at : '', me: p.me === true };
+};
+function loadHandles() {
+  const run = ++hRun, u = who();
+  if (!u) { S.handles = null; drawDir(); return Promise.resolve(); }
+  if (!S.handles) S.handles = { state: 'loading', people: [] };
+  return boards.handlesRecent(null, HANDLES_SHOWN).then((r) => {
+    if (run !== hRun || u !== who()) return;
+    S.handles = r.ok ? { state: 'ok', people: r.people.map(handleRow).filter((p) => p.name && Object.keys(p.handles).length) }
+      : { state: r.error === 'off' ? 'off' : 'fail', people: [] };
+    drawDir();
+  });
+}
+
+/* the gatherings board's approved posts (premoderated: the list only ever
+   has the approved ones); before round four the board isn't there */
+let gRun = 0;
+function loadGatherings() {
+  const run = ++gRun;
+  return boards.list('gatherings', { kind: 'gathering', limit: RULES.limits.listMax }).then((r) => {
+    if (run !== gRun) return;
+    S.gath = r.ok ? r.posts : [];
+    S.gathDone = true;
+    drawMix();
+    land();
+  });
+}
+
 /* the group calendar's events in the events file's shape (no venue: the
    calendar doesn't carry one) */
 function feedEvents(j) {
@@ -497,16 +544,17 @@ function feedEvents(j) {
 function loadLive() {
   data.load('whatnow', (j) => { S.events = j.events; drawMix(); land(); }, () => { S.eventsFailed = true; drawMix(); land(); });
   data.fetchJSON(MEETUP_FEED, 8000).then((j) => { S.feed = feedEvents(j); }, () => { S.feed = []; }).then(() => { drawMix(); land(); });
-  data.fetchJSON(CLUBS_URL, 8000).then((j) => {
-    if (!j || !Array.isArray(j.clubs)) throw new Error('bad shape');
-    S.clubs = j.clubs;
-  }).catch(() => { S.clubsFailed = true; }).then(() => { drawMix(); land(); });
+  data.fetchJSON(GROUPS_URL, 8000).then((j) => {
+    if (!j || !Array.isArray(j.groups)) throw new Error('bad shape');
+    S.groups = j.groups;
+  }).catch(() => { S.groupsFailed = true; }).then(() => { drawForYou(); drawGroups(); drawQuiz(); land(); });
   data.fetchJSON(RUN_CLUBS_URL, 8000).then((j) => {
     if (!j || !Array.isArray(j.clubs)) throw new Error('bad shape');
     S.rc = j.clubs;
-  }).catch(() => { S.rcFailed = true; }).then(() => { drawClubs(); land(); });
+  }).catch(() => { S.rcFailed = true; }).then(() => { drawClubs(); drawForYou(); land(); });
   loadPlans();
-  loadProfile().then(loadDir);
+  loadGatherings();
+  loadProfile().then(() => Promise.all([loadDir(), loadHandles()]));
 }
 
 function loadDemo() {
@@ -514,11 +562,12 @@ function loadDemo() {
     demoD = redate(d);
     seedDemo(demoD);
     S.events = demoD.events;
-    S.clubs = demoD.clubs;
-    drawMix();
-    app.demoData('run-clubs').then((j) => { S.rc = cw.redateDemo(j, Date.now()).clubs; }, () => { S.rcFailed = true; }).then(() => { drawClubs(); land(); });
+    S.groups = demoD.groups;
+    render();
+    app.demoData('run-clubs').then((j) => { S.rc = cw.redateDemo(j, Date.now()).clubs; }, () => { S.rcFailed = true; }).then(() => { drawClubs(); drawForYou(); land(); });
     loadPlans();
-    loadProfile().then(loadDir);
+    loadGatherings();
+    loadProfile().then(() => Promise.all([loadDir(), loadHandles()]));
   });
 }
 
@@ -579,21 +628,20 @@ function syncDir() {
 }
 
 /* ---------------------------------------------------------------- order */
-function clubScore(c, arch, tags) {
-  let s = c.featured ? 0.5 : 0;
-  if (arch && ARCH_CATS[arch].includes(c.category)) s += 3;
-  tags.forEach((t) => {
-    if (TAG_CATS[t] && TAG_CATS[t].includes(c.category)) s += 2;
-    if (TAG_TEXT[t] && TAG_TEXT[t].test(c.name + ' ' + c.what + ' ' + c.when)) s += 3;
-  });
-  return s;
+/* The clubs list: with picks, the groups that fit best (one per kind
+   first); without, the featured one and a fresh handful each visit. */
+const shuffleSeed = Math.random();
+const spin = (s) => { let h = 2166136261; for (const c of String(s) + shuffleSeed) h = Math.imul(h ^ c.charCodeAt(0), 16777619) >>> 0; return h; };
+const usableGroup = (g) => !!g && !!g.name && /^https?:/i.test(String(g.url || ''));
+function groupsFor(n, keys = picks()) {
+  const list = (S.groups || []).filter(usableGroup);
+  if (keys.length) {
+    const fit = bestFor(keys, list, [], n).map((x) => x.it);
+    if (fit.length) return fit;
+  }
+  const featured = list.filter((g) => g.featured);
+  return featured.concat(list.filter((g) => !g.featured).sort((a, b) => spin(a.id || a.name) - spin(b.id || b.name))).slice(0, n);
 }
-/* the reader's picks by default; the quiz asks for its own result's */
-function clubsFor(n, arch = S.arch, tags = S.tags.concat(S.quizTags)) {
-  return (S.clubs || []).filter((c) => c && c.name && c.url).map((c, i) => ({ c, s: clubScore(c, arch, tags), i }))
-    .sort((a, b) => b.s - a.s || a.i - b.i).slice(0, n).map((x) => x.c);
-}
-const fitsEvent = (e, arch, tags) => (arch && ARCH_WORDS[arch].test(e.title)) || (tags || []).some((t) => TAG_WORDS[t] && TAG_WORDS[t].test(e.title));
 /* every one of Stephen's events from now to two weeks out, once each */
 /* one event, whichever source it came from: the Meetup event number and the day */
 const eventKey = (e) => ((String(e.url).match(/\/events\/(\w+)/) || [])[1] || e.url) + '|' + e.date;
@@ -612,10 +660,54 @@ function mixerItem(x) {
   const e = x.e, dt = new Date(x.t);
   const where = [e.venue, e.town && e.town !== 'Burlington' ? e.town : ''].filter(Boolean).join(', ') || 'Place on Meetup';
   return {
-    k: 'mx-' + String(e.id || slug(e.title + '-' + e.date)), kind: 'event', href: e.url, src: 'Btown Brief IRL', sid: 'meetup:btown-irl', own: true,
-    title: e.title, dow: EV_DOW.format(dt), dom: EV_DOM.format(dt), when: e.allDay ? 'All day' : clock(dt), where,
-    price: e.free ? 'Free' : typeof e.price === 'string' && e.price ? e.price : 'RSVP on Meetup', open: 'Open on Meetup', at: x.t,
+    k: 'mx-' + String(e.id || slug(e.title + '-' + e.date)), href: e.url, own: true,
+    title: e.title, dow: EV_DOW.format(dt), dom: EV_DOM.format(dt), when: e.allDay ? 'All day' : clock(dt), where, at: x.t, date: e.date,
   };
+}
+
+/* The calendar's mixers, today and the six days after, and the readers'
+   approved gatherings, as one list of rows: { k, title, href, date, at,
+   allDay, where, kind, label, reader, post }. Stephen's own are left out
+   here (they lead the section in their own row); the same event listed
+   twice (same day, start and venue, or same day and title) shows once. */
+const DAY_KEY = (ms) => cw.dateKey(cw.et(ms));
+function weekKeys(now) {
+  const t = cw.et(now);
+  const out = [];
+  for (let i = 0; i < CAL_DAYS; i++) out.push(cw.dateKey(cw.addDays({ y: t.y, mo: t.mo, d: t.d }, i)));
+  return out;
+}
+const norm = (t) => String(t || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').replace(/s\b/g, '').trim();
+function calMixers(now = Date.now()) {
+  const days = new Set(weekKeys(now));
+  const seen = new Set(), out = [];
+  (S.events || []).forEach((e) => {
+    if (!e || isOwnEvent(e)) return;
+    const kind = mixerKind(e);
+    if (!kind || !days.has(e.date)) return;
+    const allDay = !!e.allDay || !/T\d/.test(String(e.start || ''));
+    const [y, mo, d] = String(e.date).split('-').map(Number);
+    const at = allDay ? cw.wall(y, mo, d, 0, 0) : Date.parse(e.start);
+    if (!at) return;
+    const end = allDay ? cw.wall(y, mo, d, 23, 59) : (Date.parse(e.end) || at + 2 * 3600000);
+    if (end <= now) return;
+    const venue = String(e.venue || '').trim();
+    const k1 = e.date + '|' + at + '|' + venue.toLowerCase(), k2 = e.date + '|' + norm(e.title);
+    if ((venue && seen.has(k1)) || seen.has(k2)) return;
+    seen.add(k1); seen.add(k2);
+    out.push({ k: 'mc-' + String(e.id || slug(e.title + '-' + e.date)), title: String(e.title), href: e.url, date: e.date, at, allDay,
+      where: [venue, e.town && e.town !== 'Burlington' ? e.town : ''].filter(Boolean).join(', '), kind, label: MIXER_WORDS[kind], reader: false });
+  });
+  (S.gath || []).forEach((p) => {
+    const m = p && p.meta && typeof p.meta === 'object' ? p.meta : {};
+    const w = gatheringWhen(m.when);
+    if (!w || !days.has(w.date)) return;
+    if ((w.allDay ? cw.wall(...w.date.split('-').map(Number), 23, 59) : w.at + 2 * 3600000) <= now) return;
+    const link = /^https?:\/\//i.test(String(m.link || '')) ? String(m.link) : null;
+    out.push({ k: 'g-' + p.id, title: String(p.title || ''), href: link, date: w.date, at: w.at, allDay: w.allDay,
+      where: String(m.place || p.place || ''), kind: 'reader', label: GATH_WORDS[m.kind] || 'Gathering', reader: true, post: p });
+  });
+  return out.sort((a, b) => a.at - b.at || a.title.localeCompare(b.title));
 }
 
 /* --------------------------------------------------------------- drawing */
@@ -633,20 +725,10 @@ function render() {
   if (!slots) {
     root.innerHTML = '';
     slots = {};
-    ['arch', 'clubs', 'plans', 'mix', 'quiz', 'dir', 'talk'].forEach((k) => { const s = el('div'); s.dataset.sec = k; slots[k] = s; root.appendChild(s); });
+    ['arch', 'foryou', 'clubs', 'plans', 'mix', 'host', 'groups', 'quiz', 'dir', 'talk'].forEach((k) => { const s = el('div'); s.dataset.sec = k; slots[k] = s; root.appendChild(s); });
     root.appendChild(el('div', 'spacer'));
   }
-  placeClubs();
-  drawArch(); drawClubs(); drawPlans(); drawMix(); drawQuiz(); drawDir(); drawTalk();
-}
-
-/* the club week sits under "Who are you here as?", or above it for a mover */
-function placeClubs() {
-  if (!slots) return;
-  const first = clubsFirst();
-  const want = first ? slots.arch : slots.plans;
-  if (slots.clubs.nextElementSibling !== want) root.insertBefore(slots.clubs, want);
-  if (app.activeTab() === KEY) app.paintSubnav();
+  drawArch(); drawForYou(); drawClubs(); drawPlans(); drawMix(); drawHost(); drawGroups(); drawQuiz(); drawDir(); drawTalk();
 }
 
 function drawArch() {
@@ -678,6 +760,54 @@ function drawArch() {
   tagRow('I’m into…', INTO);
 }
 
+/* -------------------------------------------------------------- for you */
+/* Right under the tiles: the three best groups for what is picked, the
+   moment anything is. A group opens its own page; a run or fitness club
+   opens its sheet. Nothing picked, nothing here. */
+const NEXT_WORDS = new Intl.DateTimeFormat('en-US', { timeZone: BTV, weekday: 'short' });
+function nextWords(o) {
+  if (!o) return '';
+  const today = DAY_KEY(Date.now()), tomorrow = cw.dateKey(cw.addDays(cw.et(Date.now()), 1));
+  return (o.date === today ? 'Today' : o.date === tomorrow ? 'Tomorrow' : NEXT_WORDS.format(new Date(o.at))) + ' ' + o.time;
+}
+/* a group, or a run club, as one list row */
+function matchRow(x, key) {
+  const it = x.it;
+  const next = x.type === 'club' ? x.next : cw.nextMeet([it], Date.now());
+  const sub = [KIND_WORDS[x.kind] || 'Club', next ? nextWords(next) : (it.town || '')].filter(Boolean).join(' · ');
+  const inner = mark(it.name, 'round lg') + '<div><div class="t">' + esc(it.name) + '</div><div class="s one">' + esc(sub) + '</div></div>';
+  let r;
+  if (x.type === 'club') {
+    r = el('button', 'lrow mixrow', inner + ICON.right);
+    r.type = 'button';
+    r.addEventListener('click', () => clubSheet(it, next));
+  } else {
+    r = el('a', 'lrow', inner + ICON.ext);
+    r.href = safeHref(it.url);
+    r.target = '_blank';
+    r.rel = 'noopener';
+  }
+  r.dataset.k = key + ':' + (it.id || slug(it.name));
+  r.dataset.kind = x.kind;
+  return r;
+}
+function drawForYou() {
+  const s = slots && slots.foryou;
+  if (!s) return;
+  s.innerHTML = '';
+  const keys = picks();
+  s.hidden = !keys.length;
+  if (!keys.length) return;
+  sec(s, 'For you');
+  const box = el('div', 'foryou');
+  box.dataset.foryou = keys.join(' ');
+  s.appendChild(box);
+  if (!S.groups && !S.groupsFailed) { box.appendChild(el('p', 'loading', 'One moment…')); return; }
+  const best = bestFor(keys, (S.groups || []).filter(usableGroup), (S.rc || []).filter(usableClub), FOR_YOU, Date.now());
+  if (!best.length) { box.appendChild(el('p', 'note', 'Nothing yet for that.')); return; }
+  best.forEach((x) => box.appendChild(matchRow(x, 'fy')));
+}
+
 /* ------------------------------------------------------ the club week */
 const usableClub = (c) => !!c && /^https?:/i.test(String(c.url || ''));
 const runClub = (c) => usableClub(c) && cw.isRun(c);
@@ -699,7 +829,9 @@ function drawClubs() {
   const sw = pills([['run', 'Run'], ['fit', 'Fitness']], kind, (v) => { S.rcKind = v; S.rcDay = null; drawClubs(); });
   sw.dataset.rcKind = kind;
   sec(s, kind === 'run' ? 'Run clubs this week' : 'Fitness this week', '', sw);
-  if (!S.rc) { s.appendChild(el('p', S.rcFailed ? 'note pad' : 'loading', S.rcFailed ? 'The clubs didn’t load.' : 'One moment…')); return; }
+  /* the clubs page, right under the week, whatever state the week is in */
+  const every = () => { const r = el('div', 'addrow'); r.dataset.everyClub = '1'; r.appendChild(linkBtn('Every club and league in town', CLUBS_PAGE, 'ghost')); s.appendChild(r); };
+  if (!S.rc) { s.appendChild(el('p', S.rcFailed ? 'note pad' : 'loading', S.rcFailed ? 'The clubs didn’t load.' : 'One moment…')); every(); return; }
   const now = Date.now();
   const week = cw.weekStrip(S.rc, now, kind === 'run' ? runClub : fitClub).map((d) => ({ ...d, meets: d.meets.filter((o) => !o.past) }));
   if (!week.some((d) => d.key === S.rcDay)) S.rcDay = (week.find((d) => d.meets.length) || week[0]).key;
@@ -723,6 +855,7 @@ function drawClubs() {
   day.meets.forEach((o) => { const r = meetRow(o, (x) => clubSheet(x.club, x)); if (r) list.appendChild(r); });
   if (list.children.length) s.appendChild(list);
   else s.appendChild(el('p', 'note pad', esc(day.today ? 'Nothing left today.' : 'Nothing this day.')));
+  every();
 }
 
 /* The club's sheet: what it is, every meet, the facts, its links, and the
@@ -824,11 +957,19 @@ function watchGoing(host) {
   goingWatch.observe(host, { subtree: true, childList: true, characterData: true });
 }
 
+/* what a plan is, read off its words: the into-tags whose MATCH words it uses */
+const planText = (p) => [p.title, p.body, p.place].filter(Boolean).join(' ');
+const planActs = (p) => Object.keys(ACT_CHIP).filter((k) => fitsText(planText(p), [k]));
+const ageFits = (p, a) => !a || p.meta.ages === a || p.meta.ages === 'any';
+const upcomingPlans = () => S.posts.filter((p) => p.at == null || p.at > Date.now() - PAST_GRACE);
 function sortedPlans() {
-  const now = Date.now();
-  const fit = (p) => (S.arch && (p.meta.arch === S.arch || p.author_arch === S.arch) ? 0 : 1);
-  return S.posts.filter((p) => p.at == null || p.at > now - PAST_GRACE)
+  const keys = picks();
+  /* for you: your tile's plans, or a plan whose words fit what you picked */
+  const fit = (p) => ((S.arch && (p.meta.arch === S.arch || p.author_arch === S.arch)) || fitsText(planText(p), keys) ? 0 : 1);
+  return upcomingPlans()
     .filter((p) => S.filter !== 'meetup' || p.meta.meetup)
+    .filter((p) => ageFits(p, S.fAge))
+    .filter((p) => !S.fAct || planActs(p).includes(S.fAct))
     .sort((a, b) => fit(a) - fit(b) || (a.at == null) - (b.at == null) || (a.at || 0) - (b.at || 0) || Date.parse(b.created_at) - Date.parse(a.created_at));
 }
 
@@ -844,16 +985,36 @@ function drawPlans() {
     s.appendChild(el('div', 'textcard', '<p>' + esc(S.plansState === 'off' ? 'Plans open soon.' : message('offline')) + '</p>'));
     return;
   }
-  const upcoming = S.posts.filter((p) => p.at == null || p.at > Date.now() - PAST_GRACE);
+  const upcoming = upcomingPlans();
   const asked = upcoming.filter((p) => p.meta.meetup).length;
   if (!asked) S.filter = 'all';
-  if (asked) {
-    const row = chips([{ key: 'all', label: 'All plans', n: upcoming.length }, { key: 'meetup', label: 'Down for Meetup', n: asked }], S.filter,
-      (k) => { S.filter = k; drawPlans(); });
+  /* the chips: Meetup, each age band and each activity the plans have */
+  const ages = Object.keys(AGE_CHIP).map((a) => [a, upcoming.filter((p) => p.meta.ages === a).length]).filter(([a, n]) => n || S.fAge === a);
+  const acts = Object.keys(ACT_CHIP).map((a) => [a, upcoming.filter((p) => planActs(p).includes(a)).length]).filter(([a, n]) => n || S.fAct === a);
+  if (!ages.some(([a]) => a === S.fAge)) S.fAge = null;
+  if (!acts.some(([a]) => a === S.fAct)) S.fAct = null;
+  if (asked || (upcoming.length > 1 && (ages.length || acts.length))) {
+    const none = S.filter === 'all' && !S.fAge && !S.fAct;
+    const items = [{ key: 'all', label: 'All plans', n: upcoming.length, cls: none ? 'on' : '' }]
+      .concat(asked ? [{ key: 'meetup', label: 'Down for Meetup', n: asked, cls: S.filter === 'meetup' ? 'on' : '' }] : [])
+      .concat(ages.map(([a, n]) => ({ key: 'age:' + a, label: AGE_CHIP[a], n, cls: S.fAge === a ? 'on' : '' })))
+      .concat(acts.map(([a, n]) => ({ key: 'act:' + a, label: ACT_CHIP[a], n, cls: S.fAct === a ? 'on' : '' })));
+    const row = chips(items, null, (k) => {
+      if (k === 'all') { S.filter = 'all'; S.fAge = null; S.fAct = null; }
+      else if (k === 'meetup') S.filter = S.filter === 'meetup' ? 'all' : 'meetup';
+      else if (/^age:/.test(k)) S.fAge = S.fAge === k.slice(4) ? null : k.slice(4);
+      else if (/^act:/.test(k)) S.fAct = S.fAct === k.slice(4) ? null : k.slice(4);
+      drawPlans();
+    });
+    row.querySelectorAll('.chip').forEach((c) => c.setAttribute('aria-pressed', c.classList.contains('on') ? 'true' : 'false'));
     row.dataset.filter = '1';
     s.appendChild(row);
   }
   const list = sortedPlans();
+  if (!list.length && upcoming.length) {
+    s.appendChild(el('p', 'note pad', 'No plans like that yet.'));
+    return;
+  }
   if (list.length) {
     const f = feed(s);
     f.dataset.plans = '1';
@@ -869,51 +1030,153 @@ function drawPlans() {
   }
 }
 
+/* Mixers: Stephen's own first as a short row, then the week's mixers from
+   the whole calendar and the readers' gatherings, one day at a time. */
+function ownTile(it) {
+  const a = el('a', 'owntile', '<span class="eyebrow">' + esc(it.dow + ' ' + it.dom) + '</span><b>' + esc(it.title) + '</b><span class="s">' +
+    esc(it.when + ' · ' + it.where) + '</span>');
+  a.href = safeHref(it.href);
+  a.target = '_blank';
+  a.rel = 'noopener';
+  a.dataset.k = it.k;
+  return a;
+}
+function mixRow(it, fits) {
+  const [hm, ap] = it.allDay ? ['All', 'day'] : timeWord(cw.et(it.at).h, cw.et(it.at).mi).split(' ');
+  const sub = [it.where, it.label].filter(Boolean).join(' · ');
+  const inner = '<span class="th tm"><b>' + esc(hm) + '</b><span>' + esc(ap || '') + '</span></span>' +
+    '<div><div class="t">' + esc(it.title) + '</div><div class="s one">' + esc(sub) + '</div>' +
+    (it.reader || fits ? '<div class="s tags">' + (it.reader ? '<span class="tag tag-local">Reader-posted</span>' : '') +
+      (fits ? '<span class="tag tag-own">For you</span>' : '') + '</div>' : '') + '</div>';
+  let r;
+  if (it.href) {
+    r = el('a', 'lrow meet mixrow', inner + ICON.ext);
+    r.href = safeHref(it.href);
+    r.target = '_blank';
+    r.rel = 'noopener';
+  } else {
+    r = el('button', 'lrow meet mixrow', inner + ICON.right);
+    r.type = 'button';
+    r.addEventListener('click', () => gatheringSheet(it));
+  }
+  r.dataset.k = it.k;
+  r.dataset.kind = it.kind;
+  if (it.reader) r.dataset.reader = '1';
+  return r;
+}
+/* a reader's gathering with no link of its own: its sheet says the rest */
+function gatheringSheet(it) {
+  const p = it.post || {};
+  app.sheet(it.title, (body) => {
+    body.dataset.gathering = p.id || '';
+    const when = (it.allDay ? '' : clock(new Date(it.at)) + ', ') + EV_DAY.format(new Date(it.at));
+    body.appendChild(el('p', 'sheet-note', esc([when, it.where, it.label].filter(Boolean).join(' · '))));
+    if (p.body) body.appendChild(el('p', 'pick-why', esc(p.body)));
+    if (p.author) body.appendChild(el('p', 'sheet-note', esc('Posted by ' + p.author)));
+  });
+}
 function drawMix() {
   const s = slots && slots.mix;
   if (!s) return;
   s.innerHTML = '';
-  sec(s, 'Mixers');
+  const full = linkBtn('Full events calendar', EVENTS_PAGE);
+  full.dataset.calendar = '1';
+  sec(s, 'Mixers', '', full);
   const settled = (S.events || S.eventsFailed) && (app.demo || S.feed);
-  if (!mixers().length && !settled) s.appendChild(el('p', 'loading', 'Reading the calendar…'));
-  else {
-    const all = mixers().map(mixerItem);
-    const tags = S.tags.concat(S.quizTags);
-    /* the ones that fit come first; none is ever left out */
-    const list = S.arch || tags.length ? all.filter((it) => fitsEvent(it, S.arch, tags)).concat(all.filter((it) => !fitsEvent(it, S.arch, tags))) : all;
-    if (list.length) {
-      app.know(list);
-      const f = feed(s);
-      f.dataset.mixers = '1';
-      app.bindFeed(f);
-      list.forEach((it) => { const n = cards.event(it, { noComments: true }); if (n) f.appendChild(n); });
-    } else {
-      const tc = el('div', 'textcard', '<p>' + esc(S.eventsFailed && !(S.feed || []).length ? 'The calendar didn’t load.' : 'No meetups in the next two weeks.') + '</p>');
-      const r = el('div', 'row');
-      r.appendChild(linkBtn('The Meetup group', MEETUP_GROUP));
-      tc.appendChild(r);
-      s.appendChild(tc);
-    }
+  const keys = picks();
+  /* his own, every one in the next two weeks */
+  const own = mixers().map(mixerItem);
+  if (!own.length && !settled) { s.appendChild(el('p', 'loading', 'Reading the calendar…')); return; }
+  const ownWrap = el('div');
+  ownWrap.dataset.own = '1';
+  s.appendChild(ownWrap);
+  if (own.length) {
+    ownWrap.appendChild(el('p', 'subh pad', '<b>Btown Brief IRL</b>'));
+    const track = rail(ownWrap);
+    track.dataset.mixers = '1';
+    own.forEach((it) => track.appendChild(ownTile(it)));
+  } else {
+    const r = el('div', 'addrow');
+    r.appendChild(linkBtn('The Btown Brief Meetup group', MEETUP_GROUP));
+    ownWrap.appendChild(r);
   }
-  s.appendChild(el('div', 'sec', '<div><h2>' + esc(S.arch || S.tags.length || S.quizTags.length ? 'Clubs that fit' : 'Clubs to try') + '</h2></div>'));
-  if (!S.clubs) { s.appendChild(el('p', S.clubsFailed ? 'note pad' : 'loading', S.clubsFailed ? 'The clubs list didn’t load.' : 'One moment…')); }
+  /* the week, from the whole calendar */
+  if (S.eventsFailed && !(S.gath || []).length) { s.appendChild(el('p', 'note pad', 'The calendar didn’t load.')); return; }
+  const now = Date.now();
+  const all = calMixers(now);
+  const days = weekKeys(now);
+  if (!days.includes(S.mixDay)) S.mixDay = days.find((d) => all.some((x) => x.date === d)) || days[0];
+  const strip = el('div', 'days mixdays');
+  strip.dataset.week = days[0];
+  days.forEach((d, i) => {
+    const [y, mo, dd] = d.split('-').map(Number);
+    const day = cw.addDays({ y, mo, d: dd }, 0);
+    const n = all.filter((x) => x.date === d).length;
+    const on = d === S.mixDay;
+    const wd = i === 0 ? 'Today' : ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][day.dow];
+    const b = el('button', (on ? 'on' : '') + (n ? '' : ' none'), '<span class="wd">' + esc(wd) + '</span><span class="dd">' + esc(dd) + '</span><span class="n">' + esc(n || '') + '</span>');
+    b.type = 'button';
+    b.dataset.day = d;
+    b.setAttribute('aria-pressed', on ? 'true' : 'false');
+    b.setAttribute('aria-label', wd + ' ' + dd + ': ' + plural(n, 'mixer', 'mixers'));
+    b.addEventListener('click', () => { S.mixDay = d; drawMix(); });
+    strip.appendChild(b);
+  });
+  s.appendChild(strip);
+  const list = el('div', 'meets');
+  list.dataset.mixDay = S.mixDay;
+  const today = all.filter((x) => x.date === S.mixDay);
+  /* the ones that fit what you picked first, the rest in time order */
+  const fits = (x) => keys.length && fitsText(x.title + ' ' + x.label, keys);
+  today.filter(fits).concat(today.filter((x) => !fits(x))).forEach((x) => list.appendChild(mixRow(x, fits(x))));
+  if (list.children.length) s.appendChild(list);
+  else s.appendChild(el('p', 'note pad', 'Nothing on this day.'));
+}
+
+/* Become a host: Stephen's ask, two lines and the email */
+function drawHost() {
+  const s = slots && slots.host;
+  if (!s) return;
+  s.innerHTML = '';
+  const tc = el('div', 'textcard hostcard', '<h3 class="serif">Host something with the crew</h3>' +
+    '<p>Anyone can host a meetup. Coffee first, then your event goes on the calendar.</p><p>Hosting makes you part of the crew.</p>');
+  tc.dataset.host = '1';
+  const r = el('div', 'row');
+  const a = el('a', 'btn', ICON.mail + ' Email Stephen');
+  a.href = HOST_MAIL;
+  r.appendChild(a);
+  tc.appendChild(r);
+  s.appendChild(el('div', 'spacer'));
+  s.appendChild(tc);
+}
+
+/* Clubs: the ones that fit, or a featured one and a fresh handful */
+function drawGroups() {
+  const s = slots && slots.groups;
+  if (!s) return;
+  s.innerHTML = '';
+  const keys = picks();
+  sec(s, keys.length ? 'Clubs that fit' : 'Clubs to try');
+  if (!S.groups) { s.appendChild(el('p', S.groupsFailed ? 'note pad' : 'loading', S.groupsFailed ? 'The clubs list didn’t load.' : 'One moment…')); }
   else {
     const g = el('div', 'clubs');
     g.dataset.clubs = '1';
-    clubsFor(CLUBS_SHOWN).forEach((c) => g.appendChild(clubRow(c)));
+    groupsFor(CLUBS_SHOWN, keys).forEach((c) => g.appendChild(clubRow(c)));
     s.appendChild(g);
   }
   const r = el('div', 'addrow');
-  r.appendChild(linkBtn('Every club in town', CLUBS_PAGE));
+  r.appendChild(linkBtn('Every club and league in town', CLUBS_PAGE));
   s.appendChild(r);
 }
 function clubRow(c) {
-  const a = el('a', 'lrow', mark(c.name, 'round lg') + '<div><div class="t">' + esc(c.name) + '</div><div class="s">' + esc([c.when, c.category].filter(Boolean).join(' · ')) + '</div></div>' + ICON.ext);
+  const next = cw.nextMeet([c], Date.now());
+  const sub = [KIND_WORDS[c.kind] || 'Club', next ? nextWords(next) : c.town].filter(Boolean).join(' · ');
+  const a = el('a', 'lrow', mark(c.name, 'round lg') + '<div><div class="t">' + esc(c.name) + '</div><div class="s">' + esc(sub) + '</div></div>' + ICON.ext);
   a.href = safeHref(c.url);
   a.target = '_blank';
   a.rel = 'noopener';
-  a.dataset.k = 'club:' + slug(c.name);
-  a.dataset.cat = c.category || '';
+  a.dataset.k = 'club:' + (c.id || slug(c.name));
+  a.dataset.kind = c.kind || '';
   return a;
 }
 
@@ -926,7 +1189,7 @@ function drawQuiz() {
   tc.dataset.quiz = S.q ? (S.q.done ? 'done' : 'q' + S.q.i) : 'intro';
   s.appendChild(tc);
   if (!S.q) {
-    tc.innerHTML = '<h3 class="serif">Seven questions.</h3>';
+    tc.innerHTML = '<h3 class="serif">Seven quick questions to find your people.</h3>';
     const r = el('div', 'row');
     r.appendChild(button('Take the quiz', '', () => { S.q = { i: 0, picks: [] }; drawQuiz(); }));
     tc.appendChild(r);
@@ -955,29 +1218,39 @@ function drawQuiz() {
   tc.innerHTML = '<span class="eyebrow">Your result</span><h3 class="serif">' + esc('Probably: ' + ARCHETYPE_LABELS[res.arch]) + '</h3><p>' + esc(arch[2]) + '</p>' +
     (res.tags.length ? '<p>' + esc('Into: ' + res.tags.map((t) => INTEREST_WORDS[t]).join(', ') + '.') + '</p>' : '');
   const h = (t) => tc.appendChild(el('p', 'fine', '<b>' + esc(t) + '</b>'));
-  const picks = clubsFor(3, res.arch, res.tags);
-  if (picks.length) { h('Three clubs to try'); const g = el('div', 'dir'); g.dataset.quizClubs = '1'; picks.forEach((c) => g.appendChild(clubRow(c))); tc.appendChild(g); }
-  const mix = mixers().map(mixerItem);
-  const fit = mix.filter((it) => fitsEvent(it, res.arch, res.tags)).concat(mix.filter((it) => !fitsEvent(it, res.arch, res.tags))).slice(0, 2);
-  if (fit.length) {
-    h('The next mixers');
+  const keys = quizKeys(res);
+  /* your three groups: the For you strip's choice for the quiz's answer */
+  const best = bestFor(keys, (S.groups || []).filter(usableGroup), (S.rc || []).filter(usableClub), 3, Date.now());
+  if (best.length) {
+    h('Your groups');
     const g = el('div', 'dir');
+    g.dataset.quizClubs = '1';
+    best.forEach((x) => g.appendChild(matchRow(x, 'qz')));
     tc.appendChild(g);
-    fit.forEach((it) => {
-      const a = el('a', 'lrow', '<span class="th bare">' + ICON.people + '</span><div><div class="t">' + esc(it.title) + '</div><div class="s">' +
-        esc(EV_DAY.format(new Date(it.at)) + ', ' + it.when + ' · ' + it.where) + '</div></div>' + ICON.ext);
-      a.href = safeHref(it.href); a.target = '_blank'; a.rel = 'noopener';
-      g.appendChild(a);
-    });
   }
-  h('Where to talk');
-  const ch = res.channel === 'find' ? ['Find Each Other', CH_FIND] : ['Plans & Meetups', CH_PLANS];
-  const door = el('div', 'row');
-  door.dataset.channel = res.channel;
-  door.appendChild(linkBtn(ch[0], ch[1]));
-  tc.appendChild(door);
+  /* your best mixer: the soonest that fits, Stephen's own first when one does */
+  const own = mixers().map(mixerItem).map((it) => ({ ...it, allDay: false, kind: 'own', label: 'Btown Brief IRL' }));
+  const cal = calMixers();
+  const fitIt = (x) => fitsText(x.title + ' ' + (x.label || ''), keys);
+  const soonest = (list) => list.slice().sort((a, b) => a.at - b.at)[0];
+  const one = soonest(own.filter(fitIt)) || soonest(cal.filter(fitIt)) || soonest(own) || soonest(cal);
+  if (one) {
+    h('Your best mixer');
+    const g = el('div', 'dir');
+    g.dataset.quizMixer = '1';
+    const row = mixRow({ ...one, where: [EV_DAY.format(new Date(one.at)), one.where].filter(Boolean).join(' · '), label: one.label }, false);
+    row.dataset.k = 'qz:' + one.k;
+    g.appendChild(row);
+    tc.appendChild(g);
+  }
+  const post = el('div', 'row');
+  const idea = PLAN_IDEAS[res.tags[0]] || PLAN_IDEAS[res.arch];
+  const pb = button(ICON.plus + ' Post a plan', '', () => planSheet({ title: idea, arch: res.arch }));
+  pb.dataset.quizPost = '1';
+  post.appendChild(pb);
+  tc.appendChild(post);
   const r = el('div', 'row');
-  r.appendChild(button('That’s me', '', () => {
+  r.appendChild(button('That’s me', 'ghost sm', () => {
     S.quizTags = res.tags.filter((t) => PEOPLE_RULES.interests.includes(t));
     keep();
     syncDir();
@@ -987,52 +1260,129 @@ function drawQuiz() {
   tc.appendChild(r);
 }
 
+/* People here. Signed out: one line and Sign in. Signed in: Add your
+   handles, the directory's join or leave, the newest handles in a row, and
+   everyone: the people with their handles on and, once you are in the
+   directory yourself, its members. The two lists are never joined into one
+   row: a first name and a neighborhood are not a person, so matching on
+   them could pin one reader's handles to another's interests. */
+function peopleRows() {
+  const d = S.dir && !S.dir.error && S.dir.me ? S.dir.people : [];
+  const hs = S.handles && S.handles.state === 'ok' ? S.handles.people : [];
+  const rows = hs.map((h, i) => ({ name: h.name, neighborhood: h.neighborhood, archetype: null, interests: [], handles: h.handles, me: h.me, i }))
+    .concat(d.map((p, i) => ({ name: p.name, neighborhood: p.neighborhood, archetype: p.archetype, interests: p.interests || [], handles: {}, me: !!p.me, i: 1000 + i })));
+  const mine = new Set(shareable());
+  const shared = (r) => r.interests.filter((t) => mine.has(t)).length;
+  return rows.sort((a, b) => (b.me - a.me) || ((b.archetype === S.arch && !!S.arch) - (a.archetype === S.arch && !!S.arch)) || shared(b) - shared(a) || a.i - b.i);
+}
+/* a handle: a link that opens the service when it has a profile page, a copy button when it hasn't */
+function handleChip(kind, v, name) {
+  const label = HANDLE_LABELS[kind];
+  const href = handleLink(kind, v);
+  const inner = '<b>' + esc(label) + '</b><span>' + esc(v) + '</span>';
+  let c;
+  if (href) {
+    c = el('a', 'hchip', inner);
+    c.href = safeHref(href);
+    c.target = '_blank';
+    c.rel = 'noopener';
+    c.setAttribute('aria-label', name + ' on ' + label + ': ' + v);
+  } else {
+    c = el('button', 'hchip', inner);
+    c.type = 'button';
+    c.setAttribute('aria-label', 'Copy ' + name + '’s ' + label + ': ' + v);
+    c.addEventListener('click', () => {
+      const done = () => app.toast('Copied ' + name + '’s ' + label);
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(v).then(done, () => app.toast(label + ': ' + v));
+      else app.toast(label + ': ' + v);
+    });
+  }
+  c.dataset.handle = kind;
+  return c;
+}
+function handleChips(h, name, max) {
+  const box = el('div', 'hchips');
+  Object.keys(HANDLE_LABELS).filter((k) => h[k]).slice(0, max || 99).forEach((k) => box.appendChild(handleChip(k, h[k], name)));
+  return box;
+}
+function personRow(p) {
+  const where = [NEIGHBORHOOD_LABELS[p.neighborhood], ARCHETYPE_LABELS[p.archetype]].filter(Boolean).join(' · ');
+  const r = el('div', 'lrow prow', mark(p.name, 'round lg'));
+  const body = el('div', null, '<div class="t">' + esc(p.name + (p.me ? ' (you)' : '')) + '</div>' + (where ? '<div class="s">' + esc(where) + '</div>' : ''));
+  const into = (p.interests || []).filter((t) => INTEREST_WORDS[t]);
+  if (into.length) body.appendChild(el('div', 'ptags', into.map((t) => '<span class="ptag">' + esc(ACT_CHIP[t] || INTEREST_WORDS[t]) + '</span>').join('')));
+  if (Object.keys(p.handles).length) body.appendChild(handleChips(p.handles, p.name));
+  r.append(body, el('span'));
+  return r;
+}
+function openHandles() {
+  if (!app.user()) { app.openSettings(); return; }
+  boards.profileSheet();
+  /* the sheet draws once the profile answers; open its handle folds and bring them up */
+  const t0 = Date.now();
+  const tick = () => {
+    const hw = document.querySelector('.sheet-body [data-handles]');
+    if (hw) {
+      hw.querySelectorAll('details').forEach((x) => { x.open = true; });
+      hw.scrollIntoView({ block: 'start' });
+      return;
+    }
+    if (Date.now() - t0 < 6000) setTimeout(tick, 60);
+  };
+  tick();
+}
 function drawDir() {
   const s = slots && slots.dir;
   if (!s) return;
   s.innerHTML = '';
   const d = S.dir;
   const count = d && !d.error ? plural(d.count, 'neighbor', 'neighbors') + ' in it' : '';
-  sec(s, 'The directory', count);
+  sec(s, 'People here', count);
   const tc = el('div', 'textcard');
-  tc.dataset.dir = !d ? 'loading' : d.error ? 'error' : !app.user() ? 'out' : d.me ? 'in' : 'join';
+  tc.dataset.dir = !d ? 'loading' : !app.user() ? 'out' : d.error ? 'error' : d.me ? 'in' : 'join';
   const r = el('div', 'row');
-  if (!d) { s.appendChild(el('p', 'loading', 'One moment…')); return; }
-  if (d.error) {
-    tc.innerHTML = '<p>' + esc(d.error === 'off' ? MESSAGES.off : d.message || message('offline')) + '</p>';
-    s.appendChild(tc);
-    return;
-  }
   if (!app.user()) {
+    tc.innerHTML = '<p>Sign in to see who’s here.</p>';
     r.appendChild(button('Sign in', '', () => app.openSettings()));
     tc.appendChild(r);
     s.appendChild(tc);
     return;
   }
-  if (!d.me) {
+  if (!d) { s.appendChild(el('p', 'loading', 'One moment…')); return; }
+  /* signed in: the two buttons */
+  const add = button(ICON.plus + ' Add your handles', '', openHandles);
+  add.dataset.addHandles = '1';
+  r.appendChild(add);
+  if (d.error) tc.appendChild(el('p', null, esc(d.error === 'off' ? MESSAGES.off : d.message || message('offline'))));
+  else if (d.me) r.appendChild(button('Leave the directory', 'ghost sm', join(false)));
+  else if (S.prof) {
     /* the one line at the moment of joining: what neighbors will see */
-    if (S.prof) { tc.innerHTML = '<p>' + esc('Neighbors will see your first name, neighborhood, tile and interests.') + '</p>'; r.appendChild(button('Join the directory', '', join(true))); }
-    else r.appendChild(button('Add your first name', '', () => boards.profileSheet()));
-    tc.appendChild(r);
-    s.appendChild(tc);
-    return;
+    tc.appendChild(el('p', null, esc('Neighbors will see your first name, neighborhood, tile and interests.')));
+    r.appendChild(button('Join the directory', 'ghost', join(true)));
+  } else r.appendChild(button('Add your first name', 'ghost', () => boards.profileSheet()));
+  tc.appendChild(r);
+  s.appendChild(tc);
+  const hs = S.handles && S.handles.state === 'ok' ? S.handles.people : [];
+  if (S.handles && S.handles.state === 'loading') { s.appendChild(el('p', 'loading', 'One moment…')); return; }
+  /* Just joined: the newest handles, a row you can swipe */
+  if (hs.length) {
+    s.appendChild(el('p', 'subh pad', '<b>Just joined</b>'));
+    const track = rail(s);
+    track.dataset.joined = '1';
+    hs.slice(0, JUST_JOINED).forEach((p) => {
+      const t = el('div', 'jtile', mark(p.name, 'round lg') + '<b>' + esc(p.name + (p.me ? ' (you)' : '')) + '</b>' +
+        '<span class="s">' + esc(NEIGHBORHOOD_LABELS[p.neighborhood] || '') + '</span>');
+      t.appendChild(handleChips(p.handles, p.name, 2));
+      track.appendChild(t);
+    });
   }
-  const me = S.arch;
-  const mine = new Set(shareable());
-  const rows = d.people.slice().sort((a, b) => (b.me - a.me) || ((b.archetype === me) - (a.archetype === me)) ||
-    ((b.interests || []).filter((t) => mine.has(t)).length - (a.interests || []).filter((t) => mine.has(t)).length));
-  const g = el('div', 'grid2 dir');
-  g.dataset.people = '1';
-  rows.forEach((p) => {
-    const where = [NEIGHBORHOOD_LABELS[p.neighborhood], ARCHETYPE_LABELS[p.archetype]].filter(Boolean).join(' · ');
-    const into = (p.interests || []).map((t) => INTEREST_WORDS[t]).filter(Boolean).join(', ');
-    g.appendChild(el('div', 'lrow', mark(p.name, 'round lg') + '<div><div class="t">' + esc(p.name + (p.me ? ' (you)' : '')) + '</div>' +
-      (where ? '<div class="s">' + esc(where) + '</div>' : '') + (into ? '<div class="s">' + esc('Into ' + into) + '</div>' : '') + '</div>'));
-  });
-  s.appendChild(g);
-  const foot = el('div', 'addrow');
-  foot.appendChild(button('Leave the directory', 'ghost sm', join(false)));
-  s.appendChild(foot);
+  const rows = peopleRows();
+  if (rows.length) {
+    const g = el('div', 'dir plist');
+    g.dataset.people = '1';
+    rows.forEach((p) => g.appendChild(personRow(p)));
+    s.appendChild(g);
+  }
 }
 function join(on) {
   return (e) => {
@@ -1150,6 +1500,7 @@ function planForm(body, close, prof, pre) {
       t.insertBefore(o, later || null);
     }
     set('title', pre.title); set('day', pre.day); set('time', pre.time); set('place', pre.place);
+    if (pre.arch && RULES.archetypes.includes(pre.arch)) set('arch', pre.arch);
   }
   f.appendChild(row('More', field('textarea', 'body', { max: L.bodyMax, placeholder: 'How to find you, what to bring, the pace' }), null, false));
   const mu = el('label', 'consent', '<input type="checkbox" name="meetup"> ' +
@@ -1211,7 +1562,7 @@ function planForm(body, close, prof, pre) {
 function land() {
   if (!pending || !root) return;
   const k = pending;
-  if (SECS.some(([key]) => key === k) || k === 'talk') {
+  if (SECS.some(([key]) => key === k) || k === 'talk' || k === 'host') {
     pending = null;
     app.jumpTo(slots && slots[k]);
     return;
@@ -1226,9 +1577,16 @@ function land() {
   /* wait for the part of the tab the key belongs to */
   if (/^b-/.test(k) && S.plansState === 'loading') return;
   if (/^mx-/.test(k) && (!(S.events || S.eventsFailed) || !(app.demo || S.feed))) return;
-  if (/^club:/.test(k) && !S.clubs && !S.clubsFailed) return;
+  if (/^(mc|g)-/.test(k)) {
+    if (!(S.events || S.eventsFailed)) return;
+    /* a calendar mixer or a gathering: show its day first */
+    const hit = calMixers().find((x) => x.k === k);
+    if (!hit && /^g-/.test(k) && gRun && !S.gathDone) return;
+    if (hit && hit.date !== S.mixDay) { S.mixDay = hit.date; drawMix(); }
+  }
+  if (/^club:/.test(k) && !S.groups && !S.groupsFailed) return;
   pending = null;
-  if (!app.flashHit(root, k)) app.toast(/^mx-/.test(k) ? 'That mixer has passed.' : /^b-/.test(k) ? 'That plan has passed.' : 'That card has moved on.');
+  if (!app.flashHit(root, k)) app.toast(/^(mx|mc|g)-/.test(k) ? 'That mixer has passed.' : /^b-/.test(k) ? 'That plan has passed.' : 'That card has moved on.');
 }
 
 function landClub(k) {
@@ -1254,14 +1612,18 @@ window.addEventListener('allday-boards', (e) => {
   if (!root) return;
   const d = (e && e.detail) || {};
   if (d.board === 'people' || d.what === 'delete' || d.what === 'hidden' || d.what === 'deleteme') loadPlans();
+  if (d.board === 'gatherings' || d.what === 'delete' || d.what === 'hidden' || d.what === 'deleteme') loadGatherings();
   /* a change made in Settings is adopted; our own saves echoing back are not */
-  if (d.what === 'profile' || d.what === 'deleteme') loadProfile(!queued).then(() => { drawArch(); return loadDir(); });
+  if (d.what === 'profile' || d.what === 'deleteme') loadProfile(!queued).then(() => { drawArch(); drawForYou(); return Promise.all([loadDir(), loadHandles()]); });
 });
 app.onAuth(() => {
   if (!root) return;
   S.prof = undefined;
+  S.handles = null;
+  S.dir = null;   // the last reader's directory is never drawn for the next one
   loadPlans();
-  loadProfile().then(() => { drawArch(); drawPlans(); return loadDir(); });
+  drawDir();
+  loadProfile().then(() => { drawArch(); drawForYou(); drawPlans(); return Promise.all([loadDir(), loadHandles()]); });
 });
 
 app.register(KEY, {
@@ -1280,11 +1642,11 @@ app.register(KEY, {
   deactivate() {},
   subnav() {
     if (!root || !slots) return null;
-    return chips(secsInOrder().map(([key, label]) => ({ key, label })), null, (k) => app.jumpTo(slots[k]));
+    return chips(SECS.map(([key, label]) => ({ key, label })), null, (k) => app.jumpTo(slots[k]));
   },
   newSince(ts) { return S.posts.filter((p) => Date.parse(p.created_at) / 1000 > ts).length; },
 });
 
 /* for the tests: the plans as drawn, with their meta, and the picks */
 export const _peek = () => ({ posts: S.posts.map((p) => ({ id: p.id, title: p.title, meta: { ...p.meta }, at: p.at, votes: p.votes })), arch: S.arch, tags: S.tags.slice(), quizTags: S.quizTags.slice(),
-  rcKind: rcKind(), rcDay: S.rcDay });
+  rcKind: rcKind(), rcDay: S.rcDay, mixDay: S.mixDay, fAge: S.fAge, fAct: S.fAct, keys: picks() });

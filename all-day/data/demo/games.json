@@ -1,5 +1,5 @@
 {
- "_": "Demo data for ?demo=1. Every player name and score is invented; the games are the arcade’s own, with invented dates. Shapes: catalog = data/games-catalog.json, boards = get_leaderboard rows per slug, champions = champions.json.",
+ "_": "Demo data for ?demo=1. Every player name and score is invented; the games are the arcade’s own, with invented dates. Shapes: catalog = data/games-catalog.json, boards = get_leaderboard rows per slug, champions = champions.json. board = more invented posts on the games board, added to the boards demo (boards-fake.js) once a visit; who is one of its invented neighbors.",
  "_anchor": "2026-10-16",
  "_you": "Juniper",
  "catalog": {
@@ -211,6 +211,32 @@
     "leaderboard": false,
     "first_seen": "2026-07-02",
     "live_since": "2026-07-02",
+    "rooms": false
+   },
+   {
+    "slug": "challenges",
+    "name": "Btown Challenges",
+    "emoji": "🏆",
+    "pitch": "Real Burlington challenges — eat it, climb it, streak it — then put your name on the board.",
+    "section": "local-more",
+    "live": true,
+    "leaderboard": false,
+    "where": "out",
+    "first_seen": "2026-07-22",
+    "live_since": "2026-07-22",
+    "rooms": false
+   },
+   {
+    "slug": "dibs",
+    "name": "Dibs",
+    "emoji": "🔷",
+    "pitch": "Burlington is 920 blocks. Stand in one, tap, it's yours — until someone takes it back. Hold for points, rep your crew.",
+    "section": "local-more",
+    "live": true,
+    "leaderboard": false,
+    "where": "out",
+    "first_seen": "2026-09-02",
+    "live_since": "2026-09-02",
     "rooms": false
    }
   ]
@@ -961,5 +987,109 @@
     "boards": 5
    }
   ]
- }
+ },
+ "board": [
+  {
+   "who": "demo-0000-4000-8000-00000000omar",
+   "kind": "playing",
+   "title": "EA Sports FC 26",
+   "meta": {
+    "game": "EA Sports FC 26",
+    "platform": "ps5"
+   },
+   "ago": 5,
+   "votes": 8
+  },
+  {
+   "who": "demo-0000-4000-8000-00000000lena",
+   "kind": "playing",
+   "title": "Baldur’s Gate 3, second run",
+   "meta": {
+    "game": "Baldur’s Gate 3",
+    "platform": "pc"
+   },
+   "ago": 9,
+   "votes": 5
+  },
+  {
+   "who": "demo-0000-4000-8000-00000000ruth",
+   "kind": "playing",
+   "title": "Mario Kart World",
+   "meta": {
+    "game": "Mario Kart World",
+    "platform": "switch"
+   },
+   "ago": 14,
+   "votes": 7
+  },
+  {
+   "who": "demo-0000-4000-8000-00000000caro",
+   "kind": "playing",
+   "title": "Eleven Table Tennis",
+   "meta": {
+    "game": "Eleven Table Tennis",
+    "platform": "vr"
+   },
+   "ago": 20,
+   "votes": 3
+  },
+  {
+   "who": "demo-0000-4000-8000-00000000tom0",
+   "kind": "playing",
+   "title": "The Thrill of the Fight 2",
+   "meta": {
+    "game": "The Thrill of the Fight 2",
+    "platform": "vr"
+   },
+   "ago": 30,
+   "votes": 2
+  },
+  {
+   "who": "demo-0000-4000-8000-00000000ben0",
+   "kind": "playing",
+   "title": "Catan",
+   "meta": {
+    "game": "Catan",
+    "platform": "board"
+   },
+   "ago": 40,
+   "votes": 4
+  },
+  {
+   "who": "demo-0000-4000-8000-00000000ivy0",
+   "kind": "playing",
+   "title": "Balatro",
+   "meta": {
+    "game": "Balatro",
+    "platform": "mobile"
+   },
+   "ago": 50,
+   "votes": 1
+  },
+  {
+   "who": "demo-0000-4000-8000-00000000ben0",
+   "kind": "lfg",
+   "title": "Catan night, need a fourth",
+   "meta": {
+    "game": "Catan",
+    "platform": "board",
+    "when": "Friday, 7 pm"
+   },
+   "place": "Essex Junction",
+   "ago": 6,
+   "votes": 1
+  },
+  {
+   "who": "demo-0000-4000-8000-00000000omar",
+   "kind": "lfg",
+   "title": "Pro Clubs, need a keeper",
+   "meta": {
+    "game": "EA Sports FC 26",
+    "platform": "ps5",
+    "when": "Tonight after 8"
+   },
+   "ago": 3,
+   "votes": 2
+  }
+ ]
 }
