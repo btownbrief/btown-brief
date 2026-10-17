@@ -624,13 +624,17 @@ export function play(it) {
     playing = it;
     if (audio.getAttribute('src') !== it.src_audio) {
       audio.src = it.src_audio;
+      /* Resume where the reader left off, but never in the last ten seconds:
+         a clip heard to its end used to come back parked at its end, so the
+         next play ran out at once and looked like a dead button (Stephen,
+         2026-10-17: "when you click the play button, nothing happens"). */
       const at = store.heardAt(it.k);
-      if (at > 30) audio.addEventListener('loadedmetadata', () => { try { audio.currentTime = at; } catch (e) { /* not seekable yet */ } }, { once: true });
+      if (at > 30) audio.addEventListener('loadedmetadata', () => { if (at < audio.duration - 10) try { audio.currentTime = at; } catch (e) { /* not seekable yet */ } }, { once: true });
     }
     closeVideo();
     silenceForeign();
     showDock(it);
-    audio.play().catch(() => {});
+    startAudio();
     paintPlayButtons();
     return;
   }
@@ -652,9 +656,18 @@ function startFake() {
   }, 200);
 }
 function stopFake() { clearInterval(fakeTimer); fakeTimer = 0; }
+/* audio.play(), saying so when it fails instead of failing silently. An
+   AbortError is a newer play or a pause replacing this one: nothing to say. */
+function startAudio() {
+  audio.play().catch((e) => {
+    if (e && e.name === 'AbortError') return;
+    toast('The audio didn’t start. Tap play to try again.');
+    paintPlayButtons();
+  });
+}
 function togglePause() {
   if (!playing) return;
-  if (playing.src_audio && !demo) { if (audio.paused) { silenceForeign(); audio.play().catch(() => {}); } else audio.pause(); }
+  if (playing.src_audio && !demo) { if (audio.paused) { silenceForeign(); startAudio(); } else audio.pause(); }
   else if (fakeTimer) stopFake(); else startFake();
   paintPlayButtons();
 }
@@ -674,6 +687,8 @@ audio.addEventListener('timeupdate', () => {
   if (Date.now() - lastSave > 5000) { lastSave = Date.now(); store.setHeardAt(playing.k, audio.currentTime); }
 });
 ['play', 'pause', 'ended'].forEach((ev) => audio.addEventListener(ev, paintPlayButtons));
+/* heard to the end: the next play starts from the top */
+audio.addEventListener('ended', () => { if (playing && playing.src_audio) store.setHeardAt(playing.k, 0); });
 $('p-toggle').addEventListener('click', togglePause);
 $('p-close').addEventListener('click', stop);
 $('p-bar').addEventListener('click', (e) => {

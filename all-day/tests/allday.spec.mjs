@@ -228,6 +228,29 @@ const tvPlay = (page) => page.evaluate(() => {
   const before = !!(row && head && railEl && (head.compareDocumentPosition(row) & 4) && (row.compareDocumentPosition(railEl) & 4));
   return { tonight: one('tonight'), past: one('past'), note: row ? row.innerText : '', before };
 });
+/* The clip: the fixture's two seconds of silence, its audio frames repeated
+   thirty times (about a minute), so a test can resume past the 30-second mark
+   and still be ten seconds from the end. The ID3 tag and the LAME Info frame
+   are dropped (the Info frame would claim 78 frames and the old length), so
+   the browser reads the length from the bitrate, as it does for a CBR file. */
+function longSilence(mp3) {
+  const id3 = mp3.subarray(0, 3).toString() === 'ID3' ? 10 + ((mp3[6] << 21) | (mp3[7] << 14) | (mp3[8] << 7) | mp3[9]) : 0;
+  let i = id3 + 4;
+  while (i < mp3.length - 1 && !(mp3[i] === 0xff && (mp3[i + 1] & 0xe0) === 0xe0)) i++;   // the frame after the Info frame
+  const frames = mp3.subarray(i);
+  return Buffer.concat(Array.from({ length: 30 }, () => frames));
+}
+/* raw.githubusercontent.com answers a Range request with 206 and the slice
+   (curl -r 0-1 on a real clip, 2026-10-17); the test server does the same */
+function fulfillBytes(r, body, type) {
+  const m = /^bytes=(\d*)-(\d*)$/.exec(r.request().headers().range || '');
+  if (!m || (!m[1] && !m[2])) return r.fulfill({ status: 200, body, contentType: type, headers: { 'accept-ranges': 'bytes', 'access-control-allow-origin': '*' } });
+  const start = m[1] ? Number(m[1]) : Math.max(0, body.length - Number(m[2]));
+  const end = m[1] && m[2] ? Math.min(Number(m[2]), body.length - 1) : body.length - 1;
+  if (start >= body.length) return r.fulfill({ status: 416, body: '', headers: { 'content-range': 'bytes */' + body.length } });
+  return r.fulfill({ status: 206, body: body.subarray(start, end + 1), contentType: type,
+    headers: { 'accept-ranges': 'bytes', 'content-range': 'bytes ' + start + '-' + end + '/' + body.length, 'access-control-allow-origin': '*' } });
+}
 async function onairFiles(opts = {}) {
   const audio = opts.audio || 'today';
   const playlist = opts.playlist || 'all';      // 'all', 'not-tonight' (tonight's upload failed) or 'none'
@@ -252,7 +275,7 @@ async function onairFiles(opts = {}) {
   const index = { v: 1, updated: new Date().toISOString(), clips: audio === 'none' ? [] : audio === 'yesterday' ? clips.slice(1) : clips };
   const files = { 'btown-tv.json': JSON.stringify(tv), 'tv-editions.json': JSON.stringify(d.tvEditions), 'index.json': JSON.stringify(index) };
   clips.forEach((c) => { files[c.script] = d.audio._script; });
-  const out = { files, tv, index, today, mp3: await readFile(path.join(HERE, 'fixtures/silence.mp3')) };
+  const out = { files, tv, index, today, mp3: longSilence(await readFile(path.join(HERE, 'fixtures/silence.mp3'))) };
   onairCache.set(key, out);
   return out;
 }
@@ -305,7 +328,7 @@ async function newPage(browser, base, opts = {}) {
   const onair = await onairFiles(opts.onair);
   await page.route(/raw\.githubusercontent\.com\/btownbrief\/btown-brief\/(btown-tv|wire-audio)\/data\/(?:audio\/)?([\w.-]+)$/, (r) => {
     const name = r.request().url().match(/([\w.-]+)$/)[1];
-    if (/\.mp3$/.test(name) && onair.index.clips.some((c) => c.file === name)) return r.fulfill({ status: 200, body: onair.mp3, contentType: 'audio/mpeg' });
+    if (/\.mp3$/.test(name) && onair.index.clips.some((c) => c.file === name)) return fulfillBytes(r, onair.mp3, 'audio/mpeg');
     const f = onair.files[name];
     return f ? r.fulfill({ status: 200, body: f, contentType: /\.txt$/.test(name) ? 'text/plain' : 'application/json' }) : r.fulfill({ status: 404, body: '' });
   });
@@ -1339,9 +1362,9 @@ async function onAir(browser, base) {
     await page.waitForSelector('#panel-onair [data-sec="past"]', { timeout: 8000 });
     check(await page.evaluate(() => document.querySelector('audio').paused && !document.querySelector('#panel-onair iframe')), 'nothing autoplays: the shell’s audio is paused and no frame is loaded', '');
     const toc = await page.$$eval('#subnav .chip', (cs) => cs.map((c) => c.innerText.trim()));
-    check(JSON.stringify(toc) === JSON.stringify(['Out loud', 'Btown TV', 'Live', 'Podcasts', 'Past nights']), 'the chip row is a table of contents: Out loud, Btown TV, Live, Podcasts, Past nights', JSON.stringify(toc));
+    check(JSON.stringify(toc) === JSON.stringify(['Out loud', 'Btown TV', 'Live', 'Podcasts', 'Playlists', 'Past nights']), 'the chip row is a table of contents: Out loud, Btown TV, Live, Podcasts, Playlists, Past nights', JSON.stringify(toc));
     const order = await page.$$eval('#panel-onair [data-sec]', (s) => s.map((x) => x.dataset.sec));
-    check(JSON.stringify(order) === JSON.stringify(['brief', 'tv', 'live', 'pods', 'past']), 'the sections run in that order', JSON.stringify(order));
+    check(JSON.stringify(order) === JSON.stringify(['brief', 'tv', 'live', 'pods', 'lists', 'past']), 'the sections run in that order', JSON.stringify(order));
     const subs = await page.$$eval('#panel-onair [data-sec] p', (p) => p.map((x) => x.textContent));
     check(!subs.length, 'no section carries an explanatory subtitle', JSON.stringify(subs));
     check(!/lands at 7 every morning/.test(await page.$eval('#panel-onair', (p) => p.innerText)), 'no end-of-tab line about when things land', '');
@@ -1399,18 +1422,22 @@ async function onAir(browser, base) {
     const eyebrow = await page.$eval('#panel-onair .audio .eyebrow', (e) => e.textContent);
     check(/^Today · /.test(eyebrow) && / · 3:27$/.test(eyebrow), 'today’s clip: the card says today and its length', eyebrow);
     check((await podRows(page))[0][0] === 'btown-brief', 'live: the Brief’s own show is first in Podcasts', '');
+    const repoLists = JSON.parse(await readFile(path.join(APP, 'data/playlists.json'), 'utf8'));
+    const realLists = [...repoLists.stephen, ...repoLists.readers].filter((p) => !/^\s*TODO/i.test(p.url)).length;
+    if (!realLists) check(!(await page.$('#panel-onair [data-sec="lists"]')) && !(await page.$$eval('#subnav .chip', (cs) => cs.map((c) => c.dataset.chip))).includes('lists'),
+      'live: data/playlists.json is still TODO placeholders, so no Playlists section and no chip', '');
     const play = await tvPlay(page);
     check(play.tonight && PLAYLIST.test(play.tonight.href) && play.tonight.href === tv.playlist.url && play.tonight.rel === 'noopener' && play.tonight.target === '_blank',
       'Btown TV: “Play tonight on your TV” opens tonight’s playlist in a new tab', JSON.stringify(play));
     check(play.tonight && play.tonight.text === 'Play tonight on your TV' && play.tonight.icons === 2 && play.before, 'under the Btown TV header, before the rail, with the play and external icons', JSON.stringify(play));
     check((await tvCards(page)).length === tv.shelves.find((x) => x.key === 'vt').items.length + 1, 'live: tonight’s local picks, the pick and the Burlington & Vermont shelf', '');
-    await page.click('#panel-onair .brieflinks .btn:text("Read it instead")');
+    await page.click('#panel-onair .brieflinks .btn:text("Read the three-minute recap")');
     await page.waitForFunction(() => /Morning\./.test(document.querySelector('.sheet-body')?.innerText || ''), null, { timeout: 4000 }).catch(() => {});
     const sheet = await page.$eval('.sheet-body', (b) => b.innerText);
     check(/Out on the water\.\.\./.test(sheet) && !/\[/.test(sheet), 'the transcript hides the voice’s pacing marks ([short pause])', sheet.slice(0, 300));
     check(!/\bAI\b|synthetic|artificial/i.test(sheet + await page.$eval('#panel-onair .audio', (a) => a.innerText)), 'no mention of AI on the card or the transcript', '');
     check(/Read to you every morning at 7\./.test(await page.$eval('#panel-onair .audio', (a) => a.innerText)), 'the card says when it is read', '');
-    check(/^Morning\./.test(await page.$eval('.sheet-body .script', (b) => b.innerText)), '“Read it instead” shows the script the voice read', '');
+    check(/^Morning\./.test(await page.$eval('.sheet-body .script', (b) => b.innerText)), '“Read the three-minute recap” shows the script the voice read', '');
     await page.keyboard.press('Escape');
 
     /* the player: the clip plays in the shell's one player and survives a tab switch */
@@ -1515,7 +1542,31 @@ async function onAir(browser, base) {
     const face = picks.concat(rest);
     check(face.length === all.length && new Set(face).size === face.length && all.every((k) => face.includes(k)),
       'Local: the whole edition is on the face, each video once (' + picks.length + ' picks + ' + rest.length + ' more = ' + all.length + ')', face.length + ' of ' + all.length);
-    check(await page.$eval('#panel-onair [data-slot="tv"] .tdiv', (t) => t.innerText.replace(/\s+/g, ' ').trim()) === 'More from tonight ' + rest.length + ' videos', 'the second rail is headed with its count', '');
+    const one = await page.$eval('#panel-onair [data-slot="tv"]', (slot) => {
+      const wraps = [...slot.children].filter((c) => c.classList.contains('rail-wrap'));
+      const picks = slot.querySelector('[data-rail="picks"]').closest('.rail-wrap');
+      const rest = slot.querySelector('[data-rail="rest"]').closest('.rail-wrap');
+      return { heads: slot.querySelectorAll('.sec').length, dividers: slot.querySelectorAll('.tdiv').length, next: picks.nextElementSibling === rest, wraps: wraps.length,
+        big: Math.round(picks.querySelector('.vcard').getBoundingClientRect().width), small: Math.round(rest.querySelector('.vcard').getBoundingClientRect().width) };
+    });
+    check(one.heads === 1 && !one.dividers && one.next && one.wraps === 2, 'one section: one header, the rest of the night straight under the picks, no second header', JSON.stringify(one));
+    check(one.big > one.small + 60, 'the picks big on top, the rest smaller below', JSON.stringify(one));
+    /* the whole edition: a filled card under the section, with the count, that opens every video */
+    const n = all.length;
+    const whole = await page.$eval('#panel-onair [data-slot="tv"] .wholeed', (b) => {
+      const r = b.getBoundingClientRect();
+      const rest = document.querySelector('#panel-onair [data-rail="rest"]').closest('.rail-wrap');
+      return { text: b.innerText.replace(/\s+/g, ' ').trim(), w: Math.round(r.width), h: Math.round(r.height), vw: innerWidth, last: b === b.parentElement.lastElementChild,
+        after: !!(rest.compareDocumentPosition(b) & 4), covers: b.querySelectorAll('.fan .th').length, filled: getComputedStyle(b).backgroundColor !== 'rgba(0, 0, 0, 0)', tag: b.tagName };
+    });
+    check(whole.text === 'Watch the whole edition All ' + n + ' videos from tonight', 'the whole edition says what it is and how many: “All ' + n + ' videos from tonight”', JSON.stringify(whole));
+    check(whole.tag === 'BUTTON' && whole.w >= whole.vw - 32 - 1 && whole.h >= 64 && whole.filled && whole.covers === 3, 'a full-width filled card, three covers fanned on it, not a ghost button', JSON.stringify(whole));
+    check(whole.last && whole.after, 'right under the section: after the second rail, the last thing in the Btown TV block', JSON.stringify(whole));
+    await page.click('#panel-onair .wholeed');
+    await page.waitForSelector('.sheet-card', { timeout: 3000 });
+    check(await page.$$eval('.sheet-body .card.video', (c) => c.length) === n, 'it opens all ' + n + ' videos', '');
+    await page.keyboard.press('Escape');
+    await page.waitForTimeout(200);
     const grid = await page.$$eval('#panel-onair [data-rail="rest"] .vcard', (cs) => {
       const rows = new Set(cs.map((c) => Math.round(c.getBoundingClientRect().top)));
       const seen = cs.filter((c) => { const r = c.getBoundingClientRect(); return r.left >= 0 && r.right <= innerWidth + 1; }).length;
@@ -1575,12 +1626,13 @@ async function onAir(browser, base) {
     await page.waitForSelector('#panel-onair .audio .speed', { timeout: 8000 });
     check(JSON.stringify(await speeds()) === JSON.stringify(['1x', '1.25x', '1.5x*']), 'still 1.5x after a reload', JSON.stringify(await speeds()));
     const link = await page.$eval('#panel-onair [data-newsletter]', (a) => ({ text: a.textContent.trim(), href: a.href, target: a.target, rel: a.rel, icons: a.querySelectorAll('svg').length }));
-    check(link.text === 'Read the Brief' && link.href === 'https://www.btownbrief.com/' && link.target === '_blank' && link.rel === 'noopener' && link.icons === 1,
-      '“Read the Brief” opens btownbrief.com in a new tab', JSON.stringify(link));
+    check(link.text === 'Read the whole Brief at btownbrief.com' && link.href === 'https://www.btownbrief.com/' && link.target === '_blank' && link.rel === 'noopener' && link.icons === 1,
+      '“Read the whole Brief at btownbrief.com” opens the newsletter in a new tab', JSON.stringify(link));
     const row = await page.$$eval('#panel-onair .brieflinks .btn', (b) => b.map((x) => x.textContent.trim()));
-    check(JSON.stringify(row) === JSON.stringify(['Read it instead', 'Read the Brief']), 'beside “Read it instead”, under the card', JSON.stringify(row));
-    const fits = await page.$eval('#panel-onair .brieflinks', (r) => { const a = [...r.children].map((c) => c.getBoundingClientRect()); return a.length === 2 && Math.abs(a[0].top - a[1].top) < 2 && a[1].right <= innerWidth; });
-    check(fits, 'one row at 390 wide', '');
+    check(JSON.stringify(row) === JSON.stringify(['Read the three-minute recap', 'Read the whole Brief at btownbrief.com']),
+      'the transcript says it is the recap, the newsletter says it is the whole Brief (Stephen, 2026-10-17)', JSON.stringify(row));
+    const fits = await page.$eval('#panel-onair .brieflinks', (r) => { const a = [...r.children].map((c) => c.getBoundingClientRect()); return a.length === 2 && a[1].top >= a[0].bottom && a.every((b) => b.left >= 15 && b.right <= innerWidth - 15 && b.width > innerWidth - 40); });
+    check(fits, 'stacked, each full width at 390, nothing cut off', '');
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
   });
@@ -1603,6 +1655,184 @@ async function onAir(browser, base) {
         check(/Read to you every morning at 7\./.test(await onairText(page)) && !(await page.$('#panel-onair [data-sec="brief"] p')), 'the card says when it is read; the header carries no subtitle', '');
       }
       check(!errors.length, audio + ': no console errors', errors.join(' | '));
+      await ctx.close();
+    }
+  });
+
+  /* Stephen, 2026-10-17: "the audio doesn't play; when you click the play
+     button, nothing happens." These start real playback of the clip, at the
+     real URL shape, served as raw.githubusercontent.com serves it (audio/mpeg,
+     byte ranges), and watch the clock move: a src attribute is not a sound. */
+  const RAW_CLIP = /^https:\/\/raw\.githubusercontent\.com\/btownbrief\/btown-brief\/wire-audio\/data\/audio\/\d{4}-\d{2}-\d{2}\.mp3$/;
+  const watchPlay = (page) => page.addInitScript(() => {
+    const play = HTMLMediaElement.prototype.play;
+    window.__plays = [];
+    HTMLMediaElement.prototype.play = function () {
+      const p = play.call(this);
+      const rec = { src: this.currentSrc || this.src, state: 'pending' };
+      window.__plays.push(rec);
+      p.then(() => { rec.state = 'resolved'; }, (e) => { rec.state = 'rejected ' + (e && e.name); });
+      return p;
+    };
+  });
+  const audioState = (page) => page.evaluate(() => { const a = document.getElementById('audio'); return { src: a.getAttribute('src'), t: a.currentTime, d: a.duration, paused: a.paused, ended: a.ended, rate: a.playbackRate, err: a.error && a.error.code, plays: window.__plays }; });
+  const clockPast = (page, s) => page.waitForFunction((s) => { const a = document.getElementById('audio'); return !a.paused && a.currentTime > s; }, s, { timeout: 8000 }).then(() => true, () => false);
+
+  await group('On Air, the Brief plays', async () => {
+    for (const audio of ['today', 'yesterday']) {
+      const { ctx, page, errors } = await newPage(browser, base, { onair: { audio } });
+      await watchPlay(page);
+      const types = [];
+      page.on('response', (r) => { if (/\.mp3$/.test(r.url())) types.push(r.status() + ' ' + (r.headers()['content-type'] || '')); });
+      await page.goto(base + '/all-day/#onair');
+      await page.waitForSelector('#panel-onair .audio .pb', { timeout: 15000 });
+      await page.waitForSelector('#panel-onair [data-sec="past"]', { timeout: 15000 });
+      const date = audio === 'today' ? etKey(Date.now()) : dayMinus(etKey(Date.now()), 1);
+      await page.tap('#panel-onair .audio .pb').catch(() => page.click('#panel-onair .audio .pb'));
+      const moved = await clockPast(page, 0.5);
+      const st = await audioState(page);
+      check(RAW_CLIP.test(st.src) && st.src.endsWith('/' + date + '.mp3'), audio + ': the play button loads ' + date + '.mp3 from the wire-audio branch', st.src);
+      check(st.plays.length && st.plays[st.plays.length - 1].state === 'resolved', audio + ': the play promise resolves', JSON.stringify(st.plays));
+      check(moved && !st.err, audio + ': and the clip is actually playing: its clock moves past half a second', JSON.stringify(st));
+      check(types.length && types.every((t) => /^20[06] audio\/mpeg$/.test(t)), audio + ': served as audio/mpeg', JSON.stringify(types));
+      check(st.rate === 1.25, audio + ': at the Brief’s 1.25x', st.rate);
+      check(await page.$eval('#panel-onair .audio .pb', (b) => b.classList.contains('is-playing')) && await page.$('#player:not([hidden])') !== null, audio + ': the button turns to pause and the player is up', '');
+      await page.click('#panel-onair .audio .pb');
+      check((await audioState(page)).paused, audio + ': a second tap pauses', '');
+      check(!errors.length, audio + ': no console errors', errors.join(' | '));
+      await ctx.close();
+    }
+
+    /* the bug as it was: a clip heard to its end came back parked at its
+       end, so the next play ran out at once and looked like a dead button */
+    const today = etKey(Date.now());
+    {
+      const { ctx, page, errors } = await newPage(browser, base);
+      await watchPlay(page);
+      await page.addInitScript((k) => { if (!sessionStorage.getItem('seeded')) { sessionStorage.setItem('seeded', '1'); localStorage.setItem('allday-heard', JSON.stringify({ [k]: 59 })); } }, 'brief:' + today);
+      await page.goto(base + '/all-day/#onair');
+      await page.waitForSelector('#panel-onair .audio .pb', { timeout: 15000 });
+      await page.click('#panel-onair .audio .pb');
+      const moved = await clockPast(page, 0.3);
+      await page.waitForTimeout(1200);
+      const st = await audioState(page);
+      check(st.d > 50, 'the test clip runs about a minute', st.d);
+      check(moved && !st.paused && !st.ended && st.t < 10, 'heard to its last second, it starts again from the top instead of running out at once', JSON.stringify(st));
+      /* to the end: the place is forgotten */
+      await page.evaluate(() => { const a = document.getElementById('audio'); a.currentTime = a.duration - 0.4; });
+      await page.waitForFunction(() => document.getElementById('audio').ended, null, { timeout: 8000 }).catch(() => {});
+      const heard = await page.evaluate((k) => JSON.parse(localStorage.getItem('allday-heard') || '{}')[k], 'brief:' + today);
+      check(heard === 0, 'played to the end, its place is cleared, so tomorrow’s visit and the next tap start at 0:00', heard);
+      check(!(await page.$eval('#panel-onair .audio .pb', (b) => b.classList.contains('is-playing'))), 'and the button is a play button again', '');
+      await page.click('#panel-onair .audio .pb');
+      check(await clockPast(page, 0.3) && (await audioState(page)).t < 5, 'pressing play again after the end plays it from the top', JSON.stringify(await audioState(page)));
+      check(!errors.length, 'no console errors', errors.join(' | '));
+      await ctx.close();
+    }
+    {
+      /* a reader who stopped part way still picks up where they were */
+      const { ctx, page, errors } = await newPage(browser, base);
+      await page.addInitScript((k) => localStorage.setItem('allday-heard', JSON.stringify({ [k]: 40 })), 'brief:' + today);
+      await page.goto(base + '/all-day/#onair');
+      await page.waitForSelector('#panel-onair .audio .pb', { timeout: 15000 });
+      await page.click('#panel-onair .audio .pb');
+      const at = await page.waitForFunction(() => { const a = document.getElementById('audio'); return !a.paused && a.currentTime > 40 && a.currentTime; }, null, { timeout: 8000 }).then((h) => h.jsonValue(), () => null);
+      check(at && at < 45, 'part way through (40 s), it resumes there', at);
+      check(!errors.length, 'resume: no console errors', errors.join(' | '));
+      await ctx.close();
+    }
+    {
+      /* a clip that will not load says so instead of doing nothing */
+      const { ctx, page } = await newPage(browser, base);
+      await page.route(RAW_CLIP, (r) => r.fulfill({ status: 404, body: '' }));
+      await page.goto(base + '/all-day/#onair');
+      await page.waitForSelector('#panel-onair .audio .pb', { timeout: 15000 });
+      await page.click('#panel-onair .audio .pb');
+      await page.waitForFunction(() => /didn’t start/.test(document.getElementById('toast')?.textContent || ''), null, { timeout: 6000 }).catch(() => {});
+      check(/The audio didn’t start\. Tap play to try again\./.test(await page.$eval('#toast', (t) => t.textContent)), 'a clip that fails to load says so in a toast', await page.$eval('#toast', (t) => t.textContent));
+      await page.waitForFunction(() => !document.querySelector('#panel-onair .audio .pb').classList.contains('is-playing'), null, { timeout: 3000 }).catch(() => {});
+      check(!(await page.$eval('#panel-onair .audio .pb', (b) => b.classList.contains('is-playing'))), 'and the button goes back to play', '');
+      await ctx.close();
+    }
+    /* the service worker (not registered today, so this is the source) never answers for sound */
+    const sw = await readFile(path.join(APP, 'sw.js'), 'utf8');
+    const guard = sw.indexOf("req.destination === 'audio'");
+    check(guard > 0 && /req\.headers\.has\('range'\)/.test(sw) && guard < sw.indexOf('if (isWire(url))'), 'sw.js lets audio, video and byte ranges past before the raw.githubusercontent.com branch', '');
+  });
+
+  await group('On Air, playlists', async () => {
+    /* demo: Stephen's first, then readers', newest first; Spotify and YouTube
+       play in a sheet, Apple Music and SoundCloud go out */
+    {
+      const { ctx, page, errors } = await newPage(browser, base);
+      await page.goto(base + '/all-day/?demo=1#onair');
+      await page.waitForSelector('#panel-onair [data-sec="lists"]', { timeout: 8000 });
+      const rows = await page.$$eval('#panel-onair [data-slot="lists"] .plrow', (rs) => rs.map((r) => [r.dataset.service, r.dataset.own || '', r.querySelector('.t').textContent]));
+      const d = JSON.parse(await readFile(path.join(APP, 'data/demo/onair.json'), 'utf8')).playlists;
+      const want = [...d.stephen.map((p) => [p.service, '1', p.title]), ...[...d.readers].sort((a, b) => (a.added < b.added ? 1 : -1)).map((p) => [p.service, '', p.title])];
+      check(JSON.stringify(rows) === JSON.stringify(want), 'Stephen’s playlists first, then readers’, newest first', JSON.stringify(rows));
+      check(await page.$$eval('#panel-onair [data-slot="lists"] [data-own] .tag-own', (t) => t.map((x) => x.textContent)).then((t) => t.length === d.stephen.length && t.every((x) => x === 'Stephen’s pick')), 'his are marked “Stephen’s pick”', '');
+      check(/From readers/.test(await page.$eval('#panel-onair [data-slot="lists"]', (s) => s.innerText)), 'readers’ under their own divider', '');
+      const outs = await page.$$eval('#panel-onair [data-slot="lists"] a[data-playlist]', (as) => as.map((a) => [a.closest('.plrow').dataset.service, a.target, a.rel, a.getAttribute('href')]));
+      check(outs.length === 2 && outs.every((o) => /^(apple|soundcloud)$/.test(o[0]) && o[1] === '_blank' && o[2] === 'noopener' && /^https:\/\/(music\.apple|soundcloud)\.com\//.test(o[3])), 'Apple Music and SoundCloud open on their own sites, in a new tab', JSON.stringify(outs));
+      const share = await page.$eval('#panel-onair [data-share-playlist]', (a) => ({ href: a.getAttribute('href'), text: a.textContent.trim() }));
+      check(share.text === 'Share your playlist' && /^mailto:btownbrief@gmail\.com\?subject=A%20playlist%20for%20On%20Air&body=Playlist%20link/.test(share.href), '“Share your playlist” opens an email to the Brief, filled in', JSON.stringify(share));
+      await page.click('#panel-onair .plrow[data-service="spotify"] .pillbtn');
+      await page.waitForSelector('.sheet-card', { timeout: 3000 });
+      check(/Spotify’s player/.test(await page.$eval('.sheet-body', (b) => b.innerText)) && !(await page.$('.sheet-body iframe')), 'demo: a Spotify playlist opens its sheet, and says the player comes in the real build', '');
+      await page.keyboard.press('Escape');
+      check(!errors.length, 'demo: no console errors', errors.join(' | '));
+      await ctx.close();
+    }
+    /* live, from data/playlists.json: only real playlist links show, and the file cannot inject anything */
+    {
+      const SP = 'https://open.spotify.com/playlist/37i9dQZF1DXcBWIGoYBM5M';
+      const YT = 'https://www.youtube.com/playlist?list=PLx0sYbCqOb8TBPRdmBHs5Iftvv9TPboYG';
+      const file = {
+        stephen: [
+          { title: 'Fall in the Old North End', by: 'Stephen', service: 'spotify', url: SP, note: 'Porch songs.', added: '2026-10-12' },
+          { title: 'TODO: the playlist’s name', by: 'Stephen', service: 'youtube', url: 'TODO: paste the YouTube playlist link', note: 'TODO', added: 'TODO' },
+          { title: 'Burlington bands, live', by: 'Stephen', service: 'youtube', url: YT, note: '', added: '2026-10-09' },
+        ],
+        readers: [
+          { title: '<img src=x onerror="window.__xss=1">Mine', by: '<b>Sam</b>', service: 'spotify', url: 'https://open.spotify.com/playlist/0123456789abcdefABCDEF', note: '<script>window.__xss=2</script>', added: '2026-10-16' },
+          { title: 'Script link', by: 'X', service: 'spotify', url: 'javascript:window.__xss=3', note: '', added: '2026-10-15' },
+          { title: 'Quote break', by: 'X', service: 'spotify', url: SP + '"><img src=x onerror=window.__xss=4>', note: '', added: '2026-10-15' },
+          { title: 'Plain http', by: 'X', service: 'youtube', url: 'http://www.youtube.com/playlist?list=PLx0sYbCqOb8TBPRdmBHs5Iftvv9TPboYG', note: '', added: '2026-10-15' },
+          { title: 'Wrong service', by: 'X', service: 'apple', url: SP, note: '', added: '2026-10-15' },
+          { title: 'Unknown service', by: 'X', service: 'myspace', url: 'https://myspace.com/x', note: '', added: '2026-10-15' },
+          { title: 'A video, not a playlist', by: 'X', service: 'youtube', url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ', note: '', added: '2026-10-15' },
+        ],
+      };
+      const { ctx, page, errors } = await newPage(browser, base, { routes: [[/\/all-day\/data\/playlists\.json/, file]] });
+      await page.route(/open\.spotify\.com\/embed|youtube-nocookie\.com\/embed/, (r) => r.fulfill({ status: 200, body: '<!doctype html><title>player</title>', contentType: 'text/html' }));
+      await page.goto(base + '/all-day/#onair');
+      await page.waitForSelector('#panel-onair [data-sec="lists"]', { timeout: 15000 });
+      await page.waitForSelector('#panel-onair [data-sec="past"]', { timeout: 15000 });
+      const rows = await page.$$eval('#panel-onair [data-slot="lists"] .plrow', (rs) => rs.map((r) => r.querySelector('.t').textContent));
+      check(JSON.stringify(rows) === JSON.stringify(['Fall in the Old North End', 'Burlington bands, live', '<img src=x onerror="window.__xss=1">Mine']),
+        'only real playlist links show: a TODO placeholder, javascript:, a broken quote, http, the wrong service, an unknown one and a single video are all left out', JSON.stringify(rows));
+      await page.waitForTimeout(300);
+      const xss = await page.evaluate(() => ({ flag: window.__xss || 0, imgs: document.querySelectorAll('#panel-onair [data-slot="lists"] img').length, scripts: document.querySelectorAll('#panel-onair [data-slot="lists"] script, #panel-onair [data-slot="lists"] b').length }));
+      check(!xss.flag && !xss.imgs && !xss.scripts, 'a title, a name and a note from the file are text, never markup', JSON.stringify(xss));
+      check(await page.$$eval('#subnav .chip', (cs) => cs.map((c) => c.dataset.chip)).then((c) => c.indexOf('lists') === c.indexOf('pods') + 1), 'the Playlists chip sits after Podcasts', '');
+
+      /* play the Brief, then open a playlist: one sound at a time */
+      await page.click('#panel-onair .audio .pb');
+      await clockPast(page, 0.2);
+      await page.click('#panel-onair .plrow[data-service="spotify"] .t');
+      await page.waitForSelector('.sheet-body iframe', { timeout: 3000 }).catch(() => {});
+      const sp = await page.evaluate(() => { const f = document.querySelector('.sheet-body iframe'); const r = f && f.getBoundingClientRect(); return f && { src: f.src, h: Math.round(r.height), title: f.title, link: document.querySelector('.sheet-body a.btn')?.getAttribute('href') }; });
+      check(sp && sp.src === 'https://open.spotify.com/embed/playlist/37i9dQZF1DXcBWIGoYBM5M?theme=0' && sp.h >= 300, 'a tap on a Spotify playlist opens Spotify’s player for it in a sheet', JSON.stringify(sp));
+      check(sp && sp.link === SP, 'with a link out to Spotify', JSON.stringify(sp));
+      check(await page.evaluate(() => document.getElementById('audio').paused && document.getElementById('player').hidden), 'opening a player stops the Brief: one sound at a time', '');
+      await page.keyboard.press('Escape');
+      await page.click('#panel-onair .plrow[data-service="youtube"] .pillbtn');
+      await page.waitForSelector('.sheet-body iframe', { timeout: 3000 }).catch(() => {});
+      const yt = await page.evaluate(() => { const f = document.querySelector('.sheet-body iframe'); const r = f && f.getBoundingClientRect(); return f && { src: f.src, ratio: r.width / r.height }; });
+      check(yt && yt.src === 'https://www.youtube-nocookie.com/embed/videoseries?list=PLx0sYbCqOb8TBPRdmBHs5Iftvv9TPboYG&rel=0&playsinline=1' && Math.abs(yt.ratio - 16 / 9) < 0.05, 'a YouTube playlist plays in YouTube’s player, 16:9', JSON.stringify(yt));
+      await page.keyboard.press('Escape');
+      check(!errors.length, 'live: no console errors', errors.join(' | '));
       await ctx.close();
     }
   });
