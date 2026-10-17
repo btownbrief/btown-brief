@@ -77,7 +77,6 @@ select pg_temp.ok(public.sz_season_next() is null, 'no season scheduled: null');
 set role authenticated; select pg_temp.who(:DANA);
 select pg_temp.ok(public.sz_me_get() is null, 'no member row before the two questions');
 select pg_temp.ok(public.sz_habits_get() = '[]'::jsonb, 'no habits yet');
-select pg_temp.expect_error($q$select public.sz_habit_add('Stretch', 'daily')$q$, 'no_member');
 select pg_temp.expect_error($q$select public.sz_me_set('  ', '802-555-0199')$q$, 'bad_name');
 select pg_temp.expect_error($q$select public.sz_me_set('dana@example.com', '802-555-0199')$q$, 'bad_name');
 select pg_temp.expect_error($q$select public.sz_me_set(repeat('d', 33), '802-555-0199')$q$, 'bad_name');

@@ -30,6 +30,16 @@
      "detailed": "Sunny."
     },
     {
+     "name": "Tonight",
+     "start": "2026-10-16T18:00:00-04:00",
+     "is_day": false,
+     "temp_f": 48,
+     "pop": 10,
+     "wind": "W 5 mph",
+     "short": "Mostly Clear",
+     "detailed": "Mostly clear, with a low around 48."
+    },
+    {
      "name": "Saturday",
      "start": "2026-10-17T06:00:00-04:00",
      "is_day": true,
@@ -1376,6 +1386,68 @@
     ],
     "legs": [],
     "top100": "Demo"
+   }
+  ]
+ },
+ "challenges": {
+  "updated": "2026-10-16",
+  "suggest": "btownbrief@gmail.com",
+  "more": "https://play.btownbrief.com/challenges/",
+  "weekly": [
+   {
+    "id": "w-demo-sunset",
+    "title": "A new sunset spot",
+    "line": "Watch one sunset this week from somewhere you never have.",
+    "kind": "explore",
+    "url": "../sunset.html"
+   },
+   {
+    "id": "w-demo-coffee",
+    "title": "Five coffees, five places",
+    "line": "A different local coffee spot every weekday, no repeats.",
+    "kind": "streak",
+    "url": "../restaurants.html"
+   }
+  ],
+  "evergreen": [
+   {
+    "id": "demo-creemee",
+    "title": "The Creemee Crawl",
+    "line": "One creemee from five different stands in a single summer.",
+    "where": "Burlington and around",
+    "kind": "eat",
+    "url": "https://play.btownbrief.com/challenges/?c=creemee-crawl"
+   },
+   {
+    "id": "demo-vt5",
+    "title": "The Vermont 5",
+    "line": "Summit the state's five 4,000-footers.",
+    "where": "Statewide",
+    "kind": "climb",
+    "url": "https://play.btownbrief.com/challenges/?c=vermont-5"
+   },
+   {
+    "id": "demo-dawn",
+    "title": "Dawn Patrol",
+    "line": "Watch five sunrises from the waterfront in one month.",
+    "where": "Burlington waterfront",
+    "kind": "streak",
+    "url": "https://play.btownbrief.com/challenges/?c=dawn-patrol"
+   },
+   {
+    "id": "demo-parks",
+    "title": "Park Passport",
+    "line": "Set foot in every Burlington city park.",
+    "where": "Burlington",
+    "kind": "explore",
+    "url": "https://play.btownbrief.com/challenges/?c=park-passport"
+   },
+   {
+    "id": "demo-bad",
+    "title": "No link",
+    "line": "This one has no page, so it never shows.",
+    "kind": "explore",
+    "url": "javascript:alert(1)"
    }
   ]
  }
