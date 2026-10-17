@@ -109,14 +109,16 @@ function call(fn, args) {
 const changed = (board, id, what) => window.dispatchEvent(new CustomEvent('allday-boards', { detail: { board, id, what } }));
 
 /* Has Stephen pasted nn-ROUND2.sql? The server's rules say: version 2 or
-   later. Asked once a visit, when a tab is about to post a round-two shape;
-   an unanswered ask (offline) is asked again next time. */
+   later. Resolves true or false once the server has answered, and null
+   when it could not be asked (offline): a tab then posts the old shape,
+   which both servers take, and does nothing it cannot undo. Asked once a
+   visit; an unanswered ask is asked again next time. */
 let two = null;
 export function roundTwo() {
   if (app.demo) return Promise.resolve(true);
   if (!two) {
     two = call('nn_rules').then((r) => {
-      if (!r.ok) { two = null; return false; }
+      if (!r.ok) { two = null; return null; }
       return Number(r.data && r.data.version) >= 2;
     });
   }

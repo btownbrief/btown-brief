@@ -2844,7 +2844,8 @@ async function theVintage(browser, base) {
     await ctx.close();
   });
 
-  for (const v of [1, 2]) await group('Vintage, live: a fit check and “Someone got it” on a server with rules v' + v, async () => {
+  /* v 0: the rules could not be read (a server error), so the tab cannot tell which server it has */
+  for (const v of [1, 2, 0]) await group('Vintage, live: a fit check and “Someone got it” on a server with rules ' + (v ? 'v' + v : 'that could not be read'), async () => {
     const at = (h) => new Date(Date.now() - h * 3600000).toISOString();
     const mineFind = { id: '0000eeee-0000-4000-8000-000000000001', board: 'vintage', kind: 'spotted', title: 'Plaid wool shirt', body: '', place: '', meta: { shop: 'Old Gold', size: 'L' },
       photo: null, author: 'Kara', author_arch: null, created_at: at(3), expires_at: new Date(Date.now() + 18 * 86400000).toISOString(), votes: 0, voted: false, mine: true };
@@ -2854,7 +2855,7 @@ async function theVintage(browser, base) {
       rpc: (fn, args) => {
         if (!/^nn_|^btb_/.test(fn)) return undefined;
         calls.push({ fn, args });
-        if (fn === 'nn_rules') return { version: v };
+        if (fn === 'nn_rules') return v ? { version: v } : { status: 500, body: { message: 'boom' } };
         if (fn === 'nn_profile_get') return { display_name: 'Kara', neighborhood: null, archetype: null };
         if (fn === 'nn_posts_list') return args.p_board === 'vintage' && args.p_filter.kind === 'spotted' && !gone ? [{ ...mineFind, meta: got ? { ...mineFind.meta, got: true } : mineFind.meta }] : [];
         if (fn === 'nn_post_create') return { id: '0000eeee-0000-4000-8000-000000000002', board: 'vintage', kind: args.p_kind, title: args.p_title, body: args.p_body, place: '', meta: args.p_meta,
@@ -2893,9 +2894,16 @@ async function theVintage(browser, base) {
     await page.waitForFunction(() => /^Posted\./.test(document.querySelector('#toast').textContent), null, { timeout: 8000 }).catch(() => {});
     const made = (calls.find((c) => c.fn === 'nn_post_create') || {}).args || { msg: await page.$eval(f + ' .bf-msg', (m) => m.textContent).catch(() => '') };
     if (v === 2) check(made.p_kind === 'fit' && JSON.stringify(made.p_meta) === '{}' && made.p_body === 'Coat from Barge Canal', 'round two: a fit check is a `fit` post', JSON.stringify(made));
-    else check(made.p_kind === 'spotted' && JSON.stringify(made.p_meta) === '{"shop":"Fit check"}', 'round one: the same fit check is a find tagged “Fit check”, which that server takes', JSON.stringify(made));
+    else check(made.p_kind === 'spotted' && JSON.stringify(made.p_meta) === '{"shop":"Fit check"}', (v ? 'round one' : 'unknown') + ': the same fit check is a find tagged “Fit check”, which either server takes', JSON.stringify(made));
     await page.click(vslot('spotted') + ' [data-act=vgot]');
     await page.click('#confirm [data-yes]');
+    if (!v) {
+      await page.waitForTimeout(600);
+      check(!calls.some((c) => c.fn === 'nn_post_delete_own' || c.fn === 'nn_post_meta_set'), 'not knowing the server, “Someone got it” deletes nothing and changes nothing', JSON.stringify(calls.map((c) => c.fn)));
+      check(/Couldn’t reach the boards/.test(await page.$eval('#toast', (t) => t.textContent)) && await page.$(vslot('spotted') + ' [data-act=vgot]'), 'it says so, and the find is still there to try again', '');
+      await ctx.close();
+      return;
+    }
     await page.waitForFunction(() => /Thank you for passing it on/.test(document.querySelector('#toast').textContent), null, { timeout: 6000 }).catch(() => {});
     const set = calls.find((c) => c.fn === 'nn_post_meta_set');
     const del = calls.find((c) => c.fn === 'nn_post_delete_own');
@@ -3740,6 +3748,10 @@ async function thePeople(browser, base) {
     const p = await peek(page);
     check(p.tags.includes('music') && !p.tags.includes('running') && !p.tags.includes('books') && p.tags.includes('lgbtq'), 'a change made in the profile sheet is the tab’s; who you are stays as it was', JSON.stringify(p.tags));
     check(/What you’re into is saved to your profile too/.test(await page.$eval(peoplePanel + ' [data-sec="arch"]', (s) => s.innerText)), 'and the tab says where each kind of tag lives', '');
+    await page.evaluate(() => import('/all-day/js/boards.js').then((b) => b.setProfile({ display_name: 'Robin', interests: [] })));
+    await page.waitForTimeout(400);
+    check(!(await peek(page)).tags.some((t) => ['music', 'running', 'books'].includes(t)) && JSON.stringify(await profileOf()) === '[]',
+      'cleared in the profile sheet: the tab clears them too, and nothing writes them back', JSON.stringify([(await peek(page)).tags, await profileOf()]));
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
   });

@@ -168,6 +168,7 @@ export const QUIZ_TEXT = () => QUIZ.map((x) => [x.q].concat(x.o.map((o) => o[0])
 /* ---------------------------------------------------------------- state */
 const S = {
   arch: null, tags: [], quizTags: [],   // the reader's picks (this device)
+  intoUp: [],                          // readers whose into-tags this device has squared with their profile once
   prof: undefined,                     // the profile when signed in: undefined not asked, null none
   posts: [], plansState: 'loading',    // 'loading' | 'ok' | 'off' | 'fail'
   events: null, eventsFailed: false, feed: null, clubs: null, clubsFailed: false,
@@ -181,7 +182,7 @@ const SECS = [['arch', 'Who you are'], ['plans', 'Open to strangers'], ['mix', '
 let memo = {};
 const saved = () => (app.demo ? memo : (store.read(STORE_KEY, {}) || {}));
 function keep() {
-  const v = { arch: S.arch, tags: S.tags, quizTags: S.quizTags };
+  const v = { arch: S.arch, tags: S.tags, quizTags: S.quizTags, intoUp: S.intoUp };
   if (app.demo) memo = v; else store.write(STORE_KEY, v);
 }
 (function restore() {
@@ -190,6 +191,7 @@ function keep() {
   const known = new Set(WHO.concat(INTO).map((x) => x[0]));
   if (Array.isArray(v.tags)) S.tags = v.tags.filter((t) => known.has(t));
   if (Array.isArray(v.quizTags)) S.quizTags = v.quizTags.filter((t) => PEOPLE_RULES.interests.includes(t));
+  if (Array.isArray(v.intoUp)) S.intoUp = v.intoUp.filter((x) => typeof x === 'string').slice(-8);
 })();
 /* what the directory may show: the into-tags and the quiz's, nothing else */
 const shareable = () => PEOPLE_RULES.interests.filter((t) => S.tags.includes(t) || S.quizTags.includes(t)).slice(0, PEOPLE_RULES.interestsMax);
@@ -436,10 +438,21 @@ function loadProfile(adopt = true) {
        signing in goes up to it */
     if (S.prof.archetype && S.prof.archetype !== S.arch) { S.arch = S.prof.archetype; keep(); render(); }
     else if (!S.prof.archetype && S.arch) pushArch();
-    /* and what you're into: the profile's, or this device's goes up to it */
-    const into = Array.isArray(S.prof.interests) ? S.prof.interests.filter((t) => PEOPLE_RULES.interests.includes(t)) : [];
-    if (into.length && into.join() !== intoTags().join()) { S.tags = S.tags.filter((t) => !PEOPLE_RULES.interests.includes(t)).concat(into); keep(); render(); }
-    else if (!into.length && intoTags().length) pushInterests();
+    /* and what you're into. The first time this device meets this reader,
+       tags picked here before go up to an empty profile; after that the
+       profile is the record, an empty one included (cleared in Settings,
+       or on another phone). A server before round two has no interests. */
+    if (!Array.isArray(S.prof.interests)) return;
+    const into = S.prof.interests.filter((t) => PEOPLE_RULES.interests.includes(t));
+    const met = S.intoUp.includes(u);
+    if (!met && !into.length && intoTags().length) { pushInterests(); return; }
+    if (!met) { S.intoUp = S.intoUp.concat(u).slice(-8); keep(); }
+    if (into.join() !== intoTags().join()) {
+      S.tags = S.tags.filter((t) => !PEOPLE_RULES.interests.includes(t)).concat(into);
+      keep();
+      syncDir();
+      render();
+    }
   });
 }
 
@@ -511,8 +524,10 @@ function pushInterests() {
   write(() => {
     if (!S.prof) return null;
     return boards.setProfile({ display_name: S.prof.display_name, neighborhood: S.prof.neighborhood, archetype: S.prof.archetype, interests: intoTags() }).then((r) => {
-      if (r.ok) S.prof = r.profile;
-      else app.toast(r.message);
+      if (!r.ok) { app.toast(r.message); return; }
+      S.prof = r.profile;
+      const u = who();
+      if (r.interestsSaved !== false && u && !S.intoUp.includes(u)) { S.intoUp = S.intoUp.concat(u).slice(-8); keep(); }
     });
   });
 }

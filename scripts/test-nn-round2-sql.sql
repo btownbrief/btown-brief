@@ -138,6 +138,14 @@ set role authenticated; select pg_temp.who('22222222-2222-2222-2222-222222222222
 select pg_temp.ok(public.nn_vote((select id from pg_temp.ids where k = 'ran')) -> 'moved' = '[]'::jsonb, 'a vote on an ended pick stays as it was counted');
 reset role;
 select pg_temp.ok((select count(*) from public.nn_votes where post_id = (select id from pg_temp.ids where k = 'heat')) = 1, 'still there');
+set role authenticated; select pg_temp.who('44444444-4444-4444-4444-444444444444');
+insert into pg_temp.ids select 'kes', (public.nn_post_create('watch', 'pick', 'Kes', '', '', '{"film":13384}') ->> 'id')::uuid;
+set role anon; select pg_temp.who(null);
+select public.nn_vote((select id from pg_temp.ids where k = 'kes'), 'p_reader03');
+reset role; update public.nn_posts set status = 'hidden' where id = (select id from pg_temp.ids where k = 'kes');
+set role anon; select pg_temp.who(null);
+select pg_temp.ok(public.nn_vote((select id from pg_temp.ids where k = 'ran'), 'p_reader03') -> 'moved' = jsonb_build_array((select id from pg_temp.ids where k = 'kes')),
+  'a vote on a hidden pick moves too, so putting it back never leaves two');
 
 -- ------------------------------------------------- votes by the week cast
 -- three votes on the Art post: two cast last week, one this week (Burlington weeks)

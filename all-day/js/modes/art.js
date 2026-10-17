@@ -26,8 +26,10 @@
    - Community board. Notices: calls for artists, shows, open studios.
    - Winners. The past eight weeks' photo of the week: among the pictures
      posted that week, the most votes cast that week (boards.votesByWeek),
-     so a week's winner is settled at Sunday midnight and never changes
-     after. Just the name; no prizes, no points.
+     so votes cast after Sunday midnight never move a past week. (A vote
+     taken back later, or a picture Stephen hides, still comes off that
+     week's count: the count is of the votes that stand.) Just the name;
+     no prizes, no points.
 
    This week's votes are the posts' own counts: every vote on a picture
    posted this week was cast this week. Until nn-ROUND2.sql is pasted there

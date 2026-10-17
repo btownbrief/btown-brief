@@ -218,9 +218,10 @@ end $$;
 
 -- Vote for a post anyone can see, as before. Where the post's kind has
 -- `one_vote` (the Watch screening ballot), a voter has one vote among that
--- kind's live posts on the board: voting for another one moves it, in one
--- step, and `moved` lists the posts it left. Votes on ended posts stay as
--- they were counted.
+-- kind's posts on the board that have not ended: voting for another one
+-- moves it, in one step, and `moved` lists the posts it left. A pick that
+-- is hidden right now counts too, so putting it back can never leave a
+-- voter with two. Votes on ended posts stay as they were counted.
 create or replace function public.nn_vote(p_post uuid, p_player text default null) returns jsonb
 language plpgsql security definer set search_path = public as $$
 declare v_voter text := public.nn_voter(auth.uid(), p_player); p public.nn_posts; v_moved jsonb := '[]'::jsonb;
@@ -234,7 +235,7 @@ begin
     with gone as (
       delete from public.nn_votes v using public.nn_posts o
        where v.voter = v_voter and v.post_id = o.id and o.id <> p_post and o.board = p.board and o.kind = p.kind
-         and public.nn_listable(o)
+         and (o.expires_at is null or o.expires_at > now())
       returning v.post_id)
     select coalesce(jsonb_agg(post_id), '[]'::jsonb) into v_moved from gone;
   end if;

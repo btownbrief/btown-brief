@@ -864,22 +864,25 @@ function voteOpt(p) {
     p.voted = !p.voted;
     p.votes = Math.max(0, p.votes + (p.voted ? 1 : -1));
     paint();
-    /* one vote each: the old vote is taken back first, and if that fails
-       the new one is not cast (the board itself counts a vote per post) */
-    const first = other ? boards.unvote(other.id).then((r) => {
+    /* one vote each. On round two the server moves the vote in one step
+       (nn_vote's one_vote rule) and says which pick it left. Before that
+       the old vote is taken back first, and if that fails the new one is
+       not cast. */
+    const first = (two) => (two || !other ? Promise.resolve(null) : boards.unvote(other.id).then((r) => {
       if (!r.ok) return r;
       const x = P.picks.find((y) => y.id === other.id);
       if (x) { x.votes = r.votes; x.voted = false; }
       return null;
-    }) : Promise.resolve(null);
-    first.then((bad) => bad || (p.voted ? boards.vote(p.id) : boards.unvote(p.id))).then((r) => {
+    }));
+    boards.roundTwo().then((two) => first(two)).then((bad) => bad || (p.voted ? boards.vote(p.id) : boards.unvote(p.id))).then((r) => {
       busy = false;
       if (!r.ok) { Object.assign(p, was); paint(); app.toast(r.message); return; }
       p.votes = r.votes; p.voted = r.voted;
       const x = P.picks.find((y) => y.id === p.id);
       if (x) { x.votes = r.votes; x.voted = r.voted; }
-      /* the server moved a vote this tab did not know about (cast on another device) */
-      const moved = (r.moved || []).filter((id) => !other || id !== other.id);
+      /* the picks the server moved the vote off: the one shown here, or one
+         cast on another device */
+      const moved = r.moved || [];
       moved.forEach((id) => { const y = P.picks.find((z) => z.id === id); if (y && y.voted) { y.voted = false; y.votes = Math.max(0, y.votes - 1); } });
       if (other || moved.length) draw('vote'); else paint();
       app.toast(p.voted ? (p.votes >= GOAL ? 'Five! Stephen will put it on Meetup.' : 'Voted for ' + p.title) : 'Vote taken back');

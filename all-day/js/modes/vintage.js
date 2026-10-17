@@ -346,7 +346,9 @@ app.onAct('vgot', (it) => {
     body: 'Nice. It comes off the board now, and the find counts toward the thank-you.',
     yes: 'Mark it gone',
     onYes() {
-      boards.roundTwo().then((two) => (two ? boards.put(it.id, { got: true }) : { ok: false, error: 'off' })).then((r) => {
+      /* only a server that answered "round one" gets the delete; one that
+         could not be asked gets nothing, and the reader can try again */
+      boards.roundTwo().then((two) => (two ? boards.put(it.id, { got: true }) : two === false ? { ok: false, error: 'off' } : { ok: false, message: message('offline') })).then((r) => {
         if (r.ok) { done(); return; }          // boards.put tells the tab, which reads the board again
         if (r.error !== 'off') { app.toast(r.message); return; }
         boards.remove(it.id).then((x) => {

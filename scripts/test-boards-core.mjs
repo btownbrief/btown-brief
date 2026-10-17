@@ -455,6 +455,10 @@ test('round two: one vote on the screening ballot, moved in one step', () => {
   f.posts.find((p) => p.id === a.id).expires_at = f.now() - 1000;
   assert.deepEqual(f.call('nn_vote', { p_post: b.id, p_player: 'p_reader02' }).moved, [], 'a vote on an ended pick stays as it was counted');
   assert.equal(f._count(a.id), 1);
+  const c = f.as(LEE).call('nn_post_create', { p_board: 'watch', p_kind: 'pick', p_title: 'Kes', p_meta: { film: 13384 } });
+  f.as(null).call('nn_vote', { p_post: c.id, p_player: 'p_reader03' });
+  f.posts.find((p) => p.id === c.id).status = 'hidden';
+  assert.deepEqual(f.call('nn_vote', { p_post: b.id, p_player: 'p_reader03' }).moved, [c.id], 'a vote on a hidden pick moves too, so putting it back never leaves two');
   const art = make();
   art.as(MAYA).call('nn_profile_set', { p_display_name: 'Maya' });
   const n1 = art.call('nn_post_create', { p_board: 'art', p_kind: 'notice', p_title: 'Open studio' });

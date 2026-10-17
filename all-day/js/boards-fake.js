@@ -226,7 +226,8 @@ export class FakeBoards {
     const p = this._find(p_post);
     const moved = [];
     if (oneVote(this.rules, p.board, p.kind)) {
-      this.posts.filter((o) => o.id !== p.id && o.board === p.board && o.kind === p.kind && this._listable(o) && this.votes.has(o.id + '|' + voter))
+      /* every other pick that has not ended, a hidden one included */
+      this.posts.filter((o) => o.id !== p.id && o.board === p.board && o.kind === p.kind && (o.expires_at == null || o.expires_at > this._t()) && this.votes.has(o.id + '|' + voter))
         .forEach((o) => { this._unvoteKey(o.id + '|' + voter); moved.push(o.id); });
     }
     const k = p_post + '|' + voter;
