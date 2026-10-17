@@ -642,6 +642,37 @@ body.chrome-away .mast { transform: translateY(-100%); }
 .deck .btn.ghost { color: var(--on-media); border-color: var(--on-media-dim); }
 .deck .hit { position: absolute; top: 0; bottom: 90px; width: 50%; z-index: 1; }
 .deck .hit.l { left: 0; } .deck .hit.r { right: 0; }
+/* Food's deals deck: a strip, not a poster, with a visible next arrow */
+.deck.deals { aspect-ratio: auto; max-height: none; min-height: 150px; }
+.deck.deals .body { position: relative; padding: 30px 60px 14px 16px; }
+.deck.deals .body h3 { font-size: var(--fs-section); }
+.deck.deals .body p { margin-top: 4px; }
+.deck.deals .body .row { margin-top: 10px; }
+.deck .next { position: absolute; right: 10px; top: 50%; width: 38px; height: 38px; margin-top: -19px; z-index: 3; border-radius: var(--r-round);
+  background: var(--media-disc); color: var(--on-media); display: flex; align-items: center; justify-content: center; }
+.deck .next .i { width: 20px; height: 20px; }
+
+/* Food: the map button, the meal toggle and the sort, the directory */
+.mapbtn { flex: 0 0 auto; display: inline-flex; align-items: center; gap: 8px; height: 46px; padding: 0 12px 0 5px;
+  border: 1px solid var(--line); border-radius: var(--r-box); background: var(--raised); color: var(--ink-2); font-size: var(--fs-meta); font-weight: 600; }
+.fm-mini { display: block; width: 58px; height: 36px; border-radius: var(--r-tile); overflow: hidden; }
+.fm-ground { fill: var(--paper-2); }
+.fm-street { stroke: var(--line); stroke-width: 1.2; fill: none; }
+.fm-dot { fill: var(--local); }
+.fm-here { fill: var(--accent); stroke: var(--raised); stroke-width: 1.5; }
+.foodtools { padding-top: 4px; gap: 8px; }
+.foodtools .pills button { padding: 0 9px; font-size: var(--fs-meta); }
+.fsort { flex: 0 1 auto; height: 36px; padding: 0 12px; background: var(--paper-2); color: var(--ink); font-size: var(--fs-meta); font-weight: 600; }
+.placeacts { display: flex; flex-direction: column; align-items: stretch; gap: 6px; }
+.placeacts .pillbtn { justify-content: center; }
+.foodmap { height: min(58vh, 520px); border-radius: var(--r-media); overflow: hidden; background: var(--paper-2); margin-bottom: 8px; }
+.foodmap .fm-pin { fill: var(--ink-3); fill-opacity: 1; stroke: var(--raised); }
+.foodmap .fm-pin.open { fill: var(--local); }
+.foodmap .fm-me { fill: var(--accent); fill-opacity: 1; stroke: var(--raised); }
+.fgrid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; padding: 4px 0 10px; }
+.ftile { display: block; text-align: left; min-width: 0; }
+.ftile .c-media { margin: 0; }
+.ftile .s { display: block; font-size: var(--fs-small); color: var(--ink-3); margin-top: 5px; line-height: 1.35; }
 
 /* the spinner: one big button and one answer */
 .spin { padding: 8px var(--gutter) 4px; text-align: center; }

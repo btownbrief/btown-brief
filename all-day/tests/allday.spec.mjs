@@ -270,6 +270,8 @@ async function newPage(browser, base, opts = {}) {
     deviceScaleFactor: opts.dpr || 1,
     serviceWorkers: 'block',
     ...(opts.timezoneId ? { timezoneId: opts.timezoneId } : {}),
+    /* opts.geo: a position the reader has allowed; without it, location is refused */
+    ...(opts.geo ? { geolocation: opts.geo, permissions: ['geolocation'] } : {}),
   });
   const page = await ctx.newPage();
   /* opts.clock (ms) fixes the page's Date while its timers keep running;
@@ -2026,6 +2028,293 @@ async function theFood(browser, base) {
     await page.reload();
     await page.waitForSelector('#toast:not([hidden])', { timeout: 6000 }).catch(() => {});
     check(/isn’t in the guide/.test(await page.$eval('#toast', (t) => t.textContent)), 'an unknown place says so', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  /* ------------------------------------------------ the map, sorts, directory */
+  const demo = JSON.parse(await readFile(path.join(APP, 'data/demo/food.json'), 'utf8'));
+  const DR = demo.restaurants.restaurants;
+  const CH = [44.4758, -73.2128];
+  const mi = (a, b) => { const R = 3958.8, rad = Math.PI / 180, dLat = (b[0] - a[0]) * rad, dLon = (b[1] - a[1]) * rad;
+    return 2 * R * Math.asin(Math.sqrt(Math.sin(dLat / 2) ** 2 + Math.cos(a[0] * rad) * Math.cos(b[0] * rad) * Math.sin(dLon / 2) ** 2)); };
+  const WIN = { breakfast: [420, 600], lunch: [660, 840], dinner: [1020, 1260] };
+  const serves = (r, meal, day) => (r.hours[day] || []).some(([o, c]) => { const a = fMin(o), b0 = fMin(c), b = b0 > a ? b0 : b0 + 1440, [x, y] = WIN[meal]; return Math.min(b, y) - Math.max(a, x) >= (y - x) / 2; });
+  const NOON = Date.parse('2026-10-16T12:00:00-04:00');   // a Friday
+  const rowIds = (page) => page.$$eval(foodPanel + ' [data-sec="open"] .lrow.place', (rs) => rs.map((r) => r.dataset.k.slice(2)));
+  const showAll = async (page) => { const more = await page.$(foodPanel + ' [data-sec="open"] .btn.more'); if (more) await more.click(); };
+  const sortTo = async (page, k) => { await page.selectOption(foodPanel + ' select.fsort', k); await page.waitForTimeout(150); await showAll(page); return rowIds(page); };
+  /* Leaflet itself is not on this machine, and the page loads it with an
+     integrity hash a stand-in cannot match: the stand-in answers the pinned
+     URL, the integrity setter records what was asked for and lets it in, and
+     the fake L records what the map was told to draw. */
+  const fakeLeaflet = `window.__sri = [];
+    Object.defineProperty(HTMLScriptElement.prototype, 'integrity', { configurable: true, set(v) { window.__sri.push(v); }, get() { return ''; } });
+    Object.defineProperty(HTMLLinkElement.prototype, 'integrity', { configurable: true, set(v) { window.__sri.push(v); }, get() { return ''; } });`;
+  const FAKE_L = `window.L = (() => {
+    const maps = [];
+    const layer = (kind, at, o) => ({ kind, at, o, addTo(m) { m.layers.push(this); return this; }, bindTooltip(t) { this.tip = t; return this; },
+      on(ev, fn) { this['on' + ev] = fn; return this; }, remove() { this.gone = true; } });
+    return { maps, map(el, opts) { const m = { el, opts, layers: [], view: null, setView(c, z) { this.view = c; this.zoom = z; return this; },
+      invalidateSize() {}, remove() { this.removed = true; }, getContainer() { return el; } }; maps.push(m); return m; },
+      tileLayer(u, o) { return layer('tiles', u, o); }, circleMarker(c, o) { return layer('pin', c, o); } };
+  })();`;
+  const withLeaflet = async (page, asked) => {
+    await page.addInitScript(fakeLeaflet);
+    await page.route(/unpkg\.com\/leaflet@1\.9\.4\/dist\/leaflet\.(js|css)$/, (r) => { asked.push(r.request().url());
+      return /\.js$/.test(r.request().url()) ? r.fulfill({ status: 200, body: FAKE_L, contentType: 'text/javascript' }) : r.fulfill({ status: 200, body: '', contentType: 'text/css' }); });
+  };
+  const mapState = (page) => page.evaluate(() => { const m = window.L && window.L.maps && window.L.maps[window.L.maps.length - 1]; if (!m) return null;
+    return { view: m.view, inSheet: !!m.el.closest('.sheet-body'), tiles: m.layers.filter((l) => l.kind === 'tiles').map((l) => ({ u: l.at, attr: l.o.attribution })),
+      pins: m.layers.filter((l) => l.kind === 'pin' && !/fm-me/.test(l.o.className)).map((l) => ({ at: l.at, tip: l.tip, cls: l.o.className })),
+      me: m.layers.filter((l) => l.kind === 'pin' && /fm-me/.test(l.o.className) && !l.gone).map((l) => l.at) }; });
+
+  await group('Food, the map with location refused (demo, noon)', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    const asked = [], out = [];
+    await withLeaflet(page, asked);
+    page.on('request', (q) => { if (!q.url().startsWith(base)) out.push(q.url()); });
+    await page.clock.setFixedTime(NOON);
+    await page.goto(base + '/all-day/?demo=1#food/open');
+    await page.waitForSelector(foodPanel + ' .lrow.place', { timeout: 15000 });
+    await page.waitForTimeout(300);
+    const btn = await page.evaluate((p) => { const b = document.querySelector(p + ' [data-sec="open"] .sec .mapbtn'); const sec = b && b.closest('.sec');
+      const r = b && b.getBoundingClientRect(), s = sec && sec.getBoundingClientRect();
+      return b && { label: b.getAttribute('aria-label'), text: b.innerText, dots: b.querySelectorAll('.fm-dot').length, here: b.querySelectorAll('.fm-here').length,
+        right: Math.round(s.right - r.right), last: sec.lastElementChild === b, sub: sec.querySelector('p').textContent }; }, foodPanel);
+    const open = DR.filter((r) => fOpenAt(r.hours, 'fri', 720));
+    check(btn && btn.last && btn.right <= 20 && /Map/.test(btn.text), 'a Map button sits at the far right of the Open now head', JSON.stringify(btn));
+    check(btn && btn.dots >= 6 && btn.dots <= open.length && btn.here === 1, 'its preview is the list as dots around Church Street', JSON.stringify(btn));
+    check(btn && btn.label === 'Map of ' + open.length + ' places', 'and it says how many places it maps', btn && btn.label);
+    check(!asked.length && !out.some((u) => /unpkg|tile\.openstreetmap/.test(u)) && await page.evaluate(() => !window.L), 'before a tap: no Leaflet, no tiles, nothing fetched', out.join(', '));
+    await page.click(foodPanel + ' .mapbtn');
+    await page.waitForFunction(() => window.L && window.L.maps && window.L.maps.length, null, { timeout: 6000 }).catch(() => {});
+    const m = await mapState(page);
+    check(asked.some((u) => /leaflet\.js$/.test(u)) && asked.some((u) => /leaflet\.css$/.test(u)), 'a tap loads Leaflet 1.9.4 and its stylesheet', asked.join(', '));
+    check(await page.evaluate(() => window.__sri.includes('sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=') && window.__sri.includes('sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=')),
+      'with the integrity hashes the guide’s own map pages use', await page.evaluate(() => window.__sri.join(', ')));
+    check(m && m.inSheet && await page.$eval('.sheet-head h2', (h) => h.textContent) === 'Map', 'the map opens in a sheet', JSON.stringify(m && m.inSheet));
+    check(m && m.tiles.length === 1 && m.tiles[0].u === 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png' && /OpenStreetMap/.test(m.tiles[0].attr), 'on OpenStreetMap’s tiles, credited', JSON.stringify(m && m.tiles));
+    check(m && JSON.stringify(m.view) === JSON.stringify(CH), 'with no location it is centred on Church Street', JSON.stringify(m && m.view));
+    check(m && m.pins.length === open.length && m.pins.every((p) => /fm-pin open/.test(p.cls)) && !m.me.length, 'a pin for each place open now, and no reader pin', JSON.stringify(m && m.pins.length));
+    const noodle = DR.find((r) => r.id === 'demo-noodle-counter');
+    check(m && m.pins.some((p) => p.tip === noodle.name && JSON.stringify(p.at) === JSON.stringify(noodle.coords)), 'each pin is a place, at its own spot, named', '');
+    await page.click('.sheet-body .nearme');
+    await page.waitForSelector('#toast:not([hidden])', { timeout: 6000 }).catch(() => {});
+    check(/Location is off/.test(await page.$eval('#toast', (t) => t.textContent)) && !(await mapState(page)).me.length, 'Near me, refused: says so, and the map stays on Church Street', '');
+    await page.evaluate((name) => { const m = window.L.maps[window.L.maps.length - 1]; m.layers.find((l) => l.tip === name).onclick(); }, noodle.name);
+    check(await page.$eval('.sheet-head h2', (h) => h.textContent) === noodle.name, 'a pin opens its place', '');
+    await page.click('.sheet-head .iconbtn');
+    /* Closest to me, refused: back to Church Street, said once */
+    await page.selectOption(foodPanel + ' select.fsort', 'me');
+    await page.waitForTimeout(400);
+    check(await page.$eval(foodPanel + ' select.fsort', (s) => s.value) === 'near' && /Location is off\. Sorted from Church St\./.test(await page.$eval('#toast', (t) => t.textContent)),
+      'Closest to me, refused: the list stays nearest Church Street and says why', '');
+    await page.goto(base + '/all-day/?demo=1#food/map');
+    await page.reload();
+    await page.waitForSelector('.sheet-head h2', { timeout: 15000 }).catch(() => {});
+    check(await page.$eval('.sheet-head h2', (h) => h.textContent).catch(() => '') === 'Map', '#food/map opens the map', '');
+    await page.screenshot({ path: path.join(SHOTS, 'demo-food-map.png') });
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Food, the map and Closest to me with location allowed (demo, noon)', async () => {
+    const ME = { latitude: 44.4885, longitude: -73.2205 };   // up North Ave, by the pho shop
+    const { ctx, page, errors } = await newPage(browser, base, { geo: ME });
+    const asked = [], sent = [];
+    await withLeaflet(page, asked);
+    page.on('request', (q) => sent.push(q.url() + ' ' + (q.postData() || '')));
+    await page.addInitScript(() => { const g = navigator.geolocation, ask = g.getCurrentPosition.bind(g); window.__geo = 0; g.getCurrentPosition = (...a) => { window.__geo++; return ask(...a); }; });
+    await page.clock.setFixedTime(NOON);
+    await page.goto(base + '/all-day/?demo=1#food/open');
+    await page.waitForSelector(foodPanel + ' .lrow.place', { timeout: 15000 });
+    check(await page.evaluate(() => window.__geo) === 0, 'nothing asks for the location on load', '');
+    const ids = await sortTo(page, 'me');
+    const d = ids.map((id) => mi(DR.find((r) => r.id === id).coords, [ME.latitude, ME.longitude]));
+    check(ids.length && d.every((x, i) => !i || x >= d[i - 1] - 1e-9) && ids[0] === 'demo-pho-shop', 'Closest to me: allowed, the list runs from the reader outward', ids.slice(0, 4).join(', '));
+    check(/closest to you/.test(await page.$eval(foodPanel + ' [data-sec="open"] .sec p', (p) => p.textContent)), 'and the head says so', '');
+    await page.click(foodPanel + ' .mapbtn');
+    await page.waitForFunction(() => window.L && window.L.maps && window.L.maps.length, null, { timeout: 6000 }).catch(() => {});
+    const m = await mapState(page);
+    check(m && m.me.length === 1 && JSON.stringify(m.me[0]) === JSON.stringify([ME.latitude, ME.longitude]) && JSON.stringify(m.view) === JSON.stringify([ME.latitude, ME.longitude]),
+      'the map puts the reader on it and centres there', JSON.stringify(m && { me: m.me, view: m.view }));
+    check(await page.$eval('.sheet-body .nearme', (b) => b.hidden), 'and Near me steps aside', '');
+    await page.screenshot({ path: path.join(SHOTS, 'demo-food-map-me.png') });
+    const lat = String(ME.latitude), lon = String(ME.longitude);
+    check(await page.evaluate(() => window.__geo) >= 1, 'it was asked for only once the reader picked Closest to me', '');
+    check(!sent.some((x) => x.includes(lat) || x.includes(lon)), 'the position is never sent anywhere', sent.filter((x) => x.includes(lat) || x.includes(lon)).join(', '));
+    const stored = await page.evaluate(() => JSON.stringify(Object.entries(localStorage)) + JSON.stringify(Object.entries(sessionStorage)) + document.cookie);
+    check(!stored.includes(lat) && !stored.includes(lon), 'and never stored', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+
+    /* a reader nowhere near Burlington is not "near" anything here */
+    const far = await newPage(browser, base, { geo: { latitude: 34.05, longitude: -118.25 } });
+    await far.page.clock.setFixedTime(NOON);
+    await far.page.goto(base + '/all-day/?demo=1#food/open');
+    await far.page.waitForSelector(foodPanel + ' .lrow.place', { timeout: 15000 });
+    await far.page.selectOption(foodPanel + ' select.fsort', 'me');
+    await far.page.waitForSelector('#toast:not([hidden])', { timeout: 6000 }).catch(() => {});
+    check(/not near Burlington/.test(await far.page.$eval('#toast', (t) => t.textContent)) && await far.page.$eval(foodPanel + ' select.fsort', (s) => s.value) === 'near',
+      'a reader in Los Angeles is told, and the list stays on Church Street', '');
+    await far.ctx.close();
+  });
+
+  await group('Food, the sorts and the meal toggle (demo, noon)', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.clock.setFixedTime(NOON);
+    await page.goto(base + '/all-day/?demo=1#food/open');
+    await page.waitForSelector(foodPanel + ' .lrow.place', { timeout: 15000 });
+    const opts = await page.$$eval(foodPanel + ' select.fsort option', (o) => o.map((x) => x.value + ':' + x.textContent));
+    check(JSON.stringify(opts) === JSON.stringify(['near:Nearest Church St', 'me:Closest to me', 'late:Open latest', 'price:Price', 'new:Newest']), 'the sort offers nearest, closest to me, open latest, price, newest', opts.join(', '));
+    const by = (id) => DR.find((r) => r.id === id);
+    const near = await sortTo(page, 'near');
+    const nd = near.map((id) => mi(by(id).coords, CH));
+    check(near.length === DR.filter((r) => fOpenAt(r.hours, 'fri', 720)).length && nd.every((x, i) => !i || x >= nd[i - 1] - 1e-9), 'Nearest Church St: the default, nearest first', near.join(', '));
+    const late = await sortTo(page, 'late');
+    const lc = late.map((id) => fLatest(by(id).hours, 'fri'));
+    check(lc.every((x, i) => !i || x <= lc[i - 1]) && lc[0] > lc[lc.length - 1], 'Open latest: the latest close tonight first', lc.join(', '));
+    const price = await sortTo(page, 'price');
+    const pr = price.map((id) => ({ $: 1, $$: 2, $$$: 3, $$$$: 4 }[by(id).price] || 9));
+    const rows = await page.$$eval(foodPanel + ' [data-sec="open"] .lrow.place', (rs) => rs.map((r) => r.innerText));
+    check(pr.every((x, i) => !i || x >= pr[i - 1]) && pr[0] === 1 && pr[pr.length - 1] === 3, 'Price: cheapest first', pr.join(', '));
+    check(/ · \$ · /.test(rows[0]), 'and each row shows its price', rows[0]);
+    const fresh = await sortTo(page, 'new');
+    check(fresh[0] === 'demo-pho-shop' && fresh[1] === 'demo-dumpling-house', 'Newest: the most recently opened first', fresh.slice(0, 3).join(', '));
+    check(/opened Oct 2026/.test(await page.$eval(foodPanel + ' [data-k="r-demo-pho-shop"]', (r) => r.innerText)), 'and says when it opened', '');
+    await sortTo(page, 'near');
+
+    /* Breakfast / Lunch / Dinner: read off today's hours, on top of the chip */
+    await page.click(foodPanel + ' .chips.filters .chip[data-chip="cheap"]');
+    const seen = {};
+    for (const meal of ['breakfast', 'lunch', 'dinner']) {
+      await page.click(foodPanel + ' .pills.meals button:text-is("' + meal[0].toUpperCase() + meal.slice(1) + '")');
+      await page.waitForTimeout(120);
+      await showAll(page);
+      const got = (await rowIds(page)).sort();
+      const want = DR.filter((r) => r.under_15 === true && serves(r, meal, 'fri')).map((r) => r.id).sort();
+      seen[meal] = got.join(',');
+      const n = Number(await page.$eval(foodPanel + ' .chips.filters .chip.on .n', (c) => c.textContent));
+      check(JSON.stringify(got) === JSON.stringify(want) && n === want.length, meal + ': the places open for it today (' + want.length + '), and the chip counts them', got.join(', ') + ' / ' + want.join(', '));
+    }
+    check(new Set(Object.values(seen)).size === 3 && seen.breakfast.includes('demo-old-north-bakery') && !seen.dinner.includes('demo-old-north-bakery'),
+      'the three meals really differ: the bakery is breakfast, not dinner', JSON.stringify(seen));
+    await page.click(foodPanel + ' .pills.meals button:text-is("Any time")');
+    await page.waitForTimeout(120);
+    await showAll(page);
+    check((await rowIds(page)).length === DR.filter((r) => r.under_15 === true).length, 'Any time puts them all back', '');
+    await page.evaluate(() => document.querySelector('#panel-food [data-sec="open"]').scrollIntoView());
+    await page.screenshot({ path: path.join(SHOTS, 'demo-food-sorts.png') });
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Food, Deals today: smaller, a › arrow, See all deals (demo, noon)', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.clock.setFixedTime(NOON);
+    await page.goto(base + '/all-day/?demo=1#food/deals');
+    await page.waitForSelector(foodPanel + ' .deck', { timeout: 15000 });
+    const k = () => page.$eval(foodPanel + ' .deck', (d) => d.dataset.k);
+    const box = await page.$eval(foodPanel + ' .deck', (d) => { const r = d.getBoundingClientRect(), n = d.querySelector('.next').getBoundingClientRect();
+      return { h: Math.round(r.height), w: Math.round(r.width), next: n.width > 20 && n.right <= r.right && n.left > r.left + r.width / 2 && getComputedStyle(d.querySelector('.next')).visibility === 'visible' }; });
+    check(box.h < 300 && box.h < box.w, 'the deck is a strip now, wider than it is tall', JSON.stringify(box));
+    check(box.next, 'with a visible › arrow on its right side', JSON.stringify(box));
+    const first = await k();
+    await page.click(foodPanel + ' .deck .next');
+    const second = await k();
+    check(first === 'd-demo-diner-coffee' && second === 'd-demo-bistro-oysters', 'the arrow turns to the next deal', first + ' → ' + second);
+    const all = await page.$eval(foodPanel + ' [data-sec="deals"] .sec a.alldeals', (a) => ({ text: a.textContent.trim(), href: a.getAttribute('href'), target: a.target, last: a.parentElement.lastElementChild === a }));
+    check(all.text === 'See all deals' && new URL(all.href).pathname === '/restaurants.html' && new URL(all.href).search === '?view=deals' && !all.target && all.last, '“See all deals” sits in the head and opens the guide’s deals page', JSON.stringify(all));
+    const bg = await page.$eval(foodPanel + ' .deck', (d) => d.querySelector(':scope > .ph') && !d.querySelector(':scope > .ph[style*="--mark"]'));
+    check(bg, 'a deal at a place with its own food picture shows it behind the card', '');
+    await page.evaluate(() => document.querySelector('#panel-food [data-sec="deals"]').scrollIntoView());
+    await page.screenshot({ path: path.join(SHOTS, 'demo-food-deals.png') });
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Food, the directory: Their food, with and without Instagram (demo)', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.clock.setFixedTime(NOON);
+    await page.goto(base + '/all-day/?demo=1#food/open');
+    await page.waitForSelector(foodPanel + ' .lrow.place .theirs', { timeout: 15000 });
+    await showAll(page);
+    const btns = await page.$$eval(foodPanel + ' [data-sec="open"] .lrow.place', (rs) => Object.fromEntries(rs.map((r) => [r.dataset.k.slice(2),
+      { theirs: !!r.querySelector('.theirs'), menuAfter: !!r.querySelector('.theirs + a.pillbtn'), pic: !!r.querySelector('.th:not(.bare) .ph, .th:not(.bare) img') }])));
+    check(btns['demo-noodle-counter'].theirs && btns['demo-noodle-counter'].menuAfter, 'a place with its own posts has “Their food” beside Menu', JSON.stringify(btns['demo-noodle-counter']));
+    check(btns['demo-dumpling-house'].theirs, 'a place with no Instagram but a reader’s dish has it too', JSON.stringify(btns['demo-dumpling-house']));
+    check(!btns['demo-pub-on-main'].theirs && !btns['demo-pub-on-main'].pic, 'a place with neither has no button and keeps its initials', JSON.stringify(btns['demo-pub-on-main']));
+    check(btns['demo-noodle-counter'].pic && btns['demo-dumpling-house'].pic, 'and a place with food to show leads its row with it', '');
+    await page.click(foodPanel + ' [data-k="r-demo-noodle-counter"] .theirs');
+    await page.waitForSelector('.sheet-body .fgrid');
+    const a = await page.evaluate(() => ({ title: document.querySelector('.sheet-head h2').textContent, tiles: [...document.querySelectorAll('.sheet-body .ftile')].map((t) => t.dataset.k + (t.classList.contains('clip') ? ':clip' : '')),
+      insta: document.querySelector('.sheet-body a.insta')?.getAttribute('href'), text: document.querySelector('.sheet-body').innerText }));
+    check(a.title === 'The noodle counter on Bank' && a.tiles[0] === 'dish-demo-dish-2' && a.tiles.includes('ig-DemoReel1:clip'), 'Their food: the reader’s dish first, then its own reels and posts', JSON.stringify(a.tiles));
+    check(a.insta === 'https://www.instagram.com/demo_noodles/' && /sent in by Theo/.test(a.text), 'with its Instagram and the reader’s credit', JSON.stringify(a));
+    await page.click('.sheet-body .ftile.clip');
+    await page.waitForSelector('#vbox:not([hidden])', { timeout: 4000 }).catch(() => {});
+    check(await page.$eval('#vbox', (b) => !b.hidden) && await page.$eval('#sheet', (s) => s.hidden), 'a reel there plays in the one video box, the sheet out of its way', '');
+    await page.click('#vbox-close');
+    await page.click(foodPanel + ' [data-k="r-demo-dumpling-house"] .theirs');
+    await page.waitForSelector('.sheet-body .fgrid');
+    const b = await page.evaluate(() => ({ tiles: [...document.querySelectorAll('.sheet-body .ftile')].map((t) => t.dataset.k), insta: !!document.querySelector('.sheet-body a.insta') }));
+    check(JSON.stringify(b.tiles) === JSON.stringify(['dish-demo-dish-1']) && !b.insta, 'no Instagram: its submitted dish still shows, and no Instagram link', JSON.stringify(b));
+    await page.screenshot({ path: path.join(SHOTS, 'demo-food-their-food.png') });
+
+    /* the owner path: a short sheet and a mailto, no form */
+    await page.click('.sheet-body .owner');
+    await page.waitForSelector('.sheet-body a.mailto');
+    const o = await page.evaluate(() => ({ title: document.querySelector('.sheet-head h2').textContent, href: document.querySelector('.sheet-body a.mailto').getAttribute('href'),
+      forms: document.querySelectorAll('.sheet-body form, .sheet-body input, .sheet-body textarea').length, text: document.querySelector('.sheet-body').innerText.trim() }));
+    check(o.title === 'Feature your restaurant' && o.href === 'mailto:btownbrief@gmail.com?subject=' + encodeURIComponent('Feature my restaurant: The dumpling house'), '“Feature your restaurant” opens a mailto with a subject', o.href);
+    check(!o.forms && o.text.split('\n').filter(Boolean).length <= 2 && o.text.length < 90, 'no form and no paragraph', JSON.stringify(o.text));
+    await page.click('.sheet-head .iconbtn');
+    const foot = await page.$eval(foodPanel + ' [data-sec="open"] .addrow .owner', (x) => x.textContent).catch(() => '');
+    check(foot === 'Feature your restaurant', 'and owners find it under the list too', foot);
+    /* not food is gone from In their own words */
+    const rail = await page.$$eval(foodPanel + ' [data-sec="kitchens"] .vcard', (c) => c.map((x) => x.dataset.k));
+    check(rail.length && !rail.includes('ig-DemoTalk1'), 'an account the directory marks not-food never reaches In their own words', rail.join(', '));
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Food, the directory over the wire (live)', async () => {
+    const dir = JSON.parse(await readFile(path.join(APP, 'data/food-directory.json'), 'utf8'));
+    check(dir.not_food.theresnoaincreemee && !Object.values(dir.places).includes('theresnoaincreemee'), 'the directory names the creemee podcast as not food', '');
+    const { ctx, page, errors } = await newPage(browser, base);
+    const ig = foodInstagram(true);
+    const now = Math.floor(Date.now() / 1000);
+    ig.posts.push({ ...ig.posts[3], h: 'theresnoaincreemee', u: 'https://www.instagram.com/p/PodcastPost/', ts: now - 600, f: 1 });
+    await page.route(/\/all-day\/data\/instagram\.json/, (r) => r.fulfill({ status: 200, body: JSON.stringify(ig), contentType: 'application/json' }));
+    const bare = fd.places.find((r) => r.hours_confidence === 'google' && !r.aka.some((id) => dir.places[id]) && r.name !== pick.name);
+    const dish = { id: '21111111-2222-3333-4444-555555555555', storage_path: 'submissions/dddd.jpg', caption: 'The breakfast sandwich, every Saturday', category: 'dish',
+      area: 'Burlington', spot: bare.name, taken_on: '', credit: 'Jo', display_label: null, approved_on: '2026-10-15', votes: 0 };
+    await page.route(/\/rest\/v1\/rpc\/btb_photos_get/, (r) => r.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify([dish]) }));
+    /* the posts arrive after the list; a place opened once they are in has them */
+    await page.goto(base + '/all-day/#food/kitchens');
+    await page.waitForSelector(foodPanel + ' [data-sec="kitchens"] .vcard', { timeout: 15000 });
+    await page.waitForTimeout(300);
+    await page.evaluate(() => { location.hash = '#food/r-waterworks'; });
+    await page.waitForSelector('.sheet-head h2', { timeout: 15000 });
+    await page.waitForSelector('.sheet-body .theirs', { timeout: 8000 }).catch(() => {});
+    await page.click('.sheet-body .theirs');
+    await page.waitForSelector('.sheet-body .fgrid', { timeout: 4000 }).catch(() => {});
+    const w = await page.evaluate(() => ({ tiles: [...document.querySelectorAll('.sheet-body .ftile')].map((t) => t.dataset.k), insta: document.querySelector('.sheet-body a.insta')?.getAttribute('href') }));
+    check(w.tiles.includes('ig-FoodPhoto') && w.insta === 'https://www.instagram.com/waterworksvt/', 'Waterworks: its own post from instagram.json, by the handle its website links', JSON.stringify(w));
+    await page.click('.sheet-head .iconbtn');
+    await page.waitForSelector(foodPanel + ' [data-sec="bite"] .hero', { timeout: 8000 }).catch(() => {});
+    await page.evaluate((id) => { location.hash = '#food/r-' + id; }, bare.id);
+    await page.waitForFunction((n) => document.querySelector('.sheet-head h2')?.textContent === n, bare.name, { timeout: 15000 }).catch(() => {});
+    await page.waitForSelector('.sheet-body .theirs', { timeout: 8000 }).catch(() => {});
+    const has = !!(await page.$('.sheet-body .theirs'));
+    if (has) await page.click('.sheet-body .theirs');
+    await page.waitForSelector('.sheet-body .fgrid', { timeout: 4000 }).catch(() => {});
+    const b = await page.evaluate(() => ({ tiles: [...document.querySelectorAll('.sheet-body .ftile')].map((t) => t.dataset.k), insta: !!document.querySelector('.sheet-body a.insta') }));
+    check(has && JSON.stringify(b.tiles) === JSON.stringify(['dish-' + dish.id]) && !b.insta, bare.name + ', no Instagram: the dish a reader sent in is its food', JSON.stringify(b));
+    await page.click('.sheet-head .iconbtn');
+    const rail = await page.$$eval(foodPanel + ' [data-sec="kitchens"] .vcard', (c) => c.map((x) => x.dataset.k));
+    check(!rail.includes('ig-PodcastPost') && rail.includes('ig-FoodReelA'), 'the podcast stays out of In their own words even tagged food', rail.join(', '));
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
   });
