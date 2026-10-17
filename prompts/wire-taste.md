@@ -159,8 +159,11 @@ clearest, most complete account, and the local outlet over a wire rewrite.
   genuinely new development, and the reason says so ("Follow-up: the council voted").
 - **Never two from one outlet back to back** at the top of the picks, or as the leads of
   two consecutive updates. Spread the voices.
-- **Never promo.** Sponsored posts, giveaways, "tune in tonight", app and subscription
-  pitches, job listings, a station promoting its own show.
+- **Never promo.** Sponsored posts, contests ("like and share to win"), "tune in
+  tonight", app and subscription pitches, job listings, a station promoting its own
+  show, a business advertising its specials or a sale. A neighbor's post is not promo:
+  a band announcing its show, a group's food drive, a spare ticket given away, a
+  question, a report. Those are the town talking, and the river carries the real ones.
 - **Never saturation without a distinct angle.** One anchor per big story.
 - **Never invent.** Headlines are used exactly as given. A reason may say why a story
   matters; it never states a fact (a number, a date, a name) the headline does not give.
