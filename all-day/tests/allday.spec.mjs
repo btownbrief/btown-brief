@@ -2427,8 +2427,36 @@ async function theFood(browser, base) {
     check(args.p_category === 'dish' && args.p_permission === true && args.p_spot === pick.name && args.p_caption === 'The cold sesame noodles, every time' && /^p_/.test(args.p_voter || ''),
       'and goes to the moderation queue as a dish, with consent, the place and the line', JSON.stringify(args));
     check(/Sent/.test(await page.$eval('#toast', (t) => t.textContent)), 'the reader is told it is in the queue', await page.$eval(form + ' .err', (e) => e.textContent));
+
+    /* both kinds of dish: one you loved somewhere, or one you made at home */
+    const kinds = await page.$eval(form, (f) => ({ line: f.querySelector('p.note').textContent, pills: [...f.querySelectorAll('.where .pills button')].map((b) => [b.textContent, b.classList.contains('on')]) }));
+    check(kinds.line === 'A dish you loved somewhere, or one you made at home.', 'the form says it covers both', kinds.line);
+    check(JSON.stringify(kinds.pills) === '[["At a place",true],["Made at home",false]]', 'and asks which: At a place (the default) or Made at home', JSON.stringify(kinds.pills));
+    await page.click(form + ' .where button:has-text("Made at home")');
+    check(await page.$eval(form + ' input[name=place]', (i) => i.closest('.row').hidden), 'made at home: the place field goes away', '');
+    await page.setInputFiles(form + ' input[type=file]', { name: 'dish.png', mimeType: 'image/png', buffer: photo });
+    await page.fill(form + ' input[name=line]', 'Sunday sauce, my grandmother’s way');
+    await page.check(form + ' input[name=consent]');
+    const before = sent.length;
+    await page.click(form + ' .send');
+    for (let i = 0; i < 60 && !sent.slice(before).some((x) => /btb_photos_submit/.test(x.url)); i++) await page.waitForTimeout(100);
+    const rpc2 = sent.slice(before).find((x) => /btb_photos_submit/.test(x.url));
+    const args2 = rpc2 ? JSON.parse(rpc2.body) : {};
+    check(args2.p_category === 'dish' && args2.p_spot === 'Made at home' && args2.p_area === 'Greater Burlington' && args2.p_caption === 'Sunday sauce, my grandmother’s way',
+      'a home dish needs no place: it goes to the same queue with “Made at home” in the place field (no SQL change)', JSON.stringify(args2));
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
+
+    /* a home dish as the Weekly Bite: made at home, no neighborhood, no place button */
+    const hm = await newPage(browser, base);
+    const homeDish = { ...dish, id: '31111111-2222-3333-4444-555555555555', caption: 'Sunday sauce', spot: 'Made at home', area: 'Greater Burlington' };
+    await hm.page.route(/\/rest\/v1\/rpc\/btb_photos_get/, (r) => r.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify([homeDish]) }));
+    await hm.page.goto(base + '/all-day/#food');
+    await hm.page.waitForSelector(foodPanel + ' .hero[data-k="bite"]', { timeout: 15000 });
+    const hh = await hm.page.$eval(foodPanel + ' .hero[data-k="bite"]', (h) => ({ p: h.querySelector('p').textContent, place: [...h.querySelectorAll('.btn')].some((b) => b.textContent === 'The place') }));
+    check(hh.p === 'Made at home · sent in by Sam' && !hh.place, 'a home dish as the Bite reads “Made at home”, with no area and no place button', JSON.stringify(hh));
+    check(!hm.errors.length, 'no console errors', hm.errors.join(' | '));
+    await hm.ctx.close();
 
     /* nobody approved yet: the slot invites the first one; the demo never sends */
     const d = await newPage(browser, base);
@@ -3053,15 +3081,22 @@ async function theWatch(browser, base) {
     check(JSON.stringify(toc) === JSON.stringify(['Theaters', 'The list', 'Town', 'Next screening', 'Chat']), 'and the table of contents leaves it out', toc.join(' / '));
     check((await wTiles(page)).length === 60, 'all sixty films', '');
     const dots = () => page.$$eval(wPanel + ' [data-grid] .poster', (n) => n.map((a) => [a.dataset.k, [...a.querySelectorAll('.seen i')].map((i) => (i.classList.contains('on') ? 1 : 0)).join('')]));
-    check((await dots()).every((d) => d[1] === '0'), 'Just me: one dot on every poster, none filled', JSON.stringify((await dots()).slice(0, 3)));
+    check((await dots()).every((d) => d[1] === '0'), 'alone: one dot on every poster, none filled', JSON.stringify((await dots()).slice(0, 3)));
+    const sw = await page.$eval(wPanel + ' [data-who]', (b) => ({ label: b.querySelector('label').textContent.trim(), role: b.querySelector('input[data-with]').getAttribute('role'),
+      on: b.querySelector('input[data-with]').checked, line: b.querySelector('.note').textContent, legend: !!b.querySelector('[data-legend]') }));
+    check(sw.label === 'Watching with someone' && sw.role === 'switch' && !sw.on, 'the partner mode is a switch that says what it is: Watching with someone, off', JSON.stringify(sw));
+    check(sw.line === 'Mark what each of you has seen, and find films neither of you has.' && !sw.legend, 'one line says what it is for; no legend while it is off', JSON.stringify(sw));
+    check(!/Just me|With partner/.test(await page.$eval(wPanel + ' [data-slot="list"]', (n) => n.innerText)), 'the old “With partner / Just me” words are gone', '');
 
-    await page.click(wPanel + ' [data-who] button:has-text("With")');
+    await page.click(wPanel + ' [data-who] input[data-with]');
     await page.waitForSelector('.sheet-body input[name=partner]');
     await page.fill('.sheet-body input[name=partner]', '  Sam  ');
     await page.click('.sheet-body button[type=submit]');
     await page.waitForSelector('#sheet[hidden]', { state: 'attached' });
     check((await dots()).every((d) => d[1] === '00'), 'With Sam: a second dot on every poster', JSON.stringify((await dots()).slice(0, 3)));
-    check(await page.$eval(wPanel + ' [data-who] button.on', (b) => b.textContent) === 'With Sam', 'the switch reads With Sam', '');
+    const on = await page.$eval(wPanel + ' [data-who]', (b) => ({ on: b.querySelector('input[data-with]').checked,
+      legend: [...b.querySelectorAll('[data-legend] .wwho')].map((w) => w.textContent + ':' + [...w.querySelectorAll('i')].map((i) => (i.classList.contains('on') ? 1 : 0)).join('')) }));
+    check(on.on && JSON.stringify(on.legend) === '["You:10","Sam:01"]', 'on: the legend names the two dots, first yours, second Sam’s', JSON.stringify(on));
 
     const k = (await wTiles(page))[4];
     await page.click(wPanel + ' [data-k="' + k + '"]');
@@ -3087,8 +3122,14 @@ async function theWatch(browser, base) {
     await page.click(wPanel + ' [data-show] button:has-text("Neither of us")');
     check((await wTiles(page)).length === 58 && !(await wTiles(page)).includes(k) && !(await wTiles(page)).includes(k2), 'Neither of us leaves out both seen films', (await wTiles(page)).length);
     await page.click(wPanel + ' [data-show] button:has-text("All")');
-    await page.click(wPanel + ' [data-who] button:has-text("Just me")');
-    check((await dots()).every((d) => d[1].length === 1) && Object.fromEntries(await dots())[k] === '1', 'Just me again: one dot, and yours is kept', '');
+    await page.click(wPanel + ' [data-who] [data-rename]');
+    await page.waitForSelector('.sheet-body input[name=partner]');
+    check(await page.$eval('.sheet-body input[name=partner]', (i) => i.value) === 'Sam', 'Change name opens the name, filled in', '');
+    await page.click('.sheet-head .iconbtn');
+    await page.waitForSelector('#sheet[hidden]', { state: 'attached' });
+    await page.click(wPanel + ' [data-who] input[data-with]');
+    check((await dots()).every((d) => d[1].length === 1) && Object.fromEntries(await dots())[k] === '1' && !(await page.$(wPanel + ' [data-legend]')),
+      'switched off: one dot, yours is kept, and the legend goes', '');
 
     /* rating, signed out: told it is one email, nothing sent */
     await page.click(wPanel + ' [data-k="' + k + '"]');
@@ -3471,6 +3512,22 @@ async function theWatch(browser, base) {
     let s = await shown();
     const ids = (m, kind) => (kind === 'tv' ? months.get(m).tv.map((k) => String(TV_BASE + Number(k.slice(1)))) : [...months.get(m).theaters, ...months.get(m).streaming].map((k) => k.slice(1)));
     check(s.m === yearAgo && s.title === name(yearAgo), 'Back then opens a year ago: ' + name(yearAgo), JSON.stringify(s));
+    const bhead = await page.$eval(wPanel + ' [data-sec="back"]', (h) => ({ title: h.querySelector('h2').textContent, sub: (h.querySelector('p') || {}).textContent, sub2: h.closest('[data-slot]').querySelector('.dateline .s').textContent }));
+    check(bhead.title === 'Back then' && bhead.sub === 'Rotten Tomatoes’ front page, month by month' && bhead.sub2 === '', 'it says what it is: Rotten Tomatoes’ front page, month by month', JSON.stringify(bhead));
+    const n0 = s.ids.length;
+    const allBtn = () => page.$eval(wPanel + ' [data-back-all]', (b) => [b.textContent, b.dataset.backAll, b.getAttribute('aria-expanded')]);
+    check(JSON.stringify(await allBtn()) === JSON.stringify(['Show all ' + n0, 'closed', 'false']) && await page.$(wPanel + ' [data-slot="back"] .rail[data-back]') !== null,
+      'a rail, with a Show all button', JSON.stringify(await allBtn()));
+    await page.click(wPanel + ' [data-back-all]');
+    const grid = await page.evaluate(() => { const g = document.querySelector('#panel-watch [data-slot="back"] [data-back]'); const r = [...g.querySelectorAll('.poster')].map((a) => a.getBoundingClientRect());
+      return { grid: g.classList.contains('wgrid'), rail: !!g.closest('.rail-wrap'), wrap: g.scrollWidth <= g.clientWidth + 1, rows: new Set(r.map((x) => Math.round(x.top))).size, n: r.length }; });
+    check(grid.grid && !grid.rail && grid.wrap && grid.n === n0 && grid.rows > 1, 'Show all opens every title in a wrapping grid that scrolls down', JSON.stringify(grid));
+    check(JSON.stringify(await allBtn()) === JSON.stringify(['Show less', 'open', 'true']), 'and the button says Show less', JSON.stringify(await allBtn()));
+    await page.click(wPanel + ' [data-slot="back"] .dateline .nav[aria-label="Earlier day"]');
+    check(await page.$(wPanel + ' [data-slot="back"] .wgrid[data-back]') !== null, 'it stays a grid from month to month', '');
+    await page.click(wPanel + ' [data-slot="back"] .dateline .nav[aria-label="Later day"]');
+    await page.click(wPanel + ' [data-back-all]');
+    check(await page.$(wPanel + ' [data-slot="back"] .rail[data-back]') !== null && (await allBtn())[1] === 'closed', 'Show less folds it back into the rail', '');
     check(JSON.stringify(s.ids) === JSON.stringify(ids(yearAgo)), 'that month’s big films, theaters then streaming', JSON.stringify(s.ids));
     await page.click(wPanel + ' [data-slot="back"] .dateline .nav[aria-label="Earlier day"]');
     s = await shown();
@@ -3513,6 +3570,14 @@ async function theWatch(browser, base) {
     check(order.indexOf('cta') === order.indexOf('soon') + 1, 'the screening call sits right under Coming soon', order.join(','));
     const cta = await page.$eval(wPanel + ' [data-cta="vote"]', (b) => b.textContent.trim());
     check(cta === 'Vote for the next screening', 'it says what it does, and nothing else', cta);
+    const host = await page.$$eval(wPanel + ' [data-host]', (n) => n.map((p) => ({ slot: p.closest('[data-slot]').dataset.slot, text: p.textContent, href: p.querySelector('a').getAttribute('href'),
+      target: p.querySelector('a').target, link: p.querySelector('a').textContent })));
+    check(JSON.stringify(host.map((h) => h.slot)) === '["cta","vote"]' && host.every((h) => h.text === 'Stephen hosts a movie night with a mixer after. Pick the next film.'),
+      'one line says who is screening, on the call and atop the ballot', JSON.stringify(host));
+    check(host.every((h) => h.href === 'https://www.meetup.com/burlington-social-activites-group/' && h.target === '_blank' && h.link === 'Stephen hosts a movie night'),
+      'and it links to his Meetup group', JSON.stringify(host));
+    const order2 = await page.$eval(wPanel + ' [data-slot="vote"]', (v) => [...v.children].map((c) => c.dataset.sec ? 'sec' : c.dataset.host ? 'host' : c.dataset.ballot ? 'ballot' : c.className));
+    check(order2[0] === 'sec' && order2[1] === 'host', 'the line sits right under the ballot’s title', JSON.stringify(order2));
     const names = await page.$$eval(wPanel + ' [data-theater] button', (n) => n.map((b) => [b.textContent, b.classList.contains('on')]));
     check(JSON.stringify(names.map((x) => x[0])) === '["Partizanfilm","Majestic 10","Essex Cinemas"]', 'the three theaters', JSON.stringify(names));
     check(names.find((x) => x[1])[0] === 'Majestic 10', 'Partizanfilm is closed, so the first open with shows today leads', JSON.stringify(names));
@@ -3572,7 +3637,7 @@ async function theWatch(browser, base) {
       ['m' + t1.id]: { id: t1.id, k: 'movie', t: '<img src=x onerror=alert(1)>', y: t1.y, d: t1.d, g: [], o: '', p: '/../../evil.jpg' },
       t1399: { id: 1399, k: 'tv', t: 'A Show', y: 2011, d: '2011-04-17', g: ['Drama'], o: '', p: '/sh.jpg' },
       m42: { id: 99, k: 'movie', t: 'Key and id disagree', y: 2020, d: '2020-01-01', g: [], o: '', p: '' } },
-      months: [{ m: m(12), src: 'rt', theaters: ['m' + t0.id, 'm42'], streaming: ['m' + t1.id], tv: ['t1399'] }, { m: 'not-a-month', theaters: ['m' + t0.id] }] };
+      months: [{ m: m(12), src: 'rt', theaters: ['m' + t0.id, 'm42'], streaming: ['m' + t1.id], tv: ['t1399'] }, { m: m(13), src: 'tmdb', theaters: ['m' + t0.id], tv: [] }, { m: 'not-a-month', theaters: ['m' + t0.id] }] };
     const showtimes = { v: 1, days: [today], theaters: [
       { id: 'majestic10', name: 'Majestic 10', town: 'Williston', url: 'https://www.majestic10.com/movies', ok: true, closed: false, back: '',
         days: { [today]: [{ t: films.now[0].t, id: films.now[0].id, p: films.now[0].p, times: ['23:59'] }, { t: '<b>Bold</b> Title', p: '/x.jpg', times: ['23:59', 'bad'] }] } },
@@ -3585,6 +3650,10 @@ async function theWatch(browser, base) {
     check(back.length === 2 && back[0][0] === String(t0.id) && back[0][2] === 'https://image.tmdb.org/t/p/w342' + t0.p, 'Back then: TMDB posters at w342, a key that disagrees with its id left out', JSON.stringify(back));
     check(back[1][1] === '<img src=x onerror=alert(1)>' && !back[1][2] && !(await page.$(wPanel + ' [data-back] img[src="x"]')), 'a title is text, never markup, and a bad poster path is dropped', JSON.stringify(back[1]));
     check(await page.$eval(wPanel + ' [data-slot="back"] .dateline b', (b) => b.textContent) === new Intl.DateTimeFormat('en-US', { timeZone: 'UTC', month: 'long', year: 'numeric' }).format(new Date(m(12) + '-15T12:00:00Z')), 'and the month is named', '');
+    check(!(await page.$(wPanel + ' [data-back-all]')), 'two titles fit the rail: no Show all', '');
+    await page.click(wPanel + ' [data-slot="back"] .dateline .nav[aria-label="Earlier day"]');
+    check(await page.$eval(wPanel + ' [data-slot="back"] .dateline .s', (n) => n.textContent) === 'Most popular on TMDB', 'a month the archive missed says it is TMDB’s most popular, not the front page', '');
+    await page.click(wPanel + ' [data-slot="back"] .dateline .nav[aria-label="Later day"]');
     const th = await page.$$eval(wPanel + ' [data-theater] button', (n) => n.map((b) => b.textContent));
     check(JSON.stringify(th) === '["Partizanfilm","Majestic 10","Essex Cinemas"]', 'theaters are the known three, whatever the file adds', JSON.stringify(th));
     const rows = await page.$$eval(wPanel + ' [data-showing] .lrow', (n) => n.map((r) => [r.querySelector('.t').textContent, r.querySelector('[data-times]').textContent, r.querySelector('img') && r.querySelector('img').getAttribute('src')]));
