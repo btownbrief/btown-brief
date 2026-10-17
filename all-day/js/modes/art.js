@@ -96,9 +96,10 @@ const rank = (a, b) => (b.votes - a.votes) || (a.created - b.created);
 /* data/demo/art.json, seeded into the boards demo backend so the demo runs
    the real path: votes, reports and posting through boards.js. The
    foundation's own sample Art posts make way for these; anything a reader
-   posts in the demo stays. Seeded once, when the app loads, so Vintage's
-   make-a-tee can find a shirt post even before this tab is opened. */
-const demoReady = app.demo ? app.demoData(KEY).then((d) => { seed(d); return d; }) : null;
+   posts in the demo stays. Seeded once, the first time this tab opens, so
+   the demo backend never changes under another tab mid-visit. */
+let demoReady = null;
+const demoSeed = () => demoReady || (demoReady = app.demoData(KEY).then((d) => { seed(d); return d; }));
 
 function seed(d) {
   const f = boards._fake();
@@ -202,7 +203,7 @@ function take() {
    dishes, which belong to the Weekly Bite. */
 function loadGallery() {
   const got = app.demo
-    ? demoReady.then((d) => (d.gallery || []).map((g) => ({ id: g.id, url: g.palette, caption: g.caption, credit: g.credit, spot: g.spot, area: g.area,
+    ? demoSeed().then((d) => (d.gallery || []).map((g) => ({ id: g.id, url: g.palette, caption: g.caption, credit: g.credit, spot: g.spot, area: g.area,
       approved_on: new Date(Date.now() - (g.days || 0) * DAY).toISOString().slice(0, 10) })))
     : (window.BTBP ? Promise.resolve() : script(PHOTOS_LIB)).then(() => window.BTBP.getApproved()).then((r) => r.photos || []);
   return got.catch(() => []).then((photos) => {
@@ -380,7 +381,7 @@ function verdict(score) {
   if (score >= 6.5) return 'Worth the walk.';
   if (score >= 5) return 'Could go either way.';
   if (score >= 3) return 'Probably a quiet one.';
-  return 'Not tonight, but the light changes fast.';
+  return 'Probably a gray one, but the light changes fast.';
 }
 const clock = (ms) => new Date(ms).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZone: 'America/New_York' }).replace(' AM', ' am').replace(' PM', ' pm');
 
@@ -396,12 +397,16 @@ function paintInvite(host) {
   const scored = !!sun && Number.isFinite(sun.score) && !sun.degraded;
   const tc = el('div', 'textcard gap');
   tc.dataset.k = 'invite';
-  const head = scored
-    ? (tonight ? 'Tonight’s' : 'Tomorrow’s') + ' sunset scores ' + sun.score.toFixed(1) + ' out of 10'
-    : 'The wall starts with you';
-  const when = ms ? 'Sunset is at ' + clock(ms) + (tonight ? ' tonight. ' : ' tomorrow. ') : '';
-  tc.innerHTML = '<span class="eyebrow">Photo of the week</span><h3 class="serif">' + esc(head) + '</h3>' +
-    '<p>' + esc(when + (scored ? verdict(sun.score) + ' ' : '') + 'Nobody has put a picture on the wall yet. The first one is photo of the week by default.') + '</p>' +
+  /* a good score is the headline; a gray one is said plainly, lower down */
+  const day = tonight ? 'tonight' : 'tomorrow';
+  const score = scored ? (tonight ? 'Tonight’s' : 'Tomorrow’s') + ' sunset scores ' + sun.score.toFixed(1) + ' out of 10' : '';
+  const head = scored && sun.score >= 5 ? score : 'The wall starts with you';
+  const words = [
+    ms ? 'Sunset is at ' + clock(ms) + ' ' + day + '.' : '',
+    scored ? (sun.score >= 5 ? '' : score + '. ') + verdict(sun.score) : '',
+    'Nobody has put a picture on the wall yet, so the first one is photo of the week.',
+  ].filter(Boolean).join(' ');
+  tc.innerHTML = '<span class="eyebrow">Photo of the week</span><h3 class="serif">' + esc(head) + '</h3><p>' + esc(words) + '</p>' +
     (spot ? '<p><b>' + esc('Best spot: ' + spot.name) + '</b>' + esc((spot.walk_min ? ', ' + spot.walk_min + ' minutes’ walk from Church Street. ' : '. ') + (spot.why || '')) + '</p>' : '');
   const row = el('div', 'row');
   row.appendChild(button(ICON.plus + ' Add the first photo', '', () => compose('photo')));
@@ -459,6 +464,7 @@ function paintWall(host) {
       page().then(() => { paint('wall'); paint('winners'); });
     }));
   } else {
+    host.appendChild(el('div', 'spacer'));
     host.appendChild(el('p', 'note pad', esc('That’s the whole wall: ' + plural(list.length, 'picture', 'pictures') + ', back to the first.')));
   }
 }
@@ -628,7 +634,7 @@ app.register(KEY, {
   mount(r) {
     root = r;
     r.innerHTML = '<p class="loading">Hanging the wall…</p>';
-    (demoReady || Promise.resolve()).then(load).then(() => {
+    (app.demo ? demoSeed() : Promise.resolve()).then(load).then(() => {
       ready = true;
       render();
       if (app.activeTab() === KEY) app.paintSubnav();
