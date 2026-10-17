@@ -1706,8 +1706,16 @@ async function thePhotos(browser, base) {
     check(!!(await page.$eval(pmPanel + ' .card.pm img.pic', (i) => i.getAttribute('src'))), 'and takes it back on the way up', '');
     /* a broken picture takes its card with it */
     const k1 = 'https://example.org/live/sd1';
+    /* The failed request must belong to a visible, loaded image. An offscreen
+       lazy image can defer the bad URL without ever emitting an error. */
+    await page.locator(pmPanel + ' [data-k="' + k1 + '"]').evaluate(n => n.scrollIntoView({block:'center',behavior:'instant'}));
+    await page.waitForFunction(k => {
+      const c=[...document.querySelectorAll('#panel-wire [data-k]')].find(n=>n.dataset.k===k);
+      const img=c && c.querySelector('img.pic');
+      return img && img.getAttribute('src') && !img.dataset.src && img.complete;
+    }, k1);
     await page.evaluate((k) => { const img = [...document.querySelectorAll('#panel-wire [data-k]')].find((n) => n.dataset.k === k).querySelector('img.pic'); img.src = 'data:image/png;base64,broken'; }, k1);
-    await page.waitForTimeout(300);
+    await page.waitForFunction(k => ![...document.querySelectorAll('#panel-wire [data-k]')].some(n=>n.dataset.k===k), k1, {timeout:4000}).catch(()=>{});
     check(!(await page.$$eval(pmPanel + ' [data-k]', (n, k) => n.some((x) => x.dataset.k === k), k1)), 'a picture that will not load takes its card with it', '');
     check(!errors.filter((e) => !/ERR_INVALID_URL|Failed to load resource/.test(e)).length, 'no console errors', errors.join(' | '));
     await ctx.close();
@@ -2674,7 +2682,9 @@ async function interactions(browser, base) {
     await page.keyboard.press('Escape');
     check(await page.$('#sheet[hidden]') !== null, 'Escape closes the sheet', '');
 
-    const rowAt = async (i) => { const l = page.locator('.panel:not([hidden]) .card.row').nth(i); await l.scrollIntoViewIfNeeded(); await page.waitForTimeout(250); return l.boundingBox(); };
+    /* Center the story before dragging: a floating bar can cover a row that
+       Playwright considers visible at the viewport's bottom edge. */
+    const rowAt = async (i) => { const l = page.locator('.panel:not([hidden]) .card.row').nth(i); await l.evaluate(n => n.scrollIntoView({block:'center',behavior:'instant'})); await page.waitForTimeout(250); return l.boundingBox(); };
     const box = await rowAt(1);
     const k2 = await page.locator('.panel:not([hidden]) .card.row').nth(1).getAttribute('data-k');
     await page.mouse.move(box.x + 60, box.y + box.height / 2);

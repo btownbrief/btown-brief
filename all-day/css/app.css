@@ -279,7 +279,7 @@ body.chrome-away .mast { transform: translateY(-100%); }
   border: 1px solid var(--dock-edge); border-radius: var(--r-dock); box-shadow: var(--dock-shadow);
 }
 .tabbar button { position: relative; display: grid; justify-items: center; align-content: center; gap: 4px;
-  min-width: 0; padding: 0 2px; color: var(--dock-muted); font-size: var(--fs-label); font-weight: 500;
+  min-width: 0; padding: 0 1px; color: var(--dock-muted); font-size: var(--fs-label); font-weight: 500;
   line-height: 1; letter-spacing: .01em; border-radius: var(--r-pill); transition: color .15s ease, background .15s ease; }
 .tabbar button span { white-space: nowrap; }
 .tabbar button:hover { color: var(--dock-ink); background: var(--dock-hover); }
