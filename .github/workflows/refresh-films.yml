@@ -7,10 +7,12 @@ name: Refresh the Watch tab's films
 #                           now, and the shows: top rated, trending, airing.
 #   data/time-machine.json  scripts/build_time_machine.py, the 2nd of each
 #                           month. What was big each month for five years:
-#                           titles from the Wayback Machine's copies of Rotten
-#                           Tomatoes' front page, matched to TMDB. Keeps the
-#                           finished months from the last file, so a monthly
-#                           run reads two archived pages, not sixty.
+#                           the titles in data/time-machine-titles.json
+#                           (harvested from the Wayback Machine's copies of
+#                           Rotten Tomatoes' front page, on a machine where
+#                           archive.org answers: it refuses GitHub's runners),
+#                           matched to TMDB here. A month not harvested yet
+#                           comes from TMDB's own most popular releases.
 #   data/showtimes.json     scripts/build_showtimes.py, every morning. Times
 #                           at Partizanfilm, Majestic 10 and Essex Cinemas,
 #                           from each theater's own showtimes page.
@@ -127,7 +129,8 @@ jobs:
         env:
           TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
         run: |
-          python3 scripts/build_time_machine.py \
+          python3 scripts/build_time_machine.py --no-wayback \
+            --titles data/time-machine-titles.json \
             --prev /tmp/films-out/data/time-machine.json \
             --out /tmp/films-new/data/time-machine.json
 

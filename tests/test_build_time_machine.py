@@ -137,26 +137,66 @@ class Match(unittest.TestCase):
         self.m = tm.Matcher(fake_tmdb(self.calls))
 
     def test_closest_release_to_the_month_wins_over_popularity(self):
-        got = self.m.match("movie", "lake_house_heist", "Lake House Heist", "2021-01")
+        got = self.m.match("movie", "Lake House Heist", "2021-01")
         self.assertEqual((got["id"], got["k"], got["y"], got["p"], got["g"]), (11, "movie", 2020, "/a.jpg", ["Action"]))
 
-    def test_a_year_in_the_slug_must_agree(self):
-        got = self.m.match("movie", "the_long_ferry_2021", "The Long Ferry", "2021-01")
+    def test_a_year_from_the_link_must_agree(self):
+        got = self.m.match("movie", "The Long Ferry", "2021-01", 2021)
         self.assertEqual(got["id"], 22)
         self.assertLessEqual(len(got["o"]), tm.OVERVIEW_MAX)
 
     def test_no_exact_title_no_match(self):
-        self.assertIsNone(self.m.match("movie", "quiet_orchard", "Quiet Orchard", "2021-01"))
+        self.assertIsNone(self.m.match("movie", "Quiet Orchard", "2021-01"))
 
     def test_a_film_from_after_the_month_is_not_it(self):
-        self.assertIsNone(self.m.match("movie", "moss_road", "Moss Road", "2023-10"))
+        self.assertIsNone(self.m.match("movie", "Moss Road", "2023-10"))
 
     def test_a_show_by_popularity_and_searches_are_cached(self):
-        a = self.m.match("tv", "harbor_town", "Harbor Town", "2021-01")
-        b = self.m.match("tv", "harbor_town", "Harbor Town", "2021-02")
+        a = self.m.match("tv", "Harbor Town", "2021-01")
+        b = self.m.match("tv", "Harbor Town", "2021-02")
         self.assertEqual((a["id"], a["k"], a["g"]), (52, "tv", ["Drama"]))
         self.assertEqual(b, a)
         self.assertEqual(sum(1 for p, _ in self.calls if p == "/search/tv"), 1)
+
+
+class WaybackBudget(unittest.TestCase):
+    def test_four_failures_in_a_row_stop_the_asking(self):
+        asked = []
+
+        def down(url):
+            asked.append(url)
+            raise OSError("timed out")
+        w = tm.Wayback(down, pause=0)
+        with mock.patch.object(tm.time, "sleep"):
+            self.assertEqual(w.month("2021-01"), (None, None))   # two CDX queries, two tries each
+            self.assertEqual(w.month("2021-02"), (None, None))
+        self.assertEqual(len(asked), 2 * tm.GIVE_UP)
+        self.assertFalse(w.usable())
+
+    def test_past_the_budget_nothing_is_asked(self):
+        now = [0]
+        asked = []
+        w = tm.Wayback(lambda url: asked.append(url) or "[]", pause=0, budget=10, clock=lambda: now[0])
+        self.assertEqual(w.month("2021-01"), (None, None))       # an empty CDX answer: no copy that month
+        n = len(asked)
+        now[0] = 11
+        self.assertEqual(w.month("2021-02"), (None, None))
+        self.assertEqual(len(asked), n)
+
+    def test_a_month_reads_the_copy_from_the_middle(self):
+        asked = []
+
+        def opener(url):
+            asked.append(url)
+            if "cdx" in url:
+                return json.dumps([["urlkey", "timestamp"], ["com,rottentomatoes)/", "20211015000000"]]) if "from=20211015" in url else "[]"
+            return PAGE_2021
+        w = tm.Wayback(opener, pause=0)
+        with mock.patch.object(tm, "MIN_TITLES", 1):
+            ts, shelves = w.month("2021-10")
+        self.assertEqual(ts, "20211015000000")
+        self.assertEqual(shelves["tv"], [("tv", "harbor_town", "Harbor Town")])
+        self.assertIn("web.archive.org/web/20211015000000id_/https://www.rottentomatoes.com/", asked[-1])
 
 
 class FakeWayback:
@@ -218,8 +258,48 @@ class Build(unittest.TestCase):
     def test_december_allows_next_years_release(self):
         m = tm.Matcher(fake_tmdb([]))
         with mock.patch.dict(SEARCH, {("movie", "Snow Day"): [{"id": 61, "title": "Snow Day", "release_date": "2025-01-03", "popularity": 1}]}):
-            self.assertEqual(m.match("movie", "snow_day", "Snow Day", "2024-12")["id"], 61)
-            self.assertIsNone(m.match("movie", "snow_day", "Snow Day", "2024-11"))
+            self.assertEqual(m.match("movie", "Snow Day", "2024-12")["id"], 61)
+            self.assertIsNone(m.match("movie", "Snow Day", "2024-11"))
+
+
+class Harvest(unittest.TestCase):
+    def test_the_titles_file_then_a_run_with_no_wayback(self):
+        months = ["2021-03", "2021-02", "2021-01"]
+        way = FakeWayback({"2021-03": PAGE_2021, "2021-02": None, "2021-01": PAGE_2021})
+        doc = tm.harvest(months, way)
+        self.assertEqual(list(doc["months"]), ["2021-03", "2021-01"])          # newest first; no copy, no month
+        self.assertEqual(doc["months"]["2021-01"]["theaters"], [["movie", "Lake House Heist", None], ["movie", "The Long Ferry", 2021]])
+        self.assertEqual(doc["months"]["2021-01"]["tv"], [["tv", "Harbor Town", None]])
+        self.assertNotIn("_2021", json.dumps(doc))                               # a year, never the link
+        # a later harvest keeps finished months and asks only the newest two again
+        way2 = FakeWayback({"2021-04": PAGE_2023, "2021-03": None, "2021-02": PAGE_2023, "2021-01": None})
+        doc2 = tm.harvest(["2021-04"] + months, way2, doc)
+        self.assertEqual(way2.asked, ["2021-04", "2021-03", "2021-02"])
+        self.assertEqual(doc2["months"]["2021-03"], doc["months"]["2021-03"])  # no copy this time: last time's kept
+        self.assertEqual(doc2["months"]["2021-01"], doc["months"]["2021-01"])
+        # the GitHub run: no Wayback at all, the titles file matched to TMDB, the rest from TMDB
+        calls = []
+        with mock.patch.object(tm, "MIN_TITLES", 1):
+            titles, out = tm.build(months, None, tm.Matcher(fake_tmdb(calls)), harvested=doc["months"])
+        by = {m["m"]: m for m in out}
+        self.assertEqual((by["2021-01"]["src"], by["2021-01"]["theaters"], by["2021-01"]["tv"]), ("rt", ["m11", "m22"], ["t52"]))
+        self.assertEqual(by["2021-02"]["src"], "tmdb")
+        # and a month that fell back to TMDB is matched once the titles file has it, with no Wayback
+        prev = tm.payload(titles, out, tm.utcnow())
+        more = {**doc["months"], "2021-02": doc["months"]["2021-01"]}
+        with mock.patch.object(tm, "MIN_TITLES", 1):
+            _, out2 = tm.build(["2021-04"] + months, None, tm.Matcher(fake_tmdb([])), prev, harvested=more)
+        self.assertEqual({m["m"]: m["src"] for m in out2}["2021-02"], "rt")
+
+    def test_harvest_cli_needs_no_key(self):
+        with tempfile.TemporaryDirectory() as d, mock.patch.dict(os.environ, {}, clear=True):
+            path = os.path.join(d, "titles.json")
+            this = tm.month_list(tm.utcnow().date(), 1)[0]
+            args = argparse.Namespace(harvest=path, months=2, out="", prev="")
+            self.assertEqual(tm.run(args, wayback=FakeWayback({this: PAGE_2021})), 0)
+            with open(path, encoding="utf-8") as src:
+                self.assertEqual(list(json.load(src)["months"]), [this])
+            self.assertEqual(tm.run(argparse.Namespace(harvest=os.path.join(d, "none.json"), months=2), wayback=FakeWayback({})), 1)
 
 
 class Run(unittest.TestCase):

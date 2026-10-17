@@ -25,15 +25,28 @@ title: its id, poster path, year, genres and overview come from TMDB's API
 under the same attribution as data/films.json. A title TMDB cannot match
 exactly is left out rather than guessed.
 
-When a month has no usable copy (the Wayback Machine had none, or the page
-it kept was a login wall), the month comes from TMDB itself instead: the
-most popular films released in the US that month, and the most popular
-shows that premiered in it. Such a month is marked `src: "tmdb"`.
+Two steps, because archive.org refuses connections from GitHub's runners
+(verified 2026-10-17: "Connection refused" on every request from Actions,
+while the same requests answer from a home connection):
+
+  1. --harvest (anywhere archive.org answers, no TMDB key): read the
+     archived front pages and write the TITLES ONLY to
+     data/time-machine-titles.json, which is committed to the repo. Each
+     listing is [kind, title, year], the year only when the listing's link
+     carried one. Finished months are final; a harvest re-reads only this
+     month and last month, so a monthly harvest is two pages.
+  2. The workflow (monthly, with the TMDB key, --no-wayback): match every
+     harvested title to TMDB and write data/time-machine.json.
+
+When a month has no harvested titles (no usable copy, a login wall, or no
+harvest yet), the month comes from TMDB itself instead: the most popular
+films released in the US that month, and the most popular shows that
+premiered in it. Such a month is marked `src: "tmdb"` and is matched from
+the titles file as soon as a later harvest has it.
 
 Politeness. One CDX query and one page per month, a pause between Wayback
-requests, an honest user agent, and the months already in the last file
-are kept: after the first run, a monthly run fetches two pages (this month
-and last month, which may have changed since the last run).
+requests, an honest user agent, a 15-minute budget per run, and it stops
+asking after four failures in a row.
 
 The file:
 
@@ -43,10 +56,17 @@ The file:
                 theaters: ["m1", ...], streaming: [...], tv: [...] } ]   newest first }
 
 CLI:
-  --out PATH    where to write (default data/time-machine.json)
-  --prev PATH   the last good file, whose finished months are kept
-  --months N    how many months back (default 60)
-  --selftest    run the offline checks and exit
+  --harvest PATH  refresh the titles file at PATH from the Wayback Machine, then exit
+  --titles PATH   the titles file to match (default data/time-machine-titles.json)
+  --no-wayback    never ask the Wayback Machine (the workflow passes this)
+  --out PATH      where to write (default data/time-machine.json)
+  --prev PATH     the last good file, whose finished months are kept
+  --months N      how many months back (default 60)
+  --selftest      run the offline checks and exit
+
+Monthly, on a machine where archive.org answers (Stephen's Mac):
+  python3 scripts/build_time_machine.py --harvest data/time-machine-titles.json
+then commit the file; the next workflow run matches it.
 
 Failure posture, as build_films.py: no TMDB_API_KEY logs and exits 0
 without writing; with a key, fewer than MIN_MONTHS usable months, or a
@@ -71,17 +91,21 @@ from build_films import IMAGES, NOTICE, POSTER, DAY, Tmdb, trim, write_json  # n
 
 ROOT = os.path.join(os.path.dirname(__file__), "..")
 OUT = os.path.join(ROOT, "data", "time-machine.json")
+TITLES = os.path.join(ROOT, "data", "time-machine-titles.json")
 CDX = "https://web.archive.org/cdx/search/cdx"
 SNAP = "https://web.archive.org/web/{ts}id_/https://www.rottentomatoes.com/"
 UA = "btown-all-day-time-machine/1.0 (+https://guide.btownbrief.com/all-day/)"
 MONTHS = 60
 MIN_MONTHS = 40          # fewer usable months than this is a broken run
 WAYBACK_PAUSE = 1.5      # seconds between Wayback requests
-ATTEMPTS = 3
+ATTEMPTS = 2
+TIMEOUT = 45             # seconds for one Wayback request
+BUDGET = 15 * 60         # seconds of Wayback asking per run; the rest of the months come from TMDB
+GIVE_UP = 4              # Wayback requests failing in a row before this run stops asking
 CAP = {"theaters": 12, "streaming": 12, "tv": 12}
 OVERVIEW_MAX = 180
 MIN_TITLES = 6           # a copy with fewer titles than this is a wall, not a front page
-RETRY = 2                # older months that fell back to TMDB, asked of the Wayback Machine again per run
+RETRY = 12               # older months that fell back to TMDB, asked of the Wayback Machine again per run
 
 # the shelves, in the order their titles are taken
 SECTIONS = {
@@ -152,14 +176,29 @@ def extract(doc):
 
 
 class Wayback:
-    def __init__(self, opener=None, pause=WAYBACK_PAUSE):
+    """The Wayback Machine, asked politely and within a budget: past BUDGET
+    seconds, or after GIVE_UP failed requests in a row, this run stops asking
+    and every remaining month comes from TMDB (and is asked again next run)."""
+
+    def __init__(self, opener=None, pause=WAYBACK_PAUSE, budget=BUDGET, clock=time.monotonic):
         self.opener = opener or self._open
         self.pause = pause
         self.calls = 0
+        self.clock = clock
+        self.deadline = clock() + budget
+        self.failing = 0
+        self.stopped = False
+
+    def usable(self):
+        if not self.stopped and (self.failing >= GIVE_UP or self.clock() > self.deadline):
+            self.stopped = True
+            log("the Wayback Machine is " + ("not answering" if self.failing >= GIVE_UP else "out of this run's time")
+                + "; the remaining months come from TMDB this run")
+        return not self.stopped
 
     def _open(self, url):
         req = urllib.request.Request(url, headers={"User-Agent": UA, "Accept-Encoding": "identity"})
-        with urllib.request.urlopen(req, timeout=60) as r:
+        with urllib.request.urlopen(req, timeout=TIMEOUT) as r:
             body = r.read()
         if body[:2] == b"\x1f\x8b":   # the copy as it was served, gzip and all
             import gzip
@@ -168,18 +207,23 @@ class Wayback:
 
     def get(self, url):
         for attempt in range(ATTEMPTS):
+            if not self.usable():
+                return None
             self.calls += 1
             try:
                 out = self.opener(url)
+                self.failing = 0
                 time.sleep(self.pause)
                 return out
             except urllib.error.HTTPError as e:
                 if e.code == 404:
+                    self.failing = 0
                     return None
                 log(f"wayback HTTP {e.code}, retrying")
             except (urllib.error.URLError, TimeoutError, ValueError, OSError) as e:
                 log(f"wayback {e}, retrying")
             time.sleep(self.pause * (2 + attempt * 2))
+        self.failing += 1
         return None
 
     def snapshots(self, month):
@@ -207,6 +251,8 @@ class Wayback:
     def month(self, month):
         """(timestamp, shelves) from the first copy in the month that reads
         as a front page, or (None, None)."""
+        if not self.usable():
+            return None, None
         for ts in self.snapshots(month)[:3]:
             doc = self.get(SNAP.format(ts=ts))
             shelves = extract(doc or "")
@@ -245,13 +291,11 @@ class Matcher:
             "p": poster if POSTER.match(poster) else "",
         }
 
-    def match(self, kind, slug, title, month):
+    def match(self, kind, title, month, hint=None):
         """The TMDB title this listing means, or None. The title must match
         exactly (ignoring case, accents and punctuation); among exact
         matches, one released by that month, closest to it, then the most
-        popular. A year in the slug (/m/dune_2021) must agree."""
-        hint = SLUG_YEAR.search(slug)
-        hint = int(hint.group(1)) if hint else None
+        popular. A year from the listing's link (/m/dune_2021) must agree."""
         year = int(month[:4])
         limit = year + (1 if month.endswith("-12") else 0)
         key = (kind, norm(title), hint, year, limit)
@@ -302,23 +346,61 @@ def tkey(item):
     return ("m" if item["k"] == "movie" else "t") + str(item["id"])
 
 
-def build(months, wayback, matcher, prev=None, keep_from=2, retry=None):
-    """The file's titles and months. A month from `prev` is kept as it was
-    unless it is one of the newest `keep_from` months, which can still change,
-    or one of the first `retry` older months that fell back to TMDB, which
-    the Wayback Machine is asked about again (so a run never re-reads more
-    than keep_from + retry archived months)."""
+def rows(shelves):
+    """Shelves as extract() reads them, as the titles file keeps them:
+    [kind, title, year or None], the year only when the link carried one."""
+    out = {}
+    for shelf, listed in shelves.items():
+        out[shelf] = []
+        for kind, slug, title in listed:
+            m = SLUG_YEAR.search(slug)
+            out[shelf].append([kind, title, int(m.group(1)) if m else None])
+    return out
+
+
+def harvest(months, wayback, prev=None, keep_from=2):
+    """The titles file: for each month, the archived copy's timestamp and its
+    shelves' titles. Months already in `prev` are final, except the newest
+    `keep_from`, which can still change. Needs no TMDB key."""
+    prev = prev if isinstance(prev, dict) else {}
+    old = prev.get("months") if isinstance(prev.get("months"), dict) else {}
+    out = {}
+    for i, month in enumerate(months):
+        if i >= keep_from and month in old:
+            out[month] = old[month]
+            continue
+        ts, shelves = wayback.month(month)
+        if ts:
+            out[month] = {"at": ts, **rows(shelves)}
+        elif month in old:
+            out[month] = old[month]
+    return {"v": 1, "source": "Titles listed on rottentomatoes.com's front page, read from the Wayback Machine's copies",
+            "months": dict(sorted(out.items(), reverse=True))}
+
+
+def build(months, wayback, matcher, prev=None, keep_from=2, retry=None, harvested=None):
+    """The file's titles and months. A month's titles come from the titles
+    file (`harvested`, read from the Wayback Machine where it answers), or
+    from asking the Wayback Machine now, or else from TMDB discover.
+
+    A month from `prev` is kept as it was unless it is one of the newest
+    `keep_from` months, which can still change; or it fell back to TMDB and
+    the titles file now has it; or it fell back to TMDB and is one of the
+    first `retry` such months, asked of the Wayback Machine again (so a run
+    never re-reads more than keep_from + retry archived months)."""
     retry = RETRY if retry is None else retry
     prev = prev if isinstance(prev, dict) else {}
+    harvested = harvested if isinstance(harvested, dict) else {}
     old_titles = prev.get("titles") if isinstance(prev.get("titles"), dict) else {}
     old = {m.get("m"): m for m in prev.get("months") or [] if isinstance(m, dict)}
     titles, out = {}, []
     for i, month in enumerate(months):
         o = old.get(month)
-        again = i >= keep_from and o is not None and o.get("src") != "rt" and retry > 0
+        have = month in harvested
+        again = i >= keep_from and o is not None and o.get("src") != "rt" and not have and wayback is not None and retry > 0
         if again:
             retry -= 1
-        if i >= keep_from and o is not None and not again:
+        if i >= keep_from and o is not None and (o.get("src") == "rt" or not (have or again)):
             row = {"m": month, "src": "rt" if o.get("src") == "rt" else "tmdb", "at": o.get("at", "")}
             for shelf in CAP:
                 row[shelf] = [k for k in o.get(shelf) or [] if k in old_titles]
@@ -326,15 +408,24 @@ def build(months, wayback, matcher, prev=None, keep_from=2, retry=None):
                     titles[k] = old_titles[k]
             out.append(row)
             continue
-        ts, shelves = wayback.month(month)
+        if have:
+            ts, listed = str(harvested[month].get("at") or "h"), harvested[month]
+        elif wayback is not None:
+            ts, shelves = wayback.month(month)
+            listed = rows(shelves) if ts else {}
+        else:
+            ts, listed = None, {}
         row = {"m": month, "src": "rt" if ts else "tmdb", "at": ts or ""}
         if ts:
-            for shelf, listed in shelves.items():
+            for shelf in CAP:
                 keys = []
-                for kind, slug, title in listed:
+                for entry in listed.get(shelf) or []:
+                    if not (isinstance(entry, list) and len(entry) == 3 and entry[0] in ("movie", "tv") and isinstance(entry[1], str)):
+                        continue
+                    kind, title, hint = entry
                     if (kind == "tv") != (shelf == "tv"):
                         continue
-                    item = matcher.match(kind, slug, title, month)
+                    item = matcher.match(kind, title, month, hint if isinstance(hint, int) else None)
                     if item and tkey(item) not in keys:
                         keys.append(tkey(item))
                         titles[tkey(item)] = item
@@ -366,22 +457,44 @@ def payload(titles, months, built):
     }
 
 
+def read_json(path):
+    if not path or not os.path.exists(path):
+        return None
+    try:
+        with open(path, encoding="utf-8") as src:
+            return json.load(src)
+    except (OSError, ValueError):
+        return None
+
+
+def run_harvest(args, wayback=None):
+    """--harvest: refresh the titles file from the Wayback Machine. No TMDB
+    key needed. Run where archive.org answers (it refuses GitHub's runners)."""
+    wayback = wayback or Wayback()
+    doc = harvest(month_list(utcnow().date(), args.months), wayback, read_json(args.harvest))
+    if not doc["months"]:
+        log("the Wayback Machine gave no months; keeping the titles file")
+        return 1
+    write_json(args.harvest, doc)
+    log(f"wrote {args.harvest}: {len(doc['months'])} months, {wayback.calls} Wayback requests")
+    return 0
+
+
 def run(args, api=None, wayback=None):
+    if getattr(args, "harvest", ""):
+        return run_harvest(args, wayback)
     key = os.environ.get("TMDB_API_KEY", "").strip()
     if not key and api is None:
         log("no TMDB_API_KEY; keeping the last file")
         return 0
     api = api or Tmdb(key)
-    wayback = wayback or Wayback()
-    prev = None
-    if args.prev and os.path.exists(args.prev):
-        try:
-            with open(args.prev, encoding="utf-8") as src:
-                prev = json.load(src)
-        except (OSError, ValueError):
-            prev = None
+    if wayback is None and not getattr(args, "no_wayback", False):
+        wayback = Wayback()
+    prev = read_json(args.prev)
+    harvested = (read_json(getattr(args, "titles", "")) or {}).get("months")
     try:
-        titles, months = build(month_list(utcnow().date(), args.months), wayback, Matcher(api), prev)
+        titles, months = build(month_list(utcnow().date(), args.months), wayback, Matcher(api), prev,
+                               harvested=harvested if isinstance(harvested, dict) else None)
     except urllib.error.HTTPError as e:
         log(f"TMDB said HTTP {e.code}; keeping the last file")
         return 1
@@ -395,7 +508,7 @@ def run(args, api=None, wayback=None):
     write_json(args.out, payload(titles, months, utcnow()))
     rt = sum(1 for m in months if m["src"] == "rt")
     log(f"wrote {args.out}: {len(months)} months ({rt} from the Wayback Machine, {len(months) - rt} from TMDB), "
-        f"{len(titles)} titles, {wayback.calls} Wayback requests, {api.calls} TMDB calls")
+        f"{len(titles)} titles, {wayback.calls if wayback else 0} Wayback requests, {api.calls} TMDB calls")
     return 0
 
 
@@ -415,6 +528,9 @@ def main():
     parser.add_argument("--out", default=OUT)
     parser.add_argument("--prev", default="")
     parser.add_argument("--months", type=int, default=MONTHS)
+    parser.add_argument("--titles", default=TITLES, help="the titles file to match (default data/time-machine-titles.json)")
+    parser.add_argument("--no-wayback", action="store_true", help="never ask the Wayback Machine (it refuses GitHub's runners)")
+    parser.add_argument("--harvest", default="", metavar="PATH", help="refresh the titles file at PATH from the Wayback Machine and exit")
     parser.add_argument("--selftest", action="store_true")
     args = parser.parse_args()
     if args.selftest:
