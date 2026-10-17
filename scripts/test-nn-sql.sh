@@ -1,25 +1,28 @@
 #!/usr/bin/env bash
-# Applies all-day/supabase/nn-SETUP.sql (then nn-ROUND2.sql and nn-ROUND3.sql) to
+# Applies all-day/supabase/nn-SETUP.sql (then nn-ROUND2.sql to nn-ROUND4.sql) to
 # scratch LOCAL Postgres databases and runs the checks against them as the
 # anon and authenticated roles, the way the app's publishable key reaches
 # Supabase. It never touches the live project.
 #
 #   bash scripts/test-nn-sql.sh
 #
-# Seven scratch databases, each built the way Stephen's project was:
+# Twelve scratch databases, each built the way Stephen's project was:
 #   1. nn-SETUP.sql alone: scripts/test-nn-sql.sql (round one).
-#   2. nn-SETUP.sql, then nn-ROUND2.sql and nn-ROUND3.sql with nothing else
+#   2. nn-SETUP.sql, then nn-ROUND2.sql to nn-ROUND4.sql with nothing else
 #      installed (no People, no Watch, no storage): round one's checks
 #      still pass.
-#   3. nn-SETUP.sql, nn-people.sql, nn-watch.sql, then nn-ROUND2.sql and
-#      nn-ROUND3.sql: the People and Watch tabs' own checks still pass (one
-#      database each).
+#   3. nn-SETUP.sql, nn-people.sql, nn-watch.sql, then the rounds: the
+#      People and Watch tabs' own checks still pass (one database each).
 #   4. the same plus a storage stand-in: scripts/test-nn-round2-sql.sql.
 #   5. round three's own checks, scripts/test-nn-round3-sql.sql, twice:
 #      with People, Watch, the photo queue and storage all installed, and
 #      with none of them (no photo queue either).
-# nn-ROUND2.sql and nn-ROUND3.sql are applied twice every time: each must
-# be safe to paste again.
+#   6. round four's own checks, scripts/test-nn-round4-sql.sql, twice, the
+#      same two ways.
+#   7. round four pasted straight over round two, before round three, and
+#      round three after it (the order Stephen might paste them in): round
+#      two's, round three's and round four's checks still pass.
+# Every round is applied twice every time: each must be safe to paste again.
 #
 # Needs a local Postgres you can reach with psql (Homebrew's postgresql@17:
 # brew services start postgresql@17). When there is none, it says so and
@@ -83,12 +86,14 @@ if [ "${1:-}" != nophotos ]; then
 fi
 }
 
-# rounds two and three over round one, each pasted twice
+# rounds two, three and four over round one, each pasted twice
 rounds() {
   apply all-day/supabase/nn-ROUND2.sql
   apply all-day/supabase/nn-ROUND2.sql
   apply all-day/supabase/nn-ROUND3.sql
   apply all-day/supabase/nn-ROUND3.sql
+  apply all-day/supabase/nn-ROUND4.sql
+  apply all-day/supabase/nn-ROUND4.sql
 }
 
 storage() {
@@ -139,6 +144,32 @@ check scripts/test-nn-round3-sql.sql
 fresh nophotos
 rounds
 check scripts/test-nn-round3-sql.sql
+
+# 6. round four's own checks: everything installed, then nothing optional.
+# The handle table is the one scripts/test-boards-core.mjs runs on the JS.
+check4() { psql -v ON_ERROR_STOP=1 -d "$DB" -q -o /dev/null -v cases="$(cat scripts/test-nn-handle-cases.json)" -f scripts/test-nn-round4-sql.sql; }
+fresh
+apply all-day/supabase/nn-people.sql
+apply all-day/supabase/nn-watch.sql
+storage
+rounds
+check4
+fresh nophotos
+rounds
+check4
+
+# 7. round four straight after round two, then round three over it
+for t in round2 round3 round4; do
+  fresh
+  apply all-day/supabase/nn-people.sql
+  apply all-day/supabase/nn-watch.sql
+  storage
+  apply all-day/supabase/nn-ROUND2.sql
+  apply all-day/supabase/nn-ROUND4.sql
+  apply all-day/supabase/nn-ROUND4.sql
+  apply all-day/supabase/nn-ROUND3.sql
+  if [ $t = round4 ]; then check4; else check scripts/test-nn-$t-sql.sql; fi
+done
 
 psql -d postgres -qc "drop database if exists $DB" >/dev/null
 echo "test-nn-sql: OK"

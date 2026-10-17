@@ -1997,6 +1997,23 @@
   ok   boards: the profile sheet says what you’re into, activities only (demo) › eight at most: books and the first seven tapped; sports and outdoors, the ninth and tenth, do nothing
   ok   boards: the profile sheet says what you’re into, activities only (demo) › books tapped off, the seven saved to the profile, in the list’s order
   ok   boards: the profile sheet says what you’re into, activities only (demo) › no console errors
+  ok   boards: handles on the profile sheet, and the three new boards (demo) › sixteen handle boxes, each labelled, in Social, Fitness and Games
+  ok   boards: handles on the profile sheet, and the three new boards (demo) › folded while empty
+  ok   boards: handles on the profile sheet, and the three new boards (demo) › one switch, off, and no subtext
+  ok   boards: handles on the profile sheet, and the three new boards (demo) › a link is refused, naming the box
+  ok   boards: handles on the profile sheet, and the three new boards (demo) › saved without the @, the switch on
+  ok   boards: handles on the profile sheet, and the three new boards (demo) › the sheet opens on what was saved, the folds with handles open
+  ok   boards: handles on the profile sheet, and the three new boards (demo) › handlesRecent: newest first, only the kinds asked for, no account ids
+  ok   boards: handles on the profile sheet, and the three new boards (demo) › the demo has posts on Games, the Square and Gatherings
+  ok   boards: handles on the profile sheet, and the three new boards (demo) › a gathering in the past is refused; a coming one waits for Stephen, its link kept
+  ok   boards: handles on the profile sheet, and the three new boards (demo) › no console errors
+  ok   boards: handles over the wire, and before round four (live) › setHandles sends round four’s call, keeping the rest of the profile, with the reader’s token
+  ok   boards: handles over the wire, and before round four (live) › and the profile comes back whole
+  ok   boards: handles over the wire, and before round four (live) › a bad handle never leaves the phone
+  ok   boards: handles over the wire, and before round four (live) › handlesRecent asks for the kinds and the limit
+  ok   boards: handles over the wire, and before round four (live) › before round four: handles are “off”, the boards are not
+  ok   boards: handles over the wire, and before round four (live) › setProfile saves the rest with round two’s call and says the handles wait
+  ok   boards: handles over the wire, and before round four (live) › no console errors beyond the browser logging the 404
   ok   boards desk: People’s Meetup list and the stray-photo sweep (demo) › opening the desk sweeps stray photos and says what went
   ok   boards desk: People’s Meetup list and the stray-photo sweep (demo) › the Meetup button lists the live plans down for Meetup: when, where, spots, ages, host, going
   ok   boards desk: People’s Meetup list and the stray-photo sweep (demo) › each with a copy button, and no email

@@ -3116,7 +3116,7 @@ async function boards(browser, base) {
     await page.click('.bform button[type=submit]');
     await page.waitForSelector('#sheet[hidden]', { state: 'attached' });
     const p = await page.evaluate(() => import('/all-day/js/boards.js').then((b) => b.profile()));
-    check(p.ok && JSON.stringify(p.profile) === JSON.stringify({ display_name: 'Maya R.', neighborhood: 'old-north-end', archetype: 'trail', interests: [] }), 'saved, tidied, and read back', JSON.stringify(p));
+    check(p.ok && JSON.stringify(p.profile) === JSON.stringify({ display_name: 'Maya R.', neighborhood: 'old-north-end', archetype: 'trail', interests: [], handles: {}, handles_public: false }), 'saved, tidied, and read back', JSON.stringify(p));
     check(/Signed in\s+as Maya R\./.test(await settingsText(page)), 'Settings names the reader by first name', '');
     await page.click('.sheet-body .sheet-row button:has-text("Edit")');
     await page.waitForSelector('input[name=display_name]');
@@ -3339,6 +3339,110 @@ async function boards(browser, base) {
     const saved = await page.evaluate(() => import('/all-day/js/boards.js').then((b) => b._fake().profiles.get(b.demoReader).interests));
     check(JSON.stringify(saved) === '["running","games","music","dance","making","languages","food"]', 'books tapped off, the seven saved to the profile, in the list’s order', JSON.stringify(saved));
     check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('boards: handles on the profile sheet, and the three new boards (demo)', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/all-day/?demo=1#vintage');
+    await settle(page);
+    await page.evaluate(() => import('/all-day/js/auth.js').then((a) => a.demoSignIn()));
+    await page.evaluate(() => import('/all-day/js/boards.js').then((b) => b.setProfile({ display_name: 'Maya' })));
+    await page.evaluate(() => import('/all-day/js/boards.js').then((b) => b.profileSheet()));
+    await page.waitForSelector('.sheet-body [data-handles] input[name="h:strava"]', { state: 'attached' });
+    const H = '.sheet-body [data-handles]';
+    const shape = await page.$eval(H, (w) => ({
+      groups: [...w.querySelectorAll('details > summary')].map((x) => x.textContent),
+      open: [...w.querySelectorAll('details')].map((d) => d.open),
+      inputs: w.querySelectorAll('input[name^="h:"]').length,
+      labelled: [...w.querySelectorAll('input[name^="h:"]')].every((i) => w.querySelector('label[for="' + i.id + '"]')),
+      sw: (() => { const i = w.querySelector('input[name=handles_public]'); return i && [i.type, i.getAttribute('role'), i.checked, i.parentNode.textContent.trim()]; })(),
+      hints: w.querySelectorAll('.bf-hint, .bf-note').length,
+    }));
+    check(JSON.stringify(shape.groups) === '["Social","Fitness","Games"]' && shape.inputs === 16 && shape.labelled, 'sixteen handle boxes, each labelled, in Social, Fitness and Games', JSON.stringify(shape));
+    check(JSON.stringify(shape.open) === '[false,false,false]', 'folded while empty', JSON.stringify(shape.open));
+    check(JSON.stringify(shape.sw) === '["checkbox","switch",false,"Show my handles in the directory"]' && shape.hints === 0, 'one switch, off, and no subtext', JSON.stringify(shape));
+    await page.click(H + ' details:nth-of-type(1) > summary');
+    await page.click(H + ' details:nth-of-type(2) > summary');
+    await page.fill(H + ' input[name="h:instagram"]', 'instagram.com/maya');
+    await page.fill(H + ' input[name="h:strava"]', '@maya_runs');
+    await page.click('.sheet-body .bform button[type=submit]');
+    await page.waitForTimeout(150);
+    const err = await page.$eval('.sheet-body .bf-msg', (m) => m.textContent);
+    check(/^Instagram: .*no link and no @/.test(err) && await page.$eval(H + ' input[name="h:instagram"]', (i) => i.getAttribute('aria-invalid')) === 'true', 'a link is refused, naming the box', err);
+    await page.fill(H + ' input[name="h:instagram"]', 'maya.outside');
+    await page.check(H + ' input[name=handles_public]');
+    await page.click('.sheet-body .bform button[type=submit]');
+    await page.waitForSelector('#sheet[hidden]', { state: 'attached', timeout: 4000 });
+    const saved = await fakeOf(page, (f) => { const p = f.profiles.get('demo-0000-4000-8000-00000000me00'); return { handles: p.handles, pub: p.handles_public }; });
+    check(JSON.stringify(saved) === '{"handles":{"instagram":"maya.outside","strava":"maya_runs"},"pub":true}', 'saved without the @, the switch on', JSON.stringify(saved));
+    await page.evaluate(() => import('/all-day/js/boards.js').then((b) => b.profileSheet()));
+    await page.waitForSelector(H + ' input[name="h:strava"]', { state: 'attached' });
+    const again = await page.$eval(H, (w) => [w.querySelector('input[name="h:strava"]').value, w.querySelector('input[name=handles_public]').checked, [...w.querySelectorAll('details')].map((d) => d.open)]);
+    check(JSON.stringify(again) === '["maya_runs",true,[true,true,false]]', 'the sheet opens on what was saved, the folds with handles open', JSON.stringify(again));
+    await page.$eval(H, (w) => w.scrollIntoView({ block: 'start' }));
+    await page.waitForTimeout(300);
+    await page.screenshot({ path: path.join(SHOTS, 'demo-handles.png') });
+    const recent = await page.evaluate(() => import('/all-day/js/boards.js').then((b) => b.handlesRecent(['strava'], 5)));
+    check(recent.ok && recent.people.length >= 2 && recent.people[0].display_name === 'Maya' && recent.people[0].me === true &&
+      recent.people.every((x) => Object.keys(x.handles).every((k) => k === 'strava')) && !/@|user_id/.test(JSON.stringify(recent)), 'handlesRecent: newest first, only the kinds asked for, no account ids', JSON.stringify(recent).slice(0, 300));
+    const lists = await page.evaluate(() => import('/all-day/js/boards.js').then((b) => Promise.all(['games', 'square', 'gatherings'].map((x) => b.list(x).then((r) => r.posts.length)))));
+    check(lists.every((n) => n >= 3), 'the demo has posts on Games, the Square and Gatherings', JSON.stringify(lists));
+    const g = await page.evaluate(() => import('/all-day/js/boards.js').then(async (b) => {
+      const day = (n) => new Date(Date.now() + n * 86400000).toLocaleDateString('en-CA', { timeZone: 'America/New_York' });
+      const meta = { when: day(3) + ', 7 pm', place: 'Leddy Park', kind: 'pickup', link: 'https://example.com/ultimate' };
+      const past = await b.create('gatherings', { kind: 'gathering', title: 'Ultimate', meta: { ...meta, when: day(-2) } });
+      const ok = await b.create('gatherings', { kind: 'gathering', title: 'Ultimate', meta });
+      return [past.error, ok.ok && ok.post.status, ok.ok && ok.post.meta.link];
+    }));
+    check(JSON.stringify(g) === '["bad_date","pending","https://example.com/ultimate"]', 'a gathering in the past is refused; a coming one waits for Stephen, its link kept', JSON.stringify(g));
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('boards: handles over the wire, and before round four (live)', async () => {
+    const calls = [];
+    let v = 3;
+    const { ctx, page, errors } = await newPage(browser, base, {
+      rpc: (fn, args, h) => {
+        if (!/^nn_/.test(fn)) return undefined;
+        calls.push({ fn, args, auth: h.authorization || null });
+        if (fn === 'nn_rules') return { version: v };
+        if (fn === 'nn_profile_get') return v >= 3 ? { display_name: 'Maya', neighborhood: 'south-end', archetype: null, interests: ['running'], handles: {}, handles_public: false }
+          : { display_name: 'Maya', neighborhood: 'south-end', archetype: null, interests: ['running'] };
+        if (fn === 'nn_profile_set') return { display_name: args.p_display_name, neighborhood: args.p_neighborhood, archetype: args.p_archetype, interests: ['running'],
+          ...('p_handles' in args ? { handles: args.p_handles, handles_public: !!args.p_handles_public } : {}) };
+        if (fn === 'nn_handles_recent') return v >= 3 ? [{ display_name: 'Sam', neighborhood: null, handles: { strava: 'sam_rides' }, updated_at: new Date().toISOString(), me: false }]
+          : { status: 404, body: { code: 'PGRST202', message: 'Could not find the function public.nn_handles_recent' } };
+        return undefined;
+      },
+    });
+    await page.goto(base + '/all-day/?x=1');
+    await page.evaluate((s) => localStorage.setItem('allday-auth', s), SESSION());
+    await page.goto(base + '/all-day/#wire');
+    await settle(page);
+    const r = await page.evaluate(() => import('/all-day/js/boards.js').then((b) => b.setHandles({ strava: 'maya_runs', psn: '' }, true)));
+    const set = calls.find((c) => c.fn === 'nn_profile_set');
+    check(r.ok && set && JSON.stringify(set.args) === JSON.stringify({ p_display_name: 'Maya', p_neighborhood: 'south-end', p_archetype: null, p_interests: null, p_handles: { strava: 'maya_runs' }, p_handles_public: true })
+      && /^Bearer /.test(set.auth || ''), 'setHandles sends round four’s call, keeping the rest of the profile, with the reader’s token', JSON.stringify(set));
+    check(r.ok && JSON.stringify(r.profile.handles) === '{"strava":"maya_runs"}' && r.profile.handles_public === true && JSON.stringify(r.profile.interests) === '["running"]', 'and the profile comes back whole', JSON.stringify(r));
+    const bad = await page.evaluate(() => import('/all-day/js/boards.js').then((b) => b.setHandles({ strava: 'strava.com/athletes/1' })));
+    check(bad.error === 'bad_handle' && bad.key === 'strava' && calls.filter((c) => c.fn === 'nn_profile_set').length === 1, 'a bad handle never leaves the phone', JSON.stringify(bad));
+    const rec = await page.evaluate(() => import('/all-day/js/boards.js').then((b) => b.handlesRecent(['strava'], 5)));
+    const hr = calls.find((c) => c.fn === 'nn_handles_recent');
+    check(rec.ok && rec.people[0].display_name === 'Sam' && JSON.stringify(hr.args) === '{"p_kinds":["strava"],"p_limit":5}', 'handlesRecent asks for the kinds and the limit', JSON.stringify(hr));
+    /* a server with round two only */
+    v = 2;
+    calls.length = 0;
+    await page.reload();
+    await settle(page);
+    const off = await page.evaluate(() => import('/all-day/js/boards.js').then(async (b) => [await b.setHandles({ strava: 'maya_runs' }, true), await b.handlesRecent([]), b.status(),
+      await b.setProfile({ display_name: 'Maya', interests: ['running'], handles: { strava: 'maya_runs' } }), await b.roundFour()]));
+    check(off[0].error === 'off' && off[1].error === 'off' && off[2] !== 'off', 'before round four: handles are “off”, the boards are not', JSON.stringify(off.slice(0, 3)));
+    const set2 = calls.filter((c) => c.fn === 'nn_profile_set');
+    check(set2.length === 1 && !('p_handles' in set2[0].args) && JSON.stringify(set2[0].args.p_interests) === '["running"]' && off[3].handlesSaved === false && off[4] === false,
+      'setProfile saves the rest with round two’s call and says the handles wait', JSON.stringify(set2));
+    check(!errors.filter((e) => !/status of 404/.test(e)).length, 'no console errors beyond the browser logging the 404', errors.join(' | '));
     await ctx.close();
   });
 
