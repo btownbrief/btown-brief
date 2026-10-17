@@ -99,7 +99,7 @@ async function staticChecks() {
     const js = [];
     const walk = async (dir) => { for (const f of await readdir(dir, { withFileTypes: true })) { const p = path.join(dir, f.name); if (f.isDirectory()) await walk(p); else if (/\.(js|css|html)$/.test(f.name)) js.push(p); } };
     await walk(path.join(APP, 'js')); await walk(path.join(APP, 'css'));
-    const NEW = ['app.js', 'ui.js', 'store.js', 'auth.js', 'liquid.js', 'main.js', 'wire.js', 'wire-demo.js', 'watch.js', 'food.js', 'people.js', 'whatnow.js', 'vintage.js', 'habits.js', 'habits-core.js', 'habits-fake.js', 'photo-wall.js', 'onair.js', 'games.js', 'clubs-week.js', 'tokens.css', 'app.css'];
+    const NEW = ['app.js', 'ui.js', 'store.js', 'auth.js', 'liquid.js', 'main.js', 'wire.js', 'wire-demo.js', 'wire-photos.js', 'watch.js', 'food.js', 'people.js', 'whatnow.js', 'vintage.js', 'habits.js', 'habits-core.js', 'habits-fake.js', 'photo-wall.js', 'onair.js', 'games.js', 'clubs-week.js', 'tokens.css', 'app.css'];
     const OLD = new Set(['sun.js', 'whatnow-engine.js', 'whatnow-data.js']);
     for (const f of js) {
       const name = path.basename(f);
@@ -963,6 +963,349 @@ async function theWire(browser, base) {
     await page.waitForSelector('.panel:not([hidden]) .wm', { timeout: 4000 });
     check(/so far/.test(await page.$eval('#subnav .dl .s', (s) => s.textContent)), '‹ Today’s paper comes back', '');
     check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+}
+
+/* ------------------------------------------------------------ Photo mode */
+/* The Wire's Photo mode (modes/wire-photos.js): the list ⟷ photos switch,
+   kept on the phone; one feed of every picture, newest first, the photo of
+   the week first; the picture sheet; Add a photo; the old #art and #photos. */
+const pmPanel = '#panel-wire';
+const pmState = (page) => page.evaluate(() => import('/all-day/js/modes/wire-photos.js').then((m) => m._state()));
+const pmCards = (page) => page.$$eval(pmPanel + ' .card.pm', (cs) => cs.map((c) => ({ k: c.dataset.k, cap: c.querySelector('.pm-cap').textContent,
+  pic: !!c.querySelector('.pm-pic img.pic, .pm-pic .ph'), eyebrow: (c.querySelector('.eyebrow') || {}).textContent || '' })));
+const pmOn = (page) => page.waitForSelector(pmPanel + ' .card.pm', { timeout: 15000 }).then(() => true, () => false);
+const viewPressed = (page) => page.$$eval('#subnav .viewsw-b', (bs) => bs.map((b) => b.dataset.view + ':' + b.getAttribute('aria-pressed')).join(' '));
+/* draw the whole feed: scroll to the bottom until the end card is in */
+async function pmAll(page) {
+  for (let i = 0; i < 60 && !(await page.$(pmPanel + ' .caught')); i++) {
+    await page.evaluate(() => { const p = document.querySelector('#panel-wire'); p.scrollTop = p.scrollHeight; });
+    await page.waitForTimeout(80);
+  }
+}
+const PM_POST = (o) => ({ id: o.id, board: 'art', kind: o.kind || 'photo', title: o.title, body: o.body || '', place: '', meta: o.meta || { shirt: 'no' },
+  photo: o.photo === undefined ? 'submissions/' + o.id.slice(-12) + '.jpg' : o.photo, author: o.author || 'Kara', author_arch: null,
+  created_at: o.at, expires_at: null, votes: o.votes || 0, voted: false, mine: false });
+
+async function thePhotos(browser, base) {
+  await group('Photo mode: the switch, kept on the phone (demo)', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/all-day/?demo=1#wire');
+    await settle(page);
+    const sw = await page.$$eval('#subnav .dateline .viewsw-b', (bs) => bs.map((b) => { const r = b.getBoundingClientRect(); return { v: b.dataset.view, w: Math.round(r.width), h: Math.round(r.height), p: b.getAttribute('aria-pressed'), l: b.getAttribute('aria-label') }; }));
+    check(sw.length === 2 && sw.every((b) => b.w >= 44 && b.h >= 44), 'the switch sits in the dateline row: two icon buttons, 44px each', JSON.stringify(sw));
+    check(sw[0].v === 'list' && sw[0].p === 'true' && sw[1].p === 'false' && sw[0].l === 'List' && sw[1].l === 'Photos', 'it opens on the list, said by aria-pressed', JSON.stringify(sw));
+    check(await page.$$eval('#subnav > *', (n) => n.length) === 2, 'no new row: still the dateline and the band', '');
+    await page.click('#subnav .viewsw-b[data-view="photos"]');
+    check(await pmOn(page), 'Photos turns the paper into the photo feed', '');
+    check(await viewPressed(page) === 'list:false photos:true', 'and the switch says so', await viewPressed(page));
+    check(await page.evaluate(() => location.hash) === '#wire/photos', 'the address says #wire/photos', await page.evaluate(() => location.hash));
+    check(await page.evaluate(() => localStorage.getItem('allday-wire-view')) === 'photos', 'the choice is kept on the phone', '');
+    check(await page.$eval('#subnav', (s) => s.querySelectorAll(':scope > .dateline, :scope > .toolband, :scope > .chips').length) === 2, 'Photo mode keeps to two rows under the mast', '');
+    check(!(await page.$(pmPanel + ' .wm, ' + pmPanel + ' .card.row')), 'the paper’s list is gone', '');
+    await page.reload();
+    await settle(page);
+    check(await pmOn(page) && await viewPressed(page) === 'list:false photos:true', 'a reload opens on the photos again', await viewPressed(page));
+    await page.goto(base + '/all-day/?demo=1');
+    await settle(page);
+    check(await pmOn(page), 'and so does a bare visit to the app', '');
+    await page.click('#subnav .viewsw-b[data-view="list"]');
+    await page.waitForSelector(pmPanel + ' .wm', { timeout: 8000 }).catch(() => {});
+    check(!(await page.$(pmPanel + ' .card.pm')) && !!(await page.$(pmPanel + ' .wm')), 'List brings the paper back', '');
+    check(await page.evaluate(() => location.hash) === '#wire' && await page.evaluate(() => localStorage.getItem('allday-wire-view')) === null, 'the address is #wire again, and the phone forgets Photos', await page.evaluate(() => location.hash));
+    check(await page.evaluate(() => document.activeElement && document.activeElement.dataset.view) === 'list', 'focus stays on the switch', '');
+    await page.reload();
+    await settle(page);
+    check(!(await page.$(pmPanel + ' .card.pm')) && await viewPressed(page) === 'list:true photos:false', 'a reload opens on the list', await viewPressed(page));
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Photo mode: the feed, its sources, Local and the photo of the week (demo)', async () => {
+    const { ctx, page, errors, supabase } = await newPage(browser, base);
+    await page.goto(base + '/all-day/?demo=1#wire/photos');
+    await settle(page);
+    await pmOn(page);
+    await pmAll(page);
+    const cs = await pmCards(page);
+    const st = await pmState(page);
+    check(cs.length > 20 && cs.length === st.list.length, 'every picture is drawn, down to the end', cs.length + ' of ' + st.list.length);
+    check(cs.every((c) => c.pic), 'every card carries a picture', JSON.stringify(cs.filter((c) => !c.pic).map((c) => c.k)));
+    const keys = await page.$$eval(pmPanel + ' [data-k]', (n) => n.map((x) => x.dataset.k));
+    check(new Set(keys).size === keys.length, 'no key twice on the page', keys.length + ' keys');
+    check(cs[0].k === 'b-0000a000-0000-4000-8000-000000000001' && /Photo of the week/i.test(cs[0].eyebrow) && st.lead === cs[0].k,
+      'the photo of the week leads: of two at 23 votes this week, the one posted first', JSON.stringify(cs[0]));
+    check(cs.slice(1).every((c) => !c.eyebrow), 'and only it says so', '');
+    const ds = st.list.slice(1).map((v) => v.d);
+    check(ds.every((d, i) => !i || ds[i - 1] >= d), 'the rest run newest first', JSON.stringify(ds.slice(0, 8)));
+    const from = st.list.reduce((o, v) => { o[v.from] = (o[v.from] || 0) + 1; return o; }, {});
+    check(from.board === 14 && from.gallery === 3 && from.instagram === 6 && from.facebook === 1 && from.reddit === 1 && from.paper > 5 && from.outlet > 10,
+      'from neighbors’ posts (14), the gallery (3), Instagram (6), a Facebook post and a Reddit post with a picture, the paper and the local outlets', JSON.stringify(from));
+    check(!keys.includes('w6') && !keys.includes('w15'), 'a video is a player, not a picture', '');
+    check(!keys.some((k) => /demo2|permalink\/102/.test(k)), 'a Reddit or Facebook post with no picture stays out', '');
+    check(['w8', 'p11', 'w24'].every((k) => !keys.includes(k)) && st.list.every((v) => v.local), 'Local: no national story, every picture local', '');
+    const ig = cs.find((c) => c.k === 'ig:DemoBeach2');
+    check(ig && ig.cap === 'First frost on the dunes at North Beach', 'an Instagram post’s caption is its first line', JSON.stringify(ig));
+    check(cs.find((c) => c.k === 'ig:DemoChurch5').cap === '@demo_churchst', 'no caption: the account', '');
+    check((await page.$eval(pmPanel + ' .caught', (c) => c.innerText)).includes('Add a photo'), 'the feed ends, with Add a photo', '');
+    /* Everything adds the paper's national stories with a lead image */
+    await page.evaluate(() => { document.querySelector('#panel-wire').scrollTop = 0; });
+    await page.click('#subnav .localsw-half:not(.on)');
+    await page.waitForFunction(() => document.querySelector('.localsw')?.classList.contains('is-on') === false);
+    await pmAll(page);
+    const keys2 = await page.$$eval(pmPanel + ' .card.pm', (n) => n.map((x) => x.dataset.k));
+    check(['w8', 'p11', 'w24'].every((k) => keys2.includes(k)) && keys2.length === keys.length + 3, 'Everything adds the three national stories with a picture', keys2.length + ' vs ' + keys.length);
+    check(new Set(keys2).size === keys2.length, 'still no key twice', '');
+    check(/^\d+ photos$/.test(await page.$eval('#subnav .dl .s', (s) => s.textContent)) && (await page.$eval('#subnav .dl .s', (s) => s.textContent)) === keys2.length + ' photos', 'the row counts what is shown', await page.$eval('#subnav .dl .s', (s) => s.textContent));
+    await page.click('#subnav .localsw-half:not(.on)');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    check(!supabase.length, 'demo mode never calls Supabase', supabase.join(', '));
+    await ctx.close();
+  });
+
+  await group('Photo mode: a picture opens in its sheet, and a vote counts (demo)', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/all-day/?demo=1#wire/photos');
+    await settle(page);
+    await pmOn(page);
+    const key = 'b-0000a000-0000-4000-8000-000000000002';
+    await pmAll(page);
+    await page.evaluate((k) => document.querySelector('#panel-wire [data-k="' + k + '"]').scrollIntoView(), key);
+    check(await page.$eval(pmPanel + ' [data-k="' + key + '"] [data-act="photovote"] .vn', (n) => n.textContent) === '23', 'a neighbor’s picture shows its board votes', '');
+    await page.click(pmPanel + ' [data-k="' + key + '"] .pm-pic');
+    await page.waitForSelector('.sheet-card[aria-label="Aurora from the causeway"]', { timeout: 4000 }).catch(() => {});
+    const sh = await page.$eval('.sheet-body', (b) => ({ media: !!b.querySelector('.c-media .ph'), text: b.innerText, acts: [...b.querySelectorAll('[data-act]')].map((x) => x.dataset.act), shirt: !!b.querySelector('[data-shirt]') }));
+    check(sh.media && /by Ben S\. · Photo/.test(sh.text) && /Eleven at night/.test(sh.text), 'the sheet: the big picture, its maker and their line', sh.text);
+    check(JSON.stringify(sh.acts) === '["photovote","share","breport"]' && sh.shirt, 'vote, share, report, and the shirt the maker said yes to', JSON.stringify(sh));
+    await page.click('.sheet-body [data-act="photovote"]');
+    await page.waitForTimeout(200);
+    const after = await page.evaluate((k) => ({ sheet: document.querySelector('.sheet-body [data-act="photovote"] .vn').textContent, pressed: document.querySelector('.sheet-body [data-act="photovote"]').getAttribute('aria-pressed'),
+      card: document.querySelector('#panel-wire [data-k="' + k + '"] [data-act="photovote"] .vn').textContent, on: document.querySelector('#panel-wire [data-k="' + k + '"] [data-act="photovote"]').classList.contains('on') }), key);
+    check(after.sheet === '24' && after.pressed === 'true' && after.card === '24' && after.on, 'one vote: 24 on the sheet and on the card', JSON.stringify(after));
+    check(await fakeOf(page, `(f) => f._count('${key.slice(2)}')`) === 24, 'and the board counted it', '');
+    await page.click('.sheet-head .iconbtn');
+    await page.click(pmPanel + ' [data-k="' + key + '"] [data-act="photovote"]');
+    await page.waitForTimeout(200);
+    check(await page.$eval(pmPanel + ' [data-k="' + key + '"] [data-act="photovote"]', (b) => b.getAttribute('aria-pressed') + ' ' + b.querySelector('.vn').textContent) === 'false 23', 'the card’s own arrow takes it back', '');
+    /* an Instagram post: its sheet has the way to the original */
+    await page.evaluate(() => document.querySelector('#panel-wire [data-k="ig:DemoLake1"]').scrollIntoView());
+    await page.click(pmPanel + ' [data-k="ig:DemoLake1"] .pm-cap');
+    await page.waitForSelector('.sheet-card', { timeout: 4000 }).catch(() => {});
+    const ig = await page.$eval('.sheet-body', (b) => ({ text: b.innerText, acts: [...b.querySelectorAll('[data-act]')].map((x) => x.dataset.act), open: (b.querySelector('a[data-open]') || {}).textContent || '' }));
+    check(/@demo_lakelight/.test(ig.text) && /Open on Instagram/.test(ig.open) && JSON.stringify(ig.acts) === '["up","share"]', 'an Instagram post’s sheet: the account, vote, share and Open on Instagram', JSON.stringify(ig));
+    const igTitle = await page.$eval('.sheet-card', (c) => c.getAttribute('aria-label'));
+    check(/^Glass-calm at the breakwater this morning\. Not a single ripple until the ferry came…$/.test(igTitle) && /until the ferry came through\./.test(ig.text),
+      'titled by its caption, cut at a word, the whole caption under the picture', igTitle);
+    await page.click('.sheet-body [data-act="up"]');
+    check(await page.$eval('.sheet-body [data-act="up"]', (b) => b.getAttribute('aria-pressed')) === 'true' && await page.$eval(pmPanel + ' [data-k="ig:DemoLake1"] [data-act="up"]', (b) => b.getAttribute('aria-pressed')) === 'true',
+      'its vote is the Wire’s own, on the sheet and the card', '');
+    await page.click('.sheet-body a[data-open]');
+    check(/in the real build/.test(await page.$eval('#toast', (t) => t.textContent)), 'the demo’s Open link only toasts', '');
+    await page.click('.sheet-head .iconbtn');
+    /* a gallery photo */
+    await pmAll(page);
+    await page.click(pmPanel + ' [data-k="g-demo-g1"] .pm-pic');
+    await page.waitForSelector('.sheet-card[aria-label="Sunset from Waterfront Park"]', { timeout: 4000 }).catch(() => {});
+    check(/Photo by Stephen · Waterfront Park, Waterfront/.test(await page.$eval('.sheet-body', (b) => b.innerText)), 'a gallery photo’s sheet credits who took it and where', await page.$eval('.sheet-body', (b) => b.innerText));
+    await page.click('.sheet-head .iconbtn');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Photo mode: Add a photo opens the submission sheet, moderated as before (demo)', async () => {
+    const { ctx, page, errors } = await newPage(browser, base, { motion: 'reduce' });
+    await page.goto(base + '/all-day/?demo=1#wire/photos');
+    await settle(page);
+    await pmOn(page);
+    await page.click('#subnav .toolband .btn:has-text("Add a photo")');
+    await page.waitForSelector('.sheet-card[aria-label="Add a photo"]', { timeout: 4000 }).catch(() => {});
+    check(/Sign in to post\./.test(await page.$eval('.sheet-body', (b) => b.innerText)), 'signed out, the sheet asks for the sign-in', '');
+    await page.click('.sheet-head .iconbtn');
+    await page.evaluate(() => import('/all-day/js/auth.js').then((a) => a.demoSignIn()));
+    await page.click('#subnav .toolband .btn:has-text("Add a photo")');
+    await page.waitForSelector('.sheet-body form.bform', { timeout: 4000 }).catch(() => {});
+    check(await page.$('input[name="m:medium"]') === null && await page.$('select[name="m:shirt"]') !== null, 'Add a photo asks for the shirt, not a medium', '');
+    check(/Photos show once approved\./.test(await page.$eval('.bform', (f) => f.innerText)), 'and says, in one line, that photos show once approved', '');
+    const before = (await pmState(page)).list.length;
+    await page.fill('input[name=display_name]', 'Robin');
+    await page.fill('input[name=title]', 'Leddy at dusk');
+    await page.selectOption('select[name="m:shirt"]', 'no');
+    await page.setInputFiles('.bform input[type=file]', { name: 'leddy.jpg', mimeType: 'image/jpeg', buffer: PNG });
+    await page.check('.bform input[name=consent]');
+    await page.click('.bform button[type=submit]');
+    await page.waitForSelector('#sheet[hidden]', { state: 'attached', timeout: 4000 }).catch(() => {});
+    check(/shows once approved/.test(await page.$eval('#toast', (t) => t.textContent)), 'posted: the toast says it waits for approval', await page.$eval('#toast', (t) => t.textContent));
+    const row = await fakeOf(page, `(f) => { const p = f.posts.find((x) => x.title === 'Leddy at dusk'); return p && { board: p.board, kind: p.kind, photo: f.photos.get(p.photo_path).status }; }`);
+    check(row && row.board === 'art' && row.kind === 'photo' && row.photo === 'pending', 'it is on the art board as a photo post, its picture pending in the queue', JSON.stringify(row));
+    await page.waitForTimeout(300);
+    check(!(await page.$(pmPanel + ' .pm-cap:has-text("Leddy at dusk")')) && (await pmState(page)).list.length === before, 'and the feed does not show it yet', '');
+    await fakeOf(page, `(f) => { const p = f.posts.find((x) => x.title === 'Leddy at dusk'); f.setPhoto(p.photo_path, 'approved'); return 1; }`);
+    await page.evaluate(() => window.dispatchEvent(new CustomEvent('allday-boards', { detail: { board: 'art', id: null, what: 'test' } })));
+    await page.waitForSelector(pmPanel + ' .pm-cap:has-text("Leddy at dusk")', { timeout: 4000 }).catch(() => {});
+    check(!!(await page.$(pmPanel + ' .pm-cap:has-text("Leddy at dusk")')), 'once Stephen approves it, it is in the feed', '');
+    await pmAll(page);
+    await page.click(pmPanel + ' .caught .btn:has-text("Add art")');
+    await page.waitForSelector('.sheet-card[aria-label="Add art"]', { timeout: 4000 }).catch(() => {});
+    check(await page.$('input[name="m:medium"]') !== null, 'the feed’s end offers Add art, which asks for the medium', '');
+    await page.click('.sheet-head .iconbtn');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Photo mode: deep links land in it (demo)', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    const open = async (hash) => {
+      await page.goto('about:blank');
+      await page.goto(base + '/all-day/?demo=1' + hash);
+      await settle(page);
+      await pmOn(page);
+      await page.waitForTimeout(300);
+      return page.evaluate(() => ({ hash: location.hash, photos: !!document.querySelector('#panel-wire .card.pm'), sheet: document.querySelector('#sheet:not([hidden]) .sheet-card')?.getAttribute('aria-label') || '',
+        toast: document.querySelector('#toast')?.textContent || '' }));
+    };
+    for (const [from, to] of [['#wire/photos', '#wire/photos'], ['#art', '#wire/photos'], ['#photos', '#wire/photos'], ['#art/wall', '#wire/photos'], ['#photos/p-1', '#wire/photos']]) {
+      const r = await open(from);
+      check(r.photos && r.hash === to && !r.sheet, from + ' opens Photo mode, and the address says ' + to, JSON.stringify(r));
+    }
+    let r = await open('#art/b-0000a000-0000-4000-8000-000000000002');
+    check(r.hash === '#wire/photos/b-0000a000-0000-4000-8000-000000000002' && r.sheet === 'Aurora from the causeway', 'an old #art/<key> opens that picture’s sheet in Photo mode', JSON.stringify(r));
+    check(await flashes(page, 'b-0000a000-0000-4000-8000-000000000002') || await page.$eval(pmPanel + ' [data-k="b-0000a000-0000-4000-8000-000000000002"]', (n) => n.getBoundingClientRect().top < innerHeight), 'and its card is on screen behind it', '');
+    r = await open('#wire/photos/g-demo-g3');
+    check(r.sheet === 'Morning coffee on Pine Street', 'a gallery photo far down the feed: drawn and opened', JSON.stringify(r));
+    r = await open('#wire/ig:DemoNight6');
+    check(r.photos && /Moonrise over the Adirondacks/.test(r.sheet), 'a shared Instagram key (#wire/ig:…) opens in Photo mode', JSON.stringify(r));
+    r = await open('#wire/photos/b-0000a000-0000-4000-8000-00000000ffff');
+    check(r.photos && !r.sheet && /moved on/.test(r.toast), 'a picture that is gone says so', JSON.stringify(r));
+    check(await page.$$eval(pmPanel + ' .card.pm', (c) => c.length) <= 10, 'and only the first screenful is drawn looking for it', '');
+    /* the phone remembers Photos, but a story's link is the paper's */
+    await page.goto(base + '/all-day/?demo=1#wire/w3');
+    await settle(page);
+    await page.waitForSelector(pmPanel + ' .card.row, ' + pmPanel + ' .wm', { timeout: 8000 }).catch(() => {});
+    check(!(await page.$(pmPanel + ' .card.pm')) && await flashes(page, 'w3'), 'a story’s link opens the list on that story, though Photos is kept', '');
+    check(await page.evaluate(() => localStorage.getItem('allday-wire-view')) === 'photos', 'and the kept choice is unchanged', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  for (const combo of COMBOS) {
+    const label = combo.viewport.width + ' ' + combo.scheme + (combo.motion === 'reduce' ? ' reduced-motion' : '');
+    await group('Photo mode at ' + label + ' (demo)', async () => {
+      const { ctx, page, errors } = await newPage(browser, base, combo);
+      await page.goto(base + '/all-day/?demo=1#wire/photos');
+      await settle(page);
+      await pmOn(page);
+      await pageRules(page, 'wire photos', combo.viewport.width);
+      const m = await page.evaluate(() => {
+        const pic = document.querySelector('#panel-wire .card.pm .pm-pic').getBoundingClientRect();
+        const feed = document.querySelector('#panel-wire .pm-feed').getBoundingClientRect();
+        const b = document.querySelector('#subnav .viewsw-b');
+        return { pw: Math.round(pic.width), ph: Math.round(pic.height), fw: Math.round(feed.width), tr: getComputedStyle(b).transitionDuration,
+          bg: getComputedStyle(document.body).backgroundColor, on: getComputedStyle(document.querySelector('#subnav .viewsw-b.on')).backgroundColor };
+      });
+      check(Math.abs(m.ph - m.pw * 5 / 4) <= 2, 'the picture reserves its 4:5 box', JSON.stringify(m));
+      check(combo.viewport.width < 900 ? m.pw === combo.viewport.width : m.fw <= 468, combo.viewport.width < 900 ? 'full width on a phone' : 'a narrow column on a wide screen', JSON.stringify(m));
+      check(m.bg === PAPER[combo.scheme], 'the ' + combo.scheme + ' paper', m.bg);
+      if (combo.motion === 'reduce') check(/^0s/.test(m.tr), 'reduced motion: the switch does not animate', m.tr);
+      if (combo === COMBOS[0]) await page.screenshot({ path: path.join(SHOTS, 'demo-wire-photos.png') });
+      if (combo === COMBOS[4]) await page.screenshot({ path: path.join(SHOTS, 'demo-wire-photos-desktop-dark.png') });
+      check(!errors.length, 'no console errors', errors.join(' | '));
+      await ctx.close();
+    });
+  }
+
+  await group('Photo mode on live payloads: each source, once, while its picture works (live)', async () => {
+    const now = Date.now();
+    const hex = (sec) => Math.floor(sec).toString(16);
+    const today = wireFiles({})['wire-today.json'];
+    const items = today.updates.flatMap((u) => u.items);
+    const dupe = items.find((it) => it.thumb && it.local && it.ch === 'local');
+    const world = items.find((it) => it.thumb && !it.local);
+    const ig = { generated: new Date(now).toISOString(), posts: [
+      { h: 'lakelight', ts: Math.round(now / 1000) - 1800, i: 'https://scontent.example.com/a.jpg?stp=x&oe=' + hex(now / 1000 + 3 * 86400) + '&oh=1', u: 'https://www.instagram.com/p/LiveOne/', w: 480, c: 'Fog on the lake <b>at dawn</b>\nsecond line', s: 'see' },
+      { h: 'lakelight', ts: Math.round(now / 1000) - 3600, i: 'https://scontent.example.com/b.jpg?oe=' + hex(now / 1000 - 3600), u: 'https://www.instagram.com/p/LiveLapsed/', w: 480, c: 'Lapsed', s: 'see' },
+      { h: 'javascript', ts: Math.round(now / 1000) - 60, i: 'javascript:alert(1)', u: 'https://www.instagram.com/p/LiveBad/', c: 'x', s: 'see' },
+    ] };
+    const pulse = { v: 1, generated: new Date(now).toISOString(),
+      sources: [{ id: 'seven-days', name: 'Seven Days', short: 'Seven Days', topic: 'local', local: 1 }, { id: 'ap', name: 'AP', short: 'AP', topic: 'news' },
+        { id: 'r-burlington', name: 'r/burlington', short: 'r/burlington', topic: 'local', local: 1 }, { id: 'frequency', name: 'The Frequency', short: 'The Frequency', topic: 'local', local: 1 }],
+      items: [
+        { t: 'Seven Days picture', u: 'https://example.org/live/sd1', d: Math.round(now / 1000) - 900, i: 'https://example.org/live/sd1.jpg', s: 'seven-days', ch: 'local', local: true },
+        { t: 'The same story again', u: dupe.url.replace('https://', 'https://www.') + '/?utm_source=x', d: Math.round(now / 1000) - 800, i: 'https://example.org/live/dupe.jpg', s: 'seven-days', ch: 'local', local: true },
+        { t: 'A national picture', u: 'https://example.org/live/ap1', d: Math.round(now / 1000) - 700, i: 'https://example.org/live/ap1.jpg', s: 'ap', ch: 'world', local: false },
+        { t: 'A podcast episode', u: 'https://example.org/live/pod1', d: Math.round(now / 1000) - 600, i: 'https://example.org/live/pod.jpg', s: 'frequency', ch: 'local', local: true, du: 900, dn: 'x' },
+        { t: 'A Reddit picture', u: 'https://www.reddit.com/r/burlington/comments/live1/', d: Math.round(now / 1000) - 500, i: 'https://i.redd.it/live1.jpg', s: 'r-burlington', ch: 'reddit', local: true },
+        { t: 'A Reddit question', u: 'https://www.reddit.com/r/burlington/comments/live2/', d: Math.round(now / 1000) - 400, s: 'r-burlington', ch: 'reddit', local: true },
+        { t: 'Morning show, Monday', u: 'https://example.org/live/show1', d: Math.round(now / 1000) - 1000, i: 'https://example.org/live/show-logo.png', s: 'seven-days', ch: 'local', local: true },
+        { t: 'Morning show, Tuesday', u: 'https://example.org/live/show2', d: Math.round(now / 1000) - 1100, i: 'https://example.org/live/show-logo.png', s: 'seven-days', ch: 'local', local: true },
+        { t: 'A picture from last month', u: 'https://example.org/live/old', d: Math.round(now / 1000) - 30 * 86400, i: 'https://example.org/live/old.jpg', s: 'seven-days', ch: 'local', local: true },
+      ],
+      inbox: { facebook: { paused: false, items: [
+        { u: 'https://facebook.com/groups/1/permalink/2/', d: Math.round(now / 1000) - 300, from: 'ONE Neighbors', name: 'ONE Neighbors', summary: 'A lost cat on North Street', kind: 'post', ch: 'facebook', local: true, i: 'https://example.org/live/cat.jpg' },
+        { u: 'https://facebook.com/groups/1/permalink/3/', d: Math.round(now / 1000) - 200, from: 'ONE Neighbors', name: 'ONE Neighbors', summary: 'No picture here', kind: 'post', ch: 'facebook', local: true },
+      ] } } };
+    const posts = [
+      PM_POST({ id: '0000e000-0000-4000-8000-000000000001', title: 'Older, more votes', at: new Date(now - 120000).toISOString(), votes: 9 }),
+      PM_POST({ id: '0000e000-0000-4000-8000-000000000002', title: 'Newest, fewer votes', at: new Date(now - 60000).toISOString(), votes: 2 }),
+      PM_POST({ id: '0000e000-0000-4000-8000-000000000003', kind: 'notice', title: 'A notice', photo: null, at: new Date(now - 30000).toISOString(), votes: 40 }),
+    ];
+    const gallery = [{ id: 'live-g1', storage_path: 'submissions/g1.jpg', caption: 'Sunset "<script>"', category: 'sunsets', area: 'Waterfront', spot: 'Waterfront Park', credit: 'Ana', approved_on: '2026-10-01', votes: 3 },
+      { id: 'live-g2', storage_path: 'submissions/g2.jpg', caption: 'A dish', category: 'dish', area: 'Old North End', credit: 'Sam', approved_on: '2026-10-01' }];
+    /* one a day back over two months: the board pages, sixty at a time, to its end */
+    for (let i = 0; i < 63; i++) posts.push(PM_POST({ id: '0000e000-0000-4000-8000-0000000001' + String(i).padStart(2, '0'), title: 'Day ' + i, at: new Date(now - (i + 2) * 86400000).toISOString(), votes: 1 }));
+    const lists = [];
+    const rpc = (fn, args) => {
+      if (fn === 'nn_posts_list') {
+        if (args.p_board !== 'art') return [];
+        lists.push(args.p_before);
+        const before = args.p_before ? Date.parse(args.p_before) : Infinity;
+        return posts.filter((p) => Date.parse(p.created_at) < before).sort((a, b) => Date.parse(b.created_at) - Date.parse(a.created_at)).slice(0, args.p_limit);
+      }
+      if (fn === 'btb_photos_get') return gallery;
+      return undefined;
+    };
+    const { ctx, page, errors } = await newPage(browser, base, { rpc });
+    await page.route(/\/all-day\/data\/instagram\.json$/, (r) => r.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(ig) }));
+    await page.route(/\/data\/pulse\.json$/, (r) => r.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(pulse) }));
+    await page.goto(base + '/all-day/#wire/photos');
+    await settle(page);
+    check(await pmOn(page), 'live, #wire/photos opens the photo feed', '');
+    await pmAll(page);
+    const st = await pmState(page);
+    const keys = st.list.map((v) => v.k);
+    const from = st.list.reduce((o, v) => { o[v.from] = (o[v.from] || 0) + 1; return o; }, {});
+    check(st.lead === 'b-0000e000-0000-4000-8000-000000000001' && keys[0] === st.lead, 'the photo of the week leads on its votes, ahead of a newer post', JSON.stringify(keys.slice(0, 3)));
+    check(!keys.includes('b-0000e000-0000-4000-8000-000000000003'), 'a notice has no picture and stays out', '');
+    check(keys.includes('g-live-g1') && !keys.includes('g-live-g2'), 'the gallery’s photos, but not Food’s dishes', '');
+    check(keys.includes('ig:LiveOne') && !keys.includes('ig:LiveLapsed') && !keys.includes('ig:LiveBad'), 'Instagram: a working picture, never a lapsed or a non-web one', JSON.stringify(keys.filter((k) => /^ig:/.test(k))));
+    check(keys.includes('https://example.org/live/sd1') && !keys.includes('https://example.org/live/ap1') && !keys.includes('https://example.org/live/pod1') && !keys.includes('https://example.org/live/old'),
+      'the Unfiltered wire: a local picture from this week, not a national one, a podcast’s artwork or last month’s', '');
+    check(!keys.includes('https://example.org/live/show1') && !keys.includes('https://example.org/live/show2'), 'one picture on two stories is a show’s logo, not a photo: left out', '');
+    check(keys.includes('https://www.reddit.com/r/burlington/comments/live1/') && !keys.includes('https://www.reddit.com/r/burlington/comments/live2/'), 'a Reddit post with a picture, not one without', '');
+    check(keys.includes('https://facebook.com/groups/1/permalink/2/') && !keys.includes('https://facebook.com/groups/1/permalink/3/'), 'a Facebook group post with a picture, not one without', '');
+    check(keys.includes(dupe.id) && st.list.filter((v) => v.url && v.url.toLowerCase().includes(dupe.url.replace('https://', '').toLowerCase())).length === 1, 'one story from two places shows once, by its link', JSON.stringify(st.list.filter((v) => v.url.includes(dupe.url.split('/').pop()))));
+    check(!keys.includes(world.id), 'Local: the paper’s national pictures wait for Everything', world.id);
+    check(lists.length === 2 && !lists[0] && lists[1], 'the art board is paged to its end', JSON.stringify(lists));
+    check(from.board === 65 && from.gallery === 1 && from.instagram === 1 && from.facebook === 1 && from.reddit >= 1 && from.paper > 10 && from.outlet === 1, 'every source gives its pictures', JSON.stringify(from));
+    const html = await page.$eval(pmPanel + ' .pm-feed', (f) => f.innerHTML);
+    check(!/<script>|<b>at dawn/.test(html), 'captions are escaped', '');
+    const igCard = await page.$eval(pmPanel + ' [data-k="ig:LiveOne"]', (c) => ({ alt: c.querySelector('img.pic').alt, cap: c.querySelector('.pm-cap').textContent, href: c.querySelector('.pm-pic').getAttribute('href'),
+      loading: c.querySelector('img.pic').getAttribute('loading') }));
+    check(igCard.alt === 'Fog on the lake <b>at dawn</b> second line' && igCard.cap === 'Fog on the lake <b>at dawn</b>' && igCard.href === 'https://www.instagram.com/p/LiveOne/' && igCard.loading === 'lazy',
+      'the picture’s alt text is its caption, lazy; one line under it', JSON.stringify(igCard));
+    const keysAll = await page.$$eval(pmPanel + ' [data-k]', (n) => n.map((x) => x.dataset.k));
+    check(new Set(keysAll).size === keysAll.length, 'no key twice on the page', '');
+    const far = await page.evaluate(() => { const img = document.querySelector('#panel-wire .card.pm img.pic'); return { src: img.getAttribute('src'), kept: img.dataset.src || '' }; });
+    check(!far.src && /^https:/.test(far.kept), 'at the bottom of the feed, the first card has let go of its picture', JSON.stringify(far));
+    await page.evaluate(() => { document.querySelector('#panel-wire').scrollTop = 0; });
+    await page.waitForFunction(() => !!document.querySelector('#panel-wire .card.pm img.pic').getAttribute('src'), null, { timeout: 4000 }).catch(() => {});
+    check(!!(await page.$eval(pmPanel + ' .card.pm img.pic', (i) => i.getAttribute('src'))), 'and takes it back on the way up', '');
+    /* a broken picture takes its card with it */
+    const k1 = 'https://example.org/live/sd1';
+    await page.evaluate((k) => { const img = [...document.querySelectorAll('#panel-wire [data-k]')].find((n) => n.dataset.k === k).querySelector('img.pic'); img.src = 'data:image/png;base64,broken'; }, k1);
+    await page.waitForTimeout(300);
+    check(!(await page.$$eval(pmPanel + ' [data-k]', (n, k) => n.some((x) => x.dataset.k === k), k1)), 'a picture that will not load takes its card with it', '');
+    check(!errors.filter((e) => !/ERR_INVALID_URL|Failed to load resource/.test(e)).length, 'no console errors', errors.join(' | '));
     await ctx.close();
   });
 }
@@ -3940,9 +4283,9 @@ async function shellFixes(browser, base) {
       ['#ig', 'wire', '#wire'], ['#ig/ig-C123', 'wire', '#wire'],
       ['#music', 'whatnow', '#whatnow/tonight'], ['#music/mus:old', 'whatnow', '#whatnow/tonight'],
       ['#wander', 'whatnow', '#whatnow'], ['#wander/Moose', 'whatnow', '#whatnow'],
-      ['#photos', 'wire', '#wire'], ['#photos/p-1', 'wire', '#wire'],
-      /* Art was folded: its links wait on the Wire for the Photo mode */
-      ['#art', 'wire', '#wire'], ['#art/b-0000a000-0000-4000-8000-000000000002', 'wire', '#wire'], ['#art/wall', 'wire', '#wire'],
+      ['#photos', 'wire', '#wire/photos'], ['#photos/p-1', 'wire', '#wire/photos'],
+      /* Art was folded into the Wire's Photo mode: its links land there, a picture's key with them */
+      ['#art', 'wire', '#wire/photos'], ['#art/b-0000a000-0000-4000-8000-000000000002', 'wire', '#wire/photos/b-0000a000-0000-4000-8000-000000000002'], ['#art/wall', 'wire', '#wire/photos'],
       ['#listen', 'onair', '#onair'], ['#watch/yt:dQw4w9WgXcQ', 'onair', '#onair/yt:dQw4w9WgXcQ'],
       /* not old tabs: an unknown word is the Wire, as before, and nothing throws */
       ['#constructor', 'wire', '#constructor'], ['#igloo', 'wire', '#igloo'], ['#photosx', 'wire', '#photosx'], ['#toString/x', 'wire', '#toString/x'],
@@ -3966,7 +4309,7 @@ async function shellFixes(browser, base) {
   await group('shell fixes: the offline shell carries the new modules', async () => {
     const sw = await readFile(path.join(APP, 'sw.js'), 'utf8');
     const main = await readFile(path.join(APP, 'js/main.js'), 'utf8');
-    check(/VERSION = 'all-day-v47'/.test(sw), 'sw.js VERSION is bumped for the run clubs’ week, to v47', (sw.match(/VERSION = '[^']+'/) || [''])[0]);
+    check(/VERSION = 'all-day-v48'/.test(sw), 'sw.js VERSION is bumped for the Wire’s Photo mode after the run clubs’ week, to v48', (sw.match(/VERSION = '[^']+'/) || [''])[0]);
     const listed = [...sw.matchAll(/'\.\/(js\/[\w/.-]+\.js)'/g)].map((m) => m[1]);
     /* the offline list is exactly the modules that exist: none missing, none gone */
     const mods = [];
@@ -4623,6 +4966,7 @@ try {
   await run(matrix);
   await run(deepLinks);
   await run(theWire);
+  await run(thePhotos);
   await run(theWhatNow);
   await run(theFood);
   await run(thePeople);
