@@ -552,7 +552,21 @@ test('the phone: a broken, newer or refused store never loses or overwrites anyt
   const refusing = { get: () => { throw new Error('SecurityError'); }, set: () => false, remove: () => {} };
   const safe = { get() { try { return refusing.get(); } catch (e) { return null; } }, set: refusing.set, remove: refusing.remove };
   const q = phone('2026-10-14 12:00', safe);
-  assert.equal(q.call('sz_habit_add', { p_text: 'Walk', p_frequency: 'daily' }).text, 'Walk');
+  const w = q.call('sz_habit_add', { p_text: 'Walk', p_frequency: 'daily' });
+  assert.equal(w.text, 'Walk');
+  q.call('sz_tap', { p_habit: w.id, p_date: '2026-10-14' });
+  q.call('sz_habit_add', { p_text: 'Read', p_frequency: 'daily' });
+  assert.deepEqual(q.call('sz_habits_get').map((h) => h.text), ['Walk', 'Read'], 'every later call still sees them');
+  assert.equal(q.call('sz_taps_get', { p_from: '2026-10-14', p_to: '2026-10-14' }).length, 1);
+  /* a disk that fills up part way: what was written stays, and nothing done after is lost for the visit */
+  let room = true, kept = null;
+  const filling = { get: () => kept, set: (v) => { if (!room) return false; kept = v; return true; }, remove: () => { kept = null; } };
+  const r = phone('2026-10-14 12:00', filling);
+  r.call('sz_habit_add', { p_text: 'Saved', p_frequency: 'daily' });
+  room = false;
+  r.call('sz_habit_add', { p_text: 'Not saved', p_frequency: 'daily' });
+  assert.deepEqual(r.call('sz_habits_get').map((h) => h.text), ['Saved', 'Not saved']);
+  assert.deepEqual(JSON.parse(kept).habits.map((h) => h.text), ['Saved'], 'the key keeps the last copy it took');
 });
 
 test('the phone: streaks from its own taps, the same cases as the server’s', () => {
@@ -626,4 +640,40 @@ test('the phone: at most habitsMax go to the account, yours before the archived'
   const list = p.toImport();
   assert.equal(list.length, 100);
   assert.ok(list.every((h) => !h.archived) && list.at(-1).text === 'Habit 101');
+  /* the account takes the hundred; the one left over stays on the phone */
+  const snap = p.snapshot('u-1');
+  assert.equal(snap.whole, false);
+  p.forget(snap.ids);
+  assert.deepEqual(p.habits.map((h) => h.text), ['Habit 1'], 'the archived one more than a call can carry is not lost');
+});
+
+test('the phone lets go of exactly what the account took', () => {
+  const p = phone();
+  const a = p.call('sz_habit_add', { p_text: 'Walk', p_frequency: 'daily' });
+  p.call('sz_tap', { p_habit: a.id, p_date: '2026-10-14' });
+  const snap = p.snapshot('u-1');
+  assert.ok(snap.whole);
+  /* added while the import was on its way: not in the snapshot, so not let go */
+  const b = p.call('sz_habit_add', { p_text: 'Added meanwhile', p_frequency: 'daily' });
+  p.forget(snap.ids);
+  assert.deepEqual(p.call('sz_habits_get').map((h) => h.id), [b.id]);
+  assert.deepEqual(p.call('sz_taps_get', { p_from: '2026-10-01', p_to: '2026-10-14' }), [], 'and the taps of what went');
+});
+
+test('the phone remembers which habits an account already had, and never sends them twice', () => {
+  const store = memoryStorage();
+  const p = phone('2026-10-13 12:00', store);
+  const a = p.call('sz_habit_add', { p_text: 'Walk', p_frequency: 'daily' });
+  p.call('sz_tap', { p_habit: a.id, p_date: '2026-10-13' });
+  p.at('2026-10-14 12:00');
+  assert.equal(p.pendingFor('u-1'), true);
+  p.markMerged('u-1', [a.id]);
+  const again = phone('2026-10-14 13:00', store);
+  assert.equal(again.pendingFor('u-1'), false, 'a merge is remembered across a reload');
+  assert.equal(again.pendingFor('u-2'), true, 'for that account only');
+  assert.deepEqual(again.snapshot('u-1').list, []);
+  assert.deepEqual(again.call('sz_taps_get', { p_from: '2026-10-01', p_to: '2026-10-14' }).map((t) => t.date), ['2026-10-13'], 'and its past days stay on the phone');
+  const b = again.call('sz_habit_add', { p_text: 'Read', p_frequency: 'daily' });
+  assert.equal(again.pendingFor('u-1'), true, 'a habit added since is new to that account');
+  assert.deepEqual(again.snapshot('u-1').ids, [b.id]);
 });

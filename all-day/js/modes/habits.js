@@ -86,6 +86,9 @@ function call(fn, args) {
   if (!S.uid && LOCAL_DOORS.has(fn)) {
     return Promise.resolve().then(() => ({ ok: true, data: local().call(fn, args || {}) })).catch((e) => fail(e.code || 'offline'));
   }
+  return serverCall(fn, args);
+}
+function serverCall(fn, args) {
   if (app.demo) {
     const u = app.user();
     return Promise.resolve().then(() => ({ ok: true, data: demoBackend().as(u ? u.id : null).call(fn, args || {}) }))
@@ -218,7 +221,7 @@ function load() {
     S.me = r.ok && r.data && typeof r.data === 'object' && !Array.isArray(r.data) && r.data.name ? r.data : (r.ok ? null : undefined);
   });
   /* signed in: this phone's habits move to the account first */
-  const habits = (u ? moveLocal() : Promise.resolve()).then(() => Promise.all([
+  const habits = (u ? moveLocal(u.id) : Promise.resolve()).then(() => Promise.all([
     call('sz_habits_get'),
     call('sz_taps_get', { p_from: addDays(S.today, -HISTORY_DAYS), p_to: S.today }),
   ])).then(([h, t]) => {
@@ -244,48 +247,68 @@ function load() {
 
 /* ------------------------------------------- moving this phone's habits */
 /* At sign-in, the habits this phone kept, with their taps, go to the
-   account in one call, and then the phone forgets them. The server takes
-   them only into an account with nothing in it yet (the first sign-in);
-   an account that already has habits gets this phone's habits one by one
-   instead, matched by name so nothing is doubled, with today's taps (a day
-   gone by cannot be tapped from the app). Offline, or before the paste,
-   they stay on the phone and go on the next visit. Never rejects. */
-let moving = null;
-function moveLocal() {
-  if (moving) return moving;
-  const db = local();
-  if (!db.has()) return Promise.resolve();
-  moving = call('sz_import_local', { p_habits: db.toImport() }).then((r) => {
-    if (r.ok) { db.clear(); return null; }
-    if (r.error === 'already_synced') return mergeLocal(db);
-    if (r.error !== 'offline' && r.error !== 'off') app.toast(r.message);
-    return null;
-  }).then(() => { moving = null; }, () => { moving = null; });
-  return moving;
+   account in one call, and the phone lets go of exactly those. The server
+   takes them only into an account with nothing in it yet (the first
+   sign-in). An account that already has habits gets this phone's own,
+   matched by name and how often so nothing is doubled, with today's taps (a
+   day gone by cannot be tapped from the app); when that leaves anything
+   behind (an archived habit, a past day), the phone keeps its whole copy,
+   and remembers which habits that account has had, so they are never sent
+   twice. Offline, before the paste, or if the reader signs out or switches
+   account on the way, nothing is let go: it moves on the next visit. Every
+   call here goes to the server, never to the phone, and stops if the
+   signed-in reader is no longer the one it started for. Never rejects. */
+let moving = null;   // { uid, p }
+const TRANSIENT = new Set(['offline', 'off', 'not_signed_in']);
+function remote(uid, fn, args) {
+  const u = app.user();
+  if (!u || u.id !== uid) return Promise.resolve(fail('not_signed_in'));
+  return serverCall(fn, args);
 }
-const sameName = (t) => clean(t).toLowerCase();
-async function mergeLocal(db) {
-  const got = await call('sz_habits_get');
+function moveLocal(uid) {
+  if (moving && moving.uid === uid) return moving.p;
+  const db = local();
+  if (!db.pendingFor(uid)) return Promise.resolve();
+  const snap = db.snapshot(uid);
+  const p = remote(uid, 'sz_import_local', { p_habits: snap.list }).then((r) => {
+    if (r.ok) { db.forget(snap.ids); return null; }
+    if (r.error === 'already_synced') return mergeLocal(db, uid);
+    if (!TRANSIENT.has(r.error)) app.toast(r.message);
+    return null;
+  }).then(() => { if (moving && moving.p === p) moving = null; }, () => { if (moving && moving.p === p) moving = null; });
+  moving = { uid, p };
+  return p;
+}
+const habitKey = (h) => clean(h.text).toLowerCase() + '|' + h.frequency + '|' + (h.frequency === 'n_per_week' ? h.n : '');
+async function mergeLocal(db, uid) {
+  const got = await remote(uid, 'sz_habits_get');
   if (!got.ok) return;
-  const have = new Map((Array.isArray(got.data) ? got.data : []).filter((h) => !h.is_goal).map((h) => [sameName(h.text), h]));
+  const have = new Map((Array.isArray(got.data) ? got.data : []).filter((h) => !h.is_goal).map((h) => [habitKey(h), h]));
   const today = dayKey(Date.now());
-  for (const h of db.toImport().filter((x) => !x.archived)) {
-    let row = have.get(sameName(h.text));
+  const snap = db.snapshot(uid);
+  let whole = snap.whole;
+  const added = [];
+  for (let i = 0; i < snap.list.length; i++) {
+    const h = snap.list[i];
+    if (h.archived) { whole = false; continue; }
+    if (h.taps.some((d) => d !== today)) whole = false;
+    let row = have.get(habitKey(h));
     if (!row) {
-      const r = await call('sz_habit_add', { p_text: h.text, p_frequency: h.frequency, p_n: h.n, p_shared: h.shared });
-      if (!r.ok) {
-        if (r.error === 'offline' || r.error === 'off' || r.error === 'not_signed_in') return;   // keep the phone's copy; try again next time
-        continue;
-      }
+      const r = await remote(uid, 'sz_habit_add', { p_text: h.text, p_frequency: h.frequency, p_n: h.n, p_shared: h.shared });
+      if (!r.ok && TRANSIENT.has(r.error)) break;
+      if (!r.ok) { whole = false; continue; }   // refused (the ceiling): it stays on the phone
       row = r.data;
-      have.set(sameName(h.text), row);
+      have.set(habitKey(h), row);
     }
     if (h.taps.includes(today)) {
-      const t = await call('sz_tap', { p_habit: row.id, p_date: today });
-      if (!t.ok && (t.error === 'offline' || t.error === 'off' || t.error === 'not_signed_in')) return;
+      const t = await remote(uid, 'sz_tap', { p_habit: row.id, p_date: today });
+      if (!t.ok && TRANSIENT.has(t.error)) break;
     }
+    added.push(snap.ids[i]);
   }
-  db.clear();
+  if (!added.length) return;
+  if (whole && added.length === snap.ids.length) db.forget(added);
+  else db.markMerged(uid, added);
 }
 
 /* the day turns at midnight New York: repaint then, and on coming back */

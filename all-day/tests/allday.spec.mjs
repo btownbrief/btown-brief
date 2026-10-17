@@ -3737,13 +3737,38 @@ async function theHabits(browser, base) {
     await hbTap(page, 'Stretch');
     check(await page.evaluate(() => localStorage.getItem('allday-habits-local')) === null, 'the demo keeps the phone’s habits in memory only', '');
     await hbSignIn(page);
-    await page.waitForFunction(() => document.querySelectorAll('#panel-habits .hb-row').length === 4, null, { timeout: 4000 }).catch(() => {});
-    const rows = await hbRows(page);
-    check(JSON.stringify(rows.map((r) => r.name)) === '["Morning walk","Read twenty pages","Gym","Stretch"]' && rows[3].on,
-      'the demo account had three: Stretch joins them with today’s tap, and Gym is not doubled', JSON.stringify(rows.map((r) => [r.name, r.on])));
+    await page.waitForFunction(() => document.querySelectorAll('#panel-habits .hb-row').length === 5, null, { timeout: 4000 }).catch(() => {});
+    let rows = await hbRows(page);
+    check(JSON.stringify(rows.map((r) => r.name)) === '["Morning walk","Read twenty pages","Gym","Stretch","Gym"]' && rows[3].on && rows[4].meta === 'Daily',
+      'the demo account had three: Stretch joins them with today’s tap; a daily Gym is not the account’s 3-a-week Gym', JSON.stringify(rows.map((r) => [r.name, r.on, r.meta])));
     await page.evaluate(() => import('/all-day/js/app.js').then((a) => a.signOut()));
     await page.waitForFunction(() => !document.querySelector('#panel-habits .hb-row'), null, { timeout: 4000 }).catch(() => {});
-    check((await hbRows(page)).length === 0, 'signed out: the phone’s list is empty', '');
+    check((await hbRows(page)).length === 0, 'everything came across, so signed out the phone’s list is empty', '');
+
+    /* an archived habit cannot come across to an account that has habits: the phone keeps its copy, and never sends one twice */
+    await page.click(hbPanel + ' .hb-addbtn');
+    await page.fill(hbPanel + ' .hb-form input[name=text]', 'Floss');
+    await page.click(hbPanel + ' .hb-form button[type=submit]');
+    await page.waitForSelector(hbPanel + ' .hb-row', { timeout: 4000 });
+    await page.click(hbPanel + ' .hb-addbtn');
+    await page.fill(hbPanel + ' .hb-form input[name=text]', 'Old habit');
+    await page.click(hbPanel + ' .hb-form button[type=submit]');
+    await page.waitForFunction(() => document.querySelectorAll('#panel-habits .hb-row').length === 2, null, { timeout: 4000 }).catch(() => {});
+    await page.click(hbPanel + ' .hb-row:nth-child(2) .hb-name');
+    await page.waitForSelector('.sheet-card[aria-label="Edit habit"]', { timeout: 4000 });
+    await page.click('.sheet-body button:has-text("Archive")');
+    await page.waitForFunction(() => document.querySelectorAll('#panel-habits .hb-row').length === 1, null, { timeout: 4000 }).catch(() => {});
+    await hbSignIn(page);
+    await page.waitForFunction(() => document.querySelectorAll('#panel-habits .hb-row').length === 6, null, { timeout: 4000 }).catch(() => {});
+    rows = await hbRows(page);
+    check(rows.length === 6 && rows[5].name === 'Floss', 'Floss joins the account', JSON.stringify(rows.map((r) => r.name)));
+    await page.evaluate(() => import('/all-day/js/app.js').then((a) => a.signOut()));
+    await page.waitForSelector(hbPanel + ' .hb-row', { timeout: 4000 }).catch(() => {});
+    check(JSON.stringify((await hbRows(page)).map((r) => r.name)) === '["Floss"]', 'and with the archived habit left behind, the phone keeps its copy', JSON.stringify((await hbRows(page)).map((r) => r.name)));
+    await hbSignIn(page);
+    await page.waitForTimeout(200);
+    rows = await hbRows(page);
+    check(rows.filter((r) => r.name === 'Floss').length === 1 && rows.length === 6, 'signing in again sends nothing twice', JSON.stringify(rows.map((r) => r.name)));
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
   });
@@ -4086,7 +4111,7 @@ async function shellFixes(browser, base) {
   await group('shell fixes: the offline shell carries the new modules', async () => {
     const sw = await readFile(path.join(APP, 'sw.js'), 'utf8');
     const main = await readFile(path.join(APP, 'js/main.js'), 'utf8');
-    check(/VERSION = 'all-day-v46'/.test(sw), 'sw.js VERSION is bumped for Habits taking Art’s slot, to v46', (sw.match(/VERSION = '[^']+'/) || [''])[0]);
+    check(/VERSION = 'all-day-v47'/.test(sw), 'sw.js VERSION is bumped for Habits working signed out, to v47', (sw.match(/VERSION = '[^']+'/) || [''])[0]);
     const listed = [...sw.matchAll(/'\.\/(js\/[\w/.-]+\.js)'/g)].map((m) => m[1]);
     /* the offline list is exactly the modules that exist: none missing, none gone */
     const mods = [];

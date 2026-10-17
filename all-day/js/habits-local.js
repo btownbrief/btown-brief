@@ -13,11 +13,16 @@
    (sz_season_next is public), and anything that needs a person (the member
    row, pods, deleting an account) refuses with not_signed_in.
 
-   At sign-in, toImport() is the list sz_import_local takes, and clear()
-   empties the phone once the account has it (modes/habits.js).
+   At sign-in, snapshot() is the list sz_import_local takes, and forget()
+   lets go of exactly the habits the account took, nothing added since
+   (modes/habits.js). An account that already had habits takes only some
+   of a phone's (no archived ones, no past days); then the phone keeps its
+   copy and remembers which habits went to that account (merged), so they
+   are never sent twice.
 
    Every storage touch is wrapped: a phone that refuses to store (private
-   mode, a full disk) keeps the habits in memory for the visit. A copy
+   mode, a full disk) keeps the habits in memory for the visit, and stops
+   reading the key back, so nothing done this visit is lost to it. A copy
    written by a newer version of this file is never overwritten: it is read
    as empty and every change is refused until the page reloads with the new
    code. */
@@ -58,6 +63,8 @@ export class LocalHabits extends FakeHabits {
     this.storage = storage || memoryStorage();
     this.uid = ME;
     this.newer = false;   // the stored copy is from a newer version: read-only
+    this.memOnly = false; // a write was refused: memory is the copy for this visit
+    this.merged = {};     // account id -> ids of this phone's habits already added to it
     this._read();
   }
 
@@ -76,10 +83,12 @@ export class LocalHabits extends FakeHabits {
 
   /* ------------------------------------------------------------ keeping */
   _read() {
+    if (this.memOnly) return;
     const raw = this.storage.get();
     let d = null;
     this.habits = [];
     this.taps = new Map();
+    this.merged = {};
     this.newer = false;
     if (!raw) return;
     try { d = JSON.parse(raw); } catch (e) { d = null; }
@@ -101,6 +110,8 @@ export class LocalHabits extends FakeHabits {
       if (!ids.has(id) || !Array.isArray(taps[id])) continue;
       for (const k of taps[id]) if (isKey(k)) this.taps.set(id + '|' + k, { habit: id, user: ME, date: k, source: 'app' });
     }
+    const merged = d.merged && typeof d.merged === 'object' ? d.merged : {};
+    for (const u of Object.keys(merged)) if (Array.isArray(merged[u])) this.merged[u] = merged[u].filter((id) => ids.has(id));
   }
   _write() {
     const from = addDays(dayKey(this.now()), -IMPORT_DAYS);
@@ -112,33 +123,75 @@ export class LocalHabits extends FakeHabits {
     Object.values(taps).forEach((l) => l.sort());
     const habits = this.habits.map((h) => ({ id: h.id, text: h.text, frequency: h.frequency, n: h.n, shared: h.shared,
       position: h.position, archived_at: h.archived_at, created_at: h.created_at }));
-    if (!habits.length) { this.storage.remove(); return; }
-    this.storage.set(JSON.stringify({ v: LOCAL_VERSION, habits, taps }));
+    if (!habits.length) { this.storage.remove(); this.merged = {}; return; }
+    if (!this.storage.set(JSON.stringify({ v: LOCAL_VERSION, habits, taps, merged: this.merged }))) this.memOnly = true;
   }
 
   /* ------------------------------------------------------- moving to an account */
   has() { this._read(); return this.habits.length > 0; }
 
-  /* The list sz_import_local takes: the habits in your order, then the
-     archived ones, newest first, at most habitsMax in all; each with its
-     taps from the last IMPORT_DAYS days. Nothing that names this phone. */
-  toImport() {
+  /* What goes to an account at sign-in, as { list, ids, whole }:
+     list   what sz_import_local takes: your habits in your order, then the
+            archived ones, newest first, at most habitsMax in all; each with
+            its taps from the last IMPORT_DAYS days, and nothing that names
+            this phone
+     ids    this phone's ids for those, in the same order, for forget()
+     whole  true when list is everything the phone has
+     Habits already added to account `uid` by an earlier merge are left out. */
+  snapshot(uid) {
     this._read();
     const today = dayKey(this.now()), from = addDays(today, -IMPORT_DAYS);
-    const active = this.habits.filter((h) => !h.archived_at).sort(byOrder);
-    const archived = this.habits.filter((h) => h.archived_at).sort((a, b) => b.archived_at - a.archived_at);
-    return active.concat(archived).slice(0, this.rules.limits.habitsMax).map((h) => ({
-      text: h.text, frequency: h.frequency, n: h.n, shared: !!h.shared, archived: !!h.archived_at,
-      taps: [...this.taps.values()].filter((t) => t.habit === h.id && t.date >= from && t.date <= today).map((t) => t.date).sort(),
-    }));
+    const done = new Set((uid && this.merged[uid]) || []);
+    const mine = this.habits.filter((h) => !done.has(h.id));
+    const active = mine.filter((h) => !h.archived_at).sort(byOrder);
+    const archived = mine.filter((h) => h.archived_at).sort((a, b) => b.archived_at - a.archived_at);
+    const all = active.concat(archived);
+    const sent = all.slice(0, this.rules.limits.habitsMax);
+    return {
+      ids: sent.map((h) => h.id),
+      whole: sent.length === this.habits.length,
+      list: sent.map((h) => ({
+        text: h.text, frequency: h.frequency, n: h.n, shared: !!h.shared, archived: !!h.archived_at,
+        taps: [...this.taps.values()].filter((t) => t.habit === h.id && t.date >= from && t.date <= today).map((t) => t.date).sort(),
+      })),
+    };
+  }
+  toImport() { return this.snapshot().list; }
+
+  /* Let go of these habits and their taps: the account has them now.
+     Anything else (added since, or more than one call could carry) stays. */
+  forget(ids) {
+    this._read();
+    if (this.newer) return;
+    const gone = new Set(ids);
+    this.habits = this.habits.filter((h) => !gone.has(h.id));
+    for (const [k, t] of this.taps) if (gone.has(t.habit)) this.taps.delete(k);
+    for (const u of Object.keys(this.merged)) this.merged[u] = this.merged[u].filter((id) => !gone.has(id));
+    this._write();
   }
 
-  /* Forget them: the account has them now. A newer version's copy stays. */
+  /* These habits were added to account `uid`, but the phone keeps them (an
+     account that already had habits takes no past days). */
+  markMerged(uid, ids) {
+    this._read();
+    if (this.newer) return;
+    this.merged[uid] = [...new Set([...(this.merged[uid] || []), ...ids])];
+    this._write();
+  }
+  /* habits the phone has that account `uid` has not had yet */
+  pendingFor(uid) {
+    this._read();
+    const done = new Set(this.merged[uid] || []);
+    return this.habits.some((h) => !done.has(h.id));
+  }
+
+  /* Forget everything. A newer version's copy stays. */
   clear() {
     this._read();
     if (this.newer) return;
     this.storage.remove();
     this.habits = [];
     this.taps = new Map();
+    this.merged = {};
   }
 }

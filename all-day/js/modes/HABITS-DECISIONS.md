@@ -39,9 +39,11 @@ These are the calls phase one had to make where neither said. Each is cheap to c
 - **Signing in moves the phone's habits once.** `sz_import_local` (sz-ROUND3.sql) takes them,
   with their past taps, into an account that is still empty; the phone then forgets them.
   An account that already has habits (a second phone) gets the phone's habits added one by
-  one, matched by name so nothing is doubled, with today's tap; that phone's earlier taps do
-  not come across, because the app cannot tap a day gone by. Offline, nothing is lost: the
-  habits stay on the phone and move on the next visit.
+  one, matched by name and how often so nothing is doubled, with today's tap. That phone's
+  earlier taps and archived habits cannot come across (the app cannot tap a day gone by), so
+  then the phone keeps its whole copy, seen when signed out, and remembers which habits that
+  account has had so they are never sent twice. The phone only ever lets go of exactly what an
+  account took. Offline, or signed out on the way, nothing is let go: it moves next visit.
 - **Signing out leaves the habits on the account** and shows the phone's own list, empty.
 - **The history the streak counts back over is 370 days**, one `sz_taps_get` call. A streak
   longer than a year shows as a year.

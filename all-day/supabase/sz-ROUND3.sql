@@ -23,7 +23,8 @@
 --      no habit, no tap, archived ones included. A second try is refused
 --      ("already_synced"). Each habit is checked as sz_habit_add checks it;
 --      at most 100 habits; a tap must be a real date, today or up to 400
---      days back, never a future one. The list cannot name a habit id or an
+--      days back, never a future one. The whole list is checked before
+--      anything is written. The list cannot name a habit id or an
 --      owner at all, so it can never touch anyone else's habits. Imported
 --      taps carry the note 'imported' in sz_taps, so you can tell them apart.
 -- ============================================================================
@@ -60,10 +61,11 @@ end $$;
 -- taps, moved into their account at the first sign-in. p_habits is a list,
 -- in the reader's order, of
 --   { "text", "frequency", "n", "shared", "archived", "taps": ["YYYY-MM-DD", ...] }
--- and nothing else. Every check runs before the function returns, and one
--- refusal undoes the whole call, so an import lands whole or not at all.
--- Answers the reader's habits, as sz_habits_get does. habits-fake.js
--- sz_import_local() is the same function, for the demo and the tests.
+-- and nothing else. The whole list is checked before anything is written,
+-- so a bad one costs a read and no writes; one refusal undoes the whole
+-- call, so an import lands whole or not at all. Answers the reader's
+-- habits, as sz_habits_get does. habits-fake.js sz_import_local() is the
+-- same function, for the demo and the tests.
 create or replace function public.sz_import_local(p_habits jsonb) returns jsonb
 language plpgsql security definer set search_path = public as $$
 declare
@@ -89,6 +91,8 @@ begin
   if p_habits is null or jsonb_typeof(p_habits) <> 'array' or jsonb_array_length(p_habits) > (L ->> 'habitsMax')::int then
     raise exception 'bad_import';
   end if;
+
+  -- first, check all of it
   for x in select value from jsonb_array_elements(p_habits) loop
     if jsonb_typeof(x) <> 'object'
        or exists (select 1 from jsonb_object_keys(x) as k(k) where k.k not in ('text', 'frequency', 'n', 'shared', 'archived', 'taps')) then
@@ -108,17 +112,11 @@ begin
     v_freq := x ->> 'frequency';
     if v_text = '' or char_length(v_text) > (L ->> 'habitTextMax')::int then raise exception 'bad_import'; end if;
     if not ((public.sz_rules() -> 'frequencies') ? v_freq) then raise exception 'bad_import'; end if;
-    v_n := null;
     if v_freq = 'n_per_week' then
       v_n := (x ->> 'n')::int;
       if v_n is null or v_n < (L ->> 'nMin')::int or v_n > (L ->> 'nMax')::int then raise exception 'bad_import'; end if;
     end if;
     if jsonb_array_length(coalesce(x -> 'taps', '[]'::jsonb)) > 401 then raise exception 'bad_import'; end if;
-    i := i + 1;
-    insert into public.sz_habits (user_id, text, frequency, n, shared, position, archived_at)
-    values (u, v_text, v_freq, v_n, coalesce((x ->> 'shared')::boolean, false), i,
-            case when coalesce((x ->> 'archived')::boolean, false) then now() end)
-    returning * into h;
     for t in select value from jsonb_array_elements(coalesce(x -> 'taps', '[]'::jsonb)) loop
       if jsonb_typeof(t) <> 'string' or (t #>> '{}') !~ '^[0-9]{4}-[0-9]{2}-[0-9]{2}$' then raise exception 'bad_import'; end if;
       begin
@@ -127,9 +125,21 @@ begin
         raise exception 'bad_import';
       end;
       if to_char(v_d, 'YYYY-MM-DD') <> (t #>> '{}') or v_d > v_today or v_d < v_today - 400 then raise exception 'bad_import'; end if;
-      insert into public.sz_taps (habit_id, user_id, date, source, note) values (h.id, u, v_d, 'app', 'imported')
-      on conflict (habit_id, date) do nothing;
     end loop;
+  end loop;
+
+  -- then write it: each habit, then its taps in one statement
+  for x in select value from jsonb_array_elements(p_habits) loop
+    i := i + 1;
+    v_freq := x ->> 'frequency';
+    insert into public.sz_habits (user_id, text, frequency, n, shared, position, archived_at)
+    values (u, public.sz_clean(x ->> 'text'), v_freq, case when v_freq = 'n_per_week' then (x ->> 'n')::int end,
+            coalesce((x ->> 'shared')::boolean, false), i,
+            case when coalesce((x ->> 'archived')::boolean, false) then now() end)
+    returning * into h;
+    insert into public.sz_taps (habit_id, user_id, date, source, note)
+    select distinct h.id, u, (d #>> '{}')::date, 'app', 'imported' from jsonb_array_elements(coalesce(x -> 'taps', '[]'::jsonb)) as e(d)
+    on conflict (habit_id, date) do nothing;
   end loop;
   return public.sz_habits_get();
 end $$;
