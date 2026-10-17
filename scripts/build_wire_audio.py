@@ -32,8 +32,8 @@ Every morning at 7 Eastern (.github/workflows/wire-audio.yml):
      no fact the headlines and reasons do not give (curate_wire.invented:
      a number, a weekday or month, "free", a capitalized name; and a pronoun
      that gives someone a gender), no run of eight words copied from a
-     headline, no list, no newsroom named (OUTLET_RE, a hard fail) and no
-     "reports that" (ATTRIB_RE, sent back), and the length. A draft that passes is fact-checked
+     headline, no list, no outlet named or credited and no "reports that"
+     (outlets_named, attributions: hard fails), and the length. A draft that passes is fact-checked
      sentence by sentence by a second call. Pacing marks are taken out
      before every check and before the fact check reads the draft (plain()),
      so a mark can neither hide a word from a check nor be flagged as one;
@@ -197,25 +197,36 @@ BRACKET_RE = re.compile(r"\[([^\[\]\n]*)\]")
 # The Brief never names an outlet (Stephen, 2026-10-17: "'VTDigger reported that'
 # at the end of the sentence just doesn't hit... why do I need to quote them?
 # I'm my own news station"). The Wire links every source; the clip is the
-# station talking. OUTLET_RE is the region's newsrooms and a few national ones
-# the Wire carries, matched case-sensitively so "for seven days" is not "Seven
-# Days"; a name a story's own headline or text uses is not attribution (a story
-# about Seven Days may say so). Naming one is a hard fail: the draft goes back,
-# and a brief that keeps naming one does not ship. Story sources are not added
-# wholesale, because many are not newsrooms ("Vermont State Police", "UVM
-# Athletics") and saying those is telling the story, not crediting it.
+# station talking. Three checks, every one a hard fail (the draft goes back
+# with the names, and a brief that keeps crediting anyone does not ship):
+# - OUTLET_RE: the newsrooms the Wire and the newsletter read
+#   (refresh_chatter.NEWS_OUTLETS, pulse.json's news and local sources) and a
+#   few national ones, matched case-sensitively so "for seven days" is not
+#   "Seven Days". Named anywhere, it is flagged, unless a headline or story
+#   text itself names that outlet (a story about Seven Days) and the sentence
+#   does not credit anyone.
+# - a story's own source name ("UVM Athletics", an X account) in a sentence
+#   that credits (CREDIT_RE): "UVM Athletics says..." is attribution, while
+#   "UVM men's basketball" is the story. Source names stay in the fact set,
+#   as before, because they ground words like "UVM".
+# - ATTRIB_RE: saying where a story came from without a name ("reports
+#   that", "according to the paper", "that's from").
 OUTLET_RE = re.compile(
     r"(?<![\w’'])(?:Seven Days|VT ?Digger|WCAX|Channel (?:3|5|22|44)|NBC ?5|WPTZ|Vermont Public(?! (?:Utility|Service|Health|Safety|Schools?|"
-    r"Interest|Defender|Library|Lands|Works|Records|Transit))|VPR|Burlington Free Press|Free Press|Vermont ?Biz|"
-    r"Vermont Business Magazine|Vermont Cynic|The Cynic|The Other Paper|Williston Observer|Charlotte News|"
-    r"MyChamplainValley|Local ?22|Local ?44|ABC ?22|FOX ?44|WVMT|Valley News|Rutland Herald|Times Argus|"
-    r"Stowe Reporter|Addison Independent|Brattleboro Reformer|Bennington Banner|Vox|The Frequency|Front Porch Forum|"
-    r"Associated Press|New York Times|Boston Globe)(?![\w’'])")
-# Saying where a story came from without naming anyone ("reports that",
-# "according to", "that's from"): a softer miss, sent back for a rewrite and
-# ranked last, since "according to police" can be the headline's own fact.
-ATTRIB_RE = re.compile(r"\b(?:reports?|reported|reporting) that\b|\baccording to\b|\bfirst reported\b|"
-                       r"\bhas (?:that one|the story|the details|more on (?:that|it))\b|\bthat(?:'s|’s| one's| one’s| one is| is) from\b",
+    r"Interest|Defender|Library|Lands|Works|Records|Transit))|VPR|Vermont Edition|Brave Little State|Vermont This Week|"
+    r"Burlington Free Press|Free Press|Vermont ?Biz|Vermont Business Magazine|Vermont Cynic|The Cynic|The Other Paper|"
+    r"Williston Observer|Charlotte News|MyChamplainValley|Local ?22(?:/44)?|Local ?44|ABC ?22|FOX ?44|WVMT|WVNY|WFFF|"
+    r"Vermont Daily Chronicle|VT Community News|Vermont Community News|Community News Service|802 News|Abstract VT|"
+    r"Valley News|Rutland Herald|Times Argus|Stowe Reporter|Addison Independent|Brattleboro Reformer|Bennington Banner|"
+    r"Vox|The Frequency|Front Porch Forum|Axios|Politico|Reuters|Associated Press|NPR|PBS|BBC|CNN|CBS News|ABC News|"
+    r"NBC News|Fox News|MarketWatch|New York Times|Boston Globe|Wall Street Journal|WSJ|The Guardian)(?![\w’'])")
+CREDIT_RE = re.compile(r"\b(?:says?|said|reports?|reported|reporting|writes|wrote|according to|first reported|"
+                       r"has (?:that one|the story|the details|more)|(?:that'?s|that one'?s|that is|that one is|this one'?s) from|"
+                       r"from|via|per)\b", re.I)
+ATTRIB_RE = re.compile(r"\b(?:reports?|reported|reporting) that\b|\bis reporting\b|\bfirst reported\b|"
+                       r"\baccording to (?:the |a |one )?(?:paper|newspaper|report|reports|reporting|station|story|article|outlet|coverage|news)\b|"
+                       r"\bhas (?:that one|the story|the details|more on (?:that|it))\b|"
+                       r"\b(?:that|this)(?:'s|’s| one's| one’s| one is| is) from\b",
                        re.I)
 TAG_RE = re.compile(r"\[\s*(?:" + "|".join(t.replace(" ", r"\s+") for t in TAGS) + r")\s*\]", re.I)
 
@@ -645,9 +656,21 @@ def copied(text, titles, run=COPY_RUN):
 
 
 def outlets_named(text, stories):
-    """Newsrooms the text names that no story's headline or own text does."""
+    """Newsrooms the text names, and story sources it credits, per sentence.
+    An outlet a headline or story text itself names (OUTLET_RE matched in
+    that text, so "Vermont Public Utility Commission" never excuses
+    "Vermont Public") is allowed only in a sentence that credits no one."""
     given = " ".join(f"{s.get('title', '')} {s.get('text', '')}" for s in stories)
-    return list(dict.fromkeys(m.group(0) for m in OUTLET_RE.finditer(plain(text)) if m.group(0) not in given))
+    allowed = {m.group(0) for m in OUTLET_RE.finditer(given)}
+    sources = {str(s.get("source") or "").strip() for s in stories} - {""}
+    found = []
+    for sentence in re.split(r"(?<=[.!?])\s+", plain(text)):
+        credits = bool(CREDIT_RE.search(sentence))
+        found += [m.group(0) for m in OUTLET_RE.finditer(sentence) if credits or m.group(0) not in allowed]
+        if credits:
+            found += [src for src in sorted(sources)
+                      if re.search(r"(?<![\w’'])" + re.escape(src) + r"(?![\w’'])", sentence)]
+    return list(dict.fromkeys(found))
 
 
 def attributions(text):
@@ -676,13 +699,13 @@ def problems_of(paragraphs, teaser, stories, date, which):
 
 
 def hard_fail(p):
-    return bool(p["invented"] or p["unsupported"] or p.get("marks") or p.get("outlets"))
+    return bool(p["invented"] or p["unsupported"] or p.get("marks") or p.get("outlets") or p.get("attribution"))
 
 
 def clean(p, soft=False):
     lo, hi = (WORDS_SOFT_MIN, WORDS_SOFT_MAX) if soft else (SHORT_OK, WORDS_MAX)
     return (not hard_fail(p) and not p["list"] and lo <= p["words"] <= hi
-            and (soft or not (p["copied"] or p.get("attribution"))))
+            and (soft or not p["copied"]))
 
 
 def describe(p):
@@ -699,7 +722,7 @@ def describe(p):
                    "every mention, with its 'reports' or 'says', and tell the fact in your own voice: "
                    + ", ".join(f'"{w}"' for w in p["outlets"]))
     if p.get("attribution"):
-        out.append("Never say where a story came from; tell the fact plainly, subject first: "
+        out.append("Never say where a story came from; the Brief is the station. Tell the fact plainly, subject first: "
                    + ", ".join(f'"{w}"' for w in p["attribution"]))
     if p["copied"]:
         out.append("These headlines were read out word for word; retell them in your own words: "
@@ -783,7 +806,7 @@ def write_script(stories, engine, date, which, ask=None):
         paragraphs = tidy(answer.get("paragraphs"))
         teaser = re.sub(r"\s+", " ", str(answer.get("teaser") or "")).strip()[:120]
         p = problems_of(paragraphs, teaser, stories, date, which)
-        if paragraphs and not p["invented"] and not p["list"] and not p["marks"] and not p["outlets"]:
+        if paragraphs and not p["invented"] and not p["list"] and not p["marks"] and not p["outlets"] and not p["attribution"]:
             p["unsupported"], got = verify(stories, paragraphs, engine, ask)
             add(usage, got)
         drafts.append((paragraphs, teaser, p))
@@ -799,11 +822,11 @@ def write_script(stories, engine, date, which, ask=None):
         # was read by the check and passed.
         for k, (paragraphs, teaser, p) in enumerate(list(drafts), 1):
             quoted = [u["sentence"] for u in p["unsupported"]]
-            if quoted and all(quoted) and not p["invented"] and not p["list"] and not p["marks"] and not p["outlets"]:
+            if quoted and all(quoted) and not p["invented"] and not p["list"] and not p["marks"] and not p["outlets"] and not p["attribution"]:
                 cut = cut_sentences(paragraphs, quoted)
                 q = problems_of(cut, teaser, stories, date, which)
                 q["cut"] = len(quoted)
-                if cut and not q["invented"] and not q["marks"] and not q["outlets"]:
+                if cut and not hard_fail(dict(q, unsupported=[])):
                     drafts.append((cut, teaser, q))
                     notes.append(f"draft {k}: cut {len(quoted)} sentence(s) the fact check could not support")
     honest = [d for d in drafts if d[0] and not hard_fail(d[2]) and not d[2]["list"]]
@@ -812,14 +835,14 @@ def write_script(stories, engine, date, which, ask=None):
                      "no clip today rather than a wrong one")
         return None, "", usage, notes
     off = lambda d: max(SHORT_OK - d[2]["words"], d[2]["words"] - WORDS_MAX, 0)  # noqa: E731
-    # no "reports that", then nearest the length, then fewest copied headlines, then a draft nothing was cut from
-    paragraphs, teaser, p = min(honest, key=lambda d: (len(d[2]["attribution"]), off(d), len(d[2]["copied"]), d[2].get("cut", 0)))
+    # nearest the length, then fewest copied headlines, then a draft nothing was cut from
+    paragraphs, teaser, p = min(honest, key=lambda d: (off(d), len(d[2]["copied"]), d[2].get("cut", 0)))
     if not clean(p, soft=True):
         notes.append(f"the nearest draft is {p['words']} words: no clip today")
         return None, "", usage, notes
-    if p["copied"] or p["attribution"] or off((paragraphs, teaser, p)):
+    if p["copied"] or off((paragraphs, teaser, p)):
         notes.append("shipped with a soft problem: " + "; ".join(describe(p)))
-    if p["teaser_invented"] or outlets_named(teaser, stories) or len(teaser) > 100 or "[" in teaser or "]" in teaser:
+    if p["teaser_invented"] or outlets_named(teaser, stories) or attributions(teaser) or len(teaser) > 100 or "[" in teaser or "]" in teaser:
         teaser = ""     # a teaser with a bracket in it is dropped whole, never trimmed
     return assemble(date, which, paragraphs), teaser, usage, notes
 
@@ -1187,7 +1210,11 @@ def selftest():
     assert outlets_named("Seven Days has the plan, VTDigger reported. Channel 3 News has more.", stories) == ["Seven Days", "VTDigger", "Channel 3"]
     assert outlets_named("It ran for seven days at the Vermont Public Utility Commission.", stories) == []
     assert outlets_named("Seven Days won.", [{"title": "Seven Days wins a Pulitzer"}]) == []
-    assert attributions("The plan passed, according to the paper. That's from WCAX.") == ["according to", "That's from"]
+    assert attributions("The plan passed, according to the paper. That's from WCAX.") == ["according to the paper", "That's from"]
+    assert not attributions("According to police, the road is closed.")
+    assert outlets_named("Seven Days reports it.", [{"title": "Seven Days wins", "source": "x"}]) == ["Seven Days"]
+    assert outlets_named("Vermont Public reports it.", [{"title": "Vermont Public Utility Commission meets"}]) == ["Vermont Public"]
+    assert outlets_named("UVM Athletics says the game is on. UVM hosts Holy Cross.", [{"title": "Hosts Holy Cross", "source": "UVM Athletics"}]) == ["UVM Athletics"]
     assert gendered("She said his plan works.", srcs) == ["She", "his"] and not gendered("She said so.", ["she won"])
     # pacing marks: kept to TAGS, never read by a check, never a hiding place
     assert tidy_tags("[Short Pause] Closer to home... the plan [pause][pause] pa[pause]ssed.") == \

@@ -233,18 +233,30 @@ class Writer(unittest.TestCase):
         about = [{"title": "Seven Days wins a national award", "text": ""}]
         self.assertEqual(wa.outlets_named("Seven Days won a national award.", about), [])
 
-    def test_saying_where_a_story_came_from_is_sent_back_and_ranked_last(self):
+    def test_saying_where_a_story_came_from_is_sent_back_and_never_ships(self):
         said = GOOD[:2] + ["Vermont's diverging diamond is a month old, and the reviews are positive, according to the paper."] + GOOD[3:]
         ask, calls = fake_answers({"paragraphs": said, "teaser": "x"}, {"paragraphs": GOOD, "teaser": "x"})
         script, *_ = wa.write_script(self.stories, ENGINE, "2026-10-16", "today", ask=ask)
         self.assertEqual(len(calls), 2)
-        self.assertIn('"according to"', calls[1].user)
+        self.assertIn('"according to the paper"', calls[1].user)
         self.assertNotIn("according to", script)
-        # a soft miss: if every draft has it, the clip still ships, with a note
         always = fake_answers({"paragraphs": said, "teaser": "x"})[0]
         script, _, _, notes = wa.write_script(self.stories, ENGINE, "2026-10-16", "today", ask=always)
-        self.assertIsNotNone(script)
-        self.assertTrue(any("soft problem" in n for n in notes), notes)
+        self.assertIsNone(script)
+        self.assertEqual(wa.attributions("According to police, the road is closed."), [])   # a source in the story, not an outlet
+
+    def test_a_story_source_counts_only_when_it_is_credited(self):
+        # UVM Athletics is pick 10's source: "UVM men's basketball" is the story, "UVM Athletics says" is credit
+        self.assertEqual(wa.outlets_named(GOOD[9], self.stories), [])
+        self.assertEqual(wa.outlets_named("UVM Athletics says the Catamounts host Holy Cross.", self.stories), ["UVM Athletics"])
+        # an outlet a headline names excuses only an uncredited mention of that same outlet
+        about = [{"title": "Seven Days wins a national award", "source": "WCAX"}]
+        self.assertEqual(wa.outlets_named("Seven Days won a national award.", about), [])
+        self.assertEqual(wa.outlets_named("Seven Days reports a new editor.", about), ["Seven Days"])
+        utility = [{"title": "Vermont Public Utility Commission meets", "source": "x"}]
+        self.assertEqual(wa.outlets_named("Vermont Public reports the commission met.", utility), ["Vermont Public"])
+        self.assertEqual(wa.outlets_named("Vermont Daily Chronicle has the story. Community News Service too.", self.stories),
+                         ["Vermont Daily Chronicle", "Community News Service"])
 
     def test_the_fact_check_is_told_a_missing_outlet_is_not_a_problem(self):
         self.assertIn("never says which outlet", wa.VERIFY_TASK)
