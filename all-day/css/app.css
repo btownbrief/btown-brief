@@ -732,6 +732,43 @@ body.chrome-away .mast { transform: translateY(-100%); }
 .wxc-h .i { width: 14px; height: 14px; color: var(--ink-2); }
 .wxc-h b { font-size: var(--fs-small); font-weight: 600; }
 /* a phone narrower than 380: the card takes its own row under the pills */
+/* the sky strip over the weather card: the sun's real arc (weather.html's
+   scene in miniature), its colour by the time of day, a light overlay for
+   the condition */
+.wxsky { display: block; height: 36px; margin: -8px -10px 0; border-radius: var(--r-box) var(--r-box) 0 0; overflow: hidden;
+  background: linear-gradient(var(--sky-a), var(--sky-b)); --sky-a: var(--sky-day-a); --sky-b: var(--sky-day-b); }
+.wxsky svg { display: block; width: 100%; height: 100%; }
+.wxsky[data-sky="night"] { --sky-a: var(--sky-night-a); --sky-b: var(--sky-night-b); }
+.wxsky[data-sky="dawn"] { --sky-a: var(--sky-dawn-a); --sky-b: var(--sky-dawn-b); }
+.wxsky[data-sky="sunrise"] { --sky-a: var(--sky-sunrise-a); --sky-b: var(--sky-sunrise-b); }
+.wxsky[data-sky="golden"] { --sky-a: var(--sky-golden-a); --sky-b: var(--sky-golden-b); }
+.wxsky[data-sky="sunset"] { --sky-a: var(--sky-sunset-a); --sky-b: var(--sky-sunset-b); }
+.wxsky[data-sky="dusk"] { --sky-a: var(--sky-dusk-a); --sky-b: var(--sky-dusk-b); }
+.wxsky .arc { fill: none; stroke: var(--sky-arc); stroke-width: 1; stroke-dasharray: 2 3; }
+.wxsky .lake { fill: var(--sky-lake); }
+.wxsky .gloom { fill: var(--sky-gloom); opacity: 0; }
+.wxsky .body.sun { fill: var(--sky-sun); }
+.wxsky .body.sun.low { fill: var(--sky-sun-low); }
+.wxsky .body.moon { fill: var(--sky-moon); }
+.wxsky .ov { opacity: 0; }
+.wxsky .cl { fill: var(--sky-cloud); }
+.wxsky .rn { stroke: var(--sky-rain); stroke-width: 1.2; stroke-linecap: round; fill: none; }
+.wxsky .sn { fill: var(--sky-snow); }
+.wxsky .fg { fill: var(--sky-fog); }
+.wxsky.is-partly .cl { opacity: 1; }
+.wxsky.is-partly .cl .more { opacity: 0; }
+.wxsky.is-cloud .cl, .wxsky.is-rain .cl, .wxsky.is-snow .cl, .wxsky.is-storm .cl { opacity: 1; }
+.wxsky.is-cloud .gloom, .wxsky.is-snow .gloom { opacity: .45; }
+.wxsky.is-rain .gloom, .wxsky.is-storm .gloom { opacity: .6; }
+.wxsky.is-fog .gloom { opacity: .3; }
+.wxsky.is-cloud .body, .wxsky.is-rain .body, .wxsky.is-snow .body, .wxsky.is-storm .body { opacity: .35; }
+.wxsky.is-fog .body { opacity: .6; }
+.wxsky.is-rain .rn, .wxsky.is-storm .rn, .wxsky.is-snow .sn, .wxsky.is-fog .fg { opacity: 1; }
+.wxsky.is-rain .rn, .wxsky.is-storm .rn { animation: wxsky-fall .9s linear infinite; }
+.wxsky.is-snow .sn { animation: wxsky-fall 3.2s linear infinite; }
+.wxsky.is-cloud .cl, .wxsky.is-partly .cl, .wxsky.is-fog .fg { animation: wxsky-drift 14s ease-in-out infinite alternate; }
+@keyframes wxsky-fall { from { transform: translateY(-5px); } to { transform: translateY(5px); } }
+@keyframes wxsky-drift { from { transform: translateX(-4px); } to { transform: translateX(4px); } }
 @media (max-width: 379px) { .wxtop { grid-template-columns: minmax(0, 1fr); } .wxcard { width: auto; } }
 
 /* Happening today: a strip of the rest of today's calendar */
