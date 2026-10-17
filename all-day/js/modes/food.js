@@ -20,9 +20,11 @@
      closest to the reader (only after they allow it), open latest, price,
      newest. The Map button at the head draws the list as dots with no
      network at all; tapping it loads Leaflet and OpenStreetMap tiles (the
-     guide's own map stack) into a sheet, pins the list, and puts the reader
-     on it once they allow it. The reader's position lives in this module's
-     memory only: never stored, never sent. A row opens a sheet with today's
+     guide's own map stack) into a sheet centred on Church Street, pins the
+     list, and draws the reader's dot once they allow it. The reader's
+     position lives in this module's memory only: never stored, never sent,
+     and the map is never turned to it on its own, so no tile request
+     carries it either. A row opens a sheet with today's
      hours, the menu (data/small-bites.json), the website and "Full reviews
      on Google" by the place's Google id.
    - The directory. all-day/data/food-directory.json maps a place to its own
@@ -316,13 +318,13 @@ function servesMeal(r, meal, day) {
   const w = MEAL_WIN[meal];
   if (!w) return true;
   if (!hasHours(r)) return false;
-  return (r.hours[day] || []).some(([o, c]) => {
-    const om = F.toMin(o), c0 = F.toMin(c);
-    if (om === null || c0 === null) return false;
-    const cm = c0 > om ? c0 : c0 + 1440;
-    return Math.min(cm, w[1]) - Math.max(om, w[0]) >= (w[1] - w[0]) / 2;
-  });
+  const enough = (a, b) => Math.min(b, w[1]) - Math.max(a, w[0]) >= (w[1] - w[0]) / 2;
+  const win = (o, c) => { const a = F.toMin(o), b = F.toMin(c); return a === null || b === null ? null : [a, b]; };
+  /* last night's window that runs past midnight counts this morning */
+  const spill = (r.hours[DAYS[(DAYS.indexOf(day) + 6) % 7]] || []).some(([o, c]) => { const x = win(o, c); return x && x[1] < x[0] && enough(0, x[1]); });
+  return spill || (r.hours[day] || []).some(([o, c]) => { const x = win(o, c); return x && enough(x[0], x[1] > x[0] ? x[1] : x[1] + 1440); });
 }
+const DAYS = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
 
 /* The sorts. Nearest Church Street is the list's own order (takePlaces);
    the rest keep it as the tiebreak. */
@@ -363,7 +365,13 @@ function foodOf(r) {
   const posts = hs.flatMap((h) => S.igBy.get(h) || []).filter((p) => pictureOk(p, nowS)).sort((a, b) => b.ts - a.ts);
   return { handle: hs[0] || '', posts, dishes: S.dishBy.get(r.id) || [] };
 }
-const thumbOf = (f) => (f.dishes[0] && f.dishes[0].url) || (f.posts[0] && f.posts[0].i) || '';
+/* the newest of its reader dishes and its own posts */
+function thumbOf(f) {
+  const d = f.dishes[0], p = f.posts[0];
+  const dTs = d ? (Date.parse(d.approved_on || '') / 1000 || 0) : -1;
+  if (d && (!p || dTs >= Number(p.ts || 0))) return d.url;
+  return p ? p.i : '';
+}
 
 /* What it is: the first cuisine that names a kind of food, else the category. */
 const NOT_A_KIND = new Set(['lunch', 'outdoor dining', 'other', 'romantic', 'activities']);
@@ -632,7 +640,7 @@ function openMap() {
     dropMap();
     loadLeaflet().then((L) => {
       if (!box.isConnected) return;
-      M = L.map(box, { zoomControl: true, attributionControl: true }).setView(S.me || CHURCH_ST, 15);
+      M = L.map(box, { zoomControl: true, attributionControl: true }).setView(CHURCH_ST, S.me ? 14 : 15);
       L.tileLayer(TILES, { maxZoom: 19, attribution: TILE_CREDIT }).addTo(M);
       list.forEach((r) => {
         const pin = L.circleMarker(r.coords, { radius: 7, weight: 2, className: 'fm-pin' + (isOpen(r, t) ? ' open' : '') }).addTo(M);
@@ -657,7 +665,9 @@ function placeMe() {
   if (!M || !S.me || !window.L || !M.getContainer().isConnected) return;
   if (mePin) { try { mePin.remove(); } catch (e) { /* gone with its map */ } }
   mePin = window.L.circleMarker(S.me, { radius: 8, weight: 3, className: 'fm-me', interactive: false }).addTo(M);
-  M.setView(S.me, 15);
+  /* the map stays on Church Street and the dot is drawn here: turning the
+     map to the reader would ask the tile server for their neighbourhood */
+  M.setZoom(14);
   const near = document.querySelector('.sheet-body .nearme');
   if (near) near.hidden = true;
 }

@@ -2055,7 +2055,7 @@ async function theFood(browser, base) {
     const maps = [];
     const layer = (kind, at, o) => ({ kind, at, o, addTo(m) { m.layers.push(this); return this; }, bindTooltip(t) { this.tip = t; return this; },
       on(ev, fn) { this['on' + ev] = fn; return this; }, remove() { this.gone = true; } });
-    return { maps, map(el, opts) { const m = { el, opts, layers: [], view: null, setView(c, z) { this.view = c; this.zoom = z; return this; },
+    return { maps, map(el, opts) { const m = { el, opts, layers: [], view: null, setView(c, z) { this.view = c; this.zoom = z; return this; }, setZoom(z) { this.zoom = z; return this; },
       invalidateSize() {}, remove() { this.removed = true; }, getContainer() { return el; } }; maps.push(m); return m; },
       tileLayer(u, o) { return layer('tiles', u, o); }, circleMarker(c, o) { return layer('pin', c, o); } };
   })();`;
@@ -2137,8 +2137,8 @@ async function theFood(browser, base) {
     await page.click(foodPanel + ' .mapbtn');
     await page.waitForFunction(() => window.L && window.L.maps && window.L.maps.length, null, { timeout: 6000 }).catch(() => {});
     const m = await mapState(page);
-    check(m && m.me.length === 1 && JSON.stringify(m.me[0]) === JSON.stringify([ME.latitude, ME.longitude]) && JSON.stringify(m.view) === JSON.stringify([ME.latitude, ME.longitude]),
-      'the map puts the reader on it and centres there', JSON.stringify(m && { me: m.me, view: m.view }));
+    check(m && m.me.length === 1 && JSON.stringify(m.me[0]) === JSON.stringify([ME.latitude, ME.longitude]), 'the map puts the reader on it', JSON.stringify(m && m.me));
+    check(m && JSON.stringify(m.view) === JSON.stringify(CH), 'but stays centred on Church Street, so no tile request is for the reader’s own block', JSON.stringify(m && m.view));
     check(await page.$eval('.sheet-body .nearme', (b) => b.hidden), 'and Near me steps aside', '');
     await page.screenshot({ path: path.join(SHOTS, 'demo-food-map-me.png') });
     const lat = String(ME.latitude), lon = String(ME.longitude);

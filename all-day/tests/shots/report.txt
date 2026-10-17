@@ -120,7 +120,8 @@
   ok   Food, the map and Closest to me with location allowed (demo, noon) › nothing asks for the location on load
   ok   Food, the map and Closest to me with location allowed (demo, noon) › Closest to me: allowed, the list runs from the reader outward
   ok   Food, the map and Closest to me with location allowed (demo, noon) › and the head says so
-  ok   Food, the map and Closest to me with location allowed (demo, noon) › the map puts the reader on it and centres there
+  ok   Food, the map and Closest to me with location allowed (demo, noon) › the map puts the reader on it
+  ok   Food, the map and Closest to me with location allowed (demo, noon) › but stays centred on Church Street, so no tile request is for the reader’s own block
   ok   Food, the map and Closest to me with location allowed (demo, noon) › and Near me steps aside
   ok   Food, the map and Closest to me with location allowed (demo, noon) › it was asked for only once the reader picked Closest to me
   ok   Food, the map and Closest to me with location allowed (demo, noon) › the position is never sent anywhere
