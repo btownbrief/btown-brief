@@ -621,10 +621,11 @@ function photoForm(o) {
 }
 
 /* ------------------------------------------------------ put it on a shirt */
-/* The Art tab's "Put it on a shirt" lands here as #vintage/b-<art post id>
-   (post ids are uuids, so it never matches a Vintage post). Only posts
-   whose maker ticked the shirt box carry that button, so only those are
-   looked up: up to three pages of the Art wall's shirt-yes posts. */
+/* The old Art tab's "Put it on a shirt" landed here as
+   #vintage/b-<art post id> (post ids are uuids, so it never matches a
+   Vintage post), and those links still work now that Art is folded. Only
+   posts whose maker ticked the shirt box carried that button, so only those
+   are looked up: up to three pages of the art board's shirt-yes posts. */
 function artForShirt(id, before, page) {
   return boards.list('art', { meta: { shirt: 'yes' }, limit: 60, before }).then((r) => {
     if (!r.ok) return { error: r.message };
@@ -638,7 +639,6 @@ function shirtSheet(p) {
     if (p.photo) body.appendChild(el('span', 'c-media r45', art(boards.photoUrl(p.photo))));
     body.appendChild(el('p', 'pick-why', '<b>' + esc(p.title) + '</b>' + esc(' by ' + (p.author || 'a neighbor'))));
     const links = el('div', 'linkrow');
-    links.appendChild(button('Vote for it on the Art wall', '', () => app.go('art', 'b-' + p.id)));
     links.appendChild(outLink('Browse the shop', SHOP_URL));
     body.appendChild(links);
   });

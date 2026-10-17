@@ -115,7 +115,7 @@ function load() {
     }).catch(() => { S.missionsFailed = true; }),
     loadAll().then(({ data: feeds }) => { S.feeds = feeds; }).catch(() => { S.feedsFailed = true; }),
   ];
-  sunScore(data).then((sun) => { S.sun = sun; });
+  sunScore(data).then((sun) => { S.sun = sun; paintWx(); });
   pullDone();
   return Promise.all(parts);
 }
@@ -170,7 +170,12 @@ function render() {
   else { renderSpin(); renderMissions(); }
 }
 
-/* One line: what it feels like, the lake when the gage is fresh, sunset. */
+/* One line: what it feels like, the lake when the gage is fresh, sunset.
+   The sunset is sun.js's answer once it has one (the line the Art tab used
+   to carry, folded in here on 2026-10-17): after tonight's has gone it is
+   tomorrow's, and says so, and its score shows only when it is a real one,
+   with a forecast behind it and not the 0.0 an empty forecast comes out
+   as. Until sun.js answers, the weather payload's time. */
 function weatherLine() {
   const w = S.weather;
   if (!w) return null;
@@ -180,12 +185,22 @@ function weatherLine() {
   const g = w.lake_gage;
   const fresh = g && g.water_temp_f != null && g.water_temp_at && Date.now() - Date.parse(g.water_temp_at) < 24 * 3600000;
   if (fresh) bits.push('<span><b>' + esc(Math.round(g.water_temp_f)) + '°</b> lake</span>');
-  const set = w.sun && Date.parse(w.sun.sunset);
-  if (set) bits.push('<span><b>' + esc(clock(set).replace(/[ap]m$/, '')) + '</b> sunset</span>');
+  const sun = S.sun && S.sun.sunsetMs ? S.sun : null;
+  const set = sun ? sun.sunsetMs : w.sun && Date.parse(w.sun.sunset);
+  const scored = !!sun && Number.isFinite(sun.score) && sun.score > 0 && !sun.degraded;
+  if (set) bits.push('<span><b>' + esc(clock(set).replace(/[ap]m$/, '')) + '</b> sunset' + (sun && !sun.isTonight ? ' tomorrow' : '') +
+    (scored ? ', <b class="sc">' + esc(sun.score.toFixed(1)) + '</b>/10' : '') + '</span>');
   if (!bits.length) return null;
   const line = el('div', 'wx', bits.join(''));
   line.setAttribute('aria-label', 'Weather');
   return line;
+}
+
+/* sun.js answers late: put its sunset into the line already drawn */
+function paintWx() {
+  const old = root && root.querySelector(':scope > .wx');
+  const next = old && weatherLine();
+  if (next) old.replaceWith(next);
 }
 
 /* ------------------------------------------------------------------ Spin */

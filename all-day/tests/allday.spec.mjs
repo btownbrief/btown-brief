@@ -47,8 +47,8 @@ const HERE = path.dirname(fileURLToPath(import.meta.url));
 const APP = path.resolve(HERE, '..');
 const REPO = path.resolve(APP, '..');
 const SHOTS = path.join(HERE, 'shots');
-const TABS = ['wire', 'watch', 'food', 'people', 'whatnow', 'vintage', 'art', 'onair', 'games'];
-const LABELS = ['Wire', 'Watch', 'Food', 'People', 'What Now', 'Vintage', 'Art', 'On Air', 'Games'];
+const TABS = ['wire', 'watch', 'food', 'people', 'whatnow', 'vintage', 'habits', 'onair', 'games'];
+const LABELS = ['Wire', 'Watch', 'Food', 'People', 'What Now', 'Vintage', 'Habits', 'On Air', 'Games'];
 const PNG = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mN8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==', 'base64');
 
 /* ------------------------------------------------------------- reporting */
@@ -99,7 +99,7 @@ async function staticChecks() {
     const js = [];
     const walk = async (dir) => { for (const f of await readdir(dir, { withFileTypes: true })) { const p = path.join(dir, f.name); if (f.isDirectory()) await walk(p); else if (/\.(js|css|html)$/.test(f.name)) js.push(p); } };
     await walk(path.join(APP, 'js')); await walk(path.join(APP, 'css'));
-    const NEW = ['app.js', 'ui.js', 'store.js', 'auth.js', 'liquid.js', 'main.js', 'wire.js', 'wire-demo.js', 'watch.js', 'food.js', 'people.js', 'whatnow.js', 'vintage.js', 'art.js', 'onair.js', 'games.js', 'tokens.css', 'app.css'];
+    const NEW = ['app.js', 'ui.js', 'store.js', 'auth.js', 'liquid.js', 'main.js', 'wire.js', 'wire-demo.js', 'watch.js', 'food.js', 'people.js', 'whatnow.js', 'vintage.js', 'habits.js', 'habits-core.js', 'habits-fake.js', 'photo-wall.js', 'onair.js', 'games.js', 'tokens.css', 'app.css'];
     const OLD = new Set(['sun.js', 'whatnow-engine.js', 'whatnow-data.js']);
     for (const f of js) {
       const name = path.basename(f);
@@ -392,7 +392,7 @@ const COMBOS = [
 ];
 const PAPER = { light: 'rgb(251, 249, 245)', dark: 'rgb(13, 14, 16)' };
 /* tabs that are built: live, they draw their screen instead of the promise */
-const LIVE = new Set(['wire', 'watch', 'whatnow', 'onair', 'games', 'food', 'art', 'vintage', 'people']);
+const LIVE = new Set(['wire', 'watch', 'whatnow', 'onair', 'games', 'food', 'habits', 'vintage', 'people']);
 
 async function matrix(browser, base) {
   for (const combo of COMBOS) {
@@ -465,8 +465,8 @@ async function matrix(browser, base) {
             await page.screenshot({ path: path.join(SHOTS, 'demo-' + tab + '.png') });
           }
           if (demo && combo === COMBOS[1] && tab === 'wire') await page.screenshot({ path: path.join(SHOTS, 'demo-wire-dark.png') });
-          if (demo && combo === COMBOS[3] && (tab === 'wire' || tab === 'onair' || tab === 'games' || tab === 'art' || tab === 'people')) await page.screenshot({ path: path.join(SHOTS, 'demo-' + tab + '-desktop.png') });
-          if (!demo && combo === COMBOS[0] && (tab === 'wire' || tab === 'watch' || tab === 'food' || tab === 'onair' || tab === 'games' || tab === 'art' || tab === 'vintage' || tab === 'people')) await page.screenshot({ path: path.join(SHOTS, 'live-' + tab + '.png') });
+          if (demo && combo === COMBOS[3] && (tab === 'wire' || tab === 'onair' || tab === 'games' || tab === 'habits' || tab === 'people')) await page.screenshot({ path: path.join(SHOTS, 'demo-' + tab + '-desktop.png') });
+          if (!demo && combo === COMBOS[0] && (tab === 'wire' || tab === 'watch' || tab === 'food' || tab === 'onair' || tab === 'games' || tab === 'habits' || tab === 'vintage' || tab === 'people')) await page.screenshot({ path: path.join(SHOTS, 'live-' + tab + '.png') });
           if (!demo && combo === COMBOS[1] && (tab === 'onair' || tab === 'games' || tab === 'people')) await page.screenshot({ path: path.join(SHOTS, 'live-' + tab + '-dark.png') });
         }
         const gc = await page.evaluate(() => window.__gc);
@@ -494,7 +494,7 @@ async function flashes(page, key) {
 
 async function deepLinks(browser, base) {
   await group('deep links, demo', async () => {
-    const cases = [['wire', 'w13'], ['wire', 'y4'], ['watch', 'f9003'], ['food', 'r-demo-all-night-diner'], ['people', 'mx-dm2'], ['whatnow', 'e-tn3'], ['vintage', 's-resource-burlington'], ['art', 'b-0000a000-0000-4000-8000-000000000002'], ['onair', 'yt:demo-tv-003'], ['games', 'g:trivia-ladder'], ['games', 'champ:btown-riddle']];
+    const cases = [['wire', 'w13'], ['wire', 'y4'], ['watch', 'f9003'], ['food', 'r-demo-all-night-diner'], ['people', 'mx-dm2'], ['whatnow', 'e-tn3'], ['vintage', 's-resource-burlington'], ['habits', 'next-season'], ['onair', 'yt:demo-tv-003'], ['games', 'g:trivia-ladder'], ['games', 'champ:btown-riddle']];
     for (const [tab, key] of cases) {
       const { ctx, page, errors } = await newPage(browser, base);
       await page.goto(base + '/all-day/?demo=1#' + tab + '/' + key);
@@ -2656,7 +2656,7 @@ async function boards(browser, base) {
 
   await group('boards: Your posts, and delete my account (demo)', async () => {
     const { ctx, page, errors } = await newPage(browser, base, { motion: 'reduce' });
-    await page.goto(base + '/all-day/?demo=1#art');
+    await page.goto(base + '/all-day/?demo=1#vintage');
     await settle(page);
     await page.evaluate(() => import('/all-day/js/auth.js').then((a) => a.demoSignIn()));
     await page.evaluate(() => import('/all-day/js/boards.js').then(async (b) => {
@@ -2697,6 +2697,8 @@ async function boards(browser, base) {
     await page.waitForTimeout(200);
     const after = await fakeOf(page, `(f) => ({ posts: f.posts.filter((p) => p.user_id === 'demo-0000-4000-8000-00000000me00').length, profile: f.profiles.has('demo-0000-4000-8000-00000000me00') })`);
     check(after.posts === 0 && !after.profile, 'everything of theirs is gone', JSON.stringify(after));
+    const habitsGone = await page.evaluate(() => import('/all-day/js/modes/habits.js').then((h) => { const f = h._fake(); return !f.members.has('demo-0000-4000-8000-00000000me00') && !f.habits.some((x) => x.user_id === 'demo-0000-4000-8000-00000000me00'); }));
+    check(habitsGone, 'and so are their habits and taps (sz_delete_me)', '');
     check(/Deleted\. You’re signed out\./.test(await page.$eval('#toast', (t) => t.textContent)) && await page.evaluate(() => import('/all-day/js/app.js').then((a) => a.user())) === null, 'and they are signed out', '');
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
@@ -3192,7 +3194,7 @@ async function theVintage(browser, base) {
     await page.goto(base + '/all-day/#vintage/b-0000dddd-0000-4000-8000-000000000001');
     await page.waitForSelector('.sheet-card[aria-label="Put it on a shirt"]', { timeout: 6000 }).catch(() => {});
     const shirt = await page.$eval('.sheet-body', (b) => ({ text: b.innerText, img: (b.querySelector('img') || {}).src || '' })).catch(() => ({ text: '', img: '' }));
-    check(/Camel’s Hump in gouache by Dev/.test(shirt.text) && /Vote for it on the Art wall/.test(shirt.text) && /submissions\/art-1\.jpg$/.test(shirt.img), 'Art’s “Put it on a shirt” link opens the piece here, picture, title and maker', JSON.stringify(shirt));
+    check(/Camel’s Hump in gouache by Dev/.test(shirt.text) && !/Art wall/.test(shirt.text) && /submissions\/art-1\.jpg$/.test(shirt.img), 'an old Art “Put it on a shirt” link still opens the piece here, picture, title and maker, with no button to a wall that has gone', JSON.stringify(shirt));
     check(!/\$\s?\d|\bprice\b/i.test(shirt.text), 'and it names no price', shirt.text);
     check(calls.some((c) => c.fn === 'nn_posts_list' && c.args.p_board === 'art' && JSON.stringify(c.args.p_filter) === '{"meta":{"shirt":"yes"}}'), 'it looks only among Art posts whose maker said yes to a shirt', '');
     check(!errors.length, 'no console errors', errors.join(' | '));
@@ -3200,220 +3202,300 @@ async function theVintage(browser, base) {
   });
 }
 
-/* ------------------------------------------------------------------ Art */
-const artPanel = '#panel-art';
-const artId = (n) => '0000c000-0000-4000-8000-' + String(n).padStart(12, '0');
-const ART_POST = (o) => ({ id: o.id, board: 'art', kind: o.kind || 'photo', title: o.title, body: o.body || '', place: o.place || '', meta: o.meta || { shirt: 'no' },
-  photo: o.photo === undefined ? 'submissions/' + o.id.slice(-12) + '.jpg' : o.photo, author: o.author || 'Kara', author_arch: null,
-  created_at: o.at, expires_at: o.expires || null, votes: o.votes || 0, voted: false, mine: false });
-/* nn_posts_list as the SQL answers it: newest first, before a time, at most p_limit */
-const artList = (posts, calls) => (fn, args) => {
-  if (fn !== 'nn_posts_list') return undefined;
-  if (calls) calls.push(args);
-  const before = args.p_before ? Date.parse(args.p_before) : Infinity;
-  return posts.filter((p) => Date.parse(p.created_at) < before).sort((a, b) => Date.parse(b.created_at) - Date.parse(a.created_at)).slice(0, args.p_limit);
+/* --------------------------------------------------------------- Habits */
+const hbPanel = '#panel-habits';
+const HB_ME = 'demo-0000-4000-8000-00000000me00';
+/* the rows as the reader sees them: name, the meta line, the dots, done today */
+const hbRows = (page) => page.$$eval(hbPanel + ' .hb-row', (rs) => rs.map((r) => ({ id: r.dataset.id, name: r.querySelector('.hb-name').textContent,
+  meta: r.querySelector('.hb-meta').innerText.replace(/\s+/g, ' ').trim(), dots: [...r.querySelectorAll('.hb-dots .d')].map((d) => d.className.replace(/^d /, '')),
+  on: r.querySelector('.hb-tap').getAttribute('aria-pressed') === 'true', tap: Math.round(r.querySelector('.hb-tap').getBoundingClientRect().height) })));
+const hbFake = (page, fn) => page.evaluate(`import('/all-day/js/modes/habits.js').then((H) => { const f = H._fake(); return (${fn})(f); })`);
+const hbSignIn = async (page) => {
+  await page.evaluate(() => import('/all-day/js/auth.js').then((a) => a.demoSignIn()));
+  await page.waitForSelector(hbPanel + ' .hb-row, ' + hbPanel + ' .hb-me', { timeout: 6000 });
 };
-const artText = (page, sel) => page.$eval(artPanel + ' ' + sel, (n) => n.textContent);
-const artReload = (page) => page.evaluate(() => window.dispatchEvent(new CustomEvent('allday-boards', { detail: { board: 'art', id: null, what: 'test' } })));
+/* today's column in the seven dots: Monday 0 … Sunday 6, in Burlington */
+const hbTodayCol = () => (new Date(Date.parse(etKey(Date.now()) + 'T12:00:00Z')).getUTCDay() + 6) % 7;
+/* a tap, measured in the page: the row must show it before the click returns */
+const hbTap = (page, name) => page.evaluate((name) => {
+  const row = () => [...document.querySelectorAll('#panel-habits .hb-row')].find((r) => r.querySelector('.hb-name').textContent === name);
+  const t0 = performance.now();
+  row().querySelector('.hb-tap').click();
+  const after = row();
+  return { ms: performance.now() - t0, on: after.querySelector('.hb-tap').getAttribute('aria-pressed') === 'true', meta: after.querySelector('.hb-meta').innerText.replace(/\s+/g, ' ').trim() };
+}, name);
 
-async function theArt(browser, base) {
-  for (const v of [1, 2]) await group('Art, photo of the week on a frozen Burlington clock (live, a reader in Los Angeles, server rules v' + v + ')', async () => {
-    const H = 3600000;
-    const posts = [
-      ART_POST({ id: artId(1), title: 'Sunday night, 11:30', at: '2026-10-12T03:30:00Z', votes: 50 }),
-      ART_POST({ id: artId(2), kind: 'art', title: 'Monday, 12:30 am', at: '2026-10-12T04:30:00Z', votes: 10, meta: { medium: 'Gouache', shirt: 'yes' } }),
-      ART_POST({ id: artId(3), title: 'Tuesday afternoon', at: '2026-10-13T16:00:00Z', votes: 9 }),
-      ART_POST({ id: artId(4), kind: 'notice', title: 'Open studio Saturday', photo: null, at: '2026-10-13T12:00:00Z', expires: '2026-11-12T12:00:00Z', votes: 40 }),
-    ];
-    /* one a day back past nine weeks, so the list needs a second page and every week has a winner */
-    for (let i = 0; i < 70; i++) posts.push(ART_POST({ id: artId(100 + i), title: 'Day ' + i, at: new Date(Date.parse('2026-10-11T12:00:00Z') - i * 24 * H).toISOString(), votes: i % 4 }));
-    const calls = [], weekly = [];
-    const list = artList(posts, calls);
-    /* round two counts votes by the week they were cast: in the week of Oct 5 (2026-W41) the Sunday-night post got 2 of
-       its 50 then, and Saturday's "Day 1" got 5; the rest came later and no longer move that week */
-    const rpc = (fn, args) => {
-      if (fn === 'nn_rules') return v === 2 ? { version: 2 } : undefined;
-      if (fn === 'nn_votes_by_week') { weekly.push(args); return [{ post: artId(101), week: '2026-W41', votes: 5 }, { post: artId(1), week: '2026-W41', votes: 2 }]; }
-      return list(fn, args);
-    };
-    const { ctx, page, errors } = await newPage(browser, base, { timezoneId: 'America/Los_Angeles', rpc });
-    await page.clock.setFixedTime(new Date('2026-10-14T14:00:00Z'));   // Wednesday, 10 am in Burlington, 7 am for this reader
-    await page.goto(base + '/all-day/#art');
-    await settle(page);
-    const hero = await page.$eval(artPanel + ' [data-sec="week"]', (s) => ({ eyebrow: s.querySelector('.eyebrow').textContent, title: s.querySelector('h3').textContent,
-      votes: s.querySelector('[data-vk] .vn').textContent, shirt: s.querySelector('[data-shirt]') && s.querySelector('[data-shirt]').getAttribute('href') }));
-    check(hero.eyebrow === 'Photo of the week' && hero.title === 'Monday, 12:30 am' && hero.votes === '10',
-      'the top-voted post since Monday in Burlington wins: 50 votes at 11:30 pm Sunday there is last week’s, though it is Monday in UTC', JSON.stringify(hero));
-    check(hero.shirt === '#vintage/' + encodeURIComponent('b-' + artId(2)), 'its maker said yes to a shirt: “Put it on a shirt” goes to #vintage with the post key', JSON.stringify(hero));
-    check(calls.length >= 2 && calls.every((c) => c.p_board === 'art' && c.p_limit === 60) && !calls[0].p_before && calls[1].p_before === posts.slice().sort((a, b) => Date.parse(b.created_at) - Date.parse(a.created_at))[59].created_at,
-      'the list is paged, 60 at a time, until the eighth week back is in', JSON.stringify(calls.map((c) => c.p_before)));
-    const wins = await page.$$eval(artPanel + ' [data-sec="winners"] .vcard', (cs) => cs.map((c) => [c.querySelector('.t').textContent, c.querySelector('.s').textContent]));
-    if (v === 1) {
-      check(!weekly.length, 'round one: no counts by week are asked for', JSON.stringify(weekly));
-      check(wins.length === 8 && wins[0][0] === 'Week of Oct 5' && /Sunday night, 11:30/.test(wins[0][1]) && wins[7][0] === 'Week of Aug 17',
-        'Winners: the past eight weeks, newest first, and the Sunday-night post wins its own week on its votes so far', JSON.stringify(wins));
-    } else {
-      check(weekly.length && weekly.every((a) => a.p_board === 'art' && a.p_weeks === 9), 'round two: the votes are counted by week for this week and the eight before', JSON.stringify(weekly));
-      check(wins.length === 8 && wins[0][0] === 'Week of Oct 5' && /Day 1$/.test(wins[0][1]) && wins[7][0] === 'Week of Aug 17',
-        'Winners: the week of Oct 5 goes to the most votes cast that week, settled at Sunday midnight, whatever came later', JSON.stringify(wins));
-    }
-    check(wins.every((w) => /^Kara · /.test(w[1])), 'each winner carries the maker’s name, and nothing else to win', JSON.stringify(wins[0]));
-    const tiles = await page.$$eval(artPanel + ' .grid3 .tile', (ts) => ts.map((t) => t.getAttribute('aria-label')));
-    check(/^Tuesday afternoon/.test(tiles[0]) && /^Monday, 12:30 am/.test(tiles[1]) && !tiles.some((t) => /Open studio/.test(t)), 'the wall is newest first, pictures only', tiles.slice(0, 3).join(' | '));
-    check(/Open studio Saturday/.test(await artText(page, '[data-sec="board"]')), 'the notice is on the community board instead', '');
-    await pageRules(page, 'art', 390);
-    check(!errors.length, 'no console errors', errors.join(' | '));
-    await ctx.close();
-  });
-
-  await group('Art, a vote that overtakes takes the week (demo)', async () => {
+async function theHabits(browser, base) {
+  await group('Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390)', async () => {
     const { ctx, page, errors } = await newPage(browser, base);
-    await page.goto(base + '/all-day/?demo=1#art');
+    await page.goto(base + '/all-day/?demo=1#habits');
     await settle(page);
-    const heroTitle = () => artText(page, '[data-sec="week"] h3');
-    check(await heroTitle() === 'The breakwater light in fog', 'two posts tie on 23 this week, and the one posted first leads', await heroTitle());
-    const tile = artPanel + ' .tile[aria-label^="Aurora from the causeway"]';
-    check(await page.$eval(tile + ' .vn', (n) => n.textContent) === '23', 'the tile shows its votes', '');
-    await page.click(tile);
-    await page.waitForSelector('.sheet-card[aria-label="Aurora from the causeway"]');
-    await page.click('.sheet-body [data-act="artvote"]');
-    await page.waitForFunction(() => document.querySelector('#panel-art [data-sec="week"] h3').textContent === 'Aurora from the causeway', null, { timeout: 3000 }).catch(() => {});
-    check(await heroTitle() === 'Aurora from the causeway', 'one vote puts it ahead, and the photo of the week changes', await heroTitle());
-    const after = await page.evaluate(() => ({ sheet: document.querySelector('.sheet-body [data-act="artvote"]').getAttribute('aria-pressed'), sheetN: document.querySelector('.sheet-body [data-act="artvote"] .vn').textContent,
-      tile: document.querySelector('#panel-art .tile[aria-label^="Aurora"] .vn').textContent, hero: document.querySelector('#panel-art [data-sec="week"] [data-vk] .vn').textContent }));
-    check(after.sheet === 'true' && after.sheetN === '24' && after.tile === '24' && after.hero === '24', 'the count is 24 on the sheet, the tile and the hero', JSON.stringify(after));
-    check(await fakeOf(page, `(f) => f._count('${'0000a000-0000-4000-8000-000000000002'}')`) === 24, 'and the board counted it', '');
-    await page.click('.sheet-body [data-act="artvote"]');
-    await page.waitForFunction(() => document.querySelector('#panel-art [data-sec="week"] h3').textContent === 'The breakwater light in fog', null, { timeout: 3000 }).catch(() => {});
-    check(await heroTitle() === 'The breakwater light in fog', 'taking the vote back hands the week back', await heroTitle());
-    await page.click('.sheet-head .iconbtn');
-    await page.click(artPanel + ' [data-sec="week"] button[data-vk]');
-    await page.waitForTimeout(150);
-    check(await page.$eval(artPanel + ' [data-sec="week"] button[data-vk]', (b) => b.getAttribute('aria-pressed') + ' ' + b.querySelector('.vn').textContent) === 'true 24' && await heroTitle() === 'The breakwater light in fog',
-      'the hero’s own Vote button counts too', '');
+    const out = await page.$eval(hbPanel, (p) => ({ tile: p.querySelector('.hb-tile').innerText.replace(/\s+/g, ' '), gate: [...p.querySelectorAll('.hb-gate button')].map((b) => b.textContent),
+      rows: p.querySelectorAll('.hb-row').length, notes: [...p.querySelectorAll('p')].map((x) => x.textContent).filter((t) => !/^Season 0 ·/.test(t)) }));
+    check(/Next season starts in 23 days/.test(out.tile) && /Sign up/.test(out.tile), 'the between-seasons tile: when the next season starts, and a sign-up button', out.tile);
+    check(JSON.stringify(out.gate) === '["Sign in"]' && out.rows === 0 && !out.notes.length, 'signed out: the tile and a sign-in button, and no explanation', JSON.stringify(out));
+    check(JSON.stringify(await page.$$eval('#subnav .chip', (c) => c.map((x) => x.textContent))) === '["Today","Goal","Season","Wall"]', 'the chips: Today, Goal, Season, Wall', '');
+    await page.click(hbPanel + ' .hb-gate button');
+    await page.waitForSelector('.sheet-card[aria-label="Settings"]', { timeout: 4000 }).catch(() => {});
+    check(!!(await page.$('.sheet-card[aria-label="Settings"]')), 'Sign in opens the sign-in in Settings', '');
+    await page.keyboard.press('Escape');
+
+    await hbSignIn(page);
+    let rows = await hbRows(page);
+    check(JSON.stringify(rows.map((r) => r.name)) === '["Morning walk","Read twenty pages","Gym"]', 'signed in: the demo’s three habits, in order', JSON.stringify(rows.map((r) => r.name)));
+    check(rows.every((r) => r.dots.length === 7) && rows.every((r) => r.tap >= 48), 'each row: seven dots and a tap target at least 48px', JSON.stringify(rows.map((r) => [r.dots.length, r.tap])));
+    check(rows[0].on && /^\d+ days · Daily · Shared$/.test(rows[0].meta) && /^\d+ weeks? · 3 a week$/.test(rows[2].meta), 'the streak, how often, and shared', JSON.stringify(rows.map((r) => r.meta)));
+    await page.evaluate(() => document.querySelector('.panel:not([hidden])').scrollTo(0, 0));
+    await page.screenshot({ path: path.join(SHOTS, 'demo-habits-today.png') });
+
+    /* add one */
+    await page.click(hbPanel + ' .hb-addbtn');
+    await page.click(hbPanel + ' .hb-form button[type=submit]');
+    check(/A name for the habit/.test(await page.$eval(hbPanel + ' .hb-form .bf-msg', (m) => m.textContent)), 'a habit with no name: refused, in one line', '');
+    check(await page.$eval(hbPanel + ' .hb-form .hb-n', (s) => s.hidden), 'times a week is hidden until N a week is chosen', '');
+    check(!(await page.$eval(hbPanel + ' .hb-form input[name=shared]', (c) => c.checked)), 'shared with the pod is off by default', '');
+    await page.fill(hbPanel + ' .hb-form input[name=text]', 'Stretch');
+    await page.click(hbPanel + ' .hb-form button[type=submit]');
+    await page.waitForFunction(() => document.querySelectorAll('#panel-habits .hb-row').length === 4, null, { timeout: 4000 }).catch(() => {});
+    rows = await hbRows(page);
+    const st = rows[3];
+    check(st && st.name === 'Stretch' && st.meta === 'Daily' && !st.on, 'it lands at the bottom: Daily, no streak yet, not done', JSON.stringify(st));
+    check(st && st.dots[hbTodayCol()] === 'today', 'today’s dot is today’s, in Burlington', JSON.stringify(st && st.dots));
+
+    /* tap it */
+    let t = await hbTap(page, 'Stretch');
+    check(t.on && t.ms < 100, 'a tap shows at once (' + Math.round(t.ms) + ' ms)', JSON.stringify(t));
+    check(t.meta === '1 day · Daily', 'the streak ticks up to 1 day', t.meta);
+    rows = await hbRows(page);
+    check(rows[3].dots[hbTodayCol()] === 'done', 'and today’s dot fills', JSON.stringify(rows[3].dots));
+    await page.waitForTimeout(100);
+    const today = etKey(Date.now());
+    check(await hbFake(page, `(f) => f.taps.has('${st.id}|${today}')`), 'the server has the tap, for today in Burlington', '');
+    t = await hbTap(page, 'Stretch');
+    check(!t.on && t.meta === 'Daily', 'tapping again un-marks it', JSON.stringify(t));
+    await page.waitForTimeout(100);
+    check(!(await hbFake(page, `(f) => f.taps.has('${st.id}|${today}')`)), 'and the server deletes the tap', '');
+
+    /* N a week, shared */
+    await page.click(hbPanel + ' .hb-addbtn');
+    await page.fill(hbPanel + ' .hb-form input[name=text]', 'Floss');
+    await page.click(hbPanel + ' .hb-form .hb-freq [data-freq="n_per_week"]');
+    await page.selectOption(hbPanel + ' .hb-form .hb-n', '4');
+    await page.check(hbPanel + ' .hb-form input[name=shared]');
+    await page.click(hbPanel + ' .hb-form button[type=submit]');
+    await page.waitForFunction(() => document.querySelectorAll('#panel-habits .hb-row').length === 5, null, { timeout: 4000 }).catch(() => {});
+    rows = await hbRows(page);
+    check(rows[4] && rows[4].meta === '4 a week · Shared' && rows[4].dots.every((d) => d !== 'missed'), 'an N-a-week habit: no set days, so no missed rings', JSON.stringify(rows[4]));
+    check(!(await page.$(hbPanel + ' .hb-addbtn')), 'five habits: the Add habit row steps aside', '');
+    await pageRules(page, 'habits', 390);
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
   });
 
-  await group('Art, the wall opens a tile in a sheet (demo, wide, dark)', async () => {
+  await group('Habits, swipe to archive with Undo, drag and keys to reorder, edit (demo, 1280, dark)', async () => {
     const { ctx, page, errors } = await newPage(browser, base, { viewport: { width: 1280, height: 800 }, scheme: 'dark' });
-    await page.goto(base + '/all-day/?demo=1#art/wall');
+    await page.goto(base + '/all-day/?demo=1#habits');
     await settle(page);
-    const grid = await page.$$eval(artPanel + ' .grid3 .tile', (ts) => ts.map((t, i) => ({ i, tall: t.classList.contains('tall'), ct: !!t.querySelector('.ct'), lbl: t.querySelector('.lbl') && t.querySelector('.lbl').textContent })));
-    check(grid.length === 17 && grid.filter((t) => t.ct).length === 14 && JSON.stringify(grid.filter((t) => t.lbl).map((t) => t.lbl)) === '["Sunset from Waterfront Park","The Church Street lights","Morning coffee on Pine Street"]',
-      'fourteen posts with votes and three gallery photos, each labelled with its own caption', JSON.stringify(grid.filter((t) => t.lbl).map((t) => t.lbl)));
-    check(JSON.stringify(grid.filter((t) => t.tall).map((t) => t.i)) === '[0,7,10]', 'two tall tiles in every ten, none where it would leave a hole', JSON.stringify(grid.filter((t) => t.tall).map((t) => t.i)));
-    const holes = await page.$eval(artPanel + ' .grid3', (g) => {
-      const r = [...g.children].map((t) => t.getBoundingClientRect());
-      const area = r.reduce((s, x) => s + x.width * x.height, 0);
-      const box = g.getBoundingClientRect();
-      const last = r.slice(-3).every((x) => Math.abs(x.bottom - r[r.length - 1].bottom) < 2);
-      return { fill: area / ((box.width - 32) * box.height), last };
-    });
-    check(holes.fill > 0.8, 'the grid is filled, no gaps', JSON.stringify(holes));
-    await page.click(artPanel + ' .tile[aria-label^="The Flynn marquee"]');
-    await page.waitForSelector('.sheet-card[aria-label="The Flynn marquee"]');
-    const sh = await page.$eval('.sheet-body', (b) => ({ media: !!b.querySelector('.c-media.r11 .ph'), text: b.innerText,
-      acts: [...b.querySelectorAll('[data-act]')].map((x) => x.dataset.act), shirt: b.querySelector('[data-shirt]') && b.querySelector('[data-shirt]').getAttribute('href') }));
-    check(sh.media, 'the sheet shows the whole picture in its own shape', JSON.stringify(sh));
-    check(/by Priya N\. · Art · Linocut/.test(sh.text) && /Three-color linocut/.test(sh.text), 'with the title, the maker, the medium and their line', sh.text);
-    check(JSON.stringify(sh.acts) === '["artvote","share","breport"]' && /^#vintage\/b-/.test(sh.shirt || ''), 'and vote, share, report, and the shirt', JSON.stringify(sh));
-    await page.screenshot({ path: path.join(SHOTS, 'demo-art-sheet-desktop-dark.png') });
-    await page.click('.sheet-body [data-act="breport"]');
-    check(/Sign in to report/.test(await page.$eval('#toast', (t) => t.textContent)), 'report goes to the boards’ own flow (signed out, it asks for sign-in)', '');
-    await page.click('.sheet-head .iconbtn');
-    await page.click(artPanel + ' .tile:has(.lbl)');
-    await page.waitForSelector('.sheet-card');
-    const g = await page.$eval('.sheet-body', (b) => ({ text: b.innerText, acts: [...b.querySelectorAll('[data-act]')].map((x) => x.dataset.act) }));
-    check(/Photo by Stephen/.test(g.text) && JSON.stringify(g.acts) === '["share"]', 'a gallery photo’s sheet: who took it, where, share, and no votes', JSON.stringify(g));
-    await page.click('.sheet-head .iconbtn');
-    await pageRules(page, 'art', 1280);
-    check(!errors.length, 'no console errors', errors.join(' | '));
-    await ctx.close();
-  });
+    await hbSignIn(page);
+    /* swipe Gym to the left */
+    const box = await page.$eval(hbPanel + ' .hb-row:nth-child(3) .hb-name', (n) => { const r = n.getBoundingClientRect(); return { x: r.left + 20, y: r.top + r.height / 2 }; });
+    await page.mouse.move(box.x + 200, box.y);
+    await page.mouse.down();
+    await page.mouse.move(box.x + 160, box.y, { steps: 4 });
+    await page.mouse.move(box.x + 60, box.y, { steps: 6 });
+    await page.mouse.up();
+    await page.waitForSelector('#toast:not([hidden])', { timeout: 4000 }).catch(() => {});
+    let rows = await hbRows(page);
+    check(JSON.stringify(rows.map((r) => r.name)) === '["Morning walk","Read twenty pages"]' && /Archived Gym/.test(await page.$eval('#toast', (x) => x.textContent)), 'a swipe left archives it, and the toast says so', JSON.stringify(rows.map((r) => r.name)));
+    check(await hbFake(page, `(f) => !!f.habits.find((h) => h.text === 'Gym').archived_at`), 'archived on the server, taps kept', '');
+    await page.click('#toast button');
+    await page.waitForFunction(() => document.querySelectorAll('#panel-habits .hb-row').length === 3, null, { timeout: 4000 }).catch(() => {});
+    rows = await hbRows(page);
+    check(rows.length === 3 && rows[2].name === 'Gym' && /weeks?/.test(rows[2].meta), 'Undo brings it back, with its streak', JSON.stringify(rows.map((r) => r.name + ' ' + r.meta)));
+    /* a short swipe does nothing */
+    const b2 = await page.$eval(hbPanel + ' .hb-row:nth-child(2) .hb-name', (n) => { const r = n.getBoundingClientRect(); return { x: r.left + 20, y: r.top + r.height / 2 }; });
+    await page.mouse.move(b2.x + 200, b2.y); await page.mouse.down(); await page.mouse.move(b2.x + 160, b2.y, { steps: 4 }); await page.mouse.up();
+    check((await hbRows(page)).length === 3 && !(await page.$('.sheet-card[aria-label="Edit habit"]')), 'a short swipe neither archives nor opens the habit', '');
 
-  await group('Art, a photo post composes with consent and lands pending (demo)', async () => {
-    const { ctx, page, errors } = await newPage(browser, base, { motion: 'reduce' });
-    await page.goto(base + '/all-day/?demo=1#art/add');
-    await settle(page);
-    await page.evaluate(() => import('/all-day/js/auth.js').then((a) => a.demoSignIn()));
-    await page.click(artPanel + ' [data-sec="add"] button:has-text("Add art")');
-    await page.waitForSelector('.sheet-body form.bform');
-    check(await page.$('input[name="m:medium"]') !== null && await page.$('select[name="m:shirt"]') !== null, 'Add art asks for the medium and the shirt', '');
-    await page.click('.sheet-head .iconbtn');
-    const tiles0 = await page.$$eval(artPanel + ' .grid3 .tile', (t) => t.length);
-    await page.click(artPanel + ' [data-sec="add"] button:has-text("Add a photo")');
-    await page.waitForSelector('.sheet-body form.bform');
-    check(await page.$('input[name="m:medium"]') === null && await page.$('select[name="m:shirt"]') !== null, 'Add a photo asks for the shirt, not a medium', '');
-    check(/Photos show once approved\./.test(await page.$eval('.bform', (f) => f.innerText)), 'and says, in one line, that photos show once approved', '');
-    await page.fill('input[name=display_name]', 'Robin');
-    await page.fill('input[name=title]', 'Leddy at dusk');
-    await page.fill('textarea[name=body]', 'From the end of the pier.');
-    await page.selectOption('select[name="m:shirt"]', 'yes');
-    await page.setInputFiles('.bform input[type=file]', { name: 'leddy.jpg', mimeType: 'image/jpeg', buffer: PNG });
-    await page.click('.bform button[type=submit]');
-    check(/Tick the box first/.test(await page.$eval('.bf-msg', (m) => m.textContent)), 'without the consent box: refused', '');
-    await page.check('.bform input[name=consent]');
-    await page.click('.bform button[type=submit]');
+    /* drag the first row below the last */
+    const g = await page.$eval(hbPanel + ' .hb-row:nth-child(1) .hb-grip', (n) => { const r = n.getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2, h: n.closest('.hb-row').offsetHeight }; });
+    await page.mouse.move(g.x, g.y);
+    await page.mouse.down();
+    for (let i = 1; i <= 12; i++) await page.mouse.move(g.x, g.y + (g.h * 2.4) * i / 12);
+    await page.mouse.up();
+    await page.waitForTimeout(150);
+    rows = await hbRows(page);
+    check(JSON.stringify(rows.map((r) => r.name)) === '["Read twenty pages","Gym","Morning walk"]', 'dragged by its grip, the first habit goes to the bottom', JSON.stringify(rows.map((r) => r.name)));
+    const order = await hbFake(page, `(f) => f.as('${HB_ME}').sz_habits_get().map((h) => h.text)`);
+    check(JSON.stringify(order) === '["Read twenty pages","Gym","Morning walk"]', 'and the server keeps the order', JSON.stringify(order));
+    await page.focus(hbPanel + ' .hb-row:nth-child(1) .hb-grip');
+    await page.keyboard.press('ArrowDown');
+    await page.waitForTimeout(100);
+    rows = await hbRows(page);
+    check(JSON.stringify(rows.map((r) => r.name)) === '["Gym","Read twenty pages","Morning walk"]', 'the grip moves a habit with the arrow keys too', JSON.stringify(rows.map((r) => r.name)));
+    check(await page.evaluate(() => document.activeElement && document.activeElement.classList.contains('hb-grip') && /Read twenty/.test(document.activeElement.getAttribute('aria-label'))), 'and keeps the focus on it', '');
+
+    /* edit */
+    await page.click(hbPanel + ' .hb-row:nth-child(1) .hb-name');
+    await page.waitForSelector('.sheet-card[aria-label="Edit habit"]', { timeout: 4000 });
+    check(await page.$eval('.sheet-body .hb-n', (s) => !s.hidden && s.value === '3'), 'the edit sheet opens on what the habit is: 3 a week', '');
+    await page.fill('.sheet-body input[name=text]', 'Gym, or a long run');
+    await page.click('.sheet-body .hb-freq [data-freq="weekdays"]');
+    await page.click('.sheet-body button[type=submit]');
     await page.waitForSelector('#sheet[hidden]', { state: 'attached', timeout: 4000 });
-    check(/The photo shows once approved/.test(await page.$eval('#toast', (t) => t.textContent)), 'with it: posted, and the toast says the photo waits', await page.$eval('#toast', (t) => t.textContent));
-    const row = await fakeOf(page, `(f) => { const p = f.posts.find((x) => x.title === 'Leddy at dusk'); return p && { kind: p.kind, meta: p.meta, body: p.body, photo: f.photos.get(p.photo_path).status }; }`);
-    check(row && row.kind === 'photo' && row.meta.shirt === 'yes' && row.body === 'From the end of the pier.' && row.photo === 'pending', 'it is on the board as a photo post, its picture pending in the queue', JSON.stringify(row));
-    await page.waitForFunction(() => !document.querySelector('#panel-art .waiting').hidden, null, { timeout: 3000 }).catch(() => {});
-    check(await artText(page, '.waiting') === '1 picture of yours is waiting for approval.', 'Add yours says one is waiting', await artText(page, '.waiting'));
-    check(await page.$$eval(artPanel + ' .grid3 .tile', (t) => t.length) === tiles0 && !(await page.$(artPanel + ' .tile[aria-label^="Leddy at dusk"]')), 'and the wall does not show it yet', '');
-    await fakeOf(page, `(f) => { const p = f.posts.find((x) => x.title === 'Leddy at dusk'); f.setPhoto(p.photo_path, 'approved'); return 1; }`);
-    await artReload(page);
-    await page.waitForSelector(artPanel + ' .tile[aria-label^="Leddy at dusk"]', { timeout: 3000 }).catch(() => {});
-    check(/^Leddy at dusk, by Robin/.test(await page.$eval(artPanel + ' .grid3 .tile', (t) => t.getAttribute('aria-label'))), 'once Stephen approves it, it leads the wall, by first name', '');
-    check(await page.$eval(artPanel + ' .waiting', (n) => n.hidden), 'and nothing is waiting any more', '');
+    rows = await hbRows(page);
+    check(rows[0].name === 'Gym, or a long run' && /Weekdays$/.test(rows[0].meta), 'renamed, and now weekdays', JSON.stringify(rows[0]));
+    await pageRules(page, 'habits', 1280);
+    await page.screenshot({ path: path.join(SHOTS, 'demo-habits-desktop-dark.png') });
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
   });
 
-  await group('Art, the community board, and a notice running out (demo)', async () => {
+  await group('Habits, the first sign-in asks a name and a phone, once (demo)', async () => {
     const { ctx, page, errors } = await newPage(browser, base);
-    await page.goto(base + '/all-day/?demo=1#art/board');
+    await page.goto(base + '/all-day/?demo=1#habits');
     await settle(page);
-    const board = () => page.$$eval(artPanel + ' [data-sec="board"] .card.board', (cs) => cs.map((c) => [c.querySelector('.b-title').textContent, (c.querySelector('.tag-left') || {}).textContent || '']));
-    const b0 = await board();
-    check(b0.length === 4 && /^Looking for a model/.test(b0[0][0]) && b0.every((b) => /^(\d+d|\d+h) left$/.test(b[1])), 'four notices, newest first, each with its days left', JSON.stringify(b0));
-    check(/^30d left$|^29d left$/.test(b0[0][1]), 'a new notice has thirty days', b0[0][1]);
-    await fakeOf(page, `(f) => { f.posts.find((p) => p.title === 'Free easel, first come').expires_at = Date.now() - 1000; return 1; }`);
-    await artReload(page);
-    await page.waitForFunction(() => document.querySelectorAll('#panel-art [data-sec="board"] .card.board').length === 3, null, { timeout: 3000 }).catch(() => {});
-    const b1 = await board();
-    check(b1.length === 3 && !b1.some((b) => /Free easel/.test(b[0])), 'a notice past its thirty days leaves the board', JSON.stringify(b1));
-    await page.click(artPanel + ' [data-sec="board"] .sec button:has-text("Post")');
-    await page.waitForSelector('.sheet-card[aria-label="Post a notice"]');
-    check(/Sign in to post\./.test(await page.$eval('.sheet-body', (b) => b.innerText)), 'posting a notice asks for the sign-in first', '');
-    await page.click('.sheet-head .iconbtn');
-    await pageRules(page, 'art', 390);
+    await hbFake(page, `(f) => { f.members.delete('${HB_ME}'); return true; }`);
+    await hbSignIn(page);
+    check(!!(await page.$(hbPanel + ' .hb-me input[name=name]')) && !!(await page.$(hbPanel + ' .hb-me input[name=phone]')) && !(await page.$(hbPanel + ' .hb-row')), 'no member yet: a first name and a phone, before any habit', '');
+    await page.fill(hbPanel + ' .hb-me input[name=name]', 'Alex');
+    await page.fill(hbPanel + ' .hb-me input[name=phone]', 'call me');
+    await page.click(hbPanel + ' .hb-me button[type=submit]');
+    check(/phone number/.test(await page.$eval(hbPanel + ' .hb-me .bf-msg', (m) => m.textContent)), 'a phone that is not one: refused', '');
+    await page.fill(hbPanel + ' .hb-me input[name=phone]', '(802) 555-0142');
+    await page.click(hbPanel + ' .hb-me button[type=submit]');
+    await page.waitForSelector(hbPanel + ' .hb-row', { timeout: 4000 }).catch(() => {});
+    check((await hbRows(page)).length === 3 && await hbFake(page, `(f) => f.members.get('${HB_ME}').phone === '(802) 555-0142'`), 'saved: the habits appear', '');
+    await page.evaluate(() => import('/all-day/js/app.js').then((a) => a.signOut()));
+    await page.waitForSelector(hbPanel + ' .hb-gate', { timeout: 4000 });
+    await hbSignIn(page);
+    check(!(await page.$(hbPanel + ' .hb-me')) && (await hbRows(page)).length === 3, 'signed in again: not asked twice', '');
+    await page.click('#subnav .chip[data-chip="season"]');
+    check(await page.$eval(hbPanel, (p) => p.innerText.trim()) === 'Season 0 is coming' && /#habits\/season$/.test(await page.evaluate(() => location.hash)), 'Season: one line, and the address says where', '');
+    await page.goto(base + '/all-day/?demo=1#habits/wall');
+    await settle(page);
+    check(await page.$eval(hbPanel, (p) => p.innerText.trim()) === 'Season 0 is coming' && await page.$eval('#subnav .chip.on', (c) => c.dataset.chip) === 'wall', '#habits/wall opens the Wall chip', '');
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
   });
 
-  await group('Art, “Put it on a shirt” goes to Vintage with the post key (demo)', async () => {
-    const { ctx, page, errors } = await newPage(browser, base);
-    await page.goto(base + '/all-day/?demo=1#art');
+  await group('Habits, the day turns at midnight New York, not the phone’s (demo, a reader in Tokyo)', async () => {
+    /* Wednesday 11:59 pm in Burlington is Thursday lunchtime in Tokyo */
+    const { ctx, page, errors } = await newPage(browser, base, { timezoneId: 'Asia/Tokyo', clock: Date.parse('2026-10-15T03:59:00Z') });
+    await page.goto(base + '/all-day/?demo=1#habits');
     await settle(page);
-    const key = 'b-0000a000-0000-4000-8000-000000000001';
-    check(await page.$eval(artPanel + ' [data-sec="week"] [data-shirt]', (a) => a.getAttribute('href')) === '#vintage/' + key, 'the hero links to #vintage/<its key>', '');
-    await page.click(artPanel + ' [data-sec="week"] [data-shirt]');
-    await page.waitForFunction(() => document.querySelector('#tab-vintage').getAttribute('aria-selected') === 'true', null, { timeout: 4000 }).catch(() => {});
-    check(await page.evaluate(() => location.hash) === '#vintage/' + key && await page.$eval('#tab-vintage', (b) => b.getAttribute('aria-selected')) === 'true', 'and tapping it opens Vintage with that key in the address', await page.evaluate(() => location.hash));
-    const found = await page.evaluate((k) => import('/all-day/js/boards.js').then((b) => b.list('art', { meta: { shirt: 'yes' }, limit: 60 }).then((r) => r.posts.find((p) => 'b-' + p.id === k))), key);
-    check(found && found.title === 'The breakwater light in fog' && found.photo, 'Vintage can find the picture from the key alone', JSON.stringify(found && found.title));
-    await page.goto(base + '/all-day/?demo=1#art');
-    await settle(page);
-    await page.click(artPanel + ' .tile[aria-label^="Church Street in rain"]');
-    await page.waitForSelector('.sheet-card[aria-label="Church Street in rain"]');
-    check(!(await page.$('.sheet-body [data-shirt]')), 'a maker who said no gets no shirt button', '');
+    await hbSignIn(page);
+    let rows = await hbRows(page);
+    check(rows[1].dots[2] === 'today' && rows[1].dots[3] === 'later', 'at 11:59 pm New York it is still Wednesday', JSON.stringify(rows[1].dots));
+    check(rows[0].dots[2] === 'done', 'and the morning walk tapped “today” is Wednesday’s', JSON.stringify(rows[0].dots));
+    await page.clock.setFixedTime(Date.parse('2026-10-15T04:01:00Z'));
+    await page.evaluate(() => document.dispatchEvent(new Event('visibilitychange')));
+    await page.waitForTimeout(100);
+    rows = await hbRows(page);
+    check(rows[1].dots[2] !== 'today' && rows[1].dots[3] === 'today', 'two minutes later it is Thursday: the day turned at midnight New York', JSON.stringify(rows[1].dots));
+    check(!rows[1].on && !(await hbTap(page, 'Read twenty pages')).meta.includes('NaN'), 'a fresh day starts untapped', '');
+    await page.waitForTimeout(100);
+    check(await hbFake(page, `(f) => [...f.taps.keys()].some((k) => k.endsWith('|2026-10-15'))`), 'and a tap now is Thursday’s', '');
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
   });
 
-  await group('Art, the empty wall’s sunset line says a score only when there is one (live)', async () => {
+  /* live: the sz_ doors answered here as the SQL would, for one reader */
+  const hbServer = (o = {}) => {
+    const st = { taps: new Set(o.taps || []), calls: [], hangTap: !!o.hangTap, refuse: o.refuse || null };
+    const habit = { id: '11111111-aaaa-4000-8000-000000000001', text: 'Stretch', frequency: 'daily', n: null, is_goal: false, shared: false, position: 1, created_at: '2026-10-01T12:00:00Z' };
+    st.rpc = (fn, args) => {
+      if (!/^sz_/.test(fn)) return undefined;
+      st.calls.push(fn + (args.p_date ? ' ' + args.p_date : ''));
+      if (o.off) return { status: 404, body: { code: 'PGRST202', message: 'Could not find the function' } };
+      if (fn === 'sz_season_next') return o.season === undefined ? null : o.season;
+      if (fn === 'sz_me_get') return { name: 'Maya', phone: '802-555-0100', city: 'burlington', email_opt_out: false };
+      if (fn === 'sz_habits_get') return [habit];
+      if (fn === 'sz_taps_get') return [...st.taps].map((d) => ({ habit: habit.id, date: d, source: 'app' }));
+      if (fn === 'sz_tap' || fn === 'sz_untap') {
+        if (st.refuse) return { status: 400, body: { code: 'P0001', message: st.refuse } };
+        if (fn === 'sz_tap' && st.hangTap) return { hang: true };
+        if (fn === 'sz_tap') st.taps.add(args.p_date); else st.taps.delete(args.p_date);
+        return { habit: habit.id, date: args.p_date, tapped: fn === 'sz_tap' };
+      }
+      return undefined;
+    };
+    return st;
+  };
+  const signedIn = (page) => page.addInitScript(() => { if (!localStorage.getItem('allday-auth')) localStorage.setItem('allday-auth', JSON.stringify({ refresh_token: 'r', user: { id: 'u-1' } })); });
+
+  await group('Habits, live: no season, a season, and before the paste', async () => {
+    let srv = hbServer({ season: null });
+    let p = await newPage(browser, base, { rpc: (fn, a) => srv.rpc(fn, a) });
+    await p.page.goto(base + '/all-day/#habits');
+    await settle(p.page);
+    await p.page.waitForSelector(hbPanel + ' .hb-tile:not(.is-skel)', { timeout: 6000 });
+    check(await p.page.$eval(hbPanel + ' .hb-tile', (t) => t.innerText.trim()) === 'No season scheduled yet' && !(await p.page.$(hbPanel + ' .hb-tile button')), 'no season scheduled: it says so, and no button', '');
+    check(!srv.calls.some((c) => /^sz_(me|habits|taps)/.test(c)), 'signed out, nothing personal is asked for', srv.calls.join(', '));
+    await pageRules(p.page, 'habits', 390);
+    check(!p.errors.length, 'no console errors', p.errors.join(' | '));
+    await p.ctx.close();
+
+    const kick = new Date(Date.now() + 5 * 86400000 + 3600000).toISOString();
+    srv = hbServer({ season: { id: 's1', name: 'Season 0', city: 'burlington', status: 'open', signup_opens: null, kickoff_at: kick, party_at: null, stripe_link: 'https://buy.stripe.com/test_x' } });
+    p = await newPage(browser, base, { rpc: (fn, a) => srv.rpc(fn, a) });
+    await signedIn(p.page);
+    await p.page.goto(base + '/all-day/#habits');
+    await p.page.waitForSelector(hbPanel + ' .hb-row', { timeout: 6000 });
+    const days = Math.round((Date.parse(etKey(Date.parse(kick)) + 'T12:00:00Z') - Date.parse(etKey(Date.now()) + 'T12:00:00Z')) / 86400000);
+    check(new RegExp('Next season starts in ' + days + ' days').test(await p.page.$eval(hbPanel + ' .hb-tile', (t) => t.innerText)), 'a season to come: in ' + days + ' Burlington days', '');
+    const popup = p.page.waitForEvent('popup', { timeout: 4000 }).catch(() => null);
+    await p.page.click(hbPanel + ' .hb-tile .hb-go');
+    const pop = await popup;
+    check(pop && /buy\.stripe\.com\/test_x/.test(pop.url()), 'signed in, Sign up opens the season’s payment link', pop ? pop.url() : 'no popup');
+    if (pop) await pop.close();
+    await p.ctx.close();
+
+    srv = hbServer({ off: true });
+    p = await newPage(browser, base, { rpc: (fn, a) => srv.rpc(fn, a) });
+    await signedIn(p.page);
+    await p.page.goto(base + '/all-day/#habits');
+    await p.page.waitForSelector(hbPanel + ' .hb-empty', { timeout: 6000 }).catch(() => {});
+    check(await p.page.$eval(hbPanel + ' .hb-empty', (e) => e.textContent).catch(() => '') === 'Habits open soon.' && /No season scheduled yet/.test(await p.page.$eval(hbPanel, (x) => x.innerText)),
+      'before sz-SETUP.sql is pasted: the tile, and one line', '');
+    await p.ctx.close();
+  });
+
+  await group('Habits, live: a refresh never loses a tap, and a refused one is taken back', async () => {
+    const today = etKey(Date.now());
+    const srv = hbServer({ hangTap: true });
+    const { ctx, page, errors } = await newPage(browser, base, { rpc: (fn, a) => srv.rpc(fn, a) });
+    await signedIn(page);
+    await page.goto(base + '/all-day/#habits');
+    await page.waitForSelector(hbPanel + ' .hb-row', { timeout: 6000 });
+    const t = await hbTap(page, 'Stretch');
+    check(t.on && t.ms < 100 && t.meta === '1 day · Daily', 'tapped while the server is slow: shown at once', JSON.stringify(t));
+    const kept = await page.evaluate(() => localStorage.getItem('allday-habits-pending'));
+    check(kept && JSON.parse(kept)['u-1'][0].op === 'tap' && JSON.parse(kept)['u-1'][0].date === today, 'the tap is written to this phone before the server answers', kept);
+    srv.hangTap = false;
+    await page.reload();
+    await page.waitForSelector(hbPanel + ' .hb-row', { timeout: 6000 });
+    const r = (await hbRows(page))[0];
+    check(r.on && r.meta === '1 day · Daily', 'after a refresh the tap is still there', JSON.stringify(r));
+    await page.waitForFunction(() => !localStorage.getItem('allday-habits-pending') || localStorage.getItem('allday-habits-pending') === '{}', null, { timeout: 4000 }).catch(() => {});
+    check(srv.taps.has(today) && srv.calls.filter((c) => c === 'sz_tap ' + today).length >= 2, 'and it is sent again, and lands', srv.calls.join(', '));
+    check(['{}', null].includes(await page.evaluate(() => localStorage.getItem('allday-habits-pending'))), 'then the phone forgets it', '');
+    srv.refuse = 'not_today';
+    const u = await hbTap(page, 'Stretch');
+    check(!u.on, 'un-tapped at once', JSON.stringify(u));
+    await page.waitForSelector('#toast:not([hidden])', { timeout: 4000 }).catch(() => {});
+    const back = (await hbRows(page))[0];
+    check(back.on && /Only today can be marked/.test(await page.$eval('#toast', (x) => x.textContent)), 'the server refused: the tap comes back, and the toast says why', JSON.stringify(back));
+    check(!errors.filter((e) => !/status of 400/.test(e)).length, 'no console errors beyond the refusal', errors.join(' | '));
+    await ctx.close();
+  });
+}
+
+/* ---------------------------------------------- What Now's sunset line */
+/* The Art tab carried "Sunset is at 6:05 pm"; when Art was folded the line
+   moved into What Now's weather line, which now asks sun.js. */
+async function sunsetLine(browser, base) {
+  await group('What Now, the sunset in the weather line says a score only when there is one (live)', async () => {
     /* sunset-score.js stands in for the shared module: tomorrow at 6:05 pm, and
        the score the page asks for. A 0.0 is what an empty forecast comes out as. */
     const stub = 'window.BtownSunsetScore = { OPEN_METEO_URL: "https://api.open-meteo.com/v1/forecast?x=1", AIR_URL: "https://air-quality-api.open-meteo.com/v1/air-quality?x=1",' +
@@ -3421,71 +3503,22 @@ async function theArt(browser, base) {
       ' computeScore: function () { return { score: window.__score, degraded: !!window.__degraded }; } };';
     const { ctx, page, errors } = await newPage(browser, base);
     await page.route(/\/js\/sunset-score\.js$/, (r) => r.fulfill({ status: 200, body: stub, contentType: 'text/javascript' }));
-    const invite = async (score, degraded) => {
+    const line = async (score, degraded) => {
       await page.addInitScript(([s, d]) => { window.__score = s; window.__degraded = d; }, [score, degraded]);
-      await page.goto(base + '/all-day/?s=' + score + (degraded ? 'd' : '') + '#art');
+      await page.goto(base + '/all-day/?s=' + score + (degraded ? 'd' : '') + '#whatnow');
       await settle(page);
-      await page.waitForFunction(() => /Sunset is at/.test(document.querySelector('#panel-art [data-k="invite"]')?.innerText || ''), null, { timeout: 6000 }).catch(() => {});
-      await page.waitForTimeout(200);
-      return page.$eval(artPanel + ' [data-k="invite"]', (c) => ({ head: c.querySelector('h3').textContent, text: c.innerText }));
+      await page.waitForFunction(() => /6:05 sunset tomorrow/.test(document.querySelector('#panel-whatnow .wx')?.innerText.replace(/\s+/g, ' ') || ''), null, { timeout: 8000 }).catch(() => {});
+      await page.waitForTimeout(150);
+      return page.$eval(wnPanel + ' .wx', (w) => ({ text: w.innerText.replace(/\s+/g, ' '), h: w.getBoundingClientRect().height })).catch(() => ({ text: '', h: 0 }));
     };
-    let r = await invite(0, false);
-    check(r.head === 'The wall starts with you' && /Sunset is at 6:05 pm tomorrow\./.test(r.text) && !/scores|out of 10|gray/.test(r.text) && /Best spot: Waterfront Park/.test(r.text),
-      'a 0.0 (the forecast missing) is no score: the time and the best spot, and nothing about the sky', r.text);
-    r = await invite(6.2, true);
-    check(!/scores|out of 10/.test(r.text) && /Sunset is at 6:05 pm tomorrow\./.test(r.text), 'a score worked out without the forecast is not shown either', r.text);
-    r = await invite(7.4, false);
-    check(r.head === 'Tomorrow’s sunset scores 7.4 out of 10' && /Worth the walk\./.test(r.text), 'a real score of 5 or more is the headline', JSON.stringify(r));
-    r = await invite(3.2, false);
-    check(r.head === 'The wall starts with you' && /Tomorrow’s sunset scores 3\.2 out of 10\. Probably a quiet one\./.test(r.text), 'under 5, it is said plainly, lower down', r.text);
+    let r = await line(0, false);
+    check(/6:05 sunset tomorrow/.test(r.text) && !/\/10/.test(r.text), 'a 0.0 (the forecast missing) is no score: the time, and that it is tomorrow’s', r.text);
+    r = await line(6.2, true);
+    check(/6:05 sunset tomorrow/.test(r.text) && !/\/10/.test(r.text), 'a score worked out without the forecast is not shown either', r.text);
+    r = await line(7.4, false);
+    check(/6:05 sunset tomorrow/.test(r.text) && /6:05 sunset tomorrow, 7\.4\/10/.test(r.text), 'a real score is shown beside the time', r.text);
+    check(r.h > 0 && r.h < 40, 'and the line stays one line at 390', r.h + ' ' + r.text);
     check(!errors.length, 'no console errors', errors.join(' | '));
-    await ctx.close();
-  });
-
-  await group('Art, the gallery fills the wall before anyone posts (live, the SQL not pasted)', async () => {
-    const at = (d) => d;
-    const rows = [
-      ['11111111-0000-4000-8000-000000000001', 'Sunset from Waterfront Park', 'sunsets', 'Waterfront Park', '2026-04-02'],
-      ['11111111-0000-4000-8000-000000000002', 'Church Street lights', 'street', 'Church Street', '2026-04-02'],
-      ['11111111-0000-4000-8000-000000000003', '', 'other', 'King Street dock', '2026-04-01'],
-      ['11111111-0000-4000-8000-000000000004', 'Leddy in June', 'sunsets', 'Leddy Park', '2026-06-20'],
-      ['11111111-0000-4000-8000-000000000005', 'Pine Street mural', 'street', 'Pine Street', '2026-08-03'],
-      ['11111111-0000-4000-8000-000000000006', 'A board photo', 'other', 'All Day · Art', at('2026-10-10')],
-      ['11111111-0000-4000-8000-000000000007', 'Tacos al pastor', 'dish', 'Taco Gordo', '2026-10-01'],
-      /* no caption and no spot: the area, else when it was taken, else the day it was approved */
-      ['11111111-0000-4000-8000-000000000008', '', 'other', '', '2026-03-20', { area: 'Old North End' }],
-      ['11111111-0000-4000-8000-000000000009', '', 'other', '', '2026-03-19', { area: 'Elsewhere', taken_on: 'late May 2026' }],
-      ['11111111-0000-4000-8000-00000000000a', '', 'other', '', '2026-03-18', { area: 'Elsewhere' }],
-    ].map(([id, caption, category, spot, approved_on, more]) => ({ id, storage_path: 'submissions/' + id.slice(-4) + '.jpg', caption, category, area: 'Downtown / Church St', spot,
-      taken_on: '', credit: 'Stephen', display_label: null, approved_on, votes: 3, ...more }));
-    const { ctx, page, errors } = await newPage(browser, base, {
-      rpc: (fn) => (fn === 'btb_photos_get' ? rows : /^nn_/.test(fn) ? { status: 404, body: { code: 'PGRST202', message: 'Could not find the function' } } : undefined),
-    });
-    await page.goto(base + '/all-day/#art');
-    await settle(page);
-    await page.waitForSelector(artPanel + ' .grid3 .tile', { timeout: 6000 }).catch(() => {});
-    const tiles = await page.$$eval(artPanel + ' .grid3 .tile', (ts) => ts.map((t) => ({ label: t.getAttribute('aria-label'), lbl: t.querySelector('.lbl') && t.querySelector('.lbl').textContent,
-      votes: !!t.querySelector('.ct'), src: t.querySelector('img') && t.querySelector('img').getAttribute('src'), lazy: t.querySelector('img') && t.querySelector('img').getAttribute('loading') })));
-    check(tiles.length === 8 && tiles.every((t) => !t.votes && /, from the gallery$/.test(t.label)), 'the eight gallery photos, said to be from the gallery, without votes', JSON.stringify(tiles.map((t) => t.label)));
-    check(JSON.stringify(tiles.map((t) => t.lbl)) === '["Pine Street mural","Leddy in June","Sunset from Waterfront Park","Church Street lights","King Street dock","Old North End","late May 2026","March 18, 2026"]',
-      'each tile is labelled with its caption, else its spot, area (never "Elsewhere"), when it was taken or the day it was approved', JSON.stringify(tiles.map((t) => t.lbl)));
-    check(/^Pine Street mural/.test(tiles[0].label) && tiles.every((t) => /\/storage\/v1\/object\/public\/btb-photos\/submissions\/\w+\.jpg$/.test(t.src) && t.lazy === 'lazy'), 'newest approved first, lazy, from the public bucket', JSON.stringify(tiles[0]));
-    check(!tiles.some((t) => /A board photo|Tacos/.test(t.label)), 'a board post’s photo and Food’s dishes stay off the gallery half', '');
-    const invite = await page.$eval(artPanel + ' [data-sec="week"]', (s) => ({ text: s.innerText, k: s.querySelector('[data-k]') && s.querySelector('[data-k]').dataset.k }));
-    check(invite.k === 'invite' && /The wall starts with you|sunset scores/.test(invite.text) && /Add the first photo/.test(invite.text) && /Best spot: Waterfront Park/.test(invite.text),
-      'with no posts at all, the top invites the first, with the best spot for tonight’s light', invite.text);
-    await page.click(artPanel + ' .tile');
-    await page.waitForSelector('.sheet-card[aria-label="Pine Street mural"]');
-    const sh = await page.$eval('.sheet-body', (b) => ({ text: b.innerText, acts: [...b.querySelectorAll('[data-act]')].map((x) => x.dataset.act) }));
-    check(/Photo by Stephen · Pine Street, Downtown \/ Church St/.test(sh.text) && JSON.stringify(sh.acts) === '["share"]', 'its sheet credits the photographer and has no vote or report', JSON.stringify(sh));
-    await page.click('.sheet-head .iconbtn');
-    await page.click(artPanel + ' [data-sec="add"] button:has-text("Add a photo")');
-    await page.waitForSelector('.sheet-card[aria-label="Add a photo"]');
-    check(/Sign in to post\./.test(await page.$eval('.sheet-body', (b) => b.innerText)), 'Add a photo, signed out, asks for the sign-in', '');
-    await page.click('.sheet-head .iconbtn');
-    await pageRules(page, 'art', 390);
-    await page.screenshot({ path: path.join(SHOTS, 'live-art-gallery.png') });
-    check(!errors.filter((e) => !/status of 404/.test(e)).length, 'no console errors beyond the browser logging the missing function', errors.join(' | '));
     await ctx.close();
   });
 }
@@ -3651,7 +3684,9 @@ async function shellFixes(browser, base) {
       ['#ig', 'wire', '#wire'], ['#ig/ig-C123', 'wire', '#wire'],
       ['#music', 'whatnow', '#whatnow/tonight'], ['#music/mus:old', 'whatnow', '#whatnow/tonight'],
       ['#wander', 'whatnow', '#whatnow'], ['#wander/Moose', 'whatnow', '#whatnow'],
-      ['#photos', 'art', '#art'], ['#photos/p-1', 'art', '#art'],
+      ['#photos', 'wire', '#wire'], ['#photos/p-1', 'wire', '#wire'],
+      /* Art was folded: its links wait on the Wire for the Photo mode */
+      ['#art', 'wire', '#wire'], ['#art/b-0000a000-0000-4000-8000-000000000002', 'wire', '#wire'], ['#art/wall', 'wire', '#wire'],
       ['#listen', 'onair', '#onair'], ['#watch/yt:dQw4w9WgXcQ', 'onair', '#onair/yt:dQw4w9WgXcQ'],
       /* not old tabs: an unknown word is the Wire, as before, and nothing throws */
       ['#constructor', 'wire', '#constructor'], ['#igloo', 'wire', '#igloo'], ['#photosx', 'wire', '#photosx'], ['#toString/x', 'wire', '#toString/x'],
@@ -3675,7 +3710,7 @@ async function shellFixes(browser, base) {
   await group('shell fixes: the offline shell carries the new modules', async () => {
     const sw = await readFile(path.join(APP, 'sw.js'), 'utf8');
     const main = await readFile(path.join(APP, 'js/main.js'), 'utf8');
-    check(/VERSION = 'all-day-v45'/.test(sw), 'sw.js VERSION is bumped once for the cutover, to v45', (sw.match(/VERSION = '[^']+'/) || [''])[0]);
+    check(/VERSION = 'all-day-v46'/.test(sw), 'sw.js VERSION is bumped for Habits taking Art’s slot, to v46', (sw.match(/VERSION = '[^']+'/) || [''])[0]);
     const listed = [...sw.matchAll(/'\.\/(js\/[\w/.-]+\.js)'/g)].map((m) => m[1]);
     /* the offline list is exactly the modules that exist: none missing, none gone */
     const mods = [];
@@ -4113,7 +4148,8 @@ try {
   await run(accounts);
   await run(boards);
   await run(boardPhotos);
-  await run(theArt);
+  await run(theHabits);
+  await run(sunsetLine);
   await run(theVintage);
 } finally {
   await browser.close();

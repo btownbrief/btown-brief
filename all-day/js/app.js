@@ -36,7 +36,7 @@ store.setDemo(demo);
 
 /* The bar's order is the shell's call. What Now sits fifth of nine, dead
    centre, in the one wider cell so its two words never wrap. */
-export const TABS = ['wire', 'watch', 'food', 'people', 'whatnow', 'vintage', 'art', 'onair', 'games'];
+export const TABS = ['wire', 'watch', 'food', 'people', 'whatnow', 'vintage', 'habits', 'onair', 'games'];
 const REQUIRED = ['label', 'icon', 'promise', 'mount', 'activate', 'refresh', 'newSince'];
 
 const registry = Object.create(null);
@@ -538,7 +538,7 @@ function settingsSheet() {
       ? 'This is the demo. Everything in it is invented, and nothing you do here is saved.'
       : 'All Day is the Btown Brief’s app for the rest of the day.'));
     body.appendChild(el('p', 'sheet-note', 'Saves, mutes, what you have read, your Watch dots and list, your People tile and quiz, your arcade name and your missions stay on this phone. '
-      + 'Signed in, your tile, interests, Watch dots and missions also go to your account. Your email is never shown to anyone.'));
+      + 'Signed in, your tile, interests, Watch dots, missions and habits also go to your account. Your email is never shown to anyone.'));
     const tmdb = el('p', 'sheet-note');
     tmdb.dataset.credit = 'tmdb';
     tmdb.innerHTML = '<a href="https://www.themoviedb.org/" target="_blank" rel="noopener"><img src="../assets/img/tmdb.svg" alt="TMDB" width="92" height="12" loading="lazy" decoding="async"></a><br>'
@@ -897,17 +897,22 @@ window.addEventListener('allday-geo', () => {
    keep their key. An old Reddit card's key is its URL, the key the Wire's
    Unfiltered view still answers to; a bare #reddit opens the Wire's Reddit
    chip. Instagram goes to the Wire, Music to What Now's Tonight (the Vermont
-   artists and their gigs), Wander to What Now, Photos to Art; their old keys
-   mean nothing there, so they are dropped. The address bar is rewritten so
+   artists and their gigs), Wander to What Now. The Art tab was
+   folded on 2026-10-17 (Habits took its slot, its shirt loop lives in
+   Vintage, its sunset line in What Now's weather). Community photos are
+   moving into the Wire as a Photo mode, so #art, #art/<key> and the older
+   #photos land on the Wire until that mode takes them (js/photo-wall.js
+   keeps the wall's drawing code for it). Their old keys mean nothing there
+   yet, so they are dropped. The address bar is rewritten so
    the next share carries the new link. */
 function legacy(h) {
   if (h === 'listen' || h.startsWith('listen/')) return 'onair' + h.slice(6);
   if (/^watch\/yt:/.test(h)) return 'onair/' + h.slice(6);
   if (h === 'reddit' || h === 'reddit/') return 'wire/reddit';
   if (h.startsWith('reddit/')) return 'wire/' + h.slice(7);
-  const m = h.match(/^(ig|music|wander|photos)(\/|$)/);
+  const m = h.match(/^(ig|music|wander|photos|art)(\/|$)/);
   if (!m) return null;
-  return { ig: 'wire', music: 'whatnow/tonight', wander: 'whatnow', photos: 'art' }[m[1]];
+  return { ig: 'wire', music: 'whatnow/tonight', wander: 'whatnow', photos: 'wire', art: 'wire' }[m[1]];
 }
 
 function parseHash() {

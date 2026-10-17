@@ -629,7 +629,7 @@ app.registerAccount((host, repaint) => {
   const del = el('div', 'linkrow');
   del.appendChild(button('Delete my account and posts', 'danger sm', () => app.confirmBox({
     title: 'Delete your account and posts?',
-    body: 'Your profile, every post and its photo, your votes, your reports, your missions, your People directory listing and your Watch dots go for good, and you are signed out. Your email sign-in is shared with other Btown Brief apps, so it stays; email Stephen to remove that too.',
+    body: 'Your profile, every post and its photo, your votes, your reports, your missions, your People directory listing, your Watch dots and your habits go for good, and you are signed out. Your email sign-in is shared with other Btown Brief apps, so it stays; email Stephen to remove that too.',
     yes: 'Delete everything',
     onYes() {
       deleteMe().then((r) => {
