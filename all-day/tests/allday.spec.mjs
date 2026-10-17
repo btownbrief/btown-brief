@@ -3154,6 +3154,22 @@ async function shellFixes(browser, base) {
     }
   });
 
+  await group('cutover: a card in a two-up grid can shrink to its cell', async () => {
+    const { ctx, page } = await newPage(browser, base, { viewport: { width: 390, height: 800 } });
+    await page.goto(base + '/all-day/?demo=1#wire');
+    await settle(page);
+    const r = await page.evaluate(() => {
+      const g = document.createElement('div'); g.className = 'grid2';
+      const a = document.createElement('div'); a.textContent = 'x'.repeat(400); a.style.whiteSpace = 'nowrap'; a.style.overflow = 'hidden';
+      g.append(a, document.createElement('div'));
+      document.querySelector('#panel-wire .panel-body').appendChild(g);
+      const out = { min: getComputedStyle(a).minWidth, over: g.scrollWidth - g.clientWidth };
+      g.remove(); return out;
+    });
+    check(r.min === '0px' && r.over <= 1, '.grid2 > * has min-width 0, so a long line never widens the grid', JSON.stringify(r));
+    await ctx.close();
+  });
+
   await group('shell fixes: an emoji thumb is drawn at the emoji size', async () => {
     const tokens = await readFile(path.join(APP, 'css/tokens.css'), 'utf8');
     const want = (tokens.match(/--fs-emoji:\s*(\d+)px/) || [])[1];
@@ -3186,11 +3202,51 @@ async function shellFixes(browser, base) {
     await ctx.close();
   });
 
+  await group('cutover: every old tab’s link lands on the nearest new tab', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    const landed = async (hash, tab) => {
+      await page.goto(base + '/all-day/?demo=1' + hash);
+      await page.waitForFunction((t) => document.querySelector('#tab-' + t)?.getAttribute('aria-selected') === 'true', tab, { timeout: 15000 }).catch(() => {});
+      return page.evaluate((t) => ({ on: document.querySelector('#tab-' + t).getAttribute('aria-selected') === 'true', hash: location.hash }), tab);
+    };
+    const cases = [
+      ['#reddit', 'wire', '#wire/reddit'],
+      ['#reddit/https%3A%2F%2Fwww.reddit.com%2Fr%2Fburlington%2Fcomments%2Fabc', 'wire', '#wire/https%3A%2F%2Fwww.reddit.com%2Fr%2Fburlington%2Fcomments%2Fabc'],
+      ['#ig', 'wire', '#wire'], ['#ig/ig-C123', 'wire', '#wire'],
+      ['#music', 'whatnow', '#whatnow'], ['#music/a-old', 'whatnow', '#whatnow'],
+      ['#wander', 'whatnow', '#whatnow'], ['#wander/Moose', 'whatnow', '#whatnow'],
+      ['#photos', 'art', '#art'], ['#photos/p-1', 'art', '#art'],
+      ['#listen', 'onair', '#onair'], ['#watch/yt:dQw4w9WgXcQ', 'onair', '#onair/yt:dQw4w9WgXcQ'],
+    ];
+    for (const [from, tab, to] of cases) {
+      const r = await landed(from, tab);
+      check(r.on && r.hash === to, from + ' opens ' + tab + ', and the address says ' + to, JSON.stringify(r));
+    }
+    await page.goto(base + '/all-day/?demo=1#reddit');
+    await page.waitForSelector('#subnav .chip.on', { timeout: 15000 });
+    await page.waitForFunction(() => document.querySelector('#subnav .chip.on')?.dataset.chip === 'reddit', null, { timeout: 5000 }).catch(() => {});
+    const on = await page.$eval('#subnav .chip.on', (c) => c.dataset.chip);
+    check(on === 'reddit', 'a bare #reddit opens the Wire on its Reddit chip', on);
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
   await group('shell fixes: the offline shell carries the new modules', async () => {
     const sw = await readFile(path.join(APP, 'sw.js'), 'utf8');
     const main = await readFile(path.join(APP, 'js/main.js'), 'utf8');
-    check(/VERSION = 'all-day-v44'/.test(sw), 'sw.js VERSION is bumped once, to v44', (sw.match(/VERSION = '[^']+'/) || [''])[0]);
+    check(/VERSION = 'all-day-v45'/.test(sw), 'sw.js VERSION is bumped once for the cutover, to v45', (sw.match(/VERSION = '[^']+'/) || [''])[0]);
     const listed = [...sw.matchAll(/'\.\/(js\/[\w/.-]+\.js)'/g)].map((m) => m[1]);
+    /* the offline list is exactly the modules that exist: none missing, none gone */
+    const mods = [];
+    const walkJs = async (dir) => { for (const f of await readdir(dir, { withFileTypes: true })) { const p = path.join(dir, f.name); if (f.isDirectory()) await walkJs(p); else if (f.name.endsWith('.js')) mods.push(path.relative(APP, p).split(path.sep).join('/')); } };
+    await walkJs(path.join(APP, 'js'));
+    check(mods.every((f) => listed.includes(f)), 'every module in js/ is in the offline list', mods.filter((f) => !listed.includes(f)).join(', '));
+    check(listed.every((f) => mods.includes(f)), 'and nothing in the offline list is missing from js/', listed.filter((f) => !mods.includes(f)).join(', '));
+    const files = [...sw.matchAll(/'\.\/([\w/.-]+\.[a-z]+)'/g)].map((m) => m[1]);
+    const gone = [];
+    for (const f of files) { try { await readFile(path.join(APP, f)); } catch (e) { gone.push(f); } }
+    check(!gone.length, 'every file in the offline list exists', gone.join(', '));
+    check(/pathname\.startsWith\('\/data\/'\)/.test(sw) && /network.first/i.test(sw), 'and /data/ is still network first', '');
     for (const f of ['js/boards.js', 'js/boards-core.js', 'js/boards-fake.js']) check(listed.includes(f), f + ' is in the offline list', '');
     const imported = [...main.matchAll(/import '\.\/([\w/.-]+\.js)'/g)].map((m) => 'js/' + m[1]);
     check(imported.every((f) => listed.includes(f)), 'every module main.js imports is in the offline list', imported.filter((f) => !listed.includes(f)).join(', '));
