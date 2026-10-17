@@ -2904,7 +2904,7 @@ const artText = (page, sel) => page.$eval(artPanel + ' ' + sel, (n) => n.textCon
 const artReload = (page) => page.evaluate(() => window.dispatchEvent(new CustomEvent('allday-boards', { detail: { board: 'art', id: null, what: 'test' } })));
 
 async function theArt(browser, base) {
-  await group('Art, photo of the week on a frozen Burlington clock (live, a reader in Los Angeles)', async () => {
+  for (const v of [1, 2]) await group('Art, photo of the week on a frozen Burlington clock (live, a reader in Los Angeles, server rules v' + v + ')', async () => {
     const H = 3600000;
     const posts = [
       ART_POST({ id: artId(1), title: 'Sunday night, 11:30', at: '2026-10-12T03:30:00Z', votes: 50 }),
@@ -2914,8 +2914,16 @@ async function theArt(browser, base) {
     ];
     /* one a day back past nine weeks, so the list needs a second page and every week has a winner */
     for (let i = 0; i < 70; i++) posts.push(ART_POST({ id: artId(100 + i), title: 'Day ' + i, at: new Date(Date.parse('2026-10-11T12:00:00Z') - i * 24 * H).toISOString(), votes: i % 4 }));
-    const calls = [];
-    const { ctx, page, errors } = await newPage(browser, base, { timezoneId: 'America/Los_Angeles', rpc: artList(posts, calls) });
+    const calls = [], weekly = [];
+    const list = artList(posts, calls);
+    /* round two counts votes by the week they were cast: in the week of Oct 5 (2026-W41) the Sunday-night post got 2 of
+       its 50 then, and Saturday's "Day 1" got 5; the rest came later and no longer move that week */
+    const rpc = (fn, args) => {
+      if (fn === 'nn_rules') return v === 2 ? { version: 2 } : undefined;
+      if (fn === 'nn_votes_by_week') { weekly.push(args); return [{ post: artId(101), week: '2026-W41', votes: 5 }, { post: artId(1), week: '2026-W41', votes: 2 }]; }
+      return list(fn, args);
+    };
+    const { ctx, page, errors } = await newPage(browser, base, { timezoneId: 'America/Los_Angeles', rpc });
     await page.clock.setFixedTime(new Date('2026-10-14T14:00:00Z'));   // Wednesday, 10 am in Burlington, 7 am for this reader
     await page.goto(base + '/all-day/#art');
     await settle(page);
@@ -2927,8 +2935,15 @@ async function theArt(browser, base) {
     check(calls.length >= 2 && calls.every((c) => c.p_board === 'art' && c.p_limit === 60) && !calls[0].p_before && calls[1].p_before === posts.slice().sort((a, b) => Date.parse(b.created_at) - Date.parse(a.created_at))[59].created_at,
       'the list is paged, 60 at a time, until the eighth week back is in', JSON.stringify(calls.map((c) => c.p_before)));
     const wins = await page.$$eval(artPanel + ' [data-sec="winners"] .vcard', (cs) => cs.map((c) => [c.querySelector('.t').textContent, c.querySelector('.s').textContent]));
-    check(wins.length === 8 && wins[0][0] === 'Week of Oct 5' && /Sunday night, 11:30/.test(wins[0][1]) && wins[7][0] === 'Week of Aug 17',
-      'Winners: the past eight weeks, newest first, and the Sunday-night post wins its own week', JSON.stringify(wins));
+    if (v === 1) {
+      check(!weekly.length, 'round one: no counts by week are asked for', JSON.stringify(weekly));
+      check(wins.length === 8 && wins[0][0] === 'Week of Oct 5' && /Sunday night, 11:30/.test(wins[0][1]) && wins[7][0] === 'Week of Aug 17',
+        'Winners: the past eight weeks, newest first, and the Sunday-night post wins its own week on its votes so far', JSON.stringify(wins));
+    } else {
+      check(weekly.length && weekly.every((a) => a.p_board === 'art' && a.p_weeks === 9), 'round two: the votes are counted by week for this week and the eight before', JSON.stringify(weekly));
+      check(wins.length === 8 && wins[0][0] === 'Week of Oct 5' && /Day 1$/.test(wins[0][1]) && wins[7][0] === 'Week of Aug 17',
+        'Winners: the week of Oct 5 goes to the most votes cast that week, settled at Sunday midnight, whatever came later', JSON.stringify(wins));
+    }
     check(wins.every((w) => /^Kara · /.test(w[1])), 'each winner carries the maker’s name, and nothing else to win', JSON.stringify(wins[0]));
     const tiles = await page.$$eval(artPanel + ' .grid3 .tile', (ts) => ts.map((t) => t.getAttribute('aria-label')));
     check(/^Tuesday afternoon/.test(tiles[0]) && /^Monday, 12:30 am/.test(tiles[1]) && !tiles.some((t) => /Open studio/.test(t)), 'the wall is newest first, pictures only', tiles.slice(0, 3).join(' | '));
@@ -3007,7 +3022,10 @@ async function theArt(browser, base) {
     const { ctx, page, errors } = await newPage(browser, base, { motion: 'reduce' });
     await page.goto(base + '/all-day/?demo=1#art/add');
     await settle(page);
-    await page.evaluate(() => import('/all-day/js/auth.js').then((a) => a.demoSignIn()));
+    /* signing in redraws the wall in the same tick; an awaited promise from
+       this evaluate can be collected by the browser mid-redraw, so fire it */
+    await page.evaluate(() => { import('/all-day/js/auth.js').then((a) => a.demoSignIn()); });
+    await page.waitForTimeout(300);
     await page.click(artPanel + ' [data-sec="add"] button:has-text("Add art")');
     await page.waitForSelector('.sheet-body form.bform');
     check(await page.$('input[name="m:medium"]') !== null && await page.$('select[name="m:shirt"]') !== null, 'Add art asks for the medium and the shirt', '');

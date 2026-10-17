@@ -24,17 +24,20 @@
      picture, title, maker, medium, votes, share, report.
    - Add yours. The boards compose sheet for a photo or a piece of art.
    - Community board. Notices: calls for artists, shows, open studios.
-   - Winners. The past eight weeks' photo of the week, worked out from the
-     same list the same way. Just the name; no prizes, no points.
+   - Winners. The past eight weeks' photo of the week: among the pictures
+     posted that week, the most votes cast that week (boards.votesByWeek),
+     so a week's winner is settled at Sunday midnight and never changes
+     after. Just the name; no prizes, no points.
 
-   Votes are not dated on the server, so "the most votes this week" means the
-   most votes on a post made this week. A past week's winner can still change
-   if its posts keep collecting votes; that is honest, and cheap. */
+   This week's votes are the posts' own counts: every vote on a picture
+   posted this week was cast this week. Until nn-ROUND2.sql is pasted there
+   are no counts by week, and a past week is ranked by its pictures' counts
+   so far, as before, which can still change. */
 
 import * as app from '../app.js';
 import * as data from '../wire.js';
 import * as boards from '../boards.js';
-import { RULES } from '../boards-core.js';
+import { RULES, isoWeek } from '../boards-core.js';
 import { sunScore } from '../sun.js';
 import { el, esc, safeHref, ICON, art, section, rail, chips, button, agoShort } from '../ui.js';
 
@@ -62,6 +65,7 @@ const S = {
   failed: null,       // a list refusal other than 'off', as its sentence
   sun: undefined, spots: null,
   heroId: null, winSig: '',
+  weekly: null,       // { 'ISO week': { post id: votes cast that week } }, or null before nn-ROUND2.sql
 };
 let root = null, slots = null, pending = null, ready = false;
 const ratios = new Map();   // demo only: a post id's picture shape
@@ -226,7 +230,17 @@ function loadSun() {
   data.fetchJSON(SPOTS_URL, 8000).then((j) => { S.spots = (j && j.spots) || []; paint('week'); }).catch(() => { S.spots = []; });
 }
 
-function load() { return Promise.all([loadPosts(), loadGallery()]); }
+/* the votes cast in each of this week and the eight before, per post */
+function loadWeekly() {
+  return boards.roundTwo().then((two) => (two ? boards.votesByWeek(BOARD, WEEKS + 1) : { ok: false })).then((r) => {
+    if (!r.ok) { S.weekly = null; return; }
+    const w = {};
+    r.weeks.forEach((x) => { (w[x.week] = w[x.week] || {})[x.post] = Number(x.votes) || 0; });
+    S.weekly = w;
+  });
+}
+
+function load() { return Promise.all([loadPosts(), loadGallery(), loadWeekly()]); }
 
 /* The board changed under us (a post, a delete, a report, a sign-in): read
    it again. The compose sheet is a sheet, so a redraw never eats a form. */
@@ -234,7 +248,7 @@ let reloading = null;
 function reload() {
   if (!ready) return;
   if (!reloading) {
-    reloading = loadPosts().then(() => {
+    reloading = Promise.all([loadPosts(), loadWeekly()]).then(() => {
       reloading = null;
       ['week', 'wall', 'board', 'winners'].forEach(paint);
       paintWaiting();
@@ -262,7 +276,10 @@ function winners() {
   let end = weekStart(Date.now());
   for (let i = 0; i < WEEKS; i++) {
     const start = prevWeek(end);
-    const best = S.pics.filter((it) => createdMs(it) >= start && createdMs(it) < end).sort(rank)[0];
+    const cast = S.weekly && (S.weekly[isoWeek(start + 12 * 3600000)] || {});
+    const score = (it) => (cast ? cast[it.id] || 0 : it.votes);
+    const best = S.pics.filter((it) => createdMs(it) >= start && createdMs(it) < end)
+      .sort((a, b) => (score(b) - score(a)) || (a.created - b.created))[0];
     if (best) out.push({ start, it: best });
     end = start;
   }
