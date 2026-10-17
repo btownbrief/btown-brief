@@ -1,20 +1,31 @@
 #!/usr/bin/env python3
-"""Build all-day/data/instagram.json — the Instagram tab's payload.
+"""Build all-day/data/instagram.json — local Instagram, minus the algorithm.
 
-The tab has two halves and this builds both.
+Three places read this payload: the Wire's Photos view (every post, filtered
+by the `category` chips), Food's "Their food" (by handle, plus `f`), and
+Vintage's "New in" (by handle). The accounts come from one hand-curated
+roster, data/instagram-handles.json, and nobody else's posts get in except
+the tagged shelf (below).
 
-  DO   — organisers. Burlington announces on Instagram and nowhere else, so a
-         lot of what happens here is only visible to people who already follow
-         the right accounts. Read newest-first, in order, no ranking.
-  SEE  — the people who MAKE things about this place: the missed-connections
-         page, the food reviewers, the DJs, the sunset shooters. Same feed
-         discipline, different promise. You read DO to find out what to go do;
-         you open SEE because you want to look at Burlington for a minute.
+EVERY ACCOUNT HAS A TIER AND A CATEGORY, and they answer different questions.
 
-The segment is not the tier. Tier answers "how often do we pay to check this
-account"; segment answers "which half of the tab does it belong to". A handle
-has both, independently, and they are set by which array it sits in:
-tier1/tier2 are DO, see1/see2 are SEE.
+  tier      how often we PAY to check it. 1 = every run (the workflow runs
+            twice a day), 2 = once a Burlington day, 3 = once a week, in a
+            rotation that takes an even slice of the tier each day.
+  category  what kind of picture it is, for the Photos chips: food, venue
+            (bars, cafes, music venues: the vibe checks), events (posters
+            and the accounts that post them), shop (vintage), pets, scenic
+            (photographers and city accounts), other.
+
+THE CREDIT BUDGET. Every request costs one Scrape Creators credit, whatever it
+returns. MONTHLY_CREDIT_BUDGET is the ceiling, and the builder enforces it
+pro rata: by the end of day d of a D-day month it may have spent at most
+budget * d / D, counted in data/instagram-ledger.json (credits spent this
+month, and when each account was last fetched). Tier 1 is served first, then
+the tagged shelf, then tier 2, then tier 3, and whatever does not fit waits
+for tomorrow. A missing or unreadable ledger fails cheap: the run assumes
+every earlier day of the month spent its full share, so it can spend at most
+today's.
 
 THREE FACTS ABOUT INSTAGRAM'S CDN SHAPE EVERYTHING HERE.
 
@@ -36,9 +47,9 @@ THREE FACTS ABOUT INSTAGRAM'S CDN SHAPE EVERYTHING HERE.
      ROSTER CAN BE BIG. The old builder started from an empty list every
      morning, so the payload only ever held the handles that run happened to
      scrape — 26 accounts out of a rostered 79. Now each run carries forward
-     yesterday's still-signed posts and layers today's scrape on top, so the
-     payload holds roughly (tier1 + see1) plus several days of both rotating
-     batches — three times the accounts for the same money.
+     yesterday's still-signed posts and layers today's scrape on top. A
+     tier 3 account fetched once a week therefore shows for about four days
+     of every seven, for one credit.
 
   4. Reels carry a playable MP4 as well, and it lives a much shorter life.
      `video_versions` holds the signed candidates (on 2026-10-16 all three
@@ -49,30 +60,27 @@ THREE FACTS ABOUT INSTAGRAM'S CDN SHAPE EVERYTHING HERE.
      post whose video is about to lapse keeps its picture and loses only
      the video fields: it shows as a photo rather than a dead player.
 
-FOOD. The roster's `food` array is a tag, not a fifth roster: it names
-handles that already sit in one of the four arrays and belong to a kitchen,
-a bar, a market or someone who writes about eating here. Their posts get
-`f: 1`, and the All Day Food tab reads those (its "In their own words"
-rail). A handle in `food` that is not in the roster is warned about and
-ignored, so the tag can never add an account the roster did not.
+FOOD. A post gets `f: 1` when its account's category is `food`, or when the
+account carries `"food": true` (a bar, a brewery or a market that belongs on
+the Food tab too). Food reads it.
 
-Credits: one per handle per run, and only the handles actually fetched. Tier 1
-every run; tier 2 on a rotation keyed to the day of the year.
+TAGGED is the one thing here that is not a roster. It is every post by anyone
+that tags @btownbrief — the route onto the wall for a reader who is not an
+account we follow. One credit per run (`/v1/instagram/user/tagged-posts`, by
+numeric user id). That endpoint returns no `taken_at`, so the timestamp is
+decoded from the post's `pk` — Instagram media ids are snowflakes (ms since
+2011-08-24 in the high bits), and the decode checks out to within minutes
+against posts that do carry `taken_at`. A handle listed in the roster file's
+`tagged_block` array never lands, whatever it tags. A tagged post takes its
+account's category when that account is rostered, else `other`.
 
 Env: SCRAPECREATORS_API_KEY (or SCRAPE_CREATORS_API_KEY), or
      ~/.config/btownbrief/secrets.env.
 
-TAGGED is the third thing this builds, and it is not a roster. It is every
-post by anyone that tags @btownbrief — the route onto the wall for a reader
-who is not an account we follow. One credit per run (`/v1/instagram/user/
-tagged-posts`, by numeric user id). That endpoint returns no `taken_at`, so the
-timestamp is decoded from the post's `pk` — Instagram media ids are snowflakes
-(ms since 2011-08-24 in the high bits), and the decode checks out to within
-minutes against posts that do carry `taken_at`. A handle listed in the roster
-file's `tagged_block` array never lands, whatever it tags.
-
-Run: python3 scripts/build_instagram.py [--tier2-batch N] [--see2-batch N]
-                                        [--dry-run] [--no-carry] [--no-tagged]
+Run: python3 scripts/build_instagram.py [--dry-run] [--only h1,h2] [--no-carry]
+                                        [--no-tagged] [--out PATH] [--ledger PATH]
+     --dry-run prints what this run would fetch and what that costs. It makes
+     no request and needs no key.
 """
 
 from __future__ import annotations
@@ -80,6 +88,7 @@ from __future__ import annotations
 import argparse
 import datetime as dt
 import json
+import math
 import os
 import pathlib
 import re
@@ -88,21 +97,39 @@ import time
 import urllib.error
 import urllib.parse
 import urllib.request
+import zlib
+from zoneinfo import ZoneInfo
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 ROSTER = ROOT / "data" / "instagram-handles.json"
+LEDGER = ROOT / "data" / "instagram-ledger.json"
 OUT = ROOT / "all-day" / "data" / "instagram.json"
 SECRETS = pathlib.Path.home() / ".config" / "btownbrief" / "secrets.env"
+TZ = ZoneInfo("America/New_York")
 
 ENDPOINT = "https://api.scrapecreators.com/v2/instagram/user/posts"
 POSTS_PER_HANDLE = 6          # newest few per account; the tab is a mixed feed
 KEEP_DAYS = 21                # older than this is not "what is happening"
 WANT_W = 480                  # candidate width to prefer for the grid
 
-# One cap per segment, not one for the payload. A single global cap lets
-# whichever half posts more often eat the other's slots, and the two halves
-# are not competing for the same attention — you switch to SEE on purpose.
-CAP = {"do": 240, "see": 260, "tagged": 12}
+# THE ONE NUMBER. Credits this builder may spend in a calendar month. Set
+# 2026-10-17 at twice what it spent before the tiered roster: 87 handles + 1
+# tagged = 88 credits a day, 2,640 in a 30-day month. At the Freelance pack's
+# price ($47 for 25,000 credits, $0.00188 each) the ceiling is about $9.93 a
+# month. Raise it and the tier 3 rotation is the only thing that grows.
+MONTHLY_CREDIT_BUDGET = 5280
+
+RUNS_PER_DAY = 2              # refresh-allday.yml's two crons; for the projection only
+TIER3_PERIOD_DAYS = 7         # tier 3: each account once a week
+TIERS = (1, 2, 3)
+CATEGORIES = ("food", "venue", "events", "shop", "pets", "scenic", "other")
+
+# One cap per category, so a chip never comes up empty because another kind
+# of account posts more. About 1.25 KB a post: the caps total ~600 posts,
+# ~750 KB, against 388 posts and 483 KB before the bigger roster.
+CAP = {"food": 150, "venue": 90, "events": 100, "shop": 60, "pets": 50,
+       "scenic": 90, "other": 60}
+TAGGED_CAP = 12
 
 # @btownbrief's numeric id (the tagged-posts endpoint takes ids, not handles).
 # Checked 2026-09-02 via /v1/instagram/profile?handle=btownbrief.
@@ -397,105 +424,280 @@ def post_record(h: str, it: dict, cutoff: float, now: float | None = None) -> di
     return rec
 
 
+
+
+def norm_handle(h: object) -> str:
+    return str(h or "").strip().lstrip("@").lower()
+
+
 def load_block() -> set[str]:
     """Handles whose tagged posts never land. Same file as the roster, so
-    there is one place to look; the arrays the roster loader reads are
-    untouched by it."""
+    there is one place to look."""
     try:
         raw = json.loads(ROSTER.read_text(encoding="utf-8"))
         got = raw.get("tagged_block") or []
-        return {str(h).strip().lstrip("@").lower() for h in got if str(h).strip()}
+        return {norm_handle(h) for h in got if norm_handle(h)}
     except Exception:
         return set()
 
 
-def load_roster() -> tuple[dict[str, list[str]], dict[str, str]]:
-    """The four arrays, and the handle -> segment map they imply.
+def load_roster(path: pathlib.Path | None = None) -> list[dict]:
+    """The roster's `accounts`, cleaned: one dict per handle with `h`, `tier`,
+    `category`, `s` (`do` or `see`, kept on posts for older readers) and
+    `food`.
 
-    tier1/tier2 are DO, see1/see2 are SEE. Keeping segment implicit in the
-    array a handle sits in means there is no second list to drift out of sync
-    — you move a handle between halves by moving the string."""
-    doc = json.loads(ROSTER.read_text(encoding="utf-8"))
-    arrays = {k: [h for h in (doc.get(k) or []) if isinstance(h, str) and h.strip()]
-              for k in ("tier1", "tier2", "see1", "see2")}
-
-    seen: dict[str, str] = {}
-    dupes = []
-    for key in ("tier1", "tier2", "see1", "see2"):
-        for h in arrays[key]:
-            if h in seen:
-                dupes.append(f"{h} (in {seen[h]} and {key})")
-                continue        # first placement wins, as the warning implies
-            seen[h] = key
+    A typo must not stop a build or cost money, so bad values fail CHEAP: an
+    unknown tier becomes 3 (the least often fetched), an unknown category
+    becomes `other`, and a handle listed twice keeps its first entry. Each is
+    warned about."""
+    doc = json.loads((path or ROSTER).read_text(encoding="utf-8"))
+    out, seen, dupes, fixed = [], set(), [], []
+    for a in doc.get("accounts") or []:
+        if not isinstance(a, dict):
+            continue
+        h = norm_handle(a.get("h"))
+        if not h or not re.fullmatch(r"[a-z0-9_.]{1,30}", h):
+            fixed.append(f"bad handle {a.get('h')!r} dropped")
+            continue
+        if h in seen:
+            dupes.append(h)
+            continue
+        seen.add(h)
+        tier = a.get("tier")
+        if tier not in TIERS or isinstance(tier, bool):
+            fixed.append(f"{h}: tier {tier!r} -> 3")
+            tier = 3
+        cat = a.get("category")
+        if cat not in CATEGORIES:
+            fixed.append(f"{h}: category {cat!r} -> other")
+            cat = "other"
+        out.append({"h": h, "tier": tier, "category": cat,
+                    "s": "see" if a.get("s") == "see" else "do",
+                    "food": cat == "food" or a.get("food") is True})
     if dupes:
-        # A handle in two arrays is paid for twice and shows up twice. Say so
-        # loudly, then keep the first placement so a typo cannot stop a build.
-        log(f"WARNING: {len(dupes)} duplicate handle(s): {'; '.join(dupes[:6])}")
-
-    segment = {h: ("see" if key.startswith("see") else "do")
-               for h, key in seen.items()}
-    return arrays, segment
+        log(f"WARNING: {len(dupes)} duplicate handle(s), first entry kept: {', '.join(dupes[:6])}")
+    if fixed:
+        log(f"WARNING: {len(fixed)} roster fix(es): {'; '.join(fixed[:6])}")
+    return out
 
 
-def load_food(segment: dict[str, str]) -> set[str]:
-    """The handles tagged as food: kitchens, bars, markets, food writers.
-    Only handles the roster already holds; anything else is warned about."""
+# ------------------------------------------------------------------ budget
+
+def local_day(ts: float) -> dt.date:
+    """The Burlington calendar day an epoch second falls on."""
+    return dt.datetime.fromtimestamp(ts, TZ).date()
+
+
+def month_key(day: dt.date) -> str:
+    return f"{day.year:04d}-{day.month:02d}"
+
+
+def days_in_month(day: dt.date) -> int:
+    nxt = (day.replace(day=28) + dt.timedelta(days=4)).replace(day=1)
+    return (nxt - dt.timedelta(days=1)).day
+
+
+def share_through(day: dt.date, budget: int, through: int | None = None) -> int:
+    """Credits the month may have spent by the end of day `through` (default:
+    `day` itself). Rounded down, so the month's shares never add to more than
+    the budget."""
+    d = day.day if through is None else through
+    return (budget * max(0, d)) // days_in_month(day)
+
+
+def load_ledger(path: pathlib.Path, now: float, budget: int) -> tuple[dict, bool]:
+    """This month's ledger, and whether it was actually read.
+
+    A ledger from last month starts this one at zero spent and keeps the
+    fetch times (the rotation does not care about months). A missing or
+    unreadable ledger, or one whose numbers do not make sense, fails CHEAP:
+    every earlier day of this month is assumed to have spent its whole
+    share, so this run gets at most today's."""
+    today = local_day(now)
+    month = month_key(today)
     try:
-        raw = json.loads(ROSTER.read_text(encoding="utf-8"))
-        got = {str(h).strip().lstrip("@") for h in (raw.get("food") or []) if str(h).strip()}
-    except Exception:
-        return set()
-    stray = sorted(got - set(segment))
-    if stray:
-        log(f"WARNING: {len(stray)} food handle(s) not in the roster, ignored: {', '.join(stray[:6])}")
-    return got & set(segment)
+        doc = json.loads(path.read_text(encoding="utf-8"))
+        if not isinstance(doc, dict):
+            raise ValueError("not an object")
+        last = doc.get("last") if isinstance(doc.get("last"), dict) else {}
+        last = {norm_handle(h): int(t) for h, t in last.items()
+                if isinstance(t, (int, float)) and not isinstance(t, bool) and 0 < t <= now + 86400}
+        spent = doc.get("spent")
+        if doc.get("month") == month:
+            if not isinstance(spent, int) or isinstance(spent, bool) or spent < 0:
+                raise ValueError(f"spent is {spent!r}")
+        elif isinstance(doc.get("month"), str) and doc["month"] < month:
+            spent = 0
+        else:
+            raise ValueError(f"month is {doc.get('month')!r}")
+        runs = [r for r in (doc.get("runs") or []) if isinstance(r, dict)]
+        return {"month": month, "spent": spent, "last": last, "runs": runs}, True
+    except FileNotFoundError:
+        why = "no ledger"
+    except Exception as e:  # corrupt, hand-edited, from the future
+        why = f"unreadable ledger ({str(e)[:60]})"
+    assumed = share_through(today, budget, today.day - 1)
+    log(f"WARNING: {why} — assuming {assumed} credits already spent this month, "
+        f"so this run gets at most today's share")
+    return {"month": month, "spent": assumed, "last": {}, "runs": []}, False
 
 
-def rotate(pool: list[str], batch: int) -> list[str]:
-    """Today's slice of a rotating tier, advancing by `batch` a day."""
-    n = max(0, batch)
-    if not n or not pool:
-        return []
-    start = (dt.date.today().toordinal() * n) % len(pool)
-    return [pool[(start + i) % len(pool)] for i in range(min(n, len(pool)))]
+def allowance(ledger: dict, now: float, budget: int) -> int:
+    """What this run may spend: today's running share, less what is spent."""
+    return max(0, share_through(local_day(now), budget) - ledger["spent"])
 
+
+def tier3_quota(n: int) -> int:
+    """Tier 3 accounts to take each day so the whole tier turns over once a
+    period."""
+    return math.ceil(n / TIER3_PERIOD_DAYS) if n else 0
+
+
+def plan(accounts: list[dict], last: dict, now: float, credits: int,
+         tagged: bool = True) -> tuple[list[dict], bool, list[str]]:
+    """Which accounts this run fetches, whether it fetches the tagged shelf,
+    and what it had to leave for later — all inside `credits`.
+
+    Order of claim: tier 1 (every run), the tagged shelf, tier 2 (any not yet
+    fetched this Burlington day), then tier 3 (those not fetched for
+    TIER3_PERIOD_DAYS, longest-waiting first, up to today's slice of the tier
+    less any already taken today). The total never exceeds `credits`."""
+    today = local_day(now)
+
+    def day_of(h: str) -> dt.date | None:
+        t = last.get(h)
+        return local_day(t) if t else None
+
+    t1 = [a for a in accounts if a["tier"] == 1]
+    t2 = [a for a in accounts if a["tier"] == 2 and day_of(a["h"]) != today]
+    t3_all = [a for a in accounts if a["tier"] == 3]
+    taken_today = sum(1 for a in t3_all if day_of(a["h"]) == today)
+    room3 = max(0, tier3_quota(len(t3_all)) - taken_today)
+    # Longest-waiting first. Ties (every account the first week, or after a
+    # lost ledger) break on a hash of the handle, not roster order, so a
+    # day's slice mixes categories instead of being all `events` one day and
+    # all `shop` another. Stable from run to run.
+    due3 = sorted((a for a in t3_all
+                   if day_of(a["h"]) is None
+                   or (today - day_of(a["h"])).days >= TIER3_PERIOD_DAYS),
+                  key=lambda a: (last.get(a["h"], 0), zlib.crc32(a["h"].encode()), a["h"]))[:room3]
+
+    left = max(0, credits)
+    picked, skipped, want_tagged = [], [], False
+    for group in (t1, ["tagged"] if tagged else [], t2, due3):
+        for a in group:
+            if left <= 0:
+                skipped.append("tagged" if a == "tagged" else a["h"])
+                continue
+            left -= 1
+            if a == "tagged":
+                want_tagged = True
+            else:
+                picked.append(a)
+    return picked, want_tagged, skipped
+
+
+def projection(accounts: list[dict], tagged: bool = True) -> dict:
+    """Steady-state cost of a roster: credits a day and a 31-day month."""
+    n = {t: sum(1 for a in accounts if a["tier"] == t) for t in TIERS}
+    day = RUNS_PER_DAY * (n[1] + (1 if tagged else 0)) + n[2] + tier3_quota(n[3])
+    return {"tiers": n, "per_day": day, "per_month": day * 31}
+
+
+def save_ledger(path: pathlib.Path, ledger: dict) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    doc = {
+        "_comment": "Written by scripts/build_instagram.py; read back by it. "
+                    "spent = Scrape Creators credits this builder spent this "
+                    "Burlington month (one per request, failures included). "
+                    "last = when each account was last requested. Do not "
+                    "hand-edit spent downward.",
+        "month": ledger["month"],
+        "budget": MONTHLY_CREDIT_BUDGET,
+        "spent": ledger["spent"],
+        "runs": ledger["runs"][-62:],
+        "last": dict(sorted(ledger["last"].items())),
+    }
+    path.write_text(json.dumps(doc, indent=0, ensure_ascii=False) + "\n", encoding="utf-8")
+
+
+# -------------------------------------------------------------------- main
 
 def main() -> int:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--tier2-batch", type=int, default=12,
-                    help="how many rotating DO handles to refresh this run")
-    ap.add_argument("--see2-batch", type=int, default=26,
-                    help="how many rotating SEE handles to refresh this run")
     ap.add_argument("--no-carry", action="store_true",
-                    help="ignore the previous payload; scrape-only, as the "
-                         "builder behaved before carry-forward existed")
+                    help="ignore the previous payload; scrape-only")
     ap.add_argument("--no-tagged", action="store_true",
                     help="skip the one-credit tagged-posts fetch")
-    ap.add_argument("--dry-run", action="store_true")
+    ap.add_argument("--only", default="",
+                    help="comma-separated rostered handles: fetch just these, "
+                         "still inside the budget (a small live test)")
+    ap.add_argument("--out", type=pathlib.Path, default=None,
+                    help="write the payload here instead of all-day/data/instagram.json")
+    ap.add_argument("--ledger", type=pathlib.Path, default=None,
+                    help="read and write the ledger here instead of data/instagram-ledger.json")
+    ap.add_argument("--dry-run", action="store_true",
+                    help="print this run's plan and its cost; no request, no key, no write")
     args = ap.parse_args()
+    out_path = args.out or OUT
+    ledger_path = args.ledger or LEDGER
+
+    accounts = load_roster()
+    cat_of = {a["h"]: a["category"] for a in accounts}
+    seg_of = {a["h"]: a["s"] for a in accounts}
+    food = {a["h"] for a in accounts if a["food"]}
+    now = time.time()
+    budget = MONTHLY_CREDIT_BUDGET
+
+    ledger, ledger_ok = load_ledger(ledger_path, now, budget)
+    credits = allowance(ledger, now, budget)
+    if args.only:
+        want = {norm_handle(h) for h in args.only.split(",") if norm_handle(h)}
+        stray = sorted(want - set(cat_of))
+        if stray:
+            log(f"--only: not in the roster, ignored: {', '.join(stray)}")
+        pool = [a for a in accounts if a["h"] in want]
+        picked = pool[:credits]
+        skipped = [a["h"] for a in pool[credits:]]
+        want_tagged = not args.no_tagged and credits > len(picked)
+    else:
+        picked, want_tagged, skipped = plan(accounts, ledger["last"], now, credits,
+                                            tagged=not args.no_tagged)
+
+    proj = projection(accounts, tagged=not args.no_tagged)
+    n = proj["tiers"]
+    log(f"roster: {len(accounts)} accounts (tier 1 {n[1]}, tier 2 {n[2]}, tier 3 {n[3]}); "
+        f"steady state ~{proj['per_day']} credits/day, ~{proj['per_month']}/month "
+        f"against a budget of {budget}")
+    log(f"ledger: {ledger['spent']} spent in {ledger['month']}"
+        + ("" if ledger_ok else " (assumed)") + f"; this run may spend {credits}")
+    spend = len(picked) + (1 if want_tagged else 0)
+    log(f"plan: {len(picked)} account(s)" + (" + tagged" if want_tagged else "")
+        + f" = {spend} credits"
+        + (f"; {len(skipped)} left for later: {', '.join(skipped[:8])}" if skipped else ""))
+    if proj["per_month"] > budget:
+        log(f"WARNING: the roster's steady state ({proj['per_month']}/month) is over the "
+            f"budget; tier 3 will turn over slower than every {TIER3_PERIOD_DAYS} days")
+
+    if args.dry_run:
+        for t in TIERS:
+            hs = [f"{a['h']} ({a['category']})" for a in picked if a["tier"] == t]
+            if hs:
+                print(f"tier {t} · {len(hs)}: " + ", ".join(hs))
+        if want_tagged:
+            print("tagged shelf · 1")
+        print(f"total {spend} credits this run")
+        return 0
+
+    if not picked and not want_tagged:
+        log("nothing to fetch inside the budget — payload left as it is")
+        return 0
 
     key = api_key()
     if not key:
         log("no Scrape Creators key — set SCRAPECREATORS_API_KEY. Nothing written.")
         return 1
 
-    arrays, segment = load_roster()
-    food = load_food(segment)
-    today = (arrays["tier1"] + rotate(arrays["tier2"], args.tier2_batch)
-             + arrays["see1"] + rotate(arrays["see2"], args.see2_batch))
-    # Order the roster arrays, not a set: a handle listed twice was already
-    # warned about in load_roster(), and paying for it twice helps nobody.
-    handles, seen_h = [], set()
-    for h in today:
-        if h not in seen_h:
-            seen_h.add(h)
-            handles.append(h)
-
-    log(f"roster: {len(arrays['tier1'])}+{len(arrays['tier2'])} DO, "
-        f"{len(arrays['see1'])}+{len(arrays['see2'])} SEE; "
-        f"fetching {len(handles)} this run = {len(handles)} credits")
-
-    now = time.time()
     cutoff = now - KEEP_DAYS * 86400
 
     # Read the previous payload. Which of its posts we KEEP is decided after
@@ -504,51 +706,74 @@ def main() -> int:
     # the tab. Only a handle that actually answered gets its old posts
     # replaced.
     prev_posts = []
-    if not args.no_carry and OUT.exists():
+    if not args.no_carry and out_path.exists():
         try:
-            prev = json.loads(OUT.read_text(encoding="utf-8"))
+            prev = json.loads(out_path.read_text(encoding="utf-8"))
             got = prev.get("posts")
             prev_posts = got if isinstance(got, list) else []
         except Exception as e:
             log(f"could not read the previous payload ({str(e)[:60]}) — "
                 f"building from this run alone")
 
-    fresh, failed, answered = [], [], set()
-    for h in handles:
-        try:
-            items = fetch_handle(h, key)
-        except Exception as e:
-            failed.append(f"{h}: {str(e)[:50]}")
-            continue
-        # It answered. Even an empty list is an answer — the account posted
-        # nothing recent — so its stale posts are now genuinely stale.
-        answered.add(h)
-        kept = 0
-        for it in items:
-            if kept >= POSTS_PER_HANDLE:
-                break
-            rec = post_record(h, it, cutoff, now)
-            if not rec:
-                continue
-            fresh.append(rec)
-            kept += 1
-        time.sleep(0.4)
+    # Every request is a credit, whatever comes back, so it is counted and
+    # stamped BEFORE it is made and the ledger is saved however this ends.
+    spent_run = 0
 
-    # The tagged shelf: anyone's posts, so it is judged by its own window and
-    # blocklist, and carried on its own — a rostered account that tagged the
-    # Brief appears in both places, and the two must not fold into one.
-    block = load_block()
-    tagged_cutoff = now - TAGGED_DAYS * 86400
-    tagged, tagged_ok = [], False
-    if not args.no_tagged:
-        try:
-            for it in fetch_tagged(key):
-                rec = tagged_record(it, tagged_cutoff, now)
-                if rec and rec["h"] not in block:
-                    tagged.append(rec)
-            tagged_ok = True
-        except Exception as e:
-            failed.append(f"tagged: {str(e)[:50]}")
+    def charge(h: str) -> None:
+        nonlocal spent_run
+        spent_run += 1
+        ledger["spent"] += 1
+        ledger["last"][h] = int(now)
+
+    fresh, failed, answered = [], [], set()
+    try:
+        for a in picked:
+            h = a["h"]
+            charge(h)
+            try:
+                items = fetch_handle(h, key)
+            except Exception as e:
+                failed.append(f"{h}: {str(e)[:50]}")
+                continue
+            # It answered. Even an empty list is an answer — the account posted
+            # nothing recent — so its stale posts are now genuinely stale.
+            answered.add(h)
+            kept = 0
+            for it in items:
+                if kept >= POSTS_PER_HANDLE:
+                    break
+                rec = post_record(h, it, cutoff, now)
+                if not rec:
+                    continue
+                fresh.append(rec)
+                kept += 1
+            time.sleep(0.4)
+
+        # The tagged shelf: anyone's posts, so it is judged by its own window
+        # and blocklist, and carried on its own — a rostered account that
+        # tagged the Brief appears in both places, and the two must not fold.
+        block = load_block()
+        tagged_cutoff = now - TAGGED_DAYS * 86400
+        tagged, tagged_ok = [], False
+        if want_tagged:
+            spent_run += 1
+            ledger["spent"] += 1
+            try:
+                for it in fetch_tagged(key):
+                    rec = tagged_record(it, tagged_cutoff, now)
+                    if rec and rec["h"] not in block:
+                        tagged.append(rec)
+                tagged_ok = True
+            except Exception as e:
+                failed.append(f"tagged: {str(e)[:50]}")
+    finally:
+        ledger["runs"].append({"at": dt.datetime.fromtimestamp(now, dt.timezone.utc)
+                               .isoformat(timespec="seconds"), "credits": spent_run})
+        roster_h = set(cat_of)
+        ledger["last"] = {h: t for h, t in ledger["last"].items() if h in roster_h}
+        save_ledger(ledger_path, ledger)
+        log(f"ledger: spent {spent_run} this run, {ledger['spent']} of {budget} this month")
+
     if not tagged_ok:
         for rec in prev_posts:
             if (isinstance(rec, dict) and rec.get("s") == "tagged"
@@ -567,32 +792,33 @@ def main() -> int:
         h = rec.get("h")
         if h in answered:
             continue            # today's fetch replaces it wholesale
-        if h not in segment:
+        if h not in cat_of:
             continue            # dropped from the roster since that run
         if not carry_ok(rec, now, cutoff):
             continue
         carried.append(rec if video_ok(rec, now) else drop_video(rec))
 
     if carried:
-        held = {r["h"] for r in carried} & set(handles)
+        held = {r["h"] for r in carried} & {a["h"] for a in picked}
         log(f"carried {len(carried)} still-signed post(s) from "
             f"{len({r['h'] for r in carried})} account(s)"
             + (f", {len(held)} of them because today's fetch failed" if held else ""))
 
     if failed:
-        log(f"{len(failed)} handle(s) failed: {'; '.join(failed[:5])}")
+        log(f"{len(failed)} request(s) failed: {'; '.join(failed[:5])}")
     if not fresh:
         # Carried posts alone are yesterday's file with a new timestamp on it.
         # Better to leave the good payload in place and let the next run try.
         log("no posts collected — refusing to overwrite a good payload")
         return 1
 
-    # Stamp the segment on every record, carried ones included: a handle can
-    # move from DO to SEE between runs and the payload must follow the roster,
-    # not the copy of it that was current when the post was first seen.
+    # Stamp segment, category and the food flag on every record, carried ones
+    # included: the payload follows the roster as it is now, not the copy of
+    # it that was current when the post was first seen.
     by_key = {}
     for rec in carried + fresh:
-        rec["s"] = segment.get(rec["h"], "do")
+        rec["s"] = seg_of.get(rec["h"], "do")
+        rec["category"] = cat_of.get(rec["h"], "other")
         if rec["h"] in food:
             rec["f"] = 1
         else:
@@ -605,53 +831,47 @@ def main() -> int:
 
     tagged_by_key = {}
     for rec in tagged:
+        rec["category"] = cat_of.get(rec["h"], "other")
         tagged_by_key[rec.get("u") or f"{rec['h']}:{rec['ts']}"] = rec
 
-    # Cap each half on its own, newest first, then interleave back into one
-    # clock-ordered list. The tab filters by segment anyway; sorting the whole
-    # thing keeps the payload readable and keeps "newest first" true of it.
+    # Cap each category on its own, newest first, then interleave back into
+    # one clock-ordered list.
     posts = []
-    for seg_name, cap_n in CAP.items():
-        pool = tagged_by_key.values() if seg_name == "tagged" else by_key.values()
-        half = sorted((r for r in pool if r["s"] == seg_name),
+    for cat, cap_n in CAP.items():
+        half = sorted((r for r in by_key.values() if r["category"] == cat),
                       key=lambda r: -r["ts"])
         if len(half) > cap_n:
-            log(f"{seg_name}: capped {len(half)} -> {cap_n}")
+            log(f"{cat}: capped {len(half)} -> {cap_n}")
         posts.extend(half[:cap_n])
+    posts.extend(sorted(tagged_by_key.values(), key=lambda r: -r["ts"])[:TAGGED_CAP])
     posts.sort(key=lambda r: -r["ts"])
 
-    counts = {s: sum(1 for r in posts if r["s"] == s) for s in CAP}
-    accounts = {s: len({r["h"] for r in posts if r["s"] == s}) for s in CAP}
+    segs = ("do", "see", "tagged")
+    counts = {s: sum(1 for r in posts if r["s"] == s) for s in segs}
+    accts = {s: len({r["h"] for r in posts if r["s"] == s}) for s in segs}
+    cats = {c: sum(1 for r in posts if r.get("category") == c) for c in CATEGORIES}
 
     out = {
         "generated": dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"),
-        # The tab shows this: these URLs stop working, and saying when is
-        # better than showing a grid of broken frames. Measured at 4.3-4.5
-        # days; the tab rounds down when it phrases the warning.
+        # These URLs stop working, and saying when is better than showing a
+        # grid of broken frames. Measured at 4.3-4.5 days.
         "expires_hint_days": 4,
-        # Accounts represented in THIS payload, not the whole roster — the tab
-        # counts chips from it. Kept as plain strings.
+        # Accounts represented in THIS payload, not the whole roster.
         "handles": sorted({p["h"] for p in posts}),
-        "segments": {s: {"posts": counts[s], "accounts": accounts[s]} for s in CAP},
+        "segments": {s: {"posts": counts[s], "accounts": accts[s]} for s in segs},
+        "categories": cats,
         # Posts that carry a playable MP4 right now, and the food-tagged ones.
         "videos": sum(1 for r in posts if r.get("vu")),
         "food": sum(1 for r in posts if r.get("f")),
         "posts": posts,
     }
-    if args.dry_run:
-        log(f"dry run — DO {counts['do']} posts/{accounts['do']} accounts · "
-            f"SEE {counts['see']} posts/{accounts['see']} accounts · "
-            f"TAGGED {counts['tagged']} posts/{accounts['tagged']} accounts")
-        return 0
 
-    OUT.parent.mkdir(parents=True, exist_ok=True)
-    OUT.write_text(json.dumps(out, ensure_ascii=False, separators=(",", ":")) + "\n")
-    log(f"wrote {OUT.relative_to(ROOT)}  "
-        f"DO {counts['do']} posts/{accounts['do']} accounts · "
-        f"SEE {counts['see']} posts/{accounts['see']} accounts · "
-        f"TAGGED {counts['tagged']} posts/{accounts['tagged']} accounts · "
-        f"{out['videos']} with video, {out['food']} food · "
-        f"{OUT.stat().st_size // 1024} KB")
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    out_path.write_text(json.dumps(out, ensure_ascii=False, separators=(",", ":")) + "\n")
+    log(f"wrote {out_path}  {len(posts)} posts from {len(out['handles'])} accounts · "
+        + " · ".join(f"{c} {n}" for c, n in cats.items() if n)
+        + f" · {out['videos']} with video, {out['food']} food · "
+        f"{out_path.stat().st_size // 1024} KB")
     return 0
 
 
