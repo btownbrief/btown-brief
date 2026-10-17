@@ -274,6 +274,18 @@ body.chrome-away .mast { transform: translateY(-100%); }
 .tabbar button.on .i { stroke-width: 2.3; }
 .tabbar .nd { position: absolute; top: 8px; left: calc(50% + 6px); width: 8px; height: 8px; border-radius: var(--r-round);
   background: var(--accent); border: 2px solid var(--paper); }
+/* What Now is the bar's centre (the fifth of nine, the one auto-width
+   column): its icon sits in a filled disc and its label is bold, in both
+   themes and on the wide rail. The disc stays filled whether or not the tab
+   is active; active adds the soft tint behind it. border-box keeps the 25px
+   disc from making this cell taller than the other eight. No glow: a shadow
+   on a 25px disc reads as a notification badge. */
+.tabbar #tab-whatnow { color: var(--now); }
+.tabbar #tab-whatnow .i { background: var(--now); color: var(--now-ink); border-radius: var(--r-round);
+  padding: 4px; width: 25px; height: 25px; box-sizing: border-box; stroke-width: 2; flex: 0 0 auto; }
+.tabbar #tab-whatnow.on { color: var(--now); background: var(--now-soft); }
+.tabbar #tab-whatnow.on .i { stroke-width: 2.2; }
+.tabbar #tab-whatnow > span { font-weight: 700; letter-spacing: -.01em; white-space: nowrap; padding: 0 5px; }
 .rail-brand { display: none; }
 
 /* ============================================================ sheet */
@@ -593,6 +605,9 @@ body.chrome-away .mast { transform: translateY(-100%); }
 .lrow .num { width: 32px; font-family: var(--serif); font-size: var(--fs-section); color: var(--ink-3); text-align: center; }
 .lrow.done .t { color: var(--ink-3); text-decoration: line-through; text-decoration-thickness: 1px; }
 .lrow.hl { animation: flash 2.4s ease; }
+/* What Now: the mission a spin landed on, for as long as that answer stands */
+.lrow.spun { background: var(--accent-soft); }
+.lrow.spun .num { color: var(--accent); }
 .pillbtn { height: 30px; padding: 0 10px; white-space: nowrap; flex: 0 0 auto; border-radius: var(--r-pill); border: 1px solid var(--line); font-size: var(--fs-meta); font-weight: 600; color: var(--ink-2); display: inline-flex; align-items: center; gap: 4px; }
 .pillbtn .i { width: 16px; height: 16px; }
 .pillbtn.on { background: var(--ink); color: var(--on-ink); border-color: var(--ink); }

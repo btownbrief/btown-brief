@@ -377,9 +377,7 @@ function paintWeek(host) {
   hero.appendChild(pic);
   const by = ['by ' + it.author, it.what + (it.medium ? ', ' + it.medium.toLowerCase() : '')].join(' · ');
   hero.insertAdjacentHTML('beforeend', '<span class="eyebrow">' + esc(w.fresh ? 'Photo of the week' : 'The newest on the wall') + '</span>' +
-    '<h3>' + esc(it.title) + '</h3><p>' + esc(by + '. ' + (w.fresh
-      ? 'The most votes on anything posted since Monday. The week closes Sunday at midnight.'
-      : 'Nothing new since Monday yet, so here’s the newest. Post this week and it could be yours.')) + '</p>');
+    '<h3>' + esc(it.title) + '</h3><p>' + esc(by) + '</p>');
   const row = el('div', 'row');
   const up = voteBtn(it);
   up.addEventListener('click', () => vote(it));
@@ -432,7 +430,6 @@ function paintInvite(host) {
   const words = [
     ms ? 'Sunset is at ' + clock(ms) + ' ' + day + '.' : '',
     scored ? (sun.score >= 5 ? '' : score + '. ') + verdict(sun.score) : '',
-    'Nobody has put a picture on the wall yet, so the first one is photo of the week.',
   ].filter(Boolean).join(' ');
   tc.innerHTML = '<span class="eyebrow">Photo of the week</span><h3 class="serif">' + esc(head) + '</h3><p>' + esc(words) + '</p>' +
     (spot ? '<p><b>' + esc('Best spot: ' + spot.name) + '</b>' + esc((spot.walk_min ? ', ' + spot.walk_min + ' minutes’ walk from Church Street. ' : '. ') + (spot.why || '')) + '</p>' : '');
@@ -461,10 +458,10 @@ function wallItems() {
 
 function paintWall(host) {
   const list = wallItems();
-  section(host, 'The wall', esc('Photos and art by people who live here, newest first. Tap one to see it big.'));
+  section(host, 'The wall');
   if (S.failed && !S.pics.length) host.appendChild(el('p', 'note pad', esc(S.failed)));
   if (!list.length) {
-    host.appendChild(el('p', 'note pad', esc('Nothing on the wall yet. Add yours below.')));
+    host.appendChild(el('p', 'note pad', esc('Nothing on the wall yet.')));
     return;
   }
   const g = el('div', 'grid3');
@@ -491,10 +488,7 @@ function paintWall(host) {
       e.currentTarget.disabled = true;
       page().then(() => { paint('wall'); paint('winners'); });
     }));
-  } else {
-    host.appendChild(el('div', 'spacer'));
-    host.appendChild(el('p', 'note pad', esc('That’s the whole wall: ' + plural(list.length, 'picture', 'pictures') + ', back to the first.')));
-  }
+  } else host.appendChild(el('div', 'spacer'));
 }
 
 /* The whole picture in a sheet. Its box is reserved at 4:5 and takes the
@@ -519,7 +513,6 @@ function openSheet(it) {
       const where = [it.spot, it.area].filter(Boolean).join(', ');
       box.appendChild(el('p', 'sheet-note', esc(['Photo by ' + (it.author || 'a neighbor'), where, it.ago].filter(Boolean).join(' · '))));
       if (it.text && it.text !== it.title) box.appendChild(el('p', 'c-text', esc(it.text)));
-      box.appendChild(el('p', 'sheet-note', esc('From the community gallery, from before the wall had votes.')));
       const r = el('div', 'linkrow');
       r.appendChild(actBtn('share', ICON.share + ' Share', 'ghost'));
       box.appendChild(r);
@@ -549,22 +542,20 @@ function actBtn(act, label, cls) {
 function compose(kind) {
   const fields = [];
   if (kind === 'art') fields.push({ key: 'medium', label: 'Medium', type: 'text', max: 40, placeholder: 'Gouache, linocut, oil, ink…' });
-  fields.push({ key: 'shirt', label: 'Could it go on a shirt?', type: 'enum', options: [['yes', 'Yes'], ['no', 'No']],
-    hint: 'Say yes and neighbors can send it to make-a-tee on the Vintage tab.' });
+  fields.push({ key: 'shirt', label: 'Could it go on a shirt?', type: 'enum', options: [['yes', 'Yes'], ['no', 'No']] });
   boards.compose({
     board: BOARD, kind, heading: kind === 'art' ? 'Add art' : 'Add a photo',
     title: 'Title', titlePlaceholder: kind === 'art' ? 'The breakwater light, in fog' : 'North Beach, 6:52 am',
     body: 'One line about it', bodyPlaceholder: kind === 'art' ? 'Where you made it, what with' : 'Where you stood, what you saw',
     fields, cta: 'Send it in',
-    notes: ['Stephen approves every photo before it shows on the wall, usually within a day.'],
+    notes: ['Photos show once approved.'],
     onPosted: () => paintWaiting(),
   });
 }
 
 function paintAdd(host) {
-  section(host, 'Add yours', esc('A photo you took or a piece you made, from around here.'));
+  section(host, 'Add yours');
   const tc = el('div', 'textcard');
-  tc.innerHTML = '<p>' + esc('A title, one line, and the picture. Stephen approves every photo before it shows, usually within a day; then the town votes, and the week’s favorite leads this tab.') + '</p>';
   const row = el('div', 'row');
   row.append(button(ICON.plus + ' Add a photo', '', () => compose('photo')), button(ICON.plus + ' Add art', 'ghost', () => compose('art')));
   tc.appendChild(row);
@@ -584,20 +575,20 @@ function paintWaiting() {
   boards.mine().then((r) => {
     const w = r.ok ? r.posts.filter((p) => p.board === BOARD && p.photo_state === 'pending' && !p.ended).length : 0;
     n.hidden = !w;
-    n.textContent = w ? plural(w, 'picture', 'pictures') + ' of yours ' + (w === 1 ? 'is' : 'are') + ' waiting for Stephen’s look.' : '';
+    n.textContent = w ? plural(w, 'picture', 'pictures') + ' of yours ' + (w === 1 ? 'is' : 'are') + ' waiting for approval.' : '';
   });
 }
 
 /* ------------------------------------------------------- community board */
 function paintBoard(host) {
-  section(host, 'Community board', esc('Calls for artists, shows, open studios, models and easels. Each notice comes down after ' + NOTICE_DAYS + ' days.'),
+  section(host, 'Community board', null,
     button(ICON.plus + ' Post', 'ghost sm', () => boards.compose({
       board: BOARD, kind: 'notice', heading: 'Post a notice', title: 'What is it?', titlePlaceholder: 'Open studio Saturday, twelve artists',
       body: 'Details', bodyPlaceholder: 'When, what it costs, how to get in touch', place: 'Where', placePlaceholder: 'Soda Plant, Pine Street',
-      notes: ['A notice stays up for ' + NOTICE_DAYS + ' days. Links are taken out; say how to reach you in words.'],
+      notes: ['Up for ' + NOTICE_DAYS + ' days. Links are removed.'],
     })));
   if (!S.notices.length) {
-    host.appendChild(el('p', 'note pad', esc('Nothing on the board right now. Post a call for artists, a show or an open studio.')));
+    host.appendChild(el('p', 'note pad', esc('Nothing on the board right now.')));
     return;
   }
   const f = el('div', 'feed');
@@ -610,9 +601,9 @@ function paintBoard(host) {
 function paintWinners(host) {
   const list = winners();
   S.winSig = list.map((w) => w.it.id).join(',');
-  section(host, 'Winners', esc('The most-voted picture posted each week, Monday to Sunday. Just the honor.'));
+  section(host, 'Winners');
   if (!list.length) {
-    host.appendChild(el('p', 'note pad', esc('The first winner is the most-voted picture posted this week, named here on Monday.')));
+    host.appendChild(el('p', 'note pad', esc('No winner yet.')));
     return;
   }
   const r = rail(host);
@@ -668,7 +659,7 @@ app.register(KEY, {
       if (app.activeTab() === KEY) app.paintSubnav();
       app.recount();
       land();
-    }).catch(() => { r.innerHTML = '<div class="errbox"><b>Art didn’t load.</b> Reload to try again.</div>'; });
+    }).catch(() => { r.innerHTML = '<div class="errbox"><b>Art didn’t load.</b></div>'; });
   },
   activate(param) { pending = param || null; land(); },
   refresh() { if (ready) render(); },

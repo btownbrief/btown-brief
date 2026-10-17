@@ -350,9 +350,9 @@ app.onAct('bvote', (it) => {
   });
 });
 app.onAct('breport', (it) => {
-  if (!app.user()) { app.toast('Reporting needs the email sign-in. It’s in Settings.'); return; }
+  if (!app.user()) { app.toast('Sign in to report.'); return; }
   app.sheet('Report this post', (body, card, close) => {
-    body.appendChild(el('p', 'sheet-note', esc('“' + it.title + '”. Two reports take a post down until Stephen has a look. Who reported it is never shown.')));
+    body.appendChild(el('p', 'sheet-note', esc('“' + it.title + '”. Who reported it is never shown.')));
     RULES.reasons.forEach((reason) => {
       const r = el('div', 'sheet-row', '<div class="t">' + esc(REASON_LABELS[reason]) + '</div>');
       r.appendChild(button('Report', 'ghost sm', () => {
@@ -393,7 +393,7 @@ export function compose(opts) {
   return app.sheet(opts.heading || 'Post', (body, card, close) => {
     const note = (t) => body.appendChild(el('p', 'sheet-note', esc(t)));
     if (!app.user()) {
-      note('Posting needs the email sign-in: one email, no password. Reading and voting never do.');
+      note('Sign in to post.');
       const r = el('div', 'linkrow');
       r.appendChild(button('Sign in', '', () => app.openSettings()));
       body.appendChild(r);
@@ -443,7 +443,7 @@ function form(body, card, close, opts, rule, prof) {
   f.noValidate = true;
   if (!prof) {
     f.appendChild(labelled('Your first name', input('text', 'display_name', { max: L.nameMax, placeholder: 'Maya, or Maya R.' }),
-      'Neighbors see it on your post. Asked once; change it in Settings.', true));
+      'Neighbors see it.', true));
   }
   f.appendChild(labelled(opts.title || 'Title', input('text', 'title', { max: L.titleMax, placeholder: opts.titlePlaceholder }), null, true));
   (opts.fields || []).forEach((fd) => {
@@ -467,7 +467,7 @@ function form(body, card, close, opts, rule, prof) {
     const line = el('div', 'bf-photo');
     line.append(btn, fname);
     const consent = el('label', 'consent', '<input type="checkbox" name="consent"> ' +
-      esc('I took this photo, and the Brief may show it in All Day and the newsletter. Photos are checked before they show.'));
+      esc('I took this photo, and the Brief may show it in All Day and the newsletter.'));
     w.append(line, pick, consent);
     f.appendChild(w);
   }
@@ -506,8 +506,8 @@ function form(body, card, close, opts, rule, prof) {
       return create(opts.board, post).then((r) => {
         if (!r.ok) return say(r.error);
         close();
-        app.toast(r.post.status === 'pending' ? 'Posted. It shows once Stephen has had a look.'
-          : r.photoWaiting ? 'Posted. The photo shows once it’s been checked.' : 'Posted');
+        app.toast(r.post.status === 'pending' ? 'Posted. It shows once approved.'
+          : r.photoWaiting ? 'Posted. The photo shows once approved.' : 'Posted');
         if (opts.onPosted) opts.onPosted(r.post);
       });
     });
@@ -529,13 +529,12 @@ export function profileSheet() {
       const f = el('form', 'bform');
       f.noValidate = true;
       f.appendChild(labelled('Your first name', input('text', 'display_name', { max: RULES.limits.nameMax, placeholder: 'Maya, or Maya R.', value: cur.display_name }),
-        'The only name anyone sees on your posts. Required to post; a last initial is fine.', true));
+        'Neighbors see it.', true));
       f.appendChild(labelled('Neighborhood', select('neighborhood', [['', 'None']].concat(RULES.neighborhoods.map((h) => [h, NEIGHBORHOOD_LABELS[h]])), cur.neighborhood || ''), null, false));
       let arch = cur.archetype || '';
       const w = el('div', 'bf-row');
       w.appendChild(el('div', 'bf-label', 'Who are you here as? <span class="bf-opt">optional</span>'));
       w.appendChild(pills([['', 'None']].concat(RULES.archetypes.map((a) => [a, ARCHETYPE_LABELS[a]])), arch, (v) => { arch = v; }, 'wrap'));
-      w.appendChild(el('p', 'bf-hint', esc('The People tab uses it to put plans like yours first.')));
       f.appendChild(w);
       /* what you're into: any of the activity list, several at once */
       const into = new Set(cur.interests || []);
@@ -556,7 +555,7 @@ export function profileSheet() {
         box.appendChild(b);
       });
       iw.appendChild(box);
-      iw.appendChild(el('p', 'bf-hint', esc('Activities only, up to eight. The People tab suggests plans and clubs by them; nobody sees them unless you join its directory.')));
+      iw.appendChild(el('p', 'bf-hint', esc('Up to eight. Private unless you join the directory.')));
       f.appendChild(iw);
       const msg = el('p', 'bf-msg');
       const go = button('Save', '');
@@ -589,7 +588,7 @@ export function mineSheet() {
       mine().then((r) => {
         body.innerHTML = '';
         if (!r.ok) { body.appendChild(el('p', 'sheet-note', esc(r.message))); return; }
-        if (!r.posts.length) { body.appendChild(el('p', 'sheet-note', 'Nothing yet. What you post on People, Vintage, Art and the Watchlist shows up here, and you can delete it any time.')); return; }
+        if (!r.posts.length) { body.appendChild(el('p', 'sheet-note', 'Nothing yet.')); return; }
         r.posts.forEach((p) => {
           const left = leftLabel(p.expires_at ? Date.parse(p.expires_at) : null, Date.now());
           const bits = [BOARD_LABELS[p.board] || p.board, p.ended ? 'Ended' : (STATUS_WORDS[p.status] || p.status)];
@@ -616,15 +615,15 @@ app.registerAccount((host, repaint) => {
   const who = el('div', 'sheet-row', '<div class="t">Signed in<div class="d">One moment…</div></div>');
   who.appendChild(button('Sign out', 'ghost sm', () => { app.signOut(); repaint(); app.toast('Signed out'); }));
   host.appendChild(who);
-  if (app.demo) host.appendChild(el('p', 'sheet-note', 'Demo account. Nothing you post here is saved or sent anywhere.'));
+  if (app.demo) host.appendChild(el('p', 'sheet-note', 'Demo account. Nothing is saved.'));
   profile().then((p) => {
     const d = who.querySelector('.d');
     if (!p.ok) { d.textContent = p.error === 'off' ? 'Posting is coming soon.' : p.message; return; }
     d.textContent = p.profile ? 'as ' + p.profile.display_name : 'Add your first name before you post';
   });
-  const prof = el('div', 'sheet-row', '<div class="t">Your profile<div class="d">First name, neighborhood, who you are here as, and what you’re into</div></div>');
+  const prof = el('div', 'sheet-row', '<div class="t">Your profile<div class="d">Name, neighborhood, tile, interests</div></div>');
   prof.appendChild(button('Edit', 'ghost sm', profileSheet));
-  const posts = el('div', 'sheet-row', '<div class="t">Your posts<div class="d">Everything you have posted, and where it stands</div></div>');
+  const posts = el('div', 'sheet-row', '<div class="t">Your posts</div>');
   posts.appendChild(button('Open', 'ghost sm', mineSheet));
   host.append(prof, posts);
   const del = el('div', 'linkrow');
