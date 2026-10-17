@@ -86,7 +86,8 @@ Env: SCRAPECREATORS_API_KEY (or SCRAPE_CREATORS_API_KEY), or
 Run: python3 scripts/build_instagram.py [--dry-run | --reserve | --execute]
                                         [--only h1,h2] [--no-carry] [--no-tagged]
                                         [--out PATH] [--ledger PATH]
-     With no step flag it reserves and fetches in one go (for a local run).
+     With no step flag it reserves and fetches in one go, and only for --only
+     (a small local test): otherwise main's ledger would never see the credits.
      --dry-run prints what this run would fetch and what that costs. It makes
      no request and needs no key.
 """
@@ -100,6 +101,7 @@ import math
 import os
 import pathlib
 import re
+import signal
 import sys
 import time
 import urllib.error
@@ -737,6 +739,16 @@ def main() -> int:
         print(f"total {spend} credits this run")
         return 0
 
+    if not (args.reserve or args.only):
+        # Reserving and spending in one go writes the credits only to THIS
+        # checkout's ledger; main's never hears of them and the workflow
+        # would spend the same allowance again. So the one-step mode is only
+        # for an --only test of a handful of accounts, whose credits are
+        # small and printed.
+        log("refusing: run --reserve then --execute (the workflow does), --dry-run to "
+            "see the plan, or --only h1,h2 for a small local test")
+        return 2
+
     if not picked and not want_tagged:
         if not ledger_ok:
             save_ledger(ledger_path, ledger)    # tomorrow starts from a known number
@@ -769,6 +781,8 @@ def main() -> int:
     log(f"ledger: {spend} reserved for this run, {ledger['spent']} of {budget} this month")
     if args.reserve:
         return 0
+    log(f"--only: these {spend} credits are on this checkout's ledger only; "
+        f"commit it to main or they go uncounted")
     return fetch_and_build(args, picked, want_tagged, accounts, now)
 
 
@@ -801,11 +815,25 @@ def execute(args, ledger: dict, ledger_path: pathlib.Path, accounts: list[dict],
         + " as reserved")
     if not picked and not want_tagged:
         return 0
-    return fetch_and_build(args, picked, want_tagged, accounts, now)
+
+    def give_back(unattempted: list[str]) -> None:
+        """Cut off partway (a crash, the step's timeout): the accounts never
+        asked for get their rotation places back. Their credits stay
+        counted; the run may have reached the API for the one in flight."""
+        for h in unattempted:
+            if pend["prev"].get(h):
+                ledger["last"][h] = pend["prev"][h]
+            else:
+                ledger["last"].pop(h, None)
+        save_ledger(ledger_path, ledger)
+        log(f"--execute: stopped with {len(unattempted)} account(s) not asked for; "
+            f"their rotation places restored")
+
+    return fetch_and_build(args, picked, want_tagged, accounts, now, on_stop=give_back)
 
 
 def fetch_and_build(args, picked: list[dict], want_tagged: bool,
-                    accounts: list[dict], now: float) -> int:
+                    accounts: list[dict], now: float, on_stop=None) -> int:
     """Fetch `picked` (and the tagged shelf), carry forward what is still
     good, and write the payload. The credits are already on the ledger."""
     out_path = args.out or OUT
@@ -831,26 +859,43 @@ def fetch_and_build(args, picked: list[dict], want_tagged: bool,
                 f"building from this run alone")
 
     fresh, failed, answered = [], [], set()
-    for a in picked:
-        h = a["h"]
-        try:
-            items = fetch_handle(h, key)
-        except Exception as e:
-            failed.append(f"{h}: {str(e)[:50]}")
-            continue
-        # It answered. Even an empty list is an answer — the account posted
-        # nothing recent — so its stale posts are now genuinely stale.
-        answered.add(h)
-        kept = 0
-        for it in items:
-            if kept >= POSTS_PER_HANDLE:
-                break
-            rec = post_record(h, it, cutoff, now)
-            if not rec:
+    # A step timeout sends SIGTERM; make it an exception so on_stop runs.
+    def _term(signum, frame):
+        raise SystemExit(143)
+    old_term = None
+    try:
+        old_term = signal.signal(signal.SIGTERM, _term)
+    except ValueError:
+        pass                    # not the main thread (a test harness)
+    i = 0
+    try:
+        for i, a in enumerate(picked):
+            h = a["h"]
+            try:
+                items = fetch_handle(h, key)
+            except Exception as e:
+                failed.append(f"{h}: {str(e)[:50]}")
                 continue
-            fresh.append(rec)
-            kept += 1
-        time.sleep(0.4)
+            # It answered. Even an empty list is an answer — the account posted
+            # nothing recent — so its stale posts are now genuinely stale.
+            answered.add(h)
+            kept = 0
+            for it in items:
+                if kept >= POSTS_PER_HANDLE:
+                    break
+                rec = post_record(h, it, cutoff, now)
+                if not rec:
+                    continue
+                fresh.append(rec)
+                kept += 1
+            time.sleep(0.4)
+    except BaseException:
+        if on_stop:
+            on_stop([a["h"] for a in picked[i + 1:]])
+        raise
+    finally:
+        if old_term is not None:
+            signal.signal(signal.SIGTERM, old_term)
 
     # The tagged shelf: anyone's posts, so it is judged by its own window
     # and blocklist, and carried on its own — a rostered account that

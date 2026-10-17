@@ -323,15 +323,15 @@ class Build(unittest.TestCase):
         doc = answer()
         now = doc["fetched_at"]
         month = bi.month_key(bi.local_day(now))
+        roster = [{"h": "foambrewers", "tier": 1, "category": "venue", "food": True},
+                  {"h": "eatvermont", "tier": 1, "category": "food", "s": "see"},
+                  {"h": "broken", "tier": 1, "category": "pets"}]
+        fetch = lambda h, k: doc["items"] if h == "foambrewers" else ([] if h == "eatvermont" else 1 / 0)
         with tempfile.TemporaryDirectory() as tmp:
-            code, got, led = self.run_main(
-                tmp,
-                [{"h": "foambrewers", "tier": 1, "category": "venue", "food": True},
-                 {"h": "eatvermont", "tier": 1, "category": "food", "s": "see"},
-                 {"h": "broken", "tier": 1, "category": "pets"}],
-                ["--no-tagged", "--no-carry"],
-                lambda h, k: doc["items"] if h == "foambrewers" else ([] if h == "eatvermont" else 1 / 0),
-                now, {"month": month, "spent": 10, "last": {}})
+            code, got, led = self.run_main(tmp, roster, ["--reserve", "--no-tagged"], fetch, now,
+                                           {"month": month, "spent": 10, "last": {}})
+            self.assertEqual((code, got), (0, None))
+            code, got, led = self.run_main(tmp, roster, ["--execute", "--no-carry"], fetch, now + 60, led)
         self.assertEqual(code, 0)
         self.assertEqual(got["videos"], 1)
         self.assertEqual(got["food"], 3)
@@ -343,11 +343,22 @@ class Build(unittest.TestCase):
         self.assertEqual(set(led["last"]), {"foambrewers", "eatvermont", "broken"})
         self.assertEqual(led["runs"][-1]["credits"], 3)
 
+    def test_a_plain_run_refuses(self):
+        """Reserve-and-spend in one go would count the credits only in this
+        checkout, so it is not allowed without --only."""
+        with tempfile.TemporaryDirectory() as tmp:
+            code, got, led = self.run_main(
+                tmp, [{"h": "a", "tier": 1, "category": "food"}], [],
+                lambda h, k: self.fail("fetched"), at(2026, 10, 17), {"month": "2026-10", "spent": 0, "last": {}})
+        self.assertEqual(code, 2)
+        self.assertEqual(led["spent"], 0)
+        self.assertEqual(self.tagged_calls, [])
+
     def test_an_exhausted_budget_makes_no_request(self):
         now = at(2026, 10, 17)
         with tempfile.TemporaryDirectory() as tmp:
             code, got, led = self.run_main(
-                tmp, [{"h": "a", "tier": 1, "category": "food"}], [],
+                tmp, [{"h": "a", "tier": 1, "category": "food"}], ["--reserve"],
                 lambda h, k: self.fail("fetched over budget"), now,
                 {"month": "2026-10", "spent": bi.share_through(bi.local_day(now), bi.MONTHLY_CREDIT_BUDGET)})
         self.assertEqual(code, 0)
@@ -368,24 +379,35 @@ class Build(unittest.TestCase):
             self.assertFalse((Path(tmp) / "l.json").exists())
             self.assertFalse((Path(tmp) / "o.json").exists())
 
-    def test_credits_are_on_the_ledger_before_the_first_request(self):
-        """A run killed mid-fetch has already counted the whole run."""
+    def test_a_run_cut_off_partway_keeps_its_credits_and_gives_back_the_rest(self):
+        """Killed on the second request: the whole run stays counted, the
+        reservation is gone (it can never be spent twice), and the accounts
+        never asked for get their rotation places back."""
         now = at(2026, 10, 17)
         seen = []
+        roster = [{"h": h, "tier": 1, "category": "food"} for h in "abc"]
         with tempfile.TemporaryDirectory() as tmp:
             led_path = Path(tmp) / "ledger.json"
 
             def fetch(h, k):
-                seen.append(json.loads(led_path.read_text())["spent"])
-                raise KeyboardInterrupt
+                seen.append((h, json.loads(led_path.read_text())["spent"]))
+                if len(seen) == 2:
+                    raise KeyboardInterrupt
+                return []
 
+            _, _, led = self.run_main(tmp, roster, ["--reserve"], fetch, now,
+                                      {"month": "2026-10", "spent": 100, "last": {"c": 5}})
+            order = led["pending"]["handles"]
             with self.assertRaises(KeyboardInterrupt):
-                self.run_main(tmp, [{"h": h, "tier": 1, "category": "food"} for h in "abc"], [],
-                              fetch, now, {"month": "2026-10", "spent": 100, "last": {}})
+                self.run_main(tmp, roster, ["--execute"], fetch, now + 60, led)
             led = json.loads(led_path.read_text())
-        self.assertEqual(seen, [104])               # three accounts + the tagged shelf
+        self.assertEqual([x[1] for x in seen], [104, 104])   # three accounts + the tagged shelf
         self.assertEqual(led["spent"], 104)
-        self.assertEqual(set(led["last"]), {"a", "b", "c"})
+        self.assertNotIn("pending", led)
+        self.assertEqual(led["last"].get(order[0]), int(now))  # answered
+        self.assertEqual(led["last"].get(order[1]), int(now))  # in flight when it stopped
+        restored = order[2]
+        self.assertEqual(led["last"].get(restored), 5 if restored == "c" else None)
 
     def test_reserve_counts_and_names_the_run_without_a_request(self):
         now = at(2026, 10, 17)
@@ -476,7 +498,7 @@ class Build(unittest.TestCase):
         now = at(2026, 10, 17)
         with tempfile.TemporaryDirectory() as tmp:
             code, got, led = self.run_main(
-                tmp, [{"h": "a", "tier": 1, "category": "food"}], [],
+                tmp, [{"h": "a", "tier": 1, "category": "food"}], ["--reserve"],
                 lambda h, k: self.fail("fetched without a ledger"), now)
         self.assertEqual(code, 0)
         self.assertIsNone(got)
