@@ -99,7 +99,7 @@ async function staticChecks() {
     const js = [];
     const walk = async (dir) => { for (const f of await readdir(dir, { withFileTypes: true })) { const p = path.join(dir, f.name); if (f.isDirectory()) await walk(p); else if (/\.(js|css|html)$/.test(f.name)) js.push(p); } };
     await walk(path.join(APP, 'js')); await walk(path.join(APP, 'css'));
-    const NEW = ['app.js', 'ui.js', 'store.js', 'auth.js', 'liquid.js', 'main.js', 'wire.js', 'wire-demo.js', 'wire-photos.js', 'watch.js', 'food.js', 'people.js', 'whatnow.js', 'vintage.js', 'habits.js', 'habits-core.js', 'habits-fake.js', 'photo-wall.js', 'onair.js', 'games.js', 'clubs-week.js', 'tokens.css', 'app.css'];
+    const NEW = ['app.js', 'ui.js', 'store.js', 'auth.js', 'liquid.js', 'main.js', 'wire.js', 'wire-demo.js', 'wire-photos.js', 'wire-square.js', 'watch.js', 'food.js', 'people.js', 'whatnow.js', 'vintage.js', 'habits.js', 'habits-core.js', 'habits-fake.js', 'photo-wall.js', 'onair.js', 'games.js', 'clubs-week.js', 'tokens.css', 'app.css'];
     const OLD = new Set(['sun.js', 'whatnow-engine.js', 'whatnow-data.js']);
     for (const f of js) {
       const name = path.basename(f);
@@ -394,7 +394,11 @@ async function pageRules(page, tab, width) {
   check(!r.bad.mono.length, tab + ': no monospace', r.bad.mono.slice(0, 3).join(', '));
   check(!r.bad.esc.length, tab + ': no escaped markup, undefined or NaN on the page', r.bad.esc.join(''));
   check(r.docW <= width && r.panelOver <= 1, tab + ': no sideways scroll at ' + width, 'doc ' + r.docW + ', panel over by ' + r.panelOver);
-  check(r.subRows <= 2, tab + ': at most two subnav rows', r.subRows);
+  /* the Wire keeps the dateline, the Local switch and its chips on rows of
+     their own under the News · Photos · Square switch (Stephen, 2026-10-17:
+     the chips "underneath the local and everything") */
+  const rows = /^wire/.test(tab) ? 3 : 2;
+  check(r.subRows <= rows, tab + ': at most ' + rows + ' subnav rows', r.subRows);
 }
 
 /* --------------------------------------------------------------- the matrix */
@@ -631,10 +635,19 @@ async function theWire(browser, base) {
     check(sub.startsWith(today.counts.local.all + ' stories so far · updated '), 'the dateline counts today’s local stories and says when it updated', sub);
     await page.screenshot({ path: path.join(SHOTS, 'live-wire-today.png') });
 
-    /* the chips: kinds only, X and Facebook hidden while paused, Unfiltered last */
+    /* the chips: kinds only, X and Facebook hidden while paused, no Video,
+       Instagram before Newsletters; Unfiltered is a button beside the switch */
     const chipsNow = await page.$$eval('#subnav .chip', (cs) => cs.map((c) => [c.dataset.chip, (c.querySelector('.n') || {}).textContent || '']));
-    check(JSON.stringify(chipsNow.map((c) => c[0])) === JSON.stringify(['all', 'reddit', 'newsletters', 'video', '__raw']), 'X and Facebook chips are hidden while paused; Unfiltered is last', JSON.stringify(chipsNow));
-    check(chipsNow.filter((c) => !['all', '__raw'].includes(c[0])).every((c) => Number(c[1]) === today.counts.local[c[0]]), 'chip counts are counts.local', JSON.stringify(chipsNow));
+    check(JSON.stringify(chipsNow.map((c) => c[0])) === JSON.stringify(['all', 'reddit', 'instagram', 'newsletters']), 'X and Facebook chips are hidden while paused; no Video chip', JSON.stringify(chipsNow));
+    check(chipsNow.filter((c) => !['all', 'instagram'].includes(c[0])).every((c) => Number(c[1]) === today.counts.local[c[0]]), 'chip counts are counts.local', JSON.stringify(chipsNow));
+    const layout = await page.evaluate(() => {
+      const sub = document.querySelector('#subnav');
+      const kids = [...sub.children].map((n) => n.className.split(' ')[0] + (n.classList.contains('w-chips') ? '.w-chips' : ''));
+      const sw = sub.querySelector('.localsw').getBoundingClientRect(), ch = sub.querySelector('.chips').getBoundingClientRect();
+      return { kids, below: ch.top >= sw.bottom - 1, raw: !!sub.querySelector('.toolband:not(.w-chips) .w-raw') };
+    });
+    check(JSON.stringify(layout.kids) === JSON.stringify(['wmodes', 'dateline', 'toolband', 'toolband.w-chips']) && layout.below && layout.raw,
+      'under the mast: News · Photos · Square, the dateline, the Local switch with Unfiltered, then the chips on their own row', JSON.stringify(layout));
 
     /* the Brief, pinned above What matters today, and nowhere else today */
     const brief = await page.evaluate(() => {
@@ -671,7 +684,7 @@ async function theWire(browser, base) {
     const keys = await todayKeys(page);
     check(new Set(keys).size === keys.length, 'nothing shows twice on today’s page', keys.length);
     check(keys.length === today.counts.local.all, 'today’s page draws every local story once: Brief + picks + river = the count', keys.length + ' vs ' + today.counts.local.all);
-    for (const [k, n] of chipsNow.filter((c) => !['all', '__raw'].includes(c[0]))) {
+    for (const [k, n] of chipsNow.filter((c) => !['all', 'instagram'].includes(c[0]))) {
       await chipTo(page, k);
       await drawToday(page);
       const got = (await todayKeys(page)).length;
@@ -681,7 +694,7 @@ async function theWire(browser, base) {
     await page.click('#subnav .localsw-half:not(.on)');
     await page.waitForTimeout(150);
     const every = await page.$$eval('#subnav .chip', (cs) => cs.map((c) => [c.dataset.chip, (c.querySelector('.n') || {}).textContent || '']));
-    check(every.filter((c) => !['all', '__raw'].includes(c[0])).every((c) => Number(c[1]) === today.counts.everything[c[0]]), 'on Everything the chips are counts.everything', JSON.stringify(every));
+    check(every.filter((c) => !['all', 'instagram'].includes(c[0])).every((c) => Number(c[1]) === today.counts.everything[c[0]]), 'on Everything the chips are counts.everything', JSON.stringify(every));
     check((await page.$eval('#subnav .dl .s', (b) => b.textContent)).startsWith(today.counts.everything.all + ' stories'), 'and the dateline counts everything', '');
     check(await page.$$eval('.wm .card', (c) => c.length) >= 5 && /What matters today/.test(await panelText(page)), 'Everything keeps the picks', '');
 
@@ -750,8 +763,8 @@ async function theWire(browser, base) {
     await page.waitForTimeout(200);
     check(!(await page.$('.panel:not([hidden]) [data-src="' + victim + '"]')), 'a muted source leaves the river (' + victim + ')', '');
     const after = await page.$$eval('#subnav .chip', (cs) => cs.map((c) => [c.dataset.chip, Number((c.querySelector('.n') || {}).textContent || 0)]));
-    const sumAfter = after.filter((c) => !['all', '__raw'].includes(c[0])).reduce((a, c) => a + c[1], 0);
-    const sumBefore = every.filter((c) => !['all', '__raw'].includes(c[0])).reduce((a, c) => a + Number(c[1]), 0);
+    const sumAfter = after.filter((c) => !['all', 'instagram'].includes(c[0])).reduce((a, c) => a + c[1], 0);
+    const sumBefore = every.filter((c) => !['all', 'instagram'].includes(c[0])).reduce((a, c) => a + Number(c[1]), 0);
     check(sumAfter <= sumBefore, 'the chip counts are recounted without the muted source', sumBefore + ' -> ' + sumAfter);
     await toTop(page);
     await page.click('#settings-btn');
@@ -940,7 +953,7 @@ async function theWire(browser, base) {
     const { ctx, page, errors } = await newPage(browser, base);
     await page.goto(base + '/all-day/');
     await page.waitForSelector('.panel:not([hidden]) .wm', { timeout: 15000 });
-    await page.click('#subnav .chip[data-chip="__raw"]');
+    await page.click('#subnav .w-raw');
     await page.waitForSelector('#subnav .chips.outlets', { timeout: 8000 });
     check(/Unfiltered/.test(await page.$eval('#subnav .dl', (d) => d.innerText)) && await page.evaluate(() => location.hash) === '#wire/unfiltered', 'Unfiltered opens inside the tab', '');
     const rows = await page.$$eval('.panel:not([hidden]) .card.row', (r) => r.length);
@@ -975,6 +988,256 @@ async function theWire(browser, base) {
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
   });
+
+  /* Stephen, 2026-10-17: each source its own colour, local green again, a
+     faint tint on every other row, bigger thumbnails (on the right, the
+     better read on the real paper) */
+  await group('the Wire, source colours, the local tint, alternate rows and thumbnails (live)', async () => {
+    const { ctx, page, errors } = await newPage(browser, base, { wire: { inbox: true, brief: false } });
+    await page.goto(base + '/all-day/');
+    await page.waitForSelector('.panel:not([hidden]) .wm', { timeout: 15000 });
+    const dots = await page.$$eval('#subnav .chip', (cs) => cs.map((c) => [c.dataset.chip, c.querySelector('.sdot') ? getComputedStyle(c.querySelector('.sdot')).backgroundColor : '']));
+    const by = Object.fromEntries(dots);
+    check(['x', 'facebook', 'reddit', 'instagram', 'newsletters'].every((k) => by[k]) && !by.all, 'every source chip carries a coloured dot; All does not', JSON.stringify(dots));
+    check(new Set(['x', 'facebook', 'reddit', 'instagram', 'newsletters'].map((k) => by[k])).size === 5, 'and the five colours differ', JSON.stringify(by));
+    await drawToday(page);
+    const look = await page.evaluate(() => {
+      const feed = document.querySelector('#panel-wire .feed.wire');
+      const accent = (sel) => { const n = feed.querySelector(sel); return n ? getComputedStyle(n).boxShadow : ''; };
+      const dot = (k) => getComputedStyle(document.querySelector('#subnav .chip[data-chip="' + k + '"] .sdot')).backgroundColor;
+      const rows = [...feed.querySelectorAll(':scope > .card.row')];
+      /* consecutive plain rows inside one update alternate */
+      let alt = true, pairs = 0;
+      for (let i = 1; i < rows.length; i++) {
+        if (rows[i].previousElementSibling !== rows[i - 1]) continue;
+        pairs++;
+        if (rows[i].classList.contains('w-alt') === rows[i - 1].classList.contains('w-alt')) alt = false;
+      }
+      const thumb = feed.querySelector('.card.row.has-thumb');
+      const t = thumb.querySelector('.c-thumb').getBoundingClientRect(), ti = thumb.querySelector('.c-title').getBoundingClientRect();
+      return { x: accent('.card.w-src-x'), xDot: dot('x'), fb: accent('.card.w-src-facebook'), fbDot: dot('facebook'), reddit: accent('.card.w-src-reddit'), plain: accent('.card.row:not([class*="w-src-"])'),
+        alt, pairs, altBg: rows.find((r) => r.classList.contains('w-alt') && !r.classList.contains('w-local')) ? getComputedStyle(rows.find((r) => r.classList.contains('w-alt') && !r.classList.contains('w-local'))).backgroundColor : '',
+        thumb: { w: Math.round(t.width), h: Math.round(t.height), right: t.left > ti.left }, localName: getComputedStyle(feed.querySelector('.card.row .c-src.is-local')).color,
+        anyTint: !!feed.querySelector('.card.w-local') };
+    });
+    check(look.x.includes('inset') && look.x.includes(look.xDot) && look.fb.includes(look.fbDot) && look.reddit.includes('inset') && look.plain === 'none',
+      'a card from X, Facebook or Reddit carries its chip’s colour as a left accent; a plain headline does not', JSON.stringify(look));
+    check(look.alt && look.pairs > 10 && look.altBg && look.altBg !== 'rgba(0, 0, 0, 0)', 'every other row has a faint tint (' + look.pairs + ' pairs)', JSON.stringify([look.alt, look.pairs, look.altBg]));
+    check(look.thumb.w === 72 && look.thumb.h === 72 && look.thumb.right, 'thumbnails are 72px, on the right of the title', JSON.stringify(look.thumb));
+    check(look.localName === 'rgb(22, 112, 78)' && !look.anyTint, 'on Local a local source is green, and no row is tinted green', JSON.stringify(look));
+    await toTop(page);
+    await page.click('#subnav .localsw-half:not(.on)');
+    await page.waitForTimeout(200);
+    await drawToday(page);
+    const ev = await page.evaluate(() => {
+      const feed = document.querySelector('#panel-wire .feed.wire');
+      const loc = feed.querySelector('.card.row.w-local:not(.w-alt)'), nat = [...feed.querySelectorAll('.card.row:not(.w-local):not(.w-alt)')].find((r) => !r.querySelector('.c-src.is-local'));
+      return { loc: loc && getComputedStyle(loc).backgroundColor, nat: nat && getComputedStyle(nat).backgroundColor, natGreen: !!(nat && nat.querySelector('.is-local')) };
+    });
+    check(ev.loc && ev.nat && ev.loc !== ev.nat && /rgba\(22, 112, 78|srgb 0\.086\d* 0\.439\d* 0\.305\d*/.test(ev.loc), 'on Everything a local story is tinted green, a national one is not', JSON.stringify(ev));
+    await page.screenshot({ path: path.join(SHOTS, 'live-wire-colours.png') });
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('the Wire, a headline is read when it is opened, never when it is scrolled past (demo)', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/all-day/?demo=1#wire');
+    await page.waitForSelector('#panel-wire .card.row', { timeout: 15000 });
+    for (let i = 0; i < 12; i++) { await page.evaluate(() => { const p = document.querySelector('#panel-wire'); p.scrollTop += 700; }); await page.waitForTimeout(80); }
+    await page.evaluate(() => { document.querySelector('#panel-wire').scrollTop = 0; });
+    await page.waitForTimeout(200);
+    check(!(await page.$('#panel-wire .is-read')), 'scrolling the whole paper marks nothing read', await page.$$eval('#panel-wire .is-read', (n) => n.map((x) => x.dataset.k).join(',')));
+    const k = await page.$eval('#panel-wire .feed.wire > .card.row', (c) => c.dataset.k);
+    const w0 = await page.$eval('#panel-wire .feed.wire > .card.row .c-title', (t) => getComputedStyle(t).fontWeight);
+    await page.click('#panel-wire .feed.wire > .card.row .c-title');
+    await page.waitForTimeout(150);
+    const after = await page.evaluate((key) => ({ read: [...document.querySelectorAll('#panel-wire .is-read')].map((n) => n.dataset.k),
+      w: getComputedStyle(document.querySelector('#panel-wire [data-k="' + key + '"] .c-title')).fontWeight }), k);
+    check(after.read.length >= 1 && after.read.every((x) => x === k) && after.w !== w0, 'opening it greys that headline, and only it', JSON.stringify([after, w0]));
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('the Wire, You left off here (live)', async () => {
+    const files = wireFiles();
+    const today = files['wire-today.json'];
+    const order = today.updates.flatMap((u) => u.items).map((it) => it.id);
+    const at = Math.floor(Date.now() / 1000) - 3600;
+    /* the bookmark: the story at the top when the reader last left */
+    const mark = order[30];
+    const v = await newPage(browser, base);
+    await v.page.addInitScript(([m, d, a]) => {
+      try { if (!sessionStorage.getItem('seeded')) { localStorage.setItem('allday-wire-left', JSON.stringify({ date: d, k: m, at: a })); sessionStorage.setItem('seeded', '1'); } } catch (e) { /* about:blank */ }
+    }, [mark, today.date, at]);
+    await v.page.goto(base + '/all-day/');
+    await v.page.waitForSelector('.panel:not([hidden]) .wm', { timeout: 15000 });
+    await drawToday(v.page);
+    const m = await v.page.evaluate(() => {
+      const n = document.querySelector('#panel-wire .newline.w-left');
+      if (!n) return null;
+      let c = n.nextElementSibling;
+      while (c && !c.dataset.k) c = c.nextElementSibling;
+      return { text: n.textContent, next: c && c.dataset.k, n: document.querySelectorAll('#panel-wire .newline.w-left').length, since: [...document.querySelectorAll('#panel-wire .newline')].filter((x) => /new since/.test(x.textContent)).length };
+    });
+    const drawnRiver = await v.page.evaluate(() => [...document.querySelectorAll('#panel-wire .feed.wire > [data-k]')].map((n) => n.dataset.k));
+    const firstAtOrBelow = drawnRiver.find((k) => order.indexOf(k) >= order.indexOf(mark));
+    check(m && m.n === 1 && /^You left off here · \d{1,2}:\d{2} [ap]m$/.test(m.text), 'one “You left off here” bookmark, with the time the reader left', JSON.stringify(m));
+    check(m && m.next === firstAtOrBelow && order.indexOf(m.next) >= order.indexOf(mark), 'it sits above the story that was on top then: everything above it came in since', JSON.stringify([m && m.next, firstAtOrBelow, mark]));
+    check(m && !m.since, 'and the older “new since you were here” line gives way to it', '');
+    await toTop(v.page);
+    await v.page.click('#tab-watch');
+    await v.page.waitForTimeout(200);
+    const saved = await v.page.evaluate(() => JSON.parse(localStorage.getItem('allday-wire-left') || 'null'));
+    check(saved && saved.k === order[0] && saved.date === today.date && Math.abs(saved.at - Date.now() / 1000) < 60, 'leaving the Wire moves the bookmark to the top story now', JSON.stringify(saved));
+    await v.page.goto('about:blank');
+    await v.page.goto(base + '/all-day/#wire');
+    await v.page.waitForSelector('.panel:not([hidden]) .wm', { timeout: 15000 });
+    await drawToday(v.page);
+    check(!(await v.page.$('#panel-wire .newline.w-left')), 'nothing new since: no bookmark', '');
+    check(!v.errors.length, 'no console errors', v.errors.join(' | '));
+    await v.ctx.close();
+  });
+
+  await group('the Wire, What matters: Morning · Midday · Evening (live)', async () => {
+    const files = wireFiles();
+    const base0 = files['wire-today.json'];
+    const iso = (h, m) => new Date(etAt(h) + (m || 0) * 60000).toISOString();
+    const T = { morning: iso(6, 5), midday: iso(12, 5), evening: iso(18, 5) };
+    const t6 = Date.parse(T.morning) / 1000;
+    const today = JSON.parse(JSON.stringify(base0));
+    today.picks.forEach((p) => { p.ranked_at = T.evening; });
+    today.picks_earlier.forEach((p, i) => { p.ranked_at = i % 2 ? T.morning : T.midday; });
+    const v = await newPage(browser, base);
+    await v.page.route(/wire-data\/data\/wire-today\.json$/, (r) => r.fulfill({ status: 200, body: JSON.stringify(today), contentType: 'application/json' }));
+    await v.page.goto(base + '/all-day/');
+    await v.page.waitForSelector('.panel:not([hidden]) .wm-top .wm-slots', { timeout: 15000 });
+    await v.page.click('#subnav .localsw-half:not(.on)');
+    await v.page.waitForTimeout(150);
+    const slots = () => v.page.$$eval('.panel:not([hidden]) .wm-top .wm-slot', (bs) => bs.map((b) => ({ k: b.dataset.slot, on: b.getAttribute('aria-pressed'), dis: b.disabled, t: b.innerText.replace(/\s+/g, ' ').trim() })));
+    const s0 = await slots();
+    check(JSON.stringify(s0.map((b) => b.k)) === '["morning","midday","evening"]' && s0[2].on === 'true' && s0.every((b) => !b.dis), 'three rankings, Morning · Midday · Evening, the current one chosen', JSON.stringify(s0));
+    check(/^Morning 6:05 am$/.test(s0[0].t) && /^Midday 12:05 pm$/.test(s0[1].t) && /^Evening 6:05 pm$/.test(s0[2].t), 'each with the time it was ranked', JSON.stringify(s0.map((b) => b.t)));
+    const cur = await v.page.$$eval('.panel:not([hidden]) .wm-top [data-k]', (n) => n.map((x) => x.dataset.k));
+    check(JSON.stringify(cur.slice(0, 5)) === JSON.stringify(today.picks.slice(0, 5).map((x) => x.id)), 'the current ranking shows as before', '');
+    await v.page.click('.panel:not([hidden]) .wm-top .wm-slot[data-slot="morning"]');
+    await v.page.waitForTimeout(150);
+    const mo = await v.page.$eval('.panel:not([hidden]) .wm-top', (w) => {
+      const more = w.querySelector('.btn.more');
+      if (more) more.click();
+      return { stood: (w.querySelector('.wm-stood') || {}).textContent || '', pick: !!w.querySelector('.card.pick'),
+        rows: [...w.querySelectorAll('.wm-row')].map((r) => [r.dataset.k, r.querySelector('.num').textContent]) };
+    });
+    const rows = await v.page.$$eval('.panel:not([hidden]) .wm-top .wm-row', (rs) => rs.map((r) => [r.dataset.k, r.querySelector('.num').textContent]));
+    const dropped = today.picks_earlier.filter((p) => p.ranked_at === T.morning);
+    const byId = Object.fromEntries(today.picks.map((p) => [p.id, p]));
+    check(mo.stood === 'As it stood at 6:05 am' && !mo.pick, 'Morning: the list as it stood at 6:05 am', JSON.stringify(mo).slice(0, 200));
+    check(dropped.every((p) => rows.some(([k, n]) => k === p.id && n === String(p.rank))), 'the stories that ranking held and later dropped, each at its rank then', JSON.stringify(rows.slice(0, 12)));
+    check(rows.every(([k]) => dropped.some((p) => p.id === k) || (byId[k] && Date.parse(byId[k].posted_at) / 1000 <= t6)), 'and the rest are today’s picks that were already posted by then', JSON.stringify(rows.filter(([k]) => !dropped.some((p) => p.id === k)).slice(0, 5)));
+    check((await slots())[0].on === 'true', 'Morning is chosen', '');
+    await v.page.click('.panel:not([hidden]) .wm-top .wm-slot[data-slot="evening"]');
+    await v.page.waitForTimeout(150);
+    check(!!(await v.page.$('.panel:not([hidden]) .wm-top .card.pick')) && !(await v.page.$('.panel:not([hidden]) .wm-top .wm-stood')), 'Evening brings the current ranking back', '');
+    /* flipping to another day starts on its current ranking */
+    await v.page.click('.panel:not([hidden]) .wm-top .wm-slot[data-slot="midday"]');
+    await v.page.click('.panel:not([hidden]) .wm-top [aria-label="Earlier day\'s picks"]');
+    await v.page.waitForFunction(() => !!document.querySelector('.panel:not([hidden]) .wm-top .wm-today'), null, { timeout: 6000 }).catch(() => {});
+    check(!(await v.page.$('.panel:not([hidden]) .wm-top .wm-stood')), 'an earlier day opens on its own last ranking', '');
+    await v.page.screenshot({ path: path.join(SHOTS, 'live-wire-slots.png') });
+    check(!v.errors.length, 'no console errors', v.errors.join(' | '));
+    await v.ctx.close();
+  });
+
+  await group('the Wire, the Instagram chip reads the local accounts as a list (live)', async () => {
+    const now = Date.now();
+    const hex = (sec) => Math.floor(sec).toString(16);
+    const ok = '&oe=' + hex(now / 1000 + 3 * 86400);
+    const ig = { generated: new Date(now).toISOString(), posts: [
+      { h: 'lakelight', ts: Math.round(now / 1000) - 1800, i: 'https://scontent.example.com/a.jpg?x=1' + ok, u: 'https://www.instagram.com/p/ListOne/', c: 'Fog on the lake <b>at dawn</b>\nsecond line', s: 'see' },
+      { h: 'wakingwindows', ts: Math.round(now / 1000) - 900, i: 'https://scontent.example.com/b.jpg?x=1' + ok, u: 'https://www.instagram.com/p/ListTwo/', c: 'Friday: three bands', s: 'do' },
+      { h: 'lakelight', ts: Math.round(now / 1000) - 3600, i: 'https://scontent.example.com/c.jpg?oe=' + hex(now / 1000 - 3600), u: 'https://www.instagram.com/p/ListLapsed/', c: 'Lapsed', s: 'see' },
+    ] };
+    const v = await newPage(browser, base);
+    await v.page.route(/\/all-day\/data\/instagram\.json$/, (r) => r.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(ig) }));
+    await v.page.goto(base + '/all-day/');
+    await v.page.waitForSelector('.panel:not([hidden]) .wm', { timeout: 15000 });
+    await v.page.waitForFunction(() => (document.querySelector('#subnav .chip[data-chip="instagram"] .n') || {}).textContent === '2', null, { timeout: 6000 }).catch(() => {});
+    check(await v.page.$eval('#subnav .chip[data-chip="instagram"] .n', (n) => n.textContent) === '2', 'the Instagram chip counts the posts whose picture still works (2)', '');
+    await v.page.click('#subnav .chip[data-chip="instagram"]');
+    await v.page.waitForSelector('#panel-wire .card.row.w-src-instagram', { timeout: 6000 }).catch(() => {});
+    const list = await v.page.$$eval('#panel-wire .card.row', (cs) => cs.map((c) => ({ k: c.dataset.k, t: c.querySelector('.c-title').textContent, src: c.querySelector('.c-src').textContent, ig: c.classList.contains('w-src-instagram'), thumb: !!c.querySelector('.c-thumb') })));
+    check(JSON.stringify(list.map((x) => x.k)) === '["ig:ListTwo","ig:ListOne"]' && list.every((x) => x.ig && x.thumb), 'newest first, each with its picture and the Instagram colour', JSON.stringify(list));
+    check(list[1].t === 'Fog on the lake <b>at dawn</b>' && list[1].src === '@lakelight', 'the title is the caption’s first line, as text; the source is the account', JSON.stringify(list[1]));
+    check(!/<b>at dawn/.test(await v.page.$eval('#panel-wire .feed', (f) => f.innerHTML)), 'captions are escaped', '');
+    check(!(await v.page.$('#panel-wire .wm')) && v.page.url().endsWith('#wire/instagram'), 'no What matters here, and the address says #wire/instagram', v.page.url());
+    await v.page.click('#panel-wire .caught .btn');
+    check(await pmOn(v.page) && (await pmState(v.page)).cat === 'instagram', 'its end opens the same posts as photos', '');
+    check(!v.errors.length, 'no console errors', v.errors.join(' | '));
+    await v.ctx.close();
+  });
+
+  await group('the Wire, Square (demo)', async () => {
+    const sqState = (page) => page.evaluate(() => import('/all-day/js/modes/wire-square.js').then((m) => m._state()));
+    const { ctx, page, errors, supabase } = await newPage(browser, base, { motion: 'reduce' });
+    await page.goto(base + '/all-day/?demo=1#wire');
+    await settle(page);
+    await page.click('#subnav .wmode[data-view="square"]');
+    await page.waitForSelector('#panel-wire .sq-compose', { timeout: 8000 }).catch(() => {});
+    check(page.url().endsWith('#wire/square') && await page.evaluate(() => localStorage.getItem('allday-wire-view')) === 'square', 'Square opens in the tab, in the address, and is kept', page.url());
+    const head = await page.$eval('#panel-wire .sq-compose', (b) => ({ h2: b.querySelector('h2').textContent, kinds: [...b.querySelectorAll('[data-compose]')].map((x) => x.dataset.compose) }));
+    check(head.h2 === 'The Square' && JSON.stringify(head.kinds) === '["post","show","ask","free","pets"]', 'it opens with the five ways to post', JSON.stringify(head));
+    const st = await sqState(page);
+    const cards = await page.$$eval('#panel-wire .sq-feed > .card', (cs) => cs.map((c) => ({ k: c.dataset.k, board: c.classList.contains('board'), out: c.classList.contains('sq-out'),
+      chip: (c.querySelector('.sq-chip') || {}).textContent || '', img: !!c.querySelector('img, .ph'), link: (c.querySelector('a[data-open]') || {}).href || '', src: [...c.classList].find((x) => /^w-src-/.test(x)) || '' })));
+    check(cards.filter((c) => c.board).length === 5 && cards.filter((c) => c.out).length >= 4, 'neighbors’ posts as full cards, Facebook and Reddit as compact ones', JSON.stringify(cards.map((c) => c.k)));
+    check(cards.filter((c) => c.out).every((c) => c.chip && !c.img && /^https?:/.test(c.link) && /w-src-(facebook|reddit)/.test(c.src)), 'a compact card: its source chip in its colour, the link out, never a copied picture', JSON.stringify(cards.filter((c) => c.out).slice(0, 3)));
+    check(cards[0].board, 'a neighbor’s post sorts ahead of outside talk of the same age', JSON.stringify(cards.slice(0, 3)));
+    const chipKeys = await page.$$eval('#subnav .chip', (cs) => cs.map((c) => c.dataset.chip));
+    check(JSON.stringify(chipKeys) === '["all","post","show","ask","free","pets","facebook","reddit"]', 'the kinds of post as chips', JSON.stringify(chipKeys));
+    await page.click('#subnav .chip[data-chip="pets"]');
+    await page.waitForTimeout(150);
+    check(JSON.stringify((await sqState(page)).list.map((x) => x.type)) === '["pets"]', 'Pets narrows it to the pets', '');
+    await page.click('#subnav .chip[data-chip="all"]');
+    await page.click('#panel-wire [data-compose="ask"]');
+    await page.waitForSelector('.sheet-card[aria-label="Ask Burlington"]', { timeout: 4000 }).catch(() => {});
+    check(/Sign in to post\./.test(await page.$eval('.sheet-body', (b) => b.innerText)), 'signed out, posting asks for the sign-in', '');
+    await page.click('.sheet-head .iconbtn');
+    await page.evaluate(() => import('/all-day/js/auth.js').then((a) => a.demoSignIn()));
+    await page.click('#panel-wire [data-compose="ask"]');
+    await page.waitForSelector('.sheet-body form.bform', { timeout: 4000 }).catch(() => {});
+    await page.fill('input[name=title]', 'Who fixes old radios?');
+    const nameField = await page.$('input[name=display_name]');
+    if (nameField) await nameField.fill('Robin');
+    await page.click('.bform button[type=submit]');
+    await page.waitForSelector('#panel-wire .card.board:has-text("Who fixes old radios?")', { timeout: 4000 }).catch(() => {});
+    check(!!(await page.$('#panel-wire .card.board:has-text("Who fixes old radios?")')), 'an ask, posted, is in the Square', '');
+    check(st.list.length === cards.length, 'the state agrees with the page', st.list.length + ' vs ' + cards.length);
+    await page.reload();
+    await settle(page);
+    check(!!(await page.$('#panel-wire .sq-compose')), 'a reload opens on the Square again', '');
+    check(!supabase.length, 'demo mode never calls Supabase', supabase.join(', '));
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+
+    /* live, before nn-ROUND4.sql: no Square, and a kept Square opens on News */
+    const live = await newPage(browser, base);
+    await live.page.addInitScript(() => localStorage.setItem('allday-wire-view', 'square'));
+    await live.page.goto(base + '/all-day/');
+    await live.page.waitForSelector('.panel:not([hidden]) .wm', { timeout: 15000 });
+    await live.page.waitForTimeout(400);
+    check(JSON.stringify(await live.page.$$eval('#subnav .wmode', (bs) => bs.map((b) => b.dataset.view))) === '["news","photos"]', 'live before the Square’s SQL: the switch says News and Photos only', '');
+    check(!(await live.page.$('#panel-wire .sq-compose')), 'and a kept Square opens on News', '');
+    check(!live.errors.length, 'no console errors', live.errors.join(' | '));
+    await live.ctx.close();
+
+    /* live, once it is pasted (rules version 3): the Square is there */
+    const on = await newPage(browser, base, { rpc: (fn) => (fn === 'nn_rules' ? { version: 3 } : fn === 'nn_posts_list' ? [] : undefined) });
+    await on.page.goto(base + '/all-day/#wire/square');
+    await on.page.waitForSelector('#panel-wire .sq-compose', { timeout: 15000 }).catch(() => {});
+    check(!!(await on.page.$('#subnav .wmode[data-view="square"]')) && !!(await on.page.$('#panel-wire .sq-compose')), 'live with the Square’s SQL: #wire/square opens it', '');
+    check(!on.errors.length, 'no console errors', on.errors.join(' | '));
+    await on.ctx.close();
+  });
 }
 
 /* ------------------------------------------------------------ Photo mode */
@@ -986,7 +1249,7 @@ const pmState = (page) => page.evaluate(() => import('/all-day/js/modes/wire-pho
 const pmCards = (page) => page.$$eval(pmPanel + ' .card.pm', (cs) => cs.map((c) => ({ k: c.dataset.k, cap: c.querySelector('.pm-cap').textContent,
   pic: !!c.querySelector('.pm-pic img.pic, .pm-pic .ph'), eyebrow: (c.querySelector('.eyebrow') || {}).textContent || '' })));
 const pmOn = (page) => page.waitForSelector(pmPanel + ' .card.pm', { timeout: 15000 }).then(() => true, () => false);
-const viewPressed = (page) => page.$$eval('#subnav .viewsw-b', (bs) => bs.map((b) => b.dataset.view + ':' + b.getAttribute('aria-pressed')).join(' '));
+const viewPressed = (page) => page.$$eval('#subnav .wmode', (bs) => bs.map((b) => b.dataset.view + ':' + b.getAttribute('aria-pressed')).join(' '));
 /* draw the whole feed: scroll to the bottom until the end card is in */
 async function pmAll(page) {
   for (let i = 0; i < 60 && !(await page.$(pmPanel + ' .caught')); i++) {
@@ -999,35 +1262,36 @@ const PM_POST = (o) => ({ id: o.id, board: 'art', kind: o.kind || 'photo', title
   created_at: o.at, expires_at: null, votes: o.votes || 0, voted: false, mine: false });
 
 async function thePhotos(browser, base) {
-  await group('Photo mode: the switch, kept on the phone (demo)', async () => {
+  await group('Photo mode: the News · Photos · Square switch, in words, kept on the phone (demo)', async () => {
     const { ctx, page, errors } = await newPage(browser, base);
     await page.goto(base + '/all-day/?demo=1#wire');
     await settle(page);
-    const sw = await page.$$eval('#subnav .dateline .viewsw-b', (bs) => bs.map((b) => { const r = b.getBoundingClientRect(); return { v: b.dataset.view, w: Math.round(r.width), h: Math.round(r.height), p: b.getAttribute('aria-pressed'), l: b.getAttribute('aria-label') }; }));
-    check(sw.length === 2 && sw.every((b) => b.w >= 44 && b.h >= 44), 'the switch sits in the dateline row: two icon buttons, 44px each', JSON.stringify(sw));
-    check(sw[0].v === 'list' && sw[0].p === 'true' && sw[1].p === 'false' && sw[0].l === 'List' && sw[1].l === 'Photos', 'it opens on the list, said by aria-pressed', JSON.stringify(sw));
-    check(await page.$$eval('#subnav > *', (n) => n.length) === 2, 'no new row: still the dateline and the band', '');
-    await page.click('#subnav .viewsw-b[data-view="photos"]');
+    const sw = await page.$$eval('#subnav > .wmodes .wmode', (bs) => bs.map((b) => { const r = b.getBoundingClientRect(); return { v: b.dataset.view, t: b.textContent, w: Math.round(r.width), h: Math.round(r.height), p: b.getAttribute('aria-pressed') }; }));
+    check(JSON.stringify(sw.map((b) => b.t)) === '["News","Photos","Square"]' && sw.every((b) => b.w >= 88 && b.h >= 32), 'the switch says News, Photos, Square in words, a third of the row each', JSON.stringify(sw));
+    check(sw[0].p === 'true' && sw[1].p === 'false' && sw[2].p === 'false', 'it opens on News, said by aria-pressed', JSON.stringify(sw));
+    check(await page.$eval('#subnav > :first-child', (n) => n.classList.contains('wmodes')), 'and it is the first row under the mast', '');
+    check(!(await page.$('#subnav .viewsw, #subnav .viewsw-b')), 'the old list and photo icons are gone', '');
+    await page.click('#subnav .wmode[data-view="photos"]');
     check(await pmOn(page), 'Photos turns the paper into the photo feed', '');
-    check(await viewPressed(page) === 'list:false photos:true', 'and the switch says so', await viewPressed(page));
+    check(await viewPressed(page) === 'news:false photos:true square:false', 'and the switch says so', await viewPressed(page));
     check(await page.evaluate(() => location.hash) === '#wire/photos', 'the address says #wire/photos', await page.evaluate(() => location.hash));
     check(await page.evaluate(() => localStorage.getItem('allday-wire-view')) === 'photos', 'the choice is kept on the phone', '');
-    check(await page.$eval('#subnav', (s) => s.querySelectorAll(':scope > .dateline, :scope > .toolband, :scope > .chips').length) === 2, 'Photo mode keeps to two rows under the mast', '');
+    check(await page.$eval('#subnav', (s) => s.querySelectorAll(':scope > .dateline, :scope > .toolband, :scope > .chips').length) === 2, 'Photo mode: the switch, then the Local band and the kinds of picture', '');
     check(!(await page.$(pmPanel + ' .wm, ' + pmPanel + ' .card.row')), 'the paper’s list is gone', '');
     await page.reload();
     await settle(page);
-    check(await pmOn(page) && await viewPressed(page) === 'list:false photos:true', 'a reload opens on the photos again', await viewPressed(page));
+    check(await pmOn(page) && await viewPressed(page) === 'news:false photos:true square:false', 'a reload opens on the photos again', await viewPressed(page));
     await page.goto(base + '/all-day/?demo=1');
     await settle(page);
     check(await pmOn(page), 'and so does a bare visit to the app', '');
-    await page.click('#subnav .viewsw-b[data-view="list"]');
+    await page.click('#subnav .wmode[data-view="news"]');
     await page.waitForSelector(pmPanel + ' .wm', { timeout: 8000 }).catch(() => {});
-    check(!(await page.$(pmPanel + ' .card.pm')) && !!(await page.$(pmPanel + ' .wm')), 'List brings the paper back', '');
+    check(!(await page.$(pmPanel + ' .card.pm')) && !!(await page.$(pmPanel + ' .wm')), 'News brings the paper back', '');
     check(await page.evaluate(() => location.hash) === '#wire' && await page.evaluate(() => localStorage.getItem('allday-wire-view')) === null, 'the address is #wire again, and the phone forgets Photos', await page.evaluate(() => location.hash));
-    check(await page.evaluate(() => document.activeElement && document.activeElement.dataset.view) === 'list', 'focus stays on the switch', '');
+    check(await page.evaluate(() => document.activeElement && document.activeElement.dataset.view) === 'news', 'focus stays on the switch', '');
     await page.reload();
     await settle(page);
-    check(!(await page.$(pmPanel + ' .card.pm')) && await viewPressed(page) === 'list:true photos:false', 'a reload opens on the list', await viewPressed(page));
+    check(!(await page.$(pmPanel + ' .card.pm')) && await viewPressed(page) === 'news:true photos:false square:false', 'a reload opens on News', await viewPressed(page));
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
   });
@@ -1050,15 +1314,15 @@ async function thePhotos(browser, base) {
     const ds = st.list.slice(1).map((v) => v.d);
     check(ds.every((d, i) => !i || ds[i - 1] >= d), 'the rest run newest first', JSON.stringify(ds.slice(0, 8)));
     const from = st.list.reduce((o, v) => { o[v.from] = (o[v.from] || 0) + 1; return o; }, {});
-    check(from.board === 14 && from.gallery === 3 && from.instagram === 6 && from.facebook === 1 && from.reddit === 1 && from.paper > 5 && from.outlet > 10,
-      'from neighbors’ posts (14), the gallery (3), Instagram (6), a Facebook post and a Reddit post with a picture, the paper and the local outlets', JSON.stringify(from));
+    check(from.board === 16 && from.gallery === 3 && from.instagram === 10 && from.square === 2 && from.facebook === 1 && from.reddit === 1 && from.paper > 5 && from.outlet > 10,
+      'from neighbors’ posts (16), the gallery (3), Instagram (10), the Square’s photos (2), a Facebook post and a Reddit post with a picture, the paper and the local outlets', JSON.stringify(from));
     check(!keys.includes('w6') && !keys.includes('w15'), 'a video is a player, not a picture', '');
     check(!keys.some((k) => /demo2|permalink\/102/.test(k)), 'a Reddit or Facebook post with no picture stays out', '');
     check(['w8', 'p11', 'w24'].every((k) => !keys.includes(k)) && st.list.every((v) => v.local), 'Local: no national story, every picture local', '');
     const ig = cs.find((c) => c.k === 'ig:DemoBeach2');
     check(ig && ig.cap === 'First frost on the dunes at North Beach', 'an Instagram post’s caption is its first line', JSON.stringify(ig));
     check(cs.find((c) => c.k === 'ig:DemoChurch5').cap === '@demo_churchst', 'no caption: the account', '');
-    check((await page.$eval(pmPanel + ' .caught', (c) => c.innerText)).includes('Add a photo'), 'the feed ends, with Add a photo', '');
+    check((await page.$eval(pmPanel + ' .caught', (c) => c.innerText)).includes('Post a photo'), 'the feed ends, with Post a photo', '');
     /* Everything adds the paper's national stories with a lead image */
     await page.evaluate(() => { document.querySelector('#panel-wire').scrollTop = 0; });
     await page.click('#subnav .localsw-half:not(.on)');
@@ -1067,11 +1331,74 @@ async function thePhotos(browser, base) {
     const keys2 = await page.$$eval(pmPanel + ' .card.pm', (n) => n.map((x) => x.dataset.k));
     check(['w8', 'p11', 'w24'].every((k) => keys2.includes(k)) && keys2.length === keys.length + 3, 'Everything adds the three national stories with a picture', keys2.length + ' vs ' + keys.length);
     check(new Set(keys2).size === keys2.length, 'still no key twice', '');
-    check(/^\d+ photos$/.test(await page.$eval('#subnav .dl .s', (s) => s.textContent)) && (await page.$eval('#subnav .dl .s', (s) => s.textContent)) === keys2.length + ' photos', 'the row counts what is shown', await page.$eval('#subnav .dl .s', (s) => s.textContent));
+    check(/^\d+ photos$/.test(await page.$eval('#subnav .pm-n .s', (s) => s.textContent)) && (await page.$eval('#subnav .pm-n .s', (s) => s.textContent)) === keys2.length + ' photos', 'the band counts what is shown', await page.$eval('#subnav .pm-n .s', (s) => s.textContent));
     await page.click('#subnav .localsw-half:not(.on)');
     check(!errors.length, 'no console errors', errors.join(' | '));
     check(!supabase.length, 'demo mode never calls Supabase', supabase.join(', '));
     await ctx.close();
+  });
+
+  await group('Photo mode: the kinds of picture, and Pets of Burlington (demo)', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/all-day/?demo=1#wire/photos');
+    await settle(page);
+    await pmOn(page);
+    const chipsNow = await page.$$eval('#subnav .chip', (cs) => cs.map((c) => [c.dataset.chip, (c.querySelector('.n') || {}).textContent || '', c.querySelector('span').textContent]));
+    check(JSON.stringify(chipsNow.map((c) => c[2])) === '["All","Instagram","Vibe checks","Event posters","Food","Pets","Posted here"]', 'the chips: All, Instagram, Vibe checks, Event posters, Food, Pets, Posted here', JSON.stringify(chipsNow));
+    const st0 = await pmState(page);
+    check(chipsNow.slice(1).every(([k, n]) => Number(n) === st0.counts[k] && st0.counts[k] > 0), 'each counts what this reader sees', JSON.stringify([chipsNow, st0.counts]));
+    const of = (k) => st0.list.find((v) => v.k === k);
+    check(JSON.stringify(of('ig:DemoShow8').cats.sort()) === '["instagram","posters"]', 'an organiser’s post (the DO half) is an event poster', JSON.stringify(of('ig:DemoShow8')));
+    check(JSON.stringify(of('ig:DemoBar7').cats.sort()) === '["food","instagram","posters","vibe"]', 'a bar that organises: vibe check, food and poster', JSON.stringify(of('ig:DemoBar7')));
+    check(JSON.stringify(of('ig:DemoCat9').cats.sort()) === '["instagram","pets","vibe"]' && JSON.stringify(of('ig:DemoLake1').cats) === '["instagram"]', 'the cat lounge is pets and a vibe check; a lake photographer is just Instagram', '');
+    check(of('g-demo-g3').cats.includes('food') && JSON.stringify(of('g-demo-g1').cats) === '["posted"]', 'a gallery photo takes its queue category (food), else it is only posted here', JSON.stringify([of('g-demo-g3'), of('g-demo-g1')]));
+    for (const [k] of chipsNow.slice(1)) {
+      await page.evaluate(() => { document.querySelector('#panel-wire').scrollTop = 0; });
+      await page.click('#subnav .chip[data-chip="' + k + '"]');
+      await page.waitForTimeout(120);
+      const st = await pmState(page);
+      const good = st.list.length === st0.counts[k] && st.list.every((v) => v.cats.includes(k)) && (k !== 'instagram' || st.list.every((v) => v.from === 'instagram'))
+        && (k !== 'posted' || st.list.every((v) => ['board', 'gallery', 'square'].includes(v.from)));
+      check(good && st.cat === k, 'the ' + k + ' chip shows only its ' + st0.counts[k], JSON.stringify(st.list.map((v) => [v.k, v.from])).slice(0, 200));
+      check(!(await page.$(pmPanel + ' .pm-pets')), k + ': no pets row outside All', '');
+    }
+    await page.click('#subnav .chip[data-chip="all"]');
+    await page.waitForTimeout(120);
+    const pets = await page.$eval(pmPanel + ' .pm-pets', (b) => ({ h: b.querySelector('h3').textContent, tiles: [...b.querySelectorAll('[data-pet]')].map((t) => t.dataset.pet), more: b.querySelector('[data-pets]').textContent,
+      before: !!(b.compareDocumentPosition(document.querySelector('#panel-wire .pm-feed')) & 4), after: !!(document.querySelector('#panel-wire .pm-head').compareDocumentPosition(b) & 4) }));
+    check(pets.h === 'Pets of Burlington' && pets.tiles.length === st0.counts.pets && pets.before && pets.after, 'All opens with Pets of Burlington, between the header and the feed', JSON.stringify(pets));
+    await page.click(pmPanel + ' .pm-pets [data-pet="' + pets.tiles[0] + '"]');
+    await page.waitForSelector('.sheet-card', { timeout: 4000 }).catch(() => {});
+    check(!!(await page.$('.sheet-card')), 'a pet opens in its sheet', '');
+    await page.click('.sheet-head .iconbtn');
+    await page.click(pmPanel + ' .pm-pets [data-pets]');
+    await page.waitForTimeout(150);
+    check((await pmState(page)).cat === 'pets' && await page.$eval('#subnav .chip.on', (c) => c.dataset.chip) === 'pets', '“See all” is the Pets chip', '');
+    await page.screenshot({ path: path.join(SHOTS, 'demo-wire-photos-pets.png') });
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Photo mode: an Instagram account’s kind comes from the roster (live)', async () => {
+    const now = Date.now();
+    const ok = '&oe=' + Math.floor(now / 1000 + 3 * 86400).toString(16);
+    const post = (h, n, extra) => ({ h, ts: Math.round(now / 1000) - n * 60, i: 'https://scontent.example.com/' + n + '.jpg?x=1' + ok, u: 'https://www.instagram.com/p/Roster' + n + '/', c: h, ...extra });
+    const ig = { generated: new Date(now).toISOString(), posts: [post('queencitycatlounge', 1, { s: 'see' }), post('foambrewers', 2, { s: 'do', f: 1 }), post('theresnoaincreemee', 3, { s: 'see', f: 1 }),
+      post('atasteofabyssinia', 4, { s: 'see' }), post('jackthurstonvt', 5, { s: 'see' })] };
+    const v = await newPage(browser, base);
+    await v.page.route(/\/all-day\/data\/instagram\.json$/, (r) => r.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(ig) }));
+    await v.page.goto(base + '/all-day/#wire/photos');
+    await settle(v.page);
+    await pmOn(v.page);
+    const st = await pmState(v.page);
+    const cats = Object.fromEntries(st.list.filter((x) => x.from === 'instagram').map((x) => [x.url.split('/').slice(-2)[0], x.cats.sort().join(' ')]));
+    check(cats.Roster1 === 'food instagram pets vibe', 'a cat café is pets and a vibe check (photo_categories), and food (the directory)', JSON.stringify(cats));
+    check(cats.Roster2 === 'food instagram posters vibe', 'a brewery that organises: food, poster and vibe check', JSON.stringify(cats));
+    check(cats.Roster3 === 'instagram', 'an account the food directory says is not food is not food', JSON.stringify(cats));
+    check(cats.Roster4 === 'food instagram', 'a restaurant in the food directory is food', JSON.stringify(cats));
+    check(cats.Roster5 === 'instagram', 'a photographer is just Instagram', JSON.stringify(cats));
+    check(!v.errors.length, 'no console errors', v.errors.join(' | '));
+    await v.ctx.close();
   });
 
   await group('Photo mode: a picture opens in its sheet, and a vote counts (demo)', async () => {
@@ -1123,37 +1450,45 @@ async function thePhotos(browser, base) {
     await ctx.close();
   });
 
-  await group('Photo mode: Add a photo opens the submission sheet, moderated as before (demo)', async () => {
+  await group('Photo mode: Post a photo opens the submission sheet, moderated as before (demo)', async () => {
     const { ctx, page, errors } = await newPage(browser, base, { motion: 'reduce' });
     await page.goto(base + '/all-day/?demo=1#wire/photos');
     await settle(page);
     await pmOn(page);
-    await page.click('#subnav .toolband .btn:has-text("Add a photo")');
-    await page.waitForSelector('.sheet-card[aria-label="Add a photo"]', { timeout: 4000 }).catch(() => {});
+    const head = await page.$eval(pmPanel + ' .pm-head', (h) => ({ h2: h.querySelector('h2').textContent, p: h.querySelector('p').textContent, b: h.querySelector('[data-post]').textContent.trim() }));
+    check(head.h2 === 'Burlington in photos' && head.p === 'Local Instagram plus photos people post here.' && head.b === 'Post a photo to the Burlington feed',
+      'the feed opens under “Burlington in photos”, one line, and the Post a photo to the Burlington feed button', JSON.stringify(head));
+    await page.click(pmPanel + ' .pm-head [data-post]');
+    await page.waitForSelector('.sheet-card[aria-label="Post a photo"]', { timeout: 4000 }).catch(() => {});
     check(/Sign in to post\./.test(await page.$eval('.sheet-body', (b) => b.innerText)), 'signed out, the sheet asks for the sign-in', '');
     await page.click('.sheet-head .iconbtn');
     await page.evaluate(() => import('/all-day/js/auth.js').then((a) => a.demoSignIn()));
-    await page.click('#subnav .toolband .btn:has-text("Add a photo")');
+    await page.click(pmPanel + ' .pm-head [data-post]');
     await page.waitForSelector('.sheet-body form.bform', { timeout: 4000 }).catch(() => {});
-    check(await page.$('input[name="m:medium"]') === null && await page.$('select[name="m:shirt"]') !== null, 'Add a photo asks for the shirt, not a medium', '');
+    const kinds = await page.$$eval('select[name="m:medium"] option', (o) => o.map((x) => x.value).filter(Boolean));
+    check(JSON.stringify(kinds) === '["Vibe check","Event poster","Food","Pets","Other"]' && await page.$('input[name="m:medium"]') === null && await page.$('select[name="m:shirt"]') !== null,
+      'Post a photo asks what it is (vibe check, event poster, food, pets, other) and about the shirt, never a medium', JSON.stringify(kinds));
     check(/Photos show once approved\./.test(await page.$eval('.bform', (f) => f.innerText)), 'and says, in one line, that photos show once approved', '');
     const before = (await pmState(page)).list.length;
     await page.fill('input[name=display_name]', 'Robin');
     await page.fill('input[name=title]', 'Leddy at dusk');
+    await page.selectOption('select[name="m:medium"]', 'Pets');
     await page.selectOption('select[name="m:shirt"]', 'no');
     await page.setInputFiles('.bform input[type=file]', { name: 'leddy.jpg', mimeType: 'image/jpeg', buffer: PNG });
     await page.check('.bform input[name=consent]');
     await page.click('.bform button[type=submit]');
     await page.waitForSelector('#sheet[hidden]', { state: 'attached', timeout: 4000 }).catch(() => {});
     check(/shows once approved/.test(await page.$eval('#toast', (t) => t.textContent)), 'posted: the toast says it waits for approval', await page.$eval('#toast', (t) => t.textContent));
-    const row = await fakeOf(page, `(f) => { const p = f.posts.find((x) => x.title === 'Leddy at dusk'); return p && { board: p.board, kind: p.kind, photo: f.photos.get(p.photo_path).status }; }`);
-    check(row && row.board === 'art' && row.kind === 'photo' && row.photo === 'pending', 'it is on the art board as a photo post, its picture pending in the queue', JSON.stringify(row));
+    const row = await fakeOf(page, `(f) => { const p = f.posts.find((x) => x.title === 'Leddy at dusk'); return p && { board: p.board, kind: p.kind, medium: p.meta.medium, photo: f.photos.get(p.photo_path).status }; }`);
+    check(row && row.board === 'art' && row.kind === 'photo' && row.medium === 'Pets' && row.photo === 'pending', 'it is on the art board as a photo post with its kind, its picture pending in the queue', JSON.stringify(row));
     await page.waitForTimeout(300);
     check(!(await page.$(pmPanel + ' .pm-cap:has-text("Leddy at dusk")')) && (await pmState(page)).list.length === before, 'and the feed does not show it yet', '');
     await fakeOf(page, `(f) => { const p = f.posts.find((x) => x.title === 'Leddy at dusk'); f.setPhoto(p.photo_path, 'approved'); return 1; }`);
     await page.evaluate(() => window.dispatchEvent(new CustomEvent('allday-boards', { detail: { board: 'art', id: null, what: 'test' } })));
     await page.waitForSelector(pmPanel + ' .pm-cap:has-text("Leddy at dusk")', { timeout: 4000 }).catch(() => {});
     check(!!(await page.$(pmPanel + ' .pm-cap:has-text("Leddy at dusk")')), 'once Stephen approves it, it is in the feed', '');
+    const st = await pmState(page);
+    check(st.pets.length === 4 && !!(await page.$(pmPanel + ' .pm-pets [data-pet]')), 'and, posted as Pets, it joins Pets of Burlington', JSON.stringify(st.pets));
     await pmAll(page);
     await page.click(pmPanel + ' .caught .btn:has-text("Add art")');
     await page.waitForSelector('.sheet-card[aria-label="Add art"]', { timeout: 4000 }).catch(() => {});
@@ -1209,9 +1544,9 @@ async function thePhotos(browser, base) {
       const m = await page.evaluate(() => {
         const pic = document.querySelector('#panel-wire .card.pm .pm-pic').getBoundingClientRect();
         const feed = document.querySelector('#panel-wire .pm-feed').getBoundingClientRect();
-        const b = document.querySelector('#subnav .viewsw-b');
+        const b = document.querySelector('#subnav .wmode');
         return { pw: Math.round(pic.width), ph: Math.round(pic.height), fw: Math.round(feed.width), tr: getComputedStyle(b).transitionDuration,
-          bg: getComputedStyle(document.body).backgroundColor, on: getComputedStyle(document.querySelector('#subnav .viewsw-b.on')).backgroundColor };
+          bg: getComputedStyle(document.body).backgroundColor, on: getComputedStyle(document.querySelector('#subnav .wmode.on')).backgroundColor };
       });
       check(Math.abs(m.ph - m.pw * 5 / 4) <= 2, 'the picture reserves its 4:5 box', JSON.stringify(m));
       check(combo.viewport.width < 900 ? m.pw === combo.viewport.width : m.fw <= 468, combo.viewport.width < 900 ? 'full width on a phone' : 'a narrow column on a wide screen', JSON.stringify(m));

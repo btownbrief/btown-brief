@@ -2,10 +2,21 @@
    newest first, one full-width picture at a time (Stephen, 2026-10-17: "I
    really should try to become the new LOCAL INSTAGRAM").
 
-   A list ⟷ photos switch in the dateline row turns it on; the choice is kept
-   on the phone (localStorage `allday-wire-view`). #wire/photos opens it, and
-   so do the old #art and #photos links; #wire/photos/<key> (and a shared
-   #wire/b-…, #wire/g-…, #wire/ig:…) opens that picture's sheet.
+   The News · Photos · Square switch at the top of the Wire turns it on
+   (Stephen's girlfriend, 2026-10-17: the old list/photo icons "looked like
+   the same information"); the choice is kept on the phone (localStorage
+   `allday-wire-view`). #wire/photos opens it, and so do the old #art and
+   #photos links; #wire/photos/<key> (and a shared #wire/b-…, #wire/g-…,
+   #wire/ig:…) opens that picture's sheet.
+
+   The feed opens under a header that says what it is, with the Post a photo
+   button, and a row of chips by kind of picture (CATS): Instagram, vibe
+   checks, event posters, food, pets, and only what readers posted here. An
+   Instagram post's kind comes from its account (data/instagram-handles.json:
+   the DO half is event posters, `food` and all-day/data/food-directory.json
+   are food, `photo_categories` names the vibe and pet accounts); a reader's
+   photo carries the kind they picked when they posted it (photo-wall.js
+   PHOTO_CATS). Pets get their own row at the top of All when there are any.
 
    What it draws from, each picture once (by key, and by its link):
      - neighbors' photo and art posts on the `art` board (boards.js), with
@@ -15,6 +26,8 @@
        ../js/photos-lib.js), as the Art wall had them
      - the local Instagram accounts' posts (data/instagram.json, built by
        scripts/build_instagram.py), while their signed picture still works
+     - once the Square is live (nn-ROUND4.sql), its pet and show-and-tell
+       posts that carry a photo
      - Facebook group posts (pulse.json's inbox) and Reddit posts (its items)
        that carry a picture
      - the Wire's own items with a lead image: today's paper, and the local
@@ -34,7 +47,7 @@ import * as boards from '../boards.js';
 import * as store from '../store.js';
 import * as wall from '../photo-wall.js';
 import { RULES } from '../boards-core.js';
-import { el, esc, safeHref, svg, ICON, art, mark, cards, button } from '../ui.js';
+import { el, esc, safeHref, ICON, art, mark, cards, button } from '../ui.js';
 
 const VIEW_KEY = 'allday-wire-view';
 const BOARD = 'art';
@@ -45,38 +58,28 @@ const FAR = 4000;              // px off screen past which a card lets go of its
 const NEWS_DAYS = 7;           // how far back the Unfiltered wire's pictures go
 const DAY = 86400000;
 
-/* ---------------------------------------------------------- the switch */
-export const ICONS = {
-  list: svg('<path d="M4.5 6.5h15M4.5 12h15M4.5 17.5h15"/>'),
-  photos: svg('<rect x="3.5" y="4.5" width="17" height="15" rx="2.5"/><circle cx="9" cy="9.5" r="1.6"/><path d="m4 17 4.6-4.4 3.4 3.1 3-2.6 5 4.4"/>'),
-};
+/* --------------------------------------------------- the kept choice */
+/* Which way the reader last read the Wire: 'photos', 'square', or '' for
+   News (nothing kept). */
 export function remembered() {
-  try { return localStorage.getItem(VIEW_KEY) === 'photos'; } catch (e) { return false; }
+  try { const v = localStorage.getItem(VIEW_KEY); return v === 'photos' || v === 'square' ? v : ''; } catch (e) { return ''; }
 }
-export function remember(on) {
-  try { if (on) localStorage.setItem(VIEW_KEY, 'photos'); else localStorage.removeItem(VIEW_KEY); } catch (e) { /* private mode: this visit only */ }
+export function remember(view) {
+  try { if (view === 'photos' || view === 'square') localStorage.setItem(VIEW_KEY, view); else localStorage.removeItem(VIEW_KEY); } catch (e) { /* private mode: this visit only */ }
 }
-/* A two-icon segmented control, 44px each: list, photos. */
-export function viewSwitch(on, onPick) {
-  const g = el('div', 'viewsw');
-  g.setAttribute('role', 'group');
-  g.setAttribute('aria-label', 'View');
-  [[false, ICONS.list, 'List'], [true, ICONS.photos, 'Photos']].forEach(([want, icon, label]) => {
-    const b = el('button', 'viewsw-b' + (want === on ? ' on' : ''), icon);
-    b.type = 'button';
-    b.dataset.view = want ? 'photos' : 'list';
-    b.setAttribute('aria-label', label);
-    b.setAttribute('aria-pressed', want === on ? 'true' : 'false');
-    b.addEventListener('click', () => { if (want !== on) onPick(want); });
-    g.appendChild(b);
-  });
-  return g;
-}
+
+/* The chips, in order. `posted` is only what readers posted to this feed. */
+export const CATS = [['all', 'All'], ['instagram', 'Instagram'], ['vibe', 'Vibe checks'], ['posters', 'Event posters'], ['food', 'Food'], ['pets', 'Pets'], ['posted', 'Posted here']];
+const POSTED = new Set(['board', 'gallery', 'square']);
 
 /* ------------------------------------------------------------- state */
 let ctx = null;
 const P = {
   pics: [],          // the art board's photo and art posts, as photo-wall items
+  square: [],        // the Square's pet and show-and-tell photos, once it is live
+  cat: 'all',        // the chip
+  igCat: null,       // { food, vibe, pets, posters, notFood } Sets of handles
+  counts: null,      // per chip, for this reader, before the chip
   gallery: [],       // the community gallery's approved photos
   ig: [],            // Instagram posts, raw
   loaded: null,      // the first load, once
@@ -100,7 +103,9 @@ const P = {
      panel()          the tab's scroll container
      showing()        is Photo mode on screen
      redraw()         draw the mode again, where the reader was
-     onMute(sid, it)  the Wire's mute */
+     onMute(sid, it)  the Wire's mute
+     squareOk()       is the Square board live (boards.roundFour)
+     compose()        open Post a photo */
 export function init(c) { ctx = c; }
 
 /* ------------------------------------------------------------ loading */
@@ -140,6 +145,48 @@ function loadInstagram() {
   if (app.demo) return Promise.resolve();
   return new Promise((res) => data.load('instagram', (j) => { P.ig = Array.isArray(j.posts) ? j.posts : []; res(); }, () => res()));
 }
+/* the posts alone, for the News list's Instagram chip */
+export function instagram() {
+  if (app.demo) return (ctx ? ctx.clockReady().then(demoSeed) : Promise.resolve()).then(() => demoIg);
+  return loadInstagram().then(() => P.ig);
+}
+
+/* Which accounts are which kind of picture. The roster file is the
+   newsletter repo's own (food.js reads it too); a miss leaves only the DO
+   half as event posters and the reader photos' own kinds. */
+const ROSTER_URL = '../data/instagram-handles.json';
+const DIRECTORY_URL = './data/food-directory.json';
+const handles = (a) => new Set((Array.isArray(a) ? a : []).map((h) => String(h || '').trim().replace(/^@/, '').toLowerCase()).filter(Boolean));
+function getJson(url) { return fetch(url).then((r) => (r.ok ? r.json() : null)).catch(() => null); }
+function loadCats() {
+  const roster = app.demo ? demoSeed().then((d) => (d && d.instagram_categories) || null) : getJson(ROSTER_URL);
+  const dir = app.demo ? Promise.resolve(null) : getJson(DIRECTORY_URL);
+  return Promise.all([roster, dir]).then(([r, d]) => {
+    const tags = (r && (r.photo_categories || r)) || {};
+    const food = handles(r && r.food);
+    if (d && d.places && typeof d.places === 'object') Object.values(d.places).forEach((h) => { if (typeof h === 'string' && h) food.add(h.replace(/^@/, '').toLowerCase()); });
+    if (app.demo) handles(tags.food).forEach((h) => food.add(h));
+    P.igCat = { food, vibe: handles(tags.vibe), pets: handles(tags.pets), posters: handles(tags.posters),
+      notFood: new Set(Object.keys((d && d.not_food) || {}).map((h) => h.toLowerCase())) };
+  });
+}
+
+/* The Square's photos: pet posts and show and tell, newest first */
+const SQUARE_KIND = { pets: 'Pet', show: 'Show and tell' };
+function loadSquare() {
+  if (!ctx || !ctx.squareOk()) { P.square = []; return Promise.resolve(); }
+  return Promise.all(Object.keys(SQUARE_KIND).map((kind) => boards.list('square', { kind, limit: RULES.limits.listMax })))
+    .then((rs) => {
+      const seen = new Set();
+      P.square = rs.flatMap((r) => (r.ok ? r.posts : [])).filter((p) => p && p.id && p.photo && !seen.has(p.id) && seen.add(p.id)).map((p) => {
+        const it = boards.item(p, { tab: 'wire/photos', ratio: 'r45' });
+        Object.assign(it, { pic: true, what: SQUARE_KIND[p.kind], medium: '', shirt: false, cat: p.kind === 'pets' ? 'pets' : '', square: true });
+        it.ago = ctx.ago(it.created * 1000);
+        return it;
+      });
+      app.know(P.square);
+    });
+}
 
 export function ensure() {
   if (!P.loaded) {
@@ -148,6 +195,8 @@ export function ensure() {
       loadBoard(),
       (d ? Promise.resolve(demoGallery(d)) : wall.loadGallery('wire/photos')).then((g) => { P.gallery = g; app.know(g); }),
       loadInstagram(),
+      loadCats().catch(() => {}),
+      (ctx.squareReady ? ctx.squareReady() : Promise.resolve()).then(loadSquare).catch(() => {}),
     ])).catch(() => {}).then(() => { P.done = true; return true; });
   }
   return P.loaded;
@@ -163,7 +212,9 @@ function reloadBoard() {
 }
 window.addEventListener('allday-boards', (e) => {
   const d = e.detail || {};
-  if ((d.board && d.board !== BOARD) || d.what === 'profile') return;
+  if (d.what === 'profile') return;
+  if (d.board === 'square') { if (P.loaded) loadSquare().then(() => { if (ctx && ctx.showing()) ctx.redraw(); }); return; }
+  if (d.board && d.board !== BOARD) return;
   reloadBoard();
 });
 app.onAuth(() => setTimeout(reloadBoard));
@@ -214,11 +265,11 @@ function seed(d) {
       place: p.place || '', expires_at: at + RULES.boards.art.kinds.notice.days * DAY, created_at: at }, 0);
   });
   /* Instagram, in build_instagram.py's shape; the picture is a palette name */
-  demoIg = (d.instagram || []).map((p) => ({ h: p.h, ts: Math.round((now - (p.hours || 1) * 3600000) / 1000), i: p.palette, u: p.u, c: p.c || '' }));
+  demoIg = (d.instagram || []).map((p) => ({ h: p.h, ts: Math.round((now - (p.hours || 1) * 3600000) / 1000), i: p.palette, u: p.u, c: p.c || '', s: p.s || 'see', ...(p.f ? { f: 1 } : {}) }));
 }
 function demoGallery(d) {
   const now = clockNow();
-  return (d.gallery || []).map((g) => wall.galleryPic({ id: g.id, url: g.palette, caption: g.caption, credit: g.credit, spot: g.spot, area: g.area,
+  return (d.gallery || []).map((g) => wall.galleryPic({ id: g.id, url: g.palette, caption: g.caption, credit: g.credit, spot: g.spot, area: g.area, category: g.category || 'other',
     approved_on: new Date(now - (g.days || 0) * DAY).toISOString().slice(0, 10) }, 'wire/photos'));
 }
 
@@ -267,13 +318,32 @@ function igView(p) {
   }
   it.ago = it.d ? ctx.ago(it.d * 1000) : '';
   return { it, k, from: 'instagram', media: it.media, ratio: 'r45', cap: oneLine(cap) || handle, alt: squash(cap).slice(0, 250) || 'Instagram photo from ' + handle,
-    src: handle, sid: it.sid, local: true, d: it.d, url: p.u };
+    src: handle, sid: it.sid, local: true, d: it.d, url: p.u, cats: igCats(p) };
+}
+/* The posts as the News list's Instagram chip draws them: newest first,
+   each with its picture still working, the same registered item the photo
+   feed uses (so a save or a vote is one thing). */
+export function igList(posts) {
+  return (posts || []).map(igView).filter(Boolean).sort((a, b) => (b.d - a.d) || (a.k < b.k ? -1 : 1));
+}
+/* an Instagram post's kinds, from its account */
+export function igCats(p) {
+  const h = String(p.h || '').replace(/^@/, '').toLowerCase();
+  const C = P.igCat;
+  const out = new Set(['instagram']);
+  if (p.s === 'do' || (C && C.posters.has(h))) out.add('posters');
+  if (C && C.vibe.has(h)) out.add('vibe');
+  if (C && C.pets.has(h)) out.add('pets');
+  if ((p.f || (C && C.food.has(h))) && !(C && C.notFood.has(h))) out.add('food');
+  return out;
 }
 
 /* a neighbor's post or a gallery photo */
 function picView(it) {
-  return { it, k: it.k, from: it.pic ? 'board' : 'gallery', media: it.media, ratio: 'r45', cap: oneLine(it.title), alt: squash([it.title, it.text].filter(Boolean).join('. ')).slice(0, 250),
-    src: it.author || 'A neighbor', sid: '', local: it.local !== false, d: Number(it.created) || 0, pic: !!it.pic, url: '' };
+  const cats = new Set(['posted']);
+  if (it.cat && it.cat !== 'other') cats.add(it.cat);
+  return { it, k: it.k, from: it.square ? 'square' : it.pic ? 'board' : 'gallery', media: it.media, ratio: 'r45', cap: oneLine(it.title), alt: squash([it.title, it.text].filter(Boolean).join('. ')).slice(0, 250),
+    src: it.author || 'A neighbor', sid: '', local: it.local !== false, d: Number(it.created) || 0, pic: !!it.pic, url: '', cats };
 }
 
 /* a story, a post or a thread with a lead image; the card's own key, so
@@ -316,6 +386,7 @@ export function build() {
   const now = clockNow();
   const all = [];
   P.pics.forEach((it) => all.push(picView(it)));
+  P.square.forEach((it) => all.push(picView(it)));
   P.gallery.forEach((it) => { it.ago = it.created ? ctx.ago(it.created * 1000) : it.ago; all.push(picView(it)); });
   (app.demo ? demoIg : P.ig).forEach((p) => all.push(igView(p)));
   /* today's paper: stories with a lead image, and posts that carry one; a
@@ -343,32 +414,48 @@ export function build() {
   const used = new Map();
   const tally = (pic, link) => { if (!isUrl(pic) || !link) return; const k = norm(pic); if (!used.has(k)) used.set(k, new Set()); used.get(k).add(norm(link)); };
   if (P2 && P2.src) (P2.src.items || []).forEach((x) => { if (x) tally(x.i, x.u); });
-  all.forEach((v) => { if (v && v.from !== 'instagram' && v.from !== 'board' && v.from !== 'gallery') tally(v.media, v.url); });
-  const stock = (v) => v.from !== 'instagram' && v.from !== 'board' && v.from !== 'gallery' && isUrl(v.media) && (used.get(norm(v.media)) || new Set()).size > 1;
+  const own = (v) => v.from === 'instagram' || POSTED.has(v.from);
+  all.forEach((v) => { if (v && !own(v)) tally(v.media, v.url); });
+  const stock = (v) => !own(v) && isUrl(v.media) && (used.get(norm(v.media)) || new Set()).size > 1;
   /* each picture once: by key, then by its link */
   const keys = new Set(), links = new Set();
-  const list = [];
+  const every = [];
   all.forEach((v) => {
     if (!v || !v.k || !v.media || keys.has(v.k) || stock(v) || !ctx.visible(v)) return;
     const u = v.url ? norm(v.url) : '';
     if (u && links.has(u)) return;
     keys.add(v.k);
     if (u) links.add(u);
+    if (!v.cats) v.cats = new Set();
     v.ago = v.it.ago || (v.d ? ctx.ago(v.d * 1000) : '');
-    list.push(v);
+    every.push(v);
   });
-  list.sort((a, b) => (b.d - a.d) || (a.k < b.k ? -1 : 1));
-  /* the photo of the week leads, when this week has one */
-  const w = wall.ofTheWeek(P.pics, now);
+  every.sort((a, b) => (b.d - a.d) || (a.k < b.k ? -1 : 1));
+  /* the chips count what this reader sees; a chip with nothing hides */
+  const counts = { all: every.length };
+  every.forEach((v) => v.cats.forEach((c) => { counts[c] = (counts[c] || 0) + 1; }));
+  P.counts = counts;
+  if (P.cat !== 'all' && !counts[P.cat]) P.cat = 'all';
+  const list = P.cat === 'all' ? every : every.filter((v) => v.cats.has(P.cat));
+  /* the photo of the week leads All, when this week has one */
+  const w = P.cat === 'all' || P.cat === 'posted' ? wall.ofTheWeek(P.pics, now) : null;
   let lead = null;
   if (w && w.fresh) {
     const i = list.findIndex((v) => v.k === w.it.k);
     if (i >= 0) { lead = list[i]; list.splice(i, 1); list.unshift(lead); }
   }
   P.list = list; P.lead = lead; P.built++;
+  P.pets = every.filter((v) => v.cats.has('pets'));
   return { list, lead };
 }
 export const count = () => (P.list ? P.list.length : null);
+/* the chips, for the subnav: [key, label, count], the empty ones left out */
+export function catChips() {
+  if (!P.counts) build();
+  return CATS.filter(([k]) => k === 'all' || P.counts[k]).map(([key, label]) => ({ key, label, n: key === 'all' ? null : P.counts[key] }));
+}
+export const cat = () => P.cat;
+export function setCat(k) { P.cat = CATS.some(([x]) => x === k) ? k : 'all'; }
 
 /* ------------------------------------------------------------- votes */
 /* A neighbor's picture is voted on its board (one vote per reader, counted
@@ -406,7 +493,7 @@ app.onAct('photovote', (it) => vote(it));
    caption, then the source and age with vote, share and save. */
 function card(v, lead) {
   const it = v.it;
-  const c = el('article', 'card fi pm' + (lead ? ' pm-lead' : '') + (store.isRead(it.k) ? ' is-read' : ''));
+  const c = el('article', 'card fi pm' + (lead ? ' pm-lead' : '') + (v.from === 'instagram' ? ' w-src-instagram' : POSTED.has(v.from) ? ' w-posted' : '') + (store.isRead(it.k) ? ' is-read' : ''));
   c.dataset.k = it.k;
   const pic = isUrl(v.media)
     ? '<img class="pic" src="' + esc(v.media) + '" alt="' + esc(v.alt || v.cap) + '" loading="lazy" decoding="async" referrerpolicy="no-referrer">'
@@ -440,7 +527,7 @@ function sheetItem(v) {
   return { ...it, media: v.media, ratio: v.ratio, title: short(it.title || it.text) || v.cap, text: squash(it.text || it.title), alt: v.alt, src: v.src, ago: v.ago, open: v.open || it.open };
 }
 export function openPicture(k) {
-  const v = P.list && P.list.find((x) => x.k === k);
+  const v = (P.list && P.list.find((x) => x.k === k)) || (P.pets && P.pets.find((x) => x.k === k));
   if (!v) return false;
   wall.openSheet(sheetItem(v));
   return true;
@@ -462,17 +549,54 @@ const near = (run) => {
 
 /* Draw into root: the empty state, or the feed in chunks of ten as the
    reader nears the bottom. `until` draws on until that key is on the page. */
+/* The header: what this is, in one line, and the way to post to it
+   (Stephen's girlfriend, 2026-10-17: "I don't even know that this is like,
+   add photo to the feed"). */
+function header() {
+  const h = el('div', 'pm-head');
+  h.innerHTML = '<h2>Burlington in photos</h2><p>' + esc('Local Instagram plus photos people post here.') + '</p>';
+  const b = button(ICON.plus + ' Post a photo to the Burlington feed', 'pm-post', () => wall.compose('photo'));
+  b.dataset.post = 'photo';
+  h.appendChild(b);
+  return h;
+}
+/* Pets of Burlington: a row of every pet picture, at the top of All */
+function petsRow(pets) {
+  const box = el('section', 'pm-pets');
+  box.setAttribute('aria-label', 'Pets of Burlington');
+  box.innerHTML = '<div class="pm-pets-h"><h3>Pets of Burlington</h3><button class="chip" data-pets>' + esc('See all ' + pets.length) + '</button></div>';
+  const row = el('div', 'pm-pets-row');
+  pets.slice(0, 12).forEach((v) => {
+    const a = el('a', 'pm-pet');
+    a.href = safeHref(v.it.href);
+    a.dataset.pet = v.k;
+    a.innerHTML = (isUrl(v.media) ? '<img class="pic" src="' + esc(v.media) + '" alt="' + esc(v.alt || v.cap) + '" loading="lazy" decoding="async" referrerpolicy="no-referrer">' : art(v.media)) +
+      '<span class="pm-pet-cap">' + esc(v.cap) + '</span>';
+    row.appendChild(a);
+  });
+  box.appendChild(row);
+  box.addEventListener('click', (e) => {
+    if (e.target.closest('[data-pets]')) { e.preventDefault(); P.cat = 'pets'; if (ctx) ctx.pickCat('pets'); return; }
+    const a = e.target.closest('[data-pet]');
+    if (!a) return;
+    e.preventDefault();
+    openPicture(a.dataset.pet);
+  });
+  return box;
+}
+
 export function render(root, opts = {}) {
   stop();
   const { list, lead } = build();
   root.innerHTML = '';
+  root.appendChild(header());
   if (!list.length) {
     const e = el('div', 'caught pm-empty');
-    e.innerHTML = '<h3>' + esc('No photos yet.') + '</h3><div class="row"></div>';
-    e.querySelector('.row').append(addBtn('photo', ''), addBtn('art', 'ghost'));
+    e.innerHTML = '<h3>' + esc(P.cat === 'pets' ? 'No pets yet.' : 'No photos yet.') + '</h3>';
     root.appendChild(e);
     return null;
   }
+  if (P.cat === 'all' && P.pets && P.pets.length) root.appendChild(petsRow(P.pets));
   const feed = el('div', 'feed pm-feed');
   root.appendChild(feed);
   /* draw on to a deep link's picture only when it is there to reach */
@@ -527,7 +651,7 @@ function step(run, n) {
   if (run.i >= run.list.length) {
     run.sentinel.remove();
     if (observer) { observer.disconnect(); observer = null; }
-    const end = cards.caught({ title: 'That’s every photo', check: false, buttons: [addBtn('photo', ''), addBtn('art', 'ghost')] });
+    const end = cards.caught({ title: P.cat === 'all' ? 'That’s every photo' : 'That’s every one', check: false, buttons: [addBtn('photo', ''), addBtn('art', 'ghost')] });
     run.feed.appendChild(end);
     return;
   }
@@ -537,7 +661,7 @@ function step(run, n) {
 export function topUp() { const run = P.run; if (run && !run.dead && near(run)) step(run, CHUNK); }
 
 export function addBtn(kind, cls) {
-  return button(ICON.plus + ' ' + (kind === 'art' ? 'Add art' : 'Add a photo'), cls, () => wall.compose(kind));
+  return button(ICON.plus + ' ' + (kind === 'art' ? 'Add art' : 'Post a photo'), cls, () => wall.compose(kind));
 }
 
 /* How far down the reader is, for a redraw that keeps the place. */
@@ -549,11 +673,12 @@ export const drawn = () => (P.run ? P.run.i : 0);
 window.addEventListener('error', (e) => {
   const img = e.target;
   if (!img || img.tagName !== 'IMG' || !img.classList || !img.classList.contains('pic')) return;
-  const c = img.closest('.card.pm');
+  const c = img.closest('.card.pm, .pm-pet');
   if (c) c.remove();
 }, true);
 
 /* for the tests: the feed as last built, each picture's key, time, place and
    where it came from */
-export const _state = () => ({ lead: P.lead ? P.lead.k : null,
-  list: (P.list || []).map((v) => ({ k: v.k, d: v.d, local: !!v.local, from: v.from, url: v.url || '' })) });
+export const _state = () => ({ lead: P.lead ? P.lead.k : null, cat: P.cat, counts: P.counts,
+  pets: (P.pets || []).map((v) => v.k),
+  list: (P.list || []).map((v) => ({ k: v.k, d: v.d, local: !!v.local, from: v.from, url: v.url || '', cats: [...(v.cats || [])] })) });

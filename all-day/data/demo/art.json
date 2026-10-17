@@ -1,5 +1,5 @@
 {
- "_": "Demo data for ?demo=1. Every name and picture is invented; each picture is a placeholder palette from shell.json. The Wire's Photo mode seeds these into the boards demo backend, so votes, reports and posting run through boards.js as they do live. A post's week is 0 for this week (Monday to now, Burlington time) or 1 to 8 for the weeks before; f is how far through that week it was posted (0 to 1). ratio is the picture's shape, for the full view. instagram is the local accounts' posts in build_instagram.py's shape, with hours for how long ago on the Wire demo's clock.",
+ "_": "Demo data for ?demo=1. Every name and picture is invented; each picture is a placeholder palette from shell.json. The Wire's Photo mode seeds these into the boards demo backend, so votes, reports and posting run through boards.js as they do live. A post's week is 0 for this week (Monday to now, Burlington time) or 1 to 8 for the weeks before; f is how far through that week it was posted (0 to 1). ratio is the picture's shape, for the full view. instagram is the local accounts' posts in build_instagram.py's shape, with hours for how long ago on the Wire demo's clock. Each Instagram post's `s` is its account's half (do: organisers, whose posts read as event posters; see: everyone else) and `f` marks a food account, as build_instagram.py writes them; instagram_categories stands in for data/instagram-handles.json's photo_categories and food tags. A photo post's medium is the kind its poster picked (Vibe check, Event poster, Food, Pets, Other); a gallery photo's category is the photo queue's.",
  "people": [
   ["ben", "Ben S."], ["kara", "Kara M."], ["jess", "Jess T."], ["nora", "Nora L."], ["priya", "Priya N."],
   ["jules", "Jules O."], ["dev", "Dev K."], ["tom", "Tom A."], ["maya", "Maya R."], ["sam", "Sam W."]
@@ -18,7 +18,9 @@
   { "who": "priya", "kind": "art", "title": "Corner store, North Winooski Ave", "body": "", "medium": "Pen and wash", "shirt": "yes", "palette": "brick", "ratio": "r11", "week": 5, "f": 0.3, "votes": 22 },
   { "who": "nora", "kind": "photo", "title": "Late corn, Intervale fields", "body": "", "shirt": "no", "palette": "field", "ratio": "r45", "week": 6, "f": 0.6, "votes": 11 },
   { "who": "jess", "kind": "art", "title": "Night swim, Leddy Beach", "body": "", "medium": "Oil on panel", "shirt": "yes", "palette": "rink", "ratio": "r45", "week": 7, "f": 0.4, "votes": 17 },
-  { "who": "ben", "kind": "photo", "title": "Mustard field off Route 7", "body": "", "shirt": "no", "palette": "mustard", "ratio": "r169", "week": 8, "f": 0.5, "votes": 14 }
+  { "who": "ben", "kind": "photo", "title": "Mustard field off Route 7", "body": "", "shirt": "no", "palette": "mustard", "ratio": "r169", "week": 8, "f": 0.5, "votes": 14 },
+  { "who": "sam", "kind": "photo", "title": "Juniper at Oakledge", "body": "First swim of her life. Not her last.", "medium": "Pets", "shirt": "no", "palette": "sand", "ratio": "r45", "week": 0, "f": 0.2, "votes": 7 },
+  { "who": "maya", "kind": "photo", "title": "The Monday crowd at the Bird House", "body": "", "medium": "Vibe check", "shirt": "no", "palette": "neon", "ratio": "r45", "week": 1, "f": 0.5, "votes": 4 }
  ],
  "notices": [
   { "who": "kara", "title": "Looking for a model for a Saturday shoot at Oakledge", "body": "Two hours, golden light, prints for you after.", "place": "Oakledge Park", "days": 0.1 },
@@ -27,16 +29,21 @@
   { "who": "jules", "title": "Open studio weekend, twelve artists on one floor", "body": "Saturday and Sunday, 11 to 5. Prints, ceramics and a lot of tea.", "place": "Soda Plant, Pine Street", "days": 6 }
  ],
  "gallery": [
-  { "id": "demo-g1", "caption": "Sunset from Waterfront Park", "credit": "Stephen", "spot": "Waterfront Park", "area": "Waterfront", "palette": "dawn", "days": 70 },
-  { "id": "demo-g2", "caption": "The Church Street lights", "credit": "Stephen", "spot": "Church Street", "area": "Downtown / Church St", "palette": "street", "days": 71 },
-  { "id": "demo-g3", "caption": "Morning coffee on Pine Street", "credit": "Stephen", "spot": "Pine Street", "area": "South End", "palette": "coffee", "days": 72 }
+  { "id": "demo-g1", "caption": "Sunset from Waterfront Park", "credit": "Stephen", "spot": "Waterfront Park", "area": "Waterfront", "palette": "dawn", "days": 70, "category": "sunsets" },
+  { "id": "demo-g2", "caption": "The Church Street lights", "credit": "Stephen", "spot": "Church Street", "area": "Downtown / Church St", "palette": "street", "days": 71, "category": "street" },
+  { "id": "demo-g3", "caption": "Morning coffee on Pine Street", "credit": "Stephen", "spot": "Pine Street", "area": "South End", "palette": "coffee", "days": 72, "category": "food" }
  ],
  "instagram": [
-  {"h": "demo_lakelight", "hours": 2, "palette": "lake", "u": "https://www.instagram.com/p/DemoLake1/", "c": "Glass-calm at the breakwater this morning. Not a single ripple until the ferry came through."},
-  {"h": "demo_northbeach", "hours": 5, "palette": "dawn", "u": "https://www.instagram.com/p/DemoBeach2/", "c": "First frost on the dunes at North Beach\nWorth the 6 am alarm."},
-  {"h": "demo_oldnorthend", "hours": 9, "palette": "brick", "u": "https://www.instagram.com/p/DemoONE3/", "c": "New mural going up on North Winooski. Day two of five."},
-  {"h": "demo_intervale", "hours": 20, "palette": "foliage", "u": "https://www.instagram.com/reel/DemoField4/", "c": "Peak color along the Intervale path. Bring a jacket, it’s windy by the river."},
-  {"h": "demo_churchst", "hours": 30, "palette": "neon", "u": "https://www.instagram.com/p/DemoChurch5/", "c": ""},
-  {"h": "demo_lakelight", "hours": 52, "palette": "night", "u": "https://www.instagram.com/p/DemoNight6/", "c": "Moonrise over the Adirondacks from Battery Park."}
- ]
+  { "h": "demo_lakelight", "hours": 2, "palette": "lake", "u": "https://www.instagram.com/p/DemoLake1/", "c": "Glass-calm at the breakwater this morning. Not a single ripple until the ferry came through.", "s": "see" },
+  { "h": "demo_northbeach", "hours": 5, "palette": "dawn", "u": "https://www.instagram.com/p/DemoBeach2/", "c": "First frost on the dunes at North Beach\nWorth the 6 am alarm.", "s": "see" },
+  { "h": "demo_oldnorthend", "hours": 9, "palette": "brick", "u": "https://www.instagram.com/p/DemoONE3/", "c": "New mural going up on North Winooski. Day two of five.", "s": "see" },
+  { "h": "demo_intervale", "hours": 20, "palette": "foliage", "u": "https://www.instagram.com/reel/DemoField4/", "c": "Peak color along the Intervale path. Bring a jacket, it’s windy by the river.", "s": "see" },
+  { "h": "demo_churchst", "hours": 30, "palette": "neon", "u": "https://www.instagram.com/p/DemoChurch5/", "c": "", "s": "see" },
+  { "h": "demo_lakelight", "hours": 52, "palette": "night", "u": "https://www.instagram.com/p/DemoNight6/", "c": "Moonrise over the Adirondacks from Battery Park.", "s": "see" },
+  { "h": "demo_foambar", "hours": 3, "palette": "neon", "u": "https://www.instagram.com/p/DemoBar7/", "c": "Patio heaters are on. Open till 10 tonight.", "s": "do", "f": 1 },
+  { "h": "demo_wakingroom", "hours": 6, "palette": "plum", "u": "https://www.instagram.com/p/DemoShow8/", "c": "FRIDAY: three bands, doors at 8, $10 at the door", "s": "do" },
+  { "h": "demo_catlounge", "hours": 11, "palette": "sand", "u": "https://www.instagram.com/p/DemoCat9/", "c": "Pepper has claimed the window seat again.", "s": "see" },
+  { "h": "demo_bakehouse", "hours": 26, "palette": "mustard", "u": "https://www.instagram.com/p/DemoBake10/", "c": "Maple croissants are back, Saturdays only.", "s": "see", "f": 1 }
+ ],
+ "instagram_categories": { "vibe": ["demo_foambar", "demo_catlounge"], "pets": ["demo_catlounge"], "posters": [], "food": ["demo_bakehouse", "demo_foambar"] }
 }
