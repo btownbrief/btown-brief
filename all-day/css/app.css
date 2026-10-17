@@ -336,6 +336,9 @@ body.chrome-away .mast { transform: translateY(-100%); }
 .vbox-head .t { flex: 1; min-width: 0; font-weight: 600; font-size: var(--fs-body); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .vbox-frame { position: relative; aspect-ratio: 16 / 9; background: var(--lightbox); }
 .vbox-frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+/* showClip(): a file video in the same box; a reel stands 9:16 */
+.vbox-frame.vertical { aspect-ratio: 9 / 16; max-height: 70vh; margin: 0 auto; }
+.vbox-frame video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; background: var(--lightbox); }
 .vbox-foot { display: flex; align-items: center; gap: var(--s3); padding: var(--s3) var(--gutter); }
 .vbox-foot .note { flex: 1; }
 
@@ -532,7 +535,8 @@ body.chrome-away .mast { transform: translateY(-100%); }
 .sec .btn.sm, .sec .pills, .sec .pillbtn { flex: 0 0 auto; }
 .sec + .card.row, .sec + .card { border-top: 1px solid var(--line); }
 .rail-wrap { position: relative; padding: 0 0 6px; }
-.rail { display: flex; gap: 12px; overflow-x: auto; scroll-snap-type: x proximity; padding: 2px var(--gutter) 10px; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+/* scroll-padding: a snapped card stops at the gutter, never flush to the screen edge */
+.rail { display: flex; gap: 12px; overflow-x: auto; scroll-snap-type: x proximity; scroll-padding-inline: var(--gutter); padding: 2px var(--gutter) 10px; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
 .rail.pad-top { padding-top: 14px; }
 .rail::-webkit-scrollbar { display: none; }
 .rail > * { flex: 0 0 auto; scroll-snap-align: start; }
@@ -573,7 +577,8 @@ body.chrome-away .mast { transform: translateY(-100%); }
 /* list rows (restaurants, shops, podcasts, people) */
 .lrow { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 12px; padding: 10px var(--gutter); border-bottom: 1px solid var(--line); }
 .lrow .th { position: relative; display: block; width: 52px; height: 52px; border-radius: var(--r-thumb); overflow: hidden; background: var(--paper-2); }
-.lrow .th.bare { background: transparent; display: flex; align-items: center; justify-content: center; }
+/* a bare thumb holds an icon or an emoji (a game's), drawn at the emoji size */
+.lrow .th.bare { background: transparent; display: flex; align-items: center; justify-content: center; font-size: var(--fs-emoji); line-height: 1; }
 .lrow .t { font-size: var(--fs-body); font-weight: 600; line-height: 1.3; }
 .lrow .s { font-size: var(--fs-meta); color: var(--ink-3); margin-top: 2px; line-height: 1.35; }
 .lrow .s b { color: var(--ink-2); font-weight: 600; }
@@ -681,13 +686,67 @@ body.chrome-away .mast { transform: translateY(-100%); }
 .tee .design { position: absolute; left: 37%; right: 37%; top: 36%; aspect-ratio: 1; border-radius: var(--r-xs); overflow: hidden; }
 .tee .t { display: block; font-size: var(--fs-meta); font-weight: 600; margin-top: 8px; }
 .tee .s { display: block; font-size: var(--fs-small); color: var(--ink-3); }
+/* A third-party player (Spotify, Bandcamp) in a tab: full width, no frame of
+   its own, the media radius, a sunk ground while it loads. The height is the
+   player's own; .spotify and .bandcamp are the two sizes in use. */
+.embed { display: block; width: 100%; border: 0; border-radius: var(--r-media); background: var(--paper-2); }
+.embed.spotify { height: 152px; }
+.embed.bandcamp { height: 120px; }
 .spacer { height: 12px; }
 .addrow { padding: 12px var(--gutter) 0; }
 
+/* ======================================================= board posts */
+/* A reader's post on a tab's board (cards.board, boards.js): the author where
+   a source would be, then the post, then the board's own action row. */
+.card.board .c-head .mark { width: 22px; height: 22px; }
+.card.board .b-title { -webkit-touch-callout: default; }
+.card.board .c-media + .c-body { margin-top: var(--s2); }
+.b-meta { font-size: var(--fs-meta); font-weight: 600; color: var(--ink-2); margin-top: 2px; line-height: 1.35; }
+.b-place { display: flex; align-items: center; gap: var(--s1); font-size: var(--fs-meta); color: var(--ink-3); margin-top: var(--s1); }
+.b-place .i { width: 14px; height: 14px; flex: 0 0 auto; }
+.tag-left { color: var(--ink-2); background: var(--paper-2); }
+.act.rep .i, .act.del .i { width: 18px; height: 18px; }
+
+/* the compose and profile sheets */
+.bform { display: flex; flex-direction: column; gap: var(--s4); padding: var(--s2) 0 var(--s4); }
+.bf-row { display: flex; flex-direction: column; gap: var(--s1); }
+.bf-label { font-size: var(--fs-meta); font-weight: 600; color: var(--ink-2); }
+.bf-opt { font-weight: 400; color: var(--ink-3); }
+.bf-in { flex: 0 0 auto; width: 100%; }
+textarea.bf-in { height: auto; min-height: 96px; padding: 10px 14px; border-radius: var(--r-box); line-height: var(--lh-body); resize: vertical; }
+select.bf-in { appearance: none; -webkit-appearance: none; }
+.bf-hint { font-size: var(--fs-small); color: var(--ink-3); line-height: 1.4; }
+.bf-photo { display: flex; align-items: center; gap: var(--s3); min-width: 0; }
+.bf-photo .bf-hint { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.consent { display: flex; gap: var(--s2); align-items: flex-start; font-size: var(--fs-meta); color: var(--ink-2); line-height: 1.4; margin-top: var(--s2); }
+.consent input { margin-top: 2px; flex: 0 0 auto; width: 18px; height: 18px; accent-color: var(--accent); }
+.bf-note { font-size: var(--fs-meta); color: var(--ink-2); line-height: 1.45; padding: var(--s2) var(--s3); background: var(--paper-2); border-radius: var(--r-box); }
+.bf-go { display: flex; align-items: center; gap: var(--s3); flex-wrap: wrap; }
+.bf-msg { flex: 1 1 200px; font-size: var(--fs-meta); color: var(--ink-2); line-height: 1.4; }
+.bf-msg.err { color: var(--warn); }
+.bf-msg:empty { display: none; }
+.pills.wrap { flex-wrap: wrap; border-radius: var(--r-box); }
+.pills.wrap button { flex: 0 0 auto; }
+
+/* mod.html, the boards desk: one column of posts with their buttons */
+body.desk { overflow: auto; }
+.desk-col { max-width: var(--col); margin: 0 auto; padding: var(--s6) var(--gutter) var(--s8); }
+.desk-h { font-family: var(--serif); font-size: var(--fs-hero); font-weight: 500; }
+.desk-col a { text-decoration: underline; }
+.desk-post { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: var(--s3); padding: var(--s3) 0; border-bottom: 1px solid var(--line-soft); }
+.desk-post > div:only-child { grid-column: 1 / -1; }
+.desk-post .t { font-weight: 600; line-height: 1.35; }
+.desk-post .d { font-size: var(--fs-meta); color: var(--ink-3); margin-top: 2px; }
+.desk-pic { width: 72px; height: 72px; object-fit: cover; border-radius: var(--r-thumb); background: var(--paper-2); }
+.desk-body { font-size: var(--fs-body); color: var(--ink-2); margin-top: var(--s1); white-space: pre-line; }
+
 @media (min-width: 900px) {
-  /* a wide screen has room: chips wrap instead of scrolling, so a mouse can reach them all */
-  .subnav .chips { flex-wrap: wrap; row-gap: 8px; -webkit-mask-image: none; mask-image: none; padding-bottom: 12px; }
-  .subnav .chips::after { display: none; }
+  /* a wide screen has room: chips wrap instead of scrolling, so a mouse can
+     reach them all, under the mast and inside a tab alike (Food's filters,
+     What Now's themes) */
+  .subnav .chips, .panel-body .chips { flex-wrap: wrap; row-gap: 8px; -webkit-mask-image: none; mask-image: none; }
+  .subnav .chips { padding-bottom: 12px; }
+  .subnav .chips::after, .panel-body .chips::after { display: none; }
   .toolband { flex-wrap: wrap; row-gap: 8px; }
   .toolband .chips { padding-right: var(--gutter); }
   .srcgrid { grid-template-columns: 1fr 1fr; column-gap: 24px; }

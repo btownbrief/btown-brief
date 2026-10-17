@@ -14,7 +14,9 @@
      author, handle, via, ago, thumb, media (a picture URL, or a demo palette
      name), ratio (r169 | r45 | r11), dur, local, own, live, votes,
      comments, open ("Open on X"), eyebrow, dow, dom, when, where, price,
-     going, cta, name, arch, line, show, src_audio, yt (a YouTube id). */
+     going, cta, name, arch, line, show, src_audio, yt (a YouTube id).
+   A board post (kind 'board', made by boards.item()) adds id, metaLine,
+   place, voted, mine and left ("19d left"). */
 
 import * as store from './store.js';
 import { attach as pour } from './liquid.js';
@@ -82,6 +84,8 @@ export const ICON = {
   live: svg('<circle cx="12" cy="12" r="3" fill="currentColor" stroke="none"/><path d="M6.3 6.3a8 8 0 0 0 0 11.4M17.7 6.3a8 8 0 0 1 0 11.4"/>'),
   tee: svg('<path d="M8 4 3.5 7.3 6 10.5l2-1.1V20h8V9.4l2 1.1 2.5-3.2L16 4a4 4 0 0 1-8 0z"/>'),
   mail: svg('<rect x="3.5" y="5.5" width="17" height="13" rx="2"/><path d="m4 7 8 6 8-6"/>'),
+  flag: svg('<path d="M5.5 21V4.5M5.5 4.5h11l-2.2 4 2.2 4h-11"/>'),
+  trash: svg('<path d="M4.5 7h15M9.5 7V4.5h5V7M6.5 7l1 13h9l1-13M10 11v5.5M14 11v5.5"/>'),
 };
 
 /* ------------------------------------------------------------------- time */
@@ -151,6 +155,7 @@ export function pills(options, current, onPick, cls) {
   const wrap = el('div', 'pills' + (cls ? ' ' + cls : ''));
   options.forEach(([v, label]) => {
     const b = el('button', v === current ? 'on' : '', esc(label));
+    b.type = 'button';   // inside a form (the profile sheet) a pill must not submit it
     b.addEventListener('click', () => { [...wrap.children].forEach((c) => c.classList.toggle('on', c === b)); onPick(v); });
     wrap.appendChild(b);
   });
@@ -368,6 +373,35 @@ function person(it) {
   return c;
 }
 
+/* A reader's post on a tab's board (boards.js). The author's first name
+   leads where a source would, then the post: its photo, title, the tab's
+   one-line summary of its fields, the words, the place. The action row is
+   the board's own: a vote that counts this board's votes, share, report
+   (someone else's post) or delete (your own), and save. The buttons carry
+   data-act names boards.js answers through app.onAct(). */
+function board(it) {
+  if (!ok(it)) return null;
+  const c = shell(it, 'board');
+  const head = '<div class="c-head">' + mark(it.author, 'round') + '<span class="c-src">' + esc(it.author) + '</span>' +
+    (it.arch ? '<span class="dot"></span><span class="via">' + esc(it.arch) + '</span>' : '') +
+    (it.ago ? '<span class="dot"></span><span>' + esc(it.ago) + '</span>' : '') +
+    (it.left ? '<span class="tag tag-left">' + esc(it.left) + '</span>' : '') + '</div>';
+  const media = it.media ? '<span class="c-media ' + esc(it.ratio || 'r45') + '" data-zoom role="button" tabindex="0" aria-label="See it full screen">' + art(it.media) + '</span>' : '';
+  const words = '<div class="c-body"><div><p class="c-title b-title">' + esc(it.title) + '</p>' +
+    (it.metaLine ? '<p class="b-meta">' + esc(it.metaLine) + '</p>' : '') +
+    (it.text ? '<p class="c-text">' + esc(it.text) + '</p>' : '') +
+    (it.place ? '<p class="b-place">' + ICON.pin + '<span>' + esc(it.place) + '</span></p>' : '') + '</div></div>';
+  const saved = store.isSaved(it.k);
+  const row = '<div class="c-acts">' +
+    '<button class="act up' + (it.voted ? ' on' : '') + '" data-act="bvote" aria-label="Vote" aria-pressed="' + !!it.voted + '">' + ICON.up + '<span class="n">' + (it.votes || '') + '</span></button>' +
+    '<button class="act sh" data-act="share" aria-label="Share">' + ICON.share + '</button>' +
+    (it.mine ? '<button class="act del" data-act="bdelete" aria-label="Delete your post">' + ICON.trash + '</button>'
+      : '<button class="act rep" data-act="breport" aria-label="Report">' + ICON.flag + '</button>') +
+    '<span class="sp"></span><button class="act star' + (saved ? ' on' : '') + '" data-act="save" aria-label="Save" aria-pressed="' + saved + '">' + ICON.star + '</button></div>';
+  c.innerHTML = head + media + words + row;
+  return c;
+}
+
 const newline = (label) => el('div', 'newline', esc(label));
 
 /* The end of a feed, and it says what it was the end of. Buttons are built
@@ -387,11 +421,11 @@ function caught(opts) {
 function any(it, o = {}) {
   if (!it) return null;
   if (it.kind === 'newline') return newline(it.label);
-  const f = { headline, post, pick, video, image, event, person, audio: video }[it.kind] || headline;
+  const f = { headline, post, pick, video, image, event, person, board, audio: video }[it.kind] || headline;
   return f(it, o);
 }
 
-export const cards = { headline, row, post, pick, video, image, event, person, newline, caught, any };
+export const cards = { headline, row, post, pick, video, image, event, person, board, newline, caught, any };
 
 /* append a card if it could be drawn */
 export function put(host, node) { if (node) host.appendChild(node); return node; }

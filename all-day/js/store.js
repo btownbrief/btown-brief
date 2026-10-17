@@ -23,8 +23,8 @@
    items cannot leak into a reader's real lists or into ad_votes. Theme is
    the one thing demo mode still remembers. */
 
-const SB_URL = 'https://jnouvwxomrcffqwilqkq.supabase.co';
-const SB_KEY = 'sb_publishable_RkMJQopffWlV6DSwCRkndQ_Xw6GJMf3'; // anon — safe to ship
+export const SB_URL = 'https://jnouvwxomrcffqwilqkq.supabase.co';
+export const SB_KEY = 'sb_publishable_RkMJQopffWlV6DSwCRkndQ_Xw6GJMf3'; // anon — safe to ship
 
 /* Shared with pulse.html, tv.html and the games. Do not rename. */
 const PLAYER_KEY = 'btown-player-id';
@@ -474,12 +474,25 @@ export function topVoted(limit) {
 /* ---------------------------------------------------------------- user */
 /* The optional email sign-in. auth.js talks to Supabase Auth and keeps the
    session here; tabs only ever ask app.user(), which is this. Null when
-   nobody is signed in, which is the normal state: no tab may require it. */
+   nobody is signed in, which is the normal state: no tab may require it.
+   What is stored is the refresh token and the account id, nothing else.
+   Not the email, and not the access token either: Supabase's access token
+   is a JWT that carries the email among its claims, so auth.js keeps it in
+   memory only and trades the refresh token for a fresh one when the app
+   starts. A session saved by an earlier build (access token, email) is
+   rewritten to the two fields the first time it is read. */
 const AUTH_KEY = 'allday-auth';
 export function session() {
   if (DEMO) return null;   /* demo mode never shows or touches a real account */
   const s = obj(read(AUTH_KEY, null));
-  return s.access_token && s.user ? s : null;
+  if (!s.refresh_token || !s.user || !s.user.id) return null;
+  const keys = Object.keys(s);
+  if (keys.length !== 2 || Object.keys(s.user).length !== 1) {
+    const clean = { refresh_token: String(s.refresh_token), user: { id: String(s.user.id) } };
+    write(AUTH_KEY, clean);
+    return clean;
+  }
+  return s;
 }
 export function setSession(s) {
   if (DEMO) return;
@@ -488,5 +501,5 @@ export function setSession(s) {
 }
 export function user() {
   const s = session();
-  return s ? { id: s.user.id, email: s.user.email || '' } : null;
+  return s ? { id: s.user.id } : null;
 }

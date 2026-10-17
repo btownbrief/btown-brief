@@ -491,12 +491,9 @@ function ownShow() {
         if (app.demo) { app.toast('Opens Spotify’s player for this episode in the real build'); return; }
         app.stop();
         app.closeVideo();
-        frame = el('iframe');
+        frame = el('iframe', 'embed spotify');
         frame.title = e.title;
         frame.loading = 'lazy';
-        frame.width = '100%';
-        frame.height = '152';
-        frame.frameBorder = '0';
         frame.allow = 'clipboard-write; encrypted-media; fullscreen; picture-in-picture';
         frame.src = 'https://open.spotify.com/embed/episode/' + encodeURIComponent(e.id) + '?theme=0';
         holder.appendChild(frame);

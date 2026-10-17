@@ -1,6 +1,7 @@
 // All Day — the shell's test matrix.
 //
 //   NODE_PATH=~/btownbrief/btownbrief.github.io/smoke/node_modules node all-day/tests/allday.spec.mjs
+//   ONLY=shellFixes,boards …same…   (just those groups, while iterating)
 //
 // No project here installs Playwright, so this borrows the arcade smoke
 // run's copy (1.62, Chromium already cached in ~/Library/Caches/ms-playwright)
@@ -274,11 +275,22 @@ async function newPage(browser, base, opts = {}) {
     const u = r.request().url();
     supabase.push(r.request().method() + ' ' + u.replace(/^https:\/\/[^/]+/, ''));
     if (/\/auth\/v1\/settings/.test(u)) return r.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ external: { email: opts.authEmail !== false } }) });
+    /* opts.auth(path, body, headers) answers Supabase Auth: { status, body } or undefined for the default */
+    const ap = (u.match(/\/auth\/v1\/([\w?=&_-]+)/) || [])[1];
+    if (ap && opts.auth) {
+      const out = opts.auth(ap, JSON.parse(r.request().postData() || '{}'), r.request().headers());
+      if (out !== undefined) return new Promise((res) => setTimeout(res, out.delay || 0))
+        .then(() => r.fulfill({ status: out.status || 200, contentType: 'application/json', body: JSON.stringify(out.body || {}) })).catch(() => {});
+    }
+    /* a stored session trades its refresh token for a fresh access token on each visit */
+    if (ap && /^token/.test(ap)) return r.fulfill({ status: 200, contentType: 'application/json',
+      body: JSON.stringify({ access_token: 'a.b.c', refresh_token: 'r-next', expires_in: 3600, token_type: 'bearer', user: { id: 'u-1' } }) });
     const fn = (u.match(/\/rest\/v1\/rpc\/(\w+)/) || [])[1];
     if (fn && opts.rpc) {
-      const out = opts.rpc(fn, JSON.parse(r.request().postData() || '{}'));
+      const out = opts.rpc(fn, JSON.parse(r.request().postData() || '{}'), r.request().headers());
       if (out && out.hang) return undefined;   // never answers: a stalled request
-      if (out !== undefined) return r.fulfill({ status: out && out.status || 200, contentType: 'application/json', body: JSON.stringify(out && out.status ? out.body : out) });
+      const wrapped = out && typeof out.status === 'number';   // { status: 404, body } is an HTTP answer; a row may have its own status field
+      if (out !== undefined) return r.fulfill({ status: wrapped ? out.status : 200, contentType: 'application/json', body: JSON.stringify(wrapped ? out.body : out) });
     }
     if (fn) return r.fulfill({ status: 200, contentType: 'application/json', body: '[]' });
     return r.fulfill({ status: 200, contentType: 'application/json', body: '{}' });
@@ -1340,6 +1352,8 @@ async function theWhatNow(browser, base) {
     await page.click(wnPanel + ' .artist .listen');
     const src = await page.$eval(wnPanel + ' .artist iframe', (f) => f.src);
     check(/bandcamp\.com\/EmbeddedPlayer\/album=1234567\//.test(src) && !/autoplay/.test(src), 'Listen builds that artist’s Bandcamp player, which does not autoplay', src);
+    const frame = await page.$eval(wnPanel + ' .artist iframe', (f) => ({ cls: f.className, r: getComputedStyle(f).borderRadius, h: Math.round(f.getBoundingClientRect().height), w: f.getBoundingClientRect().width === f.parentElement.getBoundingClientRect().width - parseFloat(getComputedStyle(f.parentElement).paddingLeft) - parseFloat(getComputedStyle(f.parentElement).paddingRight) }));
+    check(frame.cls === 'embed bandcamp' && frame.r === '12px' && frame.h === 120 && frame.w, 'the player is the shell’s .embed: full width, the media radius, its own height', JSON.stringify(frame));
     await page.click(wnPanel + ' .artist .listen');
     check(await page.$(wnPanel + ' iframe') === null, 'pressing it again takes the player away', '');
     check(await page.$(wnPanel + ' .caught') !== null, 'the list ends, and says so', '');
@@ -1696,21 +1710,621 @@ async function theFood(browser, base) {
   });
 }
 
+/* ------------------------------------------------------------- accounts */
+/* The sign-in row's three states, live, with Supabase Auth answered here. */
+const SESSION = (o = {}) => JSON.stringify({ access_token: 'a.b.c', refresh_token: 'r1', expires_at: o.expires || 4102444800, user: { id: 'u-1', ...(o.user || {}) } });
+async function settingsText(page) {
+  if (await page.$eval('#sheet', (x) => !x.hidden)) { await page.keyboard.press('Escape'); await page.waitForTimeout(50); }
+  await page.click('#settings-btn');
+  await page.waitForFunction(() => { const b = document.querySelector('.sheet-body'); return b && !/Checking…|One moment…/.test(b.innerText); }, null, { timeout: 6000 }).catch(() => {});
+  return page.$eval('.sheet-body', (b) => b.innerText);
+}
+async function accounts(browser, base) {
+  await group('accounts: the sign-in row, three states', async () => {
+    const off = await newPage(browser, base, { authEmail: false });
+    await off.page.goto(base + '/all-day/');
+    await settle(off.page);
+    check(/Sign in\s+Coming soon/.test(await settingsText(off.page)), 'Auth off in the project: "Sign in · Coming soon"', '');
+    await off.ctx.close();
+
+    const out = await newPage(browser, base);
+    await out.page.goto(base + '/all-day/');
+    await settle(out.page);
+    const t = await settingsText(out.page);
+    check(await out.page.$('.signin input[type=email]') !== null && /posting on a board and reporting do/.test(t), 'signed out: the email field, and what it is for', t.slice(0, 200));
+    await out.ctx.close();
+
+    /* the emailed link lands with tokens in the hash; /auth/v1/user names the reader */
+    const seen = [];
+    const inn = await newPage(browser, base, {
+      auth: (p, body, h) => { seen.push(p + ' ' + (h.authorization || '')); if (/^user/.test(p)) return { body: { id: 'u-1', email: 'reader@example.com', aud: 'authenticated' } }; if (/^logout/.test(p)) return { status: 204 }; return undefined; },
+      rpc: (fn) => (fn === 'nn_profile_get' ? { display_name: 'Maya R.', neighborhood: null, archetype: null } : undefined),
+    });
+    /* a token shaped like Supabase's: a JWT whose claims carry the email */
+    const b64 = (o) => Buffer.from(JSON.stringify(o)).toString('base64url');
+    const jwt = b64({ alg: 'HS256', typ: 'JWT' }) + '.' + b64({ sub: 'u-1', email: 'reader@example.com', role: 'authenticated', exp: 4102444800 }) + '.c2ln';
+    await inn.page.goto(base + '/all-day/#access_token=' + jwt + '&refresh_token=r1&expires_in=3600&token_type=bearer&type=magiclink');
+    await inn.page.waitForSelector('#toast:not([hidden])', { timeout: 6000 });
+    check(/You’re signed in/.test(await inn.page.$eval('#toast', (x) => x.textContent)), 'the link signs the reader in, and says so without the address', '');
+    check(await inn.page.evaluate(() => location.hash) === '#wire', 'the tokens leave the address bar', '');
+    check(seen.some((x) => x === 'user Bearer ' + jwt), 'the token is checked with Supabase', seen.join(', '));
+    const stored = await inn.page.evaluate(() => Object.keys(localStorage).map((k) => k + '=' + localStorage.getItem(k)));
+    check(stored.length && !stored.some((v) => /@|eyJ|%40/.test(v)), 'nothing in localStorage holds an "@" or a JWT after sign-in', stored.filter((v) => /@|eyJ|%40/.test(v)).join(' | '));
+    const kept = await inn.page.evaluate(() => localStorage.getItem('allday-auth'));
+    check(kept && !/@/.test(kept) && JSON.stringify(Object.keys(JSON.parse(kept)).sort()) === '["refresh_token","user"]' && JSON.parse(kept).user.id === 'u-1',
+      'storage keeps only the refresh token and the account id: no email, no access token (whose claims carry it)', kept);
+    const t2 = await settingsText(inn.page);
+    check(/Signed in\s+as Maya R\./.test(t2) && /Your profile/.test(t2) && /Your posts/.test(t2) && /Delete my account and posts/.test(t2), 'signed in: the name, profile, posts, delete', t2.slice(0, 300));
+    check(!/reader@example\.com/.test(await inn.page.content()), 'the email is nowhere on the page', '');
+    await inn.page.click('.sheet-body .sheet-row button:has-text("Sign out")');
+    await inn.page.waitForTimeout(150);
+    check(await inn.page.evaluate(() => localStorage.getItem('allday-auth')) === null && await inn.page.$('.signin input[type=email]') !== null, 'Sign out forgets the session and shows the email field again', '');
+    check(seen.some((x) => /^logout/.test(x)), 'and tells Supabase', seen.join(', '));
+    check(!inn.errors.length, 'no console errors', inn.errors.join(' | '));
+    await inn.ctx.close();
+  });
+
+  await group('accounts: sessions refresh once, and an old email is dropped', async () => {
+    let refreshes = 0;
+    const { ctx, page, errors } = await newPage(browser, base, {
+      auth: (p, body) => {
+        if (/^token/.test(p)) { refreshes++; return body.refresh_token === 'r1' ? { body: { access_token: 'n.e.w', refresh_token: 'r2', expires_in: 3600, user: { id: 'u-1', email: 'reader@example.com' } } } : { status: 400, body: { error: 'invalid_grant' } }; }
+        return undefined;
+      },
+    });
+    await page.goto(base + '/all-day/?x=1');
+    await page.evaluate((s) => localStorage.setItem('allday-auth', s), SESSION({ expires: Math.floor(Date.now() / 1000) + 60, user: { email: 'reader@example.com' } }));
+    await page.goto(base + '/all-day/');
+    await settle(page);
+    const toks = await page.evaluate(() => import('/all-day/js/app.js').then((app) => Promise.all([app.token(), app.token(), app.token()])));
+    check(toks.every((t) => t === 'n.e.w'), 'a session about to run out is refreshed', JSON.stringify(toks));
+    check(refreshes === 1, 'once, however many callers ask at the same moment', refreshes);
+    const kept = JSON.parse(await page.evaluate(() => localStorage.getItem('allday-auth')));
+    check(kept.refresh_token === 'r2' && !('email' in kept.user) && !('access_token' in kept), 'the new refresh token is kept; the old saved email and access token are gone', JSON.stringify(kept));
+    await page.evaluate((s) => localStorage.setItem('allday-auth', s), SESSION({ expires: Math.floor(Date.now() / 1000) + 60 }).replace('"r1"', '"spent"'));
+    await page.reload();
+    await settle(page);
+    check(await page.evaluate(() => localStorage.getItem('allday-auth')) === null && await page.evaluate(() => import('/all-day/js/app.js').then((a) => a.user())) === null,
+      'a refused refresh signs out quietly', '');
+    check(refreshes === 2, 'one try for the spent token, no retries', refreshes);
+    const real = errors.filter((e) => !/Failed to load resource: the server responded with a status of 400/.test(e));
+    check(!real.length, 'no console errors beyond the browser logging the refused refresh', real.join(' | '));
+    await ctx.close();
+  });
+
+  await group('accounts: a slow refresh cannot sign a reader back in', async () => {
+    const { ctx, page, errors } = await newPage(browser, base, {
+      auth: (p) => (/^token/.test(p) ? { delay: 900, body: { access_token: 'late.tok.en', refresh_token: 'r-late', expires_in: 3600, user: { id: 'u-1' } } } : undefined),
+    });
+    await page.goto(base + '/all-day/?x=1');
+    await page.evaluate((s) => localStorage.setItem('allday-auth', s), SESSION());
+    await page.goto(base + '/all-day/');
+    await settle(page);
+    const heard = await page.evaluate(() => import('/all-day/js/app.js').then((app) => {
+      const seen = [];
+      app.onAuth((u) => seen.push(u));
+      app.signOut();                       // while the visit's refresh is still on its way
+      return new Promise((res) => setTimeout(() => res({ seen, user: app.user(), kept: localStorage.getItem('allday-auth') }), 1400));
+    }));
+    check(heard.user === null && heard.kept === null, 'after Sign out the late answer is dropped: still signed out, nothing stored', JSON.stringify(heard));
+    check(heard.seen.length === 1 && heard.seen[0] === null, 'and onAuth heard the sign-out once, nothing after', JSON.stringify(heard.seen));
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('accounts: another tab switching accounts never borrows the old token', async () => {
+    const sent = [];
+    const { ctx, page, errors } = await newPage(browser, base, {
+      auth: (p, body) => { if (/^token/.test(p)) { sent.push(body.refresh_token); return { body: { access_token: 'tok-' + body.refresh_token, refresh_token: body.refresh_token + '+', expires_in: 3600, user: { id: 'x' } } }; } return undefined; },
+    });
+    await page.goto(base + '/all-day/?x=1');
+    await page.evaluate((s) => localStorage.setItem('allday-auth', s), SESSION());
+    await page.goto(base + '/all-day/');
+    await settle(page);
+    const a = await page.evaluate(() => import('/all-day/js/app.js').then((app) => app.token()));
+    check(a === 'tok-r1', 'tab one holds the first account’s token', a);
+    const two = await ctx.newPage();
+    await two.goto(base + '/all-day/?x=2');
+    await two.evaluate(() => localStorage.setItem('allday-auth', JSON.stringify({ refresh_token: 'rB', user: { id: 'u-2' } })));
+    await page.waitForTimeout(200);
+    const b = await page.evaluate(() => import('/all-day/js/app.js').then((app) => app.token().then((t) => ({ t, id: app.user() && app.user().id }))));
+    check(b.id === 'u-2' && b.t === 'tok-rB', 'after the other tab signs in as someone else, tab one drops the old token and fetches the new account’s', JSON.stringify(b));
+    check(sent.includes('rB'), 'with the new account’s refresh token', sent.join(', '));
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('accounts: before the SQL is pasted, posting says so', async () => {
+    const missing = { status: 404, body: { code: 'PGRST202', message: 'Could not find the function' } };
+    const { ctx, page, errors } = await newPage(browser, base, { rpc: (fn) => (/^nn_/.test(fn) ? missing : undefined) });
+    await page.goto(base + '/all-day/?x=1');
+    await page.evaluate((s) => localStorage.setItem('allday-auth', s), SESSION());
+    await page.goto(base + '/all-day/');
+    await settle(page);
+    check(/Signed in\s+Posting is coming soon\./.test(await settingsText(page)), 'Settings: "Signed in · Posting is coming soon."', '');
+    await page.keyboard.press('Escape');
+    await page.evaluate(() => import('/all-day/js/boards.js').then((b) => b.compose({ board: 'vintage', kind: 'spotted', heading: 'Post a find' })));
+    await page.waitForFunction(() => !/One moment/.test(document.querySelector('.sheet-body').innerText));
+    check(/Posting is coming soon\. Everything else here works\./.test(await page.$eval('.sheet-body', (b) => b.innerText)), 'the compose sheet says the same, and offers no form', '');
+    const l = await page.evaluate(() => import('/all-day/js/boards.js').then((b) => b.list('vintage').then((r) => ({ ok: r.ok, n: r.posts.length, err: r.error, status: b.status() }))));
+    check(!l.ok && l.n === 0 && l.err === 'off' && l.status === 'off', 'a list resolves empty with "off", never throws', JSON.stringify(l));
+    const real = errors.filter((e) => !/Failed to load resource: the server responded with a status of 404/.test(e));
+    check(!real.length, 'no console errors beyond the browser logging the 404s (the reader sees none)', real.join(' | '));
+    await ctx.close();
+  });
+}
+
+/* --------------------------------------------------------------- boards */
+/* The tab-facing API, driven in ?demo=1 against boards-fake.js, plus the
+   live wire format. A test host feed is drawn at the top of the Vintage tab,
+   the way a tab will draw one. */
+const VMETA = (p) => [p.meta.shop, p.meta.size, p.meta.price != null ? '$' + p.meta.price : ''].filter(Boolean).join(' · ');
+async function drawBoard(page, board, extra) {
+  await page.evaluate(async ({ board, extra }) => {
+    const B = await import('/all-day/js/boards.js');
+    const app = await import('/all-day/js/app.js');
+    let host = document.getElementById('board-test');
+    if (!host) {
+      host = document.createElement('div');
+      host.className = 'feed';
+      host.id = 'board-test';
+      document.querySelector('.panel:not([hidden]) .panel-body').prepend(host);
+      app.bindFeed(host);
+    }
+    host.innerHTML = '';
+    const r = await B.list(board, extra || {});
+    const meta = (p) => [p.meta.shop, p.meta.size, p.meta.price != null ? '$' + p.meta.price : ''].filter(Boolean).join(' · ');
+    B.put(host, r.posts, { meta: board === 'vintage' ? meta : undefined });
+  }, { board, extra });
+}
+const COMPOSE = { board: 'vintage', kind: 'spotted', heading: 'Post a find', title: 'What did you spot?',
+  fields: [{ key: 'shop', label: 'Shop' }, { key: 'size', label: 'Size' }, { key: 'price', label: 'Price', type: 'int' }],
+  notes: ['A find lasts three weeks, then it is gone.'] };
+async function openCompose(page, o) {
+  await page.evaluate((o) => import('/all-day/js/boards.js').then((b) => b.compose(o)), o || COMPOSE);
+  await page.waitForSelector('.sheet-body form.bform, .sheet-body .linkrow', { timeout: 4000 });
+}
+const fakeOf = (page, fn) => page.evaluate(`import('/all-day/js/boards.js').then((B) => { const f = B._fake(); return (${fn})(f); })`);
+
+async function boards(browser, base) {
+  await group('boards: the profile, set and read (demo)', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/all-day/?demo=1#vintage');
+    await settle(page);
+    await openCompose(page);
+    check(/Posting needs the email sign-in/.test(await page.$eval('.sheet-body', (b) => b.innerText)) && await page.$('.sheet-body form') === null, 'signed out, compose asks for sign-in and shows no form', '');
+    await page.click('.sheet-body .linkrow button:has-text("Sign in")');
+    await page.waitForSelector('.sheet-body .sheet-row button:has-text("Sign in")');
+    await page.click('.sheet-body .sheet-row button:has-text("Sign in")');
+    await page.waitForFunction(() => /Add your first name before you post/.test(document.querySelector('.sheet-body').innerText));
+    check(true, 'Settings → Sign in signs into the demo account, which has no name yet', '');
+    await page.click('.sheet-body .sheet-row button:has-text("Edit")');
+    await page.waitForSelector('.sheet-body form.bform input[name=display_name]');
+    await page.fill('input[name=display_name]', 'me@example.com');
+    await page.click('.bform button[type=submit]');
+    check(/no @ in it/.test(await page.$eval('.bf-msg', (m) => m.textContent)), 'an email as a name is refused', '');
+    await page.fill('input[name=display_name]', '  Maya   R. ');
+    await page.selectOption('select[name=neighborhood]', 'old-north-end');
+    await page.click('.bform .pills button:has-text("Trail person")');
+    await page.click('.bform button[type=submit]');
+    await page.waitForSelector('#sheet[hidden]', { state: 'attached' });
+    const p = await page.evaluate(() => import('/all-day/js/boards.js').then((b) => b.profile()));
+    check(p.ok && JSON.stringify(p.profile) === JSON.stringify({ display_name: 'Maya R.', neighborhood: 'old-north-end', archetype: 'trail' }), 'saved, tidied, and read back', JSON.stringify(p));
+    check(/Signed in\s+as Maya R\./.test(await settingsText(page)), 'Settings names the reader by first name', '');
+    await page.click('.sheet-body .sheet-row button:has-text("Edit")');
+    await page.waitForSelector('input[name=display_name]');
+    check(await page.$eval('input[name=display_name]', (i) => i.value) === 'Maya R.' && await page.$eval('select[name=neighborhood]', (s) => s.value) === 'old-north-end' &&
+      await page.$eval('.bform .pills button.on', (b) => b.textContent) === 'Trail person', 'the profile sheet opens on what was saved', '');
+    await page.waitForTimeout(400);
+    await page.screenshot({ path: path.join(SHOTS, 'demo-profile.png') });
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('boards: compose refuses, then posts (demo)', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/all-day/?demo=1#vintage');
+    await settle(page);
+    await page.evaluate(() => import('/all-day/js/auth.js').then((a) => a.demoSignIn()));
+    const before = await fakeOf(page, (f) => f.posts.length);
+    await openCompose(page);
+    await page.waitForTimeout(400);
+    await page.screenshot({ path: path.join(SHOTS, 'demo-compose.png') });
+    check(await page.$('input[name=display_name]') !== null, 'a reader with no name is asked for one in the sheet', '');
+    await page.fill('input[name=title]', '1994 UVM crewneck');
+    await page.fill('input[name="m:shop"]', 'Battery Street Jeans');
+    await page.click('.bform button[type=submit]');
+    check(/Add your first name before you post/.test(await page.$eval('.bf-msg', (m) => m.textContent)), 'no name: refused, with the reason', '');
+    await page.fill('input[name=display_name]', 'Kara');
+    await page.setInputFiles('.bform input[type=file]', { name: 'find.jpg', mimeType: 'image/jpeg', buffer: PNG });
+    check(/find\.jpg/.test(await page.$eval('.bf-photo', (x) => x.textContent)), 'the chosen photo is named', '');
+    await page.click('.bform button[type=submit]');
+    check(/Tick the box first/.test(await page.$eval('.bf-msg', (m) => m.textContent)), 'a photo without the consent box: refused', '');
+    const sent = await fakeOf(page, (f) => ({ posts: f.posts.length, photos: [...f.photos.keys()].filter((k) => !/^submissions\/demo-[a-z]+\.jpg$/.test(k)).length }));
+    check(sent.posts === before && sent.photos === 0, 'and nothing was sent: no post, no photo', JSON.stringify(sent));
+    await page.setInputFiles('.bform input[type=file]', []);
+    await page.fill('input[name="m:size"]', 'L');
+    await page.fill('input[name="m:price"]', '28');
+    await page.fill('textarea[name=body]', 'Back rack by the boots. https://spam.example');
+    await page.click('.bform button[type=submit]');
+    await page.waitForSelector('#sheet[hidden]', { state: 'attached', timeout: 4000 });
+    check(/^Posted$/.test(await page.$eval('#toast', (t) => t.textContent)), 'posted, and the toast says so', await page.$eval('#toast', (t) => t.textContent));
+    await drawBoard(page, 'vintage', { kind: 'spotted' });
+    const card = await page.$eval('#board-test .card.board', (c) => ({ title: c.querySelector('.b-title').textContent, meta: c.querySelector('.b-meta') && c.querySelector('.b-meta').textContent,
+      text: c.querySelector('.c-text').textContent, who: c.querySelector('.c-src').textContent, left: c.querySelector('.tag-left') && c.querySelector('.tag-left').textContent,
+      del: !!c.querySelector('[data-act=bdelete]'), rep: !!c.querySelector('[data-act=breport]') }));
+    check(card.title === '1994 UVM crewneck' && card.meta === 'Battery Street Jeans · L · $28', 'it is first on the board, with the tab’s meta line', JSON.stringify(card));
+    check(card.who === 'Kara' && card.text === 'Back rack by the boots.' && /^2[01]d left$/.test(card.left), 'by first name, the link stripped, three weeks to run', JSON.stringify(card));
+    check(card.del && !card.rep, 'your own post offers delete, not report', JSON.stringify(card));
+    await pageRules(page, 'boards', 390);
+    await page.screenshot({ path: path.join(SHOTS, 'demo-board-cards.png') });
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('boards: votes, reports, delete, expiry (demo)', async () => {
+    const { ctx, page, errors } = await newPage(browser, base, { viewport: { width: 1280, height: 800 }, scheme: 'dark' });
+    await page.goto(base + '/all-day/?demo=1#vintage');
+    await settle(page);
+    await drawBoard(page, 'vintage');
+    const first = '#board-test .card.board:first-child';
+    const n0 = Number(await page.$eval(first + ' [data-act=bvote] .n', (n) => n.textContent || 0));
+    await page.click(first + ' [data-act=bvote]');
+    await page.waitForTimeout(100);
+    const v1 = await page.$eval(first + ' [data-act=bvote]', (b) => ({ n: Number(b.querySelector('.n').textContent || 0), on: b.getAttribute('aria-pressed') }));
+    check(v1.n === n0 + 1 && v1.on === 'true', 'signed out, a vote counts (the device’s vote) and the arrow fills', JSON.stringify([n0, v1]));
+    await drawBoard(page, 'vintage');
+    check(await page.$eval(first + ' [data-act=bvote]', (b) => b.getAttribute('aria-pressed')) === 'true', 'and it is still yours when the board redraws', '');
+    await page.click(first + ' [data-act=bvote]');
+    await page.waitForTimeout(100);
+    check(Number(await page.$eval(first + ' [data-act=bvote] .n', (n) => n.textContent || 0)) === n0, 'unvote takes it back', '');
+    await page.click(first + ' [data-act=breport]');
+    check(/Reporting needs the email sign-in/.test(await page.$eval('#toast', (t) => t.textContent)), 'signed out, report asks for sign-in', '');
+
+    await page.evaluate(() => import('/all-day/js/auth.js').then((a) => a.demoSignIn()));
+    const target = await page.$eval(first, (c) => c.dataset.k.slice(2));
+    await fakeOf(page, `(f) => { f.as('demo-0000-4000-8000-0000000other').call('nn_report', { p_post: '${target}', p_reason: 'spam' }); return 1; }`);
+    await page.click(first + ' [data-act=breport]');
+    await page.waitForSelector('.sheet-card[aria-label="Report this post"]');
+    await page.click('.sheet-body .sheet-row:nth-child(3) button');
+    await page.waitForTimeout(150);
+    check(/It’s down until Stephen has a look/.test(await page.$eval('#toast', (t) => t.textContent)), 'the second report takes it down, and says so', await page.$eval('#toast', (t) => t.textContent));
+    check(!(await page.$('#board-test .card.board[data-k="b-' + target + '"]')), 'its card leaves the board at once', '');
+    await drawBoard(page, 'vintage');
+    check(!(await page.$('#board-test .card.board[data-k="b-' + target + '"]')), 'and it is not listed again', '');
+    const again = await page.evaluate((id) => import('/all-day/js/boards.js').then((b) => b.vote(id)), target);
+    check(!again.ok && again.error === 'not_found', 'a hidden post cannot be voted on', JSON.stringify(again));
+
+    const mine = await page.evaluate(() => import('/all-day/js/boards.js').then(async (b) => {
+      await b.setProfile({ display_name: 'Sam' });
+      const r = await b.create('watch', { kind: 'rating', title: 'Winter Light', meta: { stars: 5, year: 2024 } });
+      return r.post.id;
+    }));
+    await drawBoard(page, 'watch');
+    await page.click('#board-test .card.board[data-k="b-' + mine + '"] [data-act=bdelete]');
+    await page.click('#confirm [data-yes]');
+    await page.waitForTimeout(150);
+    check(!(await page.$('#board-test .card.board[data-k="b-' + mine + '"]')) && /Deleted/.test(await page.$eval('#toast', (t) => t.textContent)), 'delete-own asks, then removes it', '');
+    const still = await page.evaluate(() => import('/all-day/js/boards.js').then((b) => b.mine()));
+    check(still.ok && !still.posts.length, 'and Your posts no longer has it', JSON.stringify(still.posts.map((p) => p.title)));
+
+    const old = await page.$eval('#board-test .card.board:first-child', (c) => c.dataset.k.slice(2));
+    await fakeOf(page, `(f) => { f.posts.find((p) => p.id === '${old}').expires_at = Date.now() - 1000; return 1; }`);
+    await drawBoard(page, 'watch');
+    check(!(await page.$('#board-test .card.board[data-k="b-' + old + '"]')), 'an expired post is not listed', '');
+    await pageRules(page, 'boards', 1280);
+    await page.screenshot({ path: path.join(SHOTS, 'demo-board-desktop-dark.png') });
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('boards: Your posts, and delete my account (demo)', async () => {
+    const { ctx, page, errors } = await newPage(browser, base, { motion: 'reduce' });
+    await page.goto(base + '/all-day/?demo=1#art');
+    await settle(page);
+    await page.evaluate(() => import('/all-day/js/auth.js').then((a) => a.demoSignIn()));
+    await page.evaluate(() => import('/all-day/js/boards.js').then(async (b) => {
+      await b.setProfile({ display_name: 'Jess' });
+      await b.create('vintage', { kind: 'swap', title: 'Two band tees for denim', meta: { want: 'Denim, 32' } });
+    }));
+    await openCompose(page, { board: 'art', kind: 'photo', heading: 'Add a photo', title: 'What is it?', body: false, notes: ['Photos are checked before they show.'] });
+    await page.fill('input[name=title]', 'Oakledge, low water');
+    await page.click('.bform button[type=submit]');
+    check(/This one needs a photo/.test(await page.$eval('.bf-msg', (m) => m.textContent)), 'an Art photo without a photo: refused', '');
+    await page.setInputFiles('.bform input[type=file]', { name: 'dawn.jpg', mimeType: 'image/jpeg', buffer: PNG });
+    await page.check('.bform input[name=consent]');
+    await page.click('.bform button[type=submit]');
+    await page.waitForSelector('#sheet[hidden]', { state: 'attached', timeout: 4000 });
+    check(/The photo shows once it’s been checked/.test(await page.$eval('#toast', (t) => t.textContent)), 'with a photo and consent: posted, the photo waits for the queue', await page.$eval('#toast', (t) => t.textContent));
+    const orphan = await page.evaluate(() => import('/all-day/js/boards.js').then(async (b) => {
+      const f = b._fake();
+      const ban = f.bans; ban.set('demo-0000-4000-8000-00000000me00', Date.now());
+      const r = await b.create('art', { kind: 'art', title: 'Refused', photo: new Blob(['x']), consent: true });
+      ban.delete('demo-0000-4000-8000-00000000me00');
+      await new Promise((res) => setTimeout(res, 50));
+      const last = [...f.photos.entries()].pop();
+      return { error: r.error, path: last[0], status: last[1].status };
+    }));
+    check(orphan.error === 'banned' && orphan.status === 'removed', 'a photo whose post is refused is taken back out of the queue', JSON.stringify(orphan));
+    const listed = await page.evaluate(() => import('/all-day/js/boards.js').then((b) => b.list('art').then((r) => r.posts.some((p) => p.title === 'Oakledge, low water'))));
+    check(!listed, 'an Art post is not on the wall until its photo is approved', '');
+    await settingsText(page);
+    await page.click('.sheet-body .sheet-row button:has-text("Open")');
+    await page.waitForSelector('.sheet-row.mine');
+    const rows = await page.$$eval('.sheet-row.mine', (r) => r.map((x) => x.innerText.replace(/\s+/g, ' ')));
+    check(rows.length === 2 && /Oakledge, low water.*Art · Live · photo waiting for a check/.test(rows[0]) && /Two band tees.*Vintage · Live · 2[01]d left/.test(rows[1]), 'Your posts lists both, with where each stands', JSON.stringify(rows));
+    await page.screenshot({ path: path.join(SHOTS, 'demo-your-posts.png') });
+    await settingsText(page);
+    await page.click('.sheet-body button:has-text("Delete my account and posts")');
+    check(/Your email sign-in is shared/.test(await page.$eval('#confirm', (c) => c.innerText)), 'delete asks first, and says the shared sign-in stays', '');
+    await page.click('#confirm [data-yes]');
+    await page.waitForTimeout(200);
+    const after = await fakeOf(page, `(f) => ({ posts: f.posts.filter((p) => p.user_id === 'demo-0000-4000-8000-00000000me00').length, profile: f.profiles.has('demo-0000-4000-8000-00000000me00') })`);
+    check(after.posts === 0 && !after.profile, 'everything of theirs is gone', JSON.stringify(after));
+    check(/Deleted\. You’re signed out\./.test(await page.$eval('#toast', (t) => t.textContent)) && await page.evaluate(() => import('/all-day/js/app.js').then((a) => a.user())) === null, 'and they are signed out', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('boards: what goes over the wire (live)', async () => {
+    const calls = [];
+    const post = { id: '0000aaaa-0000-4000-8000-000000000001', board: 'vintage', kind: 'spotted', title: 'Red barn jacket', body: '', place: '', meta: { shop: 'Old Gold', size: 'M', price: 45 },
+      photo: 'submissions/abcd-1234.jpg', author: 'Kara', author_arch: null, created_at: new Date(Date.now() - 3600000).toISOString(), expires_at: new Date(Date.now() + 20 * 86400000).toISOString(), votes: 3, voted: false, mine: false };
+    const { ctx, page, errors } = await newPage(browser, base, {
+      rpc: (fn, args, h) => {
+        if (!/^nn_/.test(fn)) return undefined;
+        calls.push({ fn, args, auth: h.authorization || null });
+        if (fn === 'nn_posts_list') return [post];
+        if (fn === 'nn_vote') return { votes: 4, voted: true };
+        if (fn === 'nn_report') return { status: 400, body: { code: 'P0001', message: 'already_reported' } };
+        if (fn === 'nn_profile_get') return { display_name: 'Maya', neighborhood: null, archetype: null };
+        return undefined;
+      },
+    });
+    await page.goto(base + '/all-day/#wire');
+    await settle(page);
+    await drawBoard(page, 'vintage', { kind: 'spotted', meta: { size: 'M' } });
+    const list = calls.find((c) => c.fn === 'nn_posts_list');
+    check(list && list.auth === null && list.args.p_board === 'vintage' && JSON.stringify(list.args.p_filter) === '{"kind":"spotted","meta":{"size":"M"}}' && /^p_/.test(list.args.p_player),
+      'signed out: the list goes with the device’s player id and no token', JSON.stringify(list));
+    const img = await page.$eval('#board-test .card.board .c-media img', (i) => i.getAttribute('src'));
+    check(img === 'https://jnouvwxomrcffqwilqkq.supabase.co/storage/v1/object/public/btb-photos/submissions/abcd-1234.jpg', 'an approved photo is drawn from the public bucket', img);
+    await page.click('#board-test [data-act=bvote]');
+    await page.waitForTimeout(200);
+    check(await page.$eval('#board-test [data-act=bvote] .n', (n) => n.textContent) === '4', 'the vote adopts the server’s count', '');
+    check(calls.some((c) => c.fn === 'nn_vote' && c.auth === null && c.args.p_post === post.id), 'signed out, nn_vote goes without a token', '');
+    await page.evaluate((s) => localStorage.setItem('allday-auth', s), SESSION());
+    await page.reload();
+    await settle(page);
+    await drawBoard(page, 'vintage');
+    await page.click('#board-test [data-act=breport]');
+    await page.waitForSelector('.sheet-card[aria-label="Report this post"]');
+    await page.click('.sheet-body .sheet-row:first-of-type button');
+    await page.waitForTimeout(250);
+    check(/already reported this one/.test(await page.$eval('#toast', (t) => t.textContent)), 'a refusal from the server becomes its sentence', await page.$eval('#toast', (t) => t.textContent));
+    check(calls.some((c) => c.fn === 'nn_report' && c.auth === 'Bearer a.b.c' && c.args.p_reason === 'spam'), 'signed in, a report carries the reader’s token', JSON.stringify(calls.filter((c) => c.fn === 'nn_report')));
+    check(!calls.some((c) => /@/.test(JSON.stringify(c.args))), 'no call carries an email', '');
+    const real = errors.filter((e) => !/Failed to load resource: the server responded with a status of 400/.test(e));
+    check(!real.length, 'no console errors beyond the browser logging the refusal', real.join(' | '));
+    await ctx.close();
+  });
+}
+
+async function boardPhotos(browser, base) {
+  await group('boards: a Vintage photo stays out of the gallery; an Art photo joins it (live)', async () => {
+    const sent = [];
+    const { ctx, page, errors } = await newPage(browser, base, {
+      rpc: (fn, args) => {
+        if (fn === 'btb_photos_submit') { sent.push(args); return null; }
+        if (fn === 'nn_profile_get') return { display_name: 'Kara', neighborhood: 'downtown', archetype: null };
+        if (fn === 'nn_post_create') return { id: '0000bbbb-0000-4000-8000-00000000000' + sent.length, board: args.p_board, kind: args.p_kind, title: args.p_title, status: 'approved' };
+        return undefined;
+      },
+    });
+    await page.goto(base + '/all-day/?x=1');
+    await page.evaluate((s) => localStorage.setItem('allday-auth', s), SESSION());
+    await page.goto(base + '/all-day/#vintage');
+    await settle(page);
+    const r = await page.evaluate(() => import('/all-day/js/boards.js').then(async (b) => {
+      const c = document.createElement('canvas'); c.width = 8; c.height = 8; c.getContext('2d').fillRect(0, 0, 8, 8);
+      const blob = await new Promise((res) => c.toBlob(res, 'image/png'));
+      const file = new File([blob], 'find.png', { type: 'image/png' });
+      const v = await b.create('vintage', { kind: 'spotted', title: 'Red barn jacket', meta: { shop: 'Old Gold' }, photo: file, consent: true });
+      const a = await b.create('art', { kind: 'photo', title: 'North Beach at dawn', photo: file, consent: true });
+      return [v.ok, a.ok];
+    }));
+    check(r[0] && r[1], 'both posts go through', JSON.stringify(r));
+    const [v, a] = sent;
+    check(v && v.p_category === 'board' && v.p_spot === 'All Day · Vintage' && v.p_permission === true && v.p_area === 'Downtown / Church St',
+      'Vintage files its photo as category "board", which the gallery leaves out', JSON.stringify(v));
+    check(a && a.p_category === 'other' && a.p_spot === 'All Day · Art', 'Art files its photo as "other": it joins the gallery', JSON.stringify(a));
+    check(sent.every((x) => /^submissions\/[A-Za-z0-9-]+\.jpg$/.test(x.p_path) && x.p_name === 'Kara' && !/@/.test(JSON.stringify(x))), 'resized to a jpeg, credited by first name, no email', JSON.stringify(sent.map((x) => x.p_path)));
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+}
+
+/* ---------------------------------------------------------- shell fixes */
+/* The small shell changes the tab sessions asked for, one check each. */
+async function shellFixes(browser, base) {
+  await group('shell fixes: a rail never snaps flush to the edge', async () => {
+    for (const width of [390, 1280]) {
+      const { ctx, page, errors } = await newPage(browser, base, { viewport: { width, height: 844 } });
+      await page.goto(base + '/all-day/?demo=1#onair');
+      await page.waitForSelector('#panel-onair .rail > *', { timeout: 15000 });
+      const r = await page.evaluate(() => {
+        const rail = [...document.querySelectorAll('#panel-onair .rail')].find((x) => x.scrollWidth > x.clientWidth + 40);
+        if (!rail) return null;
+        const gutter = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--gutter'));
+        const pad = parseFloat(getComputedStyle(rail).scrollPaddingLeft);
+        rail.children[1].scrollIntoView({ inline: 'start', block: 'nearest' });
+        const left = rail.children[1].getBoundingClientRect().left - rail.getBoundingClientRect().left;
+        return { gutter, pad, left: Math.round(left) };
+      });
+      check(r && r.pad === r.gutter, width + ': .rail carries scroll-padding of one gutter', JSON.stringify(r));
+      check(r && Math.abs(r.left - r.gutter) <= 1, width + ': a card scrolled to the start stops at the gutter', JSON.stringify(r));
+      check(!errors.length, width + ': no console errors', errors.join(' | '));
+      await ctx.close();
+    }
+  });
+
+  await group('shell fixes: a new address closes an open sheet', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/all-day/?demo=1#wire');
+    await settle(page);
+    await page.click('#settings-btn');
+    check(await page.$eval('#sheet', (s) => !s.hidden), 'Settings is open', '');
+    await page.evaluate(() => { location.hash = '#food'; });
+    await page.waitForFunction(() => document.querySelector('#tab-food').getAttribute('aria-selected') === 'true');
+    check(await page.$eval('#sheet', (s) => s.hidden && !s.children.length), 'a hash change to another tab closes it', '');
+    await page.click('#saved-btn');
+    await page.evaluate(() => { location.hash = '#food/open'; });
+    await page.waitForTimeout(200);
+    check(await page.$eval('#sheet', (s) => s.hidden), 'and a deep link inside the same tab does too', '');
+    await page.goto(base + '/all-day/#whatnow/missions');
+    await page.waitForSelector(wnPanel + ' .lrow[data-k="m5"] .open', { timeout: 15000 });
+    await page.click(wnPanel + ' .lrow[data-k="m5"] .open');
+    await page.waitForSelector('.sheet-card h2');
+    await page.evaluate(() => { location.hash = '#wire'; });
+    await page.waitForTimeout(200);
+    check(await page.$eval('#sheet', (s) => s.hidden), 'a tab’s own sheet (a mission) closes when you leave', '');
+    await page.goBack();
+    await page.waitForTimeout(200);
+    check(await page.$eval('#sheet', (s) => s.hidden) && await page.$eval('#tab-whatnow', (b) => b.getAttribute('aria-selected')) === 'true', 'and Back lands on the tab, not a ghost sheet', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('shell fixes: app.showClip plays a file video in the one box', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.route(/clips\.example\/.*\.mp4/, (r) => r.fulfill({ status: 200, body: '', contentType: 'video/mp4' }));
+    await page.goto(base + '/all-day/#wire');
+    await settle(page);
+    const food = await readFile(path.join(APP, 'js/modes/food.js'), 'utf8');
+    check(!/MutationObserver|getElementById\('vbox/.test(food), 'Food no longer reaches into the video box itself', '');
+    await page.evaluate(() => import('/all-day/js/app.js').then((app) => app.showClip({ src: 'https://clips.example/a.mp4', poster: 'https://clips.example/a.jpg',
+      title: '@foam · the new IPA', href: 'https://www.instagram.com/reel/AAA/', vertical: true })));
+    const open = await page.evaluate(() => {
+      const v = document.querySelector('#vbox-frame video'), f = document.getElementById('vbox-frame'), r = f.getBoundingClientRect();
+      return { shown: !document.getElementById('vbox').hidden, src: v && v.getAttribute('src'), controls: v && v.controls, auto: v && v.autoplay,
+        tall: r.height > r.width, label: document.getElementById('vbox-open').textContent, href: document.getElementById('vbox-open').href,
+        title: document.getElementById('vbox-title').textContent, audioPaused: document.getElementById('audio').paused };
+    });
+    check(open.shown && open.src === 'https://clips.example/a.mp4' && open.controls && !open.auto, 'it opens the box with a <video>, controls on, no autoplay attribute', JSON.stringify(open));
+    check(open.tall, 'vertical: the box stands 9:16', JSON.stringify(open));
+    check(/^Open on Instagram/.test(open.label) && open.href === 'https://www.instagram.com/reel/AAA/' && open.title === '@foam · the new IPA', 'the link names Instagram and points at the post', JSON.stringify(open));
+    await page.keyboard.press('Escape');
+    const shut = await page.evaluate(() => ({ hidden: document.getElementById('vbox').hidden, videos: document.querySelectorAll('video').length,
+      vertical: document.getElementById('vbox-frame').classList.contains('vertical'), label: document.getElementById('vbox-open').textContent }));
+    check(shut.hidden && !shut.videos && !shut.vertical && /^Open in YouTube/.test(shut.label), 'Escape closes it and gives the box back to YouTube', JSON.stringify(shut));
+    await page.evaluate(() => import('/all-day/js/app.js').then((app) => app.showClip({ src: 'https://clips.example/b.mp4', href: 'https://example.org/clip' })));
+    const flat = await page.evaluate(() => { const r = document.getElementById('vbox-frame').getBoundingClientRect(); return { wide: r.width > r.height, label: document.getElementById('vbox-open').textContent }; });
+    check(flat.wide && /^Open the original/.test(flat.label), 'not vertical: 16:9, and an unknown host is "Open the original"', JSON.stringify(flat));
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('shell fixes: chips inside a tab wrap on a wide screen', async () => {
+    for (const width of [390, 1280]) {
+      const { ctx, page, errors } = await newPage(browser, base, { viewport: { width, height: 800 } });
+      await page.goto(base + '/all-day/#whatnow/missions');
+      await page.waitForSelector(wnPanel + ' .chips.themes .chip', { timeout: 15000 });
+      const r = await page.$eval(wnPanel + ' .chips.themes', (c) => {
+        const tops = new Set([...c.querySelectorAll('.chip')].map((b) => Math.round(b.getBoundingClientRect().top)));
+        return { wrap: getComputedStyle(c).flexWrap, rows: tops.size, over: c.scrollWidth - c.clientWidth };
+      });
+      if (width >= 900) check(r.wrap === 'wrap' && r.over <= 1, '1280: the theme chips wrap, nothing to scroll sideways', JSON.stringify(r));
+      else check(r.wrap === 'nowrap' && r.rows === 1, '390: they stay one row that scrolls', JSON.stringify(r));
+      check(!errors.length, width + ': no console errors', errors.join(' | '));
+      await ctx.close();
+    }
+  });
+
+  await group('shell fixes: an emoji thumb is drawn at the emoji size', async () => {
+    const tokens = await readFile(path.join(APP, 'css/tokens.css'), 'utf8');
+    const want = (tokens.match(/--fs-emoji:\s*(\d+)px/) || [])[1];
+    check(!!want, 'tokens.css has --fs-emoji', '');
+    const { ctx, page } = await newPage(browser, base);
+    await page.goto(base + '/all-day/?demo=1#games');
+    await page.waitForSelector('#panel-games .lrow .th.bare', { timeout: 15000 });
+    const fs = await page.$eval('#panel-games .lrow .th.bare', (t) => getComputedStyle(t).fontSize);
+    check(fs === want + 'px', 'a game’s emoji in a list row is ' + want + 'px, not body size', fs);
+    await ctx.close();
+  });
+
+  await group('shell fixes: old Listen and TV links land in On Air', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    const landed = async (hash) => {
+      await page.goto(base + '/all-day/?demo=1' + hash);
+      await page.waitForFunction(() => document.querySelector('#tab-onair')?.getAttribute('aria-selected') === 'true', null, { timeout: 15000 }).catch(() => {});
+      return page.evaluate(() => ({ on: document.querySelector('#tab-onair').getAttribute('aria-selected') === 'true', hash: location.hash }));
+    };
+    let r = await landed('#listen');
+    check(r.on && r.hash === '#onair', '#listen opens On Air, and the address says #onair', JSON.stringify(r));
+    r = await landed('#watch/yt:dQw4w9WgXcQ');
+    check(r.on && r.hash === '#onair/yt:dQw4w9WgXcQ', '#watch/yt:<id> opens On Air with the same video key', JSON.stringify(r));
+    r = await landed('#listen/brief');
+    check(r.on && r.hash === '#onair/brief', '#listen/<key> keeps its key', JSON.stringify(r));
+    await page.goto(base + '/all-day/?demo=1#watch');
+    await settle(page);
+    check(await page.$eval('#tab-watch', (b) => b.getAttribute('aria-selected')) === 'true', 'a plain #watch is still the Watchlist', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('shell fixes: the offline shell carries the new modules', async () => {
+    const sw = await readFile(path.join(APP, 'sw.js'), 'utf8');
+    const main = await readFile(path.join(APP, 'js/main.js'), 'utf8');
+    check(/VERSION = 'all-day-v44'/.test(sw), 'sw.js VERSION is bumped once, to v44', (sw.match(/VERSION = '[^']+'/) || [''])[0]);
+    const listed = [...sw.matchAll(/'\.\/(js\/[\w/.-]+\.js)'/g)].map((m) => m[1]);
+    for (const f of ['js/boards.js', 'js/boards-core.js', 'js/boards-fake.js']) check(listed.includes(f), f + ' is in the offline list', '');
+    const imported = [...main.matchAll(/import '\.\/([\w/.-]+\.js)'/g)].map((m) => 'js/' + m[1]);
+    check(imported.every((f) => listed.includes(f)), 'every module main.js imports is in the offline list', imported.filter((f) => !listed.includes(f)).join(', '));
+  });
+
+  await group('shell fixes: third-party players use the shared .embed', async () => {
+    for (const f of ['modes/onair.js', 'modes/whatnow.js', 'modes/food.js']) {
+      const src = (await readFile(path.join(APP, 'js', f), 'utf8')).replace(/\/\*[\s\S]*?\*\//g, '');
+      const made = src.match(/el\('iframe'[^)]*\)|createElement\('iframe'\)/g) || [];
+      check(made.every((m) => /'embed (spotify|bandcamp)'/.test(m)), f + ': every iframe it builds is an .embed', made.join(' '));
+      check(!/\.(width|height|frameBorder)\s*=|setAttribute\('(frameborder|seamless)'/.test(src), f + ': and sizes none by hand', '');
+    }
+    const { ctx, page } = await newPage(browser, base);
+    await page.goto(base + '/all-day/?demo=1#onair');
+    await settle(page);
+    const sp = await page.evaluate(() => {
+      const f = document.createElement('iframe'); f.className = 'embed spotify';
+      document.querySelector('#panel-onair .panel-body').appendChild(f);
+      const cs = getComputedStyle(f); const out = { h: cs.height, r: cs.borderRadius, b: cs.borderTopWidth, d: cs.display }; f.remove(); return out;
+    });
+    check(sp.h === '152px' && sp.r === '12px' && sp.b === '0px' && sp.d === 'block', '.embed.spotify is Spotify’s 152px, the media radius, no border', JSON.stringify(sp));
+    await ctx.close();
+  });
+}
+
 /* ----------------------------------------------------------------- run */
 const t0 = Date.now();
 await mkdir(SHOTS, { recursive: true });
 await staticChecks();
 const { base, proc } = await serve();
 const browser = await chromium.launch();
+/* ONLY=shellFixes,boards runs just those groups while iterating; the full
+   matrix is the one that counts. */
+const ONLY = (process.env.ONLY || '').split(',').filter(Boolean);
+const run = (fn) => (!ONLY.length || ONLY.includes(fn.name) ? fn(browser, base) : null);
 try {
-  await matrix(browser, base);
-  await deepLinks(browser, base);
-  await theWire(browser, base);
-  await theWhatNow(browser, base);
-  await theFood(browser, base);
-  await onAir(browser, base);
-  await theGames(browser, base);
-  await interactions(browser, base);
+  await run(matrix);
+  await run(deepLinks);
+  await run(theWire);
+  await run(theWhatNow);
+  await run(theFood);
+  await run(onAir);
+  await run(theGames);
+  await run(interactions);
+  await run(shellFixes);
+  await run(accounts);
+  await run(boards);
+  await run(boardPhotos);
 } finally {
   await browser.close();
   proc.kill();

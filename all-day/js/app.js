@@ -56,8 +56,22 @@ export function register(key, mod) {
   registry[key] = mod;
 }
 export const activeTab = () => active;
+/* The signed-in reader as { id }, or null; never an email (auth.js keeps
+   none). onAuth(fn) runs fn(user) on every sign-in, sign-out and lost
+   session, and returns the unsubscribe. */
 export const user = () => auth.user();
 export const token = () => auth.token();
+export const onAuth = (fn) => auth.onChange(fn);
+export const signOut = () => auth.signOut();
+
+/* Card buttons a shell module answers (boards.js: bvote, breport,
+   bdelete). bindFeed() hands a data-act it does not know itself to the
+   function registered under its name, with the card's item. */
+const ACTS = Object.create(null);
+export function onAct(name, fn) { ACTS[name] = fn; }
+/* The signed-in half of Settings → Your account (boards.js draws it). */
+let accountPainter = null;
+export function registerAccount(fn) { accountPainter = fn; }
 
 /* -------------------------------------------------------------- items */
 /* Every card a tab draws is known here by its key, so one delegated click
@@ -176,6 +190,7 @@ export function bindFeed(host, h = {}) {
       else if (a === 'comment') comments(it);
       else if (a === 'share') share(active, it.k, it.title || it.text);
       else if (a === 'save') (h.onSave || toggleSave)(it);
+      else if (ACTS[a]) ACTS[a](it, act);
       return;
     }
     const srcb = e.target.closest('[data-src]');
@@ -345,19 +360,24 @@ export function peek(it) {
   const t = it.title || it.line || it.text;
   const from = it.author || it.name || it.src;
   const pic = it.media || it.thumb;
+  const words = it.kind === 'board' ? [it.metaLine, it.text].filter(Boolean).join('. ') : (it.text || it.why || '');
   box.innerHTML = '<div class="peek-head"><span class="t">' + esc(t) + '</span><button class="iconbtn" aria-label="Close">' + ICON.x + '</button></div>' +
     '<div class="peek-body">' + (pic ? '<span class="c-media r169">' + art(pic) + '</span>' : '') +
-    '<p class="from">' + esc(from) + (it.ago ? ' · ' + esc(it.ago) : '') + '</p><p>' + esc(it.text || it.why || '') + '</p></div>';
+    '<p class="from">' + esc(from) + (it.ago ? ' · ' + esc(it.ago) : '') + '</p><p>' + esc(words) + '</p></div>';
   const foot = el('div', 'peek-foot');
-  const open = el('a', 'btn', esc(it.open || 'Open') + ' ' + ICON.ext);
-  open.href = safeHref(it.href);
-  if (/^https?:/.test(it.href || '')) { open.target = '_blank'; open.rel = 'noopener'; }
-  open.addEventListener('click', (e) => {
-    store.markRead(it.k);
-    if (demo || !/^https?:/.test(it.href || '')) { e.preventDefault(); toast('Opens in the real build'); }
-    closePeek();
-  });
-  foot.append(open, button(store.isSaved(it.k) ? 'Saved' : 'Save', 'ghost', () => { toggleSave(it); closePeek(); }));
+  /* a reader's board post lives here, in the card itself: nothing to open */
+  if (it.kind !== 'board') {
+    const open = el('a', 'btn', esc(it.open || 'Open') + ' ' + ICON.ext);
+    open.href = safeHref(it.href);
+    if (/^https?:/.test(it.href || '')) { open.target = '_blank'; open.rel = 'noopener'; }
+    open.addEventListener('click', (e) => {
+      store.markRead(it.k);
+      if (demo || !/^https?:/.test(it.href || '')) { e.preventDefault(); toast('Opens in the real build'); }
+      closePeek();
+    });
+    foot.appendChild(open);
+  }
+  foot.append(button(store.isSaved(it.k) ? 'Saved' : 'Save', 'ghost', () => { toggleSave(it); closePeek(); }));
   box.appendChild(foot);
   box.querySelector('.iconbtn').addEventListener('click', closePeek);
   document.body.appendChild(box);
@@ -442,6 +462,7 @@ const MORE = [
   ['Telegram chat', '../telegram.html'],
 ];
 
+export function openSettings() { settingsSheet(); }
 function settingsSheet() {
   sheet('Settings', (body) => {
     body.appendChild(el('div', 'sheet-h', 'Appearance'));
@@ -453,9 +474,16 @@ function settingsSheet() {
     const paintAcct = () => {
       acct.innerHTML = '';
       const u = auth.user();
+      if (u && accountPainter) { accountPainter(acct, paintAcct); return; }
       if (u) {
-        const r = el('div', 'sheet-row', '<div class="t">Signed in<div class="d">' + esc(u.email) + '</div></div>');
+        const r = el('div', 'sheet-row', '<div class="t">Signed in</div>');
         r.appendChild(button('Sign out', 'ghost sm', () => { auth.signOut(); paintAcct(); toast('Signed out'); }));
+        acct.appendChild(r);
+        return;
+      }
+      if (demo) {
+        const r = el('div', 'sheet-row', '<div class="t">Sign in<div class="d">The demo has a pretend account, so you can try posting. Real sign-in is one email link, no password.</div></div>');
+        r.appendChild(button('Sign in', 'ghost sm', () => { auth.demoSignIn(); paintAcct(); toast('Signed in to the demo account'); }));
         acct.appendChild(r);
         return;
       }
@@ -465,7 +493,7 @@ function settingsSheet() {
           (st === 'checking' ? 'Checking…' : 'Coming soon. Everything here works without an account.') + '</div></div>'));
         return;
       }
-      acct.appendChild(el('p', 'sheet-note', 'Optional. An email link signs you in; no password. Nothing here needs it yet.'));
+      acct.appendChild(el('p', 'sheet-note', 'Optional. An email link signs you in; no password. Reading and voting never need it; posting on a board and reporting do.'));
       const f = el('form', 'signin');
       f.noValidate = true;   /* our own message, not the browser's bubble */
       const input = el('input', 'field');
@@ -664,6 +692,7 @@ export function showVideo(id, title) {
   f.title = title || 'Video';
   frame.appendChild(f);
   $('vbox-open').href = 'https://www.youtube.com/watch?v=' + id;
+  $('vbox-open').textContent = 'Open in YouTube ↗';
   $('vbox-hint').hidden = true;
   $('vbox').hidden = false;
   audio.pause();
@@ -673,9 +702,57 @@ export function showVideo(id, title) {
   clearTimeout(hintTimer);
   hintTimer = setTimeout(() => { if (!$('vbox').hidden) $('vbox-hint').hidden = false; }, 3000);
 }
+/* The same box for a video that is a file, not a YouTube id: a reel from
+   Instagram, a clip from a kitchen. A <video> with controls, started by the
+   tap that opened it (never before), 9:16 when `vertical`. The Open link
+   names where the original lives. Demo items have no file; the box shows
+   the poster and says so. */
+const OPEN_ON = [[/(^|\.)instagram\.com$/, 'Open on Instagram'], [/(^|\.)(youtube\.com|youtu\.be)$/, 'Open in YouTube'],
+  [/(^|\.)facebook\.com$/, 'Open on Facebook'], [/(^|\.)tiktok\.com$/, 'Open on TikTok'], [/(^|\.)vimeo\.com$/, 'Open on Vimeo']];
+function openLabel(href) {
+  let host = '';
+  try { host = new URL(href, location.href).hostname; } catch (e) { host = ''; }
+  const hit = OPEN_ON.find(([re]) => re.test(host));
+  return hit ? hit[1] : 'Open the original';
+}
+export function showClip({ src, poster, title, href, vertical } = {}) {
+  closeVideo();
+  audio.pause();
+  stopFake();
+  silenceForeign();
+  paintPlayButtons();
+  $('vbox-title').textContent = title || '';
+  const frame = $('vbox-frame');
+  frame.classList.toggle('vertical', !!vertical);
+  const ok = /^https?:\/\//.test(String(src || ''));
+  if (demo || !ok) {
+    frame.innerHTML = art(poster || 'paper');
+    toast(demo ? 'The video plays here in the real build' : 'This video can’t play here. Open the original.');
+  } else {
+    const v = document.createElement('video');
+    v.src = src;
+    if (/^https?:\/\//.test(String(poster || ''))) v.poster = poster;
+    v.controls = true;
+    v.playsInline = true;
+    v.setAttribute('playsinline', '');
+    v.preload = 'none';
+    frame.appendChild(v);
+    v.play().catch(() => {});
+  }
+  const open = $('vbox-open');
+  open.href = safeHref(href || src);
+  open.textContent = openLabel(href || src) + ' ↗';
+  $('vbox-hint').hidden = true;
+  $('vbox').hidden = false;
+}
+/* Closing gives the box back as YouTube expects it: 16:9, its own label. */
 export function closeVideo() {
   clearTimeout(hintTimer);
-  $('vbox-frame').innerHTML = '';
+  const frame = $('vbox-frame');
+  frame.querySelectorAll('video').forEach((v) => { try { v.pause(); } catch (e) { /* gone */ } v.removeAttribute('src'); });
+  frame.innerHTML = '';
+  frame.classList.remove('vertical');
+  $('vbox-open').textContent = 'Open in YouTube ↗';
   $('vbox').hidden = true;
 }
 $('vbox-close').addEventListener('click', closeVideo);
@@ -807,8 +884,19 @@ window.addEventListener('allday-geo', () => {
 });
 
 /* ----------------------------------------------------------------- routing */
+/* Links from before the New Nine: the old Listen tab and Btown TV videos
+   shared as #watch/yt:<id> both live in On Air now. The address bar is
+   rewritten so the next share carries the new link. */
+function legacy(h) {
+  if (h === 'listen' || h.startsWith('listen/')) return 'onair' + h.slice(6);
+  if (/^watch\/yt:/.test(h)) return 'onair/' + h.slice(6);
+  return null;
+}
+
 function parseHash() {
-  const h = location.hash.replace(/^#/, '');
+  let h = location.hash.replace(/^#/, '');
+  const moved = legacy(h);
+  if (moved) { history.replaceState(null, '', location.pathname + location.search + '#' + moved); h = moved; }
   const m = h.match(/^([a-z]+)\/(.*)$/);
   if (m && TABS.includes(m[1]) && registry[m[1]]) {
     /* a shared link can carry broken percent-encoding, and an uncaught
@@ -833,6 +921,10 @@ export function route() {
   const { tab, param } = parseHash();
   const mod = registry[tab];
   if (!mod) return;
+  /* a new address is a new place: a sheet left open (Settings, a mission,
+     a film) closes, as the peek already did; a tab that wants one for its
+     deep link opens it again in activate() below */
+  if (sheetClose) sheetClose();
   const prev = active;
   if (prev && prev !== tab) {
     scrollMemory[prev] = panels[prev].scrollTop;

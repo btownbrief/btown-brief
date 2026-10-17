@@ -9,6 +9,9 @@
    modes/ until the cutover deletes them; nothing imports them. */
 
 import * as app from './app.js';
+/* boards.js wires the board cards' buttons and Settings → Your account,
+   so it loads before any tab that draws a board. */
+import './boards.js';
 
 import './modes/wire.js';
 import './modes/watch.js';

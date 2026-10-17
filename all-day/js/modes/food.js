@@ -568,60 +568,12 @@ function photoCard(p) {
   return c;
 }
 
-/* The shell's one video box plays YouTube. A reel is an MP4, so this puts a
-   <video> into the same box, starts it on the tap that opened it (never
-   before), and gives the box back exactly as it found it when it closes,
-   however it closes: its X, the scrim, the shell's player starting. A shell
-   showClip() would make this unnecessary; it is asked for in the PR. */
-let clip = null;
+/* A reel is an MP4, not a YouTube id: it plays in the shell's one video
+   box through app.showClip(), started by the tap, 9:16, with the box's link
+   pointing back to the post on Instagram. */
 function openClip(p) {
-  const box = document.getElementById('vbox');
-  const frame = document.getElementById('vbox-frame');
-  const title = document.getElementById('vbox-title');
-  const open = document.getElementById('vbox-open');
-  const hint = document.getElementById('vbox-hint');
-  if (!box || !frame || !title || !open) { window.open(safeHref(p.u), '_blank', 'noopener'); return; }
-  closeClip();
-  app.closeVideo();
-  if (app.isPlaying()) app.stop();
-  app.silenceForeign();
-  const was = { label: open.innerHTML, href: open.getAttribute('href') };
-  title.textContent = who(p) + (p.c ? ' · ' + trim(p.c, 60) : '');
-  open.innerHTML = esc('Open on Instagram') + ' ' + ICON.ext;
-  open.href = safeHref(p.u);
-  if (hint) hint.hidden = true;
-  Object.assign(frame.style, { aspectRatio: '9 / 16', maxHeight: '70vh', margin: '0 auto' });
-  if (app.demo) {
-    frame.innerHTML = art(p.i);
-    app.toast('The kitchen’s video plays here in the real build');
-  } else {
-    const v = document.createElement('video');
-    v.src = p.vu;
-    v.poster = p.i;
-    v.controls = true;
-    v.playsInline = true;
-    v.setAttribute('playsinline', '');
-    v.preload = 'none';
-    Object.assign(v.style, { position: 'absolute', inset: '0', width: '100%', height: '100%', objectFit: 'contain' });
-    frame.appendChild(v);
-    v.play().catch(() => {});
-  }
-  box.hidden = false;
-  const restore = () => {
-    if (!clip) return;
-    const c = clip; clip = null;
-    c.watch.disconnect();
-    c.unreg();
-    Object.assign(frame.style, { aspectRatio: '', maxHeight: '', margin: '' });
-    frame.querySelectorAll('video').forEach((v) => { try { v.pause(); } catch (e) { /* gone */ } v.removeAttribute('src'); });
-    open.innerHTML = was.label;
-    if (was.href) open.setAttribute('href', was.href); else open.removeAttribute('href');
-  };
-  const watch = new MutationObserver(() => { if (box.hidden) restore(); });
-  watch.observe(box, { attributes: true, attributeFilter: ['hidden'] });
-  clip = { watch, unreg: app.registerForeign(() => app.closeVideo()), restore };
+  app.showClip({ src: p.vu, poster: p.i, title: who(p) + (p.c ? ' · ' + trim(p.c, 60) : ''), href: p.u, vertical: true });
 }
-function closeClip() { if (clip) { app.closeVideo(); if (clip) clip.restore(); } }
 
 /* ---------------------------------------------------------- Feature a dish */
 const AREA_OF = { 'Essex': 'Essex / Essex Jct', 'Burlington': 'Greater Burlington' };
@@ -762,7 +714,7 @@ app.register(KEY, {
     land();
   },
   refresh() { if (ready) { paint('bite'); paint('open'); paint('deals'); paint('kitchens'); } },
-  deactivate() { closeClip(); },
+  deactivate() { app.closeVideo(); },
   subnav() {
     if (!ready) return null;
     const t = now();
