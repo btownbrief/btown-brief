@@ -16,10 +16,17 @@ file. It refuses the file when:
   (`where` starting "Varies", lat and lng both null),
 - a club has no weekly meet and no `schedule_note` telling a reader where
   to look,
+- two clubs share a name, or a field holds the wrong type,
 - a field name is not one the directory uses (catches typos like "meet").
 
+It cannot tell whether a source page really says what checked.note quotes,
+or whether coordinates sit on the right building: that is the human (or
+second-model) review step described in the file's `_about`.
+
 It warns (without failing) when a check is more than STALE_DAYS old, so a
-human knows which clubs to re-read first.
+human knows which clubs to re-read first, and when two clubs list the same
+day, time and place. The week grid prints every meet with its season label;
+it does not hide summer-only meets in winter.
 
     python3 scripts/build_run_clubs.py          # check, then print the week
     python3 scripts/build_run_clubs.py --quiet  # check only
@@ -72,6 +79,9 @@ def check_meet(meet, where_label, errors):
         errors.append(f"{where_label}: day {meet.get('day')!r} is not one of {', '.join(DAYS)}")
     if not isinstance(meet.get("time"), str) or not TIME_RE.match(meet["time"]):
         errors.append(f"{where_label}: time {meet.get('time')!r} is not 24-hour HH:MM")
+    for key in ("address", "note", "season"):
+        if key in meet and not isinstance(meet[key], str):
+            errors.append(f"{where_label}: {key} must be text")
     place = meet.get("where")
     if not isinstance(place, str) or not place.strip():
         errors.append(f"{where_label}: no 'where'")
@@ -81,7 +91,7 @@ def check_meet(meet, where_label, errors):
         if not place.lower().startswith("varies"):
             errors.append(f"{where_label}: no coordinates; give lat/lng, or start 'where' with "
                           "'Varies' when the start point moves")
-        if meet.get("address"):
+        if isinstance(meet.get("address"), str) and meet["address"]:
             errors.append(f"{where_label}: has an address but no coordinates")
     elif not (is_number(lat) and is_number(lng)):
         errors.append(f"{where_label}: lat/lng must both be numbers (or both null)")
@@ -109,7 +119,7 @@ def validate(doc, today=None):
     errors, warnings = [], []
     if not isinstance(doc, dict) or not isinstance(doc.get("clubs"), list):
         return ["the file must be an object with a 'clubs' list"], warnings
-    seen = {}
+    seen, names, slots_seen = {}, {}, {}
     for i, club in enumerate(doc["clubs"]):
         if not isinstance(club, dict):
             errors.append(f"clubs[{i}]: must be an object")
@@ -127,6 +137,11 @@ def validate(doc, today=None):
             if cid in seen:
                 errors.append(f"{label}: duplicate id (also clubs[{seen[cid]}])")
             seen.setdefault(cid, i)
+        name_key = re.sub(r"[^a-z0-9]", "", str(club.get("name", "")).lower())
+        if name_key:
+            if name_key in names:
+                errors.append(f"{label}: same name as {names[name_key]}")
+            names.setdefault(name_key, label)
         if club.get("kind") not in KINDS:
             errors.append(f"{label}: kind {club.get('kind')!r} is not one of {', '.join(sorted(KINDS))}")
         for key in LINK_KEYS:
@@ -147,7 +162,11 @@ def validate(doc, today=None):
                 errors.append(f"{label}: checked.source must be the URL of the page that was read")
             if not isinstance(checked.get("note"), str) or not checked["note"].strip():
                 errors.append(f"{label}: checked.note should say what the source page states")
-            for extra in checked.get("also", []) or []:
+            also = checked.get("also", [])
+            if not isinstance(also, list):
+                errors.append(f"{label}: checked.also must be a list of URLs")
+                also = []
+            for extra in also:
                 if not is_url(extra):
                     errors.append(f"{label}: checked.also {extra!r} is not a URL")
             check_date(checked.get("date"), label, today, errors, warnings)
@@ -164,6 +183,11 @@ def validate(doc, today=None):
                 if slot in slots:
                     errors.append(f"{label} meets[{j}]: same day, time and place listed twice")
                 slots.add(slot)
+                other = slots_seen.get(slot)
+                if other and other != label and not str(slot[2]).lower().startswith("varies"):
+                    warnings.append(f"{label} meets[{j}]: same day, time and place as {other}; "
+                                    "is this one group listed twice?")
+                slots_seen.setdefault(slot, label)
         if not meets and not str(club.get("schedule_note", "")).strip():
             errors.append(f"{label}: no weekly meet, so 'schedule_note' must say where to find the schedule")
     return errors, warnings

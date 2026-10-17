@@ -70,6 +70,21 @@ class Validate(unittest.TestCase):
     def test_unknown_field_is_caught(self):
         self.assertTrue(any("unknown field 'meet'" in e for e in errors_for(club(meet=[]))))
 
+    def test_wrong_types_are_errors_not_crashes(self):
+        bad = club(checked={"date": "2026-10-17", "source": "https://x.org", "note": "x", "also": 5})
+        self.assertTrue(any("checked.also" in e for e in errors_for(bad)))
+        meet = {"day": "tue", "time": "18:00", "where": "Gym", "address": 12, "lat": 44.48, "lng": -73.2}
+        self.assertTrue(any("address must be text" in e for e in errors_for(club(meets=[meet]))))
+
+    def test_same_name_twice(self):
+        self.assertTrue(any("same name" in e for e in errors_for(club("a", name="Run Club"),
+                                                                  club("b", name="Run club"))))
+
+    def test_shared_slot_warns(self):
+        errs, warns = brc.validate({"clubs": [club("a"), club("b")]}, today=TODAY)
+        self.assertEqual(errs, [])
+        self.assertTrue(any("listed twice" in w for w in warns))
+
     def test_stale_check_only_warns(self):
         old = club(checked={"date": "2026-01-02", "source": "https://x.org", "note": "x"})
         errs, warns = brc.validate({"clubs": [old]}, today=TODAY)
