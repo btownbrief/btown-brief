@@ -19,8 +19,10 @@
    - The shop guide. data/vintage-shops.json (scripts/build_vintage_shops.py
      from data/things.json): every vintage, thrift, consignment, antique and
      record shop the Brief's guide knows, numbered in walking order, with the
-     way to the next one when both have coordinates. Hours only where the
-     guide has them; every other shop says "Hours not checked yet".
+     way to the next one when both have coordinates, a map and the shop's
+     own site. Hours only where someone has read them off the shop's own
+     page (the shop's `checked` date and source); a checked shop that posts
+     none says to call ahead, and an unchecked one "Hours not checked yet".
    - Swaps. Board posts of kind `swap`: what I have, what I'd take, size.
    - Make a tee. Stephen's always-in-stock designs from the merch repo
      (all-day/data/merch-designs.json, scripts/build_merch_rail.py), each a
@@ -393,12 +395,14 @@ function paintShops(host) {
     const row = el('div', 'lrow');
     row.dataset.k = 's-' + s.id;
     const facts = [(s.kinds || []).join(', '), s.neighborhood].filter(Boolean).join(' · ');
-    const hours = s.hours ? '<b>' + esc(s.hours) + '</b>' + (s.verified ? esc(' (checked ' + monthOf(s.verified) + ')') : '') : esc('Hours not checked yet');
+    const hours = s.hours ? '<b>' + esc(s.hours) + '</b>' + (s.verified ? esc(' (checked ' + monthOf(s.verified) + ')') : '')
+      : esc(s.checked ? 'No hours posted; call ahead' + (s.phone ? ' at ' + s.phone : '') : 'Hours not checked yet');
     const leg = legText(s, list[i + 1]);
     row.innerHTML = '<span class="num">' + (i + 1) + '</span><div><div class="t">' + esc(s.name) + '</div>' +
       '<div class="s">' + esc(facts) + '</div><div class="s" data-hours>' + hours + (s.address ? esc(' · ' + s.address) : '') + '</div>' +
       (s.blurb ? '<div class="s">' + esc(s.blurb) + '</div>' : '') + (leg ? '<div class="s" data-leg>' + esc(leg) + '</div>' : '') + '</div>';
     row.appendChild(outLink('Map', mapUrl(s), 'pillbtn', 'Map for ' + s.name));
+    if (s.website) row.appendChild(outLink('Site', s.website, 'pillbtn', s.name + '’s website'));
     host.appendChild(row);
   });
   host.appendChild(el('p', 'note pad', esc('Missing a shop, or know the hours? The guide is the Brief’s own; reply to any issue and it joins the walk.')));

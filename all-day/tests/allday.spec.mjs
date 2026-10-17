@@ -2824,10 +2824,13 @@ async function theVintage(browser, base) {
     check(ranks.every((r, i) => i === 0 || r >= ranks[i - 1]), 'the walk goes downtown, the South End, the Old North End, Winooski, then Essex', JSON.stringify(file.shops.map((s) => s.neighborhood)));
     const byId = Object.fromEntries(things.map((t) => [t.id, t]));
     check(file.shops.every((s) => byId[s.id] && byId[s.id].group === 'Shopping' && byId[s.id].name === s.name), 'every shop is one of things.json’s Shopping entries: none invented', '');
-    const invented = file.shops.filter((s) => s.hours && !(byId[s.id].blurb || '').toLowerCase().includes(s.hours.split(' ')[0].toLowerCase()));
-    check(!invented.length, 'every hour comes from the shop’s own things.json entry', JSON.stringify(invented.map((s) => s.name)));
-    const shown = rows.map((r, i) => (file.shops[i].hours ? r.hours.startsWith(file.shops[i].hours) : r.hours === 'Hours not checked yet'));
-    check(shown.every(Boolean), 'hours show only where the guide has them; the rest say “Hours not checked yet”', JSON.stringify(rows.map((r) => r.hours)));
+    const invented = file.shops.filter((s) => s.hours && !(byId[s.id].hours && byId[s.id].checked && byId[s.id].checked.date && /^https?:\/\//.test(byId[s.id].checked.source || '')));
+    check(!invented.length, 'every hour comes from the shop’s own things.json entry, with the date and page it was checked on', JSON.stringify(invented.map((s) => s.name)));
+    const shown = rows.map((r, i) => {
+      const s = file.shops[i];
+      return s.hours ? r.hours.startsWith(s.hours) : s.checked ? r.hours.startsWith('No hours posted; call ahead') : r.hours === 'Hours not checked yet';
+    });
+    check(shown.every(Boolean), 'hours show only where the guide has them; a checked shop without them says call ahead, the rest “Hours not checked yet”', JSON.stringify(rows.map((r) => r.hours)));
     check(rows.every((r) => /^https:\/\/www\.google\.com\/maps\/search\//.test(r.map)), 'Map opens a search on Google Maps', rows[0].map);
     check(file.shops.every((s) => Array.isArray(s.gaps)) && file.gaps, 'gaps are marked in the file for Stephen to fill', JSON.stringify(file.gaps));
     check(!errors.length, 'no console errors', errors.join(' | '));

@@ -10,8 +10,16 @@ things.json is not in the guide, so the way to add one is to add it there.
 
 What each shop carries: name, neighborhood, address, website, coordinates
 and hours exactly as things.json has them, and a one-line blurb, which is
-the first sentence of the entry's own blurb. Hours are only ever read from
-the entry ("Open noon-6 daily." in the blurb); nothing is guessed. Every
+the first sentence of the entry's own blurb. Hours come only from the
+entry's `hours`, day by day, and only when the entry also has `checked`:
+the date someone read them and the page they were read from, the shop's
+own site wherever it publishes them:
+
+    "hours": {"mon": null, "tue": "11:00-18:00", ..., "sun": "12:00-17:00"},
+    "checked": {"date": "2026-10-17", "source": "https://...", "note": "..."}
+
+A day set to null is a closed day. An entry with no `hours` has none
+published, and the tab says to call ahead. Nothing is guessed. Every
 missing fact is listed in the shop's `gaps`, so the tab can say "hours not
 checked yet" instead of leaving a hole, and Stephen can see what to fill.
 
@@ -56,6 +64,9 @@ ROUTE = ["Downtown / Church St", "Waterfront", "South End", "Hill Section", "Old
          "New North End", "Winooski", "South Burlington", "Shelburne", "Colchester", "Essex / Essex Jct"]
 
 HOURS = re.compile(r"\bOpen ([^.]*?\b(daily|weekdays|weekends|mon|tue|wed|thu|fri|sat|sun)[^.]*)\.", re.I)
+DAYS = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"]
+DAY_LABEL = dict(zip(DAYS, ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]))
+SPAN = re.compile(r"^([01]\d|2[0-3]):([0-5]\d)-([01]\d|2[0-3]):([0-5]\d)$")
 CHURCH_ST = [44.4759, -73.2121]
 WALK_MPH = 3.0
 STREET_FACTOR = 1.3
@@ -81,19 +92,63 @@ def first_sentence(text):
     return parts[0] if parts else ""
 
 
-def hours_of(t):
-    m = HOURS.search(t.get("blurb") or "")
-    if not m:
+def clock(hh, mm):
+    """14:30 -> 2:30pm, 12:00 -> noon."""
+    h, m = int(hh), int(mm)
+    if h == 12 and m == 0:
+        return "noon"
+    suffix = "am" if h < 12 else "pm"
+    h = h % 12 or 12
+    return f"{h}:{m:02d}{suffix}" if m else f"{h}{suffix}"
+
+
+def week_of(t):
+    """The entry's checked hours, day by day, or None. A malformed day stops the build: no guessing."""
+    hours, checked = t.get("hours"), t.get("checked")
+    if not hours:
         return None
-    h = m.group(1).strip()
-    h = re.sub(r"\s*[–—-]\s*", " to ", h)
-    return h[0].upper() + h[1:]
+    if not (isinstance(checked, dict) and checked.get("date") and checked.get("source")):
+        sys.exit(f"{t['id']}: hours without checked.date and checked.source")
+    if not isinstance(hours, dict) or sorted(hours) != sorted(DAYS):
+        sys.exit(f"{t['id']}: hours must give all seven days, mon to sun (null for closed)")
+    for d in DAYS:
+        if hours[d] is not None and not SPAN.match(hours[d]):
+            sys.exit(f"{t['id']}: {d} hours {hours[d]!r} are not HH:MM-HH:MM")
+    return {d: hours[d] for d in DAYS}
+
+
+def hours_line(week):
+    """Mon to Sun grouped into runs: "Tue–Sat 11am to 6pm · Sun noon to 5pm · closed Mon"."""
+    if not week:
+        return None
+
+    def say(span):
+        m = SPAN.match(span)
+        return clock(m[1], m[2]) + " to " + clock(m[3], m[4])
+
+    runs = []                                   # [first day, last day, span or None]
+    for d in DAYS:
+        if runs and runs[-1][2] == week[d]:
+            runs[-1][1] = d
+        else:
+            runs.append([d, d, week[d]])
+    if not any(span for _, _, span in runs):
+        return None
+    if len(runs) == 1:
+        return "Daily " + say(runs[0][2])
+    parts = [(DAY_LABEL[a] if a == b else DAY_LABEL[a] + "–" + DAY_LABEL[b]) + " " + say(span) for a, b, span in runs if span]
+    closed = [DAY_LABEL[d] for d in DAYS if week[d] is None]
+    if closed:
+        parts.append("closed " + ", ".join(closed))
+    return " · ".join(parts)
 
 
 def shop(t):
     ks = kinds_of(t)
     coords = t.get("coords")
     coords = coords if isinstance(coords, list) and len(coords) == 2 and all(isinstance(c, (int, float)) for c in coords) else None
+    week = week_of(t)
+    checked = t.get("checked") if isinstance(t.get("checked"), dict) else None
     out = {
         "id": t["id"],
         "name": t["name"],
@@ -102,9 +157,12 @@ def shop(t):
         "address": t.get("address") or None,
         "website": t.get("website") or None,
         "coords": coords,
-        "hours": hours_of(t),
+        "hours": hours_line(week),
+        "week": week,
+        "phone": t.get("phone") or None,
         "blurb": first_sentence(t.get("blurb")),
-        "verified": t.get("last_verified") or None,
+        "verified": (checked or {}).get("date") or t.get("last_verified") or None,
+        "checked": checked,
     }
     # An address that only names a street area is not an address to walk to.
     if out["address"] and re.match(r"^[A-Za-z .]+ (area|street|st)\b,", out["address"], re.I) and not re.match(r"^\d", out["address"]):
