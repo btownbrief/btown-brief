@@ -1662,7 +1662,7 @@
   ok   sign-in fails soft › a bad address is caught before any request
   ok   sign-in fails soft › no link was requested
   ok   sign-in fails soft › no console errors
-  ok   performance › the live Wire redraws 60 cards in 8ms (budget 100)
+  ok   performance › the live Wire redraws 60 cards in 10ms (budget 100)
   ok   shell fixes: a rail never snaps flush to the edge › 390: .rail carries scroll-padding of one gutter
   ok   shell fixes: a rail never snaps flush to the edge › 390: a card scrolled to the start stops at the gutter
   ok   shell fixes: a rail never snaps flush to the edge › 390: no console errors
@@ -1854,7 +1854,7 @@
   ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › shared with the pod is off by default
   ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › it lands at the bottom: Daily, no streak yet, not done
   ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › today’s dot is today’s, in Burlington
-  ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › a tap shows at once (0 ms)
+  ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › a tap shows at once (1 ms)
   ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › the streak ticks up to 1 day
   ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › and today’s dot fills
   ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › the server has the tap, for today in Burlington
