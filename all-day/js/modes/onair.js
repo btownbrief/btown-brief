@@ -154,15 +154,16 @@ function clipItem(c) {
 /* ------------------------------------------------------------ the videos */
 const isLocalVideo = (v) => !!v && (!!v.vt || v.g === 'vt' || v.shelf === LOCAL_SHELF);
 /* Live on Local is cameras around here: a stream on the Vermont shelf, or
-   one of the pinned cameras (scripts/refresh_youtube.py PINNED_LIVE, kept in
-   step by hand). The live search also matches "Vermont" in titles like
-   "Peaceful Autumn Village in Vermont with Relaxing Jazz", so anything that
-   reads as music or ambience is never shown, on either side of the switch.
-   The real fix is a pinned live roster in refresh_youtube.py. */
+   one on the pinned live roster (scripts/refresh_youtube.py LIVE_ROSTER),
+   which the data marks cam: 1. PINNED_LIVE is the roster as it was when this
+   was written, for a btown-tv.json made before cam existed. The live search
+   also matches "Vermont" in titles like "Peaceful Autumn Village in Vermont
+   with Relaxing Jazz"; the pipeline now drops those, and anything that reads
+   as music or ambience is still never shown, on either side of the switch. */
 const PINNED_LIVE = new Set(['zl1woMXGGmQ']);   // Church Street Market Place
 const AMBIENCE_RE = /\b(jazz|lo-?fi|relaxing|ambient|ambience|sleep|study)\b|\bcaf[eé](?![a-z])/i;
 const isAmbience = (v) => AMBIENCE_RE.test(String(v && v.t || ''));
-const isLocalCam = (v) => !!v && (isLocalVideo(v) || PINNED_LIVE.has(v.id));
+const isLocalCam = (v) => !!v && (v.cam === 1 || isLocalVideo(v) || PINNED_LIVE.has(v.id));
 const shelvesOf = (tv) => arr(tv && tv.shelves).filter((s) => s && typeof s === 'object');
 
 function videoItem(v, opts = {}) {

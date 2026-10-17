@@ -474,14 +474,30 @@ def fetch_vermont(key, now_ts, exclude):
     return found[:MAX_VERMONT]
 
 
-# Cameras we always want, whether or not a keyword search happens to surface
-# them. Church Street is THE Burlington webcam and it was missing for exactly
-# this reason: its title and channel are "Church Street Market Place", which
-# a q=Vermont search with ten results never returns. VT_RE was never the
-# problem — the search was.
-PINNED_LIVE = [
-    "zl1woMXGGmQ",   # Church Street Market Place — the marketplace, live
+# The pinned live roster: the cameras around here, which On Air shows as its
+# Local cams. Each goes out whether or not a keyword search happens to surface
+# it, and only these carry cam: 1. Church Street is THE Burlington webcam and
+# it was missing for exactly this reason: its title and channel are "Church
+# Street Market Place", which a q=Vermont search with ten results never
+# returns. A 24/7 stream restarted under a new id means editing its id here
+# (the run warns "pinned live ... is not live right now" when one goes dark).
+LIVE_ROSTER = [
+    {"id": "zl1woMXGGmQ", "name": "Church Street Market Place", "where": "Burlington"},
 ]
+PINNED_LIVE = [cam["id"] for cam in LIVE_ROSTER]
+
+# The live search matches "Vermont" in titles like "Peaceful Autumn Village in
+# Vermont with Relaxing Jazz" (2026-10-16). A music or ambience stream is
+# never news from here, so it is dropped before it reaches any shelf. Titles
+# only: a channel called Vermont Public Radio still streams the news.
+MUSIC_LIVE_RE = re.compile(
+    r"\b(jazz|lo-?fi|relaxing|ambient|ambience|sleep|study|music|piano|chill|beats|asmr)\b"
+    r"|\bcaf[eé](?![a-z])", re.I)
+
+
+def live_hit_ok(title, channel):
+    """A live search hit worth keeping: from here, and not music or ambience."""
+    return is_vermont(f"{title} {channel}") and not MUSIC_LIVE_RE.search(title)
 
 # One search finds what one phrase finds. The cameras worth having are named
 # for the place they point at, not for the state they sit in.
@@ -538,7 +554,7 @@ def fetch_live_now(key, now_ts, exclude):
         seen.add(vid)
         titles.add(title_key(meta["t"]))
         live.append({"id": vid, "t": meta["t"], "ch": meta["ch"],
-                     "d": now_ts, "dur": "LIVE", "vt": 1, "lv": 1})
+                     "d": now_ts, "dur": "LIVE", "vt": 1, "lv": 1, "cam": 1})
 
     for phrase in LIVE_QUERIES:
         if len(live) >= LIVE_MAX:
@@ -558,7 +574,7 @@ def fetch_live_now(key, now_ts, exclude):
             channel = html.unescape((snippet.get("channelTitle") or "").strip())
             if not vid or vid in seen or not title:
                 continue
-            if not is_vermont(f"{title} {channel}"):
+            if not live_hit_ok(title, channel):
                 continue
             if title_key(title) in titles:
                 continue
@@ -1012,6 +1028,17 @@ def selftest():
     assert [v["id"] for v in digest["videos"]] == ["hothothot01", "slowslowsl1"]
     assert digest["videos"][0]["vph"] > digest["videos"][1]["vph"]
     print("refresh_youtube: digest ok (velocity rank, shorts + live excluded)")
+
+    # the live roster: pinned cameras by id; search hits only from here, never music or ambience
+    assert PINNED_LIVE == [cam["id"] for cam in LIVE_ROSTER] and "zl1woMXGGmQ" in PINNED_LIVE
+    assert all(VIDEO_ID_RE.search("v=" + cam["id"]) and cam["name"] for cam in LIVE_ROSTER)
+    assert not live_hit_ok("Peaceful Autumn Village in Vermont with Relaxing Jazz 🍂 Smooth Jazz", "Serene Jazz Haven")
+    assert not live_hit_ok("Peaceful Autumn Village in Vermont 🍂 at a Cozy Café for Slow Days ☕", "Dreams Notes")
+    assert not live_hit_ok("Vermont fall foliage lofi beats to study to", "Chill Hub")
+    assert not live_hit_ok("Rowville vs Vermont South, FNL live", "Eastern Football")
+    assert live_hit_ok("Lake Champlain live cam, Burlington waterfront", "Some Channel")
+    assert live_hit_ok("Justice Oversight - 2026-10-16", "Vermont Legislature Joint Committees")
+    print("refresh_youtube: live roster ok (pinned cams, no music or ambience)")
 
     # discovery runs only in the Friday-morning window and suggests once
     assert update_channel_suggestions(

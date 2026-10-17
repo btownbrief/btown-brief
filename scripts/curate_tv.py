@@ -373,6 +373,8 @@ def gate(videos, catalog, history, signals, now_ts, roster_g):
         is_live = bool(video.get("lv")) or video.get("dur") == "LIVE" or \
             (sec is None and LIVE_RE.search(title))
         if is_live:
+            if video.get("cam"):
+                item["cam"] = 1      # on refresh_youtube.py's pinned live roster
             live.append(item)
             continue
         if not VIDEO_ID_RE.match(vid):
@@ -1252,7 +1254,7 @@ def selftest():
         {"id": "fresh000004", "t": "Classic episode 2", "ch": "Kurz",
          "d": now_ts - day, "dur": "12:00", "views": 10},              # rerun
         {"id": "fresh000005", "t": "WCAX SkyWatch3: Church St", "ch": "WCAX",
-         "d": now_ts - day, "dur": "LIVE", "lv": 1},                   # live
+         "d": now_ts - day, "dur": "LIVE", "lv": 1, "cam": 1},         # live, pinned
         {"id": "fresh000006", "t": "A ferry ride across the lake", "ch": "Local",
          "d": now_ts - 2 * day, "dur": "8:00", "views": 400, "vt": 1}, # vermont
         {"id": "fresh000007", "t": "One upload this week", "ch": "Quiet",
@@ -1284,7 +1286,7 @@ def selftest():
     assert "fresh000004" not in fresh_ids and dropped.get("rerun") == 1, dropped
     assert "fresh000008" not in fresh_ids and dropped.get("shown") == 1, dropped
     assert fresh_ids == ["fresh000002", "fresh000007"], fresh_ids
-    assert pools["live"][0]["id"] == "fresh000005"
+    assert pools["live"][0]["id"] == "fresh000005" and pools["live"][0]["cam"] == 1
     assert pools["vt"][0]["id"] == "fresh000006"
     assert [v["id"] for v in pools["gold"]] == ["old00000001"], pools["gold"]
     rare = {v["id"]: v.get("rare") for v in pools["fresh"]}
