@@ -6,8 +6,8 @@ tag_wire.py left in data/wire-tags.json, and the day so far, then asks the
 editor model, with prompts/wire-taste.md as its doctrine, for:
 
   * "What matters today": 40 ranked picks, each with a one-line reason and a
-    local flag, so the page shows ten local picks and adds national ones when
-    the switch is on Everything. Re-ranked at most every PICKS_EVERY_HOURS
+    local flag, so the page shows every local pick and adds the national ones
+    when the switch is on Everything. Re-ranked at most every PICKS_EVERY_HOURS
     (and at once when a score-9 local story lands); between re-ranks the
     picks stand. A day keeps every story the editor ranked: one that falls
     out of a re-rank moves to `picks_earlier` with its last rank, its reason

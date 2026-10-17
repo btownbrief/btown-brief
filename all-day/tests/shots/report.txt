@@ -998,11 +998,11 @@
   ok   the Wire, live › one pick card and four ranked rows to start
   ok   the Wire, live › an empty why draws no reason line
   ok   the Wire, live › the earlier picks wait behind the button
-  ok   the Wire, live › the button counts the rest of the ranking and the earlier picks (14)
-  ok   the Wire, live › opened, the block shows every local pick of the ranking, in order (15)
+  ok   the Wire, live › the button counts the rest of the ranking and the earlier picks (24)
+  ok   the Wire, live › opened, the block shows every local pick of the ranking, in order (25)
   ok   the Wire, live › then the earlier picks, newest ranking first, each with its last rank and its reason
   ok   the Wire, live › under “Earlier today, these mattered too”
-  ok   the Wire, live › and the list ends “That’s all nineteen.”
+  ok   the Wire, live › and the list ends “That’s all twenty-nine.”
   ok   the Wire, live › nothing shows twice on today’s page
   ok   the Wire, live › today’s page draws every local story once: Brief + picks + river = the count
   ok   the Wire, live › the reddit chip shows exactly its count today (7)
@@ -1011,7 +1011,7 @@
   ok   the Wire, live › on Everything the chips are counts.everything
   ok   the Wire, live › and the dateline counts everything
   ok   the Wire, live › Everything keeps the picks
-  ok   the Wire, live › the river keeps rendering past 120 items (164)
+  ok   the Wire, live › the river keeps rendering past 120 items (219)
   ok   the Wire, live › today flows into yesterday, then the day before, each with its own head
   ok   the Wire, live › when the editions run out, the end says so
   ok   the Wire, live › scrolled into yesterday, the dateline names it
@@ -1020,7 +1020,7 @@
   ok   the Wire, live › with its picks: the card and four rows, in rank order
   ok   the Wire, live › and its own button for the rest and the earlier picks
   ok   the Wire, live › opened in place: the whole ranking, then “Earlier that day” and the earlier picks
-  ok   the Wire, live › no key appears twice on the page, today through the archive (190 cards)
+  ok   the Wire, live › no key appears twice on the page, today through the archive (260 cards)
   ok   the Wire, live › the source sheet: its stories today, Mute, Open the site
   ok   the Wire, live › a muted source leaves the river (r-burlington)
   ok   the Wire, live › the chip counts are recounted without the muted source
@@ -1501,7 +1501,7 @@
   ok   sign-in fails soft › a bad address is caught before any request
   ok   sign-in fails soft › no link was requested
   ok   sign-in fails soft › no console errors
-  ok   performance › the live Wire redraws 60 cards in 11ms (budget 100)
+  ok   performance › the live Wire redraws 60 cards in 6ms (budget 100)
   ok   shell fixes: a rail never snaps flush to the edge › 390: .rail carries scroll-padding of one gutter
   ok   shell fixes: a rail never snaps flush to the edge › 390: a card scrolled to the start stops at the gutter
   ok   shell fixes: a rail never snaps flush to the edge › 390: no console errors

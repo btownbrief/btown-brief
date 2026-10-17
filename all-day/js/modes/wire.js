@@ -356,7 +356,7 @@ function render(opts = {}) {
   const exclude = new Set();
   if (d && W.ch === 'all') {
     if (d.brief && seen(d.brief)) {
-      put(feed, briefPin(d, date === tk));
+      put(feed, briefPin(d));
       exclude.add(d.brief.k);
     }
     renderMatters(feed, d, date === tk).forEach((k) => exclude.add(k));
@@ -384,9 +384,8 @@ function render(opts = {}) {
    the rank it last had. The list says when it is done. Returns every key
    in the block, open or not, so the river leaves them all out. */
 /* no picture: the Brief is a pin above the picks, not a second front page */
-function briefPin(d, isToday) {
-  return cards.pick({ ...d.brief, media: '', thumb: '', own: false, eyebrow: 'The Brief',
-    why: isToday ? 'Today’s newsletter, as it went out.' : 'That day’s newsletter, as it went out.' }, { greenLocal: greenOf(d.brief) });
+function briefPin(d) {
+  return cards.pick({ ...d.brief, media: '', thumb: '', own: false, eyebrow: 'The Brief', why: '' }, { greenLocal: greenOf(d.brief) });
 }
 function mattersOf(d) {
   const keep = (x) => seen(x.c) && (x.c.local || geo() === 'everything');
@@ -396,8 +395,7 @@ function renderMatters(host, d, isToday) {
   const { list, earlier } = mattersOf(d);
   if (!list.length && !earlier.length) return [];
   const wm = el('div', 'wm');
-  section(wm, isToday ? 'What matters today' : 'What mattered ' + weekday(d.date),
-    esc(isToday ? 'Ranked, most important first.' : 'Ranked, as they stood at midnight.'));
+  section(wm, isToday ? 'What matters today' : 'What mattered ' + weekday(d.date));
   const [first] = list;
   if (first) put(wm, cards.pick({ ...first.c, media: first.c.thumb, thumb: '', eyebrow: '1 of ' + list.length, why: first.why }, { greenLocal: greenOf(first.c) }));
   list.slice(1, PICKS_OPEN).forEach((x, i) => wm.appendChild(wmRow(x.c, x.why, i + 2)));
@@ -511,7 +509,7 @@ function entriesFor(run, date, p) {
   if (!items.length) {
     const kind = W.ch === 'all' ? '' : ' from ' + (KINDS.find((x) => x[0] === W.ch) || ['', W.ch])[1];
     out.push({ note: date === tk
-      ? (W.ch === 'all' && !(d && d.all.length) ? 'Nothing yet today. The first stories land in the morning; yesterday’s paper is right below.' : 'Nothing' + kind + ' today so far.')
+      ? (W.ch === 'all' && !(d && d.all.length) ? 'Nothing yet today.' : 'Nothing' + kind + ' today so far.')
       : 'Nothing' + (kind || (geo() === 'local' ? ' local' : '')) + ' that day.' });
   }
   return out;
@@ -558,7 +556,7 @@ function fill(run) {
       divider(h, e.divider, e.sub);
       node = h.firstChild;
     } else if (e.pin) {
-      node = briefPin(e.pin, false);
+      node = briefPin(e.pin);
       if (node) { run.shown++; added.push(e.pin.brief.k); }
     } else if (e.matters) {
       const box = el('div');
@@ -587,14 +585,12 @@ function finish(run) {
   run.until = null;
   run.sentinel.textContent = '';
   const days = editionDates().length;
-  const tk = todayKey();
   run.end = cards.caught(days ? {
     title: 'That’s the whole archive',
-    text: 'The Wire keeps its editions for 30 days. ' + dayName(run.lastDate || tk) + ' is the oldest one on file, and nothing goes further back.',
     buttons: [button('Back to today', '', () => goDay(null))], check: false,
   } : {
     title: 'That’s today so far',
-    text: W.idxDone ? 'New stories land through the day, above a line, never under your thumb.' : 'Earlier editions didn’t load. They come back when the connection does.',
+    text: W.idxDone ? '' : 'Earlier editions didn’t load. They come back when the connection does.',
     buttons: [button('Unfiltered ' + ICON.arrow, 'ghost', openRaw)],
   });
   run.feed.insertBefore(run.end, run.sentinel);
@@ -713,7 +709,6 @@ function sourceSheet(sid, from) {
     else if (/^https?:/i.test(info.site || '')) row.appendChild(openLink('Open the site', info.site));
     else if (first.href) row.appendChild(openLink('Open the post', first.href));
     body.appendChild(row);
-    if (!first.local) body.appendChild(el('p', 'sheet-note', esc('Follow, and ' + name + ' shows on Local too.')));
     if (items.length) {
       body.appendChild(el('div', 'sheet-h', esc((when === 'today' ? 'Today' : when) + ' from ' + name)));
       const f = el('div', 'feed tight');
@@ -778,7 +773,7 @@ function rawSubnav(frag) {
   const P = W.pulse;
   const tk = todayKey();
   const n = P ? P.items.filter((c) => etDay(c.d * 1000) === tk).length : 0;
-  dl.appendChild(el('span', 'dl', '<b>Unfiltered</b><span class="s">' + (P ? esc(n ? n.toLocaleString('en-US') + ' today' : P.items.length.toLocaleString('en-US') + ' headlines') + ' · every 10 min · nothing picked' : 'every headline, nothing picked') + '</span>'));
+  dl.appendChild(el('span', 'dl', '<b>Unfiltered</b><span class="s">' + (P ? esc(n ? n.toLocaleString('en-US') + ' today' : P.items.length.toLocaleString('en-US') + ' headlines') : '') + '</span>'));
   frag.appendChild(dl);
   if (P) {
     frag.appendChild(chips([{ key: '', label: 'All outlets' }].concat(outletsOf(P)), W.raw.outlet, (k) => {
@@ -870,7 +865,7 @@ function renderRawList() {
     if (added.length) hydrateVotes(list, added);
     if (run.i >= run.all.length) {
       run.sentinel.remove();
-      list.appendChild(cards.caught({ title: 'That’s every headline on the wire', text: 'The raw wire keeps about two days. Older stories live on in the paper’s past editions.',
+      list.appendChild(cards.caught({ title: 'That’s every headline on the wire',
         buttons: [button('Back to today’s paper', '', closeRaw)], check: false }));
       return;
     }
@@ -995,7 +990,7 @@ function mount(root) {
        further down it waits for a pull or a tap on the tab */
     data.setFreshGate((apply) => {
       if (app.activeTab() !== 'wire' || !W.panel || W.panel.scrollTop < 120) apply();
-      else { W.queued.push(apply); app.toast('New stories on the Wire. Pull down or tap Wire to see them.'); }
+      else { W.queued.push(apply); app.toast('New stories on the Wire.'); }
     });
     data.setStaleHandler((s) => { if (W.stale !== s) { W.stale = s; if (app.activeTab() === 'wire') paintDateline(W.reading || todayKey()); } });
   }

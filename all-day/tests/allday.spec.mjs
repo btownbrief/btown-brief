@@ -171,13 +171,13 @@ function wireDay(date, n, opts) {
       lead: list[0] ? { id: list[0].id, why: 'Why update ' + u + ' leads with this.' } : null, items: list };
   }).filter((u) => u.items.length);
   const ranked = items.filter((it) => !it.own && (it.ch === 'local' || it.ch === 'world'));
-  const picks = ranked.filter((it) => it.local).slice(0, 15).concat(ranked.filter((it) => !it.local).slice(0, 10))
+  const picks = ranked.filter((it) => it.local).slice(0, 25).concat(ranked.filter((it) => !it.local).slice(0, 15))
     .map((it, r) => ({ ...it, rank: r + 1, why: r === 2 ? '' : 'Reason ' + (r + 1) + ': why this one matters.' }));
   /* the stories an earlier ranking held and the current one dropped: their
      last rank and reason, newest ranking first, never also in `picks` */
   const morning = new Date(top - (top - bottom) * 0.8).toISOString(), noon = new Date(top - (top - bottom) * 0.4).toISOString();
-  const picksEarlier = ranked.filter((it) => it.local).slice(15, 19).concat(ranked.filter((it) => !it.local).slice(10, 12))
-    .map((it, i) => ({ ...it, rank: [4, 9, 2, 7, 18, 21][i], why: 'Earlier reason ' + i + ': it led the morning.', ranked_at: i % 2 ? morning : noon }))
+  const picksEarlier = ranked.filter((it) => it.local).slice(25, 29).concat(ranked.filter((it) => !it.local).slice(15, 17))
+    .map((it, i) => ({ ...it, rank: [4, 9, 2, 7, 28, 33][i], why: 'Earlier reason ' + i + ': it led the morning.', ranked_at: i % 2 ? morning : noon }))
     .sort((a, b) => (a.ranked_at === b.ranked_at ? a.rank - b.rank : a.ranked_at < b.ranked_at ? 1 : -1));
   const counts = {};
   for (const scope of ['local', 'everything']) {
@@ -200,7 +200,7 @@ function wireFiles(opts = {}) {
   if (!wireCache.has(key)) {
     const today = etKey(Date.now());
     const y1 = dayMinus(today, 1), y2 = dayMinus(today, 2);
-    const files = { 'wire-today.json': wireDay(today, 160, o), [y1 + '.json']: wireDay(y1, 40, { ...o, brief: true }), [y2 + '.json']: wireDay(y2, 40, { ...o, brief: false }) };
+    const files = { 'wire-today.json': wireDay(today, 160, o), [y1 + '.json']: wireDay(y1, 90, { ...o, brief: true }), [y2 + '.json']: wireDay(y2, 90, { ...o, brief: false }) };
     files['index.json'] = { v: 1, editions: [y1, y2].map((d) => ({ date: d, count: files[d + '.json'].count, picks: files[d + '.json'].picks.length,
       picks_total: files[d + '.json'].picks.length + files[d + '.json'].picks_earlier.length })) };
     wireCache.set(key, files);
