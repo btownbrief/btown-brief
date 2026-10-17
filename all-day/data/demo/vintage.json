@@ -1,5 +1,5 @@
 {
- "_": "Demo data for ?demo=1. The people, finds, swaps and fit checks are invented; vintage.js adds them to the demo boards (boards-fake.js), which already holds three of the finds and one of the swaps by title. The shops are the first six of data/vintage-shops.json and the designs six of all-day/data/merch-designs.json, copied as they are, so the demo never shows an hour or an address that is not real. days is how long a post has left; photo is a placeholder palette. New in: instagram names the invented shop accounts as data/vintage-shops.json names the real ones, and instagramPosts are invented posts in all-day/data/instagram.json's shape; their times move with the reader's clock (anchor). One post is three weeks old and one is from an account that is not a shop: neither shows.",
+ "_": "Demo data for ?demo=1. The people, finds, swaps, fit checks and designs sent in are invented; vintage.js adds them to the demo boards (boards-fake.js), which already holds three of the finds and one of the swaps by title. The shops are the first fourteen of data/vintage-shops.json (downtown, the Waterfront and the South End) and the designs six of all-day/data/merch-designs.json, copied as they are, so the demo never shows an hour or an address that is not real. days is how long a post has left; photo is a placeholder palette. New in: instagram names the invented shop accounts as data/vintage-shops.json names the real ones, and instagramPosts are invented posts in all-day/data/instagram.json's shape; their times move with the reader's clock (anchor). One post is three weeks old and one is from an account that is not a shop: neither shows.",
  "anchor": "2026-10-16T12:00:00-04:00",
  "homesThisMonth": 2,
  "people": [
@@ -142,6 +142,22 @@
    "photo": "street",
    "votes": 7,
    "body": "Thanks in: store credit"
+  },
+  {
+   "who": 0,
+   "title": "Champ in the chop, linocut",
+   "days": 9,
+   "photo": "night",
+   "votes": 12,
+   "thanks": "shirts"
+  },
+  {
+   "who": 3,
+   "title": "Old North End porches",
+   "days": 5,
+   "photo": "coffee",
+   "votes": 3,
+   "thanks": "credit"
   }
  ],
  "shops": [
@@ -380,6 +396,304 @@
    "next": {
     "miles": 0.04,
     "minutes": 1,
+    "mode": "walk"
+   }
+  },
+  {
+   "id": "fear-and-cloathing",
+   "name": "Fear & Cloathing Vintage",
+   "kinds": [
+    "Vintage"
+   ],
+   "neighborhood": "Downtown / Church St",
+   "address": "33 Church St, Burlington, VT 05401",
+   "website": "https://fearandcloathing.com/",
+   "coords": [
+    44.47952,
+    -73.21292
+   ],
+   "hours": null,
+   "week": null,
+   "hours_note": null,
+   "phone": null,
+   "blurb": "A vintage clothing shop on Church Street that buys, sells and trades, with new items weekly.",
+   "verified": "2026-10-17",
+   "checked": {
+    "date": "2026-10-17",
+    "source": "https://fearandcloathing.com/",
+    "note": "No weekly hours published: the website is a 'Coming Soon... website undergoing renovation' page giving only '33 Church St · Burlington, VT 05401' and an Instagram link; the Instagram bio (@fearandcloathingvt) says 'New items weekly / Located at 33 Church St, Burlington Vermont / Buy Sell Trade' with no hours. Hello Burlington (June 2026) gives 32 Church St and hours, but the shop's own pages say 33 and give no hours, so hours are omitted. Shop is active: own posts of sold items dated Oct 1, 7 and 8, 2026. Coordinates: Nominatim house-number match (OSM shop node 'Fear and Cloathing')."
+   },
+   "instagram": "fearandcloathingvt",
+   "gaps": [
+    "hours"
+   ],
+   "next": {
+    "miles": 0.06,
+    "minutes": 1,
+    "mode": "walk"
+   }
+  },
+  {
+   "id": "vault-collective",
+   "name": "The Vault Collective",
+   "kinds": [
+    "Vintage"
+   ],
+   "neighborhood": "Downtown / Church St",
+   "address": "145 Cherry Street, Burlington, VT 05401",
+   "website": "https://www.thevaultcollective.com/pages/vermont-1",
+   "coords": [
+    44.4792,
+    -73.21215
+   ],
+   "hours": "Daily 11am to 7pm",
+   "week": {
+    "mon": "11:00-19:00",
+    "tue": "11:00-19:00",
+    "wed": "11:00-19:00",
+    "thu": "11:00-19:00",
+    "fri": "11:00-19:00",
+    "sat": "11:00-19:00",
+    "sun": "11:00-19:00"
+   },
+   "hours_note": null,
+   "phone": "802-448-0651",
+   "blurb": "A multi-vendor vintage clothing shop on Cherry Street with racks from local Vermont sellers such as Project Object Vintage and Stay Gold Vintage.",
+   "verified": "2026-10-17",
+   "checked": {
+    "date": "2026-10-17",
+    "source": "https://www.thevaultcollective.com/pages/vermont-1",
+    "note": "Hours, address and phone from the Vermont location page: 'Open 11-7 Daily', '145 Cherry Street, Burlington VT 05401', '802-448-0651'. Vendor names from the site's 'Shop Vermont' collection menu. The business also has a Rhode Island store; this entry is the Vermont one only. Coordinates: Nominatim house-number match (OSM shop node 'The Vault Collective')."
+   },
+   "instagram": "thevaultvt",
+   "gaps": [],
+   "next": {
+    "miles": 0.01,
+    "minutes": 1,
+    "mode": "walk"
+   }
+  },
+  {
+   "id": "old-gold",
+   "name": "Old Gold",
+   "kinds": [
+    "Vintage"
+   ],
+   "neighborhood": "Downtown / Church St",
+   "address": "151 Cherry St, Burlington, VT 05401",
+   "website": "https://www.facebook.com/OldGoldVT/",
+   "coords": [
+    44.4792,
+    -73.212
+   ],
+   "hours": null,
+   "week": null,
+   "hours_note": null,
+   "phone": "802-864-7786",
+   "blurb": "Vintage and new clothing on Cherry Street: costumes, boots, shoes, wigs and accessories for men and women.",
+   "verified": "2026-10-17",
+   "checked": {
+    "date": "2026-10-17",
+    "source": "https://www.facebook.com/OldGoldVT/about",
+    "note": "Address, phone and what it sells from the shop's own Facebook page (intro and About); it has no website of its own. No weekly hours are readable without a Facebook login, so hours are left empty and the guide says call ahead. Coordinates: OpenStreetMap's Old Gold node at 151 Cherry St. A 2018 Seven Days item gave 153 Cherry St for the move; the shop's own page says 151."
+   },
+   "gaps": [
+    "hours"
+   ],
+   "next": {
+    "miles": 0.11,
+    "minutes": 2,
+    "mode": "walk"
+   }
+  },
+  {
+   "id": "possibility-shop",
+   "name": "The Possibility Shop",
+   "kinds": [
+    "Thrift"
+   ],
+   "neighborhood": "Downtown / Church St",
+   "address": "38 South Winooski Ave, Burlington, VT 05401",
+   "website": "https://firstchurchburlington.org/service-outreach/",
+   "coords": [
+    44.47955,
+    -73.21029
+   ],
+   "hours": "Wed 10am to 3pm · Fri 10am to 3pm · Mon, Tue, Thu, Sat, Sun not listed",
+   "week": {
+    "mon": "unlisted",
+    "tue": "unlisted",
+    "wed": "10:00-15:00",
+    "thu": "unlisted",
+    "fri": "10:00-15:00",
+    "sat": "unlisted",
+    "sun": "unlisted"
+   },
+   "hours_note": null,
+   "phone": "(802) 862-5010",
+   "blurb": "A volunteer-run thrift store at First Congregational Church selling affordable clothing and household items to raise money for church ministries.",
+   "verified": "2026-10-17",
+   "checked": {
+    "date": "2026-10-17",
+    "source": "https://firstchurchburlington.org/service-outreach/",
+    "note": "Hours from the church's Service Outreach page: 'The Possibility Shop, our volunteer-run thrift store, offers affordable clothing and household items... Open Wednesdays and Fridays from 10am – 3pm.' Address and phone are the church's, from https://firstchurchburlington.org/contact/ ('38 South Winooski Ave Burlington, VT 05401', '(802) 862-5010'); the page does not give a separate shop phone. Coordinates: Nominatim house-number match (OSM 'First Congregational Church')."
+   },
+   "gaps": [],
+   "next": {
+    "miles": 0.64,
+    "minutes": 13,
+    "mode": "walk"
+   }
+  },
+  {
+   "id": "billie-jean-vintage",
+   "name": "Billie Jean Vintage",
+   "kinds": [
+    "Vintage"
+   ],
+   "neighborhood": "Waterfront",
+   "address": "152 Battery Street, Burlington, VT 05401",
+   "website": "https://www.billiejeanvintage.com/",
+   "coords": [
+    44.47536,
+    -73.21839
+   ],
+   "hours": "Thu–Sat 11am to 5pm · Sun 11am to 4pm · closed Mon, Tue, Wed",
+   "week": {
+    "mon": null,
+    "tue": null,
+    "wed": null,
+    "thu": "11:00-17:00",
+    "fri": "11:00-17:00",
+    "sat": "11:00-17:00",
+    "sun": "11:00-16:00"
+   },
+   "hours_note": null,
+   "phone": "802-860-6152",
+   "blurb": "A women-owned vintage clothing shop on Battery Street, near the waterfront.",
+   "verified": "2026-10-17",
+   "checked": {
+    "date": "2026-10-17",
+    "source": "https://www.billiejeanvintage.com/",
+    "note": "Hours from the home page 'Shop Hours' block: 'Thursday 11 - 5 / Friday 11 - 5 / Saturday 11 - 5 / sunday 11 - 4 / Closed Monday - Wednesday'; address '152 Battery Street Burlington, VT right by the waterfront!!'. Phone from https://www.billiejeanvintage.com/contact. Women-owned from the About page. ZIP 05401 added (site omits it). Coordinates: Nominatim house-number match (OSM building at 152 Battery St)."
+   },
+   "instagram": "billiejeanvintage",
+   "gaps": [],
+   "next": {
+    "miles": 0.38,
+    "minutes": 8,
+    "mode": "walk"
+   }
+  },
+  {
+   "id": "stay-gold-vintage",
+   "name": "Stay Gold Vintage",
+   "kinds": [
+    "Vintage"
+   ],
+   "neighborhood": "South End",
+   "address": "266 Pine St, Burlington, VT 05401",
+   "website": "https://www.instagram.com/stay.gold.vintage/",
+   "coords": [
+    44.47182,
+    -73.21505
+   ],
+   "hours": "Thu 10:30am to 3pm · Fri–Sat 10:30am to 5pm · Mon, Tue, Wed, Sun not listed",
+   "week": {
+    "mon": "unlisted",
+    "tue": "unlisted",
+    "wed": "unlisted",
+    "thu": "10:30-15:00",
+    "fri": "10:30-17:00",
+    "sat": "10:30-17:00",
+    "sun": "unlisted"
+   },
+   "hours_note": "In the Soda Plant studio",
+   "phone": null,
+   "blurb": "A vintage clothing studio shop in the Soda Plant on Pine Street.",
+   "verified": "2026-10-17",
+   "checked": {
+    "date": "2026-10-17",
+    "source": "https://www.instagram.com/stay.gold.vintage/",
+    "note": "No website. Hours and address from the Instagram bio (via Scrape Creators): 'Shop our studio @thesodaplant 266 Pine St Burlington Vermont / Thursday 10:30-3 / Friday 10:30-5 / Saturday 10:30-5'. Caution: an Aug 6, 2026 post said that after the owner's baby arrived (late Aug/early Sept) the shop would be 'open by appointment or by chance for a few weeks'; an Oct 16, 2026 post describes the owner at the studio 'conversing with customers', and the bio lists regular hours, so recorded as open. Hello Burlington (June 2026) had Fri-Sat 10-3, which the bio supersedes. ZIP added. Coordinates: Nominatim house-number match (OSM address point for 266 Pine St)."
+   },
+   "instagram": "stay.gold.vintage",
+   "gaps": [],
+   "next": {
+    "miles": 0.2,
+    "minutes": 4,
+    "mode": "walk"
+   }
+  },
+  {
+   "id": "resource-burlington",
+   "name": "ReSOURCE",
+   "kinds": [
+    "Thrift"
+   ],
+   "neighborhood": "South End",
+   "address": "339 Pine St, Burlington, VT 05401",
+   "website": "https://resourcevt.org/store-location-hours/",
+   "coords": [
+    44.46985,
+    -73.21633
+   ],
+   "hours": "Tue 10am to 5pm · Thu–Sat 10am to 5pm · closed Mon, Wed, Sun",
+   "week": {
+    "mon": null,
+    "tue": "10:00-17:00",
+    "wed": null,
+    "thu": "10:00-17:00",
+    "fri": "10:00-17:00",
+    "sat": "10:00-17:00",
+    "sun": null
+   },
+   "hours_note": "Donations 10am to 4pm",
+   "phone": "802-846-4015",
+   "blurb": "The nonprofit ReSOURCE's thrift store on Pine Street, stocked with donated secondhand goods.",
+   "verified": "2026-10-17",
+   "checked": {
+    "date": "2026-10-17",
+    "source": "https://resourcevt.org/store-location-hours/",
+    "note": "Address, phone and hours from the ReSOURCE Burlington block of the nonprofit's Store Location & Hours page; its Williston and Morrisville stores keep other hours. Coordinates: OpenStreetMap's ReSOURCE node at 339 Pine St. It is the Burlington store of ReSOURCE, a Vermont nonprofit; the store page lists its four open days."
+   },
+   "gaps": [],
+   "next": {
+    "miles": 0.1,
+    "minutes": 2,
+    "mode": "walk"
+   }
+  },
+  {
+   "id": "barge-canal-market",
+   "name": "Barge Canal Market",
+   "kinds": [
+    "Vintage"
+   ],
+   "neighborhood": "South End",
+   "address": "377 Pine St, Burlington, VT 05401",
+   "website": "https://www.facebook.com/bargecanalmarket/",
+   "coords": [
+    44.46891,
+    -73.21539
+   ],
+   "hours": null,
+   "week": null,
+   "hours_note": "It posts the day's hours on Facebook",
+   "phone": "802-497-7119",
+   "blurb": "Vintage furniture and home decor in the Pine Street building it shares with Speaking Volumes: mid-century design, old industrial pieces and farmhouse finds.",
+   "verified": "2026-10-17",
+   "checked": {
+    "date": "2026-10-17",
+    "source": "https://www.facebook.com/bargecanalmarket/about",
+    "note": "No weekly hours published anywhere reachable; the shop posts the day's hours on Facebook. Its old domain bargecanalmarket.com now redirects to an unrelated gambling site, so it is not linked. Coordinates: OpenStreetMap's building at 377 Pine St. What it sells is from the intro on its Facebook page."
+   },
+   "gaps": [
+    "hours"
+   ],
+   "next": {
+    "miles": 0.15,
+    "minutes": 3,
     "mode": "walk"
    }
   }

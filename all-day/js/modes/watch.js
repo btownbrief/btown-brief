@@ -6,7 +6,9 @@
      and what opens next, labelled theaters or streaming. A tap plays the
      trailer in the shell's one video box (never on its own); a film with no
      trailer on TMDB opens its sheet instead. Right under it, the call to
-     vote for the next screening, which scrolls to the ballot.
+     vote for the next screening, which scrolls to the ballot, with the one
+     line a first-time visitor needs: Stephen hosts the movie night (a link
+     to his Meetup group), and this picks the film.
      On TV the rail is what is airing this week, new seasons first.
    - In theaters near you (Movies): Partizanfilm, Majestic 10 and Essex
      Cinemas, one at a time, with the rest of today's times read off each
@@ -18,13 +20,17 @@
      Tomatoes' front page listed that month, as archived by the Wayback
      Machine, matched to TMDB; or TMDB's own most popular releases of a
      month the archive missed). Titles only ever come from there; every
-     picture and word is TMDB's.
+     picture and word is TMDB's. The section says where the titles come
+     from (a TMDB month says so on its dateline), and "Show all" swaps the
+     rail for a wrapping grid.
    - The list: the ranking is chosen, and the chosen chip says what it is:
      Top rated (TMDB's 300 best films or 200 best shows, in its order),
      Trending (TMDB's this week), Town favorites (the town's ratings, three
      or more), Newest (by release), By genre (a ranked shelf per genre),
      Shuffle (the ones you have not seen, in a new order on every tap).
-     Seen dots for you and your person ("With Sam" / "Just me"), the town
+     Seen dots for you and your person (the "Watching with someone"
+     switch, one line saying what it is for, and a legend naming the two
+     dots while it is on), the town
      rating, filters by how recent and by genre, and the want list. The
      dots and the want list live on this device; a signed-in reader's dots
      also follow them (supabase/nn-watch.sql). The partner is a first name
@@ -79,6 +85,8 @@ const SEED_URL = 'data/films-seed.json';
 /* Talk: the Telegram watch chat first, the community channel second */
 const TELEGRAM_URL = 'https://t.me/+39fLB9cqY684ZmVh';
 const CHAT_URL = 'https://www.btownbrief.com/community/channels/meetups-hangouts';
+/* the screening is a night Stephen hosts through his Meetup group */
+const MEETUP_URL = 'https://www.meetup.com/burlington-social-activites-group/';
 const TMDB_URL = 'https://www.themoviedb.org/';
 const TMDB_LOGO = '../assets/img/tmdb.svg';
 const LOCAL_KEY = 'allday-watch';
@@ -140,7 +148,7 @@ const byId = new Map();     // id -> title (films and shows; a show's id is TV_B
 const byKey = new Map();    // "title|year" -> title
 const byTitle = new Map();  // "title" -> title, or null when two share it
 const slots = Object.create(null);
-const V = { kind: 'movie', recency: 'any', genre: 'all', sort: 'top', show: 'all', shown: PAGE, seed: 1, month: '', theater: '', picked: false };
+const V = { kind: 'movie', recency: 'any', genre: 'all', sort: 'top', show: 'all', shown: PAGE, seed: 1, month: '', theater: '', picked: false, backAll: false };
 const P = { state: 'loading', ratings: [], picks: [], agg: new Map() };
 let L = null;               // this device's dots, partner, want list, own ratings
 
@@ -218,7 +226,8 @@ function playTrailer(f) {
 }
 
 /* ------------------------------------------------------- the time machine */
-/* time-machine.json: { titles: { m603: {...}, t1399: {...} }, months: [{ m, theaters, streaming, tv }] } */
+/* time-machine.json: { titles: { m603: {...}, t1399: {...} }, months: [{ m, src, theaters, streaming, tv }] };
+   src is "rt" (the archived front page) or "tmdb" (a month the archive missed) */
 function setTM(j) {
   TM = null;
   if (!j || typeof j !== 'object' || !j.titles || typeof j.titles !== 'object' || !Array.isArray(j.months)) return;
@@ -231,7 +240,7 @@ function setTM(j) {
   });
   const pick = (keys) => uniq(arr(keys).map((k) => titles.get(k)));
   const months = j.months.filter((m) => m && MONTH.test(String(m.m)))
-    .map((m) => ({ m: m.m, movie: pick([...arr(m.theaters), ...arr(m.streaming)]), tv: pick(m.tv) }))
+    .map((m) => ({ m: m.m, src: m.src === 'tmdb' ? 'tmdb' : 'rt', movie: pick([...arr(m.theaters), ...arr(m.streaming)]), tv: pick(m.tv) }))
     .filter((m) => m.movie.length || m.tv.length)
     .sort((a, b) => b.m.localeCompare(a.m));
   if (months.length) TM = { months };
@@ -352,7 +361,6 @@ function saveLocal() {
 const cleanName = (s) => String(s || '').replace(/[@<>]/g, '').replace(/\s+/g, ' ').trim().slice(0, 32);
 const us = () => L.mode === 'us' && !!L.partner;
 const seenOf = (f) => L.seen[f.id] || [0, 0];
-const partnerName = () => L.partner || 'partner';
 
 function setSeen(f, who, on) {
   const s = seenOf(f).slice();
@@ -606,9 +614,18 @@ function drawSoon(host) {
   });
 }
 
+/* who is screening, for a first-time visitor: one line, with the Meetup link */
+function hostLine() {
+  const p = el('p', 'note pad wnight', '<a href="' + esc(MEETUP_URL) + '" target="_blank" rel="noopener">' + esc('Stephen hosts a movie night') + '</a>' +
+    esc(' with a mixer after. Pick the next film.'));
+  p.dataset.host = '1';
+  return p;
+}
+
 /* the screening vote, right where people are: under Coming soon */
 function drawCta(host) {
   if (V.kind !== 'movie') return;
+  host.appendChild(hostLine());
   const row = el('div', 'addrow');
   const b = button('Vote for the next screening ' + ICON.arrow, '', () => app.jumpTo(root.querySelector('[data-sec="vote"]')));
   b.dataset.cta = 'vote';
@@ -677,10 +694,20 @@ function drawBack(host) {
   if (!months.some((m) => m.m === V.month)) V.month = defaultMonth();
   const at = months.findIndex((m) => m.m === V.month);
   const cur = months[at];
-  sec(host, 'Back then', null, 'back');
+  const list = cur[V.kind];
+  /* the rail, or every title in a wrapping grid */
+  const all = list.length > 3 ? button(V.backAll ? 'Show less' : 'Show all ' + list.length, 'ghost sm', () => {
+    V.backAll = !V.backAll;
+    draw('back');
+    const h = root.querySelector('[data-sec="back"]');
+    if (!V.backAll && h && h.getBoundingClientRect().top < 0) app.jumpTo(h);
+  }) : null;
+  if (all) { all.dataset.backAll = V.backAll ? 'open' : 'closed'; all.setAttribute('aria-expanded', V.backAll ? 'true' : 'false'); }
+  sec(host, 'Back then', esc('Rotten Tomatoes’ front page, month by month'), 'back', all);
   const go = (m) => { V.month = m; draw('back'); };
-  /* months are newest first: ‹ is older, › is newer */
-  const dl = dateline({ title: monthLabel(cur.m), sub: '',
+  /* months are newest first: ‹ is older, › is newer. A month the archive
+     missed is TMDB's most popular, and its dateline says so. */
+  const dl = dateline({ title: monthLabel(cur.m), sub: cur.src === 'tmdb' ? 'Most popular on TMDB' : '',
     prev: at < months.length - 1 ? () => go(months[at + 1].m) : null, next: at > 0 ? () => go(months[at - 1].m) : null });
   dl.dataset.month = cur.m;
   host.appendChild(dl);
@@ -694,9 +721,13 @@ function drawBack(host) {
     yr.dataset.years = '1';
     host.appendChild(yr);
   }
-  const r = rail(host);
+  let r;
+  if (V.backAll && all) {
+    r = el('div', 'grid3 wgrid');
+    host.appendChild(r);
+  } else r = rail(host);
   r.dataset.back = cur.m;
-  cur[V.kind].forEach((f) => r.appendChild(tile(f, 'back:' + cur.m + ':' + f.id)));
+  list.forEach((f) => { const t = tile(f, 'back:' + cur.m + ':' + f.id); if (r.classList.contains('wgrid')) t.style.width = 'auto'; r.appendChild(t); });
 }
 
 /* ----------------------------------------------------------- the list */
@@ -778,6 +809,34 @@ function rateTiles() {
   });
 }
 
+/* Watching with someone: a switch, the one line that says what it is for,
+   and while it is on, which dot is whose */
+function withSwitch(nouns) {
+  const box = el('div', 'wwith');
+  box.dataset.who = '1';
+  const lab = el('label', 'consent', '<input type="checkbox" role="switch" data-with> ' + esc('Watching with someone'));
+  const cb = lab.querySelector('input');
+  cb.checked = us();
+  cb.addEventListener('change', () => {
+    if (cb.checked && !L.partner) { cb.checked = false; nameSheet(); return; }
+    L.mode = cb.checked ? 'us' : 'me';
+    saveLocal();
+    draw('list');
+  });
+  box.append(lab, el('p', 'note', esc('Mark what each of you has seen, and find ' + nouns + ' neither of you has.')));
+  if (us()) {
+    /* the dots sit side by side on every poster: the first is yours */
+    const who = (first, name) => '<span class="wwho"><span class="wdots" aria-hidden="true"><i' + (first ? ' class="on"' : '') + '></i><i' + (first ? '' : ' class="on"') + '></i></span>' + esc(name) + '</span>';
+    const leg = el('p', 'wlegend', who(true, 'You') + who(false, L.partner));
+    leg.dataset.legend = '1';
+    const ch = button('Change name', 'ghost sm', () => nameSheet());
+    ch.dataset.rename = '1';
+    leg.appendChild(ch);
+    box.appendChild(leg);
+  }
+  return box;
+}
+
 function drawList(host) {
   const top = tops();
   const n = top.length;
@@ -785,15 +844,9 @@ function drawList(host) {
   const neither = top.filter((f) => { const s = seenOf(f); return !s[0] && !s[1]; }).length;
   const left = top.filter((f) => !seenOf(f)[0]).length;
   const sub = us() ? '<b>' + esc(neither) + '</b> ' + esc('neither of you has seen') : '<b>' + esc(left) + '</b> ' + esc('of ' + n + ' to go');
-  const who = pills([['us', 'With ' + partnerName()], ['me', 'Just me']], us() ? 'us' : 'me', (v) => {
-    if (v === 'us' && (!L.partner || us())) { draw('list'); nameSheet(); return; }
-    L.mode = v;
-    saveLocal();
-    draw('list');
-  });
-  who.dataset.who = '1';
-  const head = sec(host, 'The list', sub, 'list', who);
+  const head = sec(host, 'The list', sub, 'list');
   if (F.seed) head.dataset.seed = '1';
+  host.appendChild(withSwitch(noun[1]));
 
   /* the ranking, chosen: the chip that is on says what the order is */
   const sorts = SORTS.filter(([k]) => k !== 'trend' || trends().length);
@@ -1074,11 +1127,6 @@ function nameSheet(back) {
     go.type = 'submit';
     const row = el('div', 'bf-go');
     row.appendChild(go);
-    if (L.partner) {
-      const just = button('Just me', 'ghost', (e) => { e.preventDefault(); L.mode = 'me'; saveLocal(); close(); draw('list'); });
-      just.type = 'button';
-      row.appendChild(just);
-    }
     f.append(i, row);
     body.appendChild(f);
     f.addEventListener('submit', (e) => {
@@ -1143,6 +1191,7 @@ const screening = () => P.picks.filter((p) => p.meta && p.meta.where).sort((a, b
 
 function drawVote(host) {
   sec(host, 'Vote for the next screening', null, 'vote');
+  host.appendChild(hostLine());
   if (P.state === 'loading') { host.appendChild(el('p', 'note pad', 'Counting…')); return; }
   if (P.state === 'off') { host.appendChild(el('p', 'note pad', 'Opening soon.')); return; }
   if (P.state === 'fail') { host.appendChild(el('p', 'note pad', 'Didn’t load.')); return; }
