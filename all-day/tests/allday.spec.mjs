@@ -349,7 +349,7 @@ const COMBOS = [
 ];
 const PAPER = { light: 'rgb(251, 249, 245)', dark: 'rgb(13, 14, 16)' };
 /* tabs that are built: live, they draw their screen instead of the promise */
-const LIVE = new Set(['wire', 'whatnow', 'onair', 'games', 'food']);
+const LIVE = new Set(['wire', 'whatnow', 'onair', 'games', 'food', 'people']);
 
 async function matrix(browser, base) {
   for (const combo of COMBOS) {
@@ -402,9 +402,9 @@ async function matrix(browser, base) {
             await page.screenshot({ path: path.join(SHOTS, 'demo-' + tab + '.png') });
           }
           if (demo && combo === COMBOS[1] && tab === 'wire') await page.screenshot({ path: path.join(SHOTS, 'demo-wire-dark.png') });
-          if (demo && combo === COMBOS[3] && (tab === 'wire' || tab === 'onair' || tab === 'games')) await page.screenshot({ path: path.join(SHOTS, 'demo-' + tab + '-desktop.png') });
-          if (!demo && combo === COMBOS[0] && (tab === 'wire' || tab === 'food' || tab === 'onair' || tab === 'games')) await page.screenshot({ path: path.join(SHOTS, 'live-' + tab + '.png') });
-          if (!demo && combo === COMBOS[1] && (tab === 'onair' || tab === 'games')) await page.screenshot({ path: path.join(SHOTS, 'live-' + tab + '-dark.png') });
+          if (demo && combo === COMBOS[3] && (tab === 'wire' || tab === 'onair' || tab === 'games' || tab === 'people')) await page.screenshot({ path: path.join(SHOTS, 'demo-' + tab + '-desktop.png') });
+          if (!demo && combo === COMBOS[0] && (tab === 'wire' || tab === 'food' || tab === 'onair' || tab === 'games' || tab === 'people')) await page.screenshot({ path: path.join(SHOTS, 'live-' + tab + '.png') });
+          if (!demo && combo === COMBOS[1] && (tab === 'onair' || tab === 'games' || tab === 'people')) await page.screenshot({ path: path.join(SHOTS, 'live-' + tab + '-dark.png') });
         }
         const gc = await page.evaluate(() => window.__gc);
         check(JSON.stringify(gc) === JSON.stringify(TABS.map((t) => 'all-day-tab-' + t)), 'one GoatCounter tab-landing event per landing', JSON.stringify(gc));
@@ -431,7 +431,7 @@ async function flashes(page, key) {
 
 async function deepLinks(browser, base) {
   await group('deep links, demo', async () => {
-    const cases = [['wire', 'w13'], ['wire', 'y4'], ['watch', 'fm3'], ['food', 'r-demo-all-night-diner'], ['people', 'pp2'], ['whatnow', 'e-tn3'], ['vintage', 'sp2'], ['art', 'aw6'], ['onair', 'yt:demo-tv-003'], ['games', 'g:trivia-ladder'], ['games', 'champ:btown-riddle']];
+    const cases = [['wire', 'w13'], ['wire', 'y4'], ['watch', 'fm3'], ['food', 'r-demo-all-night-diner'], ['people', 'mx-dm2'], ['whatnow', 'e-tn3'], ['vintage', 'sp2'], ['art', 'aw6'], ['onair', 'yt:demo-tv-003'], ['games', 'g:trivia-ladder'], ['games', 'champ:btown-riddle']];
     for (const [tab, key] of cases) {
       const { ctx, page, errors } = await newPage(browser, base);
       await page.goto(base + '/all-day/?demo=1#' + tab + '/' + key);
@@ -2302,6 +2302,302 @@ async function shellFixes(browser, base) {
   });
 }
 
+/* -------------------------------------------------------------- People */
+/* The People tab: live on the repo's own calendar and clubs with the boards
+   answered locally, and ?demo=1 against boards-fake.js and the tab's own
+   mirror of nn-people.sql. */
+const peoplePanel = '#panel-people';
+const NO_ID_QUESTIONS = /\bages?\b|how old|years? old|\bborn\b|birth|gender|orientation|sexual|straight|\bgay\b|pronoun|\bman\b|\bwoman\b|\bmale\b|female|lgbt/i;
+const OWN_URL_T = /meetup\.com\/burlington-social-activiti?es-group\//i;
+const OWN_NAME_T = /btown brief|btown coffee club|burlington social activities group/i;
+const peopleReady = (page) => page.waitForSelector(peoplePanel + ' [data-plans], ' + peoplePanel + ' [data-sec="plans"] .textcard', { timeout: 15000 });
+const planCards = (page) => page.$$eval(peoplePanel + ' [data-plans] .card.board', (cs) => cs.map((c) => ({
+  k: c.dataset.k, title: c.querySelector('.b-title').textContent, meta: (c.querySelector('.b-meta') || {}).textContent || '',
+  who: c.querySelector('.c-head').innerText, going: (c.querySelector('.going') || {}).textContent || '' })));
+const clubCats = (page) => page.$$eval(peoplePanel + ' [data-clubs] .lrow', (rs) => rs.map((r) => ({ cat: r.dataset.cat, name: r.querySelector('.t').textContent })));
+const peek = (page) => page.evaluate(() => import('/all-day/js/modes/people.js').then((m) => m._peek()));
+/* Stephen's own events in the repo's calendar, as the tab picks them: every one from now to two weeks out, once each */
+async function ownEvents() {
+  const w = JSON.parse(await readFile(path.join(APP, 'data/whatnow.json'), 'utf8'));
+  const now = Date.now(), seen = new Set();
+  return w.events.filter((e) => OWN_URL_T.test(e.url || '') || OWN_NAME_T.test([e.title, e.venue, (e.tags || []).join(' ')].join(' ')))
+    .filter((e) => { const t = Date.parse(e.start); const end = Date.parse(e.end) || t + 7200000; return t && end > now && t < now + 14 * 86400000 && e.url; })
+    .filter((e) => { const k = e.url + '|' + e.date; if (seen.has(k)) return false; seen.add(k); return true; });
+}
+
+async function thePeople(browser, base) {
+  await group('People: the rules in the module and the SQL agree', async () => {
+    const js = await readFile(path.join(APP, 'js/modes/people.js'), 'utf8');
+    const sql = await readFile(path.join(APP, 'supabase/nn-people.sql'), 'utf8');
+    const lit = js.match(/export const PEOPLE_RULES = (\{[\s\S]*?\n\});/);
+    const mine = lit ? new Function('return ' + lit[1])() : null;
+    const theirs = JSON.parse((sql.match(/\$json\$(\{[\s\S]*?\})\$json\$/) || [])[1] || 'null');
+    check(mine && theirs && JSON.stringify(mine) === JSON.stringify(theirs), 'PEOPLE_RULES in people.js is nn_people_rules() in nn-people.sql', JSON.stringify(mine) + ' vs ' + JSON.stringify(theirs));
+    check(!/boards-fake/.test(js.replace(/\/\*[\s\S]*?\*\//g, '')), 'the tab never imports boards-fake.js; its mirror is its own', '');
+  });
+
+  await group('People, live: Stephen’s meetups, the clubs, an empty board', async () => {
+    const own = await ownEvents();
+    const clubs = JSON.parse(await readFile(path.join(REPO, 'data/clubs.json'), 'utf8')).clubs;
+    const { ctx, page, errors } = await newPage(browser, base, { rpc: (fn) => (fn === 'nn_people_directory' ? { count: 12, me: false, people: [] } : undefined) });
+    await page.goto(base + '/all-day/#people');
+    await peopleReady(page);
+    await page.waitForFunction((s) => !document.querySelector(s + ' [data-sec="mix"] .loading'), peoplePanel, { timeout: 10000 });
+    const mix = await page.$$eval(peoplePanel + ' [data-mixers] .card.event', (cs) => cs.map((c) => ({ k: c.dataset.k, href: c.querySelector('.c-title').getAttribute('href'), title: c.querySelector('.c-title').textContent, text: c.innerText })));
+    check(mix.length === own.length, 'every one of Stephen’s own events in the next two weeks shows (' + own.length + ')', mix.length + ': ' + mix.map((m) => m.title).join(', '));
+    check(own.every((e) => mix.some((m) => m.href === e.url)), 'none is missed', own.filter((e) => !mix.some((m) => m.href === e.url)).map((e) => e.title).join(', '));
+    check(mix.every((m) => OWN_URL_T.test(m.href) || OWN_NAME_T.test(m.title)), 'and nothing that isn’t his', mix.map((m) => m.href).join(' '));
+    check(mix.every((m) => /Open on Meetup/.test(m.text) && !/\bgoing\b|interested|RSVPs?:/i.test(m.text.replace(/RSVP on Meetup/g, ''))), 'each links to Meetup and shows no Meetup interest count', '');
+    if (!own.length) check(/No Btown Brief meetups/.test(await panelText(page)), 'with none on the calendar it says so and links the group', '');
+    const rows = await clubCats(page);
+    check(rows.length === 4 && rows.every((r) => clubs.some((c) => c.name === r.name)), 'four clubs from data/clubs.json', JSON.stringify(rows));
+    check(rows[0].name === clubs.find((c) => c.featured).name, 'with nothing picked, the featured club leads', rows[0] && rows[0].name);
+    const txt = await panelText(page);
+    check(/No plans yet this week/.test(txt), 'an empty board says so and offers the first plan', '');
+    check(/Posting one takes the email sign-in/.test(txt), 'signed out, the tab says posting is one email', '');
+    check(/12 neighbors are in it/.test(txt) && /Sign in to see who’s in it/.test(txt), 'the directory: the count for anyone, the people after sign-in', '');
+    const doors = await page.$$eval(peoplePanel + ' [data-sec="talk"] a.btn', (as) => as.map((a) => [a.textContent.trim(), a.href]));
+    check(doors.length === 3 && /^Find Each Other/.test(doors[0][0]) && doors[0][1] === 'https://www.btownbrief.com/community/channels/music' &&
+      /^Plans & Meetups/.test(doors[1][0]) && doors[1][1] === 'https://www.btownbrief.com/community/channels/meetups-hangouts' &&
+      /^Telegram/.test(doors[2][0]) && doors[2][1] === base + '/telegram.html', 'one door card: Find Each Other, Plans & Meetups, Telegram', JSON.stringify(doors));
+    const chipsTxt = await page.$$eval('#subnav .chip', (cs) => cs.map((c) => c.textContent));
+    check(JSON.stringify(chipsTxt) === JSON.stringify(['Who you are', 'Open to strangers', 'Mixers', 'Quiz', 'Directory']), 'the chip row is the table of contents', JSON.stringify(chipsTxt));
+    await page.click('#subnav .chip[data-chip="quiz"]');
+    await page.waitForTimeout(700);
+    const top = await page.$eval(peoplePanel + ' [data-sec="quiz"]', (s) => Math.round(s.getBoundingClientRect().top));
+    check(top < 260, 'a chip scrolls to its section', top);
+    await page.screenshot({ path: path.join(SHOTS, 'live-people-quiz.png') });
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('People, live: a plan, its extras and posting, over the wire', async () => {
+    const seen = [];
+    const now = new Date();
+    const post = (id, title, meta, ago) => ({ id, board: 'people', kind: 'plan', title, body: '', place: 'Foam Brewers', meta, photo: null, author: 'Priya N.', author_arch: 'regular',
+      created_at: new Date(now - (ago || 1) * 3600000).toISOString(), expires_at: new Date(+now + 13 * 86400000).toISOString(), votes: 3, voted: false, mine: false });
+    const later = post('11111111-aaaa-4aaa-8aaa-000000000001', 'Trivia, need a fifth', { when: 'Tonight, 11 pm', spots: 2 }, 1);
+    const sooner = post('11111111-aaaa-4aaa-8aaa-000000000002', 'Coffee walk', { when: 'Tonight, 10:30 pm', arch: 'new' }, 2);
+    const yday = new Intl.DateTimeFormat('en-US', { weekday: 'short', month: 'short', day: 'numeric' }).format(new Date(now - 86400000));
+    const past = post('11111111-aaaa-4aaa-8aaa-000000000003', 'Yesterday’s plan', { when: yday + ', 7 am' }, 30);
+    let created = null;
+    const { ctx, page, errors } = await newPage(browser, base, {
+      rpc: (fn, body) => {
+        seen.push([fn, body]);
+        if (fn === 'nn_posts_list') return body.p_board === 'people' ? [later, sooner, past].concat(created ? [created] : []) : [];
+        if (fn === 'nn_people_plan_extras') return { [later.id]: { meetup: true, ages: 'thirties' } };
+        if (fn === 'nn_profile_get') return { display_name: 'Robin', neighborhood: null, archetype: null };
+        if (fn === 'nn_post_create') { created = post('11111111-aaaa-4aaa-8aaa-000000000009', body.p_title, body.p_meta, 0); created.author = 'Robin'; created.mine = true; return { ...created, status: 'approved' }; }
+        if (fn === 'nn_people_plan_set') return { meetup: body.p_meetup, ages: body.p_ages };
+        if (fn === 'nn_people_directory') return { count: 0, me: false, people: [] };
+        return undefined;
+      },
+    });
+    await page.goto(base + '/all-day/?x=1');
+    await page.evaluate((s) => localStorage.setItem('allday-auth', s), SESSION());
+    await page.goto(base + '/all-day/#people');
+    await page.waitForSelector(peoplePanel + ' [data-plans] .card.board', { timeout: 15000 });
+    let cards = await planCards(page);
+    check(cards.length === 2 && cards[0].title === 'Coffee walk' && cards[1].title === 'Trivia, need a fifth', 'soonest first, and a plan whose time has passed is gone', JSON.stringify(cards.map((c) => c.title)));
+    check(/Down for Meetup/.test(cards[1].meta) && /Mostly 30s/.test(cards[1].meta), 'nn_people_plan_extras puts the Meetup box and age band on the card', cards[1].meta);
+    check(cards[1].going === '3 going', 'the vote reads as a going count', cards[1].going);
+    const ask = seen.find(([fn]) => fn === 'nn_people_plan_extras');
+    check(ask && ask[1].p_posts.length === 3, 'the extras are asked for the plans on the board, by id', JSON.stringify(ask && ask[1]));
+    const p = await peek(page);
+    check(p.posts.find((x) => x.title === 'Trivia, need a fifth').meta.meetup === true, 'and land in the plan’s meta', JSON.stringify(p.posts));
+    check(/Down for Meetup\s*1/.test(await page.$eval(peoplePanel + ' [data-filter]', (r) => r.innerText)), 'the plans asking for Meetup are one chip away, counted', '');
+    await page.click(peoplePanel + ' [data-filter] .chip[data-chip="meetup"]');
+    cards = await planCards(page);
+    check(cards.length === 1 && cards[0].title === 'Trivia, need a fifth', 'that chip shows just them', JSON.stringify(cards.map((c) => c.title)));
+
+    await page.click(peoplePanel + ' [data-post]');
+    await page.waitForSelector('.sheet-body form.bform input[name=title]');
+    check(await page.$('.sheet-body input[name=display_name]') === null, 'a reader with a name is not asked again', '');
+    await page.fill('input[name=title]', 'Sunset paddle from North Beach');
+    await page.selectOption('select[name=day]', { index: 2 });
+    await page.selectOption('select[name=time]', '6 pm');
+    await page.selectOption('select[name=ages]', 'forties');
+    await page.fill('input[name=spots]', '3');
+    await page.check('input[name=meetup]');
+    await page.click('.bform button[type=submit]');
+    await page.waitForSelector('#sheet[hidden]', { state: 'attached', timeout: 6000 });
+    const make = seen.find(([fn]) => fn === 'nn_post_create');
+    const extra = seen.find(([fn]) => fn === 'nn_people_plan_set');
+    check(make && make[1].p_board === 'people' && make[1].p_kind === 'plan' && /, 6 pm$/.test(make[1].p_meta.when) && make[1].p_meta.spots === 3,
+      'nn_post_create gets a people plan with when and spots', JSON.stringify(make && make[1]));
+    check(make && Object.keys(make[1].p_meta).every((k) => ['when', 'arch', 'spots'].includes(k)), 'its meta holds only the keys the people board’s rules allow', JSON.stringify(make && make[1].p_meta));
+    check(extra && extra[1].p_post === '11111111-aaaa-4aaa-8aaa-000000000009' && extra[1].p_meetup === true && extra[1].p_ages === 'forties',
+      'then nn_people_plan_set records the Meetup box and age band for that plan', JSON.stringify(extra && extra[1]));
+    check(/Stephen will see you’re down for Meetup/.test(await page.$eval('#toast', (t) => t.textContent)), 'and the toast says so', '');
+    check(seen.every(([fn, b]) => !/@/.test(JSON.stringify(b))), 'no call carries an email', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('People, demo: who you are reorders the plans and the clubs', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/all-day/?demo=1#people');
+    await page.waitForSelector(peoplePanel + ' [data-plans] .card.board');
+    const before = await planCards(page);
+    check(before.length >= 5 && before.every((c) => /\d+ going|Be the first/.test(c.going)), 'the demo’s plans, each with its going count', JSON.stringify(before.map((c) => c.going)));
+    await page.click(peoplePanel + ' .arch button[data-arch="trail"]');
+    await page.waitForTimeout(150);
+    const trail = await planCards(page);
+    check(/For trail people|Trail person/.test(trail[0].meta + trail[0].who) && trail[0].title !== before[0].title, 'Trail person: a trail plan moves to the top', trail[0].title);
+    const tc = await clubCats(page);
+    check(['Hiking & Outdoors', 'Running', 'Biking'].includes(tc[0].cat), 'and a trail club leads the clubs', JSON.stringify(tc));
+    check(await page.$eval(peoplePanel + ' .arch button[data-arch="trail"]', (b) => b.getAttribute('aria-pressed')) === 'true', 'the tile says it is picked', '');
+    check(/You’re here as trail person/.test(await page.$eval('#toast', (t) => t.textContent)), 'and the toast says what changed', '');
+    await page.click(peoplePanel + ' .arch button[data-arch="games"]');
+    await page.waitForTimeout(150);
+    const games = await planCards(page);
+    check(/For game night people|Game night/.test(games[0].meta + games[0].who), 'Game night: a game night plan leads', games[0].title);
+    check(['Games & Puzzles', 'Sports & Rec'].includes((await clubCats(page))[0].cat), 'and a games or sports club', '');
+    await page.click(peoplePanel + ' [data-tags="I’m…"] .chip[data-chip="women"]');
+    await page.waitForTimeout(150);
+    const w = await clubCats(page);
+    check(/Womxn|Ultimate/.test(w[0].name) && /Womxn|Ultimate/.test(w[1].name), 'a woman finding her people: the two women’s and nonbinary pickup clubs come first', JSON.stringify(w));
+    check(await page.$eval(peoplePanel + ' [data-tags="I’m…"] .chip[data-chip="women"]', (b) => b.getAttribute('aria-pressed')) === 'true', 'the tag shows as picked', '');
+    const p = await peek(page);
+    check(p.arch === 'games' && p.tags.includes('women'), 'the picks are kept for the visit', JSON.stringify(p));
+    check(await page.evaluate(() => localStorage.getItem('allday-people')) === null, 'and the demo writes nothing to this device', '');
+    await page.click(peoplePanel + ' .arch button[data-arch="games"]');
+    await page.waitForTimeout(150);
+    check((await planCards(page))[0].title === before[0].title, 'tapping the tile again clears it: back to soonest first', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('People, demo: posting a plan, the Meetup box, I’d go', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/all-day/?demo=1#people');
+    await page.waitForSelector(peoplePanel + ' [data-plans] .card.board');
+    check((await planCards(page)).length >= 5, 'signed out, the plans show', '');
+    await page.click(peoplePanel + ' [data-post]');
+    await page.waitForSelector('.sheet-body .linkrow');
+    check(/Posting a plan needs the email sign-in: one email, no password/.test(await page.$eval('.sheet-body', (b) => b.innerText)) && await page.$('.sheet-body form') === null,
+      'signed out, Post a plan gives the sign-in note and no form', '');
+    await page.keyboard.press('Escape');
+    await page.evaluate(() => import('/all-day/js/auth.js').then((a) => a.demoSignIn()));
+    await page.waitForTimeout(150);
+    await page.click(peoplePanel + ' [data-post]');
+    await page.waitForSelector('.sheet-body form.bform input[name=display_name]');
+    await page.waitForTimeout(300);
+    await page.screenshot({ path: path.join(SHOTS, 'demo-people-compose.png') });
+    await page.fill('input[name=display_name]', 'Robin');
+    await page.fill('input[name=title]', 'Sunset paddle from North Beach');
+    await page.click('.bform button[type=submit]');
+    check(/Pick the day and the time/.test(await page.$eval('.bf-msg', (m) => m.textContent)), 'no day or time: refused, with the reason', '');
+    await page.selectOption('select[name=day]', { index: 2 });
+    await page.selectOption('select[name=time]', '6 pm');
+    await page.selectOption('select[name=ages]', 'forties');
+    await page.fill('input[name=spots]', '99');
+    await page.click('.bform button[type=submit]');
+    check(/Spots is a number from 1 to 50/.test(await page.$eval('.bf-msg', (m) => m.textContent)), 'the board’s own rule on spots is checked first', '');
+    await page.fill('input[name=spots]', '3');
+    await page.fill('input[name=place]', 'North Beach');
+    await page.check('input[name=meetup]');
+    await page.click('.bform button[type=submit]');
+    await page.waitForSelector('#sheet[hidden]', { state: 'attached', timeout: 6000 });
+    await page.waitForTimeout(300);
+    const p = await peek(page);
+    const mine = p.posts.find((x) => x.title === 'Sunset paddle from North Beach');
+    check(mine && mine.meta.meetup === true && mine.meta.ages === 'forties' && /, 6 pm$/.test(mine.meta.when) && mine.meta.spots === 3,
+      'it posts through the compose sheet, and the Meetup box lands in its meta', JSON.stringify(mine));
+    const board = await fakeOf(page, (f) => f.posts.filter((x) => x.board === 'people').map((x) => x.meta));
+    check(board.every((m) => !('meetup' in m) && !('ages' in m)), 'on the board itself the post keeps to the rules’ fields; the extras sit in the People table', JSON.stringify(board));
+    const k = 'b-' + mine.id;
+    const sel = peoplePanel + ' [data-plans] .card.board[data-k="' + k + '"]';
+    check(await flashes(page, k), 'the new plan is on the tab, scrolled to and flashed', k);
+    const card = await page.$eval(sel, (c) => ({ meta: c.querySelector('.b-meta').textContent, going: c.querySelector('.going').textContent, who: c.querySelector('.c-src').textContent,
+      del: !!c.querySelector('[data-act=bdelete]'), label: c.querySelector('[data-act=bvote]').getAttribute('aria-label') }));
+    check(/Down for Meetup/.test(card.meta) && /Mostly 40s/.test(card.meta) && /3 spots/.test(card.meta), 'its card says Down for Meetup, the band and the spots', card.meta);
+    check(card.who === 'Robin' && card.del && card.label === 'I’d go' && card.going === 'Be the first', 'by first name, yours to delete, with I’d go and no one going yet', JSON.stringify(card));
+    await page.click(sel + ' [data-act=bvote]');
+    await page.waitForFunction((s) => document.querySelector(s + ' .going').textContent === '1 going', sel, { timeout: 3000 }).catch(() => {});
+    check(await page.$eval(sel + ' .going', (g) => g.textContent) === '1 going' && await page.$eval(sel + ' [data-act=bvote]', (b) => b.getAttribute('aria-pressed')) === 'true', 'I’d go: the going count goes to 1', '');
+    const other = peoplePanel + ' [data-plans] .card.board:not([data-k="' + k + '"])';
+    const g0 = Number((await page.$eval(other, (c) => c.querySelector('.going').textContent)).match(/\d+/)[0]);
+    await page.click(other + ' [data-act=bvote]');
+    await page.waitForTimeout(150);
+    check(await page.$eval(other, (c) => c.querySelector('.going').textContent) === (g0 + 1) + ' going', 'on someone else’s plan too: ' + g0 + ' going becomes ' + (g0 + 1), '');
+    await page.click(sel + ' [data-act=bvote]');
+    await page.waitForTimeout(150);
+    check(await page.$eval(sel + ' .going', (g) => g.textContent) === 'Be the first', 'and tapping again takes it back', '');
+    await pageRules(page, 'people', 390);
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('People, demo: the quiz never asks age, and ends in a suggestion', async () => {
+    const { ctx, page, errors } = await newPage(browser, base, { viewport: { width: 1280, height: 800 }, scheme: 'dark' });
+    await page.goto(base + '/all-day/?demo=1#people/quiz');
+    await page.waitForSelector(peoplePanel + ' [data-plans] .card.board');
+    const all = await page.evaluate(() => import('/all-day/js/modes/people.js').then((m) => m.QUIZ_TEXT()));
+    check(all.split('\n').length >= 6 && all.split('\n').length <= 8, 'six to eight questions', all.split('\n').length);
+    check(!NO_ID_QUESTIONS.test(all), 'no question or answer asks age, gender or orientation', (all.match(NO_ID_QUESTIONS) || [''])[0]);
+    await page.click(peoplePanel + ' [data-quiz="intro"] button:has-text("Take the quiz")');
+    const route = [1, 0, 1, 1, 1, 0, 0];   // weekends, outside, three or four, do, a few years, a trail, the same thing every week
+    const asked = [];
+    for (let i = 0; i < route.length; i++) {
+      await page.waitForSelector(peoplePanel + ' [data-quiz="q' + i + '"]');
+      asked.push(await page.$eval(peoplePanel + ' [data-quiz="q' + i + '"]', (c) => c.innerText));
+      await page.click(peoplePanel + ' [data-quiz="q' + i + '"] [data-answers] button:nth-child(' + (route[i] + 1) + ')');
+    }
+    check(asked.length === 7 && asked.every((t) => !NO_ID_QUESTIONS.test(t)), 'seven questions on the page, none about age, gender or orientation', '');
+    await page.waitForSelector(peoplePanel + ' [data-quiz="done"]');
+    const res = await page.$eval(peoplePanel + ' [data-quiz="done"]', (c) => ({ text: c.innerText, clubs: c.querySelectorAll('[data-quiz-clubs] .lrow').length,
+      channel: c.querySelector('[data-channel] a').getAttribute('href'), mixers: c.querySelectorAll('a.lrow[href*="meetup.com/burlington-social"]').length }));
+    check(/Probably: Trail person/.test(res.text) && /a guess, not a box/.test(res.text), 'it ends in a suggested archetype the reader can change', res.text.slice(0, 160));
+    check(res.clubs === 3 && res.mixers >= 1, 'with three clubs and the next mixers', JSON.stringify(res));
+    check(res.channel === 'https://www.btownbrief.com/community/channels/meetups-hangouts', 'and the community channel that fits (a doer: Plans & Meetups)', res.channel);
+    await page.screenshot({ path: path.join(SHOTS, 'demo-people-quiz.png') });
+    check((await peek(page)).arch === null, 'nothing changes until the reader says so', '');
+    await page.click(peoplePanel + ' [data-quiz="done"] button:has-text("That’s me")');
+    await page.waitForTimeout(150);
+    const p = await peek(page);
+    check(p.arch === 'trail' && JSON.stringify(p.quizTags) === '["outdoors"]', '“That’s me” takes the archetype and what the quiz learned', JSON.stringify(p));
+    check(await page.$eval(peoplePanel + ' .arch button[data-arch="trail"]', (b) => b.classList.contains('on')), 'and the tile at the top lights', '');
+    await page.click(peoplePanel + ' .arch button[data-arch="new"]');
+    check((await peek(page)).arch === 'new', 'the reader can still pick another', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('People, demo: the directory is opt-in and never shows an email', async () => {
+    const demo = JSON.parse(await readFile(path.join(APP, 'data/demo/people.json'), 'utf8'));
+    const on = demo.directory.filter((r) => r.on).map((r) => r.name), off = demo.directory.filter((r) => !r.on).map((r) => r.name);
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/all-day/?demo=1#people/dir');
+    await page.waitForSelector(peoplePanel + ' [data-dir="out"]');
+    let txt = await page.$eval(peoplePanel + ' [data-sec="dir"]', (s) => s.innerText);
+    check(new RegExp(on.length + ' neighbors are in it').test(txt) && !on.concat(off).some((n) => txt.includes(n)), 'signed out: how many, and nobody by name', txt.slice(0, 200));
+    await page.evaluate(() => import('/all-day/js/auth.js').then((a) => a.demoSignIn()));
+    await page.waitForSelector(peoplePanel + ' [data-dir="join"]');
+    check(/Add your first name/.test(await page.$eval(peoplePanel + ' [data-dir="join"]', (c) => c.innerText)), 'signed in with no name: asked for one first', '');
+    await page.evaluate(() => import('/all-day/js/boards.js').then((b) => b.setProfile({ display_name: 'Robin', neighborhood: 'south-end', archetype: 'trail' })));
+    await page.waitForSelector(peoplePanel + ' [data-dir="join"] button:has-text("Join the directory")');
+    txt = await page.$eval(peoplePanel + ' [data-sec="dir"]', (s) => s.innerText);
+    check(!on.concat(off).some((n) => txt.includes(n)), 'not in it yet: still nobody by name', '');
+    await page.click(peoplePanel + ' [data-tags="I’m into…"] .chip[data-chip="running"]');
+    await page.click(peoplePanel + ' [data-tags="I’m…"] .chip[data-chip="lgbtq"]');
+    await page.click(peoplePanel + ' [data-dir="join"] button:has-text("Join the directory")');
+    await page.waitForSelector(peoplePanel + ' [data-people]');
+    const rows = await page.$$eval(peoplePanel + ' [data-people] .lrow', (rs) => rs.map((r) => r.innerText));
+    txt = await page.$eval(peoplePanel + ' [data-sec="dir"]', (s) => s.innerText);
+    check(rows.length === on.length + 1, 'in it: everyone who opted in, and you', rows.length);
+    check(on.every((n) => txt.includes(n)) && !off.some((n) => txt.includes(n)), 'only opted-in rows: ' + off.join(' and ') + ' never show', '');
+    check(/Robin \(you\)/.test(rows[0]) && /South End/.test(rows[0]) && /Trail person/.test(rows[0]) && /Into running/.test(rows[0]), 'your row: first name, neighborhood, tile, interests', rows[0]);
+    check(!/LGBTQ|lgbtq/.test(txt), 'the who-you-are tags never reach the directory', '');
+    check(!/@/.test(txt) && !/@/.test(await page.$eval(peoplePanel, (p) => p.innerHTML)), 'no email anywhere on the tab', '');
+    await page.click(peoplePanel + ' [data-sec="dir"] button:has-text("Leave the directory")');
+    await page.waitForSelector(peoplePanel + ' [data-dir="join"]');
+    check(new RegExp(on.length + ' neighbors are in it').test(await page.$eval(peoplePanel + ' [data-sec="dir"]', (s) => s.innerText)), 'leaving takes you out of the count', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+}
+
 /* ----------------------------------------------------------------- run */
 const t0 = Date.now();
 await mkdir(SHOTS, { recursive: true });
@@ -2318,6 +2614,7 @@ try {
   await run(theWire);
   await run(theWhatNow);
   await run(theFood);
+  await run(thePeople);
   await run(onAir);
   await run(theGames);
   await run(interactions);
