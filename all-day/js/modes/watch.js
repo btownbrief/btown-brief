@@ -402,12 +402,17 @@ function credit(inSheet) {
 }
 
 /* ------------------------------------------------------- coming soon */
+/* TMDB's now-playing list carries re-releases under their first year (Endgame,
+   2019): a film three or more years old is back, not new */
+const BACK_YEARS = 3;
+const nowLabel = (f) => (f.y && f.y <= Number(todayKey().slice(0, 4)) - BACK_YEARS ? 'Back in theaters' : 'In theaters now');
+
 function drawSoon(host) {
   const now = F.now, soon = F.soon;
   if (!now.length && !soon.length) return;
   sec(host, 'Coming soon', esc('In theaters now, and what opens next in theaters and on streaming. Tap a poster for its trailer.'), 'soon');
   const r = rail(host);
-  const label = (f) => (f.shelf === 'now' ? 'In theaters now' : (f.d ? dateLabel(f.d) + ' · ' : '') + (f.where === 'streaming' ? 'streaming' : 'theaters'));
+  const label = (f) => (f.shelf === 'now' ? nowLabel(f) : (f.d ? dateLabel(f.d) + ' · ' : '') + (f.where === 'streaming' ? 'streaming' : 'theaters'));
   [...now, ...soon].forEach((f) => {
     const a = el('a', 'poster');
     a.href = '#watch/soon:' + f.id;
@@ -579,7 +584,7 @@ function filmSheet(f) {
     facts.innerHTML = '<p class="sheet-note">' + esc([f.y, f.rt ? runtime(f.rt) : '', f.g.join(', ')].filter(Boolean).join(' · ')) + '</p>' +
       (t ? '<p class="sheet-note" data-town>Town rating <b>' + esc(avg(t.sum, t.n).toFixed(1)) + '</b> from ' + esc(plural(t.n, 'rating', 'ratings')) + '</p>' : '') +
       (f.shelf === 'soon' && f.d ? '<p class="sheet-note">' + esc((f.where === 'streaming' ? 'Streaming from ' : 'In theaters from ') + dateLabel(f.d)) + '</p>' : '') +
-      (f.shelf === 'now' ? '<p class="sheet-note">In theaters now</p>' : '');
+      (f.shelf === 'now' ? '<p class="sheet-note">' + esc(nowLabel(f)) + '</p>' : '');
     const tr = el('div', 'linkrow');
     if (hasTrailer(f)) {
       const b = button(ICON.play + ' Trailer', '', () => { close(); playTrailer(f); });

@@ -1930,7 +1930,8 @@ async function watchFilms() {
   const seed = JSON.parse(await readFile(path.join(APP, 'data/films-seed.json'), 'utf8'));
   const day = (n) => new Date(Date.now() + n * W_DAY).toISOString().slice(0, 10);
   const top = seed.top.slice(0, 12);
-  const now = [{ ...seed.top[20], where: 'theaters' }, { ...seed.top[21], where: 'theaters' }];
+  /* a new release, and a re-release TMDB lists under its first year */
+  const now = [{ ...seed.top[20], y: Number(day(-10).slice(0, 4)), d: day(-10), where: 'theaters' }, { ...seed.top[21], where: 'theaters', yt: '' }];
   const soon = [{ ...seed.top[22], id: 990001, t: 'Harbor Lights', d: day(9), where: 'theaters' },
     { ...seed.top[23], id: 990002, t: 'Plain Sight', d: day(16), where: 'streaming' },
     { ...seed.top[24], id: 990003, t: 'No Trailer Yet', d: day(30), where: 'theaters', yt: '' }];
@@ -1951,8 +1952,8 @@ async function theWatch(browser, base) {
     const toc = await page.$$eval('#subnav .chip', (c) => c.map((x) => x.textContent));
     check(JSON.stringify(toc) === JSON.stringify(['Coming soon', 'The list', 'Town', 'Next screening', 'Chat']), 'the chip row is the table of contents', toc.join(' / '));
     const soon = await page.$$eval(wPanel + ' [data-sec="soon"] + .rail-wrap .poster', (n) => n.map((a) => [a.dataset.k, a.querySelector('.s').textContent, !!a.querySelector('.play')]));
-    check(soon.length === 5 && soon[0][1] === 'In theaters now' && /· theaters$/.test(soon[2][1]) && /· streaming$/.test(soon[3][1]), 'Coming soon: in theaters now, then what opens, labelled theaters or streaming', JSON.stringify(soon));
-    check(!soon[4][2] && soon.slice(0, 4).every((x) => x[2]), 'a play disc only where TMDB has a trailer', JSON.stringify(soon));
+    check(soon.length === 5 && soon[0][1] === 'In theaters now' && soon[1][1] === 'Back in theaters' && /· theaters$/.test(soon[2][1]) && /· streaming$/.test(soon[3][1]), 'Coming soon: in theaters now (a 1966 re-release is back in theaters), then what opens, labelled theaters or streaming', JSON.stringify(soon));
+    check(JSON.stringify(soon.map((x) => x[2])) === '[true,false,true,true,false]', 'a play disc only where TMDB has a trailer', JSON.stringify(soon));
     const pics = await page.$$eval(wPanel + ' .poster img.pic', (n) => n.slice(0, 3).map((i) => [i.getAttribute('src'), i.loading]));
     check(pics.length && pics.every(([src, lazy]) => /^https:\/\/image\.tmdb\.org\/t\/p\/w342\/[A-Za-z0-9]+\.jpg$/.test(src) && lazy === 'lazy'), 'posters are TMDB paths at w342, loaded lazily', JSON.stringify(pics));
     const box = await page.$eval(wPanel + ' [data-grid] .poster .c-media', (m) => { const r = m.getBoundingClientRect(); return Math.round(r.height / r.width * 100) / 100; });
@@ -1971,6 +1972,11 @@ async function theWatch(browser, base) {
       'a tap plays that film’s TMDB trailer in the shell’s video box, and only there', JSON.stringify(v));
     await page.click('#vbox-close');
     check(await page.$eval('#vbox', (b) => b.hidden) && !(await page.$('iframe')), 'closing the box stops it', '');
+    await page.click(wPanel + ' [data-k="soon:' + films.now[1].id + '"]');
+    await page.waitForSelector('.sheet-body', { timeout: 4000 });
+    const back = await page.$eval('.sheet-body', (b) => b.innerText);
+    check(/Back in theaters/.test(back) && !/In theaters now/.test(back), 'the re-release’s sheet says it is back in theaters', back.slice(0, 120));
+    await page.click('.sheet-head .iconbtn');
     await page.click(wPanel + ' [data-k="soon:990003"]');
     await page.waitForSelector('.sheet-body', { timeout: 4000 });
     check(await page.$eval('#vbox', (b) => b.hidden) && /No trailer on TMDB yet\./.test(await page.$eval('.sheet-body', (b) => b.innerText)), 'a film with no trailer opens its sheet instead, and says so', '');
@@ -1989,6 +1995,22 @@ async function theWatch(browser, base) {
     await page.click('#vbox-close');
     await page.screenshot({ path: path.join(SHOTS, 'live-watch-films.png') });
     check(!supabase.some((u) => /nn_post_create|nn_watch/.test(u)), 'signed out, nothing is posted or synced', supabase.join(', '));
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Watch, a re-release is three or more years old (live)', async () => {
+    const films = await watchFilms();
+    const year = Number(new Intl.DateTimeFormat('en-CA', { timeZone: 'America/New_York', year: 'numeric' }).format(new Date()));
+    const base0 = films.now[0];
+    films.now = [{ ...base0, id: 990011, t: 'Two Years On', y: year - 2, d: (year - 2) + '-05-01' },
+      { ...base0, id: 990012, t: 'Three Years On', y: year - 3, d: (year - 3) + '-05-01' },
+      { ...base0, id: 990013, t: 'No Year', y: undefined, d: undefined }];
+    const { ctx, page, errors } = await newPage(browser, base, { films });
+    await page.goto(base + '/all-day/#watch');
+    await page.waitForSelector(wPanel + ' [data-sec="soon"] + .rail-wrap .poster', { timeout: 15000 });
+    const got = await page.$$eval(wPanel + ' [data-sec="soon"] + .rail-wrap .poster', (n) => n.slice(0, 3).map((a) => a.querySelector('.s').textContent));
+    check(JSON.stringify(got) === '["In theaters now","Back in theaters","In theaters now"]', 'two years old is in theaters now, three is back in theaters, no year is in theaters now', JSON.stringify(got));
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
   });
@@ -3122,7 +3144,8 @@ async function theArt(browser, base) {
     await page.goto(base + '/all-day/?demo=1#art/wall');
     await settle(page);
     const grid = await page.$$eval(artPanel + ' .grid3 .tile', (ts) => ts.map((t, i) => ({ i, tall: t.classList.contains('tall'), ct: !!t.querySelector('.ct'), lbl: t.querySelector('.lbl') && t.querySelector('.lbl').textContent })));
-    check(grid.length === 17 && grid.filter((t) => t.ct).length === 14 && grid.filter((t) => t.lbl === 'From the gallery').length === 3, 'fourteen posts with votes and three gallery photos', JSON.stringify(grid.length));
+    check(grid.length === 17 && grid.filter((t) => t.ct).length === 14 && JSON.stringify(grid.filter((t) => t.lbl).map((t) => t.lbl)) === '["Sunset from Waterfront Park","The Church Street lights","Morning coffee on Pine Street"]',
+      'fourteen posts with votes and three gallery photos, each labelled with its own caption', JSON.stringify(grid.filter((t) => t.lbl).map((t) => t.lbl)));
     check(JSON.stringify(grid.filter((t) => t.tall).map((t) => t.i)) === '[0,7,10]', 'two tall tiles in every ten, none where it would leave a hole', JSON.stringify(grid.filter((t) => t.tall).map((t) => t.i)));
     const holes = await page.$eval(artPanel + ' .grid3', (g) => {
       const r = [...g.children].map((t) => t.getBoundingClientRect());
@@ -3268,13 +3291,17 @@ async function theArt(browser, base) {
     const rows = [
       ['11111111-0000-4000-8000-000000000001', 'Sunset from Waterfront Park', 'sunsets', 'Waterfront Park', '2026-04-02'],
       ['11111111-0000-4000-8000-000000000002', 'Church Street lights', 'street', 'Church Street', '2026-04-02'],
-      ['11111111-0000-4000-8000-000000000003', 'The ferry dock', 'other', 'King Street dock', '2026-04-01'],
+      ['11111111-0000-4000-8000-000000000003', '', 'other', 'King Street dock', '2026-04-01'],
       ['11111111-0000-4000-8000-000000000004', 'Leddy in June', 'sunsets', 'Leddy Park', '2026-06-20'],
       ['11111111-0000-4000-8000-000000000005', 'Pine Street mural', 'street', 'Pine Street', '2026-08-03'],
       ['11111111-0000-4000-8000-000000000006', 'A board photo', 'other', 'All Day · Art', at('2026-10-10')],
       ['11111111-0000-4000-8000-000000000007', 'Tacos al pastor', 'dish', 'Taco Gordo', '2026-10-01'],
-    ].map(([id, caption, category, spot, approved_on]) => ({ id, storage_path: 'submissions/' + id.slice(-4) + '.jpg', caption, category, area: 'Downtown / Church St', spot,
-      taken_on: '', credit: 'Stephen', display_label: null, approved_on, votes: 3 }));
+      /* no caption and no spot: the area, else when it was taken, else the day it was approved */
+      ['11111111-0000-4000-8000-000000000008', '', 'other', '', '2026-03-20', { area: 'Old North End' }],
+      ['11111111-0000-4000-8000-000000000009', '', 'other', '', '2026-03-19', { area: 'Elsewhere', taken_on: 'late May 2026' }],
+      ['11111111-0000-4000-8000-00000000000a', '', 'other', '', '2026-03-18', { area: 'Elsewhere' }],
+    ].map(([id, caption, category, spot, approved_on, more]) => ({ id, storage_path: 'submissions/' + id.slice(-4) + '.jpg', caption, category, area: 'Downtown / Church St', spot,
+      taken_on: '', credit: 'Stephen', display_label: null, approved_on, votes: 3, ...more }));
     const { ctx, page, errors } = await newPage(browser, base, {
       rpc: (fn) => (fn === 'btb_photos_get' ? rows : /^nn_/.test(fn) ? { status: 404, body: { code: 'PGRST202', message: 'Could not find the function' } } : undefined),
     });
@@ -3283,7 +3310,9 @@ async function theArt(browser, base) {
     await page.waitForSelector(artPanel + ' .grid3 .tile', { timeout: 6000 }).catch(() => {});
     const tiles = await page.$$eval(artPanel + ' .grid3 .tile', (ts) => ts.map((t) => ({ label: t.getAttribute('aria-label'), lbl: t.querySelector('.lbl') && t.querySelector('.lbl').textContent,
       votes: !!t.querySelector('.ct'), src: t.querySelector('img') && t.querySelector('img').getAttribute('src'), lazy: t.querySelector('img') && t.querySelector('img').getAttribute('loading') })));
-    check(tiles.length === 5 && tiles.every((t) => t.lbl === 'From the gallery' && !t.votes), 'the five gallery photos, labelled from the gallery, without votes', JSON.stringify(tiles.map((t) => t.label)));
+    check(tiles.length === 8 && tiles.every((t) => !t.votes && /, from the gallery$/.test(t.label)), 'the eight gallery photos, said to be from the gallery, without votes', JSON.stringify(tiles.map((t) => t.label)));
+    check(JSON.stringify(tiles.map((t) => t.lbl)) === '["Pine Street mural","Leddy in June","Sunset from Waterfront Park","Church Street lights","King Street dock","Old North End","late May 2026","March 18, 2026"]',
+      'each tile is labelled with its caption, else its spot, area (never "Elsewhere"), when it was taken or the day it was approved', JSON.stringify(tiles.map((t) => t.lbl)));
     check(/^Pine Street mural/.test(tiles[0].label) && tiles.every((t) => /\/storage\/v1\/object\/public\/btb-photos\/submissions\/\w+\.jpg$/.test(t.src) && t.lazy === 'lazy'), 'newest approved first, lazy, from the public bucket', JSON.stringify(tiles[0]));
     check(!tiles.some((t) => /A board photo|Tacos/.test(t.label)), 'a board post’s photo and Food’s dishes stay off the gallery half', '');
     const invite = await page.$eval(artPanel + ' [data-sec="week"]', (s) => ({ text: s.innerText, k: s.querySelector('[data-k]') && s.querySelector('[data-k]').dataset.k }));

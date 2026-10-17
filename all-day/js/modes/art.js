@@ -216,8 +216,13 @@ function loadGallery() {
     S.gallery = photos.filter((g) => g && g.id && g.url && !/^All Day ·/.test(g.spot || '') && g.category !== 'dish' && g.category !== 'board')
       .map((g) => {
         const when = Date.parse(g.approved_on ? g.approved_on + 'T12:00:00Z' : '') || 0;
-        return { k: 'g-' + g.id, kind: 'image', gallery: true, href: '#' + KEY + '/g-' + g.id, title: g.caption || g.spot || 'A photo from the gallery',
-          text: g.caption || '', author: g.credit || '', spot: g.spot || '', area: g.area && g.area !== 'Elsewhere' ? g.area : '',
+        const area = g.area && g.area !== 'Elsewhere' ? g.area : '';
+        /* the tile and the sheet say what the picture is: its caption, else
+           where it was taken, else when */
+        const day = when ? new Date(when).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' }) : '';
+        return { k: 'g-' + g.id, kind: 'image', gallery: true, href: '#' + KEY + '/g-' + g.id,
+          title: g.caption || g.spot || area || g.taken_on || day || 'A photo from the gallery',
+          text: g.caption || '', author: g.credit || '', spot: g.spot || '', area,
           media: g.url, ratio: 'r45', created: when / 1000, ago: when ? agoShort(when / 1000) : '' };
       });
     app.know(S.gallery);
@@ -468,7 +473,7 @@ function paintWall(host) {
     t.href = safeHref(it.href);
     t.dataset.k = it.k;
     t.setAttribute('aria-label', it.title + (it.author ? ', by ' + it.author : '') + (it.gallery ? ', from the gallery' : ', ' + plural(it.votes, 'vote', 'votes')));
-    t.innerHTML = art(it.media) + (it.gallery ? '<span class="lbl">From the gallery</span>'
+    t.innerHTML = art(it.media) + (it.gallery ? '<span class="lbl"><span class="t">' + esc(it.title) + '</span></span>'
       : '<span class="ct" data-vk="' + esc(it.k) + '">' + ICON.up + '<span class="vn">' + esc(it.votes || '') + '</span></span>');
     g.appendChild(t);
   });
