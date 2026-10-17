@@ -5,7 +5,7 @@ Reads pulse.json (the firehose, plus the X and Facebook inbox), the tags
 tag_wire.py left in data/wire-tags.json, and the day so far, then asks the
 editor model, with prompts/wire-taste.md as its doctrine, for:
 
-  * "What matters today": 25 ranked picks, each with a one-line reason and a
+  * "What matters today": 40 ranked picks, each with a one-line reason and a
     local flag, so the page shows ten local picks and adds national ones when
     the switch is on Everything. Re-ranked at most every PICKS_EVERY_HOURS
     (and at once when a score-9 local story lands); between re-ranks the
@@ -89,8 +89,8 @@ RIVER_MAX = 300
 ADD_MAX = 60               # per hourly update (Stephen, 2026-10-17: the river runs to hundreds)
 ADD_MAX_FIRST = 100        # the day's first update can catch up on the night
 RIVER_SHOWN_HOURLY = 60    # between re-ranks the editor sees the newest river items only
-PICK_COUNT = 25
-NATIONAL_PICKS = 10        # the rest of the 25 are local
+PICK_COUNT = 40            # Stephen, 2026-10-17: 25 was too few
+NATIONAL_PICKS = 15        # the rest of the 40 are local
 WHY_MAX = 90
 NEW_MAX_LOCAL = 120        # candidates shown to the editor per run
 NEW_MAX_WORLD = 80
@@ -131,7 +131,7 @@ rewrite a headline: the page shows each one exactly as the outlet wrote it.
 - `drop`: numbers from TODAY'S RIVER to remove, only when the river would pass
   300 items. Otherwise an empty list.
 - `picks`, only when asked for: the ranked "What matters today" list from the
-  river and NEW together: 25 picks, about 15 local and up to 10 national,
+  river and NEW together: 40 picks, about 25 local and up to 15 national,
   fewer only when the day truly lacks them. Each has a reason under 90
   characters. A pick from NEW is added to the river for you.
 """
