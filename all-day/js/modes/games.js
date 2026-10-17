@@ -714,14 +714,15 @@ function playItem(p) {
   app.know([it]);
   return it;
 }
-/* each row's bar is its share of everyone in the poll: the poster and the
-   "me too"s on it, over all of them; redrawn whenever a vote moves */
+/* each row's bar counts the people on it (the poster and the "me too"s),
+   drawn against the game with the most: a tie is a tie, at any count. It is
+   redrawn whenever a vote moves. */
 function paintBars(box) {
   if (!box) return;
   const rows = [...box.querySelectorAll('.gm-poll')];
   const people = rows.map((r) => 1 + ((app.item(r.dataset.k) || {}).votes || 0));
-  const total = people.reduce((a, b) => a + b, 0) || 1;
-  rows.forEach((r, i) => r.style.setProperty('--w', Math.round((people[i] / total) * 100) + '%'));
+  const most = Math.max(1, ...people);
+  rows.forEach((r, i) => r.style.setProperty('--w', Math.round((people[i] / most) * 100) + '%'));
 }
 function pollRow(p, it) {
   const r = el('div', 'gm-poll' + (it.voted ? ' on' : ''));

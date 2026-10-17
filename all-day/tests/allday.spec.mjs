@@ -1818,7 +1818,7 @@ async function theGames(browser, base) {
     await page.waitForTimeout(200);
     check(Number(await page.$eval(first + ' .n', (n) => n.textContent || 0)) === before, 'and a second tap takes it back', '');
     const w0 = await widths();
-    check(Math.abs(w0.reduce((a, b) => a + b, 0) - 100) <= 2 && w1[0] > w0[0], 'each bar is its share of everyone in the poll, and it moves with a vote', JSON.stringify([w0, w1]));
+    check(w0[0] === 100 && w1[0] === 100 && w1[1] < w0[1] && w0.every((w, i) => !i || w <= w0[i - 1]), 'each bar is drawn against the most-played game, and it moves with a vote', JSON.stringify([w0, w1]));
     /* signed out, the line asks you to sign in instead of posting */
     await page.fill(gmPanel + ' [data-say] input', 'Hades II');
     await page.selectOption(gmPanel + ' [data-say] select', 'pc');
