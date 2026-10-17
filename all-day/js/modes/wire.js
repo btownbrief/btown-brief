@@ -187,7 +187,9 @@ function dayOf(p) {
     counts: p.counts || {}, status: p.status || {}, sources, updated: Date.parse(p.updated) || 0, count: Number(p.count) || all.length };
   app.know(all);
   if (brief) app.know([brief]);
-  app.know(picks.concat(earlier).map((x) => x.c));   /* a pick can outlive its river slot */
+  /* every card the day can draw: a pick can outlive its river slot */
+  d.cards = [...new Set(all.concat(brief || [], picks.concat(earlier).map((x) => x.c)))];
+  app.know(d.cards);
   DAYS.set(p, d);
   return d;
 }
@@ -354,9 +356,7 @@ function render(opts = {}) {
   const exclude = new Set();
   if (d && W.ch === 'all') {
     if (d.brief && seen(d.brief)) {
-      /* no picture: the Brief is a pin above the picks, not a second front page */
-      put(feed, cards.pick({ ...d.brief, media: '', thumb: '', own: false, eyebrow: 'The Brief',
-        why: date === tk ? 'Today’s newsletter, as it went out.' : 'That day’s newsletter, as it went out.' }, { greenLocal: greenOf(d.brief) }));
+      put(feed, briefPin(d, date === tk));
       exclude.add(d.brief.k);
     }
     renderMatters(feed, d, date === tk).forEach((k) => exclude.add(k));
@@ -383,18 +383,23 @@ function render(opts = {}) {
    small divider, the stories an earlier ranking that day held, each under
    the rank it last had. The list says when it is done. Returns every key
    in the block, open or not, so the river leaves them all out. */
+/* no picture: the Brief is a pin above the picks, not a second front page */
+function briefPin(d, isToday) {
+  return cards.pick({ ...d.brief, media: '', thumb: '', own: false, eyebrow: 'The Brief',
+    why: isToday ? 'Today’s newsletter, as it went out.' : 'That day’s newsletter, as it went out.' }, { greenLocal: greenOf(d.brief) });
+}
 function mattersOf(d) {
   const keep = (x) => seen(x.c) && (x.c.local || geo() === 'everything');
   return { list: d.picks.filter(keep), earlier: d.earlier.filter(keep) };
 }
 function renderMatters(host, d, isToday) {
   const { list, earlier } = mattersOf(d);
-  if (!list.length) return [];
+  if (!list.length && !earlier.length) return [];
   const wm = el('div', 'wm');
   section(wm, isToday ? 'What matters today' : 'What mattered ' + weekday(d.date),
     esc(isToday ? 'Ranked, most important first.' : 'Ranked, as they stood at midnight.'));
   const [first] = list;
-  put(wm, cards.pick({ ...first.c, media: first.c.thumb, thumb: '', eyebrow: '1 of ' + list.length, why: first.why }, { greenLocal: greenOf(first.c) }));
+  if (first) put(wm, cards.pick({ ...first.c, media: first.c.thumb, thumb: '', eyebrow: '1 of ' + list.length, why: first.why }, { greenLocal: greenOf(first.c) }));
   list.slice(1, PICKS_OPEN).forEach((x, i) => wm.appendChild(wmRow(x.c, x.why, i + 2)));
   const rest = list.slice(PICKS_OPEN);
   const total = list.length + earlier.length;
@@ -410,7 +415,9 @@ function renderMatters(host, d, isToday) {
     return f;
   };
   const hidden = rest.length + earlier.length;
-  if (hidden && W.open.has(d.date)) wm.appendChild(behind());
+  /* nothing of the current ranking shows here (all muted, say): the earlier
+     picks stand on their own, open */
+  if (hidden && (W.open.has(d.date) || !list.length)) wm.appendChild(behind());
   else if (hidden) {
     const more = button(esc(plural(hidden, 'more pick', 'more picks')), 'ghost more', () => {
       W.open.add(d.date);
@@ -471,10 +478,14 @@ function entriesFor(run, date, p) {
   /* an earlier day opens with its own What mattered block, drawn as the
      arrow view draws it, and its river leaves those stories out */
   let exclude = isFirst ? run.exclude : new Set();
-  if (!isFirst && d && W.ch === 'all' && mattersOf(d).list.length) {
+  if (!isFirst && d && W.ch === 'all') {
+    /* and its Brief pinned above it, as the arrow view pins it */
+    if (d.brief && seen(d.brief)) { out.push({ pin: d }); exclude.add(d.brief.k); }
     const { list, earlier } = mattersOf(d);
-    exclude = new Set(list.concat(earlier).map((x) => x.c.k));
-    out.push({ matters: d });
+    if (list.length || earlier.length) {
+      list.concat(earlier).forEach((x) => exclude.add(x.c.k));
+      out.push({ matters: d });
+    }
   }
   const items = [];
   (d ? d.updates : []).forEach((u) => {
@@ -546,6 +557,9 @@ function fill(run) {
       const h = el('div');
       divider(h, e.divider, e.sub);
       node = h.firstChild;
+    } else if (e.pin) {
+      node = briefPin(e.pin, false);
+      if (node) { run.shown++; added.push(e.pin.brief.k); }
     } else if (e.matters) {
       const box = el('div');
       renderMatters(box, e.matters, false);
@@ -673,8 +687,8 @@ function openLink(label, href) {
 function sourceSheet(sid, from) {
   if (W.view === 'raw') { rawSourceSheet(sid, from); return; }
   const day = [startDay(), W.today && dayOf(W.today)].concat(Object.keys(W.eds).filter(isDate).map((dt) => payloadFor(dt)).filter(Boolean).map(dayOf))
-    .find((d) => d && (!from || d.all.includes(from) || d.brief === from)) || startDay();
-  const items = day ? day.all.filter((c) => c.sid === sid) : [];
+    .find((d) => d && (!from || d.cards.includes(from))) || startDay();
+  const items = day ? day.cards.filter((c) => c.sid === sid) : [];
   const first = from || items[0] || {};
   const info = (day && day.sources[sid]) || {};
   const name = first.src || info.name || app.sourceName(sid);
@@ -920,8 +934,7 @@ function hunt(k) {
   const found = (date) => {
     const q = payloadFor(date);
     if (!q) return null;
-    const d = dayOf(q);
-    return d.all.concat(d.brief || [], d.picks.concat(d.earlier).map((x) => x.c)).find((c) => c.k === k) || null;
+    return dayOf(q).cards.find((c) => c.k === k) || null;
   };
   const dates = [todayKey()].concat(editionDates());
   const show = (date, c) => {

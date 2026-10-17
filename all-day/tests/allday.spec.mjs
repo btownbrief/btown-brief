@@ -681,6 +681,11 @@ async function theWire(browser, base) {
     }, y1);
     const yWeek = nameOf(y1).split(',')[0];
     check(yBlock && yBlock.title === 'What mattered ' + yWeek, 'scrolling into yesterday draws “What mattered ' + yWeek + '” under its head', JSON.stringify(yBlock));
+    const yPin = await page.evaluate((date) => {
+      const n = document.querySelector('.panel:not([hidden]) [data-day="' + date + '"]').nextElementSibling;
+      return n && n.matches('.card.pick') ? { k: n.dataset.k, eyebrow: n.querySelector('.eyebrow').textContent } : null;
+    }, y1);
+    check(yPin && yPin.k === yday.brief.id && /The Brief/i.test(yPin.eyebrow), 'yesterday’s Brief is pinned above its block, as the arrow view pins it', JSON.stringify(yPin));
     const yAll = yday.picks.map((x) => x.id);   /* the switch is on Everything here */
     check(yBlock && JSON.stringify(yBlock.keys) === JSON.stringify(yAll.slice(0, 5)), 'with its picks: the card and four rows, in rank order', JSON.stringify(yBlock && yBlock.keys));
     check(yBlock && yBlock.more === (yAll.length - 5 + yday.picks_earlier.length) + ' more picks', 'and its own button for the rest and the earlier picks', yBlock && yBlock.more);

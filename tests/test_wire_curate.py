@@ -734,6 +734,23 @@ class PicksEarlierTests(Workdir):
             self.run_curate(Rerank(gone), now=NOW + timedelta(hours=1))
         self.assertRegex(out.getvalue(), r"picks \d+ \(\+7 earlier today\)")
 
+    def test_the_cap_never_drops_an_earlier_pick(self):
+        self.run_curate(Stub(take_all))
+        gone = [pick["title"] for pick in self.today()["picks"][:3]]
+        self.rerank(1, leave_out=gone)
+        # a flood past the cap: the earlier picks stay river items, so counted
+        flood = pulse(n_local=40, n_world=0, start=100)
+        for k, item in enumerate(flood["items"]):
+            item["d"] = NOW_TS + 7000 - k * 10      # newer than the picks: the oldest go first
+        self.write_pulse(flood)
+        with mock.patch.object(cw, "RIVER_MAX", 35), mock.patch.object(cw, "ADD_MAX", 40):
+            self.run_curate(Rerank(gone), now=NOW + timedelta(hours=2))
+        day = self.today()
+        self.assertEqual(day["count"], 35)                                 # the cap did drop
+        ids = {item["id"] for item in cw.river(day)}
+        self.assertEqual(len(day["picks_earlier"]), 3)
+        self.assertTrue({pick["id"] for pick in day["picks_earlier"]} <= ids)
+
     def test_retire_picks_dedupes_and_never_keeps_a_current_pick(self):
         old = [{"id": "a", "rank": 1, "ranked_at": "2026-10-16T16:00:00+00:00"},
                {"id": "b", "rank": 2, "ranked_at": "2026-10-16T16:00:00+00:00"}]

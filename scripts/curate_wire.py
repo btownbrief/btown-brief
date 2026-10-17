@@ -552,9 +552,11 @@ def apply_answer(day, answer, numbered_river, new, want_picks, et, now, previous
             and by_index[lead_index]["id"] in lead_ok:
         current["lead"] = {"id": by_index[lead_index]["id"], "why": lead_why}
 
-    # drops: only past RIVER_MAX, never a pick, a lead or the Brief's own edition
-    protected = {by_index[index]["id"] for index, _ in picks} if want_picks else \
-        {pick["id"] for pick in day.get("picks") or []}
+    # drops: only past RIVER_MAX, never a pick (current, or any the day ranked
+    # earlier: they stay river items, so the counts and chips include them),
+    # a lead or the Brief's own edition
+    protected = {by_index[index]["id"] for index, _ in picks} if want_picks else set()
+    protected |= {pick["id"] for pick in (day.get("picks") or []) + (day.get("picks_earlier") or [])}
     protected |= {update["lead"]["id"] for update in updates if update.get("lead")}
     protected |= {item["id"] for item in river(day) if item.get("own")}   # the Brief stays
     dropped = []
@@ -782,8 +784,10 @@ def finish(day, pulse, now, changed):
         kept = [pick for pick in day["picks"] if not pick.get("own")]
         day["picks"] = [dict(pick, rank=rank) for rank, pick in enumerate(kept, start=1)]
     current = {pick["id"] for pick in day.get("picks") or []}
+    in_river = {item["id"] for item in items}
     day["picks_earlier"] = [pick for pick in day.get("picks_earlier") or []
-                            if pick["id"] not in current and not pick.get("own")]
+                            if pick["id"] not in current and pick["id"] in in_river
+                            and not pick.get("own")]
     brief = brief_of(items)
     if brief:
         day["brief"] = brief
