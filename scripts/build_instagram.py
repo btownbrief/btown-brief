@@ -23,9 +23,12 @@ pro rata: by the end of day d of a D-day month it may have spent at most
 budget * d / D, counted in data/instagram-ledger.json (credits spent this
 month, and when each account was last fetched). Tier 1 is served first, then
 the tagged shelf, then tier 2, then tier 3, and whatever does not fit waits
-for tomorrow. A missing or unreadable ledger fails cheap: the run assumes
-every earlier day of the month spent its full share, so it can spend at most
-today's.
+for tomorrow. Credits are written to the ledger BEFORE the requests go out,
+so a run that dies halfway has already counted them. A missing or unreadable
+ledger fails CLOSED: the run assumes today's whole share is spent, fetches
+nothing, and writes a fresh ledger so tomorrow starts normally. (The one gap
+left: a ledger that was written but never pushed. The workflow's commit step
+runs even after a failure, and a failed push turns the job red.)
 
 THREE FACTS ABOUT INSTAGRAM'S CDN SHAPE EVERYTHING HERE.
 
@@ -510,9 +513,11 @@ def load_ledger(path: pathlib.Path, now: float, budget: int) -> tuple[dict, bool
 
     A ledger from last month starts this one at zero spent and keeps the
     fetch times (the rotation does not care about months). A missing or
-    unreadable ledger, or one whose numbers do not make sense, fails CHEAP:
-    every earlier day of this month is assumed to have spent its whole
-    share, so this run gets at most today's."""
+    unreadable ledger, or one whose numbers do not make sense, fails CLOSED:
+    the whole of today's share is assumed spent, so this run fetches nothing,
+    and the ledger it writes lets tomorrow's run start from a known number.
+    A missing ledger cannot be told apart from a lost one, and a lost one
+    could hide a run that already spent today's credits."""
     today = local_day(now)
     month = month_key(today)
     try:
@@ -536,9 +541,9 @@ def load_ledger(path: pathlib.Path, now: float, budget: int) -> tuple[dict, bool
         why = "no ledger"
     except Exception as e:  # corrupt, hand-edited, from the future
         why = f"unreadable ledger ({str(e)[:60]})"
-    assumed = share_through(today, budget, today.day - 1)
-    log(f"WARNING: {why} — assuming {assumed} credits already spent this month, "
-        f"so this run gets at most today's share")
+    assumed = share_through(today, budget)
+    log(f"WARNING: {why} — assuming {assumed} credits already spent this month "
+        f"(today's whole share), so this run fetches nothing")
     return {"month": month, "spent": assumed, "last": {}, "runs": []}, False
 
 
@@ -568,19 +573,22 @@ def plan(accounts: list[dict], last: dict, now: float, credits: int,
         t = last.get(h)
         return local_day(t) if t else None
 
-    t1 = [a for a in accounts if a["tier"] == 1]
-    t2 = [a for a in accounts if a["tier"] == 2 and day_of(a["h"]) != today]
+    # Every tier is served longest-waiting first, so when credits run short
+    # the same accounts are not the ones left out every time. Ties (every
+    # account the first week, or after a lost ledger) break on a hash of the
+    # handle, not roster order, so a day's slice mixes categories instead of
+    # being all `events` one day and all `shop` another.
+    def oldest_first(group):
+        return sorted(group, key=lambda a: (last.get(a["h"], 0), zlib.crc32(a["h"].encode()), a["h"]))
+
+    t1 = oldest_first(a for a in accounts if a["tier"] == 1)
+    t2 = oldest_first(a for a in accounts if a["tier"] == 2 and day_of(a["h"]) != today)
     t3_all = [a for a in accounts if a["tier"] == 3]
     taken_today = sum(1 for a in t3_all if day_of(a["h"]) == today)
     room3 = max(0, tier3_quota(len(t3_all)) - taken_today)
-    # Longest-waiting first. Ties (every account the first week, or after a
-    # lost ledger) break on a hash of the handle, not roster order, so a
-    # day's slice mixes categories instead of being all `events` one day and
-    # all `shop` another. Stable from run to run.
-    due3 = sorted((a for a in t3_all
-                   if day_of(a["h"]) is None
-                   or (today - day_of(a["h"])).days >= TIER3_PERIOD_DAYS),
-                  key=lambda a: (last.get(a["h"], 0), zlib.crc32(a["h"].encode()), a["h"]))[:room3]
+    due3 = oldest_first(a for a in t3_all
+                        if day_of(a["h"]) is None
+                        or (today - day_of(a["h"])).days >= TIER3_PERIOD_DAYS)[:room3]
 
     left = max(0, credits)
     picked, skipped, want_tagged = [], [], False
@@ -618,7 +626,7 @@ def save_ledger(path: pathlib.Path, ledger: dict) -> None:
         "runs": ledger["runs"][-62:],
         "last": dict(sorted(ledger["last"].items())),
     }
-    path.write_text(json.dumps(doc, indent=0, ensure_ascii=False) + "\n", encoding="utf-8")
+    path.write_text(json.dumps(doc, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
 
 
 # -------------------------------------------------------------------- main
@@ -630,8 +638,8 @@ def main() -> int:
     ap.add_argument("--no-tagged", action="store_true",
                     help="skip the one-credit tagged-posts fetch")
     ap.add_argument("--only", default="",
-                    help="comma-separated rostered handles: fetch just these, "
-                         "still inside the budget (a small live test)")
+                    help="comma-separated rostered handles: fetch just these and "
+                         "nothing else (no tagged shelf), still inside the budget")
     ap.add_argument("--out", type=pathlib.Path, default=None,
                     help="write the payload here instead of all-day/data/instagram.json")
     ap.add_argument("--ledger", type=pathlib.Path, default=None,
@@ -659,7 +667,7 @@ def main() -> int:
         pool = [a for a in accounts if a["h"] in want]
         picked = pool[:credits]
         skipped = [a["h"] for a in pool[credits:]]
-        want_tagged = not args.no_tagged and credits > len(picked)
+        want_tagged = False         # "just these": never the tagged shelf
     else:
         picked, want_tagged, skipped = plan(accounts, ledger["last"], now, credits,
                                             tagged=not args.no_tagged)
@@ -690,6 +698,8 @@ def main() -> int:
         return 0
 
     if not picked and not want_tagged:
+        if not ledger_ok:
+            save_ledger(ledger_path, ledger)    # tomorrow starts from a known number
         log("nothing to fetch inside the budget — payload left as it is")
         return 0
 
@@ -715,64 +725,57 @@ def main() -> int:
             log(f"could not read the previous payload ({str(e)[:60]}) — "
                 f"building from this run alone")
 
-    # Every request is a credit, whatever comes back, so it is counted and
-    # stamped BEFORE it is made and the ledger is saved however this ends.
-    spent_run = 0
-
-    def charge(h: str) -> None:
-        nonlocal spent_run
-        spent_run += 1
-        ledger["spent"] += 1
-        ledger["last"][h] = int(now)
+    # Every request is a credit, whatever comes back. The whole run's spend is
+    # written to the ledger BEFORE the first request: a run killed halfway
+    # has then over-counted, never under-counted, and a ledger that cannot be
+    # written stops the run before it costs anything.
+    ledger["spent"] += spend
+    for a in picked:
+        ledger["last"][a["h"]] = int(now)
+    roster_h = set(cat_of)
+    ledger["last"] = {h: t for h, t in ledger["last"].items() if h in roster_h}
+    ledger["runs"].append({"at": dt.datetime.fromtimestamp(now, dt.timezone.utc)
+                           .isoformat(timespec="seconds"), "credits": spend})
+    save_ledger(ledger_path, ledger)
+    log(f"ledger: {spend} reserved for this run, {ledger['spent']} of {budget} this month")
 
     fresh, failed, answered = [], [], set()
-    try:
-        for a in picked:
-            h = a["h"]
-            charge(h)
-            try:
-                items = fetch_handle(h, key)
-            except Exception as e:
-                failed.append(f"{h}: {str(e)[:50]}")
+    for a in picked:
+        h = a["h"]
+        try:
+            items = fetch_handle(h, key)
+        except Exception as e:
+            failed.append(f"{h}: {str(e)[:50]}")
+            continue
+        # It answered. Even an empty list is an answer — the account posted
+        # nothing recent — so its stale posts are now genuinely stale.
+        answered.add(h)
+        kept = 0
+        for it in items:
+            if kept >= POSTS_PER_HANDLE:
+                break
+            rec = post_record(h, it, cutoff, now)
+            if not rec:
                 continue
-            # It answered. Even an empty list is an answer — the account posted
-            # nothing recent — so its stale posts are now genuinely stale.
-            answered.add(h)
-            kept = 0
-            for it in items:
-                if kept >= POSTS_PER_HANDLE:
-                    break
-                rec = post_record(h, it, cutoff, now)
-                if not rec:
-                    continue
-                fresh.append(rec)
-                kept += 1
-            time.sleep(0.4)
+            fresh.append(rec)
+            kept += 1
+        time.sleep(0.4)
 
-        # The tagged shelf: anyone's posts, so it is judged by its own window
-        # and blocklist, and carried on its own — a rostered account that
-        # tagged the Brief appears in both places, and the two must not fold.
-        block = load_block()
-        tagged_cutoff = now - TAGGED_DAYS * 86400
-        tagged, tagged_ok = [], False
-        if want_tagged:
-            spent_run += 1
-            ledger["spent"] += 1
-            try:
-                for it in fetch_tagged(key):
-                    rec = tagged_record(it, tagged_cutoff, now)
-                    if rec and rec["h"] not in block:
-                        tagged.append(rec)
-                tagged_ok = True
-            except Exception as e:
-                failed.append(f"tagged: {str(e)[:50]}")
-    finally:
-        ledger["runs"].append({"at": dt.datetime.fromtimestamp(now, dt.timezone.utc)
-                               .isoformat(timespec="seconds"), "credits": spent_run})
-        roster_h = set(cat_of)
-        ledger["last"] = {h: t for h, t in ledger["last"].items() if h in roster_h}
-        save_ledger(ledger_path, ledger)
-        log(f"ledger: spent {spent_run} this run, {ledger['spent']} of {budget} this month")
+    # The tagged shelf: anyone's posts, so it is judged by its own window
+    # and blocklist, and carried on its own — a rostered account that
+    # tagged the Brief appears in both places, and the two must not fold.
+    block = load_block()
+    tagged_cutoff = now - TAGGED_DAYS * 86400
+    tagged, tagged_ok = [], False
+    if want_tagged:
+        try:
+            for it in fetch_tagged(key):
+                rec = tagged_record(it, tagged_cutoff, now)
+                if rec and rec["h"] not in block:
+                    tagged.append(rec)
+            tagged_ok = True
+        except Exception as e:
+            failed.append(f"tagged: {str(e)[:50]}")
 
     if not tagged_ok:
         for rec in prev_posts:

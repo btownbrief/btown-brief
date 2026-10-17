@@ -82,12 +82,16 @@ jobs:
         run: python3 scripts/build_sports.py || echo "sports build skipped"
 
       - name: Build Instagram
+        timeout-minutes: 30
         env:
           SCRAPECREATORS_API_KEY: ${{ secrets.SCRAPECREATORS_API_KEY }}
           SCRAPE_CREATORS_API_KEY: ${{ secrets.SCRAPE_CREATORS_API_KEY }}
         run: python3 scripts/build_instagram.py || echo "instagram build skipped"
 
+      # always(): the Instagram ledger records credits before it spends them,
+      # so it must land even when a step after it failed or timed out.
       - name: Commit if changed
+        if: always()
         run: |
           git config user.name "btown-brief-bot"
           git config user.email "actions@users.noreply.github.com"

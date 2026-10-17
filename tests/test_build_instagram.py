@@ -182,12 +182,13 @@ class Budget(unittest.TestCase):
             self.assertEqual(bi.share_through(day, 5280, 0), 0)
         self.assertEqual(bi.days_in_month(datetime(2028, 2, 10).date()), 29)
 
-    def test_a_missing_ledger_gets_today_s_share_at_most(self):
+    def test_a_missing_ledger_fails_closed_for_the_day(self):
         with tempfile.TemporaryDirectory() as tmp, mock.patch.object(bi, "log"):
             now = at(2026, 10, 17)
             led, ok = bi.load_ledger(Path(tmp) / "none.json", now, 5280)
             self.assertFalse(ok)
-            self.assertEqual(bi.allowance(led, now, 5280), (5280 * 17) // 31 - (5280 * 16) // 31)
+            self.assertEqual(bi.allowance(led, now, 5280), 0)
+            self.assertEqual(bi.allowance(led, at(2026, 10, 18), 5280), (5280 * 18) // 31 - (5280 * 17) // 31)
             bad = Path(tmp) / "bad.json"
             for body in ("{not json", json.dumps({"month": "2026-10", "spent": -5}),
                          json.dumps({"month": "2026-10", "spent": "0"}),
@@ -195,7 +196,7 @@ class Budget(unittest.TestCase):
                 bad.write_text(body)
                 led, ok = bi.load_ledger(bad, now, 5280)
                 self.assertFalse(ok, body)
-                self.assertEqual(led["spent"], (5280 * 16) // 31, body)
+                self.assertEqual(led["spent"], (5280 * 17) // 31, body)
 
     def test_last_month_s_ledger_starts_at_zero_and_keeps_the_rotation(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -234,6 +235,18 @@ class Budget(unittest.TestCase):
         last = {"t2_000": at(2026, 10, 16, 23, )}              # 11pm yesterday, Burlington time
         picked, _, _ = bi.plan(roster, last, at(2026, 10, 17, 0) + 1800, 100)
         self.assertIn("t2_000", [a["h"] for a in picked])
+
+    def test_short_credits_rotate_through_tier_2_instead_of_starving_it(self):
+        roster = accts(0, 2, 0)
+        last, got = {}, []
+        for day in range(1, 7):
+            now = at(2026, 10, day)
+            picked, _, _ = bi.plan(roster, last, now, 1, tagged=False)
+            for a in picked:
+                last[a["h"]] = int(now)
+                got.append(a["h"])
+        self.assertEqual(sorted(set(got)), ["t2_000", "t2_001"])
+        self.assertEqual(got.count("t2_000"), 3)
 
     def test_tier_3_turns_over_once_a_week_in_even_slices(self):
         """Two runs a day for four weeks: every tier 3 account is fetched
@@ -287,6 +300,9 @@ class Build(unittest.TestCase):
     """main() end to end on the fixture: the payload carries video, food and
     a category on every post; the ledger counts every request."""
 
+    def setUp(self):
+        self.tagged_calls = []
+
     def run_main(self, tmp, accounts, argv, fetch, now, ledger=None):
         roster = roster_file(tmp, accounts)
         out = Path(tmp) / "instagram.json"
@@ -296,6 +312,7 @@ class Build(unittest.TestCase):
         with mock.patch.object(bi, "ROSTER", roster), mock.patch.object(bi, "OUT", out), \
                 mock.patch.object(bi, "LEDGER", led), mock.patch.object(bi, "ROOT", Path(tmp)), \
                 mock.patch.object(bi, "api_key", return_value="k"), mock.patch.object(bi, "fetch_handle", fetch), \
+                mock.patch.object(bi, "fetch_tagged", lambda k: self.tagged_calls.append(k) or []), \
                 mock.patch.object(bi.time, "time", return_value=now), mock.patch.object(bi.time, "sleep"), \
                 mock.patch.object(bi, "log"), mock.patch.object(sys, "argv", ["x"] + argv):
             code = bi.main()
@@ -351,6 +368,35 @@ class Build(unittest.TestCase):
             self.assertFalse((Path(tmp) / "l.json").exists())
             self.assertFalse((Path(tmp) / "o.json").exists())
 
+    def test_credits_are_on_the_ledger_before_the_first_request(self):
+        """A run killed mid-fetch has already counted the whole run."""
+        now = at(2026, 10, 17)
+        seen = []
+        with tempfile.TemporaryDirectory() as tmp:
+            led_path = Path(tmp) / "ledger.json"
+
+            def fetch(h, k):
+                seen.append(json.loads(led_path.read_text())["spent"])
+                raise KeyboardInterrupt
+
+            with self.assertRaises(KeyboardInterrupt):
+                self.run_main(tmp, [{"h": h, "tier": 1, "category": "food"} for h in "abc"], [],
+                              fetch, now, {"month": "2026-10", "spent": 100, "last": {}})
+            led = json.loads(led_path.read_text())
+        self.assertEqual(seen, [104])               # three accounts + the tagged shelf
+        self.assertEqual(led["spent"], 104)
+        self.assertEqual(set(led["last"]), {"a", "b", "c"})
+
+    def test_a_missing_ledger_fetches_nothing_and_writes_one(self):
+        now = at(2026, 10, 17)
+        with tempfile.TemporaryDirectory() as tmp:
+            code, got, led = self.run_main(
+                tmp, [{"h": "a", "tier": 1, "category": "food"}], [],
+                lambda h, k: self.fail("fetched without a ledger"), now)
+        self.assertEqual(code, 0)
+        self.assertIsNone(got)
+        self.assertEqual((led["month"], led["spent"]), ("2026-10", bi.share_through(bi.local_day(now), bi.MONTHLY_CREDIT_BUDGET)))
+
     def test_only_stays_inside_the_budget(self):
         now = at(2026, 10, 17)
         calls = []
@@ -358,11 +404,12 @@ class Build(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             code, got, led = self.run_main(
                 tmp, [{"h": h, "tier": 3, "category": "food"} for h in "abcd"],
-                ["--only", "a,b,c,zz", "--no-tagged", "--no-carry"],
+                ["--only", "a,b,c,zz", "--no-carry"],
                 lambda h, k: calls.append(h) or doc["items"], doc["fetched_at"],
                 {"month": bi.month_key(bi.local_day(doc["fetched_at"])),
                  "spent": bi.share_through(bi.local_day(doc["fetched_at"]), bi.MONTHLY_CREDIT_BUDGET) - 2})
         self.assertEqual(calls, ["a", "b"])
+        self.assertEqual(self.tagged_calls, [])     # --only never spends the tagged credit
         self.assertEqual(led["runs"][-1]["credits"], 2)
 
 
