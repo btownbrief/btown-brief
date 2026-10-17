@@ -1,5 +1,5 @@
 {
- "_": "Demo data for ?demo=1, in the shapes the live tab reads. Every person and plan is invented. Plans are what nn_post_create takes (author, title, body, place, meta) plus the People table's extras (ages, meetup) and how many said they'd go; seeded into the demo board when the tab opens, dated hours ago. Events are all-day/data/whatnow.json's shape, dated from _anchor and moved to the reader's day; four are Stephen's own Meetup group and one is not, so the filter shows. Clubs are data/clubs.json's shape. Directory rows are what nn_people_directory() reads (the opt-in table joined to the profile), with `on` saying whether they joined: only the on ones may ever show.",
+ "_": "Demo data for ?demo=1, in the shapes the live tab reads. Every person and plan is invented. Plans are what nn_post_create takes (author, title, body, place, meta) plus the People table's extras (ages, meetup) and how many said they'd go; seeded into the demo board when the tab opens, posted `ago` hours ago, and starting `starts_in` hours from now (written into meta.when the way the compose sheet writes it, so the demo never shows a plan that has passed). Events are all-day/data/whatnow.json's shape, dated from _anchor and moved to the reader's day; four are Stephen's own Meetup group and one is not, so the filter shows. Clubs are data/clubs.json's shape. Directory rows are what nn_people_directory() reads (the opt-in table joined to the profile), with `on` saying whether they joined: only the on ones may ever show.",
  "_anchor": "2026-10-16",
  "plans": [
   {
@@ -11,8 +11,8 @@
    "title": "Trivia at Three Needs, need a fifth",
    "body": "We’re decent at sports and hopeless at geography. Look for the table with the green notebook.",
    "place": "Three Needs, College St",
+   "starts_in": 4,
    "meta": {
-    "when": "Tonight, 7:30 pm",
     "arch": "regular",
     "spots": 2
    },
@@ -30,8 +30,8 @@
    "title": "Sunrise hike up Mount Philo",
    "body": "Carpool from the Shelburne Road grocery store at 6. Headlamps optional, coffee after mandatory.",
    "place": "Mount Philo State Park",
+   "starts_in": 34,
    "meta": {
-    "when": "Saturday, 6:30 am",
     "arch": "trail",
     "spots": 5
    },
@@ -49,8 +49,8 @@
    "title": "First-timers’ walk down Church Street, then dumplings",
    "body": "Moved here in September. If you also know nobody yet, come walk around with me.",
    "place": "Church Street, by the Unitarian church",
+   "starts_in": 20,
    "meta": {
-    "when": "Tomorrow, 12:30 pm",
     "arch": "new",
     "spots": 4
    },
@@ -68,8 +68,8 @@
    "title": "Board game night, every skill level",
    "body": "I’ll bring two games I can teach in ten minutes. Teaching is half the fun.",
    "place": "The Boardroom, Mill St",
+   "starts_in": 52,
    "meta": {
-    "when": "Sunday, 6:30 pm",
     "arch": "games",
     "spots": 6
    },
@@ -87,8 +87,8 @@
    "title": "Open mic, mostly to listen",
    "body": "Not performing. Want company in the back row and someone to rate the sets with.",
    "place": "Radio Bean, N Winooski Ave",
+   "starts_in": 80,
    "meta": {
-    "when": "Thursday, 8 pm",
     "arch": "regular",
     "spots": 3
    },
