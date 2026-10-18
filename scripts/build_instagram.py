@@ -70,6 +70,26 @@ FOOD. A post gets `f: 1` when its account's category is `food`, or when the
 account carries `"food": true` (a bar, a brewery or a market that belongs on
 the Food tab too). Food reads it.
 
+KIND. Every post also carries `kind`, what the PICTURE is, for the Photos
+chips: vibe (a room, a crowd, a night out), poster (a flyer for a dated
+event), food, pets, scenic, other. The account's category is only the first
+guess: a cat cafe's latte is food, not pets, and a restaurant's trivia flyer
+is a poster, not food. So once a run, Claude Haiku 5.5 reads the account,
+its category and the caption of every post that has no kind yet, in one
+batched call, and says which kind each is and whether it is sure. The
+posts it is not sure about (up to IMAGE_LOOK_MAX) get a second call that
+shows it the 480px thumbnail itself. A kind is decided once per post and
+carried with it, so a post is never paid for twice. Without a key, past
+AI_MONTH_CAP_USD, or when a call fails, a post gets its category's kind
+with `kd: 1` (defaulted) and is asked about again next run. The spend is
+kept in the ledger's `ai` block; AI COST below has the measured numbers.
+
+PERSISTENCE. Each category's cap is filled one post per account at a time
+(every account's newest, then every account's second newest, ...), not
+newest-first, so a weekly account's posts are not pushed out by an account
+that posts daily. They still lapse when their signature does (about four
+days), which is the one limit carrying cannot lift.
+
 TAGGED is the one thing here that is not a roster. It is every post by anyone
 that tags @btownbrief — the route onto the wall for a reader who is not an
 account we follow. One credit per run (`/v1/instagram/user/tagged-posts`, by
@@ -155,6 +175,27 @@ IG_EPOCH_MS = 1314220021721   # media-id snowflake epoch
 # days. This is the only knob — refuse anything that close to expiring, so a
 # reader who opens the tab late in the day still gets pictures.
 CARRY_MARGIN_H = 8
+
+# What a picture is, for the Photos chips (the contract with the Wire's
+# Photos view: it reads `kind` when present). A post nobody has judged yet
+# takes its account's category's kind.
+KINDS = ("vibe", "poster", "food", "pets", "scenic", "other")
+KIND_OF_CATEGORY = {"food": "food", "venue": "vibe", "events": "poster", "pets": "pets",
+                    "scenic": "scenic", "shop": "other", "other": "other"}
+KIND_BATCH = 150              # posts per caption call; a steady-state run is one call
+CAPTION_CHARS = 300           # of each caption the model reads
+IMAGE_LOOK_MAX = 60           # unsure posts per run that get their thumbnail looked at
+IMAGE_MAX_BYTES = 1_500_000   # a 480px thumbnail is ~20-60 KB; anything bigger is skipped
+# AI COST. Claude Haiku 5.5, $0.10 / $0.50 per million tokens in / out
+# (platform.claude.com pricing, checked 2026-10-18; under 100K-token prompts).
+# An image is ceil(w/28) * ceil(h/28) tokens: a 480x600 thumbnail is 396.
+# Measured 2026-10-18 on the live payload, every one of its 433 posts treated
+# as new: captions 47,922 in / 8,165 out tokens over three calls = $0.0089
+# ($0.00002 a post); 60 thumbnails 31,431 in / 904 out = $0.0036 ($0.00006 a
+# post). The roster brings ~150 new posts a day, about half unsure, so a
+# steady month is roughly $0.10 of captions and $0.13 of looks. This cap is
+# the backstop, not the budget.
+AI_MONTH_CAP_USD = 3.0
 
 
 def log(m: str) -> None:
@@ -453,6 +494,42 @@ def load_block() -> set[str]:
         return set()
 
 
+def load_hints(accounts: list[dict]) -> dict[str, set[str]]:
+    """The roster's second opinions about an account, for the kind prompt:
+    `photo_categories` (a cat cafe is also pets and a vibe check) and the
+    `food` flag on a bar or a brewery."""
+    out: dict[str, set[str]] = {}
+    try:
+        tags = json.loads(ROSTER.read_text(encoding="utf-8")).get("photo_categories") or {}
+    except Exception:
+        tags = {}
+    for tag, hs in tags.items() if isinstance(tags, dict) else ():
+        if tag.startswith("_") or not isinstance(hs, list):
+            continue
+        for h in hs:
+            if norm_handle(h):
+                out.setdefault(norm_handle(h), set()).add(tag)
+    for a in accounts:
+        if a["food"] and a["category"] != "food":
+            out.setdefault(a["h"], set()).add("food")
+    return out
+
+
+def fair_cap(recs: list[dict], n: int) -> list[dict]:
+    """At most `n` posts, filled one per account at a time: every account's
+    newest, then every account's second newest, and so on, newest first
+    within a round. Newest-first alone let a daily account push a weekly
+    one's still-good posts out of the payload."""
+    rank: dict[str, int] = {}
+    ranked = []
+    for r in sorted(recs, key=lambda r: -r["ts"]):
+        k = rank.get(r["h"], 0)
+        rank[r["h"]] = k + 1
+        ranked.append((k, -r["ts"], r))
+    ranked.sort(key=lambda t: (t[0], t[1]))
+    return [r for _, _, r in ranked[:n]]
+
+
 def load_roster(path: pathlib.Path | None = None) -> list[dict]:
     """The roster's `accounts`, cleaned: one dict per handle with `h`, `tier`,
     `category`, `s` (`do` or `see`, kept on posts for older readers) and
@@ -491,6 +568,233 @@ def load_roster(path: pathlib.Path | None = None) -> list[dict]:
     if fixed:
         log(f"WARNING: {len(fixed)} roster fix(es): {'; '.join(fixed[:6])}")
     return out
+
+
+# -------------------------------------------------------------------- kind
+
+KIND_RULES = """You sort Instagram posts from Burlington, Vermont accounts into the kind of
+PICTURE each one is, for a photo wall with these filters:
+
+vibe    what a place or a night looks like right now: a bar, a cafe or a venue's
+        room, a crowd, a band on stage, people out, a patio, a storefront
+poster  a flyer or graphic announcing a dated event: a lineup, a show, a market
+        day, a class, trivia night, with the date or time usually in the picture
+food    food or drink is the subject: a plate, a pastry, a coffee, a pour, a special
+pets    an animal is the subject: a cat, a dog, an adoptable pet
+scenic  the lake, a sunset, the mountains, foliage, streets, buildings, weather
+other   anything else: clothing and goods for sale, portraits, merch, hiring
+        notices, announcements with no event, memes, text that is not an event
+
+The account's category is a hint, not the answer. A cat cafe's latte is food, a
+restaurant's trivia flyer is a poster, a brewery's crowded taproom is vibe. A
+caption describes the post but not always the picture: "join us Friday" may sit
+on a flyer or on a photo of last week's crowd. Say sure=false whenever the
+caption does not settle what the picture shows."""
+
+LOOK_RULES = KIND_RULES + """
+
+Now you can see each picture. Judge by the picture itself; use the caption only
+to break a tie."""
+
+
+def kind_schema(sure: bool) -> dict:
+    props = {"i": {"type": "integer"}, "kind": {"type": "string", "enum": list(KINDS)}}
+    if sure:
+        props["sure"] = {"type": "boolean"}
+    return {"type": "object", "additionalProperties": False, "required": ["kinds"],
+            "properties": {"kinds": {"type": "array", "items": {
+                "type": "object", "properties": props, "required": list(props),
+                "additionalProperties": False}}}}
+
+
+def kind_line(i: int, rec: dict, hints: dict) -> str:
+    also = sorted(hints.get(rec["h"], ()))
+    what = "reel" if rec.get("v") else "photo"
+    cap = (rec.get("c") or "")[:CAPTION_CHARS] or "(no caption)"
+    return (f"{i}. @{rec['h']} · {rec.get('category') or 'other'}"
+            + (f" (also {', '.join(also)})" if also else "") + f" · {what} · {cap}")
+
+
+def read_kinds(raw: object, n: int, sure: bool) -> dict[int, tuple[str, bool]]:
+    """The model's answer -> {index: (kind, sure)}. A bad index, a repeat or
+    an unknown kind is dropped, and that post simply keeps its default."""
+    out = {}
+    for e in raw if isinstance(raw, list) else []:
+        if not isinstance(e, dict):
+            continue
+        i = e.get("i")
+        if not isinstance(i, int) or isinstance(i, bool) or not 0 <= i < n or i in out:
+            continue
+        if e.get("kind") not in KINDS:
+            continue
+        out[i] = (e["kind"], e.get("sure") is True if sure else True)
+    return out
+
+
+def sniff_image(data: bytes) -> str | None:
+    if data[:3] == b"\xff\xd8\xff":
+        return "image/jpeg"
+    if data[:8] == b"\x89PNG\r\n\x1a\n":
+        return "image/png"
+    if data[:4] == b"RIFF" and data[8:12] == b"WEBP":
+        return "image/webp"
+    return None
+
+
+def fetch_thumb(url: str) -> tuple[str, str] | None:
+    """(media type, base64) of a thumbnail, or None. Sent as bytes rather
+    than a URL so the answer never depends on who else Instagram's CDN will
+    serve."""
+    import base64
+    try:
+        req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
+        with urllib.request.urlopen(req, timeout=20) as r:
+            data = r.read(IMAGE_MAX_BYTES + 1)
+    except Exception:
+        return None
+    mt = sniff_image(data) if len(data) <= IMAGE_MAX_BYTES else None
+    return (mt, base64.b64encode(data).decode("ascii")) if mt else None
+
+
+def ai_spent(ledger: dict | None, now: float) -> float:
+    ai = (ledger or {}).get("ai") or {}
+    return float(ai.get("usd") or 0) if ai.get("month") == month_key(local_day(now)) else 0.0
+
+
+def assign_kinds(posts: list[dict], prev_kinds: dict, hints: dict,
+                 ledger: dict | None, now: float, look: bool = True) -> dict:
+    """Give every post a `kind`. Returns what the run did and spent.
+
+    A post keeps a kind it already has, or the one its URL had in the last
+    payload (a tier 2 account's posts come back every day; they are judged
+    once). The rest start at their category's kind, marked `kd`, and are
+    sent to the model; a valid answer replaces the default and clears `kd`."""
+    todo = []
+    for rec in posts:
+        known = rec.get("kind") if not rec.get("kd") else None
+        known = known or prev_kinds.get(rec.get("u") or "")
+        if known in KINDS:
+            rec["kind"] = known
+            rec.pop("kd", None)
+            continue
+        rec["kind"] = KIND_OF_CATEGORY.get(rec.get("category"), "other")
+        rec["kd"] = 1
+        todo.append(rec)
+    report = {"asked": 0, "looked": 0, "decided": 0, "usd": 0.0}
+    if not todo:
+        return report
+    try:
+        sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
+        import wire_common as wc
+    except Exception as e:
+        log(f"kind: wire_common unavailable ({str(e)[:60]}); {len(todo)} post(s) keep their category's kind")
+        return report
+    engine = wc.pick_engine("tag")
+    if engine is None:
+        log(f"kind: no model key; {len(todo)} post(s) keep their category's kind")
+        return report
+    if ai_spent(ledger, now) >= AI_MONTH_CAP_USD:
+        log(f"kind: ${ai_spent(ledger, now):.2f} spent this month (cap ${AI_MONTH_CAP_USD:.2f}); "
+            f"{len(todo)} post(s) keep their category's kind")
+        return report
+
+    usage = {"in": 0, "out": 0, "cache_read": 0, "cache_write": 0, "calls": 0}
+
+    def ask(system, user, schema, n, sure, label):
+        try:
+            answer, got = wc.ask_json(engine, system, user, schema, max_tokens=60 * n + 500,
+                                      log_prefix="kind")
+        except Exception as e:  # noqa: BLE001 — SDK missing, network, a bad answer
+            got = getattr(e, "usage", {}) or {}
+            answer = None
+            log(f"kind: {label} call failed ({str(e)[:80]})")
+        for k in usage:
+            usage[k] += got.get(k, 0)
+        return read_kinds((answer or {}).get("kinds"), n, sure)
+
+    # The picture itself settles what a caption cannot. Claude only: the
+    # OpenRouter fallback reads text, so there a caption's guess is final.
+    can_look = look and engine["provider"] == "anthropic"
+    unsure = []
+    for start in range(0, len(todo), KIND_BATCH):
+        batch = todo[start:start + KIND_BATCH]
+        text = "POSTS:\n" + "\n".join(kind_line(i, r, hints) for i, r in enumerate(batch))
+        got = ask(KIND_RULES, text, kind_schema(True), len(batch), True, "caption")
+        report["asked"] += len(batch)
+        for i, rec in enumerate(batch):
+            if i not in got:
+                continue
+            kind, sure = got[i]
+            rec["kind"] = kind          # unsure: the caption's best guess while it waits for a look
+            if sure or not can_look:
+                rec.pop("kd", None)
+            else:
+                unsure.append(rec)
+
+    if unsure:
+        spent_so_far = ai_spent(ledger, now) + wc.cost_usd(engine["model"], usage)
+        if spent_so_far < AI_MONTH_CAP_USD:
+            shown, content = [], []
+            for rec in sorted(unsure, key=lambda r: -r["ts"]):
+                if len(shown) >= IMAGE_LOOK_MAX:
+                    break
+                pic = fetch_thumb(rec["i"])
+                if not pic:
+                    continue
+                content.append({"type": "text", "text": "Image " + kind_line(len(shown), rec, hints)})
+                content.append({"type": "image", "source": {"type": "base64",
+                                                            "media_type": pic[0], "data": pic[1]}})
+                shown.append(rec)
+            if shown:
+                content.append({"type": "text", "text": f"Give the kind of each of the {len(shown)} images."})
+                got = ask(LOOK_RULES, content, kind_schema(False), len(shown), False, "image")
+                report["looked"] = len(shown)
+                for i, rec in enumerate(shown):
+                    if i in got:
+                        rec["kind"] = got[i][0]
+                        rec.pop("kd", None)
+    # An unsure post nobody looked at (past IMAGE_LOOK_MAX, a thumbnail that
+    # would not download, the cap) keeps the caption's guess, still marked
+    # `kd`, and is asked again next run.
+
+    report["decided"] = sum(1 for r in todo if not r.get("kd"))
+    usd = wc.cost_usd(engine["model"], usage)
+    report["usd"] = usd
+    if ledger is not None and (usage["calls"] or usage["in"]):
+        month = month_key(local_day(now))
+        ai = ledger.get("ai")
+        if not isinstance(ai, dict) or ai.get("month") != month:
+            ai = {"month": month, "usd": 0.0, "runs": []}
+        ai["usd"] = round(ai["usd"] + usd, 6)
+        ai["runs"].append({"at": dt.datetime.fromtimestamp(now, dt.timezone.utc).isoformat(timespec="seconds"),
+                           "model": engine["model"], "asked": report["asked"], "looked": report["looked"],
+                           "in": usage["in"], "out": usage["out"], "usd": round(usd, 6)})
+        ledger["ai"] = ai
+    log(f"kind: {report['decided']} of {len(todo)} new post(s) decided ({report['asked']} by caption, "
+        f"{report['looked']} looked at) · {usage['in']:,} in / {usage['out']:,} out tokens · "
+        f"${usd:.4f} this run · ${ai_spent(ledger, now) if ledger else usd:.2f} this month")
+    return report
+
+
+BUSY_DAYS = 14
+BUSY_MIN = 3
+
+
+def busy_tier3(accounts: list[dict], payload: pathlib.Path, now: float) -> list[tuple]:
+    """Tier 3 accounts whose shipped posts say they post often enough to be
+    worth a daily check: candidates to move to tier 2 by hand. Read from the
+    payload, so it costs nothing and only knows accounts already fetched."""
+    try:
+        posts = json.loads(payload.read_text(encoding="utf-8")).get("posts") or []
+    except Exception:
+        return []
+    t3 = {a["h"]: a["category"] for a in accounts if a["tier"] == 3}
+    n: dict[str, int] = {}
+    for r in posts:
+        if (isinstance(r, dict) and r.get("h") in t3 and r.get("s") != "tagged"
+                and isinstance(r.get("ts"), (int, float)) and r["ts"] >= now - BUSY_DAYS * 86400):
+            n[r["h"]] = n.get(r["h"], 0) + 1
+    return sorted(((h, t3[h], k) for h, k in n.items() if k >= BUSY_MIN), key=lambda t: (-t[2], t[0]))
 
 
 # ------------------------------------------------------------------ budget
@@ -546,6 +850,11 @@ def load_ledger(path: pathlib.Path, now: float, budget: int) -> tuple[dict, bool
             raise ValueError(f"month is {doc.get('month')!r}")
         runs = [r for r in (doc.get("runs") or []) if isinstance(r, dict)]
         out = {"month": month, "spent": spent, "last": last, "runs": runs}
+        ai = doc.get("ai")
+        if (isinstance(ai, dict) and ai.get("month") == month
+                and isinstance(ai.get("usd"), (int, float)) and not isinstance(ai.get("usd"), bool)):
+            out["ai"] = {"month": month, "usd": float(ai["usd"]),
+                         "runs": [r for r in (ai.get("runs") or []) if isinstance(r, dict)]}
         pend = doc.get("pending")
         if (isinstance(pend, dict) and isinstance(pend.get("handles"), list)
                 and isinstance(pend.get("at"), (int, float))):
@@ -649,6 +958,8 @@ def save_ledger(path: pathlib.Path, ledger: dict) -> None:
     }
     if ledger.get("pending"):
         doc["pending"] = ledger["pending"]
+    if ledger.get("ai"):
+        doc["ai"] = dict(ledger["ai"], runs=ledger["ai"]["runs"][-62:])
     path.write_text(json.dumps(doc, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
 
 
@@ -663,6 +974,8 @@ def main() -> int:
     ap.add_argument("--only", default="",
                     help="comma-separated rostered handles: fetch just these and "
                          "nothing else (no tagged shelf), still inside the budget")
+    ap.add_argument("--no-look", action="store_true",
+                    help="judge kinds from captions only; never send a thumbnail to the model")
     ap.add_argument("--out", type=pathlib.Path, default=None,
                     help="write the payload here instead of all-day/data/instagram.json")
     ap.add_argument("--ledger", type=pathlib.Path, default=None,
@@ -743,6 +1056,11 @@ def main() -> int:
         if want_tagged:
             print("tagged shelf · 1")
         print(f"total {spend} credits this run")
+        busy = busy_tier3(accounts, args.out or OUT, now)
+        if busy:
+            print("tier 3 accounts posting like daily ones (posts in the last "
+                  f"{BUSY_DAYS} days, from the payload): "
+                  + ", ".join(f"{h} ({c}, {n})" for h, c, n in busy))
         return 0
 
     if not (args.reserve or args.only):
@@ -789,7 +1107,8 @@ def main() -> int:
         return 0
     log(f"--only: these {spend} credits are on this checkout's ledger only; "
         f"commit it to main or they go uncounted")
-    return fetch_and_build(args, picked, want_tagged, accounts, now)
+    return fetch_and_build(args, picked, want_tagged, accounts, now,
+                           ledger=ledger, ledger_path=ledger_path)
 
 
 def execute(args, ledger: dict, ledger_path: pathlib.Path, accounts: list[dict], now: float) -> int:
@@ -835,13 +1154,16 @@ def execute(args, ledger: dict, ledger_path: pathlib.Path, accounts: list[dict],
         log(f"--execute: stopped with {len(unattempted)} account(s) not asked for; "
             f"their rotation places restored")
 
-    return fetch_and_build(args, picked, want_tagged, accounts, now, on_stop=give_back)
+    return fetch_and_build(args, picked, want_tagged, accounts, now, on_stop=give_back,
+                           ledger=ledger, ledger_path=ledger_path)
 
 
 def fetch_and_build(args, picked: list[dict], want_tagged: bool,
-                    accounts: list[dict], now: float, on_stop=None) -> int:
+                    accounts: list[dict], now: float, on_stop=None,
+                    ledger: dict | None = None, ledger_path: pathlib.Path | None = None) -> int:
     """Fetch `picked` (and the tagged shelf), carry forward what is still
-    good, and write the payload. The credits are already on the ledger."""
+    good, give every post its kind, and write the payload. The credits are
+    already on the ledger; the kind call's dollars are added to it."""
     out_path = args.out or OUT
     key = api_key()
     cat_of = {a["h"]: a["category"] for a in accounts}
@@ -979,22 +1301,33 @@ def fetch_and_build(args, picked: list[dict], want_tagged: bool,
         rec["category"] = cat_of.get(rec["h"], "other")
         tagged_by_key[rec.get("u") or f"{rec['h']}:{rec['ts']}"] = rec
 
-    # Cap each category on its own, newest first, then interleave back into
-    # one clock-ordered list.
+    # Cap each category on its own, one post per account at a time, then
+    # interleave back into one clock-ordered list.
     posts = []
     for cat, cap_n in CAP.items():
-        half = sorted((r for r in by_key.values() if r["category"] == cat),
-                      key=lambda r: -r["ts"])
+        half = [r for r in by_key.values() if r["category"] == cat]
         if len(half) > cap_n:
             log(f"{cat}: capped {len(half)} -> {cap_n}")
-        posts.extend(half[:cap_n])
+        posts.extend(fair_cap(half, cap_n))
     posts.extend(sorted(tagged_by_key.values(), key=lambda r: -r["ts"])[:TAGGED_CAP])
     posts.sort(key=lambda r: -r["ts"])
+
+    # What each picture is. Only the shipped posts are judged, and a post the
+    # last payload already judged keeps that answer.
+    prev_kinds = {r["u"]: r["kind"] for r in prev_posts
+                  if isinstance(r, dict) and isinstance(r.get("u"), str) and "/p/" in r["u"]
+                  and r.get("kind") in KINDS and not r.get("kd")}
+    before = ai_spent(ledger, now)
+    assign_kinds(posts, prev_kinds, load_hints(accounts), ledger, now,
+                 look=not getattr(args, "no_look", False))
+    if ledger is not None and ledger_path is not None and ai_spent(ledger, now) != before:
+        save_ledger(ledger_path, ledger)
 
     segs = ("do", "see", "tagged")
     counts = {s: sum(1 for r in posts if r["s"] == s) for s in segs}
     accts = {s: len({r["h"] for r in posts if r["s"] == s}) for s in segs}
     cats = {c: sum(1 for r in posts if r.get("category") == c) for c in CATEGORIES}
+    kinds = {k: sum(1 for r in posts if r.get("kind") == k) for k in KINDS}
 
     out = {
         "generated": dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"),
@@ -1005,6 +1338,10 @@ def fetch_and_build(args, picked: list[dict], want_tagged: bool,
         "handles": sorted({p["h"] for p in posts}),
         "segments": {s: {"posts": counts[s], "accounts": accts[s]} for s in segs},
         "categories": cats,
+        # What the pictures are (`kind` on each post); `kd` marks a post still
+        # on its category's default, to be judged next run.
+        "kinds": kinds,
+        "kinds_defaulted": sum(1 for r in posts if r.get("kd")),
         # Posts that carry a playable MP4 right now, and the food-tagged ones.
         "videos": sum(1 for r in posts if r.get("vu")),
         "food": sum(1 for r in posts if r.get("f")),
@@ -1015,6 +1352,7 @@ def fetch_and_build(args, picked: list[dict], want_tagged: bool,
     out_path.write_text(json.dumps(out, ensure_ascii=False, separators=(",", ":")) + "\n")
     log(f"wrote {out_path}  {len(posts)} posts from {len(out['handles'])} accounts · "
         + " · ".join(f"{c} {n}" for c, n in cats.items() if n)
+        + " · kinds " + " ".join(f"{k} {n}" for k, n in kinds.items() if n)
         + f" · {out['videos']} with video, {out['food']} food · "
         f"{out_path.stat().st_size // 1024} KB")
     return 0
