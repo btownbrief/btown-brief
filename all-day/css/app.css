@@ -608,6 +608,14 @@ body.chrome-away .mast { transform: translateY(-100%); }
 .wlegend i { width: 10px; height: 10px; border-radius: var(--r-round); border: 2px solid var(--ink-3); }
 .wlegend i.on { background: var(--ink-2); border-color: var(--ink-2); }
 .grid3.wgrid { grid-template-columns: repeat(auto-fill, minmax(104px, 1fr)); gap: var(--s4) var(--s3); padding-bottom: var(--s2); }
+/* an opened list (Watch's Back then, People's own mixers) and its Collapse
+   bar: the one sticky thing in a tab, and only while that list is on screen.
+   It rides just above the tab bar and the player and rests at the list's
+   end. Sticky measures from inside the panel's bottom padding, which already
+   clears the dock and the player plus 28px, so it reaches 16px into that. */
+.collapsebar { position: sticky; z-index: 2; bottom: calc(-1 * var(--s4));
+  display: flex; justify-content: center; padding: var(--s3) 0 var(--s1); pointer-events: none; }
+.collapsebar .btn { pointer-events: auto; box-shadow: var(--dock-shadow); }
 .vcard { display: block; width: 240px; }
 .vcard .c-media { margin: 0; }
 .vcard .t { display: block; font-size: var(--fs-sub); font-weight: 600; line-height: 1.3; margin-top: 8px; }
@@ -892,6 +900,11 @@ body.chrome-away .mast { transform: translateY(-100%); }
 .owntile { display: flex; flex-direction: column; gap: 3px; width: 200px; padding: 10px 12px 12px; border: 1px solid var(--line); border-radius: var(--r-media); background: var(--accent-soft); }
 .owntile b { font-size: var(--fs-sub); font-weight: 600; line-height: var(--lh-title); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 .owntile .s { font-size: var(--fs-small); color: var(--ink-3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+/* the IRL head with its Show all, and the row opened into a list */
+.subrow { display: flex; align-items: center; justify-content: space-between; gap: var(--s3); padding: 0 var(--gutter) var(--s2); }
+.subrow .subh { padding-bottom: 0; }
+.ownlist { display: grid; gap: var(--s2); padding: 0 var(--gutter); }
+.ownlist .owntile { width: auto; }
 .mixdays { padding-top: 4px; }
 .hostcard { background: var(--paper-2); border-color: transparent; }
 /* People here: handles that open the app, interests as small tiles */
@@ -1124,7 +1137,7 @@ select.bf-in { appearance: none; -webkit-appearance: none; }
    a game: one accent (--habit), near-black and near-white, habit names at
    17px, the goal tile's line at 24px, nothing under 13px. */
 .hb { max-width: var(--col); margin: 0 auto; padding-bottom: var(--s6); }
-.hb-tile { margin: var(--s4) var(--gutter) var(--s2); padding: var(--s5) var(--s4); background: var(--paper-2); border-radius: var(--r-media);
+.hb-tile { margin: var(--s6) var(--gutter) 0; padding: var(--s5) var(--s4); background: var(--paper-2); border-radius: var(--r-media);
   display: flex; flex-direction: column; align-items: flex-start; gap: var(--s2); }
 .hb-kicker { font-size: var(--fs-meta); font-weight: 500; color: var(--ink-3); }
 .hb-big { font-family: var(--sans); font-size: var(--fs-hero); font-weight: 600; line-height: var(--lh-tight); letter-spacing: -.005em; color: var(--ink); }
@@ -1144,6 +1157,8 @@ select.bf-in { appearance: none; -webkit-appearance: none; }
 .hb-arch { position: absolute; top: 0; bottom: 0; right: var(--gutter); display: flex; align-items: center;
   font-size: var(--fs-small); font-weight: 700; color: var(--ink-3); }
 .hb-row.will-commit .hb-arch { color: var(--warn); }
+/* the striped rows' tint is see-through: the word shows only during a swipe */
+.hb-row:not(.is-swiping) .hb-arch { visibility: hidden; }
 .hb-row.is-drag { z-index: 2; box-shadow: var(--shadow-float); }
 .hb-grip { width: 32px; height: var(--hit); display: flex; align-items: center; justify-content: center; color: var(--ink-3); cursor: grab; touch-action: none; }
 .hb-grip .i { width: 18px; height: 18px; fill: currentColor; stroke: none; }
@@ -1175,6 +1190,54 @@ select.bf-in { appearance: none; -webkit-appearance: none; }
 .hb-share { display: flex; align-items: center; gap: var(--s2); font-size: var(--fs-body); color: var(--ink); }
 .hb-share input { width: 20px; height: 20px; flex: 0 0 auto; accent-color: var(--habit); }
 .hb-me { padding: var(--s2) var(--gutter) 0; }
+
+/* today, on top: done of due, a bar, and the last seven days */
+.hb-today { display: grid; grid-template-columns: 1fr auto; align-items: end; gap: var(--s2) var(--s4); margin: var(--s4) var(--gutter) 0; }
+.hb-stat { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.hb-stat.r { align-items: flex-end; text-align: right; }
+.hb-num { font-size: var(--fs-hero); font-weight: 600; line-height: var(--lh-tight); color: var(--ink); font-variant-numeric: tabular-nums; }
+.hb-lab { font-size: var(--fs-meta); font-weight: 500; color: var(--ink-3); }
+.hb-bar { grid-column: 1 / -1; display: block; height: 8px; border-radius: var(--r-pill); background: var(--line-soft); overflow: hidden; }
+.hb-bar i { display: block; height: 100%; border-radius: var(--r-pill); background: var(--habit); transition: width .2s ease; }
+@media (prefers-reduced-motion: reduce) { .hb-bar i { transition: none; } }
+
+/* the last sixteen weeks: a square a day, darker the more got done */
+.hb-h { font-family: var(--sans); font-size: var(--fs-title); font-weight: 600; line-height: var(--lh-title); color: var(--ink); }
+.hb-heat { margin: var(--s6) var(--gutter) 0; }
+.hb-heatin { display: flex; gap: var(--s2); margin-top: var(--s3); max-width: 460px; }
+.hb-wd { display: grid; grid-template-rows: repeat(7, 1fr); gap: 3px; flex: 0 0 auto; }
+.hb-wd i { font-style: normal; font-size: var(--fs-meta); line-height: 1; color: var(--ink-3); display: flex; align-items: center; }
+.hb-grid { flex: 1; min-width: 0; display: grid; grid-template-rows: repeat(7, auto); grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: 3px; }
+.hb-grid .c, .hb-key .c, .hb-month .c { display: block; aspect-ratio: 1; border-radius: var(--r-xs); background: var(--line-soft); }
+.hb-grid .c.l0, .hb-key .c.l0 { background: var(--line); }
+.hb-grid .c.l1, .hb-key .c.l1 { background: color-mix(in srgb, var(--habit) 30%, var(--paper)); }
+.hb-grid .c.l2, .hb-key .c.l2 { background: color-mix(in srgb, var(--habit) 55%, var(--paper)); }
+.hb-grid .c.l3, .hb-key .c.l3 { background: color-mix(in srgb, var(--habit) 78%, var(--paper)); }
+.hb-grid .c.l4, .hb-key .c.l4 { background: var(--habit); }
+.hb-grid .c.later { visibility: hidden; }
+.hb-grid .c.now { outline: 1.5px solid var(--ink-3); outline-offset: 1px; }
+.hb-key { display: flex; align-items: center; gap: 3px; margin-top: var(--s2); font-size: var(--fs-meta); color: var(--ink-3); }
+.hb-key .c { width: 12px; height: 12px; }
+.hb-key span:first-child { margin-right: var(--s1); }
+.hb-key span:last-child { margin-left: var(--s1); }
+
+/* a habit's sheet: three numbers, its month, then the edit form */
+.hb-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--s3); padding: var(--s2) 0 var(--s4); border-bottom: 1px solid var(--line); }
+.hb-stats .hb-num { font-size: var(--fs-date); }
+.hb-cal { padding: var(--s3) 0 var(--s4); border-bottom: 1px solid var(--line); }
+.hb-calhead { display: flex; align-items: center; justify-content: space-between; gap: var(--s2); }
+.hb-calhead .hb-h { flex: 1; text-align: center; }
+.hb-calhead .iconbtn:disabled { opacity: .3; cursor: default; }
+.hb-month { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px; max-width: 360px; margin: var(--s2) auto 0; text-align: center; }
+.hb-month b { font-size: var(--fs-meta); font-weight: 500; color: var(--ink-3); padding: var(--s1) 0; }
+.hb-month .c { display: flex; align-items: center; justify-content: center; border-radius: var(--r-round); background: transparent;
+  font-style: normal; font-size: var(--fs-meta); font-variant-numeric: tabular-nums; color: var(--ink-3); }
+.hb-month .c.pad { visibility: hidden; }
+.hb-month .c.done { background: var(--habit); color: var(--habit-ink); font-weight: 600; }
+.hb-month .c.missed { box-shadow: inset 0 0 0 1.5px var(--ink-3); color: var(--ink-2); }
+.hb-month .c.today { box-shadow: inset 0 0 0 1.5px var(--habit); color: var(--ink); font-weight: 600; }
+.hb-month .c.later { opacity: .5; }
+.hb-edit { padding-top: var(--s3); }
 
 /* loading: the same layout, in grey */
 .skel { display: block; height: 12px; border-radius: var(--r-xs); background: var(--line-soft); animation: hb-fade 1.2s ease-in-out infinite alternate; }
@@ -1223,6 +1286,9 @@ select.bf-in { appearance: none; -webkit-appearance: none; }
 .w-src-newsletters { --w-src: var(--w-newsletters); }
 .chip.w-pets { color: var(--w-pets); }
 .chip.w-pets.on { background: var(--w-pets); color: var(--on-ink); }
+/* the topic row under the source chips: lighter, so the two rows read as two */
+.w-topics .chip { height: 28px; background: transparent; border: 1px solid var(--line); }
+.w-topics .chip.on { background: var(--ink); color: var(--on-ink); border-color: transparent; }
 .feed.wire .card[class*="w-src-"], .sq-feed .card[class*="w-src-"] { box-shadow: inset 3px 0 0 var(--w-src); }
 .feed.wire .card.w-alt { background: var(--w-alt-tint); }
 .feed.wire .card.w-local { background: var(--w-local-tint); }
