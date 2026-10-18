@@ -2519,7 +2519,8 @@ async function theGames(browser, base) {
 
   await group('Games, challenge fails soft', async () => {
     const { ctx, page, errors } = await newPage(browser, base);
-    await page.goto(base + '/all-day/#games/challenge:queen-city-chess');
+    /* a one-player game: never on the allowlist, whatever the Hangout adds */
+    await page.goto(base + '/all-day/#games/challenge:pothole-patrol');
     await page.waitForSelector(gmPanel + ' [data-refused]', { timeout: 15000 });
     check(/can’t host a room right now/.test(await page.$eval(gmPanel + ' [data-refused]', (n) => n.textContent)), 'a game off the allowlist: that game can’t host a room right now', '');
     check(await page.$$eval(gmPanel + ' [data-pick]', (b) => b.length) > 0, 'and the ones that can are still offered', '');
@@ -2583,7 +2584,32 @@ async function theGames(browser, base) {
     const demo = await gamesDemo();
     const live = demo.catalog.games.filter((g) => g.live);
     const cabs = await page.$$eval(gmPanel + ' .gm-cab', (n) => n.map((x) => ({ k: x.dataset.k, play: x.querySelector('.gm-acts a').href, scr: x.querySelector('.gm-scr').href, inv: x.querySelector('[data-invite]').getAttribute('href') })));
-    check(cabs.length === 5 && cabs[0].k === 'cab:pothole-patrol', 'one big cabinet (the newest game) and four more', cabs.map((c) => c.k).join(', '));
+    check(cabs.length === 5 && cabs[0].k === 'cab:pothole-patrol', 'one wide cabinet (the newest game) and four more', cabs.map((c) => c.k).join(', '));
+    /* the newest game is a row with a small picture, not a banner; every cabinet with a picture shows a real one */
+    const feat = await page.$eval(gmPanel + ' .gm-cab.feat', (n) => { const c = n.getBoundingClientRect(), s = n.querySelector('.gm-scr').getBoundingClientRect(); return { cw: c.width, sw: s.width, sh: s.height, ch: c.height }; });
+    check(feat.sw < feat.cw / 2 && feat.sh <= 120, 'the newest game’s picture sits beside its words, small', JSON.stringify(feat));
+    const grid = await page.$eval(gmPanel + ' .gm-grid .gm-scr', (n) => { const b = n.getBoundingClientRect(); return b.height / b.width; });
+    check(grid < 0.7, 'the grid’s screens are shorter than 4:3', String(grid));
+    const shots = await readdir(path.join(APP, 'assets/games'));
+    await page.click(gmPanel + ' [data-allgames]');
+    await page.waitForFunction((p) => [...document.querySelectorAll(p + ' .gm-scr.shot img')].every((i) => i.complete), gmPanel, { timeout: 8000 }).catch(() => {});
+    const pics = await page.$$eval(gmPanel + ' .gm-cab, ' + gmPanel + ' .gm-quiz', (n) => n.map((x) => { const i = x.querySelector('.gm-scr img'); return { slug: x.dataset.slug, img: i ? i.getAttribute('src') : '', w: i ? i.naturalWidth : 0, emo: !!x.querySelector('.gm-emo'), alt: i ? i.getAttribute('alt') : null }; }));
+    const want = (slug) => shots.includes(slug + '.webp');
+    check(pics.length > 5 && pics.every((p) => (want(p.slug) ? p.img === 'assets/games/' + p.slug + '.webp' && p.w === 480 && !p.emo && p.alt === '' : !p.img && p.emo)),
+      'a game with a gameplay picture shows it (480 wide, loaded, decorative); one without keeps its emoji', JSON.stringify(pics.filter((p) => (want(p.slug) ? p.w !== 480 : !p.emo))));
+    check(pics.filter((p) => p.img).length >= pics.length - 2, 'nearly every demo cabinet has a picture', pics.filter((p) => !p.img).map((p) => p.slug).join(', '));
+    const src = await readFile(path.join(APP, 'js/modes/games.js'), 'utf8');
+    const listed = [...(/const SHOTS = new Set\(\[([\s\S]*?)\]\)/.exec(src) || ['', ''])[1].matchAll(/'([a-z0-9-]+)'/g)].map((m) => m[1]).sort();
+    check(JSON.stringify(listed) === JSON.stringify(shots.filter((f) => f.endsWith('.webp')).map((f) => f.replace(/\.webp$/, '')).sort()) && shots.every((f) => f.endsWith('.webp')),
+      'SHOTS in games.js names exactly the pictures in assets/games', listed.length + ' listed, ' + shots.length + ' files');
+    await page.click(gmPanel + ' [data-arcade] [data-chip="all"]');
+    /* a picture that doesn't load falls back to the game's emoji, New tag and all */
+    const miss = await newPage(browser, base, { routes: [[/\/assets\/games\/pothole-patrol\.webp/, 'not a picture']] });   // answered as JSON: the image can't decode
+    await miss.page.goto(base + '/all-day/?demo=1#games');
+    await miss.page.waitForSelector(gmPanel + ' .gm-cab.feat .gm-emo', { timeout: 8000 }).catch(() => {});
+    const fb = await miss.page.$eval(gmPanel + ' .gm-cab.feat .gm-scr', (n) => ({ img: !!n.querySelector('img'), emo: !!n.querySelector('.gm-emo'), shot: n.classList.contains('shot'), tag: !!n.querySelector('.gm-new') }));
+    check(!fb.img && fb.emo && !fb.shot && fb.tag, 'a picture that fails to load gives way to the emoji, New tag kept', JSON.stringify(fb));
+    await miss.ctx.close();
     check(cabs.every((c) => c.play === 'https://play.btownbrief.com/' + c.k.slice(4) + '/' && c.scr === c.play), 'the screen and Play both open the game on the arcade', JSON.stringify(cabs[0]));
     const body = decodeURIComponent(cabs[0].inv.replace(/^sms:\?&body=/, ''));
     check(/^sms:\?&body=/.test(cabs[0].inv) && body === 'Play Pothole Patrol with me? https://play.btownbrief.com/pothole-patrol/', 'Invite is a text message with the game’s link and no number', cabs[0].inv);
@@ -2790,8 +2816,9 @@ async function theGames(browser, base) {
     await page.goto(base + '/all-day/?demo=1#games/vr');
     await page.waitForSelector(gmPanel + ' [data-invr]', { timeout: 15000 });
     const picks = await page.$$eval(gmPanel + ' .gm-vr', (n) => n.map((x) => [x.querySelector('.t').textContent, x.querySelector('a').href, x.querySelector('a').target]));
-    check(picks.length === 4 && picks.slice(0, 3).every(([, h, t]) => /^https:\/\/www\.meta\.com\/experiences\/[a-z0-9-]+\/\d+\/$/.test(h) && t === '_blank'), 'three picks, each on its official Meta store page, and the headsets', JSON.stringify(picks));
-    check(/Thrill of the Fight/.test(picks[0][0]) && /Eleven Table Tennis/.test(picks[1][0]), 'boxing and ping pong lead', '');
+    check(picks.length === 3 && picks.every(([, h, t]) => /^https:\/\/www\.meta\.com\/experiences\/[a-z0-9-]+\/\d+\/$/.test(h) && t === '_blank'), 'three picks, each on its official Meta store page', JSON.stringify(picks));
+    check(/Thrill of the Fight/.test(picks[0][0]) && /Eleven Table Tennis/.test(picks[1][0]) && /GOLF\+/.test(picks[2][0]), 'boxing, ping pong and golf: Stephen’s three', picks.map((p) => p[0]).join(' / '));
+    check(!/First Encounters|VR at home|Quest 3/.test(await page.$eval(gmPanel + ' [data-slot="vr"]', (n) => n.innerText)), 'no mixed-reality starter and no headset ad', '');
     check(!/\$\d|sale|% off/i.test(await page.$eval(gmPanel + ' [data-slot="vr"]', (n) => n.innerText)), 'no prices and no sale claims', '');
     check(await page.$eval(gmPanel + ' [data-invr]', (b) => b.dataset.invr) === '2', 'it counts the neighbors who posted a VR game', '');
     await page.click(gmPanel + ' [data-invr]');

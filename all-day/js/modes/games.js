@@ -5,9 +5,9 @@
      quiz's own data/questions.json), one minute on the clock. It is the one
      game that sends the reader to the newsletter, so it leads the tab and
      is left out of the arcade's cabinets below.
-   - The arcade: the arcade's own games as cabinets, the way its homepage
-     shows them (the emoji on a coloured screen, the name, the pitch, this
-     month's champ, Play), newest first, with chips for New, each of the
+   - The arcade: the arcade's own games as cabinets (a picture of the game
+     being played, or its emoji on a coloured screen, the name, the pitch,
+     this month's champ, Play), newest first, with chips for New, each of the
      arcade's sections and Out in Burlington. Every cabinet has Invite: a
      text message with the game's link.
    - What people are playing: the `games` board's `playing` posts (game and
@@ -20,8 +20,8 @@
      handles on, with their gaming kinds only (boards.handlesRecent), each a
      chip that copies the name. "Add your gamertag" opens the profile sheet
      at its Games fold. Nothing here keeps a handle.
-   - VR corner: Stephen's picks on the Quest store, the headsets, and how
-     many neighbors posted a VR game.
+   - VR corner: Stephen's picks on the Quest store, and how many neighbors
+     posted a VR game.
    - Challenge a neighbor: the games on the Hangout's challenge allowlist
      (church-street-hangout/js/challenge.js), kept by the catalog only while
      each still opens a room from ?join=CODE. A room's seat is tied to a
@@ -81,6 +81,19 @@ const CABS = 4;           // cabinets in the grid before "All n games"
 const POLL = 8;           // playing rows before "n more"
 const TAGS = 12;          // gamertag rows before "n more"
 const SLUG = /^[a-z0-9-]{1,40}$/;
+/* The games with a moment of real play as their picture (assets/games/<slug>.webp,
+   taken by tests/game-shots.mjs). A game not on this list, a new one or one that
+   needs a live room to show anything, keeps its emoji on a coloured screen. */
+const SHOTS = new Set([
+  'archive', 'battle-on-the-lake', 'btown-cribbage', 'btown-crossings', 'btown-hangman', 'btown-riddle',
+  'btown-wordle', 'burlington-days', 'challenges', 'champlain-glider', 'church-street-checkers',
+  'church-street-runner', 'church-street-skate', 'church-street-zombies', 'crazy-eights', 'creemee-drop',
+  'dibs', 'earlier-or-later', 'filed', 'flappy-champ', 'four-in-a-rowboat', 'front-porch-dominoes',
+  'heads-up-btown', 'higher-or-lower', 'kings-corner', 'lake-breath', 'little-local', 'maple-mancala',
+  'maple-scramble', 'maples-to-maples', 'news-quiz', 'north-star-hop', 'peak-foliage', 'pothole-patrol',
+  'queen-city-chess', 'rank-what-you-know', 'real-or-fake', 'snowball-slinger', 'stay-awhile', 'street-yeet',
+  'sugarbush-squares', 'tap-the-maple', 'trivia-ladder', 'where-in-btown', 'whos-playing'
+]);
 /* The featured game. The catalog may or may not list it (the demo's does
    not), so the tab carries what it needs to draw the card. Five questions and
    a sixty-second clock are the quiz's own (news-quiz/data/questions.json). */
@@ -92,18 +105,18 @@ const PLAT = Object.fromEntries(PLATFORMS);
 /* the profile's Games fold: the only handle kinds this tab ever asks for */
 const GAMER = ['psn', 'xbox', 'steam', 'switch', 'discord', 'epic', 'riot', 'chess'];
 
-/* The VR corner. Stephen's picks (boxing, ping pong) and one mixed-reality
-   starter, each on its official Meta store page (checked 2026-10-17). No
-   prices and no sales here: those change by the day. */
+/* The VR corner: Stephen's three picks (boxing, ping pong, golf), each on
+   its official Meta store page (checked 2026-10-18; Meta has sold these
+   three together as one sports pack). No prices and no sales here: those
+   change by the day. */
 const VR = [
   { k: 'vr:thrill-of-the-fight-2', emoji: '🥊', name: 'The Thrill of the Fight 2', what: 'Boxing',
     url: 'https://www.meta.com/experiences/the-thrill-of-the-fight-2/5479643155418422/' },
   { k: 'vr:eleven-table-tennis', emoji: '🏓', name: 'Eleven Table Tennis', what: 'Ping pong',
     url: 'https://www.meta.com/experiences/eleven-table-tennis/1995434190525828/' },
-  { k: 'vr:first-encounters', emoji: '👾', name: 'First Encounters', what: 'Mixed reality, in your own room',
-    url: 'https://www.meta.com/experiences/first-encounters/6236169136472090/' },
+  { k: 'vr:golf-plus', emoji: '⛳', name: 'GOLF+', what: 'Golf',
+    url: 'https://www.meta.com/experiences/golf/2412327085529357/' },
 ];
-const VR_HOME = { k: 'vr:quest', emoji: '🥽', name: 'VR at home', what: 'Meta Quest 3 and Quest 3S', url: 'https://www.meta.com/quest/quest-3s/' };
 
 const arr = (v) => (Array.isArray(v) ? v : []);
 const plural = (n, one, many) => n + ' ' + (n === 1 ? one : many);
@@ -638,15 +651,26 @@ function arcadeList(f) {
   return fresh.concat(rest);
 }
 
+/* a cabinet's screen: a moment of play when there is one, else the emoji
+   (also when the picture doesn't load: offline, or a deploy half done) */
+function screen(slug, emoji, extra) {
+  const emo = '<span class="gm-emo" aria-hidden="true">' + esc(emoji || '🕹️') + '</span>';
+  const a = el('a', 'gm-scr' + (SHOTS.has(slug) ? ' shot' : ''), (SHOTS.has(slug)
+    ? '<img src="assets/games/' + esc(slug) + '.webp" alt="" width="480" height="360" loading="lazy" decoding="async">' : emo) + (extra || ''));
+  const img = a.querySelector('img');
+  if (img) img.addEventListener('error', () => { a.classList.remove('shot'); img.insertAdjacentHTML('beforebegin', emo); img.remove(); }, { once: true });
+  a.href = playUrl(slug); a.target = '_blank'; a.rel = 'noopener';
+  a.style.setProperty('--mk', 'var(--mark-' + hue(slug) + ')');
+  return a;
+}
+
 function cabinet(g, feat) {
   const c = el('article', 'gm-cab' + (feat ? ' feat' : ''));
   c.dataset.k = 'cab:' + g.slug;
   c.dataset.slug = g.slug;
   const fresh = newGames().includes(g);
   const ch = champOf(g.slug);
-  const scr = el('a', 'gm-scr', '<span class="gm-emo" aria-hidden="true">' + esc(g.emoji || '🕹️') + '</span>' + (fresh ? '<span class="tag gm-new">New</span>' : ''));
-  scr.href = playUrl(g.slug); scr.target = '_blank'; scr.rel = 'noopener';
-  scr.style.setProperty('--mk', 'var(--mark-' + hue(g.slug) + ')');
+  const scr = screen(g.slug, g.emoji, fresh ? '<span class="tag gm-new">New</span>' : '');
   scr.setAttribute('aria-label', 'Play ' + g.name);
   const body = el('div', 'gm-cab-b', '<h3 class="gm-name">' + esc(g.name) + '</h3>' +
     (g.pitch ? '<p class="gm-pitch">' + esc(g.pitch) + '</p>' : '') +
@@ -671,9 +695,7 @@ function drawQuiz(host) {
   c.dataset.sec = 'quiz';
   c.dataset.k = 'cab:' + QUIZ.slug;
   c.dataset.slug = QUIZ.slug;
-  const scr = el('a', 'gm-scr', '<span class="gm-emo" aria-hidden="true">' + esc(QUIZ.emoji) + '</span>');
-  scr.href = playUrl(QUIZ.slug); scr.target = '_blank'; scr.rel = 'noopener';
-  scr.style.setProperty('--mk', 'var(--mark-' + hue(QUIZ.slug) + ')');
+  const scr = screen(QUIZ.slug, QUIZ.emoji);
   scr.setAttribute('aria-label', 'Take the ' + QUIZ.name);
   const body = el('div', 'gm-cab-b', '<h3 class="gm-name">' + esc(QUIZ.name) + '</h3><p class="gm-pitch">' + esc(QUIZ.pitch) + '</p>' +
     (ch ? '<p class="gm-champ">' + ICON.trophy + '<span><b>' + esc(ch.champ) + '</b> · ' + esc(num(ch.score)) + '</span></p>' : ''));
@@ -1022,7 +1044,7 @@ function vrRow(v) {
   const r = el('div', 'lrow gm-vr');
   r.dataset.k = v.k;
   r.innerHTML = '<span class="th bare" aria-hidden="true">' + esc(v.emoji) + '</span><div><div class="t">' + esc(v.name) + '</div><div class="s">' + esc(v.what) + '</div></div>';
-  const a = el('a', 'pillbtn', (v === VR_HOME ? 'Meta ' : 'Store ') + ICON.ext);
+  const a = el('a', 'pillbtn', 'Store ' + ICON.ext);
   a.href = safeHref(v.url); a.target = '_blank'; a.rel = 'noopener';
   a.setAttribute('aria-label', v.name + ' on the Meta store');
   r.appendChild(a);
@@ -1031,7 +1053,6 @@ function vrRow(v) {
 function drawVr(host) {
   sec(host, 'VR corner', null, 'vr');
   VR.forEach((v) => host.appendChild(vrRow(v)));
-  host.appendChild(vrRow(VR_HOME));
   const inVr = arr(G.posts && G.posts.playing).filter((p) => platOf(p) === 'vr').length;
   const row = el('div', 'linkrow gm-vr-go');
   if (inVr) {
