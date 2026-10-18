@@ -1665,14 +1665,14 @@
   ok   Food, Open now on a frozen Burlington clock (live, a reader in Los Angeles) › the data has a place that closes at 10 pm on Fridays
   ok   Food, Open now on a frozen Burlington clock (live, a reader in Los Angeles) › 9 pm Friday: 99 Restaurants is open
   ok   Food, Open now on a frozen Burlington clock (live, a reader in Los Angeles) › and says it is open until 10 pm
-  ok   Food, Open now on a frozen Burlington clock (live, a reader in Los Angeles) › 9 pm: Open now lists exactly the places open then (99)
+  ok   Food, Open now on a frozen Burlington clock (live, a reader in Los Angeles) › 9 pm: Open now lists exactly the places open then (100)
   ok   Food, Open now on a frozen Burlington clock (live, a reader in Los Angeles) › no place shows twice
   ok   Food, Open now on a frozen Burlington clock (live, a reader in Los Angeles) › the late chip shows its 45 places and says so
   ok   Food, Open now on a frozen Burlington clock (live, a reader in Los Angeles) › the patio chip shows its 14 places and says so
   ok   Food, Open now on a frozen Burlington clock (live, a reader in Los Angeles) › the hh chip shows its 7 places and says so
-  ok   Food, Open now on a frozen Burlington clock (live, a reader in Los Angeles) › the cheap chip shows its 50 places and says so
+  ok   Food, Open now on a frozen Burlington clock (live, a reader in Los Angeles) › the cheap chip shows its 49 places and says so
   ok   Food, Open now on a frozen Burlington clock (live, a reader in Los Angeles) › the deal chip shows its 12 places and says so
-  ok   Food, Open now on a frozen Burlington clock (live, a reader in Los Angeles) › the open chip shows its 99 places and says so
+  ok   Food, Open now on a frozen Burlington clock (live, a reader in Los Angeles) › the open chip shows its 100 places and says so
   ok   Food, Open now on a frozen Burlington clock (live, a reader in Los Angeles) › the chips really do change the count
   ok   Food, Open now on a frozen Burlington clock (live, a reader in Los Angeles) › “Full reviews on Google” opens the place by its place id
   ok   Food, Open now on a frozen Burlington clock (live, a reader in Los Angeles) › and says what it is
@@ -1806,7 +1806,7 @@
   ok   People, live: Stephen’s meetups, the clubs, an empty board › an event in both sources shows once
   ok   People, live: Stephen’s meetups, the clubs, an empty board › and no Meetup interest count
   ok   People, live: Stephen’s meetups, the clubs, an empty board › the mixers: seven days from today
-  ok   People, live: Stephen’s meetups, the clubs, an empty board › with the calendar’s mixers counted on each (36 this week)
+  ok   People, live: Stephen’s meetups, the clubs, an empty board › with the calendar’s mixers counted on each (35 this week)
   ok   People, live: Stephen’s meetups, the clubs, an empty board › a day’s rows: each links to its event page, none of them his
   ok   People, live: Stephen’s meetups, the clubs, an empty board › and no kids’ or teens’ event is a mixer
   ok   People, live: Stephen’s meetups, the clubs, an empty board › today’s are the calendar’s, past ones gone
@@ -2090,8 +2090,9 @@
   ok   Run clubs, What Now: nothing in the window says so and names the next (live, 1280) › which opens on People, on Fitness, its sheet up
   ok   Run clubs, What Now: nothing in the window says so and names the next (live, 1280) › no console errors
   ok   On Air, demo › nothing autoplays: the shell’s audio is paused and no frame is loaded
-  ok   On Air, demo › the chip row is a table of contents: Out loud, Btown TV, Live, Podcasts, Playlists, Past nights
-  ok   On Air, demo › the sections run in that order
+  ok   On Air, demo › the chip row is a table of contents: Btown TV, Live, Past nights, Out loud, Podcasts, Playlists
+  ok   On Air, demo › what changes daily first: tonight, live and past nights, then the Brief out loud, then podcasts (Stephen, 2026-10-18: not videos, podcasts, videos)
+  ok   On Air, demo › Btown TV tonight opens the tab, high on the first screen
   ok   On Air, demo › no section carries an explanatory subtitle
   ok   On Air, demo › no end-of-tab line about when things land
   ok   On Air, demo › a chip scrolls to its section
@@ -2112,16 +2113,16 @@
   ok   On Air, demo › demo: no Supabase call
   ok   On Air, demo › no console errors
   ok   On Air, live › nothing autoplays
-  ok   On Air, live › today’s clip: the card says today and its length
+  ok   On Air, live › today’s edition: the card says so and how long it runs
   ok   On Air, live › live: the Brief’s own show is first in Podcasts
   ok   On Air, live › live: data/playlists.json is still TODO placeholders, so no Playlists section and no chip
   ok   On Air, live › Btown TV: “Play tonight on your TV” opens tonight’s playlist in a new tab
   ok   On Air, live › under the Btown TV header, before the rail, with the play and external icons
   ok   On Air, live › live: tonight’s local picks, the pick and the Burlington & Vermont shelf
-  ok   On Air, live › the transcript hides the voice’s pacing marks ([short pause])
-  ok   On Air, live › no mention of AI on the card or the transcript
-  ok   On Air, live › the card says when it is read
-  ok   On Air, live › “Read the three-minute recap” shows the script the voice read
+  ok   On Air, live › the card says what it is (the newsletter itself) and when a new one comes
+  ok   On Air, live › no mention of AI, and nothing calls it a recap
+  ok   On Air, live › “Read this edition” opens that edition’s own page
+  ok   On Air, live › no transcript button and no waveform: the card is one row and its controls
   ok   On Air, live › play loads today’s MP3 from the wire-audio branch into the shell’s player
   ok   On Air, live › the Brief plays at 1.25x by default, pitch kept
   ok   On Air, live › 1.5x speeds up the playing clip at once, no reload
@@ -2171,20 +2172,35 @@
   ok   On Air, more of the edition and past nights › Past nights stays below
   ok   On Air, more of the edition and past nights › Everything: “Last night, local and beyond”
   ok   On Air, more of the edition and past nights › no console errors
+  ok   On Air, see as a list › every video rail can turn: tonight’s picks, the rest of the night, Live and Past nights
+  ok   On Air, see as a list › sideways by default, “See as a list” above each rail
+  ok   On Air, see as a list › no button at the foot of a sideways row
+  ok   On Air, see as a list › each button names its rail for a screen reader, the visible words first
+  ok   On Air, see as a list › the rest of the night becomes a list you scroll down, every card on screen
+  ok   On Air, see as a list › the thumbnail beside a bigger title (13 to 15 px)
+  ok   On Air, see as a list › and the sideways progress bar goes
+  ok   On Air, see as a list › “See as a row” above it, and again at its foot
+  ok   On Air, see as a list › the other rails keep their own setting
+  ok   On Air, see as a list › remembered on this phone
+  ok   On Air, see as a list › still a list after a reload
+  ok   On Air, see as a list › the button at the foot folds it back and brings you to the top of it
+  ok   On Air, see as a list › no console errors
   ok   On Air, speed and the newsletter › three speeds on the card, 1.25x unless chosen
   ok   On Air, speed and the newsletter › a labelled group
   ok   On Air, speed and the newsletter › 1.5x picked
   ok   On Air, speed and the newsletter › and remembered on this phone
   ok   On Air, speed and the newsletter › still 1.5x after a reload
-  ok   On Air, speed and the newsletter › “Read the whole Brief at btownbrief.com” opens the newsletter in a new tab
-  ok   On Air, speed and the newsletter › the transcript says it is the recap, the newsletter says it is the whole Brief (Stephen, 2026-10-17)
-  ok   On Air, speed and the newsletter › stacked, each full width at 390, nothing cut off
+  ok   On Air, speed and the newsletter › “Read this edition” opens the edition the clip reads, in a new tab
+  ok   On Air, speed and the newsletter › a small card (Stephen, 2026-10-18): at 390 wide it is under 190 px tall, the play button, speeds and link all inside it
   ok   On Air, speed and the newsletter › no console errors
   ok   On Air, the audio card › no clip: no audio card, no section, no chip
   ok   On Air, the audio card › none: no console errors
-  ok   On Air, the audio card › no clip today: the latest one, with its date (Saturday, October 17)
-  ok   On Air, the audio card › the card says when it is read; the header carries no subtitle
-  ok   On Air, the audio card › yesterday: no console errors
+  ok   On Air, the audio card › the retired daily recap’s clips (no kind) never show, even before the first edition run prunes them
+  ok   On Air, the audio card › recap: no console errors
+  ok   On Air, the audio card › no edition today: the latest one, with its date (October 14)
+  ok   On Air, the audio card › titled by its weekday
+  ok   On Air, the audio card › the header carries no subtitle
+  ok   On Air, the audio card › older: no console errors
   ok   On Air, the Brief plays › today: the play button loads 2026-10-18.mp3 from the wire-audio branch
   ok   On Air, the Brief plays › today: the play promise resolves
   ok   On Air, the Brief plays › today: and the clip is actually playing: its clock moves past half a second
@@ -2193,14 +2209,14 @@
   ok   On Air, the Brief plays › today: the button turns to pause and the player is up
   ok   On Air, the Brief plays › today: a second tap pauses
   ok   On Air, the Brief plays › today: no console errors
-  ok   On Air, the Brief plays › yesterday: the play button loads 2026-10-17.mp3 from the wire-audio branch
-  ok   On Air, the Brief plays › yesterday: the play promise resolves
-  ok   On Air, the Brief plays › yesterday: and the clip is actually playing: its clock moves past half a second
-  ok   On Air, the Brief plays › yesterday: served as audio/mpeg
-  ok   On Air, the Brief plays › yesterday: at the Brief’s 1.25x
-  ok   On Air, the Brief plays › yesterday: the button turns to pause and the player is up
-  ok   On Air, the Brief plays › yesterday: a second tap pauses
-  ok   On Air, the Brief plays › yesterday: no console errors
+  ok   On Air, the Brief plays › older: the play button loads 2026-10-14.mp3 from the wire-audio branch
+  ok   On Air, the Brief plays › older: the play promise resolves
+  ok   On Air, the Brief plays › older: and the clip is actually playing: its clock moves past half a second
+  ok   On Air, the Brief plays › older: served as audio/mpeg
+  ok   On Air, the Brief plays › older: at the Brief’s 1.25x
+  ok   On Air, the Brief plays › older: the button turns to pause and the player is up
+  ok   On Air, the Brief plays › older: a second tap pauses
+  ok   On Air, the Brief plays › older: no console errors
   ok   On Air, the Brief plays › WebKit: the play button starts the clip at 1.25x and its clock moves
   ok   On Air, the Brief plays › WebKit: no console errors
   ok   On Air, the Brief plays › the test clip runs about a minute
@@ -2274,7 +2290,13 @@
   ok   Games, new this month › a #games/new link lands there
   ok   Games, new this month › no console errors
   ok   Games, the arcade up front › the News Quiz, then the games, then the people, then VR; the leaderboard below
-  ok   Games, the arcade up front › one big cabinet (the newest game) and four more
+  ok   Games, the arcade up front › one wide cabinet (the newest game) and four more
+  ok   Games, the arcade up front › the newest game’s picture sits beside its words, small
+  ok   Games, the arcade up front › the grid’s screens are shorter than 4:3
+  ok   Games, the arcade up front › a game with a gameplay picture shows it (480 wide, loaded, decorative); one without keeps its emoji
+  ok   Games, the arcade up front › nearly every demo cabinet has a picture
+  ok   Games, the arcade up front › SHOTS in games.js names exactly the pictures in assets/games
+  ok   Games, the arcade up front › a picture that fails to load gives way to the emoji, New tag kept
   ok   Games, the arcade up front › the screen and Play both open the game on the arcade
   ok   Games, the arcade up front › Invite is a text message with the game’s link and no number
   ok   Games, the arcade up front › a cabinet shows this month’s champ
@@ -2334,8 +2356,9 @@
   ok   Games, gamertags › “Add your gamertag” opens the profile at its Games fold, on the first box
   ok   Games, gamertags › the demo never calls Supabase
   ok   Games, gamertags › no console errors
-  ok   Games, VR corner › three picks, each on its official Meta store page, and the headsets
-  ok   Games, VR corner › boxing and ping pong lead
+  ok   Games, VR corner › three picks, each on its official Meta store page
+  ok   Games, VR corner › boxing, ping pong and golf: Stephen’s three
+  ok   Games, VR corner › no mixed-reality starter and no headset ad
   ok   Games, VR corner › no prices and no sale claims
   ok   Games, VR corner › it counts the neighbors who posted a VR game
   ok   Games, VR corner › and that count opens the poll on VR
@@ -2844,7 +2867,7 @@
   ok   Habits, swipe to archive with Undo, drag and keys to reorder, edit (demo, 1280, dark) › habits: at most 2 subnav rows
   ok   Habits, swipe to archive with Undo, drag and keys to reorder, edit (demo, 1280, dark) › no console errors
   ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › twenty habits, in order
-  ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › twenty habits and a year of taps: a tap still shows at once (11, 10, 10, 10 ms)
+  ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › twenty habits and a year of taps: a tap still shows at once (10, 10, 10, 9 ms)
   ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › the heat map is all there, and four taps leave it as it was
   ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › every row keeps its seven dots and its 48px tap
   ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › the list is longer than the screen, and the panel scrolls

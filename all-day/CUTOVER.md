@@ -26,7 +26,7 @@ begin on their own once the merge lands (times are Burlington time):
 | Job (Actions tab name) | When | What it does | Where it writes |
 |---|---|---|---|
 | Curate the Wire | every hour at :07 | tags new items, ranks up to 40 picks, writes the day's paper | the `wire-data` branch |
-| The Brief, out loud | 7 am every day | Opus writes a three-minute script from the Wire's local picks; ElevenLabs reads it | the `wire-audio` branch |
+| The Brief, out loud | every hour at :23, 8 am to midnight | when a new newsletter edition is in the feed, ElevenLabs reads its intro and local news word for word (about $1.50 an edition) | the `wire-audio` branch |
 | Refresh games catalog | 6:35 am every day (5:35 am in winter) | the arcade's list of games for the Games tab | `data/games-catalog.json` on main |
 | Refresh the Watch tab's films | Mondays, 6:20 am (5:20 am in winter) | the Watch tab's film list from TMDB | the `films-data` branch |
 | Refresh Reddit intake | every hour at :41 | the Reddit bridge for when Reddit's RSS ends on Nov 13 | the `reddit-data` branch |

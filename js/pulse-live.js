@@ -538,7 +538,7 @@
 
     if (Array.isArray(things)) {
       shuffle(things.slice()).slice(0, 24).forEach(function (th) {
-        if (!th || !th.name) return;
+        if (!th || !th.name || th.closed) return;
         // the pitch beats the taxonomy: lead with why it's special
         var why = String(th.why_special || th.blurb || '').split(/(?<=[.!?])\s/)[0] || '';
         if (why.length > 100) why = why.slice(0, 97).replace(/\s+\S*$/, '') + '…';

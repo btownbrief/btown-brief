@@ -1,6 +1,6 @@
 {
   "_comment": "Instagram accounts the All Day photo feed reads (the Wire's Photos view, Food's Their food, Vintage's New in). HAND-CURATED: nobody's posts get in unless their handle is here, except the @btownbrief tagged shelf. One object per account. `tier` is how often we pay one Scrape Creators credit to check it: 1 = every run (twice a day), 2 = once a Burlington day, 3 = once a week, rotating, an even slice a day. `category` is what kind of picture it is, for the Photos chips: food, venue (bars, cafes, music venues: the vibe checks), events (posters and the accounts that post them), shop (vintage), pets, scenic (photographers, city and landscape accounts), other. `food: true` puts a non-food account's posts on the Food tab as well (a bar, a brewery). `s: see` marks the creator accounts the retired Instagram tab showed in its SEE half; it is carried on posts for older readers and means nothing else. The monthly credit budget is MONTHLY_CREDIT_BUDGET in scripts/build_instagram.py; `python3 scripts/build_instagram.py --dry-run` prints what a roster costs. Vetting: the original DO handles in the newsletter's reference/instagram-sources.md, SEE handles 2026-08-30 against the live profile API, restaurants (PR #308) and vintage shops (PR #311) as linked from each business's own website, and the 2026-10-17 venue, events, pets and scenic additions the same way. A dormant account still costs its credit, so prune ones that stop posting.",
-  "updated": "2026-10-17",
+  "updated": "2026-10-18",
   "tagged_block": [],
   "accounts": [
     {
@@ -2000,6 +2000,131 @@
       "tier": 3,
       "category": "venue",
       "food": true
+    },
+    {
+      "h": "themakeryvt",
+      "tier": 3,
+      "category": "events"
+    },
+    {
+      "h": "sandboxvermont",
+      "tier": 3,
+      "category": "other"
+    },
+    {
+      "h": "peakmacaya_coop",
+      "tier": 3,
+      "category": "food"
+    },
+    {
+      "h": "mudcraftstudio",
+      "tier": 3,
+      "category": "events"
+    },
+    {
+      "h": "vermonthandworks",
+      "tier": 3,
+      "category": "events"
+    },
+    {
+      "h": "old_town_cafe_comics",
+      "tier": 3,
+      "category": "other"
+    },
+    {
+      "h": "sblibrary",
+      "tier": 3,
+      "category": "events"
+    },
+    {
+      "h": "sherpafoods",
+      "tier": 3,
+      "category": "food"
+    },
+    {
+      "h": "oldspokeshome",
+      "tier": 3,
+      "category": "other"
+    },
+    {
+      "h": "winooski_wheels",
+      "tier": 3,
+      "category": "other"
+    },
+    {
+      "h": "arthoundgallery",
+      "tier": 3,
+      "category": "other"
+    },
+    {
+      "h": "bespokebest",
+      "tier": 3,
+      "category": "other"
+    },
+    {
+      "h": "madamcutlerandco",
+      "tier": 3,
+      "category": "other"
+    },
+    {
+      "h": "mustloveyarn",
+      "tier": 3,
+      "category": "other"
+    },
+    {
+      "h": "burlingtonoddfellows",
+      "tier": 3,
+      "category": "events"
+    },
+    {
+      "h": "heinebergseniorcenter",
+      "tier": 3,
+      "category": "events"
+    },
+    {
+      "h": "essexartleague",
+      "tier": 3,
+      "category": "events"
+    },
+    {
+      "h": "buckleyprojects",
+      "tier": 3,
+      "category": "other"
+    },
+    {
+      "h": "vermontviolins",
+      "tier": 3,
+      "category": "other"
+    },
+    {
+      "h": "cswdvt",
+      "tier": 3,
+      "category": "other"
+    },
+    {
+      "h": "conantvt",
+      "tier": 3,
+      "category": "other"
+    },
+    {
+      "h": "deadlymartha",
+      "tier": 3,
+      "category": "other"
+    },
+    {
+      "h": "autumnrecordsvt",
+      "tier": 3,
+      "category": "other"
+    },
+    {
+      "h": "huddysbagels",
+      "tier": 3,
+      "category": "food"
+    },
+    {
+      "h": "yankeepridequilts",
+      "tier": 3,
+      "category": "events"
     }
   ],
   "photo_categories": {

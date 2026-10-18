@@ -104,6 +104,35 @@ def _expand_span(title: str, blurb: str, start: datetime, end: datetime | None,
 
 # ------------------------------------------------------- Squarespace events
 
+# A listing that says the regular thing is OFF ("No Thursday Trivia: Taproom
+# Closed All Day") is a notice, not an event.
+_NOTICE_RE = re.compile(
+    r"^\s*no\s+(?:\w+\s+)?(?:trivia|bingo|karaoke)\b"
+    r"|\b(?:taproom|brewery|tasting room) closed\b|\bclosed all day\b", re.I)
+
+
+def _own_place(loc: dict, venue: str, town: str):
+    """Where a Squarespace item actually happens -> (venue, town), or None
+    when it is outside the region. A brewery's calendar also lists its
+    off-site pours: BBCO at Jay Peak's Bean & Brew Festival came through as
+    a Burlington event because the adapter stamped the brewery on every
+    item, and its Monday trivia at Grazers in Williston did too (research
+    audit, 2026-10-17). The item's own location block says where."""
+    line2 = (loc.get("addressLine2") or "").strip()
+    if not line2:
+        return venue, town
+    where = common.town_from_address(line2)
+    if where is None:
+        return None
+    title = " ".join((loc.get("addressTitle") or "").split())
+    # the brewery's own rooms ("Burlington Beer Co., Lumière Hall") stay the
+    # brewery; anywhere else keeps its own name, even in the same town
+    home = " ".join(common._norm_venue(venue).split()[:2])
+    if not title or home in common._norm_venue(title):
+        return venue, where
+    return title, where
+
+
 def _sqsp_events(base: str, path: str, *, venue: str, town: str,
                  lo: date, hi: date, who: str) -> list[dict]:
     """Squarespace events collection -> events (JSON at <path>?format=json)."""
@@ -123,7 +152,15 @@ def _sqsp_events(base: str, path: str, *, venue: str, town: str,
             end = (datetime.fromtimestamp(item["endDate"] // 1000, TZ)
                    if item.get("endDate") else None)
             excerpt = common.strip_tags(item.get("excerpt") or "")
+            if _NOTICE_RE.search(title):
+                continue
             loc = item.get("location") or {}
+            place = _own_place(loc, venue, town)
+            if place is None:
+                common.log(f"  breweries/{who}: outside the area, skipped: "
+                           f"{title!r} ({loc.get('addressLine2')})")
+                continue
+            ev_venue, ev_town = place
             address = ", ".join(filter(None, [loc.get("addressLine1"),
                                               loc.get("addressLine2")])) or None
             for occ, recurring in _expand_span(title, excerpt, start, end, lo, hi, who):
@@ -132,7 +169,7 @@ def _sqsp_events(base: str, path: str, *, venue: str, town: str,
                 out.append(common.make_event(
                     source=SOURCE, title=title, url=url,
                     start=occ, end=occ_end if isinstance(occ, datetime) else None,
-                    venue=venue, address=address, town=town,
+                    venue=ev_venue, address=address, town=ev_town,
                     price=_explicit_price(f"{title} {excerpt}"),
                     description=excerpt or None, recurring=recurring))
         except Exception as e:

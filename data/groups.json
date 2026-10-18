@@ -3269,8 +3269,11 @@
      "end": "20:00",
      "where": "Burlington Beer Co.",
      "address": "180 Flynn Avenue, Burlington",
-     "note": "",
-     "season": ""
+     "note": "No trivia Thursday, Nov 5: the taproom is closed for a private party.",
+     "season": "",
+     "skip": [
+      "2026-11-05"
+     ]
     }
    ],
    "schedule_note": "",
@@ -3292,10 +3295,12 @@
     "facebook": "https://www.facebook.com/burlingtonbeer"
    },
    "checked": {
-    "date": "2026-10-17",
+    "date": "2026-10-18",
     "source": "https://www.burlingtonbeercompany.com/bbcoevents",
-    "note": "'Thursday Trivia at Burlington Beer Co. Thursday, October 22, 2026 7:00 PM 8:00 PM', 'Join us for free Thursday trivia, 7–8 PM, at Burlington Beer Co., 180 Flynn Avenue in Burlington. Trivia runs every Thursday.' Oct 29 is Halloween-themed trivia, same time.",
-    "also": []
+    "note": "'Thursday Trivia at Burlington Beer Co. Thursday, October 22, 2026 7:00 PM 8:00 PM', 'Join us for free Thursday trivia, 7–8 PM, at Burlington Beer Co., 180 Flynn Avenue in Burlington. Trivia runs every Thursday.' Oct 29 is Halloween-themed trivia, same time. Nov 5 listing (https://www.burlingtonbeercompany.com/bbcoevents/thursday-trivia-2026-11-05): 'No Thursday Trivia: Taproom Closed All Day', 'The Burlington Beer Co. taproom will be closed to regular service all day on Thursday, November 5, 2026, and open only for the private party. Thursday trivia will not take place.'",
+    "also": [
+     "https://www.burlingtonbeercompany.com/bbcoevents/thursday-trivia-2026-11-05"
+    ]
    }
   },
   {
@@ -5215,9 +5220,9 @@
     "calendar": "https://brownelllibrary.org/events/"
    },
    "checked": {
-    "date": "2026-10-17",
+    "date": "2026-10-18",
     "source": "https://brownelllibrary.org/event/current/2026-10-20/",
-    "note": "Library calendar: Current Events, Tuesdays 10:00 to 11:30 am, Kolvoord Community Room, listed Oct 20, Oct 27, Nov 3, Nov 17: 'This current events discussion group will attempt to quiet the noise and step back to reflect on what the news means'; 'in a non-judgmental framework. This discussion group is free and open to all. Registration is not required.' Cost: the page states no fee; marked free under the standing rule that public-library programs are free."
+    "note": "Library calendar: Current Events, Tuesdays 10:00 to 11:30 am, Kolvoord Community Room, listed Oct 20, Oct 27, Nov 3, Nov 17: 'This current events discussion group will attempt to quiet the noise and step back to reflect on what the news means'; 'in a non-judgmental framework. This discussion group is free and open to all. Registration is not required.' The page itself says free."
    }
   },
   {
@@ -5372,6 +5377,468 @@
     "note": "Directions page: 'meets online on Zoom and in-person. The meetings are the 2nd and 4th Wednesday of every month at 6:00 PM. The 2nd Wednesday of the month is on Zoom. The 4th Wednesday is a Hybrid meeting: in-person & online.' Next meeting Wednesday, October 28, 2026, 6:00 to 7:30, HYBRID. Home page: 'We meet the 2nd & 4th Wednesdays of the month 6:00 - 7:30 pm'; 'guests are welcome!' In-person address not stated in text (map pin and Toastmasters' club finder disagree), so it is left out.",
     "also": [
      "https://toastmastersofgreaterburlingtonvermont.toastmastersclubs.org/"
+    ]
+   }
+  },
+  {
+   "id": "dad-guild-fires-with-fathers",
+   "name": "Dad Guild Fires with Fathers",
+   "kind": "other",
+   "category": "other",
+   "what": "A monthly evening peer support circle for dads around a fire at Rock Point in Burlington, run by Dad Guild.",
+   "meets": [],
+   "schedule_note": "Third Saturday of each month, 8 to 10pm, at Rock Point (20 Rock Point Road). Next on the calendar: Nov 21 and Dec 19.",
+   "season": "year-round",
+   "where": "Rock Point, Burlington",
+   "town": "Burlington",
+   "cost": "",
+   "free": false,
+   "level": "",
+   "beginner": false,
+   "signup": {
+    "how": "RSVP through Dad Guild's registration page",
+    "url": "https://online.traxsolutions.com/dadguild/main#/search"
+   },
+   "newcomers": "Dads only. RSVP ahead through Dad Guild's registration site.",
+   "url": "https://www.dadguild.org/events/fires-with-fathers-2-whhmd-swl54-lxw5t-48xh5-9fe39-t7she-lsp4r",
+   "links": {
+    "calendar": "https://www.dadguild.org/events",
+    "instagram": "https://www.instagram.com/dadguild/"
+   },
+   "checked": {
+    "date": "2026-10-18",
+    "source": "https://www.dadguild.org/events",
+    "note": "Calendar lists 'Dads Only , Chittenden County / Fires with Fathers / Saturday, November 21, 2026 / 8:00 PM / 10:00 PM / Rock Point' and the same for 'Saturday, December 19, 2026'. Description: 'The 3rd Saturday evening of the month from 8pm-10pm at Rock Point in Burlington, this peer support group shares and connects on a deeper level while modeling vulnerability. RSVP here: https://online.traxsolutions.com/dadguild/main#/search'. Event page address '20 Rock Point Road Burlington, VT, 05408'; tagged 'RSVP , In-person'. No cost stated.",
+    "also": [
+     "https://www.dadguild.org/events/fires-with-fathers-2-whhmd-swl54-lxw5t-48xh5-9fe39-t7she-lsp4r"
+    ]
+   }
+  },
+  {
+   "id": "rock-point-bird-walks",
+   "name": "Rock Point Bird Walks",
+   "kind": "outdoors",
+   "category": "other",
+   "what": "Guided morning bird walks at Rock Point in Burlington led by local birder and naturalist Lachlan Ziegler.",
+   "meets": [],
+   "schedule_note": "The registration page calls these monthly walks; the next and last date in the current series is Saturday, Nov 21, at 8am, from Rock Point Center. Register for each walk.",
+   "season": "Series ends Nov 21, 2026",
+   "until": "2026-11-21",
+   "where": "Rock Point Center, Burlington",
+   "town": "Burlington",
+   "cost": "By donation; a free ticket code is offered if cost is a barrier",
+   "free": true,
+   "level": "All experience levels",
+   "beginner": true,
+   "signup": {
+    "how": "Reserve a ticket on Eventbrite for each walk (capacity 20)",
+    "url": "https://www.eventbrite.com/e/bird-walks-at-rock-point-center-tickets-1981017914911"
+   },
+   "newcomers": "Register ahead; walks are capped at 20 and are not dog friendly. Dress for the weather and bring binoculars if you have them (a few are on hand); walks can run past two hours, but you can leave anytime.",
+   "url": "https://www.rockpointvt.org/programs",
+   "links": {
+    "calendar": "https://www.eventbrite.com/e/bird-walks-at-rock-point-center-tickets-1981017914911"
+   },
+   "checked": {
+    "date": "2026-10-18",
+    "source": "https://www.eventbrite.com/e/bird-walks-at-rock-point-center-tickets-1981017914911",
+    "note": "Organizer 'Rock Point Commons'; 'Join us for monthly bird walks at Rock Point! Registration is required for this event! Please sign up for each walk you plan to attend. Capacity is limited to 20 participants.' 'This is not a dog-friendly event.' 'Tickets are available by donation ... If cost is a barrier for you, please use the code ROCKPOINT100 during checkout to reveal a free ticket.' 'All experience levels are welcome'. 'We will have a few binoculars and other resources available as needed. Please note that bird walks may last longer than two hours but participants may leave whenever they need to.' Embedded data: nextAvailableSession '2026-11-21T08:00:00-05', series endDate '2026-11-21T10:00:00-05:00', salesStatus 'on_sale'. Programs page still says 'Join us for our weekly bird walks at Rock Point!' and links this Eventbrite series.",
+    "also": [
+     "https://www.rockpointvt.org/programs"
+    ]
+   }
+  },
+  {
+   "id": "rock-point-stewardship",
+   "name": "Tending Rock Point Volunteer Days",
+   "kind": "outdoors",
+   "category": "gardening",
+   "what": "Every-other-Wednesday volunteer afternoons caring for the land at Rock Point: gardening, removing non-native plants and trail work.",
+   "meets": [],
+   "schedule_note": "Every other Wednesday, 3:30 to 5:30pm, at Rock Point Center. Remaining dates in the current series are Oct 28 and Nov 11; work may be cancelled or moved for weather.",
+   "season": "Current series runs through Nov 11, 2026",
+   "until": "2026-11-11",
+   "where": "Rock Point Center, Burlington",
+   "town": "Burlington",
+   "cost": "",
+   "free": false,
+   "level": "",
+   "beginner": false,
+   "signup": {
+    "how": "Sign up for a date on Eventbrite",
+    "url": "https://www.eventbrite.com/e/tending-rock-point-biweekly-volunteering-tickets-1991204527343"
+   },
+   "newcomers": "Sign up for a session and the organizer, Tyler, will send the plan for the day ahead of time. Questions go to tpastorok@diovermont.org.",
+   "url": "https://www.rockpointvt.org/programs",
+   "links": {
+    "calendar": "https://www.eventbrite.com/e/tending-rock-point-biweekly-volunteering-tickets-1991204527343"
+   },
+   "checked": {
+    "date": "2026-10-18",
+    "source": "https://www.rockpointvt.org/programs",
+    "note": "'Regular Volunteer Days / Join us every other week on Wednesday afternoons from 3:30-5:30pm to help with tending the land between workshops. Tasks may include gardening, non-native species management, trail maintenance, and more. Sign-up here: https://www.eventbrite.com/e/tending-rock-point-biweekly-volunteering-tickets-1991204527343'. Eventbrite (organizer Rock Point Commons, 20 Rock Point Rd): 'Every other Wednesday from 3:30-5:30pm'; 'Tyler will be in touch ahead of time about the plan for each day. Work may be cancelled or rescheduled depending on the weather.' 'Questions? Feel free to reach out to Tyler at tpastorok@diovermont.org'. Embedded data: nextAvailableSession '2026-10-28T15:30:00-04', series endDate '2026-11-11T17:00:00-05:00'. Readable text names no price (structured data says isFree true, price 0.0).",
+    "also": [
+     "https://www.eventbrite.com/e/tending-rock-point-biweekly-volunteering-tickets-1991204527343"
+    ]
+   }
+  },
+  {
+   "id": "oddfellows-crafternoons",
+   "name": "Crafternoons Craft & Skillshare",
+   "kind": "making",
+   "category": "crafts",
+   "what": "Sunday afternoon craft and mending sessions at the Odd Fellows Lodge on North Avenue, with guidance from experienced crafters and menders.",
+   "meets": [],
+   "schedule_note": "Select Sundays, 3 to 5pm, at the Odd Fellows Lodge. Upcoming dates on the venue calendar: Oct 25, Nov 1 and Nov 8; check the event page for the full list.",
+   "season": "year-round",
+   "where": "Burlington Odd Fellows Lodge, Burlington",
+   "town": "Burlington",
+   "cost": "",
+   "free": false,
+   "level": "",
+   "beginner": false,
+   "signup": {
+    "how": "Pick a date on the event page and RSVP",
+    "url": "https://www.burlingtonoddfellows.com/events-1/crafternoons-craft-skillshare-2026-10-18-15-00"
+   },
+   "newcomers": "Bring your own project and supplies, or just come for the company. Light refreshments are provided.",
+   "url": "https://www.burlingtonoddfellows.com/events-1/crafternoons-craft-skillshare-2026-10-18-15-00",
+   "links": {
+    "calendar": "https://www.burlingtonoddfellows.com/events"
+   },
+   "checked": {
+    "date": "2026-10-18",
+    "source": "https://www.burlingtonoddfellows.com/events-1/crafternoons-craft-skillshare-2026-10-18-15-00",
+    "note": "'CRAFTERNOONS! [Craft & Skillshare]' at '1416 North Ave, Burlington, VT 05408'. 'Other dates Sun, Oct 25, 3:00 PM / Sun, Nov 01, 3:00 PM / Sun, Nov 08, 3:00 PM View all 18 dates'. 'Join us on select Sundays for a Craft & Skillshare afternoon!' 'Guided projects and inspiration from experienced crafters, makers, & menders'; 'Light refreshments provided'; 'Bring your own ideas & supplies.' Events page: past 'Oct 11, 2026, 3:00 PM - 5:00 PM ... Sundays 3-5pm' with RSVP button. No cost stated.",
+    "also": [
+     "https://www.burlingtonoddfellows.com/events"
+    ]
+   }
+  },
+  {
+   "id": "emanata-figure-drawing",
+   "name": "Emanata Art Collective Figure Drawing",
+   "kind": "making",
+   "category": "art",
+   "what": "Weekly drop-in figure drawing with a live model, hosted by Emanata Art Collective at the Odd Fellows Lodge on North Avenue.",
+   "meets": [
+    {
+     "day": "thu",
+     "time": "19:00",
+     "end": "21:00",
+     "where": "Queen City Lodge Odd Fellows Hall",
+     "address": "1416 North Ave, Burlington",
+     "note": "",
+     "season": ""
+    }
+   ],
+   "schedule_note": "",
+   "season": "year-round",
+   "where": "Odd Fellows Hall, Burlington",
+   "town": "Burlington",
+   "cost": "Suggested donation of $15 to $20; no one turned away for lack of funds",
+   "free": false,
+   "level": "",
+   "beginner": false,
+   "signup": {
+    "how": "Drop in (an RSVP button is on the event page)",
+    "url": "https://www.burlingtonoddfellows.com/events-1/figure-drawing-18-w-valid-id-2026-10-22-19-00-1"
+   },
+   "newcomers": "18 and over; ID is checked at the door. Bring your own art supplies.",
+   "url": "https://www.burlingtonoddfellows.com/events-1/figure-drawing-18-w-valid-id-2026-10-22-19-00-1",
+   "links": {
+    "calendar": "https://www.burlingtonoddfellows.com/events"
+   },
+   "checked": {
+    "date": "2026-10-18",
+    "source": "https://www.burlingtonoddfellows.com/events-1/figure-drawing-18-w-valid-id-2026-10-22-19-00-1",
+    "note": "'Figure Drawing! [18+ w/ valid ID]' at 'Queen City Lodge Oddfellows Hall, 1416 North Ave, Burlington, VT 05408'. 'Other dates Thu, Oct 29, 7:00 PM / Thu, Nov 05, 7:00 PM / Thu, Nov 12, 7:00 PM View all 12 dates'. 'Weekly figure drawing hosted by Emanata Art Collective! Bring your own art supplies and join us for drop-in figure drawing sessions. 18+ (ID will be checked at the door) Suggested donation of $15-$20 (no one will be turned away for lack of funds) Thursdays from 7-9PM'.",
+    "also": [
+     "https://www.burlingtonoddfellows.com/events"
+    ]
+   }
+  },
+  {
+   "id": "north-end-food-pantry-volunteers",
+   "name": "North End Food Pantry Volunteers",
+   "kind": "other",
+   "category": "other",
+   "what": "Weekend morning volunteer shifts at the all-volunteer North End Food Pantry at the Odd Fellows Lodge, unloading, sorting and handing out free groceries.",
+   "meets": [
+    {
+     "day": "sat",
+     "time": "07:45",
+     "end": "10:15",
+     "where": "North End Food Pantry (Odd Fellows Lodge)",
+     "address": "1416 North Ave, Burlington",
+     "note": "Food distribution helpers; there is also an 8:45 to 10:30am shift. Email first.",
+     "season": ""
+    },
+    {
+     "day": "sun",
+     "time": "07:45",
+     "end": "10:15",
+     "where": "North End Food Pantry (Odd Fellows Lodge)",
+     "address": "1416 North Ave, Burlington",
+     "note": "Food distribution helpers; there is also an 8:45 to 10:30am shift. Email first.",
+     "season": ""
+    }
+   ],
+   "schedule_note": "Monthly clothing drive volunteers work 10:30am to 1:30pm on the last Sunday of the month (next: Oct 25). Drivers pick up donations at Hannaford North Avenue at 7:30am on Saturdays or Sundays.",
+   "season": "year-round",
+   "where": "Odd Fellows Lodge, Burlington",
+   "town": "Burlington",
+   "cost": "",
+   "free": false,
+   "level": "",
+   "beginner": false,
+   "signup": {
+    "how": "Email volunteer@northendfoodpantry.org to set up a shift",
+    "url": "https://www.northendfoodpantry.org/food-shelf-volunteer"
+   },
+   "newcomers": "Email the volunteer address before your first shift; one shift here and there is fine, no permanent commitment. Some lifting is involved, so wear supportive shoes; distribution shifts are great for high school students.",
+   "url": "https://www.northendfoodpantry.org/food-shelf-volunteer",
+   "links": {},
+   "checked": {
+    "date": "2026-10-18",
+    "source": "https://www.northendfoodpantry.org/food-shelf-volunteer",
+    "note": "'No permanent commitment required' and 'it's okay to sign up for just one shift here and there!' 'Food Distribution Helpers (great for high school students!) Time Commitment: 7:45am-10:15am or 8:45am-10:30am Saturdays or Sundays Some lifting required.' 'Monthly Clothing Drives ... 3 hours per month. (10:30am-1:30pm on the last Sunday of the month)'. 'Food Pickup Driver ... Pick up food donations at Hannaford North Avenue at 7:30 AM on Saturdays or Sundays ... (1416 North Ave).' 'please contact volunteer@northendfoodpantry.org'. 'Wear supportive footwear with a tread'. Blog (Oct 2): 'Sunday, October 25, 2026 at 11:00am-1:00pm' clothing drive; 'We are also recruiting volunteers to help sort donated clothing'.",
+    "also": [
+     "https://www.northendfoodpantry.org/blog/october-2026-clothing-drive"
+    ]
+   }
+  },
+  {
+   "id": "heineberg-arts-games",
+   "name": "Heineberg Senior Center Games and Craft Groups",
+   "kind": "games",
+   "category": "board-games",
+   "what": "Weekly by-donation games and craft groups at the Heineberg Community Senior Center: Craft & Mend, adult coloring, mahjong, board games, cribbage and bridge.",
+   "meets": [
+    {
+     "day": "mon",
+     "time": "10:00",
+     "end": "11:15",
+     "where": "Heineberg Community Senior Center",
+     "address": "14 Heineberg Rd, Burlington",
+     "note": "Craft & Mend",
+     "season": ""
+    },
+    {
+     "day": "mon",
+     "time": "12:30",
+     "end": "",
+     "where": "Heineberg Community Senior Center",
+     "address": "14 Heineberg Rd, Burlington",
+     "note": "Adult Coloring and Mahjong (mahjong runs to 2:30pm)",
+     "season": ""
+    },
+    {
+     "day": "tue",
+     "time": "10:30",
+     "end": "",
+     "where": "Heineberg Community Senior Center",
+     "address": "14 Heineberg Rd, Burlington",
+     "note": "Board Games",
+     "season": ""
+    },
+    {
+     "day": "thu",
+     "time": "11:00",
+     "end": "12:30",
+     "where": "Heineberg Community Senior Center",
+     "address": "14 Heineberg Rd, Burlington",
+     "note": "Cribbage",
+     "season": ""
+    },
+    {
+     "day": "thu",
+     "time": "13:00",
+     "end": "15:00",
+     "where": "Heineberg Community Senior Center",
+     "address": "14 Heineberg Rd, Burlington",
+     "note": "Bridge",
+     "season": ""
+    }
+   ],
+   "schedule_note": "Days and times are from the center's October 2026 calendar; check each month's calendar on the home page.",
+   "season": "year-round",
+   "where": "Heineberg Community Senior Center, Burlington",
+   "town": "Burlington",
+   "cost": "By donation",
+   "free": true,
+   "level": "Cribbage and bridge: all levels; mahjong: beginner and experienced players",
+   "beginner": true,
+   "signup": {
+    "how": "See the monthly calendar; call the center at (802) 863-3982 with questions",
+    "url": "https://heinebergcsc.org/"
+   },
+   "newcomers": "These groups run at a community senior center and are by donation. For Craft & Mend, bring your yarn or fabric project; coloring supplies are provided.",
+   "url": "https://heinebergcsc.org/",
+   "links": {},
+   "checked": {
+    "date": "2026-10-18",
+    "source": "https://img1.wsimg.com/blobby/go/2e496751-044c-48b9-8c76-de14b94e90be/downloads/06a46a4e-1ef6-427d-a85c-e5103e940bea/OCTOBER%202026.pdf?ver=1791231888173",
+    "note": "October 2026 calendar (linked from the home page 'October 2026 Click here for the calendar'): header 'Unmarked activities BY DONATION / Activities marked $$ have a fee', '14 Heineberg Rd, Burlington VT (802) 863-3982'. Every Monday (5, 12, 19, 26): '10:00 Craft & Mend', '12:30 Adult Coloring', '12:30 Mahjong'. Every Tuesday (6, 13, 20, 27): '10:30 Board Games'. Every Thursday (1, 8, 15, 22, 29): '11:00 Cribbage', '1:00 Bridge'. None marked $$. End times and levels from the Ongoing Programs page ('Updated list as of November 2025'), used only where its start time matches the October calendar: 'Craft & Mend Group: Mondays, 10:00 am to 11:15 am, by donation. Come along with your yarn or fabric projects'; 'Mahjongg : Mondays, 12:30 to 2:30 pm. Beginner and experienced players welcome, by donation.'; 'Cribbage : Thursdays, 11 am - 12:30 pm, by donation. All levels welcome.'; 'Bridge Club: Thursdays, 1:00 - 3:00 pm, by donation. All levels welcome.'; 'Adult Coloring every Monday at 12:30 pm, by donation. All supplies provided.' (That older page puts Board Games on Wednesdays; the October calendar's Tuesday 10:30 is used.)",
+    "also": [
+     "https://heinebergcsc.org/",
+     "https://heinebergcsc.org/ongoing-programs"
+    ]
+   }
+  },
+  {
+   "id": "age-well-winooski-singing",
+   "name": "Singing for People with Memory Loss and Their Caregivers (Winooski)",
+   "kind": "music",
+   "category": "choir",
+   "what": "A weekly Friday morning singing group in Winooski for people living with memory loss and the people who care for them, run by Age Well.",
+   "meets": [
+    {
+     "day": "fri",
+     "time": "10:30",
+     "end": "11:30",
+     "where": "Winooski Senior Center",
+     "address": "123 Barlow St, Winooski",
+     "note": "Fall series; no sessions Oct 30 or Nov 27.",
+     "season": "Oct 9 to Dec 11, 2026",
+     "from": "2026-10-09",
+     "until": "2026-12-11",
+     "skip": [
+      "2026-10-30",
+      "2026-11-27"
+     ]
+    }
+   ],
+   "schedule_note": "",
+   "season": "Fall series, Oct 9 to Dec 11, 2026",
+   "where": "Winooski Senior Center, Winooski",
+   "town": "Winooski",
+   "cost": "No cost to participate",
+   "free": true,
+   "level": "No music experience required",
+   "beginner": true,
+   "signup": {
+    "how": "Contact Age Well at 802-865-0360 for details",
+    "url": "https://www.agewellvt.org/event/singing-group-winooski-5/2026-11-06/"
+   },
+   "newcomers": "For people with memory loss together with their caregivers. No music experience needed; call Age Well at 802-865-0360 for details before your first visit.",
+   "url": "https://www.agewellvt.org/event/singing-group-winooski-5/2026-11-06/",
+   "links": {},
+   "checked": {
+    "date": "2026-10-18",
+    "source": "https://www.agewellvt.org/event/singing-group-winooski-5/2026-11-06/",
+    "note": "'Singing Group - Winooski November 6 @ 10:30 am - 11:30 am'. 'Our Singing for People with Memory Loss AND their Caregivers groups meet weekly in Winooski.' 'No music experience required and no cost to participate.' 'WHEN & WHERE: October 9 - December 11 (no sessions will be held on 10/30 or 11/27) Fridays | 10:30 - 11:30 am Winooski Senior Center, 123 Barlow Street, Winooski'. 'For details, contact: [email protected]' (email obfuscated); Organizer 'Age Well Phone 802-865-0360'. Event Categories: 'Caregivers , Community Event'.",
+    "also": []
+   }
+  },
+  {
+   "id": "essex-art-league",
+   "name": "Essex Art League",
+   "kind": "making",
+   "category": "art",
+   "what": "A long-running club for artists and art lovers that meets monthly in Essex Junction for guest artist demonstrations, critiques and socials.",
+   "meets": [],
+   "schedule_note": "First Thursday of the month, 9 to 11am, September to June, at the Congregational Church in Essex Junction. Next: Nov 5 (painter and fabric artist Dianne Shullenberger) and Dec 3 (holiday potluck brunch). No meeting when schools close for snow.",
+   "season": "September to June",
+   "months": [
+    9,
+    10,
+    11,
+    12,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+   ],
+   "where": "Congregational Church, Essex Junction",
+   "town": "Essex Junction",
+   "cost": "$25 a year to join; guests can attend two meetings first",
+   "free": false,
+   "level": "Artists and art lovers",
+   "beginner": false,
+   "signup": {
+    "how": "Come to a meeting as a guest (up to two), then pay annual dues to join",
+    "url": "https://www.essexartleague.org/meetings"
+   },
+   "newcomers": "Guests are welcome at up to two meetings before joining. Open to artists and art lovers from anywhere in Vermont.",
+   "url": "https://www.essexartleague.org/meetings",
+   "links": {},
+   "checked": {
+    "date": "2026-10-18",
+    "source": "https://www.essexartleague.org/meetings",
+    "note": "'The Essex Art League meets 9am-11am on the first Thursday of each month from September to June. All meetings are held at the Congregational Church in Essex Junction unless otherwise noted.' 'Guests are welcome at EAL Meetings. A guest may attend up to 2 meetings. If they wish to attend more than two meetings, they must become a dues-paying member'. 'If the schools are closed for a snow day, the EAL will not meet that day.' 2026-2027: 'November 5, 2026 Guest Artist: Dianne Shullenberger Painter and Fabric Artist'; 'December 3, 2026 Annual Holiday Party Potluck brunch and social'. About Us: 'The group is open to artists and art lovers from throughout Vermont.' 'pay your $25 annual membership fee'.",
+    "also": [
+     "https://www.essexartleague.org/about-us"
+    ]
+   }
+  },
+  {
+   "id": "vermont-astronomical-society",
+   "name": "Vermont Astronomical Society",
+   "kind": "other",
+   "category": "other",
+   "what": "Chittenden County's amateur astronomy club, with free monthly public meetings at Brownell Library and members who help newcomers get started.",
+   "meets": [],
+   "schedule_note": "Monthly meetings, 7:30 to 9pm, at Brownell Library in Essex Junction and on Zoom. Next: Mon Nov 2 and Mon Dec 7. Stargazing nights at the club's Hinesburg site are for members and invited guests.",
+   "season": "year-round",
+   "where": "Brownell Library, Essex Junction",
+   "town": "Essex Junction",
+   "cost": "Monthly meetings are free and open to the public; membership $15 a year (associate) or $25 (full)",
+   "free": true,
+   "level": "Complete novices to advanced observers",
+   "beginner": true,
+   "signup": {
+    "how": "Come to a monthly meeting; ask a listed contact for the Zoom link",
+    "url": "https://vtastro.org/calendar/"
+   },
+   "newcomers": "Meetings are free and open to anyone, any experience level. Hinesburg observing nights need a member invitation; contact the organizer listed on the calendar.",
+   "url": "https://vtastro.org/",
+   "links": {
+    "calendar": "https://vtastro.org/calendar/"
+   },
+   "checked": {
+    "date": "2026-10-18",
+    "source": "https://vtastro.org/calendar/",
+    "note": "'VAS Monthly Meeting 2026-11-02 19:30 - 21:00 Brownell Library, 6 Lincoln St, Essex Junction, VT 05452, USA Free and Open to the Public In-person and via Zoom Ask for the Zoom link from paulwaav@together.net or theresamarie11@GMAIL.COM'; same for '2026-12-07 19:30 - 21:00'. Hinesburg events: 'Stargazing-Member & Invited Guests at the Hinesburg Site'. Home: 'monthly meetings at the Brownell Library in Essex Junction'; 'We welcome anyone with an interest in astronomy at all levels of experience, from complete novices to advanced observers. Our monthly meetings are free and open to the public.' Membership: 'Associate $15.00/yr', 'Full $25.00/yr'.",
+    "also": [
+     "https://vtastro.org/",
+     "https://vtastro.org/membership/"
+    ]
+   }
+  },
+  {
+   "id": "yankee-pride-helping-hands",
+   "name": "Helping Hands: Quilts for the Community",
+   "kind": "making",
+   "category": "crafts",
+   "what": "A monthly sew-in at Yankee Pride Quilts where customers and staff finish quilts for local charities like Steps to End Domestic Violence and the Respite House.",
+   "meets": [],
+   "schedule_note": "Third Tuesday of the month, 1 to 4pm, on the lower level of Yankee Pride Quilts in Essex Junction. Next: Oct 20 and Nov 17.",
+   "season": "year-round",
+   "where": "Yankee Pride Quilts (lower level), Essex Junction",
+   "town": "Essex Junction",
+   "cost": "",
+   "free": false,
+   "level": "All skill levels",
+   "beginner": true,
+   "signup": {
+    "how": "Drop in for the afternoon; questions to staff@yankeepridequilts.com or 802-872-9300",
+    "url": ""
+   },
+   "newcomers": "All skill levels welcome. Bring a sewing machine if you like, but there are plenty of hand jobs; tables, irons and cutting mats are provided, and you can bring a lunch.",
+   "url": "https://www.yankeepridequilts.com/module/class/576216/helping-hands---quilts-for-the-community-e",
+   "links": {
+    "calendar": "https://www.yankeepridequilts.com/module/events.htm?month=11&pageComponentId=1489483&year=2026"
+   },
+   "checked": {
+    "date": "2026-10-18",
+    "source": "https://www.yankeepridequilts.com/module/class/576216/helping-hands---quilts-for-the-community-e",
+    "note": "'Where: Lower Level at Yankee Pride Quilts, Essex Junction, VT When: Every third Tuesday of the month | 1:00-4:00 pm'. 'our monthly sew-in where customers and staff finish quilts for local charities ... Laurie's House, Steps to End Domestic Violence, the Lund Home, the Respite House, and the Refugee Resettlement Center.' 'All skill levels are welcome'; 'bring your sewing machine if you'd like, but there are plenty of non-machine jobs too. We provide tables, chairs, extension cords, cutting mats, irons, and ironing boards.' 'Stop by for the afternoon or just drop in to see what we're working on. Bring a lunch or snack'. 'Questions? staff@yankeepridequilts.com | 802-872-9300'. Store calendar: 'Tuesday, October 20th 1:00 pm HH-QC26: Helping Hands' and 'Tuesday, November 17th 1:00 pm HH-QC26: Helping Hands'. No price readable (booking widget shows unrendered templates).",
+    "also": [
+     "https://www.yankeepridequilts.com/module/events.htm?month=10&pageComponentId=1489483&year=2026",
+     "https://www.yankeepridequilts.com/module/events.htm?month=11&pageComponentId=1489483&year=2026"
     ]
    }
   }
