@@ -1,0 +1,130 @@
+{
+ "v": 1,
+ "generated": "2026-10-18T00:14:51+00:00",
+ "window_hours": 24,
+ "intake_generated": "2026-10-18T00:14:46+00:00",
+ "intake_state": {
+  "paused": false,
+  "since": null,
+  "newest_first_seen": "2026-10-18T00:14:46+00:00",
+  "pause_after_hours": 36,
+  "routes_live": [
+   "inoreader",
+   "rss"
+  ],
+  "reason": "posts arriving"
+ },
+ "subs": {
+  "r/burlington": {
+   "new_24h": 122,
+   "made_24h": 16,
+   "overlap": {
+    "inoreader+rss": 6,
+    "rss": 10
+   },
+   "routes": {
+    "inoreader": {
+     "new_24h": 103,
+     "new_prior_6d": 0,
+     "last_new": "2026-10-17T17:41:17+00:00",
+     "found_of_made_24h": 6,
+     "only_route": 0,
+     "median_lag_minutes": 120,
+     "runs": {
+      "ok": 18
+     },
+     "last_error": null
+    },
+    "rss": {
+     "new_24h": 112,
+     "new_prior_6d": 0,
+     "last_new": "2026-10-18T00:14:46+00:00",
+     "found_of_made_24h": 16,
+     "only_route": 10,
+     "median_lag_minutes": 0,
+     "runs": {
+      "ok": 18
+     },
+     "last_error": null
+    },
+    "oauth": {
+     "new_24h": 0,
+     "new_prior_6d": 0,
+     "last_new": null,
+     "found_of_made_24h": 0,
+     "only_route": 0,
+     "median_lag_minutes": null,
+     "runs": {
+      "skipped": 18
+     },
+     "last_error": "REDDIT_CLIENT_ID/SECRET not set"
+    }
+   }
+  },
+  "r/vermont": {
+   "new_24h": 127,
+   "made_24h": 27,
+   "overlap": {
+    "inoreader": 27
+   },
+   "routes": {
+    "inoreader": {
+     "new_24h": 127,
+     "new_prior_6d": 0,
+     "last_new": "2026-10-18T00:14:46+00:00",
+     "found_of_made_24h": 27,
+     "only_route": 27,
+     "median_lag_minutes": null,
+     "runs": {
+      "ok": 18
+     },
+     "last_error": null
+    },
+    "rss": {
+     "new_24h": 0,
+     "new_prior_6d": 0,
+     "last_new": null,
+     "found_of_made_24h": 0,
+     "only_route": 0,
+     "median_lag_minutes": null,
+     "runs": {
+      "error": 18
+     },
+     "last_error": "HTTP 429"
+    },
+    "oauth": {
+     "new_24h": 0,
+     "new_prior_6d": 0,
+     "last_new": null,
+     "found_of_made_24h": 0,
+     "only_route": 0,
+     "median_lag_minutes": null,
+     "runs": {
+      "skipped": 18
+     },
+     "last_error": "REDDIT_CLIENT_ID/SECRET not set"
+    }
+   }
+  }
+ },
+ "routes": {
+  "inoreader": {
+   "status": "live",
+   "new_24h": 230,
+   "error": null
+  },
+  "rss": {
+   "status": "live",
+   "new_24h": 112,
+   "error": "HTTP 429"
+  },
+  "oauth": {
+   "status": "skipped",
+   "new_24h": 0,
+   "error": "REDDIT_CLIENT_ID/SECRET not set"
+  }
+ },
+ "alarms": [],
+ "level": "green",
+ "brief_line": "Reddit: green, 249 new posts in 24h (Inoreader 230, RSS 112, OAuth not set up)"
+}

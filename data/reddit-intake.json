@@ -1,0 +1,6579 @@
+{
+ "v": 1,
+ "generated": "2026-10-18T00:14:46+00:00",
+ "subs": [
+  "r/burlington",
+  "r/vermont"
+ ],
+ "window_days": 10,
+ "state": {
+  "paused": false,
+  "since": null,
+  "newest_first_seen": "2026-10-18T00:14:46+00:00",
+  "pause_after_hours": 36,
+  "routes_live": [
+   "inoreader",
+   "rss"
+  ],
+  "reason": "posts arriving"
+ },
+ "routes": {
+  "inoreader": {
+   "r/burlington": {
+    "status": "ok",
+    "fetched": 100,
+    "new": 0,
+    "error": null
+   },
+   "r/vermont": {
+    "status": "ok",
+    "fetched": 100,
+    "new": 6,
+    "error": null
+   }
+  },
+  "rss": {
+   "r/burlington": {
+    "status": "ok",
+    "fetched": 100,
+    "new": 3,
+    "error": null
+   },
+   "r/vermont": {
+    "status": "error",
+    "fetched": 0,
+    "new": 0,
+    "error": "HTTP 429"
+   }
+  },
+  "oauth": {
+   "r/burlington": {
+    "status": "skipped",
+    "fetched": 0,
+    "new": 0,
+    "error": "REDDIT_CLIENT_ID/SECRET not set"
+   },
+   "r/vermont": {
+    "status": "skipped",
+    "fetched": 0,
+    "new": 0,
+    "error": "REDDIT_CLIENT_ID/SECRET not set"
+   }
+  }
+ },
+ "runs": [
+  {
+   "ts": "2026-10-17T06:53:08+00:00",
+   "routes": {
+    "inoreader": {
+     "r/burlington": {
+      "status": "ok",
+      "fetched": 100,
+      "new": 100,
+      "error": null
+     },
+     "r/vermont": {
+      "status": "ok",
+      "fetched": 100,
+      "new": 100,
+      "error": null
+     }
+    },
+    "rss": {
+     "r/burlington": {
+      "status": "ok",
+      "fetched": 100,
+      "new": 100,
+      "error": null
+     },
+     "r/vermont": {
+      "status": "error",
+      "fetched": 0,
+      "new": 0,
+      "error": "HTTP 429"
+     }
+    },
+    "oauth": {
+     "r/burlington": {
+      "status": "skipped",
+      "fetched": 0,
+      "new": 0,
+      "error": "REDDIT_CLIENT_ID/SECRET not set"
+     },
+     "r/vermont": {
+      "status": "skipped",
+      "fetched": 0,
+      "new": 0,
+      "error": "REDDIT_CLIENT_ID/SECRET not set"
+     }
+    }
+   }
+  },
+  {
+   "ts": "2026-10-17T11:41:10+00:00",
+   "routes": {
+    "inoreader": {
+     "r/burlington": {
+      "status": "ok",
+      "fetched": 100,
+      "new": 1,
+      "error": null
+     },
+     "r/vermont": {
+      "status": "ok",
+      "fetched": 100,
+      "new": 0,
+      "error": null
+     }
+    },
+    "rss": {
+     "r/burlington": {
+      "status": "ok",
+      "fetched": 100,
+      "new": 0,
+      "error": null
+     },
+     "r/vermont": {
+      "status": "error",
+      "fetched": 0,
+      "new": 0,
+      "error": "HTTP 429"
+     }
+    },
+    "oauth": {
+     "r/burlington": {
+      "status": "skipped",
+      "fetched": 0,
+      "new": 0,
+      "error": "REDDIT_CLIENT_ID/SECRET not set"
+     },
+     "r/vermont": {
+      "status": "skipped",
+      "fetched": 0,
+      "new": 0,
+      "error": "REDDIT_CLIENT_ID/SECRET not set"
+     }
+    }
+   }
+  },
+  {
+   "ts": "2026-10-17T11:44:25+00:00",
+   "routes": {
+    "inoreader": {
+     "r/burlington": {
+      "status": "ok",
+      "fetched": 100,
+      "new": 0,
+      "error": null
+     },
+     "r/vermont": {
+      "status": "ok",
+      "fetched": 100,
+      "new": 0,
+      "error": null
+     }
+    },
+    "rss": {
+     "r/burlington": {
+      "status": "ok",
+      "fetched": 100,
+      "new": 0,
+      "error": null
+     },
+     "r/vermont": {
+      "status": "error",
+      "fetched": 0,
+      "new": 0,
+      "error": "HTTP 429"
+     }
+    },
+    "oauth": {
+     "r/burlington": {
+      "status": "skipped",
+      "fetched": 0,
+      "new": 0,
+      "error": "REDDIT_CLIENT_ID/SECRET not set"
+     },
+     "r/vermont": {
+      "status": "skipped",
+      "fetched": 0,
+      "new": 0,
+      "error": "REDDIT_CLIENT_ID/SECRET not set"
+     }
+    }
+   }
+  },
+  {
+   "ts": "2026-10-17T12:41:17+00:00",
+   "routes": {
+    "inoreader": {
+     "r/burlington": {
+      "status": "ok",
+      "fetched": 100,
+      "new": 0,
+      "error": null
+     },
+     "r/vermont": {
+      "status": "ok",
+      "fetched": 100,
+      "new": 0,
+      "error": null
+     }
+    },
+    "rss": {
+     "r/burlington": {
+      "status": "ok",
+      "fetched": 100,
+      "new": 0,
+      "error": null
+     },
+     "r/vermont": {
+      "status": "error",
+      "fetched": 0,
+      "new": 0,
+      "error": "HTTP 429"
+     }
+    },
+    "oauth": {
+     "r/burlington": {
+      "status": "skipped",
+      "fetched": 0,
+      "new": 0,
+      "error": "REDDIT_CLIENT_ID/SECRET not set"
+     },
+     "r/vermont": {
+      "status": "skipped",
+      "fetched": 0,
+      "new": 0,
+      "error": "REDDIT_CLIENT_ID/SECRET not set"
+     }
+    }
+   }
+  },
+  {
+   "ts": "2026-10-17T13:41:16+00:00",
+   "routes": {
+    "inoreader": {
+     "r/burlington": {
+      "status": "ok",
+      "fetched": 100,
+      "new": 0,
+      "error": null
+     },
+     "r/vermont": {
+      "status": "ok",
+      "fetched": 100,
+      "new": 0,
+      "error": null
+     }
+    },
+    "rss": {
+     "r/burlington": {
+      "status": "ok",
+      "fetched": 100,
+      "new": 1,
+      "error": null
+     },
+     "r/vermont": {
+      "status": "error",
+      "fetched": 0,
+      "new": 0,
+      "error": "HTTP 429"
+     }
+    },
+    "oauth": {
+     "r/burlington": {
+      "status": "skipped",
+      "fetched": 0,
+      "new": 0,
+      "error": "REDDIT_CLIENT_ID/SECRET not set"
+     },
+     "r/vermont": {
+      "status": "skipped",
+      "fetched": 0,
+      "new": 0,
+      "error": "REDDIT_CLIENT_ID/SECRET not set"
+     }
+    }
+   }
+  },
+  {
+   "ts": "2026-10-17T14:41:13+00:00",
+   "routes": {
+    "inoreader": {
+     "r/burlington": {
+      "status": "ok",
+      "fetched": 100,
+      "new": 0,
+      "error": null
+     },
+     "r/vermont": {
+      "status": "ok",
+      "fetched": 100,
+      "new": 0,
+      "error": null
+     }
+    },
+    "rss": {
+     "r/burlington": {
+      "status": "ok",
+      "fetched": 100,
+      "new": 1,
+      "error": null
+     },
+     "r/vermont": {
+      "status": "error",
+      "fetched": 0,
+      "new": 0,
+      "error": "HTTP 429"
+     }
+    },
+    "oauth": {
+     "r/burlington": {
+      "status": "skipped",
+      "fetched": 0,
+      "new": 0,
+      "error": "REDDIT_CLIENT_ID/SECRET not set"
+     },
+     "r/vermont": {
+      "status": "skipped",
+      "fetched": 0,
+      "new": 0,
+      "error": "REDDIT_CLIENT_ID/SECRET not set"
+     }
+    }
+   }
+  },
+  {
+   "ts": "2026-10-17T15:41:19+00:00",
+   "routes": {
+    "inoreader": {
+     "r/burlington": {
+      "status": "ok",
+      "fetched": 100,
+      "new": 0,
+      "error": null
+     },
+     "r/vermont": {
+      "status": "ok",
+      "fetched": 100,
+      "new": 0,
+      "error": null
+     }
+    },
+    "rss": {
+     "r/burlington": {
+      "status": "ok",
+      "fetched": 100,
+      "new": 0,
+      "error": null
+     },
+     "r/vermont": {
+      "status": "error",
+      "fetched": 0,
+      "new": 0,
+      "error": "HTTP 429"
+     }
+    },
+    "oauth": {
+     "r/burlington": {
+      "status": "skipped",
+      "fetched": 0,
+      "new": 0,
+      "error": "REDDIT_CLIENT_ID/SECRET not set"
+     },
+     "r/vermont": {
+      "status": "skipped",
+      "fetched": 0,
+      "new": 0,
+      "error": "REDDIT_CLIENT_ID/SECRET not set"
+     }
+    }
+   }
+  },
+  {
+   "ts": "2026-10-17T15:54:09+00:00",
+   "routes": {
+    "inoreader": {
+     "r/burlington": {
+      "status": "ok",
+      "fetched": 100,
+      "new": 0,
+      "error": null
+     },
+     "r/vermont": {
+      "status": "ok",
+      "fetched": 100,
+      "new": 0,
+      "error": null
+     }
+    },
+    "rss": {
+     "r/burlington": {
+      "status": "ok",
+      "fetched": 100,
+      "new": 0,
+      "error": null
+     },
+     "r/vermont": {
+      "status": "error",
+      "fetched": 0,
+      "new": 0,
+      "error": "HTTP 429"
+     }
+    },
+    "oauth": {
+     "r/burlington": {
+      "status": "skipped",
+      "fetched": 0,
+      "new": 0,
+      "error": "REDDIT_CLIENT_ID/SECRET not set"
+     },
+     "r/vermont": {
+      "status": "skipped",
+      "fetched": 0,
+      "new": 0,
+      "error": "REDDIT_CLIENT_ID/SECRET not set"
+     }
+    }
+   }
+  },
+  {
+   "ts": "2026-10-17T16:41:19+00:00",
+   "routes": {
+    "inoreader": {
+     "r/burlington": {
+      "status": "ok",
+      "fetched": 100,
+      "new": 0,
+      "error": null
+     },
+     "r/vermont": {
+      "status": "ok",
+      "fetched": 100,
+      "new": 0,
+      "error": null
+     }
+    },
+    "rss": {
+     "r/burlington": {
+      "status": "ok",
+      "fetched": 100,
+      "new": 0,
+      "error": null
+     },
+     "r/vermont": {
+      "status": "error",
+      "fetched": 0,
+      "new": 0,
+      "error": "HTTP 429"
+     }
+    },
+    "oauth": {
+     "r/burlington": {
+      "status": "skipped",
+      "fetched": 0,
+      "new": 0,
+      "error": "REDDIT_CLIENT_ID/SECRET not set"
+     },
+     "r/vermont": {
+      "status": "skipped",
+      "fetched": 0,
+      "new": 0,
+      "error": "REDDIT_CLIENT_ID/SECRET not set"
+     }
+    }
+   }
+  },
+  {
+   "ts": "2026-10-17T17:41:17+00:00",
+   "routes": {
+    "inoreader": {
+     "r/burlington": {
+      "status": "ok",
+      "fetched": 100,
+      "new": 2,
+      "error": null
+     },
+     "r/vermont": {
+      "status": "ok",
+      "fetched": 100,
+      "new": 0,
+      "error": null
+     }
+    },
+    "rss": {
+     "r/burlington": {
+      "status": "ok",
+      "fetched": 100,
+      "new": 2,
+      "error": null
+     },
+     "r/vermont": {
+      "status": "error",
+      "fetched": 0,
+      "new": 0,
+      "error": "HTTP 429"
+     }
+    },
+    "oauth": {
+     "r/burlington": {
+      "status": "skipped",
+      "fetched": 0,
+      "new": 0,
+      "error": "REDDIT_CLIENT_ID/SECRET not set"
+     },
+     "r/vermont": {
+      "status": "skipped",
+      "fetched": 0,
+      "new": 0,
+      "error": "REDDIT_CLIENT_ID/SECRET not set"
+     }
+    }
+   }
+  },
+  {
+   "ts": "2026-10-17T18:41:15+00:00",
+   "routes": {
+    "inoreader": {
+     "r/burlington": {
+      "status": "ok",
+      "fetched": 100,
+      "new": 0,
+      "error": null
+     },
+     "r/vermont": {
+      "status": "ok",
+      "fetched": 100,
+      "new": 0,
+      "error": null
+     }
+    },
+    "rss": {
+     "r/burlington": {
+      "status": "ok",
+      "fetched": 100,
+      "new": 0,
+      "error": null
+     },
+     "r/vermont": {
+      "status": "error",
+      "fetched": 0,
+      "new": 0,
+      "error": "HTTP 429"
+     }
+    },
+    "oauth": {
+     "r/burlington": {
+      "status": "skipped",
+      "fetched": 0,
+      "new": 0,
+      "error": "REDDIT_CLIENT_ID/SECRET not set"
+     },
+     "r/vermont": {
+      "status": "skipped",
+      "fetched": 0,
+      "new": 0,
+      "error": "REDDIT_CLIENT_ID/SECRET not set"
+     }
+    }
+   }
+  },
+  {
+   "ts": "2026-10-17T18:47:20+00:00",
+   "routes": {
+    "inoreader": {
+     "r/burlington": {
+      "status": "ok",
+      "fetched": 100,
+      "new": 0,
+      "error": null
+     },
+     "r/vermont": {
+      "status": "ok",
+      "fetched": 100,
+      "new": 0,
+      "error": null
+     }
+    },
+    "rss": {
+     "r/burlington": {
+      "status": "ok",
+      "fetched": 100,
+      "new": 0,
+      "error": null
+     },
+     "r/vermont": {
+      "status": "error",
+      "fetched": 0,
+      "new": 0,
+      "error": "HTTP 429"
+     }
+    },
+    "oauth": {
+     "r/burlington": {
+      "status": "skipped",
+      "fetched": 0,
+      "new": 0,
+      "error": "REDDIT_CLIENT_ID/SECRET not set"
+     },
+     "r/vermont": {
+      "status": "skipped",
+      "fetched": 0,
+      "new": 0,
+      "error": "REDDIT_CLIENT_ID/SECRET not set"
+     }
+    }
+   }
+  },
+  {
+   "ts": "2026-10-17T19:41:15+00:00",
+   "routes": {
+    "inoreader": {
+     "r/burlington": {
+      "status": "ok",
+      "fetched": 100,
+      "new": 0,
+      "error": null
+     },
+     "r/vermont": {
+      "status": "ok",
+      "fetched": 100,
+      "new": 0,
+      "error": null
+     }
+    },
+    "rss": {
+     "r/burlington": {
+      "status": "ok",
+      "fetched": 100,
+      "new": 1,
+      "error": null
+     },
+     "r/vermont": {
+      "status": "error",
+      "fetched": 0,
+      "new": 0,
+      "error": "HTTP 429"
+     }
+    },
+    "oauth": {
+     "r/burlington": {
+      "status": "skipped",
+      "fetched": 0,
+      "new": 0,
+      "error": "REDDIT_CLIENT_ID/SECRET not set"
+     },
+     "r/vermont": {
+      "status": "skipped",
+      "fetched": 0,
+      "new": 0,
+      "error": "REDDIT_CLIENT_ID/SECRET not set"
+     }
+    }
+   }
+  },
+  {
+   "ts": "2026-10-17T20:41:15+00:00",
+   "routes": {
+    "inoreader": {
+     "r/burlington": {
+      "status": "ok",
+      "fetched": 100,
+      "new": 0,
+      "error": null
+     },
+     "r/vermont": {
+      "status": "ok",
+      "fetched": 100,
+      "new": 21,
+      "error": null
+     }
+    },
+    "rss": {
+     "r/burlington": {
+      "status": "ok",
+      "fetched": 100,
+      "new": 1,
+      "error": null
+     },
+     "r/vermont": {
+      "status": "error",
+      "fetched": 0,
+      "new": 0,
+      "error": "HTTP 429"
+     }
+    },
+    "oauth": {
+     "r/burlington": {
+      "status": "skipped",
+      "fetched": 0,
+      "new": 0,
+      "error": "REDDIT_CLIENT_ID/SECRET not set"
+     },
+     "r/vermont": {
+      "status": "skipped",
+      "fetched": 0,
+      "new": 0,
+      "error": "REDDIT_CLIENT_ID/SECRET not set"
+     }
+    }
+   }
+  },
+  {
+   "ts": "2026-10-17T21:41:16+00:00",
+   "routes": {
+    "inoreader": {
+     "r/burlington": {
+      "status": "ok",
+      "fetched": 100,
+      "new": 0,
+      "error": null
+     },
+     "r/vermont": {
+      "status": "ok",
+      "fetched": 100,
+      "new": 0,
+      "error": null
+     }
+    },
+    "rss": {
+     "r/burlington": {
+      "status": "ok",
+      "fetched": 100,
+      "new": 2,
+      "error": null
+     },
+     "r/vermont": {
+      "status": "error",
+      "fetched": 0,
+      "new": 0,
+      "error": "HTTP 429"
+     }
+    },
+    "oauth": {
+     "r/burlington": {
+      "status": "skipped",
+      "fetched": 0,
+      "new": 0,
+      "error": "REDDIT_CLIENT_ID/SECRET not set"
+     },
+     "r/vermont": {
+      "status": "skipped",
+      "fetched": 0,
+      "new": 0,
+      "error": "REDDIT_CLIENT_ID/SECRET not set"
+     }
+    }
+   }
+  },
+  {
+   "ts": "2026-10-17T21:42:08+00:00",
+   "routes": {
+    "inoreader": {
+     "r/burlington": {
+      "status": "ok",
+      "fetched": 100,
+      "new": 0,
+      "error": null
+     },
+     "r/vermont": {
+      "status": "ok",
+      "fetched": 100,
+      "new": 0,
+      "error": null
+     }
+    },
+    "rss": {
+     "r/burlington": {
+      "status": "ok",
+      "fetched": 100,
+      "new": 0,
+      "error": null
+     },
+     "r/vermont": {
+      "status": "error",
+      "fetched": 0,
+      "new": 0,
+      "error": "HTTP 429"
+     }
+    },
+    "oauth": {
+     "r/burlington": {
+      "status": "skipped",
+      "fetched": 0,
+      "new": 0,
+      "error": "REDDIT_CLIENT_ID/SECRET not set"
+     },
+     "r/vermont": {
+      "status": "skipped",
+      "fetched": 0,
+      "new": 0,
+      "error": "REDDIT_CLIENT_ID/SECRET not set"
+     }
+    }
+   }
+  },
+  {
+   "ts": "2026-10-17T22:41:17+00:00",
+   "routes": {
+    "inoreader": {
+     "r/burlington": {
+      "status": "ok",
+      "fetched": 100,
+      "new": 0,
+      "error": null
+     },
+     "r/vermont": {
+      "status": "ok",
+      "fetched": 100,
+      "new": 0,
+      "error": null
+     }
+    },
+    "rss": {
+     "r/burlington": {
+      "status": "ok",
+      "fetched": 100,
+      "new": 1,
+      "error": null
+     },
+     "r/vermont": {
+      "status": "error",
+      "fetched": 0,
+      "new": 0,
+      "error": "HTTP 429"
+     }
+    },
+    "oauth": {
+     "r/burlington": {
+      "status": "skipped",
+      "fetched": 0,
+      "new": 0,
+      "error": "REDDIT_CLIENT_ID/SECRET not set"
+     },
+     "r/vermont": {
+      "status": "skipped",
+      "fetched": 0,
+      "new": 0,
+      "error": "REDDIT_CLIENT_ID/SECRET not set"
+     }
+    }
+   }
+  },
+  {
+   "ts": "2026-10-18T00:14:46+00:00",
+   "routes": {
+    "inoreader": {
+     "r/burlington": {
+      "status": "ok",
+      "fetched": 100,
+      "new": 0,
+      "error": null
+     },
+     "r/vermont": {
+      "status": "ok",
+      "fetched": 100,
+      "new": 6,
+      "error": null
+     }
+    },
+    "rss": {
+     "r/burlington": {
+      "status": "ok",
+      "fetched": 100,
+      "new": 3,
+      "error": null
+     },
+     "r/vermont": {
+      "status": "error",
+      "fetched": 0,
+      "new": 0,
+      "error": "HTTP 429"
+     }
+    },
+    "oauth": {
+     "r/burlington": {
+      "status": "skipped",
+      "fetched": 0,
+      "new": 0,
+      "error": "REDDIT_CLIENT_ID/SECRET not set"
+     },
+     "r/vermont": {
+      "status": "skipped",
+      "fetched": 0,
+      "new": 0,
+      "error": "REDDIT_CLIENT_ID/SECRET not set"
+     }
+    }
+   }
+  }
+ ],
+ "removed": {},
+ "posts": [
+  {
+   "id": "1x8ocrt",
+   "sub": "r/burlington",
+   "title": "Hello Vermont!",
+   "url": "https://www.reddit.com/r/burlington/comments/1x8ocrt/hello_vermont/",
+   "created_exact": true,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-17T23:29:06+00:00",
+   "routes": [
+    "rss"
+   ],
+   "seen": {
+    "rss": "2026-10-18T00:14:46+00:00"
+   },
+   "first_seen": "2026-10-18T00:14:46+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x8oa70",
+   "sub": "r/burlington",
+   "title": "Burlington, Vermont has gotten Flyover in Apple Maps",
+   "url": "https://www.reddit.com/r/burlington/comments/1x8oa70/burlington_vermont_has_gotten_flyover_in_apple/",
+   "created_exact": true,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-17T23:25:35+00:00",
+   "routes": [
+    "rss"
+   ],
+   "seen": {
+    "rss": "2026-10-18T00:14:46+00:00"
+   },
+   "first_seen": "2026-10-18T00:14:46+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x8nmd9",
+   "sub": "r/vermont",
+   "title": "Winter Vacation in Killington",
+   "url": "https://www.reddit.com/r/vermont/comments/1x8nmd9/winter_vacation_in_killington/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-17T23:14:17+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-18T00:14:46+00:00"
+   },
+   "first_seen": "2026-10-18T00:14:46+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x8mt1b",
+   "sub": "r/vermont",
+   "title": "Camels Hump today from Richmond.",
+   "url": "https://www.reddit.com/r/vermont/comments/1x8mt1b/camels_hump_today_from_richmond/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-17T23:14:17+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-18T00:14:46+00:00"
+   },
+   "first_seen": "2026-10-18T00:14:46+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x8lc3c",
+   "sub": "r/vermont",
+   "title": "Mt. Mansfield snowliage",
+   "url": "https://www.reddit.com/r/vermont/comments/1x8lc3c/mt_mansfield_snowliage/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-17T23:14:17+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-18T00:14:46+00:00"
+   },
+   "first_seen": "2026-10-18T00:14:46+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x8l2qr",
+   "sub": "r/vermont",
+   "title": "Vermont cannabis event permits could bring legal sales to community events",
+   "url": "https://www.reddit.com/r/vermont/comments/1x8l2qr/vermont_cannabis_event_permits_could_bring_legal/",
+   "created_exact": false,
+   "kind": "link",
+   "out": "https://www.wcax.com/2026/10/14/vermont-cannabis-event-permits-could-bring-legal-sales-community-events",
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-17T23:14:17+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-18T00:14:46+00:00"
+   },
+   "first_seen": "2026-10-18T00:14:46+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x8keft",
+   "sub": "r/vermont",
+   "title": "Found these two gubernatorial race videos from a Vermont vlogger",
+   "url": "https://www.reddit.com/r/vermont/comments/1x8keft/found_these_two_gubernatorial_race_videos_from_a/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-17T23:14:17+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-18T00:14:46+00:00"
+   },
+   "first_seen": "2026-10-18T00:14:46+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x8kccd",
+   "sub": "r/vermont",
+   "title": "Seasons shouldering",
+   "url": "https://www.reddit.com/r/vermont/comments/1x8kccd/seasons_shouldering/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-17T23:14:17+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-18T00:14:46+00:00"
+   },
+   "first_seen": "2026-10-18T00:14:46+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x8ny6i",
+   "sub": "r/burlington",
+   "title": "Why is there no stop line just before Dorset after crossing 89?",
+   "url": "https://www.reddit.com/r/burlington/comments/1x8ny6i/why_is_there_no_stop_line_just_before_dorset/",
+   "created_exact": true,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-17T23:09:50+00:00",
+   "routes": [
+    "rss"
+   ],
+   "seen": {
+    "rss": "2026-10-18T00:14:46+00:00"
+   },
+   "first_seen": "2026-10-18T00:14:46+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x8m5un",
+   "sub": "r/burlington",
+   "title": "Bars to watch hockey?",
+   "url": "https://www.reddit.com/r/burlington/comments/1x8m5un/bars_to_watch_hockey/",
+   "created_exact": true,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-17T21:47:11+00:00",
+   "routes": [
+    "rss"
+   ],
+   "seen": {
+    "rss": "2026-10-17T22:41:17+00:00"
+   },
+   "first_seen": "2026-10-17T22:41:17+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x8lrml",
+   "sub": "r/burlington",
+   "title": "are there gunshots in the old north end",
+   "url": "https://www.reddit.com/r/burlington/comments/1x8lrml/are_there_gunshots_in_the_old_north_end/",
+   "created_exact": true,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-17T21:28:58+00:00",
+   "routes": [
+    "rss"
+   ],
+   "seen": {
+    "rss": "2026-10-17T21:41:16+00:00"
+   },
+   "first_seen": "2026-10-17T21:41:16+00:00",
+   "last_seen": "2026-10-17T22:41:17+00:00"
+  },
+  {
+   "id": "1x8lk6w",
+   "sub": "r/burlington",
+   "title": "Cat found - last seen on college street",
+   "url": "https://www.reddit.com/r/burlington/comments/1x8lk6w/cat_found_last_seen_on_college_street/",
+   "created_exact": true,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-17T21:19:53+00:00",
+   "routes": [
+    "rss"
+   ],
+   "seen": {
+    "rss": "2026-10-17T21:41:16+00:00"
+   },
+   "first_seen": "2026-10-17T21:41:16+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x8k87l",
+   "sub": "r/burlington",
+   "title": "Campaigning for JP?",
+   "url": "https://www.reddit.com/r/burlington/comments/1x8k87l/campaigning_for_jp/",
+   "created_exact": true,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-17T20:22:42+00:00",
+   "routes": [
+    "rss"
+   ],
+   "seen": {
+    "rss": "2026-10-17T20:41:15+00:00"
+   },
+   "first_seen": "2026-10-17T20:41:15+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x8ijlm",
+   "sub": "r/vermont",
+   "title": "Got tired of juggling 6 tabs every Friday to pick where to ski in Vermont, so I built TenFlakes.",
+   "url": "https://www.reddit.com/r/vermont/comments/1x8ijlm/got_tired_of_juggling_6_tabs_every_friday_to_pick/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-17T20:06:12+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T20:41:15+00:00"
+   },
+   "first_seen": "2026-10-17T20:41:15+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x8h8ry",
+   "sub": "r/vermont",
+   "title": "Resturants",
+   "url": "https://www.reddit.com/r/vermont/comments/1x8h8ry/resturants/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-17T20:06:12+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T20:41:15+00:00"
+   },
+   "first_seen": "2026-10-17T20:41:15+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x8guij",
+   "sub": "r/vermont",
+   "title": "Passion 4 Paws Country Concert 10/17/2026",
+   "url": "https://www.reddit.com/r/vermont/comments/1x8guij/passion_4_paws_country_concert_10172026/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-17T20:06:12+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T20:41:15+00:00"
+   },
+   "first_seen": "2026-10-17T20:41:15+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x8g0vn",
+   "sub": "r/vermont",
+   "title": "Upcoming Vermont Comedy Open Mics",
+   "url": "https://www.reddit.com/r/vermont/comments/1x8g0vn/upcoming_vermont_comedy_open_mics/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-17T20:06:12+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T20:41:15+00:00"
+   },
+   "first_seen": "2026-10-17T20:41:15+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x8ey0u",
+   "sub": "r/vermont",
+   "title": "epic recycling center find",
+   "url": "https://www.reddit.com/r/vermont/comments/1x8ey0u/epic_recycling_center_find/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-17T20:06:12+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T20:41:15+00:00"
+   },
+   "first_seen": "2026-10-17T20:41:15+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x8ehcc",
+   "sub": "r/vermont",
+   "title": "Stowe traffic",
+   "url": "https://www.reddit.com/r/vermont/comments/1x8ehcc/stowe_traffic/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-17T20:06:12+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T20:41:15+00:00"
+   },
+   "first_seen": "2026-10-17T20:41:15+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x8d6nb",
+   "sub": "r/vermont",
+   "title": "Little known haunted places + folklore",
+   "url": "https://www.reddit.com/r/vermont/comments/1x8d6nb/little_known_haunted_places_folklore/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-17T20:06:12+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T20:41:15+00:00"
+   },
+   "first_seen": "2026-10-17T20:41:15+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x8cy88",
+   "sub": "r/vermont",
+   "title": "Residents decry the state of Maple Street [Stowe]",
+   "url": "https://www.reddit.com/r/vermont/comments/1x8cy88/residents_decry_the_state_of_maple_street_stowe/",
+   "created_exact": false,
+   "kind": "link",
+   "out": "https://www.vtcng.com/stowe_reporter/news/local_news/residents-decry-the-state-of-maple-street/article_52ac93ef-9df8-487e-a284-a3f0310c227c.html",
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-17T20:06:12+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T20:41:15+00:00"
+   },
+   "first_seen": "2026-10-17T20:41:15+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x8b51s",
+   "sub": "r/vermont",
+   "title": "Winter coat out of storage, re reading the note inside.....",
+   "url": "https://www.reddit.com/r/vermont/comments/1x8b51s/winter_coat_out_of_storage_re_reading_the_note/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-17T20:06:12+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T20:41:15+00:00"
+   },
+   "first_seen": "2026-10-17T20:41:15+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x8a28s",
+   "sub": "r/vermont",
+   "title": "A bit of sog",
+   "url": "https://www.reddit.com/r/vermont/comments/1x8a28s/a_bit_of_sog/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-17T20:06:12+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T20:41:15+00:00"
+   },
+   "first_seen": "2026-10-17T20:41:15+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x89rid",
+   "sub": "r/vermont",
+   "title": "Bristol by drone, 10/15/2026",
+   "url": "https://www.reddit.com/r/vermont/comments/1x89rid/bristol_by_drone_10152026/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-17T20:06:12+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T20:41:15+00:00"
+   },
+   "first_seen": "2026-10-17T20:41:15+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x892ya",
+   "sub": "r/vermont",
+   "title": "First snow flying",
+   "url": "https://www.reddit.com/r/vermont/comments/1x892ya/first_snow_flying/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-17T20:06:12+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T20:41:15+00:00"
+   },
+   "first_seen": "2026-10-17T20:41:15+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x88eoz",
+   "sub": "r/vermont",
+   "title": "Horse logging, a 200-year Vermont tradition with a future",
+   "url": "https://www.reddit.com/r/vermont/comments/1x88eoz/horse_logging_a_200year_vermont_tradition_with_a/",
+   "created_exact": false,
+   "kind": "link",
+   "out": "https://www.vermontpublic.org/local-news/2026-10-16/horse-logging-200-year-vermont-tradition-future",
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-17T20:06:12+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T20:41:15+00:00"
+   },
+   "first_seen": "2026-10-17T20:41:15+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x850jb",
+   "sub": "r/vermont",
+   "title": "Doesn’t matter how tall you are!",
+   "url": "https://www.reddit.com/r/vermont/comments/1x850jb/doesnt_matter_how_tall_you_are/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-17T20:06:12+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T20:41:15+00:00"
+   },
+   "first_seen": "2026-10-17T20:41:15+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x83bb7",
+   "sub": "r/vermont",
+   "title": "A small pond with fall colors in Vermont",
+   "url": "https://www.reddit.com/r/vermont/comments/1x83bb7/a_small_pond_with_fall_colors_in_vermont/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-17T20:06:12+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T20:41:15+00:00"
+   },
+   "first_seen": "2026-10-17T20:41:15+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x83874",
+   "sub": "r/vermont",
+   "title": "A lake house in Vermont",
+   "url": "https://www.reddit.com/r/vermont/comments/1x83874/a_lake_house_in_vermont/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-17T20:06:12+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T20:41:15+00:00"
+   },
+   "first_seen": "2026-10-17T20:41:15+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x7zbtb",
+   "sub": "r/vermont",
+   "title": "Feast your eyes",
+   "url": "https://www.reddit.com/r/vermont/comments/1x7zbtb/feast_your_eyes/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-17T20:06:12+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T20:41:15+00:00"
+   },
+   "first_seen": "2026-10-17T20:41:15+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x7xogf",
+   "sub": "r/vermont",
+   "title": "Pro-Phil Scott super PAC launches ad buy, another signal Vermont governor’s race could be close",
+   "url": "https://www.reddit.com/r/vermont/comments/1x7xogf/prophil_scott_super_pac_launches_ad_buy_another/",
+   "created_exact": false,
+   "kind": "link",
+   "out": "https://vtdigger.org/2026/10/16/pro-phil-scott-super-pac-launches-ad-buy-another-signal-vermont-governors-race-could-be-close/",
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-17T20:06:12+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T20:41:15+00:00"
+   },
+   "first_seen": "2026-10-17T20:41:15+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x7saum",
+   "sub": "r/vermont",
+   "title": "Zola is up for adoption!",
+   "url": "https://www.reddit.com/r/vermont/comments/1x7saum/zola_is_up_for_adoption/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-17T20:06:12+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T20:41:15+00:00"
+   },
+   "first_seen": "2026-10-17T20:41:15+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x7qegv",
+   "sub": "r/vermont",
+   "title": "I need to yell at my grandma. Where to take her for Sunday brunch?",
+   "url": "https://www.reddit.com/r/vermont/comments/1x7qegv/i_need_to_yell_at_my_grandma_where_to_take_her/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-17T20:06:12+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T20:41:15+00:00"
+   },
+   "first_seen": "2026-10-17T20:41:15+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x7oub0",
+   "sub": "r/vermont",
+   "title": "Greetings, NH neighbors! May you be enjoying our foliage views across the river as much as I am enjoying yours.",
+   "url": "https://www.reddit.com/r/vermont/comments/1x7oub0/greetings_nh_neighbors_may_you_be_enjoying_our/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-17T20:06:12+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T20:41:15+00:00"
+   },
+   "first_seen": "2026-10-17T20:41:15+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x8izt2",
+   "sub": "r/burlington",
+   "title": "Best ramen",
+   "url": "https://www.reddit.com/r/burlington/comments/1x8izt2/best_ramen/",
+   "created_exact": true,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-17T19:31:15+00:00",
+   "routes": [
+    "rss"
+   ],
+   "seen": {
+    "rss": "2026-10-17T19:41:15+00:00"
+   },
+   "first_seen": "2026-10-17T19:41:15+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x8f9nw",
+   "sub": "r/burlington",
+   "title": "anyone have a spare ticket for judge at higher ground tonight?",
+   "url": "https://www.reddit.com/r/burlington/comments/1x8f9nw/anyone_have_a_spare_ticket_for_judge_at_higher/",
+   "created_exact": true,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-17T16:58:40+00:00",
+   "routes": [
+    "rss"
+   ],
+   "seen": {
+    "rss": "2026-10-17T17:41:17+00:00"
+   },
+   "first_seen": "2026-10-17T17:41:17+00:00",
+   "last_seen": "2026-10-17T19:41:15+00:00"
+  },
+  {
+   "id": "1x8ewbr",
+   "sub": "r/burlington",
+   "title": "Private Equity Vets in BTV",
+   "url": "https://www.reddit.com/r/burlington/comments/1x8ewbr/private_equity_vets_in_btv/",
+   "created_exact": true,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-17T16:43:37+00:00",
+   "routes": [
+    "inoreader",
+    "rss"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T17:41:17+00:00",
+    "rss": "2026-10-17T17:41:17+00:00"
+   },
+   "first_seen": "2026-10-17T17:41:17+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x8blyc",
+   "sub": "r/burlington",
+   "title": "New friend for Bob the Drag Queen show tonight? Free ticket!",
+   "url": "https://www.reddit.com/r/burlington/comments/1x8blyc/new_friend_for_bob_the_drag_queen_show_tonight/",
+   "created_exact": true,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-17T14:28:09+00:00",
+   "routes": [
+    "rss"
+   ],
+   "seen": {
+    "rss": "2026-10-17T14:41:13+00:00"
+   },
+   "first_seen": "2026-10-17T14:41:13+00:00",
+   "last_seen": "2026-10-17T16:41:19+00:00"
+  },
+  {
+   "id": "1x89y02",
+   "sub": "r/burlington",
+   "title": "Vintage Clothing Market today! 377 Pine St till 2pm",
+   "url": "https://www.reddit.com/r/burlington/comments/1x89y02/vintage_clothing_market_today_377_pine_st_till_2pm/",
+   "created_exact": true,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-17T13:12:54+00:00",
+   "routes": [
+    "inoreader",
+    "rss"
+   ],
+   "seen": {
+    "rss": "2026-10-17T13:41:16+00:00",
+    "inoreader": "2026-10-17T17:41:17+00:00"
+   },
+   "first_seen": "2026-10-17T13:41:16+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x81iag",
+   "sub": "r/burlington",
+   "title": "smallest biggest city position",
+   "url": "https://www.reddit.com/r/burlington/comments/1x81iag/smallest_biggest_city_position/",
+   "created_exact": true,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-17T04:57:03+00:00",
+   "routes": [
+    "inoreader",
+    "rss"
+   ],
+   "seen": {
+    "rss": "2026-10-17T06:53:08+00:00",
+    "inoreader": "2026-10-17T11:41:10+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x80st9",
+   "sub": "r/burlington",
+   "title": "best deli style chicken salad?",
+   "url": "https://www.reddit.com/r/burlington/comments/1x80st9/best_deli_style_chicken_salad/",
+   "created_exact": true,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-17T04:15:44+00:00",
+   "routes": [
+    "inoreader",
+    "rss"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00",
+    "rss": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x7z3ta",
+   "sub": "r/burlington",
+   "title": "Where do the crows go during the day??",
+   "url": "https://www.reddit.com/r/burlington/comments/1x7z3ta/where_do_the_crows_go_during_the_day/",
+   "created_exact": true,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-17T02:41:44+00:00",
+   "routes": [
+    "inoreader",
+    "rss"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00",
+    "rss": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x7xg53",
+   "sub": "r/burlington",
+   "title": "There should be a snowboard park in Burlington.",
+   "url": "https://www.reddit.com/r/burlington/comments/1x7xg53/there_should_be_a_snowboard_park_in_burlington/",
+   "created_exact": true,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-17T01:14:28+00:00",
+   "routes": [
+    "inoreader",
+    "rss"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00",
+    "rss": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x7vet6",
+   "sub": "r/burlington",
+   "title": "Yikes, I guess Four Corners of the Earth is at it again.",
+   "url": "https://www.reddit.com/r/burlington/comments/1x7vet6/yikes_i_guess_four_corners_of_the_earth_is_at_it/",
+   "created_exact": true,
+   "kind": "link",
+   "out": "https://www.instagram.com/p/DecVjU0TftO/",
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-16T23:34:16+00:00",
+   "routes": [
+    "inoreader",
+    "rss"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00",
+    "rss": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x7qi5r",
+   "sub": "r/burlington",
+   "title": "Game on",
+   "url": "https://www.reddit.com/r/burlington/comments/1x7qi5r/game_on/",
+   "created_exact": true,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-16T20:05:00+00:00",
+   "routes": [
+    "inoreader",
+    "rss"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00",
+    "rss": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x7ni6w",
+   "sub": "r/burlington",
+   "title": "Vote Yes on Prop3!",
+   "url": "https://www.reddit.com/r/burlington/comments/1x7ni6w/vote_yes_on_prop3/",
+   "created_exact": true,
+   "kind": "link",
+   "out": "https://www.timesargus.com/opinion/commentary/moquin-time-for-action/article_527f74ba-ee74-5fe1-81a9-92109659fc32.html",
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-16T18:09:21+00:00",
+   "routes": [
+    "inoreader",
+    "rss"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00",
+    "rss": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x7n6ug",
+   "sub": "r/burlington",
+   "title": "Sewing machine repair",
+   "url": "https://www.reddit.com/r/burlington/comments/1x7n6ug/sewing_machine_repair/",
+   "created_exact": true,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-16T17:57:39+00:00",
+   "routes": [
+    "inoreader",
+    "rss"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00",
+    "rss": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x7n3hh",
+   "sub": "r/burlington",
+   "title": "Last Chance for a Free Haircut This Week at Burlington Barbershop!",
+   "url": "https://www.reddit.com/r/burlington/comments/1x7n3hh/last_chance_for_a_free_haircut_this_week_at/",
+   "created_exact": true,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-16T17:54:00+00:00",
+   "routes": [
+    "inoreader",
+    "rss"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00",
+    "rss": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x7lzsa",
+   "sub": "r/burlington",
+   "title": "Warning scary figure: Luke",
+   "url": "https://www.reddit.com/r/burlington/comments/1x7lzsa/warning_scary_figure_luke/",
+   "created_exact": true,
+   "kind": "link",
+   "out": "https://www.youtube.com/watch?v=_B1z_BYjM6M",
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-16T17:11:34+00:00",
+   "routes": [
+    "inoreader",
+    "rss"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00",
+    "rss": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x7jalm",
+   "sub": "r/vermont",
+   "title": "Now playing: \"Spirits of Rokeby: The Impending Crisis\"",
+   "url": "https://www.reddit.com/r/vermont/comments/1x7jalm/now_playing_spirits_of_rokeby_the_impending_crisis/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-16T16:52:19+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x7ixsx",
+   "sub": "r/vermont",
+   "title": "We need everyone to get out there and vote! If you’re able to please vote early!",
+   "url": "https://www.reddit.com/r/vermont/comments/1x7ixsx/we_need_everyone_to_get_out_there_and_vote_if/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-16T16:52:19+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x7ivwt",
+   "sub": "r/vermont",
+   "title": "Vermont man cited for allegedly killing family dog, police say",
+   "url": "https://www.reddit.com/r/vermont/comments/1x7ivwt/vermont_man_cited_for_allegedly_killing_family/",
+   "created_exact": false,
+   "kind": "link",
+   "out": "https://www.mynbc5.com/article/man-torments-kills-family-dog-vermont/74154002",
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-16T16:52:19+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x7ipwi",
+   "sub": "r/vermont",
+   "title": "Is 108 open today? Getting mixed information.",
+   "url": "https://www.reddit.com/r/vermont/comments/1x7ipwi/is_108_open_today_getting_mixed_information/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-16T16:52:19+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x7hqvd",
+   "sub": "r/vermont",
+   "title": "Colchester 10/15 (a non-foliage pic)",
+   "url": "https://www.reddit.com/r/vermont/comments/1x7hqvd/colchester_1015_a_nonfoliage_pic/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-16T16:52:19+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x7ha4b",
+   "sub": "r/vermont",
+   "title": "2026 Prop 3 question...",
+   "url": "https://www.reddit.com/r/vermont/comments/1x7ha4b/2026_prop_3_question/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-16T16:52:19+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x7ldbx",
+   "sub": "r/burlington",
+   "title": "Anyone local that repairs Dyson hair dryers?",
+   "url": "https://www.reddit.com/r/burlington/comments/1x7ldbx/anyone_local_that_repairs_dyson_hair_dryers/",
+   "created_exact": true,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-16T16:48:06+00:00",
+   "routes": [
+    "inoreader",
+    "rss"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00",
+    "rss": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x7jae4",
+   "sub": "r/burlington",
+   "title": "Now playing: \"Spirits of Rokeby: The Impending Crisis\"",
+   "url": "https://www.reddit.com/r/burlington/comments/1x7jae4/now_playing_spirits_of_rokeby_the_impending_crisis/",
+   "created_exact": true,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-16T15:29:37+00:00",
+   "routes": [
+    "inoreader",
+    "rss"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00",
+    "rss": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x7i4ol",
+   "sub": "r/burlington",
+   "title": "Cars on bike path",
+   "url": "https://www.reddit.com/r/burlington/comments/1x7i4ol/cars_on_bike_path/",
+   "created_exact": true,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-16T14:44:59+00:00",
+   "routes": [
+    "inoreader",
+    "rss"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00",
+    "rss": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x7i35n",
+   "sub": "r/burlington",
+   "title": "This weekend Burlington has a puppet slam at Junktiques, a liminal space haunted house inside NBT Bank, PokeKon-Fest, Flaxtravaganza, shadow puppets at Shelburne Farms and Fright by Flashlight, and in the news Kismayo Kitchen reopens, a sober home opens on Cedar Street and VTIFF previews 48 films",
+   "url": "https://www.reddit.com/r/burlington/comments/1x7i35n/this_weekend_burlington_has_a_puppet_slam_at/",
+   "created_exact": true,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-16T14:43:12+00:00",
+   "routes": [
+    "inoreader",
+    "rss"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00",
+    "rss": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x7gb6p",
+   "sub": "r/vermont",
+   "title": "Police arrest Vermont Corrections employee on assault charge",
+   "url": "https://www.reddit.com/r/vermont/comments/1x7gb6p/police_arrest_vermont_corrections_employee_on/",
+   "created_exact": false,
+   "kind": "link",
+   "out": "https://www.wcax.com/2026/10/13/police-arrest-vermont-corrections-employee-assault-charge/?outputType=amp",
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-16T13:54:47+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x7fmma",
+   "sub": "r/vermont",
+   "title": "Champlain Memorial Lighthouse during sunrise",
+   "url": "https://www.reddit.com/r/vermont/comments/1x7fmma/champlain_memorial_lighthouse_during_sunrise/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-16T13:54:47+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x7fmco",
+   "sub": "r/vermont",
+   "title": "Wellbeing Economy: An Economy in Service of Life | Amanda Janoo",
+   "url": "https://www.reddit.com/r/vermont/comments/1x7fmco/wellbeing_economy_an_economy_in_service_of_life/",
+   "created_exact": false,
+   "kind": "link",
+   "out": "https://youtu.be/dgumvzfI-H0?si=S_2rLb54P7Eoyowb",
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-16T13:54:47+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x7fihl",
+   "sub": "r/vermont",
+   "title": "Kiss them leafs goodbye",
+   "url": "https://www.reddit.com/r/vermont/comments/1x7fihl/kiss_them_leafs_goodbye/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-16T13:54:47+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x7dqpx",
+   "sub": "r/vermont",
+   "title": "Foliage",
+   "url": "https://www.reddit.com/r/vermont/comments/1x7dqpx/foliage/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-16T13:54:47+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x7fmw3",
+   "sub": "r/burlington",
+   "title": "Champlain Memorial Lighthouse during sunrise",
+   "url": "https://www.reddit.com/r/burlington/comments/1x7fmw3/champlain_memorial_lighthouse_during_sunrise/",
+   "created_exact": true,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-16T13:02:08+00:00",
+   "routes": [
+    "inoreader",
+    "rss"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00",
+    "rss": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x7df0e",
+   "sub": "r/burlington",
+   "title": "Kismayo Kitchen Reopens in BTV on Riverside Ave — for Now",
+   "url": "https://www.reddit.com/r/burlington/comments/1x7df0e/kismayo_kitchen_reopens_in_btv_on_riverside_ave/",
+   "created_exact": true,
+   "kind": "link",
+   "out": "https://www.sevendaysvt.com/food-drink/foodnews/kismayo-kitchen-reopens-in-btv-on-riverside-ave-for-now/?utm_content=buffer5faf7&utm_medium=social&utm_source=twitter.com&utm_campaign=buffer&fbclid=IwZXh0bgNhZW0CMTEAcGRvZgNzcnRjBmFwcF9pZA80MDk5NjI2MjMwODU2MDkAAR4gD6sdnB91NbSdStKDQ9U69DONZRfVYNyzs9mIEm1KsTj_6iUZoVD5Kez2kg_aem_tocUqvTqQ8cCDFN-QJHuCw",
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-16T11:13:00+00:00",
+   "routes": [
+    "inoreader",
+    "rss"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00",
+    "rss": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x73728",
+   "sub": "r/burlington",
+   "title": "Halloween in burly",
+   "url": "https://www.reddit.com/r/burlington/comments/1x73728/halloween_in_burly/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-16T08:07:06+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x6zypv",
+   "sub": "r/burlington",
+   "title": "95.5",
+   "url": "https://www.reddit.com/r/burlington/comments/1x6zypv/955/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-16T08:07:06+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x79ung",
+   "sub": "r/burlington",
+   "title": "Repair Cafe Saturday!",
+   "url": "https://www.reddit.com/r/burlington/comments/1x79ung/repair_cafe_saturday/",
+   "created_exact": true,
+   "kind": "link",
+   "out": "https://www.facebook.com/share/19CuQ2nW1f/",
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-16T07:33:23+00:00",
+   "routes": [
+    "inoreader",
+    "rss"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00",
+    "rss": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x74mr5",
+   "sub": "r/vermont",
+   "title": "Giving away Woodstock VT Restaurant Reservation, 10/16",
+   "url": "https://www.reddit.com/r/vermont/comments/1x74mr5/giving_away_woodstock_vt_restaurant_reservation/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-16T04:56:08+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x72kd1",
+   "sub": "r/vermont",
+   "title": "Heating season",
+   "url": "https://www.reddit.com/r/vermont/comments/1x72kd1/heating_season/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-16T02:12:06+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x72g2z",
+   "sub": "r/vermont",
+   "title": "Crazy video of folks in Hardwick guy almost crushes troopers with an excavator",
+   "url": "https://www.reddit.com/r/vermont/comments/1x72g2z/crazy_video_of_folks_in_hardwick_guy_almost/",
+   "created_exact": false,
+   "kind": "link",
+   "out": "https://youtu.be/F6mmMkwO-lQ?is=WtWkqkvP0Tj-iANS",
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-16T02:12:06+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x6w6va",
+   "sub": "r/vermont",
+   "title": "Groennfel/Havoc Mead",
+   "url": "https://www.reddit.com/r/vermont/comments/1x6w6va/groennfelhavoc_mead/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-16T02:12:06+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x6vly2",
+   "sub": "r/vermont",
+   "title": "Springfield, Vermont Missing (29M) Brad Spurr",
+   "url": "https://www.reddit.com/r/vermont/comments/1x6vly2/springfield_vermont_missing_29m_brad_spurr/",
+   "created_exact": false,
+   "kind": "link",
+   "out": "https://www.facebook.com/share/p/1F3i3efzMi/?mibextid=wwXIfr",
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-16T02:12:06+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x6sqa6",
+   "sub": "r/vermont",
+   "title": "Montreal",
+   "url": "https://www.reddit.com/r/vermont/comments/1x6sqa6/montreal/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-16T02:12:06+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x6riu7",
+   "sub": "r/vermont",
+   "title": "ICE spotted",
+   "url": "https://www.reddit.com/r/vermont/comments/1x6riu7/ice_spotted/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-16T02:12:06+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x6mtdr",
+   "sub": "r/vermont",
+   "title": "What's the deal with Irene Wrenner? (Chittenden North Senate race)",
+   "url": "https://www.reddit.com/r/vermont/comments/1x6mtdr/whats_the_deal_with_irene_wrenner_chittenden/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-16T02:12:06+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x6lskv",
+   "sub": "r/vermont",
+   "title": "Moose spotted off Route 5 on Norwich/Thetford town line.",
+   "url": "https://www.reddit.com/r/vermont/comments/1x6lskv/moose_spotted_off_route_5_on_norwichthetford_town/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-16T02:12:06+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x6kfxa",
+   "sub": "r/vermont",
+   "title": "Vermont will restore fire towers on Spruce and Elmore mountains using helicopters this fall",
+   "url": "https://www.reddit.com/r/vermont/comments/1x6kfxa/vermont_will_restore_fire_towers_on_spruce_and/",
+   "created_exact": false,
+   "kind": "link",
+   "out": "https://www.vermontpublic.org/local-news/2026-10-15/vermont-restore-fire-towers-spruce-elmore-mountains-helicopters-fall",
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-16T02:12:06+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x6inwb",
+   "sub": "r/vermont",
+   "title": "What are those hawks near Lake Champlain?",
+   "url": "https://www.reddit.com/r/vermont/comments/1x6inwb/what_are_those_hawks_near_lake_champlain/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-16T02:12:06+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x6zz6z",
+   "sub": "r/burlington",
+   "title": "What charity is leaving food?",
+   "url": "https://www.reddit.com/r/burlington/comments/1x6zz6z/what_charity_is_leaving_food/",
+   "created_exact": true,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-15T22:48:04+00:00",
+   "routes": [
+    "inoreader",
+    "rss"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00",
+    "rss": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x6y1m5",
+   "sub": "r/burlington",
+   "title": "Queer/Trans friendly nail salon?",
+   "url": "https://www.reddit.com/r/burlington/comments/1x6y1m5/queertrans_friendly_nail_salon/",
+   "created_exact": true,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-15T21:23:56+00:00",
+   "routes": [
+    "inoreader",
+    "rss"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00",
+    "rss": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x6qqd7",
+   "sub": "r/burlington",
+   "title": "Nectars to return?",
+   "url": "https://www.reddit.com/r/burlington/comments/1x6qqd7/nectars_to_return/",
+   "created_exact": true,
+   "kind": "link",
+   "out": "https://www.wcax.com/2026/10/15/nectars-could-be-making-comeback-burlington/",
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-15T16:43:29+00:00",
+   "routes": [
+    "inoreader",
+    "rss"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00",
+    "rss": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x6qd60",
+   "sub": "r/burlington",
+   "title": "Burlington ABA Basketball Team",
+   "url": "https://www.reddit.com/r/burlington/comments/1x6qd60/burlington_aba_basketball_team/",
+   "created_exact": true,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-15T16:29:33+00:00",
+   "routes": [
+    "inoreader",
+    "rss"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00",
+    "rss": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x6oarv",
+   "sub": "r/burlington",
+   "title": "Curry and Cocktails",
+   "url": "https://www.reddit.com/r/burlington/comments/1x6oarv/curry_and_cocktails/",
+   "created_exact": true,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-15T15:12:19+00:00",
+   "routes": [
+    "inoreader",
+    "rss"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00",
+    "rss": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x6o1nc",
+   "sub": "r/burlington",
+   "title": "Burlington trip this weekend",
+   "url": "https://www.reddit.com/r/burlington/comments/1x6o1nc/burlington_trip_this_weekend/",
+   "created_exact": true,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-15T15:02:49+00:00",
+   "routes": [
+    "rss"
+   ],
+   "seen": {
+    "rss": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x6nov7",
+   "sub": "r/burlington",
+   "title": "Sci-fi author Annalee Newitz at Phoenix Books tonight!",
+   "url": "https://www.reddit.com/r/burlington/comments/1x6nov7/scifi_author_annalee_newitz_at_phoenix_books/",
+   "created_exact": true,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-15T14:49:44+00:00",
+   "routes": [
+    "inoreader",
+    "rss"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00",
+    "rss": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x6nd1y",
+   "sub": "r/burlington",
+   "title": "Places that are hiring but that aren’t on Indeed?",
+   "url": "https://www.reddit.com/r/burlington/comments/1x6nd1y/places_that_are_hiring_but_that_arent_on_indeed/",
+   "created_exact": true,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-15T14:37:23+00:00",
+   "routes": [
+    "inoreader",
+    "rss"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00",
+    "rss": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x6lt7s",
+   "sub": "r/burlington",
+   "title": "What's the deal with Irene Wrenner? (Chittenden North Senate race)",
+   "url": "https://www.reddit.com/r/burlington/comments/1x6lt7s/whats_the_deal_with_irene_wrenner_chittenden/",
+   "created_exact": true,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-15T13:35:00+00:00",
+   "routes": [
+    "inoreader",
+    "rss"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00",
+    "rss": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x6k3ea",
+   "sub": "r/burlington",
+   "title": "Donate to Support Lila Darjee's Children, organized by Jonathan Fisher",
+   "url": "https://www.reddit.com/r/burlington/comments/1x6k3ea/donate_to_support_lila_darjees_children_organized/",
+   "created_exact": true,
+   "kind": "link",
+   "out": "https://www.gofundme.com/f/support-lila-darjees-children",
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-15T12:17:45+00:00",
+   "routes": [
+    "inoreader",
+    "rss"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00",
+    "rss": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x6jlzf",
+   "sub": "r/burlington",
+   "title": "Monkey House (And Other Winooski Music Venues)",
+   "url": "https://www.reddit.com/r/burlington/comments/1x6jlzf/monkey_house_and_other_winooski_music_venues/",
+   "created_exact": true,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-15T11:53:37+00:00",
+   "routes": [
+    "inoreader",
+    "rss"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00",
+    "rss": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x68628",
+   "sub": "r/burlington",
+   "title": "Bus car crash",
+   "url": "https://www.reddit.com/r/burlington/comments/1x68628/bus_car_crash/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-15T02:05:04+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x68l8d",
+   "sub": "r/burlington",
+   "title": "Dude on TikTok harassing local businesses",
+   "url": "https://www.reddit.com/r/burlington/comments/1x68l8d/dude_on_tiktok_harassing_local_businesses/",
+   "created_exact": true,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-15T01:14:25+00:00",
+   "routes": [
+    "inoreader",
+    "rss"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00",
+    "rss": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x67xm6",
+   "sub": "r/burlington",
+   "title": "Public displays of support for Ukraine planned?",
+   "url": "https://www.reddit.com/r/burlington/comments/1x67xm6/public_displays_of_support_for_ukraine_planned/",
+   "created_exact": true,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-15T00:41:38+00:00",
+   "routes": [
+    "inoreader",
+    "rss"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00",
+    "rss": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x67trd",
+   "sub": "r/burlington",
+   "title": "avg water bill",
+   "url": "https://www.reddit.com/r/burlington/comments/1x67trd/avg_water_bill/",
+   "created_exact": true,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-15T00:36:26+00:00",
+   "routes": [
+    "inoreader",
+    "rss"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00",
+    "rss": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x66frc",
+   "sub": "r/burlington",
+   "title": "Does anyone know this guy",
+   "url": "https://www.reddit.com/r/burlington/comments/1x66frc/does_anyone_know_this_guy/",
+   "created_exact": true,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-14T23:30:48+00:00",
+   "routes": [
+    "inoreader",
+    "rss"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00",
+    "rss": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x65p37",
+   "sub": "r/vermont",
+   "title": "Thinking of the Rockingham Meeting House builders - late 1700s - enjoying the foliage as we are today",
+   "url": "https://www.reddit.com/r/vermont/comments/1x65p37/thinking_of_the_rockingham_meeting_house_builders/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-14T23:23:47+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x63t8n",
+   "sub": "r/vermont",
+   "title": "What does this mean on someone's car 53 **** 67 ?",
+   "url": "https://www.reddit.com/r/vermont/comments/1x63t8n/what_does_this_mean_on_someones_car_53_67/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-14T23:23:47+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x63eei",
+   "sub": "r/vermont",
+   "title": "Car Inspections vicinity of Moretown",
+   "url": "https://www.reddit.com/r/vermont/comments/1x63eei/car_inspections_vicinity_of_moretown/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-14T23:23:47+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x63az0",
+   "sub": "r/vermont",
+   "title": "How to address the constant accidents on I-89(S) by exit 15 onramp",
+   "url": "https://www.reddit.com/r/vermont/comments/1x63az0/how_to_address_the_constant_accidents_on_i89s_by/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-14T23:23:47+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x62nzu",
+   "sub": "r/vermont",
+   "title": "Why is one lane closed for like 30mi both North and Southbound on i89 for no discernable reason?",
+   "url": "https://www.reddit.com/r/vermont/comments/1x62nzu/why_is_one_lane_closed_for_like_30mi_both_north/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-14T23:23:47+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x62np0",
+   "sub": "r/vermont",
+   "title": "Landlord Threatened Rent Increase",
+   "url": "https://www.reddit.com/r/vermont/comments/1x62np0/landlord_threatened_rent_increase/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-14T23:23:47+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x624o7",
+   "sub": "r/vermont",
+   "title": "Just saw the new Phil Scott ad on YouTube.",
+   "url": "https://www.reddit.com/r/vermont/comments/1x624o7/just_saw_the_new_phil_scott_ad_on_youtube/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-14T23:23:47+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x64vgz",
+   "sub": "r/burlington",
+   "title": "Need an apartment for next June. Too early to start looking?",
+   "url": "https://www.reddit.com/r/burlington/comments/1x64vgz/need_an_apartment_for_next_june_too_early_to/",
+   "created_exact": true,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-14T22:19:50+00:00",
+   "routes": [
+    "inoreader",
+    "rss"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00",
+    "rss": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x62lle",
+   "sub": "r/burlington",
+   "title": "Kismayo Kitchen is Open!",
+   "url": "https://www.reddit.com/r/burlington/comments/1x62lle/kismayo_kitchen_is_open/",
+   "created_exact": true,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-14T20:45:36+00:00",
+   "routes": [
+    "inoreader",
+    "rss"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00",
+    "rss": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x61p7e",
+   "sub": "r/burlington",
+   "title": "Sing with The Green Mountain Chorus for the Holiday's.",
+   "url": "https://www.reddit.com/r/burlington/comments/1x61p7e/sing_with_the_green_mountain_chorus_for_the/",
+   "created_exact": true,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-14T20:09:34+00:00",
+   "routes": [
+    "inoreader",
+    "rss"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00",
+    "rss": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x60a3y",
+   "sub": "r/vermont",
+   "title": "How’s the foliage in Elmore State Park right now?",
+   "url": "https://www.reddit.com/r/vermont/comments/1x60a3y/hows_the_foliage_in_elmore_state_park_right_now/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-14T20:05:45+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x5y8qs",
+   "sub": "r/vermont",
+   "title": "Can You Janoo?",
+   "url": "https://www.reddit.com/r/vermont/comments/1x5y8qs/can_you_janoo/",
+   "created_exact": false,
+   "kind": "link",
+   "out": "https://www.sevendaysvt.com/news/election-2026/can-amanda-janoo-pull-off-an-upset-in-the-race-for-governor/",
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-14T20:05:45+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x5xc6t",
+   "sub": "r/vermont",
+   "title": "Teach Or Request New Workshops At Generator: Burlington's Favorite Creative Space!",
+   "url": "https://www.reddit.com/r/vermont/comments/1x5xc6t/teach_or_request_new_workshops_at_generator/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-14T20:05:45+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x61gdx",
+   "sub": "r/burlington",
+   "title": "Recommendations for new snatch gardener",
+   "url": "https://www.reddit.com/r/burlington/comments/1x61gdx/recommendations_for_new_snatch_gardener/",
+   "created_exact": true,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-14T20:00:22+00:00",
+   "routes": [
+    "inoreader",
+    "rss"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00",
+    "rss": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x612u6",
+   "sub": "r/burlington",
+   "title": "Gossip",
+   "url": "https://www.reddit.com/r/burlington/comments/1x612u6/gossip/",
+   "created_exact": true,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-14T19:45:33+00:00",
+   "routes": [
+    "inoreader",
+    "rss"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00",
+    "rss": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x60zvz",
+   "sub": "r/burlington",
+   "title": "Blowing up balloons?",
+   "url": "https://www.reddit.com/r/burlington/comments/1x60zvz/blowing_up_balloons/",
+   "created_exact": true,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-14T19:42:19+00:00",
+   "routes": [
+    "inoreader",
+    "rss"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00",
+    "rss": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x608o3",
+   "sub": "r/burlington",
+   "title": "Recommendation for Co-Work/Work Locations for Visitors",
+   "url": "https://www.reddit.com/r/burlington/comments/1x608o3/recommendation_for_coworkwork_locations_for/",
+   "created_exact": true,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-14T19:12:58+00:00",
+   "routes": [
+    "inoreader",
+    "rss"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00",
+    "rss": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x5zm1x",
+   "sub": "r/burlington",
+   "title": "White Audi at exit 14",
+   "url": "https://www.reddit.com/r/burlington/comments/1x5zm1x/white_audi_at_exit_14/",
+   "created_exact": true,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-14T18:49:40+00:00",
+   "routes": [
+    "inoreader",
+    "rss"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00",
+    "rss": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x5yf8y",
+   "sub": "r/burlington",
+   "title": "Speaking on I89 (tire troughs / ruts, hydroplaning, black ice)",
+   "url": "https://www.reddit.com/r/burlington/comments/1x5yf8y/speaking_on_i89_tire_troughs_ruts_hydroplaning/",
+   "created_exact": true,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-14T18:05:08+00:00",
+   "routes": [
+    "inoreader",
+    "rss"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00",
+    "rss": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x5y3tr",
+   "sub": "r/burlington",
+   "title": "Sushi recs",
+   "url": "https://www.reddit.com/r/burlington/comments/1x5y3tr/sushi_recs/",
+   "created_exact": true,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-14T17:53:37+00:00",
+   "routes": [
+    "inoreader",
+    "rss"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00",
+    "rss": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x5xbsa",
+   "sub": "r/burlington",
+   "title": "Teach Or Request New Workshops At Generator: Burlington's Favorite Creative Space!",
+   "url": "https://www.reddit.com/r/burlington/comments/1x5xbsa/teach_or_request_new_workshops_at_generator/",
+   "created_exact": true,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-14T17:24:04+00:00",
+   "routes": [
+    "inoreader",
+    "rss"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00",
+    "rss": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x5vute",
+   "sub": "r/vermont",
+   "title": "Military Surplus Stores?",
+   "url": "https://www.reddit.com/r/vermont/comments/1x5vute/military_surplus_stores/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-14T17:19:32+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x5v97a",
+   "sub": "r/vermont",
+   "title": "SpOOOOoooky Season 🍂🎃",
+   "url": "https://www.reddit.com/r/vermont/comments/1x5v97a/spoooooooky_season/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-14T17:19:32+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x5q2a7",
+   "sub": "r/vermont",
+   "title": "Was camping green mountain national forest, castle Brooke trail, last weekend and I believe I left a pair of sentimental shoes at my site.",
+   "url": "https://www.reddit.com/r/vermont/comments/1x5q2a7/was_camping_green_mountain_national_forest_castle/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-14T14:02:44+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x5ps2t",
+   "sub": "r/vermont",
+   "title": "Pure Vermont Fall Foliage [Hasselblad 500C/M, 100 f/3.5 and 150 f/4 CF, Kodak Ektar 100]",
+   "url": "https://www.reddit.com/r/vermont/comments/1x5ps2t/pure_vermont_fall_foliage_hasselblad_500cm_100/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-14T14:02:44+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x5r16l",
+   "sub": "r/burlington",
+   "title": "Trusted Car Mechanics",
+   "url": "https://www.reddit.com/r/burlington/comments/1x5r16l/trusted_car_mechanics/",
+   "created_exact": true,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-14T13:19:24+00:00",
+   "routes": [
+    "inoreader",
+    "rss"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00",
+    "rss": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x5q409",
+   "sub": "r/burlington",
+   "title": "I’m done being pissed - how tf do we solve this i89 winooski bridge issue?",
+   "url": "https://www.reddit.com/r/burlington/comments/1x5q409/im_done_being_pissed_how_tf_do_we_solve_this_i89/",
+   "created_exact": true,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-14T12:38:00+00:00",
+   "routes": [
+    "inoreader",
+    "rss"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00",
+    "rss": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x5pvvq",
+   "sub": "r/burlington",
+   "title": "Accident on 89S",
+   "url": "https://www.reddit.com/r/burlington/comments/1x5pvvq/accident_on_89s/",
+   "created_exact": true,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-14T12:27:12+00:00",
+   "routes": [
+    "inoreader",
+    "rss"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00",
+    "rss": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x5ieah",
+   "sub": "r/vermont",
+   "title": "Worst time to visit?",
+   "url": "https://www.reddit.com/r/vermont/comments/1x5ieah/worst_time_to_visit/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-14T05:20:40+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x5i22k",
+   "sub": "r/vermont",
+   "title": "Looking for the Good Samaritan Montpelier couple…",
+   "url": "https://www.reddit.com/r/vermont/comments/1x5i22k/looking_for_the_good_samaritan_montpelier_couple/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-14T05:20:40+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x5hj50",
+   "sub": "r/vermont",
+   "title": "Anomalous Pelagic Migration Theory: A Comparative Ecological Framework of Lake Champlain and Loch Ness",
+   "url": "https://www.reddit.com/r/vermont/comments/1x5hj50/anomalous_pelagic_migration_theory_a_comparative/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-14T05:20:40+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x5ggju",
+   "sub": "r/vermont",
+   "title": "Has anyone been able to find the new ben and jerry’s flavor Razz Up?",
+   "url": "https://www.reddit.com/r/vermont/comments/1x5ggju/has_anyone_been_able_to_find_the_new_ben_and/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-14T05:20:40+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x5dili",
+   "sub": "r/vermont",
+   "title": "Waitsfield",
+   "url": "https://www.reddit.com/r/vermont/comments/1x5dili/waitsfield/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-14T02:32:50+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x5cmxw",
+   "sub": "r/vermont",
+   "title": "Fall Foliage in Stowe",
+   "url": "https://www.reddit.com/r/vermont/comments/1x5cmxw/fall_foliage_in_stowe/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-14T02:32:50+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x5e0qb",
+   "sub": "r/burlington",
+   "title": "I was in Always Full Market today…",
+   "url": "https://www.reddit.com/r/burlington/comments/1x5e0qb/i_was_in_always_full_market_today/",
+   "created_exact": true,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-14T01:01:56+00:00",
+   "routes": [
+    "inoreader",
+    "rss"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00",
+    "rss": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x5dq6x",
+   "sub": "r/burlington",
+   "title": "ISO: strong go players around Burlington",
+   "url": "https://www.reddit.com/r/burlington/comments/1x5dq6x/iso_strong_go_players_around_burlington/",
+   "created_exact": true,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-14T00:47:24+00:00",
+   "routes": [
+    "inoreader",
+    "rss"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00",
+    "rss": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x5cngt",
+   "sub": "r/burlington",
+   "title": "reliable brake replacement",
+   "url": "https://www.reddit.com/r/burlington/comments/1x5cngt/reliable_brake_replacement/",
+   "created_exact": true,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-13T23:56:48+00:00",
+   "routes": [
+    "inoreader",
+    "rss"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00",
+    "rss": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x5cfum",
+   "sub": "r/burlington",
+   "title": "BTV Teases New International Destination - Guesses?",
+   "url": "https://www.reddit.com/r/burlington/comments/1x5cfum/btv_teases_new_international_destination_guesses/",
+   "created_exact": true,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-13T23:46:37+00:00",
+   "routes": [
+    "inoreader",
+    "rss"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00",
+    "rss": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x5bvt3",
+   "sub": "r/vermont",
+   "title": "pretty hills & daytime moon",
+   "url": "https://www.reddit.com/r/vermont/comments/1x5bvt3/pretty_hills_daytime_moon/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-13T23:43:09+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x5av6n",
+   "sub": "r/vermont",
+   "title": "Need help from someone in colchester",
+   "url": "https://www.reddit.com/r/vermont/comments/1x5av6n/need_help_from_someone_in_colchester/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-13T23:43:09+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x58pd0",
+   "sub": "r/vermont",
+   "title": "Blueberries bragging about their own scarlet gowns",
+   "url": "https://www.reddit.com/r/vermont/comments/1x58pd0/blueberries_bragging_about_their_own_scarlet_gowns/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-13T23:43:09+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x5becr",
+   "sub": "r/burlington",
+   "title": "Followed to my car by some dude after less than an hour in ONE",
+   "url": "https://www.reddit.com/r/burlington/comments/1x5becr/followed_to_my_car_by_some_dude_after_less_than/",
+   "created_exact": true,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-13T22:59:03+00:00",
+   "routes": [
+    "inoreader",
+    "rss"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00",
+    "rss": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x5b1xg",
+   "sub": "r/burlington",
+   "title": "What's happening today at City Market?",
+   "url": "https://www.reddit.com/r/burlington/comments/1x5b1xg/whats_happening_today_at_city_market/",
+   "created_exact": true,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-13T22:43:03+00:00",
+   "routes": [
+    "inoreader",
+    "rss"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00",
+    "rss": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x5avee",
+   "sub": "r/burlington",
+   "title": "Need help from someone in colchester",
+   "url": "https://www.reddit.com/r/burlington/comments/1x5avee/need_help_from_someone_in_colchester/",
+   "created_exact": true,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-13T22:34:49+00:00",
+   "routes": [
+    "inoreader",
+    "rss"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00",
+    "rss": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x59cdy",
+   "sub": "r/burlington",
+   "title": "City Market",
+   "url": "https://www.reddit.com/r/burlington/comments/1x59cdy/city_market/",
+   "created_exact": true,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-13T21:29:33+00:00",
+   "routes": [
+    "rss"
+   ],
+   "seen": {
+    "rss": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x594oi",
+   "sub": "r/burlington",
+   "title": "Champlain housing",
+   "url": "https://www.reddit.com/r/burlington/comments/1x594oi/champlain_housing/",
+   "created_exact": true,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-13T21:20:52+00:00",
+   "routes": [
+    "inoreader",
+    "rss"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00",
+    "rss": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x58qlg",
+   "sub": "r/burlington",
+   "title": "Stand With Survivors at University of Vermont",
+   "url": "https://www.reddit.com/r/burlington/comments/1x58qlg/stand_with_survivors_at_university_of_vermont/",
+   "created_exact": true,
+   "kind": "link",
+   "out": "https://youtu.be/mvpP3-NwM8I?is=wH3F1GRN_UeOrNh4",
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-13T21:05:14+00:00",
+   "routes": [
+    "inoreader",
+    "rss"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00",
+    "rss": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x57ito",
+   "sub": "r/vermont",
+   "title": "South Burlington’s OnLogic to Be Acquired for $675 Million by OMRON, a Japanese Firm. (Employees getting bonuses of $1,500 for each month of employment.)",
+   "url": "https://www.reddit.com/r/vermont/comments/1x57ito/south_burlingtons_onlogic_to_be_acquired_for_675/",
+   "created_exact": false,
+   "kind": "link",
+   "out": "https://www.sevendaysvt.com/news/south-burlingtons-onlogic-to-be-acquired-for-675-million-by-a-japanese-company-called-omron/",
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-13T20:55:04+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x56ov3",
+   "sub": "r/vermont",
+   "title": "I painted this VT themed painting in the spring, it’s called “Mud Season’s Revenge” 😁",
+   "url": "https://www.reddit.com/r/vermont/comments/1x56ov3/i_painted_this_vt_themed_painting_in_the_spring/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-13T20:55:04+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x56cvk",
+   "sub": "r/vermont",
+   "title": "Driving exam",
+   "url": "https://www.reddit.com/r/vermont/comments/1x56cvk/driving_exam/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-13T20:55:04+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x565qc",
+   "sub": "r/vermont",
+   "title": "Missing Garden Season Already...",
+   "url": "https://www.reddit.com/r/vermont/comments/1x565qc/missing_garden_season_already/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-13T20:55:04+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x54uq9",
+   "sub": "r/vermont",
+   "title": "Vote Early Rallies This Saturday October 17th!",
+   "url": "https://www.reddit.com/r/vermont/comments/1x54uq9/vote_early_rallies_this_saturday_october_17th/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-13T20:55:04+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x54vlv",
+   "sub": "r/burlington",
+   "title": "Vote Early Rallies This Saturday October 17th!",
+   "url": "https://www.reddit.com/r/burlington/comments/1x54vlv/vote_early_rallies_this_saturday_october_17th/",
+   "created_exact": true,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-13T18:37:52+00:00",
+   "routes": [
+    "inoreader",
+    "rss"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00",
+    "rss": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x53lk2",
+   "sub": "r/burlington",
+   "title": "Concierge / Private primary care physician in Burlington area?",
+   "url": "https://www.reddit.com/r/burlington/comments/1x53lk2/concierge_private_primary_care_physician_in/",
+   "created_exact": true,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-13T17:51:23+00:00",
+   "routes": [
+    "inoreader",
+    "rss"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00",
+    "rss": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x50o58",
+   "sub": "r/vermont",
+   "title": "Does anyone know an herbalist in central Vermont that they would recommend?",
+   "url": "https://www.reddit.com/r/vermont/comments/1x50o58/does_anyone_know_an_herbalist_in_central_vermont/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-13T17:40:32+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x50fgq",
+   "sub": "r/vermont",
+   "title": "16th Annual Champlain Valley Buddy Walk for Down Syndrome in South Burlington on Oct 18, all are welcome",
+   "url": "https://www.reddit.com/r/vermont/comments/1x50fgq/16th_annual_champlain_valley_buddy_walk_for_down/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-13T17:40:32+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x502d6",
+   "sub": "r/vermont",
+   "title": "Access to Hunger Mt Hut",
+   "url": "https://www.reddit.com/r/vermont/comments/1x502d6/access_to_hunger_mt_hut/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-13T17:40:32+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x4z6zx",
+   "sub": "r/vermont",
+   "title": "GOOD NEWS IN VERMONT (10/13)",
+   "url": "https://www.reddit.com/r/vermont/comments/1x4z6zx/good_news_in_vermont_1013/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-13T17:40:32+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x4ybyw",
+   "sub": "r/vermont",
+   "title": "A house hold income jump of $100k in Vermont only nets an extra $18k in disposable income ($70k to $170k)",
+   "url": "https://www.reddit.com/r/vermont/comments/1x4ybyw/a_house_hold_income_jump_of_100k_in_vermont_only/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-13T17:40:32+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x4yxfi",
+   "sub": "r/burlington",
+   "title": "Subaru service places",
+   "url": "https://www.reddit.com/r/burlington/comments/1x4yxfi/subaru_service_places/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-13T17:00:19+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x51um5",
+   "sub": "r/burlington",
+   "title": "Burlington’s Mexican Food Scene Grows in Unexpected Places",
+   "url": "https://www.reddit.com/r/burlington/comments/1x51um5/burlingtons_mexican_food_scene_grows_in/",
+   "created_exact": true,
+   "kind": "link",
+   "out": "https://www.sevendaysvt.com/food-drink/restaurantreviews/the-burlington-area-mexican-food-scene-grows-in-unexpected-places/",
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-13T16:48:00+00:00",
+   "routes": [
+    "inoreader",
+    "rss"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00",
+    "rss": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x50fak",
+   "sub": "r/burlington",
+   "title": "16th Annual Champlain Valley Buddy Walk for Down Syndrome in South Burlington on Oct 18, all are welcome",
+   "url": "https://www.reddit.com/r/burlington/comments/1x50fak/16th_annual_champlain_valley_buddy_walk_for_down/",
+   "created_exact": true,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-13T15:55:35+00:00",
+   "routes": [
+    "inoreader",
+    "rss"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00",
+    "rss": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x4yglc",
+   "sub": "r/burlington",
+   "title": "NEFP clothing & food drive",
+   "url": "https://www.reddit.com/r/burlington/comments/1x4yglc/nefp_clothing_food_drive/",
+   "created_exact": true,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-13T14:40:35+00:00",
+   "routes": [
+    "inoreader",
+    "rss"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00",
+    "rss": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x4y4hf",
+   "sub": "r/vermont",
+   "title": "PSA: Time to start thinking about those winter tires",
+   "url": "https://www.reddit.com/r/vermont/comments/1x4y4hf/psa_time_to_start_thinking_about_those_winter/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-13T14:33:55+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x4xcld",
+   "sub": "r/vermont",
+   "title": "Restaurant Recommendations for a Birthday Trip to Vermont!",
+   "url": "https://www.reddit.com/r/vermont/comments/1x4xcld/restaurant_recommendations_for_a_birthday_trip_to/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-13T14:33:55+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x4wbro",
+   "sub": "r/vermont",
+   "title": "Burlington mentioned in NYT piece about homelessness",
+   "url": "https://www.reddit.com/r/vermont/comments/1x4wbro/burlington_mentioned_in_nyt_piece_about/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-13T14:33:55+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x4w6tq",
+   "sub": "r/vermont",
+   "title": "Best place to get a large beard trim and haircut?",
+   "url": "https://www.reddit.com/r/vermont/comments/1x4w6tq/best_place_to_get_a_large_beard_trim_and_haircut/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-13T14:33:55+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x4vlkk",
+   "sub": "r/vermont",
+   "title": "PAC spam about voter registration",
+   "url": "https://www.reddit.com/r/vermont/comments/1x4vlkk/pac_spam_about_voter_registration/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-13T14:33:55+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x4y3bk",
+   "sub": "r/burlington",
+   "title": "Hong’s Dumplings for sale",
+   "url": "https://www.reddit.com/r/burlington/comments/1x4y3bk/hongs_dumplings_for_sale/",
+   "created_exact": true,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-13T14:26:24+00:00",
+   "routes": [
+    "inoreader",
+    "rss"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00",
+    "rss": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x4wb7e",
+   "sub": "r/burlington",
+   "title": "Burlington mentioned in NYT piece about homelessness",
+   "url": "https://www.reddit.com/r/burlington/comments/1x4wb7e/burlington_mentioned_in_nyt_piece_about/",
+   "created_exact": true,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-13T13:14:25+00:00",
+   "routes": [
+    "inoreader",
+    "rss"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00",
+    "rss": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x4w5pq",
+   "sub": "r/burlington",
+   "title": "Best place to get a large beard trim and haircut?",
+   "url": "https://www.reddit.com/r/burlington/comments/1x4w5pq/best_place_to_get_a_large_beard_trim_and_haircut/",
+   "created_exact": true,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-13T13:07:45+00:00",
+   "routes": [
+    "inoreader",
+    "rss"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00",
+    "rss": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x4uzap",
+   "sub": "r/burlington",
+   "title": "I STG VT interstate drivers are the worst in the country.",
+   "url": "https://www.reddit.com/r/burlington/comments/1x4uzap/i_stg_vt_interstate_drivers_are_the_worst_in_the/",
+   "created_exact": true,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-13T12:12:41+00:00",
+   "routes": [
+    "inoreader",
+    "rss"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00",
+    "rss": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x4u294",
+   "sub": "r/vermont",
+   "title": "Its that time of the year",
+   "url": "https://www.reddit.com/r/vermont/comments/1x4u294/its_that_time_of_the_year/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-13T11:33:35+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x4tyhj",
+   "sub": "r/vermont",
+   "title": "Best plans for late November?",
+   "url": "https://www.reddit.com/r/vermont/comments/1x4tyhj/best_plans_for_late_november/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-13T11:33:35+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x4r83r",
+   "sub": "r/burlington",
+   "title": "BPD: Man charged with murder after bludgeoning wife",
+   "url": "https://www.reddit.com/r/burlington/comments/1x4r83r/bpd_man_charged_with_murder_after_bludgeoning_wife/",
+   "created_exact": true,
+   "kind": "link",
+   "out": "https://www.mychamplainvalley.com/news/local-news/crime/bpd-man-charged-with-attempted-murder-after-bludgeoning-woman/",
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-13T08:33:16+00:00",
+   "routes": [
+    "inoreader",
+    "rss"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00",
+    "rss": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x4mmna",
+   "sub": "r/vermont",
+   "title": "Vermont is beautiful!",
+   "url": "https://www.reddit.com/r/vermont/comments/1x4mmna/vermont_is_beautiful/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-13T06:00:25+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x4j7qh",
+   "sub": "r/vermont",
+   "title": "What’s happening in the mornings at BTV right now?",
+   "url": "https://www.reddit.com/r/vermont/comments/1x4j7qh/whats_happening_in_the_mornings_at_btv_right_now/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-13T03:07:04+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x4ilms",
+   "sub": "r/vermont",
+   "title": "Be prepared for all the \"what did I see\" posts.",
+   "url": "https://www.reddit.com/r/vermont/comments/1x4ilms/be_prepared_for_all_the_what_did_i_see_posts/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-13T03:07:04+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x4jbkl",
+   "sub": "r/burlington",
+   "title": "Wedding videographers",
+   "url": "https://www.reddit.com/r/burlington/comments/1x4jbkl/wedding_videographers/",
+   "created_exact": true,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-13T01:06:55+00:00",
+   "routes": [
+    "inoreader",
+    "rss"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00",
+    "rss": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x4j547",
+   "sub": "r/burlington",
+   "title": "Does anyone have a small poker table for sale?",
+   "url": "https://www.reddit.com/r/burlington/comments/1x4j547/does_anyone_have_a_small_poker_table_for_sale/",
+   "created_exact": true,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-13T00:58:30+00:00",
+   "routes": [
+    "inoreader",
+    "rss"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00",
+    "rss": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x4i9ck",
+   "sub": "r/burlington",
+   "title": "bar recommendations?",
+   "url": "https://www.reddit.com/r/burlington/comments/1x4i9ck/bar_recommendations/",
+   "created_exact": true,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-13T00:15:03+00:00",
+   "routes": [
+    "inoreader",
+    "rss"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00",
+    "rss": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x4hcz9",
+   "sub": "r/vermont",
+   "title": "Free NH Vacation!",
+   "url": "https://www.reddit.com/r/vermont/comments/1x4hcz9/free_nh_vacation/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-12T23:58:44+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x4fk8q",
+   "sub": "r/vermont",
+   "title": "Momma bear with cubs wandering near my house.",
+   "url": "https://www.reddit.com/r/vermont/comments/1x4fk8q/momma_bear_with_cubs_wandering_near_my_house/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-12T23:58:44+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x4e934",
+   "sub": "r/vermont",
+   "title": "Tag yourself I’m the Plymouth Rock sign",
+   "url": "https://www.reddit.com/r/vermont/comments/1x4e934/tag_yourself_im_the_plymouth_rock_sign/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-12T23:58:44+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x4eg19",
+   "sub": "r/burlington",
+   "title": "Beanie the cat",
+   "url": "https://www.reddit.com/r/burlington/comments/1x4eg19/beanie_the_cat/",
+   "created_exact": true,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-12T21:24:59+00:00",
+   "routes": [
+    "inoreader",
+    "rss"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00",
+    "rss": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x4e6r8",
+   "sub": "r/burlington",
+   "title": "Is Red Square that awful? Visiting from out of town.",
+   "url": "https://www.reddit.com/r/burlington/comments/1x4e6r8/is_red_square_that_awful_visiting_from_out_of_town/",
+   "created_exact": true,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-12T21:14:46+00:00",
+   "routes": [
+    "inoreader",
+    "rss"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00",
+    "rss": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x4chex",
+   "sub": "r/vermont",
+   "title": "Moose 2026-09-22 NEK",
+   "url": "https://www.reddit.com/r/vermont/comments/1x4chex/moose_20260922_nek/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-12T21:07:28+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x4bbgv",
+   "sub": "r/vermont",
+   "title": "Free Haircuts at Burlington Barber Shop 10/14, 10/15, and 10/16",
+   "url": "https://www.reddit.com/r/vermont/comments/1x4bbgv/free_haircuts_at_burlington_barber_shop_1014_1015/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-12T21:07:28+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x4a1o4",
+   "sub": "r/vermont",
+   "title": "Q&A With Andrew Savage of Lime Micromobility - Wednesday, October 21st in Burlington, VT... NEXT WEEK!",
+   "url": "https://www.reddit.com/r/vermont/comments/1x4a1o4/qa_with_andrew_savage_of_lime_micromobility/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-12T21:07:28+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x498k8",
+   "sub": "r/vermont",
+   "title": "Vermont Vacation",
+   "url": "https://www.reddit.com/r/vermont/comments/1x498k8/vermont_vacation/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-12T21:07:28+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x4cba2",
+   "sub": "r/burlington",
+   "title": "Learning to play the washboard",
+   "url": "https://www.reddit.com/r/burlington/comments/1x4cba2/learning_to_play_the_washboard/",
+   "created_exact": true,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-12T20:02:00+00:00",
+   "routes": [
+    "inoreader",
+    "rss"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00",
+    "rss": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x4bj3d",
+   "sub": "r/burlington",
+   "title": "Waterfront View",
+   "url": "https://www.reddit.com/r/burlington/comments/1x4bj3d/waterfront_view/",
+   "created_exact": true,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-12T19:33:08+00:00",
+   "routes": [
+    "inoreader",
+    "rss"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00",
+    "rss": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x4a1ii",
+   "sub": "r/burlington",
+   "title": "Q&A With Andrew Savage of Lime Micromobility - Wednesday, October 21st in Burlington, VT... NEXT WEEK!",
+   "url": "https://www.reddit.com/r/burlington/comments/1x4a1ii/qa_with_andrew_savage_of_lime_micromobility/",
+   "created_exact": true,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-12T18:38:29+00:00",
+   "routes": [
+    "inoreader",
+    "rss"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00",
+    "rss": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x48z3a",
+   "sub": "r/vermont",
+   "title": "Slab City",
+   "url": "https://www.reddit.com/r/vermont/comments/1x48z3a/slab_city/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-12T18:02:50+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x48t4d",
+   "sub": "r/vermont",
+   "title": "Outside money in the Vermont governor’s race. How do you feel about it?",
+   "url": "https://www.reddit.com/r/vermont/comments/1x48t4d/outside_money_in_the_vermont_governors_race_how/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-12T18:02:50+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-17T22:41:17+00:00"
+  },
+  {
+   "id": "1x48krm",
+   "sub": "r/vermont",
+   "title": "Have you noticed a sudden drop in right wing chatter?",
+   "url": "https://www.reddit.com/r/vermont/comments/1x48krm/have_you_noticed_a_sudden_drop_in_right_wing/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-12T18:02:50+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-17T22:41:17+00:00"
+  },
+  {
+   "id": "1x44t77",
+   "sub": "r/vermont",
+   "title": "Camper sinks off dock in Burlington, Coast Guard says",
+   "url": "https://www.reddit.com/r/vermont/comments/1x44t77/camper_sinks_off_dock_in_burlington_coast_guard/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-12T18:02:50+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-17T22:41:17+00:00"
+  },
+  {
+   "id": "1x43iz5",
+   "sub": "r/vermont",
+   "title": "Tourist complains about tourist traffic in Stowe.",
+   "url": "https://www.reddit.com/r/vermont/comments/1x43iz5/tourist_complains_about_tourist_traffic_in_stowe/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-12T18:02:50+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-17T22:41:17+00:00"
+  },
+  {
+   "id": "1x43brh",
+   "sub": "r/vermont",
+   "title": "Hair & Makeup needed!!",
+   "url": "https://www.reddit.com/r/vermont/comments/1x43brh/hair_makeup_needed/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-12T18:02:50+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-17T22:41:17+00:00"
+  },
+  {
+   "id": "1x438uo",
+   "sub": "r/vermont",
+   "title": "outdoor shed for tractor overwinter",
+   "url": "https://www.reddit.com/r/vermont/comments/1x438uo/outdoor_shed_for_tractor_overwinter/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-12T18:02:50+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-17T22:41:17+00:00"
+  },
+  {
+   "id": "1x42bis",
+   "sub": "r/vermont",
+   "title": "Last day in Cabot visiting family (we’re not leaf peepers)—any family friendly activities to recommend in the area?",
+   "url": "https://www.reddit.com/r/vermont/comments/1x42bis/last_day_in_cabot_visiting_family_were_not_leaf/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-12T18:02:50+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-17T19:41:15+00:00"
+  },
+  {
+   "id": "1x40uhp",
+   "sub": "r/vermont",
+   "title": "Dog seen in Jeff",
+   "url": "https://www.reddit.com/r/vermont/comments/1x40uhp/dog_seen_in_jeff/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-12T18:02:50+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-17T19:41:15+00:00"
+  },
+  {
+   "id": "1x3zl86",
+   "sub": "r/vermont",
+   "title": "What to do around Brattleboro/Bennington VT on a holiday?",
+   "url": "https://www.reddit.com/r/vermont/comments/1x3zl86/what_to_do_around_brattleborobennington_vt_on_a/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-12T18:02:50+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-17T19:41:15+00:00"
+  },
+  {
+   "id": "1x3ziq9",
+   "sub": "r/vermont",
+   "title": "Another Reason School Consolidation is a Failed Plan: Diesel Costs",
+   "url": "https://www.reddit.com/r/vermont/comments/1x3ziq9/another_reason_school_consolidation_is_a_failed/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-12T18:02:50+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-17T19:41:15+00:00"
+  },
+  {
+   "id": "1x3ypl7",
+   "sub": "r/vermont",
+   "title": "Tell everyone you know that Phil Scott has got to go",
+   "url": "https://www.reddit.com/r/vermont/comments/1x3ypl7/tell_everyone_you_know_that_phil_scott_has_got_to/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-12T18:02:50+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-17T19:41:15+00:00"
+  },
+  {
+   "id": "1x3wvng",
+   "sub": "r/vermont",
+   "title": "29M, new friends? Down for walks and just talking",
+   "url": "https://www.reddit.com/r/vermont/comments/1x3wvng/29m_new_friends_down_for_walks_and_just_talking/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-12T18:02:50+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-17T19:41:15+00:00"
+  },
+  {
+   "id": "1x48utz",
+   "sub": "r/burlington",
+   "title": "Bird Feeder Stolen",
+   "url": "https://www.reddit.com/r/burlington/comments/1x48utz/bird_feeder_stolen/",
+   "created_exact": true,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-12T17:55:28+00:00",
+   "routes": [
+    "inoreader",
+    "rss"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00",
+    "rss": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x467mq",
+   "sub": "r/burlington",
+   "title": "89 Pedestrian Bridge",
+   "url": "https://www.reddit.com/r/burlington/comments/1x467mq/89_pedestrian_bridge/",
+   "created_exact": true,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-12T16:17:49+00:00",
+   "routes": [
+    "inoreader",
+    "rss"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00",
+    "rss": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x45ou9",
+   "sub": "r/burlington",
+   "title": "Apple Cider Donuts?",
+   "url": "https://www.reddit.com/r/burlington/comments/1x45ou9/apple_cider_donuts/",
+   "created_exact": true,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-12T15:58:47+00:00",
+   "routes": [
+    "inoreader",
+    "rss"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00",
+    "rss": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x44szz",
+   "sub": "r/burlington",
+   "title": "Camper sinks off dock in Burlington, Coast Guard says",
+   "url": "https://www.reddit.com/r/burlington/comments/1x44szz/camper_sinks_off_dock_in_burlington_coast_guard/",
+   "created_exact": true,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-12T15:25:19+00:00",
+   "routes": [
+    "inoreader",
+    "rss"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00",
+    "rss": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x432dv",
+   "sub": "r/burlington",
+   "title": "Fantasy NBA",
+   "url": "https://www.reddit.com/r/burlington/comments/1x432dv/fantasy_nba/",
+   "created_exact": true,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-12T14:17:18+00:00",
+   "routes": [
+    "inoreader",
+    "rss"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00",
+    "rss": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x42unu",
+   "sub": "r/burlington",
+   "title": "Free Haircuts at Burlington Barber Shop 10/14, 10/15, and 10/16",
+   "url": "https://www.reddit.com/r/burlington/comments/1x42unu/free_haircuts_at_burlington_barber_shop_1014_1015/",
+   "created_exact": true,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-12T14:08:39+00:00",
+   "routes": [
+    "inoreader",
+    "rss"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00",
+    "rss": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x3wvx1",
+   "sub": "r/burlington",
+   "title": "29M, new friends? Down for walks and just talking",
+   "url": "https://www.reddit.com/r/burlington/comments/1x3wvx1/29m_new_friends_down_for_walks_and_just_talking/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-12T13:50:42+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x41vte",
+   "sub": "r/burlington",
+   "title": "Get outside today and Thursday because Tuesday brings an inch of rain, then catch Magoo’s bluegrass, Dead Media at Partizanfilm, Chuck Wendig at Phoenix Books and Kendall Farrell, and read about 30 affordable condos in Cambrian Rise and Vermont’s biggest battery in Essex Junction",
+   "url": "https://www.reddit.com/r/burlington/comments/1x41vte/get_outside_today_and_thursday_because_tuesday/",
+   "created_exact": true,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-12T13:28:32+00:00",
+   "routes": [
+    "inoreader",
+    "rss"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00",
+    "rss": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x41fst",
+   "sub": "r/burlington",
+   "title": "Raw milk in CC",
+   "url": "https://www.reddit.com/r/burlington/comments/1x41fst/raw_milk_in_cc/",
+   "created_exact": true,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-12T13:09:38+00:00",
+   "routes": [
+    "inoreader",
+    "rss"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00",
+    "rss": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x40giz",
+   "sub": "r/burlington",
+   "title": "The Eaton Trial: One Juror’s Perspective",
+   "url": "https://www.reddit.com/r/burlington/comments/1x40giz/the_eaton_trial_one_jurors_perspective/",
+   "created_exact": true,
+   "kind": "link",
+   "out": "https://www.hinesburgrecord.org/p/the-eaton-trial-one-jurors-perspective",
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-12T12:24:38+00:00",
+   "routes": [
+    "inoreader",
+    "rss"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00",
+    "rss": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x40ef3",
+   "sub": "r/burlington",
+   "title": "Look for a Spanish teacher to teach a group",
+   "url": "https://www.reddit.com/r/burlington/comments/1x40ef3/look_for_a_spanish_teacher_to_teach_a_group/",
+   "created_exact": true,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-12T12:21:46+00:00",
+   "routes": [
+    "inoreader",
+    "rss"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00",
+    "rss": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x3rjmp",
+   "sub": "r/burlington",
+   "title": "Video Rental Store North Ave in Early 2000s?",
+   "url": "https://www.reddit.com/r/burlington/comments/1x3rjmp/video_rental_store_north_ave_in_early_2000s/",
+   "created_exact": true,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-12T03:37:49+00:00",
+   "routes": [
+    "inoreader",
+    "rss"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00",
+    "rss": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x3q9ke",
+   "sub": "r/vermont",
+   "title": "Walmart parking lot?",
+   "url": "https://www.reddit.com/r/vermont/comments/1x3q9ke/walmart_parking_lot/",
+   "created_exact": false,
+   "kind": "link",
+   "out": "https://www.wcax.com/2026/10/11/leaf-peepers-flock-stowe-despite-heavy-traffic-parking-shortage/?outputType=amp",
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-12T03:17:11+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-17T19:41:15+00:00"
+  },
+  {
+   "id": "1x3pdmb",
+   "sub": "r/vermont",
+   "title": "Rural Vermont Rising…",
+   "url": "https://www.reddit.com/r/vermont/comments/1x3pdmb/rural_vermont_rising/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-12T03:17:11+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-17T19:41:15+00:00"
+  },
+  {
+   "id": "1x3qhye",
+   "sub": "r/burlington",
+   "title": "King James SA?",
+   "url": "https://www.reddit.com/r/burlington/comments/1x3qhye/king_james_sa/",
+   "created_exact": true,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-12T02:42:11+00:00",
+   "routes": [
+    "inoreader",
+    "rss"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00",
+    "rss": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x3p167",
+   "sub": "r/burlington",
+   "title": "Rural Vermont Rising..",
+   "url": "https://www.reddit.com/r/burlington/comments/1x3p167/rural_vermont_rising/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-12T01:54:04+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x3mx92",
+   "sub": "r/burlington",
+   "title": "Found Cat",
+   "url": "https://www.reddit.com/r/burlington/comments/1x3mx92/found_cat/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-12T01:54:04+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x3pgrt",
+   "sub": "r/burlington",
+   "title": "Butterfly pea flower tea?",
+   "url": "https://www.reddit.com/r/burlington/comments/1x3pgrt/butterfly_pea_flower_tea/",
+   "created_exact": true,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-12T01:48:28+00:00",
+   "routes": [
+    "inoreader",
+    "rss"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00",
+    "rss": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x3opxq",
+   "sub": "r/burlington",
+   "title": "Less farmers at the farmers market this year",
+   "url": "https://www.reddit.com/r/burlington/comments/1x3opxq/less_farmers_at_the_farmers_market_this_year/",
+   "created_exact": true,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-12T01:10:04+00:00",
+   "routes": [
+    "inoreader",
+    "rss"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00",
+    "rss": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x3o2ax",
+   "sub": "r/burlington",
+   "title": "Housing Rental Timing",
+   "url": "https://www.reddit.com/r/burlington/comments/1x3o2ax/housing_rental_timing/",
+   "created_exact": true,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-12T00:36:32+00:00",
+   "routes": [
+    "inoreader",
+    "rss"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00",
+    "rss": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x3nwti",
+   "sub": "r/vermont",
+   "title": "Best Customer Service Heat Pump Installer in VT? (Jericho/Underhill area)",
+   "url": "https://www.reddit.com/r/vermont/comments/1x3nwti/best_customer_service_heat_pump_installer_in_vt/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-12T00:30:22+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-17T19:41:15+00:00"
+  },
+  {
+   "id": "1x3ne4x",
+   "sub": "r/vermont",
+   "title": "Undercoating locations?",
+   "url": "https://www.reddit.com/r/vermont/comments/1x3ne4x/undercoating_locations/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-12T00:30:22+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-17T19:41:15+00:00"
+  },
+  {
+   "id": "1x3m7er",
+   "sub": "r/vermont",
+   "title": "Times are tough, up for sale. Don't low-ball me, I know what I got.",
+   "url": "https://www.reddit.com/r/vermont/comments/1x3m7er/times_are_tough_up_for_sale_dont_lowball_me_i/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-12T00:30:22+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-17T19:41:15+00:00"
+  },
+  {
+   "id": "1x3kgcv",
+   "sub": "r/vermont",
+   "title": "No need to yell at people on the street",
+   "url": "https://www.reddit.com/r/vermont/comments/1x3kgcv/no_need_to_yell_at_people_on_the_street/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-12T00:30:22+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-17T19:41:15+00:00"
+  },
+  {
+   "id": "1x3isl3",
+   "sub": "r/burlington",
+   "title": "Russian Manicure",
+   "url": "https://www.reddit.com/r/burlington/comments/1x3isl3/russian_manicure/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-11T22:52:26+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x3k5mb",
+   "sub": "r/vermont",
+   "title": "Blue Nissan on I-89 South 5:27 pm 10/11/26",
+   "url": "https://www.reddit.com/r/vermont/comments/1x3k5mb/blue_nissan_on_i89_south_527_pm_101126/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-11T21:45:33+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-17T19:41:15+00:00"
+  },
+  {
+   "id": "1x3jktf",
+   "sub": "r/vermont",
+   "title": "Eczema",
+   "url": "https://www.reddit.com/r/vermont/comments/1x3jktf/eczema/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-11T21:45:33+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-17T19:41:15+00:00"
+  },
+  {
+   "id": "1x3h4n4",
+   "sub": "r/vermont",
+   "title": "Custom car work/ mechanic needed",
+   "url": "https://www.reddit.com/r/vermont/comments/1x3h4n4/custom_car_work_mechanic_needed/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-11T21:45:33+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-17T19:41:15+00:00"
+  },
+  {
+   "id": "1x3ip8w",
+   "sub": "r/burlington",
+   "title": "Illegal bike-lane flyers",
+   "url": "https://www.reddit.com/r/burlington/comments/1x3ip8w/illegal_bikelane_flyers/",
+   "created_exact": true,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-11T20:32:06+00:00",
+   "routes": [
+    "inoreader",
+    "rss"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00",
+    "rss": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x3hsqx",
+   "sub": "r/burlington",
+   "title": "Just visited Burlington with my family and this is the most underrated city in the country",
+   "url": "https://www.reddit.com/r/burlington/comments/1x3hsqx/just_visited_burlington_with_my_family_and_this/",
+   "created_exact": true,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-11T19:56:01+00:00",
+   "routes": [
+    "inoreader",
+    "rss"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00",
+    "rss": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x3h92k",
+   "sub": "r/burlington",
+   "title": "Custom car work/ mechanic needed",
+   "url": "https://www.reddit.com/r/burlington/comments/1x3h92k/custom_car_work_mechanic_needed/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-11T19:55:37+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x3f4zw",
+   "sub": "r/burlington",
+   "title": "Old North End",
+   "url": "https://www.reddit.com/r/burlington/comments/1x3f4zw/old_north_end/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-11T19:55:37+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-17T16:41:19+00:00"
+  },
+  {
+   "id": "1x3cfgm",
+   "sub": "r/vermont",
+   "title": "Get your WORST. SONG. EVER. tickets!",
+   "url": "https://www.reddit.com/r/vermont/comments/1x3cfgm/get_your_worst_song_ever_tickets/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-11T18:32:08+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-17T19:41:15+00:00"
+  },
+  {
+   "id": "1x3bf50",
+   "sub": "r/vermont",
+   "title": "Anybody else unable to log into the VT DMV website?",
+   "url": "https://www.reddit.com/r/vermont/comments/1x3bf50/anybody_else_unable_to_log_into_the_vt_dmv_website/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-11T18:32:08+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-17T19:41:15+00:00"
+  },
+  {
+   "id": "1x3e83v",
+   "sub": "r/burlington",
+   "title": "White tree of burlington",
+   "url": "https://www.reddit.com/r/burlington/comments/1x3e83v/white_tree_of_burlington/",
+   "created_exact": true,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-11T17:34:57+00:00",
+   "routes": [
+    "inoreader",
+    "rss"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00",
+    "rss": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-18T00:14:46+00:00"
+  },
+  {
+   "id": "1x3e4gj",
+   "sub": "r/burlington",
+   "title": "South Willard car sadness",
+   "url": "https://www.reddit.com/r/burlington/comments/1x3e4gj/south_willard_car_sadness/",
+   "created_exact": true,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-11T17:30:52+00:00",
+   "routes": [
+    "inoreader",
+    "rss"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00",
+    "rss": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-17T22:41:17+00:00"
+  },
+  {
+   "id": "1x3c3kl",
+   "sub": "r/burlington",
+   "title": "Found friendly orange kitty",
+   "url": "https://www.reddit.com/r/burlington/comments/1x3c3kl/found_friendly_orange_kitty/",
+   "created_exact": true,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-11T16:10:38+00:00",
+   "routes": [
+    "rss"
+   ],
+   "seen": {
+    "rss": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-17T22:41:17+00:00"
+  },
+  {
+   "id": "1x3ayaf",
+   "sub": "r/vermont",
+   "title": "Just finished another Woodstock themed painting 😁",
+   "url": "https://www.reddit.com/r/vermont/comments/1x3ayaf/just_finished_another_woodstock_themed_painting/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-11T15:35:31+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-17T19:41:15+00:00"
+  },
+  {
+   "id": "1x393s4",
+   "sub": "r/vermont",
+   "title": "Thank you, tourists, but....",
+   "url": "https://www.reddit.com/r/vermont/comments/1x393s4/thank_you_tourists_but/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-11T15:35:31+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-17T19:41:15+00:00"
+  },
+  {
+   "id": "1x38vvo",
+   "sub": "r/vermont",
+   "title": "Topography question",
+   "url": "https://www.reddit.com/r/vermont/comments/1x38vvo/topography_question/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-11T15:35:31+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-17T19:41:15+00:00"
+  },
+  {
+   "id": "1x38dj5",
+   "sub": "r/vermont",
+   "title": "Leaf peepers",
+   "url": "https://www.reddit.com/r/vermont/comments/1x38dj5/leaf_peepers/",
+   "created_exact": false,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-11T15:35:31+00:00",
+   "routes": [
+    "inoreader"
+   ],
+   "seen": {
+    "inoreader": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-17T19:41:15+00:00"
+  },
+  {
+   "id": "1x39cwb",
+   "sub": "r/burlington",
+   "title": "Home charging an EV is $1 per gallon",
+   "url": "https://www.reddit.com/r/burlington/comments/1x39cwb/home_charging_an_ev_is_1_per_gallon/",
+   "created_exact": true,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-11T14:18:12+00:00",
+   "routes": [
+    "rss"
+   ],
+   "seen": {
+    "rss": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-17T20:41:15+00:00"
+  },
+  {
+   "id": "1x2z3xj",
+   "sub": "r/burlington",
+   "title": "stop bringing ur pets to the bar",
+   "url": "https://www.reddit.com/r/burlington/comments/1x2z3xj/stop_bringing_ur_pets_to_the_bar/",
+   "created_exact": true,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-11T04:41:59+00:00",
+   "routes": [
+    "rss"
+   ],
+   "seen": {
+    "rss": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-17T20:41:15+00:00"
+  },
+  {
+   "id": "1x2xbi0",
+   "sub": "r/burlington",
+   "title": "anyone see anything of the aurora yet?",
+   "url": "https://www.reddit.com/r/burlington/comments/1x2xbi0/anyone_see_anything_of_the_aurora_yet/",
+   "created_exact": true,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-11T03:03:28+00:00",
+   "routes": [
+    "rss"
+   ],
+   "seen": {
+    "rss": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-17T18:47:20+00:00"
+  },
+  {
+   "id": "1x2v1ak",
+   "sub": "r/burlington",
+   "title": "missed connection today🥹",
+   "url": "https://www.reddit.com/r/burlington/comments/1x2v1ak/missed_connection_today/",
+   "created_exact": true,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-11T01:03:01+00:00",
+   "routes": [
+    "rss"
+   ],
+   "seen": {
+    "rss": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-17T16:41:19+00:00"
+  },
+  {
+   "id": "1x2udp9",
+   "sub": "r/burlington",
+   "title": "Indoor Flea Market this sunday 8:30-2!",
+   "url": "https://www.reddit.com/r/burlington/comments/1x2udp9/indoor_flea_market_this_sunday_8302/",
+   "created_exact": true,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-11T00:29:26+00:00",
+   "routes": [
+    "rss"
+   ],
+   "seen": {
+    "rss": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-17T13:41:16+00:00"
+  },
+  {
+   "id": "1x2tbxa",
+   "sub": "r/burlington",
+   "title": "Look at camp johnson/ fort Ethan allen pt2",
+   "url": "https://www.reddit.com/r/burlington/comments/1x2tbxa/look_at_camp_johnson_fort_ethan_allen_pt2/",
+   "created_exact": true,
+   "kind": "self",
+   "out": null,
+   "score": null,
+   "comments": null,
+   "flair": null,
+   "nsfw": null,
+   "created": "2026-10-10T23:37:50+00:00",
+   "routes": [
+    "rss"
+   ],
+   "seen": {
+    "rss": "2026-10-17T06:53:08+00:00"
+   },
+   "first_seen": "2026-10-17T06:53:08+00:00",
+   "last_seen": "2026-10-17T12:41:17+00:00"
+  }
+ ]
+}
