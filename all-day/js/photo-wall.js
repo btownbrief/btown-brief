@@ -25,9 +25,8 @@
      drawWall(host, list, onOpen)  the three-column grid, two tall tiles in ten
      openSheet(it)               the whole picture in a sheet: a neighbor's with
                                  vote, share, shirt and report or delete; a gallery
-                                 photo with share; any other picture (Instagram, a
-                                 story's lead image) with vote, share and the way
-                                 to the original
+                                 photo with share; an Instagram post with vote,
+                                 share and the way to the original
      compose(kind, onPosted)     the photo-and-art submission sheet (boards.compose),
                                  moderated by the photo queue; a photo asks what it
                                  is (PHOTO_CATS) */

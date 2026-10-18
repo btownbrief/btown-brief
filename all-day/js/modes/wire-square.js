@@ -9,9 +9,14 @@
        sheet is boards.compose; posting needs the email sign-in, reading
        needs nothing. A pet or show-and-tell photo also shows in Photos.
      - what people are saying elsewhere, curated by the pipeline: the
-       Facebook group posts and r/burlington threads in today's paper and on
-       the Unfiltered wire's inbox, as compact cards with a source chip, two
-       lines and the link out. Never a copied picture.
+       Facebook group posts and the Burlington and Vermont subreddits'
+       threads in today's paper and on the Unfiltered wire, as compact cards
+       with a source chip, two lines and the link out. Never a copied
+       picture. The Unfiltered wire also follows national subreddits
+       (r/news, r/technology, r/Jokes ...); they are never the Square's
+       (Stephen, 2026-10-18: "I just want our Burlington in our Vermont").
+       Which is which is decided by the subreddit (LOCAL_SUBS), never by
+       guessing from the text.
 
    Newest first, with a thumb on the scale for the neighbors: a native post
    sorts as if it were six hours newer than it is.
@@ -34,6 +39,12 @@ const DAY = 86400;
 const FIRST = 30;                  // cards on the first screenful
 const CHUNK = 30;                  // then thirty at a time as the reader nears the bottom
 const AHEAD = 1600;                // px below the screen where the next ones start drawing
+/* the subreddits whose threads are the Square's, lower case */
+export const LOCAL_SUBS = new Set(['burlington', 'vermont', 'goodburlington']);
+const SUB = /^https?:\/\/(?:[a-z]+\.)?reddit\.com\/r\/([A-Za-z0-9_]+)/i;
+/* a thread's subreddit: from its link, else from its source's page */
+const subOf = (...urls) => { for (const u of urls) { const m = String(u || '').match(SUB); if (m) return m[1].toLowerCase(); } return ''; };
+const localSub = (...urls) => LOCAL_SUBS.has(subOf(...urls));
 
 /* the chips, in order; an empty one is left out */
 export const TYPES = [['all', 'All'], ['post', 'Posts'], ['show', 'Show and tell'], ['ask', 'Ask'], ['free', 'Free'], ['pets', 'Pets'],
@@ -106,6 +117,7 @@ function outside() {
   };
   ctx.today().forEach((c) => {
     if (c.ch !== 'facebook' && c.ch !== 'reddit') return;
+    if (c.ch === 'reddit' && !localSub(c.href, c.site)) return;
     add({ k: c.k, href: c.href, src: c.src, sid: c.sid, ch: c.ch, text: squash(c.text || c.title), d: c.d, comments: c.comments || 0,
       open: c.ch === 'reddit' ? 'Open the thread' : 'Open the post' });
   });
@@ -119,6 +131,7 @@ function outside() {
     (src.items || []).forEach((x) => {
       if (!x || x.ch !== 'reddit' || !x.u) return;
       const s = map[x.s] || {};
+      if (!localSub(x.u, s.site)) return;
       add({ k: x.u, href: x.u, src: s.short || s.name || 'r/burlington', sid: x.s, ch: 'reddit', text: squash(x.t), d: Number(x.d) || 0, open: 'Open the thread' });
     });
   }

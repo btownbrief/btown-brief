@@ -7,14 +7,16 @@
      trailer in the shell's one video box (never on its own); a film with no
      trailer on TMDB opens its sheet instead. Right under it, the call to
      vote for the next screening, which scrolls to the ballot, with the one
-     line a first-time visitor needs: Stephen hosts the movie night (a link
-     to his Meetup group), and this picks the film.
+     line a first-time visitor needs: Steve (Stephen's name on the page)
+     hosts the movie night (a link to his Meetup group), and this picks the film.
      On TV the rail is what is airing this week, new seasons first.
    - In theaters near you (Movies): Partizanfilm, Majestic 10 and Essex
      Cinemas, one at a time, with the rest of today's times read off each
      theater's own page (scripts/build_showtimes.py, every morning), or the
-     next day it has shows, or that it is closed and until when. Every
-     theater keeps its Showtimes button to its own page.
+     next day it has shows, or "Back Oct 30" while it is closed. Partizanfilm
+     is picked first (Stephen, 2026-10-18: the local one). Every theater
+     keeps its Showtimes button to its own page. Back then's Show all opens
+     a grid with a Collapse bar that stays in reach while it is on screen.
    - Back then: the time machine. ‹ October 2021 › and a row of years; the
      month's big titles (scripts/build_time_machine.py, monthly: what Rotten
      Tomatoes' front page listed that month, as archived by the Wayback
@@ -616,7 +618,7 @@ function drawSoon(host) {
 
 /* who is screening, for a first-time visitor: one line, with the Meetup link */
 function hostLine() {
-  const p = el('p', 'note pad wnight', '<a href="' + esc(MEETUP_URL) + '" target="_blank" rel="noopener">' + esc('Stephen hosts a movie night') + '</a>' +
+  const p = el('p', 'note pad wnight', '<a href="' + esc(MEETUP_URL) + '" target="_blank" rel="noopener">' + esc('Steve hosts a movie night') + '</a>' +
     esc(' with a mixer after. Pick the next film.'));
   p.dataset.host = '1';
   return p;
@@ -638,8 +640,10 @@ function drawTheaters(host) {
   if (V.kind !== 'movie') return;
   const all = theaters();
   sec(host, 'In theaters near you', null, 'theaters');
-  /* until the reader picks one: the first with a show still to come today */
-  if (!V.picked) V.theater = (all.find((t) => { const s = t.ok && showDay(t); return s && s.day === todayKey(); }) || all[0]).id;
+  /* until the reader picks one: the first that read, in the set order
+     (Partizanfilm, the local one, then Majestic 10, then Essex; Stephen,
+     2026-10-18), even while it is closed, since it says when it is back */
+  if (!V.picked) V.theater = (all.find((t) => t.ok) || all[0]).id;
   const pick = pills(all.map((t) => [t.id, t.name]), V.theater, (v) => { V.theater = v; V.picked = true; draw('theaters'); });
   pick.dataset.theater = '1';
   pick.style.flex = '1 1 auto';
@@ -653,8 +657,12 @@ function drawTheaters(host) {
   const show = t.ok ? showDay(t) : null;
   const open = show && (!t.closed || (t.back && show.day >= t.back));
   const line = [t.town];
-  if (t.closed) line.push(t.back ? 'Closed until ' + dateLabel(t.back) : 'Closed for now');
-  if (open && show.day !== t.back) line.push(dayLabel(show.day));
+  /* closed with a reopening still to come: "Back Oct 30", and the day its
+     schedule is for when that is later; once the day has come, its shows */
+  const back = t.closed && t.back > todayKey() ? t.back : '';
+  if (back) line.push('Back ' + dateLabel(back));
+  else if (t.closed && !open) line.push('Closed for now');
+  if (open && show.day !== back) line.push(dayLabel(show.day));
   const head = el('p', 'note pad', esc(line.join(' · ')));
   head.dataset.status = '1';
   box.appendChild(head);
@@ -695,12 +703,14 @@ function drawBack(host) {
   const at = months.findIndex((m) => m.m === V.month);
   const cur = months[at];
   const list = cur[V.kind];
-  /* the rail, or every title in a wrapping grid */
+  /* the rail, or every title in a wrapping grid, with a Collapse bar that
+     stays in reach while the grid is on screen */
   const all = list.length > 3 ? button(V.backAll ? 'Show less' : 'Show all ' + list.length, 'ghost sm', () => {
     V.backAll = !V.backAll;
     draw('back');
     const h = root.querySelector('[data-sec="back"]');
     if (!V.backAll && h && h.getBoundingClientRect().top < 0) app.jumpTo(h);
+    backToggle();
   }) : null;
   if (all) { all.dataset.backAll = V.backAll ? 'open' : 'closed'; all.setAttribute('aria-expanded', V.backAll ? 'true' : 'false'); }
   sec(host, 'Back then', esc('Rotten Tomatoes’ front page, month by month'), 'back', all);
@@ -723,11 +733,34 @@ function drawBack(host) {
   }
   let r;
   if (V.backAll && all) {
+    const wrap = el('div', 'expwrap');
     r = el('div', 'grid3 wgrid');
-    host.appendChild(r);
+    wrap.append(r, collapseBar('Back then', () => {
+      V.backAll = false;
+      draw('back');
+      app.jumpTo(root.querySelector('[data-sec="back"]'));
+      backToggle();
+    }));
+    host.appendChild(wrap);
   } else r = rail(host);
   r.dataset.back = cur.m;
   list.forEach((f) => { const t = tile(f, 'back:' + cur.m + ':' + f.id); if (r.classList.contains('wgrid')) t.style.width = 'auto'; r.appendChild(t); });
+}
+/* the redraw took the pressed button away: keep the keyboard on its toggle */
+function backToggle() {
+  const t = root.querySelector('[data-back-all]');
+  if (t) t.focus({ preventScroll: true });
+}
+/* the bar under an opened list: it rides the bottom of the screen while the
+   list is in view, so a long list folds back up from anywhere in it */
+function collapseBar(what, onCollapse) {
+  const bar = el('div', 'collapsebar');
+  const b = button(ICON.up + ' Collapse', '', onCollapse);
+  b.type = 'button';
+  b.dataset.collapse = '1';
+  b.setAttribute('aria-label', 'Collapse ' + what);
+  bar.appendChild(b);
+  return bar;
 }
 
 /* ----------------------------------------------------------- the list */
@@ -1262,7 +1295,7 @@ function voteOpt(p) {
       const moved = r.moved || [];
       moved.forEach((id) => { const y = P.picks.find((z) => z.id === id); if (y && y.voted) { y.voted = false; y.votes = Math.max(0, y.votes - 1); } });
       if (other || moved.length) draw('vote'); else paint();
-      app.toast(p.voted ? (p.votes >= GOAL ? 'Five! Stephen will put it on Meetup.' : 'Voted for ' + p.title) : 'Vote taken back');
+      app.toast(p.voted ? (p.votes >= GOAL ? 'Five! Steve will put it on Meetup.' : 'Voted for ' + p.title) : 'Vote taken back');
     });
   };
   o.addEventListener('click', go);

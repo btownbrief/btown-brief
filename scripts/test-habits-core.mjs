@@ -240,6 +240,81 @@ test('this week as seven dots: done, missed, off, today, later', () => {
   assert.equal(st(DAILY, ['2026-10-19'], ny('2026-10-19 00:00')), 'done later later later later later later', 'at midnight a new week starts');
 });
 
+test('a day before the habit started is never a missed day', () => {
+  const wed = ny('2026-10-14 15:00');
+  const st = (h, taps, now) => core.weekDots(h, taps, now).map((d) => d.state).join(' ');
+  const made = { frequency: 'daily', created_at: '2026-10-13T20:00:00Z' };   // Tuesday afternoon in Burlington
+  assert.equal(st(made, [], wed), 'off missed today later later later later', 'made Tuesday: Monday is off, Tuesday a ring');
+  assert.equal(st(made, ['2026-10-12'], wed), 'done missed today later later later later', 'a tap from before (moved from a phone) moves the start back');
+  assert.equal(core.startKey(made, ['2026-10-01']), '2026-10-01');
+  assert.equal(core.startKey(DAILY, ['2026-10-01']), null, 'nothing known: every day counts, as before');
+  assert.equal(core.startKey({ frequency: 'daily', created_at: new Date(0).toISOString() }, []), null, 'a zero date is not a start');
+});
+
+test('the best streak: the longest run, never less than the one running now', () => {
+  const wed = ny('2026-10-14 15:00');
+  assert.equal(core.bestStreak(DAILY, [], wed), 0);
+  assert.equal(core.bestStreak(DAILY, [...days('2026-09-01', '2026-09-10'), '2026-10-13', '2026-10-14'], wed), 10);
+  assert.equal(core.bestStreak(DAILY, days('2026-10-01', '2026-10-13'), wed), 13, 'today untapped: the run to yesterday still stands');
+  assert.equal(core.bestStreak(DAILY, ['2026-10-20'], wed), 0, 'a tap after today is ignored');
+  /* weekends skipped: Fri 9, Mon 12, Tue 13 is one run of three */
+  assert.equal(core.bestStreak(WEEKDAYS, ['2026-10-08', '2026-10-09', '2026-10-12', '2026-10-13'], wed), 4);
+  assert.equal(core.bestStreak(WEEKDAYS, ['2026-10-01', '2026-10-02', '2026-10-06'], wed), 2, 'a missed Monday breaks it');
+  /* three a week: weeks of Sep 21, Sep 28 on target, Oct 5 not, this week at 3 */
+  const taps = ['2026-09-21', '2026-09-22', '2026-09-23', '2026-09-28', '2026-09-29', '2026-09-30', '2026-10-05', '2026-10-12', '2026-10-13', '2026-10-14'];
+  assert.equal(core.bestStreak(THREE, taps, wed), 2);
+  assert.equal(core.bestStreak(THREE, ['2026-10-12', '2026-10-13', '2026-10-14'], wed), 1, 'this week made counts');
+  assert.equal(core.bestStreak(THREE, ['2026-10-05', '2026-10-06', '2026-10-07', '2026-10-12'], wed), 1, 'this week not made yet never breaks the run');
+});
+
+test('completion over the last days: done of due, today only once tapped', () => {
+  const wed = ny('2026-10-14 15:00');
+  assert.deepEqual(core.completion(DAILY, days('2026-10-08', '2026-10-13'), wed, 7), { done: 6, due: 6 }, 'today untapped is not counted yet');
+  assert.deepEqual(core.completion(DAILY, days('2026-10-08', '2026-10-14'), wed, 7), { done: 7, due: 7 });
+  assert.deepEqual(core.completion(DAILY, ['2026-10-10'], wed, 7), { done: 1, due: 6 });
+  assert.deepEqual(core.completion(WEEKDAYS, ['2026-10-08', '2026-10-11', '2026-10-13'], wed, 7), { done: 2, due: 4 }, 'weekdays: Thu, Fri, Mon, Tue due; a Sunday tap is not due');
+  assert.deepEqual(core.completion(THREE, ['2026-10-09', '2026-10-12'], wed, 7), { done: 2, due: 3 }, 'six days gone by, three a week: three due');
+  assert.deepEqual(core.completion(THREE, days('2026-10-08', '2026-10-14'), wed, 7), { done: 7, due: 7 }, 'never less due than done');
+  const made = { frequency: 'daily', created_at: '2026-10-12T14:00:00Z' };
+  assert.deepEqual(core.completion(made, ['2026-10-12'], wed, 30), { done: 1, due: 2 }, 'nothing before the habit started');
+  assert.deepEqual(core.completion({ frequency: 'daily', created_at: '2026-10-14T14:00:00Z' }, [], wed, 7), { done: 0, due: 0 }, 'made today, untapped: nothing yet');
+  assert.equal(core.percent({ done: 2, due: 3 }), 67);
+  assert.equal(core.percent({ done: 0, due: 0 }), null);
+});
+
+test('due today: weekdays on weekends and a made N-a-week week are not', () => {
+  const wed = ny('2026-10-14 15:00'), sat = ny('2026-10-17 10:00');
+  assert.equal(core.dueToday(DAILY, [], sat), true);
+  assert.equal(core.dueToday(WEEKDAYS, [], wed), true);
+  assert.equal(core.dueToday(WEEKDAYS, [], sat), false);
+  assert.equal(core.dueToday(WEEKDAYS, ['2026-10-17'], sat), true, 'tapped anyway: it is one of today’s');
+  assert.equal(core.dueToday(THREE, ['2026-10-12', '2026-10-13'], wed), true);
+  assert.equal(core.dueToday(THREE, ['2026-10-12', '2026-10-13', '2026-10-14'], wed), true, 'made today, by today’s tap');
+  assert.equal(core.dueToday(THREE, ['2026-10-12', '2026-10-13', '2026-10-14'], sat), false, 'the week is made');
+});
+
+test('a month as calendar squares, and the heat map’s days', () => {
+  const wed = ny('2026-10-14 15:00');
+  const g = core.monthGrid({ frequency: 'daily', created_at: '2026-10-03T14:00:00Z' }, ['2026-10-05', '2026-10-14'], '2026-10', wed);
+  assert.equal(g.lead, 3, 'October 2026 starts on a Thursday');
+  assert.equal(g.days.length, 31);
+  const at = (k) => g.days.find((d) => d.key === k).state;
+  assert.deepEqual([at('2026-10-02'), at('2026-10-03'), at('2026-10-05'), at('2026-10-14'), at('2026-10-15')], ['off', 'missed', 'done', 'done', 'later']);
+  assert.equal(core.monthGrid(DAILY, [], '2026-02', wed).days.length, 28);
+  assert.equal(core.addMonths('2026-01', -1), '2025-12');
+  assert.equal(core.addMonths('2026-12', 1), '2027-01');
+  assert.equal(core.monthOf('2026-10-14'), '2026-10');
+
+  const hs = [{ id: 'a', frequency: 'daily' }, { id: 'b', frequency: 'weekdays' }, { id: 'c', frequency: 'n_per_week', n: 3 }];
+  const taps = { a: ['2026-10-10', '2026-10-13'], b: ['2026-10-13'], c: ['2026-10-11'] };
+  const out = core.dayTotals(hs, (id) => taps[id], '2026-10-10', '2026-10-15', wed);
+  assert.deepEqual(out.map((d) => [d.key.slice(8), d.done, d.due]),
+    [['10', 1, 1], ['11', 1, 2], ['12', 0, 2], ['13', 2, 2], ['14', 0, 2], ['15', 0, 0]],
+    'Saturday: the walk; Sunday: the gym tap and a missed walk; weekdays due Monday to Friday; tomorrow nothing');
+  const late = core.dayTotals([{ id: 'a', frequency: 'daily', created_at: '2026-10-13T14:00:00Z' }], () => [], '2026-10-12', '2026-10-13', wed);
+  assert.deepEqual(late.map((d) => d.due), [0, 1], 'nothing due before a habit began');
+});
+
 /* --------------------------------------------------------------- checks */
 test('checkHabit and checkMe agree with the SQL', () => {
   const R = core.HABIT_RULES;
