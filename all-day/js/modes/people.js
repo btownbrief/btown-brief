@@ -995,8 +995,10 @@ const ageFits = (p, a) => !a || p.meta.ages === a || p.meta.ages === 'any';
 const upcomingPlans = () => S.posts.filter((p) => p.at == null || p.at > Date.now() - PAST_GRACE);
 function sortedPlans() {
   const keys = picks();
-  /* for you: your tile's plans, or a plan whose words fit what you picked */
-  const fit = (p) => ((S.arch && (p.meta.arch === S.arch || p.author_arch === S.arch)) || fitsText(planText(p), keys) ? 0 : 1);
+  /* for you: your tile's own plans first, then a plan whose words fit what
+     you picked (Trail's words take any "walk", so a newcomers' downtown walk
+     must not tie with the trail person's hike), then the rest */
+  const fit = (p) => (S.arch && (p.meta.arch === S.arch || p.author_arch === S.arch) ? 0 : fitsText(planText(p), keys) ? 1 : 2);
   return upcomingPlans()
     .filter((p) => S.filter !== 'meetup' || p.meta.meetup)
     .filter((p) => ageFits(p, S.fAge))
