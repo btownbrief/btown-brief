@@ -1147,6 +1147,29 @@ img {
   margin-top: var(--space-6);
 }
 
+/* Fix, borrow & make: one short practical line per service */
+.card-services,
+.detail-services {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 4px;
+  color: var(--ink-2);
+}
+.card-services { font-size: var(--text-xs); line-height: 1.45; padding-top: var(--space-2); }
+.detail-services { font-size: var(--text-sm); line-height: 1.55; gap: var(--space-2); margin-bottom: var(--space-5); }
+.service-kind {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--coral);
+  background: var(--coral-light);
+  border-radius: var(--radius-full);
+  padding: 1px 8px;
+  margin-right: 4px;
+}
+
 .detail-why-special {
   font-family: var(--font-display);
   font-style: italic;

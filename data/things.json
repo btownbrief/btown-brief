@@ -3455,7 +3455,14 @@
       "date": "2026-10-18",
       "source": "https://www.autumnrecordsvt.com/",
       "note": "Address, phone and hours ('12-6pm / 7 days a week') from the Winooski block of the shop's site; its Waterbury store keeps different hours. Coordinates from the map on the shop's site; OpenStreetMap agrees. Services block (2026-10-18): '1-5 = $5 per record', '6-10 = $4 per record', 'Our vinyl flattening service costs $10 per LP ... bad edge warps may be too difficult to fix.' 'Please EMAIL US or stop by the shop to set up an record cleaning appointment'."
-    }
+    },
+    "services": [
+      {
+        "type": "repair",
+        "note": "Record cleaning $5 a record for 1 to 5 (less in bulk); warped LPs flattened for $10. Book by email or at the shop.",
+        "source": "https://www.autumnrecordsvt.com/"
+      }
+    ]
   },
   {
     "id": "wilder-wines",
@@ -3944,7 +3951,14 @@
     "has_guide": false,
     "guide_id": null,
     "source": "user-provided / fletcherfree.org",
-    "last_verified": "2026-07"
+    "last_verified": "2026-07",
+    "services": [
+      {
+        "type": "borrow",
+        "note": "Library of Things: tools, sports gear, instruments, a telescope and board games, on one-week loans. Museum passes too.",
+        "source": "https://fletcherfree.org/index.php/Borrowing"
+      }
+    ]
   },
   {
     "id": "lc-maritime-museum",
@@ -5211,7 +5225,14 @@
       "date": "2026-10-17",
       "source": "https://www.gearx.com/pages/hours-location",
       "note": "Hours and address from the shop's Hours & Location page; coordinates from the Google Maps link on that page."
-    }
+    },
+    "services": [
+      {
+        "type": "repair",
+        "note": "The tech room tunes and repairs skis, snowboards and bikes, and fixes tents and backpacks.",
+        "source": "https://www.gearx.com/pages/service-repair"
+      }
+    ]
   },
   {
     "id": "barge-canal-market",
@@ -9142,7 +9163,14 @@
       "date": "2026-10-17",
       "source": "https://resourcevt.org/store-location-hours/",
       "note": "From the 'ReSOURCE Williston' block: '329 Harvest Lane, Suite 200 Williston, VT | 802.857.4361 | Mon-Sat: 10 AM-6 PM | Sun: 10 AM-5 PM | Donation hours: Tuesday-Friday, 11 AM-4 PM | Saturday Donation hours: 11 AM-2 PM', described as 'your go-to destination for quality used electronics and appliances'. This is a separate store from the Pine St ReSOURCE already in the guide. The page itself never uses the word thrift (the Morrisville blurb says 'thrifty finds'); 'thrift and reuse' is our category label. Coordinates: Nominatim matched the ReSOURCE second_hand shop node at 329 Harvest Lane."
-    }
+    },
+    "services": [
+      {
+        "type": "repair",
+        "note": "Large appliance repair at the Williston warehouse or in your home, $150 base fee plus parts. Call to schedule.",
+        "source": "https://resourcevt.org/large-appliance-sales-services/"
+      }
+    ]
   },
   {
     "id": "boho-baby-williston",
@@ -10056,7 +10084,14 @@
       "date": "2026-10-18",
       "source": "https://themakeryvt.com/",
       "note": "Home page: 'Hours Tuesday 10 - 5 Thursday 10 - 5 Friday 12 - 5 Saturday 12 - 4'; 'Bring your own Craft Night Thursday Sept 3rd, Oct 1, Nov. 5, 2026 5 - 7:00 PM Free! No registration Required'; 'We are now donation by appointment only!'; 'private sewing lessons - $85/hour ... No prior sewing experience required.' Instagram linked from the site."
-    }
+    },
+    "services": [
+      {
+        "type": "make",
+        "note": "Secondhand art and craft supplies, classes, and a free Bring Your Own Craft Night with no registration.",
+        "source": "https://themakeryvt.com/"
+      }
+    ]
   },
   {
     "id": "sandbox-repair",
@@ -10098,7 +10133,72 @@
       "date": "2026-10-18",
       "source": "https://www.sandboxvt.com/",
       "note": "Home page services: 'Clothing Repair Technical Outerwear & Gear Repair Backpack Repair Zipper Replacement Alterations Mail-in Repair'; 'Every third Thursday of the month, we roll out a fresh curated collection of gently pre-loved clothing'; address '688 Pine Street, Burlington VT 05401'. No hours or prices published."
-    }
+    },
+    "services": [
+      {
+        "type": "repair",
+        "note": "Clothing, backpack and outdoor gear repair, zippers and alterations. Start with the repair request form on its site.",
+        "source": "https://www.sandboxvt.com/service/repair.html"
+      }
+    ]
+  },
+  {
+    "id": "generator-makerspace",
+    "name": "Generator",
+    "group": "Do & Play",
+    "category": "Activity & Experience",
+    "neighborhood": "South End",
+    "cost_tier": "$$",
+    "cost_note": "Day pass $25 ($50 with wood and metal shops); membership $105 a month",
+    "season": [
+      "Year-Round"
+    ],
+    "time_of_day": [
+      "Morning",
+      "Afternoon",
+      "Evening"
+    ],
+    "indoor_outdoor": "Indoor",
+    "good_for": [
+      "Solo",
+      "Rainy Day",
+      "Locals' Pick"
+    ],
+    "vibe": [
+      "Quirky",
+      "Underrated"
+    ],
+    "blurb": "Burlington's nonprofit makerspace on Sears Lane, with wood, metal, electronics, jewelry and sewing shops plus laser cutters and 3D printers. Workshops teach the tools, and a day pass lets you try the place without joining.",
+    "why_special": "Shop tools almost nobody has room for at home, and classes to learn them.",
+    "address": "40 Sears Ln, Burlington, VT 05401",
+    "coords": [
+      44.4592,
+      -73.2163
+    ],
+    "website": "https://generatorvt.com/",
+    "image": null,
+    "has_guide": false,
+    "guide_id": null,
+    "source": "https://generatorvt.com/",
+    "last_verified": "2026-10",
+    "hours": null,
+    "checked": {
+      "date": "2026-10-18",
+      "source": "https://generatorvt.com/membership/daypass/",
+      "note": "Day pass page: 'Day Pass (standard): $25 This option does not include our Wood or Metal Shops'; 'Day Pass (hot shop): $50'; 'must be purchased in-person'; 'Must be 18 years or older.'; 'Day Pass User Orientation ... These sessions are FREE'; access includes 'our wood shop, metal shop, sewing studio, electronics lab, jewelry studio, and all of our rapid prototyping tools'. Membership page: 'Monthly Membership: $105'. About page: 'Fully equipped studios for woodworking, metalworking, electronics, 3D printing, laser cutting, textiles'; '501(c)(3) nonprofit'. Home page: 'Physical Address 40 Sears Ln Burlington, VT 05401'. Coordinates: OpenStreetMap hackerspace node at 40 Sears Lane.",
+      "also": [
+        "https://generatorvt.com/membership/",
+        "https://generatorvt.com/generator-about/",
+        "https://generatorvt.com/"
+      ]
+    },
+    "services": [
+      {
+        "type": "make",
+        "note": "Day pass $25, or $50 with the wood and metal shops; 18 and up, after a free orientation. Membership $105 a month.",
+        "source": "https://generatorvt.com/membership/daypass/"
+      }
+    ]
   },
   {
     "id": "mudcraft-studio",
@@ -10139,7 +10239,14 @@
       "date": "2026-10-18",
       "source": "https://mudcraftstudio.com/",
       "note": "'Pottery Date Night, $110 per couple ... ready within a month. Tickets are for this date only and are nonrefundable.' 'Handbuilding, $385 ... 7 lbs of clay ... Our next class begins October 26.' 'Mixed Level Wheel Throwing, $395 ... Our next classes start in January 2027'. 'We operate by appointment, yet welcome visitors anytime.' Address '794 W. Lakeshore Drive, #4, Colchester, Vermont, 05446'."
-    }
+    },
+    "services": [
+      {
+        "type": "make",
+        "note": "Pottery Date Night $110 a couple; 15-hour wheel and handbuilding courses from $385.",
+        "source": "https://mudcraftstudio.com/"
+      }
+    ]
   },
   {
     "id": "old-town-cafe-comics",
@@ -10246,7 +10353,14 @@
         "https://southburlingtonlibrary.org/checking-out-materials",
         "https://southburlingtonlibrary.org/contact-us"
       ]
-    }
+    },
+    "services": [
+      {
+        "type": "borrow",
+        "note": "Library of Things: games, electronics and tools on a library card, ages 16 and up. Most loans two weeks, no renewals.",
+        "source": "https://southburlingtonlibrary.org/library-of-things/"
+      }
+    ]
   },
   {
     "id": "indian-brook-park",
@@ -10516,7 +10630,14 @@
       "also": [
         "https://shelburnecraftschool.coursestorm.com/course/learn-to-spin-yarn-on-a-spinning-wheel?page=2"
       ]
-    }
+    },
+    "services": [
+      {
+        "type": "make",
+        "note": "Classes in clay, glass, fiber, wood and more, including kids classes. Sign up on its CourseStorm page.",
+        "source": "https://shelburnecraftschool.coursestorm.com/"
+      }
+    ]
   },
   {
     "id": "arthound-gallery",
@@ -10619,7 +10740,14 @@
       "also": [
         "https://oldspokeshome.com/what-we-do"
       ]
-    }
+    },
+    "services": [
+      {
+        "type": "repair",
+        "note": "Repair shop open to everyone: flats from $15 plus the tube, tune-ups from $100. Half-price repairs for income-eligible riders.",
+        "source": "https://oldspokeshome.com/what-we-do"
+      }
+    ]
   },
   {
     "id": "bespoke-bikes",
@@ -10665,7 +10793,14 @@
       "date": "2026-10-18",
       "source": "https://www.bespokebest.net/",
       "note": "'custom frame up builds, high quality service, and community oriented group rides, events, and classes'; 'Wednesday - Friday: 12pm-5pm Saturday: 12am-4pm' (Saturday start left out of the hours: it reads as a typo); '12 Main Street, Essex Junction, VT 05452'."
-    }
+    },
+    "services": [
+      {
+        "type": "repair",
+        "note": "Service for e-assist, mountain, gravel, road and cargo bikes: standard tune $95, flat fix $18 plus the tube.",
+        "source": "https://www.bespokebest.net/services"
+      }
+    ]
   },
   {
     "id": "winooski-wheels",
@@ -10708,7 +10843,14 @@
         "https://www.winooskiwheels.com/"
       ]
     },
-    "hours_note": "Tue, Thu and Fri 10am to 6pm, Wed 10am to 5pm, Sat 11am to 4pm, closed 1 to 2pm for lunch; Sun and Mon closed"
+    "hours_note": "Tue, Thu and Fri 10am to 6pm, Wed 10am to 5pm, Sat 11am to 4pm, closed 1 to 2pm for lunch; Sun and Mon closed",
+    "services": [
+      {
+        "type": "repair",
+        "note": "Bike sales and service for new riders, commuters and tourers. Closed 1 to 2 for lunch Tuesday to Friday.",
+        "source": "https://www.winooskiwheels.com/service/hours/"
+      }
+    ]
   },
   {
     "id": "yankee-pride-quilts",
@@ -10814,7 +10956,14 @@
         "https://mustloveyarn.com/pages/store-hours-information",
         "https://mustloveyarn.com/collections/classes/products/introduction-to-crochet"
       ]
-    }
+    },
+    "services": [
+      {
+        "type": "make",
+        "note": "Yarn crafters' group Wednesdays 5 to 7 and Sundays 1 to 3, plus small knitting and crochet classes.",
+        "source": "https://mustloveyarn.com/collections/classes"
+      }
+    ]
   },
   {
     "id": "vermont-violins",
@@ -10862,7 +11011,14 @@
       "date": "2026-10-18",
       "source": "https://www.vermontviolins.com/contact-us",
       "note": "Contact page: '5 Green Tree Drive (Unit B); South Burlington, VT 05403'; 'Monday - Friday: 9am - 5pm Saturday: 9am - 3pm'; '(802) 862-0349'. 'Our staff of experienced professional musicians and luthiers ... frequently demonstrate how modern instruments are built.' (Its Lebanon, NH branch is separate.)"
-    }
+    },
+    "services": [
+      {
+        "type": "repair",
+        "note": "Violin-family repairs and restoration by appointment; bow rehairs and new bridges can often be done while you wait.",
+        "source": "https://www.vermontviolins.com/repairsandrestoration"
+      }
+    ]
   },
   {
     "id": "wild-meadows-books",
