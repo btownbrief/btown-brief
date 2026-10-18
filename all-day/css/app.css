@@ -608,6 +608,14 @@ body.chrome-away .mast { transform: translateY(-100%); }
 .wlegend i { width: 10px; height: 10px; border-radius: var(--r-round); border: 2px solid var(--ink-3); }
 .wlegend i.on { background: var(--ink-2); border-color: var(--ink-2); }
 .grid3.wgrid { grid-template-columns: repeat(auto-fill, minmax(104px, 1fr)); gap: var(--s4) var(--s3); padding-bottom: var(--s2); }
+/* an opened list (Watch's Back then, People's own mixers) and its Collapse
+   bar: the one sticky thing in a tab, and only while that list is on screen.
+   It rides just above the tab bar and the player and rests at the list's
+   end. Sticky measures from inside the panel's bottom padding, which already
+   clears the dock and the player plus 28px, so it reaches 16px into that. */
+.collapsebar { position: sticky; z-index: 2; bottom: calc(-1 * var(--s4));
+  display: flex; justify-content: center; padding: var(--s3) 0 var(--s1); pointer-events: none; }
+.collapsebar .btn { pointer-events: auto; box-shadow: var(--dock-shadow); }
 .vcard { display: block; width: 240px; }
 .vcard .c-media { margin: 0; }
 .vcard .t { display: block; font-size: var(--fs-sub); font-weight: 600; line-height: 1.3; margin-top: 8px; }
@@ -892,6 +900,11 @@ body.chrome-away .mast { transform: translateY(-100%); }
 .owntile { display: flex; flex-direction: column; gap: 3px; width: 200px; padding: 10px 12px 12px; border: 1px solid var(--line); border-radius: var(--r-media); background: var(--accent-soft); }
 .owntile b { font-size: var(--fs-sub); font-weight: 600; line-height: var(--lh-title); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 .owntile .s { font-size: var(--fs-small); color: var(--ink-3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+/* the IRL head with its Show all, and the row opened into a list */
+.subrow { display: flex; align-items: center; justify-content: space-between; gap: var(--s3); padding: 0 var(--gutter) var(--s2); }
+.subrow .subh { padding-bottom: 0; }
+.ownlist { display: grid; gap: var(--s2); padding: 0 var(--gutter); }
+.ownlist .owntile { width: auto; }
 .mixdays { padding-top: 4px; }
 .hostcard { background: var(--paper-2); border-color: transparent; }
 /* People here: handles that open the app, interests as small tiles */

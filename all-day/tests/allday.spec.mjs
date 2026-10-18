@@ -95,7 +95,8 @@ async function staticChecks() {
     check(!fams.length, 'every font-family is --serif or --sans', fams.join(', '));
     const upper = bare.match(/text-transform:\s*uppercase/g) || [];
     check(upper.length === 1 && /\.eyebrow, \.newline, \.soon \{ text-transform: uppercase; \}/.test(bare), 'uppercase lives only in the one caps rule', upper.length + ' rules');
-    check(!/sticky/.test(bare), 'nothing is position: sticky', '');
+    const stickies = bare.match(/[^{}]*\{[^{}]*sticky[^{}]*\}/g) || [];
+    check(stickies.length === 1 && /^\s*\.collapsebar \{/.test(stickies[0]), 'nothing is position: sticky but the Collapse bar under an opened list', stickies.map((x) => x.trim().slice(0, 40)).join(' | '));
 
     const js = [];
     const walk = async (dir) => { for (const f of await readdir(dir, { withFileTypes: true })) { const p = path.join(dir, f.name); if (f.isDirectory()) await walk(p); else if (/\.(js|css|html)$/.test(f.name)) js.push(p); } };
@@ -405,7 +406,7 @@ async function pageRules(page, tab, width) {
     const bad = { fixed: [], upper: [], mono: [], esc: [] };
     panel.querySelectorAll('*').forEach((n) => {
       const cs = getComputedStyle(n);
-      if (cs.position === 'fixed' || cs.position === 'sticky') bad.fixed.push(n.className);
+      if ((cs.position === 'fixed' || cs.position === 'sticky') && !n.matches('.collapsebar')) bad.fixed.push(n.className);
       if (cs.textTransform === 'uppercase' && !n.closest('.eyebrow, .newline, .soon')) bad.upper.push(n.className || n.tagName);
       if (/monospace/i.test(cs.fontFamily)) bad.mono.push(n.className);
     });
@@ -4651,6 +4652,24 @@ async function theWatch(browser, base) {
     await page.click(wPanel + ' [data-slot="back"] .dateline .nav[aria-label="Later day"]');
     await page.click(wPanel + ' [data-back-all]');
     check(await page.$(wPanel + ' [data-slot="back"] .rail[data-back]') !== null && (await allBtn())[1] === 'closed', 'Show less folds it back into the rail', '');
+    /* Stephen, 2026-10-18: a long opened list must be easy to fold back. The
+       Collapse bar rides just above the tab bar while the grid is on screen. */
+    await page.click(wPanel + ' [data-back-all]');
+    const bar = await page.evaluate(() => {
+      const panel = document.querySelector('#panel-watch');
+      const g = document.querySelector('#panel-watch [data-slot="back"] .wgrid[data-back]');
+      panel.scrollTop += g.getBoundingClientRect().bottom - innerHeight - 160;   // the grid's end 160px below the screen
+      const b = g.parentElement.querySelector('.collapsebar [data-collapse]');
+      const r = b.getBoundingClientRect(), tb = document.querySelector('.tabbar').getBoundingClientRect(), gr = g.getBoundingClientRect();
+      return { pos: getComputedStyle(b.parentElement).position, gap: Math.round(tb.top - r.bottom), gridOn: gr.top < r.top && gr.bottom > r.bottom, label: b.getAttribute('aria-label'), text: b.textContent.trim() };
+    });
+    check(bar.pos === 'sticky' && bar.gap >= 8 && bar.gap <= 20 && bar.gridOn && bar.text === 'Collapse' && bar.label === 'Collapse Back then',
+      'mid-grid, a Collapse bar sits just above the tab bar', JSON.stringify(bar));
+    await page.click(wPanel + ' [data-slot="back"] [data-collapse]');
+    await page.waitForTimeout(700);
+    const folded = await page.evaluate(() => { const h = document.querySelector('#panel-watch [data-sec="back"]').getBoundingClientRect().top;
+      return { rail: !!document.querySelector('#panel-watch [data-slot="back"] .rail[data-back]'), bar: !!document.querySelector('#panel-watch .collapsebar'), top: Math.round(h), ok: h >= 0 && h < innerHeight / 2 }; });
+    check(folded.rail && !folded.bar && folded.ok && (await allBtn())[1] === 'closed', 'Collapse folds it into the rail and lands on Back then’s head', JSON.stringify(folded));
     check(JSON.stringify(s.ids) === JSON.stringify(ids(yearAgo)), 'that month’s big films, theaters then streaming', JSON.stringify(s.ids));
     await page.click(wPanel + ' [data-slot="back"] .dateline .nav[aria-label="Earlier day"]');
     s = await shown();
@@ -4695,30 +4714,30 @@ async function theWatch(browser, base) {
     check(cta === 'Vote for the next screening', 'it says what it does, and nothing else', cta);
     const host = await page.$$eval(wPanel + ' [data-host]', (n) => n.map((p) => ({ slot: p.closest('[data-slot]').dataset.slot, text: p.textContent, href: p.querySelector('a').getAttribute('href'),
       target: p.querySelector('a').target, link: p.querySelector('a').textContent })));
-    check(JSON.stringify(host.map((h) => h.slot)) === '["cta","vote"]' && host.every((h) => h.text === 'Stephen hosts a movie night with a mixer after. Pick the next film.'),
+    check(JSON.stringify(host.map((h) => h.slot)) === '["cta","vote"]' && host.every((h) => h.text === 'Steve hosts a movie night with a mixer after. Pick the next film.'),
       'one line says who is screening, on the call and atop the ballot', JSON.stringify(host));
-    check(host.every((h) => h.href === 'https://www.meetup.com/burlington-social-activites-group/' && h.target === '_blank' && h.link === 'Stephen hosts a movie night'),
+    check(host.every((h) => h.href === 'https://www.meetup.com/burlington-social-activites-group/' && h.target === '_blank' && h.link === 'Steve hosts a movie night'),
       'and it links to his Meetup group', JSON.stringify(host));
     const order2 = await page.$eval(wPanel + ' [data-slot="vote"]', (v) => [...v.children].map((c) => c.dataset.sec ? 'sec' : c.dataset.host ? 'host' : c.dataset.ballot ? 'ballot' : c.className));
     check(order2[0] === 'sec' && order2[1] === 'host', 'the line sits right under the ballot’s title', JSON.stringify(order2));
     const names = await page.$$eval(wPanel + ' [data-theater] button', (n) => n.map((b) => [b.textContent, b.classList.contains('on')]));
     check(JSON.stringify(names.map((x) => x[0])) === '["Partizanfilm","Majestic 10","Essex Cinemas"]', 'the three theaters', JSON.stringify(names));
-    check(names.find((x) => x[1])[0] === 'Majestic 10', 'Partizanfilm is closed, so the first open with shows today leads', JSON.stringify(names));
+    check(names.find((x) => x[1])[0] === 'Partizanfilm', 'Partizanfilm, the local one, leads even while it is closed (Stephen, 2026-10-18)', JSON.stringify(names));
     const rows = () => page.$$eval(wPanel + ' [data-showing] .lrow', (n) => n.map((r) => [r.querySelector('.t').textContent, r.querySelector('[data-times]').textContent, !!r.querySelector('.pillbtn')]));
+    const pz = d.showtimes.theaters[0];
+    const back = new Date((wDayNum(pz.back) + wDayNum(wToday()) - wDayNum(d._anchor)) * W_DAY + 12 * 3600000).toISOString().slice(0, 10);
+    const backLabel = new Intl.DateTimeFormat('en-US', { timeZone: 'UTC', month: 'short', day: 'numeric' }).format(new Date(back + 'T12:00:00Z'));
+    check(await page.$eval(wPanel + ' [data-status]', (p) => p.textContent) === 'Burlington · Back ' + backLabel, 'Partizanfilm: Back ' + backLabel, await page.$eval(wPanel + ' [data-status]', (p) => p.textContent));
     let r = await rows();
+    check(JSON.stringify(r.map((x) => x[0])) === '["Lantern Season","Small Hours"]', 'and the first day back’s schedule', JSON.stringify(r));
+    check(await page.$eval(wPanel + ' [data-showtimes]', (a) => a.getAttribute('href')) === 'https://www.partizanfilm.org/', 'its Showtimes button', '');
+    await page.click(wPanel + ' [data-theater] button:has-text("Majestic")');
+    r = await rows();
     check(JSON.stringify(r) === JSON.stringify([['Low Tide', '10:50 am · 1:25 · 4:00 · 6:35 · 9:10 · 11:58 pm', true], ['Hollow Pines', '11:00 am · 1:40 · 7:00 · 11:55 pm', true], ['Street Brawler', '12:00 · 5:30 · 11:59 pm', false]]),
       'Majestic 10: the rest of today’s times, by first show; a title the tab knows gets a trailer button', JSON.stringify(r));
     check(await page.$eval(wPanel + ' [data-status]', (p) => p.textContent) === 'Williston · Today', 'the town and the day', '');
     const st = await page.$eval(wPanel + ' [data-showtimes]', (a) => [a.getAttribute('href'), a.target, a.textContent.trim()]);
     check(st[0] === 'https://www.majestic10.com/movies' && st[1] === '_blank' && st[2] === 'Showtimes', 'a Showtimes button to its own page', JSON.stringify(st));
-    await page.click(wPanel + ' [data-theater] button:has-text("Partizanfilm")');
-    const pz = d.showtimes.theaters[0];
-    const back = new Date((wDayNum(pz.back) + wDayNum(wToday()) - wDayNum(d._anchor)) * W_DAY + 12 * 3600000).toISOString().slice(0, 10);
-    const backLabel = new Intl.DateTimeFormat('en-US', { timeZone: 'UTC', month: 'short', day: 'numeric' }).format(new Date(back + 'T12:00:00Z'));
-    check(await page.$eval(wPanel + ' [data-status]', (p) => p.textContent) === 'Burlington · Closed until ' + backLabel, 'Partizanfilm: closed until ' + backLabel, await page.$eval(wPanel + ' [data-status]', (p) => p.textContent));
-    r = await rows();
-    check(JSON.stringify(r.map((x) => x[0])) === '["Lantern Season","Small Hours"]', 'and the first day back’s schedule', JSON.stringify(r));
-    check(await page.$eval(wPanel + ' [data-showtimes]', (a) => a.getAttribute('href')) === 'https://www.partizanfilm.org/', 'its Showtimes button', '');
     await page.click(wPanel + ' [data-theater] button:has-text("Essex")');
     await page.click(wPanel + ' [data-showing] .lrow .t');
     await page.waitForSelector('.sheet-body [data-trailer]', { timeout: 4000 });
@@ -6816,6 +6835,8 @@ async function thePeople(browser, base) {
     check(/Host something with the crew/.test(host.text) && /^mailto:btownbrief@gmail\.com\?subject=/.test(host.mail) && host.ps === 2, 'the host card: a title, two short lines and a prefilled email to Stephen', JSON.stringify(host));
     const order = await page.$$eval(peoplePanel + ' [data-sec]', (ss) => ss.map((x) => x.dataset.sec));
     check(order.indexOf('host') === order.indexOf('mix') + 1, 'right under the mixers', order.join(' '));
+    const steve = await page.$eval(peoplePanel + ' [data-host] a.btn', (a) => [a.textContent.trim(), decodeURIComponent(a.getAttribute('href'))]);
+    check(steve[0] === 'Email Steve' && /Hi Steve,/.test(steve[1]) && !/Stephen/.test(steve.join(' ')), 'it says Steve, not Stephen (Stephen, 2026-10-18)', JSON.stringify(steve));
     if (!own.length) check(/No Btown Brief meetups/.test(await panelText(page)), 'with none on the calendar it says so and links the group', '');
     const groupsJson = JSON.parse(await readFile(path.join(REPO, 'data/groups.json'), 'utf8')).groups;
     const crows = await clubCats(page);
@@ -7099,6 +7120,23 @@ async function thePeople(browser, base) {
     await page.waitForSelector(peoplePanel + ' [data-sec="mix"] .mixdays button');
     const own = await page.$$eval(peoplePanel + ' [data-mixers] .owntile', (cs) => cs.map((c) => c.dataset.k));
     check(own.length >= 3 && own.every((k) => /^mx-dm/.test(k)), 'Stephen’s own lead the section, as a short row', own.join(' '));
+    /* Stephen, 2026-10-18: a button opens the row into a list that scrolls down, and a Collapse bar folds it back */
+    const ownBtn = () => page.$eval(peoplePanel + ' [data-own-all]', (b) => [b.textContent, b.dataset.ownAll, b.getAttribute('aria-expanded')]);
+    check(JSON.stringify(await ownBtn()) === JSON.stringify(['Show all ' + own.length, 'closed', 'false']) && !!(await page.$(peoplePanel + ' .rail[data-mixers]')), 'his row has a Show all button', JSON.stringify(await ownBtn()));
+    await page.click(peoplePanel + ' [data-own-all]');
+    const list = await page.evaluate(() => { const l = document.querySelector('#panel-people .ownlist[data-mixers]'); if (!l) return null;
+      const r = [...l.querySelectorAll('.owntile')].map((t) => t.getBoundingClientRect());
+      return { n: r.length, rail: !!l.closest('.rail-wrap'), down: r.every((x, i) => !i || x.top >= r[i - 1].bottom), left: new Set(r.map((x) => Math.round(x.left))).size, wide: r.every((x) => x.width > 300),
+        bar: (l.parentElement.querySelector('.collapsebar [data-collapse]') || {}).ariaLabel || '' }; });
+    check(list && list.n === own.length && !list.rail && list.down && list.left === 1 && list.wide && list.bar === 'Collapse Btown Brief IRL',
+      'Show all stacks every one, full width, in a list that scrolls down, with a Collapse bar', JSON.stringify(list));
+    check(JSON.stringify(await ownBtn()) === JSON.stringify(['Show less', 'open', 'true']), 'and the button says Show less', JSON.stringify(await ownBtn()));
+    await page.click(peoplePanel + ' [data-sec="mix"] [data-collapse]');
+    await page.waitForTimeout(700);
+    const back = await page.evaluate(() => { const h = document.querySelector('#panel-people [data-sec="mix"] .sec').getBoundingClientRect().top;
+      return { rail: !!document.querySelector('#panel-people .rail[data-mixers]'), bar: !!document.querySelector('#panel-people .collapsebar'), ok: h >= 0 && h < innerHeight / 2,
+        focus: (document.activeElement && document.activeElement.dataset.ownAll) || '' }; });
+    check(back.rail && !back.bar && back.ok && back.focus === 'closed', 'Collapse folds it back into the row, lands on the Mixers head, and the keyboard is on Show all', JSON.stringify(back));
     const days = await page.$$eval(peoplePanel + ' [data-sec="mix"] .mixdays button', (bs) => bs.map((b) => [b.dataset.day, b.querySelector('.wd').textContent, b.querySelector('.n').textContent]));
     check(days[0][0] === '2026-10-17' && days[0][1] === 'Today' && days.length === 7, 'seven days, today first', JSON.stringify(days));
     let rows = await mixRows(page);
