@@ -377,6 +377,7 @@ function thingCandidates(data, ctx) {
   const season = seasonOf(ctx.targetMonth);
   const out = [];
   for (const t of things) {
+    if (t.closed) continue; // a place that has shut keeps its record, never a suggestion
     const seasons = t.season || [];
     if (!seasons.includes('Year-Round') && !seasons.includes(season)) continue;
     const tods = t.time_of_day || [];

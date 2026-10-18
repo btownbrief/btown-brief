@@ -3199,17 +3199,14 @@
   },
   {
    "id": "cafe-mamajuana",
-   "name": "Cafe Mamajuana",
+   "name": "Café Mamajuana",
    "category": "Restaurant",
    "cuisine": [
     "Dominican"
    ],
-   "neighborhood": "Burlington",
-   "address": "88 Oak St, Burlington, VT, 05401",
-   "coords": [
-    44.5383198,
-    -73.2497034
-   ],
+   "neighborhood": "Colchester",
+   "address": "164 Porters Point Road, Colchester, VT 05446",
+   "coords": null,
    "price": "$$",
    "under_15": null,
    "dietary": [],
@@ -3240,7 +3237,7 @@
     ]
    },
    "kitchen_close": null,
-   "hours_confidence": "google",
+   "hours_confidence": "website",
    "patio": null,
    "quiet_talk": null,
    "solo_friendly": null,
@@ -3253,16 +3250,16 @@
    "closed": false,
    "serves_food": true,
    "links": {
-    "website": "https://www.cafemamajuana.com/",
-    "google_maps": "https://maps.google.com/?cid=12907982386599707824"
+    "website": "https://www.cafemamajuana.com/"
    },
    "blurb": null,
    "happy_hour_note": null,
    "day_trip": false,
-   "last_verified": "2026-07-10",
+   "last_verified": "2026-10-18",
    "sources": [
     "hello",
-    "google"
+    "google",
+    "web-2026-10"
    ],
    "place_id": "ChIJz8cyiMt7ykwRsERGWJddIrM"
   },
@@ -3798,7 +3795,7 @@
    "name": "City Market",
    "category": "Restaurant",
    "cuisine": [],
-   "neighborhood": "Winooski",
+   "neighborhood": "Downtown / Church St",
    "address": "82 S Winooski Ave, Burlington, VT 05401, USA",
    "coords": [
     44.47809549999999,
@@ -3852,7 +3849,7 @@
     ]
    },
    "kitchen_close": null,
-   "hours_confidence": "google",
+   "hours_confidence": "website",
    "patio": null,
    "quiet_talk": null,
    "solo_friendly": null,
@@ -3865,16 +3862,17 @@
    "closed": false,
    "serves_food": null,
    "links": {
-    "website": "http://www.citymarket.coop/",
+    "website": "https://citymarket.coop/",
     "google_maps": "https://maps.google.com/?cid=8476465354254798193"
    },
    "blurb": null,
    "happy_hour_note": null,
    "day_trip": false,
-   "last_verified": "2026-07-10",
+   "last_verified": "2026-10-18",
    "sources": [
     "deals",
-    "google"
+    "google",
+    "web-2026-10"
    ],
    "place_id": "ChIJqQKkNPZ6ykwRcU1DV1R0onU"
   },
@@ -7098,8 +7096,8 @@
    "name": "Guild Tavern",
    "category": "Bar & Nightlife",
    "cuisine": [],
-   "neighborhood": "Williston",
-   "address": "1633 Williston Rd,, Burlington, VT, 05401",
+   "neighborhood": "South Burlington",
+   "address": "1633 Williston Road, South Burlington, VT 05403",
    "coords": [
     44.4636353,
     -73.15948589999999
@@ -7152,7 +7150,7 @@
     ]
    },
    "kitchen_close": null,
-   "hours_confidence": "google",
+   "hours_confidence": "website",
    "patio": null,
    "quiet_talk": null,
    "solo_friendly": null,
@@ -7171,10 +7169,11 @@
    "blurb": null,
    "happy_hour_note": null,
    "day_trip": false,
-   "last_verified": "2026-07-10",
+   "last_verified": "2026-10-18",
    "sources": [
     "hello",
-    "google"
+    "google",
+    "web-2026-10"
    ],
    "place_id": "ChIJ2cO5toZ5ykwRZ_rMg8jNFqA"
   },
@@ -9286,28 +9285,22 @@
    "under_15": null,
    "dietary": [],
    "hours": {
-    "sun": [
-     [
-      "12:00",
-      "19:00"
-     ]
-    ],
     "wed": [
      [
       "12:00",
-      "19:00"
+      "20:00"
      ]
     ],
     "thu": [
      [
       "12:00",
-      "19:00"
+      "20:00"
      ]
     ],
     "fri": [
      [
-      "14:00",
-      "20:00"
+      "14:30",
+      "21:30"
      ]
     ],
     "sat": [
@@ -9315,10 +9308,16 @@
       "12:00",
       "20:00"
      ]
+    ],
+    "sun": [
+     [
+      "12:00",
+      "20:00"
+     ]
     ]
    },
    "kitchen_close": null,
-   "hours_confidence": "google",
+   "hours_confidence": "news",
    "patio": null,
    "quiet_talk": null,
    "solo_friendly": null,
@@ -9331,16 +9330,16 @@
    "closed": false,
    "serves_food": true,
    "links": {
-    "website": "https://kismayo-kitchen.business.site/?utm_source=gmb&utm_medium=referral",
     "google_maps": "https://maps.google.com/?cid=10901306177664531010"
    },
    "blurb": null,
    "happy_hour_note": null,
    "day_trip": false,
-   "last_verified": "2026-07-10",
+   "last_verified": "2026-10-18",
    "sources": [
     "hello",
-    "google"
+    "google",
+    "sevendays-2026-10-15"
    ],
    "place_id": "ChIJzS7yO4x7ykwRQjp3AzY4SZc"
   },
@@ -19903,7 +19902,7 @@
    "attr_evidence": "Seven Days: packed brunch room with 20-25 min waits at noon — lively, not quiet; counter/bar seating works solo; brunch dishes mostly at/under $15 (low confidence).",
    "opened": null,
    "closing": null,
-   "closed": false,
+   "closed": true,
    "serves_food": true,
    "links": {
     "website": "https://www.greyjayvt.com",
@@ -19912,11 +19911,12 @@
    "blurb": "A polished downtown room doing modern American plates and a serious cocktail list — brunch and dinner that feel like an occasion, a block off Church Street.",
    "happy_hour_note": null,
    "day_trip": false,
-   "last_verified": "2026-07-10",
+   "last_verified": "2026-10-18",
    "sources": [
     "things.json",
     "google",
-    "hello"
+    "hello",
+    "web-2026-10"
    ]
   },
   {
@@ -23729,6 +23729,372 @@
    "sources": [
     "things.json",
     "google"
+   ]
+  },
+  {
+   "id": "pioneer-lakeshore-cafe",
+   "name": "Pioneer Lakeshore Café",
+   "category": "Restaurant",
+   "cuisine": [
+    "American & Burgers"
+   ],
+   "neighborhood": "Colchester",
+   "address": "824 W Lakeshore Drive, Colchester, VT 05446",
+   "coords": null,
+   "price": null,
+   "under_15": null,
+   "dietary": [],
+   "hours": {
+    "tue": [
+     [
+      "11:00",
+      "20:00"
+     ]
+    ],
+    "wed": [
+     [
+      "11:00",
+      "20:00"
+     ]
+    ],
+    "thu": [
+     [
+      "11:00",
+      "20:00"
+     ]
+    ],
+    "fri": [
+     [
+      "11:00",
+      "20:00"
+     ]
+    ],
+    "sat": [
+     [
+      "11:00",
+      "20:00"
+     ]
+    ]
+   },
+   "kitchen_close": null,
+   "hours_confidence": "website",
+   "patio": null,
+   "quiet_talk": null,
+   "solo_friendly": null,
+   "tv_sports": null,
+   "groups_8": null,
+   "attr_confidence": null,
+   "attr_evidence": null,
+   "opened": null,
+   "closing": null,
+   "closed": false,
+   "serves_food": true,
+   "links": {
+    "website": "https://www.pioneerfoodvt.com/"
+   },
+   "blurb": "A food truck turned year-round cafe near Malletts Bay: a signature chicken sandwich, hand-cut fries, pastries made in house, beer and wine.",
+   "happy_hour_note": null,
+   "day_trip": false,
+   "last_verified": "2026-10-18",
+   "sources": [
+    "research",
+    "web-2026-10"
+   ]
+  },
+  {
+   "id": "huddys-colchester",
+   "name": "Huddy's (Colchester)",
+   "category": "Cafe & Bakery",
+   "cuisine": [
+    "Breakfast & Brunch"
+   ],
+   "neighborhood": "Colchester",
+   "address": "506 Porter's Point Rd, Colchester, VT 05446",
+   "coords": null,
+   "price": null,
+   "under_15": null,
+   "dietary": [],
+   "hours": {
+    "mon": [
+     [
+      "07:00",
+      "13:30"
+     ]
+    ],
+    "tue": [
+     [
+      "07:00",
+      "13:30"
+     ]
+    ],
+    "wed": [
+     [
+      "07:00",
+      "13:30"
+     ]
+    ],
+    "thu": [
+     [
+      "07:00",
+      "13:30"
+     ]
+    ],
+    "fri": [
+     [
+      "07:00",
+      "13:30"
+     ]
+    ],
+    "sat": [
+     [
+      "07:00",
+      "13:30"
+     ]
+    ],
+    "sun": [
+     [
+      "07:00",
+      "13:30"
+     ]
+    ]
+   },
+   "kitchen_close": null,
+   "hours_confidence": "website",
+   "patio": null,
+   "quiet_talk": null,
+   "solo_friendly": null,
+   "tv_sports": null,
+   "groups_8": null,
+   "attr_confidence": null,
+   "attr_evidence": null,
+   "opened": null,
+   "closing": null,
+   "closed": false,
+   "serves_food": true,
+   "links": {
+    "website": "https://huddysbagels.com/"
+   },
+   "blurb": "Bagel sandwiches on New York-style bagels, Vermont-roasted coffee and milkshakes. Its other shop is in Milton.",
+   "happy_hour_note": null,
+   "day_trip": false,
+   "last_verified": "2026-10-18",
+   "sources": [
+    "research",
+    "web-2026-10"
+   ]
+  },
+  {
+   "id": "le-bon-gout",
+   "name": "Le Bon GoûT",
+   "category": "Restaurant",
+   "cuisine": [
+    "African"
+   ],
+   "neighborhood": "Winooski",
+   "address": "62 Pine Street, Winooski, VT 05404",
+   "coords": null,
+   "price": null,
+   "under_15": null,
+   "dietary": [],
+   "hours": {
+    "sun": [
+     [
+      "11:00",
+      "14:00"
+     ],
+     [
+      "17:00",
+      "20:00"
+     ]
+    ],
+    "mon": [
+     [
+      "11:00",
+      "14:00"
+     ]
+    ],
+    "tue": [
+     [
+      "11:00",
+      "14:00"
+     ]
+    ],
+    "sat": [
+     [
+      "11:00",
+      "14:00"
+     ],
+     [
+      "17:00",
+      "20:00"
+     ]
+    ]
+   },
+   "kitchen_close": null,
+   "hours_confidence": "website",
+   "patio": null,
+   "quiet_talk": null,
+   "solo_friendly": null,
+   "tv_sports": null,
+   "groups_8": null,
+   "attr_confidence": null,
+   "attr_evidence": null,
+   "opened": null,
+   "closing": null,
+   "closed": false,
+   "serves_food": true,
+   "links": {
+    "website": "https://xn--lebongot-35a.com/"
+   },
+   "blurb": "West African takeout in Winooski, pickup only: jollof rice, suya chicken wings with plantains, egusi soup and pondu.",
+   "happy_hour_note": null,
+   "day_trip": false,
+   "last_verified": "2026-10-18",
+   "sources": [
+    "research",
+    "web-2026-10"
+   ]
+  },
+  {
+   "id": "chocolate-butcher",
+   "name": "The Chocolate Butcher",
+   "category": "Sweet Treats",
+   "cuisine": [],
+   "neighborhood": "Williston",
+   "address": "22 Merchants Row, Williston, VT 05495",
+   "coords": null,
+   "price": null,
+   "under_15": null,
+   "dietary": [],
+   "hours": {
+    "thu": [
+     [
+      "12:00",
+      "19:00"
+     ]
+    ],
+    "fri": [
+     [
+      "12:00",
+      "19:00"
+     ]
+    ],
+    "sat": [
+     [
+      "12:00",
+      "19:00"
+     ]
+    ],
+    "sun": [
+     [
+      "12:00",
+      "18:00"
+     ]
+    ]
+   },
+   "kitchen_close": null,
+   "hours_confidence": "website",
+   "patio": null,
+   "quiet_talk": null,
+   "solo_friendly": null,
+   "tv_sports": null,
+   "groups_8": null,
+   "attr_confidence": null,
+   "attr_evidence": null,
+   "opened": null,
+   "closing": null,
+   "closed": false,
+   "serves_food": true,
+   "links": {
+    "website": "https://chocolatebutcher.com/"
+   },
+   "blurb": "Belgian chocolate sold roughly chopped by the bag, plus truffles. The door is to the left of Casa Grande.",
+   "happy_hour_note": null,
+   "day_trip": false,
+   "last_verified": "2026-10-18",
+   "sources": [
+    "research",
+    "web-2026-10"
+   ]
+  },
+  {
+   "id": "asian-mart-essex",
+   "name": "Asian Mart",
+   "category": "Market",
+   "cuisine": [],
+   "neighborhood": "Essex",
+   "address": "60D Pearl St, Essex Junction, VT 05452",
+   "coords": null,
+   "price": null,
+   "under_15": null,
+   "dietary": [],
+   "hours": {
+    "mon": [
+     [
+      "10:00",
+      "20:00"
+     ]
+    ],
+    "tue": [
+     [
+      "10:00",
+      "20:00"
+     ]
+    ],
+    "wed": [
+     [
+      "10:00",
+      "20:00"
+     ]
+    ],
+    "thu": [
+     [
+      "10:00",
+      "20:00"
+     ]
+    ],
+    "fri": [
+     [
+      "10:00",
+      "20:00"
+     ]
+    ],
+    "sat": [
+     [
+      "10:00",
+      "20:00"
+     ]
+    ],
+    "sun": [
+     [
+      "10:00",
+      "20:00"
+     ]
+    ]
+   },
+   "kitchen_close": null,
+   "hours_confidence": "website",
+   "patio": null,
+   "quiet_talk": null,
+   "solo_friendly": null,
+   "tv_sports": null,
+   "groups_8": null,
+   "attr_confidence": null,
+   "attr_evidence": null,
+   "opened": null,
+   "closing": null,
+   "closed": false,
+   "serves_food": null,
+   "links": {
+    "website": "https://asianmartvt.com/"
+   },
+   "blurb": "An Asian grocery at the back of Essex Post Office Square with napa and daikon kimchi made in Essex Junction, and cooking classes; call the store for the next one.",
+   "happy_hour_note": null,
+   "day_trip": false,
+   "last_verified": "2026-10-18",
+   "sources": [
+    "research",
+    "web-2026-10"
    ]
   }
  ]

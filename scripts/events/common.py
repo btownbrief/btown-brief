@@ -655,6 +655,12 @@ def resolve_venue(venue: str | None, address: str | None = None):
     if address:
         a = re.sub(r"[^a-z0-9]+", " ", address.lower())
         for name, info in reg.items():
+            # One street address can hold several venues (UVM gives 97 Spear
+            # St for Gutterson Fieldhouse, Patrick Gym and Virtue Field), so
+            # the address alone names none of them: hockey was landing on
+            # Virtue Field, outdoors (research audit, 2026-10-17).
+            if info.get("address_shared"):
+                continue
             ia = (info.get("address") or "").split(",")[0]
             stem = re.sub(r"[^a-z0-9]+", " ", ia.lower()).strip()
             # numberless stems like "church st" would swallow every address
@@ -667,7 +673,9 @@ def resolve_venue(venue: str | None, address: str | None = None):
 def town_from_address(address: str | None) -> str | None:
     if not address:
         return None
-    for t in TOWNS:
+    # longest name first, so "South Burlington" and "Essex Junction" are not
+    # read as Burlington and Essex
+    for t in sorted(TOWNS, key=len, reverse=True):
         if re.search(rf"\b{re.escape(t)}\b", address, re.I):
             return t
     return None

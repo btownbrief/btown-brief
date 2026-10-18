@@ -146,6 +146,26 @@ def _same_source_other_showtime(ev: dict, cluster: list[dict]) -> bool:
     return False
 
 
+def _same_slot(a: dict, b: dict) -> bool:
+    """Two sources, one venue, the same timed start to the minute."""
+    return (a["source"] != b["source"] and not a["allDay"] and not b["allDay"]
+            and a["start"] == b["start"] and bool(a.get("venue")) and bool(b.get("venue"))
+            and _norm_venue(a["venue"]) == _norm_venue(b["venue"]))
+
+
+def _same_show(a: str, b: str) -> bool:
+    """Raw titles naming one show: after dropping a trailing "@ <venue>",
+    every word of the shorter title (three or more, a lone possessive "s"
+    aside) appears in the longer one. "Bob The Drag Queen @ Flynn Theater"
+    and "Now Clap! Bob The Drag Queen's" match; "Opening Night: Film A" and
+    "Opening Night: Film B" do not."""
+    def words(t):
+        return {w for w in norm_title(re.split(r"\s@\s", t)[0]).split() if w != "s"}
+    wa, wb = words(a), words(b)
+    small, big = (wa, wb) if len(wa) <= len(wb) else (wb, wa)
+    return len(small) >= 3 and small <= big
+
+
 def dedupe(events: list[dict]) -> tuple[list[dict], list[dict]]:
     """Fuzzy-merge same title+date+venue across sources.
     Returns (merged_events, merge_log)."""
@@ -174,6 +194,13 @@ def dedupe(events: list[dict]) -> tuple[list[dict], list[dict]]:
                 # (promoter vs venue name, or an unresolved FB address)
                 if not compatible and sim >= 0.93 and _distinctive(nt) \
                         and _towns_compatible(ev, head):
+                    compatible = True
+                # same-show path: two sources title one show differently
+                # ("Bob The Drag Queen @ Flynn Theater" from UVM, "Now Clap!
+                # Bob The Drag Queen's" from the Flynn) but agree on the venue
+                # and the minute it starts (research audit, 2026-10-17)
+                if not compatible and _same_slot(ev, head) \
+                        and _same_show(ev["title"], head["title"]):
                     compatible = True
                 if compatible:
                     cluster.append(ev)

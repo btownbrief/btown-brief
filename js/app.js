@@ -63,7 +63,7 @@
       // Annual one-off events (extra: true) live in their own section at the
       // foot of the page, so the evergreen List never carries a stale festival.
       state.extras = (things || []).filter(t => t.extra);
-      state.things = (things || []).filter(t => !t.extra);
+      state.things = (things || []).filter(t => !t.extra && !t.closed);
       // Assign a per-load random key so "Random" sort gives a fresh order on
       // every refresh, but stays stable while filtering within a session.
       state.things.forEach(t => { t._rand = Math.random(); });
