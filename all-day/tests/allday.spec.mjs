@@ -224,7 +224,9 @@ function wireFiles(opts = {}) {
 /* ------------------------------------------------------------ On Air's data */
 /* btown-tv.json, tv-editions.json and the wire-audio index in their real
    shapes: the demo file's payloads, moved from its _anchor to today in
-   Burlington. `audio` picks the clip state: 'today', 'yesterday' or 'none'. */
+   Burlington. `audio` picks the clip state: 'today' (the newest edition is
+   today's), 'older' (only the edition before it), 'none', or 'recap' (the
+   retired daily recap's v1 index, whose clips carry no kind). */
 const onairCache = new Map();
 const PLAYLIST = /^https:\/\/www\.youtube\.com\/playlist\?list=[A-Za-z0-9_-]+$/;   // onair.js PLAYLIST_RE
 /* the Play-on-your-TV row under the Btown TV header: tonight's button, or the fallback past night */
@@ -279,11 +281,11 @@ async function onairFiles(opts = {}) {
     e.edition = shift(e.edition);
     [e.pick, ...e.shelves.flatMap((x) => x.items)].forEach((v) => { if (v) delete v.art; });
   });
-  const clips = d.audio.clips.map((c) => ({ ...c, date: shift(c.date), file: shift(c.date) + '.mp3', script: shift(c.date) + '.txt', made: new Date().toISOString() }));
-  const index = { v: 1, updated: new Date().toISOString(), clips: audio === 'none' ? [] : audio === 'yesterday' ? clips.slice(1) : clips };
+  let clips = d.audio.clips.map((c) => ({ ...c, date: shift(c.date), file: shift(c.date) + '.mp3', script: shift(c.date) + '.txt', made: new Date().toISOString() }));
+  if (audio === 'recap') clips = clips.map(({ kind, ...c }) => c);
+  const index = { v: audio === 'recap' ? 1 : 2, updated: new Date().toISOString(), clips: audio === 'none' ? [] : audio === 'older' ? clips.slice(1) : clips };
   const files = { 'btown-tv.json': JSON.stringify(tv), 'tv-editions.json': JSON.stringify(d.tvEditions), 'index.json': JSON.stringify(index) };
-  clips.forEach((c) => { files[c.script] = d.audio._script; });
-  const out = { files, tv, index, today, mp3: longSilence(await readFile(path.join(HERE, 'fixtures/silence.mp3'))) };
+  const out = { files, tv, index, today, clips, mp3: longSilence(await readFile(path.join(HERE, 'fixtures/silence.mp3'))) };
   onairCache.set(key, out);
   return out;
 }
@@ -1855,9 +1857,10 @@ async function onAir(browser, base) {
     await page.waitForSelector('#panel-onair [data-sec="past"]', { timeout: 8000 });
     check(await page.evaluate(() => document.querySelector('audio').paused && !document.querySelector('#panel-onair iframe')), 'nothing autoplays: the shell’s audio is paused and no frame is loaded', '');
     const toc = await page.$$eval('#subnav .chip', (cs) => cs.map((c) => c.innerText.trim()));
-    check(JSON.stringify(toc) === JSON.stringify(['Out loud', 'Btown TV', 'Live', 'Podcasts', 'Playlists', 'Past nights']), 'the chip row is a table of contents: Out loud, Btown TV, Live, Podcasts, Playlists, Past nights', JSON.stringify(toc));
+    check(JSON.stringify(toc) === JSON.stringify(['Btown TV', 'Live', 'Past nights', 'Out loud', 'Podcasts', 'Playlists']), 'the chip row is a table of contents: Btown TV, Live, Past nights, Out loud, Podcasts, Playlists', JSON.stringify(toc));
     const order = await page.$$eval('#panel-onair [data-sec]', (s) => s.map((x) => x.dataset.sec));
-    check(JSON.stringify(order) === JSON.stringify(['brief', 'tv', 'live', 'pods', 'lists', 'past']), 'the sections run in that order', JSON.stringify(order));
+    check(JSON.stringify(order) === JSON.stringify(['tv', 'live', 'past', 'brief', 'pods', 'lists']), 'what changes daily first: tonight, live and past nights, then the Brief out loud, then podcasts (Stephen, 2026-10-18: not videos, podcasts, videos)', JSON.stringify(order));
+    check(await page.$eval('#panel-onair [data-sec="tv"]', (h) => h.getBoundingClientRect().top < 260), 'Btown TV tonight opens the tab, high on the first screen', '');
     const subs = await page.$$eval('#panel-onair [data-sec] p', (p) => p.map((x) => x.textContent));
     check(!subs.length, 'no section carries an explanatory subtitle', JSON.stringify(subs));
     check(!/lands at 7 every morning/.test(await page.$eval('#panel-onair', (p) => p.innerText)), 'no end-of-tab line about when things land', '');
@@ -1913,7 +1916,7 @@ async function onAir(browser, base) {
     await page.waitForSelector('#panel-onair [data-sec="past"]', { timeout: 15000 });
     check(await page.evaluate(() => document.querySelector('audio').paused && document.getElementById('player').hidden), 'nothing autoplays', '');
     const eyebrow = await page.$eval('#panel-onair .audio .eyebrow', (e) => e.textContent);
-    check(/^Today · /.test(eyebrow) && / · 3:27$/.test(eyebrow), 'today’s clip: the card says today and its length', eyebrow);
+    check(eyebrow === 'Today’s edition · 21 min', 'today’s edition: the card says so and how long it runs', eyebrow);
     check((await podRows(page))[0][0] === 'btown-brief', 'live: the Brief’s own show is first in Podcasts', '');
     const repoLists = JSON.parse(await readFile(path.join(APP, 'data/playlists.json'), 'utf8'));
     const realLists = [...repoLists.stephen, ...repoLists.readers].filter((p) => !/^\s*TODO/i.test(p.url)).length;
@@ -1924,14 +1927,12 @@ async function onAir(browser, base) {
       'Btown TV: “Play tonight on your TV” opens tonight’s playlist in a new tab', JSON.stringify(play));
     check(play.tonight && play.tonight.text === 'Play tonight on your TV' && play.tonight.icons === 2 && play.before, 'under the Btown TV header, before the rail, with the play and external icons', JSON.stringify(play));
     check((await tvCards(page)).length === tv.shelves.find((x) => x.key === 'vt').items.length + 1, 'live: tonight’s local picks, the pick and the Burlington & Vermont shelf', '');
-    await page.click('#panel-onair .brieflinks .btn:text("Read the three-minute recap")');
-    await page.waitForFunction(() => /Morning\./.test(document.querySelector('.sheet-body')?.innerText || ''), null, { timeout: 4000 }).catch(() => {});
-    const sheet = await page.$eval('.sheet-body', (b) => b.innerText);
-    check(/Out on the water\.\.\./.test(sheet) && !/\[/.test(sheet), 'the transcript hides the voice’s pacing marks ([short pause])', sheet.slice(0, 300));
-    check(!/\bAI\b|synthetic|artificial/i.test(sheet + await page.$eval('#panel-onair .audio', (a) => a.innerText)), 'no mention of AI on the card or the transcript', '');
-    check(/Read to you every morning at 7\./.test(await page.$eval('#panel-onair .audio', (a) => a.innerText)), 'the card says when it is read', '');
-    check(/^Morning\./.test(await page.$eval('.sheet-body .script', (b) => b.innerText)), '“Read the three-minute recap” shows the script the voice read', '');
-    await page.keyboard.press('Escape');
+    const cardText = await page.$eval('#panel-onair .audio', (a) => a.innerText);
+    check(/The intro and the local news, word for word\. New every Monday and Friday\./.test(cardText), 'the card says what it is (the newsletter itself) and when a new one comes', cardText);
+    check(!/\bAI\b|synthetic|artificial|recap|summary/i.test(cardText), 'no mention of AI, and nothing calls it a recap', cardText);
+    const ed = await page.$eval('#panel-onair .audio [data-newsletter]', (a) => a.getAttribute('href'));
+    check(ed === index.clips[0].url, '“Read this edition” opens that edition’s own page', ed);
+    check(!(await page.$('#panel-onair .brieflinks, #panel-onair .audio .wave')), 'no transcript button and no waveform: the card is one row and its controls', '');
 
     /* the player: the clip plays in the shell's one player and survives a tab switch */
     await page.click('#panel-onair .audio .pb');
@@ -1946,7 +1947,7 @@ async function onAir(browser, base) {
     await page.click('#panel-onair .audio [data-rate="1.25"]');
     await goTab(page, 'wire');
     await goTab(page, 'food');
-    check(await page.$('#player:not([hidden])') !== null && /news in/.test(await page.$eval('#p-title', (t) => t.textContent)), 'the player survives a tab switch', '');
+    check(await page.$('#player:not([hidden])') !== null && /’s Brief, read aloud/.test(await page.$eval('#p-title', (t) => t.textContent)), 'the player survives a tab switch', '');
     await goTab(page, 'onair');
 
     /* a reaction writes tv.html's key, tells Supabase, and survives a reload */
@@ -2039,7 +2040,11 @@ async function onAir(browser, base) {
       const wraps = [...slot.children].filter((c) => c.classList.contains('rail-wrap'));
       const picks = slot.querySelector('[data-rail="picks"]').closest('.rail-wrap');
       const rest = slot.querySelector('[data-rail="rest"]').closest('.rail-wrap');
-      return { heads: slot.querySelectorAll('.sec').length, dividers: slot.querySelectorAll('.tdiv').length, next: picks.nextElementSibling === rest, wraps: wraps.length,
+      /* between the two rails only their "See as a list" rows */
+      let between = picks.nextElementSibling;
+      const mid = [];
+      while (between && between !== rest) { mid.push(between.className); between = between.nextElementSibling; }
+      return { heads: slot.querySelectorAll('.sec').length, dividers: slot.querySelectorAll('.tdiv').length, next: between === rest && mid.every((c) => /^railmode/.test(c)), wraps: wraps.length,
         big: Math.round(picks.querySelector('.vcard').getBoundingClientRect().width), small: Math.round(rest.querySelector('.vcard').getBoundingClientRect().width) };
     });
     check(one.heads === 1 && !one.dividers && one.next && one.wraps === 2, 'one section: one header, the rest of the night straight under the picks, no second header', JSON.stringify(one));
@@ -2105,6 +2110,57 @@ async function onAir(browser, base) {
     await ctx.close();
   });
 
+  /* Stephen, 2026-10-18: the rails felt small and hard to read next to
+     YouTube; "at least having a button, so it changes to just scrolling down" */
+  await group('On Air, see as a list', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/all-day/?demo=1#onair');
+    await settle(page);
+    await page.waitForSelector('#panel-onair [data-sec="past"]', { timeout: 8000 });
+    const rails = await page.$$eval('#panel-onair .rail[data-rail]', (rs) => rs.map((r) => r.dataset.rail));
+    check(JSON.stringify(rails) === JSON.stringify(['picks', 'rest', 'live', 'past']), 'every video rail can turn: tonight’s picks, the rest of the night, Live and Past nights', JSON.stringify(rails));
+    const tops = await page.$$eval('#panel-onair .railmode:not(.foot) [data-railmode]', (bs) => bs.map((b) => b.textContent + '|' + b.getAttribute('aria-pressed') + '|' + Math.round(b.getBoundingClientRect().height)));
+    check(tops.length === 4 && tops.every((t) => /^See as a list\|false\|\d+$/.test(t) && Number(t.split('|')[2]) >= 30), 'sideways by default, “See as a list” above each rail', JSON.stringify(tops));
+    check(!(await page.$$eval('#panel-onair .railmode.foot', (fs) => fs.filter((f) => !f.hidden).length)), 'no button at the foot of a sideways row', '');
+    const names = await page.$$eval('#panel-onair .railmode:not(.foot) [data-railmode]', (bs) => bs.map((b) => b.getAttribute('aria-label')));
+    check(new Set(names).size === 4 && names.every((n) => n.startsWith('See as a list: ')), 'each button names its rail for a screen reader, the visible words first', JSON.stringify(names));
+    const measure = () => page.$eval('#panel-onair [data-rail="rest"]', (r) => {
+      const cs = [...r.querySelectorAll(':scope > .vcard')];
+      const boxes = cs.map((c) => c.getBoundingClientRect());
+      const first = cs[0];
+      const media = first.querySelector('.c-media').getBoundingClientRect();
+      const t = first.querySelector('.t');
+      return { list: r.classList.contains('aslist'), sideways: r.scrollWidth > r.clientWidth + 4, n: cs.length,
+        down: boxes.every((b, i) => !i || b.top >= boxes[i - 1].bottom - 1), inside: boxes.every((b) => b.left >= 0 && b.right <= innerWidth + 0.5),
+        title: parseFloat(getComputedStyle(t).fontSize), beside: media.right <= t.getBoundingClientRect().left + 0.5 && media.width >= 140,
+        bar: getComputedStyle(r.parentElement.querySelector('.rail-bar')).display };
+    });
+    const before = await measure();
+    await page.click('#panel-onair .railmode:not(.foot) [data-railmode="rest"]');
+    const after = await measure();
+    check(before.sideways && !before.list && after.list && !after.sideways && after.down && after.inside, 'the rest of the night becomes a list you scroll down, every card on screen', JSON.stringify({ before, after }));
+    check(after.beside && after.title > before.title, 'the thumbnail beside a bigger title (' + before.title + ' to ' + after.title + ' px)', JSON.stringify(after));
+    check(after.bar === 'none', 'and the sideways progress bar goes', after.bar);
+    const words = await page.$$eval('#panel-onair [data-railmode="rest"]', (bs) => bs.map((b) => b.textContent + '|' + b.getAttribute('aria-pressed') + '|' + !b.closest('.railmode').hidden));
+    check(JSON.stringify(words) === JSON.stringify(['See as a row|true|true', 'See as a row|true|true']), '“See as a row” above it, and again at its foot', JSON.stringify(words));
+    check(await page.$eval('#panel-onair [data-rail="picks"]', (r) => !r.classList.contains('aslist')), 'the other rails keep their own setting', '');
+    check(await page.evaluate(() => localStorage.getItem('allday-onair-lists')) === '{"rest":1}', 'remembered on this phone', '');
+    await page.reload();
+    await page.waitForSelector('#panel-onair [data-sec="past"]', { timeout: 8000 });
+    check(await page.$eval('#panel-onair [data-rail="rest"]', (r) => r.classList.contains('aslist')), 'still a list after a reload', '');
+    await page.$eval('#panel-onair .railmode.foot [data-railmode="rest"]', (b) => b.scrollIntoView({ block: 'center' }));
+    await page.click('#panel-onair .railmode.foot [data-railmode="rest"]');
+    await page.waitForTimeout(700);
+    const back = await page.evaluate(() => {
+      const top = document.querySelector('#panel-onair .railmode:not(.foot) [data-railmode="rest"]');
+      const r = top.getBoundingClientRect();
+      return { list: document.querySelector('#panel-onair [data-rail="rest"]').classList.contains('aslist'), seen: r.top >= 0 && r.bottom <= innerHeight, focus: document.activeElement === top };
+    });
+    check(!back.list && back.seen && back.focus, 'the button at the foot folds it back and brings you to the top of it', JSON.stringify(back));
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
   await group('On Air, speed and the newsletter', async () => {
     const { ctx, page, errors } = await newPage(browser, base);
     await page.goto(base + '/all-day/?demo=1#onair');
@@ -2119,19 +2175,20 @@ async function onAir(browser, base) {
     await page.waitForSelector('#panel-onair .audio .speed', { timeout: 8000 });
     check(JSON.stringify(await speeds()) === JSON.stringify(['1x', '1.25x', '1.5x*']), 'still 1.5x after a reload', JSON.stringify(await speeds()));
     const link = await page.$eval('#panel-onair [data-newsletter]', (a) => ({ text: a.textContent.trim(), href: a.href, target: a.target, rel: a.rel, icons: a.querySelectorAll('svg').length }));
-    check(link.text === 'Read the whole Brief at btownbrief.com' && link.href === 'https://www.btownbrief.com/' && link.target === '_blank' && link.rel === 'noopener' && link.icons === 1,
-      '“Read the whole Brief at btownbrief.com” opens the newsletter in a new tab', JSON.stringify(link));
-    const row = await page.$$eval('#panel-onair .brieflinks .btn', (b) => b.map((x) => x.textContent.trim()));
-    check(JSON.stringify(row) === JSON.stringify(['Read the three-minute recap', 'Read the whole Brief at btownbrief.com']),
-      'the transcript says it is the recap, the newsletter says it is the whole Brief (Stephen, 2026-10-17)', JSON.stringify(row));
-    const fits = await page.$eval('#panel-onair .brieflinks', (r) => { const a = [...r.children].map((c) => c.getBoundingClientRect()); return a.length === 2 && a[1].top >= a[0].bottom && a.every((b) => b.left >= 15 && b.right <= innerWidth - 15 && b.width > innerWidth - 40); });
-    check(fits, 'stacked, each full width at 390, nothing cut off', '');
+    check(link.text === 'Read this edition' && link.href === 'https://www.btownbrief.com/p/friday-october-16th' && link.target === '_blank' && link.rel === 'noopener' && link.icons === 1,
+      '“Read this edition” opens the edition the clip reads, in a new tab', JSON.stringify(link));
+    const card = await page.$eval('#panel-onair .audio', (c) => {
+      const r = c.getBoundingClientRect();
+      const kids = [...c.querySelectorAll('.pb, [data-rate], [data-newsletter]')].map((x) => x.getBoundingClientRect());
+      return { h: Math.round(r.height), left: r.left, right: r.right, vw: innerWidth, inside: kids.every((b) => b.left >= r.left && b.right <= r.right + 0.5 && b.height >= 30) };
+    });
+    check(card.h <= 190 && card.left >= 15 && card.right <= card.vw - 15 && card.inside, 'a small card (Stephen, 2026-10-18): at 390 wide it is under 190 px tall, the play button, speeds and link all inside it', JSON.stringify(card));
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
   });
 
   await group('On Air, the audio card', async () => {
-    for (const audio of ['none', 'yesterday']) {
+    for (const audio of ['none', 'recap', 'older']) {
       const { ctx, page, errors } = await newPage(browser, base, { onair: { audio } });
       await page.goto(base + '/all-day/#onair');
       await page.waitForSelector('#panel-onair [data-sec="tv"]', { timeout: 15000 });
@@ -2141,11 +2198,17 @@ async function onAir(browser, base) {
       const toc = await page.$$eval('#subnav .chip', (cs) => cs.map((c) => c.dataset.chip));
       if (audio === 'none') {
         check(!card && !toc.includes('brief') && !(await page.$('#panel-onair [data-sec="brief"]')), 'no clip: no audio card, no section, no chip', JSON.stringify(toc));
+      } else if (audio === 'recap') {
+        check(!card && !toc.includes('brief'), 'the retired daily recap’s clips (no kind) never show, even before the first edition run prunes them', JSON.stringify(toc));
       } else {
-        const y = dayMinus(etKey(Date.now()), 1);
+        const { clips } = await onairFiles({ audio });
+        const y = clips[1].date;
+        const month = nameOf(y).split(', ')[1];
         const eyebrow = await page.$eval('#panel-onair .audio .eyebrow', (e) => e.textContent);
-        check(card && eyebrow.startsWith(nameOf(y)), 'no clip today: the latest one, with its date (' + nameOf(y) + ')', eyebrow);
-        check(/Read to you every morning at 7\./.test(await onairText(page)) && !(await page.$('#panel-onair [data-sec="brief"] p')), 'the card says when it is read; the header carries no subtitle', '');
+        check(card && eyebrow === month + ' edition · 20 min', 'no edition today: the latest one, with its date (' + month + ')', eyebrow);
+        const title = await page.$eval('#panel-onair .audio h3', (e) => e.textContent);
+        check(title === nameOf(y).split(', ')[0] + '’s Brief, read aloud', 'titled by its weekday', title);
+        check(!(await page.$('#panel-onair [data-sec="brief"] p')), 'the header carries no subtitle', '');
       }
       check(!errors.length, audio + ': no console errors', errors.join(' | '));
       await ctx.close();
@@ -2172,7 +2235,7 @@ async function onAir(browser, base) {
   const clockPast = (page, s) => page.waitForFunction((s) => { const a = document.getElementById('audio'); return !a.paused && a.currentTime > s; }, s, { timeout: 8000 }).then(() => true, () => false);
 
   await group('On Air, the Brief plays', async () => {
-    for (const audio of ['today', 'yesterday']) {
+    for (const audio of ['today', 'older']) {
       const { ctx, page, errors } = await newPage(browser, base, { onair: { audio } });
       await watchPlay(page);
       const types = [];
@@ -2180,7 +2243,7 @@ async function onAir(browser, base) {
       await page.goto(base + '/all-day/#onair');
       await page.waitForSelector('#panel-onair .audio .pb', { timeout: 15000 });
       await page.waitForSelector('#panel-onair [data-sec="past"]', { timeout: 15000 });
-      const date = audio === 'today' ? etKey(Date.now()) : dayMinus(etKey(Date.now()), 1);
+      const date = (await onairFiles({ audio })).clips[audio === 'today' ? 0 : 1].date;
       await page.tap('#panel-onair .audio .pb').catch(() => page.click('#panel-onair .audio .pb'));
       const moved = await clockPast(page, 0.5);
       const st = await audioState(page);
