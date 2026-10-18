@@ -52,11 +52,45 @@ These are the calls phase one had to make where neither said. Each is cheap to c
 - **Reorder is "move to place k"** (`sz_habit_set(p_position => k)`); the server renumbers
   the rest, so one call per drag. The grip also answers the arrow keys.
 
+## Round two: more to it (Stephen, 2026-10-18: "really pretty bare")
+
+Looked at what Streaks, Habitify, Loop and Done share, and took the four that matter most
+and need nothing new on the server: every number is worked out on the phone from the 370
+days of taps the tab already loads (`habits-core.js`), so signed out and signed in work
+the same, and no SQL changed.
+
+- **Today on top.** "2 of 3" with a bar, and "Last 7 days 86%". A habit is one of today's
+  when it is daily, a weekdays habit Monday to Friday, or an N-a-week habit whose week
+  has not got its N yet; any habit tapped today is one of today's. Nothing due is
+  "Rest day"; everything done is "All done today". No confetti.
+- **The last seven (or thirty) days, as a percent.** Done of due. Today counts once it is
+  tapped (it is not over yet), and nothing before the habit started counts. An N-a-week
+  habit is due N for every seven days, rounded, and never less than its taps.
+- **Best streak**, beside the streak, in a habit's sheet: the longest run the taps hold, by
+  the same rules as the streak, so a year is the most it can show.
+- **A month calendar per habit** in its sheet (tap the name), back a month at a time to
+  the month it started or the history's start. And on Today, **the last sixteen weeks as
+  a heat map**, a square a day, darker the more of that day's habits were done (an N-a-
+  week habit has no set days, so only its taps count there).
+- **A day before a habit started is never a missed ring.** The start is the day it was
+  made, or its first tap if earlier (habits moved from a phone keep older taps). This
+  changes the seven dots too: a habit added Wednesday no longer shows Monday and Tuesday
+  as missed.
+- **The season tile moved under the tracker.** Between seasons it changes once a season,
+  and the things that change every day go on top (Stephen, the same morning, about On
+  Air). When phase two puts a live goal and its Done button in the tile, it goes back on
+  top, because then it is the day's main thing.
+- **Not built, on purpose:** a growth picture that grows with the streak (the notes: "no
+  illustrations, no badges"; the bar and the heat map are the visible progress), and
+  reminders (the app has no notifications; the notes' daily email is phase two).
+- **The habit sheet's title is the habit's name**; it used to say "Edit habit". Editing
+  is under the numbers, under a small "Edit" heading.
+
 ## Screens and words
 
-- **Signed out:** the tile, the tracker, and one quiet line under it, "Sync across devices",
-  that opens Settings' sign-in (only once there is a habit to sync). A first visit is the tile,
-  "No habits yet." and Add habit. The tile's Sign up opens the sign-in too, with a toast, "Sign
+- **Signed out:** the tracker, one quiet line under it, "Sync across devices",
+  that opens Settings' sign-in (only once there is a habit to sync). A first visit is "No habits
+  yet.", Add habit and the tile. The tile's Sign up opens the sign-in too, with a toast, "Sign
   in to join a season.": the season is the one thing that needs an account.
 - **Sign up, signed in:** opens the season's `stripe_link` when it has one; otherwise a
   toast, "Sign-up opens Oct 30." (from `signup_opens`) or "Sign-up opens soon."

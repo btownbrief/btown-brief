@@ -5946,8 +5946,9 @@ async function theHabits(browser, base) {
     const out = await page.$eval(hbPanel, (p) => ({ tile: p.querySelector('.hb-tile').innerText.replace(/\s+/g, ' '), buttons: [...p.querySelectorAll('button')].map((b) => b.textContent.trim()),
       rows: p.querySelectorAll('.hb-row').length, notes: [...p.querySelectorAll('p')].map((x) => x.textContent).filter((t) => !/^Season 0 ·/.test(t)) }));
     check(/Next season starts in 23 days/.test(out.tile) && /Sign up/.test(out.tile), 'the between-seasons tile: when the next season starts, and a sign-up button', out.tile);
-    check(JSON.stringify(out.buttons) === '["Sign up","Add habit"]' && out.rows === 0 && JSON.stringify(out.notes) === '["No habits yet."]',
-      'signed out, a first visit: one line and the Add habit row, no sign-in wall', JSON.stringify(out));
+    check(JSON.stringify(out.buttons) === '["Add habit","Sign up"]' && out.rows === 0 && JSON.stringify(out.notes) === '["No habits yet."]',
+      'signed out, a first visit: one line and the Add habit row, then the season tile, no sign-in wall', JSON.stringify(out));
+    check(!(await page.$(hbPanel + ' .hb-today')) && !(await page.$(hbPanel + ' .hb-heat')), 'no habits, no numbers: no today line and no heat map', '');
     check(JSON.stringify(await page.$$eval('#subnav .chip', (c) => c.map((x) => x.textContent))) === '["Today","Goal","Season","Wall"]', 'the chips: Today, Goal, Season, Wall', '');
     await page.click(hbPanel + ' .hb-tile .hb-go');
     await page.waitForSelector('.sheet-card[aria-label="Settings"]', { timeout: 4000 }).catch(() => {});
@@ -6008,6 +6009,63 @@ async function theHabits(browser, base) {
     await ctx.close();
   });
 
+  await group('Habits, the numbers: today on top, the heat map, a habit’s month and best streak (demo, 390, Wednesday Oct 14)', async () => {
+    /* noon on Wednesday 2026-10-14 in Burlington; the demo's taps count back from it */
+    const { ctx, page, errors } = await newPage(browser, base, { clock: Date.parse('2026-10-14T16:00:00Z') });
+    await page.goto(base + '/all-day/?demo=1#habits');
+    await settle(page);
+    /* the walk also ran for the fourteen days before its first missed day: a best streak longer than today's */
+    await hbFake(page, `(f) => { const h = f.habits.find((x) => x.text === 'Morning walk'); for (let i = 22; i <= 30; i++) { const d = new Date(Date.UTC(2026, 9, 14 - i, 12)).toISOString().slice(0, 10); f.addTap(h.id, d); } return true; }`);
+    await hbSignIn(page);
+    const order = await page.$eval(hbPanel + ' .hb', (b) => [...b.children].map((c) => c.className.split(' ')[0]));
+    check(order[0] === 'hb-today' && order[1] === 'hb-list' && order.indexOf('hb-heat') > order.indexOf('hb-add') && order[order.length - 1] === 'hb-tile',
+      'today on top, then the habits, then the weeks behind them; the season tile last', JSON.stringify(order));
+    const today = () => page.$eval(hbPanel + ' .hb-today', (t) => ({ text: [...t.querySelectorAll('.hb-stat')].map((x) => x.innerText.replace(/\s+/g, ' ').trim()),
+      now: t.querySelector('.hb-bar').getAttribute('aria-valuenow'), max: t.querySelector('.hb-bar').getAttribute('aria-valuemax') }));
+    let t = await today();
+    check(JSON.stringify(t.text) === '["1 of 3 Today","100% Last 7 days"]' && t.now === '1' && t.max === '3', 'Wednesday: the walk done, reading and the gym still to do; every due day of the last week done', JSON.stringify(t));
+    const heat = () => page.$$eval(hbPanel + ' .hb-grid .c', (cs) => cs.map((c) => [c.dataset.day, c.className.replace(/^c /, '')]));
+    let cells = await heat();
+    const cell = (day) => (cells.find((c) => c[0] === day) || [])[1];
+    check(cells.length === 16 * 7 && cells[0][0] === '2026-06-29' && cells[cells.length - 1][0] === '2026-10-18', 'sixteen weeks, Monday to Sunday, ending this week', JSON.stringify([cells.length, cells[0], cells[cells.length - 1]]));
+    check(cell('2026-10-14') === 'l2 now' && cell('2026-10-13') === 'l4' && cell('2026-10-15') === 'later' && cell('2026-09-01') === 'none',
+      'today half done and marked, yesterday all done, tomorrow blank, before the habits began nothing', JSON.stringify(['10-14 ' + cell('2026-10-14'), '10-13 ' + cell('2026-10-13'), '10-15 ' + cell('2026-10-15'), '09-01 ' + cell('2026-09-01')]));
+    const tr = await hbTap(page, 'Read twenty pages');
+    t = await today();
+    cells = await heat();
+    check(tr.on && tr.ms < 100 && JSON.stringify(t.text) === '["2 of 3 Today","100% Last 7 days"]' && t.now === '2' && cell('2026-10-14') === 'l4 now',
+      'a tap moves today’s count and today’s square in the same click (' + Math.round(tr.ms) + ' ms)', JSON.stringify([t, cell('2026-10-14')]));
+    await hbTap(page, 'Gym');
+    t = await today();
+    check(JSON.stringify(t.text) === '["3 of 3 All done today","100% Last 7 days"]' && t.now === '3', 'all three: “All done today”, and the bar full', JSON.stringify(t));
+    await page.evaluate(() => document.querySelector('.panel:not([hidden])').scrollTo(0, 0));
+    await page.screenshot({ path: path.join(SHOTS, 'demo-habits-numbers.png'), fullPage: false });
+
+    /* the walk's own sheet */
+    await page.click(hbPanel + ' .hb-row:nth-child(1) .hb-name');
+    await page.waitForSelector('.sheet-card[aria-label="Morning walk"] .hb-cal', { timeout: 4000 });
+    const sheet = () => page.$eval('.sheet-body', (b) => ({ stats: [...b.querySelectorAll('.hb-stats .hb-stat')].map((x) => x.innerText.replace(/\s+/g, ' ').trim()),
+      month: b.querySelector('.hb-cal .hb-h').textContent, prev: b.querySelector('[data-m="-1"]').disabled, next: b.querySelector('[data-m="1"]').disabled,
+      pads: b.querySelectorAll('.hb-month .c.pad').length, days: [...b.querySelectorAll('.hb-month .c:not(.pad)')].map((c) => [c.dataset.day, c.className.replace(/^c /, '')]) }));
+    let sh = await sheet();
+    const st = (day) => (sh.days.find((d) => d[0] === day) || [])[1];
+    check(JSON.stringify(sh.stats) === '["9 days Streak","14 days Best","93% Last 30 days"]', 'the streak, the best streak and the last thirty days', JSON.stringify(sh.stats));
+    check(sh.month === 'October 2026' && sh.pads === 3 && sh.days.length === 31 && !sh.prev && sh.next, 'this month: the 1st is a Thursday, and no month after it', JSON.stringify([sh.month, sh.pads, sh.days.length, sh.prev, sh.next]));
+    check(st('2026-10-14') === 'done' && st('2026-10-05') === 'missed' && st('2026-10-15') === 'later', 'today done, a missed day a ring, the rest of the month to come', JSON.stringify([st('2026-10-14'), st('2026-10-05'), st('2026-10-15')]));
+    await page.click('.sheet-body [data-m="-1"]');
+    sh = await sheet();
+    check(sh.month === 'September 2026' && sh.prev && !sh.next && st('2026-09-28') === 'missed' && st('2026-09-14') === 'done' && st('2026-09-13') === 'off',
+      'a month back: the walk began on the 14th, so nothing earlier is missed, and there is no month before it', JSON.stringify([sh.month, sh.prev, sh.next, st('2026-09-28'), st('2026-09-14'), st('2026-09-13')]));
+    check(await page.evaluate(() => document.activeElement && document.activeElement.dataset.m === '1'), 'the focus stays on the month buttons', '');
+    check(!!(await page.$('.sheet-body .hb-edit input[name=text]')), 'and the edit form under it', '');
+    await page.waitForTimeout(450);   // the sheet's rise
+    await page.screenshot({ path: path.join(SHOTS, 'demo-habits-sheet.png') });
+    await page.keyboard.press('Escape');
+    await pageRules(page, 'habits', 390);
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
   await group('Habits, swipe to archive with Undo, drag and keys to reorder, edit (demo, 1280, dark)', async () => {
     const { ctx, page, errors } = await newPage(browser, base, { viewport: { width: 1280, height: 800 }, scheme: 'dark' });
     await page.goto(base + '/all-day/?demo=1#habits');
@@ -6031,7 +6089,7 @@ async function theHabits(browser, base) {
     /* a short swipe does nothing */
     const b2 = await page.$eval(hbPanel + ' .hb-row:nth-child(2) .hb-name', (n) => { const r = n.getBoundingClientRect(); return { x: r.left + 20, y: r.top + r.height / 2 }; });
     await page.mouse.move(b2.x + 200, b2.y); await page.mouse.down(); await page.mouse.move(b2.x + 160, b2.y, { steps: 4 }); await page.mouse.up();
-    check((await hbRows(page)).length === 3 && !(await page.$('.sheet-card[aria-label="Edit habit"]')), 'a short swipe neither archives nor opens the habit', '');
+    check((await hbRows(page)).length === 3 && !(await page.$('.sheet-card .hb-cal')), 'a short swipe neither archives nor opens the habit', '');
 
     /* drag the first row below the last */
     const g = await page.$eval(hbPanel + ' .hb-row:nth-child(1) .hb-grip', (n) => { const r = n.getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2, h: n.closest('.hb-row').offsetHeight }; });
@@ -6053,8 +6111,8 @@ async function theHabits(browser, base) {
 
     /* edit */
     await page.click(hbPanel + ' .hb-row:nth-child(1) .hb-name');
-    await page.waitForSelector('.sheet-card[aria-label="Edit habit"]', { timeout: 4000 });
-    check(await page.$eval('.sheet-body .hb-n', (s) => !s.hidden && s.value === '3'), 'the edit sheet opens on what the habit is: 3 a week', '');
+    await page.waitForSelector('.sheet-card[aria-label="Gym"] .hb-edit', { timeout: 4000 });
+    check(await page.$eval('.sheet-body .hb-n', (s) => !s.hidden && s.value === '3'), 'the habit’s sheet has the edit form, on what the habit is: 3 a week', '');
     await page.fill('.sheet-body input[name=text]', 'Gym, or a long run');
     await page.click('.sheet-body .hb-freq [data-freq="weekdays"]');
     await page.click('.sheet-body button[type=submit]');
@@ -6073,10 +6131,17 @@ async function theHabits(browser, base) {
     await settle(page);
     /* seventeen more on the server before signing in: twenty in all */
     await hbFake(page, `(f) => { f.as('${HB_ME}'); for (let i = 4; i <= 20; i++) f.sz_habit_add({ p_text: 'Habit ' + i, p_frequency: 'daily' }); f.as(null); }`);
+    /* and a full history behind every one: 369 days of taps, most days, the most the tab loads */
+    await hbFake(page, `(f) => { const now = Date.now(); f.habits.forEach((h, j) => { for (let i = 1; i <= 369; i++) if ((i + j) % 5) f.addTap(h.id, new Date(now - i * 86400000).toLocaleDateString('en-CA', { timeZone: 'America/New_York' })); }); return true; }`);
     await hbSignIn(page);
     let rows = await hbRows(page);
     const names0 = rows.map((r) => r.name);
     check(rows.length === 20 && names0[3] === 'Habit 4' && names0[19] === 'Habit 20', 'twenty habits, in order', JSON.stringify(names0));
+    /* every tap repaints the row, today's numbers and the heat map: still at once with twenty habits and a year of taps */
+    const ms = [];
+    for (let i = 0; i < 4; i++) ms.push((await hbTap(page, 'Habit 5')).ms);
+    check(Math.max(...ms.slice(1)) < 100, 'twenty habits and a year of taps: a tap still shows at once (' + ms.map(Math.round).join(', ') + ' ms)', JSON.stringify(ms));
+    check(await page.$$eval(hbPanel + ' .hb-grid .c', (c) => c.length) === 112 && !(await hbRows(page)).find((r) => r.name === 'Habit 5').on, 'the heat map is all there, and four taps leave it as it was', '');
     check(rows.every((r) => r.dots.length === 7 && r.tap >= 48), 'every row keeps its seven dots and its 48px tap', '');
     const scroll = () => page.$eval(hbPanel, (p) => ({ top: Math.round(p.scrollTop), max: p.scrollHeight - p.clientHeight }));
     check((await scroll()).max > 600, 'the list is longer than the screen, and the panel scrolls', JSON.stringify(await scroll()));
@@ -6190,6 +6255,9 @@ async function theHabits(browser, base) {
     await page.click(hbPanel + ' .hb-tile .hb-go');
     await page.waitForTimeout(150);
     check(!(await page.$('.sheet-card[aria-label="Join Season 0"]')) && (await hbRows(page)).length === 4, 'signed in again: not asked twice', '');
+    /* the tile sits under the habits now, and scrolling down to it tucks the mast away: back up to the chips */
+    await page.evaluate(() => document.querySelector('#panel-habits').scrollTo(0, 0));
+    await page.waitForFunction(() => { const c = document.querySelector('#subnav .chip[data-chip="season"]'); return c && c.getBoundingClientRect().top > 0; }, null, { timeout: 4000 }).catch(() => {});
     await page.click('#subnav .chip[data-chip="season"]');
     check(await page.$eval(hbPanel, (p) => p.innerText.trim()) === 'Season 0 is coming' && /#habits\/season$/.test(await page.evaluate(() => location.hash)), 'Season: one line, and the address says where', '');
     await page.goto(base + '/all-day/?demo=1#habits/wall');
@@ -6337,7 +6405,7 @@ async function theHabits(browser, base) {
     await page.click(hbPanel + ' .hb-form button[type=submit]');
     await page.waitForFunction(() => document.querySelectorAll('#panel-habits .hb-row').length === 2, null, { timeout: 4000 }).catch(() => {});
     await page.click(hbPanel + ' .hb-row:nth-child(2) .hb-name');
-    await page.waitForSelector('.sheet-card[aria-label="Edit habit"]', { timeout: 4000 });
+    await page.waitForSelector('.sheet-card[aria-label="Old habit"] .hb-edit', { timeout: 4000 });
     await page.click('.sheet-body button:has-text("Archive")');
     await page.waitForFunction(() => document.querySelectorAll('#panel-habits .hb-row').length === 1, null, { timeout: 4000 }).catch(() => {});
     await hbSignIn(page);

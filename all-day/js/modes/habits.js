@@ -6,16 +6,20 @@
 
    Phase one is the habit tracker on its own, and it should feel finished:
 
-   - Today. The goal tile on top: with no goal live it says when the next
-     season starts, with a sign-up button, or that none is scheduled. Below
-     it, your own habits, as many as you keep, each a row with its name, its
-     streak, this week as seven dots and a 48px tap target. Tap to mark
-     today done, tap again to un-mark. Swipe a row left to archive it (the
-     toast has Undo); drag it by its grip to reorder (held near the top or
-     bottom of the screen, the list scrolls with it); tap its name to edit
-     it. An Add habit row at the bottom: a name, how often (daily,
-     weekdays, N times a week) and sharing with your pod, off unless you
-     turn it on.
+   - Today. On top, once you keep a habit: how many of today's are done,
+     with a bar, and how much of what was due got done in the last seven
+     days. Then your own habits, as many as you keep, each a row with its
+     name, its streak, this week as seven dots and a 48px tap target. Tap
+     to mark today done, tap again to un-mark. Swipe a row left to archive
+     it (the toast has Undo); drag it by its grip to reorder (held near the
+     top or bottom of the screen, the list scrolls with it); tap its name
+     for its sheet: the streak, the best streak, the last thirty days, a
+     month calendar going back over the history the tab holds, and the
+     edit form. An Add habit row: a name, how often (daily, weekdays, N
+     times a week) and sharing with your pod, off unless you turn it on.
+     Under them, the last sixteen weeks as a heat map, a square a day. Last,
+     the goal tile: with no goal live it says when the next season starts,
+     with a sign-up button, or that none is scheduled.
    - Goal, Season and Wall are chips that say Season 0 is coming.
 
    Signed out, it just works: the same Today, every habit and tap kept on
@@ -47,7 +51,8 @@ import * as app from '../app.js';
 import * as store from '../store.js';
 import * as boards from '../boards.js';
 import { el, esc, ICON, button, chips } from '../ui.js';
-import { HABIT_RULES, dayKey, addDays, streak, streakUnit, weekDots, daysUntil, nextMidnight, checkHabit, checkMe, clean, message } from '../habits-core.js';
+import { HABIT_RULES, dayKey, addDays, weekStart, streak, streakUnit, weekDots, daysUntil, nextMidnight, checkHabit, checkMe, clean, message,
+  bestStreak, completion, percent, dueToday, dayTotals, monthGrid, monthOf, addMonths, startKey } from '../habits-core.js';
 import { FakeHabits, seedDemo } from '../habits-fake.js';
 import { LocalHabits, LOCAL_DOORS, browserStorage, memoryStorage } from '../habits-local.js';
 import { DEMO_ME } from '../boards-fake.js';
@@ -59,6 +64,7 @@ const HISTORY_DAYS = HABIT_RULES.limits.tapsRangeMaxDays - 1;
 const SWIPE_START = 24, SWIPE_COMMIT = 72, SWIPE_CANCEL_Y = 14;
 const DRAG_EDGE = 56, DRAG_SPEED = 18;   // the band where a drag scrolls the list, and its top speed in px a frame
 const DOW = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+const HEAT_WEEKS = 16;   // the heat map under the list: this week and the fifteen before it
 const FREQ_WORD = { daily: 'Daily', weekdays: 'Weekdays' };
 const freqWord = (h) => (h.frequency === 'n_per_week' ? h.n + ' a week' : FREQ_WORD[h.frequency] || '');
 
@@ -342,24 +348,85 @@ function paint() {
     app.paintSubnav();
     return;
   }
-  body.appendChild(tile());
-  if (S.phase === 'loading') { body.appendChild(skeleton()); return; }
-  if (S.off && S.uid) { body.appendChild(el('p', 'hb-empty', esc(message('off')))); return; }
+  /* the day's own things first: today, your habits, the weeks behind
+     them; the season tile, which changes once a season, under them */
+  if (S.phase === 'loading') { body.append(skeleton(), tile()); return; }
+  if (S.off && S.uid) { body.append(el('p', 'hb-empty', esc(message('off'))), tile()); return; }
   if (S.failed) {
     const box = el('div', 'hb-gate');
     box.appendChild(el('p', 'hb-empty', esc(S.failed)));
     box.appendChild(button('Try again', 'ghost', load));
-    body.appendChild(box);
+    body.append(box, tile());
     return;
   }
+  const any = mine().length > 0;
+  if (any) body.appendChild(fill(el('section', 'hb-today'), paintToday));
   const list = el('ul', 'hb-list');
   list.setAttribute('aria-label', 'Your habits');
   mine().forEach((h) => list.appendChild(row(h)));
   body.appendChild(list);
   bindList(list);
-  if (!mine().length && !S.adding) body.appendChild(el('p', 'hb-empty', 'No habits yet.'));
+  if (!any && !S.adding) body.appendChild(el('p', 'hb-empty', 'No habits yet.'));
   body.appendChild(addRow());
-  if (!S.uid && mine().length) body.appendChild(button('Sync across devices', 'hb-sync', () => app.openSettings()));
+  if (!S.uid && any) body.appendChild(button('Sync across devices', 'hb-sync', () => app.openSettings()));
+  if (any) body.appendChild(fill(el('section', 'hb-heat'), paintHeat));
+  body.appendChild(tile());
+}
+const fill = (node, fn) => { fn(node); return node; };
+
+/* ------------------------------------------------- today, and the weeks */
+/* On top: how many of today's habits are done, with a bar, and how much of
+   what was due got done over the last seven days. A weekdays habit on a
+   weekend, or an N-a-week habit whose week is already made, is not one of
+   today's, unless it is tapped. */
+function paintToday(w) {
+  const now = Date.now();
+  const list = mine();
+  const due = list.filter((h) => dueToday(h, tapsOf(h.id), now));
+  const done = due.filter((h) => tapsOf(h.id).has(S.today)).length;
+  let d = 0, u = 0;
+  list.forEach((h) => { const c = completion(h, tapsOf(h.id), now, 7); d += c.done; u += c.due; });
+  const pct = percent({ done: d, due: u });
+  const share = due.length ? Math.round(100 * done / due.length) : 0;
+  w.innerHTML = '<div class="hb-stat"><span class="hb-num">' + esc(due.length ? done + ' of ' + due.length : 'Rest day') + '</span>' +
+      '<span class="hb-lab">' + esc(due.length && done === due.length ? 'All done today' : 'Today') + '</span></div>' +
+    (pct == null ? '' : '<div class="hb-stat r"><span class="hb-num">' + esc(pct + '%') + '</span><span class="hb-lab">' + esc('Last 7 days') + '</span></div>') +
+    (due.length ? '<span class="hb-bar" role="progressbar" aria-label="' + esc('Done today') + '" aria-valuemin="0" aria-valuemax="' + due.length + '" aria-valuenow="' + done + '">' +
+      '<i style="width:' + share + '%"></i></span>' : '');
+}
+
+/* Under the list: the last sixteen weeks, a square a day, Monday at the
+   top, darker the more of that day's habits got done. */
+const shortDay = (key) => new Date(key + 'T12:00:00Z').toLocaleDateString('en-US', { month: 'short', day: 'numeric', timeZone: 'UTC' });
+function paintHeat(w) {
+  const start = weekStart(S.today);
+  const from = addDays(start, -7 * (HEAT_WEEKS - 1));
+  const days = dayTotals(mine(), tapsOf, from, addDays(start, 6), Date.now());
+  let full = 0, any = 0;
+  const cells = days.map((x) => {
+    let lv;
+    if (x.key > S.today) lv = 'later';
+    else if (!x.due) lv = 'none';
+    else {
+      any++;
+      const r = x.done / x.due;
+      if (r >= 1) full++;
+      lv = r >= 1 ? 'l4' : r > 2 / 3 ? 'l3' : r > 1 / 3 ? 'l2' : r > 0 ? 'l1' : 'l0';
+    }
+    const tip = x.key > S.today ? '' : ' title="' + esc(shortDay(x.key) + ': ' + x.done + ' of ' + x.due) + '"';
+    return '<i class="c ' + lv + (x.key === S.today ? ' now' : '') + '" data-day="' + x.key + '"' + tip + '></i>';
+  }).join('');
+  w.innerHTML = '<h3 class="hb-h">' + esc('Last ' + HEAT_WEEKS + ' weeks') + '</h3>' +
+    '<div class="hb-heatin"><span class="hb-wd" aria-hidden="true"><i>Mon</i><i></i><i>Wed</i><i></i><i>Fri</i><i></i><i></i></span>' +
+    '<div class="hb-grid" role="img" aria-label="' + esc('Every habit done on ' + full + ' of the last ' + any + ' days') + '">' + cells + '</div></div>' +
+    '<p class="hb-key" aria-hidden="true"><span>Less</span>' + ['l0', 'l1', 'l2', 'l3', 'l4'].map((l) => '<i class="c ' + l + '"></i>').join('') + '<span>More</span></p>';
+}
+/* a tap changes today's numbers and today's square, in the same click */
+function paintNumbers() {
+  if (!body) return;
+  const t = body.querySelector('.hb-today'), h = body.querySelector('.hb-heat');
+  if (t) paintToday(t);
+  if (h) paintHeat(h);
 }
 
 /* a #habits/<key> link, or a habit just added: scroll to it and flash it */
@@ -452,6 +519,7 @@ function paintRow(id) {
   const li = rowOf(id);
   const h = S.habits.find((x) => x.id === id);
   if (li && h) li.innerHTML = rowInner(h);
+  paintNumbers();
 }
 
 /* Tap: today done, or not. Painted first, sent after. */
@@ -571,7 +639,7 @@ function bindList(list) {
     if (!li) return;
     if (li === deadRow && Date.now() < deadUntil) { e.preventDefault(); e.stopPropagation(); return; }
     if (e.target.closest('.hb-tap')) { toggle(li.dataset.id); return; }
-    if (e.target.closest('.hb-name')) { editSheet(li.dataset.id); }
+    if (e.target.closest('.hb-name')) { habitSheet(li.dataset.id); }
   });
   list.addEventListener('keydown', (e) => {
     const g = e.target.closest('.hb-grip');
@@ -752,11 +820,59 @@ function addRow() {
   return w;
 }
 
-function editSheet(id) {
+/* A habit's own sheet, from its name: the streak, the best streak and the
+   last thirty days; this month as a calendar, a month back at a time over
+   the history the tab holds; and the edit form under them. */
+const MONTHF = new Intl.DateTimeFormat('en-US', { month: 'long', year: 'numeric', timeZone: 'UTC' });
+const monthName = (ym) => MONTHF.format(new Date(ym + '-15T12:00:00Z'));
+function stat(n, label) {
+  return '<div class="hb-stat"><span class="hb-num">' + esc(n) + '</span><span class="hb-lab">' + esc(label) + '</span></div>';
+}
+function habitSheet(id) {
   const h = S.habits.find((x) => x.id === id);
   if (!h) return;
-  app.sheet('Edit habit', (sheetBody, card, close) => {
-    sheetBody.appendChild(habitForm(h, (habit) => call('sz_habit_set', {
+  app.sheet(h.text, (sheetBody, card, close) => {
+    const now = Date.now();
+    const taps = tapsOf(id);
+    const n = streak(h, taps, now), best = bestStreak(h, taps, now), pct = percent(completion(h, taps, now, 30));
+    const stats = el('div', 'hb-stats');
+    stats.innerHTML = stat(n + ' ' + streakUnit(h, n), 'Streak') + stat(best + ' ' + streakUnit(h, best), 'Best') +
+      stat(pct == null ? 'New' : pct + '%', 'Last 30 days');
+    /* the months the tab holds taps for, back to the one the habit started in */
+    const hist = addDays(S.today, -HISTORY_DAYS);
+    /* no known start (a habit with no date): back to its first tap */
+    const begun = startKey(h, taps) || [...taps].sort()[0] || S.today;
+    const lo = monthOf(begun > hist ? begun : hist);
+    const hi = monthOf(S.today);
+    let ym = hi;
+    const cal = el('div', 'hb-cal');
+    const draw = () => {
+      const g = monthGrid(h, taps, ym, Date.now());
+      const list = (st) => g.days.filter((x) => x.state === st).map((x) => x.day).join(', ');
+      const said = monthName(ym) + ': ' + [['done', 'done on '], ['missed', 'missed on ']].filter(([st]) => list(st)).map(([st, w]) => w + list(st)).join('; ');
+      cal.innerHTML = '<div class="hb-calhead">' +
+          '<button class="iconbtn" type="button" data-m="-1" aria-label="Previous month"' + (ym <= lo ? ' disabled' : '') + '>' + ICON.left + '</button>' +
+          '<h3 class="hb-h">' + esc(monthName(ym)) + '</h3>' +
+          '<button class="iconbtn" type="button" data-m="1" aria-label="Next month"' + (ym >= hi ? ' disabled' : '') + '>' + ICON.right + '</button></div>' +
+        '<div class="hb-month" role="img" aria-label="' + esc(said.replace(/: $/, '')) + '">' +
+          ['M', 'T', 'W', 'T', 'F', 'S', 'S'].map((x) => '<b>' + x + '</b>').join('') +
+          '<i class="c pad"></i>'.repeat(g.lead) +
+          g.days.map((x) => '<i class="c ' + x.state + '" data-day="' + x.key + '">' + x.day + '</i>').join('') + '</div>';
+    };
+    cal.addEventListener('click', (e) => {
+      const b = e.target.closest('[data-m]');
+      if (!b || b.disabled) return;
+      const next = addMonths(ym, Number(b.dataset.m));
+      if (next < lo || next > hi) return;
+      ym = next;
+      draw();
+      const again = cal.querySelector('[data-m="' + b.dataset.m + '"]');
+      (again && !again.disabled ? again : cal.querySelector('[data-m]:not([disabled])') || cal).focus();
+    });
+    draw();
+    const edit = el('div', 'hb-edit');
+    edit.appendChild(el('h3', 'hb-h', esc('Edit')));
+    edit.appendChild(habitForm(h, (habit) => call('sz_habit_set', {
       p_habit: id, p_text: habit.text, p_frequency: habit.frequency, p_n: habit.frequency === 'n_per_week' ? habit.n : null, p_shared: habit.shared,
     }).then((r) => {
       if (!r.ok) return r;
@@ -765,6 +881,7 @@ function editSheet(id) {
       paint();
       return r;
     }), (actions) => actions.appendChild(button('Archive', 'ghost', (e) => { e.preventDefault(); close(); archive(id); }))));
+    sheetBody.append(stats, cal, edit);
   });
 }
 

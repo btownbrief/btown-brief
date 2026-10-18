@@ -13,7 +13,7 @@
    audio — episodes are large and the browser's own HTTP cache handles them
    better than we would. */
 
-const VERSION = 'all-day-v64';   // Lake and Sunset reskin
+const VERSION = 'all-day-v65';   // Habits: today, the heat map, a habit's month
 const SHELL = VERSION + '-shell';
 const DATA = 'all-day-data';   // unversioned on purpose: survives shell bumps
 
