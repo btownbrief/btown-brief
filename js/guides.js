@@ -334,8 +334,26 @@
       return item;
     }).filter(Boolean);
 
+    // Extras past the ranking (guide.more): same shape, numbered on from the last rank
+    const more = (guide.more || []).filter(item => item && typeof item === 'object');
+
     const view = document.getElementById('guides-view');
     if (!view) return;
+
+    const entry = (item, n) => {
+      const places = (item.things || []).map(byId).filter(Boolean);
+      const chips = places.map(placeChip).join('');
+      return `
+        <article class="ranked-exp">
+          <div class="ranked-num" aria-hidden="true">${n}</div>
+          <div class="ranked-exp-body">
+            <h3 class="ranked-exp-title">${esc(item.title)}</h3>
+            <p class="ranked-exp-text">${esc(item.body || '')}</p>
+            ${chips ? `<div class="ranked-chips" aria-label="Places for this entry">${chips}</div>` : ''}
+          </div>
+        </article>
+      `;
+    };
 
     view.innerHTML = `
       <div class="guides-view">
@@ -347,21 +365,15 @@
           <span class="guide-auto-note">${items.length} experiences · drawn from ${things.length} places on the living list</span>
         </div>
         <div class="ranked-exp-list">
-          ${items.map((item, i) => {
-            const places = (item.things || []).map(byId).filter(Boolean);
-            const chips = places.map(placeChip).join('');
-            return `
-              <article class="ranked-exp">
-                <div class="ranked-num" aria-hidden="true">${i + 1}</div>
-                <div class="ranked-exp-body">
-                  <h3 class="ranked-exp-title">${esc(item.title)}</h3>
-                  <p class="ranked-exp-text">${esc(item.body || '')}</p>
-                  ${chips ? `<div class="ranked-chips" aria-label="Places for this entry">${chips}</div>` : ''}
-                </div>
-              </article>
-            `;
-          }).join('')}
+          ${items.map((item, i) => entry(item, i + 1)).join('')}
         </div>
+        ${more.length ? `
+        <section class="ranked-more" aria-labelledby="ranked-more-title">
+          <h2 class="ranked-more-title" id="ranked-more-title">And a few more</h2>
+          <div class="ranked-exp-list ranked-exp-list-more">
+            ${more.map((item, i) => entry(item, items.length + i + 1)).join('')}
+          </div>
+        </section>` : ''}
       </div>
     `;
 
