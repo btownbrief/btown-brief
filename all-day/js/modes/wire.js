@@ -10,7 +10,9 @@
      that day, so it always says what you are looking at.
    - the Local / Everything switch (the shell's, shared with On Air) and the
      chips by kind of source, counted, X and Facebook hidden while paused,
-     then "Unfiltered ↗"
+     then "Unfiltered ↗", and under them a row of topics (TOPICS, from each
+     story's `topic` tag, scripts/tag_wire.py), each counted, an empty one
+     left out
    - the Brief's own edition pinned on the days it went out
    - What matters today: every local pick of the current ranking (plus the
      national ones on Everything, ranked with them as one list), each with
@@ -32,11 +34,11 @@
    Unfiltered is a sub-view of this tab, not a tab: every headline on
    pulse.json, newest first or by outlet, the outlet chips, search.
 
-   Photo mode (wire-photos.js) is the other way to read the tab: a list ⟷
-   photos switch at the end of the dateline row turns the paper into one
-   feed of every picture (neighbors' photos and art, local Instagram, the
-   stories' lead images), newest first. The choice is kept on the phone;
-   #wire/photos opens it, and the old #art and #photos land there too.
+   Photo mode (wire-photos.js) is the other way to read the tab: the News ·
+   Photos · Square switch turns the paper into one feed of pictures
+   (neighbors' photos and art, the gallery, local Instagram; never the
+   news), newest first. The choice is kept on the phone; #wire/photos opens
+   it, and the old #art and #photos land there too.
 
    ?demo=1 runs exactly this file on wire-demo.js's fake payloads, which have
    the same shape as the real ones. */
@@ -72,6 +74,23 @@ const THUMBS_LEFT = false;
 const KINDS = [['all', 'All'], ['x', 'X'], ['facebook', 'Facebook'], ['reddit', 'Reddit'], ['instagram', 'Instagram'], ['newsletters', 'Newsletters']];
 const SRC_CH = new Set(['x', 'facebook', 'reddit', 'instagram', 'newsletters']);
 const KIND_LABEL = { local: 'Local news', world: 'News', x: 'X', facebook: 'Facebook group, via Muse', reddit: 'Reddit', newsletters: 'Newsletter', video: 'Video', instagram: 'Instagram' };
+/* The topic row under the chips (Stephen, 2026-10-18: "add some tags for
+   people ... like sports or like politics"): a handful of main topics, each
+   a few of tag_wire.py's TOPICS. A story with any other topic is only under
+   All topics. Keys carry a "t:" so they never meet the source chips'. */
+const TOPICS = [
+  ['t:politics', 'Politics', ['city-government', 'state-politics', 'national-politics']],
+  ['t:safety', 'Safety', ['public-safety', 'courts']],
+  ['t:business', 'Business', ['business', 'economy']],
+  ['t:housing', 'Housing', ['housing']],
+  ['t:around', 'Getting around', ['transportation']],
+  ['t:arts', 'Arts & events', ['arts-culture', 'music', 'events']],
+  ['t:food', 'Food & drink', ['food-drink']],
+  ['t:sports', 'Sports', ['sports']],
+  ['t:weather', 'Weather', ['weather']],
+  ['t:health', 'Health', ['health']],
+];
+const TOPIC_OF = Object.fromEntries(TOPICS.flatMap(([key, , tags]) => tags.map((t) => [t, key])));
 /* the three ways to read the tab, in words (his girlfriend, 2026-10-17:
    the list and photo icons "looked like the same information") */
 const MODES = [['news', 'News'], ['photos', 'Photos'], ['square', 'Square']];
@@ -107,6 +126,7 @@ const W = {
   start: null,          // null: the paper opens on today; else the edition it opens on
   reading: null,        // the day the dateline names (follows the scroll)
   ch: 'all',
+  topic: 'all',         // or a TOPICS key
   open: new Set(),      // the days whose What matters list is opened past five
   flip: null,           // the earlier day today's What matters block shows, or null (never stored)
   view: 'paper',        // or 'raw', Unfiltered
@@ -172,7 +192,7 @@ function toCard(it, sources, isToday) {
   const c = {
     k: String(it.id), href: it.url, kind: 'headline', title: it.title, src: name, sid: it.src || name,
     local: !!it.local, ch: it.ch || 'local', d: ms / 1000, thumb: it.thumb || '',
-    ago: ms ? (isToday ? ago(ms) : clock(ms)) : '', own: !!it.own,
+    ago: ms ? (isToday ? ago(ms) : clock(ms)) : '', own: !!it.own, topic: TOPIC_OF[it.topic] || '',
   };
   if (Number(it.votes)) c.votes = Number(it.votes);      // demo only; real counts come from the shell
   if (c.ch === 'x' || c.ch === 'facebook') {
@@ -238,7 +258,9 @@ function loadMutes() {
   Object.keys(store.muted()).forEach((id) => { MUTE[id] = 1; MUTE[canon(id)] = 1; });
 }
 const seen = (c) => !MUTE[c.sid] && (geo() === 'everything' || c.local || !!follows[c.sid]);
-const shows = (c) => seen(c) && (W.ch === 'all' || c.ch === W.ch);
+const shows = (c) => seen(c) && (W.ch === 'all' || c.ch === W.ch) && (W.topic === 'all' || c.topic === W.topic);
+/* no filter on: the Brief and What matters lead the day */
+const unfiltered = () => W.ch === 'all' && W.topic === 'all';
 const greenOf = (c) => !!c.local;
 
 /* Chip counts: the pipeline's own, unless a mute or a follow changes what
@@ -250,6 +272,12 @@ function countsOf(d) {
   if (given && !touched && given.all === d.all.filter(seen).length) return given;
   const out = { all: 0 };
   d.all.forEach((c) => { if (seen(c)) { out.all++; out[c.ch] = (out[c.ch] || 0) + 1; } });
+  return out;
+}
+/* the topic row's counts: what this reader sees under the source chip */
+function topicCounts(d) {
+  const out = {};
+  if (d) d.all.forEach((c) => { if (c.topic && seen(c) && (W.ch === 'all' || c.ch === W.ch)) out[c.topic] = (out[c.topic] || 0) + 1; });
   return out;
 }
 const paused = (d, ch) => !!(d && d.status && d.status[ch] && d.status[ch].paused);
@@ -347,19 +375,34 @@ function subnav() {
     app.paintSubnav(); render(); app.scrollTop();
   }));
   frag.append(band, row);
+  const topics = topicRow(d);
+  if (topics) frag.appendChild(topics);
   return frag;
+}
+/* the topics, one row; a topic with nothing here is left out, unless it is
+   the one picked. Instagram's list has no topics. */
+function topicRow(d) {
+  if (W.ch === 'instagram') return null;
+  const n = topicCounts(d);
+  const items = TOPICS.filter(([k]) => n[k] || k === W.topic).map(([key, label]) => ({ key, label, n: n[key] || 0 }));
+  if (!items.length) { W.topic = 'all'; return null; }
+  const row = el('div', 'toolband w-chips w-topics');
+  row.appendChild(chips([{ key: 'all', label: 'All topics' }].concat(items), W.topic, (k) => {
+    W.topic = k;
+    app.paintSubnav(); render(); app.scrollTop();
+  }));
+  return row;
 }
 
 /* ----------------------------------------------------------- Photo mode */
-/* The switch, then the Local / Everything switch with the count, then the
-   kinds of picture. */
+/* The switch, then the count, then the kinds of picture. No Local /
+   Everything: every picture here is Burlington's. */
 let PDL = null;
 function photoSubnav() {
   loadMutes();
   const frag = document.createDocumentFragment();
   frag.appendChild(modeRow());
   const band = el('div', 'toolband');
-  band.appendChild(localSwitch(() => { app.paintSubnav(); render(); app.scrollTop(); }));
   const n = el('span', 'dl pm-n', '<span class="s"></span>');
   band.appendChild(n);
   PDL = n.firstChild;
@@ -421,7 +464,7 @@ square.init({
   ago,
   today: () => (W.today ? dayOf(W.today).cards : []),
   pulse: () => W.pulse,
-  needPulse: () => pulseForPhotos(),
+  needPulse: () => pulseForSquare(),
   showing: () => W.mode === 'square' && W.view === 'paper' && panelOn(),
   panel: () => W.panel,
   redraw: () => redraw(),
@@ -454,29 +497,28 @@ function setMode(mode) {
   if (b) b.focus({ preventScroll: true });
 }
 
-/* Photo mode draws once its pictures are in: the art board, the gallery and
-   Instagram (wire-photos.js), and the Unfiltered wire for the Facebook,
-   Reddit and local outlets' pictures. Drawn at once when they are, so a
-   redraw keeps the reader's place. */
-let photoSeq = 0;
-const pulseSettled = () => !!W.pulse || W.pulseTried;
-/* Photo mode's own hold on the Unfiltered wire: every payload (the first
-   and each poll's) is taken in, and a feed already drawn without it, or
-   with an older one, is drawn again where the reader is. A failure lets the
-   feed draw without it and is tried again on the next visit to the mode. */
-let photoPulse = null;
-function pulseForPhotos() {
-  if (!photoPulse) {
-    photoPulse = new Promise((res) => SRC.pulse((j) => {
+/* The Square's hold on the Unfiltered wire (its Facebook and Reddit
+   threads): every payload (the first and each poll's) is taken in, and a
+   Square already drawn without it, or with an older one, is drawn again
+   where the reader is. A failure lets it draw without them and is tried
+   again on the next visit. */
+let squarePulse = null;
+function pulseForSquare() {
+  if (!squarePulse) {
+    squarePulse = new Promise((res) => SRC.pulse((j) => {
       const fresh = !W.pulse || W.pulse.src !== j;
       pulseReady(j);
       W.pulseTried = false;
       res();
-      if (fresh && W.mode === 'photos' && W.view === 'paper' && W.root && W.root.querySelector('.pm-feed')) redraw();
-    }, () => { W.pulseTried = true; photoPulse = null; res(); }));
+      if (fresh && W.mode === 'square' && W.view === 'paper' && W.root && W.root.querySelector('.sq-feed')) redraw();
+    }, () => { W.pulseTried = true; squarePulse = null; res(); }));
   }
-  return photoPulse;
+  return squarePulse;
 }
+/* Photo mode draws once its pictures are in: the art board, the gallery and
+   Instagram (wire-photos.js). Drawn at once when they are, so a redraw
+   keeps the reader's place. */
+let photoSeq = 0;
 function renderPhotos(opts = {}) {
   const root = W.root;
   const seq = ++photoSeq;
@@ -489,10 +531,9 @@ function renderPhotos(opts = {}) {
     paintPhotoCount();
     landPhoto();
   };
-  const pulseP = pulseForPhotos();
-  if (photos.loaded() && pulseSettled()) { draw(); return; }
+  if (photos.loaded()) { draw(); return; }
   root.innerHTML = '<p class="loading">Loading photos…</p>';
-  Promise.all([photos.ensure(), pulseP]).then(draw);
+  photos.ensure().then(draw);
 }
 function landPhoto() {
   const k = W.photoOpen;
@@ -506,9 +547,7 @@ photos.init({
   now: () => SRC.now(),
   clockReady: () => (app.demo ? demo.init() : Promise.resolve()),
   ago,
-  today: () => (W.today ? dayOf(W.today).cards : []),
-  pulse: () => W.pulse,
-  visible: (v) => !(v.sid && MUTE[v.sid]) && (geo() === 'everything' || v.local || !!(v.sid && follows[v.sid])),
+  visible: (v) => !(v.sid && MUTE[v.sid]),
   green: () => true,
   hydrate: (host, keys) => hydrateVotes(host, keys),
   panel: () => W.panel,
@@ -600,7 +639,7 @@ function render(opts = {}) {
   const p = payloadFor(date);
   const d = p ? dayOf(p) : null;
   const exclude = new Set();
-  if (d && W.ch === 'all') {
+  if (d && unfiltered()) {
     if (d.brief && seen(d.brief)) {
       put(feed, briefPin(d));
       exclude.add(d.brief.k);
@@ -928,7 +967,7 @@ function entriesFor(run, date, p) {
   /* an earlier day opens with its own What mattered block, drawn as the
      arrow view draws it, and its river leaves those stories out */
   let exclude = isFirst ? run.exclude : new Set();
-  if (!isFirst && d && W.ch === 'all') {
+  if (!isFirst && d && unfiltered()) {
     /* and its Brief pinned above it, as the arrow view pins it */
     if (d.brief && seen(d.brief)) { out.push({ pin: d }); exclude.add(d.brief.k); }
     const { list, earlier } = mattersOf(d);
@@ -965,9 +1004,10 @@ function entriesFor(run, date, p) {
     }
   }
   if (!items.length) {
-    const kind = W.ch === 'all' ? '' : ' from ' + (KINDS.find((x) => x[0] === W.ch) || ['', W.ch])[1];
+    const topic = W.topic === 'all' ? '' : ' on ' + (TOPICS.find((x) => x[0] === W.topic) || ['', ''])[1];
+    const kind = (W.ch === 'all' ? '' : ' from ' + (KINDS.find((x) => x[0] === W.ch) || ['', W.ch])[1]) + topic;
     out.push({ note: date === tk
-      ? (W.ch === 'all' && !(d && d.all.length) ? 'Nothing yet today.' : 'Nothing' + kind + ' today so far.')
+      ? (unfiltered() && !(d && d.all.length) ? 'Nothing yet today.' : 'Nothing' + kind + ' today so far.')
       : 'Nothing' + (kind || (geo() === 'local' ? ' local' : '')) + ' that day.' });
   }
   return out;
@@ -1519,8 +1559,8 @@ function land() {
      shown as the list for this visit (the kept choice is not changed) */
   if (W.mode !== 'news') { W.mode = 'news'; W.view = 'paper'; app.paintSubnav(); render(); }
   /* the Video chip went; its old link opens the paper */
-  if (p === 'video') { W.ch = 'all'; W.view = 'paper'; app.paintSubnav(); render(); return; }
-  if (KINDS.some(([k]) => k === p)) { W.ch = p; W.view = 'paper'; app.paintSubnav(); render(); return; }
+  if (p === 'video') { W.ch = 'all'; W.topic = 'all'; W.view = 'paper'; app.paintSubnav(); render(); return; }
+  if (KINDS.some(([k]) => k === p)) { W.ch = p; W.topic = 'all'; W.view = 'paper'; app.paintSubnav(); render(); return; }
   if (p === 'unfiltered') { openRaw(); return; }
   if (isDate(p)) {
     if (p >= todayKey() || editionDates().includes(p)) goDay(p);
@@ -1545,7 +1585,7 @@ function hunt(k) {
     if (!live()) return;
     if (MUTE[c.sid]) { app.toast('That card is from ' + c.src + ', which you muted. Unmute it in Settings.'); return; }
     if (!seen(c)) setGeo('everything');
-    W.view = 'paper'; W.ch = 'all';
+    W.view = 'paper'; W.ch = 'all'; W.topic = 'all';
     W.start = date >= todayKey() ? null : date;
     W.open.add(W.start || todayKey());
     app.paintSubnav();

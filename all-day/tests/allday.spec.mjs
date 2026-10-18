@@ -132,6 +132,8 @@ const dayMinus = (key, n) => { const [y, m, d] = key.split('-').map(Number); ret
 const ETNAME = new Intl.DateTimeFormat('en-US', { timeZone: 'UTC', weekday: 'long', month: 'long', day: 'numeric' });
 const nameOf = (key) => { const [y, m, d] = key.split('-').map(Number); return ETNAME.format(new Date(Date.UTC(y, m - 1, d, 12))); };
 const CHIPS = ['x', 'facebook', 'reddit', 'newsletters', 'video'];
+/* tag_wire.py's topics, for opts.topics; 'world' and 'tech' have no chip */
+const WIRE_TOPICS = ['city-government', 'world', 'public-safety', 'state-politics', 'tech', 'arts-culture', 'weather', 'business', 'music'];
 function wireDay(date, n, opts) {
   const now = Date.now();
   const o = etParts(now);
@@ -158,6 +160,10 @@ function wireDay(date, n, opts) {
       url: 'https://example.org/' + tag + '/' + i, posted_at: new Date(top - (top - bottom) * (i / n)).toISOString() };
     if (ch === 'x') it.handle = '@wcax';
     if (ch === 'reddit' || ch === 'facebook') it.comments = 12;
+    /* a thread's link is its subreddit's, as tag_wire.py's input has it:
+       some r/burlington, some r/news (the Square keeps only the first) */
+    if (ch === 'reddit') it.url = 'https://www.reddit.com/r/' + (i % 2 ? 'burlington' : 'news') + '/comments/' + tag + i + '/x/';
+    if (opts.topics) it.topic = WIRE_TOPICS[i % WIRE_TOPICS.length];
     if (ch === 'video') { it.url = 'https://www.youtube.com/watch?v=dQw4w9WgXc' + (i % 10); it.media = { type: 'video', url: it.url }; }
     if (i % 4 === 0) it.thumb = 'https://example.org/pic/' + tag + '-' + i + '.jpg';
     items.push(it);
@@ -201,7 +207,7 @@ function wireDay(date, n, opts) {
 }
 const wireCache = new Map();
 function wireFiles(opts = {}) {
-  const o = { inbox: !!opts.inbox, brief: opts.brief !== false };
+  const o = { inbox: !!opts.inbox, brief: opts.brief !== false, topics: !!opts.topics };
   const key = JSON.stringify(o) + etKey(Date.now());
   if (!wireCache.has(key)) {
     const today = etKey(Date.now());
@@ -1202,9 +1208,57 @@ async function theWire(browser, base) {
     check(!/<b>at dawn/.test(await v.page.$eval('#panel-wire .feed', (f) => f.innerHTML)), 'captions are escaped', '');
     check(!(await v.page.$('#panel-wire .wm')) && v.page.url().endsWith('#wire/instagram'), 'no What matters here, and the address says #wire/instagram', v.page.url());
     await v.page.click('#panel-wire .caught .btn');
-    check(await pmOn(v.page) && (await pmState(v.page)).cat === 'instagram', 'its end opens the same posts as photos', '');
+    /* two posts are too few for Photos' Instagram chip (four), so they are under All */
+    const igSt = await pmOn(v.page) && await pmState(v.page);
+    check(igSt && igSt.cat === 'all' && ['ig:ListOne', 'ig:ListTwo'].every((k) => igSt.list.some((x) => x.k === k)), 'its end opens the same posts as photos', JSON.stringify(igSt && igSt.cat));
     check(!v.errors.length, 'no console errors', v.errors.join(' | '));
     await v.ctx.close();
+  });
+
+  /* the topic row (Stephen, 2026-10-18: "add some tags ... like sports or
+     like politics"): tag_wire.py's topics, grouped, under the source chips */
+  await group('the Wire, the topic row (live)', async () => {
+    const files = wireFiles({ topics: true });
+    const today = files['wire-today.json'];
+    const items = today.updates.flatMap((u) => u.items);
+    const GROUP = { 'city-government': 't:politics', 'state-politics': 't:politics', 'public-safety': 't:safety', 'arts-culture': 't:arts', music: 't:arts', weather: 't:weather', business: 't:business' };
+    const { ctx, page, errors } = await newPage(browser, base, { wire: { topics: true } });
+    await page.goto(base + '/all-day/');
+    await page.waitForSelector('.panel:not([hidden]) .wm', { timeout: 15000 });
+    await page.waitForSelector('#subnav .w-topics', { timeout: 8000 }).catch(() => {});
+    const row = await page.evaluate(() => {
+      const sub = document.querySelector('#subnav');
+      const t = sub.querySelector('.w-topics');
+      if (!t) return null;
+      const src = sub.querySelector('.w-chips:not(.w-topics)');
+      const cs = t.querySelector('.chips');
+      return { last: sub.lastElementChild === t, below: t.getBoundingClientRect().top >= src.getBoundingClientRect().bottom - 1,
+        chips: [...t.querySelectorAll('.chip')].map((c) => [c.dataset.chip, c.querySelector('span').textContent, (c.querySelector('.n') || {}).textContent || '', c.classList.contains('on')]),
+        oneRow: new Set([...t.querySelectorAll('.chip')].map((c) => Math.round(c.getBoundingClientRect().top))).size === 1, scrolls: getComputedStyle(cs).overflowX,
+        pageW: document.documentElement.scrollWidth };
+    });
+    check(row && row.last && row.below, 'the topics sit on their own row under the source chips', JSON.stringify(row));
+    const want = { 't:politics': 0, 't:safety': 0, 't:business': 0, 't:arts': 0, 't:weather': 0 };
+    items.forEach((it) => { if (it.local && GROUP[it.topic]) want[GROUP[it.topic]]++; });
+    const order = ['t:politics', 't:safety', 't:business', 't:arts', 't:weather'];
+    check(row && JSON.stringify(row.chips.map((c) => c[0])) === JSON.stringify(['all'].concat(order)) && row.chips[0][1] === 'All topics' && row.chips[0][3],
+      'All topics first and on, then only the topics this day has, in a fixed order', JSON.stringify(row && row.chips));
+    check(row && row.chips.slice(1).every(([k, , n]) => Number(n) === want[k]), 'each topic counts what this reader sees (Local)', JSON.stringify([row && row.chips, want]));
+    check(row && row.oneRow && row.scrolls === 'auto' && row.pageW <= 390, 'one row that scrolls sideways; the page does not', JSON.stringify(row));
+    await page.click('#subnav .w-topics .chip[data-chip="t:politics"]');
+    await page.waitForTimeout(200);
+    const shown = await page.$$eval('#panel-wire .feed [data-k]', (n) => n.map((x) => x.dataset.k));
+    const topicOf = Object.fromEntries(items.map((it) => [it.id, it.topic]));
+    const todays = shown.filter((k) => k in topicOf);
+    check(todays.length > 0 && todays.every((k) => GROUP[topicOf[k]] === 't:politics'), 'Politics narrows the river to city and state politics', JSON.stringify(todays.slice(0, 6).map((k) => topicOf[k])));
+    check(!(await page.$('#panel-wire .wm')), 'with a topic on, the river stands alone: no What matters', '');
+    check(!(await page.$$eval('#panel-wire .feed .eyebrow', (n) => n.some((e) => /The Brief/i.test(e.textContent)))), 'and no Brief pinned above it', '');
+    check(await page.$eval('#subnav .w-chips:not(.w-topics) .chip.on', (c) => c.dataset.chip) === 'all', 'the source chips are untouched', '');
+    await page.click('#subnav .w-topics .chip[data-chip="all"]');
+    await page.waitForTimeout(200);
+    check(!!(await page.$('#panel-wire .wm')), 'All topics brings What matters back', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
   });
 
   await group('the Wire, Square (demo)', async () => {
@@ -1276,8 +1330,14 @@ async function theWire(browser, base) {
     const now = Math.round(Date.now() / 1000);
     const files = wireFiles({ inbox: true, brief: false });
     const fbToday = files['wire-today.json'].updates.flatMap((u) => u.items).find((it) => it.ch === 'facebook');
-    const pulse = { v: 1, generated: new Date().toISOString(), sources: [{ id: 'r-burlington', name: 'r/burlington', short: 'r/burlington', topic: 'local', local: 1 }],
-      items: Array.from({ length: 120 }, (_, i) => ({ t: 'Thread ' + i, u: 'https://www.reddit.com/r/burlington/comments/t' + i + '/', d: now - i * 600, s: 'r-burlington', ch: 'reddit', local: true })),
+    /* the Unfiltered wire also follows national subreddits; only the
+       Burlington and Vermont ones are the Square's (Stephen, 2026-10-18) */
+    const subs = [['r-vermont', 'vermont'], ['r-news', 'news'], ['technology', 'technology'], ['jokes', 'Jokes'], ['world-news', 'worldnews']];
+    const pulse = { v: 1, generated: new Date().toISOString(),
+      sources: [{ id: 'r-burlington', name: 'r/burlington', short: 'r/burlington', topic: 'local', local: 1, site: 'https://www.reddit.com/r/burlington/' }]
+        .concat(subs.map(([id, sub]) => ({ id, name: 'r/' + sub, short: 'r/' + sub, site: 'https://www.reddit.com/r/' + sub + '/', ...(sub === 'vermont' ? { local: 1 } : {}) }))),
+      items: Array.from({ length: 120 }, (_, i) => ({ t: 'Thread ' + i, u: 'https://www.reddit.com/r/burlington/comments/t' + i + '/', d: now - i * 600, s: 'r-burlington', ch: 'reddit', local: true }))
+        .concat(subs.map(([id, sub], i) => ({ t: 'Elsewhere ' + sub, u: 'https://www.reddit.com/r/' + sub + '/comments/e' + i + '/', d: now - 30 - i, s: id, ch: 'reddit', local: sub === 'vermont' }))),
       inbox: { facebook: { paused: false, items: [{ u: fbToday.url.replace('https://', 'https://www.') + '/', d: now - 100, from: 'ONE', name: 'ONE', summary: 'The same post again', ch: 'facebook', local: true }] } } };
     const on = await newPage(browser, base, { wire: { inbox: true, brief: false }, rpc: (fn) => (fn === 'nn_rules' ? { version: 3 } : fn === 'nn_posts_list' ? [] : undefined) });
     await on.page.route(/\/data\/pulse\.json$/, (r) => r.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(pulse) }));
@@ -1290,6 +1350,12 @@ async function theWire(browser, base) {
     check(ost.list.length > 100 && first <= 40, 'a long feed draws its first screenful only (' + first + ' of ' + ost.list.length + ')', '');
     check(ost.list.filter((x) => x.type === 'facebook').length === files['wire-today.json'].updates.flatMap((u) => u.items).filter((it) => it.ch === 'facebook').length,
       'a Facebook post in both today’s paper and the Unfiltered inbox shows once', JSON.stringify(ost.counts));
+    const sqKeys = new Set(ost.list.map((x) => x.k));
+    check(sqKeys.has('https://www.reddit.com/r/vermont/comments/e0/') && ['news', 'technology', 'Jokes', 'worldnews'].every((sub) => ![...sqKeys].some((k) => k.includes('/r/' + sub + '/'))),
+      'Reddit in the Square: r/burlington and r/vermont, never r/news, r/technology, r/Jokes or r/worldnews', JSON.stringify([...sqKeys].filter((k) => /reddit/.test(k) && !/r\/burlington/.test(k))));
+    const todayReddit = files['wire-today.json'].updates.flatMap((u) => u.items).filter((it) => it.ch === 'reddit');
+    check(todayReddit.some((it) => /\/r\/news\//.test(it.url)) && todayReddit.every((it) => sqKeys.has(it.id) === /\/r\/burlington\//.test(it.url)),
+      'today’s paper’s threads too: the r/burlington ones in, the r/news ones out', JSON.stringify(todayReddit.map((it) => [it.id, it.url.split('/')[4], sqKeys.has(it.id)])));
     check(!on.errors.length, 'no console errors', on.errors.join(' | '));
     await on.ctx.close();
   });
@@ -1351,7 +1417,7 @@ async function thePhotos(browser, base) {
     await ctx.close();
   });
 
-  await group('Photo mode: the feed, its sources, Local and the photo of the week (demo)', async () => {
+  await group('Photo mode: the feed, its sources, never the news, and the photo of the week (demo)', async () => {
     const { ctx, page, errors, supabase } = await newPage(browser, base);
     await page.goto(base + '/all-day/?demo=1#wire/photos');
     await settle(page);
@@ -1369,25 +1435,16 @@ async function thePhotos(browser, base) {
     const ds = st.list.slice(1).map((v) => v.d);
     check(ds.every((d, i) => !i || ds[i - 1] >= d), 'the rest run newest first', JSON.stringify(ds.slice(0, 8)));
     const from = st.list.reduce((o, v) => { o[v.from] = (o[v.from] || 0) + 1; return o; }, {});
-    check(from.board === 16 && from.gallery === 3 && from.instagram === 10 && from.square === 2 && from.facebook === 1 && from.reddit === 1 && from.paper > 5 && from.outlet > 10,
-      'from neighbors’ posts (16), the gallery (3), Instagram (10), the Square’s photos (2), a Facebook post and a Reddit post with a picture, the paper and the local outlets', JSON.stringify(from));
-    check(!keys.includes('w6') && !keys.includes('w15'), 'a video is a player, not a picture', '');
-    check(!keys.some((k) => /demo2|permalink\/102/.test(k)), 'a Reddit or Facebook post with no picture stays out', '');
-    check(['w8', 'p11', 'w24'].every((k) => !keys.includes(k)) && st.list.every((v) => v.local), 'Local: no national story, every picture local', '');
+    check(from.board === 16 && from.gallery === 3 && from.instagram === 10 && from.square === 2 && Object.keys(from).length === 4,
+      'from neighbors’ posts (16), the gallery (3), Instagram (10) and the Square’s photos (2), nothing else', JSON.stringify(from));
+    check(keys.every((k) => /^(b-|g-|ig:)/.test(k)), 'Photos is not news: no story, Facebook or Reddit picture', JSON.stringify(keys.filter((k) => !/^(b-|g-|ig:)/.test(k))));
     const ig = cs.find((c) => c.k === 'ig:DemoBeach2');
     check(ig && ig.cap === 'First frost on the dunes at North Beach', 'an Instagram post’s caption is its first line', JSON.stringify(ig));
     check(cs.find((c) => c.k === 'ig:DemoChurch5').cap === '@demo_churchst', 'no caption: the account', '');
     check((await page.$eval(pmPanel + ' .caught', (c) => c.innerText)).includes('Post a photo'), 'the feed ends, with Post a photo', '');
-    /* Everything adds the paper's national stories with a lead image */
-    await page.evaluate(() => { document.querySelector('#panel-wire').scrollTop = 0; });
-    await page.click('#subnav .localsw-half:not(.on)');
-    await page.waitForFunction(() => document.querySelector('.localsw')?.classList.contains('is-on') === false);
-    await pmAll(page);
-    const keys2 = await page.$$eval(pmPanel + ' .card.pm', (n) => n.map((x) => x.dataset.k));
-    check(['w8', 'p11', 'w24'].every((k) => keys2.includes(k)) && keys2.length === keys.length + 3, 'Everything adds the three national stories with a picture', keys2.length + ' vs ' + keys.length);
-    check(new Set(keys2).size === keys2.length, 'still no key twice', '');
-    check(/^\d+ photos$/.test(await page.$eval('#subnav .pm-n .s', (s) => s.textContent)) && (await page.$eval('#subnav .pm-n .s', (s) => s.textContent)) === keys2.length + ' photos', 'the band counts what is shown', await page.$eval('#subnav .pm-n .s', (s) => s.textContent));
-    await page.click('#subnav .localsw-half:not(.on)');
+    /* no Local / Everything: every picture here is Burlington's */
+    check(!(await page.$('#subnav .localsw')), 'no Local / Everything switch on Photos', '');
+    check((await page.$eval('#subnav .pm-n .s', (s) => s.textContent)) === cs.length + ' photos', 'the band counts what is shown', await page.$eval('#subnav .pm-n .s', (s) => s.textContent));
     check(!errors.length, 'no console errors', errors.join(' | '));
     check(!supabase.length, 'demo mode never calls Supabase', supabase.join(', '));
     await ctx.close();
@@ -1399,9 +1456,13 @@ async function thePhotos(browser, base) {
     await settle(page);
     await pmOn(page);
     const chipsNow = await page.$$eval('#subnav .chip', (cs) => cs.map((c) => [c.dataset.chip, (c.querySelector('.n') || {}).textContent || '', c.querySelector('span').textContent]));
-    check(JSON.stringify(chipsNow.map((c) => c[2])) === '["All","Instagram","Vibe checks","Event posters","Food","Pets","Posted here"]', 'the chips: All, Instagram, Vibe checks, Event posters, Food, Pets, Posted here', JSON.stringify(chipsNow));
     const st0 = await pmState(page);
-    check(chipsNow.slice(1).every(([k, n]) => Number(n) === st0.counts[k] && st0.counts[k] > 0), 'each counts what this reader sees', JSON.stringify([chipsNow, st0.counts]));
+    /* a kind with fewer than four pictures gets no chip: in the demo, the
+       vibe checks, posters, food and pets are each too few */
+    const kinds = ['instagram', 'vibe', 'posters', 'food', 'pets', 'posted'];
+    check(JSON.stringify(chipsNow.map((c) => c[0])) === JSON.stringify(['all'].concat(kinds.filter((k) => (st0.counts[k] || 0) >= 4))) && kinds.some((k) => st0.counts[k] > 0 && st0.counts[k] < 4),
+      'the chips in order, a kind with fewer than four pictures left out', JSON.stringify([chipsNow, st0.counts]));
+    check(chipsNow.slice(1).every(([k, n]) => Number(n) === st0.counts[k]), 'each counts what this reader sees', JSON.stringify([chipsNow, st0.counts]));
     const of = (k) => st0.list.find((v) => v.k === k);
     check(JSON.stringify(of('ig:DemoShow8').cats.sort()) === '["instagram","posters"]', 'an organiser’s post (the DO half) is an event poster', JSON.stringify(of('ig:DemoShow8')));
     check(JSON.stringify(of('ig:DemoBar7').cats.sort()) === '["food","instagram","posters","vibe"]', 'a bar that organises: vibe check, food and poster', JSON.stringify(of('ig:DemoBar7')));
@@ -1419,16 +1480,14 @@ async function thePhotos(browser, base) {
     }
     await page.click('#subnav .chip[data-chip="all"]');
     await page.waitForTimeout(120);
-    const pets = await page.$eval(pmPanel + ' .pm-pets', (b) => ({ h: b.querySelector('h3').textContent, tiles: [...b.querySelectorAll('[data-pet]')].map((t) => t.dataset.pet), more: b.querySelector('[data-pets]').textContent,
+    const pets = await page.$eval(pmPanel + ' .pm-pets', (b) => ({ h: b.querySelector('h3').textContent, tiles: [...b.querySelectorAll('[data-pet]')].map((t) => t.dataset.pet),
       before: !!(b.compareDocumentPosition(document.querySelector('#panel-wire .pm-feed')) & 4), after: !!(document.querySelector('#panel-wire .pm-head').compareDocumentPosition(b) & 4) }));
     check(pets.h === 'Pets of Burlington' && pets.tiles.length === st0.counts.pets && pets.before && pets.after, 'All opens with Pets of Burlington, between the header and the feed', JSON.stringify(pets));
+    check(st0.counts.pets < 4 && !(await page.$(pmPanel + ' .pm-pets [data-pets]')), 'too few pets for a chip: no “See all”', '');
     await page.click(pmPanel + ' .pm-pets [data-pet="' + pets.tiles[0] + '"]');
     await page.waitForSelector('.sheet-card', { timeout: 4000 }).catch(() => {});
     check(!!(await page.$('.sheet-card')), 'a pet opens in its sheet', '');
     await page.click('.sheet-head .iconbtn');
-    await page.click(pmPanel + ' .pm-pets [data-pets]');
-    await page.waitForTimeout(150);
-    check((await pmState(page)).cat === 'pets' && await page.$eval('#subnav .chip.on', (c) => c.dataset.chip) === 'pets', '“See all” is the Pets chip', '');
     await page.screenshot({ path: path.join(SHOTS, 'demo-wire-photos-pets.png') });
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
@@ -1458,6 +1517,45 @@ async function thePhotos(browser, base) {
     check(cats.Roster7 === 'food instagram', 'new food categories work without the legacy food flag', JSON.stringify(cats));
     check(cats.Roster8 === 'instagram vibe', 'venue posts enter Vibe checks', JSON.stringify(cats));
     check(cats.Roster9 === 'instagram posters', 'event accounts enter Event posters', JSON.stringify(cats));
+    check(!v.errors.length, 'no console errors', v.errors.join(' | '));
+    await v.ctx.close();
+  });
+
+  /* builder 2's contract (2026-10-18): each Instagram post carries its own
+     `kind`, and the chips read it ahead of the account's category */
+  await group('Photo mode: each Instagram post’s own kind picks its chip (live)', async () => {
+    const now = Date.now();
+    const ok = '&oe=' + Math.floor(now / 1000 + 3 * 86400).toString(16);
+    let n = 0;
+    const post = (h, kind) => { n++; return { h, ts: Math.round(now / 1000) - n * 60, i: 'https://scontent.example.com/k' + n + '.jpg?x=1' + ok, u: 'https://www.instagram.com/p/Kind' + n + '/', c: h + ' ' + kind, s: 'see', kind }; };
+    const posts = [post('queencitycatlounge', 'food')];   // a cat café's latte: food, not pets
+    ['vibe', 'vibe', 'vibe', 'vibe', 'poster', 'poster', 'poster', 'food', 'food', 'food', 'pets', 'pets', 'pets', 'pets', 'scenic', 'other']
+      .forEach((kind, i) => posts.push(post('acct' + i, kind)));
+    const ig = { generated: new Date(now).toISOString(), posts };
+    const v = await newPage(browser, base);
+    await v.page.route(/\/all-day\/data\/instagram\.json$/, (r) => r.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(ig) }));
+    await v.page.goto(base + '/all-day/#wire/photos');
+    await settle(v.page);
+    await pmOn(v.page);
+    const st0 = await pmState(v.page);
+    const catOf = Object.fromEntries(st0.list.map((x) => [x.url.split('/').slice(-2)[0], x.cats.sort().join(' ')]));
+    check(catOf.Kind1 === 'food instagram', 'the post’s kind wins over its account’s (a cat café’s food post is food, not pets or a vibe check)', JSON.stringify(catOf));
+    check(catOf.Kind16 === 'instagram' && catOf.Kind17 === 'instagram', 'scenic and other are just Instagram', JSON.stringify(catOf));
+    check(st0.counts.vibe === 4 && st0.counts.posters === 3 && st0.counts.food === 4 && st0.counts.pets === 4, 'each kind counted', JSON.stringify(st0.counts));
+    const chipKeys = await v.page.$$eval('#subnav .chip', (cs) => cs.map((c) => c.dataset.chip));
+    check(JSON.stringify(chipKeys) === '["all","instagram","vibe","food","pets"]', 'three posters is too few for a chip; nobody posted here, so no Posted here', JSON.stringify(chipKeys));
+    for (const k of chipKeys.slice(1)) {
+      await v.page.evaluate(() => { document.querySelector('#panel-wire').scrollTop = 0; });
+      await v.page.click('#subnav .chip[data-chip="' + k + '"]');
+      await v.page.waitForTimeout(120);
+      const st = await pmState(v.page);
+      check(st.cat === k && st.list.length === st0.counts[k] && st.list.every((x) => x.cats.includes(k)), 'the ' + k + ' chip shows only its ' + st0.counts[k], JSON.stringify(st.list.map((x) => x.k)));
+    }
+    await v.page.click('#subnav .chip[data-chip="all"]');
+    await v.page.waitForTimeout(120);
+    await v.page.click(pmPanel + ' .pm-pets [data-pets]');
+    await v.page.waitForTimeout(150);
+    check((await pmState(v.page)).cat === 'pets' && await v.page.$eval('#subnav .chip.on', (c) => c.dataset.chip) === 'pets', 'enough pets for a chip: “See all” is the Pets chip', '');
     check(!v.errors.length, 'no console errors', v.errors.join(' | '));
     await v.ctx.close();
   });
@@ -1620,13 +1718,12 @@ async function thePhotos(browser, base) {
     });
   }
 
-  await group('Photo mode on live payloads: each source, once, while its picture works (live)', async () => {
+  await group('Photo mode on live payloads: each source, once, while its picture works, and never the news (live)', async () => {
     const now = Date.now();
     const hex = (sec) => Math.floor(sec).toString(16);
     const today = wireFiles({})['wire-today.json'];
     const items = today.updates.flatMap((u) => u.items);
     const dupe = items.find((it) => it.thumb && it.local && it.ch === 'local');
-    const world = items.find((it) => it.thumb && !it.local);
     const ig = { generated: new Date(now).toISOString(), posts: [
       { h: 'lakelight', ts: Math.round(now / 1000) - 1800, i: 'https://scontent.example.com/a.jpg?stp=x&oe=' + hex(now / 1000 + 3 * 86400) + '&oh=1', u: 'https://www.instagram.com/p/LiveOne/', w: 480, c: 'Fog on the lake <b>at dawn</b>\nsecond line', s: 'see' },
       { h: 'lakelight', ts: Math.round(now / 1000) - 3600, i: 'https://scontent.example.com/b.jpg?oe=' + hex(now / 1000 - 3600), u: 'https://www.instagram.com/p/LiveLapsed/', w: 480, c: 'Lapsed', s: 'see' },
@@ -1684,15 +1781,11 @@ async function thePhotos(browser, base) {
     check(!keys.includes('b-0000e000-0000-4000-8000-000000000003'), 'a notice has no picture and stays out', '');
     check(keys.includes('g-live-g1') && !keys.includes('g-live-g2'), 'the gallery’s photos, but not Food’s dishes', '');
     check(keys.includes('ig:LiveOne') && !keys.includes('ig:LiveLapsed') && !keys.includes('ig:LiveBad'), 'Instagram: a working picture, never a lapsed or a non-web one', JSON.stringify(keys.filter((k) => /^ig:/.test(k))));
-    check(keys.includes('https://example.org/live/sd1') && !keys.includes('https://example.org/live/ap1') && !keys.includes('https://example.org/live/pod1') && !keys.includes('https://example.org/live/old'),
-      'the Unfiltered wire: a local picture from this week, not a national one, a podcast’s artwork or last month’s', '');
-    check(!keys.includes('https://example.org/live/show1') && !keys.includes('https://example.org/live/show2'), 'one picture on two stories is a show’s logo, not a photo: left out', '');
-    check(keys.includes('https://www.reddit.com/r/burlington/comments/live1/') && !keys.includes('https://www.reddit.com/r/burlington/comments/live2/'), 'a Reddit post with a picture, not one without', '');
-    check(keys.includes('https://facebook.com/groups/1/permalink/2/') && !keys.includes('https://facebook.com/groups/1/permalink/3/'), 'a Facebook group post with a picture, not one without', '');
-    check(keys.includes(dupe.id) && st.list.filter((v) => v.url && v.url.toLowerCase().includes(dupe.url.replace('https://', '').toLowerCase())).length === 1, 'one story from two places shows once, by its link', JSON.stringify(st.list.filter((v) => v.url.includes(dupe.url.split('/').pop()))));
-    check(!keys.includes(world.id), 'Local: the paper’s national pictures wait for Everything', world.id);
+    /* Stephen, 2026-10-18: "I don't want to see the news here" */
+    check(keys.every((k) => /^(b-|g-|ig:)/.test(k)) && !keys.includes(dupe.id) && !keys.includes('https://example.org/live/sd1'),
+      'no story’s lead image, no outlet’s, no Reddit or Facebook picture: Photos is not news', JSON.stringify(keys.filter((k) => !/^(b-|g-|ig:)/.test(k))));
     check(lists.length === 2 && !lists[0] && lists[1], 'the art board is paged to its end', JSON.stringify(lists));
-    check(from.board === 65 && from.gallery === 1 && from.instagram === 1 && from.facebook === 1 && from.reddit >= 1 && from.paper > 10 && from.outlet === 1, 'every source gives its pictures', JSON.stringify(from));
+    check(from.board === 65 && from.gallery === 1 && from.instagram === 1 && Object.keys(from).length === 3, 'every source gives its pictures', JSON.stringify(from));
     const html = await page.$eval(pmPanel + ' .pm-feed', (f) => f.innerHTML);
     check(!/<script>|<b>at dawn/.test(html), 'captions are escaped', '');
     const igCard = await page.$eval(pmPanel + ' [data-k="ig:LiveOne"]', (c) => ({ alt: c.querySelector('img.pic').alt, cap: c.querySelector('.pm-cap').textContent, href: c.querySelector('.pm-pic').getAttribute('href'),
@@ -1707,7 +1800,7 @@ async function thePhotos(browser, base) {
     await page.waitForFunction(() => !!document.querySelector('#panel-wire .card.pm img.pic').getAttribute('src'), null, { timeout: 4000 }).catch(() => {});
     check(!!(await page.$eval(pmPanel + ' .card.pm img.pic', (i) => i.getAttribute('src'))), 'and takes it back on the way up', '');
     /* a broken picture takes its card with it */
-    const k1 = 'https://example.org/live/sd1';
+    const k1 = 'ig:LiveOne';
     /* The failed request must belong to a visible, loaded image. An offscreen
        lazy image can defer the bad URL without ever emitting an error. */
     await page.locator(pmPanel + ' [data-k="' + k1 + '"]').evaluate(n => n.scrollIntoView({block:'center',behavior:'instant'}));

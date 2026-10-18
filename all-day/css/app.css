@@ -1223,6 +1223,9 @@ select.bf-in { appearance: none; -webkit-appearance: none; }
 .w-src-newsletters { --w-src: var(--w-newsletters); }
 .chip.w-pets { color: var(--w-pets); }
 .chip.w-pets.on { background: var(--w-pets); color: var(--on-ink); }
+/* the topic row under the source chips: lighter, so the two rows read as two */
+.w-topics .chip { height: 28px; background: transparent; border: 1px solid var(--line); }
+.w-topics .chip.on { background: var(--ink); color: var(--on-ink); border-color: transparent; }
 .feed.wire .card[class*="w-src-"], .sq-feed .card[class*="w-src-"] { box-shadow: inset 3px 0 0 var(--w-src); }
 .feed.wire .card.w-alt { background: var(--w-alt-tint); }
 .feed.wire .card.w-local { background: var(--w-local-tint); }

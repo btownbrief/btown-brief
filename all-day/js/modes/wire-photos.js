@@ -11,12 +11,21 @@
 
    The feed opens under a header that says what it is, with the Post a photo
    button, and a row of chips by kind of picture (CATS): Instagram, vibe
-   checks, event posters, food, pets, and only what readers posted here. An
-   Instagram post's kind comes from its account (data/instagram-handles.json:
-   the DO half is event posters, `food` and all-day/data/food-directory.json
-   are food, `photo_categories` names the vibe and pet accounts); a reader's
+   checks, event posters, food, pets, and only what readers posted here. A
+   chip with fewer than MIN_CHIP pictures is left out. An Instagram post's
+   kind is the post's own `kind` (scripts/build_instagram.py reads each
+   post: "vibe", "poster", "food", "pets", "scenic" or "other"); a payload
+   without it falls back to its account (data/instagram-handles.json: the
+   DO half is event posters, `food` and all-day/data/food-directory.json are
+   food, `photo_categories` names the vibe and pet accounts). A reader's
    photo carries the kind they picked when they posted it (photo-wall.js
-   PHOTO_CATS). Pets get their own row at the top of All when there are any.
+   PHOTO_CATS); one with no kind is only in All and Posted here. Pets get
+   their own row at the top of All when there are any.
+
+   Photos is not news (Stephen, 2026-10-18: "Photos is more for like
+   Instagram or vibe checks or Food or event posters ... Not for like the
+   local news"): no story's lead image, no Facebook or Reddit post, and no
+   Local / Everything switch, since every picture here is Burlington's.
 
    What it draws from, each picture once (by key, and by its link):
      - neighbors' photo and art posts on the `art` board (boards.js), with
@@ -28,12 +37,7 @@
        scripts/build_instagram.py), while their signed picture still works
      - once the Square is live (nn-ROUND4.sql), its pet and show-and-tell
        posts that carry a photo
-     - Facebook group posts (pulse.json's inbox) and Reddit posts (its items)
-       that carry a picture
-     - the Wire's own items with a lead image: today's paper, and the local
-       outlets on the Unfiltered wire from the last week (not their podcast
-       artwork)
-   Local / Everything filters it as it filters the list; mutes hold.
+   Mutes hold.
 
    modes/wire.js owns the tab and calls in here through the ctx it hands to
    init(); this file never touches the paper's own state. The picture sheet
@@ -55,7 +59,7 @@ const FIRST = 10;              // pictures on the first screenful
 const CHUNK = 10;              // then ten at a time as the reader nears the bottom
 const AHEAD = 1800;            // px below the screen where the next ten start drawing
 const FAR = 4000;              // px off screen past which a card lets go of its picture
-const NEWS_DAYS = 7;           // how far back the Unfiltered wire's pictures go
+const MIN_CHIP = 4;            // a kind with fewer pictures than this gets no chip
 const DAY = 86400000;
 
 /* --------------------------------------------------- the kept choice */
@@ -94,11 +98,8 @@ const P = {
      now()            the Wire's clock (pinned in the demo)
      clockReady()     resolves once that clock is set (the demo's payload is in)
      ago(ms)          "3h", on that clock
-     today()          today's paper as cards, or []
-     pulse()          { src, items, map, isLocal } once the Unfiltered wire is in, else null
-     needPulse(fn)    fetch it, then fn()
-     visible(v)       Local / Everything, follows and mutes, for a source id and a local flag
-     green()          a local source shows green (the switch is on Everything)
+     visible(v)       the reader's mutes, for a source id
+     green()          a local source shows green
      hydrate(host, keys)  the Wire's vote counts for those keys
      panel()          the tab's scroll container
      showing()        is Photo mode on screen
@@ -285,7 +286,7 @@ function demoGallery(d) {
 /* ------------------------------------------------------- the pictures */
 const isUrl = (u) => /^https?:\/\//i.test(String(u || ''));
 /* a picture's link, compared without its scheme, www, trailing slash or
-   tracking, so one story from two places shows once */
+   tracking, so one post from two places shows once */
 function norm(u) {
   try {
     const x = new URL(u);
@@ -335,11 +336,17 @@ function igView(p) {
 export function igList(posts) {
   return (posts || []).map(igView).filter(Boolean).sort((a, b) => (b.d - a.d) || (a.k < b.k ? -1 : 1));
 }
-/* an Instagram post's kinds, from its account */
+/* an Instagram post's kinds: the post's own `kind` when the payload has
+   one (scripts/build_instagram.py), else from its account */
+const KIND_CAT = { vibe: 'vibe', poster: 'posters', food: 'food', pets: 'pets', scenic: '', other: '' };
 export function igCats(p) {
+  const out = new Set(['instagram']);
+  if (typeof p.kind === 'string' && p.kind in KIND_CAT) {
+    if (KIND_CAT[p.kind]) out.add(KIND_CAT[p.kind]);
+    return out;
+  }
   const h = String(p.h || '').replace(/^@/, '').toLowerCase();
   const C = P.igCat;
-  const out = new Set(['instagram']);
   if (p.category === 'events' || (!p.category && p.s === 'do') || (C && C.posters.has(h))) out.add('posters');
   if (p.category === 'venue' || (C && C.vibe.has(h))) out.add('vibe');
   if (p.category === 'pets' || (C && C.pets.has(h))) out.add('pets');
@@ -355,42 +362,8 @@ function picView(it) {
     src: it.author || 'A neighbor', sid: '', local: it.local !== false, d: Number(it.created) || 0, pic: !!it.pic, url: '', cats };
 }
 
-/* a story, a post or a thread with a lead image; the card's own key, so
-   saves and votes are the list's */
-function storyView(c, media, from, d) {
-  if (!c || !c.k || !c.href || !media) return null;
-  const cap = oneLine(c.title || c.text);
-  return { it: c, k: c.k, from, media, ratio: 'r11', cap, alt: squash(c.title || c.text).slice(0, 250), src: c.src || '', sid: c.sid || '', local: !!c.local,
-    d: Number(d != null ? d : c.d) || 0, url: c.href, open: c.open || (/instagram\.com/.test(c.href) ? 'Open on Instagram' : 'Open the story') };
-}
-
-/* pulse.json's inbox: Muse's Facebook group posts (and X), when one carries a picture */
-const inboxKeys = new Map();
-function inboxViews(j) {
-  const out = [];
-  const box = j && j.inbox && typeof j.inbox === 'object' ? j.inbox : {};
-  Object.keys(box).forEach((ch) => {
-    const items = box[ch] && Array.isArray(box[ch].items) ? box[ch].items : [];
-    items.forEach((x) => {
-      const pic = x && (x.i || x.image);
-      if (!x || !x.u || !isUrl(x.u) || !pic || (!app.demo && !isUrl(pic))) return;
-      let it = inboxKeys.get(x.u);
-      if (!it) {
-        it = { k: x.u, kind: 'post', href: x.u, title: '', text: squash(x.summary), src: x.name || x.from || '', sid: 'inbox:' + (x.from || x.name || ch),
-          local: !!x.local, ch, d: Number(x.d) || 0, open: ch === 'x' ? 'Open on X' : 'Open the post' };
-        inboxKeys.set(x.u, it);
-        app.know([it]);
-      }
-      it.ago = it.d ? ctx.ago(it.d * 1000) : '';
-      const v = storyView({ ...it, title: it.text }, pic, ch, it.d);
-      if (v) { v.it = it; v.open = it.open; out.push(v); }
-    });
-  });
-  return out;
-}
-
-/* Everything that carries a picture, newest first, each once, filtered for
-   this reader. Returns { list, lead }. */
+/* Every picture, newest first, each once, less the reader's mutes.
+   Returns { list, lead }. */
 export function build() {
   const now = clockNow();
   const all = [];
@@ -398,39 +371,11 @@ export function build() {
   P.square.forEach((it) => all.push(picView(it)));
   P.gallery.forEach((it) => { it.ago = it.created ? ctx.ago(it.created * 1000) : it.ago; all.push(picView(it)); });
   (app.demo ? demoIg : P.ig).forEach((p) => all.push(igView(p)));
-  /* today's paper: stories with a lead image, and posts that carry one; a
-     video is a player, not a picture */
-  ctx.today().forEach((c) => {
-    if (c.kind !== 'video' && (c.thumb || c.media)) all.push(storyView(c, c.thumb || c.media, c.ch === 'facebook' || c.ch === 'reddit' ? c.ch : 'paper'));
-  });
-  /* the Unfiltered wire: Facebook and Reddit posts with a picture, and the
-     local outlets' pictures from the last week, never a podcast's artwork */
-  const P2 = ctx.pulse();
-  if (P2 && P2.src) {
-    inboxViews(P2.src).forEach((v) => all.push(v));
-    const raw = new Map();
-    (P2.src.items || []).forEach((x) => { if (x && x.u) raw.set(x.u, x); });
-    const from = now / 1000 - NEWS_DAYS * 86400;
-    P2.items.forEach((c) => {
-      const x = raw.get(c.href);
-      if (!x || !c.thumb || x.du || x.dn || c.d < from) return;
-      if (!(c.local || x.ch === 'reddit')) return;
-      all.push(storyView(c, c.thumb, x.ch === 'reddit' ? 'reddit' : 'outlet'));
-    });
-  }
-  /* a picture that stands for more than one story is a show's artwork or an
-     outlet's logo (a radio show's every episode, a podcast's), not a photo */
-  const used = new Map();
-  const tally = (pic, link) => { if (!isUrl(pic) || !link) return; const k = norm(pic); if (!used.has(k)) used.set(k, new Set()); used.get(k).add(norm(link)); };
-  if (P2 && P2.src) (P2.src.items || []).forEach((x) => { if (x) tally(x.i, x.u); });
-  const own = (v) => v.from === 'instagram' || POSTED.has(v.from);
-  all.forEach((v) => { if (v && !own(v)) tally(v.media, v.url); });
-  const stock = (v) => !own(v) && isUrl(v.media) && (used.get(norm(v.media)) || new Set()).size > 1;
   /* each picture once: by key, then by its link */
   const keys = new Set(), links = new Set();
   const every = [];
   all.forEach((v) => {
-    if (!v || !v.k || !v.media || keys.has(v.k) || stock(v) || !ctx.visible(v)) return;
+    if (!v || !v.k || !v.media || keys.has(v.k) || !ctx.visible(v)) return;
     const u = v.url ? norm(v.url) : '';
     if (u && links.has(u)) return;
     keys.add(v.k);
@@ -440,11 +385,11 @@ export function build() {
     every.push(v);
   });
   every.sort((a, b) => (b.d - a.d) || (a.k < b.k ? -1 : 1));
-  /* the chips count what this reader sees; a chip with nothing hides */
+  /* the chips count what this reader sees; a chip with too few hides */
   const counts = { all: every.length };
   every.forEach((v) => v.cats.forEach((c) => { counts[c] = (counts[c] || 0) + 1; }));
   P.counts = counts;
-  if (P.cat !== 'all' && !counts[P.cat]) P.cat = 'all';
+  if (!chipShown(P.cat)) P.cat = 'all';
   const list = P.cat === 'all' ? every : every.filter((v) => v.cats.has(P.cat));
   /* the photo of the week leads All, when this week has one */
   const w = P.cat === 'all' || P.cat === 'posted' ? wall.ofTheWeek(P.pics, now) : null;
@@ -458,10 +403,12 @@ export function build() {
   return { list, lead };
 }
 export const count = () => (P.list ? P.list.length : null);
-/* the chips, for the subnav: [key, label, count], the empty ones left out */
+/* the chips, for the subnav: [key, label, count], the ones with fewer than
+   MIN_CHIP pictures left out */
+const chipShown = (k) => k === 'all' || (P.counts && (P.counts[k] || 0) >= MIN_CHIP);
 export function catChips() {
   if (!P.counts) build();
-  return CATS.filter(([k]) => k === 'all' || P.counts[k]).map(([key, label]) => ({ key, label, n: key === 'all' ? null : P.counts[key] }));
+  return CATS.filter(([k]) => chipShown(k)).map(([key, label]) => ({ key, label, n: key === 'all' ? null : P.counts[key] }));
 }
 export const cat = () => P.cat;
 export function setCat(k) { P.cat = CATS.some(([x]) => x === k) ? k : 'all'; }
@@ -497,8 +444,7 @@ function vote(it) {
 app.onAct('photovote', (it) => vote(it));
 
 /* ------------------------------------------------------------- drawing */
-/* One picture: full width, its box reserved (4:5 for a neighbor's or an
-   Instagram post, square for a story's lead image), then one line of
+/* One picture: full width, its box reserved (4:5), then one line of
    caption, then the source and age with vote, share and save. */
 function card(v, lead) {
   const it = v.it;
@@ -573,7 +519,7 @@ function header() {
 function petsRow(pets) {
   const box = el('section', 'pm-pets');
   box.setAttribute('aria-label', 'Pets of Burlington');
-  box.innerHTML = '<div class="pm-pets-h"><h3>Pets of Burlington</h3><button class="chip" data-pets>' + esc('See all ' + pets.length) + '</button></div>';
+  box.innerHTML = '<div class="pm-pets-h"><h3>Pets of Burlington</h3>' + (chipShown('pets') ? '<button class="chip" data-pets>' + esc('See all ' + pets.length) + '</button>' : '') + '</div>';
   const row = el('div', 'pm-pets-row');
   pets.slice(0, 12).forEach((v) => {
     const a = el('a', 'pm-pet');
