@@ -1,13 +1,7 @@
 /* On Air: everything in All Day that you watch or listen to, replacing the
-   old Watch (Btown TV) and Listen (podcasts) tabs. Top to bottom:
+   old Watch (Btown TV) and Listen (podcasts) tabs. What changes every day sits
+   on top (Stephen, 2026-10-18). Top to bottom:
 
-   - The Brief, out loud: a three-minute audio brief written from the Wire's
-     top local picks every morning at 7 (scripts/build_wire_audio.py, on the
-     wire-audio branch). Today's clip when there is one, otherwise the most
-     recent with its date, otherwise no card at all. A speed control on the
-     card (1x, 1.25x, 1.5x; 1.25x unless the reader picked otherwise on this
-     phone); under it "Read the two-minute recap" (the script, as text) and
-     "Read the whole Brief at btownbrief.com" (the newsletter itself).
    - Btown TV tonight: the nightly curated edition (scripts/curate_tv.py, on
      the btown-tv branch). First rail, the picks: on Local, the pick and the
      Burlington & Vermont shelf with the reason under each; on Everything,
@@ -20,12 +14,24 @@
      ‹ › on the header flip the block in place to earlier nights.
    - Live: the always-on cameras, smaller, because a lake at night is not
      competing with a documentary.
+   - Past nights: the last two weeks of editions (tv-editions.json), here
+     with the other videos rather than after the podcasts (Stephen,
+     2026-10-18: "it feels weird going from videos to podcast back to videos").
+     Every video rail has "See as a list", which turns the sideways row into
+     a list you scroll down, thumbnail beside a readable title, and back.
+   - The Brief, out loud: the newsletter itself, read aloud, a small card
+     (scripts/build_edition_audio.py, on the wire-audio branch). Each Monday
+     and Friday edition's intro and local news, word for word, voiced within
+     the hour it is published. It changes twice a week, so it sits under the
+     videos, at the head of the listening. The newest edition's clip, with
+     its date, or no card at all. A speed control (1x, 1.25x, 1.5x; 1.25x
+     unless the reader picked otherwise on this phone) and the edition's own
+     page at btownbrief.com.
    - Podcasts: the Brief's own show first, always; then every local show
      (pulse.json sources with pod === 1), newest episode first, each a row
      that opens in place; on Everything, two shows from away as well.
    - Playlists: Stephen's, then readers', from data/playlists.json, and a
      "Share your playlist" email (see the playlists section below).
-   - Past nights: the last two weeks of editions (tv-editions.json).
 
    All sound goes through the shell's one player and the one video box;
    nothing autoplays. The Brief's own show is on Spotify only, so its
@@ -52,8 +58,9 @@ const BRIEF_ART = '../assets/icon-192.png';
 const SHOW_ART = '../assets/btown-arts-cover.jpg';
 const PLAYLIST_RE = /^https:\/\/www\.youtube\.com\/playlist\?list=[A-Za-z0-9_-]+$/;
 const SPOTIFY_ID = /^[A-Za-z0-9]{22}$/;
-const CLIP_FILE = /^\d{4}-\d{2}-\d{2}\.(mp3|txt)$/;
+const CLIP_FILE = /^\d{4}-\d{2}-\d{2}\.mp3$/;
 const NEWSLETTER = 'https://www.btownbrief.com/';
+const EDITION_URL = /^https:\/\/www\.btownbrief\.com\/p\/[a-z0-9-]+\/?$/;
 const RATES = [1, 1.25, 1.5];   // Stephen, 2026-10-17: "way too slow… people like YT videos at 1.5x"
 const RATE_DEFAULT = 1.25;
 const RATE_KEY = 'allday-brief-rate';
@@ -149,26 +156,27 @@ function react(v, kind) {
 const skipped = (v) => reacts()[v && v.id] === 'skip';
 
 /* ------------------------------------------------------------- the clip */
-/* Today's clip, or the newest one before today, or null. */
+/* The newest edition's clip on or before today, or null. Only clips the
+   edition reader made count (kind "edition"): the daily recap it replaced
+   left its last clips in the same index until the first edition run prunes
+   them, and those must not show. */
 function currentClip() {
   const tk = todayKey();
   const clips = arr(O.audio && O.audio.clips)
-    .filter((c) => c && isDate(c.date) && c.date <= tk && CLIP_FILE.test(String(c.file || '')))
+    .filter((c) => c && c.kind === 'edition' && isDate(c.date) && c.date <= tk && CLIP_FILE.test(String(c.file || '')))
     .sort((a, b) => (a.date < b.date ? 1 : -1));
   return clips[0] || null;
 }
 
 function clipItem(c) {
-  const today = c.date === todayKey();
   const mins = Math.max(1, Math.round((Number(c.duration) || 0) / 60));
   return {
     k: 'brief:' + c.date, kind: 'audio', src: 'The Brief', sid: 'btown-brief', show: 'The Brief, out loud',
-    title: weekday(c.date) + '’s news in ' + words(mins) + (mins === 1 ? ' minute' : ' minutes'),
-    mins: words(mins) + '-minute',
-    text: String(c.teaser || ''), media: BRIEF_ART, dur: c.duration ? mmss(c.duration) : '',
+    title: weekday(c.date) + '’s Brief, read aloud',
+    text: '', media: BRIEF_ART, dur: c.duration ? mmss(c.duration) : '',
     src_audio: clipUrl(c.file), href: clipUrl(c.file),
-    when: (today ? 'Today' : dayName(c.date)) + (c.made && today ? ' · ' + clock(Date.parse(c.made)) : '') + (c.duration ? ' · ' + mmss(c.duration) : ''),
-    script: CLIP_FILE.test(String(c.script || '')) ? c.script : '',
+    when: (c.date === todayKey() ? 'Today’s edition' : dayName(c.date).split(', ')[1] + ' edition') + (c.duration ? ' · ' + mins + ' min' : ''),
+    page: EDITION_URL.test(String(c.url || '')) ? c.url : NEWSLETTER,
   };
 }
 
@@ -299,11 +307,10 @@ const SAID = {
   more: 'More like this. Tomorrow’s edition will know.',
 };
 
-function wave() {
-  return '<div class="wave" aria-hidden="true">' + Array.from({ length: 40 }, (_, i) =>
-    '<i style="height:' + (6 + Math.round(10 * Math.abs(Math.sin(i * 0.7)) + 8 * Math.abs(Math.cos(i * 0.3)))) + 'px"></i>').join('') + '</div>';
-}
-
+/* Small on purpose (Stephen, 2026-10-18: "make that smaller, since it's not
+   gonna be changing every day"): one row, then the speeds and the edition's
+   own page. The one line under the title says what it is to a first-time
+   visitor: the newsletter, not a summary of it. */
 function drawBrief(host) {
   const c = currentClip();
   if (!c) return false;
@@ -312,20 +319,17 @@ function drawBrief(host) {
   sec(host, 'The Brief, out loud', '', 'brief');
   const au = el('div', 'audio');
   au.dataset.k = it.k;
-  au.innerHTML = '<button class="pb" data-pk="' + esc(it.k) + '" aria-label="Play the Brief, out loud">' + ICON.play + '</button><div><div class="eyebrow">' + esc(it.when) + '</div><h3>' +
-    esc(it.title) + '</h3><p>' + esc((it.text ? it.text + ' ' : '') + 'Read to you every morning at 7.') + '</p></div>' + wave() + speedRow();
+  au.innerHTML = '<button class="pb" data-pk="' + esc(it.k) + '" aria-label="Play ' + esc(it.title) + '">' + ICON.play + '</button><div><div class="eyebrow">' + esc(it.when) + '</div><h3>' +
+    esc(it.title) + '</h3><p>The intro and the local news, word for word. New every Monday and Friday.</p></div>';
+  const row = el('div', 'brow');
+  row.innerHTML = speedRow();
+  const a = el('a', 'btn sm ghost', 'Read this edition ' + ICON.ext);
+  a.href = it.page; a.target = '_blank'; a.rel = 'noopener';
+  a.dataset.newsletter = '1';
+  row.appendChild(a);
+  au.appendChild(row);
   au.querySelector('.pb').addEventListener('click', () => { app.play(it); applyRate(); });
   host.appendChild(au);
-  /* the transcript, and the newsletter itself, under the card. Each label
-     says which it is (Stephen, 2026-10-17: "make it clear that the read it
-     instead is that 2 minute recap… and then you can read the whole brief"). */
-  const links = el('div', 'linkrow brieflinks');
-  if (it.script) links.appendChild(button(esc('Read the ' + it.mins + ' recap'), 'ghost', () => readScript(it, c)));
-  const a = el('a', 'btn ghost', 'Read the whole Brief at btownbrief.com ' + ICON.ext);
-  a.href = NEWSLETTER; a.target = '_blank'; a.rel = 'noopener';
-  a.dataset.newsletter = '1';
-  links.appendChild(a);
-  host.appendChild(links);
   return true;
 }
 
@@ -367,27 +371,6 @@ function paintRate(root) {
   root.querySelectorAll('[data-rate]').forEach((b) => b.setAttribute('aria-pressed', String(Number(b.dataset.rate) === rate())));
 }
 
-/* the script the voice read, as text: the transcript, for reading or for anyone who cannot listen.
-   The script carries pacing marks for the voice ([pause], [softly]: build_wire_audio.py TAGS),
-   which are direction, never words, so the reader never sees them. */
-const PACING_RE = /[ \t]*\[[a-z ]{1,20}\][ \t]*/g;
-function readScript(it, c) {
-  app.sheet(it.title, (body) => {
-    const t = el('div', 'script');
-    body.appendChild(t);
-    const show = (text) => {
-      t.innerHTML = '';
-      String(text || '').replace(PACING_RE, ' ').split(/\n\s*\n/).map((p) => p.trim()).filter(Boolean).forEach((p, i) => {
-        if (i) t.appendChild(el('div', 'spacer'));
-        t.appendChild(el('p', '', esc(p)));
-      });
-    };
-    if (app.demo) { show(O.audio._script || ''); return; }
-    t.textContent = 'Loading…';
-    data.fetchText(data.audioUrl(c.script), 8000).then(show, () => { t.textContent = 'The script didn’t load. Try again in a minute.'; });
-  });
-}
-
 /* Every night the TV block can show, newest first: tonight's edition, then
    the archive's earlier ones (tv-editions.json also holds tonight's; it is
    skipped, the live file wins). */
@@ -418,6 +401,76 @@ function restOf(ed, taken) {
     if (v && app.isVideoId(v.id) && v.t && !seen.has(v.id) && !skipped(v)) { seen.add(v.id); out.push(v); }
   });
   return out;
+}
+
+/* "See as a list" (Stephen, 2026-10-18: the rails felt "really small and
+   hard to read" next to YouTube; "at least having a button, so it changes
+   to just scrolling down instead of scrolling left and right"). Each video
+   rail has a small button above it that turns the row into a list, the
+   thumbnail beside a title at reading size, and back; a long list has the
+   same button at its foot, which folds it and scrolls back to the top one.
+   Sideways stays the default. The choice is this phone's, per rail
+   (localStorage in try: blocked storage just means sideways each visit). */
+const LIST_KEY = 'allday-onair-lists';
+let listMem = null;
+function listed() {
+  if (listMem) return listMem;
+  listMem = Object.create(null);
+  try {
+    const v = JSON.parse(localStorage.getItem(LIST_KEY) || '{}');
+    if (v && typeof v === 'object') Object.keys(v).forEach((k) => { if (v[k] === 1) listMem[k] = 1; });
+  } catch (e) { /* storage blocked */ }
+  return listMem;
+}
+function setListed(name, on) {
+  const m = listed();
+  if (on) m[name] = 1; else delete m[name];
+  try { localStorage.setItem(LIST_KEY, JSON.stringify(m)); } catch (e) { /* kept for the visit */ }
+}
+const LIST_FOOT = 6;   // a list this long gets the button at its foot too
+function videoRail(host, name, cls) {
+  const top = el('div', 'railmode');
+  top.appendChild(modeButton(name));
+  host.appendChild(top);
+  const r = rail(host, cls);
+  r.dataset.rail = name;
+  const foot = el('div', 'railmode foot');
+  foot.appendChild(modeButton(name));
+  host.appendChild(foot);
+  paintMode(r);
+  return r;
+}
+function modeButton(name) {
+  const b = el('button', 'btn sm ghost');
+  b.dataset.railmode = name;
+  return b;
+}
+/* the rail's class, both buttons' words, and whether the foot one shows */
+function paintMode(r) {
+  const on = !!listed()[r.dataset.rail];
+  r.classList.toggle('aslist', on);
+  const wrap = r.closest('.rail-wrap');
+  const top = wrap.previousElementSibling;
+  const foot = wrap.nextElementSibling;
+  [top, foot].forEach((row) => {
+    const b = row.querySelector('[data-railmode]');
+    b.textContent = on ? 'See as a row' : 'See as a list';
+    b.setAttribute('aria-pressed', on ? 'true' : 'false');
+  });
+  foot.hidden = !on || r.children.length < LIST_FOOT;
+}
+/* the cards arrive after videoRail returns, so the foot is settled here too */
+function settleRails(host) { host.querySelectorAll('.rail[data-rail]').forEach(paintMode); }
+function flipMode(btn) {
+  const name = btn.dataset.railmode;
+  const fromFoot = !!btn.closest('.railmode.foot');
+  setListed(name, !listed()[name]);
+  const r = O.root.querySelector('.rail[data-rail="' + name + '"]');
+  if (!r) return;
+  paintMode(r);
+  r.scrollLeft = 0;
+  const top = r.closest('.rail-wrap').previousElementSibling;
+  if (fromFoot) { app.jumpTo(top); top.querySelector('button').focus({ preventScroll: true }); }
 }
 
 /* Btown TV, the star of the tab (Stephen, 2026-10-17: "I have 39 to show"):
@@ -473,8 +526,7 @@ function drawTV(host) {
   const list = local.concat(wider.map((x) => ({ ...x, wider: true })));
   const items = [];
   if (list.length) {
-    const r = rail(host);
-    r.dataset.rail = 'picks';
+    const r = videoRail(host, 'picks');
     list.forEach((x) => {
       const it = videoItem(x.v);
       if (!it) return;
@@ -491,8 +543,7 @@ function drawTV(host) {
      and small on the bottom") */
   const rest = restOf(ed, list).map((v) => videoItem(v)).filter(Boolean);
   if (rest.length) {
-    const r = rail(host, 'tworow');
-    r.dataset.rail = 'rest';
+    const r = videoRail(host, 'rest', 'tworow');
     rest.forEach((it) => { items.push(it); r.appendChild(vcard(it, '', { noWhy: true })); });   // dense: title and channel
   }
   app.know(items);
@@ -524,6 +575,7 @@ function flipTV(date, again) {
   if (!S) return;
   S.tv.innerHTML = '';
   S.tv.hidden = !drawTV(S.tv);
+  settleRails(S.tv);
   app.paintPlayButtons();
   const btn = [...S.tv.querySelectorAll('.wm-nav .nav')];
   const want = btn.find((b) => b.getAttribute('aria-label') === again && !b.disabled) || btn.find((b) => !b.disabled);
@@ -534,7 +586,7 @@ function drawLive(host) {
   const live = arr(O.tv && O.tv.live).filter((v) => v && app.isVideoId(v.id) && !isAmbience(v) && (geo() === 'everything' || isLocalCam(v)));
   if (!live.length) return false;
   sec(host, 'Live', '', 'live');
-  const r = rail(host);
+  const r = videoRail(host, 'live');
   const items = live.map((v) => videoItem(v, { live: true })).filter(Boolean);
   items.forEach((it) => r.appendChild(vcard(it, 'w220')));
   app.know(items);
@@ -899,7 +951,7 @@ function drawPast(host) {
     .filter((x) => x.n && x.lead);
   if (!nights.length) return false;
   sec(host, 'Past nights', '', 'past');
-  const r = rail(host);
+  const r = videoRail(host, 'past');
   const items = nights.map(({ e, n, lead }) => {
     const v = videoItem(lead);
     return { k: 'tv:' + e.edition, kind: 'video', title: nightOf(e.edition), src: 'Btown TV', sid: 'btown-tv', media: v ? v.media : '',
@@ -931,21 +983,22 @@ function render() {
        frame in it) is never torn down by a redraw */
     root.innerHTML = '';
     const mk = (name) => { const s = el('div'); s.dataset.slot = name; root.appendChild(s); return s; };
-    O.slots = { brief: mk('brief'), tv: mk('tv'), live: mk('live'), podsHead: mk('pods-head'), own: mk('own'), pods: mk('pods'), lists: mk('lists'), past: mk('past'), end: mk('end') };
+    O.slots = { tv: mk('tv'), live: mk('live'), past: mk('past'), brief: mk('brief'), podsHead: mk('pods-head'), own: mk('own'), pods: mk('pods'), lists: mk('lists'), end: mk('end') };
     O.built = true;
   }
   const S = O.slots;
   Object.entries(S).forEach(([name, s]) => { if (name !== 'own') s.innerHTML = ''; });
-  S.brief.hidden = !drawBrief(S.brief);
   S.tv.hidden = !drawTV(S.tv);
   S.live.hidden = !drawLive(S.live);
+  S.past.hidden = !drawPast(S.past);
+  settleRails(root);
+  S.brief.hidden = !drawBrief(S.brief);
   if (!O.own && O.podcast) { O.own = ownShow(); if (O.own) S.own.appendChild(O.own); }
   const anyPods = !!O.own || shows().length > 0;
   S.podsHead.hidden = !anyPods && !O.failed.pulse;
   if (!S.podsHead.hidden) drawPodsHead(S.podsHead);
   drawPods(S.pods);
   S.lists.hidden = !drawPlaylists(S.lists);
-  S.past.hidden = !drawPast(S.past);
   S.end.appendChild(cards.caught({
     title: 'That’s On Air',
     check: false,
@@ -957,6 +1010,12 @@ function render() {
 
 /* ------------------------------------------------------------ the clicks */
 function onClick(e) {
+  const mb = e.target.closest('[data-railmode]');
+  if (mb) {
+    e.preventDefault();
+    flipMode(mb);
+    return;
+  }
   const rb = e.target.closest('[data-rate]');
   if (rb) {
     e.preventDefault();
@@ -1070,7 +1129,7 @@ app.register(KEY, {
     const band = el('div', 'toolband');
     band.appendChild(localSwitch(() => { render(); app.scrollTop(); }));
     const S = O.slots;
-    const toc = [['brief', 'Out loud'], ['tv', 'Btown TV'], ['live', 'Live'], ['pods', 'Podcasts'], ['lists', 'Playlists'], ['past', 'Past nights']]
+    const toc = [['tv', 'Btown TV'], ['live', 'Live'], ['past', 'Past nights'], ['brief', 'Out loud'], ['pods', 'Podcasts'], ['lists', 'Playlists']]
       .filter(([key]) => !S || O.root.querySelector('[data-sec="' + key + '"]'))
       .map(([key, label]) => ({ key, label }));
     band.appendChild(chips(toc, null, (k) => app.jumpTo(O.root.querySelector('[data-sec="' + k + '"]'))));

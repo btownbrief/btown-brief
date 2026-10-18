@@ -917,28 +917,39 @@ body.chrome-away .mast { transform: translateY(-100%); }
 .board .r .sc { font-variant-numeric: tabular-nums; font-weight: 700; font-size: var(--fs-body); }
 .board .r.me { background: var(--accent-soft); margin: 0 -8px; padding-left: 8px; padding-right: 8px; border-radius: var(--r-tile); }
 
-/* the audio card: the Brief, out loud */
-.audio { margin: 0 var(--gutter); border-radius: var(--r-media); overflow: hidden; background: var(--ink); color: var(--on-ink); padding: 18px 18px 16px; display: grid; grid-template-columns: 56px minmax(0, 1fr); gap: 14px; align-items: center; }
-.audio .pb { width: 56px; height: 56px; border-radius: var(--r-round); background: var(--on-ink); color: var(--ink); display: flex; align-items: center; justify-content: center; }
-.audio .pb .i { width: 26px; height: 26px; fill: currentColor; stroke: none; margin-left: 2px; }
+/* the audio card: the Brief, out loud. Small (Stephen, 2026-10-18): it changes
+   twice a week, so it sits under the videos and takes one row and its controls.
+   Its fill is the lake (the palette section below sets --ink for it). */
+.audio { margin: 0 var(--gutter); border-radius: var(--r-media); background: var(--ink); color: var(--on-ink); padding: 12px 14px; display: grid; grid-template-columns: 44px minmax(0, 1fr); gap: 4px 12px; align-items: center; }
+.audio .pb { width: 44px; height: 44px; border-radius: var(--r-round); background: var(--on-ink); color: var(--ink); display: flex; align-items: center; justify-content: center; }
+.audio .pb .i { width: 20px; height: 20px; fill: currentColor; stroke: none; margin-left: 2px; }
 .audio .pb.is-playing .i { fill: none; stroke: currentColor; margin-left: 0; }
-.audio .eyebrow { color: var(--on-ink); opacity: .7; }
-.audio h3 { font-family: var(--serif); font-size: var(--fs-section); font-weight: 500; line-height: var(--lh-tight); margin-top: 3px; }
-.audio p { font-size: var(--fs-meta); opacity: .75; margin-top: 4px; }
-.audio .wave { grid-column: 1 / -1; display: flex; gap: 3px; align-items: flex-end; height: 28px; margin-top: 4px; }
-.audio .wave i { flex: 1; background: var(--on-ink); opacity: .35; border-radius: var(--r-hair); min-height: 4px; }
-.audio .wave i:nth-child(-n+9) { opacity: .9; }
-.audio .speed { grid-column: 1 / -1; display: flex; gap: 6px; }
-.audio .speed button { height: 36px; min-width: 56px; padding: 0 12px; border-radius: var(--r-pill); border: 1px solid currentColor; color: var(--on-ink); opacity: .7; font-size: var(--fs-meta); font-weight: 600; }
+.audio .eyebrow { color: var(--on-ink); opacity: .75; }
+.audio h3 { font-size: var(--fs-sub); font-weight: 600; line-height: var(--lh-tight); margin-top: 2px; }
+.audio p { font-size: var(--fs-meta); opacity: .8; margin-top: 2px; line-height: 1.35; }
+.audio .brow { grid-column: 1 / -1; display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 8px; }
+.audio .speed { display: flex; gap: 4px; }
+.audio .speed button { height: 32px; min-width: 46px; padding: 0 8px; border-radius: var(--r-pill); border: 1px solid currentColor; color: var(--on-ink); opacity: .75; font-size: var(--fs-meta); font-weight: 600; }
 .audio .speed button[aria-pressed="true"] { background: var(--on-ink); border-color: var(--on-ink); color: var(--ink); opacity: 1; }
-.linkrow.brieflinks { padding: 12px var(--gutter) 0; flex-direction: column; align-items: stretch; }
-.linkrow.brieflinks .btn { width: 100%; }
+.audio .brow .btn { flex: 0 0 auto; height: 32px; color: var(--on-ink); border-color: currentColor; }
 /* On Air: the rest of a night's Btown TV edition, two rows deep in one sideways scroll,
    straight under the picks with no header of its own (one section) */
 .rail.tworow { display: grid; grid-auto-flow: column; grid-template-rows: auto auto; grid-auto-columns: 156px; row-gap: 16px; }
 .rail.tworow > .vcard { width: auto; min-width: 0; }
 .rail.tworow .vcard .t { font-size: var(--fs-meta); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 .rail-wrap + .rail-wrap { margin-top: var(--s2); }
+/* On Air: "See as a list" turns a video rail into a list you scroll down,
+   the thumbnail beside a title at reading size (the reactions run full width under) */
+.railmode { display: flex; justify-content: flex-end; padding: 0 var(--gutter) 6px; }
+.railmode.foot { padding: 4px var(--gutter) 0; }
+.railmode[hidden] { display: none; }
+.rail.aslist, .rail.tworow.aslist { display: flex; flex-direction: column; gap: 14px; overflow: visible; scroll-snap-type: none; }
+.rail.aslist > .vcard { width: auto; display: grid; grid-template-columns: 160px minmax(0, 1fr); column-gap: 12px; align-content: start; }
+.rail.aslist > .vcard > * { grid-column: 2; }
+.rail.aslist > .vcard > .c-media { grid-column: 1; grid-row: 1 / span 5; align-self: start; }
+.rail.aslist > .vcard > .c-acts { grid-column: 1 / -1; }
+.rail.aslist .vcard .t, .rail.tworow.aslist .vcard .t { margin-top: 0; font-size: var(--fs-body); display: block; overflow: visible; -webkit-line-clamp: unset; }
+.rail-wrap:has(> .rail.aslist) > .rail-bar { display: none; }
 /* On Air: the whole edition, a filled card with three covers fanned on the left */
 .wholeed { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 14px; width: calc(100% - 2 * var(--gutter)); margin: 14px var(--gutter) 4px; padding: 14px 14px 14px 16px; border-radius: var(--r-media); background: var(--ink); color: var(--on-ink); text-align: left; }
 .wholeed:active { transform: scale(.98); }

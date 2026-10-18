@@ -1,36 +1,37 @@
 name: The Brief, out loud
 
-# A three-minute audio brief written from the Wire's top local picks, every
-# morning at 7 Eastern, for the On Air tab in All Day:
-#   scripts/build_wire_audio.py -> data/audio/YYYY-MM-DD.mp3 (mono, 64 kbps, -16 LUFS)
-#                                  data/audio/YYYY-MM-DD.txt (the script it read)
-#                                  data/audio/index.json     (the rolling 30 days)
-#                                  data/audio/cost.json      (model and voice spend, month to date)
-# on the `wire-audio` branch, force-pushed as one orphan commit each run (the
-# way wire-data is published), so the page reads raw.githubusercontent.com and
-# old MP3s never pile up in git history.
+# Each newsletter edition, read aloud word for word: the intro and the local
+# news, for the On Air tab in All Day (Stephen, 2026-10-18). This replaced the
+# daily two-minute recap the same day; the file keeps its name so its run
+# history and the wire-audio branch stay where they were.
+#
+#   scripts/build_edition_audio.py -> data/audio/YYYY-MM-DD.mp3 (the edition's date)
+#                                     data/audio/YYYY-MM-DD.txt (the words it read)
+#                                     data/audio/index.json     (the last ten editions)
+#                                     data/audio/cost.json      (the voice's spend, month to date)
+# on the `wire-audio` branch, force-pushed as one orphan commit, so the page
+# reads raw.githubusercontent.com and old MP3s never pile up in git history.
+#
+# Stephen publishes in Beehiiv whenever he is done, so this looks at the
+# newsletter's RSS feed every hour from 8 am to midnight in Burlington and
+# voices an edition the first time it sees one (one a run, at most four days
+# old). A run with nothing new takes seconds and pushes nothing. About $1.50
+# an edition at ElevenLabs' eleven_v4 rate; the script caps the month at $25.
 #
 # Secrets: ELEVENLABS_API_KEY (required; without it the run ends green and
-# writes nothing), ELEVENLABS_VOICE_ID (optional; default Wyatt,
-# FrS6cKLB1wg4WYgPa9GW), and the Wire's ANTHROPIC_API_KEY (Claude Opus 5.5
-# writes the script; there is deliberately no cheaper fallback).
-#
-# 7 am Eastern is 11:00 UTC in summer time and 12:00 UTC in winter, so the job
-# is scheduled at both; the first one that finds it is 7 or later in
-# Burlington makes the clip and the other finds it already up.
+# voices nothing) and ELEVENLABS_VOICE_ID (optional; default Wyatt).
 
 on:
   schedule:
-    - cron: '0 11 * * *'
-    - cron: '0 12 * * *'
+    - cron: '23 0-4,12-23 * * *'
   workflow_dispatch:
     inputs:
+      edition:
+        description: "Voice this edition (its btownbrief.com/p/... link) instead of the newest"
+        type: string
+        default: ''
       force:
-        description: "Make today's clip again even if one is up (costs one more clip)"
-        type: boolean
-        default: false
-      script_only:
-        description: "Write and check today's script only (Opus), no voice; voice it later with --audio-from"
+        description: "Voice it again even if it is already up (costs about $1.50)"
         type: boolean
         default: false
 
@@ -44,35 +45,34 @@ concurrency:
 jobs:
   audio:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
 
-      - name: Offline tests and selftest (no network, no model, no voice)
-        run: |
-          python3 -m unittest tests.test_wire_audio
-          python3 scripts/build_wire_audio.py --selftest
+      - name: Offline tests (no network, no voice)
+        run: python3 -m unittest tests.test_edition_audio
 
-      - name: Is it 7 am in Burlington yet?
-        id: gate
+      - name: Check the key
+        id: key
+        env:
+          ELEVENLABS_API_KEY: ${{ secrets.ELEVENLABS_API_KEY }}
         run: |
-          hour=$(TZ=America/New_York date +%-H)
-          if [ "${{ github.event_name }}" = "schedule" ] && [ "$hour" -lt 7 ]; then
-            echo "go=false" >> "$GITHUB_OUTPUT"
-            echo "It is ${hour} o'clock in Burlington; the later run makes the clip."
+          if [ -z "$ELEVENLABS_API_KEY" ]; then
+            echo "voice=none" >> "$GITHUB_OUTPUT"
+            echo "### The Brief, out loud · no ELEVENLABS_API_KEY secret, nothing voiced" >> "$GITHUB_STEP_SUMMARY"
           else
-            echo "go=true" >> "$GITHUB_OUTPUT"
+            echo "voice=on" >> "$GITHUB_OUTPUT"
           fi
 
       - name: Pull the previous wire-audio branch
         id: pull
-        if: steps.gate.outputs.go == 'true'
+        if: steps.key.outputs.voice == 'on'
         run: |
           mkdir -p /tmp/wa
           # ls-remote --exit-code says 2 for "no such branch" and something
           # else for a network or auth failure. Only a confirmed "no such
           # branch" may start from nothing; anything else fails the run
-          # rather than force-push away thirty days of clips.
+          # rather than force-push away the editions already voiced.
           set +e
           git ls-remote --exit-code --heads origin wire-audio >/dev/null
           status=$?
@@ -87,61 +87,26 @@ jobs:
             exit 1
           fi
           mkdir -p /tmp/wa/data/audio
-          ls -la /tmp/wa/data/audio
 
-      - name: Check the keys
-        id: key
-        if: steps.gate.outputs.go == 'true'
-        env:
-          ELEVENLABS_API_KEY: ${{ secrets.ELEVENLABS_API_KEY }}
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-        run: |
-          if [ "${{ inputs.script_only }}" = "true" ]; then
-            if [ -n "$ANTHROPIC_API_KEY" ]; then
-              echo "voice=on" >> "$GITHUB_OUTPUT"
-              echo "### The Brief, out loud · script only: Claude Opus 5.5 writes, nothing voiced" >> "$GITHUB_STEP_SUMMARY"
-            else
-              echo "voice=none" >> "$GITHUB_OUTPUT"
-              echo "### The Brief, out loud · no ANTHROPIC_API_KEY to write the script, nothing made" >> "$GITHUB_STEP_SUMMARY"
-            fi
-          elif [ -z "$ELEVENLABS_API_KEY" ]; then
-            echo "voice=none" >> "$GITHUB_OUTPUT"
-            echo "### The Brief, out loud · no ELEVENLABS_API_KEY secret, nothing made" >> "$GITHUB_STEP_SUMMARY"
-            echo "Add it under Settings, Secrets and variables, Actions to turn the audio brief on." >> "$GITHUB_STEP_SUMMARY"
-          elif [ -n "$ANTHROPIC_API_KEY" ]; then
-            echo "voice=on" >> "$GITHUB_OUTPUT"
-            echo "### The Brief, out loud · Claude Opus 5.5 writes, ElevenLabs reads" >> "$GITHUB_STEP_SUMMARY"
-          else
-            echo "voice=none" >> "$GITHUB_OUTPUT"
-            echo "### The Brief, out loud · no ANTHROPIC_API_KEY to write the script, nothing made" >> "$GITHUB_STEP_SUMMARY"
-          fi
-
-      - name: Install the Anthropic SDK and ffmpeg
+      - name: Make sure ffmpeg is here
         if: steps.key.outputs.voice == 'on'
-        run: |
-          python3 -m pip install --quiet 'anthropic>=0.116,<1'
-          command -v ffmpeg >/dev/null || (sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg)
-          ffmpeg -version | head -1
+        run: command -v ffmpeg >/dev/null || (sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg)
 
-      - name: Write, read and publish today's brief
+      - name: Voice the newest edition, if there is one
+        id: run
         if: steps.key.outputs.voice == 'on'
         env:
           ELEVENLABS_API_KEY: ${{ secrets.ELEVENLABS_API_KEY }}
           ELEVENLABS_VOICE_ID: ${{ secrets.ELEVENLABS_VOICE_ID }}
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-        run: >-
-          python3 scripts/build_wire_audio.py --out-dir /tmp/wa/data/audio
-          ${{ inputs.force && '--force' || '' }} ${{ inputs.script_only && '--script-only' || '' }}
+          EDITION: ${{ inputs.edition }}
+          FORCE: ${{ inputs.force && '--force' || '' }}
+        run: python3 scripts/build_edition_audio.py --out-dir /tmp/wa/data/audio $FORCE ${EDITION:+--edition "$EDITION"}
 
       - name: Force-push the single-commit wire-audio branch
-        # Also after a failed step: the cost ledger is worth keeping. Never
-        # after a failed pull, and never with nothing in the folder.
-        if: always() && steps.pull.outcome == 'success' && steps.key.outputs.voice == 'on'
+        # Only when the run wrote something (a clip, or the cost of a failed
+        # one: the ledger is worth keeping). Never after a failed pull.
+        if: always() && steps.pull.outcome == 'success' && steps.run.outputs.changed == 'true'
         run: |
-          if [ ! -s /tmp/wa/data/audio/index.json ] && [ ! -s /tmp/wa/data/audio/cost.json ] && [ ! -s /tmp/wa/data/audio/pending.json ]; then
-            echo "nothing written yet — leaving the branch alone"
-            exit 0
-          fi
           cd /tmp/wa
           rm -rf .git
           git init -q -b wire-audio
