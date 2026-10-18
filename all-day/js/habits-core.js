@@ -145,28 +145,162 @@ export const streakUnit = (habit, n) => (habit && habit.frequency === 'n_per_wee
   ? (n === 1 ? 'week' : 'weeks') : (n === 1 ? 'day' : 'days'));
 
 /* ------------------------------------------------------------------- dots */
-/* This week, Monday to Sunday, as seven dots:
+/* The day a habit starts counting: the day it was made, in Burlington, or
+   its first tap if that is earlier (habits moved from a phone keep their
+   older taps). null when neither is known, and then every day counts. A
+   day before it is never a missed day. */
+export function startKey(habit, taps) {
+  const c = habit && habit.created_at;
+  const ms = typeof c === 'number' ? c : Date.parse(c);
+  if (!(Number.isFinite(ms) && ms > 0)) return null;
+  let k = dayKey(ms);
+  for (const t of asSet(taps)) if (isKey(t) && t < k) k = t;
+  return k;
+}
+
+/* One day of one habit, as a dot or a calendar square:
      done    a tap
      missed  a day the habit was due, gone by without one (a ring)
-     off     a day it was not due: a weekend for a weekdays habit, and any
-             untapped day for an N-a-week habit, which has no set days
+     off     a day it was not due: a weekend for a weekdays habit, any
+             untapped day for an N-a-week habit, which has no set days, and
+             any day before the habit started
      today   today, not tapped yet
      later   a day still to come */
+function dayState(habit, set, key, today, start) {
+  if (key <= today && set.has(key)) return 'done';
+  if (key === today) return 'today';
+  if (key > today) return 'later';
+  if (start && key < start) return 'off';
+  if (habit && habit.frequency === 'n_per_week') return 'off';
+  if (habit && habit.frequency === 'weekdays' && isWeekend(key)) return 'off';
+  return 'missed';
+}
+
+/* This week, Monday to Sunday, as seven dots (dayState). */
 export function weekDots(habit, taps, nowMs) {
   const set = asSet(taps);
   const today = dayKey(nowMs);
-  const start = weekStart(today);
+  const start = startKey(habit, set);
+  const w = weekStart(today);
   const out = [];
   for (let i = 0; i < 7; i++) {
-    const key = addDays(start, i);
-    let state;
-    if (key <= today && set.has(key)) state = 'done';
-    else if (key === today) state = 'today';
-    else if (key > today) state = 'later';
-    else if (habit && habit.frequency === 'n_per_week') state = 'off';
-    else if (habit && habit.frequency === 'weekdays' && isWeekend(key)) state = 'off';
-    else state = 'missed';
-    out.push({ key, state });
+    const key = addDays(w, i);
+    out.push({ key, state: dayState(habit, set, key, today, start) });
+  }
+  return out;
+}
+
+/* A month as calendar squares: ym is 'YYYY-MM'. lead is how many blank
+   squares come before the 1st in a week that starts Monday. */
+export const monthOf = (key) => String(key).slice(0, 7);
+export function addMonths(ym, n) {
+  const [y, m] = ym.split('-').map(Number);
+  const t = new Date(Date.UTC(y, m - 1 + n, 1));
+  return t.toISOString().slice(0, 7);
+}
+export function monthGrid(habit, taps, ym, nowMs) {
+  const set = asSet(taps);
+  const today = dayKey(nowMs);
+  const start = startKey(habit, set);
+  const first = ym + '-01';
+  const days = [];
+  for (let k = first; monthOf(k) === ym; k = addDays(k, 1)) days.push({ key: k, day: Number(k.slice(8)), state: dayState(habit, set, k, today, start) });
+  return { ym, lead: dow(first), days };
+}
+
+/* ---------------------------------------------------------- more numbers */
+/* The longest streak the taps hold, by the same rules as streak(): never
+   less than the streak running now. */
+export function bestStreak(habit, taps, nowMs) {
+  const today = dayKey(nowMs);
+  const set = new Set([...asSet(taps)].filter((k) => isKey(k) && k <= today));
+  if (!set.size) return 0;
+  const first = [...set].sort()[0];
+  let best = 0, run = 0;
+  if (habit && habit.frequency === 'n_per_week') {
+    const n = nOf(habit);
+    const w0 = weekStart(today);
+    for (let w = weekStart(first); w <= w0; w = addDays(w, 7)) {
+      let c = 0;
+      for (let i = 0; i < 7; i++) { const k = addDays(w, i); if (k > today) break; if (set.has(k)) c++; }
+      if (c >= n) best = Math.max(best, ++run);
+      else if (w !== w0) run = 0;   // this week is not over: it never breaks a run
+    }
+  } else {
+    const weekdays = habit && habit.frequency === 'weekdays';
+    for (let d = first; d <= today; d = addDays(d, 1)) {
+      if (set.has(d)) best = Math.max(best, ++run);
+      else if (!(weekdays && isWeekend(d))) run = 0;
+    }
+  }
+  return Math.max(best, streak(habit, set, nowMs));
+}
+
+/* How much of what was due got done over the last `days` days, as
+   { done, due }. Today counts once it is tapped (it is not over yet), and
+   nothing before the habit started counts. Daily: every day is due.
+   Weekdays: Monday to Friday. N a week: N for every seven days, rounded,
+   and never less than the taps made. */
+export function completion(habit, taps, nowMs, days = 7) {
+  const set = asSet(taps);
+  const today = dayKey(nowMs);
+  let from = addDays(today, -(days - 1));
+  const start = startKey(habit, set);
+  if (start && start > from) from = start;
+  const to = set.has(today) ? today : addDays(today, -1);
+  if (to < from) return { done: 0, due: 0 };
+  let done = 0, due = 0;
+  if (habit && habit.frequency === 'n_per_week') {
+    for (let d = from; d <= to; d = addDays(d, 1)) if (set.has(d)) done++;
+    due = Math.max(Math.round(nOf(habit) * (daysBetween(from, to) + 1) / 7), done);
+    return { done, due };
+  }
+  const weekdays = habit && habit.frequency === 'weekdays';
+  for (let d = from; d <= to; d = addDays(d, 1)) {
+    if (weekdays && isWeekend(d)) continue;
+    due++;
+    if (set.has(d)) done++;
+  }
+  return { done, due };
+}
+export const percent = (c) => (c && c.due ? Math.round(100 * c.done / c.due) : null);
+
+/* Is this habit one for today? Daily: always. Weekdays: Monday to Friday.
+   N a week: until the week has its N, and on any day it is tapped. */
+export function dueToday(habit, taps, nowMs) {
+  const set = asSet(taps);
+  const today = dayKey(nowMs);
+  if (set.has(today)) return true;
+  const f = habit && habit.frequency;
+  if (f === 'weekdays') return !isWeekend(today);
+  if (f === 'n_per_week') {
+    const w = weekStart(today);
+    let c = 0;
+    for (let i = 0; i < 7; i++) if (set.has(addDays(w, i))) c++;
+    return c < nOf(habit);
+  }
+  return true;
+}
+
+/* Each day from `from` to `to` across all your habits, for the heat map:
+   [{ key, done, due }]. A tap is one done and one due; an untapped day is
+   due for a daily habit, and for a weekdays one Monday to Friday, once the
+   habit has started. An N-a-week habit has no set days, so only its taps
+   count. Days to come are nothing. tapsOf(id) gives a habit's taps. */
+export function dayTotals(habits, tapsOf, from, to, nowMs) {
+  const today = dayKey(nowMs);
+  const hs = (habits || []).map((h) => { const set = asSet(tapsOf(h.id)); return { f: h.frequency, set, start: startKey(h, set) }; });
+  const out = [];
+  for (let key = from; key <= to; key = addDays(key, 1)) {
+    let done = 0, due = 0;
+    if (key <= today) {
+      for (const h of hs) {
+        if (h.set.has(key)) { done++; due++; continue; }
+        if (h.start && key < h.start) continue;
+        if (h.f === 'daily' || (h.f === 'weekdays' && !isWeekend(key))) due++;
+      }
+    }
+    out.push({ key, done, due });
   }
   return out;
 }

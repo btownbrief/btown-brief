@@ -31,7 +31,8 @@
      reader first. Chips filter by Meetup, by age band and by activity (the
      activity is read off the plan's words with MATCH; the board has no
      field for it). "I'd go" is the board's vote, shown as a going count.
-   - Mixers. Stephen's own Meetup events first, as a short row (the
+   - Mixers. Stephen's own Meetup events first, as a short row (Show all
+     opens it into a list with a Collapse bar; "Steve" on the page) (the
      newsletter's golden rule: his own events are never missed, with no
      Meetup interest counts), then a seven-day strip of every mixer on the
      guide's events calendar (all-day/data/whatnow.json, which
@@ -81,7 +82,7 @@ const CLUBS_PAGE = '../clubs.html';
 const EVENTS_PAGE = '../events.html';   // the guide's full events calendar
 /* Becoming a host starts with an email to Stephen; coffee, then the calendar */
 const HOST_MAIL = 'mailto:btownbrief@gmail.com?subject=' + encodeURIComponent('I’d like to host something with the crew') + '&body=' +
-  encodeURIComponent('Hi Stephen,\n\nI’d like to host something for the Btown Brief crew.\n\nWhat I’d host:\nWhen:\nWhere:\n\nA good time for coffee:\n');
+  encodeURIComponent('Hi Steve,\n\nI’d like to host something for the Btown Brief crew.\n\nWhat I’d host:\nWhen:\nWhere:\n\nA good time for coffee:\n');
 const RUN_CLUBS_URL = '../data/run-clubs.json';
 const MEETUP_GROUP = 'https://www.meetup.com/burlington-social-activites-group/';
 /* Stephen's own Meetup calendar: Up For It's copy of the group's iCal,
@@ -200,6 +201,7 @@ const S = {
   events: null, eventsFailed: false, feed: null, groups: null, groupsFailed: false,
   gath: [], gathDone: false,           // approved reader gatherings (the gatherings board)
   mixDay: null,                        // the day picked on the mixers' strip, for the visit
+  ownAll: false,                       // his own mixers opened from the row into a list, for the visit
   dir: null,                           // { count, me, people } | { error }
   handles: null,                       // signed in: { state: 'loading' | 'ok' | 'off' | 'fail', people }
   filter: 'all', fAge: null, fAct: null, // the plans' chips: Meetup, an age band, an activity
@@ -993,8 +995,10 @@ const ageFits = (p, a) => !a || p.meta.ages === a || p.meta.ages === 'any';
 const upcomingPlans = () => S.posts.filter((p) => p.at == null || p.at > Date.now() - PAST_GRACE);
 function sortedPlans() {
   const keys = picks();
-  /* for you: your tile's plans, or a plan whose words fit what you picked */
-  const fit = (p) => ((S.arch && (p.meta.arch === S.arch || p.author_arch === S.arch)) || fitsText(planText(p), keys) ? 0 : 1);
+  /* for you: your tile's own plans first, then a plan whose words fit what
+     you picked (Trail's words take any "walk", so a newcomers' downtown walk
+     must not tie with the trail person's hike), then the rest */
+  const fit = (p) => (S.arch && (p.meta.arch === S.arch || p.author_arch === S.arch) ? 0 : fitsText(planText(p), keys) ? 1 : 2);
   return upcomingPlans()
     .filter((p) => S.filter !== 'meetup' || p.meta.meetup)
     .filter((p) => ageFits(p, S.fAge))
@@ -1120,8 +1124,32 @@ function drawMix() {
   ownWrap.dataset.own = '1';
   s.appendChild(ownWrap);
   if (own.length) {
-    ownWrap.appendChild(el('p', 'subh pad', '<b>Btown Brief IRL</b>'));
-    const track = rail(ownWrap);
+    /* the row, or every one of them in a list that scrolls down; a
+       Collapse bar stays in reach while the list is on screen */
+    const head = el('div', 'subrow');
+    head.appendChild(el('p', 'subh', '<b>Btown Brief IRL</b>'));
+    const many = own.length > 1;
+    if (!many) S.ownAll = false;
+    if (many) {
+      const t = button(S.ownAll ? 'Show less' : 'Show all ' + own.length, 'ghost sm', () => {
+        S.ownAll = !S.ownAll;
+        drawMix();
+        if (!S.ownAll) jumpBack();
+        ownToggle();
+      });
+      t.type = 'button';
+      t.dataset.ownAll = S.ownAll ? 'open' : 'closed';
+      t.setAttribute('aria-expanded', S.ownAll ? 'true' : 'false');
+      head.appendChild(t);
+    }
+    ownWrap.appendChild(head);
+    let track;
+    if (S.ownAll && many) {
+      const wrap = el('div', 'expwrap');
+      track = el('div', 'ownlist');
+      wrap.append(track, collapseBar('Btown Brief IRL', () => { S.ownAll = false; drawMix(); jumpBack(true); ownToggle(); }));
+      ownWrap.appendChild(wrap);
+    } else track = rail(ownWrap);
     track.dataset.mixers = '1';
     own.forEach((it) => track.appendChild(ownTile(it)));
   } else {
@@ -1162,6 +1190,29 @@ function drawMix() {
   else s.appendChild(el('p', 'note pad', 'Nothing on this day.'));
 }
 
+/* folding his own back into the row: back to the Mixers head when it has
+   scrolled away, or always, from the Collapse bar */
+function jumpBack(always) {
+  const h = slots && slots.mix && slots.mix.querySelector('.sec');
+  if (h && (always || h.getBoundingClientRect().top < 0)) app.jumpTo(h);
+}
+/* the redraw took the pressed button away: keep the keyboard on its toggle */
+function ownToggle() {
+  const t = slots && slots.mix && slots.mix.querySelector('[data-own-all]');
+  if (t) t.focus({ preventScroll: true });
+}
+/* the bar under an opened list: it rides the bottom of the screen while the
+   list is in view, so a long list folds back up from anywhere in it */
+function collapseBar(what, onCollapse) {
+  const bar = el('div', 'collapsebar');
+  const b = button(ICON.up + ' Collapse', '', onCollapse);
+  b.type = 'button';
+  b.dataset.collapse = '1';
+  b.setAttribute('aria-label', 'Collapse ' + what);
+  bar.appendChild(b);
+  return bar;
+}
+
 /* Become a host: Stephen's ask, two lines and the email */
 function drawHost() {
   const s = slots && slots.host;
@@ -1171,7 +1222,7 @@ function drawHost() {
     '<p>Anyone can host a meetup. Coffee first, then your event goes on the calendar.</p><p>Hosting makes you part of the crew.</p>');
   tc.dataset.host = '1';
   const r = el('div', 'row');
-  const a = el('a', 'btn', ICON.mail + ' Email Stephen');
+  const a = el('a', 'btn', ICON.mail + ' Email Steve');
   a.href = HOST_MAIL;
   r.appendChild(a);
   tc.appendChild(r);
@@ -1533,7 +1584,7 @@ function planForm(body, close, prof, pre) {
   }
   f.appendChild(row('More', field('textarea', 'body', { max: L.bodyMax, placeholder: 'How to find you, what to bring, the pace' }), null, false));
   const mu = el('label', 'consent', '<input type="checkbox" name="meetup"> ' +
-    esc('Stephen may put this on Meetup, with me as host.'));
+    esc('Steve may put this on Meetup, with me as host.'));
   f.appendChild(mu);
   f.appendChild(el('p', 'bf-note', esc('Up until it happens, two weeks at most. Meet somewhere public.')));
   const msg = el('p', 'bf-msg');

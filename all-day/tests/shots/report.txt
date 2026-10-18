@@ -3,7 +3,7 @@
   ok   source rules › every border-radius is a --r token
   ok   source rules › every font-family is --serif or --sans
   ok   source rules › uppercase lives only in the one caps rule
-  ok   source rules › nothing is position: sticky
+  ok   source rules › nothing is position: sticky but the Collapse bar under an opened list
   ok   source rules › js/app.js: no monospace
   ok   source rules › js/auth.js: no monospace
   ok   source rules › js/clubs-week.js: no monospace
@@ -1200,7 +1200,7 @@
   ok   deep links, live Wire › a shared national card far down today lands and flashes for a Local reader
   ok   deep links, live Wire › and the switch moved to Everything to show it
   ok   deep links, live Wire › a card from yesterday’s edition lands and flashes
-  ok   deep links, live Wire › #wire/2026-10-16 opens that edition
+  ok   deep links, live Wire › #wire/2026-10-17 opens that edition
   ok   deep links, live Wire › an earlier day reads “What mattered …”
   ok   deep links, live Wire › an old URL link opens Unfiltered and flashes the headline
   ok   deep links, live Wire › live: an unknown key says the card has moved on
@@ -1209,7 +1209,7 @@
   ok   demo mode keeps its hands off the real app › demo Settings does not show the real account
   ok   demo mode keeps its hands off the real app › demo leaves the real session, settings and visit untouched
   ok   demo mode keeps its hands off the real app › demo makes no Supabase call
-  ok   the Wire, live › the dateline is today in America/New_York on the real clock (Saturday, October 17)
+  ok   the Wire, live › the dateline is today in America/New_York on the real clock (Sunday, October 18)
   ok   the Wire, live › the dateline counts today’s local stories and says when it updated
   ok   the Wire, live › X and Facebook chips are hidden while paused; no Video chip
   ok   the Wire, live › chip counts are counts.local
@@ -1234,7 +1234,7 @@
   ok   the Wire, live › today flows into yesterday, then the day before, each with its own head
   ok   the Wire, live › when the editions run out, the end says so
   ok   the Wire, live › scrolled into yesterday, the dateline names it
-  ok   the Wire, live › scrolling into yesterday draws “What mattered Friday” under its head
+  ok   the Wire, live › scrolling into yesterday draws “What mattered Saturday” under its head
   ok   the Wire, live › yesterday’s Brief is pinned above its block, as the arrow view pins it
   ok   the Wire, live › with its picks: the card and four rows, in rank order
   ok   the Wire, live › and its own button for the rest and the earlier picks
@@ -1246,8 +1246,8 @@
   ok   the Wire, live › Settings lists mutes
   ok   the Wire, live › no console errors
   ok   the Wire, walking back › one day back: yesterday, final
-  ok   the Wire, walking back › yesterday reads “What mattered Friday”
-  ok   the Wire, walking back › two days back: Thursday, October 15
+  ok   the Wire, walking back › yesterday reads “What mattered Saturday”
+  ok   the Wire, walking back › two days back: Friday, October 16
   ok   the Wire, walking back › and that is as far as the archive goes
   ok   the Wire, walking back › the edition is in the address, so it can be shared
   ok   the Wire, walking back › › › comes back to today
@@ -1257,7 +1257,7 @@
   ok   the Wire, What matters flips through earlier days › today: ‹ is live, › is disabled
   ok   the Wire, What matters flips through earlier days › the arrows are 44px targets
   ok   the Wire, What matters flips through earlier days › the river is drawn under the block (55)
-  ok   the Wire, What matters flips through earlier days › ‹ reads “What mattered Friday”, its date under it and a Today link
+  ok   the Wire, What matters flips through earlier days › ‹ reads “What mattered Saturday”, its date under it and a Today link
   ok   the Wire, What matters flips through earlier days › ‹ flips the block in place to yesterday’s picks
   ok   the Wire, What matters flips through earlier days › yesterday: both arrows live
   ok   the Wire, What matters flips through earlier days › with a short fade when motion is allowed
@@ -1295,7 +1295,7 @@
   ok   the Wire, Unfiltered › Unfiltered opens inside the tab
   ok   the Wire, Unfiltered › the raw wire draws sixty headlines to start
   ok   the Wire, Unfiltered › an outlet chip narrows the wire to that outlet
-  ok   the Wire, Unfiltered › search keeps only matching headlines (“HomeView”)
+  ok   the Wire, Unfiltered › search keeps only matching headlines (“button”)
   ok   the Wire, Unfiltered › and the search field keeps the caret
   ok   the Wire, Unfiltered › By outlet draws a section per outlet
   ok   the Wire, Unfiltered › hold to peek works on the raw wire
@@ -1335,6 +1335,19 @@
   ok   the Wire, the Instagram chip reads the local accounts as a list (live) › no What matters here, and the address says #wire/instagram
   ok   the Wire, the Instagram chip reads the local accounts as a list (live) › its end opens the same posts as photos
   ok   the Wire, the Instagram chip reads the local accounts as a list (live) › no console errors
+  ok   the Wire, the topic row (live) › the topics sit on their own row under the source chips
+  ok   the Wire, the topic row (live) › All topics first and on, then only the topics this day has, in a fixed order
+  ok   the Wire, the topic row (live) › each topic counts what this reader sees (Local)
+  ok   the Wire, the topic row (live) › one row that scrolls sideways; the page does not
+  ok   the Wire, the topic row (live) › Politics narrows the river to city and state politics
+  ok   the Wire, the topic row (live) › with a topic on, the river stands alone: no What matters
+  ok   the Wire, the topic row (live) › and no Brief pinned above it
+  ok   the Wire, the topic row (live) › the source chips are untouched
+  ok   the Wire, the topic row (live) › on the Instagram chip there is no topic row
+  ok   the Wire, the topic row (live) › and back on All, the topic is All topics again
+  ok   the Wire, the topic row (live) › under Reddit, only Reddit’s topics; Politics stays picked only if Reddit has some
+  ok   the Wire, the topic row (live) › All topics brings What matters back
+  ok   the Wire, the topic row (live) › no console errors
   ok   the Wire, Square (demo) › Square opens in the tab, in the address, and is kept
   ok   the Wire, Square (demo) › it opens with the five ways to post
   ok   the Wire, Square (demo) › neighbors’ posts as full cards, Facebook and Reddit as compact ones
@@ -1353,8 +1366,10 @@
   ok   the Wire, Square (demo) › and a kept Square opens on News
   ok   the Wire, Square (demo) › no console errors
   ok   the Wire, Square (demo) › live with the Square’s SQL: #wire/square opens it
-  ok   the Wire, Square (demo) › a long feed draws its first screenful only (30 of 131)
+  ok   the Wire, Square (demo) › a long feed draws its first screenful only (30 of 130)
   ok   the Wire, Square (demo) › a Facebook post in both today’s paper and the Unfiltered inbox shows once
+  ok   the Wire, Square (demo) › Reddit in the Square: r/burlington, r/vermont and r/GoodBurlington, never r/news, r/technology, r/Jokes or r/worldnews
+  ok   the Wire, Square (demo) › today’s paper’s threads too: the r/burlington ones in, the r/news ones out
   ok   the Wire, Square (demo) › no console errors
   ok   Photo mode: the News · Photos · Square switch, in words, kept on the phone (demo) › the switch says News, Photos, Square in words, a third of the row each
   ok   Photo mode: the News · Photos · Square switch, in words, kept on the phone (demo) › it opens on News, said by aria-pressed
@@ -1373,25 +1388,22 @@
   ok   Photo mode: the News · Photos · Square switch, in words, kept on the phone (demo) › focus stays on the switch
   ok   Photo mode: the News · Photos · Square switch, in words, kept on the phone (demo) › a reload opens on News
   ok   Photo mode: the News · Photos · Square switch, in words, kept on the phone (demo) › no console errors
-  ok   Photo mode: the feed, its sources, Local and the photo of the week (demo) › every picture is drawn, down to the end
-  ok   Photo mode: the feed, its sources, Local and the photo of the week (demo) › every card carries a picture
-  ok   Photo mode: the feed, its sources, Local and the photo of the week (demo) › no key twice on the page
-  ok   Photo mode: the feed, its sources, Local and the photo of the week (demo) › the photo of the week leads: of two at 23 votes this week, the one posted first
-  ok   Photo mode: the feed, its sources, Local and the photo of the week (demo) › and only it says so
-  ok   Photo mode: the feed, its sources, Local and the photo of the week (demo) › the rest run newest first
-  ok   Photo mode: the feed, its sources, Local and the photo of the week (demo) › from neighbors’ posts (16), the gallery (3), Instagram (10), the Square’s photos (2), a Facebook post and a Reddit post with a picture, the paper and the local outlets
-  ok   Photo mode: the feed, its sources, Local and the photo of the week (demo) › a video is a player, not a picture
-  ok   Photo mode: the feed, its sources, Local and the photo of the week (demo) › a Reddit or Facebook post with no picture stays out
-  ok   Photo mode: the feed, its sources, Local and the photo of the week (demo) › Local: no national story, every picture local
-  ok   Photo mode: the feed, its sources, Local and the photo of the week (demo) › an Instagram post’s caption is its first line
-  ok   Photo mode: the feed, its sources, Local and the photo of the week (demo) › no caption: the account
-  ok   Photo mode: the feed, its sources, Local and the photo of the week (demo) › the feed ends, with Post a photo
-  ok   Photo mode: the feed, its sources, Local and the photo of the week (demo) › Everything adds the three national stories with a picture
-  ok   Photo mode: the feed, its sources, Local and the photo of the week (demo) › still no key twice
-  ok   Photo mode: the feed, its sources, Local and the photo of the week (demo) › the band counts what is shown
-  ok   Photo mode: the feed, its sources, Local and the photo of the week (demo) › no console errors
-  ok   Photo mode: the feed, its sources, Local and the photo of the week (demo) › demo mode never calls Supabase
-  ok   Photo mode: the kinds of picture, and Pets of Burlington (demo) › the chips: All, Instagram, Vibe checks, Event posters, Food, Pets, Posted here
+  ok   Photo mode: the feed, its sources, never the news, and the photo of the week (demo) › every picture is drawn, down to the end
+  ok   Photo mode: the feed, its sources, never the news, and the photo of the week (demo) › every card carries a picture
+  ok   Photo mode: the feed, its sources, never the news, and the photo of the week (demo) › no key twice on the page
+  ok   Photo mode: the feed, its sources, never the news, and the photo of the week (demo) › the photo of the week leads: of two at 23 votes this week, the one posted first
+  ok   Photo mode: the feed, its sources, never the news, and the photo of the week (demo) › and only it says so
+  ok   Photo mode: the feed, its sources, never the news, and the photo of the week (demo) › the rest run newest first
+  ok   Photo mode: the feed, its sources, never the news, and the photo of the week (demo) › from neighbors’ posts (16), the gallery (3), Instagram (10) and the Square’s photos (2), nothing else
+  ok   Photo mode: the feed, its sources, never the news, and the photo of the week (demo) › Photos is not news: no story, Facebook or Reddit picture
+  ok   Photo mode: the feed, its sources, never the news, and the photo of the week (demo) › an Instagram post’s caption is its first line
+  ok   Photo mode: the feed, its sources, never the news, and the photo of the week (demo) › no caption: the account
+  ok   Photo mode: the feed, its sources, never the news, and the photo of the week (demo) › the feed ends, with Post a photo
+  ok   Photo mode: the feed, its sources, never the news, and the photo of the week (demo) › no Local / Everything switch on Photos
+  ok   Photo mode: the feed, its sources, never the news, and the photo of the week (demo) › the band counts what is shown
+  ok   Photo mode: the feed, its sources, never the news, and the photo of the week (demo) › no console errors
+  ok   Photo mode: the feed, its sources, never the news, and the photo of the week (demo) › demo mode never calls Supabase
+  ok   Photo mode: the kinds of picture, and Pets of Burlington (demo) › the chips in order, a kind with fewer than four pictures left out
   ok   Photo mode: the kinds of picture, and Pets of Burlington (demo) › each counts what this reader sees
   ok   Photo mode: the kinds of picture, and Pets of Burlington (demo) › an organiser’s post (the DO half) is an event poster
   ok   Photo mode: the kinds of picture, and Pets of Burlington (demo) › a bar that organises: vibe check, food and poster
@@ -1399,19 +1411,11 @@
   ok   Photo mode: the kinds of picture, and Pets of Burlington (demo) › a gallery photo takes its queue category (food), else it is only posted here
   ok   Photo mode: the kinds of picture, and Pets of Burlington (demo) › the instagram chip shows only its 10
   ok   Photo mode: the kinds of picture, and Pets of Burlington (demo) › instagram: no pets row outside All
-  ok   Photo mode: the kinds of picture, and Pets of Burlington (demo) › the vibe chip shows only its 3
-  ok   Photo mode: the kinds of picture, and Pets of Burlington (demo) › vibe: no pets row outside All
-  ok   Photo mode: the kinds of picture, and Pets of Burlington (demo) › the posters chip shows only its 2
-  ok   Photo mode: the kinds of picture, and Pets of Burlington (demo) › posters: no pets row outside All
-  ok   Photo mode: the kinds of picture, and Pets of Burlington (demo) › the food chip shows only its 3
-  ok   Photo mode: the kinds of picture, and Pets of Burlington (demo) › food: no pets row outside All
-  ok   Photo mode: the kinds of picture, and Pets of Burlington (demo) › the pets chip shows only its 3
-  ok   Photo mode: the kinds of picture, and Pets of Burlington (demo) › pets: no pets row outside All
   ok   Photo mode: the kinds of picture, and Pets of Burlington (demo) › the posted chip shows only its 21
   ok   Photo mode: the kinds of picture, and Pets of Burlington (demo) › posted: no pets row outside All
   ok   Photo mode: the kinds of picture, and Pets of Burlington (demo) › All opens with Pets of Burlington, between the header and the feed
+  ok   Photo mode: the kinds of picture, and Pets of Burlington (demo) › too few pets for a chip: no “See all”
   ok   Photo mode: the kinds of picture, and Pets of Burlington (demo) › a pet opens in its sheet
-  ok   Photo mode: the kinds of picture, and Pets of Burlington (demo) › “See all” is the Pets chip
   ok   Photo mode: the kinds of picture, and Pets of Burlington (demo) › no console errors
   ok   Photo mode: an Instagram account’s kind comes from the roster (live) › a cat café is pets and a vibe check (photo_categories), and food (the directory)
   ok   Photo mode: an Instagram account’s kind comes from the roster (live) › a brewery that organises: food, poster and vibe check
@@ -1423,6 +1427,16 @@
   ok   Photo mode: an Instagram account’s kind comes from the roster (live) › venue posts enter Vibe checks
   ok   Photo mode: an Instagram account’s kind comes from the roster (live) › event accounts enter Event posters
   ok   Photo mode: an Instagram account’s kind comes from the roster (live) › no console errors
+  ok   Photo mode: each Instagram post’s own kind picks its chip (live) › the post’s kind wins over its account’s (a cat café’s food post is food, not pets or a vibe check)
+  ok   Photo mode: each Instagram post’s own kind picks its chip (live) › scenic and other are just Instagram
+  ok   Photo mode: each Instagram post’s own kind picks its chip (live) › each kind counted
+  ok   Photo mode: each Instagram post’s own kind picks its chip (live) › three posters is too few for a chip; nobody posted here, so no Posted here
+  ok   Photo mode: each Instagram post’s own kind picks its chip (live) › the instagram chip shows only its 17
+  ok   Photo mode: each Instagram post’s own kind picks its chip (live) › the vibe chip shows only its 4
+  ok   Photo mode: each Instagram post’s own kind picks its chip (live) › the food chip shows only its 4
+  ok   Photo mode: each Instagram post’s own kind picks its chip (live) › the pets chip shows only its 4
+  ok   Photo mode: each Instagram post’s own kind picks its chip (live) › enough pets for a chip: “See all” is the Pets chip
+  ok   Photo mode: each Instagram post’s own kind picks its chip (live) › no console errors
   ok   Photo mode: a picture opens in its sheet, and a vote counts (demo) › a neighbor’s picture shows its board votes
   ok   Photo mode: a picture opens in its sheet, and a vote counts (demo) › the sheet: the big picture, its maker and their line
   ok   Photo mode: a picture opens in its sheet, and a vote counts (demo) › vote, share, report, and the shirt the maker said yes to
@@ -1512,26 +1526,21 @@
   ok   Photo mode at 1280 dark reduced-motion (demo) › the dark paper
   ok   Photo mode at 1280 dark reduced-motion (demo) › reduced motion: the switch does not animate
   ok   Photo mode at 1280 dark reduced-motion (demo) › no console errors
-  ok   Photo mode on live payloads: each source, once, while its picture works (live) › live, #wire/photos opens the photo feed
-  ok   Photo mode on live payloads: each source, once, while its picture works (live) › the photo of the week leads on its votes, ahead of a newer post
-  ok   Photo mode on live payloads: each source, once, while its picture works (live) › a notice has no picture and stays out
-  ok   Photo mode on live payloads: each source, once, while its picture works (live) › the gallery’s photos, but not Food’s dishes
-  ok   Photo mode on live payloads: each source, once, while its picture works (live) › Instagram: a working picture, never a lapsed or a non-web one
-  ok   Photo mode on live payloads: each source, once, while its picture works (live) › the Unfiltered wire: a local picture from this week, not a national one, a podcast’s artwork or last month’s
-  ok   Photo mode on live payloads: each source, once, while its picture works (live) › one picture on two stories is a show’s logo, not a photo: left out
-  ok   Photo mode on live payloads: each source, once, while its picture works (live) › a Reddit post with a picture, not one without
-  ok   Photo mode on live payloads: each source, once, while its picture works (live) › a Facebook group post with a picture, not one without
-  ok   Photo mode on live payloads: each source, once, while its picture works (live) › one story from two places shows once, by its link
-  ok   Photo mode on live payloads: each source, once, while its picture works (live) › Local: the paper’s national pictures wait for Everything
-  ok   Photo mode on live payloads: each source, once, while its picture works (live) › the art board is paged to its end
-  ok   Photo mode on live payloads: each source, once, while its picture works (live) › every source gives its pictures
-  ok   Photo mode on live payloads: each source, once, while its picture works (live) › captions are escaped
-  ok   Photo mode on live payloads: each source, once, while its picture works (live) › the picture’s alt text is its caption, lazy; one line under it
-  ok   Photo mode on live payloads: each source, once, while its picture works (live) › no key twice on the page
-  ok   Photo mode on live payloads: each source, once, while its picture works (live) › at the bottom of the feed, the first card has let go of its picture
-  ok   Photo mode on live payloads: each source, once, while its picture works (live) › and takes it back on the way up
-  ok   Photo mode on live payloads: each source, once, while its picture works (live) › a picture that will not load takes its card with it
-  ok   Photo mode on live payloads: each source, once, while its picture works (live) › no console errors
+  ok   Photo mode on live payloads: each source, once, while its picture works, and never the news (live) › live, #wire/photos opens the photo feed
+  ok   Photo mode on live payloads: each source, once, while its picture works, and never the news (live) › the photo of the week leads on its votes, ahead of a newer post
+  ok   Photo mode on live payloads: each source, once, while its picture works, and never the news (live) › a notice has no picture and stays out
+  ok   Photo mode on live payloads: each source, once, while its picture works, and never the news (live) › the gallery’s photos, but not Food’s dishes
+  ok   Photo mode on live payloads: each source, once, while its picture works, and never the news (live) › Instagram: a working picture, never a lapsed or a non-web one
+  ok   Photo mode on live payloads: each source, once, while its picture works, and never the news (live) › no story’s lead image, no outlet’s, no Reddit or Facebook picture: Photos is not news
+  ok   Photo mode on live payloads: each source, once, while its picture works, and never the news (live) › the art board is paged to its end
+  ok   Photo mode on live payloads: each source, once, while its picture works, and never the news (live) › every source gives its pictures
+  ok   Photo mode on live payloads: each source, once, while its picture works, and never the news (live) › captions are escaped
+  ok   Photo mode on live payloads: each source, once, while its picture works, and never the news (live) › the picture’s alt text is its caption, lazy; one line under it
+  ok   Photo mode on live payloads: each source, once, while its picture works, and never the news (live) › no key twice on the page
+  ok   Photo mode on live payloads: each source, once, while its picture works, and never the news (live) › at the bottom of the feed, the first card has let go of its picture
+  ok   Photo mode on live payloads: each source, once, while its picture works, and never the news (live) › and takes it back on the way up
+  ok   Photo mode on live payloads: each source, once, while its picture works, and never the news (live) › a picture that will not load takes its card with it
+  ok   Photo mode on live payloads: each source, once, while its picture works, and never the news (live) › no console errors
   ok   What Now, Spin (demo) › the chip row is the mode switch, Spin first
   ok   What Now, Spin (demo) › the weather line: the lake and sunset (feels like is on the card)
   ok   What Now, Spin (demo) › the weather line is one line at 390
@@ -1790,20 +1799,21 @@
   ok   Food, the directory over the wire (live) › no console errors
   ok   People: the rules in the module and the SQL agree › PEOPLE_RULES in people.js is nn_people_rules() in nn-people.sql
   ok   People: the rules in the module and the SQL agree › the tab never imports boards-fake.js; its mirror is its own
-  ok   People, live: Stephen’s meetups, the clubs, an empty board › every one of Stephen’s own events in the next two weeks shows, first, as a short row (4)
+  ok   People, live: Stephen’s meetups, the clubs, an empty board › every one of Stephen’s own events in the next two weeks shows, first, as a short row (5)
   ok   People, live: Stephen’s meetups, the clubs, an empty board › none is missed
   ok   People, live: Stephen’s meetups, the clubs, an empty board › and nothing that isn’t his
   ok   People, live: Stephen’s meetups, the clubs, an empty board › one thirteen days out, only on his Meetup calendar, shows (place: on Meetup, never guessed)
   ok   People, live: Stephen’s meetups, the clubs, an empty board › an event in both sources shows once
   ok   People, live: Stephen’s meetups, the clubs, an empty board › and no Meetup interest count
   ok   People, live: Stephen’s meetups, the clubs, an empty board › the mixers: seven days from today
-  ok   People, live: Stephen’s meetups, the clubs, an empty board › with the calendar’s mixers counted on each (30 this week)
+  ok   People, live: Stephen’s meetups, the clubs, an empty board › with the calendar’s mixers counted on each (36 this week)
   ok   People, live: Stephen’s meetups, the clubs, an empty board › a day’s rows: each links to its event page, none of them his
   ok   People, live: Stephen’s meetups, the clubs, an empty board › and no kids’ or teens’ event is a mixer
   ok   People, live: Stephen’s meetups, the clubs, an empty board › today’s are the calendar’s, past ones gone
   ok   People, live: Stephen’s meetups, the clubs, an empty board › a clear Full events calendar link to the guide’s events page
   ok   People, live: Stephen’s meetups, the clubs, an empty board › the host card: a title, two short lines and a prefilled email to Stephen
   ok   People, live: Stephen’s meetups, the clubs, an empty board › right under the mixers
+  ok   People, live: Stephen’s meetups, the clubs, an empty board › it says Steve, not Stephen (Stephen, 2026-10-18)
   ok   People, live: Stephen’s meetups, the clubs, an empty board › six clubs from data/groups.json
   ok   People, live: Stephen’s meetups, the clubs, an empty board › with nothing picked, the featured club leads
   ok   People, live: Stephen’s meetups, the clubs, an empty board › and nothing picked, no For you strip
@@ -1910,6 +1920,10 @@
   ok   People: the group chat card shows only for a real t.me link, at the top › a title, one line and a button
   ok   People: the group chat card shows only for a real t.me link, at the top › as shipped: a real group-chat link, not the watch chat, and the card shows
   ok   People, demo: mixers from everywhere, and the readers’ gatherings › Stephen’s own lead the section, as a short row
+  ok   People, demo: mixers from everywhere, and the readers’ gatherings › his row has a Show all button
+  ok   People, demo: mixers from everywhere, and the readers’ gatherings › Show all stacks every one, full width, in a list that scrolls down, with a Collapse bar
+  ok   People, demo: mixers from everywhere, and the readers’ gatherings › and the button says Show less
+  ok   People, demo: mixers from everywhere, and the readers’ gatherings › Collapse folds it back into the row, lands on the Mixers head, and the keyboard is on Show all
   ok   People, demo: mixers from everywhere, and the readers’ gatherings › seven days, today first
   ok   People, demo: mixers from everywhere, and the readers’ gatherings › today: the singles mixer, named for its kind
   ok   People, demo: mixers from everywhere, and the readers’ gatherings › and his own are not listed twice
@@ -2168,10 +2182,10 @@
   ok   On Air, speed and the newsletter › no console errors
   ok   On Air, the audio card › no clip: no audio card, no section, no chip
   ok   On Air, the audio card › none: no console errors
-  ok   On Air, the audio card › no clip today: the latest one, with its date (Friday, October 16)
+  ok   On Air, the audio card › no clip today: the latest one, with its date (Saturday, October 17)
   ok   On Air, the audio card › the card says when it is read; the header carries no subtitle
   ok   On Air, the audio card › yesterday: no console errors
-  ok   On Air, the Brief plays › today: the play button loads 2026-10-17.mp3 from the wire-audio branch
+  ok   On Air, the Brief plays › today: the play button loads 2026-10-18.mp3 from the wire-audio branch
   ok   On Air, the Brief plays › today: the play promise resolves
   ok   On Air, the Brief plays › today: and the clip is actually playing: its clock moves past half a second
   ok   On Air, the Brief plays › today: served as audio/mpeg
@@ -2179,7 +2193,7 @@
   ok   On Air, the Brief plays › today: the button turns to pause and the player is up
   ok   On Air, the Brief plays › today: a second tap pauses
   ok   On Air, the Brief plays › today: no console errors
-  ok   On Air, the Brief plays › yesterday: the play button loads 2026-10-16.mp3 from the wire-audio branch
+  ok   On Air, the Brief plays › yesterday: the play button loads 2026-10-17.mp3 from the wire-audio branch
   ok   On Air, the Brief plays › yesterday: the play promise resolves
   ok   On Air, the Brief plays › yesterday: and the clip is actually playing: its clock moves past half a second
   ok   On Air, the Brief plays › yesterday: served as audio/mpeg
@@ -2490,6 +2504,8 @@
   ok   Watch, the time machine (demo) › and the button says Show less
   ok   Watch, the time machine (demo) › it stays a grid from month to month
   ok   Watch, the time machine (demo) › Show less folds it back into the rail
+  ok   Watch, the time machine (demo) › mid-grid, a Collapse bar sits just above the tab bar
+  ok   Watch, the time machine (demo) › Collapse folds it into the rail and lands on Back then’s head
   ok   Watch, the time machine (demo) › that month’s big films, theaters then streaming
   ok   Watch, the time machine (demo) › ‹ is a month earlier
   ok   Watch, the time machine (demo) › › a month later
@@ -2505,13 +2521,13 @@
   ok   Watch, in theaters near you and the screening call (demo, 10 am) › and it links to his Meetup group
   ok   Watch, in theaters near you and the screening call (demo, 10 am) › the line sits right under the ballot’s title
   ok   Watch, in theaters near you and the screening call (demo, 10 am) › the three theaters
-  ok   Watch, in theaters near you and the screening call (demo, 10 am) › Partizanfilm is closed, so the first open with shows today leads
+  ok   Watch, in theaters near you and the screening call (demo, 10 am) › Partizanfilm, the local one, leads even while it is closed (Stephen, 2026-10-18)
+  ok   Watch, in theaters near you and the screening call (demo, 10 am) › Partizanfilm: Back Oct 31
+  ok   Watch, in theaters near you and the screening call (demo, 10 am) › and the first day back’s schedule
+  ok   Watch, in theaters near you and the screening call (demo, 10 am) › its Showtimes button
   ok   Watch, in theaters near you and the screening call (demo, 10 am) › Majestic 10: the rest of today’s times, by first show; a title the tab knows gets a trailer button
   ok   Watch, in theaters near you and the screening call (demo, 10 am) › the town and the day
   ok   Watch, in theaters near you and the screening call (demo, 10 am) › a Showtimes button to its own page
-  ok   Watch, in theaters near you and the screening call (demo, 10 am) › Partizanfilm: closed until Oct 30
-  ok   Watch, in theaters near you and the screening call (demo, 10 am) › and the first day back’s schedule
-  ok   Watch, in theaters near you and the screening call (demo, 10 am) › its Showtimes button
   ok   Watch, in theaters near you and the screening call (demo, 10 am) › a known title opens its film sheet
   ok   Watch, in theaters near you and the screening call (demo, 10 am) › the call scrolls the ballot into view
   ok   Watch, in theaters near you and the screening call (demo, 10 am) › watch: nothing fixed or sticky inside the tab
@@ -2564,7 +2580,7 @@
   ok   sign-in fails soft › a bad address is caught before any request
   ok   sign-in fails soft › no link was requested
   ok   sign-in fails soft › no console errors
-  ok   performance › the live Wire redraws 60 cards in 11ms (budget 100)
+  ok   performance › the live Wire redraws 60 cards in 13ms (budget 100)
   ok   shell fixes: a rail never snaps flush to the edge › 390: .rail carries scroll-padding of one gutter
   ok   shell fixes: a rail never snaps flush to the edge › 390: a card scrolled to the start stops at the gutter
   ok   shell fixes: a rail never snaps flush to the edge › 390: no console errors
@@ -2763,7 +2779,8 @@
   ok   boards: a Vintage photo stays out of the gallery; an Art photo joins it (live) › resized to a jpeg, credited by first name, no email
   ok   boards: a Vintage photo stays out of the gallery; an Art photo joins it (live) › no console errors
   ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › the between-seasons tile: when the next season starts, and a sign-up button
-  ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › signed out, a first visit: one line and the Add habit row, no sign-in wall
+  ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › signed out, a first visit: one line and the Add habit row, then the season tile, no sign-in wall
+  ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › no habits, no numbers: no today line and no heat map
   ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › the chips: Today, Goal, Season, Wall
   ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › the season is signed-in only, and says so only when Sign up is tapped
   ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › signed in: the demo’s three habits, in order
@@ -2774,7 +2791,7 @@
   ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › shared with the pod is off by default
   ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › it lands at the bottom: Daily, no streak yet, not done
   ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › today’s dot is today’s, in Burlington
-  ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › a tap shows at once (0 ms)
+  ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › a tap shows at once (3 ms)
   ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › the streak ticks up to 1 day
   ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › and today’s dot fills
   ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › the server has the tap, for today in Burlington
@@ -2790,6 +2807,25 @@
   ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › habits: no sideways scroll at 390
   ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › habits: at most 2 subnav rows
   ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › no console errors
+  ok   Habits, the numbers: today on top, the heat map, a habit’s month and best streak (demo, 390, Wednesday Oct 14) › today on top, then the habits, then the weeks behind them; the season tile last
+  ok   Habits, the numbers: today on top, the heat map, a habit’s month and best streak (demo, 390, Wednesday Oct 14) › Wednesday: the walk done, reading and the gym still to do; every due day of the last week done
+  ok   Habits, the numbers: today on top, the heat map, a habit’s month and best streak (demo, 390, Wednesday Oct 14) › sixteen weeks, Monday to Sunday, ending this week
+  ok   Habits, the numbers: today on top, the heat map, a habit’s month and best streak (demo, 390, Wednesday Oct 14) › today half done and marked, yesterday all done, tomorrow blank, before the habits began nothing
+  ok   Habits, the numbers: today on top, the heat map, a habit’s month and best streak (demo, 390, Wednesday Oct 14) › a tap moves today’s count and today’s square in the same click (3 ms)
+  ok   Habits, the numbers: today on top, the heat map, a habit’s month and best streak (demo, 390, Wednesday Oct 14) › all three: “All done today”, and the bar full
+  ok   Habits, the numbers: today on top, the heat map, a habit’s month and best streak (demo, 390, Wednesday Oct 14) › the streak, the best streak and the last thirty days
+  ok   Habits, the numbers: today on top, the heat map, a habit’s month and best streak (demo, 390, Wednesday Oct 14) › this month: the 1st is a Thursday, and no month after it
+  ok   Habits, the numbers: today on top, the heat map, a habit’s month and best streak (demo, 390, Wednesday Oct 14) › today done, a missed day a ring, the rest of the month to come
+  ok   Habits, the numbers: today on top, the heat map, a habit’s month and best streak (demo, 390, Wednesday Oct 14) › a month back: the walk began on the 14th, so nothing earlier is missed, and there is no month before it
+  ok   Habits, the numbers: today on top, the heat map, a habit’s month and best streak (demo, 390, Wednesday Oct 14) › the focus stays on the month buttons
+  ok   Habits, the numbers: today on top, the heat map, a habit’s month and best streak (demo, 390, Wednesday Oct 14) › and the edit form under it
+  ok   Habits, the numbers: today on top, the heat map, a habit’s month and best streak (demo, 390, Wednesday Oct 14) › habits: nothing fixed or sticky inside the tab
+  ok   Habits, the numbers: today on top, the heat map, a habit’s month and best streak (demo, 390, Wednesday Oct 14) › habits: uppercase only in the caps roles
+  ok   Habits, the numbers: today on top, the heat map, a habit’s month and best streak (demo, 390, Wednesday Oct 14) › habits: no monospace
+  ok   Habits, the numbers: today on top, the heat map, a habit’s month and best streak (demo, 390, Wednesday Oct 14) › habits: no escaped markup, undefined or NaN on the page
+  ok   Habits, the numbers: today on top, the heat map, a habit’s month and best streak (demo, 390, Wednesday Oct 14) › habits: no sideways scroll at 390
+  ok   Habits, the numbers: today on top, the heat map, a habit’s month and best streak (demo, 390, Wednesday Oct 14) › habits: at most 2 subnav rows
+  ok   Habits, the numbers: today on top, the heat map, a habit’s month and best streak (demo, 390, Wednesday Oct 14) › no console errors
   ok   Habits, swipe to archive with Undo, drag and keys to reorder, edit (demo, 1280, dark) › a swipe left archives it, and the toast says so
   ok   Habits, swipe to archive with Undo, drag and keys to reorder, edit (demo, 1280, dark) › archived on the server, taps kept
   ok   Habits, swipe to archive with Undo, drag and keys to reorder, edit (demo, 1280, dark) › Undo brings it back, with its streak
@@ -2798,7 +2834,7 @@
   ok   Habits, swipe to archive with Undo, drag and keys to reorder, edit (demo, 1280, dark) › and the server keeps the order
   ok   Habits, swipe to archive with Undo, drag and keys to reorder, edit (demo, 1280, dark) › the grip moves a habit with the arrow keys too
   ok   Habits, swipe to archive with Undo, drag and keys to reorder, edit (demo, 1280, dark) › and keeps the focus on it
-  ok   Habits, swipe to archive with Undo, drag and keys to reorder, edit (demo, 1280, dark) › the edit sheet opens on what the habit is: 3 a week
+  ok   Habits, swipe to archive with Undo, drag and keys to reorder, edit (demo, 1280, dark) › the habit’s sheet has the edit form, on what the habit is: 3 a week
   ok   Habits, swipe to archive with Undo, drag and keys to reorder, edit (demo, 1280, dark) › renamed, and now weekdays
   ok   Habits, swipe to archive with Undo, drag and keys to reorder, edit (demo, 1280, dark) › habits: nothing fixed or sticky inside the tab
   ok   Habits, swipe to archive with Undo, drag and keys to reorder, edit (demo, 1280, dark) › habits: uppercase only in the caps roles
@@ -2808,12 +2844,14 @@
   ok   Habits, swipe to archive with Undo, drag and keys to reorder, edit (demo, 1280, dark) › habits: at most 2 subnav rows
   ok   Habits, swipe to archive with Undo, drag and keys to reorder, edit (demo, 1280, dark) › no console errors
   ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › twenty habits, in order
+  ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › twenty habits and a year of taps: a tap still shows at once (11, 10, 10, 10 ms)
+  ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › the heat map is all there, and four taps leave it as it was
   ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › every row keeps its seven dots and its 48px tap
   ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › the list is longer than the screen, and the panel scrolls
   ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › the Add habit row is still there at twenty
   ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › a swipe left on the seventeenth row archives it
   ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › Undo brings it back, at the bottom
-  ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › held near the bottom, the drag scrolls the list (1298px)
+  ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › held near the bottom, the drag scrolls the list (1612px)
   ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › and Habit 4 travels down the list, to row 20
   ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › no row lost or doubled on the way
   ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › and the server keeps the order
@@ -2845,7 +2883,7 @@
   ok   Habits, the day turns at midnight New York, not the phone’s (demo, a reader in Tokyo) › and a tap now is Thursday’s
   ok   Habits, the day turns at midnight New York, not the phone’s (demo, a reader in Tokyo) › no console errors
   ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 390, light) › a first visit: one line and Add habit, nothing seeded, no sign-in wall
-  ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 390, light) › three habits, two tapped, at once (1 ms)
+  ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 390, light) › three habits, two tapped, at once (4 ms)
   ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 390, light) › and nothing personal went to the server
   ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 390, light) › kept on this phone, under one versioned key
   ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 390, light) › one quiet line under the list: Sync across devices
@@ -2871,7 +2909,7 @@
   ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 390, light) › habits: at most 2 subnav rows
   ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 390, light) › no console errors
   ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 1280, dark) › a first visit: one line and Add habit, nothing seeded, no sign-in wall
-  ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 1280, dark) › three habits, two tapped, at once (0 ms)
+  ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 1280, dark) › three habits, two tapped, at once (4 ms)
   ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 1280, dark) › and nothing personal went to the server
   ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 1280, dark) › kept on this phone, under one versioned key
   ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 1280, dark) › one quiet line under the list: Sync across devices
