@@ -107,8 +107,8 @@ def _expand_span(title: str, blurb: str, start: datetime, end: datetime | None,
 # A listing that says the regular thing is OFF ("No Thursday Trivia: Taproom
 # Closed All Day") is a notice, not an event.
 _NOTICE_RE = re.compile(
-    r"^\s*no\s+(?:\w+\s+){0,2}(?:trivia|music|show|bingo|karaoke|event)s?\b"
-    r"|\bclosed (?:all day|for)\b", re.I)
+    r"^\s*no\s+(?:\w+\s+)?(?:trivia|bingo|karaoke)\b"
+    r"|\b(?:taproom|brewery|tasting room) closed\b|\bclosed all day\b", re.I)
 
 
 def _own_place(loc: dict, venue: str, town: str):
@@ -124,10 +124,13 @@ def _own_place(loc: dict, venue: str, town: str):
     where = common.town_from_address(line2)
     if where is None:
         return None
-    if where == town:
-        return venue, town
     title = " ".join((loc.get("addressTitle") or "").split())
-    return (title or venue), where
+    # the brewery's own rooms ("Burlington Beer Co., Lumière Hall") stay the
+    # brewery; anywhere else keeps its own name, even in the same town
+    home = " ".join(common._norm_venue(venue).split()[:2])
+    if not title or home in common._norm_venue(title):
+        return venue, where
+    return title, where
 
 
 def _sqsp_events(base: str, path: str, *, venue: str, town: str,

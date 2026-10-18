@@ -133,12 +133,16 @@ _ABROAD_RE = re.compile(
     r"Mexico|Brazil|New Zealand|South Africa|Korea)\b")
 
 
+# UTC or Etc/GMT says nothing about place; these prefixes do
+_ABROAD_ZONES = ("Australia/", "Asia/", "Europe/", "Africa/", "Pacific/", "Indian/", "Antarctica/")
+
+
 def _elsewhere(item: dict) -> bool:
     """True when the item itself says it happens far from Burlington: a
-    time zone outside the Americas, or a conference whose own text places
+    time zone on another continent, or a conference whose own text places
     it in another country."""
     zone = item.get("timezone") or ""
-    if zone and not zone.startswith(("America/", "US/")):
+    if zone.startswith(_ABROAD_ZONES):
         return True
     text = f"{item.get('title') or ''} {item.get('description_short') or ''}"
     return bool(_CONFERENCE_RE.search(text) and _ABROAD_RE.search(text))

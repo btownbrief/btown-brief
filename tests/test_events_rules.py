@@ -78,6 +78,14 @@ class BreweryPlaces(unittest.TestCase):
         self.assertTrue(breweries._NOTICE_RE.search("No Thursday Trivia: Taproom Closed All Day"))
         self.assertFalse(breweries._NOTICE_RE.search("Thursday Trivia at Burlington Beer Co."))
         self.assertFalse(breweries._NOTICE_RE.search("No Kings Rally Afterparty"))
+        for real in ("No Cover Live Music", "No Cover Show", "No Strings Attached Show",
+                     "Main Street Closed for Festival"):
+            self.assertFalse(breweries._NOTICE_RE.search(real), real)
+
+    def test_offsite_same_town_keeps_its_own_venue(self):
+        loc = {"addressTitle": "Waterfront Park", "addressLine1": "20 Lake St",
+               "addressLine2": "Burlington, VT 05401"}
+        self.assertEqual(breweries._own_place(loc, *self.BBCO), ("Waterfront Park", "Burlington"))
 
 
 class LoveBurlingtonElsewhere(unittest.TestCase):
@@ -88,6 +96,10 @@ class LoveBurlingtonElsewhere(unittest.TestCase):
         item = {"title": "2026 World Radiology and Medical Imaging Conference", "timezone": "",
                 "description_short": "accredited with CPD credits during October 22-23, 2026, in Brisbane, Australia"}
         self.assertTrue(loveburlington._elsewhere(item))
+
+    def test_utc_says_nothing_about_place(self):
+        self.assertFalse(loveburlington._elsewhere({"title": "Open studio", "timezone": "UTC"}))
+        self.assertFalse(loveburlington._elsewhere({"title": "Open studio", "timezone": "Etc/GMT+5"}))
 
     def test_local_event_mentioning_abroad_stays(self):
         item = {"title": "Jazz night", "timezone": "America/New_York",
@@ -116,6 +128,12 @@ class SameShowDedupe(unittest.TestCase):
             self.ev("flynn", "Now Clap! Bob The Drag Queen's", start="2026-10-17T20:00:00-04:00"),
         ])
         self.assertEqual(len(merged), 2)
+
+    def test_same_slot_related_but_distinct_titles_stay_apart(self):
+        for a, b in (("Vermont Film Festival Opening Night: Casablanca", "Vermont Film Festival Opening Night: Vertigo"),
+                     ("Burlington Book Festival Author Alice Walker", "Burlington Book Festival Author Bob Dylan")):
+            merged, _ = update.dedupe([self.ev("uvm", a), self.ev("flynn", b)])
+            self.assertEqual(len(merged), 2, (a, b))
 
     def test_same_slot_unrelated_titles_stay_apart(self):
         merged, _ = update.dedupe([

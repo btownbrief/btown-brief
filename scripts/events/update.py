@@ -153,11 +153,17 @@ def _same_slot(a: dict, b: dict) -> bool:
             and _norm_venue(a["venue"]) == _norm_venue(b["venue"]))
 
 
-def _shared_run(a: str, b: str, n: int = 3) -> bool:
-    """True when two normalized titles share n consecutive words."""
-    ta, tb = a.split(), b.split()
-    runs = {tuple(tb[i:i + n]) for i in range(len(tb) - n + 1)}
-    return any(tuple(ta[i:i + n]) in runs for i in range(len(ta) - n + 1))
+def _same_show(a: str, b: str) -> bool:
+    """Raw titles naming one show: after dropping a trailing "@ <venue>",
+    every word of the shorter title (three or more, a lone possessive "s"
+    aside) appears in the longer one. "Bob The Drag Queen @ Flynn Theater"
+    and "Now Clap! Bob The Drag Queen's" match; "Opening Night: Film A" and
+    "Opening Night: Film B" do not."""
+    def words(t):
+        return {w for w in norm_title(re.split(r"\s@\s", t)[0]).split() if w != "s"}
+    wa, wb = words(a), words(b)
+    small, big = (wa, wb) if len(wa) <= len(wb) else (wb, wa)
+    return len(small) >= 3 and small <= big
 
 
 def dedupe(events: list[dict]) -> tuple[list[dict], list[dict]]:
@@ -194,7 +200,7 @@ def dedupe(events: list[dict]) -> tuple[list[dict], list[dict]]:
                 # Bob The Drag Queen's" from the Flynn) but agree on the venue
                 # and the minute it starts (research audit, 2026-10-17)
                 if not compatible and _same_slot(ev, head) \
-                        and _shared_run(nt, norm_title(head["title"])):
+                        and _same_show(ev["title"], head["title"]):
                     compatible = True
                 if compatible:
                     cluster.append(ev)
