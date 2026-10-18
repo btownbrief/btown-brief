@@ -149,7 +149,7 @@ WANT_W = 480                  # candidate width to prefer for the grid
 # tagged = 88 credits a day, 2,640 in a 30-day month. At the Freelance pack's
 # price ($47 for 25,000 credits, $0.00188 each) the ceiling is about $9.93 a
 # month. Raise it and the tier 3 rotation is the only thing that grows.
-MONTHLY_CREDIT_BUDGET = 5280
+MONTHLY_CREDIT_BUDGET = 5400
 
 RUNS_PER_DAY = 2              # refresh-allday.yml's two crons; for the projection only
 TIER3_PERIOD_DAYS = 7         # tier 3: each account once a week
