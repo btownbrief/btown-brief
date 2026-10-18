@@ -326,16 +326,17 @@
     const byId = id => things.find(t => t.id === id);
 
     // Normalize: string id → minimal experience object
-    const items = (guide.items || []).map(item => {
+    const normalize = list => (list || []).map(item => {
       if (typeof item === 'string') {
         const t = byId(item);
         return t ? { title: t.name, body: t.blurb || '', things: [t.id] } : null;
       }
       return item;
     }).filter(Boolean);
+    const items = normalize(guide.items);
 
     // Extras past the ranking (guide.more): same shape, numbered on from the last rank
-    const more = (guide.more || []).filter(item => item && typeof item === 'object');
+    const more = normalize(guide.more);
 
     const view = document.getElementById('guides-view');
     if (!view) return;
