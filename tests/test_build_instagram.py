@@ -20,6 +20,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(HERE, "..", "scripts"))
 
 import build_instagram as bi  # noqa: E402
+import wire_common as wc  # noqa: E402
 
 FIXTURE = os.path.join(HERE, "fixtures", "instagram", "foambrewers-posts.json")
 
@@ -143,6 +144,18 @@ class Roster(unittest.TestCase):
         for h in ("burlingtonvintagemarket", "shakursvintage", "stay.gold.vintage", "theexchangevt"):
             self.assertEqual(cat.get(h), "shop", h)
         self.assertTrue(shops)
+
+    def test_every_vintage_shop_is_checked_daily(self):
+        shops = [a for a in bi.load_roster() if a["category"] == "shop"]
+        self.assertGreaterEqual(len(shops), 20)
+        self.assertEqual({a["tier"] for a in shops}, {2}, [a["h"] for a in shops if a["tier"] != 2])
+
+    def test_the_busiest_restaurants_are_checked_daily(self):
+        tier = {a["h"]: a["tier"] for a in bi.load_roster()}
+        for h in ("shelburnefarmersmarket", "windjammervt", "haymakerbunsbtv", "sippinfoodie",
+                  "eatvermont", "skinnypancake", "poppy.cafe", "burlsdowntown"):
+            self.assertEqual(tier[h], 2, h)
+        self.assertEqual(sum(1 for a in bi.load_roster() if a["category"] == "food" and a["tier"] == 2), 20)
 
     def test_bad_values_fail_cheap(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -314,7 +327,8 @@ class Build(unittest.TestCase):
                 mock.patch.object(bi, "api_key", return_value="k"), mock.patch.object(bi, "fetch_handle", fetch), \
                 mock.patch.object(bi, "fetch_tagged", lambda k: self.tagged_calls.append(k) or []), \
                 mock.patch.object(bi.time, "time", return_value=now), mock.patch.object(bi.time, "sleep"), \
-                mock.patch.object(bi, "log"), mock.patch.object(sys, "argv", ["x"] + argv):
+                mock.patch.object(bi, "log"), mock.patch.object(sys, "argv", ["x"] + argv), \
+                mock.patch.object(wc, "pick_engine", return_value=None):    # never a real model call
             code = bi.main()
         return code, (json.loads(out.read_text()) if out.exists() else None), \
             (json.loads(led.read_text()) if led.exists() else None)
@@ -339,6 +353,10 @@ class Build(unittest.TestCase):
         reel = next(p for p in got["posts"] if p.get("vu"))
         self.assertEqual((reel["h"], reel["f"], reel["s"], reel["category"]), ("foambrewers", 1, "do", "venue"))
         self.assertEqual(got["categories"]["venue"], 3)
+        # no model key here: every post still has a kind, its category's, marked to retry
+        self.assertTrue(all(p["kind"] in bi.KINDS and p["kd"] == 1 for p in got["posts"]))
+        self.assertEqual(got["kinds"]["vibe"], 3)
+        self.assertEqual(got["kinds_defaulted"], 3)
         self.assertEqual(led["spent"], 13)                    # the failed request is charged too
         self.assertEqual(set(led["last"]), {"foambrewers", "eatvermont", "broken"})
         self.assertEqual(led["runs"][-1]["credits"], 3)
@@ -526,6 +544,185 @@ class Build(unittest.TestCase):
         self.assertEqual(calls, ["a", "b"])
         self.assertEqual(self.tagged_calls, [])     # --only never spends the tagged credit
         self.assertEqual(led["runs"][-1]["credits"], 2)
+
+
+def post(h, ts, cat="venue", u=None, **kw):
+    return dict({"h": h, "ts": ts, "i": f"https://cdn.test/{h}{ts}.jpg?oe=7AD477AC",
+                 "u": u or f"https://www.instagram.com/p/{h}{ts}/", "category": cat}, **kw)
+
+
+class Caps(unittest.TestCase):
+    def test_every_account_gets_a_post_before_any_gets_a_second(self):
+        recs = [post("daily", 100 + i) for i in range(10)] + [post("weekly", 5), post("weekly", 4)]
+        got = bi.fair_cap(recs, 3)
+        self.assertEqual([(r["h"], r["ts"]) for r in got], [("daily", 109), ("weekly", 5), ("daily", 108)])
+        self.assertEqual(len(bi.fair_cap(recs, 50)), 12)
+
+    def test_a_weekly_account_s_carried_posts_survive_a_full_category(self):
+        doc = answer()
+        now = doc["fetched_at"]
+        prev = {"posts": [post("weekly", now - 5 * 86400, cat="shop")]}   # older than both of foam's newest
+        roster = [{"h": "foambrewers", "tier": 1, "category": "shop"},
+                  {"h": "weekly", "tier": 3, "category": "shop"}]
+        b = Build()
+        b.setUp()
+        with tempfile.TemporaryDirectory() as tmp, mock.patch.dict(bi.CAP, {"shop": 2}):
+            (Path(tmp) / "instagram.json").write_text(json.dumps(prev))
+            code, got, _ = b.run_main(tmp, roster, ["--only", "foambrewers"], lambda h, k: doc["items"], now,
+                                      {"month": bi.month_key(bi.local_day(now)), "spent": 0, "last": {}})
+        self.assertEqual(code, 0)
+        self.assertEqual(sorted(p["h"] for p in got["posts"]), ["foambrewers", "weekly"])
+
+
+class Kinds(unittest.TestCase):
+    """The per-post kind: the model is never called for real here."""
+
+    NOW = at(2026, 10, 18)
+    ENGINE = {"provider": "anthropic", "model": "claude-haiku-5-5"}
+
+    def run_kinds(self, posts, answers, prev=None, ledger=None, engine=ENGINE, thumb=("image/jpeg", "AAAA")):
+        calls = []
+
+        def ask(engine, system, user, schema, max_tokens, **kw):
+            calls.append(user)
+            ans = answers.pop(0)
+            if isinstance(ans, Exception):
+                raise ans
+            return ans, {"in": 1000, "out": 100, "calls": 1}
+
+        with mock.patch.object(wc, "pick_engine", return_value=engine), \
+                mock.patch.object(wc, "ask_json", ask), mock.patch.object(bi, "log"), \
+                mock.patch.object(bi, "fetch_thumb", return_value=thumb):
+            rep = bi.assign_kinds(posts, prev or {}, {"cat": {"pets", "vibe"}}, ledger, self.NOW)
+        return rep, calls
+
+    def test_no_key_gives_the_category_s_kind_and_marks_it(self):
+        posts = [post("a", 1, "events"), post("b", 2, "shop"), post("c", 3, "food")]
+        with mock.patch.object(wc, "pick_engine", return_value=None), mock.patch.object(bi, "log"):
+            bi.assign_kinds(posts, {}, {}, None, self.NOW)
+        self.assertEqual([(p["kind"], p["kd"]) for p in posts], [("poster", 1), ("other", 1), ("food", 1)])
+
+    def test_a_judged_post_is_never_asked_again(self):
+        posts = [post("a", 1, kind="food"), post("b", 2, u="https://www.instagram.com/p/X/"),
+                 post("c", 3, u="https://www.instagram.com/c/")]       # no shortcode: known by handle and time
+        prev = {bi.post_key(posts[1]): "poster", "t:c:3": "scenic"}
+        rep, calls = self.run_kinds(posts, [], prev=prev)
+        self.assertEqual(calls, [])
+        self.assertEqual([p["kind"] for p in posts], ["food", "poster", "scenic"])
+        self.assertTrue(all("kd" not in p for p in posts))
+
+    def test_the_caption_decides_and_the_picture_settles_the_unsure(self):
+        posts = [post("cat", 3, "venue", c="our new oat latte"), post("b", 2, "food", c="trivia tuesday 7pm"),
+                 post("c", 1, "events", c="what a night")]
+        caption = {"kinds": [{"i": 0, "kind": "food", "sure": True}, {"i": 1, "kind": "poster", "sure": True},
+                             {"i": 2, "kind": "poster", "sure": False}, {"i": 9, "kind": "food", "sure": True},
+                             {"i": 0, "kind": "pets", "sure": True}]}       # out of range and a repeat: dropped
+        look = {"kinds": [{"i": 0, "kind": "vibe"}]}
+        ledger = {"month": "2026-10"}
+        rep, calls = self.run_kinds(posts, [caption, look], ledger=ledger)
+        self.assertEqual([p["kind"] for p in posts], ["food", "poster", "vibe"])
+        self.assertTrue(all("kd" not in p for p in posts))
+        self.assertIn("@cat · venue (also pets, vibe) · photo · our new oat latte", calls[0])
+        self.assertEqual([b["type"] for b in calls[1]], ["text", "image", "text"])    # only the unsure one is shown
+        self.assertEqual((rep["asked"], rep["looked"], rep["decided"]), (3, 1, 3))
+        self.assertEqual(ledger["ai"]["month"], "2026-10")
+        self.assertAlmostEqual(ledger["ai"]["usd"], 2 * wc.cost_usd("claude-haiku-5-5", {"in": 1000, "out": 100}))
+
+    def test_an_unsure_post_nobody_could_look_at_is_asked_again_next_run(self):
+        posts = [post("c", 1, "events", c="what a night")]
+        caption = {"kinds": [{"i": 0, "kind": "vibe", "sure": False}]}
+        rep, calls = self.run_kinds(posts, [caption], thumb=None)     # the thumbnail would not download
+        self.assertEqual((posts[0]["kind"], posts[0]["kd"]), ("vibe", 1))
+        self.assertEqual(len(calls), 1)
+
+    def test_a_post_shipped_twice_is_asked_about_once(self):
+        roster, tagged = post("a", 1, "venue"), post("a", 1, "other", s="tagged")
+        rep, calls = self.run_kinds([roster, tagged], [{"kinds": [{"i": 0, "kind": "food", "sure": True}]}])
+        self.assertEqual(calls[0].count("@a"), 1)
+        self.assertEqual([(p["kind"], "kd" in p) for p in (roster, tagged)], [("food", False), ("food", False)])
+
+    def test_thumbnail_downloads_are_capped_even_when_they_all_fail(self):
+        posts = [post(f"p{i}", i, "events") for i in range(bi.IMAGE_LOOK_MAX + 40)]
+        caption = {"kinds": [{"i": i, "kind": "vibe", "sure": False} for i in range(len(posts))]}
+        tries = []
+        with mock.patch.object(wc, "pick_engine", return_value=self.ENGINE), mock.patch.object(bi, "log"), \
+                mock.patch.object(wc, "ask_json", lambda *a, **k: (caption, {"in": 1, "calls": 1})), \
+                mock.patch.object(bi, "fetch_thumb", lambda u: tries.append(u)):
+            bi.assign_kinds(posts, {}, {}, None, self.NOW)
+        self.assertEqual(len(tries), bi.IMAGE_LOOK_MAX)
+        self.assertTrue(all(p["kd"] == 1 for p in posts))
+
+    def test_an_answer_that_is_not_an_object_changes_nothing(self):
+        posts = [post("a", 1, "pets")]
+        rep, calls = self.run_kinds(posts, [[{"i": 0, "kind": "food", "sure": True}]])
+        self.assertEqual((posts[0]["kind"], posts[0]["kd"]), ("pets", 1))
+
+    def test_the_cap_is_checked_before_every_call(self):
+        posts = [post(f"p{i}", i, "pets") for i in range(bi.KIND_BATCH + 1)]       # two caption batches
+        ledger = {"ai": {"month": "2026-10", "usd": bi.AI_MONTH_CAP_USD - 0.0001, "runs": []}}
+        rep, calls = self.run_kinds(posts, [{"kinds": []}, {"kinds": []}], ledger=ledger)
+        self.assertEqual(len(calls), 1)                         # the first call's cost reaches the cap
+
+    def test_a_classifier_crash_still_writes_the_payload(self):
+        doc = answer()
+        now = doc["fetched_at"]
+        b = Build()
+        b.setUp()
+        with tempfile.TemporaryDirectory() as tmp, \
+                mock.patch.object(bi, "assign_kinds", side_effect=RuntimeError("boom")):
+            code, got, _ = b.run_main(tmp, [{"h": "foambrewers", "tier": 1, "category": "venue"}],
+                                      ["--only", "foambrewers", "--no-carry"], lambda h, k: doc["items"], now,
+                                      {"month": bi.month_key(bi.local_day(now)), "spent": 0, "last": {}})
+        self.assertEqual(code, 0)
+        self.assertTrue(got["posts"] and all((p["kind"], p["kd"]) == ("vibe", 1) for p in got["posts"]))
+
+    def test_text_only_engine_takes_the_caption_s_guess(self):
+        posts = [post("c", 1, "events", c="what a night")]
+        caption = {"kinds": [{"i": 0, "kind": "vibe", "sure": False}]}
+        rep, calls = self.run_kinds(posts, [caption], engine={"provider": "openrouter", "model": wc.GLM})
+        self.assertEqual(posts[0]["kind"], "vibe")
+        self.assertNotIn("kd", posts[0])
+        self.assertEqual(len(calls), 1)
+
+    def test_a_failed_call_keeps_the_defaults(self):
+        posts = [post("a", 1, "pets")]
+        err = wc.ModelError("bad")
+        err.usage = {"in": 500, "out": 0, "calls": 1}
+        ledger = {}
+        rep, calls = self.run_kinds(posts, [err], ledger=ledger)
+        self.assertEqual((posts[0]["kind"], posts[0]["kd"]), ("pets", 1))
+        self.assertGreater(ledger["ai"]["usd"], 0)                    # a failed call is still billed
+
+    def test_the_monthly_cap_stops_the_calls(self):
+        posts = [post("a", 1, "pets")]
+        ledger = {"ai": {"month": "2026-10", "usd": bi.AI_MONTH_CAP_USD, "runs": []}}
+        rep, calls = self.run_kinds(posts, [], ledger=ledger)
+        self.assertEqual(calls, [])
+        self.assertEqual(posts[0]["kd"], 1)
+
+    def test_the_spend_survives_the_ledger_and_resets_each_month(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            p = Path(tmp) / "l.json"
+            led = {"month": "2026-10", "spent": 3, "last": {}, "runs": [],
+                   "ai": {"month": "2026-10", "usd": 0.25, "runs": [{"usd": 0.25}]}}
+            bi.save_ledger(p, led)
+            got, ok = bi.load_ledger(p, self.NOW, 5280)
+            self.assertTrue(ok)
+            self.assertEqual(got["ai"]["usd"], 0.25)
+            nov, ok = bi.load_ledger(p, at(2026, 11, 2), 5280)
+            self.assertNotIn("ai", nov)
+            self.assertEqual(bi.ai_spent(nov, at(2026, 11, 2)), 0.0)
+
+    def test_answers_are_checked(self):
+        got = bi.read_kinds([{"i": 0, "kind": "food", "sure": True}, {"i": True, "kind": "food"},
+                             {"i": 1, "kind": "poem", "sure": True}, "x", {"i": 2, "kind": "pets", "sure": "yes"}],
+                            3, True)
+        self.assertEqual(got, {0: ("food", True), 2: ("pets", False)})
+
+    def test_thumbnails_are_sniffed_not_trusted(self):
+        self.assertEqual(bi.sniff_image(b"\xff\xd8\xff\xe0rest"), "image/jpeg")
+        self.assertEqual(bi.sniff_image(b"RIFF\x00\x00\x00\x00WEBPVP8 "), "image/webp")
+        self.assertIsNone(bi.sniff_image(b"<html>"))
 
 
 if __name__ == "__main__":

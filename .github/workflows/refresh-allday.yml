@@ -110,13 +110,22 @@ jobs:
         if: github.event_name != 'schedule' || github.event.schedule == '40 10 * * *'
         run: python3 scripts/build_sports.py || echo "sports build skipped"
 
+      # The model key gives each new post its `kind` (what the picture is) in
+      # one batched Claude Haiku 5.5 call; without it posts keep their
+      # account's category's kind and the build is otherwise unchanged.
       - name: Build Instagram
         if: ${{ !cancelled() && steps.reserve.outputs.reserved == '1' }}
         timeout-minutes: 30
         env:
           SCRAPECREATORS_API_KEY: ${{ secrets.SCRAPECREATORS_API_KEY }}
           SCRAPE_CREATORS_API_KEY: ${{ secrets.SCRAPE_CREATORS_API_KEY }}
-        run: python3 scripts/build_instagram.py --execute || echo "instagram build skipped"
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+        run: |
+          if [ -n "$ANTHROPIC_API_KEY$OPENROUTER_API_KEY" ]; then
+            python3 -m pip install --quiet 'anthropic>=0.116,<1' || echo "no Anthropic SDK: kinds stay defaulted"
+          fi
+          python3 scripts/build_instagram.py --execute || echo "instagram build skipped"
 
       # always(): a payload half-built before a timeout is still worth saving,
       # and the ledger's cleared reservation with it.
