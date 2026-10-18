@@ -318,7 +318,7 @@
     });
   }
 
-  /* --- Ranked list (Top 100) ---
+  /* --- Ranked list (Top 100+) ---
      Items are experiences: { title, body, things: [ids] }.
      Plain string ids are still supported for backward compat. --- */
   function renderRanked(guide) {
@@ -334,9 +334,6 @@
       return item;
     }).filter(Boolean);
     const items = normalize(guide.items);
-
-    // Extras past the ranking (guide.more): same shape, numbered on from the last rank
-    const more = normalize(guide.more);
 
     const view = document.getElementById('guides-view');
     if (!view) return;
@@ -368,13 +365,6 @@
         <div class="ranked-exp-list">
           ${items.map((item, i) => entry(item, i + 1)).join('')}
         </div>
-        ${more.length ? `
-        <section class="ranked-more" aria-labelledby="ranked-more-title">
-          <h2 class="ranked-more-title" id="ranked-more-title">And a few more</h2>
-          <div class="ranked-exp-list ranked-exp-list-more">
-            ${more.map((item, i) => entry(item, items.length + i + 1)).join('')}
-          </div>
-        </section>` : ''}
       </div>
     `;
 

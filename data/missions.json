@@ -12,8 +12,8 @@
   "winter",
   "free"
  ],
- "count": 100,
- "needs_check": 10,
+ "count": 108,
+ "needs_check": 11,
  "missions": [
   {
    "n": 1,
@@ -33,7 +33,7 @@
     {
      "id": "outdoor-gear-exchange",
      "name": "Outdoor Gear Exchange",
-     "url": "https://www.gearx.com",
+     "url": "https://www.gearx.com/",
      "neighborhood": "Downtown / Church St",
      "nearby": false
     },
@@ -52,7 +52,15 @@
      "nearby": false
     }
    ],
-   "legs": [],
+   "legs": [
+    {
+     "from": "church-street-marketplace",
+     "to": "outdoor-gear-exchange",
+     "km": 0.2,
+     "mode": "walk",
+     "min": 3
+    }
+   ],
    "top100": "Stroll the Church Street Marketplace"
   },
   {
@@ -1188,7 +1196,7 @@
     {
      "id": "autumn-records",
      "name": "Autumn Records",
-     "url": "",
+     "url": "https://www.autumnrecordsvt.com/",
      "neighborhood": "Winooski",
      "nearby": true
     },
@@ -1204,7 +1212,7 @@
     {
      "from": "waking-windows",
      "to": "autumn-records",
-     "km": 0.0,
+     "km": 0.1,
      "mode": "walk",
      "min": 1
     }
@@ -1311,7 +1319,7 @@
     {
      "id": "autumn-records",
      "name": "Autumn Records",
-     "url": "",
+     "url": "https://www.autumnrecordsvt.com/",
      "neighborhood": "Winooski",
      "nearby": true
     },
@@ -1329,12 +1337,12 @@
      "to": "autumn-records",
      "km": 0.6,
      "mode": "walk",
-     "min": 10
+     "min": 9
     },
     {
      "from": "autumn-records",
      "to": "winooski-mill-museum",
-     "km": 0.0,
+     "km": 0.1,
      "mode": "walk",
      "min": 1
     }
@@ -2441,7 +2449,7 @@
     {
      "id": "speaking-volumes",
      "name": "Speaking Volumes",
-     "url": "",
+     "url": "https://www.speakingvolumesvt.com/",
      "neighborhood": "South End",
      "nearby": false
     }
@@ -2455,19 +2463,20 @@
    "title": "Go on a vintage safari",
    "theme": "culture",
    "paragraph": "Mid-century furniture, records and oddities from many sellers fill Barge Canal Market, Pine Street's vintage anchor, where the inventory turns over often enough that regulars check in weekly. Start there, then cross town to North Winooski Avenue in the Old North End for Junktiques Collective, a dig-for-it trove of furniture and oddities with the occasional genuine score priced like nobody checked. Finish with the drive to Five Corners Antiques in Essex, fifteen minutes out, a massive depot where dozens of dealers under one roof make it the county's deepest single antiquing stop. You'll walk in curious and leave two hours later carrying a lamp. Budget double the time you planned.",
-   "needs_check": false,
+   "needs_check": true,
+   "check_note": "Five Corners Antiques has no confirmed address (its own 2024 ad and OpenStreetMap disagree, so things.json leaves it out until someone calls); the computed drive to it uses the OpenStreetMap point.",
    "places": [
     {
      "id": "barge-canal-market",
      "name": "Barge Canal Market",
-     "url": "",
+     "url": "https://www.facebook.com/bargecanalmarket/",
      "neighborhood": "South End",
      "nearby": false
     },
     {
      "id": "junktiques",
      "name": "Junktiques Collective",
-     "url": "",
+     "url": "https://www.junktiques.net/",
      "neighborhood": "Old North End",
      "nearby": false
     },
@@ -2479,7 +2488,22 @@
      "nearby": false
     }
    ],
-   "legs": [],
+   "legs": [
+    {
+     "from": "barge-canal-market",
+     "to": "junktiques",
+     "km": 2.3,
+     "mode": "drive",
+     "min": 10
+    },
+    {
+     "from": "junktiques",
+     "to": "five-corners-antiques",
+     "km": 7.7,
+     "mode": "drive",
+     "min": 20
+    }
+   ],
    "top100": "Go on a vintage safari"
   },
   {
@@ -2489,24 +2513,32 @@
    "theme": "culture",
    "paragraph": "Used vinyl starts at $1 in the crates at Burlington Records, downtown's independent vinyl shop, with an extensive catalog organized by genre and era and new records from $25. The crates reward patience, and the staff have opinions they'll share. Go in the morning, then head to Winooski for Autumn Records at 11 E. Allen Street, which is open noon to 6 daily. It's run by an internationally recognized experimental musician, and the used vinyl, from $3, is curated unlike any other shop in Vermont, alongside new records, CDs, cassettes and turntables. One shop is deep and classic, the other sharp and curated, and vinyl culture is alive in both.",
    "needs_check": true,
-   "check_note": "Burlington Records' why_special is still a TODO placeholder and its address is only 'Church Street area'; Autumn Records' noon to 6 daily hours are worth confirming before print.",
+   "check_note": "Burlington Records' why_special is still a TODO placeholder, and its used-from-$1 and new-from-$25 prices carry no dated check in the data.",
    "places": [
     {
      "id": "burlington-records",
      "name": "Burlington Records",
-     "url": "",
+     "url": "https://www.burlingtonrecords.com/",
      "neighborhood": "Downtown / Church St",
      "nearby": false
     },
     {
      "id": "autumn-records",
      "name": "Autumn Records",
-     "url": "",
+     "url": "https://www.autumnrecordsvt.com/",
      "neighborhood": "Winooski",
      "nearby": false
     }
    ],
-   "legs": [],
+   "legs": [
+    {
+     "from": "burlington-records",
+     "to": "autumn-records",
+     "km": 2.6,
+     "mode": "drive",
+     "min": 10
+    }
+   ],
    "top100": "Flip through the record stores"
   },
   {
@@ -3184,7 +3216,7 @@
    "k": "m100",
    "title": "Pay your respects to the World's Tallest Filing Cabinet",
    "theme": "culture",
-   "paragraph": "Finish the list at thirty-eight filing cabinet drawers stacked 38 feet high on Flynn Avenue, the World's Tallest Filing Cabinet, built in 2002 as commentary on bureaucracy. Birds have nested in the top drawers, and local lore says there's treasure up there too. It's entirely underwhelming and completely mandatory. Then collect the next piece of the quirky-landmark set with a drive out to Shelburne, where Jim Sardonis's granite whale tails, \"Reverence,\" rise from a hillside off I-89 South. They commemorate beluga fossils that proved this valley was a saltwater sea 12,000 years ago. They're easy to miss at speed and worth the exit.",
+   "paragraph": "Round out the first hundred at thirty-eight filing cabinet drawers stacked 38 feet high on Flynn Avenue, the World's Tallest Filing Cabinet, built in 2002 as commentary on bureaucracy. Birds have nested in the top drawers, and local lore says there's treasure up there too. It's entirely underwhelming and completely mandatory. Then collect the next piece of the quirky-landmark set with a drive out to Shelburne, where Jim Sardonis's granite whale tails, \"Reverence,\" rise from a hillside off I-89 South. They commemorate beluga fossils that proved this valley was a saltwater sea 12,000 years ago. They're easy to miss at speed and worth the exit.",
    "needs_check": false,
    "places": [
     {
@@ -3212,6 +3244,179 @@
     }
    ],
    "top100": "Pay your respects to the World's Tallest Filing Cabinet"
+  },
+  {
+   "n": 101,
+   "k": "m101",
+   "title": "Drink where Vermont's brewpubs began",
+   "theme": "drink",
+   "paragraph": "The Vermont Pub & Brewery at 144 College Street opened in late 1988 as the state's first brewpub and Burlington's first brewery since Prohibition. It took a change in the law: founder Greg Noonan and Bill Mares, then a state legislator, rewrote it so a brewery could pour its own beer on site, and every taproom on this list owes them a pint. Order the Burly Irish Ale, one of the award winners still on tap. Come on a Tuesday with a Vermont or Canadian ID and the food is 15% off.",
+   "needs_check": false,
+   "places": [
+    {
+     "id": "vermont-pub-brewery",
+     "name": "Vermont Pub & Brewery",
+     "url": "https://www.vermontbrewery.com",
+     "neighborhood": "Downtown / Church St",
+     "nearby": false
+    }
+   ],
+   "legs": [],
+   "top100": "Drink where Vermont's brewpubs began"
+  },
+  {
+   "n": 102,
+   "k": "m102",
+   "title": "Warm up with hot chocolate at the chocolate factory",
+   "theme": "eat",
+   "paragraph": "Lake Champlain Chocolates keeps its flagship at 750 Pine Street, steps from the bike path, and it is open daily 9 to 6. Walk in for the free samples and a look at the chocolatiers working in the Innovation Kitchen, then order the hot chocolate they bill as America's best. They make the ice cream right there all year, so a scoop is never out of season, and you can stock up on factory seconds on the way out. To go deeper, book the guided tasting: $16, 45 to 60 minutes, ages 10 and up.",
+   "needs_check": false,
+   "places": [
+    {
+     "id": "lake-champlain-chocolates",
+     "name": "Lake Champlain Chocolates (Factory Store)",
+     "url": "https://www.lakechamplainchocolates.com",
+     "neighborhood": "South End",
+     "nearby": false
+    }
+   ],
+   "legs": [],
+   "top100": "Warm up with hot chocolate at the chocolate factory"
+  },
+  {
+   "n": 103,
+   "k": "m103",
+   "title": "Fix, borrow, or make something instead of buying it",
+   "theme": "culture",
+   "paragraph": "Start on Pine Street at The Makery, number 388, a secondhand art and craft supply store that also hosts a free Bring Your Own Craft Night once a month, no registration needed. Further down Pine at 688, Sandbox repairs clothing, backpacks and technical outerwear, and swaps out busted zippers. Then cross town to Old Spokes Home on North Winooski Avenue, where used bikes and parts are the specialty and flat fixes start at $15. Finish in South Burlington, where the library's Library of Things lends games, tools and even a telescope to cardholders 16 and up, nonresidents included.",
+   "needs_check": false,
+   "places": [
+    {
+     "id": "the-makery",
+     "name": "The Makery",
+     "url": "https://themakeryvt.com/",
+     "neighborhood": "South End",
+     "nearby": false
+    },
+    {
+     "id": "sandbox-repair",
+     "name": "Sandbox",
+     "url": "https://www.sandboxvt.com/",
+     "neighborhood": "South End",
+     "nearby": false
+    },
+    {
+     "id": "old-spokes-home",
+     "name": "Old Spokes Home",
+     "url": "https://oldspokeshome.com/",
+     "neighborhood": "Old North End",
+     "nearby": false
+    },
+    {
+     "id": "south-burlington-library",
+     "name": "South Burlington Public Library",
+     "url": "https://southburlingtonlibrary.org/library-of-things/",
+     "neighborhood": "South Burlington",
+     "nearby": false
+    }
+   ],
+   "legs": [],
+   "top100": "Fix, borrow, or make something instead of buying it"
+  },
+  {
+   "n": 104,
+   "k": "m104",
+   "title": "Learn to contra dance on a Friday night",
+   "theme": "play",
+   "paragraph": "Queen City Contras has kept contra dancing, an old New England tradition, going around Burlington for over thirty years. Dances run on select Fridays from 7 to 10 with a live band and a caller, and every dance is taught, so no partner or experience is needed. Get there at 6:45 for the beginner lesson, and bring clean soft-soled shoes and water. It costs $12, $5 for teens or anyone on a limited budget, and nothing at all under 12. The hall moves between Burlington and Shelburne, so check the schedule before you head out.",
+   "needs_check": false,
+   "places": [
+    {
+     "id": "queen-city-contras",
+     "name": "Queen City Contras",
+     "url": "https://queencitycontras.com/schedule/",
+     "neighborhood": "Greater Burlington",
+     "nearby": false
+    }
+   ],
+   "legs": [],
+   "top100": "Learn to contra dance on a Friday night"
+  },
+  {
+   "n": 105,
+   "k": "m105",
+   "title": "Ride a ferry across the lake to New York",
+   "theme": "water",
+   "paragraph": "Lake Champlain Ferries has been crossing this lake since 1826, and walking on is the best cheap boat ride around: $5.50 each way for an adult, or $12.25 with your car, before any fuel surcharge. From the Charlotte dock at 2901 Ferry Road it is about 25 minutes and 3 miles across to Essex, New York, with the Adirondacks and the Green Mountains on either side. Up north, the Grand Isle to Plattsburgh crossing runs 24 hours a day, year round, in about 14 minutes. There are no reservations, so just show up 15 minutes early.",
+   "needs_check": false,
+   "places": [
+    {
+     "id": "lake-champlain-ferries",
+     "name": "Lake Champlain Ferries",
+     "url": "https://ferries.com/",
+     "neighborhood": "Greater Burlington",
+     "nearby": false
+    }
+   ],
+   "legs": [],
+   "top100": "Ride a ferry across the lake to New York"
+  },
+  {
+   "n": 106,
+   "k": "m106",
+   "title": "Ski It If You Can at Mad River Glen",
+   "theme": "winter",
+   "paragraph": "Mad River Glen in Fayston is America's only skier-owned mountain, bought by its own skiers as a co-op in 1995 and capped at 2,500 shareholders. The Single Chair first ran in 1948 and still runs as the oldest continually operating single chairlift in the country. Snowboards are still banned, and there is precious little snowmaking, so the steep, raw terrain skis the way the weather left it. Adult day tickets are $125 this season, and sales are capped on weekends and holidays, so buy online before you make the drive.",
+   "needs_check": false,
+   "places": [
+    {
+     "id": "mad-river-glen",
+     "name": "Mad River Glen",
+     "url": "https://www.madriverglen.com/",
+     "neighborhood": "Greater Burlington",
+     "nearby": false
+    }
+   ],
+   "legs": [],
+   "top100": "Ski It If You Can at Mad River Glen"
+  },
+  {
+   "n": 107,
+   "k": "m107",
+   "title": "Ski to a fireside cabin on the von Trapp trails",
+   "theme": "winter",
+   "paragraph": "The von Trapp family's lodge in Stowe is home to the country's first cross-country ski center, with over 60 kilometers of groomed Nordic trails spread across 2,500 acres. Pick up your gear at the Outdoor Center, then ski out to the Slayton Pasture Cabin, where homemade soup, sandwiches and hot chocolate wait in front of a roaring fireplace. Warm up there before the ski back. A 2026 to 2027 adult day pass is $33 on weekdays and $37 on weekends and holidays, so a weekday is the cheaper day on the trails.",
+   "needs_check": false,
+   "places": [
+    {
+     "id": "von-trapp-nordic",
+     "name": "von Trapp Outdoor Center (Nordic skiing)",
+     "url": "https://www.vontrappresort.com/skiing-snowshoeing.htm",
+     "neighborhood": "Greater Burlington",
+     "nearby": false
+    }
+   ],
+   "legs": [],
+   "top100": "Ski to a fireside cabin on the von Trapp trails"
+  },
+  {
+   "n": 108,
+   "k": "m108",
+   "title": "Swing an ice axe up a frozen waterfall",
+   "theme": "winter",
+   "paragraph": "Petra Cliffs, the Burlington climbing gym, takes beginners outside from December through March for a one-day Intro to Ice Climbing, in groups of one to six. AMGA-certified guides teach crampon and ice axe technique on frozen waterfalls, and they bring the harness, helmet, ropes and the rest of the technical gear. Your part is warm layers, food, water and your own ride to the ice. Few winter days in Vermont feel more earned.",
+   "needs_check": false,
+   "places": [
+    {
+     "id": "petra-cliffs",
+     "name": "Petra Cliffs Climbing Center",
+     "url": "https://www.petracliffs.com",
+     "neighborhood": "South End",
+     "nearby": false
+    }
+   ],
+   "legs": [],
+   "top100": "Swing an ice axe up a frozen waterfall"
   }
  ]
 }
