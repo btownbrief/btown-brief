@@ -48,8 +48,15 @@ suspiciously long (a broken cut that swallowed the calendar); TTS_CAP_USD
 stops the month at $25 by the ledger in data/audio/cost.json; and, because
 that ledger lives on the branch and a failed push would lose it, the run asks
 ElevenLabs itself for the billing period's usage before every voicing and
-refuses past PERIOD_CAP_CHARS or the account's own limit (room_for). An
-edition that fails twice waits for a run with --force.
+refuses when the account is full, past PERIOD_CAP_UNITS, or past
+RECENT_CAP_UNITS in the last two days (room_for), so a run that keeps voicing
+and failing to push stops after a day's worth. An edition that fails twice
+waits for a run with --force.
+
+The account's meter is not one unit per character sent: the one test clip
+(1,013 characters, 2026-10-18) moved it by 223. So the dollar figures above,
+at the list price per character, are a ceiling, and the guards compare the
+account's units only with the account's units.
 
 Failure posture: no ELEVENLABS_API_KEY, nothing new, a Wednesday, or the
 month's cap reached logs and exits 0 with nothing published. A changed layout,
@@ -113,12 +120,13 @@ TTS_CAP_USD = 25.0          # a month: about sixteen editions, so two a week wit
 MAX_AGE_DAYS = 4            # an edition older than this is never voiced on a schedule
 KEEP = 10                   # editions kept on the branch, about five weeks
 MAX_FAILS = 2               # failed tries at one edition before it waits for a person (--force)
-# The account's own count is the cap that cannot be lost: cost.json lives on
+# The account's own meter is the cap that cannot be lost: cost.json lives on
 # the branch, and a run whose push failed would not see what it spent. Before
-# any voice call the run asks ElevenLabs how many characters this billing
-# period has used, and refuses past PERIOD_CAP_CHARS (about $25) or the
-# account's own limit. If it cannot ask, it does not voice.
-PERIOD_CAP_CHARS = 310000
+# any voice call the run asks ElevenLabs what this billing period and the last
+# two days have used, in the account's units, and refuses past these (or a
+# full account). If it cannot ask, it does not voice.
+PERIOD_CAP_UNITS = 310000   # about $25 even if a unit were a character
+RECENT_CAP_UNITS = 25000    # one edition fits even at a unit a character; a loop stops within a day
 
 GREETING = "This is the Btown Brief for {title}."
 NEWS_TURN = "Now, the local news."
@@ -283,8 +291,8 @@ def script_of(ed):
             quick = frag
     if news is None:
         return None, "no Local News section (a Wednesday-style edition), nothing to read"
-    if intro is None:
-        raise LayoutError(f"{ed['title']} has Local News but no Weather intro heading; the layout changed, nothing voiced")
+    if intro is None or not paragraphs(intro):
+        raise LayoutError(f"{ed['title']} has Local News but no Weather intro to read; the layout changed, nothing voiced")
     out = [GREETING.format(title=ed["title"])]
     for kind, t in paragraphs(intro or ""):
         out.append(f"{BEAT} {sentence(t)}" if kind == "day" else t)
@@ -360,19 +368,38 @@ def period_usage(api_key):
     req = urllib.request.Request(f"{API}/user/subscription", headers={"xi-api-key": api_key, "Accept": "application/json"})
     with urllib.request.urlopen(req, timeout=30) as resp:
         d = json.load(resp)
-    return int(d.get("character_count") or 0), int(d.get("character_limit") or 0)
+    used, limit = d.get("character_count"), d.get("character_limit")
+    if not all(isinstance(v, int) and not isinstance(v, bool) and v >= 0 for v in (used, limit)):
+        raise ValueError("the subscription answer has no character counts")
+    return used, limit
 
 
-def room_for(api_key, chars):
-    """'' when the account has room for `chars` more, else why not."""
+def recent_usage(api_key, now):
+    """The account's units across every model over the last two days."""
+    now_ms = int(now.timestamp() * 1000)
+    q = f"start_unix={now_ms - 2 * 86400000}&end_unix={now_ms}"
+    req = urllib.request.Request(f"{API}/usage/character-stats?{q}", headers={"xi-api-key": api_key, "Accept": "application/json"})
+    with urllib.request.urlopen(req, timeout=30) as resp:
+        d = json.load(resp)
+    usage = d.get("usage") if isinstance(d, dict) else None
+    if not isinstance(usage, dict):
+        raise ValueError("the usage answer has no usage")
+    return sum(v for series in usage.values() if isinstance(series, list) for v in series if isinstance(v, (int, float)))
+
+
+def room_for(api_key, now):
+    """'' when the account may voice now, else why not."""
     try:
         used, limit = period_usage(api_key)
+        recent = recent_usage(api_key, now)
     except Exception as err:   # noqa: BLE001  (can't ask -> don't spend)
         return f"could not read the ElevenLabs account's usage ({type(err).__name__}), so nothing is voiced"
-    ceiling = min(PERIOD_CAP_CHARS, limit) if limit else PERIOD_CAP_CHARS
-    if used + chars > ceiling:
-        return (f"ElevenLabs has used {used:,} characters this billing period; {chars:,} more would pass "
-                f"{ceiling:,} ({'the account limit' if limit and limit < PERIOD_CAP_CHARS else 'the cap'}), so nothing is voiced")
+    if limit and used >= limit:
+        return f"the ElevenLabs account has used all {limit:,} of this billing period's units, so nothing is voiced"
+    if used >= PERIOD_CAP_UNITS:
+        return f"the ElevenLabs account has used {used:,} units this billing period, past the {PERIOD_CAP_UNITS:,} cap, so nothing is voiced"
+    if recent >= RECENT_CAP_UNITS:
+        return f"the ElevenLabs account used {recent:,.0f} units in the last two days, past {RECENT_CAP_UNITS:,}, so nothing is voiced"
     return ""
 
 
@@ -454,8 +481,14 @@ def month_of(now):
 
 def load_cost(out_dir, now):
     cost = load_json(os.path.join(out_dir, "cost.json"), {})
-    if not isinstance(cost, dict) or cost.get("month") != month_of(now):
-        cost = {"month": month_of(now), "tts_chars": 0, "tts_usd": 0.0, "runs": []}
+    if not isinstance(cost, dict):
+        cost = {}
+    if cost.get("month") != month_of(now):
+        # a new month starts the spend from zero but keeps the failure counts,
+        # so an edition that failed twice on the 31st still waits for a person
+        cost = {"month": month_of(now), "tts_chars": 0, "tts_usd": 0.0, "runs": [], "fails": cost.get("fails")}
+    if not isinstance(cost.get("fails"), dict):
+        cost["fails"] = {}
     cost.setdefault("tts_chars", 0)
     cost.setdefault("tts_usd", 0.0)
     cost.setdefault("runs", [])
@@ -471,6 +504,8 @@ def record(out_dir, now, chars, what, date=None, failed=False):
     run = {"at": now.replace(microsecond=0).isoformat(), "what": what, "date": date, "tts_chars": chars, "tts_usd": usd}
     if failed:
         run["failed"] = True
+        cost["fails"][date] = int(cost["fails"].get(date) or 0) + 1
+        cost["fails"] = dict(sorted(cost["fails"].items())[-KEEP:])
     cost["runs"] = (cost["runs"] + [run])[-40:]
     write_json(os.path.join(out_dir, "cost.json"), cost)
     mark_changed()
@@ -538,7 +573,7 @@ def run(args, now=None):
     voice_id = os.environ.get("ELEVENLABS_VOICE_ID", "").strip() or DEFAULT_VOICE
     if args.sample:
         opening = "\n\n".join(voice.split("\n\n")[:2])
-        full = room_for(key, len(opening))
+        full = room_for(key, now)
         if full:
             say(full)
             return 1
@@ -553,11 +588,11 @@ def run(args, now=None):
     if cost["tts_usd"] + len(voice) / 1000 * USD_PER_1K_CHARS > TTS_CAP_USD:
         say(f"this edition would pass the month's ${TTS_CAP_USD:.0f} voice cap (${cost['tts_usd']:.2f} spent); nothing voiced")
         return 0
-    fails = sum(1 for r in cost["runs"] if isinstance(r, dict) and r.get("date") == ed["date"] and r.get("failed"))
+    fails = int(cost["fails"].get(ed["date"]) or 0)
     if fails >= MAX_FAILS and not args.force:
-        say(f"{ed['title']} has failed {fails} times this month; it waits for a run with force")
+        say(f"{ed['title']} has failed {fails} times; it waits for a run with force")
         return 1
-    full = room_for(key, len(voice))
+    full = room_for(key, now)
     if full:
         say(full)
         return 1

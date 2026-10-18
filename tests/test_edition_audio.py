@@ -6,6 +6,7 @@ touches the network.
 Run: python3 -m unittest tests.test_edition_audio
 """
 
+import io
 import json
 import os
 import sys
@@ -90,6 +91,11 @@ class Script(unittest.TestCase):
         ed["html"] = self.eds[FRIDAY]["html"].replace('<p class="paragraph"><a', '<p class="paragraph">See <a')
         with self.assertRaises(ea.LayoutError):
             ea.script_of(ed)
+        body = self.eds[FRIDAY]["html"]                  # the heading is there, its paragraphs are not
+        a, b = body.index('id="weather-weekend-rundown"'), body.index('id="the-btown-brief-irl')
+        ed["html"] = body[:a] + body[a:b].replace('class="paragraph"', 'class="other"') + body[b:]
+        with self.assertRaises(ea.LayoutError):
+            ea.script_of(ed)
 
     def test_monday_reads_too(self):
         script, stats = ea.script_of(self.eds["https://www.btownbrief.com/p/monday-october-12th"])
@@ -125,11 +131,13 @@ class Run(unittest.TestCase):
         self.tmp = tempfile.TemporaryDirectory()
         self.out = self.tmp.name
         self.calls = []
-        self.usage = (5000, 0)
+        self.usage = (5000, 35566)
+        self.recent = 223
         env = {"ELEVENLABS_API_KEY": "test-key", "ELEVENLABS_VOICE_ID": ""}
         self.patches = [mock.patch.dict(os.environ, env), mock.patch.object(ea, "load_secrets", lambda: None),
                         mock.patch.object(ea, "tts", side_effect=self.fake_tts),
                         mock.patch.object(ea, "period_usage", side_effect=lambda key: self.usage),
+                        mock.patch.object(ea, "recent_usage", side_effect=lambda key, now: self.recent),
                         mock.patch.object(ea, "join_and_normalize", side_effect=lambda parts, title: (b"".join(parts), 1234.5))]
         for p in self.patches:
             p.start()
@@ -244,10 +252,10 @@ class Run(unittest.TestCase):
         self.assertEqual(self.index()["clips"][0]["date"], "2026-10-16")
 
     def test_the_account_is_the_cap_a_lost_ledger_cannot_beat(self):
-        self.usage = (300000, 0)                      # the ledger is empty (as after a failed push); the account is not
-        self.assertEqual(ea.run(args(self.out), now=NOW), 1)
-        self.usage = (20000, 35566)                   # a pay-as-you-go limit that one edition would pass
-        self.assertEqual(ea.run(args(self.out), now=NOW), 1)
+        # the ledger is empty each time, as after a failed push; the account's meter is not
+        for usage, recent in (((35566, 35566), 0), ((320000, 0), 0), ((9000, 35566), 30000)):
+            self.usage, self.recent = usage, recent
+            self.assertEqual(ea.run(args(self.out), now=NOW), 1, (usage, recent))
         self.assertFalse(self.calls)
 
     def test_no_usage_reading_no_voice(self):
@@ -255,10 +263,39 @@ class Run(unittest.TestCase):
             self.assertEqual(ea.run(args(self.out), now=NOW), 1)
         self.assertFalse(self.calls)
 
+    def test_failures_survive_the_new_month(self):
+        with open(os.path.join(self.out, "cost.json"), "w") as f:
+            json.dump({"month": "2026-09", "tts_chars": 9, "tts_usd": 1.0, "runs": [], "fails": {"2026-10-16": 2}}, f)
+        self.assertEqual(ea.run(args(self.out), now=NOW), 1)
+        self.assertFalse(self.calls)
+
     def test_a_cut_gone_wrong_is_refused(self):
         with mock.patch.object(ea, "MAX_EDITION_CHARS", 5000):
             self.assertEqual(ea.run(args(self.out), now=NOW), 1)
         self.assertFalse(self.calls)
+
+
+
+class Usage(unittest.TestCase):
+    def test_a_usage_answer_without_counts_is_no_answer(self):
+        class Resp(io.BytesIO):
+            def __enter__(self):
+                return self
+
+            def __exit__(self, *a):
+                return False
+        for body in (b"{}", b'{"character_count": null, "character_limit": 0}', b'{"character_count": "9", "character_limit": 0}'):
+            with mock.patch.object(ea.urllib.request, "urlopen", lambda req, timeout: Resp(body)):
+                with self.assertRaises(ValueError):
+                    ea.period_usage("k")
+        with mock.patch.object(ea.urllib.request, "urlopen", lambda req, timeout: Resp(b'{"character_count": 9, "character_limit": 0}')):
+            self.assertEqual(ea.period_usage("k"), (9, 0))
+        with mock.patch.object(ea.urllib.request, "urlopen", lambda req, timeout: Resp(b'{"time": [], "nothing": 1}')):
+            with self.assertRaises(ValueError):
+                ea.recent_usage("k", NOW)
+        stats = b'{"time": [1, 2], "usage": {"eleven_v4": [2279.0, 223.0], "scribe_v2": [95.0, 0.0]}}'
+        with mock.patch.object(ea.urllib.request, "urlopen", lambda req, timeout: Resp(stats)):
+            self.assertEqual(ea.recent_usage("k", NOW), 2597.0)
 
 
 if __name__ == "__main__":
