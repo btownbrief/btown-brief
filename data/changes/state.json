@@ -431,32 +431,6 @@
  },
  "civicclerk": {
   "meetings": {
-   "10255": {
-    "name": "City Council - Charter Change Committee Meeting",
-    "start": "2026-10-15T12:00:00+00:00",
-    "hasAgenda": true,
-    "files": [
-     "Charter Change Committee Agenda - 26.10.13v2",
-     "Charter Change Committee Agenda Packet - 26.10.13v2"
-    ]
-   },
-   "10253": {
-    "name": "Burlington Aging Council",
-    "start": "2026-10-15T15:00:00+00:00",
-    "hasAgenda": true,
-    "files": [
-     "Agenda v1",
-     "Agenda Packet v1"
-    ]
-   },
-   "10249": {
-    "name": "Ward 5 NPA Meeting",
-    "start": "2026-10-15T18:30:00+00:00",
-    "hasAgenda": true,
-    "files": [
-     "Ward 5 NPA Agenda 10/15/2026"
-    ]
-   },
    "10265": {
     "name": "Church Street Marketplace Commission Meeting",
     "start": "2026-10-16T00:00:00+00:00",
@@ -556,6 +530,30 @@
      "Special Ward 3 NPA Agenda 10/20/2026",
      "Special Ward 3 NPA Agenda Packet 10/20/2026"
     ]
+   },
+   "10260": {
+    "name": "Church Street Marketplace Commission Meeting",
+    "start": "2026-10-21T09:00:00+00:00",
+    "hasAgenda": true,
+    "files": [
+     "Agenda V2",
+     "Packet V2"
+    ]
+   },
+   "10181": {
+    "name": "Ward 8 NPA Meeting",
+    "start": "2026-10-21T17:30:00+00:00",
+    "hasAgenda": true,
+    "files": [
+     "Ward 8 NPA Agenda 10/21/2026 v3",
+     "Ward 8 NPA Agenda Packet 10/21/2026"
+    ]
+   },
+   "10247": {
+    "name": "Public Works Commission Meeting",
+    "start": "2026-10-21T18:30:00+00:00",
+    "hasAgenda": false,
+    "files": []
    }
   }
  },
@@ -866,18 +864,18 @@
       "summary": "Award-winning Vermont-based writer, artist and anthropologist Dana Mashoian Walrath is the author of Aliceheimer's and Like Water on Stone. Her latest work is The Book of Genocides, a graphic narrative published by Harvard University Press in September."
      },
      {
-      "id": "https://www.vermontpublic.org/local-news/2026-10-16/an-evening-of-folk-and-classical-music-styles-that-share-roots-and-themes-in-nature",
-      "title": "An evening of folk and classical music styles that share roots and themes in nature",
-      "link": "https://www.vermontpublic.org/local-news/2026-10-16/an-evening-of-folk-and-classical-music-styles-that-share-roots-and-themes-in-nature",
-      "ts": "2026-10-16T09:00:00+00:00",
-      "summary": "Vermont folk musician Moira Smiley will take the stage with The Rasa String Quartet for an evening of classical music, original and traditional folk songs and immersive film images of the natural world."
-     },
-     {
       "id": "https://www.vermontpublic.org/local-news/2026-10-16/vermont-schoolteacher-musician-mines-family-mythology-in-new-song",
       "title": "Vermont schoolteacher, musician mines family mythology in new song",
       "link": "https://www.vermontpublic.org/local-news/2026-10-16/vermont-schoolteacher-musician-mines-family-mythology-in-new-song",
       "ts": "2026-10-16T09:00:00+00:00",
       "summary": "This week's Friday Song is \"Fix Everything,\" from Samara's songwriting project, Bull's Head."
+     },
+     {
+      "id": "https://www.vermontpublic.org/local-news/2026-10-16/an-evening-of-folk-and-classical-music-styles-that-share-roots-and-themes-in-nature",
+      "title": "An evening of folk and classical music styles that share roots and themes in nature",
+      "link": "https://www.vermontpublic.org/local-news/2026-10-16/an-evening-of-folk-and-classical-music-styles-that-share-roots-and-themes-in-nature",
+      "ts": "2026-10-16T09:00:00+00:00",
+      "summary": "Vermont folk musician Moira Smiley will take the stage with The Rasa String Quartet for an evening of classical music, original and traditional folk songs and immersive film images of the natural world."
      },
      {
       "id": "https://www.vermontpublic.org/local-news/2026-10-16/horse-logging-200-year-vermont-tradition-future",
@@ -939,6 +937,27 @@
    },
    "wcax": {
     "items": [
+     {
+      "id": "L6V4N5HDFFEUVKQTUMUDZ5R64U",
+      "title": "Pico Mountain Resort to replace failed Outpost chairlift",
+      "link": "https://www.wcax.com/2026/10/18/pico-mountain-resort-replace-failed-outpost-chairlift/",
+      "ts": "2026-10-18T00:00:29+00:00",
+      "summary": "New quad chair planned to bring skiers to natural terrain next winter."
+     },
+     {
+      "id": "QVE4PKKQ7ZCB3FKREYWQL5MFQI",
+      "title": "Volunteers help conserve wildlife along the Batten Kill",
+      "link": "https://www.wcax.com/2026/10/18/volunteers-help-conserve-wildlife-along-batten-kill/",
+      "ts": "2026-10-18T00:00:18+00:00",
+      "summary": "Conservation groups add trees, wood and debris to riverbank in Manchester."
+     },
+     {
+      "id": "3NXR3BLXTNDZLBYCOJOIH5CDRY",
+      "title": "Rutland hospital support staff rally for first union contract",
+      "link": "https://www.wcax.com/2026/10/18/rutland-hospital-support-staff-rally-first-union-contract/",
+      "ts": "2026-10-18T00:00:05+00:00",
+      "summary": "Workers gather in Main Street Park as negotiations continue."
+     },
      {
       "id": "BHPEIN2XOVCGXPH5N2ODQIEXNA",
       "title": "VT-108 reopens early",
@@ -1267,38 +1286,80 @@
       "link": "https://www.wcax.com/2026/10/15/archaeologists-dig-beneath-bennington-battle-monument-before-repairs/",
       "ts": "2026-10-15T02:46:42+00:00",
       "summary": "Before the state can make repairs to the 300-foot-tall obelisk, officials have to see what lies beneath it, which ties into the reason the monument is there."
-     },
-     {
-      "id": "GQJ2MY66VVBD3DHTXETQAF5GPM",
-      "title": "Vermont seeks shelter for homeless residents with complex medical needs",
-      "link": "https://www.wcax.com/2026/10/15/vermont-seeks-shelter-homeless-residents-with-complex-medical-needs/",
-      "ts": "2026-10-15T02:39:55+00:00",
-      "summary": "The state of Vermont is looking to set up a shelter for homeless Vermonters with the most intense and complex medical needs."
-     },
-     {
-      "id": "UM27MLXA4VCE7G7WFKMUCYNUNQ",
-      "title": "UVM launches ‘Vermont Listens’ civic engagement series",
-      "link": "https://www.wcax.com/2026/10/14/uvm-launches-vermont-listens-civic-engagement-series/",
-      "ts": "2026-10-14T23:28:57+00:00",
-      "summary": "The University of Vermont is launching a new event series aimed at encouraging civic engagement and discourse."
-     },
-     {
-      "id": "Z64DDAPRJZERBH4PU6J6ZJUO24",
-      "title": "GlobalFoundries to open 2 new chip plants in New York with $21 billion in financing from Japan",
-      "link": "https://www.wcax.com/2026/10/14/globalfoundries-open-2-new-chip-plants-new-york-with-21-billion-financing-japan/",
-      "ts": "2026-10-14T23:15:22+00:00",
-      "summary": "Computer chip company GlobalFoundries Inc. said Wednesday it plans to open two factories in Malta, New York, financed by an investment of up to $21 billion from Japan."
      }
     ]
    },
    "mynbc5": {
     "items": [
      {
+      "id": "74168711",
+      "title": "Brewers fan hopes 'Timeless Ticket' secures World Series seat",
+      "link": "https://www.mynbc5.com/article/brewers-timeless-ticket-world-series-seat/74168711",
+      "ts": "2026-10-18T01:07:00+00:00",
+      "summary": "A Brewers fan who purchased a \"Timeless Ticket\" in 2015 is waiting to find out if his ticket will grant him access to a World Series game after nearly 12 years of anticipation."
+     },
+     {
+      "id": "74168327",
+      "title": "Police respond to 'mass casualty incident' at Kansas sports complex",
+      "link": "https://www.mynbc5.com/article/mass-casualty-field-soccer-game-wichita-sports-complex/74168327",
+      "ts": "2026-10-18T01:02:00+00:00",
+      "summary": "Two people were killed and multiple others were injured when a vehicle drove onto a field during a soccer game at a sports complex in Wichita, Kansas, on Saturday, authorities said."
+     },
+     {
+      "id": "74168644",
+      "title": "Gene therapy helps doctors restore hearing for children born deaf",
+      "link": "https://www.mynbc5.com/article/gene-therapy-helps-doctors-restore-hearing-for-children-born-deaf/74168644",
+      "ts": "2026-10-18T00:17:00+00:00",
+      "summary": "A major medical triumph is now giving some children born deaf the ability to hear."
+     },
+     {
+      "id": "74168510",
+      "title": "34-yard field goal as time expires lifts Auburn over No. 1 Georgia 27-24",
+      "link": "https://www.mynbc5.com/article/auburn-beats-georgia/74168510",
+      "ts": "2026-10-17T23:29:00+00:00",
+      "summary": "For the second consecutive week, college football's No. 1 team lost, and there are no unbeaten teams in the Southeastern Conference"
+     },
+     {
+      "id": "74166682",
+      "title": "Scuffles, fires break out as protesters rally across France, joining students",
+      "link": "https://www.mynbc5.com/article/scuffles-fires-protest-paris-france-students-police/74166682",
+      "ts": "2026-10-17T23:00:00+00:00",
+      "summary": "A car and a newspaper kiosk were set on fire in Paris as police used tear gas and water cannons to disperse groups of protesters."
+     },
+     {
       "id": "74152002",
       "title": "Friday Night Fever Week 7: Schedule & Scores from Vermont & New York",
       "link": "https://www.mynbc5.com/article/friday-night-fever-week-7-schedule-scores-from-vermont-new-york/74152002",
-      "ts": "2026-10-17T22:06:00+00:00",
-      "summary": "Find out when your favorite team is playing!"
+      "ts": "2026-10-17T22:53:00+00:00",
+      "summary": "See the latest results from VPA and Section VII high school football"
+     },
+     {
+      "id": "74168082",
+      "title": "No Kings events in Vermont focus on voter participation ahead of midterms",
+      "link": "https://www.mynbc5.com/article/no-kings-events/74168082",
+      "ts": "2026-10-17T22:50:00+00:00",
+      "summary": "People across Vermont gathered Saturday as part of the nationwide No Kings movement, with organizers putting a focus on encouraging people to get out and vote."
+     },
+     {
+      "id": "74167065",
+      "title": "'Goals For Hope' soccer tournament continues to support cancer research",
+      "link": "https://www.mynbc5.com/article/goals-for-hope-soccer-tournament-continues-to-support-cancer-research/74167065",
+      "ts": "2026-10-17T22:49:00+00:00",
+      "summary": "The \"Goals for Hope\" soccer tournament at Plattsburgh High School brought together 40 youth teams to raise funds for the Fitzpatrick Cancer Center."
+     },
+     {
+      "id": "74168094",
+      "title": "No Kings event highlights voting importance in Plattsburgh",
+      "link": "https://www.mynbc5.com/article/no-kings-event-highlights-voting-importance-in-plattsburgh/74168094",
+      "ts": "2026-10-17T22:48:00+00:00",
+      "summary": "Activities, live music, and interactive tables were featured at the Unitarian Universalist Fellowship of Plattsburgh to promote voting awareness and community engagement."
+     },
+     {
+      "id": "74168144",
+      "title": "Smuggler's Notch reopens earlier than expected",
+      "link": "https://www.mynbc5.com/article/smugglers-notch-reopens/74168144",
+      "ts": "2026-10-17T22:44:00+00:00",
+      "summary": "VTRANS announced Friday that the roadway would be closed for the weekend because of the weather."
      },
      {
       "id": "74148111",
@@ -1306,13 +1367,6 @@
       "link": "https://www.mynbc5.com/article/jalen-hurts-eagles-carolina-blood-clot/74148111",
       "ts": "2026-10-17T21:40:00+00:00",
       "summary": "The Philadelphia Eagles have ruled out quarterback Jalen Hurts for Sunday's game against Carolina because of \"movement\" in a small blood clot."
-     },
-     {
-      "id": "74168144",
-      "title": "Smuggler's Notch reopens earlier than expected",
-      "link": "https://www.mynbc5.com/article/smugglers-notch-reopens/74168144",
-      "ts": "2026-10-17T21:21:00+00:00",
-      "summary": "VTRANS announced Friday that the roadway would be closed for the weekend because of the weather."
      },
      {
       "id": "74166336",
@@ -1357,13 +1411,6 @@
       "summary": "The Trump administration is looking to remove the federal judge overseeing a legal challenge to Trump’s plans to overhaul a public golf course, accusing her of \"egregious\" behavior."
      },
      {
-      "id": "74166682",
-      "title": "Scuffles, fires break out as protesters rally across France, joining students",
-      "link": "https://www.mynbc5.com/article/scuffles-fires-protest-paris-france-students-police/74166682",
-      "ts": "2026-10-17T14:46:00+00:00",
-      "summary": "A car and a newspaper kiosk were set on fire in Paris as police used tear gas and water cannons to disperse groups of protesters."
-     },
-     {
       "id": "74166494",
       "title": "Zacharia makes first statement since leaving job as White House press secretary",
       "link": "https://www.mynbc5.com/article/zacharia-first-statement-leaving-job-white-house-press-secretary/74166494",
@@ -1383,55 +1430,6 @@
       "link": "https://www.mynbc5.com/article/six-flags-over-georgia-reopen-goliath-death-investigation/74158254",
       "ts": "2026-10-17T11:13:00+00:00",
       "summary": "Six Flags Over Georgia opened its gates Friday evening for the first time since a man fell to his death from one of the amusement park's towering roller coasters."
-     },
-     {
-      "id": "74166404",
-      "title": "Things To Do: Saturday, October 17",
-      "link": "https://www.mynbc5.com/article/things-to-do-october-17-2026/74166404",
-      "ts": "2026-10-17T11:09:00+00:00",
-      "summary": "Looking for some weekend fun? NBC5's Andrew Grautski has you covered every weekend with \"Things To Do!\""
-     },
-     {
-      "id": "74166293",
-      "title": "Family heirloom found to be unspent WWI artillery shell prompts emergency response",
-      "link": "https://www.mynbc5.com/article/family-heirloom-wwi-artillery-shell-emergency-massachusetts/74166293",
-      "ts": "2026-10-17T10:13:00+00:00",
-      "summary": "A homeowner found a World War I artillery shell passed down from their grandfather, prompting a large emergency response."
-     },
-     {
-      "id": "74166043",
-      "title": "'Road of death': Civilians risk their lives along mined roads to escape Russian-held city",
-      "link": "https://www.mynbc5.com/article/road-of-death-mines-oleshky-escape-russia-ukraine/74166043",
-      "ts": "2026-10-17T09:24:00+00:00",
-      "summary": "As civilians in the Russian-held city of Oleshky face death from hunger or disease as another harsh winter looms, some attempt to escape via \"the road of death.\""
-     },
-     {
-      "id": "74165545",
-      "title": "FlyDubai passenger who survived hijacking attempt speaks out",
-      "link": "https://www.mynbc5.com/article/flydubai-passenger-speaks/74165545",
-      "ts": "2026-10-17T03:20:00+00:00",
-      "summary": "A FlyDubai passenger whose flight plunged thousands of feet during an attack in the cockpit talked about his experience on Thursday."
-     },
-     {
-      "id": "74165395",
-      "title": "Kittens recovering after being buried alive in Florida backyard",
-      "link": "https://www.mynbc5.com/article/surviving-kittens-recovering-buried-alive-florida/74165395",
-      "ts": "2026-10-17T02:42:00+00:00",
-      "summary": "Two of the five kittens a Florida sheriff's office says were buried in a backyard are recovering and being cared for by a foster family before they can be adopted."
-     },
-     {
-      "id": "74165244",
-      "title": "Community tradition haunted house open for the season in Pittsford",
-      "link": "https://www.mynbc5.com/article/pittsford-fire-department-haunted-house/74165244",
-      "ts": "2026-10-17T02:38:00+00:00",
-      "summary": "The house, which raises money for the department, has been scaring the community for over 40 years"
-     },
-     {
-      "id": "74165253",
-      "title": "Coastal homes burn as hot winds fuel California fires",
-      "link": "https://www.mynbc5.com/article/norte-fire-california-wildfire/74165253",
-      "ts": "2026-10-17T02:29:00+00:00",
-      "summary": "High winds are fueling a fast-moving fire that has burned homes in Southern California."
      }
     ]
    },
@@ -1822,17 +1820,17 @@
     "venue": "Champlain Valley Exposition"
    },
    {
-    "id": "7e9d5ebed344",
-    "title": "'Very Eric Carle' Exhibit",
-    "link": "https://community.sevendaysvt.com/event/very-eric-carle-exhibit-45471609",
+    "id": "6c7387878e11",
+    "title": "'Champ: America’s Lake Monster' Exhibit",
+    "link": "https://community.sevendaysvt.com/event/champ-americas-lake-monster-exhibit-44279688",
     "ts": "2026-10-17T09:09:14-04:00",
     "start": "2026-10-17T10:00:00-04:00",
     "venue": "ECHO, Leahy Center for Lake Champlain"
    },
    {
-    "id": "6c7387878e11",
-    "title": "'Champ: America’s Lake Monster' Exhibit",
-    "link": "https://community.sevendaysvt.com/event/champ-americas-lake-monster-exhibit-44279688",
+    "id": "7e9d5ebed344",
+    "title": "'Very Eric Carle' Exhibit",
+    "link": "https://community.sevendaysvt.com/event/very-eric-carle-exhibit-45471609",
     "ts": "2026-10-17T09:09:14-04:00",
     "start": "2026-10-17T10:00:00-04:00",
     "venue": "ECHO, Leahy Center for Lake Champlain"
@@ -1844,14 +1842,6 @@
     "ts": "2026-10-17T09:09:14-04:00",
     "start": "2026-10-17T10:00:00-04:00",
     "venue": "AO Glass"
-   },
-   {
-    "id": "bcc601d05484",
-    "title": "BTown Coffee Club",
-    "link": "https://www.meetup.com/burlington-social-activites-group/events/316637181/",
-    "ts": "2026-09-26T19:08:49-04:00",
-    "start": "2026-10-17T10:00:00-04:00",
-    "venue": "Zero Gravity Craft Brewery"
    },
    {
     "id": "b0010077fd5b",
@@ -1868,6 +1858,14 @@
     "ts": "2026-09-28T13:48:33-04:00",
     "start": "2026-10-17T10:00:00-04:00",
     "venue": "Oakledge Park"
+   },
+   {
+    "id": "bcc601d05484",
+    "title": "BTown Coffee Club",
+    "link": "https://www.meetup.com/burlington-social-activites-group/events/316637181/",
+    "ts": "2026-09-26T19:08:49-04:00",
+    "start": "2026-10-17T10:00:00-04:00",
+    "venue": "Zero Gravity Craft Brewery"
    },
    {
     "id": "5558e92d0148",
@@ -2006,20 +2004,20 @@
     "venue": "ECHO, Leahy Center for Lake Champlain"
    },
    {
-    "id": "db82a049cf01",
-    "title": "Cruise aboard the Spirit of Ethan Allen III",
-    "link": "https://www.helloburlingtonvt.com/event/cruise-aboard-the-spirit-of-ethan-allen-iii/6292/",
-    "ts": "2026-10-14T10:38:50-04:00",
-    "start": "2026-10-17T12:00:00-04:00",
-    "venue": "Spirit of Ethan Allen"
-   },
-   {
     "id": "aa390a42f8ba",
     "title": "Live in the Orchard: Queen City Cut-Ups",
     "link": "https://community.sevendaysvt.com/event/live-in-the-orchard-queen-city-cut-ups-45487388",
     "ts": "2026-09-14T11:59:33-04:00",
     "start": "2026-10-17T12:00:00-04:00",
     "venue": "Shelburne Orchards"
+   },
+   {
+    "id": "db82a049cf01",
+    "title": "Cruise aboard the Spirit of Ethan Allen III",
+    "link": "https://www.helloburlingtonvt.com/event/cruise-aboard-the-spirit-of-ethan-allen-iii/6292/",
+    "ts": "2026-10-14T10:38:50-04:00",
+    "start": "2026-10-17T12:00:00-04:00",
+    "venue": "Spirit of Ethan Allen"
    },
    {
     "id": "2e49f1ebfc33",
@@ -2238,20 +2236,20 @@
     "venue": "Shelburne Farms"
    },
    {
-    "id": "399c5520c4a3",
-    "title": "Sneaker Soirée",
-    "link": "https://community.sevendaysvt.com/event/sneaker-soiree-45504429",
-    "ts": "2026-10-08T12:56:22-04:00",
-    "start": "2026-10-17T18:00:00-04:00",
-    "venue": "The Essex Resort & Spa"
-   },
-   {
     "id": "90f95bd02b5d",
     "title": "Two Towns",
     "link": "https://community.sevendaysvt.com/event/two-towns-45590851",
     "ts": "2026-10-15T10:24:08-04:00",
     "start": "2026-10-17T18:00:00-04:00",
     "venue": "1st Republic Brewing"
+   },
+   {
+    "id": "399c5520c4a3",
+    "title": "Sneaker Soirée",
+    "link": "https://community.sevendaysvt.com/event/sneaker-soiree-45504429",
+    "ts": "2026-10-08T12:56:22-04:00",
+    "start": "2026-10-17T18:00:00-04:00",
+    "venue": "The Essex Resort & Spa"
    },
    {
     "id": "d4f50204ce0d",
@@ -2310,12 +2308,12 @@
     "venue": "The Rep"
    },
    {
-    "id": "acac77dbc393",
-    "title": "Los Songoros",
-    "link": "https://community.sevendaysvt.com/event/los-songoros-45591043",
-    "ts": "2026-10-15T10:24:08-04:00",
+    "id": "4ae24ccbae92",
+    "title": "Queen City Ghostwalk: Darkness Falls Tour",
+    "link": "https://community.sevendaysvt.com/event/queen-city-ghostwalk-darkness-falls-tour-45485945",
+    "ts": "2026-09-10T09:48:32-04:00",
     "start": "2026-10-17T19:00:00-04:00",
-    "venue": "The S.P.A.C.E. Gallery"
+    "venue": "199 Main St."
    },
    {
     "id": "157aeec45278",
@@ -2326,12 +2324,12 @@
     "venue": "Queen City Lodge Oddfellows Hall"
    },
    {
-    "id": "4ae24ccbae92",
-    "title": "Queen City Ghostwalk: Darkness Falls Tour",
-    "link": "https://community.sevendaysvt.com/event/queen-city-ghostwalk-darkness-falls-tour-45485945",
-    "ts": "2026-09-10T09:48:32-04:00",
+    "id": "acac77dbc393",
+    "title": "Los Songoros",
+    "link": "https://community.sevendaysvt.com/event/los-songoros-45591043",
+    "ts": "2026-10-15T10:24:08-04:00",
     "start": "2026-10-17T19:00:00-04:00",
-    "venue": "199 Main St."
+    "venue": "The S.P.A.C.E. Gallery"
    },
    {
     "id": "dfcf46aa6a9d",
@@ -2430,20 +2428,20 @@
     "venue": "Higher Ground"
    },
    {
-    "id": "59179cdf4ce8",
-    "title": "The So & So's",
-    "link": "https://community.sevendaysvt.com/event/the-so-and-sos-45591031",
-    "ts": "2026-10-15T10:24:08-04:00",
-    "start": "2026-10-17T20:00:00-04:00",
-    "venue": "Standing Stone Wines"
-   },
-   {
     "id": "b4ac2074dbf7",
     "title": "Fires With Fathers",
     "link": "https://community.sevendaysvt.com/event/fires-with-fathers-45573101",
     "ts": "2026-10-08T12:56:22-04:00",
     "start": "2026-10-17T20:00:00-04:00",
     "venue": "Rock Point"
+   },
+   {
+    "id": "59179cdf4ce8",
+    "title": "The So & So's",
+    "link": "https://community.sevendaysvt.com/event/the-so-and-sos-45591031",
+    "ts": "2026-10-15T10:24:08-04:00",
+    "start": "2026-10-17T20:00:00-04:00",
+    "venue": "Standing Stone Wines"
    },
    {
     "id": "250adeefd95e",
@@ -2526,14 +2524,6 @@
     "venue": "Ken's Pizza & Pub"
    },
    {
-    "id": "5251ec6911cc",
-    "title": "Vermont International Film Festival",
-    "link": "https://community.sevendaysvt.com/event/vermont-international-film-festival-45509017",
-    "ts": "2026-10-17T09:09:14-04:00",
-    "start": "2026-10-17",
-    "venue": "Main Street Landing Performing Arts Center"
-   },
-   {
     "id": "2a82baa65b3c",
     "title": "'Norman Rockwell: At Home in Vermont'",
     "link": "https://community.sevendaysvt.com/event/norman-rockwell-at-home-in-vermont-44831320",
@@ -2574,14 +2564,6 @@
     "venue": "Birds of Vermont Museum"
    },
    {
-    "id": "db3fc2197908",
-    "title": "Peter Harrigan's Barbies",
-    "link": "https://community.sevendaysvt.com/event/peter-harrigans-barbies-45530451",
-    "ts": "2026-10-17T09:09:14-04:00",
-    "start": "2026-10-17",
-    "venue": "South Burlington Public Library"
-   },
-   {
     "id": "d023d5529c9a",
     "title": "'Body Horror: Immoral Feast III'",
     "link": "https://community.sevendaysvt.com/event/body-horror-immoral-feast-iii-45445061",
@@ -2590,12 +2572,12 @@
     "venue": "Spiral House Art Collective"
    },
    {
-    "id": "0a3748da794e",
-    "title": "Bonnie Acker",
-    "link": "https://community.sevendaysvt.com/event/bonnie-acker-45576485",
+    "id": "db3fc2197908",
+    "title": "Peter Harrigan's Barbies",
+    "link": "https://community.sevendaysvt.com/event/peter-harrigans-barbies-45530451",
     "ts": "2026-10-17T09:09:14-04:00",
     "start": "2026-10-17",
-    "venue": "Furchgott Sourdiffe Gallery"
+    "venue": "South Burlington Public Library"
    },
    {
     "id": "4f8992f15ddf",
@@ -2604,6 +2586,14 @@
     "ts": "2026-10-17T09:09:14-04:00",
     "start": "2026-10-17",
     "venue": "ArtsRiot"
+   },
+   {
+    "id": "0a3748da794e",
+    "title": "Bonnie Acker",
+    "link": "https://community.sevendaysvt.com/event/bonnie-acker-45576485",
+    "ts": "2026-10-17T09:09:14-04:00",
+    "start": "2026-10-17",
+    "venue": "Furchgott Sourdiffe Gallery"
    },
    {
     "id": "10992ff2aac5",
@@ -2630,44 +2620,12 @@
     "venue": "Patrick Leahy Burlington International Airport"
    },
    {
-    "id": "62e30cb9580e",
-    "title": "Ana Koehler and Hannah Cieri",
-    "link": "https://community.sevendaysvt.com/event/ana-koehler-and-hannah-cieri-45545668",
-    "ts": "2026-10-17T09:09:14-04:00",
-    "start": "2026-10-17",
-    "venue": "The S.P.A.C.E. Gallery"
-   },
-   {
-    "id": "980078e24bd0",
-    "title": "Wolf Kahn: Conversations in Color",
-    "link": "https://community.sevendaysvt.com/event/wolf-kahn-conversations-in-color-45483546",
-    "ts": "2026-10-17T09:09:14-04:00",
-    "start": "2026-10-17",
-    "venue": "Fleming Museum of Art"
-   },
-   {
-    "id": "9f8eeee6ead6",
-    "title": "'Dark Autumnal Work'",
-    "link": "https://community.sevendaysvt.com/event/dark-autumnal-work-45533554",
-    "ts": "2026-10-17T09:09:14-04:00",
-    "start": "2026-10-17",
-    "venue": "Gaston Weed Company"
-   },
-   {
     "id": "8b68e181d5f7",
     "title": "'Show Me to Me'",
     "link": "https://community.sevendaysvt.com/event/show-me-to-me-45509151",
     "ts": "2026-10-17T09:09:14-04:00",
     "start": "2026-10-17",
     "venue": "Maglianero"
-   },
-   {
-    "id": "c1912fc5d2a3",
-    "title": "'Catalyst: Art as Inquiry'",
-    "link": "https://community.sevendaysvt.com/event/catalyst-art-as-inquiry-45483543",
-    "ts": "2026-10-17T09:09:14-04:00",
-    "start": "2026-10-17",
-    "venue": "Fleming Museum of Art"
    },
    {
     "id": "5bb1bccface0",
@@ -2678,12 +2636,12 @@
     "venue": "South Burlington Public Library"
    },
    {
-    "id": "0d2112c41328",
-    "title": "'The Cut & Sew Show'",
-    "link": "https://community.sevendaysvt.com/event/the-cut-and-sew-show-45449069",
+    "id": "980078e24bd0",
+    "title": "Wolf Kahn: Conversations in Color",
+    "link": "https://community.sevendaysvt.com/event/wolf-kahn-conversations-in-color-45483546",
     "ts": "2026-10-17T09:09:14-04:00",
     "start": "2026-10-17",
-    "venue": "Maglianero"
+    "venue": "Fleming Museum of Art"
    },
    {
     "id": "86356b10ce42",
@@ -2692,6 +2650,30 @@
     "ts": "2026-10-17T09:09:14-04:00",
     "start": "2026-10-17",
     "venue": "Dwellness Shop"
+   },
+   {
+    "id": "9f8eeee6ead6",
+    "title": "'Dark Autumnal Work'",
+    "link": "https://community.sevendaysvt.com/event/dark-autumnal-work-45533554",
+    "ts": "2026-10-17T09:09:14-04:00",
+    "start": "2026-10-17",
+    "venue": "Gaston Weed Company"
+   },
+   {
+    "id": "c1912fc5d2a3",
+    "title": "'Catalyst: Art as Inquiry'",
+    "link": "https://community.sevendaysvt.com/event/catalyst-art-as-inquiry-45483543",
+    "ts": "2026-10-17T09:09:14-04:00",
+    "start": "2026-10-17",
+    "venue": "Fleming Museum of Art"
+   },
+   {
+    "id": "0d2112c41328",
+    "title": "'The Cut & Sew Show'",
+    "link": "https://community.sevendaysvt.com/event/the-cut-and-sew-show-45449069",
+    "ts": "2026-10-17T09:09:14-04:00",
+    "start": "2026-10-17",
+    "venue": "Maglianero"
    },
    {
     "id": "67a1760bfe35",
@@ -2718,12 +2700,12 @@
     "venue": "Heritage Winooski Mill Museum"
    },
    {
-    "id": "f7c4f3918dd6",
-    "title": "Champlain Valley Quilt Guild",
-    "link": "https://community.sevendaysvt.com/event/champlain-valley-quilt-guild-45603405",
+    "id": "62e30cb9580e",
+    "title": "Ana Koehler and Hannah Cieri",
+    "link": "https://community.sevendaysvt.com/event/ana-koehler-and-hannah-cieri-45545668",
     "ts": "2026-10-17T09:09:14-04:00",
     "start": "2026-10-17",
-    "venue": "Emile A. Gruppe Gallery"
+    "venue": "The S.P.A.C.E. Gallery"
    },
    {
     "id": "c860e0ed4694",
@@ -2734,12 +2716,28 @@
     "venue": "Various Locations"
    },
    {
+    "id": "5251ec6911cc",
+    "title": "Vermont International Film Festival",
+    "link": "https://www.helloburlingtonvt.com/event/vermont-international-film-festival/7981/",
+    "ts": "2026-10-17T09:09:14-04:00",
+    "start": "2026-10-17",
+    "venue": "Main Street Landing Performing Arts Center"
+   },
+   {
     "id": "14524103df90",
     "title": "PokeKon Fest - Burlington, VT 2026",
     "link": "https://www.mychamplainvalley.com/calendar/#/details/pokekon-fest-burlington-vt-2026/19074588/2026-10-17T00",
     "ts": "2026-08-18T06:01:18-04:00",
     "start": "2026-10-17",
     "venue": "DoubleTree by Hilton Burlington Vermont"
+   },
+   {
+    "id": "f7c4f3918dd6",
+    "title": "Champlain Valley Quilt Guild",
+    "link": "https://community.sevendaysvt.com/event/champlain-valley-quilt-guild-45603405",
+    "ts": "2026-10-17T09:09:14-04:00",
+    "start": "2026-10-17",
+    "venue": "Emile A. Gruppe Gallery"
    },
    {
     "id": "616da66565b6",
@@ -2958,20 +2956,20 @@
     "venue": "Shelburne Vineyard"
    },
    {
-    "id": "b1b48b0d14d2",
-    "title": "Champlain Valley Buddy Walk",
-    "link": "https://community.sevendaysvt.com/event/champlain-valley-buddy-walk-45526846",
-    "ts": "2026-10-08T12:56:22-04:00",
-    "start": "2026-10-18T13:00:00-04:00",
-    "venue": "Veterans Memorial Park"
-   },
-   {
     "id": "cb26e9d3634b",
     "title": "Duplicate Bridge Games",
     "link": "https://community.sevendaysvt.com/event/duplicate-bridge-games-41579461",
     "ts": "2026-08-30T13:28:30-04:00",
     "start": "2026-10-18T13:00:00-04:00",
     "venue": "Burlington Bridge Club"
+   },
+   {
+    "id": "b1b48b0d14d2",
+    "title": "Champlain Valley Buddy Walk",
+    "link": "https://community.sevendaysvt.com/event/champlain-valley-buddy-walk-45526846",
+    "ts": "2026-10-08T12:56:22-04:00",
+    "start": "2026-10-18T13:00:00-04:00",
+    "venue": "Veterans Memorial Park"
    },
    {
     "id": "586a71c4e477",
@@ -3110,18 +3108,18 @@
     "venue": "Westford Common Hall"
    },
    {
-    "id": "3e6237709b69",
-    "title": "Story Songs of the 70s - Fall Edition",
-    "link": "https://www.mychamplainvalley.com/calendar/#/details/story-songs-of-the-70s-fall-edition/19889584/2026-10-18T16",
-    "ts": "2026-10-17T09:09:14-04:00",
-    "start": "2026-10-18T16:00:00-04:00",
-    "venue": "Cathedral Church of St. Paul"
-   },
-   {
     "id": "3d64326d0a42",
     "title": "'Story Songs of the 70s'",
     "link": "https://community.sevendaysvt.com/event/story-songs-of-the-70s-45489545",
     "ts": "2026-10-08T12:56:22-04:00",
+    "start": "2026-10-18T16:00:00-04:00",
+    "venue": "Cathedral Church of St. Paul"
+   },
+   {
+    "id": "3e6237709b69",
+    "title": "Story Songs of the 70s - Fall Edition",
+    "link": "https://www.mychamplainvalley.com/calendar/#/details/story-songs-of-the-70s-fall-edition/19889584/2026-10-18T16",
+    "ts": "2026-10-17T09:09:14-04:00",
     "start": "2026-10-18T16:00:00-04:00",
     "venue": "Cathedral Church of St. Paul"
    },
@@ -3854,20 +3852,20 @@
     "venue": "Fletcher Free Library"
    },
    {
-    "id": "a233b379196d",
-    "title": "Local Dork",
-    "link": "https://community.sevendaysvt.com/event/local-dork-45549419",
-    "ts": "2026-09-29T12:06:11-04:00",
-    "start": "2026-10-20T18:00:00-04:00",
-    "venue": "Foam Brewers"
-   },
-   {
     "id": "e011242c519c",
     "title": "Bashment Tuesday",
     "link": "https://community.sevendaysvt.com/event/bashment-tuesday-44278125",
     "ts": "2026-08-30T13:28:30-04:00",
     "start": "2026-10-20T18:00:00-04:00",
     "venue": "Akes' Place"
+   },
+   {
+    "id": "a233b379196d",
+    "title": "Local Dork",
+    "link": "https://community.sevendaysvt.com/event/local-dork-45549419",
+    "ts": "2026-09-29T12:06:11-04:00",
+    "start": "2026-10-20T18:00:00-04:00",
+    "venue": "Foam Brewers"
    },
    {
     "id": "92781fac0597",
@@ -4902,6 +4900,14 @@
     "venue": "La Reprise"
    },
    {
+    "id": "4199b1783a7f",
+    "title": "Minecraft Meet-up",
+    "link": "https://fletcherfree.libcal.com/event/17358992",
+    "ts": "2026-10-17T18:39:26-04:00",
+    "start": "2026-10-22T16:30:00-04:00",
+    "venue": "Fletcher Free Library"
+   },
+   {
     "id": "d597239c7c71",
     "title": "Mr. Nobody Against Putin: Film Screening and Director Q&A",
     "link": "https://events.uvm.edu/event/mr-nobody-against-putin-film-screening-and-director-qa",
@@ -4910,20 +4916,20 @@
     "venue": "Billings Library"
    },
    {
-    "id": "07d91732d3fd",
-    "title": "Minecraft Meet-up",
-    "link": "https://fletcherfree.libcal.com/event/17358992",
-    "ts": "2026-08-23T05:56:20-04:00",
-    "start": "2026-10-22T17:00:00-04:00",
-    "venue": "New North End Branch"
-   },
-   {
     "id": "ed1812bc0874",
     "title": "Martini Night at The Daily Planet",
     "link": "https://calendar.time.ly/vfaca7kw/event/78067580/20261022170000",
     "ts": "2026-08-23T05:56:20-04:00",
     "start": "2026-10-22T17:00:00-04:00",
     "venue": ""
+   },
+   {
+    "id": "07d91732d3fd",
+    "title": "Minecraft Meet-up",
+    "link": "https://fletcherfree.libcal.com/event/17358992",
+    "ts": "2026-08-23T05:56:20-04:00",
+    "start": "2026-10-22T17:00:00-04:00",
+    "venue": "New North End Branch"
    },
    {
     "id": "2856d5246c30",
@@ -5500,14 +5506,6 @@
     "ts": "2026-10-13T13:06:34-04:00",
     "start": "2026-10-23T15:30:00-04:00",
     "venue": "Champlain Art Gallery, Center for Communication & Creative Media (CCM)"
-   },
-   {
-    "id": "2ed76f357ecb",
-    "title": "Food Challenge for Kids",
-    "link": "https://calendar.time.ly/nt0nyapn/event/78448868/20261023153000",
-    "ts": "2026-08-26T20:04:49-04:00",
-    "start": "2026-10-23T15:30:00-04:00",
-    "venue": "Winooski Memorial Library"
    },
    {
     "id": "9412290313b6",
@@ -6334,14 +6332,6 @@
     "venue": "The Monkey House"
    },
    {
-    "id": "57c0e56f579d",
-    "title": "Lamplight & Fowl",
-    "link": "https://www.monkeyhousevt.com/events/lamplight-the-clearwater-swimmers-amp-fowl",
-    "ts": "2026-10-07T20:24:11-04:00",
-    "start": "2026-10-24T20:00:00.573000-04:00",
-    "venue": "The Monkey House"
-   },
-   {
     "id": "1c57d3ef908e-2030",
     "title": "Sam Jay",
     "link": "https://www-vermontcomedyclub-com.seatengine.com/shows/359255",
@@ -6788,6 +6778,14 @@
     "ts": "2026-10-11T19:58:39-04:00",
     "start": "2026-10-26T09:10:00-04:00",
     "venue": "Leddy Park"
+   },
+   {
+    "id": "b304e78cf5d8",
+    "title": "Italian Book Club: Viaggi e Destini",
+    "link": "https://southburlingtonlibrary.org/italian-book-club-viaggi-e-destini",
+    "ts": "2026-10-17T18:39:26-04:00",
+    "start": "2026-10-26T10:15:00-04:00",
+    "venue": "South Burlington Public Library"
    },
    {
     "id": "43306a2c71c7",
@@ -7286,20 +7284,20 @@
     "venue": "Fletcher Free Library"
    },
    {
-    "id": "7d23682ac9b5",
-    "title": "Local Dork",
-    "link": "https://community.sevendaysvt.com/event/local-dork-45549419",
-    "ts": "2026-09-29T12:06:11-04:00",
-    "start": "2026-10-27T18:00:00-04:00",
-    "venue": "Foam Brewers"
-   },
-   {
     "id": "ace7ec179076",
     "title": "Bashment Tuesday",
     "link": "https://community.sevendaysvt.com/event/bashment-tuesday-44278125",
     "ts": "2026-08-30T13:28:30-04:00",
     "start": "2026-10-27T18:00:00-04:00",
     "venue": "Akes' Place"
+   },
+   {
+    "id": "7d23682ac9b5",
+    "title": "Local Dork",
+    "link": "https://community.sevendaysvt.com/event/local-dork-45549419",
+    "ts": "2026-09-29T12:06:11-04:00",
+    "start": "2026-10-27T18:00:00-04:00",
+    "venue": "Foam Brewers"
    },
    {
     "id": "35b319fda403",
@@ -8334,12 +8332,12 @@
     "venue": "South Burlington Public Library"
    },
    {
-    "id": "ddf471ea6d81",
+    "id": "899d56097989",
     "title": "Minecraft Meet-up",
     "link": "https://fletcherfree.libcal.com/event/17358993",
-    "ts": "2026-08-30T10:30:27-04:00",
-    "start": "2026-10-29T17:00:00-04:00",
-    "venue": "New North End Branch"
+    "ts": "2026-10-17T18:39:26-04:00",
+    "start": "2026-10-29T16:30:00-04:00",
+    "venue": "Fletcher Free Library"
    },
    {
     "id": "64c4082056c3",
@@ -8348,6 +8346,14 @@
     "ts": "2026-08-30T10:30:27-04:00",
     "start": "2026-10-29T17:00:00-04:00",
     "venue": ""
+   },
+   {
+    "id": "ddf471ea6d81",
+    "title": "Minecraft Meet-up",
+    "link": "https://fletcherfree.libcal.com/event/17358993",
+    "ts": "2026-08-30T10:30:27-04:00",
+    "start": "2026-10-29T17:00:00-04:00",
+    "venue": "New North End Branch"
    },
    {
     "id": "6d3476347263",
@@ -8750,22 +8756,6 @@
     "venue": "Vermont Comedy Club"
    },
    {
-    "id": "c5b35c44a50f",
-    "title": "Live Music",
-    "link": "https://calendar.time.ly/vfaca7kw/event/78470848/20261030173000",
-    "ts": "2026-09-22T19:15:39-04:00",
-    "start": "2026-10-30T17:30:00-04:00",
-    "venue": "Switchback Brewing Company"
-   },
-   {
-    "id": "2994140f1373",
-    "title": "Madigan Linnane",
-    "link": "https://community.sevendaysvt.com/event/madigan-linnane-45524180",
-    "ts": "2026-09-28T13:48:33-04:00",
-    "start": "2026-10-30T17:30:00-04:00",
-    "venue": "Switchback Brewing Company"
-   },
-   {
     "id": "0f126a81a667",
     "title": "Monsters Ball Adventure Dinner",
     "link": "https://www.helloburlingtonvt.com/event/monsters-ball-adventure-dinner/8086/",
@@ -9022,14 +9012,6 @@
     "venue": "Fletcher Free Library"
    },
    {
-    "id": "d74ff56a591a",
-    "title": "BTown Coffee Club",
-    "link": "https://www.meetup.com/burlington-social-activites-group/events/316902278/",
-    "ts": "2026-10-10T19:48:59-04:00",
-    "start": "2026-10-31T10:00:00-04:00",
-    "venue": "Zero Gravity Craft Brewery"
-   },
-   {
     "id": "5c1ee2b8da02",
     "title": "Trick-or-Treat at Fletcher Free Library",
     "link": "https://fletcherfree.libcal.com/event/17687658",
@@ -9044,6 +9026,14 @@
     "ts": "2026-10-05T14:49:31-04:00",
     "start": "2026-10-31T10:00:00-04:00",
     "venue": "Birds of Vermont Museum"
+   },
+   {
+    "id": "d74ff56a591a",
+    "title": "BTown Coffee Club",
+    "link": "https://www.meetup.com/burlington-social-activites-group/events/316902278/",
+    "ts": "2026-10-10T19:48:59-04:00",
+    "start": "2026-10-31T10:00:00-04:00",
+    "venue": "Zero Gravity Craft Brewery"
    },
    {
     "id": "177e0563aad6",
@@ -9886,14 +9876,6 @@
     "venue": "McKee's Original"
    },
    {
-    "id": "b18957e04933",
-    "title": "Trivia with Craig Mitchell",
-    "link": "https://community.sevendaysvt.com/event/trivia-with-craig-mitchell-40943661",
-    "ts": "2026-09-03T09:50:39-04:00",
-    "start": "2026-11-02T19:00:00-05:00",
-    "venue": "Monkey House"
-   },
-   {
     "id": "77ea36f7d825",
     "title": "Trivia with Craig Mitchell @ The Monkey House",
     "link": "https://www.monkeyhousevt.com/events/c92gc468rlb7lax-c25zg-gjxwj-9ycmw-8yy53-532p5-rz9mh-c2e72-dcabg-dad5y-3ltrc-45efj-7h38j-bgspc",
@@ -10182,20 +10164,20 @@
     "venue": "Fletcher Free Library"
    },
    {
-    "id": "5cf35951fe55",
-    "title": "Local Dork",
-    "link": "https://community.sevendaysvt.com/event/local-dork-45549419",
-    "ts": "2026-09-29T12:06:11-04:00",
-    "start": "2026-11-03T18:00:00-05:00",
-    "venue": "Foam Brewers"
-   },
-   {
     "id": "9f8353d2b206",
     "title": "Bashment Tuesday",
     "link": "https://community.sevendaysvt.com/event/bashment-tuesday-44278125",
     "ts": "2026-09-04T09:44:35-04:00",
     "start": "2026-11-03T18:00:00-05:00",
     "venue": "Akes' Place"
+   },
+   {
+    "id": "5cf35951fe55",
+    "title": "Local Dork",
+    "link": "https://community.sevendaysvt.com/event/local-dork-45549419",
+    "ts": "2026-09-29T12:06:11-04:00",
+    "start": "2026-11-03T18:00:00-05:00",
+    "venue": "Foam Brewers"
    },
    {
     "id": "8bdd5d34396e",
@@ -11070,6 +11052,14 @@
     "venue": "Howe Library"
    },
    {
+    "id": "a7afde00b7d6",
+    "title": "Knit for your Neighbors",
+    "link": "https://southburlingtonlibrary.org/knit-for-your-neighbors",
+    "ts": "2026-10-17T18:39:26-04:00",
+    "start": "2026-11-05T14:00:00-05:00",
+    "venue": "South Burlington Public Library"
+   },
+   {
     "id": "3025d696be87",
     "title": "Understanding Cannabis and Anxiety: For You and Your Community",
     "link": "https://www.champlain.edu/event/understanding-cannabis-and-anxiety-for-you-and-your-community-2/",
@@ -11118,12 +11108,28 @@
     "venue": "La Reprise"
    },
    {
+    "id": "32d43af19ab0",
+    "title": "Kids Book Club for K-2",
+    "link": "https://southburlingtonlibrary.org/kids-book-club-for-k-2-and-their-parents-winnie-the-pooh",
+    "ts": "2026-10-17T18:39:26-04:00",
+    "start": "2026-11-05T16:00:00-05:00",
+    "venue": "South Burlington Public Library"
+   },
+   {
     "id": "8bde9ff0ec75",
     "title": "Tree ID and Natural History Tour of Ethan Allen Park",
     "link": "https://www.mychamplainvalley.com/calendar/#/details/tree-id-and-natural-history-tour-of-ethan-allen-park/20035285/2026-11-05T16",
     "ts": "2026-09-28T13:48:33-04:00",
     "start": "2026-11-05T16:00:00-05:00",
     "venue": "Oakledge Park"
+   },
+   {
+    "id": "0994fc7e7473",
+    "title": "Minecraft Meet-up",
+    "link": "https://fletcherfree.libcal.com/event/17358994",
+    "ts": "2026-10-17T18:39:26-04:00",
+    "start": "2026-11-05T16:30:00-05:00",
+    "venue": "Fletcher Free Library"
    },
    {
     "id": "556e56724a46",
@@ -11150,20 +11156,20 @@
     "venue": "Burlington High School"
    },
    {
-    "id": "619acdd842ae",
-    "title": "Minecraft Meet-up",
-    "link": "https://fletcherfree.libcal.com/event/17358994",
-    "ts": "2026-09-06T09:05:39-04:00",
-    "start": "2026-11-05T17:00:00-05:00",
-    "venue": "New North End Branch"
-   },
-   {
     "id": "431863b5f483",
     "title": "Martini Night at The Daily Planet",
     "link": "https://calendar.time.ly/vfaca7kw/event/78067580/20261105170000",
     "ts": "2026-09-06T09:05:39-04:00",
     "start": "2026-11-05T17:00:00-05:00",
     "venue": ""
+   },
+   {
+    "id": "619acdd842ae",
+    "title": "Minecraft Meet-up",
+    "link": "https://fletcherfree.libcal.com/event/17358994",
+    "ts": "2026-09-06T09:05:39-04:00",
+    "start": "2026-11-05T17:00:00-05:00",
+    "venue": "New North End Branch"
    },
    {
     "id": "7d4ee9ac71bc",
@@ -11468,6 +11474,14 @@
     "ts": "2026-09-07T11:14:17-04:00",
     "start": "2026-11-06T15:00:00-05:00",
     "venue": "Vermont Pub and Brewery"
+   },
+   {
+    "id": "81fa0a354bfb",
+    "title": "Friday LEGO Builders",
+    "link": "https://southburlingtonlibrary.org/lego-builders",
+    "ts": "2026-10-17T18:39:26-04:00",
+    "start": "2026-11-06T15:00:00-05:00",
+    "venue": "South Burlington Public Library"
    },
    {
     "id": "4101d2260ec5",
@@ -11796,6 +11810,14 @@
     "ts": "2026-10-08T12:56:22-04:00",
     "start": "2026-11-07T13:00:00-05:00",
     "venue": "Burnham Memorial Library"
+   },
+   {
+    "id": "639a0595e7f8",
+    "title": "Thursday Murder Club",
+    "link": "https://www.meetup.com/burlington-brewery-book-club/events/317028215/",
+    "ts": "2026-10-17T18:39:26-04:00",
+    "start": "2026-11-07T15:00:00-05:00",
+    "venue": "Burlington Beer Company"
    },
    {
     "id": "0717544c823d",
@@ -12374,14 +12396,6 @@
     "venue": "Outright Vermont"
    },
    {
-    "id": "f01377f7c5ea",
-    "title": "Trivia with Craig Mitchell",
-    "link": "https://community.sevendaysvt.com/event/trivia-with-craig-mitchell-40943661",
-    "ts": "2026-09-10T09:48:32-04:00",
-    "start": "2026-11-09T19:00:00-05:00",
-    "venue": "Monkey House"
-   },
-   {
     "id": "730fc0c44690",
     "title": "Trivia with Craig Mitchell @ The Monkey House",
     "link": "https://www.monkeyhousevt.com/events/c92gc468rlb7lax-c25zg-gjxwj-9ycmw-8yy53-532p5-rz9mh-c2e72-dcabg-dad5y-3ltrc-45efj-7h38j-bgspc-xergd",
@@ -12444,14 +12458,6 @@
     "ts": "2026-10-11T19:58:39-04:00",
     "start": "2026-11-10T09:15:00-05:00",
     "venue": "Leddy Park"
-   },
-   {
-    "id": "e6a003686b7d",
-    "title": "Current Events",
-    "link": "https://brownelllibrary.org/event/current-events-2/2026-11-10/",
-    "ts": "2026-09-11T09:47:53-04:00",
-    "start": "2026-11-10T10:00:00-05:00",
-    "venue": "Brownell Library"
    },
    {
     "id": "3c6bd4d8ffb7",
@@ -12522,7 +12528,7 @@
     "title": "Craftytown! Stick Season Wands",
     "link": "https://southburlingtonlibrary.org/craftytown-stick-season-wands",
     "ts": "2026-10-08T12:56:22-04:00",
-    "start": "2026-11-10T15:00:00-05:00",
+    "start": "2026-11-10T13:00:00-05:00",
     "venue": "South Burlington Public Library"
    },
    {
@@ -12638,20 +12644,20 @@
     "venue": "Fletcher Free Library"
    },
    {
-    "id": "1e047e6d8973",
-    "title": "Local Dork",
-    "link": "https://community.sevendaysvt.com/event/local-dork-45549419",
-    "ts": "2026-09-29T12:06:11-04:00",
-    "start": "2026-11-10T18:00:00-05:00",
-    "venue": "Foam Brewers"
-   },
-   {
     "id": "ccf2effa941d",
     "title": "Bashment Tuesday",
     "link": "https://community.sevendaysvt.com/event/bashment-tuesday-44278125",
     "ts": "2026-09-11T09:47:53-04:00",
     "start": "2026-11-10T18:00:00-05:00",
     "venue": "Akes' Place"
+   },
+   {
+    "id": "1e047e6d8973",
+    "title": "Local Dork",
+    "link": "https://community.sevendaysvt.com/event/local-dork-45549419",
+    "ts": "2026-09-29T12:06:11-04:00",
+    "start": "2026-11-10T18:00:00-05:00",
+    "venue": "Foam Brewers"
    },
    {
     "id": "3c8a98e286be",
@@ -12806,14 +12812,6 @@
     "venue": "Dorothy Alling Memorial Library"
    },
    {
-    "id": "779b320f5d9a",
-    "title": "Tech Help with Clif",
-    "link": "https://brownelllibrary.org/event/tech-help-with-clif-6/2026-11-11/",
-    "ts": "2026-09-12T09:05:50-04:00",
-    "start": "2026-11-11T10:30:00-05:00",
-    "venue": "Brownell Library"
-   },
-   {
     "id": "bef0f0a2ff3f",
     "title": "Stick & Puck",
     "link": "https://www.burlingtonvt.gov/calendar.aspx?EID=5202",
@@ -12884,14 +12882,6 @@
     "ts": "2026-09-13T09:52:26-04:00",
     "start": "2026-11-11T12:15:00-05:00",
     "venue": "Howe Library"
-   },
-   {
-    "id": "779b320f5d9a-1300",
-    "title": "Tech Help with Clif",
-    "link": "https://brownelllibrary.org/event/tech-help-with-clif-7/2026-11-11/",
-    "ts": "2026-09-12T09:05:50-04:00",
-    "start": "2026-11-11T13:00:00-05:00",
-    "venue": "Brownell Library"
    },
    {
     "id": "56ab3407ddbf",
@@ -13246,6 +13236,14 @@
     "venue": "Green Mountain Audubon Center"
    },
    {
+    "id": "0b70e216eaf4",
+    "title": "Toddlertime- 9:15am Session",
+    "link": "https://southburlingtonlibrary.org/toddlertime-915am-session",
+    "ts": "2026-10-17T18:39:26-04:00",
+    "start": "2026-11-12T09:15:00-05:00",
+    "venue": "South Burlington Public Library"
+   },
+   {
     "id": "0b740d518fa8",
     "title": "Baby & Me Class",
     "link": "https://community.sevendaysvt.com/event/baby-and-me-class-41827771",
@@ -13276,6 +13274,14 @@
     "ts": "2026-10-08T12:56:22-04:00",
     "start": "2026-11-12T10:00:00-05:00",
     "venue": "Career Collaborative – Perry Hall Room 174"
+   },
+   {
+    "id": "dd5db1277aae",
+    "title": "Toddlertime- 10:30am Session",
+    "link": "https://southburlingtonlibrary.org/toddlertime-1030-session",
+    "ts": "2026-10-17T18:39:26-04:00",
+    "start": "2026-11-12T10:30:00-05:00",
+    "venue": "South Burlington Public Library"
    },
    {
     "id": "5ebbec20e1c3",
@@ -13366,6 +13372,14 @@
     "venue": "Heineberg Senior Center"
    },
    {
+    "id": "e86e0ab4c4ab",
+    "title": "Knit for your Neighbors",
+    "link": "https://southburlingtonlibrary.org/knit-for-your-neighbors",
+    "ts": "2026-10-17T18:39:26-04:00",
+    "start": "2026-11-12T14:00:00-05:00",
+    "venue": "South Burlington Public Library"
+   },
+   {
     "id": "b4cefb0ef796",
     "title": "Vermont Craft Brewers Conference",
     "link": "https://www.mychamplainvalley.com/calendar/#/details/vermont-craft-brewers-conference/19695969/2026-11-12T14",
@@ -13406,12 +13420,12 @@
     "venue": "South Burlington Public Library"
    },
    {
-    "id": "9c04ec9681cd",
+    "id": "b109d22ed627",
     "title": "Minecraft Meet-up",
     "link": "https://fletcherfree.libcal.com/event/17358995",
-    "ts": "2026-09-13T09:52:26-04:00",
-    "start": "2026-11-12T17:00:00-05:00",
-    "venue": "New North End Branch"
+    "ts": "2026-10-17T18:39:26-04:00",
+    "start": "2026-11-12T16:30:00-05:00",
+    "venue": "Fletcher Free Library"
    },
    {
     "id": "617da3828dd3",
@@ -13420,6 +13434,14 @@
     "ts": "2026-09-13T09:52:26-04:00",
     "start": "2026-11-12T17:00:00-05:00",
     "venue": ""
+   },
+   {
+    "id": "9c04ec9681cd",
+    "title": "Minecraft Meet-up",
+    "link": "https://fletcherfree.libcal.com/event/17358995",
+    "ts": "2026-09-13T09:52:26-04:00",
+    "start": "2026-11-12T17:00:00-05:00",
+    "venue": "New North End Branch"
    },
    {
     "id": "af13673896f1",
@@ -13748,6 +13770,14 @@
     "ts": "2026-09-14T11:59:33-04:00",
     "start": "2026-11-13T15:00:00-05:00",
     "venue": "Vermont Pub and Brewery"
+   },
+   {
+    "id": "78e45c58e8db",
+    "title": "Friday LEGO Builders",
+    "link": "https://southburlingtonlibrary.org/lego-builders",
+    "ts": "2026-10-17T18:39:26-04:00",
+    "start": "2026-11-13T15:00:00-05:00",
+    "venue": "South Burlington Public Library"
    },
    {
     "id": "6a067aa17ccd",
@@ -14814,14 +14844,6 @@
     "venue": "McKee's Original"
    },
    {
-    "id": "aba465097f1f",
-    "title": "Trivia with Craig Mitchell",
-    "link": "https://community.sevendaysvt.com/event/trivia-with-craig-mitchell-40943661",
-    "ts": "2026-09-17T10:26:31-04:00",
-    "start": "2026-11-16T19:00:00-05:00",
-    "venue": "Monkey House"
-   },
-   {
     "id": "484df60a9633",
     "title": "Trivia with Craig Mitchell @ The Monkey House",
     "link": "https://www.monkeyhousevt.com/events/c92gc468rlb7lax-c25zg-gjxwj-9ycmw-8yy53-532p5-rz9mh-c2e72-dcabg-dad5y-3ltrc-45efj-7h38j-bgspc-xergd-yzjfg",
@@ -15046,20 +15068,20 @@
     "venue": "Fletcher Free Library"
    },
    {
-    "id": "a1efee2ff14a",
-    "title": "Local Dork",
-    "link": "https://community.sevendaysvt.com/event/local-dork-45549419",
-    "ts": "2026-09-29T12:06:11-04:00",
-    "start": "2026-11-17T18:00:00-05:00",
-    "venue": "Foam Brewers"
-   },
-   {
     "id": "eb9b286097f1",
     "title": "Bashment Tuesday",
     "link": "https://community.sevendaysvt.com/event/bashment-tuesday-44278125",
     "ts": "2026-09-18T09:47:25-04:00",
     "start": "2026-11-17T18:00:00-05:00",
     "venue": "Akes' Place"
+   },
+   {
+    "id": "a1efee2ff14a",
+    "title": "Local Dork",
+    "link": "https://community.sevendaysvt.com/event/local-dork-45549419",
+    "ts": "2026-09-29T12:06:11-04:00",
+    "start": "2026-11-17T18:00:00-05:00",
+    "venue": "Foam Brewers"
    },
    {
     "id": "cc7f4dfe36d4",
@@ -15294,6 +15316,14 @@
     "venue": "Brownell Library"
    },
    {
+    "id": "296200926c46",
+    "title": "Half Day Craftytown! Perler Beads",
+    "link": "https://southburlingtonlibrary.org/half-day-craftytown",
+    "ts": "2026-10-17T18:39:26-04:00",
+    "start": "2026-11-18T13:00:00-05:00",
+    "venue": "South Burlington Public Library"
+   },
+   {
     "id": "c537742e07c5",
     "title": "Howard Center: Community Partners Desk",
     "link": "https://fletcherfree.libcal.com/event/17106658",
@@ -15306,14 +15336,6 @@
     "title": "Kids' Puzzle Swap",
     "link": "https://southburlingtonlibrary.org/kids-puzzle-swap-2025",
     "ts": "2026-10-10T19:48:59-04:00",
-    "start": "2026-11-18T14:30:00-05:00",
-    "venue": "South Burlington Public Library"
-   },
-   {
-    "id": "3abf9a87b71c",
-    "title": "Puzzle Swap",
-    "link": "https://southburlingtonlibrary.org/puzzle-swap",
-    "ts": "2026-09-19T09:22:07-04:00",
     "start": "2026-11-18T14:30:00-05:00",
     "venue": "South Burlington Public Library"
    },
@@ -15428,6 +15450,14 @@
     "ts": "2026-10-12T15:18:29-04:00",
     "start": "2026-11-18T17:30:00-05:00",
     "venue": "Shambhala Meditation Center"
+   },
+   {
+    "id": "0bb27378ac0d",
+    "title": "Pick-up Basketball",
+    "link": "https://www.meetup.com/burlington-social-activites-group/events/ggcpbvyjcpbxb/",
+    "ts": "2026-10-17T18:39:26-04:00",
+    "start": "2026-11-18T17:30:00-05:00",
+    "venue": "Gutterson Fieldhouse"
    },
    {
     "id": "4b99f3da2c71",
@@ -15638,6 +15668,14 @@
     "venue": "Top of Church St."
    },
    {
+    "id": "6e565633425d",
+    "title": "Toddlertime- 9:15am Session",
+    "link": "https://southburlingtonlibrary.org/toddlertime-915am-session",
+    "ts": "2026-10-17T18:39:26-04:00",
+    "start": "2026-11-19T09:15:00-05:00",
+    "venue": "South Burlington Public Library"
+   },
+   {
     "id": "ab87f07c56e8",
     "title": "Baby & Me Class",
     "link": "https://community.sevendaysvt.com/event/baby-and-me-class-41827771",
@@ -15660,6 +15698,14 @@
     "ts": "2026-09-23T10:24:21-04:00",
     "start": "2026-11-19T10:00:00-05:00",
     "venue": "Dana Health Sciences Library"
+   },
+   {
+    "id": "052f358d3240",
+    "title": "Toddlertime- 10:30am Session",
+    "link": "https://southburlingtonlibrary.org/toddlertime-1030-session",
+    "ts": "2026-10-17T18:39:26-04:00",
+    "start": "2026-11-19T10:30:00-05:00",
+    "venue": "South Burlington Public Library"
    },
    {
     "id": "76e59387b817",
@@ -15742,6 +15788,14 @@
     "venue": "Heineberg Senior Center"
    },
    {
+    "id": "42a77dc883f2",
+    "title": "Knit for your Neighbors",
+    "link": "https://southburlingtonlibrary.org/knit-for-your-neighbors",
+    "ts": "2026-10-17T18:39:26-04:00",
+    "start": "2026-11-19T14:00:00-05:00",
+    "venue": "South Burlington Public Library"
+   },
+   {
     "id": "29035dad48dc",
     "title": "Pub Hour",
     "link": "https://calendar.time.ly/vfaca7kw/event/78304347/20261119150000",
@@ -15766,6 +15820,14 @@
     "venue": "La Reprise"
    },
    {
+    "id": "c821187ef813",
+    "title": "Kids Book Club for K-2",
+    "link": "https://southburlingtonlibrary.org/kids-book-club-for-k-2-and-their-parents-winnie-the-pooh",
+    "ts": "2026-10-17T18:39:26-04:00",
+    "start": "2026-11-19T16:00:00-05:00",
+    "venue": "South Burlington Public Library"
+   },
+   {
     "id": "63c892630f4e",
     "title": "Minute-to-Win-It Hunger Games",
     "link": "https://southburlingtonlibrary.org/minute-to-win-it-hunger-games",
@@ -15774,12 +15836,12 @@
     "venue": "South Burlington Public Library"
    },
    {
-    "id": "c8e388d5e4f9",
+    "id": "bfd3b2b8767d",
     "title": "Minecraft Meet-up",
     "link": "https://fletcherfree.libcal.com/event/17358996",
-    "ts": "2026-09-20T09:40:15-04:00",
-    "start": "2026-11-19T17:00:00-05:00",
-    "venue": "New North End Branch"
+    "ts": "2026-10-17T18:39:26-04:00",
+    "start": "2026-11-19T16:30:00-05:00",
+    "venue": "Fletcher Free Library"
    },
    {
     "id": "bdc8c57695cf",
@@ -15788,6 +15850,14 @@
     "ts": "2026-09-20T09:40:15-04:00",
     "start": "2026-11-19T17:00:00-05:00",
     "venue": ""
+   },
+   {
+    "id": "c8e388d5e4f9",
+    "title": "Minecraft Meet-up",
+    "link": "https://fletcherfree.libcal.com/event/17358996",
+    "ts": "2026-09-20T09:40:15-04:00",
+    "start": "2026-11-19T17:00:00-05:00",
+    "venue": "New North End Branch"
    },
    {
     "id": "871be2d9e5a9",
@@ -16068,6 +16138,14 @@
     "ts": "2026-09-21T12:00:51-04:00",
     "start": "2026-11-20T15:00:00-05:00",
     "venue": "Vermont Pub and Brewery"
+   },
+   {
+    "id": "45dba6770a6b",
+    "title": "Friday LEGO Builders",
+    "link": "https://southburlingtonlibrary.org/lego-builders",
+    "ts": "2026-10-17T18:39:26-04:00",
+    "start": "2026-11-20T15:00:00-05:00",
+    "venue": "South Burlington Public Library"
    },
    {
     "id": "57c122cd27b2",
@@ -16726,6 +16804,14 @@
     "venue": "Leddy Park"
    },
    {
+    "id": "5555082aadaa",
+    "title": "Italian Book Club: Viaggi e Destini",
+    "link": "https://southburlingtonlibrary.org/italian-book-club-viaggi-e-destini",
+    "ts": "2026-10-17T18:39:26-04:00",
+    "start": "2026-11-23T10:15:00-05:00",
+    "venue": "South Burlington Public Library"
+   },
+   {
     "id": "d6e87148a12f",
     "title": "Tech Help with Clif",
     "link": "https://brownelllibrary.org/event/tech-help-with-clif/2026-11-23/",
@@ -16844,14 +16930,6 @@
     "ts": "2026-09-24T10:26:17-04:00",
     "start": "2026-11-23T19:00:00-05:00",
     "venue": ""
-   },
-   {
-    "id": "1275c2b45d1c",
-    "title": "Trivia with Craig Mitchell",
-    "link": "https://community.sevendaysvt.com/event/trivia-with-craig-mitchell-40943661",
-    "ts": "2026-09-24T10:26:17-04:00",
-    "start": "2026-11-23T19:00:00-05:00",
-    "venue": "Monkey House"
    },
    {
     "id": "2ab887c8d15b",
@@ -17054,20 +17132,20 @@
     "venue": "Fletcher Free Library"
    },
    {
-    "id": "54cd7a7f92b7",
-    "title": "Local Dork",
-    "link": "https://community.sevendaysvt.com/event/local-dork-45549419",
-    "ts": "2026-09-29T12:06:11-04:00",
-    "start": "2026-11-24T18:00:00-05:00",
-    "venue": "Foam Brewers"
-   },
-   {
     "id": "0147a9209057",
     "title": "Bashment Tuesday",
     "link": "https://community.sevendaysvt.com/event/bashment-tuesday-44278125",
     "ts": "2026-09-25T10:43:13-04:00",
     "start": "2026-11-24T18:00:00-05:00",
     "venue": "Akes' Place"
+   },
+   {
+    "id": "54cd7a7f92b7",
+    "title": "Local Dork",
+    "link": "https://community.sevendaysvt.com/event/local-dork-45549419",
+    "ts": "2026-09-29T12:06:11-04:00",
+    "start": "2026-11-24T18:00:00-05:00",
+    "venue": "Foam Brewers"
    },
    {
     "id": "665fea9d82d3",
@@ -18446,14 +18524,6 @@
     "venue": "Higher Ground"
    },
    {
-    "id": "a44c61af6145",
-    "title": "Trivia with Craig Mitchell",
-    "link": "https://community.sevendaysvt.com/event/trivia-with-craig-mitchell-40943661",
-    "ts": "2026-10-01T12:41:27-04:00",
-    "start": "2026-11-30T19:00:00-05:00",
-    "venue": "Monkey House"
-   },
-   {
     "id": "766b1bfdfc94",
     "title": "Trivia with Craig Mitchell @ The Monkey House",
     "link": "https://www.monkeyhousevt.com/events/c92gc468rlb7lax-c25zg-gjxwj-9ycmw-8yy53-532p5-rz9mh-c2e72-dcabg-dad5y-3ltrc-45efj-7h38j-bgspc-xergd-yzjfg-97pl6-6x64w",
@@ -18670,20 +18740,20 @@
     "venue": "Fletcher Free Library"
    },
    {
-    "id": "a8d08b674096",
-    "title": "Local Dork",
-    "link": "https://community.sevendaysvt.com/event/local-dork-45549419",
-    "ts": "2026-10-02T11:57:22-04:00",
-    "start": "2026-12-01T18:00:00-05:00",
-    "venue": "Foam Brewers"
-   },
-   {
     "id": "17e3f459bfc7",
     "title": "Bashment Tuesday",
     "link": "https://community.sevendaysvt.com/event/bashment-tuesday-44278125",
     "ts": "2026-10-02T11:57:22-04:00",
     "start": "2026-12-01T18:00:00-05:00",
     "venue": "Akes' Place"
+   },
+   {
+    "id": "a8d08b674096",
+    "title": "Local Dork",
+    "link": "https://community.sevendaysvt.com/event/local-dork-45549419",
+    "ts": "2026-10-02T11:57:22-04:00",
+    "start": "2026-12-01T18:00:00-05:00",
+    "venue": "Foam Brewers"
    },
    {
     "id": "1933eab074e6",
@@ -19846,6 +19916,14 @@
     "venue": "Burnham Memorial Library"
    },
    {
+    "id": "0c9bb443eb8d",
+    "title": "The Hill",
+    "link": "https://www.meetup.com/burlington-brewery-book-club/events/317028302/",
+    "ts": "2026-10-17T18:39:26-04:00",
+    "start": "2026-12-05T14:00:00-05:00",
+    "venue": "Upper Pass Beer Co"
+   },
+   {
     "id": "a9d93d33a7b8",
     "title": "Paul Winter’s Winter Solstice Celebration",
     "link": "https://community.sevendaysvt.com/event/paul-winters-winter-solstice-celebration-45563080",
@@ -20582,20 +20660,20 @@
     "venue": "Fletcher Free Library"
    },
    {
-    "id": "8cb0cd10f2aa",
-    "title": "Local Dork",
-    "link": "https://community.sevendaysvt.com/event/local-dork-45549419",
-    "ts": "2026-10-09T12:31:32-04:00",
-    "start": "2026-12-08T18:00:00-05:00",
-    "venue": "Foam Brewers"
-   },
-   {
     "id": "6be0189980d3",
     "title": "Bashment Tuesday",
     "link": "https://community.sevendaysvt.com/event/bashment-tuesday-44278125",
     "ts": "2026-10-09T12:31:32-04:00",
     "start": "2026-12-08T18:00:00-05:00",
     "venue": "Akes' Place"
+   },
+   {
+    "id": "8cb0cd10f2aa",
+    "title": "Local Dork",
+    "link": "https://community.sevendaysvt.com/event/local-dork-45549419",
+    "ts": "2026-10-09T12:31:32-04:00",
+    "start": "2026-12-08T18:00:00-05:00",
+    "venue": "Foam Brewers"
    },
    {
     "id": "9b840a79fec1",
@@ -22214,20 +22292,20 @@
     "venue": "Fletcher Free Library"
    },
    {
-    "id": "17e95eafaa1d",
-    "title": "Local Dork",
-    "link": "https://community.sevendaysvt.com/event/local-dork-45549419",
-    "ts": "2026-10-16T10:12:13-04:00",
-    "start": "2026-12-15T18:00:00-05:00",
-    "venue": "Foam Brewers"
-   },
-   {
     "id": "b39853a58fb8",
     "title": "Bashment Tuesday",
     "link": "https://community.sevendaysvt.com/event/bashment-tuesday-44278125",
     "ts": "2026-10-16T10:12:13-04:00",
     "start": "2026-12-15T18:00:00-05:00",
     "venue": "Akes' Place"
+   },
+   {
+    "id": "17e95eafaa1d",
+    "title": "Local Dork",
+    "link": "https://community.sevendaysvt.com/event/local-dork-45549419",
+    "ts": "2026-10-16T10:12:13-04:00",
+    "start": "2026-12-15T18:00:00-05:00",
+    "venue": "Foam Brewers"
    },
    {
     "id": "a5304e6e9afc",
