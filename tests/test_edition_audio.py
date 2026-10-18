@@ -72,12 +72,24 @@ class Script(unittest.TestCase):
                      "News Quiz", "Upcoming Home Games", "Men's hockey hosts",                          # the quiz and sports
                      "8:00 AM: Women Rising Summit", "Table of Contents", "[MEETUP]"):                  # the calendar, the contents, a bracket
             self.assertNotIn(gone, self.fri, gone)
-        self.assertIn("BTown Coffee Club – 10 AM:", self.fri)   # "[MEETUP]" dropped, the rest kept
+        self.assertIn("BTown Coffee Club (Meetup) – 10 AM:", self.fri)   # the brackets go, the word stays
         self.assertNotIn("AI", self.fri.split())
 
     def test_the_only_brackets_are_the_voice_marks(self):
         import re
         self.assertEqual(set(re.findall(r"\[[^\]]*\]", self.fri)), {"[pause]", "[long pause]"})
+
+    def test_brackets_keep_their_words(self):
+        self.assertEqual(ea.text_of("the vote did [not] pass [MEETUP] [Here]"), "the vote did (not) pass (Meetup) (Here)")
+
+    def test_a_changed_layout_fails_loud(self):
+        ed = dict(self.eds[FRIDAY])
+        ed["html"] = ed["html"].replace("Weather &amp; Weekend Rundown", "Your Weekend").replace("Weather & Weekend Rundown", "Your Weekend")
+        with self.assertRaises(ea.LayoutError):
+            ea.script_of(ed)
+        ed["html"] = self.eds[FRIDAY]["html"].replace('<p class="paragraph"><a', '<p class="paragraph">See <a')
+        with self.assertRaises(ea.LayoutError):
+            ea.script_of(ed)
 
     def test_monday_reads_too(self):
         script, stats = ea.script_of(self.eds["https://www.btownbrief.com/p/monday-october-12th"])
@@ -113,9 +125,11 @@ class Run(unittest.TestCase):
         self.tmp = tempfile.TemporaryDirectory()
         self.out = self.tmp.name
         self.calls = []
+        self.usage = (5000, 0)
         env = {"ELEVENLABS_API_KEY": "test-key", "ELEVENLABS_VOICE_ID": ""}
         self.patches = [mock.patch.dict(os.environ, env), mock.patch.object(ea, "load_secrets", lambda: None),
                         mock.patch.object(ea, "tts", side_effect=self.fake_tts),
+                        mock.patch.object(ea, "period_usage", side_effect=lambda key: self.usage),
                         mock.patch.object(ea, "join_and_normalize", side_effect=lambda parts, title: (b"".join(parts), 1234.5))]
         for p in self.patches:
             p.start()
@@ -212,7 +226,34 @@ class Run(unittest.TestCase):
             self.assertEqual(ea.run(args(self.out), now=NOW), 1)
         self.assertFalse(os.path.exists(os.path.join(self.out, "index.json")))
         with open(os.path.join(self.out, "cost.json"), encoding="utf-8") as src:
-            self.assertEqual(json.load(src)["tts_chars"], len(self.calls[0]))
+            cost = json.load(src)
+        self.assertEqual(cost["tts_chars"], len(self.calls[0]) + len(self.calls[1]))   # the piece that died counts
+        self.assertTrue(cost["runs"][-1]["failed"])
+
+    def test_two_failures_wait_for_force(self):
+        def broken(key, voice, text):
+            self.calls.append(text)
+            raise OSError("down")
+        with mock.patch.object(ea, "tts", side_effect=broken):
+            self.assertEqual(ea.run(args(self.out), now=NOW), 1)
+            self.assertEqual(ea.run(args(self.out), now=NOW), 1)
+            self.assertEqual(len(self.calls), 2)
+            self.assertEqual(ea.run(args(self.out), now=NOW), 1)
+            self.assertEqual(len(self.calls), 2)          # a third hour does not try again
+        self.assertEqual(ea.run(args(self.out, force=True), now=NOW), 0)
+        self.assertEqual(self.index()["clips"][0]["date"], "2026-10-16")
+
+    def test_the_account_is_the_cap_a_lost_ledger_cannot_beat(self):
+        self.usage = (300000, 0)                      # the ledger is empty (as after a failed push); the account is not
+        self.assertEqual(ea.run(args(self.out), now=NOW), 1)
+        self.usage = (20000, 35566)                   # a pay-as-you-go limit that one edition would pass
+        self.assertEqual(ea.run(args(self.out), now=NOW), 1)
+        self.assertFalse(self.calls)
+
+    def test_no_usage_reading_no_voice(self):
+        with mock.patch.object(ea, "period_usage", side_effect=OSError("403")):
+            self.assertEqual(ea.run(args(self.out), now=NOW), 1)
+        self.assertFalse(self.calls)
 
     def test_a_cut_gone_wrong_is_refused(self):
         with mock.patch.object(ea, "MAX_EDITION_CHARS", 5000):

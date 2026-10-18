@@ -16,7 +16,8 @@ name: The Brief, out loud
 # newsletter's RSS feed every hour from 8 am to midnight in Burlington and
 # voices an edition the first time it sees one (one a run, at most four days
 # old). A run with nothing new takes seconds and pushes nothing. About $1.50
-# an edition at ElevenLabs' eleven_v4 rate; the script caps the month at $25.
+# an edition at ElevenLabs' eleven_v4 rate; the script caps the month at $25,
+# checked against the ElevenLabs account's own usage before every voicing.
 #
 # Secrets: ELEVENLABS_API_KEY (required; without it the run ends green and
 # voices nothing) and ELEVENLABS_VOICE_ID (optional; default Wyatt).
@@ -99,8 +100,12 @@ jobs:
           ELEVENLABS_API_KEY: ${{ secrets.ELEVENLABS_API_KEY }}
           ELEVENLABS_VOICE_ID: ${{ secrets.ELEVENLABS_VOICE_ID }}
           EDITION: ${{ inputs.edition }}
-          FORCE: ${{ inputs.force && '--force' || '' }}
-        run: python3 scripts/build_edition_audio.py --out-dir /tmp/wa/data/audio $FORCE ${EDITION:+--edition "$EDITION"}
+          FORCE: ${{ inputs.force }}
+        run: |
+          args=(--out-dir /tmp/wa/data/audio)
+          if [ "$FORCE" = "true" ]; then args+=(--force); fi
+          if [ -n "$EDITION" ]; then args+=(--edition "$EDITION"); fi
+          python3 scripts/build_edition_audio.py "${args[@]}"
 
       - name: Force-push the single-commit wire-audio branch
         # Only when the run wrote something (a clip, or the cost of a failed

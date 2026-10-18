@@ -2010,6 +2010,8 @@ async function onAir(browser, base) {
     const tops = await page.$$eval('#panel-onair .railmode:not(.foot) [data-railmode]', (bs) => bs.map((b) => b.textContent + '|' + b.getAttribute('aria-pressed') + '|' + Math.round(b.getBoundingClientRect().height)));
     check(tops.length === 4 && tops.every((t) => /^See as a list\|false\|\d+$/.test(t) && Number(t.split('|')[2]) >= 30), 'sideways by default, “See as a list” above each rail', JSON.stringify(tops));
     check(!(await page.$$eval('#panel-onair .railmode.foot', (fs) => fs.filter((f) => !f.hidden).length)), 'no button at the foot of a sideways row', '');
+    const names = await page.$$eval('#panel-onair .railmode:not(.foot) [data-railmode]', (bs) => bs.map((b) => b.getAttribute('aria-label')));
+    check(new Set(names).size === 4 && names.every((n) => n.startsWith('See as a list: ')), 'each button names its rail for a screen reader, the visible words first', JSON.stringify(names));
     const measure = () => page.$eval('#panel-onair [data-rail="rest"]', (r) => {
       const cs = [...r.querySelectorAll(':scope > .vcard')];
       const boxes = cs.map((c) => c.getBoundingClientRect());

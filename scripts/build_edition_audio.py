@@ -19,13 +19,14 @@ hourly through the day):
      News" through QUICK HITS, which ends at the quiz). The events calendar,
      IRL, the projects plug, the support block, sports and the quiz are
      never read. An edition with no news section (the Wednesday format) is
-     skipped and logged, not guessed at.
+     skipped and logged, not guessed at; one with news but no intro, or a news
+     section with no headlines, means the layout changed and fails loudly.
   3. The script is those paragraphs in order, verbatim, with four fixed
      lines around them: who and when at the top, "Now, the local news.",
      "Quick hits.", and one short supporter line to close. Square brackets in
-     the text ("[MEETUP]", "[Here]") are dropped, because the voice takes a
-     bracketed word as direction; [pause] goes before each day and each
-     story, which is the only direction it gets.
+     the text ("[MEETUP]") become parentheses, because the voice takes a
+     bracketed word as direction and would not say it; [pause] goes before
+     each day and each story, which is the only direction it gets.
   4. ElevenLabs voices it with the same settings the recap used (eleven_v4,
      the voice in ELEVENLABS_VOICE_ID, default Wyatt, stability 0.4,
      similarity 0.65, place names respelled for the voice only). An edition
@@ -41,15 +42,20 @@ hourly through the day):
 
 Cost: ElevenLabs bills characters, $0.08 per 1,000 on eleven_v4 (API pricing
 page, checked 2026-10-18). An edition is about 19,000 characters, so about
-$1.50; two a week is about $13 a month. TTS_CAP_USD stops the month at $25 and
-MAX_EDITION_CHARS refuses an edition that parsed suspiciously long (a broken
-cut that swallowed the calendar), so a loop or a parser slip can never run up
-a bill. The spend goes to data/audio/cost.json, month to date.
+$1.50; two a week is about $13 a month. Three guards keep a loop or a parser
+slip from running up a bill: MAX_EDITION_CHARS refuses an edition that parsed
+suspiciously long (a broken cut that swallowed the calendar); TTS_CAP_USD
+stops the month at $25 by the ledger in data/audio/cost.json; and, because
+that ledger lives on the branch and a failed push would lose it, the run asks
+ElevenLabs itself for the billing period's usage before every voicing and
+refuses past PERIOD_CAP_CHARS or the account's own limit (room_for). An
+edition that fails twice waits for a run with --force.
 
-Failure posture: no ELEVENLABS_API_KEY, nothing new, a Wednesday, or the cap
-reached logs and exits 0 with nothing published. A voice or ffmpeg failure
-part way exits 1 so it is seen, and publishes nothing (the characters already
-spent are still recorded).
+Failure posture: no ELEVENLABS_API_KEY, nothing new, a Wednesday, or the
+month's cap reached logs and exits 0 with nothing published. A changed layout,
+an account out of room (or unreadable), or a voice or ffmpeg failure part way
+exits 1 so it is seen, and publishes nothing (characters sent are recorded,
+counting the piece that failed).
 
 CLI:
   --out-dir DIR     the data/audio folder to publish into (default data/audio)
@@ -106,6 +112,13 @@ MAX_EDITION_CHARS = 32000   # more than this and the cut swallowed something (th
 TTS_CAP_USD = 25.0          # a month: about sixteen editions, so two a week with room for a re-run
 MAX_AGE_DAYS = 4            # an edition older than this is never voiced on a schedule
 KEEP = 10                   # editions kept on the branch, about five weeks
+MAX_FAILS = 2               # failed tries at one edition before it waits for a person (--force)
+# The account's own count is the cap that cannot be lost: cost.json lives on
+# the branch, and a run whose push failed would not see what it spent. Before
+# any voice call the run asks ElevenLabs how many characters this billing
+# period has used, and refuses past PERIOD_CAP_CHARS (about $25) or the
+# account's own limit. If it cannot ask, it does not voice.
+PERIOD_CAP_CHARS = 310000
 
 GREETING = "This is the Btown Brief for {title}."
 NEWS_TURN = "Now, the local news."
@@ -123,7 +136,7 @@ QUICK_HEAD = re.compile(r"^quick hits\b", re.I)
 SKIP_LINE = re.compile(r"^(scroll down to events section|\*+\s*for best viewing)", re.I)
 DAY_LABEL = re.compile(r"^(monday|tuesday|wednesday|thursday|friday|saturday|sunday)$", re.I)
 LONE_LINK = re.compile(r"^\s*(?:<[^>]+>\s*)*<a\b[^>]*>.*?</a>\s*(?:</[^>]+>\s*)*$", re.S)
-BRACKETS = re.compile(r"\s*\[[^\[\]\n]*\]")
+BRACKETS = re.compile(r"\[([^\[\]\n]*)\]")
 
 
 # ----------------------------------------------------------------------
@@ -209,9 +222,19 @@ def editions(feed_xml):
     return sorted(out, key=lambda e: e["published"], reverse=True)
 
 
+def unbracket(m):
+    """"[MEETUP]" -> "(Meetup)", "[not]" -> "(not)": the voice takes a word in
+    square brackets as direction and never says it, so the brackets go and the
+    words stay (dropping them could flip a sentence: "did [not] pass")."""
+    inner = m.group(1).strip()
+    if inner.isupper() and len(inner) > 3:
+        inner = inner.capitalize()
+    return f"({inner})" if inner else ""
+
+
 def text_of(fragment):
     t = html.unescape(re.sub(r"<[^>]+>", "", fragment))
-    t = BRACKETS.sub("", t)
+    t = BRACKETS.sub(unbracket, t)
     return re.sub(r"\s+", " ", t).strip()
 
 
@@ -240,9 +263,16 @@ def sentence(t):
     return t if re.search(r"[.!?…:\"”’']$", t) else t + "."
 
 
+class LayoutError(Exception):
+    """A Monday or Friday whose sections are not where they always are: a
+    loud failure, never a half-read edition."""
+
+
 def script_of(ed):
-    """-> (script, stats) or (None, why). The script is plain paragraphs with
-    the voice's [pause] marks, the words all the edition's own."""
+    """-> (script, stats), or (None, why) for an edition with no news section
+    (a Wednesday). The script is plain paragraphs with the voice's [pause]
+    marks, the words all the edition's own. Raises LayoutError when the news
+    is there but the intro or the headlines are not."""
     intro = news = quick = None
     for head, frag in regions(ed["html"]):
         if intro is None and INTRO_HEAD.match(head):
@@ -253,6 +283,8 @@ def script_of(ed):
             quick = frag
     if news is None:
         return None, "no Local News section (a Wednesday-style edition), nothing to read"
+    if intro is None:
+        raise LayoutError(f"{ed['title']} has Local News but no Weather intro heading; the layout changed, nothing voiced")
     out = [GREETING.format(title=ed["title"])]
     for kind, t in paragraphs(intro or ""):
         out.append(f"{BEAT} {sentence(t)}" if kind == "day" else t)
@@ -271,7 +303,7 @@ def script_of(ed):
         out.extend(t for _, t in hits)
     out.append(f"{LONG_BEAT} {SIGN_OFF}")
     if not n:
-        return None, "the Local News section has no headlines; the layout may have changed"
+        raise LayoutError(f"{ed['title']}: the Local News section has no headlines; the layout changed, nothing voiced")
     script = "\n\n".join(out) + "\n"
     return script, {"stories": n, "quick": len(hits), "intro": bool(intro), "chars": len(for_voice(script))}
 
@@ -321,6 +353,27 @@ def tts(api_key, voice_id, text):
         headers={"xi-api-key": api_key, "Content-Type": "application/json", "Accept": "audio/mpeg"})
     with urllib.request.urlopen(req, timeout=300) as resp:
         return resp.read()
+
+
+def period_usage(api_key):
+    """-> (characters used this billing period, the account's limit or 0)."""
+    req = urllib.request.Request(f"{API}/user/subscription", headers={"xi-api-key": api_key, "Accept": "application/json"})
+    with urllib.request.urlopen(req, timeout=30) as resp:
+        d = json.load(resp)
+    return int(d.get("character_count") or 0), int(d.get("character_limit") or 0)
+
+
+def room_for(api_key, chars):
+    """'' when the account has room for `chars` more, else why not."""
+    try:
+        used, limit = period_usage(api_key)
+    except Exception as err:   # noqa: BLE001  (can't ask -> don't spend)
+        return f"could not read the ElevenLabs account's usage ({type(err).__name__}), so nothing is voiced"
+    ceiling = min(PERIOD_CAP_CHARS, limit) if limit else PERIOD_CAP_CHARS
+    if used + chars > ceiling:
+        return (f"ElevenLabs has used {used:,} characters this billing period; {chars:,} more would pass "
+                f"{ceiling:,} ({'the account limit' if limit and limit < PERIOD_CAP_CHARS else 'the cap'}), so nothing is voiced")
+    return ""
 
 
 def join_and_normalize(parts, title):
@@ -409,14 +462,16 @@ def load_cost(out_dir, now):
     return cost
 
 
-def record(out_dir, now, chars, what):
+def record(out_dir, now, chars, what, date=None, failed=False):
     cost = load_cost(out_dir, now)
     usd = round(chars / 1000 * USD_PER_1K_CHARS, 4)
     cost["v"] = 2
     cost["tts_chars"] += chars
     cost["tts_usd"] = round(cost["tts_usd"] + usd, 4)
-    cost["runs"] = (cost["runs"] + [{"at": now.replace(microsecond=0).isoformat(), "what": what,
-                                     "tts_chars": chars, "tts_usd": usd}])[-40:]
+    run = {"at": now.replace(microsecond=0).isoformat(), "what": what, "date": date, "tts_chars": chars, "tts_usd": usd}
+    if failed:
+        run["failed"] = True
+    cost["runs"] = (cost["runs"] + [run])[-40:]
     write_json(os.path.join(out_dir, "cost.json"), cost)
     mark_changed()
     say(f"{chars:,} characters (${usd:.2f}) for {what}; month to date {cost['tts_chars']:,} "
@@ -455,17 +510,18 @@ def run(args, now=None):
     eds = editions(read_feed(args.feed_file))
     out_dir = args.out_dir
     index = load_index(out_dir)
-    ed, why = choose(eds, index, now, args.edition, args.force)
-    if not ed:
-        say(why)
-        return 0
-    script, stats = script_of(ed)
+    try:
+        ed, why = choose(eds, index, now, args.edition, args.force)
+        script, stats = script_of(ed) if ed else (None, why)
+    except LayoutError as err:
+        say(str(err))
+        return 1
     if not script:
-        say(f"{ed['title']}: {stats}")
+        say(f"{ed['title']}: {stats}" if ed else stats)
         return 0
     voice = for_voice(script)
     pieces = chunks(voice)
-    say(f"{ed['title']}: intro {'found' if stats['intro'] else 'MISSING'}, {stats['stories']} stories, "
+    say(f"{ed['title']}: the intro, {stats['stories']} stories, "
         f"{stats['quick']} quick hits, {len(voice):,} characters in {len(pieces)} pieces "
         f"(about ${len(voice) / 1000 * USD_PER_1K_CHARS:.2f})")
     if not (MIN_EDITION_CHARS <= len(voice) <= MAX_EDITION_CHARS):
@@ -482,6 +538,10 @@ def run(args, now=None):
     voice_id = os.environ.get("ELEVENLABS_VOICE_ID", "").strip() or DEFAULT_VOICE
     if args.sample:
         opening = "\n\n".join(voice.split("\n\n")[:2])
+        full = room_for(key, len(opening))
+        if full:
+            say(full)
+            return 1
         mp3, seconds = join_and_normalize([tts(key, voice_id, opening)], "Sample")
         os.makedirs(args.sample, exist_ok=True)
         with open(os.path.join(args.sample, "sample.mp3"), "wb") as f:
@@ -489,22 +549,29 @@ def run(args, now=None):
         print(f"edition_audio: sample, {len(opening):,} characters (${len(opening) / 1000 * USD_PER_1K_CHARS:.3f}), "
               f"{seconds:.0f} s -> {os.path.join(args.sample, 'sample.mp3')}")
         return 0
-    spent = load_cost(out_dir, now)["tts_usd"]
-    if spent + len(voice) / 1000 * USD_PER_1K_CHARS > TTS_CAP_USD:
-        say(f"this edition would pass the month's ${TTS_CAP_USD:.0f} voice cap (${spent:.2f} spent); nothing voiced")
+    cost = load_cost(out_dir, now)
+    if cost["tts_usd"] + len(voice) / 1000 * USD_PER_1K_CHARS > TTS_CAP_USD:
+        say(f"this edition would pass the month's ${TTS_CAP_USD:.0f} voice cap (${cost['tts_usd']:.2f} spent); nothing voiced")
         return 0
+    fails = sum(1 for r in cost["runs"] if isinstance(r, dict) and r.get("date") == ed["date"] and r.get("failed"))
+    if fails >= MAX_FAILS and not args.force:
+        say(f"{ed['title']} has failed {fails} times this month; it waits for a run with force")
+        return 1
+    full = room_for(key, len(voice))
+    if full:
+        say(full)
+        return 1
     parts, sent = [], 0
     try:
         for piece in pieces:
+            sent += len(piece)   # counted before the call: a request that dies mid-way may still be billed
             parts.append(tts(key, voice_id, piece))
-            sent += len(piece)
         mp3, seconds = join_and_normalize(parts, f"The Btown Brief, {ed['title']}")
     except Exception as err:   # noqa: BLE001  (any failure: record the spend, publish nothing, fail loud)
-        if sent:
-            record(out_dir, now, sent, ed["title"] + " (failed part way)")
+        record(out_dir, now, sent, ed["title"] + " (failed part way)", ed["date"], failed=True)
         say(f"{ed['title']}: the voice failed after {len(parts)} of {len(pieces)} pieces: {type(err).__name__}: {err}")
         return 1
-    record(out_dir, now, sent, ed["title"])
+    record(out_dir, now, sent, ed["title"], ed["date"])
     publish(out_dir, ed, mp3, script, {"duration": seconds, "chars": sent, "stories": stats["stories"],
                                        "quick": stats["quick"], "voice": voice_id, "model": MODEL}, now)
     say(f"published {ed['date']}.mp3, {seconds / 60:.1f} minutes, {len(mp3):,} bytes")

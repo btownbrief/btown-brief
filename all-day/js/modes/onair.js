@@ -428,6 +428,8 @@ function setListed(name, on) {
   try { localStorage.setItem(LIST_KEY, JSON.stringify(m)); } catch (e) { /* kept for the visit */ }
 }
 const LIST_FOOT = 6;   // a list this long gets the button at its foot too
+/* what each button turns, for a screen reader: four buttons say "See as a list" */
+const RAIL_NAMES = { picks: 'tonight’s picks', rest: 'the rest of the night', live: 'Live', past: 'Past nights' };
 function videoRail(host, name, cls) {
   const top = el('div', 'railmode');
   top.appendChild(modeButton(name));
@@ -455,6 +457,7 @@ function paintMode(r) {
   [top, foot].forEach((row) => {
     const b = row.querySelector('[data-railmode]');
     b.textContent = on ? 'See as a row' : 'See as a list';
+    b.setAttribute('aria-label', b.textContent + ': ' + (RAIL_NAMES[r.dataset.rail] || 'these videos'));
     b.setAttribute('aria-pressed', on ? 'true' : 'false');
   });
   foot.hidden = !on || r.children.length < LIST_FOOT;
