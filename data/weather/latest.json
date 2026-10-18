@@ -1,19 +1,19 @@
 {
- "updated": "2026-10-18T03:50:10+00:00",
+ "updated": "2026-10-18T05:10:44+00:00",
  "sections_updated": {
-  "now": "2026-10-18T03:50:10+00:00",
-  "forecast": "2026-10-18T03:50:10+00:00",
-  "hourly": "2026-10-18T03:50:10+00:00",
-  "alerts": "2026-10-18T03:50:10+00:00",
-  "afd": "2026-10-18T03:50:10+00:00",
-  "lake_forecast": "2026-10-18T03:50:10+00:00",
-  "lake_gage": "2026-10-18T03:50:10+00:00",
-  "air": "2026-10-18T03:50:10+00:00",
-  "sun": "2026-10-18T03:50:10+00:00",
-  "models": "2026-10-18T03:50:10+00:00"
+  "now": "2026-10-18T05:10:44+00:00",
+  "forecast": "2026-10-18T05:10:44+00:00",
+  "hourly": "2026-10-18T05:10:44+00:00",
+  "alerts": "2026-10-18T05:10:44+00:00",
+  "afd": "2026-10-18T05:10:44+00:00",
+  "lake_forecast": "2026-10-18T05:10:44+00:00",
+  "lake_gage": "2026-10-18T05:10:44+00:00",
+  "air": "2026-10-18T05:10:44+00:00",
+  "sun": "2026-10-18T05:10:44+00:00",
+  "models": "2026-10-18T05:10:44+00:00"
  },
  "now": {
-  "observed_at": "2026-10-18T03:20:00+00:00",
+  "observed_at": "2026-10-18T04:50:00+00:00",
   "station": "KBTV",
   "description": "Clear",
   "temp_f": 30,
@@ -29,14 +29,14 @@
   "updated": "2026-10-17T18:17:09+00:00",
   "periods": [
    {
-    "name": "Tonight",
-    "start": "2026-10-17T23:00:00-04:00",
+    "name": "Overnight",
+    "start": "2026-10-18T01:00:00-04:00",
     "is_day": false,
     "temp_f": 34,
     "pop": 0,
-    "wind": "SW 3 to 8 mph",
+    "wind": "S 5 to 8 mph",
     "short": "Mostly Clear",
-    "detailed": "Mostly clear, with a low around 34. Southwest wind 3 to 8 mph."
+    "detailed": "Mostly clear, with a low around 34. South wind 5 to 8 mph."
    },
    {
     "name": "Sunday",
@@ -173,28 +173,6 @@
  "hourly": {
   "updated": "2026-10-17T18:17:09+00:00",
   "hours": [
-   {
-    "t": "2026-10-17T23:00:00-04:00",
-    "temp_f": 36,
-    "feels_f": 33,
-    "pop": 0,
-    "humidity": 69,
-    "wind_mph": 3,
-    "wind_dir": "W",
-    "sky": 3,
-    "short": "Clear"
-   },
-   {
-    "t": "2026-10-18T00:00:00-04:00",
-    "temp_f": 36,
-    "feels_f": 33,
-    "pop": 0,
-    "humidity": 69,
-    "wind_mph": 3,
-    "wind_dir": "SW",
-    "sky": 3,
-    "short": "Clear"
-   },
    {
     "t": "2026-10-18T01:00:00-04:00",
     "temp_f": 36,
@@ -568,6 +546,28 @@
     "wind_dir": "S",
     "sky": 3,
     "short": "Sunny"
+   },
+   {
+    "t": "2026-10-19T11:00:00-04:00",
+    "temp_f": 51,
+    "feels_f": 51,
+    "pop": 0,
+    "humidity": 68,
+    "wind_mph": 8,
+    "wind_dir": "S",
+    "sky": 3,
+    "short": "Sunny"
+   },
+   {
+    "t": "2026-10-19T12:00:00-04:00",
+    "temp_f": 55,
+    "feels_f": 55,
+    "pop": 0,
+    "humidity": 61,
+    "wind_mph": 8,
+    "wind_dir": "S",
+    "sky": 4,
+    "short": "Sunny"
    }
   ]
  },
@@ -575,13 +575,13 @@
   "active": []
  },
  "afd": {
-  "issued": "2026-10-17T23:28:00+00:00",
+  "issued": "2026-10-18T04:58:00+00:00",
   "key_messages": [
    "A chilly overnight period tonight will be followed by quiet and dry weather well into mid week.",
    "High probability of dry weather and seasonable temperatures continuing through next weekend."
   ],
   "what_changed": "As of 207 PM EDT Saturday... No significant changes to the current forecast.",
-  "raw": "\n000\nFXUS61 KBTV 172328\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n728 PM EDT Sat Oct 17 2026\n\n.WHAT HAS CHANGED...\nAs of 207 PM EDT Saturday...\n\nNo significant changes to the current forecast.\n\n&&\n\n.KEY MESSAGES...\nAs of 207 PM EDT Saturday...\n\n1. A chilly overnight period tonight will be followed by quiet \nand dry weather well into mid week.\n\n2. High probability of dry weather and seasonable temperatures \ncontinuing through next weekend.\n\n&&\n\n.DISCUSSION...\nAs of 207 PM EDT Saturday...\n\nKEY MESSAGE 1: Ridging will begin to nose in this evening with the \napproach of an anomalously strong area of high pressure building \nover the Midwest. This 1037mb high will slide east tonight \ncontinuing to dry out the region, and leading to a cold start to \nSunday. Tonight will be the coldest night of the forecast period as \nwinds abate  and skies become mainly clear. Contrary to previous \nforecasts, new guidance has trended towards slightly warmer lows for \ntonight, albeit still cold for this time of year. Lows in the mid to \nupper 20s are expected for the Adirondacks and east of the Greens \nwith low 30s elsewhere. A weak shortwave will ride north of our \narea, but could bring some increased mid clouds to portions of the \nthe Adirondacks and near the International Border, stifling strong \nradiational cooling. Many sites will still fall below freezing \ntonight regardless of cloud coverage due to ongoing advective cold \nprocesses under light west winds. Wind by tomorrow morning will turn \nslightly southwesterly drawing slightly warmer air into the region \nhelping to rebound our temperatures with highs tomorrow into the mid \n50s. Some light breezes around 10-15 mph in the wider valleys will \nbe possible tomorrow as well. \n\nSouthwest flow will continue to advect some warmer air in by \nMonday as highs reach their peak for the week, into the upper \n50s to low 60s across the area with clear skies. Through the \nentire near and short term period towards mid week, there is \nhigh confidence in no precipitation areawide.\n\nKEY MESSAGE 2: Large scale upper level ridging either upstream or \noverhead from Tuesday night through Saturday will bring us \nseasonable temperatures and mainly clear skies as low humidity and \nlight wind dominates the period. One exception to the completely \nquiet weather will probably be associated with a moisture-starved \ncold front on Thursday, which could bring a band of clouds through \nthe region and support a modest north wind into Friday. Our quasi-\nstationary weather pattern will include an ocean storm well to our \nsouth and east while Canadian/polar lows track well to our east and \nnorth, keeping any unseasonable cold locked up as well as any push \nof warm air from the southwest from moving in. \n\nNote ensemble guidance does show a very low (6 hourly PoP peaking \nnear 10%) chance of rain squeaking into southeastern portions of \nWindsor County early Thursday in the event, probably associated with \nthe aforementioned ocean storm if it was to track much farther west \nthan the strong consensus.\n\n&&\n\n.AVIATION /00Z SUNDAY THROUGH THURSDAY/...\nThrough 00Z Monday...VFR conditions are expected to persist for the\nnext 24 hours. The one exception could be at SLK where MVFR ceilings\ncould briefly develop tomorrow morning due to lake-effect clouds.\nWinds will decrease quickly this evening and they should mostly go\nlight/variable/terrain driven tonight. Late in the night and\ntomorrow morning, winds will switch to southerly and southwesterly.\nBTV and MSS should be the first to go, with the rest likely waiting\nuntil around and after 12Z. While winds in most places should stay\naround and under 10 KT, gusts in the 10-20 KT range are possible at\nPBG, BTV and MSS.\n\nOutlook...\n\nSunday Night: VFR. NO SIG WX.\nMonday: VFR. NO SIG WX.\nMonday Night: VFR. NO SIG WX.\nTuesday: VFR. NO SIG WX.\nTuesday Night: VFR. NO SIG WX.\nWednesday: VFR. NO SIG WX.\nWednesday Night: VFR. NO SIG WX.\nThursday: VFR. NO SIG WX.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Danzig\nDISCUSSION...Danzig/Kutikoff\nAVIATION...Myskowski\n"
+  "raw": "\n000\nFXUS61 KBTV 180458\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n1258 AM EDT Sun Oct 18 2026\n\n.WHAT HAS CHANGED...\nAs of 207 PM EDT Saturday...\n\nNo significant changes to the current forecast.\n\n&&\n\n.KEY MESSAGES...\nAs of 207 PM EDT Saturday...\n\n1. A chilly overnight period tonight will be followed by quiet \nand dry weather well into mid week.\n\n2. High probability of dry weather and seasonable temperatures \ncontinuing through next weekend.\n\n&&\n\n.DISCUSSION...\nAs of 207 PM EDT Saturday...\n\nKEY MESSAGE 1: Ridging will begin to nose in this evening with the \napproach of an anomalously strong area of high pressure building \nover the Midwest. This 1037mb high will slide east tonight \ncontinuing to dry out the region, and leading to a cold start to \nSunday. Tonight will be the coldest night of the forecast period as \nwinds abate  and skies become mainly clear. Contrary to previous \nforecasts, new guidance has trended towards slightly warmer lows for \ntonight, albeit still cold for this time of year. Lows in the mid to \nupper 20s are expected for the Adirondacks and east of the Greens \nwith low 30s elsewhere. A weak shortwave will ride north of our \narea, but could bring some increased mid clouds to portions of the \nthe Adirondacks and near the International Border, stifling strong \nradiational cooling. Many sites will still fall below freezing \ntonight regardless of cloud coverage due to ongoing advective cold \nprocesses under light west winds. Wind by tomorrow morning will turn \nslightly southwesterly drawing slightly warmer air into the region \nhelping to rebound our temperatures with highs tomorrow into the mid \n50s. Some light breezes around 10-15 mph in the wider valleys will \nbe possible tomorrow as well. \n\nSouthwest flow will continue to advect some warmer air in by \nMonday as highs reach their peak for the week, into the upper \n50s to low 60s across the area with clear skies. Through the \nentire near and short term period towards mid week, there is \nhigh confidence in no precipitation areawide.\n\nKEY MESSAGE 2: Large scale upper level ridging either upstream or \noverhead from Tuesday night through Saturday will bring us \nseasonable temperatures and mainly clear skies as low humidity and \nlight wind dominates the period. One exception to the completely \nquiet weather will probably be associated with a moisture-starved \ncold front on Thursday, which could bring a band of clouds through \nthe region and support a modest north wind into Friday. Our quasi-\nstationary weather pattern will include an ocean storm well to our \nsouth and east while Canadian/polar lows track well to our east and \nnorth, keeping any unseasonable cold locked up as well as any push \nof warm air from the southwest from moving in. \n\nNote ensemble guidance does show a very low (6 hourly PoP peaking \nnear 10%) chance of rain squeaking into southeastern portions of \nWindsor County early Thursday in the event, probably associated with \nthe aforementioned ocean storm if it was to track much farther west \nthan the strong consensus.\n\n&&\n\n.AVIATION /06Z SUNDAY THROUGH THURSDAY/...\nThrough 06Z Monday...VFR conditions will prevail at all sites\nfor the next 24 hours, except for a brief 2 to 4 hour window of\nMVFR cigs at SLK this morning due to some lake clouds. This has\nyet to develop and probability of occurring is <30%, so have not\nmention in TAF. Otherwise, light south/southwest winds will\nincrease at 5 to 15 knots, especially northern NY into Champlain\nValley TAF sites today with a few gusts up to 20 knots possible.\nLow level jet increases by evening with some areas of wind shear\nlikely over northern NY.\n\nOutlook...\n\nSunday Night: VFR. NO SIG WX.\nMonday: VFR. NO SIG WX.\nMonday Night: VFR. NO SIG WX.\nTuesday: VFR. NO SIG WX.\nTuesday Night: VFR. NO SIG WX.\nWednesday: VFR. NO SIG WX.\nWednesday Night: VFR. NO SIG WX.\nThursday: VFR. NO SIG WX.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Danzig\nDISCUSSION...Kutikoff/Danzig\nAVIATION...Taber\n"
  },
  "lake_forecast": {
   "issued": "2026-10-17T21:22:00+00:00",
@@ -853,51 +853,32 @@
  },
  "lake_gage": {
   "water_temp_f": 55,
-  "water_temp_at": "2026-10-17T23:00:00.000-04:00",
-  "level_ft": 94.07,
-  "level_at": "2026-10-17T23:00:00.000-04:00",
+  "water_temp_at": "2026-10-18T00:00:00.000-04:00",
+  "level_ft": 94.08,
+  "level_at": "2026-10-18T00:00:00.000-04:00",
   "level_status": "normal"
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 24,
+  "aqi": 25,
   "category": "Good",
   "pollutant": "OZONE",
-  "observed": "10/17/26 23:00",
+  "observed": "10/18/26 0:00",
   "discussion": "On Sunday, October 18th, expect generally good air quality across Vermont."
  },
  "sun": {
-  "sunrise": "2026-10-17T07:10-04:00",
-  "sunset": "2026-10-17T18:05-04:00",
-  "sunrise_tomorrow": "2026-10-18T07:11-04:00",
-  "sunset_tomorrow": "2026-10-18T18:03-04:00",
-  "uv_max": 3.85
+  "sunrise": "2026-10-18T07:11-04:00",
+  "sunset": "2026-10-18T18:03-04:00",
+  "sunrise_tomorrow": "2026-10-19T07:13-04:00",
+  "sunset_tomorrow": "2026-10-19T18:01-04:00",
+  "uv_max": 4.0
  },
  "models": {
   "days": [
    {
-    "date": "2026-10-17",
-    "high_f": {
-     "GFS": 45,
-     "Euro": 48,
-     "ICON": 46
-    },
-    "pop_max": {
-     "GFS": 2,
-     "Euro": 20,
-     "ICON": 20
-    },
-    "precip_in": {
-     "GFS": 0.0,
-     "Euro": 0.0,
-     "ICON": 0.02
-    },
-    "high_spread_f": 3
-   },
-   {
     "date": "2026-10-18",
     "high_f": {
-     "GFS": 54,
+     "GFS": 55,
      "Euro": 56,
      "ICON": 56
     },
@@ -911,14 +892,14 @@
      "Euro": 0.0,
      "ICON": 0.0
     },
-    "high_spread_f": 2
+    "high_spread_f": 1
    },
    {
     "date": "2026-10-19",
     "high_f": {
      "GFS": 61,
      "Euro": 61,
-     "ICON": 63
+     "ICON": 64
     },
     "pop_max": {
      "GFS": 0,
@@ -930,7 +911,26 @@
      "Euro": 0.0,
      "ICON": 0.0
     },
-    "high_spread_f": 2
+    "high_spread_f": 3
+   },
+   {
+    "date": "2026-10-20",
+    "high_f": {
+     "GFS": 57,
+     "Euro": 53,
+     "ICON": 58
+    },
+    "pop_max": {
+     "GFS": 0,
+     "Euro": 0,
+     "ICON": 0
+    },
+    "precip_in": {
+     "GFS": 0.0,
+     "Euro": 0.0,
+     "ICON": 0.0
+    },
+    "high_spread_f": 5
    }
   ]
  }
