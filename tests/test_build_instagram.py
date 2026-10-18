@@ -603,10 +603,12 @@ class Kinds(unittest.TestCase):
         self.assertEqual([(p["kind"], p["kd"]) for p in posts], [("poster", 1), ("other", 1), ("food", 1)])
 
     def test_a_judged_post_is_never_asked_again(self):
-        posts = [post("a", 1, kind="food"), post("b", 2, u="https://www.instagram.com/p/X/")]
-        rep, calls = self.run_kinds(posts, [], prev={"https://www.instagram.com/p/X/": "poster"})
+        posts = [post("a", 1, kind="food"), post("b", 2, u="https://www.instagram.com/p/X/"),
+                 post("c", 3, u="https://www.instagram.com/c/")]       # no shortcode: known by handle and time
+        prev = {bi.post_key(posts[1]): "poster", "t:c:3": "scenic"}
+        rep, calls = self.run_kinds(posts, [], prev=prev)
         self.assertEqual(calls, [])
-        self.assertEqual([p["kind"] for p in posts], ["food", "poster"])
+        self.assertEqual([p["kind"] for p in posts], ["food", "poster", "scenic"])
         self.assertTrue(all("kd" not in p for p in posts))
 
     def test_the_caption_decides_and_the_picture_settles_the_unsure(self):
@@ -632,6 +634,47 @@ class Kinds(unittest.TestCase):
         rep, calls = self.run_kinds(posts, [caption], thumb=None)     # the thumbnail would not download
         self.assertEqual((posts[0]["kind"], posts[0]["kd"]), ("vibe", 1))
         self.assertEqual(len(calls), 1)
+
+    def test_a_post_shipped_twice_is_asked_about_once(self):
+        roster, tagged = post("a", 1, "venue"), post("a", 1, "other", s="tagged")
+        rep, calls = self.run_kinds([roster, tagged], [{"kinds": [{"i": 0, "kind": "food", "sure": True}]}])
+        self.assertEqual(calls[0].count("@a"), 1)
+        self.assertEqual([(p["kind"], "kd" in p) for p in (roster, tagged)], [("food", False), ("food", False)])
+
+    def test_thumbnail_downloads_are_capped_even_when_they_all_fail(self):
+        posts = [post(f"p{i}", i, "events") for i in range(bi.IMAGE_LOOK_MAX + 40)]
+        caption = {"kinds": [{"i": i, "kind": "vibe", "sure": False} for i in range(len(posts))]}
+        tries = []
+        with mock.patch.object(wc, "pick_engine", return_value=self.ENGINE), mock.patch.object(bi, "log"), \
+                mock.patch.object(wc, "ask_json", lambda *a, **k: (caption, {"in": 1, "calls": 1})), \
+                mock.patch.object(bi, "fetch_thumb", lambda u: tries.append(u)):
+            bi.assign_kinds(posts, {}, {}, None, self.NOW)
+        self.assertEqual(len(tries), bi.IMAGE_LOOK_MAX)
+        self.assertTrue(all(p["kd"] == 1 for p in posts))
+
+    def test_an_answer_that_is_not_an_object_changes_nothing(self):
+        posts = [post("a", 1, "pets")]
+        rep, calls = self.run_kinds(posts, [[{"i": 0, "kind": "food", "sure": True}]])
+        self.assertEqual((posts[0]["kind"], posts[0]["kd"]), ("pets", 1))
+
+    def test_the_cap_is_checked_before_every_call(self):
+        posts = [post(f"p{i}", i, "pets") for i in range(bi.KIND_BATCH + 1)]       # two caption batches
+        ledger = {"ai": {"month": "2026-10", "usd": bi.AI_MONTH_CAP_USD - 0.0001, "runs": []}}
+        rep, calls = self.run_kinds(posts, [{"kinds": []}, {"kinds": []}], ledger=ledger)
+        self.assertEqual(len(calls), 1)                         # the first call's cost reaches the cap
+
+    def test_a_classifier_crash_still_writes_the_payload(self):
+        doc = answer()
+        now = doc["fetched_at"]
+        b = Build()
+        b.setUp()
+        with tempfile.TemporaryDirectory() as tmp, \
+                mock.patch.object(bi, "assign_kinds", side_effect=RuntimeError("boom")):
+            code, got, _ = b.run_main(tmp, [{"h": "foambrewers", "tier": 1, "category": "venue"}],
+                                      ["--only", "foambrewers", "--no-carry"], lambda h, k: doc["items"], now,
+                                      {"month": bi.month_key(bi.local_day(now)), "spent": 0, "last": {}})
+        self.assertEqual(code, 0)
+        self.assertTrue(got["posts"] and all((p["kind"], p["kd"]) == ("vibe", 1) for p in got["posts"]))
 
     def test_text_only_engine_takes_the_caption_s_guess(self):
         posts = [post("c", 1, "events", c="what a night")]

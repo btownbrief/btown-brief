@@ -81,7 +81,9 @@ posts it is not sure about (up to IMAGE_LOOK_MAX) get a second call that
 shows it the 480px thumbnail itself. A kind is decided once per post and
 carried with it, so a post is never paid for twice. Without a key, past
 AI_MONTH_CAP_USD, or when a call fails, a post gets its category's kind
-with `kd: 1` (defaulted) and is asked about again next run. The spend is
+with `kd: 1` (defaulted) and is asked about again next run; an unsure post
+whose picture could not be looked at this run ships the caption's guess,
+also with `kd: 1`. The spend is
 kept in the ledger's `ai` block; AI COST below has the measured numbers.
 
 PERSISTENCE. Each category's cap is filled one post per account at a time
@@ -648,12 +650,18 @@ def fetch_thumb(url: str) -> tuple[str, str] | None:
     import base64
     try:
         req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
-        with urllib.request.urlopen(req, timeout=20) as r:
+        with urllib.request.urlopen(req, timeout=10) as r:
             data = r.read(IMAGE_MAX_BYTES + 1)
     except Exception:
         return None
     mt = sniff_image(data) if len(data) <= IMAGE_MAX_BYTES else None
     return (mt, base64.b64encode(data).decode("ascii")) if mt else None
+
+
+def post_key(rec: dict) -> str:
+    """A post's identity: its post URL, or (no shortcode) handle and time."""
+    u = rec.get("u") or ""
+    return "u:" + u if "/p/" in u else f"t:{rec.get('h')}:{rec.get('ts')}"
 
 
 def ai_spent(ledger: dict | None, now: float) -> float:
@@ -665,21 +673,28 @@ def assign_kinds(posts: list[dict], prev_kinds: dict, hints: dict,
                  ledger: dict | None, now: float, look: bool = True) -> dict:
     """Give every post a `kind`. Returns what the run did and spent.
 
-    A post keeps a kind it already has, or the one its URL had in the last
-    payload (a tier 2 account's posts come back every day; they are judged
-    once). The rest start at their category's kind, marked `kd`, and are
-    sent to the model; a valid answer replaces the default and clears `kd`."""
-    todo = []
+    A post keeps a kind it already has, or the one it had in the last
+    payload (`prev_kinds`, by post_key: a tier 2 account's posts come back
+    every day; they are judged once). The rest start at their category's
+    kind, marked `kd`, and are sent to the model, one question per post even
+    when it ships twice (a rostered account's post that also tags the
+    Brief); a valid answer replaces the default and clears `kd`."""
+    todo, twins = [], {}
     for rec in posts:
         known = rec.get("kind") if not rec.get("kd") else None
-        known = known or prev_kinds.get(rec.get("u") or "")
+        known = known or prev_kinds.get(post_key(rec))
         if known in KINDS:
             rec["kind"] = known
             rec.pop("kd", None)
             continue
         rec["kind"] = KIND_OF_CATEGORY.get(rec.get("category"), "other")
         rec["kd"] = 1
-        todo.append(rec)
+        k = post_key(rec)
+        if k in twins:
+            twins[k].append(rec)
+        else:
+            twins[k] = [rec]
+            todo.append(rec)
     report = {"asked": 0, "looked": 0, "decided": 0, "usd": 0.0}
     if not todo:
         return report
@@ -700,6 +715,13 @@ def assign_kinds(posts: list[dict], prev_kinds: dict, hints: dict,
 
     usage = {"in": 0, "out": 0, "cache_read": 0, "cache_write": 0, "calls": 0}
 
+    def over_cap(what):
+        spent = ai_spent(ledger, now) + wc.cost_usd(engine["model"], usage)
+        if spent >= AI_MONTH_CAP_USD:
+            log(f"kind: the month's cap (${AI_MONTH_CAP_USD:.2f}) reached; no {what} call")
+            return True
+        return False
+
     def ask(system, user, schema, n, sure, label):
         try:
             answer, got = wc.ask_json(engine, system, user, schema, max_tokens=60 * n + 500,
@@ -710,13 +732,15 @@ def assign_kinds(posts: list[dict], prev_kinds: dict, hints: dict,
             log(f"kind: {label} call failed ({str(e)[:80]})")
         for k in usage:
             usage[k] += got.get(k, 0)
-        return read_kinds((answer or {}).get("kinds"), n, sure)
+        return read_kinds(answer.get("kinds") if isinstance(answer, dict) else None, n, sure)
 
     # The picture itself settles what a caption cannot. Claude only: the
     # OpenRouter fallback reads text, so there a caption's guess is final.
     can_look = look and engine["provider"] == "anthropic"
     unsure = []
     for start in range(0, len(todo), KIND_BATCH):
+        if over_cap("caption"):
+            break
         batch = todo[start:start + KIND_BATCH]
         text = "POSTS:\n" + "\n".join(kind_line(i, r, hints) for i, r in enumerate(batch))
         got = ask(KIND_RULES, text, kind_schema(True), len(batch), True, "caption")
@@ -731,31 +755,41 @@ def assign_kinds(posts: list[dict], prev_kinds: dict, hints: dict,
             else:
                 unsure.append(rec)
 
-    if unsure:
-        spent_so_far = ai_spent(ledger, now) + wc.cost_usd(engine["model"], usage)
-        if spent_so_far < AI_MONTH_CAP_USD:
-            shown, content = [], []
-            for rec in sorted(unsure, key=lambda r: -r["ts"]):
-                if len(shown) >= IMAGE_LOOK_MAX:
-                    break
-                pic = fetch_thumb(rec["i"])
-                if not pic:
-                    continue
-                content.append({"type": "text", "text": "Image " + kind_line(len(shown), rec, hints)})
-                content.append({"type": "image", "source": {"type": "base64",
-                                                            "media_type": pic[0], "data": pic[1]}})
-                shown.append(rec)
-            if shown:
-                content.append({"type": "text", "text": f"Give the kind of each of the {len(shown)} images."})
-                got = ask(LOOK_RULES, content, kind_schema(False), len(shown), False, "image")
-                report["looked"] = len(shown)
-                for i, rec in enumerate(shown):
-                    if i in got:
-                        rec["kind"] = got[i][0]
-                        rec.pop("kd", None)
+    if unsure and not over_cap("image"):
+        # At most IMAGE_LOOK_MAX downloads, newest first, inside a deadline:
+        # a CDN that hangs must not eat the step's timeout before the
+        # payload is written.
+        shown, content = [], []
+        deadline = time.monotonic() + 90
+        for rec in sorted(unsure, key=lambda r: -r["ts"])[:IMAGE_LOOK_MAX]:
+            if time.monotonic() > deadline:
+                log("kind: thumbnail downloads ran out of time")
+                break
+            pic = fetch_thumb(rec["i"])
+            if not pic:
+                continue
+            content.append({"type": "text", "text": "Image " + kind_line(len(shown), rec, hints)})
+            content.append({"type": "image", "source": {"type": "base64",
+                                                        "media_type": pic[0], "data": pic[1]}})
+            shown.append(rec)
+        if shown:
+            content.append({"type": "text", "text": f"Give the kind of each of the {len(shown)} images."})
+            got = ask(LOOK_RULES, content, kind_schema(False), len(shown), False, "image")
+            report["looked"] = len(shown)
+            for i, rec in enumerate(shown):
+                if i in got:
+                    rec["kind"] = got[i][0]
+                    rec.pop("kd", None)
     # An unsure post nobody looked at (past IMAGE_LOOK_MAX, a thumbnail that
     # would not download, the cap) keeps the caption's guess, still marked
     # `kd`, and is asked again next run.
+    for rec in todo:
+        for twin in twins[post_key(rec)][1:]:
+            twin["kind"] = rec["kind"]
+            if rec.get("kd"):
+                twin["kd"] = 1
+            else:
+                twin.pop("kd", None)
 
     report["decided"] = sum(1 for r in todo if not r.get("kd"))
     usd = wc.cost_usd(engine["model"], usage)
@@ -1314,12 +1348,18 @@ def fetch_and_build(args, picked: list[dict], want_tagged: bool,
 
     # What each picture is. Only the shipped posts are judged, and a post the
     # last payload already judged keeps that answer.
-    prev_kinds = {r["u"]: r["kind"] for r in prev_posts
-                  if isinstance(r, dict) and isinstance(r.get("u"), str) and "/p/" in r["u"]
-                  and r.get("kind") in KINDS and not r.get("kd")}
+    prev_kinds = {post_key(r): r["kind"] for r in prev_posts
+                  if isinstance(r, dict) and r.get("kind") in KINDS and not r.get("kd")}
     before = ai_spent(ledger, now)
-    assign_kinds(posts, prev_kinds, load_hints(accounts), ledger, now,
-                 look=not getattr(args, "no_look", False))
+    try:
+        assign_kinds(posts, prev_kinds, load_hints(accounts), ledger, now,
+                     look=not getattr(args, "no_look", False))
+    except Exception as e:  # noqa: BLE001 — a kind is never worth the payload
+        log(f"kind: classification failed ({type(e).__name__}); unjudged posts keep their category's kind")
+        for rec in posts:
+            if rec.get("kind") not in KINDS:
+                rec["kind"] = KIND_OF_CATEGORY.get(rec.get("category"), "other")
+                rec["kd"] = 1
     if ledger is not None and ledger_path is not None and ai_spent(ledger, now) != before:
         save_ledger(ledger_path, ledger)
 
