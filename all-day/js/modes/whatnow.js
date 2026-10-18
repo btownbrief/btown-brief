@@ -14,7 +14,7 @@
      the app's own line; Another respins. The path chips (I'm broke, get me
      outside, people please, two hours, close by, teach me something) are the
      engine's own constraint keys.
-   - Missions. The Top 100 as missions (data/missions.json, built by
+   - Missions. The Top 100+ as missions (data/missions.json, built by
      scripts/build_missions.py): a numbered list, theme chips, Mark done
      (kept on this device, and on the reader's account when signed in, which
      fails soft), and Surprise me, which scrolls the list to a mission you
@@ -51,7 +51,7 @@
      data/whatnow.json (the events calendar, trimmed), in Burlington's clock,
      daytime first and then tonight's, each opening its own listing, and a
      link to the full events calendar.
-   - Btown Challenges, above the Top 100: one weekly challenge and three
+   - Btown Challenges, above the Top 100+: one weekly challenge and three
      evergreen ones from all-day/data/challenges.json, which Stephen edits by
      hand (none of the boards fits a standing challenge, so readers suggest
      one by email instead). The week's pick and the evergreen three turn over
@@ -892,7 +892,7 @@ function renderMissions() {
   }
   const all = missions();
   const sur = el('button', 'pillbtn on surprise', ICON.shuffle + ' Surprise me');
-  const head = section(root, 'The Top 100, as missions', null, sur);
+  const head = section(root, 'The Top 100+, as missions', null, sur);
   head.dataset.sec = 'missions';
   const themes = (S.missions.themes || Object.keys(THEME)).filter((t) => all.some((m) => m.theme === t));
   if (S.theme !== 'all' && !themes.includes(S.theme)) S.theme = 'all';
@@ -911,7 +911,7 @@ function renderMissions() {
   }));
 }
 
-/* Not one of the Top 100, and not numbered: the standing mission, whose
+/* Not one of the Top 100+, and not numbered: the standing mission, whose
    action is People's club week. The count is the week's run-club meets. */
 function clubMission() {
   const r = el('div', 'lrow mission club');
@@ -1238,7 +1238,7 @@ function land() {
 app.register(KEY, {
   label: 'What Now',
   icon: ICON.whatnow,
-  promise: 'One answer for right now, a hundred missions for later, and what is on tonight.',
+  promise: 'One answer for right now, over a hundred missions for later, and what is on tonight.',
   mount(r) {
     root = r;
     r.innerHTML = '<p class="loading">Reading the sky…</p>';

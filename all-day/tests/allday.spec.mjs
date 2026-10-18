@@ -3143,7 +3143,10 @@ async function theWhatNow(browser, base) {
 
   await group('What Now, Missions (live)', async () => {
     const real = JSON.parse(await readFile(path.join(REPO, 'data/missions.json'), 'utf8'));
-    check(real.count === 100 && real.missions.length === 100, 'data/missions.json holds 100 missions', real.missions.length);
+    /* one mission per Top 100+ entry, however long the list runs */
+    const ranked = JSON.parse(await readFile(path.join(REPO, 'data/guides.json'), 'utf8')).find((g) => g.id === 'top-100').items.length;
+    const N = real.missions.length;
+    check(ranked > 100 && real.count === ranked && N === ranked, 'data/missions.json holds a mission for every Top 100+ entry (' + ranked + ')', N);
     const words = real.missions.map((m) => m.paragraph.split(/\s+/).length);
     check(words.every((n) => n >= 60 && n <= 120), 'every paragraph is 60 to 120 words', words.filter((n) => n < 60 || n > 120).join(', '));
     check(real.missions.every((m) => !/[—–!]/.test(m.paragraph) && real.themes.includes(m.theme) && m.places.length), 'no dashes or exclamation points, a known theme, at least one place', '');
@@ -3153,7 +3156,8 @@ async function theWhatNow(browser, base) {
     await page.goto(base + '/all-day/#whatnow/missions');
     await page.waitForSelector(wnPanel + ' .lrow.mission', { timeout: 15000 });
     const nums = await page.$$eval(wnPanel + ' .lrow.mission:not(.club) .num', (n) => n.map((x) => Number(x.textContent)));
-    check(nums.length === 100 && nums.every((n, i) => n === i + 1), 'the hundred, numbered 1 to 100', nums.length);
+    check(nums.length === N && nums.every((n, i) => n === i + 1), 'all of them, numbered 1 to ' + N, nums.length);
+    check(/^The Top 100\+, as missions/.test(await page.$eval(wnPanel + ' [data-sec="missions"]', (h) => h.textContent.trim())), 'under the Top 100+ name', '');
     const themeChip = await page.$eval(wnPanel + ' .chips.themes .chip[data-chip="drink"] .n', (n) => Number(n.textContent));
     await page.click(wnPanel + ' .chips.themes .chip[data-chip="drink"]');
     const shown = await page.$$eval(wnPanel + ' .lrow.mission:not(.club) .s', (s) => s.map((x) => x.textContent));
@@ -3165,7 +3169,7 @@ async function theWhatNow(browser, base) {
     await page.reload();
     await page.waitForSelector(wnPanel + ' .lrow.mission', { timeout: 15000 });
     check(await page.$eval(wnPanel + ' .lrow[data-k="m7"]', (r) => r.classList.contains('done')), 'a mission marked done survives a reload', '');
-    check(/1\/100/.test(await page.$eval('#subnav .chip[data-chip="missions"]', (b) => b.innerText)), 'and the Missions chip counts it: 1/100', '');
+    check(new RegExp('1/' + N + '\\b').test(await page.$eval('#subnav .chip[data-chip="missions"]', (b) => b.innerText)), 'and the Missions chip counts it: 1/' + N, '');
     check(!supabase.some((x) => /nn_mission/.test(x)), 'signed out, nothing goes to the account', supabase.join(', '));
 
     await page.click(wnPanel + ' .surprise');
@@ -3444,7 +3448,7 @@ async function theWhatNow(browser, base) {
         rows: [...p.querySelectorAll('.lrow.chal')].map((r) => r.dataset.k), suggest: ch.querySelector('a.suggest')?.getAttribute('href'),
         more: p.querySelector('.chlinks a')?.getAttribute('href') };
     });
-    check(got.above, 'Btown Challenges sits above the Top 100', JSON.stringify(got));
+    check(got.above, 'Btown Challenges sits above the Top 100+', JSON.stringify(got));
     check(got.week === want.title && got.weekK === 'c-' + want.id, 'this week’s challenge is the one for Burlington’s week', got.week + ' vs ' + want.title);
     check(got.rows.length === 3 && got.rows.every((k) => real.evergreen.some((c) => 'c-' + c.id === k)), 'and three evergreen ones under it', got.rows.join(', '));
     check(/^mailto:btownbrief@gmail\.com\?subject=/.test(got.suggest || ''), 'Suggest one writes to btownbrief@gmail.com', got.suggest);

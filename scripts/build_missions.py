@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""Build data/missions.json, the Top 100 as missions, for All Day's What Now tab.
+"""Build data/missions.json, the Top 100+ as missions, for All Day's What Now tab.
 
-The Top 100 in data/guides.json (id top-100) is a ranked list of one-off
+The Top 100+ in data/guides.json (id top-100) is a ranked list of one-off
 things to do. A mission is the same entry made into an outing: a title, one
 theme, a paragraph that strings the places together with the walk or drive
 between them, and the places themselves (name, website, neighborhood) from
@@ -36,7 +36,7 @@ checked the same way. A drafter can set needs_check too. The check is a net,
 not a proof: a lowercase claim ("the patio fills fast") passes it, which is
 why every paragraph was also read by a person against its sources.
 
-If the Top 100 changes under the copy (an entry's title no longer matches
+If the Top 100+ changes under the copy (an entry's title no longer matches
 the one the paragraph was written for), the mission keeps the guide's own
 words and is marked needs_check.
 
@@ -68,7 +68,9 @@ NEIGHBORS = 2         # added to an entry that names one place
 WORDS = (60, 120)
 
 # words a paragraph may capitalize without the sources spelling them out
-COMMON = {"Burlington", "Vermont", "Vermont's", "Lake", "Champlain", "I"}
+# ("Street" spelled out where a source abbreviates it "St."; the name before
+# it is still checked)
+COMMON = {"Burlington", "Vermont", "Vermont's", "Lake", "Champlain", "I", "Street"}
 NUMBER_WORDS = {"two": 2, "three": 3, "four": 4, "five": 5, "six": 6, "seven": 7, "eight": 8,
                 "nine": 9, "ten": 10, "eleven": 11, "twelve": 12, "twenty": 20, "thirty": 30,
                 "forty": 40, "fifty": 50, "hundred": 100}
@@ -301,7 +303,7 @@ def main() -> int:
                 note.insert(0, c.get("check_note") or "the drafter asked for a read")
         else:
             title, para, theme = e["title"], e["body"], c.get("theme")
-            note.append("no paragraph written for this entry yet" if not c else "the Top 100 entry changed since this was written")
+            note.append("no paragraph written for this entry yet" if not c else "the Top 100+ entry changed since this was written")
         if theme not in THEMES:
             errors.append("%d: theme %r is not one of %s" % (n, theme, ", ".join(THEMES)))
         missions.append({

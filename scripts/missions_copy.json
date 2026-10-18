@@ -718,7 +718,7 @@
   "theme": "culture",
   "paragraph": "Used vinyl starts at $1 in the crates at Burlington Records, downtown's independent vinyl shop, with an extensive catalog organized by genre and era and new records from $25. The crates reward patience, and the staff have opinions they'll share. Go in the morning, then head to Winooski for Autumn Records at 11 E. Allen Street, which is open noon to 6 daily. It's run by an internationally recognized experimental musician, and the used vinyl, from $3, is curated unlike any other shop in Vermont, alongside new records, CDs, cassettes and turntables. One shop is deep and classic, the other sharp and curated, and vinyl culture is alive in both.",
   "needs_check": true,
-  "check_note": "Burlington Records' why_special is still a TODO placeholder and its address is only 'Church Street area'; Autumn Records' noon to 6 daily hours are worth confirming before print."
+  "check_note": "Burlington Records' why_special is still a TODO placeholder, and its used-from-$1 and new-from-$25 prices carry no dated check in the data."
  },
  "75": {
   "source": "Build a waterfront picnic from City Market",
@@ -958,7 +958,78 @@
   "source": "Pay your respects to the World's Tallest Filing Cabinet",
   "title": "Pay your respects to the World's Tallest Filing Cabinet",
   "theme": "culture",
-  "paragraph": "Finish the list at thirty-eight filing cabinet drawers stacked 38 feet high on Flynn Avenue, the World's Tallest Filing Cabinet, built in 2002 as commentary on bureaucracy. Birds have nested in the top drawers, and local lore says there's treasure up there too. It's entirely underwhelming and completely mandatory. Then collect the next piece of the quirky-landmark set with a drive out to Shelburne, where Jim Sardonis's granite whale tails, \"Reverence,\" rise from a hillside off I-89 South. They commemorate beluga fossils that proved this valley was a saltwater sea 12,000 years ago. They're easy to miss at speed and worth the exit.",
+  "paragraph": "Round out the first hundred at thirty-eight filing cabinet drawers stacked 38 feet high on Flynn Avenue, the World's Tallest Filing Cabinet, built in 2002 as commentary on bureaucracy. Birds have nested in the top drawers, and local lore says there's treasure up there too. It's entirely underwhelming and completely mandatory. Then collect the next piece of the quirky-landmark set with a drive out to Shelburne, where Jim Sardonis's granite whale tails, \"Reverence,\" rise from a hillside off I-89 South. They commemorate beluga fossils that proved this valley was a saltwater sea 12,000 years ago. They're easy to miss at speed and worth the exit.",
+  "needs_check": false,
+  "check_note": ""
+ },
+ "101": {
+  "source": "Drink where Vermont's brewpubs began",
+  "title": "Drink where Vermont's brewpubs began",
+  "theme": "drink",
+  "with": [],
+  "paragraph": "The Vermont Pub & Brewery at 144 College Street opened in late 1988 as the state's first brewpub, and the first brewery Burlington had since Prohibition. It took a change in the law: founder Greg Noonan and Bill Mares, then a state legislator, rewrote it so a brewery could pour its own beer on site, and every taproom on this list owes them a pint. Pull up a stool and order the Burly Irish Ale, one of the award winners still on tap. Come on a Tuesday with a Vermont or Canadian ID and the food is 15% off.",
+  "needs_check": false,
+  "check_note": ""
+ },
+ "102": {
+  "source": "Warm up with hot chocolate at the chocolate factory",
+  "title": "Warm up with hot chocolate at the chocolate factory",
+  "theme": "eat",
+  "with": [],
+  "paragraph": "Lake Champlain Chocolates keeps its flagship at 750 Pine Street, steps from the bike path, and it is open daily 9 to 6. Walk in for the free samples and a look at the chocolatiers working in the Innovation Kitchen, then order a mug of the hot chocolate they bill as America's best. They make the ice cream right there all year, so a scoop is never out of season, and you can stock up on factory seconds on the way out. To go deeper, book the guided tasting: $16, 45 to 60 minutes, ages 10 and up.",
+  "needs_check": false,
+  "check_note": ""
+ },
+ "103": {
+  "source": "Fix, borrow, or make something instead of buying it",
+  "title": "Fix, borrow, or make something instead of buying it",
+  "theme": "culture",
+  "paragraph": "Start on Pine Street at The Makery, number 388, a secondhand art and craft supply store that also hosts a free Bring Your Own Craft Night once a month, no registration needed. Further down Pine at 688, Sandbox repairs clothing, backpacks and technical outerwear, and swaps out busted zippers. Then cross town to Old Spokes Home on North Winooski Avenue, where used bikes and parts are the specialty and flat fixes start at $15. Finish in South Burlington, where the library's Library of Things lends games, tools and even a telescope to cardholders 16 and up, nonresidents included.",
+  "needs_check": false,
+  "check_note": ""
+ },
+ "104": {
+  "source": "Learn to contra dance on a Friday night",
+  "title": "Learn to contra dance on a Friday night",
+  "theme": "play",
+  "with": [],
+  "paragraph": "Queen City Contras has kept contra dancing, an old New England tradition, going around Burlington for over thirty years. Dances run on select Fridays from 7 to 10 with a live band and a caller, and every dance is taught, so no partner or experience is needed. Get there at 6:45 for the beginner lesson, and bring clean soft-soled shoes and water. It costs $12, $5 for teens or anyone on a limited budget, and nothing at all under 12. The hall moves between Burlington and Shelburne, so check the schedule before you head out.",
+  "needs_check": false,
+  "check_note": ""
+ },
+ "105": {
+  "source": "Ride a ferry across the lake to New York",
+  "title": "Ride a ferry across the lake to New York",
+  "theme": "water",
+  "with": [],
+  "paragraph": "Lake Champlain Ferries has been crossing this lake since 1826, and walking on is the best cheap boat ride around: $5.50 each way for an adult, or $12.25 with your car, before any fuel surcharge. From the Charlotte dock at 2901 Ferry Road it is about 25 minutes and 3 miles across to Essex, New York, with the Adirondacks and the Green Mountains on either side. Up north, the Grand Isle to Plattsburgh crossing runs 24 hours a day, year round, in about 14 minutes. There are no reservations, so just show up 15 minutes early.",
+  "needs_check": false,
+  "check_note": ""
+ },
+ "106": {
+  "source": "Ski It If You Can at Mad River Glen",
+  "title": "Ski It If You Can at Mad River Glen",
+  "theme": "winter",
+  "with": [],
+  "paragraph": "Mad River Glen in Fayston is America's only skier-owned mountain, bought by its own skiers as a co-op in 1995 and capped at 2,500 shareholders. The Single Chair first ran in 1948 and still runs as the oldest continually operating single chairlift in the country. Snowboards are still banned, and there is precious little snowmaking, so the steep, raw terrain skis the way the weather left it. Adult day tickets are $125 this season, and sales are capped on weekends and holidays, so buy online before you make the drive.",
+  "needs_check": false,
+  "check_note": ""
+ },
+ "107": {
+  "source": "Ski to a fireside cabin on the von Trapp trails",
+  "title": "Ski to a fireside cabin on the von Trapp trails",
+  "theme": "winter",
+  "with": [],
+  "paragraph": "The von Trapp family's lodge in Stowe is home to the country's first cross-country ski center, with over 60 kilometers of groomed Nordic trails spread across 2,500 acres. Pick up your gear at the Outdoor Center, then ski out to the Slayton Pasture Cabin, where homemade soup, sandwiches and hot chocolate wait in front of a roaring fireplace. Warm up there before the ski back. A 2026 to 2027 adult day pass is $33 on weekdays and $37 on weekends and holidays, so a weekday is the cheaper day on the trails.",
+  "needs_check": false,
+  "check_note": ""
+ },
+ "108": {
+  "source": "Swing an ice axe up a frozen waterfall",
+  "title": "Swing an ice axe up a frozen waterfall",
+  "theme": "winter",
+  "with": [],
+  "paragraph": "Petra Cliffs, the Burlington climbing gym, takes beginners outside from December through March for a one-day Intro to Ice Climbing, in groups of one to six. AMGA-certified guides teach crampon and ice axe technique on frozen waterfalls, and they bring the harness, helmet, ropes and the rest of the technical gear. Your part is warm layers, food, water and your own ride to the ice. Few winter days in Vermont feel more earned.",
   "needs_check": false,
   "check_note": ""
  }
