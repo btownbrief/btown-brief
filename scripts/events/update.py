@@ -146,6 +146,20 @@ def _same_source_other_showtime(ev: dict, cluster: list[dict]) -> bool:
     return False
 
 
+def _same_slot(a: dict, b: dict) -> bool:
+    """Two sources, one venue, the same timed start to the minute."""
+    return (a["source"] != b["source"] and not a["allDay"] and not b["allDay"]
+            and a["start"] == b["start"] and bool(a.get("venue")) and bool(b.get("venue"))
+            and _norm_venue(a["venue"]) == _norm_venue(b["venue"]))
+
+
+def _shared_run(a: str, b: str, n: int = 3) -> bool:
+    """True when two normalized titles share n consecutive words."""
+    ta, tb = a.split(), b.split()
+    runs = {tuple(tb[i:i + n]) for i in range(len(tb) - n + 1)}
+    return any(tuple(ta[i:i + n]) in runs for i in range(len(ta) - n + 1))
+
+
 def dedupe(events: list[dict]) -> tuple[list[dict], list[dict]]:
     """Fuzzy-merge same title+date+venue across sources.
     Returns (merged_events, merge_log)."""
@@ -174,6 +188,13 @@ def dedupe(events: list[dict]) -> tuple[list[dict], list[dict]]:
                 # (promoter vs venue name, or an unresolved FB address)
                 if not compatible and sim >= 0.93 and _distinctive(nt) \
                         and _towns_compatible(ev, head):
+                    compatible = True
+                # same-show path: two sources title one show differently
+                # ("Bob The Drag Queen @ Flynn Theater" from UVM, "Now Clap!
+                # Bob The Drag Queen's" from the Flynn) but agree on the venue
+                # and the minute it starts (research audit, 2026-10-17)
+                if not compatible and _same_slot(ev, head) \
+                        and _shared_run(nt, norm_title(head["title"])):
                     compatible = True
                 if compatible:
                     cluster.append(ev)

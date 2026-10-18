@@ -120,6 +120,30 @@ def _venue(item: dict):
             town.title() if town else None)
 
 
+# "...during October 22-23, 2026, in Brisbane, Australia" on a conference
+# listing. The calendar takes public submissions, and conference mills post
+# overseas meetings to it pinned to a downtown venue (research audit,
+# 2026-10-17: a Brisbane radiology conference showed at the BCA Center).
+_CONFERENCE_RE = re.compile(r"\b(conference|congress|summit|symposium|expo)\b", re.I)
+_ABROAD_RE = re.compile(
+    r"\bin\s+[A-Z][\w.' -]{1,40},\s+(?:[A-Z][\w.' -]{1,30},\s+)?"
+    r"(Australia|Canada|United Kingdom|UK|England|Scotland|Ireland|France|"
+    r"Germany|Spain|Italy|Portugal|Netherlands|Belgium|Switzerland|Austria|"
+    r"Japan|China|Singapore|Malaysia|Thailand|India|UAE|Dubai|Turkey|Greece|"
+    r"Mexico|Brazil|New Zealand|South Africa|Korea)\b")
+
+
+def _elsewhere(item: dict) -> bool:
+    """True when the item itself says it happens far from Burlington: a
+    time zone outside the Americas, or a conference whose own text places
+    it in another country."""
+    zone = item.get("timezone") or ""
+    if zone and not zone.startswith(("America/", "US/")):
+        return True
+    text = f"{item.get('title') or ''} {item.get('description_short') or ''}"
+    return bool(_CONFERENCE_RE.search(text) and _ABROAD_RE.search(text))
+
+
 def _cats(item: dict) -> list[str]:
     cx = (item.get("taxonomies") or {}).get("taxonomy_category") or []
     return [(c.get("title") or "").strip() for c in cx]
@@ -160,6 +184,9 @@ def fetch(window_start: date, window_end: date) -> list[dict]:
     for (eid, day), (it, _) in sorted(occurrences.items(),
                                       key=lambda kv: (kv[0][1], str(kv[0][0]))):
         try:
+            if _elsewhere(it):
+                log(f"  [{SOURCE}] skipped (set elsewhere): {it.get('title')!r}")
+                continue
             tz = TZ
             if it.get("timezone"):
                 try:
