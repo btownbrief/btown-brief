@@ -28,7 +28,7 @@
       group: [], category: [], neighborhood: [],
       cost_tier: [], season: [], time_of_day: [],
       indoor_outdoor: [], good_for: [], vibe: [],
-      freeOnly: false, hasGuide: false,
+      freeOnly: false, hasGuide: false, servicesOnly: false,
     },
     search: '',
     sort: 'random',
@@ -604,7 +604,8 @@
   function getTotalActiveFilters() {
     const fieldCounts = ['group','category','neighborhood','cost_tier','good_for','vibe','season','time_of_day','indoor_outdoor']
       .reduce((n, k) => n + (state.filters[k] ? state.filters[k].length : 0), 0);
-    return fieldCounts + (state.filters.freeOnly ? 1 : 0) + (state.filters.hasGuide ? 1 : 0);
+    return fieldCounts + (state.filters.freeOnly ? 1 : 0) + (state.filters.hasGuide ? 1 : 0)
+      + (state.filters.servicesOnly ? 1 : 0);
   }
 
   function clearAllFilters() {
@@ -613,6 +614,7 @@
     });
     state.filters.freeOnly = false;
     state.filters.hasGuide = false;
+    state.filters.servicesOnly = false;
     state.search = '';
 
     const searchInput = document.getElementById('search-input');
@@ -624,6 +626,8 @@
     const hasGuide = document.getElementById('has-guide');
     if (freeOnly) freeOnly.checked = false;
     if (hasGuide) hasGuide.checked = false;
+    const servicesOnly = document.getElementById('services-only');
+    if (servicesOnly) servicesOnly.checked = false;
 
     // Re-render filters to reset chip states
     renderFilters();
@@ -647,13 +651,15 @@
         (t.category || '').toLowerCase().includes(q) ||
         (t.group || '').toLowerCase().includes(q) ||
         (t.vibe || []).some(v => v.toLowerCase().includes(q)) ||
-        (t.good_for || []).some(g => g.toLowerCase().includes(q))
+        (t.good_for || []).some(g => g.toLowerCase().includes(q)) ||
+        (t.services || []).some(sv => (sv.type + ' ' + sv.note).toLowerCase().includes(q))
       );
     }
 
     // Quick toggles
     if (filters.freeOnly) result = result.filter(t => t.cost_tier === 'Free');
     if (filters.hasGuide) result = result.filter(t => t.has_guide);
+    if (filters.servicesOnly) result = result.filter(t => (t.services || []).length > 0);
 
     // Taxonomy fields: AND across fields, OR within a field
     const arrayFields = ['group','category','neighborhood','cost_tier','good_for','vibe','season','time_of_day'];
@@ -832,6 +838,7 @@
           </div>
           <h3 class="card-name">${esc(t.name)}</h3>
           <p class="card-blurb">${esc(t.blurb || '')}</p>
+          ${servicesHTML(t, 'card-services')}
           ${vibes ? `<div class="card-vibes" aria-label="Vibes">${vibes}</div>` : ''}
         </div>
         <div class="card-footer">
@@ -840,6 +847,16 @@
         </div>
       </article>
     `;
+  }
+
+  /* Fix, borrow & make: one short practical line per service, read on the
+     place's own page (data/things.json `services`, each with its source). */
+  const SERVICE_LABELS = { repair: 'Repair', borrow: 'Borrow', make: 'Make' };
+  function servicesHTML(t, cls) {
+    const rows = (t.services || []).filter(sv => SERVICE_LABELS[sv.type] && sv.note);
+    if (!rows.length) return '';
+    return `<ul class="${cls}" aria-label="Fix, borrow and make">${rows.map(sv =>
+      `<li><span class="service-kind">${SERVICE_LABELS[sv.type]}</span> ${esc(sv.note)}</li>`).join('')}</ul>`;
   }
 
   function costTierClass(tier) {
@@ -955,6 +972,8 @@
         <h2 class="detail-name">${esc(t.name)}</h2>
         <p class="detail-neighborhood">${esc(t.neighborhood || '')}</p>
         <p class="detail-blurb">${esc(t.blurb || '')}</p>
+
+        ${(t.services || []).length ? `<p class="detail-section-label">Fix, borrow &amp; make</p>${servicesHTML(t, 'detail-services')}` : ''}
 
         ${t.why_special ? `
           <p class="detail-section-label">What makes it worth it</p>
@@ -1107,6 +1126,11 @@
     // Quick toggles
     document.getElementById('free-only')?.addEventListener('change', e => {
       state.filters.freeOnly = e.target.checked;
+      updateActiveFilterCount();
+      renderList();
+    });
+    document.getElementById('services-only')?.addEventListener('change', e => {
+      state.filters.servicesOnly = e.target.checked;
       updateActiveFilterCount();
       renderList();
     });
