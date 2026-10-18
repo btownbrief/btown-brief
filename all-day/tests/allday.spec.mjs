@@ -1254,7 +1254,25 @@ async function theWire(browser, base) {
     check(!(await page.$('#panel-wire .wm')), 'with a topic on, the river stands alone: no What matters', '');
     check(!(await page.$$eval('#panel-wire .feed .eyebrow', (n) => n.some((e) => /The Brief/i.test(e.textContent)))), 'and no Brief pinned above it', '');
     check(await page.$eval('#subnav .w-chips:not(.w-topics) .chip.on', (c) => c.dataset.chip) === 'all', 'the source chips are untouched', '');
-    await page.click('#subnav .w-topics .chip[data-chip="all"]');
+    /* the Instagram list has no topics: the row goes, and the topic with it */
+    await chipTo(page, 'instagram');
+    await page.waitForTimeout(150);
+    check(!(await page.$('#subnav .w-topics')), 'on the Instagram chip there is no topic row', '');
+    await chipTo(page, 'all');
+    await page.waitForTimeout(150);
+    check(await page.$eval('#subnav .w-topics .chip.on', (c) => c.dataset.chip) === 'all' && !!(await page.$('#panel-wire .wm')), 'and back on All, the topic is All topics again', '');
+    /* a topic with nothing under a source chip is left out, and a picked
+       one goes back to All topics */
+    await page.click('#subnav .w-topics .chip[data-chip="t:politics"]');
+    await page.waitForTimeout(150);
+    const redditTopics = new Set(items.filter((it) => it.local && it.ch === 'reddit' && GROUP[it.topic]).map((it) => GROUP[it.topic]));
+    await chipTo(page, 'reddit');
+    await page.waitForTimeout(150);
+    const rRow = await page.$$eval('#subnav .w-topics .chip', (cs) => cs.map((c) => c.dataset.chip + (c.classList.contains('on') ? '*' : '')));
+    check(JSON.stringify(rRow.filter((k) => k !== 'all' && k !== 'all*').map((k) => k.replace('*', '')).sort()) === JSON.stringify([...redditTopics].sort())
+      && rRow.includes(redditTopics.has('t:politics') ? 't:politics*' : 'all*'), 'under Reddit, only Reddit’s topics; Politics stays picked only if Reddit has some', JSON.stringify([rRow, [...redditTopics]]));
+    await chipTo(page, 'all');
+    await page.click('#subnav .w-topics .chip[data-chip="all"]').catch(() => {});
     await page.waitForTimeout(200);
     check(!!(await page.$('#panel-wire .wm')), 'All topics brings What matters back', '');
     check(!errors.length, 'no console errors', errors.join(' | '));
@@ -1332,12 +1350,12 @@ async function theWire(browser, base) {
     const fbToday = files['wire-today.json'].updates.flatMap((u) => u.items).find((it) => it.ch === 'facebook');
     /* the Unfiltered wire also follows national subreddits; only the
        Burlington and Vermont ones are the Square's (Stephen, 2026-10-18) */
-    const subs = [['r-vermont', 'vermont'], ['r-news', 'news'], ['technology', 'technology'], ['jokes', 'Jokes'], ['world-news', 'worldnews']];
+    const subs = [['r-vermont', 'vermont'], ['goodburlington', 'GoodBurlington'], ['r-news', 'news'], ['technology', 'technology'], ['jokes', 'Jokes'], ['world-news', 'worldnews']];
     const pulse = { v: 1, generated: new Date().toISOString(),
       sources: [{ id: 'r-burlington', name: 'r/burlington', short: 'r/burlington', topic: 'local', local: 1, site: 'https://www.reddit.com/r/burlington/' }]
-        .concat(subs.map(([id, sub]) => ({ id, name: 'r/' + sub, short: 'r/' + sub, site: 'https://www.reddit.com/r/' + sub + '/', ...(sub === 'vermont' ? { local: 1 } : {}) }))),
+        .concat(subs.map(([id, sub]) => ({ id, name: 'r/' + sub, short: 'r/' + sub, site: 'https://www.reddit.com/r/' + sub + '/', ...(/vermont|burlington/i.test(sub) ? { local: 1 } : {}) }))),
       items: Array.from({ length: 120 }, (_, i) => ({ t: 'Thread ' + i, u: 'https://www.reddit.com/r/burlington/comments/t' + i + '/', d: now - i * 600, s: 'r-burlington', ch: 'reddit', local: true }))
-        .concat(subs.map(([id, sub], i) => ({ t: 'Elsewhere ' + sub, u: 'https://www.reddit.com/r/' + sub + '/comments/e' + i + '/', d: now - 30 - i, s: id, ch: 'reddit', local: sub === 'vermont' }))),
+        .concat(subs.map(([id, sub], i) => ({ t: 'Elsewhere ' + sub, u: 'https://www.reddit.com/r/' + sub + '/comments/e' + i + '/', d: now - 30 - i, s: id, ch: 'reddit', local: /vermont|burlington/i.test(sub) }))),
       inbox: { facebook: { paused: false, items: [{ u: fbToday.url.replace('https://', 'https://www.') + '/', d: now - 100, from: 'ONE', name: 'ONE', summary: 'The same post again', ch: 'facebook', local: true }] } } };
     const on = await newPage(browser, base, { wire: { inbox: true, brief: false }, rpc: (fn) => (fn === 'nn_rules' ? { version: 3 } : fn === 'nn_posts_list' ? [] : undefined) });
     await on.page.route(/\/data\/pulse\.json$/, (r) => r.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(pulse) }));
@@ -1351,8 +1369,8 @@ async function theWire(browser, base) {
     check(ost.list.filter((x) => x.type === 'facebook').length === files['wire-today.json'].updates.flatMap((u) => u.items).filter((it) => it.ch === 'facebook').length,
       'a Facebook post in both today’s paper and the Unfiltered inbox shows once', JSON.stringify(ost.counts));
     const sqKeys = new Set(ost.list.map((x) => x.k));
-    check(sqKeys.has('https://www.reddit.com/r/vermont/comments/e0/') && ['news', 'technology', 'Jokes', 'worldnews'].every((sub) => ![...sqKeys].some((k) => k.includes('/r/' + sub + '/'))),
-      'Reddit in the Square: r/burlington and r/vermont, never r/news, r/technology, r/Jokes or r/worldnews', JSON.stringify([...sqKeys].filter((k) => /reddit/.test(k) && !/r\/burlington/.test(k))));
+    check(sqKeys.has('https://www.reddit.com/r/vermont/comments/e0/') && sqKeys.has('https://www.reddit.com/r/GoodBurlington/comments/e1/') && ['news', 'technology', 'Jokes', 'worldnews'].every((sub) => ![...sqKeys].some((k) => k.includes('/r/' + sub + '/'))),
+      'Reddit in the Square: r/burlington, r/vermont and r/GoodBurlington, never r/news, r/technology, r/Jokes or r/worldnews', JSON.stringify([...sqKeys].filter((k) => /reddit/.test(k) && !/r\/burlington/.test(k))));
     const todayReddit = files['wire-today.json'].updates.flatMap((u) => u.items).filter((it) => it.ch === 'reddit');
     check(todayReddit.some((it) => /\/r\/news\//.test(it.url)) && todayReddit.every((it) => sqKeys.has(it.id) === /\/r\/burlington\//.test(it.url)),
       'today’s paper’s threads too: the r/burlington ones in, the r/news ones out', JSON.stringify(todayReddit.map((it) => [it.id, it.url.split('/')[4], sqKeys.has(it.id)])));

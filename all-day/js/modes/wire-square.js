@@ -41,7 +41,7 @@ const CHUNK = 30;                  // then thirty at a time as the reader nears 
 const AHEAD = 1600;                // px below the screen where the next ones start drawing
 /* the subreddits whose threads are the Square's, lower case */
 export const LOCAL_SUBS = new Set(['burlington', 'vermont', 'goodburlington']);
-const SUB = /reddit\.com\/r\/([A-Za-z0-9_]+)/i;
+const SUB = /^https?:\/\/(?:[a-z]+\.)?reddit\.com\/r\/([A-Za-z0-9_]+)/i;
 /* a thread's subreddit: from its link, else from its source's page */
 const subOf = (...urls) => { for (const u of urls) { const m = String(u || '').match(SUB); if (m) return m[1].toLowerCase(); } return ''; };
 const localSub = (...urls) => LOCAL_SUBS.has(subOf(...urls));
@@ -117,7 +117,7 @@ function outside() {
   };
   ctx.today().forEach((c) => {
     if (c.ch !== 'facebook' && c.ch !== 'reddit') return;
-    if (c.ch === 'reddit' && !localSub(c.href)) return;
+    if (c.ch === 'reddit' && !localSub(c.href, c.site)) return;
     add({ k: c.k, href: c.href, src: c.src, sid: c.sid, ch: c.ch, text: squash(c.text || c.title), d: c.d, comments: c.comments || 0,
       open: c.ch === 'reddit' ? 'Open the thread' : 'Open the post' });
   });

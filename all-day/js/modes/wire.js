@@ -193,6 +193,7 @@ function toCard(it, sources, isToday) {
     k: String(it.id), href: it.url, kind: 'headline', title: it.title, src: name, sid: it.src || name,
     local: !!it.local, ch: it.ch || 'local', d: ms / 1000, thumb: it.thumb || '',
     ago: ms ? (isToday ? ago(ms) : clock(ms)) : '', own: !!it.own, topic: TOPIC_OF[it.topic] || '',
+    site: String(it.site || (sources[it.src] && sources[it.src].site) || ''),
   };
   if (Number(it.votes)) c.votes = Number(it.votes);      // demo only; real counts come from the shell
   if (c.ch === 'x' || c.ch === 'facebook') {
@@ -279,6 +280,11 @@ function topicCounts(d) {
   const out = {};
   if (d) d.all.forEach((c) => { if (c.topic && seen(c) && (W.ch === 'all' || c.ch === W.ch)) out[c.topic] = (out[c.topic] || 0) + 1; });
   return out;
+}
+/* a topic with nothing under this source chip (or the Instagram list,
+   which has no topics) goes back to All topics */
+function checkTopic(d) {
+  if (W.topic !== 'all' && (W.ch === 'instagram' || !topicCounts(d)[W.topic])) W.topic = 'all';
 }
 const paused = (d, ch) => !!(d && d.status && d.status[ch] && d.status[ch].paused);
 const chipHidden = (d, ch) => (ch === 'x' || ch === 'facebook') && paused(d, ch);
@@ -379,13 +385,14 @@ function subnav() {
   if (topics) frag.appendChild(topics);
   return frag;
 }
-/* the topics, one row; a topic with nothing here is left out, unless it is
-   the one picked. Instagram's list has no topics. */
+/* the topics, one row; a topic with nothing here is left out. Instagram's
+   list has no topics. */
 function topicRow(d) {
+  checkTopic(d);
   if (W.ch === 'instagram') return null;
   const n = topicCounts(d);
-  const items = TOPICS.filter(([k]) => n[k] || k === W.topic).map(([key, label]) => ({ key, label, n: n[key] || 0 }));
-  if (!items.length) { W.topic = 'all'; return null; }
+  const items = TOPICS.filter(([k]) => n[k]).map(([key, label]) => ({ key, label, n: n[key] }));
+  if (!items.length) return null;
   const row = el('div', 'toolband w-chips w-topics');
   row.appendChild(chips([{ key: 'all', label: 'All topics' }].concat(items), W.topic, (k) => {
     W.topic = k;
@@ -449,7 +456,12 @@ function renderSquare(opts = {}) {
     if (app.activeTab() === 'wire') app.paintSubnav();
     landSquare();
   };
-  if (square.loaded()) { draw(); return; }
+  if (square.loaded()) {
+    draw();
+    /* the Unfiltered wire failed last time: try again (it redraws on arrival) */
+    if (!W.pulse) pulseForSquare();
+    return;
+  }
   root.innerHTML = '<p class="loading">Loading the Square…</p>';
   square.ensure().then(draw);
 }
@@ -526,8 +538,11 @@ function renderPhotos(opts = {}) {
   const draw = () => {
     if (seq !== photoSeq || W.mode !== 'photos' || W.view !== 'paper') return;
     const first = !root.querySelector('.pm-head');
+    const was = photos.cat();
     photos.render(root, { limit: opts.limit, until: W.photoOpen || opts.until });
-    if (first && app.activeTab() === 'wire') app.paintSubnav();
+    /* the subnav names the chip: paint it again if a rebuild moved it (a
+       kind can drop under the chip's minimum) */
+    if ((first || photos.cat() !== was) && app.activeTab() === 'wire') app.paintSubnav();
     paintPhotoCount();
     landPhoto();
   };
@@ -617,6 +632,7 @@ function render(opts = {}) {
   if (W.view === 'raw') { renderRaw(); return; }
   if (W.mode === 'photos') { renderPhotos(opts); return; }
   if (W.mode === 'square') { renderSquare(opts); return; }
+  if (W.topic !== 'all') { loadMutes(); checkTopic(startDay()); }
   if (W.ch === 'instagram') { renderInstagram(opts); return; }
   if (W.failed && !W.today) {
     root.innerHTML = '<div class="errbox"><b>Couldn’t reach the wire.</b><br>The paper is served from GitHub. If you are offline it will come back on its own.</div>';
