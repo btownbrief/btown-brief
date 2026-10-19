@@ -49,6 +49,7 @@ import * as data from '../wire.js';
 import * as demo from './wire-demo.js';
 import * as photos from './wire-photos.js';
 import * as square from './wire-square.js';
+import * as recaps from './wire-recaps.js';
 import * as boards from '../boards.js';
 import { el, esc, safeHref, ICON, mark, cards, chips, pills, button, divider, section, localSwitch, geo, setGeo, put } from '../ui.js';
 import { liquify } from '../liquid.js';
@@ -76,6 +77,9 @@ const TOPICS = [
   ['t:politics', 'Politics', ['city-government', 'state-politics', 'national-politics']],
   ['t:safety', 'Safety', ['public-safety', 'courts']],
   ['t:business', 'Business', ['business', 'economy']],
+  /* Markets and Sports also read their own lanes on the payload (`markets`,
+     `sports`): every such story of the day, not only the river's few */
+  ['t:markets', 'Markets', ['markets']],
   ['t:housing', 'Housing', ['housing']],
   ['t:around', 'Getting around', ['transportation']],
   ['t:arts', 'Arts & events', ['arts-culture', 'music', 'events']],
@@ -85,11 +89,22 @@ const TOPICS = [
   ['t:health', 'Health', ['health']],
 ];
 const TOPIC_OF = Object.fromEntries(TOPICS.flatMap(([key, , tags]) => tags.map((t) => [t, key])));
+/* Topics view's shelves go a little further than the chips, so nothing
+   the day carries is out of reach there: the world, tech and science, and
+   the rest */
+const SHELF_EXTRA = [['x:world', 'World', ['world']], ['x:tech', 'Tech & science', ['tech', 'science', 'environment']]];
+const SHELF_OF = Object.fromEntries(SHELF_EXTRA.flatMap(([key, , tags]) => tags.map((t) => [t, key])));
+const SHELF_N = 4;       // stories on a shelf before "All N"
+/* the sports under the Sports chip, in the payload's `sport_chips` order
+   (MLB only in its postseason; `other` is never a chip) */
+const SPORTS = { nba: 'NBA', nfl: 'NFL', nhl: 'NHL', tennis: 'Tennis', mlb: 'MLB', local: 'Local', college: 'College' };
+const SPORT_ORDER = ['nba', 'nfl', 'nhl', 'tennis', 'mlb', 'local', 'college'];
+const NEWS_KEY = 'allday-wire-news';   // Feed or Topics, kept on the phone
 /* the three ways to read the tab, in words (his girlfriend, 2026-10-17:
    the list and photo icons "looked like the same information") */
-const MODES = [['news', 'News'], ['photos', 'Photos'], ['square', 'Square']];
+const MODES = [['news', 'News'], ['photos', 'Photos'], ['square', 'Square'], ['recaps', 'Recaps']];
 /* each word's water, a colour token */
-const MODE_WATER = ['--liq-news', '--liq-photos', '--liq-square'];
+const MODE_WATER = ['--liq-news', '--liq-photos', '--liq-square', '--liq-recaps'];
 const NUMBER = ['none', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve', 'thirteen',
   'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen'];
 const TENS = ['', '', 'twenty', 'thirty', 'forty', 'fifty', 'sixty', 'seventy', 'eighty', 'ninety'];
@@ -123,6 +138,12 @@ const W = {
   reading: null,        // the day the dateline names (follows the scroll)
   ch: 'all',
   topic: 'all',         // or a TOPICS key
+  sport: 's:all',       // under Sports: 's:' and a SPORTS key
+  news: readNews(),     // News as the Feed or as Topics' shelves
+  shelves: new Set(),   // the shelves opened past four
+  rkind: 'all',         // Recaps: one kind, or all of them
+  rOpen: new Set(),     // the recaps opened past five bullets
+  rFlash: null,         // a recap to scroll to once Recaps is drawn
   open: new Set(),      // the days whose What matters list is opened past five
   flip: null,           // the earlier day today's What matters block shows, or null (never stored)
   view: 'paper',        // or 'raw', Unfiltered
@@ -138,6 +159,8 @@ const W = {
   raw: { outlet: '', q: '', run: null, list: null, until: null, keep: 0 },
   hunt: 0,              // the newest deep-link search; an older one stops
 };
+function readNews() { try { return localStorage.getItem(NEWS_KEY) === 'topics' ? 'topics' : 'feed'; } catch (e) { return 'feed'; } }
+function keepNews(v) { try { if (v === 'topics') localStorage.setItem(NEWS_KEY, v); else localStorage.removeItem(NEWS_KEY); } catch (e) { /* this visit only */ } }
 const follows = app.demo ? Object.create(null) : { ...store.read('allday-follows', {}) };
 function setFollow(sid, on) {
   if (on) follows[sid] = 1; else delete follows[sid];
@@ -190,7 +213,10 @@ function toCard(it, sources, isToday) {
   const c = {
     k: String(it.id), href: it.url, kind: 'headline', title: it.title, src: name, sid: it.src || name,
     local: !!it.local, ch: it.ch || 'local', d: ms / 1000, thumb: it.thumb || '',
-    ago: ms ? (isToday ? ago(ms) : clock(ms)) : '', own: !!it.own, topic: TOPIC_OF[it.topic] || '',
+    ago: ms ? (isToday ? ago(ms) : clock(ms)) : '', own: !!it.own, topic: TOPIC_OF[it.topic] || '', shelf: SHELF_OF[it.topic] || '',
+    /* the sport chip a sports story sits under (MLB out of season, and
+       anything else, is `other`, which has no chip) */
+    chip: SPORTS[it.sport] ? String(it.sport) : it.sport ? 'other' : '',
     site: String(it.site || (sources[it.src] && sources[it.src].site) || ''),
   };
   if (Number(it.votes)) c.votes = Number(it.votes);      // demo only; real counts come from the shell
@@ -257,12 +283,28 @@ function dayOf(p) {
   const inPicks = new Set(picks.map((x) => x.c.k));
   const earlier = ranked(p.picks_earlier).filter((x) => !inPicks.has(x.c.k) && (inPicks.add(x.c.k), true))
     .sort((a, b) => (a.at === b.at ? (a.rank || 99) - (b.rank || 99) : a.at < b.at ? 1 : -1));
-  const d = { date: p.date, final: !!p.final, isToday, payload: p, updates, all, picks, earlier, brief,
+  /* the two lanes (PR #373): every sports story of the day under its chip,
+     and every markets story; the river carries only a few of each, and
+     those are the same cards (same ids) */
+  const lane = (it, topic, chip) => {
+    const c = card(it);
+    if (!c) return null;
+    c.topic = topic;
+    if (chip) c.chip = SPORTS[chip] ? chip : 'other';
+    return c;
+  };
+  const sportsP = p.sports && typeof p.sports === 'object' && !Array.isArray(p.sports) ? p.sports : {};
+  const sports = Object.keys(sportsP).flatMap((chip) => (Array.isArray(sportsP[chip]) ? sportsP[chip] : []).map((it) => lane(it, 't:sports', chip))).filter(Boolean);
+  const markets = (Array.isArray(p.markets) ? p.markets : []).map((it) => lane(it, 't:markets')).filter(Boolean);
+  /* a river story the tagger called sports or markets is in its lane too */
+  all.forEach((c) => { if (c.topic === 't:sports' && !c.chip) c.chip = 'other'; });
+  const pool = [...new Set(all.concat(sports, markets))];
+  const d = { date: p.date, final: !!p.final, isToday, payload: p, updates, all, picks, earlier, brief, pool,
     counts: p.counts || {}, status: p.status || {}, sources, updated: Date.parse(p.updated) || 0, count: Number(p.count) || all.length };
   app.know(all);
   if (brief) app.know([brief]);
   /* every card the day can draw: a pick can outlive its river slot */
-  d.cards = [...new Set(all.concat(brief || [], picks.concat(earlier).map((x) => x.c)))];
+  d.cards = [...new Set(pool.concat(brief || [], picks.concat(earlier).map((x) => x.c)))];
   app.know(d.cards);
   DAYS.set(p, d);
   return d;
@@ -275,7 +317,11 @@ function loadMutes() {
   Object.keys(store.muted()).forEach((id) => { MUTE[id] = 1; MUTE[canon(id)] = 1; });
 }
 const seen = (c) => !MUTE[c.sid] && (geo() === 'everything' || c.local || !!follows[c.sid]);
-const shows = (c) => seen(c) && (W.ch === 'all' || c.ch === W.ch) && (W.topic === 'all' || c.topic === W.topic);
+const shows = (c) => seen(c) && (W.ch === 'all' || c.ch === W.ch) && (W.topic === 'all' || c.topic === W.topic) &&
+  (W.topic !== 't:sports' || W.sport === 's:all' || c.chip === W.sport.slice(2));
+/* Sports and Markets read their lanes, the rest the river */
+const lanes = () => W.topic === 't:sports' || W.topic === 't:markets';
+const topicsOn = () => W.news === 'topics' && W.mode === 'news' && W.view === 'paper' && W.ch !== 'instagram';
 /* no filter on: the Brief and What matters lead the day */
 const unfiltered = () => W.ch === 'all' && W.topic === 'all';
 /* a local story's source is green only on Everything, where local and
@@ -296,13 +342,20 @@ function countsOf(d) {
 /* the topic row's counts: what this reader sees under the source chip */
 function topicCounts(d) {
   const out = {};
-  if (d) d.all.forEach((c) => { if (c.topic && seen(c) && (W.ch === 'all' || c.ch === W.ch)) out[c.topic] = (out[c.topic] || 0) + 1; });
+  if (d) d.pool.forEach((c) => { if (c.topic && seen(c) && (W.ch === 'all' || c.ch === W.ch)) out[c.topic] = (out[c.topic] || 0) + 1; });
+  return out;
+}
+/* the sport chips' counts: what this reader sees under each */
+function sportCounts(d) {
+  const out = {};
+  if (d) d.pool.forEach((c) => { if (c.topic === 't:sports' && seen(c) && (W.ch === 'all' || c.ch === W.ch)) out[c.chip] = (out[c.chip] || 0) + 1; });
   return out;
 }
 /* a topic with nothing under this source chip (or the Instagram list,
    which has no topics) goes back to All topics */
 function checkTopic(d) {
   if (W.topic !== 'all' && (W.ch === 'instagram' || !topicCounts(d)[W.topic])) W.topic = 'all';
+  if (W.topic !== 't:sports') W.sport = 's:all';
 }
 const paused = (d, ch) => !!(d && d.status && d.status[ch] && d.status[ch].paused);
 const chipHidden = (d, ch) => (ch === 'x' || ch === 'facebook') && paused(d, ch);
@@ -352,7 +405,11 @@ function modeRow() {
   const g = el('div', 'wmodes');
   g.setAttribute('role', 'group');
   g.setAttribute('aria-label', 'Read the Wire as');
-  MODES.forEach(([key, label]) => {
+  /* the Square holds its place, unseen, until the board answers; once it
+     has said it is not open, its place goes, so four words never show a
+     hole between Photos and Recaps */
+  const modes = MODES.map((m, i) => [...m, MODE_WATER[i]]).filter(([key]) => key !== 'square' || W.squareOk !== false);
+  modes.forEach(([key, label]) => {
     const on = W.mode === key && W.view === 'paper';
     const wait = key === 'square' && !W.squareOk;
     const b = el('button', 'wmode' + (on ? ' on' : '') + (wait ? ' wait' : ''), esc(label));
@@ -366,8 +423,8 @@ function modeRow() {
   /* the chosen word sits in poured water, each its own colour (Stephen,
      2026-10-19: "that bubble and the motion ... for the main ones I want
      people switching through"); Unfiltered has no word on, so no water */
-  const at = MODES.findIndex(([key]) => key === W.mode);
-  if (W.view === 'paper' && at >= 0) liquify(g, { key: 'wire-mode', idx: at, colors: MODE_WATER });
+  const at = modes.findIndex(([key]) => key === W.mode);
+  if (W.view === 'paper' && at >= 0) liquify(g, { key: 'wire-mode', idx: at, colors: modes.map((m) => m[2]) });
   return g;
 }
 /* a chip's colour mark: a dot in the source's colour */
@@ -377,6 +434,7 @@ function activeFilters() {
   if (W.view !== 'paper') return 0;
   if (W.mode === 'photos') return photos.cat() !== 'all' ? 1 : 0;
   if (W.mode === 'square') return square.type() !== 'all' ? 1 : 0;
+  if (W.mode === 'recaps') return W.rkind !== 'all' ? 1 : 0;
   return (W.ch !== 'all' ? 1 : 0) + (W.topic !== 'all' ? 1 : 0) + (W.slot ? 1 : 0);
 }
 function subnav() {
@@ -409,13 +467,15 @@ function subnav() {
    scroll"). The wide screen's rail holds the chips instead. Each tap
    applies at once. */
 let FBODY = null;
-const dayRowShown = () => W.view === 'paper' && W.mode === 'news' && W.ch !== 'instagram';
+const dayRowShown = () => W.view === 'paper' && ((W.mode === 'news' && W.ch !== 'instagram') || W.mode === 'recaps');
 /* the row that floats: the day and the switch on News, the switch alone on
-   Photos (Local is Burlington's pictures, Everything adds the world's) */
+   Photos (Local is Burlington's pictures, Everything adds the world's), the
+   day alone on Recaps (a recap is the whole of X, never local or not) */
 const topRowShown = () => dayRowShown() || (W.view === 'paper' && W.mode === 'photos');
 function topRow(cls) {
   const row = el('div', cls);
-  row.append(dayRowShown() ? dayPager() : el('span', 'wtop-sp'), localSwitch(() => { W.open.clear(); changed(); }));
+  row.append(dayRowShown() ? dayPager() : el('span', 'wtop-sp'));
+  if (W.mode !== 'recaps') row.appendChild(localSwitch(() => { W.open.clear(); changed(); }));
   return row;
 }
 function dayPager() {
@@ -488,6 +548,13 @@ function paperTop(root) {
 /* "Show all" only when a row of chips runs past the screen */
 function fits(band) {
   if (!band || !band.isConnected) return;
+  /* a chosen chip past the edge of its row (Sports, a sport) is brought into view */
+  band.querySelectorAll('.wf .chips').forEach((r) => {
+    const on = r.querySelector('.chip.on');
+    if (!on || r.scrollWidth <= r.clientWidth + 1) return;
+    const a = on.getBoundingClientRect(), b = r.getBoundingClientRect();
+    if (a.right > b.right) r.scrollLeft += a.left - b.left - 16;
+  });
   const over = [...band.querySelectorAll('.wf .chips')].some((r) => r.scrollWidth > r.clientWidth + 1);
   band.classList.toggle('fits', !over && !W.fwrap);
 }
@@ -549,11 +616,13 @@ function pickKind(k) {
   history.replaceState(null, '', location.search + '#wire' + (W.start ? '/' + W.start : k === 'all' ? '' : '/' + k));
   changed();
 }
-function pickTopic(k) { W.topic = k; if (k !== 'all') W.slot = null; changed(); }
+function pickTopic(k) { W.topic = k; W.sport = 's:all'; if (k !== 'all') W.slot = null; changed(); }
+function pickSport(k) { W.sport = k; changed(); }
 function clearFilters() {
   if (W.mode === 'photos') { pickCat('all'); return; }
   if (W.mode === 'square') { square.setType('all'); changed(); return; }
-  W.ch = 'all'; W.topic = 'all'; W.slot = null;
+  if (W.mode === 'recaps') { W.rkind = 'all'; changed(); return; }
+  W.ch = 'all'; W.topic = 'all'; W.sport = 's:all'; W.slot = null;
   history.replaceState(null, '', location.search + '#wire' + (W.start ? '/' + W.start : ''));
   changed();
 }
@@ -568,6 +637,20 @@ function filtersUI(band) {
       h('Kind of photo');
       f.appendChild(chips(photos.catChips().map((c) => ({ ...c, cls: c.key === 'instagram' ? 'w-src-instagram' : c.key === 'pets' ? 'w-pets' : '', icon: c.key === 'instagram' ? DOT : '' })),
         photos.cat(), (k) => pickCat(k)));
+    }
+    clear();
+    return f;
+  }
+  if (W.view === 'paper' && W.mode === 'recaps') {
+    /* the kinds the day has, once there are two to choose between */
+    const p = recapDay().p;
+    const kinds = p ? recaps.kindsOf(p) : [];
+    if (kinds.length > 1) {
+      h('Kind of recap');
+      const row = chips([{ key: 'all', label: 'All' }].concat(kinds.map((k) => ({ key: 'r:' + k.key, label: k.label, n: k.n }))), W.rkind === 'all' ? 'all' : 'r:' + W.rkind,
+        (k) => { W.rkind = k === 'all' ? 'all' : k.slice(2); changed(); });
+      row.classList.add('w-rkinds');
+      f.appendChild(row);
     }
     clear();
     return f;
@@ -592,7 +675,8 @@ function filtersUI(band) {
   h('Source');
   f.appendChild(chips(kinds, W.ch, pickKind));
   checkTopic(d);
-  if (W.ch !== 'instagram') {
+  /* Topics view is every topic at once: no topic row there */
+  if (W.ch !== 'instagram' && !topicsOn()) {
     const n = topicCounts(d);
     const items = TOPICS.filter(([k]) => n[k]).map(([key, label]) => ({ key, label, n: n[key] }));
     if (items.length) {
@@ -601,9 +685,21 @@ function filtersUI(band) {
       row.classList.add('w-topics');
       f.appendChild(row);
     }
+    /* Sports opens a row of its own: each sport, counted (Stephen,
+       2026-10-19: "the ability to select the specific sport. Like nba") */
+    if (W.topic === 't:sports') {
+      const sn = sportCounts(d);
+      const listed = (Array.isArray(d && d.payload.sport_chips) ? d.payload.sport_chips : SPORT_ORDER).filter((k) => SPORTS[k]);
+      const sp = listed.filter((k) => k !== 'college' || sn[k] || W.sport === 's:college')
+        .map((k) => ({ key: 's:' + k, label: SPORTS[k], n: sn[k] || 0, cls: sn[k] ? '' : 'is-none' }));
+      h('Sport');
+      const row = chips([{ key: 's:all', label: 'All sports' }].concat(sp), W.sport, pickSport);
+      row.classList.add('w-sports');
+      f.appendChild(row);
+    }
   }
   /* the day's three rankings (Stephen, 2026-10-17), today only */
-  const tp = !W.start && unfiltered() && payloadFor(todayKey());
+  const tp = !W.start && unfiltered() && !topicsOn() && payloadFor(todayKey());
   const sl = tp ? slotRow(dayOf(tp)) : null;
   if (sl) { h('Top stories as of'); f.appendChild(sl.row); }
   if (!band) {
@@ -621,7 +717,7 @@ function aside() {
   const box = el('div', 'wside');
   if (W.view === 'paper') {
     const fs = el('section', 'ws');
-    fs.appendChild(el('h3', null, W.mode === 'news' ? 'Filters' : W.mode === 'photos' ? 'Photos' : 'The Square'));
+    fs.appendChild(el('h3', null, W.mode === 'news' ? 'Filters' : W.mode === 'photos' ? 'Photos' : W.mode === 'recaps' ? 'Recaps' : 'The Square'));
     fs.appendChild(filtersUI());
     box.appendChild(fs);
   }
@@ -684,6 +780,99 @@ square.init({
   panel: () => W.panel,
   redraw: () => redraw(),
 });
+/* ------------------------------------------------------------- Recaps */
+/* The day's recaps, newest first, each a big card (wire-recaps.js). The
+   day pager walks the frozen editions, which keep their recaps. Before
+   today's first recap the page shows the latest day that has some, as the
+   paper does with its top stories. */
+recaps.init({
+  clock,
+  open: (id) => openRecap(id),
+  all: () => setMode('recaps'),
+});
+/* the day Recaps shows, and its payload; `need` is an earlier edition
+   that has to load before the page can say whether to lead with it */
+function recapDay() {
+  const tk = todayKey();
+  if (W.start) return { date: W.start, p: payloadFor(W.start) };
+  const p = payloadFor(tk);
+  if (p && recaps.recapsOf(p).length) return { date: tk, p };
+  const prev = W.noEarlier === tk ? null : olderThan(tk);
+  const pp = prev && payloadFor(prev);
+  if (pp && recaps.recapsOf(pp).length) return { date: prev, p: pp, borrowed: true };
+  return { date: tk, p, need: prev && !pp ? prev : null };
+}
+let recapSeq = 0;
+function renderRecaps() {
+  const root = W.root;
+  const seq = ++recapSeq;
+  W.shownDay = null;
+  if (W.failed && !W.today) {
+    root.innerHTML = '<div class="errbox"><b>Couldn’t reach the wire.</b><br>The paper is served from GitHub. If you are offline it will come back on its own.</div>';
+    return;
+  }
+  if (!W.today) { root.innerHTML = '<p class="loading">Loading the recaps…</p>'; return; }
+  const tk = todayKey();
+  const r = recapDay();
+  if (r.need) {
+    root.innerHTML = '<p class="loading">Loading the recaps…</p>';
+    loadEdition(r.need).catch(() => { W.noEarlier = tk; })
+      .then(() => { if (seq === recapSeq && W.mode === 'recaps' && W.view === 'paper') render(); });
+    return;
+  }
+  if (r.borrowed) W.shownDay = r.date;
+  W.reading = r.date;
+  root.innerHTML = '';
+  const feed = el('div', 'feed wire wrecaps');
+  root.appendChild(feed);
+  paperTop(root);
+  const all = r.p ? recaps.recapsOf(r.p) : [];
+  if (W.rkind !== 'all' && !all.some((x) => x.kind === W.rkind)) W.rkind = 'all';
+  const list = W.rkind === 'all' ? all : all.filter((x) => x.kind === W.rkind);
+  const isToday = r.date === tk;
+  const h = el('div', 'whead');
+  h.innerHTML = '<h2>' + esc((isToday ? 'Today’s' : weekday(r.date) + '’s') + ' recaps') + '</h2>';
+  if (all.length) h.appendChild(el('div', 'whead-row', '<span class="s">' + esc(plural(all.length, 'recap', 'recaps') + (all[0].at ? ' · latest ' + clock(all[0].at) : '')) + '</span>'));
+  feed.appendChild(h);
+  if (!list.length) feed.appendChild(el('p', 'empty wrc-empty', esc(isToday ? 'No recaps yet today.' : 'No recaps that day.')));
+  list.forEach((x) => feed.appendChild(recapCard(x)));
+  /* the day before, one tap away */
+  const prev = olderThan(r.date);
+  if (prev) {
+    const b = button(ICON.left + ' ' + esc(weekday(prev) + '’s recaps'), 'ghost wmore-btn wrc-prev', () => goDay(prev));
+    b.type = 'button';
+    feed.appendChild(b);
+  }
+  painted(root);
+  if (W.rFlash) {
+    const k = 'rc:' + W.rFlash;
+    W.rFlash = null;
+    if (!app.flashHit(root, k)) app.toast('That recap has moved on.');
+  }
+}
+/* a recap's card; "Show all N" and Collapse redraw just that card */
+function recapCard(x) {
+  const node = recaps.card(x, { open: W.rOpen.has(x.id), onToggle: (on) => {
+    if (on) W.rOpen.add(x.id); else W.rOpen.delete(x.id);
+    const next = recapCard(x);
+    node.replaceWith(next);
+    if (on) { const a = next.querySelectorAll('.rc-b')[5]; if (a) a.focus({ preventScroll: true }); }
+    else { app.jumpTo(next); const b = next.querySelector('.rc-all'); if (b) b.focus({ preventScroll: true }); }
+  } });
+  return node;
+}
+/* News' strip and #wire/recaps/<id>: Recaps, on that recap's day, at it */
+function openRecap(id) {
+  const date = String(id).slice(0, 10);
+  W.mode = 'recaps';
+  photos.remember('recaps');
+  W.view = 'paper';
+  W.rkind = 'all';
+  W.rFlash = id;
+  goDay(isDate(date) ? date : null);
+  history.replaceState(null, '', location.search + '#wire/recaps/' + encodeURIComponent(id));
+}
+
 /* Is the Square live? Asked once a visit; until it is, the switch has two
    words and a kept Square opens on News. */
 let squareAsk = null;
@@ -702,11 +891,11 @@ function squareReady() {
 /* The switch: the choice is kept on the phone, and the address says which
    view this is, so it can be shared. Focus stays on the switch. */
 function setMode(mode) {
-  W.mode = mode === 'photos' || mode === 'square' ? mode : 'news';
+  W.mode = mode === 'photos' || mode === 'square' || mode === 'recaps' ? mode : 'news';
   photos.remember(W.mode);
   W.view = 'paper';
   W.photoOpen = null;
-  history.replaceState(null, '', location.search + '#wire' + (W.mode !== 'news' ? '/' + W.mode : W.start ? '/' + W.start : W.ch !== 'all' ? '/' + W.ch : ''));
+  history.replaceState(null, '', location.search + '#wire' + (W.mode === 'recaps' ? '/recaps' + (W.start ? '/' + W.start : '') : W.mode !== 'news' ? '/' + W.mode : W.start ? '/' + W.start : W.ch !== 'all' ? '/' + W.ch : ''));
   app.paintSubnav(); render(); app.scrollTop();
   const b = document.querySelector('#subnav .wmode[data-view="' + W.mode + '"]');
   if (b) b.focus({ preventScroll: true });
@@ -801,7 +990,8 @@ function goDay(date) {
   W.reading = W.start || tk;
   W.open.clear();
   W.view = 'paper';
-  history.replaceState(null, '', location.search + '#wire' + (W.start ? '/' + W.start : ''));
+  W.shelves.clear();
+  history.replaceState(null, '', location.search + '#wire' + (W.mode === 'recaps' ? '/recaps' : '') + (W.start ? '/' + W.start : ''));
   paintFilters();
   if (W.start && !payloadFor(W.start)) {
     app.paintSubnav();
@@ -828,6 +1018,7 @@ function render(opts = {}) {
   if (W.view === 'raw') { renderRaw(); return; }
   if (W.mode === 'photos') { renderPhotos(opts); return; }
   if (W.mode === 'square') { renderSquare(opts); return; }
+  if (W.mode === 'recaps') { renderRecaps(); return; }
   if (W.topic !== 'all') { loadMutes(); checkTopic(startDay()); }
   if (W.ch === 'instagram') { renderInstagram(opts); return; }
   if (W.failed && !W.today) {
@@ -873,18 +1064,35 @@ function render(opts = {}) {
       }
     }
   }
+  /* Topics view is the day's shelves, no top stories above them */
+  const topics = topicsOn();
+  if (topics) borrow = null;
   const top = borrow || d;
-  const ranked = !!(top && unfiltered() && (mattersOf(top).list.length || mattersOf(top).earlier.length));
+  const ranked = !topics && !!(top && unfiltered() && (mattersOf(top).list.length || mattersOf(top).earlier.length));
   W.reading = date;
   paperTop(root);
   headBlock(feed, borrow ? borrow.date : date, borrow || d, ranked);
+  if (topics) {
+    if (d) topicShelves(feed, d, date === tk);
+    app.bindFeed(feed, { onSource: sourceSheet, onMute: muteSource });
+    painted(root);
+    return;
+  }
   const exclude = new Set();
+  /* an earlier day opened on the pager leads with what readers upvoted */
+  if (d && W.start && unfiltered()) popular(feed, d);
   if (d && unfiltered()) {
     if (d.brief && seen(d.brief)) {
       put(feed, briefPin(d));
       exclude.add(d.brief.k);
     }
     if (top) topBlock(feed, top, top.date === tk).forEach((k) => exclude.add(k));
+    /* the newest recap of each kind, after the top stories; a bullet the
+       river already carries is not repeated there */
+    if (!W.start && W.today && W.today.date === tk) {
+      const st = recaps.strip(W.today, new Set(dayOf(W.today).all.map((c) => c.k)));
+      if (st) feed.appendChild(st);
+    }
     if (borrow) {
       const n = countsOf(d).all;
       section(feed, 'Today so far', esc(plural(n, 'story', 'stories') + (W.today.updated ? ' · updated ' + clock(Date.parse(W.today.updated)) : '')));
@@ -906,7 +1114,11 @@ function render(opts = {}) {
   fill(run);
   app.bindFeed(feed, { onSource: sourceSheet, onMute: muteSource });
   watch(run);
-  /* the filters read the day this paper shows */
+  painted(root);
+}
+/* after a paper view is drawn: the filters read the day it shows, and
+   focus follows a day arrow to the new day's banner */
+function painted(root) {
   if (app.activeTab() === 'wire') { app.paintAside(); paintFilters(); paintDateline(W.reading); }
   if (W.refocus) {
     const b = root.querySelector('.wband .wday ' + W.refocus);
@@ -948,10 +1160,12 @@ function headBlock(host, date, d, ranked) {
   const row = el('div', 'whead-row', '<span class="s"></span>');
   row.firstChild.textContent = headSub(date, d);
   row.firstChild.dataset.of = date;
+  row.appendChild(newsSwitch());
   h.appendChild(row);
   const on = [];
   if (W.ch !== 'all') on.push(KIND_NAME[W.ch] || W.ch);
   if (W.topic !== 'all') on.push(TOPIC_NAME[W.topic] || '');
+  if (W.topic === 't:sports' && W.sport !== 's:all') on.push(SPORTS[W.sport.slice(2)] || '');
   if (W.slot) on.push('as of ' + (SLOTS.find((x) => x[0] === W.slot) || ['', ''])[1].toLowerCase());
   if (on.length) {
     const f = el('div', 'wfilt', 'Showing ' + on.filter(Boolean).map((t) => '<b>' + esc(t) + '</b>').join(' · '));
@@ -961,6 +1175,119 @@ function headBlock(host, date, d, ranked) {
   host.appendChild(h);
   return h;
 }
+/* Feed | Topics (Stephen, 2026-10-19): the paper as it runs, or the day
+   on shelves by topic. Poured like the other main switches; kept on the
+   phone. */
+const NEWS_WAYS = [['feed', 'Feed'], ['topics', 'Topics']];
+function newsSwitch() {
+  const g = el('div', 'wnsw');
+  g.setAttribute('role', 'group');
+  g.setAttribute('aria-label', 'Read the news as');
+  NEWS_WAYS.forEach(([key, label]) => {
+    const on = W.news === key;
+    const b = el('button', 'wnsw-b' + (on ? ' on' : ''), esc(label));
+    b.type = 'button';
+    b.dataset.news = key;
+    b.setAttribute('aria-pressed', on ? 'true' : 'false');
+    b.addEventListener('click', () => { if (!on) setNews(key); });
+    g.appendChild(b);
+  });
+  liquify(g, { key: 'wire-news', idx: W.news === 'topics' ? 1 : 0, colors: ['--liq-news', '--liq-topics'] });
+  return g;
+}
+function setNews(key) {
+  W.news = key === 'topics' ? 'topics' : 'feed';
+  keepNews(W.news);
+  /* Topics shows every topic: a topic chip or a ranking would hide most of it */
+  if (W.news === 'topics') { W.topic = 'all'; W.sport = 's:all'; W.slot = null; }
+  W.shelves.clear();
+  app.paintSubnav(); render(); app.scrollTop();
+  const b = W.root && W.root.querySelector('.wnsw-b[data-news="' + W.news + '"]');
+  if (b) b.focus({ preventScroll: true });
+}
+
+/* --------------------------------------------------------- Topics view */
+/* The day on shelves: New today (today only), then each topic with
+   anything in it, then the world, tech and science, and the rest. Four
+   stories a shelf, "All N" for the others, and the Collapse bar under an
+   opened shelf. Sports and Markets read their lanes. Under a source chip,
+   only that kind of source. */
+function shelvesOf(d, isToday) {
+  const byNew = (a, b) => b.d - a.d;
+  const pass = (c) => seen(c) && (W.ch === 'all' || c.ch === W.ch);
+  const river = d.all.filter(pass).sort(byNew);
+  const pool = d.pool.filter(pass).sort(byNew);
+  const out = [];
+  if (isToday && river.length) out.push(['new', 'New today', river]);
+  TOPICS.forEach(([key, label]) => out.push([key, label, pool.filter((c) => c.topic === key)]));
+  SHELF_EXTRA.forEach(([key, label]) => out.push([key, label, river.filter((c) => !c.topic && c.shelf === key)]));
+  out.push(['x:more', 'More', river.filter((c) => !c.topic && !c.shelf)]);
+  return out.filter(([, , list]) => list.length);
+}
+function topicShelves(feed, d, isToday) {
+  const list = shelvesOf(d, isToday);
+  if (!list.length) { feed.appendChild(el('p', 'note pad', esc(isToday ? 'Nothing yet today.' : 'Nothing that day.'))); return; }
+  list.forEach((s) => feed.appendChild(shelf(...s)));
+}
+function shelf(key, title, list) {
+  const box = el('section', 'wshelf');
+  box.dataset.shelf = key;
+  const open = W.shelves.has(key) && list.length > SHELF_N;
+  const head = section(box, title, esc(plural(list.length, 'story', 'stories')));
+  head.dataset.shelfHead = key;
+  (open ? list : list.slice(0, SHELF_N)).forEach((c) => put(box, storyRow(c)));
+  const redo = (on) => {
+    if (on) W.shelves.add(key); else W.shelves.delete(key);
+    const next = shelf(key, title, list);
+    /* the feed's own handler (bindFeed, delegated) covers the new rows */
+    box.replaceWith(next);
+    if (on) { const a = next.querySelectorAll('.card')[SHELF_N]; const l = a && a.querySelector('a.c-title'); if (l) l.focus({ preventScroll: true }); }
+    else { app.jumpTo(next); const b = next.querySelector('.wshelf-all'); if (b) b.focus({ preventScroll: true }); }
+  };
+  if (list.length > SHELF_N && !open) {
+    const b = button(esc('All ' + list.length + ' · ' + title), 'ghost wmore-btn wshelf-all', () => redo(true));
+    b.type = 'button';
+    box.appendChild(b);
+  }
+  if (open) {
+    const bar = el('div', 'collapsebar');
+    const b = button(ICON.up + ' Collapse', '', (e) => { e.preventDefault(); e.stopPropagation(); redo(false); });
+    b.type = 'button';
+    b.dataset.collapse = '1';
+    b.setAttribute('aria-label', 'Collapse ' + title);
+    bar.appendChild(b);
+    box.appendChild(bar);
+  }
+  hydrateVotes(box, [...box.querySelectorAll('[data-k]')].map((n) => n.dataset.k));
+  return box;
+}
+
+/* Most upvoted (Stephen, 2026-10-20: "the upvoted ones make it to the top
+   of each Past Edition"). Votes are counted on the server already (store.js:
+   ad_vote / ad_counts, one row per reader per story), so a past day asks
+   for its stories' counts in one call and, once they come, puts the five
+   most upvoted (one vote or more) at its top. Before the votes SQL is in,
+   or with no votes that day, there is no block. */
+const POP_N = 5, POP_MIN = 1;
+function popular(feed, d) {
+  const slot = el('section', 'wpop');
+  slot.hidden = true;
+  slot.setAttribute('aria-label', 'Most upvoted');
+  feed.appendChild(slot);
+  const pool = d.all.filter((c) => seen(c) && !c.own);
+  store.loadVotes(pool.map((c) => c.k)).then((ok) => {
+    if (!ok || !slot.isConnected) return;
+    const n = (c) => (Number(c.votes) || 0) + store.voteCount(c.k);
+    const rank = new Map(d.picks.map((x) => [x.c.k, x.rank || 99]));
+    const top = pool.filter((c) => n(c) >= POP_MIN).sort((a, b) => (n(b) - n(a)) || ((rank.get(a.k) || 99) - (rank.get(b.k) || 99)) || (b.d - a.d)).slice(0, POP_N);
+    /* a reader already scrolled down is not pushed along */
+    if (!top.length || (W.panel && W.panel.scrollTop > 120)) return;
+    section(slot, 'Most upvoted', '');
+    top.forEach((c) => put(slot, storyRow(c)));
+    slot.hidden = false;
+  });
+}
+
 /* the stale flag came or went: say so in the head, in place */
 function paintHeadSub() {
   const s = W.root && W.root.querySelector('.whead-row .s');
@@ -1200,11 +1527,12 @@ function entriesFor(run, date, p) {
   }
   const once = new Set();
   const list = [];
-  (d ? d.updates : []).forEach((u) => u.items.forEach((c) => {
+  /* Sports and Markets: every story in the lane, not only the river's */
+  (d ? (lanes() ? d.pool : d.updates.flatMap((u) => u.items)) : []).forEach((c) => {
     if (once.has(c.k) || !shows(c) || exclude.has(c.k)) return;
     once.add(c.k);
     list.push(c);
-  }));
+  });
   list.sort((a, b) => b.d - a.d);
   const start = dayStart(date);
   const items = [];
@@ -1233,7 +1561,7 @@ function entriesFor(run, date, p) {
     }
   }
   if (!items.length && !(isFirst && run.borrowed)) {
-    const topic = W.topic === 'all' ? '' : ' on ' + (TOPICS.find((x) => x[0] === W.topic) || ['', ''])[1];
+    const topic = W.topic === 'all' ? '' : ' on ' + (W.topic === 't:sports' && W.sport !== 's:all' ? SPORTS[W.sport.slice(2)] : (TOPICS.find((x) => x[0] === W.topic) || ['', ''])[1]);
     const kind = (W.ch === 'all' ? '' : ' from ' + (KINDS.find((x) => x[0] === W.ch) || ['', W.ch])[1]) + topic;
     out.push({ note: date === tk
       ? (unfiltered() && !(d && d.all.length) ? 'Nothing yet today.' : 'Nothing' + kind + ' today so far.')
@@ -1783,6 +2111,14 @@ function land() {
   W.wantSquare = false;
   if (p === 'local' || p === 'everything') { setGeo(p); W.view = 'paper'; app.paintSubnav(); render(); return; }
   if (p === 'news') { if (W.mode !== 'news') setMode('news'); return; }
+  /* #wire/recaps, #wire/recaps/<date>, #wire/recaps/<recap id> */
+  if (p === 'recaps' || p.startsWith('recaps/')) {
+    const rest = p.slice(7).replace(/^\//, '');
+    if (rest && !isDate(rest)) { openRecap(rest); return; }
+    W.mode = 'recaps'; photos.remember('recaps'); W.view = 'paper';
+    goDay(rest || null);
+    return;
+  }
   /* anything else is the paper's: a kind, Unfiltered, a day or a story,
      shown as the list for this visit (the kept choice is not changed) */
   if (W.mode !== 'news') { W.mode = 'news'; W.view = 'paper'; app.paintSubnav(); render(); }
@@ -1813,7 +2149,10 @@ function hunt(k) {
     if (!live()) return;
     if (MUTE[c.sid]) { app.toast('That card is from ' + c.src + ', which you muted. Unmute it in Settings.'); return; }
     if (!seen(c)) setGeo('everything');
-    W.view = 'paper'; W.ch = 'all'; W.topic = 'all';
+    W.view = 'paper'; W.ch = 'all'; W.topic = 'all'; W.sport = 's:all'; W.news = 'feed';
+    /* a sports or markets story the river never carried is on its chip */
+    const q = payloadFor(date);
+    if (q && !dayOf(q).all.includes(c) && (c.topic === 't:sports' || c.topic === 't:markets')) W.topic = c.topic;
     W.start = date >= todayKey() ? null : date;
     W.open.add(W.start || todayKey());
     app.paintSubnav();
@@ -1895,6 +2234,8 @@ function mount(root) {
     if (run && run.done && run.end) { run.end.remove(); run.end = null; run.done = false; fill(run); }
     /* today has no ranking yet: the page can now lead with the latest day that does */
     if (W.view === 'paper' && W.mode === 'news' && !W.start && W.ch !== 'instagram' && (!W.panel || W.panel.scrollTop < 120) && needsEarlier()) render();
+    /* Recaps with none yet today can now lead with the day before */
+    if (W.view === 'paper' && W.mode === 'recaps' && !W.start && W.today && !recaps.recapsOf(W.today).length) render();
     if (app.activeTab() === 'wire') paintFilters();
     /* the day's ‹ can now see the days before */
     if (W.reading) paintDateline(W.reading);

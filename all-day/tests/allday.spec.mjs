@@ -102,7 +102,7 @@ async function staticChecks() {
     const js = [];
     const walk = async (dir) => { for (const f of await readdir(dir, { withFileTypes: true })) { const p = path.join(dir, f.name); if (f.isDirectory()) await walk(p); else if (/\.(js|css|html)$/.test(f.name)) js.push(p); } };
     await walk(path.join(APP, 'js')); await walk(path.join(APP, 'css'));
-    const NEW = ['app.js', 'ui.js', 'store.js', 'auth.js', 'liquid.js', 'main.js', 'wire.js', 'wire-demo.js', 'wire-photos.js', 'wire-square.js', 'watch.js', 'food.js', 'people.js', 'whatnow.js', 'vintage.js', 'habits.js', 'habits-core.js', 'habits-fake.js', 'photo-wall.js', 'onair.js', 'games.js', 'clubs-week.js', 'people-match.js', 'food-asks.js', 'tokens.css', 'app.css'];
+    const NEW = ['app.js', 'ui.js', 'store.js', 'auth.js', 'liquid.js', 'main.js', 'wire.js', 'wire-demo.js', 'wire-photos.js', 'wire-square.js', 'wire-recaps.js', 'watch.js', 'food.js', 'people.js', 'whatnow.js', 'vintage.js', 'habits.js', 'habits-core.js', 'habits-fake.js', 'photo-wall.js', 'onair.js', 'games.js', 'clubs-week.js', 'people-match.js', 'food-asks.js', 'tokens.css', 'app.css'];
     const OLD = new Set(['sun.js', 'whatnow-engine.js', 'whatnow-data.js']);
     for (const f of js) {
       const name = path.basename(f);
@@ -205,11 +205,47 @@ function wireDay(date, n, opts) {
   const day = { v: 1, date, tz: 'America/New_York', final: !isToday, updated: updates[0].updated, checked: new Date(now).toISOString(), count: items.length,
     counts, picks, picks_earlier: picksEarlier, updates, sources, status: { x: paused, facebook: { ...paused }, reddit: { paused: false, last_post: null } } };
   if (opts.brief) day.brief = items.find((it) => it.own);
+  if (opts.pass2) Object.assign(day, pass2Day(date, items, top, bottom));
   return day;
+}
+/* Wire pass 2's keys (PR #362 and #373): recaps, the sports and markets
+   lanes, and the world's pictures, for opts.pass2. Today's morning recap
+   repeats two river stories by id (the strip must not show them twice). */
+const RECAP_KINDS = [['morning', 'Morning briefing'], ['evening', 'Evening wrap'], ['breaking', 'Breaking'], ['ai', 'AI & tech'], ['politics', 'Politics & Washington'],
+  ['world', 'World'], ['markets', 'Markets & money'], ['sports', 'Sports'], ['vermont', 'Vermont on X'], ['market-open', 'Market open'], ['market-close', 'Market close'],
+  ['culture', 'Culture & entertainment'], ['science', 'Science & space'], ['weekend', 'Weekend preview'], ['week-ahead', 'Week ahead'], ['pictures', 'Pictures of the day']];
+function pass2Day(date, items, top, bottom) {
+  const tag = date.replace(/-/g, '');
+  const at = (f) => new Date(top - (top - bottom) * f).toISOString();
+  const bullet = (kind, i, extra) => ({ id: tag + '-' + kind + '-b' + i, text: kind + ' headline ' + (i + 1) + ' of ' + nameOf(date), url: 'https://x.com/acct' + i + '/status/' + (1000 + i), note: 'Why ' + kind + ' ' + (i + 1) + ' matters.', ...extra });
+  const morning = { id: date + '-morning', kind: 'morning', title: 'Morning briefing', posted_at: at(0.7), intro: 'The morning in one breath, ' + nameOf(date) + '.', basis: 'trending', label: 'From X trending summaries',
+    bullets: Array.from({ length: 13 }, (_, i) => (i < 2 ? { id: items[i].id, text: 'River twin ' + i, url: items[i].url, note: 'Also in the river.' } : bullet('morning', i))) };
+  const ai = { id: date + '-ai', kind: 'ai', title: 'AI & tech', posted_at: at(0.3), intro: 'Labs, chips and money.', basis: 'accounts', label: 'From posts on X',
+    bullets: Array.from({ length: 4 }, (_, i) => bullet('ai', i)) };
+  const sports = { id: date + '-sports', kind: 'sports', title: 'Sports', posted_at: at(0.5), intro: 'Last night in sports.', basis: 'accounts', label: 'From posts on X',
+    bullets: ['nba', 'nfl', 'nhl', 'tennis', 'local', 'nba'].map((sp, i) => bullet('sports', i, { sport: sp })) };
+  const recaps = [ai, sports, morning];
+  const lane = (sp, i, local) => ({ id: tag + '-sp-' + sp + i, ch: local ? 'local' : 'world', local: !!local, src: local ? 'wcax' : 'espn', name: local ? 'WCAX' : 'ESPN',
+    title: sp.toUpperCase() + ' lane story ' + i + ' of ' + nameOf(date), url: 'https://example.org/' + tag + '/sport/' + sp + i, posted_at: at(0.1 + i * 0.05), topic: 'sports', sport: sp });
+  const sportsLane = { nba: [lane('nba', 0), lane('nba', 1), lane('nba', 2)], nfl: [lane('nfl', 0), lane('nfl', 1)], tennis: [lane('tennis', 0)], local: [lane('local', 0, true)], other: [lane('other', 0)] };
+  const markets = [0, 1, 2].map((i) => ({ id: tag + '-mk' + i, ch: 'world', local: false, src: 'quartz', name: 'Quartz', title: 'Markets story ' + i + ' of ' + nameOf(date),
+    url: 'https://example.org/' + tag + '/markets/' + i, posted_at: at(0.2 + i * 0.1), topic: 'markets', ...(i === 0 ? { river: true } : {}) }));
+  const photos = [['guardian-photos-of-the-day', 'The Guardian', 'Photograph: A. Shooter/The Guardian'], ['nasa-apod', 'NASA APOD', 'NASA/JPL'], ['atlantic-in-focus', 'The Atlantic', 'AP Photo'], ['nasa-earth-observatory', 'NASA Earth Observatory', '']]
+    .map(([src, name, credit], i) => ({ id: tag + '-pw' + i, kind: 'photo', src, name, title: name + ' picture ' + i + ' of ' + nameOf(date), url: 'https://example.org/' + tag + '/world/' + i,
+      image: 'https://example.org/world/' + tag + '-' + i + '.jpg', posted_at: at(0.05 + i * 0.1), ...(credit ? { credit } : {}) }));
+  photos.push({ id: tag + '-pwx', kind: 'x', src: 'x:@NWSBurlington', name: '@NWSBurlington', title: 'A rainbow over the lake', why: 'Pictures of the day', url: 'https://x.com/NWSBurlington/status/1990001',
+    embed: 'x', posted_at: at(0.97), recap: date + '-pictures' });
+  return {
+    recaps, recaps_latest: [ai.id, sports.id, morning.id], recap_kinds: RECAP_KINDS.map(([kind, title]) => ({ kind, title })),
+    status_recaps: { paused: false, reason: null, updated_at: ai.posted_at },
+    sports: sportsLane, sport_chips: ['nba', 'nfl', 'nhl', 'tennis', 'mlb', 'local', 'college'],
+    sport_counts: { local: { nba: 0, nfl: 0, nhl: 0, tennis: 0, mlb: 0, local: 1, college: 0, other: 0 }, everything: { nba: 3, nfl: 2, nhl: 0, tennis: 1, mlb: 0, local: 1, college: 0, other: 1 } },
+    markets, markets_count: { local: 0, everything: 3 }, photos_world: photos,
+  };
 }
 const wireCache = new Map();
 function wireFiles(opts = {}) {
-  const o = { inbox: !!opts.inbox, brief: opts.brief !== false, topics: !!opts.topics };
+  const o = { inbox: !!opts.inbox, brief: opts.brief !== false, topics: !!opts.topics, pass2: !!opts.pass2 };
   const key = JSON.stringify(o) + etKey(Date.now());
   if (!wireCache.has(key)) {
     const today = etKey(Date.now());
@@ -765,7 +801,7 @@ async function theWire(browser, base) {
     check(JSON.stringify(chrome.kids) === '["wbar"]' && JSON.stringify(chrome.inner) === '["wmodes","wfloat"]' && !chrome.filters, 'under the mast: the pill, and no Filters button', JSON.stringify(chrome));
     check(chrome.floatHidden, 'at the top the floating day row is hidden: the banner shows the same two controls', JSON.stringify(chrome));
     check(chrome.bottom <= 130, 'the chrome above the banner is 130px or less (' + chrome.bottom + ')', chrome.bottom);
-    check(JSON.stringify(chrome.modes) === '["news","photos","square"]', 'all three words are there from the first paint', JSON.stringify(chrome.modes));
+    check(JSON.stringify(chrome.modes.filter((m) => m !== 'square')) === '["news","photos","recaps"]', 'the words are there from the first paint (the Square’s only while it may open)', JSON.stringify(chrome.modes));
 
     /* the chips: kinds only, X and Facebook hidden while paused, no Video,
        a kind with nothing in it left out; Unfiltered is a button under them */
@@ -1118,10 +1154,11 @@ async function theWire(browser, base) {
         initials: feed.querySelectorAll('.w-meta .mark').length, green: cards.filter((c) => c.querySelector('.c-src.is-local')).length,
         national: /National/.test(feed.innerText), tint: feed.querySelectorAll('.card.w-local').length };
     });
-    check(look.lead === 24 && /Lora/.test(look.leadFont) && look.dek >= 16, 'a top story: 24px Lora headline, 16px reason', JSON.stringify(look));
-    check(look.row === 19 && look.meta === 14, 'a story row: 19px headline, 14px meta line', JSON.stringify([look.row, look.meta]));
-    check(look.thumb[0] === 104 && look.thumb[1] === 104 && look.thumb[2], 'its picture is 104px, on the left', JSON.stringify(look.thumb));
-    check(look.acts.length > 5 && look.acts.every(([w, h]) => w >= 44 && h >= 44), '⋯ and the star are 44px targets', JSON.stringify(look.acts.slice(0, 4)));
+    /* denser since Stephen, 2026-10-20: "the text in the Wire is a bit large. I want to fit more in less space" */
+    check(look.lead === 21 && /Lora/.test(look.leadFont) && look.dek >= 15, 'a top story: 21px Lora headline, 15px reason', JSON.stringify(look));
+    check(look.row === 17 && look.meta === 13, 'a story row: 17px headline, 13px meta line', JSON.stringify([look.row, look.meta]));
+    check(look.thumb[0] === 92 && look.thumb[1] === 92 && look.thumb[2], 'its picture is 92px, on the left', JSON.stringify(look.thumb));
+    check(look.acts.length > 5 && look.acts.every(([w, h]) => w >= 44 && h >= 44), 'upvote, share, ⋯ and the star are 44px targets', JSON.stringify(look.acts.slice(0, 4)));
     check(look.modes.every((h) => h >= 44), 'News · Photos · Square are 44px tall', JSON.stringify(look.modes));
     check(!look.bars && !look.alt && !look.initials, 'no left colour bars, no alternate tints, no source initials', JSON.stringify([look.bars, look.alt, look.initials]));
     check(!look.green && !look.national && !look.tint, 'on Local, no green names, no National, no tint: everything here is local', JSON.stringify([look.green, look.national, look.tint]));
@@ -1172,7 +1209,7 @@ async function theWire(browser, base) {
         check(m.asideOn && m.aside.l >= m.body.r + 24 && m.aside.r <= w && m.chips === 'none' && m.top, w + ': the rail on the right holds the chips; the banner keeps the day and the switch', JSON.stringify(m));
         check(m.body.w >= 640 && m.body.w <= 720, w + ': the column is 640 to 720 wide', m.body.w);
       } else check(!m.asideOn && m.chips !== 'none' && m.top && m.body.w === 720, w + ': no rail; the banner holds the chips', JSON.stringify(m));
-      check(m.lead === 32 && m.second === 21 && m.row === 20 && m.thumb === 136, w + ': the first top story 32px, the next four 21px two-up, rows 20px with 136px pictures', JSON.stringify([m.lead, m.second, m.row, m.thumb]));
+      check(m.lead === 28 && m.second === 19 && m.row === 18 && m.thumb === 120, w + ': the first top story 28px, the next four 19px two-up, rows 18px with 120px pictures', JSON.stringify([m.lead, m.second, m.row, m.thumb]));
       /* the wheel scrolls the paper from over the tab list */
       const nb = await v.page.locator('#tabbar').boundingBox();
       await v.page.mouse.move(nb.x + 100, nb.y + nb.height - 40);
@@ -1466,8 +1503,8 @@ async function theWire(browser, base) {
     await live.page.waitForSelector('.panel:not([hidden]) .wleads', { timeout: 15000 });
     await live.page.waitForTimeout(400);
     const words = await live.page.$$eval('#subnav .wmode', (bs) => bs.map((b) => [b.dataset.view, getComputedStyle(b).visibility, b.tabIndex]));
-    check(JSON.stringify(words.filter((w) => w[1] === 'visible').map((w) => w[0])) === '["news","photos"]' && words.length === 3 && words[2][2] === -1,
-      'live before the Square’s SQL: News and Photos show; Square holds its place, unseen, so nothing moves', JSON.stringify(words));
+    check(JSON.stringify(words.map((w) => w[0])) === '["news","photos","recaps"]' && words.every((w) => w[1] === 'visible'),
+      'live before the Square’s SQL: once the board says no, its place goes (no hole between Photos and Recaps)', JSON.stringify(words));
     check(!(await live.page.$('#panel-wire .sq-compose')), 'and a kept Square opens on News', '');
     check(!live.errors.length, 'no console errors', live.errors.join(' | '));
     await live.ctx.close();
@@ -1525,6 +1562,338 @@ async function pmAll(page) {
     await page.waitForTimeout(80);
   }
 }
+
+/* Wire pass 2 (Stephen, 2026-10-19/20): Recaps as a fourth word, the
+   newest recap of each kind on News, Feed | Topics, the Sports and Markets
+   chips, and the world's pictures on Photos' Everything; upvote and Share
+   back on the cards, and Most upvoted on an earlier day. Runs with theWire. */
+const everywhere = (page) => page.addInitScript(() => localStorage.setItem('allday-settings', JSON.stringify({ localOnly: false })));
+async function wirePass2(browser, base) {
+  const W2 = { pass2: true, topics: true };
+  await group('Wire pass 2: News · Photos · Square · Recaps, and the Recaps view (390, live)', async () => {
+    const files = wireFiles(W2);
+    const today = files['wire-today.json'];
+    const { ctx, page, errors } = await newPage(browser, base, { wire: W2 });
+    await page.goto(base + '/all-day/');
+    await page.waitForSelector('.panel:not([hidden]) .wleads', { timeout: 15000 });
+    const sw = await page.$$eval('#subnav .wbar > .wmodes .wmode', (bs) => bs.map((b) => { const r = b.getBoundingClientRect(); return { t: b.textContent, w: Math.round(r.width), h: Math.round(r.height), fit: b.scrollWidth <= b.clientWidth }; }));
+    check(JSON.stringify(sw.map((b) => b.t)) === '["News","Photos","Recaps"]' && sw.every((b) => b.w >= 44 && b.h >= 44 && b.fit), 'Recaps joins the words (live here before the Square’s SQL), each a 44px target with its word whole', JSON.stringify(sw));
+    await page.click('#subnav .wmode[data-view="recaps"]');
+    await page.waitForSelector('#panel-wire .rcap', { timeout: 8000 });
+    const v = await page.evaluate(() => {
+      const p = document.querySelector('#panel-wire');
+      return { hash: location.hash, kept: localStorage.getItem('allday-wire-view'), h2: p.querySelector('.whead h2').textContent,
+        cards: [...p.querySelectorAll('.rcap')].map((c) => ({ k: c.dataset.k, t: c.querySelector('.rc-t').textContent, from: c.querySelector('.rc-from').textContent,
+          when: c.querySelector('.rc-when').textContent, n: c.querySelectorAll('.rc-b').length, all: (c.querySelector('.rc-all') || {}).textContent || '',
+          links: [...c.querySelectorAll('a.rc-b')].every((a) => /^https:/.test(a.href) && a.target === '_blank' && /noopener/.test(a.rel)) })),
+        kinds: [...p.querySelectorAll('.wband .w-rkinds .chip')].map((c) => c.dataset.chip),
+        local: !!p.querySelector('.wband-top .localsw'), day: !!p.querySelector('.wband-top .wday'), river: !!p.querySelector('.card.wrow, .wleads') };
+    });
+    check(v.hash === '#wire/recaps' && v.kept === 'recaps', 'Recaps has its address and is kept on the phone', v.hash + ' ' + v.kept);
+    check(v.h2 === 'Today’s recaps' && !v.river, 'the page is today’s recaps, and only them', v.h2);
+    check(JSON.stringify(v.cards.map((c) => c.t)) === '["AI & tech","Sports","Morning briefing"]', 'every recap of the day, newest first, under its kind’s title', JSON.stringify(v.cards.map((c) => c.t)));
+    check(v.cards.every((c) => /^\d{1,2}:\d{2} [ap]m$/.test(c.when) && c.links), 'each with its time, and its headlines link out in a new tab', JSON.stringify(v.cards.map((c) => c.when)));
+    check(v.cards[0].from === 'From posts on X' && v.cards[2].from === 'From X trending summaries' && v.cards.every((c) => !/\bAI\b/.test(c.from)), 'where it came from, never “AI”', JSON.stringify(v.cards.map((c) => c.from)));
+    check(v.cards[2].n === 5 && /^Show all 13/.test(v.cards[2].all) && v.cards[0].n === 4 && !v.cards[0].all, 'five headlines show; a longer recap says “Show all 13”', JSON.stringify(v.cards.map((c) => [c.n, c.all])));
+    check(JSON.stringify(v.kinds) === '["all","r:morning","r:ai","r:sports"]', 'the banner offers each kind the day has, in the payload’s order of kinds', JSON.stringify(v.kinds));
+    check(v.day && !v.local, 'the banner keeps the day; a recap is never Local or not', JSON.stringify(v));
+    const sp = await page.$$eval('#panel-wire .rcap[data-kind="sports"] .rc-bn b', (bs) => bs.map((b) => b.textContent));
+    check(sp.join(',') === 'NBA,NFL,NHL,Tennis,Vermont', 'a Sports recap names each headline’s league', sp.join(','));
+    await page.screenshot({ path: path.join(SHOTS, 'wirep2-recaps-390.png') });
+    /* Show all, the Collapse bar, back */
+    await page.click('#panel-wire .rcap[data-kind="morning"] .rc-all');
+    const open = await page.evaluate(() => { const c = document.querySelector('#panel-wire .rcap[data-kind="morning"]'); const bar = c.querySelector('.collapsebar');
+      return { n: c.querySelectorAll('.rc-b').length, bar: !!bar && getComputedStyle(bar).position, focus: document.activeElement && document.activeElement.classList.contains('rc-b') }; });
+    check(open.n === 13 && open.bar === 'sticky' && open.focus, 'Show all opens every headline, with the sticky Collapse bar, and focus goes to the first new one', JSON.stringify(open));
+    await page.click('#panel-wire .rcap[data-kind="morning"] .collapsebar button');
+    await page.waitForTimeout(400);
+    check(await page.$eval('#panel-wire .rcap[data-kind="morning"]', (c) => c.querySelectorAll('.rc-b').length === 5 && !c.querySelector('.collapsebar')), 'Collapse folds it back to five', '');
+    /* a kind */
+    await page.click('#panel-wire .wband .w-rkinds .chip[data-chip="r:sports"]');
+    await page.waitForTimeout(150);
+    check(JSON.stringify(await page.$$eval('#panel-wire .rcap', (cs) => cs.map((c) => c.dataset.kind))) === '["sports"]', 'a kind’s chip shows only that kind', '');
+    await page.click('#panel-wire .wband .w-rkinds .chip[data-chip="all"]');
+    /* the day before, through the same pager */
+    await page.click('#panel-wire .wband .wday .prev');
+    await page.waitForFunction(() => /recaps$/.test((document.querySelector('#panel-wire .whead h2') || {}).textContent || '') && !/^Today/.test(document.querySelector('#panel-wire .whead h2').textContent), null, { timeout: 8000 });
+    const y = await page.evaluate(() => ({ h2: document.querySelector('#panel-wire .whead h2').textContent, n: document.querySelectorAll('#panel-wire .rcap').length, hash: location.hash }));
+    const y1 = dayMinus(etKey(Date.now()), 1);
+    check(y.h2 === nameOf(y1).split(',')[0] + '’s recaps' && y.n === 3 && y.hash === '#wire/recaps/' + y1, '‹ goes to the day before’s recaps', JSON.stringify(y));
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+
+    /* four words fit a 360px phone (the demo has the Square) */
+    const n = await newPage(browser, base, { viewport: { width: 360, height: 740 } });
+    await n.page.goto(base + '/all-day/?demo=1#wire/recaps');
+    await n.page.waitForSelector('#panel-wire .whead', { timeout: 15000 });
+    await n.page.waitForTimeout(300);
+    const fit = await n.page.evaluate(() => { const g = document.querySelector('#subnav .wmodes').getBoundingClientRect();
+      return { n: document.querySelectorAll('#subnav .wmode:not(.wait)').length, l: g.left, r: g.right, vw: innerWidth, whole: [...document.querySelectorAll('#subnav .wmode')].every((b) => b.scrollWidth <= b.clientWidth), sw: document.documentElement.scrollWidth }; });
+    check(fit.n === 4 && fit.l >= 0 && fit.r <= fit.vw && fit.whole && fit.sw <= fit.vw, 'at 360px the four words fit the pill, each whole, nothing sideways', JSON.stringify(fit));
+    await n.page.screenshot({ path: path.join(SHOTS, 'wirep2-recaps-360.png') });
+    check(!n.errors.length, 'no console errors', n.errors.join(' | '));
+    await n.ctx.close();
+    void today;
+  });
+
+  await group('Wire pass 2: the newest recap of each kind on News, and into Recaps (390, live)', async () => {
+    for (const scheme of ['light', 'dark']) {
+      const { ctx, page, errors } = await newPage(browser, base, { wire: W2, scheme });
+      await page.goto(base + '/all-day/');
+      await page.waitForSelector('#panel-wire .rc-strip', { timeout: 15000 });
+      const s = await page.evaluate(() => {
+        const feed = document.querySelector('#panel-wire .feed.wire');
+        const kids = [...feed.children];
+        const st = feed.querySelector('.rc-strip');
+        return { after: kids.indexOf(st) > kids.indexOf(feed.querySelector('.wleads')), beforeRiver: !feed.querySelector('.tdiv') || (st.compareDocumentPosition(feed.querySelector('.tdiv')) & 4) > 0,
+          minis: [...st.querySelectorAll('.rc-mini:not(.rc-end)')].map((m) => ({ id: m.dataset.recap, bullets: [...m.querySelectorAll('.rc-mb')].map((b) => b.textContent) })),
+          end: (st.querySelector('.rc-end') || {}).textContent || '', tog: st.querySelector('.rc-listbtn').textContent };
+      });
+      const tk = etKey(Date.now());
+      if (scheme === 'light') {
+        check(s.after && s.beforeRiver, 'after the top stories, before the river', JSON.stringify(s));
+        check(JSON.stringify(s.minis.map((m) => m.id)) === JSON.stringify([tk + '-ai', tk + '-sports', tk + '-morning']), 'the newest recap of each kind, newest first', JSON.stringify(s.minis));
+        const m = s.minis[2];
+        check(m.bullets.length === 2 && m.bullets.every((b) => !/River twin/.test(b)), 'a headline the river already carries is not shown twice', JSON.stringify(m));
+        check(s.end === 'All recaps' && s.tog === 'See as a list', 'the row ends in All recaps, and can be seen as a list', JSON.stringify(s));
+        await page.click('#panel-wire .rc-strip .rc-listbtn');
+        const l = await page.evaluate(() => { const st = document.querySelector('#panel-wire .rc-strip'); const r = st.querySelector('.rc-rail');
+          return { listed: st.classList.contains('listed'), dir: getComputedStyle(r).flexDirection, bar: !st.querySelector('.collapsebar').hidden, tog: st.querySelector('.rc-listbtn').textContent }; });
+        check(l.listed && l.dir === 'column' && l.bar && l.tog === 'See as a row', 'See as a list lays the cards down the page, with the Collapse bar', JSON.stringify(l));
+        await page.click('#panel-wire .rc-strip .collapsebar button');
+        check(await page.$eval('#panel-wire .rc-strip', (st) => !st.classList.contains('listed') && st.querySelector('.collapsebar').hidden), 'Collapse puts the row back', '');
+        await toTop(page);
+        await page.$eval('#panel-wire .rc-strip', (n) => n.scrollIntoView({ block: 'center' }));
+        await page.waitForTimeout(200);
+        await page.screenshot({ path: path.join(SHOTS, 'wirep2-news-strip-390.png') });
+        await page.click('#panel-wire .rc-mini[data-recap="' + tk + '-morning"]');
+        await page.waitForSelector('#panel-wire .rcap', { timeout: 8000 });
+        await page.waitForTimeout(200);
+        const o = await page.evaluate(() => ({ hash: location.hash, on: (document.querySelector('#subnav .wmode.on') || {}).dataset.view,
+          flash: !!document.querySelector('#panel-wire .rcap.flash'), k: (document.querySelector('#panel-wire .rcap.flash') || {}).dataset?.k }));
+        check(o.hash === '#wire/recaps/' + tk + '-morning' && o.on === 'recaps' && o.flash && o.k === 'rc:' + tk + '-morning', 'a small card opens Recaps at that recap', JSON.stringify(o));
+      } else {
+        await page.$eval('#panel-wire .rc-strip', (n) => n.scrollIntoView({ block: 'center' }));
+        await page.waitForTimeout(200);
+        await page.screenshot({ path: path.join(SHOTS, 'wirep2-news-strip-390-dark.png') });
+      }
+      check(!errors.length, 'no console errors (' + scheme + ')', errors.join(' | '));
+      await ctx.close();
+    }
+    /* a filter narrows News: no strip */
+    const { ctx, page, errors } = await newPage(browser, base, { wire: W2 });
+    await page.goto(base + '/all-day/#wire/reddit');
+    await page.waitForSelector('#panel-wire .whead', { timeout: 15000 });
+    await page.waitForTimeout(300);
+    check(!(await page.$('#panel-wire .rc-strip')), 'under a source chip the strip steps aside', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Wire pass 2: Feed | Topics, shelves of four, kept on the phone (390, live)', async () => {
+    const { ctx, page, errors } = await newPage(browser, base, { wire: W2 });
+    await everywhere(page);
+    await page.goto(base + '/all-day/');
+    await page.waitForSelector('#panel-wire .whead .wnsw', { timeout: 15000 });
+    const sw = await page.$$eval('#panel-wire .whead .wnsw-b', (bs) => bs.map((b) => [b.textContent, b.getAttribute('aria-pressed'), b.getBoundingClientRect().height]));
+    check(JSON.stringify(sw.map((b) => b[0] + ':' + b[1])) === '["Feed:true","Topics:false"]' && sw.every((b) => b[2] >= 32), 'Feed | Topics sits in the head, Feed on', JSON.stringify(sw));
+    await page.click('#panel-wire .wnsw-b[data-news="topics"]');
+    await page.waitForSelector('#panel-wire .wshelf', { timeout: 8000 });
+    const t = await page.evaluate(() => {
+      const p = document.querySelector('#panel-wire');
+      return { kept: localStorage.getItem('allday-wire-news'), shelves: [...p.querySelectorAll('.wshelf')].map((s) => ({ k: s.dataset.shelf, h: s.querySelector('h2').textContent,
+        sub: s.querySelector('.sec p').textContent, n: s.querySelectorAll('[data-k]').length, all: (s.querySelector('.wshelf-all') || {}).textContent || '' })),
+        topicsRow: !!p.querySelector('.wband .w-topics'), leads: !!p.querySelector('.wleads'), strip: !!p.querySelector('.rc-strip') };
+    });
+    check(t.kept === 'topics' && !t.leads && !t.strip && !t.topicsRow, 'Topics is the day on shelves (no top stories, no topic chips) and is kept', JSON.stringify({ ...t, shelves: t.shelves.length }));
+    check(t.shelves[0] && t.shelves[0].k === 'new' && t.shelves[0].h === 'New today', 'New today leads', JSON.stringify(t.shelves[0]));
+    check(t.shelves.every((s) => s.n === Math.min(4, Number(s.sub.match(/\d+/)[0])) && (s.n < 4 || Number(s.sub.match(/\d+/)[0]) === 4 || s.all.startsWith('All ' + s.sub.match(/\d+/)[0] + ' · '))),
+      'each shelf shows four and says “All N” for the rest', JSON.stringify(t.shelves));
+    check(['t:politics', 't:sports', 't:markets', 'x:world', 'x:tech'].every((k) => t.shelves.some((s) => s.k === k)), 'topics, Sports and Markets from their lanes, the world and tech too', JSON.stringify(t.shelves.map((s) => s.k)));
+    const sports = t.shelves.find((s) => s.k === 't:sports');
+    await page.screenshot({ path: path.join(SHOTS, 'wirep2-topics-390.png') });
+    /* All N opens the whole shelf, with the Collapse bar */
+    const first = t.shelves[0];
+    const N = Number(first.sub.match(/\d+/)[0]);
+    await page.click('#panel-wire .wshelf[data-shelf="new"] .wshelf-all');
+    const o = await page.evaluate(() => { const s = document.querySelector('#panel-wire .wshelf[data-shelf="new"]'); const bar = s.querySelector('.collapsebar');
+      return { n: s.querySelectorAll('[data-k]').length, bar: !!bar && getComputedStyle(bar).position }; });
+    check(o.n === N && o.bar === 'sticky', '“All ' + N + '” shows all ' + N + ', with the Collapse bar', JSON.stringify(o));
+    await page.click('#panel-wire .wshelf[data-shelf="new"] .collapsebar button');
+    await page.waitForTimeout(300);
+    check(await page.$eval('#panel-wire .wshelf[data-shelf="new"]', (s) => s.querySelectorAll('[data-k]').length === 4 && !s.querySelector('.collapsebar')), 'Collapse folds it back to four', '');
+    check(!!sports && Number(sports.sub.match(/\d+/)[0]) >= 8, 'the Sports shelf counts its lane, not only the river’s', JSON.stringify(sports));
+    await page.reload();
+    await page.waitForSelector('#panel-wire .wshelf', { timeout: 15000 });
+    check(true, 'a reload opens on Topics again', '');
+    await page.click('#panel-wire .wnsw-b[data-news="feed"]');
+    await page.waitForSelector('#panel-wire .wleads', { timeout: 8000 });
+    check(await page.evaluate(() => localStorage.getItem('allday-wire-news')) === null && !(await page.$('#panel-wire .wshelf')), 'Feed brings the paper back, and the phone forgets Topics', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Wire pass 2: the Sports chip opens each sport; Markets shows its lane (390, live)', async () => {
+    const { ctx, page, errors } = await newPage(browser, base, { wire: W2 });
+    await everywhere(page);
+    await page.goto(base + '/all-day/');
+    await page.waitForSelector('#panel-wire .wband .w-topics', { timeout: 15000 });
+    const tops = await sheetChips(page, '.w-topics');
+    const sp = tops.find((c) => c[0] === 't:sports'), mk = tops.find((c) => c[0] === 't:markets');
+    check(!!sp && !!mk && Number(mk[1]) === 3, 'Sports and Markets are on the topic row; Markets counts its whole lane', JSON.stringify(tops));
+    await page.click(BAND + ' .w-topics .chip[data-chip="t:sports"]');
+    await page.waitForSelector(BAND + ' .w-sports', { timeout: 4000 });
+    const sub = await sheetChips(page, '.w-sports');
+    check(JSON.stringify(sub) === '[["s:all",""],["s:nba","3"],["s:nfl","2"],["s:nhl","0"],["s:tennis","1"],["s:mlb","0"],["s:local","1"]]',
+      'a row of sports in the payload’s order, counted (college left out while empty)', JSON.stringify(sub));
+    check(await page.$eval(BAND + ' .w-sports .chip[data-chip="s:nhl"]', (c) => c.classList.contains('is-none')), 'a sport with nothing today stays, quieter', '');
+    await page.click(BAND + ' .w-sports .chip[data-chip="s:nba"]');
+    await page.waitForTimeout(200);
+    const todayName = nameOf(etKey(Date.now()));
+    const nbaAll = await page.$$eval('#panel-wire .feed.wire .card[data-k]', (cs) => cs.map((c) => c.querySelector('.c-title').textContent));
+    const nba = nbaAll.filter((t) => t.endsWith(todayName));
+    check(nba.length === 3 && nbaAll.every((t) => /^NBA lane story/.test(t)), 'NBA shows every NBA story of the day, not only the river’s (and the days before, below)', JSON.stringify(nbaAll));
+    const h = await head(page);
+    check(/Sports/.test(h.filt) && /NBA/.test(h.filt), 'the head says what it is showing', h.filt);
+    await page.screenshot({ path: path.join(SHOTS, 'wirep2-sports-390.png') });
+    await toTop(page);
+    await page.click(BAND + ' .w-topics .chip[data-chip="t:markets"]');
+    await page.waitForTimeout(200);
+    check(!(await page.$(BAND + ' .w-sports')), 'the sport row goes with the Sports chip', '');
+    const mks = await page.$$eval('#panel-wire .feed.wire .card[data-k]', (cs) => cs.map((c) => c.querySelector('.c-title').textContent));
+    check(mks.filter((t) => t.endsWith(todayName)).length === 3 && mks.every((t) => /^Markets story/.test(t)), 'Markets shows its whole lane', JSON.stringify(mks));
+    await toTop(page);
+    await page.click(BAND + ' .localsw-half:not(.on)');
+    await page.waitForTimeout(200);
+    const loc = await sheetChips(page, '.w-topics');
+    check(!loc.some((c) => c[0] === 't:markets'), 'on Local there are no markets', JSON.stringify(loc));
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Wire pass 2: Photos, Everything: the world’s pictures, credited, and X’s own embed (390, live)', async () => {
+    const { ctx, page, errors } = await newPage(browser, base, { wire: W2 });
+    await everywhere(page);
+    const asked = [];
+    await page.route(/platform\.twitter\.com\/widgets\.js/, (r) => { asked.push(r.request().url());
+      return r.fulfill({ status: 200, contentType: 'text/javascript', body: 'window.twttr={widgets:{load:function(el){el.dataset.embedded="1";}},ready:function(f){f(window.twttr);}};' }); });
+    await page.goto(base + '/all-day/#wire/photos');
+    await page.waitForSelector(pmPanel + ' .card.pm', { timeout: 15000 });
+    await page.waitForTimeout(400);
+    const w = await page.evaluate(() => [...document.querySelectorAll('#panel-wire .card.pm-world')].map((c) => ({ k: c.dataset.k, credit: (c.querySelector('.pm-credit') || {}).textContent || '',
+      out: (() => { const a = c.querySelector('a.pm-out'); return a ? { t: a.textContent, href: a.href, target: a.target } : null; })(), ratio: getComputedStyle(c.querySelector('.pm-pic')).aspectRatio })));
+    check(w.length === 4 && w.every((c) => c.out && /^https:\/\/example\.org\//.test(c.out.href) && c.out.target === '_blank'), 'every world picture links to where it ran', JSON.stringify(w));
+    check(w.filter((c) => c.credit).length === 3 && w.some((c) => c.credit === 'Photograph: A. Shooter/The Guardian'), 'with its credit when the feed gives one', JSON.stringify(w.map((c) => c.credit)));
+    check(w.some((c) => /^The Guardian/.test(c.out.t)) && w.every((c) => c.ratio === '4 / 3'), 'under the publisher’s name, large at 4:3', JSON.stringify(w.map((c) => [c.out.t, c.ratio])));
+    const far = await page.$eval(pmPanel + ' .card.pm-x', (n) => n.getBoundingClientRect().top - innerHeight);
+    check(far > 700 && !asked.length, 'X’s script is not asked for until an X post is near the screen', far + ' ' + asked.join(' '));
+    await page.$eval(pmPanel + ' .card.pm-x', (n) => n.scrollIntoView({ block: 'center' }));
+    await page.waitForFunction(() => document.querySelector('#panel-wire .card.pm-x .pm-xbox[data-embedded="1"]'), null, { timeout: 8000 }).catch(() => {});
+    const x = await page.evaluate(() => { const c = document.querySelector('#panel-wire .card.pm-x'); const a = c.querySelector('blockquote.twitter-tweet a');
+      return { href: a && a.href, embedded: c.querySelector('.pm-xbox').dataset.embedded === '1' }; });
+    check(asked.length === 1 && x.embedded && x.href === 'https://x.com/NWSBurlington/status/1990001', 'then X’s script loads once and embeds the post (its link stays as the fallback)', JSON.stringify({ asked, x }));
+    await page.$eval(pmPanel + ' .card.pm-world', (n) => n.scrollIntoView({ block: 'start' }));
+    await page.waitForTimeout(200);
+    await page.screenshot({ path: path.join(SHOTS, 'wirep2-photos-world-390.png') });
+    /* Local: Burlington's pictures alone */
+    await toTop(page);
+    await page.click('.panel:not([hidden]) .wband .localsw-half:not(.on)');
+    await page.waitForTimeout(400);
+    check(!(await page.$(pmPanel + ' .card.pm-world, ' + pmPanel + ' .card.pm-x')), 'on Local, none of the world’s', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+
+    /* when X's script cannot load, the post stays a plain card that links out */
+    const f = await newPage(browser, base, { wire: W2 });
+    await everywhere(f.page);
+    await f.page.route(/platform\.twitter\.com\/widgets\.js/, (r) => r.abort());
+    await f.page.goto(base + '/all-day/#wire/photos');
+    await f.page.waitForSelector(pmPanel + ' .card.pm-x', { timeout: 15000 });
+    await f.page.$eval(pmPanel + ' .card.pm-x', (n) => n.scrollIntoView({ block: 'center' }));
+    await f.page.waitForTimeout(500);
+    const fb = await f.page.$eval(pmPanel + ' .card.pm-x a.pm-xcard', (a) => ({ href: a.href, t: a.textContent, h: a.getBoundingClientRect().height }));
+    check(fb.href === 'https://x.com/NWSBurlington/status/1990001' && /A rainbow over the lake/.test(fb.t) && fb.h > 40, 'without X’s script, a link card to the post', JSON.stringify(fb));
+    check(!f.errors.filter((e) => !/widgets\.js|ERR_FAILED/.test(e)).length, 'no console errors but the blocked script', f.errors.join(' | '));
+    await f.ctx.close();
+  });
+
+  await group('Wire pass 2: upvote and Share on every story; Most upvoted on an earlier day (390, live)', async () => {
+    const y1 = dayMinus(etKey(Date.now()), 1);
+    const tag = y1.replace(/-/g, '');
+    const votes = { [tag + '-012']: 4, [tag + '-020']: 2, [tag + '-005']: 1 };
+    const asked = [];
+    const rpc = (fn, body) => { if (fn !== 'ad_counts') return undefined; asked.push(body.p_keys.length); return body.p_keys.filter((k) => votes[k]).map((k) => ({ k, n: votes[k] })); };
+    const { ctx, page, errors } = await newPage(browser, base, { wire: W2, rpc });
+    await page.goto(base + '/all-day/');
+    await page.waitForSelector('#panel-wire .wleads', { timeout: 15000 });
+    await drawToday(page);
+    const a = await page.evaluate(() => [...document.querySelectorAll('#panel-wire .feed.wire .card.wlead, #panel-wire .feed.wire .card.wrow')].slice(0, 40).map((c) => {
+      const m = c.querySelector('.w-meta');
+      const box = (s) => { const b = m && m.querySelector(s); if (!b) return null; const r = b.getBoundingClientRect(); return [Math.round(r.width), Math.round(r.height)]; };
+      return { up: box('[data-act="up"]'), sh: box('[data-act="share"]'), more: box('[data-act="wmore"]'), star: box('[data-act="save"]'), right: m ? Math.round(m.getBoundingClientRect().right) : 0 };
+    }));
+    check(a.length > 20 && a.every((x) => x.up && x.sh && x.more && x.star), 'every top story and row shows upvote, Share, ⋯ and the star', JSON.stringify(a.slice(0, 2)));
+    check(a.every((x) => [x.up, x.sh, x.more, x.star].every(([w, h]) => w >= 44 && h >= 44) && x.right <= 390), 'each a 44px target, all on the card', JSON.stringify(a.find((x) => ![x.up, x.sh, x.more, x.star].every(([w, h]) => w >= 44 && h >= 44)) || a[0]));
+    const k = await page.$eval('#panel-wire .wleads .card', (c) => c.dataset.k);
+    await page.click('#panel-wire .wleads .card [data-act="up"]');
+    const up = await page.$eval('#panel-wire .wleads .card [data-act="up"]', (b) => [b.getAttribute('aria-pressed'), b.querySelector('.n').textContent]);
+    check(up[0] === 'true' && up[1] === '1', 'the upvote counts in place, as before', JSON.stringify([up, k]));
+    await page.evaluate(() => { window.__copied = null; navigator.clipboard.writeText = (t) => { window.__copied = t; return Promise.resolve(); }; });
+    await page.click('#panel-wire .wleads .card [data-act="share"]');
+    await page.waitForTimeout(150);
+    const copied = await page.evaluate(() => window.__copied);
+    check(copied === 'https://guide.btownbrief.com/all-day/#wire/' + encodeURIComponent(k) && /Link copied/.test(await page.$eval('#toast', (t) => t.textContent)), 'Share copies the story’s link when there is no share sheet', String(copied));
+    check(!(await page.$('#panel-wire .wpop')), 'today has no Most upvoted block', '');
+    /* the day before, on the pager */
+    await page.evaluate(() => { document.querySelector('.panel:not([hidden])').scrollTop = 0; });
+    await page.click('#panel-wire .wband .wday .prev');
+    await page.waitForSelector('#panel-wire .wpop:not([hidden])', { timeout: 8000 }).catch(() => {});
+    const pop = await page.evaluate(() => { const s = document.querySelector('#panel-wire .wpop'); const feed = document.querySelector('#panel-wire .feed.wire');
+      return s && { hidden: s.hidden, h: (s.querySelector('h2') || {}).textContent, keys: [...s.querySelectorAll('[data-k]')].map((c) => [c.dataset.k, c.querySelector('[data-act="up"] .n').textContent]),
+        first: [...feed.children].indexOf(s) < [...feed.children].indexOf(feed.querySelector('.wleads')) }; });
+    check(pop && !pop.hidden && pop.h === 'Most upvoted' && JSON.stringify(pop.keys) === JSON.stringify([[tag + '-012', '4'], [tag + '-020', '2'], [tag + '-005', '1']]),
+      'an earlier day leads with its most upvoted stories, most votes first, each with its count', JSON.stringify(pop));
+    check(pop && pop.first, 'above that day’s top stories', '');
+    check(asked.some((n) => n >= 50), 'one call asks for the whole day’s counts', JSON.stringify(asked));
+    await page.screenshot({ path: path.join(SHOTS, 'wirep2-popular-390.png') });
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+
+    /* before the votes SQL (or with no votes): no block */
+    const n = await newPage(browser, base, { wire: W2 });
+    await n.page.goto(base + '/all-day/#wire/' + y1);
+    await n.page.waitForSelector('#panel-wire .whead', { timeout: 15000 });
+    await n.page.waitForTimeout(500);
+    check(await n.page.$eval('#panel-wire', (p) => !p.querySelector('.wpop:not([hidden])')), 'no votes, no block', '');
+    check(!n.errors.length, 'no console errors', n.errors.join(' | '));
+    await n.ctx.close();
+  });
+
+  await group('Wire pass 2: deep links into Recaps, and the wide screen (1440, live)', async () => {
+    const tk = etKey(Date.now());
+    const { ctx, page, errors } = await newPage(browser, base, { wire: W2, viewport: { width: 1440, height: 900 } });
+    await page.goto(base + '/all-day/#wire/recaps/' + tk + '-sports');
+    await page.waitForSelector('#panel-wire .rcap.flash', { timeout: 15000 }).catch(() => {});
+    const d = await page.evaluate(() => ({ k: (document.querySelector('#panel-wire .rcap.flash') || {}).dataset?.k, on: (document.querySelector('#subnav .wmode.on') || {}).dataset?.view }));
+    check(d.k === 'rc:' + tk + '-sports' && d.on === 'recaps', '#wire/recaps/<id> opens Recaps and flashes that recap', JSON.stringify(d));
+    await page.evaluate(() => { document.querySelector('.panel:not([hidden])').scrollTop = 0; });
+    await page.waitForTimeout(300);
+    await page.screenshot({ path: path.join(SHOTS, 'wirep2-recaps-1440.png') });
+    const aside = await page.$$eval('#aside .w-rkinds .chip', (cs) => cs.length);
+    check(aside === 4, 'the wide screen’s rail holds the kinds', String(aside));
+    await page.goto(base + '/all-day/#wire/news');
+    await page.waitForSelector('#panel-wire .rc-strip', { timeout: 15000 });
+    await page.evaluate(() => { document.querySelector('.panel:not([hidden])').scrollTop = 0; });
+    await page.waitForTimeout(300);
+    await page.screenshot({ path: path.join(SHOTS, 'wirep2-news-1440.png') });
+    await page.goto(base + '/all-day/#wire/recaps/' + tk + '-nothing');
+    await page.waitForTimeout(800);
+    check(!!(await page.$('#panel-wire .rcap')), 'an unknown recap still lands on Recaps', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+}
+
 const PM_POST = (o) => ({ id: o.id, board: 'art', kind: o.kind || 'photo', title: o.title, body: o.body || '', place: '', meta: o.meta || { shirt: 'no' },
   photo: o.photo === undefined ? 'submissions/' + o.id.slice(-12) + '.jpg' : o.photo, author: o.author || 'Kara', author_arch: null,
   created_at: o.at, expires_at: null, votes: o.votes || 0, voted: false, mine: false });
@@ -1535,20 +1904,20 @@ async function thePhotos(browser, base) {
     await page.goto(base + '/all-day/?demo=1#wire');
     await settle(page);
     const sw = await page.$$eval('#subnav .wbar > .wmodes .wmode', (bs) => bs.map((b) => { const r = b.getBoundingClientRect(); return { v: b.dataset.view, t: b.textContent, w: Math.round(r.width), h: Math.round(r.height), p: b.getAttribute('aria-pressed') }; }));
-    check(JSON.stringify(sw.map((b) => b.t)) === '["News","Photos","Square"]' && sw.every((b) => b.w >= 44 && b.h >= 44), 'the switch says News, Photos, Square in words, each a 44px target', JSON.stringify(sw));
-    check(sw[0].p === 'true' && sw[1].p === 'false' && sw[2].p === 'false', 'it opens on News, said by aria-pressed', JSON.stringify(sw));
+    check(JSON.stringify(sw.map((b) => b.t)) === '["News","Photos","Square","Recaps"]' && sw.every((b) => b.w >= 44 && b.h >= 44), 'the switch says News, Photos, Square, Recaps in words, each a 44px target', JSON.stringify(sw));
+    check(sw[0].p === 'true' && sw.slice(1).every((b) => b.p === 'false'), 'it opens on News, said by aria-pressed', JSON.stringify(sw));
     check(await page.$eval('#subnav > :first-child', (n) => n.classList.contains('wbar') && n.firstElementChild.classList.contains('wmodes')), 'and it leads the one row under the mast', '');
     check(!(await page.$('#subnav .viewsw, #subnav .viewsw-b')), 'the old list and photo icons are gone', '');
     await page.click('#subnav .wmode[data-view="photos"]');
     check(await pmOn(page), 'Photos turns the paper into the photo feed', '');
-    check(await viewPressed(page) === 'news:false photos:true square:false', 'and the switch says so', await viewPressed(page));
+    check(await viewPressed(page) === 'news:false photos:true square:false recaps:false', 'and the switch says so', await viewPressed(page));
     check(await page.evaluate(() => location.hash) === '#wire/photos', 'the address says #wire/photos', await page.evaluate(() => location.hash));
     check(await page.evaluate(() => localStorage.getItem('allday-wire-view')) === 'photos', 'the choice is kept on the phone', '');
     check(JSON.stringify(await page.$eval('#subnav', (s) => [...s.children].map((n) => n.className))) === '["wbar"]', 'Photo mode keeps the one row: the pill', '');
     check(!(await page.$(pmPanel + ' .wleads, ' + pmPanel + ' .card.wrow')), 'the paper’s list is gone', '');
     await page.reload();
     await settle(page);
-    check(await pmOn(page) && await viewPressed(page) === 'news:false photos:true square:false', 'a reload opens on the photos again', await viewPressed(page));
+    check(await pmOn(page) && await viewPressed(page) === 'news:false photos:true square:false recaps:false', 'a reload opens on the photos again', await viewPressed(page));
     await page.goto(base + '/all-day/?demo=1');
     await settle(page);
     check(await pmOn(page), 'and so does a bare visit to the app', '');
@@ -1559,7 +1928,7 @@ async function thePhotos(browser, base) {
     check(await page.evaluate(() => document.activeElement && document.activeElement.dataset.view) === 'news', 'focus stays on the switch', '');
     await page.reload();
     await settle(page);
-    check(!(await page.$(pmPanel + ' .card.pm')) && await viewPressed(page) === 'news:true photos:false square:false', 'a reload opens on News', await viewPressed(page));
+    check(!(await page.$(pmPanel + ' .card.pm')) && await viewPressed(page) === 'news:true photos:false square:false recaps:false', 'a reload opens on News', await viewPressed(page));
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
   });
@@ -8145,7 +8514,7 @@ async function shellFixes(browser, base) {
     check(ph[0] === 'photos' && ph[1] === 'true' && ok(await look('#subnav .wmodes')), 'Photos takes the water and the pressed state', JSON.stringify(ph));
     if (!water) {
       const fills = await page.$$eval('#subnav .wmode', (bs) => bs.map((b) => b.dataset.view));
-      check(fills.length === 3, 'three words', '');
+      check(fills.length === 4, 'four words', '');
     }
     await page.click('#subnav .wmode[data-view="news"]');
     await goTab(page, 'onair');
@@ -9840,6 +10209,8 @@ try {
   await run(lakePalette);
   await run(deepLinks);
   await run(theWire);
+  /* Wire pass 2 runs with theWire (or alone, as ONLY=wirePass2) */
+  if (!ONLY.length || ONLY.includes('theWire') || ONLY.includes('wirePass2')) await wirePass2(browser, base);
   await run(thePhotos);
   await run(theWhatNow);
   await run(theFood);

@@ -66,13 +66,13 @@ const MIN_CHIP = 4;            // a kind with fewer pictures than this gets no c
 const DAY = 86400000;
 
 /* --------------------------------------------------- the kept choice */
-/* Which way the reader last read the Wire: 'photos', 'square', or '' for
-   News (nothing kept). */
+/* Which way the reader last read the Wire: 'photos', 'square', 'recaps',
+   or '' for News (nothing kept). */
 export function remembered() {
-  try { const v = localStorage.getItem(VIEW_KEY); return v === 'photos' || v === 'square' ? v : ''; } catch (e) { return ''; }
+  try { const v = localStorage.getItem(VIEW_KEY); return v === 'photos' || v === 'square' || v === 'recaps' ? v : ''; } catch (e) { return ''; }
 }
 export function remember(view) {
-  try { if (view === 'photos' || view === 'square') localStorage.setItem(VIEW_KEY, view); else localStorage.removeItem(VIEW_KEY); } catch (e) { /* private mode: this visit only */ }
+  try { if (view === 'photos' || view === 'square' || view === 'recaps') localStorage.setItem(VIEW_KEY, view); else localStorage.removeItem(VIEW_KEY); } catch (e) { /* private mode: this visit only */ }
 }
 
 /* The chips, in order. `posted` is only what readers posted to this feed. */
@@ -359,30 +359,37 @@ export function igCats(p) {
   return out;
 }
 
-/* A picture from everywhere (the payload's `photos_world`, built by the
-   wire pipeline; its exact shape is read loosely): the picture, its own
-   page, a title, the source and the credit. One without a picture or a
-   page is left out. */
+/* A picture from everywhere (the payload's `photos_world`, PR #373):
+   { id, kind: "photo", src, name, title, url, image, credit?, alt?,
+   posted_at } from the photo feeds (APOD, Earth Observatory, The Atlantic,
+   The Guardian), and { kind: "x", embed: "x", name: "@handle", title, url
+   (the post), posted_at } from Grok's "Pictures of the day". A photo is
+   drawn large with its credit and a link to where it ran; an X post is X's
+   own embed (nothing re-hosted). One without a page, or a photo without a
+   picture, is left out. Older keys are still read. */
 const worldKeys = new Map();
+const X_POST = /^https:\/\/(?:www\.)?(?:x|twitter)\.com\/[A-Za-z0-9_]{1,15}\/status\/\d+/i;
 function worldView(p) {
   if (!p || typeof p !== 'object') return null;
-  const media = p.image || p.img || p.i || p.media || '';
   const url = p.url || p.link || p.u || p.href || '';
-  if (!isUrl(media) || !isUrl(url)) return null;
+  const isX = p.kind === 'x' || p.embed === 'x';
+  const media = isX ? '' : p.image || p.img || p.i || p.media || '';
+  if (!isUrl(url) || (isX ? !X_POST.test(url) : !isUrl(media))) return null;
   /* keyed by its own page, so two rows never share a key */
   const k = 'pw:' + norm(url);
   const title = squash(p.title || p.caption || p.c || '');
-  const src = squash(p.source || p.src || p.outlet || '') || (() => { try { return new URL(url).hostname.replace(/^www\./, ''); } catch (e) { return 'The world'; } })();
+  const host = () => { try { return new URL(url).hostname.replace(/^www\./, ''); } catch (e) { return 'The world'; } };
+  const src = squash(p.name || p.source || p.outlet || '') || (isX ? '' : squash(p.src || '')) || host();
   const credit = squash(p.credit || '');
-  const t = typeof p.ts === 'number' ? p.ts : Date.parse(p.published || p.date || p.at || '') / 1000;
+  const t = typeof p.ts === 'number' ? p.ts : Date.parse(p.posted_at || p.published || p.date || p.at || '') / 1000;
   let it = worldKeys.get(k);
-  if (!it) { it = { k, kind: 'image', ratio: 'r45', local: false }; worldKeys.set(k, it); app.know([it]); }
+  if (!it) { it = { k, kind: 'image', ratio: 'r43', local: false }; worldKeys.set(k, it); app.know([it]); }
   /* the same object each draw (the registry's), with this payload's words */
-  Object.assign(it, { href: url, media, title: short(title) || src, text: squash([title, credit && 'Photo: ' + credit].filter(Boolean).join('. ')),
-    src, sid: 'pw:' + src, d: Number.isFinite(t) ? t : 0, open: 'Open on ' + src });
+  Object.assign(it, { href: url, media, title: short(title) || src, text: squash([title, credit].filter(Boolean).join('. ')),
+    src, sid: 'pw:' + (p.src || src), d: Number.isFinite(t) ? t : 0, open: isX ? 'Open on X' : 'Open on ' + src });
   it.ago = it.d ? ctx.ago(it.d * 1000) : '';
-  return { it, k, from: 'world', media, ratio: 'r45', cap: oneLine(title) || src, alt: (title || 'Photo from ' + src).slice(0, 250),
-    src, sid: it.sid, local: false, d: it.d, url, cats: new Set(['world']) };
+  return { it, k, from: isX ? 'x' : 'world', media, ratio: 'r43', cap: oneLine(title) || src, alt: squash(p.alt || title || 'Photo from ' + src).slice(0, 250),
+    src, sid: it.sid, local: false, d: it.d, url, credit, cats: new Set(['world']) };
 }
 const worldRows = () => {
   if (!ctx || !ctx.everything()) return [];
@@ -412,7 +419,7 @@ export function build() {
   const keys = new Set(), links = new Set();
   const every = [];
   all.forEach((v) => {
-    if (!v || !v.k || !v.media || keys.has(v.k) || !ctx.visible(v)) return;
+    if (!v || !v.k || (!v.media && v.from !== 'x') || keys.has(v.k) || !ctx.visible(v)) return;
     const u = v.url ? norm(v.url) : '';
     if (u && links.has(u)) return;
     keys.add(v.k);
@@ -484,6 +491,7 @@ app.onAct('photovote', (it) => vote(it));
 /* One picture: full width, its box reserved (4:5), then one line of
    caption, then the source and age with vote, share and save. */
 function card(v, lead) {
+  if (v.from === 'x') return xCard(v);
   const it = v.it;
   const c = el('article', 'card fi pm' + (lead ? ' pm-lead' : '') + (v.from === 'instagram' ? ' w-src-instagram' : POSTED.has(v.from) ? ' w-posted' : v.from === 'world' ? ' pm-world' : '') + (store.isRead(it.k) ? ' is-read' : ''));
   c.dataset.k = it.k;
@@ -501,14 +509,66 @@ function card(v, lead) {
     up = '<button class="mini up' + (on ? ' on' : '') + '" data-act="up" aria-label="Upvote" aria-pressed="' + on + '">' + ICON.up + '<span class="n">' + esc(n || '') + '</span></button>';
   }
   const saved = store.isSaved(it.k);
+  /* a picture from everywhere: its credit, and its source is a link to the page it ran on */
+  const world = v.from === 'world';
+  const who = world ? '<a class="c-src pm-out" href="' + href + '" target="_blank" rel="noopener">' + esc(v.src) + ICON.ext + '</a>'
+    : '<span class="c-src' + (v.local && ctx.green() ? ' is-local' : '') + '">' + esc(v.src) + '</span>';
   c.innerHTML = '<a class="pm-pic ' + esc(v.ratio) + '" href="' + href + '" data-pm' + (isUrl(v.media) ? '' : ' aria-label="' + esc(v.alt || v.cap) + '"') + '>' + pic + '</a>' +
     '<div class="pm-body">' + (lead ? '<span class="eyebrow">Photo of the week</span>' : '') +
     '<a class="pm-cap" href="' + href + '" data-pm>' + esc(v.cap) + '</a>' +
-    '<div class="c-foot">' + mark(v.src, 'xs') + '<span class="c-src' + (v.local && ctx.green() ? ' is-local' : '') + '">' + esc(v.src) + '</span>' +
+    (world && v.credit ? '<p class="pm-credit">' + esc(v.credit) + '</p>' : '') +
+    '<div class="c-foot">' + mark(v.src, 'xs') + who +
     (v.ago ? '<span class="dot"></span><span class="age">' + esc(v.ago) + '</span>' : '') + '<span class="sp"></span>' + up +
     '<button class="mini sh" data-act="share" aria-label="Share">' + ICON.share + '</button>' +
     '<button class="act star' + (saved ? ' on' : '') + '" data-act="save" aria-label="Save" aria-pressed="' + saved + '">' + ICON.star + '</button></div></div>';
   return c;
+}
+
+/* A Grok "Pictures of the day" post: X's own embed, drawn by X's script,
+   which loads only once one of these is near the screen (xLoad). Until
+   then, and for good if the script cannot load, it is a plain card that
+   links to the post. */
+function xCard(v) {
+  const it = v.it;
+  const c = el('article', 'card fi pm pm-x' + (store.isRead(it.k) ? ' is-read' : ''));
+  c.dataset.k = it.k;
+  const href = esc(safeHref(it.href));
+  const saved = store.isSaved(it.k);
+  c.innerHTML = '<div class="pm-xbox"><blockquote class="twitter-tweet" data-dnt="true" data-conversation="none"' + (darkTheme() ? ' data-theme="dark"' : '') + '>' +
+    '<a class="pm-xcard" href="' + href + '" target="_blank" rel="noopener"><span class="pm-xt">' + esc(v.cap) + '</span>' +
+    '<span class="pm-xh">' + esc(v.src || 'X') + ' · Open on X' + ICON.ext + '</span></a></blockquote></div>' +
+    '<div class="pm-body"><div class="c-foot"><span class="c-src">' + esc(v.src || 'X') + '</span>' +
+    (v.ago ? '<span class="dot"></span><span class="age">' + esc(v.ago) + '</span>' : '') + '<span class="sp"></span>' +
+    '<button class="mini sh" data-act="share" aria-label="Share">' + ICON.share + '</button>' +
+    '<button class="act star' + (saved ? ' on' : '') + '" data-act="save" aria-label="Save" aria-pressed="' + saved + '">' + ICON.star + '</button></div></div>';
+  return c;
+}
+const darkTheme = () => {
+  const t = document.documentElement.dataset.theme;
+  return t === 'dark' || (t !== 'light' && matchMedia('(prefers-color-scheme: dark)').matches);
+};
+/* X's widget script, once a visit, and only when an X post is near the
+   screen; null when it failed (the plain cards stay) */
+const X_JS = 'https://platform.twitter.com/widgets.js';
+let xReady = null;
+function xLoad() {
+  if (!xReady) {
+    xReady = new Promise((res) => {
+      const done = () => res(window.twttr && window.twttr.widgets && typeof window.twttr.widgets.load === 'function' ? window.twttr : null);
+      const s = document.createElement('script');
+      s.src = X_JS; s.async = true; s.charset = 'utf-8';
+      s.onload = () => { if (window.twttr && typeof window.twttr.ready === 'function') window.twttr.ready(done); else done(); };
+      s.onerror = () => res(null);
+      setTimeout(() => res(null), 10000);
+      document.head.appendChild(s);
+    });
+  }
+  return xReady;
+}
+function embedX(node) {
+  if (node.dataset.xdone) return;
+  node.dataset.xdone = '1';
+  xLoad().then((tw) => { if (tw && node.isConnected) tw.widgets.load(node.querySelector('.pm-xbox')); });
 }
 
 /* the item the picture sheet reads: the registered one, with the picture,
@@ -529,6 +589,7 @@ let observer = null;
 export function stop() {
   if (observer) { observer.disconnect(); observer = null; }
   if (P.run && P.run.far) P.run.far.disconnect();
+  if (P.run && P.run.near) P.run.near.disconnect();
   if (P.run) P.run.dead = true;
   P.run = null;
 }
@@ -625,6 +686,9 @@ export function render(root, opts = {}) {
       if (x.isIntersecting) { if (img.dataset.src) { img.src = img.dataset.src; delete img.dataset.src; } }
       else if (!img.dataset.src && img.getAttribute('src')) { img.dataset.src = img.getAttribute('src'); img.removeAttribute('src'); }
     }), { root: panel, rootMargin: FAR + 'px 0px' });
+    /* an X post asks for X's script only once it is within a screen */
+    run.near = new IntersectionObserver((es) => es.forEach((x) => { if (x.isIntersecting) { run.near.unobserve(x.target); embedX(x.target); } }),
+      { root: panel, rootMargin: '600px 0px' });
   }
   step(run, Math.max(FIRST, opts.limit || 0));
   return run;
@@ -638,7 +702,8 @@ function step(run, n) {
     const node = card(v, v === run.lead);
     if (run.i === 1) node.querySelector('img.pic')?.setAttribute('loading', 'eager');   // the first picture is the page
     run.feed.insertBefore(node, run.sentinel);
-    if (run.far) run.far.observe(node);
+    if (v.from === 'x') { if (run.near) run.near.observe(node); else embedX(node); }
+    else if (run.far) run.far.observe(node);
     if (!v.pic) added.push(v.k);
     if (v.k === run.until) run.until = null;
   }
