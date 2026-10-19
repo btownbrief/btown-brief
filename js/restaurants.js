@@ -83,7 +83,7 @@
         F.fetchJSON('data/deals.json').catch(() => ({ deals: [] })),
       ]);
       RESTAURANTS = rjson.restaurants.filter(r => !r.closed);
-      DEALS = (djson.deals || []).filter(d => !d.retired);
+      DEALS = (djson.deals || []).filter(d => !d.retired && !d.needs_check);
       for (const d of DEALS) {
         if (!d.restaurant_id) continue;
         (dealsByRestaurant[d.restaurant_id] = dealsByRestaurant[d.restaurant_id] || []).push(d);
