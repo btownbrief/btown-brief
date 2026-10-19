@@ -186,11 +186,32 @@ def build_packet(d, outlets):
     if afd.get("what_changed"):
         lines.append(f"AFD WHAT CHANGED (same regional caveat): {afd['what_changed']}")
 
+    # The lake's boating forecast (knots, waves) only in swim season, and
+    # never as the story (Stephen, 2026-10-19: "Idk why it's talking so
+    # much about knots and wind and boats"). See prompts/weather-read.md.
     lk = d.get("lake_forecast") or {}
-    if lk.get("broad") and not lk.get("suspended"):
-        lines.append("LAKE (broad waters):")
+    local_month = datetime.now(ZoneInfo("America/New_York")).month
+    if lk.get("broad") and not lk.get("suspended") and 6 <= local_month <= 9:
+        lines.append("LAKE (broad waters; background for a swim call only, "
+                     "say any wind in mph, never knots or waves):")
         for p in lk["broad"][:4]:
             lines.append(f"  {p['period']}: {p['text']}")
+
+    # When and how much: the NWS grid's amounts (refresh_weather.py)
+    amounts = [a for a in ((d.get("hourly") or {}).get("days") or [])
+               if (a.get("precip_in") or 0) >= 0.01 or (a.get("snow_in") or 0) >= 0.1]
+    wet_hours = [h for h in ((d.get("hourly") or {}).get("hours") or []) if (h.get("pop") or 0) >= 40]
+    if amounts or wet_hours:
+        lines.append("RAIN AND SNOW (NWS grid; amounts in inches, liquid then snow):")
+        for a in amounts:
+            lines.append(f"  {a['date']}: {a.get('precip_in')} in liquid, {a.get('snow_in')} in snow")
+        if wet_hours:
+            lines.append("  hours at 40%+ chance: " + ", ".join(
+                f"{datetime.fromisoformat(h['t']).astimezone(ZoneInfo('America/New_York')).strftime('%a')} "
+                f"{_clock(h['t'])} {h.get('pop')}%" for h in wet_hours[:24]))
+    brief = d.get("brief") or {}
+    if brief.get("text"):
+        lines.append(f"PLAIN-WORDS BRIEF (rules from the same NWS data, already on the page): {brief['text']}")
     gage = d.get("lake_gage") or {}
     if gage:
         lines.append(f"LAKE GAGE: water {gage.get('water_temp_f')}F, "

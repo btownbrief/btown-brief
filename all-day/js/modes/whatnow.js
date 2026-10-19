@@ -46,7 +46,9 @@
      Over it, a strip of sky (2026-10-17, Stephen: "recreate it, with how
      the sun moves"): weather.html's sun arc in miniature, the sun or the
      moon where it really is, the sky's colour by the hour and a light
-     overlay for what the weather is doing.
+     overlay for what the weather is doing. Under the pills and the card,
+     today in two or three plain sentences (latest.json's brief, see
+     wxBrief) and a Full weather link to that page (2026-10-19).
      Under the answer, Happening today: the rest of today's calendar from
      data/whatnow.json (the events calendar, trimmed), in Burlington's clock,
      daytime first and then tonight's, each opening its own listing, and a
@@ -210,6 +212,7 @@ function redate(d) {
   out.weather.updated = now;
   if (out.weather.now) out.weather.now.observed_at = now;
   if (out.weather.lake_gage) out.weather.lake_gage.water_temp_at = now;
+  if (out.weather.brief) out.weather.brief.generated = now;
   return out;
 }
 
@@ -433,6 +436,33 @@ function weatherCard() {
   return a;
 }
 
+/* Today in plain words, under the card (Stephen, 2026-10-19: "a text brief
+   about today's weather and an obvious link to the full weather page").
+   The words are latest.json's `brief`, written by rules from the NWS
+   forecast at each hourly refresh (scripts/weather_brief.py), the same
+   sentences the weather page leads with; they are left out when the brief
+   is more than BRIEF_MAX_MS old or was written on another Burlington day,
+   so a stalled refresh never says the wrong "tonight".
+   The Full weather link shows whenever the card does. */
+const BRIEF_MAX_MS = 4 * 3600000;
+function wxBriefText(now = Date.now()) {
+  const b = S.weather && S.weather.brief;
+  if (!b || typeof b.text !== 'string' || !b.text.trim()) return '';
+  const age = now - Date.parse(b.generated || '');
+  if (!(age >= -3600000 && age < BRIEF_MAX_MS)) return '';
+  if (b.date !== et(now).date) return '';      // another Burlington day's today and tonight
+  return b.text.trim();
+}
+function wxBrief() {
+  const box = el('div', 'wxbrief');
+  const text = wxBriefText();
+  if (text) box.appendChild(el('p', 'wxb-t', esc(text)));
+  const go = el('a', 'btn sm wxb-go', '<span>Full weather</span>' + ICON.arrow);
+  go.href = WEATHER_URL;
+  box.appendChild(go);
+  return box;
+}
+
 /* ------------------------------------------------------------------ Spin */
 /* The top of the Spin view: the lake and sunset line across the top (one
    line at 390, sunset score and all), then the window pills on the left and
@@ -445,7 +475,7 @@ function renderSpin() {
   const tools = el('div', 'toolrow');
   tools.appendChild(pills(WINDOWS, S.window, (v) => { S.window = v; S.answer = null; S.did = false; if (moving()) spin(); else render(); }));
   top.appendChild(tools);
-  if (card) top.appendChild(card);
+  if (card) { top.appendChild(card); top.appendChild(wxBrief()); }
   root.appendChild(top);
 
   const s = el('div', 'spin');
