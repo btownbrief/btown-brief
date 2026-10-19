@@ -67,6 +67,7 @@ import * as boards from '../boards.js';
 import { RULES } from '../boards-core.js';
 import { el, esc, safeHref, ICON, svg, art, section, chips, pills, divider, cards, button, localSwitch, geo, setGeo, agoShort, listRail } from '../ui.js';
 import { liquify } from '../liquid.js';
+import { pill } from '../sections.js';
 
 const KEY = 'onair';
 const NATIONAL = 2;         // shows from away on Everything
@@ -1984,11 +1985,13 @@ app.register(KEY, {
   deactivate() { app.closePeek(); },
   subnav() {
     if (!O.root) return null;
-    /* two rows: the three sides, full width and plain to see (Stephen,
-       2026-10-19: toggles "more apparent … too easy to skip past"), then
-       the Local switch with the side's own chips beside it */
-    const wrap = el('div', 'oa-sub');
-    const top = el('div', 'toolband oa-sidesrow');
+    /* two rows, floating over the paper like the Wire's (Stephen,
+       2026-10-19): the three sides, full width and plain to see ("more
+       apparent … too easy to skip past"), then the Local switch with the
+       side's own small pill beside it, poured in the side's colour: the TV
+       lengths, or the podcast sections, which follow the scroll */
+    const wrap = el('div', 'secbar oa-sub');
+    const top = el('div', 'secrow oa-sidesrow');
     const sw = pills([['tv', 'TV'], ['pods', 'Podcasts'], ['lists', 'Playlists']], O.side, (v) => setSide(v), 'oa-sideswitch');
     sw.setAttribute('role', 'group');
     sw.setAttribute('aria-label', 'TV, podcasts or playlists');
@@ -1997,21 +2000,21 @@ app.register(KEY, {
     liquify(sw, { key: 'oa-side', idx: ['tv', 'pods', 'lists'].indexOf(O.side), colors: ['--liq-tv', '--liq-pods', '--liq-lists'] });
     top.appendChild(sw);
     wrap.appendChild(top);
-    const band = el('div', 'toolband');
+    const band = el('div', 'secrow');
     band.appendChild(localSwitch(() => { render(); app.scrollTop(); }));
     if (O.side === 'tv') {
       const pool = O.built ? (() => { const keep = O.len; O.len = ''; const all = pool_(); O.len = keep; return all; })() : [];
       const items = [{ key: 'all', label: 'All lengths' }].concat(LENGTHS.filter((l) => l.key === O.len || pool.some((it) => it.len === l.key)).map((l) => ({ key: l.key, label: l.chip })));
-      band.appendChild(chips(items, O.len || 'all', (k) => setLen(k === 'all' ? '' : k)));
+      band.appendChild(pill({ key: 'sec-onair-tv', title: 'Lengths', items, current: O.len || 'all', color: '--liq-tv', onPick: (k) => setLen(k === 'all' ? '' : k) }));
     } else if (O.side === 'pods') {
-      const toc = [['brief', 'Out loud'], ['pods', 'Podcasts']]
-        .filter(([key]) => O.root.querySelector('[data-side="pods"] [data-sec="' + key + '"]'))
-        .map(([key, label]) => ({ key, label }));
-      if (toc.length > 1) band.appendChild(chips(toc, null, (k) => app.jumpTo(O.root.querySelector('[data-sec="' + k + '"]'))));
+      const sec = (k) => O.root.querySelector('[data-side="pods"] [data-sec="' + k + '"]');
+      const toc = [['brief', 'Out loud'], ['pods', 'Podcasts']].filter(([key]) => sec(key)).map(([key, label]) => ({ key, label }));
+      if (toc.length > 1) band.appendChild(pill({ key: 'sec-onair-pods', title: 'Podcasts', items: toc, color: '--liq-pods', find: sec, onPick: (k) => app.jumpTo(sec(k)) }));
     }
     wrap.appendChild(band);
     return wrap;
   },
+  keepSubnav: true,
   newSince,
   pull() {
     if (app.demo) return null;

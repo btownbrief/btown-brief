@@ -74,6 +74,7 @@ import * as store from '../store.js';
 import * as data from '../wire.js';
 import { el, esc, safeHref, ICON, svg, art, section, chips, pills, button, cards, put, meetRow, listRail } from '../ui.js';
 import * as cw from '../clubs-week.js';
+import { sectionBar, hold } from '../sections.js';
 import { loadAll } from '../whatnow-data.js';
 import { buildContext, buildPool, pick, fmtTime, outdoorRisks } from '../whatnow-engine.js';
 import { sunScore } from '../sun.js';
@@ -1301,11 +1302,14 @@ function stopReel() {
 
 /* Spin and Missions are one view, so moving between them is a scroll;
    Tonight is the other view. */
+const PILL = 'sec-whatnow';
 const jumpMissions = () => { const s = root && root.querySelector('[data-sec="missions"]'); if (s) app.jumpTo(s); };
 function setMode(mode) {
   const sameView = mode !== 'tonight' && S.mode !== 'tonight';
   if (!sameView) stopReel();
   S.mode = mode;
+  /* the pill's water goes to the mode now; the scroll to Missions waits for it */
+  hold(PILL, mode);
   history.replaceState(null, '', location.search + '#whatnow/' + mode);
   app.paintSubnav();
   if (!sameView) render();
@@ -1342,14 +1346,21 @@ app.register(KEY, {
   activate(param) { pending = param || null; land(); paintSky(); skyTick(true); },
   refresh() { if (ready) render(); },
   deactivate() { stopReel(); closeBandcamp(); app.closePeek(); skyTick(false); },
+  /* Spin · Missions · Tonight as a floating pill in What Now's amber. Spin
+     and Missions are one page, so the water follows the scroll between
+     them; Tonight is a view of its own (sections.js) */
   subnav() {
     if (!ready) return null;
-    return chips([
-      { key: 'spin', label: 'Spin', icon: ICON.shuffle },
-      { key: 'missions', label: 'Missions', n: S.missions ? doneCount() + '/' + missions().length : null },
-      { key: 'tonight', label: 'Tonight', n: S.events ? tonight().length : null },
-    ], S.mode, (k) => { if (k !== S.mode) setMode(k); else if (k === 'missions') jumpMissions(); else app.scrollTop(true); });
+    return sectionBar({ key: PILL, title: 'What Now', color: '--liq-whatnow', current: S.mode,
+      items: [
+        { key: 'spin', label: 'Spin', icon: ICON.shuffle },
+        { key: 'missions', label: 'Missions', n: S.missions ? doneCount() + '/' + missions().length : null },
+        { key: 'tonight', label: 'Tonight', n: S.events ? tonight().length : null },
+      ],
+      find: (k) => (!root || S.mode === 'tonight' ? null : k === 'spin' ? root.firstElementChild : k === 'missions' ? root.querySelector('[data-sec="missions"]') : null),
+      onPick: (k) => { if (k !== S.mode) setMode(k); else if (k === 'missions') jumpMissions(); else app.scrollTop(true); } });
   },
+  keepSubnav: true,
   /* Nothing here is a feed that grows while you are away, so the dot stays off. */
   newSince() { return 0; },
 });

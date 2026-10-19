@@ -429,7 +429,7 @@ body.chrome-away .mast { transform: translateY(-100%); }
     --main-x: calc(var(--edge) + var(--nav-w) + var(--grid-gap));
   }
   .mast { left: var(--main-x); right: auto; width: var(--main); border-radius: 0 0 var(--r-media) var(--r-media); border-bottom: 0; }
-  .mast:has(.wbar)::before { border-radius: 0 0 var(--r-media) var(--r-media); }
+  .mast:has(.wbar, .secbar)::before { border-radius: 0 0 var(--r-media) var(--r-media); }
   .mast-row, .subnav { max-width: none; }
   .mast-row { padding-left: var(--gutter); }
   .wordmark { display: none; }
@@ -519,9 +519,10 @@ body.chrome-away .mast { transform: translateY(-100%); }
   border-radius: var(--r-pill); background: var(--paper-2); border: 1px solid var(--line-soft);
   transition: background .2s ease, border-color .2s ease; }
 .localsw.liquid { overflow: hidden; }
-/* the water's canvas fills the switch inside its rim and is rounded like it;
-   liquid.js clips the drawing to the same capsule, since Safari does not
-   always clip a canvas layer to a parent with a backdrop filter */
+/* the water's canvas: liquid.js places it on the switch's inner box (inside
+   the padding, where the buttons are) and clips the drawing to that
+   capsule, since Safari does not always clip a canvas layer to a parent
+   with a backdrop filter; it is rounded here too */
 .lsw-canvas { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; border-radius: var(--r-pill); }
 .localsw-half { position: relative; z-index: 1; display: inline-flex; align-items: center; justify-content: center; gap: 6px;
   height: 32px; padding: 0 12px; border-radius: var(--r-pill); font-size: var(--fs-meta); font-weight: 600; letter-spacing: -.005em;
@@ -1516,18 +1517,19 @@ body.chrome-away.keep-subnav .mast { transform: translateY(calc(-1 * var(--mast-
 /* News · Photos · Square floats (Stephen, 2026-10-19: it stays on screen
    "that's how important it is"): on the Wire the mast's navy is only the
    top line, and the row under it is see-through, so the pill floats over
-   the paper as the tab bar does at the bottom. */
-.mast:has(.wbar) { background: transparent; backdrop-filter: none; -webkit-backdrop-filter: none; border-bottom: 0; }
-.mast:has(.wbar) .subnav { position: relative; }
+   the paper as the tab bar does at the bottom. Every other tab's section
+   pill (.secbar, sections.js) floats the same way. */
+.mast:has(.wbar, .secbar) { background: transparent; backdrop-filter: none; -webkit-backdrop-filter: none; border-bottom: 0; }
+.mast:has(.wbar, .secbar) .subnav { position: relative; }
 /* a frosted strip of paper behind the pill (and the day row, once it
    floats) so the words scrolling under them don't fight them; it fades out
    at its lower edge */
-.mast:has(.wbar) .subnav::before { content: ""; position: absolute; z-index: -1; left: 0; right: 0; top: 0; bottom: 0;
+.mast:has(.wbar, .secbar) .subnav::before { content: ""; position: absolute; z-index: -1; left: 0; right: 0; top: 0; bottom: 0;
   background: color-mix(in srgb, var(--paper) 78%, transparent); backdrop-filter: saturate(140%) blur(14px); -webkit-backdrop-filter: saturate(140%) blur(14px);
   -webkit-mask-image: linear-gradient(var(--mask) calc(100% - 14px), transparent); mask-image: linear-gradient(var(--mask) calc(100% - 14px), transparent);
   transition: bottom .18s ease; }
 body.wire-float .mast:has(.wbar) .subnav::before { bottom: -60px; }
-.mast:has(.wbar)::before { content: ""; position: absolute; z-index: -1; left: 0; right: 0; top: 0; height: calc(var(--safe-t) + var(--mast-h));
+.mast:has(.wbar, .secbar)::before { content: ""; position: absolute; z-index: -1; left: 0; right: 0; top: 0; height: calc(var(--safe-t) + var(--mast-h));
   background: var(--lake); }
 .wbar { position: relative; justify-content: center; height: auto; padding: var(--s2) var(--s3) var(--s2); }
 .wbar .wmodes { flex: 0 1 420px; padding: 4px; gap: 4px; background: linear-gradient(var(--dock-sheen), var(--dock-clear)), var(--dock-glass);
@@ -2087,3 +2089,79 @@ body.desk { overflow: auto; }
   .sheet-card.oa-player { width: min(860px, 92vw); }
   .oa-stage { margin: 0; border-radius: var(--r-media); }
 }
+
+/* ---------------------------------------- the section pill (2026-10-19) */
+/* Every tab but the Wire (sections.js; Stephen: "that cool animated liquid
+   effect, with different colors ... floating too like the Wire. But
+   probably smaller"). Its sections or views in a compact glass pill that
+   floats under the mast like News · Photos · Square, at 40px with 14px
+   words because it is second to those and holds more of them. The one you
+   are on sits in the tab's own water (--secpill-water, set from the tab's
+   --liq-* token). Past the edge the pill scrolls sideways inside itself,
+   and "All" at its end lists every section in a sheet. */
+.secbar { position: relative; display: flex; flex-direction: column; align-items: center; gap: var(--s2); padding: var(--s2); }
+.secrow { display: flex; align-items: center; justify-content: center; gap: 6px; width: 100%; min-width: 0; }
+.secpill { position: relative; display: flex; align-items: center; max-width: 100%; min-width: 0; height: 40px; padding: 3px;
+  border-radius: var(--r-pill); color: var(--dock-ink);
+  background: linear-gradient(var(--dock-sheen), var(--dock-clear)), var(--dock-glass);
+  backdrop-filter: var(--dock-filter); -webkit-backdrop-filter: var(--dock-filter);
+  border: 1px solid var(--dock-edge); box-shadow: var(--dock-shadow); }
+.secpill.over { width: 100%; }
+.secpill-scroll { flex: 0 1 auto; min-width: 0; height: 100%; overflow-x: auto; overflow-y: hidden; border-radius: var(--r-pill);
+  scrollbar-width: none; overscroll-behavior-x: contain; -webkit-overflow-scrolling: touch; }
+.secpill.over .secpill-scroll { flex: 1 1 auto; }
+.secpill-scroll::-webkit-scrollbar { display: none; }
+.secpill.over .secpill-scroll.fl { -webkit-mask-image: linear-gradient(to right, transparent, var(--mask) 18px); mask-image: linear-gradient(to right, transparent, var(--mask) 18px); }
+.secpill.over .secpill-scroll.fr { -webkit-mask-image: linear-gradient(to left, transparent, var(--mask) 18px); mask-image: linear-gradient(to left, transparent, var(--mask) 18px); }
+.secpill.over .secpill-scroll.fl.fr { -webkit-mask-image: linear-gradient(to right, transparent, var(--mask) 18px, var(--mask) calc(100% - 18px), transparent);
+  mask-image: linear-gradient(to right, transparent, var(--mask) 18px, var(--mask) calc(100% - 18px), transparent); }
+.secpill-track { position: relative; display: flex; gap: 2px; width: max-content; height: 100%; border-radius: var(--r-pill); }
+.secpill-track.liquid { overflow: hidden; }
+.secbar .secpill .chip { position: relative; z-index: 1; height: 100%; padding: 0 12px; gap: 5px; background: transparent; color: var(--dock-ink);
+  font-size: var(--fs-button); font-weight: 600; letter-spacing: -.005em; }
+/* a taller tap target than the pill shows */
+.secbar .secpill .chip::after { content: ""; position: absolute; inset: -4px 0; }
+.secbar .secpill .chip:hover { background: var(--dock-hover); color: var(--dock-ink); }
+.secbar .secpill .chip .n { opacity: .72; font-weight: 500; }
+.secbar .secpill .chip.on { background: var(--secpill-water, var(--sunset)); color: var(--secpill-ink, var(--sunset-ink)); box-shadow: none; }
+.secbar .secpill .chip.on .n { opacity: .85; }
+.secbar .secpill-track.liquid .chip.on { background: transparent; }
+.secbar .secpill .chip:focus-visible, .secpill-all:focus-visible { outline-color: var(--dock-ink); outline-offset: -3px; border-radius: var(--r-pill); }
+.secpill-all { position: relative; flex: 0 0 auto; display: none; align-items: center; gap: 1px; height: 100%; padding: 0 7px 0 8px; margin-left: 3px;
+  border-left: 1px solid var(--dock-edge); color: var(--dock-ink); font-size: var(--fs-button); font-weight: 600; }
+.secpill-all::after { content: ""; position: absolute; inset: -4px 0; }
+.secpill-all .i { width: 14px; height: 14px; }
+.secpill-all:hover { background: var(--dock-hover); border-radius: 0 var(--r-pill) var(--r-pill) 0; }
+.secpill.over .secpill-all { display: inline-flex; }
+@media (prefers-reduced-motion: no-preference) {
+  .secbar .secpill, .secbar .oa-sideswitch { transform-origin: 50% 0; transition: transform .24s cubic-bezier(.2, .8, .2, 1); }
+  body.pill-small .secbar > .secpill, body.pill-small .secbar .oa-sideswitch { transform: scale(.9); }
+  body.pill-small .secbar .secrow:not(.oa-sidesrow) { transform: translateY(-5px); transition: transform .24s cubic-bezier(.2, .8, .2, 1); }
+}
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .secpill, .secbar .oa-sideswitch, .secbar .localsw { background: var(--dock-solid); }
+}
+/* "All": every section as a row, the one you are on marked in its water */
+.secsheet-row { display: flex; align-items: center; gap: var(--s3); width: 100%; min-height: 52px; padding: 0 var(--s1);
+  border-bottom: 1px solid var(--line-soft); text-align: left; font-size: var(--fs-lead); font-weight: 600; color: var(--ink); }
+.secsheet-row:last-child { border-bottom: 0; }
+.secsheet-row .t { flex: 1 1 auto; min-width: 0; }
+.secsheet-row .n { flex: 0 0 auto; color: var(--ink-3); font-weight: 500; font-variant-numeric: tabular-nums; }
+.secsheet-row .i { width: 18px; height: 18px; }
+.secsheet-row::before { content: ""; flex: 0 0 auto; width: 10px; height: 10px; border-radius: var(--r-pill); background: var(--line); }
+.secsheet-row.on::before { background: var(--secpill-water, var(--sunset)); box-shadow: 0 0 0 3px color-mix(in srgb, var(--secpill-water, var(--sunset)) 28%, transparent); }
+.secsheet-row:hover .t { text-decoration: underline; }
+/* On Air's two floating rows: the three sides in glass like the Wire's
+   words, then the Local switch in glass beside the side's small pill */
+.secbar .oa-sidesrow .oa-sideswitch { flex: 0 1 420px; margin: 0; padding: 4px; gap: 4px; border-radius: var(--r-pill);
+  background: linear-gradient(var(--dock-sheen), var(--dock-clear)), var(--dock-glass);
+  backdrop-filter: var(--dock-filter); -webkit-backdrop-filter: var(--dock-filter);
+  border: 1px solid var(--dock-edge); box-shadow: var(--dock-shadow); }
+.mast .secbar .oa-sideswitch button { color: var(--dock-ink); }
+.secbar .oa-sideswitch button:hover { background: var(--dock-hover); }
+.secbar .localsw { flex: 0 0 auto; width: auto; color: var(--dock-ink); border: 1px solid var(--dock-edge);
+  background: linear-gradient(var(--dock-sheen), var(--dock-clear)), var(--dock-glass);
+  backdrop-filter: var(--dock-filter); -webkit-backdrop-filter: var(--dock-filter); box-shadow: var(--dock-shadow); }
+.secbar .localsw-half { padding: 0 8px; }
+.mast .secbar .localsw .localsw-half:not(.on) { color: var(--dock-ink); }
+.secbar .secrow .secpill { flex: 0 1 auto; }

@@ -95,6 +95,23 @@
   --liq-lists-ink: #FFFFFF;
   --liq-topics: #2F6FB2;
   --liq-topics-ink: #FFFFFF;
+  /* each tab's section pill, one water per tab (2026-10-19), spread round
+     the wheel between the Wire's and On Air's and the same in both themes;
+     every ink reads at 4.5:1 or better on its water */
+  --liq-watch: #C8466E;             /* cinema rose */
+  --liq-watch-ink: #FFFFFF;
+  --liq-food: #E46B32;              /* paprika */
+  --liq-food-ink: #2B1606;
+  --liq-people: #1D7F8A;            /* lake teal */
+  --liq-people-ink: #FFFFFF;
+  --liq-whatnow: #F2A93B;           /* What Now's own amber, its disc in the tab bar */
+  --liq-whatnow-ink: #2B1606;
+  --liq-vintage: #9B4F96;           /* plum */
+  --liq-vintage-ink: #FFFFFF;
+  --liq-habits: #5DA142;            /* fern, for the forest */
+  --liq-habits-ink: #0E2410;
+  --liq-games: #5560D6;             /* arcade indigo */
+  --liq-games-ink: #FFFFFF;
   --liq-recaps: #7A5BB0;            /* Recaps, the Wire's fourth word */
   --liq-recaps-ink: #FFFFFF;
   --recap: #5B3F94;                 /* a recap's kind title */
