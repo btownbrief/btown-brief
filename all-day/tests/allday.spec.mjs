@@ -2353,7 +2353,7 @@ async function onAir(browser, base) {
     if (!realLists) {
       await toSide(page, 'lists');
       const ls = await page.evaluate(() => ({ tiles: document.querySelectorAll('#panel-onair [data-slot="lists"] .pl-tile').length,
-        add: document.querySelector('#panel-onair [data-add-playlist]')?.dataset.addPlaylist, empty: document.querySelector('#panel-onair [data-slot="lists"] .note')?.textContent || '' }));
+        add: document.querySelector('#panel-onair [data-add-playlist]')?.dataset.addPlaylist, empty: document.querySelector('#panel-onair [data-slot="lists"] .note:not(.pl-any)')?.textContent || '' }));
       check(!ls.tiles && ls.add === 'mail' && /first/.test(ls.empty), 'live: data/playlists.json is still TODO placeholders and the board’s SQL is not in, so no tiles, an empty line, and “Add your playlist” is an email', JSON.stringify(ls));
       await toSide(page, 'tv');
     }
@@ -2520,7 +2520,7 @@ async function onAir(browser, base) {
     await page.click('#panel-onair .railmode:not(.foot) [data-railmode="past"]');
     const after = await measure();
     check(before.sideways && !before.list && after.list && !after.sideways && after.down && after.inside, 'Past nights becomes a list you scroll down', JSON.stringify({ before, after }));
-    check(await page.evaluate(() => localStorage.getItem('allday-onair-lists')) === '{"past":1}', 'remembered on this phone', '');
+    check(await page.evaluate(() => localStorage.getItem('allday-rail-lists')) === '{"past":1}', 'remembered on this phone', '');
     await page.reload();
     await page.waitForSelector('#panel-onair [data-sec="past"]', { timeout: 8000 });
     check(await page.$eval('#panel-onair [data-rail="past"]', (r) => r.classList.contains('aslist')), 'still a list after a reload', '');
@@ -2789,6 +2789,32 @@ async function onAir(browser, base) {
     const sw = await readFile(path.join(APP, 'sw.js'), 'utf8');
     const guard = sw.indexOf("req.destination === 'audio'");
     check(guard > 0 && /req\.headers\.has\('range'\)/.test(sw) && guard < sw.indexOf('if (isWire(url))'), 'sw.js lets audio, video and byte ranges past before the raw.githubusercontent.com branch', '');
+  });
+
+  await group('On Air, playlists: any playlist link', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/all-day/?demo=1#onair/playlists');
+    await page.waitForSelector('#panel-onair [data-side="lists"]:not([hidden]) [data-sec="lists"]', { timeout: 8000 });
+    const any = await page.$eval('#panel-onair [data-slot="lists"] .pl-any', (p) => p.textContent);
+    check(/^Any playlist link: Spotify, Apple Music, YouTube, SoundCloud/.test(any), 'a short line under Add your playlist says any playlist link works', any);
+    const svc = await page.evaluate(async () => {
+      const { SERVICES } = await import('/all-day/js/modes/onair.js');
+      const which = (u) => Object.keys(SERVICES).find((k) => SERVICES[k].re.test(u)) || '';
+      return {
+        good: [
+          ['spotify', 'https://open.spotify.com/playlist/37i9dQZF1DXcBWIGoYBM5M?si=abc'], ['youtube', 'https://music.youtube.com/playlist?list=PLabcdefghijk&si=x'],
+          ['apple', 'https://music.apple.com/us/playlist/chill/pl.u-abc123'], ['soundcloud', 'https://on.soundcloud.com/AbC12'],
+          ['tidal', 'https://tidal.com/browse/playlist/6d7e3f1a-1b2c-4d5e-8f90-a1b2c3d4e5f6'], ['tidal', 'https://listen.tidal.com/playlist/6d7e3f1a-1b2c-4d5e-8f90-a1b2c3d4e5f6'],
+          ['deezer', 'https://www.deezer.com/en/playlist/1234567890'], ['deezer', 'https://link.deezer.com/s/32AbCdEfGhIj'],
+          ['amazon', 'https://music.amazon.com/user-playlists/0a1b2c3d4e5f?ref=dm_sh_x'], ['amazon', 'https://music.amazon.com/playlists/B07ABCDEFG'],
+        ].map(([want, u]) => [want, which(u), u]),
+        bad: ['http://open.spotify.com/playlist/37i9dQZF1DXcBWIGoYBM5M', 'https://evil.com/open.spotify.com/playlist/37i9dQZF1DXcBWIGoYBM5M', 'https://tidal.com.evil.io/playlist/6d7e3f1a-1b2c-4d5e-8f90-a1b2c3d4e5f6',
+          'https://music.amazon.com.evil.io/playlists/B07ABCDEFG', 'https://deezer.com/playlist/12ab', 'javascript:alert(1)'].filter((u) => which(u)),
+      };
+    });
+    check(svc.good.every((g) => g[0] === g[1]) && !svc.bad.length, 'Spotify, YouTube, Apple Music, SoundCloud, Tidal, Deezer and Amazon Music links are all recognised, https only on their own hosts', JSON.stringify(svc));
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
   });
 
   await group('On Air, playlists', async () => {
@@ -5327,7 +5353,7 @@ async function theWatch(browser, base) {
     const toc = await page.$$eval('#subnav .chip', (c) => c.map((x) => x.textContent));
     check(JSON.stringify(toc) === JSON.stringify(['Theaters', 'Coming soon', 'The list', 'Town', 'Next screening', 'Chat']), 'the chip row is the table of contents, today’s showtimes first', toc.join(' / '));
     check(!(await page.$(wPanel + ' [data-kind]')), 'a films.json with no shows has no Movies / TV switch', '');
-    const soon = await page.$$eval(wPanel + ' [data-sec="soon"] + .rail-wrap .poster', (n) => n.map((a) => [a.dataset.k, a.querySelector('.s').textContent, !!a.querySelector('.play')]));
+    const soon = await page.$$eval(wPanel + ' [data-sec="soon"] + .railmode + .rail-wrap .poster', (n) => n.map((a) => [a.dataset.k, a.querySelector('.s').textContent, !!a.querySelector('.play')]));
     check(soon.length === 5 && soon[0][1] === 'In theaters now' && soon[1][1] === 'Back in theaters' && /· theaters$/.test(soon[2][1]) && /· streaming$/.test(soon[3][1]), 'Coming soon: in theaters now (a 1966 re-release is back in theaters), then what opens, labelled theaters or streaming', JSON.stringify(soon));
     check(JSON.stringify(soon.map((x) => x[2])) === '[true,false,true,true,false]', 'a play disc only where TMDB has a trailer', JSON.stringify(soon));
     const pics = await page.$$eval(wPanel + ' .poster img.pic', (n) => n.slice(0, 3).map((i) => [i.getAttribute('src'), i.loading]));
@@ -5387,8 +5413,8 @@ async function theWatch(browser, base) {
       { ...base0, id: 990013, t: 'No Year', y: undefined, d: undefined }];
     const { ctx, page, errors } = await newPage(browser, base, { films });
     await page.goto(base + '/all-day/#watch');
-    await page.waitForSelector(wPanel + ' [data-sec="soon"] + .rail-wrap .poster', { timeout: 15000 });
-    const got = await page.$$eval(wPanel + ' [data-sec="soon"] + .rail-wrap .poster', (n) => n.slice(0, 3).map((a) => a.querySelector('.s').textContent));
+    await page.waitForSelector(wPanel + ' [data-sec="soon"] + .railmode + .rail-wrap .poster', { timeout: 15000 });
+    const got = await page.$$eval(wPanel + ' [data-sec="soon"] + .railmode + .rail-wrap .poster', (n) => n.slice(0, 3).map((a) => a.querySelector('.s').textContent));
     check(JSON.stringify(got) === '["In theaters now","Back in theaters","In theaters now"]', 'two years old is in theaters now, three is back in theaters, no year is in theaters now', JSON.stringify(got));
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
@@ -5594,7 +5620,7 @@ async function theWatch(browser, base) {
     check(await page.$eval(wPanel + ' [data-sort] [data-chip="town"]', (c) => c.getAttribute('aria-pressed')) === 'true', 'and the Town favorites chip is the one on', '');
     await page.click(wPanel + ' [data-sort] [data-chip="top"]');
     check(JSON.stringify(await wTiles(page)) === JSON.stringify(d.films.top.map((f) => 'f' + f.id)), 'Top rated puts it back', '');
-    const soon = await page.$$eval(wPanel + ' [data-sec="soon"] + .rail-wrap .poster', (n) => n.length);
+    const soon = await page.$$eval(wPanel + ' [data-sec="soon"] + .railmode + .rail-wrap .poster', (n) => n.length);
     check(soon === d.films.soon.length + d.films.now.length && soon === 10, 'Coming soon: ten trailers', soon);
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
@@ -5757,7 +5783,7 @@ async function theWatch(browser, base) {
     await page.click(wPanel + ' [data-kind] button:has-text("TV")');
     await page.waitForFunction(() => /On TV now/.test(document.querySelector('#panel-watch [data-sec="soon"]')?.innerText || ''), null, { timeout: 4000 }).catch(() => {});
     check(JSON.stringify(await wTiles(page)) === JSON.stringify(d.films.tv_top.map((f) => 'tv' + f.id)), 'TV: the top shows, in TMDB order', JSON.stringify((await wTiles(page)).slice(0, 4)));
-    const air = await page.$$eval(wPanel + ' [data-sec="soon"] + .rail-wrap .poster', (n) => n.map((a) => [a.querySelector('.t').textContent, a.querySelector('.s').textContent]));
+    const air = await page.$$eval(wPanel + ' [data-sec="soon"] + .railmode + .rail-wrap .poster', (n) => n.map((a) => [a.querySelector('.t').textContent, a.querySelector('.s').textContent]));
     check(air[0][1] === 'New season 2' && /^Season 4 · [A-Z][a-z]{2} \d+$/.test(air[1][1]) && air[2][1] === 'Airing now', 'On TV now: a new season, one coming, then airing', JSON.stringify(air));
     check(!(await page.$(wPanel + ' [data-sec="theaters"]')) && !(await page.$(wPanel + ' [data-cta]')), 'no theaters and no screening call on TV', '');
     const toc = await page.$$eval('#subnav .chip', (c) => c.map((x) => x.textContent));
@@ -5812,7 +5838,7 @@ async function theWatch(browser, base) {
     check(shelves.length > 5 && !(await page.$(wPanel + ' [data-filter="genre"]')) && !(await page.$(wPanel + ' [data-grid]')), 'By genre: a shelf per genre, and no genre chips', JSON.stringify(shelves));
     const drama = await page.$$eval(wPanel + ' [data-genre="Drama"] .poster', (n) => n.map((a) => a.dataset.id));
     check(JSON.stringify(drama) === JSON.stringify(d.films.top.filter((f) => f.g.includes('Drama')).slice(0, 20).map((f) => String(f.id))), 'each shelf ranked as Top rated', JSON.stringify(drama.slice(0, 4)));
-    const counts = await page.$$eval(wPanel + ' [data-genre]', (n) => n.map((r) => Number(r.closest('.rail-wrap').previousElementSibling.querySelector('.s').textContent.split(' ')[0])));
+    const counts = await page.$$eval(wPanel + ' [data-genre]', (n) => n.map((r) => Number(r.closest('.rail-wrap').previousElementSibling.previousElementSibling.querySelector('.s').textContent.split(' ')[0])));
     check(counts.every((c, i) => i === 0 || counts[i - 1] >= c), 'the biggest genre first', JSON.stringify(counts));
     await pick('shuffle');
     const s1 = await wTiles(page);
@@ -5879,7 +5905,7 @@ async function theWatch(browser, base) {
     await page.click(wPanel + ' [data-slot="back"] [data-collapse]');
     await page.waitForTimeout(700);
     const folded = await page.evaluate(() => { const h = document.querySelector('#panel-watch [data-sec="back"]').getBoundingClientRect().top;
-      return { rail: !!document.querySelector('#panel-watch [data-slot="back"] .rail[data-back]'), bar: !!document.querySelector('#panel-watch .collapsebar'), top: Math.round(h), ok: h >= 0 && h < innerHeight / 2 }; });
+      return { rail: !!document.querySelector('#panel-watch [data-slot="back"] .rail[data-back]'), bar: !!document.querySelector('#panel-watch .collapsebar:not([hidden])'), top: Math.round(h), ok: h >= 0 && h < innerHeight / 2 }; });
     check(folded.rail && !folded.bar && folded.ok && (await allBtn())[1] === 'closed', 'Collapse folds it into the rail and lands on Back then’s head', JSON.stringify(folded));
     check(JSON.stringify(s.ids) === JSON.stringify(ids(yearAgo)), 'that month’s big films, theaters then streaming', JSON.stringify(s.ids));
     await page.click(wPanel + ' [data-slot="back"] .dateline .nav[aria-label="Earlier day"]');
@@ -8221,11 +8247,127 @@ async function shellFixes(browser, base) {
     await page.waitForTimeout(150);
     check(await page.$eval('#subnav .oa-sideswitch [data-side="pods"]', (b) => b.getAttribute('aria-pressed')) === 'true' && ok(await look('#subnav .oa-sideswitch')), 'a side picked keeps its pressed state in the water', '');
     if (water) {
-      /* still water: after the lap the one loop asks for no more frames */
+      /* the loop sleeps once the reader has gone quiet (CALM seconds without a touch, scroll or key) */
+      await page.evaluate(() => import('/all-day/js/liquid.js').then((m) => m._rest()));
       await page.waitForTimeout(6500);
       const n = await page.evaluate(() => new Promise((r) => { let n = 0; const o = window.requestAnimationFrame; window.requestAnimationFrame = (f) => { n++; return o(f); }; setTimeout(() => { window.requestAnimationFrame = o; r(n); }, 600); }));
-      check(n === 0, 'when the water is still, the loop sleeps (' + n + ' frames asked in 600ms)', n);
+      check(n === 0, 'when the reader has gone quiet and the water is still, the loop sleeps (' + n + ' frames asked in 600ms)', n);
     }
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  /* Stephen, 2026-10-19, of the poured switches: "they would be frozen at
+     times" and "the color would be outside the button outline". The water
+     keeps lapping while the reader is here (the first version went still
+     five seconds after a pick, mid-wave), and it is clipped to the pill in
+     the canvas itself, because Safari does not always clip a canvas layer
+     to a parent with a backdrop filter or a shrink transform. Each case
+     reads the canvas's own pixels: which segment holds the water, and
+     whether anything is painted in the corners outside the capsule. */
+  await group('shell fixes: the poured water never freezes and stays inside its pill', async () => {
+    const { ctx, page, errors } = await newPage(browser, base, { dpr: 2 });
+    await page.goto(base + '/all-day/?demo=1#wire');
+    await settle(page);
+    await page.waitForSelector('#subnav .wmodes.liquid', { timeout: 8000 });
+    /* alpha at each segment's centre, the corners' alpha, and the colour where the water is */
+    const sample = (sel) => page.$eval(sel, (bar) => {
+      const c = bar.querySelector(':scope > canvas.lsw-canvas');
+      const btns = [...bar.querySelectorAll('button')];
+      const on = btns.findIndex((b) => b.classList.contains('on'));
+      if (!c || !c.width) return { on, canvas: false };
+      const x = c.getContext('2d'), cr = c.getBoundingClientRect(), sx = c.width / cr.width, sy = c.height / cr.height;
+      const px = (a, b) => [...x.getImageData(Math.max(0, Math.min(c.width - 1, Math.round(a))), Math.max(0, Math.min(c.height - 1, Math.round(b))), 1, 1).data];
+      const centre = (b) => { const r = b.getBoundingClientRect(); return [(r.left + r.width / 2 - cr.left) * sx, (r.top + r.height / 2 - cr.top) * sy]; };
+      const alpha = btns.map((b) => px(...centre(b))[3]);
+      const corners = [px(0, 0), px(c.width - 1, 0), px(0, c.height - 1), px(c.width - 1, c.height - 1)].map((p) => p[3]);
+      const rgb = on >= 0 ? px(...centre(btns[on])).slice(0, 3) : null;
+      const sum = (() => { const d = x.getImageData(0, 0, c.width, c.height).data; let h = 0; for (let i = 0; i < d.length; i += 7) h = (h * 31 + d[i]) >>> 0; return h; })();
+      return { on, canvas: true, alpha, corners, rgb, sum };
+    });
+    const inPlace = (r) => !!(r && r.canvas && r.on >= 0 && r.alpha.every((a, i) => (i === r.on ? a > 200 : a < 20)));
+    const clear = (r) => !!(r && r.canvas && r.corners.every((a) => a === 0));
+    const frames = () => page.evaluate(() => new Promise((r) => { let n = 0; const o = window.requestAnimationFrame; window.requestAnimationFrame = (f) => { n++; return o(f); }; setTimeout(() => { window.requestAnimationFrame = o; r(n); }, 600); }));
+    const MODES = '#subnav .wmodes';
+
+    let r = await sample(MODES);
+    check(inPlace(r) && clear(r), 'News holds the water, and nothing is painted in the corners outside the pill', JSON.stringify(r));
+    /* rapid taps: the water ends under the last one */
+    for (const v of ['photos', 'news', 'photos', 'news', 'photos']) await page.click('#subnav .wmode[data-view="' + v + '"]');
+    await page.waitForTimeout(1600);
+    r = await sample(MODES);
+    check(inPlace(r) && r.on === 1 && clear(r), 'five quick taps: the water lands under Photos', JSON.stringify(r));
+    /* the steady lap: seven seconds on, with the reader still here, the water still moves */
+    await page.waitForTimeout(5500);
+    await page.keyboard.press('Shift');
+    await page.waitForTimeout(1500);
+    const a = await sample(MODES);
+    await page.waitForTimeout(250);
+    const b = await sample(MODES);
+    const n1 = await frames();
+    check(n1 > 0 && a.sum !== b.sum && inPlace(b), 'seven seconds after a pick the water still laps (' + n1 + ' frames in 600ms)', JSON.stringify({ n1, a: a.sum, b: b.sum }));
+    /* the floating pill shrinks on the way down: a pick there pours in place, inside the outline */
+    await page.evaluate(() => { const p = document.querySelector('.panel:not([hidden])'); p.scrollBy(0, 300); });
+    await page.waitForTimeout(80);
+    await page.evaluate(() => { const p = document.querySelector('.panel:not([hidden])'); p.scrollBy(0, 300); });
+    await page.waitForTimeout(500);
+    const small = await page.evaluate(() => document.body.classList.contains('pill-small'));
+    await page.click('#subnav .wmode[data-view="news"]');
+    await page.waitForTimeout(1600);
+    r = await sample(MODES);
+    check(small && inPlace(r) && r.on === 0 && clear(r), 'scrolled down with the pill shrunk, a pick pours to News and stays in the pill', JSON.stringify({ small, ...r }));
+    /* away to On Air and back: both answer a tap */
+    await goTab(page, 'onair');
+    await page.click('#subnav .oa-sideswitch [data-side="lists"]');
+    await page.waitForTimeout(1600);
+    r = await sample('#subnav .oa-sideswitch');
+    check(inPlace(r) && r.on === 2 && clear(r), 'On Air: Playlists takes the water, in its pill', JSON.stringify(r));
+    await page.click('#subnav .oa-sideswitch [data-side="tv"]');
+    await goTab(page, 'wire');
+    await page.click('#subnav .wmode[data-view="photos"]');
+    await page.waitForTimeout(1600);
+    r = await sample(MODES);
+    check(inPlace(r) && r.on === 1, 'back on the Wire, a tap still pours', JSON.stringify(r));
+    /* turned sideways and back: the water follows its segment */
+    await page.setViewportSize({ width: 844, height: 390 });
+    await page.waitForTimeout(900);
+    const wide = await sample(MODES);
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.waitForTimeout(900);
+    r = await sample(MODES);
+    check(inPlace(wide) && inPlace(r) && clear(r), 'turned sideways and back, the water stays on Photos', JSON.stringify({ wide, r }));
+    await page.click('#subnav .wmode[data-view="news"]');
+    await page.waitForTimeout(400);
+    /* a theme change repaints still water in the new theme's colour (the banner's Local is #16704E light, #6FD79E dark) */
+    await page.evaluate(() => document.querySelector('.panel:not([hidden])').scrollTo(0, 0));
+    await page.evaluate(() => import('/all-day/js/liquid.js').then((m) => m._rest()));
+    await page.waitForTimeout(6500);
+    const LOCAL = '.panel:not([hidden]) .wband .localsw';
+    if (!(await page.$eval(LOCAL, (x) => x.classList.contains('is-on')))) { await page.click(LOCAL + ' .localsw-half:not(.on)'); await page.waitForTimeout(6500); }
+    const tone = (sel) => page.$eval(sel, (bar) => getComputedStyle(bar).getPropertyValue('--local').trim());
+    const near = (rgb, hex) => { const h = hex.replace('#', ''); const t = [0, 2, 4].map((i) => parseInt(h.slice(i, i + 2), 16)); return rgb && rgb.every((v, i) => Math.abs(v - t[i]) <= 45); };
+    await page.evaluate(() => { document.documentElement.setAttribute('data-theme', 'dark'); });
+    await page.waitForTimeout(700);
+    const dark = await sample(LOCAL);
+    const darkTone = await tone(LOCAL);
+    check(inPlace(dark) && near(dark.rgb, darkTone), 'still water takes the dark theme’s colour when the theme changes', JSON.stringify({ rgb: dark.rgb, darkTone }));
+    await page.evaluate(() => { document.documentElement.setAttribute('data-theme', 'light'); });
+    await page.waitForTimeout(700);
+    const light = await sample(LOCAL);
+    const lightTone = await tone(LOCAL);
+    check(inPlace(light) && near(light.rgb, lightTone) && clear(light), 'and the light theme’s colour coming back', JSON.stringify({ rgb: light.rgb, lightTone }));
+    /* a touch wakes the sleeping loop; a hidden page puts it to sleep */
+    check(!(await page.evaluate(() => import('/all-day/js/liquid.js').then((m) => m._state().running))), 'gone quiet, the loop is asleep', '');
+    await page.mouse.wheel(0, 40);
+    await page.waitForTimeout(200);
+    check(await page.evaluate(() => import('/all-day/js/liquid.js').then((m) => m._state().running)), 'a scroll wakes it', '');
+    await page.evaluate(() => { Object.defineProperty(document, 'hidden', { configurable: true, get: () => true }); document.dispatchEvent(new Event('visibilitychange')); });
+    await page.waitForTimeout(200);
+    const hid = await frames();
+    check(hid === 0, 'a hidden page asks for no frames (' + hid + ' in 600ms)', hid);
+    await page.evaluate(() => { delete document.hidden; document.dispatchEvent(new Event('visibilitychange')); });
+    await page.waitForTimeout(200);
+    check(await page.evaluate(() => import('/all-day/js/liquid.js').then((m) => m._state().running)), 'shown again, the water moves again', '');
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
   });
@@ -9888,6 +10030,71 @@ async function weatherBrief(browser, base) {
   });
 }
 
+/* ------------------------------------------- every sideways row has a way out */
+/* Stephen's standing rule (2026-10-19, again): "I like horizontal scroll, but
+   there must ALWAYS be the option to get out of it." Every tab drawn at 390,
+   demo mode: anything that scrolls sideways is either a chip row (filters, a
+   table of contents) in the subnav or band, which are exempt, or a content
+   rail with its "See as a list" button just above it and its Collapse bar
+   after it. A new shelf that forgets the button fails here. */
+async function railsHaveList(browser, base) {
+  await group('sideways rows: every content rail can be a list', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/all-day/?demo=1#wire', { waitUntil: 'domcontentloaded' });
+    await settle(page);
+    const scan = async (tab) => {
+      /* walk the page so lazy sections draw */
+      await page.evaluate(async () => {
+        const sc = document.querySelector('.panel:not([hidden])');
+        for (let y = 0; y < sc.scrollHeight && y < 30000; y += 700) { sc.scrollTop = y; await new Promise((r) => setTimeout(r, 40)); }
+        sc.scrollTop = 0;
+      });
+      const found = await page.evaluate(() => {
+        const out = [];
+        document.querySelectorAll('.panel:not([hidden]) *, #subnav *').forEach((n) => {
+          if (!/^(auto|scroll)$/.test(getComputedStyle(n).overflowX) || n.scrollWidth <= n.clientWidth + 4) return;
+          if (n.classList.contains('chips')) return;   // filters and tables of contents, not content
+          const wrap = n.closest('.rail-wrap');
+          const pre = wrap && wrap.previousElementSibling;
+          const post = wrap && wrap.nextElementSibling;
+          const own = n.dataset.out && !!document.querySelector('.panel:not([hidden]) ' + n.dataset.out);   // a row whose own head already opens it as a list
+          const toggle = !!(pre && pre.matches('.railmode') && /^See as a list$/.test((pre.querySelector('button') || {}).textContent || '')) && !!(post && post.matches('.collapsebar'));
+          if (!toggle && !own) out.push(n.className + (n.dataset.rail ? ' [' + n.dataset.rail + ']' : ''));
+        });
+        return out;
+      });
+      check(!found.length, tab + ': every sideways row can be turned into a list', found.join(', '));
+      /* and the button works: the first row opens down (no sideways scroll left), Collapse puts it back */
+      const first = await page.$('.panel:not([hidden]) .railmode:not(.foot) button');
+      if (first) {
+        await first.evaluate((b) => b.scrollIntoView({ block: 'center' }));
+        await first.click();
+        const open = await page.evaluate(() => {
+          const r = document.querySelector('.panel:not([hidden]) .rail.aslist');
+          const foot = r && r.closest('.rail-wrap').nextElementSibling;
+          return r && { sideways: r.scrollWidth > r.clientWidth + 4, bar: !foot.hidden && foot.matches('.collapsebar') };
+        });
+        check(open && !open.sideways && open.bar, tab + ': See as a list opens it downward with the Collapse bar', JSON.stringify(open));
+        await page.click('.panel:not([hidden]) .collapsebar:not([hidden]) button');
+        check(await page.evaluate(() => !document.querySelector('.panel:not([hidden]) .rail.aslist')), tab + ': Collapse puts the row back', '');
+      }
+    };
+    for (const tab of TABS) {
+      if (tab !== 'wire') await goTab(page, tab);
+      await scan(tab);
+    }
+    /* the Wire's other two faces: the photo feed (with Pets of Burlington) and the square */
+    for (const view of ['photos', 'square']) {
+      await page.goto(base + '/all-day/?demo=1#wire/' + view);
+      await settle(page);
+      await page.waitForTimeout(400);
+      await scan('wire ' + view);
+    }
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+}
+
 /* ----------------------------------------------------------------- run */
 const t0 = Date.now();
 await mkdir(SHOTS, { recursive: true });
@@ -9922,6 +10129,7 @@ try {
   await run(theVintage);
   await run(theWeather);
   await run(weatherBrief);
+  await run(railsHaveList);
 } finally {
   await browser.close();
   proc.kill();

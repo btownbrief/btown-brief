@@ -13,7 +13,7 @@
    audio — episodes are large and the browser's own HTTP cache handles them
    better than we would. */
 
-const VERSION = 'all-day-v81';   // What Now: mission teasers, place notes, stable done marks
+const VERSION = 'all-day-v83';   // What Now: mission teasers, place notes, stable done marks
 const SHELL = VERSION + '-shell';
 const DATA = 'all-day-data';   // unversioned on purpose: survives shell bumps
 

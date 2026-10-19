@@ -1,28 +1,28 @@
 {
- "updated": "2026-10-19T15:17:13+00:00",
+ "updated": "2026-10-19T15:37:15+00:00",
  "sections_updated": {
-  "now": "2026-10-19T15:17:13+00:00",
-  "forecast": "2026-10-19T15:17:13+00:00",
-  "hourly": "2026-10-19T15:17:13+00:00",
-  "alerts": "2026-10-19T15:17:13+00:00",
-  "afd": "2026-10-19T15:17:13+00:00",
-  "lake_forecast": "2026-10-19T15:17:13+00:00",
-  "lake_gage": "2026-10-19T15:17:13+00:00",
-  "air": "2026-10-19T15:17:13+00:00",
-  "sun": "2026-10-19T15:17:13+00:00",
-  "models": "2026-10-19T15:17:13+00:00"
+  "now": "2026-10-19T15:37:15+00:00",
+  "forecast": "2026-10-19T15:37:15+00:00",
+  "hourly": "2026-10-19T15:37:15+00:00",
+  "alerts": "2026-10-19T15:37:15+00:00",
+  "afd": "2026-10-19T15:37:15+00:00",
+  "lake_forecast": "2026-10-19T15:37:15+00:00",
+  "lake_gage": "2026-10-19T15:37:15+00:00",
+  "air": "2026-10-19T15:37:15+00:00",
+  "sun": "2026-10-19T15:37:15+00:00",
+  "models": "2026-10-19T15:37:15+00:00"
  },
  "now": {
-  "observed_at": "2026-10-19T14:45:00+00:00",
+  "observed_at": "2026-10-19T15:20:00+00:00",
   "station": "KBTV",
   "description": "Clear",
-  "temp_f": 55,
-  "feels_like_f": 55,
-  "humidity": 44,
+  "temp_f": 57,
+  "feels_like_f": 57,
+  "humidity": 41,
   "dewpoint_f": 34,
-  "wind_mph": 10,
-  "wind_gust_mph": null,
-  "wind_dir": "SSW",
+  "wind_mph": null,
+  "wind_gust_mph": 20,
+  "wind_dir": null,
   "precip_last_hr_in": null
  },
  "forecast": {
@@ -30,13 +30,13 @@
   "periods": [
    {
     "name": "Today",
-    "start": "2026-10-19T09:00:00-04:00",
+    "start": "2026-10-19T11:00:00-04:00",
     "is_day": true,
     "temp_f": 62,
     "pop": 0,
-    "wind": "S 5 to 12 mph",
+    "wind": "S 5 to 9 mph",
     "short": "Sunny",
-    "detailed": "Sunny, with a high near 62. South wind 5 to 12 mph."
+    "detailed": "Sunny, with a high near 62. South wind 5 to 9 mph."
    },
    {
     "name": "Tonight",
@@ -968,7 +968,7 @@
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 35,
+  "aqi": 34,
   "category": "Good",
   "pollutant": "OZONE",
   "observed": "10/19/26 11:00",
@@ -1044,7 +1044,7 @@
  },
  "brief": {
   "date": "2026-10-19",
-  "generated": "2026-10-19T15:17:16+00:00",
+  "generated": "2026-10-19T15:37:18+00:00",
   "text": "Sunny today, high 62. Mostly clear tonight, low 42. Tuesday, mostly sunny and cooler, high 56.",
   "periods": [
    {
@@ -1053,7 +1053,7 @@
     "is_day": true,
     "temp_f": 62,
     "sky": "sunny",
-    "start": "2026-10-19T15:00:00+00:00",
+    "start": "2026-10-19T11:00:00-04:00",
     "end": "2026-10-19T18:00:00-04:00",
     "precip": null,
     "wind": null,

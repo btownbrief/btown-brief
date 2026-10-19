@@ -71,7 +71,7 @@ import * as app from '../app.js';
 import * as store from '../store.js';
 import * as data from '../wire.js';
 import * as boards from '../boards.js';
-import { el, esc, safeHref, ICON, mark, section, chips, pills, button, cards, meetRow, rail } from '../ui.js';
+import { el, esc, safeHref, ICON, mark, section, chips, pills, button, cards, meetRow, rail, listRail } from '../ui.js';
 import * as cw from '../clubs-week.js';
 import { MATCH, KIND_WORDS, bestFor, fitsText, mixerKind, MIXER_WORDS, handleLink, gatheringWhen } from '../people-match.js';
 import { RULES, ARCHETYPE_LABELS, NEIGHBORHOOD_LABELS, HANDLE_LABELS, message, checkPost } from '../boards-core.js';
@@ -1149,7 +1149,10 @@ function drawMix() {
       track = el('div', 'ownlist');
       wrap.append(track, collapseBar('Btown Brief IRL', () => { S.ownAll = false; drawMix(); jumpBack(true); ownToggle(); }));
       ownWrap.appendChild(wrap);
-    } else track = rail(ownWrap);
+    } else {
+      track = rail(ownWrap);
+      track.dataset.out = '[data-own-all]';   // its head's Show all opens the list, with the Collapse bar
+    }
     track.dataset.mixers = '1';
     own.forEach((it) => track.appendChild(ownTile(it)));
   } else {
@@ -1447,7 +1450,7 @@ function drawDir() {
   /* Just joined: the newest handles, a row you can swipe */
   if (hs.length) {
     s.appendChild(el('p', 'subh pad', '<b>Just joined</b>'));
-    const track = rail(s);
+    const track = listRail(s, { name: 'people-joined', label: 'Just joined', cells: 160 });
     track.dataset.joined = '1';
     hs.slice(0, JUST_JOINED).forEach((p) => {
       const t = el('div', 'jtile', mark(p.name, 'round lg') + '<b>' + esc(p.name + (p.me ? ' (you)' : '')) + '</b>' +
