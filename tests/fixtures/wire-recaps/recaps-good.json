@@ -1,7 +1,7 @@
 {
   "source": "grok-recaps",
   "updated_at": "2026-10-16T23:05:00Z",
-  "run_note": "evening run: 2 recaps written",
+  "run_note": "evening run: 3 recaps written",
   "recaps": [
     {
       "id": "2026-10-16-evening",
@@ -12,10 +12,16 @@
       "basis": "trending",
       "source": "grok",
       "bullets": [
-        {"text": "Senate passes the stopgap spending bill", "url": "https://x.com/AP/status/2110990000000000001",
-         "note": "Keeps the government open through December."},
-        {"text": "Storm warning for the Gulf Coast", "url": "https://x.com/NWS/status/2110990000000000002",
-         "note": "Landfall expected Saturday morning."}
+        {
+          "text": "Senate passes the stopgap spending bill",
+          "url": "https://x.com/AP/status/2110990000000000001",
+          "note": "Keeps the government open through December."
+        },
+        {
+          "text": "Storm warning for the Gulf Coast",
+          "url": "https://x.com/NWS/status/2110990000000000002",
+          "note": "Landfall expected Saturday morning."
+        }
       ]
     },
     {
@@ -27,12 +33,36 @@
       "basis": "accounts",
       "source": "grok",
       "bullets": [
-        {"text": "Lakers trade for a backup center", "url": "https://x.com/ShamsCharania/status/2110980000000000001",
-         "note": "A second-round pick goes the other way.", "sport": "nba"},
-        {"text": "Jets fire their offensive coordinator", "url": "https://x.com/AdamSchefter/status/2110980000000000002",
-         "note": "After a 1-5 start.", "sport": "nfl"},
-        {"text": "UVM men's soccer wins at Albany", "url": "https://uvmathletics.com/news/2026/10/16/mens-soccer",
-         "note": "Clinches a home playoff game.", "sport": "local"}
+        {
+          "text": "Lakers trade for a backup center",
+          "url": "https://x.com/ShamsCharania/status/2110980000000000001",
+          "note": "A second-round pick goes the other way.",
+          "sport": "nba"
+        },
+        {
+          "text": "Jets fire their offensive coordinator",
+          "url": "https://x.com/AdamSchefter/status/2110980000000000002",
+          "note": "After a 1-5 start.",
+          "sport": "nfl"
+        },
+        {
+          "text": "UVM men's soccer wins at Albany",
+          "url": "https://uvmathletics.com/news/2026/10/16/mens-soccer",
+          "note": "Clinches a home playoff game.",
+          "sport": "local"
+        },
+        {
+          "text": "Shelton reaches the Shanghai semifinal",
+          "url": "https://www.espn.com/tennis/story/_/id/1",
+          "note": "His best run at a Masters event.",
+          "sport": "tennis"
+        },
+        {
+          "text": "A transfer rumor",
+          "url": "https://x.com/someone/status/2110980000000000009",
+          "note": "Written by a bot on the older brief.",
+          "sport": "soccer"
+        }
       ]
     },
     {
@@ -44,8 +74,37 @@
       "basis": "trending",
       "source": "grok",
       "bullets": [
-        {"text": "A model launch", "url": "https://x.com/someone/status/2110970000000000001",
-         "note": "One line."}
+        {
+          "text": "A model launch",
+          "url": "https://x.com/someone/status/2110970000000000001",
+          "note": "One line."
+        }
+      ]
+    },
+    {
+      "id": "2026-10-16-pictures",
+      "kind": "pictures",
+      "title": "Pictures of the day",
+      "posted_at": "2026-10-16T10:55:00Z",
+      "intro": "A test fixture: two posts whose picture is the story.",
+      "basis": "trending",
+      "source": "grok",
+      "bullets": [
+        {
+          "text": "Aurora over the Champlain Valley",
+          "url": "https://x.com/NWSBurlington/status/2110995000000000001",
+          "note": "Northern lights this far south are rare."
+        },
+        {
+          "text": "Lava reaches the sea in Hawaii",
+          "url": "https://x.com/USGSVolcanoes/status/2110995000000000002",
+          "note": "The flow's first ocean entry this year, seen from above."
+        },
+        {
+          "text": "Morning fog fills the Winooski valley",
+          "url": "https://x.com/wcax/status/2110995000000000003",
+          "note": "A view most people only see from a plane."
+        }
       ]
     }
   ]
