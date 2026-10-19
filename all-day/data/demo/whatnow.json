@@ -605,6 +605,41 @@
    "sunrise_tomorrow": "2026-10-17T07:10-04:00",
    "sunset_tomorrow": "2026-10-17T18:05-04:00",
    "uv_max": 2.0
+  },
+  "brief": {
+   "date": "2026-10-16",
+   "generated": "2026-10-16T18:00:00+00:00",
+   "text": "Sunny today, high 62. Mostly clear tonight, low 48. Tomorrow, mostly sunny, high 60.",
+   "periods": [
+    {
+     "label": "Today",
+     "name": "Today",
+     "is_day": true,
+     "temp_f": 62,
+     "sky": "sunny",
+     "start": "2026-10-16T14:00:00-04:00",
+     "end": "2026-10-16T18:00:00-04:00",
+     "precip": null,
+     "wind": null,
+     "feels_lo": 58,
+     "feels_hi": 58,
+     "text": "Sunny today, high 62."
+    },
+    {
+     "label": "Tonight",
+     "name": "Tonight",
+     "is_day": false,
+     "temp_f": 48,
+     "sky": "mostly clear",
+     "start": "2026-10-16T18:00:00-04:00",
+     "end": "2026-10-17T06:00:00-04:00",
+     "precip": null,
+     "wind": null,
+     "feels_lo": 58,
+     "feels_hi": 58,
+     "text": "Mostly clear tonight, low 48."
+    }
+   ]
   }
  },
  "feeds": {
