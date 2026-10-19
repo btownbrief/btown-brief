@@ -82,6 +82,7 @@ jobs:
           WIRE_INBOX_TOKEN: ${{ secrets.WIRE_INBOX_TOKEN }}
         run: |
           python3 scripts/refresh_pulse.py --selftest
+          python3 scripts/wire_photos.py --selftest
           mkdir -p /tmp/pulse-out/data
           INTAKE=""
           [ -s /tmp/reddit-intake.json ] && INTAKE="--reddit-intake /tmp/reddit-intake.json"
