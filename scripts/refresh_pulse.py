@@ -147,8 +147,10 @@ WPCOM_READ_RE = re.compile(
 #   instead would publish a dead link (Daybreak's answers 400 without upn).
 #   A link that stays opaque is never published: the edition renders unlinked.
 SAFE_PARAMS = {"e", "email", "m", "mbuuid"}
-RECIPIENT_PARAMS = SAFE_PARAMS | {"upn", "jwt_token", "_bhlid", "token", "uid",
-                                  "isfreemail"}
+RECIPIENT_PARAMS = SAFE_PARAMS | {
+    "upn", "jwt_token", "_bhlid", "token", "uid", "isfreemail", "r", "ref",
+    "subscriber", "subscriber_id", "sub_id", "sid", "user", "user_id", "uuid",
+    "contact", "contact_id", "recipient", "rid", "member", "member_id"}
 # an unbroken run this long of token characters is an encoded token; a long
 # hyphenated lowercase slug ("burlington-mayor-vows-to-…") is a headline
 TOKEN_RUN_RE = re.compile(r"[A-Za-z0-9_+=~.%]{40,}")
@@ -156,6 +158,8 @@ SLUG_RE = re.compile(r"[a-z0-9]{1,20}(?:-[a-z0-9]{1,20})*(?:\.html?)?")
 OPAQUE_MIN = 60
 WEBCOPY_HOPS = 3
 WEBCOPY_RESOLVE_MAX = 25   # tracker lookups per run; repeats reuse the store
+WEBCOPY_RESOLVE_S = 60     # and at most this long on them: the run is every 10 min
+WEBCOPY_MATCH_S = 12 * 3600   # a stored edition this close in time is the same one
 
 # Subscription plumbing, not editions — skipped outright.
 NEWSLETTER_NOISE_RE = re.compile(
@@ -685,6 +689,9 @@ def parse_stream(raw):
                        if match else wpcom_post_url(desc))
             if webcopy:
                 item["webcopy"] = webcopy
+            for field in ("image", "audio"):   # a pixel can name him too
+                media = strip_recipient(item[field]) if item[field] else ""
+                item[field] = "" if is_opaque(media) else media
             if NEWSLETTER_NOISE_RE.search(item["title"]):
                 item["noise"] = True
         elif "reddit.com" in site or "ycombinator.com" in site:
@@ -759,33 +766,45 @@ def follow_tracker(url, hops=WEBCOPY_HOPS, timeout=10):
                 return ""
         except Exception:  # noqa: BLE001 — an unreachable tracker just stays unlinked
             return ""
-        url = strip_recipient(urllib.parse.urljoin(url, location))
+        try:
+            landing = urllib.parse.urljoin(url, location)
+            if not re.match(r"https?://", landing):
+                return ""
+            url = strip_recipient(landing)
+        except ValueError:   # a malformed Location ("http://[") is a dead end
+            return ""
         if url and not is_opaque(url):
             return url
     return ""
 
 
 def settle_webcopies(fresh_by_source, prev_by_source, resolve=follow_tracker,
-                     budget=WEBCOPY_RESOLVE_MAX):
+                     budget=WEBCOPY_RESOLVE_MAX, seconds=WEBCOPY_RESOLVE_S):
     """Every fresh email web copy that is still opaque after stripping gets
     a public URL or none. An edition the store already holds (same title,
-    same timestamp) reuses what it settled on, so a tracker is followed once,
-    not every run; past the budget an edition waits for the next run.
-    Returns how many trackers were followed."""
+    stored at or up to WEBCOPY_MATCH_S before this copy's timestamp: the
+    merge keeps the earliest, and clamps a post-dated one to its first
+    sighting) reuses what it settled on, so a tracker is followed once, not
+    every run; past the budget an edition waits for the next run. Returns
+    how many trackers were followed."""
     followed = 0
+    deadline = time.monotonic() + seconds
     for source_id, items in fresh_by_source.items():
-        held = {(item.get("t"), item.get("d")): item
-                for item in prev_by_source.get(source_id, [])}
+        held = {}
+        for item in prev_by_source.get(source_id, []):
+            held.setdefault(item.get("t"), []).append(item)
         kept = []
         for item in items:
             webcopy = item.get("webcopy")
             if webcopy and is_opaque(webcopy):
                 when = item.get("when")
-                known = held.get((item.get("title"),
-                                  int(when.timestamp()) if when else None))
+                ts = int(when.timestamp()) if when else None
+                known = next((stored for stored in held.get(item.get("title"), [])
+                              if ts is not None and isinstance(stored.get("d"), int)
+                              and ts - WEBCOPY_MATCH_S <= stored["d"] <= ts), None)
                 if known is not None:
                     webcopy = "" if known.get("x") else known.get("u", "")
-                elif followed < budget:
+                elif followed < budget and time.monotonic() < deadline:
                     followed += 1
                     webcopy = resolve(webcopy)
                 else:
@@ -935,7 +954,9 @@ def build_roster(folder_outlines, topics):
             source_id = pinned
         else:
             if title_counts[base] > 1:
-                suffix = hashlib.md5((outline["xml"] or "").encode()).hexdigest()[:4]
+                # a stream-derived sender has no feed URL: its title is the
+                # stable thing, so two senders sharing a slug never swap ids
+                suffix = hashlib.md5((outline["xml"] or outline["title"]).encode()).hexdigest()[:4]
                 source_id = f"{base}-{suffix}"
             else:
                 source_id = base
@@ -1886,6 +1907,12 @@ def selftest():
     assert [s["id"] for s in mixed] == ["vtdigger-9ca7", "morning-brew", "vtdigger-dd84",
                                         "love-burlington"]
     assert all(s["topic"] == "newsletters" for s in mixed[1:])
+    # feedless senders sharing a slug get title-hashed ids, in any order
+    pair = [{"title": "Day Break", "xml": "", "html": INO},
+            {"title": "Day-Break", "xml": "", "html": INO}]
+    fwd = {s["name"]: s["id"] for s in build_roster([(o, "newsletter") for o in pair], {})}
+    rev = {s["name"]: s["id"] for s in build_roster([(o, "newsletter") for o in pair[::-1]], {})}
+    assert fwd == rev and len(set(fwd.values())) == 2
     by_site, by_title, by_nl = source_index(mixed)
     assert attribute({"src_site": "https://www.inoreader.com", "src_title": "Vtdigger"},
                      by_site, by_title, by_nl) == "vtdigger-dd84"
@@ -1910,6 +1937,7 @@ def selftest():
     tracker = "https://elink1.mail.example/ss/c/" + "t" * 300
     assert is_opaque(tracker) and is_opaque("https://a.com/x?who=me%40x.com")
     assert not is_opaque("https://us2.campaign-archive.com/?u=ab&id=cd")
+    assert is_opaque("https://a.com/issue?subscriber_id=abc123")
     # a tracker whose token is a param is followed whole, never stripped dead
     assert is_opaque("https://elink.mail.example/ls/click?upn=short")
     assert strip_recipient("https://elink.mail.example/ls/click?upn=x", SAFE_PARAMS) \
@@ -1931,6 +1959,16 @@ def selftest():
         return "https://a.com/p/new" if url == tracker else ""
     assert settle_webcopies(fresh, store, fake_resolve, budget=2) == 2
     assert calls == [tracker, tracker + "3"]                      # Held reused, Over waits
+    # a post-dated copy the merge clamped (stored earlier) is still the same
+    # edition; last week's "Daybreak Thursday" is not
+    later = datetime.fromtimestamp(1_754_000_000 + 3 * 3600, tz=timezone.utc)
+    again = {"nl": [{"title": "Held", "when": later, "webcopy": tracker + "2"},
+                    {"title": "Held", "when": datetime.fromtimestamp(1_754_000_000 + 7 * 86400, tz=timezone.utc), "webcopy": tracker + "5"}]}
+    calls.clear()
+    settle_webcopies(again, store, fake_resolve)
+    assert calls == [tracker + "5"] and again["nl"][0]["webcopy"] == "https://a.com/p/held"
+    assert "webcopy" not in again["nl"][1]
+    assert follow_tracker("not a url") == ""
     got = {item["title"]: item.get("webcopy") for item in fresh["nl"]}
     assert got == {"New": "https://a.com/p/new", "Held": "https://a.com/p/held",
                    "Dead": None, "Plain": "https://a.com/p/plain"}, got

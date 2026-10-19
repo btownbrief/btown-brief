@@ -667,6 +667,9 @@ def apply_answer(day, answer, numbered_river, new, want_picks, et, now, previous
     protected |= {pick["id"] for pick in (day.get("picks") or []) + (day.get("picks_earlier") or [])}
     protected |= {update["lead"]["id"] for update in updates if update.get("lead")}
     protected |= {item["id"] for item in river(day) if item.get("own")}   # the Brief stays
+    # and so do newsletter editions: filed whatever the editor says, they
+    # would otherwise be the oldest national items the cap drops first
+    protected |= {item["id"] for item in river(day) if item.get("ch") == "newsletters"}
     dropped = []
     excess = len(river(day)) - RIVER_MAX
     if excess > 0:

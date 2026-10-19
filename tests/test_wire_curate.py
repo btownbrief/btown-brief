@@ -283,6 +283,23 @@ class HouseRuleTests(Workdir):
         editions = [item for item in cw.river(self.today()) if item["ch"] == "newsletters"]
         self.assertEqual(len(editions), 2)
 
+    def test_the_cap_never_drops_a_filed_newsletter_edition(self):
+        et = wc.et_now(NOW)
+        full = [{"id": f"w{k}", "ch": "world", "local": False, "src": "ap", "name": "AP",
+                 "title": f"National {k}", "url": f"https://world.example/{k}",
+                 "posted_at": "2026-10-16T10:00:00+00:00"} for k in range(5)]
+        day = cw.empty_day("2026-10-16")
+        day["updates"] = [{"key": "morning", "label": "Morning", "items": list(full)}]
+        edition = {"id": "nl", "ch": "newsletters", "local": False, "src": "semafor",
+                   "name": "Semafor", "title": "Anger and shame", "url": "https://semafor.com/s/a",
+                   "posted_at": "2026-10-16T09:00:00+00:00"}
+        with mock.patch.object(cw, "RIVER_MAX", 5):
+            result = cw.apply_answer(day, {}, cw.river(day), [edition], False, et, NOW)
+        ids = [item["id"] for item in cw.river(day)]
+        self.assertIn("nl", ids)
+        self.assertEqual(len(ids), 5)
+        self.assertEqual(result["added"], ["nl"])
+
     def test_the_briefs_own_edition_is_never_a_pick(self):
         payload = pulse()
         payload["sources"].append({"id": "btown-brief", "name": "Btown Brief", "short": "Btown Brief",
