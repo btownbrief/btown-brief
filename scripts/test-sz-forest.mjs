@@ -186,6 +186,7 @@ test('the fake runs the SQL test’s cases (scripts/test-sz-forest.sql)', () => 
   f.as(gus).sz_habit_set({ p_habit: stretch, p_archived: true });
   assert.deepEqual(f.as(gus).sz_forest_get().habits, []);
   assert.equal(f.as(null).sz_forests_public({}).length, 1, 'a forest with no trees is not in the gallery');
+  assert.equal(f.as(null).sz_forest_public({ p_id: f.forests.get(gus).id }), null, 'nor behind its link');
   f.forests.get(fern).hidden = true;
   assert.deepEqual(f.as(null).sz_forests_public({}), [], 'hidden');
   f.forests.get(fern).hidden = false;

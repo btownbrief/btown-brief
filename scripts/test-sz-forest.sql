@@ -121,6 +121,9 @@ select public.sz_habit_set((select id from pg_temp.ids where k = 'gus'), p_archi
 select pg_temp.ok(public.sz_forest_get() -> 'habits' = '[]'::jsonb, 'an archived habit is not in the forest');
 set role anon; select pg_temp.who(null);
 select pg_temp.ok(jsonb_array_length(public.sz_forests_public()) = 1, 'Gus''s empty forest is not in the gallery');
+reset role;
+select pg_temp.ok(public.sz_forest_public((select id from public.sz_forests where user_id = :GUS)) is null, 'nor behind its link');
+set role anon; select pg_temp.who(null);
 -- Stephen hides one
 reset role;
 update public.sz_forests set hidden_at = now() where user_id = :FERN;

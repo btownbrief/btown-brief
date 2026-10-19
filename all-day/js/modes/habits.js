@@ -290,14 +290,15 @@ const isObj = (x) => !!x && typeof x === 'object' && !Array.isArray(x);
 
 /* The public forests. Asked on every load, because it is also how a reader
    who is not signed in learns whether sharing is open yet. */
+let galleryAsk = 0;   // only the newest answer counts
 function loadGallery() {
-  const my = gen;
+  const my = gen, ask = ++galleryAsk;
   S.galleryFailed = null;
   return call('sz_forests_public', { p_limit: FOREST_RULES.galleryMax }).then((r) => {
-    if (my !== gen) return;
+    if (my !== gen || ask !== galleryAsk) return;
     if (!r.ok && r.error === 'off') { S.forestOff = true; S.gallery = []; }
     else if (r.ok) S.gallery = Array.isArray(r.data) ? r.data.filter(isObj) : [];
-    else { S.galleryFailed = r.message; if (S.gallery === undefined) S.gallery = null; }
+    else { S.galleryFailed = r.message; S.gallery = null; }   // never a stale list shown as current
     forestChanged();
   });
 }
@@ -811,13 +812,15 @@ function treeOf(h) {
 }
 function treeInner(h, fresh) {
   const t = treeOf(h);
-  return tree(seedOf(h.id), t.leaves, t.blooms, { fresh, label: h.text + ': ' + treeWords(t.leaves, t.blooms) }) +
+  /* the picture is decorative inside its button; the name and count below are what is read */
+  return tree(seedOf(h.id), t.leaves, t.blooms, { fresh }) +
     '<span class="fr-name">' + esc(h.text) + '</span><span class="fr-meta">' + esc(treeWords(t.leaves, t.blooms)) + '</span>';
 }
+const treeLabel = (b, h) => { const t = treeOf(h); b.setAttribute('aria-label', h.text + ': ' + treeWords(t.leaves, t.blooms)); };
 function paintTree(id, fresh) {
   const b = body && body.querySelector('.fr-tree[data-id="' + CSS.escape(id) + '"]');
   const h = S.habits.find((x) => x.id === id);
-  if (b && h) b.innerHTML = treeInner(h, !!fresh);
+  if (b && h) { b.innerHTML = treeInner(h, !!fresh); treeLabel(b, h); }
 }
 function forestSection() {
   const w = el('section', 'hb-forest');
@@ -830,6 +833,7 @@ function forestSection() {
     const b = el('button', 'fr-tree', treeInner(h, false));
     b.type = 'button';
     b.dataset.id = h.id;
+    treeLabel(b, h);
     b.addEventListener('click', () => habitSheet(h.id));
     grove.appendChild(b);
   });
@@ -844,7 +848,7 @@ function forestHead() {
   head.appendChild(el('h3', 'hb-h', esc('Your forest')));
   if (shared) head.appendChild(el('span', 'tag hb-pub', esc('Public')));
   head.appendChild(el('span', 'hb-sp'));
-  if (!S.forestOff && mine().length) {
+  if (!S.forestOff && (mine().length || (S.uid && S.forest))) {
     head.appendChild(button(ICON.share + '<span>' + esc(shared ? 'Sharing' : 'Share') + '</span>', 'ghost sm hb-sharebtn', () => {
       if (!S.uid) { app.toast('Sign in to share your forest.'); app.openSettings(); return; }
       shareSheet();
@@ -968,10 +972,14 @@ function shareSheet() {
       go.disabled = true;
       msg.classList.remove('err');
       msg.textContent = '';
+      const my = gen, who = S.uid;
       call('sz_forest_set', { p_name: c.forest.name, p_public: c.forest.public, p_show_names: c.forest.show_names, p_habits: c.forest.habits, p_cohort: c.forest.cohort }).then((r) => {
+        if (my !== gen || who !== S.uid) return;   // signed out or in as someone else meanwhile: not this reader's
         go.disabled = false;
         if (!r.ok) { msg.textContent = r.message; msg.classList.add('err'); return; }
         S.forest = r.data;
+        /* off the gallery at once when it went private; the reload confirms */
+        if (Array.isArray(S.gallery) && r.data && !r.data.public) S.gallery = S.gallery.filter((x) => x.id !== r.data.id);
         close();
         app.toast(r.data && r.data.public ? 'Your forest is in Forests' : 'Your forest is private');
         forestChanged();

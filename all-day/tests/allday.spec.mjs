@@ -6814,12 +6814,12 @@ async function theHabits(browser, base) {
     await page.waitForSelector(hbPanel + ' .hb-row', { timeout: 4000 });
     let rows = await hbRows(page);
     check(rows.length === 1 && rows[0].name === 'Walk outside' && rows[0].meta === 'Daily' && !(await page.$(hbPanel + ' .hb-starts')), 'a starter adds a daily habit in one tap, and the starters step aside', JSON.stringify(rows));
-    check(await page.$eval(hbPanel + ' .fr-tree[data-id] svg', (s) => s.getAttribute('aria-label')) === 'Walk outside: 0 leaves', 'and plants its tree: no leaves yet', '');
+    check(await page.$eval(hbPanel + ' .fr-tree[data-id]', (b) => b.getAttribute('aria-label') + '|' + b.querySelector('svg').getAttribute('aria-hidden')) === 'Walk outside: 0 leaves|true', 'and plants its tree: no leaves yet (one name for the button, the picture itself decorative)', '');
     const t1 = await page.evaluate(() => {
       const t0 = performance.now();
       document.querySelector('#panel-habits .hb-row .hb-tap').click();
       const tr = document.querySelector('#panel-habits .fr-tree[data-id]');
-      return { ms: performance.now() - t0, label: tr.querySelector('svg').getAttribute('aria-label'), fresh: !!tr.querySelector('.tr-new') };
+      return { ms: performance.now() - t0, label: tr.getAttribute('aria-label'), fresh: !!tr.querySelector('.tr-new') };
     });
     check(t1.label === 'Walk outside: 1 leaf' && t1.fresh && t1.ms < 100, 'a tap grows a leaf, in the same click (' + Math.round(t1.ms) + ' ms)', JSON.stringify(t1));
     await page.click(hbPanel + ' .hb-help .hb-go');
@@ -6827,7 +6827,7 @@ async function theHabits(browser, base) {
 
     /* signed in: the demo's three habits, three trees */
     await hbSignIn(page);
-    const trees = () => page.$$eval(hbPanel + ' .fr-tree[data-id]', (ts) => ts.map((t) => ({ id: t.dataset.id, label: t.querySelector('svg').getAttribute('aria-label'),
+    const trees = () => page.$$eval(hbPanel + ' .fr-tree[data-id]', (ts) => ts.map((t) => ({ id: t.dataset.id, label: t.getAttribute('aria-label'),
       petals: t.querySelectorAll('.tr-pet').length, name: t.querySelector('.fr-name').textContent })));
     let tr = await trees();
     rows = await hbRows(page);
@@ -6837,7 +6837,7 @@ async function theHabits(browser, base) {
       return f.habits.filter((h) => h.user_id === 'demo-0000-4000-8000-00000000me00' && !h.archived_at).sort((a, b) => a.position - b.position).map((h) => {
         const taps = [...f.taps.values()].filter((t) => t.habit === h.id).map((t) => t.date);
         const best = C.bestStreak(h, F.inWindow(taps, today), Date.now());
-        return { id: h.id, leaves: F.leavesOf(taps, today), blooms: F.bloomsOf(h.frequency, best), svg: F.tree(F.seedOf(h.id), F.leavesOf(taps, today), F.bloomsOf(h.frequency, best), { label: h.text + ': ' + F.treeWords(F.leavesOf(taps, today), F.bloomsOf(h.frequency, best)) }) };
+        return { id: h.id, leaves: F.leavesOf(taps, today), blooms: F.bloomsOf(h.frequency, best), svg: F.tree(F.seedOf(h.id), F.leavesOf(taps, today), F.bloomsOf(h.frequency, best)) };
       });
     }));
     check(want.length === tr.length && want.length === 4 && want.every((w, i) => tr[i].label.endsWith(': ' + w.leaves + (w.leaves === 1 ? ' leaf' : ' leaves') + (w.blooms ? ', ' + w.blooms + (w.blooms === 1 ? ' flower' : ' flowers') : ''))),

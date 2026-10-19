@@ -262,7 +262,7 @@ export class FakeHabits {
     return this._gallery().slice(0, n).map((x) => this._forestJson(x.uid));
   }
   sz_forest_public({ p_id }) {
-    const hit = [...this.forests.entries()].find(([, f]) => f.id === p_id && f.public && !f.hidden);
+    const hit = [...this.forests.entries()].find(([uid, f]) => f.id === p_id && f.public && !f.hidden && this._forestTrees(uid).length);
     return hit ? this._forestJson(hit[0]) : null;
   }
 

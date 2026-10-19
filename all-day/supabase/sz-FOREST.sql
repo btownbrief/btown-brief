@@ -255,10 +255,13 @@ language sql stable security definer set search_path = public as $$
 $$;
 
 -- One public forest, by its public id (a shared link). Null when it is not
--- public, hidden, or gone.
+-- public, hidden, gone, or has no tree to show (the same rule as the gallery).
 create or replace function public.sz_forest_public(p_id uuid) returns jsonb
 language sql stable security definer set search_path = public as $$
-  select public.sz_forest_json(f) from public.sz_forests f where f.id = p_id and f.public and f.hidden_at is null
+  select public.sz_forest_json(f) from public.sz_forests f
+   where f.id = p_id and f.public and f.hidden_at is null
+     and exists (select 1 from public.sz_forest_habits fh join public.sz_habits h on h.id = fh.habit_id
+                  where fh.user_id = f.user_id and h.user_id = f.user_id and h.archived_at is null)
 $$;
 
 -- ------------------------------------------------- deleting your account
