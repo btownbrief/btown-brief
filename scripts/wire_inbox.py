@@ -204,13 +204,15 @@ RECAP_KINDS = {
 # what the recap was built from -> the small label the page shows. Never "AI".
 RECAP_BASIS = {"trending": "From X trending summaries", "accounts": "From posts on X"}
 RECAP_SPORTS = wc.SPORTS
-RECAP_MAX = 150           # recaps in the file
+RECAP_MAX = 60            # recaps in the file: ~12 a day for 3 days, with room
 RECAP_KEEP_DAYS = 3       # the file keeps 3 days, and so does the Wire's store
-RECAP_BULLETS = (1, 25)
+RECAP_STORE_BYTES = 250_000   # and the store never adds more than this to pulse.json
+RECAP_BULLETS = (1, 20)
+RECAP_URL_MAX = 300
 RECAP_TEXT_MAX = 160
 RECAP_NOTE_MAX = 200
 RECAP_INTRO_MAX = 400
-RECAP_ID = re.compile(r"^[a-z0-9][a-z0-9-]{2,63}$")
+RECAP_ID = re.compile(r"^(\d{4}-\d{2}-\d{2})-([a-z-]+?)(?:-(\d+))?$")
 SEARCH_URL = re.compile(r"/search\b|[?&]q=", re.I)
 
 
@@ -233,9 +235,12 @@ def check_recap(rc, now):
     if not isinstance(rc, dict):
         return ["must be an object"]
     bad = []
-    if not isinstance(rc.get("id"), str) or not RECAP_ID.match(rc["id"]):
-        bad.append("id must be 3 to 64 lowercase letters, digits and dashes")
     kind = rc.get("kind")
+    match = RECAP_ID.match(rc["id"]) if isinstance(rc.get("id"), str) else None
+    if not match:
+        bad.append("id must be YYYY-MM-DD-<kind>, with -2, -3 for a second or third")
+    elif kind in RECAP_KINDS and match.group(2) != kind:
+        bad.append(f"id {rc['id']!r} names another kind than {kind!r}")
     if kind not in RECAP_KINDS:
         bad.append(f"kind must be one of {list(RECAP_KINDS)}")
     elif rc.get("title") != RECAP_KINDS[kind]:
@@ -250,7 +255,7 @@ def check_recap(rc, now):
     else:
         if posted - now > timedelta(minutes=CLOCK_SKEW_MINUTES):
             bad.append("posted_at is in the future")
-        if (now - posted).days > RECAP_KEEP_DAYS:
+        if now - posted > timedelta(days=RECAP_KEEP_DAYS):
             bad.append(f"older than {RECAP_KEEP_DAYS} days; drop it")
     clean_text(rc.get("intro"), RECAP_INTRO_MAX, "intro", bad)
     bullets = rc.get("bullets")
@@ -264,8 +269,10 @@ def check_recap(rc, now):
             bad.append(f"{where}: must be an object")
             continue
         url = bl.get("url")
-        if not isinstance(url, str) or not HTTPS.match(url) or SEARCH_URL.search(url):
-            bad.append(f"{where}: url must be a real https:// link, never a search page")
+        if not isinstance(url, str) or not HTTPS.match(url) or SEARCH_URL.search(url) \
+                or len(url) > RECAP_URL_MAX:
+            bad.append(f"{where}: url must be a real https:// link of at most {RECAP_URL_MAX} "
+                       "characters, never a search page")
         elif url in seen:
             bad.append(f"{where}: duplicate url {url}")
         else:
@@ -375,8 +382,10 @@ def merge_recaps(previous, fresh, now):
         by_id[item["id"]] = dict(item)
     cutoff = int((now - timedelta(days=RECAP_KEEP_DAYS)).timestamp())
     kept = sorted((item for item in by_id.values() if item.get("d", 0) >= cutoff),
-                  key=lambda item: item.get("d", 0), reverse=True)
-    return kept[:RECAP_MAX], added
+                  key=lambda item: item.get("d", 0), reverse=True)[:RECAP_MAX]
+    while kept and len(json.dumps(kept, ensure_ascii=False).encode("utf-8")) > RECAP_STORE_BYTES:
+        kept.pop()   # the oldest go first; today's recaps are what the Wire shows
+    return kept, added
 
 
 # --- fetching ----------------------------------------------------------------

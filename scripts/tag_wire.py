@@ -60,6 +60,7 @@ WINDOW_HOURS = 30        # the curator looks back 26h; tag a little wider
 BATCH = 120              # items per call: ~4k tokens in, ~3k out
 MAX_PER_RUN = 600        # the first run of a fresh store tags local first
 KEEP_HOURS = 72          # tags older than this leave the store
+CALL_GAP_MINUTES = 50    # as curate_wire: one tagging call an hour, whichever tick lands
 RIVER_TITLES = 300       # duplicates are judged against all of today's river
 JUNK = ("none", "promo", "contest", "tunein", "jobs", "duplicate", "noise")
 TOPICS = (
@@ -140,10 +141,19 @@ def river_titles(data_dir, rebuilding=False):
     return titles[:RIVER_TITLES]
 
 
+def needs_tag(tag):
+    """True when an item has no usable tag: never tagged, or a sports story
+    tagged before tags carried a `sport` (2026-10-19), which is tagged once
+    more so the page's sport chips see it."""
+    if not isinstance(tag, dict):
+        return True
+    return tag.get("topic") == "sports" and not tag.get("sport")
+
+
 def untagged(items, store):
     tags = store.get("tags") or {}
     # the Brief's own edition is never judged (curate_wire always runs it)
-    fresh = [item for item in items if item["id"] not in tags and not item.get("own")]
+    fresh = [item for item in items if needs_tag(tags.get(item["id"])) and not item.get("own")]
     # local first, then newest: a capped first run spends itself on the
     # items the page leads with
     fresh.sort(key=lambda item: (not item["local"], -item["d"]))
@@ -255,6 +265,12 @@ def run(args):
 
     store = {"v": 1, "tags": {}} if getattr(args, "retag", False) else load_store(args.data_dir)
     prune(store, now_ts)
+    called = store.get("called_at")
+    if called and not getattr(args, "retag", False) and \
+            0 <= (now - datetime.fromisoformat(called)).total_seconds() < CALL_GAP_MINUTES * 60:
+        # the workflow ticks up to three times an hour; tag once an hour
+        print(f"tag_wire: tagged {called}, under {CALL_GAP_MINUTES} minutes ago; next tick")
+        return 0
     todo = untagged(wc.wire_items(pulse, now_ts, WINDOW_HOURS), store)
     if not todo:
         print("tag_wire: nothing new to tag")
@@ -290,6 +306,8 @@ def run(args):
             failed += len(batch) - len(tags)
 
     store["updated"] = now.replace(microsecond=0).isoformat()
+    if usage["calls"]:
+        store["called_at"] = store["updated"]
     wc.write_json(os.path.join(args.data_dir, "wire-tags.json"), store)
     if usage["calls"] or usage["in"]:
         wc.record_cost(args.data_dir, "tag_wire", engine, usage, now)
@@ -356,6 +374,11 @@ def selftest():
     prune(store, 10 ** 9)
     assert list(store["tags"]) == ["new"]
     assert [i["id"] for i in untagged(batch, {"tags": {"a": {}}})][:2] == ["f", "c"]   # local, newest first
+    # a sports tag from before `sport` existed is tagged again, once
+    old = {"tags": {"g": {"topic": "sports"}, "h": {"topic": "sports", "sport": "other"},
+                    "a": {"topic": "city-government"}}}
+    assert "g" in [i["id"] for i in untagged(sports, old)]
+    assert "h" not in [i["id"] for i in untagged(sports, old)]
     print("selftest ok")
 
 

@@ -957,7 +957,11 @@ def finish(day, pulse, now, changed):
     day["count"] = len(items)
     day["counts"] = counts(items)
     day["sport_counts"] = sport_counts(items)
+    before = [(rc.get("id"), rc.get("posted_at"), len(rc.get("bullets") or []))
+              for rc in day.get("recaps") or []]
     day.update(recaps_of(pulse, day.get("date")))
+    changed = changed or before != [(rc["id"], rc["posted_at"], len(rc["bullets"]))
+                                    for rc in day["recaps"]]
     day["checked"] = stamp
     if changed or not day.get("updated"):
         day["updated"] = stamp
@@ -970,6 +974,16 @@ def finish(day, pulse, now, changed):
     day["sources"] = dict(sorted(sources.items()))
     day["status"] = status_of(pulse)
     return day
+
+
+def hydrate_sports(day, scored):
+    """A river item filed before its tag knew the sport gets it now, so the
+    sport chips and sport_counts see the whole day (2026-10-19 rollout)."""
+    for update in day.get("updates") or []:
+        for item in update.get("items") or []:
+            sport = (scored.get(item.get("id")) or {}).get("sport")
+            if sport and not item.get("sport"):
+                item["sport"] = sport
 
 
 def sport_counts(items):
@@ -1080,7 +1094,7 @@ def decide(day, state, new, et, now):
     if want_picks:
         return True, True, "urgent" if urgent and day.get("picks") else "picks due"
     called_at = state.get("called_at")
-    if called_at and (now - datetime.fromisoformat(called_at)).total_seconds() < CALL_GAP_MINUTES * 60:
+    if called_at and 0 <= (now - datetime.fromisoformat(called_at)).total_seconds() < CALL_GAP_MINUTES * 60:
         return False, False, "too soon after the last update"
     if len(new) >= MIN_NEW or any(item["local"] and item["_score"] >= 6 for item in new):
         return True, False, "additions"
@@ -1136,6 +1150,7 @@ def run(args):
     tags = (wc.load_json(files["tags"], {}) or {}).get("tags") or {}
     comments = {} if args.pulse else reddit_comments()
     pool = apply_tags(wc.wire_items(pulse, now_ts, WINDOW_HOURS), tags, comments)
+    hydrate_sports(day, {item["id"]: item for item in pool})
     reserved_ids, reserved_urls, ran = reserved(args.data_dir, today)
     numbered_river = river(day)
     in_river = {item["id"] for item in numbered_river}

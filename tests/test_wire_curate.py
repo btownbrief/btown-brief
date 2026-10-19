@@ -1146,6 +1146,23 @@ class TagWireRunTests(Workdir):
         self.assertNotIn("Local headline 3", [item["title"] for item in pool])
         self.assertNotIn("National headline 3", [item["title"] for item in pool])
 
+    def test_a_second_tick_inside_the_hour_does_not_tag(self):
+        calls = []
+
+        def plan(engine, system, user, schema, max_tokens, attempts=2, log_prefix=""):
+            rows = [line for line in user.splitlines() if line[:1].isdigit()]
+            calls.append(len(rows))
+            return {"tags": [{"i": int(r.split(".")[0]), "junk": "none", "local": True, "ch": "local",
+                              "topic": "other", "sport": "none", "score": 5} for r in rows]}, \
+                {"in": 1000, "out": 300, "calls": 1}
+        args = SimpleNamespace(data_dir=self.data, pulse=self.pulse_path)
+        for minutes, payload in ((0, pulse()), (20, pulse(start=40)), (50, pulse(start=40))):
+            self.write_pulse(payload)
+            at = NOW + timedelta(minutes=minutes)
+            with mock.patch.object(wc, "ask_json", plan), mock.patch.object(wc, "utcnow", return_value=at):
+                tw.run(args)
+        self.assertEqual(len(calls), 2)            # the :20 tick waited for the next hour
+
     def test_tagger_outage_exits_zero_and_leaves_items_untagged(self):
         self.assertEqual(self.run_tag(Stub(error="overloaded")), 0)
         store = wc.load_json(os.path.join(self.data, "wire-tags.json"), {})

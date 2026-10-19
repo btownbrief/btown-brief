@@ -224,12 +224,18 @@ class RecapTests(unittest.TestCase):
 
     def test_bullet_rules(self):
         self.assertIn("never a search page", self.bad_bullet(url="https://x.com/search?q=senate"))
+        self.assertIn("at most 300", self.bad_bullet(url="https://x.com/a/" + "b" * 300))
         self.assertIn("email or phone", self.bad_bullet(note="Call 802-555-0100 to ask."))
         self.assertIn("hashtag", self.bad_bullet(text="Senate passes #budget"))
         data = recaps_raw()
         data["recaps"][1]["bullets"][0].pop("sport")      # a Sports bullet names its league
         self.assertIn("in a Sports recap", " ".join(wi.check_recaps(data, NOW + timedelta(hours=6))[1][1]))
         self.assertEqual(self.bad_bullet(), "")
+        data = recaps_raw()
+        data["recaps"][0]["id"] = "2026-10-16-morning"         # an evening recap named morning
+        self.assertIn("names another kind", " ".join(wi.check_recaps(data, NOW)[1][0]))
+        data["recaps"][0]["id"] = "evening"
+        self.assertIn("YYYY-MM-DD", " ".join(wi.check_recaps(data, NOW)[1][0]))
 
     def test_a_stale_or_mostly_bad_file_pauses(self):
         state, fresh = self.read(recaps_raw(), now=NOW + timedelta(hours=24))
@@ -257,6 +263,18 @@ class RecapTests(unittest.TestCase):
         later, _, _ = wi.read_inbox(second, NOW + timedelta(days=4), token="")
         self.assertEqual(later["recaps"]["n"], 0)       # three days, then gone
         self.assertIn("recaps", wi.summary_line(first))
+
+    def test_store_has_a_byte_ceiling(self):
+        big = []
+        for n in range(wi.RECAP_MAX):
+            posted = NOW - timedelta(minutes=n)
+            big.append({"id": f"r-{n:03d}", "kind": "ai", "title": "AI & tech", "d": int(posted.timestamp()),
+                        "posted_at": posted.isoformat(), "intro": "x" * 400, "basis": "trending",
+                        "bullets": [{"text": "t" * 160, "url": "https://x.com/" + "u" * 280,
+                                     "note": "n" * 200}] * 20})
+        kept, _ = wi.merge_recaps([], big, NOW)
+        self.assertLessEqual(len(json.dumps(kept).encode()), wi.RECAP_STORE_BYTES)
+        self.assertEqual(kept[0]["id"], "r-000")          # the newest stay
 
 
 @unittest.skipUnless(os.path.exists(VALIDATOR), "wire-inbox checkout not on this machine")
