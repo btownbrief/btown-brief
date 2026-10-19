@@ -13,7 +13,7 @@
    audio — episodes are large and the browser's own HTTP cache handles them
    better than we would. */
 
-const VERSION = 'all-day-v81';   // Wire pass 2: Recaps, Feed | Topics, sport and Markets chips, the world's photos
+const VERSION = 'all-day-v83';   // Wire pass 2: Recaps, Feed | Topics, sport and Markets chips, the world's photos
 const SHELL = VERSION + '-shell';
 const DATA = 'all-day-data';   // unversioned on purpose: survives shell bumps
 
