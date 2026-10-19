@@ -18,7 +18,10 @@ import wire_inbox as wi  # noqa: E402
 
 FIXTURES = os.path.join(HERE, "fixtures", "wire")
 NOW = datetime(2026, 10, 16, 18, 0, tzinfo=timezone.utc)
-VALIDATOR = os.path.expanduser("~/btownbrief/wire-inbox/scripts/validate_inbox.py")
+# WIRE_INBOX_VALIDATOR points the parity tests at another checkout (a branch
+# worktree of the inbox repo) when both sides change together
+VALIDATOR = os.environ.get("WIRE_INBOX_VALIDATOR") or \
+    os.path.expanduser("~/btownbrief/wire-inbox/scripts/validate_inbox.py")
 
 
 def raw(name):
@@ -207,11 +210,15 @@ class RecapTests(unittest.TestCase):
     def test_good_file_reads_every_good_recap(self):
         state, fresh = self.read(recaps_raw())
         self.assertFalse(state["paused"])
-        self.assertEqual([rc["id"] for rc in fresh], ["2026-10-16-evening", "2026-10-16-sports"])
+        self.assertEqual([rc["id"] for rc in fresh],
+                         ["2026-10-16-evening", "2026-10-16-sports", "2026-10-16-pictures"])
         self.assertEqual(state["dropped"], 1)          # "AI and tech" is not the fixed title
         sports = fresh[1]
         self.assertEqual(sports["title"], "Sports")
-        self.assertEqual([bl["sport"] for bl in sports["bullets"]], ["nba", "nfl", "local"])
+        # tennis is a sport now; soccer, from a bot on the older brief, reads as other
+        self.assertEqual([bl["sport"] for bl in sports["bullets"]],
+                         ["nba", "nfl", "local", "tennis", "other"])
+        self.assertEqual(fresh[2]["title"], "Pictures of the day")
         self.assertEqual(sports["bullets"][0]["text"], "Lakers trade for a backup center")  # verbatim
         self.assertEqual(sports["basis"], "accounts")
         self.assertNotIn("sport", fresh[0]["bullets"][0])
@@ -246,6 +253,29 @@ class RecapTests(unittest.TestCase):
         data["recaps"][0]["bullets"] *= 3                     # six bullets: Breaking is short
         self.assertIn("1 to 5", " ".join(wi.check_recaps(data, NOW + timedelta(hours=6))[1][0]))
 
+    def test_pictures_are_x_posts_and_few(self):
+        now = NOW + timedelta(hours=6)
+        data = recaps_raw()
+        data["recaps"][3]["bullets"][0]["url"] = "https://www.nasa.gov/image-of-the-day/"
+        self.assertIn("the X post itself", " ".join(wi.check_recaps(data, now)[1][3]))
+        data = recaps_raw()
+        data["recaps"][3]["bullets"][0]["url"] = "https://twitter.com/NWSBurlington/status/1"
+        self.assertNotIn(3, wi.check_recaps(data, now)[1])          # twitter.com links are X posts too
+        base = data["recaps"][3]["bullets"][0]
+        data["recaps"][3]["bullets"] = [dict(base, url=f"https://x.com/a/status/{n}") for n in range(9)]
+        self.assertIn("3 to 8", " ".join(wi.check_recaps(data, now)[1][3]))
+        data["recaps"][3]["bullets"] = data["recaps"][3]["bullets"][:2]     # two is too few
+        self.assertIn("3 to 8", " ".join(wi.check_recaps(data, now)[1][3]))
+        self.assertEqual(wi.RECAP_KINDS["pictures"], "Pictures of the day")
+
+    def test_market_recaps(self):
+        data = recaps_raw()
+        data["recaps"][0].update(id="2026-10-16-market-close", kind="market-close", title="Market close")
+        self.assertNotIn(0, wi.check_recaps(data, NOW + timedelta(hours=6))[1])
+        data["recaps"][0]["title"] = "Markets & money"
+        self.assertIn("must be 'Market close'", " ".join(wi.check_recaps(data, NOW)[1][0]))
+        self.assertEqual(wi.RECAP_KINDS["market-open"], "Market open")
+
     def test_a_stale_or_mostly_bad_file_pauses(self):
         state, fresh = self.read(recaps_raw(), now=NOW + timedelta(hours=24))
         self.assertTrue(state["paused"])
@@ -266,9 +296,9 @@ class RecapTests(unittest.TestCase):
             return "missing", None
         now = NOW + timedelta(hours=6)
         first, added, changed = wi.read_inbox(None, now, token="t", fetch=fetch)
-        self.assertEqual((first["recaps"]["n"], added, changed), (2, 2, True))
+        self.assertEqual((first["recaps"]["n"], added, changed), (3, 3, True))
         second, added, changed = wi.read_inbox(first, now, token="t", fetch=fetch)
-        self.assertEqual((second["recaps"]["n"], added, changed), (2, 0, False))
+        self.assertEqual((second["recaps"]["n"], added, changed), (3, 0, False))
         later, _, _ = wi.read_inbox(second, NOW + timedelta(days=4), token="")
         self.assertEqual(later["recaps"]["n"], 0)       # three days, then gone
         self.assertIn("recaps", wi.summary_line(first))

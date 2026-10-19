@@ -57,6 +57,7 @@ from email.utils import parsedate_to_datetime
 # private wire-inbox repo) and the mechanical channel rules. Both are
 # standard library only and never raise into this run.
 import wire_inbox
+import wire_photos
 from wire_common import mechanical_channel
 
 ROOT = os.path.join(os.path.dirname(__file__), "..")
@@ -256,7 +257,20 @@ EXTRA_NATIONAL_NEWS_FEEDS = [
      "https://www.espn.com/college-football/"),
     ("ESPN College Basketball", "https://www.espn.com/espn/rss/ncb/news",
      "https://www.espn.com/mens-college-basketball/"),
-    ("ESPN Soccer", "https://www.espn.com/espn/rss/soccer/news", "https://www.espn.com/soccer/"),
+    # Stephen, 2026-10-19: "Sports: keep it light ... Chips: NBA, NFL, NHL,
+    # Tennis, Local (MLB in postseason; college optional; drop soccer)".
+    # ESPN Soccer left the list that day; ESPN's tennis feed joined it.
+    ("ESPN Tennis", "https://www.espn.com/espn/rss/tennis/news", "https://www.espn.com/tennis/"),
+    # Markets (Stephen, 2026-10-19: "can we also add some stock news"): CNBC's
+    # Market Insider (premarket and midday movers, the close) and MarketWatch's
+    # breaking bulletins. Both checked live that day; the Everything folder
+    # already carries MarketWatch's top stories and CNBC's top news.
+    # wire_common.MARKETS_SOURCES files their stories under `markets`.
+    ("CNBC Market Insider",
+     "https://search.cnbc.com/rs/search/combinedcms/view.xml?partnerId=wrss01&id=20409666",
+     "https://www.cnbc.com/market-insider/"),
+    ("MarketWatch Bulletins", "https://feeds.content.dowjones.io/public/rss/mw_bulletins",
+     "https://www.marketwatch.com/latest-news"),
 ]
 
 ITEM_CAP = 20          # headlines kept per source
@@ -1603,13 +1617,25 @@ def run(args):
     # fresh write pauses that source and changes nothing else about the run.
     inbox, inbox_added, inbox_changed = wire_inbox.read_inbox(previous.get("inbox"))
     print(wire_inbox.summary_line(inbox), f"({inbox_added} new)")
+    # The Photos tab's world pictures (wire_photos.py): fetched at most hourly,
+    # never raises; a dead feed keeps its held pictures.
+    photos, photos_added = wire_photos.refresh(previous.get("photos"))
+    print(wire_photos.summary_line(photos), f"({photos_added} new)")
 
     prev_total = len(previous.get("items", []))
     if not args.seed and prev_total and added_total == 0 and not dropped_removed \
-            and not reddit_changed and not inbox_changed:
+            and not reddit_changed and not inbox_changed and not photos_added:
         # Nothing new anywhere: don't write at all. The workflow then skips
         # its push, the branch keeps its honest `generated` stamp, and the
         # page's "updated Xm ago" reflects when content actually changed.
+        if photos.get("fetched") != (previous.get("photos") or {}).get("fetched"):
+            # an hourly photo fetch that brought nothing new still stands (its
+            # time, which feeds are down, what aged out), or every quiet run
+            # would fetch all four feeds again; `generated` keeps its value
+            write_json(args.out, dict(previous, photos=photos))
+            print("pulse: no new items this run — kept the last payload, with the "
+                  "photo fetch recorded")
+            return
         print("pulse: no new items this run — leaving the last payload in place")
         return
 
@@ -1617,6 +1643,7 @@ def run(args):
     if reddit:
         payload["reddit"] = reddit   # pages that predate the key just ignore it
     payload["inbox"] = inbox         # same: only the Wire reads it
+    payload["photos"] = photos       # and the Photos tab's world pictures
     total = len(payload["items"])
     floor = max(MIN_ITEMS, prev_total // 2)
     if total < floor:
@@ -1801,7 +1828,9 @@ def selftest():
     assert [source["id"] for source in lane] == ["ok", "pod", "espn-mlb"]
     import wire_common
     for title, _feed, _site in EXTRA_NATIONAL_NEWS_FEEDS + EXTRA_LOCAL_FEEDS[1:]:
-        assert wire_common.source_sport(slugify(title)), title   # every sports feed has its sport
+        # every sports feed has its sport, and every other one is a markets desk
+        assert wire_common.source_sport(slugify(title)) \
+            or slugify(title) in wire_common.MARKETS_SOURCES, title
 
     # shared-homepage podcast links: audio becomes the identity, non-audio
     # items keep the link as-is

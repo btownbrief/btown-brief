@@ -54,6 +54,7 @@ jobs:
           python3 -m unittest discover -s tests -p 'test_wire*.py'
           python3 scripts/wire_common.py --selftest
           python3 scripts/wire_inbox.py --selftest
+          python3 scripts/wire_photos.py --selftest
           python3 scripts/tag_wire.py --selftest
           python3 scripts/curate_wire.py --selftest
 
