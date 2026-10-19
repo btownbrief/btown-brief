@@ -2,6 +2,8 @@
 
    - Movies | TV: one switch at the top. Everything below shows that kind;
      the dots, the want list and the town ratings work the same for both.
+     On Movies, today's showtimes come first (fresh first, 2026-10-19),
+     opening on the first theater with shows still to come today.
    - Coming soon (Movies): a rail of 2:3 posters, what is in US theaters now
      and what opens next, labelled theaters or streaming. A tap plays the
      trailer in the shell's one video box (never on its own); a film with no
@@ -15,8 +17,9 @@
      theater's own page (scripts/build_showtimes.py, every morning), or the
      next day it has shows, or "Back Oct 30" while it is closed. Partizanfilm
      is picked first (Stephen, 2026-10-18: the local one). Every theater
-     keeps its Showtimes button to its own page. Back then's Show all opens
-     a grid with a Collapse bar that stays in reach while it is on screen.
+     keeps its Showtimes button to its own page. Back then's Show all, and
+     the list once "Show more" has grown it, carry a Collapse bar that
+     stays in reach while the list is on screen.
    - Back then: the time machine. ‹ October 2021 › and a row of years; the
      month's big titles (scripts/build_time_machine.py, monthly: what Rotten
      Tomatoes' front page listed that month, as archived by the Wayback
@@ -537,7 +540,10 @@ function seedDemo() {
 
 /* ------------------------------------------------------------- drawing */
 const sec = (host, title, sub, key, right) => { const s = section(host, title, sub, right); s.dataset.sec = key; return s; };
-const SECTIONS = ['kind', 'soon', 'cta', 'theaters', 'back', 'list', 'town', 'vote', 'chat'];
+/* what is on today first (Stephen, 2026-10-19: "when someone opens to a
+   tab, the fresh content is the first thing they see"): today's showtimes,
+   then what is in theaters and coming, then the rest */
+const SECTIONS = ['kind', 'theaters', 'soon', 'cta', 'back', 'list', 'town', 'vote', 'chat'];
 
 function draw(name) {
   const host = slots[name];
@@ -640,10 +646,14 @@ function drawTheaters(host) {
   if (V.kind !== 'movie') return;
   const all = theaters();
   sec(host, 'In theaters near you', null, 'theaters');
-  /* until the reader picks one: the first that read, in the set order
-     (Partizanfilm, the local one, then Majestic 10, then Essex; Stephen,
-     2026-10-18), even while it is closed, since it says when it is back */
-  if (!V.picked) V.theater = (all.find((t) => t.ok) || all[0]).id;
+  /* until the reader picks one: the first in the set order (Partizanfilm,
+     the local one, then Majestic 10, then Essex; Stephen, 2026-10-18) with
+     shows still to come today, so the tab opens on tonight's times; else
+     the first that read, even while it is closed, since it says when it is
+     back */
+  const today = todayKey();
+  const tonight = (t) => t.ok && (!t.closed || (t.back && t.back <= today)) && (showDay(t) || {}).day === today;
+  if (!V.picked) V.theater = (all.find(tonight) || all.find((t) => t.ok) || all[0]).id;
   const pick = pills(all.map((t) => [t.id, t.name]), V.theater, (v) => { V.theater = v; V.picked = true; draw('theaters'); });
   pick.dataset.theater = '1';
   pick.style.flex = '1 1 auto';
@@ -663,6 +673,9 @@ function drawTheaters(host) {
   if (back) line.push('Back ' + dateLabel(back));
   else if (t.closed && !open) line.push('Closed for now');
   if (open && show.day !== back) line.push(dayLabel(show.day));
+  /* the times could not be read this morning (Essex's site turns away
+     GitHub's machines): its own page has them */
+  if (!t.ok && !t.closed) line.push('Times on their site');
   const head = el('p', 'note pad', esc(line.join(' · ')));
   head.dataset.status = '1';
   box.appendChild(head);
@@ -958,7 +971,20 @@ function drawList(host) {
   grid.style.gap = 'var(--s4) var(--s3)';
   grid.dataset.grid = '1';
   list.slice(0, V.shown).forEach((f) => grid.appendChild(tile(f)));
-  host.appendChild(grid);
+  /* once "Show more" has opened it past the first page, the list gets the
+     Collapse bar: back to the first page, and back up to the list's head */
+  const wrap = el('div', 'expwrap');
+  wrap.appendChild(grid);
+  host.appendChild(wrap);
+  const fold = () => {
+    if (wrap.querySelector('.collapsebar')) return;
+    wrap.appendChild(collapseBar('the list', () => {
+      V.shown = PAGE;
+      draw('list');
+      app.jumpTo(root.querySelector('[data-sec="list"]'));
+    }));
+  };
+  if (V.shown > PAGE) fold();
   if (list.length > V.shown) {
     const r = el('div', 'addrow');
     r.appendChild(button('Show ' + Math.min(PAGE, list.length - V.shown) + ' more', 'ghost', () => {
@@ -967,8 +993,9 @@ function drawList(host) {
       list.slice(from, V.shown).forEach((f) => grid.appendChild(tile(f)));
       if (list.length <= V.shown) r.remove();
       else r.firstChild.textContent = 'Show ' + Math.min(PAGE, list.length - V.shown) + ' more';
+      fold();
     }));
-    host.appendChild(r);
+    grid.after(r);
   }
 }
 
@@ -1381,7 +1408,7 @@ function drawChat(host) {
 }
 
 /* ------------------------------------------------------------ landing */
-const TOC = () => [['soon', V.kind === 'tv' ? 'On TV now' : 'Coming soon'], ['theaters', 'Theaters'], ['back', 'Back then'], ['list', 'The list'],
+const TOC = () => [['theaters', 'Theaters'], ['soon', V.kind === 'tv' ? 'On TV now' : 'Coming soon'], ['back', 'Back then'], ['list', 'The list'],
   ['town', 'Town'], ['vote', 'Next screening'], ['chat', 'Chat']];
 
 function land() {

@@ -602,8 +602,8 @@ async function deepLinks(browser, base) {
     check(await page.$eval('#subnav .chip.on', (b) => b.innerText).then((t) => /Missions/.test(t)), '#whatnow/missions opens the mode', '');
     await page.goto(base + '/all-day/?demo=1#onair/everything');
     await settle(page);
-    await page.waitForSelector('#panel-onair [data-sec="boards"]', { timeout: 8000 }).catch(() => {});
-    check(await page.$eval('#subnav .localsw-half.on', (b) => b.textContent.trim()) === 'Everything' && await page.$('#panel-onair [data-sec="boards"]') !== null, '#onair/everything flips the shared switch', '');
+    await page.waitForSelector('#panel-onair .wholeed', { timeout: 8000 }).catch(() => {});
+    check(await page.$eval('#subnav .localsw-half.on', (b) => b.textContent.trim()) === 'Everything' && await page.$('#panel-onair .wholeed') !== null, '#onair/everything flips the shared switch', '');
     await page.goto(base + '/all-day/?demo=1#wire/nope-not-a-card');
     await page.waitForSelector('#toast:not([hidden])', { timeout: 6000 }).catch(() => {});
     check(/moved on/.test(await page.$eval('#toast', (t) => t.textContent)), 'an unknown key says the card has moved on', '');
@@ -1906,7 +1906,10 @@ async function onAir(browser, base) {
     await page.waitForSelector('#panel-onair [data-sec="past"]', { timeout: 8000 });
     check(await page.evaluate(() => document.querySelector('audio').paused && !document.querySelector('#panel-onair iframe')), 'nothing autoplays: the shell’s audio is paused and no frame is loaded', '');
     const sw = await page.$$eval('#subnav .oa-sideswitch button', (bs) => bs.map((b) => b.textContent + '|' + b.getAttribute('aria-pressed')));
-    check(JSON.stringify(sw) === JSON.stringify(['TV|true', 'Podcasts|false']), 'a TV | Podcasts switch at the top, TV first and on (Stephen, 2026-10-19)', JSON.stringify(sw));
+    check(JSON.stringify(sw) === JSON.stringify(['TV|true', 'Podcasts|false', 'Playlists|false']), 'a TV | Podcasts | Playlists switch at the top, TV first and on (Stephen, 2026-10-19)', JSON.stringify(sw));
+    const sides = await page.$eval('#subnav .oa-sideswitch', (g) => { const r = g.getBoundingClientRect(); return { w: Math.round(r.width), vw: innerWidth, row: !g.closest('.toolband').querySelector('.localsw'),
+      cut: [...g.children].some((b) => b.getBoundingClientRect().right > innerWidth || b.getBoundingClientRect().height < 36) }; });
+    check(sides.row && sides.w >= sides.vw * 0.8 && !sides.cut, 'the three sides get a full-width row of their own, nothing cut off at 390', JSON.stringify(sides));
     const chipsTV = await page.$$eval('#subnav .chip', (cs) => cs.map((c) => c.innerText.trim()));
     check(chipsTV[0] === 'All lengths' && chipsTV.slice(1).every((c) => ['Under 15 min', '15–30 min', '30 min+', 'Trailers'].includes(c)) && chipsTV.length >= 3,
       'on TV the chip row is lengths, in minutes', JSON.stringify(chipsTV));
@@ -1914,7 +1917,9 @@ async function onAir(browser, base) {
     check(order[0] === 'tv' && order.indexOf('live') < order.indexOf('past') && !order.includes('boards') && !order.includes('brief') && !order.includes('pods'),
       'TV: Btown TV first, then more, Live and Past nights; no podcasts on this side', JSON.stringify(order));
     const pick = await page.$eval('#panel-onair [data-pick]', (b) => { const r = b.getBoundingClientRect(); return { text: b.textContent.trim(), top: r.top, w: r.width, h: r.height }; });
-    check(pick.text === 'Pick a vid for me' && pick.h >= 44 && pick.w >= 300, '“Pick a vid for me”, a full-width button', JSON.stringify(pick));
+    check(pick.text === 'Pick a vid for me' && pick.h >= 44 && pick.w >= 200, '“Pick a vid for me”, a big button', JSON.stringify(pick));
+    const vsw = await page.$$eval('#panel-onair .oa-viewswitch button', (bs) => bs.map((b) => b.textContent + '|' + b.getAttribute('aria-pressed')));
+    check(JSON.stringify(vsw) === JSON.stringify(['Feed|true', 'Topics|false']), 'beside it, one small Feed | Topics switch, Feed on', JSON.stringify(vsw));
     check(await page.$eval('#panel-onair [data-sec="tv"]', (h) => h.getBoundingClientRect().top < 330), 'Btown TV high on the first screen, under the pick button', '');
     const subs = await page.$$eval('#panel-onair [data-sec] p', (p) => p.filter((x) => x.offsetParent !== null).map((x) => x.textContent));
     check(!subs.length, 'no section carries an explanatory subtitle', JSON.stringify(subs));
@@ -1950,16 +1955,16 @@ async function onAir(browser, base) {
     check(await page.$$eval('.sheet-body .oa-row', (c) => c.length) === edition.length, 'it opens all ' + edition.length + ' videos as rows', '');
     await page.keyboard.press('Escape');
     const evOrder = await visibleSecs(page);
-    check(evOrder.includes('boards') && evOrder.indexOf('more') < evOrder.indexOf('boards'), 'Everything: the finds and Clipsboard’s playlists join', JSON.stringify(evOrder));
+    check(evOrder.indexOf('tv') < evOrder.indexOf('more') && !evOrder.includes('boards') && !evOrder.includes('vlists'), 'Everything: the finds join More to watch; playlists have their own side', JSON.stringify(evOrder));
     const via = await page.$$eval('#panel-onair [data-slot="more"] .oa-row .s', (s) => s.map((x) => x.textContent).filter((t) => / · via /.test(t)));
     check(via.length > 0, 'a find names the curator that found it', JSON.stringify(via.slice(0, 3)));
 
     /* the other side */
     await toSide(page, 'pods');
     const podsOrder = await visibleSecs(page);
-    check(JSON.stringify(podsOrder) === JSON.stringify(['brief', 'pods', 'lists']), 'Podcasts: the Brief out loud, the shows, the playlists', JSON.stringify(podsOrder));
+    check(JSON.stringify(podsOrder) === JSON.stringify(['brief', 'pods']), 'Podcasts: the Brief out loud, then the shows', JSON.stringify(podsOrder));
     const toc = await page.$$eval('#subnav .chip', (cs) => cs.map((c) => c.innerText.trim()));
-    check(JSON.stringify(toc) === JSON.stringify(['Out loud', 'Podcasts', 'Playlists']), 'and its chips are a table of contents', JSON.stringify(toc));
+    check(JSON.stringify(toc) === JSON.stringify(['Out loud', 'Podcasts']), 'and its chips are a table of contents', JSON.stringify(toc));
     check(await page.evaluate(() => location.hash) === '#onair/podcasts', 'the side is in the address', '');
     await page.click('#subnav .chip[data-chip="pods"]');
     await page.waitForTimeout(600);
@@ -2027,7 +2032,7 @@ async function onAir(browser, base) {
         return { on: document.querySelector('#subnav .chip.on')?.dataset.chip, head: document.querySelector('#panel-onair [data-sec="len"] h2')?.textContent,
           sub: document.querySelector('#panel-onair [data-sec="len"] p')?.textContent, n: cards.length,
           durs: cards.map((c) => secs(c.querySelector('.dur')?.textContent)), titles: cards.map((c) => c.querySelector('.t').textContent),
-          others: ['more', 'boards', 'live', 'past'].filter((s) => document.querySelector('#panel-onair [data-slot="' + s + '"]:not([hidden])')) };
+          others: ['more', 'live', 'past'].filter((s) => document.querySelector('#panel-onair [data-side="tv"] [data-slot="' + s + '"]:not([hidden])')) };
       });
       if (key === 'commute') check(st.on === 'commute' && st.head === 'Commute length' && st.n > 1 && st.durs.every((s) => s >= 900 && s < 1800) && /^(\d+ of )?\d+ videos · 15–30 min$/.test(st.sub),
         '15–30 min: only videos 15 to 30 minutes long, under his word for it, with the count', JSON.stringify(st));
@@ -2169,7 +2174,7 @@ async function onAir(browser, base) {
     const credit = await page.$eval('.sheet-body [data-via]', (a) => ({ text: a.textContent.trim(), href: a.getAttribute('href'), target: a.target }));
     check(credit.text === 'Found by Wimp' && credit.href === 'https://www.wimp.com/good/' && credit.target === '_blank', '“Found by Wimp” links back to the curator', JSON.stringify(credit));
     await page.keyboard.press('Escape');
-    const boards = await page.$$eval('#panel-onair [data-slot="boards"] .oa-row', (rs) => rs.map((r) => r.dataset.k + '|' + r.querySelector('.dur').textContent));
+    const boards = await page.$$eval('#panel-onair [data-slot="boards"] .pl-tile.board', (rs) => rs.map((r) => r.dataset.k + '|' + r.querySelector('.dur').textContent));
     check(JSON.stringify(boards) === JSON.stringify(['board:nine-songs|3 videos']), 'a board keeps only its real clips; a bad slug is left out', JSON.stringify(boards));
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
@@ -2184,9 +2189,10 @@ async function onAir(browser, base) {
     const repoLists = JSON.parse(await readFile(path.join(APP, 'data/playlists.json'), 'utf8'));
     const realLists = [...repoLists.stephen, ...repoLists.readers].filter((p) => !/^\s*TODO/i.test(p.url)).length;
     if (!realLists) {
-      await toSide(page, 'pods');
-      check(!(await page.$('#panel-onair [data-sec="lists"]')) && !(await page.$$eval('#subnav .chip', (cs) => cs.map((c) => c.dataset.chip))).includes('lists'),
-        'live: data/playlists.json is still TODO placeholders, so no Playlists section and no chip', '');
+      await toSide(page, 'lists');
+      const ls = await page.evaluate(() => ({ tiles: document.querySelectorAll('#panel-onair [data-slot="lists"] .pl-tile').length,
+        add: document.querySelector('#panel-onair [data-add-playlist]')?.dataset.addPlaylist, empty: document.querySelector('#panel-onair [data-slot="lists"] .note')?.textContent || '' }));
+      check(!ls.tiles && ls.add === 'mail' && /first/.test(ls.empty), 'live: data/playlists.json is still TODO placeholders and the board’s SQL is not in, so no tiles, an empty line, and “Add your playlist” is an email', JSON.stringify(ls));
       await toSide(page, 'tv');
     }
     const play = await tvPlay(page);
@@ -2539,30 +2545,61 @@ async function onAir(browser, base) {
   });
 
   await group('On Air, playlists', async () => {
-    /* demo: Stephen's first, then readers', newest first; Spotify and YouTube
-       play in a sheet, Apple Music and SoundCloud go out */
+    /* demo: their own side (Stephen, 2026-10-19). Stephen's first, then
+       readers' (the file and the board), newest first; Spotify and YouTube
+       play in a sheet, Apple Music, SoundCloud and a Spotify profile go out */
     {
-      const { ctx, page, errors } = await newPage(browser, base);
-      await page.goto(base + '/all-day/?demo=1#onair/podcasts');
-      await page.waitForSelector('#panel-onair [data-sec="lists"]', { timeout: 8000 });
-      const rows = await page.$$eval('#panel-onair [data-slot="lists"] .plrow', (rs) => rs.map((r) => [r.dataset.service, r.dataset.own || '', r.querySelector('.t').textContent]));
+      const { ctx, page, errors, supabase } = await newPage(browser, base);
+      await page.goto(base + '/all-day/?demo=1#onair/playlists');
+      await page.waitForSelector('#panel-onair [data-side="lists"]:not([hidden]) [data-sec="lists"]', { timeout: 8000 });
+      check(await page.$eval('#subnav .oa-sideswitch [data-side="lists"]', (b) => b.getAttribute('aria-pressed')) === 'true', '#onair/playlists lands on the Playlists side', '');
+      const order = await visibleSecs(page);
+      const local = await page.$$eval('#panel-onair [data-slot="boards"] .pl-tile', (ts) => ts.map((t) => (t.dataset.tvlist ? 'tv' : 'board')));
+      check(JSON.stringify(order) === JSON.stringify(['lists', 'vlists']) && JSON.stringify(local) === JSON.stringify(['tv']), 'on Local: the playlists and Btown TV’s own night; no Clipsboard boards (Local means local)', JSON.stringify({ order, local }));
+      const add = await page.$eval('#panel-onair [data-add-playlist]', (b) => { const r = b.getBoundingClientRect(); return { text: b.textContent.trim(), kind: b.dataset.addPlaylist, w: Math.round(r.width), h: r.height, top: Math.round(r.top) }; });
+      check(add.text === 'Add your playlist' && add.kind === 'board' && add.w >= 300 && add.h >= 44 && add.top < 400, '“Add your playlist” first, big, on the board', JSON.stringify(add));
+      const tiles = await page.$$eval('#panel-onair [data-slot="lists"] .pl-tile', (rs) => rs.map((r) => [r.dataset.service, r.dataset.own || '', r.querySelector('.t').textContent]));
       const d = JSON.parse(await readFile(path.join(APP, 'data/demo/onair.json'), 'utf8')).playlists;
-      const want = [...d.stephen.map((p) => [p.service, '1', p.title]), ...[...d.readers].sort((a, b) => (a.added < b.added ? 1 : -1)).map((p) => [p.service, '', p.title])];
-      check(JSON.stringify(rows) === JSON.stringify(want), 'Stephen’s playlists first, then readers’, newest first', JSON.stringify(rows));
-      check(await page.$$eval('#panel-onair [data-slot="lists"] [data-own] .tag-own', (t) => t.map((x) => x.textContent)).then((t) => t.length === d.stephen.length && t.every((x) => x === 'Stephen’s pick')), 'his are marked “Stephen’s pick”', '');
-      check(/From readers/.test(await page.$eval('#panel-onair [data-slot="lists"]', (s) => s.innerText)), 'readers’ under their own divider', '');
-      const outs = await page.$$eval('#panel-onair [data-slot="lists"] a[data-playlist]', (as) => as.map((a) => [a.closest('.plrow').dataset.service, a.target, a.rel, a.getAttribute('href')]));
-      check(outs.length === 2 && outs.every((o) => /^(apple|soundcloud)$/.test(o[0]) && o[1] === '_blank' && o[2] === 'noopener' && /^https:\/\/(music\.apple|soundcloud)\.com\//.test(o[3])), 'Apple Music and SoundCloud open on their own sites, in a new tab', JSON.stringify(outs));
-      const share = await page.$eval('#panel-onair [data-share-playlist]', (a) => ({ href: a.getAttribute('href'), text: a.textContent.trim() }));
-      check(share.text === 'Share your playlist' && /^mailto:btownbrief@gmail\.com\?subject=A%20playlist%20for%20On%20Air&body=Playlist%20link/.test(share.href), '“Share your playlist” opens an email to the Brief, filled in', JSON.stringify(share));
-      await page.click('#panel-onair .plrow[data-service="spotify"] .pillbtn');
+      check(JSON.stringify(tiles.slice(0, d.stephen.length)) === JSON.stringify(d.stephen.map((p) => [p.service, '1', p.title])), 'Stephen’s playlists first, as tiles', JSON.stringify(tiles));
+      const readers = tiles.slice(d.stephen.length).map((t) => t[2]);
+      check(['Leaf peeping on Route 100', 'Late night at Radio Bean', 'Maya on Spotify'].every((t) => readers.includes(t)) && !readers.includes('Waiting for a look')
+        && d.readers.every((p) => readers.includes(p.title)) && readers.indexOf('Leaf peeping on Route 100') < readers.indexOf(d.readers[0].title),
+        'then readers’, the board’s approved posts with the file’s, newest first; one still waiting for Stephen does not show', JSON.stringify(readers));
+      const heads = await page.$$eval('#panel-onair [data-slot="lists"] .tdiv', (t) => t.map((x) => x.innerText.trim()));
+      check(JSON.stringify(heads) === JSON.stringify(['Stephen’s picks', 'From readers']), 'his under his name, readers’ under their own divider', JSON.stringify(heads));
+      const outs = await page.$$eval('#panel-onair [data-slot="lists"] a.pl-tile', (as) => as.map((a) => [a.dataset.service, a.target, a.rel, a.getAttribute('href')]));
+      check(outs.length === 3 && outs.every((o) => /^(apple|soundcloud|spotifyuser)$/.test(o[0]) && o[1] === '_blank' && o[2] === 'noopener' && /^https:\/\/(music\.apple|soundcloud|open\.spotify)\.com\//.test(o[3])),
+        'Apple Music, SoundCloud and a Spotify profile open on their own sites, in a new tab', JSON.stringify(outs));
+      const box = await page.$$eval('#panel-onair [data-slot="lists"] .pl-grid', (gs) => gs.map((g) => { const c = [...g.children].map((x) => x.getBoundingClientRect()); return c.length > 1 ? Math.round(c[1].left - c[0].left) : 0; }));
+      check(box.every((dx) => dx > 100), 'tiles sit two across on a phone', JSON.stringify(box));
+      await page.click('#panel-onair .pl-tile[data-service="spotify"]');
       await page.waitForSelector('.sheet-card', { timeout: 3000 });
       check(/Spotify’s player/.test(await page.$eval('.sheet-body', (b) => b.innerText)) && !(await page.$('.sheet-body iframe')), 'demo: a Spotify playlist opens its sheet, and says the player comes in the real build', '');
       await page.keyboard.press('Escape');
+      /* add yours: the board's own form, then it waits for Stephen */
+      await page.click('#panel-onair [data-add-playlist]');
+      await page.waitForSelector('.sheet-body .bform, .sheet-body .sheet-note', { timeout: 3000 });
+      const form = await page.evaluate(() => ({ head: document.querySelector('.sheet-head h2')?.textContent, labels: [...document.querySelectorAll('.sheet-body .bf-label')].map((l) => l.childNodes[0].textContent.trim()),
+        signin: /Sign in to post/.test(document.querySelector('.sheet-body').innerText) }));
+      check(form.head === 'Add your playlist' && (form.signin || (form.labels.includes('Playlist name') && form.labels.includes('Link'))), 'it opens the playlist form: a name and a link', JSON.stringify(form));
+      await page.keyboard.press('Escape');
+      /* on Everything, the video playlists follow: the latest Btown TV night, then Clipsboard's boards */
+      await toEverything(page);
+      const vl = await page.$$eval('#panel-onair [data-slot="boards"] .pl-tile', (ts) => ts.map((t) => (t.dataset.tvlist ? 'tv' : t.dataset.board ? 'board' : '?') + '|' + t.querySelector('.t').textContent));
+      check(vl.length >= 2 && vl[0] === 'tv|Btown TV tonight' && vl.slice(1).every((x) => /^board\|/.test(x)), 'Everything: Video playlists, Btown TV tonight first, then Clipsboard’s boards', JSON.stringify(vl));
+      await page.click('#panel-onair [data-tvlist]');
+      await page.waitForSelector('.sheet-card', { timeout: 3000 });
+      check(await page.$eval('.sheet-head h2', (h) => h.textContent) === 'Btown TV tonight' && /YouTube’s player/.test(await page.$eval('.sheet-body', (b) => b.innerText)), 'Btown TV’s night plays as its YouTube playlist, in a sheet', '');
+      await page.keyboard.press('Escape');
+      await page.click('#panel-onair .pl-tile.board [data-watch]');
+      await page.waitForSelector('.sheet-card.oa-player', { timeout: 3000 });
+      check(/^1 of \d+$/.test(await page.$eval('.oa-pos', (p) => p.textContent)), 'a Clipsboard board plays straight through in On Air’s player', '');
+      await page.keyboard.press('Escape');
+      check(!supabase.length, 'demo: no Supabase call', supabase.join(', '));
       check(!errors.length, 'demo: no console errors', errors.join(' | '));
       await ctx.close();
     }
-    /* live, from data/playlists.json: only real playlist links show, and the file cannot inject anything */
+    /* live, from data/playlists.json and the board: only real playlist links show, nothing can inject markup, covers only from the services' own image hosts */
     {
       const SP = 'https://open.spotify.com/playlist/37i9dQZF1DXcBWIGoYBM5M';
       const YT = 'https://www.youtube.com/playlist?list=PLx0sYbCqOb8TBPRdmBHs5Iftvv9TPboYG';
@@ -2583,30 +2620,46 @@ async function onAir(browser, base) {
           { title: 'A video, not a playlist', by: 'X', service: 'youtube', url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ', note: '', added: '2026-10-15' },
         ],
       };
-      const { ctx, page, errors } = await newPage(browser, base, { routes: [[/\/all-day\/data\/playlists\.json/, file]] });
+      /* the board: its SQL pasted (the rules carry "playlists"), two approved posts, one a link it does not know */
+      const rpc = (fn) => {
+        if (fn === 'nn_rules') return { version: 3, boards: { playlists: { premod: true } } };
+        if (fn === 'nn_posts_list') return [
+          { id: 'p1', board: 'playlists', kind: 'playlist', title: 'Leaf peeping on Route 100', body: 'Folk for the drive.', author: 'Kara', meta: { link: 'https://open.spotify.com/playlist/ABCDEFGHIJKLMNOPQRSTUV' }, created_at: '2026-10-18T12:00:00Z' },
+          { id: 'p2', board: 'playlists', kind: 'playlist', title: 'Somewhere else', body: '', author: 'Lee', meta: { link: 'https://example.com/my-mix' }, created_at: '2026-10-18T12:00:00Z' },
+        ];
+        return undefined;
+      };
+      const { ctx, page, errors } = await newPage(browser, base, { routes: [[/\/all-day\/data\/playlists\.json/, file]], rpc });
       await page.route(/open\.spotify\.com\/embed|youtube-nocookie\.com\/embed/, (r) => r.fulfill({ status: 200, body: '<!doctype html><title>player</title>', contentType: 'text/html' }));
-      await page.goto(base + '/all-day/#onair/podcasts');
+      await page.route(/open\.spotify\.com\/oembed/, (r) => r.fulfill({ status: 200, contentType: 'application/json',
+        body: JSON.stringify({ thumbnail_url: /37i9dQZF1DXcBWIGoYBM5M/.test(decodeURIComponent(r.request().url())) ? 'https://i.scdn.co/image/ab67706f00000002cover' : 'https://evil.example/x.jpg' }) }));
+      await page.route(/youtube\.com\/oembed/, (r) => r.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ thumbnail_url: 'javascript:alert(1)' }) }));
+      await page.goto(base + '/all-day/#onair/playlists');
       await page.waitForSelector('#panel-onair [data-sec="lists"]', { timeout: 15000 });
-      await page.waitForSelector('#panel-onair [data-sec="pods"]', { timeout: 15000 });
-      const rows = await page.$$eval('#panel-onair [data-slot="lists"] .plrow', (rs) => rs.map((r) => r.querySelector('.t').textContent));
-      check(JSON.stringify(rows) === JSON.stringify(['Fall in the Old North End', 'Burlington bands, live', '<img src=x onerror="window.__xss=1">Mine']),
-        'only real playlist links show: a TODO placeholder, javascript:, a broken quote, http, the wrong service, an unknown or inherited one (“constructor”) and a single video are all left out', JSON.stringify(rows));
-      await page.waitForTimeout(300);
-      const xss = await page.evaluate(() => ({ flag: window.__xss || 0, imgs: document.querySelectorAll('#panel-onair [data-slot="lists"] img').length, scripts: document.querySelectorAll('#panel-onair [data-slot="lists"] script, #panel-onair [data-slot="lists"] b').length }));
-      check(!xss.flag && !xss.imgs && !xss.scripts, 'a title, a name and a note from the file are text, never markup', JSON.stringify(xss));
-      check(await page.$$eval('#subnav .chip', (cs) => cs.map((c) => c.dataset.chip)).then((c) => c.indexOf('lists') === c.indexOf('pods') + 1), 'the Playlists chip sits after Podcasts', '');
+      await page.waitForSelector('#panel-onair [data-add-playlist="board"]', { timeout: 8000 });
+      const rows = await page.$$eval('#panel-onair [data-slot="lists"] .pl-tile', (rs) => rs.map((r) => r.querySelector('.t').textContent));
+      check(JSON.stringify(rows) === JSON.stringify(['Fall in the Old North End', 'Burlington bands, live', 'Leaf peeping on Route 100', '<img src=x onerror="window.__xss=1">Mine']),
+        'only real playlist links show: a TODO placeholder, javascript:, a broken quote, http, the wrong service, an unknown or inherited one (“constructor”), a single video and a board post with a link it does not know are all left out', JSON.stringify(rows));
+      await page.waitForTimeout(500);
+      const xss = await page.evaluate(() => ({ flag: window.__xss || 0, bad: document.querySelectorAll('#panel-onair [data-slot="lists"] img[src="x"], #panel-onair [data-slot="lists"] script, #panel-onair [data-slot="lists"] b').length,
+        covers: [...document.querySelectorAll('#panel-onair [data-slot="lists"] .pl-cover img')].map((i) => i.getAttribute('src')) }));
+      check(!xss.flag && !xss.bad, 'a title, a name and a note from the file or the board are text, never markup', JSON.stringify(xss));
+      check(JSON.stringify(xss.covers) === JSON.stringify(['https://i.scdn.co/image/ab67706f00000002cover']), 'a cover only from Spotify’s or YouTube’s own image hosts; anything else keeps the service tile', JSON.stringify(xss.covers));
 
       /* play the Brief, then open a playlist: one sound at a time */
+      await toSide(page, 'pods');
+      await page.waitForSelector('#panel-onair .audio .pb', { timeout: 8000 });
       await page.click('#panel-onair .audio .pb');
       await clockPast(page, 0.2);
-      await page.click('#panel-onair .plrow[data-service="spotify"] .t');
+      await toSide(page, 'lists');
+      await page.click('#panel-onair .pl-tile[data-service="spotify"] .t');
       await page.waitForSelector('.sheet-body iframe', { timeout: 3000 }).catch(() => {});
       const sp = await page.evaluate(() => { const f = document.querySelector('.sheet-body iframe'); const r = f && f.getBoundingClientRect(); return f && { src: f.src, h: Math.round(r.height), title: f.title, link: document.querySelector('.sheet-body a.btn')?.getAttribute('href') }; });
       check(sp && sp.src === 'https://open.spotify.com/embed/playlist/37i9dQZF1DXcBWIGoYBM5M?theme=0' && sp.h >= 300, 'a tap on a Spotify playlist opens Spotify’s player for it in a sheet', JSON.stringify(sp));
       check(sp && sp.link === SP, 'with a link out to Spotify', JSON.stringify(sp));
       check(await page.evaluate(() => document.getElementById('audio').paused && document.getElementById('player').hidden), 'opening a player stops the Brief: one sound at a time', '');
       await page.keyboard.press('Escape');
-      await page.click('#panel-onair .plrow[data-service="youtube"] .pillbtn');
+      await page.click('#panel-onair .pl-tile[data-service="youtube"]');
       await page.waitForSelector('.sheet-body iframe', { timeout: 3000 }).catch(() => {});
       const yt = await page.evaluate(() => { const f = document.querySelector('.sheet-body iframe'); const r = f && f.getBoundingClientRect(); return f && { src: f.src, ratio: r.width / r.height }; });
       check(yt && yt.src === 'https://www.youtube-nocookie.com/embed/videoseries?list=PLx0sYbCqOb8TBPRdmBHs5Iftvv9TPboYG&rel=0&playsinline=1' && Math.abs(yt.ratio - 16 / 9) < 0.05, 'a YouTube playlist plays in YouTube’s player, 16:9', JSON.stringify(yt));
@@ -2614,6 +2667,129 @@ async function onAir(browser, base) {
       check(!errors.length, 'live: no console errors', errors.join(' | '));
       await ctx.close();
     }
+  });
+
+  /* Stephen, 2026-10-19 late: "All 160 · 15–30 mins … when I click it I dont
+     see 160 vids … is there a way to make it smaller again without having to
+     scroll?" "All N" opens all N in place, and a Collapse bar rides along. */
+  await group('On Air, All N opens in place', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/all-day/?demo=1#onair/everything');
+    await settle(page);
+    await page.waitForSelector('#panel-onair [data-sec="past"]', { timeout: 8000 });
+    const btn = await page.$eval('#panel-onair [data-slot="more"] [data-expand]', (b) => ({ key: b.dataset.expand, text: b.textContent }));
+    const n = Number((/^All (\d+) · /.exec(btn.text) || [])[1]);
+    await page.click('#panel-onair [data-slot="more"] [data-expand="' + btn.key + '"]');
+    await page.waitForTimeout(200);
+    const open = await page.evaluate((key) => {
+      const w = document.querySelector('#panel-onair [data-slot="more"] .expwrap');
+      return { rows: w ? w.querySelectorAll('.oa-row').length : 0, bar: !!(w && w.querySelector('.collapsebar [data-collapse]')), label: w?.querySelector('[data-collapse]')?.getAttribute('aria-label'),
+        stillAll: !!document.querySelector('#panel-onair [data-expand="' + key + '"]') };
+    }, btn.key);
+    check(n > 3 && open.rows === n && open.bar && !open.stillAll, '“All ' + n + '” opens all ' + n + ', in place, with a Collapse bar', JSON.stringify({ btn, open }));
+    /* the bar rides the bottom of the screen while the list is on it */
+    await page.$eval('#panel-onair [data-slot="more"] .expwrap .oa-row:nth-child(' + Math.max(2, Math.ceil(n / 2)) + ')', (r) => r.scrollIntoView({ block: 'center' }));
+    await page.waitForTimeout(200);
+    const ride = await page.$eval('#panel-onair .expwrap .collapsebar [data-collapse]', (b) => { const r = b.getBoundingClientRect(); return { top: Math.round(r.top), bottom: Math.round(r.bottom), vh: innerHeight }; });
+    check(ride.top > 0 && ride.bottom <= ride.vh, 'the Collapse bar is on screen from the middle of the list', JSON.stringify(ride));
+    await page.click('#panel-onair .expwrap .collapsebar [data-collapse]');
+    await page.waitForFunction((key) => { const h = document.querySelector('#panel-onair [data-open-head="' + key + '"]'); const t = h && h.getBoundingClientRect().top; return t >= 0 && t < 400; }, btn.key, { timeout: 4000 }).catch(() => {});
+    const shut = await page.evaluate((key) => ({ open: !!document.querySelector('#panel-onair .expwrap'), all: !!document.querySelector('#panel-onair [data-expand="' + key + '"]'),
+      head: Math.round(document.querySelector('#panel-onair [data-open-head="' + key + '"]').getBoundingClientRect().top) }), btn.key);
+    check(!shut.open && shut.all && shut.head >= 0 && shut.head < 400, 'Collapse folds it back and returns to its heading', JSON.stringify(shut));
+    /* a sideways row as a list has the bar too */
+    await toTop(page);
+    await page.click('#panel-onair .railmode:not(.foot) [data-railmode="past"]');
+    const rb = await page.$eval('#panel-onair [data-slot="past"] .collapsebar', (b) => ({ hidden: b.hidden, label: b.querySelector('[data-collapse]').getAttribute('aria-label') }));
+    check(!rb.hidden && rb.label === 'Collapse Past nights', 'Past nights as a list: the Collapse bar under it', JSON.stringify(rb));
+    await page.click('#panel-onair [data-slot="past"] .collapsebar [data-collapse]');
+    await page.waitForTimeout(400);
+    check(await page.$eval('#panel-onair [data-rail="past"]', (r) => !r.classList.contains('aslist')) && await page.$eval('#panel-onair [data-slot="past"] .collapsebar', (b) => b.hidden), 'and Collapse makes it a row again', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('On Air, a long list draws in chunks', async () => {
+    /* 130 finds at one length: "All 130" shows 130, the first 40 at once */
+    const { d } = await demoKeys();
+    const now = Math.floor(Date.now() / 1000);
+    const items = Array.from({ length: 130 }, (_, i) => ({ id: 'Chunk' + String(i).padStart(6, '0'), t: 'Long one ' + i, ch: 'Channel ' + (i % 40), sec: 1200, dur: '20:00', b: 'commute', via: 'wimp', via_url: 'https://www.wimp.com/x/', d: now - i * 60 }));
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.route(/\/all-day\/data\/demo\/onair\.json$/, async (r) => {
+      const body = JSON.parse(await readFile(path.join(APP, 'data/demo/onair.json'), 'utf8'));
+      body.finds.items = items.concat(d.finds.items.filter((x) => x.b !== 'commute'));
+      r.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(body) });
+    });
+    await page.goto(base + '/all-day/?demo=1#onair/everything');
+    await settle(page);
+    await page.waitForSelector('#panel-onair [data-expand="len:commute"]', { timeout: 8000 });
+    const label = await page.$eval('#panel-onair [data-expand="len:commute"]', (b) => b.textContent);
+    const total = Number((/^All (\d+)/.exec(label) || [])[1]);
+    await page.click('#panel-onair [data-expand="len:commute"]');
+    const first = await page.$$eval('#panel-onair .expwrap .oa-row', (r) => r.length);
+    const more = await page.$eval('#panel-onair .oa-morerows', (b) => b.textContent);
+    check(total >= 130 && first === 40 && more === 'Show 40 more · ' + (total - 40) + ' left', 'the first 40 at once, and the button says what is left', JSON.stringify({ label, first, more }));
+    for (let i = 0; i < 8; i++) {
+      const m = await page.$('#panel-onair .oa-morerows');
+      if (!m) break;
+      await m.scrollIntoViewIfNeeded();
+      await page.waitForTimeout(250);
+    }
+    const all = await page.$$eval('#panel-onair .expwrap .oa-row', (r) => r.length);
+    check(all === total && !(await page.$('#panel-onair .oa-morerows')), 'nearing the end draws the next, until all ' + total + ' are there', JSON.stringify({ all, total }));
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  /* the coordinator, for Stephen (2026-10-19): "a button that toggles the
+     view from Feed to organized Topics … like Clipsboard" */
+  await group('On Air, topics', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/all-day/?demo=1#onair/everything');
+    await settle(page);
+    await page.waitForSelector('#panel-onair .oa-viewswitch', { timeout: 8000 });
+    await page.click('#panel-onair .oa-viewswitch [data-view="topics"]');
+    await page.waitForTimeout(250);
+    const t = await page.evaluate(() => ({
+      shelves: [...document.querySelectorAll('#panel-onair [data-topic]')].map((h) => h.dataset.topic),
+      counts: [...document.querySelectorAll('#panel-onair [data-topic]')].map((h) => Number((h.querySelector('p')?.textContent || '').split(' ')[0])),
+      firstTiles: document.querySelectorAll('#panel-onair [data-slot="topics"] .oa-grid')[0]?.children.length,
+      feed: ['tv', 'more', 'live', 'past'].filter((s) => !document.querySelector('#panel-onair [data-side="tv"] [data-slot="' + s + '"]').hidden),
+      stored: localStorage.getItem('allday-onair-view'),
+    }));
+    check(t.shelves[0] === 'new' && t.shelves.length >= 3 && t.counts.every((c, i) => c >= (i ? 3 : 1)), 'Topics: New this week first, then each topic with three or more', JSON.stringify(t));
+    check(t.firstTiles === Math.min(4, t.counts[0]) && !t.feed.length && t.stored === 'topics', 'four tiles a shelf; the feed’s sections step aside; the choice is kept on this phone', JSON.stringify(t));
+    /* a topic's All N opens in place with the bar */
+    const key = await page.$eval('#panel-onair [data-slot="topics"] [data-expand]', (b) => b.dataset.expand);
+    const n = Number((/^All (\d+)/.exec(await page.$eval('#panel-onair [data-expand="' + key + '"]', (b) => b.textContent)) || [])[1]);
+    await page.click('#panel-onair [data-expand="' + key + '"]');
+    for (let i = 0; i < 6; i++) {
+      const m = await page.$('#panel-onair [data-slot="topics"] .oa-morerows');
+      if (!m) break;
+      await m.scrollIntoViewIfNeeded();
+      await page.waitForTimeout(250);
+    }
+    check(await page.$$eval('#panel-onair [data-slot="topics"] .expwrap .oa-tile', (x) => x.length) === n && !!(await page.$('#panel-onair [data-slot="topics"] .expwrap .collapsebar')), 'a topic’s “All ' + n + '” opens all ' + n + ' with a Collapse bar', key);
+    await toTop(page);
+    /* a tile plays in On Air's player, the shelf after it */
+    await page.click('#panel-onair [data-slot="topics"] .oa-tile .c-media');
+    await page.waitForSelector('.sheet-card.oa-player', { timeout: 3000 });
+    check(/^1 of \d+$/.test(await page.$eval('.oa-pos', (p) => p.textContent)), 'a tile opens the player on its shelf', '');
+    await page.keyboard.press('Escape');
+    /* the length chips still choose inside Topics */
+    await page.click('#subnav .chip[data-chip="trailer"]');
+    await page.waitForTimeout(250);
+    const tr = await page.$$eval('#panel-onair [data-slot="topics"] .oa-tile .t', (x) => x.map((e) => e.textContent));
+    check(tr.length >= 1 && tr.every((x) => /trailer|teaser/i.test(x)), 'Trailers inside Topics: only trailers', JSON.stringify(tr));
+    await page.click('#subnav .chip[data-chip="all"]');
+    await page.reload();
+    await page.waitForSelector('#panel-onair .oa-viewswitch', { timeout: 8000 });
+    check(await page.$eval('#panel-onair .oa-viewswitch [data-view="topics"]', (b) => b.getAttribute('aria-pressed')) === 'true' && !!(await page.$('#panel-onair [data-topic="new"]')), 'still Topics after a reload', '');
+    await page.click('#panel-onair .oa-viewswitch [data-view="feed"]');
+    await page.waitForTimeout(200);
+    check(!!(await page.$('#panel-onair [data-side="tv"] [data-slot="tv"]:not([hidden]) [data-sec="tv"]')), 'Feed brings Btown TV back', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
   });
 }
 
@@ -4687,7 +4863,7 @@ async function theWatch(browser, base) {
       'films.json is the list, and its subtitle is only the count to go', await page.$eval(wPanel + ' [data-sec="list"]', (s) => s.innerText));
     check(JSON.stringify(await wTiles(page)) === JSON.stringify(films.top.map((f) => 'f' + f.id)), 'every film in its TMDB order', '');
     const toc = await page.$$eval('#subnav .chip', (c) => c.map((x) => x.textContent));
-    check(JSON.stringify(toc) === JSON.stringify(['Coming soon', 'Theaters', 'The list', 'Town', 'Next screening', 'Chat']), 'the chip row is the table of contents', toc.join(' / '));
+    check(JSON.stringify(toc) === JSON.stringify(['Theaters', 'Coming soon', 'The list', 'Town', 'Next screening', 'Chat']), 'the chip row is the table of contents, today’s showtimes first', toc.join(' / '));
     check(!(await page.$(wPanel + ' [data-kind]')), 'a films.json with no shows has no Movies / TV switch', '');
     const soon = await page.$$eval(wPanel + ' [data-sec="soon"] + .rail-wrap .poster', (n) => n.map((a) => [a.dataset.k, a.querySelector('.s').textContent, !!a.querySelector('.play')]));
     check(soon.length === 5 && soon[0][1] === 'In theaters now' && soon[1][1] === 'Back in theaters' && /· theaters$/.test(soon[2][1]) && /· streaming$/.test(soon[3][1]), 'Coming soon: in theaters now (a 1966 re-release is back in theaters), then what opens, labelled theaters or streaming', JSON.stringify(soon));
@@ -4942,9 +5118,17 @@ async function theWatch(browser, base) {
     const pool = [...new Set([...d.films.top, ...d.films.trend, ...d.films.now].map((f) => 'f' + f.id))];
     const rest = pool.filter((k) => !rated.some((f) => 'f' + f.id === k));
     check(JSON.stringify(sorted.slice(rated.length)) === JSON.stringify(rest.slice(0, 60 - rated.length)), 'then the rest in list order', JSON.stringify(sorted.slice(rated.length).slice(-4)));
+    check(!(await page.$(wPanel + ' [data-slot="list"] .collapsebar')), 'the first page of the list has no Collapse bar', '');
     await page.click(wPanel + ' [data-slot="list"] .addrow button');
     const all = await wTiles(page);
     check(JSON.stringify(all.slice(-2)) === JSON.stringify(['f9201', 'f9202']), 'and the trending films not on the list come last', JSON.stringify(all.slice(-3)));
+    /* grown past its first page, the list carries the Collapse bar (Stephen, 2026-10-19) */
+    check(!!(await page.$(wPanel + ' [data-slot="list"] .expwrap .collapsebar [data-collapse]')), 'once Show more has grown it, the list has a Collapse bar', '');
+    await page.click(wPanel + ' [data-slot="list"] .collapsebar [data-collapse]');
+    await page.waitForFunction(() => { const t = document.querySelector('#panel-watch [data-sec="list"]').getBoundingClientRect().top; return t >= 0 && t < 400; }, null, { timeout: 4000 }).catch(() => {});
+    const folded = await page.evaluate(() => ({ n: document.querySelectorAll('#panel-watch [data-slot="list"] [data-grid] > *').length, bar: !!document.querySelector('#panel-watch [data-slot="list"] .collapsebar'),
+      top: Math.round(document.querySelector('#panel-watch [data-sec="list"]').getBoundingClientRect().top) }));
+    check(folded.n === 60 && !folded.bar && folded.top >= 0 && folded.top < 400, 'Collapse folds it back to the first 60 and returns to the list’s head', JSON.stringify(folded));
     check(await page.$eval(wPanel + ' [data-sort] [data-chip="town"]', (c) => c.getAttribute('aria-pressed')) === 'true', 'and the Town favorites chip is the one on', '');
     await page.click(wPanel + ' [data-sort] [data-chip="top"]');
     check(JSON.stringify(await wTiles(page)) === JSON.stringify(d.films.top.map((f) => 'f' + f.id)), 'Top rated puts it back', '');
@@ -5284,7 +5468,13 @@ async function theWatch(browser, base) {
     check(order2[0] === 'sec' && order2[1] === 'host', 'the line sits right under the ballot’s title', JSON.stringify(order2));
     const names = await page.$$eval(wPanel + ' [data-theater] button', (n) => n.map((b) => [b.textContent, b.classList.contains('on')]));
     check(JSON.stringify(names.map((x) => x[0])) === '["Partizanfilm","Majestic 10","Essex Cinemas"]', 'the three theaters', JSON.stringify(names));
-    check(names.find((x) => x[1])[0] === 'Partizanfilm', 'Partizanfilm, the local one, leads even while it is closed (Stephen, 2026-10-18)', JSON.stringify(names));
+    /* fresh first (2026-10-19): the tab opens on the first theater, in his
+       order, with shows still to come today; Partizanfilm leads whenever it
+       is open, and while it is closed its pill is still first */
+    check(names.find((x) => x[1])[0] === 'Majestic 10', 'Partizanfilm is closed, so the tab opens on today’s times at the next theater', JSON.stringify(names));
+    const slotsOrder = await page.$$eval(wPanel + ' [data-slot]', (n) => n.map((x) => x.dataset.slot).filter((x) => ['theaters', 'soon'].includes(x)));
+    check(JSON.stringify(slotsOrder) === '["theaters","soon"]', 'today’s showtimes come before Coming soon', JSON.stringify(slotsOrder));
+    await page.click(wPanel + ' [data-theater] button:has-text("Partizanfilm")');
     const rows = () => page.$$eval(wPanel + ' [data-showing] .lrow', (n) => n.map((r) => [r.querySelector('.t').textContent, r.querySelector('[data-times]').textContent, !!r.querySelector('.pillbtn')]));
     const pz = d.showtimes.theaters[0];
     const back = new Date((wDayNum(pz.back) + wDayNum(wToday()) - wDayNum(d._anchor)) * W_DAY + 12 * 3600000).toISOString().slice(0, 10);
@@ -5367,7 +5557,7 @@ async function theWatch(browser, base) {
     check(!(await page.$(wPanel + ' [data-showing] .lrow')) && await page.$eval(wPanel + ' [data-showtimes]', (a) => a.getAttribute('href')) === 'https://www.essexcinemas.com/vermont/essex/essex-cinemas-9/showtimes',
       'a theater that did not read: no rows, and its own Showtimes page (never the file’s link)', '');
     await page.click(wPanel + ' [data-theater] button:has-text("Partizanfilm")');
-    check(await page.$eval(wPanel + ' [data-status]', (p) => p.textContent) === 'Burlington' && !(await page.$(wPanel + ' [data-showing] .lrow')), 'a theater missing from the file: just its button', '');
+    check(await page.$eval(wPanel + ' [data-status]', (p) => p.textContent) === 'Burlington · Times on their site' && !(await page.$(wPanel + ' [data-showing] .lrow')), 'a theater missing from the file: one plain line and its button', '');
     await page.click(wPanel + ' [data-kind] button:has-text("TV")');
     await page.waitForTimeout(100);
     check(JSON.stringify((await wTiles(page)).slice(0, 2)) === '["tv1400","tv1401"]', 'live TV shelves from films.json', JSON.stringify((await wTiles(page)).slice(0, 2)));

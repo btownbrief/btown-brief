@@ -136,6 +136,17 @@ class Bar(unittest.TestCase):
         self.assertEqual(g.bucket(30 * 60, False), "sit")
         self.assertEqual(g.bucket(70, True), "trailer")
 
+    def test_topic_is_the_curators_own_category(self):
+        self.assertEqual(g.topic_of({"via": "13gb", "cat": "Satirical Content"}), "comedy")
+        self.assertEqual(g.topic_of({"via": "13gb", "cat": "short films"}), "film")
+        self.assertEqual(g.topic_of({"via": "13gb", "cat": ""}), "")
+        self.assertEqual(g.topic_of({"via": "sotw"}), "film")
+        self.assertEqual(g.topic_of({"via": "wimp", "cat": "music"}), "")
+        ok, _ = g.gate(self.cand(via="13gb", cat="music"), detail("A song, live", 300))
+        self.assertEqual(ok["topic"], "music")
+        ok, _ = g.gate(self.cand(), detail("How a pencil is made", 600))
+        self.assertNotIn("topic", ok)
+
     def test_gate(self):
         ok, why = g.gate(self.cand(), detail("How a pencil is made", 600))
         self.assertEqual((ok["b"], ok["dur"], why), ("snack", "10:00", None))
