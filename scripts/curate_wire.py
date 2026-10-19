@@ -308,9 +308,13 @@ def counts(items):
 
 
 def freeze(day, data_dir):
-    """Write yesterday as a final edition and refresh the index."""
+    """Write yesterday as a final edition and refresh the index. A day filed
+    before the lanes' caps existed is held to them first."""
     archive = paths(data_dir)["archive"]
+    cap_river_lanes(day)
     final = dict(day, final=True)
+    final["sports"] = sports_of(final, river(final))
+    final["markets"] = lane_view(final, river(final), "markets")
     final["counts"] = counts(river(final))
     final["count"] = len(river(final))
     wc.write_json(os.path.join(archive, f"{day['date']}.json"), final)
@@ -368,6 +372,7 @@ def reserved(data_dir, today):
             continue
         shelf = [item for items in (day.get("sports") or {}).values() for item in items or []
                  if isinstance(item, dict)]
+        shelf += [item for item in day.get("markets") or [] if isinstance(item, dict)]
         for item in river(day) + list(day.get("picks") or []) + list(day.get("picks_earlier") or []) \
                 + shelf:
             ids.add(item.get("id"))
@@ -425,11 +430,11 @@ def apply_tags(items, tags, comments=None):
             item["topic"] = tag.get("topic")
             if wc.norm_sport(tag.get("sport")) and not item.get("sport"):
                 item["sport"] = wc.norm_sport(tag["sport"])
-            if item["topic"] in ("business", "economy") and item.get("src") in wc.MARKETS_SOURCES:
-                item["topic"] = "markets"   # a markets desk's story is a market story
             item["_score"] = tag.get("score", default_score(item))
         else:
             item["_score"] = default_score(item)
+        if item.get("src") in wc.MARKETS_SOURCES and item.get("topic") in (None, "business", "economy"):
+            item["topic"] = "markets"   # a markets desk's story is a market story, tagged or not
         out.append(annotate(item, comments))
     return out
 
@@ -1024,10 +1029,13 @@ def apply_answer(day, answer, numbered_river, new, want_picks, et, now, previous
                 continue
             for update in updates:
                 before = len(update["items"])
+                leaving = [item for item in update["items"] if item["id"] == item_id]
                 update["items"] = [item for item in update["items"] if item["id"] != item_id]
                 if len(update["items"]) < before:
                     dropped.append(item_id)
                     excess -= 1
+                    # a sports or market story the cap drops stays on its chip
+                    shelved += shelve(day, leaving)
         day["updates"] = updates = [u for u in updates if u["items"]]
 
     # order inside each update: the lead first, then this hour's additions in
@@ -1279,12 +1287,16 @@ def finish(day, pulse, now, changed):
 
 
 def hydrate_sports(day, scored):
-    """A river item filed before its tag knew the sport gets it now, so the
-    sport chips and sport_counts see the whole day (2026-10-19 rollout).
-    Returns how many items changed."""
+    """A river item filed before its tag knew the sport (or that it is a
+    market story) gets it now, so the lanes' caps and chips see the whole day
+    (2026-10-19 rollout). Returns how many items changed."""
     n = 0
     for update in day.get("updates") or []:
         for item in update.get("items") or []:
+            if (scored.get(item.get("id")) or {}).get("topic") == "markets" \
+                    and item.get("topic") != "markets" and not item.get("sport"):
+                item["topic"] = "markets"
+                n += 1
             sport = wc.norm_sport((scored.get(item.get("id")) or {}).get("sport"))
             if sport and not item.get("sport"):
                 item["sport"] = sport

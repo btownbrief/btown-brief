@@ -168,6 +168,50 @@ class SportsCapTests(unittest.TestCase):
         a = dict(item(1, 3), src="cnbc-market-insider")
         tags = {"id1": {"ch": "world", "local": False, "junk": "none", "topic": "business", "score": 3}}
         self.assertEqual(cw.apply_tags([a], tags)[0]["topic"], "markets")
+        b = dict(item(2, 3), src="marketwatch-bulletins")         # not tagged yet
+        self.assertEqual(cw.apply_tags([b], {})[0]["topic"], "markets")
+        # a river story filed before its tag said markets gets it, and the cap sees it
+        self.day["updates"] = [{"key": "morning", "label": "Morning", "items": [filed(3, None)]}]
+        self.assertEqual(cw.hydrate_sports(self.day, {"id3": {"topic": "markets"}}), 1)
+        self.assertEqual(len(cw.counted(cw.river(self.day), "markets")), 1)
+
+    def test_mixed_picks_adds_and_lanes(self):
+        self.day["updates"] = [{"key": "morning", "label": "Morning",
+                                "items": [filed(1, "nba"), dict(filed(2, None), topic="markets")]}]
+        new = [item(10, 6, sport="nba"), dict(item(11, 5), topic="markets"), item(12, 5, sport="nfl"),
+               item(13, 4, sport="nhl"), item(14, 4, sport="tennis")]
+        # river pick (0 is id1), a NEW pick also in add and in `sports`, two lanes at once
+        off = len(cw.river(self.day))
+        answer = {"add": [off + 0, off + 1, off + 2, off + 3, off + 4], "lead": -1, "lead_why": "",
+                  "drop": [], "sports": [off + 0, off + 4], "markets": [off + 1],
+                  "picks": [{"i": 0, "why": "Big."}, {"i": off + 0, "why": "Bigger."}]}
+        result = cw.apply_answer(self.day, answer, cw.river(self.day), new, True, self.et, NOW)
+        in_river = {i["id"] for i in cw.river(self.day)}
+        self.assertEqual(in_river, {"id1", "id2", "id10", "id11", "id12", "id13"})
+        self.assertEqual(result["shelved"], ["id14"])               # sports full at four
+        self.assertEqual([p["id"] for p in self.day["picks"]], ["id1", "id10"])
+        self.assertEqual(len(cw.counted(cw.river(self.day), "sports")), 4)
+        self.assertEqual(len(cw.counted(cw.river(self.day), "markets")), 2)
+
+    def test_the_river_cap_keeps_a_dropped_lane_story_on_its_chip(self):
+        self.day["updates"] = [{"key": "morning", "label": "Morning",
+                                "items": [filed(n, None, local=True) for n in range(1, cw.RIVER_MAX + 1)]}]
+        new = [dict(item(900, 3), topic="markets")]
+        result = self.answer(new, add=[0])
+        self.assertNotIn("id900", {i["id"] for i in cw.river(self.day)})   # the oldest national goes
+        self.assertIn("id900", result["shelved"])
+        self.assertIn("id900", {i["id"] for i in cw.shelf_items(self.day, "markets")})
+
+    def test_a_day_frozen_over_the_cap_is_capped_first(self):
+        import tempfile
+        self.day["date"] = "2026-10-18"
+        self.day["updates"] = [{"key": "morning", "label": "Morning",
+                                "items": [filed(n, "nba") for n in range(1, 8)]}]
+        with tempfile.TemporaryDirectory() as data:
+            cw.freeze(self.day, data)
+            final = wc.load_json(os.path.join(data, "wire", "2026-10-18.json"), {})
+        self.assertEqual(len(cw.counted(cw.river(final), "sports")), cw.SPORTS_RIVER_MAX)
+        self.assertEqual(len(final["sports"]["nba"]), 7)
 
     def test_a_river_from_before_the_cap_is_trimmed_keeping_picks_and_the_biggest(self):
         self.day["updates"] = [{"key": "morning", "label": "Morning",
@@ -195,13 +239,14 @@ class SportsCapTests(unittest.TestCase):
             self.assertEqual("mlb" in day["sport_chips"], chip == "mlb")
 
     def test_shelved_stories_are_never_offered_again_or_re_served(self):
-        cw.shelve(self.day, [item(1, 3, sport="nba")])
-        self.assertEqual([i["id"] for i in cw.shelf_items(self.day)], ["id1"])
+        cw.shelve(self.day, [item(1, 3, sport="nba"), dict(item(2, 3), topic="markets")])
+        self.assertEqual([i["id"] for i in cw.shelf_items(self.day)], ["id1", "id2"])
         import tempfile
         with tempfile.TemporaryDirectory() as data:
             wc.write_json(os.path.join(data, "wire", "2026-10-18.json"), self.day)
             ids, urls, _ = cw.reserved(data, "2026-10-19")
         self.assertIn("id1", ids)
+        self.assertIn("id2", ids)
 
     def test_the_prompt_says_how_many_sports_have_run(self):
         new = [item(1, 3, sport="tennis")]
