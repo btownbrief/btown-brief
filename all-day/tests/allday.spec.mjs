@@ -289,7 +289,9 @@ async function onairFiles(opts = {}) {
   /* the finds file (all-day/data/onair-finds.json): the demo's, re-dated, its placeholder art dropped */
   d.finds.items.forEach((f) => { f.d += secs; delete f.art; });
   d.finds.boards.forEach((b) => b.clips.forEach((c) => { delete c.art; }));
-  const out = { files, tv, index, today, clips, finds: JSON.stringify(d.finds), mp3: longSilence(await readFile(path.join(HERE, 'fixtures/silence.mp3'))) };
+  /* and the news recaps file (all-day/data/onair-news.json), the same way */
+  d.news.items.forEach((f) => { f.d += secs; delete f.art; });
+  const out = { files, tv, index, today, clips, finds: JSON.stringify(d.finds), news: JSON.stringify(d.news), mp3: longSilence(await readFile(path.join(HERE, 'fixtures/silence.mp3'))) };
   onairCache.set(key, out);
   return out;
 }
@@ -365,6 +367,7 @@ async function newPage(browser, base, opts = {}) {
   });
   const onair = await onairFiles(opts.onair);
   await page.route(/\/all-day\/data\/onair-finds\.json$/, (r) => r.fulfill({ status: 200, body: onair.finds, contentType: 'application/json' }));
+  await page.route(/\/all-day\/data\/onair-news\.json$/, (r) => r.fulfill({ status: 200, body: onair.news, contentType: 'application/json' }));
   await page.route(/raw\.githubusercontent\.com\/btownbrief\/btown-brief\/(btown-tv|wire-audio)\/data\/(?:audio\/)?([\w.-]+)$/, (r) => {
     const name = r.request().url().match(/([\w.-]+)$/)[1];
     if (/\.mp3$/.test(name) && onair.index.clips.some((c) => c.file === name)) return fulfillBytes(r, onair.mp3, 'audio/mpeg');
@@ -2343,11 +2346,11 @@ async function onAir(browser, base) {
     await settle(page);
     await page.waitForSelector('#panel-onair [data-sec="past"]', { timeout: 8000 });
     const sideways = await page.$$eval('#panel-onair .rail', (rs) => rs.map((r) => r.dataset.rail || '(none)'));
-    check(JSON.stringify(sideways) === JSON.stringify(['live', 'past']), 'the only sideways rows on the tab are Live and Past nights', JSON.stringify(sideways));
+    check(JSON.stringify(sideways) === JSON.stringify(['news-cast', 'news-late', 'live', 'past']), 'the only sideways rows on the tab are the two news recap rows, Live and Past nights', JSON.stringify(sideways));
     const tops = await page.$$eval('#panel-onair .railmode:not(.foot) [data-railmode]', (bs) => bs.map((b) => b.textContent + '|' + b.getAttribute('aria-pressed') + '|' + Math.round(b.getBoundingClientRect().height)));
-    check(tops.length === 2 && tops.every((t) => /^See as a list\|false\|\d+$/.test(t) && Number(t.split('|')[2]) >= 30), 'and each has “See as a list” above it', JSON.stringify(tops));
+    check(tops.length === 4 && tops.every((t) => /^See as a list\|false\|\d+$/.test(t) && Number(t.split('|')[2]) >= 30), 'and each has “See as a list” above it', JSON.stringify(tops));
     const names = await page.$$eval('#panel-onair .railmode:not(.foot) [data-railmode]', (bs) => bs.map((b) => b.getAttribute('aria-label')));
-    check(JSON.stringify(names) === JSON.stringify(['See as a list: Live', 'See as a list: Past nights']), 'each button names its row for a screen reader', JSON.stringify(names));
+    check(JSON.stringify(names) === JSON.stringify(['See as a list: Tonight’s newscasts', 'See as a list: Late-night and comedy', 'See as a list: Live', 'See as a list: Past nights']), 'each button names its row for a screen reader', JSON.stringify(names));
     const measure = () => page.$eval('#panel-onair [data-rail="past"]', (r) => {
       const cs = [...r.querySelectorAll(':scope > .vcard')];
       const boxes = cs.map((c) => c.getBoundingClientRect());
@@ -2367,6 +2370,91 @@ async function onAir(browser, base) {
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
   });
+  /* Stephen, 2026-10-19: "a news recap section … the main comedy news shows …
+     and also the main news recaps like Reuters and ABC World News Tonight …
+     Full recap videos, not just one-off stories." */
+  await group('On Air, news recaps', async () => {
+    const d = JSON.parse(await readFile(path.join(APP, 'data/demo/onair.json'), 'utf8'));
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/all-day/?demo=1#onair');
+    await settle(page);
+    await page.waitForSelector('#panel-onair [data-sec="news"]', { timeout: 8000 });
+    const order = await visibleSecs(page);
+    check(order.indexOf('news') === order.indexOf('tv') + 1, 'News recaps sit right after Btown TV, on Local too (national, and plainly named)', JSON.stringify(order));
+    const groups = await page.$$eval('#panel-onair [data-slot="news"] .oa-newsgroup', (gs) => gs.map((g) => ({ kind: g.dataset.news, label: g.querySelector('.tdiv').textContent.trim(),
+      shows: [...g.querySelectorAll('.oa-newscard .eyebrow')].map((e) => e.textContent) })));
+    check(JSON.stringify(groups.map((g) => [g.kind, g.label])) === JSON.stringify([['newscast', 'Tonight’s newscasts'], ['comedy', 'Late-night and comedy']]), 'two groups: the newscasts, then late night', JSON.stringify(groups));
+    const want = (kind) => d.news.items.filter((f) => f.kind === kind).sort((a, b) => b.d - a.d).map((f) => f.show);
+    check(JSON.stringify(groups[0].shows) === JSON.stringify(want('newscast')) && JSON.stringify(groups[1].shows) === JSON.stringify(want('comedy')),
+      'every recap in its group, newest first', JSON.stringify(groups));
+    const card = await page.$eval('#panel-onair [data-slot="news"] .oa-newscard', (c) => ({ show: c.querySelector('.eyebrow').textContent, t: c.querySelector('.t').textContent,
+      s: c.querySelector('.s').textContent, dur: c.querySelector('.dur')?.textContent, buttons: [...c.querySelectorAll('button')].map((b) => b.textContent.trim() || b.getAttribute('aria-label')),
+      size: parseFloat(getComputedStyle(c.querySelector('.t')).fontSize) }));
+    check(card.show && card.t && /^\d+ min · (Today|Yesterday|[A-Z][a-z]+day)$/.test(card.s) && /^\d+:\d\d$/.test(card.dur) && card.buttons[0] === 'Watch now' && card.buttons.length === 2 && card.size >= 16,
+      'a card: the show, the episode in a readable size, its length and day, Watch now and ⋯', JSON.stringify(card));
+    const abc = await page.$eval('#panel-onair .oa-newscard[data-k="yt:demo-nw-001"] .t', (t) => t.textContent);
+    check(abc === 'Full broadcast · Thursday, Oct. 15', 'a newscast reads as its date, not its show name twice', abc);
+    /* Watch now plays the row in On Air's own player */
+    await page.click('#panel-onair .oa-newscard[data-k="yt:demo-nw-001"] .oa-watch');
+    await page.waitForSelector('.sheet-card.oa-player', { timeout: 3000 });
+    const player = await page.evaluate(() => ({ title: document.querySelector('.sheet-card.oa-player')?.getAttribute('aria-label'), q: document.querySelectorAll('.sheet-card .oa-q').length }));
+    const casts = d.news.items.filter((f) => f.kind === 'newscast').sort((a, b) => b.d - a.d);
+    const after = Math.min(5, casts.length - 1 - casts.findIndex((f) => f.id === 'demo-nw-001'));
+    check(player.title === 'Tonight’s newscasts' && player.q === after, 'it opens the player on that row, the newscasts after it up next', JSON.stringify({ player, after }));
+    await page.keyboard.press('Escape');
+    /* "See as a list", and the Collapse bar while it is open */
+    await page.click('#panel-onair .railmode:not(.foot) [data-railmode="news-cast"]');
+    const listed = await page.$eval('#panel-onair [data-rail="news-cast"]', (r) => {
+      const boxes = [...r.querySelectorAll(':scope > .vcard')].map((c) => c.getBoundingClientRect());
+      const foot = r.closest('.rail-wrap').nextElementSibling;
+      return { list: r.classList.contains('aslist'), down: boxes.every((b, i) => !i || b.top >= boxes[i - 1].bottom - 1), inside: boxes.every((b) => b.left >= 0 && b.right <= innerWidth + 0.5),
+        bar: !foot.hidden && foot.matches('.collapsebar') && getComputedStyle(foot).position === 'sticky', comedy: document.querySelector('[data-rail="news-late"]').classList.contains('aslist') };
+    });
+    check(listed.list && listed.down && listed.inside && listed.bar && !listed.comedy, 'the newscasts become a list, the Collapse bar under it; late night stays a row', JSON.stringify(listed));
+    await page.evaluate(() => document.querySelector('[data-rail="news-cast"]').closest('.rail-wrap').nextElementSibling.querySelector('[data-collapse]').click());
+    check(!(await page.$eval('#panel-onair [data-rail="news-cast"]', (r) => r.classList.contains('aslist'))), 'Collapse folds it back to a row', '');
+    /* Topics: a News & politics shelf, not a flood in New this week */
+    await page.click('#panel-onair .oa-viewswitch [data-view="topics"]');
+    await page.waitForSelector('#panel-onair [data-topic="news"]', { timeout: 3000 });
+    const topics = await page.evaluate(() => ({ label: document.querySelector('#panel-onair [data-topic="news"] h2').textContent,
+      news: [...document.querySelectorAll('#panel-onair .oa-tile')].filter((t) => t.dataset.run === 'News & politics').map((t) => t.dataset.k),
+      fresh: [...document.querySelectorAll('#panel-onair .oa-tile')].filter((t) => t.dataset.run === 'New this week' && /demo-nw/.test(t.dataset.k)).length }));
+    check(topics.label === 'News & politics' && topics.news.filter((k) => /demo-nw/.test(k)).length >= 1 && !topics.fresh, 'in Topics the recaps are News & politics, and stay out of New this week', JSON.stringify(topics));
+    await page.click('#panel-onair .oa-viewswitch [data-view="feed"]');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('On Air, news recaps are checked', async () => {
+    const now = Math.floor(Date.now() / 1000);
+    const file = { v: 1, items: [
+      { id: 'NewsGood001', t: 'ABC World News Tonight Full Broadcast', ep: 'Full broadcast · Today', show: 'ABC World News Tonight', ch: 'ABC News', kind: 'newscast', sec: 1230, d: now - 3600 },
+      { id: 'NewsGood002', t: '<img src=x onerror="window.__xss=1">Monologue', show: '<b>Kimmel</b>', ch: 'Jimmy Kimmel Live', kind: 'comedy', sec: 900, d: now - 7200 },
+      { id: 'bad', t: 'Not an id', show: 'X', kind: 'newscast', sec: 900, d: now },
+      { id: 'NewsBad0003', t: 'Unknown kind', show: 'X', kind: 'constructor', sec: 900, d: now },
+    ] };
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.route(/\/all-day\/data\/onair-news\.json/, (r) => r.fulfill({ status: 200, body: JSON.stringify(file), contentType: 'application/json' }));
+    await page.goto(base + '/all-day/#onair');
+    await page.waitForSelector('#panel-onair [data-slot="news"] .oa-newscard', { timeout: 15000 });
+    const keys = await page.$$eval('#panel-onair [data-slot="news"] [data-k]', (cs) => cs.map((c) => c.dataset.k));
+    check(JSON.stringify(keys) === JSON.stringify(['yt:NewsGood001', 'yt:NewsGood002']), 'live: real recaps show; a bad id or an unknown kind is left out', JSON.stringify(keys));
+    await page.waitForTimeout(300);
+    const xss = await page.evaluate(() => ({ flag: window.__xss || 0, imgs: [...document.querySelectorAll('#panel-onair [data-slot="news"] img')].filter((i) => !/^https:\/\/i\.ytimg\.com\//.test(i.src)).length,
+      show: document.querySelector('#panel-onair [data-k="yt:NewsGood002"] .eyebrow').textContent }));
+    check(!xss.flag && !xss.imgs && xss.show === '<b>Kimmel</b>', 'a title or show name from the file is text, never markup', JSON.stringify(xss));
+    await ctx.close();
+    /* no file, or an empty one: no section, nothing broken */
+    const p2 = await newPage(browser, base);
+    await p2.page.route(/\/all-day\/data\/onair-news\.json/, (r) => r.fulfill({ status: 404, body: '' }));
+    await p2.page.goto(base + '/all-day/#onair');
+    await p2.page.waitForSelector('#panel-onair [data-sec="tv"]', { timeout: 15000 });
+    await p2.page.waitForTimeout(400);
+    check(await p2.page.$eval('#panel-onair [data-slot="news"]', (s) => s.hidden && !s.children.length) && !(await p2.page.$('#panel-onair .errbox')), 'with no news file the section is simply not there', '');
+    check(!errors.length && !p2.errors.filter((e) => !/404/.test(e)).length, 'no console errors', errors.concat(p2.errors).join(' | '));
+    await p2.ctx.close();
+  });
+
   await group('On Air, speed and the newsletter', async () => {
     const { ctx, page, errors } = await newPage(browser, base);
     await page.goto(base + '/all-day/?demo=1#onair/podcasts');

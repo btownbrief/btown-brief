@@ -154,6 +154,7 @@ function redate(d) {
   });
   arr(d.pulse && d.pulse.items).forEach(shiftV);
   arr(d.finds && d.finds.items).forEach(shiftV);
+  arr(d.news && d.news.items).forEach(shiftV);
   arr(d.audio && d.audio.clips).forEach((c) => {
     if (isDate(c.date)) c.date = addDays(c.date, days);
     if (c.made) c.made = new Date(Date.parse(c.made) + secs * 1000).toISOString();
@@ -176,6 +177,7 @@ const O = {
   exp: Object.create(null),    // the "All N" lists opened in place, for the visit
   posts: null,                 // the readers' playlists board's approved posts, or null
   board: null,                 // that board is installed: true, false, or null (not asked yet)
+  news: null,                  // data/onair-news.json, the news recaps
   finds: null,                 // the earlier night the TV block shows, or null for tonight (the visit only)
 };
 
@@ -1022,9 +1024,13 @@ function tile(it, list, run) {
 /* Topics: New this week, then each topic with enough in it. The length
    chips still choose: a topic then holds only that length. */
 function drawTopics(host) {
-  const pool = pool_();
+  /* the news recaps join News & politics, not "New this week": they are all new,
+     every day. A recap that is also a Btown TV pick or a find counts as a recap. */
+  const news = newsPool();
+  const nk = new Set(news.map((it) => it.k));
+  const pool = pool_().filter((it) => !nk.has(it.k)).concat(news.filter((it) => !O.len || it.len === O.len));
   if (!pool.length) { host.appendChild(el('p', 'note pad', 'Nothing at that length yet.')); return true; }
-  const fresh = pool.filter(isNew).sort(newest);
+  const fresh = pool.filter((it) => isNew(it) && !it.news).sort(newest);
   const shelves = [];
   if (fresh.length) shelves.push(['new', 'New this week', fresh]);
   const by = Object.create(null);
@@ -1154,6 +1160,77 @@ function drawLive(host) {
   const items = live.map((v) => videoItem(v, { live: true })).filter(Boolean);
   items.forEach((it) => r.appendChild(vcard(it, 'w220', items)));
   app.know(items);
+  return true;
+}
+
+/* ------------------------------------------------------------ news recaps */
+/* Stephen, 2026-10-19: "a news recap section … the main comedy news shows
+   like The Daily Show, Jimmy Kimmel, John Oliver … and also the main news
+   recaps like Reuters and ABC World News Tonight … Full recap videos, not
+   just one-off stories." scripts/gather_onair_news.py → data/onair-news.json:
+   each show's full broadcast, monologue or headlines block, from the show's
+   own YouTube channel, the last seven days, newest first. Two sideways rows
+   right after Btown TV, the newscasts and late night, each with "See as a
+   list". They are national on purpose and plainly named, so they show on
+   Local too: hiding them behind the switch (Local is the default) would hide
+   the section itself. In Topics they join News & politics. */
+const NEWS_URL = 'data/onair-news.json';
+const NEWS_GROUPS = [['newscast', 'news-cast', 'Tonight’s newscasts'], ['comedy', 'news-late', 'Late-night and comedy']];
+Object.assign(RAIL_NAMES, Object.fromEntries(NEWS_GROUPS.map(([, name, label]) => [name, label])));
+function loadNews(ok, fail) {
+  if (app.demo) { load('news', ok, fail); return; }
+  fetch(NEWS_URL, { cache: 'no-cache' }).then((r) => (r.ok ? r.json() : Promise.reject(new Error(String(r.status)))))
+    .then((j) => (j && Array.isArray(j.items) ? ok(j) : fail()), fail);
+}
+/* the file is ours, but its titles came off YouTube: every field is checked */
+function newsItem(f) {
+  if (!f || !app.isVideoId(f.id) || !f.t || !NEWS_GROUPS.some(([kind]) => kind === f.kind)) return null;
+  const sec = Math.max(0, Math.round(Number(f.sec) || 0));
+  const show = clip(f.show, 60) || clip(f.ch, 60) || 'YouTube';
+  const d = Number(f.d) || 0;
+  return {
+    k: 'yt:' + f.id, kind: 'video', yt: f.id, title: clip(f.ep || f.t, 140), src: show, sid: 'yt:' + String(f.ch || show),
+    href: 'https://www.youtube.com/watch?v=' + f.id,
+    media: app.demo && f.art ? f.art : 'https://i.ytimg.com/vi/' + f.id + '/hqdefault.jpg',
+    dur: sec ? fmtClock(sec) : '', sec, len: lengthOf(sec, ''), why: '', via: '', viaUrl: '',
+    ago: d ? agoShort(d) : '', d, topic: 'news', news: f.kind,
+  };
+}
+const newsPool = () => arr(O.news && O.news.items).map(newsItem).filter(Boolean).sort((a, b) => b.d - a.d);
+/* the day it went up, as a reader says it: Today, Yesterday, Thursday */
+function newsDay(d) {
+  if (!d) return '';
+  const day = etDay(d * 1000);
+  return day === todayKey() ? 'Today' : day === addDays(todayKey(), -1) ? 'Yesterday' : weekday(day);
+}
+/* a card: the show, the episode, its length and day, Watch now and ⋯ */
+function newsCard(it, list, run) {
+  const c = el('article', 'vcard w250 oa-newscard');
+  c.dataset.k = it.k;
+  c.dataset.run = run;
+  c._list = list;
+  c.innerHTML = '<span class="c-media r169" data-watch role="button" tabindex="0" aria-label="Watch ' + esc(it.src + ', ' + it.title) + '">' + art(it.media) +
+    (it.dur ? '<span class="dur">' + esc(it.dur) + '</span>' : '') + '</span>' +
+    '<span class="eyebrow">' + esc(it.src) + '</span><span class="t">' + esc(it.title) + '</span>' +
+    '<span class="s">' + esc([it.sec ? minutes(it.sec) : '', newsDay(it.d)].filter(Boolean).join(' · ')) + '</span>' + watchRow(it, 'pillbtn');
+  return c;
+}
+function drawNews(host) {
+  const all = newsPool();
+  if (!all.length) return false;
+  sec(host, 'News recaps', '', 'news');
+  NEWS_GROUPS.forEach(([kind, name, label]) => {
+    const list = all.filter((it) => it.news === kind);
+    if (!list.length) return;
+    /* each row in its own box, so an opened list's Collapse bar stays with it */
+    const g = el('div', 'oa-newsgroup');
+    g.dataset.news = kind;
+    host.appendChild(g);
+    divider(g, label);
+    const r = videoRail(g, name);
+    list.forEach((it) => r.appendChild(newsCard(it, list, label)));
+  });
+  app.know(all);
   return true;
 }
 
@@ -1729,17 +1806,18 @@ function setLen(k) {
 
 function drawTVSide() {
   const S = O.slots;
-  ['pick', 'tv', 'more', 'topics', 'live', 'past', 'tvEnd'].forEach((n) => { S[n].innerHTML = ''; });
+  ['pick', 'tv', 'news', 'more', 'topics', 'live', 'past', 'tvEnd'].forEach((n) => { S[n].innerHTML = ''; });
   S.pick.hidden = !drawPick(S.pick);
   const topics = view() === 'topics';
   S.topics.hidden = !topics || !drawTopics(S.topics);
   if (topics) {
-    ['tv', 'more', 'live', 'past'].forEach((n) => { S[n].hidden = true; });
+    ['tv', 'news', 'more', 'live', 'past'].forEach((n) => { S[n].hidden = true; });
   } else if (O.len) {
     S.tv.hidden = !drawLength(S.tv);
-    ['more', 'live', 'past'].forEach((n) => { S[n].hidden = true; });
+    ['news', 'more', 'live', 'past'].forEach((n) => { S[n].hidden = true; });
   } else {
     S.tv.hidden = !drawTV(S.tv);
+    S.news.hidden = !drawNews(S.news);
     S.more.hidden = !drawMore(S.more);
     S.live.hidden = !drawLive(S.live);
     S.past.hidden = !drawPast(S.past);
@@ -1767,7 +1845,7 @@ function render() {
     const listSide = side('lists');
     const mk = (host, name) => { const s = el('div'); s.dataset.slot = name; host.appendChild(s); return s; };
     O.slots = { tvSide, podSide, listSide,
-      pick: mk(tvSide, 'pick'), tv: mk(tvSide, 'tv'), more: mk(tvSide, 'more'), topics: mk(tvSide, 'topics'), live: mk(tvSide, 'live'), past: mk(tvSide, 'past'), tvEnd: mk(tvSide, 'end'),
+      pick: mk(tvSide, 'pick'), tv: mk(tvSide, 'tv'), news: mk(tvSide, 'news'), more: mk(tvSide, 'more'), topics: mk(tvSide, 'topics'), live: mk(tvSide, 'live'), past: mk(tvSide, 'past'), tvEnd: mk(tvSide, 'end'),
       brief: mk(podSide, 'brief'), podsHead: mk(podSide, 'pods-head'), own: mk(podSide, 'own'), pods: mk(podSide, 'pods'), podEnd: mk(podSide, 'end'),
       lists: mk(listSide, 'lists'), boards: mk(listSide, 'boards'), listEnd: mk(listSide, 'end') };
     O.built = true;
@@ -1871,10 +1949,17 @@ function allVideos() {
 }
 function land() {
   let k = O.pending;
-  if (!k || !O.root || !O.built || !FEEDS.every((f) => O.settled[f]) || !O.settled.playlists || !O.settled.finds) return;
+  if (!k || !O.root || !O.built || !FEEDS.every((f) => O.settled[f]) || !O.settled.playlists || !O.settled.finds || !O.settled.news) return;
   O.pending = null;
   if (k === 'brief') { const c = currentClip(); if (c) k = 'brief:' + c.date; }   // the old #listen/brief
   let hit = findHit(k);
+  if (!hit && /^yt:/.test(k) && newsPool().some((x) => x.k === k)) {
+    /* a shared news recap: its row is in the feed, with every length */
+    O.len = '';
+    if (view() === 'topics') viewMem = 'feed';
+    drawTVSide();
+    hit = findHit(k);
+  }
   if (!hit && /^(yt|vm):/.test(k)) {
     /* a shared video that the page as drawn does not show (a find while on
        Local, the twentieth of tonight's, the fourth of a length): bring the
@@ -1918,6 +2003,7 @@ function mount(root) {
   /* not in FEEDS: a playlist or finds file that loads must not hide "Couldn't reach On Air" */
   loadPlaylists((j) => { O.playlists = j; O.settled.playlists = true; render(); }, () => { O.settled.playlists = true; render(); });
   loadFinds((j) => { O.finds = j; O.settled.finds = true; render(); }, () => { O.settled.finds = true; render(); });
+  loadNews((j) => { O.news = j; O.settled.news = true; render(); }, () => { O.settled.news = true; render(); });
   loadBoard();
   /* a playlist approved, deleted or taken down elsewhere in the app */
   window.addEventListener('allday-boards', (e) => {
