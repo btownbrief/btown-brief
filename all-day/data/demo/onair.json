@@ -1,5 +1,5 @@
 {
- "_": "Demo data for ?demo=1, in the real payloads' shapes: tv is btown-tv.json, tvEditions is tv-editions.json, pulse is the podcast part of pulse.json, podcast is all-day/data/podcast.json, audio is the wire-audio branch's index.json, playlists is all-day/data/playlists.json, finds is all-day/data/onair-finds.json (its links are made up and only toast here). Every item is invented. `art` (a placeholder palette) and `_script` are demo-only fields. Dates are moved to the reader's clock from _anchor.",
+ "_": "Demo data for ?demo=1, in the real payloads' shapes: tv is btown-tv.json, tvEditions is tv-editions.json, pulse is the podcast part of pulse.json, podcast is all-day/data/podcast.json, audio is the wire-audio branch's index.json, playlists is all-day/data/playlists.json, finds is all-day/data/onair-finds.json (its links are made up and only toast here). Every item is invented. `art` (a placeholder palette) and `_script` are demo-only fields. Dates are moved to the reader's clock from _anchor. news is all-day/data/onair-news.json (scripts/gather_onair_news.py): the news recaps, with placeholder art.",
  "_anchor": "2026-10-16",
  "tv": {
   "v": 1,
@@ -1814,6 +1814,180 @@
      }
     ],
     "sec": 2520
+   }
+  ]
+ },
+ "news": {
+  "v": 1,
+  "generated": "2026-10-16T12:25:00Z",
+  "items": [
+   {
+    "id": "demo-nw-005",
+    "t": "Storm cleanup, a rate decision and a record harvest | Reuters World News",
+    "ep": "Storm cleanup, a rate decision and a record harvest",
+    "show": "Reuters World News",
+    "sk": "reuters",
+    "ch": "Reuters",
+    "kind": "newscast",
+    "topic": "news",
+    "sec": 561,
+    "dur": "9:21",
+    "d": 1792152000,
+    "art": "maple"
+   },
+   {
+    "id": "demo-nw-007",
+    "t": "Congress Takes a Long Weekend, a Very Confident Goose & Our Week in Review",
+    "ep": "Congress Takes a Long Weekend, a Very Confident Goose & Our Week in Review",
+    "show": "Jimmy Kimmel Live",
+    "sk": "kimmel",
+    "ch": "Jimmy Kimmel Live",
+    "kind": "comedy",
+    "topic": "news",
+    "sec": 853,
+    "dur": "14:13",
+    "d": 1792122300,
+    "art": "dusk"
+   },
+   {
+    "id": "demo-nw-001",
+    "t": "ABC World News Tonight with David Muir Full Broadcast - Oct. 15, 2026",
+    "ep": "Full broadcast · Thursday, Oct. 15",
+    "show": "ABC World News Tonight",
+    "sk": "abc",
+    "ch": "ABC News",
+    "kind": "newscast",
+    "topic": "news",
+    "sec": 1236,
+    "dur": "20:36",
+    "d": 1792117800,
+    "art": "lake"
+   },
+   {
+    "id": "demo-nw-008",
+    "t": "The News Team on the Midterm Ad Blitz and a Very Long Ballot | The Daily Show",
+    "ep": "The News Team on the Midterm Ad Blitz and a Very Long Ballot",
+    "show": "The Daily Show",
+    "sk": "dailyshow",
+    "ch": "The Daily Show",
+    "kind": "comedy",
+    "topic": "news",
+    "sec": 683,
+    "dur": "11:23",
+    "d": 1792116000,
+    "art": "harbor"
+   },
+   {
+    "id": "demo-nw-003",
+    "t": "CBS Evening News Full Broadcast | October 15, 2026",
+    "ep": "Full broadcast · Thursday, Oct. 15",
+    "show": "CBS Evening News",
+    "sk": "cbs",
+    "ch": "CBS Evening News",
+    "kind": "newscast",
+    "topic": "news",
+    "sec": 1171,
+    "dur": "19:31",
+    "d": 1792115400,
+    "art": "harbor"
+   },
+   {
+    "id": "demo-nw-009",
+    "t": "The Week in Campaign Promises, Explained Slowly: A Closer Look",
+    "ep": "The Week in Campaign Promises, Explained Slowly",
+    "show": "Late Night with Seth Meyers",
+    "sk": "seth",
+    "ch": "Late Night with Seth Meyers",
+    "kind": "comedy",
+    "topic": "news",
+    "sec": 842,
+    "dur": "14:02",
+    "d": 1792112400,
+    "art": "field"
+   },
+   {
+    "id": "demo-nw-002",
+    "t": "NBC Nightly News Full Episode - Oct. 15",
+    "ep": "Full broadcast · Thursday, Oct. 15",
+    "show": "NBC Nightly News",
+    "sk": "nbc",
+    "ch": "NBC News",
+    "kind": "newscast",
+    "topic": "news",
+    "sec": 1158,
+    "dur": "19:18",
+    "d": 1792107600,
+    "art": "dusk"
+   },
+   {
+    "id": "demo-nw-004",
+    "t": "PBS News Hour full episode, Oct. 15, 2026",
+    "ep": "Full broadcast · Thursday, Oct. 15",
+    "show": "PBS News Hour",
+    "sk": "pbs",
+    "ch": "PBS NewsHour",
+    "kind": "newscast",
+    "topic": "news",
+    "sec": 3407,
+    "dur": "56:47",
+    "d": 1792107300,
+    "art": "field"
+   },
+   {
+    "id": "demo-nw-010",
+    "t": "Halloween Candy Inflation, a Pumpkin Record & the Mayor's New Hat",
+    "ep": "Halloween Candy Inflation, a Pumpkin Record & the Mayor's New Hat",
+    "show": "The Tonight Show",
+    "sk": "fallon",
+    "ch": "The Tonight Show Starring Jimmy Fallon",
+    "kind": "comedy",
+    "topic": "news",
+    "sec": 622,
+    "dur": "10:22",
+    "d": 1792035300,
+    "art": "maple"
+   },
+   {
+    "id": "demo-nw-006",
+    "t": "ABC World News Tonight with David Muir Full Broadcast - Oct. 14, 2026",
+    "ep": "Full broadcast · Wednesday, Oct. 14",
+    "show": "ABC World News Tonight",
+    "sk": "abc",
+    "ch": "ABC News",
+    "kind": "newscast",
+    "topic": "news",
+    "sec": 1194,
+    "dur": "19:54",
+    "d": 1792031400,
+    "art": "lake"
+   },
+   {
+    "id": "demo-nw-011",
+    "t": "Weekend Update ft. the Cast - SNL",
+    "ep": "Weekend Update ft. the Cast",
+    "show": "SNL Weekend Update",
+    "sk": "snl",
+    "ch": "Saturday Night Live",
+    "kind": "comedy",
+    "topic": "news",
+    "sec": 825,
+    "dur": "13:45",
+    "d": 1791810000,
+    "art": "lake"
+   },
+   {
+    "id": "demo-nw-012",
+    "t": "S13 E26: Generic Drugs: 10/11/26: Last Week Tonight with John Oliver",
+    "ep": "Generic Drugs",
+    "show": "Last Week Tonight",
+    "sk": "lwt",
+    "ch": "Last Week Tonight",
+    "kind": "comedy",
+    "topic": "news",
+    "sec": 2345,
+    "dur": "39:05",
+    "d": 1791774000,
+    "art": "dusk"
    }
   ]
  }

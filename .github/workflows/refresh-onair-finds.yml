@@ -21,12 +21,24 @@
 # Failure posture: each source fails on its own and the file keeps what it
 # had; with no YouTube credentials nothing new is measured, so nothing new
 # is added. The script exits 0 either way.
+#
+# News recaps (scripts/gather_onair_news.py -> all-day/data/onair-news.json)
+# ride the same workflow every three hours: the evening newscasts and late
+# night's monologues from the shows' own YouTube channels, found in their
+# free RSS feeds. A channel feed holds only its newest 15 uploads, and NBC
+# News posts about 1.5 an hour, so once a day would miss Nightly News. Each
+# run is ~13 feed requests and at most one videos.list call (one quota unit)
+# for the handful of new candidates; the file is rewritten only when it
+# changed. The curator finds still run once a day: their step skips itself
+# when onair-finds.json is under 22 hours old, so it keeps to the 15:10 UTC
+# run (11:10 EDT, after the curators' mornings) and still runs when GitHub's
+# best-effort cron fires late. No step depends on WHICH schedule fired.
 
 name: Refresh On Air finds
 
 on:
   schedule:
-    - cron: "10 15 * * *"   # 11:10 EDT, after the curators' mornings
+    - cron: "10 */3 * * *"  # every three hours for the news; the finds step runs on the one near 11:10 EDT
   workflow_dispatch:
 
 concurrency:
@@ -52,9 +64,24 @@ jobs:
           python-version: "3.12"
 
       - name: Offline checks
-        run: python3 -m unittest tests.test_gather_onair_finds
+        run: python3 -m unittest tests.test_gather_onair_finds tests.test_gather_onair_news
+
+      - name: Is a finds run due?
+        id: due
+        run: |
+          python3 - <<'PY' >> "$GITHUB_OUTPUT"
+          import calendar, json, os, time
+          try:
+              g = json.load(open("all-day/data/onair-finds.json"))["generated"]
+              age = time.time() - calendar.timegm(time.strptime(g, "%Y-%m-%dT%H:%M:%SZ"))
+          except Exception:
+              age = 1e9
+          manual = os.environ.get("GITHUB_EVENT_NAME") == "workflow_dispatch"
+          print("finds=" + ("yes" if manual or age > 22 * 3600 else "no"))
+          PY
 
       - name: Gather the finds
+        if: steps.due.outputs.finds == 'yes'
         env:
           YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
           YT_OAUTH_CLIENT_ID: ${{ secrets.YT_OAUTH_CLIENT_ID }}
@@ -62,14 +89,22 @@ jobs:
           YT_OAUTH_REFRESH_TOKEN: ${{ secrets.YT_OAUTH_REFRESH_TOKEN }}
         run: python3 scripts/gather_onair_finds.py
 
+      - name: Gather the news recaps
+        env:
+          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+          YT_OAUTH_CLIENT_ID: ${{ secrets.YT_OAUTH_CLIENT_ID }}
+          YT_OAUTH_CLIENT_SECRET: ${{ secrets.YT_OAUTH_CLIENT_SECRET }}
+          YT_OAUTH_REFRESH_TOKEN: ${{ secrets.YT_OAUTH_REFRESH_TOKEN }}
+        run: python3 scripts/gather_onair_news.py
+
       - name: Commit if it changed
         run: |
           git config user.name "btown-brief-bot"
           git config user.email "actions@users.noreply.github.com"
-          git add all-day/data/onair-finds.json
+          git add all-day/data/onair-finds.json all-day/data/onair-news.json
           if git diff --cached --quiet; then
-            echo "No On Air finds changes."
+            echo "No On Air finds or news changes."
           else
-            git commit -m "Auto-refresh On Air finds"
+            git commit -m "Auto-refresh On Air finds and news recaps"
             git push origin HEAD:main || (git pull --rebase origin main && git push origin HEAD:main)
           fi

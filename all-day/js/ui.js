@@ -86,6 +86,8 @@ export const ICON = {
   tee: svg('<path d="M8 4 3.5 7.3 6 10.5l2-1.1V20h8V9.4l2 1.1 2.5-3.2L16 4a4 4 0 0 1-8 0z"/>'),
   mail: svg('<rect x="3.5" y="5.5" width="17" height="13" rx="2"/><path d="m4 7 8 6 8-6"/>'),
   flag: svg('<path d="M5.5 21V4.5M5.5 4.5h11l-2.2 4 2.2 4h-11"/>'),
+  more: svg('<circle cx="5.5" cy="12" r="1.6" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.6" fill="currentColor" stroke="none"/><circle cx="18.5" cy="12" r="1.6" fill="currentColor" stroke="none"/>'),
+  down: svg('<path d="m6 9.5 6 6 6-6"/>'),
   trash: svg('<path d="M4.5 7h15M9.5 7V4.5h5V7M6.5 7l1 13h9l1-13M10 11v5.5M14 11v5.5"/>'),
 };
 
@@ -403,6 +405,47 @@ function board(it) {
   return c;
 }
 
+/* The Wire's two story cards (2026-10-19 rebuild: "simple, everything
+   filled to the screen ... glanceable"). Both end in the same meta line,
+   Source · time on the left, then "⋯" (vote, share, the original, the
+   source, mute: data-act="wmore", answered by the tab through app.onAct)
+   and the star, each a 44px target.
+     lead   a top story: the picture full width at 16:9, the headline in
+            Lora, the one-line reason, the meta line. o.rank numbers it.
+     story  every other item: a square picture on the left when there is
+            one, the headline (three lines at most), the meta line. A post
+            (X, Facebook, Reddit) is the same row with the post's words.
+   o.meta is extra trusted markup for the meta line (a "Local" word); o.tag
+   is an eyebrow above the headline ("The Brief"). */
+function wmeta(it, o) {
+  const saved = store.isSaved(it.k);
+  /* the words sit in one box that can take a second line on a narrow
+     row ("National" beside a long source), so ⋯ and the star never leave
+     the card */
+  return '<div class="w-meta">' + (o.rank ? '<span class="w-rank">' + esc(o.rank) + '</span>' : '') +
+    '<span class="w-who"><button class="srcbtn" data-src="' + esc(it.sid || it.src) + '"><span class="c-src' + (it.local && o.greenLocal ? ' is-local' : '') + '">' + esc(it.src) + '</span></button>' +
+    (it.via ? '<span class="dot"></span><span class="via">' + esc(it.via) + '</span>' : '') +
+    (it.ago ? '<span class="dot"></span><span class="age">' + esc(it.ago) + '</span>' : '') + (o.meta || '') + '</span>' +
+    '<button class="act w-more" data-act="wmore" aria-label="More: vote, share, the source">' + ICON.more + '</button>' +
+    '<button class="act star' + (saved ? ' on' : '') + '" data-act="save" aria-label="Save" aria-pressed="' + saved + '">' + ICON.star + '</button></div>';
+}
+function lead(it, o = {}) {
+  if (!ok(it)) return null;
+  const c = shell(it, 'wlead' + (it.media ? ' has-pic' : '') + (o.cls ? ' ' + o.cls : ''));
+  c.innerHTML = (it.media ? '<a class="w-pic" ' + linkAttrs(it) + ' tabindex="-1" aria-hidden="true">' + art(it.media) + '</a>' : '') +
+    '<div class="w-body">' + (o.tag ? '<span class="eyebrow">' + esc(o.tag) + '</span>' : '') + title(it) +
+    (it.why ? '<p class="w-dek">' + esc(it.why) + '</p>' : '') + wmeta(it, o) + '</div>';
+  return c;
+}
+function story(it, o = {}) {
+  if (!ok(it)) return null;
+  const words = !it.title && it.text;
+  const c = shell(it, 'wrow' + (it.thumb ? ' has-thumb' : '') + (words ? ' wpost' : '') + (o.cls ? ' ' + o.cls : ''));
+  c.innerHTML = (it.thumb ? '<a class="w-thumb" ' + linkAttrs(it) + ' tabindex="-1" aria-hidden="true">' + art(it.thumb) + '</a>' : '') +
+    '<div class="w-body">' + (o.tag ? '<span class="eyebrow">' + esc(o.tag) + '</span>' : '') + title(it) + wmeta(it, o) + '</div>';
+  return c;
+}
+
 const newline = (label) => el('div', 'newline', esc(label));
 
 /* The end of a feed, and it says what it was the end of. Buttons are built
@@ -426,7 +469,7 @@ function any(it, o = {}) {
   return f(it, o);
 }
 
-export const cards = { headline, row, post, pick, video, image, event, person, board, newline, caught, any };
+export const cards = { headline, row, post, pick, video, image, event, person, board, lead, story, newline, caught, any };
 
 /* A club's weekly meet as a list row, the one People's week and What Now's
    windows both draw: the start time in the tile, the club, where and the

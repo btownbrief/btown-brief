@@ -14,7 +14,15 @@
        subnav() {},              optional: up to two rows under the mast, or null
        newSince(ts) {},          how many items are newer than ts (epoch seconds), for the tab dot
        pull() {},                optional shell extension: pull-to-refresh asked; return a toast or null
+       aside() {},               optional: the right-hand rail on a wide screen (1280 and up), or null
+       keepSubnav: true,         optional: the row under the mast stays while the mast steps away
      });
+
+   On a wide screen (1024 and up) the page is a centred grid: the nine tabs
+   on the left, the tab in a 720px column, and at 1280 and up a 300px rail
+   on the right with what the tab's aside() hands back (a tab without one
+   gets the rail's width too). Each panel still scrolls on its own, but it
+   is as wide as the window, so the wheel works over the margins as well.
 
    Each tab panel is its own scroll container, so per-tab scroll memory is
    just saving and restoring scrollTop, and the mast can slide away without
@@ -35,7 +43,9 @@ export const demo = new URLSearchParams(location.search).get('demo') === '1';
 store.setDemo(demo);
 
 /* The bar's order is the shell's call. What Now sits fifth of nine, dead
-   centre, in the one wider cell so its two words never wrap. */
+   centre, in the one wider cell so its two words never wrap. All nine show
+   on a phone too (Stephen, 2026-10-19, undoing the five-and-More bar: "I'd
+   either like to keep them or only merge two together tops"). */
 export const TABS = ['wire', 'watch', 'food', 'people', 'whatnow', 'vintage', 'habits', 'onair', 'games'];
 const REQUIRED = ['label', 'icon', 'promise', 'mount', 'activate', 'refresh', 'newSince'];
 
@@ -400,6 +410,7 @@ function closeLightbox() { if (lbEl) { lbEl.remove(); lbEl = null; } }
 
 /* ----------------------------------------------------------------- sheets */
 let sheetClose = null;
+export function closeSheet() { if (sheetClose) sheetClose(); }
 export function sheet(titleText, build) {
   if (sheetClose) sheetClose();
   const s = $('sheet');
@@ -407,7 +418,9 @@ export function sheet(titleText, build) {
   const scrim = el('div', 'sheet-scrim');
   const card = el('div', 'sheet-card');
   card.setAttribute('role', 'dialog');
+  card.setAttribute('aria-modal', 'true');
   card.setAttribute('aria-label', titleText);
+  const opener = document.activeElement;
   const head = el('div', 'sheet-head', '<h2>' + esc(titleText) + '</h2>');
   const x = el('button', 'iconbtn', ICON.x);
   x.setAttribute('aria-label', 'Close');
@@ -416,11 +429,17 @@ export function sheet(titleText, build) {
   card.append(el('div', 'grab'), head, body);
   s.append(scrim, card);
   s.hidden = false;
-  const close = () => { s.hidden = true; s.innerHTML = ''; if (sheetClose === close) sheetClose = null; };
+  const close = () => {
+    s.hidden = true; s.innerHTML = '';
+    if (sheetClose === close) sheetClose = null;
+    /* focus goes back where it came from, if that is still on the page */
+    if (opener && opener.isConnected && opener !== document.body && typeof opener.focus === 'function') opener.focus({ preventScroll: true });
+  };
   sheetClose = close;
   x.addEventListener('click', close);
   scrim.addEventListener('click', close);
   build(body, card, close);
+  x.focus({ preventScroll: true });
   return close;
 }
 
@@ -795,7 +814,7 @@ function paintThemeBtn() {
   b.setAttribute('aria-label', dark ? 'Switch to light mode' : 'Switch to dark mode');
   root.style.background = '';
 }
-function paintSavedBtn() { $('saved-btn').classList.toggle('on', store.saved().length > 0); }
+function paintSavedBtn() { $('saved-btn').classList.toggle('on', store.saved().length > 0); if (started) paintAside(); }
 
 /* ------------------------------------------------------------------ chrome */
 const mast = $('mast');
@@ -803,7 +822,7 @@ export function measure() {
   root.style.setProperty('--mast-total', mast.offsetHeight + 'px');
   root.style.setProperty('--player-h', dock.hidden ? '0px' : (dock.offsetHeight + 8) + 'px');
 }
-function showChrome() { document.body.classList.remove('chrome-away'); }
+function showChrome() { document.body.classList.remove('chrome-away', 'pill-small'); }
 export function scrollTop(smooth) {
   const p = panels[active];
   if (p) p.scrollTo({ top: 0, behavior: smooth ? 'smooth' : 'auto' });
@@ -824,8 +843,26 @@ export function paintSubnav() {
   const mod = registry[active];
   const n = mod && mod.subnav ? mod.subnav() : null;
   if (n) s.appendChild(n);
+  /* a tab can keep its row under the mast while the reader scrolls */
+  document.body.classList.toggle('keep-subnav', !!(n && mod && mod.keepSubnav));
   measure();
+  paintAside();
 }
+
+/* the wide screen's right-hand rail: the tab's aside(), or nothing, and
+   then the tab's column takes the rail's width too */
+export function paintAside() {
+  const a = $('aside');
+  if (!a) return;
+  const mod = registry[active];
+  let n = null;
+  try { n = mod && mod.aside ? mod.aside() : null; } catch (e) { console.error('[all-day] ' + active + ' aside threw', e); }
+  a.innerHTML = '';
+  if (n) a.appendChild(n);
+  a.hidden = !n;
+  document.body.classList.toggle('has-aside', !!n);
+}
+const wide = matchMedia('(min-width: 1024px)');
 
 function watchScroll(p) {
   let last = 0, tick = 0;
@@ -836,6 +873,11 @@ function watchScroll(p) {
       const y = p.scrollTop;
       if (y < 40 || y < last - 8) showChrome();
       else if (y > last + 8 && y > 120 && !peekEl) document.body.classList.add('chrome-away');
+      /* the floating pills settle a little smaller on the way down and come
+         back to full size on any move up (Stephen, 2026-10-19, after
+         Instagram's bar: "dynamic") */
+      if (y < 40 || y < last - 2) document.body.classList.remove('pill-small');
+      else if (y > last + 6) document.body.classList.add('pill-small');
       last = y;
     });
   }, { passive: true });
@@ -990,7 +1032,9 @@ export function route() {
   paintSubnav();
   $('mast-title').textContent = mod.label;
   document.title = (tab === 'wire' ? 'All Day' : mod.label + ' · All Day') + ' — Burlington Brief';
-  if (switched) panels[tab].scrollTop = scrollMemory[tab] || 0;
+  /* a phone keeps each tab's place; a wide screen opens a tab at its top
+     (the reviewers, 2026-10-19: Watch and What Now opened mid-page) */
+  if (switched) panels[tab].scrollTop = wide.matches ? 0 : scrollMemory[tab] || 0;
   showChrome();
   closePeek();
   try { mod.activate(param, first); } catch (e) { console.error('[all-day] ' + tab + ' activate threw', e); }
@@ -1064,7 +1108,8 @@ matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
 });
 paintThemeBtn();
 $('theme-btn').addEventListener('click', () => { store.setTheme(store.nextTheme()); paintThemeBtn(); });
-$('saved-btn').innerHTML = ICON.star;
+/* labeled, so it reads as a place (Stephen, 2026-10-19: "make Saved more obvious") */
+$('saved-btn').innerHTML = ICON.star + '<span>Saved</span>';
 $('settings-btn').innerHTML = ICON.gear;
 $('saved-btn').addEventListener('click', savedSheet);
 $('settings-btn').addEventListener('click', settingsSheet);
@@ -1085,6 +1130,8 @@ document.addEventListener('error', (e) => {
   const img = e.target;
   if (!img || img.tagName !== 'IMG' || !img.classList.contains('pic')) return;
   const box = img.closest('.c-thumb, .c-media, .th, .tile, .p-art, .mark');
+  const wbox = img.closest('.w-thumb, .w-pic');
+  if (wbox) { wbox.closest('.card')?.classList.remove(wbox.classList.contains('w-thumb') ? 'has-thumb' : 'has-pic'); wbox.remove(); return; }
   if (box && box.classList.contains('c-thumb')) { box.closest('.card')?.classList.remove('has-thumb'); box.remove(); }
   else if (box && box.classList.contains('c-media') && !box.closest('.poster, .vcard, .hero, .result, .lb, .peek')) box.remove();
   else img.remove();
@@ -1098,6 +1145,22 @@ document.addEventListener('keydown', (e) => {
   else if (!$('confirm').hidden) $('confirm').hidden = true;
   else if (sheetClose) sheetClose();
 });
+
+/* On a wide screen the wheel scrolls the tab wherever the pointer is: over
+   the tab list, the mast or a rail too short to scroll itself. */
+function forwardWheel(node, own) {
+  if (!node) return;
+  node.addEventListener('wheel', (e) => {
+    const p = panels[active];
+    if (!p || !wide.matches || e.ctrlKey || Math.abs(e.deltaY) <= Math.abs(e.deltaX)) return;
+    if (own && node.scrollHeight > node.clientHeight + 1) return;
+    if (e.target.closest && e.target.closest('.chips, .rail')) return;
+    p.scrollBy({ top: e.deltaY * (e.deltaMode === 1 ? 16 : 1) });
+  }, { passive: true });
+}
+forwardWheel($('tabbar'));
+forwardWheel(mast);
+forwardWheel($('aside'), true);
 
 window.addEventListener('hashchange', () => { if (started) route(); });
 window.addEventListener('resize', measure);

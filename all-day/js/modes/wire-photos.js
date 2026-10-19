@@ -24,8 +24,11 @@
 
    Photos is not news (Stephen, 2026-10-18: "Photos is more for like
    Instagram or vibe checks or Food or event posters ... Not for like the
-   local news"): no story's lead image, no Facebook or Reddit post, and no
-   Local / Everything switch, since every picture here is Burlington's.
+   local news"): no story's lead image, no Facebook or Reddit post. Local
+   is every picture below; Everything (Stephen, 2026-10-19: "this sort of
+   new Everything Photos tab") adds the day's pictures from everywhere, the
+   wire payload's `photos_world` list (curated photo feeds and the Grok
+   "Pictures of the day" recap). Without that list, Everything is Local.
 
    What it draws from, each picture once (by key, and by its link):
      - neighbors' photo and art posts on the `art` board (boards.js), with
@@ -73,7 +76,7 @@ export function remember(view) {
 }
 
 /* The chips, in order. `posted` is only what readers posted to this feed. */
-export const CATS = [['all', 'All'], ['instagram', 'Instagram'], ['vibe', 'Vibe checks'], ['posters', 'Event posters'], ['food', 'Food'], ['pets', 'Pets'], ['posted', 'Posted here']];
+export const CATS = [['all', 'All'], ['instagram', 'Instagram'], ['vibe', 'Vibe checks'], ['posters', 'Event posters'], ['food', 'Food'], ['pets', 'Pets'], ['posted', 'Posted here'], ['world', 'The world']];
 const POSTED = new Set(['board', 'gallery', 'square']);
 
 /* ------------------------------------------------------------- state */
@@ -106,6 +109,8 @@ const P = {
      redraw()         draw the mode again, where the reader was
      onMute(sid, it)  the Wire's mute
      squareOk()       is the Square board live (boards.roundFour)
+     everything()     the Local / Everything switch is on Everything
+     world()          the day's pictures from everywhere (raw payload rows), or []
      compose()        open Post a photo */
 export function init(c) { ctx = c; }
 
@@ -354,6 +359,37 @@ export function igCats(p) {
   return out;
 }
 
+/* A picture from everywhere (the payload's `photos_world`, built by the
+   wire pipeline; its exact shape is read loosely): the picture, its own
+   page, a title, the source and the credit. One without a picture or a
+   page is left out. */
+const worldKeys = new Map();
+function worldView(p) {
+  if (!p || typeof p !== 'object') return null;
+  const media = p.image || p.img || p.i || p.media || '';
+  const url = p.url || p.link || p.u || p.href || '';
+  if (!isUrl(media) || !isUrl(url)) return null;
+  /* keyed by its own page, so two rows never share a key */
+  const k = 'pw:' + norm(url);
+  const title = squash(p.title || p.caption || p.c || '');
+  const src = squash(p.source || p.src || p.outlet || '') || (() => { try { return new URL(url).hostname.replace(/^www\./, ''); } catch (e) { return 'The world'; } })();
+  const credit = squash(p.credit || '');
+  const t = typeof p.ts === 'number' ? p.ts : Date.parse(p.published || p.date || p.at || '') / 1000;
+  let it = worldKeys.get(k);
+  if (!it) { it = { k, kind: 'image', ratio: 'r45', local: false }; worldKeys.set(k, it); app.know([it]); }
+  /* the same object each draw (the registry's), with this payload's words */
+  Object.assign(it, { href: url, media, title: short(title) || src, text: squash([title, credit && 'Photo: ' + credit].filter(Boolean).join('. ')),
+    src, sid: 'pw:' + src, d: Number.isFinite(t) ? t : 0, open: 'Open on ' + src });
+  it.ago = it.d ? ctx.ago(it.d * 1000) : '';
+  return { it, k, from: 'world', media, ratio: 'r45', cap: oneLine(title) || src, alt: (title || 'Photo from ' + src).slice(0, 250),
+    src, sid: it.sid, local: false, d: it.d, url, cats: new Set(['world']) };
+}
+const worldRows = () => {
+  if (!ctx || !ctx.everything()) return [];
+  const rows = ctx.world();
+  return Array.isArray(rows) ? rows : [];
+};
+
 /* a neighbor's post or a gallery photo */
 function picView(it) {
   const cats = new Set(['posted']);
@@ -371,6 +407,7 @@ export function build() {
   P.square.forEach((it) => all.push(picView(it)));
   P.gallery.forEach((it) => { it.ago = it.created ? ctx.ago(it.created * 1000) : it.ago; all.push(picView(it)); });
   (app.demo ? demoIg : P.ig).forEach((p) => all.push(igView(p)));
+  worldRows().forEach((p) => all.push(worldView(p)));
   /* each picture once: by key, then by its link */
   const keys = new Set(), links = new Set();
   const every = [];
@@ -448,7 +485,7 @@ app.onAct('photovote', (it) => vote(it));
    caption, then the source and age with vote, share and save. */
 function card(v, lead) {
   const it = v.it;
-  const c = el('article', 'card fi pm' + (lead ? ' pm-lead' : '') + (v.from === 'instagram' ? ' w-src-instagram' : POSTED.has(v.from) ? ' w-posted' : '') + (store.isRead(it.k) ? ' is-read' : ''));
+  const c = el('article', 'card fi pm' + (lead ? ' pm-lead' : '') + (v.from === 'instagram' ? ' w-src-instagram' : POSTED.has(v.from) ? ' w-posted' : v.from === 'world' ? ' pm-world' : '') + (store.isRead(it.k) ? ' is-read' : ''));
   c.dataset.k = it.k;
   const pic = isUrl(v.media)
     ? '<img class="pic" src="' + esc(v.media) + '" alt="' + esc(v.alt || v.cap) + '" loading="lazy" decoding="async" referrerpolicy="no-referrer">'
@@ -509,7 +546,10 @@ const near = (run) => {
    add photo to the feed"). */
 function header() {
   const h = el('div', 'pm-head');
-  h.innerHTML = '<h2>Burlington in photos</h2><p>' + esc('Local Instagram plus photos people post here.') + '</p>';
+  /* on Everything, and only when the day's pictures from everywhere came */
+  const world = P.counts && P.counts.world > 0;
+  h.innerHTML = world ? '<h2>Burlington and the world in photos</h2><p>' + esc('Local Instagram, photos people post here, and the day’s best pictures from everywhere.') + '</p>'
+    : '<h2>Burlington in photos</h2><p>' + esc('Local Instagram plus photos people post here.') + '</p>';
   const b = button(ICON.plus + ' Post a photo to the Burlington feed', 'pm-post', () => wall.compose('photo'));
   b.dataset.post = 'photo';
   h.appendChild(b);

@@ -73,6 +73,13 @@ body.chrome-away .mast { transform: translateY(-100%); }
   transition: background .15s ease, color .15s ease;
 }
 .iconbtn:hover { background: var(--paper-2); color: var(--ink); }
+/* Saved, in words beside its star (2026-10-19) */
+.savedbtn { flex: 0 0 auto; display: inline-flex; align-items: center; gap: 5px; height: 36px; padding: 0 12px 0 9px; margin: 0 4px;
+  border-radius: var(--r-pill); border: 1px solid var(--line); color: var(--ink); font-size: var(--fs-button); font-weight: 600; position: relative; }
+.savedbtn::after { content: ""; position: absolute; inset: -4px 0; }
+.savedbtn .i { width: 18px; height: 18px; }
+.savedbtn:hover { background: var(--paper-2); }
+.savedbtn.on .i { color: var(--sunset); fill: var(--sunset); }
 .iconbtn.on { color: var(--accent); }
 .iconbtn.on .i { fill: currentColor; }
 .subnav { max-width: var(--col); margin: 0 auto; padding: 0 var(--s2); }
@@ -275,12 +282,18 @@ body.chrome-away .mast { transform: translateY(-100%); }
   display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)) auto repeat(4, minmax(0, 1fr));
   height: var(--tab-h); padding: var(--s1);
   background: linear-gradient(var(--dock-sheen), var(--dock-clear)), var(--dock-glass);
-  backdrop-filter: saturate(115%) blur(18px); -webkit-backdrop-filter: saturate(115%) blur(18px);
+  backdrop-filter: var(--dock-filter); -webkit-backdrop-filter: var(--dock-filter);
   border: 1px solid var(--dock-edge); border-radius: var(--r-dock); box-shadow: var(--dock-shadow);
 }
+/* scrolling down, the pill settles to 88% (transform only, so nothing
+   reflows); any move up brings it straight back */
+@media (max-width: 1023px) and (prefers-reduced-motion: no-preference) {
+  .tabbar { transform-origin: 50% 100%; transition: transform .24s cubic-bezier(.2, .8, .2, 1); }
+  body.pill-small .tabbar { transform: scale(.88); }
+}
 .tabbar button { position: relative; display: grid; justify-items: center; align-content: center; gap: 4px;
-  min-width: 0; padding: 0 1px; color: var(--dock-muted); font-size: var(--fs-label); font-weight: 500;
-  line-height: 1; letter-spacing: .01em; border-radius: var(--r-pill); transition: color .15s ease, background .15s ease; }
+  min-width: 0; padding: 0; color: var(--dock-muted); font-size: var(--fs-nav); font-weight: 500;
+  line-height: 1; letter-spacing: -.01em; border-radius: var(--r-pill); transition: color .15s ease, background .15s ease; }
 .tabbar button span { white-space: nowrap; }
 .tabbar button:hover { color: var(--dock-ink); background: var(--dock-hover); }
 .tabbar button > .i { width: var(--dock-icon); height: var(--dock-icon); }
@@ -298,7 +311,7 @@ body.chrome-away .mast { transform: translateY(-100%); }
   padding: 4px; width: 25px; height: 25px; box-sizing: border-box; stroke-width: 2; flex: 0 0 auto; }
 .tabbar #tab-whatnow.on { color: var(--dock-ink); background: var(--dock-selected); }
 .tabbar #tab-whatnow.on .i { stroke-width: 2.2; }
-.tabbar #tab-whatnow > span { font-weight: 700; letter-spacing: -.01em; white-space: nowrap; padding: 0 3px; }
+.tabbar #tab-whatnow > span { font-weight: 700; letter-spacing: -.01em; white-space: nowrap; padding: 0 4px; }
 .rail-brand { display: none; }
 
 /* ============================================================ sheet */
@@ -400,36 +413,65 @@ body.chrome-away .mast { transform: translateY(-100%); }
 .player #p-toggle .i path[stroke-width] { fill: none; stroke: currentColor; }
 
 /* ============================================================ wide screens */
-@media (min-width: 900px) {
-  :root { --gutter: 20px; --dock-lift: 0px; }
-  .mast, .app { left: calc(50% - 220px); right: auto; width: var(--col); }
-  .mast { border-left: 1px solid var(--line-soft); border-right: 1px solid var(--line-soft); }
-  .app { border-left: 1px solid var(--line-soft); border-right: 1px solid var(--line-soft); }
+/* 1024 and up: a centred grid, not the phone column in a dark room (the
+   reviewers, 2026-10-19). The nine tabs are a 220px list on the left, the
+   tab is a 720px column, and at 1280 and up a 300px rail on the right holds
+   the tab's aside() (the Wire's filters and saved stories); a tab without
+   one takes the rail's width as well. --edge is the margin either side,
+   --main-x where the column starts. Each panel is as wide as the window,
+   so the page scrolls under the wheel wherever the pointer is. */
+.aside { display: none; }
+@media (min-width: 1024px) {
+  :root {
+    --gutter: 24px; --dock-lift: 0px;
+    --main: min(var(--main-w), 100vw - 32px - var(--nav-w) - var(--grid-gap));
+    --edge: max(16px, (100vw - var(--nav-w) - var(--grid-gap) - var(--main)) / 2);
+    --main-x: calc(var(--edge) + var(--nav-w) + var(--grid-gap));
+  }
+  .mast { left: var(--main-x); right: auto; width: var(--main); border-radius: 0 0 var(--r-media) var(--r-media); border-bottom: 0; }
+  .mast:has(.wbar)::before { border-radius: 0 0 var(--r-media) var(--r-media); }
+  .mast-row, .subnav { max-width: none; }
   .mast-row { padding-left: var(--gutter); }
   .wordmark { display: none; }
-  .mast-title { display: block; }
+  .mast-title { display: block; font-size: var(--fs-wordmark); }
+  .app { left: 0; right: 0; }
   .panel { padding-bottom: calc(64px + var(--player-h, 0px)); }
-  .tabbar { left: calc(50% - 444px); right: auto; top: 0; bottom: 0; width: 208px; height: auto; padding: 18px 12px;
-    display: flex; flex-direction: column; gap: 2px; background: transparent; border: 0;
+  .panel-body { margin-left: var(--main-x); width: var(--main); }
+  .panel-body .feed, .panel-body .hb, .panel-body .sq-compose { max-width: none; }
+  .tabbar { left: var(--edge); right: auto; top: 0; bottom: 0; width: var(--nav-w); height: auto; padding: 22px 0;
+    display: flex; flex-direction: column; gap: 4px; background: transparent; border: 0;
     margin-inline: 0; max-width: none; border-radius: 0; box-shadow: none;
     backdrop-filter: none; -webkit-backdrop-filter: none; }
-  .rail-brand { display: block; font-family: var(--serif); font-size: var(--fs-wordmark); font-weight: 500;
-    padding: 6px 12px 22px; color: var(--ink); }
-  .tabbar button { display: flex; align-items: center; gap: 12px; height: 44px; padding: 0 12px; border-radius: var(--r-media);
-    font-size: var(--fs-body); font-weight: 500; letter-spacing: 0; color: var(--ink-2); }
+  .rail-brand { display: block; font-family: var(--serif); font-size: var(--fs-empty); font-weight: 500;
+    padding: 4px 14px 26px; color: var(--ink); }
+  .tabbar button { display: flex; align-items: center; gap: 14px; height: 48px; padding: 0 14px; border-radius: var(--r-media);
+    font-size: var(--fs-lead); font-weight: 500; letter-spacing: 0; color: var(--ink-2); }
+  .tabbar button > .i { width: var(--icon); height: var(--icon); }
   .tabbar button.on { background: var(--sunset); color: var(--sunset-ink); font-weight: 600; }
   .tabbar button:hover { color: var(--ink); background: var(--paper-2); }
   .tabbar #tab-whatnow { color: var(--accent); }
   .tabbar #tab-whatnow.on { color: var(--sunset-ink); background: var(--sunset); }
   .tabbar button.on::before { display: none; }
   .tabbar .nd { position: static; margin-left: auto; border-color: transparent; }
-  .toast { bottom: calc(28px + var(--player-h, 0px)); }
-  .peek { left: calc(50% - 200px); right: auto; width: 480px; bottom: 28px; }
-  .sheet-card { left: 50%; right: auto; bottom: auto; top: 50%; transform: translate(-50%, -50%); width: 520px;
-    border-radius: var(--r-sheet); max-height: 80vh; animation: none; }
+  .toast { left: calc(var(--main-x) + var(--main) / 2); bottom: calc(28px + var(--player-h, 0px)); }
+  .peek { left: var(--main-x); right: auto; width: min(480px, var(--main)); bottom: 28px; }
+  .sheet-card { left: 50%; right: auto; bottom: auto; top: 50%; transform: translate(-50%, -50%); width: 560px;
+    border-radius: var(--r-sheet); max-height: 84vh; animation: none; }
   .grab { display: none; }
   .sheet-head { padding-top: var(--s4); }
-  .player { left: calc(50% - 212px); right: auto; width: 624px; bottom: 16px; }
+  .player { left: var(--main-x); right: auto; width: var(--main); bottom: 16px; }
+}
+@media (min-width: 1280px) {
+  :root {
+    --main-a: min(var(--main-w), 100vw - 48px - var(--nav-w) - var(--aside-w) - 2 * var(--grid-gap));
+    --main: var(--main-a);
+    --edge: max(24px, (100vw - var(--nav-w) - var(--main-a) - var(--aside-w) - 2 * var(--grid-gap)) / 2);
+  }
+  body:not(.has-aside) { --main: calc(var(--main-a) + var(--grid-gap) + var(--aside-w)); }
+  .aside { display: block; position: fixed; z-index: 30; top: 0; bottom: 0; width: var(--aside-w);
+    left: calc(var(--main-x) + var(--main) + var(--grid-gap)); overflow-y: auto; overscroll-behavior: contain;
+    padding: 22px 0 40px; scrollbar-width: thin; }
+  .aside[hidden] { display: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -477,7 +519,7 @@ body.chrome-away .mast { transform: translateY(-100%); }
   border-radius: var(--r-pill); background: var(--paper-2); border: 1px solid var(--line-soft);
   transition: background .2s ease, border-color .2s ease; }
 .localsw.liquid { overflow: hidden; }
-.localsw .lsw-canvas { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.lsw-canvas { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
 .localsw-half { position: relative; z-index: 1; display: inline-flex; align-items: center; justify-content: center; gap: 6px;
   height: 32px; padding: 0 12px; border-radius: var(--r-pill); font-size: var(--fs-meta); font-weight: 600; letter-spacing: -.005em;
   color: var(--ink-3); white-space: nowrap; transition: color .18s ease, background .18s ease; }
@@ -1389,13 +1431,6 @@ button.fr-tree:hover { background: var(--paper-2); }
   --w-alt-tint: color-mix(in srgb, var(--paper-2) 55%, transparent);
   --w-pets: color-mix(in srgb, var(--accent) 80%, var(--ink));
 }
-/* News · Photos · Square, in words, the width of the column */
-.wmodes { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 3px; margin: 2px var(--gutter) 8px; padding: 3px;
-  border-radius: var(--r-pill); background: var(--paper-2); border: 1px solid var(--line-soft); }
-.wmode { display: flex; align-items: center; justify-content: center; height: 34px; border-radius: var(--r-pill); font-size: var(--fs-button); font-weight: 600; color: var(--ink-2);
-  transition: background .15s ease, color .15s ease; }
-.wmode:hover { color: var(--ink); }
-.wmode.on { background: var(--ink); color: var(--on-ink); box-shadow: var(--shadow-pill); }
 .toolband .w-raw { flex: 0 0 auto; margin: 0 var(--gutter) 0 auto; }
 .toolband .pm-n { flex: 1 1 auto; text-align: right; padding-right: var(--gutter); font-size: var(--fs-small); color: var(--ink-3); white-space: nowrap; }
 .toolband.w-chips { padding-left: 0; }
@@ -1413,8 +1448,7 @@ button.fr-tree:hover { background: var(--paper-2); }
 /* the topic row under the source chips: lighter, so the two rows read as two */
 .w-topics .chip { height: 28px; background: transparent; border: 1px solid var(--line); }
 .w-topics .chip.on { background: var(--ink); color: var(--on-ink); border-color: transparent; }
-.feed.wire .card[class*="w-src-"], .sq-feed .card[class*="w-src-"] { box-shadow: inset 3px 0 0 var(--w-src); }
-.feed.wire .card.w-alt { background: var(--w-alt-tint); }
+.sq-feed .card[class*="w-src-"] { box-shadow: inset 3px 0 0 var(--w-src); }
 .feed.wire .card.w-local { background: var(--w-local-tint); }
 /* the river's thumbnails: 72px, on the left (THUMBS_LEFT in modes/wire.js)
    or on the right */
@@ -1432,6 +1466,243 @@ button.fr-tree:hover { background: var(--paper-2); }
 .wm-slot.on .t { color: var(--on-ink); opacity: .75; }
 .wm-slot:disabled { opacity: .4; cursor: default; }
 .wm-stood { border-top: 1px solid var(--line-soft); }
+
+/* ------------------------------------------- the Wire, rebuilt (2026-10-19) */
+/* Stephen: "simple, everything filled to the screen, like Instagram or
+   TikTok ... glanceable ... hard to read if I have trouble seeing". Under
+   the mast, News · Photos · Square as a floating pill; at the top of the
+   paper a banner with the day, Local / Everything and the chips, which
+   scrolls away (the rail holds the chips on a wide screen). Two cards: a top story with its
+   picture full width and a Lora headline, and a story row with a 104px
+   picture on the left. One meta line, Source · time, then ⋯ and the star. */
+.wbar { display: flex; align-items: center; }
+/* News · Photos · Square: a big segmented control, the reader's first
+   choice (Stephen, 2026-10-19: the words were "so small and easy to miss;
+   someone might never reach Photos or Square"). Equal thirds of the row,
+   40px pills, the chosen one filled. */
+.wmodes { flex: 1 1 auto; min-width: 0; display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: 2px; padding: 3px;
+  border-radius: var(--r-pill); background: var(--paper-2); }
+.wmode { position: relative; display: flex; align-items: center; justify-content: center; height: var(--hit); padding: 0 6px; border-radius: var(--r-pill);
+  font-size: var(--fs-w-seg); font-weight: 700; color: var(--ink-2); white-space: nowrap; transition: color .15s ease, background .15s ease; }
+.wmode:hover { color: var(--ink); }
+.wmode.on { background: var(--accent); color: var(--on-ink); box-shadow: var(--shadow-pill); }
+.wmode.wait { visibility: hidden; }
+/* the row stays while the mast's top line steps away, so the switch is
+   always within reach */
+body.chrome-away.keep-subnav .mast { transform: translateY(calc(-1 * var(--mast-h))); }
+
+/* News · Photos · Square floats (Stephen, 2026-10-19: it stays on screen
+   "that's how important it is"): on the Wire the mast's navy is only the
+   top line, and the row under it is see-through, so the pill floats over
+   the paper as the tab bar does at the bottom. */
+.mast:has(.wbar) { background: transparent; backdrop-filter: none; -webkit-backdrop-filter: none; border-bottom: 0; }
+.mast:has(.wbar) .subnav { position: relative; }
+/* a frosted strip of paper behind the pill (and the day row, once it
+   floats) so the words scrolling under them don't fight them; it fades out
+   at its lower edge */
+.mast:has(.wbar) .subnav::before { content: ""; position: absolute; z-index: -1; left: 0; right: 0; top: 0; bottom: 0;
+  background: color-mix(in srgb, var(--paper) 78%, transparent); backdrop-filter: saturate(140%) blur(14px); -webkit-backdrop-filter: saturate(140%) blur(14px);
+  -webkit-mask-image: linear-gradient(var(--mask) calc(100% - 14px), transparent); mask-image: linear-gradient(var(--mask) calc(100% - 14px), transparent);
+  transition: bottom .18s ease; }
+body.wire-float .mast:has(.wbar) .subnav::before { bottom: -60px; }
+.mast:has(.wbar)::before { content: ""; position: absolute; z-index: -1; left: 0; right: 0; top: 0; height: calc(var(--safe-t) + var(--mast-h));
+  background: var(--lake); }
+.wbar { position: relative; justify-content: center; height: auto; padding: var(--s2) var(--s3) var(--s2); }
+.wbar .wmodes { flex: 0 1 420px; padding: 4px; gap: 4px; background: linear-gradient(var(--dock-sheen), var(--dock-clear)), var(--dock-glass);
+  backdrop-filter: var(--dock-filter); -webkit-backdrop-filter: var(--dock-filter);
+  border: 1px solid var(--dock-edge); box-shadow: var(--dock-shadow); }
+@media (prefers-reduced-motion: no-preference) {
+  .wbar .wmodes { transform-origin: 50% 0; transition: transform .24s cubic-bezier(.2, .8, .2, 1); }
+  body.pill-small .wbar .wmodes { transform: scale(.9); }
+  body.pill-small.wire-float .wfloat { transform: translateY(-5px); }
+}
+.wbar .wmode { color: var(--dock-ink); }
+.wbar .wmode:hover { background: var(--dock-hover); }
+.wbar .wmode.on { background: var(--sunset); color: var(--sunset-ink); }
+/* each word its own water (liquid.js pours it; without the canvas, the
+   same colour as a plain fill) */
+.wmodes { position: relative; }
+.wmodes.liquid { overflow: hidden; }
+.wmode { z-index: 1; }
+.wbar .wmode[data-view="news"].on { background: var(--liq-news); color: var(--liq-news-ink); }
+.wbar .wmode[data-view="photos"].on { background: var(--liq-photos); color: var(--liq-photos-ink); }
+.wbar .wmode[data-view="square"].on { background: var(--liq-square); color: var(--liq-square-ink); }
+.wbar .wmodes.liquid .wmode.on { background: transparent; box-shadow: none; }
+/* scrolled down: the day and Local / Everything float under the pill, the
+   same two controls the banner leads with */
+/* the wbar sits 8px in from the screen, so 8px more lines this row up with the paper's 16px gutter */
+.wfloat { position: absolute; top: 100%; left: var(--s2); right: var(--s2); display: flex; align-items: center; justify-content: space-between;
+  gap: var(--s2); opacity: 0; visibility: hidden; transform: translateY(-6px); transition: opacity .18s ease, transform .18s ease, visibility 0s linear .18s; }
+body.wire-float .wfloat { opacity: 1; visibility: visible; transform: none; transition: opacity .18s ease, transform .18s ease; }
+.wfloat .wday, .wfloat .localsw { background: linear-gradient(var(--dock-sheen), var(--dock-clear)), var(--dock-glass);
+  backdrop-filter: var(--dock-filter); -webkit-backdrop-filter: var(--dock-filter);
+  border: 1px solid var(--dock-edge); box-shadow: var(--dock-shadow); color: var(--dock-ink); }
+.wfloat .localsw:not(.is-on) .localsw-half:not(.on), .wfloat .localsw.is-on .localsw-half:not(.on) { color: var(--dock-ink); }
+
+/* the day: ‹ Monday, October 19 ›, as tall as the Local / Everything
+   pill. The way back is green and nudges gently toward yesterday (Stephen:
+   "they should know: just go to yesterday's"); still under reduced motion. */
+.wday { flex: 0 0 auto; display: inline-flex; align-items: center; height: 40px; border-radius: var(--r-pill);
+  border: 1px solid var(--line-soft); background: var(--paper-2); }
+.wday .t { padding: 0 2px; font-size: var(--fs-button); font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.wday .t .d-m, .wday .t .d-s { display: none; }
+.wday-nav { position: relative; flex: 0 0 auto; width: 34px; height: 38px; display: inline-flex; align-items: center; justify-content: center;
+  border-radius: var(--r-pill); color: var(--local); }
+.wday-nav::after { content: ""; position: absolute; inset: -3px 0; }
+.wday-nav .i { width: 22px; height: 22px; stroke-width: 2.6; }
+.wday-nav:hover { background: var(--paper-2); }
+.wday-nav:disabled { color: var(--ink-3); opacity: .35; cursor: default; background: none; }
+.wday-nav.prev:not(:disabled) .i { animation: wday-nudge 2.6s ease-in-out infinite; }
+@keyframes wday-nudge {
+  0%, 60%, 100% { transform: translateX(0); filter: drop-shadow(0 0 1px var(--local-soft)); }
+  30% { transform: translateX(-3px); filter: drop-shadow(0 0 5px var(--local)); }
+}
+@media (prefers-reduced-motion: reduce) { .wday-nav.prev:not(:disabled) .i { animation: none; filter: drop-shadow(0 0 3px var(--local)); } }
+.wband-top .localsw, .wfloat .localsw { flex: 0 0 auto; width: auto; }
+.wband-top .localsw-half, .wfloat .localsw-half { padding: 0 10px; }
+@media (max-width: 429px) { .wday .t .d-l { display: none; } .wday .t .d-m { display: inline; } }
+@media (max-width: 379px) { .wday .t .d-m { display: none; } .wday .t .d-s { display: inline; } }
+
+/* the banner at the top of the paper: the day and Local / Everything, the
+   chips (each row scrolls sideways; .wrap lays them all out), then
+   Unfiltered and "Show all". It scrolls away with the paper. */
+.wband { padding: var(--s3) 0 var(--s1); border-bottom: 1px solid var(--line-soft); }
+.wband-top { display: flex; align-items: center; justify-content: space-between; gap: var(--s2); padding: 0 var(--gutter) var(--s3); }
+.wband .wf { gap: 2px; padding: 0; }
+.wband .wf .chips { padding: 2px var(--gutter) 6px; }
+.wband .wf .wm-slots { padding: 2px var(--gutter) 6px; }
+.wband-foot { display: flex; align-items: center; justify-content: space-between; gap: var(--s2); padding: 0 var(--s2); }
+.wband-foot .wf-raw { height: var(--hit); padding: 0 var(--s2); font-size: var(--fs-button); }
+.wband-foot .wf-raw .i { width: 16px; height: 16px; }
+.wband-all { margin-left: auto; display: inline-flex; align-items: center; gap: 4px; height: var(--hit); padding: 0 var(--s2); border-radius: var(--r-pill);
+  font-size: var(--fs-button); font-weight: 600; color: var(--accent); white-space: nowrap; }
+.wband-all:hover { background: var(--paper-2); }
+.wband-all .i { width: 18px; height: 18px; transition: transform .2s ease; }
+.wband.wrap .wband-all .i { transform: rotate(180deg); }
+.wband.fits .wband-all, .wband.fits .wband-foot:not(:has(.wf-raw)) { display: none; }
+
+/* the head of the paper: whose top stories these are, when it updated */
+.whead { padding: var(--s5) var(--gutter) var(--s3); }
+.whead h2 { font-family: var(--serif); font-size: var(--fs-w-head); font-weight: 500; line-height: var(--lh-tight); letter-spacing: -.005em; }
+.whead-row { display: flex; align-items: center; gap: var(--s3); margin-top: var(--s2); }
+.whead-row .s { font-size: var(--fs-w-meta); color: var(--ink-3); line-height: 1.3; min-width: 0; }
+.wfilt { display: flex; align-items: center; flex-wrap: wrap; gap: var(--s2); margin-top: var(--s3); font-size: var(--fs-w-meta); color: var(--ink-2); }
+.wfilt b { font-weight: 600; color: var(--ink); }
+.wfilt .btn { height: 36px; }
+
+/* the meta line both cards end in */
+.w-meta { display: flex; align-items: center; gap: 6px; min-width: 0; min-height: var(--hit); margin-bottom: -6px;
+  font-size: var(--fs-w-meta); color: var(--ink-3); line-height: 1.2; }
+.w-meta .srcbtn { min-width: 0; flex: 0 1 auto; padding: 10px 4px 10px 2px; }
+.w-meta .c-src { font-weight: 600; color: var(--ink-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.w-meta .c-src.is-local { color: var(--local); }
+.w-meta .dot::before { content: "·"; }
+.w-meta .age, .w-meta .via, .w-meta .geo { white-space: nowrap; flex: 0 0 auto; }
+.w-meta .geo.local { color: var(--local); font-weight: 600; }
+.w-meta .w-who { flex: 1 1 0; min-width: 0; display: flex; flex-wrap: wrap; align-items: center; column-gap: 6px; row-gap: 0; }
+.w-meta .act { width: var(--hit); height: var(--hit); min-width: var(--hit); padding: 0; justify-content: center; flex: 0 0 auto; }
+.w-meta .act::after { display: none; }
+.w-meta .act.star { margin-right: -12px; }
+.w-rank { flex: 0 0 auto; min-width: 24px; height: 24px; padding: 0 6px; border-radius: var(--r-pill); display: inline-flex; align-items: center; justify-content: center;
+  background: var(--ink); color: var(--on-ink); font-weight: 700; font-variant-numeric: tabular-nums; margin-right: 2px; }
+
+/* a top story: the picture, full bleed, then the words */
+.feed.wire .card.wlead, .card.wlead { padding: 0 0 var(--s3); border-bottom: 1px solid var(--line); }
+.wlead .w-pic { position: relative; display: block; aspect-ratio: 16 / 9; overflow: hidden; background: var(--paper-2); }
+.wlead .w-body { padding: var(--s4) var(--gutter) 0; }
+.wlead:not(.has-pic) .w-body { padding-top: var(--s5); }
+.wlead .eyebrow { display: block; margin-bottom: var(--s2); }
+.wlead .c-title { font-family: var(--serif); font-size: var(--fs-w-lead); font-weight: 500; line-height: 1.18; letter-spacing: -.005em;
+  display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+.wlead.is-read .c-title { color: var(--ink-2); font-weight: 500; }
+.w-dek { margin-top: var(--s2); font-size: var(--fs-w-dek); line-height: 1.45; color: var(--ink-2);
+  display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.wlead .w-meta { margin-top: var(--s1); }
+
+/* a story row: the picture on the left, the headline, the meta line */
+.feed.wire .card.wrow, .card.wrow { display: grid; grid-template-columns: var(--w-thumb) minmax(0, 1fr); column-gap: 14px; align-items: start;
+  padding: var(--s4) var(--gutter) var(--s1); border-bottom: 1px solid var(--line-soft); }
+.feed.wire .card.wrow:not(.has-thumb), .card.wrow:not(.has-thumb) { grid-template-columns: minmax(0, 1fr); }
+.wrow .w-thumb { position: relative; display: block; width: var(--w-thumb); height: var(--w-thumb); border-radius: var(--r-thumb); overflow: hidden; background: var(--paper-2); }
+.wrow .c-title { font-size: var(--fs-w-title); font-weight: 600; line-height: 1.28; letter-spacing: -.005em;
+  display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.wrow.wpost .c-title { font-weight: 500; -webkit-line-clamp: 4; }
+.wrow.is-read .c-title { color: var(--ink-2); font-weight: 500; }
+.wrow.wpost.is-read .c-title { font-weight: 400; }
+.wrow .eyebrow { display: block; margin-bottom: var(--s1); }
+.wrow .w-meta { margin-top: 2px; }
+.feed.wire .card.w-local { background: var(--w-local-tint); }
+
+/* top stories: a short list, then the rest on request */
+.wleads { border-bottom: 1px solid var(--line); }
+.wleads > .card:last-child { border-bottom: 0; }
+.wmore-btn { display: flex; width: calc(100% - 2 * var(--gutter)); margin: var(--s3) var(--gutter) var(--s4); height: var(--hit); font-size: var(--fs-button); }
+.wsub { padding: var(--s5) var(--gutter) var(--s1); font-size: var(--fs-w-meta); font-weight: 700; color: var(--ink-2); }
+.feed.wire .tdiv { padding: var(--s6) var(--gutter) var(--s2); font-size: var(--fs-w-meta); color: var(--ink-2); border-bottom: 1px solid var(--line-soft); }
+.feed.wire .sec { padding-top: var(--s8); }
+.feed.wire .sec h2 { font-size: var(--fs-w-head); }
+.feed.wire .sec p { font-size: var(--fs-w-meta); }
+.feed.wire .note.pad { padding: var(--s4) var(--gutter); font-size: var(--fs-w-meta); }
+.feed.wire .newline { padding-top: var(--s3); padding-bottom: var(--s3); }
+
+/* the Filters sheet, and the same controls in the wide screen's rail */
+.wf { display: grid; gap: var(--s1); padding-bottom: var(--s2); }
+.wf .sheet-h { padding-top: var(--s4); font-size: var(--fs-w-meta); }
+.aside .wf .chips, .wband.wrap .wf .chips { flex-wrap: wrap; row-gap: 8px; -webkit-mask-image: none; mask-image: none; overflow: visible; }
+.aside .wf .chips { padding: 2px 0 4px; }
+.aside .wf .chips::after, .wband.wrap .wf .chips::after { display: none; }
+.wf .chip { height: 40px; padding: 0 14px; font-size: var(--fs-button); position: relative; }
+.wf .chip::after { content: ""; position: absolute; inset: -2px 0; }
+.wf .wm-slots { padding: 0; }
+.wf .btn { height: var(--hit); justify-content: center; }
+.wf .wf-raw { margin-top: var(--s3); }
+.wf .wf-clear { margin-top: var(--s1); }
+
+/* the "⋯" sheet: the story, then what you can do with it */
+.wmore-t { font-weight: 600; font-size: var(--fs-w-dek); line-height: 1.35; color: var(--ink); padding: var(--s1) 0 var(--s3); }
+.wacts { display: grid; gap: 2px; padding-bottom: var(--s3); }
+.wacts .wact { display: flex; align-items: center; gap: var(--s3); min-height: 52px; padding: 0 var(--s2); border-radius: var(--r-box);
+  font-size: var(--fs-w-dek); font-weight: 500; color: var(--ink); }
+.wacts .wact:hover { background: var(--paper-2); }
+.wacts .wact .i { width: 22px; height: 22px; color: var(--ink-2); }
+.wacts .wact.on, .wacts .wact.on .i { color: var(--accent); }
+.wacts .wact .n { margin-left: auto; color: var(--ink-3); font-variant-numeric: tabular-nums; }
+.wacts .wact.warn { color: var(--warn); }
+.wacts .wact.warn .i { color: var(--warn); }
+
+/* the wide screen's rail */
+.aside .ws { padding: 0 0 var(--s5); }
+.aside .ws + .ws { border-top: 1px solid var(--line-soft); padding-top: var(--s4); }
+.aside .ws h3 { font-family: var(--serif); font-size: var(--fs-section); font-weight: 500; padding: 0 0 var(--s2); }
+.aside .wf .sheet-h:first-child { padding-top: 0; }
+.aside .wsaved a { display: block; padding: var(--s2) 0; border-bottom: 1px solid var(--line-soft); font-size: var(--fs-button); font-weight: 600; line-height: 1.35; }
+.aside .wsaved a span { display: block; font-size: var(--fs-small); font-weight: 400; color: var(--ink-3); margin-top: 2px; }
+.aside .wsaved a:hover { text-decoration: underline; }
+.aside .wsaved .note { padding: var(--s1) 0; }
+
+@media (min-width: 1024px) {
+  .wbar { padding-left: var(--s3); }
+  .feed.wire .card.wrow, .card.wrow { grid-template-columns: var(--w-thumb-xl) minmax(0, 1fr); column-gap: 18px; padding-top: var(--s5); }
+  .feed.wire .card.wrow:not(.has-thumb), .card.wrow:not(.has-thumb) { grid-template-columns: minmax(0, 1fr); }
+  .wrow .w-thumb { width: var(--w-thumb-xl); height: auto; aspect-ratio: 4 / 3; }
+  .wrow .c-title { font-size: var(--fs-w-title-xl); }
+  .whead { padding-top: var(--s8); }
+  /* the top stories: the first across the column, the next four two by two */
+  .wleads { display: grid; grid-template-columns: 1fr 1fr; column-gap: var(--s6); padding: var(--s2) var(--gutter) var(--s3); }
+  .wleads > .card.wlead { grid-column: span 1; padding: 0 0 var(--s4); border-bottom: 0; }
+  .wleads > .card.wlead:first-child { grid-column: 1 / -1; padding-bottom: var(--s6); }
+  .wleads > .card.wlead .w-pic { border-radius: var(--r-media); }
+  .wleads > .card.wlead .w-body { padding: var(--s3) 0 0; }
+  .wleads > .card.wlead .c-title { font-size: var(--fs-w-card); line-height: 1.22; }
+  .wleads > .card.wlead:first-child .c-title { font-size: var(--fs-w-lead-xl); line-height: 1.12; }
+  .wleads > .card.wlead:first-child .w-dek { font-size: var(--fs-lead); }
+  .wleads > .card.wlead:not(.has-pic):first-child .w-body { padding-top: var(--s2); }
+}
+@media (min-width: 1280px) {
+  /* the rail holds the chips and Unfiltered: the banner keeps the day and the switch */
+  body.has-aside #panel-wire .wband-b, body.has-aside #panel-wire .wband-foot { display: none; }
+  body.has-aside #panel-wire .wband:not(:has(.wband-top)) { display: none; }
+}
 
 /* The Wire's Photo mode (modes/wire-photos.js): a header that says what it
    is with the Post button, the pets row on All, then one picture at a time,
@@ -1502,7 +1773,7 @@ body.desk { overflow: auto; }
 .desk-pic { width: 72px; height: 72px; object-fit: cover; border-radius: var(--r-thumb); background: var(--paper-2); }
 .desk-body { font-size: var(--fs-body); color: var(--ink-2); margin-top: var(--s1); white-space: pre-line; }
 
-@media (min-width: 900px) {
+@media (min-width: 1024px) {
   /* a wide screen has room: chips wrap instead of scrolling, so a mouse can
      reach them all, under the mast and inside a tab alike (Food's filters,
      What Now's themes) */
@@ -1521,12 +1792,13 @@ body.desk { overflow: auto; }
 .mast .chip.on { background: var(--sunset); color: var(--sunset-ink); }
 
 @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
-  @media (max-width: 899px) { .tabbar { background: var(--dock-solid); } }
+  @media (max-width: 1023px) { .tabbar { background: var(--dock-solid); } }
+  .wbar .wmodes, .wfloat .wday, .wfloat .localsw { background: var(--dock-solid); }
 }
 
 .mast .localsw .localsw-half:not(.on) { color: var(--lake-muted); }
 
-@media (max-width: 899px) {
+@media (max-width: 1023px) {
   .tabbar button:focus-visible { outline-color: var(--sunset); }
 }
 /* Small counts remain readable against the navy chip fill. */
@@ -1572,13 +1844,11 @@ body.desk { overflow: auto; }
 .wm-row:nth-of-type(even), .panel-body .lrow:nth-of-type(even) { background: var(--row-tint); }
 .panel-body .lrow.spun { background: var(--accent-soft); }
 .hb-row:nth-child(even) .hb-in { background: color-mix(in srgb, var(--row-tint), var(--paper)); }
-.feed.wire .card.w-alt { background: var(--row-tint); }
 .feed.wire .card.w-local { background: var(--w-local-tint); }
 .tag-local { background: var(--tag-local-bg); color: var(--tag-local-ink); }
 .tag-national { background: var(--tag-national-bg); color: var(--tag-national-ink); }
 #panel-wire .card .c-head { flex-wrap: wrap; }
 #panel-wire .card .c-foot { height: auto; min-height: 24px; flex-wrap: wrap; }
-#panel-wire .card .geo-tag { white-space: nowrap; }
 
 /* Feedback follows a deliberate tap or pointer, never a looping entrance. */
 @media (prefers-reduced-motion: no-preference) {
@@ -1596,6 +1866,15 @@ body.desk { overflow: auto; }
 
 .vshops .vk.k-antique { color: var(--accent); }
 
+/* the Wire's Photos on a wide screen: a grid, not one 468px strip */
+@media (min-width: 1024px) {
+  .pm-head, .pm-pets { max-width: none; }
+  .panel-body .feed.pm-feed { max-width: none; display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: var(--s6) var(--s5); padding: 0 var(--gutter); }
+  .feed.pm-feed > .loading, .feed.pm-feed > .caught { grid-column: 1 / -1; }
+  .feed.pm-feed .card.pm { padding-top: 0; border-bottom: 0; contain-intrinsic-size: auto 420px; }
+  .pm-head .btn.pm-post { width: auto; }
+}
+
 /* ============================================================ On Air */
 /* TV | Podcasts beside the Local switch; the TV side's features, rows and
    player (modes/onair.js, Stephen's 2026-10-19 notes and the outside UI
@@ -1605,6 +1884,16 @@ body.desk { overflow: auto; }
 .oa-sideswitch button { padding: 0 var(--s2); min-height: var(--hit); font-size: var(--fs-button); font-weight: 600; }
 .mast .oa-sideswitch button { color: var(--lake-muted); }
 .mast .oa-sideswitch button.on { background: var(--sunset); color: var(--sunset-ink); box-shadow: none; }
+/* On Air's sides and Feed | Topics, poured like the Wire's words */
+.oa-sideswitch, .oa-viewswitch { position: relative; }
+.oa-sideswitch.liquid, .oa-viewswitch.liquid { overflow: hidden; }
+.oa-sideswitch button, .oa-viewswitch button { position: relative; z-index: 1; }
+.mast .oa-sideswitch button[data-side="tv"].on { background: var(--liq-tv); color: var(--liq-tv-ink); }
+.mast .oa-sideswitch button[data-side="pods"].on { background: var(--liq-pods); color: var(--liq-pods-ink); }
+.mast .oa-sideswitch button[data-side="lists"].on { background: var(--liq-lists); color: var(--liq-lists-ink); }
+.oa-viewswitch button[data-view="feed"].on { background: var(--liq-tv); color: var(--liq-tv-ink); }
+.oa-viewswitch button[data-view="topics"].on { background: var(--liq-topics); color: var(--liq-topics-ink); }
+.mast .oa-sideswitch.liquid button.on, .oa-viewswitch.liquid button.on { background: transparent; box-shadow: none; }
 .oa-pick { display: flex; align-items: center; gap: var(--s2); padding: 14px var(--gutter) 0; }
 .oa-pickbtn { flex: 1 1 auto; min-width: 0; height: 44px; font-size: var(--fs-button); }
 .oa-viewswitch { flex: 0 0 auto; }
@@ -1636,6 +1925,14 @@ body.desk { overflow: auto; }
 .oa-acts .pillbtn.oa-watch { height: 34px; padding: 0 14px; font-size: var(--fs-button); color: var(--ink); }
 .oa-acts .oa-more { margin-left: auto; }
 .oa-all { margin: var(--s2) var(--gutter) 0; }
+/* News recaps: two sideways rows of cards, the show over the episode, Watch now under it */
+.oa-newsgroup + .oa-newsgroup { margin-top: var(--s4); }
+.oa-newscard .eyebrow { display: block; margin-top: 10px; }
+.oa-newscard .t { margin-top: 2px; font-size: var(--fs-title); display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.oa-newscard .s { font-size: var(--fs-meta); margin-top: 4px; }
+.oa-newscard .oa-acts { margin-top: var(--s2); }
+.rail.aslist > .oa-newscard .eyebrow { margin-top: 0; }
+.rail.aslist > .oa-newscard .t { font-size: var(--fs-title); }
 .oa-rows.insheet { border-top: 0; margin: 0 calc(-1 * var(--gutter)); }
 .oa-rows.insheet .oa-row { grid-template-columns: 128px minmax(0, 1fr); }
 .oa-menu { display: flex; flex-direction: column; padding-bottom: var(--s2); }
@@ -1660,7 +1957,7 @@ body.desk { overflow: auto; }
 .oa-q .th { position: relative; display: block; aspect-ratio: 16 / 9; border-radius: var(--r-thumb); overflow: hidden; background: var(--paper-2); }
 .oa-q .t { font-size: var(--fs-body); font-weight: 500; line-height: 1.3; }
 .oa-q .s { font-size: var(--fs-meta); color: var(--ink-3); }
-@media (min-width: 900px) {
+@media (min-width: 1024px) {
   .oa-row { grid-template-columns: 200px minmax(0, 1fr); }
   .sheet-card.oa-player { width: min(860px, 92vw); }
   .oa-stage { margin: 0; border-radius: var(--r-media); }
