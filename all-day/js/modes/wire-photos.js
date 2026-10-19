@@ -54,7 +54,7 @@ import * as boards from '../boards.js';
 import * as store from '../store.js';
 import * as wall from '../photo-wall.js';
 import { RULES } from '../boards-core.js';
-import { el, esc, safeHref, ICON, art, mark, cards, button } from '../ui.js';
+import { el, esc, safeHref, ICON, art, mark, cards, button, listRail } from '../ui.js';
 
 const VIEW_KEY = 'allday-wire-view';
 const BOARD = 'art';
@@ -560,7 +560,7 @@ function petsRow(pets) {
   const box = el('section', 'pm-pets');
   box.setAttribute('aria-label', 'Pets of Burlington');
   box.innerHTML = '<div class="pm-pets-h"><h3>Pets of Burlington</h3>' + (chipShown('pets') ? '<button class="chip" data-pets>' + esc('See all ' + pets.length) + '</button>' : '') + '</div>';
-  const row = el('div', 'pm-pets-row');
+  const row = listRail(box, { name: 'wire-pets', label: 'Pets of Burlington', cls: 'pm-pets-row', cells: 132 });
   pets.slice(0, 12).forEach((v) => {
     const a = el('a', 'pm-pet');
     a.href = safeHref(v.it.href);
@@ -569,7 +569,6 @@ function petsRow(pets) {
       '<span class="pm-pet-cap">' + esc(v.cap) + '</span>';
     row.appendChild(a);
   });
-  box.appendChild(row);
   box.addEventListener('click', (e) => {
     if (e.target.closest('[data-pets]')) { e.preventDefault(); P.cat = 'pets'; if (ctx) ctx.pickCat('pets'); return; }
     const a = e.target.closest('[data-pet]');

@@ -32,7 +32,7 @@
 import * as store from './store.js';
 import * as auth from './auth.js';
 import { bindGestures } from './gestures.js';
-import { el, esc, safeHref, ICON, art, mark, cards, pills, button, setPalette } from './ui.js';
+import { el, esc, safeHref, ICON, art, mark, cards, pills, button, setPalette, setJump } from './ui.js';
 
 const $ = (id) => document.getElementById(id);
 const root = document.documentElement;
@@ -835,6 +835,7 @@ export function jumpTo(node) {
   const top = node.getBoundingClientRect().top - p.getBoundingClientRect().top + p.scrollTop - mast.offsetHeight - 4;
   p.scrollTo({ top: Math.max(0, top), behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
 }
+setJump(jumpTo);
 
 /* the slot under the mast: a tab hands back nothing, one row, or two */
 export function paintSubnav() {

@@ -74,7 +74,7 @@
 import * as app from '../app.js';
 import * as store from '../store.js';
 import * as data from '../wire.js';
-import { el, esc, safeHref, ICON, art, mark, section, rail, chips, pills, button, agoShort, cards as feedCards, put } from '../ui.js';
+import { el, esc, safeHref, ICON, art, mark, section, listRail, chips, pills, button, agoShort, cards as feedCards, put } from '../ui.js';
 import { asksFrom, directoryFrom, GROUPS } from '../food-asks.js';
 
 const KEY = 'food';
@@ -1106,13 +1106,13 @@ function paintKitchens(host) {
   const clipsList = food.filter((p) => hasClip(p, nowS)).slice(0, RAIL_MAX);
   if (clipsList.length) {
     section(host, 'In their own words');
-    const r = rail(host);
+    const r = listRail(host, { name: 'food-clips', label: 'In their own words', cells: 140 });
     clipsList.forEach((p) => r.appendChild(clipCard(p)));
     return;
   }
   section(host, 'In their own words');
   if (!food.length) { host.appendChild(el('p', 'note pad', 'Nothing new this week.')); return; }
-  const r = rail(host);
+  const r = listRail(host, { name: 'food-photos', label: 'In their own words', cells: 140 });
   food.slice(0, RAIL_MAX).forEach((p) => r.appendChild(photoCard(p)));
 }
 
