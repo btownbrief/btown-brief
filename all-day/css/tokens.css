@@ -26,18 +26,23 @@
   --sunset: #F5B04B;
   --sunset-ink: #2B1606;
   --ember: #B74117; /* darkened from #D9531E for 4.5:1 text on paper */
-  --dock-glass: rgba(12, 16, 18, .82);
+  /* the floating pills' glass (Stephen, 2026-10-19, after Instagram's bar:
+     "the perfect amount of glass, and the shade is not overwhelming"):
+     enough tint that white labels still read on the cream paper, the rest
+     is blur and colour from what scrolls behind */
+  --dock-glass: rgba(12, 16, 18, .64);
+  --dock-filter: saturate(175%) blur(22px);
   --dock-solid: #101416;
   --dock-ink: #F7F8F9;
-  --dock-selected: rgba(255, 255, 255, .20);
+  --dock-selected: rgba(255, 255, 255, .16);
   --dock-hover: rgba(255, 255, 255, .10);
   --dock-sheen: rgba(255, 255, 255, .045);
   --dock-clear: rgba(247, 244, 238, 0);
-  --dock-edge: rgba(255, 255, 255, .22);
+  --dock-edge: rgba(255, 255, 255, .14);
   --dock-muted: #F7F8F9;
-  --dock-shadow: 0 6px 18px rgba(0, 0, 0, .22), inset 0 1px 1px rgba(255, 255, 255, .12);
+  --dock-shadow: 0 12px 32px rgba(0, 0, 0, .16), 0 2px 6px rgba(0, 0, 0, .08), inset 0 1px 0 rgba(255, 255, 255, .22);
   --dock-lift: 8px;
-  --dock-inset: 4px;
+  --dock-inset: 6px;
   --r-dock: 999px;
   --dock-max: 520px;
   --dock-icon: 22px;
@@ -141,7 +146,7 @@
 
   /* type. In rem, so a reader's own browser text size scales every word
      (16px = 1rem). The few px sizes are layout-bound: the tab bar's labels
-     (nine must fit a 390px bar), the initials inside a fixed-size mark, an
+     (nine must fit a 360px bar), the initials inside a fixed-size mark, an
      emoji drawn as a picture. */
   --serif: "Lora", Georgia, serif;
   --sans: "Archivo", system-ui, -apple-system, "Segoe UI", sans-serif;
@@ -152,7 +157,9 @@
   --fs-body: 0.9375rem;      /* 15, Archivo 400: captions, excerpts, the pick's reason */
   --fs-meta: 0.8125rem;      /* 13, Archivo 500/400: source, time, counts */
   --fs-label: 10px;          /* Archivo 500: the date tile weekday */
-  --fs-nav: 12px;            /* Archivo 500: the phone bar's five labels (was 10 when it held nine) */
+  /* Archivo 500: the phone bar's nine labels, as big as nine fit: 10px on a
+     360px phone, about 11 at 390, 12 at 430 and up ("Vintage" is the widest) */
+  --fs-nav: clamp(10px, calc(10px + (100vw - 360px) * .028), 12px);
   --fs-button: 0.875rem;     /* 14, Archivo 600 */
   --fs-caps: 0.75rem;        /* 12, Archivo 700, the only uppercase: eyebrow, new-since line, "Coming in the rebuild" */
   --fs-tag: 0.6875rem;       /* 11, Archivo 600: Local, Btown Brief */
@@ -222,10 +229,10 @@
   :root:not([data-theme="light"]) {
     color-scheme: dark;
     --lake: #16334F;
-    --dock-glass: rgba(12, 16, 18, .78);
-    --dock-sheen: rgba(255, 255, 255, .045);
-    --dock-edge: rgba(255, 255, 255, .22);
-    --dock-shadow: 0 6px 18px rgba(0, 0, 0, .32), inset 0 1px 1px rgba(255, 255, 255, .12);
+    --dock-glass: rgba(20, 26, 32, .5);
+    --dock-sheen: rgba(255, 255, 255, .06);
+    --dock-edge: rgba(255, 255, 255, .12);
+    --dock-shadow: 0 12px 32px rgba(0, 0, 0, .36), 0 2px 6px rgba(0, 0, 0, .2), inset 0 1px 0 rgba(255, 255, 255, .16);
     --ember: #F39872;
     --row-tint: rgba(185, 205, 224, .035);
     --lake-blue: #83B5E9;
@@ -274,10 +281,10 @@
 :root[data-theme="dark"] {
   color-scheme: dark;
   --lake: #16334F;
-  --dock-glass: rgba(12, 16, 18, .78);
-  --dock-sheen: rgba(255, 255, 255, .045);
-  --dock-edge: rgba(255, 255, 255, .22);
-  --dock-shadow: 0 6px 18px rgba(0, 0, 0, .32), inset 0 1px 1px rgba(255, 255, 255, .12);
+  --dock-glass: rgba(20, 26, 32, .5);
+  --dock-sheen: rgba(255, 255, 255, .06);
+  --dock-edge: rgba(255, 255, 255, .12);
+  --dock-shadow: 0 12px 32px rgba(0, 0, 0, .36), 0 2px 6px rgba(0, 0, 0, .2), inset 0 1px 0 rgba(255, 255, 255, .16);
   --ember: #F39872;
   --row-tint: rgba(185, 205, 224, .035);
   --lake-blue: #83B5E9;

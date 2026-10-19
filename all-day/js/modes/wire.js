@@ -336,14 +336,15 @@ function loadEdition(date) {
 }
 
 /* --------------------------------------------------------------- subnav */
-/* One row under the mast (the reviewers, 2026-10-19: six rows of controls
-   before the first story): News · Photos · Square in words on the left,
-   Filters on the right. Everything else that narrows the paper (the day,
-   the kinds of source, the topics, the ranking of the day, Unfiltered)
-   is in the Filters sheet, or in the rail on a wide screen. All three
-   words are drawn from the first paint, so nothing moves under a thumb;
-   Square holds its place, unseen, until the board answers. Unfiltered
-   keeps its own two rows (the way back and the outlets). */
+/* News · Photos · Square is a pill that floats over the paper and stays
+   on screen as you scroll (Stephen, 2026-10-19: "that's how important it
+   is"). Once the banner at the top of the paper has scrolled away, a small
+   second row floats under it with the same two controls the banner leads
+   with: the day, ‹ Monday, October 19 ›, on the left and Local /
+   Everything on the right. All three words are drawn from the first
+   paint, so nothing moves under a thumb; Square holds its place, unseen,
+   until the board answers. Unfiltered keeps its own two rows (the way back
+   and the outlets). */
 function modeRow() {
   const g = el('div', 'wmodes');
   g.setAttribute('role', 'group');
@@ -368,16 +369,7 @@ function activeFilters() {
   if (W.view !== 'paper') return 0;
   if (W.mode === 'photos') return photos.cat() !== 'all' ? 1 : 0;
   if (W.mode === 'square') return square.type() !== 'all' ? 1 : 0;
-  return (W.ch !== 'all' ? 1 : 0) + (W.topic !== 'all' ? 1 : 0) + (W.start ? 1 : 0) + (W.slot ? 1 : 0);
-}
-function filterBtn() {
-  const n = activeFilters();
-  const b = el('button', 'wfilter' + (n ? ' on' : ''), ICON.sliders + '<span>Filters</span>' + (n ? '<span class="n">' + n + '</span>' : ''));
-  b.type = 'button';
-  b.setAttribute('aria-haspopup', 'dialog');
-  b.setAttribute('aria-label', n ? 'Filters, ' + n + ' on' : 'Filters');
-  b.addEventListener('click', openFilters);
-  return b;
+  return (W.ch !== 'all' ? 1 : 0) + (W.topic !== 'all' ? 1 : 0) + (W.slot ? 1 : 0);
 }
 function subnav() {
   if (W.view === 'raw') {
@@ -386,24 +378,136 @@ function subnav() {
     return rawSubnav(document.createDocumentFragment());
   }
   const bar = el('div', 'wbar');
-  bar.append(modeRow(), filterBtn());
+  bar.append(modeRow());
+  if (dayRowShown()) {
+    const fl = el('div', 'wfloat');
+    fl.setAttribute('aria-hidden', 'true');
+    fl.append(dayPager(), localSwitch(() => { W.open.clear(); changed(); }));
+    /* hidden until the banner's own row has gone under the pill */
+    fl.querySelectorAll('button').forEach((b) => { b.tabIndex = -1; });
+    bar.appendChild(fl);
+    requestAnimationFrame(floatCheck);
+  }
   return bar;
 }
 
-/* ----------------------------------------------------------- Filters */
-/* The sheet a phone opens from the Filters button; the wide screen's rail
-   draws the same controls in place. Each tap applies at once, behind it. */
+/* ----------------------------------------------------------- the banner */
+/* The top of the paper, every view of it (News, a kind like Instagram,
+   Photos, the Square), always open (Stephen, 2026-10-19: "I like how much
+   you can see without clicking Filters"; it scrolls away with the paper).
+   On News it leads with the day and Local / Everything, then the kinds of
+   source and the topics as rows of chips that scroll sideways, and a foot
+   with Unfiltered and "Show all", which lays every row out in full and back
+   ("there should always be the option to get out of a horizontal
+   scroll"). The wide screen's rail holds the chips instead. Each tap
+   applies at once. */
 let FBODY = null;
-function openFilters() {
-  app.sheet(W.mode === 'photos' ? 'Photos' : W.mode === 'square' ? 'The Square' : 'Filters', (body) => { FBODY = body; paintFilters(); });
+const dayRowShown = () => W.view === 'paper' && W.mode === 'news' && W.ch !== 'instagram';
+function dayPager() {
+  const row = el('div', 'wday');
+  row.setAttribute('role', 'group');
+  row.setAttribute('aria-label', 'Edition');
+  const prev = el('button', 'wday-nav prev', ICON.left);
+  const next = el('button', 'wday-nav next', ICON.right);
+  prev.type = next.type = 'button';
+  prev.setAttribute('aria-label', 'Earlier day');
+  next.setAttribute('aria-label', 'Later day');
+  /* focus follows to the same arrow on the new day's banner */
+  prev.addEventListener('click', () => { const d = olderThan(row.dataset.of); if (d) { W.refocus = '.prev'; goDay(d); } });
+  next.addEventListener('click', () => { const d = newerThan(row.dataset.of); if (d) { W.refocus = '.next'; goDay(d); } });
+  row.append(prev, el('span', 't'), next);
+  fillPager(row);
+  return row;
 }
+/* the day the reader is in (it follows the scroll into earlier days) */
+function fillPager(row) {
+  const tk = todayKey();
+  const date = W.reading || W.start || W.shownDay || tk;
+  row.dataset.of = date;
+  /* as long as the width allows: "Monday, October 19", "Monday, Oct 19",
+     "Mon, Oct 19" (the CSS shows one) */
+  const wd = weekday(date);
+  row.querySelector('.t').innerHTML = '<span class="d-l">' + esc(dayName(date)) + '</span><span class="d-m">' + esc(wd + ', ' + shortDay(date)) +
+    '</span><span class="d-s">' + esc(wd.slice(0, 3) + ', ' + shortDay(date)) + '</span>';
+  row.querySelector('.prev').disabled = !olderThan(date);
+  /* the paper is leading with an earlier day because today has nothing yet:
+     there is no later day to go to */
+  row.querySelector('.next').disabled = date >= tk || (!W.start && !!W.shownDay && date === W.shownDay);
+}
+function banner() {
+  const band = el('section', 'wband' + (W.fwrap ? ' wrap' : ''));
+  band.setAttribute('aria-label', 'What the Wire shows');
+  if (dayRowShown()) {
+    const top = el('div', 'wband-top');
+    top.append(dayPager(), localSwitch(() => { W.open.clear(); changed(); }));
+    band.appendChild(top);
+  }
+  const body = el('div', 'wband-b');
+  body.appendChild(filtersUI(true));
+  FBODY = body;
+  band.appendChild(body);
+  const foot = el('div', 'wband-foot');
+  if (W.mode === 'news') {
+    const raw = button('Unfiltered ' + ICON.arrow, 'ghost wf-raw', () => openRaw());
+    raw.setAttribute('aria-label', 'Every headline, unfiltered');
+    foot.appendChild(raw);
+  }
+  const all = el('button', 'wband-all', '<span>' + (W.fwrap ? 'Show less' : 'Show all') + '</span>' + ICON.down);
+  all.type = 'button';
+  all.setAttribute('aria-pressed', W.fwrap ? 'true' : 'false');
+  all.addEventListener('click', () => {
+    W.fwrap = !W.fwrap;
+    band.classList.toggle('wrap', W.fwrap);
+    all.setAttribute('aria-pressed', W.fwrap ? 'true' : 'false');
+    all.firstChild.textContent = W.fwrap ? 'Show less' : 'Show all';
+    fits(band);
+    if (band.classList.contains('fits')) { const h = W.root && W.root.querySelector('.whead h2'); if (h) { h.tabIndex = -1; h.focus({ preventScroll: true }); } }
+  });
+  foot.appendChild(all);
+  band.appendChild(foot);
+  return band;
+}
+/* the top of every paper view */
+function paperTop(root) {
+  const band = banner();
+  root.prepend(band);
+  floatCheck();
+  requestAnimationFrame(() => fits(band));
+}
+/* "Show all" only when a row of chips runs past the screen */
+function fits(band) {
+  if (!band || !band.isConnected) return;
+  const over = [...band.querySelectorAll('.wf .chips')].some((r) => r.scrollWidth > r.clientWidth + 1);
+  band.classList.toggle('fits', !over && !W.fwrap);
+}
+window.addEventListener('resize', () => { if (W.root) fits(W.root.querySelector('.wband')); });
+/* the floating day row shows once the banner's own row is under the pill */
+function floatCheck() {
+  const on = (() => {
+    if (app.activeTab() !== 'wire' || !dayRowShown() || !W.root) return false;
+    const top = W.root.querySelector('.wband-top');
+    const bar = document.querySelector('#subnav .wmodes');
+    if (!top || !bar) return false;
+    return top.getBoundingClientRect().bottom < bar.getBoundingClientRect().bottom + 4;
+  })();
+  document.body.classList.toggle('wire-float', on);
+  const fl = document.querySelector('#subnav .wfloat');
+  if (fl && fl.getAttribute('aria-hidden') !== (on ? 'false' : 'true')) {
+    fl.setAttribute('aria-hidden', on ? 'false' : 'true');
+    fl.querySelectorAll('button').forEach((b) => { b.tabIndex = on ? 0 : -1; });
+  }
+  /* one copy of the two controls in reach at a time */
+  const top = W.root && W.root.querySelector('.wband-top');
+  if (top) top.inert = on;
+}
+/* something else drew the chips' content anew (Instagram arrived) */
 function paintFilters() {
   if (!FBODY || !FBODY.isConnected) { FBODY = null; return; }
-  /* the sheet is drawn again on every change: keep the reader's place in it */
   const was = document.activeElement && FBODY.contains(document.activeElement) ? focusKey(document.activeElement) : null;
   FBODY.innerHTML = '';
-  FBODY.appendChild(filtersUI());
+  FBODY.appendChild(filtersUI(true));
   if (was) { const n = FBODY.querySelector(was); if (n && !n.disabled) n.focus({ preventScroll: true }); }
+  fits(FBODY.closest('.wband'));
 }
 function focusKey(n) {
   if (n.dataset.chip) return '.chip[data-chip="' + CSS.escape(n.dataset.chip) + '"]';
@@ -413,18 +517,25 @@ function focusKey(n) {
   return label ? '[aria-label="' + CSS.escape(label) + '"]' : null;
 }
 /* something that narrows the paper changed: the button's count, the
-   sheet, the rail and the paper, from the top */
+   banner, the rail and the paper, from the top; focus stays on the chip
+   that was tapped */
 function changed() {
+  const a = document.activeElement;
+  const host = a && a.closest ? a.closest('.wband, .aside, .wfloat') : null;
+  const was = host ? focusKey(a) : null;
+  /* from the floating row too, focus lands in the banner: the paper goes back to its top */
+  const where = host ? (host.classList.contains('aside') ? '#aside' : '#panel-wire .wband') : null;
   app.paintSubnav();
-  paintFilters();
   render();
   app.scrollTop();
+  if (was) { const n = document.querySelector(where + ' ' + was); if (n && !n.disabled) n.focus({ preventScroll: true }); }
 }
 function pickKind(k) {
   W.ch = k;
   /* a ranking of the day only reads on the whole paper */
   if (k !== 'all') W.slot = null;
-  history.replaceState(null, '', location.search + '#wire' + (k === 'all' ? '' : '/' + k));
+  /* the address holds one thing: on an earlier day, the day */
+  history.replaceState(null, '', location.search + '#wire' + (W.start ? '/' + W.start : k === 'all' ? '' : '/' + k));
   changed();
 }
 function pickTopic(k) { W.topic = k; if (k !== 'all') W.slot = null; changed(); }
@@ -432,29 +543,15 @@ function clearFilters() {
   if (W.mode === 'photos') { pickCat('all'); return; }
   if (W.mode === 'square') { square.setType('all'); changed(); return; }
   W.ch = 'all'; W.topic = 'all'; W.slot = null;
-  if (W.start) goDay(null);
-  else { history.replaceState(null, '', location.search + '#wire'); changed(); }
+  history.replaceState(null, '', location.search + '#wire' + (W.start ? '/' + W.start : ''));
+  changed();
 }
-function dayPager() {
-  const tk = todayKey();
-  const date = W.start || W.shownDay || tk;
-  const row = el('div', 'wday');
-  const prev = el('button', 'iconbtn nav', ICON.left); prev.setAttribute('aria-label', 'Earlier day');
-  const next = el('button', 'iconbtn nav', ICON.right); next.setAttribute('aria-label', 'Later day');
-  prev.disabled = !olderThan(date);
-  /* the paper is leading with an earlier day because today has nothing yet:
-     there is no later day to go to */
-  next.disabled = date >= tk || (!W.start && !!W.shownDay);
-  prev.addEventListener('click', () => { const d = olderThan(date); if (d) goDay(d); });
-  next.addEventListener('click', () => { const d = newerThan(date); if (d) goDay(d); });
-  const parts = dayName(date).split(', ');
-  row.append(prev, el('div', 't', esc(date === tk ? 'Today' : parts[0]) + '<span>' + esc(date === tk ? dayName(date) : parts[1] || '') + '</span>'), next);
-  return row;
-}
-function filtersUI() {
+/* the chips; in the banner they go without heads and without the buttons
+   the banner's foot carries */
+function filtersUI(band) {
   const f = el('div', 'wf');
-  const h = (t) => f.appendChild(el('div', 'sheet-h', esc(t)));
-  const clear = () => { if (activeFilters()) f.appendChild(button('Clear filters', 'ghost wf-clear', clearFilters)); };
+  const h = (t) => { if (!band) f.appendChild(el('div', 'sheet-h', esc(t))); };
+  const clear = () => { if (!band && activeFilters()) f.appendChild(button('Clear filters', 'ghost wf-clear', clearFilters)); };
   if (W.view === 'paper' && W.mode === 'photos') {
     if (photos.loaded()) {
       h('Kind of photo');
@@ -474,10 +571,6 @@ function filtersUI() {
   }
   loadMutes();
   const d = startDay();
-  h('Day');
-  f.appendChild(dayPager());
-  h('Where');
-  f.appendChild(localSwitch(() => { W.open.clear(); changed(); }));
   const counts = d ? countsOf(d) : {};
   if (chipHidden(d, W.ch)) W.ch = 'all';
   /* a kind with nothing in it today is left out, unless it is the one on */
@@ -502,9 +595,11 @@ function filtersUI() {
   const tp = !W.start && unfiltered() && payloadFor(todayKey());
   const sl = tp ? slotRow(dayOf(tp)) : null;
   if (sl) { h('Top stories as of'); f.appendChild(sl.row); }
-  const raw = button('Every headline, unfiltered ' + ICON.arrow, 'ghost wf-raw', () => { if (FBODY) app.closeSheet(); openRaw(); });
-  raw.dataset.chip = '__raw';
-  f.appendChild(raw);
+  if (!band) {
+    const raw = button('Every headline, unfiltered ' + ICON.arrow, 'ghost wf-raw', () => openRaw());
+    raw.dataset.chip = '__raw';
+    f.appendChild(raw);
+  }
   clear();
   return f;
 }
@@ -549,6 +644,7 @@ function renderSquare(opts = {}) {
   const draw = () => {
     if (seq !== squareSeq || W.mode !== 'square' || W.view !== 'paper') return;
     square.render(root, { limit: opts.limit });
+    paperTop(root);
     if (app.activeTab() === 'wire') app.paintSubnav();
     landSquare();
   };
@@ -636,6 +732,7 @@ function renderPhotos(opts = {}) {
     const first = !root.querySelector('.pm-head');
     const was = photos.cat();
     photos.render(root, { limit: opts.limit, until: W.photoOpen || opts.until });
+    paperTop(root);
     /* the subnav names the chip: paint it again if a rebuild moved it (a
        kind can drop under the chip's minimum) */
     if ((first || photos.cat() !== was) && app.activeTab() === 'wire') app.paintSubnav();
@@ -671,7 +768,10 @@ photos.init({
 
 /* the day the reader is in: the one the page opened on, or the earlier day
    they have scrolled down into */
-function paintDateline(date) { W.reading = date; }
+function paintDateline(date) {
+  W.reading = date;
+  document.querySelectorAll('#subnav .wday, #panel-wire .wband .wday').forEach(fillPager);
+}
 
 function startDay() {
   const date = W.start || W.shownDay || todayKey();
@@ -761,6 +861,8 @@ function render(opts = {}) {
   }
   const top = borrow || d;
   const ranked = !!(top && unfiltered() && (mattersOf(top).list.length || mattersOf(top).earlier.length));
+  W.reading = date;
+  paperTop(root);
   headBlock(feed, borrow ? borrow.date : date, borrow || d, ranked);
   const exclude = new Set();
   if (d && unfiltered()) {
@@ -791,7 +893,13 @@ function render(opts = {}) {
   app.bindFeed(feed, { onSource: sourceSheet, onMute: muteSource });
   watch(run);
   /* the filters read the day this paper shows */
-  if (app.activeTab() === 'wire') { app.paintAside(); paintFilters(); }
+  if (app.activeTab() === 'wire') { app.paintAside(); paintFilters(); paintDateline(W.reading); }
+  if (W.refocus) {
+    const b = root.querySelector('.wband .wday ' + W.refocus);
+    const to = b && !b.disabled ? b : root.querySelector('.wband .wday button:not(:disabled)');
+    W.refocus = null;
+    if (to) to.focus({ preventScroll: true });
+  }
 }
 
 /* today has no ranking (or no stories) yet, so the paper leads with an
@@ -826,10 +934,8 @@ function headBlock(host, date, d, ranked) {
   const row = el('div', 'whead-row', '<span class="s"></span>');
   row.firstChild.textContent = headSub(date, d);
   row.firstChild.dataset.of = date;
-  row.appendChild(localSwitch(() => { W.open.clear(); changed(); }));
   h.appendChild(row);
   const on = [];
-  if (W.start) on.push(dayName(W.start));
   if (W.ch !== 'all') on.push(KIND_NAME[W.ch] || W.ch);
   if (W.topic !== 'all') on.push(TOPIC_NAME[W.topic] || '');
   if (W.slot) on.push('as of ' + (SLOTS.find((x) => x[0] === W.slot) || ['', ''])[1].toLowerCase());
@@ -1151,6 +1257,7 @@ function renderInstagram(opts = {}) {
   root.innerHTML = '';
   const feed = el('div', 'feed wire');
   root.appendChild(feed);
+  paperTop(root);
   const list = igRows();
   if (!list.length) { feed.appendChild(el('p', 'empty', 'No Instagram posts today.')); return; }
   const run = { i: 0, dead: false, sentinel: el('div', 'loading') };
@@ -1337,6 +1444,7 @@ function stopRun() {
 /* which day is under the mast: the dateline follows the scroll */
 let tracking = 0;
 function track() {
+  floatCheck();
   if (tracking) return;
   if (W.view === 'paper' && W.mode === 'photos') { tracking = requestAnimationFrame(() => { tracking = 0; photos.topUp(); }); return; }
   if (W.view !== 'paper' || !W.run) return;
@@ -1773,6 +1881,8 @@ function mount(root) {
     /* today has no ranking yet: the page can now lead with the latest day that does */
     if (W.view === 'paper' && W.mode === 'news' && !W.start && W.ch !== 'instagram' && (!W.panel || W.panel.scrollTop < 120) && needsEarlier()) render();
     if (app.activeTab() === 'wire') paintFilters();
+    /* the day's ‹ can now see the days before */
+    if (W.reading) paintDateline(W.reading);
     land();
   }, () => {
     W.idxDone = true;

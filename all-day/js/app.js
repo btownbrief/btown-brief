@@ -43,13 +43,10 @@ export const demo = new URLSearchParams(location.search).get('demo') === '1';
 store.setDemo(demo);
 
 /* The bar's order is the shell's call. What Now sits fifth of nine, dead
-   centre, in the one wider cell so its two words never wrap. */
+   centre, in the one wider cell so its two words never wrap. All nine show
+   on a phone too (Stephen, 2026-10-19, undoing the five-and-More bar: "I'd
+   either like to keep them or only merge two together tops"). */
 export const TABS = ['wire', 'watch', 'food', 'people', 'whatnow', 'vintage', 'habits', 'onair', 'games'];
-/* On a phone the bar shows five (Stephen, 2026-10-19: "Yes, go to five tabs
-   plus a More menu"): Wire · Food · What Now · People · More, What Now's
-   disc still in the centre. More opens a sheet with the other five. A wide
-   screen's left list shows all nine, in TABS order, and has no More. */
-export const MORE_TABS = ['watch', 'vintage', 'habits', 'onair', 'games'];
 const REQUIRED = ['label', 'icon', 'promise', 'mount', 'activate', 'refresh', 'newSince'];
 
 const registry = Object.create(null);
@@ -825,7 +822,7 @@ export function measure() {
   root.style.setProperty('--mast-total', mast.offsetHeight + 'px');
   root.style.setProperty('--player-h', dock.hidden ? '0px' : (dock.offsetHeight + 8) + 'px');
 }
-function showChrome() { document.body.classList.remove('chrome-away'); }
+function showChrome() { document.body.classList.remove('chrome-away', 'pill-small'); }
 export function scrollTop(smooth) {
   const p = panels[active];
   if (p) p.scrollTo({ top: 0, behavior: smooth ? 'smooth' : 'auto' });
@@ -876,6 +873,11 @@ function watchScroll(p) {
       const y = p.scrollTop;
       if (y < 40 || y < last - 8) showChrome();
       else if (y > last + 8 && y > 120 && !peekEl) document.body.classList.add('chrome-away');
+      /* the floating pills settle a little smaller on the way down and come
+         back to full size on any move up (Stephen, 2026-10-19, after
+         Instagram's bar: "dynamic") */
+      if (y < 40 || y < last - 2) document.body.classList.remove('pill-small');
+      else if (y > last + 6) document.body.classList.add('pill-small');
       last = y;
     });
   }, { passive: true });
@@ -936,13 +938,6 @@ export function recount() {
     if (n > 0 && !dot) { const d = el('i', 'nd'); d.setAttribute('aria-label', 'New'); b.appendChild(d); }
     else if (n <= 0 && dot) dot.remove();
   });
-  const more = $('tab-more');
-  if (more) {
-    const any = MORE_TABS.some((k) => $('tab-' + k) && $('tab-' + k).querySelector('.nd'));
-    const dot = more.querySelector('.nd');
-    if (any && !dot) { const d = el('i', 'nd'); d.setAttribute('aria-label', 'New'); more.appendChild(d); }
-    else if (!any && dot) dot.remove();
-  }
 }
 
 /* --------------------------------------------------------------- refresh */
@@ -1007,35 +1002,6 @@ function paintTabs() {
     b.classList.toggle('on', on);
     b.setAttribute('aria-selected', on ? 'true' : 'false');
     b.tabIndex = on ? 0 : -1;
-  });
-  const m = $('tab-more');
-  if (m) {
-    /* on a phone the tab you are on is hidden when it lives in More, so More
-       is the selected tab there */
-    const inMore = MORE_TABS.includes(active);
-    m.classList.toggle('on', inMore);
-    m.setAttribute('aria-selected', inMore ? 'true' : 'false');
-  }
-}
-
-/* More: the five tabs the phone's bar does not show, as big rows; the one
-   you are on is marked, and one with something new carries its dot */
-function moreSheet() {
-  sheet('More', (body, card, close) => {
-    const list = el('div', 'morelist');
-    MORE_TABS.forEach((key) => {
-      const mod = registry[key];
-      if (!mod) return;
-      const on = key === active;
-      const dot = $('tab-' + key) && $('tab-' + key).querySelector('.nd');
-      const b = el('button', 'morerow' + (on ? ' on' : ''), mod.icon + '<span>' + esc(mod.label) + '</span>' + (dot ? '<i class="nd" aria-label="New"></i>' : ''));
-      b.type = 'button';
-      b.dataset.tab = key;
-      if (on) b.setAttribute('aria-current', 'page');
-      b.addEventListener('click', () => { close(); if (active === key) scrollTop(true); else go(key); });
-      list.appendChild(b);
-    });
-    body.appendChild(list);
   });
 }
 
@@ -1123,18 +1089,8 @@ export function start() {
       if (active === key) { scrollTop(true); checkNew(); }
       else go(key);
     });
-    if (MORE_TABS.includes(key)) b.classList.add('in-more');
     bar.appendChild(b);
   });
-  const more = el('button', 'more-btn', ICON.grid + '<span>More</span>');
-  more.id = 'tab-more';
-  more.type = 'button';
-  more.setAttribute('role', 'tab');
-  more.setAttribute('aria-selected', 'false');
-  more.setAttribute('aria-haspopup', 'dialog');
-  more.setAttribute('aria-label', 'More: ' + MORE_TABS.map((k) => registry[k] && registry[k].label).filter(Boolean).join(', '));
-  more.addEventListener('click', moreSheet);
-  bar.appendChild(more);
 
   /* the emailed sign-in link lands on a hash the router must not see */
   const signin = auth.consumeHash();
@@ -1152,7 +1108,8 @@ matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
 });
 paintThemeBtn();
 $('theme-btn').addEventListener('click', () => { store.setTheme(store.nextTheme()); paintThemeBtn(); });
-$('saved-btn').innerHTML = ICON.star;
+/* labeled, so it reads as a place (Stephen, 2026-10-19: "make Saved more obvious") */
+$('saved-btn').innerHTML = ICON.star + '<span>Saved</span>';
 $('settings-btn').innerHTML = ICON.gear;
 $('saved-btn').addEventListener('click', savedSheet);
 $('settings-btn').addEventListener('click', settingsSheet);

@@ -13,7 +13,7 @@
    audio — episodes are large and the browser's own HTTP cache handles them
    better than we would. */
 
-const VERSION = 'all-day-v75';   // the Wire rebuilt, five tabs and More, a real desktop grid
+const VERSION = 'all-day-v76';   // the Wire rebuilt: nine tabs, a floating News · Photos · Square, the banner back
 const SHELL = VERSION + '-shell';
 const DATA = 'all-day-data';   // unversioned on purpose: survives shell bumps
 

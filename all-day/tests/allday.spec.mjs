@@ -435,14 +435,9 @@ const settle = (page) => page.waitForFunction(() => {
   return p && p.children.length && !p.querySelector(':scope > .loading');
 }, null, { timeout: 15000 });
 
-/* the phone's bar shows five (Wire · Food · What Now · People · More); the
-   other five open from More's sheet. A wide screen lists all nine. */
-const MORE = ['watch', 'vintage', 'habits', 'onair', 'games'];
-async function tapTab(page, tab) {
-  if (await page.$eval('#tab-' + tab, (b) => b.offsetParent !== null)) { await page.click('#tab-' + tab); return; }
-  await page.click('#tab-more');
-  await page.click('.sheet-card .morerow[data-tab="' + tab + '"]');
-}
+/* all nine tabs on the phone's bar too (Stephen, 2026-10-19, undoing the
+   five-and-More bar) */
+async function tapTab(page, tab) { await page.click('#tab-' + tab); }
 async function goTab(page, tab) {
   await tapTab(page, tab);
   await page.waitForFunction((t) => document.querySelector('#tab-' + t)?.getAttribute('aria-selected') === 'true', tab);
@@ -506,12 +501,11 @@ async function matrix(browser, base) {
         const bar = await page.$$eval('#tabbar button[data-tab]', (bs) => bs.map((b) => [b.dataset.tab, b.textContent.trim()]));
         check(JSON.stringify(bar.map((b) => b[0])) === JSON.stringify(TABS), 'nine tabs in order', JSON.stringify(bar));
         check(JSON.stringify(bar.map((b) => b[1])) === JSON.stringify(LABELS), 'the nine labels', JSON.stringify(bar.map((b) => b[1])));
-        /* what the reader sees: five on a phone, in the bar's own order; all nine on a wide screen */
+        /* what the reader sees: all nine, in order, on a phone as on a wide screen */
         const seen = await page.$$eval('#tabbar button', (bs) => bs.filter((b) => b.offsetParent !== null)
           .map((b) => ({ x: Math.round(b.getBoundingClientRect().left), y: Math.round(b.getBoundingClientRect().top), t: b.textContent.trim() }))
           .sort((a, b) => a.y - b.y || a.x - b.x).map((b) => b.t));
-        const want = combo.viewport.width >= 1024 ? LABELS : ['Wire', 'Food', 'What Now', 'People', 'More'];
-        check(JSON.stringify(seen) === JSON.stringify(want), (combo.viewport.width >= 1024 ? 'all nine' : 'five on a phone, What Now in the middle, then More') + ', in order', JSON.stringify(seen));
+        check(JSON.stringify(seen) === JSON.stringify(LABELS) && !(await page.$('#tab-more')), 'all nine showing, in order, and no More', JSON.stringify(seen));
         check(!(await page.$('script[src*="nav.js"], .btnav')), 'the network bar is gone', '');
         const bg = await page.evaluate(() => getComputedStyle(document.body).backgroundColor);
         check(bg === PAPER[combo.scheme], 'body is the ' + combo.scheme + ' paper', bg);
@@ -529,9 +523,10 @@ async function matrix(browser, base) {
           check(!over.length, 'no tab label overflows the rail', over.join(', '));
         } else {
           const cells = await page.$$eval('#tabbar button', (bs) => bs.filter((b) => b.offsetParent !== null).map((b) => { const r = b.getBoundingClientRect(); return [b.dataset.tab || 'more', Math.round(r.width), Math.round(r.height), b.scrollWidth <= b.clientWidth + 1]; }));
-          check(cells.length === 5 && cells.every((c) => c[2] >= 44 && c[1] >= 44), 'five tab targets, each at least 44px', JSON.stringify(cells));
+          check(cells.length === 9 && cells.every((c) => c[2] >= 44), 'nine tab targets, each at least 44px tall', JSON.stringify(cells));
+          /* as big as nine fit: 10px at 360, about 11 at 390, 12 at 430 */
           const labelPx = await page.$eval('#tab-wire span', (x) => parseFloat(getComputedStyle(x).fontSize));
-          check(labelPx >= 12, 'the bar’s labels are 12px or more', labelPx);
+          check(labelPx >= 10 + (Math.min(430, combo.viewport.width) - 360) * .028 - .05, 'the bar’s labels are as big as nine fit (' + labelPx + 'px)', labelPx);
           check(cells.every((c) => c[3]), 'no tab label overflows its cell', JSON.stringify(cells.filter((c) => !c[3])));
           const wn = cells.find((c) => c[0] === 'whatnow');
           check(wn[1] > cells[0][1], 'What Now gets the wider cell', JSON.stringify(cells));
@@ -560,10 +555,6 @@ async function matrix(browser, base) {
               title: document.getElementById('mast-title').textContent, err: !!p.querySelector('.errbox') };
           });
           check(state.id === 'panel-' + tab, tab + ': its panel is the one showing', state.id);
-          if (combo.viewport.width < 1024 && MORE.includes(tab)) {
-            const more = await page.$eval('#tab-more', (m) => [m.classList.contains('on'), m.getAttribute('aria-selected')]);
-            check(more[0] && more[1] === 'true', tab + ': opened from More, the bar lights More', JSON.stringify(more));
-          }
           check(!state.err, tab + ': no error box', '');
           if (!demo && !LIVE.has(tab)) {
             check(state.promise && state.h2 === LABELS[TABS.indexOf(tab)], tab + ': live, it states its promise', JSON.stringify(state));
@@ -675,7 +666,7 @@ async function deepLinks(browser, base) {
     supabase.length = 0;
     await page.goto(base + '/all-day/?demo=1#wire');
     await settle(page);
-    await page.click('.panel:not([hidden]) .whead .localsw-half:not(.on)');
+    await page.click(BAND + ' .localsw-half:not(.on)');
     await page.click('#settings-btn');
     const txt = await page.$eval('.sheet-body', (b) => b.innerText);
     check(!/reader@example\.com|Sign out/.test(txt), 'demo Settings does not show the real account', '');
@@ -709,24 +700,21 @@ async function toTop(page) {
   await page.waitForFunction(() => !document.body.classList.contains('chrome-away'));
   await page.waitForTimeout(250);
 }
-/* the Filters sheet: the kinds, the topics, the day, Unfiltered (2026-10-19:
-   one row of chrome under the mast; everything that narrows is in here) */
+/* the banner at the top of the paper: the day and Local / Everything, the
+   kinds and topics as chips, Unfiltered (Stephen, 2026-10-19: always open,
+   no Filters button; it scrolls away with the paper) */
+const BAND = '.panel:not([hidden]) .wband';
 async function openFilters(page) {
-  if (await page.$('.sheet-card .wf')) return;
   await toTop(page);
-  await page.click('#subnav .wfilter');
-  await page.waitForSelector('.sheet-card .wf', { timeout: 4000 });
+  await page.waitForSelector(BAND + ' .wf', { timeout: 4000 });
 }
-async function closeFilters(page) {
-  if (await page.$('.sheet-card')) { await page.keyboard.press('Escape'); await page.waitForTimeout(80); }
-}
+async function closeFilters() {}
 async function chipTo(page, k) {
   await openFilters(page);
-  await page.click('.sheet-card .wf .chip[data-chip="' + k + '"]');
+  await page.click(BAND + ' .wf .chip[data-chip="' + k + '"]');
   await page.waitForTimeout(80);
-  await closeFilters(page);
 }
-const sheetChips = (page, sel) => page.$$eval('.sheet-card .wf ' + (sel || '.chips:not(.w-topics)') + ' .chip',
+const sheetChips = (page, sel) => page.$$eval(BAND + ' .wf ' + (sel || '.chips:not(.w-topics)') + ' .chip',
   (cs) => cs.map((c) => [c.dataset.chip, (c.querySelector('.n') || {}).textContent || '']));
 const head = (page) => page.$eval('.panel:not([hidden]) .whead', (h) => ({ h2: h.querySelector('h2').textContent, sub: h.querySelector('.whead-row .s').textContent,
   filt: (h.querySelector('.wfilt') || {}).textContent || '' }));
@@ -759,15 +747,19 @@ async function theWire(browser, base) {
     check(/^Updated \d{1,2}:\d{2} [ap]m$/.test(h0.sub), 'its line says when the paper last updated', h0.sub);
     await page.screenshot({ path: path.join(SHOTS, 'live-wire-today.png') });
 
-    /* one row under the mast: News · Photos · Square and Filters (the reviewers, 2026-10-19) */
+    /* under the mast, News · Photos · Square as a floating pill; the day and
+       Local / Everything wait, hidden, to float under it (Stephen, 2026-10-19) */
     const chrome = await page.evaluate(() => {
       const sub = document.querySelector('#subnav');
+      const f = sub.querySelector('.wfloat');
       return { kids: [...sub.children].map((n) => n.className), inner: [...sub.querySelector('.wbar').children].map((n) => n.className.split(' ')[0]),
         modes: [...sub.querySelectorAll('.wmode')].map((b) => b.dataset.view), bottom: Math.round(document.querySelector('#mast').getBoundingClientRect().bottom),
-        filt: (() => { const r = sub.querySelector('.wfilter').getBoundingClientRect(); return [Math.round(r.width), Math.round(r.height)]; })() };
+        floatHidden: getComputedStyle(f).visibility === 'hidden' && f.getAttribute('aria-hidden') === 'true',
+        filters: !!document.querySelector('.wfilter'), subBg: getComputedStyle(sub).backgroundImage };
     });
-    check(JSON.stringify(chrome.kids) === '["wbar"]' && JSON.stringify(chrome.inner) === '["wmodes","wfilter"]', 'under the mast, one row: News · Photos · Square, then Filters', JSON.stringify(chrome));
-    check(chrome.bottom <= 110, 'the chrome above the first story is 110px or less (' + chrome.bottom + ')', chrome.bottom);
+    check(JSON.stringify(chrome.kids) === '["wbar"]' && JSON.stringify(chrome.inner) === '["wmodes","wfloat"]' && !chrome.filters, 'under the mast: the pill, and no Filters button', JSON.stringify(chrome));
+    check(chrome.floatHidden, 'at the top the floating day row is hidden: the banner shows the same two controls', JSON.stringify(chrome));
+    check(chrome.bottom <= 130, 'the chrome above the banner is 130px or less (' + chrome.bottom + ')', chrome.bottom);
     check(JSON.stringify(chrome.modes) === '["news","photos","square"]', 'all three words are there from the first paint', JSON.stringify(chrome.modes));
 
     /* the chips: kinds only, X and Facebook hidden while paused, no Video,
@@ -777,10 +769,22 @@ async function theWire(browser, base) {
     const kinds = ['reddit', 'instagram', 'newsletters'].filter((k) => k === 'instagram' || today.counts.local[k]);
     check(JSON.stringify(chipsNow.map((c) => c[0])) === JSON.stringify(['all'].concat(kinds)), 'Filters: X and Facebook chips hidden while paused; no Video chip', JSON.stringify(chipsNow));
     check(chipsNow.filter((c) => !['all', 'instagram'].includes(c[0])).every((c) => Number(c[1]) === today.counts.local[c[0]]), 'chip counts are counts.local', JSON.stringify(chipsNow));
-    const sheet = await page.$eval('.sheet-card .wf', (f) => ({ heads: [...f.querySelectorAll('.sheet-h')].map((x) => x.textContent), raw: !!f.querySelector('[data-chip="__raw"]'),
-      sw: !!f.querySelector('.localsw'), day: (f.querySelector('.wday .t') || {}).textContent || '' }));
-    check(sheet.heads[0] === 'Day' && sheet.heads.includes('Where') && sheet.heads.includes('Source') && sheet.raw && sheet.sw && /^Today/.test(sheet.day),
-      'Filters holds the day, the Local switch, the kinds and Unfiltered', JSON.stringify(sheet));
+    const sheet = await page.$eval(BAND, (f) => ({ top: [...f.querySelector('.wband-top').children].map((x) => x.className.split(' ')[0]), raw: !!f.querySelector('.wband-foot .wf-raw'),
+      day: (f.querySelector('.wday .t .d-l') || {}).textContent || '', next: f.querySelector('.wday [aria-label="Later day"]').disabled,
+      first: !f.previousElementSibling, heads: f.querySelectorAll('.sheet-h').length }));
+    check(sheet.first && JSON.stringify(sheet.top) === '["wday","localsw"]' && sheet.day === nameOf(etKey(Date.now())) && sheet.next && sheet.raw && !sheet.heads,
+      'the banner leads the paper: ‹ the day ›, Local / Everything, the chips, Unfiltered', JSON.stringify(sheet));
+    /* every row of chips scrolls sideways, and Show all lays them all out */
+    const wrapOf = () => page.$$eval(BAND + ' .wf .chips', (cs) => [...new Set(cs.map((c) => getComputedStyle(c).flexWrap))].join());
+    const w0 = await wrapOf();
+    const all = await page.$(BAND + ' .wband-all');
+    if (all && await all.isVisible()) {
+      await all.click();
+      const w1 = await wrapOf();
+      const lab = await page.$eval(BAND + ' .wband-all', (b) => [b.textContent, b.getAttribute('aria-pressed')]);
+      await all.click();
+      check(w0 === 'nowrap' && w1 === 'wrap' && lab[0] === 'Show less' && lab[1] === 'true' && await wrapOf() === 'nowrap', 'Show all lays the chips out in full, Show less puts them back in a row', JSON.stringify([w0, w1, lab]));
+    } else check(w0 === 'nowrap', 'the chips sit in one row, and with nothing past the edge there is no Show all', w0);
     await closeFilters(page);
 
     /* the Brief, pinned above the top stories, and nowhere else today */
@@ -838,7 +842,7 @@ async function theWire(browser, base) {
       check(/^Showing /.test(f) && /Clear$/.test(f), 'with a filter on, the head says so, with a Clear', f);
     }
     await chipTo(page, 'all');
-    await page.click('.panel:not([hidden]) .whead .localsw-half:not(.on)');
+    await page.click(BAND + ' .localsw-half:not(.on)');
     await page.waitForTimeout(150);
     await openFilters(page);
     const every = await sheetChips(page);
@@ -924,30 +928,38 @@ async function theWire(browser, base) {
     const { ctx, page, errors } = await newPage(browser, base);
     await page.goto(base + '/all-day/');
     await page.waitForSelector('.panel:not([hidden]) .wleads', { timeout: 15000 });
-    const day = async (label) => { await openFilters(page); await page.click('.sheet-card .wday .nav[aria-label="' + label + '"]'); await page.waitForTimeout(150); };
+    const day = async (label) => { await openFilters(page); await page.click(BAND + ' .wday .wday-nav[aria-label="' + label + '"]'); await page.waitForTimeout(150); };
     const yWeek = nameOf(y1).split(',')[0];
     await day('Earlier day');
     await page.waitForFunction((n) => document.querySelector('.panel:not([hidden]) .whead h2')?.textContent === n, yWeek + '’s top stories', { timeout: 6000 }).catch(() => {});
     const h1 = await head(page);
-    check(h1.h2 === yWeek + '’s top stories' && new RegExp(nameOf(y1)).test(h1.filt), 'one day back: “' + yWeek + '’s top stories”, the day named in the head', JSON.stringify(h1));
-    check((await page.$eval('.sheet-card .wday .t', (t) => t.textContent)).startsWith(yWeek), 'the sheet’s day follows', '');
+    check(h1.h2 === yWeek + '’s top stories' && /stor(y|ies)$/.test(h1.sub) && !h1.filt, 'one day back: “' + yWeek + '’s top stories”, its date and count under it, no filter line', JSON.stringify(h1));
+    check((await page.$eval(BAND + ' .wday .t .d-l', (t) => t.textContent)) === nameOf(y1), 'the banner’s day follows', '');
     await closeFilters(page);
     await page.screenshot({ path: path.join(SHOTS, 'live-wire-yesterday.png') });
     await day('Earlier day');
     await page.waitForFunction((n) => document.querySelector('.panel:not([hidden]) .whead h2')?.textContent.startsWith(n), nameOf(y2).split(',')[0], { timeout: 6000 }).catch(() => {});
     check((await head(page)).h2.startsWith(nameOf(y2).split(',')[0]), 'two days back: ' + nameOf(y2), (await head(page)).h2);
-    check(await page.$eval('.sheet-card .wday .nav[aria-label="Earlier day"]', (b) => b.disabled), 'and that is as far as the archive goes', '');
+    check(await page.$eval(BAND + ' .wday .wday-nav[aria-label="Earlier day"]', (b) => b.disabled), 'and that is as far as the archive goes', '');
     check(/#wire\/\d{4}-\d{2}-\d{2}$/.test(await page.evaluate(() => location.hash)), 'the edition is in the address, so it can be shared', '');
     await day('Later day');
     await day('Later day');
     await page.waitForTimeout(200);
     check((await head(page)).h2 === 'Today’s top stories' && !(await head(page)).filt, '› › comes back to today', JSON.stringify(await head(page)));
-    await closeFilters(page);
-    await day('Earlier day');
-    await closeFilters(page);
-    await page.click('.panel:not([hidden]) .wfilt .btn');
-    await page.waitForTimeout(200);
-    check((await head(page)).h2 === 'Today’s top stories', 'Clear in the head comes back to today too', '');
+    /* the day follows you down: under the pill once the banner has gone */
+    await page.evaluate(() => { const p = document.querySelector('.panel:not([hidden])'); p.scrollTop = 1400; });
+    await page.waitForTimeout(150);
+    await page.evaluate(() => document.querySelector('.panel:not([hidden])').scrollBy(0, 40));
+    await page.waitForTimeout(400);
+    const fl = await page.evaluate(() => { const f = document.querySelector('#subnav .wfloat'); const r = f.getBoundingClientRect();
+      return { on: document.body.classList.contains('wire-float'), vis: getComputedStyle(f).visibility, top: Math.round(r.top), pill: Math.round(document.querySelector('#subnav .wmodes').getBoundingClientRect().bottom),
+        sw: !!f.querySelector('.localsw'), t: f.querySelector('.wday .t .d-l').textContent }; });
+    check(fl.on && fl.vis === 'visible' && fl.top >= fl.pill && fl.top - fl.pill < 24 && fl.sw && fl.t === nameOf(etKey(Date.now())), 'scrolled down: the day and Local / Everything float right under the pill', JSON.stringify(fl));
+    await page.click('#subnav .wfloat .wday-nav[aria-label="Earlier day"]');
+    await page.waitForFunction((n) => document.querySelector('.panel:not([hidden]) .whead h2')?.textContent === n, yWeek + '’s top stories', { timeout: 6000 }).catch(() => {});
+    check((await head(page)).h2 === yWeek + '’s top stories', 'its ‹ goes back a day from wherever you are', (await head(page)).h2);
+    const top = await page.evaluate(() => ({ y: document.querySelector('.panel:not([hidden])').scrollTop, on: document.body.classList.contains('wire-float') }));
+    check(top.y === 0 && !top.on, 'and opens that day at its top, the floating row gone again', JSON.stringify(top));
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
   });
@@ -996,7 +1008,7 @@ async function theWire(browser, base) {
       const txt = await panelText(v.page);
       check(h.h2 === yWeek + '’s top stories' && !/Today so far|Nothing yet today|0 stories/.test(txt), 'nothing today: the page is yesterday’s, with no empty state', JSON.stringify(h));
       await openFilters(v.page);
-      const d = await v.page.$eval('.sheet-card .wday', (w) => ({ t: w.querySelector('.t').textContent, next: w.querySelector('[aria-label="Later day"]').disabled }));
+      const d = await v.page.$eval(BAND + ' .wday', (w) => ({ t: w.querySelector('.t .d-l').textContent, next: w.querySelector('[aria-label="Later day"]').disabled }));
       check(d.t.startsWith(yWeek) && d.next, 'Filters names that day, with no later day to go to', JSON.stringify(d));
       await closeFilters(v.page);
       await drawToday(v.page);
@@ -1043,9 +1055,8 @@ async function theWire(browser, base) {
     await page.goto(base + '/all-day/');
     await page.waitForSelector('.panel:not([hidden]) .wleads', { timeout: 15000 });
     await openFilters(page);
-    await page.click('.sheet-card .wf-raw');
+    await page.click(BAND + ' .wf-raw');
     await page.waitForSelector('#subnav .chips.outlets', { timeout: 8000 });
-    check(!(await page.$('.sheet-card')), 'the sheet closes on the way', '');
     check(/Unfiltered/.test(await page.$eval('#subnav .dl', (d) => d.innerText)) && await page.evaluate(() => location.hash) === '#wire/unfiltered', 'Unfiltered opens inside the tab', '');
     const rows = await page.$$eval('.panel:not([hidden]) .card.wrow', (r) => r.length);
     check(rows === 60, 'the raw wire draws sixty headlines to start', rows);
@@ -1110,7 +1121,7 @@ async function theWire(browser, base) {
     check(!look.bars && !look.alt && !look.initials, 'no left colour bars, no alternate tints, no source initials', JSON.stringify([look.bars, look.alt, look.initials]));
     check(!look.green && !look.national && !look.tint, 'on Local, no green names, no National, no tint: everything here is local', JSON.stringify([look.green, look.national, look.tint]));
     await toTop(page);
-    await page.click('.panel:not([hidden]) .whead .localsw-half:not(.on)');
+    await page.click(BAND + ' .localsw-half:not(.on)');
     await page.waitForTimeout(200);
     await drawToday(page);
     const ev = await page.evaluate(() => {
@@ -1146,16 +1157,16 @@ async function theWire(browser, base) {
         const r = (s) => { const n = document.querySelector(s); if (!n) return null; const b = n.getBoundingClientRect(); return { l: Math.round(b.left), r: Math.round(b.right), w: Math.round(b.width), shown: n.offsetParent !== null || getComputedStyle(n).position === 'fixed' && getComputedStyle(n).display !== 'none' }; };
         const px = (s) => { const n = document.querySelector(s); return n && parseFloat(getComputedStyle(n).fontSize); };
         return { nav: r('#tabbar'), body: r('#panel-wire .panel-body'), mast: r('#mast'), aside: r('#aside'), asideOn: !!document.querySelector('#aside .wf') && getComputedStyle(document.querySelector('#aside')).display !== 'none',
-          filter: getComputedStyle(document.querySelector('#subnav .wfilter')).display, lead: px('.wleads .card:first-child .c-title'), second: px('.wleads .card:nth-child(2) .c-title'),
+          chips: getComputedStyle(document.querySelector('#panel-wire .wband-b')).display, top: !!document.querySelector('#panel-wire .wband-top .wday'), lead: px('.wleads .card:first-child .c-title'), second: px('.wleads .card:nth-child(2) .c-title'),
           thumb: (() => { const t = document.querySelector('.feed.wire > .card.wrow .w-thumb'); return t ? Math.round(t.getBoundingClientRect().width) : 0; })(),
           row: px('.feed.wire > .card.wrow .c-title'), docW: document.documentElement.scrollWidth, panelOver: document.querySelector('#panel-wire').scrollWidth - document.querySelector('#panel-wire').clientWidth };
       });
       check(m.nav.w === 220 && m.body.l >= m.nav.r + 24 && m.mast.l === m.body.l && m.mast.w === m.body.w, w + ': the nine tabs on the left, the mast and the paper in one column', JSON.stringify(m));
       check(m.docW <= w && m.panelOver <= 1, w + ': nothing scrolls sideways', JSON.stringify([m.docW, m.panelOver]));
       if (w >= 1280) {
-        check(m.asideOn && m.aside.l >= m.body.r + 24 && m.aside.r <= w && m.filter === 'none', w + ': the rail on the right holds the filters; no Filters button', JSON.stringify(m));
+        check(m.asideOn && m.aside.l >= m.body.r + 24 && m.aside.r <= w && m.chips === 'none' && m.top, w + ': the rail on the right holds the chips; the banner keeps the day and the switch', JSON.stringify(m));
         check(m.body.w >= 640 && m.body.w <= 720, w + ': the column is 640 to 720 wide', m.body.w);
-      } else check(!m.asideOn && m.filter !== 'none' && m.body.w === 720, w + ': no rail; the Filters button opens a sheet', JSON.stringify(m));
+      } else check(!m.asideOn && m.chips !== 'none' && m.top && m.body.w === 720, w + ': no rail; the banner holds the chips', JSON.stringify(m));
       check(m.lead === 32 && m.second === 21 && m.row === 20 && m.thumb === 136, w + ': the first top story 32px, the next four 21px two-up, rows 20px with 136px pictures', JSON.stringify([m.lead, m.second, m.row, m.thumb]));
       /* the wheel scrolls the paper from over the tab list */
       const nb = await v.page.locator('#tabbar').boundingBox();
@@ -1254,16 +1265,16 @@ async function theWire(browser, base) {
     await v.page.route(/wire-data\/data\/wire-today\.json$/, (r) => r.fulfill({ status: 200, body: JSON.stringify(today), contentType: 'application/json' }));
     await v.page.goto(base + '/all-day/');
     await v.page.waitForSelector('.panel:not([hidden]) .wleads', { timeout: 15000 });
-    await v.page.click('.panel:not([hidden]) .whead .localsw-half:not(.on)');
+    await v.page.click(BAND + ' .localsw-half:not(.on)');
     await v.page.waitForTimeout(150);
     await openFilters(v.page);
-    const slots = () => v.page.$$eval('.sheet-card .wf .wm-slot', (bs) => bs.map((b) => ({ k: b.dataset.slot, on: b.getAttribute('aria-pressed'), dis: b.disabled, t: b.innerText.replace(/\s+/g, ' ').trim() })));
+    const slots = () => v.page.$$eval(BAND + ' .wf .wm-slot', (bs) => bs.map((b) => ({ k: b.dataset.slot, on: b.getAttribute('aria-pressed'), dis: b.disabled, t: b.innerText.replace(/\s+/g, ' ').trim() })));
     const s0 = await slots();
     check(JSON.stringify(s0.map((b) => b.k)) === '["morning","midday","evening"]' && s0[2].on === 'true' && s0.every((b) => !b.dis), 'Filters: three rankings, Morning · Midday · Evening, the current one chosen', JSON.stringify(s0));
     check(/^Morning 6:05 am$/.test(s0[0].t) && /^Midday 12:05 pm$/.test(s0[1].t) && /^Evening 6:05 pm$/.test(s0[2].t), 'each with the time it was ranked', JSON.stringify(s0.map((b) => b.t)));
     const cur = (await topKeys(v.page)).map((x) => x.k);
     check(JSON.stringify(cur.slice(0, 5)) === JSON.stringify(today.picks.slice(0, 5).map((x) => x.id)), 'the current ranking shows as before', '');
-    await v.page.click('.sheet-card .wf .wm-slot[data-slot="morning"]');
+    await v.page.click(BAND + ' .wf .wm-slot[data-slot="morning"]');
     await v.page.waitForTimeout(150);
     await closeFilters(v.page);
     check(/as of morning/.test((await head(v.page)).filt), 'Morning: the head says “as of morning”', (await head(v.page)).filt);
@@ -1275,15 +1286,15 @@ async function theWire(browser, base) {
     check(rows.every(([k]) => dropped.some((p) => p.id === k) || (byId[k] && Date.parse(byId[k].posted_at) / 1000 <= t6)), 'and the rest are today’s picks that were already posted by then', JSON.stringify(rows.filter(([k]) => !dropped.some((p) => p.id === k)).slice(0, 5)));
     await openFilters(v.page);
     check((await slots())[0].on === 'true', 'Morning is chosen', '');
-    await v.page.click('.sheet-card .wf .wm-slot[data-slot="evening"]');
+    await v.page.click(BAND + ' .wf .wm-slot[data-slot="evening"]');
     await v.page.waitForTimeout(150);
     check(!/as of/.test((await head(v.page)).filt) && JSON.stringify((await topKeys(v.page)).slice(0, 5).map((x) => x.k)) === JSON.stringify(cur.slice(0, 5)), 'Evening brings the current ranking back', '');
     /* walking to another day starts on its own ranking */
-    await v.page.click('.sheet-card .wf .wm-slot[data-slot="midday"]');
+    await v.page.click(BAND + ' .wf .wm-slot[data-slot="midday"]');
     await v.page.waitForTimeout(100);
-    await v.page.click('.sheet-card .wday .nav[aria-label="Earlier day"]');
+    await v.page.click(BAND + ' .wday .wday-nav[aria-label="Earlier day"]');
     await v.page.waitForTimeout(300);
-    check(!/as of/.test((await head(v.page)).filt) && !(await v.page.$('.sheet-card .wf .wm-slot')), 'an earlier day opens on its own last ranking, with no ranking choice', (await head(v.page)).filt);
+    check(!/as of/.test((await head(v.page)).filt) && !(await v.page.$(BAND + ' .wf .wm-slot')), 'an earlier day opens on its own last ranking, with no ranking choice', (await head(v.page)).filt);
     await closeFilters(v.page);
     await v.page.screenshot({ path: path.join(SHOTS, 'live-wire-slots.png') });
     check(!v.errors.length, 'no console errors', v.errors.join(' | '));
@@ -1304,9 +1315,9 @@ async function theWire(browser, base) {
     await v.page.goto(base + '/all-day/');
     await v.page.waitForSelector('.panel:not([hidden]) .wleads', { timeout: 15000 });
     await openFilters(v.page);
-    await v.page.waitForFunction(() => (document.querySelector('.sheet-card .chip[data-chip="instagram"] .n') || {}).textContent === '2', null, { timeout: 6000 }).catch(() => {});
-    check(await v.page.$eval('.sheet-card .chip[data-chip="instagram"] .n', (n) => n.textContent) === '2', 'the Instagram chip counts the posts whose picture still works (2)', '');
-    await v.page.click('.sheet-card .chip[data-chip="instagram"]');
+    await v.page.waitForFunction(() => (document.querySelector('.panel:not([hidden]) .wband .chip[data-chip="instagram"] .n') || {}).textContent === '2', null, { timeout: 6000 }).catch(() => {});
+    check(await v.page.$eval(BAND + ' .chip[data-chip="instagram"] .n', (n) => n.textContent) === '2', 'the Instagram chip counts the posts whose picture still works (2)', '');
+    await v.page.click(BAND + ' .chip[data-chip="instagram"]');
     await closeFilters(v.page);
     await v.page.waitForSelector('#panel-wire .card.wrow.w-src-instagram', { timeout: 6000 }).catch(() => {});
     const list = await v.page.$$eval('#panel-wire .card.wrow', (cs) => cs.map((c) => ({ k: c.dataset.k, t: c.querySelector('.c-title').textContent, src: c.querySelector('.c-src').textContent, ig: c.classList.contains('w-src-instagram'), thumb: !!c.querySelector('.w-thumb') })));
@@ -1334,23 +1345,23 @@ async function theWire(browser, base) {
     await page.waitForSelector('.panel:not([hidden]) .wleads', { timeout: 15000 });
     await openFilters(page);
     const row = await page.evaluate(() => {
-      const f = document.querySelector('.sheet-card .wf');
+      const f = document.querySelector('.panel:not([hidden]) .wband .wf');
       const t = f.querySelector('.w-topics');
       if (!t) return null;
       const src = f.querySelector('.chips:not(.w-topics)');
-      return { below: t.getBoundingClientRect().top >= src.getBoundingClientRect().bottom - 1, head: t.previousElementSibling.textContent,
+      return { below: t.getBoundingClientRect().top >= src.getBoundingClientRect().bottom - 1, head: t.previousElementSibling === src ? 'kinds' : t.previousElementSibling.className,
         chips: [...t.querySelectorAll('.chip')].map((c) => [c.dataset.chip, c.querySelector('span').textContent, (c.querySelector('.n') || {}).textContent || '', c.classList.contains('on')]),
         pageW: document.documentElement.scrollWidth };
     });
-    check(row && row.below && row.head === 'Topic', 'the topics sit under the kinds, headed Topic', JSON.stringify(row));
+    check(row && row.below && row.head === 'kinds', 'the topics are the row under the kinds', JSON.stringify(row));
     const want = { 't:politics': 0, 't:safety': 0, 't:business': 0, 't:arts': 0, 't:weather': 0 };
     items.forEach((it) => { if (it.local && GROUP[it.topic]) want[GROUP[it.topic]]++; });
     const order = ['t:politics', 't:safety', 't:business', 't:arts', 't:weather'];
     check(row && JSON.stringify(row.chips.map((c) => c[0])) === JSON.stringify(['all'].concat(order)) && row.chips[0][1] === 'All topics' && row.chips[0][3],
       'All topics first and on, then only the topics this day has, in a fixed order', JSON.stringify(row && row.chips));
     check(row && row.chips.slice(1).every(([k, , n]) => Number(n) === want[k]), 'each topic counts what this reader sees (Local)', JSON.stringify([row && row.chips, want]));
-    check(row && row.pageW <= 390, 'they wrap; the page does not scroll sideways', JSON.stringify(row && row.pageW));
-    await page.click('.sheet-card .w-topics .chip[data-chip="t:politics"]');
+    check(row && row.pageW <= 390, 'the row scrolls sideways; the page does not', JSON.stringify(row && row.pageW));
+    await page.click(BAND + ' .w-topics .chip[data-chip="t:politics"]');
     await page.waitForTimeout(200);
     await closeFilters(page);
     const shown = await page.$$eval('#panel-wire .feed [data-k]', (n) => n.map((x) => x.dataset.k));
@@ -1361,29 +1372,29 @@ async function theWire(browser, base) {
     check(!(await page.$$eval('#panel-wire .feed .eyebrow', (n) => n.some((e) => /The Brief/i.test(e.textContent)))), 'and no Brief pinned above it', '');
     check(/Politics/.test((await head(page)).filt) && (await head(page)).h2 === 'Today', 'the head says Today, showing Politics', JSON.stringify(await head(page)));
     await openFilters(page);
-    check(await page.$eval('.sheet-card .chips:not(.w-topics) .chip.on', (c) => c.dataset.chip) === 'all', 'the source chips are untouched', '');
+    check(await page.$eval(BAND + ' .chips:not(.w-topics) .chip.on', (c) => c.dataset.chip) === 'all', 'the source chips are untouched', '');
     await closeFilters(page);
     /* the Instagram list has no topics: the row goes, and the topic with it */
     await chipTo(page, 'instagram');
     await openFilters(page);
-    check(!(await page.$('.sheet-card .w-topics')), 'on the Instagram chip there is no topic row', '');
+    check(!(await page.$(BAND + ' .w-topics')), 'on the Instagram chip there is no topic row', '');
     await closeFilters(page);
     await chipTo(page, 'all');
     await openFilters(page);
-    check(await page.$eval('.sheet-card .w-topics .chip.on', (c) => c.dataset.chip) === 'all' && !!(await page.$('#panel-wire .wleads')), 'and back on All, the topic is All topics again', '');
+    check(await page.$eval(BAND + ' .w-topics .chip.on', (c) => c.dataset.chip) === 'all' && !!(await page.$('#panel-wire .wleads')), 'and back on All, the topic is All topics again', '');
     /* a topic with nothing under a source chip is left out, and a picked
        one goes back to All topics */
-    await page.click('.sheet-card .w-topics .chip[data-chip="t:politics"]');
+    await page.click(BAND + ' .w-topics .chip[data-chip="t:politics"]');
     await page.waitForTimeout(150);
     const redditTopics = new Set(items.filter((it) => it.local && it.ch === 'reddit' && GROUP[it.topic]).map((it) => GROUP[it.topic]));
-    await page.click('.sheet-card .chips:not(.w-topics) .chip[data-chip="reddit"]');
+    await page.click(BAND + ' .chips:not(.w-topics) .chip[data-chip="reddit"]');
     await page.waitForTimeout(150);
-    const rRow = await page.$$eval('.sheet-card .w-topics .chip', (cs) => cs.map((c) => c.dataset.chip + (c.classList.contains('on') ? '*' : '')));
+    const rRow = await page.$$eval(BAND + ' .w-topics .chip', (cs) => cs.map((c) => c.dataset.chip + (c.classList.contains('on') ? '*' : '')));
     check(JSON.stringify(rRow.filter((k) => k !== 'all' && k !== 'all*').map((k) => k.replace('*', '')).sort()) === JSON.stringify([...redditTopics].sort())
       && rRow.includes(redditTopics.has('t:politics') ? 't:politics*' : 'all*'), 'under Reddit, only Reddit’s topics; Politics stays picked only if Reddit has some', JSON.stringify([rRow, [...redditTopics]]));
-    await page.click('.sheet-card .wf-clear');
+    await page.click('.panel:not([hidden]) .wfilt .btn');
     await page.waitForTimeout(200);
-    check(!!(await page.$('#panel-wire .wleads')) && !(await page.$('.sheet-card .wf-clear')), 'Clear filters brings the top stories back', '');
+    check(!!(await page.$('#panel-wire .wleads')) && !(await page.$('.panel:not([hidden]) .wfilt')), 'Clear in the head brings the top stories back', '');
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
   });
@@ -1405,12 +1416,12 @@ async function theWire(browser, base) {
     check(cards.filter((c) => c.out).every((c) => c.chip && !c.img && /^https?:/.test(c.link) && /w-src-(facebook|reddit)/.test(c.src)), 'a compact card: its source chip in its colour, the link out, never a copied picture', JSON.stringify(cards.filter((c) => c.out).slice(0, 3)));
     check(cards[0].board, 'a neighbor’s post sorts ahead of outside talk of the same age', JSON.stringify(cards.slice(0, 3)));
     await openFilters(page);
-    const chipKeys = await page.$$eval('.sheet-card .wf .chip', (cs) => cs.map((c) => c.dataset.chip));
+    const chipKeys = await page.$$eval(BAND + ' .wf .chip', (cs) => cs.map((c) => c.dataset.chip));
     check(JSON.stringify(chipKeys) === '["all","post","show","ask","free","pets","facebook","reddit"]', 'Filters: the kinds of post as chips', JSON.stringify(chipKeys));
-    await page.click('.sheet-card .wf .chip[data-chip="pets"]');
+    await page.click(BAND + ' .wf .chip[data-chip="pets"]');
     await page.waitForTimeout(150);
     check(JSON.stringify((await sqState(page)).list.map((x) => x.type)) === '["pets"]', 'Pets narrows it to the pets', '');
-    await page.click('.sheet-card .wf .chip[data-chip="all"]');
+    await page.click(BAND + ' .wf .chip[data-chip="all"]');
     await closeFilters(page);
     /* opened, an outside thread stays read through a redraw */
     const outK = await page.$eval('#panel-wire .sq-out', (c) => c.dataset.k);
@@ -1528,7 +1539,7 @@ async function thePhotos(browser, base) {
     check(await viewPressed(page) === 'news:false photos:true square:false', 'and the switch says so', await viewPressed(page));
     check(await page.evaluate(() => location.hash) === '#wire/photos', 'the address says #wire/photos', await page.evaluate(() => location.hash));
     check(await page.evaluate(() => localStorage.getItem('allday-wire-view')) === 'photos', 'the choice is kept on the phone', '');
-    check(JSON.stringify(await page.$eval('#subnav', (s) => [...s.children].map((n) => n.className))) === '["wbar"]', 'Photo mode keeps the one row: the switch and Filters', '');
+    check(JSON.stringify(await page.$eval('#subnav', (s) => [...s.children].map((n) => n.className))) === '["wbar"]', 'Photo mode keeps the one row: the pill', '');
     check(!(await page.$(pmPanel + ' .wleads, ' + pmPanel + ' .card.wrow')), 'the paper’s list is gone', '');
     await page.reload();
     await settle(page);
@@ -1575,7 +1586,7 @@ async function thePhotos(browser, base) {
     check((await page.$eval(pmPanel + ' .caught', (c) => c.innerText)).includes('Post a photo'), 'the feed ends, with Post a photo', '');
     /* no Local / Everything: every picture here is Burlington's */
     check(!(await page.$('#subnav .localsw')), 'no Local / Everything switch on Photos', '');
-    check(!(await page.$('#subnav .pm-n, #subnav .chips')), 'no count band and no chips under the mast: the kinds are in Filters', '');
+    check(!(await page.$('#subnav .pm-n, #subnav .chips')), 'no count band and no chips under the mast: the kinds are in the banner', '');
     check(!errors.length, 'no console errors', errors.join(' | '));
     check(!supabase.length, 'demo mode never calls Supabase', supabase.join(', '));
     await ctx.close();
@@ -1587,8 +1598,8 @@ async function thePhotos(browser, base) {
     await settle(page);
     await pmOn(page);
     await openFilters(page);
-    check(await page.$eval('.sheet-card h2', (h) => h.textContent) === 'Photos' && await page.$eval('.sheet-card .sheet-h', (h) => h.textContent) === 'Kind of photo', 'Photos’ Filters sheet: the kinds of photo', '');
-    const chipsNow = await page.$$eval('.sheet-card .wf .chip', (cs) => cs.map((c) => [c.dataset.chip, (c.querySelector('.n') || {}).textContent || '', c.querySelector('span').textContent]));
+    check(!!(await page.$(BAND + ' .wf .chips')) && !(await page.$(BAND + ' .wband-top')) && !(await page.$(BAND + ' .wf-raw')), 'Photos’ banner: the kinds of photo, no day and no Unfiltered', '');
+    const chipsNow = await page.$$eval(BAND + ' .wf .chip', (cs) => cs.map((c) => [c.dataset.chip, (c.querySelector('.n') || {}).textContent || '', c.querySelector('span').textContent]));
     const st0 = await pmState(page);
     /* a kind with fewer than four pictures gets no chip: in the demo, the
        vibe checks, posters, food and pets are each too few */
@@ -1602,7 +1613,7 @@ async function thePhotos(browser, base) {
     check(JSON.stringify(of('ig:DemoCat9').cats.sort()) === '["instagram","pets","vibe"]' && JSON.stringify(of('ig:DemoLake1').cats) === '["instagram"]', 'the cat lounge is pets and a vibe check; a lake photographer is just Instagram', '');
     check(of('g-demo-g3').cats.includes('food') && JSON.stringify(of('g-demo-g1').cats) === '["posted"]', 'a gallery photo takes its queue category (food), else it is only posted here', JSON.stringify([of('g-demo-g3'), of('g-demo-g1')]));
     for (const [k] of chipsNow.slice(1)) {
-      await page.click('.sheet-card .wf .chip[data-chip="' + k + '"]');
+      await page.click(BAND + ' .wf .chip[data-chip="' + k + '"]');
       await page.waitForTimeout(120);
       const st = await pmState(page);
       const good = st.list.length === st0.counts[k] && st.list.every((v) => v.cats.includes(k)) && (k !== 'instagram' || st.list.every((v) => v.from === 'instagram'))
@@ -1610,7 +1621,7 @@ async function thePhotos(browser, base) {
       check(good && st.cat === k, 'the ' + k + ' chip shows only its ' + st0.counts[k], JSON.stringify(st.list.map((v) => [v.k, v.from])).slice(0, 200));
       check(!(await page.$(pmPanel + ' .pm-pets')), k + ': no pets row outside All', '');
     }
-    await page.click('.sheet-card .wf .chip[data-chip="all"]');
+    await page.click(BAND + ' .wf .chip[data-chip="all"]');
     await page.waitForTimeout(120);
     await closeFilters(page);
     const pets = await page.$eval(pmPanel + ' .pm-pets', (b) => ({ h: b.querySelector('h3').textContent, tiles: [...b.querySelectorAll('[data-pet]')].map((t) => t.dataset.pet),
@@ -1676,21 +1687,21 @@ async function thePhotos(browser, base) {
     check(catOf.Kind16 === 'instagram' && catOf.Kind17 === 'instagram', 'scenic and other are just Instagram', JSON.stringify(catOf));
     check(st0.counts.vibe === 4 && st0.counts.posters === 3 && st0.counts.food === 4 && st0.counts.pets === 4, 'each kind counted', JSON.stringify(st0.counts));
     await openFilters(v.page);
-    const chipKeys = await v.page.$$eval('.sheet-card .wf .chip', (cs) => cs.map((c) => c.dataset.chip));
+    const chipKeys = await v.page.$$eval(BAND + ' .wf .chip', (cs) => cs.map((c) => c.dataset.chip));
     check(JSON.stringify(chipKeys) === '["all","instagram","vibe","food","pets"]', 'three posters is too few for a chip; nobody posted here, so no Posted here', JSON.stringify(chipKeys));
     for (const k of chipKeys.slice(1)) {
-      await v.page.click('.sheet-card .wf .chip[data-chip="' + k + '"]');
+      await v.page.click(BAND + ' .wf .chip[data-chip="' + k + '"]');
       await v.page.waitForTimeout(120);
       const st = await pmState(v.page);
       check(st.cat === k && st.list.length === st0.counts[k] && st.list.every((x) => x.cats.includes(k)), 'the ' + k + ' chip shows only its ' + st0.counts[k], JSON.stringify(st.list.map((x) => x.k)));
     }
-    await v.page.click('.sheet-card .wf .chip[data-chip="all"]');
+    await v.page.click(BAND + ' .wf .chip[data-chip="all"]');
     await v.page.waitForTimeout(120);
     await closeFilters(v.page);
     await v.page.click(pmPanel + ' .pm-pets [data-pets]');
     await v.page.waitForTimeout(150);
     await openFilters(v.page);
-    check((await pmState(v.page)).cat === 'pets' && await v.page.$eval('.sheet-card .wf .chip.on', (c) => c.dataset.chip) === 'pets', 'enough pets for a chip: “See all” is the Pets chip', '');
+    check((await pmState(v.page)).cat === 'pets' && await v.page.$eval(BAND + ' .wf .chip.on', (c) => c.dataset.chip) === 'pets', 'enough pets for a chip: “See all” is the Pets chip', '');
     await closeFilters(v.page);
     check(!v.errors.length, 'no console errors', v.errors.join(' | '));
     await v.ctx.close();
@@ -3268,7 +3279,7 @@ async function interactions(browser, base) {
     await page.waitForTimeout(200);
     /* the switch to Everything: a full page of rows, drawn from scratch */
     const ms = await page.evaluate(() => {
-      const half = document.querySelector('.panel:not([hidden]) .whead .localsw-half:not(.on)');
+      const half = document.querySelector('.panel:not([hidden]) .wband .localsw-half:not(.on)');
       const t = performance.now();
       half.click();
       return performance.now() - t;
@@ -7595,11 +7606,9 @@ async function shellFixes(browser, base) {
     }
     await page.goto(base + '/all-day/?demo=1#reddit');
     await page.waitForSelector('.panel:not([hidden]) .whead .wfilt', { timeout: 15000 }).catch(() => {});
-    await page.click('#subnav .wfilter');
-    await page.waitForSelector('.sheet-card .wf .chip.on', { timeout: 5000 });
-    const on = await page.$eval('.sheet-card .wf .chips:not(.w-topics) .chip.on', (c) => c.dataset.chip);
+    await page.waitForSelector(BAND + ' .wf .chip.on', { timeout: 5000 });
+    const on = await page.$eval(BAND + ' .wf .chips:not(.w-topics) .chip.on', (c) => c.dataset.chip);
     check(on === 'reddit', 'a bare #reddit opens the Wire on its Reddit chip', on);
-    await page.keyboard.press('Escape');
     await page.goto(base + '/all-day/?demo=1#music');
     await page.waitForFunction(() => document.querySelector('#subnav .chip.on')?.dataset.chip === 'tonight', null, { timeout: 15000 }).catch(() => {});
     check(await page.$eval('#subnav .chip.on', (c) => c.dataset.chip).catch(() => '') === 'tonight', 'an old Music link opens What Now on Tonight', '');
@@ -7611,7 +7620,7 @@ async function shellFixes(browser, base) {
     const sw = await readFile(path.join(APP, 'sw.js'), 'utf8');
     const main = await readFile(path.join(APP, 'js/main.js'), 'utf8');
     /* every branch that touches the shell bumps sw.js once; check "at least" so merges never clash on the number */
-    check(Number((sw.match(/VERSION = 'all-day-v(\d+)'/) || [])[1]) >= 52, 'sw.js VERSION is bumped past Vintage (v51) for Watch, to v52 or later', (sw.match(/VERSION = '[^']+'/) || [''])[0]);
+    check(Number((sw.match(/VERSION = 'all-day-v(\d+)'/) || [])[1]) >= 76, 'sw.js VERSION is bumped for the nine-tab bar and the Wire banner, to v76 or later', (sw.match(/VERSION = '[^']+'/) || [''])[0]);
     const listed = [...sw.matchAll(/'\.\/(js\/[\w/.-]+\.js)'/g)].map((m) => m[1]);
     /* the offline list is exactly the modules that exist: none missing, none gone */
     const mods = [];
@@ -8561,25 +8570,34 @@ async function lakePalette(browser, base) {
     const {ctx, page} = await newPage(browser, base, {scheme, viewport:{width:375,height:844}, motion:'reduce'});
     try {
       await page.goto(base + '/all-day/?demo=1#wire'); await settle(page);
-      const local = await page.$$eval('#panel-wire .geo-tag', ns => ns.map(n => n.textContent));
-      check(local.length > 0 && local.every(x => x === 'Local'), 'Local view labels its stories Local', local.join(','));
-      await page.click('.mast .localsw-half:last-child'); await settle(page);
-      const tags = await page.$$eval('#panel-wire .geo-tag', ns => ns.map(n => n.textContent));
-      check(tags.includes('Local') && tags.includes('National'), 'Everything distinguishes local and national stories', tags.join(','));
+      /* the 2026-10-19 rebuild: on Local every story is local, so nothing is
+         labelled; on Everything a local story's source is green and a
+         national one says National on its meta line */
+      const national = await page.$$eval('#panel-wire .w-meta .geo', ns => ns.map(n => n.textContent));
+      check(!national.length, 'Local view needs no geography labels', national.join(','));
+      await page.click(BAND + ' .localsw-half:last-child'); await settle(page);
       const audit = await page.evaluate(() => {
         const rows = [...document.querySelectorAll('#panel-wire .card.fi')];
         const lum = rgb => rgb.map(n => { n/=255; return n<=.04045 ? n/12.92 : ((n+.055)/1.055)**2.4; }).reduce((sum,n,i)=>sum+n*[.2126,.7152,.0722][i],0);
         const ratio = (a,b) => { const x=lum(a), y=lum(b); return (Math.max(x,y)+.05)/(Math.min(x,y)+.05); };
         const rgb = s => (s.match(/[\d.]+/g)||[]).slice(0,3).map(Number);
-        const badges = [...document.querySelectorAll('#panel-wire .geo-tag')];
-        return { missing: rows.filter(r => !r.querySelector('.geo-tag')).map(r=>r.dataset.k),
+        /* what is really behind the words: each translucent layer (a local row's tint) laid over the ones under it */
+        const parse = (c) => { const m = c.match(/color\(srgb ([\d.]+) ([\d.]+) ([\d.]+)(?: \/ ([\d.]+))?\)/);
+          if (m) return [m[1] * 255, m[2] * 255, m[3] * 255, m[4] == null ? 1 : +m[4]];
+          const v = (c.match(/[\d.]+/g) || []).map(Number); return [v[0], v[1], v[2], v.length > 3 ? v[3] : 1]; };
+        const bgOf = (n) => { const layers = []; for (; n; n = n.parentElement) { const c = parse(getComputedStyle(n).backgroundColor); if (c[3] > 0) layers.push(c); if (c[3] >= 1) break; }
+          let out = layers.length && layers[layers.length - 1][3] >= 1 ? layers.pop() : parse(getComputedStyle(document.body).backgroundColor);
+          for (const l of layers.reverse()) out = [0, 1, 2].map((i) => l[i] * l[3] + out[i] * (1 - l[3]));
+          return 'rgb(' + out.slice(0, 3).map(Math.round).join(', ') + ')'; };
+        const marks = [...document.querySelectorAll('#panel-wire .w-meta .geo, #panel-wire .w-meta .c-src.is-local')];
+        return { national: [...document.querySelectorAll('#panel-wire .w-meta .geo')].map(n => n.textContent), green: document.querySelectorAll('#panel-wire .w-meta .c-src.is-local').length,
           overflow: rows.filter(r => r.scrollWidth > r.clientWidth+1).map(r=>r.dataset.k),
-          contrast: badges.map(n => { const s=getComputedStyle(n); return ratio(rgb(s.color),rgb(s.backgroundColor)); }),
+          contrast: marks.map(n => ratio(rgb(getComputedStyle(n).color), rgb(bgOf(n)))),
           transition: getComputedStyle(document.querySelector('#tabbar button')).transitionDuration };
       });
-      check(!audit.missing.length, 'every Wire story carries a geography label', audit.missing.join(','));
-      check(!audit.overflow.length, 'geography labels fit the existing metadata area at 375px', audit.overflow.join(','));
-      check(audit.contrast.every(n=>n>=4.5), 'Local and National labels meet 4.5:1 contrast', JSON.stringify(audit.contrast));
+      check(audit.national.length > 0 && audit.national.every(x => x === 'National') && audit.green > 0, 'Everything tells local from national: green local sources, National said', JSON.stringify([audit.national.length, audit.green]));
+      check(!audit.overflow.length, 'geography marks fit the meta line at 375px', audit.overflow.join(','));
+      check(audit.contrast.every(n=>n>=4.5), 'green sources and National meet 4.5:1 contrast', JSON.stringify(audit.contrast));
       check(audit.transition === '0s', 'reduced motion disables new tab feedback', audit.transition);
       await page.click('#settings-btn');
       const tip = await page.$eval('[data-tip]', a=>({href:a.href,text:a.innerText,rel:a.rel}));

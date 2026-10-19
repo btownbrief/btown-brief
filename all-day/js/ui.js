@@ -86,9 +86,8 @@ export const ICON = {
   tee: svg('<path d="M8 4 3.5 7.3 6 10.5l2-1.1V20h8V9.4l2 1.1 2.5-3.2L16 4a4 4 0 0 1-8 0z"/>'),
   mail: svg('<rect x="3.5" y="5.5" width="17" height="13" rx="2"/><path d="m4 7 8 6 8-6"/>'),
   flag: svg('<path d="M5.5 21V4.5M5.5 4.5h11l-2.2 4 2.2 4h-11"/>'),
-  grid: svg('<rect x="4" y="4" width="6.5" height="6.5" rx="1.6"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1.6"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1.6"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1.6"/>'),
   more: svg('<circle cx="5.5" cy="12" r="1.6" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.6" fill="currentColor" stroke="none"/><circle cx="18.5" cy="12" r="1.6" fill="currentColor" stroke="none"/>'),
-  sliders: svg('<path d="M4 7h9M17 7h3M4 17h3M11 17h9"/><circle cx="15" cy="7" r="2.2"/><circle cx="9" cy="17" r="2.2"/>'),
+  down: svg('<path d="m6 9.5 6 6 6-6"/>'),
   trash: svg('<path d="M4.5 7h15M9.5 7V4.5h5V7M6.5 7l1 13h9l1-13M10 11v5.5M14 11v5.5"/>'),
 };
 
@@ -420,11 +419,14 @@ function board(it) {
    is an eyebrow above the headline ("The Brief"). */
 function wmeta(it, o) {
   const saved = store.isSaved(it.k);
+  /* the words sit in one box that can take a second line on a narrow
+     row ("National" beside a long source), so ⋯ and the star never leave
+     the card */
   return '<div class="w-meta">' + (o.rank ? '<span class="w-rank">' + esc(o.rank) + '</span>' : '') +
-    '<button class="srcbtn" data-src="' + esc(it.sid || it.src) + '"><span class="c-src' + (it.local && o.greenLocal ? ' is-local' : '') + '">' + esc(it.src) + '</span></button>' +
+    '<span class="w-who"><button class="srcbtn" data-src="' + esc(it.sid || it.src) + '"><span class="c-src' + (it.local && o.greenLocal ? ' is-local' : '') + '">' + esc(it.src) + '</span></button>' +
     (it.via ? '<span class="dot"></span><span class="via">' + esc(it.via) + '</span>' : '') +
-    (it.ago ? '<span class="dot"></span><span class="age">' + esc(it.ago) + '</span>' : '') + (o.meta || '') +
-    '<span class="sp"></span><button class="act w-more" data-act="wmore" aria-label="More: vote, share, the source">' + ICON.more + '</button>' +
+    (it.ago ? '<span class="dot"></span><span class="age">' + esc(it.ago) + '</span>' : '') + (o.meta || '') + '</span>' +
+    '<button class="act w-more" data-act="wmore" aria-label="More: vote, share, the source">' + ICON.more + '</button>' +
     '<button class="act star' + (saved ? ' on' : '') + '" data-act="save" aria-label="Save" aria-pressed="' + saved + '">' + ICON.star + '</button></div>';
 }
 function lead(it, o = {}) {
