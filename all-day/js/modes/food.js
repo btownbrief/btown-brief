@@ -4,7 +4,11 @@
    nothing negative anywhere on the tab; every place links out to its Google
    page for the full reviews.
 
-   Top to bottom, and the chip row is the table of contents:
+   Top to bottom, and the chip row is the table of contents. The freshest
+   section leads whatever is listed here (2026-10-18): Asked on Reddit while
+   it has a thread under three days old, else In their own words while it has
+   pictures; otherwise the order below. Open now is the same list all day, so
+   it comes after.
 
    - The Weekly Bite. The newest approved "dish" photo from the reader photo
      queue (js/photos-lib.js, the same queue, consent box and moderation as
@@ -111,6 +115,7 @@ const DEAL_DAYS = 60;                      // a deal last verified longer ago th
 const Q_FIRST = 12;                        // Best of r/burlington opens in place past these
 
 const SECTIONS = [['bite', 'The Bite'], ['open', 'Open now'], ['deals', 'Deals'], ['asks', 'Asked'], ['best', 'Best of'], ['kitchens', 'Kitchens'], ['add', 'Feature a dish']];
+const FRESH_ASK_DAYS = 3;                  // an ask this young is fresh enough to lead the tab
 
 /* ------------------------------------------------------------------ state */
 const S = {
@@ -521,7 +526,35 @@ function render() {
   });
   SECTIONS.forEach(([k]) => paint(k));
   root.appendChild(el('div', 'spacer'));
+  placeSlots();
   S.drawn = Date.now();
+}
+
+/* The freshest thing leads (Stephen, 2026-10-18: "when someone opens a tab,
+   the fresh content is the first thing they see"): the Reddit asks while one
+   is under three days old, else In their own words while it has anything,
+   else the tab's old order. Open now is a list that is always the same, so
+   it comes after. */
+const freshAsk = () => asksShown().some((a) => Date.now() / 1000 - a.d <= FRESH_ASK_DAYS * 86400);
+const leadKey = () => (freshAsk() ? 'asks' : kitchenFood().length ? 'kitchens' : null);
+function order() {
+  const lead = leadKey();
+  const keys = SECTIONS.map(([k]) => k);
+  return lead ? [lead].concat(keys.filter((k) => k !== lead)) : keys;
+}
+/* put the slots in order() without redrawing any of them; a no-op while
+   they already are */
+function placeSlots() {
+  if (!slots) return false;
+  const want = order().map((k) => slots[k]);
+  let moved = false;
+  /* only a slot that is out of place moves, so the form at the end never
+     loses a reader's cursor to a reorder */
+  want.forEach((n, i) => {
+    const at = [...root.children].filter((c) => c.dataset && c.dataset.sec)[i];
+    if (at !== n) { root.insertBefore(n, at); moved = true; }
+  });
+  return moved;
 }
 
 function paint(k) {
@@ -532,7 +565,8 @@ function paint(k) {
   host.innerHTML = '';
   ({ bite: paintBite, open: paintOpen, deals: paintDeals, asks: paintAsks, best: paintBest, kitchens: paintKitchens, add: paintAdd })[k](host);
   if (panel() && app.activeTab() === KEY) panel().scrollTop = y;
-  if (k === 'open' || k === 'deals' || k === 'asks') app.paintSubnav();
+  if ((k === 'asks' || k === 'kitchens') && placeSlots()) resettle();
+  if (k === 'open' || k === 'deals' || k === 'asks' || k === 'kitchens') app.paintSubnav();
 }
 
 /* ------------------------------------------------------- the Weekly Bite */
@@ -1054,6 +1088,13 @@ const isFood = (p) => {
 const keyOf = (p) => { const m = /\/(?:p|reel)\/([A-Za-z0-9_-]+)/.exec(p.u); return 'ig-' + (m ? m[1] : p.h + '-' + p.ts); };
 const hasClip = (p, nowS) => typeof p.vu === 'string' && /^https:\/\//.test(p.vu) && Number(p.ve) - nowS > VIDEO_MARGIN;
 
+/* the kitchens' pictures worth showing, newest first (none while they load) */
+function kitchenFood() {
+  if (!S.posts || !S.foodSet || !S.dir) return [];
+  const nowS = Date.now() / 1000;
+  return S.posts.filter((p) => isFood(p) && pictureOk(p, nowS)).sort((a, b) => b.ts - a.ts);
+}
+
 function paintKitchens(host) {
   if (!S.posts || !S.foodSet || !S.dir) {
     section(host, 'In their own words');
@@ -1061,7 +1102,7 @@ function paintKitchens(host) {
     return;
   }
   const nowS = Date.now() / 1000;
-  const food = S.posts.filter((p) => isFood(p) && pictureOk(p, nowS)).sort((a, b) => b.ts - a.ts);
+  const food = kitchenFood();
   const clipsList = food.filter((p) => hasClip(p, nowS)).slice(0, RAIL_MAX);
   if (clipsList.length) {
     section(host, 'In their own words');
@@ -1205,7 +1246,26 @@ function submitDish(form) {
 
 /* ------------------------------------------------------------------- bits */
 const panel = () => (root ? root.closest('.panel') : null);
-function jump(k) { if (slots && slots[k]) app.jumpTo(slots[k]); }
+/* A section the reader was just sent to (a chip, a deep link) is scrolled
+   to once more if a late load moves sections around it, settled after the
+   whole batch of paints; the reader taking the scroll over cancels it. */
+let jumped = null, settleT = 0, watching = null;
+function jump(k) {
+  if (!slots || !slots[k]) return;
+  jumped = { k, t: Date.now() };
+  const p = panel();
+  if (p && watching !== p) {
+    watching = p;
+    ['wheel', 'touchstart', 'keydown'].forEach((ev) => p.addEventListener(ev, () => { jumped = null; }, { passive: true }));
+  }
+  app.jumpTo(slots[k]);
+}
+function resettle() {
+  clearTimeout(settleT);
+  settleT = setTimeout(() => {
+    if (jumped && Date.now() - jumped.t < 6000 && app.activeTab() === KEY && slots && slots[jumped.k]) app.jumpTo(slots[jumped.k]);
+  }, 60);
+}
 
 /* #food/bite|open|deals|asks|best|kitchens|add jumps to a section; #food/map opens
    the map; a filter key
@@ -1276,6 +1336,7 @@ app.register(KEY, {
     pending = param || null;
     /* the list is about this minute: coming back later redraws it */
     if (ready && Date.now() - S.drawn > STALE_MS) { paint('open'); paint('deals'); S.drawn = Date.now(); }
+    if (ready) placeSlots();            // a thread may have turned three days old while the tab was away
     if (ready && !app.demo && Date.now() - S.asksAt > ASKS_STALE) loadAsks();
     land();
   },
@@ -1283,9 +1344,10 @@ app.register(KEY, {
   deactivate() { app.closeVideo(); if (M && !M.getContainer().isConnected) dropMap(); },
   subnav() {
     if (!ready) return null;
+    placeSlots();                        // the chips and the page share one order
     const t = now();
     const next = nothingOpen(t);
-    return chips(SECTIONS.map(([key, label]) => ({
+    return chips(order().map((k) => SECTIONS.find(([key]) => key === k)).map(([key, label]) => ({
       key, label: key === 'open' && next ? 'Opening next' : label,
       n: key === 'open' ? (next ? null : listFor('open', t).length) : key === 'deals' ? deck(t).length : key === 'asks' && S.asks ? asksShown().length : null,
     })), null, (k) => jump(k));
