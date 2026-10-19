@@ -352,19 +352,59 @@ def reddit_comments(url=REDDIT_INTAKE_URL, timeout=15):
     return out
 
 
-def edition_since(et):
-    """Epoch from which a newsletter edition counts as today's: 9 pm Eastern
-    last night (EDITION_LATE_HOUR)."""
+def edition_window(et):
+    """(from, until) epochs between which a newsletter edition counts as
+    today's: 9 pm Eastern last night (EDITION_LATE_HOUR) up to midnight
+    tonight. An edition stamped after midnight waits for tomorrow's river."""
     midnight = et.replace(hour=0, minute=0, second=0, microsecond=0)
     late = (midnight - timedelta(days=1)).replace(hour=EDITION_LATE_HOUR)
-    return int(late.timestamp())
+    tomorrow = (midnight + timedelta(days=1)).replace(hour=0)
+    return int(late.timestamp()), int(tomorrow.timestamp())
 
 
-def select_new(pool, in_river, considered, reserved_ids, reserved_urls, edition_from=None):
+def edition_since(et):
+    return edition_window(et)[0]
+
+
+def candidates(pulse, now_ts, et):
+    """The run's pool before tags: the WINDOW_HOURS window for everything,
+    reaching back further for a newsletter edition only as far as today's
+    edition window does (late at night that is more than WINDOW_HOURS)."""
+    since = edition_since(et)
+    hours = max(WINDOW_HOURS, (now_ts - since) / 3600 + 1)
+    cutoff = now_ts - WINDOW_HOURS * 3600
+    return [item for item in wc.wire_items(pulse, now_ts, hours)
+            if item["d"] >= cutoff or item.get("ch") == "newsletters"]
+
+
+def evict_stale_editions(day, since):
+    """Take out of today's river any newsletter edition sent before `since`
+    (filed before the day guard existed). Returns the ids removed."""
+    gone = set()
+    for update in day.get("updates") or []:
+        keep = []
+        for item in update.get("items") or []:
+            stamp = item.get("posted_at")
+            if (item.get("ch") == "newsletters" and stamp
+                    and datetime.fromisoformat(stamp).timestamp() < since):
+                gone.add(item["id"])
+            else:
+                keep.append(item)
+        update["items"] = keep
+        if (update.get("lead") or {}).get("id") in gone:
+            update["lead"] = None
+    if gone and any(pick["id"] in gone for pick in day.get("picks") or []):
+        kept = [pick for pick in day["picks"] if pick["id"] not in gone]
+        day["picks"] = [dict(pick, rank=rank) for rank, pick in enumerate(kept, start=1)]
+    day["updates"] = [update for update in day.get("updates") or [] if update.get("items")]
+    return sorted(gone)
+
+
+def select_new(pool, in_river, considered, reserved_ids, reserved_urls, editions_in=None):
     """The NEW list: eligible, not yet in the river, not passed on, not run
     before. Returns (new_items, auto_passed_ids). Newsletter editions skip
     the score bar and the caps: apply_answer adds every one of them, but
-    only today's (sent at or after `edition_from`, see edition_since)."""
+    only today's (sent inside `editions_in`, see edition_window)."""
     local, world, auto, editions = [], [], [], []
     for item in pool:
         if item["id"] in in_river or item["id"] in considered:
@@ -372,7 +412,7 @@ def select_new(pool, in_river, considered, reserved_ids, reserved_urls, edition_
         if item["id"] in reserved_ids or item["url"] in reserved_urls:
             continue
         if item.get("ch") == "newsletters":
-            if edition_from is None or item["d"] >= edition_from:
+            if editions_in is None or editions_in[0] <= item["d"] < editions_in[1]:
                 editions.append(item)
             continue
         if not item["local"] and item["_score"] < WORLD_MIN_SCORE:
@@ -1066,13 +1106,17 @@ def run(args):
 
     tags = (wc.load_json(files["tags"], {}) or {}).get("tags") or {}
     comments = {} if args.pulse else reddit_comments()
-    pool = apply_tags(wc.wire_items(pulse, now_ts, WINDOW_HOURS), tags, comments)
+    pool = apply_tags(candidates(pulse, now_ts, et), tags, comments)
     reserved_ids, reserved_urls, ran = reserved(args.data_dir, today)
+    evicted = evict_stale_editions(day, edition_since(et))
+    if evicted:
+        print(f"curate_wire: took {len(evicted)} newsletter editions from an earlier day "
+              "out of today's river")
     numbered_river = river(day)
     in_river = {item["id"] for item in numbered_river}
     considered = set(state.get("considered", [])) | set(state.get("considered_today", []))
     new, auto = select_new(pool, in_river, considered, reserved_ids, reserved_urls,
-                           edition_from=edition_since(et))
+                           editions_in=edition_window(et))
     state.setdefault("considered_today", []).extend(auto)
 
     call, want_picks, why = decide(day, state, new, et, now)
@@ -1083,7 +1127,7 @@ def run(args):
         editions = [item for item in new if item.get("ch") == "newsletters"]
         filed = apply_answer(day, {}, river(day), editions, False, et, now)["added"] \
             if editions else []
-        finish(day, pulse, now, changed=bool(filed))
+        finish(day, pulse, now, changed=bool(filed or evicted))
         wc.write_json(files["today"], day)
         wc.write_json(files["state"], state)
         line_ = (f"curate_wire: {why}, {len(new)} new candidates, no model call"
@@ -1138,7 +1182,8 @@ def run(args):
     # everything shown is now considered: passed items stay passed today
     state["considered_today"] = sorted(set(state.get("considered_today", []))
                                        | {item["id"] for item in new})
-    finish(day, pulse, now, changed=bool(result["added"] or result["dropped"] or result["picks"]))
+    finish(day, pulse, now, changed=bool(result["added"] or result["dropped"] or result["picks"]
+                                         or evicted))
     if as_of(args):
         day["backfilled"] = True   # replayed later from the pulse store, and says so
     wc.write_json(files["today"], day)
@@ -1226,8 +1271,9 @@ def selftest():
     late = dict(mk(12, local=False, src="tangle"), ch="newsletters", d=at("2026-10-19T03:30:00+00:00"))
     today_ = dict(mk(13, local=False, src="1440"), ch="newsletters", d=at("2026-10-19T08:28:20+00:00"))
     news = dict(mk(14, local=False, src="ap"), d=at("2026-10-18T22:15:33+00:00"))
-    picked, _ = select_new([sunday_am, sunday_pm, late, today_, news], set(), set(), set(), set(),
-                           edition_from=since)
+    tuesday = dict(mk(15, local=False, src="1440"), ch="newsletters", d=at("2026-10-20T04:15:00+00:00"))
+    picked, _ = select_new([sunday_am, sunday_pm, late, today_, news, tuesday], set(), set(), set(),
+                           set(), editions_in=edition_window(wc.et_now(monday)))
     assert [i["id"] for i in picked] == ["id14", "id12", "id13"], [i["id"] for i in picked]
     # the guard holds across the autumn clock change too (Nov 1 -> Nov 2)
     fall = edition_since(wc.et_now(datetime(2026, 11, 2, 12, 0, tzinfo=timezone.utc)))

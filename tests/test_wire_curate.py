@@ -310,6 +310,50 @@ class HouseRuleTests(Workdir):
                         if item["ch"] == "newsletters")
         self.assertEqual(titles, ["Late Sunday Semafor", "Monday 1440"])
 
+    def test_the_edition_window_is_last_night_9pm_to_midnight(self):
+        ts = lambda iso: int(datetime.fromisoformat(iso).timestamp())  # noqa: E731
+        payload = pulse(n_local=0, n_world=0)
+        payload["sources"].append({"id": "1440", "name": "1440", "short": "1440",
+                                   "site": "https://join1440.com/", "topic": "newsletters"})
+        payload["items"] += [
+            # Sunday 9:05 pm, still unfiled at Monday 11:30 pm (26h25m old)
+            {"t": "Late Sunday", "u": "https://join1440.com/a", "d": ts("2026-10-19T01:05:00+00:00"),
+             "s": "1440"},
+            # Tuesday 12:15 am, already in the pulse at Monday 11:30 pm
+            {"t": "Tuesday", "u": "https://join1440.com/b", "d": ts("2026-10-20T04:15:00+00:00"),
+             "s": "1440"}]
+        late_monday = datetime(2026, 10, 20, 3, 30, tzinfo=timezone.utc)
+        pool = cw.candidates(payload, int(late_monday.timestamp()), wc.et_now(late_monday))
+        picked, _ = cw.select_new(pool, set(), set(), set(), set(),
+                                  editions_in=cw.edition_window(wc.et_now(late_monday)))
+        self.assertEqual([item["title"] for item in picked], ["Late Sunday"])
+
+    def test_editions_filed_before_the_guard_leave_todays_river(self):
+        # today's paper already held five Sunday editions when the guard
+        # landed; the next run takes them out (and nothing else)
+        monday = datetime(2026, 10, 19, 12, 7, tzinfo=timezone.utc)   # 8:07 am Eastern
+        edition = lambda n, iso: {"id": f"nl{n}", "ch": "newsletters", "local": False,  # noqa: E731
+                                  "src": "1440", "name": "1440", "title": f"Edition {n}",
+                                  "url": f"https://join1440.com/{n}", "posted_at": iso}
+        news = {"id": "w1", "ch": "world", "local": False, "src": "ap", "name": "AP",
+                "title": "National 1", "url": "https://world.example/1",
+                "posted_at": "2026-10-18T22:00:00+00:00"}
+        day = cw.empty_day("2026-10-19")
+        day["updates"] = [{"key": "morning", "label": "Morning", "time": "7:24 am",
+                           "lead": {"id": "nl1", "why": "x"},
+                           "items": [edition(1, "2026-10-18T09:38:08+00:00"), news,
+                                     edition(2, "2026-10-19T08:28:20+00:00")]}]
+        wc.write_json(os.path.join(self.data, "wire-today.json"), day)
+        wc.write_json(os.path.join(self.data, "wire-state.json"),
+                      {"date": "2026-10-19", "picks_at": monday.isoformat()})
+        self.write_pulse(pulse(n_local=0, n_world=0, start=0) | {"items": [
+            {"t": "Old local", "u": "https://local.example/old", "d": NOW_TS, "s": "wcax"}]})
+        self.run_curate(Stub(take_all), now=monday)
+        after = self.today()
+        self.assertEqual([item["id"] for item in cw.river(after)], ["w1", "nl2"])
+        self.assertIsNone(after["updates"][0]["lead"])
+        self.assertEqual((after["count"], after["counts"]["everything"]["newsletters"]), (2, 1))
+
     def test_the_cap_never_drops_a_filed_newsletter_edition(self):
         et = wc.et_now(NOW)
         full = [{"id": f"w{k}", "ch": "world", "local": False, "src": "ap", "name": "AP",
