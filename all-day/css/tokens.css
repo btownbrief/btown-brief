@@ -158,8 +158,8 @@
   --fs-meta: 0.8125rem;      /* 13, Archivo 500/400: source, time, counts */
   --fs-label: 10px;          /* Archivo 500: the date tile weekday */
   /* Archivo 500: the phone bar's nine labels, as big as nine fit: 10px on a
-     360px phone, about 11 at 390, 12 at 430 and up ("Vintage" is the widest) */
-  --fs-nav: clamp(10px, calc(10px + (100vw - 360px) * .028), 12px);
+     360px phone, about 10.8 at 390, 11.8 at 430 ("Vintage" is the widest) */
+  --fs-nav: clamp(10px, calc(10px + (100vw - 360px) * .026), 12px);
   --fs-button: 0.875rem;     /* 14, Archivo 600 */
   --fs-caps: 0.75rem;        /* 12, Archivo 700, the only uppercase: eyebrow, new-since line, "Coming in the rebuild" */
   --fs-tag: 0.6875rem;       /* 11, Archivo 600: Local, Btown Brief */

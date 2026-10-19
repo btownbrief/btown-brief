@@ -526,7 +526,7 @@ async function matrix(browser, base) {
           check(cells.length === 9 && cells.every((c) => c[2] >= 44), 'nine tab targets, each at least 44px tall', JSON.stringify(cells));
           /* as big as nine fit: 10px at 360, about 11 at 390, 12 at 430 */
           const labelPx = await page.$eval('#tab-wire span', (x) => parseFloat(getComputedStyle(x).fontSize));
-          check(labelPx >= 10 + (Math.min(430, combo.viewport.width) - 360) * .028 - .05, 'the bar’s labels are as big as nine fit (' + labelPx + 'px)', labelPx);
+          check(labelPx >= 10 + (Math.min(430, combo.viewport.width) - 360) * .026 - .05, 'the bar’s labels are as big as nine fit (' + labelPx + 'px)', labelPx);
           check(cells.every((c) => c[3]), 'no tab label overflows its cell', JSON.stringify(cells.filter((c) => !c[3])));
           const wn = cells.find((c) => c[0] === 'whatnow');
           check(wn[1] > cells[0][1], 'What Now gets the wider cell', JSON.stringify(cells));
@@ -1105,7 +1105,7 @@ async function theWire(browser, base) {
       const row = feed.querySelector(':scope > .card.wrow.has-thumb');
       const t = row.querySelector('.w-thumb').getBoundingClientRect(), ti = row.querySelector('.c-title').getBoundingClientRect();
       const acts = [...feed.querySelectorAll('.w-meta .act')].slice(0, 20).map((a) => { const r = a.getBoundingClientRect(); return [Math.round(r.width), Math.round(r.height)]; });
-      const modes = [...document.querySelectorAll('#subnav .wmode')].map((b) => Math.round(b.getBoundingClientRect().height));
+      const modes = [...document.querySelectorAll('#subnav .wmode')].map((b) => b.offsetHeight);   /* at rest: scrolling down settles the pill to 90% */
       const cards = [...feed.querySelectorAll('.card')];
       return { lead: px(lead.querySelector('.c-title')), leadFont: getComputedStyle(lead.querySelector('.c-title')).fontFamily, dek: px(feed.querySelector('.w-dek')),
         row: px(row.querySelector('.c-title')), meta: px(row.querySelector('.w-meta')), thumb: [Math.round(t.width), Math.round(t.height), t.right <= ti.left],

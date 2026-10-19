@@ -293,7 +293,7 @@ body.chrome-away .mast { transform: translateY(-100%); }
 }
 .tabbar button { position: relative; display: grid; justify-items: center; align-content: center; gap: 4px;
   min-width: 0; padding: 0; color: var(--dock-muted); font-size: var(--fs-nav); font-weight: 500;
-  line-height: 1; letter-spacing: 0; border-radius: var(--r-pill); transition: color .15s ease, background .15s ease; }
+  line-height: 1; letter-spacing: -.01em; border-radius: var(--r-pill); transition: color .15s ease, background .15s ease; }
 .tabbar button span { white-space: nowrap; }
 .tabbar button:hover { color: var(--dock-ink); background: var(--dock-hover); }
 .tabbar button > .i { width: var(--dock-icon); height: var(--dock-icon); }
