@@ -1,0 +1,75 @@
+# Rebuild On Air's "More to watch": videos other curators found, with their
+# real lengths, so the tab can sort them into Snack, Commute, Sit-down and
+# Trailers.
+#
+# What it writes: all-day/data/onair-finds.json (about 50-150 KB). Sources,
+# politeness and the quality bar are in scripts/gather_onair_finds.py; the
+# research behind them is reference/drafts/new-nine-2026-10/research/
+# on-air-sources-2026-10-19.md in the newsletter repo.
+#
+# Cost: $0. About fifteen plain requests a run (Stephen's public Inoreader
+# tag, 13GB's home page, Short of the Week's RSS, a few new pages from each,
+# BiteTube's public query once a week) and a handful of YouTube Data API
+# quota units (videos.list, one unit per fifty ids). No model call.
+#
+# Why it commits to main rather than riding a data branch: like music.json,
+# the file lives inside /all-day/ so the app's service worker can cache it,
+# and the file is its own memory (what it already looked at is in `seen`).
+# Commits made with GITHUB_TOKEN do not fire `push`, so this workflow's name
+# is listed in pages-deploy.yml's workflow_run list. Rename both together.
+#
+# Failure posture: each source fails on its own and the file keeps what it
+# had; with no YouTube credentials nothing new is measured, so nothing new
+# is added. The script exits 0 either way.
+
+name: Refresh On Air finds
+
+on:
+  schedule:
+    - cron: "10 15 * * *"   # 11:10 EDT, after the curators' mornings
+  workflow_dispatch:
+
+concurrency:
+  group: refresh-onair-finds
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      # always main, even for a manual run started from another branch:
+      # main is what Pages serves and what the next run reads back
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Offline checks
+        run: python3 -m unittest tests.test_gather_onair_finds
+
+      - name: Gather the finds
+        env:
+          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+          YT_OAUTH_CLIENT_ID: ${{ secrets.YT_OAUTH_CLIENT_ID }}
+          YT_OAUTH_CLIENT_SECRET: ${{ secrets.YT_OAUTH_CLIENT_SECRET }}
+          YT_OAUTH_REFRESH_TOKEN: ${{ secrets.YT_OAUTH_REFRESH_TOKEN }}
+        run: python3 scripts/gather_onair_finds.py
+
+      - name: Commit if it changed
+        run: |
+          git config user.name "btown-brief-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add all-day/data/onair-finds.json
+          if git diff --cached --quiet; then
+            echo "No On Air finds changes."
+          else
+            git commit -m "Auto-refresh On Air finds"
+            git push origin HEAD:main || (git pull --rebase origin main && git push origin HEAD:main)
+          fi

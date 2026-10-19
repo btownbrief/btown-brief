@@ -13,7 +13,7 @@
    audio — episodes are large and the browser's own HTTP cache handles them
    better than we would. */
 
-const VERSION = 'all-day-v72';   // the Wire rebuilt, a real desktop grid
+const VERSION = 'all-day-v75';   // the Wire rebuilt, five tabs and More, a real desktop grid
 const SHELL = VERSION + '-shell';
 const DATA = 'all-day-data';   // unversioned on purpose: survives shell bumps
 
@@ -26,14 +26,16 @@ const SHELL_URLS = [
   './js/modes/onair.js', './js/modes/games.js',
   /* What Now's engine and its feeds' loader, imported by modes/whatnow.js */
   './js/whatnow-engine.js', './js/whatnow-data.js', './js/sun.js',
-  /* Habits' rules, its demo server and the signed-out phone's copy, imported by modes/habits.js */
-  './js/habits-core.js', './js/habits-fake.js', './js/habits-local.js',
+  /* Habits' rules, its demo server, the signed-out phone's copy and its trees, imported by modes/habits.js */
+  './js/habits-core.js', './js/habits-fake.js', './js/habits-local.js', './js/forest.js',
   /* the photo wall's helpers, imported by the Wire's Photo mode */
   './js/photo-wall.js',
   /* the run clubs' week, imported by ui.js, People and What Now */
   './js/clubs-week.js',
   /* what People's tiles mean and which events are mixers, imported by People */
   './js/people-match.js',
+  /* Food's Reddit asks and Best of r/burlington shapers, imported by modes/food.js */
+  './js/food-asks.js',
   /* the boards: imported by main.js, so every tab can draw one offline */
   './js/boards.js', './js/boards-core.js', './js/boards-fake.js',
   /* Watch's starter list, so the tab has films to show offline */

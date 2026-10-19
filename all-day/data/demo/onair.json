@@ -1,5 +1,5 @@
 {
- "_": "Demo data for ?demo=1, in the real payloads' shapes: tv is btown-tv.json, tvEditions is tv-editions.json, pulse is the podcast part of pulse.json, podcast is all-day/data/podcast.json, audio is the wire-audio branch's index.json, playlists is all-day/data/playlists.json (its links are made up and only toast here). Every item is invented. `art` (a placeholder palette) and `_script` are demo-only fields. Dates are moved to the reader's clock from _anchor.",
+ "_": "Demo data for ?demo=1, in the real payloads' shapes: tv is btown-tv.json, tvEditions is tv-editions.json, pulse is the podcast part of pulse.json, podcast is all-day/data/podcast.json, audio is the wire-audio branch's index.json, playlists is all-day/data/playlists.json, finds is all-day/data/onair-finds.json (its links are made up and only toast here). Every item is invented. `art` (a placeholder palette) and `_script` are demo-only fields. Dates are moved to the reader's clock from _anchor.",
  "_anchor": "2026-10-16",
  "tv": {
   "v": 1,
@@ -1462,6 +1462,358 @@
     "url": "https://soundcloud.com/btownbrief-demo/sets/late-night",
     "note": "",
     "added": "2026-10-11"
+   }
+  ]
+ },
+ "finds": {
+  "v": 1,
+  "generated": "2026-10-16T12:00:00Z",
+  "items": [
+   {
+    "id": "demo-fd-001",
+    "t": "How a covered bridge is rebuilt by hand",
+    "ch": "Timber Framers Guild",
+    "sec": 734,
+    "dur": "12:14",
+    "b": "snack",
+    "via": "wimp",
+    "via_url": "https://example.com/wimp/demo-fd-001",
+    "why": "",
+    "d": 1792094400,
+    "art": "harbor"
+   },
+   {
+    "id": "demo-fd-002",
+    "t": "The last lighthouse keeper on a Great Lake",
+    "ch": "Northern Waters",
+    "sec": 1312,
+    "dur": "21:52",
+    "b": "commute",
+    "via": "shahniva",
+    "via_url": "https://example.com/shahniva/demo-fd-002",
+    "why": "",
+    "d": 1792074400,
+    "art": "lake"
+   },
+   {
+    "id": "demo-fd-003",
+    "t": "A year inside a small-town bakery",
+    "ch": "Slow Bread",
+    "sec": 2710,
+    "dur": "45:10",
+    "b": "sit",
+    "via": "bitetube",
+    "via_url": "https://example.com/bitetube/demo-fd-003",
+    "why": "A quiet, patient watch for a long lunch.",
+    "d": 1792054400,
+    "art": "field"
+   },
+   {
+    "id": "demo-fd-004",
+    "t": "Why maple syrup grades changed",
+    "ch": "Kitchen Science",
+    "sec": 512,
+    "dur": "8:32",
+    "b": "snack",
+    "via": "awesomer",
+    "via_url": "https://example.com/awesomer/demo-fd-004",
+    "why": "",
+    "d": 1792034400,
+    "art": "maple"
+   },
+   {
+    "id": "demo-fd-005",
+    "t": "Night Train, official trailer",
+    "ch": "Little Films",
+    "sec": 148,
+    "dur": "2:28",
+    "b": "trailer",
+    "via": "13gb",
+    "via_url": "https://example.com/13gb/demo-fd-005",
+    "why": "",
+    "d": 1792014400,
+    "art": "dusk"
+   },
+   {
+    "id": "demo-fd-006",
+    "t": "Restoring a 1950s diner sign",
+    "ch": "Neon Revival",
+    "sec": 1095,
+    "dur": "18:15",
+    "b": "commute",
+    "via": "awesomer",
+    "via_url": "https://example.com/awesomer/demo-fd-006",
+    "why": "",
+    "d": 1791994400,
+    "art": "dusk"
+   },
+   {
+    "id": "demo-fd-007",
+    "t": "The man who maps every hiking trail",
+    "ch": "Trail Notes",
+    "sec": 3840,
+    "dur": "1:04:00",
+    "b": "sit",
+    "via": "shahniva",
+    "via_url": "https://example.com/shahniva/demo-fd-007",
+    "why": "",
+    "d": 1791974400,
+    "art": "field"
+   },
+   {
+    "id": "demo-fd-008",
+    "t": "How ice skates are sharpened",
+    "ch": "Shop Talk",
+    "sec": 388,
+    "dur": "6:28",
+    "b": "snack",
+    "via": "wimp",
+    "via_url": "https://example.com/wimp/demo-fd-008",
+    "why": "",
+    "d": 1791954400,
+    "art": "lake"
+   },
+   {
+    "id": "demo-fd-009",
+    "t": "A short film about a lost mitten",
+    "ch": "Short Stuff",
+    "sec": 642,
+    "dur": "10:42",
+    "b": "snack",
+    "via": "sotw",
+    "via_url": "https://example.com/sotw/demo-fd-009",
+    "why": "",
+    "d": 1791934400,
+    "art": "harbor"
+   },
+   {
+    "id": "demo-fd-010",
+    "t": "Building a canoe in thirty days",
+    "ch": "Workshop Diaries",
+    "sec": 1640,
+    "dur": "27:20",
+    "b": "commute",
+    "via": "wimp",
+    "via_url": "https://example.com/wimp/demo-fd-010",
+    "why": "",
+    "d": 1791914400,
+    "art": "lake"
+   },
+   {
+    "id": "demo-fd-011",
+    "t": "The history of the town meeting",
+    "ch": "Civics Hour",
+    "sec": 2105,
+    "dur": "35:05",
+    "b": "sit",
+    "via": "bitetube",
+    "via_url": "https://example.com/bitetube/demo-fd-011",
+    "why": "",
+    "d": 1791894400,
+    "art": "maple"
+   },
+   {
+    "id": "demo-fd-012",
+    "t": "Harvest Moon, teaser",
+    "ch": "Little Films",
+    "sec": 95,
+    "dur": "1:35",
+    "b": "trailer",
+    "via": "13gb",
+    "via_url": "https://example.com/13gb/demo-fd-012",
+    "why": "",
+    "d": 1791874400,
+    "art": "dusk"
+   }
+  ],
+  "boards": [
+   {
+    "slug": "demo-fiddlers",
+    "t": "Fiddlers, live, in every kitchen",
+    "cat": "music",
+    "ids": [
+     "demo-bd-000",
+     "demo-bd-001",
+     "demo-bd-002",
+     "demo-bd-003",
+     "demo-bd-004",
+     "demo-bd-005",
+     "demo-bd-006",
+     "demo-bd-007",
+     "demo-bd-008"
+    ],
+    "via": "clipsboard",
+    "via_url": "https://clipsboard.com/grid/demo-fiddlers",
+    "d": 1792094400,
+    "clips": [
+     {
+      "id": "demo-bd-000",
+      "t": "Fiddle Hall, live, number 1",
+      "ch": "Fiddle Hall",
+      "sec": 180,
+      "dur": "3:00",
+      "art": "lake"
+     },
+     {
+      "id": "demo-bd-001",
+      "t": "Fiddle Hall, live, number 2",
+      "ch": "Fiddle Hall",
+      "sec": 205,
+      "dur": "3:25",
+      "art": "field"
+     },
+     {
+      "id": "demo-bd-002",
+      "t": "Fiddle Hall, live, number 3",
+      "ch": "Fiddle Hall",
+      "sec": 230,
+      "dur": "3:50",
+      "art": "dusk"
+     },
+     {
+      "id": "demo-bd-003",
+      "t": "Fiddle Hall, live, number 4",
+      "ch": "Fiddle Hall",
+      "sec": 255,
+      "dur": "4:15",
+      "art": "maple"
+     },
+     {
+      "id": "demo-bd-004",
+      "t": "Fiddle Hall, live, number 5",
+      "ch": "Fiddle Hall",
+      "sec": 280,
+      "dur": "4:40",
+      "art": "harbor"
+     },
+     {
+      "id": "demo-bd-005",
+      "t": "Fiddle Hall, live, number 6",
+      "ch": "Fiddle Hall",
+      "sec": 305,
+      "dur": "5:05",
+      "art": "pine"
+     },
+     {
+      "id": "demo-bd-006",
+      "t": "Fiddle Hall, live, number 7",
+      "ch": "Fiddle Hall",
+      "sec": 330,
+      "dur": "5:30",
+      "art": "plum"
+     },
+     {
+      "id": "demo-bd-007",
+      "t": "Fiddle Hall, live, number 8",
+      "ch": "Fiddle Hall",
+      "sec": 355,
+      "dur": "5:55",
+      "art": "teal"
+     },
+     {
+      "id": "demo-bd-008",
+      "t": "Fiddle Hall, live, number 9",
+      "ch": "Fiddle Hall",
+      "sec": 380,
+      "dur": "6:20",
+      "art": "slate"
+     }
+    ],
+    "sec": 2520
+   },
+   {
+    "slug": "demo-standup",
+    "t": "Stand-up from small rooms",
+    "cat": "comedy",
+    "ids": [
+     "demo-bs-000",
+     "demo-bs-001",
+     "demo-bs-002",
+     "demo-bs-003",
+     "demo-bs-004",
+     "demo-bs-005",
+     "demo-bs-006",
+     "demo-bs-007",
+     "demo-bs-008"
+    ],
+    "via": "clipsboard",
+    "via_url": "https://clipsboard.com/grid/demo-standup",
+    "d": 1792054400,
+    "clips": [
+     {
+      "id": "demo-bs-000",
+      "t": "Small Rooms, live, number 1",
+      "ch": "Small Rooms",
+      "sec": 180,
+      "dur": "3:00",
+      "art": "lake"
+     },
+     {
+      "id": "demo-bs-001",
+      "t": "Small Rooms, live, number 2",
+      "ch": "Small Rooms",
+      "sec": 205,
+      "dur": "3:25",
+      "art": "field"
+     },
+     {
+      "id": "demo-bs-002",
+      "t": "Small Rooms, live, number 3",
+      "ch": "Small Rooms",
+      "sec": 230,
+      "dur": "3:50",
+      "art": "dusk"
+     },
+     {
+      "id": "demo-bs-003",
+      "t": "Small Rooms, live, number 4",
+      "ch": "Small Rooms",
+      "sec": 255,
+      "dur": "4:15",
+      "art": "maple"
+     },
+     {
+      "id": "demo-bs-004",
+      "t": "Small Rooms, live, number 5",
+      "ch": "Small Rooms",
+      "sec": 280,
+      "dur": "4:40",
+      "art": "harbor"
+     },
+     {
+      "id": "demo-bs-005",
+      "t": "Small Rooms, live, number 6",
+      "ch": "Small Rooms",
+      "sec": 305,
+      "dur": "5:05",
+      "art": "pine"
+     },
+     {
+      "id": "demo-bs-006",
+      "t": "Small Rooms, live, number 7",
+      "ch": "Small Rooms",
+      "sec": 330,
+      "dur": "5:30",
+      "art": "plum"
+     },
+     {
+      "id": "demo-bs-007",
+      "t": "Small Rooms, live, number 8",
+      "ch": "Small Rooms",
+      "sec": 355,
+      "dur": "5:55",
+      "art": "teal"
+     },
+     {
+      "id": "demo-bs-008",
+      "t": "Small Rooms, live, number 9",
+      "ch": "Small Rooms",
+      "sec": 380,
+      "dur": "6:20",
+      "art": "slate"
+     }
+    ],
+    "sec": 2520
    }
   ]
  }

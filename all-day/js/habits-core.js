@@ -361,6 +361,9 @@ const MESSAGES = {
   locked: 'The goal is locked for the season.',
   bad_range: 'Couldn’t load that stretch.',
   off: 'Habits open soon.',
+  bad_forest_name: 'A name for your forest, up to 32 letters, no @.',
+  bad_cohort: 'A cohort name, up to 32 letters.',
+  bad_forest: 'That’s a lot of trees. Choose fewer.',
   offline: 'Couldn’t reach the server. Try again in a moment.',
 };
 export const message = (code) => MESSAGES[code] || MESSAGES.offline;

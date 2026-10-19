@@ -321,12 +321,18 @@ end $$;
 
 -- "Delete my account and posts" in Settings also takes this: your member
 -- row, goals (with their milestones, reviews and wall card), habits, taps
--- and attendance, all gone. A pod you captained loses its captain.
+-- and attendance, all gone. A pod you captained loses its captain. Your
+-- shared forest too, once sz-FOREST.sql (part D) has made its tables; it
+-- carries this same function, word for word.
 create or replace function public.sz_delete_me() returns jsonb
 language plpgsql security definer set search_path = public as $$
 declare u uuid := auth.uid();
 begin
   if u is null then raise exception 'not_signed_in'; end if;
+  if to_regclass('public.sz_forests') is not null then
+    execute 'delete from public.sz_forest_habits where user_id = $1' using u;
+    execute 'delete from public.sz_forests where user_id = $1' using u;
+  end if;
   delete from public.sz_taps where user_id = u;
   delete from public.sz_habits where user_id = u;
   delete from public.sz_attendance where user_id = u;

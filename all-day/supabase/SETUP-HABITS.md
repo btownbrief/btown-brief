@@ -1,7 +1,8 @@
 # Habits tab: the pastes
 
-Three pastes, a few minutes in all, each safe to run again. Part A sets the tab up; Part B lifts the
-habit limit; Part C lets people use it without signing in. Already did A and B? Do Part C only.
+Four pastes, a few minutes in all, each safe to run again. Part A sets the tab up; Part B lifts the
+habit limit; Part C lets people use it without signing in; Part D lets people share their forest.
+Already did A, B and C? Do Part D only.
 
 ## Part A: set up Habits (one paste)
 
@@ -71,6 +72,42 @@ cannot move it to their account yet: it stays on the phone, and moves on the fir
 the paste. A fresh project runs A, B and C in order. If `sz-SETUP.sql` is ever pasted again, adding
 a habit stays name-free (it carries the same `sz_habit_add`), and `sz_import_local` is untouched.
 
+## Part D: share your forest (one paste)
+
+For a project that already has Part A. About a minute. From the newsletter repo on Stephen's Mac,
+`bash scripts/setup_boards.sh habits4` copies it and opens the SQL editor; or by hand:
+
+1. Supabase dashboard, the shared project (`jnouvwxomrcffqwilqkq`), **SQL Editor**, **New query**.
+2. Open `all-day/supabase/sz-FOREST.sql` from this repository, copy the **whole** file, paste it in.
+3. Click **Run**. It should finish with "Success. No rows returned."
+
+It adds two tables (`sz_forests`, `sz_forest_habits`) and the functions around them, and replaces
+one, `sz_delete_me`, so deleting an account also deletes its forest. No existing row is touched.
+`bash scripts/setup_boards.sh check` then says "Habits part D (forests) installed: yes".
+
+**Before the paste**, every habit still grows its tree on Today and in its sheet, signed in or not:
+the trees are drawn on the phone from the habit's own taps. Only sharing waits: the Share button
+and the Forests chip stay hidden, because the app asks for the forests, hears that the functions
+do not exist yet, and leaves them out. Nothing is lost or half-saved.
+
+**After the paste**, a signed-in reader can share their forest from the Share button over it:
+
+- under any name they type (their first name to start, if they gave one), changeable any time;
+  an `@` is refused, so an email can never be a name;
+- with their habit names, or just the trees;
+- with all of their habits, or the ones they tick.
+
+Anyone, signed in or not, sees public forests under the Forests chip: the name, and for each
+shared habit its tree, its leaves, its streak and its best streak (and its name, if shown). Never a
+date, an email, a phone or an account id. A shared link (`#habits/f-<id>`) opens that forest.
+
+**Taking one down.** Table Editor, `sz_forests`, find the row by its `name`, and set `hidden_at` to
+now. It leaves the gallery and its link stops working; the owner's own trees are untouched. Clear
+`hidden_at` to put it back.
+
+**Cohorts, later.** `sz_forests.cohort` is kept for the accountability cohorts to come (a name up to
+32 letters). Nothing in the app sets or shows it yet.
+
 ## Putting a season on the tile
 
 Until the Season desk arrives in phase two, add a season in the dashboard: **Table Editor**,
@@ -95,4 +132,6 @@ functions that enforce the privacy rules:
 - your habits and taps are yours alone;
 - a habit you share is seen by your pod only, never anyone else;
 - your phone number is never sent to anyone but you (Stephen sees it in the dashboard);
-- "Delete my account and posts" in Settings now also deletes your habits and taps.
+- "Delete my account and posts" in Settings now also deletes your habits and taps, and (after
+  Part D) your shared forest;
+- a shared forest shows only what its owner chose (Part D above).

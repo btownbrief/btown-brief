@@ -22,6 +22,15 @@
      with a sign-up button, or that none is scheduled.
    - Goal, Season and Wall are chips that say Season 0 is coming.
 
+   - Round three (2026-10-19): every habit is a tree, a leaf for each day
+     done and a flower for each streak milestone (forest.js); together they
+     stand over the list as your forest, and a tap grows its tree a leaf in
+     the same click. Share the forest from its Share button (any name,
+     habit names or just the trees, which habits); everyone's public forests
+     are under the Forests chip (sz-FOREST.sql). A first visit opens on what
+     the page does; the "?" by the forest shows it again. An empty Today
+     offers three starter habits.
+
    Signed out, it just works: the same Today, every habit and tap kept on
    this phone (habits-local.js, the same doors and rules as the server),
    and one quiet "Sync across devices" line under the list. Signing in only
@@ -54,11 +63,19 @@ import { el, esc, ICON, button, chips } from '../ui.js';
 import { HABIT_RULES, dayKey, addDays, weekStart, streak, streakUnit, weekDots, daysUntil, nextMidnight, checkHabit, checkMe, clean, message,
   bestStreak, completion, percent, dueToday, dayTotals, monthGrid, monthOf, addMonths, startKey } from '../habits-core.js';
 import { FakeHabits, seedDemo } from '../habits-fake.js';
+import { tree, seedOf, leavesOf, bloomsOf, inWindow, treeWords, emptyPlot, checkForest, FOREST_RULES } from '../forest.js';
 import { LocalHabits, LOCAL_DOORS, browserStorage, memoryStorage } from '../habits-local.js';
 import { DEMO_ME } from '../boards-fake.js';
 
 const KEY = 'habits';
-const VIEWS = [['today', 'Today'], ['goal', 'Goal'], ['season', 'Season'], ['wall', 'Wall']];
+const VIEWS = [['today', 'Today'], ['forests', 'Forests'], ['goal', 'Goal'], ['season', 'Season'], ['wall', 'Wall']];
+const HELP = 'allday-habits-help';   // the first-visit card was dismissed
+/* one tap each on an empty Today: a habit, and its tree, at once */
+const STARTERS = [
+  { text: 'Walk outside', frequency: 'daily', n: null },
+  { text: 'Read the Brief', frequency: 'n_per_week', n: 3 },
+  { text: 'Try a new Burlington place', frequency: 'n_per_week', n: 1 },
+];
 const PENDING = 'allday-habits-pending';
 const HISTORY_DAYS = HABIT_RULES.limits.tapsRangeMaxDays - 1;
 const SWIPE_START = 24, SWIPE_COMMIT = 72, SWIPE_CANCEL_Y = 14;
@@ -131,6 +148,11 @@ const S = {
   failed: null,         // a load that did not work, as its sentence
   adding: false,        // the Add habit form is open
   today: dayKey(Date.now()),
+  forest: undefined,    // your forest's share settings, null before the first save, undefined while asking
+  forestOff: false,     // sz-FOREST.sql is not pasted yet: sharing and the gallery stay hidden
+  gallery: undefined,   // the public forests, undefined while asking
+  galleryFailed: null,  // the gallery did not load, as its sentence
+  helpSeen: app.demo ? false : !!store.read(HELP, false),
 };
 let root = null, body = null, gen = 0, dayTimer = 0, flashKey = null;
 
@@ -221,6 +243,19 @@ function load() {
   S.me = undefined;
   S.habits = [];
   S.taps = new Map();
+  /* the forest's share settings and the gallery: neither holds up Today,
+     and either one saying the SQL is not pasted hides sharing */
+  S.forest = undefined;
+  S.forestOff = false;
+  if (u) {
+    call('sz_forest_get').then((r) => {
+      if (my !== gen) return;
+      if (!r.ok && r.error === 'off') S.forestOff = true;
+      S.forest = r.ok ? (isObj(r.data) ? r.data : null) : undefined;
+      forestChanged();
+    });
+  }
+  loadGallery();
   /* the member row only matters for Sign up; a missing one stops nothing */
   const me = !u ? Promise.resolve() : call('sz_me_get').then((r) => {
     if (my !== gen) return;
@@ -249,6 +284,34 @@ function load() {
     land();
     if (u && pending().length) flush();
   });
+}
+
+const isObj = (x) => !!x && typeof x === 'object' && !Array.isArray(x);
+
+/* The public forests. Asked on every load, because it is also how a reader
+   who is not signed in learns whether sharing is open yet. */
+let galleryAsk = 0;   // only the newest answer counts
+function loadGallery() {
+  const my = gen, ask = ++galleryAsk;
+  S.galleryFailed = null;
+  return call('sz_forests_public', { p_limit: FOREST_RULES.galleryMax }).then((r) => {
+    if (my !== gen || ask !== galleryAsk) return;
+    if (!r.ok && r.error === 'off') { S.forestOff = true; S.gallery = []; }
+    else if (r.ok) S.gallery = Array.isArray(r.data) ? r.data.filter(isObj) : [];
+    else { S.galleryFailed = r.message; S.gallery = null; }   // never a stale list shown as current
+    forestChanged();
+  });
+}
+/* A forest answer arrived: redraw only what it touches, never the form
+   someone may be typing in. */
+function forestChanged() {
+  if (!body) return;
+  if (shown()) app.paintSubnav();   // the Forests chip comes and goes with sharing being open
+  if (S.phase !== 'ready') return;
+  if (S.view === 'forests') { paint(); land(); return; }
+  const head = body.querySelector('.hb-fhead');
+  if (head) head.replaceWith(forestHead());
+  land();
 }
 
 /* ------------------------------------------- moving this phone's habits */
@@ -343,36 +406,43 @@ document.addEventListener('visibilitychange', () => {
 function paint() {
   if (!body) return;
   body.innerHTML = '';
+  if (S.view === 'forests') { paintForests(); app.paintSubnav(); return; }
   if (S.view !== 'today') {
     body.appendChild(el('div', 'hb-soon', '<p>' + esc('Season 0 is coming') + '</p>'));
     app.paintSubnav();
     return;
   }
-  /* the day's own things first: today, your habits, the weeks behind
-     them; the season tile, which changes once a season, under them */
-  if (S.phase === 'loading') { body.append(skeleton(), tile()); return; }
-  if (S.off && S.uid) { body.append(el('p', 'hb-empty', esc(message('off'))), tile()); return; }
+  /* a first visit opens on what this page is; then the day's own things:
+     today, your forest, your habits, the weeks behind them; the season
+     tile, which changes once a season, under them, and only when there is
+     a season to show */
+  const t = () => [tile()].filter(Boolean);
+  if (!S.helpSeen) body.appendChild(helpCard());
+  if (S.phase === 'loading') { body.append(skeleton(), ...t()); return; }
+  if (S.off && S.uid) { body.append(el('p', 'hb-empty', esc(message('off'))), ...t()); return; }
   if (S.failed) {
     const box = el('div', 'hb-gate');
     box.appendChild(el('p', 'hb-empty', esc(S.failed)));
     box.appendChild(button('Try again', 'ghost', load));
-    body.append(box, tile());
+    body.append(box, ...t());
     return;
   }
   const any = mine().length > 0;
   if (any) body.appendChild(fill(el('section', 'hb-today'), paintToday));
+  body.appendChild(forestSection());
   const list = el('ul', 'hb-list');
   list.setAttribute('aria-label', 'Your habits');
   mine().forEach((h) => list.appendChild(row(h)));
   body.appendChild(list);
   bindList(list);
-  if (!any && !S.adding) body.appendChild(el('p', 'hb-empty', 'No habits yet.'));
+  if (!any && !S.adding) body.appendChild(starters());
   body.appendChild(addRow());
   if (!S.uid && any) body.appendChild(button('Sync across devices', 'hb-sync', () => app.openSettings()));
   if (any) body.appendChild(fill(el('section', 'hb-heat'), paintHeat));
-  body.appendChild(tile());
+  body.append(...t());
 }
 const fill = (node, fn) => { fn(node); return node; };
+const shown = () => !!root && !(root.closest('.panel') || root).hidden;
 
 /* ------------------------------------------------- today, and the weeks */
 /* On top: how many of today's habits are done, with a bar, and how much of
@@ -431,7 +501,21 @@ function paintNumbers() {
 
 /* a #habits/<key> link, or a habit just added: scroll to it and flash it */
 function land() {
-  if (!flashKey || S.phase !== 'ready' || S.view !== 'today') return;
+  if (!flashKey || S.phase !== 'ready') return;
+  if (/^f-/.test(flashKey)) {
+    /* a shared forest's link: its card in Forests, or, past the gallery's
+       forty, the forest itself in a sheet */
+    if (S.view !== 'forests' || S.gallery === undefined) return;
+    const k = flashKey;
+    flashKey = null;
+    if (app.flashHit(body, k)) return;
+    call('sz_forest_public', { p_id: k.slice(2) }).then((r) => {
+      if (r.ok && isObj(r.data) && Array.isArray(r.data.trees)) forestSheet(r.data);
+      else app.toast(r.ok ? 'That forest is private now' : r.message);
+    });
+    return;
+  }
+  if (S.view !== 'today') return;
   const k = flashKey;
   flashKey = null;
   if (!app.flashHit(body, k)) app.toast('That card has moved on');
@@ -448,10 +532,7 @@ function tile() {
     return t;
   }
   const s = S.season;
-  if (!s) {
-    t.innerHTML = '<h2 class="hb-big">' + esc('No season scheduled yet') + '</h2>';
-    return t;
-  }
+  if (!s) return null;   // no season: no box (an empty promise gives no reason to start)
   const n = Math.max(0, daysUntil(Date.parse(s.kickoff_at), Date.now()));
   const when = new Date(s.kickoff_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', timeZone: 'America/New_York' });
   t.innerHTML = '<p class="hb-kicker">' + esc((s.name || 'Next season') + ' · ' + when) + '</p>' +
@@ -515,11 +596,12 @@ function row(h) {
   return li;
 }
 function rowOf(id) { return body && body.querySelector('.hb-row[data-id="' + CSS.escape(id) + '"]'); }
-function paintRow(id) {
+function paintRow(id, fresh) {
   const li = rowOf(id);
   const h = S.habits.find((x) => x.id === id);
   if (li && h) li.innerHTML = rowInner(h);
   paintNumbers();
+  paintTree(id, fresh);
 }
 
 /* Tap: today done, or not. Painted first, sent after. */
@@ -531,7 +613,7 @@ function toggle(id) {
   const day = S.today;
   const on = !taps.has(day);
   if (on) taps.add(day); else taps.delete(day);
-  paintRow(id);
+  paintRow(id, on);
   const b = rowOf(id) && rowOf(id).querySelector('.hb-tap');
   if (b && on) { b.classList.add('pop'); if (navigator.vibrate) navigator.vibrate(8); }
   const op = { op: on ? 'tap' : 'untap', habit: id, date: day };
@@ -717,6 +799,262 @@ function bindList(list) {
   list.addEventListener('pointercancel', finish);
 }
 
+/* ------------------------------------------------------------ the forest */
+/* Every habit is a tree: a leaf for each day it was done in the window the
+   tab holds, a flower for each streak milestone its best streak reached
+   (forest.js). On Today they stand together as your forest, over the list;
+   a tap grows the tapped habit's tree a leaf, in the same click. */
+function treeOf(h) {
+  const taps = tapsOf(h.id);
+  const leaves = leavesOf(taps, S.today);
+  const blooms = leaves ? bloomsOf(h.frequency, bestStreak(h, inWindow(taps, S.today), Date.now())) : 0;
+  return { leaves, blooms };
+}
+function treeInner(h, fresh) {
+  const t = treeOf(h);
+  /* the picture is decorative inside its button; the name and count below are what is read */
+  return tree(seedOf(h.id), t.leaves, t.blooms, { fresh }) +
+    '<span class="fr-name">' + esc(h.text) + '</span><span class="fr-meta">' + esc(treeWords(t.leaves, t.blooms)) + '</span>';
+}
+const treeLabel = (b, h) => { const t = treeOf(h); b.setAttribute('aria-label', h.text + ': ' + treeWords(t.leaves, t.blooms)); };
+function paintTree(id, fresh) {
+  const b = body && body.querySelector('.fr-tree[data-id="' + CSS.escape(id) + '"]');
+  const h = S.habits.find((x) => x.id === id);
+  if (b && h) { b.innerHTML = treeInner(h, !!fresh); treeLabel(b, h); }
+}
+function forestSection() {
+  const w = el('section', 'hb-forest');
+  w.dataset.k = 'forest';
+  w.appendChild(forestHead());
+  const list = mine();
+  const grove = el('div', 'hb-grove' + (list.length > 8 ? ' many' : list.length > 3 ? '' : ' few'));
+  if (!list.length) grove.innerHTML = '<div class="fr-tree is-empty">' + emptyPlot() + '</div>';
+  list.forEach((h) => {
+    const b = el('button', 'fr-tree', treeInner(h, false));
+    b.type = 'button';
+    b.dataset.id = h.id;
+    treeLabel(b, h);
+    b.addEventListener('click', () => habitSheet(h.id));
+    grove.appendChild(b);
+  });
+  w.appendChild(grove);
+  return w;
+}
+/* The forest's title, and beside it Share (once there is a tree to share
+   and sharing is open) and the "?" that explains the page. */
+function forestHead() {
+  const head = el('div', 'hb-fhead');
+  const shared = !!(S.uid && S.forest && S.forest.public);
+  head.appendChild(el('h3', 'hb-h', esc('Your forest')));
+  if (shared) head.appendChild(el('span', 'tag hb-pub', esc('Public')));
+  head.appendChild(el('span', 'hb-sp'));
+  if (!S.forestOff && (mine().length || (S.uid && S.forest))) {
+    head.appendChild(button(ICON.share + '<span>' + esc(shared ? 'Sharing' : 'Share') + '</span>', 'ghost sm hb-sharebtn', () => {
+      if (!S.uid) { app.toast('Sign in to share your forest.'); app.openSettings(); return; }
+      shareSheet();
+    }));
+  }
+  const q = el('button', 'iconbtn hb-q', '?');
+  q.type = 'button';
+  q.setAttribute('aria-label', 'How Habits works');
+  q.addEventListener('click', helpSheet);
+  head.appendChild(q);
+  return head;
+}
+
+/* ------------------------------------------------------------- the help */
+/* What this page does, in four lines: on top of a first visit until "Got
+   it", and behind the "?" any time after (Stephen: "a help thing that pops
+   up that explains what this habits page does"). */
+const HELP_LINES = [
+  'Add a habit and a tree is planted.',
+  'Tap the check each day you do it, and a leaf grows.',
+  'Keep a streak going and flowers bloom, at 7, 21 and 50 days.',
+  'Share your forest under any name, or keep it to yourself.',
+];
+const helpList = () => '<ul class="hb-helpl">' + HELP_LINES.map((l) => '<li>' + esc(l) + '</li>').join('') + '</ul>';
+function helpCard() {
+  const w = el('section', 'hb-help', '<h2 class="hb-big">' + esc('Grow a forest') + '</h2>' + helpList());
+  w.dataset.k = 'help';
+  w.appendChild(button('Got it', 'hb-go', () => {
+    S.helpSeen = true;
+    if (!app.demo) store.write(HELP, true);
+    w.remove();
+  }));
+  return w;
+}
+function helpSheet() {
+  app.sheet('How Habits works', (sheetBody) => {
+    sheetBody.innerHTML = helpList() + '<p class="sheet-note">' + esc('Seasons with a small group, and a party at the end, are coming.') + '</p>';
+  });
+}
+
+/* Three habits a tap away, for a Today with none yet. */
+function starters() {
+  const w = el('div', 'hb-starts');
+  w.appendChild(el('p', 'hb-empty', 'Plant your first tree.'));
+  const row = el('div', 'hb-startl');
+  STARTERS.forEach((x) => {
+    const b = button(ICON.plus + '<span>' + esc(x.text) + '</span>', 'ghost hb-start', () => {
+      [...row.children].forEach((c) => { c.disabled = true; });
+      call('sz_habit_add', { p_text: x.text, p_frequency: x.frequency, p_n: x.n, p_shared: false }).then((r) => {
+        if (!r.ok) { app.toast(r.message); [...row.children].forEach((c) => { c.disabled = false; }); return; }
+        S.habits.push(r.data);
+        flashKey = 'h-' + r.data.id;
+        paint();
+        land();
+      });
+    });
+    b.type = 'button';
+    row.appendChild(b);
+  });
+  w.appendChild(row);
+  return w;
+}
+
+/* --------------------------------------------------------- sharing it */
+/* Public or not, under any name (the member's first name to start, if
+   they gave one), habit names or only the trees, which trees. One short
+   line says who sees it. sz_forest_set checks it all again. */
+function shareSheet() {
+  app.sheet('Share your forest', (sheetBody, card, close) => {
+    const f = S.forest || null;
+    const list = mine();
+    const form = el('form', 'bform hb-sharef');
+    form.noValidate = true;
+    const pub = el('label', 'hb-share', '<input type="checkbox" name="public"' + (!f || f.public ? ' checked' : '') + '> <span>' + esc('Show it in Forests') + '</span>');
+    form.appendChild(pub);
+    const name = textInput('fname', FOREST_RULES.nameMax, (f && f.name) || (S.me && S.me.name) || '', 'Your name or a nickname');
+    name.autocomplete = 'nickname';
+    form.appendChild(field('Name on it', name));
+    let names = !!(f && f.show_names);
+    const show = el('div', 'bf-row');
+    show.appendChild(el('div', 'bf-label', 'Show'));
+    const pl = el('div', 'pills hb-show');
+    [[true, 'Habit names'], [false, 'Just the trees']].forEach(([v, label]) => {
+      const b = el('button', v === names ? 'on' : '', esc(label));
+      b.type = 'button';
+      b.dataset.names = String(v);
+      b.setAttribute('aria-pressed', v === names ? 'true' : 'false');
+      b.addEventListener('click', () => {
+        names = v;
+        [...pl.children].forEach((c) => { c.classList.toggle('on', c === b); c.setAttribute('aria-pressed', c === b ? 'true' : 'false'); });
+      });
+      pl.appendChild(b);
+    });
+    show.appendChild(pl);
+    form.appendChild(show);
+    const which = el('fieldset', 'bf-row hb-which');
+    which.appendChild(el('legend', 'bf-label', 'Trees'));
+    const inForest = new Set(f && Array.isArray(f.habits) ? f.habits : list.map((h) => h.id));
+    list.forEach((h) => {
+      which.appendChild(el('label', 'hb-share', '<input type="checkbox" name="tree" value="' + esc(h.id) + '"' + (inForest.has(h.id) ? ' checked' : '') + '> <span>' + esc(h.text) + '</span>'));
+    });
+    form.appendChild(which);
+    form.appendChild(el('p', 'bf-hint', esc('Anyone can see it. Change it or stop anytime.')));
+    const msg = el('p', 'bf-msg');
+    msg.setAttribute('role', 'status');
+    const go = button('Save', '');
+    go.type = 'submit';
+    const actions = el('div', 'bf-go');
+    actions.append(go);
+    if (f && f.public) {
+      actions.appendChild(button('Send link', 'ghost', (e) => { e.preventDefault(); app.share(KEY, 'f-' + f.id, f.name + '’s forest'); }));
+    }
+    actions.append(msg);
+    form.appendChild(actions);
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const input = { name: name.value, public: form.querySelector('input[name="public"]').checked, show_names: names,
+        habits: [...form.querySelectorAll('input[name="tree"]:checked')].map((c) => c.value), cohort: (f && f.cohort) || '' };
+      const c = checkForest(input, clean);
+      if (!c.ok) { msg.textContent = message(c.error); msg.classList.add('err'); return; }
+      go.disabled = true;
+      msg.classList.remove('err');
+      msg.textContent = '';
+      const my = gen, who = S.uid;
+      call('sz_forest_set', { p_name: c.forest.name, p_public: c.forest.public, p_show_names: c.forest.show_names, p_habits: c.forest.habits, p_cohort: c.forest.cohort }).then((r) => {
+        if (my !== gen || who !== S.uid) return;   // signed out or in as someone else meanwhile: not this reader's
+        go.disabled = false;
+        if (!r.ok) { msg.textContent = r.message; msg.classList.add('err'); return; }
+        S.forest = r.data;
+        /* off the gallery at once when it went private; the reload confirms */
+        if (Array.isArray(S.gallery) && r.data && !r.data.public) S.gallery = S.gallery.filter((x) => x.id !== r.data.id);
+        close();
+        app.toast(r.data && r.data.public ? 'Your forest is in Forests' : 'Your forest is private');
+        forestChanged();
+        loadGallery();
+      });
+    });
+    sheetBody.appendChild(form);
+  });
+}
+
+/* -------------------------------------------------------- the gallery */
+/* Forests: everyone's shared forests, most recently tended first. A card
+   is the chosen name, how many trees and leaves, and the trees; tapped,
+   the whole forest in a sheet. */
+const sumOf = (f) => f.trees.reduce((n, t) => n + (Number(t.leaves) || 0), 0);
+const unitOf = (t, n) => (t.frequency === 'n_per_week' ? (n === 1 ? 'week' : 'weeks') : (n === 1 ? 'day' : 'days'));
+function sharedTree(t, big) {
+  const leaves = Math.max(0, Number(t.leaves) || 0);
+  const blooms = bloomsOf(t.frequency, Number(t.best) || 0);
+  const label = (t.name ? t.name + ': ' : '') + treeWords(leaves, blooms);
+  const streak = Number(t.streak) || 0;
+  return '<div class="fr-tree' + (big ? '' : ' fr-sm') + '">' + tree(Number(t.seed) >>> 0, leaves, blooms, { label, whole: true }) +
+    (t.name ? '<span class="fr-name">' + esc(t.name) + '</span>' : '') +
+    (big ? '<span class="fr-meta">' + esc(treeWords(leaves, blooms) + (streak ? ' · ' + streak + ' ' + unitOf(t, streak) : '')) + '</span>' : '') + '</div>';
+}
+function paintForests() {
+  const w = el('div', 'hb-forests');
+  body.appendChild(w);
+  if (S.forestOff) { w.appendChild(el('p', 'hb-empty', esc('Forests open soon.'))); return; }
+  const mineShared = S.uid && S.forest && S.forest.public;
+  if (!mineShared && mine().length) {
+    w.appendChild(button(ICON.share + '<span>' + esc('Share yours') + '</span>', 'ghost hb-shareyours', () => {
+      if (!S.uid) { app.toast('Sign in to share your forest.'); app.openSettings(); return; }
+      shareSheet();
+    }));
+  }
+  if (S.gallery === undefined) {
+    const sk = el('div', 'hb-fcards is-skel');
+    sk.setAttribute('aria-hidden', 'true');
+    for (let i = 0; i < 3; i++) sk.appendChild(el('div', 'fr-card', '<span class="skel w40"></span><span class="skel big"></span>'));
+    w.appendChild(sk);
+    return;
+  }
+  if (!S.gallery) {
+    w.appendChild(el('p', 'hb-empty', esc(S.galleryFailed || message('offline'))));
+    w.appendChild(button('Try again', 'ghost', () => { S.gallery = undefined; paint(); loadGallery(); }));
+    return;
+  }
+  const list = S.gallery.filter((f) => Array.isArray(f.trees) && f.trees.length && typeof f.id === 'string');
+  if (!list.length) { w.appendChild(el('p', 'hb-empty', esc('No forests shared yet.'))); return; }
+  const cards = el('div', 'hb-fcards');
+  list.forEach((f) => {
+    const card = el('article', 'fr-card');
+    card.dataset.k = 'f-' + f.id;
+    const you = S.forest && S.forest.id === f.id;
+    const n = f.trees.length;
+    /* the name is the button; a tap anywhere on the card does the same */
+    const b = el('button', 'fr-open', '<span class="fr-who">' + esc(f.name || '') + (you ? ' <span class="tag tag-own">' + esc('You') + '</span>' : '') + '</span>' +
+      '<span class="fr-sum">' + esc(n + (n === 1 ? ' tree' : ' trees') + ' · ' + sumOf(f) + (sumOf(f) === 1 ? ' leaf' : ' leaves')) + '</span>');
+    b.type = 'button';
+    card.addEventListener('click', () => forestSheet(f));
+    card.append(b, el('div', 'hb-grove fr-row', f.trees.slice(0, 5).map((t) => sharedTree(t, false)).join('')));
+    cards.appendChild(card);
+  });
+  w.appendChild(cards);
+}
+function forestSheet(f) {
+  app.sheet(f.name || 'A forest', (sheetBody) => {
+    sheetBody.appendChild(el('div', 'hb-grove fr-all', f.trees.map((t) => sharedTree(t, true)).join('')));
+    const go = el('div', 'bf-go');
+    go.appendChild(button(ICON.share + '<span>' + esc('Send link') + '</span>', 'ghost', () => app.share(KEY, 'f-' + f.id, (f.name || 'A') + '’s forest')));
+    sheetBody.appendChild(go);
+  });
+}
+
 /* ------------------------------------------------------------- the forms */
 let fid = 0;
 function field(label, input) {
@@ -881,7 +1219,10 @@ function habitSheet(id) {
       paint();
       return r;
     }), (actions) => actions.appendChild(button('Archive', 'ghost', (e) => { e.preventDefault(); close(); archive(id); }))));
-    sheetBody.append(stats, cal, edit);
+    const tr = treeOf(h);
+    const big = el('div', 'hb-bigtree', tree(seedOf(h.id), tr.leaves, tr.blooms, { label: h.text + ': ' + treeWords(tr.leaves, tr.blooms) }) +
+      '<span class="fr-meta">' + esc(treeWords(tr.leaves, tr.blooms)) + '</span>');
+    sheetBody.append(big, stats, cal, edit);
   });
 }
 
@@ -953,8 +1294,10 @@ app.register(KEY, {
   activate(param) {
     const v = VIEWS.find(([k]) => k === param);
     const was = S.view;
-    S.view = v ? v[0] : 'today';
+    const forestLink = /^f-[\w-]{1,64}$/.test(param || '');
+    S.view = v ? v[0] : forestLink ? 'forests' : 'today';
     if (param && !v) flashKey = param;
+    if (S.view === 'forests' && was !== 'forests' && S.phase === 'ready' && !forestLink) loadGallery();
     armDay();
     rollDay();
     if (was !== S.view || flashKey) paint();
@@ -964,9 +1307,10 @@ app.register(KEY, {
   refresh() { paint(); },
   deactivate() { clearTimeout(dayTimer); },
   subnav() {
-    return chips(VIEWS.map(([key, label]) => ({ key, label })), S.view, (k) => {
+    return chips(VIEWS.filter(([key]) => key !== 'forests' || !S.forestOff).map(([key, label]) => ({ key, label })), S.view, (k) => {
       if (k === S.view) { app.scrollTop(true); return; }
       S.view = k;
+      if (k === 'forests') loadGallery();
       history.replaceState(null, '', location.search + '#habits' + (k === 'today' ? '' : '/' + k));
       paint();
       app.paintSubnav();

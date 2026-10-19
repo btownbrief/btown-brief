@@ -8,7 +8,8 @@
    member, or nobody. Pods, goals and seasons are plain arrays a test (or
    the demo seed) fills in, the way Stephen fills them in the database. */
 
-import { HABIT_RULES, IMPORT_DAYS, dayKey, addDays, daysBetween, isKey, checkHabit, checkMe } from './habits-core.js';
+import { HABIT_RULES, IMPORT_DAYS, dayKey, addDays, daysBetween, isKey, checkHabit, checkMe, clean, streak, bestStreak } from './habits-core.js';
+import { FOREST_RULES, checkForest, seedOf, inWindow } from './forest.js';
 
 const fail = (code) => { const e = new Error(code); e.code = code; return e; };
 let seq = 0;
@@ -29,6 +30,8 @@ export class FakeHabits {
     this.taps = new Map();      // `${habit}|${date}` -> { habit, user, date, source }
     this.goals = [];            // { id, user_id, locked_at }
     this.seasons = [];          // { id, city, name, status, signup_opens, kickoff_at, party_at, stripe_link } (ISO strings)
+    this.forests = new Map();   // uid -> { id, name, public, show_names, cohort, hidden, updated } (sz-FOREST.sql)
+    this.forestHabits = new Set();   // habit ids in their owner's forest
   }
 
   as(uid) { this.uid = uid || null; return this; }
@@ -75,6 +78,8 @@ export class FakeHabits {
     this.habits = this.habits.filter((h) => h.user_id !== u);
     this.goals = this.goals.filter((g) => g.user_id !== u);
     this.members.delete(u);
+    for (const id of mine) this.forestHabits.delete(id);
+    this.forests.delete(u);
     return { deleted: true };
   }
 
@@ -200,6 +205,67 @@ export class FakeHabits {
       }));
   }
 
+  /* --------------------------------------------------------------- forests */
+  /* sz-FOREST.sql: your forest's settings, which habits are in it, and the
+     public gallery. A tree's numbers come from the taps in the 370 days that
+     end today, by habits-core.js's own streak rules. */
+  _tree(h, today) {
+    const set = inWindow([...this.taps.values()].filter((t) => t.habit === h.id).map((t) => t.date), today);
+    const now = this.now();
+    return { leaves: set.size, streak: set.size ? streak(h, set, now) : 0, best: set.size ? bestStreak(h, set, now) : 0 };
+  }
+  _forestTrees(uid) {
+    return this.habits.filter((h) => h.user_id === uid && !h.archived_at && this.forestHabits.has(h.id)).sort(byOrder);
+  }
+  _forestJson(uid) {
+    const f = this.forests.get(uid);
+    const today = this._today();
+    return { id: f.id, name: f.name, cohort: f.cohort, show_names: f.show_names,
+      trees: this._forestTrees(uid).slice(0, FOREST_RULES.treesShown).map((h) => ({ seed: seedOf(h.id), name: f.show_names ? h.text : null, frequency: h.frequency, n: h.n, ...this._tree(h, today) })) };
+  }
+  sz_forest_get() {
+    const u = this._need();
+    const f = this.forests.get(u);
+    if (!f) return null;
+    return { id: f.id, name: f.name, public: f.public, show_names: f.show_names, cohort: f.cohort,
+      habits: this._forestTrees(u).map((h) => h.id).sort() };
+  }
+  sz_forest_set({ p_name, p_public, p_show_names, p_habits = null, p_cohort = null }) {
+    const u = this._need();
+    const c = checkForest({ name: p_name, public: p_public, show_names: p_show_names, habits: p_habits, cohort: p_cohort }, clean);
+    if (!c.ok) throw fail(c.error);
+    const ids = c.forest.habits;
+    if (ids && ids.some((id) => !this.habits.some((h) => h.id === id && h.user_id === u && !h.archived_at))) throw fail('not_found');
+    const had = this.forests.get(u);
+    this.forests.set(u, { id: had ? had.id : this._newId(), hidden: had ? had.hidden : false, name: c.forest.name, public: c.forest.public,
+      show_names: c.forest.show_names, cohort: c.forest.cohort, updated: this.now() });
+    if (ids) {
+      this.habits.filter((h) => h.user_id === u).forEach((h) => this.forestHabits.delete(h.id));
+      ids.forEach((id) => this.forestHabits.add(id));
+    }
+    return this.sz_forest_get();
+  }
+  _gallery() {
+    const last = (uid) => {
+      const ids = new Set(this._forestTrees(uid).map((h) => h.id));
+      let m = null;
+      for (const t of this.taps.values()) if (ids.has(t.habit) && (m == null || t.date > m)) m = t.date;
+      return m;
+    };
+    return [...this.forests.entries()].filter(([uid, f]) => f.public && !f.hidden && this._forestTrees(uid).length)
+      .map(([uid, f]) => ({ uid, f, last: last(uid) }))
+      .sort((a, b) => (a.last === b.last ? 0 : a.last == null ? 1 : b.last == null ? -1 : a.last < b.last ? 1 : -1)
+        || (a.f.name < b.f.name ? -1 : a.f.name > b.f.name ? 1 : 0) || (a.f.id < b.f.id ? -1 : 1));
+  }
+  sz_forests_public({ p_limit = FOREST_RULES.galleryMax } = {}) {
+    const n = Math.max(1, Math.min(Number(p_limit) || FOREST_RULES.galleryMax, FOREST_RULES.galleryMax));
+    return this._gallery().slice(0, n).map((x) => this._forestJson(x.uid));
+  }
+  sz_forest_public({ p_id }) {
+    const hit = [...this.forests.entries()].find(([uid, f]) => f.id === p_id && f.public && !f.hidden && this._forestTrees(uid).length);
+    return hit ? this._forestJson(hit[0]) : null;
+  }
+
   /* -------------------------------------------------------------- seasons */
   sz_season_next({ p_city = 'burlington' } = {}) {
     const t = this.now();
@@ -238,6 +304,20 @@ export function seedDemo(f, uid) {
     if (i % 2 === 1) f.addTap(gym, d);
   }
   f.addTap(walk, today);
+  /* three neighbours who share their forests, for the Forests gallery */
+  const friend = (uid, name, show, list) => {
+    const ids = list.map(([text, frequency, n, days, skip], i) => {
+      const h = { id: newId(), user_id: uid, goal_id: null, text, frequency, n, is_goal: false, shared: false, position: i + 1, archived_at: null, created_at: t - (days + 1) * 86400000 };
+      f.habits.push(h);
+      for (let d = 0; d < days; d++) if (!skip(d)) f.addTap(h.id, addDays(today, -d));
+      return h.id;
+    });
+    f.forests.set(uid, { id: newId(), name, public: true, show_names: show, cohort: null, hidden: false, updated: t });
+    ids.forEach((id) => f.forestHabits.add(id));
+  };
+  friend('demo-forest-maya', 'Maya', true, [['Morning pages', 'daily', null, 46, (d) => d % 9 === 4], ['Swim', 'n_per_week', 3, 60, (d) => d % 2 === 1]]);
+  friend('demo-forest-owl', 'Night Owl', false, [['Stretch', 'daily', null, 130, (d) => d === 0], ['Practice guitar', 'weekdays', null, 90, (d) => d % 7 === 5 || d % 7 === 6], ['Cold shower', 'daily', null, 12, () => false]]);
+  friend('demo-forest-theo', 'Theo R.', true, [['No phone after 10', 'daily', null, 220, (d) => d % 17 === 3]]);
   const kick = new Date(t + 23 * 86400000);
   f.seasons.push({ id: 'demo-season-0', city: 'burlington', name: 'Season 0', status: 'open', signup_opens: new Date(t - 86400000).toISOString(),
     kickoff_at: kick.toISOString(), party_at: new Date(kick.getTime() + 56 * 86400000).toISOString(), stripe_link: null });

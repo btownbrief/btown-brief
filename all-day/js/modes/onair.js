@@ -1,54 +1,52 @@
-/* On Air: everything in All Day that you watch or listen to, replacing the
-   old Watch (Btown TV) and Listen (podcasts) tabs. What changes every day sits
-   on top (Stephen, 2026-10-18). Top to bottom:
+/* On Air: everything in All Day that you watch or listen to. Two sides, a
+   switch at the top (Stephen, 2026-10-19: "a top toggle for TV and for
+   Podcasts, because the TV one is so special"). TV is the default.
 
-   - Btown TV tonight: the nightly curated edition (scripts/curate_tv.py, on
-     the btown-tv branch). First rail, the picks: on Local, the pick and the
-     Burlington & Vermont shelf with the reason under each; on Everything,
-     three more from the wider shelf. Watched / not for me / more like this
-     write to the same key tv.html used, so they still teach tomorrow's
-     edition; "not for me" swaps in the editor's next one from the bench on
-     the next draw. Straight under it, smaller and with no header of its own,
-     the rest of the edition, two rows deep; then "Watch the whole edition",
-     a filled card with the count that opens every video in a sheet.
-     ‹ › on the header flip the block in place to earlier nights.
-   - Live: the always-on cameras, smaller, because a lake at night is not
-     competing with a documentary.
-   - Past nights: the last two weeks of editions (tv-editions.json), here
-     with the other videos rather than after the podcasts (Stephen,
-     2026-10-18: "it feels weird going from videos to podcast back to videos").
-     Every video rail has "See as a list", which turns the sideways row into
-     a list you scroll down, thumbnail beside a readable title, and back.
-   - The Brief, out loud: the newsletter itself, read aloud, a small card
-     (scripts/build_edition_audio.py, on the wire-audio branch). Each Monday
-     and Friday edition's intro and local news, word for word, voiced within
-     the hour it is published. It changes twice a week, so it sits under the
-     videos, at the head of the listening. The newest edition's clip, with
-     its date, or no card at all. A speed control (1x, 1.25x, 1.5x; 1.25x
-     unless the reader picked otherwise on this phone) and the edition's own
-     page at btownbrief.com.
-   - Podcasts: the Brief's own show first, always; then every local show
-     (pulse.json sources with pod === 1), newest episode first, each a row
-     that opens in place; on Everything, two shows from away as well.
-   - Playlists: Stephen's, then readers', from data/playlists.json, and a
-     "Share your playlist" email (see the playlists section below).
+   TV, top to bottom:
+   - Btown TV: the nightly curated edition (scripts/curate_tv.py, on the
+     btown-tv branch), labelled by the night it was made ("Btown TV tonight",
+     "Last night on Btown TV" in the morning: the outside reviews of
+     2026-10-19 caught the morning still saying "tonight"). One program
+     full width at the top, then simple rows, then "Watch the whole edition".
+     Local means local (the same reviews: "with Local on, rails still show
+     Yes Theory, TED and Vox"): on Local the block is only the Burlington &
+     Vermont videos; Everything adds the rest of the night.
+     ‹ › on the header flip the block to earlier nights.
+   - More to watch: what other people's curators found (scripts/
+     gather_onair_finds.py → data/onair-finds.json: Wimp, Shahniva, The
+     Awesomer, 13GB, Short of the Week, BiteTube), plus the last two weeks of
+     Btown TV, sorted by how long they run. The chip row under the switch
+     picks a length: Snack (under 15 minutes, "eating a snack"), Commute (15
+     to 30), Sit-down (30 and up), Trailers. Every card says its length and
+     has one Watch button; the rest is behind ⋯ (the reviews: "cards carry up
+     to five actions with tiny titles").
+   - Pick a vid for me: one random video from the chosen length.
+   - Playlists: Clipsboard's nine-video boards, played straight through.
+   - Live (cameras) and Past nights: two sideways rows, each with "See as a
+     list".
+   Every video plays in On Air's own player, a sheet: the video, what it is,
+   Previous and Next, ← → on a keyboard, and when one ends the next in the
+   same list follows after a five-second "Up next" you can cancel.
 
-   All sound goes through the shell's one player and the one video box;
-   nothing autoplays. The Brief's own show is on Spotify only, so its
-   episodes open Spotify's embed in place, built once and never rebuilt
-   (rebuilding the frame is what silently stops playback), and registered
-   with the shell so any other sound stops it.
+   Podcasts: The Brief out loud (the newsletter read aloud, small card, with
+   speeds), then the Brief's own show and every local show, then music
+   playlists from data/playlists.json. These are the listening, so they sit
+   together on their own side rather than under a long run of videos.
+
+   All sound goes through the shell's one player or one embed at a time;
+   nothing plays until it is tapped. The Brief's own show is on Spotify only,
+   so its episodes open Spotify's embed in place, built once and never
+   rebuilt (rebuilding the frame is what silently stops playback).
 
    ?demo=1 runs exactly this file on data/demo/onair.json, which holds the
-   same five payloads in the real shapes, re-dated to the reader's clock. */
+   same payloads in the real shapes, re-dated to the reader's clock. */
 
 import * as app from '../app.js';
 import * as store from '../store.js';
 import * as data from '../wire.js';
-import { el, esc, safeHref, ICON, art, section, rail, chips, button, divider, cards, put, localSwitch, geo, setGeo, agoShort } from '../ui.js';
+import { el, esc, safeHref, ICON, svg, art, section, rail, chips, pills, divider, cards, localSwitch, geo, setGeo, agoShort } from '../ui.js';
 
 const KEY = 'onair';
-const WIDER = 3;            // picks from the wider shelf on Everything (DESIGN.md §0b, round two)
 const NATIONAL = 2;         // shows from away on Everything
 const PAST_DAYS = 14;       // Past nights reaches back two weeks
 const EPISODES_OPEN = 5;    // a show opens in place to its newest five
@@ -64,9 +62,11 @@ const EDITION_URL = /^https:\/\/www\.btownbrief\.com\/p\/[a-z0-9-]+\/?$/;
 const RATES = [1, 1.25, 1.5];   // Stephen, 2026-10-17: "way too slow… people like YT videos at 1.5x"
 const RATE_DEFAULT = 1.25;
 const RATE_KEY = 'allday-brief-rate';
+/* The finds file is committed to main daily by its own workflow
+   (refresh-onair-finds.yml) and lives inside /all-day/, so the service
+   worker caches it like music.json. */
+const FINDS_URL = 'data/onair-finds.json';
 
-const NUMBER = ['no', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten'];
-const words = (n) => NUMBER[n] || String(n);
 const plural = (n, one, many) => n + ' ' + (n === 1 ? one : many);
 const arr = (v) => (Array.isArray(v) ? v : []);
 
@@ -107,6 +107,12 @@ function loadPlaylists(ok, fail) {
   if (app.demo) { load('playlists', ok, fail); return; }
   fetch(PLAYLISTS_URL, { cache: 'no-cache' }).then((r) => (r.ok ? r.json() : Promise.reject(new Error(String(r.status))))).then(ok, fail);
 }
+/* The finds file: same-origin, committed daily; the demo carries its own. */
+function loadFinds(ok, fail) {
+  if (app.demo) { load('finds', ok, fail); return; }
+  fetch(FINDS_URL, { cache: 'no-cache' }).then((r) => (r.ok ? r.json() : Promise.reject(new Error(String(r.status)))))
+    .then((j) => (j && Array.isArray(j.items) ? ok(j) : fail()), fail);
+}
 const clipUrl = (file) => (app.demo ? '#onair/brief' : data.audioUrl(file));
 
 /* The demo file is written on 2026-10-16; move every date and timestamp by
@@ -126,6 +132,7 @@ function redate(d) {
     if (e.generated) e.generated = new Date(Date.parse(e.generated) + secs * 1000).toISOString();
   });
   arr(d.pulse && d.pulse.items).forEach(shiftV);
+  arr(d.finds && d.finds.items).forEach(shiftV);
   arr(d.audio && d.audio.clips).forEach((c) => {
     if (isDate(c.date)) c.date = addDays(c.date, days);
     if (c.made) c.made = new Date(Date.parse(c.made) + secs * 1000).toISOString();
@@ -141,7 +148,11 @@ const O = {
   open: Object.create(null),   // show id -> opened in place
   pending: null,
   own: null,                   // the Brief's own show: built once, never rebuilt
-  night: null,                 // the earlier night the TV block shows, or null for tonight (the visit only)
+  night: null,
+  focus: null,                 // a deep link's video, put first in its length
+  side: 'tv',                  // TV | Podcasts, for the visit
+  len: '',                     // the TV side's chosen length, or '' for all
+  finds: null,                 // the earlier night the TV block shows, or null for tonight (the visit only)
 };
 
 /* TV reactions: the store's (tv.html's key, and the Supabase calls that
@@ -180,15 +191,43 @@ function clipItem(c) {
   };
 }
 
+/* ------------------------------------------------------------- lengths */
+/* Stephen, 2026-10-19: "sometimes im trying to watch a 10 minutes video for
+   eating a snack. Sometimes I want a 20 minutes video for my daily commute.
+   And sometimes I want a 40+ long YouTube doc." Under two minutes only
+   counts when it is a trailer ("I dont LOVE videos under 2 minutes unless
+   it's like a trailer"). The chips say the minutes, so a first-time visitor
+   reads them without a key; the section heads use his words. */
+const LENGTHS = [
+  { key: 'snack', chip: 'Under 15 min', title: 'Snack size' },
+  { key: 'commute', chip: '15–30 min', title: 'Commute length' },
+  { key: 'sit', chip: '30 min+', title: 'Sit-down' },
+  { key: 'trailer', chip: 'Trailers', title: 'Trailers' },
+];
+const LEN = Object.assign(Object.create(null), Object.fromEntries(LENGTHS.map((l) => [l.key, l])));   // no inherited keys: a file's "constructor" is not a length
+const TRAILER_RE = /\b(trailer|teaser)\b/i;
+const MIN_SEC = 120;
+const BUCKET_SHOW = 3;      // rows per length on the All view
+const BUCKET_MAX = 40;      // a chosen length shows at most this many: finite, like every list here
+const TONIGHT_ROWS = 6;     // rows under the feature before "Watch the whole edition"
+const secsOf = (dur) => {
+  const m = /^(?:(\d+):)?(\d{1,2}):(\d{2})$/.exec(String(dur || ''));
+  return m ? (Number(m[1] || 0) * 3600 + Number(m[2]) * 60 + Number(m[3])) : 0;
+};
+function lengthOf(sec, title) {
+  if (TRAILER_RE.test(String(title || ''))) return 'trailer';
+  if (!sec || sec < MIN_SEC) return '';
+  return sec < 900 ? 'snack' : sec < 1800 ? 'commute' : 'sit';
+}
+const minutes = (sec) => (sec >= 3600 ? Math.floor(sec / 3600) + ' hr ' + Math.round((sec % 3600) / 60) + ' min' : Math.max(1, Math.round(sec / 60)) + ' min');
+
 /* ------------------------------------------------------------ the videos */
 const isLocalVideo = (v) => !!v && (!!v.vt || v.g === 'vt' || v.shelf === LOCAL_SHELF);
 /* Live on Local is cameras around here: a stream on the Vermont shelf, or
    one on the pinned live roster (scripts/refresh_youtube.py LIVE_ROSTER),
    which the data marks cam: 1. PINNED_LIVE is the roster as it was when this
-   was written, for a btown-tv.json made before cam existed. The live search
-   also matches "Vermont" in titles like "Peaceful Autumn Village in Vermont
-   with Relaxing Jazz"; the pipeline now drops those, and anything that reads
-   as music or ambience is still never shown, on either side of the switch. */
+   was written, for a btown-tv.json made before cam existed. Anything that
+   reads as music or ambience is never shown, on either side of the switch. */
 const PINNED_LIVE = new Set(['zl1woMXGGmQ']);   // Church Street Market Place
 const AMBIENCE_RE = /\b(jazz|lo-?fi|relaxing|ambient|ambience|sleep|study)\b|\bcaf[eé](?![a-z])/i;
 const isAmbience = (v) => AMBIENCE_RE.test(String(v && v.t || ''));
@@ -198,14 +237,42 @@ const shelvesOf = (tv) => arr(tv && tv.shelves).filter((s) => s && typeof s === 
 function videoItem(v, opts = {}) {
   if (!v || !app.isVideoId(v.id) || !v.t) return null;
   const live = opts.live || v.dur === 'LIVE';
+  const sec = live ? 0 : secsOf(v.dur);
   return {
     k: 'yt:' + v.id, kind: 'video', yt: v.id, title: String(v.t), src: String(v.ch || 'YouTube'), sid: 'yt:' + String(v.ch || ''),
     href: 'https://www.youtube.com/watch?v=' + v.id,
     media: app.demo && v.art ? v.art : 'https://i.ytimg.com/vi/' + v.id + '/hqdefault.jpg',
-    dur: !live && v.dur ? String(v.dur) : '', why: String(v.why || ''), local: isLocalVideo(v), live,
+    dur: !live && v.dur ? String(v.dur) : '', sec, len: live ? '' : lengthOf(sec, v.t),
+    why: String(v.why || ''), local: isLocalVideo(v), live, via: 'Btown TV', viaUrl: '',
     ago: !live && Number(v.d) ? agoShort(v.d) : '', v,
   };
 }
+
+/* One find from data/onair-finds.json. Everything in it came off other
+   people's pages, so every field is checked before it is used: an id that is
+   not an id, a picture that is not Vimeo's own, a link that is not https,
+   and the find is left out or the field is dropped. */
+const VIMEO_ID = /^\d{5,12}$/;
+const VIMEO_ART = /^https:\/\/i\.vimeocdn\.com\/[\w./-]+(\?[\w=&.%-]*)?$/;
+const CREDIT = { wimp: 'Wimp', shahniva: 'Shahniva', awesomer: 'The Awesomer', '13gb': '13GB', clipsboard: 'Clipsboard',
+  sotw: 'Short of the Week', bitetube: 'BiteTube' };
+function findItem(f) {
+  if (!f || !f.t || !LEN[f.b]) return null;
+  const vimeo = VIMEO_ID.test(String(f.vimeo || '')) ? String(f.vimeo) : '';
+  if (!vimeo && !app.isVideoId(f.id)) return null;
+  if (vimeo && !VIMEO_ART.test(String(f.art || ''))) return null;
+  const sec = Math.max(0, Math.round(Number(f.sec) || 0));
+  const viaUrl = /^https:\/\/[^\s"'<>]+$/.test(String(f.via_url || '')) ? String(f.via_url) : '';
+  return {
+    k: vimeo ? 'vm:' + vimeo : 'yt:' + f.id, kind: 'video', yt: vimeo ? null : f.id, vimeo: vimeo || null,
+    title: clip(f.t, 140), src: clip(f.ch, 60) || CREDIT[f.via] || 'YouTube', sid: 'yt:' + String(f.ch || f.via || ''),
+    href: vimeo ? 'https://vimeo.com/' + vimeo : 'https://www.youtube.com/watch?v=' + f.id,
+    media: vimeo ? f.art : (app.demo && f.art ? f.art : 'https://i.ytimg.com/vi/' + f.id + '/hqdefault.jpg'),
+    dur: sec ? fmtClock(sec) : '', sec, len: f.b, why: clip(f.why, 160),
+    via: CREDIT[f.via] || '', viaUrl, ago: Number(f.d) ? agoShort(f.d) : '', d: Number(f.d) || 0,
+  };
+}
+const fmtClock = (s) => { const h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60), x = s % 60; return (h ? h + ':' + String(m).padStart(2, '0') : m) + ':' + String(x).padStart(2, '0'); };
 
 /* Tonight's local list: the pick when it is from here, the Burlington &
    Vermont shelf, then anything local on the other shelves. A video the
@@ -229,22 +296,6 @@ function localTonight(tv) {
     const i = bench.findIndex((b) => !skipped(b));
     return i >= 0 ? { v: bench.splice(i, 1)[0], swapped: true } : { v, swapped: false };
   });
-}
-
-/* Three from the wider shelf: the edition's pick when it is not local,
-   then the top of each shelf in the order a phone reads best. */
-function widerTonight(tv, taken) {
-  const seen = new Set(taken.map((x) => x.v.id));
-  const ok = (v) => v && app.isVideoId(v.id) && !isLocalVideo(v) && !skipped(v) && !seen.has(v.id);
-  const out = [];
-  const add = (v) => { if (out.length < WIDER && ok(v)) { out.push({ v, swapped: false }); seen.add(v.id); } };
-  add(tv.pick);
-  if (skipped(tv.pick)) arr(tv.pick_more).forEach(add);
-  const shelves = shelvesOf(tv);
-  const ordered = WIDER_ORDER.map((k) => shelves.find((s) => s.key === k)).filter(Boolean)
-    .concat(shelves.filter((s) => !WIDER_ORDER.includes(s.key) && s.key !== LOCAL_SHELF));
-  for (let round = 0; out.length < WIDER && round < 4; round++) ordered.forEach((s) => add(arr(s.items).filter(ok)[0]));
-  return out;
 }
 
 const editionCount = (ed) => (ed.pick ? 1 : 0) + shelvesOf(ed).reduce((n, s) => n + arr(s.items).length, 0);
@@ -277,35 +328,634 @@ function episodeItem(ep, s) {
 
 /* ---------------------------------------------------------------- draw */
 const sec = (host, title, sub, key, right) => { const s = section(host, title, sub, right); if (key) s.dataset.sec = key; return s; };
+const MORE_ICON = svg('<circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/>', ' fill="currentColor" stroke="none"');
 
-function vcard(it, w, opts = {}) {
-  const c = el('article', 'vcard ' + w);
+/* The two shapes a video takes on the TV side (the outside reviews,
+   2026-10-19: "feature one program full-width at the top, then simple
+   rows"; "a clear title, length, and one Watch button, other actions in an
+   overflow"). Both carry data-k, the length on the picture, one Watch
+   button and ⋯. `list` is the run the player continues through. */
+function feature(it, list) {
+  const c = el('article', 'oa-feature');
   c.dataset.k = it.k;
-  const meta = [it.src, it.live ? '' : it.ago].filter(Boolean).join(' · ');
-  c.innerHTML = '<span class="c-media r169" data-play role="button" tabindex="0" aria-label="Play ' + esc(it.title) + '">' + art(it.media) +
-    '<span class="play">' + ICON.play + '</span>' + (it.dur ? '<span class="dur">' + esc(it.dur) + '</span>' : '') +
-    (it.live ? '<span class="tag tag-live on-pic">Live</span>' : '') + '</span>' +
-    (opts.swapped ? '<span class="s">Stepped in for one you passed on</span>' : '') +
-    '<span class="t">' + esc(it.title) + '</span>' + (it.why && !opts.noWhy ? '<span class="s">' + esc(it.why) + '</span>' : '') +
-    (meta ? '<span class="s">' + esc(meta) + '</span>' : '') + (opts.react ? reactRow(it) : '');
+  c.innerHTML = '<span class="c-media r169" data-watch role="button" tabindex="0" aria-label="Watch ' + esc(it.title) + '">' + art(it.media) +
+    (it.dur ? '<span class="dur">' + esc(it.dur) + '</span>' : '') + '</span>' +
+    '<h3 class="t">' + esc(it.title) + '</h3>' + (it.why ? '<p class="why">' + esc(it.why) + '</p>' : '') +
+    '<p class="s">' + esc(metaOf(it)) + '</p>' + watchRow(it, 'btn');
+  c._list = list;
   return c;
 }
-
-/* the three signals that teach tomorrow's edition, then share and save */
-const REACTS = [['watched', ICON.check, 'Watched'], ['skip', ICON.x, 'Not for me'], ['more', ICON.plus, 'More like this']];
-function reactRow(it) {
-  const mine = reacts()[it.yt];
-  const saved = store.isSaved(it.k);
-  return '<div class="c-acts">' + REACTS.map(([kind, icon, label]) =>
-    '<button class="act' + (mine === kind ? ' on' : '') + '" data-react="' + kind + '" aria-label="' + label + '" title="' + label + '" aria-pressed="' + (mine === kind) + '">' + icon + '</button>').join('') +
-    '<button class="act sh" data-act="share" aria-label="Share">' + ICON.share + '</button><span class="sp"></span>' +
-    '<button class="act star' + (saved ? ' on' : '') + '" data-act="save" aria-label="Save" aria-pressed="' + saved + '">' + ICON.star + '</button></div>';
+function row(it, list, opts = {}) {
+  const c = el('article', 'oa-row');
+  c.dataset.k = it.k;
+  if (opts.wider) c.dataset.wider = '1';
+  c.innerHTML = '<span class="c-media r169" data-watch role="button" tabindex="0" aria-label="Watch ' + esc(it.title) + '">' + art(it.media) +
+    (it.dur ? '<span class="dur">' + esc(it.dur) + '</span>' : '') + '</span>' +
+    '<div class="b"><span class="t">' + esc(it.title) + '</span>' +
+    (opts.swapped ? '<span class="s">Stepped in for one you passed on</span>' : '') +
+    '<span class="s">' + esc(metaOf(it)) + '</span>' + watchRow(it, 'pillbtn') + '</div>';
+  c._list = list;
+  return c;
 }
+/* channel, then who found it when it was not us */
+const metaOf = (it) => [it.src, it.sec ? minutes(it.sec) : '', it.via && it.via !== 'Btown TV' ? 'via ' + it.via : ''].filter(Boolean).join(' · ');
+const watchRow = (it, cls) => '<div class="oa-acts"><button class="' + cls + ' oa-watch" data-watch aria-label="Watch ' + esc(it.title) + '">' + ICON.play + ' Watch now</button>' +
+  '<button class="iconbtn oa-more" data-more aria-label="More for ' + esc(it.title) + '">' + MORE_ICON + '</button></div>';
+
+/* the three signals that teach tomorrow's edition */
+const REACTS = [['watched', ICON.check, 'Watched'], ['skip', ICON.x, 'Not for me'], ['more', ICON.plus, 'More like this']];
 const SAID = {
   watched: 'Marked watched. Tomorrow’s edition learns from it.',
   skip: 'Not for you. The editor’s next one takes its place.',
   more: 'More like this. Tomorrow’s edition will know.',
 };
+
+/* ⋯: everything that is not Watch, in a sheet. A Btown TV video carries the
+   three signals; every video can be saved, shared and opened at its source,
+   and a find names the curator who found it, with a link back to them. */
+function moreSheet(it) {
+  app.sheet(it.title, (body, card, close) => {
+    const menu = el('div', 'oa-menu');
+    const add = (html, fn, attrs = {}) => {
+      const b = el('button', 'oa-mi', html);
+      Object.entries(attrs).forEach(([k, v]) => b.setAttribute(k, v));
+      b.addEventListener('click', () => fn(b));
+      menu.appendChild(b);
+      return b;
+    };
+    if (it.v) {
+      const paint = () => menu.querySelectorAll('[data-react]').forEach((b) => b.setAttribute('aria-pressed', String(reacts()[it.yt] === b.dataset.react)));
+      REACTS.forEach(([kind, icon, label]) => add(icon + '<span>' + label + '</span>', () => {
+        const now = react(it.v, kind);
+        paint();
+        app.toast(now ? SAID[now] : 'Taken back.');
+      }, { 'data-react': kind }));
+      paint();
+    }
+    const saved = () => store.isSaved(it.k);
+    const sv = add(ICON.star + '<span>' + (saved() ? 'Saved' : 'Save') + '</span>', (b) => {
+      app.toggleSave(it);
+      b.setAttribute('aria-pressed', String(saved()));
+      b.querySelector('span').textContent = saved() ? 'Saved' : 'Save';
+    }, { 'data-act-save': '1' });
+    sv.setAttribute('aria-pressed', String(saved()));
+    add(ICON.share + '<span>Share</span>', () => app.share(KEY, it.k, it.title));
+    const out = (label, href) => {
+      const a = el('a', 'oa-mi', ICON.ext + '<span>' + esc(label) + '</span>');
+      a.href = safeHref(href); a.target = '_blank'; a.rel = 'noopener';
+      if (app.demo) a.addEventListener('click', (e) => { e.preventDefault(); app.toast('Opens the original in the real build'); });
+      menu.appendChild(a);
+      return a;
+    };
+    if (it.clips) out('Open on Clipsboard', it.href).dataset.via = '1';
+    else {
+      out(it.vimeo ? 'Open on Vimeo' : 'Open in YouTube', it.href);
+      if (it.viaUrl && it.via) out('Found by ' + it.via, it.viaUrl).dataset.via = '1';
+    }
+    body.appendChild(menu);
+  });
+}
+
+/* ------------------------------------------------------------ the player */
+/* On Air's own player (Stephen, 2026-10-19, on Clipsboard: "its built in
+   media player is WOW"). A sheet with the video in YouTube's or Vimeo's own
+   embed, what it is and who found it, Previous and Next, and the rest of
+   the run under it. ← and → (or P and N) step through on a keyboard; Escape
+   closes it, as every sheet. When a video ends the next one in the same run
+   follows after a five-second "Up next" that Cancel stops: the reader asked
+   for a run when they opened one, and nothing starts that they did not
+   start. The end of a YouTube or Vimeo video is read from the player's own
+   postMessage events (YouTube's "listening" handshake, Vimeo's "finish"),
+   so no player script is loaded from anywhere. Opening it stops whatever
+   the shell is playing; closing the sheet removes the frame, which stops it. */
+const UP_NEXT = 5;
+const YT_ORIGIN = /^https:\/\/www\.youtube(-nocookie)?\.com$/;
+const VIMEO_ORIGIN = /^https:\/\/player\.vimeo\.com$/;
+function openPlayer(list, start, title) {
+  const run = arr(list).filter((it) => it && (it.yt || it.vimeo));
+  if (!run.length) return;
+  app.stop();
+  app.closeVideo();
+  app.silenceForeign();
+  app.sheet(title, (body, card) => {
+    card.classList.add('oa-player');
+    const P = { i: Math.max(0, Math.min(run.length - 1, start)), timer: 0, left: 0, frame: null };
+    const stage = el('div', 'oa-stage');
+    const now = el('div', 'oa-now');
+    const ctl = el('div', 'oa-ctl');
+    const next = el('div', 'oa-upnext');
+    next.hidden = true;
+    const queue = el('div', 'oa-queue');
+    body.append(stage, now, next, ctl, queue);
+    const unreg = app.registerForeign(() => { if (P.frame) P.frame.removeAttribute('src'); });
+    const cancel = () => { clearInterval(P.timer); P.timer = 0; next.hidden = true; };
+    /* the sheet empties #sheet when it closes, however it closes (×, scrim,
+       Escape, another sheet): that is when everything here lets go */
+    const host = card.parentNode;
+    const gone = new MutationObserver(() => { if (!card.isConnected) dispose(); });
+    if (host) gone.observe(host, { childList: true });
+    function dispose() {
+      gone.disconnect();
+      cancel();
+      window.removeEventListener('message', onMsg);
+      document.removeEventListener('keydown', onKey);
+      unreg();
+      if (P.frame) P.frame.removeAttribute('src');
+      P.frame = null;
+    }
+    const go = (i) => { if (i < 0 || i >= run.length) return; cancel(); P.i = i; paint(); };
+    const ended = () => {
+      if (P.i >= run.length - 1 || P.timer) return;
+      P.left = UP_NEXT;
+      const it = run[P.i + 1];
+      const tick = () => {
+        next.innerHTML = '<span>Up next in ' + P.left + ' · <b>' + esc(it.title) + '</b></span>';
+        const x = el('button', 'btn sm ghost', 'Cancel');
+        x.dataset.cancel = '1';
+        x.addEventListener('click', cancel);
+        next.appendChild(x);
+      };
+      next.hidden = false;
+      tick();
+      P.timer = setInterval(() => { P.left -= 1; if (P.left <= 0) go(P.i + 1); else tick(); }, 1000);
+    };
+    const onMsg = (e) => {
+      if (!card.isConnected) { dispose(); return; }
+      if (!P.frame || e.source !== P.frame.contentWindow) return;
+      let d = e.data;
+      if (typeof d === 'string') { try { d = JSON.parse(d); } catch (err) { return; } }
+      if (!d || typeof d !== 'object') return;
+      const ytEnd = YT_ORIGIN.test(e.origin) && ((d.event === 'onStateChange' && d.info === 0) || (d.event === 'infoDelivery' && d.info && d.info.playerState === 0));
+      const vmEnd = VIMEO_ORIGIN.test(e.origin) && d.event === 'finish';
+      if (ytEnd || vmEnd) ended();
+    };
+    window.addEventListener('message', onMsg);
+    const onKey = (e) => {
+      if (!card.isConnected) { dispose(); return; }
+      if (e.target && e.target.closest && e.target.closest('input, textarea, [contenteditable]')) return;
+      if (e.key === 'ArrowRight' || e.key === 'n' || e.key === 'N') { e.preventDefault(); go(P.i + 1); }
+      else if (e.key === 'ArrowLeft' || e.key === 'p' || e.key === 'P') { e.preventDefault(); go(P.i - 1); }
+    };
+    document.addEventListener('keydown', onKey);
+    function paint() {
+      const it = run[P.i];
+      stage.innerHTML = '';
+      P.frame = null;
+      if (app.demo) {
+        stage.innerHTML = art(it.media);
+        stage.appendChild(el('p', 'oa-demo', 'The video plays here in the real build'));
+      } else {
+        const f = el('iframe', 'embed yt');   // Vimeo's frame is a 16:9 video too
+        f.title = it.title;
+        f.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
+        f.setAttribute('allowfullscreen', '');
+        f.src = it.vimeo
+          ? 'https://player.vimeo.com/video/' + it.vimeo + '?autoplay=1&dnt=1'
+          : 'https://www.youtube-nocookie.com/embed/' + it.yt + '?autoplay=1&rel=0&playsinline=1&enablejsapi=1&origin=' + encodeURIComponent(location.origin);
+        f.addEventListener('load', () => {
+          try {
+            if (it.vimeo) f.contentWindow.postMessage(JSON.stringify({ method: 'addEventListener', value: 'finish' }), 'https://player.vimeo.com');
+            else f.contentWindow.postMessage(JSON.stringify({ event: 'listening', id: 1, channel: 'widget' }), '*');
+          } catch (e) { /* the frame went away */ }
+        });
+        stage.appendChild(f);
+        P.frame = f;
+      }
+      now.innerHTML = '<h3 class="t">' + esc(it.title) + '</h3><p class="s">' + esc(metaOf(it)) + '</p>' + (it.why ? '<p class="why">' + esc(it.why) + '</p>' : '');
+      ctl.innerHTML = '';
+      const prev = el('button', 'btn ghost sm', ICON.left + ' Previous');
+      prev.dataset.prev = '1';
+      prev.disabled = P.i === 0;
+      prev.addEventListener('click', () => go(P.i - 1));
+      const nx = el('button', 'btn sm', 'Next ' + ICON.right);
+      nx.dataset.next = '1';
+      nx.disabled = P.i >= run.length - 1;
+      nx.addEventListener('click', () => go(P.i + 1));
+      const pos = el('span', 'oa-pos', esc((P.i + 1) + ' of ' + run.length));
+      const open = el('a', 'btn ghost sm', (it.vimeo ? 'Vimeo' : 'YouTube') + ' ' + ICON.ext);
+      open.href = safeHref(it.href); open.target = '_blank'; open.rel = 'noopener';
+      open.setAttribute('aria-label', it.vimeo ? 'Open on Vimeo' : 'Open in YouTube');
+      if (app.demo) open.addEventListener('click', (e) => { e.preventDefault(); app.toast('Opens the original in the real build'); });
+      ctl.append(prev, pos, nx, open);
+      queue.innerHTML = '';
+      const after = run.slice(P.i + 1, P.i + 6);
+      if (after.length) {
+        queue.appendChild(el('div', 'sheet-h', 'Next up'));
+        after.forEach((q, j) => {
+          const b = el('button', 'oa-q', '<span class="th">' + art(q.media) + '</span><span class="t">' + esc(q.title) + '</span><span class="s">' + esc(q.dur) + '</span>');
+          b.addEventListener('click', () => go(P.i + 1 + j));
+          queue.appendChild(b);
+        });
+      }
+      body.scrollTop = 0;
+    }
+    paint();
+  });
+}
+
+/* Pick a vid for me (BiteTube's best idea, Stephen: "I love the pick a vid
+   feature"): one at random from the chosen length (or from everything
+   here), never one the reader marked watched or passed on, and never the
+   one it picked last time. The rest of that length follows it, shuffled. */
+let lastPick = '';
+function pickForMe() {
+  const pool = pool_().filter((it) => !reacts()[it.yt]);
+  if (!pool.length) { app.toast('Nothing here at that length.'); return; }
+  const choices = pool.length > 1 ? pool.filter((it) => it.k !== lastPick) : pool;
+  const at = Math.floor(Math.random() * choices.length);
+  const first = choices[at];
+  lastPick = first.k;
+  const rest = pool.filter((it) => it !== first);
+  for (let i = rest.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [rest[i], rest[j]] = [rest[j], rest[i]]; }
+  openPlayer([first, ...rest], 0, O.len ? LEN[O.len].title : 'Picked for you');
+}
+
+/* ---------------------------------------------------- what the TV side holds */
+/* Every night the TV block can show, newest first: tonight's edition, then
+   the archive's earlier ones (tv-editions.json also holds tonight's; it is
+   skipped, the live file wins). */
+function tvNights() {
+  const tv = O.tv;
+  if (!tv || !(tv.pick || shelvesOf(tv).length)) return [];
+  const top = isDate(tv.edition) ? tv.edition : '';
+  const out = [{ date: top, ed: tv }];
+  const seen = new Set([top]);
+  arr(O.tvEditions && O.tvEditions.editions)
+    .filter((e) => e && isDate(e.edition) && (!top || e.edition < top) && editionCount(e))
+    .sort((a, b) => (a.edition < b.edition ? 1 : -1))
+    .forEach((e) => { if (!seen.has(e.edition)) { seen.add(e.edition); out.push({ date: e.edition, ed: e }); } });
+  return out;
+}
+
+/* One night's edition as the TV block shows it: on Local only what is from
+   here (with the editor's bench stepping in for a "not for me"); on
+   Everything the local ones first, then the pick and every shelf in the
+   order a phone reads best, less what the reader passed on. */
+function nightList(ed) {
+  const local = localTonight(ed);
+  if (geo() !== 'everything') return local;
+  const seen = new Set(local.map((x) => x.v.id));
+  const shelves = shelvesOf(ed);
+  const ordered = WIDER_ORDER.map((k) => shelves.find((s) => s.key === k)).filter(Boolean)
+    .concat(shelves.filter((s) => !WIDER_ORDER.includes(s.key)));
+  const out = local.slice();
+  [ed.pick, ...ordered.flatMap((s) => arr(s.items))].forEach((v) => {
+    if (v && app.isVideoId(v.id) && v.t && !seen.has(v.id) && !skipped(v)) { seen.add(v.id); out.push({ v, swapped: false, wider: true }); }
+  });
+  return out;
+}
+
+/* The finds and the last two weeks of Btown TV, as one shelf sorted by
+   length. Local: only Btown TV's local videos (Local means local). The
+   curators take turns (newest first within each), so one busy curator does
+   not fill a length; tonight's edition is left out, it has its own block. */
+function library() {
+  const every = geo() === 'everything';
+  const nights = tvNights();
+  const tonight = new Set(nights.length ? nightList(nights[0].ed).map((x) => 'yt:' + x.v.id) : []);
+  const seen = new Set(tonight);
+  const groups = Object.create(null);
+  const put1 = (it) => {
+    if (!it || !it.len || seen.has(it.k)) return;
+    seen.add(it.k);
+    (groups[it.via] = groups[it.via] || []).push(it);
+  };
+  nights.slice(1).forEach(({ ed }) => [ed.pick, ...shelvesOf(ed).flatMap((s) => arr(s.items))]
+    .forEach((v) => { if (v && (every || isLocalVideo(v)) && !skipped(v)) put1(videoItem(v)); }));
+  if (every) arr(O.finds && O.finds.items).map(findItem).sort((a, b) => (b ? b.d : 0) - (a ? a.d : 0)).forEach(put1);
+  const lanes = Object.values(groups);
+  const out = [];
+  for (let i = 0; lanes.some((l) => i < l.length); i++) lanes.forEach((l) => { if (l[i]) out.push(l[i]); });
+  return out;
+}
+
+/* what "Pick a vid" and a chosen length draw from: tonight first, then the shelf */
+function pool_() {
+  const nights = tvNights();
+  const tonight = nights.length ? nightList(nights[0].ed).map((x) => videoItem(x.v)).filter((it) => it && it.len) : [];
+  const all = tonight.concat(library());
+  return O.len ? all.filter((it) => it.len === O.len) : all;
+}
+
+/* Clipsboard's boards: nine videos on one idea, a playlist (Stephen: "it
+   basically has YouTube playlists too, not just individual videos"). Only
+   clips with a real id and length are kept. */
+function boards() {
+  if (geo() !== 'everything') return [];
+  return arr(O.finds && O.finds.boards).map((b) => {
+    if (!b || !b.t || !/^[a-z0-9-]{1,120}$/.test(String(b.slug || ''))) return null;
+    const clips = arr(b.clips).filter((c) => c && app.isVideoId(c.id) && c.t).map((c) => {
+      return findItem({ id: c.id, t: c.t, ch: c.ch, sec: c.sec, b: lengthOf(c.sec, c.t), via: 'clipsboard', via_url: 'https://clipsboard.com/grid/' + b.slug, art: c.art });
+    }).filter(Boolean);
+    if (clips.length < 3) return null;
+    const total = clips.reduce((n, c) => n + c.sec, 0);
+    return { k: 'board:' + b.slug, kind: 'playlist', title: clip(b.t, 90), src: 'Clipsboard', sid: 'clipsboard', clips, total,
+      href: 'https://clipsboard.com/grid/' + b.slug, via: 'Clipsboard', viaUrl: 'https://clipsboard.com/grid/' + b.slug };
+  }).filter(Boolean);
+}
+
+/* ------------------------------------------------------------- the TV block */
+/* "Btown TV tonight" only while it is tonight's: an edition made yesterday
+   evening reads "Last night on Btown TV" the next morning, an older one
+   "Thursday night on Btown TV". ‹ › walk the archive in place (O.night, for
+   the visit only); "Tonight" in the subtitle comes back. */
+const TV_PREV = 'Earlier night';
+const TV_NEXT = 'Later night';
+const said = (night) => (/^(Tonight|Last night)$/.test(night) ? night.toLowerCase() : night);   // mid-sentence: “Play tonight”, “Play Friday night”
+const tvTitle = (night) => (night === 'Tonight' ? 'Btown TV tonight' : night + ' on Btown TV');
+
+function drawTV(host) {
+  const all = tvNights();
+  if (!all.length) return false;
+  let i = O.night ? all.findIndex((n) => n.date === O.night) : 0;
+  if (i < 0) { O.night = null; i = 0; }
+  const ed = all[i].ed;
+  const isTop = i === 0;
+  const date = all[i].date;
+  const night = !date || date >= todayKey() ? 'Tonight' : nightOf(date);
+  let nav = null;
+  if (all.length > 1) {
+    nav = el('div', 'wm-nav');
+    const prev = el('button', 'iconbtn nav', ICON.left); prev.setAttribute('aria-label', TV_PREV);
+    const next = el('button', 'iconbtn nav', ICON.right); next.setAttribute('aria-label', TV_NEXT);
+    prev.disabled = i >= all.length - 1;
+    next.disabled = isTop;
+    prev.addEventListener('click', () => { if (all[i + 1]) flipTV(all[i + 1].date, TV_PREV); });
+    next.addEventListener('click', () => { if (!isTop) flipTV(i - 1 === 0 ? null : all[i - 1].date, TV_NEXT); });
+    nav.append(prev, next);
+  }
+  const h = sec(host, tvTitle(night), isTop ? '' : esc(dayName(date).split(', ')[1] || ''), 'tv', nav);
+  h.dataset.showing = isTop ? 'tonight' : date;
+  if (!isTop) {
+    const back = el('button', 'wm-today', 'Tonight');
+    back.dataset.tonight = '1';
+    back.addEventListener('click', () => flipTV(null, TV_NEXT));
+    const sub = h.querySelector('p');
+    if (sub) sub.append(' · ', back);
+  }
+  drawTVPlay(host, ed, night, isTop);
+  const list = nightList(ed).map((x) => ({ ...x, it: videoItem(x.v) })).filter((x) => x.it);
+  const items = list.map((x) => x.it);
+  app.know(items);
+  if (!list.length) {
+    host.appendChild(el('p', 'note pad', esc(geo() === 'everything' ? 'Nothing in that edition.' : 'No local videos ' + said(night) + '.')));
+  } else {
+    host.appendChild(feature(list[0].it, items));
+    const box = el('div', 'oa-rows');
+    box.dataset.rows = 'tv';
+    list.slice(1, 1 + TONIGHT_ROWS).forEach((x) => box.appendChild(row(x.it, items, { swapped: x.swapped, wider: x.wider })));
+    host.appendChild(box);
+  }
+  /* the whole edition, every video in it, on Everything: Local shows only
+     what is from here, so the button that opens all of it lives there */
+  const n = editionCount(ed);
+  if (n && geo() === 'everything') host.appendChild(wholeCard(ed, n, night));
+  return true;
+}
+
+/* The whole edition, as a card that asks to be opened (Stephen, 2026-10-17:
+   "I want people to want to click it… it's really important that people
+   see all of them"): full width, filled, three covers fanned, the count. */
+function wholeCard(ed, n, night) {
+  const b = el('button', 'wholeed');
+  b.dataset.whole = String(n);
+  const covers = editionVideos(ed).slice(0, 3);
+  b.innerHTML = '<span class="fan" aria-hidden="true">' + covers.map((it) => '<span class="th">' + art(it.media) + '</span>').join('') + '</span>' +
+    '<span class="w"><span class="t">Watch the whole edition</span><span class="s">' +
+    esc((n === 1 ? 'The one video' : 'All ' + n + ' videos') + ' from ' + said(night)) + '</span></span>' + ICON.right;
+  b.addEventListener('click', () => editionSheet(ed, (night === 'Tonight' ? 'Tonight' : night) + '’s edition'));
+  return b;
+}
+const editionVideos = (ed, localOnly) => [ed.pick, ...shelvesOf(ed).flatMap((s) => arr(s.items))].filter((v) => !localOnly || isLocalVideo(v)).map((v) => videoItem(v)).filter(Boolean);
+
+/* Flip the TV block in place, keeping the reader's place: the arrow they
+   pressed, or the other one at an end. Only this block redraws. */
+function flipTV(date, again) {
+  O.night = date || null;
+  const S = O.slots;
+  if (!S) return;
+  S.tv.innerHTML = '';
+  S.tv.hidden = !drawTV(S.tv);
+  const btn = [...S.tv.querySelectorAll('.wm-nav .nav')];
+  const want = btn.find((b) => b.getAttribute('aria-label') === again && !b.disabled) || btn.find((b) => !b.disabled);
+  if (want) want.focus({ preventScroll: true });
+}
+
+/* Play the night on your TV: tonight's YouTube playlist, or, when tonight's
+   did not publish, a quiet link to the most recent past night that has one. */
+function drawTVPlay(host, tv, night, isTop = true) {
+  const row_ = el('div', 'linkrow tvplay');
+  const url = playlistOf(tv);
+  if (url) {
+    row_.appendChild(playLink(url, 'Play ' + said(night) + ' on your TV', 'btn ghost', isTop ? 'tonight' : 'night'));
+  } else if (isTop) {
+    const prev = arr(O.tvEditions && O.tvEditions.editions)
+      .filter((e) => e && isDate(e.edition) && e.edition !== tv.edition && playlistOf(e))
+      .sort((a, b) => (a.edition < b.edition ? 1 : -1))[0];
+    if (!prev) return;
+    row_.appendChild(playLink(playlistOf(prev), 'Play ' + said(nightOf(prev.edition)) + ' on your TV', 'btn ghost', 'past'));
+    row_.appendChild(el('span', 'note', esc(night + '’s playlist isn’t up yet')));
+  } else return;
+  host.appendChild(row_);
+}
+
+function playLink(url, label, cls, which) {
+  const a = el('a', cls, ICON.play + ' ' + esc(label) + ' ' + ICON.ext);
+  a.href = url; a.target = '_blank'; a.rel = 'noopener';
+  a.dataset.tvplay = which;
+  a.title = 'Opens the playlist in YouTube: cast it, or open it on your TV';
+  if (app.demo) a.addEventListener('click', (e) => { e.preventDefault(); app.toast('Opens the night’s YouTube playlist in the real build'); });
+  return a;
+}
+
+/* One edition, in a sheet: the night's TV playlist, then every video as a
+   row; a row's Watch opens the player on the whole edition from there. */
+function editionSheet(ed, title, localOnly) {
+  app.sheet(title, (body) => {
+    const url = playlistOf(ed);
+    if (url) {
+      const r = el('div', 'linkrow');
+      r.appendChild(playLink(url, 'Play it on your TV', 'btn', 'sheet'));
+      body.appendChild(r);
+    }
+    const items = editionVideos(ed, localOnly);
+    app.know(items);
+    const box = el('div', 'oa-rows insheet');
+    items.forEach((it) => box.appendChild(row(it, items)));
+    body.appendChild(box);
+    if (!items.length) body.appendChild(el('p', 'sheet-note', 'Nothing in that edition.'));
+    body.addEventListener('click', onClick);
+  });
+}
+
+/* Pick a vid for me, at the top of the TV side */
+function drawPick(host) {
+  const n = pool_().length;
+  if (!n) return false;
+  const r = el('div', 'oa-pick');
+  const b = el('button', 'btn oa-pickbtn', ICON.shuffle + ' Pick a vid for me');
+  b.dataset.pick = '1';
+  r.appendChild(b);
+  host.appendChild(r);
+  return true;
+}
+
+/* More to watch. On All: each length with its first three and a button to
+   the rest; with a length chosen: that length, finite, the first full width. */
+function drawMore(host) {
+  const lib = library();
+  if (!lib.length) return false;
+  sec(host, 'More to watch', '', 'more');
+  LENGTHS.forEach((l) => {
+    const list = lib.filter((it) => it.len === l.key);
+    if (!list.length) return;
+    const d = divider(host, l.title, l.key === 'trailer' ? '' : l.chip);
+    d.dataset.len = l.key;
+    const box = el('div', 'oa-rows');
+    box.dataset.rows = l.key;
+    list.slice(0, BUCKET_SHOW).forEach((it) => box.appendChild(row(it, list)));
+    host.appendChild(box);
+    if (list.length > BUCKET_SHOW) {
+      const all = el('button', 'btn ghost sm oa-all', esc('All ' + list.length + ' · ' + l.chip));
+      all.dataset.len = l.key;
+      host.appendChild(all);
+    }
+  });
+  app.know(lib);
+  return true;
+}
+
+/* A chosen length: tonight's at that length, then the shelf's */
+function drawLength(host) {
+  const l = LEN[O.len];
+  const all = pool_();
+  /* a deep link's video leads its length */
+  const at = O.focus ? all.findIndex((it) => it.k === O.focus) : -1;
+  if (at > 0) all.unshift(all.splice(at, 1)[0]);
+  O.focus = null;
+  const list = all.slice(0, BUCKET_MAX);
+  const n = all.length > list.length ? list.length + ' of ' + all.length + ' videos' : plural(list.length, 'video', 'videos');
+  sec(host, l.title, esc(n + (O.len === 'trailer' ? '' : ' · ' + l.chip.toLowerCase())), 'len');
+  if (!list.length) { host.appendChild(el('p', 'note pad', 'Nothing at that length yet.')); return true; }
+  app.know(list);
+  host.appendChild(feature(list[0], list));
+  const box = el('div', 'oa-rows');
+  box.dataset.rows = O.len;
+  list.slice(1).forEach((it) => box.appendChild(row(it, list)));
+  host.appendChild(box);
+  return true;
+}
+
+function drawBoards(host) {
+  const list = boards();
+  if (!list.length) return false;
+  sec(host, 'Playlists', '', 'boards');
+  app.know(list);
+  const box = el('div', 'oa-rows');
+  box.dataset.rows = 'boards';
+  list.forEach((b) => {
+    const c = el('article', 'oa-row board');
+    c.dataset.k = b.k;
+    c.dataset.board = b.k;
+    c.innerHTML = '<span class="c-media r169 mosaic" data-watch role="button" tabindex="0" aria-label="Play ' + esc(b.title) + '">' +
+      b.clips.slice(0, 4).map((x) => '<span class="m">' + art(x.media) + '</span>').join('') + '<span class="dur">' + esc(String(b.clips.length)) + ' videos</span></span>' +
+      '<div class="b"><span class="t">' + esc(b.title) + '</span><span class="s">' + esc(minutes(b.total) + ' · via Clipsboard') + '</span>' +
+      '<div class="oa-acts"><button class="pillbtn oa-watch" data-watch aria-label="Play all of ' + esc(b.title) + '">' + ICON.play + ' Play all</button>' +
+      '<button class="iconbtn oa-more" data-more aria-label="More for ' + esc(b.title) + '">' + MORE_ICON + '</button></div></div>';
+    box.appendChild(c);
+  });
+  host.appendChild(box);
+  return true;
+}
+
+/* ------------------------------------------- sideways rows: Live, Past nights */
+/* "See as a list" (Stephen, 2026-10-18, and again 2026-10-19: "I still see
+   Horizontal scrolling without the option/button to expand as a list"):
+   every sideways row on this tab has the button above it, and a long list
+   has it at its foot too. Everything else on the TV side is already a list.
+   The choice is this phone's, per row (localStorage in try). */
+const LIST_KEY = 'allday-onair-lists';
+let listMem = null;
+function listed() {
+  if (listMem) return listMem;
+  listMem = Object.create(null);
+  try {
+    const v = JSON.parse(localStorage.getItem(LIST_KEY) || '{}');
+    if (v && typeof v === 'object') Object.keys(v).forEach((k) => { if (v[k] === 1) listMem[k] = 1; });
+  } catch (e) { /* storage blocked */ }
+  return listMem;
+}
+function setListed(name, on) {
+  const m = listed();
+  if (on) m[name] = 1; else delete m[name];
+  try { localStorage.setItem(LIST_KEY, JSON.stringify(m)); } catch (e) { /* kept for the visit */ }
+}
+const LIST_FOOT = 6;
+const RAIL_NAMES = { live: 'Live', past: 'Past nights' };
+function videoRail(host, name, cls) {
+  const top = el('div', 'railmode');
+  top.appendChild(modeButton(name));
+  host.appendChild(top);
+  const r = rail(host, cls);
+  r.dataset.rail = name;
+  const foot = el('div', 'railmode foot');
+  foot.appendChild(modeButton(name));
+  host.appendChild(foot);
+  paintMode(r);
+  return r;
+}
+function modeButton(name) {
+  const b = el('button', 'btn sm ghost');
+  b.dataset.railmode = name;
+  return b;
+}
+function paintMode(r) {
+  const on = !!listed()[r.dataset.rail];
+  r.classList.toggle('aslist', on);
+  const wrap = r.closest('.rail-wrap');
+  const top = wrap.previousElementSibling;
+  const foot = wrap.nextElementSibling;
+  [top, foot].forEach((row_) => {
+    const b = row_.querySelector('[data-railmode]');
+    b.textContent = on ? 'See as a row' : 'See as a list';
+    b.setAttribute('aria-label', b.textContent + ': ' + (RAIL_NAMES[r.dataset.rail] || 'these videos'));
+    b.setAttribute('aria-pressed', on ? 'true' : 'false');
+  });
+  foot.hidden = !on || r.children.length < LIST_FOOT;
+}
+function settleRails(host) { host.querySelectorAll('.rail[data-rail]').forEach(paintMode); }
+function flipMode(btn) {
+  const name = btn.dataset.railmode;
+  const fromFoot = !!btn.closest('.railmode.foot');
+  setListed(name, !listed()[name]);
+  const r = O.root.querySelector('.rail[data-rail="' + name + '"]');
+  if (!r) return;
+  paintMode(r);
+  r.scrollLeft = 0;
+  const top = r.closest('.rail-wrap').previousElementSibling;
+  if (fromFoot) { app.jumpTo(top); top.querySelector('button').focus({ preventScroll: true }); }
+}
+
+function vcard(it, w, list) {
+  const c = el('article', 'vcard ' + w);
+  c.dataset.k = it.k;
+  c._list = list;
+  c.innerHTML = '<span class="c-media r169" data-watch role="button" tabindex="0" aria-label="Watch ' + esc(it.title) + '">' + art(it.media) +
+    '<span class="play">' + ICON.play + '</span>' + (it.live ? '<span class="tag tag-live on-pic">Live</span>' : '') + '</span>' +
+    '<span class="t">' + esc(it.title) + '</span><span class="s">' + esc(it.src) + '</span>';
+  return c;
+}
+
+function drawLive(host) {
+  const live = arr(O.tv && O.tv.live).filter((v) => v && app.isVideoId(v.id) && !isAmbience(v) && (geo() === 'everything' || isLocalCam(v)));
+  if (!live.length) return false;
+  sec(host, 'Live', '', 'live');
+  const r = videoRail(host, 'live');
+  const items = live.map((v) => videoItem(v, { live: true })).filter(Boolean);
+  items.forEach((it) => r.appendChild(vcard(it, 'w220', items)));
+  app.know(items);
+  return true;
+}
 
 /* Small on purpose (Stephen, 2026-10-18: "make that smaller, since it's not
    gonna be changing every day"): one row, then the speeds and the edition's
@@ -369,296 +1019,6 @@ const speedRow = () => '<div class="speed" role="group" aria-label="Playback spe
   '<button data-rate="' + r + '" aria-pressed="' + (r === rate()) + '" aria-label="' + r + ' times speed">' + r + 'x</button>').join('') + '</div>';
 function paintRate(root) {
   root.querySelectorAll('[data-rate]').forEach((b) => b.setAttribute('aria-pressed', String(Number(b.dataset.rate) === rate())));
-}
-
-/* Every night the TV block can show, newest first: tonight's edition, then
-   the archive's earlier ones (tv-editions.json also holds tonight's; it is
-   skipped, the live file wins). */
-function tvNights() {
-  const tv = O.tv;
-  if (!tv || !(tv.pick || shelvesOf(tv).length)) return [];
-  const top = isDate(tv.edition) ? tv.edition : '';
-  const out = [{ date: top, ed: tv }];
-  const seen = new Set([top]);
-  arr(O.tvEditions && O.tvEditions.editions)
-    .filter((e) => e && isDate(e.edition) && (!top || e.edition < top) && editionCount(e))
-    .sort((a, b) => (a.edition < b.edition ? 1 : -1))
-    .forEach((e) => { if (!seen.has(e.edition)) { seen.add(e.edition); out.push({ date: e.edition, ed: e }); } });
-  return out;
-}
-
-/* The rest of a night's edition, for the second rail: the pick when the
-   first rail does not have it, then every shelf in the order a phone reads
-   best (Settle in, Quick one, From the Vault, Old gold, From the bench, any
-   other), less what the first rail shows and what the reader passed on. */
-function restOf(ed, taken) {
-  const seen = new Set(taken.map((x) => x.v.id));
-  const shelves = shelvesOf(ed);
-  const ordered = WIDER_ORDER.map((k) => shelves.find((s) => s.key === k)).filter(Boolean)
-    .concat(shelves.filter((s) => !WIDER_ORDER.includes(s.key)));
-  const out = [];
-  [ed.pick, ...ordered.flatMap((s) => arr(s.items))].forEach((v) => {
-    if (v && app.isVideoId(v.id) && v.t && !seen.has(v.id) && !skipped(v)) { seen.add(v.id); out.push(v); }
-  });
-  return out;
-}
-
-/* "See as a list" (Stephen, 2026-10-18: the rails felt "really small and
-   hard to read" next to YouTube; "at least having a button, so it changes
-   to just scrolling down instead of scrolling left and right"). Each video
-   rail has a small button above it that turns the row into a list, the
-   thumbnail beside a title at reading size, and back; a long list has the
-   same button at its foot, which folds it and scrolls back to the top one.
-   Sideways stays the default. The choice is this phone's, per rail
-   (localStorage in try: blocked storage just means sideways each visit). */
-const LIST_KEY = 'allday-onair-lists';
-let listMem = null;
-function listed() {
-  if (listMem) return listMem;
-  listMem = Object.create(null);
-  try {
-    const v = JSON.parse(localStorage.getItem(LIST_KEY) || '{}');
-    if (v && typeof v === 'object') Object.keys(v).forEach((k) => { if (v[k] === 1) listMem[k] = 1; });
-  } catch (e) { /* storage blocked */ }
-  return listMem;
-}
-function setListed(name, on) {
-  const m = listed();
-  if (on) m[name] = 1; else delete m[name];
-  try { localStorage.setItem(LIST_KEY, JSON.stringify(m)); } catch (e) { /* kept for the visit */ }
-}
-const LIST_FOOT = 6;   // a list this long gets the button at its foot too
-/* what each button turns, for a screen reader: four buttons say "See as a list" */
-const RAIL_NAMES = { picks: 'tonight’s picks', rest: 'the rest of the night', live: 'Live', past: 'Past nights' };
-function videoRail(host, name, cls) {
-  const top = el('div', 'railmode');
-  top.appendChild(modeButton(name));
-  host.appendChild(top);
-  const r = rail(host, cls);
-  r.dataset.rail = name;
-  const foot = el('div', 'railmode foot');
-  foot.appendChild(modeButton(name));
-  host.appendChild(foot);
-  paintMode(r);
-  return r;
-}
-function modeButton(name) {
-  const b = el('button', 'btn sm ghost');
-  b.dataset.railmode = name;
-  return b;
-}
-/* the rail's class, both buttons' words, and whether the foot one shows */
-function paintMode(r) {
-  const on = !!listed()[r.dataset.rail];
-  r.classList.toggle('aslist', on);
-  const wrap = r.closest('.rail-wrap');
-  const top = wrap.previousElementSibling;
-  const foot = wrap.nextElementSibling;
-  [top, foot].forEach((row) => {
-    const b = row.querySelector('[data-railmode]');
-    b.textContent = on ? 'See as a row' : 'See as a list';
-    b.setAttribute('aria-label', b.textContent + ': ' + (RAIL_NAMES[r.dataset.rail] || 'these videos'));
-    b.setAttribute('aria-pressed', on ? 'true' : 'false');
-  });
-  foot.hidden = !on || r.children.length < LIST_FOOT;
-}
-/* the cards arrive after videoRail returns, so the foot is settled here too */
-function settleRails(host) { host.querySelectorAll('.rail[data-rail]').forEach(paintMode); }
-function flipMode(btn) {
-  const name = btn.dataset.railmode;
-  const fromFoot = !!btn.closest('.railmode.foot');
-  setListed(name, !listed()[name]);
-  const r = O.root.querySelector('.rail[data-rail="' + name + '"]');
-  if (!r) return;
-  paintMode(r);
-  r.scrollLeft = 0;
-  const top = r.closest('.rail-wrap').previousElementSibling;
-  if (fromFoot) { app.jumpTo(top); top.querySelector('button').focus({ preventScroll: true }); }
-}
-
-/* Btown TV, the star of the tab (Stephen, 2026-10-17: "I have 39 to show"):
-   two rails. The first is the night's picks, with the reason and the three
-   reactions under each: on Local the pick and the Burlington & Vermont
-   shelf, on Everything three from the wider shelf as well. The second is the
-   whole rest of the edition, two rows deep in one sideways scroll (.rail.tworow):
-   four or five covers a screen instead of one and a half, without a third
-   and fourth rail pushing Live and the podcasts off the page. The switch
-   decides what leads, not whether the rest of the edition exists: the
-   edition is Btown Brief's own curation either way.
-   ‹ › on the header flip the block in place to an earlier night (as the
-   Wire's What matters does), from the archive; "Tonight" in the subtitle comes
-   back. O.night is kept for the visit only. */
-const TV_PREV = 'Earlier night';
-const TV_NEXT = 'Later night';
-function drawTV(host) {
-  const all = tvNights();
-  if (!all.length) return false;
-  let i = O.night ? all.findIndex((n) => n.date === O.night) : 0;
-  if (i < 0) { O.night = null; i = 0; }
-  const ed = all[i].ed;
-  const isTop = i === 0;
-  const every = geo() === 'everything';
-  const date = all[i].date;
-  const night = isTop ? (!date || date >= todayKey() ? 'Tonight' : nightOf(date)) : nightOf(date);
-  const when = night + '’s edition';
-  let title = every ? 'Tonight, local and beyond' : 'Btown TV tonight';
-  if (!isTop) title = every ? night + ', local and beyond' : 'Btown TV ' + said(night);
-  let nav = null;
-  if (all.length > 1) {
-    nav = el('div', 'wm-nav');
-    const prev = el('button', 'iconbtn nav', ICON.left); prev.setAttribute('aria-label', TV_PREV);
-    const next = el('button', 'iconbtn nav', ICON.right); next.setAttribute('aria-label', TV_NEXT);
-    prev.disabled = i >= all.length - 1;
-    next.disabled = isTop;
-    prev.addEventListener('click', () => { if (all[i + 1]) flipTV(all[i + 1].date, TV_PREV); });
-    next.addEventListener('click', () => { if (!isTop) flipTV(i - 1 === 0 ? null : all[i - 1].date, TV_NEXT); });
-    nav.append(prev, next);
-  }
-  const h = sec(host, title, isTop ? '' : esc(dayName(date).split(', ')[1] || ''), 'tv', nav);
-  h.dataset.showing = isTop ? 'tonight' : date;
-  if (!isTop) {
-    const back = el('button', 'wm-today', 'Tonight');
-    back.dataset.tonight = '1';
-    back.addEventListener('click', () => flipTV(null, TV_NEXT));
-    const sub = h.querySelector('p');
-    if (sub) sub.append(' · ', back);
-  }
-  drawTVPlay(host, ed, night, isTop);
-  const local = localTonight(ed);
-  const wider = every ? widerTonight(ed, local) : [];
-  const list = local.concat(wider.map((x) => ({ ...x, wider: true })));
-  const items = [];
-  if (list.length) {
-    const r = videoRail(host, 'picks');
-    list.forEach((x) => {
-      const it = videoItem(x.v);
-      if (!it) return;
-      items.push(it);
-      const c = vcard(it, 'w250', { react: true, swapped: x.swapped });
-      if (x.wider) c.dataset.wider = '1';
-      r.appendChild(c);
-    });
-  } else {
-    host.appendChild(el('p', 'note pad', esc('No local picks ' + said(night) + '.')));
-  }
-  /* the rest of the night, smaller, straight under the picks: one section,
-     no second header (Stephen, 2026-10-17: "it can still be big on the top
-     and small on the bottom") */
-  const rest = restOf(ed, list).map((v) => videoItem(v)).filter(Boolean);
-  if (rest.length) {
-    const r = videoRail(host, 'rest', 'tworow');
-    rest.forEach((it) => { items.push(it); r.appendChild(vcard(it, '', { noWhy: true })); });   // dense: title and channel
-  }
-  app.know(items);
-  const n = editionCount(ed);
-  if (n) host.appendChild(wholeCard(ed, n, night, when));
-  return true;
-}
-
-/* The whole edition, as a card that asks to be opened rather than a ghost
-   button people scrolled past (Stephen, 2026-10-17: "I want people to want
-   to click it… it's really important that people see all of them"): full
-   width, filled, three of the night's covers fanned on the left, the count. */
-function wholeCard(ed, n, night, when) {
-  const b = el('button', 'wholeed');
-  b.dataset.whole = String(n);
-  const covers = [ed.pick, ...shelvesOf(ed).flatMap((s) => arr(s.items))].map((v) => videoItem(v)).filter(Boolean).slice(0, 3);
-  b.innerHTML = '<span class="fan" aria-hidden="true">' + covers.map((it) => '<span class="th">' + art(it.media) + '</span>').join('') + '</span>' +
-    '<span class="w"><span class="t">Watch the whole edition</span><span class="s">' +
-    esc((n === 1 ? 'The one video' : 'All ' + n + ' videos') + ' from ' + said(night)) + '</span></span>' + ICON.right;
-  b.addEventListener('click', () => editionSheet(ed, when));
-  return b;
-}
-
-/* Flip the TV block in place, keeping the reader's place: the arrow they
-   pressed, or the other one at an end. Only this block redraws. */
-function flipTV(date, again) {
-  O.night = date || null;
-  const S = O.slots;
-  if (!S) return;
-  S.tv.innerHTML = '';
-  S.tv.hidden = !drawTV(S.tv);
-  settleRails(S.tv);
-  app.paintPlayButtons();
-  const btn = [...S.tv.querySelectorAll('.wm-nav .nav')];
-  const want = btn.find((b) => b.getAttribute('aria-label') === again && !b.disabled) || btn.find((b) => !b.disabled);
-  if (want) want.focus({ preventScroll: true });
-}
-
-function drawLive(host) {
-  const live = arr(O.tv && O.tv.live).filter((v) => v && app.isVideoId(v.id) && !isAmbience(v) && (geo() === 'everything' || isLocalCam(v)));
-  if (!live.length) return false;
-  sec(host, 'Live', '', 'live');
-  const r = videoRail(host, 'live');
-  const items = live.map((v) => videoItem(v, { live: true })).filter(Boolean);
-  items.forEach((it) => r.appendChild(vcard(it, 'w220')));
-  app.know(items);
-  return true;
-}
-
-/* Play the night on your TV, on the tab face (it lived only in the edition's
-   sheet, and the old Watch tab had it filled under its masthead: sending the
-   whole night to a TV is the best thing Btown TV does). Tonight's playlist,
-   or, when tonight's did not publish (a dropped upload has done it), a quiet
-   link to the most recent past night that has one, said plainly. */
-function drawTVPlay(host, tv, night, isTop = true) {
-  const row = el('div', 'linkrow tvplay');
-  const url = playlistOf(tv);
-  if (url) {
-    row.appendChild(playLink(url, 'Play ' + said(night) + ' on your TV', 'btn', isTop ? 'tonight' : 'night'));
-  } else if (isTop) {
-    const prev = arr(O.tvEditions && O.tvEditions.editions)
-      .filter((e) => e && isDate(e.edition) && e.edition !== tv.edition && playlistOf(e))
-      .sort((a, b) => (a.edition < b.edition ? 1 : -1))[0];
-    if (!prev) return;
-    row.appendChild(playLink(playlistOf(prev), 'Play ' + said(nightOf(prev.edition)) + ' on your TV', 'btn ghost', 'past'));
-    row.appendChild(el('span', 'note', esc(night + '’s playlist isn’t up yet')));
-  } else return;
-  host.appendChild(row);
-}
-
-const said = (night) => (/^(Tonight|Last night)$/.test(night) ? night.toLowerCase() : night);   // mid-sentence: “Play tonight”, “Play Friday night”, “Btown TV last night”
-
-function playLink(url, label, cls, which) {
-  const a = el('a', cls, ICON.play + ' ' + esc(label) + ' ' + ICON.ext);
-  a.href = url; a.target = '_blank'; a.rel = 'noopener';
-  a.dataset.tvplay = which;
-  a.title = 'Opens the playlist in YouTube: cast it, or open it on your TV';
-  if (app.demo) a.addEventListener('click', (e) => { e.preventDefault(); app.toast('Opens the night’s YouTube playlist in the real build'); });
-  return a;
-}
-
-/* One edition, in a sheet: the pick and every shelf, as video cards that
-   play in the shell's video box, and the night's YouTube playlist for a TV.
-   The whole edition on either side of the switch, as the tab face now shows it. */
-function editionSheet(ed, title) {
-  app.sheet(title, (body) => {
-    const url = playlistOf(ed);
-    if (url) {
-      const row = el('div', 'linkrow');
-      const a = el('a', 'btn', ICON.play + ' Play it on your TV ' + ICON.ext);
-      a.href = url; a.target = '_blank'; a.rel = 'noopener';
-      if (app.demo) a.addEventListener('click', (e) => { e.preventDefault(); app.toast('Opens the night’s YouTube playlist in the real build'); });
-      row.appendChild(a);
-      body.appendChild(row);
-    }
-    const groups = [];
-    if (ed.pick) groups.push({ title: 'The pick', items: [ed.pick] });
-    shelvesOf(ed).forEach((s) => groups.push({ title: String(s.title || 'Shelf'), sub: String(s.sub || ''), items: arr(s.items) }));
-    const known = [];
-    groups.forEach((g) => {
-      const vids = g.items.filter((v) => v && app.isVideoId(v.id));
-      const shown = vids;
-      if (!shown.length) return;
-      body.appendChild(el('div', 'sheet-h', esc(g.title) + (g.sub ? ' · <span>' + esc(g.sub) + '</span>' : '')));
-      const f = el('div', 'feed tight');
-      shown.forEach((v) => { const it = videoItem(v); if (it) { known.push(it); put(f, cards.video(it, { noComments: true })); } });
-      body.appendChild(f);
-    });
-    app.know(known);
-    if (!known.length) body.appendChild(el('p', 'sheet-note', 'Nothing in that edition.'));
-    app.bindFeed(body, {});
-  });
 }
 
 /* --------------------------------------------------------------- podcasts */
@@ -754,6 +1114,7 @@ function ownShow() {
         if (app.demo) { app.toast('Opens Spotify’s player for this episode in the real build'); return; }
         app.stop();
         app.closeVideo();
+        app.silenceForeign();
         frame = el('iframe', 'embed spotify');
         frame.title = e.title;
         frame.loading = 'lazy';
@@ -895,6 +1256,7 @@ function playlistSheet(it) {
     } else {
       app.stop();
       app.closeVideo();
+      app.silenceForeign();
       const frame = el('iframe', it.service === 'youtube' ? 'embed yt' : 'embed spotify list');
       frame.title = it.title;
       frame.loading = 'lazy';
@@ -946,9 +1308,10 @@ function drawPast(host) {
     .filter((e) => e && isDate(e.edition) && e.edition >= since && (!tv || e.edition !== tv.edition))
     .sort((a, b) => (a.edition < b.edition ? 1 : -1))
     .map((e) => {
-      const vids = [e.pick, ...shelvesOf(e).flatMap((s) => arr(s.items))].filter((v) => v && app.isVideoId(v.id));
-      const n = vids.length;    // the whole edition, as the face and the sheet show it
-      const lead = (every ? null : vids.find(isLocalVideo)) || (e.pick && app.isVideoId(e.pick.id) ? e.pick : vids[0]) || null;
+      /* Local means local: on Local a night is only its local videos, here and in its sheet */
+      const vids = [e.pick, ...shelvesOf(e).flatMap((s) => arr(s.items))].filter((v) => v && app.isVideoId(v.id) && (every || isLocalVideo(v)));
+      const n = vids.length;
+      const lead = (e.pick && vids.includes(e.pick) ? e.pick : vids[0]) || null;
       return { e, n, lead };
     })
     .filter((x) => x.n && x.lead);
@@ -972,6 +1335,46 @@ function drawPast(host) {
   return true;
 }
 
+/* ------------------------------------------------------------- the sides */
+/* TV | Podcasts, and the TV side's length. Both live for the visit; the side
+   is in the URL (#onair/podcasts) so a link can land on it. Both sides are
+   drawn and the other is hidden, so the Brief's own show (and a Spotify
+   frame in it) is never torn down by a flip. */
+function setSide(side, quiet) {
+  O.side = side === 'pods' ? 'pods' : 'tv';
+  const S = O.slots;
+  if (S) { S.tvSide.hidden = O.side !== 'tv'; S.podSide.hidden = O.side !== 'pods'; }
+  if (!quiet) {
+    try { history.replaceState(null, '', '#onair' + (O.side === 'pods' ? '/podcasts' : '')); } catch (e) { /* a sandboxed frame */ }
+    app.scrollTop();
+  }
+  if (app.activeTab() === KEY) app.paintSubnav();
+}
+function setLen(k) {
+  O.len = LEN[k] ? k : '';
+  drawTVSide();
+  app.paintSubnav();
+  app.scrollTop();
+}
+
+function drawTVSide() {
+  const S = O.slots;
+  ['pick', 'tv', 'more', 'boards', 'live', 'past', 'tvEnd'].forEach((n) => { S[n].innerHTML = ''; });
+  S.pick.hidden = !drawPick(S.pick);
+  if (O.len) {
+    S.tv.hidden = !drawLength(S.tv);
+    ['more', 'boards', 'live', 'past'].forEach((n) => { S[n].hidden = true; });
+  } else {
+    S.tv.hidden = !drawTV(S.tv);
+    S.more.hidden = !drawMore(S.more);
+    S.boards.hidden = !drawBoards(S.boards);
+    S.live.hidden = !drawLive(S.live);
+    S.past.hidden = !drawPast(S.past);
+    settleRails(S.tvSide);
+  }
+  S.tvEnd.appendChild(cards.caught({ title: 'That’s On Air', check: false }));
+}
+
 function render() {
   const root = O.root;
   if (!root) return;
@@ -985,16 +1388,19 @@ function render() {
     /* the slots are made once, so the Brief's own show (and any Spotify
        frame in it) is never torn down by a redraw */
     root.innerHTML = '';
-    const mk = (name) => { const s = el('div'); s.dataset.slot = name; root.appendChild(s); return s; };
-    O.slots = { tv: mk('tv'), live: mk('live'), past: mk('past'), brief: mk('brief'), podsHead: mk('pods-head'), own: mk('own'), pods: mk('pods'), lists: mk('lists'), end: mk('end') };
+    const side = (name) => { const s = el('div', 'oa-side'); s.dataset.side = name; root.appendChild(s); return s; };
+    const tvSide = side('tv');
+    const podSide = side('pods');
+    const mk = (host, name) => { const s = el('div'); s.dataset.slot = name; host.appendChild(s); return s; };
+    O.slots = { tvSide, podSide,
+      pick: mk(tvSide, 'pick'), tv: mk(tvSide, 'tv'), more: mk(tvSide, 'more'), boards: mk(tvSide, 'boards'), live: mk(tvSide, 'live'), past: mk(tvSide, 'past'), tvEnd: mk(tvSide, 'end'),
+      brief: mk(podSide, 'brief'), podsHead: mk(podSide, 'pods-head'), own: mk(podSide, 'own'), pods: mk(podSide, 'pods'), lists: mk(podSide, 'lists'), podEnd: mk(podSide, 'end') };
     O.built = true;
+    setSide(O.side, true);
   }
   const S = O.slots;
-  Object.entries(S).forEach(([name, s]) => { if (name !== 'own') s.innerHTML = ''; });
-  S.tv.hidden = !drawTV(S.tv);
-  S.live.hidden = !drawLive(S.live);
-  S.past.hidden = !drawPast(S.past);
-  settleRails(root);
+  drawTVSide();
+  ['brief', 'podsHead', 'pods', 'lists', 'podEnd'].forEach((n) => { S[n].innerHTML = ''; });
   S.brief.hidden = !drawBrief(S.brief);
   if (!O.own && O.podcast) { O.own = ownShow(); if (O.own) S.own.appendChild(O.own); }
   const anyPods = !!O.own || shows().length > 0;
@@ -1002,10 +1408,7 @@ function render() {
   if (!S.podsHead.hidden) drawPodsHead(S.podsHead);
   drawPods(S.pods);
   S.lists.hidden = !drawPlaylists(S.lists);
-  S.end.appendChild(cards.caught({
-    title: 'That’s On Air',
-    check: false,
-  }));
+  S.podEnd.appendChild(cards.caught({ title: 'That’s On Air', check: false }));
   app.paintPlayButtons();
   if (app.activeTab() === KEY) app.paintSubnav();
   land();
@@ -1013,32 +1416,37 @@ function render() {
 
 /* ------------------------------------------------------------ the clicks */
 function onClick(e) {
-  const mb = e.target.closest('[data-railmode]');
-  if (mb) {
+  const pick = e.target.closest('[data-pick]');
+  if (pick) { e.preventDefault(); pickForMe(); return; }
+  const len = e.target.closest('button[data-len]');
+  if (len) { e.preventDefault(); setLen(len.dataset.len); return; }
+  const w = e.target.closest('[data-watch]');
+  if (w) {
     e.preventDefault();
-    flipMode(mb);
+    const card = w.closest('[data-k]');
+    const it = card && app.item(card.dataset.k);
+    if (!it) return;
+    if (it.clips) { openPlayer(it.clips, 0, it.title); return; }
+    const list = card._list || [it];
+    const at = Math.max(0, list.findIndex((x) => x.k === it.k));
+    openPlayer(list, at, card.closest('.sheet-body') ? 'The whole edition' : it.live ? 'Live' : O.len ? LEN[O.len].title : it.via === 'Btown TV' ? 'Btown TV' : 'More to watch');
     return;
   }
+  const more = e.target.closest('[data-more]');
+  if (more) {
+    e.preventDefault();
+    const card = more.closest('[data-k]');
+    const it = card && app.item(card.dataset.k);
+    if (it) moreSheet(it);
+    return;
+  }
+  const mb = e.target.closest('[data-railmode]');
+  if (mb) { e.preventDefault(); flipMode(mb); return; }
   const rb = e.target.closest('[data-rate]');
   if (rb) {
     e.preventDefault();
     setRate(Number(rb.dataset.rate));
     paintRate(O.root);
-    return;
-  }
-  const r = e.target.closest('[data-react]');
-  if (r) {
-    e.preventDefault();
-    const card = r.closest('[data-k]');
-    const it = card && app.item(card.dataset.k);
-    if (!it || !it.v) return;
-    const now = react(it.v, r.dataset.react);
-    card.querySelectorAll('[data-react]').forEach((b) => {
-      const on = b.dataset.react === now;
-      b.classList.toggle('on', on);
-      b.setAttribute('aria-pressed', on ? 'true' : 'false');
-    });
-    app.toast(now ? SAID[now] : 'Taken back.');
     return;
   }
   const pl = e.target.closest('[data-k^="pl:"]');
@@ -1052,7 +1460,7 @@ function onClick(e) {
   if (night) {
     e.preventDefault();
     const ed = arr(O.tvEditions && O.tvEditions.editions).find((x) => x && x.edition === night.dataset.night);
-    if (ed) editionSheet(ed, nightOf(ed.edition) + '’s edition');
+    if (ed) editionSheet(ed, nightOf(ed.edition) + (geo() === 'everything' ? '’s edition' : ', from here'), geo() !== 'everything');
     return;
   }
   const show = e.target.closest('[data-show]');
@@ -1070,17 +1478,42 @@ function onClick(e) {
   }
 }
 function onKey(e) {
-  if ((e.key === 'Enter' || e.key === ' ') && e.target.matches('[data-show], [data-night] [role="button"], .plrow[role="button"]')) { e.preventDefault(); e.target.click(); }
+  if ((e.key === 'Enter' || e.key === ' ') && e.target.matches('[data-show], [data-night] [role="button"], .plrow[role="button"], .c-media[data-watch]')) { e.preventDefault(); e.target.click(); }
 }
 
 /* -------------------------------------------------------------- deep links */
 /* Only once every payload has settled: each one redraws the page, which
-   would replace a card that had just flashed, and a key cannot be called
-   gone while a payload that might hold it is still on its way. */
+   would replace a card that had just flashed. A key on the other side
+   brings that side forward first. */
+const findHit = (k) => [...O.root.querySelectorAll('[data-k]')].find((n) => n.dataset.k === k) || null;
+/* every video On Air holds, whatever the switch and the length say */
+function allVideos() {
+  const out = [];
+  tvNights().forEach(({ ed }) => out.push(...editionVideos(ed)));
+  arr(O.finds && O.finds.items).forEach((f) => { const it = findItem(f); if (it) out.push(it); });
+  return out;
+}
 function land() {
-  const k = O.pending;
-  if (!k || !O.root || !O.built || !FEEDS.every((f) => O.settled[f]) || !O.settled.playlists) return;
+  let k = O.pending;
+  if (!k || !O.root || !O.built || !FEEDS.every((f) => O.settled[f]) || !O.settled.playlists || !O.settled.finds) return;
   O.pending = null;
+  if (k === 'brief') { const c = currentClip(); if (c) k = 'brief:' + c.date; }   // the old #listen/brief
+  let hit = findHit(k);
+  if (!hit && /^(yt|vm):/.test(k)) {
+    /* a shared video that the page as drawn does not show (a find while on
+       Local, the twentieth of tonight's, the fourth of a length): bring the
+       page to it. A find from away flips the switch to Everything, as
+       #onair/everything does; then its length opens with it first. */
+    const it = allVideos().find((x) => x.k === k);
+    if (it) {
+      if (!it.local && geo() !== 'everything') setGeo('everything');
+      if (it.len) { O.len = it.len; O.focus = k; }
+      drawTVSide();
+      hit = findHit(k);
+    }
+  }
+  if (hit) setSide(hit.closest('[data-side="pods"]') ? 'pods' : 'tv', true);
+  if (app.activeTab() === KEY) app.paintSubnav();
   if (!app.flashHit(O.root, k)) app.toast('That one has moved on. Here’s what’s on now.');
 }
 
@@ -1098,8 +1531,9 @@ function mount(root) {
     render();
     app.recount();
   }, () => { O.settled[key] = true; O.failed[key] = true; render(); }));
-  /* not in FEEDS: a playlist file that loads must not hide "Couldn't reach On Air" */
+  /* not in FEEDS: a playlist or finds file that loads must not hide "Couldn't reach On Air" */
   loadPlaylists((j) => { O.playlists = j; O.settled.playlists = true; render(); }, () => { O.settled.playlists = true; render(); });
+  loadFinds((j) => { O.finds = j; O.settled.finds = true; render(); }, () => { O.settled.finds = true; render(); });
 }
 
 function newSince(ts) {
@@ -1118,10 +1552,12 @@ app.register(KEY, {
   activate(param) {
     if (param === 'local' || param === 'everything') {
       /* a link can set the shared switch: #onair/everything */
+      O.pending = null;   // an explicit route replaces a link still waiting for its data
       setGeo(param);
       if (O.root) render();
       return;
     }
+    if (param === 'podcasts' || param === 'tv') { O.pending = null; setSide(param === 'podcasts' ? 'pods' : 'tv', true); return; }
     O.pending = param || null;
     land();
   },
@@ -1129,14 +1565,26 @@ app.register(KEY, {
   deactivate() { app.closePeek(); },
   subnav() {
     if (!O.root) return null;
+    const wrap = el('div', 'oa-sub');
     const band = el('div', 'toolband');
     band.appendChild(localSwitch(() => { render(); app.scrollTop(); }));
-    const S = O.slots;
-    const toc = [['tv', 'Btown TV'], ['live', 'Live'], ['past', 'Past nights'], ['brief', 'Out loud'], ['pods', 'Podcasts'], ['lists', 'Playlists']]
-      .filter(([key]) => !S || O.root.querySelector('[data-sec="' + key + '"]'))
-      .map(([key, label]) => ({ key, label }));
-    band.appendChild(chips(toc, null, (k) => app.jumpTo(O.root.querySelector('[data-sec="' + k + '"]'))));
-    return band;
+    const sw = pills([['tv', 'TV'], ['pods', 'Podcasts']], O.side, (v) => setSide(v), 'oa-sideswitch');
+    sw.setAttribute('role', 'group');
+    sw.setAttribute('aria-label', 'TV or podcasts');
+    [...sw.children].forEach((b, i) => { b.dataset.side = i ? 'pods' : 'tv'; b.setAttribute('aria-pressed', String(b.dataset.side === O.side)); });
+    band.appendChild(sw);
+    wrap.appendChild(band);
+    if (O.side === 'tv') {
+      const pool = O.built ? (() => { const keep = O.len; O.len = ''; const all = pool_(); O.len = keep; return all; })() : [];
+      const items = [{ key: 'all', label: 'All lengths' }].concat(LENGTHS.filter((l) => l.key === O.len || pool.some((it) => it.len === l.key)).map((l) => ({ key: l.key, label: l.chip })));
+      wrap.appendChild(chips(items, O.len || 'all', (k) => setLen(k === 'all' ? '' : k)));
+    } else {
+      const toc = [['brief', 'Out loud'], ['pods', 'Podcasts'], ['lists', 'Playlists']]
+        .filter(([key]) => O.root.querySelector('[data-side="pods"] [data-sec="' + key + '"]'))
+        .map(([key, label]) => ({ key, label }));
+      if (toc.length) wrap.appendChild(chips(toc, null, (k) => app.jumpTo(O.root.querySelector('[data-sec="' + k + '"]'))));
+    }
+    return wrap;
   },
   newSince,
   pull() {
