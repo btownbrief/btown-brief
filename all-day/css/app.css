@@ -1925,6 +1925,14 @@ body.desk { overflow: auto; }
 .oa-acts .pillbtn.oa-watch { height: 34px; padding: 0 14px; font-size: var(--fs-button); color: var(--ink); }
 .oa-acts .oa-more { margin-left: auto; }
 .oa-all { margin: var(--s2) var(--gutter) 0; }
+/* News recaps: two sideways rows of cards, the show over the episode, Watch now under it */
+.oa-newsgroup + .oa-newsgroup { margin-top: var(--s4); }
+.oa-newscard .eyebrow { display: block; margin-top: 10px; }
+.oa-newscard .t { margin-top: 2px; font-size: var(--fs-title); display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.oa-newscard .s { font-size: var(--fs-meta); margin-top: 4px; }
+.oa-newscard .oa-acts { margin-top: var(--s2); }
+.rail.aslist > .oa-newscard .eyebrow { margin-top: 0; }
+.rail.aslist > .oa-newscard .t { font-size: var(--fs-title); }
 .oa-rows.insheet { border-top: 0; margin: 0 calc(-1 * var(--gutter)); }
 .oa-rows.insheet .oa-row { grid-template-columns: 128px minmax(0, 1fr); }
 .oa-menu { display: flex; flex-direction: column; padding-bottom: var(--s2); }
