@@ -720,10 +720,13 @@ def parse_stream(raw):
 
 def strip_recipient(url, params=RECIPIENT_PARAMS):
     """A newsletter link without the params that identify its subscriber."""
-    url = canon_url(url)
+    try:
+        url = canon_url(url)
+        parts = urllib.parse.urlsplit(url)
+    except ValueError:   # "http://[" and friends: nothing safe to publish
+        return ""
     if not url:
         return ""
-    parts = urllib.parse.urlsplit(url)
     query = "&".join(pair for pair in parts.query.split("&")
                      if pair and pair.split("=", 1)[0].lower() not in params)
     return urllib.parse.urlunsplit(
@@ -733,7 +736,10 @@ def strip_recipient(url, params=RECIPIENT_PARAMS):
 def is_opaque(url):
     """True when a link still carries something that could identify the
     subscriber: an encoded token in its path or query, or an address."""
-    parts = urllib.parse.urlsplit(url or "")
+    try:
+        parts = urllib.parse.urlsplit(url or "")
+    except ValueError:
+        return True
     pieces = [urllib.parse.unquote(piece) for piece in parts.path.split("/")]
     pieces += [value for _, value in urllib.parse.parse_qsl(parts.query)]
     if any(key.lower() in RECIPIENT_PARAMS
@@ -799,6 +805,12 @@ def settle_webcopies(fresh_by_source, prev_by_source, resolve=follow_tracker,
             if webcopy and is_opaque(webcopy):
                 when = item.get("when")
                 ts = int(when.timestamp()) if when else None
+                if ts is None or ts > time.time() + 3600:
+                    # post-dated: the merge stamps it at first sighting, so
+                    # no later run could match it back; it renders unlinked
+                    item.pop("webcopy", None)
+                    kept.append(item)
+                    continue
                 known = next((stored for stored in held.get(item.get("title"), [])
                               if ts is not None and isinstance(stored.get("d"), int)
                               and ts - WEBCOPY_MATCH_S <= stored["d"] <= ts), None)
@@ -956,7 +968,8 @@ def build_roster(folder_outlines, topics):
             if title_counts[base] > 1:
                 # a stream-derived sender has no feed URL: its title is the
                 # stable thing, so two senders sharing a slug never swap ids
-                suffix = hashlib.md5((outline["xml"] or outline["title"]).encode()).hexdigest()[:4]
+                suffix = hashlib.md5((outline["xml"] or outline["title"].lower())
+                                     .encode()).hexdigest()[:4]
                 source_id = f"{base}-{suffix}"
             else:
                 source_id = base
@@ -1461,6 +1474,13 @@ def run(args):
             kept["u"] = strip_recipient(kept.get("u", ""))
             if not kept["u"] or is_opaque(kept["u"]):
                 continue
+            for field in ("a", "i"):
+                if field in kept:
+                    media = strip_recipient(kept[field])
+                    if media and not is_opaque(media):
+                        kept[field] = media
+                    else:
+                        del kept[field]
         prev_by_source.setdefault(item.get("s"), []).append(kept)
 
     by_site, by_title, by_nl_title = source_index(sources)
@@ -1913,6 +1933,9 @@ def selftest():
     fwd = {s["name"]: s["id"] for s in build_roster([(o, "newsletter") for o in pair], {})}
     rev = {s["name"]: s["id"] for s in build_roster([(o, "newsletter") for o in pair[::-1]], {})}
     assert fwd == rev and len(set(fwd.values())) == 2
+    recased = build_roster([({"title": "DAY BREAK", "xml": "", "html": INO}, "newsletter"),
+                            (pair[1], "newsletter")], {})
+    assert recased[0]["id"] == fwd["Day Break"]   # a case change keeps the id
     by_site, by_title, by_nl = source_index(mixed)
     assert attribute({"src_site": "https://www.inoreader.com", "src_title": "Vtdigger"},
                      by_site, by_title, by_nl) == "vtdigger-dd84"
@@ -1969,6 +1992,12 @@ def selftest():
     assert calls == [tracker + "5"] and again["nl"][0]["webcopy"] == "https://a.com/p/held"
     assert "webcopy" not in again["nl"][1]
     assert follow_tracker("not a url") == ""
+    assert strip_recipient("http://[") == "" and is_opaque("http://[")
+    future = datetime.fromtimestamp(time.time() + 86400, tz=timezone.utc)
+    ahead = {"nl": [{"title": "Soon", "when": future, "webcopy": tracker}]}
+    calls.clear()
+    settle_webcopies(ahead, {}, fake_resolve)
+    assert calls == [] and "webcopy" not in ahead["nl"][0]
     got = {item["title"]: item.get("webcopy") for item in fresh["nl"]}
     assert got == {"New": "https://a.com/p/new", "Held": "https://a.com/p/held",
                    "Dead": None, "Plain": "https://a.com/p/plain"}, got
