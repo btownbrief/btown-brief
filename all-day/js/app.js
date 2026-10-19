@@ -14,7 +14,14 @@
        subnav() {},              optional: up to two rows under the mast, or null
        newSince(ts) {},          how many items are newer than ts (epoch seconds), for the tab dot
        pull() {},                optional shell extension: pull-to-refresh asked; return a toast or null
+       aside() {},               optional: the right-hand rail on a wide screen (1280 and up), or null
      });
+
+   On a wide screen (1024 and up) the page is a centred grid: the nine tabs
+   on the left, the tab in a 720px column, and at 1280 and up a 300px rail
+   on the right with what the tab's aside() hands back (a tab without one
+   gets the rail's width too). Each panel still scrolls on its own, but it
+   is as wide as the window, so the wheel works over the margins as well.
 
    Each tab panel is its own scroll container, so per-tab scroll memory is
    just saving and restoring scrollTop, and the mast can slide away without
@@ -37,6 +44,11 @@ store.setDemo(demo);
 /* The bar's order is the shell's call. What Now sits fifth of nine, dead
    centre, in the one wider cell so its two words never wrap. */
 export const TABS = ['wire', 'watch', 'food', 'people', 'whatnow', 'vintage', 'habits', 'onair', 'games'];
+/* On a phone the bar shows five (Stephen, 2026-10-19: "Yes, go to five tabs
+   plus a More menu"): Wire · Food · What Now · People · More, What Now's
+   disc still in the centre. More opens a sheet with the other five. A wide
+   screen's left list shows all nine, in TABS order, and has no More. */
+export const MORE_TABS = ['watch', 'vintage', 'habits', 'onair', 'games'];
 const REQUIRED = ['label', 'icon', 'promise', 'mount', 'activate', 'refresh', 'newSince'];
 
 const registry = Object.create(null);
@@ -400,6 +412,7 @@ function closeLightbox() { if (lbEl) { lbEl.remove(); lbEl = null; } }
 
 /* ----------------------------------------------------------------- sheets */
 let sheetClose = null;
+export function closeSheet() { if (sheetClose) sheetClose(); }
 export function sheet(titleText, build) {
   if (sheetClose) sheetClose();
   const s = $('sheet');
@@ -795,7 +808,7 @@ function paintThemeBtn() {
   b.setAttribute('aria-label', dark ? 'Switch to light mode' : 'Switch to dark mode');
   root.style.background = '';
 }
-function paintSavedBtn() { $('saved-btn').classList.toggle('on', store.saved().length > 0); }
+function paintSavedBtn() { $('saved-btn').classList.toggle('on', store.saved().length > 0); if (started) paintAside(); }
 
 /* ------------------------------------------------------------------ chrome */
 const mast = $('mast');
@@ -825,7 +838,23 @@ export function paintSubnav() {
   const n = mod && mod.subnav ? mod.subnav() : null;
   if (n) s.appendChild(n);
   measure();
+  paintAside();
 }
+
+/* the wide screen's right-hand rail: the tab's aside(), or nothing, and
+   then the tab's column takes the rail's width too */
+export function paintAside() {
+  const a = $('aside');
+  if (!a) return;
+  const mod = registry[active];
+  let n = null;
+  try { n = mod && mod.aside ? mod.aside() : null; } catch (e) { console.error('[all-day] ' + active + ' aside threw', e); }
+  a.innerHTML = '';
+  if (n) a.appendChild(n);
+  a.hidden = !n;
+  document.body.classList.toggle('has-aside', !!n);
+}
+const wide = matchMedia('(min-width: 1024px)');
 
 function watchScroll(p) {
   let last = 0, tick = 0;
@@ -896,6 +925,13 @@ export function recount() {
     if (n > 0 && !dot) { const d = el('i', 'nd'); d.setAttribute('aria-label', 'New'); b.appendChild(d); }
     else if (n <= 0 && dot) dot.remove();
   });
+  const more = $('tab-more');
+  if (more) {
+    const any = MORE_TABS.some((k) => $('tab-' + k) && $('tab-' + k).querySelector('.nd'));
+    const dot = more.querySelector('.nd');
+    if (any && !dot) { const d = el('i', 'nd'); d.setAttribute('aria-label', 'New'); more.appendChild(d); }
+    else if (!any && dot) dot.remove();
+  }
 }
 
 /* --------------------------------------------------------------- refresh */
@@ -961,6 +997,33 @@ function paintTabs() {
     b.setAttribute('aria-selected', on ? 'true' : 'false');
     b.tabIndex = on ? 0 : -1;
   });
+  const m = $('tab-more');
+  if (m) {
+    const inMore = MORE_TABS.includes(active);
+    m.classList.toggle('on', inMore);
+    if (inMore) m.setAttribute('aria-current', 'page'); else m.removeAttribute('aria-current');
+  }
+}
+
+/* More: the five tabs the phone's bar does not show, as big rows; the one
+   you are on is marked, and one with something new carries its dot */
+function moreSheet() {
+  sheet('More', (body, card, close) => {
+    const list = el('div', 'morelist');
+    MORE_TABS.forEach((key) => {
+      const mod = registry[key];
+      if (!mod) return;
+      const on = key === active;
+      const dot = $('tab-' + key) && $('tab-' + key).querySelector('.nd');
+      const b = el('button', 'morerow' + (on ? ' on' : ''), mod.icon + '<span>' + esc(mod.label) + '</span>' + (dot ? '<i class="nd" aria-label="New"></i>' : ''));
+      b.type = 'button';
+      b.dataset.tab = key;
+      if (on) b.setAttribute('aria-current', 'page');
+      b.addEventListener('click', () => { close(); if (active === key) scrollTop(true); else go(key); });
+      list.appendChild(b);
+    });
+    body.appendChild(list);
+  });
 }
 
 export function route() {
@@ -990,7 +1053,9 @@ export function route() {
   paintSubnav();
   $('mast-title').textContent = mod.label;
   document.title = (tab === 'wire' ? 'All Day' : mod.label + ' · All Day') + ' — Burlington Brief';
-  if (switched) panels[tab].scrollTop = scrollMemory[tab] || 0;
+  /* a phone keeps each tab's place; a wide screen opens a tab at its top
+     (the reviewers, 2026-10-19: Watch and What Now opened mid-page) */
+  if (switched) panels[tab].scrollTop = wide.matches ? 0 : scrollMemory[tab] || 0;
   showChrome();
   closePeek();
   try { mod.activate(param, first); } catch (e) { console.error('[all-day] ' + tab + ' activate threw', e); }
@@ -1045,8 +1110,16 @@ export function start() {
       if (active === key) { scrollTop(true); checkNew(); }
       else go(key);
     });
+    if (MORE_TABS.includes(key)) b.classList.add('in-more');
     bar.appendChild(b);
   });
+  const more = el('button', 'more-btn', ICON.grid + '<span>More</span>');
+  more.id = 'tab-more';
+  more.type = 'button';
+  more.setAttribute('aria-haspopup', 'dialog');
+  more.setAttribute('aria-label', 'More: ' + MORE_TABS.map((k) => registry[k] && registry[k].label).filter(Boolean).join(', '));
+  more.addEventListener('click', moreSheet);
+  bar.appendChild(more);
 
   /* the emailed sign-in link lands on a hash the router must not see */
   const signin = auth.consumeHash();
@@ -1098,6 +1171,22 @@ document.addEventListener('keydown', (e) => {
   else if (!$('confirm').hidden) $('confirm').hidden = true;
   else if (sheetClose) sheetClose();
 });
+
+/* On a wide screen the wheel scrolls the tab wherever the pointer is: over
+   the tab list, the mast or a rail too short to scroll itself. */
+function forwardWheel(node, own) {
+  if (!node) return;
+  node.addEventListener('wheel', (e) => {
+    const p = panels[active];
+    if (!p || !wide.matches || e.ctrlKey || Math.abs(e.deltaY) <= Math.abs(e.deltaX)) return;
+    if (own && node.scrollHeight > node.clientHeight + 1) return;
+    if (e.target.closest && e.target.closest('.chips, .rail')) return;
+    p.scrollBy({ top: e.deltaY * (e.deltaMode === 1 ? 16 : 1) });
+  }, { passive: true });
+}
+forwardWheel($('tabbar'));
+forwardWheel(mast);
+forwardWheel($('aside'), true);
 
 window.addEventListener('hashchange', () => { if (started) route(); });
 window.addEventListener('resize', measure);

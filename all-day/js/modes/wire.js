@@ -59,13 +59,6 @@ const PICKS_OPEN = 5;    // one as the pick card, two to five as ranked rows, th
 const RAW_PAGE = 60;
 const PER_OUTLET = 6;
 const HUNT_AT_ONCE = 5;  // editions a shared link fetches at a time while it looks for its card
-/* the river's thumbnails, 72px (were 56). Tried on the left (Stephen,
-   2026-10-17: "I like a left oriented photo") and on the right at 390 on
-   the real paper (tests/shots/wire-thumbs-*-390.png). Right reads better:
-   only about one row in three has a picture, and on the left every titled
-   row without one starts at a different edge, so the eye zigzags; on the
-   right the titles share one edge and the pictures still break the list. */
-const THUMBS_LEFT = false;
 
 /* The chips under the switch, each source with its own colour (Stephen,
    2026-10-17: "better color coordinate the x vs Facebook vs other posts").
@@ -73,7 +66,7 @@ const THUMBS_LEFT = false;
    local accounts' posts as a list (wire-photos.js has them). */
 const KINDS = [['all', 'All'], ['x', 'X'], ['facebook', 'Facebook'], ['reddit', 'Reddit'], ['instagram', 'Instagram'], ['newsletters', 'Newsletters']];
 const SRC_CH = new Set(['x', 'facebook', 'reddit', 'instagram', 'newsletters']);
-const KIND_LABEL = { local: 'Local news', world: 'News', x: 'X', facebook: 'Facebook group, via Muse', reddit: 'Reddit', newsletters: 'Newsletter', video: 'Video', instagram: 'Instagram' };
+const KIND_LABEL = { local: 'Local news', world: 'News', x: 'X', facebook: 'Facebook group', reddit: 'Reddit', newsletters: 'Newsletter', video: 'Video', instagram: 'Instagram' };
 /* The topic row under the chips (Stephen, 2026-10-18: "add some tags for
    people ... like sports or like politics"): a handful of main topics, each
    a few of tag_wire.py's TOPICS. A story with any other topic is only under
@@ -164,6 +157,8 @@ const todayKey = () => etDay(SRC.now());
 const utcNoon = (date) => { const [y, m, d] = date.split('-').map(Number); return new Date(Date.UTC(y, m - 1, d, 12)); };
 const dayName = (date) => nameFmt.format(utcNoon(date));                       // "Thursday, October 16"
 const weekday = (date) => dayName(date).split(',')[0];
+const shortFmt = new Intl.DateTimeFormat('en-US', { timeZone: 'UTC', month: 'short', day: 'numeric' });
+const shortDay = (date) => shortFmt.format(utcNoon(date));                     // "Oct 16" 
 const dayBefore = (date) => { const t = utcNoon(date); t.setUTCDate(t.getUTCDate() - 1); return t.toISOString().slice(0, 10); };
 const clock = (ms) => timeFmt.format(new Date(ms)).replace(/\s+/g, ' ').toLowerCase();   // "2:10 pm"
 function ago(ms) {
@@ -198,7 +193,7 @@ function toCard(it, sources, isToday) {
   if (Number(it.votes)) c.votes = Number(it.votes);      // demo only; real counts come from the shell
   if (c.ch === 'x' || c.ch === 'facebook') {
     /* the bot's one-line summary is the text; the link is always the original post */
-    Object.assign(c, { kind: 'post', text: it.title, title: '', via: KIND_LABEL[c.ch], open: c.ch === 'x' ? 'Open on X' : 'Open the post' });
+    Object.assign(c, { kind: 'post', text: c.ch === 'facebook' ? ownVoice(it.title) : it.title, title: '', via: KIND_LABEL[c.ch], open: c.ch === 'x' ? 'Open on X' : 'Open the post' });
     if (it.handle) c.handle = it.handle;
   }
   if (Number.isInteger(it.comments) && it.comments > 0) {
@@ -212,6 +207,24 @@ function toCard(it, sources, isToday) {
     if (poster && (yt || app.demo)) Object.assign(c, { kind: 'video', media: poster, thumb: '', yt });
   }
   return c;
+}
+
+/* Muse writes each Facebook post up as "Someone is sharing the 1877 map
+   ...", "Someone is asking for ...": a robot narrating a neighbour, four
+   times in a row (the reviewers, 2026-10-19). Until its brief asks for the
+   post's own words (wire-inbox/briefs/muse-task.md), the river drops the
+   narrator: "Someone is sharing the 1877 map" reads "The 1877 map", and
+   "Someone is asking for a plumber" reads "Asking for a plumber". Nothing
+   is added; a line this does not recognise is left as it came. */
+const NARRATOR = /^(?:someone|a member|a user|a neighbou?r|the poster|one member)\s+(?:is|was)\s+/i;
+const SAYS = /^(?:sharing|announcing|promoting|posting|recounting|showing|highlighting|advertising|offering|reporting|noting|celebrating|reminding (?:people|everyone|members) (?:of|about|that)|pointing out|warning(?: people| everyone| members)? (?:about|of|that))\s+(?:that\s+)?/i;
+function ownVoice(t) {
+  const s = String(t || '').trim();
+  if (!NARRATOR.test(s)) return s;
+  let rest = s.replace(NARRATOR, '');
+  if (SAYS.test(rest)) rest = rest.replace(SAYS, '');
+  if (rest.length < 12) return s;
+  return rest.charAt(0).toUpperCase() + rest.slice(1);
 }
 
 /* A payload, once, as days of cards. Cached on the payload object. */
@@ -262,7 +275,9 @@ const seen = (c) => !MUTE[c.sid] && (geo() === 'everything' || c.local || !!foll
 const shows = (c) => seen(c) && (W.ch === 'all' || c.ch === W.ch) && (W.topic === 'all' || c.topic === W.topic);
 /* no filter on: the Brief and What matters lead the day */
 const unfiltered = () => W.ch === 'all' && W.topic === 'all';
-const greenOf = (c) => !!c.local;
+/* a local story's source is green only on Everything, where local and
+   national share the list; on Local every one is local */
+const greenOf = (c) => !!c.local && geo() === 'everything';
 
 /* Chip counts: the pipeline's own, unless a mute or a follow changes what
    this reader sees that day, in which case they are counted here. */
@@ -321,131 +336,200 @@ function loadEdition(date) {
 }
 
 /* --------------------------------------------------------------- subnav */
-/* Under the mast, top to bottom: the News · Photos · Square switch, in
-   words; then for News the dateline, the Local / Everything switch with
-   Unfiltered, and the chips on a row of their own (Stephen, 2026-10-17:
-   "underneath the local and everything"); for Photos the switch and the
-   kinds of picture; for Square the kinds of post. */
-let DL = null;
+/* One row under the mast (the reviewers, 2026-10-19: six rows of controls
+   before the first story): News · Photos · Square in words on the left,
+   Filters on the right. Everything else that narrows the paper (the day,
+   the kinds of source, the topics, the ranking of the day, Unfiltered)
+   is in the Filters sheet, or in the rail on a wide screen. All three
+   words are drawn from the first paint, so nothing moves under a thumb;
+   Square holds its place, unseen, until the board answers. Unfiltered
+   keeps its own two rows (the way back and the outlets). */
 function modeRow() {
   const g = el('div', 'wmodes');
   g.setAttribute('role', 'group');
   g.setAttribute('aria-label', 'Read the Wire as');
-  MODES.filter(([k]) => k !== 'square' || W.squareOk).forEach(([key, label]) => {
+  MODES.forEach(([key, label]) => {
     const on = W.mode === key && W.view === 'paper';
-    const b = el('button', 'wmode' + (on ? ' on' : ''), esc(label));
+    const wait = key === 'square' && !W.squareOk;
+    const b = el('button', 'wmode' + (on ? ' on' : '') + (wait ? ' wait' : ''), esc(label));
     b.type = 'button';
     b.dataset.view = key;
     b.setAttribute('aria-pressed', on ? 'true' : 'false');
-    b.addEventListener('click', () => { if (!on) setMode(key); });
+    if (wait) { b.tabIndex = -1; b.setAttribute('aria-hidden', 'true'); }
+    b.addEventListener('click', () => { if (!on && !(key === 'square' && !W.squareOk)) setMode(key); });
     g.appendChild(b);
   });
   return g;
 }
 /* a chip's colour mark: a dot in the source's colour */
 const DOT = '<i class="sdot" aria-hidden="true"></i>';
+/* how many things narrow what this view shows */
+function activeFilters() {
+  if (W.view !== 'paper') return 0;
+  if (W.mode === 'photos') return photos.cat() !== 'all' ? 1 : 0;
+  if (W.mode === 'square') return square.type() !== 'all' ? 1 : 0;
+  return (W.ch !== 'all' ? 1 : 0) + (W.topic !== 'all' ? 1 : 0) + (W.start ? 1 : 0) + (W.slot ? 1 : 0);
+}
+function filterBtn() {
+  const n = activeFilters();
+  const b = el('button', 'wfilter' + (n ? ' on' : ''), ICON.sliders + '<span>Filters</span>' + (n ? '<span class="n">' + n + '</span>' : ''));
+  b.type = 'button';
+  b.setAttribute('aria-haspopup', 'dialog');
+  b.setAttribute('aria-label', n ? 'Filters, ' + n + ' on' : 'Filters');
+  b.addEventListener('click', openFilters);
+  return b;
+}
 function subnav() {
-  if (W.view === 'paper' && W.mode === 'photos') return photoSubnav();
-  if (W.view === 'paper' && W.mode === 'square') return squareSubnav();
-  if (!W.today && !W.failed) return null;
-  loadMutes();
-  const frag = document.createDocumentFragment();
-  if (W.view === 'raw') return rawSubnav(frag);
-  frag.appendChild(modeRow());
-  const dl = el('div', 'dateline');
+  if (W.view === 'raw') {
+    if (!W.today && !W.failed) return null;
+    loadMutes();
+    return rawSubnav(document.createDocumentFragment());
+  }
+  const bar = el('div', 'wbar');
+  bar.append(modeRow(), filterBtn());
+  return bar;
+}
+
+/* ----------------------------------------------------------- Filters */
+/* The sheet a phone opens from the Filters button; the wide screen's rail
+   draws the same controls in place. Each tap applies at once, behind it. */
+let FBODY = null;
+function openFilters() {
+  app.sheet(W.mode === 'photos' ? 'Photos' : W.mode === 'square' ? 'The Square' : 'Filters', (body) => { FBODY = body; paintFilters(); });
+}
+function paintFilters() {
+  if (!FBODY || !FBODY.isConnected) { FBODY = null; return; }
+  FBODY.innerHTML = '';
+  FBODY.appendChild(filtersUI());
+}
+/* something that narrows the paper changed: the button's count, the
+   sheet, the rail and the paper, from the top */
+function changed() {
+  app.paintSubnav();
+  paintFilters();
+  render();
+  app.scrollTop();
+}
+function pickKind(k) {
+  W.ch = k;
+  history.replaceState(null, '', location.search + '#wire' + (k === 'all' ? '' : '/' + k));
+  changed();
+}
+function pickTopic(k) { W.topic = k; changed(); }
+function clearFilters() {
+  if (W.mode === 'photos') { pickCat('all'); return; }
+  if (W.mode === 'square') { square.setType('all'); changed(); return; }
+  W.ch = 'all'; W.topic = 'all'; W.slot = null;
+  if (W.start) goDay(null);
+  else { history.replaceState(null, '', location.search + '#wire'); changed(); }
+}
+function dayPager() {
+  const tk = todayKey();
+  const date = W.start || W.shownDay || tk;
+  const row = el('div', 'wday');
   const prev = el('button', 'iconbtn nav', ICON.left); prev.setAttribute('aria-label', 'Earlier day');
   const next = el('button', 'iconbtn nav', ICON.right); next.setAttribute('aria-label', 'Later day');
-  const label = el('span', 'dl', '<b></b><span class="s"></span>');
-  prev.addEventListener('click', () => { const d = olderThan(W.reading || todayKey()); if (d) goDay(d); });
-  next.addEventListener('click', () => { const d = newerThan(W.reading || todayKey()); if (d) goDay(d); });
-  dl.append(prev, label, next);
-  frag.appendChild(dl);
-  DL = { prev, next, label };
-  paintDateline(W.reading || W.start || todayKey());
-
+  prev.disabled = !olderThan(date);
+  /* the paper is leading with an earlier day because today has nothing yet:
+     there is no later day to go to */
+  next.disabled = date >= tk || (!W.start && !!W.shownDay);
+  prev.addEventListener('click', () => { const d = olderThan(date); if (d) goDay(d); });
+  next.addEventListener('click', () => { const d = newerThan(date); if (d) goDay(d); });
+  const parts = dayName(date).split(', ');
+  row.append(prev, el('div', 't', esc(date === tk ? 'Today' : parts[0]) + '<span>' + esc(date === tk ? dayName(date) : parts[1] || '') + '</span>'), next);
+  return row;
+}
+function filtersUI() {
+  const f = el('div', 'wf');
+  const h = (t) => f.appendChild(el('div', 'sheet-h', esc(t)));
+  const clear = () => { if (activeFilters()) f.appendChild(button('Clear filters', 'ghost wf-clear', clearFilters)); };
+  if (W.view === 'paper' && W.mode === 'photos') {
+    if (photos.loaded()) {
+      h('Kind of photo');
+      f.appendChild(chips(photos.catChips().map((c) => ({ ...c, cls: c.key === 'instagram' ? 'w-src-instagram' : c.key === 'pets' ? 'w-pets' : '', icon: c.key === 'instagram' ? DOT : '' })),
+        photos.cat(), (k) => pickCat(k)));
+    }
+    clear();
+    return f;
+  }
+  if (W.view === 'paper' && W.mode === 'square') {
+    if (square.loaded()) {
+      h('Kind of post');
+      f.appendChild(chips(square.typeChips().map((c) => ({ ...c, icon: c.cls ? DOT : '' })), square.type(), (k) => { square.setType(k); changed(); }));
+    }
+    clear();
+    return f;
+  }
+  loadMutes();
   const d = startDay();
+  h('Day');
+  f.appendChild(dayPager());
+  h('Where');
+  f.appendChild(localSwitch(() => { W.open.clear(); changed(); }));
   const counts = d ? countsOf(d) : {};
   if (chipHidden(d, W.ch)) W.ch = 'all';
-  const items = KINDS.filter(([k]) => !chipHidden(d, k))
+  /* a kind with nothing in it today is left out, unless it is the one on */
+  const kinds = KINDS.filter(([k]) => !chipHidden(d, k))
     .map(([key, lab]) => ({ key, label: lab, n: key === 'all' ? null : key === 'instagram' ? igCount() : (counts[key] || 0),
-      cls: SRC_CH.has(key) ? 'w-src-' + key : '', icon: SRC_CH.has(key) ? DOT : '' }));
-  const band = el('div', 'toolband');
-  band.appendChild(localSwitch(() => { W.open.clear(); app.paintSubnav(); render(); app.scrollTop(); }));
-  const raw = button('Unfiltered ' + ICON.arrow, 'ghost sm w-raw', openRaw);
-  raw.dataset.chip = '__raw';
-  band.appendChild(raw);
-  const row = el('div', 'toolband w-chips');
-  row.appendChild(chips(items, W.ch, (k) => {
-    W.ch = k;
-    history.replaceState(null, '', location.search + '#wire' + (k === 'all' ? '' : '/' + k));
-    app.paintSubnav(); render(); app.scrollTop();
-  }));
-  frag.append(band, row);
-  const topics = topicRow(d);
-  if (topics) frag.appendChild(topics);
-  return frag;
-}
-/* the topics, one row; a topic with nothing here is left out. Instagram's
-   list has no topics. */
-function topicRow(d) {
+      cls: SRC_CH.has(key) ? 'w-src-' + key : '', icon: SRC_CH.has(key) ? DOT : '' }))
+    .filter((c) => c.key === 'all' || c.key === W.ch || c.n !== 0);
+  h('Source');
+  f.appendChild(chips(kinds, W.ch, pickKind));
   checkTopic(d);
-  if (W.ch === 'instagram') return null;
-  const n = topicCounts(d);
-  const items = TOPICS.filter(([k]) => n[k]).map(([key, label]) => ({ key, label, n: n[key] }));
-  if (!items.length) return null;
-  const row = el('div', 'toolband w-chips w-topics');
-  row.appendChild(chips([{ key: 'all', label: 'All topics' }].concat(items), W.topic, (k) => {
-    W.topic = k;
-    app.paintSubnav(); render(); app.scrollTop();
-  }));
-  return row;
+  if (W.ch !== 'instagram') {
+    const n = topicCounts(d);
+    const items = TOPICS.filter(([k]) => n[k]).map(([key, label]) => ({ key, label, n: n[key] }));
+    if (items.length) {
+      h('Topic');
+      const row = chips([{ key: 'all', label: 'All topics' }].concat(items), W.topic, pickTopic);
+      row.classList.add('w-topics');
+      f.appendChild(row);
+    }
+  }
+  /* the day's three rankings (Stephen, 2026-10-17), today only */
+  const tp = !W.start && unfiltered() && payloadFor(todayKey());
+  const sl = tp ? slotRow(dayOf(tp)) : null;
+  if (sl) { h('Top stories as of'); f.appendChild(sl.row); }
+  const raw = button('Every headline, unfiltered ' + ICON.arrow, 'ghost wf-raw', () => { if (FBODY) app.closeSheet(); openRaw(); });
+  raw.dataset.chip = '__raw';
+  f.appendChild(raw);
+  clear();
+  return f;
+}
+
+/* ------------------------------------------------------- the wide rail */
+/* At 1280 and up: the same filters, in place, and what you saved. */
+function aside() {
+  const box = el('div', 'wside');
+  if (W.view === 'paper') {
+    const fs = el('section', 'ws');
+    fs.appendChild(el('h3', null, W.mode === 'news' ? 'Filters' : W.mode === 'photos' ? 'Photos' : 'The Square'));
+    fs.appendChild(filtersUI());
+    box.appendChild(fs);
+  }
+  const sv = el('section', 'ws wsaved');
+  sv.appendChild(el('h3', null, 'Saved'));
+  const list = store.saved();
+  if (!list.length) sv.appendChild(el('p', 'note', 'Nothing saved yet.'));
+  list.slice(0, 6).forEach((it) => {
+    const a = el('a', null, esc(it.title) + '<span>' + esc(it.from || '') + '</span>');
+    a.href = safeHref(it.href);
+    if (!/^#/.test(it.href || '')) { a.target = '_blank'; a.rel = 'noopener'; }
+    sv.appendChild(a);
+  });
+  if (list.length > 6) sv.appendChild(button('All ' + list.length + ' saved', 'ghost sm', () => document.getElementById('saved-btn').click()));
+  box.appendChild(sv);
+  return box;
 }
 
 /* ----------------------------------------------------------- Photo mode */
-/* The switch, then the count, then the kinds of picture. No Local /
-   Everything: every picture here is Burlington's. */
-let PDL = null;
-function photoSubnav() {
-  loadMutes();
-  const frag = document.createDocumentFragment();
-  frag.appendChild(modeRow());
-  const band = el('div', 'toolband');
-  const n = el('span', 'dl pm-n', '<span class="s"></span>');
-  band.appendChild(n);
-  PDL = n.firstChild;
-  paintPhotoCount();
-  frag.appendChild(band);
-  if (photos.loaded()) {
-    const row = el('div', 'toolband w-chips');
-    row.appendChild(chips(photos.catChips().map((c) => ({ ...c, cls: c.key === 'instagram' ? 'w-src-instagram' : c.key === 'pets' ? 'w-pets' : '', icon: c.key === 'instagram' ? DOT : '' })),
-      photos.cat(), (k) => { pickCat(k); }));
-    frag.appendChild(row);
-  }
-  return frag;
-}
 function pickCat(k) {
   photos.setCat(k);
   W.photoOpen = null;
-  app.paintSubnav(); render(); app.scrollTop();
-}
-function paintPhotoCount() {
-  const n = photos.count();
-  if (PDL) PDL.textContent = n == null ? '' : plural(n, 'photo', 'photos');
+  changed();
 }
 
 /* ------------------------------------------------------------- Square */
-function squareSubnav() {
-  const frag = document.createDocumentFragment();
-  frag.appendChild(modeRow());
-  if (square.loaded()) {
-    const row = el('div', 'toolband w-chips');
-    row.appendChild(chips(square.typeChips().map((c) => ({ ...c, icon: c.cls ? DOT : '' })), square.type(), (k) => {
-      square.setType(k); app.paintSubnav(); render(); app.scrollTop();
-    }));
-    frag.appendChild(row);
-  }
-  return frag;
-}
 let squareSeq = 0;
 function renderSquare(opts = {}) {
   const root = W.root;
@@ -543,7 +627,6 @@ function renderPhotos(opts = {}) {
     /* the subnav names the chip: paint it again if a rebuild moved it (a
        kind can drop under the chip's minimum) */
     if ((first || photos.cat() !== was) && app.activeTab() === 'wire') app.paintSubnav();
-    paintPhotoCount();
     landPhoto();
   };
   if (photos.loaded()) { draw(); return; }
@@ -574,33 +657,12 @@ photos.init({
   pickCat: (k) => pickCat(k),
 });
 
-/* The dateline names one day: today, or the edition you opened, or the
-   earlier day you have scrolled down into. It is repainted in place as you
-   scroll, never rebuilt, so the water in the switch beside it keeps moving. */
-function paintDateline(date) {
-  W.reading = date;
-  if (!DL) return;
-  const tk = todayKey();
-  let sub;
-  if (date === tk) {
-    const p = W.today && W.today.date === tk ? W.today : null;
-    const n = p ? countsOf(dayOf(p)).all : 0;
-    sub = n + (n === 1 ? ' story' : ' stories') + ' so far' + (p && p.updated ? ' · updated ' + clock(Date.parse(p.updated)) : '');
-  } else {
-    const p = payloadFor(date);
-    const e = indexEntry(date);
-    const n = p ? countsOf(dayOf(p)).all : (e ? Number(e.count) || 0 : 0);
-    sub = plural(n, 'story', 'stories') + ' · ' + (!p || p.final ? 'final' : 'as it stood at ' + clock(Date.parse(p.updated)));
-  }
-  if (W.stale) sub += ' · reconnecting';
-  DL.label.firstChild.textContent = dayName(date);
-  DL.label.lastChild.textContent = sub;
-  DL.prev.disabled = !olderThan(date);
-  DL.next.disabled = date >= tk;
-}
+/* the day the reader is in: the one the page opened on, or the earlier day
+   they have scrolled down into */
+function paintDateline(date) { W.reading = date; }
 
 function startDay() {
-  const date = W.start || todayKey();
+  const date = W.start || W.shownDay || todayKey();
   const p = payloadFor(date) || (!W.start ? W.today : null);
   return p ? dayOf(p) : null;
 }
@@ -614,6 +676,7 @@ function goDay(date) {
   W.open.clear();
   W.view = 'paper';
   history.replaceState(null, '', location.search + '#wire' + (W.start ? '/' + W.start : ''));
+  paintFilters();
   if (W.start && !payloadFor(W.start)) {
     app.paintSubnav();
     W.root.innerHTML = '<p class="loading">Loading ' + esc(dayName(W.start)) + '…</p>';
@@ -625,6 +688,13 @@ function goDay(date) {
 }
 
 /* ------------------------------------------------------------- the paper */
+/* Top to bottom: the head (whose top stories these are, how many stories,
+   the Local / Everything switch), the Brief pinned on the days it went
+   out, the top stories (the day's ranking: five as big cards, the rest on
+   request), then the river by time of day, and on into the days before.
+   Before today's first ranking the paper opens on the latest day that has
+   one (the reviewers, 2026-10-19: a morning reader met two empty states
+   and no stories). */
 function render(opts = {}) {
   const root = W.root;
   if (!root) return;
@@ -641,7 +711,7 @@ function render(opts = {}) {
   if (!W.today) { root.innerHTML = '<p class="loading">Loading the wire…</p>'; return; }
   loadMutes();
   root.innerHTML = '';
-  const feed = el('div', 'feed wire' + (THUMBS_LEFT ? ' thumbs-left' : ''));
+  const feed = el('div', 'feed wire');
   root.appendChild(feed);
 
   const tk = todayKey();
@@ -651,23 +721,54 @@ function render(opts = {}) {
     const top = dayOf(W.today).all[0];
     if (top) W.seenTop = { date: tk, k: top.k };
   }
-  const date = W.start || tk;
-  const p = payloadFor(date);
-  const d = p ? dayOf(p) : null;
+  let date = W.start || tk;
+  let p = payloadFor(date);
+  let d = p ? dayOf(p) : null;
+  /* today has no ranking yet: lead with the latest day that has one. With
+     nothing at all today, that day is the page; with a few stories in,
+     its top stories lead and today's stories follow them. */
+  let borrow = null;
+  W.shownDay = null;
+  if (!W.start && unfiltered()) {
+    const empty = !d || !d.all.some(seen);
+    if (empty || !mattersOf(d).list.length) {
+      const prev = W.noEarlier === tk ? null : olderThan(tk);
+      const pp = prev && payloadFor(prev);
+      /* nothing today and the archive not in yet: wait for it rather than
+         flash an empty paper */
+      if (empty && (!W.idxDone || (prev && !pp))) root.innerHTML = '<p class="loading">Loading the wire…</p>';
+      if (prev && !pp) {
+        loadEdition(prev).then(() => { if (W.view === 'paper' && W.mode === 'news' && !W.start && (!W.panel || W.panel.scrollTop < 120)) render(); },
+          () => { W.noEarlier = tk; if (empty && W.view === 'paper' && W.mode === 'news') render(); });
+        if (empty) return;
+      } else if (empty && !W.idxDone) return;
+      else if (pp) {
+        if (empty) { date = prev; p = pp; d = dayOf(pp); W.shownDay = prev; } else if (mattersOf(dayOf(pp)).list.length) borrow = dayOf(pp);
+      }
+    }
+  }
+  const top = borrow || d;
+  const ranked = !!(top && unfiltered() && (mattersOf(top).list.length || mattersOf(top).earlier.length));
+  headBlock(feed, borrow ? borrow.date : date, borrow || d, ranked);
   const exclude = new Set();
   if (d && unfiltered()) {
     if (d.brief && seen(d.brief)) {
       put(feed, briefPin(d));
       exclude.add(d.brief.k);
     }
-    (date === tk ? topMatters(feed, d) : renderMatters(feed, d, false)).forEach((k) => exclude.add(k));
+    if (top) topBlock(feed, top, top.date === tk).forEach((k) => exclude.add(k));
+    if (borrow) {
+      const n = countsOf(d).all;
+      section(feed, 'Today so far', esc(plural(n, 'story', 'stories') + (W.today.updated ? ' · updated ' + clock(Date.parse(W.today.updated)) : '')));
+    }
   }
   /* the Brief and the open picks count toward the first sixty */
   const above = feed.querySelectorAll('[data-k]').length;
   const run = {
     feed, exclude, first: date, lastDate: null, queue: [], shown: 0,
     limit: Math.max(FIRST - above, opts.limit || 0), until: opts.until && !exclude.has(opts.until) ? opts.until : null,
-    done: false, loading: false, breaks: [], keys: [], alt: 0,
+    done: false, loading: false, breaks: [], keys: [],
+    borrowed: borrow ? borrow.date : null, borrowedKeys: borrow ? new Set(mattersKeys(borrow)) : null,
     sentinel: el('div', 'loading'),
   };
   run.sentinel.setAttribute('aria-hidden', 'true');
@@ -677,41 +778,86 @@ function render(opts = {}) {
   fill(run);
   app.bindFeed(feed, { onSource: sourceSheet, onMute: muteSource });
   watch(run);
+  /* the filters read the day this paper shows */
+  if (app.activeTab() === 'wire') { app.paintAside(); paintFilters(); }
 }
 
-/* What matters today: number one as the pick card, two to five as ranked
-   rows, then one button for the rest of the current ranking and, after a
-   small divider, the stories an earlier ranking that day held, each under
-   the rank it last had. The list says when it is done. Returns every key
-   in the block, open or not, so the river leaves them all out. */
-/* no picture: the Brief is a pin above the picks, not a second front page */
+/* today has no ranking (or no stories) yet, so the paper leads with an
+   earlier day's */
+function needsEarlier() {
+  if (!unfiltered() || !W.today || W.today.date !== todayKey()) return false;
+  loadMutes();
+  const d = dayOf(W.today);
+  return !d.all.some(seen) || !mattersOf(d).list.length;
+}
+
+/* The head: whose top stories these are, a count and the time, the switch.
+   Narrowed by a filter, it says what by, with one way back. */
+const KIND_NAME = Object.fromEntries(KINDS);
+const TOPIC_NAME = Object.fromEntries(TOPICS.map(([k, l]) => [k, l]));
+function headSub(date, d) {
+  const tk = todayKey();
+  const n = d ? countsOf(d).all : (indexEntry(date) ? Number(indexEntry(date).count) || 0 : 0);
+  let sub = date === tk
+    ? plural(n, 'story', 'stories') + (W.today && W.today.updated ? ' · updated ' + clock(Date.parse(W.today.updated)) : '')
+    : shortDay(date) + ' · ' + plural(n, 'story', 'stories');
+  if (W.stale) sub += ' · reconnecting';
+  return sub;
+}
+function headBlock(host, date, d, ranked) {
+  const tk = todayKey();
+  const h = el('div', 'whead');
+  const day = date === tk ? 'Today' : weekday(date);
+  h.innerHTML = '<h2>' + esc(ranked ? (date === tk ? 'Today’s' : day + '’s') + ' top stories' : day) + '</h2>';
+  const row = el('div', 'whead-row', '<span class="s"></span>');
+  row.firstChild.textContent = headSub(date, d);
+  row.firstChild.dataset.of = date;
+  row.appendChild(localSwitch(() => { W.open.clear(); changed(); }));
+  h.appendChild(row);
+  const on = [];
+  if (W.start) on.push(dayName(W.start));
+  if (W.ch !== 'all') on.push(KIND_NAME[W.ch] || W.ch);
+  if (W.topic !== 'all') on.push(TOPIC_NAME[W.topic] || '');
+  if (W.slot) on.push('as of ' + (SLOTS.find((x) => x[0] === W.slot) || ['', ''])[1].toLowerCase());
+  if (on.length) {
+    const f = el('div', 'wfilt', 'Showing ' + on.filter(Boolean).map((t) => '<b>' + esc(t) + '</b>').join(' · '));
+    f.appendChild(button('Clear', 'ghost sm', clearFilters));
+    h.appendChild(f);
+  }
+  host.appendChild(h);
+  return h;
+}
+/* the stale flag came or went: say so in the head, in place */
+function paintHeadSub() {
+  const s = W.root && W.root.querySelector('.whead-row .s');
+  if (!s) return;
+  const date = s.dataset.of;
+  const p = payloadFor(date);
+  s.textContent = headSub(date, p ? dayOf(p) : null);
+}
+
+/* the Brief: a pin above the top stories, words only */
 function briefPin(d) {
-  return mark3(cards.pick({ ...d.brief, media: '', thumb: '', own: false, eyebrow: 'The Brief', why: '' }, { greenLocal: greenOf(d.brief) }), d.brief);
+  return wireCls(cards.lead({ ...d.brief, media: '', thumb: '', why: '' }, { tag: 'The Brief', greenLocal: greenOf(d.brief), meta: geoMeta(d.brief) }), d.brief);
 }
 function mattersOf(d) {
   const keep = (x) => seen(x.c) && (x.c.local || geo() === 'everything');
   return { list: d.picks.filter(keep), earlier: d.earlier.filter(keep) };
 }
 const mattersKeys = (d) => { const { list, earlier } = mattersOf(d); return list.concat(earlier).map((x) => x.c.k); };
-function renderMatters(host, d, isToday) {
-  const wm = mattersBlock(d, isToday);
-  if (!wm) return [];
-  host.appendChild(wm);
-  divider(host, isToday ? 'The rest of today' : 'The rest of the day', geo() === 'local' ? 'local only' : 'every source');
-  return mattersKeys(d);
-}
 
 /* ---------------------------------------------- three rankings a day */
 /* What matters is ranked again about 6 am, noon and 6 pm (Stephen,
    2026-10-17: "making that more apparent ... from earlier in that day").
-   The block on top carries Morning · Midday · Evening: the current ranking
-   is chosen; an earlier one shows the list as it stood then. A slot is the
-   latest ranking in its part of the day, Burlington time. The payload keeps
-   the current ranking (`picks`) and, for each story a later ranking dropped,
-   its last rank and that ranking's time (`picks_earlier`). The stories an
-   earlier ranking shared with the current one are not stored with their
-   rank then, so they fill that ranking's other places in today's order,
-   when they were posted before it. */
+   Filters offers Morning · Midday · Evening: the current ranking is
+   chosen; an earlier one shows the top stories as they stood then. A slot
+   is the latest ranking in its part of the day, Burlington time. The
+   payload keeps the current ranking (`picks`) and, for each story a later
+   ranking dropped, its last rank and that ranking's time
+   (`picks_earlier`). The stories an earlier ranking shared with the
+   current one are not stored with their rank then, so they fill that
+   ranking's other places in today's order, when they were posted before
+   it. */
 const SLOTS = [['morning', 'Morning'], ['midday', 'Midday'], ['evening', 'Evening']];
 const slotOf = (iso) => { const ms = Date.parse(iso || ''); if (!ms) return null; const h = etHour(ms); return h < 11 ? 'morning' : h < 17 ? 'midday' : 'evening'; };
 function rankings(d) {
@@ -736,14 +882,15 @@ function asItStood(d, at) {
   const keep = (x) => seen(x.c) && (x.c.local || geo() === 'everything');
   return out.filter(keep);
 }
-/* Morning · Midday · Evening, on the block's head */
-function slotRow(d, isToday) {
+/* Morning · Midday · Evening, in Filters; only when there was more than
+   one ranking to choose from */
+function slotRow(d) {
   const { slots, now } = rankings(d);
-  if (!now && !Object.keys(slots).length) return null;
+  if (!now || Object.keys(slots).length < 2) return null;
   const want = W.slot && slots[W.slot] ? W.slot : now;
   const g = el('div', 'wm-slots');
   g.setAttribute('role', 'group');
-  g.setAttribute('aria-label', isToday ? 'Today’s rankings' : 'That day’s rankings');
+  g.setAttribute('aria-label', 'Today’s rankings');
   SLOTS.forEach(([key, label]) => {
     const has = !!slots[key];
     const b = el('button', 'wm-slot' + (key === want ? ' on' : ''), esc(label) + (has ? '<span class="t">' + esc(clock(Date.parse(slots[key].at))) + '</span>' : ''));
@@ -751,257 +898,189 @@ function slotRow(d, isToday) {
     b.dataset.slot = key;
     b.disabled = !has;
     b.setAttribute('aria-pressed', key === want ? 'true' : 'false');
-    b.addEventListener('click', () => { if (has && key !== want) reslot(key === now ? null : key); });
+    b.addEventListener('click', () => { if (has && key !== want) { W.slot = key === now ? null : key; changed(); } });
     g.appendChild(b);
   });
   return { row: g, slots, now, want };
 }
-function reslot(slot) {
-  W.slot = slot;
-  const old = W.root && W.root.querySelector('.wm.wm-top');
-  const tp = payloadFor(todayKey());
-  if (!old || !tp) return;
-  const today = dayOf(tp);
-  const past = W.flip && payloadFor(W.flip);
-  const node = flipBlock(past ? dayOf(past) : today, today);
-  old.replaceWith(node);
-  hydrateVotes(node, [...node.querySelectorAll('[data-k]')].map((n) => n.dataset.k));
-  const b = node.querySelector('.wm-slot.on');
-  if (b) b.focus({ preventScroll: true });
-}
-/* an earlier ranking, as it stood: its rows, five open, the rest on request */
-function stoodBlock(wm, d, at) {
-  const list = asItStood(d, at);
-  wm.appendChild(el('p', 'wm-was wm-stood', esc('As it stood at ' + clock(Date.parse(at)))));
-  if (!list.length) { wm.appendChild(el('p', 'wm-end', esc('No ' + (geo() === 'local' ? 'local ' : '') + 'picks then.'))); return; }
-  list.slice(0, PICKS_OPEN).forEach((x) => wm.appendChild(wmRow(x.c, x.why, x.n)));
-  const rest = list.slice(PICKS_OPEN);
-  if (!rest.length) return;
-  const more = button(esc(plural(rest.length, 'more pick', 'more picks')), 'ghost more', () => {
-    const f = document.createDocumentFragment();
-    rest.forEach((x) => f.appendChild(wmRow(x.c, x.why, x.n)));
-    const rows = [...f.querySelectorAll('[data-k]')];
-    more.replaceWith(f);
-    const a = rows[0] && rows[0].querySelector('a');
-    if (a) a.focus({ preventScroll: true });
-    hydrateVotes(wm, rows.map((r) => r.dataset.k));
-  });
-  wm.appendChild(more);
-}
 
-/* The block itself. `nav`, on today's block only, goes on its head: the
-   ‹ › that flip it through earlier days. A flipped day with nothing to show
-   in this view still draws its head, so the arrows stay where they were. */
-function mattersBlock(d, isToday, nav) {
+/* The top stories: the day's ranking, one to five as big cards, then one
+   button for the rest and, under a small head, the stories an earlier
+   ranking that day held, each under the rank it last had. Today's block
+   can show an earlier ranking (Filters). Returns every key in the block,
+   open or not, so the river leaves them all out. */
+function topBlock(host, d, isToday) {
   const { list, earlier } = mattersOf(d);
-  if (!list.length && !earlier.length && !nav) return null;
-  const wm = el('div', 'wm');
-  section(wm, isToday ? 'What matters today' : 'What mattered ' + weekday(d.date), nav && !isToday ? esc(dayName(d.date).split(', ')[1] || '') : '', nav || null);
-  const sl = nav ? slotRow(d, isToday) : null;
-  if (sl) {
-    wm.appendChild(sl.row);
-    if (sl.want && sl.want !== sl.now) { stoodBlock(wm, d, sl.slots[sl.want].at); return wm; }
+  let shown = list.map((x, i) => ({ ...x, n: i + 1 }));
+  let early = earlier;
+  if (isToday && W.slot) {
+    const { slots, now } = rankings(d);
+    if (slots[W.slot] && W.slot !== now) { shown = asItStood(d, slots[W.slot].at); early = []; }
   }
-  if (!list.length && !earlier.length) {
-    wm.appendChild(el('p', 'wm-end', esc('No ' + (geo() === 'local' ? 'local ' : '') + 'picks ' + (isToday ? 'yet today.' : 'that day.'))));
-    return wm;
-  }
-  const [first] = list;
-  if (first) put(wm, mark3(cards.pick({ ...first.c, media: first.c.thumb, thumb: '', eyebrow: '1 of ' + list.length, why: first.why }, { greenLocal: greenOf(first.c) }), first.c));
-  list.slice(1, PICKS_OPEN).forEach((x, i) => wm.appendChild(wmRow(x.c, x.why, i + 2)));
-  const rest = list.slice(PICKS_OPEN);
-  const total = list.length + earlier.length;
-  const end = () => el('p', 'wm-end', esc('That’s all ' + words(total) + '.'));
-  const behind = () => {
+  if (!shown.length && !early.length) return mattersKeys(d);
+  const box = el('div', 'wleads');
+  shown.slice(0, PICKS_OPEN).forEach((x) => put(box, leadCard(x.c, x.why, x.n)));
+  if (box.children.length) host.appendChild(box);
+  const rest = shown.slice(PICKS_OPEN);
+  const more = () => {
     const f = document.createDocumentFragment();
-    rest.forEach((x, i) => f.appendChild(wmRow(x.c, x.why, i + PICKS_OPEN + 1)));
-    if (earlier.length) {
-      f.appendChild(el('p', 'wm-was', esc(isToday ? 'Earlier today, these mattered too' : 'Earlier that day')));
-      earlier.forEach((x) => f.appendChild(wmRow(x.c, x.why, x.rank || '·', true)));
+    rest.forEach((x) => put(f, storyRow(x.c, { rank: x.n })));
+    if (early.length) {
+      f.appendChild(el('p', 'wsub', esc(isToday ? 'Earlier today' : 'Earlier that day')));
+      early.forEach((x) => put(f, storyRow(x.c, { rank: x.rank || '' })));
     }
-    f.appendChild(end());
     return f;
   };
-  const hidden = rest.length + earlier.length;
-  /* nothing of the current ranking shows here (all muted, say): the earlier
-     picks stand on their own, open */
-  if (hidden && (W.open.has(d.date) || !list.length)) wm.appendChild(behind());
+  const hidden = rest.length + early.length;
+  if (hidden && (W.open.has(d.date) || !shown.length)) host.appendChild(more());
   else if (hidden) {
-    const more = button(esc(plural(hidden, 'more pick', 'more picks')), 'ghost more', () => {
+    const b = button(esc('More top stories · ' + hidden), 'ghost wmore-btn', () => {
       W.open.add(d.date);
-      const f = behind();
+      const f = more();
       const rows = [...f.querySelectorAll('[data-k]')];
-      more.replaceWith(f);
+      b.replaceWith(f);
       /* the reader asked for these: move focus to the first, not the top */
       const a = rows[0] && rows[0].querySelector('a');
       if (a) a.focus({ preventScroll: true });
-      hydrateVotes(wm, rows.map((r) => r.dataset.k));
+      hydrateVotes(host, rows.map((r) => r.dataset.k));
     });
-    wm.appendChild(more);
-  } else if (list.length > 1) wm.appendChild(end());
-  return wm;
-}
-
-/* Today's block, with ‹ › on its head (Stephen, 2026-10-17: "an arrow next
-   to it as well so people can easily see past What Matters picks"). The
-   arrows swap the block in place to an earlier day's picks from the frozen
-   editions; the river below stays today's and still leaves out today's
-   picks, whatever the block shows, so flipping never changes it (a past
-   pick that recurs today can show in the river, which is fine). W.flip is
-   the day shown, kept for the visit only: a reload opens on today. Returns
-   today's keys, for the river to leave out. Before the day's first ranking
-   (or with every pick muted) the block still stands, saying so, while there
-   may be earlier days to flip to. */
-function topMatters(host, d) {
-  const keys = mattersKeys(d);
-  if (!keys.length && W.idxDone && !olderThan(d.date)) { W.flip = null; return []; }
-  const past = W.flip && payloadFor(W.flip);
-  if (!past) W.flip = null;
-  host.appendChild(flipBlock(past ? dayOf(past) : d, d));
-  divider(host, 'The rest of today', geo() === 'local' ? 'local only' : 'every source');
-  return keys;
-}
-const FLIP_PREV = 'Earlier day\'s picks';
-const FLIP_NEXT = 'Later day\'s picks';
-function flipBlock(shown, today) {
-  const isToday = shown === today;
-  const nav = el('div', 'wm-nav');
-  const prev = el('button', 'iconbtn nav', ICON.left); prev.setAttribute('aria-label', FLIP_PREV);
-  const next = el('button', 'iconbtn nav', ICON.right); next.setAttribute('aria-label', FLIP_NEXT);
-  /* the archive's index can land after the block: asked at the click, and
-     the disabled state repainted when it lands (paintFlip) */
-  prev.disabled = !olderThan(shown.date);
-  next.disabled = isToday;
-  prev.addEventListener('click', () => { const d = olderThan(shown.date); if (d) flipTo(d, FLIP_PREV); });
-  next.addEventListener('click', () => { if (!isToday) flipTo(newerThan(shown.date), FLIP_NEXT); });
-  nav.append(prev, next);
-  const wm = mattersBlock(shown, isToday, nav);
-  wm.classList.add('wm-top');
-  wm.dataset.showing = shown.date;
-  if (!isToday) {
-    const sub = wm.querySelector('.sec p');
-    const back = el('button', 'wm-today', 'Today');
-    back.addEventListener('click', () => flipTo(null, FLIP_NEXT));
-    if (sub) sub.append(' · ', back);
+    host.appendChild(b);
   }
-  return wm;
-}
-function paintFlip() {
-  const wm = W.root && W.root.querySelector('.wm.wm-top');
-  const prev = wm && !wm.hasAttribute('aria-busy') && wm.querySelector('.wm-nav .nav[aria-label="' + FLIP_PREV + '"]');
-  if (prev) prev.disabled = !olderThan(wm.dataset.showing);
-}
-let flipSeq = 0;
-function flipTo(date, again) {
-  const tk = todayKey();
-  const target = !date || date >= tk ? null : date;
-  const seq = ++flipSeq;
-  const swap = (to) => {
-    const old = W.root && W.root.querySelector('.wm.wm-top');
-    const tp = payloadFor(tk);
-    if (seq !== flipSeq || !old || !tp) return;
-    const today = dayOf(tp);
-    const past = to && payloadFor(to);
-    W.flip = past ? to : null;
-    W.slot = null;
-    const node = flipBlock(past ? dayOf(past) : today, today);
-    node.classList.add('flip-in');   /* a short fade; none under reduced motion */
-    old.replaceWith(node);
-    hydrateVotes(node, [...node.querySelectorAll('[data-k]')].map((n) => n.dataset.k));
-    /* keep the reader's place: the arrow they pressed, or the other one at an end */
-    const btn = [...node.querySelectorAll('.wm-nav .nav')];
-    const want = btn.find((b) => b.getAttribute('aria-label') === again && !b.disabled) || btn.find((b) => !b.disabled);
-    if (want) want.focus({ preventScroll: true });
-  };
-  if (!target || payloadFor(target)) { swap(target); return; }
-  const old = W.root && W.root.querySelector('.wm.wm-top');
-  if (old) { old.setAttribute('aria-busy', 'true'); old.querySelectorAll('.wm-nav .nav').forEach((b) => { b.disabled = true; }); }
-  loadEdition(target).then(() => swap(target), () => {
-    if (seq !== flipSeq) return;
-    app.toast('That day’s picks didn’t load.');
-    swap(W.flip);
-  });
+  return mattersKeys(d);
 }
 
-/* a ranked row: the numeral, the title, the reason, then the foot line */
-function wmRow(it, why, n, was) {
-  const on = store.hasVoted(it.k);
-  const r = el('article', 'wm-row card fi' + (was ? ' was' : '') + (store.isRead(it.k) ? ' is-read' : ''));
-  r.dataset.k = it.k;
-  const ext = /^https?:/.test(it.href || '');
-  r.innerHTML = '<span class="num">' + esc(n) + '</span><div><a class="c-title" href="' + esc(safeHref(it.href)) + '"' + (ext ? ' target="_blank" rel="noopener"' : '') + ' data-open>' + esc(it.title || it.text) + '</a>' +
-    (why ? '<p class="why">' + esc(why) + '</p>' : '') +
-    '<div class="c-foot"><button class="srcbtn" data-src="' + esc(it.sid || it.src) + '">' + mark(it.src, 'xs') + '<span class="c-src' + (greenOf(it) ? ' is-local' : '') + '">' + esc(it.src) + '</span></button>' +
-    (it.ago ? '<span class="dot"></span><span class="age">' + esc(it.ago) + '</span>' : '') +
-    '<button class="mini up' + (on ? ' on' : '') + '" data-act="up" aria-label="Upvote" aria-pressed="' + on + '">' + ICON.up + '<span class="n">' + (((Number(it.votes) || 0) + store.voteCount(it.k)) || '') + '</span></button>' +
-    '<button class="mini sh" data-act="share" aria-label="Share">' + ICON.share + '</button></div></div>' +
-    '<button class="act star' + (store.isSaved(it.k) ? ' on' : '') + '" data-act="save" aria-label="Save" aria-pressed="' + store.isSaved(it.k) + '">' + ICON.star + '</button>';
-  return mark3(r, it);
+/* The Wire's two cards. A plain headline or a post is a story row, a video
+   keeps its poster and play button, a top story is the big card. Local and
+   National are words on the meta line, and only on Everything, where the
+   two share the list (on Local every story is local). */
+/* X says so on the meta line; a Facebook group's name is long enough (and
+   says what it is), a subreddit's name says Reddit */
+const VIA = { x: 'X' };
+function geoMeta(c) {
+  if (geo() !== 'everything') return '';
+  return c.local ? '' : '<span class="dot"></span><span class="geo">National</span>';
 }
-
-/* One item in the river. A plain headline is the tight row; posts, videos
-   and an update's lead get the bigger cards. */
-function draw(c, leadWhy, every) {
-  const o = { greenLocal: greenOf(c), noComments: !c.comments };
-  let n;
-  if (c.kind === 'video') n = cards.video(c, o);
-  else if (c.kind === 'post') n = cards.post(c, o);
-  else if (leadWhy) n = cards.pick({ ...c, media: c.thumb, thumb: '', why: leadWhy, eyebrow: 'The lead' }, o);
-  else n = cards.row(c, o);
-  return mark3(n, c, every);
-}
-/* The Wire's colour on a card: its source's mark (X, Facebook, Reddit,
-   Instagram, a newsletter) as a left accent, and the green local tint on
-   Everything, where local and national share the list (Stephen,
-   2026-10-17: "in my old All Day feed, something local was usually green"). */
-function mark3(n, c, every = geo() === 'everything') {
+function wireCls(n, c) {
   if (!n) return n;
   if (SRC_CH.has(c.ch)) n.classList.add('w-src-' + c.ch);
-  if (c.local && every) n.classList.add('w-local');
-  const meta = n.querySelector('.c-foot, .c-head');
-  if (meta && !meta.querySelector('.geo-tag')) {
-    const tag = el('span', 'tag geo-tag ' + (c.local ? 'tag-local' : 'tag-national'), c.local ? 'Local' : 'National');
-    const age = meta.querySelector('.age');
-    if (age) age.after(tag); else meta.appendChild(tag);
-  }
+  if (c.local && geo() === 'everything') n.classList.add('w-local');
   return n;
 }
+function leadCard(c, why, rank) {
+  const media = c.kind === 'video' ? c.media : c.thumb;
+  return wireCls(cards.lead({ ...c, media, thumb: '', why, via: VIA[c.ch] || '' }, { rank, greenLocal: greenOf(c), meta: geoMeta(c) }), c);
+}
+function storyRow(c, o = {}) {
+  if (c.kind === 'video') return wireCls(cards.video(c, { greenLocal: greenOf(c), noComments: !c.comments }), c);
+  return wireCls(cards.story({ ...c, via: VIA[c.ch] || '' }, { rank: o.rank, greenLocal: greenOf(c), meta: geoMeta(c) }), c);
+}
+const draw = (c) => storyRow(c);
+
+/* "⋯" on a card: vote, share, the original, the source, mute */
+function moreSheet(it) {
+  app.sheet(it.src || 'Story', (body, card, close) => {
+    body.appendChild(el('p', 'wmore-t', esc(it.title || it.text)));
+    const list = el('div', 'wacts');
+    const row = (icon, label, cls, fn) => {
+      const b = el('button', 'wact' + (cls ? ' ' + cls : ''), icon + '<span class="l">' + esc(label) + '</span><span class="n"></span>');
+      b.type = 'button';
+      b.addEventListener('click', fn);
+      list.appendChild(b);
+      return b;
+    };
+    const count = () => (Number(it.votes) || 0) + store.voteCount(it.k);
+    const paintUp = (b) => {
+      const on = store.hasVoted(it.k);
+      b.classList.toggle('on', on);
+      b.setAttribute('aria-pressed', on ? 'true' : 'false');
+      b.querySelector('.l').textContent = on ? 'Upvoted' : 'Upvote';
+      b.querySelector('.n').textContent = count() || '';
+    };
+    const up = row(ICON.up, 'Upvote', '', () => { app.toggleVote(it); paintUp(up); });
+    up.dataset.wact = 'up';
+    paintUp(up);
+    row(ICON.share, 'Share', '', () => { close(); app.share('wire', it.k, it.title || it.text); }).dataset.wact = 'share';
+    const label = it.open || (it.ch === 'reddit' ? 'Open the thread' : 'Open the story');
+    const a = el('a', 'wact', ICON.ext + '<span class="l">' + esc(label) + '</span>' + (it.comments ? '<span class="n">' + esc(plural(it.comments, 'reply', 'replies')) + '</span>' : ''));
+    a.href = safeHref(it.href);
+    a.target = '_blank'; a.rel = 'noopener';
+    a.dataset.wact = 'open';
+    a.addEventListener('click', (e) => {
+      store.markRead(it.k);
+      document.querySelectorAll('.card[data-k="' + CSS.escape(it.k) + '"]').forEach((n) => n.classList.add('is-read'));
+      if (app.demo || !/^https?:/.test(it.href || '')) { e.preventDefault(); app.toast(label + ' in the real build'); }
+    });
+    list.appendChild(a);
+    if (it.sid || it.src) {
+      row(ICON.eye, 'More from ' + it.src, '', () => { close(); sourceSheet(it.sid || it.src, it); }).dataset.wact = 'source';
+      row(ICON.x, 'Mute ' + it.src, 'warn', () => { close(); muteSource(it.sid || it.src, it); }).dataset.wact = 'mute';
+    }
+    body.appendChild(list);
+  });
+}
+app.onAct('wmore', (it) => moreSheet(it));
 
 /* The entries one day adds to the river: its head (unless it is the day the
-   page opened on), its updates under their time dividers, and the
-   new-since line on today. */
+   page opened on), its own top stories for an earlier day, then its stories
+   newest first under the part of the day each was posted in, by the clock
+   it shows (the reviewers, 2026-10-19: a 9:43 pm post sat under Morning,
+   because the dividers were the pipeline's runs), and the new-since line
+   on today. */
+/* midnight in Burlington at the start of a day, in epoch seconds */
+function dayStart(date) {
+  const [y, m, d] = date.split('-').map(Number);
+  const guess = Date.UTC(y, m - 1, d, 5);
+  return (guess - etHour(guess) * 3600000) / 1000;
+}
+function partOf(sec, start) {
+  if (sec < start) return 'The night before';
+  const h = etHour(sec * 1000);
+  return h >= 17 ? 'Evening' : h >= 12 ? 'Afternoon' : h >= 5 ? 'Morning' : 'Overnight';
+}
 function entriesFor(run, date, p) {
   const out = [];
   const tk = todayKey();
   const isFirst = date === run.first;
   if (!isFirst) {
     const n = p ? countsOf(dayOf(p)).all : 0;
-    out.push({ head: date, title: (date === dayBefore(tk) ? 'Yesterday, ' : '') + dayName(date),
-      sub: plural(n, 'story', 'stories') + ' · ' + (!p || p.final ? 'final' : 'as it stood at ' + clock(Date.parse(p.updated))) });
+    const yest = date === dayBefore(tk);
+    const parts = dayName(date).split(', ');
+    out.push({ head: date, title: yest ? 'Yesterday' : parts[0],
+      sub: (yest ? dayName(date) : parts[1] || '') + ' · ' + (!p || p.final ? plural(n, 'story', 'stories') : 'as it stood at ' + clock(Date.parse(p.updated))) });
   }
   const d = p ? dayOf(p) : null;
-  /* an earlier day opens with its own What mattered block, drawn as the
-     arrow view draws it, and its river leaves those stories out */
+  /* an earlier day opens with its own top stories, and its river leaves
+     them out; the day whose top stories lead the page skips them here */
   let exclude = isFirst ? run.exclude : new Set();
   if (!isFirst && d && unfiltered()) {
-    /* and its Brief pinned above it, as the arrow view pins it */
+    /* and its Brief pinned above them */
     if (d.brief && seen(d.brief)) { out.push({ pin: d }); exclude.add(d.brief.k); }
-    const { list, earlier } = mattersOf(d);
-    if (list.length || earlier.length) {
-      list.concat(earlier).forEach((x) => exclude.add(x.c.k));
-      out.push({ matters: d });
+    if (run.borrowed === date) run.borrowedKeys.forEach((k) => exclude.add(k));
+    else {
+      const { list, earlier } = mattersOf(d);
+      if (list.length || earlier.length) {
+        list.concat(earlier).forEach((x) => exclude.add(x.c.k));
+        out.push({ matters: d });
+      }
     }
   }
+  const once = new Set();
+  const list = [];
+  (d ? d.updates : []).forEach((u) => u.items.forEach((c) => {
+    if (once.has(c.k) || !shows(c) || exclude.has(c.k)) return;
+    once.add(c.k);
+    list.push(c);
+  }));
+  list.sort((a, b) => b.d - a.d);
+  const start = dayStart(date);
   const items = [];
-  (d ? d.updates : []).forEach((u) => {
-    const list = u.items.filter((c) => shows(c) && !exclude.has(c.k));
-    if (!list.length) return;
-    out.push({ divider: u.label, sub: u.time ? 'updated ' + u.time : '' });
-    list.forEach((c, i) => {
-      const e = { c, why: i === 0 && u.lead && u.lead.id === c.k ? u.lead.why : '' };
-      out.push(e);
-      items.push(e);
-    });
+  let part = null;
+  list.forEach((c) => {
+    const now = partOf(c.d, start);
+    if (now !== part) { out.push({ divider: now }); part = now; }
+    const e = { c };
+    out.push(e);
+    items.push(e);
   });
   /* You left off here: the bookmark above the story that was at the top of
      today's paper when the reader last left it (his girlfriend, 2026-10-17:
@@ -1019,7 +1098,7 @@ function entriesFor(run, date, p) {
       out.splice(out.indexOf(items[last]) + 1, 0, { newline: fresh.length + ' new since you were here at ' + clock(base * 1000) });
     }
   }
-  if (!items.length) {
+  if (!items.length && !(isFirst && run.borrowed)) {
     const topic = W.topic === 'all' ? '' : ' on ' + (TOPICS.find((x) => x[0] === W.topic) || ['', ''])[1];
     const kind = (W.ch === 'all' ? '' : ' from ' + (KINDS.find((x) => x[0] === W.ch) || ['', W.ch])[1]) + topic;
     out.push({ note: date === tk
@@ -1039,6 +1118,7 @@ function loadIg() {
       W.ig = Array.isArray(posts) ? posts : [];
       if (app.activeTab() === 'wire' && W.mode === 'news' && W.view === 'paper') {
         app.paintSubnav();
+        paintFilters();
         if (W.ch === 'instagram') render();
       }
     }, () => { W.ig = []; });
@@ -1055,7 +1135,7 @@ function renderInstagram(opts = {}) {
   loadMutes();
   if (!W.ig) { root.innerHTML = '<p class="loading">Loading Instagram…</p>'; loadIg(); return; }
   root.innerHTML = '';
-  const feed = el('div', 'feed wire' + (THUMBS_LEFT ? ' thumbs-left' : ''));
+  const feed = el('div', 'feed wire');
   root.appendChild(feed);
   const list = igRows();
   if (!list.length) { feed.appendChild(el('p', 'empty', 'No Instagram posts today.')); return; }
@@ -1068,10 +1148,9 @@ function renderInstagram(opts = {}) {
     const added = [];
     while (run.i < list.length && n-- > 0) {
       const v = list[run.i++];
-      const node = cards.row({ ...v.it, title: v.cap, thumb: v.media, ago: v.it.ago }, { greenLocal: true, noComments: true });
+      const node = cards.story({ ...v.it, title: v.cap, thumb: v.media, ago: v.it.ago }, {});
       if (!node) continue;
       node.classList.add('w-src-instagram');
-      if (run.i % 2 === 0) node.classList.add('w-alt');
       feed.insertBefore(node, run.sentinel);
       added.push(v.k);
     }
@@ -1137,7 +1216,6 @@ const leftMark = (at) => {
 function fill(run) {
   if (W.run !== run || run.done) return;
   const added = [];
-  const every = geo() === 'everything';
   while (run.shown < run.limit || run.until) {
     if (!run.queue.length) {
       const date = run.lastDate == null ? run.first : olderThan(run.lastDate);
@@ -1172,13 +1250,12 @@ function fill(run) {
       const h = el('div');
       divider(h, e.divider, e.sub);
       node = h.firstChild;
-      run.alt = 0;
     } else if (e.pin) {
       node = briefPin(e.pin);
       if (node) { run.shown++; added.push(e.pin.brief.k); }
     } else if (e.matters) {
       const box = el('div');
-      renderMatters(box, e.matters, false);
+      topBlock(box, e.matters, false);
       const keys = [...box.querySelectorAll('[data-k]')].map((n) => n.dataset.k);
       while (box.firstChild) run.feed.insertBefore(box.firstChild, run.sentinel);
       run.shown += keys.length;
@@ -1186,11 +1263,9 @@ function fill(run) {
     } else if (e.newline) node = cards.newline(e.newline);
     else if (e.note) node = el('p', 'note pad', esc(e.note));
     else if (e.c) {
-      node = draw(e.c, e.why, every);
+      node = draw(e.c);
       if (node) {
         run.shown++; added.push(e.c.k);
-        /* a faint tint on every other row, so a long list is easier on the eyes */
-        if (node.classList.contains('row') && (run.alt++ % 2)) node.classList.add('w-alt');
       }
       if (run.until && e.c.k === run.until) run.until = null;
     } else if (e.left) node = leftMark(e.left);
@@ -1339,7 +1414,7 @@ function sourceSheet(sid, from) {
     if (items.length) {
       body.appendChild(el('div', 'sheet-h', esc((when === 'today' ? 'Today' : when) + ' from ' + name)));
       const f = el('div', 'feed tight');
-      items.slice(0, 12).forEach((c) => put(f, c.kind === 'headline' ? cards.row(c, { noComments: !c.comments }) : draw(c)));
+      items.slice(0, 12).forEach((c) => put(f, draw(c)));
       body.appendChild(f);
       app.bindFeed(f, { onSource() {}, onMute: muteSource });
     }
@@ -1463,7 +1538,7 @@ function renderRawList() {
       const s = el('section', 'srcsec');
       s.innerHTML = '<h3><button class="srcbtn" data-outlet="' + esc(sid) + '">' + mark(items[0].src, 'xs') + '<span>' + esc(items[0].src) + '</span></button><span class="n">' +
         esc(all.filter((c) => c.sid === sid).length) + ' on the wire</span></h3>';
-      items.forEach((c) => put(s, cards.row(c, { greenLocal: c.local, noComments: true })));
+      items.forEach((c) => put(s, cards.story(c, { greenLocal: c.local })));
       grid.appendChild(s);
     });
     /* the outlet's name narrows the wire to it, the way the chip does */
@@ -1485,7 +1560,7 @@ function renderRawList() {
     const added = [];
     while (run.i < run.all.length && (n-- > 0 || run.until)) {
       const c = run.all[run.i++];
-      const node = cards.row(c, { greenLocal: c.local, noComments: true });
+      const node = cards.story(c, { greenLocal: c.local });
       if (node) { list.insertBefore(node, run.sentinel); added.push(c.k); }
       if (c.k === run.until) run.until = null;
     }
@@ -1522,7 +1597,7 @@ function rawSourceSheet(sid, from) {
     if (items.length) {
       body.appendChild(el('div', 'sheet-h', 'Newest from ' + esc(name)));
       const f = el('div', 'feed tight');
-      items.slice(0, 12).forEach((c) => put(f, cards.row(c, { noComments: true })));
+      items.slice(0, 12).forEach((c) => put(f, cards.story(c)));
       body.appendChild(f);
       app.bindFeed(f, { onSource() {}, onMute: muteSource });
     }
@@ -1667,7 +1742,7 @@ function mount(root) {
       if (app.activeTab() !== 'wire' || !W.panel || W.panel.scrollTop < 120) apply();
       else { W.queued.push(apply); app.toast('New stories on the Wire.'); }
     });
-    data.setStaleHandler((s) => { if (W.stale !== s) { W.stale = s; if (app.activeTab() === 'wire') paintDateline(W.reading || todayKey()); } });
+    data.setStaleHandler((s) => { if (W.stale !== s) { W.stale = s; if (app.activeTab() === 'wire') paintHeadSub(); } });
   }
   SRC.today((j) => {
     W.today = j;
@@ -1681,8 +1756,9 @@ function mount(root) {
     const run = W.run;
     /* the archive arrived after the page: let the river run on into it */
     if (run && run.done && run.end) { run.end.remove(); run.end = null; run.done = false; fill(run); }
-    if (app.activeTab() === 'wire' && DL) paintDateline(W.reading || todayKey());
-    paintFlip();
+    /* today has no ranking yet: the page can now lead with the latest day that does */
+    if (W.view === 'paper' && W.mode === 'news' && !W.start && W.ch !== 'instagram' && (!W.panel || W.panel.scrollTop < 120) && needsEarlier()) render();
+    if (app.activeTab() === 'wire') paintFilters();
     land();
   }, () => { W.idxDone = true; land(); });
 }
@@ -1713,6 +1789,7 @@ app.register('wire', {
   refresh: redraw,
   deactivate() { app.closePeek(); if (W.mode === 'news' && W.view === 'paper') { saveLeft(); W.left = readLeft() || W.left; } },
   subnav,
+  aside,
   newSince,
   pull() {
     if (applyQueued()) return 'Fresh stories are in';

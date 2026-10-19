@@ -37,10 +37,10 @@
   --dock-muted: #F7F8F9;
   --dock-shadow: 0 6px 18px rgba(0, 0, 0, .22), inset 0 1px 1px rgba(255, 255, 255, .12);
   --dock-lift: 8px;
-  --dock-inset: 6px;
+  --dock-inset: 4px;
   --r-dock: 999px;
   --dock-max: 520px;
-  --dock-icon: 20px;
+  --dock-icon: 22px;
   --row-tint: rgba(14, 42, 71, .025);
   --lake-blue: #2F6FB2;
   --park: #26764E;
@@ -139,30 +139,46 @@
   --mark-6: hsl(330 28% 42%);
   --mark-7: hsl(90 28% 42%);
 
-  /* type */
+  /* type. In rem, so a reader's own browser text size scales every word
+     (16px = 1rem). The few px sizes are layout-bound: the tab bar's labels
+     (nine must fit a 390px bar), the initials inside a fixed-size mark, an
+     emoji drawn as a picture. */
   --serif: "Lora", Georgia, serif;
   --sans: "Archivo", system-ui, -apple-system, "Segoe UI", sans-serif;
-  --fs-wordmark: 24px;   /* Lora 500 */
-  --fs-display: 22px;    /* Lora 500: pick titles, date numerals, ranked numerals */
-  --fs-section: 20px;    /* Lora 500: sheet titles */
-  --fs-title: 17px;      /* Archivo 600: every card title */
-  --fs-body: 15px;       /* Archivo 400: captions, excerpts, the pick's reason */
-  --fs-meta: 13px;       /* Archivo 500/400: source, time, counts */
-  --fs-label: 10px;      /* Archivo 500: tab bar labels, date tile weekday */
-  --fs-button: 14px;     /* Archivo 600 */
-  --fs-caps: 12px;       /* Archivo 700, the only uppercase: eyebrow, new-since line, "Coming in the rebuild" */
-  --fs-tag: 11px;        /* Archivo 600: Local, Btown Brief */
+  --fs-wordmark: 1.5rem;     /* 24, Lora 500 */
+  --fs-display: 1.375rem;    /* 22, Lora 500: pick titles, date numerals, ranked numerals */
+  --fs-section: 1.25rem;     /* 20, Lora 500: sheet titles */
+  --fs-title: 1.0625rem;     /* 17, Archivo 600: every card title */
+  --fs-body: 0.9375rem;      /* 15, Archivo 400: captions, excerpts, the pick's reason */
+  --fs-meta: 0.8125rem;      /* 13, Archivo 500/400: source, time, counts */
+  --fs-label: 10px;          /* Archivo 500: the date tile weekday */
+  --fs-nav: 12px;            /* Archivo 500: the phone bar's five labels (was 10 when it held nine) */
+  --fs-button: 0.875rem;     /* 14, Archivo 600 */
+  --fs-caps: 0.75rem;        /* 12, Archivo 700, the only uppercase: eyebrow, new-since line, "Coming in the rebuild" */
+  --fs-tag: 0.6875rem;       /* 11, Archivo 600: Local, Btown Brief */
   /* shell: sizes the prototype's layouts use, named once */
-  --fs-hero: 24px;       /* Lora: a hero, a deal, a stat, the spin button */
-  --fs-empty: 26px;      /* Lora: an empty-state tab name */
-  --fs-sec: 21px;        /* Lora: a section head inside a tab */
-  --fs-date: 18px;       /* Lora: the dateline's date, weather numerals, ranks */
-  --fs-lead: 16px;       /* Archivo: a post with no title, a ranked title, the promise line */
-  --fs-sub: 14px;        /* Archivo: titles under posters and shelf cards */
-  --fs-small: 12px;      /* Archivo: lines under posters, fine print */
-  --fs-mark-xs: 8px;     /* initials inside the 18px source mark */
-  --fs-mark-xl: 17px;    /* initials inside the 48px avatar */
-  --fs-emoji: 30px;      /* shell: an emoji standing in for a picture (a game in a 52px list thumb) */
+  --fs-hero: 1.5rem;         /* 24, Lora: a hero, a deal, a stat, the spin button */
+  --fs-empty: 1.625rem;      /* 26, Lora: an empty-state tab name */
+  --fs-sec: 1.3125rem;       /* 21, Lora: a section head inside a tab */
+  --fs-date: 1.125rem;       /* 18, Lora: the dateline's date, weather numerals, ranks */
+  --fs-lead: 1rem;           /* 16, Archivo: a post with no title, a ranked title, the promise line */
+  --fs-sub: 0.875rem;        /* 14, Archivo: titles under posters and shelf cards */
+  --fs-small: 0.75rem;       /* 12, Archivo: lines under posters, fine print */
+  --fs-mark-xs: 8px;         /* initials inside the 18px source mark (no longer on the Wire) */
+  --fs-mark-xl: 17px;        /* initials inside the 48px avatar */
+  --fs-emoji: 30px;          /* shell: an emoji standing in for a picture (a game in a 52px list thumb) */
+  /* the Wire (2026-10-19, "hard to read if I have trouble seeing"): big
+     headlines, a 16px floor for reading text, 14px for the meta line.
+     The desktop sizes take over at 1024px and up (app.css). */
+  --fs-w-head: 1.75rem;      /* 28, Lora: "Today's top stories", a day's head */
+  --fs-w-lead: 1.5rem;       /* 24, Lora: a top story's headline on a phone */
+  --fs-w-lead-xl: 2rem;      /* 32, Lora: the first top story on a wide screen */
+  --fs-w-card: 1.3125rem;    /* 21, Lora: a top story in the wide screen's two-up grid */
+  --fs-w-title: 1.1875rem;   /* 19, Archivo 600: a story row's headline */
+  --fs-w-title-xl: 1.25rem;  /* 20, the same on a wide screen */
+  --fs-w-dek: 1rem;          /* 16, a top story's one-line reason, a post's words */
+  --fs-w-meta: 0.875rem;     /* 14, Source · 3h */
+  --fs-w-seg: 1rem;          /* 16, News · Photos · Square */
   --lh-tight: 1.15;
   --lh-title: 1.3;
   --lh-body: 1.45;
@@ -170,7 +186,15 @@
   /* space: 4 8 12 16 20 24 32 */
   --s1: 4px; --s2: 8px; --s3: 12px; --s4: 16px; --s5: 20px; --s6: 24px; --s8: 32px;
   --gutter: 16px;        /* side gutter on a phone, also the card's horizontal padding */
-  --col: 640px;          /* the feed column on a wide screen */
+  --col: 640px;          /* a reading column inside a tab (Habits, the Square's compose) */
+  /* wide screens (1024 and up): a centred grid, the nine tabs on the left,
+     the tab in the middle, a context rail on the right at 1280 and up */
+  --nav-w: 220px;
+  --main-w: 720px;
+  --aside-w: 300px;
+  --grid-gap: 32px;
+  --w-thumb: 104px;      /* a story row's picture on a phone */
+  --w-thumb-xl: 136px;   /* and on a wide screen */
 
   /* radius */
   --r-media: 12px;       /* posters, image posts, pick art */
