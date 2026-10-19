@@ -1056,11 +1056,17 @@ def run(args):
     call, want_picks, why = decide(day, state, new, et, now)
     key, label = label_for(et)
     if not call:
-        finish(day, pulse, now, changed=False)
+        # newsletter editions are never the editor's call, so a quiet hour
+        # (or the night) still files them; no lead, no picks, no model
+        editions = [item for item in new if item.get("ch") == "newsletters"]
+        filed = apply_answer(day, {}, river(day), editions, False, et, now)["added"] \
+            if editions else []
+        finish(day, pulse, now, changed=bool(filed))
         wc.write_json(files["today"], day)
         wc.write_json(files["state"], state)
-        line_ = (f"curate_wire: {why}, {len(new)} new candidates, no model call; "
-                 f"{day['count']} in today's river")
+        line_ = (f"curate_wire: {why}, {len(new)} new candidates, no model call"
+                 + (f", {len(filed)} newsletter editions filed" if filed else "")
+                 + f"; {day['count']} in today's river")
         print(line_)
         wc.step_summary("- " + line_)
         return 0
