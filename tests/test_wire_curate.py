@@ -234,6 +234,72 @@ class HouseRuleTests(Workdir):
         self.assertEqual(len(own), 1)
         self.assertEqual((own[0]["ch"], own[0]["title"]), ("newsletters", "Friday, October 16th"))
 
+    def newsletter_pulse(self, payload):
+        payload["sources"] += [
+            {"id": "semafor", "name": "Semafor", "short": "Semafor",
+             "site": "https://www.semafor.com/newsletters", "topic": "newsletters"},
+            {"id": "btv-daily", "name": "BTV Daily", "short": "BTV Daily", "site": "",
+             "topic": "newsletters"}]
+        payload["items"] += [
+            {"t": "Anger and shame", "u": "https://semafor.com/s/abc",
+             "d": NOW_TS - 2 * 3600, "s": "semafor"},
+            {"t": "#BTV Daily Friday", "u": "https://us20.campaign-archive.com/?u=a&id=b",
+             "d": NOW_TS - 3 * 3600, "s": "btv-daily"},
+            # no public copy: nowhere to send a reader, so never in the river
+            {"t": "Weekly Wrap", "u": "https://www.inoreader.com/article/1", "x": 1,
+             "d": NOW_TS - 3 * 3600, "s": "btv-daily"}]
+        return payload
+
+    def test_every_linkable_newsletter_edition_runs(self):
+        # Stephen, 2026-10-19: the Newsletters chip read 0 while Inoreader
+        # showed fifteen. The editor skipping them no longer keeps them out.
+        self.write_pulse(self.newsletter_pulse(pulse()))
+
+        def skip_newsletters(numbers, river_n, schema):
+            answer = take_all(numbers, river_n, schema)
+            answer["add"] = answer["add"][:3]
+            answer["picks"] = answer.get("picks", [])[:3]
+            return answer
+        self.run_curate(Stub(skip_newsletters))
+        editions = [item for item in cw.river(self.today()) if item["ch"] == "newsletters"]
+        self.assertEqual(sorted(item["title"] for item in editions),
+                         ["#BTV Daily Friday", "Anger and shame"])
+        self.assertEqual(self.today()["counts"]["everything"]["newsletters"], 2)
+        self.assertEqual(self.today()["counts"]["local"]["newsletters"], 1)
+
+    def test_a_quiet_hour_still_files_newsletter_editions(self):
+        payload = pulse(n_local=0, n_world=0)
+        self.write_pulse(self.newsletter_pulse(payload))
+        stub = Stub(take_all)
+        # picks ranked a minute ago and too few new items to ask about
+        day = cw.empty_day("2026-10-16")
+        day["picks"] = [{"id": "p", "src": "wcax", "title": "x", "rank": 1}]
+        wc.write_json(os.path.join(self.data, "wire-today.json"), day)
+        wc.write_json(os.path.join(self.data, "wire-state.json"),
+                      {"date": "2026-10-16", "picks_at": NOW.isoformat()})
+        with mock.patch.object(cw, "MIN_NEW", 10):
+            self.run_curate(stub)
+        self.assertEqual(stub.prompts, [])          # no model call
+        editions = [item for item in cw.river(self.today()) if item["ch"] == "newsletters"]
+        self.assertEqual(len(editions), 2)
+
+    def test_the_cap_never_drops_a_filed_newsletter_edition(self):
+        et = wc.et_now(NOW)
+        full = [{"id": f"w{k}", "ch": "world", "local": False, "src": "ap", "name": "AP",
+                 "title": f"National {k}", "url": f"https://world.example/{k}",
+                 "posted_at": "2026-10-16T10:00:00+00:00"} for k in range(5)]
+        day = cw.empty_day("2026-10-16")
+        day["updates"] = [{"key": "morning", "label": "Morning", "items": list(full)}]
+        edition = {"id": "nl", "ch": "newsletters", "local": False, "src": "semafor",
+                   "name": "Semafor", "title": "Anger and shame", "url": "https://semafor.com/s/a",
+                   "posted_at": "2026-10-16T09:00:00+00:00"}
+        with mock.patch.object(cw, "RIVER_MAX", 5):
+            result = cw.apply_answer(day, {}, cw.river(day), [edition], False, et, NOW)
+        ids = [item["id"] for item in cw.river(day)]
+        self.assertIn("nl", ids)
+        self.assertEqual(len(ids), 5)
+        self.assertEqual(result["added"], ["nl"])
+
     def test_the_briefs_own_edition_is_never_a_pick(self):
         payload = pulse()
         payload["sources"].append({"id": "btown-brief", "name": "Btown Brief", "short": "Btown Brief",

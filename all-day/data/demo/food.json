@@ -1,5 +1,5 @@
 {
- "_": "Demo data for ?demo=1. Every place, deal, dish and account is invented; the shapes are the real payloads' (data/restaurants.json, data/deals.json, data/small-bites.json, data/instagram-handles.json, all-day/data/instagram.json, the reader dishes as js/photos-lib.js normalizes them, and all-day/data/food-directory.json). Pictures are palette names. The Instagram times and video expiries move with the reader's clock (anchor).",
+ "_": "Demo data for ?demo=1. Every place, deal, dish and account is invented; the shapes are the real payloads' (data/restaurants.json, data/deals.json, data/small-bites.json, data/instagram-handles.json, all-day/data/instagram.json, the reader dishes as js/photos-lib.js normalizes them, all-day/data/food-directory.json, the Reddit intake from the reddit-data branch, and data/best-of-reddit.json). The Reddit threads, questions and Seven Daysies picks are invented too. Pictures are palette names. The Instagram times and video expiries move with the reader's clock (anchor).",
  "anchor": "2026-10-16T12:00:00-04:00",
  "restaurants": {
   "generated": "2026-10-16",
@@ -1351,5 +1351,330 @@
    "demo-lakeside-bar": "demo_lakeside",
    "demo-church-bistro": "demo_bistro"
   }
+ },
+ "reddit": {
+  "v": 1,
+  "generated": "2026-10-16T16:00:00+00:00",
+  "subs": [
+   "r/burlington",
+   "r/vermont"
+  ],
+  "window_days": 10,
+  "state": {
+   "paused": false
+  },
+  "removed": {
+   "demo7": "2026-10-16T10:00:00+00:00"
+  },
+  "posts": [
+   {
+    "id": "demo1",
+    "sub": "r/burlington",
+    "title": "Best breakfast burrito near the waterfront?",
+    "url": "https://www.reddit.com/r/burlington/comments/demo1/best_breakfast_burrito_near_the_waterfro/",
+    "created_exact": false,
+    "kind": "self",
+    "out": null,
+    "score": null,
+    "comments": 23,
+    "flair": null,
+    "nsfw": null,
+    "created": "2026-10-16T14:40:00+00:00",
+    "routes": [
+     "inoreader"
+    ]
+   },
+   {
+    "id": "demo2",
+    "sub": "r/burlington",
+    "title": "Cozy spots for soup on a rainy day",
+    "url": "https://www.reddit.com/r/burlington/comments/demo2/cozy_spots_for_soup_on_a_rainy_day/",
+    "created_exact": false,
+    "kind": "self",
+    "out": null,
+    "score": null,
+    "comments": null,
+    "flair": null,
+    "nsfw": null,
+    "created": "2026-10-16T09:10:00+00:00",
+    "routes": [
+     "inoreader"
+    ]
+   },
+   {
+    "id": "demo3",
+    "sub": "r/burlington",
+    "title": "Lost umbrella on Church St",
+    "url": "https://www.reddit.com/r/burlington/comments/demo3/lost_umbrella_on_church_st/",
+    "created_exact": false,
+    "kind": "self",
+    "out": null,
+    "score": null,
+    "comments": null,
+    "flair": null,
+    "nsfw": null,
+    "created": "2026-10-15T22:00:00+00:00",
+    "routes": [
+     "inoreader"
+    ]
+   },
+   {
+    "id": "demo4",
+    "sub": "r/vermont",
+    "title": "Where to get good dumplings in Winooski?",
+    "url": "https://www.reddit.com/r/vermont/comments/demo4/where_to_get_good_dumplings_in_winooski/",
+    "created_exact": false,
+    "kind": "self",
+    "out": null,
+    "score": null,
+    "comments": 8,
+    "flair": null,
+    "nsfw": null,
+    "created": "2026-10-15T18:30:00+00:00",
+    "routes": [
+     "inoreader"
+    ]
+   },
+   {
+    "id": "demo5",
+    "sub": "r/vermont",
+    "title": "Best maple creemee in the Northeast Kingdom?",
+    "url": "https://www.reddit.com/r/vermont/comments/demo5/best_maple_creemee_in_the_northeast_king/",
+    "created_exact": false,
+    "kind": "self",
+    "out": null,
+    "score": null,
+    "comments": null,
+    "flair": null,
+    "nsfw": null,
+    "created": "2026-10-15T12:00:00+00:00",
+    "routes": [
+     "inoreader"
+    ]
+   },
+   {
+    "id": "demo6",
+    "sub": "r/burlington",
+    "title": "New taco truck opens on North Ave",
+    "url": "https://www.reddit.com/r/burlington/comments/demo6/new_taco_truck_opens_on_north_ave/",
+    "created_exact": false,
+    "kind": "link",
+    "out": null,
+    "score": null,
+    "comments": null,
+    "flair": null,
+    "nsfw": null,
+    "created": "2026-10-14T16:00:00+00:00",
+    "routes": [
+     "inoreader"
+    ]
+   },
+   {
+    "id": "demo7",
+    "sub": "r/burlington",
+    "title": "Best pizza slice downtown?",
+    "url": "https://www.reddit.com/r/burlington/comments/demo7/best_pizza_slice_downtown/",
+    "created_exact": false,
+    "kind": "self",
+    "out": null,
+    "score": null,
+    "comments": null,
+    "flair": null,
+    "nsfw": null,
+    "created": "2026-10-14T13:00:00+00:00",
+    "routes": [
+     "inoreader"
+    ]
+   },
+   {
+    "id": "demo8",
+    "sub": "r/burlington",
+    "title": "Coffee shop recs for working remotely",
+    "url": "https://www.reddit.com/r/burlington/comments/demo8/coffee_shop_recs_for_working_remotely/",
+    "created_exact": false,
+    "kind": "self",
+    "out": null,
+    "score": null,
+    "comments": 41,
+    "flair": null,
+    "nsfw": null,
+    "created": "2026-10-13T15:00:00+00:00",
+    "routes": [
+     "inoreader"
+    ]
+   },
+   {
+    "id": "demo9",
+    "sub": "r/burlington",
+    "title": "Bars to watch the game Saturday?",
+    "url": "https://www.reddit.com/r/burlington/comments/demo9/bars_to_watch_the_game_saturday/",
+    "created_exact": false,
+    "kind": "self",
+    "out": null,
+    "score": null,
+    "comments": null,
+    "flair": null,
+    "nsfw": null,
+    "created": "2026-10-12T20:00:00+00:00",
+    "routes": [
+     "inoreader"
+    ]
+   }
+  ]
+ },
+ "bestof": {
+  "generated": "2026-07-17",
+  "updated": "2026-10-16",
+  "categories": [
+   {
+    "id": "food-restaurants",
+    "title": "Food & Restaurants",
+    "entries": [
+     {
+      "id": "food-restaurants--best-bagels",
+      "question": "Best Bagels",
+      "status": "active",
+      "notes": null,
+      "sevendays_url": "https://community.sevendaysvt.com/best-of/demo",
+      "sevendays_note": "Seven Daysies 2026: Corner Bagel Shop (best bagels)",
+      "sources": [
+       {
+        "year": 2025,
+        "thread_url": "https://www.reddit.com/r/burlington/comments/demoq1/best_bagels/",
+        "label": "Who has the best bagel?"
+       },
+       {
+        "year": 2025,
+        "thread_url": "https://www.reddit.com/r/burlington/comments/demoq2/best_bagels/",
+        "label": "Bagel recommendations"
+       }
+      ]
+     },
+     {
+      "id": "food-restaurants--best-bagel",
+      "question": "Best Bagel",
+      "status": "2023-only",
+      "notes": null,
+      "sevendays_url": null,
+      "sevendays_note": null,
+      "sources": [
+       {
+        "year": 2023,
+        "thread_url": "https://www.reddit.com/r/burlington/comments/demoq3/best_bagel/",
+        "label": "Best bagel in town"
+       }
+      ]
+     },
+     {
+      "id": "food-restaurants--best-nachos",
+      "question": "Best Nachos",
+      "status": "active",
+      "notes": null,
+      "sevendays_url": null,
+      "sevendays_note": null,
+      "sources": [
+       {
+        "year": 2026,
+        "thread_url": "https://www.reddit.com/r/burlington/comments/demoq4/best_nachos/",
+        "label": "Best nachos in town?"
+       }
+      ]
+     },
+     {
+      "id": "food-restaurants--best/worst-restaurants",
+      "question": "Best/Worst Restaurants",
+      "status": "active",
+      "notes": null,
+      "sevendays_url": null,
+      "sevendays_note": null,
+      "sources": [
+       {
+        "year": 2025,
+        "thread_url": "https://www.reddit.com/r/burlington/comments/demoq5/best/worst_restaurants/",
+        "label": "Best and worst restaurants"
+       }
+      ]
+     },
+     {
+      "id": "food-restaurants--best-soup",
+      "question": "Best Soup",
+      "status": "active",
+      "notes": null,
+      "sevendays_url": null,
+      "sevendays_note": null,
+      "sources": [
+       {
+        "year": 2025,
+        "thread_url": "https://www.reddit.com/r/burlington/comments/demoq6/best_soup/",
+        "label": "Where is the best soup?"
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "coffee",
+    "title": "Coffee",
+    "entries": [
+     {
+      "id": "coffee--best-latte",
+      "question": "Best Latte",
+      "status": "active",
+      "notes": null,
+      "sevendays_url": "https://community.sevendaysvt.com/best-of/demo",
+      "sevendays_note": "Seven Daysies 2026: The Demo Roastery",
+      "sources": [
+       {
+        "year": 2025,
+        "thread_url": "https://www.reddit.com/r/burlington/comments/demoq7/best_latte/",
+        "label": "Best latte?"
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "bars-breweries",
+    "title": "Bars & Breweries",
+    "entries": [
+     {
+      "id": "bars-breweries--coziest-bars",
+      "question": "Coziest Bars",
+      "status": "active",
+      "notes": null,
+      "sevendays_url": null,
+      "sevendays_note": null,
+      "sources": [
+       {
+        "year": 2025,
+        "thread_url": "https://www.reddit.com/r/burlington/comments/demoq8/coziest_bars/",
+        "label": "Coziest bars in town please"
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "pets",
+    "title": "Pets",
+    "entries": [
+     {
+      "id": "pets--best-dog-park",
+      "question": "Best Dog Park",
+      "status": "active",
+      "notes": null,
+      "sevendays_url": null,
+      "sevendays_note": null,
+      "sources": [
+       {
+        "year": 2025,
+        "thread_url": "https://www.reddit.com/r/burlington/comments/demoq9/best_dog_park/",
+        "label": "Best dog park"
+       }
+      ]
+     }
+    ]
+   }
+  ]
  }
 }

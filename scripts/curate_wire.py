@@ -151,6 +151,9 @@ rewrite a headline: the page shows each one exactly as the outlet wrote it.
   characters. A pick from NEW is added to the river for you.
   The ranking is a single list by importance, not two lists: local and
   national interleaved, the most important first, whichever kind it is.
+
+Newsletter editions in NEW join the river on their own; leave them out of
+`add` unless one should lead.
 """
 
 
@@ -343,12 +346,16 @@ def reddit_comments(url=REDDIT_INTAKE_URL, timeout=15):
 
 def select_new(pool, in_river, considered, reserved_ids, reserved_urls):
     """The NEW list: eligible, not yet in the river, not passed on, not run
-    before. Returns (new_items, auto_passed_ids)."""
-    local, world, auto = [], [], []
+    before. Returns (new_items, auto_passed_ids). Newsletter editions skip
+    the score bar and the caps: apply_answer adds every one of them."""
+    local, world, auto, editions = [], [], [], []
     for item in pool:
         if item["id"] in in_river or item["id"] in considered:
             continue
         if item["id"] in reserved_ids or item["url"] in reserved_urls:
+            continue
+        if item.get("ch") == "newsletters":
+            editions.append(item)
             continue
         if not item["local"] and item["_score"] < WORLD_MIN_SCORE:
             auto.append(item["id"])
@@ -357,7 +364,7 @@ def select_new(pool, in_river, considered, reserved_ids, reserved_urls):
     rank = lambda item: (-item["_score"], -item["d"])  # noqa: E731
     local.sort(key=rank)
     world.sort(key=rank)
-    return local[:NEW_MAX_LOCAL] + world[:NEW_MAX_WORLD], auto
+    return local[:NEW_MAX_LOCAL] + world[:NEW_MAX_WORLD] + editions, auto
 
 
 def age_label(item, now_ts):
@@ -604,9 +611,13 @@ def apply_answer(day, answer, numbered_river, new, want_picks, et, now, previous
         if index is not None and index not in adds:
             adds.append(index)
     adds = adds[:ADD_MAX if numbered_river else ADD_MAX_FIRST]
-    # the Brief's own edition is always in the paper, never the model's call
+    # the Brief's own edition is always in the paper, never the model's call;
+    # so is every linkable newsletter edition the tagger did not junk, or the
+    # Newsletters chip shows a stray one a day while Inoreader shows fifteen
+    # (Stephen, 2026-10-19: "Why is my Newsletter tab have 0 articles?")
     for index in range(offset, total):
-        if by_index[index].get("own") and index not in adds:
+        item = by_index[index]
+        if (item.get("own") or item.get("ch") == "newsletters") and index not in adds:
             adds.append(index)
 
     picks, pick_seen = [], set()
@@ -656,6 +667,9 @@ def apply_answer(day, answer, numbered_river, new, want_picks, et, now, previous
     protected |= {pick["id"] for pick in (day.get("picks") or []) + (day.get("picks_earlier") or [])}
     protected |= {update["lead"]["id"] for update in updates if update.get("lead")}
     protected |= {item["id"] for item in river(day) if item.get("own")}   # the Brief stays
+    # and so do newsletter editions: filed whatever the editor says, they
+    # would otherwise be the oldest national items the cap drops first
+    protected |= {item["id"] for item in river(day) if item.get("ch") == "newsletters"}
     dropped = []
     excess = len(river(day)) - RIVER_MAX
     if excess > 0:
@@ -1045,11 +1059,17 @@ def run(args):
     call, want_picks, why = decide(day, state, new, et, now)
     key, label = label_for(et)
     if not call:
-        finish(day, pulse, now, changed=False)
+        # newsletter editions are never the editor's call, so a quiet hour
+        # (or the night) still files them; no lead, no picks, no model
+        editions = [item for item in new if item.get("ch") == "newsletters"]
+        filed = apply_answer(day, {}, river(day), editions, False, et, now)["added"] \
+            if editions else []
+        finish(day, pulse, now, changed=bool(filed))
         wc.write_json(files["today"], day)
         wc.write_json(files["state"], state)
-        line_ = (f"curate_wire: {why}, {len(new)} new candidates, no model call; "
-                 f"{day['count']} in today's river")
+        line_ = (f"curate_wire: {why}, {len(new)} new candidates, no model call"
+                 + (f", {len(filed)} newsletter editions filed" if filed else "")
+                 + f"; {day['count']} in today's river")
         print(line_)
         wc.step_summary("- " + line_)
         return 0
@@ -1163,6 +1183,17 @@ def selftest():
         day["picks_earlier"]
     assert all(p["ranked_at"] == now.isoformat() for p in day["picks_earlier"])
     print("curate_wire: dropped picks move to picks_earlier ok")
+
+    # a newsletter edition joins the river whatever the answer, past the score
+    # bar that keeps weak national items from the editor
+    edition = dict(mk(6, local=False, src="semafor"), ch="newsletters", _score=1)
+    picked, passed = select_new([dict(mk(7, local=False, src="ap"), _score=1), edition],
+                                set(), set(), set(), set())
+    assert [i["id"] for i in picked] == ["id6"] and passed == ["id7"]
+    day3 = empty_day("2026-10-16")
+    result = apply_answer(day3, {"add": [], "lead": -1, "lead_why": ""}, [], picked, False, et, now)
+    assert result["added"] == ["id6"] and river(day3)[0]["ch"] == "newsletters"
+    print("curate_wire: newsletter editions always join the river ok")
 
     # lead must be this hour's add or the current update's own item
     day2 = empty_day("2026-10-16")
