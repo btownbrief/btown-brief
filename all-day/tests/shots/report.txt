@@ -1602,17 +1602,17 @@
   ok   What Now, the missions under the spinner (demo) › the Missions chip jumps down to the list, just under the mast
   ok   What Now, the missions under the spinner (demo) › and the answer is still there above it
   ok   What Now, the missions under the spinner (demo) › no console errors
-  ok   What Now, Missions (live) › data/missions.json holds a mission for every Top 100+ entry (108)
+  ok   What Now, Missions (live) › data/missions.json holds a mission for every Top 100+ entry (102)
   ok   What Now, Missions (live) › every paragraph is 60 to 120 words
   ok   What Now, Missions (live) › no dashes or exclamation points, a known theme, at least one place
-  ok   What Now, Missions (live) › needs_check is counted honestly (11)
-  ok   What Now, Missions (live) › all of them, numbered 1 to 108
+  ok   What Now, Missions (live) › needs_check is counted honestly (0)
+  ok   What Now, Missions (live) › all of them, numbered 1 to 102
   ok   What Now, Missions (live) › under the Top 100+ name
   ok   What Now, Missions (live) › a theme shows its own missions only, not the club one
-  ok   What Now, Missions (live) › a theme chip filters to its missions, and its count is right (11)
+  ok   What Now, Missions (live) › a theme chip filters to its missions, and its count is right (8)
   ok   What Now, Missions (live) › Mark done marks it
   ok   What Now, Missions (live) › a mission marked done survives a reload
-  ok   What Now, Missions (live) › and the Missions chip counts it: 1/108
+  ok   What Now, Missions (live) › and the Missions chip counts it: 1/102
   ok   What Now, Missions (live) › signed out, nothing goes to the account
   ok   What Now, Missions (live) › Surprise me scrolls the list to a highlighted mission
   ok   What Now, Missions (live) › and it is one you have not done
@@ -1623,6 +1623,18 @@
   ok   What Now, Missions (live) › signed in, marks are read from and written to the account
   ok   What Now, Missions (live) › and the device copy stands either way
   ok   What Now, Missions (live) › no console errors
+  ok   What Now, the teasers and the old done marks (live) › every mission has a teaser of at most 90 characters, no dash, colon or exclamation point
+  ok   What Now, the teasers and the old done marks (live) › every mission has its own stable mark, m200 to m999
+  ok   What Now, the teasers and the old done marks (live) › each old rank moves to one mission at most
+  ok   What Now, the teasers and the old done marks (live) › the tile shows the teaser under the title
+  ok   What Now, the teasers and the old done marks (live) › old marks land on the missions that replaced them: two old entries nested into m2 mark it once, m19 marks m17
+  ok   What Now, the teasers and the old done marks (live) › and the device keeps them under the stable marks, the old keys gone, the latest time kept
+  ok   What Now, the teasers and the old done marks (live) › the move happens once: a reload keeps the same two, and the chip counts 2/102
+  ok   What Now, the teasers and the old done marks (live) › the sheet gives each place its line on why it is the pick
+  ok   What Now, the teasers and the old done marks (live) › no console errors
+  ok   What Now, the teasers and the old done marks (live) › the account’s old rank and its stable mark both land on the right missions, and nothing else
+  ok   What Now, the teasers and the old done marks (live) › and the account is moved too: the old row deleted, the stable mark set
+  ok   What Now, the teasers and the old done marks (live) › no console errors
   ok   What Now, Tonight (live, a reader in Los Angeles) › Tonight lists only items after 5 pm today in America/New_York
   ok   What Now, Tonight (live, a reader in Los Angeles) › tonight’s late listing is there
   ok   What Now, Tonight (live, a reader in Los Angeles) › a listing posted twice shows once
@@ -2793,7 +2805,7 @@
   ok   sign-in fails soft › a bad address is caught before any request
   ok   sign-in fails soft › no link was requested
   ok   sign-in fails soft › no console errors
-  ok   performance › the live Wire redraws 60 cards in 19ms (budget 100)
+  ok   performance › the live Wire redraws 60 cards in 14ms (budget 100)
   ok   shell fixes: a rail never snaps flush to the edge › 390: .rail carries scroll-padding of one gutter
   ok   shell fixes: a rail never snaps flush to the edge › 390: a card scrolled to the start stops at the gutter
   ok   shell fixes: a rail never snaps flush to the edge › 390: no console errors
@@ -3089,7 +3101,7 @@
   ok   Habits, swipe to archive with Undo, drag and keys to reorder, edit (demo, 1280, dark) › habits: at most 2 subnav rows
   ok   Habits, swipe to archive with Undo, drag and keys to reorder, edit (demo, 1280, dark) › no console errors
   ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › twenty habits, in order
-  ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › twenty habits and a year of taps: a tap still shows at once (12, 12, 12, 13 ms)
+  ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › twenty habits and a year of taps: a tap still shows at once (12, 11, 12, 11 ms)
   ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › the heat map is all there, and four taps leave it as it was
   ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › every row keeps its seven dots and its 48px tap
   ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › the list is longer than the screen, and the panel scrolls
