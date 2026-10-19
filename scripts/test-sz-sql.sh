@@ -1,9 +1,12 @@
 #!/usr/bin/env bash
 # Applies all-day/supabase/sz-SETUP.sql (the Habits tab), then sz-ROUND2.sql
-# (the rules with only the abuse ceiling of 100) and sz-ROUND3.sql (no name
-# wall, and sz_import_local) over it, to a scratch LOCAL
+# (the rules with only the abuse ceiling of 100), sz-ROUND3.sql (no name
+# wall, and sz_import_local) and sz-FOREST.sql (share your forest) over it,
+# to a scratch LOCAL
 # Postgres database, seeds it with scripts/sz-seed.sql, and runs the checks
-# in scripts/test-sz-sql.sql and scripts/test-sz-import.sql against it as the anon and authenticated roles,
+# in scripts/test-sz-sql.sql, scripts/test-sz-import.sql and scripts/test-sz-forest.sql
+# (plus the forest's JS-vs-SQL parity cases from scripts/test-sz-forest.mjs)
+# against it as the anon and authenticated roles,
 # the way the app's publishable key reaches Supabase. It never touches the
 # live project.
 #
@@ -35,6 +38,10 @@ fi
 
 apply() { psql -v ON_ERROR_STOP=1 -d "$DB" -q -f "$1" >/dev/null; }
 check() { psql -v ON_ERROR_STOP=1 -d "$DB" -q -o /dev/null -f "$1"; }
+PARITY=$(mktemp -t sz-forest-parity.XXXXXX)
+trap 'rm -f "$PARITY"' EXIT
+node scripts/test-sz-forest.mjs --parity-sql > "$PARITY"
+forest() { check scripts/test-sz-forest.sql; check "$PARITY"; }
 
 fresh() {
 psql -v ON_ERROR_STOP=1 -d postgres -qc "drop database if exists $DB" -qc "create database $DB" >/dev/null
@@ -64,10 +71,15 @@ apply all-day/supabase/sz-ROUND2.sql
 apply all-day/supabase/sz-ROUND2.sql
 apply all-day/supabase/sz-ROUND3.sql
 apply all-day/supabase/sz-ROUND3.sql
+apply all-day/supabase/sz-FOREST.sql
+apply all-day/supabase/sz-FOREST.sql
+# sz-SETUP.sql pasted again after the forest must not undo it (sz_delete_me)
+apply all-day/supabase/sz-SETUP.sql
 apply scripts/sz-seed.sql
 apply scripts/sz-seed.sql
 check scripts/test-sz-sql.sql
 check scripts/test-sz-import.sql
+forest
 
 # 2. the same, on a database that already has the boards
 fresh
@@ -82,14 +94,16 @@ apply all-day/supabase/sz-ROUND2.sql
 apply all-day/supabase/sz-ROUND2.sql
 apply all-day/supabase/sz-ROUND3.sql
 apply all-day/supabase/sz-ROUND3.sql
+apply all-day/supabase/sz-FOREST.sql
 apply scripts/sz-seed.sql
 check scripts/test-sz-sql.sql
 check scripts/test-sz-import.sql
+forest
 
 # 3. the live project's way: the first sz-SETUP.sql (ceiling 5, the name wall), then sz-ROUND2.sql and sz-ROUND3.sql
 fresh
 FIRST=$(mktemp -t sz-first.XXXXXX)
-trap 'rm -f "$FIRST"' EXIT
+trap 'rm -f "$FIRST" "$PARITY"' EXIT
 perl -pe 's/"habitsMax":100,/"habitsMax":5,/; s/^(  if v_text = .. or char_length\(v_text\) > \(L ->> .habitTextMax.\)::int then raise exception .bad_text.; end if;)$/  if not exists (select 1 from public.sz_members where user_id = u) then raise exception \x27no_member\x27; end if;\n$1/' \
   all-day/supabase/sz-SETUP.sql > "$FIRST"
 grep -q '"habitsMax":5,' "$FIRST"
@@ -100,9 +114,11 @@ apply all-day/supabase/sz-ROUND2.sql
 apply all-day/supabase/sz-ROUND2.sql
 apply all-day/supabase/sz-ROUND3.sql
 apply all-day/supabase/sz-ROUND3.sql
+apply all-day/supabase/sz-FOREST.sql
 apply scripts/sz-seed.sql
 check scripts/test-sz-sql.sql
 check scripts/test-sz-import.sql
+forest
 
 psql -d postgres -qc "drop database if exists $DB" >/dev/null
 echo "test-sz-sql: OK"

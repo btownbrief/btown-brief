@@ -2645,7 +2645,7 @@
   ok   sign-in fails soft › a bad address is caught before any request
   ok   sign-in fails soft › no link was requested
   ok   sign-in fails soft › no console errors
-  ok   performance › the live Wire redraws 60 cards in 14ms (budget 100)
+  ok   performance › the live Wire redraws 60 cards in 11ms (budget 100)
   ok   shell fixes: a rail never snaps flush to the edge › 390: .rail carries scroll-padding of one gutter
   ok   shell fixes: a rail never snaps flush to the edge › 390: a card scrolled to the start stops at the gutter
   ok   shell fixes: a rail never snaps flush to the edge › 390: no console errors
@@ -2844,9 +2844,11 @@
   ok   boards: a Vintage photo stays out of the gallery; an Art photo joins it (live) › resized to a jpeg, credited by first name, no email
   ok   boards: a Vintage photo stays out of the gallery; an Art photo joins it (live) › no console errors
   ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › the between-seasons tile: when the next season starts, and a sign-up button
-  ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › signed out, a first visit: one line and the Add habit row, then the season tile, no sign-in wall
+  ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › signed out, a first visit: what the page does, the forest’s “?”, three starter habits, Add habit, then the season tile; no sign-in wall
+  ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › a first visit opens on what the page does, front and centre
+  ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › an empty forest: a ghost sapling, and nothing to share yet
   ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › no habits, no numbers: no today line and no heat map
-  ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › the chips: Today, Goal, Season, Wall
+  ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › the chips: Today, Forests, Goal, Season, Wall
   ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › the season is signed-in only, and says so only when Sign up is tapped
   ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › signed in: the demo’s three habits, in order
   ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › each row: seven dots and a tap target at least 48px
@@ -2872,11 +2874,11 @@
   ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › habits: no sideways scroll at 390
   ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › habits: at most 2 subnav rows
   ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › no console errors
-  ok   Habits, the numbers: today on top, the heat map, a habit’s month and best streak (demo, 390, Wednesday Oct 14) › today on top, then the habits, then the weeks behind them; the season tile last
+  ok   Habits, the numbers: today on top, the heat map, a habit’s month and best streak (demo, 390, Wednesday Oct 14) › the first visit’s help, then today, the forest, the habits, the weeks behind them; the season tile last
   ok   Habits, the numbers: today on top, the heat map, a habit’s month and best streak (demo, 390, Wednesday Oct 14) › Wednesday: the walk done, reading and the gym still to do; every due day of the last week done
   ok   Habits, the numbers: today on top, the heat map, a habit’s month and best streak (demo, 390, Wednesday Oct 14) › sixteen weeks, Monday to Sunday, ending this week
   ok   Habits, the numbers: today on top, the heat map, a habit’s month and best streak (demo, 390, Wednesday Oct 14) › today half done and marked, yesterday all done, tomorrow blank, before the habits began nothing
-  ok   Habits, the numbers: today on top, the heat map, a habit’s month and best streak (demo, 390, Wednesday Oct 14) › a tap moves today’s count and today’s square in the same click (4 ms)
+  ok   Habits, the numbers: today on top, the heat map, a habit’s month and best streak (demo, 390, Wednesday Oct 14) › a tap moves today’s count and today’s square in the same click (3 ms)
   ok   Habits, the numbers: today on top, the heat map, a habit’s month and best streak (demo, 390, Wednesday Oct 14) › all three: “All done today”, and the bar full
   ok   Habits, the numbers: today on top, the heat map, a habit’s month and best streak (demo, 390, Wednesday Oct 14) › the streak, the best streak and the last thirty days
   ok   Habits, the numbers: today on top, the heat map, a habit’s month and best streak (demo, 390, Wednesday Oct 14) › this month: the 1st is a Thursday, and no month after it
@@ -2909,14 +2911,14 @@
   ok   Habits, swipe to archive with Undo, drag and keys to reorder, edit (demo, 1280, dark) › habits: at most 2 subnav rows
   ok   Habits, swipe to archive with Undo, drag and keys to reorder, edit (demo, 1280, dark) › no console errors
   ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › twenty habits, in order
-  ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › twenty habits and a year of taps: a tap still shows at once (9, 9, 9, 9 ms)
+  ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › twenty habits and a year of taps: a tap still shows at once (12, 11, 11, 12 ms)
   ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › the heat map is all there, and four taps leave it as it was
   ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › every row keeps its seven dots and its 48px tap
   ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › the list is longer than the screen, and the panel scrolls
   ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › the Add habit row is still there at twenty
   ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › a swipe left on the seventeenth row archives it
   ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › Undo brings it back, at the bottom
-  ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › held near the bottom, the drag scrolls the list (1612px)
+  ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › held near the bottom, the drag scrolls the list (2712px)
   ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › and Habit 4 travels down the list, to row 20
   ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › no row lost or doubled on the way
   ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › and the server keeps the order
@@ -2947,9 +2949,9 @@
   ok   Habits, the day turns at midnight New York, not the phone’s (demo, a reader in Tokyo) › a fresh day starts untapped
   ok   Habits, the day turns at midnight New York, not the phone’s (demo, a reader in Tokyo) › and a tap now is Thursday’s
   ok   Habits, the day turns at midnight New York, not the phone’s (demo, a reader in Tokyo) › no console errors
-  ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 390, light) › a first visit: one line and Add habit, nothing seeded, no sign-in wall
+  ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 390, light) › a first visit: one line, the starters and Add habit, nothing seeded, no sign-in wall
   ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 390, light) › three habits, two tapped, at once (4 ms)
-  ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 390, light) › and nothing personal went to the server
+  ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 390, light) › and nothing personal went to the server (the season and the public forests only)
   ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 390, light) › kept on this phone, under one versioned key
   ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 390, light) › one quiet line under the list: Sync across devices
   ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 390, light) › habits: nothing fixed or sticky inside the tab
@@ -2973,9 +2975,9 @@
   ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 390, light) › habits: no sideways scroll at 390
   ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 390, light) › habits: at most 2 subnav rows
   ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 390, light) › no console errors
-  ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 1280, dark) › a first visit: one line and Add habit, nothing seeded, no sign-in wall
+  ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 1280, dark) › a first visit: one line, the starters and Add habit, nothing seeded, no sign-in wall
   ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 1280, dark) › three habits, two tapped, at once (3 ms)
-  ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 1280, dark) › and nothing personal went to the server
+  ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 1280, dark) › and nothing personal went to the server (the season and the public forests only)
   ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 1280, dark) › kept on this phone, under one versioned key
   ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 1280, dark) › one quiet line under the list: Sync across devices
   ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 1280, dark) › habits: nothing fixed or sticky inside the tab
@@ -3006,7 +3008,7 @@
   ok   Habits, signing in to an account that already has habits adds this phone’s by name, never twice (demo, 390) › and with the archived habit left behind, the phone keeps its copy
   ok   Habits, signing in to an account that already has habits adds this phone’s by name, never twice (demo, 390) › signing in again sends nothing twice
   ok   Habits, signing in to an account that already has habits adds this phone’s by name, never twice (demo, 390) › no console errors
-  ok   Habits, live: no season, a season, and before the paste › no season scheduled: it says so, and no button
+  ok   Habits, live: no season, a season, and before the paste › no season scheduled: no box at all
   ok   Habits, live: no season, a season, and before the paste › signed out, nothing personal is asked for
   ok   Habits, live: no season, a season, and before the paste › habits: nothing fixed or sticky inside the tab
   ok   Habits, live: no season, a season, and before the paste › habits: uppercase only in the caps roles
@@ -3017,7 +3019,11 @@
   ok   Habits, live: no season, a season, and before the paste › no console errors
   ok   Habits, live: no season, a season, and before the paste › a season to come: in 5 Burlington days
   ok   Habits, live: no season, a season, and before the paste › signed in, Sign up opens the season’s payment link
-  ok   Habits, live: no season, a season, and before the paste › before sz-SETUP.sql is pasted: the tile, and one line
+  ok   Habits, live: no season, a season, and before the paste › before sz-SETUP.sql is pasted: one line, and no empty season box
+  ok   Habits, live: no season, a season, and before the paste › before sz-FOREST.sql is pasted: the tree still grows, from the habit’s own taps
+  ok   Habits, live: no season, a season, and before the paste › and Share and the Forests chip stay hidden; the “?” stays
+  ok   Habits, live: no season, a season, and before the paste › it asked, and took the missing doors as “not yet”
+  ok   Habits, live: no season, a season, and before the paste › no console errors but the expected 404s
   ok   Habits, live: a refresh never loses a tap, and a refused one is taken back › tapped while the server is slow: shown at once
   ok   Habits, live: a refresh never loses a tap, and a refused one is taken back › the tap is written to this phone before the server answers
   ok   Habits, live: a refresh never loses a tap, and a refused one is taken back › after a refresh the tap is still there
@@ -3028,6 +3034,47 @@
   ok   Habits, live: a refresh never loses a tap, and a refused one is taken back › no console errors beyond the refusal
   ok   Habits, live: deleting the account deletes the habits first, and stops if it cannot › the habits could not be deleted: nothing else is, the reader stays signed in, and it says so
   ok   Habits, live: deleting the account deletes the habits first, and stops if it cannot › then: the habits first, then the posts and profile
+  ok   Habits, the forest: a tree per habit, a leaf per tap, flowers, help, starters (demo, 390) › the “?” opens How Habits works: four lines
+  ok   Habits, the forest: a tree per habit, a leaf per tap, flowers, help, starters (demo, 390) › a starter adds a daily habit in one tap, and the starters step aside
+  ok   Habits, the forest: a tree per habit, a leaf per tap, flowers, help, starters (demo, 390) › and plants its tree: no leaves yet (one name for the button, the picture itself decorative)
+  ok   Habits, the forest: a tree per habit, a leaf per tap, flowers, help, starters (demo, 390) › a tap grows a leaf, in the same click (5 ms)
+  ok   Habits, the forest: a tree per habit, a leaf per tap, flowers, help, starters (demo, 390) › Got it puts the help away
+  ok   Habits, the forest: a tree per habit, a leaf per tap, flowers, help, starters (demo, 390) › one tree per habit, in the list’s order
+  ok   Habits, the forest: a tree per habit, a leaf per tap, flowers, help, starters (demo, 390) › each tree has a leaf for every day done in the last 370
+  ok   Habits, the forest: a tree per habit, a leaf per tap, flowers, help, starters (demo, 390) › the morning walk’s week-long streak has bloomed: 1 flower
+  ok   Habits, the forest: a tree per habit, a leaf per tap, flowers, help, starters (demo, 390) › a tree is the same drawing wherever it is made: its seed, its leaves, its flowers
+  ok   Habits, the forest: a tree per habit, a leaf per tap, flowers, help, starters (demo, 390) › tapping a tree opens its habit, with the tree big on top
+  ok   Habits, the forest: a tree per habit, a leaf per tap, flowers, help, starters (demo, 390) › habits: nothing fixed or sticky inside the tab
+  ok   Habits, the forest: a tree per habit, a leaf per tap, flowers, help, starters (demo, 390) › habits: uppercase only in the caps roles
+  ok   Habits, the forest: a tree per habit, a leaf per tap, flowers, help, starters (demo, 390) › habits: no monospace
+  ok   Habits, the forest: a tree per habit, a leaf per tap, flowers, help, starters (demo, 390) › habits: no escaped markup, undefined or NaN on the page
+  ok   Habits, the forest: a tree per habit, a leaf per tap, flowers, help, starters (demo, 390) › habits: no sideways scroll at 390
+  ok   Habits, the forest: a tree per habit, a leaf per tap, flowers, help, starters (demo, 390) › habits: at most 2 subnav rows
+  ok   Habits, the forest: a tree per habit, a leaf per tap, flowers, help, starters (demo, 390) › no console errors
+  ok   Habits, the forest: a tree per habit, a leaf per tap, flowers, help, starters (demo, 390) › reduced motion: the new leaf does not grow in, it is just there
+  ok   Habits, sharing a forest: any name, names or just the trees, the gallery, a link (demo, 390) › signed out, Share asks for a sign-in first
+  ok   Habits, sharing a forest: any name, names or just the trees, the gallery, a link (demo, 390) › the share sheet: public, the first name to start, every tree, just the trees, and one line on who sees it
+  ok   Habits, sharing a forest: any name, names or just the trees, the gallery, a link (demo, 390) › an email is never a name: refused
+  ok   Habits, sharing a forest: any name, names or just the trees, the gallery, a link (demo, 390) › saved: under the name typed, tidied, public, trees only, without the Gym
+  ok   Habits, sharing a forest: any name, names or just the trees, the gallery, a link (demo, 390) › the forest says it is public
+  ok   Habits, sharing a forest: any name, names or just the trees, the gallery, a link (demo, 390) › Forests: four forests, mine marked You, its trees without their names
+  ok   Habits, sharing a forest: any name, names or just the trees, the gallery, a link (demo, 390) › a forest that shows names shows them, with its trees and leaves counted
+  ok   Habits, sharing a forest: any name, names or just the trees, the gallery, a link (demo, 390) › no email or phone anywhere in the gallery
+  ok   Habits, sharing a forest: any name, names or just the trees, the gallery, a link (demo, 390) › and the address says Forests
+  ok   Habits, sharing a forest: any name, names or just the trees, the gallery, a link (demo, 390) › habits: nothing fixed or sticky inside the tab
+  ok   Habits, sharing a forest: any name, names or just the trees, the gallery, a link (demo, 390) › habits: uppercase only in the caps roles
+  ok   Habits, sharing a forest: any name, names or just the trees, the gallery, a link (demo, 390) › habits: no monospace
+  ok   Habits, sharing a forest: any name, names or just the trees, the gallery, a link (demo, 390) › habits: no escaped markup, undefined or NaN on the page
+  ok   Habits, sharing a forest: any name, names or just the trees, the gallery, a link (demo, 390) › habits: no sideways scroll at 390
+  ok   Habits, sharing a forest: any name, names or just the trees, the gallery, a link (demo, 390) › habits: at most 2 subnav rows
+  ok   Habits, sharing a forest: any name, names or just the trees, the gallery, a link (demo, 390) › a forest opens in a sheet, each tree with its leaves
+  ok   Habits, sharing a forest: any name, names or just the trees, the gallery, a link (demo, 390) › once public, the sheet has a link to send
+  ok   Habits, sharing a forest: any name, names or just the trees, the gallery, a link (demo, 390) › stop sharing: private again, and the tag is gone
+  ok   Habits, sharing a forest: any name, names or just the trees, the gallery, a link (demo, 390) › and it leaves the gallery, which offers Share yours
+  ok   Habits, sharing a forest: any name, names or just the trees, the gallery, a link (demo, 390) › no console errors
+  ok   Habits, sharing a forest: any name, names or just the trees, the gallery, a link (demo, 390) › #habits/f-<id> opens Forests on that forest and flashes it
+  ok   Habits, sharing a forest: any name, names or just the trees, the gallery, a link (demo, 390) › a link to a forest no longer public says so
+  ok   Habits, sharing a forest: any name, names or just the trees, the gallery, a link (demo, 390) › no console errors
   ok   What Now, the sunset in the weather line says a score only when there is one (live) › a 0.0 (the forecast missing) is no score: the time, and that it is tomorrow’s
   ok   What Now, the sunset in the weather line says a score only when there is one (live) › a score worked out without the forecast is not shown either
   ok   What Now, the sunset in the weather line says a score only when there is one (live) › a real score is shown beside the time

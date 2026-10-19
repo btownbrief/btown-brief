@@ -136,3 +136,40 @@ the same, and no SQL changed.
   "6:05 sunset tomorrow, 7.4/10", the score only when it is a real one.
 - Vintage's shirt sheet lost its "Vote for it on the Art wall" button; old shirt links
   still open the piece.
+
+## Round three: a forest (Stephen, 2026-10-19)
+
+"I want there to be visual already there for people. Basically I want people to add a habit and
+then a tree or branch appears. Then as they check off the habit that day then another leaf grows."
+That reverses the build notes' "no illustrations" (round two kept to it); his words win.
+
+- **A habit is a tree** (`js/forest.js`). Its shape comes from a seed, a hash of the habit's id
+  (FNV-1a, so the server can work out the same number); its size and leaves from the days it was
+  done in the last 370, the window the tab already loads; its flowers from its best streak in that
+  window. Those three numbers draw the same tree anywhere: Today, the habit's sheet, or someone
+  else's phone in Forests. No picture is stored.
+- **A leaf per day done, each in its own spot.** The shape has at least 380 leaf spots and leaf k
+  always takes spot k, so a tap adds exactly one leaf, which grows in (not with reduced motion), and
+  moves none of the others. The tree grows a little with every leaf, full size at 120. A day older
+  than the window drops its leaf, as the streaks already drop days older than the window.
+- **Flowers for the best streak, not the running one**, so a missed day never takes a flower away
+  (no streak-break shaming). Days: 7, 21, 50, 100, 200, 300. Weeks (N a week): 2, 4, 8, 16, 26, 40.
+- **A habit moved from the phone to an account changes shape once**: it gets a new id there. Its
+  leaves, which come from its taps, stay.
+- **The forest stands over the list**, right under today's numbers, so the leaf that grows is on
+  screen when you tap. With no habits it is a ghost sapling. Tapping a tree opens its habit.
+- **Sharing** (`sz-FOREST.sql`, Part D): public or not, any name (no `@`, so never an email),
+  habit names or only the trees, which habits. Default when first opened: public, every habit,
+  just the trees, the member's first name if they gave one. A public forest shows, for each shared
+  habit, its seed, how often, leaves, streak and best streak, and its name only when chosen; never
+  a tap date. The server works the streaks out with the same rules (`sz_forest_tree`), and
+  `scripts/test-sz-forest.mjs` checks 360 random habits agree with `habits-core.js`.
+- **Forests** is a chip, newest-tended first, 40 forests, 24 trees each. Stephen can hide one
+  (`hidden_at`). A cohort field is kept for later; nothing shows it.
+- **Before the paste** sharing hides itself (the gallery's function is missing, so the chip and
+  Share are left out); the trees work regardless.
+- **A first visit opens on four lines of what the page does**, with "Got it"; the "?" by the
+  forest shows them again any time. **An empty Today offers three starter habits**, one tap each
+  (Walk outside daily, Read the Brief 3 a week, Try a new Burlington place once a week), and **the
+  season box is gone when there is no season** (three outside reviews: an empty tab gave "no
+  reason to begin").
