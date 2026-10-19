@@ -421,7 +421,9 @@ export function sheet(titleText, build) {
   const scrim = el('div', 'sheet-scrim');
   const card = el('div', 'sheet-card');
   card.setAttribute('role', 'dialog');
+  card.setAttribute('aria-modal', 'true');
   card.setAttribute('aria-label', titleText);
+  const opener = document.activeElement;
   const head = el('div', 'sheet-head', '<h2>' + esc(titleText) + '</h2>');
   const x = el('button', 'iconbtn', ICON.x);
   x.setAttribute('aria-label', 'Close');
@@ -430,11 +432,17 @@ export function sheet(titleText, build) {
   card.append(el('div', 'grab'), head, body);
   s.append(scrim, card);
   s.hidden = false;
-  const close = () => { s.hidden = true; s.innerHTML = ''; if (sheetClose === close) sheetClose = null; };
+  const close = () => {
+    s.hidden = true; s.innerHTML = '';
+    if (sheetClose === close) sheetClose = null;
+    /* focus goes back where it came from, if that is still on the page */
+    if (opener && opener.isConnected && opener !== document.body && typeof opener.focus === 'function') opener.focus({ preventScroll: true });
+  };
   sheetClose = close;
   x.addEventListener('click', close);
   scrim.addEventListener('click', close);
   build(body, card, close);
+  x.focus({ preventScroll: true });
   return close;
 }
 
@@ -1002,9 +1010,11 @@ function paintTabs() {
   });
   const m = $('tab-more');
   if (m) {
+    /* on a phone the tab you are on is hidden when it lives in More, so More
+       is the selected tab there */
     const inMore = MORE_TABS.includes(active);
     m.classList.toggle('on', inMore);
-    if (inMore) m.setAttribute('aria-current', 'page'); else m.removeAttribute('aria-current');
+    m.setAttribute('aria-selected', inMore ? 'true' : 'false');
   }
 }
 
@@ -1119,6 +1129,8 @@ export function start() {
   const more = el('button', 'more-btn', ICON.grid + '<span>More</span>');
   more.id = 'tab-more';
   more.type = 'button';
+  more.setAttribute('role', 'tab');
+  more.setAttribute('aria-selected', 'false');
   more.setAttribute('aria-haspopup', 'dialog');
   more.setAttribute('aria-label', 'More: ' + MORE_TABS.map((k) => registry[k] && registry[k].label).filter(Boolean).join(', '));
   more.addEventListener('click', moreSheet);
@@ -1161,6 +1173,8 @@ document.addEventListener('error', (e) => {
   const img = e.target;
   if (!img || img.tagName !== 'IMG' || !img.classList.contains('pic')) return;
   const box = img.closest('.c-thumb, .c-media, .th, .tile, .p-art, .mark');
+  const wbox = img.closest('.w-thumb, .w-pic');
+  if (wbox) { wbox.closest('.card')?.classList.remove(wbox.classList.contains('w-thumb') ? 'has-thumb' : 'has-pic'); wbox.remove(); return; }
   if (box && box.classList.contains('c-thumb')) { box.closest('.card')?.classList.remove('has-thumb'); box.remove(); }
   else if (box && box.classList.contains('c-media') && !box.closest('.poster, .vcard, .hero, .result, .lb, .peek')) box.remove();
   else img.remove();

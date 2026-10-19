@@ -399,8 +399,18 @@ function openFilters() {
 }
 function paintFilters() {
   if (!FBODY || !FBODY.isConnected) { FBODY = null; return; }
+  /* the sheet is drawn again on every change: keep the reader's place in it */
+  const was = document.activeElement && FBODY.contains(document.activeElement) ? focusKey(document.activeElement) : null;
   FBODY.innerHTML = '';
   FBODY.appendChild(filtersUI());
+  if (was) { const n = FBODY.querySelector(was); if (n && !n.disabled) n.focus({ preventScroll: true }); }
+}
+function focusKey(n) {
+  if (n.dataset.chip) return '.chip[data-chip="' + CSS.escape(n.dataset.chip) + '"]';
+  if (n.dataset.slot) return '.wm-slot[data-slot="' + CSS.escape(n.dataset.slot) + '"]';
+  if (n.classList.contains('localsw-half')) return '.localsw-half.on';
+  const label = n.getAttribute('aria-label');
+  return label ? '[aria-label="' + CSS.escape(label) + '"]' : null;
 }
 /* something that narrows the paper changed: the button's count, the
    sheet, the rail and the paper, from the top */
@@ -412,10 +422,12 @@ function changed() {
 }
 function pickKind(k) {
   W.ch = k;
+  /* a ranking of the day only reads on the whole paper */
+  if (k !== 'all') W.slot = null;
   history.replaceState(null, '', location.search + '#wire' + (k === 'all' ? '' : '/' + k));
   changed();
 }
-function pickTopic(k) { W.topic = k; changed(); }
+function pickTopic(k) { W.topic = k; if (k !== 'all') W.slot = null; changed(); }
 function clearFilters() {
   if (W.mode === 'photos') { pickCat('all'); return; }
   if (W.mode === 'square') { square.setType('all'); changed(); return; }
@@ -1762,7 +1774,12 @@ function mount(root) {
     if (W.view === 'paper' && W.mode === 'news' && !W.start && W.ch !== 'instagram' && (!W.panel || W.panel.scrollTop < 120) && needsEarlier()) render();
     if (app.activeTab() === 'wire') paintFilters();
     land();
-  }, () => { W.idxDone = true; land(); });
+  }, () => {
+    W.idxDone = true;
+    /* an empty today waited for the archive; without it, draw today as it is */
+    if (W.view === 'paper' && W.mode === 'news' && !W.start) render();
+    land();
+  });
 }
 
 /* a mute, a follow or the switch: redraw as far down as the reader was */

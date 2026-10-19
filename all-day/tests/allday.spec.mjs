@@ -561,8 +561,8 @@ async function matrix(browser, base) {
           });
           check(state.id === 'panel-' + tab, tab + ': its panel is the one showing', state.id);
           if (combo.viewport.width < 1024 && MORE.includes(tab)) {
-            const more = await page.$eval('#tab-more', (m) => [m.classList.contains('on'), m.getAttribute('aria-current')]);
-            check(more[0] && more[1] === 'page', tab + ': opened from More, the bar lights More', JSON.stringify(more));
+            const more = await page.$eval('#tab-more', (m) => [m.classList.contains('on'), m.getAttribute('aria-selected')]);
+            check(more[0] && more[1] === 'true', tab + ': opened from More, the bar lights More', JSON.stringify(more));
           }
           check(!state.err, tab + ': no error box', '');
           if (!demo && !LIVE.has(tab)) {
@@ -1128,7 +1128,9 @@ async function theWire(browser, base) {
     check(JSON.stringify(acts) === '["up","share","open","source","mute"]', '⋯ opens: Upvote, Share, the original, More from the source, Mute', JSON.stringify(acts));
     await page.click('.sheet-card .wact[data-wact="up"]');
     const up = await page.$eval('.sheet-card .wact[data-wact="up"]', (b) => [b.getAttribute('aria-pressed'), b.querySelector('.n').textContent]);
-    check(up[0] === 'true' && up[1] === '1' && await page.evaluate((key) => JSON.parse(localStorage.getItem('allday-votes') || '{}')[key] !== undefined || true, k), 'Upvote counts in place', JSON.stringify(up));
+    /* the count in place is the optimistic one; whether it is kept is the
+       vote RPC's business (store.js), tested with the shell's votes */
+    check(up[0] === 'true' && up[1] === '1', 'Upvote counts in place', JSON.stringify([up, k]));
     await page.keyboard.press('Escape');
     await page.screenshot({ path: path.join(SHOTS, 'live-wire-colours.png') });
     check(!errors.length, 'no console errors', errors.join(' | '));
@@ -7419,12 +7421,16 @@ async function sunsetLine(browser, base) {
 /* The small shell changes the tab sessions asked for, one check each. */
 async function shellFixes(browser, base) {
   await group('shell fixes: a rail never snaps flush to the edge', async () => {
-    for (const width of [390, 1280]) {
+    /* 1100: the wide layout with its 720px column; at 1280 and up On Air's
+       column is 1052 wide and the demo's shelves barely overflow it */
+    for (const width of [390, 1100]) {
       const { ctx, page, errors } = await newPage(browser, base, { viewport: { width, height: 844 } });
       await page.goto(base + '/all-day/?demo=1#onair');
       await page.waitForSelector('#panel-onair .rail > *', { timeout: 15000 });
       const r = await page.evaluate(() => {
-        const rail = [...document.querySelectorAll('#panel-onair .rail')].find((x) => x.scrollWidth > x.clientWidth + 40);
+        /* a rail long enough that its second card can reach the start (on a
+           wide screen the column is wider, so a short shelf cannot) */
+        const rail = [...document.querySelectorAll('#panel-onair .rail')].find((x) => x.children[1] && x.scrollWidth - x.clientWidth > x.children[1].offsetLeft + 40);
         if (!rail) return null;
         const gutter = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--gutter'));
         const pad = parseFloat(getComputedStyle(rail).scrollPaddingLeft);
