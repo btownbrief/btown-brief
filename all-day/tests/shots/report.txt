@@ -1293,7 +1293,7 @@
   ok   the Wire, Unfiltered › Unfiltered opens inside the tab
   ok   the Wire, Unfiltered › the raw wire draws sixty headlines to start
   ok   the Wire, Unfiltered › an outlet chip narrows the wire to that outlet
-  ok   the Wire, Unfiltered › search keeps only matching headlines (“button”)
+  ok   the Wire, Unfiltered › search keeps only matching headlines (“Cloning”)
   ok   the Wire, Unfiltered › and the search field keeps the caret
   ok   the Wire, Unfiltered › By outlet draws a section per outlet
   ok   the Wire, Unfiltered › hold to peek works on the raw wire
@@ -1968,7 +1968,7 @@
   ok   Food, deals verified more than 60 days ago stay off (live) › with only old deals: “No recently verified deals today.”
   ok   People: the rules in the module and the SQL agree › PEOPLE_RULES in people.js is nn_people_rules() in nn-people.sql
   ok   People: the rules in the module and the SQL agree › the tab never imports boards-fake.js; its mirror is its own
-  ok   People, live: Stephen’s meetups, the clubs, an empty board › every one of Stephen’s own events in the next two weeks shows, first, as a short row (5)
+  ok   People, live: Stephen’s meetups, the clubs, an empty board › every one of Stephen’s own events in the next two weeks shows, first, as a short row (6)
   ok   People, live: Stephen’s meetups, the clubs, an empty board › none is missed
   ok   People, live: Stephen’s meetups, the clubs, an empty board › and nothing that isn’t his
   ok   People, live: Stephen’s meetups, the clubs, an empty board › one thirteen days out, only on his Meetup calendar, shows (place: on Meetup, never guessed)
@@ -2879,7 +2879,7 @@
   ok   sign-in fails soft › a bad address is caught before any request
   ok   sign-in fails soft › no link was requested
   ok   sign-in fails soft › no console errors
-  ok   performance › the live Wire redraws 60 cards in 18ms (budget 100)
+  ok   performance › the live Wire redraws 60 cards in 23ms (budget 100)
   ok   shell fixes: a rail never snaps flush to the edge › 390: .rail carries scroll-padding of one gutter
   ok   shell fixes: a rail never snaps flush to the edge › 390: a card scrolled to the start stops at the gutter
   ok   shell fixes: a rail never snaps flush to the edge › 390: no console errors
@@ -2951,7 +2951,7 @@
   ok   shell fixes: the main switches share the poured water (reduce) › no console errors
   ok   shell fixes: the poured water never freezes and stays inside its pill › News holds the water, and nothing is painted in the corners outside the pill
   ok   shell fixes: the poured water never freezes and stays inside its pill › five quick taps: the water lands under Photos
-  ok   shell fixes: the poured water never freezes and stays inside its pill › seven seconds after a pick the water still laps (44 frames in 600ms)
+  ok   shell fixes: the poured water never freezes and stays inside its pill › seven seconds after a pick the water still laps (45 frames in 600ms)
   ok   shell fixes: the poured water never freezes and stays inside its pill › scrolled down with the pill shrunk, a pick pours to News and stays in the pill
   ok   shell fixes: the poured water never freezes and stays inside its pill › On Air: Playlists takes the water, in its pill
   ok   shell fixes: the poured water never freezes and stays inside its pill › back on the Wire, a tap still pours
@@ -3175,14 +3175,14 @@
   ok   Habits, swipe to archive with Undo, drag and keys to reorder, edit (demo, 1280, dark) › habits: at most 2 subnav rows
   ok   Habits, swipe to archive with Undo, drag and keys to reorder, edit (demo, 1280, dark) › no console errors
   ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › twenty habits, in order
-  ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › twenty habits and a year of taps: a tap still shows at once (12, 11, 12, 13 ms)
+  ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › twenty habits and a year of taps: a tap still shows at once (12, 12, 12, 12 ms)
   ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › the heat map is all there, and four taps leave it as it was
   ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › every row keeps its seven dots and its 48px tap
   ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › the list is longer than the screen, and the panel scrolls
   ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › the Add habit row is still there at twenty
   ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › a swipe left on the seventeenth row archives it
   ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › Undo brings it back, at the bottom
-  ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › held near the bottom, the drag scrolls the list (2712px)
+  ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › held near the bottom, the drag scrolls the list (2725px)
   ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › and Habit 4 travels down the list, to row 20
   ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › no row lost or doubled on the way
   ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › and the server keeps the order
@@ -3214,7 +3214,7 @@
   ok   Habits, the day turns at midnight New York, not the phone’s (demo, a reader in Tokyo) › and a tap now is Thursday’s
   ok   Habits, the day turns at midnight New York, not the phone’s (demo, a reader in Tokyo) › no console errors
   ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 390, light) › a first visit: one line, the starters and Add habit, nothing seeded, no sign-in wall
-  ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 390, light) › three habits, two tapped, at once (4 ms)
+  ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 390, light) › three habits, two tapped, at once (3 ms)
   ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 390, light) › and nothing personal went to the server (the season and the public forests only)
   ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 390, light) › kept on this phone, under one versioned key
   ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 390, light) › one quiet line under the list: Sync across devices
@@ -3301,7 +3301,7 @@
   ok   Habits, the forest: a tree per habit, a leaf per tap, flowers, help, starters (demo, 390) › the “?” opens How Habits works: four lines
   ok   Habits, the forest: a tree per habit, a leaf per tap, flowers, help, starters (demo, 390) › a starter adds a daily habit in one tap, and the starters step aside
   ok   Habits, the forest: a tree per habit, a leaf per tap, flowers, help, starters (demo, 390) › and plants its tree: no leaves yet (one name for the button, the picture itself decorative)
-  ok   Habits, the forest: a tree per habit, a leaf per tap, flowers, help, starters (demo, 390) › a tap grows a leaf, in the same click (4 ms)
+  ok   Habits, the forest: a tree per habit, a leaf per tap, flowers, help, starters (demo, 390) › a tap grows a leaf, in the same click (5 ms)
   ok   Habits, the forest: a tree per habit, a leaf per tap, flowers, help, starters (demo, 390) › Got it puts the help away
   ok   Habits, the forest: a tree per habit, a leaf per tap, flowers, help, starters (demo, 390) › one tree per habit, in the list’s order
   ok   Habits, the forest: a tree per habit, a leaf per tap, flowers, help, starters (demo, 390) › each tree has a leaf for every day done in the last 370
@@ -3645,6 +3645,102 @@
   ok   What Now: today in plain words and a Full weather link, under the card (390, live) › no console errors
   ok   What Now: today in plain words and a Full weather link, under the card (390, live) › the demo carries its brief too (its weekday said as Tomorrow, since the demo moves to today)
   ok   What Now: today in plain words and a Full weather link, under the card (390, live) › no console errors
+  ok   section pills: every tab floats a liquid pill in its own water › watch: a compact pill, 40px tall with 14px words (the Wire’s is 54)
+  ok   section pills: every tab floats a liquid pill in its own water › watch: glass, floating over the paper, and it stays as the mast steps away
+  ok   section pills: every tab floats a liquid pill in its own water › watch: a labelled group, and nothing scrolls the page sideways
+  ok   section pills: every tab floats a liquid pill in its own water › watch: the one on sits in poured water, inside the pill
+  ok   section pills: every tab floats a liquid pill in its own water › watch: the water is the tab’s own --liq-watch (#C8466E)
+  ok   section pills: every tab floats a liquid pill in its own water › watch: the canvas carries the colour, not the button
+  ok   section pills: every tab floats a liquid pill in its own water › watch: scrolled down, it floats at the top, 90% size
+  ok   section pills: every tab floats a liquid pill in its own water › watch: any move up brings it back to full size
+  ok   section pills: every tab floats a liquid pill in its own water › food: a compact pill, 40px tall with 14px words (the Wire’s is 54)
+  ok   section pills: every tab floats a liquid pill in its own water › food: glass, floating over the paper, and it stays as the mast steps away
+  ok   section pills: every tab floats a liquid pill in its own water › food: a labelled group, and nothing scrolls the page sideways
+  ok   section pills: every tab floats a liquid pill in its own water › food: the one on sits in poured water, inside the pill
+  ok   section pills: every tab floats a liquid pill in its own water › food: the water is the tab’s own --liq-food (#E46B32)
+  ok   section pills: every tab floats a liquid pill in its own water › food: the canvas carries the colour, not the button
+  ok   section pills: every tab floats a liquid pill in its own water › food: scrolled down, it floats at the top, 90% size
+  ok   section pills: every tab floats a liquid pill in its own water › food: any move up brings it back to full size
+  ok   section pills: every tab floats a liquid pill in its own water › people: a compact pill, 40px tall with 14px words (the Wire’s is 54)
+  ok   section pills: every tab floats a liquid pill in its own water › people: glass, floating over the paper, and it stays as the mast steps away
+  ok   section pills: every tab floats a liquid pill in its own water › people: a labelled group, and nothing scrolls the page sideways
+  ok   section pills: every tab floats a liquid pill in its own water › people: the one on sits in poured water, inside the pill
+  ok   section pills: every tab floats a liquid pill in its own water › people: the water is the tab’s own --liq-people (#1D7F8A)
+  ok   section pills: every tab floats a liquid pill in its own water › people: the canvas carries the colour, not the button
+  ok   section pills: every tab floats a liquid pill in its own water › people: scrolled down, it floats at the top, 90% size
+  ok   section pills: every tab floats a liquid pill in its own water › people: any move up brings it back to full size
+  ok   section pills: every tab floats a liquid pill in its own water › whatnow: a compact pill, 40px tall with 14px words (the Wire’s is 54)
+  ok   section pills: every tab floats a liquid pill in its own water › whatnow: glass, floating over the paper, and it stays as the mast steps away
+  ok   section pills: every tab floats a liquid pill in its own water › whatnow: a labelled group, and nothing scrolls the page sideways
+  ok   section pills: every tab floats a liquid pill in its own water › whatnow: the one on sits in poured water, inside the pill
+  ok   section pills: every tab floats a liquid pill in its own water › whatnow: the water is the tab’s own --liq-whatnow (#F2A93B)
+  ok   section pills: every tab floats a liquid pill in its own water › whatnow: the canvas carries the colour, not the button
+  ok   section pills: every tab floats a liquid pill in its own water › whatnow: scrolled down, it floats at the top, 90% size
+  ok   section pills: every tab floats a liquid pill in its own water › whatnow: any move up brings it back to full size
+  ok   section pills: every tab floats a liquid pill in its own water › vintage: a compact pill, 40px tall with 14px words (the Wire’s is 54)
+  ok   section pills: every tab floats a liquid pill in its own water › vintage: glass, floating over the paper, and it stays as the mast steps away
+  ok   section pills: every tab floats a liquid pill in its own water › vintage: a labelled group, and nothing scrolls the page sideways
+  ok   section pills: every tab floats a liquid pill in its own water › vintage: the one on sits in poured water, inside the pill
+  ok   section pills: every tab floats a liquid pill in its own water › vintage: the water is the tab’s own --liq-vintage (#9B4F96)
+  ok   section pills: every tab floats a liquid pill in its own water › vintage: the canvas carries the colour, not the button
+  ok   section pills: every tab floats a liquid pill in its own water › vintage: scrolled down, it floats at the top, 90% size
+  ok   section pills: every tab floats a liquid pill in its own water › vintage: any move up brings it back to full size
+  ok   section pills: every tab floats a liquid pill in its own water › habits: a compact pill, 40px tall with 14px words (the Wire’s is 54)
+  ok   section pills: every tab floats a liquid pill in its own water › habits: glass, floating over the paper, and it stays as the mast steps away
+  ok   section pills: every tab floats a liquid pill in its own water › habits: a labelled group, and nothing scrolls the page sideways
+  ok   section pills: every tab floats a liquid pill in its own water › habits: the one on sits in poured water, inside the pill
+  ok   section pills: every tab floats a liquid pill in its own water › habits: the water is the tab’s own --liq-habits (#5DA142)
+  ok   section pills: every tab floats a liquid pill in its own water › habits: the canvas carries the colour, not the button
+  ok   section pills: every tab floats a liquid pill in its own water › habits: scrolled down, it floats at the top, 90% size
+  ok   section pills: every tab floats a liquid pill in its own water › habits: any move up brings it back to full size
+  ok   section pills: every tab floats a liquid pill in its own water › games: a compact pill, 40px tall with 14px words (the Wire’s is 54)
+  ok   section pills: every tab floats a liquid pill in its own water › games: glass, floating over the paper, and it stays as the mast steps away
+  ok   section pills: every tab floats a liquid pill in its own water › games: a labelled group, and nothing scrolls the page sideways
+  ok   section pills: every tab floats a liquid pill in its own water › games: the one on sits in poured water, inside the pill
+  ok   section pills: every tab floats a liquid pill in its own water › games: the water is the tab’s own --liq-games (#5560D6)
+  ok   section pills: every tab floats a liquid pill in its own water › games: the canvas carries the colour, not the button
+  ok   section pills: every tab floats a liquid pill in its own water › games: scrolled down, it floats at the top, 90% size
+  ok   section pills: every tab floats a liquid pill in its own water › games: any move up brings it back to full size
+  ok   section pills: every tab floats a liquid pill in its own water › each tab’s water is its own colour
+  ok   section pills: every tab floats a liquid pill in its own water › no console errors
+  ok   section pills: the water follows the scroll, and a tap scrolls there › watch: at the top, the first section is on (theaters, soon, back, list, town, vote, chat)
+  ok   section pills: the water follows the scroll, and a tap scrolls there › watch: scrolled to back, the water pours there and it shows in the pill
+  ok   section pills: the water follows the scroll, and a tap scrolls there › watch: a tap on town lands its head just under the floating pill, and the water stays there
+  ok   section pills: the water follows the scroll, and a tap scrolls there › food: at the top, the first section is on (asks, bite, open, deals, best, kitchens, add)
+  ok   section pills: the water follows the scroll, and a tap scrolls there › food: scrolled to open, the water pours there and it shows in the pill
+  ok   section pills: the water follows the scroll, and a tap scrolls there › food: a tap on best lands its head just under the floating pill, and the water stays there
+  ok   section pills: the water follows the scroll, and a tap scrolls there › people: at the top, the first section is on (arch, clubs, plans, mix, groups, quiz, dir)
+  ok   section pills: the water follows the scroll, and a tap scrolls there › people: scrolled to plans, the water pours there and it shows in the pill
+  ok   section pills: the water follows the scroll, and a tap scrolls there › people: a tap on groups lands its head just under the floating pill, and the water stays there
+  ok   section pills: the water follows the scroll, and a tap scrolls there › vintage: at the top, the first section is on (fit, spotted, swaps, tees, newin, shops)
+  ok   section pills: the water follows the scroll, and a tap scrolls there › vintage: scrolled to swaps, the water pours there and it shows in the pill
+  ok   section pills: the water follows the scroll, and a tap scrolls there › vintage: a tap on newin lands its head just under the floating pill, and the water stays there
+  ok   section pills: the water follows the scroll, and a tap scrolls there › games: at the top, the first section is on (arcade, picks, playing, lfg, tags, vr, challenge, board, champs)
+  ok   section pills: the water follows the scroll, and a tap scrolls there › games: scrolled to playing, the water pours there and it shows in the pill
+  ok   section pills: the water follows the scroll, and a tap scrolls there › games: a tap on tags lands its head just under the floating pill, and the water stays there
+  ok   section pills: the water follows the scroll, and a tap scrolls there › no console errors
+  ok   section pills: "All" lists every section, no sideways scroll needed › at 360 the Games pill runs past its edge, scrolls inside itself, and shows All
+  ok   section pills: "All" lists every section, no sideways scroll needed › All opens a sheet with every section, the one you are on marked
+  ok   section pills: "All" lists every section, no sideways scroll needed › a row closes the sheet, scrolls to that section, and the pill scrolls to show it on
+  ok   section pills: "All" lists every section, no sideways scroll needed › a pill that fits (Habits) has no All button
+  ok   section pills: "All" lists every section, no sideways scroll needed › no console errors
+  ok   section pills: views, deep links, On Air and both themes › What Now opens on Spin
+  ok   section pills: views, deep links, On Air and both themes › scrolled down to the missions, the water pours to Missions
+  ok   section pills: views, deep links, On Air and both themes › a tap on Spin goes back up, the water with it
+  ok   section pills: views, deep links, On Air and both themes › Tonight is its own view, poured
+  ok   section pills: views, deep links, On Air and both themes › Habits: Forests takes the water and the address
+  ok   section pills: views, deep links, On Air and both themes › a view switch says which view is pressed
+  ok   section pills: views, deep links, On Air and both themes › dark: the words off the water are the dock’s ink
+  ok   section pills: views, deep links, On Air and both themes › #vintage/shops lands on Shops, and the pill says so
+  ok   section pills: views, deep links, On Air and both themes › #food/deals lands on Deals, and the pill says so
+  ok   section pills: views, deep links, On Air and both themes › On Air: the sides in glass, then Local and the lengths as a small pill, All lengths on
+  ok   section pills: views, deep links, On Air and both themes › and the lengths pill pours too
+  ok   section pills: views, deep links, On Air and both themes › no console errors
+  ok   section pills: reduced motion is a plain fill that does not shrink › no canvas: the one on is filled in Food’s paprika
+  ok   section pills: reduced motion is a plain fill that does not shrink › and scrolling down leaves it full size
+  ok   section pills: reduced motion is a plain fill that does not shrink › no console errors
+  ok   section pills: a wide screen centres the pill over the column › the pill sits centred in the mast’s column
+  ok   section pills: a wide screen centres the pill over the column › no console errors
   ok   sideways rows: every content rail can be a list › wire: every sideways row can be turned into a list
   ok   sideways rows: every content rail can be a list › wire: See as a list opens it downward with the Collapse bar
   ok   sideways rows: every content rail can be a list › wire: Collapse puts the row back
