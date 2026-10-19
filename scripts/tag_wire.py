@@ -8,8 +8,8 @@ should only read the ones worth reading, so this pass gives each NEW item:
   local  true when the story is about Burlington or Vermont, whatever the outlet
   ch     the mechanical channel, flipped local <-> world when `local` says so
   topic  one of TOPICS
-  sport  for a sports item, one of wire_common.SPORTS (nba, nfl, mlb, nhl,
-         college, soccer, local, other); a single-sport source's own sport wins
+  sport  for a sports item, one of wire_common.SPORTS (nba, nfl, nhl, tennis,
+         mlb, college, local, other); a single-sport source's own sport wins
   score  0-10 local interest
 
 Posts from people (Facebook groups, Reddit) are judged by narrower junk
@@ -67,7 +67,7 @@ TOPICS = (
     "city-government", "state-politics", "schools", "housing", "transportation",
     "public-safety", "courts", "business", "food-drink", "arts-culture", "music",
     "events", "sports", "weather", "environment", "health", "community",
-    "national-politics", "world", "economy", "tech", "science", "media", "other",
+    "national-politics", "world", "economy", "markets", "tech", "science", "media", "other",
 )
 FIXED = ("x", "facebook", "reddit", "newsletters", "video")
 TUNEIN_RE = re.compile(r"tune in|watch live|live ?stream|listen live|on air|join us|"

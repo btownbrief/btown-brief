@@ -7,7 +7,8 @@ Two bots drop files in the private repo btownbrief/wire-inbox:
                       national desks (AP, Reuters, BBC and others), 2026-10-17
   muse/facebook.json  posts from public Facebook groups, every one of them local
   grok/recaps.json    Grok's packed recaps (Morning briefing, AI & tech, Sports...):
-                      each a short intro plus linked bullets, 2026-10-19
+                      each a short intro plus linked bullets, 2026-10-19; and
+                      "Pictures of the day", X posts whose picture is the point
 
 refresh_pulse.py calls read_inbox() each run. This module fetches both files
 through the GitHub contents API with the WIRE_INBOX_TOKEN secret, checks them
@@ -199,12 +200,21 @@ RECAP_KINDS = {
     "morning": "Morning briefing", "evening": "Evening wrap", "breaking": "Breaking",
     "ai": "AI & tech", "politics": "Politics & Washington", "world": "World",
     "markets": "Markets & money", "sports": "Sports", "vermont": "Vermont on X",
+    # 2026-10-19, "stock news and RECAPS for it": two weekday market recaps;
+    # Markets & money stays as the weekend look back at the week
+    "market-open": "Market open", "market-close": "Market close",
     "culture": "Culture & entertainment", "science": "Science & space",
     "weekend": "Weekend preview", "week-ahead": "Week ahead",
+    # Stephen, 2026-10-19: "a Grok 'Pictures of the day' recap kind (~5 X posts
+    # where the image is the point, one-line why each)". Every bullet is an X
+    # post's own link; the page shows it or X's official embed, never a copy.
+    "pictures": "Pictures of the day",
 }
 # what the recap was built from -> the small label the page shows. Never "AI".
 RECAP_BASIS = {"trending": "From X trending summaries", "accounts": "From posts on X"}
-RECAP_SPORTS = wc.SPORTS
+# today's sports, plus `soccer`, which a bot on the brief before 2026-10-19's
+# "drop soccer" may still write: accepted, and read as `other`
+RECAP_SPORTS = wc.SPORTS + tuple(wc.LEGACY_SPORTS)
 RECAP_MAX = 60            # recaps in the file: ~12 a day for 3 days, with room
 RECAP_KEEP_DAYS = 3       # the file keeps 3 days, and so does the Wire's store
 RECAP_STORE_BYTES = 250_000   # and the store never adds more than this to pulse.json
@@ -215,6 +225,8 @@ RECAP_NOTE_MAX = 200
 RECAP_INTRO_MAX = 400
 RECAP_ID = re.compile(r"^(\d{4}-\d{2}-\d{2})-([a-z-]+?)(?:-([23]))?$")
 RECAP_BREAKING_BULLETS = 5
+RECAP_PICTURES_BULLETS = (3, 8)   # "~5": a recap of one picture is not one
+X_POST = re.compile(r"^https://(?:www\.)?(?:x|twitter)\.com/[A-Za-z0-9_]{1,15}/status/\d{1,25}/?$")
 SEARCH_URL = re.compile(r"/search\b|[?&]q=", re.I)
 
 
@@ -268,6 +280,8 @@ def check_recap(rc, now):
     lo, hi = RECAP_BULLETS
     if kind == "breaking":
         hi = RECAP_BREAKING_BULLETS
+    elif kind == "pictures":
+        lo, hi = RECAP_PICTURES_BULLETS
     if not isinstance(bullets, list) or not lo <= len(bullets) <= hi:
         return bad + [f"bullets must be a list of {lo} to {hi}"]
     seen = set()
@@ -283,6 +297,9 @@ def check_recap(rc, now):
                        "characters, never a search page")
         elif url in seen:
             bad.append(f"{where}: duplicate url {url}")
+        elif kind == "pictures" and not X_POST.match(url):
+            bad.append(f"{where}: in Pictures of the day, url must be the X post itself "
+                       "(https://x.com/<handle>/status/<id>)")
         else:
             seen.add(url)
         inner = []
@@ -364,7 +381,7 @@ def read_recaps(raw, now):
             out = {"text": re.sub(r"\s+", " ", bl["text"]).strip(), "url": bl["url"],
                    "note": re.sub(r"\s+", " ", bl["note"]).strip()}
             if bl.get("sport"):
-                out["sport"] = bl["sport"]
+                out["sport"] = wc.norm_sport(bl["sport"])
             bullets.append(out)
         fresh.append({"id": rc["id"], "kind": rc["kind"], "title": RECAP_KINDS[rc["kind"]],
                       "posted_at": iso(posted), "d": int(posted.timestamp()),
