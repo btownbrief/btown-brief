@@ -504,6 +504,7 @@ function board(it) {
    is an eyebrow above the headline ("The Brief"). */
 function wmeta(it, o) {
   const saved = store.isSaved(it.k);
+  const voted = store.hasVoted(it.k);
   /* the words sit in one box that can take a second line on a narrow
      row ("National" beside a long source), so ⋯ and the star never leave
      the card */
@@ -511,7 +512,12 @@ function wmeta(it, o) {
     '<span class="w-who"><button class="srcbtn" data-src="' + esc(it.sid || it.src) + '"><span class="c-src' + (it.local && o.greenLocal ? ' is-local' : '') + '">' + esc(it.src) + '</span></button>' +
     (it.via ? '<span class="dot"></span><span class="via">' + esc(it.via) + '</span>' : '') +
     (it.ago ? '<span class="dot"></span><span class="age">' + esc(it.ago) + '</span>' : '') + (o.meta || '') + '</span>' +
-    '<button class="act w-more" data-act="wmore" aria-label="More: vote, share, the source">' + ICON.more + '</button>' +
+    /* the upvote with its count and Share stay on the card (Stephen,
+       2026-10-20: "I see you cut the Share button ... Please re-add", "add
+       the upvote button too"); ⋯ keeps the rest */
+    (o.noActs ? '' : '<button class="act up w-up' + (voted ? ' on' : '') + '" data-act="up" aria-label="Upvote" aria-pressed="' + voted + '">' + ICON.up + '<span class="n">' + (voteN(it) || '') + '</span></button>' +
+      '<button class="act sh w-sh" data-act="share" aria-label="Share">' + ICON.share + '</button>') +
+    '<button class="act w-more" data-act="wmore" aria-label="More: the original, the source, mute">' + ICON.more + '</button>' +
     '<button class="act star' + (saved ? ' on' : '') + '" data-act="save" aria-label="Save" aria-pressed="' + saved + '">' + ICON.star + '</button></div>';
 }
 function lead(it, o = {}) {

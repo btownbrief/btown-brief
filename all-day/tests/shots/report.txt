@@ -32,6 +32,8 @@
   ok   source rules › js/modes/wire-demo.js: no colour, type size, caps or fixed position of its own
   ok   source rules › js/modes/wire-photos.js: no monospace
   ok   source rules › js/modes/wire-photos.js: no colour, type size, caps or fixed position of its own
+  ok   source rules › js/modes/wire-recaps.js: no monospace
+  ok   source rules › js/modes/wire-recaps.js: no colour, type size, caps or fixed position of its own
   ok   source rules › js/modes/wire-square.js: no monospace
   ok   source rules › js/modes/wire-square.js: no colour, type size, caps or fixed position of its own
   ok   source rules › js/modes/wire.js: no monospace
@@ -1228,7 +1230,7 @@
   ok   the Wire, live › under the mast: the pill, and no Filters button
   ok   the Wire, live › at the top the floating day row is hidden: the banner shows the same two controls
   ok   the Wire, live › the chrome above the banner is 130px or less (122)
-  ok   the Wire, live › all three words are there from the first paint
+  ok   the Wire, live › the words are there from the first paint (the Square’s only while it may open)
   ok   the Wire, live › Filters: X and Facebook chips hidden while paused; no Video chip
   ok   the Wire, live › chip counts are counts.local
   ok   the Wire, live › the banner leads the paper: ‹ the day ›, Local / Everything, the chips, Unfiltered
@@ -1297,10 +1299,10 @@
   ok   the Wire, Unfiltered › hold to peek works on the raw wire
   ok   the Wire, Unfiltered › ‹ Today’s paper comes back, with its one row
   ok   the Wire, Unfiltered › no console errors
-  ok   the Wire, cards and sizes (live) › a top story: 24px Lora headline, 16px reason
-  ok   the Wire, cards and sizes (live) › a story row: 19px headline, 14px meta line
-  ok   the Wire, cards and sizes (live) › its picture is 104px, on the left
-  ok   the Wire, cards and sizes (live) › ⋯ and the star are 44px targets
+  ok   the Wire, cards and sizes (live) › a top story: 21px Lora headline, 15px reason
+  ok   the Wire, cards and sizes (live) › a story row: 17px headline, 13px meta line
+  ok   the Wire, cards and sizes (live) › its picture is 92px, on the left
+  ok   the Wire, cards and sizes (live) › upvote, share, ⋯ and the star are 44px targets
   ok   the Wire, cards and sizes (live) › News · Photos · Square are 44px tall
   ok   the Wire, cards and sizes (live) › no left colour bars, no alternate tints, no source initials
   ok   the Wire, cards and sizes (live) › on Local, no green names, no National, no tint: everything here is local
@@ -1312,7 +1314,7 @@
   ok   the Wire, cards and sizes (live) › 1440: nothing scrolls sideways
   ok   the Wire, cards and sizes (live) › 1440: the rail on the right holds the chips; the banner keeps the day and the switch
   ok   the Wire, cards and sizes (live) › 1440: the column is 640 to 720 wide
-  ok   the Wire, cards and sizes (live) › 1440: the first top story 32px, the next four 21px two-up, rows 20px with 136px pictures
+  ok   the Wire, cards and sizes (live) › 1440: the first top story 28px, the next four 19px two-up, rows 18px with 120px pictures
   ok   the Wire, cards and sizes (live) › 1440: the wheel over the tab list scrolls the paper
   ok   the Wire, cards and sizes (live) › 1440: a tab opens at its top, not where it was left
   ok   the Wire, cards and sizes (live) › 1440: a tab with no rail of its own has none
@@ -1321,13 +1323,13 @@
   ok   the Wire, cards and sizes (live) › 1280: nothing scrolls sideways
   ok   the Wire, cards and sizes (live) › 1280: the rail on the right holds the chips; the banner keeps the day and the switch
   ok   the Wire, cards and sizes (live) › 1280: the column is 640 to 720 wide
-  ok   the Wire, cards and sizes (live) › 1280: the first top story 32px, the next four 21px two-up, rows 20px with 136px pictures
+  ok   the Wire, cards and sizes (live) › 1280: the first top story 28px, the next four 19px two-up, rows 18px with 120px pictures
   ok   the Wire, cards and sizes (live) › 1280: the wheel over the tab list scrolls the paper
   ok   the Wire, cards and sizes (live) › 1280: no console errors
   ok   the Wire, cards and sizes (live) › 1024: the nine tabs on the left, the mast and the paper in one column
   ok   the Wire, cards and sizes (live) › 1024: nothing scrolls sideways
   ok   the Wire, cards and sizes (live) › 1024: no rail; the banner holds the chips
-  ok   the Wire, cards and sizes (live) › 1024: the first top story 32px, the next four 21px two-up, rows 20px with 136px pictures
+  ok   the Wire, cards and sizes (live) › 1024: the first top story 28px, the next four 19px two-up, rows 18px with 120px pictures
   ok   the Wire, cards and sizes (live) › 1024: the wheel over the tab list scrolls the paper
   ok   the Wire, cards and sizes (live) › 1024: no console errors
   ok   the Wire, a headline is read when it is opened, never when it is scrolled past (demo) › scrolling the whole paper marks nothing read
@@ -1384,7 +1386,7 @@
   ok   the Wire, Square (demo) › a reload opens on the Square again
   ok   the Wire, Square (demo) › demo mode never calls Supabase
   ok   the Wire, Square (demo) › no console errors
-  ok   the Wire, Square (demo) › live before the Square’s SQL: News and Photos show; Square holds its place, unseen, so nothing moves
+  ok   the Wire, Square (demo) › live before the Square’s SQL: once the board says no, its place goes (no hole between Photos and Recaps)
   ok   the Wire, Square (demo) › and a kept Square opens on News
   ok   the Wire, Square (demo) › no console errors
   ok   the Wire, Square (demo) › live with the Square’s SQL: #wire/square opens it
@@ -1393,7 +1395,79 @@
   ok   the Wire, Square (demo) › Reddit in the Square: r/burlington, r/vermont and r/GoodBurlington, never r/news, r/technology, r/Jokes or r/worldnews
   ok   the Wire, Square (demo) › today’s paper’s threads too: the r/burlington ones in, the r/news ones out
   ok   the Wire, Square (demo) › no console errors
-  ok   Photo mode: the News · Photos · Square switch, in words, kept on the phone (demo) › the switch says News, Photos, Square in words, each a 44px target
+  ok   Wire pass 2: News · Photos · Square · Recaps, and the Recaps view (390, live) › Recaps joins the words (live here before the Square’s SQL), each a 44px target with its word whole
+  ok   Wire pass 2: News · Photos · Square · Recaps, and the Recaps view (390, live) › Recaps has its address and is kept on the phone
+  ok   Wire pass 2: News · Photos · Square · Recaps, and the Recaps view (390, live) › the page is today’s recaps, and only them
+  ok   Wire pass 2: News · Photos · Square · Recaps, and the Recaps view (390, live) › every recap of the day, newest first, under its kind’s title
+  ok   Wire pass 2: News · Photos · Square · Recaps, and the Recaps view (390, live) › each with its time, and its headlines link out in a new tab
+  ok   Wire pass 2: News · Photos · Square · Recaps, and the Recaps view (390, live) › where it came from, never “AI”
+  ok   Wire pass 2: News · Photos · Square · Recaps, and the Recaps view (390, live) › five headlines show; a longer recap says “Show all 13”
+  ok   Wire pass 2: News · Photos · Square · Recaps, and the Recaps view (390, live) › the banner offers each kind the day has, in the payload’s order of kinds
+  ok   Wire pass 2: News · Photos · Square · Recaps, and the Recaps view (390, live) › the banner keeps the day; a recap is never Local or not
+  ok   Wire pass 2: News · Photos · Square · Recaps, and the Recaps view (390, live) › a Sports recap names each headline’s league
+  ok   Wire pass 2: News · Photos · Square · Recaps, and the Recaps view (390, live) › Show all opens every headline, with the sticky Collapse bar, and focus goes to the first new one
+  ok   Wire pass 2: News · Photos · Square · Recaps, and the Recaps view (390, live) › Collapse folds it back to five
+  ok   Wire pass 2: News · Photos · Square · Recaps, and the Recaps view (390, live) › a kind’s chip shows only that kind
+  ok   Wire pass 2: News · Photos · Square · Recaps, and the Recaps view (390, live) › ‹ goes to the day before’s recaps
+  ok   Wire pass 2: News · Photos · Square · Recaps, and the Recaps view (390, live) › no console errors
+  ok   Wire pass 2: News · Photos · Square · Recaps, and the Recaps view (390, live) › at 360px the four words fit the pill, each whole, nothing sideways
+  ok   Wire pass 2: News · Photos · Square · Recaps, and the Recaps view (390, live) › no console errors
+  ok   Wire pass 2: the newest recap of each kind on News, and into Recaps (390, live) › after the top stories, before the river
+  ok   Wire pass 2: the newest recap of each kind on News, and into Recaps (390, live) › the newest recap of each kind, newest first
+  ok   Wire pass 2: the newest recap of each kind on News, and into Recaps (390, live) › a headline the river already carries is not shown twice
+  ok   Wire pass 2: the newest recap of each kind on News, and into Recaps (390, live) › the row ends in All recaps, and can be seen as a list
+  ok   Wire pass 2: the newest recap of each kind on News, and into Recaps (390, live) › See as a list lays the cards down the page, with the Collapse bar
+  ok   Wire pass 2: the newest recap of each kind on News, and into Recaps (390, live) › Collapse puts the row back
+  ok   Wire pass 2: the newest recap of each kind on News, and into Recaps (390, live) › a small card opens Recaps at that recap
+  ok   Wire pass 2: the newest recap of each kind on News, and into Recaps (390, live) › no console errors (light)
+  ok   Wire pass 2: the newest recap of each kind on News, and into Recaps (390, live) › no console errors (dark)
+  ok   Wire pass 2: the newest recap of each kind on News, and into Recaps (390, live) › under a source chip the strip steps aside
+  ok   Wire pass 2: the newest recap of each kind on News, and into Recaps (390, live) › no console errors
+  ok   Wire pass 2: Feed | Topics, shelves of four, kept on the phone (390, live) › Feed | Topics sits in the head, Feed on
+  ok   Wire pass 2: Feed | Topics, shelves of four, kept on the phone (390, live) › Topics is the day on shelves (no top stories, no topic chips) and is kept
+  ok   Wire pass 2: Feed | Topics, shelves of four, kept on the phone (390, live) › New today leads
+  ok   Wire pass 2: Feed | Topics, shelves of four, kept on the phone (390, live) › each shelf shows four and says “All N” for the rest
+  ok   Wire pass 2: Feed | Topics, shelves of four, kept on the phone (390, live) › topics, Sports and Markets from their lanes, the world and tech too
+  ok   Wire pass 2: Feed | Topics, shelves of four, kept on the phone (390, live) › “All 161” shows all 161, with the Collapse bar
+  ok   Wire pass 2: Feed | Topics, shelves of four, kept on the phone (390, live) › Collapse folds it back to four
+  ok   Wire pass 2: Feed | Topics, shelves of four, kept on the phone (390, live) › the Sports shelf counts its lane, not only the river’s
+  ok   Wire pass 2: Feed | Topics, shelves of four, kept on the phone (390, live) › a reload opens on Topics again
+  ok   Wire pass 2: Feed | Topics, shelves of four, kept on the phone (390, live) › Feed brings the paper back, and the phone forgets Topics
+  ok   Wire pass 2: Feed | Topics, shelves of four, kept on the phone (390, live) › no console errors
+  ok   Wire pass 2: the Sports chip opens each sport; Markets shows its lane (390, live) › Sports and Markets are on the topic row; Markets counts its whole lane
+  ok   Wire pass 2: the Sports chip opens each sport; Markets shows its lane (390, live) › a row of sports in the payload’s order, counted (college left out while empty)
+  ok   Wire pass 2: the Sports chip opens each sport; Markets shows its lane (390, live) › a sport with nothing today stays, quieter
+  ok   Wire pass 2: the Sports chip opens each sport; Markets shows its lane (390, live) › NBA shows every NBA story of the day, not only the river’s (and the days before, below)
+  ok   Wire pass 2: the Sports chip opens each sport; Markets shows its lane (390, live) › the head says what it is showing
+  ok   Wire pass 2: the Sports chip opens each sport; Markets shows its lane (390, live) › the sport row goes with the Sports chip
+  ok   Wire pass 2: the Sports chip opens each sport; Markets shows its lane (390, live) › Markets shows its whole lane
+  ok   Wire pass 2: the Sports chip opens each sport; Markets shows its lane (390, live) › on Local there are no markets
+  ok   Wire pass 2: the Sports chip opens each sport; Markets shows its lane (390, live) › no console errors
+  ok   Wire pass 2: Photos, Everything: the world’s pictures, credited, and X’s own embed (390, live) › every world picture links to where it ran
+  ok   Wire pass 2: Photos, Everything: the world’s pictures, credited, and X’s own embed (390, live) › with its credit when the feed gives one
+  ok   Wire pass 2: Photos, Everything: the world’s pictures, credited, and X’s own embed (390, live) › under the publisher’s name, large at 4:3
+  ok   Wire pass 2: Photos, Everything: the world’s pictures, credited, and X’s own embed (390, live) › X’s script is not asked for until an X post is near the screen
+  ok   Wire pass 2: Photos, Everything: the world’s pictures, credited, and X’s own embed (390, live) › then X’s script loads once and embeds the post (its link stays as the fallback)
+  ok   Wire pass 2: Photos, Everything: the world’s pictures, credited, and X’s own embed (390, live) › on Local, none of the world’s
+  ok   Wire pass 2: Photos, Everything: the world’s pictures, credited, and X’s own embed (390, live) › no console errors
+  ok   Wire pass 2: Photos, Everything: the world’s pictures, credited, and X’s own embed (390, live) › without X’s script, a link card to the post
+  ok   Wire pass 2: Photos, Everything: the world’s pictures, credited, and X’s own embed (390, live) › no console errors but the blocked script
+  ok   Wire pass 2: upvote and Share on every story; Most upvoted on an earlier day (390, live) › every top story and row shows upvote, Share, ⋯ and the star
+  ok   Wire pass 2: upvote and Share on every story; Most upvoted on an earlier day (390, live) › each a 44px target, all on the card
+  ok   Wire pass 2: upvote and Share on every story; Most upvoted on an earlier day (390, live) › the upvote counts in place, as before
+  ok   Wire pass 2: upvote and Share on every story; Most upvoted on an earlier day (390, live) › Share copies the story’s link when there is no share sheet
+  ok   Wire pass 2: upvote and Share on every story; Most upvoted on an earlier day (390, live) › today has no Most upvoted block
+  ok   Wire pass 2: upvote and Share on every story; Most upvoted on an earlier day (390, live) › an earlier day leads with its most upvoted stories, most votes first, each with its count
+  ok   Wire pass 2: upvote and Share on every story; Most upvoted on an earlier day (390, live) › above that day’s top stories
+  ok   Wire pass 2: upvote and Share on every story; Most upvoted on an earlier day (390, live) › one call asks for the whole day’s counts
+  ok   Wire pass 2: upvote and Share on every story; Most upvoted on an earlier day (390, live) › no console errors
+  ok   Wire pass 2: upvote and Share on every story; Most upvoted on an earlier day (390, live) › no votes, no block
+  ok   Wire pass 2: upvote and Share on every story; Most upvoted on an earlier day (390, live) › no console errors
+  ok   Wire pass 2: deep links into Recaps, and the wide screen (1440, live) › #wire/recaps/<id> opens Recaps and flashes that recap
+  ok   Wire pass 2: deep links into Recaps, and the wide screen (1440, live) › the wide screen’s rail holds the kinds
+  ok   Wire pass 2: deep links into Recaps, and the wide screen (1440, live) › an unknown recap still lands on Recaps
+  ok   Wire pass 2: deep links into Recaps, and the wide screen (1440, live) › no console errors
+  ok   Photo mode: the News · Photos · Square switch, in words, kept on the phone (demo) › the switch says News, Photos, Square, Recaps in words, each a 44px target
   ok   Photo mode: the News · Photos · Square switch, in words, kept on the phone (demo) › it opens on News, said by aria-pressed
   ok   Photo mode: the News · Photos · Square switch, in words, kept on the phone (demo) › and it leads the one row under the mast
   ok   Photo mode: the News · Photos · Square switch, in words, kept on the phone (demo) › the old list and photo icons are gone
@@ -2805,7 +2879,7 @@
   ok   sign-in fails soft › a bad address is caught before any request
   ok   sign-in fails soft › no link was requested
   ok   sign-in fails soft › no console errors
-  ok   performance › the live Wire redraws 60 cards in 14ms (budget 100)
+  ok   performance › the live Wire redraws 60 cards in 18ms (budget 100)
   ok   shell fixes: a rail never snaps flush to the edge › 390: .rail carries scroll-padding of one gutter
   ok   shell fixes: a rail never snaps flush to the edge › 390: a card scrolled to the start stops at the gutter
   ok   shell fixes: a rail never snaps flush to the edge › 390: no console errors
@@ -2870,14 +2944,14 @@
   ok   shell fixes: the main switches share the poured water (reduce) › the Wire’s News · Photos · Square is a plain fill
   ok   shell fixes: the main switches share the poured water (reduce) › Local / Everything is a plain fill
   ok   shell fixes: the main switches share the poured water (reduce) › Photos takes the water and the pressed state
-  ok   shell fixes: the main switches share the poured water (reduce) › three words
+  ok   shell fixes: the main switches share the poured water (reduce) › four words
   ok   shell fixes: the main switches share the poured water (reduce) › On Air’s TV · Podcasts · Playlists is a plain fill
   ok   shell fixes: the main switches share the poured water (reduce) › Feed | Topics is a plain fill
   ok   shell fixes: the main switches share the poured water (reduce) › a side picked keeps its pressed state in the water
   ok   shell fixes: the main switches share the poured water (reduce) › no console errors
   ok   shell fixes: the poured water never freezes and stays inside its pill › News holds the water, and nothing is painted in the corners outside the pill
   ok   shell fixes: the poured water never freezes and stays inside its pill › five quick taps: the water lands under Photos
-  ok   shell fixes: the poured water never freezes and stays inside its pill › seven seconds after a pick the water still laps (45 frames in 600ms)
+  ok   shell fixes: the poured water never freezes and stays inside its pill › seven seconds after a pick the water still laps (44 frames in 600ms)
   ok   shell fixes: the poured water never freezes and stays inside its pill › scrolled down with the pill shrunk, a pick pours to News and stays in the pill
   ok   shell fixes: the poured water never freezes and stays inside its pill › On Air: Playlists takes the water, in its pill
   ok   shell fixes: the poured water never freezes and stays inside its pill › back on the Wire, a tap still pours
@@ -3101,7 +3175,7 @@
   ok   Habits, swipe to archive with Undo, drag and keys to reorder, edit (demo, 1280, dark) › habits: at most 2 subnav rows
   ok   Habits, swipe to archive with Undo, drag and keys to reorder, edit (demo, 1280, dark) › no console errors
   ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › twenty habits, in order
-  ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › twenty habits and a year of taps: a tap still shows at once (12, 11, 12, 11 ms)
+  ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › twenty habits and a year of taps: a tap still shows at once (12, 11, 12, 13 ms)
   ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › the heat map is all there, and four taps leave it as it was
   ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › every row keeps its seven dots and its 48px tap
   ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › the list is longer than the screen, and the panel scrolls
@@ -3572,6 +3646,8 @@
   ok   What Now: today in plain words and a Full weather link, under the card (390, live) › the demo carries its brief too (its weekday said as Tomorrow, since the demo moves to today)
   ok   What Now: today in plain words and a Full weather link, under the card (390, live) › no console errors
   ok   sideways rows: every content rail can be a list › wire: every sideways row can be turned into a list
+  ok   sideways rows: every content rail can be a list › wire: See as a list opens it downward with the Collapse bar
+  ok   sideways rows: every content rail can be a list › wire: Collapse puts the row back
   ok   sideways rows: every content rail can be a list › watch: every sideways row can be turned into a list
   ok   sideways rows: every content rail can be a list › watch: See as a list opens it downward with the Collapse bar
   ok   sideways rows: every content rail can be a list › watch: Collapse puts the row back
