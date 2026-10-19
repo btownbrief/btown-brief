@@ -1772,7 +1772,13 @@ async function wirePass2(browser, base) {
   });
 
   await group('Wire pass 2: Photos, Everything: the world’s pictures, credited, and X’s own embed (390, live)', async () => {
-    const { ctx, page, errors } = await newPage(browser, base, { wire: W2 });
+    /* Photo mode draws ten pictures at a time, newest first, and the repo's
+       own instagram.json is real posts on the real clock: later in the day
+       they outnumber the fixture's world pictures above the fold. So this
+       group answers Instagram with nothing, and the feed is the fixture's
+       alone, whatever the hour. */
+    const noIg = [/\/all-day\/data\/instagram\.json/, { generated: new Date().toISOString(), posts: [] }];
+    const { ctx, page, errors } = await newPage(browser, base, { wire: W2, routes: [noIg] });
     await everywhere(page);
     const asked = [];
     await page.route(/platform\.twitter\.com\/widgets\.js/, (r) => { asked.push(r.request().url());
@@ -1785,8 +1791,8 @@ async function wirePass2(browser, base) {
     check(w.length === 4 && w.every((c) => c.out && /^https:\/\/example\.org\//.test(c.out.href) && c.out.target === '_blank'), 'every world picture links to where it ran', JSON.stringify(w));
     check(w.filter((c) => c.credit).length === 3 && w.some((c) => c.credit === 'Photograph: A. Shooter/The Guardian'), 'with its credit when the feed gives one', JSON.stringify(w.map((c) => c.credit)));
     check(w.some((c) => /^The Guardian/.test(c.out.t)) && w.every((c) => c.ratio === '4 / 3'), 'under the publisher’s name, large at 4:3', JSON.stringify(w.map((c) => [c.out.t, c.ratio])));
-    const far = await page.$eval(pmPanel + ' .card.pm-x', (n) => n.getBoundingClientRect().top - innerHeight);
-    check(far > 700 && !asked.length, 'X’s script is not asked for until an X post is near the screen', far + ' ' + asked.join(' '));
+    const far = await page.$$eval(pmPanel + ' .card.pm-x', (ns) => (ns.length ? ns[0].getBoundingClientRect().top - innerHeight : null));
+    check(far !== null && far > 700 && !asked.length, 'X’s script is not asked for until an X post is near the screen', far + ' ' + asked.join(' '));
     await page.$eval(pmPanel + ' .card.pm-x', (n) => n.scrollIntoView({ block: 'center' }));
     await page.waitForFunction(() => document.querySelector('#panel-wire .card.pm-x .pm-xbox[data-embedded="1"]'), null, { timeout: 8000 }).catch(() => {});
     const x = await page.evaluate(() => { const c = document.querySelector('#panel-wire .card.pm-x'); const a = c.querySelector('blockquote.twitter-tweet a');
@@ -1804,7 +1810,7 @@ async function wirePass2(browser, base) {
     await ctx.close();
 
     /* when X's script cannot load, the post stays a plain card that links out */
-    const f = await newPage(browser, base, { wire: W2 });
+    const f = await newPage(browser, base, { wire: W2, routes: [noIg] });
     await everywhere(f.page);
     await f.page.route(/platform\.twitter\.com\/widgets\.js/, (r) => r.abort());
     await f.page.goto(base + '/all-day/#wire/photos');
