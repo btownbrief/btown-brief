@@ -3242,6 +3242,7 @@ async function theGames(browser, base) {
     /* the same list, expanded */
     check(/^See all 19$/.test(await page.$eval(gmPanel + ' [data-web-all]', (b) => b.textContent.trim())), '“See all 19”', '');
     await page.click(gmPanel + ' [data-web-all]');
+    check(await page.evaluate(() => document.activeElement && document.activeElement.hasAttribute('data-web-list')), 'See all moves the keyboard into the opened list', '');
     check(await page.$$eval(gmPanel + ' [data-slot="picks"] .gm-wrow', (n) => n.length) === 19 && !(await page.$(gmPanel + ' [data-slot="picks"] .rail')), 'it opens all 19 as a vertical list', '');
     const heads = await page.$$eval(gmPanel + ' [data-slot="picks"] .tdiv', (n) => n.map((x) => x.firstElementChild.textContent));
     check(JSON.stringify(heads) === JSON.stringify(web.categories.map((c) => c.title)), 'grouped by category, in the file’s order', heads.join(' / '));
@@ -3259,19 +3260,22 @@ async function theGames(browser, base) {
       const days = [];
       let d = new Date(Date.UTC(2026, 9, 1, 12));
       for (let i = 0; i < 400; i++) { days.push(d.toISOString().slice(0, 10)); d = new Date(d.getTime() + 86400000); }
+      const m_ids = (c, x) => m.dailyPicks(c, x).map((g) => g.id);
       const sets = days.map((x) => m.dailyPicks(cfg, x).map((g) => g.id));
       const again = days.map((x) => m.dailyPicks(cfg, x).map((g) => g.id));
       const key = (a) => a.slice().sort().join();
       const seen = new Set(sets.slice(0, 60).flat());
       const catsPer = sets.map((s) => new Set(s.map((id) => cfg.games.find((g) => g.id === id).category)).size);
       return { same: JSON.stringify(sets) === JSON.stringify(again), repeat: sets.findIndex((s, i) => i && key(s) === key(sets[i - 1])), sizes: [...new Set(sets.map((s) => new Set(s).size === s.length ? s.length : -1))],
-        seen: seen.size, minCats: Math.min(...catsPer), distinct: new Set(sets.map(key)).size, oct19: m.dailyPicks(cfg, '2026-10-19').map((g) => g.id), oct20: m.dailyPicks(cfg, '2026-10-20').map((g) => g.id) };
+        seen: seen.size, minCats: Math.min(...catsPer), distinct: new Set(sets.map(key)).size, small: [[3, 2], [2, 1], [4, 2], [5, 3]].map(([m, shown]) => { const c = { shown, categories: [{ id: 'a' }], games: Array.from({ length: m }, (_, i) => ({ id: 'g' + i, category: 'a' })) }; let bad = 0, prev = ''; days.forEach((x) => { const k = key(m_ids(c, x)); if (k === prev) bad++; prev = k; }); return bad; }),
+        oct19: m.dailyPicks(cfg, '2026-10-19').map((g) => g.id), oct20: m.dailyPicks(cfg, '2026-10-20').map((g) => g.id) };
     }, web);
     check(probe.same, 'the same date always gives the same picks', '');
     check(probe.repeat === -1, 'over 400 days, never the same set two days running', 'first repeat at ' + probe.repeat);
     check(JSON.stringify(probe.sizes) === '[5]' && probe.minCats === 4, 'every day: five different games, one or more from each category', JSON.stringify(probe.sizes) + ' ' + probe.minCats);
-    check(probe.seen === 19 && probe.distinct > 100, 'every game comes up within two months, and the mixes keep changing', probe.seen + ' games, ' + probe.distinct + ' distinct sets');
-    check(probe.oct19.join() === 'geoguessr-daily-challenge,the-atlantic-crossword,wikitrivia,wordle,murdle' && probe.oct20.join() === 'the-guardian-crosswords,connections,strands,lichess-puzzle-of-the-day,framed', 'pinned: Oct 19 and Oct 20 2026 give these picks (the arcade page must give the same)', probe.oct19.join() + ' | ' + probe.oct20.join());
+    check(probe.seen === 19 && probe.distinct >= 12, 'every game comes up within two months, and the mix does not repeat for 12 days', probe.seen + ' games, ' + probe.distinct + ' distinct sets');
+    check(probe.small.every((b) => b === 0), 'a small list (3 games, 2 shown; 2, 1; 4, 2; 5, 3) also never repeats two days running', JSON.stringify(probe.small));
+    check(probe.oct19.join() === 'travle,la-times-crossword,strands,pips,murdle' && probe.oct20.join() === 'usa-today-crossword,bracket-city,wikitrivia,lichess-puzzle-of-the-day,geoguessr-daily-challenge', 'pinned: Oct 19 and Oct 20 2026 give these picks (the arcade page must give the same)', probe.oct19.join() + ' | ' + probe.oct20.join());
     if (etKey(Date.now()) === '2026-10-19') check(probe.oct19.join() === tiles.map((t) => t.k.slice(4)).join(), 'the tiles are exactly dailyPicks for the Burlington date', '');
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
@@ -3306,8 +3310,9 @@ async function theGames(browser, base) {
     await page.goto(base + '/all-day/?demo=1#games');
     await page.waitForSelector(gmPanel + ' [data-you="ask"]', { timeout: 15000 });
     await page.waitForSelector(gmPanel + ' .gm-poll', { timeout: 15000 });
+    await page.waitForSelector('#subnav [data-chip="picks"]', { timeout: 8000 }).catch(() => {});
     const chipsAt = await page.$$eval('#subnav .chip', (c) => c.map((x) => x.textContent));
-    check(JSON.stringify(chipsAt) === JSON.stringify(['Arcade', 'Playing', 'Groups', 'Gamertags', 'VR', 'Challenge', 'Leaderboard', 'Champions']), 'the chip row is the table of contents', chipsAt.join(' / '));
+    check(JSON.stringify(chipsAt) === JSON.stringify(['Arcade', 'Picks', 'Playing', 'Groups', 'Gamertags', 'VR', 'Challenge', 'Leaderboard', 'Champions']), 'the chip row is the table of contents', chipsAt.join(' / '));
     check(await page.$$eval(gmPanel + ' [data-me]', (n) => n.length) === 0, 'before a name, nothing is marked', '');
     await findMe(page, 'Juniper');
     check(await page.$$eval(gmPanel + ' [data-me]', (n) => n.length) === 3, 'the demo reader is on three boards', '');

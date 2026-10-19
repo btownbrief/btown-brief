@@ -278,9 +278,10 @@ function loadLive() {
      n      = days since 1970-01-01 of the Burlington date (YYYY-MM-DD)
      shown  = web-games.json's "shown" (5), at least one per category and the
               spare ones going to the biggest categories (the first of equals)
-     a category with m games and q picks shows games (n*q + k + floor(n*q/m)) mod m
-              for k = 0..q-1, in file order (the floor term shifts the pattern each
-              time it wraps, so the same mix does not come back every few days)
+     a category with m games and q picks shows games (n*q + k) mod m for k = 0..q-1,
+              in file order. Each day moves a category's window along by q, and q < m,
+              so no category shows the same games two days running (the whole set
+              repeats every lcm of the category sizes, 12 days with today's file)
      order  = the categories, starting at category (n mod how many there are) */
 export function dailyPicks(cfg, date) {
   const games = arr(cfg && cfg.games);
@@ -302,7 +303,7 @@ export function dailyPicks(cfg, date) {
   const out = [];
   order.forEach((c) => {
     const m = c.list.length, per = q.get(c.id);
-    for (let k = 0; k < per; k++) out.push(c.list[(n * per + k + Math.floor(n * per / m)) % m]);
+    for (let k = 0; k < per; k++) out.push(c.list[(n * per + k) % m]);
   });
   return out;
 }
@@ -317,7 +318,12 @@ function loadWeb() {
   fetch(WEB_URL, { cache: 'no-cache' }).then((r) => (r.ok ? r.json() : Promise.reject(new Error(String(r.status)))))
     .then((j) => { G.web = webShape(j); })
     .catch(() => { G.web = null; })
-    .then(() => { G.settled.web = true; if (G.slots) { drawWebSlot(); land(); } });
+    .then(() => {
+      G.settled.web = true;
+      if (!G.slots) return;
+      drawWebSlot();
+      if (app.activeTab() === KEY) { app.paintSubnav(); land(); }
+    });
 }
 
 /* Every board, six at a time; store.rpc answers null for a board that
@@ -847,6 +853,9 @@ function drawWeb(host) {
   if (G.webOpen) {
     const wrap = el('div', 'expwrap');
     wrap.dataset.webList = String(total);
+    wrap.tabIndex = -1;
+    wrap.setAttribute('role', 'group');
+    wrap.setAttribute('aria-label', 'All ' + total + ' daily picks');
     G.web.categories.forEach((c) => {
       const list = G.web.games.filter((g) => g.category === c.id);
       if (!list.length) return;
@@ -860,7 +869,12 @@ function drawWeb(host) {
   const rail = railOf(host);
   rail.dataset.webToday = G.webDay;
   dailyPicks(G.web, G.webDay).forEach((g) => rail.appendChild(webTile(g)));
-  const more = button('See all ' + total, 'ghost more', () => { G.webOpen = true; drawWebSlot(); });
+  const more = button('See all ' + total, 'ghost more', () => {
+    G.webOpen = true;
+    drawWebSlot();
+    const list = G.root.querySelector('[data-web-list]');
+    if (list) list.focus({ preventScroll: true });
+  });
   more.dataset.webAll = '';
   more.setAttribute('aria-expanded', 'false');
   host.appendChild(more);
