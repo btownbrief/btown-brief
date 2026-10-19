@@ -8183,11 +8183,127 @@ async function shellFixes(browser, base) {
     await page.waitForTimeout(150);
     check(await page.$eval('#subnav .oa-sideswitch [data-side="pods"]', (b) => b.getAttribute('aria-pressed')) === 'true' && ok(await look('#subnav .oa-sideswitch')), 'a side picked keeps its pressed state in the water', '');
     if (water) {
-      /* still water: after the lap the one loop asks for no more frames */
+      /* the loop sleeps once the reader has gone quiet (CALM seconds without a touch, scroll or key) */
+      await page.evaluate(() => import('/all-day/js/liquid.js').then((m) => m._rest()));
       await page.waitForTimeout(6500);
       const n = await page.evaluate(() => new Promise((r) => { let n = 0; const o = window.requestAnimationFrame; window.requestAnimationFrame = (f) => { n++; return o(f); }; setTimeout(() => { window.requestAnimationFrame = o; r(n); }, 600); }));
-      check(n === 0, 'when the water is still, the loop sleeps (' + n + ' frames asked in 600ms)', n);
+      check(n === 0, 'when the reader has gone quiet and the water is still, the loop sleeps (' + n + ' frames asked in 600ms)', n);
     }
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  /* Stephen, 2026-10-19, of the poured switches: "they would be frozen at
+     times" and "the color would be outside the button outline". The water
+     keeps lapping while the reader is here (the first version went still
+     five seconds after a pick, mid-wave), and it is clipped to the pill in
+     the canvas itself, because Safari does not always clip a canvas layer
+     to a parent with a backdrop filter or a shrink transform. Each case
+     reads the canvas's own pixels: which segment holds the water, and
+     whether anything is painted in the corners outside the capsule. */
+  await group('shell fixes: the poured water never freezes and stays inside its pill', async () => {
+    const { ctx, page, errors } = await newPage(browser, base, { dpr: 2 });
+    await page.goto(base + '/all-day/?demo=1#wire');
+    await settle(page);
+    await page.waitForSelector('#subnav .wmodes.liquid', { timeout: 8000 });
+    /* alpha at each segment's centre, the corners' alpha, and the colour where the water is */
+    const sample = (sel) => page.$eval(sel, (bar) => {
+      const c = bar.querySelector(':scope > canvas.lsw-canvas');
+      const btns = [...bar.querySelectorAll('button')];
+      const on = btns.findIndex((b) => b.classList.contains('on'));
+      if (!c || !c.width) return { on, canvas: false };
+      const x = c.getContext('2d'), cr = c.getBoundingClientRect(), sx = c.width / cr.width, sy = c.height / cr.height;
+      const px = (a, b) => [...x.getImageData(Math.max(0, Math.min(c.width - 1, Math.round(a))), Math.max(0, Math.min(c.height - 1, Math.round(b))), 1, 1).data];
+      const centre = (b) => { const r = b.getBoundingClientRect(); return [(r.left + r.width / 2 - cr.left) * sx, (r.top + r.height / 2 - cr.top) * sy]; };
+      const alpha = btns.map((b) => px(...centre(b))[3]);
+      const corners = [px(0, 0), px(c.width - 1, 0), px(0, c.height - 1), px(c.width - 1, c.height - 1)].map((p) => p[3]);
+      const rgb = on >= 0 ? px(...centre(btns[on])).slice(0, 3) : null;
+      const sum = (() => { const d = x.getImageData(0, 0, c.width, c.height).data; let h = 0; for (let i = 0; i < d.length; i += 7) h = (h * 31 + d[i]) >>> 0; return h; })();
+      return { on, canvas: true, alpha, corners, rgb, sum };
+    });
+    const inPlace = (r) => !!(r && r.canvas && r.on >= 0 && r.alpha.every((a, i) => (i === r.on ? a > 200 : a < 20)));
+    const clear = (r) => !!(r && r.canvas && r.corners.every((a) => a === 0));
+    const frames = () => page.evaluate(() => new Promise((r) => { let n = 0; const o = window.requestAnimationFrame; window.requestAnimationFrame = (f) => { n++; return o(f); }; setTimeout(() => { window.requestAnimationFrame = o; r(n); }, 600); }));
+    const MODES = '#subnav .wmodes';
+
+    let r = await sample(MODES);
+    check(inPlace(r) && clear(r), 'News holds the water, and nothing is painted in the corners outside the pill', JSON.stringify(r));
+    /* rapid taps: the water ends under the last one */
+    for (const v of ['photos', 'news', 'photos', 'news', 'photos']) await page.click('#subnav .wmode[data-view="' + v + '"]');
+    await page.waitForTimeout(1600);
+    r = await sample(MODES);
+    check(inPlace(r) && r.on === 1 && clear(r), 'five quick taps: the water lands under Photos', JSON.stringify(r));
+    /* the steady lap: seven seconds on, with the reader still here, the water still moves */
+    await page.waitForTimeout(5500);
+    await page.keyboard.press('Shift');
+    await page.waitForTimeout(1500);
+    const a = await sample(MODES);
+    await page.waitForTimeout(250);
+    const b = await sample(MODES);
+    const n1 = await frames();
+    check(n1 > 0 && a.sum !== b.sum && inPlace(b), 'seven seconds after a pick the water still laps (' + n1 + ' frames in 600ms)', JSON.stringify({ n1, a: a.sum, b: b.sum }));
+    /* the floating pill shrinks on the way down: a pick there pours in place, inside the outline */
+    await page.evaluate(() => { const p = document.querySelector('.panel:not([hidden])'); p.scrollBy(0, 300); });
+    await page.waitForTimeout(80);
+    await page.evaluate(() => { const p = document.querySelector('.panel:not([hidden])'); p.scrollBy(0, 300); });
+    await page.waitForTimeout(500);
+    const small = await page.evaluate(() => document.body.classList.contains('pill-small'));
+    await page.click('#subnav .wmode[data-view="news"]');
+    await page.waitForTimeout(1600);
+    r = await sample(MODES);
+    check(small && inPlace(r) && r.on === 0 && clear(r), 'scrolled down with the pill shrunk, a pick pours to News and stays in the pill', JSON.stringify({ small, ...r }));
+    /* away to On Air and back: both answer a tap */
+    await goTab(page, 'onair');
+    await page.click('#subnav .oa-sideswitch [data-side="lists"]');
+    await page.waitForTimeout(1600);
+    r = await sample('#subnav .oa-sideswitch');
+    check(inPlace(r) && r.on === 2 && clear(r), 'On Air: Playlists takes the water, in its pill', JSON.stringify(r));
+    await page.click('#subnav .oa-sideswitch [data-side="tv"]');
+    await goTab(page, 'wire');
+    await page.click('#subnav .wmode[data-view="photos"]');
+    await page.waitForTimeout(1600);
+    r = await sample(MODES);
+    check(inPlace(r) && r.on === 1, 'back on the Wire, a tap still pours', JSON.stringify(r));
+    /* turned sideways and back: the water follows its segment */
+    await page.setViewportSize({ width: 844, height: 390 });
+    await page.waitForTimeout(900);
+    const wide = await sample(MODES);
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.waitForTimeout(900);
+    r = await sample(MODES);
+    check(inPlace(wide) && inPlace(r) && clear(r), 'turned sideways and back, the water stays on Photos', JSON.stringify({ wide, r }));
+    await page.click('#subnav .wmode[data-view="news"]');
+    await page.waitForTimeout(400);
+    /* a theme change repaints still water in the new theme's colour (the banner's Local is #16704E light, #6FD79E dark) */
+    await page.evaluate(() => document.querySelector('.panel:not([hidden])').scrollTo(0, 0));
+    await page.evaluate(() => import('/all-day/js/liquid.js').then((m) => m._rest()));
+    await page.waitForTimeout(6500);
+    const LOCAL = '.panel:not([hidden]) .wband .localsw';
+    if (!(await page.$eval(LOCAL, (x) => x.classList.contains('is-on')))) { await page.click(LOCAL + ' .localsw-half:not(.on)'); await page.waitForTimeout(6500); }
+    const tone = (sel) => page.$eval(sel, (bar) => getComputedStyle(bar).getPropertyValue('--local').trim());
+    const near = (rgb, hex) => { const h = hex.replace('#', ''); const t = [0, 2, 4].map((i) => parseInt(h.slice(i, i + 2), 16)); return rgb && rgb.every((v, i) => Math.abs(v - t[i]) <= 45); };
+    await page.evaluate(() => { document.documentElement.setAttribute('data-theme', 'dark'); });
+    await page.waitForTimeout(700);
+    const dark = await sample(LOCAL);
+    const darkTone = await tone(LOCAL);
+    check(inPlace(dark) && near(dark.rgb, darkTone), 'still water takes the dark theme’s colour when the theme changes', JSON.stringify({ rgb: dark.rgb, darkTone }));
+    await page.evaluate(() => { document.documentElement.setAttribute('data-theme', 'light'); });
+    await page.waitForTimeout(700);
+    const light = await sample(LOCAL);
+    const lightTone = await tone(LOCAL);
+    check(inPlace(light) && near(light.rgb, lightTone) && clear(light), 'and the light theme’s colour coming back', JSON.stringify({ rgb: light.rgb, lightTone }));
+    /* a touch wakes the sleeping loop; a hidden page puts it to sleep */
+    check(!(await page.evaluate(() => import('/all-day/js/liquid.js').then((m) => m._state().running))), 'gone quiet, the loop is asleep', '');
+    await page.mouse.wheel(0, 40);
+    await page.waitForTimeout(200);
+    check(await page.evaluate(() => import('/all-day/js/liquid.js').then((m) => m._state().running)), 'a scroll wakes it', '');
+    await page.evaluate(() => { Object.defineProperty(document, 'hidden', { configurable: true, get: () => true }); document.dispatchEvent(new Event('visibilitychange')); });
+    await page.waitForTimeout(200);
+    const hid = await frames();
+    check(hid === 0, 'a hidden page asks for no frames (' + hid + ' in 600ms)', hid);
+    await page.evaluate(() => { delete document.hidden; document.dispatchEvent(new Event('visibilitychange')); });
+    await page.waitForTimeout(200);
+    check(await page.evaluate(() => import('/all-day/js/liquid.js').then((m) => m._state().running)), 'shown again, the water moves again', '');
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
   });

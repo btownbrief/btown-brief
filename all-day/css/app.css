@@ -519,7 +519,10 @@ body.chrome-away .mast { transform: translateY(-100%); }
   border-radius: var(--r-pill); background: var(--paper-2); border: 1px solid var(--line-soft);
   transition: background .2s ease, border-color .2s ease; }
 .localsw.liquid { overflow: hidden; }
-.lsw-canvas { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+/* the water's canvas fills the switch inside its rim and is rounded like it;
+   liquid.js clips the drawing to the same capsule, since Safari does not
+   always clip a canvas layer to a parent with a backdrop filter */
+.lsw-canvas { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; border-radius: var(--r-pill); }
 .localsw-half { position: relative; z-index: 1; display: inline-flex; align-items: center; justify-content: center; gap: 6px;
   height: 32px; padding: 0 12px; border-radius: var(--r-pill); font-size: var(--fs-meta); font-weight: 600; letter-spacing: -.005em;
   color: var(--ink-3); white-space: nowrap; transition: color .18s ease, background .18s ease; }
