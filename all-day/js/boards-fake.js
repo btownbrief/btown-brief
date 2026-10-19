@@ -509,6 +509,11 @@ export function seedDemo(fake) {
   add(1, 'gatherings', 'gathering', 'Pickup ultimate at Leddy', { ago: 6, meta: { when: day(2) + ', 5:30 pm', place: 'Leddy Park', kind: 'pickup' }, body: 'All levels. Bring a light and a dark shirt.', votes: 7 });
   add(6, 'gatherings', 'gathering', 'Board game night', { ago: 10, meta: { when: day(4) + ', 7 pm', place: 'The Archives', kind: 'board-games', link: 'https://example.com/board-game-night' }, votes: 11 });
   add(2, 'gatherings', 'gathering', 'Saturday social run, 5k', { ago: 14, meta: { when: day(1) + ', 8 am', place: 'Waterfront Park, by the boathouse', kind: 'run' }, votes: 4 });
+  /* readers' playlists for On Air (premod, like a gathering) */
+  add(3, 'playlists', 'playlist', 'Leaf peeping on Route 100', { ago: 5, meta: { link: 'https://open.spotify.com/playlist/DemoBtownBriefLeaf0001' }, body: 'Folk for the drive to Stowe.', votes: 3 });
+  add(5, 'playlists', 'playlist', 'Late night at Radio Bean', { ago: 30, meta: { link: 'https://www.youtube.com/playlist?list=PLdemoBtownBriefBean01' }, votes: 2 });
+  add(4, 'playlists', 'playlist', 'Maya on Spotify', { ago: 50, meta: { link: 'https://open.spotify.com/user/demo.maya' }, votes: 1 });
+  add(8, 'playlists', 'playlist', 'Waiting for a look', { ago: 2, meta: { link: 'https://open.spotify.com/playlist/DemoBtownBriefWait0001' }, status: 'pending' });
   add(7, 'gatherings', 'gathering', 'Open fiddle jam', { ago: 1, meta: { when: day(6) + ', 6 pm', place: 'Radio Bean', kind: 'music' }, status: 'pending' });
   return fake;
 }

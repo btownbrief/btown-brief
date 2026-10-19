@@ -188,6 +188,66 @@ class Run(unittest.TestCase):
         self.assertEqual((th["majestic10"]["ok"], th["majestic10"]["days"]), (False, {}))
         self.assertTrue(th["essex"]["ok"])
 
+    def go_with(self, web, prev=None, relay=None, days=7):
+        with tempfile.TemporaryDirectory() as d:
+            out = os.path.join(d, "s.json")
+            pp = rp = None
+            if prev is not None:
+                pp = os.path.join(d, "prev.json")
+                with open(pp, "w", encoding="utf-8") as fh:
+                    json.dump(prev, fh)
+            if relay is not None:
+                rp = os.path.join(d, "essex.json")
+                with open(rp, "w", encoding="utf-8") as fh:
+                    fh.write(relay if isinstance(relay, str) else json.dumps(relay))
+            code = bs.run(argparse.Namespace(out=out, days=days, prev=pp, essex_json=rp), web, None, NOW)
+            doc = json.load(open(out, encoding="utf-8")) if os.path.exists(out) else None
+        return code, doc
+
+    def test_essex_turned_away_uses_the_macs_read(self):
+        # 2026-10-17 on: Essex's firewall answers GitHub's runners 405; the Mac reads it
+        relay = {"v": 1, "read": "2026-10-17T10:30:00Z", "days": {
+            "2026-10-16": [["Yesterday's Film", "19:00"]],                    # past: dropped
+            "2026-10-17": [["HARBOR LIGHTS", "20:45"], ["Harbor Lights", "12:15"], ["Bad", "25:00"], ["<b>x</b>"]],
+            "not-a-day": [["Nope", "10:00"]]}}
+        code, doc = self.go_with(web_for(all_pages(), fail=("essexcinemas.com",)), relay=relay)
+        th = {t["id"]: t for t in doc["theaters"]}
+        self.assertTrue(th["essex"]["ok"])
+        self.assertEqual(th["essex"]["days"], {"2026-10-17": [{"t": "Harbor Lights", "times": ["12:15", "20:45"]}]})
+        self.assertEqual((th["essex"]["read"], th["essex"]["via"]), ("2026-10-17T10:30:00Z", "mac"))
+        self.assertNotIn("carried", th["essex"])
+
+    def test_a_relay_in_the_wrong_shape_is_ignored(self):
+        for bad in ("not json", {"v": 2, "read": "2026-10-17T10:30:00Z", "days": {}}, {"v": 1, "read": "today", "days": {"2026-10-17": [["A", "10:00"]]}},
+                    {"v": 1, "read": "2026-10-17T10:30:00Z", "days": []}, {"v": True, "read": "2026-10-17T10:30:00Z", "days": {"2026-10-17": [["A", "10:00"]]}},
+                    {"v": 1, "read": "2026-99-99T99:99:99Z", "days": {"2026-10-17": [["A", "10:00"]]}},
+                    {"v": 1, "read": "2026-10-10T10:30:00Z", "days": {"2026-10-17": [["A", "10:00"]]}},      # a week old
+                    {"v": 1, "read": "2026-10-17T10:30:00Z", "days": {"2026-99-99": [["A", "10:00"]], "2027-01-30": [["Far", "10:00"]]}}):
+            code, doc = self.go_with(web_for(all_pages(), fail=("essexcinemas.com",)), relay=bad)
+            th = {t["id"]: t for t in doc["theaters"]}
+            self.assertEqual((th["essex"]["ok"], th["essex"]["days"]), (False, {}), bad)
+
+    def test_the_page_wins_over_the_relay(self):
+        relay = {"v": 1, "read": "2026-10-17T10:30:00Z", "days": {"2026-10-17": [["Other", "10:00"]]}}
+        code, doc = self.go_with(web_for(all_pages()), relay=relay)
+        th = {t["id"]: t for t in doc["theaters"]}
+        self.assertEqual(th["essex"]["days"]["2026-10-17"], [{"t": "Harbor Lights", "times": ["12:15", "20:45"]}])
+        self.assertNotIn("read", th["essex"])
+
+    def test_a_failed_theater_keeps_its_days_still_ahead(self):
+        prev = {"v": 1, "built": "2026-10-16T13:00:00Z", "theaters": [
+            {"id": "essex", "ok": True, "days": {"2026-10-16": [{"t": "Gone", "times": ["19:00"]}],
+                                                 "2026-99-99": [{"t": "Not a day", "times": ["19:00"]}],
+                                                 "2026-10-18": [{"t": "Quiet Lake", "id": 7, "times": ["19:00", "99:00"], "x": "<b>"}, {"t": 5, "times": "19:00"}]}},
+            {"id": "majestic10", "ok": False, "days": {"2026-10-18": [{"t": "Not trusted", "times": ["19:00"]}]}}]}
+        pages = all_pages()
+        pages["majestic10.com/"] = "<html>Coming soon</html>"
+        code, doc = self.go_with(web_for(pages, fail=("essexcinemas.com",)), prev=prev)
+        th = {t["id"]: t for t in doc["theaters"]}
+        self.assertEqual((th["essex"]["ok"], th["essex"]["days"], th["essex"]["read"], th["essex"]["carried"]),
+                         (True, {"2026-10-18": [{"t": "Quiet Lake", "id": 7, "times": ["19:00"]}]}, "2026-10-16T13:00:00Z", True))
+        self.assertEqual((th["majestic10"]["ok"], th["majestic10"]["days"]), (False, {}))   # a row that was itself failing is not carried
+
     def test_every_theater_down_writes_nothing(self):
         code, doc = self.go(web_for({}, fail=("http",)))
         self.assertEqual(code, 1)
