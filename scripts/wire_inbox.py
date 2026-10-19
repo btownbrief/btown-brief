@@ -6,6 +6,8 @@ Two bots drop files in the private repo btownbrief/wire-inbox:
   grok/x.json         X posts from a shortlist of accounts: six Vermont ones and the
                       national desks (AP, Reuters, BBC and others), 2026-10-17
   muse/facebook.json  posts from public Facebook groups, every one of them local
+  grok/recaps.json    Grok's packed recaps (Morning briefing, AI & tech, Sports...):
+                      each a short intro plus linked bullets, 2026-10-19
 
 refresh_pulse.py calls read_inbox() each run. This module fetches both files
 through the GitHub contents API with the WIRE_INBOX_TOKEN secret, checks them
@@ -18,7 +20,11 @@ merges the surviving posts into pulse.json under its own `inbox` key:
                  "checked": "...", "pause_after_hours": 18, "n": 12,
                  "items": [{"u", "d", "fd", "from", "name", "summary",
                             "kind", "ch": "x", "local": false}, ...]},
-    "facebook": {...same shape, "ch": "facebook"...}
+    "facebook": {...same shape, "ch": "facebook"...},
+    "recaps":   {"paused": false, "reason": null, "updated_at": "...", "checked": "...",
+                 "pause_after_hours": 18, "n": 5,
+                 "items": [{"id", "kind", "title", "posted_at", "d", "intro", "basis",
+                            "bullets": [{"text", "url", "note", "sport"?}, ...]}, ...]}
   }
 
 The posts live under their own key, not in `items`, so pages that predate the
@@ -63,21 +69,37 @@ FILES = {
     "facebook": ("muse/facebook.json", "muse-facebook"),
 }
 PAUSE_HOURS = 18     # README: "paused if updated_at is older than 18 hours"
-KEEP_DAYS = 7        # README: "Keep the last 7 days"
-CAP = 300            # README: "At most 300"
+# The Wire keeps its own store (pulse.json's inbox key) and only reads the
+# last ~28 hours of it, so the inbox files need a short window: the bots keep
+# 3 days (README, 2026-10-19), and this side keeps up to 7 days, 300 posts per
+# channel, of what it has read. That is two and a half days of X at ~120 posts
+# a day, still far more than the Wire's window.
+KEEP_DAYS = 7
+CAP = 300
 BAD_SHARE = 0.5      # more than half the posts failing = a bad file
 CLOCK_SKEW_MINUTES = 10
 
 # --- the contract, ported from wire-inbox/scripts/validate_inbox.py --------
 SOURCES = {"grok-x", "muse-facebook"}
 KINDS = {"post", "recap", "listing"}
-MAX_ITEMS = 300
+# 2026-10-19: was 300 items and 7 days, which a busy X list outgrew in three
+# days ("the file will reach the 300-item limit tomorrow"). The bots now keep
+# 3 days with a safety cap of 1,000; this side still accepts posts up to 7 days
+# old, so a bot running an older brief is never paused for keeping too much.
+MAX_ITEMS = 1000
 MAX_SUMMARY = 200
 MAX_AGE_DAYS = 7
 HTTPS = re.compile(r"^https://[^\s]+$")
 EMAIL = re.compile(r"[\w.+-]+@[\w-]+\.[\w.-]+")
 PHONE = re.compile(r"(?<!\d)(?:\+?1[\s.-]?)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}(?!\d)")
 SHOUTY = re.compile(r"\bBREAKING\b|#\w+|[\U0001F300-\U0001FAFF]")
+# A summary that narrates the poster ("Someone is sharing...", "Burlington Area
+# History is sharing...") instead of speaking in the post's own voice (2026-10-19). Counted
+# and reported, never dropped: the page strips the narrator meanwhile, and a
+# bot still on its old brief must not pause its whole source.
+NARRATOR = re.compile(r"^(someone|a member|a user|the poster|a neighbor|a resident)\b"
+                      r"|^\S.{0,60}?\bis (sharing|asking|promoting|announcing|advertising|"
+                      r"inviting|looking for|offering)\b", re.I)
 
 
 def parse_ts(value):
@@ -168,6 +190,195 @@ def is_fatal(problem):
     return not problem.startswith("items[")
 
 
+# --- recaps (grok/recaps.json), ported from the validator too ----------------
+
+RECAP_PATH, RECAP_SOURCE = "grok/recaps.json", "grok-recaps"
+# kind -> the fixed title the page shows. Each kind is optional on any day.
+RECAP_KINDS = {
+    "morning": "Morning briefing", "evening": "Evening wrap", "breaking": "Breaking",
+    "ai": "AI & tech", "politics": "Politics & Washington", "world": "World",
+    "markets": "Markets & money", "sports": "Sports", "vermont": "Vermont on X",
+    "culture": "Culture & entertainment", "science": "Science & space",
+    "weekend": "Weekend preview", "week-ahead": "Week ahead",
+}
+# what the recap was built from -> the small label the page shows. Never "AI".
+RECAP_BASIS = {"trending": "From X trending summaries", "accounts": "From posts on X"}
+RECAP_SPORTS = wc.SPORTS
+RECAP_MAX = 150           # recaps in the file
+RECAP_KEEP_DAYS = 3       # the file keeps 3 days, and so does the Wire's store
+RECAP_BULLETS = (1, 25)
+RECAP_TEXT_MAX = 160
+RECAP_NOTE_MAX = 200
+RECAP_INTRO_MAX = 400
+RECAP_ID = re.compile(r"^[a-z0-9][a-z0-9-]{2,63}$")
+SEARCH_URL = re.compile(r"/search\b|[?&]q=", re.I)
+
+
+def clean_text(value, limit, what, bad, required=True):
+    """One reader-facing string: present, short, no shouting, no contact details."""
+    if not isinstance(value, str) or not value.strip():
+        if required:
+            bad.append(f"{what} must be 1 to {limit} characters")
+        return
+    if len(value) > limit:
+        bad.append(f"{what} must be 1 to {limit} characters")
+    if SHOUTY.search(value):
+        bad.append(f"{what} has a hashtag, emoji or BREAKING")
+    if EMAIL.search(value) or PHONE.search(value):
+        bad.append(f"{what} contains an email or phone number")
+
+
+def check_recap(rc, now):
+    """Problems with one recap, as a list (empty when it is fine)."""
+    if not isinstance(rc, dict):
+        return ["must be an object"]
+    bad = []
+    if not isinstance(rc.get("id"), str) or not RECAP_ID.match(rc["id"]):
+        bad.append("id must be 3 to 64 lowercase letters, digits and dashes")
+    kind = rc.get("kind")
+    if kind not in RECAP_KINDS:
+        bad.append(f"kind must be one of {list(RECAP_KINDS)}")
+    elif rc.get("title") != RECAP_KINDS[kind]:
+        bad.append(f"title for {kind} must be {RECAP_KINDS[kind]!r}")
+    if rc.get("basis") not in RECAP_BASIS:
+        bad.append(f"basis must be one of {list(RECAP_BASIS)}")
+    if rc.get("source") != "grok":
+        bad.append("source must be 'grok'")
+    posted = parse_ts(rc.get("posted_at"))
+    if posted is None:
+        bad.append("posted_at must be ISO 8601 with a timezone")
+    else:
+        if posted - now > timedelta(minutes=CLOCK_SKEW_MINUTES):
+            bad.append("posted_at is in the future")
+        if (now - posted).days > RECAP_KEEP_DAYS:
+            bad.append(f"older than {RECAP_KEEP_DAYS} days; drop it")
+    clean_text(rc.get("intro"), RECAP_INTRO_MAX, "intro", bad)
+    bullets = rc.get("bullets")
+    lo, hi = RECAP_BULLETS
+    if not isinstance(bullets, list) or not lo <= len(bullets) <= hi:
+        return bad + [f"bullets must be a list of {lo} to {hi}"]
+    seen = set()
+    for j, bl in enumerate(bullets):
+        where = f"bullets[{j}]"
+        if not isinstance(bl, dict):
+            bad.append(f"{where}: must be an object")
+            continue
+        url = bl.get("url")
+        if not isinstance(url, str) or not HTTPS.match(url) or SEARCH_URL.search(url):
+            bad.append(f"{where}: url must be a real https:// link, never a search page")
+        elif url in seen:
+            bad.append(f"{where}: duplicate url {url}")
+        else:
+            seen.add(url)
+        inner = []
+        clean_text(bl.get("text"), RECAP_TEXT_MAX, "text", inner)
+        clean_text(bl.get("note"), RECAP_NOTE_MAX, "note", inner)
+        sport = bl.get("sport")
+        if kind == "sports" and sport not in RECAP_SPORTS:
+            inner.append(f"sport must be one of {list(RECAP_SPORTS)} in a Sports recap")
+        elif sport is not None and sport not in RECAP_SPORTS:
+            inner.append(f"sport must be one of {list(RECAP_SPORTS)}")
+        bad += [f"{where}: {problem}" for problem in inner]
+    return bad
+
+
+def check_recaps(data, now):
+    """-> (file_problems, {recap_index: problems}), the validator's rules."""
+    if not isinstance(data, dict):
+        return ["top level must be an object"], {}
+    problems = []
+    if data.get("source") != RECAP_SOURCE:
+        problems.append(f"source must be {RECAP_SOURCE!r}, got {data.get('source')!r}")
+    if parse_ts(data.get("updated_at")) is None:
+        problems.append("updated_at must be ISO 8601 with a timezone")
+    note = data.get("run_note", "")
+    if not isinstance(note, str) or "\n" in note or len(note) > 300:
+        problems.append("run_note must be one line of at most 300 characters")
+    recaps = data.get("recaps")
+    if not isinstance(recaps, list):
+        return problems + ["recaps must be a list"], {}
+    if len(recaps) > RECAP_MAX:
+        problems.append(f"{len(recaps)} recaps; the cap is {RECAP_MAX}")
+    per, ids = {}, set()
+    for i, rc in enumerate(recaps):
+        bad = check_recap(rc, now)
+        if isinstance(rc, dict) and isinstance(rc.get("id"), str):
+            if rc["id"] in ids:
+                bad.append(f"duplicate id {rc['id']}")
+            ids.add(rc["id"])
+        if bad:
+            per[i] = bad
+    return problems, per
+
+
+def read_recaps(raw, now):
+    """grok/recaps.json -> (state, fresh_recaps), the same posture as read_one:
+    a bad file or a stale write pauses the source; one bad recap is dropped."""
+    state = {"paused": True, "reason": None, "updated_at": None,
+             "checked": iso(now), "pause_after_hours": PAUSE_HOURS}
+    try:
+        data = json.loads(raw.decode("utf-8"))
+    except (ValueError, UnicodeDecodeError) as exc:
+        state["reason"] = f"{RECAP_PATH} is not valid JSON ({exc.__class__.__name__})"
+        return state, []
+    problems, per = check_recaps(data, now)
+    if problems:
+        state["reason"] = f"{RECAP_PATH} fails the contract: {problems[0]}"
+        return state, []
+    updated = parse_ts(data["updated_at"])
+    state["updated_at"] = iso(updated)
+    recaps = data["recaps"]
+    if recaps and len(per) > BAD_SHARE * len(recaps):
+        state["reason"] = (f"{RECAP_PATH}: {len(per)} of {len(recaps)} recaps fail the "
+                           f"contract (first: {next(iter(per.values()))[0]})")
+        return state, []
+    if updated - now > timedelta(minutes=CLOCK_SKEW_MINUTES):
+        state["reason"] = f"{RECAP_PATH} claims it was written in the future ({iso(updated)})"
+        return state, []
+    if now - updated > timedelta(hours=PAUSE_HOURS):
+        hours = (now - updated).total_seconds() / 3600
+        state["reason"] = f"{RECAP_PATH} last written {hours:.0f}h ago (limit {PAUSE_HOURS}h)"
+        return state, []
+    fresh = []
+    for i, rc in enumerate(recaps):
+        if i in per:
+            continue
+        posted = parse_ts(rc["posted_at"])
+        bullets = []
+        for bl in rc["bullets"]:
+            out = {"text": re.sub(r"\s+", " ", bl["text"]).strip(), "url": bl["url"],
+                   "note": re.sub(r"\s+", " ", bl["note"]).strip()}
+            if bl.get("sport"):
+                out["sport"] = bl["sport"]
+            bullets.append(out)
+        fresh.append({"id": rc["id"], "kind": rc["kind"], "title": RECAP_KINDS[rc["kind"]],
+                      "posted_at": iso(posted), "d": int(posted.timestamp()),
+                      "intro": re.sub(r"\s+", " ", rc["intro"]).strip(),
+                      "basis": rc["basis"], "bullets": bullets})
+    state["paused"] = False
+    if per:
+        state["dropped"] = len(per)
+    return state, fresh
+
+
+def merge_recaps(previous, fresh, now):
+    """Union by id (the bot's newest version of a recap wins), newest first,
+    the last RECAP_KEEP_DAYS, at most RECAP_MAX."""
+    by_id = {item["id"]: dict(item) for item in previous or []
+             if isinstance(item, dict) and item.get("id")}
+    added = 0
+    for item in fresh:
+        if item["id"] not in by_id:
+            added += 1
+        elif by_id[item["id"]] != item:
+            added += 1   # a rewritten recap is worth publishing too
+        by_id[item["id"]] = dict(item)
+    cutoff = int((now - timedelta(days=RECAP_KEEP_DAYS)).timestamp())
+    kept = sorted((item for item in by_id.values() if item.get("d", 0) >= cutoff),
+                  key=lambda item: item.get("d", 0), reverse=True)
+    return kept[:RECAP_MAX], added
+
+
 # --- fetching ----------------------------------------------------------------
 
 def fetch_file(path, token, timeout=20):
@@ -246,6 +457,9 @@ def read_one(ch, raw, now):
     state["paused"] = False
     if per_item:
         state["dropped"] = len(per_item)
+    narrated = sum(1 for item in fresh if NARRATOR.search(item["summary"]))
+    if narrated:
+        state["narrated"] = narrated
     return state, fresh
 
 
@@ -318,6 +532,31 @@ def read_inbox(previous_inbox, now=None, token=None, fetch=fetch_file):
         added_total += added
         if added or bool(prev.get("paused")) != state["paused"] or not prev:
             changed = True
+    # Grok's recaps: their own file and shape, the same pause rules
+    prev = previous_inbox.get("recaps") if isinstance(previous_inbox.get("recaps"), dict) else {}
+    if not token:
+        state, fresh = {"paused": True, "reason": f"no {TOKEN_ENV} secret",
+                        "updated_at": prev.get("updated_at"), "checked": iso(now),
+                        "pause_after_hours": PAUSE_HOURS}, []
+    else:
+        status, raw = fetch(RECAP_PATH, token)
+        if status == "ok":
+            state, fresh = read_recaps(raw, now)
+        else:
+            state = {"paused": True, "updated_at": prev.get("updated_at"),
+                     "reason": (f"{RECAP_PATH} is missing" if status == "missing"
+                                else f"{RECAP_PATH} could not be fetched ({status})"),
+                     "checked": iso(now), "pause_after_hours": PAUSE_HOURS}
+            fresh = []
+    recaps, added = merge_recaps(prev.get("items"), fresh, now)
+    state["n"] = len(recaps)
+    state["items"] = recaps
+    out["recaps"] = state
+    added_total += added
+    # a recap file that is still missing (the bot has not written one yet)
+    # changes nothing worth a publish on its own
+    if added or (prev and bool(prev.get("paused")) != state["paused"]):
+        changed = True
     return out, added_total, changed
 
 
@@ -328,6 +567,8 @@ def summary_line(inbox):
             parts.append(f"{ch} paused ({state['reason']})")
         else:
             extra = f", {state['dropped']} posts dropped" if state.get("dropped") else ""
+            if state.get("narrated"):
+                extra += f", {state['narrated']} narrate the poster"
             parts.append(f"{ch} ok ({state['n']} held{extra})")
     return "wire inbox: " + "; ".join(parts)
 
@@ -361,6 +602,15 @@ def selftest():
     assert local_guess("x", "Winooski council votes on rents") is True
     assert local_guess("x", "Senate passes the spending bill") is False
     assert local_guess("facebook", "Anyone know a good plumber?") is True
+    for narrated in ("Someone is sharing the Haunted Hustle 5K on October 24",
+                     "A member is asking where to find dry ice",
+                     "Burlington Area History is sharing a photo of Church Street in 1950"):
+        assert NARRATOR.search(narrated), narrated
+    for own in ("Haunted Hustle 5K, October 24 at 3:30", "Where can I find dry ice?",
+                "Frost advisory tonight, 2 to 8 am.", "Saturday morning run from the waterfront, 8am. Who's in?",
+                "Senate passes the spending bill; the House votes Friday",
+                "President Trump said he delayed further sanctions"):   # news, not narration
+        assert not NARRATOR.search(own), own
     stale = _fixture(now, updated_at=iso(now - timedelta(hours=19)))
     state, fresh = read_one("x", stale, now)
     assert state["paused"] and "19h" in state["reason"] and fresh == []

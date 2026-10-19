@@ -197,6 +197,14 @@ EXTRA_LOCAL_FEEDS = [
      "https://www.vtcng.com/search/?f=rss&t=article&l=25&s=start_time"
      "&sd=desc&app=editorial&sites=otherpapersbvt",
      "https://www.vtcng.com/"),
+    # Local sports (2026-10-19): UVM, high schools and Vermont teams. WCAX's
+    # news feed in the folder carries none of its sports desk.
+    ("WCAX Sports",
+     "https://www.wcax.com/arc/outboundfeeds/rss/category/sports/?outputType=xml",
+     "https://www.wcax.com/sports/"),
+    ("MyChamplainValley Sports", "https://www.mychamplainvalley.com/sports/feed/",
+     "https://www.mychamplainvalley.com/sports/"),
+    ("Vermont Green FC", "https://www.vermontgreenfc.com/feed", "https://vermontgreenfc.com/"),
 ]
 
 # National podcasts that ride along OUTSIDE Inoreader, same mechanics as
@@ -232,6 +240,23 @@ EXTRA_NATIONAL_FEEDS = [
     ("Search Engine",
      "https://feeds.megaphone.fm/search-engine",
      "https://www.searchengine.show/"),
+]
+
+# National NEWS feeds that ride along outside Inoreader, same mechanics as
+# EXTRA_NATIONAL_FEEDS but not podcasts. Born 2026-10-19 (Stephen: "I need
+# better sports coverage ... the ability to select the specific sport"): the
+# Everything folder carries ESPN's top, NBA and NFL feeds; these fill in the
+# other leagues so every sport chip on the Wire has a source. Titles must stay
+# stable: the source id is the title slug, and wire_common.SOURCE_SPORT gives
+# each one its sport by that id.
+EXTRA_NATIONAL_NEWS_FEEDS = [
+    ("ESPN MLB", "https://www.espn.com/espn/rss/mlb/news", "https://www.espn.com/mlb/"),
+    ("ESPN NHL", "https://www.espn.com/espn/rss/nhl/news", "https://www.espn.com/nhl/"),
+    ("ESPN College Football", "https://www.espn.com/espn/rss/ncf/news",
+     "https://www.espn.com/college-football/"),
+    ("ESPN College Basketball", "https://www.espn.com/espn/rss/ncb/news",
+     "https://www.espn.com/mens-college-basketball/"),
+    ("ESPN Soccer", "https://www.espn.com/espn/rss/soccer/news", "https://www.espn.com/soccer/"),
 ]
 
 ITEM_CAP = 20          # headlines kept per source
@@ -272,6 +297,9 @@ SHORT_NAMES = {
     "vermont-community-newspaper-group": "VT Community News",
     "espn-com-nba": "ESPN NBA",
     "espn-com-nfl": "ESPN NFL",
+    "espn-college-basketball": "ESPN CBB",
+    "espn-college-football": "ESPN CFB",
+    "mychamplainvalley-sports": "MCV Sports",
     "fortune-fortune": "Fortune",
     "hacker-news-daily": "HN Daily",
     "hacker-news-front-page": "Hacker News",
@@ -1434,6 +1462,11 @@ def run(args):
             {"title": title, "xml": feed_url, "html": site_url, "pod": True},
             "national"))
 
+    for title, feed_url, site_url in EXTRA_NATIONAL_NEWS_FEEDS:
+        if topic_keys(site_url)[0] in folder_sites:
+            continue  # the folder carries it now — the ride-along retires
+        folder_outlines.append(({"title": title, "xml": feed_url, "html": site_url}, "national"))
+
     sources = build_roster(folder_outlines, topics)
     if len(sources) < MIN_SOURCES:
         sys.exit(f"roster has only {len(sources)} sources — refusing to run")
@@ -1605,14 +1638,17 @@ FAST_LANE_SKIP = ("reddit.com", "inoreader.com", "youtube.com")
 def pick_fast_lane(sources):
     """Local-folder sources plus podcast shows whose own feed is safe to hit
     from Actions — Reddit (cloud-hostile) and Inoreader-stream ride-alongs
-    stay stream-only. Podcasts ride the lane because Inoreader's crawl of a
+    stay stream-only. The EXTRA_NATIONAL_NEWS_FEEDS ride it too: no stream
+    carries them at all. Podcasts ride the lane because Inoreader's crawl of a
     podcast feed can silently die for months while the show keeps publishing
     (60-Second Science and WSJ Minute Briefing froze that way, 2026-08)."""
     lane = []
+    direct = {title for title, _feed, _site in EXTRA_NATIONAL_NEWS_FEEDS}
     for source in sources:
         if not source.get("feed"):
             continue
-        if source.get("topic") != "local" and not source.get("podcast"):
+        if source.get("topic") != "local" and not source.get("podcast") \
+                and source.get("name") not in direct:
             continue
         probe = (source.get("feed") or "") + " " + (source.get("site") or "")
         if any(host in probe for host in FAST_LANE_SKIP):
@@ -1759,8 +1795,13 @@ def selftest():
         {"id": "pod", "topic": "news", "podcast": True,
          "feed": "https://feeds.npr.org/510318/podcast.xml",
          "site": "https://www.npr.org/podcasts/510318/up-first"},
+        {"id": "espn-mlb", "name": "ESPN MLB", "topic": "sports",
+         "feed": "https://www.espn.com/espn/rss/mlb/news", "site": "https://www.espn.com/mlb/"},
     ])
-    assert [source["id"] for source in lane] == ["ok", "pod"]
+    assert [source["id"] for source in lane] == ["ok", "pod", "espn-mlb"]
+    import wire_common
+    for title, _feed, _site in EXTRA_NATIONAL_NEWS_FEEDS + EXTRA_LOCAL_FEEDS[1:]:
+        assert wire_common.source_sport(slugify(title)), title   # every sports feed has its sport
 
     # shared-homepage podcast links: audio becomes the identity, non-audio
     # items keep the link as-is

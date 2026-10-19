@@ -132,7 +132,7 @@ class IndexMappingTests(Workdir):
         self.assertEqual(day["counts"]["local"]["all"], 12)
         self.assertEqual(day["status"]["x"]["reason"], "no WIRE_INBOX_TOKEN secret")
         self.assertEqual(day["status"]["facebook"]["reason"], "the inbox reader is not live yet")
-        self.assertEqual(set(day["status"]), {"x", "facebook", "reddit"})
+        self.assertEqual(set(day["status"]), {"x", "facebook", "reddit", "recaps"})
         self.assertEqual(day["sources"]["wcax"], {"name": "WCAX", "ch": "local",
                                                   "site": "https://www.wcax.com/"})
         self.assertEqual(set(day["sources"]), {"wcax", "vtd", "ap"})
@@ -985,6 +985,16 @@ class DecideTests(unittest.TestCase):
         self.assertEqual(cw.decide(day, state, new, self.et(12), NOW)[:2], (True, False))
         state = {"picks_at": (NOW - timedelta(hours=cw.PICKS_EVERY_HOURS)).isoformat()}
         self.assertEqual(cw.decide(day, state, new, self.et(12), NOW)[:2], (True, True))
+
+    def test_a_second_tick_in_the_hour_does_not_pay_twice(self):
+        day = {"picks": [{}], "updates": []}
+        new = [self.item(5)] * 10
+        state = {"picks_at": (NOW - timedelta(hours=1)).isoformat(),
+                 "called_at": (NOW - timedelta(minutes=20)).isoformat()}
+        self.assertEqual(cw.decide(day, state, new, self.et(9), NOW)[:2], (False, False))
+        self.assertEqual(cw.decide(day, state, [self.item(9)], self.et(9), NOW)[:2], (True, True))  # urgent
+        state["called_at"] = (NOW - timedelta(minutes=cw.CALL_GAP_MINUTES)).isoformat()
+        self.assertEqual(cw.decide(day, state, new, self.et(9), NOW)[:2], (True, False))
 
 
 def rule_breaks(items):

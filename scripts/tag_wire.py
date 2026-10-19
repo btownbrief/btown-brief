@@ -8,6 +8,8 @@ should only read the ones worth reading, so this pass gives each NEW item:
   local  true when the story is about Burlington or Vermont, whatever the outlet
   ch     the mechanical channel, flipped local <-> world when `local` says so
   topic  one of TOPICS
+  sport  for a sports item, one of wire_common.SPORTS (nba, nfl, mlb, nhl,
+         college, soccer, local, other); a single-sport source's own sport wins
   score  0-10 local interest
 
 Posts from people (Facebook groups, Reddit) are judged by narrower junk
@@ -92,9 +94,10 @@ SCHEMA_ITEM = {
         "local": {"type": "boolean"},
         "ch": {"type": "string", "enum": list(wc.CHANNELS)},
         "topic": {"type": "string", "enum": list(TOPICS)},
+        "sport": {"type": "string", "enum": ["none"] + list(wc.SPORTS)},
         "score": {"type": "integer", "minimum": 0, "maximum": 10},
     },
-    "required": ["i", "junk", "local", "ch", "topic", "score"],
+    "required": ["i", "junk", "local", "ch", "topic", "sport", "score"],
     "additionalProperties": False,
 }
 
@@ -203,7 +206,18 @@ def validate_tags(raw, batch, now_ts):
             "ch": ch, "local": local, "junk": junk, "topic": topic,
             "score": max(0, min(10, score)), "at": now_ts,
         }
+        sport = item.get("sport") or sport_of(entry.get("sport"), topic)
+        if sport:
+            out[item["id"]]["sport"] = sport
     return out
+
+
+def sport_of(answer, topic):
+    """The model's sport for a sports story; `other` when it named none. A
+    story filed under any other topic carries no sport."""
+    if topic != "sports":
+        return None
+    return answer if answer in wc.SPORTS else "other"
 
 
 def prune(store, now_ts):
@@ -300,18 +314,35 @@ def selftest():
          "title": "Jury selection begins in a South Carolina murder trial", "d": 5},
         {"id": "f", "ch": "facebook", "local": True, "name": "Old North End", "title": "Lost cat on North St", "d": 6},
     ]
+    sports = [
+        {"id": "g", "ch": "world", "local": False, "name": "ESPN", "title": "Lakers trade", "d": 7},
+        {"id": "h", "ch": "world", "local": False, "name": "ESPN", "title": "A bonspiel", "d": 8},
+        {"id": "i", "ch": "world", "local": False, "name": "AP", "title": "NFL TV deal", "d": 9},
+        {"id": "j", "ch": "world", "local": False, "name": "ESPN MLB", "title": "MLB owners vote",
+         "d": 10, "sport": "mlb"},
+    ]
     tags = validate_tags([
         {"i": 0, "junk": "none", "local": False, "ch": "world", "topic": "city-government", "score": 9},
         {"i": 1, "junk": "none", "local": True, "ch": "world", "topic": "weather", "score": 14},
         {"i": 2, "junk": "none", "local": False, "ch": "local", "topic": "transportation", "score": 7},
         {"i": 2, "junk": "promo", "local": True, "ch": "x", "topic": "other", "score": 0},
-        {"i": 7, "junk": "none", "local": True, "ch": "local", "topic": "other", "score": 5},
+        {"i": 70, "junk": "none", "local": True, "ch": "local", "topic": "other", "score": 5},
         {"i": 0, "junk": "maybe", "local": True, "ch": "local", "topic": "other", "score": 5},
         {"i": 3, "junk": "none", "local": True, "ch": "x", "topic": "weather", "score": 8},
         {"i": 4, "junk": "none", "local": False, "ch": "x", "topic": "courts", "score": 3},
         {"i": 5, "junk": "none", "local": False, "ch": "facebook", "topic": "community", "score": 4},
-    ], batch, 100)
-    assert set(tags) == {"a", "b", "c", "d", "e", "f"}
+        {"i": 6, "junk": "none", "local": False, "ch": "world", "topic": "sports", "sport": "nba",
+         "score": 4},
+        {"i": 7, "junk": "none", "local": False, "ch": "world", "topic": "sports", "sport": "curling",
+         "score": 3},
+        {"i": 8, "junk": "none", "local": False, "ch": "world", "topic": "economy", "sport": "nfl",
+         "score": 3},
+        {"i": 9, "junk": "none", "local": False, "ch": "world", "topic": "business", "sport": "none",
+         "score": 3},
+    ], batch + sports, 100)
+    assert set(tags) == {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j"}
+    assert [tags[k].get("sport") for k in "ghij"] == ["nba", "other", None, "mlb"]   # source wins
+    assert "sport" not in tags["a"]
     assert tags["a"]["ch"] == "world" and tags["a"]["local"] is False   # geography flips
     assert tags["b"]["ch"] == "local" and tags["b"]["score"] == 10      # clamped
     assert tags["c"]["ch"] == "x" and tags["c"]["local"] is False       # X: the verdict decides
