@@ -1728,7 +1728,11 @@ body.wire-float .wfloat { opacity: 1; visibility: visible; transform: none; tran
    list" lays them out down the page */
 .rc-strip { border-bottom: 1px solid var(--line); padding-bottom: var(--s3); }
 .feed.wire .rc-strip .sec { align-items: center; padding-top: var(--s6); }
-.rc-strip .sec .railmode { flex: 0 0 auto; padding: 0; }
+/* "See as a list" stays right above its row (listRail's order), lifted
+   onto the head's line so it costs no row of its own */
+.feed.wire .rc-strip .sec { padding-right: calc(var(--gutter) + 120px); }
+.rc-strip .sec + .railmode { position: relative; z-index: 1; margin-top: -46px; padding-bottom: 16px; pointer-events: none; }
+.rc-strip .sec + .railmode .btn { pointer-events: auto; }
 .rc-rail { align-items: stretch; }
 .rc-mini { display: flex; flex-direction: column; gap: var(--s1); width: 272px; padding: var(--s3) var(--s3) var(--s2); border-radius: var(--r-media);
   background: var(--recap-soft); border: 1px solid var(--recap-line); text-align: left; color: var(--ink); }

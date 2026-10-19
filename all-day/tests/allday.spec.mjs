@@ -1647,7 +1647,7 @@ async function wirePass2(browser, base) {
         const st = feed.querySelector('.rc-strip');
         return { after: kids.indexOf(st) > kids.indexOf(feed.querySelector('.wleads')), beforeRiver: !feed.querySelector('.tdiv') || (st.compareDocumentPosition(feed.querySelector('.tdiv')) & 4) > 0,
           minis: [...st.querySelectorAll('.rc-mini:not(.rc-end)')].map((m) => ({ id: m.dataset.recap, bullets: [...m.querySelectorAll('.rc-mb')].map((b) => b.textContent) })),
-          end: (st.querySelector('.rc-end') || {}).textContent || '', tog: st.querySelector('.sec [data-railmode]').textContent };
+          end: (st.querySelector('.rc-end') || {}).textContent || '', tog: st.querySelector('.railmode:not(.foot) [data-railmode]').textContent };
       });
       const tk = etKey(Date.now());
       if (scheme === 'light') {
@@ -1656,9 +1656,9 @@ async function wirePass2(browser, base) {
         const m = s.minis[2];
         check(m.bullets.length === 2 && m.bullets.every((b) => !/River twin/.test(b)), 'a headline the river already carries is not shown twice', JSON.stringify(m));
         check(s.end === 'All recaps' && s.tog === 'See as a list', 'the row ends in All recaps, and can be seen as a list', JSON.stringify(s));
-        await page.click('#panel-wire .rc-strip .sec [data-railmode]');
+        await page.click('#panel-wire .rc-strip .railmode:not(.foot) [data-railmode]');
         const l = await page.evaluate(() => { const st = document.querySelector('#panel-wire .rc-strip'); const r = st.querySelector('.rc-rail');
-          return { listed: r.classList.contains('aslist'), dir: getComputedStyle(r).flexDirection, bar: !st.querySelector('.collapsebar.foot').hidden, tog: st.querySelector('.sec [data-railmode]').textContent }; });
+          return { listed: r.classList.contains('aslist'), dir: getComputedStyle(r).flexDirection, bar: !st.querySelector('.collapsebar.foot').hidden, tog: st.querySelector('.railmode:not(.foot) [data-railmode]').textContent }; });
         check(l.listed && l.dir === 'column' && l.bar && l.tog === 'See as a row', 'See as a list lays the cards down the page, with the Collapse bar', JSON.stringify(l));
         await page.click('#panel-wire .rc-strip .collapsebar.foot button');
         check(await page.$eval('#panel-wire .rc-strip', (st) => !st.querySelector('.rc-rail').classList.contains('aslist') && st.querySelector('.collapsebar.foot').hidden), 'Collapse puts the row back', '');

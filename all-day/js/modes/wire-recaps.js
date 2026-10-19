@@ -133,11 +133,10 @@ export function strip(p, inRiver) {
   const head = el('div', 'sec');
   head.innerHTML = '<div><h2>Recaps</h2></div>';
   wrap.appendChild(head);
-  /* the shell's sideways row: "See as a list" (kept per phone) and the
-     Collapse bar under it while it is a list; the button sits in the head */
+  /* the shell's sideways row, as drawn: "See as a list" (kept per phone)
+     right above the row, and the Collapse bar under it while it is a list;
+     the CSS lifts the button onto the head's line */
   const track = listRail(wrap, { name: 'wire-recaps', label: 'Recaps', cls: 'rc-rail' });
-  const mode = wrap.querySelector('.railmode:not(.foot)');
-  if (mode) head.appendChild(mode);
   list.forEach((r) => {
     const b = el('button', 'rc-mini');
     b.type = 'button';
