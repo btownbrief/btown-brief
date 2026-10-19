@@ -1111,6 +1111,17 @@ body.chrome-away .mast { transform: translateY(-100%); }
 .gm-cab.feat .gm-acts .pillbtn { flex: 0 0 auto; padding: 0 18px; }
 .btn.gm-share { width: 36px; padding: 0; }
 
+/* daily picks from around the web: a short rail of link tiles, then (See all)
+   the whole list by category with the Collapse bar. A tile is the category's
+   colour with the game's first letter, never a scraped logo. */
+.gm-web { display: flex; flex-direction: column; gap: var(--s1); width: 168px; padding: var(--s3); border: 1px solid var(--line); border-radius: var(--r-media); background: var(--raised); color: var(--ink); }
+.gm-wmark { display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: var(--r-tile); background: var(--mk, var(--mark-0)); color: var(--on-media); font-family: var(--serif); font-size: var(--fs-display); font-weight: 500; line-height: 1; flex: 0 0 auto; }
+.gm-wname { display: block; margin-top: var(--s1); font-size: var(--fs-sub); font-weight: 600; line-height: var(--lh-title); }
+.gm-wname .i { width: 12px; height: 12px; vertical-align: -1px; color: var(--ink-3); }
+.gm-wby { font-size: var(--fs-small); color: var(--ink-3); line-height: 1.35; }
+.gm-wdesc { font-size: var(--fs-small); color: var(--ink-2); line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+.gm-wrow .gm-wmark { width: 36px; height: 36px; font-size: var(--fs-sub); }
+
 /* what people are playing: a poll, each row's bar its share of the "me too"s */
 .gm-say { display: flex; gap: var(--s2); padding: 0 var(--gutter) var(--s3); }
 .gm-say select.field { flex: 0 0 auto; width: 100px; padding: 0 14px; appearance: none; -webkit-appearance: none; }

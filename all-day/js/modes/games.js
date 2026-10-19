@@ -10,6 +10,10 @@
      this month's champ, Play), newest first, with chips for New, each of the
      arcade's sections and Out in Burlington. Every cabinet has Invite: a
      text message with the game's link.
+   - Daily picks from around the web: free puzzles on other sites (data/web-games.json),
+     link-out only, below the arcade. A few show at a time, chosen by the
+     Burlington date (see dailyPicks), so everyone sees the same ones that day;
+     "See all" opens the whole list by category, with the sticky Collapse bar.
    - What people are playing: the `games` board's `playing` posts (game and
      platform, 14 days), a poll with "Me too" as the board's vote, platform
      chips, and an "I'm playing…" line to add yours.
@@ -62,13 +66,14 @@ import * as store from '../store.js';
 import * as data from '../wire.js';
 import * as boards from '../boards.js';
 import { RULES, HANDLE_LABELS, NEIGHBORHOOD_LABELS } from '../boards-core.js';
-import { el, esc, safeHref, ICON, mark, section, chips, button, divider, cards, agoShort } from '../ui.js';
+import { el, esc, safeHref, ICON, mark, section, chips, button, divider, cards, agoShort, rail as railOf } from '../ui.js';
 
 const KEY = 'games';
 const BOARD = 'games';
 const ARCADE = 'https://play.btownbrief.com/';
 const BOARDS_PAGE = ARCADE + 'leaderboards/';
 const CATALOG_URL = '../data/games-catalog.json';
+const WEB_URL = 'data/web-games.json';    // this app's own folder, like On Air's finds
 const CHAT_URL = 'https://www.btownbrief.com/community/channels/photo-wall';   // the Btown Arcade channel; the slug is historical
 const TELEGRAM_URL = '../telegram.html';
 const NAME_KEY = 'allday-arcade-name';
@@ -192,6 +197,9 @@ const G = {
   demo: null,
   arc: 'all',                    // which arcade chip is on
   arcOpen: false,                // every game under that chip is showing
+  web: null,                     // web-games.json: { shown, categories, games }, or null
+  webOpen: false,                // the whole picks list is showing
+  webDay: '',                    // the Burlington day the picks on screen were chosen for
   posts: null,                   // the games board: { playing, lfg }, each a list or null when it did not load
   postErr: { playing: '', lfg: '' },
   postRun: 0,
@@ -260,6 +268,56 @@ function loadLive() {
     .then(() => { G.settled.catalog = true; render(); return loadBoards(); });
   data.load('champions', (j) => { G.champions = j; G.settled.champions = true; delete G.failed.champions; render(); },
     () => { G.settled.champions = true; G.failed.champions = true; render(); });
+}
+
+/* ------------------------------------------------ daily picks from the web */
+/* A pick is a link out and nothing else; the file is the one list the arcade
+   (play.btownbrief.com) reads too, so both pages show the same picks.
+   Which ones show is a pure function of the Burlington date, so no two readers
+   differ and nothing is stored:
+     n      = days since 1970-01-01 of the Burlington date (YYYY-MM-DD)
+     shown  = web-games.json's "shown" (5), at least one per category and the
+              spare ones going to the biggest categories (the first of equals)
+     a category with m games and q picks shows games (n*q + k + floor(n*q/m)) mod m
+              for k = 0..q-1, in file order (the floor term shifts the pattern each
+              time it wraps, so the same mix does not come back every few days)
+     order  = the categories, starting at category (n mod how many there are) */
+export function dailyPicks(cfg, date) {
+  const games = arr(cfg && cfg.games);
+  const cats = arr(cfg && cfg.categories).map((c) => ({ id: c.id, list: games.filter((g) => g.category === c.id) })).filter((c) => c.list.length);
+  if (!cats.length) return [];
+  const n = Math.round(utcNoon(date) / 86400000);
+  const shown = Math.max(1, Math.min(Number(cfg.shown) || 5, games.length));
+  const start = n % cats.length;
+  const order = cats.map((c, i) => cats[(i + start) % cats.length]);
+  if (shown <= cats.length) order.length = shown;
+  const q = new Map(order.map((c) => [c.id, 1]));
+  let spare = shown - order.length;
+  const bySize = cats.filter((c) => q.has(c.id)).sort((a, b) => b.list.length - a.list.length);   // file order, so a category's q never changes with the day
+  while (spare > 0) {
+    const room = bySize.filter((c) => q.get(c.id) < c.list.length);
+    if (!room.length) break;
+    room.forEach((c) => { if (spare > 0) { q.set(c.id, q.get(c.id) + 1); spare--; } });
+  }
+  const out = [];
+  order.forEach((c) => {
+    const m = c.list.length, per = q.get(c.id);
+    for (let k = 0; k < per; k++) out.push(c.list[(n * per + k + Math.floor(n * per / m)) % m]);
+  });
+  return out;
+}
+/* keep only rows that can be drawn: a name, an https link, a known category */
+function webShape(j) {
+  const cats = arr(j && j.categories).filter((c) => c && c.id && c.title);
+  const games = arr(j && j.games).filter((g) => g && g.id && g.name && /^https:\/\//.test(String(g.url || '')) && cats.some((c) => c.id === g.category));
+  if (!games.length) throw new Error('bad shape');
+  return { shown: j.shown, categories: cats, games };
+}
+function loadWeb() {
+  fetch(WEB_URL, { cache: 'no-cache' }).then((r) => (r.ok ? r.json() : Promise.reject(new Error(String(r.status)))))
+    .then((j) => { G.web = webShape(j); })
+    .catch(() => { G.web = null; })
+    .then(() => { G.settled.web = true; if (G.slots) { drawWebSlot(); land(); } });
 }
 
 /* Every board, six at a time; store.rpc answers null for a board that
@@ -742,6 +800,84 @@ function drawArcade(host) {
   return true;
 }
 
+/* ------------------------------------------------ the picks, drawn */
+const webCatIndex = (g) => Math.max(0, arr(G.web && G.web.categories).findIndex((c) => c.id === g.category));
+/* a tile in the category's colour with the game's first letter */
+function webMark(g) {
+  const m = el('span', 'gm-wmark', esc(String(g.name).charAt(0).toUpperCase()));
+  m.setAttribute('aria-hidden', 'true');
+  m.style.setProperty('--mk', 'var(--mark-' + (webCatIndex(g) % 8) + ')');
+  return m;
+}
+function webTile(g) {
+  const a = el('a', 'gm-web');
+  a.dataset.k = 'web:' + g.id;
+  a.href = safeHref(g.url); a.target = '_blank'; a.rel = 'noopener';
+  a.setAttribute('aria-label', g.name + ', ' + g.cost + ', opens in a new tab');
+  a.append(webMark(g), el('span', 'gm-wname', esc(g.name) + ' ' + ICON.ext));
+  a.appendChild(el('span', 'gm-wby', esc(g.publisher) + ' · ' + esc(g.cost)));
+  a.appendChild(el('span', 'gm-wdesc', esc(g.description)));
+  return a;
+}
+function webRow(g) {
+  const r = el('div', 'lrow gm-wrow');
+  r.dataset.k = 'web:' + g.id;
+  const th = el('span', 'th bare');
+  th.appendChild(webMark(g));
+  r.append(th, el('div', '', '<div class="t">' + esc(g.name) + '</div><div class="s"><b>' + esc(g.publisher) + ' · ' + esc(g.cost) + '</b></div><div class="s">' + esc(g.description) + '</div>'));
+  const a = el('a', 'pillbtn', 'Open ' + ICON.ext);
+  a.href = safeHref(g.url); a.target = '_blank'; a.rel = 'noopener';
+  a.setAttribute('aria-label', 'Open ' + g.name + ' in a new tab');
+  r.appendChild(a);
+  return r;
+}
+function foldWeb() {
+  G.webOpen = false;
+  drawWebSlot();
+  const head = G.root && G.root.querySelector('[data-sec="picks"]');
+  app.jumpTo(head);
+  const t = G.root && G.root.querySelector('[data-web-all]');
+  if (t) t.focus({ preventScroll: true });
+}
+function drawWeb(host) {
+  if (!G.web) return false;
+  const total = G.web.games.length;
+  G.webDay = todayKey();
+  sec(host, 'Daily picks from around the web', esc('Free puzzles on other sites. A few new ones every day.'), 'picks');
+  if (G.webOpen) {
+    const wrap = el('div', 'expwrap');
+    wrap.dataset.webList = String(total);
+    G.web.categories.forEach((c) => {
+      const list = G.web.games.filter((g) => g.category === c.id);
+      if (!list.length) return;
+      divider(wrap, c.title, String(list.length));
+      list.forEach((g) => wrap.appendChild(webRow(g)));
+    });
+    wrap.appendChild(collapseBar('the daily picks', foldWeb));
+    host.appendChild(wrap);
+    return true;
+  }
+  const rail = railOf(host);
+  rail.dataset.webToday = G.webDay;
+  dailyPicks(G.web, G.webDay).forEach((g) => rail.appendChild(webTile(g)));
+  const more = button('See all ' + total, 'ghost more', () => { G.webOpen = true; drawWebSlot(); });
+  more.dataset.webAll = '';
+  more.setAttribute('aria-expanded', 'false');
+  host.appendChild(more);
+  return true;
+}
+/* the bar under an opened list: it rides the bottom of the screen while the
+   list is in view, so a long list folds back up from anywhere in it */
+function collapseBar(what, onCollapse) {
+  const bar = el('div', 'collapsebar');
+  const b = button(ICON.up + ' Collapse', '', onCollapse);
+  b.type = 'button';
+  b.dataset.collapse = '1';
+  b.setAttribute('aria-label', 'Collapse ' + what);
+  bar.appendChild(b);
+  return bar;
+}
+
 /* ------------------------------------------------- the games board, read */
 /* The demo's board copy (boards-fake.js) has two posts of each kind; the
    demo file adds a few more neighbors' posts through the fake's own calls,
@@ -1079,6 +1215,7 @@ function drawYouSlot() { if (G.slots) { G.slots.you.innerHTML = ''; if (G.catalo
 function drawBoardsSlot() { if (G.slots) { G.slots.boards.innerHTML = ''; drawBoards(G.slots.boards); } }
 function drawChallengeSlot() { if (G.slots) { G.slots.challenge.innerHTML = ''; G.slots.challenge.hidden = !drawChallenge(G.slots.challenge); } }
 function drawQuizSlot() { if (G.slots) { G.slots.quiz.innerHTML = ''; G.slots.quiz.hidden = !drawQuiz(G.slots.quiz); } }
+function drawWebSlot() { if (G.slots) { G.slots.picks.innerHTML = ''; G.slots.picks.hidden = !drawWeb(G.slots.picks); } }
 function drawArcadeSlot() { if (G.slots) { G.slots.arcade.innerHTML = ''; G.slots.arcade.hidden = !drawArcade(G.slots.arcade); } }
 function drawTagsSlot() { if (G.slots) { G.slots.tags.innerHTML = ''; drawTags(G.slots.tags); } }
 /* the board's three sections, redrawn only when the board changes, so a
@@ -1093,7 +1230,7 @@ function drawPostsSlots() {
   if (app.activeTab() === KEY) app.paintSubnav();
 }
 
-const ORDER = ['quiz', 'arcade', 'playing', 'lfg', 'tags', 'vr', 'challenge', 'head', 'you', 'boards', 'champs', 'chat'];
+const ORDER = ['quiz', 'arcade', 'picks', 'playing', 'lfg', 'tags', 'vr', 'challenge', 'head', 'you', 'boards', 'champs', 'chat'];
 function render() {
   const root = G.root;
   if (!root) return;
@@ -1123,6 +1260,7 @@ function render() {
   ['head', 'boards', 'challenge', 'chat', 'champs'].forEach((k) => { S[k].innerHTML = ''; });
   drawQuizSlot();
   drawArcadeSlot();
+  drawWebSlot();
   if (!S.you.firstChild || S.you.firstChild.dataset.you !== 'ask') drawYouSlot();
   S.head.hidden = !(G.catalog && boardGames().length) && !G.failed.catalog;
   if (!S.head.hidden) drawBoardHead(S.head);
@@ -1141,9 +1279,10 @@ function render() {
    other key flashes its row once everything that might hold it is in. A
    cabinet is cab:<slug>, and the old new:<slug> and party:<slug> links
    land on it. */
-const SECTIONS = ['quiz', 'arcade', 'playing', 'lfg', 'tags', 'vr', 'challenge', 'board', 'champs', 'chat'];
+const SECTIONS = ['quiz', 'arcade', 'picks', 'playing', 'lfg', 'tags', 'vr', 'challenge', 'board', 'champs', 'chat'];
 /* what a key has to wait for before it can be found, or called gone */
 function needs(k) {
+  if (k === 'picks' || /^web:/.test(k)) return ['catalog', 'web'];
   if (k === 'board' || /^g:/.test(k)) return ['catalog', 'boards'];
   if (k === 'champs' || /^champ:/.test(k)) return ['catalog', 'champions'];
   if (k === 'playing' || k === 'lfg' || /^b-/.test(k)) return ['catalog', 'posts'];
@@ -1188,6 +1327,7 @@ function land() {
     G.open[slug[1]] = true;
     drawBoardsSlot();
   }
+  if (/^web:/.test(k)) { G.webOpen = true; drawWebSlot(); }
   if (/^b-/.test(k)) {
     /* a playing post past the first few, or under another platform, is drawn first */
     G.plat = 'all';
@@ -1207,6 +1347,7 @@ function mount(root) {
     loadLive();
     loadPosts();
   }
+  loadWeb();
   loadTags();
   /* signing in or out changes what the board says is yours, and the gamertags */
   app.onAuth(() => { if (!G.root) return; loadPosts(); loadTags(); });
@@ -1227,6 +1368,7 @@ function newSince(ts) {
 
 /* a tab left open across midnight on the 1st reads the new month's boards */
 function rollover() {
+  if (G.web && G.slots && G.webDay && G.webDay !== todayKey()) drawWebSlot();
   if (app.demo || !G.settled.boards || G.boardMonth === monthKey()) return;
   G.boards = Object.create(null);
   G.settled.boards = false;
@@ -1245,7 +1387,7 @@ app.register(KEY, {
   deactivate() {},
   subnav() {
     if (!G.root || !G.slots) return null;
-    const toc = [['arcade', 'Arcade'], ['playing', 'Playing'], ['lfg', 'Groups'], ['tags', 'Gamertags'], ['vr', 'VR'], ['challenge', 'Challenge'], ['board', 'Leaderboard'], ['champs', 'Champions']]
+    const toc = [['arcade', 'Arcade'], ['picks', 'Picks'], ['playing', 'Playing'], ['lfg', 'Groups'], ['tags', 'Gamertags'], ['vr', 'VR'], ['challenge', 'Challenge'], ['board', 'Leaderboard'], ['champs', 'Champions']]
       .filter(([key]) => G.root.querySelector('[data-sec="' + key + '"]'))
       .map(([key, label]) => ({ key, label }));
     return toc.length ? chips(toc, null, (k) => app.jumpTo(G.root.querySelector('[data-sec="' + k + '"]'))) : null;

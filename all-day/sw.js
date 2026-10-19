@@ -13,7 +13,7 @@
    audio — episodes are large and the browser's own HTTP cache handles them
    better than we would. */
 
-const VERSION = 'all-day-v77';   // Vintage: Make a tee is one block, higher up; Food: the freshest section leads
+const VERSION = 'all-day-v78';   // Games: Daily picks from around the web, below the arcade
 const SHELL = VERSION + '-shell';
 const DATA = 'all-day-data';   // unversioned on purpose: survives shell bumps
 
