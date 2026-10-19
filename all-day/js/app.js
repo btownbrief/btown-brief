@@ -15,6 +15,7 @@
        newSince(ts) {},          how many items are newer than ts (epoch seconds), for the tab dot
        pull() {},                optional shell extension: pull-to-refresh asked; return a toast or null
        aside() {},               optional: the right-hand rail on a wide screen (1280 and up), or null
+       keepSubnav: true,         optional: the row under the mast stays while the mast steps away
      });
 
    On a wide screen (1024 and up) the page is a centred grid: the nine tabs
@@ -837,6 +838,8 @@ export function paintSubnav() {
   const mod = registry[active];
   const n = mod && mod.subnav ? mod.subnav() : null;
   if (n) s.appendChild(n);
+  /* a tab can keep its row under the mast while the reader scrolls */
+  document.body.classList.toggle('keep-subnav', !!(n && mod && mod.keepSubnav));
   measure();
   paintAside();
 }

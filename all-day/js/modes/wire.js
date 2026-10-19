@@ -798,8 +798,10 @@ const TOPIC_NAME = Object.fromEntries(TOPICS.map(([k, l]) => [k, l]));
 function headSub(date, d) {
   const tk = todayKey();
   const n = d ? countsOf(d).all : (indexEntry(date) ? Number(indexEntry(date).count) || 0 : 0);
+  /* today: when it last changed (the count lives in Filters, beside each
+     kind); an earlier day: its date and how many it held */
   let sub = date === tk
-    ? plural(n, 'story', 'stories') + (W.today && W.today.updated ? ' · updated ' + clock(Date.parse(W.today.updated)) : '')
+    ? (W.today && W.today.updated ? 'Updated ' + clock(Date.parse(W.today.updated)) : plural(n, 'story', 'stories'))
     : shortDay(date) + ' · ' + plural(n, 'story', 'stories');
   if (W.stale) sub += ' · reconnecting';
   return sub;
@@ -1789,6 +1791,7 @@ app.register('wire', {
   refresh: redraw,
   deactivate() { app.closePeek(); if (W.mode === 'news' && W.view === 'paper') { saveLeft(); W.left = readLeft() || W.left; } },
   subnav,
+  keepSubnav: true,
   aside,
   newSince,
   pull() {

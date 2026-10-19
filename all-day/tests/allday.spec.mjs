@@ -720,7 +720,7 @@ async function theWire(browser, base) {
     await page.waitForSelector('.panel:not([hidden]) .wleads', { timeout: 15000 });
     const h0 = await head(page);
     check(h0.h2 === 'Today’s top stories', 'the paper opens on today’s top stories', h0.h2);
-    check(h0.sub.startsWith(today.counts.local.all + ' stories · updated '), 'its line counts today’s local stories and says when it updated', h0.sub);
+    check(/^Updated \d{1,2}:\d{2} [ap]m$/.test(h0.sub), 'its line says when the paper last updated', h0.sub);
     await page.screenshot({ path: path.join(SHOTS, 'live-wire-today.png') });
 
     /* one row under the mast: News · Photos · Square and Filters (the reviewers, 2026-10-19) */
@@ -783,7 +783,12 @@ async function theWire(browser, base) {
     check(parts.length >= 1 && parts.every((t) => ['Evening', 'Afternoon', 'Morning', 'Overnight', 'The night before'].includes(t)), 'the river’s dividers are the part of the day each story was posted in', JSON.stringify(parts.slice(0, 6)));
     const times = await page.evaluate(() => {
       const out = [];
-      for (const n of document.querySelectorAll('.panel:not([hidden]) .feed.wire > .card.wrow, .panel:not([hidden]) .feed.wire > [data-day]')) { if (n.dataset.day) break; out.push(n.dataset.k); }
+      let river = false;   /* the river starts at its first time divider; the opened top stories above it are in rank order */
+      for (const n of document.querySelectorAll('.panel:not([hidden]) .feed.wire > .card.wrow, .panel:not([hidden]) .feed.wire > .tdiv, .panel:not([hidden]) .feed.wire > [data-day]')) {
+        if (n.dataset.day) break;
+        if (n.classList.contains('tdiv')) { river = true; continue; }
+        if (river) out.push(n.dataset.k);
+      }
       return out;
     });
     const posted = Object.fromEntries(today.updates.flatMap((u) => u.items).map((it) => [it.id, Date.parse(it.posted_at)]));
@@ -803,7 +808,7 @@ async function theWire(browser, base) {
     const every = await sheetChips(page);
     await closeFilters(page);
     check(every.filter((c) => !['all', 'instagram'].includes(c[0])).every((c) => Number(c[1]) === today.counts.everything[c[0]]), 'on Everything the chips are counts.everything', JSON.stringify(every));
-    check((await head(page)).sub.startsWith(today.counts.everything.all + ' stories'), 'and the head counts everything', '');
+
     check(await page.$$eval('.wleads .card', (c) => c.length) === 5 && (await head(page)).h2 === 'Today’s top stories', 'Everything keeps the top stories', '');
 
     /* the long river: it keeps drawing past 120 and runs into the editions, then really ends */

@@ -1371,15 +1371,23 @@ select.bf-in { appearance: none; -webkit-appearance: none; }
    sheet, or the rail on a wide screen). Two cards: a top story with its
    picture full width and a Lora headline, and a story row with a 104px
    picture on the left. One meta line, Source · time, then ⋯ and the star. */
-.wbar { display: flex; align-items: center; gap: var(--s2); height: 52px; padding: 0 var(--s2) var(--s1) var(--s2); }
-.wmodes { flex: 1 1 auto; min-width: 0; display: flex; align-items: stretch; gap: 2px; height: var(--hit); }
-.wmode { position: relative; display: flex; align-items: center; padding: 0 10px; font-size: var(--fs-w-seg); font-weight: 600;
-  color: var(--ink-3); white-space: nowrap; transition: color .15s ease; }
+.wbar { display: flex; align-items: center; gap: var(--s2); height: 56px; padding: 0 var(--s2) var(--s1) var(--s3); }
+/* News · Photos · Square: a big segmented control, the reader's first
+   choice (Stephen, 2026-10-19: the words were "so small and easy to miss;
+   someone might never reach Photos or Square"). Equal thirds of the row,
+   40px pills, the chosen one filled. */
+.wmodes { flex: 1 1 auto; min-width: 0; display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: 2px; padding: 3px;
+  border-radius: var(--r-pill); background: var(--paper-2); }
+.wmode { position: relative; display: flex; align-items: center; justify-content: center; height: 40px; padding: 0 6px; border-radius: var(--r-pill);
+  font-size: var(--fs-w-seg); font-weight: 700; color: var(--ink-2); white-space: nowrap; transition: color .15s ease, background .15s ease; }
+.wmode::after { content: ""; position: absolute; inset: -4px 0; }
 .wmode:hover { color: var(--ink); }
-.wmode.on { color: var(--ink); font-weight: 700; }
-.wmode.on::after { content: ""; position: absolute; left: 10px; right: 10px; bottom: 4px; height: 3px; border-radius: var(--r-hair); background: var(--accent); }
+.wmode.on { background: var(--accent); color: var(--on-ink); box-shadow: var(--shadow-pill); }
 .wmode.wait { visibility: hidden; }
-.wfilter { flex: 0 0 auto; display: inline-flex; align-items: center; gap: 6px; height: 38px; padding: 0 14px 0 11px; border-radius: var(--r-pill);
+/* the row stays while the mast's top line steps away, so the switch is
+   always within reach */
+body.chrome-away.keep-subnav .mast { transform: translateY(calc(-1 * var(--mast-h))); }
+.wfilter { flex: 0 0 auto; display: inline-flex; align-items: center; gap: 6px; height: 40px; padding: 0 14px 0 11px; border-radius: var(--r-pill);
   border: 1px solid var(--line); font-size: var(--fs-button); font-weight: 600; color: var(--ink); white-space: nowrap; position: relative; }
 .wfilter::after { content: ""; position: absolute; inset: -3px; }
 .wfilter .i { width: 18px; height: 18px; }
