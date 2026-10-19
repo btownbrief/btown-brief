@@ -2580,9 +2580,24 @@ async function onAir(browser, base) {
       await page.click('#panel-onair [data-add-playlist]');
       await page.waitForSelector('.sheet-body .bform, .sheet-body .sheet-note', { timeout: 3000 });
       const form = await page.evaluate(() => ({ head: document.querySelector('.sheet-head h2')?.textContent, labels: [...document.querySelectorAll('.sheet-body .bf-label')].map((l) => l.childNodes[0].textContent.trim()),
-        signin: /Sign in to post/.test(document.querySelector('.sheet-body').innerText) }));
-      check(form.head === 'Add your playlist' && (form.signin || (form.labels.includes('Playlist name') && form.labels.includes('Link'))), 'it opens the playlist form: a name and a link', JSON.stringify(form));
+        signin: !!document.querySelector('.sheet-body .linkrow button'), mail: document.querySelector('.sheet-body [data-mail-playlist]')?.getAttribute('href') || '' }));
+      check(form.head === 'Add your playlist' && form.signin && /^mailto:btownbrief@gmail\.com\?subject=A%20playlist%20for%20On%20Air&body=Playlist%20link/.test(form.mail),
+        'signed out: sign in to send it here, or email it, already filled in', JSON.stringify(form));
       await page.keyboard.press('Escape');
+      /* signed in: the board's own form, and the post waits for Stephen */
+      await page.evaluate(() => import('/all-day/js/auth.js').then((a) => a.demoSignIn()));
+      await page.click('#panel-onair [data-add-playlist]');
+      await page.waitForSelector('.sheet-body .bform', { timeout: 4000 });
+      const labels = await page.$$eval('.sheet-body .bf-label', (ls) => ls.map((l) => l.childNodes[0].textContent.trim()));
+      check(labels.includes('Playlist name') && labels.includes('Link'), 'signed in: the form asks for a name and a link', JSON.stringify(labels));
+      if (await page.$('.sheet-body input[name="display_name"]')) await page.fill('.sheet-body input[name="display_name"]', 'Kara');
+      await page.fill('.sheet-body input[name="title"]', 'Rainy Sunday');
+      await page.fill('.sheet-body input[name="m:link"]', 'https://open.spotify.com/playlist/ZYXWVUTSRQPONMLKJIHGFE');
+      await page.click('.sheet-body button[type="submit"]');
+      await page.waitForFunction(() => /approved/.test(document.getElementById('toast')?.textContent || ''), null, { timeout: 4000 }).catch(() => {});
+      const sent = await fakeOf(page, (x) => { const p = x.posts.filter((q) => q.board === 'playlists').pop(); return { title: p.title, status: p.status, link: p.meta.link }; });
+      check(sent.title === 'Rainy Sunday' && sent.status === 'pending' && sent.link === 'https://open.spotify.com/playlist/ZYXWVUTSRQPONMLKJIHGFE', 'sent: it waits for Stephen, and does not show yet', JSON.stringify(sent));
+      check(!(await page.$$eval('#panel-onair .pl-tile .t', (t) => t.map((x) => x.textContent))).includes('Rainy Sunday'), 'not on the page until approved', '');
       /* on Everything, the video playlists follow: the latest Btown TV night, then Clipsboard's boards */
       await toEverything(page);
       const vl = await page.$$eval('#panel-onair [data-slot="boards"] .pl-tile', (ts) => ts.map((t) => (t.dataset.tvlist ? 'tv' : t.dataset.board ? 'board' : '?') + '|' + t.querySelector('.t').textContent));

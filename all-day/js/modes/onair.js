@@ -1543,12 +1543,29 @@ function addButton() {
     b.dataset.addPlaylist = 'board';
     return b;
   }
-  const a = el('a', 'btn oa-addpl', ICON.plus + ' Add your playlist');
-  a.href = 'mailto:' + SHARE_TO + '?subject=' + encodeURIComponent('A playlist for On Air') + '&body=' + encodeURIComponent(MAIL_BODY);
+  const a = mailLink('btn oa-addpl', ICON.plus + ' Add your playlist');
   a.dataset.addPlaylist = 'mail';
   return a;
 }
+function mailLink(cls, label) {
+  const a = el('a', cls, label);
+  a.href = 'mailto:' + SHARE_TO + '?subject=' + encodeURIComponent('A playlist for On Air') + '&body=' + encodeURIComponent(MAIL_BODY);
+  return a;
+}
 function composePlaylist() {
+  /* signed out: signing in, or the email, whichever is less bother */
+  if (!app.user()) {
+    app.sheet('Add your playlist', (body) => {
+      body.appendChild(el('p', 'sheet-note', 'Sign in to send it here, or email it to us.'));
+      const r = el('div', 'linkrow');
+      r.appendChild(button('Sign in', '', () => app.openSettings()));
+      const m = mailLink('btn ghost', ICON.mail + ' Email it');
+      m.dataset.mailPlaylist = '1';
+      r.appendChild(m);
+      body.appendChild(r);
+    });
+    return;
+  }
   boards.compose({
     board: 'playlists', kind: 'playlist', heading: 'Add your playlist', cta: 'Send it',
     title: 'Playlist name', titlePlaceholder: 'Sunday drive down Route 7',
