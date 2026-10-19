@@ -9,10 +9,37 @@
    One body of water per key, shared by every canvas that shows it, so the
    Wire's switch and On Air's switch are the same lake. Skipped entirely
    under prefers-reduced-motion; the CSS fill still works without it.
-   ui.js builds the switch itself (localSwitch); this file only pours. */
+   ui.js builds the switch itself (localSwitch); this file only pours.
+
+   Since 2026-10-19 (Stephen: "have that effect for the main ones I want
+   people switching through across the tabs") any two- or three-way
+   control can pour: liquify(bar, { key, idx, colors }) with one colour
+   token per segment (the Wire's News · Photos · Square, On Air's TV ·
+   Podcasts · Playlists and Feed · Topics). The bar's buttons are the
+   segments, in order; the bar is built again on each pick and liquified
+   again, and the same key carries the water across.
+
+   One rAF loop for every body of water, and it sleeps: a pour churns,
+   laps for a few seconds and goes still, and with nothing moving the loop
+   stops until the next pick (or a bar changes size). */
 
 const liquids = new Map();
 let raf = 0, wake = false;
+const LAP = 5;   // seconds the edge keeps lapping after a pick, before the water goes still
+/* a bar that appears, or changes size, gets painted again */
+const sized = 'ResizeObserver' in window ? new ResizeObserver((es) => {
+  const now = performance.now() / 1000;
+  es.forEach((e) => liquids.forEach((s) => { if (s.faces.some((f) => f.bar === e.target)) s.until = Math.max(s.until, now + 0.25); }));
+  kick();
+}) : null;
+function kick() { if (!raf) raf = requestAnimationFrame(frame); }
+
+/* the shared control: the water takes segment idx's colour token (a
+   name like '--liq-news'; tokens.css holds the colours) */
+export function liquify(bar, { key, idx, colors }) {
+  if (!bar || !Array.isArray(colors) || !colors[idx]) return;
+  attach(bar, { key, n: colors.length, idx, prop: colors[idx], fallback: '#16704E' });
+}
 
 const cssVar = (node, prop, fallback) => (getComputedStyle(node).getPropertyValue(prop).trim() || fallback);
 function rgbOf(c) {
@@ -32,16 +59,18 @@ function mixColor(a, b, t) {
 export function attach(bar, { key, n, idx, prop, fallback }) {
   if (idx < 0 || !(n > 0)) return;
   if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  let canvas, ctx;
-  try { canvas = document.createElement('canvas'); ctx = canvas.getContext('2d'); if (!ctx) return; } catch (e) { return; }
-  canvas.className = 'lsw-canvas';
-  canvas.setAttribute('aria-hidden', 'true');
+  /* one canvas per bar: a bar liquified again keeps its canvas */
+  let canvas = bar.querySelector(':scope > canvas.lsw-canvas'), ctx = null;
+  try {
+    if (!canvas) { canvas = document.createElement('canvas'); canvas.className = 'lsw-canvas'; canvas.setAttribute('aria-hidden', 'true'); bar.insertBefore(canvas, bar.firstChild); }
+    ctx = canvas.getContext('2d');
+  } catch (e) { ctx = null; }
+  if (!ctx) { if (canvas) canvas.remove(); return; }
   bar.classList.add('liquid');
-  bar.insertBefore(canvas, bar.firstChild);
   let s = liquids.get(key);
   if (!s) {
     s = { n, idx: null, L: 0, R: 0, vL: 0, vR: 0, dir: 1, churn: 0, drops: [], blobs: [], bubbles: [], bubbleAt: 0,
-      colorFrom: null, colorTo: null, colorT: 1, phase: Math.random() * 20, splashed: true, splashed2: true, lastT: 0, faces: [] };
+      colorFrom: null, colorTo: null, colorT: 1, phase: Math.random() * 20, splashed: true, splashed2: true, lastT: 0, faces: [], until: 0 };
     liquids.set(key, s);
   }
   s.n = n;
@@ -50,10 +79,16 @@ export function attach(bar, { key, n, idx, prop, fallback }) {
   if (first) { s.L = idx / n; s.R = (idx + 1) / n; s.vL = 0; s.vR = 0; }
   else if (flipped) { s.dir = idx > s.idx ? 1 : -1; s.colorFrom = s.colorTo; s.colorTo = null; s.colorT = 0; s.churn = 1; s.splashed = false; s.splashed2 = false; }
   s.idx = idx;
-  s.faces = s.faces.filter((f) => f.canvas.isConnected && f.canvas !== canvas);
-  s.faces.push({ bar, canvas, ctx, prop, fallback, color: null, slots: [...bar.querySelectorAll('button')] });
-  s.lastT = performance.now() / 1000;
-  if (!raf) raf = requestAnimationFrame(frame);
+  /* this bar's old face goes (a bar liquified again); a face whose bar has
+     left the page goes at the next frame, which also stops observing it (a
+     bar is often liquified before it is put on the page, so not here) */
+  liquids.forEach((o) => { o.faces = o.faces.filter((f) => f.canvas !== canvas); });
+  s.faces.push({ bar, canvas, ctx, prop, fallback, color: null, slots: [...bar.querySelectorAll('button')], drawn: false });
+  if (sized) sized.observe(bar);
+  const now = performance.now() / 1000;
+  if (!raf) s.lastT = now;
+  s.until = Math.max(s.until, now + (first ? 0.5 : LAP));
+  kick();
 }
 
 function slotBounds(face, s, W) {
@@ -71,26 +106,31 @@ function frame() {
   const dpr = Math.min(window.devicePixelRatio || 1, 2);
   let alive = false;
   liquids.forEach((s) => {
-    s.faces = s.faces.filter((f) => f.canvas.isConnected);
+    s.faces = s.faces.filter((f) => { if (f.canvas.isConnected) return true; if (sized) sized.unobserve(f.bar); return false; });
     if (!s.faces.length) return;
-    alive = true;
     const shown = s.faces.filter((f) => f.bar.clientWidth > 0 && f.bar.clientHeight > 0);
     if (!shown.length) { s.lastT = now; return; }
     const W = shown[0].bar.clientWidth, H = shown[0].bar.clientHeight;
     const dt = Math.min(0.05, Math.max(0, now - s.lastT));
     s.lastT = now;
+    const busy = now < s.until || s.churn > 0.01 || s.drops.length > 0 || s.blobs.length > 0 || Math.abs(s.vL) + Math.abs(s.vR) > 0.002 || s.colorT < 1;
+    /* still water: nothing to do unless a canvas has not been painted at its size */
+    if (!busy && shown.every((f) => f.drawn && f.canvas.width === Math.round(W * dpr) && f.canvas.height === Math.round(H * dpr))) return;
+    if (busy) alive = true;
     const [tL, tR] = slotBounds(shown[0], s, W);
     const face = shown[0];
     /* the token is read per face per frame cheaply enough; a flip changes the prop */
     const want = cssVar(face.bar, face.prop, face.fallback);
     if (face.color !== want) face.color = want;
     if (s.colorTo !== face.color) { if (s.colorT >= 1 || !s.colorFrom) s.colorFrom = face.color; s.colorTo = face.color; }
-    step(s, W, H, dt, now, tL, tR);
+    if (busy) step(s, W, H, dt, now, tL, tR);
+    else { s.bubbles.length = 0; s.L = tL; s.R = tR; }
     shown.forEach((f) => {
-      if (f.canvas.width !== W * dpr || f.canvas.height !== H * dpr) { f.canvas.width = W * dpr; f.canvas.height = H * dpr; }
+      if (f.canvas.width !== Math.round(W * dpr) || f.canvas.height !== Math.round(H * dpr)) { f.canvas.width = Math.round(W * dpr); f.canvas.height = Math.round(H * dpr); }
       f.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       f.ctx.clearRect(0, 0, W, H);
       paint(s, f.ctx, W, H, tL, tR);
+      f.drawn = true;
     });
   });
   if (!alive) return;
@@ -147,7 +187,7 @@ function step(s, W, H, dt, now, tL, tR) {
   s.churn = Math.max(0, s.churn - dt * 0.7);
   s.colorT = Math.min(1, s.colorT + dt * 2.2);
   const slabL = Math.min(s.L, s.R) * W, slabR = Math.max(s.L, s.R) * W;
-  if (now > s.bubbleAt && slabR - slabL > 30) {
+  if (now < s.until - 0.6 && now > s.bubbleAt && slabR - slabL > 30) {
     s.bubbleAt = now + 0.35 + Math.random() * 0.8 - Math.min(0.5, s.churn * 0.5);
     s.bubbles.push({ x: slabL + 12 + Math.random() * (slabR - slabL - 24), y: H - 4, r: 0.9 + Math.random() * 1.7, vy: 9 + Math.random() * 9, ph: Math.random() * Math.PI * 2 });
   }

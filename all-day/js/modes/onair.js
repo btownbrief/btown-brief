@@ -66,6 +66,7 @@ import * as data from '../wire.js';
 import * as boards from '../boards.js';
 import { RULES } from '../boards-core.js';
 import { el, esc, safeHref, ICON, svg, art, section, rail, chips, pills, divider, cards, button, localSwitch, geo, setGeo, agoShort } from '../ui.js';
+import { liquify } from '../liquid.js';
 
 const KEY = 'onair';
 const NATIONAL = 2;         // shows from away on Everything
@@ -815,6 +816,7 @@ function drawPick(host) {
   sw.setAttribute('role', 'group');
   sw.setAttribute('aria-label', 'Show as a feed or by topic');
   [...sw.children].forEach((b, i) => { b.dataset.view = i ? 'topics' : 'feed'; b.setAttribute('aria-pressed', String(b.dataset.view === view())); });
+  liquify(sw, { key: 'oa-view', idx: view() === 'topics' ? 1 : 0, colors: ['--liq-tv', '--liq-topics'] });
   r.appendChild(sw);
   host.appendChild(r);
   return true;
@@ -1965,6 +1967,8 @@ app.register(KEY, {
     sw.setAttribute('role', 'group');
     sw.setAttribute('aria-label', 'TV, podcasts or playlists');
     [...sw.children].forEach((b, i) => { b.dataset.side = ['tv', 'pods', 'lists'][i]; b.setAttribute('aria-pressed', String(b.dataset.side === O.side)); });
+    /* the side you are on sits in poured water, its own colour (2026-10-19) */
+    liquify(sw, { key: 'oa-side', idx: ['tv', 'pods', 'lists'].indexOf(O.side), colors: ['--liq-tv', '--liq-pods', '--liq-lists'] });
     top.appendChild(sw);
     wrap.appendChild(top);
     const band = el('div', 'toolband');
