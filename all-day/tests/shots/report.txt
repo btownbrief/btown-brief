@@ -2853,7 +2853,7 @@
   ok   shell fixes: the main switches share the poured water (no-preference) › On Air’s TV · Podcasts · Playlists pours
   ok   shell fixes: the main switches share the poured water (no-preference) › Feed | Topics pours
   ok   shell fixes: the main switches share the poured water (no-preference) › a side picked keeps its pressed state in the water
-  ok   shell fixes: the main switches share the poured water (no-preference) › when the water is still, the loop sleeps (0 frames asked in 600ms)
+  ok   shell fixes: the main switches share the poured water (no-preference) › when the reader has gone quiet and the water is still, the loop sleeps (0 frames asked in 600ms)
   ok   shell fixes: the main switches share the poured water (no-preference) › no console errors
   ok   shell fixes: the main switches share the poured water (reduce) › the Wire’s News · Photos · Square is a plain fill
   ok   shell fixes: the main switches share the poured water (reduce) › Local / Everything is a plain fill
@@ -2863,6 +2863,20 @@
   ok   shell fixes: the main switches share the poured water (reduce) › Feed | Topics is a plain fill
   ok   shell fixes: the main switches share the poured water (reduce) › a side picked keeps its pressed state in the water
   ok   shell fixes: the main switches share the poured water (reduce) › no console errors
+  ok   shell fixes: the poured water never freezes and stays inside its pill › News holds the water, and nothing is painted in the corners outside the pill
+  ok   shell fixes: the poured water never freezes and stays inside its pill › five quick taps: the water lands under Photos
+  ok   shell fixes: the poured water never freezes and stays inside its pill › seven seconds after a pick the water still laps (45 frames in 600ms)
+  ok   shell fixes: the poured water never freezes and stays inside its pill › scrolled down with the pill shrunk, a pick pours to News and stays in the pill
+  ok   shell fixes: the poured water never freezes and stays inside its pill › On Air: Playlists takes the water, in its pill
+  ok   shell fixes: the poured water never freezes and stays inside its pill › back on the Wire, a tap still pours
+  ok   shell fixes: the poured water never freezes and stays inside its pill › turned sideways and back, the water stays on Photos
+  ok   shell fixes: the poured water never freezes and stays inside its pill › still water takes the dark theme’s colour when the theme changes
+  ok   shell fixes: the poured water never freezes and stays inside its pill › and the light theme’s colour coming back
+  ok   shell fixes: the poured water never freezes and stays inside its pill › gone quiet, the loop is asleep
+  ok   shell fixes: the poured water never freezes and stays inside its pill › a scroll wakes it
+  ok   shell fixes: the poured water never freezes and stays inside its pill › a hidden page asks for no frames (0 in 600ms)
+  ok   shell fixes: the poured water never freezes and stays inside its pill › shown again, the water moves again
+  ok   shell fixes: the poured water never freezes and stays inside its pill › no console errors
   ok   shell fixes: the offline shell carries the new modules › sw.js VERSION is bumped for the nine-tab bar and the Wire banner, to v78 or later
   ok   shell fixes: the offline shell carries the new modules › every module in js/ is in the offline list
   ok   shell fixes: the offline shell carries the new modules › and nothing in the offline list is missing from js/
@@ -3075,7 +3089,7 @@
   ok   Habits, swipe to archive with Undo, drag and keys to reorder, edit (demo, 1280, dark) › habits: at most 2 subnav rows
   ok   Habits, swipe to archive with Undo, drag and keys to reorder, edit (demo, 1280, dark) › no console errors
   ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › twenty habits, in order
-  ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › twenty habits and a year of taps: a tap still shows at once (12, 12, 13, 13 ms)
+  ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › twenty habits and a year of taps: a tap still shows at once (12, 12, 12, 13 ms)
   ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › the heat map is all there, and four taps leave it as it was
   ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › every row keeps its seven dots and its 48px tap
   ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › the list is longer than the screen, and the panel scrolls
@@ -3114,7 +3128,7 @@
   ok   Habits, the day turns at midnight New York, not the phone’s (demo, a reader in Tokyo) › and a tap now is Thursday’s
   ok   Habits, the day turns at midnight New York, not the phone’s (demo, a reader in Tokyo) › no console errors
   ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 390, light) › a first visit: one line, the starters and Add habit, nothing seeded, no sign-in wall
-  ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 390, light) › three habits, two tapped, at once (3 ms)
+  ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 390, light) › three habits, two tapped, at once (4 ms)
   ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 390, light) › and nothing personal went to the server (the season and the public forests only)
   ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 390, light) › kept on this phone, under one versioned key
   ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 390, light) › one quiet line under the list: Sync across devices
@@ -3140,7 +3154,7 @@
   ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 390, light) › habits: at most 2 subnav rows
   ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 390, light) › no console errors
   ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 1280, dark) › a first visit: one line, the starters and Add habit, nothing seeded, no sign-in wall
-  ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 1280, dark) › three habits, two tapped, at once (4 ms)
+  ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 1280, dark) › three habits, two tapped, at once (3 ms)
   ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 1280, dark) › and nothing personal went to the server (the season and the public forests only)
   ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 1280, dark) › kept on this phone, under one versioned key
   ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 1280, dark) › one quiet line under the list: Sync across devices
