@@ -498,6 +498,8 @@ async function matrix(browser, base) {
         const { ctx, page, errors, supabase } = await newPage(browser, base, { ...combo, rpc });
         await page.goto(base + '/all-day/' + (demo ? '?demo=1' : ''), { waitUntil: 'domcontentloaded' });
         await settle(page);
+        /* measure the bar in its own font, not the fallback it shows for a moment while Archivo loads */
+        await page.evaluate(() => document.fonts.ready);
         const bar = await page.$$eval('#tabbar button[data-tab]', (bs) => bs.map((b) => [b.dataset.tab, b.textContent.trim()]));
         check(JSON.stringify(bar.map((b) => b[0])) === JSON.stringify(TABS), 'nine tabs in order', JSON.stringify(bar));
         check(JSON.stringify(bar.map((b) => b[1])) === JSON.stringify(LABELS), 'the nine labels', JSON.stringify(bar.map((b) => b[1])));
@@ -5527,7 +5529,10 @@ async function theWatch(browser, base) {
       const g = document.querySelector('#panel-watch [data-slot="back"] .wgrid[data-back]');
       panel.scrollTop += g.getBoundingClientRect().bottom - innerHeight - 160;   // the grid's end 160px below the screen
       const b = g.parentElement.querySelector('.collapsebar [data-collapse]');
-      const r = b.getBoundingClientRect(), tb = document.querySelector('.tabbar').getBoundingClientRect(), gr = g.getBoundingClientRect();
+      /* the bar at its full size: scrolling down settles it to 88% for a moment (2026-10-19) */
+      const t = document.querySelector('.tabbar'); t.style.transition = 'none'; t.style.transform = 'none';
+      const r = b.getBoundingClientRect(), tb = t.getBoundingClientRect(), gr = g.getBoundingClientRect();
+      t.style.transition = ''; t.style.transform = '';
       return { pos: getComputedStyle(b.parentElement).position, gap: Math.round(tb.top - r.bottom), gridOn: gr.top < r.top && gr.bottom > r.bottom, label: b.getAttribute('aria-label'), text: b.textContent.trim() };
     });
     check(bar.pos === 'sticky' && bar.gap >= 8 && bar.gap <= 20 && bar.gridOn && bar.text === 'Collapse' && bar.label === 'Collapse Back then',
