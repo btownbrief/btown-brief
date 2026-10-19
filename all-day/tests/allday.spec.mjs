@@ -30,7 +30,7 @@
 // the repo's own, and third-party pictures get a 1px PNG.
 
 import { createRequire } from 'node:module';
-import { spawn } from 'node:child_process';
+import { spawn, execFileSync } from 'node:child_process';
 import { readFile, readdir, mkdir, writeFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import net from 'node:net';
@@ -8839,6 +8839,157 @@ async function theWeather(browser, base) {
   });
 }
 
+/* ------------------------------------------------------- the weather brief */
+/* Stephen, 2026-10-19: "a text brief about today's weather and an obvious
+   link to the full weather page … Just focus on what matters: weather in
+   Burlington area. When and how much. Temps." The brief is written by
+   scripts/weather_brief.py at each refresh; here the real script writes it
+   from a rainy-day payload (so the words on the page are the generator's,
+   not the test's), and What Now and weather.html are checked against it. */
+async function weatherBrief(browser, base) {
+  const day = etKey(Date.now());
+  const off = etOffset(Date.parse(day + 'T12:00:00Z'));
+  const at = (d, hm) => d + 'T' + hm + ':00' + off;
+  const tmr = dayMinus(day, -1), d2 = dayMinus(day, -2);
+  const NOW = Date.parse(at(day, '08:30'));
+  const start = Date.parse(at(day, '08:00'));
+  /* 2 pm to 7 pm wet, 0.08 in an hour; a gusty stretch at 8 to 11 pm;
+     the hourly temperatures sit a degree or more inside the NWS high and low */
+  const hours = Array.from({ length: 36 }, (_, i) => {
+    const wet = i >= 6 && i <= 10, gusty = i >= 12 && i <= 14;
+    const temp = Math.max(45, 48 + Math.min(i, 6) - Math.max(0, i - 10));
+    return { t: new Date(start + i * 3600000).toISOString(), temp_f: temp, feels_f: temp - 3, pop: wet ? 80 : 5, humidity: 70,
+      wind_mph: gusty ? 22 : 8, wind_dir: 'S', sky: 50, short: wet ? 'Rain' : 'Partly Sunny', qpf_in: wet ? 0.08 : 0, snow_in: 0, gust_mph: gusty ? 34 : 14 };
+  });
+  const per = (name, d, hm, isDay, temp, short, pop) => ({ name, start: at(d, hm), is_day: isDay, temp_f: temp, pop, wind: 'S 5 to 10 mph', short, detailed: short + '.' });
+  const payload = {
+    updated: new Date(NOW - 15 * 60000).toISOString(),
+    sections_updated: {},
+    now: { observed_at: new Date(NOW - 10 * 60000).toISOString(), station: 'KBTV', description: 'Cloudy', temp_f: 47, feels_like_f: 44, humidity: 80, dewpoint_f: 40, wind_mph: 6, wind_gust_mph: null, wind_dir: 'S' },
+    forecast: { updated: new Date(NOW - 3 * 3600000).toISOString(), periods: [
+      per('Today', day, '06:00', true, 55, 'Partly Sunny then Rain', 80),
+      per('Tonight', day, '18:00', false, 41, 'Rain then Mostly Cloudy', 80),
+      per('Tomorrow', tmr, '06:00', true, 50, 'Mostly Sunny', 5),
+      per('Tomorrow Night', tmr, '18:00', false, 35, 'Mostly Clear', 5),
+      per('Later', d2, '06:00', true, 52, 'Sunny', 0)] },
+    hourly: { updated: new Date(NOW - 3 * 3600000).toISOString(), hours,
+      days: [{ date: day, precip_in: 0.4, snow_in: 0 }, { date: tmr, precip_in: 0, snow_in: 0 }] },
+    alerts: { active: [] },
+    lake_forecast: { suspended: false, broad: [{ period: 'Today', text: 'South winds 15 to 20 knots. Waves 2 to 3 feet.', wind_knots_max: 20, gust_knots: null, waves_ft_max: 3, calm: false }] },
+    lake_gage: { water_temp_f: 54, water_temp_at: new Date(NOW - 3600000).toISOString(), level_ft: 94.04, level_status: 'normal' },
+    air: { aqi: 30, category: 'Good' },
+    sun: { sunrise: at(day, '07:13'), sunset: at(day, '18:01'), sunrise_tomorrow: at(tmr, '07:14'), sunset_tomorrow: at(tmr, '17:59'), uv_max: 3 },
+  };
+  const py = 'import sys, json\nsys.path.insert(0, "scripts")\nimport weather_brief as wb\nfrom datetime import datetime, timezone\n' +
+    'd = json.load(sys.stdin)\nprint(json.dumps(wb.build(d, datetime.fromtimestamp(' + NOW / 1000 + ', timezone.utc))))';
+  payload.brief = JSON.parse(execFileSync('python3', ['-c', py], { cwd: REPO, input: JSON.stringify(payload) }).toString());
+  const weekday = new Intl.DateTimeFormat('en-US', { weekday: 'long', timeZone: 'UTC' }).format(new Date(tmr + 'T12:00:00Z'));
+  const WANT = 'Rain today from 2pm on, about 0.3 inch, high 55. Rain tonight until 7pm, about a tenth of an inch, windy with gusts to 34 mph, low 41. ' +
+    weekday + ', mostly sunny and cooler, high 50.';
+  const stale = { ...payload, brief: { ...payload.brief, generated: new Date(NOW - 6 * 3600000).toISOString() } };
+
+  await group('The weather brief: written by rules from the NWS numbers (weather_brief.py on a rainy day)', async () => {
+    check(payload.brief.text === WANT, 'when, how much, the NWS high and low, wind only when it gusts, in mph', payload.brief.text);
+    check(payload.brief.periods.map((p) => p.label).join() === 'Today,Tonight', 'its cards are today and tonight', JSON.stringify(payload.brief.periods.map((p) => p.label)));
+  });
+
+  const wxPage = async (body, opts = {}) => {
+    /* a fixture read: the live one is a model's words, checked by its own rules */
+    const read = { date: day, edition: 'morning', text: 'A fixture read.', week: [], approved_at: new Date(NOW - 3600000).toISOString() };
+    const w = await newPage(browser, base, { clock: NOW, routes: [[/\/data\/weather\/latest\.json/, body], [/\/data\/weather\/read\.json/, read]], ...opts });
+    await w.page.route(/play\.btownbrief\.com\/nav\.js/, (r) => r.fulfill({ status: 200, body: '', contentType: 'text/javascript' }));
+    await w.page.route(/api\.weather\.gov/, (r) => r.fulfill({ status: 200, body: '{}', contentType: 'application/geo+json' }));
+    /* the radar stays below the fold; anything else outside answers empty */
+    await w.page.route(/unpkg\.com|opengeo\.ncep\.noaa\.gov|air-quality-api|airnow/, (r) => r.fulfill({ status: 200, body: '{}', contentType: 'application/json' }));
+    await w.page.goto(base + '/weather.html');
+    await w.page.waitForSelector('#rn-page:not([hidden])', { timeout: 15000 });
+    await w.page.waitForSelector('#week-section:not([hidden])', { timeout: 15000 });
+    return w;
+  };
+
+  await group('Weather page: now, today and tonight in plain words, when and how much (390, 8:30 am)', async () => {
+    const w = await wxPage(payload, { viewport: { width: 390, height: 1100 }, dpr: 2 });
+    const { page, errors } = w;
+    const s = await page.evaluate(() => {
+      const q = (sel) => document.querySelector(sel);
+      const rows = (card) => [...card.querySelectorAll('.day-card-rows div')].map((r) => r.querySelector('dt').textContent + ': ' + r.querySelector('dd').textContent);
+      const order = ['#rn-stats', '#day-section', '#hours-section', '#week-section', '#radar', '#read-section', '#life-section', '#swim-section'].map((x) => q(x));
+      return { sub: q('#rn-sub').textContent, brief: q('#rn-sub').classList.contains('is-brief'),
+        chips: [...document.querySelectorAll('#rn-chips .rn-chip')].map((c) => c.textContent.trim()),
+        dayHidden: q('#day-section').hidden, title: q('#day-title').textContent,
+        cards: [...document.querySelectorAll('.day-card')].map((c) => ({ name: c.querySelector('.day-card-name').textContent, temp: c.querySelector('.day-card-temp').textContent,
+          sky: c.querySelector('.day-card-sky').textContent, rows: rows(c), wet: c.classList.contains('is-wet') })),
+        story: q('#hours-story').textContent,
+        amt: q('.wk-row.is-today .wk-amt') && q('.wk-row.is-today .wk-amt').textContent,
+        swim: [...document.querySelectorAll('.swim-cond')].map((c) => c.textContent),
+        order: order.every((n, i) => !i || (order[i - 1].compareDocumentPosition(n) & 4)),
+        text: document.body.innerText, vw: innerWidth, sw: document.documentElement.scrollWidth };
+    });
+    check(s.sub === WANT && s.brief, 'the hero carries the brief, word for word', s.sub);
+    check(!s.chips.some((c) => /mph|%/.test(c)) && s.chips.some((c) => /lake 54°/.test(c)), 'no humidity chip, and no wind chip on a 6 mph morning', s.chips.join(' | '));
+    check(!s.dayHidden && s.title === 'Today and tonight', 'a Today and tonight section under the hero', s.title);
+    const [t, n] = s.cards;
+    check(t && t.name === 'Today' && t.temp === 'High 55°' && t.sky === 'Rain' && t.wet &&
+      t.rows.join(' | ') === 'When: From 2pm on | Chance: 80% | How much: About 0.3 inch | Feels like: 45° to 51°', 'today: the NWS high, when the rain starts, the chance, how much, feels like', JSON.stringify(t));
+    check(n && n.name === 'Tonight' && n.temp === 'Low 41°' && n.rows.join(' | ') === 'When: Until 7pm | Chance: 80% | How much: About a tenth of an inch | Feels like: 42° to 51° | Wind: Gusts to 34 mph',
+      'tonight: when it stops, how much, and the gusts in mph', JSON.stringify(n));
+    check(/topping out near 55 today/.test(s.story) && /low near 41 tonight/.test(s.story), 'the next-hours story uses the same NWS high and low, not the hourly extremes', s.story);
+    check(s.amt === '0.4″', 'the week row says how much: today’s NWS rain total', String(s.amt));
+    check(!/\bkt\b|knots?\b|boats?\b/i.test(s.text) && s.swim.some((c) => /Wind\s*to 23 mph/.test(c)), 'no knots or boats anywhere; the swim card’s lake wind is in mph', s.swim.join(' | '));
+    check(s.order, 'in order: now, today and tonight, the next hours, the week, radar, my read, the scores, swimming', '');
+    check(s.sw <= s.vw, 'nothing scrolls sideways at 390', s.sw + ' > ' + s.vw);
+    /* clicked in place: scrolling down would wake the radar, which has its own group */
+    await page.$eval('.wk-row.is-today .wk-main', (b) => b.click());
+    check(/How much: about 0\.4 inch of rain\./.test(await page.$eval('.wk-row.is-today .wk-more', (m) => m.textContent)), 'and opening the row says it in words', '');
+    await page.screenshot({ path: path.join(SHOTS, 'weather-brief-390.png') });
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await w.ctx.close();
+
+    const st = await wxPage(stale, { scheme: 'dark' });
+    const ss = await st.page.evaluate(() => ({ sub: document.querySelector('#rn-sub').textContent, day: document.querySelector('#day-section').hidden }));
+    check(ss.sub === 'Today: partly sunny then rain, high near 55, 80% chance of rain.' && ss.day, 'a brief six hours old is not shown: the NWS day line instead, and no cards', JSON.stringify(ss));
+    check(!st.errors.length, 'no console errors', st.errors.join(' | '));
+    await st.ctx.close();
+  });
+
+  await group('What Now: today in plain words and a Full weather link, under the card (390, live)', async () => {
+    const routes = [[/\/all-day\/data\/whatnow\.json/, { generated: new Date(NOW).toISOString(), days: 10, counts: {}, events: [] }], [/\/data\/weather\/latest\.json/, payload]];
+    const { ctx, page, errors } = await newPage(browser, base, { clock: NOW, routes, timezoneId: 'America/Los_Angeles' });
+    await page.goto(base + '/all-day/#whatnow');
+    await page.waitForSelector(wnPanel + ' .wxbrief', { timeout: 15000 });
+    const b = await page.evaluate(() => {
+      const p = document.querySelector('#panel-whatnow');
+      const r = (s) => p.querySelector(s).getBoundingClientRect();
+      const go = p.querySelector('.wxbrief .wxb-go');
+      return { text: p.querySelector('.wxb-t') && p.querySelector('.wxb-t').textContent, go: go.textContent.trim(), href: go.getAttribute('href'), target: go.target,
+        top: r('.wxbrief').top, cardBottom: r('.wxcard').bottom, bottom: r('.wxbrief').bottom, spin: r('.spin .big').top, goH: go.getBoundingClientRect().height,
+        vw: innerWidth, sw: document.documentElement.scrollWidth };
+    });
+    check(b.text === WANT, 'the same brief as the weather page, word for word', b.text);
+    check(b.go === 'Full weather' && b.href === '../weather.html' && !b.target && b.goH >= 30, 'an obvious Full weather button to the guide’s weather page', JSON.stringify(b));
+    check(b.top >= b.cardBottom && b.bottom <= b.spin && b.sw <= b.vw, 'under the card, above Spin, and nothing scrolls sideways', JSON.stringify(b));
+    await page.screenshot({ path: path.join(SHOTS, 'whatnow-weather-brief-390.png') });
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+
+    const s = await newPage(browser, base, { clock: NOW, routes: [routes[0], [/\/data\/weather\/latest\.json/, stale]] });
+    await s.page.goto(base + '/all-day/#whatnow');
+    await s.page.waitForSelector(wnPanel + ' .wxbrief', { timeout: 15000 });
+    const sb = await s.page.evaluate(() => ({ t: !!document.querySelector('#panel-whatnow .wxb-t'), go: !!document.querySelector('#panel-whatnow .wxb-go') }));
+    check(!sb.t && sb.go, 'a brief six hours old is left out; the link stays', JSON.stringify(sb));
+    check(!s.errors.length, 'no console errors', s.errors.join(' | '));
+    await s.ctx.close();
+
+    const d = await newPage(browser, base, { clock: etAt(14) });
+    await d.page.goto(base + '/all-day/?demo=1#whatnow');
+    await d.page.waitForSelector(wnPanel + ' .wxb-t', { timeout: 15000 });
+    const demoText = await d.page.$eval(wnPanel + ' .wxb-t', (p) => p.textContent);
+    check(demoText === 'Sunny today, high 62. Mostly clear tonight, low 48. Tomorrow, mostly sunny, high 60.', 'the demo carries its brief too (its weekday said as Tomorrow, since the demo moves to today)', demoText);
+    check(!d.errors.length, 'no console errors', d.errors.join(' | '));
+    await d.ctx.close();
+  });
+}
+
 /* ----------------------------------------------------------------- run */
 const t0 = Date.now();
 await mkdir(SHOTS, { recursive: true });
@@ -8872,6 +9023,7 @@ try {
   await run(sunsetLine);
   await run(theVintage);
   await run(theWeather);
+  await run(weatherBrief);
 } finally {
   await browser.close();
   proc.kill();

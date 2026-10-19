@@ -5,9 +5,10 @@
    (Steve's approved read), and data/weather/beaches.json.
 
    Sections, top to bottom:
-     alerts → hero (now) → the next hours (strip + plain-English
-     story + model check) → My read → the week ahead (range rows)
-     → life scores (score, best window, sparkline, why?) → swim.
+     alerts → hero (now + the plain-words brief) → today and
+     tonight (when, how much) → the next hours (strip + plain-English
+     story + model check) → the week ahead (range rows) → radar →
+     My read → life scores (score, best window, sparkline, why?) → swim.
 
    The six LIFE SCORES are computed here, client-side, so they
    track the actual hour of day between data refreshes.
@@ -479,6 +480,20 @@
     ab.hidden = false;
   }
 
+  /* The brief is written by the hourly refresh. Past BRIEF_MAX_AGE (the
+     refresh skipped a few runs) its "today" and "tonight" may be the wrong
+     ones, so it is not shown at all. */
+  var BRIEF_MAX_AGE = 4 * HOUR;
+  var WIND_NOTABLE_MPH = 15, GUST_NOTABLE_MPH = 25;
+  function freshBrief(d) {
+    var b = d && d.brief;
+    if (!b || !b.text || !b.generated) return null;
+    var age = Date.now() - new Date(b.generated).getTime();
+    if (!(age >= -HOUR && age < BRIEF_MAX_AGE)) return null;
+    if (b.date && b.date !== btvDayKey(new Date()) && age > HOUR) return null;
+    return b;
+  }
+
   function renderNow(d) {
     var box = el('rn-stats');
     if (!box) return;
@@ -498,14 +513,16 @@
     }
     box.innerHTML = head.join('');
 
-    // Chips: the glanceable secondary numbers.
+    // Chips: the glanceable secondary numbers. Wind only when someone on
+    // foot or a bike would feel it (Stephen, 2026-10-19: "Idk why it's
+    // talking so much about knots and wind and boats"); humidity is gone,
+    // the running score carries mugginess.
     var chips = [];
-    if (now.wind_mph != null) {
+    if (now.wind_mph != null && (now.wind_mph >= WIND_NOTABLE_MPH || (now.wind_gust_mph || 0) >= GUST_NOTABLE_MPH)) {
       chips.push('<span class="rn-chip" title="Wind">' + windArrow(now.wind_dir) +
         ' ' + esc(now.wind_dir || '') + ' ' + now.wind_mph + ' mph' +
         (now.wind_gust_mph ? ', gusts ' + now.wind_gust_mph : '') + '</span>');
     }
-    if (now.humidity != null) chips.push('<span class="rn-chip" title="Relative humidity">💧 ' + now.humidity + '%</span>');
     if (gage.water_temp_f != null) chips.push('<a class="rn-chip" href="#swim-section" title="Lake Champlain water temperature">🌊 lake ' + gage.water_temp_f + '°</a>');
     if (air.aqi != null) chips.push('<span class="rn-chip rn-chip-aqi-' + esc((air.category || '').toLowerCase().replace(/\s+/g, '-')) +
       '" title="Air quality index">AQI ' + air.aqi + ' ' + esc((air.category || '').toLowerCase()) + '</span>');
@@ -513,11 +530,15 @@
     if (sun.sunset) chips.push('<a class="rn-chip" href="sunset.html" title="Sunset tracker">🌇 ' + fmtClock(sun.sunset) + '</a>');
     el('rn-chips').innerHTML = chips.join('');
 
-    // One compact day line, not the full NWS paragraph — the wording
-    // lives in the week strip's Today row.
+    // The plain-words brief (scripts/weather_brief.py) while it is fresh;
+    // otherwise one compact day line from the first NWS period.
     var sub = el('rn-sub');
     var fc = (d.forecast || {}).periods || [];
-    if (fc.length) {
+    var brief = freshBrief(d);
+    if (brief) {
+      sub.textContent = brief.text;
+      sub.classList.add('is-brief');
+    } else if (fc.length) {
       var p0 = fc[0];
       var bits = [esc((p0.short || '').toLowerCase())];
       if (p0.temp_f != null) bits.push((p0.is_day ? 'high near ' : 'low near ') + p0.temp_f);
@@ -532,6 +553,59 @@
       el('rn-updated').textContent = 'Observed ' + fmtClock(now.observed_at) + ' at the airport' +
         (observedAge > 2 * HOUR ? ' · ' + fmtAgo(now.observed_at) : '');
     }
+  }
+
+  /* ============================================================
+     TODAY AND TONIGHT — two cards from the brief's periods
+     (Today + Tonight, or Tonight + tomorrow after dark): the high
+     or low, the sky, when rain or snow starts and stops, how much,
+     feels like, and wind only when it matters. Every value is the
+     brief's, which took it from the NWS forecast; nothing here is
+     worked out again.
+  ============================================================ */
+
+  function dayCard(p) {
+    var pr = p.precip;
+    var head = cap(pr ? pr.say || pr.kind || '' : p.sky || '');
+    var rows = [];
+    if (pr) {
+      var when = pr.when ? cap(pr.when) : (p.is_day ? 'All day' : 'All night');
+      rows.push(['When', when]);
+      rows.push(['Chance', pr.chance + '%']);
+      if (pr.amount) rows.push(['How much', cap(pr.amount)]);
+    } else {
+      rows.push([p.temp_f != null && p.temp_f <= 38 ? 'Rain or snow' : 'Rain', 'None expected']);
+    }
+    if (p.feels_lo != null && p.feels_hi != null) {
+      rows.push(['Feels like', p.feels_lo === p.feels_hi ? p.feels_lo + '°' : p.feels_lo + '° to ' + p.feels_hi + '°']);
+    }
+    if (p.wind) {
+      rows.push(['Wind', p.wind.gust_mph && p.wind.gust_mph >= 30 ? 'Gusts to ' + p.wind.gust_mph + ' mph' : 'Up to ' + p.wind.mph + ' mph']);
+    }
+    return '<article class="day-card' + (p.is_day ? ' is-day' : ' is-night') + (pr ? ' is-wet' : '') + '">' +
+      '<div class="day-card-head">' +
+        '<h3 class="day-card-name">' + esc(p.label) + '</h3>' +
+        (p.temp_f != null ? '<span class="day-card-temp"><span class="day-card-hl">' + (p.is_day ? 'High' : 'Low') + '</span> ' + p.temp_f + '°</span>' : '') +
+      '</div>' +
+      '<p class="day-card-sky">' + esc(head) + '</p>' +
+      '<dl class="day-card-rows">' + rows.map(function (r) {
+        return '<div><dt>' + esc(r[0]) + '</dt><dd>' + esc(r[1]) + '</dd></div>';
+      }).join('') + '</dl>' +
+    '</article>';
+  }
+
+  function renderDay(d) {
+    var sec = el('day-section'), grid = el('day-grid');
+    if (!sec || !grid) return;
+    var b = freshBrief(d);
+    var periods = b && Array.isArray(b.periods) ? b.periods.filter(Boolean) : [];
+    if (!periods.length) { sec.hidden = true; return; }
+    var title = el('day-title');
+    if (title) title.textContent = periods.map(function (p, i) {
+      return i && /^(Tonight|Overnight)$/.test(p.label) ? p.label.toLowerCase() : p.label;
+    }).join(' and ');
+    grid.innerHTML = periods.map(dayCard).join('');
+    sec.hidden = false;
   }
 
   /* ============================================================
@@ -750,7 +824,18 @@
 
     // Clause 3: temperatures — tonight's low if the span covers tonight,
     // tomorrow's high if it covers tomorrow's afternoon, today's high if
-    // it's still morning.
+    // it's still morning. The numbers are the NWS periods' own highs and
+    // lows (the ones the brief and the week rows show); the hourly min/max
+    // is only the fallback, since it can sit a degree or two off them.
+    var periodsAll = ((d.forecast || {}).periods) || [];
+    function periodTemp(isDay, dayKey, test) {
+      for (var pi = 0; pi < periodsAll.length; pi++) {
+        var pp = periodsAll[pi];
+        if (!pp || !pp.start || !!pp.is_day !== isDay || pp.temp_f == null) continue;
+        if (btvDayKey(pp.start) === dayKey && (!test || test(pp))) return pp.temp_f;
+      }
+      return null;
+    }
     var sun = d.sun || {};
     var nowMs = Date.now();
     var sunsetMs = new Date(sun.sunset).getTime(), riseTmMs = new Date(sun.sunrise_tomorrow).getTime();
@@ -761,6 +846,12 @@
     var tempBits = [];
     if (nightHours.length >= 3) {
       var low = Math.min.apply(null, nightHours.map(function (h) { return h.temp_f; }));
+      // tonight's NWS period starts this evening, or it started last
+      // evening if it is now the small hours
+      var nightKey = btvHour(new Date()) < 6 ? btvDayKey(new Date(nowMs - 12 * HOUR)) : btvDayKey(new Date());
+      var pLow = periodTemp(false, nightKey, function (pp) { return btvHour(pp.start) >= 12; });
+      if (pLow == null) pLow = periodTemp(false, btvDayKey(new Date()), null);
+      if (pLow != null) low = pLow;
       tempBits.push('low near ' + low + ' tonight');
     }
     // Before mid-afternoon, today's high is the number that matters (the
@@ -768,12 +859,14 @@
     var todayKey = btvDayKey(new Date());
     var todayRest = span.filter(function (h) { return btvDayKey(h.t) === todayKey && btvHour(h.t) <= 19; });
     if (btvHour(new Date()) < 15 && todayRest.length >= 2) {
-      tempBits.unshift('topping out near ' + Math.max.apply(null, todayRest.map(function (h) { return h.temp_f; })) + ' today');
+      var pHigh = periodTemp(true, todayKey, null);
+      tempBits.unshift('topping out near ' + (pHigh != null ? pHigh : Math.max.apply(null, todayRest.map(function (h) { return h.temp_f; }))) + ' today');
     } else {
       var tomorrowKey = nextDayKey(todayKey);
       var tmDay = span.filter(function (h) { return btvDayKey(h.t) === tomorrowKey && btvHour(h.t) >= 10 && btvHour(h.t) <= 18; });
       if (tmDay.length >= 4) {
-        var hiT = Math.max.apply(null, tmDay.map(function (h) { return h.temp_f; }));
+        var hiT = periodTemp(true, tomorrowKey, null);
+        if (hiT == null) hiT = Math.max.apply(null, tmDay.map(function (h) { return h.temp_f; }));
         tempBits.push('high near ' + hiT + ' ' + btvWeekday(tmDay[0].t));
       }
     }
@@ -987,6 +1080,29 @@
     var models = {};
     (((d.models || {}).days) || []).forEach(function (m) { if (m && m.date) models[m.date] = m; });
 
+    // How much: the NWS grid's rain and snow totals per Burlington day
+    // (refresh_weather.py, hourly.days; about three days out).
+    var amounts = {};
+    (((d.hourly || {}).days) || []).forEach(function (a) { if (a && a.date) amounts[a.date] = a; });
+    function amountShort(a) {
+      if (!a) return '';
+      if (a.snow_in != null && a.snow_in >= 0.5) return '❄ ' + (a.snow_in < 0.75 ? '<1' : Math.round(a.snow_in)) + '″';
+      if (a.precip_in != null && a.precip_in >= 0.05) return (a.precip_in < 0.1 ? '0.1' : a.precip_in.toFixed(1)) + '″';
+      return '';
+    }
+    function amountLong(a) {
+      if (!a) return '';
+      // snow is said as snow; otherwise the liquid total as rain
+      if (a.snow_in != null && a.snow_in >= 0.5) {
+        var n = Math.round(a.snow_in);
+        return 'How much: ' + (a.snow_in < 0.75 ? 'under an inch' : n === 1 ? 'about an inch' : 'about ' + n + ' inches') + ' of snow.';
+      }
+      if (a.precip_in != null && a.precip_in >= 0.05) {
+        return 'How much: about ' + (a.precip_in < 0.1 ? 'a tenth of an inch' : a.precip_in.toFixed(1) + (a.precip_in >= 0.95 ? ' inches' : ' inch')) + ' of rain.';
+      }
+      return '';
+    }
+
     // Shared scale for the week's bars.
     var allT = [];
     days.forEach(function (day) { if (day.high != null) allT.push(day.high); if (day.low != null) allT.push(day.low); });
@@ -1013,6 +1129,8 @@
       // is 30%"); showing the raw API value (28%) next to that reads as a
       // contradiction, so the row rounds the same way.
       var popShown = pop != null && pop >= 20 ? Math.round(pop / 10) * 10 + '%' : '';
+      var amt = day.key ? amounts[day.key] : null;
+      var amtShort = amountShort(amt), amtLong = amountLong(amt);
       var nightWet = day.dayPop != null && day.nightPop != null && day.nightPop - day.dayPop >= 30
         ? Math.round(day.nightPop / 10) * 10 + '% ' + (isToday ? 'tonight' : 'overnight') : '';
 
@@ -1051,13 +1169,14 @@
       if (day.dayDetail) nws.push('<p><span class="week-detail-when">' + esc(day.dayName || 'Day') + '</span> ' + esc(day.dayDetail) + '</p>');
       if (day.nightDetail) nws.push('<p><span class="week-detail-when">' + esc(day.nightName || 'Night') + '</span> ' + esc(day.nightDetail) + '</p>');
       var more = (nightWet ? '<p class="wk-nightwet">' + esc(nightWet) + '</p>' : '') +
+        (amtLong ? '<p class="wk-amount">' + esc(amtLong) + '</p>' : '') +
         (nws.length ? '<div class="wk-nws">' + nws.join('') + '</div>' : '');
 
       return '<div class="wk-row' + (isToday ? ' is-today' : '') + '" data-day="' + i + '">' +
         '<button class="wk-main" type="button" aria-expanded="false" aria-controls="wk-more-' + i + '">' +
           '<span class="wk-day"><span class="wk-day-name">' + esc(label) + '</span>' + (sub ? '<span class="wk-day-date">' + esc(sub) + '</span>' : '') + '</span>' +
           '<span class="wk-glyph" aria-hidden="true">' + skyGlyph(short, pop) + '</span>' +
-          '<span class="wk-pop">' + popShown + '</span>' +
+          '<span class="wk-pop">' + popShown + (amtShort ? '<span class="wk-amt">' + esc(amtShort) + '</span>' : '') + '</span>' +
           '<span class="wk-lo">' + (lo != null ? lo + '°' : '—') + '</span>' +
           bar +
           '<span class="wk-hi">' + (hi != null ? hi + '°' : '—') + '</span>' +
@@ -1241,7 +1360,8 @@
     var cond = [];
     if (gage.water_temp_f != null) cond.push(['Water', gage.water_temp_f + '°']);
     if (broad.waves_ft_max != null) cond.push(['Waves', 'to ' + broad.waves_ft_max + ' ft']);
-    if (broad.wind_knots_max != null) cond.push(['Wind', 'to ' + broad.wind_knots_max + ' kt']);
+    // the lake forecast speaks knots; this page speaks mph (1 kt = 1.15 mph)
+    if (broad.wind_knots_max != null) cond.push(['Wind', 'to ' + Math.round(broad.wind_knots_max * 1.15078) + ' mph']);
     if (gage.level_ft != null) cond.push(['Level', gage.level_ft + ' ft' + (gage.level_status ? ' · ' + gage.level_status : '')]);
     el('swim-conditions').innerHTML = cond.map(function (c) {
       return '<span class="swim-cond"><span class="swim-cond-k">' + esc(c[0]) + '</span><span class="swim-cond-v">' + esc(c[1]) + '</span></span>';
@@ -1397,6 +1517,7 @@
       window.dispatchEvent(new CustomEvent('btown:weather-data', { detail: d }));
       renderAlerts(d);
       renderNow(d);
+      renderDay(d);
       renderHours(d);
       patchLiveNWS(d, nwsObservationP, nwsAlertsP);
       readP.then(function (read) { renderWeek(d, read); });

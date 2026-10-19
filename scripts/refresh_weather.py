@@ -158,14 +158,60 @@ def _expand_grid_values(values):
     return out
 
 
+def _expand_grid_amounts(values):
+    """Like _expand_grid_values, for AMOUNTS (rain, snow): NWS gives them as
+    totals over 6-hour blocks, so each hour gets an even share of its block.
+    Repeating the block's total into every hour would count it six times."""
+    out = {}
+    for item in values:
+        if item.get("value") is None:
+            continue
+        start_s, _, dur = item["validTime"].partition("/")
+        start = datetime.fromisoformat(start_s)
+        hours = 1
+        m = re.match(r"P(?:(\d+)D)?(?:T(?:(\d+)H)?)?", dur)
+        if m:
+            hours = (int(m.group(1) or 0)) * 24 + int(m.group(2) or 0) or 1
+        for h in range(hours):
+            ts = start.timestamp() + h * 3600
+            key = datetime.fromtimestamp(ts, timezone.utc).isoformat(timespec="hours")
+            out[key] = item["value"] / hours
+    return out
+
+
+def _grid_layer(grid, name):
+    return ((grid.get("properties") or {}).get(name) or {}).get("values") or []
+
+
+def _precip_days(rain_mm, snow_mm):
+    """Rain (liquid, inches) and snow (inches) per Burlington day across the
+    whole grid, about seven days, for the week rows' amounts."""
+    days = {}
+    for src, field in ((rain_mm, "precip_in"), (snow_mm, "snow_in")):
+        for key, mm in src.items():
+            day = datetime.fromisoformat(key).astimezone(BTV_TZ).date().isoformat()
+            row = days.setdefault(day, {"date": day, "precip_in": 0.0, "snow_in": 0.0})
+            row[field] += (mm or 0) / 25.4
+    out = []
+    for day in sorted(days):
+        row = days[day]
+        out.append({"date": day, "precip_in": round(row["precip_in"], 2), "snow_in": round(row["snow_in"], 1)})
+    return out
+
+
 def fetch_hourly():
     """Next 36 hours, one row per hour. Joins the hourly forecast with the
     apparentTemperature + skyCover grid layers (the hourly endpoint has no
-    feels-like). All the client-side life scores read from this array."""
+    feels-like), plus the grid's rain and snow amounts and wind gusts, which
+    the plain-words brief (weather_brief.py) uses for "how much" and for
+    wind worth mentioning. All the client-side life scores read from this array."""
     fc = fetch_json_retry(f"https://api.weather.gov/gridpoints/{NWS_GRID}/forecast/hourly")
     grid = fetch_json_retry(f"https://api.weather.gov/gridpoints/{NWS_GRID}")
     feels = _expand_grid_values(grid["properties"]["apparentTemperature"]["values"])
     sky = _expand_grid_values(grid["properties"]["skyCover"]["values"])
+    gusts = _expand_grid_values(_grid_layer(grid, "windGust"))
+    rain_mm = _expand_grid_amounts(_grid_layer(grid, "quantitativePrecipitation"))
+    snow_mm = _expand_grid_amounts(_grid_layer(grid, "snowfallAmount"))
 
     hours = []
     for per in fc["properties"]["periods"][:36]:
@@ -184,8 +230,14 @@ def fetch_hourly():
             "wind_dir": per.get("windDirection"),
             "sky": sky.get(key),
             "short": per["shortForecast"],
+            # NWS grid amounts for this hour (an even share of its 6-hour
+            # block), inches; gusts in mph
+            "qpf_in": round((rain_mm.get(key) or 0) / 25.4, 3),
+            "snow_in": round((snow_mm.get(key) or 0) / 25.4, 2),
+            "gust_mph": kmh_to_mph(gusts.get(key)),
         })
-    return {"updated": fc["properties"].get("updateTime"), "hours": hours}
+    return {"updated": fc["properties"].get("updateTime"), "hours": hours,
+            "days": _precip_days(rain_mm, snow_mm)}
 
 
 def fetch_alerts():
@@ -723,6 +775,17 @@ def main():
             else:
                 out[name] = None
                 print(f"{name}: FAILED ({e}) — no previous data", file=sys.stderr)
+
+    # The plain-words brief is worked out from the sections above, never
+    # fetched: rebuilt every run, and dropped (not kept) if it fails, so a
+    # stale sentence can never outlive the data it came from.
+    try:
+        import weather_brief
+        out["brief"] = weather_brief.build(out)
+        print("brief: " + ((out["brief"] or {}).get("text") or "none"))
+    except Exception as e:  # noqa: BLE001
+        out.pop("brief", None)
+        print(f"brief: FAILED ({e})", file=sys.stderr)
 
     os.makedirs(os.path.dirname(OUT), exist_ok=True)
     with open(OUT, "w") as f:

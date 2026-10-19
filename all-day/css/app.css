@@ -803,6 +803,10 @@ body.chrome-away .mast { transform: translateY(-100%); }
 .wxc-h i { font-style: normal; font-size: var(--fs-label); color: var(--ink-3); }
 .wxc-h .i { width: 14px; height: 14px; color: var(--ink-2); }
 .wxc-h b { font-size: var(--fs-small); font-weight: 600; }
+/* today in plain words and the Full weather link, under the pills and the card */
+.wxbrief { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; }
+.wxb-t { flex: 1 1 240px; margin: 0; font-size: var(--fs-body); line-height: 1.4; color: var(--ink-2); }
+.wxb-go { flex: none; }
 /* a phone narrower than 380: the card takes its own row under the pills */
 /* the sky strip over the weather card: the sun's real arc (weather.html's
    scene in miniature), its colour by the time of day, a light overlay for
