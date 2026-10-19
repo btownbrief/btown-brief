@@ -66,7 +66,7 @@
 import * as app from '../app.js';
 import * as store from '../store.js';
 import * as data from '../wire.js';
-import { el, esc, safeHref, ICON, svg, art, section, chips, pills, button, cards, put, meetRow, rail } from '../ui.js';
+import { el, esc, safeHref, ICON, svg, art, section, chips, pills, button, cards, put, meetRow, listRail } from '../ui.js';
 import * as cw from '../clubs-week.js';
 import { loadAll } from '../whatnow-data.js';
 import { buildContext, buildPool, pick, fmtTime, outdoorRisks } from '../whatnow-engine.js';
@@ -794,7 +794,7 @@ function renderToday() {
   const head = section(root, day === 'today' ? 'Happening today' : 'Happening tomorrow');
   head.dataset.sec = 'today';
   if (early.length || late.length) {
-    const track = rail(root, 'today');
+    const track = listRail(root, { name: 'whatnow-today', label: day === 'today' ? 'Happening today' : 'Happening tomorrow', cls: 'today', cells: 148 });
     early.forEach((e) => track.appendChild(todayTile(e, now)));
     if (late.length && early.length) track.appendChild(el('span', 'tdsep eyebrow', 'Tonight'));
     late.forEach((e) => track.appendChild(todayTile(e, now)));

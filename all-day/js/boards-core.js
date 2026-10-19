@@ -204,7 +204,7 @@ export const RULES = {
     },
     /* readers' playlists for On Air (supabase/nn-PLAYLISTS.sql, which only
        replaces nn_rules() with this copy): a playlist link on Spotify,
-       YouTube, Apple Music or SoundCloud, or a Spotify profile. Links mean
+       YouTube, Apple Music, SoundCloud, Tidal, Deezer or Amazon Music, or a Spotify profile. Links mean
        Stephen looks first (premod), and a playlist stays until its poster
        or he takes it down. The tab shows only links it recognises. */
     playlists: {

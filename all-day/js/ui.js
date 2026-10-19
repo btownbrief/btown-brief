@@ -197,6 +197,91 @@ export function rail(host, cls) {
   return track;
 }
 
+/* "See as a list" (Stephen, 2026-10-18, and again 2026-10-19: "I like
+   horizontal scroll, but there must ALWAYS be the option to get out of it").
+   Every sideways content row is drawn with listRail(), not rail(): a
+   "See as a list" button above it (it reads "See as a row" once opened), and
+   under it, only while it is a list, the Collapse bar (DESIGN §9.3's one
+   sticky exception) that folds it back and returns to its heading. The
+   choice is this phone's, per row (localStorage in try). A chip row of
+   filters is not a content row; the allday spec fails a new shelf that
+   forgets the button.
+     name   the saved key and data-rail
+     label  what the button and Collapse say they act on
+     cls    extra classes for the row
+     cells  open as a grid of cards at least this many px wide, not one column */
+const LIST_KEYS = ['allday-rail-lists', 'allday-onair-lists'];   // the second is On Air's first home for it
+let listMem = null;
+function listed() {
+  if (listMem) return listMem;
+  listMem = Object.create(null);
+  try {
+    LIST_KEYS.forEach((k) => {
+      const v = JSON.parse(localStorage.getItem(k) || '{}');
+      if (v && typeof v === 'object') Object.keys(v).forEach((n) => { if (v[n] === 1) listMem[n] = 1; });
+    });
+  } catch (e) { /* storage blocked */ }
+  return listMem;
+}
+function setListed(name, on) {
+  const m = listed();
+  if (on) m[name] = 1; else delete m[name];
+  try { localStorage.setItem(LIST_KEYS[0], JSON.stringify(m)); } catch (e) { /* kept for the visit */ }
+}
+let jumpFn = (n) => n.scrollIntoView({ block: 'start' });
+/* the shell hands over its own jumpTo, which knows where the mast ends */
+export function setJump(fn) { jumpFn = fn; }
+
+/* the bar under an opened list: it rides the bottom of the screen while the
+   list is on it, so a long list folds back up from anywhere in it */
+export function collapseBar(what, onCollapse) {
+  const bar = el('div', 'collapsebar');
+  const b = button(ICON.up + ' Collapse', '', (e) => { e.preventDefault(); e.stopPropagation(); onCollapse(); });
+  b.type = 'button';
+  b.dataset.collapse = '1';
+  b.setAttribute('aria-label', 'Collapse ' + what);
+  bar.appendChild(b);
+  return bar;
+}
+
+export function listRail(host, o) {
+  const name = o.name, what = o.label || 'this row';
+  const top = el('div', 'railmode');
+  const btn = el('button', 'btn sm ghost');
+  btn.type = 'button';
+  btn.dataset.railmode = name;
+  top.appendChild(btn);
+  host.appendChild(top);
+  const r = rail(host, [o.cls, o.cells ? 'cells' : ''].filter(Boolean).join(' '));
+  r.dataset.rail = name;
+  if (o.cells) r.style.setProperty('--cell', o.cells + 'px');
+  const foot = collapseBar(what, () => {
+    setListed(name, false);
+    paint();
+    r.scrollLeft = 0;
+    jumpFn(top.previousElementSibling || top);
+    btn.focus({ preventScroll: true });
+  });
+  foot.classList.add('foot');
+  host.appendChild(foot);
+  function paint() {
+    const on = !!listed()[name];
+    r.classList.toggle('aslist', on);
+    btn.textContent = on ? 'See as a row' : 'See as a list';
+    btn.setAttribute('aria-label', btn.textContent + ': ' + what);
+    btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+    foot.hidden = !on;
+  }
+  btn.addEventListener('click', (e) => {
+    e.preventDefault();
+    setListed(name, !listed()[name]);
+    paint();
+    r.scrollLeft = 0;
+  });
+  paint();
+  return r;
+}
+
 export function divider(host, label, sub) {
   const d = el('div', 'tdiv', '<span>' + esc(label) + '</span>' + (sub ? '<span class="s">' + esc(sub) + '</span>' : ''));
   host.appendChild(d);
