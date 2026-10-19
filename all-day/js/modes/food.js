@@ -18,7 +18,9 @@
      Breakfast / Lunch / Dinner toggle read off today's hours, and a sort:
      nearest Church Street (the default, a distance, never a judgement),
      closest to the reader (only after they allow it), open latest, price,
-     newest. The Map button at the head draws the list as dots with no
+     newest. When nothing at all is open (the small hours) and the reader
+     has not picked a filter, the list leads with what opens next instead
+     of an empty block. The Map button at the head draws the list as dots with no
      network at all; tapping it loads Leaflet and OpenStreetMap tiles (the
      guide's own map stack) into a sheet centred on Church Street, pins the
      list, and draws the reader's dot once they allow it. The reader's
@@ -33,10 +35,20 @@
      "Their food" button and its newest picture as the row's thumbnail;
      owners without Instagram get "Feature your restaurant", a mailto.
    - Deals. data/deals.json as a story deck: today's deals that carry a
-     verified date and no open conflict between sources, happening-now first,
+     verified date from the last 60 days and no open conflict between sources, happening-now first,
      then later today, then the untimed ones. Tap the right side (or the ›)
      for the next card, the left for the previous. The verified date is on
      every card, and the place's own food picture behind it when it has one.
+   - Asked on Reddit. The r/burlington threads (and r/vermont ones that
+     name a Burlington-area place) asking where to eat or drink, newest
+     first, from the shared Reddit intake (scripts/reddit_intake.py, hourly,
+     on the reddit-data branch, a 10-day store). js/food-asks.js picks them
+     by title rules. A row is the thread's own title and links to it; no
+     comment is copied. Coming back after 15 minutes fetches it again.
+   - Best of r/burlington. data/best-of-reddit.json's food, coffee and drink
+     questions, most asked first: a card per question, a sheet with its
+     threads and the Seven Daysies pick where the directory has one. The
+     answers live in the threads; nothing here picks a winner.
    - In their own words. Reels from the kitchens and food accounts tagged in
      data/instagram-handles.json (`food`) or listed in the directory, from
      all-day/data/instagram.json, minus the directory's `not_food` accounts.
@@ -58,7 +70,8 @@
 import * as app from '../app.js';
 import * as store from '../store.js';
 import * as data from '../wire.js';
-import { el, esc, safeHref, ICON, art, mark, section, rail, chips, pills, button, agoShort } from '../ui.js';
+import { el, esc, safeHref, ICON, art, mark, section, rail, chips, pills, button, agoShort, cards as feedCards, put } from '../ui.js';
+import { asksFrom, directoryFrom, GROUPS } from '../food-asks.js';
 
 const KEY = 'food';
 const RESTAURANTS_URL = '../data/restaurants.json';
@@ -70,6 +83,10 @@ const PHOTOS_LIB = '../js/photos-lib.js';
 const GUIDE_URL = '../restaurants.html';
 const DEALS_PAGE = '../restaurants.html?view=deals';   // deals.html redirects here
 const DIRECTORY_URL = './data/food-directory.json';
+/* the shared Reddit intake: only on its branch, so no same-origin copy */
+const INTAKE_URL = 'https://raw.githubusercontent.com/btownbrief/btown-brief/reddit-data/data/reddit-intake.json';
+const BESTOF_URL = '../data/best-of-reddit.json';
+const SUB_URL = 'https://www.reddit.com/r/burlington/';
 /* the guide's own map stack (events.html, things-to-do.html): Leaflet from
    unpkg with its integrity hashes, OpenStreetMap's tiles, loaded on the
    first tap of Map and never before */
@@ -89,12 +106,18 @@ const LINE_MAX = 140;
 const VIDEO_MARGIN = 30 * 60;              // a reel this close to lapsing shows as a photo
 const LATE = 23 * 60;                      // "Open late": until 11 pm or later (restaurants.html)
 const STALE_MS = 5 * 60000;                // the clock-driven parts redraw on the way back in after this
+const ASKS_STALE = 15 * 60000;             // the Reddit asks are fetched again on the way back in after this
+const DEAL_DAYS = 60;                      // a deal last verified longer ago than this is not shown
+const Q_FIRST = 12;                        // Best of r/burlington opens in place past these
 
-const SECTIONS = [['bite', 'The Bite'], ['open', 'Open now'], ['deals', 'Deals'], ['kitchens', 'Kitchens'], ['add', 'Feature a dish']];
+const SECTIONS = [['bite', 'The Bite'], ['open', 'Open now'], ['deals', 'Deals'], ['asks', 'Asked'], ['best', 'Best of'], ['kitchens', 'Kitchens'], ['add', 'Feature a dish']];
 
 /* ------------------------------------------------------------------ state */
 const S = {
   f: 'open', all: false, deal: 0, sort: 'near', meal: 'any',
+  chose: false,              // the reader picked a filter: an empty Open now stays theirs
+  asks: null, asksFailed: false, asksAt: 0, best: null, bestFailed: false, bestGroup: 'all', bestAll: false,
+  staleDeals: 0,
   places: null, byId: null, deals: null, menus: null, foodSet: null, posts: null, dish: undefined, dishes: [],
   dir: null, igBy: new Map(), dishBy: new Map(),
   me: null,                  // [lat, lon] once the reader allows it; memory only
@@ -127,11 +150,11 @@ const demoFile = () => (demoP || (demoP = app.demoData(KEY).then(redate)));
    redrawn underneath. */
 function load() {
   const core = app.demo
-    ? Promise.all([script(FOOD_LIB), demoFile()]).then(([, d]) => { takePlaces(d.restaurants); takeDeals(d.deals); })
+    ? Promise.all([script(FOOD_LIB), demoFile()]).then(([, d]) => { takePlaces(d.restaurants); takeDeals(d.deals, Date.parse(d.anchor)); })
     : Promise.all([
       script(FOOD_LIB),
       data.fetchJSON(RESTAURANTS_URL, 12000).then(takePlaces),
-      data.fetchJSON(DEALS_URL, 8000).then(takeDeals).catch(() => takeDeals({ deals: [] })),
+      data.fetchJSON(DEALS_URL, 8000).then((j) => takeDeals(j, Date.now())).catch(() => takeDeals({ deals: [] }, Date.now())),
     ]);
   return core.then(() => {
     F = window.BTFood;
@@ -145,10 +168,17 @@ function loadLater() {
     demoFile().then((d) => {
       takeMenus(d.menus); takeRoster(d.roster); takeDirectory(d.directory); takeInstagram(d.instagram);
       takeDishes(d.dishes);
-      paint('bite'); paint('open'); paint('deals'); paint('kitchens');
+      S.asks = asksFrom(d.reddit, Date.now());
+      takeBest(d.bestof);
+      paint('bite'); paint('open'); paint('deals'); paint('asks'); paint('best'); paint('kitchens');
+      app.paintSubnav();
+      land();
     });
     return;
   }
+  loadAsks();
+  data.fetchJSON(BESTOF_URL, 10000).then(takeBest).catch(() => { S.bestFailed = true; })
+    .then(() => { paint('best'); land(); });
   data.fetchJSON(MENUS_URL, 15000).then((j) => { takeMenus(j); paint('open'); })
     .catch(() => { S.menusFailed = true; });
   const roster = data.fetchJSON(ROSTER_URL, 8000).then(takeRoster).catch(() => takeRoster({}));
@@ -160,6 +190,23 @@ function loadLater() {
     .then(({ photos }) => takeDishes(photos))
     .catch(() => takeDishes([]))
     .then(() => { paint('bite'); paint('open'); paint('deals'); });
+}
+
+/* The Reddit asks, fetched now and again on the way back in. A failed
+   refetch keeps the list it had. */
+function loadAsks() {
+  S.asksAt = Date.now();
+  return data.fetchJSON(INTAKE_URL, 10000).then((j) => {
+    if (!j || !Array.isArray(j.posts)) throw new Error('not an intake');
+    S.asks = asksFrom(j, Date.now());
+    S.asksFailed = false;
+  }).catch(() => { if (!S.asks) S.asksFailed = true; })
+    .then(() => { paint('asks'); land(); });
+}
+
+function takeBest(j) {
+  S.best = directoryFrom(j);
+  if (!S.best.length) { S.best = null; S.bestFailed = true; }
 }
 
 /* restaurants.json lists a dozen places twice (two names for one Google
@@ -191,11 +238,17 @@ function takePlaces(j) {
 const tidyName = (n) => (/[a-z]/.test(n) || !/[A-Z]{3}/.test(n) ? n
   : n.toLowerCase().replace(/(^|[\s(\/-])([a-z])/g, (m, a, b) => a + b.toUpperCase()));
 
-/* The deals we stand behind: a verified date, not retired, and no open
-   conflict between the two sources that reported it. */
-function takeDeals(j) {
-  S.deals = (j && Array.isArray(j.deals) ? j.deals : [])
+/* The deals we stand behind: verified in the last 60 days, not retired, and
+   no open conflict between the two sources that reported it. `at` is the
+   clock it is judged by (the demo's anchor in the demo). */
+const BTV_DATE = new Intl.DateTimeFormat('en-CA', { timeZone: 'America/New_York', year: 'numeric', month: '2-digit', day: '2-digit' });   // YYYY-MM-DD
+function takeDeals(j, at) {
+  const ok = (j && Array.isArray(j.deals) ? j.deals : [])
     .filter((d) => d && d.id && d.title && d.business && !d.retired && !d.conflict && /^\d{4}-\d{2}-\d{2}$/.test(String(d.last_verified || '')));
+  const today = Date.parse(BTV_DATE.format(new Date(Number(at) || Date.now())) + 'T00:00:00Z');
+  const fresh = (d) => (today - Date.parse(d.last_verified + 'T00:00:00Z')) / 86400000 <= DEAL_DAYS;
+  S.deals = ok.filter(fresh);
+  S.staleDeals = ok.length - S.deals.length;
 }
 
 function takeMenus(j) {
@@ -264,6 +317,10 @@ function redate(d) {
     if (Number(p.ts)) p.ts = Number(p.ts) + shift;
     if (Number(p.ve)) p.ve = Number(p.ve) + shift;
   });
+  ((d.reddit && d.reddit.posts) || []).forEach((p) => {
+    const ms = Date.parse(p.created || '');
+    if (Number.isFinite(ms)) p.created = new Date(ms + shift * 1000).toISOString();
+  });
   return d;
 }
 
@@ -315,6 +372,24 @@ const FILTERS = [
 ];
 const filterOf = (k) => FILTERS.find((f) => f.key === k) || FILTERS[0];
 const listFor = (k, t) => S.places.filter((r) => filterOf(k).test(r, t) && servesMeal(r, S.meal, t.day));
+
+/* Nothing open at all (the small hours), on the list's own default: rather
+   than an empty block, the places in the order they open next. A filter the
+   reader picks, Open now included, is shown as asked. */
+const nothingOpen = (t) => S.f === 'open' && !S.chose && !S.places.some((r) => isOpen(r, t));
+function openingNext(t) {
+  return S.places.map((r) => ({ r, nx: hasHours(r) ? F.nextOpening(r.hours, t.day, t.minutes) : null }))
+    .filter((x) => x.nx && servesMealOn(x.r, x.nx))
+    .sort((a, b) => a.nx.daysAhead - b.nx.daysAhead || F.toMin(a.nx.time) - F.toMin(b.nx.time))
+    .map((x) => x.r);
+}
+/* the meal toggle still applies: the place serves it on the day it opens */
+const servesMealOn = (r, nx) => S.meal === 'any' || servesMeal(r, S.meal, nx.day);
+/* what the Open now block draws, and what its map pins */
+function shownPlaces(t) {
+  if (nothingOpen(t)) return { next: true, list: openingNext(t) };
+  return { next: false, list: sorted(listFor(S.f, t), t) };
+}
 
 /* Breakfast, lunch, dinner: read off today's hours. A place serves the meal
    when it is open for at least half of the meal's window (7 to 10 am,
@@ -443,7 +518,7 @@ function render() {
     slots[k] = s;
     root.appendChild(s);
   });
-  ['bite', 'open', 'deals', 'kitchens', 'add'].forEach(paint);
+  SECTIONS.forEach(([k]) => paint(k));
   root.appendChild(el('div', 'spacer'));
   S.drawn = Date.now();
 }
@@ -454,9 +529,9 @@ function paint(k) {
   if (k === 'add' && host.firstChild) return;   // the form is drawn once; a redraw would eat what was typed
   const y = panel() ? panel().scrollTop : 0;
   host.innerHTML = '';
-  ({ bite: paintBite, open: paintOpen, deals: paintDeals, kitchens: paintKitchens, add: paintAdd })[k](host);
+  ({ bite: paintBite, open: paintOpen, deals: paintDeals, asks: paintAsks, best: paintBest, kitchens: paintKitchens, add: paintAdd })[k](host);
   if (panel() && app.activeTab() === KEY) panel().scrollTop = y;
-  if (k === 'open' || k === 'deals') app.paintSubnav();
+  if (k === 'open' || k === 'deals' || k === 'asks') app.paintSubnav();
 }
 
 /* ------------------------------------------------------- the Weekly Bite */
@@ -499,11 +574,11 @@ function placeByName(name) {
 function paintOpen(host) {
   const t = now();
   const f = filterOf(S.f);
-  const list = sorted(listFor(f.key, t), t);
+  const { next, list } = shownPlaces(t);
   const by = S.sort === 'me' && !S.me ? sortOf('near') : sortOf(S.sort);
-  section(host, 'Open now', '<b>' + esc(plural(list.length, 'place', 'places')) + '</b> · ' + esc(by.sub), mapButton(list));
-  host.appendChild(chips(FILTERS.map((x) => ({ key: x.key, label: x.label, n: listFor(x.key, t).length })), S.f,
-    (k) => { S.f = k; S.all = false; paint('open'); }, 'filters'));
+  section(host, next ? 'Opening next' : 'Open now', '<b>' + esc(plural(list.length, 'place', 'places')) + '</b> · ' + esc(next ? 'soonest first' : by.sub), mapButton(list));
+  host.appendChild(chips(FILTERS.map((x) => ({ key: x.key, label: x.label, n: listFor(x.key, t).length })), next ? null : S.f,
+    (k) => { S.f = k; S.chose = true; S.all = false; paint('open'); }, 'filters'));
   const tools = el('div', 'toolrow foodtools');
   const meal = pills(MEALS, S.meal, (v) => { S.meal = v; S.all = false; paint('open'); }, 'meals');
   meal.setAttribute('aria-label', 'Meal');
@@ -516,14 +591,15 @@ function paintOpen(host) {
     sel.appendChild(o);
   });
   sel.addEventListener('change', () => setSort(sel.value));
-  tools.append(meal, sel);
+  tools.append(meal);
+  if (!next) tools.appendChild(sel);
   host.appendChild(tools);
   const box = el('div', 'places');
   const shown = S.all ? list : list.slice(0, FIRST_ROWS);
   shown.forEach((r) => box.appendChild(placeRow(r, t)));
   host.appendChild(box);
   if (!list.length) {
-    host.appendChild(el('p', 'note pad', esc(f.key === 'open' || f.key === 'patio' ? 'Nothing open right now.' : 'Nothing fits that today.')));
+    host.appendChild(el('p', 'note pad', esc(next ? 'Nothing opens this week.' : f.key === 'open' || f.key === 'patio' ? 'Nothing open right now.' : 'Nothing fits that today.')));
   } else if (list.length > shown.length) {
     host.appendChild(button('All ' + list.length + ' ' + ICON.arrow, 'ghost more', () => { S.all = true; paint('open'); }));
   }
@@ -635,9 +711,10 @@ function dropMap() { if (M) { try { M.remove(); } catch (e) { /* already gone */
 function openMap() {
   const t = now();
   const f = filterOf(S.f);
-  const list = sorted(listFor(f.key, t), t).filter((r) => r.coords && r.coords.length === 2);
+  const shown = shownPlaces(t);
+  const list = shown.list.filter((r) => r.coords && r.coords.length === 2);
   app.sheet('Map', (body) => {
-    body.appendChild(el('p', 'sheet-note', '<b>' + esc(plural(list.length, 'place', 'places')) + '</b> · ' + esc(f.label.toLowerCase())));
+    body.appendChild(el('p', 'sheet-note', '<b>' + esc(plural(list.length, 'place', 'places')) + '</b> · ' + esc(shown.next ? 'opening next' : f.label.toLowerCase())));
     const box = el('div', 'foodmap');
     box.dataset.k = 'map';
     const bar = el('div', 'linkrow');
@@ -814,7 +891,7 @@ function paintDeals(host) {
   const every = outLink('See all deals', DEALS_PAGE, 'btn ghost sm alldeals', true);
   section(host, 'Deals today', all.length ? '<b>' + esc(plural(all.length, 'deal', 'deals')) + '</b> · now first' : null, every);
   if (!cards.length) {
-    host.appendChild(el('p', 'note pad', esc('No deals on today.')));
+    host.appendChild(el('p', 'note pad', esc(S.staleDeals ? 'No recently verified deals today.' : 'No deals on today.')));
     return;
   }
   if (S.deal > cards.length) S.deal = 0;
@@ -864,6 +941,94 @@ function tint(id) {
   for (const c of String(id)) h = (h * 31 + c.charCodeAt(0)) >>> 0;
   const a = h % 8, b = (a + 3) % 8;
   return '<span class="ph" style="--p1:var(--mark-' + a + ');--p2:var(--mark-' + b + ');--p3:var(--lightbox)"></span>';
+}
+
+/* --------------------------------------------------------- Asked on Reddit */
+/* The threads asking where to eat or drink, newest first, as the shell's
+   rows: the thread's title, its subreddit and age, and its comment count
+   once the intake carries one. Mutes are the Wire's (r-burlington,
+   r-vermont), so muting r/burlington anywhere quiets it here too. */
+const askItem = (a) => ({ k: a.k, kind: 'headline', href: a.url, title: a.title, src: a.sub, sid: a.sid, local: true,
+  ago: agoShort(a.d), d: a.d, comments: a.comments == null ? '' : a.comments, open: 'Open the thread' });
+const asksShown = () => (S.asks || []).filter((a) => !store.isMuted(a.sid));
+
+function paintAsks(host) {
+  const sub = outLink('r/burlington', SUB_URL, 'btn ghost sm');
+  if (!S.asks) {
+    section(host, 'Asked on Reddit', null, sub);
+    host.appendChild(S.asksFailed ? el('p', 'note pad', esc('Didn’t load. Try again later.')) : el('p', 'loading', 'Loading the threads…'));
+    return;
+  }
+  const list = asksShown();
+  section(host, 'Asked on Reddit', list.length ? '<b>' + esc(plural(list.length, 'thread', 'threads')) + '</b> · newest first' : null, sub);
+  if (!list.length) { host.appendChild(el('p', 'note pad', esc('No new food questions.'))); return; }
+  const items = app.know(list.map(askItem));
+  const feed = el('div', 'feed asks');
+  items.forEach((it) => put(feed, feedCards.row(it, { noComments: it.comments === '', greenLocal: true })));
+  app.bindFeed(feed);
+  host.appendChild(feed);
+}
+
+/* ---------------------------------------------------- Best of r/burlington */
+/* The questions r/burlington keeps asking, most asked first, a card each.
+   A card opens its threads; the answers are in them, one tap away. */
+function paintBest(host) {
+  if (!S.best) {
+    section(host, 'Best of r/burlington');
+    host.appendChild(S.bestFailed ? el('p', 'note pad', esc('Didn’t load. Try again later.')) : el('p', 'loading', 'Loading the questions…'));
+    return;
+  }
+  if (S.bestGroup !== 'all' && !S.best.some((q) => q.group === S.bestGroup)) S.bestGroup = 'all';
+  const list = S.best.filter((q) => S.bestGroup === 'all' || q.group === S.bestGroup);
+  section(host, 'Best of r/burlington', '<b>' + esc(plural(list.length, 'question', 'questions')) + '</b> · most asked first');
+  const kinds = [['all', 'All']].concat(GROUPS.filter(([g]) => S.best.some((q) => q.group === g)).map(([g, label]) => [g, label]));
+  const tools = el('div', 'toolrow foodtools');
+  const p = pills(kinds, S.bestGroup, (v) => { S.bestGroup = v; S.bestAll = false; paint('best'); }, 'kinds');
+  p.setAttribute('role', 'group');
+  p.setAttribute('aria-label', 'Food, coffee or drinks');
+  tools.appendChild(p);
+  host.appendChild(tools);
+  const grid = el('div', 'qgrid');
+  const shown = S.bestAll ? list : list.slice(0, Q_FIRST);
+  shown.forEach((q) => grid.appendChild(qCard(q)));
+  host.appendChild(grid);
+  if (list.length > shown.length) host.appendChild(button('All ' + list.length + ' ' + ICON.arrow, 'ghost more', () => { S.bestAll = true; paint('best'); }));
+}
+
+function qCard(q) {
+  const b = el('button', 'qcard', '<span class="t">' + esc(q.q) + '</span><span class="s">' +
+    esc([q.sd ? 'Seven Daysies: ' + q.sd.winner : '', plural(q.threads.length, 'thread', 'threads')].filter(Boolean).join(' · ')) + '</span>');
+  b.type = 'button';
+  b.dataset.k = q.k;
+  b.setAttribute('aria-label', q.q + ', ' + plural(q.threads.length, 'thread', 'threads') + ' on r/burlington');
+  b.addEventListener('click', () => qSheet(q));
+  return b;
+}
+
+/* a link out of the sheet: the thread, or Seven Days' page */
+function sheetLink(title, sub, href) {
+  const a = el('a', 't', esc(title) + ' ' + ICON.ext + '<div class="d">' + esc(sub) + '</div>');
+  a.href = safeHref(href);
+  a.target = '_blank';
+  a.rel = 'noopener';
+  if (app.demo) a.addEventListener('click', (e) => { e.preventDefault(); app.toast('Opens the page in the real build'); });
+  const row = el('div', 'sheet-row');
+  row.appendChild(a);
+  return row;
+}
+
+function qSheet(q) {
+  app.sheet(q.q, (body) => {
+    body.appendChild(el('div', 'sheet-h', esc(q.threads.length === 1 ? 'Asked on r/burlington' : 'Asked on r/burlington ' + q.threads.length + ' times')));
+    q.threads.forEach((t) => body.appendChild(sheetLink(t.label, ['r/burlington', t.year].filter(Boolean).join(' · '), t.url)));
+    if (q.sd) {
+      body.appendChild(el('div', 'sheet-h', esc('Seven Daysies ' + q.sd.year)));
+      body.appendChild(sheetLink(q.sd.pick, 'Seven Days readers’ pick', q.sd.url));
+    }
+    const links = el('div', 'linkrow');
+    links.appendChild(button(ICON.share + ' Share', 'ghost sm', () => app.share(KEY, q.k, q.q)));
+    body.appendChild(links);
+  });
 }
 
 /* ------------------------------------------------------- In their own words */
@@ -1032,16 +1197,31 @@ function submitDish(form) {
 const panel = () => (root ? root.closest('.panel') : null);
 function jump(k) { if (slots && slots[k]) app.jumpTo(slots[k]); }
 
-/* #food/bite|open|deals|kitchens|add jumps to a section; #food/map opens
+/* #food/bite|open|deals|asks|best|kitchens|add jumps to a section; #food/map opens
    the map; a filter key
    (late, patio, hh, cheap, deal) sets the filter; r-<id> opens a place;
-   d-<id> turns the deck to that deal; ig-<code> a kitchen's post. */
+   d-<id> turns the deck to that deal; ig-<code> a kitchen's post; q-<id>
+   opens a Best of question; a thread's URL flashes its Reddit ask. */
 function land() {
   if (!pending || !ready) return;
   const k = pending; pending = null;
   if (SECTIONS.some(([s]) => s === k) && k !== 'open') { jump(k); return; }
   if (k === 'map') { jump('open'); openMap(); return; }
-  if (FILTERS.some((f) => f.key === k)) { S.f = k; S.all = false; paint('open'); jump('open'); return; }
+  if (FILTERS.some((f) => f.key === k)) { S.f = k; S.chose = true; S.all = false; paint('open'); jump('open'); return; }
+  if (/^q-/.test(k)) {
+    if (!S.best && !S.bestFailed) { pending = k; return; }   // still loading: land when it arrives
+    const q = (S.best || []).find((x) => x.k === k);
+    if (!q) { app.toast('That question isn’t in the list any more.'); return; }
+    if (!slots.best.querySelector('[data-k="' + CSS.escape(k) + '"]')) { S.bestGroup = 'all'; S.bestAll = true; paint('best'); }
+    app.flashHit(root, k);
+    qSheet(q);
+    return;
+  }
+  if (/^https:\/\/(www\.|old\.)?reddit\.com\//.test(k)) {
+    if (!S.asks && !S.asksFailed) { pending = k; return; }
+    if (!app.flashHit(root, k)) app.toast('That thread has moved on.');
+    return;
+  }
   if (/^r-/.test(k)) {
     const r = S.byId[k.slice(2)];
     if (!r) { app.toast('That place isn’t in the guide any more.'); return; }
@@ -1049,7 +1229,7 @@ function land() {
     if (!slots.open.querySelector('[data-k="' + CSS.escape(key) + '"]')) {
       const t = now();
       const f = FILTERS.find((x) => x.test(r, t));
-      S.f = f ? f.key : S.f; S.all = true; paint('open');
+      S.f = f ? f.key : S.f; S.chose = true; S.all = true; paint('open');
     }
     app.flashHit(root, key);
     placeSheet(r);
@@ -1068,7 +1248,7 @@ function land() {
 app.register(KEY, {
   label: 'Food',
   icon: ICON.food,
-  promise: 'Where to eat right now, the deals worth crossing town for, and the kitchens in their own words.',
+  promise: 'Where to eat right now, the deals worth crossing town for, what Burlington recommends, and the kitchens in their own words.',
   mount(r) {
     root = r;
     r.innerHTML = '<p class="loading">Checking who’s open…</p>';
@@ -1083,17 +1263,20 @@ app.register(KEY, {
     pending = param || null;
     /* the list is about this minute: coming back later redraws it */
     if (ready && Date.now() - S.drawn > STALE_MS) { paint('open'); paint('deals'); S.drawn = Date.now(); }
+    if (ready && !app.demo && Date.now() - S.asksAt > ASKS_STALE) loadAsks();
     land();
   },
-  refresh() { if (ready) { paint('bite'); paint('open'); paint('deals'); paint('kitchens'); } },
+  refresh() { if (ready) { paint('bite'); paint('open'); paint('deals'); paint('asks'); paint('best'); paint('kitchens'); } },
   deactivate() { app.closeVideo(); if (M && !M.getContainer().isConnected) dropMap(); },
   subnav() {
     if (!ready) return null;
     const t = now();
+    const next = nothingOpen(t);
     return chips(SECTIONS.map(([key, label]) => ({
-      key, label, n: key === 'open' ? listFor('open', t).length : key === 'deals' ? deck(t).length : null,
+      key, label: key === 'open' && next ? 'Opening next' : label,
+      n: key === 'open' ? (next ? null : listFor('open', t).length) : key === 'deals' ? deck(t).length : key === 'asks' && S.asks ? asksShown().length : null,
     })), null, (k) => jump(k));
   },
-  /* Nothing here is a feed that grows while you are away, so the dot stays off. */
-  newSince() { return 0; },
+  /* The Reddit asks are the one part that grows while you are away. */
+  newSince(ts) { return S.asks ? asksShown().filter((a) => a.d > Number(ts || 0)).length : 0; },
 });

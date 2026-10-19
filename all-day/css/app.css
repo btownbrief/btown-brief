@@ -729,6 +729,12 @@ body.chrome-away .mast { transform: translateY(-100%); }
 .ftile { display: block; text-align: left; min-width: 0; }
 .ftile .c-media { margin: 0; }
 .ftile .s { display: block; font-size: var(--fs-small); color: var(--ink-3); margin-top: 5px; line-height: 1.35; }
+/* Food's Best of r/burlington: a card per question, as many across as fit */
+.qgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; padding: 6px var(--gutter) 4px; }
+.qcard { display: flex; flex-direction: column; gap: 4px; min-width: 0; text-align: left; padding: 12px 14px;
+  border: 1px solid var(--line); border-radius: var(--r-media); background: var(--raised); color: var(--ink); }
+.qcard .t { font-size: var(--fs-body); font-weight: 600; line-height: 1.3; }
+.qcard .s { font-size: var(--fs-small); color: var(--ink-3); line-height: 1.35; }
 
 /* Vintage: a colour per kind of shop (the number badge, the kind's name, the
    map pin and the button's dots), coloured neighborhood dividers, the shop
