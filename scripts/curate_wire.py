@@ -36,7 +36,22 @@ Output, data/wire-today.json:
    "updates": [{"key": "afternoon", "label": "Afternoon", "time": "2:10 pm",
                 "updated": "...", "lead": {"id": "...", "why": "..."},
                 "items": [item, ...]}, ...newest first],
-   "sources": {"x": {"paused": ..., "reason": ...}, "facebook": ..., "reddit": ...}}
+   "sources": {"x": {"paused": ..., "reason": ...}, "facebook": ..., "reddit": ...},
+   "sport_counts": {"local": {"nba": 2, ...}, "everything": {"nba": 9, ...}},
+   "recaps": [recap, ...]          (Grok's recaps posted today, newest first; see below)
+   "recaps_latest": ["id", ...],   (the newest recap of each kind, newest first)
+   "recap_kinds": [{"kind": "morning", "title": "Morning briefing"}, ...]}
+
+A recap is {"id", "kind", "title", "posted_at", "intro", "basis", "label",
+"bullets": [{"id", "text", "url", "note", "sport"?}, ...]}: `title` is the
+kind's fixed title, `label` the small trust line ("From X trending
+summaries" or "From posts on X"), and each bullet's `id` is the id a river
+item with the same url would carry, so a page can show a bullet as its own
+river item without showing one story twice. Recaps are copied verbatim from
+the inbox (wire_inbox.py checks them); no model touches them here.
+
+Sports items carry `sport` (wire_common.SPORTS: nba, nfl, mlb, nhl,
+college, soccer, local, other) for the page's sport chips.
 
 Every item carries id, ch, local, src, name, title, url, posted_at, and
 thumb / media / handle / discuss / site / topic where available. Picks are
@@ -81,6 +96,7 @@ from datetime import datetime, timedelta, timezone
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import wire_common as wc  # noqa: E402
+import wire_inbox  # noqa: E402  (the recap kinds and labels)
 
 PULSE_URL = ("https://raw.githubusercontent.com/btownbrief/btown-brief/"
              "pulse-data/data/pulse.json")
@@ -111,6 +127,11 @@ WHY_MAX = 90
 NEW_MAX_LOCAL = 120        # candidates shown to the editor per run
 NEW_MAX_WORLD = 80
 WORLD_MIN_SCORE = 3        # national items the tagger scored lower never reach the editor
+# Sports (Stephen, 2026-10-19: "better sports coverage ... select the specific
+# sport"): national sports stories reach the editor from a lower score, in
+# their own lane so the news never crowds them out (or they the news)
+SPORTS_MIN_SCORE = 2
+NEW_MAX_SPORTS = 30
 PICKS_EVERY_HOURS = 6      # re-rank cadence: about 6am, noon, 6pm (Stephen, 2026-10-17: one to three a day, not hourly)
 PICKS_MIN_POOL = 8         # the first ranking of the day waits for this many items
 URGENT_SCORE = 9           # a local story this big re-ranks the picks at once
@@ -122,13 +143,19 @@ KIND_RUN_MAX = 3           # never more local (or national) than this in a row w
 POST_RUN_MAX = 2           # nor more posts than this from one of SPREAD_CHANNELS in a row
 SPREAD_CHANNELS = ("x", "facebook", "reddit")   # an X desk posts five at a time
 STALE_HOURS = 4
+# The workflow's schedule has three slots an hour (:07, :27, :47) because
+# GitHub sheds most scheduled ticks; whichever lands first does the hour's
+# work. Additions wait this long after the last model call, so two ticks (or
+# a tick and the Mac's dispatch) in one hour never pay twice. Picks that are
+# due and urgent stories still go at once.
+CALL_GAP_MINUTES = 50
 ALREADY_RAN_PICKS = 15     # per earlier day, shown to the editor as "already ran"
 MAX_TOKENS = {"openrouter": 6000, "anthropic": 16000}
 LABELS = (("morning", "Morning", 0), ("midday", "Midday", 11),
           ("afternoon", "Afternoon", 14), ("evening", "Evening", 18))
 ITEM_KEYS = ("id", "ch", "local", "src", "name", "title", "url", "posted_at",
              "thumb", "media", "handle", "discuss", "site", "topic", "kind", "own",
-             "town", "comments")
+             "town", "comments", "sport")
 REDDIT_INTAKE_URL = ("https://raw.githubusercontent.com/btownbrief/btown-brief/"
                      "reddit-data/data/reddit-intake.json")
 REDDIT_POST_ID_RE = re.compile(r"/comments/([a-z0-9]+)", re.I)
@@ -162,6 +189,13 @@ rewrite a headline: the page shows each one exactly as the outlet wrote it.
 
 Newsletter editions in NEW join the river on their own; leave them out of
 `add` unless one should lead.
+
+Sports: the page filters the river by sport (NBA, NFL, MLB, NHL, college,
+soccer, Vermont teams), so add the real sports news from NEW, marked
+`sports/<sport>` in the list: trades and signings, firings, a star's injury,
+results of big games, league decisions, and every Vermont team's result. A few
+per sport each hour is plenty; leave out betting, fantasy and listicles. A
+sports story is a pick only when it is the day's big news.
 """
 
 
@@ -326,6 +360,8 @@ def apply_tags(items, tags, comments=None):
             item["ch"] = tag.get("ch") or item["ch"]
             item["local"] = bool(tag.get("local", item["local"]))
             item["topic"] = tag.get("topic")
+            if tag.get("sport") and not item.get("sport"):
+                item["sport"] = tag["sport"]
             item["_score"] = tag.get("score", default_score(item))
         else:
             item["_score"] = default_score(item)
@@ -404,8 +440,9 @@ def select_new(pool, in_river, considered, reserved_ids, reserved_urls, editions
     """The NEW list: eligible, not yet in the river, not passed on, not run
     before. Returns (new_items, auto_passed_ids). Newsletter editions skip
     the score bar and the caps: apply_answer adds every one of them, but
-    only today's (sent inside `editions_in`, see edition_window)."""
-    local, world, auto, editions = [], [], [], []
+    only today's (sent inside `editions_in`, see edition_window). National
+    sports items have their own lane and a lower score bar."""
+    local, world, auto, editions, sports = [], [], [], [], []
     for item in pool:
         if item["id"] in in_river or item["id"] in considered:
             continue
@@ -415,14 +452,18 @@ def select_new(pool, in_river, considered, reserved_ids, reserved_urls, editions
             if editions_in is None or editions_in[0] <= item["d"] < editions_in[1]:
                 editions.append(item)
             continue
-        if not item["local"] and item["_score"] < WORLD_MIN_SCORE:
+        national_sport = not item["local"] and item.get("sport") and item.get("ch") in ("world", "x")
+        bar = SPORTS_MIN_SCORE if national_sport else WORLD_MIN_SCORE
+        if not item["local"] and item["_score"] < bar:
             auto.append(item["id"])
             continue
-        (local if item["local"] else world).append(item)
+        (local if item["local"] else sports if national_sport else world).append(item)
     rank = lambda item: (-item["_score"], -item["d"])  # noqa: E731
     local.sort(key=rank)
     world.sort(key=rank)
-    return local[:NEW_MAX_LOCAL] + world[:NEW_MAX_WORLD] + editions, auto
+    sports.sort(key=rank)
+    return (local[:NEW_MAX_LOCAL] + world[:NEW_MAX_WORLD] + sports[:NEW_MAX_SPORTS]
+            + editions), auto
 
 
 def age_label(item, now_ts):
@@ -433,6 +474,8 @@ def age_label(item, now_ts):
 def line(index, item, now_ts):
     who = item.get("handle") or item.get("name") or item.get("src")
     topic = f" · {item['topic']}" if item.get("topic") else ""
+    if item.get("sport"):
+        topic = f" · sports/{item['sport']}"
     place = {"btv": "Burlington area", "away": "outside the Burlington area",
              "out": "out of state"}.get(item.get("region"), "")
     if place and item.get("town"):
@@ -972,6 +1015,10 @@ def finish(day, pulse, now, changed):
         day.pop("brief", None)
     day["count"] = len(items)
     day["counts"] = counts(items)
+    day["sport_counts"] = sport_counts(items)
+    before = day.get("recaps") or []
+    day.update(recaps_of(pulse, day.get("date")))
+    changed = changed or before != day["recaps"]
     day["checked"] = stamp
     if changed or not day.get("updated"):
         day["updated"] = stamp
@@ -986,12 +1033,66 @@ def finish(day, pulse, now, changed):
     return day
 
 
+def hydrate_sports(day, scored):
+    """A river item filed before its tag knew the sport gets it now, so the
+    sport chips and sport_counts see the whole day (2026-10-19 rollout).
+    Returns how many items changed."""
+    n = 0
+    for update in day.get("updates") or []:
+        for item in update.get("items") or []:
+            sport = (scored.get(item.get("id")) or {}).get("sport")
+            if sport and not item.get("sport"):
+                item["sport"] = sport
+                n += 1
+    return n
+
+
+def sport_counts(items):
+    """{"local"|"everything": {sport: n}} for the page's sport chips."""
+    out = {}
+    for scope in ("local", "everything"):
+        tally = {sport: 0 for sport in wc.SPORTS}
+        for item in items:
+            if item.get("sport") in tally and (scope == "everything" or item.get("local")):
+                tally[item["sport"]] += 1
+        out[scope] = tally
+    return out
+
+
+def recaps_of(pulse, date):
+    """Today's recaps from the inbox store, for the page: every recap posted
+    on `date` (Eastern) newest first, and the newest of each kind. Verbatim;
+    wire_inbox.py has already checked every field."""
+    held = ((pulse.get("inbox") or {}).get("recaps") or {}).get("items") or []
+    recaps = []
+    for rc in held:
+        if not isinstance(rc, dict) or not isinstance(rc.get("d"), int) or not date:
+            continue
+        if wc.et_now(datetime.fromtimestamp(rc["d"], timezone.utc)).date().isoformat() != date:
+            continue
+        recaps.append({
+            "id": rc["id"], "kind": rc["kind"], "title": wire_inbox.RECAP_KINDS.get(rc["kind"], rc.get("title")),
+            "posted_at": rc["posted_at"], "intro": rc.get("intro") or "",
+            "basis": rc.get("basis"), "label": wire_inbox.RECAP_BASIS.get(rc.get("basis"), ""),
+            "bullets": [dict({"id": wc.item_id(bl["url"])}, **bl) for bl in rc.get("bullets") or []
+                        if isinstance(bl, dict) and bl.get("url")],
+        })
+    recaps.sort(key=lambda rc: rc["posted_at"], reverse=True)
+    latest, seen = [], set()
+    for rc in recaps:
+        if rc["kind"] not in seen:
+            seen.add(rc["kind"])
+            latest.append(rc["id"])
+    kinds = [{"kind": kind, "title": title} for kind, title in wire_inbox.RECAP_KINDS.items()]
+    return {"recaps": recaps, "recaps_latest": latest, "recap_kinds": kinds}
+
+
 def status_of(pulse):
     """Is each kind of source flowing? The page hides or labels a chip from
     this. Always all three keys, so a page never has to guess."""
     inbox = pulse.get("inbox") if isinstance(pulse.get("inbox"), dict) else {}
     status = {}
-    for ch in ("x", "facebook"):
+    for ch in ("x", "facebook", "recaps"):
         state = inbox.get(ch)
         if isinstance(state, dict):
             status[ch] = {"paused": bool(state.get("paused")), "reason": state.get("reason"),
@@ -1053,6 +1154,9 @@ def decide(day, state, new, et, now):
         return False, False, "overnight"
     if want_picks:
         return True, True, "urgent" if urgent and day.get("picks") else "picks due"
+    called_at = state.get("called_at")
+    if called_at and 0 <= (now - datetime.fromisoformat(called_at)).total_seconds() < CALL_GAP_MINUTES * 60:
+        return False, False, "too soon after the last update"
     if len(new) >= MIN_NEW or any(item["local"] and item["_score"] >= 6 for item in new):
         return True, False, "additions"
     return False, False, "quiet hour"
@@ -1107,6 +1211,7 @@ def run(args):
     tags = (wc.load_json(files["tags"], {}) or {}).get("tags") or {}
     comments = {} if args.pulse else reddit_comments()
     pool = apply_tags(candidates(pulse, now_ts, et), tags, comments)
+    hydrated = hydrate_sports(day, {item["id"]: item for item in pool})
     reserved_ids, reserved_urls, ran = reserved(args.data_dir, today)
     evicted = evict_stale_editions(day, edition_since(et))
     if evicted:
@@ -1127,7 +1232,7 @@ def run(args):
         editions = [item for item in new if item.get("ch") == "newsletters"]
         filed = apply_answer(day, {}, river(day), editions, False, et, now)["added"] \
             if editions else []
-        finish(day, pulse, now, changed=bool(filed or evicted))
+        finish(day, pulse, now, changed=bool(filed or evicted or hydrated))
         wc.write_json(files["today"], day)
         wc.write_json(files["state"], state)
         line_ = (f"curate_wire: {why}, {len(new)} new candidates, no model call"
@@ -1179,11 +1284,12 @@ def run(args):
         print(f"curate_wire: reasons pass rewrote {rewritten}, left {emptied} empty")
     if want_picks:
         state["picks_at"] = now.replace(microsecond=0).isoformat()
+    state["called_at"] = now.replace(microsecond=0).isoformat()
     # everything shown is now considered: passed items stay passed today
     state["considered_today"] = sorted(set(state.get("considered_today", []))
                                        | {item["id"] for item in new})
     finish(day, pulse, now, changed=bool(result["added"] or result["dropped"] or result["picks"]
-                                         or evicted))
+                                         or evicted or hydrated))
     if as_of(args):
         day["backfilled"] = True   # replayed later from the pulse store, and says so
     wc.write_json(files["today"], day)

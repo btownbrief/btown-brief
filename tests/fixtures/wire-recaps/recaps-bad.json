@@ -1,0 +1,66 @@
+{
+  "source": "grok-recaps",
+  "updated_at": "2026-10-16T23:05:00Z",
+  "run_note": "a fixture where most recaps break a rule",
+  "recaps": [
+    {
+      "id": "2026-10-16-evening",
+      "kind": "evening",
+      "title": "Evening wrap",
+      "posted_at": "2026-10-16T23:00:00Z",
+      "intro": "A test fixture: the day closed on a Senate vote and a storm warning.",
+      "basis": "trending",
+      "source": "grok",
+      "bullets": [
+        {
+          "text": "Senate passes the stopgap spending bill",
+          "url": "https://x.com/search?q=senate",
+          "note": "Keeps the government open through December."
+        },
+        {
+          "text": "Storm warning for the Gulf Coast",
+          "url": "https://x.com/NWS/status/2110990000000000002",
+          "note": "Call 802-555-0100 for more."
+        }
+      ]
+    },
+    {
+      "id": "2026-10-16-sports",
+      "kind": "sports",
+      "title": "Sports",
+      "posted_at": "2026-10-16T11:00:00Z",
+      "intro": "A test fixture: a trade, a firing and a UVM result.",
+      "basis": "vibes",
+      "source": "grok",
+      "bullets": [
+        {
+          "text": "Lakers trade for a backup center",
+          "url": "https://x.com/ShamsCharania/status/2110980000000000001",
+          "note": "A second-round pick goes the other way."
+        },
+        {
+          "text": "Jets fire their offensive coordinator",
+          "url": "https://x.com/AdamSchefter/status/2110980000000000002",
+          "note": "After a 1-5 start.",
+          "sport": "nfl"
+        },
+        {
+          "text": "UVM men's soccer wins at Albany",
+          "url": "https://uvmathletics.com/news/2026/10/16/mens-soccer",
+          "note": "Clinches a home playoff game.",
+          "sport": "local"
+        }
+      ]
+    },
+    {
+      "id": "2026-10-16-sports",
+      "kind": "ai",
+      "title": "AI and tech",
+      "posted_at": "2026-10-16T11:00:00Z",
+      "intro": "A test fixture whose title is wrong, so the Wire drops it.",
+      "basis": "trending",
+      "source": "grok",
+      "bullets": []
+    }
+  ]
+}

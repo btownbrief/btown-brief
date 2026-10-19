@@ -132,7 +132,7 @@ class IndexMappingTests(Workdir):
         self.assertEqual(day["counts"]["local"]["all"], 12)
         self.assertEqual(day["status"]["x"]["reason"], "no WIRE_INBOX_TOKEN secret")
         self.assertEqual(day["status"]["facebook"]["reason"], "the inbox reader is not live yet")
-        self.assertEqual(set(day["status"]), {"x", "facebook", "reddit"})
+        self.assertEqual(set(day["status"]), {"x", "facebook", "reddit", "recaps"})
         self.assertEqual(day["sources"]["wcax"], {"name": "WCAX", "ch": "local",
                                                   "site": "https://www.wcax.com/"})
         self.assertEqual(set(day["sources"]), {"wcax", "vtd", "ap"})
@@ -1057,6 +1057,16 @@ class DecideTests(unittest.TestCase):
         state = {"picks_at": (NOW - timedelta(hours=cw.PICKS_EVERY_HOURS)).isoformat()}
         self.assertEqual(cw.decide(day, state, new, self.et(12), NOW)[:2], (True, True))
 
+    def test_a_second_tick_in_the_hour_does_not_pay_twice(self):
+        day = {"picks": [{}], "updates": []}
+        new = [self.item(5)] * 10
+        state = {"picks_at": (NOW - timedelta(hours=1)).isoformat(),
+                 "called_at": (NOW - timedelta(minutes=20)).isoformat()}
+        self.assertEqual(cw.decide(day, state, new, self.et(9), NOW)[:2], (False, False))
+        self.assertEqual(cw.decide(day, state, [self.item(9)], self.et(9), NOW)[:2], (True, True))  # urgent
+        state["called_at"] = (NOW - timedelta(minutes=cw.CALL_GAP_MINUTES)).isoformat()
+        self.assertEqual(cw.decide(day, state, new, self.et(9), NOW)[:2], (True, False))
+
 
 def rule_breaks(items):
     """Every place an update's order breaks a river rule that it could have
@@ -1206,6 +1216,23 @@ class TagWireRunTests(Workdir):
         pool = cw.apply_tags(wc.wire_items(pulse(), NOW_TS, 26), tags)
         self.assertNotIn("Local headline 3", [item["title"] for item in pool])
         self.assertNotIn("National headline 3", [item["title"] for item in pool])
+
+    def test_a_second_tick_inside_the_hour_does_not_tag(self):
+        calls = []
+
+        def plan(engine, system, user, schema, max_tokens, attempts=2, log_prefix=""):
+            rows = [line for line in user.splitlines() if line[:1].isdigit()]
+            calls.append(len(rows))
+            return {"tags": [{"i": int(r.split(".")[0]), "junk": "none", "local": True, "ch": "local",
+                              "topic": "other", "sport": "none", "score": 5} for r in rows]}, \
+                {"in": 1000, "out": 300, "calls": 1}
+        args = SimpleNamespace(data_dir=self.data, pulse=self.pulse_path)
+        for minutes, payload in ((0, pulse()), (20, pulse(start=40)), (50, pulse(start=40))):
+            self.write_pulse(payload)
+            at = NOW + timedelta(minutes=minutes)
+            with mock.patch.object(wc, "ask_json", plan), mock.patch.object(wc, "utcnow", return_value=at):
+                tw.run(args)
+        self.assertEqual(len(calls), 2)            # the :20 tick waited for the next hour
 
     def test_tagger_outage_exits_zero_and_leaves_items_untagged(self):
         self.assertEqual(self.run_tag(Stub(error="overloaded")), 0)
