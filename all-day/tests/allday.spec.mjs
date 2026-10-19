@@ -3957,6 +3957,70 @@ async function theWhatNow(browser, base) {
     await ctx.close();
   });
 
+  await group('What Now, the teasers and the old done marks (live)', async () => {
+    /* Stephen, 2026-10-19: the Top 100+ was re-curated into nested missions,
+       each with a one-line teaser under its title. Marks used to be kept
+       under the rank (m17); they now live under each mission's stable mark,
+       and an old rank moves onto the mission whose `was` names it. */
+    const real = JSON.parse(await readFile(path.join(REPO, 'data/missions.json'), 'utf8'));
+    const ms = real.missions;
+    check(ms.every((m) => typeof m.teaser === 'string' && m.teaser.length > 10 && m.teaser.length <= 90 && !/[—–!]|:(?!\d)/.test(m.teaser)), 'every mission has a teaser of at most 90 characters, no dash, colon or exclamation point', ms.filter((m) => !m.teaser || m.teaser.length > 90).map((m) => m.n).join(', '));
+    const marks = ms.map((m) => m.mark);
+    check(marks.every((k) => /^m[2-9]\d\d$/.test(k)) && new Set(marks).size === marks.length, 'every mission has its own stable mark, m200 to m999', '');
+    const was = ms.flatMap((m) => m.was || []);
+    check(new Set(was).size === was.length && was.every((k) => /^m\d{1,3}$/.test(k) && Number(k.slice(1)) < 200), 'each old rank moves to one mission at most', '');
+    const nested = ms.find((m) => (m.was || []).length >= 3);
+    const single = ms.find((m) => (m.was || []).length === 1 && m.was[0] !== m.k && m.n !== nested.n);
+    const plain = ms.find((m) => !(m.was || []).length);
+    const [a, b] = nested.was;
+    const seed = { [a]: 1760000000, [b]: 1760000500, [single.was[0]]: 1760000000 };
+    if (plain && !was.includes('m150')) seed.m150 = 1760000000;   // an old rank nothing claims is dropped
+
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/all-day/#whatnow/missions');
+    await page.waitForSelector(wnPanel + ' .lrow.mission', { timeout: 15000 });
+    const tz = await page.$eval(wnPanel + ' .lrow[data-k="m1"] .tz', (t) => t.textContent).catch(() => '');
+    check(tz === ms[0].teaser, 'the tile shows the teaser under the title', tz);
+    await page.evaluate((v) => localStorage.setItem('allday-missions', JSON.stringify(v)), seed);
+    await page.reload();
+    await page.waitForSelector(wnPanel + ' .lrow.mission', { timeout: 15000 });
+    const doneRows = () => page.$$eval(wnPanel + ' .lrow.mission.done', (r) => r.map((x) => x.dataset.k));
+    let rows = await doneRows();
+    check(rows.includes(nested.k) && rows.includes(single.k) && rows.length === 2, 'old marks land on the missions that replaced them: two old entries nested into ' + nested.k + ' mark it once, ' + single.was[0] + ' marks ' + single.k, JSON.stringify(rows));
+    const stored = await page.evaluate(() => JSON.parse(localStorage.getItem('allday-missions')));
+    check(Object.keys(stored).sort().join() === [nested.mark, single.mark].sort().join() && stored[nested.mark] === 1760000500, 'and the device keeps them under the stable marks, the old keys gone, the latest time kept', JSON.stringify(stored));
+    await page.reload();
+    await page.waitForSelector(wnPanel + ' .lrow.mission', { timeout: 15000 });
+    rows = await doneRows();
+    check(rows.length === 2 && new RegExp('2/' + ms.length + '\\b').test(await page.$eval('#subnav .chip[data-chip="missions"]', (x) => x.innerText)), 'the move happens once: a reload keeps the same two, and the chip counts 2/' + ms.length, JSON.stringify(rows));
+    await page.click(wnPanel + ' .lrow[data-k="' + nested.k + '"] .open');
+    await page.waitForSelector('.sheet-card');
+    const why = await page.$$eval('.sheet-card .sheet-row .d.why', (d) => d.map((x) => x.textContent));
+    check(why.length === nested.places.filter((p) => p.note).length && why.length >= 2, 'the sheet gives each place its line on why it is the pick', JSON.stringify(why));
+    await page.keyboard.press('Escape');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+
+    /* signed in: an old mark on the account moves the same way, and the old row goes */
+    const calls = [];
+    const acct = await newPage(browser, base, { rpc: (fn, body) => {
+      if (fn === 'nn_missions_done') return [{ key: single.was[0] }, { key: nested.mark }];
+      if (fn === 'nn_mission_set') { calls.push(body.p_key + ':' + body.p_done); return null; }
+      return undefined;
+    } });
+    await acct.page.goto(base + '/all-day/#whatnow/missions');
+    await acct.page.evaluate(() => localStorage.setItem('allday-auth', JSON.stringify({ access_token: 'a.b.c', refresh_token: 'r', expires_at: 4102444800, user: { id: 'u1', email: 'reader@example.com' } })));
+    await acct.page.reload();
+    await acct.page.waitForSelector(wnPanel + ' .lrow.mission', { timeout: 15000 });
+    await acct.page.waitForFunction((k) => document.querySelector('#panel-whatnow .lrow[data-k="' + k + '"].done'), single.k, { timeout: 5000 }).catch(() => null);
+    await acct.page.waitForTimeout(300);
+    rows = await acct.page.$$eval(wnPanel + ' .lrow.mission.done', (r) => r.map((x) => x.dataset.k));
+    check(rows.slice().sort().join() === [single.k, nested.k].sort().join(), 'the account’s old rank and its stable mark both land on the right missions, and nothing else', JSON.stringify(rows));
+    check(calls.includes(single.was[0] + ':false') && calls.includes(single.mark + ':true') && !calls.includes(nested.mark + ':true'), 'and the account is moved too: the old row deleted, the stable mark set', calls.join(', '));
+    check(!acct.errors.length, 'no console errors', acct.errors.join(' | '));
+    await acct.ctx.close();
+  });
+
   await group('What Now, Tonight (live, a reader in Los Angeles)', async () => {
     const day = etKey(Date.now());
     const frozen = Date.parse(day + 'T18:30:00' + etOffset(Date.parse(day + 'T12:00:00Z')));
