@@ -132,7 +132,7 @@ class IndexMappingTests(Workdir):
         self.assertEqual(day["counts"]["local"]["all"], 12)
         self.assertEqual(day["status"]["x"]["reason"], "no WIRE_INBOX_TOKEN secret")
         self.assertEqual(day["status"]["facebook"]["reason"], "the inbox reader is not live yet")
-        self.assertEqual(set(day["status"]), {"x", "facebook", "reddit", "recaps"})
+        self.assertEqual(set(day["status"]), {"x", "facebook", "reddit", "recaps", "photos"})
         self.assertEqual(day["sources"]["wcax"], {"name": "WCAX", "ch": "local",
                                                   "site": "https://www.wcax.com/"})
         self.assertEqual(set(day["sources"]), {"wcax", "vtd", "ap"})

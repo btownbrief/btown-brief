@@ -61,19 +61,30 @@ VIDEO_HOSTS = ("youtube.com", "youtu.be", "vimeo.com")
 # a `sport`, which the page's sport chips filter on. `local` is any Vermont
 # team or school (UVM, Vermont Green FC, the Lake Monsters, high schools),
 # whatever the game; `college` is college sports elsewhere.
-SPORTS = ("nba", "nfl", "mlb", "nhl", "college", "soccer", "local", "other")
+# Later that day: "Sports: keep it light ... Chips: NBA, NFL, NHL, Tennis,
+# Local (MLB in postseason; college optional; drop soccer)". Soccer is no
+# longer its own sport (a soccer story is `other`), and MLB is a chip only in
+# its postseason (sport_chips); the rest of the year an MLB story counts as
+# `other` on the chips while keeping its own `sport`.
+SPORTS = ("nba", "nfl", "nhl", "tennis", "mlb", "college", "local", "other")
+# values an older tag, river item or recap may still carry -> today's sport
+LEGACY_SPORTS = {"soccer": "other"}
+# MLB's postseason, as (month, day) bounds: the Wild Card round opens around
+# the last day of September and the World Series is over by early November.
+MLB_POSTSEASON = ((9, 29), (11, 7))
 # Sources that only ever carry one sport: their items get that sport without
 # a model. Keys are pulse source ids, or "x:@handle" (lowercase) for X posts.
 SOURCE_SPORT = {
     "espn-com-nba": "nba", "espn-com-nfl": "nfl", "espn-mlb": "mlb", "espn-nhl": "nhl",
     "espn-college-football": "college", "espn-college-basketball": "college",
-    "espn-soccer": "soccer",
+    "espn-tennis": "tennis",
     "wcax-sports": "local", "mychamplainvalley-sports": "local",
     "university-of-vermont-athletics": "local", "vermont-green-fc": "local",
     "vermont-sports": "local",
     "x:@shamscharania": "nba", "x:@nba": "nba", "x:@adamschefter": "nfl", "x:@nfl": "nfl",
     "x:@jeffpassan": "mlb", "x:@mlb": "mlb", "x:@friedgehnic": "nhl", "x:@nhl": "nhl",
-    "x:@petethamel": "college", "x:@fabrizioromano": "soccer",
+    "x:@petethamel": "college", "x:@josemorgado": "tennis", "x:@atptour": "tennis",
+    "x:@wta": "tennis",
     "x:@uvmathletics": "local", "x:@vermontgreenfc": "local", "x:@vtlakemonsters": "local",
 }
 
@@ -81,6 +92,41 @@ SOURCE_SPORT = {
 def source_sport(src):
     """The one sport a single-sport source carries, or None."""
     return SOURCE_SPORT.get((src or "").lower())
+
+
+def norm_sport(value):
+    """A stored sport as today's vocabulary knows it, or None."""
+    value = LEGACY_SPORTS.get(value, value)
+    return value if value in SPORTS else None
+
+
+def mlb_postseason(date):
+    """Is `date` (a date, or "YYYY-MM-DD") inside MLB's postseason?"""
+    if isinstance(date, str):
+        date = datetime.fromisoformat(date).date()
+    (m0, d0), (m1, d1) = MLB_POSTSEASON
+    return (m0, d0) <= (date.month, date.day) <= (m1, d1)
+
+
+def sport_chips(date):
+    """The sport chips for a day, in the order the page shows them. `other`
+    is never a chip: those stories live in the daily Sports recap."""
+    chips = ["nba", "nfl", "nhl", "tennis"]
+    if mlb_postseason(date):
+        chips.append("mlb")
+    return chips + ["local", "college"]
+
+
+def sport_chip(sport, date):
+    """Which chip a story with this sport sits under on `date`."""
+    sport = norm_sport(sport)
+    if sport is None:
+        return None
+    if sport == "mlb" and not mlb_postseason(date):
+        return "other"
+    return sport
+
+
 # The newsletter's own edition. It is always in the river (the way Stephen's
 # own events are always in the newsletter) and never judged as junk.
 OWN_SOURCES = {"btown-brief"}
@@ -634,6 +680,12 @@ def selftest():
     assert item_id("https://a.com/1") == item_id("https://a.com/1 ") != item_id("https://a.com/2")
     assert source_sport("espn-com-nba") == "nba" and source_sport("x:@ShamsCharania") == "nba"
     assert source_sport("x:@AP") is None and set(SOURCE_SPORT.values()) <= set(SPORTS)
+    assert source_sport("espn-tennis") == "tennis" and source_sport("x:@FabrizioRomano") is None
+    assert norm_sport("soccer") == "other" and norm_sport("tennis") == "tennis" and norm_sport("x") is None
+    assert "mlb" in sport_chips("2026-10-19") and "mlb" not in sport_chips("2026-11-08")
+    assert "mlb" not in sport_chips("2026-07-04") and "other" not in sport_chips("2026-10-19")
+    assert sport_chip("mlb", "2026-07-04") == "other" and sport_chip("mlb", "2026-09-30") == "mlb"
+    assert sport_chip("soccer", "2026-10-19") == "other" and sport_chip("nba", "2026-07-04") == "nba"
     pulse = {"sources": [{"id": "espn-mlb", "site": "https://www.espn.com/mlb/"}],
              "items": [{"s": "espn-mlb", "t": "Trade", "u": "https://espn.com/1", "d": 100}],
              "inbox": {"x": {"items": [{"u": "https://x.com/AdamSchefter/status/1", "d": 100,

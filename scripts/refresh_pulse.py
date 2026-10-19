@@ -57,6 +57,7 @@ from email.utils import parsedate_to_datetime
 # private wire-inbox repo) and the mechanical channel rules. Both are
 # standard library only and never raise into this run.
 import wire_inbox
+import wire_photos
 from wire_common import mechanical_channel
 
 ROOT = os.path.join(os.path.dirname(__file__), "..")
@@ -256,7 +257,10 @@ EXTRA_NATIONAL_NEWS_FEEDS = [
      "https://www.espn.com/college-football/"),
     ("ESPN College Basketball", "https://www.espn.com/espn/rss/ncb/news",
      "https://www.espn.com/mens-college-basketball/"),
-    ("ESPN Soccer", "https://www.espn.com/espn/rss/soccer/news", "https://www.espn.com/soccer/"),
+    # Stephen, 2026-10-19: "Sports: keep it light ... Chips: NBA, NFL, NHL,
+    # Tennis, Local (MLB in postseason; college optional; drop soccer)".
+    # ESPN Soccer left the list that day; ESPN's tennis feed joined it.
+    ("ESPN Tennis", "https://www.espn.com/espn/rss/tennis/news", "https://www.espn.com/tennis/"),
 ]
 
 ITEM_CAP = 20          # headlines kept per source
@@ -1603,10 +1607,14 @@ def run(args):
     # fresh write pauses that source and changes nothing else about the run.
     inbox, inbox_added, inbox_changed = wire_inbox.read_inbox(previous.get("inbox"))
     print(wire_inbox.summary_line(inbox), f"({inbox_added} new)")
+    # The Photos tab's world pictures (wire_photos.py): fetched at most hourly,
+    # never raises; a dead feed keeps its held pictures.
+    photos, photos_added = wire_photos.refresh(previous.get("photos"))
+    print(wire_photos.summary_line(photos), f"({photos_added} new)")
 
     prev_total = len(previous.get("items", []))
     if not args.seed and prev_total and added_total == 0 and not dropped_removed \
-            and not reddit_changed and not inbox_changed:
+            and not reddit_changed and not inbox_changed and not photos_added:
         # Nothing new anywhere: don't write at all. The workflow then skips
         # its push, the branch keeps its honest `generated` stamp, and the
         # page's "updated Xm ago" reflects when content actually changed.
@@ -1617,6 +1625,7 @@ def run(args):
     if reddit:
         payload["reddit"] = reddit   # pages that predate the key just ignore it
     payload["inbox"] = inbox         # same: only the Wire reads it
+    payload["photos"] = photos       # and the Photos tab's world pictures
     total = len(payload["items"])
     floor = max(MIN_ITEMS, prev_total // 2)
     if total < floor:

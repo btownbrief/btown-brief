@@ -111,11 +111,11 @@ contra dance in Corinth is not junk; it scores 1.
   `x`, `facebook`, `reddit`, `newsletters` or `video`.
 - **topic**: the one best fit from the list in the schema.
 - **sport**: `none` unless the topic is `sports`. For a sports story, the one it is
-  about: `nba`, `nfl`, `mlb`, `nhl`, `college` (college sports outside Vermont),
-  `soccer` (any league, any country), `local` (any Vermont team or school: UVM,
-  Vermont Green FC, the Lake Monsters, high schools, whatever the game), or `other`
-  (golf, tennis, F1, the Olympics, boxing and the rest). The page has a filter per
-  sport, so a reader who picks NBA sees exactly the `nba` stories.
+  about: `nba`, `nfl`, `nhl`, `tennis` (the ATP, the WTA, the majors), `mlb`,
+  `college` (college sports outside Vermont), `local` (any Vermont team or school:
+  UVM, Vermont Green FC, the Lake Monsters, high schools, whatever the game), or
+  `other` (soccer, golf, F1, the Olympics, boxing and the rest). The page has a
+  filter per sport, so a reader who picks NBA sees exactly the `nba` stories.
 - **score**: 0 to 10, how much a Burlingtonian would care today. 9 to 10: affects many
   people here now (an emergency, a rate decision, a major closure, a council vote on
   something big). 7 to 8: solid local news (an opening, a policy step, a notable crime
