@@ -3,19 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Burlington Weather &amp; Lake — live conditions and life scores — Burlington Brief</title>
-  <meta name="description" content="Burlington, Vermont right now: live weather, Lake Champlain conditions, can-I-swim beach statuses, and life scores for patios, sunsets, running, and more.">
+  <title>Burlington Weather — today, tonight and the week ahead — Burlington Brief</title>
+  <meta name="description" content="Burlington, Vermont weather in plain words: right now, today and tonight, when rain or snow starts and how much, the week ahead, and radar.">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Btown Brief">
-  <meta property="og:title" content="Burlington Weather &amp; Lake — live conditions and life scores">
-  <meta property="og:description" content="Burlington, Vermont right now: live weather, Lake Champlain conditions, can-I-swim beach statuses, and life scores for patios, sunsets, running, and more.">
+  <meta property="og:title" content="Burlington Weather — today, tonight and the week ahead">
+  <meta property="og:description" content="Burlington, Vermont weather in plain words: right now, today and tonight, when rain or snow starts and how much, the week ahead, and radar.">
   <meta property="og:url" content="https://guide.btownbrief.com/weather.html">
   <meta property="og:image" content="https://guide.btownbrief.com/assets/og/og-guide.jpg">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Burlington Weather &amp; Lake — live conditions and life scores">
-  <meta name="twitter:description" content="Burlington, Vermont right now: live weather, Lake Champlain conditions, can-I-swim beach statuses, and life scores for patios, sunsets, running, and more.">
+  <meta name="twitter:title" content="Burlington Weather — today, tonight and the week ahead">
+  <meta name="twitter:description" content="Burlington, Vermont weather in plain words: right now, today and tonight, when rain or snow starts and how much, the week ahead, and radar.">
   <meta name="twitter:image" content="https://guide.btownbrief.com/assets/og/og-guide.jpg">
 
   <link rel="icon" href="assets/favicon-32.png" sizes="32x32" type="image/png">
@@ -27,7 +27,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css?v=20260904b">
-  <link rel="stylesheet" href="css/weather.css?v=20261017a">
+  <link rel="stylesheet" href="css/weather.css?v=20261019a">
   <script>
     /* Theme before first paint, from the cached sunrise/sunset. js/auto-theme.js
        refreshes the cache; this only avoids the white flash after dark. */
@@ -84,7 +84,7 @@ src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
           </svg>
         </button>
         <span class="logo-sep"></span>
-        <span class="logo-title">Burlington Weather &amp; Lake</span>
+        <span class="logo-title">Burlington Weather</span>
       </div>
 
       <nav class="mode-nav" aria-label="Site pages">
@@ -114,6 +114,14 @@ src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
       </div>
     </section>
 
+    <!-- ============ TODAY AND TONIGHT (data/weather/latest.json's brief) ============ -->
+    <section class="day-section" id="day-section" hidden aria-labelledby="day-title">
+      <div class="day-inner">
+        <h2 class="day-title" id="day-title">Today and tonight</h2>
+        <div class="day-grid" id="day-grid"></div>
+      </div>
+    </section>
+
     <!-- ============ THE NEXT HOURS ============ -->
     <section class="hours-section" id="hours-section" hidden aria-label="The next hours">
       <div class="hours-inner">
@@ -126,6 +134,17 @@ src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
         <div class="hr-scroll" id="hr-scroll" tabindex="0" aria-label="Hour-by-hour forecast, scroll sideways">
           <div class="hr-track" id="hr-track"></div>
         </div>
+      </div>
+    </section>
+
+    <!-- ============ THE WEEK AHEAD ============ -->
+    <section class="week-section" id="week-section" hidden aria-label="Seven-day forecast">
+      <div class="week-inner">
+        <div class="week-head">
+          <h2 class="week-title">The week ahead</h2>
+        </div>
+        <div class="week-grid" id="week-grid"></div>
+        <p class="week-note" id="week-note"></p>
       </div>
     </section>
 
@@ -163,17 +182,6 @@ src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
         </div>
         <div class="read-text" id="read-text"></div>
         <p class="read-byline">— Steve, the <a href="https://www.btownbrief.com" target="_blank" rel="noopener">BTown Brief</a></p>
-      </div>
-    </section>
-
-    <!-- ============ THE WEEK AHEAD ============ -->
-    <section class="week-section" id="week-section" hidden aria-label="Seven-day forecast">
-      <div class="week-inner">
-        <div class="week-head">
-          <h2 class="week-title">The week ahead</h2>
-        </div>
-        <div class="week-grid" id="week-grid"></div>
-        <p class="week-note" id="week-note"></p>
       </div>
     </section>
 
@@ -251,7 +259,7 @@ src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
 
   <script src="js/theme.js?v=20260711k"></script>
   <script src="js/sunset-score.js?v=20260827a"></script>
-  <script src="js/life.js?v=20260904a"></script>
+  <script src="js/life.js?v=20261019a"></script>
   <script src="js/sun.js?v=20260904b"></script>
   <script src="js/radar.js?v=20261017a"></script>
   <script src="js/auto-theme.js?v=20260711k"></script>
