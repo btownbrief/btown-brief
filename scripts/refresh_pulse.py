@@ -103,6 +103,22 @@ NEWSLETTER_SITES = {
     "vtdigger": "https://vtdigger.org/",
 }
 
+# The Newsletters ROSTER comes from the stream, not only the OPML. On
+# 2026-10-17 the folder's OPML export started coming back as a bare label
+# with no feeds in it, while the tag's stream kept carrying ~15 editions a
+# day; every one of them was then unattributable and dropped, and the Wire's
+# Newsletters chip read 0 for two days. Every email item names its sender in
+# <source>, so the senders seen in the stream (plus any sender the previous
+# payload heard from within NEWSLETTER_KEEP_DAYS, so a monthly letter does
+# not lose its history between issues) are rostered whatever the OPML says.
+NEWSLETTER_KEEP_DAYS = 45
+# A stream-derived sender has no feed URL to hash, so a sender whose title
+# slug collides with an RSS source keeps its established id by title here.
+# Keyed on the lowercased sender title exactly as the stream gives it.
+NEWSLETTER_ID_PINS = {
+    "vtdigger": "vtdigger-dd84",
+}
+
 # "View in browser" shapes actually seen in the folder (probed 2026-08-09):
 # a labeled anchor, or a platform archive URL. Extraction is best-effort —
 # an email without a public copy stays honest and unlinked.
@@ -113,6 +129,11 @@ WEBCOPY_URL_RE = re.compile(
     r'href="(https?://[^"]*?(?:campaign-archive\.com[^"]*|mailchi\.mp/[^"]+'
     r'|substack\.com/p/[^"]+|beehiiv\.com/p/[^"]+|/p_v\.php[^"]*'
     r'|link\.join1440\.com/view/[^"]+|/web-version[^"]*))"', re.I)
+# WordPress.com post emails (the VPO) wrap "Read on blog" in a click tracker
+# whose redirect_to is the public post URL itself.
+WPCOM_READ_RE = re.compile(
+    r'<a[^>]+href="(https://public-api\.wordpress\.com/bar/\?[^"]+)"[^>]*>'
+    r'\s*Read on blog\s*</a>', re.I)
 # Subscription plumbing, not editions — skipped outright.
 NEWSLETTER_NOISE_RE = re.compile(
     r"^welcome to\b|confirm your|verify your|set (?:a new )?password|"
@@ -639,6 +660,10 @@ def parse_stream(raw):
             match = WEBCOPY_TEXT_RE.search(desc) or WEBCOPY_URL_RE.search(desc)
             if match:
                 item["webcopy"] = canon_url(html.unescape(match.group(1)))
+            else:
+                webcopy = wpcom_post_url(desc)
+                if webcopy:
+                    item["webcopy"] = webcopy
             if NEWSLETTER_NOISE_RE.search(item["title"]):
                 item["noise"] = True
         elif "reddit.com" in site or "ycombinator.com" in site:
@@ -663,6 +688,46 @@ def parse_stream(raw):
                     item["thread_n"] = min(int(match.group(1)), 99999)
         items.append(item)
     return items
+
+
+def wpcom_post_url(desc):
+    """The public post URL behind a WordPress.com email's "Read on blog"."""
+    match = WPCOM_READ_RE.search(desc or "")
+    if not match:
+        return ""
+    query = urllib.parse.urlsplit(html.unescape(match.group(1))).query
+    target = (urllib.parse.parse_qs(query).get("redirect_to") or [""])[0]
+    if not re.match(r"https?://", target) or "wordpress.com" in site_host(target):
+        return ""
+    return canon_url(target)
+
+
+def newsletter_outlines(stream_items, previous, now_ts):
+    """Newsletter senders as OPML-shaped outlines, from the stream itself.
+
+    Every email item names its sender in <source>; those senders, plus the
+    previous payload's newsletter sources that published within
+    NEWSLETTER_KEEP_DAYS, are the roster. Subscription plumbing (welcome and
+    confirm emails) never founds a source on its own.
+    """
+    titles = [item["src_title"] for item in stream_items
+              if item.get("email") and not item.get("noise") and item.get("src_title")]
+    newest = {}
+    for item in previous.get("items") or []:
+        if isinstance(item, dict) and isinstance(item.get("d"), int):
+            newest[item.get("s")] = max(newest.get(item.get("s"), 0), item["d"])
+    cutoff = now_ts - NEWSLETTER_KEEP_DAYS * 86400
+    for source in previous.get("sources") or []:
+        if isinstance(source, dict) and source.get("topic") == "newsletters" \
+                and source.get("name") and newest.get(source.get("id"), 0) >= cutoff:
+            titles.append(source["name"])
+    out, seen = [], set()
+    for title in titles:
+        title = clean_space(title)
+        if title and title.lower() not in seen:
+            seen.add(title.lower())
+            out.append({"title": title, "xml": "", "html": INO})
+    return out
 
 
 ATOM = "{http://www.w3.org/2005/Atom}"
@@ -745,12 +810,17 @@ def build_roster(folder_outlines, topics):
     # Pinned ids are claimed up front so a rename can never hand one of them
     # to a different subscription: whoever is not the pinned feed takes the
     # suffix/bump instead.
-    used_ids = {ID_PINS[outline["xml"]] for outline, _ in entries
-                if outline["xml"] in ID_PINS}
+    def pin_of(outline, kind):
+        pinned = ID_PINS.get(outline["xml"] or "")
+        if not pinned and kind == "newsletter":
+            pinned = NEWSLETTER_ID_PINS.get(outline["title"].lower())
+        return pinned
+
+    used_ids = {pin_of(outline, kind) for outline, kind in entries} - {None}
     pins_taken = set()
     for outline, kind in entries:
         base = slugify(outline["title"])
-        pinned = ID_PINS.get(outline["xml"] or "")
+        pinned = pin_of(outline, kind)
         if pinned and pinned not in pins_taken:
             pins_taken.add(pinned)
             source_id = pinned
@@ -1155,10 +1225,29 @@ def run(args):
     if not topics:
         sys.exit("data/pulse-topics.json missing or empty — refusing to run")
 
+    previous = load_json(args.store or args.out, {})
+    now_ts = int(utcnow().timestamp())
+    # each folder's stream is fetched once: the Newsletters one feeds both
+    # the roster (below) and the items (further down)
+    streams = {}
+
+    def stream_raw(label, kind):
+        count = SEED_STREAM_N if args.seed else STREAM_N[kind]
+        if (label, count) not in streams:
+            streams[(label, count)] = fetch_bytes(folder_stream_url(label, count))
+        return streams[(label, count)]
+
     folder_outlines = []
     empty_folders = []
     for label, kind in FOLDERS:
         outlines = parse_opml(fetch_bytes(folder_opml_url(label)))
+        derived = []
+        if kind == "newsletter":
+            # the stream names every sender, so a folder whose OPML comes
+            # back bare (2026-10-17 on) still has a roster; build_roster
+            # collapses a sender the OPML also lists onto the OPML's entry
+            derived = newsletter_outlines(parse_stream(stream_raw(label, kind)),
+                                          previous, now_ts)
         if not outlines:
             # An empty folder is Stephen's Inoreader, not a broken run: on
             # 2026-10-17 the Newsletters folder lost its feeds and the Pulse
@@ -1166,10 +1255,11 @@ def run(args):
             # Carry on without the folder and say so; only every folder
             # empty at once means Inoreader itself is down.
             empty_folders.append(label)
-            print(f"WARNING: OPML for folder {label!r} came back empty; carrying on "
-                  "without it (check the folder in Inoreader)", file=sys.stderr)
-            continue
-        folder_outlines.extend((outline, kind) for outline in outlines)
+            print(f"WARNING: OPML for folder {label!r} came back empty; "
+                  + (f"rostering {len(derived)} senders from its stream instead"
+                     if derived else "carrying on without it")
+                  + " (check the folder in Inoreader)", file=sys.stderr)
+        folder_outlines.extend((outline, kind) for outline in outlines + derived)
     if len(empty_folders) == len(FOLDERS):
         sys.exit("every Inoreader folder came back empty — refusing to run")
 
@@ -1212,7 +1302,6 @@ def run(args):
         sys.exit(f"OUTLETS points at ids no source carries: {', '.join(stray)} "
                  "— refusing to write")
 
-    previous = load_json(args.store or args.out, {})
     newsletter_ids = {source["id"] for source in sources
                       if source["topic"] == "newsletters"}
     paper_sections = {}
@@ -1241,8 +1330,7 @@ def run(args):
     stream_labels = (list(FOLDERS)
                      + [(label, "local") for label in extra_tags])
     for label, kind in stream_labels:
-        count = SEED_STREAM_N if args.seed else STREAM_N[kind]
-        for item in parse_stream(fetch_bytes(folder_stream_url(label, count))):
+        for item in parse_stream(stream_raw(label, kind)):
             if item.get("noise"):
                 continue  # subscription plumbing, not an edition
             source_id = attribute(item, by_site, by_title, by_nl_title)
@@ -1288,7 +1376,6 @@ def run(args):
     dropped_removed = drop_removed(prev_by_source, sources, removed_ids)
     drop_removed(fresh_by_source, sources, removed_ids, key="url")
 
-    now_ts = int(utcnow().timestamp())
     per_source, added_total = {}, 0
     for source in sources:
         prev_items = prev_by_source.get(source["id"], [])
@@ -1408,7 +1495,8 @@ def seed_direct(sources, fresh_by_source):
             return source["id"], []
 
     with concurrent.futures.ThreadPoolExecutor(max_workers=10) as pool:
-        for source_id, items in pool.map(grab, sources):
+        # stream-derived newsletter senders have no feed of their own
+        for source_id, items in pool.map(grab, [s for s in sources if s.get("feed")]):
             fresh_by_source.setdefault(source_id, []).extend(items)
 
 
@@ -1645,6 +1733,50 @@ def selftest():
     # the map is one hop deep and never points a source at itself
     assert not (set(OUTLETS) & set(OUTLETS.values()))
     assert all(k != v for k, v in OUTLETS.items())
+
+    # 2026-10-17: the Newsletters OPML came back bare while the stream kept
+    # carrying editions. The senders come from the stream itself; plumbing
+    # emails found no source; a sender the last payload heard from within
+    # NEWSLETTER_KEEP_DAYS stays rostered between issues, an older one retires
+    now = 1_760_000_000
+    derived = newsletter_outlines(
+        [{"email": True, "src_title": "Morning Brew"},
+         {"email": True, "src_title": "morning brew"},
+         {"email": True, "src_title": "Vtdigger"},
+         {"email": True, "noise": True, "src_title": "Brand New Letter"},
+         {"src_title": "VTDigger", "src_site": "https://vtdigger.org/"}],
+        {"sources": [{"id": "love-burlington", "name": "Love Burlington", "topic": "newsletters"},
+                     {"id": "essex-reporter", "name": "Essex Reporter", "topic": "newsletters"},
+                     {"id": "wcax", "name": "WCAX", "topic": "local"}],
+         "items": [{"s": "love-burlington", "d": now - 20 * 86400},
+                   {"s": "essex-reporter", "d": now - 90 * 86400},
+                   {"s": "wcax", "d": now}]}, now)
+    assert [o["title"] for o in derived] == ["Morning Brew", "Vtdigger", "Love Burlington"]
+    assert all(o["xml"] == "" and "inoreader.com" in o["html"] for o in derived)
+    mixed = build_roster(
+        [({"title": "VTDigger", "xml": "https://vtdigger.org/feed/",
+           "html": "https://vtdigger.org/"}, "local"),
+         ({"title": "Morning Brew", "xml": "https://www.inoreader.com/x1",
+           "html": "https://www.inoreader.com"}, "newsletter")]
+        + [(o, "newsletter") for o in derived], {})
+    # the OPML's Morning Brew and the stream's are one source; the stream's
+    # Vtdigger keeps the id readers' mutes and OUTLETS already point at
+    assert [s["id"] for s in mixed] == ["vtdigger-9ca7", "morning-brew", "vtdigger-dd84",
+                                        "love-burlington"]
+    assert all(s["topic"] == "newsletters" for s in mixed[1:])
+    by_site, by_title, by_nl = source_index(mixed)
+    assert attribute({"src_site": "https://www.inoreader.com", "src_title": "Vtdigger"},
+                     by_site, by_title, by_nl) == "vtdigger-dd84"
+    assert attribute({"src_site": "https://vtdigger.org/", "src_title": "VTDigger"},
+                     by_site, by_title, by_nl) == "vtdigger-9ca7"
+
+    # a WordPress.com post email: "Read on blog" unwraps to the public post
+    wp = ('<a href="https://public-api.wordpress.com/bar/?stat=groovemails-events&amp;'
+          'bin=wpcom_email_click&amp;redirect_to=http%3A%2F%2Fthevpo.org%2F2026%2F10%2F17'
+          '%2Fa-post%2F&amp;sr=1&amp;signature=abc&amp;user=9">Read on blog</a>')
+    assert wpcom_post_url(wp) == "http://thevpo.org/2026/10/17/a-post/"
+    assert wpcom_post_url(wp.replace("Read on blog", "Unsubscribe")) == ""
+    assert wpcom_post_url(wp.replace("thevpo.org", "wordpress.com")) == ""
 
     # a pinned feed keeps its id through a title rename (the 2026-08 churn
     # that forked Vermont Public and VTDigger), and keeps the suffix it only
