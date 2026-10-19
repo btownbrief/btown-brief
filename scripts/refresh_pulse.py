@@ -103,6 +103,22 @@ NEWSLETTER_SITES = {
     "vtdigger": "https://vtdigger.org/",
 }
 
+# The Newsletters ROSTER comes from the stream, not only the OPML. On
+# 2026-10-17 the folder's OPML export started coming back as a bare label
+# with no feeds in it, while the tag's stream kept carrying ~15 editions a
+# day; every one of them was then unattributable and dropped, and the Wire's
+# Newsletters chip read 0 for two days. Every email item names its sender in
+# <source>, so the senders seen in the stream (plus any sender the previous
+# payload heard from within NEWSLETTER_KEEP_DAYS, so a monthly letter does
+# not lose its history between issues) are rostered whatever the OPML says.
+NEWSLETTER_KEEP_DAYS = 45
+# A stream-derived sender has no feed URL to hash, so a sender whose title
+# slug collides with an RSS source keeps its established id by title here.
+# Keyed on the lowercased sender title exactly as the stream gives it.
+NEWSLETTER_ID_PINS = {
+    "vtdigger": "vtdigger-dd84",
+}
+
 # "View in browser" shapes actually seen in the folder (probed 2026-08-09):
 # a labeled anchor, or a platform archive URL. Extraction is best-effort —
 # an email without a public copy stays honest and unlinked.
@@ -113,6 +129,38 @@ WEBCOPY_URL_RE = re.compile(
     r'href="(https?://[^"]*?(?:campaign-archive\.com[^"]*|mailchi\.mp/[^"]+'
     r'|substack\.com/p/[^"]+|beehiiv\.com/p/[^"]+|/p_v\.php[^"]*'
     r'|link\.join1440\.com/view/[^"]+|/web-version[^"]*))"', re.I)
+# WordPress.com post emails (the VPO) wrap "Read on blog" in a click tracker
+# whose redirect_to is the public post URL itself.
+WPCOM_READ_RE = re.compile(
+    r'<a[^>]+href="(https://public-api\.wordpress\.com/bar/\?[^"]+)"[^>]*>'
+    r'\s*Read on blog\s*</a>', re.I)
+# A web copy is extracted from STEPHEN'S copy of the email, so its link can
+# name him: Semafor's carried his address in ?email=, Mailchimp's ?e= and
+# Morning Brew's mbuuid are his subscriber ids, and the beehiiv trackers
+# (Garbage Day, Daybreak) redirect to a ?jwt_token= that signs the clicker in
+# as him. All of it shipped in the public payload until 2026-10-19.
+#   SAFE_PARAMS name him and were checked (2026-10-19) to leave a link that
+#   still opens the edition when removed, so they simply go.
+#   A link still carrying an encoded token (is_opaque) is a click tracker:
+#   it is followed, tokens and all, to where it lands (settle_webcopies),
+#   and the landing loses every RECIPIENT_PARAMS entry. Stripping a tracker
+#   instead would publish a dead link (Daybreak's answers 400 without upn).
+#   A link that stays opaque is never published: the edition renders unlinked.
+SAFE_PARAMS = {"e", "email", "m", "mbuuid"}
+RECIPIENT_PARAMS = SAFE_PARAMS | {
+    "upn", "jwt_token", "_bhlid", "token", "uid", "isfreemail", "r", "ref",
+    "subscriber", "subscriber_id", "sub_id", "sid", "user", "user_id", "uuid",
+    "contact", "contact_id", "recipient", "rid", "member", "member_id"}
+# an unbroken run this long of token characters is an encoded token; a long
+# hyphenated lowercase slug ("burlington-mayor-vows-to-…") is a headline
+TOKEN_RUN_RE = re.compile(r"[A-Za-z0-9_+=~.%]{40,}")
+SLUG_RE = re.compile(r"[a-z0-9]{1,20}(?:-[a-z0-9]{1,20})*(?:\.html?)?")
+OPAQUE_MIN = 60
+WEBCOPY_HOPS = 3
+WEBCOPY_RESOLVE_MAX = 25   # tracker lookups per run; repeats reuse the store
+WEBCOPY_RESOLVE_S = 60     # and at most this long on them: the run is every 10 min
+WEBCOPY_MATCH_S = 12 * 3600   # a stored edition this close in time is the same one
+
 # Subscription plumbing, not editions — skipped outright.
 NEWSLETTER_NOISE_RE = re.compile(
     r"^welcome to\b|confirm your|verify your|set (?:a new )?password|"
@@ -637,8 +685,13 @@ def parse_stream(raw):
             item["email"] = True
             desc = node.findtext("description") or ""
             match = WEBCOPY_TEXT_RE.search(desc) or WEBCOPY_URL_RE.search(desc)
-            if match:
-                item["webcopy"] = canon_url(html.unescape(match.group(1)))
+            webcopy = (strip_recipient(html.unescape(match.group(1)), SAFE_PARAMS)
+                       if match else wpcom_post_url(desc))
+            if webcopy:
+                item["webcopy"] = webcopy
+            for field in ("image", "audio"):   # a pixel can name him too
+                media = strip_recipient(item[field]) if item[field] else ""
+                item[field] = "" if is_opaque(media) else media
             if NEWSLETTER_NOISE_RE.search(item["title"]):
                 item["noise"] = True
         elif "reddit.com" in site or "ycombinator.com" in site:
@@ -663,6 +716,158 @@ def parse_stream(raw):
                     item["thread_n"] = min(int(match.group(1)), 99999)
         items.append(item)
     return items
+
+
+def strip_recipient(url, params=RECIPIENT_PARAMS):
+    """A newsletter link without the params that identify its subscriber."""
+    try:
+        url = canon_url(url)
+        parts = urllib.parse.urlsplit(url)
+    except ValueError:   # "http://[" and friends: nothing safe to publish
+        return ""
+    if not url:
+        return ""
+    query = "&".join(pair for pair in parts.query.split("&")
+                     if pair and pair.split("=", 1)[0].lower() not in params)
+    return urllib.parse.urlunsplit(
+        (parts.scheme, parts.netloc, parts.path, query, ""))
+
+
+def is_opaque(url):
+    """True when a link still carries something that could identify the
+    subscriber: an encoded token in its path or query, or an address."""
+    try:
+        parts = urllib.parse.urlsplit(url or "")
+    except ValueError:
+        return True
+    pieces = [urllib.parse.unquote(piece) for piece in parts.path.split("/")]
+    pieces += [value for _, value in urllib.parse.parse_qsl(parts.query)]
+    if any(key.lower() in RECIPIENT_PARAMS
+           for key, _ in urllib.parse.parse_qsl(parts.query)):
+        return True   # a param that names the subscriber, whatever its length
+    return any("@" in piece or TOKEN_RUN_RE.search(piece)
+               or (len(piece) >= OPAQUE_MIN and not SLUG_RE.fullmatch(piece))
+               for piece in pieces)
+
+
+class _NoRedirect(urllib.request.HTTPRedirectHandler):
+    def redirect_request(self, *args, **kwargs):  # noqa: ARG002 — hop by hop
+        return None
+
+
+def follow_tracker(url, hops=WEBCOPY_HOPS, timeout=10):
+    """Where a click tracker sends its reader, one hop at a time, stopping
+    at the first landing that no longer looks opaque once stripped. Reads
+    headers only. "" when it never gets there."""
+    opener = urllib.request.build_opener(_NoRedirect)
+    for _ in range(hops):
+        try:
+            response = opener.open(urllib.request.Request(
+                url, headers={"User-Agent": UA}), timeout=timeout)
+            response.close()
+            return ""            # a 200 that is still opaque is the tracker itself
+        except urllib.error.HTTPError as exc:
+            location = exc.headers.get("Location") if exc.code in (301, 302, 303, 307, 308) else None
+            if not location:
+                return ""
+        except Exception:  # noqa: BLE001 — an unreachable tracker just stays unlinked
+            return ""
+        try:
+            landing = urllib.parse.urljoin(url, location)
+            if not re.match(r"https?://", landing):
+                return ""
+            url = strip_recipient(landing)
+        except ValueError:   # a malformed Location ("http://[") is a dead end
+            return ""
+        if url and not is_opaque(url):
+            return url
+    return ""
+
+
+def settle_webcopies(fresh_by_source, prev_by_source, resolve=follow_tracker,
+                     budget=WEBCOPY_RESOLVE_MAX, seconds=WEBCOPY_RESOLVE_S):
+    """Every fresh email web copy that is still opaque after stripping gets
+    a public URL or none. An edition the store already holds (same title,
+    stored at or up to WEBCOPY_MATCH_S before this copy's timestamp: the
+    merge keeps the earliest, and clamps a post-dated one to its first
+    sighting) reuses what it settled on, so a tracker is followed once, not
+    every run; past the budget an edition waits for the next run. Returns
+    how many trackers were followed."""
+    followed = 0
+    deadline = time.monotonic() + seconds
+    for source_id, items in fresh_by_source.items():
+        held = {}
+        for item in prev_by_source.get(source_id, []):
+            held.setdefault(item.get("t"), []).append(item)
+        kept = []
+        for item in items:
+            webcopy = item.get("webcopy")
+            if webcopy and is_opaque(webcopy):
+                when = item.get("when")
+                ts = int(when.timestamp()) if when else None
+                if ts is None or ts > time.time() + 3600:
+                    # post-dated: the merge stamps it at first sighting, so
+                    # no later run could match it back; it renders unlinked
+                    item.pop("webcopy", None)
+                    kept.append(item)
+                    continue
+                known = next((stored for stored in held.get(item.get("title"), [])
+                              if ts is not None and isinstance(stored.get("d"), int)
+                              and ts - WEBCOPY_MATCH_S <= stored["d"] <= ts), None)
+                if known is not None:
+                    webcopy = "" if known.get("x") else known.get("u", "")
+                elif followed < budget and time.monotonic() < deadline:
+                    followed += 1
+                    webcopy = resolve(webcopy)
+                else:
+                    continue
+                if webcopy and not is_opaque(webcopy):
+                    item["webcopy"] = webcopy
+                else:
+                    item.pop("webcopy", None)   # renders unlinked, never leaks
+            kept.append(item)
+        fresh_by_source[source_id] = kept
+    return followed
+
+
+def wpcom_post_url(desc):
+    """The public post URL behind a WordPress.com email's "Read on blog"."""
+    match = WPCOM_READ_RE.search(desc or "")
+    if not match:
+        return ""
+    query = urllib.parse.urlsplit(html.unescape(match.group(1))).query
+    target = (urllib.parse.parse_qs(query).get("redirect_to") or [""])[0]
+    if not re.match(r"https?://", target) or "wordpress.com" in site_host(target):
+        return ""
+    return strip_recipient(target)
+
+
+def newsletter_outlines(stream_items, previous, now_ts):
+    """Newsletter senders as OPML-shaped outlines, from the stream itself.
+
+    Every email item names its sender in <source>; those senders, plus the
+    previous payload's newsletter sources that published within
+    NEWSLETTER_KEEP_DAYS, are the roster. Subscription plumbing (welcome and
+    confirm emails) never founds a source on its own.
+    """
+    titles = [item["src_title"] for item in stream_items
+              if item.get("email") and not item.get("noise") and item.get("src_title")]
+    newest = {}
+    for item in previous.get("items") or []:
+        if isinstance(item, dict) and isinstance(item.get("d"), int):
+            newest[item.get("s")] = max(newest.get(item.get("s"), 0), item["d"])
+    cutoff = now_ts - NEWSLETTER_KEEP_DAYS * 86400
+    for source in previous.get("sources") or []:
+        if isinstance(source, dict) and source.get("topic") == "newsletters" \
+                and source.get("name") and newest.get(source.get("id"), 0) >= cutoff:
+            titles.append(source["name"])
+    out, seen = [], set()
+    for title in titles:
+        title = clean_space(title)
+        if title and title.lower() not in seen:
+            seen.add(title.lower())
+            out.append({"title": title, "xml": "", "html": INO})
+    return out
 
 
 ATOM = "{http://www.w3.org/2005/Atom}"
@@ -745,18 +950,26 @@ def build_roster(folder_outlines, topics):
     # Pinned ids are claimed up front so a rename can never hand one of them
     # to a different subscription: whoever is not the pinned feed takes the
     # suffix/bump instead.
-    used_ids = {ID_PINS[outline["xml"]] for outline, _ in entries
-                if outline["xml"] in ID_PINS}
+    def pin_of(outline, kind):
+        pinned = ID_PINS.get(outline["xml"] or "")
+        if not pinned and kind == "newsletter":
+            pinned = NEWSLETTER_ID_PINS.get(outline["title"].lower())
+        return pinned
+
+    used_ids = {pin_of(outline, kind) for outline, kind in entries} - {None}
     pins_taken = set()
     for outline, kind in entries:
         base = slugify(outline["title"])
-        pinned = ID_PINS.get(outline["xml"] or "")
+        pinned = pin_of(outline, kind)
         if pinned and pinned not in pins_taken:
             pins_taken.add(pinned)
             source_id = pinned
         else:
             if title_counts[base] > 1:
-                suffix = hashlib.md5((outline["xml"] or "").encode()).hexdigest()[:4]
+                # a stream-derived sender has no feed URL: its title is the
+                # stable thing, so two senders sharing a slug never swap ids
+                suffix = hashlib.md5((outline["xml"] or outline["title"].lower())
+                                     .encode()).hexdigest()[:4]
                 source_id = f"{base}-{suffix}"
             else:
                 source_id = base
@@ -853,7 +1066,9 @@ def merge_source(previous, incoming, now_ts, cap=ITEM_CAP):
             fresh["du"] = item["thread"]
         if item.get("thread_n") is not None:
             fresh["dn"] = item["thread_n"]
-        key = dedupe_key(item["url"])
+        # keyed on the URL that gets STORED: an email's web copy, not its
+        # Inoreader link, or every run re-adds the edition as a new story
+        key = dedupe_key(fresh["u"])
         held = by_key.get(key)
         if held is None:
             fresh["_new"] = True
@@ -1155,10 +1370,29 @@ def run(args):
     if not topics:
         sys.exit("data/pulse-topics.json missing or empty — refusing to run")
 
+    previous = load_json(args.store or args.out, {})
+    now_ts = int(utcnow().timestamp())
+    # each folder's stream is fetched once: the Newsletters one feeds both
+    # the roster (below) and the items (further down)
+    streams = {}
+
+    def stream_raw(label, kind):
+        count = SEED_STREAM_N if args.seed else STREAM_N[kind]
+        if (label, count) not in streams:
+            streams[(label, count)] = fetch_bytes(folder_stream_url(label, count))
+        return streams[(label, count)]
+
     folder_outlines = []
     empty_folders = []
     for label, kind in FOLDERS:
         outlines = parse_opml(fetch_bytes(folder_opml_url(label)))
+        derived = []
+        if kind == "newsletter":
+            # the stream names every sender, so a folder whose OPML comes
+            # back bare (2026-10-17 on) still has a roster; build_roster
+            # collapses a sender the OPML also lists onto the OPML's entry
+            derived = newsletter_outlines(parse_stream(stream_raw(label, kind)),
+                                          previous, now_ts)
         if not outlines:
             # An empty folder is Stephen's Inoreader, not a broken run: on
             # 2026-10-17 the Newsletters folder lost its feeds and the Pulse
@@ -1166,10 +1400,11 @@ def run(args):
             # Carry on without the folder and say so; only every folder
             # empty at once means Inoreader itself is down.
             empty_folders.append(label)
-            print(f"WARNING: OPML for folder {label!r} came back empty; carrying on "
-                  "without it (check the folder in Inoreader)", file=sys.stderr)
-            continue
-        folder_outlines.extend((outline, kind) for outline in outlines)
+            print(f"WARNING: OPML for folder {label!r} came back empty; "
+                  + (f"rostering {len(derived)} senders from its stream instead"
+                     if derived else "carrying on without it")
+                  + " (check the folder in Inoreader)", file=sys.stderr)
+        folder_outlines.extend((outline, kind) for outline in outlines + derived)
     if len(empty_folders) == len(FOLDERS):
         sys.exit("every Inoreader folder came back empty — refusing to run")
 
@@ -1212,7 +1447,6 @@ def run(args):
         sys.exit(f"OUTLETS points at ids no source carries: {', '.join(stray)} "
                  "— refusing to write")
 
-    previous = load_json(args.store or args.out, {})
     newsletter_ids = {source["id"] for source in sources
                       if source["topic"] == "newsletters"}
     paper_sections = {}
@@ -1231,9 +1465,23 @@ def run(args):
         section = paper_sections.get(item.get("s"))
         if section and not section_ok(section, item.get("u", "")):
             continue
-        prev_by_source.setdefault(item.get("s"), []).append(
-            {k: item[k] for k in ("t", "u", "d", "a", "i", "o", "du", "dn",
-                                  "r", "h", "hc", "x") if k in item})
+        kept = {k: item[k] for k in ("t", "u", "d", "a", "i", "o", "du", "dn",
+                                     "r", "h", "hc", "x") if k in item}
+        if item.get("s") in newsletter_ids and not item.get("x"):
+            # and the subscriber-token scrub: a stored web copy that names
+            # Stephen loses the params, or leaves the store if it still
+            # does (the stream re-offers it and settle_webcopies settles it)
+            kept["u"] = strip_recipient(kept.get("u", ""))
+            if not kept["u"] or is_opaque(kept["u"]):
+                continue
+            for field in ("a", "i"):
+                if field in kept:
+                    media = strip_recipient(kept[field])
+                    if media and not is_opaque(media):
+                        kept[field] = media
+                    else:
+                        del kept[field]
+        prev_by_source.setdefault(item.get("s"), []).append(kept)
 
     by_site, by_title, by_nl_title = source_index(sources)
     fresh_by_source = {}
@@ -1241,8 +1489,7 @@ def run(args):
     stream_labels = (list(FOLDERS)
                      + [(label, "local") for label in extra_tags])
     for label, kind in stream_labels:
-        count = SEED_STREAM_N if args.seed else STREAM_N[kind]
-        for item in parse_stream(fetch_bytes(folder_stream_url(label, count))):
+        for item in parse_stream(stream_raw(label, kind)):
             if item.get("noise"):
                 continue  # subscription plumbing, not an edition
             source_id = attribute(item, by_site, by_title, by_nl_title)
@@ -1250,6 +1497,10 @@ def run(args):
                 unmatched += 1
                 continue
             fresh_by_source.setdefault(source_id, []).append(item)
+
+    resolved = settle_webcopies(fresh_by_source, prev_by_source)
+    if resolved:
+        print(f"newsletters: followed {resolved} click trackers to their public copies")
 
     matched = sum(len(items) for items in fresh_by_source.values())
     if unmatched > matched:
@@ -1288,7 +1539,6 @@ def run(args):
     dropped_removed = drop_removed(prev_by_source, sources, removed_ids)
     drop_removed(fresh_by_source, sources, removed_ids, key="url")
 
-    now_ts = int(utcnow().timestamp())
     per_source, added_total = {}, 0
     for source in sources:
         prev_items = prev_by_source.get(source["id"], [])
@@ -1408,7 +1658,8 @@ def seed_direct(sources, fresh_by_source):
             return source["id"], []
 
     with concurrent.futures.ThreadPoolExecutor(max_workers=10) as pool:
-        for source_id, items in pool.map(grab, sources):
+        # stream-derived newsletter senders have no feed of their own
+        for source_id, items in pool.map(grab, [s for s in sources if s.get("feed")]):
             fresh_by_source.setdefault(source_id, []).extend(items)
 
 
@@ -1645,6 +1896,117 @@ def selftest():
     # the map is one hop deep and never points a source at itself
     assert not (set(OUTLETS) & set(OUTLETS.values()))
     assert all(k != v for k, v in OUTLETS.items())
+
+    # 2026-10-17: the Newsletters OPML came back bare while the stream kept
+    # carrying editions. The senders come from the stream itself; plumbing
+    # emails found no source; a sender the last payload heard from within
+    # NEWSLETTER_KEEP_DAYS stays rostered between issues, an older one retires
+    now = 1_760_000_000
+    derived = newsletter_outlines(
+        [{"email": True, "src_title": "Morning Brew"},
+         {"email": True, "src_title": "morning brew"},
+         {"email": True, "src_title": "Vtdigger"},
+         {"email": True, "noise": True, "src_title": "Brand New Letter"},
+         {"src_title": "VTDigger", "src_site": "https://vtdigger.org/"}],
+        {"sources": [{"id": "love-burlington", "name": "Love Burlington", "topic": "newsletters"},
+                     {"id": "essex-reporter", "name": "Essex Reporter", "topic": "newsletters"},
+                     {"id": "wcax", "name": "WCAX", "topic": "local"}],
+         "items": [{"s": "love-burlington", "d": now - 20 * 86400},
+                   {"s": "essex-reporter", "d": now - 90 * 86400},
+                   {"s": "wcax", "d": now}]}, now)
+    assert [o["title"] for o in derived] == ["Morning Brew", "Vtdigger", "Love Burlington"]
+    assert all(o["xml"] == "" and "inoreader.com" in o["html"] for o in derived)
+    mixed = build_roster(
+        [({"title": "VTDigger", "xml": "https://vtdigger.org/feed/",
+           "html": "https://vtdigger.org/"}, "local"),
+         ({"title": "Morning Brew", "xml": "https://www.inoreader.com/x1",
+           "html": "https://www.inoreader.com"}, "newsletter")]
+        + [(o, "newsletter") for o in derived], {})
+    # the OPML's Morning Brew and the stream's are one source; the stream's
+    # Vtdigger keeps the id readers' mutes and OUTLETS already point at
+    assert [s["id"] for s in mixed] == ["vtdigger-9ca7", "morning-brew", "vtdigger-dd84",
+                                        "love-burlington"]
+    assert all(s["topic"] == "newsletters" for s in mixed[1:])
+    # feedless senders sharing a slug get title-hashed ids, in any order
+    pair = [{"title": "Day Break", "xml": "", "html": INO},
+            {"title": "Day-Break", "xml": "", "html": INO}]
+    fwd = {s["name"]: s["id"] for s in build_roster([(o, "newsletter") for o in pair], {})}
+    rev = {s["name"]: s["id"] for s in build_roster([(o, "newsletter") for o in pair[::-1]], {})}
+    assert fwd == rev and len(set(fwd.values())) == 2
+    recased = build_roster([({"title": "DAY BREAK", "xml": "", "html": INO}, "newsletter"),
+                            (pair[1], "newsletter")], {})
+    assert recased[0]["id"] == fwd["Day Break"]   # a case change keeps the id
+    by_site, by_title, by_nl = source_index(mixed)
+    assert attribute({"src_site": "https://www.inoreader.com", "src_title": "Vtdigger"},
+                     by_site, by_title, by_nl) == "vtdigger-dd84"
+    assert attribute({"src_site": "https://vtdigger.org/", "src_title": "VTDigger"},
+                     by_site, by_title, by_nl) == "vtdigger-9ca7"
+
+    # a WordPress.com post email: "Read on blog" unwraps to the public post
+    wp = ('<a href="https://public-api.wordpress.com/bar/?stat=groovemails-events&amp;'
+          'bin=wpcom_email_click&amp;redirect_to=http%3A%2F%2Fthevpo.org%2F2026%2F10%2F17'
+          '%2Fa-post%2F&amp;sr=1&amp;signature=abc&amp;user=9">Read on blog</a>')
+    assert wpcom_post_url(wp) == "http://thevpo.org/2026/10/17/a-post/"
+    assert wpcom_post_url(wp.replace("Read on blog", "Unsubscribe")) == ""
+    assert wpcom_post_url(wp.replace("thevpo.org", "wordpress.com")) == ""
+
+    # subscriber tokens never reach the payload (2026-10-19): the params go,
+    # a click tracker is followed to its landing, an opaque link stays unlinked
+    assert strip_recipient("https://semafor.com/s/abc?email=me%40x.com") == "https://semafor.com/s/abc"
+    assert strip_recipient("https://us2.campaign-archive.com/?e=1234567890&u=ab&id=cd") \
+        == "https://us2.campaign-archive.com/?u=ab&id=cd"
+    assert strip_recipient("https://x.example/p/a?utm_source=n&_bhlid=1&jwt_token=eyJ") \
+        == "https://x.example/p/a"
+    tracker = "https://elink1.mail.example/ss/c/" + "t" * 300
+    assert is_opaque(tracker) and is_opaque("https://a.com/x?who=me%40x.com")
+    assert not is_opaque("https://us2.campaign-archive.com/?u=ab&id=cd")
+    assert is_opaque("https://a.com/issue?subscriber_id=abc123")
+    # a tracker whose token is a param is followed whole, never stripped dead
+    assert is_opaque("https://elink.mail.example/ls/click?upn=short")
+    assert strip_recipient("https://elink.mail.example/ls/click?upn=x", SAFE_PARAMS) \
+        == "https://elink.mail.example/ls/click?upn=x"
+    # a long headline slug is not a token; a base64 blob or a JWT is
+    assert not is_opaque("https://mailchi.mp/sevendaysvt/" + "-".join(["burlington"] * 12))
+    assert is_opaque("https://a.com/p?x=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjM0NTY3ODkwIn0")
+    when = datetime.fromtimestamp(1_754_000_000, tz=timezone.utc)
+    fresh = {"nl": [{"title": "New", "when": when, "webcopy": tracker},
+                    {"title": "Held", "when": when, "webcopy": tracker + "2"},
+                    {"title": "Dead", "when": when, "webcopy": tracker + "3"},
+                    {"title": "Over", "when": when, "webcopy": tracker + "4"},
+                    {"title": "Plain", "when": when, "webcopy": "https://a.com/p/plain"}]}
+    store = {"nl": [{"t": "Held", "d": 1_754_000_000, "u": "https://a.com/p/held"}]}
+    calls = []
+
+    def fake_resolve(url):
+        calls.append(url)
+        return "https://a.com/p/new" if url == tracker else ""
+    assert settle_webcopies(fresh, store, fake_resolve, budget=2) == 2
+    assert calls == [tracker, tracker + "3"]                      # Held reused, Over waits
+    # a post-dated copy the merge clamped (stored earlier) is still the same
+    # edition; last week's "Daybreak Thursday" is not
+    later = datetime.fromtimestamp(1_754_000_000 + 3 * 3600, tz=timezone.utc)
+    again = {"nl": [{"title": "Held", "when": later, "webcopy": tracker + "2"},
+                    {"title": "Held", "when": datetime.fromtimestamp(1_754_000_000 + 7 * 86400, tz=timezone.utc), "webcopy": tracker + "5"}]}
+    calls.clear()
+    settle_webcopies(again, store, fake_resolve)
+    assert calls == [tracker + "5"] and again["nl"][0]["webcopy"] == "https://a.com/p/held"
+    assert "webcopy" not in again["nl"][1]
+    assert follow_tracker("not a url") == ""
+    assert strip_recipient("http://[") == "" and is_opaque("http://[")
+    future = datetime.fromtimestamp(time.time() + 86400, tz=timezone.utc)
+    ahead = {"nl": [{"title": "Soon", "when": future, "webcopy": tracker}]}
+    calls.clear()
+    settle_webcopies(ahead, {}, fake_resolve)
+    assert calls == [] and "webcopy" not in ahead["nl"][0]
+    got = {item["title"]: item.get("webcopy") for item in fresh["nl"]}
+    assert got == {"New": "https://a.com/p/new", "Held": "https://a.com/p/held",
+                   "Dead": None, "Plain": "https://a.com/p/plain"}, got
+    # one edition seen on two runs is one story: the merge keys on the web copy
+    issue = {"title": "Issue", "url": "https://www.inoreader.com/a/1", "email": True,
+             "webcopy": "https://a.com/p/i", "audio": "", "image": "", "when": when}
+    first, _ = merge_source([], [issue], 1_754_000_100)
+    twice, added = merge_source(first, [dict(issue)], 1_754_000_100)
+    assert len(twice) == 1 and added == 0
 
     # a pinned feed keeps its id through a title rename (the 2026-08 churn
     # that forked Vermont Public and VTDigger), and keeps the suffix it only
