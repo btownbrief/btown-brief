@@ -1,25 +1,25 @@
 {
- "updated": "2026-10-19T09:42:33+00:00",
+ "updated": "2026-10-19T11:17:00+00:00",
  "sections_updated": {
-  "now": "2026-10-19T09:42:33+00:00",
-  "forecast": "2026-10-19T09:42:33+00:00",
-  "hourly": "2026-10-19T09:42:33+00:00",
-  "alerts": "2026-10-19T09:42:33+00:00",
-  "afd": "2026-10-19T09:42:33+00:00",
-  "lake_forecast": "2026-10-19T09:42:33+00:00",
-  "lake_gage": "2026-10-19T09:42:33+00:00",
-  "air": "2026-10-19T09:42:33+00:00",
-  "sun": "2026-10-19T09:42:33+00:00",
-  "models": "2026-10-19T09:42:33+00:00"
+  "now": "2026-10-19T11:17:00+00:00",
+  "forecast": "2026-10-19T11:17:00+00:00",
+  "hourly": "2026-10-19T11:17:00+00:00",
+  "alerts": "2026-10-19T11:17:00+00:00",
+  "afd": "2026-10-19T11:17:00+00:00",
+  "lake_forecast": "2026-10-19T11:17:00+00:00",
+  "lake_gage": "2026-10-19T11:17:00+00:00",
+  "air": "2026-10-19T11:17:00+00:00",
+  "sun": "2026-10-19T11:17:00+00:00",
+  "models": "2026-10-19T11:17:00+00:00"
  },
  "now": {
-  "observed_at": "2026-10-19T09:20:00+00:00",
+  "observed_at": "2026-10-19T10:55:00+00:00",
   "station": "KBTV",
   "description": "Clear",
-  "temp_f": 37,
-  "feels_like_f": 37,
-  "humidity": 87,
-  "dewpoint_f": 34,
+  "temp_f": 34,
+  "feels_like_f": 34,
+  "humidity": 86,
+  "dewpoint_f": 30,
   "wind_mph": 0,
   "wind_gust_mph": null,
   "wind_dir": "N",
@@ -29,17 +29,7 @@
   "updated": "2026-10-19T06:12:53+00:00",
   "periods": [
    {
-    "name": "Overnight",
-    "start": "2026-10-19T05:00:00-04:00",
-    "is_day": false,
-    "temp_f": 45,
-    "pop": 0,
-    "wind": "S 10 mph",
-    "short": "Clear",
-    "detailed": "Clear, with a low around 45. South wind around 10 mph."
-   },
-   {
-    "name": "Monday",
+    "name": "Today",
     "start": "2026-10-19T06:00:00-04:00",
     "is_day": true,
     "temp_f": 62,
@@ -49,7 +39,7 @@
     "detailed": "Sunny, with a high near 62. South wind 5 to 12 mph."
    },
    {
-    "name": "Monday Night",
+    "name": "Tonight",
     "start": "2026-10-19T18:00:00-04:00",
     "is_day": false,
     "temp_f": 42,
@@ -167,34 +157,22 @@
     "wind": "S 6 to 9 mph",
     "short": "Mostly Sunny",
     "detailed": "Mostly sunny, with a high near 58. South wind 6 to 9 mph."
+   },
+   {
+    "name": "Sunday Night",
+    "start": "2026-10-25T18:00:00-04:00",
+    "is_day": false,
+    "temp_f": 40,
+    "pop": 0,
+    "wind": "S 9 mph",
+    "short": "Partly Cloudy",
+    "detailed": "Partly cloudy, with a low around 40. South wind around 9 mph."
    }
   ]
  },
  "hourly": {
   "updated": "2026-10-19T06:12:53+00:00",
   "hours": [
-   {
-    "t": "2026-10-19T05:00:00-04:00",
-    "temp_f": 46,
-    "feels_f": 41,
-    "pop": 0,
-    "humidity": 68,
-    "wind_mph": 10,
-    "wind_dir": "S",
-    "sky": 3,
-    "short": "Clear"
-   },
-   {
-    "t": "2026-10-19T06:00:00-04:00",
-    "temp_f": 45,
-    "feels_f": 40,
-    "pop": 0,
-    "humidity": 70,
-    "wind_mph": 10,
-    "wind_dir": "S",
-    "sky": 4,
-    "short": "Sunny"
-   },
    {
     "t": "2026-10-19T07:00:00-04:00",
     "temp_f": 45,
@@ -568,6 +546,28 @@
     "wind_dir": "N",
     "sky": 5,
     "short": "Sunny"
+   },
+   {
+    "t": "2026-10-20T17:00:00-04:00",
+    "temp_f": 55,
+    "feels_f": 55,
+    "pop": 0,
+    "humidity": 59,
+    "wind_mph": 13,
+    "wind_dir": "N",
+    "sky": 6,
+    "short": "Sunny"
+   },
+   {
+    "t": "2026-10-20T18:00:00-04:00",
+    "temp_f": 54,
+    "feels_f": 54,
+    "pop": 0,
+    "humidity": 61,
+    "wind_mph": 12,
+    "wind_dir": "N",
+    "sky": 10,
+    "short": "Mostly Clear"
    }
   ]
  },
@@ -575,13 +575,13 @@
   "active": []
  },
  "afd": {
-  "issued": "2026-10-19T07:01:00+00:00",
+  "issued": "2026-10-19T11:04:00+00:00",
   "key_messages": [
    "Quiet and dry weather is expected through the late week.",
    "The extended forecast continues to be very quiet with seasonable temperatures and dry conditions prevail through next weekend."
   ],
   "what_changed": "As of 300 AM EDT Monday... No significant changes to the current forecast.",
-  "raw": "\n000\nFXUS61 KBTV 190701\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n301 AM EDT Mon Oct 19 2026\n\n.WHAT HAS CHANGED...\nAs of 300 AM EDT Monday...\n\nNo significant changes to the current forecast.\n\n&&\n\n.KEY MESSAGES...\nAs of 300 AM EDT Monday...\n\n1. Quiet and dry weather is expected through the late week.\n\n2. The extended forecast continues to be very quiet with \nseasonable temperatures and dry conditions prevail through next \nweekend. \n  \n\n&&\n\n.DISCUSSION...\nAs of 300 AM EDT Monday...\n\nKEY MESSAGE 1: High pressure 1037 mb is currently centered over Nova \nScotia early this morning as a low level jet blows across Ontario \nand Quebec. This is resulting in clear skies and breezy conditions \non mountaintops. Temperatures this morning in the 30s and 40s will \nrebound into the lower 60s by the afternoon hours under southerly \nflow. A weak moisture starved cold front will slide south from \nCanada Monday night into Tuesday and wash out over the area with no \nprecipitation expected, though some morning clouds and cooler \ntemperatures can be expected Tuesday morning. Sunny skies will \nprevail thereafter with large scale ridging leading to low humidity \nand light winds through mid week. There continues to be high \nconfidence of no precipitation areawide at least through mid week.\n\nKEY MESSAGE 2: Little change in the forecast provided by WPC this \npackage with temps trending cooler than normal by late week and dry \nconditions prevailing. A weak cold front will drop south late Thurs \ninto Friday with northerly winds and cooler 925mb to 850mb thermal \nprofiles. The latest ECMWF is most aggressive with showing a closing \n700 to 500mb circulation and the potential for a few \nsprinkles/flurries, while the GFS/CMC are less robust with trof \ndevelopment and associated caa. The probability of measurable precip \nis <10% attm, so have no mention of pops in latest fcst. Based on \nprogged 850mb temps btwn 0C and -2C and similar 925mb temps, the \nhighs provided by WPC are in the upper 30s mtns summits to l/m 50s \nvalleys on Friday and warm into the mid 40s to upper 50s by Saturday \nand mostly mid 50s to lower 60s by Sunday. Lows generally in the mid \n20s to mid 30s, warming back into the mid 30s to lower 40s by \nSunday. As daily nocturnal inversion develop by next weekend, expect \na sharp thermal gradient between cooler/sheltered valleys and warmer \nmidslope/ridges to persist. These temperature details are not very \nwell captured by the latest forecast provided by WPC. \n\nFire weather concerns increase this week, given the dry conditions, \nmild temperatures and sunshine, significant drying of fine fuels, \nincluding leaf litter is expected, but winds are expected to remain \nlight.\n\n&&\n\n.AVIATION /06Z MONDAY THROUGH FRIDAY/...\nThrough 06Z Tuesday...Primary aviation hazard will be localized\nwind shear at MSS through 10z this morning associated with 2000\nfeet above ground jet of 35 to 40 knots. Otherwise, high\nconfidence of VFR conditions prevailing the next 24 hours at all\nTAF sites, with south to southwest winds 5 to 15 knots. \n\nOutlook...\n\nTuesday: VFR. NO SIG WX.\nTuesday Night: VFR. NO SIG WX.\nWednesday: VFR. NO SIG WX.\nWednesday Night: VFR. NO SIG WX.\nThursday: VFR. NO SIG WX.\nThursday Night: Mainly VFR, with local MVFR possible. NO SIG WX.\nFriday: VFR. NO SIG WX.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Storm\nDISCUSSION...Storm/Taber\nAVIATION...Taber\n"
+  "raw": "\n000\nFXUS61 KBTV 191104\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n704 AM EDT Mon Oct 19 2026\n\n.WHAT HAS CHANGED...\nAs of 300 AM EDT Monday...\n\nNo significant changes to the current forecast.\n\n&&\n\n.KEY MESSAGES...\nAs of 300 AM EDT Monday...\n\n1. Quiet and dry weather is expected through the late week.\n\n2. The extended forecast continues to be very quiet with \nseasonable temperatures and dry conditions prevail through next \nweekend.\n\n&&\n\n.DISCUSSION...\nAs of 300 AM EDT Monday...\n\nKEY MESSAGE 1: High pressure 1037 mb is currently centered over Nova \nScotia early this morning as a low level jet blows across Ontario \nand Quebec. This is resulting in clear skies and breezy conditions \non mountaintops. Temperatures this morning in the 30s and 40s will \nrebound into the lower 60s by the afternoon hours under southerly \nflow. A weak moisture starved cold front will slide south from \nCanada Monday night into Tuesday and wash out over the area with no \nprecipitation expected, though some morning clouds and cooler \ntemperatures can be expected Tuesday morning. Sunny skies will \nprevail thereafter with large scale ridging leading to low humidity \nand light winds through mid week. There continues to be high \nconfidence of no precipitation areawide at least through mid week.\n\nKEY MESSAGE 2: Little change in the forecast provided by WPC this \npackage with temps trending cooler than normal by late week and dry \nconditions prevailing. A weak cold front will drop south late Thurs \ninto Friday with northerly winds and cooler 925mb to 850mb thermal \nprofiles. The latest ECMWF is most aggressive with showing a closing \n700 to 500mb circulation and the potential for a few \nsprinkles/flurries, while the GFS/CMC are less robust with trof \ndevelopment and associated caa. The probability of measurable precip \nis <10% attm, so have no mention of pops in latest fcst. Based on \nprogged 850mb temps btwn 0C and -2C and similar 925mb temps, the \nhighs provided by WPC are in the upper 30s mtns summits to l/m 50s \nvalleys on Friday and warm into the mid 40s to upper 50s by Saturday \nand mostly mid 50s to lower 60s by Sunday. Lows generally in the mid \n20s to mid 30s, warming back into the mid 30s to lower 40s by \nSunday. As daily nocturnal inversion develop by next weekend, expect \na sharp thermal gradient between cooler/sheltered valleys and warmer \nmidslope/ridges to persist. These temperature details are not very \nwell captured by the latest forecast provided by WPC. \n\nFire weather concerns increase this week, given the dry conditions, \nmild temperatures and sunshine, significant drying of fine fuels, \nincluding leaf litter is expected, but winds are expected to remain \nlight.\n\n&&\n\n.AVIATION /12Z MONDAY THROUGH FRIDAY/...\nThrough 12Z Tuesday...VFR conditions continue to prevail through\n06z tonight with surface high pressure and south to southwest\nwinds 5 to 10 knots. A weak cold front will shift south after\n06z with a wind change to the north-northwest at 4 to 8 knots, \nalong with some slightly better low level moisture. The \nprobability of MVFR/localized IFR/LIFR in stratus/mist is <20% \nat this time, so have just hinted at lower clouds with few-sct \n500 feet. If any lower cigs develop, it would be after 06z \nTuesday and toward sunrise.\n\nOutlook...\n\nTuesday: VFR. NO SIG WX.\nTuesday Night: VFR. NO SIG WX.\nWednesday: VFR. NO SIG WX.\nWednesday Night: VFR. NO SIG WX.\nThursday: VFR. NO SIG WX.\nThursday Night: Mainly VFR, with local MVFR possible. NO SIG WX.\nFriday: VFR. NO SIG WX.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Storm\nDISCUSSION...Storm/Taber\nAVIATION...Taber\n"
  },
  "lake_forecast": {
   "issued": "2026-10-19T06:18:00+00:00",
@@ -825,18 +825,18 @@
   }
  },
  "lake_gage": {
-  "water_temp_f": 55,
-  "water_temp_at": "2026-10-19T05:00:00.000-04:00",
-  "level_ft": 94.05,
-  "level_at": "2026-10-19T05:00:00.000-04:00",
+  "water_temp_f": 54,
+  "water_temp_at": "2026-10-19T07:00:00.000-04:00",
+  "level_ft": 94.04,
+  "level_at": "2026-10-19T07:00:00.000-04:00",
   "level_status": "normal"
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 31,
+  "aqi": 33,
   "category": "Good",
   "pollutant": "OZONE",
-  "observed": "10/19/26 5:00",
+  "observed": "10/19/26 7:00",
   "discussion": "On Monday, October 19th, expect generally good air quality across Vermont."
  },
  "sun": {
@@ -851,7 +851,7 @@
    {
     "date": "2026-10-19",
     "high_f": {
-     "GFS": 62,
+     "GFS": 61,
      "Euro": 62,
      "ICON": 65
     },
@@ -865,7 +865,7 @@
      "Euro": 0.0,
      "ICON": 0.0
     },
-    "high_spread_f": 3
+    "high_spread_f": 4
    },
    {
     "date": "2026-10-20",
