@@ -2614,6 +2614,20 @@ async function onAir(browser, base) {
       check(!errors.length, 'demo: no console errors', errors.join(' | '));
       await ctx.close();
     }
+    /* a shared Clipsboard board reaches a reader on Local: it flips to Everything and the Playlists side */
+    {
+      const { d } = await demoKeys();
+      const slug = d.finds.boards[0].slug;
+      const { ctx, page, errors } = await newPage(browser, base);
+      await page.goto(base + '/all-day/?demo=1#onair/board:' + slug);
+      await settle(page);
+      await page.waitForSelector('#panel-onair [data-side="lists"]:not([hidden]) [data-board="board:' + slug + '"]', { timeout: 8000 }).catch(() => {});
+      const st = await page.evaluate((k) => ({ side: !document.querySelector('#panel-onair [data-side="lists"]').hidden, tile: !!document.querySelector('#panel-onair [data-board="' + k + '"]'),
+        every: document.querySelector('#subnav .localsw-half.on')?.textContent.trim(), toast: document.getElementById('toast')?.hidden === false ? document.getElementById('toast').textContent : '' }), 'board:' + slug);
+      check(st.side && st.tile && st.every === 'Everything' && !/moved on/.test(st.toast), 'a shared board lands for a Local reader: Everything, Playlists, the board', JSON.stringify(st));
+      check(!errors.length, 'no console errors', errors.join(' | '));
+      await ctx.close();
+    }
     /* live, from data/playlists.json and the board: only real playlist links show, nothing can inject markup, covers only from the services' own image hosts */
     {
       const SP = 'https://open.spotify.com/playlist/37i9dQZF1DXcBWIGoYBM5M';
@@ -2633,6 +2647,7 @@ async function onAir(browser, base) {
           { title: 'Unknown service', by: 'X', service: 'myspace', url: 'https://myspace.com/x', note: '', added: '2026-10-15' },
           { title: 'Inherited service', by: 'X', service: 'constructor', url: 'https://example.com/anything', note: '', added: '2026-10-15' },
           { title: 'A video, not a playlist', by: 'X', service: 'youtube', url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ', note: '', added: '2026-10-15' },
+          { title: 'Shared from the app', by: 'X', service: 'youtube', url: 'https://www.youtube.com/playlist?list=PLx0sYbCqOb8TBPRdmBHs5Iftvv9TPboYH&si=Ab_C-12', note: '', added: '2026-10-14' },
         ],
       };
       /* the board: its SQL pasted (the rules carry "playlists"), two approved posts, one a link it does not know */
@@ -2653,8 +2668,8 @@ async function onAir(browser, base) {
       await page.waitForSelector('#panel-onair [data-sec="lists"]', { timeout: 15000 });
       await page.waitForSelector('#panel-onair [data-add-playlist="board"]', { timeout: 8000 });
       const rows = await page.$$eval('#panel-onair [data-slot="lists"] .pl-tile', (rs) => rs.map((r) => r.querySelector('.t').textContent));
-      check(JSON.stringify(rows) === JSON.stringify(['Fall in the Old North End', 'Burlington bands, live', 'Leaf peeping on Route 100', '<img src=x onerror="window.__xss=1">Mine']),
-        'only real playlist links show: a TODO placeholder, javascript:, a broken quote, http, the wrong service, an unknown or inherited one (“constructor”), a single video and a board post with a link it does not know are all left out', JSON.stringify(rows));
+      check(JSON.stringify(rows) === JSON.stringify(['Fall in the Old North End', 'Burlington bands, live', 'Leaf peeping on Route 100', '<img src=x onerror="window.__xss=1">Mine', 'Shared from the app']),
+        'only real playlist links show (a YouTube share link with its &si= is one): a TODO placeholder, javascript:, a broken quote, http, the wrong service, an unknown or inherited one (“constructor”), a single video and a board post with a link it does not know are all left out', JSON.stringify(rows));
       await page.waitForTimeout(500);
       const xss = await page.evaluate(() => ({ flag: window.__xss || 0, bad: document.querySelectorAll('#panel-onair [data-slot="lists"] img[src="x"], #panel-onair [data-slot="lists"] script, #panel-onair [data-slot="lists"] b').length,
         covers: [...document.querySelectorAll('#panel-onair [data-slot="lists"] .pl-cover img')].map((i) => i.getAttribute('src')) }));
@@ -5548,7 +5563,9 @@ async function theWatch(browser, base) {
       m42: { id: 99, k: 'movie', t: 'Key and id disagree', y: 2020, d: '2020-01-01', g: [], o: '', p: '' } },
       months: [{ m: m(12), src: 'rt', theaters: ['m' + t0.id, 'm42'], streaming: ['m' + t1.id], tv: ['t1399'] }, { m: m(13), src: 'tmdb', theaters: ['m' + t0.id], tv: [] }, { m: 'not-a-month', theaters: ['m' + t0.id] }] };
     const showtimes = { v: 1, days: [today], theaters: [
-      { id: 'majestic10', name: 'Majestic 10', town: 'Williston', url: 'https://www.majestic10.com/movies', ok: true, closed: false, back: '',
+      /* this morning's read failed: yesterday's times, carried (build_showtimes.py --prev) */
+      { id: 'majestic10', name: 'Majestic 10', town: 'Williston', url: 'https://www.majestic10.com/movies', ok: true, closed: false, back: '', carried: true,
+        read: new Date(Date.parse(today + 'T12:00:00Z') - 86400000).toISOString().replace(/\.\d+Z$/, 'Z'),
         days: { [today]: [{ t: films.now[0].t, id: films.now[0].id, p: films.now[0].p, times: ['23:59'] }, { t: '<b>Bold</b> Title', p: '/x.jpg', times: ['23:59', 'bad'] }] } },
       { id: 'essex', name: 'Essex Cinemas', town: 'Essex', url: 'https://evil.example/', ok: false, closed: false, back: '', days: {} },
       { id: 'nowhere', name: 'Elsewhere', town: 'Nowhere', url: 'https://x.example/', ok: true, days: {} }] };
@@ -5568,6 +5585,8 @@ async function theWatch(browser, base) {
     const rows = await page.$$eval(wPanel + ' [data-showing] .lrow', (n) => n.map((r) => [r.querySelector('.t').textContent, r.querySelector('[data-times]').textContent, r.querySelector('img') && r.querySelector('img').getAttribute('src')]));
     check(rows.length === 2 && rows[1][0] === '<b>Bold</b> Title' && rows[1][1] === '11:59 pm' && rows[1][2] === 'https://image.tmdb.org/t/p/w185/x.jpg' && !(await page.$(wPanel + ' [data-showing] b')),
       'Majestic 10 from showtimes.json: escaped titles, bad times dropped, TMDB posters at w185', JSON.stringify(rows));
+    const asOf = new Intl.DateTimeFormat('en-US', { timeZone: 'UTC', month: 'short', day: 'numeric' }).format(new Date(Date.parse(today + 'T12:00:00Z') - 86400000));
+    check(await page.$eval(wPanel + ' [data-status]', (p) => p.textContent) === 'Williston · Today · Times as of ' + asOf, 'times carried from yesterday’s read say so', await page.$eval(wPanel + ' [data-status]', (p) => p.textContent));
     await page.click(wPanel + ' [data-theater] button:has-text("Essex")');
     check(!(await page.$(wPanel + ' [data-showing] .lrow')) && await page.$eval(wPanel + ' [data-showtimes]', (a) => a.getAttribute('href')) === 'https://www.essexcinemas.com/vermont/essex/essex-cinemas-9/showtimes',
       'a theater that did not read: no rows, and its own Showtimes page (never the file’s link)', '');

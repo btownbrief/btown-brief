@@ -574,7 +574,9 @@ def run(args):
             b = dict(b, clips=clips, sec=sum(c["sec"] for c in clips))
             kept_boards.append(b)
 
-    for it in items:   # a find from before topics were kept: what its curator alone says
+    # a find from before topics were kept: Short of the Week's are films; an
+    # older 13GB find kept no category, so On Air sorts it by channel and title
+    for it in items:
         if not it.get("topic") and topic_of(it):
             it["topic"] = topic_of(it)
     merged = sorted(added + items, key=lambda it: -int(it.get("d", 0)))

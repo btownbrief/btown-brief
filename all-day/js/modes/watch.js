@@ -277,7 +277,12 @@ function setShowtimes(j) {
         .filter((x) => x.times.length);
       if (list.length) days[day] = list;
     });
-    got.set(known.id, { ...known, ok: t.ok !== false, closed: !!t.closed, back: ISO_DAY.test(String(t.back || '')) ? t.back : '', days });
+    /* carried: this morning's read failed and these are the times it last
+       had (build_showtimes.py --prev), read on that day */
+    const readMs = /^\d{4}-\d{2}-\d{2}T/.test(String(t.read || '')) ? Date.parse(t.read) : NaN;
+    const read = Number.isFinite(readMs) ? dayFmt.format(new Date(readMs)) : '';
+    got.set(known.id, { ...known, ok: t.ok !== false, closed: !!t.closed, back: ISO_DAY.test(String(t.back || '')) ? t.back : '', days,
+      carried: t.carried === true && ISO_DAY.test(read) ? read : '' });
   });
   if (got.size) ST = { theaters: THEATERS.map((t) => got.get(t.id) || { ...t, ok: false, closed: false, back: '', days: {} }) };
 }
@@ -653,7 +658,7 @@ function drawTheaters(host) {
      back */
   const today = todayKey();
   const tonight = (t) => t.ok && (!t.closed || (t.back && t.back <= today)) && (showDay(t) || {}).day === today;
-  if (!V.picked) V.theater = (all.find(tonight) || all.find((t) => t.ok) || all[0]).id;
+  if (!V.picked) V.theater = (all.find((t) => tonight(t) && !t.carried) || all.find(tonight) || all.find((t) => t.ok) || all[0]).id;
   const pick = pills(all.map((t) => [t.id, t.name]), V.theater, (v) => { V.theater = v; V.picked = true; draw('theaters'); });
   pick.dataset.theater = '1';
   pick.style.flex = '1 1 auto';
@@ -676,6 +681,7 @@ function drawTheaters(host) {
   /* the times could not be read this morning (Essex's site turns away
      GitHub's machines): its own page has them */
   if (!t.ok && !t.closed) line.push('Times on their site');
+  else if (open && t.carried && t.carried < todayKey()) line.push('Times as of ' + dateLabel(t.carried));
   const head = el('p', 'note pad', esc(line.join(' · ')));
   head.dataset.status = '1';
   box.appendChild(head);

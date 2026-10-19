@@ -1406,7 +1406,8 @@ const SHARE_TO = 'btownbrief@gmail.com';
 const SERVICES = {
   spotify: { name: 'Spotify', re: /^https:\/\/open\.spotify\.com\/(?:intl-[a-z]{2}(?:-[a-z]{2})?\/)?playlist\/([A-Za-z0-9]{22})(?:\?[A-Za-z0-9=&._-]*)?$/,
     embed: (id) => 'https://open.spotify.com/embed/playlist/' + id + '?theme=0', oembed: 'https://open.spotify.com/oembed?url=' },
-  youtube: { name: 'YouTube', re: /^https:\/\/(?:www\.|m\.|music\.)?youtube\.com\/playlist\?list=([A-Za-z0-9_-]{10,64})$/,
+  /* a share link carries ?list= and often &si=…: the list id is what counts */
+  youtube: { name: 'YouTube', re: /^https:\/\/(?:www\.|m\.|music\.)?youtube\.com\/playlist\?list=([A-Za-z0-9_-]{10,64})(?:&[A-Za-z0-9=&._-]*)?$/,
     embed: (id) => 'https://www.youtube-nocookie.com/embed/videoseries?list=' + id + '&rel=0&playsinline=1', oembed: 'https://www.youtube.com/oembed?format=json&url=' },
   apple: { name: 'Apple Music', re: /^https:\/\/music\.apple\.com\/[a-z]{2}\/playlist\/(?:[A-Za-z0-9%._~-]+\/)?(pl\.[A-Za-z0-9-]+)(?:\?[A-Za-z0-9=&._-]*)?$/ },
   soundcloud: { name: 'SoundCloud', re: /^https:\/\/(?:soundcloud\.com\/[A-Za-z0-9_-]+\/sets\/([A-Za-z0-9_-]+)|on\.soundcloud\.com\/([A-Za-z0-9]+))(?:\?[A-Za-z0-9=&._-]*)?$/ },
@@ -1888,6 +1889,12 @@ function land() {
       drawTVSide();
       hit = findHit(k);
     }
+  }
+  if (!hit && /^board:[a-z0-9-]{1,120}$/.test(k) && geo() !== 'everything' && arr(O.finds && O.finds.boards).some((b) => b && 'board:' + b.slug === k)) {
+    /* a shared Clipsboard board, for a reader on Local: boards are Everything's */
+    setGeo('everything');
+    drawListsSide();
+    hit = findHit(k);
   }
   if (hit) { const sd = hit.closest('[data-side]'); setSide(sd ? sd.dataset.side : 'tv', true); }
   if (app.activeTab() === KEY) app.paintSubnav();

@@ -257,9 +257,45 @@ def essex(doc):
 
 
 # ------------------------------------------------- Essex, read elsewhere
-DAY_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 HHMM_RE = re.compile(r"^([01]\d|2[0-3]):[0-5]\d$")
-RELAY_MAX = 600   # screenings: a week of a nine-screen house is about 250
+RELAY_MAX = 600       # screenings: a week of a nine-screen house is about 250
+HORIZON = 21          # days ahead a relayed or carried day may be
+RELAY_FRESH = 2       # days a relay stays usable after it was read
+
+
+def real_day(s, today):
+    """s as an ISO date from today to HORIZON days out, else None (2026-99-99 is not a day)."""
+    try:
+        d = date.fromisoformat(str(s))
+    except ValueError:
+        return None
+    return d.isoformat() if today <= d <= today + timedelta(days=HORIZON) and str(s) == d.isoformat() else None
+
+
+def real_stamp(s):
+    """s as a UTC timestamp ('2026-10-19T10:30:00Z'), else None."""
+    if not re.match(r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$", str(s or "")):
+        return None
+    try:
+        return datetime.strptime(s, "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=timezone.utc)
+    except ValueError:
+        return None
+
+
+def clean_film(f):
+    """One screening row from a file we wrote before, kept only in its known shape."""
+    if not isinstance(f, dict) or not isinstance(f.get("t"), str):
+        return None
+    title = re.sub(r"\s+", " ", f["t"]).strip()[:120]
+    times = sorted({h for h in f.get("times") or [] if isinstance(h, str) and HHMM_RE.match(h)}) if isinstance(f.get("times"), list) else []
+    if not title or not times:
+        return None
+    out = {"t": title, "times": times}
+    if isinstance(f.get("id"), int) and not isinstance(f.get("id"), bool) and 0 < f["id"] < 100000000:
+        out["id"] = f["id"]
+    if isinstance(f.get("p"), str) and POSTER.match(f["p"]):
+        out["p"] = f["p"]
+    return out
 
 
 def essex_dump(web, now=None):
@@ -272,22 +308,26 @@ def essex_dump(web, now=None):
             "days": {d: [[t, h] for t, h in rows] for d, rows in sorted(got.items())}}
 
 
-def essex_relayed(raw, today):
+def essex_relayed(raw, today, now=None):
     """(days, read) from an --essex-dump document, every field checked: it
-    arrives as a workflow input, so it is treated as untrusted text. Only days
-    from today on; nothing at all when the shape is wrong."""
+    arrives as a workflow input, so it is treated as untrusted text. Only real
+    days from today to HORIZON out, from a read in the last RELAY_FRESH days;
+    nothing at all when the shape is wrong."""
     try:
         doc = json.loads(raw) if isinstance(raw, str) else raw
     except ValueError:
         return {}, ""
-    if not isinstance(doc, dict) or doc.get("v") != 1 or not isinstance(doc.get("days"), dict):
+    if not isinstance(doc, dict) or type(doc.get("v")) is not int or doc["v"] != 1 or not isinstance(doc.get("days"), dict):
         return {}, ""
     read = str(doc.get("read") or "")
-    if not re.match(r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$", read):
+    at = real_stamp(read)
+    now = now or datetime.now(timezone.utc)
+    if not at or at > now + timedelta(hours=1) or now - at > timedelta(days=RELAY_FRESH):
         return {}, ""
     out, n = {}, 0
     for day, rows in doc["days"].items():
-        if not DAY_RE.match(str(day)) or day < today.isoformat() or not isinstance(rows, list):
+        day = real_day(day, today)
+        if not day or not isinstance(rows, list):
             continue
         for row in rows:
             if not (isinstance(row, list) and len(row) == 2 and all(isinstance(x, str) for x in row)):
@@ -300,15 +340,24 @@ def essex_relayed(raw, today):
 
 
 def carried(prev, tid, today):
-    """(days, read) a failed theater keeps from the last published file:
-    its days from today on, and when they were read."""
-    if not isinstance(prev, dict):
+    """(days, read) a failed theater keeps from the last published file: its
+    real days from today on, each screening in its known shape, and when they
+    were read. A row that was itself failing, or carried already past its
+    read, carries nothing new."""
+    if not isinstance(prev, dict) or not isinstance(prev.get("theaters"), list):
         return {}, ""
-    row = next((t for t in prev.get("theaters") or [] if isinstance(t, dict) and t.get("id") == tid and t.get("ok")), None)
+    row = next((t for t in prev["theaters"] if isinstance(t, dict) and t.get("id") == tid and t.get("ok") is True), None)
     if not row or not isinstance(row.get("days"), dict):
         return {}, ""
-    days = {d: v for d, v in row["days"].items() if DAY_RE.match(str(d)) and d >= today.isoformat() and isinstance(v, list) and v}
-    return days, str(row.get("read") or prev.get("built") or "")
+    read = row.get("read") if real_stamp(row.get("read")) else prev.get("built") if real_stamp(prev.get("built")) else ""
+    days = {}
+    for d, films in row["days"].items():
+        day = real_day(d, today)
+        if day and isinstance(films, list):
+            kept = [f for f in map(clean_film, films) if f]
+            if kept:
+                days[day] = kept
+    return days, read or ""
 
 
 # --------------------------------------------------------------- the run
@@ -427,7 +476,7 @@ def run(args, web=None, api=None, now=None):
     if getattr(args, "essex_json", None):
         try:
             with open(args.essex_json, encoding="utf-8") as fh:
-                relay = essex_relayed(fh.read(), today)
+                relay = essex_relayed(fh.read(), today, now)
         except OSError:
             relay = ({}, "")
     theaters = []
@@ -443,13 +492,12 @@ def run(args, web=None, api=None, now=None):
             for day, rows in relay[0].items():
                 for title, when in rows:
                     add(days, day, title_case(title), when)
-            row.update(ok=True, days=tidy(days, wanted), read=relay[1])
+            row.update(ok=True, days=tidy(days, wanted), read=relay[1], via="mac")
             log(f"{th['name']}: read on the Mac at {relay[1]}")
         if not row["ok"]:
             days, read = carried(prev, th["id"], today)
             if days:
-                row.update(ok=True, days=tidy({d: [dict(f, times=list(f.get("times") or [])) for f in v if isinstance(f, dict) and f.get("t")]
-                                               for d, v in days.items()}, wanted), read=read)
+                row.update(ok=True, days=tidy(days, wanted), read=read, carried=True)
                 log(f"{th['name']}: kept its times read {read or 'earlier'}")
         theaters.append(row)
     if not any(t["ok"] and (t["days"] or t["closed"]) for t in theaters):
