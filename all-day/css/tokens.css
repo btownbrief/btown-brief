@@ -95,6 +95,11 @@
   --liq-lists-ink: #FFFFFF;
   --liq-topics: #2F6FB2;
   --liq-topics-ink: #FFFFFF;
+  --liq-recaps: #7A5BB0;            /* Recaps, the Wire's fourth word */
+  --liq-recaps-ink: #FFFFFF;
+  --recap: #5B3F94;                 /* a recap's kind title */
+  --recap-soft: #EEE8F6;            /* a recap's card */
+  --recap-line: rgba(91, 63, 148, .18);
   --every-ink: #FFFFFF;
   --now: #9A5B00;                   /* What Now's disc in the tab bar: the accent, filled */
   --now-ink: #FFFFFF;               /* the icon on the disc */
@@ -195,14 +200,14 @@
   /* the Wire (2026-10-19, "hard to read if I have trouble seeing"): big
      headlines, a 16px floor for reading text, 14px for the meta line.
      The desktop sizes take over at 1024px and up (app.css). */
-  --fs-w-head: 1.75rem;      /* 28, Lora: "Today's top stories", a day's head */
-  --fs-w-lead: 1.5rem;       /* 24, Lora: a top story's headline on a phone */
-  --fs-w-lead-xl: 2rem;      /* 32, Lora: the first top story on a wide screen */
-  --fs-w-card: 1.3125rem;    /* 21, Lora: a top story in the wide screen's two-up grid */
-  --fs-w-title: 1.1875rem;   /* 19, Archivo 600: a story row's headline */
-  --fs-w-title-xl: 1.25rem;  /* 20, the same on a wide screen */
-  --fs-w-dek: 1rem;          /* 16, a top story's one-line reason, a post's words */
-  --fs-w-meta: 0.875rem;     /* 14, Source · 3h */
+  --fs-w-head: 1.5rem;       /* 24, Lora: "Today's top stories", a day's head (28 until 2026-10-20) */
+  --fs-w-lead: 1.3125rem;    /* 21, Lora: a top story's headline on a phone (24 until Stephen, 2026-10-20: "fit more in less space") */
+  --fs-w-lead-xl: 1.75rem;   /* 28, Lora: the first top story on a wide screen */
+  --fs-w-card: 1.1875rem;    /* 19, Lora: a top story in the wide screen's two-up grid */
+  --fs-w-title: 1.0625rem;   /* 17, Archivo 600: a story row's headline */
+  --fs-w-title-xl: 1.125rem; /* 18, the same on a wide screen */
+  --fs-w-dek: 0.9375rem;     /* 15, a top story's one-line reason, a post's words */
+  --fs-w-meta: 0.8125rem;    /* 13, Source · 3h */
   --fs-w-seg: 1rem;          /* 16, News · Photos · Square */
   --lh-tight: 1.15;
   --lh-title: 1.3;
@@ -218,8 +223,8 @@
   --main-w: 720px;
   --aside-w: 300px;
   --grid-gap: 32px;
-  --w-thumb: 104px;      /* a story row's picture on a phone */
-  --w-thumb-xl: 136px;   /* and on a wide screen */
+  --w-thumb: 92px;       /* a story row's picture on a phone */
+  --w-thumb-xl: 120px;   /* and on a wide screen */
 
   /* radius */
   --r-media: 12px;       /* posters, image posts, pick art */
@@ -258,6 +263,9 @@
     --lake-soft: #1A2B3A;
     --park-soft: #1B2D25;
     --sunset-soft: #30271A;
+    --recap: #C9B5F0;
+    --recap-soft: #1D1A33;
+    --recap-line: rgba(201, 181, 240, .16);
     --tag-local-bg: #193F30;
     --tag-local-ink: #A4E4BD;
     --tag-national-bg: #1B3653;
@@ -310,6 +318,9 @@
   --lake-soft: #1A2B3A;
   --park-soft: #1B2D25;
   --sunset-soft: #30271A;
+  --recap: #C9B5F0;
+  --recap-soft: #1D1A33;
+  --recap-line: rgba(201, 181, 240, .16);
   --tag-local-bg: #193F30;
   --tag-local-ink: #A4E4BD;
   --tag-national-bg: #1B3653;
