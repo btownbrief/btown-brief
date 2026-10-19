@@ -36,6 +36,7 @@ import { fileURLToPath } from 'node:url';
 import net from 'node:net';
 import path from 'node:path';
 import { FakeHabits } from '../js/habits-fake.js';
+import { directoryFrom } from '../js/food-asks.js';
 
 const require = createRequire(import.meta.url);
 let chromium;
@@ -101,7 +102,7 @@ async function staticChecks() {
     const js = [];
     const walk = async (dir) => { for (const f of await readdir(dir, { withFileTypes: true })) { const p = path.join(dir, f.name); if (f.isDirectory()) await walk(p); else if (/\.(js|css|html)$/.test(f.name)) js.push(p); } };
     await walk(path.join(APP, 'js')); await walk(path.join(APP, 'css'));
-    const NEW = ['app.js', 'ui.js', 'store.js', 'auth.js', 'liquid.js', 'main.js', 'wire.js', 'wire-demo.js', 'wire-photos.js', 'wire-square.js', 'watch.js', 'food.js', 'people.js', 'whatnow.js', 'vintage.js', 'habits.js', 'habits-core.js', 'habits-fake.js', 'photo-wall.js', 'onair.js', 'games.js', 'clubs-week.js', 'people-match.js', 'tokens.css', 'app.css'];
+    const NEW = ['app.js', 'ui.js', 'store.js', 'auth.js', 'liquid.js', 'main.js', 'wire.js', 'wire-demo.js', 'wire-photos.js', 'wire-square.js', 'watch.js', 'food.js', 'people.js', 'whatnow.js', 'vintage.js', 'habits.js', 'habits-core.js', 'habits-fake.js', 'photo-wall.js', 'onair.js', 'games.js', 'clubs-week.js', 'people-match.js', 'food-asks.js', 'tokens.css', 'app.css'];
     const OLD = new Set(['sun.js', 'whatnow-engine.js', 'whatnow-data.js']);
     for (const f of js) {
       const name = path.basename(f);
@@ -295,6 +296,30 @@ let gamesDemoP = null;
 const gamesDemo = () => (gamesDemoP = gamesDemoP || readFile(path.join(APP, 'data/demo/games.json'), 'utf8').then(JSON.parse));
 
 /* ------------------------------------------------------------- the page */
+/* The shared Reddit intake (scripts/reddit_intake.py) in its real shape,
+   dated back from `nowMs`: four food asks (one from r/vermont naming
+   Winooski), and the threads the Food tab must leave out: not food, an
+   r/vermont ask outside the Burlington area, a link post, a sale, a removed
+   post. Food shows t1, t3, t5, t8, newest first. */
+function redditIntake(nowMs) {
+  const iso = (h) => new Date(nowMs - h * 3600000).toISOString();
+  const p = (id, sub, title, h, x = {}) => ({ id, sub, title, url: 'https://www.reddit.com/' + sub + '/comments/' + id + '/thread/', created_exact: false,
+    kind: 'self', out: null, score: null, comments: null, flair: null, nsfw: null, created: iso(h), routes: ['inoreader'], ...x });
+  return { v: 1, generated: iso(0), subs: ['r/burlington', 'r/vermont'], window_days: 10, state: { paused: false }, routes: {}, runs: [], removed: { t9: iso(1) },
+    posts: [
+      p('t1', 'r/burlington', 'Best ramen', 2, { comments: 31 }),
+      p('t2', 'r/burlington', 'Hen of the Woods', 3),
+      p('t3', 'r/vermont', 'Where to get good dumplings in Winooski?', 5),
+      p('t4', 'r/vermont', 'Where to take her for Sunday brunch?', 6),
+      p('t5', 'r/burlington', 'Sushi recs', 30),
+      p('t6', 'r/burlington', 'Kismayo Kitchen Reopens in BTV', 8, { kind: 'link' }),
+      p('t7', 'r/burlington', 'Hong’s Dumplings for sale', 9),
+      p('t8', 'r/burlington', 'bar recommendations?', 50),
+      p('t9', 'r/burlington', 'Best bagels?', 4),
+    ] };
+}
+const redditUrl = (id, sub = 'r/burlington') => 'https://www.reddit.com/' + sub + '/comments/' + id + '/thread/';
+
 async function newPage(browser, base, opts = {}) {
   const ctx = await browser.newContext({
     viewport: opts.viewport || { width: 390, height: 844 },
@@ -351,6 +376,12 @@ async function newPage(browser, base, opts = {}) {
   await page.route(/raw\.githubusercontent\.com\/btownbrief\/btown-brief\/films-data\/data\/films\.json$/, (r) => (films === null
     ? r.fulfill({ status: 404, body: '' })
     : r.fulfill({ status: 200, body: typeof films === 'string' ? films : JSON.stringify(films), contentType: 'application/json' })));
+  /* the shared Reddit intake (Food's Asked on Reddit): a small one dated to
+     the real clock unless a group passes opts.reddit (a payload; `{}` is a
+     broken one) */
+  const reddit = opts.reddit === undefined ? redditIntake(Date.now()) : opts.reddit;
+  await page.route(/raw\.githubusercontent\.com\/btownbrief\/btown-brief\/reddit-data\/data\/reddit-intake\.json$/,
+    (r) => r.fulfill({ status: 200, body: JSON.stringify(reddit), contentType: 'application/json' }));
   /* Watch's time machine and showtimes, on the same branch: empty unless a
      group passes opts.tm / opts.showtimes (a payload, or null for a 404) */
   const wExtra = { 'time-machine.json': opts.tm === undefined ? { v: 1, titles: {}, months: [] } : opts.tm,
@@ -3517,7 +3548,9 @@ function fLatest(hours, day) {
   for (const [o, c] of hours[day] || []) { const a = fMin(o), b = fMin(c); const e = b > a ? b : b + 1440; if (l === null || e > l) l = e; }
   return l;
 }
-async function foodData() {
+/* `at` (ms) is the clock the deals are judged by: one last verified more
+   than 60 days before it is not shown */
+async function foodData(at) {
   const R = JSON.parse(await readFile(path.join(REPO, 'data/restaurants.json'), 'utf8')).restaurants;
   const D = JSON.parse(await readFile(path.join(REPO, 'data/deals.json'), 'utf8')).deals;
   /* one row per place: duplicates by Google id or id fold into the record with the blurb */
@@ -3530,7 +3563,8 @@ async function foodData() {
     had.aka.add(r.id); if (worth(r) > worth(had.r)) had.r = r; keep.set('id:' + r.id, had);
   });
   const places = [...new Set(keep.values())].map(({ r, aka }) => ({ ...r, aka: [...aka] }));
-  const deals = D.filter((d) => d.id && d.title && d.business && !d.retired && !d.conflict && /^\d{4}-\d{2}-\d{2}$/.test(String(d.last_verified || '')));
+  const deals = D.filter((d) => d.id && d.title && d.business && !d.retired && !d.conflict && /^\d{4}-\d{2}-\d{2}$/.test(String(d.last_verified || ''))
+    && (Date.parse(etKey(at) + 'T00:00:00Z') - Date.parse(d.last_verified + 'T00:00:00Z')) / 86400000 <= 60);
   return { places, deals };
 }
 function foodExpect({ places, deals }, day, mins) {
@@ -3573,9 +3607,9 @@ function foodInstagram(withVideo) {
 }
 
 async function theFood(browser, base) {
-  const fd = await foodData();
   /* Friday, October 16, 2026, in Burlington; the reader is in Los Angeles */
   const NINE = Date.parse('2026-10-16T21:00:00-04:00');
+  const fd = await foodData(NINE);
   const ELEVEN = Date.parse('2026-10-16T23:00:00-04:00');
   const at9 = foodExpect(fd, 'fri', 21 * 60);
   const at11 = foodExpect(fd, 'fri', 23 * 60);
@@ -3817,7 +3851,7 @@ async function theFood(browser, base) {
     await page.click('.sheet-head .iconbtn').catch(() => {});
     await toTop(page);
     const toc = await page.$$eval('#subnav .chip', (c) => c.map((x) => x.dataset.chip));
-    check(JSON.stringify(toc) === JSON.stringify(['bite', 'open', 'deals', 'kitchens', 'add']), 'the chip row is the table of contents: Bite, Open now, Deals, Kitchens, Feature a dish', toc.join(', '));
+    check(JSON.stringify(toc) === JSON.stringify(['bite', 'open', 'deals', 'asks', 'best', 'kitchens', 'add']), 'the chip row is the table of contents: Bite, Open now, Deals, Asked, Best of, Kitchens, Feature a dish', toc.join(', '));
     await page.click('#subnav .chip[data-chip="add"]');
     await page.waitForTimeout(1200);
     /* the last section of a short page cannot reach the top; then the panel is scrolled to its end */
@@ -4124,6 +4158,160 @@ async function theFood(browser, base) {
     check(!rail.includes('ig-PodcastPost') && rail.includes('ig-FoodReelA'), 'the podcast stays out of In their own words even tagged food', rail.join(', '));
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
+  });
+
+  await group('Food, Asked on Reddit (live)', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/all-day/#food/asks');
+    await page.waitForSelector(foodPanel + ' [data-sec="asks"] .card', { timeout: 15000 });
+    const rows = await page.$$eval(foodPanel + ' [data-sec="asks"] .card', (cs) => cs.map((c) => ({ k: c.dataset.k, text: c.innerText,
+      href: c.querySelector('a.c-title').getAttribute('href'), target: c.querySelector('a.c-title').target })));
+    const want = [redditUrl('t1'), redditUrl('t3', 'r/vermont'), redditUrl('t5'), redditUrl('t8')];
+    check(JSON.stringify(rows.map((r) => r.k)) === JSON.stringify(want),
+      'only the food asks, newest first: not the non-food thread, the r/vermont ask outside Burlington, the link post, the sale or the removed post', rows.map((r) => r.k).join(', '));
+    check(rows.every((r, i) => r.href === want[i] && r.target === '_blank'), 'each title links out to its own thread', JSON.stringify(rows.map((r) => [r.href, r.target])));
+    check(/^Best ramen/.test(rows[0].text) && /r\/burlington/.test(rows[0].text) && /\b2h\b/.test(rows[0].text) && /\b31\b/.test(rows[0].text),
+      'a row: the thread title, its subreddit, its age and its comment count', rows[0].text);
+    check(/r\/vermont/.test(rows[1].text) && !/\b\d+\b(?!h)/.test(rows[1].text.replace(/Winooski\?/, '')), 'an r/vermont ask names its subreddit; no count when the intake has none', rows[1].text);
+    const head = await page.$eval(foodPanel + ' [data-sec="asks"] .sec', (h) => ({ h2: h.querySelector('h2').textContent, sub: h.querySelector('p')?.textContent || '',
+      link: h.querySelector('a')?.getAttribute('href') || '', target: h.querySelector('a')?.target }));
+    check(head.h2 === 'Asked on Reddit' && head.sub === '4 threads · newest first', 'the head: Asked on Reddit, 4 threads, newest first', JSON.stringify(head));
+    check(head.link === 'https://www.reddit.com/r/burlington/' && head.target === '_blank', 'and an r/burlington link out', JSON.stringify(head));
+    const chip = await page.$eval('#subnav .chip[data-chip="asks"]', (c) => ({ label: c.querySelector('span').textContent, n: c.querySelector('.n')?.textContent }));
+    check(chip.label === 'Asked' && chip.n === '4', 'its chip in the table of contents counts the threads', JSON.stringify(chip));
+
+    /* a thread's link lands on its row */
+    await page.evaluate((u) => { location.hash = '#food/' + encodeURIComponent(u); }, want[2]);
+    await page.waitForSelector(foodPanel + ' .card.flash', { timeout: 5000 }).catch(() => {});
+    check(await page.$eval(foodPanel + ' .card.flash', (c) => c.dataset.k).catch(() => '') === want[2], 'a shared thread link scrolls to its row and flashes it', '');
+    await page.screenshot({ path: path.join(SHOTS, 'live-food-asks.png') });
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+
+    /* r/vermont muted (the Wire's mute, by source id): its ask leaves, and its link says why */
+    const m = await newPage(browser, base);
+    await m.page.addInitScript(() => localStorage.setItem('pulse2-settings', JSON.stringify({ hidden: { 'r-vermont': 1 } })));
+    await m.page.goto(base + '/all-day/#food/asks');
+    await m.page.waitForSelector(foodPanel + ' [data-sec="asks"] .card', { timeout: 15000 });
+    const mk = await m.page.$$eval(foodPanel + ' [data-sec="asks"] .card', (cs) => cs.map((c) => c.dataset.k));
+    check(JSON.stringify(mk) === JSON.stringify([want[0], want[2], want[3]]), 'with r/vermont muted, its ask is not shown', mk.join(', '));
+    await m.page.evaluate((u) => { location.hash = '#food/' + encodeURIComponent(u); }, want[1]);
+    await m.page.waitForSelector('#toast:not([hidden])', { timeout: 4000 }).catch(() => {});
+    const tm = await m.page.evaluate(() => document.getElementById('toast')?.textContent || '');
+    check(/You muted r\/vermont\./.test(tm), 'a link to a muted thread says it is muted', tm);
+    check(!m.errors.length, 'no console errors', m.errors.join(' | '));
+    await m.ctx.close();
+
+    /* an intake that comes back broken: the section says so, Best of still draws */
+    const b = await newPage(browser, base, { reddit: {} });
+    await b.page.goto(base + '/all-day/#food/asks');
+    await b.page.waitForFunction((p) => /Didn’t load/.test(document.querySelector(p + ' [data-sec="asks"]')?.innerText || ''), foodPanel, { timeout: 15000 }).catch(() => {});
+    check(/Didn’t load/.test(await b.page.$eval(foodPanel + ' [data-sec="asks"]', (s) => s.innerText)), 'a broken intake: “Didn’t load.”', '');
+    await b.page.waitForSelector(foodPanel + ' [data-sec="best"] .qcard', { timeout: 15000 }).catch(() => {});
+    check(!!(await b.page.$(foodPanel + ' [data-sec="best"] .qcard')), 'and Best of r/burlington still draws', '');
+    check(!b.errors.length, 'no console errors', b.errors.join(' | '));
+    await b.ctx.close();
+  });
+
+  await group('Food, Best of r/burlington (live, the real directory)', async () => {
+    const dir = directoryFrom(JSON.parse(await readFile(path.join(REPO, 'data/best-of-reddit.json'), 'utf8')));
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/all-day/#food/best');
+    await page.waitForSelector(foodPanel + ' [data-sec="best"] .qcard', { timeout: 15000 });
+    const keys = () => page.$$eval(foodPanel + ' [data-sec="best"] .qcard', (c) => c.map((x) => x.dataset.k));
+    const first = await keys();
+    check(first.length === 12 && JSON.stringify(first) === JSON.stringify(dir.slice(0, 12).map((q) => q.k)), 'twelve cards, most asked first', first.join(', '));
+    const sub = await page.$eval(foodPanel + ' [data-sec="best"] .sec p', (p) => p.textContent);
+    check(sub === dir.length + ' questions · most asked first', 'the head counts every food, coffee and drink question (' + dir.length + ')', sub);
+    await page.click(foodPanel + ' [data-sec="best"] .btn.more');
+    check((await keys()).length === dir.length, 'All ' + dir.length + ' opens the rest in place', '');
+    const top = await page.$eval(foodPanel + ' [data-sec="best"] .qcard', (c) => c.innerText);
+    check(top.includes(dir[0].q) && top.includes(dir[0].threads.length + ' threads') && (!dir[0].sd || top.includes('Seven Daysies: ' + dir[0].sd.pick)),
+      'a card: the question, its Seven Daysies pick where there is one, how many threads', top);
+    for (const [g, label] of [['drinks', 'Drinks'], ['coffee', 'Coffee']]) {
+      await page.click(foodPanel + ' [data-sec="best"] .pills.kinds button:text-is("' + label + '")');
+      const got = await keys();
+      const exp = dir.filter((q) => q.group === g).map((q) => q.k);
+      check(got.length === Math.min(12, exp.length) && got.every((k) => exp.includes(k)), label + ' shows only its ' + exp.length + ' questions', got.join(', '));
+    }
+    const text = await page.$eval(foodPanel + ' [data-sec="best"]', (s) => s.innerText);
+    check(!/worst/i.test(text), 'nothing negative on the cards', '');
+
+    /* a question's sheet: its threads, and the Seven Daysies pick */
+    await page.evaluate(() => { location.hash = '#food/q-food-restaurants--best-bakery'; });
+    await page.waitForFunction(() => document.querySelector('.sheet-head h2')?.textContent === 'Best Bakery', null, { timeout: 15000 }).catch(() => {});
+    const sheet = await page.evaluate(() => ({ text: document.querySelector('.sheet-body')?.innerText || '',
+      links: [...document.querySelectorAll('.sheet-body a.t')].map((a) => ({ href: a.getAttribute('href'), target: a.target })) }));
+    const bakery = dir.find((q) => q.k === 'q-food-restaurants--best-bakery');
+    check(bakery && sheet.links.length === bakery.threads.length + 1 && bakery.threads.every((t) => sheet.links.some((l) => l.href === t.url && l.target === '_blank')),
+      'Best Bakery: a link to each of its threads', JSON.stringify(sheet.links));
+    check(/Seven Daysies 2026/.test(sheet.text) && sheet.text.includes('August First (bread) · Mirabelles Bakery (sweets)') &&
+      sheet.links.some((l) => /^https:\/\/community\.sevendaysvt\.com\//.test(l.href)), 'and the Seven Daysies pick exactly as the directory has it, linked to Seven Days', sheet.text);
+    check(!!(await page.waitForSelector(foodPanel + ' .qcard.flash[data-k="q-food-restaurants--best-bakery"]', { timeout: 2000 }).catch(() => null)), 'the deep link scrolled to its card too', '');
+    await page.click('.sheet-head .iconbtn');
+    await page.screenshot({ path: path.join(SHOTS, 'live-food-best.png') });
+
+    /* Stephen's examples from the Btown Eats archive are cards */
+    for (const q of ['Best Nachos', 'Coziest Bars', 'Best Cheap Places for Food']) check(dir.some((x) => x.q === q), q + ' is in the directory', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Food, nothing open: Opening next leads (live, the small hours)', async () => {
+    const at = fd.places.filter((r) => r.hours && Object.keys(r.hours).length && r.hours_confidence !== 'unverified');
+    /* the first quarter hour between 2 and 7 am on Tuesday, Oct 20 when nothing is open */
+    let when = null;
+    for (let m = 120; m < 420 && when === null; m += 15) if (!at.some((r) => fOpenAt(r.hours, 'tue', m))) when = m;
+    check(when !== null, 'the data has a quiet hour before dawn', '');
+    if (when === null) return;
+    const clockAt = Date.parse('2026-10-20T00:00:00-04:00') + when * 60000;
+    const { ctx, page, errors } = await newPage(browser, base, { reddit: redditIntake(clockAt) });
+    await page.clock.setFixedTime(clockAt);
+    await page.goto(base + '/all-day/#food');
+    await page.waitForSelector(foodPanel + ' [data-sec="open"] .lrow.place', { timeout: 15000 });
+    const o = await page.evaluate((p) => {
+      const s = document.querySelector(p + ' [data-sec="open"]');
+      return { h2: s.querySelector('.sec h2').textContent, sub: s.querySelector('.sec p').textContent, rows: [...s.querySelectorAll('.lrow.place')].map((r) => r.innerText),
+        on: s.querySelector('.chips.filters .chip.on')?.dataset.chip || null, h2s: [...document.querySelectorAll(p + ' .sec h2')].map((h) => h.textContent),
+        toc: document.querySelector('#subnav .chip[data-chip="open"] span')?.textContent };
+    }, foodPanel);
+    check(o.h2 === 'Opening next' && !o.h2s.includes('Open now'), 'with nothing open, the block is Opening next, not an empty Open now', JSON.stringify(o.h2s));
+    check(/ · soonest first$/.test(o.sub) && o.rows.length >= 1 && o.rows.every((r) => /Opens /.test(r)), 'the places in the order they open, each saying when', o.sub + ' | ' + o.rows.slice(0, 3).join(' / '));
+    check(o.on === null && o.toc === 'Opening next', 'no filter chip is lit, and the table of contents says Opening next', JSON.stringify(o));
+    /* soonest first: the ones opening later today lead, in time order */
+    const later = (r) => { const m = /Opens (\d{1,2})(?::(\d\d))? (am|pm)(.*)$/m.exec(r); if (!m) return /Opens noon(?! tomorrow| [A-Z])/.test(r) ? 720 : null;
+      return m[4].trim() ? null : (Number(m[1]) % 12 + (m[3] === 'pm' ? 12 : 0)) * 60 + Number(m[2] || 0); };
+    const mins = o.rows.map(later);
+    const k = mins.indexOf(null) < 0 ? mins.length : mins.indexOf(null);
+    check(k > 0 && mins.slice(0, k).every((x, i, a) => !i || a[i - 1] <= x) && mins.slice(k).every((x) => x === null),
+      'soonest first: today’s openings in time order, then the later days', mins.slice(0, 8).join(', '));
+    await page.screenshot({ path: path.join(SHOTS, 'live-food-opening-next.png') });
+    /* the reader asks for Open now: then it is theirs, empty and saying so */
+    await page.click(foodPanel + ' .chips.filters .chip[data-chip="open"]');
+    const asked = await page.$eval(foodPanel + ' [data-sec="open"]', (s) => ({ h2: s.querySelector('.sec h2').textContent, text: s.innerText }));
+    check(asked.h2 === 'Open now' && /Nothing open right now\./.test(asked.text), 'tapping Open now shows the empty list the reader asked for', JSON.stringify(asked.h2));
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Food, deals verified more than 60 days ago stay off (live)', async () => {
+    const NOON = Date.parse('2026-10-16T12:00:00-04:00');
+    const real = JSON.parse(await readFile(path.join(REPO, 'data/deals.json'), 'utf8')).deals.find((d) => d.restaurant_id && !d.retired && !d.conflict);
+    const deal = (id, verified) => ({ ...real, id, title: 'Deal ' + id, days: null, start: null, end: null, all_day: false, last_verified: verified });
+    const run = async (deals) => {
+      const { ctx, page, errors } = await newPage(browser, base, { routes: [[/\/data\/deals\.json$/, { generated: '2026-10-16', deals }]] });
+      await page.clock.setFixedTime(NOON);
+      await page.goto(base + '/all-day/#food/deals');
+      await page.waitForSelector(foodPanel + ' [data-sec="deals"] .sec', { timeout: 15000 });
+      const out = await page.$eval(foodPanel + ' [data-sec="deals"]', (s) => ({ text: s.innerText, k: s.querySelector('.deck')?.dataset.k || null, segs: s.querySelectorAll('.deck .segs i').length }));
+      check(!errors.length, 'no console errors', errors.join(' | '));
+      await ctx.close();
+      return out;
+    };
+    const mixed = await run([deal('fresh', '2026-10-01'), deal('edge', '2026-08-17'), deal('stale', '2026-03-25')]);
+    check(mixed.k === 'd-fresh' && mixed.segs === 3, 'a deal verified Oct 1 and one 60 days back show; one verified Mar 25 does not', JSON.stringify(mixed));
+    const stale = await run([deal('stale', '2026-03-25')]);
+    check(stale.k === null && /No recently verified deals today\./.test(stale.text), 'with only old deals: “No recently verified deals today.”', stale.text);
   });
 }
 

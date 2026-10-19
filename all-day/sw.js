@@ -13,7 +13,7 @@
    audio — episodes are large and the browser's own HTTP cache handles them
    better than we would. */
 
-const VERSION = 'all-day-v71';   // Top 100+ missions
+const VERSION = 'all-day-v72';   // Food: what Burlington asks Reddit
 const SHELL = VERSION + '-shell';
 const DATA = 'all-day-data';   // unversioned on purpose: survives shell bumps
 
@@ -34,6 +34,8 @@ const SHELL_URLS = [
   './js/clubs-week.js',
   /* what People's tiles mean and which events are mixers, imported by People */
   './js/people-match.js',
+  /* Food's Reddit asks and Best of r/burlington shapers, imported by modes/food.js */
+  './js/food-asks.js',
   /* the boards: imported by main.js, so every tab can draw one offline */
   './js/boards.js', './js/boards-core.js', './js/boards-fake.js',
   /* Watch's starter list, so the tab has films to show offline */
