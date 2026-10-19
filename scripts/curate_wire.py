@@ -957,11 +957,9 @@ def finish(day, pulse, now, changed):
     day["count"] = len(items)
     day["counts"] = counts(items)
     day["sport_counts"] = sport_counts(items)
-    before = [(rc.get("id"), rc.get("posted_at"), len(rc.get("bullets") or []))
-              for rc in day.get("recaps") or []]
+    before = day.get("recaps") or []
     day.update(recaps_of(pulse, day.get("date")))
-    changed = changed or before != [(rc["id"], rc["posted_at"], len(rc["bullets"]))
-                                    for rc in day["recaps"]]
+    changed = changed or before != day["recaps"]
     day["checked"] = stamp
     if changed or not day.get("updated"):
         day["updated"] = stamp
@@ -978,12 +976,16 @@ def finish(day, pulse, now, changed):
 
 def hydrate_sports(day, scored):
     """A river item filed before its tag knew the sport gets it now, so the
-    sport chips and sport_counts see the whole day (2026-10-19 rollout)."""
+    sport chips and sport_counts see the whole day (2026-10-19 rollout).
+    Returns how many items changed."""
+    n = 0
     for update in day.get("updates") or []:
         for item in update.get("items") or []:
             sport = (scored.get(item.get("id")) or {}).get("sport")
             if sport and not item.get("sport"):
                 item["sport"] = sport
+                n += 1
+    return n
 
 
 def sport_counts(items):
@@ -1150,7 +1152,7 @@ def run(args):
     tags = (wc.load_json(files["tags"], {}) or {}).get("tags") or {}
     comments = {} if args.pulse else reddit_comments()
     pool = apply_tags(wc.wire_items(pulse, now_ts, WINDOW_HOURS), tags, comments)
-    hydrate_sports(day, {item["id"]: item for item in pool})
+    hydrated = hydrate_sports(day, {item["id"]: item for item in pool})
     reserved_ids, reserved_urls, ran = reserved(args.data_dir, today)
     numbered_river = river(day)
     in_river = {item["id"] for item in numbered_river}
@@ -1166,7 +1168,7 @@ def run(args):
         editions = [item for item in new if item.get("ch") == "newsletters"]
         filed = apply_answer(day, {}, river(day), editions, False, et, now)["added"] \
             if editions else []
-        finish(day, pulse, now, changed=bool(filed))
+        finish(day, pulse, now, changed=bool(filed or hydrated))
         wc.write_json(files["today"], day)
         wc.write_json(files["state"], state)
         line_ = (f"curate_wire: {why}, {len(new)} new candidates, no model call"
@@ -1222,7 +1224,8 @@ def run(args):
     # everything shown is now considered: passed items stay passed today
     state["considered_today"] = sorted(set(state.get("considered_today", []))
                                        | {item["id"] for item in new})
-    finish(day, pulse, now, changed=bool(result["added"] or result["dropped"] or result["picks"]))
+    finish(day, pulse, now, changed=bool(result["added"] or result["dropped"] or result["picks"]
+                                         or hydrated))
     if as_of(args):
         day["backfilled"] = True   # replayed later from the pulse store, and says so
     wc.write_json(files["today"], day)

@@ -103,6 +103,17 @@ class RecapPayloadTests(unittest.TestCase):
         self.assertFalse(day["status"]["recaps"]["paused"])
         self.assertEqual(day["sport_counts"]["everything"]["nba"], 1)
 
+    def test_a_rewritten_recap_moves_updated(self):
+        day = cw.empty_day("2026-10-19")
+        pulse = self.pulse([recap("mon-sports", "sports", 1)])
+        cw.finish(day, pulse, NOW, changed=True)
+        cw.finish(day, pulse, NOW + timedelta(minutes=10), changed=False)
+        self.assertEqual(day["updated"], NOW.isoformat())               # nothing new
+        pulse["inbox"]["recaps"]["items"][0]["intro"] = "Rewritten."
+        later = NOW + timedelta(minutes=20)
+        cw.finish(day, pulse, later, changed=False)
+        self.assertEqual(day["updated"], later.isoformat())
+
 
 if __name__ == "__main__":
     unittest.main()

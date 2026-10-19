@@ -236,6 +236,15 @@ class RecapTests(unittest.TestCase):
         self.assertIn("names another kind", " ".join(wi.check_recaps(data, NOW)[1][0]))
         data["recaps"][0]["id"] = "evening"
         self.assertIn("YYYY-MM-DD", " ".join(wi.check_recaps(data, NOW)[1][0]))
+        for rid, want in (("2026-10-15-evening", "Burlington date"), ("2026-10-16-evening-2", "only Breaking"),
+                          ("2026-10-16-evening-1", "YYYY-MM-DD")):
+            data["recaps"][0]["id"] = rid
+            self.assertIn(want, " ".join(wi.check_recaps(data, NOW)[1][0]), rid)
+        data = recaps_raw()
+        data["recaps"][0].update(id="2026-10-16-breaking-2", kind="breaking", title="Breaking")
+        self.assertNotIn(0, wi.check_recaps(data, NOW + timedelta(hours=6))[1])
+        data["recaps"][0]["bullets"] *= 3                     # six bullets: Breaking is short
+        self.assertIn("1 to 5", " ".join(wi.check_recaps(data, NOW + timedelta(hours=6))[1][0]))
 
     def test_a_stale_or_mostly_bad_file_pauses(self):
         state, fresh = self.read(recaps_raw(), now=NOW + timedelta(hours=24))
@@ -275,6 +284,8 @@ class RecapTests(unittest.TestCase):
         kept, _ = wi.merge_recaps([], big, NOW)
         self.assertLessEqual(len(json.dumps(kept).encode()), wi.RECAP_STORE_BYTES)
         self.assertEqual(kept[0]["id"], "r-000")          # the newest stay
+        again, added = wi.merge_recaps(kept, big, NOW)
+        self.assertEqual((again, added), (kept, 0))      # the capped-out ones are not "new" each run
 
 
 @unittest.skipUnless(os.path.exists(VALIDATOR), "wire-inbox checkout not on this machine")

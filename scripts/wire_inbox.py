@@ -171,7 +171,7 @@ def check(data, now):
         if posted is not None:
             if posted > now:
                 bad.append("posted_at is in the future")
-            if (now - posted).days > MAX_AGE_DAYS:
+            if now - posted > timedelta(days=MAX_AGE_DAYS):
                 bad.append(f"older than {MAX_AGE_DAYS} days; drop it")
             if last_posted is not None and posted > last_posted:
                 # an ordering slip is the bot's bookkeeping, not a bad post:
@@ -193,6 +193,7 @@ def is_fatal(problem):
 # --- recaps (grok/recaps.json), ported from the validator too ----------------
 
 RECAP_PATH, RECAP_SOURCE = "grok/recaps.json", "grok-recaps"
+EASTERN = wc.ET
 # kind -> the fixed title the page shows. Each kind is optional on any day.
 RECAP_KINDS = {
     "morning": "Morning briefing", "evening": "Evening wrap", "breaking": "Breaking",
@@ -212,7 +213,8 @@ RECAP_URL_MAX = 300
 RECAP_TEXT_MAX = 160
 RECAP_NOTE_MAX = 200
 RECAP_INTRO_MAX = 400
-RECAP_ID = re.compile(r"^(\d{4}-\d{2}-\d{2})-([a-z-]+?)(?:-(\d+))?$")
+RECAP_ID = re.compile(r"^(\d{4}-\d{2}-\d{2})-([a-z-]+?)(?:-([23]))?$")
+RECAP_BREAKING_BULLETS = 5
 SEARCH_URL = re.compile(r"/search\b|[?&]q=", re.I)
 
 
@@ -238,9 +240,11 @@ def check_recap(rc, now):
     kind = rc.get("kind")
     match = RECAP_ID.match(rc["id"]) if isinstance(rc.get("id"), str) else None
     if not match:
-        bad.append("id must be YYYY-MM-DD-<kind>, with -2, -3 for a second or third")
+        bad.append("id must be YYYY-MM-DD-<kind>, with -2 or -3 for a second or third Breaking")
     elif kind in RECAP_KINDS and match.group(2) != kind:
         bad.append(f"id {rc['id']!r} names another kind than {kind!r}")
+    elif match.group(3) and kind != "breaking":
+        bad.append("only Breaking may have a second or third recap in a day")
     if kind not in RECAP_KINDS:
         bad.append(f"kind must be one of {list(RECAP_KINDS)}")
     elif rc.get("title") != RECAP_KINDS[kind]:
@@ -253,6 +257,8 @@ def check_recap(rc, now):
     if posted is None:
         bad.append("posted_at must be ISO 8601 with a timezone")
     else:
+        if match and posted.astimezone(EASTERN).date().isoformat() != match.group(1):
+            bad.append(f"id date {match.group(1)} is not posted_at's Burlington date")
         if posted - now > timedelta(minutes=CLOCK_SKEW_MINUTES):
             bad.append("posted_at is in the future")
         if now - posted > timedelta(days=RECAP_KEEP_DAYS):
@@ -260,6 +266,8 @@ def check_recap(rc, now):
     clean_text(rc.get("intro"), RECAP_INTRO_MAX, "intro", bad)
     bullets = rc.get("bullets")
     lo, hi = RECAP_BULLETS
+    if kind == "breaking":
+        hi = RECAP_BREAKING_BULLETS
     if not isinstance(bullets, list) or not lo <= len(bullets) <= hi:
         return bad + [f"bullets must be a list of {lo} to {hi}"]
     seen = set()
@@ -373,18 +381,16 @@ def merge_recaps(previous, fresh, now):
     the last RECAP_KEEP_DAYS, at most RECAP_MAX."""
     by_id = {item["id"]: dict(item) for item in previous or []
              if isinstance(item, dict) and item.get("id")}
-    added = 0
+    before = dict(by_id)
     for item in fresh:
-        if item["id"] not in by_id:
-            added += 1
-        elif by_id[item["id"]] != item:
-            added += 1   # a rewritten recap is worth publishing too
         by_id[item["id"]] = dict(item)
     cutoff = int((now - timedelta(days=RECAP_KEEP_DAYS)).timestamp())
     kept = sorted((item for item in by_id.values() if item.get("d", 0) >= cutoff),
                   key=lambda item: item.get("d", 0), reverse=True)[:RECAP_MAX]
     while kept and len(json.dumps(kept, ensure_ascii=False).encode("utf-8")) > RECAP_STORE_BYTES:
         kept.pop()   # the oldest go first; today's recaps are what the Wire shows
+    # new or rewritten, and still kept: a recap the caps turned away is not news
+    added = sum(1 for item in kept if before.get(item["id"]) != item)
     return kept, added
 
 
