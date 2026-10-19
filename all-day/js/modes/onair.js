@@ -1,6 +1,16 @@
-/* On Air: everything in All Day that you watch or listen to. Two sides, a
+/* On Air: everything in All Day that you watch or listen to. Three sides, a
    switch at the top (Stephen, 2026-10-19: "a top toggle for TV and for
-   Podcasts, because the TV one is so special"). TV is the default.
+   Podcasts, because the TV one is so special"; that night: playlists "its
+   own button like the TV, Podcasts toggles"). TV is the default.
+
+   The TV side reads two ways, Feed or Topics, one small switch beside "Pick
+   a vid for me" (Stephen, 2026-10-19, after Clipsboard: "New this week,
+   Music, Comedy, Politics… a button that toggles the view from Feed to
+   organized Topics"). The choice is this phone's. Every "All N" opens that
+   whole list in place, N rows (drawn in chunks as the reader nears the end),
+   with a Collapse bar that rides the bottom of the screen while the list is
+   on it and folds the list back to its heading (Stephen, the same night:
+   "is there a way to make it smaller again without having to scroll?").
 
    TV, top to bottom:
    - Btown TV: the nightly curated edition (scripts/curate_tv.py, on the
@@ -21,17 +31,26 @@
      has one Watch button; the rest is behind ⋯ (the reviews: "cards carry up
      to five actions with tiny titles").
    - Pick a vid for me: one random video from the chosen length.
-   - Playlists: Clipsboard's nine-video boards, played straight through.
    - Live (cameras) and Past nights: two sideways rows, each with "See as a
-     list".
+     list" (and, as a list, the Collapse bar).
+   Topics: "New this week" (the nights and finds of the last seven days,
+   newest first), then a shelf per topic that has three or more videos, each
+   four across and "All N". A video's topic is the curator's own category
+   where it has one (13GB's, Short of the Week's, stored as `topic` by
+   gather_onair_finds.py), else Btown TV's lane or genre, sharpened by the
+   channel and a few title words (topicOf below). No model call.
    Every video plays in On Air's own player, a sheet: the video, what it is,
    Previous and Next, ← → on a keyboard, and when one ends the next in the
    same list follows after a five-second "Up next" you can cancel.
 
    Podcasts: The Brief out loud (the newsletter read aloud, small card, with
-   speeds), then the Brief's own show and every local show, then music
-   playlists from data/playlists.json. These are the listening, so they sit
-   together on their own side rather than under a long run of videos.
+   speeds), then the Brief's own show and every local show.
+
+   Playlists: "Add your playlist" first, then Stephen's own and readers'
+   (data/playlists.json, and the readers' playlists board, which Stephen
+   approves first: supabase/nn-PLAYLISTS.sql), as cover tiles, newest first;
+   then video playlists: the latest Btown TV night as a YouTube playlist and
+   Clipsboard's nine-video boards, played straight through.
 
    All sound goes through the shell's one player or one embed at a time;
    nothing plays until it is tapped. The Brief's own show is on Spotify only,
@@ -44,7 +63,9 @@
 import * as app from '../app.js';
 import * as store from '../store.js';
 import * as data from '../wire.js';
-import { el, esc, safeHref, ICON, svg, art, section, rail, chips, pills, divider, cards, localSwitch, geo, setGeo, agoShort } from '../ui.js';
+import * as boards from '../boards.js';
+import { RULES } from '../boards-core.js';
+import { el, esc, safeHref, ICON, svg, art, section, rail, chips, pills, divider, cards, button, localSwitch, geo, setGeo, agoShort } from '../ui.js';
 
 const KEY = 'onair';
 const NATIONAL = 2;         // shows from away on Everything
@@ -150,8 +171,11 @@ const O = {
   own: null,                   // the Brief's own show: built once, never rebuilt
   night: null,
   focus: null,                 // a deep link's video, put first in its length
-  side: 'tv',                  // TV | Podcasts, for the visit
+  side: 'tv',                  // TV | Podcasts | Playlists, for the visit
   len: '',                     // the TV side's chosen length, or '' for all
+  exp: Object.create(null),    // the "All N" lists opened in place, for the visit
+  posts: null,                 // the readers' playlists board's approved posts, or null
+  board: null,                 // that board is installed: true, false, or null (not asked yet)
   finds: null,                 // the earlier night the TV block shows, or null for tonight (the visit only)
 };
 
@@ -208,7 +232,7 @@ const LEN = Object.assign(Object.create(null), Object.fromEntries(LENGTHS.map((l
 const TRAILER_RE = /\b(trailer|teaser)\b/i;
 const MIN_SEC = 120;
 const BUCKET_SHOW = 3;      // rows per length on the All view
-const BUCKET_MAX = 40;      // a chosen length shows at most this many: finite, like every list here
+const CHUNK = 40;           // an opened list draws this many rows at a time (DESIGN §9.14), all of them in the end
 const TONIGHT_ROWS = 6;     // rows under the feature before "Watch the whole edition"
 const secsOf = (dur) => {
   const m = /^(?:(\d+):)?(\d{1,2}):(\d{2})$/.exec(String(dur || ''));
@@ -270,6 +294,7 @@ function findItem(f) {
     media: vimeo ? f.art : (app.demo && f.art ? f.art : 'https://i.ytimg.com/vi/' + f.id + '/hqdefault.jpg'),
     dur: sec ? fmtClock(sec) : '', sec, len: f.b, why: clip(f.why, 160),
     via: CREDIT[f.via] || '', viaUrl, ago: Number(f.d) ? agoShort(f.d) : '', d: Number(f.d) || 0,
+    topic: TOPIC[f.topic] ? f.topic : '',
   };
 }
 const fmtClock = (s) => { const h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60), x = s % 60; return (h ? h + ':' + String(m).padStart(2, '0') : m) + ':' + String(x).padStart(2, '0'); };
@@ -620,8 +645,8 @@ function library() {
     seen.add(it.k);
     (groups[it.via] = groups[it.via] || []).push(it);
   };
-  nights.slice(1).forEach(({ ed }) => [ed.pick, ...shelvesOf(ed).flatMap((s) => arr(s.items))]
-    .forEach((v) => { if (v && (every || isLocalVideo(v)) && !skipped(v)) put1(videoItem(v)); }));
+  nights.slice(1).forEach(({ date, ed }) => [ed.pick, ...shelvesOf(ed).flatMap((s) => arr(s.items))]
+    .forEach((v) => { if (v && (every || isLocalVideo(v)) && !skipped(v)) put1(nightItem(v, date)); }));
   if (every) arr(O.finds && O.finds.items).map(findItem).sort((a, b) => (b ? b.d : 0) - (a ? a.d : 0)).forEach(put1);
   const lanes = Object.values(groups);
   const out = [];
@@ -629,29 +654,18 @@ function library() {
   return out;
 }
 
+/* a Btown TV video with the night it ran, which is when it was new here */
+function nightItem(v, date) {
+  const it = videoItem(v);
+  if (it) it.night = date || todayKey();
+  return it;
+}
 /* what "Pick a vid" and a chosen length draw from: tonight first, then the shelf */
 function pool_() {
   const nights = tvNights();
-  const tonight = nights.length ? nightList(nights[0].ed).map((x) => videoItem(x.v)).filter((it) => it && it.len) : [];
+  const tonight = nights.length ? nightList(nights[0].ed).map((x) => nightItem(x.v, nights[0].date)).filter((it) => it && it.len) : [];
   const all = tonight.concat(library());
   return O.len ? all.filter((it) => it.len === O.len) : all;
-}
-
-/* Clipsboard's boards: nine videos on one idea, a playlist (Stephen: "it
-   basically has YouTube playlists too, not just individual videos"). Only
-   clips with a real id and length are kept. */
-function boards() {
-  if (geo() !== 'everything') return [];
-  return arr(O.finds && O.finds.boards).map((b) => {
-    if (!b || !b.t || !/^[a-z0-9-]{1,120}$/.test(String(b.slug || ''))) return null;
-    const clips = arr(b.clips).filter((c) => c && app.isVideoId(c.id) && c.t).map((c) => {
-      return findItem({ id: c.id, t: c.t, ch: c.ch, sec: c.sec, b: lengthOf(c.sec, c.t), via: 'clipsboard', via_url: 'https://clipsboard.com/grid/' + b.slug, art: c.art });
-    }).filter(Boolean);
-    if (clips.length < 3) return null;
-    const total = clips.reduce((n, c) => n + c.sec, 0);
-    return { k: 'board:' + b.slug, kind: 'playlist', title: clip(b.t, 90), src: 'Clipsboard', sid: 'clipsboard', clips, total,
-      href: 'https://clipsboard.com/grid/' + b.slug, via: 'Clipsboard', viaUrl: 'https://clipsboard.com/grid/' + b.slug };
-  }).filter(Boolean);
 }
 
 /* ------------------------------------------------------------- the TV block */
@@ -788,20 +802,101 @@ function editionSheet(ed, title, localOnly) {
   });
 }
 
-/* Pick a vid for me, at the top of the TV side */
+/* Pick a vid for me, at the top of the TV side, with Feed | Topics beside it */
 function drawPick(host) {
   const n = pool_().length;
-  if (!n) return false;
   const r = el('div', 'oa-pick');
-  const b = el('button', 'btn oa-pickbtn', ICON.shuffle + ' Pick a vid for me');
-  b.dataset.pick = '1';
-  r.appendChild(b);
+  if (n) {
+    const b = el('button', 'btn oa-pickbtn', ICON.shuffle + ' Pick a vid for me');
+    b.dataset.pick = '1';
+    r.appendChild(b);
+  }
+  const sw = pills([['feed', 'Feed'], ['topics', 'Topics']], view(), setView, 'oa-viewswitch');
+  sw.setAttribute('role', 'group');
+  sw.setAttribute('aria-label', 'Show as a feed or by topic');
+  [...sw.children].forEach((b, i) => { b.dataset.view = i ? 'topics' : 'feed'; b.setAttribute('aria-pressed', String(b.dataset.view === view())); });
+  r.appendChild(sw);
   host.appendChild(r);
   return true;
 }
 
-/* More to watch. On All: each length with its first three and a button to
-   the rest; with a length chosen: that length, finite, the first full width. */
+/* ------------------------------------------------- lists opened in place */
+/* An opened list draws CHUNK rows, then the next CHUNK as the reader comes
+   near its end (or taps "Show more"), until all N are there: the count on
+   the button that opened it is the count in it. */
+function fill(box, list, make) {
+  let at = 0;
+  const more = el('button', 'btn ghost sm oa-morerows');
+  more.dataset.morerows = '1';
+  let io = null;
+  const step = () => {
+    list.slice(at, at + CHUNK).forEach((it) => box.appendChild(make(it)));
+    at += CHUNK;
+    const left = list.length - at;
+    if (left <= 0) { if (io) io.disconnect(); more.remove(); return; }
+    more.textContent = 'Show ' + Math.min(CHUNK, left) + ' more · ' + left + ' left';
+    if (!more.isConnected) box.after(more);
+    /* observed afresh, so a button still in reach after the rows went in
+       asks again instead of waiting for a scroll */
+    if (io) { io.unobserve(more); io.observe(more); }
+  };
+  more.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); step(); });
+  step();
+  if (more.isConnected && 'IntersectionObserver' in window) {
+    io = new IntersectionObserver((es) => { if (es.some((x) => x.isIntersecting) && more.isConnected) step(); }, { rootMargin: '600px 0px' });
+    io.observe(more);
+  }
+}
+
+/* The bar under an opened list (DESIGN §9.3's one exception): it rides the
+   bottom of the screen while the list is on it, so a long list folds back up
+   from anywhere in it, and the page returns to the list's heading. */
+function collapseBar(what, onCollapse) {
+  const bar = el('div', 'collapsebar');
+  const b = button(ICON.up + ' Collapse', '', (e) => { e.preventDefault(); e.stopPropagation(); onCollapse(); });
+  b.type = 'button';
+  b.dataset.collapse = '1';
+  b.setAttribute('aria-label', 'Collapse ' + what);
+  bar.appendChild(b);
+  return bar;
+}
+/* open or fold one list (key: 'len:commute', 'topic:music'); folding goes
+   back to its heading */
+function setOpen(key, on) {
+  if (on) O.exp[key] = 1; else delete O.exp[key];
+  drawTVSide();
+  const head = O.root && O.root.querySelector('[data-open-head="' + CSS.escape(key) + '"]');
+  if (!head) return;
+  if (!on) app.jumpTo(head);
+  const t = head.parentNode && head.parentNode.querySelector('[data-expand="' + CSS.escape(key) + '"], [data-collapse]');
+  if (t && !on) t.focus({ preventScroll: true });
+}
+/* a list that is three (or four) and "All N", or all N with the bar */
+function openable(host, key, label, list, show, make, boxCls) {
+  const open = !!O.exp[key] && list.length > show;
+  const holder = open ? el('div', 'expwrap') : host;
+  if (open) host.appendChild(holder);
+  const box = el('div', boxCls);
+  box.dataset.rows = key.split(':')[1];
+  holder.appendChild(box);
+  if (open) {
+    holder.appendChild(collapseBar(label, () => setOpen(key, false)));
+    fill(box, list, make);
+  } else {
+    list.slice(0, show).forEach((it) => box.appendChild(make(it)));
+    if (list.length > show) {
+      const all = el('button', 'btn ghost sm oa-all', esc('All ' + list.length + ' · ' + label));
+      all.dataset.expand = key;
+      all.setAttribute('aria-expanded', 'false');
+      host.appendChild(all);
+    }
+  }
+  return box;
+}
+
+/* More to watch. On All: each length with its first three and "All N",
+   which opens all N right there; with a length chosen: that length, the
+   first full width. */
 function drawMore(host) {
   const lib = library();
   if (!lib.length) return false;
@@ -809,23 +904,17 @@ function drawMore(host) {
   LENGTHS.forEach((l) => {
     const list = lib.filter((it) => it.len === l.key);
     if (!list.length) return;
+    const key = 'len:' + l.key;
     const d = divider(host, l.title, l.key === 'trailer' ? '' : l.chip);
     d.dataset.len = l.key;
-    const box = el('div', 'oa-rows');
-    box.dataset.rows = l.key;
-    list.slice(0, BUCKET_SHOW).forEach((it) => box.appendChild(row(it, list)));
-    host.appendChild(box);
-    if (list.length > BUCKET_SHOW) {
-      const all = el('button', 'btn ghost sm oa-all', esc('All ' + list.length + ' · ' + l.chip));
-      all.dataset.len = l.key;
-      host.appendChild(all);
-    }
+    d.dataset.openHead = key;
+    openable(host, key, l.key === 'trailer' ? l.title : l.chip, list, BUCKET_SHOW, (it) => row(it, list), 'oa-rows');
   });
   app.know(lib);
   return true;
 }
 
-/* A chosen length: tonight's at that length, then the shelf's */
+/* A chosen length: tonight's at that length, then the shelf's, all of them */
 function drawLength(host) {
   const l = LEN[O.len];
   const all = pool_();
@@ -833,39 +922,143 @@ function drawLength(host) {
   const at = O.focus ? all.findIndex((it) => it.k === O.focus) : -1;
   if (at > 0) all.unshift(all.splice(at, 1)[0]);
   O.focus = null;
-  const list = all.slice(0, BUCKET_MAX);
-  const n = all.length > list.length ? list.length + ' of ' + all.length + ' videos' : plural(list.length, 'video', 'videos');
-  sec(host, l.title, esc(n + (O.len === 'trailer' ? '' : ' · ' + l.chip.toLowerCase())), 'len');
-  if (!list.length) { host.appendChild(el('p', 'note pad', 'Nothing at that length yet.')); return true; }
-  app.know(list);
-  host.appendChild(feature(list[0], list));
+  sec(host, l.title, esc(plural(all.length, 'video', 'videos') + (O.len === 'trailer' ? '' : ' · ' + l.chip.toLowerCase())), 'len');
+  if (!all.length) { host.appendChild(el('p', 'note pad', 'Nothing at that length yet.')); return true; }
+  app.know(all);
+  host.appendChild(feature(all[0], all));
   const box = el('div', 'oa-rows');
   box.dataset.rows = O.len;
-  list.slice(1).forEach((it) => box.appendChild(row(it, list)));
   host.appendChild(box);
+  fill(box, all.slice(1), (it) => row(it, all));
   return true;
 }
 
-function drawBoards(host) {
-  const list = boards();
-  if (!list.length) return false;
-  sec(host, 'Playlists', '', 'boards');
-  app.know(list);
-  const box = el('div', 'oa-rows');
-  box.dataset.rows = 'boards';
-  list.forEach((b) => {
-    const c = el('article', 'oa-row board');
-    c.dataset.k = b.k;
-    c.dataset.board = b.k;
-    c.innerHTML = '<span class="c-media r169 mosaic" data-watch role="button" tabindex="0" aria-label="Play ' + esc(b.title) + '">' +
-      b.clips.slice(0, 4).map((x) => '<span class="m">' + art(x.media) + '</span>').join('') + '<span class="dur">' + esc(String(b.clips.length)) + ' videos</span></span>' +
-      '<div class="b"><span class="t">' + esc(b.title) + '</span><span class="s">' + esc(minutes(b.total) + ' · via Clipsboard') + '</span>' +
-      '<div class="oa-acts"><button class="pillbtn oa-watch" data-watch aria-label="Play all of ' + esc(b.title) + '">' + ICON.play + ' Play all</button>' +
-      '<button class="iconbtn oa-more" data-more aria-label="More for ' + esc(b.title) + '">' + MORE_ICON + '</button></div></div>';
-    box.appendChild(c);
+/* -------------------------------------------------------------- topics */
+/* The order shelves come in after "New this week"; a topic shows only with
+   three or more videos. */
+const TOPICS = [
+  ['local', 'Burlington & Vermont'], ['music', 'Music'], ['comedy', 'Comedy'], ['docs', 'Documentaries'],
+  ['news', 'News & politics'], ['sci', 'Science & tech'], ['makers', 'Makers'], ['food', 'Food'],
+  ['sports', 'Sports'], ['games', 'Games & puzzles'], ['film', 'Film & short films'], ['fun', 'Fun & curious'],
+  ['trailer', 'Trailers'],
+];
+const TOPIC = Object.assign(Object.create(null), Object.fromEntries(TOPICS));
+const TOPIC_MIN = 3;
+const TOPIC_SHOW = 4;
+const NEW_DAYS = 7;
+/* channels whose topic is plain from the name (lowercase, straight quotes) */
+const BY_CHANNEL = {
+  music: ['npr music', 'kexp', 'audiotree', 'colors', 'mike o\'leary', 'phish', 'noah kahan', 'tiny desk', 'vevo', 'genius', 'sofar sounds'],
+  comedy: ['team coco', 'trevor noah', 'saturday night live', 'taskmaster', 'lastweektonight', 'last week tonight', 'comedy central stand-up',
+    'netflix is a joke', 'almost friday tv', 'casually explained', 'the daily show', 'dropout', 'jimmy kimmel live', 'the tonight show starring jimmy fallon'],
+  docs: ['dw documentary', 'real stories', 'frontline pbs', 'free documentary', 'timeline - world history documentaries', 'fern', 'bloomberg originals',
+    'channel 5 with andrew callaghan', 'lemmino', 'fall of civilizations', 'vice', 'the new yorker'],
+  news: ['60 minutes', 'pbs newshour', 'the new york times', 'vox', 'johnny harris', 'cbs sunday morning', 'reallifelore', 'vtdigger', 'vermont public',
+    'town meeting tv', 'mynbc5-wptz', 'wcax', 'associated press', 'nbc news', 'cnn', 'bbc news'],
+  makers: ['adam savage\'s tested', 'essential craftsman', 'primitive technology', 'inheritance machining', 'baumgartner restoration', 'diy perks',
+    'sampson boat co', 'project farm', 'erik grankvist', 'stuff made here', 'simone giertz', 'unnecessary inventions'],
+  food: ['bon appetit', 'bon appétit', 'america\'s test kitchen', 'sorted food', 'andy cooks', 'tasting history', 'first we feast', 'kenji lópez-alt',
+    'townsends', 'joshua weissman', 'king arthur baking', 'babish culinary universe', 'best ever food review show'],
+  sports: ['espn', 'jomboy media', 'ball_motivation', 'bballbreakdown', 'uvm athletics', 'nba', 'nfl', 'mlb', 'skiessentials', 'red bull'],
+  games: ['gothamchess', 'cracking the cryptic', 'summoning salt', 'jelle\'s marble runs', 'jet lag: the game'],
+  film: ['thomas flight', 'nerdwriter1', 'corridor crew', 'every frame a painting', 'lessons from the screenplay'],
+};
+const CHANNEL_TOPIC = Object.create(null);
+Object.entries(BY_CHANNEL).forEach(([t, list]) => list.forEach((c) => { CHANNEL_TOPIC[c] = t; }));
+/* Btown TV's own lanes and genres (scripts/curate_tv.py) */
+const LANE_TOPIC = { music: 'music', comedy: 'comedy', doc: 'docs', explainer: 'sci', wonder: 'sci', craft: 'makers', hoops: 'sports',
+  film: 'film', talk: 'fun', vermont: 'local' };
+const G_TOPIC = { sci: 'sci', fun: 'fun', news: 'news', vt: 'local', food: 'food', music: 'music', trailer: 'trailer' };
+const TITLE_TOPIC = [
+  ['music', /\b(tiny desk|live (at|from|session)|full (set|concert)|concert|official (music )?video|album)\b/i],
+  ['sports', /\b(nba|nfl|mlb|nhl|wnba|world series|super bowl|playoffs?|soccer|basketball|baseball|hockey|olympics?|marathon)\b/i],
+  ['food', /\b(recipes?|cooking|cooks?|chefs?|baking|kitchen|restaurant)\b/i],
+  ['docs', /\bdocumentary\b/i],
+  ['news', /\b(election|congress|senate|president|trump|supreme court|politic\w*|war in|ukraine|gaza)\b/i],
+  ['games', /\b(chess|speedrun|sudoku|puzzle|video game)\b/i],
+  ['film', /\b(short film|filmmaking|cinematography)\b/i],
+  ['comedy', /\b(stand-?up|sketch|comedy)\b/i],
+];
+const chanKey = (ch) => String(ch || '').toLowerCase().replace(/[’‘]/g, '\'').replace(/\s+/g, ' ').trim();
+/* One video's topic. On Everything a video from here is Burlington &
+   Vermont first; on Local everything is from here, so it goes by what it is. */
+function topicOf(it) {
+  if (!it) return 'fun';
+  if (it.len === 'trailer') return 'trailer';
+  const v = it.v || {};
+  if (it.local && geo() === 'everything') return 'local';
+  if (it.topic && TOPIC[it.topic]) return it.topic;
+  const byCh = CHANNEL_TOPIC[chanKey(it.src)];
+  if (byCh) return byCh;
+  if (v.lane && LANE_TOPIC[v.lane] && LANE_TOPIC[v.lane] !== 'local') return LANE_TOPIC[v.lane];
+  const byTitle = TITLE_TOPIC.find(([, re]) => re.test(String(it.title || '')));
+  if (byTitle) return byTitle[0];
+  if (v.lane && LANE_TOPIC[v.lane]) return LANE_TOPIC[v.lane];
+  if (v.g && G_TOPIC[v.g]) return G_TOPIC[v.g];
+  if (it.local) return 'local';
+  return 'fun';
+}
+/* new here this week: a Btown TV night in the last seven, or a find found in them */
+function isNew(it) {
+  const since = addDays(todayKey(), -(NEW_DAYS - 1));
+  if (it.night) return it.night >= since;
+  return !!it.d && it.d * 1000 >= Date.now() - NEW_DAYS * 86400000;
+}
+const whenNew = (it) => (it.night ? Date.parse(it.night + 'T23:00:00Z') / 1000 : Number(it.d) || 0);
+const newest = (a, b) => whenNew(b) - whenNew(a);   // a stable sort keeps a night's own order
+
+/* a video as a tile in a topic's grid: the picture, the length, the title */
+function tile(it, list, run) {
+  const c = el('article', 'oa-tile');
+  c.dataset.k = it.k;
+  c.dataset.run = run;
+  c.innerHTML = '<span class="c-media r169" data-watch role="button" tabindex="0" aria-label="Watch ' + esc(it.title) + '">' + art(it.media) +
+    (it.dur ? '<span class="dur">' + esc(it.dur) + '</span>' : '') + '</span>' +
+    '<span class="t">' + esc(it.title) + '</span><span class="s">' + esc(it.src) + '</span>';
+  c._list = list;
+  return c;
+}
+
+/* Topics: New this week, then each topic with enough in it. The length
+   chips still choose: a topic then holds only that length. */
+function drawTopics(host) {
+  const pool = pool_();
+  if (!pool.length) { host.appendChild(el('p', 'note pad', 'Nothing at that length yet.')); return true; }
+  const fresh = pool.filter(isNew).sort(newest);
+  const shelves = [];
+  if (fresh.length) shelves.push(['new', 'New this week', fresh]);
+  const by = Object.create(null);
+  pool.forEach((it) => { const t = topicOf(it); (by[t] = by[t] || []).push(it); });
+  TOPICS.forEach(([key, label]) => { if ((by[key] || []).length >= TOPIC_MIN) shelves.push([key, label, by[key].sort(newest)]); });
+  /* what is left over in a topic too small for its own shelf */
+  const odd = TOPICS.filter(([key]) => by[key] && by[key].length < TOPIC_MIN).flatMap(([key]) => by[key]);
+  if (odd.length >= TOPIC_MIN) shelves.push(['more', 'And more', odd.sort(newest)]);
+  app.know(pool);
+  shelves.forEach(([key, label, list]) => {
+    const okey = 'topic:' + key;
+    const h = sec(host, label, esc(plural(list.length, 'video', 'videos')), 'topic-' + key);
+    h.dataset.topic = key;
+    h.dataset.openHead = okey;
+    openable(host, okey, label, list, TOPIC_SHOW, (it) => tile(it, list, label), 'oa-grid');
   });
-  host.appendChild(box);
   return true;
+}
+
+/* Feed | Topics, this phone's choice */
+const VIEW_KEY = 'allday-onair-view';
+let viewMem = null;
+function view() {
+  if (viewMem) return viewMem;
+  let v = 'feed';
+  try { if (localStorage.getItem(VIEW_KEY) === 'topics') v = 'topics'; } catch (e) { /* storage blocked */ }
+  viewMem = v;
+  return v;
+}
+function setView(v) {
+  viewMem = v === 'topics' ? 'topics' : 'feed';
+  try { localStorage.setItem(VIEW_KEY, viewMem); } catch (e) { /* kept for the visit */ }
+  drawTVSide();
+  app.scrollTop();
 }
 
 /* ------------------------------------------- sideways rows: Live, Past nights */
@@ -890,16 +1083,17 @@ function setListed(name, on) {
   if (on) m[name] = 1; else delete m[name];
   try { localStorage.setItem(LIST_KEY, JSON.stringify(m)); } catch (e) { /* kept for the visit */ }
 }
-const LIST_FOOT = 6;
 const RAIL_NAMES = { live: 'Live', past: 'Past nights' };
+/* the row, with its button above it; as a list, the Collapse bar under it
+   (sticky in its slot, which holds only this section) */
 function videoRail(host, name, cls) {
   const top = el('div', 'railmode');
   top.appendChild(modeButton(name));
   host.appendChild(top);
   const r = rail(host, cls);
   r.dataset.rail = name;
-  const foot = el('div', 'railmode foot');
-  foot.appendChild(modeButton(name));
+  const foot = collapseBar(RAIL_NAMES[name] || 'these videos', () => foldRail(name));
+  foot.classList.add('foot');
   host.appendChild(foot);
   paintMode(r);
   return r;
@@ -915,25 +1109,31 @@ function paintMode(r) {
   const wrap = r.closest('.rail-wrap');
   const top = wrap.previousElementSibling;
   const foot = wrap.nextElementSibling;
-  [top, foot].forEach((row_) => {
-    const b = row_.querySelector('[data-railmode]');
-    b.textContent = on ? 'See as a row' : 'See as a list';
-    b.setAttribute('aria-label', b.textContent + ': ' + (RAIL_NAMES[r.dataset.rail] || 'these videos'));
-    b.setAttribute('aria-pressed', on ? 'true' : 'false');
-  });
-  foot.hidden = !on || r.children.length < LIST_FOOT;
+  const b = top.querySelector('[data-railmode]');
+  b.textContent = on ? 'See as a row' : 'See as a list';
+  b.setAttribute('aria-label', b.textContent + ': ' + (RAIL_NAMES[r.dataset.rail] || 'these videos'));
+  b.setAttribute('aria-pressed', on ? 'true' : 'false');
+  foot.hidden = !on;
 }
 function settleRails(host) { host.querySelectorAll('.rail[data-rail]').forEach(paintMode); }
 function flipMode(btn) {
   const name = btn.dataset.railmode;
-  const fromFoot = !!btn.closest('.railmode.foot');
   setListed(name, !listed()[name]);
   const r = O.root.querySelector('.rail[data-rail="' + name + '"]');
   if (!r) return;
   paintMode(r);
   r.scrollLeft = 0;
+}
+/* Collapse: back to a row, and back up to its heading */
+function foldRail(name) {
+  setListed(name, false);
+  const r = O.root.querySelector('.rail[data-rail="' + name + '"]');
+  if (!r) return;
+  paintMode(r);
+  r.scrollLeft = 0;
   const top = r.closest('.rail-wrap').previousElementSibling;
-  if (fromFoot) { app.jumpTo(top); top.querySelector('button').focus({ preventScroll: true }); }
+  app.jumpTo(top.previousElementSibling || top);
+  top.querySelector('button').focus({ preventScroll: true });
 }
 
 function vcard(it, w, list) {
@@ -1127,6 +1327,15 @@ function ownShow() {
     row.appendChild(b);
     list.append(row, holder);
   });
+  /* a long run of episodes folds back up from anywhere in it */
+  if (eps.length > EPISODES_OPEN) {
+    list.appendChild(collapseBar(name + '’s episodes', () => {
+      list.hidden = true;
+      r.setAttribute('aria-expanded', 'false');
+      app.jumpTo(r);
+      r.focus({ preventScroll: true });
+    }));
+  }
   /* Enter and space reach this through the tab's keydown handler */
   r.addEventListener('click', () => { list.hidden = !list.hidden; r.setAttribute('aria-expanded', list.hidden ? 'false' : 'true'); });
   wrap.append(r, list);
@@ -1168,35 +1377,52 @@ function drawPods(host) {
 }
 
 /* -------------------------------------------------------------- playlists */
-/* Playlists (Stephen, 2026-10-17: "seed fire Spotify playlists of mines and
-   or playlists from YouTube. I'm the curator. Encourage people to share
-   theirs too."). data/playlists.json is edited by hand: Stephen's own under
-   `stephen`, then readers' under `readers`, each { title, by, service, url,
-   note, added }. An entry shows only when its url is a real playlist link on
-   its service (the patterns below), so the TODO placeholders the file ships
-   with stay off the page until he pastes real links. Spotify and YouTube
-   play in a sheet through their own embeds; Apple Music and SoundCloud open
-   on their own sites. Readers send theirs by email: the Square board's posts
-   carry no link field (boards-core.js), and adding one is a foundation change.
-   Every string is the file's, so all of it goes through esc(), and a url is
-   only ever used after its service's pattern has matched it whole. */
+/* Playlists, their own side (Stephen, 2026-10-17: "seed fire Spotify
+   playlists of mines and or playlists from YouTube. I'm the curator.
+   Encourage people to share theirs too"; 2026-10-19: "a better spot for
+   people to submit their playlists … and for it all to be displayed cool").
+
+   Three sources, one shape. data/playlists.json is edited by hand: Stephen's
+   own under `stephen`, readers' he adds himself under `readers`, each
+   { title, by, service, url, note, added }. Readers also send their own
+   through the playlists board (boards.js; supabase/nn-PLAYLISTS.sql): a
+   name, a line and one link, which waits for Stephen before it shows. Until
+   that SQL is pasted the server's rules have no such board (boards.hasBoard)
+   and "Add your playlist" is an email instead. An entry shows only when its url is a real playlist (or
+   Spotify profile) link on its service, matched whole by the patterns
+   below, so the TODO placeholders the file ships with stay off the page.
+   Spotify and YouTube play in a sheet through their own embeds; Apple
+   Music, SoundCloud and a Spotify profile open on their own sites. A cover
+   comes from the service's own public oEmbed (Spotify's and YouTube's;
+   only their image hosts are accepted), fetched once the side is opened;
+   without one the tile is the service's colour and mark.
+
+   Video playlists follow: the latest Btown TV night (its YouTube playlist,
+   in the sheet's player) and Clipsboard's nine-video boards (On Air's own
+   player, straight through). Every string is the file's or a reader's, so
+   all of it goes through esc(). */
 const PLAYLISTS_URL = 'data/playlists.json';
 const SHARE_TO = 'btownbrief@gmail.com';
 const SERVICES = {
   spotify: { name: 'Spotify', re: /^https:\/\/open\.spotify\.com\/(?:intl-[a-z]{2}(?:-[a-z]{2})?\/)?playlist\/([A-Za-z0-9]{22})(?:\?[A-Za-z0-9=&._-]*)?$/,
-    embed: (id) => 'https://open.spotify.com/embed/playlist/' + id + '?theme=0' },
-  youtube: { name: 'YouTube', re: /^https:\/\/(?:www\.|m\.|music\.)?youtube\.com\/playlist\?list=([A-Za-z0-9_-]{10,64})$/,
-    embed: (id) => 'https://www.youtube-nocookie.com/embed/videoseries?list=' + id + '&rel=0&playsinline=1' },
+    embed: (id) => 'https://open.spotify.com/embed/playlist/' + id + '?theme=0', oembed: 'https://open.spotify.com/oembed?url=' },
+  /* a share link carries ?list= and often &si=…: the list id is what counts */
+  youtube: { name: 'YouTube', re: /^https:\/\/(?:www\.|m\.|music\.)?youtube\.com\/playlist\?list=([A-Za-z0-9_-]{10,64})(?:&[A-Za-z0-9=&._-]*)?$/,
+    embed: (id) => 'https://www.youtube-nocookie.com/embed/videoseries?list=' + id + '&rel=0&playsinline=1', oembed: 'https://www.youtube.com/oembed?format=json&url=' },
   apple: { name: 'Apple Music', re: /^https:\/\/music\.apple\.com\/[a-z]{2}\/playlist\/(?:[A-Za-z0-9%._~-]+\/)?(pl\.[A-Za-z0-9-]+)(?:\?[A-Za-z0-9=&._-]*)?$/ },
   soundcloud: { name: 'SoundCloud', re: /^https:\/\/(?:soundcloud\.com\/[A-Za-z0-9_-]+\/sets\/([A-Za-z0-9_-]+)|on\.soundcloud\.com\/([A-Za-z0-9]+))(?:\?[A-Za-z0-9=&._-]*)?$/ },
+  /* a reader's whole Spotify, "or their Spotify handles" */
+  spotifyuser: { name: 'Spotify', re: /^https:\/\/open\.spotify\.com\/user\/([A-Za-z0-9._-]{1,64})(?:\?[A-Za-z0-9=&._-]*)?$/, profile: true },
 };
+const COVER_OK = /^https:\/\/(?:i\.scdn\.co|mosaic\.scdn\.co|image-cdn-[a-z0-9-]+\.spotifycdn\.com|i\.ytimg\.com)\/[A-Za-z0-9._~\/-]+$/;
 const clip = (v, n) => { const t = String(v == null ? '' : v).replace(/\s+/g, ' ').trim(); return t.length > n ? t.slice(0, n - 1).trimEnd() + '…' : t; };
 const isTodo = (v) => /^\s*TODO\b/i.test(String(v || ''));
+const hasSvc = (k) => Object.prototype.hasOwnProperty.call(SERVICES, k);   // never "constructor" and friends
 
 /* one entry, checked, or null */
 function playlistItem(p, own) {
   if (!p || typeof p !== 'object') return null;
-  const svc = Object.prototype.hasOwnProperty.call(SERVICES, p.service) ? SERVICES[p.service] : null;   // never "constructor" and friends
+  const svc = hasSvc(p.service) ? SERVICES[p.service] : null;
   const url = String(p.url || '').trim();
   const m = svc && !isTodo(url) && url.match(svc.re);
   const title = clip(p.title, 80);
@@ -1208,42 +1434,75 @@ function playlistItem(p, own) {
     added: isDate(p.added) ? p.added : '', own: !!own, src: svc.name, sid: 'playlist:' + p.service,
   };
 }
+/* a reader's approved post on the playlists board, as an entry */
+function postItem(p) {
+  if (!p || typeof p !== 'object') return null;
+  const url = String(p.meta && p.meta.link || '').trim();
+  const service = Object.keys(SERVICES).find((k) => SERVICES[k].re.test(url));
+  if (!service) return null;
+  return playlistItem({ title: p.title, by: p.author, service, url, note: p.body, added: String(p.created_at || '').slice(0, 10) }, false);
+}
 function playlists() {
-  const P = O.playlists;
-  if (!P || typeof P !== 'object') return { own: [], readers: [] };
+  const P = O.playlists && typeof O.playlists === 'object' ? O.playlists : {};
   const seen = new Set();
-  const take = (list, own) => arr(list).map((p) => playlistItem(p, own)).filter((it) => it && !seen.has(it.k) && (seen.add(it.k), true));
-  const own = take(P.stephen, true);
-  /* readers' newest first; one with no date goes last */
-  const readers = take(P.readers, false).sort((a, b) => (a.added < b.added ? 1 : a.added > b.added ? -1 : 0));
+  const once = (it) => it && !seen.has(it.k) && (seen.add(it.k), true);
+  const own = arr(P.stephen).map((p) => playlistItem(p, true)).filter(once);
+  /* readers' newest first, from the file and the board; one with no date goes last */
+  const readers = arr(P.readers).map((p) => playlistItem(p, false)).concat(arr(O.posts).map(postItem)).filter(once)
+    .sort((a, b) => (a.added < b.added ? 1 : a.added > b.added ? -1 : 0));
   return { own, readers };
 }
 
-function playlistRow(it) {
-  const r = el('div', 'lrow plrow');
-  r.dataset.k = it.k;
-  r.dataset.service = it.service;
-  if (it.own) r.dataset.own = '1';
-  const meta = [it.svc.name, it.by && !it.own ? 'from ' + it.by : ''].filter(Boolean).join(' · ');
-  r.innerHTML = '<span class="th svc">' + (it.service === 'youtube' ? ICON.play : ICON.listen) + '</span><div><div class="t">' + esc(it.title) + '</div><div class="s">' +
-    (it.own ? '<span class="tag tag-own">' + esc(it.by ? it.by + '’s pick' : 'Btown Brief') + '</span> ' : '') + esc(meta) + '</div>' +
-    (it.text ? '<div class="s pn">' + esc(it.text) + '</div>' : '') + '</div>';
-  if (it.svc.embed) {
-    r.setAttribute('role', 'button');
-    r.tabIndex = 0;
-    const b = el('button', 'pillbtn', ICON.play + ' Play');
-    b.setAttribute('aria-label', 'Play ' + it.title + ' on ' + it.svc.name);
-    b.dataset.playlist = it.k;
-    r.appendChild(b);
-  } else {
-    const a = el('a', 'pillbtn', esc(it.svc.name) + ' ' + ICON.ext);
-    a.href = safeHref(it.href); a.target = '_blank'; a.rel = 'noopener';
-    a.setAttribute('aria-label', 'Open ' + it.title + ' on ' + it.svc.name);
-    a.dataset.playlist = it.k;
-    if (app.demo) a.addEventListener('click', (e) => { e.preventDefault(); app.toast('Opens the playlist on ' + it.svc.name + ' in the real build'); });
-    r.appendChild(a);
+/* the covers: the service's own oEmbed picture, asked once per visit */
+const covers = new Map();
+function coverOf(it) {
+  if (app.demo || !it.svc.oembed) return Promise.resolve('');
+  if (!covers.has(it.href)) {
+    covers.set(it.href, fetch(it.svc.oembed + encodeURIComponent(it.href)).then((r) => (r.ok ? r.json() : null))
+      .then((j) => { const u = String(j && j.thumbnail_url || ''); return COVER_OK.test(u) ? u : ''; }, () => ''));
   }
-  return r;
+  return covers.get(it.href);
+}
+function paintCovers() {
+  const S = O.slots;
+  if (!S || O.side !== 'lists') return;
+  S.listSide.querySelectorAll('.pl-tile[data-k^="pl:"]:not([data-covered]):not([data-tvlist])').forEach((t) => {
+    t.dataset.covered = '1';
+    const it = app.item(t.dataset.k);
+    if (!it || !it.svc) return;
+    coverOf(it).then((u) => {
+      const c = u && t.querySelector('.pl-cover');
+      if (!c) return;
+      c.classList.remove('svc');
+      c.innerHTML = art(u);
+    });
+  });
+}
+
+const SVC_MARK = { spotify: 'Spotify', spotifyuser: 'Spotify', youtube: 'YouTube', apple: 'Apple Music', soundcloud: 'SoundCloud' };
+function playlistTile(it) {
+  const out = !it.svc.embed;
+  const t = el(out ? 'a' : 'div', 'pl-tile');
+  t.dataset.k = it.k;
+  t.dataset.service = it.service;
+  t.dataset.playlist = it.k;
+  if (it.own) t.dataset.own = '1';
+  if (out) {
+    t.href = safeHref(it.href); t.target = '_blank'; t.rel = 'noopener';
+    t.setAttribute('aria-label', 'Open ' + it.title + ' on ' + it.svc.name);
+    if (app.demo) t.addEventListener('click', (e) => { e.preventDefault(); app.toast('Opens the playlist on ' + it.svc.name + ' in the real build'); });
+  } else {
+    t.setAttribute('role', 'button');
+    t.tabIndex = 0;
+    t.setAttribute('aria-label', 'Play ' + it.title + ' on ' + it.svc.name);
+  }
+  const meta = [it.svc.profile ? 'Profile' : '', it.svc.name, it.by && !it.own ? 'from ' + it.by : ''].filter(Boolean).join(' · ');
+  t.innerHTML = '<span class="pl-cover svc"><span class="pl-mark">' + (it.service === 'youtube' ? ICON.play : ICON.listen) + '<span>' + esc(SVC_MARK[it.service] || '') + '</span></span>' +
+    (out ? '' : '<span class="pl-play">' + ICON.play + '</span>') + '</span>' +
+    '<span class="t">' + esc(it.title) + '</span>' +
+    '<span class="s">' + esc(meta) + '</span>' +
+    (it.text ? '<span class="s pn">' + esc(it.text) + '</span>' : '');
+  return t;
 }
 
 /* A Spotify or YouTube playlist in a sheet, in the service's own player.
@@ -1276,28 +1535,137 @@ function playlistSheet(it) {
   });
 }
 
-/* "Share yours": an email to the Brief, the subject and the three things
-   Stephen needs already in it */
-function shareLink() {
-  const body = 'Playlist link:\n\nWhat it is (one line):\n\nName to credit:\n';
-  const a = el('a', 'btn ghost more', ICON.mail + ' Share your playlist');
-  a.href = 'mailto:' + SHARE_TO + '?subject=' + encodeURIComponent('A playlist for On Air') + '&body=' + encodeURIComponent(body);
-  a.dataset.sharePlaylist = '1';
+/* "Add your playlist": the board's own form once its SQL is in, an email to
+   the Brief with the three things Stephen needs until then */
+const MAIL_BODY = 'Playlist link (Spotify, YouTube, Apple Music or SoundCloud), or your Spotify profile:\n\nWhat it is (one line):\n\nName to credit:\n';
+function addButton() {
+  if (O.board === true) {
+    const b = button(ICON.plus + ' Add your playlist', 'oa-addpl', composePlaylist);
+    b.dataset.addPlaylist = 'board';
+    return b;
+  }
+  const a = mailLink('btn oa-addpl', ICON.plus + ' Add your playlist');
+  a.dataset.addPlaylist = 'mail';
   return a;
 }
-
-function drawPlaylists(host) {
-  const { own, readers } = playlists();
-  if (!own.length && !readers.length) return false;   // nothing real yet: no section, not an empty one
-  sec(host, 'Playlists', '', 'lists');
-  own.forEach((it) => host.appendChild(playlistRow(it)));
-  if (readers.length) {
-    divider(host, 'From readers');
-    readers.forEach((it) => host.appendChild(playlistRow(it)));
+function mailLink(cls, label) {
+  const a = el('a', cls, label);
+  a.href = 'mailto:' + SHARE_TO + '?subject=' + encodeURIComponent('A playlist for On Air') + '&body=' + encodeURIComponent(MAIL_BODY);
+  return a;
+}
+function composePlaylist() {
+  /* signed out: signing in, or the email, whichever is less bother */
+  if (!app.user()) {
+    app.sheet('Add your playlist', (body) => {
+      body.appendChild(el('p', 'sheet-note', 'Sign in to send it here, or email it to us.'));
+      const r = el('div', 'linkrow');
+      r.appendChild(button('Sign in', '', () => app.openSettings()));
+      const m = mailLink('btn ghost', ICON.mail + ' Email it');
+      m.dataset.mailPlaylist = '1';
+      r.appendChild(m);
+      body.appendChild(r);
+    });
+    return;
   }
-  app.know(own.concat(readers));
-  host.appendChild(shareLink());
+  boards.compose({
+    board: 'playlists', kind: 'playlist', heading: 'Add your playlist', cta: 'Send it',
+    title: 'Playlist name', titlePlaceholder: 'Sunday drive down Route 7',
+    fields: [{ key: 'link', type: 'url', label: 'Link', max: 200, placeholder: 'https://open.spotify.com/playlist/…',
+      hint: 'A Spotify, YouTube, Apple Music or SoundCloud playlist, or your Spotify profile.' }],
+    body: 'One line about it', bodyPlaceholder: 'Windows down, Shelburne to Ferrisburgh',
+    notes: ['Steve has a look before it shows here.'],
+    onPosted: () => loadBoard(),
+  });
+}
+/* the board's approved playlists; bad_board or off means its SQL is not in yet */
+function loadBoard() {
+  boards.hasBoard('playlists').then((has) => {
+    if (has === false) O.board = false;
+    if (!has) return null;
+    return boards.list('playlists', { kind: 'playlist', limit: RULES.limits.listMax }).then((r) => {
+      if (r.ok) { O.board = true; O.posts = r.posts; } else if (r.error === 'bad_board' || r.error === 'off') O.board = false;
+    });
+  }).then(() => { if (O.built) { drawListsSide(); app.paintPlayButtons(); } });
+}
+
+/* The video playlists: the latest Btown TV night that has one, then
+   Clipsboard's boards (Stephen: "it basically has YouTube playlists too,
+   not just individual videos"; only clips with a real id and length kept). */
+function tvPlaylist() {
+  const night = tvNights().find(({ ed }) => playlistOf(ed));
+  if (!night) return null;
+  const url = playlistOf(night.ed);
+  const label = !night.date || night.date >= todayKey() ? 'Tonight' : nightOf(night.date);
+  const it = playlistItem({ title: tvTitle(label), by: 'Btown TV', service: 'youtube', url }, false);
+  if (!it) return null;
+  it.covers = editionVideos(night.ed).slice(0, 4).map((x) => x.media);
+  it.n = editionCount(night.ed);
+  return it;
+}
+function boardsList() {
+  if (geo() !== 'everything') return [];   // Local means local
+  return arr(O.finds && O.finds.boards).map((b) => {
+    if (!b || !b.t || !/^[a-z0-9-]{1,120}$/.test(String(b.slug || ''))) return null;
+    const clips = arr(b.clips).filter((c) => c && app.isVideoId(c.id) && c.t).map((c) => {
+      return findItem({ id: c.id, t: c.t, ch: c.ch, sec: c.sec, b: lengthOf(c.sec, c.t), via: 'clipsboard', via_url: 'https://clipsboard.com/grid/' + b.slug, art: c.art });
+    }).filter(Boolean);
+    if (clips.length < 3) return null;
+    const total = clips.reduce((n, c) => n + c.sec, 0);
+    return { k: 'board:' + b.slug, kind: 'playlist', title: clip(b.t, 90), src: 'Clipsboard', sid: 'clipsboard', clips, total,
+      href: 'https://clipsboard.com/grid/' + b.slug, via: 'Clipsboard', viaUrl: 'https://clipsboard.com/grid/' + b.slug };
+  }).filter(Boolean);
+}
+const mosaic = (media, label) => '<span class="pl-cover mosaic">' + media.slice(0, 4).map((m) => '<span class="m">' + art(m) + '</span>').join('') +
+  '<span class="dur">' + esc(label) + '</span></span>';
+function videoTiles(host) {
+  const tv = tvPlaylist();
+  const list = boardsList();
+  if (!tv && !list.length) return false;
+  const h = sec(host, 'Video playlists', '', 'vlists');
+  h.dataset.vlists = '1';
+  const grid = el('div', 'pl-grid wide');
+  if (tv) {
+    app.know([tv]);
+    const t = el('div', 'pl-tile');
+    t.dataset.k = tv.k; t.dataset.service = 'youtube'; t.dataset.playlist = tv.k; t.dataset.tvlist = '1';
+    t.setAttribute('role', 'button'); t.tabIndex = 0;
+    t.setAttribute('aria-label', 'Play ' + tv.title);
+    t.innerHTML = mosaic(tv.covers, plural(tv.n, 'video', 'videos')) + '<span class="t">' + esc(tv.title) + '</span><span class="s">' + esc('YouTube playlist') + '</span>';
+    grid.appendChild(t);
+  }
+  app.know(list);
+  list.forEach((b) => {
+    const t = el('article', 'pl-tile board');
+    t.dataset.k = b.k;
+    t.dataset.board = b.k;
+    t.innerHTML = '<span class="pl-coverbtn" data-watch role="button" tabindex="0" aria-label="Play ' + esc(b.title) + '">' + mosaic(b.clips.map((x) => x.media), b.clips.length + ' videos') + '</span>' +
+      '<span class="t">' + esc(b.title) + '</span><span class="s">' + esc(minutes(b.total) + ' · via Clipsboard') + '</span>' +
+      '<span class="oa-acts"><button class="pillbtn oa-watch" data-watch aria-label="Play all of ' + esc(b.title) + '">' + ICON.play + ' Play all</button>' +
+      '<button class="iconbtn oa-more" data-more aria-label="More for ' + esc(b.title) + '">' + MORE_ICON + '</button></span>';
+    grid.appendChild(t);
+  });
+  host.appendChild(grid);
   return true;
+}
+
+function drawListsSide() {
+  const S = O.slots;
+  if (!S) return;
+  ['lists', 'boards', 'listEnd'].forEach((n) => { S[n].innerHTML = ''; });
+  const host = S.lists;
+  const { own, readers } = playlists();
+  sec(host, 'Playlists', '', 'lists');
+  const add = el('div', 'oa-pick');
+  add.appendChild(addButton());
+  host.appendChild(add);
+  const grid = (list) => { const g = el('div', 'pl-grid'); list.forEach((it) => g.appendChild(playlistTile(it))); host.appendChild(g); };
+  if (own.length) { divider(host, own[0].by ? own[0].by + '’s picks' : 'Our picks'); grid(own); }
+  if (readers.length) { divider(host, 'From readers'); grid(readers); }
+  if (!own.length && !readers.length) host.appendChild(el('p', 'note pad', 'No playlists here yet. Yours could be the first.'));
+  app.know(own.concat(readers));
+  S.boards.hidden = !videoTiles(S.boards);
+  S.listEnd.appendChild(cards.caught({ title: 'That’s On Air', check: false }));
+  paintCovers();
 }
 
 function drawPast(host) {
@@ -1336,18 +1704,20 @@ function drawPast(host) {
 }
 
 /* ------------------------------------------------------------- the sides */
-/* TV | Podcasts, and the TV side's length. Both live for the visit; the side
-   is in the URL (#onair/podcasts) so a link can land on it. Both sides are
-   drawn and the other is hidden, so the Brief's own show (and a Spotify
-   frame in it) is never torn down by a flip. */
+/* TV | Podcasts | Playlists, and the TV side's length. Both live for the
+   visit; the side is in the URL (#onair/podcasts, #onair/playlists) so a
+   link can land on it. Every side is drawn and the others hidden, so the
+   Brief's own show (and a Spotify frame in it) is never torn down by a flip. */
+const SIDES = { tv: '', pods: 'podcasts', lists: 'playlists' };
 function setSide(side, quiet) {
-  O.side = side === 'pods' ? 'pods' : 'tv';
+  O.side = SIDES[side] != null ? side : 'tv';
   const S = O.slots;
-  if (S) { S.tvSide.hidden = O.side !== 'tv'; S.podSide.hidden = O.side !== 'pods'; }
+  if (S) { S.tvSide.hidden = O.side !== 'tv'; S.podSide.hidden = O.side !== 'pods'; S.listSide.hidden = O.side !== 'lists'; }
   if (!quiet) {
-    try { history.replaceState(null, '', '#onair' + (O.side === 'pods' ? '/podcasts' : '')); } catch (e) { /* a sandboxed frame */ }
+    try { history.replaceState(null, '', '#onair' + (SIDES[O.side] ? '/' + SIDES[O.side] : '')); } catch (e) { /* a sandboxed frame */ }
     app.scrollTop();
   }
+  paintCovers();
   if (app.activeTab() === KEY) app.paintSubnav();
 }
 function setLen(k) {
@@ -1359,15 +1729,18 @@ function setLen(k) {
 
 function drawTVSide() {
   const S = O.slots;
-  ['pick', 'tv', 'more', 'boards', 'live', 'past', 'tvEnd'].forEach((n) => { S[n].innerHTML = ''; });
+  ['pick', 'tv', 'more', 'topics', 'live', 'past', 'tvEnd'].forEach((n) => { S[n].innerHTML = ''; });
   S.pick.hidden = !drawPick(S.pick);
-  if (O.len) {
+  const topics = view() === 'topics';
+  S.topics.hidden = !topics || !drawTopics(S.topics);
+  if (topics) {
+    ['tv', 'more', 'live', 'past'].forEach((n) => { S[n].hidden = true; });
+  } else if (O.len) {
     S.tv.hidden = !drawLength(S.tv);
-    ['more', 'boards', 'live', 'past'].forEach((n) => { S[n].hidden = true; });
+    ['more', 'live', 'past'].forEach((n) => { S[n].hidden = true; });
   } else {
     S.tv.hidden = !drawTV(S.tv);
     S.more.hidden = !drawMore(S.more);
-    S.boards.hidden = !drawBoards(S.boards);
     S.live.hidden = !drawLive(S.live);
     S.past.hidden = !drawPast(S.past);
     settleRails(S.tvSide);
@@ -1391,24 +1764,26 @@ function render() {
     const side = (name) => { const s = el('div', 'oa-side'); s.dataset.side = name; root.appendChild(s); return s; };
     const tvSide = side('tv');
     const podSide = side('pods');
+    const listSide = side('lists');
     const mk = (host, name) => { const s = el('div'); s.dataset.slot = name; host.appendChild(s); return s; };
-    O.slots = { tvSide, podSide,
-      pick: mk(tvSide, 'pick'), tv: mk(tvSide, 'tv'), more: mk(tvSide, 'more'), boards: mk(tvSide, 'boards'), live: mk(tvSide, 'live'), past: mk(tvSide, 'past'), tvEnd: mk(tvSide, 'end'),
-      brief: mk(podSide, 'brief'), podsHead: mk(podSide, 'pods-head'), own: mk(podSide, 'own'), pods: mk(podSide, 'pods'), lists: mk(podSide, 'lists'), podEnd: mk(podSide, 'end') };
+    O.slots = { tvSide, podSide, listSide,
+      pick: mk(tvSide, 'pick'), tv: mk(tvSide, 'tv'), more: mk(tvSide, 'more'), topics: mk(tvSide, 'topics'), live: mk(tvSide, 'live'), past: mk(tvSide, 'past'), tvEnd: mk(tvSide, 'end'),
+      brief: mk(podSide, 'brief'), podsHead: mk(podSide, 'pods-head'), own: mk(podSide, 'own'), pods: mk(podSide, 'pods'), podEnd: mk(podSide, 'end'),
+      lists: mk(listSide, 'lists'), boards: mk(listSide, 'boards'), listEnd: mk(listSide, 'end') };
     O.built = true;
     setSide(O.side, true);
   }
   const S = O.slots;
   drawTVSide();
-  ['brief', 'podsHead', 'pods', 'lists', 'podEnd'].forEach((n) => { S[n].innerHTML = ''; });
+  ['brief', 'podsHead', 'pods', 'podEnd'].forEach((n) => { S[n].innerHTML = ''; });
   S.brief.hidden = !drawBrief(S.brief);
   if (!O.own && O.podcast) { O.own = ownShow(); if (O.own) S.own.appendChild(O.own); }
   const anyPods = !!O.own || shows().length > 0;
   S.podsHead.hidden = !anyPods && !O.failed.pulse;
   if (!S.podsHead.hidden) drawPodsHead(S.podsHead);
   drawPods(S.pods);
-  S.lists.hidden = !drawPlaylists(S.lists);
   S.podEnd.appendChild(cards.caught({ title: 'That’s On Air', check: false }));
+  drawListsSide();
   app.paintPlayButtons();
   if (app.activeTab() === KEY) app.paintSubnav();
   land();
@@ -1418,6 +1793,8 @@ function render() {
 function onClick(e) {
   const pick = e.target.closest('[data-pick]');
   if (pick) { e.preventDefault(); pickForMe(); return; }
+  const ex = e.target.closest('button[data-expand]');
+  if (ex) { e.preventDefault(); setOpen(ex.dataset.expand, true); return; }
   const len = e.target.closest('button[data-len]');
   if (len) { e.preventDefault(); setLen(len.dataset.len); return; }
   const w = e.target.closest('[data-watch]');
@@ -1429,7 +1806,7 @@ function onClick(e) {
     if (it.clips) { openPlayer(it.clips, 0, it.title); return; }
     const list = card._list || [it];
     const at = Math.max(0, list.findIndex((x) => x.k === it.k));
-    openPlayer(list, at, card.closest('.sheet-body') ? 'The whole edition' : it.live ? 'Live' : O.len ? LEN[O.len].title : it.via === 'Btown TV' ? 'Btown TV' : 'More to watch');
+    openPlayer(list, at, card.closest('.sheet-body') ? 'The whole edition' : card.dataset.run || (it.live ? 'Live' : O.len ? LEN[O.len].title : it.via === 'Btown TV' ? 'Btown TV' : 'More to watch'));
     return;
   }
   const more = e.target.closest('[data-more]');
@@ -1450,11 +1827,10 @@ function onClick(e) {
     return;
   }
   const pl = e.target.closest('[data-k^="pl:"]');
-  if (pl && !e.target.closest('a')) {
+  if (pl) {
     const it = app.item(pl.dataset.k);
     if (it && it.svc && it.svc.embed) { e.preventDefault(); playlistSheet(it); }
-    else if (it) { const a = pl.querySelector('a[data-playlist]'); if (a) a.click(); }
-    return;
+    return;   // an outside playlist is its own link
   }
   const night = e.target.closest('[data-night]');
   if (night) {
@@ -1478,13 +1854,13 @@ function onClick(e) {
   }
 }
 function onKey(e) {
-  if ((e.key === 'Enter' || e.key === ' ') && e.target.matches('[data-show], [data-night] [role="button"], .plrow[role="button"], .c-media[data-watch]')) { e.preventDefault(); e.target.click(); }
+  if ((e.key === 'Enter' || e.key === ' ') && e.target.matches('[data-show], [data-night] [role="button"], .pl-tile[role="button"], [data-watch][role="button"]')) { e.preventDefault(); e.target.click(); }
 }
 
 /* -------------------------------------------------------------- deep links */
 /* Only once every payload has settled: each one redraws the page, which
-   would replace a card that had just flashed. A key on the other side
-   brings that side forward first. */
+   would replace a card that had just flashed. A key on another side brings
+   that side forward first. */
 const findHit = (k) => [...O.root.querySelectorAll('[data-k]')].find((n) => n.dataset.k === k) || null;
 /* every video On Air holds, whatever the switch and the length say */
 function allVideos() {
@@ -1503,16 +1879,24 @@ function land() {
     /* a shared video that the page as drawn does not show (a find while on
        Local, the twentieth of tonight's, the fourth of a length): bring the
        page to it. A find from away flips the switch to Everything, as
-       #onair/everything does; then its length opens with it first. */
+       #onair/everything does; then its length opens with it first, in the
+       feed (Topics would hide where it is). */
     const it = allVideos().find((x) => x.k === k);
     if (it) {
       if (!it.local && geo() !== 'everything') setGeo('everything');
       if (it.len) { O.len = it.len; O.focus = k; }
+      if (view() === 'topics') viewMem = 'feed';
       drawTVSide();
       hit = findHit(k);
     }
   }
-  if (hit) setSide(hit.closest('[data-side="pods"]') ? 'pods' : 'tv', true);
+  if (!hit && /^board:[a-z0-9-]{1,120}$/.test(k) && geo() !== 'everything' && arr(O.finds && O.finds.boards).some((b) => b && 'board:' + b.slug === k)) {
+    /* a shared Clipsboard board, for a reader on Local: boards are Everything's */
+    setGeo('everything');
+    drawListsSide();
+    hit = findHit(k);
+  }
+  if (hit) { const sd = hit.closest('[data-side]'); setSide(sd ? sd.dataset.side : 'tv', true); }
   if (app.activeTab() === KEY) app.paintSubnav();
   if (!app.flashHit(O.root, k)) app.toast('That one has moved on. Here’s what’s on now.');
 }
@@ -1534,6 +1918,12 @@ function mount(root) {
   /* not in FEEDS: a playlist or finds file that loads must not hide "Couldn't reach On Air" */
   loadPlaylists((j) => { O.playlists = j; O.settled.playlists = true; render(); }, () => { O.settled.playlists = true; render(); });
   loadFinds((j) => { O.finds = j; O.settled.finds = true; render(); }, () => { O.settled.finds = true; render(); });
+  loadBoard();
+  /* a playlist approved, deleted or taken down elsewhere in the app */
+  window.addEventListener('allday-boards', (e) => {
+    const d = (e && e.detail) || {};
+    if (d.board === 'playlists' || d.what === 'delete' || d.what === 'hidden' || d.what === 'deleteme') loadBoard();
+  });
 }
 
 function newSince(ts) {
@@ -1557,7 +1947,8 @@ app.register(KEY, {
       if (O.root) render();
       return;
     }
-    if (param === 'podcasts' || param === 'tv') { O.pending = null; setSide(param === 'podcasts' ? 'pods' : 'tv', true); return; }
+    const side = Object.keys(SIDES).find((k) => SIDES[k] && SIDES[k] === param) || (param === 'tv' ? 'tv' : null);
+    if (side) { O.pending = null; setSide(side, true); return; }
     O.pending = param || null;
     land();
   },
@@ -1565,25 +1956,30 @@ app.register(KEY, {
   deactivate() { app.closePeek(); },
   subnav() {
     if (!O.root) return null;
+    /* two rows: the three sides, full width and plain to see (Stephen,
+       2026-10-19: toggles "more apparent … too easy to skip past"), then
+       the Local switch with the side's own chips beside it */
     const wrap = el('div', 'oa-sub');
+    const top = el('div', 'toolband oa-sidesrow');
+    const sw = pills([['tv', 'TV'], ['pods', 'Podcasts'], ['lists', 'Playlists']], O.side, (v) => setSide(v), 'oa-sideswitch');
+    sw.setAttribute('role', 'group');
+    sw.setAttribute('aria-label', 'TV, podcasts or playlists');
+    [...sw.children].forEach((b, i) => { b.dataset.side = ['tv', 'pods', 'lists'][i]; b.setAttribute('aria-pressed', String(b.dataset.side === O.side)); });
+    top.appendChild(sw);
+    wrap.appendChild(top);
     const band = el('div', 'toolband');
     band.appendChild(localSwitch(() => { render(); app.scrollTop(); }));
-    const sw = pills([['tv', 'TV'], ['pods', 'Podcasts']], O.side, (v) => setSide(v), 'oa-sideswitch');
-    sw.setAttribute('role', 'group');
-    sw.setAttribute('aria-label', 'TV or podcasts');
-    [...sw.children].forEach((b, i) => { b.dataset.side = i ? 'pods' : 'tv'; b.setAttribute('aria-pressed', String(b.dataset.side === O.side)); });
-    band.appendChild(sw);
-    wrap.appendChild(band);
     if (O.side === 'tv') {
       const pool = O.built ? (() => { const keep = O.len; O.len = ''; const all = pool_(); O.len = keep; return all; })() : [];
       const items = [{ key: 'all', label: 'All lengths' }].concat(LENGTHS.filter((l) => l.key === O.len || pool.some((it) => it.len === l.key)).map((l) => ({ key: l.key, label: l.chip })));
-      wrap.appendChild(chips(items, O.len || 'all', (k) => setLen(k === 'all' ? '' : k)));
-    } else {
-      const toc = [['brief', 'Out loud'], ['pods', 'Podcasts'], ['lists', 'Playlists']]
+      band.appendChild(chips(items, O.len || 'all', (k) => setLen(k === 'all' ? '' : k)));
+    } else if (O.side === 'pods') {
+      const toc = [['brief', 'Out loud'], ['pods', 'Podcasts']]
         .filter(([key]) => O.root.querySelector('[data-side="pods"] [data-sec="' + key + '"]'))
         .map(([key, label]) => ({ key, label }));
-      if (toc.length) wrap.appendChild(chips(toc, null, (k) => app.jumpTo(O.root.querySelector('[data-sec="' + k + '"]'))));
+      if (toc.length > 1) band.appendChild(chips(toc, null, (k) => app.jumpTo(O.root.querySelector('[data-sec="' + k + '"]'))));
     }
+    wrap.appendChild(band);
     return wrap;
   },
   newSince,

@@ -202,6 +202,21 @@ export const RULES = {
         kind: { type: 'enum', values: ['pickup', 'league', 'board-games', 'run', 'social', 'music', 'other'] },
       },
     },
+    /* readers' playlists for On Air (supabase/nn-PLAYLISTS.sql, which only
+       replaces nn_rules() with this copy): a playlist link on Spotify,
+       YouTube, Apple Music or SoundCloud, or a Spotify profile. Links mean
+       Stephen looks first (premod), and a playlist stays until its poster
+       or he takes it down. The tab shows only links it recognises. */
+    playlists: {
+      premod: true,
+      gallery: false,
+      kinds: {
+        playlist: { days: null, photo: 'none', needs: ['link'] },
+      },
+      meta: {
+        link: { type: 'url', max: 200 },
+      },
+    },
   },
 };
 
@@ -215,7 +230,8 @@ export const ARCHETYPE_LABELS = { new: 'New in town', regular: 'Weeknight regula
 export const REASON_LABELS = { spam: 'Spam, or not from around here', unkind: 'Rude or unkind', unsafe: 'Not safe', other: 'Something else' };
 export const INTEREST_LABELS = { sports: 'Pickup sports', running: 'Running', outdoors: 'The outdoors', games: 'Games', music: 'Live music',
   dance: 'Dancing', books: 'Books', making: 'Making things', languages: 'Languages', food: 'Food and drink' };
-export const BOARD_LABELS = { people: 'People', vintage: 'Vintage', art: 'Art', watch: 'Watchlist', games: 'Games', square: 'The Square', gatherings: 'Gatherings' };
+export const BOARD_LABELS = { people: 'People', vintage: 'Vintage', art: 'Art', watch: 'Watchlist', games: 'Games', square: 'The Square', gatherings: 'Gatherings',
+  playlists: 'Playlists' };
 export const HANDLE_LABELS = {
   instagram: 'Instagram', spotify: 'Spotify', strava: 'Strava', letterboxd: 'Letterboxd', goodreads: 'Goodreads', beli: 'Beli',
   untappd: 'Untappd', psn: 'PlayStation', xbox: 'Xbox', steam: 'Steam', switch: 'Switch', discord: 'Discord', epic: 'Epic',

@@ -2132,10 +2132,12 @@
   ok   Run clubs, What Now: nothing in the window says so and names the next (live, 1280) › which opens on People, on Fitness, its sheet up
   ok   Run clubs, What Now: nothing in the window says so and names the next (live, 1280) › no console errors
   ok   On Air, demo › nothing autoplays: the shell’s audio is paused and no frame is loaded
-  ok   On Air, demo › a TV | Podcasts switch at the top, TV first and on (Stephen, 2026-10-19)
+  ok   On Air, demo › a TV | Podcasts | Playlists switch at the top, TV first and on (Stephen, 2026-10-19)
+  ok   On Air, demo › the three sides get a full-width row of their own, nothing cut off at 390
   ok   On Air, demo › on TV the chip row is lengths, in minutes
   ok   On Air, demo › TV: Btown TV first, then more, Live and Past nights; no podcasts on this side
-  ok   On Air, demo › “Pick a vid for me”, a full-width button
+  ok   On Air, demo › “Pick a vid for me”, a big button
+  ok   On Air, demo › beside it, one small Feed | Topics switch, Feed on
   ok   On Air, demo › Btown TV high on the first screen, under the pick button
   ok   On Air, demo › no section carries an explanatory subtitle
   ok   On Air, demo › the feature: a full-width picture with its length, a big title
@@ -2148,9 +2150,9 @@
   ok   On Air, demo › Everything: the local ones still lead, the rest of the night follows (a feature and six rows)
   ok   On Air, demo › and the whole edition, with its count
   ok   On Air, demo › it opens all 27 videos as rows
-  ok   On Air, demo › Everything: the finds and Clipsboard’s playlists join
+  ok   On Air, demo › Everything: the finds join More to watch; playlists have their own side
   ok   On Air, demo › a find names the curator that found it
-  ok   On Air, demo › Podcasts: the Brief out loud, the shows, the playlists
+  ok   On Air, demo › Podcasts: the Brief out loud, then the shows
   ok   On Air, demo › and its chips are a table of contents
   ok   On Air, demo › the side is in the address
   ok   On Air, demo › a chip scrolls to its section
@@ -2202,7 +2204,7 @@
   ok   On Air, finds are checked › a board keeps only its real clips; a bad slug is left out
   ok   On Air, finds are checked › no console errors
   ok   On Air, live › nothing autoplays
-  ok   On Air, live › live: data/playlists.json is still TODO placeholders, so no Playlists section and no chip
+  ok   On Air, live › live: data/playlists.json is still TODO placeholders and the board’s SQL is not in, so no tiles, an empty line, and “Add your playlist” is an email
   ok   On Air, live › Btown TV: “Play tonight on your TV” opens tonight’s playlist in a new tab
   ok   On Air, live › under the Btown TV header, before the feature, with the play and external icons
   ok   On Air, live › live: tonight’s local videos, the pick and the Burlington & Vermont shelf
@@ -2296,21 +2298,51 @@
   ok   On Air, the Brief plays › a clip that fails to load says so in a toast
   ok   On Air, the Brief plays › and the button goes back to play
   ok   On Air, the Brief plays › sw.js lets audio, video and byte ranges past before the raw.githubusercontent.com branch
-  ok   On Air, playlists › Stephen’s playlists first, then readers’, newest first
-  ok   On Air, playlists › his are marked “Stephen’s pick”
-  ok   On Air, playlists › readers’ under their own divider
-  ok   On Air, playlists › Apple Music and SoundCloud open on their own sites, in a new tab
-  ok   On Air, playlists › “Share your playlist” opens an email to the Brief, filled in
+  ok   On Air, playlists › #onair/playlists lands on the Playlists side
+  ok   On Air, playlists › on Local: the playlists and Btown TV’s own night; no Clipsboard boards (Local means local)
+  ok   On Air, playlists › “Add your playlist” first, big, on the board
+  ok   On Air, playlists › Stephen’s playlists first, as tiles
+  ok   On Air, playlists › then readers’, the board’s approved posts with the file’s, newest first; one still waiting for Stephen does not show
+  ok   On Air, playlists › his under his name, readers’ under their own divider
+  ok   On Air, playlists › Apple Music, SoundCloud and a Spotify profile open on their own sites, in a new tab
+  ok   On Air, playlists › tiles sit two across on a phone
   ok   On Air, playlists › demo: a Spotify playlist opens its sheet, and says the player comes in the real build
+  ok   On Air, playlists › signed out: sign in to send it here, or email it, already filled in
+  ok   On Air, playlists › signed in: the form asks for a name and a link
+  ok   On Air, playlists › sent: it waits for Stephen, and does not show yet
+  ok   On Air, playlists › not on the page until approved
+  ok   On Air, playlists › Everything: Video playlists, Btown TV tonight first, then Clipsboard’s boards
+  ok   On Air, playlists › Btown TV’s night plays as its YouTube playlist, in a sheet
+  ok   On Air, playlists › a Clipsboard board plays straight through in On Air’s player
+  ok   On Air, playlists › demo: no Supabase call
   ok   On Air, playlists › demo: no console errors
-  ok   On Air, playlists › only real playlist links show: a TODO placeholder, javascript:, a broken quote, http, the wrong service, an unknown or inherited one (“constructor”) and a single video are all left out
-  ok   On Air, playlists › a title, a name and a note from the file are text, never markup
-  ok   On Air, playlists › the Playlists chip sits after Podcasts
+  ok   On Air, playlists › a shared board lands for a Local reader: Everything, Playlists, the board
+  ok   On Air, playlists › no console errors
+  ok   On Air, playlists › only real playlist links show (a YouTube share link with its &si= is one): a TODO placeholder, javascript:, a broken quote, http, the wrong service, an unknown or inherited one (“constructor”), a single video and a board post with a link it does not know are all left out
+  ok   On Air, playlists › a title, a name and a note from the file or the board are text, never markup
+  ok   On Air, playlists › a cover only from Spotify’s or YouTube’s own image hosts; anything else keeps the service tile
   ok   On Air, playlists › a tap on a Spotify playlist opens Spotify’s player for it in a sheet
   ok   On Air, playlists › with a link out to Spotify
   ok   On Air, playlists › opening a player stops the Brief: one sound at a time
   ok   On Air, playlists › a YouTube playlist plays in YouTube’s player, 16:9
   ok   On Air, playlists › live: no console errors
+  ok   On Air, All N opens in place › “All 16” opens all 16, in place, with a Collapse bar
+  ok   On Air, All N opens in place › the Collapse bar is on screen from the middle of the list
+  ok   On Air, All N opens in place › Collapse folds it back and returns to its heading
+  ok   On Air, All N opens in place › Past nights as a list: the Collapse bar under it
+  ok   On Air, All N opens in place › and Collapse makes it a row again
+  ok   On Air, All N opens in place › no console errors
+  ok   On Air, a long list draws in chunks › the first 40 at once, and the button says what is left
+  ok   On Air, a long list draws in chunks › nearing the end draws the next, until all 130 are there
+  ok   On Air, a long list draws in chunks › no console errors
+  ok   On Air, topics › Topics: New this week first, then each topic with three or more
+  ok   On Air, topics › four tiles a shelf; the feed’s sections step aside; the choice is kept on this phone
+  ok   On Air, topics › a topic’s “All 50” opens all 50 with a Collapse bar
+  ok   On Air, topics › a tile opens the player on its shelf
+  ok   On Air, topics › Trailers inside Topics: only trailers
+  ok   On Air, topics › still Topics after a reload
+  ok   On Air, topics › Feed brings Btown TV back
+  ok   On Air, topics › no console errors
   ok   Games, live › one get_leaderboard call per live board, for this month in Burlington
   ok   Games, live › the tab only ever reads
   ok   Games, live › before a name, no row is marked as yours
@@ -2440,7 +2472,7 @@
   ok   Games, 390 shots › no console errors
   ok   Watch, live from films.json › films.json is the list, and its subtitle is only the count to go
   ok   Watch, live from films.json › every film in its TMDB order
-  ok   Watch, live from films.json › the chip row is the table of contents
+  ok   Watch, live from films.json › the chip row is the table of contents, today’s showtimes first
   ok   Watch, live from films.json › a films.json with no shows has no Movies / TV switch
   ok   Watch, live from films.json › Coming soon: in theaters now (a 1966 re-release is back in theaters), then what opens, labelled theaters or streaming
   ok   Watch, live from films.json › a play disc only where TMDB has a trailer
@@ -2513,7 +2545,10 @@
   ok   Watch, filters and the rating sort on frozen data (demo) › Causeway, with two, shows none
   ok   Watch, filters and the rating sort on frozen data (demo) › Town favorites: the rated films first, highest average first
   ok   Watch, filters and the rating sort on frozen data (demo) › then the rest in list order
+  ok   Watch, filters and the rating sort on frozen data (demo) › the first page of the list has no Collapse bar
   ok   Watch, filters and the rating sort on frozen data (demo) › and the trending films not on the list come last
+  ok   Watch, filters and the rating sort on frozen data (demo) › once Show more has grown it, the list has a Collapse bar
+  ok   Watch, filters and the rating sort on frozen data (demo) › Collapse folds it back to the first 60 and returns to the list’s head
   ok   Watch, filters and the rating sort on frozen data (demo) › and the Town favorites chip is the one on
   ok   Watch, filters and the rating sort on frozen data (demo) › Top rated puts it back
   ok   Watch, filters and the rating sort on frozen data (demo) › Coming soon: ten trailers
@@ -2610,7 +2645,8 @@
   ok   Watch, in theaters near you and the screening call (demo, 10 am) › and it links to his Meetup group
   ok   Watch, in theaters near you and the screening call (demo, 10 am) › the line sits right under the ballot’s title
   ok   Watch, in theaters near you and the screening call (demo, 10 am) › the three theaters
-  ok   Watch, in theaters near you and the screening call (demo, 10 am) › Partizanfilm, the local one, leads even while it is closed (Stephen, 2026-10-18)
+  ok   Watch, in theaters near you and the screening call (demo, 10 am) › Partizanfilm is closed, so the tab opens on today’s times at the next theater
+  ok   Watch, in theaters near you and the screening call (demo, 10 am) › today’s showtimes come before Coming soon
   ok   Watch, in theaters near you and the screening call (demo, 10 am) › Partizanfilm: Back Nov 1
   ok   Watch, in theaters near you and the screening call (demo, 10 am) › and the first day back’s schedule
   ok   Watch, in theaters near you and the screening call (demo, 10 am) › its Showtimes button
@@ -2633,8 +2669,9 @@
   ok   Watch, showtimes, the time machine and TV from the films-data branch (live) › a month the archive missed says it is TMDB’s most popular, not the front page
   ok   Watch, showtimes, the time machine and TV from the films-data branch (live) › theaters are the known three, whatever the file adds
   ok   Watch, showtimes, the time machine and TV from the films-data branch (live) › Majestic 10 from showtimes.json: escaped titles, bad times dropped, TMDB posters at w185
+  ok   Watch, showtimes, the time machine and TV from the films-data branch (live) › times carried from yesterday’s read say so
   ok   Watch, showtimes, the time machine and TV from the films-data branch (live) › a theater that did not read: no rows, and its own Showtimes page (never the file’s link)
-  ok   Watch, showtimes, the time machine and TV from the films-data branch (live) › a theater missing from the file: just its button
+  ok   Watch, showtimes, the time machine and TV from the films-data branch (live) › a theater missing from the file: one plain line and its button
   ok   Watch, showtimes, the time machine and TV from the films-data branch (live) › live TV shelves from films.json
   ok   Watch, showtimes, the time machine and TV from the films-data branch (live) › a show links to its TMDB TV page
   ok   Watch, showtimes, the time machine and TV from the films-data branch (live) › the switch is remembered on this phone
@@ -2669,7 +2706,7 @@
   ok   sign-in fails soft › a bad address is caught before any request
   ok   sign-in fails soft › no link was requested
   ok   sign-in fails soft › no console errors
-  ok   performance › the live Wire redraws 60 cards in 12ms (budget 100)
+  ok   performance › the live Wire redraws 60 cards in 14ms (budget 100)
   ok   shell fixes: a rail never snaps flush to the edge › 390: .rail carries scroll-padding of one gutter
   ok   shell fixes: a rail never snaps flush to the edge › 390: a card scrolled to the start stops at the gutter
   ok   shell fixes: a rail never snaps flush to the edge › 390: no console errors
@@ -2902,7 +2939,7 @@
   ok   Habits, the numbers: today on top, the heat map, a habit’s month and best streak (demo, 390, Wednesday Oct 14) › Wednesday: the walk done, reading and the gym still to do; every due day of the last week done
   ok   Habits, the numbers: today on top, the heat map, a habit’s month and best streak (demo, 390, Wednesday Oct 14) › sixteen weeks, Monday to Sunday, ending this week
   ok   Habits, the numbers: today on top, the heat map, a habit’s month and best streak (demo, 390, Wednesday Oct 14) › today half done and marked, yesterday all done, tomorrow blank, before the habits began nothing
-  ok   Habits, the numbers: today on top, the heat map, a habit’s month and best streak (demo, 390, Wednesday Oct 14) › a tap moves today’s count and today’s square in the same click (4 ms)
+  ok   Habits, the numbers: today on top, the heat map, a habit’s month and best streak (demo, 390, Wednesday Oct 14) › a tap moves today’s count and today’s square in the same click (3 ms)
   ok   Habits, the numbers: today on top, the heat map, a habit’s month and best streak (demo, 390, Wednesday Oct 14) › all three: “All done today”, and the bar full
   ok   Habits, the numbers: today on top, the heat map, a habit’s month and best streak (demo, 390, Wednesday Oct 14) › the streak, the best streak and the last thirty days
   ok   Habits, the numbers: today on top, the heat map, a habit’s month and best streak (demo, 390, Wednesday Oct 14) › this month: the 1st is a Thursday, and no month after it
@@ -2935,7 +2972,7 @@
   ok   Habits, swipe to archive with Undo, drag and keys to reorder, edit (demo, 1280, dark) › habits: at most 2 subnav rows
   ok   Habits, swipe to archive with Undo, drag and keys to reorder, edit (demo, 1280, dark) › no console errors
   ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › twenty habits, in order
-  ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › twenty habits and a year of taps: a tap still shows at once (12, 12, 14, 12 ms)
+  ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › twenty habits and a year of taps: a tap still shows at once (13, 12, 12, 11 ms)
   ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › the heat map is all there, and four taps leave it as it was
   ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › every row keeps its seven dots and its 48px tap
   ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › the list is longer than the screen, and the panel scrolls
@@ -3000,7 +3037,7 @@
   ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 390, light) › habits: at most 2 subnav rows
   ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 390, light) › no console errors
   ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 1280, dark) › a first visit: one line, the starters and Add habit, nothing seeded, no sign-in wall
-  ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 1280, dark) › three habits, two tapped, at once (3 ms)
+  ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 1280, dark) › three habits, two tapped, at once (4 ms)
   ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 1280, dark) › and nothing personal went to the server (the season and the public forests only)
   ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 1280, dark) › kept on this phone, under one versioned key
   ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 1280, dark) › one quiet line under the list: Sync across devices

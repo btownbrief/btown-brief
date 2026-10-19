@@ -8,6 +8,8 @@ should only read the ones worth reading, so this pass gives each NEW item:
   local  true when the story is about Burlington or Vermont, whatever the outlet
   ch     the mechanical channel, flipped local <-> world when `local` says so
   topic  one of TOPICS
+  sport  for a sports item, one of wire_common.SPORTS (nba, nfl, mlb, nhl,
+         college, soccer, local, other); a single-sport source's own sport wins
   score  0-10 local interest
 
 Posts from people (Facebook groups, Reddit) are judged by narrower junk
@@ -58,6 +60,7 @@ WINDOW_HOURS = 30        # the curator looks back 26h; tag a little wider
 BATCH = 120              # items per call: ~4k tokens in, ~3k out
 MAX_PER_RUN = 600        # the first run of a fresh store tags local first
 KEEP_HOURS = 72          # tags older than this leave the store
+CALL_GAP_MINUTES = 50    # as curate_wire: one tagging call an hour, whichever tick lands
 RIVER_TITLES = 300       # duplicates are judged against all of today's river
 JUNK = ("none", "promo", "contest", "tunein", "jobs", "duplicate", "noise")
 TOPICS = (
@@ -92,9 +95,10 @@ SCHEMA_ITEM = {
         "local": {"type": "boolean"},
         "ch": {"type": "string", "enum": list(wc.CHANNELS)},
         "topic": {"type": "string", "enum": list(TOPICS)},
+        "sport": {"type": "string", "enum": ["none"] + list(wc.SPORTS)},
         "score": {"type": "integer", "minimum": 0, "maximum": 10},
     },
-    "required": ["i", "junk", "local", "ch", "topic", "score"],
+    "required": ["i", "junk", "local", "ch", "topic", "sport", "score"],
     "additionalProperties": False,
 }
 
@@ -137,10 +141,19 @@ def river_titles(data_dir, rebuilding=False):
     return titles[:RIVER_TITLES]
 
 
+def needs_tag(tag):
+    """True when an item has no usable tag: never tagged, or a sports story
+    tagged before tags carried a `sport` (2026-10-19), which is tagged once
+    more so the page's sport chips see it."""
+    if not isinstance(tag, dict):
+        return True
+    return tag.get("topic") == "sports" and not tag.get("sport")
+
+
 def untagged(items, store):
     tags = store.get("tags") or {}
     # the Brief's own edition is never judged (curate_wire always runs it)
-    fresh = [item for item in items if item["id"] not in tags and not item.get("own")]
+    fresh = [item for item in items if needs_tag(tags.get(item["id"])) and not item.get("own")]
     # local first, then newest: a capped first run spends itself on the
     # items the page leads with
     fresh.sort(key=lambda item: (not item["local"], -item["d"]))
@@ -203,7 +216,18 @@ def validate_tags(raw, batch, now_ts):
             "ch": ch, "local": local, "junk": junk, "topic": topic,
             "score": max(0, min(10, score)), "at": now_ts,
         }
+        sport = item.get("sport") or sport_of(entry.get("sport"), topic)
+        if sport:
+            out[item["id"]]["sport"] = sport
     return out
+
+
+def sport_of(answer, topic):
+    """The model's sport for a sports story; `other` when it named none. A
+    story filed under any other topic carries no sport."""
+    if topic != "sports":
+        return None
+    return answer if answer in wc.SPORTS else "other"
 
 
 def prune(store, now_ts):
@@ -241,6 +265,12 @@ def run(args):
 
     store = {"v": 1, "tags": {}} if getattr(args, "retag", False) else load_store(args.data_dir)
     prune(store, now_ts)
+    called = store.get("called_at")
+    if called and not getattr(args, "retag", False) and \
+            0 <= (now - datetime.fromisoformat(called)).total_seconds() < CALL_GAP_MINUTES * 60:
+        # the workflow ticks up to three times an hour; tag once an hour
+        print(f"tag_wire: tagged {called}, under {CALL_GAP_MINUTES} minutes ago; next tick")
+        return 0
     todo = untagged(wc.wire_items(pulse, now_ts, WINDOW_HOURS), store)
     if not todo:
         print("tag_wire: nothing new to tag")
@@ -276,6 +306,8 @@ def run(args):
             failed += len(batch) - len(tags)
 
     store["updated"] = now.replace(microsecond=0).isoformat()
+    if usage["calls"]:
+        store["called_at"] = store["updated"]
     wc.write_json(os.path.join(args.data_dir, "wire-tags.json"), store)
     if usage["calls"] or usage["in"]:
         wc.record_cost(args.data_dir, "tag_wire", engine, usage, now)
@@ -300,18 +332,35 @@ def selftest():
          "title": "Jury selection begins in a South Carolina murder trial", "d": 5},
         {"id": "f", "ch": "facebook", "local": True, "name": "Old North End", "title": "Lost cat on North St", "d": 6},
     ]
+    sports = [
+        {"id": "g", "ch": "world", "local": False, "name": "ESPN", "title": "Lakers trade", "d": 7},
+        {"id": "h", "ch": "world", "local": False, "name": "ESPN", "title": "A bonspiel", "d": 8},
+        {"id": "i", "ch": "world", "local": False, "name": "AP", "title": "NFL TV deal", "d": 9},
+        {"id": "j", "ch": "world", "local": False, "name": "ESPN MLB", "title": "MLB owners vote",
+         "d": 10, "sport": "mlb"},
+    ]
     tags = validate_tags([
         {"i": 0, "junk": "none", "local": False, "ch": "world", "topic": "city-government", "score": 9},
         {"i": 1, "junk": "none", "local": True, "ch": "world", "topic": "weather", "score": 14},
         {"i": 2, "junk": "none", "local": False, "ch": "local", "topic": "transportation", "score": 7},
         {"i": 2, "junk": "promo", "local": True, "ch": "x", "topic": "other", "score": 0},
-        {"i": 7, "junk": "none", "local": True, "ch": "local", "topic": "other", "score": 5},
+        {"i": 70, "junk": "none", "local": True, "ch": "local", "topic": "other", "score": 5},
         {"i": 0, "junk": "maybe", "local": True, "ch": "local", "topic": "other", "score": 5},
         {"i": 3, "junk": "none", "local": True, "ch": "x", "topic": "weather", "score": 8},
         {"i": 4, "junk": "none", "local": False, "ch": "x", "topic": "courts", "score": 3},
         {"i": 5, "junk": "none", "local": False, "ch": "facebook", "topic": "community", "score": 4},
-    ], batch, 100)
-    assert set(tags) == {"a", "b", "c", "d", "e", "f"}
+        {"i": 6, "junk": "none", "local": False, "ch": "world", "topic": "sports", "sport": "nba",
+         "score": 4},
+        {"i": 7, "junk": "none", "local": False, "ch": "world", "topic": "sports", "sport": "curling",
+         "score": 3},
+        {"i": 8, "junk": "none", "local": False, "ch": "world", "topic": "economy", "sport": "nfl",
+         "score": 3},
+        {"i": 9, "junk": "none", "local": False, "ch": "world", "topic": "business", "sport": "none",
+         "score": 3},
+    ], batch + sports, 100)
+    assert set(tags) == {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j"}
+    assert [tags[k].get("sport") for k in "ghij"] == ["nba", "other", None, "mlb"]   # source wins
+    assert "sport" not in tags["a"]
     assert tags["a"]["ch"] == "world" and tags["a"]["local"] is False   # geography flips
     assert tags["b"]["ch"] == "local" and tags["b"]["score"] == 10      # clamped
     assert tags["c"]["ch"] == "x" and tags["c"]["local"] is False       # X: the verdict decides
@@ -325,6 +374,11 @@ def selftest():
     prune(store, 10 ** 9)
     assert list(store["tags"]) == ["new"]
     assert [i["id"] for i in untagged(batch, {"tags": {"a": {}}})][:2] == ["f", "c"]   # local, newest first
+    # a sports tag from before `sport` existed is tagged again, once
+    old = {"tags": {"g": {"topic": "sports"}, "h": {"topic": "sports", "sport": "other"},
+                    "a": {"topic": "city-government"}}}
+    assert "g" in [i["id"] for i in untagged(sports, old)]
+    assert "h" not in [i["id"] for i in untagged(sports, old)]
     print("selftest ok")
 
 
