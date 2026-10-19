@@ -67,7 +67,7 @@ TOPICS = (
     "city-government", "state-politics", "schools", "housing", "transportation",
     "public-safety", "courts", "business", "food-drink", "arts-culture", "music",
     "events", "sports", "weather", "environment", "health", "community",
-    "national-politics", "world", "economy", "tech", "science", "media", "other",
+    "national-politics", "world", "economy", "markets", "tech", "science", "media", "other",
 )
 FIXED = ("x", "facebook", "reddit", "newsletters", "video")
 TUNEIN_RE = re.compile(r"tune in|watch live|live ?stream|listen live|on air|join us|"

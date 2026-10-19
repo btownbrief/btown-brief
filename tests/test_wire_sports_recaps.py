@@ -78,11 +78,11 @@ class SportsCapTests(unittest.TestCase):
         self.et = wc.et_now(NOW)
         self.day = cw.empty_day("2026-10-19")
 
-    def answer(self, new, add, sports=(), picks=None, scores=None):
-        """add, sports and picks are indices into `new`."""
+    def answer(self, new, add, sports=(), picks=None, scores=None, markets=()):
+        """add, sports, markets and picks are indices into `new`."""
         off = len(cw.river(self.day))
         answer = {"add": [off + i for i in add], "lead": -1, "lead_why": "", "drop": [],
-                  "sports": [off + i for i in sports]}
+                  "sports": [off + i for i in sports], "markets": [off + i for i in markets]}
         if picks is not None:
             answer["picks"] = [{"i": off + i, "why": "Big news today."} for i in picks]
         return cw.apply_answer(self.day, answer, cw.river(self.day), new, picks is not None,
@@ -116,7 +116,7 @@ class SportsCapTests(unittest.TestCase):
         result = self.answer(new, add=[0, 1])
         self.assertIn("id10", [i["id"] for i in cw.river(self.day)])   # a UVM title run
         self.assertEqual(result["shelved"], ["id11"])                    # an ordinary result
-        self.assertEqual(len(cw.sports_counted(cw.river(self.day), {"id10": cw.LOCAL_SPORTS_BIG})), 4)
+        self.assertEqual(len(cw.counted(cw.river(self.day), "sports", {"id10": cw.LOCAL_SPORTS_BIG})), 4)
 
     def test_a_sports_pick_always_runs_and_counts(self):
         new = [item(n, 4, sport="nfl") for n in range(1, 7)]
@@ -126,17 +126,60 @@ class SportsCapTests(unittest.TestCase):
         self.assertEqual(len(in_river), cw.SPORTS_RIVER_MAX)
         self.assertEqual(sorted(result["shelved"]), ["id4", "id5"])
 
+    def test_five_sports_picks_never_pass_the_cap(self):
+        new = [item(n, 6, sport="nba") for n in range(1, 6)] + [item(9, 6)]
+        result = self.answer(new, add=[], picks=[0, 1, 2, 3, 4, 5])
+        self.assertEqual([p["id"] for p in self.day["picks"]], ["id1", "id2", "id3", "id4", "id9"])
+        self.assertEqual(result["shelved"], ["id5"])                     # the chip, not the picks
+        self.assertEqual(len(cw.counted(cw.river(self.day), "sports")), cw.SPORTS_RIVER_MAX)
+        # a later re-rank that names a fifth sports story from NEW: the chip again
+        later = [item(20, 7, sport="nfl")]
+        result = self.answer(later, add=[], picks=[0])
+        self.assertEqual(result["shelved"], ["id20"])
+        self.assertNotIn("id20", [p["id"] for p in self.day["picks"]])
+
+    def test_migration_holds_the_cap_even_over_protected_stories(self):
+        items = [filed(n, "nhl") for n in range(1, 7)]
+        self.day["updates"] = [{"key": "morning", "label": "Morning",
+                                "lead": {"id": "id6", "why": "Lead."}, "items": items}]
+        self.day["picks"] = [dict(filed(n, "nhl"), rank=n, why="Big.") for n in (1, 2, 3)]
+        self.day["picks_earlier"] = [dict(filed(n, "nhl"), rank=1, why="Was big.") for n in (4, 5)]
+        moved = cw.cap_river_lanes(self.day, {})
+        self.assertEqual(moved, ["id4", "id5"])            # the earlier picks give way first
+        self.assertEqual([i["id"] for i in cw.river(self.day)], ["id1", "id2", "id3", "id6"])
+        self.assertEqual(self.day["picks_earlier"], [])
+        self.assertEqual(self.day["updates"][0]["lead"]["id"], "id6")
+
+    def test_market_stories_get_three_a_day_and_a_chip(self):
+        new = [dict(item(n, 4), topic="markets") for n in range(1, 6)] + [dict(item(6, 3), topic="markets")]
+        result = self.answer(new, add=[0, 1, 2, 3], markets=[4, 5])
+        in_river = [i["id"] for i in cw.river(self.day)]
+        self.assertEqual(sorted(in_river), ["id1", "id2", "id3"])
+        self.assertEqual(sorted(result["shelved"]), ["id4", "id5", "id6"])
+        cw.finish(self.day, {}, NOW, changed=True)
+        self.assertEqual(len(self.day["markets"]), 6)
+        self.assertEqual(sum(1 for i in self.day["markets"] if i.get("river")), 3)
+        self.assertEqual(self.day["markets_count"], {"local": 0, "everything": 6})
+        self.assertNotIn("markets", [k for k in self.day["sports"]])
+        self.assertIn("`markets`", cw.TASK)
+        self.assertIn("never investment advice", cw.TASK)
+
+    def test_a_markets_desk_files_under_markets(self):
+        a = dict(item(1, 3), src="cnbc-market-insider")
+        tags = {"id1": {"ch": "world", "local": False, "junk": "none", "topic": "business", "score": 3}}
+        self.assertEqual(cw.apply_tags([a], tags)[0]["topic"], "markets")
+
     def test_a_river_from_before_the_cap_is_trimmed_keeping_picks_and_the_biggest(self):
         self.day["updates"] = [{"key": "morning", "label": "Morning",
                                 "lead": {"id": "id1", "why": "Lead."},
                                 "items": [filed(n, "nba") for n in range(1, 9)] + [filed(9, None)]}]
         self.day["picks"] = [dict(filed(2, "nba"), rank=1, why="Big.")]
         scores = {"id1": 2, "id2": 2, "id3": 5, "id4": 3, "id5": 6, "id6": 1, "id7": 2, "id8": 4}
-        moved = cw.cap_river_sports(self.day, scores)
+        moved = cw.cap_river_lanes(self.day, scores)
         kept = [i["id"] for i in cw.river(self.day)]
         self.assertEqual(kept, ["id1", "id2", "id3", "id5", "id9"])     # lead, pick, then 6 and 5
         self.assertEqual(moved, ["id4", "id6", "id7", "id8"])
-        self.assertEqual(cw.cap_river_sports(self.day, scores), [])     # settled
+        self.assertEqual(cw.cap_river_lanes(self.day, scores), [])      # settled
         cw.finish(self.day, {}, NOW, changed=False)
         self.assertEqual(len(self.day["sports"]["nba"]), 8)
         self.assertIn("id4", {i["id"] for i in cw.shelf_items(self.day)})
@@ -162,8 +205,10 @@ class SportsCapTests(unittest.TestCase):
 
     def test_the_prompt_says_how_many_sports_have_run(self):
         new = [item(1, 3, sport="tennis")]
-        user = cw.build_prompt([], new, [], [], False, self.et, "Midday", NOW_TS, sports_in_river=3)
+        user = cw.build_prompt([], new + [dict(item(2, 3), topic="markets")], [], [], False, self.et,
+                               "Midday", NOW_TS, lanes_in_river={"sports": 3, "markets": 1})
         self.assertIn("Sports in today's main river: 3 of 4.", user)
+        self.assertIn("Market stories in today's main river: 1 of 3.", user)
         self.assertIn("`sports`", cw.TASK)
         self.assertIn("sports", cw.schema(False)["properties"])
 

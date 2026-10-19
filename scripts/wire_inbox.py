@@ -200,6 +200,9 @@ RECAP_KINDS = {
     "morning": "Morning briefing", "evening": "Evening wrap", "breaking": "Breaking",
     "ai": "AI & tech", "politics": "Politics & Washington", "world": "World",
     "markets": "Markets & money", "sports": "Sports", "vermont": "Vermont on X",
+    # 2026-10-19, "stock news and RECAPS for it": two weekday market recaps;
+    # Markets & money stays as the weekend look back at the week
+    "market-open": "Market open", "market-close": "Market close",
     "culture": "Culture & entertainment", "science": "Science & space",
     "weekend": "Weekend preview", "week-ahead": "Week ahead",
     # Stephen, 2026-10-19: "a Grok 'Pictures of the day' recap kind (~5 X posts
@@ -222,7 +225,7 @@ RECAP_NOTE_MAX = 200
 RECAP_INTRO_MAX = 400
 RECAP_ID = re.compile(r"^(\d{4}-\d{2}-\d{2})-([a-z-]+?)(?:-([23]))?$")
 RECAP_BREAKING_BULLETS = 5
-RECAP_PICTURES_BULLETS = 8
+RECAP_PICTURES_BULLETS = (3, 8)   # "~5": a recap of one picture is not one
 X_POST = re.compile(r"^https://(?:www\.)?(?:x|twitter)\.com/[A-Za-z0-9_]{1,15}/status/\d{1,25}/?$")
 SEARCH_URL = re.compile(r"/search\b|[?&]q=", re.I)
 
@@ -278,7 +281,7 @@ def check_recap(rc, now):
     if kind == "breaking":
         hi = RECAP_BREAKING_BULLETS
     elif kind == "pictures":
-        hi = RECAP_PICTURES_BULLETS
+        lo, hi = RECAP_PICTURES_BULLETS
     if not isinstance(bullets, list) or not lo <= len(bullets) <= hi:
         return bad + [f"bullets must be a list of {lo} to {hi}"]
     seen = set()

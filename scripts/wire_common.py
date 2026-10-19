@@ -89,6 +89,12 @@ SOURCE_SPORT = {
 }
 
 
+# Markets desks (Stephen, 2026-10-19: "can we also add some stock news"): the
+# tagger files their stories under `markets` unless it says business or economy,
+# and then curate_wire.apply_tags moves them to `markets` anyway.
+MARKETS_SOURCES = {"cnbc-market-insider", "marketwatch-bulletins"}
+
+
 def source_sport(src):
     """The one sport a single-sport source carries, or None."""
     return SOURCE_SPORT.get((src or "").lower())
@@ -680,6 +686,7 @@ def selftest():
     assert item_id("https://a.com/1") == item_id("https://a.com/1 ") != item_id("https://a.com/2")
     assert source_sport("espn-com-nba") == "nba" and source_sport("x:@ShamsCharania") == "nba"
     assert source_sport("x:@AP") is None and set(SOURCE_SPORT.values()) <= set(SPORTS)
+    assert "cnbc-market-insider" in MARKETS_SOURCES
     assert source_sport("espn-tennis") == "tennis" and source_sport("x:@FabrizioRomano") is None
     assert norm_sport("soccer") == "other" and norm_sport("tennis") == "tennis" and norm_sport("x") is None
     assert "mlb" in sport_chips("2026-10-19") and "mlb" not in sport_chips("2026-11-08")

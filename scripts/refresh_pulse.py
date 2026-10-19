@@ -261,6 +261,16 @@ EXTRA_NATIONAL_NEWS_FEEDS = [
     # Tennis, Local (MLB in postseason; college optional; drop soccer)".
     # ESPN Soccer left the list that day; ESPN's tennis feed joined it.
     ("ESPN Tennis", "https://www.espn.com/espn/rss/tennis/news", "https://www.espn.com/tennis/"),
+    # Markets (Stephen, 2026-10-19: "can we also add some stock news"): CNBC's
+    # Market Insider (premarket and midday movers, the close) and MarketWatch's
+    # breaking bulletins. Both checked live that day; the Everything folder
+    # already carries MarketWatch's top stories and CNBC's top news.
+    # wire_common.MARKETS_SOURCES files their stories under `markets`.
+    ("CNBC Market Insider",
+     "https://search.cnbc.com/rs/search/combinedcms/view.xml?partnerId=wrss01&id=20409666",
+     "https://www.cnbc.com/market-insider/"),
+    ("MarketWatch Bulletins", "https://feeds.content.dowjones.io/public/rss/mw_bulletins",
+     "https://www.marketwatch.com/latest-news"),
 ]
 
 ITEM_CAP = 20          # headlines kept per source
@@ -1618,6 +1628,14 @@ def run(args):
         # Nothing new anywhere: don't write at all. The workflow then skips
         # its push, the branch keeps its honest `generated` stamp, and the
         # page's "updated Xm ago" reflects when content actually changed.
+        if photos.get("fetched") != (previous.get("photos") or {}).get("fetched"):
+            # an hourly photo fetch that brought nothing new still stands (its
+            # time, which feeds are down, what aged out), or every quiet run
+            # would fetch all four feeds again; `generated` keeps its value
+            write_json(args.out, dict(previous, photos=photos))
+            print("pulse: no new items this run — kept the last payload, with the "
+                  "photo fetch recorded")
+            return
         print("pulse: no new items this run — leaving the last payload in place")
         return
 
@@ -1810,7 +1828,9 @@ def selftest():
     assert [source["id"] for source in lane] == ["ok", "pod", "espn-mlb"]
     import wire_common
     for title, _feed, _site in EXTRA_NATIONAL_NEWS_FEEDS + EXTRA_LOCAL_FEEDS[1:]:
-        assert wire_common.source_sport(slugify(title)), title   # every sports feed has its sport
+        # every sports feed has its sport, and every other one is a markets desk
+        assert wire_common.source_sport(slugify(title)) \
+            or slugify(title) in wire_common.MARKETS_SOURCES, title
 
     # shared-homepage podcast links: audio becomes the identity, non-audio
     # items keep the link as-is

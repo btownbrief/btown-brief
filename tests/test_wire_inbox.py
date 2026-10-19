@@ -263,8 +263,18 @@ class RecapTests(unittest.TestCase):
         self.assertNotIn(3, wi.check_recaps(data, now)[1])          # twitter.com links are X posts too
         base = data["recaps"][3]["bullets"][0]
         data["recaps"][3]["bullets"] = [dict(base, url=f"https://x.com/a/status/{n}") for n in range(9)]
-        self.assertIn("1 to 8", " ".join(wi.check_recaps(data, now)[1][3]))
+        self.assertIn("3 to 8", " ".join(wi.check_recaps(data, now)[1][3]))
+        data["recaps"][3]["bullets"] = data["recaps"][3]["bullets"][:2]     # two is too few
+        self.assertIn("3 to 8", " ".join(wi.check_recaps(data, now)[1][3]))
         self.assertEqual(wi.RECAP_KINDS["pictures"], "Pictures of the day")
+
+    def test_market_recaps(self):
+        data = recaps_raw()
+        data["recaps"][0].update(id="2026-10-16-market-close", kind="market-close", title="Market close")
+        self.assertNotIn(0, wi.check_recaps(data, NOW + timedelta(hours=6))[1])
+        data["recaps"][0]["title"] = "Markets & money"
+        self.assertIn("must be 'Market close'", " ".join(wi.check_recaps(data, NOW)[1][0]))
+        self.assertEqual(wi.RECAP_KINDS["market-open"], "Market open")
 
     def test_a_stale_or_mostly_bad_file_pauses(self):
         state, fresh = self.read(recaps_raw(), now=NOW + timedelta(hours=24))

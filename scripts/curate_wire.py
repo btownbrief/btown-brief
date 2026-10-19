@@ -43,6 +43,9 @@ Output, data/wire-today.json:
                                    newest first: the river's few, marked "river": true,
                                    and the rest, which only the chips show)
    "sport_counts": {"local": {"nba": 2, ...}, "everything": {"nba": 9, ...}},
+   "markets": [item, ...]          (every market story of the day, newest first; the
+                                   river's few marked "river": true; the Markets chip)
+   "markets_count": {"local": 0, "everything": 14},
    "photos_world": [photo, ...]    (the Photos tab's Everything view, newest first; see below)
    "recaps": [recap, ...]          (Grok's recaps posted today, newest first; see below)
    "recaps_latest": ["id", ...],   (the newest recap of each kind, newest first)
@@ -63,7 +66,10 @@ stories a day, the biggest, plus a Vermont team's story only when it is big
 here (tag score LOCAL_SPORTS_BIG or more). Every other sports story the editor
 keeps goes to `sports` only, which the chips read; the daily Sports recap
 covers the rest. MLB is a chip only in its postseason; otherwise an MLB story
-sits under `other`, which is never a chip.
+sits under `other`, which is never a chip. Market stories (tag topic
+`markets`) are kept light the same way: at most MARKETS_RIVER_MAX in the main
+river a day, the rest in `markets` for the Markets chip, with Grok's Market
+open and Market close recaps covering the day.
 
 A photo is {"id", "kind", "src", "name", "title", "url", "posted_at", ...}:
 kind "photo" is a picture feed's item (wire_photos.py: The Atlantic In Focus,
@@ -158,8 +164,13 @@ NEW_MAX_SPORTS = 30
 # daily Sports recap."
 SPORTS_RIVER_MAX = 4       # sports stories in the main river a day (picks count)
 LOCAL_SPORTS_BIG = 7       # a Vermont team's story this big here is outside the cap
-SPORTS_SHELF_MAX = 200     # sports stories a day that only the chips show
-SPORTS_ADD_MAX = 40        # to the chips per hourly update
+# Stephen, the same evening: "can we also add some stock news and RECAPS for
+# it". Market stories (tag topic `markets`) get the same treatment: the big
+# moves in the main river, the rest behind the Markets chip and the recaps.
+MARKETS_RIVER_MAX = 3
+LANE_MAX = {"sports": SPORTS_RIVER_MAX, "markets": MARKETS_RIVER_MAX}
+LANE_SHELF_MAX = 200       # stories a day per lane that only its chip shows
+LANE_ADD_MAX = 40          # to a lane's chip per hourly update
 # The Photos tab's Everything view (wire_photos.py and Grok's Pictures recap)
 PHOTOS_WORLD_DAYS = 7
 PHOTOS_WORLD_MAX = 60
@@ -210,6 +221,7 @@ rewrite a headline: the page shows each one exactly as the outlet wrote it.
   a reason in the style of the picks. Use -1 and an empty reason only when
   nothing is added and the current update has no items.
 - `sports`: numbers from NEW that belong on the sport chips (see Sports below).
+- `markets`: numbers from NEW that belong on the Markets chip (see Markets below).
 - `drop`: numbers from TODAY'S RIVER to remove, only when the river would pass
   300 items. Otherwise an empty list.
 - `picks`, only when asked for: the ranked "What matters today" list from the
@@ -234,6 +246,16 @@ big games, league decisions, and every Vermont team's result. Those show only
 on the page's sport chips. A few per sport each hour is plenty; leave out
 betting, fantasy, power rankings and listicles. A sports story is a pick only
 when it is the day's big news.
+
+Markets are kept light the same way. Stories marked `markets` in NEW (stocks,
+indexes, bonds, oil, gold, crypto prices, earnings reactions, what moved and
+why) reach the main river at most three a day, only the big moves: a crash or
+a record, a rate decision's market reaction, a giant company's earnings shock.
+Put those in `add`. Everything else worth knowing goes in `markets`, which the
+Markets chip shows: the day's biggest movers and why, earnings that moved a
+stock, a data release that moved the market. Leave out stock picks, analysts'
+buy and sell calls, "stocks to buy", price predictions and personal-finance
+advice: plain facts about what moved, never investment advice.
 """
 
 
@@ -403,6 +425,8 @@ def apply_tags(items, tags, comments=None):
             item["topic"] = tag.get("topic")
             if wc.norm_sport(tag.get("sport")) and not item.get("sport"):
                 item["sport"] = wc.norm_sport(tag["sport"])
+            if item["topic"] in ("business", "economy") and item.get("src") in wc.MARKETS_SOURCES:
+                item["topic"] = "markets"   # a markets desk's story is a market story
             item["_score"] = tag.get("score", default_score(item))
         else:
             item["_score"] = default_score(item)
@@ -546,7 +570,7 @@ def shown_river(river_items, current_ids, want_picks):
 
 
 def build_prompt(numbered_river, new, current, ran, want_picks, et, label, now_ts, total=None,
-                 sports_in_river=None):
+                 lanes_in_river=None):
     lines = [f"It is {et.strftime('%A, %B')} {et.day}, {clock(et)} in Burlington. "
              f"This is the {label} update."]
     if want_picks:
@@ -566,8 +590,9 @@ def build_prompt(numbered_river, new, current, ran, want_picks, et, label, now_t
     lines += ["", f"TODAY'S RIVER ({shown}):"]
     lines += [line(i, item, now_ts) for i, item in enumerate(numbered_river)] or ["(empty)"]
     offset = len(numbered_river)
-    if sports_in_river is not None and any(item.get("sport") for item in new):
-        lines += ["", f"Sports in today's main river: {sports_in_river} of {SPORTS_RIVER_MAX}."]
+    for lane, label_ in (("sports", "Sports"), ("markets", "Market stories")):
+        if lanes_in_river and lane in lanes_in_river and any(lane_of(item) == lane for item in new):
+            lines += ["", f"{label_} in today's main river: {lanes_in_river[lane]} of {LANE_MAX[lane]}."]
     lines += ["", f"NEW since the last update ({len(new)} items):"]
     lines += [line(offset + i, item, now_ts) for i, item in enumerate(new)] or ["(none)"]
     return "\n".join(lines)
@@ -579,7 +604,8 @@ def schema(want_picks):
         "lead": {"type": "integer"},
         "lead_why": {"type": "string", "maxLength": WHY_MAX},
         "drop": {"type": "array", "maxItems": 30, "items": {"type": "integer"}},
-        "sports": {"type": "array", "maxItems": SPORTS_ADD_MAX, "items": {"type": "integer"}},
+        "sports": {"type": "array", "maxItems": LANE_ADD_MAX, "items": {"type": "integer"}},
+        "markets": {"type": "array", "maxItems": LANE_ADD_MAX, "items": {"type": "integer"}},
     }
     if want_picks:
         props["picks"] = {"type": "array", "maxItems": PICK_COUNT, "items": {
@@ -743,87 +769,125 @@ def retire_picks(old, earlier, new, previous_at=None):
 
 
 # ----------------------------------------------------------------------
-# Sports, kept light: a few in the main river, the rest on the chips
+# Lanes kept light: sports and markets. A few of each in the main river a
+# day, the rest on their chips (day["sports"] by chip, day["markets"])
 # ----------------------------------------------------------------------
 
+def lane_of(item):
+    """"sports", "markets" or None: the light lane an item belongs to."""
+    if wc.norm_sport(item.get("sport")):
+        return "sports"
+    if item.get("topic") == "markets":
+        return "markets"
+    return None
+
+
 def big_here(item, score=None):
-    """A Vermont team's story big enough here to run outside the cap."""
+    """A Vermont team's story big enough here to run outside the sports cap."""
     score = item.get("_score") if score is None else score
     return wc.norm_sport(item.get("sport")) == "local" and (score or 0) >= LOCAL_SPORTS_BIG
 
 
-def sports_counted(items, scores=None):
-    """The river items that count against SPORTS_RIVER_MAX. `scores` is
-    {id: tag score} for items that no longer carry their own."""
+def counted(items, lane, scores=None):
+    """The items that count against `lane`'s daily cap in the main river.
+    `scores` is {id: tag score} for items that no longer carry their own."""
     scores = scores or {}
-    return [item for item in items if wc.norm_sport(item.get("sport"))
-            and not big_here(item, scores.get(item["id"], item.get("_score")))]
+    return [item for item in items if lane_of(item) == lane
+            and not big_here(item, scores.get(item.get("id"), item.get("_score")))]
 
 
-def shelf_items(day):
-    """The day's sports stories that only the chips show (not in the river)."""
+def shelf_items(day, lane=None):
+    """The day's light-lane stories that only their chips show (not in the
+    river), for one lane or both."""
     in_river = {item["id"] for item in river(day)}
+    held = []
+    if lane in (None, "sports"):
+        held += [item for items in (day.get("sports") or {}).values() for item in items or []]
+    if lane in (None, "markets"):
+        held += list(day.get("markets") or [])
     out, seen = [], set()
-    for items in (day.get("sports") or {}).values():
-        for item in items or []:
-            if isinstance(item, dict) and item.get("id") and item["id"] not in in_river \
-                    and item["id"] not in seen:
-                seen.add(item["id"])
-                out.append({key: value for key, value in item.items() if key != "river"})
+    for item in held:
+        if isinstance(item, dict) and item.get("id") and item["id"] not in in_river \
+                and item["id"] not in seen:
+            seen.add(item["id"])
+            out.append({key: value for key, value in item.items() if key != "river"})
     return out
 
 
 def shelve(day, items):
-    """Put sports stories on the chips' shelf (day["sports"], by chip)."""
-    shelf = day.setdefault("sports", {})
-    have = {item.get("id") for items_ in shelf.values() for item in items_ or []}
+    """Put light-lane stories on their chips' shelf. Returns the ids added."""
+    have = {item.get("id") for item in shelf_items(day)}
     added = []
     for item in items:
-        if item["id"] in have:
+        lane = lane_of(item)
+        if lane is None or item["id"] in have:
             continue
         have.add(item["id"])
-        chip = wc.sport_chip(item.get("sport"), day["date"]) or "other"
-        shelf.setdefault(chip, []).append({key: value for key, value in public(item).items()
-                                           if key != "river"})
+        entry = {key: value for key, value in public(item).items() if key != "river"}
+        if lane == "sports":
+            chip = wc.sport_chip(item.get("sport"), day["date"]) or "other"
+            day.setdefault("sports", {}).setdefault(chip, []).append(entry)
+        else:
+            day.setdefault("markets", []).append(entry)
         added.append(item["id"])
     return added
 
 
-def cap_river_sports(day, scores=None):
-    """Hold the main river to SPORTS_RIVER_MAX sports stories: picks and
-    leads stay, then the highest tag scores (river order on a tie); the rest
-    move to the chips' shelf. apply_answer already keeps the cap, so this only
-    moves stories filed before it existed (2026-10-19), or a Vermont story whose
+def cap_river_lanes(day, scores=None):
+    """Hold the main river to each lane's daily cap (LANE_MAX). Priority:
+    the current picks in rank order, then the updates' leads, then the
+    earlier picks, then the highest tag scores (river order on a tie); the
+    rest move to the lane's shelf, and a moved story leaves the picks and
+    loses its lead. apply_answer already keeps the caps, so this only moves
+    stories filed before them (2026-10-19), or a Vermont sports story whose
     tag turned out smaller. Returns the ids moved."""
     scores = scores or {}
-    counted = sports_counted(river(day), scores)
-    if len(counted) <= SPORTS_RIVER_MAX:
+    gone = set()
+    for lane, cap in LANE_MAX.items():
+        items = counted(river(day), lane, scores)
+        if len(items) <= cap:
+            continue
+        rank = {}
+        for pick in day.get("picks") or []:
+            rank.setdefault(pick["id"], (0, pick.get("rank") or 0))
+        for update in day.get("updates") or []:
+            if update.get("lead"):
+                rank.setdefault(update["lead"]["id"], (1, 0))
+        for n, pick in enumerate(day.get("picks_earlier") or []):
+            rank.setdefault(pick["id"], (2, n))
+        order = sorted(items, key=lambda item: rank.get(item["id"],
+                                                       (3, -(scores.get(item["id"]) or 0))))
+        move = order[cap:]
+        gone |= {item["id"] for item in move}
+        shelve(day, move)
+    if not gone:
         return []
-    protected = {pick["id"] for pick in (day.get("picks") or []) + (day.get("picks_earlier") or [])}
-    protected |= {update["lead"]["id"] for update in day.get("updates") or [] if update.get("lead")}
-    keep = [item for item in counted if item["id"] in protected]
-    rest = sorted((item for item in counted if item["id"] not in protected),
-                  key=lambda item: -(scores.get(item["id"]) or 0))
-    keep_ids = {item["id"] for item in keep + rest[:max(0, SPORTS_RIVER_MAX - len(keep))]}
-    move = [item for item in counted if item["id"] not in keep_ids]
-    gone = {item["id"] for item in move}
     for update in day.get("updates") or []:
         update["items"] = [item for item in update.get("items") or [] if item["id"] not in gone]
+        if (update.get("lead") or {}).get("id") in gone:
+            update["lead"] = None
     day["updates"] = [update for update in day.get("updates") or [] if update.get("items")]
-    shelve(day, move)
+    if any(pick["id"] in gone for pick in day.get("picks") or []):
+        kept = [pick for pick in day["picks"] if pick["id"] not in gone]
+        day["picks"] = [dict(pick, rank=rank) for rank, pick in enumerate(kept, start=1)]
+    day["picks_earlier"] = [pick for pick in day.get("picks_earlier") or [] if pick["id"] not in gone]
     return sorted(gone)
 
 
+def lane_view(day, items, lane):
+    """Every story of the day in `lane`, newest first: the river's (marked
+    "river": true) and the shelf's (at most LANE_SHELF_MAX)."""
+    shelf = sorted(shelf_items(day, lane), key=lambda item: item.get("posted_at") or "",
+                   reverse=True)[:LANE_SHELF_MAX]
+    every = [dict(item, river=True) for item in items if lane_of(item) == lane] + shelf
+    return sorted(every, key=lambda item: item.get("posted_at") or "", reverse=True)
+
+
 def sports_of(day, items):
-    """{chip: [item, ...]} every sports story of the day, newest first: the
-    river's (marked "river": true) and the shelf's (at most SPORTS_SHELF_MAX)."""
-    date = day.get("date")
-    shelf = sorted(shelf_items(day), key=lambda item: item.get("posted_at") or "",
-                   reverse=True)[:SPORTS_SHELF_MAX]
-    every = [dict(item, river=True) for item in items if wc.norm_sport(item.get("sport"))] + shelf
+    """{chip: [item, ...]} every sports story of the day, newest first."""
     out = {}
-    for item in sorted(every, key=lambda item: item.get("posted_at") or "", reverse=True):
-        chip = wc.sport_chip(item.get("sport"), date) or "other"
+    for item in lane_view(day, items, "sports"):
+        chip = wc.sport_chip(item.get("sport"), day.get("date")) or "other"
         out.setdefault(chip, []).append(item)
     return out
 
@@ -854,6 +918,13 @@ def apply_answer(day, answer, numbered_river, new, want_picks, et, now, previous
         if (item.get("own") or item.get("ch") == "newsletters") and index not in adds:
             adds.append(index)
 
+    # Lanes kept light (Stephen, 2026-10-19): the main river takes sports and
+    # market stories only up to each lane's daily cap (LANE_MAX): picks first,
+    # in rank order, then the editor's adds in its order. A Vermont sports
+    # story big here is outside the cap. Everything else in a lane, and the
+    # editor's `sports` and `markets` lists, go to that lane's shelf.
+    room = {lane: cap - len(counted(river(day), lane, scores)) for lane, cap in LANE_MAX.items()}
+    to_shelf = []
     picks, pick_seen = [], set()
     if want_picks:
         for entry in answer.get("picks") or []:
@@ -866,6 +937,13 @@ def apply_answer(day, answer, numbered_river, new, want_picks, et, now, previous
             why = wc.trim(entry.get("why", ""), WHY_MAX)
             if not why:
                 continue
+            lane = lane_of(by_index[index])
+            if lane and index >= offset and counted([by_index[index]], lane):
+                if room[lane] <= 0:
+                    if index not in to_shelf:
+                        to_shelf.append(index)   # past the cap: the chip, not the picks
+                    continue
+                room[lane] -= 1
             pick_seen.add(index)
             picks.append((index, why))
             if index >= offset and index not in adds:
@@ -873,31 +951,28 @@ def apply_answer(day, answer, numbered_river, new, want_picks, et, now, previous
             if len(picks) == PICK_COUNT:
                 break
 
-    # Sports, kept light (Stephen, 2026-10-19): of what the editor adds, the
-    # main river takes sports stories only up to SPORTS_RIVER_MAX a day (picks
-    # first, then the editor's order), plus a Vermont team's story that is big
-    # here; every other sports story, and the editor's `sports`, go to the
-    # chips' shelf.
     picked = {index for index, _ in picks}
-    room = SPORTS_RIVER_MAX - len(sports_counted(river(day), scores))
-    room -= sum(1 for index in adds if index in picked and sports_counted([by_index[index]]))
-    to_shelf, kept = [], []
+    kept = []
     for index in adds:
         item = by_index[index]
-        if index in picked or not sports_counted([item]):
+        lane = lane_of(item)
+        if index in picked or not lane or not counted([item], lane):
             kept.append(index)
-        elif room > 0:
+        elif room[lane] > 0:
             kept.append(index)
-            room -= 1
-        else:
+            room[lane] -= 1
+        elif index not in to_shelf:
             to_shelf.append(index)
     adds = kept
-    for value in answer.get("sports") or []:
-        index = as_index(value, offset, total)
-        if index is not None and index not in adds and index not in to_shelf \
-                and wc.norm_sport(by_index[index].get("sport")) \
-                and len(to_shelf) < SPORTS_ADD_MAX:
+    for lane in LANE_MAX:
+        listed = 0
+        for value in answer.get(lane) or []:
+            index = as_index(value, offset, total)
+            if index is None or index in adds or index in to_shelf \
+                    or lane_of(by_index[index]) != lane or listed >= LANE_ADD_MAX:
+                continue
             to_shelf.append(index)
+            listed += 1
     shelved = shelve(day, [by_index[index] for index in to_shelf])
 
     # the current update: create it if this is the period's first run
@@ -1180,11 +1255,15 @@ def finish(day, pulse, now, changed):
     day["sports"] = sports_of(day, items)
     day["sport_chips"] = wc.sport_chips(day["date"])
     day["sport_counts"] = sport_counts(day["sports"], day["date"])
+    markets_before = day.get("markets") or []
+    day["markets"] = lane_view(day, items, "markets")
+    day["markets_count"] = {"local": sum(1 for item in day["markets"] if item.get("local")),
+                            "everything": len(day["markets"])}
     before = (day.get("recaps") or [], day.get("photos_world") or [])
     day.update(recaps_of(pulse, day.get("date")))
     day["photos_world"] = photos_world(pulse, now)
     changed = changed or before != (day["recaps"], day["photos_world"]) \
-        or sports_before != day["sports"]
+        or sports_before != day["sports"] or markets_before != day["markets"]
     day["checked"] = stamp
     if changed or not day.get("updated"):
         day["updated"] = stamp
@@ -1430,9 +1509,10 @@ def run(args):
     pool = apply_tags(candidates(pulse, now_ts, et), tags, comments)
     hydrated = hydrate_sports(day, {item["id"]: item for item in pool})
     scores = {item["id"]: item["_score"] for item in pool}
-    moved = cap_river_sports(day, scores)
+    moved = cap_river_lanes(day, scores)
     if moved:
-        print(f"curate_wire: moved {len(moved)} sports stories from the main river to the sport chips")
+        print(f"curate_wire: moved {len(moved)} sports and market stories from the main river "
+              "to their chips")
     reserved_ids, reserved_urls, ran = reserved(args.data_dir, today)
     evicted = evict_stale_editions(day, edition_since(et))
     if evicted:
@@ -1480,7 +1560,8 @@ def run(args):
     system = wc.read_prompt("wire-taste.md") + TASK
     user = build_prompt(numbered_river, new, current, ran if want_picks else [],
                         want_picks, et, label, now_ts, total=river_total,
-                        sports_in_river=len(sports_counted(river(day), scores)))
+                        lanes_in_river={lane: len(counted(river(day), lane, scores))
+                                        for lane in LANE_MAX})
     try:
         answer, usage = wc.ask_json(engine, system, user, schema(want_picks),
                                     max_tokens=MAX_TOKENS[engine["provider"]],

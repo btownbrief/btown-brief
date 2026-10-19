@@ -109,7 +109,11 @@ contra dance in Corinth is not junk; it scores 1.
 - **ch**: keep the mechanical channel, except: a `local` or `world` headline flips to
   the other one when `local` says so (`local` true means `ch` local). Never change
   `x`, `facebook`, `reddit`, `newsletters` or `video`.
-- **topic**: the one best fit from the list in the schema.
+- **topic**: the one best fit from the list in the schema. `markets` is what the markets
+  did: stocks, indexes, bonds, oil, gold and crypto prices, a company's shares moving on
+  earnings or news, premarket and after-hours movers. A company's own news (a layoff, a
+  deal, an opening) is `business`; jobs, inflation and the Fed's decisions are `economy`
+  unless the story is the market's reaction to them.
 - **sport**: `none` unless the topic is `sports`. For a sports story, the one it is
   about: `nba`, `nfl`, `nhl`, `tennis` (the ATP, the WTA, the majors), `mlb`,
   `college` (college sports outside Vermont), `local` (any Vermont team or school:
@@ -128,4 +132,8 @@ contra dance in Corinth is not junk; it scores 1.
   as fluff: a Vermont team's result, a UVM or high-school championship 5 to 7; a major
   national sports story (a blockbuster trade or signing, a firing, a title, a star's
   serious injury, a league decision) 4 to 5; an ordinary game recap or transaction 2 to
-  3; betting tips, fantasy advice, power rankings and listicles 0 to 1.
+  3; betting tips, fantasy advice, power rankings and listicles 0 to 1. Market stories
+  score like other national news: a crash, a record or a historic move 5 to 6; the day's
+  close, big movers and why, an earnings shock 3 to 4; analysts' buy and sell calls, "stocks
+  to buy", price targets, predictions and personal-finance tips 0 to 1 (the page never
+  gives investment advice).
