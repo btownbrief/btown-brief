@@ -59,13 +59,14 @@
 import * as app from '../app.js';
 import * as store from '../store.js';
 import * as boards from '../boards.js';
-import { el, esc, ICON, button, chips } from '../ui.js';
+import { el, esc, ICON, button } from '../ui.js';
 import { HABIT_RULES, dayKey, addDays, weekStart, streak, streakUnit, weekDots, daysUntil, nextMidnight, checkHabit, checkMe, clean, message,
   bestStreak, completion, percent, dueToday, dayTotals, monthGrid, monthOf, addMonths, startKey } from '../habits-core.js';
 import { FakeHabits, seedDemo } from '../habits-fake.js';
 import { tree, seedOf, leavesOf, bloomsOf, inWindow, treeWords, emptyPlot, checkForest, FOREST_RULES } from '../forest.js';
 import { LocalHabits, LOCAL_DOORS, browserStorage, memoryStorage } from '../habits-local.js';
 import { DEMO_ME } from '../boards-fake.js';
+import { sectionBar } from '../sections.js';
 
 const KEY = 'habits';
 const VIEWS = [['today', 'Today'], ['forests', 'Forests'], ['goal', 'Goal'], ['season', 'Season'], ['wall', 'Wall']];
@@ -1306,16 +1307,20 @@ app.register(KEY, {
   },
   refresh() { paint(); },
   deactivate() { clearTimeout(dayTimer); },
+  /* the views as a floating pill in fern water (sections.js) */
   subnav() {
-    return chips(VIEWS.filter(([key]) => key !== 'forests' || !S.forestOff).map(([key, label]) => ({ key, label })), S.view, (k) => {
-      if (k === S.view) { app.scrollTop(true); return; }
-      S.view = k;
-      if (k === 'forests') loadGallery();
-      history.replaceState(null, '', location.search + '#habits' + (k === 'today' ? '' : '/' + k));
-      paint();
-      app.paintSubnav();
-    });
+    return sectionBar({ key: 'sec-habits', title: 'Habits', color: '--liq-habits', current: S.view,
+      items: VIEWS.filter(([key]) => key !== 'forests' || !S.forestOff).map(([key, label]) => ({ key, label })),
+      onPick: (k) => {
+        if (k === S.view) { app.scrollTop(true); return; }
+        S.view = k;
+        if (k === 'forests') loadGallery();
+        history.replaceState(null, '', location.search + '#habits' + (k === 'today' ? '' : '/' + k));
+        paint();
+        app.paintSubnav();
+      } });
   },
+  keepSubnav: true,
   /* nothing here grows while you are away */
   newSince() { return 0; },
 });

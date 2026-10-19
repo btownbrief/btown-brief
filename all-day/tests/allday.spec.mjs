@@ -2444,7 +2444,7 @@ async function onAir(browser, base) {
     check(await page.evaluate(() => document.querySelector('audio').paused && !document.querySelector('#panel-onair iframe')), 'nothing autoplays: the shell’s audio is paused and no frame is loaded', '');
     const sw = await page.$$eval('#subnav .oa-sideswitch button', (bs) => bs.map((b) => b.textContent + '|' + b.getAttribute('aria-pressed')));
     check(JSON.stringify(sw) === JSON.stringify(['TV|true', 'Podcasts|false', 'Playlists|false']), 'a TV | Podcasts | Playlists switch at the top, TV first and on (Stephen, 2026-10-19)', JSON.stringify(sw));
-    const sides = await page.$eval('#subnav .oa-sideswitch', (g) => { const r = g.getBoundingClientRect(); return { w: Math.round(r.width), vw: innerWidth, row: !g.closest('.toolband').querySelector('.localsw'),
+    const sides = await page.$eval('#subnav .oa-sideswitch', (g) => { const r = g.getBoundingClientRect(); return { w: Math.round(r.width), vw: innerWidth, row: !g.closest('.secrow').querySelector('.localsw'),
       cut: [...g.children].some((b) => b.getBoundingClientRect().right > innerWidth || b.getBoundingClientRect().height < 36) }; });
     check(sides.row && sides.w >= sides.vw * 0.8 && !sides.cut, 'the three sides get a full-width row of their own, nothing cut off at 390', JSON.stringify(sides));
     const chipsTV = await page.$$eval('#subnav .chip', (cs) => cs.map((c) => c.innerText.trim()));
@@ -10429,6 +10429,8 @@ async function railsHaveList(browser, base) {
         document.querySelectorAll('.panel:not([hidden]) *, #subnav *').forEach((n) => {
           if (!/^(auto|scroll)$/.test(getComputedStyle(n).overflowX) || n.scrollWidth <= n.clientWidth + 4) return;
           if (n.classList.contains('chips')) return;   // filters and tables of contents, not content
+          /* a section pill (sections.js): its own All button lists every section, so it must show */
+          if (n.classList.contains('secpill-scroll')) { const all = n.parentElement.querySelector(':scope > .secpill-all'); if (all && getComputedStyle(all).display !== 'none') return; }
           const wrap = n.closest('.rail-wrap');
           const pre = wrap && wrap.previousElementSibling;
           const post = wrap && wrap.nextElementSibling;
@@ -10470,6 +10472,226 @@ async function railsHaveList(browser, base) {
   });
 }
 
+/* ------------------------------------------------------- section pills */
+/* Stephen, 2026-10-19: "I want all the tabs with the bubble/buttons at the
+   top of each to have that cool animated liquid effect, with different
+   colors ... Make sure they're floating too like the Wire. But probably
+   smaller". Every tab but the Wire wears its sections (or views) as a
+   compact glass pill (sections.js) that floats under the mast, shrinks on
+   the way down, pours the tab's own water, follows the scroll on a tab of
+   sections ("when you scroll down to the next section, the toggle up top
+   also auto switches"), scrolls sideways inside itself with the one you
+   are on kept in view, and lists every section under "All". */
+async function sectionPills(browser, base) {
+  const PILLS = [
+    ['watch', '--liq-watch', true], ['food', '--liq-food', true], ['people', '--liq-people', true], ['whatnow', '--liq-whatnow', true],
+    ['vintage', '--liq-vintage', true], ['habits', '--liq-habits', false], ['games', '--liq-games', true],
+  ];
+  /* where the water is: alpha and colour at each segment's centre, read off the canvas */
+  const water = (page) => page.$eval('#subnav .secpill', (w) => {
+    const track = w.querySelector('.secpill-track'), c = track.querySelector(':scope > canvas.lsw-canvas');
+    const chips = [...track.querySelectorAll('.chip')];
+    const on = chips.findIndex((b) => b.classList.contains('on'));
+    if (!c || !c.width) return { on, canvas: false, liquid: track.classList.contains('liquid') };
+    const x = c.getContext('2d'), cr = c.getBoundingClientRect(), sx = c.width / cr.width, sy = c.height / cr.height;
+    const at = (b) => { const r = b.getBoundingClientRect(); const d = x.getImageData(Math.round((r.left + r.width / 2 - cr.left) * sx), Math.round((r.top + r.height / 2 - cr.top) * sy), 1, 1).data; return [...d]; };
+    return { on, canvas: true, liquid: track.classList.contains('liquid'), alpha: chips.map((b) => at(b)[3]), rgb: on >= 0 ? at(chips[on]).slice(0, 3) : null,
+      corners: [[0, 0], [c.width - 1, 0], [0, c.height - 1], [c.width - 1, c.height - 1]].map(([a, b]) => x.getImageData(a, b, 1, 1).data[3]) };
+  });
+  const near = (rgb, hex, tol = 40) => { const h = hex.trim().replace('#', ''); const t = [0, 2, 4].map((i) => parseInt(h.slice(i, i + 2), 16)); return !!rgb && rgb.every((v, i) => Math.abs(v - t[i]) <= tol); };
+  const onKey = (page) => page.$eval('#subnav .secpill .chip.on', (b) => b.dataset.chip).catch(() => null);
+  const panelSel = (tab) => '#panel-' + tab;
+
+  await group('section pills: every tab floats a liquid pill in its own water', async () => {
+    const { ctx, page, errors } = await newPage(browser, base, { dpr: 2 });
+    await page.goto(base + '/all-day/?demo=1#wire');
+    await settle(page);
+    const wireH = await page.$eval('#subnav .wmodes', (m) => m.getBoundingClientRect().height);
+    const seen = new Map();
+    for (const [tab, token, spies] of PILLS) {
+      await goTab(page, tab);
+      await page.waitForSelector('#subnav .secbar .secpill .chip', { timeout: 8000 });
+      await page.waitForTimeout(700);
+      const look = await page.evaluate((tk) => {
+        const w = document.querySelector('#subnav .secpill'), mast = document.querySelector('#mast');
+        const r = w.getBoundingClientRect(), chip = w.querySelector('.chip');
+        const cs = getComputedStyle(w);
+        return { h: r.height, top: r.top, fs: getComputedStyle(chip).fontSize, glass: cs.backdropFilter || cs.webkitBackdropFilter || '', mastBg: getComputedStyle(mast).backgroundColor,
+          keep: document.body.classList.contains('keep-subnav'), tone: getComputedStyle(w).getPropertyValue(tk).trim(), docW: document.documentElement.scrollWidth, vw: innerWidth,
+          group: w.querySelector('.secpill-track').getAttribute('role'), label: w.querySelector('.secpill-track').getAttribute('aria-label') };
+      }, token);
+      check(look.h >= 36 && look.h <= 42 && look.h < wireH && look.fs === '14px', tab + ': a compact pill, ' + Math.round(look.h) + 'px tall with 14px words (the Wire’s is ' + Math.round(wireH) + ')', JSON.stringify(look));
+      check(/blur/.test(look.glass) && /rgba\(0, 0, 0, 0\)|transparent/.test(look.mastBg) && look.keep, tab + ': glass, floating over the paper, and it stays as the mast steps away', JSON.stringify(look));
+      check(look.group === 'group' && !!look.label && look.docW <= look.vw, tab + ': a labelled group, and nothing scrolls the page sideways', JSON.stringify(look));
+      const w = await water(page);
+      check(w.liquid && w.canvas && w.on >= 0 && w.alpha.every((a, i) => (i === w.on ? a > 200 : a < 20)) && w.corners.every((a) => a === 0), tab + ': the one on sits in poured water, inside the pill', JSON.stringify(w));
+      check(near(w.rgb, look.tone), tab + ': the water is the tab’s own ' + token + ' (' + look.tone + ')', JSON.stringify(w.rgb));
+      const onBg = await page.$eval('#subnav .secpill .chip.on', (b) => getComputedStyle(b).backgroundColor);
+      check(/rgba\(0, 0, 0, 0\)|transparent/.test(onBg), tab + ': the canvas carries the colour, not the button', onBg);
+      seen.set(tab, look.tone.toUpperCase());
+      /* floating: scrolled down, it stays at the top, settled smaller */
+      for (let i = 0; i < 6; i++) { await page.evaluate((sel) => document.querySelector(sel).scrollBy(0, 200), panelSel(tab)); await page.waitForTimeout(70); }
+      await page.waitForTimeout(500);
+      const fl = await page.evaluate(() => { const w = document.querySelector('#subnav .secpill'); const r = w.getBoundingClientRect(); return { top: r.top, bottom: r.bottom, away: document.body.classList.contains('chrome-away'), small: document.body.classList.contains('pill-small'), t: getComputedStyle(w).transform }; });
+      check(fl.away && fl.small && fl.top >= 0 && fl.bottom < 70 && /matrix\(0\.9, 0, 0, 0\.9/.test(fl.t), tab + ': scrolled down, it floats at the top, 90% size', JSON.stringify(fl));
+      await page.evaluate((sel) => document.querySelector(sel).scrollBy(0, -60), panelSel(tab));
+      await page.waitForTimeout(400);
+      check(await page.evaluate(() => !document.body.classList.contains('pill-small')), tab + ': any move up brings it back to full size', '');
+      await page.evaluate((sel) => { document.querySelector(sel).scrollTop = 0; }, panelSel(tab));
+      await page.waitForTimeout(300);
+    }
+    const tones = [...seen.values()];
+    check(new Set(tones).size === tones.length, 'each tab’s water is its own colour', JSON.stringify([...seen]));
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('section pills: the water follows the scroll, and a tap scrolls there', async () => {
+    const { ctx, page, errors } = await newPage(browser, base, { dpr: 2 });
+    for (const tab of ['watch', 'food', 'people', 'vintage', 'games']) {
+      await page.goto(base + '/all-day/?demo=1#' + tab);
+      await settle(page);
+      await page.waitForSelector('#subnav .secpill .chip', { timeout: 8000 });
+      await page.waitForTimeout(600);
+      const keys = await page.$$eval('#subnav .secpill .chip', (cs) => cs.map((c) => c.dataset.chip));
+      check(keys.length >= 4 && (await onKey(page)) === keys[0], tab + ': at the top, the first section is on (' + keys.join(', ') + ')', await onKey(page));
+      /* scroll the third section's head up past the top third: the water pours there */
+      const k3 = keys[2];
+      await page.evaluate(([sel, k]) => {
+        const p = document.querySelector(sel), n = p.querySelector('[data-sec="' + k + '"]');
+        p.scrollTop = n.getBoundingClientRect().top - p.getBoundingClientRect().top + p.scrollTop - 120;
+      }, [panelSel(tab), k3]);
+      await page.waitForTimeout(900);
+      const w = await water(page);
+      const inView = await page.$eval('#subnav .secpill .chip.on', (b) => { const r = b.getBoundingClientRect(), s = b.closest('.secpill-scroll').getBoundingClientRect(); return r.left >= s.left - 1 && r.right <= s.right + 1; });
+      check((await onKey(page)) === k3 && w.alpha[2] > 200 && inView, tab + ': scrolled to ' + k3 + ', the water pours there and it shows in the pill', JSON.stringify({ on: await onKey(page), w, inView }));
+      /* a tap on the last section the pill shows scrolls the page to it */
+      const kt = keys[Math.min(keys.length - 2, 4)];
+      await page.$eval('#subnav .secpill .chip[data-chip="' + kt + '"]', (b) => b.scrollIntoView({ inline: 'center', block: 'nearest' }));
+      await page.click('#subnav .secpill .chip[data-chip="' + kt + '"]');
+      await page.waitForTimeout(1600);
+      const land = await page.evaluate(([sel, k]) => {
+        const n = document.querySelector(sel + ' [data-sec="' + k + '"]'), w = document.querySelector('#subnav .secpill');
+        return { head: Math.round(n.getBoundingClientRect().top), pill: Math.round(w.getBoundingClientRect().bottom), on: w.querySelector('.chip.on').dataset.chip };
+      }, [panelSel(tab), kt]);
+      check(land.on === kt && land.head >= land.pill - 2 && land.head <= land.pill + 70, tab + ': a tap on ' + kt + ' lands its head just under the floating pill, and the water stays there', JSON.stringify(land));
+    }
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('section pills: "All" lists every section, no sideways scroll needed', async () => {
+    const { ctx, page, errors } = await newPage(browser, base, { viewport: { width: 360, height: 780 } });
+    await page.goto(base + '/all-day/?demo=1#games');
+    await settle(page);
+    await page.waitForSelector('#subnav .secpill .chip', { timeout: 8000 });
+    await page.waitForTimeout(600);
+    const st = await page.evaluate(() => { const w = document.querySelector('#subnav .secpill'), a = w.querySelector('.secpill-all'); return { over: w.classList.contains('over'), all: getComputedStyle(a).display !== 'none', label: a.getAttribute('aria-label'), w: Math.round(w.getBoundingClientRect().width), vw: innerWidth, docW: document.documentElement.scrollWidth }; });
+    check(st.over && st.all && /All of Games/.test(st.label) && st.w <= st.vw - 8 && st.docW <= st.vw, 'at 360 the Games pill runs past its edge, scrolls inside itself, and shows All', JSON.stringify(st));
+    const keys = await page.$$eval('#subnav .secpill .chip', (cs) => cs.map((c) => c.dataset.chip));
+    await page.click('#subnav .secpill-all');
+    await page.waitForSelector('.secsheet .secsheet-row', { timeout: 3000 });
+    const rows = await page.$$eval('.secsheet .secsheet-row', (rs) => rs.map((r) => [r.dataset.chip, r.classList.contains('on')]));
+    check(JSON.stringify(rows.map((r) => r[0])) === JSON.stringify(keys) && rows[0][1], 'All opens a sheet with every section, the one you are on marked', JSON.stringify(rows));
+    const last = keys[keys.length - 1];
+    await page.click('.secsheet .secsheet-row[data-chip="' + last + '"]');
+    await page.waitForTimeout(1600);
+    const after = await page.evaluate((k) => {
+      const head = document.querySelector('#panel-games [data-sec="' + k + '"]').getBoundingClientRect();
+      const on = document.querySelector('#subnav .secpill .chip.on'), sc = on.closest('.secpill-scroll').getBoundingClientRect(), r = on.getBoundingClientRect();
+      return { sheet: !document.querySelector('#sheet:not([hidden]) .secsheet'), on: on.dataset.chip, head: Math.round(head.top), vh: innerHeight, shown: r.left >= sc.left - 1 && r.right <= sc.right + 1 };
+    }, last);
+    check(after.sheet && after.on === last && after.head < after.vh && after.shown, 'a row closes the sheet, scrolls to that section, and the pill scrolls to show it on', JSON.stringify(after));
+    const habitsFit = await (async () => { await goTab(page, 'habits'); await page.waitForTimeout(400); return page.$eval('#subnav .secpill', (w) => ({ over: w.classList.contains('over'), all: getComputedStyle(w.querySelector('.secpill-all')).display })); })();
+    check(!habitsFit.over && habitsFit.all === 'none', 'a pill that fits (Habits) has no All button', JSON.stringify(habitsFit));
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('section pills: views, deep links, On Air and both themes', async () => {
+    const { ctx, page, errors } = await newPage(browser, base, { dpr: 2, scheme: 'dark' });
+    /* What Now: Spin and Missions are one page, so the water follows the scroll; Tonight is a view */
+    await page.goto(base + '/all-day/?demo=1#whatnow');
+    await settle(page);
+    await page.waitForSelector('#subnav .secpill .chip.on', { timeout: 8000 });
+    check((await onKey(page)) === 'spin', 'What Now opens on Spin', await onKey(page));
+    await page.evaluate(() => { const p = document.querySelector('#panel-whatnow'), n = p.querySelector('[data-sec="missions"]'); p.scrollTop = n.getBoundingClientRect().top - p.getBoundingClientRect().top + p.scrollTop - 100; });
+    await page.waitForTimeout(900);
+    check((await onKey(page)) === 'missions', 'scrolled down to the missions, the water pours to Missions', await onKey(page));
+    await page.click('#subnav .secpill .chip[data-chip="spin"]');
+    await page.waitForTimeout(1400);
+    check((await onKey(page)) === 'spin' && (await page.$eval('#panel-whatnow', (p) => p.scrollTop)) < 40, 'a tap on Spin goes back up, the water with it', '');
+    await page.click('#subnav .secpill .chip[data-chip="tonight"]');
+    await page.waitForTimeout(900);
+    const tw = await water(page);
+    check((await onKey(page)) === 'tonight' && tw.alpha[2] > 200 && /#whatnow\/tonight$/.test(await page.evaluate(() => location.hash)), 'Tonight is its own view, poured', JSON.stringify(tw));
+    /* Habits: a view switch */
+    await goTab(page, 'habits');
+    await page.click('#subnav .secpill .chip[data-chip="forests"]');
+    await page.waitForTimeout(900);
+    const hw = await water(page);
+    check((await onKey(page)) === 'forests' && hw.alpha[1] > 200 && /#habits\/forests$/.test(await page.evaluate(() => location.hash)), 'Habits: Forests takes the water and the address', JSON.stringify(hw));
+    check(await page.$eval('#subnav .secpill .chip.on', (b) => b.getAttribute('aria-pressed')) === 'true', 'a view switch says which view is pressed', '');
+    /* the words read on dark glass */
+    const ink = await page.$eval('#subnav .secpill .chip:not(.on)', (b) => getComputedStyle(b).color);
+    check(ink === 'rgb(247, 248, 249)', 'dark: the words off the water are the dock’s ink', ink);
+    /* a deep link to a section lands, and the water follows it there */
+    await page.goto(base + '/all-day/?demo=1#vintage/shops');
+    await settle(page);
+    await page.waitForTimeout(1800);
+    check((await onKey(page)) === 'shops', '#vintage/shops lands on Shops, and the pill says so', await onKey(page));
+    await page.goto(base + '/all-day/?demo=1#food/deals');
+    await settle(page);
+    await page.waitForTimeout(1800);
+    check((await onKey(page)) === 'deals', '#food/deals lands on Deals, and the pill says so', await onKey(page));
+    /* On Air: the sides float in glass, and the second row's small pill pours in the side's colour */
+    await page.goto(base + '/all-day/?demo=1#onair');
+    await settle(page);
+    await page.waitForSelector('#subnav .secbar .oa-sideswitch', { timeout: 8000 });
+    await page.waitForTimeout(600);
+    const oa = await page.evaluate(() => {
+      const sub = document.querySelector('#subnav .secbar'), sw = sub.querySelector('.oa-sideswitch'), row2 = sub.querySelector('.secrow:not(.oa-sidesrow)');
+      return { rows: sub.querySelectorAll(':scope > .secrow').length, glass: getComputedStyle(sw).backdropFilter, local: !!row2.querySelector('.localsw'), pill: !!row2.querySelector('.secpill'),
+        on: row2.querySelector('.secpill .chip.on')?.dataset.chip, h: Math.round(row2.querySelector('.secpill').getBoundingClientRect().height) };
+    });
+    check(oa.rows === 2 && /blur/.test(oa.glass) && oa.local && oa.pill && oa.on === 'all' && oa.h <= 42, 'On Air: the sides in glass, then Local and the lengths as a small pill, All lengths on', JSON.stringify(oa));
+    const ow = await page.$eval('#subnav .secrow:not(.oa-sidesrow) .secpill', (w) => { const c = w.querySelector('canvas.lsw-canvas'); return { liquid: w.querySelector('.secpill-track').classList.contains('liquid'), canvas: !!c && c.width > 0 }; });
+    check(ow.liquid && ow.canvas, 'and the lengths pill pours too', JSON.stringify(ow));
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('section pills: reduced motion is a plain fill that does not shrink', async () => {
+    const { ctx, page, errors } = await newPage(browser, base, { motion: 'reduce' });
+    await page.goto(base + '/all-day/?demo=1#food');
+    await settle(page);
+    await page.waitForSelector('#subnav .secpill .chip.on', { timeout: 8000 });
+    const r = await page.evaluate(() => { const w = document.querySelector('#subnav .secpill'), on = w.querySelector('.chip.on');
+      return { canvas: !!w.querySelector('canvas'), liquid: w.querySelector('.secpill-track').classList.contains('liquid'), bg: getComputedStyle(on).backgroundColor, tone: getComputedStyle(w).getPropertyValue('--liq-food').trim() }; });
+    const hex = r.tone.replace('#', ''), want = 'rgb(' + [0, 2, 4].map((i) => parseInt(hex.slice(i, i + 2), 16)).join(', ') + ')';
+    check(!r.canvas && !r.liquid && r.bg === want, 'no canvas: the one on is filled in Food’s paprika', JSON.stringify(r));
+    for (let i = 0; i < 6; i++) { await page.evaluate(() => document.querySelector('#panel-food').scrollBy(0, 200)); await page.waitForTimeout(70); }
+    await page.waitForTimeout(300);
+    const t = await page.$eval('#subnav .secpill', (w) => getComputedStyle(w).transform);
+    check(t === 'none', 'and scrolling down leaves it full size', t);
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('section pills: a wide screen centres the pill over the column', async () => {
+    const { ctx, page, errors } = await newPage(browser, base, { viewport: { width: 1280, height: 800 } });
+    await page.goto(base + '/all-day/?demo=1#people');
+    await settle(page);
+    await page.waitForSelector('#subnav .secpill .chip', { timeout: 8000 });
+    await page.waitForTimeout(500);
+    const r = await page.evaluate(() => { const w = document.querySelector('#subnav .secpill').getBoundingClientRect(), m = document.querySelector('#mast').getBoundingClientRect();
+      return { l: Math.round(w.left - m.left), r: Math.round(m.right - w.right), docW: document.documentElement.scrollWidth, vw: innerWidth }; });
+    check(Math.abs(r.l - r.r) <= 2 && r.docW <= r.vw, 'the pill sits centred in the mast’s column', JSON.stringify(r));
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+}
+
 /* ----------------------------------------------------------------- run */
 const t0 = Date.now();
 await mkdir(SHOTS, { recursive: true });
@@ -10506,6 +10728,7 @@ try {
   await run(theVintage);
   await run(theWeather);
   await run(weatherBrief);
+  await run(sectionPills);
   await run(railsHaveList);
 } finally {
   await browser.close();

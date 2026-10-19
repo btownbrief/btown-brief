@@ -78,6 +78,7 @@ import * as app from '../app.js';
 import * as store from '../store.js';
 import * as boards from '../boards.js';
 import { fetchJSON } from '../wire.js';
+import { sectionBar } from '../sections.js';
 import { RULES, expiresAt } from '../boards-core.js';
 import { el, esc, safeHref, ICON, art, section, rail, chips, pills, button, put, dateline, divider, listRail } from '../ui.js';
 
@@ -1495,11 +1496,14 @@ app.register(KEY, {
   activate(param) { pending = param || null; land(); },
   refresh() { if (ready && root) render(); },
   deactivate() {},
+  /* the sections as a floating pill in the tab's water, following the scroll (sections.js) */
   subnav() {
     if (!ready || !root) return null;
-    const toc = TOC().filter(([key]) => root.querySelector('[data-sec="' + key + '"]')).map(([key, label]) => ({ key, label }));
-    return chips(toc, null, (key) => app.jumpTo(root.querySelector('[data-sec="' + key + '"]')));
+    const sec = (key) => root.querySelector('[data-sec="' + key + '"]');
+    const toc = TOC().filter(([key]) => sec(key)).map(([key, label]) => ({ key, label }));
+    return sectionBar({ key: 'sec-watch', title: 'Watch', items: toc, color: '--liq-watch', find: sec, onPick: (key) => app.jumpTo(sec(key)) });
   },
+  keepSubnav: true,
   /* new picks for the screening vote since the reader last looked */
   newSince(ts) { return P.picks.filter((p) => (Date.parse(p.created_at) || 0) > ts * 1000 && !p.mine).length; },
   pull() { if (!ready) return null; loadPosts(); return 'Checking the town’s ratings and votes'; },

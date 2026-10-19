@@ -66,6 +66,7 @@ import * as store from '../store.js';
 import * as data from '../wire.js';
 import * as boards from '../boards.js';
 import { RULES, HANDLE_LABELS, NEIGHBORHOOD_LABELS } from '../boards-core.js';
+import { sectionBar } from '../sections.js';
 import { el, esc, safeHref, ICON, mark, section, chips, button, divider, cards, agoShort, rail as railOf } from '../ui.js';
 
 const KEY = 'games';
@@ -1400,12 +1401,15 @@ app.register(KEY, {
   activate(param) { rollover(); G.pending = param || null; land(); },
   refresh() { if (G.root) render(); },
   deactivate() {},
+  /* the sections as a floating pill in the tab's water, following the scroll (sections.js) */
   subnav() {
     if (!G.root || !G.slots) return null;
+    const sec = (k) => G.root.querySelector('[data-sec="' + k + '"]');
     const toc = [['arcade', 'Arcade'], ['picks', 'Picks'], ['playing', 'Playing'], ['lfg', 'Groups'], ['tags', 'Gamertags'], ['vr', 'VR'], ['challenge', 'Challenge'], ['board', 'Leaderboard'], ['champs', 'Champions']]
-      .filter(([key]) => G.root.querySelector('[data-sec="' + key + '"]'))
+      .filter(([key]) => sec(key))
       .map(([key, label]) => ({ key, label }));
-    return toc.length ? chips(toc, null, (k) => app.jumpTo(G.root.querySelector('[data-sec="' + k + '"]'))) : null;
+    return toc.length ? sectionBar({ key: 'sec-games', title: 'Games', items: toc, color: '--liq-games', find: sec, onPick: (k) => app.jumpTo(sec(k)) }) : null;
   },
+  keepSubnav: true,
   newSince,
 });

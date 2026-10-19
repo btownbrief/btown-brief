@@ -73,6 +73,7 @@ import * as data from '../wire.js';
 import * as boards from '../boards.js';
 import { el, esc, safeHref, ICON, mark, section, chips, pills, button, cards, meetRow, rail, listRail } from '../ui.js';
 import * as cw from '../clubs-week.js';
+import { sectionBar } from '../sections.js';
 import { MATCH, KIND_WORDS, bestFor, fitsText, mixerKind, MIXER_WORDS, handleLink, gatheringWhen } from '../people-match.js';
 import { RULES, ARCHETYPE_LABELS, NEIGHBORHOOD_LABELS, HANDLE_LABELS, message, checkPost } from '../boards-core.js';
 
@@ -1723,10 +1724,13 @@ app.register(KEY, {
   activate(param) { pending = param || null; land(); },
   refresh() { render(); },
   deactivate() {},
+  /* the sections as a floating pill in the tab's water, following the scroll (sections.js) */
   subnav() {
     if (!root || !slots) return null;
-    return chips(SECS.map(([key, label]) => ({ key, label })), null, (k) => app.jumpTo(slots[k]));
+    return sectionBar({ key: 'sec-people', title: 'People', items: SECS.map(([key, label]) => ({ key, label })), color: '--liq-people',
+      find: (k) => slots && slots[k], onPick: (k) => app.jumpTo(slots[k]) });
   },
+  keepSubnav: true,
   newSince(ts) { return S.posts.filter((p) => Date.parse(p.created_at) / 1000 > ts).length; },
 });
 
