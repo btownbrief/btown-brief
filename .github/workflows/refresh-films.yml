@@ -15,7 +15,12 @@ name: Refresh the Watch tab's films
 #                           comes from TMDB's own most popular releases.
 #   data/showtimes.json     scripts/build_showtimes.py, every morning. Times
 #                           at Partizanfilm, Majestic 10 and Essex Cinemas,
-#                           from each theater's own showtimes page.
+#                           from each theater's own showtimes page. Essex's
+#                           firewall turns GitHub's runners away (405), so
+#                           Stephen's Mac reads that page and sends its
+#                           screenings as the `essex` input
+#                           (scripts/send_essex_showtimes.sh); a theater that
+#                           fails keeps its times still ahead from the last file.
 #
 # Same publishing shape as curate-top.yml: a single orphan commit,
 # force-pushed, fetched by the page straight off raw.githubusercontent.com,
@@ -47,6 +52,11 @@ on:
         type: choice
         options: [all, films, time-machine, showtimes]
         default: all
+      essex:
+        description: "Essex Cinemas' screenings, read on the Mac (build_showtimes.py --essex-dump); leave empty"
+        type: string
+        required: false
+        default: ''
 
 concurrency:
   group: refresh-films
@@ -140,7 +150,12 @@ jobs:
         continue-on-error: true
         env:
           TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
-        run: python3 scripts/build_showtimes.py --out /tmp/films-new/data/showtimes.json
+          ESSEX: ${{ inputs.essex }}
+        run: |
+          # the input goes through a file, never through the shell's words
+          printf '%s' "$ESSEX" > /tmp/essex.json
+          python3 scripts/build_showtimes.py --out /tmp/films-new/data/showtimes.json \
+            --prev /tmp/films-out/data/showtimes.json --essex-json /tmp/essex.json
 
       - name: Lay the new files over the old
         id: lay

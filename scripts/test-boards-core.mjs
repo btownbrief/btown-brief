@@ -27,12 +27,15 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const SETUP_PATH = path.join(ROOT, 'all-day/supabase/nn-SETUP.sql');
 const ROUND2_PATH = path.join(ROOT, 'all-day/supabase/nn-ROUND2.sql');
 const ROUND4_PATH = path.join(ROOT, 'all-day/supabase/nn-ROUND4.sql');
+const PLAYLISTS_PATH = path.join(ROOT, 'all-day/supabase/nn-PLAYLISTS.sql');
 const RULES_RE = /\$json\$([\s\S]*?)\$json\$/;
 
 if (process.argv.includes('--write-sql')) {
   const sql = readFileSync(ROUND4_PATH, 'utf8');
   writeFileSync(ROUND4_PATH, sql.replace(RULES_RE, () => '$json$' + JSON.stringify(core.RULES) + '$json$'));
-  console.log('nn_rules() in nn-ROUND4.sql now matches boards-core.js RULES');
+  const pl = readFileSync(PLAYLISTS_PATH, 'utf8');
+  writeFileSync(PLAYLISTS_PATH, pl.replace(RULES_RE, () => '$json$' + JSON.stringify(core.RULES) + '$json$'));
+  console.log('nn_rules() in nn-ROUND4.sql and nn-PLAYLISTS.sql now matches boards-core.js RULES');
   process.exit(0);
 }
 const SETUP = readFileSync(SETUP_PATH, 'utf8');
@@ -61,6 +64,20 @@ test('nn_rules() in nn-ROUND4.sql is exactly RULES in boards-core.js', () => {
   assert.ok(m, 'nn-ROUND4.sql has a $json$ block');
   assert.deepEqual(JSON.parse(m[1]), core.RULES, 'run: node scripts/test-boards-core.mjs --write-sql');
   assert.equal(core.RULES.version, 3);
+});
+
+/* the Playlists board (2026-10-19) is pasted on its own: one function, the
+   same JSON, nothing dropped or deleted */
+test('nn-PLAYLISTS.sql replaces only nn_rules(), with exactly RULES', () => {
+  const sql = readFileSync(PLAYLISTS_PATH, 'utf8');
+  const m = sql.match(RULES_RE);
+  assert.ok(m, 'nn-PLAYLISTS.sql has a $json$ block');
+  assert.deepEqual(JSON.parse(m[1]), core.RULES, 'run: node scripts/test-boards-core.mjs --write-sql');
+  const code = sql.replace(/--[^\n]*/g, '');
+  assert.deepEqual([...code.matchAll(/create or replace function public\.(\w+)/g)].map((x) => x[1]), ['nn_rules']);
+  assert.ok(!/\b(drop|delete|truncate|alter|grant|revoke|insert|update)\b/i.test(code.replace(RULES_RE, '')), 'nothing but the one function');
+  const b = core.RULES.boards.playlists;
+  assert.ok(b && b.premod === true && b.meta.link.type === 'url' && b.kinds.playlist.needs.includes('link'), 'a link, and Stephen looks first');
 });
 
 /* every board, kind, field, limit and list an older copy of the rules

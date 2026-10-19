@@ -41,6 +41,7 @@
                                        given; limit 20 by default, 60 at most). updated_at is a day,
                                        '2026-10-17'. Never an email or an account id.
      boards.roundTwo() / boards.roundFour() -> true | false | null (could not ask)
+     boards.hasBoard('playlists')      -> true | false | null: the server's rules carry that board
      boards.status()  'unknown' | 'live' | 'off' (the SQL is not pasted yet)
 
    The Games ('playing', 'lfg'), Square ('post', 'show', 'ask', 'free',
@@ -141,18 +142,23 @@ const changed = (board, id, what) => window.dispatchEvent(new CustomEvent('allda
    does nothing it cannot undo. Asked once a visit; an unanswered ask is
    asked again next time. */
 let ver = null;
-function rulesVersion() {
-  if (app.demo) return Promise.resolve(RULES.version);
+function serverRules() {
+  if (app.demo) return Promise.resolve(RULES);
   if (!ver) {
     ver = call('nn_rules').then((r) => {
       if (!r.ok) { ver = null; return null; }
-      return Number(r.data && r.data.version) || 1;
+      return r.data && typeof r.data === 'object' ? r.data : {};
     });
   }
   return ver;
 }
+const rulesVersion = () => serverRules().then((d) => (d == null ? null : Number(d.version) || 1));
 export const roundTwo = () => rulesVersion().then((v) => (v == null ? null : v >= 2));
 export const roundFour = () => rulesVersion().then((v) => (v == null ? null : v >= 3));
+/* a board added without a new version (the Playlists board, nn-PLAYLISTS.sql):
+   true once the server's rules carry it, so a tab never asks for a board the
+   server would refuse */
+export const hasBoard = (board) => serverRules().then((d) => (d == null ? null : !!(d.boards && Object.prototype.hasOwnProperty.call(d.boards, board))));
 
 /* --------------------------------------------------------------- photos */
 /* A post's photo path, as something art() can draw: the public bucket URL
