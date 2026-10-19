@@ -598,6 +598,15 @@ a.rn-chip:hover { border-color: var(--teal); color: var(--teal); text-decoration
   font-size: var(--text-xs);
   font-variant-numeric: tabular-nums;
 }
+/* the plain answer: when the rain or snow comes, from the NWS hourly forecast */
+.radar-answer {
+  margin: 0 0 var(--space-3);
+  color: var(--ink);
+  font-size: var(--text-md);
+  font-weight: 600;
+  line-height: 1.4;
+}
+.radar-stage { position: relative; }
 .radar-map {
   position: relative;
   height: 420px;
@@ -626,6 +635,29 @@ a.rn-chip:hover { border-color: var(--teal); color: var(--teal); text-decoration
 .radar-map .radar-frame { transition: none; }
 .radar-map .leaflet-control-attribution { font-size: 10px; }
 
+/* which frame is showing: the radar or the forecast, and its time */
+.radar-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 1;
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: var(--bg-raised);
+  color: var(--ink);
+  box-shadow: 0 0 0 1px var(--line), 0 1px 3px rgba(0, 0, 0, 0.12);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  pointer-events: none;
+}
+.radar-badge[hidden] { display: none; }
+.radar-section.is-forecast .radar-badge {
+  background: var(--teal);
+  color: var(--bg-raised);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.18);
+}
+
 .radar-controls {
   display: flex;
   align-items: center;
@@ -650,16 +682,47 @@ a.rn-chip:hover { border-color: var(--teal); color: var(--teal); text-decoration
 .radar-play .ic-pause { display: none; }
 .radar-section.is-playing .radar-play .ic-play { display: none; }
 .radar-section.is-playing .radar-play .ic-pause { display: block; }
-.radar-scrub {
+.radar-track {
+  position: relative;
   flex: 1 1 auto;
   min-width: 0;
+}
+.radar-scrub {
+  display: block;
+  width: 100%;
+  margin: 0;
   height: 44px;
   accent-color: var(--teal);
   cursor: pointer;
 }
+/* Now on the scrubber: the past to its left, the forecast to its right.
+   8px is half the range thumb, so the tick sits under the thumb's centre. */
+.radar-now {
+  position: absolute;
+  bottom: -5px;
+  left: calc(8px + (100% - 16px) * var(--now, 0));
+  transform: translateX(-50%);
+  color: var(--ink-3);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  line-height: 1;
+  pointer-events: none;
+}
+.radar-now::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 1px);
+  width: 2px;
+  height: 7px;
+  border-radius: 1px;
+  background: var(--ink-3);
+  transform: translateX(-50%);
+}
+.radar-section:not(.has-forecast) .radar-now { display: none; }
 .radar-time {
   flex: 0 0 auto;
-  min-width: 4.6em;
+  min-width: 5.4em;
   text-align: right;
   font-variant-numeric: tabular-nums;
   font-weight: 600;

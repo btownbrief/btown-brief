@@ -61,6 +61,27 @@
       "basis": "trending",
       "source": "grok",
       "bullets": []
+    },
+    {
+      "id": "2026-10-16-pictures",
+      "kind": "pictures",
+      "title": "Pictures of the day",
+      "posted_at": "2026-10-16T22:55:00Z",
+      "intro": "A test fixture: two posts whose picture is the story.",
+      "basis": "trending",
+      "source": "grok",
+      "bullets": [
+        {
+          "text": "Aurora over the Champlain Valley",
+          "url": "https://x.com/NWSBurlington/status/2110995000000000001",
+          "note": "Northern lights this far south are rare."
+        },
+        {
+          "text": "Lava reaches the sea in Hawaii",
+          "url": "https://www.usgs.gov/volcanoes/kilauea",
+          "note": "The flow's first ocean entry this year, seen from above."
+        }
+      ]
     }
   ]
 }

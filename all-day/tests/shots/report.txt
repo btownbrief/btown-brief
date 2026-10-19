@@ -1729,7 +1729,7 @@
   ok   Food, the Weekly Bite and Feature a dish (live) › no console errors
   ok   Food, deep links and the chip row › #food/r-<id> lands on the place and flashes it
   ok   Food, deep links and the chip row › and opens its sheet
-  ok   Food, deep links and the chip row › the chip row is the table of contents: Bite, Open now, Deals, Asked, Best of, Kitchens, Feature a dish
+  ok   Food, deep links and the chip row › the chip row is the table of contents in page order, the fresh Asked first: Asked, Bite, Open now, Deals, Best of, Kitchens, Feature a dish
   ok   Food, deep links and the chip row › a chip scrolls to its section
   ok   Food, deep links and the chip row › #food/late opens Open now on the Open late filter
   ok   Food, deep links and the chip row › #food/d-<id> turns the deck to that deal
@@ -1799,6 +1799,13 @@
   ok   Food, the directory over the wire (live) › A Single Pebble, no Instagram: the dish a reader sent in is its food
   ok   Food, the directory over the wire (live) › the podcast stays out of In their own words even tagged food
   ok   Food, the directory over the wire (live) › no console errors
+  ok   Food, the freshest section leads: a thread under three days old, else the kitchens, else the old order › a thread under three days old: Asked on Reddit is the first thing on the tab, Open now below it
+  ok   Food, the freshest section leads: a thread under three days old, else the kitchens, else the old order › and the chip row follows the page
+  ok   Food, the freshest section leads: a thread under three days old, else the kitchens, else the old order › the deep link #food/open still lands on Open now
+  ok   Food, the freshest section leads: a thread under three days old, else the kitchens, else the old order › no console errors
+  ok   Food, the freshest section leads: a thread under three days old, else the kitchens, else the old order › threads that arrive late move Asked to the top and the reader sent to Open now stays on it
+  ok   Food, the freshest section leads: a thread under three days old, else the kitchens, else the old order › threads older than three days: In their own words leads
+  ok   Food, the freshest section leads: a thread under three days old, else the kitchens, else the old order › with no fresh thread and no pictures: the old order
   ok   Food, Asked on Reddit (live) › only the food asks, newest first: not the non-food thread, the r/vermont ask outside Burlington, the link post, the sale or the removed post
   ok   Food, Asked on Reddit (live) › each title links out to its own thread
   ok   Food, Asked on Reddit (live) › a row: the thread title, its subreddit, its age and its comment count
@@ -2706,7 +2713,7 @@
   ok   sign-in fails soft › a bad address is caught before any request
   ok   sign-in fails soft › no link was requested
   ok   sign-in fails soft › no console errors
-  ok   performance › the live Wire redraws 60 cards in 12ms (budget 100)
+  ok   performance › the live Wire redraws 60 cards in 13ms (budget 100)
   ok   shell fixes: a rail never snaps flush to the edge › 390: .rail carries scroll-padding of one gutter
   ok   shell fixes: a rail never snaps flush to the edge › 390: a card scrolled to the start stops at the gutter
   ok   shell fixes: a rail never snaps flush to the edge › 390: no console errors
@@ -2939,7 +2946,7 @@
   ok   Habits, the numbers: today on top, the heat map, a habit’s month and best streak (demo, 390, Wednesday Oct 14) › Wednesday: the walk done, reading and the gym still to do; every due day of the last week done
   ok   Habits, the numbers: today on top, the heat map, a habit’s month and best streak (demo, 390, Wednesday Oct 14) › sixteen weeks, Monday to Sunday, ending this week
   ok   Habits, the numbers: today on top, the heat map, a habit’s month and best streak (demo, 390, Wednesday Oct 14) › today half done and marked, yesterday all done, tomorrow blank, before the habits began nothing
-  ok   Habits, the numbers: today on top, the heat map, a habit’s month and best streak (demo, 390, Wednesday Oct 14) › a tap moves today’s count and today’s square in the same click (4 ms)
+  ok   Habits, the numbers: today on top, the heat map, a habit’s month and best streak (demo, 390, Wednesday Oct 14) › a tap moves today’s count and today’s square in the same click (3 ms)
   ok   Habits, the numbers: today on top, the heat map, a habit’s month and best streak (demo, 390, Wednesday Oct 14) › all three: “All done today”, and the bar full
   ok   Habits, the numbers: today on top, the heat map, a habit’s month and best streak (demo, 390, Wednesday Oct 14) › the streak, the best streak and the last thirty days
   ok   Habits, the numbers: today on top, the heat map, a habit’s month and best streak (demo, 390, Wednesday Oct 14) › this month: the 1st is a Thursday, and no month after it
@@ -2972,7 +2979,7 @@
   ok   Habits, swipe to archive with Undo, drag and keys to reorder, edit (demo, 1280, dark) › habits: at most 2 subnav rows
   ok   Habits, swipe to archive with Undo, drag and keys to reorder, edit (demo, 1280, dark) › no console errors
   ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › twenty habits, in order
-  ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › twenty habits and a year of taps: a tap still shows at once (12, 11, 12, 11 ms)
+  ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › twenty habits and a year of taps: a tap still shows at once (12, 12, 13, 12 ms)
   ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › the heat map is all there, and four taps leave it as it was
   ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › every row keeps its seven dots and its 48px tap
   ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › the list is longer than the screen, and the panel scrolls
@@ -3098,7 +3105,7 @@
   ok   Habits, the forest: a tree per habit, a leaf per tap, flowers, help, starters (demo, 390) › the “?” opens How Habits works: four lines
   ok   Habits, the forest: a tree per habit, a leaf per tap, flowers, help, starters (demo, 390) › a starter adds a daily habit in one tap, and the starters step aside
   ok   Habits, the forest: a tree per habit, a leaf per tap, flowers, help, starters (demo, 390) › and plants its tree: no leaves yet (one name for the button, the picture itself decorative)
-  ok   Habits, the forest: a tree per habit, a leaf per tap, flowers, help, starters (demo, 390) › a tap grows a leaf, in the same click (4 ms)
+  ok   Habits, the forest: a tree per habit, a leaf per tap, flowers, help, starters (demo, 390) › a tap grows a leaf, in the same click (3 ms)
   ok   Habits, the forest: a tree per habit, a leaf per tap, flowers, help, starters (demo, 390) › Got it puts the help away
   ok   Habits, the forest: a tree per habit, a leaf per tap, flowers, help, starters (demo, 390) › one tree per habit, in the list’s order
   ok   Habits, the forest: a tree per habit, a leaf per tap, flowers, help, starters (demo, 390) › each tree has a leaf for every day done in the last 370
@@ -3145,7 +3152,7 @@
   ok   Vintage, signed out: the finds show, posting asks for the sign-in (demo) › every find shows its days left, and they differ
   ok   Vintage, signed out: the finds show, posting asks for the sign-in (demo) › the vote on a find is “I’d want this”
   ok   Vintage, signed out: the finds show, posting asks for the sign-in (demo) › nobody signed in owns a find, so no “Someone got it”
-  ok   Vintage, signed out: the finds show, posting asks for the sign-in (demo) › the chip row is the table of contents: Fit checks, Spotted, Swaps (up top, by Spotted), New in, Shops, Make a tee
+  ok   Vintage, signed out: the finds show, posting asks for the sign-in (demo) › the chip row is the table of contents, in page order: Fit checks, Spotted, Swaps (up top, by Spotted), then Make a tee (moved up from the bottom), New in, Shops
   ok   Vintage, signed out: the finds show, posting asks for the sign-in (demo) › a chip scrolls its section up under the mast
   ok   Vintage, signed out: the finds show, posting asks for the sign-in (demo) › Post a find, signed out: the sign-in note and no form
   ok   Vintage, signed out: the finds show, posting asks for the sign-in (demo) › Post a fit check, signed out: the same
@@ -3158,7 +3165,8 @@
   ok   Vintage, signed out: the finds show, posting asks for the sign-in (demo) › vintage: at most 2 subnav rows
   ok   Vintage, signed out: the finds show, posting asks for the sign-in (demo) › no console errors
   ok   Vintage, signed out: the finds show, posting asks for the sign-in (demo) › demo mode never calls Supabase
-  ok   Vintage, fit checks and Spotted share the first screen at 390; a tile opens the fit’s own card; New in is the shops’ own posts (demo) › Fit checks leads the tab, then Spotted this week, then Swaps (moved up from the bottom), then New in
+  ok   Vintage, fit checks and Spotted share the first screen at 390; a tile opens the fit’s own card; New in is the shops’ own posts (demo) › Fit checks leads the tab, then Spotted this week, then Swaps (moved up from the bottom), then Make a tee with Top designs under it (moved up from the end), then New in and the shops
+  ok   Vintage, fit checks and Spotted share the first screen at 390; a tile opens the fit’s own card; New in is the shops’ own posts (demo) › Make a tee and Send in your design are one block: the button sits in the head, there is no card of its own
   ok   Vintage, fit checks and Spotted share the first screen at 390; a tile opens the fit’s own card; New in is the shops’ own posts (demo) › one plain line under Spotted this week says what it is for
   ok   Vintage, fit checks and Spotted share the first screen at 390; a tile opens the fit’s own card; New in is the shops’ own posts (demo) › at 390 by 844 the fit tiles, the Spotted head and the first find are all on the first screen
   ok   Vintage, fit checks and Spotted share the first screen at 390; a tile opens the fit’s own card; New in is the shops’ own posts (demo) › each fit check is a photo tile with its title and first name
@@ -3234,7 +3242,8 @@
   ok   Vintage, the designs rail links to the merch site (live) › every design links to its own page on merch.btownbrief.com, where it is shown on a model
   ok   Vintage, the designs rail links to the merch site (live) › they open in a new tab, with the small local preview
   ok   Vintage, the designs rail links to the merch site (live) › the previews load
-  ok   Vintage, the designs rail links to the merch site (live) › and “All 87 designs in the shop” goes to the shop
+  ok   Vintage, the designs rail links to the merch site (live) › and the last tile, “All 87 designs in the shop”, goes to the shop
+  ok   Vintage, the designs rail links to the merch site (live) › Make a tee and Send in your design are one block: the button is in its head, no card of its own
   ok   Vintage, the designs rail links to the merch site (live) › nothing on the rail takes money or names a price
   ok   Vintage, the designs rail links to the merch site (live) › vintage: nothing fixed or sticky inside the tab
   ok   Vintage, the designs rail links to the merch site (live) › vintage: uppercase only in the caps roles
@@ -3332,34 +3341,47 @@
   ok   Vintage, Top designs: the designs neighbors sent in, most “I’d wear this” first, and the vote works (demo) › a tap on “I’d wear this” counts one more
   ok   Vintage, Top designs: the designs neighbors sent in, most “I’d wear this” first, and the vote works (demo) › and the board has it
   ok   Vintage, Top designs: the designs neighbors sent in, most “I’d wear this” first, and the vote works (demo) › no console errors
-  ok   Weather page: the radar mounts lazily and moves (390, a stand-in Leaflet) › far below the fold: no Leaflet, no NOAA, nothing fetched
-  ok   Weather page: the radar mounts lazily and moves (390, a stand-in Leaflet) › in view, it loads Leaflet 1.9.4 and NOAA’s frame list
-  ok   Weather page: the radar mounts lazily and moves (390, a stand-in Leaflet) › with the integrity hashes events.html and Food pin
-  ok   Weather page: the radar mounts lazily and moves (390, a stand-in Leaflet) › thirteen frames, ten minutes apart, the newest last
-  ok   Weather page: the radar mounts lazily and moves (390, a stand-in Leaflet) › centred on Burlington at zoom 7; the wheel scrolls the page
-  ok   Weather page: the radar mounts lazily and moves (390, a stand-in Leaflet) › OpenStreetMap under it, credited
-  ok   Weather page: the radar mounts lazily and moves (390, a stand-in Leaflet) › one image per frame for the whole view, at its time
-  ok   Weather page: the radar mounts lazily and moves (390, a stand-in Leaflet) › the radar credited to NOAA MRMS on the map
-  ok   Weather page: the radar mounts lazily and moves (390, a stand-in Leaflet) › it opens on the newest frame, the only one showing
-  ok   Weather page: the radar mounts lazily and moves (390, a stand-in Leaflet) › the newest frame is asked for first, the other twelve after it
-  ok   Weather page: the radar mounts lazily and moves (390, a stand-in Leaflet) › one image pixel per screen pixel (MRMS is a 1 km grid), even on a 2x screen
-  ok   Weather page: the radar mounts lazily and moves (390, a stand-in Leaflet) › the frame’s time in Burlington’s clock, and how old it is
-  ok   Weather page: the radar mounts lazily and moves (390, a stand-in Leaflet) › it loops by default: Pause showing, the scrubber spans the frames
-  ok   Weather page: the radar mounts lazily and moves (390, a stand-in Leaflet) › and the two radars worth opening under the map
-  ok   Weather page: the radar mounts lazily and moves (390, a stand-in Leaflet) › the frames move: one showing at a time, its time under the map
-  ok   Weather page: the radar mounts lazily and moves (390, a stand-in Leaflet) › Pause stops it on the frame it was on
-  ok   Weather page: the radar mounts lazily and moves (390, a stand-in Leaflet) › scrubbing pauses and shows that frame, its time and age
-  ok   Weather page: the radar mounts lazily and moves (390, a stand-in Leaflet) › the arrow keys step it
-  ok   Weather page: the radar mounts lazily and moves (390, a stand-in Leaflet) › a pan redraws the thirteen at the new view, on the same frame
-  ok   Weather page: the radar mounts lazily and moves (390, a stand-in Leaflet) › no console errors
-  ok   Weather page: the radar for reduced motion, a fresh list, and when NOAA is down › reduced motion: it waits on the newest frame for a tap
-  ok   Weather page: the radar for reduced motion, a fresh list, and when NOAA is down › ten minutes on screen: it reads the list again and moves to the new newest frame
-  ok   Weather page: the radar for reduced motion, a fresh list, and when NOAA is down › and Play from the newest starts at the oldest
-  ok   Weather page: the radar for reduced motion, a fresh list, and when NOAA is down › no console errors
-  ok   Weather page: the radar for reduced motion, a fresh list, and when NOAA is down › NOAA down: the map steps aside, a line says so, the two radars stay
-  ok   Weather page: the radar for reduced motion, a fresh list, and when NOAA is down › no console errors beyond the 503 itself
-  ok   Weather page: the radar for reduced motion, a fresh list, and when NOAA is down › images failing: the map steps aside and nothing pretends to play
-  ok   Weather page: the radar for reduced motion, a fresh list, and when NOAA is down › no console errors
+  ok   Weather page: the radar looks ahead, the last hour then twelve of forecast (390, a stand-in Leaflet) › far below the fold: no Leaflet, no NOAA, no IEM, nothing fetched
+  ok   Weather page: the radar looks ahead, the last hour then twelve of forecast (390, a stand-in Leaflet) › in view, it loads Leaflet 1.9.4, NOAA’s radar times and IEM’s newest forecast run
+  ok   Weather page: the radar looks ahead, the last hour then twelve of forecast (390, a stand-in Leaflet) › with the integrity hashes events.html and Food pin
+  ok   Weather page: the radar looks ahead, the last hour then twelve of forecast (390, a stand-in Leaflet) › six radar frames ten minutes apart, Now the newest, then the forecast every half hour for twelve hours
+  ok   Weather page: the radar looks ahead, the last hour then twelve of forecast (390, a stand-in Leaflet) › mostly future: the past hour, Now, and the rest forecast
+  ok   Weather page: the radar looks ahead, the last hour then twelve of forecast (390, a stand-in Leaflet) › centred on Burlington at zoom 7; the wheel scrolls the page
+  ok   Weather page: the radar looks ahead, the last hour then twelve of forecast (390, a stand-in Leaflet) › OpenStreetMap under it, credited
+  ok   Weather page: the radar looks ahead, the last hour then twelve of forecast (390, a stand-in Leaflet) › the past and Now: one NOAA image per frame for the whole view, one pixel per screen pixel
+  ok   Weather page: the radar looks ahead, the last hour then twelve of forecast (390, a stand-in Leaflet) › the forecast: IEM’s HRRR tiles, each asked for by its run and forecast minute, in their own pane (out of the base map’s grey filter)
+  ok   Weather page: the radar looks ahead, the last hour then twelve of forecast (390, a stand-in Leaflet) › both credited on the map: NOAA MRMS for the radar, NOAA HRRR via IEM for the forecast
+  ok   Weather page: the radar looks ahead, the last hour then twelve of forecast (390, a stand-in Leaflet) › Now is asked for first, then the forecast nearest first, then the rest of the past
+  ok   Weather page: the radar looks ahead, the last hour then twelve of forecast (390, a stand-in Leaflet) › it opens on Now, the only frame showing
+  ok   Weather page: the radar looks ahead, the last hour then twelve of forecast (390, a stand-in Leaflet) › a label on the map says which frame: Now, and its time
+  ok   Weather page: the radar looks ahead, the last hour then twelve of forecast (390, a stand-in Leaflet) › beside the title: how old the radar is and how far the forecast goes
+  ok   Weather page: the radar looks ahead, the last hour then twelve of forecast (390, a stand-in Leaflet) › a Now mark on the scrubber, where the past ends
+  ok   Weather page: the radar looks ahead, the last hour then twelve of forecast (390, a stand-in Leaflet) › it plays by default: Pause showing, the scrubber spans every frame
+  ok   Weather page: the radar looks ahead, the last hour then twelve of forecast (390, a stand-in Leaflet) › and the two radars worth opening under the map
+  ok   Weather page: the radar looks ahead, the last hour then twelve of forecast (390, a stand-in Leaflet) › played forward from Now: forecast frames, one at a time, labelled "Forecast · time"
+  ok   Weather page: the radar looks ahead, the last hour then twelve of forecast (390, a stand-in Leaflet) › Pause stops it on the frame it was on
+  ok   Weather page: the radar looks ahead, the last hour then twelve of forecast (390, a stand-in Leaflet) › after the last forecast frame it starts again at Now, not in the past
+  ok   Weather page: the radar looks ahead, the last hour then twelve of forecast (390, a stand-in Leaflet) › Play from the last frame starts at Now
+  ok   Weather page: the radar looks ahead, the last hour then twelve of forecast (390, a stand-in Leaflet) › scrubbing back shows the radar: "Radar · time", 30 min before Now
+  ok   Weather page: the radar looks ahead, the last hour then twelve of forecast (390, a stand-in Leaflet) › the arrow keys step it
+  ok   Weather page: the radar looks ahead, the last hour then twelve of forecast (390, a stand-in Leaflet) › a pan redraws the six radar images at the new view, on the same frame, and keeps the forecast layers
+  ok   Weather page: the radar looks ahead, the last hour then twelve of forecast (390, a stand-in Leaflet) › two quick pans while the images are slow: only the last view’s six stay on the map
+  ok   Weather page: the radar looks ahead, the last hour then twelve of forecast (390, a stand-in Leaflet) › Play from a past frame goes forward, through Now, into the forecast
+  ok   Weather page: the radar looks ahead, the last hour then twelve of forecast (390, a stand-in Leaflet) › no console errors
+  ok   Weather page: the radar for reduced motion, a new radar scan and forecast run, and when NOAA or IEM is down › reduced motion: it waits on Now for a tap
+  ok   Weather page: the radar for reduced motion, a new radar scan and forecast run, and when NOAA or IEM is down › ten minutes on screen: it reads both again and moves with Now
+  ok   Weather page: the radar for reduced motion, a new radar scan and forecast run, and when NOAA or IEM is down › the newer forecast run replaces the old one, whose layers leave the map
+  ok   Weather page: the radar for reduced motion, a new radar scan and forecast run, and when NOAA or IEM is down › a failed read of IEM’s run keeps the forecast already showing
+  ok   Weather page: the radar for reduced motion, a new radar scan and forecast run, and when NOAA or IEM is down › and Play from Now plays forward from Now
+  ok   Weather page: the radar for reduced motion, a new radar scan and forecast run, and when NOAA or IEM is down › no console errors beyond the 503 itself
+  ok   Weather page: the radar for reduced motion, a new radar scan and forecast run, and when NOAA or IEM is down › IEM down: the last hour still plays, the title line says there is no forecast, no Now mark
+  ok   Weather page: the radar for reduced motion, a new radar scan and forecast run, and when NOAA or IEM is down › no console errors beyond the 503 itself
+  ok   Weather page: the radar for reduced motion, a new radar scan and forecast run, and when NOAA or IEM is down › forecast tiles failing: the forecast leaves the timeline and the radar hour plays on
+  ok   Weather page: the radar for reduced motion, a new radar scan and forecast run, and when NOAA or IEM is down › no console errors
+  ok   Weather page: the radar for reduced motion, a new radar scan and forecast run, and when NOAA or IEM is down › NOAA down: the map steps aside, a line says so, the two radars stay
+  ok   Weather page: the radar for reduced motion, a new radar scan and forecast run, and when NOAA or IEM is down › no console errors beyond the 503 itself
+  ok   Weather page: the radar for reduced motion, a new radar scan and forecast run, and when NOAA or IEM is down › images failing: the map steps aside and nothing pretends to play
+  ok   Weather page: the radar for reduced motion, a new radar scan and forecast run, and when NOAA or IEM is down › no console errors
   ok   What Now, the sky on the weather card: the sun where it really is (demo, 2 pm) › at 2 pm the sun is on its arc, 63% of the way from sunrise to sunset
   ok   What Now, the sky on the weather card: the sun where it really is (demo, 2 pm) › a clear day sky: no clouds, nothing falling
   ok   What Now, the sky on the weather card: the sun where it really is (demo, 2 pm) › the strip is 30px; the card stays compact
@@ -3409,6 +3431,16 @@
   ok   Weather page: now, today and tonight in plain words, when and how much (390, 8:30 am) › markup in the brief prints as text, and a temperature that is not a number is left out
   ok   Weather page: now, today and tonight in plain words, when and how much (390, 8:30 am) › no console errors
   ok   Weather page: now, today and tonight in plain words, when and how much (390, 8:30 am) › a brief written on another Burlington day is not shown
+  ok   Weather page: one line over the radar says when the rain or snow comes in the next 12 hours (390) › the rainy day: when it starts and stops, the same 2pm and 7pm as the brief
+  ok   Weather page: one line over the radar says when the rain or snow comes in the next 12 hours (390) › and the brief agrees
+  ok   Weather page: one line over the radar says when the rain or snow comes in the next 12 hours (390) › above the map, under the title, before the radar has loaded anything
+  ok   Weather page: one line over the radar says when the rain or snow comes in the next 12 hours (390) › a dry day says so
+  ok   Weather page: one line over the radar says when the rain or snow comes in the next 12 hours (390) › a dry cold day says rain or snow
+  ok   Weather page: one line over the radar says when the rain or snow comes in the next 12 hours (390) › snow at 60%: "likely", and on and off when the wet hours break
+  ok   Weather page: one line over the radar says when the rain or snow comes in the next 12 hours (390) › already raining: when it stops
+  ok   Weather page: one line over the radar says when the rain or snow comes in the next 12 hours (390) › a 40% chance: "a chance of", from when, with no end inside the twelve hours
+  ok   Weather page: one line over the radar says when the rain or snow comes in the next 12 hours (390) › a file that no longer covers the next twelve hours says nothing
+  ok   Weather page: one line over the radar says when the rain or snow comes in the next 12 hours (390) › no console errors
   ok   What Now: today in plain words and a Full weather link, under the card (390, live) › the same brief as the weather page, word for word
   ok   What Now: today in plain words and a Full weather link, under the card (390, live) › an obvious Full weather button to the guide’s weather page
   ok   What Now: today in plain words and a Full weather link, under the card (390, live) › under the card, above Spin, and nothing scrolls sideways
