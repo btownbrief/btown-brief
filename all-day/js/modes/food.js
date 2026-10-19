@@ -116,7 +116,7 @@ const SECTIONS = [['bite', 'The Bite'], ['open', 'Open now'], ['deals', 'Deals']
 const S = {
   f: 'open', all: false, deal: 0, sort: 'near', meal: 'any',
   chose: false,              // the reader picked a filter: an empty Open now stays theirs
-  asks: null, asksFailed: false, asksAt: 0, best: null, bestFailed: false, bestGroup: 'all', bestAll: false,
+  asks: null, asksFailed: false, asksAt: 0, asksLoading: false, best: null, bestFailed: false, bestGroup: 'all', bestAll: false,
   staleDeals: 0,
   places: null, byId: null, deals: null, menus: null, foodSet: null, posts: null, dish: undefined, dishes: [],
   dir: null, igBy: new Map(), dishBy: new Map(),
@@ -196,12 +196,13 @@ function loadLater() {
    refetch keeps the list it had. */
 function loadAsks() {
   S.asksAt = Date.now();
+  S.asksLoading = true;
   return data.fetchJSON(INTAKE_URL, 10000).then((j) => {
     if (!j || !Array.isArray(j.posts)) throw new Error('not an intake');
     S.asks = asksFrom(j, Date.now());
     S.asksFailed = false;
   }).catch(() => { if (!S.asks) S.asksFailed = true; })
-    .then(() => { paint('asks'); land(); });
+    .then(() => { S.asksLoading = false; paint('asks'); land(); });
 }
 
 function takeBest(j) {
@@ -961,7 +962,7 @@ function paintAsks(host) {
   }
   const list = asksShown();
   section(host, 'Asked on Reddit', list.length ? '<b>' + esc(plural(list.length, 'thread', 'threads')) + '</b> · newest first' : null, sub);
-  if (!list.length) { host.appendChild(el('p', 'note pad', esc('No new food questions.'))); return; }
+  if (!list.length) { host.appendChild(el('p', 'note pad', esc(S.asks.length ? 'You muted these subreddits.' : 'No new food questions.'))); return; }
   const items = app.know(list.map(askItem));
   const feed = el('div', 'feed asks');
   items.forEach((it) => put(feed, feedCards.row(it, { noComments: it.comments === '', greenLocal: true })));
@@ -995,14 +996,23 @@ function paintBest(host) {
   if (list.length > shown.length) host.appendChild(button('All ' + list.length + ' ' + ICON.arrow, 'ghost more', () => { S.bestAll = true; paint('best'); }));
 }
 
+/* A card is a link to its newest thread (rule 4: every item has a URL), and
+   a plain tap opens the sheet with all of them; a modified click (new tab)
+   goes straight to the thread. */
 function qCard(q) {
-  const b = el('button', 'qcard', '<span class="t">' + esc(q.q) + '</span><span class="s">' +
-    esc([q.sd ? 'Seven Daysies: ' + q.sd.winner : '', plural(q.threads.length, 'thread', 'threads')].filter(Boolean).join(' · ')) + '</span>');
-  b.type = 'button';
-  b.dataset.k = q.k;
-  b.setAttribute('aria-label', q.q + ', ' + plural(q.threads.length, 'thread', 'threads') + ' on r/burlington');
-  b.addEventListener('click', () => qSheet(q));
-  return b;
+  const a = el('a', 'qcard', '<span class="t">' + esc(q.q) + '</span><span class="s">' +
+    esc([q.sd ? 'Seven Daysies: ' + q.sd.pick : '', plural(q.threads.length, 'thread', 'threads')].filter(Boolean).join(' · ')) + '</span>');
+  a.href = safeHref(q.threads[0].url);
+  a.target = '_blank';
+  a.rel = 'noopener';
+  a.dataset.k = q.k;
+  a.setAttribute('aria-label', q.q + ', ' + plural(q.threads.length, 'thread', 'threads') + ' on r/burlington');
+  a.addEventListener('click', (e) => {
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button) return;
+    e.preventDefault();
+    qSheet(q);
+  });
+  return a;
 }
 
 /* a link out of the sheet: the thread, or Seven Days' page */
@@ -1218,7 +1228,10 @@ function land() {
     return;
   }
   if (/^https:\/\/(www\.|old\.)?reddit\.com\//.test(k)) {
-    if (!S.asks && !S.asksFailed) { pending = k; return; }
+    const a = (S.asks || []).find((x) => x.k === k);
+    /* still loading, or a refetch is under way that may bring it: land when it arrives */
+    if ((!S.asks && !S.asksFailed) || (!a && S.asksLoading)) { pending = k; return; }
+    if (a && store.isMuted(a.sid)) { app.toast('You muted ' + a.sub + '.'); return; }
     if (!app.flashHit(root, k)) app.toast('That thread has moved on.');
     return;
   }

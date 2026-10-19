@@ -35,6 +35,9 @@ const ASKS = [
   'Any good Ethiopian food around here?',
   'Looking for a cozy café to work from',
   'Visiting next week, best brunch spots?',
+  'Coffee shop recs for working remotely',
+  'Best caterer for a small wedding?',
+  'Where to buy raw milk?',
 ];
 const NOT_ASKS = [
   'Heads up everyone coming and leaving town this week 👍',
@@ -58,6 +61,9 @@ const NOT_ASKS = [
   'Avoid this bakery',
   'Now hiring line cooks, best pay in town',
   'Monkey House (And Other Winooski Music Venues)',
+  'Best coffee table?',
+  'Looking for a bar job',
+  'Best bars to work at?',
 ];
 
 test('the food asks are asks', () => {
@@ -128,7 +134,7 @@ test('directoryFrom: the food, coffee and drink questions from the real director
   assert.equal(bakery.sd.year, 2026);
   assert.ok(/^https:\/\/community\.sevendaysvt\.com\//.test(bakery.sd.url));
   const pho = d.find((q) => q.q === 'Best Pho');
-  assert.equal(pho.sd.winner, 'Pho Hong');
+  assert.equal(pho.sd.pick, 'Pho Hong (best Vietnamese restaurant)');
   /* "Best Bagel" and "Best Bagels" are one card with both threads */
   assert.equal(d.filter((q) => /^Best Bagels?$/.test(q.q)).length, 1);
   assert.equal(d.find((q) => /^Best Bagels?$/.test(q.q)).threads.length, 2);

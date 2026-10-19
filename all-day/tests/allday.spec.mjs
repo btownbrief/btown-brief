@@ -4188,6 +4188,20 @@ async function theFood(browser, base) {
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
 
+    /* r/vermont muted (the Wire's mute, by source id): its ask leaves, and its link says why */
+    const m = await newPage(browser, base);
+    await m.page.addInitScript(() => localStorage.setItem('pulse2-settings', JSON.stringify({ hidden: { 'r-vermont': 1 } })));
+    await m.page.goto(base + '/all-day/#food/asks');
+    await m.page.waitForSelector(foodPanel + ' [data-sec="asks"] .card', { timeout: 15000 });
+    const mk = await m.page.$$eval(foodPanel + ' [data-sec="asks"] .card', (cs) => cs.map((c) => c.dataset.k));
+    check(JSON.stringify(mk) === JSON.stringify([want[0], want[2], want[3]]), 'with r/vermont muted, its ask is not shown', mk.join(', '));
+    await m.page.evaluate((u) => { location.hash = '#food/' + encodeURIComponent(u); }, want[1]);
+    await m.page.waitForSelector('#toast:not([hidden])', { timeout: 4000 }).catch(() => {});
+    const tm = await m.page.evaluate(() => document.getElementById('toast')?.textContent || '');
+    check(/You muted r\/vermont\./.test(tm), 'a link to a muted thread says it is muted', tm);
+    check(!m.errors.length, 'no console errors', m.errors.join(' | '));
+    await m.ctx.close();
+
     /* an intake that comes back broken: the section says so, Best of still draws */
     const b = await newPage(browser, base, { reddit: {} });
     await b.page.goto(base + '/all-day/#food/asks');
@@ -4212,7 +4226,7 @@ async function theFood(browser, base) {
     await page.click(foodPanel + ' [data-sec="best"] .btn.more');
     check((await keys()).length === dir.length, 'All ' + dir.length + ' opens the rest in place', '');
     const top = await page.$eval(foodPanel + ' [data-sec="best"] .qcard', (c) => c.innerText);
-    check(top.includes(dir[0].q) && top.includes(dir[0].threads.length + ' threads') && (!dir[0].sd || top.includes('Seven Daysies: ' + dir[0].sd.winner)),
+    check(top.includes(dir[0].q) && top.includes(dir[0].threads.length + ' threads') && (!dir[0].sd || top.includes('Seven Daysies: ' + dir[0].sd.pick)),
       'a card: the question, its Seven Daysies pick where there is one, how many threads', top);
     for (const [g, label] of [['drinks', 'Drinks'], ['coffee', 'Coffee']]) {
       await page.click(foodPanel + ' [data-sec="best"] .pills.kinds button:text-is("' + label + '")');

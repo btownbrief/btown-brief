@@ -39,7 +39,7 @@ const FOOD = new RegExp('\\b(' + [
   'bbq', 'barbecue', 'wings', 'tacos?', 'burritos?', 'nachos', 'quesadillas?', 'sushi', 'ramen', 'pho', 'noodles?', 'dumplings?',
   'momos?', 'curry', 'banh mi', 'b\u00e1nh m\u00ec', 'bahn mi', 'falafel', 'gyros?', 'kebabs?', 'shawarma', 'poutine', 'fries',
   'steak', 'steakhouse', 'seafood', 'oysters?', 'lobster', 'fish', 'chicken', 'salad', 'salads', 'soup', 'soups', 'hot pot',
-  'mac and cheese', 'cheese', 'cheesesteak', 'butcher', 'maple', 'syrup',
+  'mac and cheese', 'cheese', 'cheesesteak', 'butcher', 'maple', 'syrup', 'milk', 'eggs', 'caterers?', 'catering',
   'vegan', 'vegetarian', 'gluten[- ]free', 'halal', 'kosher',
   'thai', 'indian', 'chinese', 'mexican', 'italian', 'korean', 'japanese', 'vietnamese', 'ethiopian', 'nepali', 'greek',
   'mediterranean', 'middle eastern', 'french', 'cuban', 'caribbean',
@@ -60,7 +60,7 @@ const ASK = new RegExp([
 ].join('|'), 'i');
 
 /* a sale, a job, an announcement, a lost cat, a charity drive: not an ask */
-const NOT_ASK = /\b(for sale|hiring|now open|is open|reopen\w*|grand opening|giveaway|discount|coupon|promo code|fundraiser|food (drive|bank|shelf|shelves|pantry)|donat\w*|charity|recall|inspection|lost|stolen|missed connection|join us|come (by|try|visit|see))\b/i;
+const NOT_ASK = /\b(coffee tables?|bar (stools?|carts?|exam)|jobs?|to work at|for sale|hiring|now open|is open|reopen\w*|grand opening|giveaway|discount|coupon|promo code|fundraiser|food (drive|bank|shelf|shelves|pantry)|donat\w*|charity|recall|inspection|lost|stolen|missed connection|join us|come (by|try|visit|see))\b/i;
 /* the tab features, it never knocks: no "worst", no warnings */
 const NEGATIVE = /\b(worst|overrated|avoid|terrible|awful|gross|disgusting|food poisoning|sick from|rip-?off|scam)\b/i;
 
@@ -142,7 +142,7 @@ export function directoryFrom(bestOf) {
     threads.forEach((t) => { if (!q.threads.some((x) => x.url === t.url)) q.threads.push(t); });
     if (!q.sd && e.sevendays_note && /^https:\/\//.test(String(e.sevendays_url || ''))) {
       const m = /^Seven Daysies (\d{4}):\s*(.+)$/.exec(e.sevendays_note);
-      if (m) q.sd = { year: Number(m[1]), pick: m[2].trim(), winner: m[2].replace(/\s*\([^)]*\)\s*$/, '').trim(), url: e.sevendays_url };
+      if (m) q.sd = { year: Number(m[1]), pick: m[2].trim(), url: e.sevendays_url };   // the pick word for word
     }
   });
   const newest = (q) => Math.max(...q.threads.map((t) => t.year || 0));
