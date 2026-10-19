@@ -2394,7 +2394,7 @@
   ok   Games, new this month › and each wears a New tag
   ok   Games, new this month › a #games/new link lands there
   ok   Games, new this month › no console errors
-  ok   Games, the arcade up front › the News Quiz, then the games, then the people, then VR; the leaderboard below
+  ok   Games, the arcade up front › the News Quiz, then the games, the daily picks from the web, then the people, then VR; the leaderboard below
   ok   Games, the arcade up front › one wide cabinet (the newest game) and four more
   ok   Games, the arcade up front › the newest game’s picture sits beside its words, small
   ok   Games, the arcade up front › the grid’s screens are shorter than 4:3
@@ -2461,6 +2461,35 @@
   ok   Games, gamertags › “Add your gamertag” opens the profile at its Games fold, on the first box
   ok   Games, gamertags › the demo never calls Supabase
   ok   Games, gamertags › no console errors
+  ok   Games, daily picks from the web › web-games.json: 19 games, each with a name, publisher, https link, known category, cost label and verified date
+  ok   Games, daily picks from the web › no game or link is listed twice
+  ok   Games, daily picks from the web › the picks come right below his own games (the arcade)
+  ok   Games, daily picks from the web › the section is called “Daily picks from around the web”
+  ok   Games, daily picks from the web › the picks are chosen for today’s Burlington date
+  ok   Games, daily picks from the web › five picks, each a link that opens a new tab with rel=noopener
+  ok   Games, daily picks from the web › and they mix all four categories
+  ok   Games, daily picks from the web › each tile goes to the file’s own link
+  ok   Games, daily picks from the web › a horizontal row, so it has the switch to a vertical list
+  ok   Games, daily picks from the web › no logos are scraped: a lettered tile in the category colour
+  ok   Games, daily picks from the web › “See all 19”
+  ok   Games, daily picks from the web › See all moves the keyboard into the opened list
+  ok   Games, daily picks from the web › it opens all 19 as a vertical list
+  ok   Games, daily picks from the web › grouped by category, in the file’s order
+  ok   Games, daily picks from the web › every row links out in a new tab, noopener, to the file’s link
+  ok   Games, daily picks from the web › each row says what it costs
+  ok   Games, daily picks from the web › the sticky Collapse bar rides under the open list
+  ok   Games, daily picks from the web › Collapse folds it back to the five
+  ok   Games, daily picks from the web › and keeps the keyboard on See all
+  ok   Games, daily picks from the web › the same date always gives the same picks
+  ok   Games, daily picks from the web › over 400 days, never the same set two days running
+  ok   Games, daily picks from the web › every day: five different games, one or more from each category
+  ok   Games, daily picks from the web › every game comes up within two months, and the mix does not repeat for 12 days
+  ok   Games, daily picks from the web › a small list (3 games, 2 shown; 2, 1; 4, 2; 5, 3) also never repeats two days running
+  ok   Games, daily picks from the web › pinned: Oct 19 and Oct 20 2026 give these picks (the arcade page must give the same)
+  ok   Games, daily picks from the web › the tiles are exactly dailyPicks for the Burlington date
+  ok   Games, daily picks from the web › no console errors
+  ok   Games, daily picks from the web › with no usable file, the shelf is not drawn (no empty heading)
+  ok   Games, daily picks from the web › and nothing logs an error
   ok   Games, VR corner › three picks, each on its official Meta store page
   ok   Games, VR corner › boxing, ping pong and golf: Stephen’s three
   ok   Games, VR corner › no mixed-reality starter and no headset ad
@@ -2979,7 +3008,7 @@
   ok   Habits, swipe to archive with Undo, drag and keys to reorder, edit (demo, 1280, dark) › habits: at most 2 subnav rows
   ok   Habits, swipe to archive with Undo, drag and keys to reorder, edit (demo, 1280, dark) › no console errors
   ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › twenty habits, in order
-  ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › twenty habits and a year of taps: a tap still shows at once (12, 12, 13, 12 ms)
+  ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › twenty habits and a year of taps: a tap still shows at once (12, 12, 12, 12 ms)
   ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › the heat map is all there, and four taps leave it as it was
   ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › every row keeps its seven dots and its 48px tap
   ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › the list is longer than the screen, and the panel scrolls
@@ -3044,7 +3073,7 @@
   ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 390, light) › habits: at most 2 subnav rows
   ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 390, light) › no console errors
   ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 1280, dark) › a first visit: one line, the starters and Add habit, nothing seeded, no sign-in wall
-  ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 1280, dark) › three habits, two tapped, at once (4 ms)
+  ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 1280, dark) › three habits, two tapped, at once (3 ms)
   ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 1280, dark) › and nothing personal went to the server (the season and the public forests only)
   ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 1280, dark) › kept on this phone, under one versioned key
   ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 1280, dark) › one quiet line under the list: Sync across devices
@@ -3105,7 +3134,7 @@
   ok   Habits, the forest: a tree per habit, a leaf per tap, flowers, help, starters (demo, 390) › the “?” opens How Habits works: four lines
   ok   Habits, the forest: a tree per habit, a leaf per tap, flowers, help, starters (demo, 390) › a starter adds a daily habit in one tap, and the starters step aside
   ok   Habits, the forest: a tree per habit, a leaf per tap, flowers, help, starters (demo, 390) › and plants its tree: no leaves yet (one name for the button, the picture itself decorative)
-  ok   Habits, the forest: a tree per habit, a leaf per tap, flowers, help, starters (demo, 390) › a tap grows a leaf, in the same click (3 ms)
+  ok   Habits, the forest: a tree per habit, a leaf per tap, flowers, help, starters (demo, 390) › a tap grows a leaf, in the same click (4 ms)
   ok   Habits, the forest: a tree per habit, a leaf per tap, flowers, help, starters (demo, 390) › Got it puts the help away
   ok   Habits, the forest: a tree per habit, a leaf per tap, flowers, help, starters (demo, 390) › one tree per habit, in the list’s order
   ok   Habits, the forest: a tree per habit, a leaf per tap, flowers, help, starters (demo, 390) › each tree has a leaf for every day done in the last 370

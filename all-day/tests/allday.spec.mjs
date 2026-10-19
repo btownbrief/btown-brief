@@ -2985,8 +2985,8 @@ async function theGames(browser, base) {
     await page.goto(base + '/all-day/?demo=1#games');
     await page.waitForSelector(gmPanel + ' .gm-cab.feat', { timeout: 15000 });
     const order = await page.$$eval(gmPanel + ' [data-sec]', (n) => n.map((x) => x.dataset.sec));
-    check(JSON.stringify(order.slice(0, 6)) === JSON.stringify(['quiz', 'arcade', 'playing', 'lfg', 'tags', 'vr']) && order.indexOf('board') > order.indexOf('challenge'),
-      'the News Quiz, then the games, then the people, then VR; the leaderboard below', order.join(' / '));
+    check(JSON.stringify(order.slice(0, 7)) === JSON.stringify(['quiz', 'arcade', 'picks', 'playing', 'lfg', 'tags', 'vr']) && order.indexOf('board') > order.indexOf('challenge'),
+      'the News Quiz, then the games, the daily picks from the web, then the people, then VR; the leaderboard below', order.join(' / '));
     const demo = await gamesDemo();
     const live = demo.catalog.games.filter((g) => g.live);
     const cabs = await page.$$eval(gmPanel + ' .gm-cab', (n) => n.map((x) => ({ k: x.dataset.k, play: x.querySelector('.gm-acts a').href, scr: x.querySelector('.gm-scr').href, inv: x.querySelector('[data-invite]').getAttribute('href') })));
@@ -3217,6 +3217,78 @@ async function theGames(browser, base) {
     await ctx.close();
   });
 
+  await group('Games, daily picks from the web', async () => {
+    const web = JSON.parse(await readFile(path.join(APP, 'data/web-games.json'), 'utf8'));
+    const catIds = web.categories.map((c) => c.id);
+    check(web.games.length === 19 && web.games.every((g) => g.name && g.publisher && g.description && /^https:\/\/[^\s]+$/.test(g.url) && catIds.includes(g.category) && ['Free', 'Free, has ads'].includes(g.cost) && /^\d{4}-\d{2}-\d{2}$/.test(g.verified)),
+      'web-games.json: 19 games, each with a name, publisher, https link, known category, cost label and verified date', web.games.length + ' games');
+    check(new Set(web.games.map((g) => g.id)).size === web.games.length && new Set(web.games.map((g) => g.url)).size === web.games.length, 'no game or link is listed twice', '');
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/all-day/#games');
+    await page.waitForSelector(gmPanel + ' [data-sec="picks"]', { timeout: 15000 });
+    await page.waitForSelector(gmPanel + ' .gm-web', { timeout: 8000 });
+    const order = await page.$$eval(gmPanel + ' [data-sec]', (n) => n.map((x) => x.dataset.sec));
+    check(order.indexOf('picks') === order.indexOf('arcade') + 1, 'the picks come right below his own games (the arcade)', order.join(' / '));
+    check(/Daily picks from around the web/.test(await page.$eval(gmPanel + ' [data-sec="picks"]', (n) => n.innerText)), 'the section is called “Daily picks from around the web”', '');
+    const today = await page.$eval(gmPanel + ' [data-web-today]', (n) => n.dataset.webToday);
+    check(today === etKey(Date.now()), 'the picks are chosen for today’s Burlington date', today);
+    const tiles = await page.$$eval(gmPanel + ' .gm-web', (n) => n.map((a) => ({ k: a.dataset.k, href: a.href, target: a.target, rel: a.rel })));
+    check(tiles.length === 5 && tiles.every((t) => t.target === '_blank' && /\bnoopener\b/.test(t.rel) && /^https:\/\//.test(t.href)), 'five picks, each a link that opens a new tab with rel=noopener', JSON.stringify(tiles.map((t) => t.k)));
+    const cats = new Set(tiles.map((t) => web.games.find((g) => 'web:' + g.id === t.k).category));
+    check(cats.size === 4, 'and they mix all four categories', [...cats].join(','));
+    check(JSON.stringify(tiles.map((t) => t.href)) === JSON.stringify(tiles.map((t) => web.games.find((g) => 'web:' + g.id === t.k).url)), 'each tile goes to the file’s own link', '');
+    check(!!(await page.$(gmPanel + ' [data-slot="picks"] .rail-wrap .rail')) && !!(await page.$(gmPanel + ' [data-web-all]')), 'a horizontal row, so it has the switch to a vertical list', '');
+    check(!(await page.$(gmPanel + ' [data-slot="picks"] img')), 'no logos are scraped: a lettered tile in the category colour', '');
+    /* the same list, expanded */
+    check(/^See all 19$/.test(await page.$eval(gmPanel + ' [data-web-all]', (b) => b.textContent.trim())), '“See all 19”', '');
+    await page.click(gmPanel + ' [data-web-all]');
+    check(await page.evaluate(() => document.activeElement && document.activeElement.hasAttribute('data-web-list')), 'See all moves the keyboard into the opened list', '');
+    check(await page.$$eval(gmPanel + ' [data-slot="picks"] .gm-wrow', (n) => n.length) === 19 && !(await page.$(gmPanel + ' [data-slot="picks"] .rail')), 'it opens all 19 as a vertical list', '');
+    const heads = await page.$$eval(gmPanel + ' [data-slot="picks"] .tdiv', (n) => n.map((x) => x.firstElementChild.textContent));
+    check(JSON.stringify(heads) === JSON.stringify(web.categories.map((c) => c.title)), 'grouped by category, in the file’s order', heads.join(' / '));
+    const rows = await page.$$eval(gmPanel + ' [data-slot="picks"] .gm-wrow a', (n) => n.map((a) => [a.target, a.rel, a.href]));
+    check(rows.every((r) => r[0] === '_blank' && /noopener/.test(r[1])) && JSON.stringify(rows.map((r) => r[2]).sort()) === JSON.stringify(web.games.map((g) => g.url).sort()), 'every row links out in a new tab, noopener, to the file’s link', '');
+    check(/Free, has ads/.test(await page.$eval(gmPanel + ' [data-slot="picks"]', (n) => n.innerText)), 'each row says what it costs', '');
+    const bar = await page.$eval(gmPanel + ' [data-slot="picks"] .collapsebar', (b) => ({ pos: getComputedStyle(b).position, n: b.querySelectorAll('button').length, label: b.querySelector('button').getAttribute('aria-label') }));
+    check(bar.pos === 'sticky' && bar.n === 1 && /Collapse/.test(bar.label), 'the sticky Collapse bar rides under the open list', JSON.stringify(bar));
+    await page.click(gmPanel + ' [data-slot="picks"] [data-collapse]');
+    check(await page.$$eval(gmPanel + ' [data-slot="picks"] .gm-web', (n) => n.length) === 5 && !(await page.$(gmPanel + ' [data-slot="picks"] .collapsebar')), 'Collapse folds it back to the five', '');
+    check(await page.evaluate(() => document.activeElement && document.activeElement.hasAttribute('data-web-all')), 'and keeps the keyboard on See all', '');
+    /* the rotation is a pure function of the date */
+    const probe = await page.evaluate(async (cfg) => {
+      const m = await import('/all-day/js/modes/games.js');
+      const days = [];
+      let d = new Date(Date.UTC(2026, 9, 1, 12));
+      for (let i = 0; i < 400; i++) { days.push(d.toISOString().slice(0, 10)); d = new Date(d.getTime() + 86400000); }
+      const m_ids = (c, x) => m.dailyPicks(c, x).map((g) => g.id);
+      const sets = days.map((x) => m.dailyPicks(cfg, x).map((g) => g.id));
+      const again = days.map((x) => m.dailyPicks(cfg, x).map((g) => g.id));
+      const key = (a) => a.slice().sort().join();
+      const seen = new Set(sets.slice(0, 60).flat());
+      const catsPer = sets.map((s) => new Set(s.map((id) => cfg.games.find((g) => g.id === id).category)).size);
+      return { same: JSON.stringify(sets) === JSON.stringify(again), repeat: sets.findIndex((s, i) => i && key(s) === key(sets[i - 1])), sizes: [...new Set(sets.map((s) => new Set(s).size === s.length ? s.length : -1))],
+        seen: seen.size, minCats: Math.min(...catsPer), distinct: new Set(sets.map(key)).size, small: [[3, 2], [2, 1], [4, 2], [5, 3]].map(([m, shown]) => { const c = { shown, categories: [{ id: 'a' }], games: Array.from({ length: m }, (_, i) => ({ id: 'g' + i, category: 'a' })) }; let bad = 0, prev = ''; days.forEach((x) => { const k = key(m_ids(c, x)); if (k === prev) bad++; prev = k; }); return bad; }),
+        oct19: m.dailyPicks(cfg, '2026-10-19').map((g) => g.id), oct20: m.dailyPicks(cfg, '2026-10-20').map((g) => g.id) };
+    }, web);
+    check(probe.same, 'the same date always gives the same picks', '');
+    check(probe.repeat === -1, 'over 400 days, never the same set two days running', 'first repeat at ' + probe.repeat);
+    check(JSON.stringify(probe.sizes) === '[5]' && probe.minCats === 4, 'every day: five different games, one or more from each category', JSON.stringify(probe.sizes) + ' ' + probe.minCats);
+    check(probe.seen === 19 && probe.distinct >= 12, 'every game comes up within two months, and the mix does not repeat for 12 days', probe.seen + ' games, ' + probe.distinct + ' distinct sets');
+    check(probe.small.every((b) => b === 0), 'a small list (3 games, 2 shown; 2, 1; 4, 2; 5, 3) also never repeats two days running', JSON.stringify(probe.small));
+    check(probe.oct19.join() === 'travle,la-times-crossword,strands,pips,murdle' && probe.oct20.join() === 'usa-today-crossword,bracket-city,wikitrivia,lichess-puzzle-of-the-day,geoguessr-daily-challenge', 'pinned: Oct 19 and Oct 20 2026 give these picks (the arcade page must give the same)', probe.oct19.join() + ' | ' + probe.oct20.join());
+    if (etKey(Date.now()) === '2026-10-19') check(probe.oct19.join() === tiles.map((t) => t.k.slice(4)).join(), 'the tiles are exactly dailyPicks for the Burlington date', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+    /* the file is missing or broken: the shelf is simply absent */
+    const bad = await newPage(browser, base, { routes: [[/\/all-day\/data\/web-games\.json/, { games: [] }]] });
+    await bad.page.goto(base + '/all-day/#games');
+    await bad.page.waitForSelector(gmPanel + ' [data-sec="arcade"]', { timeout: 15000 });
+    await bad.page.waitForTimeout(500);
+    check(await bad.page.$eval(gmPanel + ' [data-slot="picks"]', (n) => n.hidden && !n.firstChild), 'with no usable file, the shelf is not drawn (no empty heading)', '');
+    check(!bad.errors.length, 'and nothing logs an error', bad.errors.join(' | '));
+    await bad.ctx.close();
+  });
+
   await group('Games, VR corner', async () => {
     const { ctx, page, errors } = await newPage(browser, base);
     await page.goto(base + '/all-day/?demo=1#games/vr');
@@ -3238,8 +3310,9 @@ async function theGames(browser, base) {
     await page.goto(base + '/all-day/?demo=1#games');
     await page.waitForSelector(gmPanel + ' [data-you="ask"]', { timeout: 15000 });
     await page.waitForSelector(gmPanel + ' .gm-poll', { timeout: 15000 });
+    await page.waitForSelector('#subnav [data-chip="picks"]', { timeout: 8000 }).catch(() => {});
     const chipsAt = await page.$$eval('#subnav .chip', (c) => c.map((x) => x.textContent));
-    check(JSON.stringify(chipsAt) === JSON.stringify(['Arcade', 'Playing', 'Groups', 'Gamertags', 'VR', 'Challenge', 'Leaderboard', 'Champions']), 'the chip row is the table of contents', chipsAt.join(' / '));
+    check(JSON.stringify(chipsAt) === JSON.stringify(['Arcade', 'Picks', 'Playing', 'Groups', 'Gamertags', 'VR', 'Challenge', 'Leaderboard', 'Champions']), 'the chip row is the table of contents', chipsAt.join(' / '));
     check(await page.$$eval(gmPanel + ' [data-me]', (n) => n.length) === 0, 'before a name, nothing is marked', '');
     await findMe(page, 'Juniper');
     check(await page.$$eval(gmPanel + ' [data-me]', (n) => n.length) === 3, 'the demo reader is on three boards', '');
