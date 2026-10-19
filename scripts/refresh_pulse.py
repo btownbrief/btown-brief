@@ -134,6 +134,29 @@ WEBCOPY_URL_RE = re.compile(
 WPCOM_READ_RE = re.compile(
     r'<a[^>]+href="(https://public-api\.wordpress\.com/bar/\?[^"]+)"[^>]*>'
     r'\s*Read on blog\s*</a>', re.I)
+# A web copy is extracted from STEPHEN'S copy of the email, so its link can
+# name him: Semafor's carried his address in ?email=, Mailchimp's ?e= and
+# Morning Brew's mbuuid are his subscriber ids, and the beehiiv trackers
+# (Garbage Day, Daybreak) redirect to a ?jwt_token= that signs the clicker in
+# as him. All of it shipped in the public payload until 2026-10-19.
+#   SAFE_PARAMS name him and were checked (2026-10-19) to leave a link that
+#   still opens the edition when removed, so they simply go.
+#   A link still carrying an encoded token (is_opaque) is a click tracker:
+#   it is followed, tokens and all, to where it lands (settle_webcopies),
+#   and the landing loses every RECIPIENT_PARAMS entry. Stripping a tracker
+#   instead would publish a dead link (Daybreak's answers 400 without upn).
+#   A link that stays opaque is never published: the edition renders unlinked.
+SAFE_PARAMS = {"e", "email", "m", "mbuuid"}
+RECIPIENT_PARAMS = SAFE_PARAMS | {"upn", "jwt_token", "_bhlid", "token", "uid",
+                                  "isfreemail"}
+# an unbroken run this long of token characters is an encoded token; a long
+# hyphenated lowercase slug ("burlington-mayor-vows-to-…") is a headline
+TOKEN_RUN_RE = re.compile(r"[A-Za-z0-9_+=~.%]{40,}")
+SLUG_RE = re.compile(r"[a-z0-9]{1,20}(?:-[a-z0-9]{1,20})*(?:\.html?)?")
+OPAQUE_MIN = 60
+WEBCOPY_HOPS = 3
+WEBCOPY_RESOLVE_MAX = 25   # tracker lookups per run; repeats reuse the store
+
 # Subscription plumbing, not editions — skipped outright.
 NEWSLETTER_NOISE_RE = re.compile(
     r"^welcome to\b|confirm your|verify your|set (?:a new )?password|"
@@ -658,12 +681,10 @@ def parse_stream(raw):
             item["email"] = True
             desc = node.findtext("description") or ""
             match = WEBCOPY_TEXT_RE.search(desc) or WEBCOPY_URL_RE.search(desc)
-            if match:
-                item["webcopy"] = canon_url(html.unescape(match.group(1)))
-            else:
-                webcopy = wpcom_post_url(desc)
-                if webcopy:
-                    item["webcopy"] = webcopy
+            webcopy = (strip_recipient(html.unescape(match.group(1)), SAFE_PARAMS)
+                       if match else wpcom_post_url(desc))
+            if webcopy:
+                item["webcopy"] = webcopy
             if NEWSLETTER_NOISE_RE.search(item["title"]):
                 item["noise"] = True
         elif "reddit.com" in site or "ycombinator.com" in site:
@@ -690,6 +711,94 @@ def parse_stream(raw):
     return items
 
 
+def strip_recipient(url, params=RECIPIENT_PARAMS):
+    """A newsletter link without the params that identify its subscriber."""
+    url = canon_url(url)
+    if not url:
+        return ""
+    parts = urllib.parse.urlsplit(url)
+    query = "&".join(pair for pair in parts.query.split("&")
+                     if pair and pair.split("=", 1)[0].lower() not in params)
+    return urllib.parse.urlunsplit(
+        (parts.scheme, parts.netloc, parts.path, query, ""))
+
+
+def is_opaque(url):
+    """True when a link still carries something that could identify the
+    subscriber: an encoded token in its path or query, or an address."""
+    parts = urllib.parse.urlsplit(url or "")
+    pieces = [urllib.parse.unquote(piece) for piece in parts.path.split("/")]
+    pieces += [value for _, value in urllib.parse.parse_qsl(parts.query)]
+    if any(key.lower() in RECIPIENT_PARAMS
+           for key, _ in urllib.parse.parse_qsl(parts.query)):
+        return True   # a param that names the subscriber, whatever its length
+    return any("@" in piece or TOKEN_RUN_RE.search(piece)
+               or (len(piece) >= OPAQUE_MIN and not SLUG_RE.fullmatch(piece))
+               for piece in pieces)
+
+
+class _NoRedirect(urllib.request.HTTPRedirectHandler):
+    def redirect_request(self, *args, **kwargs):  # noqa: ARG002 — hop by hop
+        return None
+
+
+def follow_tracker(url, hops=WEBCOPY_HOPS, timeout=10):
+    """Where a click tracker sends its reader, one hop at a time, stopping
+    at the first landing that no longer looks opaque once stripped. Reads
+    headers only. "" when it never gets there."""
+    opener = urllib.request.build_opener(_NoRedirect)
+    for _ in range(hops):
+        try:
+            response = opener.open(urllib.request.Request(
+                url, headers={"User-Agent": UA}), timeout=timeout)
+            response.close()
+            return ""            # a 200 that is still opaque is the tracker itself
+        except urllib.error.HTTPError as exc:
+            location = exc.headers.get("Location") if exc.code in (301, 302, 303, 307, 308) else None
+            if not location:
+                return ""
+        except Exception:  # noqa: BLE001 — an unreachable tracker just stays unlinked
+            return ""
+        url = strip_recipient(urllib.parse.urljoin(url, location))
+        if url and not is_opaque(url):
+            return url
+    return ""
+
+
+def settle_webcopies(fresh_by_source, prev_by_source, resolve=follow_tracker,
+                     budget=WEBCOPY_RESOLVE_MAX):
+    """Every fresh email web copy that is still opaque after stripping gets
+    a public URL or none. An edition the store already holds (same title,
+    same timestamp) reuses what it settled on, so a tracker is followed once,
+    not every run; past the budget an edition waits for the next run.
+    Returns how many trackers were followed."""
+    followed = 0
+    for source_id, items in fresh_by_source.items():
+        held = {(item.get("t"), item.get("d")): item
+                for item in prev_by_source.get(source_id, [])}
+        kept = []
+        for item in items:
+            webcopy = item.get("webcopy")
+            if webcopy and is_opaque(webcopy):
+                when = item.get("when")
+                known = held.get((item.get("title"),
+                                  int(when.timestamp()) if when else None))
+                if known is not None:
+                    webcopy = "" if known.get("x") else known.get("u", "")
+                elif followed < budget:
+                    followed += 1
+                    webcopy = resolve(webcopy)
+                else:
+                    continue
+                if webcopy and not is_opaque(webcopy):
+                    item["webcopy"] = webcopy
+                else:
+                    item.pop("webcopy", None)   # renders unlinked, never leaks
+            kept.append(item)
+        fresh_by_source[source_id] = kept
+    return followed
+
+
 def wpcom_post_url(desc):
     """The public post URL behind a WordPress.com email's "Read on blog"."""
     match = WPCOM_READ_RE.search(desc or "")
@@ -699,7 +808,7 @@ def wpcom_post_url(desc):
     target = (urllib.parse.parse_qs(query).get("redirect_to") or [""])[0]
     if not re.match(r"https?://", target) or "wordpress.com" in site_host(target):
         return ""
-    return canon_url(target)
+    return strip_recipient(target)
 
 
 def newsletter_outlines(stream_items, previous, now_ts):
@@ -923,7 +1032,9 @@ def merge_source(previous, incoming, now_ts, cap=ITEM_CAP):
             fresh["du"] = item["thread"]
         if item.get("thread_n") is not None:
             fresh["dn"] = item["thread_n"]
-        key = dedupe_key(item["url"])
+        # keyed on the URL that gets STORED: an email's web copy, not its
+        # Inoreader link, or every run re-adds the edition as a new story
+        key = dedupe_key(fresh["u"])
         held = by_key.get(key)
         if held is None:
             fresh["_new"] = True
@@ -1320,9 +1431,16 @@ def run(args):
         section = paper_sections.get(item.get("s"))
         if section and not section_ok(section, item.get("u", "")):
             continue
-        prev_by_source.setdefault(item.get("s"), []).append(
-            {k: item[k] for k in ("t", "u", "d", "a", "i", "o", "du", "dn",
-                                  "r", "h", "hc", "x") if k in item})
+        kept = {k: item[k] for k in ("t", "u", "d", "a", "i", "o", "du", "dn",
+                                     "r", "h", "hc", "x") if k in item}
+        if item.get("s") in newsletter_ids and not item.get("x"):
+            # and the subscriber-token scrub: a stored web copy that names
+            # Stephen loses the params, or leaves the store if it still
+            # does (the stream re-offers it and settle_webcopies settles it)
+            kept["u"] = strip_recipient(kept.get("u", ""))
+            if not kept["u"] or is_opaque(kept["u"]):
+                continue
+        prev_by_source.setdefault(item.get("s"), []).append(kept)
 
     by_site, by_title, by_nl_title = source_index(sources)
     fresh_by_source = {}
@@ -1338,6 +1456,10 @@ def run(args):
                 unmatched += 1
                 continue
             fresh_by_source.setdefault(source_id, []).append(item)
+
+    resolved = settle_webcopies(fresh_by_source, prev_by_source)
+    if resolved:
+        print(f"newsletters: followed {resolved} click trackers to their public copies")
 
     matched = sum(len(items) for items in fresh_by_source.values())
     if unmatched > matched:
@@ -1777,6 +1899,47 @@ def selftest():
     assert wpcom_post_url(wp) == "http://thevpo.org/2026/10/17/a-post/"
     assert wpcom_post_url(wp.replace("Read on blog", "Unsubscribe")) == ""
     assert wpcom_post_url(wp.replace("thevpo.org", "wordpress.com")) == ""
+
+    # subscriber tokens never reach the payload (2026-10-19): the params go,
+    # a click tracker is followed to its landing, an opaque link stays unlinked
+    assert strip_recipient("https://semafor.com/s/abc?email=me%40x.com") == "https://semafor.com/s/abc"
+    assert strip_recipient("https://us2.campaign-archive.com/?e=1234567890&u=ab&id=cd") \
+        == "https://us2.campaign-archive.com/?u=ab&id=cd"
+    assert strip_recipient("https://x.example/p/a?utm_source=n&_bhlid=1&jwt_token=eyJ") \
+        == "https://x.example/p/a"
+    tracker = "https://elink1.mail.example/ss/c/" + "t" * 300
+    assert is_opaque(tracker) and is_opaque("https://a.com/x?who=me%40x.com")
+    assert not is_opaque("https://us2.campaign-archive.com/?u=ab&id=cd")
+    # a tracker whose token is a param is followed whole, never stripped dead
+    assert is_opaque("https://elink.mail.example/ls/click?upn=short")
+    assert strip_recipient("https://elink.mail.example/ls/click?upn=x", SAFE_PARAMS) \
+        == "https://elink.mail.example/ls/click?upn=x"
+    # a long headline slug is not a token; a base64 blob or a JWT is
+    assert not is_opaque("https://mailchi.mp/sevendaysvt/" + "-".join(["burlington"] * 12))
+    assert is_opaque("https://a.com/p?x=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjM0NTY3ODkwIn0")
+    when = datetime.fromtimestamp(1_754_000_000, tz=timezone.utc)
+    fresh = {"nl": [{"title": "New", "when": when, "webcopy": tracker},
+                    {"title": "Held", "when": when, "webcopy": tracker + "2"},
+                    {"title": "Dead", "when": when, "webcopy": tracker + "3"},
+                    {"title": "Over", "when": when, "webcopy": tracker + "4"},
+                    {"title": "Plain", "when": when, "webcopy": "https://a.com/p/plain"}]}
+    store = {"nl": [{"t": "Held", "d": 1_754_000_000, "u": "https://a.com/p/held"}]}
+    calls = []
+
+    def fake_resolve(url):
+        calls.append(url)
+        return "https://a.com/p/new" if url == tracker else ""
+    assert settle_webcopies(fresh, store, fake_resolve, budget=2) == 2
+    assert calls == [tracker, tracker + "3"]                      # Held reused, Over waits
+    got = {item["title"]: item.get("webcopy") for item in fresh["nl"]}
+    assert got == {"New": "https://a.com/p/new", "Held": "https://a.com/p/held",
+                   "Dead": None, "Plain": "https://a.com/p/plain"}, got
+    # one edition seen on two runs is one story: the merge keys on the web copy
+    issue = {"title": "Issue", "url": "https://www.inoreader.com/a/1", "email": True,
+             "webcopy": "https://a.com/p/i", "audio": "", "image": "", "when": when}
+    first, _ = merge_source([], [issue], 1_754_000_100)
+    twice, added = merge_source(first, [dict(issue)], 1_754_000_100)
+    assert len(twice) == 1 and added == 0
 
     # a pinned feed keeps its id through a title rename (the 2026-08 churn
     # that forked Vermont Public and VTDigger), and keeps the suffix it only
