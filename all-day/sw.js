@@ -13,7 +13,7 @@
    audio — episodes are large and the browser's own HTTP cache handles them
    better than we would. */
 
-const VERSION = 'all-day-v83';   // every tab's floating section pill
+const VERSION = 'all-day-v85';   // every tab's floating section pill
 const SHELL = VERSION + '-shell';
 const DATA = 'all-day-data';   // unversioned on purpose: survives shell bumps
 
@@ -21,7 +21,7 @@ const SHELL_URLS = [
   './', './index.html', './manifest.webmanifest', './css/tokens.css', './css/app.css',
   './js/main.js', './js/app.js', './js/store.js', './js/wire.js', './js/ui.js',
   './js/liquid.js', './js/sections.js', './js/gestures.js', './js/auth.js',
-  './js/modes/wire.js', './js/modes/wire-demo.js', './js/modes/wire-photos.js', './js/modes/wire-square.js', './js/modes/watch.js', './js/modes/food.js',
+  './js/modes/wire.js', './js/modes/wire-demo.js', './js/modes/wire-photos.js', './js/modes/wire-square.js', './js/modes/wire-recaps.js', './js/modes/watch.js', './js/modes/food.js',
   './js/modes/people.js', './js/modes/whatnow.js', './js/modes/vintage.js', './js/modes/habits.js',
   './js/modes/onair.js', './js/modes/games.js',
   /* What Now's engine and its feeds' loader, imported by modes/whatnow.js */

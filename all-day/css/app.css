@@ -934,6 +934,11 @@ body.chrome-away .mast { transform: translateY(-100%); }
 .th-free { --th: color-mix(in srgb, var(--mark-7) 75%, var(--ink)); }
 .chips.themes .chip[class*="th-"]::before { content: ""; width: 8px; height: 8px; border-radius: var(--r-round); background: var(--th); }
 .lrow.mission[class*="th-"] .num { color: var(--th); }
+/* a mission's teaser, one line under its title that leads into the sheet;
+   in the sheet, a place's line on why it is the pick */
+.lrow.mission .tz { font-size: var(--fs-meta); color: var(--ink-2); margin-top: 2px; line-height: 1.35; }
+.lrow.mission.done .tz { color: var(--ink-3); }
+.sheet-row .d.why { color: var(--ink-2); }
 
 /* archetype tiles */
 .arch { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 0 var(--gutter); }
@@ -1600,9 +1605,9 @@ body.wire-float .wfloat { opacity: 1; visibility: visible; transform: none; tran
 .wband.fits .wband-all, .wband.fits .wband-foot:not(:has(.wf-raw)) { display: none; }
 
 /* the head of the paper: whose top stories these are, when it updated */
-.whead { padding: var(--s5) var(--gutter) var(--s3); }
+.whead { padding: var(--s4) var(--gutter) var(--s2); }
 .whead h2 { font-family: var(--serif); font-size: var(--fs-w-head); font-weight: 500; line-height: var(--lh-tight); letter-spacing: -.005em; }
-.whead-row { display: flex; align-items: center; gap: var(--s3); margin-top: var(--s2); }
+.whead-row { display: flex; align-items: center; gap: var(--s3); margin-top: var(--s1); }
 .whead-row .s { font-size: var(--fs-w-meta); color: var(--ink-3); line-height: 1.3; min-width: 0; }
 .wfilt { display: flex; align-items: center; flex-wrap: wrap; gap: var(--s2); margin-top: var(--s3); font-size: var(--fs-w-meta); color: var(--ink-2); }
 .wfilt b { font-weight: 600; color: var(--ink); }
@@ -1619,6 +1624,15 @@ body.wire-float .wfloat { opacity: 1; visibility: visible; transform: none; tran
 .w-meta .geo.local { color: var(--local); font-weight: 600; }
 .w-meta .w-who { flex: 1 1 0; min-width: 0; display: flex; flex-wrap: wrap; align-items: center; column-gap: 6px; row-gap: 0; }
 .w-meta .act { width: var(--hit); height: var(--hit); min-width: var(--hit); padding: 0; justify-content: center; flex: 0 0 auto; }
+/* the upvote carries its count: as wide as it needs, never under 44px */
+.w-meta .act.w-up { width: auto; padding: 0 8px; gap: 3px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.w-meta .act.w-up .n:empty { display: none; }
+/* beside a picture the row is narrow: the source over its age, so the four
+   buttons keep their 44px and the name keeps its room */
+.wrow.has-thumb .w-meta .w-who { row-gap: 2px; }
+.wrow.has-thumb .w-meta .srcbtn { flex: 0 0 100%; padding: 0; text-align: left; }
+.wrow.has-thumb .w-meta .srcbtn + .dot { display: none; }
+.w-meta .act .i { width: 19px; height: 19px; }
 .w-meta .act::after { display: none; }
 .w-meta .act.star { margin-right: -12px; }
 .w-rank { flex: 0 0 auto; min-width: 24px; height: 24px; padding: 0 6px; border-radius: var(--r-pill); display: inline-flex; align-items: center; justify-content: center;
@@ -1627,28 +1641,28 @@ body.wire-float .wfloat { opacity: 1; visibility: visible; transform: none; tran
 /* a top story: the picture, full bleed, then the words */
 .feed.wire .card.wlead, .card.wlead { padding: 0 0 var(--s3); border-bottom: 1px solid var(--line); }
 .wlead .w-pic { position: relative; display: block; aspect-ratio: 16 / 9; overflow: hidden; background: var(--paper-2); }
-.wlead .w-body { padding: var(--s4) var(--gutter) 0; }
-.wlead:not(.has-pic) .w-body { padding-top: var(--s5); }
+.wlead .w-body { padding: var(--s3) var(--gutter) 0; }
+.wlead:not(.has-pic) .w-body { padding-top: var(--s4); }
 .wlead .eyebrow { display: block; margin-bottom: var(--s2); }
-.wlead .c-title { font-family: var(--serif); font-size: var(--fs-w-lead); font-weight: 500; line-height: 1.18; letter-spacing: -.005em;
+.wlead .c-title { font-family: var(--serif); font-size: var(--fs-w-lead); font-weight: 500; line-height: 1.2; letter-spacing: -.005em;
   display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
 .wlead.is-read .c-title { color: var(--ink-2); font-weight: 500; }
-.w-dek { margin-top: var(--s2); font-size: var(--fs-w-dek); line-height: 1.45; color: var(--ink-2);
+.w-dek { margin-top: var(--s1); font-size: var(--fs-w-dek); line-height: 1.4; color: var(--ink-2);
   display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
 .wlead .w-meta { margin-top: var(--s1); }
 
 /* a story row: the picture on the left, the headline, the meta line */
-.feed.wire .card.wrow, .card.wrow { display: grid; grid-template-columns: var(--w-thumb) minmax(0, 1fr); column-gap: 14px; align-items: start;
-  padding: var(--s4) var(--gutter) var(--s1); border-bottom: 1px solid var(--line-soft); }
+.feed.wire .card.wrow, .card.wrow { display: grid; grid-template-columns: var(--w-thumb) minmax(0, 1fr); column-gap: 12px; align-items: start;
+  padding: var(--s3) var(--gutter) 2px; border-bottom: 1px solid var(--line-soft); }
 .feed.wire .card.wrow:not(.has-thumb), .card.wrow:not(.has-thumb) { grid-template-columns: minmax(0, 1fr); }
 .wrow .w-thumb { position: relative; display: block; width: var(--w-thumb); height: var(--w-thumb); border-radius: var(--r-thumb); overflow: hidden; background: var(--paper-2); }
-.wrow .c-title { font-size: var(--fs-w-title); font-weight: 600; line-height: 1.28; letter-spacing: -.005em;
+.wrow .c-title { font-size: var(--fs-w-title); font-weight: 600; line-height: 1.25; letter-spacing: -.005em;
   display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
 .wrow.wpost .c-title { font-weight: 500; -webkit-line-clamp: 4; }
 .wrow.is-read .c-title { color: var(--ink-2); font-weight: 500; }
 .wrow.wpost.is-read .c-title { font-weight: 400; }
 .wrow .eyebrow { display: block; margin-bottom: var(--s1); }
-.wrow .w-meta { margin-top: 2px; }
+.wrow .w-meta { margin-top: 0; }
 .feed.wire .card.w-local { background: var(--w-local-tint); }
 
 /* top stories: a short list, then the rest on request */
@@ -1656,12 +1670,106 @@ body.wire-float .wfloat { opacity: 1; visibility: visible; transform: none; tran
 .wleads > .card:last-child { border-bottom: 0; }
 .wmore-btn { display: flex; width: calc(100% - 2 * var(--gutter)); margin: var(--s3) var(--gutter) var(--s4); height: var(--hit); font-size: var(--fs-button); }
 .wsub { padding: var(--s5) var(--gutter) var(--s1); font-size: var(--fs-w-meta); font-weight: 700; color: var(--ink-2); }
-.feed.wire .tdiv { padding: var(--s6) var(--gutter) var(--s2); font-size: var(--fs-w-meta); color: var(--ink-2); border-bottom: 1px solid var(--line-soft); }
-.feed.wire .sec { padding-top: var(--s8); }
+.feed.wire .tdiv { padding: var(--s5) var(--gutter) var(--s2); font-size: var(--fs-w-meta); color: var(--ink-2); border-bottom: 1px solid var(--line-soft); }
+.feed.wire .sec { padding-top: var(--s6); }
 .feed.wire .sec h2 { font-size: var(--fs-w-head); }
 .feed.wire .sec p { font-size: var(--fs-w-meta); }
 .feed.wire .note.pad { padding: var(--s4) var(--gutter); font-size: var(--fs-w-meta); }
 .feed.wire .newline { padding-top: var(--s3); padding-bottom: var(--s3); }
+
+/* Most upvoted, at the top of an earlier day */
+.wpop { border-bottom: 1px solid var(--line); }
+.feed.wire .wpop .sec { padding-top: var(--s4); }
+
+/* Recaps, the fourth word, and its water */
+.wbar .wmode[data-view="recaps"].on { background: var(--liq-recaps); color: var(--liq-recaps-ink); }
+
+/* Feed | Topics, beside "Updated" in the head: small, poured like the big
+   switches (liquid.js), a plain fill without the canvas */
+.whead-row .s { flex: 1 1 auto; }
+.wnsw { position: relative; flex: 0 0 auto; display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: 2px; padding: 3px;
+  border-radius: var(--r-pill); background: var(--paper-2); border: 1px solid var(--line-soft); }
+.wnsw.liquid { overflow: hidden; }
+.wnsw-b { position: relative; z-index: 1; height: 34px; padding: 0 14px; border-radius: var(--r-pill); font-size: var(--fs-button); font-weight: 700;
+  color: var(--ink-2); white-space: nowrap; }
+.wnsw-b:hover { color: var(--ink); }
+.wnsw-b[data-news="feed"].on { background: var(--liq-news); color: var(--liq-news-ink); }
+.wnsw-b[data-news="topics"].on { background: var(--liq-topics); color: var(--liq-topics-ink); }
+.wnsw.liquid .wnsw-b.on { background: transparent; }
+
+/* Topics view: a shelf per topic, four stories, then "All N" */
+.wshelf { border-bottom: 1px solid var(--line); }
+.feed.wire .wshelf .sec { padding-top: var(--s6); }
+.feed.wire .wshelf .sec h2 { font-size: var(--fs-sec); }
+.wshelf .wshelf-all { margin-top: var(--s2); }
+.wshelf > .card:last-of-type { border-bottom: 0; }
+
+/* a sport with nothing today stays on the row, quieter */
+.chip.is-none:not(.on) { opacity: .55; }
+
+/* a recap: a big card, the kind in Lora, where it came from, the intro,
+   then its headlines as rows that link out */
+.rcap { margin: var(--s4) var(--gutter) var(--s5); padding: var(--s4) var(--s4) var(--s2); border-radius: var(--r-media);
+  background: var(--recap-soft); border: 1px solid var(--recap-line); }
+.rc-head { display: flex; align-items: baseline; gap: var(--s2); }
+.rc-t { font-family: var(--serif); font-size: var(--fs-w-head); font-weight: 500; line-height: var(--lh-tight); color: var(--recap); }
+.rc-head .rc-t { flex: 1 1 auto; min-width: 0; }
+.rc-share { flex: 0 0 auto; width: var(--hit); height: var(--hit); padding: 0; justify-content: center; margin: -10px -10px -10px -4px; align-self: center; }
+.rc-when { flex: 0 0 auto; font-size: var(--fs-w-meta); font-weight: 600; color: var(--ink-3); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.rc-from { margin-top: var(--s1); font-size: var(--fs-meta); font-weight: 600; color: var(--ink-3); }
+.rc-intro { margin-top: var(--s3); font-size: var(--fs-w-dek); line-height: 1.45; color: var(--ink); }
+.rc-list { list-style: none; margin: var(--s3) 0 0; padding: 0; }
+.rc-list li + li { border-top: 1px solid var(--recap-line); }
+.rc-b { display: block; padding: var(--s3) 0; }
+.rc-bt { display: block; font-size: var(--fs-w-title); font-weight: 600; line-height: 1.28; color: var(--ink); }
+.rc-b:hover .rc-bt { text-decoration: underline; text-underline-offset: 3px; }
+.rc-bn { display: block; margin-top: 3px; font-size: var(--fs-w-meta); line-height: 1.4; color: var(--ink-2); }
+.rc-bn b { font-weight: 700; color: var(--recap); margin-right: 6px; }
+.rcap .rc-all { width: 100%; height: var(--hit); margin: var(--s1) 0 var(--s2); font-size: var(--fs-button); border-color: var(--recap-line); }
+.rcap .collapsebar { margin: 0 calc(-1 * var(--s4)); }
+.wrecaps .wrc-prev { margin-top: var(--s2); }
+.wrecaps .wrc-empty { padding: var(--s8) var(--gutter); }
+
+/* News' strip: the newest recap of each kind, small, in a row; "See as a
+   list" lays them out down the page */
+.rc-strip { border-bottom: 1px solid var(--line); padding-bottom: var(--s3); }
+.feed.wire .rc-strip .sec { align-items: center; padding-top: var(--s6); }
+/* "See as a list" stays right above its row (listRail's order), lifted
+   onto the head's line so it costs no row of its own */
+.feed.wire .rc-strip .sec { padding-right: calc(var(--gutter) + 120px); }
+.rc-strip .sec + .railmode { position: relative; z-index: 1; margin-top: -46px; padding-bottom: 16px; pointer-events: none; }
+.rc-strip .sec + .railmode .btn { pointer-events: auto; }
+.rc-rail { align-items: stretch; }
+.rc-mini { display: flex; flex-direction: column; gap: var(--s1); width: 272px; padding: var(--s3) var(--s3) var(--s2); border-radius: var(--r-media);
+  background: var(--recap-soft); border: 1px solid var(--recap-line); text-align: left; color: var(--ink); }
+.rc-mini:active { transform: scale(.98); }
+.rc-mini .rc-t { font-size: var(--fs-date); }
+.rc-mini .rc-from { display: block; margin-top: 0; font-size: var(--fs-small); }
+.rc-mini .rc-intro { margin-top: var(--s1); font-size: var(--fs-body); line-height: 1.4;
+  display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.rc-mlist { display: grid; gap: 4px; margin-top: var(--s1); padding-top: var(--s2); border-top: 1px solid var(--recap-line); }
+.rc-mb { font-size: var(--fs-button); font-weight: 600; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.rc-n { margin-top: auto; padding-top: var(--s1); display: inline-flex; align-items: center; gap: 2px; font-size: var(--fs-meta); font-weight: 700; color: var(--recap); }
+.rc-n .i { width: 16px; height: 16px; }
+.rc-mini.rc-end { width: 132px; align-items: center; justify-content: center; gap: var(--s2); text-align: center; }
+.rc-mini.rc-end .i { width: 22px; height: 22px; color: var(--recap); }
+.rc-rail.aslist { gap: var(--s3); }
+.rc-rail.aslist > .rc-mini { width: auto; }
+.rc-rail.aslist > .rc-mini.rc-end { flex-direction: row; padding: var(--s3); }
+
+/* Photos, Everything: a picture from everywhere gets its credit and a
+   link to where it ran; a Grok "Pictures of the day" post is X's own embed */
+.pm-pic.r43 { aspect-ratio: 4 / 3; }
+.pm-credit { margin-top: 2px; font-size: var(--fs-small); color: var(--ink-3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.card.pm .c-foot a.pm-out { display: inline-flex; align-items: center; gap: 3px; min-width: 0; color: var(--ink-2); font-weight: 600; }
+.card.pm .c-foot a.pm-out .i { width: 14px; height: 14px; flex: 0 0 auto; }
+.card.pm .c-foot a.pm-out:hover { text-decoration: underline; }
+.pm-x { padding-top: var(--s3); }
+.pm-xbox { padding: 0 var(--gutter); min-height: 120px; }
+.pm-xcard { display: block; padding: var(--s4); border-radius: var(--r-media); border: 1px solid var(--line); background: var(--raised); color: var(--ink); }
+.pm-xcard .pm-xt { display: block; font-size: var(--fs-w-dek); font-weight: 600; line-height: 1.35; }
+.pm-xcard .pm-xh { display: inline-flex; align-items: center; gap: 4px; margin-top: var(--s2); font-size: var(--fs-meta); font-weight: 600; color: var(--ink-2); }
+.pm-xcard .pm-xh .i { width: 14px; height: 14px; }
 
 /* the Filters sheet, and the same controls in the wide screen's rail */
 .wf { display: grid; gap: var(--s1); padding-bottom: var(--s2); }

@@ -40,6 +40,25 @@ If the Top 100+ changes under the copy (an entry's title no longer matches
 the one the paragraph was written for), the mission keeps the guide's own
 words and is marked needs_check.
 
+Teasers and notes (2026-10-19, the nested re-curation). Each Top 100+ entry
+carries a `teaser`, one line of at most 90 characters that sits under the
+title on the guide's card and the What Now tile; the build copies it into
+the mission and holds it to the paragraph's style rules plus no colon. The
+copy's `notes` give each place one line (at most 80 characters) on what
+makes it the pick for that mission, shown under the place in the mission's
+sheet.
+
+Done marks. A reader's Mark done used to be stored under the mission's rank
+("m17"), so re-ranking the list would have moved every mark to a different
+mission. Each mission now has a `mark`, a key from m200 to m999 given once in
+the copy file and never reused or renumbered, and What Now stores marks under
+it (on the device and on the account, whose keys must match ^m[0-9]{1,3}$).
+Keys m1 to m199 are the 2026-10-18 list's ranks, the old scheme. A mission's
+`was` names the old ranks it replaces, so What Now can move a reader's old
+marks onto it: when several old entries were nested into one mission, any
+one of them done marks the new one done. Every old rank is claimed by at
+most one mission, which the build checks.
+
 Run:  python3 scripts/build_missions.py            writes data/missions.json
       python3 scripts/build_missions.py --sources  prints the facts per entry
                                                    (what a drafter writes from)
@@ -66,6 +85,10 @@ THEMES = ["eat", "drink", "outdoors", "water", "culture", "play", "family", "win
 NEAR_M = 800          # a neighbor is within this, as the crow flies
 NEIGHBORS = 2         # added to an entry that names one place
 WORDS = (60, 120)
+TEASER_MAX = 90
+NOTE_MAX = 80
+MARK = re.compile(r"^m([2-9]\d\d)$")      # stable done-mark keys, m200 to m999
+LEGACY = re.compile(r"^m(\d{1,3})$")      # the old rank keys, m1 to m199
 
 # words a paragraph may capitalize without the sources spelling them out
 # ("Street" spelled out where a source abbreviates it "St."; the name before
@@ -234,6 +257,22 @@ def grounding(paragraph: str, src: str, legs: list) -> list:
     return sorted(set(why))
 
 
+def line_style(n: int, what: str, text: str, most: int) -> list:
+    """A teaser or a place note: one short line, no dash, colon or exclamation point."""
+    bad = []
+    if not text or not text.strip():
+        return ["%d: no %s" % (n, what)]
+    if len(text) > most:
+        bad.append("%d: %s is %d characters (at most %d)" % (n, what, len(text), most))
+    if re.search(r"[—–]|\s--\s", text):
+        bad.append("%d: a dash in the %s" % (n, what))
+    if re.search(r":(?!\d)", text):
+        bad.append("%d: a colon in the %s" % (n, what))
+    if "!" in text:
+        bad.append("%d: an exclamation point in the %s" % (n, what))
+    return bad
+
+
 def style(n: int, paragraph: str) -> list:
     bad = []
     count = len(paragraph.split())
@@ -254,10 +293,40 @@ def load():
     return top["items"], things, {t["id"]: t for t in things}
 
 
-def place_out(p: dict) -> dict:
+def place_out(p: dict, notes: dict) -> dict:
     url = p.get("website") or ""
-    return {"id": p["id"], "name": p["name"], "url": url if re.match(r"^https?://", url) else "",
-            "neighborhood": p.get("neighborhood") or "", "nearby": p["_role"] == "nearby"}
+    out = {"id": p["id"], "name": p["name"], "url": url if re.match(r"^https?://", url) else "",
+           "neighborhood": p.get("neighborhood") or "", "nearby": p["_role"] == "nearby"}
+    if notes.get(p["id"]):
+        out["note"] = notes[p["id"]].strip()
+    return out
+
+
+def marks_check(copy: dict, items: list) -> list:
+    """Every mission has its own stable mark; every old rank goes to one mission at most."""
+    bad, seen, claimed = [], {}, {}
+    for n in range(1, len(items) + 1):
+        c = copy.get(str(n)) or {}
+        mk = c.get("mark")
+        if not (isinstance(mk, str) and MARK.match(mk)):
+            bad.append("%d: mark %r is not m200 to m999" % (n, mk))
+        elif mk in seen:
+            bad.append("%d: mark %s is already mission %d's" % (n, mk, seen[mk]))
+        else:
+            seen[mk] = n
+        was = c.get("was", [])
+        if not isinstance(was, list):
+            bad.append("%d: was is not a list" % n)
+            continue
+        for k in was:
+            m = LEGACY.match(k) if isinstance(k, str) else None
+            if not m or not 1 <= int(m.group(1)) <= 199:
+                bad.append("%d: was %r is not an old rank key (m1 to m199)" % (n, k))
+            elif k in claimed:
+                bad.append("%d: %s already moves to mission %d" % (n, k, claimed[k]))
+            else:
+                claimed[k] = n
+    return bad
 
 
 def sources() -> int:
@@ -292,13 +361,26 @@ def main() -> int:
         c = copy.get(str(n)) or {}
         chosen = c.get("with") if isinstance(c.get("with"), list) else None
         errors += ["%d: no place %r in things.json" % (n, i) for i in (chosen or []) if i not in by_id]
+        errors += ["%d: no place %r in things.json" % (n, i) for i in e["things"] if i not in by_id]
         f = facts(by_id, things, e, chosen)
+        notes = c.get("notes") if isinstance(c.get("notes"), dict) else {}
+        ids = {p["id"] for p in f["places"]}
+        for i, txt in notes.items():
+            if i not in ids:
+                errors.append("%d: a note for %r, which is not one of its places" % (n, i))
+            else:
+                errors += line_style(n, "note for " + i, txt, NOTE_MAX)
+        teaser = (e.get("teaser") or "").strip()
+        errors += line_style(n, "teaser", teaser, TEASER_MAX)
         note = []
         if c and c.get("source") == e["title"] and c.get("paragraph"):
             title, para, theme = c.get("title") or e["title"], c["paragraph"].strip(), c.get("theme")
             errors += style(n, para)
             note += grounding(para, source_text(e, f), f["legs"])
             note += ["title: " + x for x in grounding(title, source_text(e, f), f["legs"]) if title != e["title"]]
+            note += ["teaser: " + x for x in grounding(teaser, source_text(e, f), f["legs"])]
+            for i, txt in notes.items():
+                note += ["note for " + i + ": " + x for x in grounding(txt, source_text(e, f), f["legs"])]
             if c.get("needs_check"):
                 note.insert(0, c.get("check_note") or "the drafter asked for a read")
         else:
@@ -307,13 +389,18 @@ def main() -> int:
         if theme not in THEMES:
             errors.append("%d: theme %r is not one of %s" % (n, theme, ", ".join(THEMES)))
         missions.append({
-            "n": n, "k": "m" + str(n), "title": title, "theme": theme, "paragraph": para,
+            "n": n, "k": "m" + str(n), "mark": c.get("mark"), "was": c.get("was", []),
+            "title": title, "teaser": teaser, "theme": theme, "paragraph": para,
             "needs_check": bool(note), **({"check_note": "; ".join(note)} if note else {}),
-            "places": [place_out(p) for p in f["places"]],
+            "places": [place_out(p, notes) for p in f["places"]],
             "legs": f["legs"],
             "top100": e["title"],
         })
+    if not check:
+        errors += marks_check(copy, items)
     if check:
+        if len(copy) == len(items):
+            errors += marks_check(copy, items)
         for m in missions:
             if m.get("check_note"):
                 log("  %d: %s" % (m["n"], m["check_note"]))
@@ -331,6 +418,8 @@ def main() -> int:
         "source": "data/guides.json (top-100) and data/things.json; words from scripts/missions_copy.json",
         "themes": THEMES,
         "count": len(missions),
+        "marks": "Mark done is stored under each mission's mark (m200 to m999), which never changes. "
+                 "Keys m1 to m199 are the 2026-10-18 list's ranks; a mission's was names the ones it replaces.",
         "needs_check": sum(m["needs_check"] for m in missions),
         "missions": missions,
     }

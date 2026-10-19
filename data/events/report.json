@@ -1,29 +1,29 @@
 {
- "generated": "2026-10-18T18:35:15-04:00",
+ "generated": "2026-10-19T12:37:26-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
    "count": 8,
-   "seconds": 5.6
+   "seconds": 5.8
   },
   "breweries": {
    "label": "Breweries & Taprooms",
-   "count": 76,
-   "seconds": 1.3
+   "count": 73,
+   "seconds": 4.5
   },
   "brownell": {
    "label": "Brownell Library",
    "count": 89,
-   "seconds": 3.3
+   "seconds": 8.2
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
-   "count": 210,
-   "seconds": 4.4
+   "count": 203,
+   "seconds": 4.1
   },
   "churchst": {
    "label": "Church Street Marketplace",
-   "count": 74,
+   "count": 75,
    "seconds": 2.0
   },
   "echo": {
@@ -34,7 +34,7 @@
   "eventbrite": {
    "label": "Eventbrite",
    "count": 0,
-   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-10-18&end_date=2026-12-17&page=1 (HTTP Error 405: Not Allowed)"
+   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-10-19&end_date=2026-12-18&page=1 (HTTP Error 405: Not Allowed)"
   },
   "facebook": {
    "label": "Facebook (manual drops)",
@@ -44,17 +44,17 @@
   "farmersmarket": {
    "label": "Burlington Farmers Market",
    "count": 2,
-   "seconds": 0.1
+   "seconds": 0.4
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
    "count": 223,
-   "seconds": 65.7
+   "seconds": 68.5
   },
   "flynn": {
    "label": "The Flynn",
-   "count": 17,
-   "seconds": 0.3
+   "count": 16,
+   "seconds": 0.6
   },
   "greenfc": {
    "label": "Vermont Green FC",
@@ -63,61 +63,60 @@
   },
   "helloburlington": {
    "label": "Hello Burlington",
-   "count": 631,
-   "seconds": 32.0
+   "count": 623,
+   "seconds": 30.8
   },
   "higherground": {
    "label": "Higher Ground",
    "count": 0,
    "error": "HTTP Error 403: Forbidden",
-   "staleDays": 18
+   "staleDays": 19
   },
   "instagram": {
    "label": "Instagram (Scrape Creators)",
    "count": 1,
-   "seconds": 26.8
+   "seconds": 31.6
   },
   "loveburlington": {
    "label": "Love Burlington",
-   "count": 391,
-   "seconds": 72.1
+   "count": 392,
+   "seconds": 72.7
   },
   "meetup": {
    "label": "Meetup",
    "count": 55,
-   "seconds": 103.9
+   "seconds": 102.4
   },
   "monkeyhouse": {
    "label": "The Monkey House",
    "count": 19,
-   "seconds": 1.4
+   "seconds": 1.5
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
-   "count": 70,
-   "seconds": 15.7
+   "count": 68,
+   "seconds": 16.0
   },
   "radiobean": {
    "label": "Radio Bean",
    "count": 0,
    "error": "HTTP Error 404: Not Found",
-   "staleDays": 10
+   "staleDays": 11
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
-   "count": 0,
-   "error": "events listing markup not found (page layout changed?)",
-   "staleDays": 0
+   "count": 100,
+   "seconds": 5.7
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
    "count": 15,
-   "seconds": 21.9
+   "seconds": 21.3
   },
   "sevendays": {
    "label": "Seven Days",
-   "count": 2369,
-   "seconds": 2.7
+   "count": 2402,
+   "seconds": 83.4
   },
   "shelburnemuseum": {
    "label": "Shelburne Museum",
@@ -126,141 +125,31 @@
   },
   "uvm": {
    "label": "UVM & Colleges",
-   "count": 472,
-   "seconds": 18.8
+   "count": 478,
+   "seconds": 47.6
   },
   "uvmbored": {
    "label": "UVM Bored",
-   "count": 288,
+   "count": 291,
    "seconds": 0.3
   },
   "vcc": {
    "label": "Vermont Comedy Club",
-   "count": 49,
-   "seconds": 64.6
+   "count": 51,
+   "seconds": 71.7
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
    "count": 50,
-   "seconds": 0.4
+   "seconds": 0.2
   }
  },
- "gathered": 5109,
- "afterDedup": 2457,
- "duplicatesMerged": 2652,
- "final": 2624,
- "firecrawlCalls": 1,
+ "gathered": 5234,
+ "afterDedup": 2519,
+ "duplicatesMerged": 2715,
+ "final": 2618,
+ "firecrawlCalls": 14,
  "mergeLog": [
-  {
-   "kept": {
-    "title": "The Warped Tour Band",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "helloburlington",
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-11-20"
-  },
-  {
-   "kept": {
-    "title": "Gimme Gimme Disco",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-11-20"
-  },
-  {
-   "kept": {
-    "title": "Pub Hour",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-11-20"
-  },
-  {
-   "kept": {
-    "title": "'Very Eric Carle' Exhibit",
-    "source": "sevendays"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "sevendays"
-   ],
-   "date": "2026-11-20"
-  },
-  {
-   "kept": {
-    "title": "Family Art Saturday",
-    "source": "bca"
-   },
-   "merged_sources": [
-    "bca",
-    "churchst",
-    "helloburlington",
-    "loveburlington",
-    "sevendays",
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-11-21"
-  },
-  {
-   "kept": {
-    "title": "Live DJ at Ri Ra!",
-    "source": "churchst"
-   },
-   "merged_sources": [
-    "churchst",
-    "loveburlington"
-   ],
-   "date": "2026-11-21"
-  },
-  {
-   "kept": {
-    "title": "Sculpt HIIT and Flow",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-11-21"
-  },
-  {
-   "kept": {
-    "title": "Greg Freeman at Higher Ground",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "helloburlington",
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-11-21"
-  },
-  {
-   "kept": {
-    "title": "Eliza Edens w/ Riverbed",
-    "source": "breweries"
-   },
-   "merged_sources": [
-    "breweries",
-    "champlainvalley",
-    "helloburlington"
-   ],
-   "date": "2026-11-21"
-  },
   {
    "kept": {
     "title": "'Very Eric Carle' Exhibit",
@@ -297,7 +186,7 @@
   },
   {
    "kept": {
-    "title": "Burlington Choral Society presents Voices of Change: Songs that Shaped History",
+    "title": "The Vermont Choral Union: The American Mercury",
     "source": "sevendays"
    },
    "merged_sources": [
@@ -308,7 +197,7 @@
   },
   {
    "kept": {
-    "title": "The Vermont Choral Union: The American Mercury",
+    "title": "Burlington Choral Society presents Voices of Change: Songs that Shaped History",
     "source": "sevendays"
    },
    "merged_sources": [
@@ -402,6 +291,17 @@
    },
    "merged_sources": [
     "monkeyhouse",
+    "sevendays"
+   ],
+   "date": "2026-11-23"
+  },
+  {
+   "kept": {
+    "title": "Art Wall: Photography by Jeffrey Trubisz",
+    "source": "sblibrary"
+   },
+   "merged_sources": [
+    "sblibrary",
     "sevendays"
    ],
    "date": "2026-11-23"
@@ -737,6 +637,17 @@
    },
    "merged_sources": [
     "fletcherfree",
+    "sevendays"
+   ],
+   "date": "2026-11-28"
+  },
+  {
+   "kept": {
+    "title": "Chess Club",
+    "source": "sblibrary"
+   },
+   "merged_sources": [
+    "sblibrary",
     "sevendays"
    ],
    "date": "2026-11-28"
@@ -1440,6 +1351,7 @@
     "source": "uvm"
    },
    "merged_sources": [
+    "sevendays",
     "uvm",
     "uvmbored"
    ],
@@ -1709,6 +1621,17 @@
     "bca",
     "churchst",
     "loveburlington"
+   ],
+   "date": "2026-12-09"
+  },
+  {
+   "kept": {
+    "title": "Italian Conversation Group",
+    "source": "sblibrary"
+   },
+   "merged_sources": [
+    "sblibrary",
+    "sevendays"
    ],
    "date": "2026-12-09"
   },
@@ -2299,6 +2222,17 @@
   },
   {
    "kept": {
+    "title": "Puzzle Swap",
+    "source": "sblibrary"
+   },
+   "merged_sources": [
+    "sblibrary",
+    "sevendays"
+   ],
+   "date": "2026-12-16"
+  },
+  {
+   "kept": {
     "title": "Wine Down Wednesday",
     "source": "churchst"
    },
@@ -2368,6 +2302,29 @@
   },
   {
    "kept": {
+    "title": "Katelyn Tarver",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-12-17"
+  },
+  {
+   "kept": {
+    "title": "UPB Game Night",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-12-17"
+  },
+  {
+   "kept": {
     "title": "Pub Hour",
     "source": "loveburlington"
    },
@@ -2398,108 +2355,95 @@
     "sevendays"
    ],
    "date": "2026-12-17"
+  },
+  {
+   "kept": {
+    "title": "Live DJ at Ri Ra!",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "churchst",
+    "loveburlington"
+   ],
+   "date": "2026-12-18"
+  },
+  {
+   "kept": {
+    "title": "Pub Hour",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-12-18"
+  },
+  {
+   "kept": {
+    "title": "'Very Eric Carle' Exhibit",
+    "source": "sevendays"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "sevendays"
+   ],
+   "date": "2026-12-18"
   }
  ],
  "changes": [
   {
    "id": "fd27adfc07e0",
-   "title": "Kids Puzzle Swap",
+   "title": "Kids' Puzzle Swap",
    "date": "2026-10-21",
    "change": "time",
-   "was": "2026-10-21T14:30:00-04:00",
-   "now": "2026-10-21T14:00:00-04:00"
+   "was": "2026-10-21T14:00:00-04:00",
+   "now": "2026-10-21T14:30:00-04:00"
   },
   {
    "id": "e872dba934d8",
-   "title": "Kids Puzzle Swap",
+   "title": "Kids' Puzzle Swap",
    "date": "2026-11-18",
    "change": "time",
-   "was": "2026-11-18T14:30:00-05:00",
-   "now": "2026-11-18T14:00:00-05:00"
+   "was": "2026-11-18T14:00:00-05:00",
+   "now": "2026-11-18T14:30:00-05:00"
   },
   {
-   "id": "a9d93d33a7b8",
-   "title": "Paul Winter’s Winter Solstice Celebration",
-   "date": "2026-12-05",
+   "id": "52643c7200fc",
+   "title": "The Queen City Square Dance",
+   "date": "2026-10-28",
    "change": "time",
-   "was": "2026-12-05T19:30:00-05:00",
-   "now": "2026-12-05T15:00:00-05:00"
+   "was": "2026-10-28T18:30:00-04:00",
+   "now": "2026-10-28T19:00:00-04:00"
   },
   {
-   "id": "55a133556ccf",
-   "title": "Very Eric Carle: A Very Hungry, Quiet, Lonely, Clumsy, Busy Exhibit",
-   "date": "2026-10-18",
-   "change": "missing",
-   "lastSeen": "2026-10-18T09:31:18-04:00"
+   "id": "ec901ba8eef1",
+   "title": "Senior Recitals",
+   "date": "2026-11-07",
+   "change": "time",
+   "was": "2026-11-07",
+   "now": "2026-11-07T12:00:00-05:00"
   },
   {
-   "id": "b906a935b130",
-   "title": "Pease Mt hike",
-   "date": "2026-10-18",
-   "change": "missing",
-   "lastSeen": "2026-10-18T09:31:18-04:00"
+   "id": "a6fea7752d01",
+   "title": "Senior Recitals",
+   "date": "2026-11-08",
+   "change": "time",
+   "was": "2026-11-08",
+   "now": "2026-11-08T14:30:00-05:00"
   },
   {
-   "id": "ba5cae39d966",
-   "title": "Song Together: A Musical Playgroup",
-   "date": "2026-10-18",
-   "change": "dropped"
-  },
-  {
-   "id": "70c00e09db74",
-   "title": "Field Hockey vs Yale",
-   "date": "2026-10-18",
-   "change": "missing",
-   "lastSeen": "2026-10-18T09:31:18-04:00"
-  },
-  {
-   "id": "3f538a02abce",
-   "title": "The Amazing Puzzle Race",
-   "date": "2026-10-18",
-   "change": "missing",
-   "lastSeen": "2026-10-18T09:31:18-04:00"
-  },
-  {
-   "id": "ee11f9061c22",
-   "title": "Kids Jam",
-   "date": "2026-10-18",
-   "change": "missing",
-   "lastSeen": "2026-10-18T09:31:18-04:00"
-  },
-  {
-   "id": "f41b98c76538",
+   "id": "375c196d3f76",
    "title": "Public Skate",
-   "date": "2026-10-18",
+   "date": "2026-10-19",
    "change": "missing",
-   "lastSeen": "2026-10-18T09:31:18-04:00"
+   "lastSeen": "2026-10-18T18:35:15-04:00"
   },
   {
-   "id": "3e6237709b69",
-   "title": "Story Songs of the 70s - Fall Edition",
-   "date": "2026-10-18",
+   "id": "d2a559d5a606",
+   "title": "Stick & Puck",
+   "date": "2026-10-19",
    "change": "missing",
-   "lastSeen": "2026-10-18T09:31:18-04:00"
-  },
-  {
-   "id": "83be54f2af2a",
-   "title": "Queen City Ghostwalk: Fright by Flashlight at Lakeview Cemetery",
-   "date": "2026-10-18",
-   "change": "missing",
-   "lastSeen": "2026-10-18T09:31:18-04:00"
-  },
-  {
-   "id": "9e67b8952960",
-   "title": "Trystan Bates",
-   "date": "2026-10-18",
-   "change": "missing",
-   "lastSeen": "2026-10-17T18:39:26-04:00"
-  },
-  {
-   "id": "c3f3eefe94a0",
-   "title": "Kathleen Schneider",
-   "date": "2026-10-18",
-   "change": "missing",
-   "lastSeen": "2026-10-17T18:39:26-04:00"
+   "lastSeen": "2026-10-18T18:35:15-04:00"
   },
   {
    "id": "1f0e013f470b",
@@ -2507,6 +2451,20 @@
    "date": "2026-10-19",
    "change": "missing",
    "lastSeen": "2026-10-18T09:31:18-04:00"
+  },
+  {
+   "id": "933b2c99e74e",
+   "title": "Trystan Bates",
+   "date": "2026-10-19",
+   "change": "missing",
+   "lastSeen": "2026-10-18T18:35:15-04:00"
+  },
+  {
+   "id": "04ca1d781c09",
+   "title": "Kathleen Schneider",
+   "date": "2026-10-19",
+   "change": "missing",
+   "lastSeen": "2026-10-18T18:35:15-04:00"
   },
   {
    "id": "2207bb57db0a",
@@ -2530,11 +2488,17 @@
    "lastSeen": "2026-10-18T09:31:18-04:00"
   },
   {
+   "id": "c59be5a2f611",
+   "title": "CS Crew Presents: Eli Smith, BETA Technologies",
+   "date": "2026-10-21",
+   "change": "missing",
+   "lastSeen": "2026-10-18T18:35:15-04:00"
+  },
+  {
    "id": "39fd361f0e4a",
    "title": "Ryan La Sala & Don Martin",
    "date": "2026-10-21",
-   "change": "missing",
-   "lastSeen": "2026-10-15T19:16:55-04:00"
+   "change": "dropped"
   },
   {
    "id": "c5df1fce68e7",
@@ -2549,6 +2513,13 @@
    "date": "2026-10-22",
    "change": "missing",
    "lastSeen": "2026-10-18T09:31:18-04:00"
+  },
+  {
+   "id": "2b254f834364",
+   "title": "Toddlertime",
+   "date": "2026-10-22",
+   "change": "missing",
+   "lastSeen": "2026-10-18T18:35:15-04:00"
   },
   {
    "id": "07d91732d3fd",
@@ -2577,6 +2548,13 @@
    "date": "2026-10-22",
    "change": "source-down",
    "lastSeen": "2026-10-07T20:24:11-04:00"
+  },
+  {
+   "id": "2c7a54f1c0d4",
+   "title": "LEGO Builders",
+   "date": "2026-10-23",
+   "change": "missing",
+   "lastSeen": "2026-10-18T18:35:15-04:00"
   },
   {
    "id": "b3468d64cb8b",
@@ -2628,11 +2606,24 @@
    "lastSeen": "2026-10-18T09:31:18-04:00"
   },
   {
+   "id": "b50b64299219",
+   "title": "Fire Safety Story Time",
+   "date": "2026-10-24",
+   "change": "missing",
+   "lastSeen": "2026-10-18T18:35:15-04:00"
+  },
+  {
+   "id": "cb1c2ff30140",
+   "title": "'No Country for Mothers'",
+   "date": "2026-10-24",
+   "change": "missing",
+   "lastSeen": "2026-10-18T18:35:15-04:00"
+  },
+  {
    "id": "a89af23cfc9f",
    "title": "Drag Story Hour",
    "date": "2026-10-24",
-   "change": "missing",
-   "lastSeen": "2026-10-15T19:16:55-04:00"
+   "change": "dropped"
   },
   {
    "id": "9509fbc9ec3a",
@@ -2640,12 +2631,6 @@
    "date": "2026-10-24",
    "change": "missing",
    "lastSeen": "2026-10-18T09:31:18-04:00"
-  },
-  {
-   "id": "7057731aa8a3",
-   "title": "Art Night Benefit for the Birds of Vermont Museum",
-   "date": "2026-10-24",
-   "change": "dropped"
   },
   {
    "id": "7fed7d1032e6",
@@ -2669,16 +2654,18 @@
    "lastSeen": "2026-10-07T20:24:11-04:00"
   },
   {
-   "id": "b8da721be59d",
-   "title": "Natural History Open House",
-   "date": "2026-10-24",
-   "change": "dropped"
+   "id": "d47e23c4cb96",
+   "title": "Winooski Farmers Market",
+   "date": "2026-10-25",
+   "change": "missing",
+   "lastSeen": "2026-10-18T18:35:15-04:00"
   },
   {
-   "id": "b51b84b55ab6",
-   "title": "Song Together: A Musical Playgroup",
+   "id": "dec1910da07a",
+   "title": "She Bravely Returns: An Immersive Women's Wellness & Writing Experience",
    "date": "2026-10-25",
-   "change": "dropped"
+   "change": "missing",
+   "lastSeen": "2026-10-18T18:35:15-04:00"
   },
   {
    "id": "6d65ebe640b0",
@@ -2686,6 +2673,13 @@
    "date": "2026-10-25",
    "change": "missing",
    "lastSeen": "2026-10-18T09:31:18-04:00"
+  },
+  {
+   "id": "6bf03d16161d",
+   "title": "Middle Grade Movie: 'How to Train Your Dragon'",
+   "date": "2026-10-26",
+   "change": "missing",
+   "lastSeen": "2026-10-18T18:35:15-04:00"
   },
   {
    "id": "dc65e3a0e10a",
@@ -2702,17 +2696,31 @@
    "lastSeen": "2026-10-18T09:31:18-04:00"
   },
   {
-   "id": "401a55755e51",
-   "title": "Board Games for Ages 18+",
+   "id": "3088e87d8e03",
+   "title": "Craftytown",
    "date": "2026-10-27",
-   "change": "dropped"
+   "change": "missing",
+   "lastSeen": "2026-10-18T18:35:15-04:00"
+  },
+  {
+   "id": "a8e0b185f666",
+   "title": "Evening Book Group",
+   "date": "2026-10-27",
+   "change": "missing",
+   "lastSeen": "2026-10-18T18:35:15-04:00"
+  },
+  {
+   "id": "185f27c555bc",
+   "title": "Allison Russell w/ Autumn Nicholas",
+   "date": "2026-10-27",
+   "change": "missing",
+   "lastSeen": "2026-10-18T18:35:15-04:00"
   },
   {
    "id": "8a2b8d52f7e3",
    "title": "Gordon MacFarland",
    "date": "2026-10-27",
-   "change": "missing",
-   "lastSeen": "2026-10-15T19:16:55-04:00"
+   "change": "dropped"
   },
   {
    "id": "1d263c180fef",
@@ -2720,12 +2728,6 @@
    "date": "2026-10-28",
    "change": "missing",
    "lastSeen": "2026-10-18T09:31:18-04:00"
-  },
-  {
-   "id": "3d9fb194c0b6",
-   "title": "Vegan in Vermont",
-   "date": "2026-10-28",
-   "change": "dropped"
   },
   {
    "id": "3df17270dfe2",
@@ -2749,6 +2751,13 @@
    "lastSeen": "2026-09-30T12:03:45-04:00"
   },
   {
+   "id": "047fbcf1fd9c",
+   "title": "Toddlertime",
+   "date": "2026-10-29",
+   "change": "missing",
+   "lastSeen": "2026-10-18T18:35:15-04:00"
+  },
+  {
    "id": "ddf471ea6d81",
    "title": "Minecraft Meet-up",
    "date": "2026-10-29",
@@ -2763,11 +2772,39 @@
    "lastSeen": "2026-10-18T09:31:18-04:00"
   },
   {
+   "id": "cf0520ff0236",
+   "title": "Spirits Night",
+   "date": "2026-10-29",
+   "change": "missing",
+   "lastSeen": "2026-10-18T18:35:15-04:00"
+  },
+  {
+   "id": "659f18b0fad8",
+   "title": "Monsters Ball Adventure Dinner",
+   "date": "2026-10-29",
+   "change": "missing",
+   "lastSeen": "2026-10-18T18:35:15-04:00"
+  },
+  {
    "id": "bd459aad3d46",
    "title": "Trivia Night",
    "date": "2026-10-29",
    "change": "missing",
    "lastSeen": "2026-10-18T09:31:18-04:00"
+  },
+  {
+   "id": "361f5b4d9984",
+   "title": "LEGO Builders",
+   "date": "2026-10-30",
+   "change": "missing",
+   "lastSeen": "2026-10-18T18:35:15-04:00"
+  },
+  {
+   "id": "0f126a81a667",
+   "title": "Monsters Ball Adventure Dinner",
+   "date": "2026-10-30",
+   "change": "missing",
+   "lastSeen": "2026-10-18T18:35:15-04:00"
   },
   {
    "id": "f7c28c672c3e",
@@ -2782,12 +2819,6 @@
    "date": "2026-10-30",
    "change": "missing",
    "lastSeen": "2026-10-18T09:31:18-04:00"
-  },
-  {
-   "id": "177e0563aad6",
-   "title": "Green Mountain Woodcarvers Carve-In",
-   "date": "2026-10-31",
-   "change": "dropped"
   },
   {
    "id": "02c35d0d0da1",
@@ -2825,12 +2856,6 @@
    "lastSeen": "2026-10-07T20:24:11-04:00"
   },
   {
-   "id": "c30a4906506f",
-   "title": "Song Together: A Musical Playgroup",
-   "date": "2026-11-01",
-   "change": "dropped"
-  },
-  {
    "id": "c299df99e33f",
    "title": "Skylark",
    "date": "2026-11-01",
@@ -2848,19 +2873,11 @@
    "id": "1639c64bed10",
    "title": "Community Dinner with Mosaic",
    "date": "2026-11-02",
-   "change": "missing",
-   "lastSeen": "2026-10-16T10:12:13-04:00"
+   "change": "dropped"
   },
   {
    "id": "18f04ccc4b01",
    "title": "First-Gen Week Kickoff",
-   "date": "2026-11-02",
-   "change": "missing",
-   "lastSeen": "2026-10-16T10:12:13-04:00"
-  },
-  {
-   "id": "5a9f75bad829",
-   "title": "First-Gen Keynote Kickoff",
    "date": "2026-11-02",
    "change": "dropped"
   },
@@ -2874,13 +2891,6 @@
   {
    "id": "e7983a530899",
    "title": "Lunch with Interfaith",
-   "date": "2026-11-03",
-   "change": "missing",
-   "lastSeen": "2026-10-16T10:12:13-04:00"
-  },
-  {
-   "id": "a816d3f0fc69",
-   "title": "Movies and Crafts with SGA",
    "date": "2026-11-03",
    "change": "dropped"
   },
@@ -2909,26 +2919,6 @@
    "id": "8aff95ec59de",
    "title": "UVM Trivia with First-Gen",
    "date": "2026-11-05",
-   "change": "missing",
-   "lastSeen": "2026-10-16T10:12:13-04:00"
-  },
-  {
-   "id": "bac9514f3c6b",
-   "title": "Chats in the Stacks: Conversations About Water, First-Gen Week Edition",
-   "date": "2026-11-05",
-   "change": "missing",
-   "lastSeen": "2026-10-16T10:12:13-04:00"
-  },
-  {
-   "id": "5d257872c8ff",
-   "title": "Vermont Outstanding Educator Awards",
-   "date": "2026-11-05",
-   "change": "dropped"
-  },
-  {
-   "id": "01f83b796325",
-   "title": "planBTV 2050 Community Open House",
-   "date": "2026-11-05",
    "change": "dropped"
   },
   {
@@ -2946,12 +2936,6 @@
    "lastSeen": "2026-10-18T09:31:18-04:00"
   },
   {
-   "id": "2441eb96fed1",
-   "title": "The Discussions",
-   "date": "2026-11-05",
-   "change": "dropped"
-  },
-  {
    "id": "c5c93bd8ff50",
    "title": "The Lowest Pair",
    "date": "2026-11-05",
@@ -2962,8 +2946,7 @@
    "id": "a566908ee597",
    "title": "University Jazz Ensemble with Dennis Mackrel",
    "date": "2026-11-05",
-   "change": "missing",
-   "lastSeen": "2026-10-16T10:12:13-04:00"
+   "change": "dropped"
   },
   {
    "id": "ff9ac1418203",
@@ -2987,10 +2970,25 @@
    "lastSeen": "2026-10-18T09:31:18-04:00"
   },
   {
-   "id": "b3c708863ec4",
-   "title": "Song Together: A Musical Playgroup",
+   "id": "c869794740ea",
+   "title": "Vets Town Hall: South Burlington, VT",
    "date": "2026-11-08",
-   "change": "dropped"
+   "change": "missing",
+   "lastSeen": "2026-10-18T18:35:15-04:00"
+  },
+  {
+   "id": "0bfcaa443762",
+   "title": "New Moon Sound Bath",
+   "date": "2026-11-08",
+   "change": "missing",
+   "lastSeen": "2026-10-18T18:35:15-04:00"
+  },
+  {
+   "id": "d8dbf9b9f434",
+   "title": "IFA Power Up Lecture with Nessa Richman",
+   "date": "2026-11-12",
+   "change": "missing",
+   "lastSeen": "2026-10-18T18:35:15-04:00"
   },
   {
    "id": "9c04ec9681cd",
@@ -3021,10 +3019,11 @@
    "lastSeen": "2026-09-30T12:03:45-04:00"
   },
   {
-   "id": "10208dd1153c",
-   "title": "Andriana & The Bananas",
-   "date": "2026-11-13",
-   "change": "dropped"
+   "id": "b5fec84d51f4",
+   "title": "BTown Coffee Club",
+   "date": "2026-11-14",
+   "change": "missing",
+   "lastSeen": "2026-10-18T18:35:15-04:00"
   },
   {
    "id": "8bf1c603aee5",
@@ -3046,12 +3045,6 @@
    "date": "2026-11-14",
    "change": "missing",
    "lastSeen": "2026-10-18T09:31:18-04:00"
-  },
-  {
-   "id": "7da8b807f81f",
-   "title": "Song Together: A Musical Playgroup",
-   "date": "2026-11-15",
-   "change": "dropped"
   },
   {
    "id": "0bb27378ac0d",
@@ -3096,12 +3089,6 @@
    "lastSeen": "2026-10-18T09:31:18-04:00"
   },
   {
-   "id": "ffe3843432b0",
-   "title": "Song Together: A Musical Playgroup",
-   "date": "2026-11-22",
-   "change": "dropped"
-  },
-  {
    "id": "7925ff480548",
    "title": "Trivia Night",
    "date": "2026-11-26",
@@ -3130,12 +3117,6 @@
    "lastSeen": "2026-10-18T09:31:18-04:00"
   },
   {
-   "id": "e0df8517a71d",
-   "title": "Song Together: A Musical Playgroup",
-   "date": "2026-11-29",
-   "change": "dropped"
-  },
-  {
    "id": "5a53b4b8622a",
    "title": "Trivia Night",
    "date": "2026-12-03",
@@ -3148,12 +3129,6 @@
    "date": "2026-12-05",
    "change": "missing",
    "lastSeen": "2026-10-18T09:31:18-04:00"
-  },
-  {
-   "id": "2cab02a24f00",
-   "title": "Song Together: A Musical Playgroup",
-   "date": "2026-12-06",
-   "change": "dropped"
   },
   {
    "id": "e6c73865f4fb",
@@ -3184,10 +3159,11 @@
    "lastSeen": "2026-10-18T09:31:18-04:00"
   },
   {
-   "id": "2d9dc6aa8476",
-   "title": "Song Together: A Musical Playgroup",
-   "date": "2026-12-13",
-   "change": "dropped"
+   "id": "83d55aac4b1a",
+   "title": "Kids Puzzle Swap",
+   "date": "2026-12-16",
+   "change": "missing",
+   "lastSeen": "2026-10-18T18:35:15-04:00"
   },
   {
    "id": "0c6451257c2c",

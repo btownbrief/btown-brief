@@ -805,6 +805,199 @@
     "why": "The last weekend to eat by the water this year.",
     "ranked_at": "2026-10-16T10:05:00+00:00"
    }
+  ],
+  "recap_kinds": [
+   {
+    "kind": "morning",
+    "title": "Morning briefing"
+   },
+   {
+    "kind": "evening",
+    "title": "Evening wrap"
+   },
+   {
+    "kind": "breaking",
+    "title": "Breaking"
+   },
+   {
+    "kind": "ai",
+    "title": "AI & tech"
+   },
+   {
+    "kind": "politics",
+    "title": "Politics & Washington"
+   },
+   {
+    "kind": "world",
+    "title": "World"
+   },
+   {
+    "kind": "markets",
+    "title": "Markets & money"
+   },
+   {
+    "kind": "sports",
+    "title": "Sports"
+   },
+   {
+    "kind": "vermont",
+    "title": "Vermont on X"
+   },
+   {
+    "kind": "market-open",
+    "title": "Market open"
+   },
+   {
+    "kind": "market-close",
+    "title": "Market close"
+   },
+   {
+    "kind": "culture",
+    "title": "Culture & entertainment"
+   },
+   {
+    "kind": "science",
+    "title": "Science & space"
+   },
+   {
+    "kind": "weekend",
+    "title": "Weekend preview"
+   },
+   {
+    "kind": "week-ahead",
+    "title": "Week ahead"
+   },
+   {
+    "kind": "pictures",
+    "title": "Pictures of the day"
+   }
+  ],
+  "recaps": [
+   {
+    "id": "2026-10-16-vermont",
+    "kind": "vermont",
+    "title": "Vermont on X",
+    "posted_at": "2026-10-16T17:30:00+00:00",
+    "intro": "A crisp afternoon, a lane closure on the Winooski bridge, and a new mural going up downtown.",
+    "basis": "accounts",
+    "label": "From posts on X",
+    "bullets": [
+     {
+      "id": "dv1",
+      "text": "Sunny and 58 this afternoon, frost likely in the valleys tonight",
+      "url": "https://x.com/NWSBurlington/status/1",
+      "note": "Invented for the demo."
+     },
+     {
+      "id": "dv2",
+      "text": "One lane closed on the Winooski bridge until 3 pm",
+      "url": "https://x.com/511VT/status/2",
+      "note": "Invented for the demo."
+     },
+     {
+      "id": "dv3",
+      "text": "A new mural is going up on the side of a Pine Street studio",
+      "url": "https://x.com/sevendaysvt/status/3",
+      "note": "Invented for the demo."
+     }
+    ]
+   },
+   {
+    "id": "2026-10-16-sports",
+    "kind": "sports",
+    "title": "Sports",
+    "posted_at": "2026-10-16T14:00:00+00:00",
+    "intro": "A season opener, a trade, and the Catamounts at home.",
+    "basis": "accounts",
+    "label": "From posts on X",
+    "bullets": [
+     {
+      "id": "ds1",
+      "text": "A big trade on the eve of the season opener",
+      "url": "https://x.com/NBA/status/4",
+      "note": "Invented for the demo.",
+      "sport": "nba"
+     },
+     {
+      "id": "ds2",
+      "text": "A quarterback ruled out for Sunday",
+      "url": "https://x.com/NFL/status/5",
+      "note": "Invented for the demo.",
+      "sport": "nfl"
+     },
+     {
+      "id": "ds3",
+      "text": "UVM hosts its home opener at Gutterson on Friday",
+      "url": "https://x.com/UVMathletics/status/6",
+      "note": "Invented for the demo.",
+      "sport": "local"
+     }
+    ]
+   },
+   {
+    "id": "2026-10-16-morning",
+    "kind": "morning",
+    "title": "Morning briefing",
+    "posted_at": "2026-10-16T11:05:00+00:00",
+    "intro": "The morning's big stories in one breath, invented for the demo.",
+    "basis": "trending",
+    "label": "From X trending summaries",
+    "bullets": [
+     {
+      "id": "dm0",
+      "text": "Demo headline 1 of the morning",
+      "url": "https://x.com/demo/status/100",
+      "note": "Why it matters, in one line."
+     },
+     {
+      "id": "dm1",
+      "text": "Demo headline 2 of the morning",
+      "url": "https://x.com/demo/status/101",
+      "note": "Why it matters, in one line."
+     },
+     {
+      "id": "dm2",
+      "text": "Demo headline 3 of the morning",
+      "url": "https://x.com/demo/status/102",
+      "note": "Why it matters, in one line."
+     },
+     {
+      "id": "dm3",
+      "text": "Demo headline 4 of the morning",
+      "url": "https://x.com/demo/status/103",
+      "note": "Why it matters, in one line."
+     },
+     {
+      "id": "dm4",
+      "text": "Demo headline 5 of the morning",
+      "url": "https://x.com/demo/status/104",
+      "note": "Why it matters, in one line."
+     },
+     {
+      "id": "dm5",
+      "text": "Demo headline 6 of the morning",
+      "url": "https://x.com/demo/status/105",
+      "note": "Why it matters, in one line."
+     },
+     {
+      "id": "dm6",
+      "text": "Demo headline 7 of the morning",
+      "url": "https://x.com/demo/status/106",
+      "note": "Why it matters, in one line."
+     },
+     {
+      "id": "dm7",
+      "text": "Demo headline 8 of the morning",
+      "url": "https://x.com/demo/status/107",
+      "note": "Why it matters, in one line."
+     }
+    ]
+   }
+  ],
+  "recaps_latest": [
+   "2026-10-16-vermont",
+   "2026-10-16-sports",
+   "2026-10-16-morning"
   ]
  },
  "index": {
@@ -1976,8 +2169,27 @@
    "facebook": {
     "paused": false,
     "items": [
-     { "u": "https://facebook.com/groups/demo/permalink/101/", "d": 1792166400, "from": "Burlington Gardeners", "name": "Burlington Gardeners", "summary": "Giant pumpkin weigh-in results from the Intervale, with a 640-pound winner.", "kind": "post", "ch": "facebook", "local": true, "i": "mustard" },
-     { "u": "https://facebook.com/groups/demo/permalink/102/", "d": 1792162800, "from": "Burlington Gardeners", "name": "Burlington Gardeners", "summary": "Who wants garlic starts? Free on the porch.", "kind": "post", "ch": "facebook", "local": true }
+     {
+      "u": "https://facebook.com/groups/demo/permalink/101/",
+      "d": 1792166400,
+      "from": "Burlington Gardeners",
+      "name": "Burlington Gardeners",
+      "summary": "Giant pumpkin weigh-in results from the Intervale, with a 640-pound winner.",
+      "kind": "post",
+      "ch": "facebook",
+      "local": true,
+      "i": "mustard"
+     },
+     {
+      "u": "https://facebook.com/groups/demo/permalink/102/",
+      "d": 1792162800,
+      "from": "Burlington Gardeners",
+      "name": "Burlington Gardeners",
+      "summary": "Who wants garlic starts? Free on the porch.",
+      "kind": "post",
+      "ch": "facebook",
+      "local": true
+     }
     ]
    }
   }
