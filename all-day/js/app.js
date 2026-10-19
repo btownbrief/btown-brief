@@ -33,6 +33,7 @@ import * as store from './store.js';
 import * as auth from './auth.js';
 import { bindGestures } from './gestures.js';
 import { el, esc, safeHref, ICON, art, mark, cards, pills, button, setPalette, setJump } from './ui.js';
+import { bindShell, spy as spySections } from './sections.js';
 
 const $ = (id) => document.getElementById(id);
 const root = document.documentElement;
@@ -828,14 +829,19 @@ export function scrollTop(smooth) {
   if (p) p.scrollTo({ top: 0, behavior: smooth ? 'smooth' : 'auto' });
   showChrome();
 }
-/* scroll a panel so a node lands just under the mast */
+/* scroll a panel so a node lands just under the mast. Where the row under
+   the mast stays as the mast's top line steps away (keepSubnav), a jump
+   down lands under the row alone, since the top line will have gone. */
 export function jumpTo(node) {
   const p = panels[active];
   if (!p || !node) return;
-  const top = node.getBoundingClientRect().top - p.getBoundingClientRect().top + p.scrollTop - mast.offsetHeight - 4;
+  const at = node.getBoundingClientRect().top - p.getBoundingClientRect().top + p.scrollTop;
+  let top = at - mast.offsetHeight - 4;
+  if (document.body.classList.contains('keep-subnav') && top > p.scrollTop + 8 && top > 120) top += mast.querySelector('.mast-row').offsetHeight;
   p.scrollTo({ top: Math.max(0, top), behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
 }
 setJump(jumpTo);
+bindShell({ sheet, panel: () => panels[active] || null });
 
 /* the slot under the mast: a tab hands back nothing, one row, or two */
 export function paintSubnav() {
@@ -848,6 +854,8 @@ export function paintSubnav() {
   document.body.classList.toggle('keep-subnav', !!(n && mod && mod.keepSubnav));
   measure();
   paintAside();
+  /* a section pill follows the scroll (sections.js) */
+  if (n) spySections(s, panels[active]);
 }
 
 /* the wide screen's right-hand rail: the tab's aside(), or nothing, and
@@ -880,6 +888,8 @@ function watchScroll(p) {
       if (y < 40 || y < last - 2) document.body.classList.remove('pill-small');
       else if (y > last + 6) document.body.classList.add('pill-small');
       last = y;
+      /* the section pill's water follows the section in view */
+      if (p === panels[active]) spySections($('subnav'), p);
     });
   }, { passive: true });
   bindPull(p);

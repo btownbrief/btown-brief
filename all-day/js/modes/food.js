@@ -76,6 +76,7 @@ import * as store from '../store.js';
 import * as data from '../wire.js';
 import { el, esc, safeHref, ICON, art, mark, section, listRail, chips, pills, button, agoShort, cards as feedCards, put } from '../ui.js';
 import { asksFrom, directoryFrom, GROUPS } from '../food-asks.js';
+import { sectionBar } from '../sections.js';
 
 const KEY = 'food';
 const RESTAURANTS_URL = '../data/restaurants.json';
@@ -1347,11 +1348,14 @@ app.register(KEY, {
     placeSlots();                        // the chips and the page share one order
     const t = now();
     const next = nothingOpen(t);
-    return chips(order().map((k) => SECTIONS.find(([key]) => key === k)).map(([key, label]) => ({
-      key, label: key === 'open' && next ? 'Opening next' : label,
-      n: key === 'open' ? (next ? null : listFor('open', t).length) : key === 'deals' ? deck(t).length : key === 'asks' && S.asks ? asksShown().length : null,
-    })), null, (k) => jump(k));
+    /* the sections as a floating pill in the tab's water, following the scroll (sections.js) */
+    return sectionBar({ key: 'sec-food', title: 'Food', color: '--liq-food', find: (k) => slots && slots[k], onPick: (k) => jump(k),
+      items: order().map((k) => SECTIONS.find(([key]) => key === k)).map(([key, label]) => ({
+        key, label: key === 'open' && next ? 'Opening next' : label,
+        n: key === 'open' ? (next ? null : listFor('open', t).length) : key === 'deals' ? deck(t).length : key === 'asks' && S.asks ? asksShown().length : null,
+      })) });
   },
+  keepSubnav: true,
   /* The Reddit asks are the one part that grows while you are away. */
   newSince(ts) { return S.asks ? asksShown().filter((a) => a.d > Number(ts || 0)).length : 0; },
 });

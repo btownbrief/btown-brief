@@ -77,7 +77,8 @@ import * as store from '../store.js';
 import * as data from '../wire.js';
 import * as boards from '../boards.js';
 import { message } from '../boards-core.js';
-import { el, esc, safeHref, ICON, art, section, chips, button, pills, cards, agoShort, listRail } from '../ui.js';
+import { sectionBar } from '../sections.js';
+import { el, esc, safeHref, ICON, art, section, button, pills, cards, agoShort, listRail } from '../ui.js';
 
 const KEY = 'vintage';
 const SHOPS_URL = '../data/vintage-shops.json';
@@ -1077,8 +1078,11 @@ app.register(KEY, {
     placeTees();
     const n = { spotted: S.spotted && S.spotted.length, shops: S.shops && S.shops.length, swaps: S.swaps && S.swaps.length, fit: S.fit && S.fit.length };
     const fresh = newIn().length;
-    return chips(sectionOrder().filter(([key]) => key !== 'newin' || fresh).map(([key, label]) => ({ key, label, n: key === 'newin' ? fresh : n[key] || null })), null, (k) => jump(k));
+    /* the sections as a floating pill in the tab's water, following the scroll (sections.js) */
+    return sectionBar({ key: 'sec-vintage', title: 'Vintage', color: '--liq-vintage', find: (k) => slots && slots[k], onPick: (k) => jump(k),
+      items: sectionOrder().filter(([key]) => key !== 'newin' || fresh).map(([key, label]) => ({ key, label, n: key === 'newin' ? fresh : n[key] || null })) });
   },
+  keepSubnav: true,
   /* reader posts newer than the last visit: finds, swaps and fit checks */
   newSince(ts) {
     const t = Number(ts) * 1000 || 0;
