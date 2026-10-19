@@ -87,6 +87,14 @@ PULSE_URL = ("https://raw.githubusercontent.com/btownbrief/btown-brief/"
 UA = "btown-wire/1.0"
 
 WINDOW_HOURS = 26          # a story from last evening can still lead this morning
+# A newsletter edition belongs to its own Burlington day. Inoreader stamps an
+# email edition with the moment the email reached it, which is the moment it
+# was sent, so "published" and "arrived" are one time. Only an edition from
+# late the evening before (after EDITION_LATE_HOUR) can still open today's
+# river: last night's last hourly run may have come before it. Without this
+# guard the 26-hour window back-filled four Sunday editions into Monday
+# morning (2026-10-19).
+EDITION_LATE_HOUR = 21
 RESERVE_DAYS = 7           # nothing in the last week's editions comes back
 KEEP_DAYS = 30             # frozen editions kept on the branch
 # Stephen, 2026-10-16: the river should feel almost endless, curated well down
@@ -344,10 +352,19 @@ def reddit_comments(url=REDDIT_INTAKE_URL, timeout=15):
     return out
 
 
-def select_new(pool, in_river, considered, reserved_ids, reserved_urls):
+def edition_since(et):
+    """Epoch from which a newsletter edition counts as today's: 9 pm Eastern
+    last night (EDITION_LATE_HOUR)."""
+    midnight = et.replace(hour=0, minute=0, second=0, microsecond=0)
+    late = (midnight - timedelta(days=1)).replace(hour=EDITION_LATE_HOUR)
+    return int(late.timestamp())
+
+
+def select_new(pool, in_river, considered, reserved_ids, reserved_urls, edition_from=None):
     """The NEW list: eligible, not yet in the river, not passed on, not run
     before. Returns (new_items, auto_passed_ids). Newsletter editions skip
-    the score bar and the caps: apply_answer adds every one of them."""
+    the score bar and the caps: apply_answer adds every one of them, but
+    only today's (sent at or after `edition_from`, see edition_since)."""
     local, world, auto, editions = [], [], [], []
     for item in pool:
         if item["id"] in in_river or item["id"] in considered:
@@ -355,7 +372,8 @@ def select_new(pool, in_river, considered, reserved_ids, reserved_urls):
         if item["id"] in reserved_ids or item["url"] in reserved_urls:
             continue
         if item.get("ch") == "newsletters":
-            editions.append(item)
+            if edition_from is None or item["d"] >= edition_from:
+                editions.append(item)
             continue
         if not item["local"] and item["_score"] < WORLD_MIN_SCORE:
             auto.append(item["id"])
@@ -1053,7 +1071,8 @@ def run(args):
     numbered_river = river(day)
     in_river = {item["id"] for item in numbered_river}
     considered = set(state.get("considered", [])) | set(state.get("considered_today", []))
-    new, auto = select_new(pool, in_river, considered, reserved_ids, reserved_urls)
+    new, auto = select_new(pool, in_river, considered, reserved_ids, reserved_urls,
+                           edition_from=edition_since(et))
     state.setdefault("considered_today", []).extend(auto)
 
     call, want_picks, why = decide(day, state, new, et, now)
@@ -1194,6 +1213,26 @@ def selftest():
     result = apply_answer(day3, {"add": [], "lead": -1, "lead_why": ""}, [], picked, False, et, now)
     assert result["added"] == ["id6"] and river(day3)[0]["ch"] == "newsletters"
     print("curate_wire: newsletter editions always join the river ok")
+
+    # ...but only on their own Burlington day: yesterday morning's edition
+    # stays out of today, last night's 11 pm one still comes in
+    monday = datetime(2026, 10, 19, 11, 7, tzinfo=timezone.utc)      # 7:07 am Eastern
+    since = edition_since(wc.et_now(monday))
+    assert wc.et_now(datetime.fromtimestamp(since, timezone.utc)).strftime("%Y-%m-%d %H:%M") \
+        == "2026-10-18 21:00", since
+    at = lambda iso: int(datetime.fromisoformat(iso).timestamp())  # noqa: E731
+    sunday_am = dict(mk(10, local=False, src="1440"), ch="newsletters", d=at("2026-10-18T09:38:08+00:00"))
+    sunday_pm = dict(mk(11, local=False, src="semafor"), ch="newsletters", d=at("2026-10-18T22:15:33+00:00"))
+    late = dict(mk(12, local=False, src="tangle"), ch="newsletters", d=at("2026-10-19T03:30:00+00:00"))
+    today_ = dict(mk(13, local=False, src="1440"), ch="newsletters", d=at("2026-10-19T08:28:20+00:00"))
+    news = dict(mk(14, local=False, src="ap"), d=at("2026-10-18T22:15:33+00:00"))
+    picked, _ = select_new([sunday_am, sunday_pm, late, today_, news], set(), set(), set(), set(),
+                           edition_from=since)
+    assert [i["id"] for i in picked] == ["id14", "id12", "id13"], [i["id"] for i in picked]
+    # the guard holds across the autumn clock change too (Nov 1 -> Nov 2)
+    fall = edition_since(wc.et_now(datetime(2026, 11, 2, 12, 0, tzinfo=timezone.utc)))
+    assert wc.et_now(datetime.fromtimestamp(fall, timezone.utc)).strftime("%m-%d %H:%M") == "11-01 21:00"
+    print("curate_wire: a newsletter edition joins only its own day ok")
 
     # lead must be this hour's add or the current update's own item
     day2 = empty_day("2026-10-16")

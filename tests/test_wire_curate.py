@@ -283,6 +283,33 @@ class HouseRuleTests(Workdir):
         editions = [item for item in cw.river(self.today()) if item["ch"] == "newsletters"]
         self.assertEqual(len(editions), 2)
 
+    def test_yesterdays_editions_stay_out_of_today(self):
+        # 2026-10-19: the 26-hour window back-filled four Sunday editions into
+        # Monday's first update. An edition runs only on its own Burlington
+        # day; one from after 9 pm last night still counts as this morning's.
+        monday = datetime(2026, 10, 19, 11, 7, tzinfo=timezone.utc)   # 7:07 am Eastern
+        ts = lambda iso: int(datetime.fromisoformat(iso).timestamp())  # noqa: E731
+        payload = pulse(n_local=0, n_world=0)
+        payload["sources"] += [
+            {"id": "semafor", "name": "Semafor", "short": "Semafor",
+             "site": "https://www.semafor.com/newsletters", "topic": "newsletters"},
+            {"id": "1440", "name": "1440", "short": "1440", "site": "https://join1440.com/",
+             "topic": "newsletters"}]
+        payload["items"] += [
+            {"t": "Sunday morning 1440", "u": "https://join1440.com/sun",
+             "d": ts("2026-10-18T09:38:08+00:00"), "s": "1440"},
+            {"t": "Sunday evening Semafor", "u": "https://semafor.com/s/sun",
+             "d": ts("2026-10-18T22:15:33+00:00"), "s": "semafor"},
+            {"t": "Late Sunday Semafor", "u": "https://semafor.com/s/late",
+             "d": ts("2026-10-19T02:30:00+00:00"), "s": "semafor"},
+            {"t": "Monday 1440", "u": "https://join1440.com/mon",
+             "d": ts("2026-10-19T08:28:20+00:00"), "s": "1440"}]
+        self.write_pulse(payload)
+        self.run_curate(Stub(take_all), now=monday)
+        titles = sorted(item["title"] for item in cw.river(self.today())
+                        if item["ch"] == "newsletters")
+        self.assertEqual(titles, ["Late Sunday Semafor", "Monday 1440"])
+
     def test_the_cap_never_drops_a_filed_newsletter_edition(self):
         et = wc.et_now(NOW)
         full = [{"id": f"w{k}", "ch": "world", "local": False, "src": "ap", "name": "AP",
