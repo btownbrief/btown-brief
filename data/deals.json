@@ -1,5 +1,5 @@
 {
- "generated": "2026-07-10",
+ "generated": "2026-10-19",
  "deals": [
   {
    "id": "3-needs-free-pool",
@@ -16,7 +16,8 @@
    "price_note": "free",
    "link": null,
    "source": "both",
-   "last_verified": "2026-03-25"
+   "last_verified": "2026-03-25",
+   "needs_check": "not on the business's own site 2026-10-19"
   },
   {
    "id": "3-needs-1-drafts",
@@ -38,7 +39,8 @@
    "price_note": "$1 drafts",
    "link": null,
    "source": "both",
-   "last_verified": "2026-03-25"
+   "last_verified": "2026-03-25",
+   "needs_check": "not on the business's own site 2026-10-19"
   },
   {
    "id": "american-flatbread-two-beers-and-a-large-cheese-pizza-for",
@@ -55,7 +57,8 @@
    "price_note": "$15",
    "link": null,
    "source": "both",
-   "last_verified": "2026-03-25"
+   "last_verified": "2026-03-25",
+   "needs_check": "not on the business's own site 2026-10-19"
   },
   {
    "id": "barkeaters-5-6oz-glasses-of-wine",
@@ -72,24 +75,25 @@
    "price_note": "$5",
    "link": null,
    "source": "both",
-   "last_verified": "2026-03-25"
+   "last_verified": "2026-03-25",
+   "needs_check": "Tuesday is now Teeny Tuesday; no $5 wine on the site 2026-10-19"
   },
   {
    "id": "barkeaters-burger-fries-beer-for-12",
    "business": "Barkeaters",
    "restaurant_id": "barkeaters",
-   "title": "Burger + fries + beer for $12",
+   "title": "$14 burger night: smash burger, fries + a VT beer (dine-in)",
    "type": "deal",
    "days": [
     "wed"
    ],
-   "start": null,
-   "end": null,
+   "start": "16:00",
+   "end": "20:15",
    "all_day": false,
-   "price_note": "$12",
-   "link": null,
+   "price_note": "$14 (dine-in only)",
+   "link": "https://www.barkeatersrestaurant.com/14-burger-night",
    "source": "both",
-   "last_verified": "2026-03-25"
+   "last_verified": "2026-10-19"
   },
   {
    "id": "barnyard-0-75-wings",
@@ -106,7 +110,8 @@
    "price_note": "$0.75/wing",
    "link": null,
    "source": "both",
-   "last_verified": "2026-03-25"
+   "last_verified": "2026-03-25",
+   "needs_check": "not on the business's own site 2026-10-19"
   },
   {
    "id": "barnyard-4-stella-artois",
@@ -123,7 +128,8 @@
    "price_note": "$4",
    "link": null,
    "source": "both",
-   "last_verified": "2026-03-25"
+   "last_verified": "2026-03-25",
+   "needs_check": "not on the business's own site 2026-10-19"
   },
   {
    "id": "black-flannel-all-draft-full-pours-5",
@@ -141,7 +147,8 @@
    "price_note": "$5 drafts",
    "link": null,
    "source": "both",
-   "last_verified": "2026-03-25"
+   "last_verified": "2026-03-25",
+   "needs_check": "not on the business's own site 2026-10-19"
   },
   {
    "id": "bleu-northeast-kitchen-1-oysters",
@@ -164,13 +171,14 @@
    "price_note": "$1/oyster",
    "link": null,
    "source": "both",
-   "last_verified": "2026-03-25"
+   "last_verified": "2026-03-25",
+   "needs_check": "own site says it closed Dec 31, 2025"
   },
   {
    "id": "burlington-beer-company-5-16oz-pours-of-elaborate-metaphor-new",
    "business": "Burlington Beer Company",
    "restaurant_id": "burlington-beer-company",
-   "title": "$5 16oz pours of Elaborate Metaphor (New England Pale Ale)",
+   "title": "$5 pours of Elaborate Metaphor",
    "type": "deal",
    "days": [
     "mon"
@@ -179,15 +187,15 @@
    "end": null,
    "all_day": false,
    "price_note": "$5",
-   "link": null,
+   "link": "https://www.burlingtonbeercompany.com/food-menu",
    "source": "both",
-   "last_verified": "2026-03-25"
+   "last_verified": "2026-10-19"
   },
   {
    "id": "burlington-beer-company-crispy-chicken-sandwich-12-tofu-banh-m",
    "business": "Burlington Beer Company",
    "restaurant_id": "burlington-beer-company",
-   "title": "Crispy chicken sandwich $12, tofu banh mi $18, $3 Lighthouse Lager",
+   "title": "$12 crispy chicken sandwich & $3 Lighthouse pours",
    "type": "deal",
    "days": [
     "tue"
@@ -195,11 +203,10 @@
    "start": null,
    "end": null,
    "all_day": false,
-   "price_note": "$12 / $18 / $3",
-   "link": null,
+   "price_note": "$12 / $3",
+   "link": "https://www.burlingtonbeercompany.com/food-menu",
    "source": "sheet",
-   "last_verified": null,
-   "conflict": "Beehiiv lists a different Tuesday deal ($10 for 2 tacos + Kings Canyon Lager); sheet may be stale or the special rotated"
+   "last_verified": "2026-10-19"
   },
   {
    "id": "burlington-beer-company-10-for-2-tacos-16oz-kings-canyon-lage",
@@ -217,13 +224,14 @@
    "link": null,
    "source": "beehiiv",
    "last_verified": "2026-03-25",
-   "conflict": "Sheet lists a different Tuesday deal (chicken sandwich $12 / banh mi $18 / $3 Lighthouse Lager)"
+   "conflict": "Sheet lists a different Tuesday deal (chicken sandwich $12 / banh mi $18 / $3 Lighthouse Lager)",
+   "needs_check": "site's Tuesday deal is now the $12 chicken sandwich + $3 Lighthouse"
   },
   {
    "id": "burlington-beer-company-5-pours-of-wizard-beers-16oz-little-wi",
    "business": "Burlington Beer Company",
    "restaurant_id": "burlington-beer-company",
-   "title": "$5 pours of Wizard beers: 16oz Little Wizard (NEIPA), 12oz Wizard (DIPA)",
+   "title": "$5 pours of Wizard & Wizard Family beers",
    "type": "deal",
    "days": [
     "wed"
@@ -232,9 +240,9 @@
    "end": null,
    "all_day": false,
    "price_note": "$5",
-   "link": null,
+   "link": "https://www.burlingtonbeercompany.com/food-menu",
    "source": "both",
-   "last_verified": "2026-03-25"
+   "last_verified": "2026-10-19"
   },
   {
    "id": "burlington-beer-company-2-slices-of-pizza-a-lighthouse-pilsne",
@@ -251,13 +259,31 @@
    "price_note": "$10",
    "link": null,
    "source": "both",
-   "last_verified": "2026-03-25"
+   "last_verified": "2026-03-25",
+   "needs_check": "site's Thursday deal is now $15 nachos + $5 Uncanny Valley pours"
   },
   {
-   "id": "city-market-6-select-sushi-rolls",
-   "business": "City Market",
-   "restaurant_id": "city-market",
-   "title": "$6 select sushi rolls",
+   "id": "burlington-beer-company-10-burger-night",
+   "business": "Burlington Beer Company",
+   "restaurant_id": "burlington-beer-company",
+   "title": "$10 burger night",
+   "type": "deal",
+   "days": [
+    "mon"
+   ],
+   "start": null,
+   "end": null,
+   "all_day": false,
+   "price_note": "$10",
+   "link": "https://www.burlingtonbeercompany.com/food-menu",
+   "source": "restaurant",
+   "last_verified": "2026-10-19"
+  },
+  {
+   "id": "burlington-beer-company-6-wings-for-6",
+   "business": "Burlington Beer Company",
+   "restaurant_id": "burlington-beer-company",
+   "title": "6 wings for $6",
    "type": "deal",
    "days": [
     "wed"
@@ -266,9 +292,43 @@
    "end": null,
    "all_day": false,
    "price_note": "$6",
-   "link": null,
+   "link": "https://www.burlingtonbeercompany.com/food-menu",
+   "source": "restaurant",
+   "last_verified": "2026-10-19"
+  },
+  {
+   "id": "burlington-beer-company-15-nachos-5-uncanny-valley-pours",
+   "business": "Burlington Beer Company",
+   "restaurant_id": "burlington-beer-company",
+   "title": "$15 nachos & $5 Uncanny Valley pours",
+   "type": "deal",
+   "days": [
+    "thu"
+   ],
+   "start": null,
+   "end": null,
+   "all_day": false,
+   "price_note": "$15 / $5",
+   "link": "https://www.burlingtonbeercompany.com/food-menu",
+   "source": "restaurant",
+   "last_verified": "2026-10-19"
+  },
+  {
+   "id": "city-market-6-select-sushi-rolls",
+   "business": "City Market",
+   "restaurant_id": "city-market",
+   "title": "$5.99 select sushi rolls",
+   "type": "deal",
+   "days": [
+    "wed"
+   ],
+   "start": null,
+   "end": null,
+   "all_day": true,
+   "price_note": "$5.99/roll",
+   "link": "https://citymarket.coop/sales-specials",
    "source": "both",
-   "last_verified": "2026-03-25"
+   "last_verified": "2026-10-19"
   },
   {
    "id": "daily-planet-5-mimosa-pints",
@@ -287,7 +347,8 @@
    "price_note": "$5",
    "link": null,
    "source": "both",
-   "last_verified": "2026-03-25"
+   "last_verified": "2026-03-25",
+   "needs_check": "official site down (expired certificate); possibly closed"
   },
   {
    "id": "daily-planet-half-off-wine-bottles",
@@ -304,7 +365,8 @@
    "price_note": "50% off bottles",
    "link": null,
    "source": "both",
-   "last_verified": "2026-03-25"
+   "last_verified": "2026-03-25",
+   "needs_check": "official site down (expired certificate); possibly closed"
   },
   {
    "id": "daily-planet-half-price-cocktails",
@@ -321,7 +383,8 @@
    "price_note": "50% off cocktails",
    "link": null,
    "source": "both",
-   "last_verified": "2026-03-25"
+   "last_verified": "2026-03-25",
+   "needs_check": "official site down (expired certificate); possibly closed"
   },
   {
    "id": "daily-planet-5-off-all-burgers-sandwiches",
@@ -338,7 +401,8 @@
    "price_note": "$5 off",
    "link": null,
    "source": "both",
-   "last_verified": "2026-03-25"
+   "last_verified": "2026-03-25",
+   "needs_check": "official site down (expired certificate); possibly closed"
   },
   {
    "id": "daily-planet-10-martinis",
@@ -355,7 +419,8 @@
    "price_note": "$10",
    "link": null,
    "source": "both",
-   "last_verified": "2026-03-25"
+   "last_verified": "2026-03-25",
+   "needs_check": "official site down (expired certificate); possibly closed"
   },
   {
    "id": "daily-planet-5-fiddlehead-ipa-pints",
@@ -372,13 +437,14 @@
    "price_note": "$5",
    "link": null,
    "source": "both",
-   "last_verified": "2026-03-25"
+   "last_verified": "2026-03-25",
+   "needs_check": "official site down (expired certificate); possibly closed"
   },
   {
    "id": "doma-bar-10-martini-with-house-made-potato-chips",
    "business": "Doma Bar",
    "restaurant_id": "doma-bar",
-   "title": "$10 martini with house-made potato chips",
+   "title": "$10 Martini Tuesday with house-made chicharrón de rueda",
    "type": "deal",
    "days": [
     "tue"
@@ -387,9 +453,26 @@
    "end": null,
    "all_day": false,
    "price_note": "$10",
-   "link": null,
+   "link": "https://www.doma.bar/",
    "source": "sheet",
-   "last_verified": null
+   "last_verified": "2026-10-19"
+  },
+  {
+   "id": "doma-bar-10-disco-aperitivo",
+   "business": "Doma Bar",
+   "restaurant_id": "doma-bar",
+   "title": "$10 Disco Aperitivo: classic spritzes",
+   "type": "deal",
+   "days": [
+    "fri"
+   ],
+   "start": null,
+   "end": null,
+   "all_day": false,
+   "price_note": "$10",
+   "link": "https://www.doma.bar/",
+   "source": "restaurant",
+   "last_verified": "2026-10-19"
   },
   {
    "id": "el-gato-essex-5-fiddlehead-ipa",
@@ -482,13 +565,14 @@
    "price_note": "$26",
    "link": null,
    "source": "both",
-   "last_verified": "2026-03-25"
+   "last_verified": "2026-03-25",
+   "needs_check": "own site disagrees: $27 on the prix fixe page, $26 in its banner (5-5:30 pm)"
   },
   {
    "id": "farmhouse-tap-grill-12-lunch-deals-soup-salad-or-half-s",
    "business": "Farmhouse Tap & Grill",
    "restaurant_id": "farmhouse-tap-grill",
-   "title": "$12 lunch deals: soup & salad, or half sandwich & side",
+   "title": "$17.50 lunch Blue Plate: half sandwich + crock of soup",
    "type": "deal",
    "days": [
     "sun",
@@ -502,10 +586,10 @@
    "start": null,
    "end": null,
    "all_day": false,
-   "price_note": "$12",
-   "link": null,
+   "price_note": "$17.50",
+   "link": "https://burlington.farmhousetg.com/lunch",
    "source": "sheet",
-   "last_verified": null
+   "last_verified": "2026-10-19"
   },
   {
    "id": "finnegan-s-pbr-special-sheet-3-pbr-pitchers-bee",
@@ -523,13 +607,14 @@
    "link": null,
    "source": "both",
    "last_verified": "2026-03-25",
-   "conflict": "Sheet says $3 PBR pitchers, beehiiv says $1 PBR"
+   "conflict": "Sheet says $3 PBR pitchers, beehiiv says $1 PBR",
+   "needs_check": "not on the business's own site 2026-10-19"
   },
   {
    "id": "follino-s-williston-1-wings",
-   "business": "Follino's (Williston)",
-   "restaurant_id": "folinos",
-   "title": "$1 wings",
+   "business": "Folino's (Williston)",
+   "restaurant_id": null,
+   "title": "$1 wings (dine-in)",
    "type": "deal",
    "days": [
     "tue"
@@ -537,10 +622,45 @@
    "start": null,
    "end": null,
    "all_day": false,
-   "price_note": "$1/wing",
-   "link": null,
+   "price_note": "$1/wing, dine-in only",
+   "link": "https://www.folinopizza.com/williston-menu",
    "source": "both",
-   "last_verified": "2026-03-25"
+   "last_verified": "2026-10-19"
+  },
+  {
+   "id": "folino-s-williston-5-good-measure-pitchers",
+   "business": "Folino's (Williston)",
+   "restaurant_id": null,
+   "title": "$5 Good Measure Early Riser pitchers (dine-in)",
+   "type": "deal",
+   "days": [
+    "tue"
+   ],
+   "start": null,
+   "end": null,
+   "all_day": false,
+   "price_note": "$5/pitcher, dine-in only",
+   "link": "https://www.folinopizza.com/williston-menu",
+   "source": "restaurant",
+   "last_verified": "2026-10-19"
+  },
+  {
+   "id": "folino-s-williston-5-fiddlehead-house-pour",
+   "business": "Folino's (Williston)",
+   "restaurant_id": null,
+   "title": "$5 20oz Fiddlehead house pour (dine-in)",
+   "type": "deal",
+   "days": [
+    "sun",
+    "wed"
+   ],
+   "start": null,
+   "end": null,
+   "all_day": false,
+   "price_note": "$5, dine-in only",
+   "link": "https://www.folinopizza.com/williston-menu",
+   "source": "restaurant",
+   "last_verified": "2026-10-19"
   },
   {
    "id": "four-quarters-brewing-16-family-dinner-meal",
@@ -557,7 +677,8 @@
    "price_note": "$16",
    "link": null,
    "source": "sheet",
-   "last_verified": null
+   "last_verified": null,
+   "needs_check": "not on the business's own site 2026-10-19"
   },
   {
    "id": "four-quarters-brewing-10-select-burgers",
@@ -574,7 +695,8 @@
    "price_note": "$10",
    "link": null,
    "source": "both",
-   "last_verified": "2026-03-25"
+   "last_verified": "2026-03-25",
+   "needs_check": "not on the business's own site 2026-10-19"
   },
   {
    "id": "gold-restaurant-12-pasta",
@@ -589,15 +711,15 @@
    "end": null,
    "all_day": false,
    "price_note": "$12",
-   "link": null,
+   "link": "https://www.fireandgoldvt.com/",
    "source": "both",
-   "last_verified": "2026-03-25"
+   "last_verified": "2026-10-19"
   },
   {
    "id": "gold-restaurant-8-wine-by-the-glass",
    "business": "Gold Restaurant",
    "restaurant_id": "gold-restaurant",
-   "title": "$8 wine by the glass",
+   "title": "$8 wine (Pasta Night)",
    "type": "deal",
    "days": [
     "tue"
@@ -605,10 +727,10 @@
    "start": null,
    "end": null,
    "all_day": false,
-   "price_note": "$8/glass",
-   "link": null,
+   "price_note": "$8",
+   "link": "https://www.fireandgoldvt.com/",
    "source": "both",
-   "last_verified": "2026-03-25"
+   "last_verified": "2026-10-19"
   },
   {
    "id": "gold-restaurant-1-oysters",
@@ -617,8 +739,8 @@
    "title": "$1 oysters",
    "type": "happy-hour",
    "days": [
-    "tue",
     "wed",
+    "thu",
     "fri",
     "sat"
    ],
@@ -626,9 +748,9 @@
    "end": "18:00",
    "all_day": false,
    "price_note": "$1/oyster",
-   "link": null,
+   "link": "https://www.fireandgoldvt.com/",
    "source": "both",
-   "last_verified": "2026-03-25"
+   "last_verified": "2026-10-19"
   },
   {
    "id": "gold-restaurant-1-oysters-all-day",
@@ -645,13 +767,14 @@
    "price_note": "$1/oyster",
    "link": null,
    "source": "both",
-   "last_verified": "2026-03-25"
+   "last_verified": "2026-03-25",
+   "needs_check": "site now lists $1 oysters Wed-Sat 4:30-6 pm only"
   },
   {
    "id": "gold-restaurant-half-priced-house-cocktails-and-mocktail",
    "business": "Gold Restaurant",
    "restaurant_id": "gold-restaurant",
-   "title": "Half priced house cocktails and mocktails",
+   "title": "Half price cocktail specials (Featured Cocktail Night)",
    "type": "deal",
    "days": [
     "wed"
@@ -660,15 +783,15 @@
    "end": null,
    "all_day": false,
    "price_note": "50% off",
-   "link": null,
+   "link": "https://www.fireandgoldvt.com/",
    "source": "both",
-   "last_verified": "2026-03-25"
+   "last_verified": "2026-10-19"
   },
   {
    "id": "guild-tavern-20-house-burger-beer",
    "business": "Guild Tavern",
    "restaurant_id": "guild-tavern",
-   "title": "$20 house burger & beer",
+   "title": "Sunday night $22 burger & a bartender-selected draft",
    "type": "deal",
    "days": [
     "sun"
@@ -676,10 +799,10 @@
    "start": null,
    "end": null,
    "all_day": false,
-   "price_note": "$20",
-   "link": null,
+   "price_note": "$22",
+   "link": "https://www.guildtavern.com/bar",
    "source": "both",
-   "last_verified": "2026-03-25"
+   "last_verified": "2026-10-19"
   },
   {
    "id": "halvorson-s-5-bloody-mary",
@@ -699,7 +822,8 @@
    "link": null,
    "source": "both",
    "last_verified": "2026-03-25",
-   "conflict": "Beehiiv includes Friday; sheet lists Sunday and Saturday only"
+   "conflict": "Beehiiv includes Friday; sheet lists Sunday and Saturday only",
+   "needs_check": "not on the business's own site 2026-10-19"
   },
   {
    "id": "hen-of-the-wood-2-oysters",
@@ -708,15 +832,21 @@
    "title": "$2 oysters",
    "type": "happy-hour",
    "days": [
-    "fri"
+    "sun",
+    "mon",
+    "tue",
+    "wed",
+    "thu",
+    "fri",
+    "sat"
    ],
    "start": "16:00",
    "end": "17:00",
    "all_day": false,
    "price_note": "$2/oyster",
-   "link": null,
+   "link": "https://www.henofthewood.com/burlington",
    "source": "both",
-   "last_verified": "2026-03-25"
+   "last_verified": "2026-10-19"
   },
   {
    "id": "ken-s-pizza-pub-2-off-winter-specialty-cocktails",
@@ -733,7 +863,8 @@
    "price_note": "$2 off",
    "link": null,
    "source": "both",
-   "last_verified": "2026-03-25"
+   "last_verified": "2026-03-25",
+   "needs_check": "not on the business's own site 2026-10-19"
   },
   {
    "id": "ken-s-pizza-pub-2-off-tacos",
@@ -750,7 +881,8 @@
    "price_note": "$2 off",
    "link": null,
    "source": "both",
-   "last_verified": "2026-03-25"
+   "last_verified": "2026-03-25",
+   "needs_check": "not on the business's own site 2026-10-19"
   },
   {
    "id": "ken-s-pizza-pub-1-off-margaritas",
@@ -767,7 +899,8 @@
    "price_note": "$1 off",
    "link": null,
    "source": "both",
-   "last_verified": "2026-03-25"
+   "last_verified": "2026-03-25",
+   "needs_check": "not on the business's own site 2026-10-19"
   },
   {
    "id": "ken-s-pizza-pub-2-off-all-glasses-of-wine",
@@ -784,7 +917,8 @@
    "price_note": "$2 off",
    "link": null,
    "source": "both",
-   "last_verified": "2026-03-25"
+   "last_verified": "2026-03-25",
+   "needs_check": "not on the business's own site 2026-10-19"
   },
   {
    "id": "ken-s-pizza-pub-2-off-local-draft-beers",
@@ -801,7 +935,8 @@
    "price_note": "$2 off",
    "link": null,
    "source": "both",
-   "last_verified": "2026-03-25"
+   "last_verified": "2026-03-25",
+   "needs_check": "not on the business's own site 2026-10-19"
   },
   {
    "id": "ken-s-pizza-pub-2-off-martinis",
@@ -818,7 +953,8 @@
    "price_note": "$2 off",
    "link": null,
    "source": "both",
-   "last_verified": "2026-03-25"
+   "last_verified": "2026-03-25",
+   "needs_check": "not on the business's own site 2026-10-19"
   },
   {
    "id": "last-stop-3-50-twisted-tea",
@@ -835,13 +971,14 @@
    "price_note": "$3.50",
    "link": null,
    "source": "both",
-   "last_verified": "2026-03-25"
+   "last_verified": "2026-03-25",
+   "needs_check": "only on Facebook, which we couldn't read"
   },
   {
    "id": "leunig-s-bistro-2-course-bistro-dinner-for-26-3-5-pm",
    "business": "Leunig's Bistro",
    "restaurant_id": "leunigs-bistro",
-   "title": "2-course 'Bistro Dinner' for $26 (3-5 PM and the last hour of service)",
+   "title": "2-course Bistro Dinner (early bird) for $28, dine-in",
    "type": "happy-hour",
    "days": [
     "sun",
@@ -855,16 +992,16 @@
    "start": "15:00",
    "end": "17:00",
    "all_day": false,
-   "price_note": "$26",
-   "link": null,
+   "price_note": "$28; dine-in, order by 5 pm",
+   "link": "https://www.leunigsbistro.com/bistro-dinner-early-bird-28",
    "source": "beehiiv",
-   "last_verified": "2026-03-25"
+   "last_verified": "2026-10-19"
   },
   {
    "id": "may-day-10-patty-melt",
    "business": "May Day",
    "restaurant_id": "may-day",
-   "title": "$10 patty melt",
+   "title": "$10 patty melt (Sunday night only)",
    "type": "deal",
    "days": [
     "sun"
@@ -873,9 +1010,9 @@
    "end": null,
    "all_day": false,
    "price_note": "$10",
-   "link": null,
+   "link": "https://www.maydayvt.com/",
    "source": "both",
-   "last_verified": "2026-03-25"
+   "last_verified": "2026-10-19"
   },
   {
    "id": "mcgillicuddy-s-half-price-burgers",
@@ -892,7 +1029,8 @@
    "price_note": "50% off burgers",
    "link": null,
    "source": "both",
-   "last_verified": "2026-03-25"
+   "last_verified": "2026-03-25",
+   "needs_check": "not on the business's own site 2026-10-19"
   },
   {
    "id": "monkey-house-5-zero-gravity-beer",
@@ -909,7 +1047,8 @@
    "price_note": "$5",
    "link": null,
    "source": "both",
-   "last_verified": "2026-03-25"
+   "last_verified": "2026-03-25",
+   "needs_check": "not on the business's own site 2026-10-19"
   },
   {
    "id": "monkey-house-2-cheese-pizza-slice-2-50-pepperoni-p",
@@ -926,7 +1065,8 @@
    "price_note": "$2 / $2.50",
    "link": null,
    "source": "both",
-   "last_verified": "2026-03-25"
+   "last_verified": "2026-03-25",
+   "needs_check": "not on the business's own site 2026-10-19"
   },
   {
    "id": "mule-bar-7-deluxe-hotdog",
@@ -943,7 +1083,8 @@
    "price_note": "$7",
    "link": null,
    "source": "both",
-   "last_verified": "2026-03-25"
+   "last_verified": "2026-03-25",
+   "needs_check": "not on the business's own site 2026-10-19"
   },
   {
    "id": "onion-city-chicken-and-oyster-5-hotdogs",
@@ -960,7 +1101,8 @@
    "price_note": "$5",
    "link": null,
    "source": "both",
-   "last_verified": "2026-03-25"
+   "last_verified": "2026-03-25",
+   "needs_check": "not on its own site (onioncityvt.com) 2026-10-19"
   },
   {
    "id": "onion-city-chicken-and-oyster-2-lite-beers",
@@ -977,7 +1119,8 @@
    "price_note": "$2",
    "link": null,
    "source": "both",
-   "last_verified": "2026-03-25"
+   "last_verified": "2026-03-25",
+   "needs_check": "not on its own site (onioncityvt.com) 2026-10-19"
   },
   {
    "id": "onion-city-chicken-and-oyster-extra-shrimp",
@@ -994,7 +1137,8 @@
    "price_note": null,
    "link": null,
    "source": "both",
-   "last_verified": "2026-03-25"
+   "last_verified": "2026-03-25",
+   "needs_check": "not on its own site (onioncityvt.com) 2026-10-19"
   },
   {
    "id": "onion-city-chicken-and-oyster-buy-one-get-one-desserts",
@@ -1011,7 +1155,8 @@
    "price_note": "BOGO",
    "link": null,
    "source": "both",
-   "last_verified": "2026-03-25"
+   "last_verified": "2026-03-25",
+   "needs_check": "not on its own site (onioncityvt.com) 2026-10-19"
   },
   {
    "id": "onion-city-chicken-and-oyster-5-off-fried-chicken-buckets",
@@ -1028,7 +1173,8 @@
    "price_note": "$5 off",
    "link": null,
    "source": "both",
-   "last_verified": "2026-03-25"
+   "last_verified": "2026-03-25",
+   "needs_check": "not on its own site (onioncityvt.com) 2026-10-19"
   },
   {
    "id": "onion-city-chicken-and-oyster-5-off-mussels",
@@ -1045,7 +1191,8 @@
    "price_note": "$5 off",
    "link": null,
    "source": "both",
-   "last_verified": "2026-03-25"
+   "last_verified": "2026-03-25",
+   "needs_check": "not on its own site (onioncityvt.com) 2026-10-19"
   },
   {
    "id": "onion-city-chicken-and-oyster-5-off-takeout-orders-over-50",
@@ -1063,7 +1210,8 @@
    "price_note": "$5 off",
    "link": null,
    "source": "both",
-   "last_verified": "2026-03-25"
+   "last_verified": "2026-03-25",
+   "needs_check": "not on its own site (onioncityvt.com) 2026-10-19"
   },
   {
    "id": "pizzeria-verita-5-off-margherita-pizzas",
@@ -1078,10 +1226,9 @@
    "end": null,
    "all_day": false,
    "price_note": "$5 off",
-   "link": null,
+   "link": "https://www.pizzeriaverita.com/",
    "source": "both",
-   "last_verified": "2026-03-25",
-   "conflict": "Sheet spells the business 'Pizza Veritas'; beehiiv 'Pizzeria Verità' (assumed same business)"
+   "last_verified": "2026-10-19"
   },
   {
    "id": "pingala-breakfast-special-breakfast-sandwich-s",
@@ -1104,24 +1251,25 @@
    "price_note": "$5.99 (+$2 coffee)",
    "link": null,
    "source": "sheet",
-   "last_verified": null
+   "last_verified": null,
+   "needs_check": "not on the business's own site 2026-10-19"
   },
   {
    "id": "ri-ra-irish-pub-10-smash-burger-and-10-select-draft-pi",
    "business": "Rí Rá Irish Pub",
    "restaurant_id": "ri-ra-irish-pub",
-   "title": "$10 smash burger and $10 select draft pitchers",
+   "title": "$10 smash burger + fries, $10 select draft pitchers (from 5 pm)",
    "type": "deal",
    "days": [
     "tue"
    ],
-   "start": null,
+   "start": "17:00",
    "end": null,
    "all_day": false,
    "price_note": "$10",
-   "link": null,
+   "link": "https://rira.com/burlington/whats-on/",
    "source": "sheet",
-   "last_verified": null
+   "last_verified": "2026-10-19"
   },
   {
    "id": "ri-ra-irish-pub-1-beer",
@@ -1138,7 +1286,8 @@
    "price_note": "$1",
    "link": null,
    "source": "beehiiv",
-   "last_verified": "2026-03-25"
+   "last_verified": "2026-03-25",
+   "needs_check": "not on the business's own site 2026-10-19"
   },
   {
    "id": "rj-s-wings-85-cents-sunday-rising-1-cent-per",
@@ -1161,7 +1310,8 @@
    "price_note": "$0.85-$0.91/wing + $5 burger",
    "link": null,
    "source": "both",
-   "last_verified": "2026-03-25"
+   "last_verified": "2026-03-25",
+   "needs_check": "official site is now a parked domain"
   },
   {
    "id": "rotisserie-0-85-wings",
@@ -1178,7 +1328,8 @@
    "price_note": "$0.85/wing",
    "link": null,
    "source": "both",
-   "last_verified": "2026-03-25"
+   "last_verified": "2026-03-25",
+   "needs_check": "official site gone (domain now unrelated); possibly closed"
   },
   {
    "id": "rotisserie-3-95-taco-tuesday",
@@ -1195,7 +1346,8 @@
    "price_note": "$3.95",
    "link": null,
    "source": "both",
-   "last_verified": "2026-03-25"
+   "last_verified": "2026-03-25",
+   "needs_check": "official site gone (domain now unrelated); possibly closed"
   },
   {
    "id": "rotisserie-5-sliders",
@@ -1212,7 +1364,8 @@
    "price_note": "$5",
    "link": null,
    "source": "both",
-   "last_verified": "2026-03-25"
+   "last_verified": "2026-03-25",
+   "needs_check": "official site gone (domain now unrelated); possibly closed"
   },
   {
    "id": "rotisserie-3-switchback-ale",
@@ -1230,7 +1383,8 @@
    "link": null,
    "source": "both",
    "last_verified": "2026-03-25",
-   "conflict": "Sheet lists this under Thursday; beehiiv under Friday (beehiiv day used)"
+   "conflict": "Sheet lists this under Thursday; beehiiv under Friday (beehiiv day used)",
+   "needs_check": "official site gone (domain now unrelated); possibly closed"
   },
   {
    "id": "rozzi-s-lakeshore-tavern-2-tacos",
@@ -1247,7 +1401,8 @@
    "price_note": "$2",
    "link": null,
    "source": "both",
-   "last_verified": "2026-03-25"
+   "last_verified": "2026-03-25",
+   "needs_check": "only on an undated page of a site whose certificate expired in 2023"
   },
   {
    "id": "rozzi-s-lakeshore-tavern-bacon-cheeseburger-with-fries-and-a-pint",
@@ -1264,7 +1419,8 @@
    "price_note": "$9.99",
    "link": null,
    "source": "both",
-   "last_verified": "2026-03-25"
+   "last_verified": "2026-03-25",
+   "needs_check": "only on an undated page of a site whose certificate expired in 2023"
   },
   {
    "id": "shalimar-sunday-brunch-buffet",
@@ -1282,13 +1438,14 @@
    "link": null,
    "source": "both",
    "last_verified": "2026-03-25",
-   "conflict": "Sheet price marked uncertain ('$14 I think')"
+   "conflict": "Sheet price marked uncertain ('$14 I think')",
+   "needs_check": "site mentions only a daily lunch buffet, no Sunday brunch or price"
   },
   {
    "id": "shelburne-taphouse-pizza-beer-night-12-cheese-or-pepper",
    "business": "Shelburne Taphouse",
    "restaurant_id": "shelburne-taphouse",
-   "title": "Pizza & Beer Night: $12 cheese or pepperoni pizzas",
+   "title": "Pizza Monday: $12 cheese or pepperoni pizza",
    "type": "deal",
    "days": [
     "mon"
@@ -1297,10 +1454,9 @@
    "end": null,
    "all_day": false,
    "price_note": "$12",
-   "link": null,
+   "link": "https://www.shelburnetaphouse.com/weekly-specials-2",
    "source": "sheet",
-   "last_verified": null,
-   "conflict": "Beehiiv lists 'half off burgers' as the Monday food deal instead of Pizza & Beer Night"
+   "last_verified": "2026-10-19"
   },
   {
    "id": "shelburne-taphouse-half-off-burgers",
@@ -1318,13 +1474,14 @@
    "link": null,
    "source": "beehiiv",
    "last_verified": "2026-03-25",
-   "conflict": "Sheet lists Pizza & Beer Night ($12 pizzas) as the Monday food deal instead"
+   "conflict": "Sheet lists Pizza & Beer Night ($12 pizzas) as the Monday food deal instead",
+   "needs_check": "site's Monday deal is Pizza Monday; no half-off burgers"
   },
   {
    "id": "shelburne-taphouse-3-beer-sheet-choice-of-beer-with-pizz",
    "business": "Shelburne Taphouse",
    "restaurant_id": "shelburne-taphouse",
-   "title": "$3 beer (sheet: choice of beer with pizza night; beehiiv: bottled beer)",
+   "title": "$3 bottled beer",
    "type": "deal",
    "days": [
     "mon"
@@ -1333,10 +1490,9 @@
    "end": null,
    "all_day": false,
    "price_note": "$3",
-   "link": null,
+   "link": "https://www.shelburnetaphouse.com/weekly-specials-2",
    "source": "both",
-   "last_verified": "2026-03-25",
-   "conflict": "Sheet: '$3 choice of beer'; beehiiv: '$3 bottled beer'"
+   "last_verified": "2026-10-19"
   },
   {
    "id": "shelburne-taphouse-5-tacos",
@@ -1351,9 +1507,9 @@
    "end": null,
    "all_day": false,
    "price_note": "$5",
-   "link": null,
+   "link": "https://www.shelburnetaphouse.com/weekly-specials-2",
    "source": "both",
-   "last_verified": "2026-03-25"
+   "last_verified": "2026-10-19"
   },
   {
    "id": "shelburne-taphouse-5-margaritas",
@@ -1368,9 +1524,9 @@
    "end": null,
    "all_day": false,
    "price_note": "$5",
-   "link": null,
+   "link": "https://www.shelburnetaphouse.com/weekly-specials-2",
    "source": "both",
-   "last_verified": "2026-03-25"
+   "last_verified": "2026-10-19"
   },
   {
    "id": "shelburne-taphouse-5-glass-of-house-chardonnay-or-cabernet",
@@ -1385,9 +1541,9 @@
    "end": null,
    "all_day": false,
    "price_note": "$5/glass",
-   "link": null,
+   "link": "https://www.shelburnetaphouse.com/weekly-specials-2",
    "source": "both",
-   "last_verified": "2026-03-25"
+   "last_verified": "2026-10-19"
   },
   {
    "id": "shelburne-taphouse-buy-one-salad-get-one-half-off",
@@ -1402,9 +1558,9 @@
    "end": null,
    "all_day": false,
    "price_note": "BOGO 50% off",
-   "link": null,
+   "link": "https://www.shelburnetaphouse.com/weekly-specials-2",
    "source": "both",
-   "last_verified": "2026-03-25"
+   "last_verified": "2026-10-19"
   },
   {
    "id": "shelburne-taphouse-0-75-wings",
@@ -1419,15 +1575,15 @@
    "end": null,
    "all_day": false,
    "price_note": "$0.75/wing",
-   "link": null,
+   "link": "https://www.shelburnetaphouse.com/weekly-specials-2",
    "source": "both",
-   "last_verified": "2026-03-25"
+   "last_verified": "2026-10-19"
   },
   {
    "id": "shelburne-taphouse-3-pbr",
    "business": "Shelburne Taphouse",
    "restaurant_id": "shelburne-taphouse",
-   "title": "$3 PBR",
+   "title": "$3 Narragansett",
    "type": "deal",
    "days": [
     "thu"
@@ -1436,9 +1592,9 @@
    "end": null,
    "all_day": false,
    "price_note": "$3",
-   "link": null,
+   "link": "https://www.shelburnetaphouse.com/weekly-specials-2",
    "source": "both",
-   "last_verified": "2026-03-25"
+   "last_verified": "2026-10-19"
   },
   {
    "id": "shelburne-taphouse-5-fiddlehead-drafts",
@@ -1453,9 +1609,9 @@
    "end": null,
    "all_day": false,
    "price_note": "$5",
-   "link": null,
+   "link": "https://www.shelburnetaphouse.com/weekly-specials-2",
    "source": "both",
-   "last_verified": "2026-03-25"
+   "last_verified": "2026-10-19"
   },
   {
    "id": "shelburne-taphouse-12-fish-and-chips",
@@ -1470,9 +1626,9 @@
    "end": null,
    "all_day": false,
    "price_note": "$12",
-   "link": null,
+   "link": "https://www.shelburnetaphouse.com/weekly-specials-2",
    "source": "both",
-   "last_verified": "2026-03-25"
+   "last_verified": "2026-10-19"
   },
   {
    "id": "shelburne-taphouse-5-switchback-drafts",
@@ -1489,7 +1645,8 @@
    "price_note": "$5",
    "link": null,
    "source": "both",
-   "last_verified": "2026-03-25"
+   "last_verified": "2026-03-25",
+   "needs_check": "site's Saturday deal is now Mimosa Saturday"
   },
   {
    "id": "shelburne-taphouse-buy-one-chicken-sandwich-get-one-half-o",
@@ -1502,11 +1659,45 @@
    ],
    "start": null,
    "end": null,
-   "all_day": false,
+   "all_day": true,
    "price_note": "BOGO 50% off",
-   "link": null,
+   "link": "https://www.shelburnetaphouse.com/weekly-specials-2",
    "source": "both",
-   "last_verified": "2026-03-25"
+   "last_verified": "2026-10-19"
+  },
+  {
+   "id": "shelburne-taphouse-5-off-any-bottle-of-wine",
+   "business": "Shelburne Taphouse",
+   "restaurant_id": "shelburne-taphouse",
+   "title": "$5 off any bottle of wine",
+   "type": "deal",
+   "days": [
+    "wed"
+   ],
+   "start": null,
+   "end": null,
+   "all_day": false,
+   "price_note": "$5 off",
+   "link": "https://www.shelburnetaphouse.com/weekly-specials-2",
+   "source": "restaurant",
+   "last_verified": "2026-10-19"
+  },
+  {
+   "id": "shelburne-taphouse-5-mimosas",
+   "business": "Shelburne Taphouse",
+   "restaurant_id": "shelburne-taphouse",
+   "title": "$5 mimosas",
+   "type": "deal",
+   "days": [
+    "sat"
+   ],
+   "start": null,
+   "end": null,
+   "all_day": true,
+   "price_note": "$5",
+   "link": "https://www.shelburnetaphouse.com/weekly-specials-2",
+   "source": "restaurant",
+   "last_verified": "2026-10-19"
   },
   {
    "id": "skinny-pancake-half-price-burgers",
@@ -1525,7 +1716,8 @@
    "link": null,
    "source": "both",
    "last_verified": "2026-03-25",
-   "conflict": "Beehiiv lists Monday and Thursday; sheet lists Monday only"
+   "conflict": "Beehiiv lists Monday and Thursday; sheet lists Monday only",
+   "needs_check": "site lists it under \"Spring Specials\" (last updated May 2026); may still run"
   },
   {
    "id": "skinny-pancake-buy-one-get-one-free-crepes",
@@ -1542,7 +1734,8 @@
    "price_note": "BOGO",
    "link": null,
    "source": "both",
-   "last_verified": "2026-03-25"
+   "last_verified": "2026-03-25",
+   "needs_check": "site lists it under \"Spring Specials\" (last updated May 2026); may still run"
   },
   {
    "id": "skinny-pancake-daily-driver-10-breakfast-sammy-dri",
@@ -1563,7 +1756,8 @@
    "price_note": "$10",
    "link": null,
    "source": "beehiiv",
-   "last_verified": "2026-03-25"
+   "last_verified": "2026-03-25",
+   "needs_check": "site lists it under \"Spring Specials\" (last updated May 2026); may still run"
   },
   {
    "id": "standing-stone-wine-10-off-retail-and-2-off-wine-by-the-gl",
@@ -1582,13 +1776,14 @@
    "link": null,
    "source": "both",
    "last_verified": "2026-03-25",
-   "conflict": "Beehiiv lists Wednesday and Thursday; sheet lists Wednesday only"
+   "conflict": "Beehiiv lists Wednesday and Thursday; sheet lists Wednesday only",
+   "needs_check": "not on the business's own site 2026-10-19"
   },
   {
    "id": "switchback-brewing-burger-and-switchback-wednesdays",
    "business": "Switchback Brewing",
    "restaurant_id": "switchback-brewing",
-   "title": "Burger and Switchback Wednesdays",
+   "title": "$12 Buns & Brew: burger or pulled pork sandwich + Switchback Ale (kitchen closes 8 pm)",
    "type": "deal",
    "days": [
     "wed"
@@ -1596,17 +1791,16 @@
    "start": null,
    "end": null,
    "all_day": false,
-   "price_note": "$12 (sheet) / $10 (beehiiv)",
-   "link": null,
+   "price_note": "$12",
+   "link": "https://www.switchbackvt.com/menu",
    "source": "both",
-   "last_verified": "2026-03-25",
-   "conflict": "Sheet says $12 burger, beehiiv says $10 burger"
+   "last_verified": "2026-10-19"
   },
   {
    "id": "switchback-brewing-half-price-wings",
    "business": "Switchback Brewing",
    "restaurant_id": "switchback-brewing",
-   "title": "Half price wings",
+   "title": "Half price wings (kitchen closes 8 pm)",
    "type": "deal",
    "days": [
     "thu"
@@ -1615,15 +1809,15 @@
    "end": null,
    "all_day": false,
    "price_note": "50% off wings",
-   "link": null,
+   "link": "https://www.switchbackvt.com/menu",
    "source": "both",
-   "last_verified": "2026-03-25"
+   "last_verified": "2026-10-19"
   },
   {
    "id": "switchback-brewing-5-pints-of-selected-beers-beehiiv-5",
    "business": "Switchback Brewing",
    "restaurant_id": "switchback-brewing",
-   "title": "$5 pints of selected beers (beehiiv: $5 Mansfield IPA pints)",
+   "title": "$5 Mansfield IPA pints",
    "type": "deal",
    "days": [
     "thu"
@@ -1632,10 +1826,43 @@
    "end": null,
    "all_day": false,
    "price_note": "$5/pint",
-   "link": null,
+   "link": "https://www.switchbackvt.com/menu",
    "source": "both",
-   "last_verified": "2026-03-25",
-   "conflict": "Sheet: '$5 pints (selected beers)'; beehiiv names Mansfield IPA specifically"
+   "last_verified": "2026-10-19"
+  },
+  {
+   "id": "switchback-brewing-5-e-z-pints",
+   "business": "Switchback Brewing",
+   "restaurant_id": "switchback-brewing",
+   "title": "$5 E-Z pints",
+   "type": "deal",
+   "days": [
+    "tue"
+   ],
+   "start": null,
+   "end": null,
+   "all_day": false,
+   "price_note": "$5/pint",
+   "link": "https://www.switchbackvt.com/menu",
+   "source": "restaurant",
+   "last_verified": "2026-10-19"
+  },
+  {
+   "id": "switchback-brewing-5-switchback-ale-pints",
+   "business": "Switchback Brewing",
+   "restaurant_id": "switchback-brewing",
+   "title": "$5 Switchback Ale pints",
+   "type": "deal",
+   "days": [
+    "wed"
+   ],
+   "start": null,
+   "end": null,
+   "all_day": true,
+   "price_note": "$5/pint",
+   "link": "https://www.switchbackvt.com/menu",
+   "source": "restaurant",
+   "last_verified": "2026-10-19"
   },
   {
    "id": "t-ruggs-4-zero-gravity-cans",
@@ -1652,7 +1879,8 @@
    "price_note": "$4",
    "link": null,
    "source": "both",
-   "last_verified": "2026-03-25"
+   "last_verified": "2026-03-25",
+   "needs_check": "not on the business's own site 2026-10-19"
   },
   {
    "id": "t-ruggs-food-pop-up",
@@ -1669,7 +1897,8 @@
    "price_note": null,
    "link": null,
    "source": "both",
-   "last_verified": "2026-03-25"
+   "last_verified": "2026-03-25",
+   "needs_check": "not on the business's own site 2026-10-19"
   },
   {
    "id": "the-kitchen-table-5-drafts",
@@ -1711,41 +1940,41 @@
    "id": "vt-pub-and-brewery-25-off-food-for-restaurant-workers",
    "business": "VT Pub and Brewery",
    "restaurant_id": "vermont-pub-brewery",
-   "title": "25% off food for restaurant workers",
+   "title": "25% off food for service industry workers (Industry Day)",
    "type": "deal",
    "days": [
     "mon"
    ],
    "start": null,
    "end": null,
-   "all_day": false,
-   "price_note": "25% off",
-   "link": null,
+   "all_day": true,
+   "price_note": "25% off food; not some holidays, no other offers",
+   "link": "https://vermontbrewery.com/industry-day",
    "source": "both",
-   "last_verified": "2026-03-25"
+   "last_verified": "2026-10-19"
   },
   {
    "id": "vt-pub-and-brewery-15-off-with-vt-id",
    "business": "VT Pub and Brewery",
    "restaurant_id": "vermont-pub-brewery",
-   "title": "15% off with VT ID",
+   "title": "15% off food with VT or Canadian ID (802sday)",
    "type": "deal",
    "days": [
     "tue"
    ],
    "start": null,
    "end": null,
-   "all_day": false,
-   "price_note": "15% off",
-   "link": null,
+   "all_day": true,
+   "price_note": "15% off food; not some holidays, no other offers",
+   "link": "https://vermontbrewery.com/802sday",
    "source": "both",
-   "last_verified": "2026-03-25"
+   "last_verified": "2026-10-19"
   },
   {
    "id": "vt-pub-and-brewery-reduced-price-snack-menu",
    "business": "VT Pub and Brewery",
    "restaurant_id": "vermont-pub-brewery",
-   "title": "Reduced-price snack menu",
+   "title": "Reduced-price snack menu (Pub Hour)",
    "type": "happy-hour",
    "days": [
     "wed",
@@ -1755,10 +1984,10 @@
    "start": "15:00",
    "end": "17:00",
    "all_day": false,
-   "price_note": null,
-   "link": null,
+   "price_note": "reduced-price snacks; not some holidays, no other offers",
+   "link": "https://vermontbrewery.com/pub-hour",
    "source": "both",
-   "last_verified": "2026-03-25"
+   "last_verified": "2026-10-19"
   },
   {
    "id": "zero-gravity-pine-st-3-pints-of-green-state-lager-green-st",
@@ -1775,7 +2004,8 @@
    "price_note": "$3/pint",
    "link": null,
    "source": "both",
-   "last_verified": "2026-03-25"
+   "last_verified": "2026-03-25",
+   "needs_check": "not on the business's own site 2026-10-19"
   },
   {
    "id": "zero-gravity-pine-st-3-pints-of-conehead-conehead-haze",
@@ -1792,13 +2022,14 @@
    "price_note": "$3/pint",
    "link": null,
    "source": "both",
-   "last_verified": "2026-03-25"
+   "last_verified": "2026-03-25",
+   "needs_check": "not on the business's own site 2026-10-19"
   },
   {
    "id": "99-restaurants-football-specials-in-the-bar-5-99-wing",
    "business": "99 Restaurants",
    "restaurant_id": "99-restaurants",
-   "title": "Football specials in the bar: $5.99 wings, $6.99 apps",
+   "title": "Football Sundays at the bar: $6.99 6-pack bone-in wings",
    "type": "deal",
    "days": [
     "sun"
@@ -1806,10 +2037,10 @@
    "start": null,
    "end": null,
    "all_day": false,
-   "price_note": "$5.99 wings / $6.99 apps",
-   "link": null,
+   "price_note": "$6.99 wings",
+   "link": "https://99restaurants.com/locations/vt/williston/11-taft-corners-shopping-center/",
    "source": "beehiiv",
-   "last_verified": "2026-03-25"
+   "last_verified": "2026-10-19"
   },
   {
    "id": "bluebird-barbecue-free-kids-meal",
@@ -1826,13 +2057,14 @@
    "price_note": "free (kids)",
    "link": null,
    "source": "beehiiv",
-   "last_verified": "2026-03-25"
+   "last_verified": "2026-03-25",
+   "needs_check": "not on the business's own site 2026-10-19; site lists Monday as closed"
   },
   {
    "id": "buffalo-wild-wings-buy-one-get-one-50-off-traditional-wing",
    "business": "Buffalo Wild Wings",
    "restaurant_id": "buffalo-wild-wings",
-   "title": "Buy one get one 50% off traditional wings",
+   "title": "Buy one, get one 50% off bone-in wings",
    "type": "deal",
    "days": [
     "tue"
@@ -1840,16 +2072,16 @@
    "start": null,
    "end": null,
    "all_day": false,
-   "price_note": "BOGO 50% off",
-   "link": null,
+   "price_note": "BOGO 50% off (equal or lesser value); dine-in or BWW app/web, limit 1, size exclusions",
+   "link": "https://www.buffalowildwings.com/promos/",
    "source": "beehiiv",
-   "last_verified": "2026-03-25"
+   "last_verified": "2026-10-19"
   },
   {
    "id": "buffalo-wild-wings-buy-one-get-one-boneless-wings",
    "business": "Buffalo Wild Wings",
    "restaurant_id": "buffalo-wild-wings",
-   "title": "Buy one get one boneless wings",
+   "title": "Buy one get one free boneless wings (online takeout/delivery only)",
    "type": "deal",
    "days": [
     "thu"
@@ -1857,10 +2089,10 @@
    "start": null,
    "end": null,
    "all_day": false,
-   "price_note": "BOGO",
-   "link": null,
+   "price_note": "BOGO free (equal value); BWW app/web takeout & delivery only, limit 1, while supplies last",
+   "link": "https://www.buffalowildwings.com/promos/",
    "source": "beehiiv",
-   "last_verified": "2026-03-25"
+   "last_verified": "2026-10-19"
   },
   {
    "id": "moe-s-kids-eat-free-with-adult-entree",
@@ -1877,7 +2109,8 @@
    "price_note": "free (kids)",
    "link": null,
    "source": "beehiiv",
-   "last_verified": "2026-03-25"
+   "last_verified": "2026-03-25",
+   "needs_check": "Moe's lists kids eat free only as a weekly Moe Rewards reward, not a Tuesday deal"
   },
   {
    "id": "texas-roadhouse-1-99-kids-meals",
@@ -1894,7 +2127,8 @@
    "price_note": "$1.99",
    "link": null,
    "source": "beehiiv",
-   "last_verified": "2026-03-25"
+   "last_verified": "2026-03-25",
+   "needs_check": "location page blocked by a security check; couldn't read it"
   },
   {
    "id": "the-spot-50-cent-wings",
@@ -1911,7 +2145,8 @@
    "price_note": "$0.50/wing",
    "link": null,
    "source": "beehiiv",
-   "last_verified": "2026-03-25"
+   "last_verified": "2026-03-25",
+   "needs_check": "official site is a template with placeholder text"
   },
   {
    "id": "church-street-tavern-1-off-fiddlehead-pints",
@@ -1928,7 +2163,8 @@
    "price_note": "$1 off",
    "link": null,
    "source": "beehiiv",
-   "last_verified": "2026-03-25"
+   "last_verified": "2026-03-25",
+   "needs_check": "official site gone (domain redirects elsewhere); possibly closed"
   },
   {
    "id": "church-street-tavern-5-michelob-ultra-drafts-5-bud-light-b",
@@ -1945,7 +2181,8 @@
    "price_note": "$5",
    "link": null,
    "source": "beehiiv",
-   "last_verified": "2026-03-25"
+   "last_verified": "2026-03-25",
+   "needs_check": "official site gone (domain redirects elsewhere); possibly closed"
   },
   {
    "id": "honey-road-honey-time-1-wings-snack-prices",
@@ -1967,7 +2204,8 @@
    "price_note": null,
    "link": null,
    "source": "research",
-   "last_verified": null
+   "last_verified": null,
+   "needs_check": "not on the business's own site 2026-10-19"
   }
  ]
 }

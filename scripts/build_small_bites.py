@@ -113,6 +113,8 @@ def main():
              "last_verified": d.get("last_verified"),
              "source": "deals.json"}
             for d in deals_by_rid.get(r["id"], [])
+            # a retired deal, or one waiting on a re-check, is not shown as on file
+            if not d.get("retired") and not d.get("needs_check")
         ]
 
         restaurants.append({
