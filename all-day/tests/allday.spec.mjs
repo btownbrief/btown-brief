@@ -1586,8 +1586,8 @@ async function thePhotos(browser, base) {
     check(ig && ig.cap === 'First frost on the dunes at North Beach', 'an Instagram post’s caption is its first line', JSON.stringify(ig));
     check(cs.find((c) => c.k === 'ig:DemoChurch5').cap === '@demo_churchst', 'no caption: the account', '');
     check((await page.$eval(pmPanel + ' .caught', (c) => c.innerText)).includes('Post a photo'), 'the feed ends, with Post a photo', '');
-    /* no Local / Everything: every picture here is Burlington's */
-    check(!(await page.$('#subnav .localsw')), 'no Local / Everything switch on Photos', '');
+    /* Local / Everything is back on Photos (Stephen, 2026-10-19): the banner leads with it, no day */
+    check(!!(await page.$(BAND + ' .wband-top .localsw')) && !(await page.$(BAND + ' .wday')), 'Photos: Local / Everything at the top, no day', '');
     check(!(await page.$('#subnav .pm-n, #subnav .chips')), 'no count band and no chips under the mast: the kinds are in the banner', '');
     check(!errors.length, 'no console errors', errors.join(' | '));
     check(!supabase.length, 'demo mode never calls Supabase', supabase.join(', '));
@@ -1600,7 +1600,7 @@ async function thePhotos(browser, base) {
     await settle(page);
     await pmOn(page);
     await openFilters(page);
-    check(!!(await page.$(BAND + ' .wf .chips')) && !(await page.$(BAND + ' .wband-top')) && !(await page.$(BAND + ' .wf-raw')), 'Photos’ banner: the kinds of photo, no day and no Unfiltered', '');
+    check(!!(await page.$(BAND + ' .wf .chips')) && !(await page.$(BAND + ' .wday')) && !(await page.$(BAND + ' .wf-raw')), 'Photos’ banner: the kinds of photo, no day and no Unfiltered', '');
     const chipsNow = await page.$$eval(BAND + ' .wf .chip', (cs) => cs.map((c) => [c.dataset.chip, (c.querySelector('.n') || {}).textContent || '', c.querySelector('span').textContent]));
     const st0 = await pmState(page);
     /* a kind with fewer than four pictures gets no chip: in the demo, the
@@ -1867,6 +1867,63 @@ async function thePhotos(browser, base) {
       await ctx.close();
     });
   }
+
+  /* Stephen, 2026-10-19: "this sort of new Everything Photos tab". Local is
+     Burlington's pictures; Everything adds the payload's photos_world; with
+     no such list, Everything is just Local. */
+  await group('Photo mode: Local / Everything, and the world’s pictures (live)', async () => {
+    const now = Date.now();
+    const base0 = wireFiles({})['wire-today.json'];
+    const world = [1, 2, 3, 4, 5].map((n) => ({ id: 'w' + n, image: 'https://example.org/world/' + n + '.jpg', url: 'https://example.org/world/page' + n,
+      title: 'Picture of the day ' + n, source: n % 2 ? 'NASA APOD' : 'In Focus', credit: 'A photographer', published: new Date(now - n * 3600000).toISOString() }))
+      .concat([{ id: 'bad', image: 'javascript:alert(1)', url: 'https://example.org/world/bad', title: 'Bad' }]);
+    const open = async (payload) => {
+      const v = await newPage(browser, base);
+      await v.page.route(/wire-data\/data\/wire-today\.json$/, (r) => r.fulfill({ status: 200, body: JSON.stringify(payload), contentType: 'application/json' }));
+      await v.page.goto(base + '/all-day/#wire/photos');
+      await settle(v.page);
+      await pmOn(v.page);
+      return v;
+    };
+    const geoTo = async (page, want) => {
+      await toTop(page);
+      const on = await page.$eval(BAND + ' .localsw', (s) => s.classList.contains('is-on'));
+      if ((want === 'local') !== on) await page.click(BAND + ' .localsw-half:not(.on)');
+      await page.waitForTimeout(300);
+      await pmAll(page);
+    };
+    const v = await open({ ...base0, photos_world: world });
+    await geoTo(v.page, 'local');
+    const loc = await pmState(v.page);
+    check(loc.list.length > 0 && !loc.list.some((x) => x.from === 'world') && /^Burlington in photos/.test(await v.page.$eval(pmPanel + ' .pm-head h2', (h) => h.textContent)),
+      'Local: Burlington’s pictures only, under “Burlington in photos”', JSON.stringify(loc.counts));
+    await geoTo(v.page, 'everything');
+    const ev = await pmState(v.page);
+    const wk = ev.list.filter((x) => x.from === 'world').map((x) => x.k);
+    check(wk.length === 5 && !wk.includes('pw:bad') && ev.list.length === loc.list.length + 5, 'Everything adds the world’s five good pictures to the same feed', JSON.stringify(wk));
+    check(ev.list.filter((x) => x.from === 'world').every((x) => !x.local), 'they are not marked local', '');
+    const w1 = await v.page.$eval(pmPanel + ' .card.pm-world', (c) => ({ src: c.querySelector('.c-src').textContent, green: c.querySelector('.c-src').classList.contains('is-local'), href: c.querySelector('.pm-pic').getAttribute('href') }));
+    check(/NASA APOD|In Focus/.test(w1.src) && !w1.green && /^https:\/\/example\.org\/world\/page/.test(w1.href), 'a world picture names its source and links to its page', JSON.stringify(w1));
+    check(/the world in photos/.test(await v.page.$eval(pmPanel + ' .pm-head h2', (h) => h.textContent)), 'the header says so', '');
+    check((await sheetChips(v.page)).some((c) => c[0] === 'world' && c[1] === '5'), 'a “The world” chip, counted', JSON.stringify(await sheetChips(v.page)));
+    /* scrolled, the switch floats under the pill, as on News */
+    await v.page.evaluate(() => { const p = document.querySelector('#panel-wire'); p.scrollTop = 1200; });
+    await v.page.waitForTimeout(150);
+    await v.page.evaluate(() => document.querySelector('#panel-wire').scrollBy(0, 40));
+    await v.page.waitForTimeout(400);
+    const fl = await v.page.evaluate(() => { const f = document.querySelector('#subnav .wfloat'); return { on: document.body.classList.contains('wire-float'), vis: getComputedStyle(f).visibility, sw: !!f.querySelector('.localsw'), day: !!f.querySelector('.wday') }; });
+    check(fl.on && fl.vis === 'visible' && fl.sw && !fl.day, 'scrolled down on Photos: Local / Everything floats under the pill', JSON.stringify(fl));
+    check(!v.errors.length, 'no console errors', v.errors.join(' | '));
+    await v.ctx.close();
+    /* no world list yet: Everything is Local, with no error and no empty shelf */
+    const u = await open({ ...base0 });
+    await geoTo(u.page, 'everything');
+    const plain = await pmState(u.page);
+    check(plain.list.length === loc.list.length && !plain.list.some((x) => x.from === 'world') && !(await u.page.$(pmPanel + ' .pm-empty')) &&
+      /^Burlington in photos/.test(await u.page.$eval(pmPanel + ' .pm-head h2', (h) => h.textContent)), 'without photos_world, Everything shows what Local does', JSON.stringify([plain.list.length, loc.list.length]));
+    check(!u.errors.length, 'no console errors', u.errors.join(' | '));
+    await u.ctx.close();
+  });
 
   await group('Photo mode on live payloads: each source, once, while its picture works, and never the news (live)', async () => {
     const now = Date.now();

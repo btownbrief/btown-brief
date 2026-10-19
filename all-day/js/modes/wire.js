@@ -379,10 +379,9 @@ function subnav() {
   }
   const bar = el('div', 'wbar');
   bar.append(modeRow());
-  if (dayRowShown()) {
-    const fl = el('div', 'wfloat');
+  if (topRowShown()) {
+    const fl = topRow('wfloat');
     fl.setAttribute('aria-hidden', 'true');
-    fl.append(dayPager(), localSwitch(() => { W.open.clear(); changed(); }));
     /* hidden until the banner's own row has gone under the pill */
     fl.querySelectorAll('button').forEach((b) => { b.tabIndex = -1; });
     bar.appendChild(fl);
@@ -403,6 +402,14 @@ function subnav() {
    applies at once. */
 let FBODY = null;
 const dayRowShown = () => W.view === 'paper' && W.mode === 'news' && W.ch !== 'instagram';
+/* the row that floats: the day and the switch on News, the switch alone on
+   Photos (Local is Burlington's pictures, Everything adds the world's) */
+const topRowShown = () => dayRowShown() || (W.view === 'paper' && W.mode === 'photos');
+function topRow(cls) {
+  const row = el('div', cls);
+  row.append(dayRowShown() ? dayPager() : el('span', 'wtop-sp'), localSwitch(() => { W.open.clear(); changed(); }));
+  return row;
+}
 function dayPager() {
   const row = el('div', 'wday');
   row.setAttribute('role', 'group');
@@ -437,11 +444,7 @@ function fillPager(row) {
 function banner() {
   const band = el('section', 'wband' + (W.fwrap ? ' wrap' : ''));
   band.setAttribute('aria-label', 'What the Wire shows');
-  if (dayRowShown()) {
-    const top = el('div', 'wband-top');
-    top.append(dayPager(), localSwitch(() => { W.open.clear(); changed(); }));
-    band.appendChild(top);
-  }
+  if (topRowShown()) band.appendChild(topRow('wband-top'));
   const body = el('div', 'wband-b');
   body.appendChild(filtersUI(true));
   FBODY = body;
@@ -484,7 +487,7 @@ window.addEventListener('resize', () => { if (W.root) fits(W.root.querySelector(
 /* the floating day row shows once the banner's own row is under the pill */
 function floatCheck() {
   const on = (() => {
-    if (app.activeTab() !== 'wire' || !dayRowShown() || !W.root) return false;
+    if (app.activeTab() !== 'wire' || !topRowShown() || !W.root) return false;
     const top = W.root.querySelector('.wband-top');
     const bar = document.querySelector('#subnav .wmodes');
     if (!top || !bar) return false;
@@ -764,6 +767,9 @@ photos.init({
   squareOk: () => !!W.squareOk,
   squareReady: () => squareReady(),
   pickCat: (k) => pickCat(k),
+  everything: () => geo() === 'everything',
+  /* the day's pictures from everywhere (the payload key may still settle) */
+  world: () => (W.today && (W.today.photos_world || W.today.world_photos)) || [],
 });
 
 /* the day the reader is in: the one the page opened on, or the earlier day
