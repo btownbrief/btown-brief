@@ -2132,43 +2132,80 @@
   ok   Run clubs, What Now: nothing in the window says so and names the next (live, 1280) › which opens on People, on Fitness, its sheet up
   ok   Run clubs, What Now: nothing in the window says so and names the next (live, 1280) › no console errors
   ok   On Air, demo › nothing autoplays: the shell’s audio is paused and no frame is loaded
-  ok   On Air, demo › the chip row is a table of contents: Btown TV, Live, Past nights, Out loud, Podcasts, Playlists
-  ok   On Air, demo › what changes daily first: tonight, live and past nights, then the Brief out loud, then podcasts (Stephen, 2026-10-18: not videos, podcasts, videos)
-  ok   On Air, demo › Btown TV tonight opens the tab, high on the first screen
+  ok   On Air, demo › a TV | Podcasts switch at the top, TV first and on (Stephen, 2026-10-19)
+  ok   On Air, demo › on TV the chip row is lengths, in minutes
+  ok   On Air, demo › TV: Btown TV first, then more, Live and Past nights; no podcasts on this side
+  ok   On Air, demo › “Pick a vid for me”, a full-width button
+  ok   On Air, demo › Btown TV high on the first screen, under the pick button
   ok   On Air, demo › no section carries an explanatory subtitle
-  ok   On Air, demo › no end-of-tab line about when things land
+  ok   On Air, demo › the feature: a full-width picture with its length, a big title
+  ok   On Air, demo › its reason, one Watch button and ⋯, nothing else
+  ok   On Air, demo › every row: a readable title, the length on the picture, Watch and ⋯
+  ok   On Air, demo › Local: Btown TV is only the local videos
+  ok   On Air, demo › Local: More to watch is only Btown TV’s local videos, no finds
+  ok   On Air, demo › Local: no “whole edition” card (that is everything)
+  ok   On Air, demo › tonight’s edition says “Btown TV tonight”
+  ok   On Air, demo › Everything: the local ones still lead, the rest of the night follows (a feature and six rows)
+  ok   On Air, demo › and the whole edition, with its count
+  ok   On Air, demo › it opens all 27 videos as rows
+  ok   On Air, demo › Everything: the finds and Clipsboard’s playlists join
+  ok   On Air, demo › a find names the curator that found it
+  ok   On Air, demo › Podcasts: the Brief out loud, the shows, the playlists
+  ok   On Air, demo › and its chips are a table of contents
+  ok   On Air, demo › the side is in the address
   ok   On Air, demo › a chip scrolls to its section
-  ok   On Air, demo › Local: the Brief’s own show is first in Podcasts
-  ok   On Air, demo › Local: every local show, no national ones
-  ok   On Air, demo › Local: the picks rail is only the local picks
-  ok   On Air, demo › each pick carries its reason
-  ok   On Air, demo › Everything adds exactly three wider picks (5 + 3)
-  ok   On Air, demo › and the local picks still lead
-  ok   On Air, demo › Everything adds exactly two national podcasts
-  ok   On Air, demo › Everything: the Brief’s own show is still first
-  ok   On Air, demo › the TV head says local and beyond
+  ok   On Air, demo › Everything: the Brief’s own show first, two shows from away
   ok   On Air, demo › a show opens in place to its newest episodes (3)
-  ok   On Air, demo › and says it is open
+  ok   On Air, demo › Local: every local show, no national ones
+  ok   On Air, demo › and back to TV
   ok   On Air, demo › a past night opens its videos and its TV playlist
-  ok   On Air, demo › demo: “more like this” lights
+  ok   On Air, demo › Local: a past night is only its local videos, and says so
+  ok   On Air, demo › a live camera opens in the player, the other cameras after it
+  ok   On Air, demo › ⋯ on a Btown TV video: the three signals, save, share, open
+  ok   On Air, demo › demo: “more like this” lights and says what it teaches
   ok   On Air, demo › demo: a reaction never reaches localStorage
   ok   On Air, demo › demo: no Supabase call
   ok   On Air, demo › no console errors
+  ok   On Air, lengths and pick a vid › Everything: all four lengths are offered
+  ok   On Air, lengths and pick a vid › More to watch: his words for each length, with the minutes
+  ok   On Air, lengths and pick a vid › three of each on the All view
+  ok   On Air, lengths and pick a vid › 15–30 min: only videos 15 to 30 minutes long, under his word for it, with the count
+  ok   On Air, lengths and pick a vid › commute: the length is the whole page, the feature first
+  ok   On Air, lengths and pick a vid › Trailers: only trailers, the one place under two minutes is fine
+  ok   On Air, lengths and pick a vid › trailer: the length is the whole page, the feature first
+  ok   On Air, lengths and pick a vid › “Pick a vid” opens the player on one from the chosen length, the rest of that length after it
+  ok   On Air, lengths and pick a vid › “All lengths” brings the whole TV side back
+  ok   On Air, lengths and pick a vid › no console errors
+  ok   On Air, a shared video lands › #onair/yt:demo-fd-011 (a find, on Local) lands on its card and flashes
+  ok   On Air, a shared video lands › it flips to Everything and opens its length
+  ok   On Air, a shared video lands › with it first
+  ok   On Air, a shared video lands › the old #listen/brief link lands on the Brief, on the Podcasts side
+  ok   On Air, a shared video lands › no console errors
+  ok   On Air, the player › demo: Watch opens the player at that row, with what comes next under it
+  ok   On Air, the player › → steps to the next one
+  ok   On Air, the player › ← back to the first, where Previous is off
+  ok   On Air, the player › a row under it jumps there
+  ok   On Air, the player › Escape closes it
+  ok   On Air, the player › demo: no console errors
+  ok   On Air, the player › live: the video plays in YouTube’s own privacy-mode embed
+  ok   On Air, the player › opening the player stops the Brief: one sound at a time
+  ok   On Air, the player › when it ends, “Up next in 5” with a Cancel
+  ok   On Air, the player › Cancel keeps you where you are
+  ok   On Air, the player › left alone, the next one in the run starts
+  ok   On Air, the player › closing the player removes the frame, so the sound stops
+  ok   On Air, the player › live: no console errors
+  ok   On Air, finds are checked › real finds show, a Vimeo one too
+  ok   On Air, finds are checked › a bad id, an unknown length or a Vimeo picture not on Vimeo’s own host is left out
+  ok   On Air, finds are checked › a title, channel or note from the file is text, never markup
+  ok   On Air, finds are checked › a curator link that is not https is not offered
+  ok   On Air, finds are checked › “Found by Wimp” links back to the curator
+  ok   On Air, finds are checked › a board keeps only its real clips; a bad slug is left out
+  ok   On Air, finds are checked › no console errors
   ok   On Air, live › nothing autoplays
-  ok   On Air, live › today’s edition: the card says so and how long it runs
-  ok   On Air, live › live: the Brief’s own show is first in Podcasts
   ok   On Air, live › live: data/playlists.json is still TODO placeholders, so no Playlists section and no chip
   ok   On Air, live › Btown TV: “Play tonight on your TV” opens tonight’s playlist in a new tab
-  ok   On Air, live › under the Btown TV header, before the rail, with the play and external icons
-  ok   On Air, live › live: tonight’s local picks, the pick and the Burlington & Vermont shelf
-  ok   On Air, live › the card says what it is (the newsletter itself) and when a new one comes
-  ok   On Air, live › no mention of AI, and nothing calls it a recap
-  ok   On Air, live › “Read this edition” opens that edition’s own page
-  ok   On Air, live › no transcript button and no waveform: the card is one row and its controls
-  ok   On Air, live › play loads today’s MP3 from the wire-audio branch into the shell’s player
-  ok   On Air, live › the Brief plays at 1.25x by default, pitch kept
-  ok   On Air, live › 1.5x speeds up the playing clip at once, no reload
-  ok   On Air, live › the player survives a tab switch
+  ok   On Air, live › under the Btown TV header, before the feature, with the play and external icons
+  ok   On Air, live › live: tonight’s local videos, the pick and the Burlington & Vermont shelf
   ok   On Air, live › a reaction says what it teaches
   ok   On Air, live › it is written to btown-tv-reacts, the key tv.html used
   ok   On Air, live › and sent to tv_react, so the editor sees it
@@ -2191,41 +2228,28 @@
   ok   On Air, Play on your TV › none anywhere: no link at all
   ok   On Air, Play on your TV › none: no console errors
   ok   On Air, Play on your TV › demo: the button toasts instead of leaving
-  ok   On Air, more of the edition and past nights › Local: the whole edition is on the face, each video once (5 picks + 22 more = 27)
-  ok   On Air, more of the edition and past nights › one section: one header, the rest of the night straight under the picks, no second header
-  ok   On Air, more of the edition and past nights › the picks big on top, the rest smaller below
-  ok   On Air, more of the edition and past nights › the whole edition says what it is and how many: “All 27 videos from tonight”
-  ok   On Air, more of the edition and past nights › a full-width filled card, three covers fanned on it, not a ghost button
-  ok   On Air, more of the edition and past nights › right under the section: after the second rail, the last thing in the Btown TV block
-  ok   On Air, more of the edition and past nights › it opens all 27 videos
-  ok   On Air, more of the edition and past nights › the second rail is two rows deep, every cover full width
-  ok   On Air, more of the edition and past nights › at 390 wide, four whole covers on screen and the next ones peeking (was one and a half)
-  ok   On Air, more of the edition and past nights › and it scrolls sideways for the rest
-  ok   On Air, more of the edition and past nights › tonight: the header as before, no subtitle
-  ok   On Air, more of the edition and past nights › the arrows are 44 px targets with labels
-  ok   On Air, more of the edition and past nights › tonight: “Later night” is disabled, “Earlier night” is not
-  ok   On Air, more of the edition and past nights › one back: last night’s edition, its date and a way back to tonight
-  ok   On Air, more of the edition and past nights › and that night’s videos, in place
-  ok   On Air, more of the edition and past nights › both arrows live now, focus stays on the one pressed
-  ok   On Air, more of the edition and past nights › with that night’s own TV playlist
-  ok   On Air, more of the edition and past nights › the oldest night: “Earlier night” disabled, focus moves to the other arrow
-  ok   On Air, more of the edition and past nights › “Later night” steps forward one
-  ok   On Air, more of the edition and past nights › “Tonight” comes back
-  ok   On Air, more of the edition and past nights › Past nights stays below
-  ok   On Air, more of the edition and past nights › Everything: “Last night, local and beyond”
-  ok   On Air, more of the edition and past nights › no console errors
-  ok   On Air, see as a list › every video rail can turn: tonight’s picks, the rest of the night, Live and Past nights
-  ok   On Air, see as a list › sideways by default, “See as a list” above each rail
-  ok   On Air, see as a list › no button at the foot of a sideways row
-  ok   On Air, see as a list › each button names its rail for a screen reader, the visible words first
-  ok   On Air, see as a list › the rest of the night becomes a list you scroll down, every card on screen
-  ok   On Air, see as a list › the thumbnail beside a bigger title (13 to 15 px)
-  ok   On Air, see as a list › and the sideways progress bar goes
-  ok   On Air, see as a list › “See as a row” above it, and again at its foot
-  ok   On Air, see as a list › the other rails keep their own setting
+  ok   On Air, the night it was made › made yesterday evening, read this morning: “Last night on Btown TV”
+  ok   On Air, the night it was made › and its TV button says last night too
+  ok   On Air, the night it was made › no console errors
+  ok   On Air, earlier nights › tonight: the header, no subtitle
+  ok   On Air, earlier nights › the arrows are 44 px targets with labels
+  ok   On Air, earlier nights › tonight: “Later night” is disabled, “Earlier night” is not
+  ok   On Air, earlier nights › one back: last night’s edition, its date and a way back to tonight
+  ok   On Air, earlier nights › and that night’s videos, in place
+  ok   On Air, earlier nights › both arrows live now, focus stays on the one pressed
+  ok   On Air, earlier nights › with that night’s own TV playlist
+  ok   On Air, earlier nights › the oldest night: “Earlier night” disabled, focus moves to the other arrow
+  ok   On Air, earlier nights › an older night is named by its weekday
+  ok   On Air, earlier nights › “Later night” steps forward one
+  ok   On Air, earlier nights › “Tonight” comes back
+  ok   On Air, earlier nights › no console errors
+  ok   On Air, see as a list › the only sideways rows on the tab are Live and Past nights
+  ok   On Air, see as a list › and each has “See as a list” above it
+  ok   On Air, see as a list › each button names its row for a screen reader
+  ok   On Air, see as a list › Past nights becomes a list you scroll down
   ok   On Air, see as a list › remembered on this phone
   ok   On Air, see as a list › still a list after a reload
-  ok   On Air, see as a list › the button at the foot folds it back and brings you to the top of it
+  ok   On Air, see as a list › Btown TV, More to watch and Playlists are lists already: nothing scrolls sideways
   ok   On Air, see as a list › no console errors
   ok   On Air, speed and the newsletter › three speeds on the card, 1.25x unless chosen
   ok   On Air, speed and the newsletter › a labelled group
@@ -2645,7 +2669,7 @@
   ok   sign-in fails soft › a bad address is caught before any request
   ok   sign-in fails soft › no link was requested
   ok   sign-in fails soft › no console errors
-  ok   performance › the live Wire redraws 60 cards in 11ms (budget 100)
+  ok   performance › the live Wire redraws 60 cards in 12ms (budget 100)
   ok   shell fixes: a rail never snaps flush to the edge › 390: .rail carries scroll-padding of one gutter
   ok   shell fixes: a rail never snaps flush to the edge › 390: a card scrolled to the start stops at the gutter
   ok   shell fixes: a rail never snaps flush to the edge › 390: no console errors
@@ -2878,7 +2902,7 @@
   ok   Habits, the numbers: today on top, the heat map, a habit’s month and best streak (demo, 390, Wednesday Oct 14) › Wednesday: the walk done, reading and the gym still to do; every due day of the last week done
   ok   Habits, the numbers: today on top, the heat map, a habit’s month and best streak (demo, 390, Wednesday Oct 14) › sixteen weeks, Monday to Sunday, ending this week
   ok   Habits, the numbers: today on top, the heat map, a habit’s month and best streak (demo, 390, Wednesday Oct 14) › today half done and marked, yesterday all done, tomorrow blank, before the habits began nothing
-  ok   Habits, the numbers: today on top, the heat map, a habit’s month and best streak (demo, 390, Wednesday Oct 14) › a tap moves today’s count and today’s square in the same click (3 ms)
+  ok   Habits, the numbers: today on top, the heat map, a habit’s month and best streak (demo, 390, Wednesday Oct 14) › a tap moves today’s count and today’s square in the same click (4 ms)
   ok   Habits, the numbers: today on top, the heat map, a habit’s month and best streak (demo, 390, Wednesday Oct 14) › all three: “All done today”, and the bar full
   ok   Habits, the numbers: today on top, the heat map, a habit’s month and best streak (demo, 390, Wednesday Oct 14) › the streak, the best streak and the last thirty days
   ok   Habits, the numbers: today on top, the heat map, a habit’s month and best streak (demo, 390, Wednesday Oct 14) › this month: the 1st is a Thursday, and no month after it
@@ -2911,7 +2935,7 @@
   ok   Habits, swipe to archive with Undo, drag and keys to reorder, edit (demo, 1280, dark) › habits: at most 2 subnav rows
   ok   Habits, swipe to archive with Undo, drag and keys to reorder, edit (demo, 1280, dark) › no console errors
   ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › twenty habits, in order
-  ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › twenty habits and a year of taps: a tap still shows at once (12, 11, 11, 12 ms)
+  ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › twenty habits and a year of taps: a tap still shows at once (12, 12, 12, 12 ms)
   ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › the heat map is all there, and four taps leave it as it was
   ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › every row keeps its seven dots and its 48px tap
   ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › the list is longer than the screen, and the panel scrolls
@@ -2950,7 +2974,7 @@
   ok   Habits, the day turns at midnight New York, not the phone’s (demo, a reader in Tokyo) › and a tap now is Thursday’s
   ok   Habits, the day turns at midnight New York, not the phone’s (demo, a reader in Tokyo) › no console errors
   ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 390, light) › a first visit: one line, the starters and Add habit, nothing seeded, no sign-in wall
-  ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 390, light) › three habits, two tapped, at once (4 ms)
+  ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 390, light) › three habits, two tapped, at once (3 ms)
   ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 390, light) › and nothing personal went to the server (the season and the public forests only)
   ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 390, light) › kept on this phone, under one versioned key
   ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 390, light) › one quiet line under the list: Sync across devices
@@ -2976,7 +3000,7 @@
   ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 390, light) › habits: at most 2 subnav rows
   ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 390, light) › no console errors
   ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 1280, dark) › a first visit: one line, the starters and Add habit, nothing seeded, no sign-in wall
-  ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 1280, dark) › three habits, two tapped, at once (3 ms)
+  ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 1280, dark) › three habits, two tapped, at once (4 ms)
   ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 1280, dark) › and nothing personal went to the server (the season and the public forests only)
   ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 1280, dark) › kept on this phone, under one versioned key
   ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 1280, dark) › one quiet line under the list: Sync across devices
@@ -3037,7 +3061,7 @@
   ok   Habits, the forest: a tree per habit, a leaf per tap, flowers, help, starters (demo, 390) › the “?” opens How Habits works: four lines
   ok   Habits, the forest: a tree per habit, a leaf per tap, flowers, help, starters (demo, 390) › a starter adds a daily habit in one tap, and the starters step aside
   ok   Habits, the forest: a tree per habit, a leaf per tap, flowers, help, starters (demo, 390) › and plants its tree: no leaves yet (one name for the button, the picture itself decorative)
-  ok   Habits, the forest: a tree per habit, a leaf per tap, flowers, help, starters (demo, 390) › a tap grows a leaf, in the same click (5 ms)
+  ok   Habits, the forest: a tree per habit, a leaf per tap, flowers, help, starters (demo, 390) › a tap grows a leaf, in the same click (4 ms)
   ok   Habits, the forest: a tree per habit, a leaf per tap, flowers, help, starters (demo, 390) › Got it puts the help away
   ok   Habits, the forest: a tree per habit, a leaf per tap, flowers, help, starters (demo, 390) › one tree per habit, in the list’s order
   ok   Habits, the forest: a tree per habit, a leaf per tap, flowers, help, starters (demo, 390) › each tree has a leaf for every day done in the last 370
