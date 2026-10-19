@@ -8806,43 +8806,74 @@ async function lakeSunset(browser, base) {
 /* ------------------------------------------------------------- the weather */
 /* Stephen, 2026-10-17: "radar that shows the showers actively moving", and
    weather.html's sun recreated on What Now's card, changing with the weather.
+   Stephen, 2026-10-19: "the radar needs to be about the future, not the past
+   per se ... people only care about when the rain is approaching." So the
+   radar is the last hour (NOAA MRMS), Now, then twelve hours of forecast
+   (NOAA HRRR tiles from the Iowa Environmental Mesonet).
    weather.html is the guide's page, not a tab: its radar is tested here with
-   a stand-in Leaflet and a capabilities file in NOAA's shape, its live feeds
-   answered locally. */
+   a stand-in Leaflet, a capabilities file in NOAA's shape and a run note in
+   IEM's, its live feeds answered locally. */
 async function theWeather(browser, base) {
-  const MIN = 60000;
+  const MIN = 60000, HOUR = 3600000;
+  const iso = (ms) => new Date(ms).toISOString().replace(/\.\d+Z$/, '.000Z');
   /* NOAA's GetCapabilities in its real shape: a scan every two minutes for
      the last two hours and a bit, the newest four minutes old */
   const capsFor = (now) => {
     const times = [];
-    for (let t = now - 130 * MIN; t <= now - 4 * MIN; t += 2 * MIN) times.push(new Date(t).toISOString().replace(/\.\d+Z$/, '.000Z'));
+    for (let t = now - 130 * MIN; t <= now - 4 * MIN; t += 2 * MIN) times.push(iso(t));
     return '<?xml version="1.0" encoding="UTF-8"?><WMS_Capabilities version="1.3.0"><Capability><Layer><Layer queryable="1"><Name>conus_bref_qcd</Name>' +
       '<Dimension name="time" default="' + times[times.length - 1] + '" units="ISO8601" nearestValue="1">' + times.join(',') + '</Dimension></Layer></Layer></Capability></WMS_Capabilities>';
   };
+  /* IEM's refd_1080.json in its real shape: the newest run finished, here two hours old */
+  const runFor = (now, back = 2) => {
+    const run = Math.floor(now / HOUR) * HOUR - back * HOUR;
+    return { model_init_utc: new Date(run).toISOString().replace(/\.\d+Z$/, 'Z'), forecast_minute: 1080.0, model_forecast_utc: new Date(run + 18 * HOUR).toISOString().replace(/\.\d+Z$/, 'Z') };
+  };
+  const runStamp = (ms) => new Date(ms).toISOString().replace(/[-T:]/g, '').slice(0, 12);
+  /* what the page should ask for: six radar frames ten minutes apart, Now
+     the newest; then every half hour from ten minutes past Now to twelve hours on */
+  const expectFrames = (now, runIso) => {
+    const newest = now - 4 * MIN, run = Date.parse(runIso);
+    const past = Array.from({ length: 6 }, (_, i) => newest - (5 - i) * 10 * MIN);
+    const fc = [];
+    for (let t = Math.ceil((newest + 10 * MIN) / (30 * MIN)) * 30 * MIN; t <= Math.min(newest + 12 * HOUR, run + 18 * HOUR); t += 30 * MIN) fc.push(t);
+    return { past, fc, run };
+  };
+  const tileUrl = (run, t) => 'https://mesonet.agron.iastate.edu/cache/tile.py/1.0.0/hrrr::REFD-F' + String(Math.round((t - run) / MIN)).padStart(4, '0') + '-' + runStamp(run) + '/{z}/{x}/{y}.png';
   const FAKE_RADAR_L = `window.L = (() => {
     const maps = [];
-    /* a frame answers load (or error, for a URL window.__frameFail matches) a moment after it is added */
+    /* a radar image answers load (or error, for a URL window.__frameFail
+       matches) a moment after it is added (window.__frameDelay ms, else 15);
+       a forecast tile layer answers like Leaflet's: tileload or tileerror for
+       its tiles, then load */
+    const fire = (l, ev) => (l.h[ev] || []).forEach((f) => f());
     const layer = (kind, at, o) => ({ kind, at, o, op: o && o.opacity, h: {}, on(ev, fn) { (this.h[ev] = this.h[ev] || []).push(fn); return this; },
-      addTo(m) { m.layers.push(this); if (kind === 'frame') setTimeout(() => (this.h[window.__frameFail && window.__frameFail.test(at) ? 'error' : 'load'] || []).forEach((f) => f()), 15); return this; },
+      addTo(m) { m.layers.push(this); m.added.push(this);
+        const bad = window.__frameFail && window.__frameFail.test(at);
+        if (kind === 'frame') setTimeout(() => fire(this, bad ? 'error' : 'load'), window.__frameDelay || 15);
+        if (kind === 'fc') setTimeout(() => { fire(this, bad ? 'tileerror' : 'tileload'); fire(this, 'load'); }, 15);
+        return this; },
       setOpacity(v) { this.op = v; return this; } });
     const ll = (lat, lng) => ({ lat, lng });
     return { maps, Browser: { mobile: false },
       CRS: { EPSG3857: { project: (p) => ({ x: p.lng * 111319.49, y: p.lat * 111319.49 }) } },
-      map(el, opts) { const m = { el, opts, layers: [], handlers: {}, shift: 0,
+      map(el, opts) { const m = { el, opts, layers: [], added: [], panes: {}, handlers: {}, shift: 0,
         on(ev, fn) { this.handlers[ev] = fn; return this; },
+        createPane(name) { return (this.panes[name] = { style: {} }); },
+        hasLayer(l) { return this.layers.includes(l); },
         getBounds() { const s = this.shift; return { getSouthWest: () => ll(43 + s, -75), getNorthEast: () => ll(46 + s, -71) }; },
         getSize() { return { x: 358, y: 340 }; },
         removeLayer(l) { l.gone = true; this.layers = this.layers.filter((x) => x !== l); return this; } };
         maps.push(m); return m; },
-      tileLayer(u, o) { return layer('tiles', u, o); }, circleMarker(c, o) { return layer('pin', c, o); },
+      tileLayer(u, o) { return layer(/mesonet/.test(u) ? 'fc' : 'tiles', u, o); }, circleMarker(c, o) { return layer('pin', c, o); },
       imageOverlay(u, b, o) { return layer('frame', u, o); } };
   })();`;
   const sriSpy = `window.__sri = [];
     Object.defineProperty(HTMLScriptElement.prototype, 'integrity', { configurable: true, set(v) { window.__sri.push(v); }, get() { return ''; } });
     Object.defineProperty(HTMLLinkElement.prototype, 'integrity', { configurable: true, set(v) { window.__sri.push(v); }, get() { return ''; } });`;
-  /* weather.html with its outside world answered here: Leaflet, NOAA, the
-     live NWS reads the page makes on top of latest.json, the fleet nav */
-  const weatherPage = async (opts, caps) => {
+  /* weather.html with its outside world answered here: Leaflet, NOAA, IEM,
+     the live NWS reads the page makes on top of latest.json, the fleet nav */
+  const weatherPage = async (opts, caps, run) => {
     const w = await newPage(browser, base, opts);
     w.asked = [];
     await w.page.addInitScript(sriSpy);
@@ -8853,67 +8884,91 @@ async function theWeather(browser, base) {
     await w.page.route(/opengeo\.ncep\.noaa\.gov\/.*GetCapabilities/i, (r) => { w.asked.push(r.request().url());
       const body = typeof caps === 'function' ? caps() : caps;
       return body === null ? r.fulfill({ status: 503, body: '' }) : r.fulfill({ status: 200, body, contentType: 'text/xml' }); });
+    await w.page.route(/mesonet\.agron\.iastate\.edu\/data\/gis\/images\/4326\/hrrr\/refd_1080\.json/, (r) => { w.asked.push(r.request().url());
+      const body = typeof run === 'function' ? run() : run;
+      return body == null ? r.fulfill({ status: 503, body: '' }) : r.fulfill({ status: 200, body: JSON.stringify(body), contentType: 'application/json' }); });
     return w;
   };
   const radarState = (page) => page.evaluate(() => {
     const m = window.L && window.L.maps && window.L.maps[0];
-    /* in frame order (the newest is added to the map first) */
+    /* in time order (Now is added to the map first) */
     const when = (l) => decodeURIComponent((l.at.match(/TIME=([^&]+)/) || [])[1] || '');
     const fr = m ? m.layers.filter((l) => l.kind === 'frame').sort((a, b) => (when(a) < when(b) ? -1 : 1)) : [];
-    return { frames: window.btownRadar ? window.btownRadar.frames() : null, idx: window.btownRadar ? window.btownRadar.index() : null,
+    const fc = m ? m.layers.filter((l) => l.kind === 'fc').sort((a, b) => (a.at < b.at ? -1 : 1)) : [];
+    const q = (id) => document.getElementById(id);
+    return { frames: window.btownRadar ? window.btownRadar.frames() : null, kinds: window.btownRadar ? window.btownRadar.kinds() : null,
+      now: window.btownRadar ? window.btownRadar.nowIndex() : null, idx: window.btownRadar ? window.btownRadar.index() : null,
       playing: window.btownRadar ? window.btownRadar.playing() : null,
       center: m && m.opts.center, zoom: m && m.opts.zoom, wheel: m && m.opts.scrollWheelZoom,
       tiles: m ? m.layers.filter((l) => l.kind === 'tiles').map((l) => l.at + ' ' + l.o.attribution) : [],
       overlays: fr.map((l) => ({ u: l.at, op: l.op, attr: l.o.attribution || '' })),
-      time: document.getElementById('radar-time').textContent, stamp: document.getElementById('radar-stamp').textContent,
-      scrub: document.getElementById('radar-scrub').value, max: document.getElementById('radar-scrub').max,
-      pressed: document.getElementById('radar-play').getAttribute('aria-pressed'), label: document.getElementById('radar-play').getAttribute('aria-label'),
-      controls: !document.getElementById('radar-controls').hidden, fail: !document.getElementById('radar-fail').hidden,
+      fc: fc.map((l) => ({ u: l.at, op: l.op, pane: l.o.pane, attr: l.o.attribution || '' })),
+      firstAdded: m && m.added.filter((l) => l.kind === 'frame' || l.kind === 'fc').map((l) => l.kind + ' ' + (when(l) || l.at)),
+      badge: q('radar-badge').textContent, badgeShown: !q('radar-badge').hidden, forecastClass: q('radar').classList.contains('is-forecast'),
+      time: q('radar-time').textContent, stamp: q('radar-stamp').textContent,
+      scrub: q('radar-scrub').value, max: q('radar-scrub').max, nowAt: q('radar-now').style.getPropertyValue('--now'),
+      nowShown: getComputedStyle(q('radar-now')).display !== 'none' && q('radar-now').textContent === 'Now',
+      pressed: q('radar-play').getAttribute('aria-pressed'), label: q('radar-play').getAttribute('aria-label'),
+      controls: !q('radar-controls').hidden, fail: !q('radar-fail').hidden,
       links: [...document.querySelectorAll('#radar .radar-links a')].map((a) => a.textContent + ' ' + a.href + ' ' + a.target) };
   });
   const clockET = (ms) => new Intl.DateTimeFormat('en-US', { hour: 'numeric', minute: '2-digit', timeZone: 'America/New_York' }).format(new Date(ms)).replace(' AM', ' am').replace(' PM', ' pm');
 
-  await group('Weather page: the radar mounts lazily and moves (390, a stand-in Leaflet)', async () => {
+  await group('Weather page: the radar looks ahead, the last hour then twelve of forecast (390, a stand-in Leaflet)', async () => {
     const NOW = Math.floor(Date.now() / MIN) * MIN;
-    const w = await weatherPage({ clock: NOW, viewport: { width: 390, height: 480 }, dpr: 2 }, capsFor(NOW));
+    const RUN = runFor(NOW);
+    const want = expectFrames(NOW, RUN.model_init_utc);
+    const w = await weatherPage({ clock: NOW, viewport: { width: 390, height: 480 }, dpr: 2 }, capsFor(NOW), RUN);
     const { page, errors } = w;
     await page.goto(base + '/weather.html');
     await page.waitForSelector('#radar', { state: 'visible', timeout: 15000 });
     await page.waitForTimeout(400);
     const top = await page.$eval('#radar', (s) => s.getBoundingClientRect().top - innerHeight);
     check(top > 300 && !w.asked.length && await page.evaluate(() => !window.L && !window.btownRadar),
-      'far below the fold: no Leaflet, no NOAA, nothing fetched', top + ' / ' + w.asked.join(', '));
+      'far below the fold: no Leaflet, no NOAA, no IEM, nothing fetched', top + ' / ' + w.asked.join(', '));
 
     await page.$eval('#radar', (s) => s.scrollIntoView());
     await page.waitForFunction(() => window.btownRadar, null, { timeout: 8000 }).catch(() => {});
-    const order = await page.evaluate(() => window.L.maps[0].layers.filter((l) => l.kind === 'frame').map((l) => l.at.match(/TIME=([^&]+)/)[1]));
     await page.waitForFunction(() => window.btownRadar.ready(), null, { timeout: 8000 }).catch(() => {});
     const s = await radarState(page);
-    check(w.asked.some((u) => /leaflet\.js$/.test(u)) && w.asked.some((u) => /leaflet\.css$/.test(u)) && w.asked.some((u) => /GetCapabilities/.test(u)),
-      'in view, it loads Leaflet 1.9.4 and NOAA’s frame list', w.asked.join(', '));
+    check(w.asked.some((u) => /leaflet\.js$/.test(u)) && w.asked.some((u) => /leaflet\.css$/.test(u)) && w.asked.some((u) => /GetCapabilities/.test(u)) && w.asked.some((u) => /refd_1080\.json$/.test(u)),
+      'in view, it loads Leaflet 1.9.4, NOAA’s radar times and IEM’s newest forecast run', w.asked.join(', '));
     check(await page.evaluate(() => window.__sri.join(' ')) === 'sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY= sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=',
       'with the integrity hashes events.html and Food pin', await page.evaluate(() => window.__sri.join(' ')));
-    const want = Array.from({ length: 13 }, (_, i) => new Date(NOW - 4 * MIN - (12 - i) * 10 * MIN).toISOString().replace(/\.\d+Z$/, '.000Z'));
-    check(s.frames && s.frames.join(',') === want.join(','), 'thirteen frames, ten minutes apart, the newest last', JSON.stringify(s.frames));
+    const wantIso = want.past.concat(want.fc).map(iso);
+    check(s.frames && s.frames.join(',') === wantIso.join(',') && want.fc.length >= 22 && want.fc.length <= 24,
+      'six radar frames ten minutes apart, Now the newest, then the forecast every half hour for twelve hours', s.frames && s.frames.length + ' frames: ' + JSON.stringify([s.frames[0], s.frames[5], s.frames[6], s.frames[s.frames.length - 1]]));
+    check(s.kinds && s.kinds.slice(0, 6).every((k) => k === 'radar') && s.kinds.slice(6).every((k) => k === 'forecast') && s.now === 5,
+      'mostly future: the past hour, Now, and the rest forecast', JSON.stringify({ now: s.now, kinds: s.kinds && s.kinds.join(',') }));
     check(String(s.center) === '44.4759,-73.2121' && s.zoom === 7 && s.wheel === false, 'centred on Burlington at zoom 7; the wheel scrolls the page', JSON.stringify([s.center, s.zoom, s.wheel]));
     check(s.tiles.length === 1 && /tile\.openstreetmap\.org/.test(s.tiles[0]) && /OpenStreetMap/.test(s.tiles[0]), 'OpenStreetMap under it, credited', s.tiles.join(' | '));
-    check(s.overlays.length === 13 && s.overlays.every((o, i) => o.u.includes('LAYERS=conus_bref_qcd') && o.u.includes('TIME=' + encodeURIComponent(want[i])) &&
-      /BBOX=-8348[0-9]{3},4786[0-9]{3},-7903[0-9]{3},5120[0-9]{3}/.test(o.u) && /WIDTH=\d+&HEIGHT=\d+/.test(o.u)),
-      'one image per frame for the whole view, at its time', s.overlays.slice(0, 2).map((o) => o.u).join(' | '));
-    check(/NOAA MRMS/.test(s.overlays.map((o) => o.attr).join(' ')), 'the radar credited to NOAA MRMS on the map', s.overlays.map((o) => o.attr).join('|'));
-    check(s.overlays.filter((o) => o.op > 0).length === 1 && s.overlays[12].op > 0 && s.idx === 12, 'it opens on the newest frame, the only one showing', JSON.stringify(s.overlays.map((o) => o.op)));
-    check(decodeURIComponent(order[0]) === want[12], 'the newest frame is asked for first, the other twelve after it', order.join(', '));
-    check(s.overlays.every((o) => /WIDTH=358&HEIGHT=340/.test(o.u)), 'one image pixel per screen pixel (MRMS is a 1 km grid), even on a 2x screen', (s.overlays[0] || {}).u);
-    check(s.time === clockET(NOW - 4 * MIN) && s.stamp === 'Latest, 4 min ago', 'the frame’s time in Burlington’s clock, and how old it is', s.time + ' / ' + s.stamp);
-    check(s.controls && s.playing === true && s.pressed === 'true' && s.label === 'Pause' && s.max === '12', 'it loops by default: Pause showing, the scrubber spans the frames', JSON.stringify(s));
+    check(s.overlays.length === 6 && s.overlays.every((o, i) => o.u.includes('LAYERS=conus_bref_qcd') && o.u.includes('TIME=' + encodeURIComponent(wantIso[i])) &&
+      /BBOX=-8348[0-9]{3},4786[0-9]{3},-7903[0-9]{3},5120[0-9]{3}/.test(o.u) && /WIDTH=358&HEIGHT=340/.test(o.u)),
+      'the past and Now: one NOAA image per frame for the whole view, one pixel per screen pixel', s.overlays.slice(0, 2).map((o) => o.u).join(' | '));
+    check(s.fc.length === want.fc.length && s.fc.every((l, i) => l.u === tileUrl(want.run, want.fc[i]) && l.pane === 'radarForecast'),
+      'the forecast: IEM’s HRRR tiles, each asked for by its run and forecast minute, in their own pane (out of the base map’s grey filter)', s.fc.slice(0, 2).map((l) => l.u + ' ' + l.pane).join(' | '));
+    check(/NOAA MRMS/.test(s.overlays.map((o) => o.attr).join(' ')) && s.fc.every((l) => /NOAA HRRR via IEM/.test(l.attr) && /mesonet\.agron\.iastate\.edu\/GIS\/model\.phtml/.test(l.attr)),
+      'both credited on the map: NOAA MRMS for the radar, NOAA HRRR via IEM for the forecast', s.overlays[0] && s.overlays[0].attr + ' | ' + (s.fc[0] && s.fc[0].attr));
+    check(s.firstAdded && /^frame /.test(s.firstAdded[0]) && s.firstAdded[0] === 'frame ' + wantIso[5] && /^fc /.test(s.firstAdded[1]) && s.firstAdded[1].includes(tileUrl(want.run, want.fc[0]).split('/{z}')[0]),
+      'Now is asked for first, then the forecast nearest first, then the rest of the past', (s.firstAdded || []).slice(0, 3).join(', '));
+    check(s.overlays.filter((o) => o.op > 0).length + s.fc.filter((l) => l.op > 0).length === 1 && s.overlays[5].op > 0 && s.idx === 5,
+      'it opens on Now, the only frame showing', JSON.stringify({ idx: s.idx, ops: s.overlays.map((o) => o.op) }));
+    const lastFc = want.fc[want.fc.length - 1];
+    check(s.badgeShown && s.badge === 'Now · ' + clockET(NOW - 4 * MIN) && s.time === 'Now' && !s.forecastClass,
+      'a label on the map says which frame: Now, and its time', s.badge + ' / ' + s.time);
+    check(s.stamp === 'Radar 4 min ago · forecast to ' + clockET(lastFc), 'beside the title: how old the radar is and how far the forecast goes', s.stamp);
+    check(s.nowShown && Math.abs(Number(s.nowAt) - 5 / (wantIso.length - 1)) < 1e-6, 'a Now mark on the scrubber, where the past ends', s.nowAt);
+    check(s.controls && s.playing === true && s.pressed === 'true' && s.label === 'Pause' && s.max === String(wantIso.length - 1), 'it plays by default: Pause showing, the scrubber spans every frame', JSON.stringify({ playing: s.playing, max: s.max }));
     check(s.links.length === 2 && /NWS Burlington radar https:\/\/radar\.weather\.gov\/station\/kcxx\/standard _blank/.test(s.links[0]) && /Windy radar https:\/\/www\.windy\.com\/.*radar.*_blank/.test(s.links[1]),
       'and the two radars worth opening under the map', s.links.join(' | '));
 
-    /* the loop: it holds the newest frame, then starts over */
-    await page.waitForFunction(() => window.btownRadar.index() >= 1 && window.btownRadar.index() < 12, null, { timeout: 6000 }).catch(() => {});
+    /* the loop goes forward from Now into the forecast, each frame labelled as forecast */
+    await page.waitForFunction(() => window.btownRadar.index() > 5, null, { timeout: 6000 }).catch(() => {});
     const moved = await radarState(page);
-    check(moved.idx >= 1 && moved.idx < 12 && moved.overlays.filter((o) => o.op > 0).length === 1 && moved.overlays[moved.idx].op > 0 && moved.time === clockET(Date.parse(moved.frames[moved.idx])),
-      'the frames move: one showing at a time, its time under the map', JSON.stringify({ idx: moved.idx, time: moved.time }));
+    const mf = moved.idx - 6;
+    check(moved.idx > 5 && moved.fc.filter((l) => l.op > 0).length === 1 && moved.fc[mf] && moved.fc[mf].op > 0 && moved.overlays.every((o) => !o.op) &&
+      moved.badge === 'Forecast · ' + clockET(want.fc[mf]) && moved.forecastClass && /^in \d/.test(moved.time),
+      'played forward from Now: forecast frames, one at a time, labelled "Forecast · time"', JSON.stringify({ idx: moved.idx, badge: moved.badge, time: moved.time }));
     await page.screenshot({ path: path.join(SHOTS, 'weather-radar-390.png') });
 
     /* pause holds the frame */
@@ -8923,33 +8978,64 @@ async function theWeather(browser, base) {
     const p2 = await radarState(page);
     check(p1.playing === false && p1.pressed === 'false' && p1.label === 'Play' && p2.idx === p1.idx, 'Pause stops it on the frame it was on', JSON.stringify([p1.idx, p2.idx, p1.label]));
 
-    /* the scrubber picks a frame, and stays paused */
+    /* the end of the forecast: a hold, then back to Now, never into the past */
+    const last = wantIso.length - 1;
+    await page.$eval('#radar-scrub', (r, v) => { r.value = String(v); r.dispatchEvent(new Event('input', { bubbles: true })); }, last - 1);
+    await page.evaluate(() => { window.__seen = []; new MutationObserver(() => window.__seen.push(Number(document.getElementById('radar').dataset.frame)))
+      .observe(document.getElementById('radar'), { attributes: true, attributeFilter: ['data-frame'] }); });
     await page.click('#radar-play');
-    await page.$eval('#radar-scrub', (r) => { r.value = '3'; r.dispatchEvent(new Event('input', { bubbles: true })); });
+    await page.waitForTimeout(3400);
+    const seen = await page.evaluate(() => window.__seen);
+    check(seen[0] === last && seen.includes(5) && seen.indexOf(5) === 1 && seen.every((i) => i >= 5), 'after the last forecast frame it starts again at Now, not in the past', JSON.stringify(seen));
+    await page.click('#radar-play');
+    await page.$eval('#radar-scrub', (r, v) => { r.value = String(v); r.dispatchEvent(new Event('input', { bubbles: true })); }, last);
+    await page.click('#radar-play');
+    check((await radarState(page)).idx === 5, 'Play from the last frame starts at Now', '');
+    await page.click('#radar-play');
+
+    /* the scrubber goes back into the short past, and stays paused */
+    await page.$eval('#radar-scrub', (r) => { r.value = '2'; r.dispatchEvent(new Event('input', { bubbles: true })); });
     const sc = await radarState(page);
-    check(sc.idx === 3 && sc.playing === false && sc.overlays[3].op > 0 && sc.overlays.filter((o) => o.op > 0).length === 1 &&
-      sc.time === clockET(Date.parse(want[3])) && sc.stamp === (94) + ' min ago', 'scrubbing pauses and shows that frame, its time and age', JSON.stringify({ idx: sc.idx, time: sc.time, stamp: sc.stamp }));
+    check(sc.idx === 2 && sc.playing === false && sc.overlays[2].op > 0 && sc.overlays.filter((o) => o.op > 0).length === 1 && !sc.fc.some((l) => l.op > 0) &&
+      sc.badge === 'Radar · ' + clockET(want.past[2]) && sc.time === '30 min ago' && !sc.forecastClass, 'scrubbing back shows the radar: "Radar · time", 30 min before Now', JSON.stringify({ idx: sc.idx, badge: sc.badge, time: sc.time }));
     await page.focus('#radar-scrub');
     await page.keyboard.press('ArrowRight');
-    check((await radarState(page)).idx === 4, 'the arrow keys step it', '');
+    check((await radarState(page)).idx === 3, 'the arrow keys step it', '');
 
-    /* a pan asks for the frames again at the new view, once, and drops the old */
+    /* a pan redraws the six radar images at the new view, once; the forecast tiles follow by themselves */
     await page.evaluate(() => { const m = window.L.maps[0]; m.shift = 1; m.handlers.moveend(); m.handlers.moveend(); });
     await page.waitForTimeout(450);
     const pan = await radarState(page);
-    check(pan.overlays.length === 13 && pan.overlays.every((o) => /BBOX=-8348[0-9]{3},4898[0-9]{3}/.test(o.u)) && pan.overlays[4].op > 0,
-      'a pan redraws the thirteen at the new view, on the same frame', pan.overlays.length + ' ' + (pan.overlays[0] || {}).u);
+    const fcSame = await page.evaluate(() => window.L.maps[0].layers.filter((l) => l.kind === 'fc').every((l) => !l.gone) && window.L.maps[0].added.filter((l) => l.kind === 'fc').length);
+    check(pan.overlays.length === 6 && pan.overlays.every((o) => /BBOX=-8348[0-9]{3},4898[0-9]{3}/.test(o.u)) && pan.overlays[3].op > 0 && pan.fc.length === want.fc.length && fcSame === want.fc.length,
+      'a pan redraws the six radar images at the new view, on the same frame, and keeps the forecast layers', pan.overlays.length + ' ' + fcSame + ' ' + (pan.overlays[0] || {}).u);
 
-    /* the page's own picture of the radar, in dark */
+    /* two pans in a row while NOAA is slow: the set the second cut off never lingers, nor does the first */
+    await page.evaluate(() => { window.__frameDelay = 500; const m = window.L.maps[0]; m.shift = 2; m.handlers.moveend(); });
+    await page.waitForTimeout(350);
+    await page.evaluate(() => { const m = window.L.maps[0]; m.shift = 3; m.handlers.moveend(); });
+    await page.waitForTimeout(1500);
+    const pan2 = await radarState(page);
+    check(pan2.overlays.length === 6 && pan2.overlays.every((o) => /BBOX=-8348[0-9]{3},5120[0-9]{3}/.test(o.u)),
+      'two quick pans while the images are slow: only the last view’s six stay on the map', pan2.overlays.length + ' ' + pan2.overlays.map((o) => (o.u.match(/BBOX=[^,]+,(\d{4})/) || [])[1]).join(','));
+    await page.evaluate(() => { window.__frameDelay = 0; });
+
+    /* Play from a frame in the past plays forward through Now into the forecast */
+    await page.$eval('#radar-scrub', (r) => { r.value = '4'; r.dispatchEvent(new Event('input', { bubbles: true })); });
+    await page.click('#radar-play');
+    await page.waitForFunction(() => window.btownRadar.index() >= 6, null, { timeout: 5000 }).catch(() => {});
+    check((await radarState(page)).idx >= 6, 'Play from a past frame goes forward, through Now, into the forecast', '');
+    await page.click('#radar-play');
+
     check(!errors.length, 'no console errors', errors.join(' | '));
     await w.ctx.close();
   });
 
-  await group('Weather page: the radar for reduced motion, a fresh list, and when NOAA is down', async () => {
+  await group('Weather page: the radar for reduced motion, a new radar scan and forecast run, and when NOAA or IEM is down', async () => {
     const NOW = Math.floor(Date.now() / MIN) * MIN;
-    /* the second read of the frame list, ten minutes on, has newer scans */
-    let reads = 0;
-    const r = await weatherPage({ motion: 'reduce', scheme: 'dark' }, () => capsFor(NOW + (reads++ ? 12 * MIN : 0)));
+    /* the second read, ten minutes on, has newer scans and a newer run */
+    let reads = 0, runs = 0;
+    const r = await weatherPage({ motion: 'reduce', scheme: 'dark' }, () => capsFor(NOW + [0, 12, 24][Math.min(reads++, 2)] * MIN), () => [runFor(NOW, 2), runFor(NOW, 1), null][Math.min(runs++, 2)]);
     await r.page.clock.install({ time: NOW });
     await r.page.goto(base + '/weather.html');
     await r.page.waitForSelector('#radar', { state: 'visible', timeout: 15000 });
@@ -8957,32 +9043,70 @@ async function theWeather(browser, base) {
     await r.page.waitForFunction(() => window.btownRadar && window.btownRadar.ready(), null, { timeout: 8000 }).catch(() => {});
     await r.page.waitForTimeout(1500);
     const s = await radarState(r.page);
-    check(s.playing === false && s.idx === 12 && s.label === 'Play', 'reduced motion: it waits on the newest frame for a tap', JSON.stringify({ playing: s.playing, idx: s.idx }));
+    check(s.playing === false && s.idx === 5 && s.now === 5 && s.label === 'Play' && s.badge.startsWith('Now · '), 'reduced motion: it waits on Now for a tap', JSON.stringify({ playing: s.playing, idx: s.idx, badge: s.badge }));
+    const oldRun = runStamp(Date.parse(runFor(NOW, 2).model_init_utc)), newRun = runStamp(Date.parse(runFor(NOW, 1).model_init_utc));
     await r.page.clock.fastForward('11:00');
-    await r.page.waitForFunction((t) => window.btownRadar.frames()[12] === t, new Date(NOW + 8 * MIN).toISOString().replace(/\.\d+Z$/, '.000Z'), { timeout: 5000 }).catch(() => {});
+    await r.page.waitForFunction((t) => window.btownRadar.frames()[5] === t, iso(NOW + 8 * MIN), { timeout: 5000 }).catch(() => {});
     await r.page.waitForTimeout(400);
     const f2 = await radarState(r.page);
-    check(reads === 2 && f2.frames[12] === new Date(NOW + 8 * MIN).toISOString().replace(/\.\d+Z$/, '.000Z') && f2.idx === 12 && f2.overlays.length === 13 && /^Latest/.test(f2.stamp),
-      'ten minutes on screen: it reads the list again and moves to the new newest frame', JSON.stringify({ reads, last: f2.frames && f2.frames[12], idx: f2.idx, stamp: f2.stamp }));
+    const gone = await r.page.evaluate((run) => window.L.maps[0].added.filter((l) => l.kind === 'fc' && l.at.includes(run)).every((l) => l.gone), oldRun);
+    check(reads === 2 && runs === 2 && f2.frames[5] === iso(NOW + 8 * MIN) && f2.idx === 5 && f2.overlays.length === 6 && /^Now · /.test(f2.badge),
+      'ten minutes on screen: it reads both again and moves with Now', JSON.stringify({ reads, runs, now: f2.frames && f2.frames[5], idx: f2.idx, badge: f2.badge }));
+    check(f2.fc.length > 20 && f2.fc.every((l) => l.u.includes('-' + newRun + '/')) && gone, 'the newer forecast run replaces the old one, whose layers leave the map', JSON.stringify({ n: f2.fc.length, first: f2.fc[0] && f2.fc[0].u, gone }));
+    /* ten more minutes: NOAA has a newer scan, IEM answers 503 once; the forecast already showing stays */
+    await r.page.clock.fastForward('11:00');
+    await r.page.waitForFunction((t) => window.btownRadar.frames()[5] === t, iso(NOW + 20 * MIN), { timeout: 5000 }).catch(() => {});
+    await r.page.waitForTimeout(400);
+    const f3 = await radarState(r.page);
+    check(runs === 3 && f3.frames[5] === iso(NOW + 20 * MIN) && f3.fc.length > 20 && f3.fc.every((l) => l.u.includes('-' + newRun + '/')) && / · forecast to /.test(f3.stamp),
+      'a failed read of IEM’s run keeps the forecast already showing', JSON.stringify({ runs, n: f3.fc.length, stamp: f3.stamp }));
     await r.page.click('#radar-play');
     const s2 = await radarState(r.page);
-    check(s2.playing === true && s2.idx === 0, 'and Play from the newest starts at the oldest', JSON.stringify({ playing: s2.playing, idx: s2.idx }));
-    check(!r.errors.length, 'no console errors', r.errors.join(' | '));
+    check(s2.playing === true && s2.idx === 5, 'and Play from Now plays forward from Now', JSON.stringify({ playing: s2.playing, idx: s2.idx }));
+    check(!r.errors.filter((e) => !/503/.test(e)).length, 'no console errors beyond the 503 itself', r.errors.join(' | '));
     await r.ctx.close();
 
-    const f = await weatherPage({}, null);
+    /* IEM down: still the radar's last hour, looping, and a line that says there is no forecast */
+    const NOW1 = Math.floor(Date.now() / MIN) * MIN;
+    const n = await weatherPage({ clock: NOW1 }, capsFor(NOW1), null);
+    await n.page.goto(base + '/weather.html');
+    await n.page.waitForSelector('#radar', { state: 'visible', timeout: 15000 });
+    await n.page.$eval('#radar', (s) => s.scrollIntoView());
+    await n.page.waitForFunction(() => window.btownRadar && window.btownRadar.ready(), null, { timeout: 8000 }).catch(() => {});
+    const ns = await radarState(n.page);
+    check(!ns.fail && ns.frames && ns.frames.length === 6 && ns.kinds.every((k) => k === 'radar') && !ns.fc.length && ns.playing === true &&
+      / · no forecast right now$/.test(ns.stamp) && !ns.nowShown, 'IEM down: the last hour still plays, the title line says there is no forecast, no Now mark', JSON.stringify({ n: ns.frames && ns.frames.length, stamp: ns.stamp, playing: ns.playing }));
+    check(!n.errors.filter((e) => !/503/.test(e)).length, 'no console errors beyond the 503 itself', n.errors.join(' | '));
+    await n.ctx.close();
+
+    /* IEM's run note loads but none of its tiles do: the forecast leaves the timeline, no blank frames */
+    const NOWt = Math.floor(Date.now() / MIN) * MIN;
+    const t = await weatherPage({ clock: NOWt }, capsFor(NOWt), runFor(NOWt));
+    await t.page.addInitScript(() => { window.__frameFail = /mesonet/; });
+    await t.page.goto(base + '/weather.html');
+    await t.page.waitForSelector('#radar', { state: 'visible', timeout: 15000 });
+    await t.page.$eval('#radar', (s) => s.scrollIntoView());
+    await t.page.waitForFunction(() => window.btownRadar && window.btownRadar.ready(), null, { timeout: 8000 }).catch(() => {});
+    const ts = await radarState(t.page);
+    const tGone = await t.page.evaluate(() => window.L.maps[0].added.filter((l) => l.kind === 'fc').every((l) => l.gone));
+    check(!ts.fail && ts.frames.length === 6 && !ts.fc.length && tGone && / · no forecast right now$/.test(ts.stamp) && ts.playing === true,
+      'forecast tiles failing: the forecast leaves the timeline and the radar hour plays on', JSON.stringify({ n: ts.frames.length, fc: ts.fc.length, gone: tGone, stamp: ts.stamp }));
+    check(!t.errors.length, 'no console errors', t.errors.join(' | '));
+    await t.ctx.close();
+
+    const f = await weatherPage({}, null, runFor(Date.now()));
     await f.page.goto(base + '/weather.html');
     await f.page.waitForSelector('#radar', { state: 'visible', timeout: 15000 });
     await f.page.$eval('#radar', (s) => s.scrollIntoView());
     await f.page.waitForSelector('#radar.is-failed', { timeout: 8000 }).catch(() => {});
     const fs = await radarState(f.page);
-    check(fs.fail && !fs.controls && fs.links.length === 2 && await f.page.$eval('#radar-map', (m) => m.hidden), 'NOAA down: the map steps aside, a line says so, the two radars stay', JSON.stringify(fs));
+    check(fs.fail && !fs.controls && !fs.badgeShown && fs.links.length === 2 && await f.page.$eval('#radar-map', (m) => m.hidden), 'NOAA down: the map steps aside, a line says so, the two radars stay', JSON.stringify(fs));
     check(!f.errors.filter((e) => !/503/.test(e)).length, 'no console errors beyond the 503 itself', f.errors.join(' | '));
     await f.ctx.close();
 
     /* the list loads but NOAA's images do not: the same, not an empty map that seems to play */
     const NOW2 = Math.floor(Date.now() / MIN) * MIN;
-    const g = await weatherPage({ clock: NOW2 }, capsFor(NOW2));
+    const g = await weatherPage({ clock: NOW2 }, capsFor(NOW2), runFor(NOW2));
     await g.page.addInitScript(() => { window.__frameFail = /GetMap/; });
     await g.page.goto(base + '/weather.html');
     await g.page.waitForSelector('#radar', { state: 'visible', timeout: 15000 });
@@ -9175,7 +9299,7 @@ async function weatherBrief(browser, base) {
     await w.page.route(/play\.btownbrief\.com\/nav\.js/, (r) => r.fulfill({ status: 200, body: '', contentType: 'text/javascript' }));
     await w.page.route(/api\.weather\.gov/, (r) => r.fulfill({ status: 200, body: '{}', contentType: 'application/geo+json' }));
     /* the radar stays below the fold; anything else outside answers empty */
-    await w.page.route(/unpkg\.com|opengeo\.ncep\.noaa\.gov|air-quality-api|airnow/, (r) => r.fulfill({ status: 200, body: '{}', contentType: 'application/json' }));
+    await w.page.route(/unpkg\.com|opengeo\.ncep\.noaa\.gov|mesonet\.agron\.iastate\.edu|air-quality-api|airnow/, (r) => r.fulfill({ status: 200, body: '{}', contentType: 'application/json' }));
     await w.page.goto(base + '/weather.html');
     await w.page.waitForSelector('#rn-page:not([hidden])', { timeout: 15000 });
     await w.page.waitForSelector('#week-section:not([hidden])', { timeout: 15000 });
@@ -9240,6 +9364,47 @@ async function weatherBrief(browser, base) {
     const ys = await y.page.evaluate(() => ({ brief: document.querySelector('#rn-sub').classList.contains('is-brief'), day: document.querySelector('#day-section').hidden }));
     check(!ys.brief && ys.day, 'a brief written on another Burlington day is not shown', JSON.stringify(ys));
     await y.ctx.close();
+  });
+
+  /* Stephen, 2026-10-19: "people only care about when the rain is approaching."
+     One line over the radar, from the NWS hours in latest.json with the brief's
+     bars, and there before the radar itself ever loads. Each case below is the
+     page's own data event with different hours. */
+  await group('Weather page: one line over the radar says when the rain or snow comes in the next 12 hours (390)', async () => {
+    const w = await wxPage(payload, { viewport: { width: 390, height: 900 } });
+    const { page, errors } = w;
+    const line = () => page.evaluate(() => { const a = document.getElementById('radar-answer'); return a.hidden ? null : a.textContent; });
+    const s = await page.evaluate(() => {
+      const a = document.getElementById('radar-answer'), m = document.getElementById('radar-map'), h = document.querySelector('#radar .radar-head');
+      return { above: !!(h.compareDocumentPosition(a) & 4) && !!(a.compareDocumentPosition(m) & 4), radar: !!window.btownRadar || !!window.L, size: getComputedStyle(a).fontWeight };
+    });
+    const first = await line();
+    check(first === 'Rain from about 2 to 7pm.', 'the rainy day: when it starts and stops, the same 2pm and 7pm as the brief', first);
+    check(payload.brief.periods[0].precip.when === 'from 2pm on' && payload.brief.periods[1].precip.when === 'until 7pm', 'and the brief agrees', JSON.stringify(payload.brief.periods.map((p) => p.precip && p.precip.when)));
+    check(s.above && !s.radar, 'above the map, under the title, before the radar has loaded anything', JSON.stringify(s));
+    const variant = async (fn) => {
+      const hrs = hours.map((h, i) => ({ ...h, ...fn(i, h) }));
+      await page.evaluate((d) => window.dispatchEvent(new CustomEvent('btown:weather-data', { detail: d })), { ...payload, hourly: { ...payload.hourly, hours: hrs } });
+      return line();
+    };
+    const dry = await variant(() => ({ pop: 5, short: 'Sunny' }));
+    check(dry === 'No rain expected in the next 12 hours.', 'a dry day says so', dry);
+    const cold = await variant(() => ({ pop: 10, short: 'Mostly Cloudy', temp_f: 30 }));
+    check(cold === 'No rain or snow expected in the next 12 hours.', 'a dry cold day says rain or snow', cold);
+    /* 10am to noon and 1pm, snow at 60%: likely, on and off */
+    const snow = await variant((i) => (i === 2 || i === 3 || i === 5 ? { pop: 60, short: 'Snow Likely', temp_f: 31 } : { pop: 20, short: 'Cloudy', temp_f: 31 }));
+    check(snow === 'Snow likely on and off from about 10am to 2pm.', 'snow at 60%: "likely", and on and off when the wet hours break', snow);
+    /* raining at 8:30, through 10am */
+    const now = await variant((i) => (i <= 2 ? { pop: 80, short: 'Rain' } : { pop: 10, short: 'Cloudy' }));
+    check(now === 'Rain until about 11am.', 'already raining: when it stops', now);
+    /* 40% showers from 5pm, past the twelve hours */
+    const late = await variant((i) => (i >= 9 ? { pop: 40, short: 'Chance Rain Showers' } : { pop: 5, short: 'Partly Sunny' }));
+    check(late === 'A chance of showers from about 5pm on.', 'a 40% chance: "a chance of", from when, with no end inside the twelve hours', late);
+    const stale = await page.evaluate((d) => { window.dispatchEvent(new CustomEvent('btown:weather-data', { detail: d })); return document.getElementById('radar-answer').hidden; },
+      { ...payload, hourly: { ...payload.hourly, hours: hours.slice(0, 6) } });
+    check(stale, 'a file that no longer covers the next twelve hours says nothing', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await w.ctx.close();
   });
 
   await group('What Now: today in plain words and a Full weather link, under the card (390, live)', async () => {
