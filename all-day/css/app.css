@@ -1264,6 +1264,70 @@ select.bf-in { appearance: none; -webkit-appearance: none; }
 .hb-month .c.later { opacity: .5; }
 .hb-edit { padding-top: var(--s3); }
 
+/* the forest: a habit is a tree, a day done a leaf (js/forest.js draws it) */
+.hb-forest { margin: var(--s5) var(--gutter) 0; }
+.hb-fhead { display: flex; align-items: center; gap: var(--s2); min-height: var(--hit); }
+.hb-sp { flex: 1; }
+.tag.hb-pub { color: var(--habit); background: var(--habit-soft); }
+.iconbtn.hb-q { font-family: var(--sans); font-size: var(--fs-title); font-weight: 700; color: var(--ink-2); }
+.hb-grove { display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: var(--s2) var(--s3); margin-top: var(--s2); }
+.hb-grove.few { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.hb-grove.many { grid-template-columns: repeat(auto-fill, minmax(72px, 1fr)); gap: var(--s1) var(--s2); }
+.fr-tree { display: flex; flex-direction: column; justify-content: flex-end; align-items: center; gap: 2px; min-width: 0; padding: var(--s1) 2px var(--s2); border-radius: var(--r-media); text-align: center; color: var(--ink); }
+button.fr-tree:hover { background: var(--paper-2); }
+.fr-tree > * { flex-shrink: 0; }
+.fr-tree .tree { display: block; width: 100%; max-width: 150px; height: auto; }
+.fr-name { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: var(--fs-sub); font-weight: 600; line-height: 1.25; color: var(--ink); }
+.fr-meta { font-size: var(--fs-small); color: var(--ink-3); font-variant-numeric: tabular-nums; }
+.hb-grove .fr-tree.is-empty { grid-column: 1 / -1; }
+.fr-tree.is-empty .tree { max-width: 200px; opacity: .7; }
+.tree .tr-wood { fill: none; stroke: color-mix(in srgb, var(--ember) 30%, var(--ink-3)); stroke-linecap: round; stroke-linejoin: round; }
+.tree .tr-l0 { fill: var(--habit); }
+.tree .tr-l1 { fill: color-mix(in srgb, var(--habit) 70%, var(--ink)); }
+.tree .tr-l2 { fill: color-mix(in srgb, var(--habit) 72%, var(--sunset)); }
+.tree .tr-pet { fill: var(--lake-every); }
+.tree .tr-eye { fill: var(--sunset); }
+.tree .tr-ground { fill: var(--habit-soft); }
+.tree .tr-new { animation: tr-grow .6s cubic-bezier(.2, .8, .3, 1.25); }
+@keyframes tr-grow { from { transform: scale(0); } }
+@media (prefers-reduced-motion: reduce) { .tree .tr-new { animation: none; } }
+.hb-bigtree { display: flex; flex-direction: column; align-items: center; padding-bottom: var(--s3); }
+.hb-bigtree .tree { width: min(240px, 72%); height: auto; }
+
+/* what the page does: on top of a first visit, and behind the "?" */
+.hb-help { margin: var(--s4) var(--gutter) 0; padding: var(--s5) var(--s4); background: var(--habit-soft); border-radius: var(--r-media); animation: rise .35s ease; }
+.hb-helpl { display: grid; gap: var(--s2); margin: var(--s3) 0 var(--s2); padding-left: 1.2em; font-size: var(--fs-body); line-height: 1.45; color: var(--ink); }
+.hb-helpl li::marker { color: var(--habit); }
+.sheet-body .hb-helpl { margin-top: 0; }
+
+/* three habits a tap away on an empty Today */
+.hb-starts { padding: var(--s4) var(--gutter) 0; }
+.hb-starts .hb-empty { padding: 0; }
+.hb-startl { display: flex; flex-wrap: wrap; gap: var(--s2); margin-top: var(--s3); }
+.btn.hb-start { height: var(--hit); padding: 0 16px; }
+.btn.hb-start .i { color: var(--habit); }
+
+/* sharing it */
+.hb-sharef .hb-share { margin: 0; }
+.hb-which { display: grid; gap: var(--s2); margin: 0; padding: 0; border: 0; min-width: 0; }
+.hb-which .bf-label { padding: 0; margin-bottom: var(--s1); }
+
+/* Forests: everyone's shared forests */
+.hb-forests { padding: var(--s4) var(--gutter) var(--s6); }
+.btn.hb-shareyours { height: var(--hit); margin-bottom: var(--s4); }
+.hb-fcards { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: var(--s3); }
+.fr-card { overflow: hidden; padding-bottom: var(--s3); border-radius: var(--r-media); background: var(--paper-2); cursor: pointer; }
+.hb-fcards.is-skel .fr-card { display: grid; gap: var(--s3); padding: var(--s4); min-height: 150px; }
+.fr-open { display: block; width: 100%; padding: var(--s4) var(--s4) 0; text-align: left; color: var(--ink); }
+.fr-who { display: flex; align-items: center; gap: var(--s2); font-size: var(--fs-title); font-weight: 600; line-height: var(--lh-title); color: var(--ink); }
+.fr-sum { display: block; margin-top: 2px; font-size: var(--fs-meta); color: var(--ink-3); }
+.hb-grove.fr-row { grid-template-columns: repeat(auto-fill, minmax(64px, 1fr)); gap: var(--s1) var(--s2); margin: var(--s2) var(--s4) 0; }
+.fr-tree.fr-sm { padding: 0; }
+.fr-tree.fr-sm .tree { width: auto; height: 76px; max-width: 100%; }
+.hb-grove.fr-all .tree { width: auto; height: 150px; max-width: 100%; }
+.fr-tree.fr-sm .fr-name { font-size: var(--fs-small); font-weight: 500; color: var(--ink-2); }
+.hb-grove.fr-all { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); padding-bottom: var(--s3); }
+
 /* loading: the same layout, in grey */
 .skel { display: block; height: 12px; border-radius: var(--r-xs); background: var(--line-soft); animation: hb-fade 1.2s ease-in-out infinite alternate; }
 .hb-tile .skel { background: var(--line); }

@@ -123,7 +123,9 @@ test('the fake answers to exactly the doors the SQL grants', () => {
   const grant = SQL.match(/grant execute on function([\s\S]*?)to anon, authenticated;/);
   assert.ok(grant, 'sz-SETUP.sql grants the reader doors');
   const grant3 = ROUND3.match(/grant execute on function([\s\S]*?)to anon, authenticated;/);
-  const granted = [...new Set([...grant[1].matchAll(/public\.(sz_\w+)\(/g), ...grant3[1].matchAll(/public\.(sz_\w+)\(/g)].map((m) => m[1]))].sort();
+  /* and the forest's (sz-FOREST.sql, part D; scripts/test-sz-forest.mjs checks it closely) */
+  const grantD = readFileSync(path.join(ROOT, 'all-day/supabase/sz-FOREST.sql'), 'utf8').match(/grant execute on function([\s\S]*?)to anon, authenticated;/);
+  const granted = [...new Set([...grant[1].matchAll(/public\.(sz_\w+)\(/g), ...grant3[1].matchAll(/public\.(sz_\w+)\(/g), ...grantD[1].matchAll(/public\.(sz_\w+)\(/g)].map((m) => m[1]))].sort();
   const fake = Object.getOwnPropertyNames(FakeHabits.prototype).filter((n) => /^sz_/.test(n)).sort();
   assert.deepEqual(fake, granted);
   /* every function the file makes is either a door or revoked */

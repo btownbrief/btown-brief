@@ -6338,6 +6338,12 @@ const hbSignIn = async (page) => {
   await page.evaluate(() => import('/all-day/js/auth.js').then((a) => a.demoSignIn()));
   await page.waitForSelector(hbPanel + ' .hb-row, ' + hbPanel + ' .hb-me', { timeout: 6000 });
 };
+/* a chip under the mast: scrolled down, the mast tucks away, so back to the top first */
+const hbChip = async (page, key) => {
+  await page.evaluate(() => document.querySelector('#panel-habits').scrollTo(0, 0));
+  await page.waitForFunction((k) => { const c = document.querySelector('#subnav .chip[data-chip="' + k + '"]'); return c && c.getBoundingClientRect().top > 0; }, key, { timeout: 4000 }).catch(() => {});
+  await page.click('#subnav .chip[data-chip="' + key + '"]');
+};
 /* today's column in the seven dots: Monday 0 … Sunday 6, in Burlington */
 const hbTodayCol = () => (new Date(Date.parse(etKey(Date.now()) + 'T12:00:00Z')).getUTCDay() + 6) % 7;
 /* a tap, measured in the page: the row must show it before the click returns */
@@ -6358,10 +6364,13 @@ async function theHabits(browser, base) {
     const out = await page.$eval(hbPanel, (p) => ({ tile: p.querySelector('.hb-tile').innerText.replace(/\s+/g, ' '), buttons: [...p.querySelectorAll('button')].map((b) => b.textContent.trim()),
       rows: p.querySelectorAll('.hb-row').length, notes: [...p.querySelectorAll('p')].map((x) => x.textContent).filter((t) => !/^Season 0 ·/.test(t)) }));
     check(/Next season starts in 23 days/.test(out.tile) && /Sign up/.test(out.tile), 'the between-seasons tile: when the next season starts, and a sign-up button', out.tile);
-    check(JSON.stringify(out.buttons) === '["Add habit","Sign up"]' && out.rows === 0 && JSON.stringify(out.notes) === '["No habits yet."]',
-      'signed out, a first visit: one line and the Add habit row, then the season tile, no sign-in wall', JSON.stringify(out));
+    check(JSON.stringify(out.buttons) === '["Got it","?","Walk outside","Read the Brief","Try a new Burlington place","Add habit","Sign up"]' && out.rows === 0 && JSON.stringify(out.notes) === '["Plant your first tree."]',
+      'signed out, a first visit: what the page does, the forest’s “?”, three starter habits, Add habit, then the season tile; no sign-in wall', JSON.stringify(out));
+    check(await page.$eval(hbPanel + ' .hb', (b) => b.firstElementChild.className) === 'hb-help' && /Grow a forest/.test(await page.$eval(hbPanel + ' .hb-help', (x) => x.innerText)),
+      'a first visit opens on what the page does, front and centre', '');
+    check(!!(await page.$(hbPanel + ' .hb-forest .fr-tree.is-empty svg')) && !(await page.$(hbPanel + ' .hb-sharebtn')), 'an empty forest: a ghost sapling, and nothing to share yet', '');
     check(!(await page.$(hbPanel + ' .hb-today')) && !(await page.$(hbPanel + ' .hb-heat')), 'no habits, no numbers: no today line and no heat map', '');
-    check(JSON.stringify(await page.$$eval('#subnav .chip', (c) => c.map((x) => x.textContent))) === '["Today","Goal","Season","Wall"]', 'the chips: Today, Goal, Season, Wall', '');
+    check(JSON.stringify(await page.$$eval('#subnav .chip', (c) => c.map((x) => x.textContent))) === '["Today","Forests","Goal","Season","Wall"]', 'the chips: Today, Forests, Goal, Season, Wall', '');
     await page.click(hbPanel + ' .hb-tile .hb-go');
     await page.waitForSelector('.sheet-card[aria-label="Settings"]', { timeout: 4000 }).catch(() => {});
     check(!!(await page.$('.sheet-card[aria-label="Settings"]')) && /Sign in to join a season/.test(await page.$eval('#toast', (t) => t.textContent)),
@@ -6430,8 +6439,8 @@ async function theHabits(browser, base) {
     await hbFake(page, `(f) => { const h = f.habits.find((x) => x.text === 'Morning walk'); for (let i = 22; i <= 30; i++) { const d = new Date(Date.UTC(2026, 9, 14 - i, 12)).toISOString().slice(0, 10); f.addTap(h.id, d); } return true; }`);
     await hbSignIn(page);
     const order = await page.$eval(hbPanel + ' .hb', (b) => [...b.children].map((c) => c.className.split(' ')[0]));
-    check(order[0] === 'hb-today' && order[1] === 'hb-list' && order.indexOf('hb-heat') > order.indexOf('hb-add') && order[order.length - 1] === 'hb-tile',
-      'today on top, then the habits, then the weeks behind them; the season tile last', JSON.stringify(order));
+    check(order[0] === 'hb-help' && order[1] === 'hb-today' && order[2] === 'hb-forest' && order[3] === 'hb-list' && order.indexOf('hb-heat') > order.indexOf('hb-add') && order[order.length - 1] === 'hb-tile',
+      'the first visit’s help, then today, the forest, the habits, the weeks behind them; the season tile last', JSON.stringify(order));
     const today = () => page.$eval(hbPanel + ' .hb-today', (t) => ({ text: [...t.querySelectorAll('.hb-stat')].map((x) => x.innerText.replace(/\s+/g, ' ').trim()),
       now: t.querySelector('.hb-bar').getAttribute('aria-valuenow'), max: t.querySelector('.hb-bar').getAttribute('aria-valuemax') }));
     let t = await today();
@@ -6483,6 +6492,10 @@ async function theHabits(browser, base) {
     await page.goto(base + '/all-day/?demo=1#habits');
     await settle(page);
     await hbSignIn(page);
+    /* the help and the forest stand over the list: put the help away and bring the list into view */
+    await page.click(hbPanel + ' .hb-help .hb-go');
+    await page.$eval(hbPanel + ' .hb-list', (l) => l.scrollIntoView({ block: 'center' }));
+    await page.waitForTimeout(100);
     /* swipe Gym to the left */
     const box = await page.$eval(hbPanel + ' .hb-row:nth-child(3) .hb-name', (n) => { const r = n.getBoundingClientRect(); return { x: r.left + 20, y: r.top + r.height / 2 }; });
     await page.mouse.move(box.x + 200, box.y);
@@ -6718,11 +6731,12 @@ async function theHabits(browser, base) {
     await group('Habits, signed out it just works on this phone, and signing in moves it to the account once (live, ' + width + ', ' + scheme + ')', async () => {
       const acct = hbAccount();
       const { ctx, page, errors } = await newPage(browser, base, { viewport: { width, height: 844 }, scheme, rpc: acct.rpc });
+     
       await page.goto(base + '/all-day/#habits');
       await settle(page);
       await page.waitForSelector(hbPanel + ' .hb-addbtn', { timeout: 6000 });
-      check(await page.$eval(hbPanel + ' .hb-empty', (e) => e.textContent).catch(() => '') === 'No habits yet.' && !(await page.$(hbPanel + ' .hb-sync')) && !(await page.$(hbPanel + ' .hb-gate')),
-        'a first visit: one line and Add habit, nothing seeded, no sign-in wall', '');
+      check(await page.$eval(hbPanel + ' .hb-empty', (e) => e.textContent).catch(() => '') === 'Plant your first tree.' && !(await page.$(hbPanel + ' .hb-row')) && !(await page.$(hbPanel + ' .hb-sync')) && !(await page.$(hbPanel + ' .hb-gate')),
+        'a first visit: one line, the starters and Add habit, nothing seeded, no sign-in wall', '');
       const add = async (name, freq, n) => {
         const k = (await hbRows(page)).length;
         await page.click(hbPanel + ' .hb-addbtn');
@@ -6738,7 +6752,7 @@ async function theHabits(browser, base) {
       const tw = await hbTap(page, 'Walk');
       const tg = await hbTap(page, 'Gym');
       check(tw.on && tg.on && tw.ms < 100 && tw.meta === '1 day · Daily' && /^1 week · 3 a week$|^3 a week$/.test(tg.meta), 'three habits, two tapped, at once (' + Math.round(tw.ms) + ' ms)', JSON.stringify([tw, tg]));
-      check(!acct.calls.some((c) => c !== 'sz_season_next'), 'and nothing personal went to the server', acct.calls.join(', '));
+      check(!acct.calls.some((c) => c !== 'sz_season_next' && c !== 'sz_forests_public'), 'and nothing personal went to the server (the season and the public forests only)', acct.calls.join(', '));
       const kept = await page.evaluate(() => JSON.parse(localStorage.getItem('allday-habits-local') || 'null'));
       check(kept && kept.v === 1 && kept.habits.length === 3 && Object.values(kept.taps).flat().length === 2, 'kept on this phone, under one versioned key', JSON.stringify(kept).slice(0, 200));
       check(await page.$eval(hbPanel + ' .hb-sync', (b) => b.textContent).catch(() => '') === 'Sync across devices', 'one quiet line under the list: Sync across devices', '');
@@ -6755,7 +6769,10 @@ async function theHabits(browser, base) {
       check(!!(await page.$('.sheet-card[aria-label="Settings"]')), 'Sync across devices opens the sign-in', '');
       await page.keyboard.press('Escape');
 
-      /* sign in: the phone's habits move to the account, once */
+      /* sign in: the phone's habits move to the account, once. The Settings
+         sheet asked whether sign-in is on; its answer tells every tab, so
+         let it land first, or this page would start the move before the reload */
+      await page.waitForFunction(() => import('/all-day/js/auth.js').then((a) => a.status() !== 'checking'), null, { timeout: 4000 }).catch(() => {});
       await page.evaluate(() => localStorage.setItem('allday-auth', JSON.stringify({ refresh_token: 'r', user: { id: 'u-1' } })));
       await page.reload();
       await page.waitForFunction(() => document.querySelectorAll('#panel-habits .hb-row').length === 3 && !localStorage.getItem('allday-habits-local'), null, { timeout: 6000 }).catch(() => {});
@@ -6776,7 +6793,7 @@ async function theHabits(browser, base) {
       /* sign out: the account keeps them, the phone's own list is empty */
       await page.evaluate(() => import('/all-day/js/app.js').then((a) => a.signOut()));
       await page.waitForFunction(() => !document.querySelector('#panel-habits .hb-row') && document.querySelector('#panel-habits .hb-addbtn'), null, { timeout: 4000 }).catch(() => {});
-      check((await hbRows(page)).length === 0 && await page.$eval(hbPanel + ' .hb-empty', (e) => e.textContent).catch(() => '') === 'No habits yet.' && acct.f.as('u-1').sz_habits_get().length === 3,
+      check((await hbRows(page)).length === 0 && await page.$eval(hbPanel + ' .hb-empty', (e) => e.textContent).catch(() => '') === 'Plant your first tree.' && acct.f.as('u-1').sz_habits_get().length === 3,
         'signed out again: an empty list here, the three still on the account', '');
       await pageRules(page, 'habits', width);
       check(!errors.length, 'no console errors', errors.join(' | '));
@@ -6842,7 +6859,7 @@ async function theHabits(browser, base) {
     st.rpc = (fn, args) => {
       if (!/^sz_/.test(fn)) return undefined;
       st.calls.push(fn + (args.p_date ? ' ' + args.p_date : ''));
-      if (o.off) return { status: 404, body: { code: 'PGRST202', message: 'Could not find the function' } };
+      if (o.off || (o.forestOff && /^sz_forest/.test(fn))) return { status: 404, body: { code: 'PGRST202', message: 'Could not find the function' } };
       if (fn === 'sz_season_next') return o.season === undefined ? null : o.season;
       if (fn === 'sz_me_get') return { name: 'Maya', phone: '802-555-0100', city: 'burlington', email_opt_out: false };
       if (fn === 'sz_habits_get') return [habit];
@@ -6864,8 +6881,9 @@ async function theHabits(browser, base) {
     let p = await newPage(browser, base, { rpc: (fn, a) => srv.rpc(fn, a) });
     await p.page.goto(base + '/all-day/#habits');
     await settle(p.page);
-    await p.page.waitForSelector(hbPanel + ' .hb-tile:not(.is-skel)', { timeout: 6000 });
-    check(await p.page.$eval(hbPanel + ' .hb-tile', (t) => t.innerText.trim()) === 'No season scheduled yet' && !(await p.page.$(hbPanel + ' .hb-tile button')), 'no season scheduled: it says so, and no button', '');
+    await p.page.waitForSelector(hbPanel + ' .hb-addbtn', { timeout: 6000 });
+    await p.page.waitForTimeout(150);
+    check(!(await p.page.$(hbPanel + ' .hb-tile')) && !/No season/.test(await p.page.$eval(hbPanel, (x) => x.innerText)), 'no season scheduled: no box at all', '');
     check(!srv.calls.some((c) => /^sz_(me|habits|taps)/.test(c)), 'signed out, nothing personal is asked for', srv.calls.join(', '));
     await pageRules(p.page, 'habits', 390);
     check(!p.errors.length, 'no console errors', p.errors.join(' | '));
@@ -6891,8 +6909,23 @@ async function theHabits(browser, base) {
     await signedIn(p.page);
     await p.page.goto(base + '/all-day/#habits');
     await p.page.waitForSelector(hbPanel + ' .hb-empty', { timeout: 6000 }).catch(() => {});
-    check(await p.page.$eval(hbPanel + ' .hb-empty', (e) => e.textContent).catch(() => '') === 'Habits open soon.' && /No season scheduled yet/.test(await p.page.$eval(hbPanel, (x) => x.innerText)),
-      'before sz-SETUP.sql is pasted: the tile, and one line', '');
+    check(await p.page.$eval(hbPanel + ' .hb-empty', (e) => e.textContent).catch(() => '') === 'Habits open soon.' && !(await p.page.$(hbPanel + ' .hb-tile')),
+      'before sz-SETUP.sql is pasted: one line, and no empty season box', '');
+    await p.ctx.close();
+
+    /* the habits are pasted, the forest's sharing is not: the forest grows, sharing stays out of sight */
+    srv = hbServer({ forestOff: true, taps: [etKey(Date.now())] });
+    p = await newPage(browser, base, { rpc: (fn, a) => srv.rpc(fn, a) });
+    await signedIn(p.page);
+    await p.page.goto(base + '/all-day/#habits');
+    await p.page.waitForSelector(hbPanel + ' .hb-row', { timeout: 6000 });
+    await p.page.waitForFunction(() => !document.querySelector('#subnav .chip[data-chip="forests"]'), null, { timeout: 4000 }).catch(() => {});
+    check(!!(await p.page.$(hbPanel + ' .fr-tree[data-id] svg.tree')) && /1 leaf/.test(await p.page.$eval(hbPanel + ' .fr-tree[data-id]', (t) => t.innerText)),
+      'before sz-FOREST.sql is pasted: the tree still grows, from the habit’s own taps', '');
+    check(!(await p.page.$(hbPanel + ' .hb-sharebtn')) && !(await p.page.$('#subnav .chip[data-chip="forests"]')) && !!(await p.page.$(hbPanel + ' .hb-q')),
+      'and Share and the Forests chip stay hidden; the “?” stays', JSON.stringify(await p.page.$$eval('#subnav .chip', (c) => c.map((x) => x.dataset.chip))));
+    check(srv.calls.some((c) => c === 'sz_forest_get') && srv.calls.some((c) => c === 'sz_forests_public'), 'it asked, and took the missing doors as “not yet”', srv.calls.join(', '));
+    check(!p.errors.filter((e) => !/404/.test(e)).length, 'no console errors but the expected 404s', p.errors.join(' | '));
     await p.ctx.close();
   });
 
@@ -6951,6 +6984,155 @@ async function theHabits(browser, base) {
     await page.waitForFunction(() => /Deleted/.test(document.querySelector('#toast').textContent), null, { timeout: 4000 }).catch(() => {});
     check(asked.indexOf('sz_delete_me') >= 0 && asked.indexOf('sz_delete_me') < asked.indexOf('nn_delete_me'), 'then: the habits first, then the posts and profile', asked.join(', '));
     await ctx.close();
+  });
+
+  await group('Habits, the forest: a tree per habit, a leaf per tap, flowers, help, starters (demo, 390)', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/all-day/?demo=1#habits');
+    await settle(page);
+    await page.waitForSelector(hbPanel + ' .hb-help', { timeout: 6000 });
+    /* the "?" explains the page any time */
+    await page.click(hbPanel + ' .hb-q');
+    await page.waitForSelector('.sheet-card[aria-label="How Habits works"]', { timeout: 4000 }).catch(() => {});
+    check((await page.$$eval('.sheet-body .hb-helpl li', (l) => l.length)) === 4, 'the “?” opens How Habits works: four lines', '');
+    await page.keyboard.press('Escape');
+    await page.click('.sheet-card .iconbtn[aria-label="Close"]').catch(() => {});
+    /* a starter is one tap: a habit, and its tree */
+    await page.click(hbPanel + ' .hb-start:has-text("Walk outside")');
+    await page.waitForSelector(hbPanel + ' .hb-row', { timeout: 4000 });
+    let rows = await hbRows(page);
+    check(rows.length === 1 && rows[0].name === 'Walk outside' && rows[0].meta === 'Daily' && !(await page.$(hbPanel + ' .hb-starts')), 'a starter adds a daily habit in one tap, and the starters step aside', JSON.stringify(rows));
+    check(await page.$eval(hbPanel + ' .fr-tree[data-id]', (b) => b.getAttribute('aria-label') + '|' + b.querySelector('svg').getAttribute('aria-hidden')) === 'Walk outside: 0 leaves|true', 'and plants its tree: no leaves yet (one name for the button, the picture itself decorative)', '');
+    const t1 = await page.evaluate(() => {
+      const t0 = performance.now();
+      document.querySelector('#panel-habits .hb-row .hb-tap').click();
+      const tr = document.querySelector('#panel-habits .fr-tree[data-id]');
+      return { ms: performance.now() - t0, label: tr.getAttribute('aria-label'), fresh: !!tr.querySelector('.tr-new') };
+    });
+    check(t1.label === 'Walk outside: 1 leaf' && t1.fresh && t1.ms < 100, 'a tap grows a leaf, in the same click (' + Math.round(t1.ms) + ' ms)', JSON.stringify(t1));
+    await page.click(hbPanel + ' .hb-help .hb-go');
+    check(!(await page.$(hbPanel + ' .hb-help')), 'Got it puts the help away', '');
+
+    /* signed in: the demo's three habits, three trees */
+    await hbSignIn(page);
+    const trees = () => page.$$eval(hbPanel + ' .fr-tree[data-id]', (ts) => ts.map((t) => ({ id: t.dataset.id, label: t.getAttribute('aria-label'),
+      petals: t.querySelectorAll('.tr-pet').length, name: t.querySelector('.fr-name').textContent })));
+    let tr = await trees();
+    rows = await hbRows(page);
+    check(JSON.stringify(tr.map((t) => t.name)) === JSON.stringify(rows.map((r) => r.name)), 'one tree per habit, in the list’s order', JSON.stringify(tr.map((t) => t.name)));
+    const want = await page.evaluate(() => Promise.all([import('/all-day/js/modes/habits.js'), import('/all-day/js/forest.js'), import('/all-day/js/habits-core.js')]).then(([H, F, C]) => {
+      const f = H._fake(), today = C.dayKey(Date.now());
+      return f.habits.filter((h) => h.user_id === 'demo-0000-4000-8000-00000000me00' && !h.archived_at).sort((a, b) => a.position - b.position).map((h) => {
+        const taps = [...f.taps.values()].filter((t) => t.habit === h.id).map((t) => t.date);
+        const best = C.bestStreak(h, F.inWindow(taps, today), Date.now());
+        return { id: h.id, leaves: F.leavesOf(taps, today), blooms: F.bloomsOf(h.frequency, best), svg: F.tree(F.seedOf(h.id), F.leavesOf(taps, today), F.bloomsOf(h.frequency, best)) };
+      });
+    }));
+    check(want.length === tr.length && want.length === 4 && want.every((w, i) => tr[i].label.endsWith(': ' + w.leaves + (w.leaves === 1 ? ' leaf' : ' leaves') + (w.blooms ? ', ' + w.blooms + (w.blooms === 1 ? ' flower' : ' flowers') : ''))),
+      'each tree has a leaf for every day done in the last 370', JSON.stringify([tr.map((t) => t.label), want.map((w) => [w.leaves, w.blooms])]));
+    check(tr[0].petals === want[0].blooms && want[0].blooms >= 1, 'the morning walk’s week-long streak has bloomed: ' + want[0].blooms + ' flower', JSON.stringify(tr[0]));
+    const same = await page.$eval(hbPanel + ' .fr-tree[data-id="' + want[2].id + '"] svg', (s, svg) => { const d = document.createElement('div'); d.innerHTML = svg; return d.firstElementChild.outerHTML === s.outerHTML; }, want[2].svg);
+    check(same, 'a tree is the same drawing wherever it is made: its seed, its leaves, its flowers', '');
+    /* the habit's sheet has it big */
+    await page.click(hbPanel + ' .fr-tree[data-id="' + want[1].id + '"]');
+    await page.waitForSelector('.sheet-body .hb-bigtree svg', { timeout: 4000 }).catch(() => {});
+    check(!!(await page.$('.sheet-card[aria-label="Read twenty pages"] .hb-bigtree svg')) && !!(await page.$('.sheet-body .hb-stats')), 'tapping a tree opens its habit, with the tree big on top', '');
+    await page.click('.sheet-card .iconbtn[aria-label="Close"]');
+    await page.evaluate(() => document.querySelector('.panel:not([hidden])').scrollTo(0, 0));
+    await page.waitForTimeout(150);
+    await page.screenshot({ path: path.join(SHOTS, 'demo-habits-forest.png') });
+    await pageRules(page, 'habits', 390);
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+
+    /* reduced motion: the new leaf is simply there */
+    const r = await newPage(browser, base, { motion: 'reduce' });
+    await r.page.goto(base + '/all-day/?demo=1#habits');
+    await settle(r.page);
+    await hbSignIn(r.page);
+    await hbTap(r.page, 'Read twenty pages');
+    const anim = await r.page.$eval(hbPanel + ' .fr-tree .tr-new', (n) => getComputedStyle(n).animationName).catch(() => 'missing');
+    check(anim === 'none', 'reduced motion: the new leaf does not grow in, it is just there', anim);
+    await r.ctx.close();
+  });
+
+  await group('Habits, sharing a forest: any name, names or just the trees, the gallery, a link (demo, 390)', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/all-day/?demo=1#habits');
+    await settle(page);
+    await page.waitForSelector(hbPanel + ' .hb-addbtn', { timeout: 6000 });
+    await page.click(hbPanel + ' .hb-start:has-text("Read the Brief")');
+    await page.waitForSelector(hbPanel + ' .hb-sharebtn', { timeout: 4000 });
+    await page.click(hbPanel + ' .hb-sharebtn');
+    await page.waitForSelector('.sheet-card[aria-label="Settings"]', { timeout: 4000 }).catch(() => {});
+    check(!!(await page.$('.sheet-card[aria-label="Settings"]')) && /Sign in to share your forest/.test(await page.$eval('#toast', (t) => t.textContent)), 'signed out, Share asks for a sign-in first', '');
+    await page.keyboard.press('Escape');
+    await page.click('.sheet-card .iconbtn[aria-label="Close"]').catch(() => {});
+    await hbSignIn(page);
+    await page.waitForFunction(() => document.querySelectorAll('#panel-habits .hb-row').length >= 3, null, { timeout: 4000 }).catch(() => {});
+    const ids = await hbFake(page, `(f) => f.habits.filter((h) => h.user_id === '${HB_ME}' && !h.archived_at).sort((a, b) => a.position - b.position).map((h) => [h.text, h.id])`);
+    await page.click(hbPanel + ' .hb-sharebtn');
+    await page.waitForSelector('.sheet-card[aria-label="Share your forest"]', { timeout: 4000 });
+    const form = await page.$eval('.sheet-body .hb-sharef', (f) => ({ pub: f.querySelector('input[name=public]').checked, name: f.querySelector('input[name=fname]').value,
+      trees: [...f.querySelectorAll('input[name=tree]')].map((c) => c.checked), show: f.querySelector('.hb-show .on').textContent, hint: f.querySelector('.bf-hint').textContent }));
+    check(form.pub && form.name === 'Alex' && form.trees.length === ids.length && form.trees.every(Boolean) && form.show === 'Just the trees' && form.hint === 'Anyone can see it. Change it or stop anytime.',
+      'the share sheet: public, the first name to start, every tree, just the trees, and one line on who sees it', JSON.stringify(form));
+    await page.fill('.sheet-body input[name=fname]', 'alex@example.com');
+    await page.click('.sheet-body .hb-sharef button[type=submit]');
+    check(/no @/.test(await page.$eval('.sheet-body .hb-sharef .bf-msg', (m) => m.textContent)), 'an email is never a name: refused', '');
+    await page.fill('.sheet-body input[name=fname]', '  Night   Walker ');
+    await page.uncheck('.sheet-body input[name=tree][value="' + ids.find((x) => x[0] === 'Gym')[1] + '"]');
+    await page.click('.sheet-body .hb-sharef button[type=submit]');
+    await page.waitForSelector('#sheet[hidden]', { state: 'attached', timeout: 4000 }).catch(() => {});
+    const saved = await hbFake(page, `(f) => { const x = f.forests.get('${HB_ME}'); return x && { name: x.name, pub: x.public, names: x.show_names, n: f.as('${HB_ME}').sz_forest_get().habits.length }; }`);
+    check(saved && saved.name === 'Night Walker' && saved.pub && !saved.names && saved.n === ids.length - 1 && /in Forests/.test(await page.$eval('#toast', (t) => t.textContent)),
+      'saved: under the name typed, tidied, public, trees only, without the Gym', JSON.stringify(saved));
+    check(await page.$eval(hbPanel + ' .hb-fhead', (h) => h.innerText.replace(/\s+/g, ' ').trim()) === 'Your forest Public Sharing ?', 'the forest says it is public', await page.$eval(hbPanel + ' .hb-fhead', (h) => h.innerText));
+
+    /* the gallery */
+    await hbChip(page, 'forests');
+    await page.waitForSelector(hbPanel + ' .fr-card', { timeout: 4000 });
+    const cards = await page.$$eval(hbPanel + ' .fr-card', (cs) => cs.map((c) => ({ k: c.dataset.k, who: c.querySelector('.fr-who').innerText.replace(/\s+/g, ' ').trim(), sum: c.querySelector('.fr-sum').textContent,
+      names: [...c.querySelectorAll('.fr-name')].map((n) => n.textContent), trees: c.querySelectorAll('svg.tree').length })));
+    const me = cards.find((c) => /Night Walker/.test(c.who));
+    check(cards.length === 4 && me && /You$/.test(me.who) && !me.names.length && me.trees === ids.length - 1, 'Forests: four forests, mine marked You, its trees without their names', JSON.stringify(cards));
+    const maya = cards.find((c) => c.who === 'Maya');
+    check(maya && JSON.stringify(maya.names) === '["Morning pages","Swim"]' && /^2 trees · \d+ leaves$/.test(maya.sum), 'a forest that shows names shows them, with its trees and leaves counted', JSON.stringify(maya));
+    check(!/@|example\.com|802-555/.test(await page.$eval(hbPanel, (p) => p.innerText)), 'no email or phone anywhere in the gallery', '');
+    check(/#habits\/forests$/.test(await page.evaluate(() => location.hash)), 'and the address says Forests', '');
+    await page.evaluate(() => document.querySelector('.panel:not([hidden])').scrollTo(0, 0));
+    await page.screenshot({ path: path.join(SHOTS, 'demo-habits-forests.png') });
+    await pageRules(page, 'habits', 390);
+    await page.click(hbPanel + ' .fr-card[data-k="' + maya.k + '"] .fr-open');
+    await page.waitForSelector('.sheet-card[aria-label="Maya"] .hb-grove.fr-all', { timeout: 4000 }).catch(() => {});
+    check((await page.$$eval('.sheet-body .hb-grove.fr-all .fr-tree', (t) => t.length)) === 2 && /leaves/.test(await page.$eval('.sheet-body', (b) => b.innerText)), 'a forest opens in a sheet, each tree with its leaves', '');
+    await page.click('.sheet-card .iconbtn[aria-label="Close"]');
+
+    /* stop sharing */
+    await hbChip(page, 'today');
+    await page.click(hbPanel + ' .hb-sharebtn');
+    await page.waitForSelector('.sheet-card[aria-label="Share your forest"]', { timeout: 4000 });
+    check(!!(await page.$('.sheet-body button:has-text("Send link")')), 'once public, the sheet has a link to send', '');
+    await page.uncheck('.sheet-body input[name=public]');
+    await page.click('.sheet-body .hb-sharef button[type=submit]');
+    await page.waitForSelector('#sheet[hidden]', { state: 'attached', timeout: 4000 }).catch(() => {});
+    check(/private/.test(await page.$eval('#toast', (t) => t.textContent)) && !(await hbFake(page, `(f) => f.forests.get('${HB_ME}').public`)) && !(await page.$(hbPanel + ' .hb-pub')), 'stop sharing: private again, and the tag is gone', '');
+    await hbChip(page, 'forests');
+    await page.waitForFunction(() => document.querySelectorAll('#panel-habits .fr-card').length === 3, null, { timeout: 4000 }).catch(() => {});
+    check((await page.$$eval(hbPanel + ' .fr-card', (c) => c.length)) === 3 && !!(await page.$(hbPanel + ' .hb-shareyours')), 'and it leaves the gallery, which offers Share yours', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+
+    /* a shared link lands on that forest */
+    const theo = await hbFake(page, `(f) => f.forests.get('demo-forest-theo').id`);
+    await ctx.close();
+    const d = await newPage(browser, base);
+    await d.page.goto(base + '/all-day/?demo=1#habits/f-' + theo);
+    check(await flashes(d.page, 'f-' + theo), '#habits/f-<id> opens Forests on that forest and flashes it', '');
+    await d.page.goto(base + '/all-day/?demo=1#habits/f-00000000-0000-4000-8000-000000000000');
+    await d.page.waitForFunction(() => /private now/.test(document.querySelector('#toast').textContent), null, { timeout: 4000 }).catch(() => {});
+    check(/private now/.test(await d.page.$eval('#toast', (t) => t.textContent)), 'a link to a forest no longer public says so', '');
+    check(!d.errors.length, 'no console errors', d.errors.join(' | '));
+    await d.ctx.close();
   });
 }
 

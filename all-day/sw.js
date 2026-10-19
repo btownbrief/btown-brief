@@ -13,7 +13,7 @@
    audio — episodes are large and the browser's own HTTP cache handles them
    better than we would. */
 
-const VERSION = 'all-day-v72';   // Food: what Burlington asks Reddit
+const VERSION = 'all-day-v73';   // batch merge
 const SHELL = VERSION + '-shell';
 const DATA = 'all-day-data';   // unversioned on purpose: survives shell bumps
 
@@ -26,8 +26,8 @@ const SHELL_URLS = [
   './js/modes/onair.js', './js/modes/games.js',
   /* What Now's engine and its feeds' loader, imported by modes/whatnow.js */
   './js/whatnow-engine.js', './js/whatnow-data.js', './js/sun.js',
-  /* Habits' rules, its demo server and the signed-out phone's copy, imported by modes/habits.js */
-  './js/habits-core.js', './js/habits-fake.js', './js/habits-local.js',
+  /* Habits' rules, its demo server, the signed-out phone's copy and its trees, imported by modes/habits.js */
+  './js/habits-core.js', './js/habits-fake.js', './js/habits-local.js', './js/forest.js',
   /* the photo wall's helpers, imported by the Wire's Photo mode */
   './js/photo-wall.js',
   /* the run clubs' week, imported by ui.js, People and What Now */
