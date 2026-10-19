@@ -7,6 +7,7 @@
   ok   source rules › js/app.js: no monospace
   ok   source rules › js/auth.js: no monospace
   ok   source rules › js/clubs-week.js: no monospace
+  ok   source rules › js/food-asks.js: no monospace
   ok   source rules › js/habits-core.js: no monospace
   ok   source rules › js/habits-fake.js: no monospace
   ok   source rules › js/liquid.js: no monospace
@@ -1670,9 +1671,9 @@
   ok   Food, Open now on a frozen Burlington clock (live, a reader in Los Angeles) › no place shows twice
   ok   Food, Open now on a frozen Burlington clock (live, a reader in Los Angeles) › the late chip shows its 45 places and says so
   ok   Food, Open now on a frozen Burlington clock (live, a reader in Los Angeles) › the patio chip shows its 14 places and says so
-  ok   Food, Open now on a frozen Burlington clock (live, a reader in Los Angeles) › the hh chip shows its 7 places and says so
+  ok   Food, Open now on a frozen Burlington clock (live, a reader in Los Angeles) › the hh chip shows its 0 places and says so
   ok   Food, Open now on a frozen Burlington clock (live, a reader in Los Angeles) › the cheap chip shows its 49 places and says so
-  ok   Food, Open now on a frozen Burlington clock (live, a reader in Los Angeles) › the deal chip shows its 12 places and says so
+  ok   Food, Open now on a frozen Burlington clock (live, a reader in Los Angeles) › the deal chip shows its 0 places and says so
   ok   Food, Open now on a frozen Burlington clock (live, a reader in Los Angeles) › the open chip shows its 100 places and says so
   ok   Food, Open now on a frozen Burlington clock (live, a reader in Los Angeles) › the chips really do change the count
   ok   Food, Open now on a frozen Burlington clock (live, a reader in Los Angeles) › “Full reviews on Google” opens the place by its place id
@@ -1728,7 +1729,7 @@
   ok   Food, the Weekly Bite and Feature a dish (live) › no console errors
   ok   Food, deep links and the chip row › #food/r-<id> lands on the place and flashes it
   ok   Food, deep links and the chip row › and opens its sheet
-  ok   Food, deep links and the chip row › the chip row is the table of contents: Bite, Open now, Deals, Kitchens, Feature a dish
+  ok   Food, deep links and the chip row › the chip row is the table of contents: Bite, Open now, Deals, Asked, Best of, Kitchens, Feature a dish
   ok   Food, deep links and the chip row › a chip scrolls to its section
   ok   Food, deep links and the chip row › #food/late opens Open now on the Open late filter
   ok   Food, deep links and the chip row › #food/d-<id> turns the deck to that deal
@@ -1798,6 +1799,46 @@
   ok   Food, the directory over the wire (live) › A Single Pebble, no Instagram: the dish a reader sent in is its food
   ok   Food, the directory over the wire (live) › the podcast stays out of In their own words even tagged food
   ok   Food, the directory over the wire (live) › no console errors
+  ok   Food, Asked on Reddit (live) › only the food asks, newest first: not the non-food thread, the r/vermont ask outside Burlington, the link post, the sale or the removed post
+  ok   Food, Asked on Reddit (live) › each title links out to its own thread
+  ok   Food, Asked on Reddit (live) › a row: the thread title, its subreddit, its age and its comment count
+  ok   Food, Asked on Reddit (live) › an r/vermont ask names its subreddit; no count when the intake has none
+  ok   Food, Asked on Reddit (live) › the head: Asked on Reddit, 4 threads, newest first
+  ok   Food, Asked on Reddit (live) › and an r/burlington link out
+  ok   Food, Asked on Reddit (live) › its chip in the table of contents counts the threads
+  ok   Food, Asked on Reddit (live) › a shared thread link scrolls to its row and flashes it
+  ok   Food, Asked on Reddit (live) › no console errors
+  ok   Food, Asked on Reddit (live) › with r/vermont muted, its ask is not shown
+  ok   Food, Asked on Reddit (live) › a link to a muted thread says it is muted
+  ok   Food, Asked on Reddit (live) › no console errors
+  ok   Food, Asked on Reddit (live) › a broken intake: “Didn’t load.”
+  ok   Food, Asked on Reddit (live) › and Best of r/burlington still draws
+  ok   Food, Asked on Reddit (live) › no console errors
+  ok   Food, Best of r/burlington (live, the real directory) › twelve cards, most asked first
+  ok   Food, Best of r/burlington (live, the real directory) › the head counts every food, coffee and drink question (123)
+  ok   Food, Best of r/burlington (live, the real directory) › All 123 opens the rest in place
+  ok   Food, Best of r/burlington (live, the real directory) › a card: the question, its Seven Daysies pick where there is one, how many threads
+  ok   Food, Best of r/burlington (live, the real directory) › Drinks shows only its 12 questions
+  ok   Food, Best of r/burlington (live, the real directory) › Coffee shows only its 5 questions
+  ok   Food, Best of r/burlington (live, the real directory) › nothing negative on the cards
+  ok   Food, Best of r/burlington (live, the real directory) › Best Bakery: a link to each of its threads
+  ok   Food, Best of r/burlington (live, the real directory) › and the Seven Daysies pick exactly as the directory has it, linked to Seven Days
+  ok   Food, Best of r/burlington (live, the real directory) › the deep link scrolled to its card too
+  ok   Food, Best of r/burlington (live, the real directory) › Best Nachos is in the directory
+  ok   Food, Best of r/burlington (live, the real directory) › Coziest Bars is in the directory
+  ok   Food, Best of r/burlington (live, the real directory) › Best Cheap Places for Food is in the directory
+  ok   Food, Best of r/burlington (live, the real directory) › no console errors
+  ok   Food, nothing open: Opening next leads (live, the small hours) › the data has a quiet hour before dawn
+  ok   Food, nothing open: Opening next leads (live, the small hours) › with nothing open, the block is Opening next, not an empty Open now
+  ok   Food, nothing open: Opening next leads (live, the small hours) › the places in the order they open, each saying when
+  ok   Food, nothing open: Opening next leads (live, the small hours) › no filter chip is lit, and the table of contents says Opening next
+  ok   Food, nothing open: Opening next leads (live, the small hours) › soonest first: today’s openings in time order, then the later days
+  ok   Food, nothing open: Opening next leads (live, the small hours) › tapping Open now shows the empty list the reader asked for
+  ok   Food, nothing open: Opening next leads (live, the small hours) › no console errors
+  ok   Food, deals verified more than 60 days ago stay off (live) › no console errors
+  ok   Food, deals verified more than 60 days ago stay off (live) › a deal verified Oct 1 and one 60 days back show; one verified Mar 25 does not
+  ok   Food, deals verified more than 60 days ago stay off (live) › no console errors
+  ok   Food, deals verified more than 60 days ago stay off (live) › with only old deals: “No recently verified deals today.”
   ok   People: the rules in the module and the SQL agree › PEOPLE_RULES in people.js is nn_people_rules() in nn-people.sql
   ok   People: the rules in the module and the SQL agree › the tab never imports boards-fake.js; its mirror is its own
   ok   People, live: Stephen’s meetups, the clubs, an empty board › every one of Stephen’s own events in the next two weeks shows, first, as a short row (5)
@@ -2604,7 +2645,7 @@
   ok   sign-in fails soft › a bad address is caught before any request
   ok   sign-in fails soft › no link was requested
   ok   sign-in fails soft › no console errors
-  ok   performance › the live Wire redraws 60 cards in 13ms (budget 100)
+  ok   performance › the live Wire redraws 60 cards in 14ms (budget 100)
   ok   shell fixes: a rail never snaps flush to the edge › 390: .rail carries scroll-padding of one gutter
   ok   shell fixes: a rail never snaps flush to the edge › 390: a card scrolled to the start stops at the gutter
   ok   shell fixes: a rail never snaps flush to the edge › 390: no console errors
@@ -2868,7 +2909,7 @@
   ok   Habits, swipe to archive with Undo, drag and keys to reorder, edit (demo, 1280, dark) › habits: at most 2 subnav rows
   ok   Habits, swipe to archive with Undo, drag and keys to reorder, edit (demo, 1280, dark) › no console errors
   ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › twenty habits, in order
-  ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › twenty habits and a year of taps: a tap still shows at once (10, 10, 9, 9 ms)
+  ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › twenty habits and a year of taps: a tap still shows at once (9, 9, 9, 9 ms)
   ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › the heat map is all there, and four taps leave it as it was
   ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › every row keeps its seven dots and its 48px tap
   ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › the list is longer than the screen, and the panel scrolls
@@ -2907,7 +2948,7 @@
   ok   Habits, the day turns at midnight New York, not the phone’s (demo, a reader in Tokyo) › and a tap now is Thursday’s
   ok   Habits, the day turns at midnight New York, not the phone’s (demo, a reader in Tokyo) › no console errors
   ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 390, light) › a first visit: one line and Add habit, nothing seeded, no sign-in wall
-  ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 390, light) › three habits, two tapped, at once (3 ms)
+  ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 390, light) › three habits, two tapped, at once (4 ms)
   ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 390, light) › and nothing personal went to the server
   ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 390, light) › kept on this phone, under one versioned key
   ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 390, light) › one quiet line under the list: Sync across devices
