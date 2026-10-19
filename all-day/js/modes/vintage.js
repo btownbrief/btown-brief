@@ -241,11 +241,25 @@ app.onAuth(() => { if (ready) postsChanged(); });
 const plural = (n, one, many) => n + ' ' + (n === 1 ? one : many);
 const monthKey = () => { const d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0'); };
 const panel = () => (root ? root.closest('.panel') : null);
-let jumped = null;            // the last section jumped to, and when
+/* A section the reader was just sent to (a chip, a deep link) is scrolled
+   to once more if a late load moves sections around it, settled after the
+   whole batch of paints; the reader taking the scroll over cancels it. */
+let jumped = null, settleT = 0, watching = null;
 function jump(k) {
   if (!slots || !slots[k]) return;
   jumped = { k, t: Date.now() };
+  const p = panel();
+  if (p && watching !== p) {
+    watching = p;
+    ['wheel', 'touchstart', 'keydown'].forEach((ev) => p.addEventListener(ev, () => { jumped = null; }, { passive: true }));
+  }
   app.jumpTo(slots[k]);
+}
+function resettle() {
+  clearTimeout(settleT);
+  settleT = setTimeout(() => {
+    if (jumped && Date.now() - jumped.t < 6000 && app.activeTab() === KEY && slots && slots[jumped.k]) app.jumpTo(slots[jumped.k]);
+  }, 60);
 }
 
 /* An outbound link. In the demo it says where it would go instead. */
@@ -301,9 +315,7 @@ function paint(k) {
   host.innerHTML = '';
   ({ fit: paintFit, spotted: paintSpotted, newin: paintNewIn, shops: paintShops, swaps: paintSwaps, tees: paintTees, sent: paintSent })[k](host);
   if (panel() && app.activeTab() === KEY) panel().scrollTop = y;
-  /* a late load moved Make a tee up: a reader just sent to a section (a chip, a
-     deep link) is sent there again, because the move shifted it */
-  if ((BEFORE_TEES.includes(k) || k === 'tees') && placeTees() && jumped && Date.now() - jumped.t < 6000 && app.activeTab() === KEY) jump(jumped.k);
+  if ((BEFORE_TEES.includes(k) || k === 'tees') && placeTees()) resettle();
 }
 
 /* Board posts, two up, on the shell's board card, or in a row (`rail`, its

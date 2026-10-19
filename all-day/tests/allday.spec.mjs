@@ -4551,6 +4551,18 @@ async function theFood(browser, base) {
     check(await a.page.$eval(foodPanel + ' [data-sec="open"]', (s) => !!s.querySelector('.lrow.place')), 'the deep link #food/open still lands on Open now', '');
     check(!a.errors.length, 'no console errors', a.errors.join(' | '));
     await a.ctx.close();
+    /* the threads arrive late and move Asked above Open now: the reader who was sent to Open now is still there */
+    const late = await newPage(browser, base, { viewport: { width: 390, height: 844 } });
+    await late.page.route(/reddit-data\/data\/reddit-intake\.json$/, async (r) => {
+      await new Promise((res) => setTimeout(res, 1500));
+      await r.fulfill({ status: 200, body: JSON.stringify(redditIntake(Date.now())), contentType: 'application/json' }).catch(() => {});
+    });
+    await late.page.goto(base + '/all-day/#food/open');
+    await late.page.waitForSelector(foodPanel + ' [data-sec="asks"] .card', { timeout: 15000 });
+    await late.page.waitForTimeout(1200);
+    const ol = await late.page.evaluate((p) => ({ first: document.querySelector(p + ' [data-sec]').dataset.sec, top: Math.round(document.querySelector(p + ' [data-sec="open"]').getBoundingClientRect().top) }), foodPanel);
+    check(ol.first === 'asks' && ol.top >= 0 && ol.top < 300, 'threads that arrive late move Asked to the top and the reader sent to Open now stays on it', JSON.stringify(ol));
+    await late.ctx.close();
     /* only week-old threads: In their own words leads while it has pictures */
     const k = await newPage(browser, base, { reddit: redditIntake(Date.now() - 5 * 86400000) });
     await k.page.route(/\/all-day\/data\/instagram\.json/, (r) => r.fulfill({ status: 200, body: JSON.stringify(foodInstagram(true)), contentType: 'application/json' }));

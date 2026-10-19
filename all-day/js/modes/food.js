@@ -565,9 +565,7 @@ function paint(k) {
   host.innerHTML = '';
   ({ bite: paintBite, open: paintOpen, deals: paintDeals, asks: paintAsks, best: paintBest, kitchens: paintKitchens, add: paintAdd })[k](host);
   if (panel() && app.activeTab() === KEY) panel().scrollTop = y;
-  /* a section the reader was sent to (a deep link, a chip) is scrolled to again if
-     a late load moved it just now */
-  if ((k === 'asks' || k === 'kitchens') && placeSlots() && jumped && Date.now() - jumped.t < 6000 && app.activeTab() === KEY) jump(jumped.k);
+  if ((k === 'asks' || k === 'kitchens') && placeSlots()) resettle();
   if (k === 'open' || k === 'deals' || k === 'asks' || k === 'kitchens') app.paintSubnav();
 }
 
@@ -1248,11 +1246,25 @@ function submitDish(form) {
 
 /* ------------------------------------------------------------------- bits */
 const panel = () => (root ? root.closest('.panel') : null);
-let jumped = null;            // the last section jumped to, and when
+/* A section the reader was just sent to (a chip, a deep link) is scrolled
+   to once more if a late load moves sections around it, settled after the
+   whole batch of paints; the reader taking the scroll over cancels it. */
+let jumped = null, settleT = 0, watching = null;
 function jump(k) {
   if (!slots || !slots[k]) return;
   jumped = { k, t: Date.now() };
+  const p = panel();
+  if (p && watching !== p) {
+    watching = p;
+    ['wheel', 'touchstart', 'keydown'].forEach((ev) => p.addEventListener(ev, () => { jumped = null; }, { passive: true }));
+  }
   app.jumpTo(slots[k]);
+}
+function resettle() {
+  clearTimeout(settleT);
+  settleT = setTimeout(() => {
+    if (jumped && Date.now() - jumped.t < 6000 && app.activeTab() === KEY && slots && slots[jumped.k]) app.jumpTo(slots[jumped.k]);
+  }, 60);
 }
 
 /* #food/bite|open|deals|asks|best|kitchens|add jumps to a section; #food/map opens
