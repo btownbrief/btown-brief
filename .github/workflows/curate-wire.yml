@@ -21,7 +21,13 @@ name: Curate the Wire
 
 on:
   schedule:
-    - cron: '7 * * * *'
+    # Three slots an hour: GitHub sheds most scheduled ticks for this repo
+    # (2026-10-18/19: the single :07 slot fired about once every three to four
+    # hours). Whichever tick lands first does the hour's work; curate_wire.py
+    # waits CALL_GAP_MINUTES after a model call, so extra ticks cost nothing.
+    # The Mac's hourly dispatch (newsletter/scripts/setup_wire_dispatch.sh)
+    # stays as the backup.
+    - cron: '7,27,47 * * * *'
   workflow_dispatch:
     inputs:
       rebuild:
