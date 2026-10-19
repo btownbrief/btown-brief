@@ -1915,6 +1915,15 @@ async function thePhotos(browser, base) {
     check(fl.on && fl.vis === 'visible' && fl.sw && !fl.day, 'scrolled down on Photos: Local / Everything floats under the pill', JSON.stringify(fl));
     check(!v.errors.length, 'no console errors', v.errors.join(' | '));
     await v.ctx.close();
+    /* a shared world picture opens on a Local reader: the switch goes to Everything */
+    const d = await open({ ...base0, photos_world: world });
+    await geoTo(d.page, 'local');
+    await d.page.goto(base + '/all-day/#wire/' + encodeURIComponent('pw:example.org/world/page2'));
+    await d.page.waitForSelector('.sheet-card[aria-label="Picture of the day 2"]', { timeout: 6000 }).catch(() => {});
+    check(!!(await d.page.$('.sheet-card[aria-label="Picture of the day 2"]')) && await d.page.$eval(BAND + ' .localsw', (x) => !x.classList.contains('is-on')),
+      'a shared world picture opens in its sheet, on Everything', d.page.url());
+    check(!d.errors.length, 'no console errors', d.errors.join(' | '));
+    await d.ctx.close();
     /* no world list yet: Everything is Local, with no error and no empty shelf */
     const u = await open({ ...base0 });
     await geoTo(u.page, 'everything');

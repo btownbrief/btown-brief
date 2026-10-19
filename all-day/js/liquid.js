@@ -59,12 +59,14 @@ function mixColor(a, b, t) {
 export function attach(bar, { key, n, idx, prop, fallback }) {
   if (idx < 0 || !(n > 0)) return;
   if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  let canvas, ctx;
-  try { canvas = document.createElement('canvas'); ctx = canvas.getContext('2d'); if (!ctx) return; } catch (e) { return; }
-  canvas.className = 'lsw-canvas';
-  canvas.setAttribute('aria-hidden', 'true');
+  /* one canvas per bar: a bar liquified again keeps its canvas */
+  let canvas = bar.querySelector(':scope > canvas.lsw-canvas'), ctx = null;
+  try {
+    if (!canvas) { canvas = document.createElement('canvas'); canvas.className = 'lsw-canvas'; canvas.setAttribute('aria-hidden', 'true'); bar.insertBefore(canvas, bar.firstChild); }
+    ctx = canvas.getContext('2d');
+  } catch (e) { ctx = null; }
+  if (!ctx) { if (canvas) canvas.remove(); return; }
   bar.classList.add('liquid');
-  bar.insertBefore(canvas, bar.firstChild);
   let s = liquids.get(key);
   if (!s) {
     s = { n, idx: null, L: 0, R: 0, vL: 0, vR: 0, dir: 1, churn: 0, drops: [], blobs: [], bubbles: [], bubbleAt: 0,
@@ -77,7 +79,10 @@ export function attach(bar, { key, n, idx, prop, fallback }) {
   if (first) { s.L = idx / n; s.R = (idx + 1) / n; s.vL = 0; s.vR = 0; }
   else if (flipped) { s.dir = idx > s.idx ? 1 : -1; s.colorFrom = s.colorTo; s.colorTo = null; s.colorT = 0; s.churn = 1; s.splashed = false; s.splashed2 = false; }
   s.idx = idx;
-  s.faces = s.faces.filter((f) => f.canvas.isConnected && f.canvas !== canvas);
+  /* this bar's old face goes (a bar liquified again); a face whose bar has
+     left the page goes at the next frame, which also stops observing it (a
+     bar is often liquified before it is put on the page, so not here) */
+  liquids.forEach((o) => { o.faces = o.faces.filter((f) => f.canvas !== canvas); });
   s.faces.push({ bar, canvas, ctx, prop, fallback, color: null, slots: [...bar.querySelectorAll('button')], drawn: false });
   if (sized) sized.observe(bar);
   const now = performance.now() / 1000;

@@ -369,18 +369,17 @@ function worldView(p) {
   const media = p.image || p.img || p.i || p.media || '';
   const url = p.url || p.link || p.u || p.href || '';
   if (!isUrl(media) || !isUrl(url)) return null;
-  const k = 'pw:' + String(p.id || url).slice(0, 200);
+  /* keyed by its own page, so two rows never share a key */
+  const k = 'pw:' + norm(url);
   const title = squash(p.title || p.caption || p.c || '');
   const src = squash(p.source || p.src || p.outlet || '') || (() => { try { return new URL(url).hostname.replace(/^www\./, ''); } catch (e) { return 'The world'; } })();
   const credit = squash(p.credit || '');
   const t = typeof p.ts === 'number' ? p.ts : Date.parse(p.published || p.date || p.at || '') / 1000;
   let it = worldKeys.get(k);
-  if (!it) {
-    it = { k, kind: 'image', href: url, media, ratio: 'r45', title: short(title) || src, text: squash([title, credit && 'Photo: ' + credit].filter(Boolean).join('. ')),
-      src, sid: 'pw:' + src, local: false, d: Number.isFinite(t) ? t : 0, open: 'Open on ' + src };
-    worldKeys.set(k, it);
-    app.know([it]);
-  }
+  if (!it) { it = { k, kind: 'image', ratio: 'r45', local: false }; worldKeys.set(k, it); app.know([it]); }
+  /* the same object each draw (the registry's), with this payload's words */
+  Object.assign(it, { href: url, media, title: short(title) || src, text: squash([title, credit && 'Photo: ' + credit].filter(Boolean).join('. ')),
+    src, sid: 'pw:' + src, d: Number.isFinite(t) ? t : 0, open: 'Open on ' + src });
   it.ago = it.d ? ctx.ago(it.d * 1000) : '';
   return { it, k, from: 'world', media, ratio: 'r45', cap: oneLine(title) || src, alt: (title || 'Photo from ' + src).slice(0, 250),
     src, sid: it.sid, local: false, d: it.d, url, cats: new Set(['world']) };

@@ -1746,15 +1746,16 @@ function rawSourceSheet(sid, from) {
    in an earlier edition, or on the raw wire (old links are URLs). */
 /* A picture's key (a neighbor's post b-…, a gallery photo g-…, an Instagram
    post ig:…) belongs to Photo mode, as does #wire/photos/<key>. */
-const PHOTO_KEY = /^(b-|g-|ig:)/;
+const PHOTO_KEY = /^(b-|g-|ig:|pw:)/;
 const isPhotoParam = (p) => p === 'photos' || p.startsWith('photos/') || PHOTO_KEY.test(p);
 function landPhotos(p) {
   const k = p === 'photos' ? '' : p.startsWith('photos/') ? p.slice(7) : p;
   W.view = 'paper';
   W.wantSquare = false;
   if (W.mode !== 'photos') { W.mode = 'photos'; photos.remember('photos'); }
-  /* a shared picture is found under All */
+  /* a shared picture is found under All; one from everywhere, on Everything */
   if (k) photos.setCat('all');
+  if (/^pw:/.test(k) && geo() !== 'everything') setGeo('everything');
   W.photoOpen = k || null;
   app.paintSubnav(); render();
   if (!k) app.scrollTop();
