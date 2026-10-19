@@ -51,6 +51,7 @@ import * as photos from './wire-photos.js';
 import * as square from './wire-square.js';
 import * as boards from '../boards.js';
 import { el, esc, safeHref, ICON, mark, cards, chips, pills, button, divider, section, localSwitch, geo, setGeo, put } from '../ui.js';
+import { liquify } from '../liquid.js';
 
 const FIRST = 60;        // cards on the first screenful (DESIGN.md §9 rule 14: sixty in under 100ms)
 const CHUNK = 40;        // then forty at a time as the reader nears the bottom
@@ -87,6 +88,8 @@ const TOPIC_OF = Object.fromEntries(TOPICS.flatMap(([key, , tags]) => tags.map((
 /* the three ways to read the tab, in words (his girlfriend, 2026-10-17:
    the list and photo icons "looked like the same information") */
 const MODES = [['news', 'News'], ['photos', 'Photos'], ['square', 'Square']];
+/* each word's water, a colour token */
+const MODE_WATER = ['--liq-news', '--liq-photos', '--liq-square'];
 const NUMBER = ['none', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve', 'thirteen',
   'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen'];
 const TENS = ['', '', 'twenty', 'thirty', 'forty', 'fifty', 'sixty', 'seventy', 'eighty', 'ninety'];
@@ -360,6 +363,11 @@ function modeRow() {
     b.addEventListener('click', () => { if (!on && !(key === 'square' && !W.squareOk)) setMode(key); });
     g.appendChild(b);
   });
+  /* the chosen word sits in poured water, each its own colour (Stephen,
+     2026-10-19: "that bubble and the motion ... for the main ones I want
+     people switching through"); Unfiltered has no word on, so no water */
+  const at = MODES.findIndex(([key]) => key === W.mode);
+  if (W.view === 'paper' && at >= 0) liquify(g, { key: 'wire-mode', idx: at, colors: MODE_WATER });
   return g;
 }
 /* a chip's colour mark: a dot in the source's colour */

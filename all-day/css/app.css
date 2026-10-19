@@ -519,7 +519,7 @@ body.chrome-away .mast { transform: translateY(-100%); }
   border-radius: var(--r-pill); background: var(--paper-2); border: 1px solid var(--line-soft);
   transition: background .2s ease, border-color .2s ease; }
 .localsw.liquid { overflow: hidden; }
-.localsw .lsw-canvas { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.lsw-canvas { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
 .localsw-half { position: relative; z-index: 1; display: inline-flex; align-items: center; justify-content: center; gap: 6px;
   height: 32px; padding: 0 12px; border-radius: var(--r-pill); font-size: var(--fs-meta); font-weight: 600; letter-spacing: -.005em;
   color: var(--ink-3); white-space: nowrap; transition: color .18s ease, background .18s ease; }
@@ -1505,6 +1505,15 @@ body.wire-float .mast:has(.wbar) .subnav::before { bottom: -60px; }
 .wbar .wmode { color: var(--dock-ink); }
 .wbar .wmode:hover { background: var(--dock-hover); }
 .wbar .wmode.on { background: var(--sunset); color: var(--sunset-ink); }
+/* each word its own water (liquid.js pours it; without the canvas, the
+   same colour as a plain fill) */
+.wmodes { position: relative; }
+.wmodes.liquid { overflow: hidden; }
+.wmode { z-index: 1; }
+.wbar .wmode[data-view="news"].on { background: var(--liq-news); color: var(--liq-news-ink); }
+.wbar .wmode[data-view="photos"].on { background: var(--liq-photos); color: var(--liq-photos-ink); }
+.wbar .wmode[data-view="square"].on { background: var(--liq-square); color: var(--liq-square-ink); }
+.wbar .wmodes.liquid .wmode.on { background: transparent; box-shadow: none; }
 /* scrolled down: the day and Local / Everything float under the pill, the
    same two controls the banner leads with */
 /* the wbar sits 8px in from the screen, so 8px more lines this row up with the paper's 16px gutter */
@@ -1861,6 +1870,16 @@ body.desk { overflow: auto; }
 .oa-sideswitch button { padding: 0 var(--s2); min-height: var(--hit); font-size: var(--fs-button); font-weight: 600; }
 .mast .oa-sideswitch button { color: var(--lake-muted); }
 .mast .oa-sideswitch button.on { background: var(--sunset); color: var(--sunset-ink); box-shadow: none; }
+/* On Air's sides and Feed | Topics, poured like the Wire's words */
+.oa-sideswitch, .oa-viewswitch { position: relative; }
+.oa-sideswitch.liquid, .oa-viewswitch.liquid { overflow: hidden; }
+.oa-sideswitch button, .oa-viewswitch button { position: relative; z-index: 1; }
+.mast .oa-sideswitch button[data-side="tv"].on { background: var(--liq-tv); color: var(--liq-tv-ink); }
+.mast .oa-sideswitch button[data-side="pods"].on { background: var(--liq-pods); color: var(--liq-pods-ink); }
+.mast .oa-sideswitch button[data-side="lists"].on { background: var(--liq-lists); color: var(--liq-lists-ink); }
+.oa-viewswitch button[data-view="feed"].on { background: var(--liq-tv); color: var(--liq-tv-ink); }
+.oa-viewswitch button[data-view="topics"].on { background: var(--liq-topics); color: var(--liq-topics-ink); }
+.mast .oa-sideswitch.liquid button.on, .oa-viewswitch.liquid button.on { background: transparent; box-shadow: none; }
 .oa-pick { display: flex; align-items: center; gap: var(--s2); padding: 14px var(--gutter) 0; }
 .oa-pickbtn { flex: 1 1 auto; min-width: 0; height: 44px; font-size: var(--fs-button); }
 .oa-viewswitch { flex: 0 0 auto; }

@@ -7902,6 +7902,49 @@ async function shellFixes(browser, base) {
     await ctx.close();
   });
 
+  /* Stephen, 2026-10-19: "that bubble and the motion ... for the main ones I
+     want people switching through". One shared liquid (liquid.js) pours the
+     Wire's News · Photos · Square, every Local / Everything, On Air's sides
+     and Feed | Topics; under reduced motion each is a plain fill in its own
+     colour; and the one loop goes still when the water does. */
+  for (const motion of ['no-preference', 'reduce']) await group('shell fixes: the main switches share the poured water (' + motion + ')', async () => {
+    const { ctx, page, errors } = await newPage(browser, base, { motion });
+    await page.goto(base + '/all-day/?demo=1#wire');
+    await settle(page);
+    const look = (sel) => page.$eval(sel, (bar) => { const on = bar.querySelector('button.on, .on'); return { liquid: bar.classList.contains('liquid'), canvas: !!bar.querySelector(':scope > canvas.lsw-canvas'),
+      onBg: on ? getComputedStyle(on).backgroundColor : '', pressed: on ? on.getAttribute('aria-pressed') : '' }; });
+    const water = motion === 'no-preference';
+    const ok = (r) => (water ? r.liquid && r.canvas && /rgba\(0, 0, 0, 0\)|transparent/.test(r.onBg) : !r.liquid && !r.canvas && !/rgba\(0, 0, 0, 0\)|transparent/.test(r.onBg)) && r.pressed === 'true';
+    const news = await look('#subnav .wmodes');
+    check(ok(news), 'the Wire’s News · Photos · Square ' + (water ? 'pours' : 'is a plain fill'), JSON.stringify(news));
+    check(ok(await look('.panel:not([hidden]) .wband .localsw')), 'Local / Everything ' + (water ? 'pours' : 'is a plain fill'), '');
+    await page.click('#subnav .wmode[data-view="photos"]');
+    await page.waitForTimeout(150);
+    const ph = await page.$eval('#subnav .wmode.on', (b) => [b.dataset.view, b.getAttribute('aria-pressed'), getComputedStyle(b).color]);
+    check(ph[0] === 'photos' && ph[1] === 'true' && ok(await look('#subnav .wmodes')), 'Photos takes the water and the pressed state', JSON.stringify(ph));
+    if (!water) {
+      const fills = await page.$$eval('#subnav .wmode', (bs) => bs.map((b) => b.dataset.view));
+      check(fills.length === 3, 'three words', '');
+    }
+    await page.click('#subnav .wmode[data-view="news"]');
+    await goTab(page, 'onair');
+    await page.waitForSelector('#subnav .oa-sideswitch', { timeout: 8000 });
+    check(ok(await look('#subnav .oa-sideswitch')), 'On Air’s TV · Podcasts · Playlists ' + (water ? 'pours' : 'is a plain fill'), JSON.stringify(await look('#subnav .oa-sideswitch')));
+    const vs = await page.$('#panel-onair .oa-viewswitch');
+    if (vs) check(ok(await look('#panel-onair .oa-viewswitch')), 'Feed | Topics ' + (water ? 'pours' : 'is a plain fill'), '');
+    await page.click('#subnav .oa-sideswitch [data-side="pods"]');
+    await page.waitForTimeout(150);
+    check(await page.$eval('#subnav .oa-sideswitch [data-side="pods"]', (b) => b.getAttribute('aria-pressed')) === 'true' && ok(await look('#subnav .oa-sideswitch')), 'a side picked keeps its pressed state in the water', '');
+    if (water) {
+      /* still water: after the lap the one loop asks for no more frames */
+      await page.waitForTimeout(6500);
+      const n = await page.evaluate(() => new Promise((r) => { let n = 0; const o = window.requestAnimationFrame; window.requestAnimationFrame = (f) => { n++; return o(f); }; setTimeout(() => { window.requestAnimationFrame = o; r(n); }, 600); }));
+      check(n === 0, 'when the water is still, the loop sleeps (' + n + ' frames asked in 600ms)', n);
+    }
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
   await group('shell fixes: the offline shell carries the new modules', async () => {
     const sw = await readFile(path.join(APP, 'sw.js'), 'utf8');
     const main = await readFile(path.join(APP, 'js/main.js'), 'utf8');

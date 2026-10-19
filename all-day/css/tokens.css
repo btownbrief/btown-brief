@@ -77,6 +77,24 @@
   --local-soft: rgba(22, 112, 78, .10);
   --local-ink: #FFFFFF;             /* text on the Local water */
   --every: #A63A2C;                 /* the Everything water in the switch; used nowhere else */
+  /* the poured water of the main switches (2026-10-19), one colour per
+     choice, the same in both themes so the words on them keep their ink:
+     News amber, Photos coral, Square lake blue; On Air's TV amber,
+     Podcasts violet, Playlists park green, Topics lake blue */
+  --liq-news: #F2A93B;
+  --liq-news-ink: #2B1606;
+  --liq-photos: #D9644F;
+  --liq-photos-ink: #2B1606;
+  --liq-square: #2F6FB2;
+  --liq-square-ink: #FFFFFF;
+  --liq-tv: #F2A93B;
+  --liq-tv-ink: #2B1606;
+  --liq-pods: #7A5BB0;
+  --liq-pods-ink: #FFFFFF;
+  --liq-lists: #26764E;
+  --liq-lists-ink: #FFFFFF;
+  --liq-topics: #2F6FB2;
+  --liq-topics-ink: #FFFFFF;
   --every-ink: #FFFFFF;
   --now: #9A5B00;                   /* What Now's disc in the tab bar: the accent, filled */
   --now-ink: #FFFFFF;               /* the icon on the disc */
