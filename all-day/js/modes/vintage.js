@@ -51,7 +51,10 @@
    - Make a tee. Stephen's always-in-stock designs from the merch repo
      (all-day/data/merch-designs.json, scripts/build_merch_rail.py), each a
      link to its page in the shop, where the Printify mockups on a model
-     live. Then "Send in your design": one image through the photo queue
+     live, the shop itself the row's last tile. "Send in your design" is the
+     button in that same head, one block (2026-10-18), and the block sits
+     right after the first section with items rather than last. It is one
+     image through the photo queue
      with the consent box, a name, a line, and free shirts or store credit
      (never cash): a `design` post, the choice in its `thanks` field.
      Stephen sees it in the photo desk and the boards desk. Approved ones
@@ -90,9 +93,16 @@ const NEW_IN_MAX = 12;
 const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
 const SECTIONS = [['fit', 'Fit checks'], ['spotted', 'Spotted'], ['swaps', 'Swaps'], ['newin', 'New in'], ['shops', 'Shops'], ['tees', 'Make a tee']];
-/* the slots, top to bottom: `make` is the design pitch, `sent` the designs
-   neighbors sent in, as Top designs */
-const SLOTS = ['fit', 'spotted', 'swaps', 'newin', 'shops', 'tees', 'make', 'sent'];
+/* the slots, in their resting order: `sent` is the designs neighbors sent
+   in, as Top designs, and always follows `tees` */
+const SLOTS = ['fit', 'spotted', 'swaps', 'newin', 'shops', 'tees', 'sent'];
+/* Make a tee (with the Top designs row under it) is not last any more
+   (Stephen, 2026-10-18: "so far down"). Fit checks, Spotted and Swaps are
+   the neighbors' trio he asked to keep together at the top, so while any of
+   the three has items the block follows the trio; otherwise it follows the
+   first of New in and Shops that has items, and the end while none does. */
+const TRIO = ['fit', 'spotted', 'swaps'];
+const BEFORE_TEES = TRIO.concat(['newin', 'shops']);
 
 /* the guide's own map stack, as Food loads it (events.html, things-to-do.html):
    Leaflet from unpkg with its integrity hashes, OpenStreetMap's tiles, on the
@@ -231,7 +241,12 @@ app.onAuth(() => { if (ready) postsChanged(); });
 const plural = (n, one, many) => n + ' ' + (n === 1 ? one : many);
 const monthKey = () => { const d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0'); };
 const panel = () => (root ? root.closest('.panel') : null);
-function jump(k) { if (slots && slots[k]) app.jumpTo(slots[k]); }
+let jumped = null;            // the last section jumped to, and when
+function jump(k) {
+  if (!slots || !slots[k]) return;
+  jumped = { k, t: Date.now() };
+  app.jumpTo(slots[k]);
+}
 
 /* An outbound link. In the demo it says where it would go instead. */
 function outLink(label, href, cls, aria) {
@@ -284,8 +299,11 @@ function paint(k) {
   const host = slots[k];
   const y = panel() ? panel().scrollTop : 0;
   host.innerHTML = '';
-  ({ fit: paintFit, spotted: paintSpotted, newin: paintNewIn, shops: paintShops, swaps: paintSwaps, tees: paintTees, make: paintMake, sent: paintSent })[k](host);
+  ({ fit: paintFit, spotted: paintSpotted, newin: paintNewIn, shops: paintShops, swaps: paintSwaps, tees: paintTees, sent: paintSent })[k](host);
   if (panel() && app.activeTab() === KEY) panel().scrollTop = y;
+  /* a late load moved Make a tee up: a reader just sent to a section (a chip, a
+     deep link) is sent there again, because the move shifted it */
+  if ((BEFORE_TEES.includes(k) || k === 'tees') && placeTees() && jumped && Date.now() - jumped.t < 6000 && app.activeTab() === KEY) jump(jumped.k);
 }
 
 /* Board posts, two up, on the shell's board card, or in a row (`rail`, its
@@ -664,10 +682,36 @@ function paintSwaps(host) {
   }));
 }
 
+/* Where Make a tee then Top designs go (see TRIO); the chips use the same order. */
+const hasItems = (k) => ({ fit: S.fit && S.fit.length, spotted: S.spotted && S.spotted.length, swaps: S.swaps && S.swaps.length,
+  newin: newIn().length, shops: S.shops && S.shops.length })[k];
+const teeAfter = () => (TRIO.some(hasItems) ? 'swaps' : ['newin', 'shops'].find(hasItems) || 'shops');
+function placeTees() {
+  if (!slots || !slots.tees) return false;
+  const at = slots[teeAfter()];
+  if (at.nextElementSibling === slots.tees && slots.tees.nextElementSibling === slots.sent) return false;
+  at.after(slots.tees, slots.sent);
+  return true;
+}
+const sectionOrder = () => {
+  const after = teeAfter();
+  return SECTIONS.filter(([k]) => k !== 'tees').flatMap((x) => (x[0] === after ? [x, SECTIONS.find(([k]) => k === 'tees')] : [x]));
+};
+
 /* -------------------------------------------------------------- Make a tee */
+/* One block: the designs, and "Send in your design" as the button in its
+   head (Stephen, 2026-10-18: "combine it ... so that it takes up less
+   space"). The shop is the last tile of the row, so the block has two ways
+   in and neither is a block of its own: a design opens in the shop, the
+   button opens the form. One image of the artist's own work goes through
+   the photo queue (category 'board', consent required), a name, a line, and
+   how they'd be thanked: free shirts or store credit. There is no price, no
+   payment and no cash option anywhere in it. */
 function paintTees(host) {
   const total = S.designsTotal || (S.designs ? S.designs.length : 0);
-  section(host, 'Make a tee', total ? '<b>' + esc(plural(total, 'design', 'designs')) + '</b>' : null);
+  const send = button(ICON.plus + ' ' + esc('Send in your design'), 'ghost sm', designSheet);
+  send.dataset.act = 'vsend';
+  section(host, 'Make a tee', total ? '<b>' + esc(plural(total, 'design', 'designs')) + '</b>' : null, send);
   if (!S.designs) {
     host.appendChild(el('p', 'note pad', esc(S.designsFailed ? 'The designs didn’t load.' : 'Loading the designs…')));
   } else if (S.designs.length) {
@@ -684,25 +728,19 @@ function paintTees(host) {
       if (app.demo) a.addEventListener('click', (e) => { e.preventDefault(); app.toast('Opens ' + d.name + ' in the merch shop in the real build'); });
       r.appendChild(a);
     });
+    const all = el('a', 'vcard w150 vall');
+    all.href = safeHref(SHOP_URL);
+    all.target = '_blank';
+    all.rel = 'noopener';
+    all.setAttribute('aria-label', 'All ' + (total || S.designs.length) + ' designs in the shop');
+    all.innerHTML = '<span class="c-media r11"><b>' + esc('All ' + (total || S.designs.length)) + '</b></span><span class="t">' + esc('The whole shop') + '</span><span class="s">' + esc('Opens the shop') + ' ' + ICON.ext + '</span>';
+    if (app.demo) all.addEventListener('click', (e) => { e.preventDefault(); app.toast('The merch shop opens in the real build'); });
+    r.appendChild(all);
+    return;
   }
   const links = el('div', 'linkrow addrow');
-  links.appendChild(outLink(total ? 'All ' + total + ' designs in the shop' : 'The shop', SHOP_URL));
+  links.appendChild(outLink('The shop', SHOP_URL));
   host.appendChild(links);
-}
-
-/* Send in a design: the button here, the form in a sheet like every other
-   post. One image of the artist's own work through the photo queue
-   (category 'board', consent required), a name, a line, and how they'd be
-   thanked: free shirts or store credit. There is no price, no payment and
-   no cash option anywhere in it. */
-function paintMake(host) {
-  const tc = el('div', 'textcard gap');
-  tc.dataset.k = 'send';
-  tc.innerHTML = '<h3 class="serif">' + esc('Send in your design') + '</h3>';
-  const row = el('div', 'row');
-  row.appendChild(button(ICON.plus + ' ' + esc('Send in your design'), '', designSheet));
-  tc.appendChild(row);
-  host.appendChild(tc);
 }
 
 function designSheet() {
@@ -1025,9 +1063,10 @@ app.register(KEY, {
   deactivate() { route++; if (M && !M.getContainer().isConnected) dropMap(); },
   subnav() {
     if (!ready) return null;
+    placeTees();
     const n = { spotted: S.spotted && S.spotted.length, shops: S.shops && S.shops.length, swaps: S.swaps && S.swaps.length, fit: S.fit && S.fit.length };
     const fresh = newIn().length;
-    return chips(SECTIONS.filter(([key]) => key !== 'newin' || fresh).map(([key, label]) => ({ key, label, n: key === 'newin' ? fresh : n[key] || null })), null, (k) => jump(k));
+    return chips(sectionOrder().filter(([key]) => key !== 'newin' || fresh).map(([key, label]) => ({ key, label, n: key === 'newin' ? fresh : n[key] || null })), null, (k) => jump(k));
   },
   /* reader posts newer than the last visit: finds, swaps and fit checks */
   newSince(ts) {

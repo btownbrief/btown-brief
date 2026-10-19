@@ -762,6 +762,9 @@ body.chrome-away .mast { transform: translateY(-100%); }
 .vmap .vm-me { fill: var(--ink); fill-opacity: 1; stroke: var(--raised); }
 .rail.vtop { align-items: flex-start; }
 .rail.vtop > .card.board { width: 176px; }
+/* the last tile of Make a tee: the whole shop */
+.vcard.vall .c-media { display: grid; place-items: center; background: var(--paper-2); border-radius: var(--r-media); text-align: center; padding: 12px; }
+.vcard.vall .c-media b { font-family: var(--serif); font-size: var(--fs-sec); font-weight: 500; }
 
 /* the spinner: one big button and one answer */
 .spin { padding: 8px var(--gutter) 4px; text-align: center; }

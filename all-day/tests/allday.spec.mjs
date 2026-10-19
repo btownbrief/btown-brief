@@ -4020,7 +4020,7 @@ async function theFood(browser, base) {
     await page.click('.sheet-head .iconbtn').catch(() => {});
     await toTop(page);
     const toc = await page.$$eval('#subnav .chip', (c) => c.map((x) => x.dataset.chip));
-    check(JSON.stringify(toc) === JSON.stringify(['bite', 'open', 'deals', 'asks', 'best', 'kitchens', 'add']), 'the chip row is the table of contents: Bite, Open now, Deals, Asked, Best of, Kitchens, Feature a dish', toc.join(', '));
+    check(JSON.stringify(toc) === JSON.stringify(['asks', 'bite', 'open', 'deals', 'best', 'kitchens', 'add']), 'the chip row is the table of contents in page order, the fresh Asked first: Asked, Bite, Open now, Deals, Best of, Kitchens, Feature a dish', toc.join(', '));
     await page.click('#subnav .chip[data-chip="add"]');
     await page.waitForTimeout(1200);
     /* the last section of a short page cannot reach the top; then the panel is scrolled to its end */
@@ -4327,6 +4327,42 @@ async function theFood(browser, base) {
     check(!rail.includes('ig-PodcastPost') && rail.includes('ig-FoodReelA'), 'the podcast stays out of In their own words even tagged food', rail.join(', '));
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
+  });
+
+  await group('Food, the freshest section leads: a thread under three days old, else the kitchens, else the old order', async () => {
+    const order = (page) => page.$$eval(foodPanel + ' [data-sec]', (ss) => ss.map((x) => x.dataset.sec));
+    const chipOrder = (page) => page.$$eval('#subnav .chip', (c) => c.map((x) => x.dataset.chip));
+    const first = (page) => page.waitForSelector(foodPanel + ' [data-sec="kitchens"] .vcard, ' + foodPanel + ' [data-sec="kitchens"] .note', { timeout: 15000 });
+    /* a thread from this morning: Asked on Reddit leads, Open now sits below it */
+    const a = await newPage(browser, base);
+    await a.page.goto(base + '/all-day/#food');
+    await a.page.waitForSelector(foodPanel + ' [data-sec="asks"] .card', { timeout: 15000 });
+    await first(a.page);
+    const oa = await order(a.page);
+    check(oa[0] === 'asks' && oa.indexOf('open') > oa.indexOf('asks') && oa.join() === 'asks,bite,open,deals,best,kitchens,add', 'a thread under three days old: Asked on Reddit is the first thing on the tab, Open now below it', oa.join());
+    check((await chipOrder(a.page))[0] === 'asks', 'and the chip row follows the page', (await chipOrder(a.page)).join());
+    await a.page.goto(base + '/all-day/#food/open');
+    check(await a.page.$eval(foodPanel + ' [data-sec="open"]', (s) => !!s.querySelector('.lrow.place')), 'the deep link #food/open still lands on Open now', '');
+    check(!a.errors.length, 'no console errors', a.errors.join(' | '));
+    await a.ctx.close();
+    /* only week-old threads: In their own words leads while it has pictures */
+    const k = await newPage(browser, base, { reddit: redditIntake(Date.now() - 5 * 86400000) });
+    await k.page.route(/\/all-day\/data\/instagram\.json/, (r) => r.fulfill({ status: 200, body: JSON.stringify(foodInstagram(true)), contentType: 'application/json' }));
+    await k.page.goto(base + '/all-day/#food');
+    await k.page.waitForSelector(foodPanel + ' [data-sec="kitchens"] .vcard', { timeout: 15000 });
+    await k.page.waitForSelector(foodPanel + ' [data-sec="asks"] .card', { timeout: 15000 });
+    const ok = await order(k.page);
+    check(ok.join() === 'kitchens,bite,open,deals,asks,best,add', 'threads older than three days: In their own words leads', ok.join());
+    await k.ctx.close();
+    /* nothing fresh anywhere: the tab keeps its old order */
+    const n = await newPage(browser, base, { reddit: redditIntake(Date.now() - 5 * 86400000) });
+    await n.page.route(/\/all-day\/data\/instagram\.json/, (r) => r.fulfill({ status: 200, body: JSON.stringify({ generated: new Date().toISOString(), handles: [], posts: [] }), contentType: 'application/json' }));
+    await n.page.goto(base + '/all-day/#food');
+    await n.page.waitForSelector(foodPanel + ' [data-sec="asks"] .card', { timeout: 15000 });
+    await n.page.waitForFunction((p) => !document.querySelector(p + ' [data-sec="kitchens"] .loading'), foodPanel, { timeout: 15000 });
+    const on = await order(n.page);
+    check(on.join() === 'bite,open,deals,asks,best,kitchens,add', 'with no fresh thread and no pictures: the old order', on.join());
+    await n.ctx.close();
   });
 
   await group('Food, Asked on Reddit (live)', async () => {
@@ -5915,7 +5951,7 @@ async function theVintage(browser, base) {
     check(votes.every((v) => v === 'I’d want this'), 'the vote on a find is “I’d want this”', JSON.stringify(votes.slice(0, 2)));
     check(!(await page.$(vslot('spotted') + ' [data-act=vgot]')), 'nobody signed in owns a find, so no “Someone got it”', '');
     const chipsRow = await page.$$eval('#subnav .chip', (cs) => cs.map((c) => c.dataset.chip));
-    check(JSON.stringify(chipsRow) === JSON.stringify(['fit', 'spotted', 'swaps', 'newin', 'shops', 'tees']), 'the chip row is the table of contents: Fit checks, Spotted, Swaps (up top, by Spotted), New in, Shops, Make a tee', JSON.stringify(chipsRow));
+    check(JSON.stringify(chipsRow) === JSON.stringify(['fit', 'spotted', 'swaps', 'tees', 'newin', 'shops']), 'the chip row is the table of contents, in page order: Fit checks, Spotted, Swaps (up top, by Spotted), then Make a tee (moved up from the bottom), New in, Shops', JSON.stringify(chipsRow));
     await page.click('#subnav .chip[data-chip="tees"]');
     /* a smooth scroll, and the fourteen shops above Make a tee make it a long one */
     await page.waitForFunction((sel) => { const t = document.querySelector(sel).getBoundingClientRect().top; return t >= 0 && t < 300; }, vslot('tees'), { timeout: 4000 }).catch(() => {});
@@ -5929,7 +5965,7 @@ async function theVintage(browser, base) {
     await page.waitForSelector('.sheet-body .linkrow');
     check(/Sign in to post\./.test(await page.$eval('.sheet-body', (b) => b.innerText)) && !(await page.$('.sheet-body form')), 'Post a fit check, signed out: the same', '');
     await page.click('.sheet-head .iconbtn');
-    await page.click(vslot('make') + ' .textcard button');
+    await page.click(vslot('tees') + ' [data-act=vsend]');
     await page.waitForSelector('.sheet-body .linkrow');
     check(/Sign in to post\./.test(await page.$eval('.sheet-body', (b) => b.innerText)) && !(await page.$('.sheet-body form')), 'Send in your design, signed out: the same', '');
     await page.click('.sheet-head .iconbtn');
@@ -5949,7 +5985,9 @@ async function theVintage(browser, base) {
         spotHead: q('spotted').querySelector('.sec h2').textContent, spotHeadBottom: q('spotted').querySelector('.sec').getBoundingClientRect().bottom,
         spotCard: q('spotted').querySelector('.card.board').getBoundingClientRect().top };
     });
-    check(JSON.stringify(top.order.slice(0, 4)) === '["fit","spotted","swaps","newin"]' && top.fitHead === 'Fit checks' && top.spotHead === 'Spotted this week', 'Fit checks leads the tab, then Spotted this week, then Swaps (moved up from the bottom), then New in', JSON.stringify(top));
+    check(JSON.stringify(top.order) === '["fit","spotted","swaps","tees","sent","newin","shops"]' && top.fitHead === 'Fit checks' && top.spotHead === 'Spotted this week', 'Fit checks leads the tab, then Spotted this week, then Swaps (moved up from the bottom), then Make a tee with Top designs under it (moved up from the end), then New in and the shops', JSON.stringify(top));
+    const tee = await page.$eval(vslot('tees'), (s) => ({ head: s.querySelector('.sec h2').textContent, btn: (s.querySelector('.sec button') || {}).textContent || '', cards: s.querySelectorAll('.textcard').length, top: Math.round(s.getBoundingClientRect().top), h: Math.round(s.getBoundingClientRect().height) }));
+    check(tee.head === 'Make a tee' && /Send in your design/.test(tee.btn) && tee.cards === 0, 'Make a tee and Send in your design are one block: the button sits in the head, there is no card of its own', JSON.stringify(tee));
     const why = await page.$eval(vslot('spotted') + ' .sec + p', (p) => p.textContent).catch(() => '');
     check(why === 'Saw something great that wasn’t your size? Post it so someone else can grab it.', 'one plain line under Spotted this week says what it is for', why);
     check(top.fitBottom <= top.vh && top.spotHeadBottom <= top.vh && top.spotCard < top.vh, 'at 390 by 844 the fit tiles, the Spotted head and the first find are all on the first screen', JSON.stringify(top));
@@ -6045,10 +6083,10 @@ async function theVintage(browser, base) {
   await group('Vintage, the design form: consent first, and no price or cash anywhere (demo)', async () => {
     const { ctx, page, errors } = await vintageDemo(browser, base, { motion: 'reduce' });
     await signInAs(page, 'Nora');
-    await page.click(vslot('make') + ' .textcard button');
+    await page.click(vslot('tees') + ' [data-act=vsend]');
     const f = '.sheet-body form[data-form="design"]';
     await page.waitForSelector(f);
-    const card = (await page.$eval(vslot('make'), (s) => s.innerText)) + '\n' + (await page.$eval('.sheet-body', (b) => b.innerText));
+    const card = (await page.$eval(vslot('tees'), (s) => s.innerText)) + '\n' + (await page.$eval('.sheet-body', (b) => b.innerText));
     check(!/\$\s?\d|\bcash\b|\bprice\b|\bcommission\b|\braffle\b/i.test(card), 'the design pitch and form show no price and no cash', card.slice(0, 160));
     const opts = await page.$$eval(f + ' .pills button', (bs) => bs.map((b) => b.textContent));
     check(JSON.stringify(opts) === JSON.stringify(['Free shirts', 'Store credit']), 'the artist’s choice is free shirts or store credit, and nothing else', JSON.stringify(opts));
@@ -6154,15 +6192,16 @@ async function theVintage(browser, base) {
     await page.goto(base + '/all-day/#vintage/tees');
     await settle(page);
     await page.waitForSelector(vslot('tees') + ' a.vcard');
-    const cardsOut = await page.$$eval(vslot('tees') + ' a.vcard', (as) => as.map((a) => ({ href: a.href, name: a.querySelector('.t').textContent, target: a.target, img: a.querySelector('img').getAttribute('src') })));
+    const cardsOut = await page.$$eval(vslot('tees') + ' a.vcard:not(.vall)', (as) => as.map((a) => ({ href: a.href, name: a.querySelector('.t').textContent, target: a.target, img: a.querySelector('img').getAttribute('src') })));
     check(cardsOut.length === d.designs.length && cardsOut.every((c, i) => c.href === 'https://merch.btownbrief.com/#/p/huba/d/' + d.designs[i].id && c.name === d.designs[i].name),
       'every design links to its own page on merch.btownbrief.com, where it is shown on a model', JSON.stringify(cardsOut.slice(0, 2)));
     check(cardsOut.every((c) => c.target === '_blank' && /^\.\/assets\/merch\/\d+\.webp$/.test(c.img)), 'they open in a new tab, with the small local preview', JSON.stringify(cardsOut[0]));
     await page.$eval(vslot('tees'), (s) => s.scrollIntoView());   /* the previews load lazily, and Fit checks now sits above the rail */
     const loaded = await page.$$eval(vslot('tees') + ' a.vcard img', (is) => Promise.all(is.slice(0, 4).map((i) => (i.complete ? i.naturalWidth : new Promise((r) => { i.onload = () => r(i.naturalWidth); i.onerror = () => r(0); setTimeout(() => r(i.naturalWidth), 6000); })))));
     check(loaded.every((w) => w > 0), 'the previews load', JSON.stringify(loaded));
-    const all = await page.$eval(vslot('tees') + ' .addrow a', (a) => ({ href: a.href, text: a.textContent.trim() }));
-    check(all.href === 'https://merch.btownbrief.com/' && new RegExp('All ' + d.total + ' designs').test(all.text), 'and “All ' + d.total + ' designs in the shop” goes to the shop', JSON.stringify(all));
+    const all = await page.$eval(vslot('tees') + ' a.vall', (a) => ({ href: a.href, target: a.target, label: a.getAttribute('aria-label'), last: a.parentElement.lastElementChild === a }));
+    check(all.href === 'https://merch.btownbrief.com/' && all.target === '_blank' && all.last && new RegExp('All ' + d.total + ' designs').test(all.label), 'and the last tile, “All ' + d.total + ' designs in the shop”, goes to the shop', JSON.stringify(all));
+    check(!(await page.$(vslot('tees') + ' .textcard')) && !(await page.$('.panel:not([hidden]) [data-sec="make"]')), 'Make a tee and Send in your design are one block: the button is in its head, no card of its own', '');
     const money = await page.$eval(vslot('tees'), (s) => s.innerText);
     check(!/\$\s?\d|buy now|checkout|add to (cart|bag)/i.test(money), 'nothing on the rail takes money or names a price', money.slice(0, 100));
     await pageRules(page, 'vintage', 1280);
