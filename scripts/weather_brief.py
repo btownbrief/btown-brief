@@ -128,12 +128,18 @@ def likelihood(kind, chance):
     return f"a chance of {kind}"
 
 
+def tenths(x):
+    """Half up to a tenth, the way js/life.js rounds the week rows (Python's
+    round() goes to even: 0.25 would be 0.2 here and 0.3 there)."""
+    return int(x * 10 + 0.5 + 1e-9) / 10
+
+
 def amount_words(rain_in, snow_in):
     """'about 0.4 inch', 'about 2 inches of snow', 'under a tenth of an inch'."""
     if snow_in is not None and snow_in >= 0.5:
         if snow_in < 0.75:
             return "under an inch of snow"
-        n = int(snow_in + 0.5)              # half up, as the page's JS rounds
+        n = int(snow_in + 0.5 + 1e-9)       # half up, as the page's JS rounds
         return "about an inch of snow" if n == 1 else f"about {n} inches of snow"
     if rain_in is None:
         return ""
@@ -141,8 +147,20 @@ def amount_words(rain_in, snow_in):
         return "under a tenth of an inch"
     if rain_in < 0.15:
         return "about a tenth of an inch"
-    r = round(rain_in, 1)
-    return f"about {r:g} inch" if r < 1 else f"about {r:g} inches"
+    r = tenths(rain_in)
+    return f"about {r:g} inch" if r <= 1 else f"about {r:g} inches"
+
+
+def _runs(rows):
+    """Consecutive hours, as [(first row, last row), …]."""
+    runs = []
+    for h in rows:
+        t = _dt(h["t"])
+        if runs and t - _dt(runs[-1][1]["t"]) <= HOUR:
+            runs[-1][1] = h
+        else:
+            runs.append([h, h])
+    return runs
 
 
 SKY_DRY = re.compile(r"\b(slight chance|chance|likely|isolated|scattered|showers?|rain|snow|drizzle|"
@@ -168,12 +186,16 @@ def _wind_max(text):
 
 # --------------------------------------------------------------- periods
 
-def _label(period, today):
+def _label(period, today, current=False):
     start = _local(_dt(period["start"]))
     if period.get("is_day"):
         return "Today" if start.date() == today else start.strftime("%A")
     if start.date() == today:
         return "Overnight" if start.hour < 6 else "Tonight"
+    if current:
+        # last evening's night period, still running after midnight (the
+        # forecast was issued before NWS renamed it "Overnight")
+        return "Overnight"
     return start.strftime("%A") + " night"
 
 
@@ -187,7 +209,7 @@ def analyse(period, end, hours, now, today):
     eff_start = max(start, now.replace(minute=0, second=0, microsecond=0))
     rows = [h for h in hours if _dt(h.get("t")) and eff_start <= _dt(h["t"]) < end]
     covered = bool(rows) and _dt(rows[-1]["t"]) + HOUR >= end and _dt(rows[0]["t"]) <= eff_start
-    label = _label(period, today)
+    label = _label(period, today, current=start <= now < end)
     out = {
         "label": label,
         "name": period.get("name"),
@@ -226,16 +248,20 @@ def analyse(period, end, hours, now, today):
             p["start"], p["end"] = a.isoformat(), b.isoformat()
             from_start = a <= eff_start
             to_end = b >= end
+            # two or more separate wet stretches are "on and off" across
+            # them, never one long run that the gaps would contradict
+            gappy = len(_runs(wet)) > 1
+            lead = "on and off " if gappy else ""
             if from_start and to_end:
-                p["when"] = ""                 # the whole period: the label says when
+                p["when"] = "on and off" if gappy else ""   # the whole period: the label says when
             elif from_start:
-                p["when"] = f"until {clock(b)}"
+                p["when"] = f"{lead}until {clock(b)}"
             elif to_end:
-                p["when"] = f"from {clock(a)} on"
+                p["when"] = f"{lead}from {clock(a)} on"
             else:
-                p["when"] = _span(a, b)
+                p["when"] = lead + _span(a, b)
         if covered:
-            p["amount"] = amount_words(p["amount_in"], p["snow_in"])
+            p["amount"] = amount_words(rain, snow)
         out["precip"] = p
 
     # wind, only when it matters on foot or on a bike
@@ -292,7 +318,8 @@ def build(d, now=None):
     # drop a period that has already ended (the file is a few hours old)
     while len(periods) > 1 and _dt(periods[1]["start"]) <= now:
         periods = periods[1:]
-    if not periods:
+    # a forecast that has run out (kept from an old run) says nothing
+    if not periods or (len(periods) == 1 and _dt(periods[0]["start"]) + timedelta(hours=12) <= now):
         return None
 
     def end_of(i):

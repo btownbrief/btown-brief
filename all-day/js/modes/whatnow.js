@@ -441,8 +441,8 @@ function weatherCard() {
    The words are latest.json's `brief`, written by rules from the NWS
    forecast at each hourly refresh (scripts/weather_brief.py), the same
    sentences the weather page leads with; they are left out when the brief
-   is more than BRIEF_MAX_MS old, or was written for another Burlington day
-   over an hour ago, so a stalled refresh never says the wrong "tonight".
+   is more than BRIEF_MAX_MS old or was written on another Burlington day,
+   so a stalled refresh never says the wrong "tonight".
    The Full weather link shows whenever the card does. */
 const BRIEF_MAX_MS = 4 * 3600000;
 function wxBriefText(now = Date.now()) {
@@ -450,7 +450,7 @@ function wxBriefText(now = Date.now()) {
   if (!b || typeof b.text !== 'string' || !b.text.trim()) return '';
   const age = now - Date.parse(b.generated || '');
   if (!(age >= -3600000 && age < BRIEF_MAX_MS)) return '';
-  if (b.date && b.date !== et(now).date && age > 3600000) return '';
+  if (b.date !== et(now).date) return '';      // another Burlington day's today and tonight
   return b.text.trim();
 }
 function wxBrief() {

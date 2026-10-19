@@ -8950,6 +8950,21 @@ async function weatherBrief(browser, base) {
     check(ss.sub === 'Today: partly sunny then rain, high near 55, 80% chance of rain.' && ss.day, 'a brief six hours old is not shown: the NWS day line instead, and no cards', JSON.stringify(ss));
     check(!st.errors.length, 'no console errors', st.errors.join(' | '));
     await st.ctx.close();
+
+    /* yesterday's brief, however new its stamp, and a hostile one */
+    const bad = '<img src=x onerror="window.__wxxss=1">';
+    const odd = { ...payload, brief: { ...payload.brief, periods: payload.brief.periods.map((p, i) => (i ? p : { ...p, temp_f: bad, label: bad })) } };
+    const h = await wxPage(odd);
+    const hs = await h.page.evaluate(() => ({ fired: !!window.__wxxss, imgs: document.querySelectorAll('#day-section img').length,
+      temp: document.querySelector('.day-card:first-child .day-card-temp') ? document.querySelector('.day-card:first-child .day-card-temp').textContent : null,
+      name: document.querySelector('.day-card:first-child .day-card-name').textContent }));
+    check(!hs.fired && !hs.imgs && hs.temp === null && /^<img/.test(hs.name), 'markup in the brief prints as text, and a temperature that is not a number is left out', JSON.stringify(hs));
+    check(!h.errors.length, 'no console errors', h.errors.join(' | '));
+    await h.ctx.close();
+    const y = await wxPage({ ...payload, brief: { ...payload.brief, date: dayMinus(day, 1) } });
+    const ys = await y.page.evaluate(() => ({ brief: document.querySelector('#rn-sub').classList.contains('is-brief'), day: document.querySelector('#day-section').hidden }));
+    check(!ys.brief && ys.day, 'a brief written on another Burlington day is not shown', JSON.stringify(ys));
+    await y.ctx.close();
   });
 
   await group('What Now: today in plain words and a Full weather link, under the card (390, live)', async () => {

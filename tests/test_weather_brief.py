@@ -95,6 +95,15 @@ class DryDay(unittest.TestCase):
         # dry Tuesday night is left out at night: two sentences
         self.assertEqual(b["text"].count("."), 2, b["text"])
 
+    def test_last_evenings_night_after_midnight_is_overnight(self):
+        b = wb.build(self.d, now=at(20, 1))
+        self.assertTrue(b["text"].startswith("Mostly clear overnight, low 42. Mostly sunny today, high 56."), b["text"])
+        self.assertEqual(b["date"], "2026-10-20")
+
+    def test_a_forecast_that_has_run_out_says_nothing(self):
+        # kept from an old run: its last period ended days ago
+        self.assertIsNone(wb.build(self.d, now=at(23, 9)))
+
     def test_a_period_that_has_ended_is_dropped(self):
         b = wb.build(self.d, now=at(20, 7))
         self.assertTrue(b["text"].startswith("Mostly sunny today, high 56."), b["text"])
@@ -147,6 +156,16 @@ class RainTimingAndAmount(unittest.TestCase):
         b = wb.build(d, now=at(19, 18, 20))
         self.assertTrue(b["text"].startswith("Snow tonight from 10pm to 4am, about 3 inches of snow, low 28."), b["text"])
 
+    def test_separate_wet_stretches_are_on_and_off(self):
+        hours = hours_from(at(19, 7), 36, spans={range(1, 4): {"pop": 70, "qpf_in": 0.05, "short": "Rain Showers Likely"},
+                                                 range(7, 10): {"pop": 70, "qpf_in": 0.05, "short": "Rain Showers Likely"}})
+        d = {"forecast": {"periods": [
+            period("Today", at(19, 7), True, 55, "Showers Likely", pop=70),
+            period("Tonight", at(19, 18), False, 44, "Mostly Cloudy")]},
+            "hourly": {"hours": hours}}
+        b = wb.build(d, now=at(19, 7, 10))
+        self.assertTrue(b["text"].startswith("Showers likely today on and off from 8am to 5pm, about 0.3 inch, high 55."), b["text"])
+
     def test_rain_beyond_the_hourly_rows_says_no_time_or_amount(self):
         hours = hours_from(at(19, 7), 12)    # only to 7 pm today
         d = {"forecast": {"periods": [
@@ -194,6 +213,12 @@ class Words(unittest.TestCase):
         self.assertEqual(wb.amount_words(0.3, 0.6), "under an inch of snow")
         self.assertEqual(wb.amount_words(0.3, 2.5), "about 3 inches of snow")
         self.assertEqual(wb.amount_words(0.3, 0.4), "about 0.3 inch")
+        # half up, as the page's JS rounds (Python's round() would say 0.2)
+        self.assertEqual(wb.amount_words(0.25, 0), "about 0.3 inch")
+        self.assertEqual(wb.amount_words(0.95, 0), "about 1 inch")
+        self.assertEqual(wb.amount_words(1.0, 0), "about 1 inch")
+        self.assertEqual(wb.amount_words(1.05, 0), "about 1.1 inches")
+        self.assertEqual(wb.amount_words(0.149, 0), "about a tenth of an inch")
 
     def test_clock(self):
         self.assertEqual(wb.clock(at(19, 0)), "midnight")
@@ -203,6 +228,11 @@ class Words(unittest.TestCase):
 
 
 class GridAmounts(unittest.TestCase):
+
+    def test_no_brief_from_sections_kept_from_an_old_run(self):
+        d = {"forecast": {"periods": [period("Today", at(19, 7), True, 62)]}, "hourly": {"hours": hours_from(at(19, 7), 12)}}
+        self.assertIsNone(rw.brief_for(d, ["forecast"]))
+        self.assertIsNone(rw.brief_for(d, ["hourly"]))
 
     def test_a_six_hour_total_is_split_not_repeated(self):
         vals = [{"validTime": "2026-10-19T18:00:00+00:00/PT6H", "value": 12.0}]

@@ -194,7 +194,7 @@ a.rn-chip:hover { border-color: var(--teal); color: var(--teal); text-decoration
 .day-card-sky { font-family: var(--font-display); font-size: var(--text-md); color: var(--ink); margin: var(--space-1) 0 var(--space-2); }
 .day-card-rows { margin: 0; display: grid; gap: 4px; }
 .day-card-rows div { display: flex; justify-content: space-between; gap: var(--space-2); font-size: var(--text-sm); border-top: 1px solid var(--line-soft); padding-top: 4px; }
-.day-card-rows dt { color: var(--ink-3); }
+.day-card-rows dt { color: var(--ink-3); white-space: nowrap; }
 .day-card-rows dd { margin: 0; color: var(--ink); text-align: right; font-variant-numeric: tabular-nums; }
 .day-card.is-wet .day-card-rows div:first-child dd { color: var(--wx-rain); font-weight: 600; }
 

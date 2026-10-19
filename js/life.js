@@ -484,13 +484,14 @@
      refresh skipped a few runs) its "today" and "tonight" may be the wrong
      ones, so it is not shown at all. */
   var BRIEF_MAX_AGE = 4 * HOUR;
-  var WIND_NOTABLE_MPH = 15, GUST_NOTABLE_MPH = 25;
+  var WIND_NOTABLE_MPH = 20, GUST_NOTABLE_MPH = 30;   // the brief's own bar (weather_brief.py)
   function freshBrief(d) {
     var b = d && d.brief;
     if (!b || !b.text || !b.generated) return null;
     var age = Date.now() - new Date(b.generated).getTime();
     if (!(age >= -HOUR && age < BRIEF_MAX_AGE)) return null;
-    if (b.date && b.date !== btvDayKey(new Date()) && age > HOUR) return null;
+    // written on another Burlington day: its "today" and "tonight" are not today's
+    if (b.date !== btvDayKey(new Date())) return null;
     return b;
   }
 
@@ -521,7 +522,7 @@
     if (now.wind_mph != null && (now.wind_mph >= WIND_NOTABLE_MPH || (now.wind_gust_mph || 0) >= GUST_NOTABLE_MPH)) {
       chips.push('<span class="rn-chip" title="Wind">' + windArrow(now.wind_dir) +
         ' ' + esc(now.wind_dir || '') + ' ' + now.wind_mph + ' mph' +
-        (now.wind_gust_mph ? ', gusts ' + now.wind_gust_mph : '') + '</span>');
+        (now.wind_gust_mph ? ', gusts ' + now.wind_gust_mph + ' mph' : '') + '</span>');
     }
     if (gage.water_temp_f != null) chips.push('<a class="rn-chip" href="#swim-section" title="Lake Champlain water temperature">🌊 lake ' + gage.water_temp_f + '°</a>');
     if (air.aqi != null) chips.push('<span class="rn-chip rn-chip-aqi-' + esc((air.category || '').toLowerCase().replace(/\s+/g, '-')) +
@@ -585,7 +586,7 @@
     return '<article class="day-card' + (p.is_day ? ' is-day' : ' is-night') + (pr ? ' is-wet' : '') + '">' +
       '<div class="day-card-head">' +
         '<h3 class="day-card-name">' + esc(p.label) + '</h3>' +
-        (p.temp_f != null ? '<span class="day-card-temp"><span class="day-card-hl">' + (p.is_day ? 'High' : 'Low') + '</span> ' + p.temp_f + '°</span>' : '') +
+        (isFinite(p.temp_f) && p.temp_f !== null ? '<span class="day-card-temp"><span class="day-card-hl">' + (p.is_day ? 'High' : 'Low') + '</span> ' + esc(String(Math.round(p.temp_f))) + '°</span>' : '') +
       '</div>' +
       '<p class="day-card-sky">' + esc(head) + '</p>' +
       '<dl class="day-card-rows">' + rows.map(function (r) {
@@ -1084,21 +1085,24 @@
     // (refresh_weather.py, hourly.days; about three days out).
     var amounts = {};
     (((d.hourly || {}).days) || []).forEach(function (a) { if (a && a.date) amounts[a.date] = a; });
+    // half up to a tenth, the same rule as weather_brief.py's tenths()
+    function tenths(x) { return Math.floor(x * 10 + 0.5 + 1e-9) / 10; }
     function amountShort(a) {
       if (!a) return '';
-      if (a.snow_in != null && a.snow_in >= 0.5) return '❄ ' + (a.snow_in < 0.75 ? '<1' : Math.round(a.snow_in)) + '″';
-      if (a.precip_in != null && a.precip_in >= 0.05) return (a.precip_in < 0.1 ? '0.1' : a.precip_in.toFixed(1)) + '″';
+      if (a.snow_in != null && a.snow_in >= 0.5) return '❄ ' + (a.snow_in < 0.75 ? '<1' : Math.floor(a.snow_in + 0.5 + 1e-9)) + '″';
+      if (a.precip_in != null && a.precip_in >= 0.05) return String(Math.max(0.1, tenths(a.precip_in))) + '″';
       return '';
     }
     function amountLong(a) {
       if (!a) return '';
       // snow is said as snow; otherwise the liquid total as rain
       if (a.snow_in != null && a.snow_in >= 0.5) {
-        var n = Math.round(a.snow_in);
+        var n = Math.floor(a.snow_in + 0.5 + 1e-9);
         return 'How much: ' + (a.snow_in < 0.75 ? 'under an inch' : n === 1 ? 'about an inch' : 'about ' + n + ' inches') + ' of snow.';
       }
       if (a.precip_in != null && a.precip_in >= 0.05) {
-        return 'How much: about ' + (a.precip_in < 0.1 ? 'a tenth of an inch' : a.precip_in.toFixed(1) + (a.precip_in >= 0.95 ? ' inches' : ' inch')) + ' of rain.';
+        var r = tenths(a.precip_in);
+        return 'How much: about ' + (a.precip_in < 0.15 ? 'a tenth of an inch' : r + (r > 1 ? ' inches' : ' inch')) + ' of rain.';
       }
       return '';
     }

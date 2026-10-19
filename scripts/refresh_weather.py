@@ -195,7 +195,7 @@ def _precip_days(rain_mm, snow_mm):
     out = []
     for day in sorted(days):
         row = days[day]
-        out.append({"date": day, "precip_in": round(row["precip_in"], 2), "snow_in": round(row["snow_in"], 1)})
+        out.append({"date": day, "precip_in": round(row["precip_in"], 3), "snow_in": round(row["snow_in"], 2)})
     return out
 
 
@@ -741,6 +741,23 @@ SECTIONS = {
 }
 
 
+def brief_for(out, failures):
+    """The plain-words brief, only from a forecast and hourly fetched THIS
+    run: one rebuilt from kept-last-good sections would put a fresh
+    timestamp on old words. None when it cannot be written."""
+    if "forecast" in failures or "hourly" in failures:
+        print("brief: skipped (forecast or hourly not fresh this run)", file=sys.stderr)
+        return None
+    try:
+        import weather_brief
+        brief = weather_brief.build(out)
+    except Exception as e:  # noqa: BLE001
+        print(f"brief: FAILED ({e})", file=sys.stderr)
+        return None
+    print("brief: " + ((brief or {}).get("text") or "none"))
+    return brief
+
+
 def main():
     previous = {}
     if os.path.exists(OUT):
@@ -779,13 +796,11 @@ def main():
     # The plain-words brief is worked out from the sections above, never
     # fetched: rebuilt every run, and dropped (not kept) if it fails, so a
     # stale sentence can never outlive the data it came from.
-    try:
-        import weather_brief
-        out["brief"] = weather_brief.build(out)
-        print("brief: " + ((out["brief"] or {}).get("text") or "none"))
-    except Exception as e:  # noqa: BLE001
+    brief = brief_for(out, failures)
+    if brief:
+        out["brief"] = brief
+    else:
         out.pop("brief", None)
-        print(f"brief: FAILED ({e})", file=sys.stderr)
 
     os.makedirs(os.path.dirname(OUT), exist_ok=True)
     with open(OUT, "w") as f:
