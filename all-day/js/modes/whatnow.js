@@ -18,9 +18,15 @@
      scripts/build_missions.py): a numbered list, theme chips, Mark done
      (kept on this device, and on the reader's account when signed in, which
      fails soft), and Surprise me, which scrolls the list to a mission you
-     have not done and lets it glow, rather than opening a modal. Tap a
-     mission for its paragraph and its places. A spin that lands on a
-     mission's own place marks that row and scrolls the list to it.
+     have not done and lets it glow, rather than opening a modal. Each row
+     carries the mission's one-line teaser under its title (2026-10-19);
+     tap a mission for its paragraph and its places, each with a line on
+     why it is the pick. A spin that lands on a mission's own place marks
+     that row and scrolls the list to it. Marks are kept under each
+     mission's stable `mark` (m200 and up), never its rank; old marks kept
+     under a rank (m1 to m199, the list before 2026-10-19) move onto the
+     mission whose `was` names that rank, once, on the device and on the
+     account (see migrateMarks and pullDone).
    - Moving with people. The run and fitness clubs' weekly meets
      (data/run-clubs.json through clubs-week.js, the same week People
      shows) in the window being planned: Now is the next three hours,
@@ -88,6 +94,8 @@ const TODAY_SHOWN = 8;                   // Happening today, at most
 const DAY_SHOWN = 4;                     // of which before 5 pm, at most
 const HOURS_SHOWN = 6;
 const DONE_KEY = 'allday-missions';
+const STABLE = /^m[2-9]\d\d$/;          // a mission's own mark, m200 to m999
+const LEGACY = /^m(\d{1,3})$/;           // m1 to m199: a rank, the old way
 const SEEN_KEY = 'allday-wn-seen';
 const SEEN_MS = 20 * 3600 * 1000;       // about a day, so tomorrow does not open on today's answer
 const EVENING = 17;                      // Tonight starts at 5 pm in Burlington
@@ -160,7 +168,8 @@ function load() {
     data.fetchJSON(MISSIONS_URL, 8000).then((j) => {
       if (!j || !Array.isArray(j.missions)) throw new Error('bad shape');
       S.missions = j;
-    }).catch(() => { S.missionsFailed = true; }),
+      migrateMarks();
+    }).catch(() => { S.missionsFailed = true; }).then(pullDone),
     loadAll().then(({ data: feeds }) => { S.feeds = feeds; }).catch(() => { S.feedsFailed = true; }),
     data.fetchJSON(CHALLENGES_URL, 8000).then((j) => {
       if (!j || !Array.isArray(j.weekly) || !Array.isArray(j.evergreen)) throw new Error('bad shape');
@@ -172,7 +181,6 @@ function load() {
     }).catch(() => { S.rc = []; }),
   ];
   sunScore(data).then((sun) => { S.sun = sun; paintWx(); });
-  pullDone();
   return Promise.all(parts);
 }
 
@@ -911,8 +919,38 @@ function challengeSheet(c) {
 
 /* --------------------------------------------------------------- Missions */
 const missions = () => (S.missions && Array.isArray(S.missions.missions) ? S.missions.missions.filter((m) => m && m.k && m.title) : []);
-const isDone = (k) => !!done[k];
-const doneCount = () => missions().filter((m) => isDone(m.k)).length;
+/* the key a mark is kept under: the mission's own stable mark, or (an older
+   file, the demo) its rank */
+const markOf = (m) => (typeof m.mark === 'string' && STABLE.test(m.mark) ? m.mark : m.k);
+const isDone = (m) => !!done[markOf(m)];
+const doneCount = () => missions().filter(isDone).length;
+
+/* Old marks were kept under a rank (m1 to m199). With a list whose missions
+   carry stable marks, each old rank moves onto the mission whose `was`
+   names it (several nested into one: any one done marks it done, at the
+   latest time), and the old key goes, so it cannot come back later as the
+   new mission that happens to hold that rank. An old rank no mission claims
+   is dropped. Returns [old, new-or-null] pairs. Runs on every load and does
+   nothing once there is nothing old left. */
+function legacyMap() {
+  const to = new Map();
+  missions().forEach((m) => { if (markOf(m) !== m.k) (Array.isArray(m.was) ? m.was : []).forEach((k) => to.set(k, markOf(m))); });
+  return to;
+}
+const isLegacy = (k) => { const x = LEGACY.exec(k); return !!x && Number(x[1]) >= 1 && Number(x[1]) < 200; };
+function migrateMarks() {
+  if (app.demo || !missions().some((m) => markOf(m) !== m.k)) return [];
+  const to = legacyMap(), moved = [];
+  Object.keys(done).forEach((k) => {
+    if (!isLegacy(k)) return;
+    const mk = to.get(k) || null;
+    if (mk) done[mk] = Math.max(Number(done[mk]) || 0, Number(done[k]) || 0) || Math.floor(Date.now() / 1000);
+    delete done[k];
+    moved.push([k, mk]);
+  });
+  if (moved.length) store.write(DONE_KEY, done);
+  return moved;
+}
 
 function renderMissions() {
   if (!S.missions) {
@@ -959,12 +997,13 @@ function clubMission() {
 }
 
 function missionRow(m) {
-  const on = isDone(m.k);
+  const on = isDone(m);
   const r = el('div', 'lrow mission' + (THEME[m.theme] ? ' th-' + m.theme : '') + (on ? ' done' : ''));
   r.dataset.k = m.k;
   const hoods = [...new Set((m.places || []).map((p) => p.neighborhood).filter((h) => h && h !== 'Greater Burlington'))];
   const meta = [THEME[m.theme] || m.theme, (m.places || []).length > 1 ? plural(m.places.length, 'place', 'places') : '', hoods.slice(0, 2).join(', ')].filter(Boolean).join(' · ');
-  const open = el('button', 'open', '<div class="t">' + esc(m.title) + '</div><div class="s">' + esc(meta) + '</div>');
+  const tz = typeof m.teaser === 'string' && m.teaser.trim() ? '<div class="tz">' + esc(m.teaser.trim()) + '</div>' : '';
+  const open = el('button', 'open', '<div class="t">' + esc(m.title) + '</div>' + tz + '<div class="s">' + esc(meta) + '</div>');
   open.setAttribute('aria-label', 'Mission ' + m.n + ': ' + m.title + '. Read it');
   open.addEventListener('click', () => missionSheet(m));
   r.append(el('span', 'num', esc(m.n)), open, doneButton(m));
@@ -972,17 +1011,18 @@ function missionRow(m) {
 }
 
 function doneButton(m, after) {
-  const on = isDone(m.k);
+  const on = isDone(m);
   const b = el('button', 'pillbtn markdone' + (on ? ' on' : ''), on ? ICON.check + ' Done' : 'Mark done');
   b.setAttribute('aria-pressed', on ? 'true' : 'false');
   b.setAttribute('aria-label', (on ? 'Done: ' : 'Mark done: ') + m.title);
-  b.addEventListener('click', () => { setDone(m, !isDone(m.k)); if (after) after(); });
+  b.addEventListener('click', () => { setDone(m, !isDone(m)); if (after) after(); });
   return b;
 }
 
 function setDone(m, on) {
-  if (on) done[m.k] = Math.floor(Date.now() / 1000); else delete done[m.k];
-  if (!app.demo) { store.write(DONE_KEY, done); pushDone(m.k, on); }
+  const k = markOf(m);
+  if (on) done[k] = Math.floor(Date.now() / 1000); else delete done[k];
+  if (!app.demo) { store.write(DONE_KEY, done); pushDone(k, on); }
   app.toast(on ? 'Mission ' + m.n + ' done' : 'Mission ' + m.n + ' unmarked');
   const y = panel() ? panel().scrollTop : 0;
   render();
@@ -1020,7 +1060,8 @@ function missionSheet(m) {
         places.forEach((p) => {
           const row = el('div', 'sheet-row');
           const sub = [p.neighborhood, p.nearby ? 'nearby' : ''].filter(Boolean).join(' · ');
-          const label = esc(p.name) + (sub ? '<div class="d">' + esc(sub) + '</div>' : '');
+          const why = typeof p.note === 'string' && p.note.trim() ? '<div class="d why">' + esc(p.note.trim()) + '</div>' : '';
+          const label = esc(p.name) + why + (sub ? '<div class="d">' + esc(sub) + '</div>' : '');
           if (/^https?:/i.test(p.url || '')) {
             const a = el('a', 't', label);
             a.href = safeHref(p.url); a.target = '_blank'; a.rel = 'noopener';
@@ -1061,13 +1102,30 @@ function pushDone(k, on) {
   touched.add(k);
   queue[k] = (queue[k] || Promise.resolve()).then(() => rpcAs('nn_mission_set', { p_key: k, p_done: !!on }));
 }
+/* Runs once the missions file has landed (or failed), so an old mark on the
+   account can be read in the new list's terms. An old rank (m1 to m199) is
+   moved the way migrateMarks moves the device's: the mission's mark goes
+   up and the old row goes, so it is not read again after the reader
+   unmarks the new mission. With no stable marks to move to (an older
+   missions file, or none at all) the rows are taken as they are. */
 function pullDone() {
   rpcAs('nn_missions_done').then((rows) => {
     if (!Array.isArray(rows)) return;
+    const stable = missions().some((m) => markOf(m) !== m.k);
+    const to = stable ? legacyMap() : null;
     let added = 0;
     rows.forEach((r) => {
-      const k = r && (r.key || r.mission);
-      if (typeof k === 'string' && /^m\d+$/.test(k) && !done[k] && !touched.has(k)) { done[k] = Math.floor(Date.now() / 1000); added++; }
+      let k = r && (r.key || r.mission);
+      if (typeof k !== 'string' || !LEGACY.test(k)) return;
+      if (stable && isLegacy(k)) {
+        const old = k;
+        k = to.get(old) || null;
+        if (!touched.has(old)) pushDone(old, false);     // the old row goes
+        if (!k || touched.has(k)) return;                 // unclaimed, or the reader just changed it here
+        pushDone(k, true);
+        touched.delete(k);                                // pushDone notes it; this pull still applies it below
+      }
+      if (!done[k] && !touched.has(k)) { done[k] = Math.floor(Date.now() / 1000); added++; }
     });
     if (added) { store.write(DONE_KEY, done); if (ready) repaint(); }
   });

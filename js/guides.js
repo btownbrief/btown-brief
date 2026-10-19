@@ -319,11 +319,13 @@
   }
 
   /* --- Ranked list (Top 100+) ---
-     Items are experiences: { title, body, things: [ids] }.
+     Items are experiences: { title, teaser, body, things: [ids] }. The
+     teaser is the one line What Now's mission tile shows under the title.
      Plain string ids are still supported for backward compat. --- */
   function renderRanked(guide) {
     const things = window.BTV.things || [];
-    const byId = id => things.find(t => t.id === id);
+    const extras = window.BTV.extras || [];
+    const byId = id => things.find(t => t.id === id) || extras.find(t => t.id === id);
 
     // Normalize: string id → minimal experience object
     const normalize = list => (list || []).map(item => {
@@ -346,6 +348,7 @@
           <div class="ranked-num" aria-hidden="true">${n}</div>
           <div class="ranked-exp-body">
             <h3 class="ranked-exp-title">${esc(item.title)}</h3>
+            ${item.teaser ? `<p class="ranked-exp-teaser">${esc(item.teaser)}</p>` : ''}
             <p class="ranked-exp-text">${esc(item.body || '')}</p>
             ${chips ? `<div class="ranked-chips" aria-label="Places for this entry">${chips}</div>` : ''}
           </div>

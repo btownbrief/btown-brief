@@ -76,6 +76,8 @@
       state.reddit = reddit || { posts: [] };
       state.newsletter = newsletter || {};
       window.BTV.things = state.things;
+      // annual events, so a guide entry about a festival can still show its chip
+      window.BTV.extras = state.extras;
       window.BTV.taxonomy = state.taxonomy;
       window.BTV.guides = guides || [];
       window.BTV.filterThings = filterThings;

@@ -931,6 +931,11 @@ body.chrome-away .mast { transform: translateY(-100%); }
 .th-free { --th: color-mix(in srgb, var(--mark-7) 75%, var(--ink)); }
 .chips.themes .chip[class*="th-"]::before { content: ""; width: 8px; height: 8px; border-radius: var(--r-round); background: var(--th); }
 .lrow.mission[class*="th-"] .num { color: var(--th); }
+/* a mission's teaser, one line under its title that leads into the sheet;
+   in the sheet, a place's line on why it is the pick */
+.lrow.mission .tz { font-size: var(--fs-meta); color: var(--ink-2); margin-top: 2px; line-height: 1.35; }
+.lrow.mission.done .tz { color: var(--ink-3); }
+.sheet-row .d.why { color: var(--ink-2); }
 
 /* archetype tiles */
 .arch { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 0 var(--gutter); }
