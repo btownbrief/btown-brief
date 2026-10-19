@@ -77,7 +77,7 @@ import * as store from '../store.js';
 import * as data from '../wire.js';
 import * as boards from '../boards.js';
 import { message } from '../boards-core.js';
-import { el, esc, safeHref, ICON, art, section, rail, chips, button, pills, cards, agoShort } from '../ui.js';
+import { el, esc, safeHref, ICON, art, section, chips, button, pills, cards, agoShort, listRail } from '../ui.js';
 
 const KEY = 'vintage';
 const SHOPS_URL = '../data/vintage-shops.json';
@@ -322,7 +322,7 @@ function paint(k) {
    class). `vote` names the vote ("I'd want this"); `got` adds "Someone got
    it" to the reader's own. */
 function grid(host, posts, o) {
-  const g = o.rail ? rail(host, 'feed tight ' + o.rail) : el('div', 'grid2 feed tight');
+  const g = o.rail ? listRail(host, { name: 'vintage-' + o.name, label: 'the designs sent in', cls: 'feed tight ' + o.rail, cells: 160 }) : el('div', 'grid2 feed tight');
   g.dataset.grid = o.name;
   const items = posts.map((p) => boards.item(p, { tab: KEY, ratio: 'r11', meta: o.meta }));
   app.know(items);
@@ -727,7 +727,7 @@ function paintTees(host) {
   if (!S.designs) {
     host.appendChild(el('p', 'note pad', esc(S.designsFailed ? 'The designs didn’t load.' : 'Loading the designs…')));
   } else if (S.designs.length) {
-    const r = rail(host, 'pad-top');
+    const r = listRail(host, { name: 'vintage-designs', label: 'the designs', cls: 'pad-top', cells: 150 });
     S.designs.forEach((d) => {
       const a = el('a', 'vcard w150');
       a.href = safeHref(d.href);
@@ -794,7 +794,7 @@ function paintFit(host) {
   if (!S.fit.length) { boardNote(host, 'No fit checks yet.', S.failed); return; }
   const items = S.fit.map((p) => boards.item(p, { tab: KEY, ratio: 'r45', meta: noMeta }));
   app.know(items);
-  const r = rail(host);
+  const r = listRail(host, { name: 'vintage-fit', label: 'Fit checks', cells: 150 });
   r.dataset.grid = 'fit';
   items.forEach((it) => {
     if (!it.media) return;
@@ -848,8 +848,7 @@ function paintNewIn(host) {
   const posts = newIn();
   if (!posts.length) return;
   section(host, 'New in');
-  const r = rail(host);
-  r.dataset.rail = 'newin';
+  const r = listRail(host, { name: 'newin', label: 'New in', cells: 150 });
   posts.forEach((p) => {
     const a = el('a', 'vcard w150');
     a.href = safeHref(p.u);

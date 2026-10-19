@@ -65,7 +65,7 @@ import * as store from '../store.js';
 import * as data from '../wire.js';
 import * as boards from '../boards.js';
 import { RULES } from '../boards-core.js';
-import { el, esc, safeHref, ICON, svg, art, section, rail, chips, pills, divider, cards, button, localSwitch, geo, setGeo, agoShort } from '../ui.js';
+import { el, esc, safeHref, ICON, svg, art, section, chips, pills, divider, cards, button, localSwitch, geo, setGeo, agoShort, listRail } from '../ui.js';
 import { liquify } from '../liquid.js';
 
 const KEY = 'onair';
@@ -1072,76 +1072,12 @@ function setView(v) {
 /* ------------------------------------------- sideways rows: Live, Past nights */
 /* "See as a list" (Stephen, 2026-10-18, and again 2026-10-19: "I still see
    Horizontal scrolling without the option/button to expand as a list"):
-   every sideways row on this tab has the button above it, and a long list
-   has it at its foot too. Everything else on the TV side is already a list.
-   The choice is this phone's, per row (localStorage in try). */
-const LIST_KEY = 'allday-onair-lists';
-let listMem = null;
-function listed() {
-  if (listMem) return listMem;
-  listMem = Object.create(null);
-  try {
-    const v = JSON.parse(localStorage.getItem(LIST_KEY) || '{}');
-    if (v && typeof v === 'object') Object.keys(v).forEach((k) => { if (v[k] === 1) listMem[k] = 1; });
-  } catch (e) { /* storage blocked */ }
-  return listMem;
-}
-function setListed(name, on) {
-  const m = listed();
-  if (on) m[name] = 1; else delete m[name];
-  try { localStorage.setItem(LIST_KEY, JSON.stringify(m)); } catch (e) { /* kept for the visit */ }
-}
+   every sideways row on this tab has the button above it and the Collapse
+   bar under it once opened. That is now the shell's listRail (ui.js), which
+   every tab's rows use. Everything else on the TV side is already a list. */
 const RAIL_NAMES = { live: 'Live', past: 'Past nights' };
-/* the row, with its button above it; as a list, the Collapse bar under it
-   (sticky in its slot, which holds only this section) */
 function videoRail(host, name, cls) {
-  const top = el('div', 'railmode');
-  top.appendChild(modeButton(name));
-  host.appendChild(top);
-  const r = rail(host, cls);
-  r.dataset.rail = name;
-  const foot = collapseBar(RAIL_NAMES[name] || 'these videos', () => foldRail(name));
-  foot.classList.add('foot');
-  host.appendChild(foot);
-  paintMode(r);
-  return r;
-}
-function modeButton(name) {
-  const b = el('button', 'btn sm ghost');
-  b.dataset.railmode = name;
-  return b;
-}
-function paintMode(r) {
-  const on = !!listed()[r.dataset.rail];
-  r.classList.toggle('aslist', on);
-  const wrap = r.closest('.rail-wrap');
-  const top = wrap.previousElementSibling;
-  const foot = wrap.nextElementSibling;
-  const b = top.querySelector('[data-railmode]');
-  b.textContent = on ? 'See as a row' : 'See as a list';
-  b.setAttribute('aria-label', b.textContent + ': ' + (RAIL_NAMES[r.dataset.rail] || 'these videos'));
-  b.setAttribute('aria-pressed', on ? 'true' : 'false');
-  foot.hidden = !on;
-}
-function settleRails(host) { host.querySelectorAll('.rail[data-rail]').forEach(paintMode); }
-function flipMode(btn) {
-  const name = btn.dataset.railmode;
-  setListed(name, !listed()[name]);
-  const r = O.root.querySelector('.rail[data-rail="' + name + '"]');
-  if (!r) return;
-  paintMode(r);
-  r.scrollLeft = 0;
-}
-/* Collapse: back to a row, and back up to its heading */
-function foldRail(name) {
-  setListed(name, false);
-  const r = O.root.querySelector('.rail[data-rail="' + name + '"]');
-  if (!r) return;
-  paintMode(r);
-  r.scrollLeft = 0;
-  const top = r.closest('.rail-wrap').previousElementSibling;
-  app.jumpTo(top.previousElementSibling || top);
-  top.querySelector('button').focus({ preventScroll: true });
+  return listRail(host, { name, label: RAIL_NAMES[name] || 'these videos', cls });
 }
 
 function vcard(it, w, list) {
@@ -1482,7 +1418,7 @@ function drawPods(host) {
    all of it goes through esc(). */
 const PLAYLISTS_URL = 'data/playlists.json';
 const SHARE_TO = 'btownbrief@gmail.com';
-const SERVICES = {
+export const SERVICES = {   // exported for the spec's link check
   spotify: { name: 'Spotify', re: /^https:\/\/open\.spotify\.com\/(?:intl-[a-z]{2}(?:-[a-z]{2})?\/)?playlist\/([A-Za-z0-9]{22})(?:\?[A-Za-z0-9=&._-]*)?$/,
     embed: (id) => 'https://open.spotify.com/embed/playlist/' + id + '?theme=0', oembed: 'https://open.spotify.com/oembed?url=' },
   /* a share link carries ?list= and often &si=…: the list id is what counts */
@@ -1490,6 +1426,11 @@ const SERVICES = {
     embed: (id) => 'https://www.youtube-nocookie.com/embed/videoseries?list=' + id + '&rel=0&playsinline=1', oembed: 'https://www.youtube.com/oembed?format=json&url=' },
   apple: { name: 'Apple Music', re: /^https:\/\/music\.apple\.com\/[a-z]{2}\/playlist\/(?:[A-Za-z0-9%._~-]+\/)?(pl\.[A-Za-z0-9-]+)(?:\?[A-Za-z0-9=&._-]*)?$/ },
   soundcloud: { name: 'SoundCloud', re: /^https:\/\/(?:soundcloud\.com\/[A-Za-z0-9_-]+\/sets\/([A-Za-z0-9_-]+)|on\.soundcloud\.com\/([A-Za-z0-9]+))(?:\?[A-Za-z0-9=&._-]*)?$/ },
+  /* Tidal, Deezer and Amazon Music: their own share links, https only, and
+     they open on their own sites (no embed, no cover) */
+  tidal: { name: 'Tidal', re: /^https:\/\/(?:listen\.|www\.)?tidal\.com\/(?:browse\/)?playlist\/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})(?:\?[A-Za-z0-9=&._%-]*)?$/i },
+  deezer: { name: 'Deezer', re: /^https:\/\/(?:(?:www\.)?deezer\.com\/(?:[a-z]{2}\/)?playlist\/([0-9]{1,20})|link\.deezer\.com\/s\/([A-Za-z0-9]{6,40}))(?:\?[A-Za-z0-9=&._%-]*)?$/ },
+  amazon: { name: 'Amazon Music', re: /^https:\/\/music\.amazon\.(?:com|co\.uk|ca|de|fr|es|it|co\.jp|com\.au)\/(?:user-)?playlists\/([A-Za-z0-9]{6,60})(?:\?[A-Za-z0-9=&._%-]*)?$/ },
   /* a reader's whole Spotify, "or their Spotify handles" */
   spotifyuser: { name: 'Spotify', re: /^https:\/\/open\.spotify\.com\/user\/([A-Za-z0-9._-]{1,64})(?:\?[A-Za-z0-9=&._-]*)?$/, profile: true },
 };
@@ -1558,7 +1499,7 @@ function paintCovers() {
   });
 }
 
-const SVC_MARK = { spotify: 'Spotify', spotifyuser: 'Spotify', youtube: 'YouTube', apple: 'Apple Music', soundcloud: 'SoundCloud' };
+const SVC_MARK = { spotify: 'Spotify', spotifyuser: 'Spotify', youtube: 'YouTube', apple: 'Apple Music', soundcloud: 'SoundCloud', tidal: 'Tidal', deezer: 'Deezer', amazon: 'Amazon Music' };
 function playlistTile(it) {
   const out = !it.svc.embed;
   const t = el(out ? 'a' : 'div', 'pl-tile');
@@ -1616,7 +1557,7 @@ function playlistSheet(it) {
 
 /* "Add your playlist": the board's own form once its SQL is in, an email to
    the Brief with the three things Stephen needs until then */
-const MAIL_BODY = 'Playlist link (Spotify, YouTube, Apple Music or SoundCloud), or your Spotify profile:\n\nWhat it is (one line):\n\nName to credit:\n';
+const MAIL_BODY = 'Playlist link (any service: Spotify, YouTube, Apple Music, SoundCloud, Tidal, Deezer, Amazon Music), or your Spotify profile:\n\nWhat it is (one line):\n\nName to credit:\n';
 function addButton() {
   if (O.board === true) {
     const b = button(ICON.plus + ' Add your playlist', 'oa-addpl', composePlaylist);
@@ -1649,8 +1590,8 @@ function composePlaylist() {
   boards.compose({
     board: 'playlists', kind: 'playlist', heading: 'Add your playlist', cta: 'Send it',
     title: 'Playlist name', titlePlaceholder: 'Sunday drive down Route 7',
-    fields: [{ key: 'link', type: 'url', label: 'Link', max: 200, placeholder: 'https://open.spotify.com/playlist/…',
-      hint: 'A Spotify, YouTube, Apple Music or SoundCloud playlist, or your Spotify profile.' }],
+    fields: [{ key: 'link', type: 'url', label: 'Link', max: 200, placeholder: 'Any playlist link: Spotify, Apple Music, YouTube…',
+      hint: 'Spotify, Apple Music, YouTube, SoundCloud, Tidal, Deezer or Amazon Music, or your Spotify profile.' }],
     body: 'One line about it', bodyPlaceholder: 'Windows down, Shelburne to Ferrisburgh',
     notes: ['Steve has a look before it shows here.'],
     onPosted: () => loadBoard(),
@@ -1737,6 +1678,8 @@ function drawListsSide() {
   const add = el('div', 'oa-pick');
   add.appendChild(addButton());
   host.appendChild(add);
+  const any = el('p', 'note pad pl-any', esc('Any playlist link: Spotify, Apple Music, YouTube, SoundCloud and more.'));
+  host.appendChild(any);
   const grid = (list) => { const g = el('div', 'pl-grid'); list.forEach((it) => g.appendChild(playlistTile(it))); host.appendChild(g); };
   if (own.length) { divider(host, own[0].by ? own[0].by + '’s picks' : 'Our picks'); grid(own); }
   if (readers.length) { divider(host, 'From readers'); grid(readers); }
@@ -1823,7 +1766,6 @@ function drawTVSide() {
     S.more.hidden = !drawMore(S.more);
     S.live.hidden = !drawLive(S.live);
     S.past.hidden = !drawPast(S.past);
-    settleRails(S.tvSide);
   }
   S.tvEnd.appendChild(cards.caught({ title: 'That’s On Air', check: false }));
 }
@@ -1897,8 +1839,6 @@ function onClick(e) {
     if (it) moreSheet(it);
     return;
   }
-  const mb = e.target.closest('[data-railmode]');
-  if (mb) { e.preventDefault(); flipMode(mb); return; }
   const rb = e.target.closest('[data-rate]');
   if (rb) {
     e.preventDefault();

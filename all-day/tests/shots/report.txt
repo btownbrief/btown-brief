@@ -2353,6 +2353,9 @@
   ok   On Air, the Brief plays › a clip that fails to load says so in a toast
   ok   On Air, the Brief plays › and the button goes back to play
   ok   On Air, the Brief plays › sw.js lets audio, video and byte ranges past before the raw.githubusercontent.com branch
+  ok   On Air, playlists: any playlist link › a short line under Add your playlist says any playlist link works
+  ok   On Air, playlists: any playlist link › Spotify, YouTube, Apple Music, SoundCloud, Tidal, Deezer and Amazon Music links are all recognised, https only on their own hosts
+  ok   On Air, playlists: any playlist link › no console errors
   ok   On Air, playlists › #onair/playlists lands on the Playlists side
   ok   On Air, playlists › on Local: the playlists and Btown TV’s own night; no Clipsboard boards (Local means local)
   ok   On Air, playlists › “Add your playlist” first, big, on the board
@@ -2790,7 +2793,7 @@
   ok   sign-in fails soft › a bad address is caught before any request
   ok   sign-in fails soft › no link was requested
   ok   sign-in fails soft › no console errors
-  ok   performance › the live Wire redraws 60 cards in 20ms (budget 100)
+  ok   performance › the live Wire redraws 60 cards in 19ms (budget 100)
   ok   shell fixes: a rail never snaps flush to the edge › 390: .rail carries scroll-padding of one gutter
   ok   shell fixes: a rail never snaps flush to the edge › 390: a card scrolled to the start stops at the gutter
   ok   shell fixes: a rail never snaps flush to the edge › 390: no console errors
@@ -3072,7 +3075,7 @@
   ok   Habits, swipe to archive with Undo, drag and keys to reorder, edit (demo, 1280, dark) › habits: at most 2 subnav rows
   ok   Habits, swipe to archive with Undo, drag and keys to reorder, edit (demo, 1280, dark) › no console errors
   ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › twenty habits, in order
-  ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › twenty habits and a year of taps: a tap still shows at once (12, 11, 12, 11 ms)
+  ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › twenty habits and a year of taps: a tap still shows at once (12, 12, 13, 13 ms)
   ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › the heat map is all there, and four taps leave it as it was
   ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › every row keeps its seven dots and its 48px tap
   ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › the list is longer than the screen, and the panel scrolls
@@ -3137,7 +3140,7 @@
   ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 390, light) › habits: at most 2 subnav rows
   ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 390, light) › no console errors
   ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 1280, dark) › a first visit: one line, the starters and Add habit, nothing seeded, no sign-in wall
-  ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 1280, dark) › three habits, two tapped, at once (3 ms)
+  ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 1280, dark) › three habits, two tapped, at once (4 ms)
   ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 1280, dark) › and nothing personal went to the server (the season and the public forests only)
   ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 1280, dark) › kept on this phone, under one versioned key
   ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 1280, dark) › one quiet line under the list: Sync across devices
@@ -3542,3 +3545,27 @@
   ok   What Now: today in plain words and a Full weather link, under the card (390, live) › no console errors
   ok   What Now: today in plain words and a Full weather link, under the card (390, live) › the demo carries its brief too (its weekday said as Tomorrow, since the demo moves to today)
   ok   What Now: today in plain words and a Full weather link, under the card (390, live) › no console errors
+  ok   sideways rows: every content rail can be a list › wire: every sideways row can be turned into a list
+  ok   sideways rows: every content rail can be a list › watch: every sideways row can be turned into a list
+  ok   sideways rows: every content rail can be a list › watch: See as a list opens it downward with the Collapse bar
+  ok   sideways rows: every content rail can be a list › watch: Collapse puts the row back
+  ok   sideways rows: every content rail can be a list › food: every sideways row can be turned into a list
+  ok   sideways rows: every content rail can be a list › food: See as a list opens it downward with the Collapse bar
+  ok   sideways rows: every content rail can be a list › food: Collapse puts the row back
+  ok   sideways rows: every content rail can be a list › people: every sideways row can be turned into a list
+  ok   sideways rows: every content rail can be a list › whatnow: every sideways row can be turned into a list
+  ok   sideways rows: every content rail can be a list › whatnow: See as a list opens it downward with the Collapse bar
+  ok   sideways rows: every content rail can be a list › whatnow: Collapse puts the row back
+  ok   sideways rows: every content rail can be a list › vintage: every sideways row can be turned into a list
+  ok   sideways rows: every content rail can be a list › vintage: See as a list opens it downward with the Collapse bar
+  ok   sideways rows: every content rail can be a list › vintage: Collapse puts the row back
+  ok   sideways rows: every content rail can be a list › habits: every sideways row can be turned into a list
+  ok   sideways rows: every content rail can be a list › onair: every sideways row can be turned into a list
+  ok   sideways rows: every content rail can be a list › onair: See as a list opens it downward with the Collapse bar
+  ok   sideways rows: every content rail can be a list › onair: Collapse puts the row back
+  ok   sideways rows: every content rail can be a list › games: every sideways row can be turned into a list
+  ok   sideways rows: every content rail can be a list › wire photos: every sideways row can be turned into a list
+  ok   sideways rows: every content rail can be a list › wire photos: See as a list opens it downward with the Collapse bar
+  ok   sideways rows: every content rail can be a list › wire photos: Collapse puts the row back
+  ok   sideways rows: every content rail can be a list › wire square: every sideways row can be turned into a list
+  ok   sideways rows: every content rail can be a list › no console errors

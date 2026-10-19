@@ -867,6 +867,7 @@ function drawWeb(host) {
     return true;
   }
   const rail = railOf(host);
+  rail.dataset.out = '[data-web-all]';   // See all opens the list, with the Collapse bar
   rail.dataset.webToday = G.webDay;
   dailyPicks(G.web, G.webDay).forEach((g) => rail.appendChild(webTile(g)));
   const more = button('See all ' + total, 'ghost more', () => {

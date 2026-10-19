@@ -51,7 +51,7 @@ import * as photos from './wire-photos.js';
 import * as square from './wire-square.js';
 import * as recaps from './wire-recaps.js';
 import * as boards from '../boards.js';
-import { el, esc, safeHref, ICON, mark, cards, chips, pills, button, divider, section, localSwitch, geo, setGeo, put } from '../ui.js';
+import { el, esc, safeHref, ICON, mark, cards, chips, pills, button, divider, section, localSwitch, geo, setGeo, put, collapseBar } from '../ui.js';
 import { liquify } from '../liquid.js';
 
 const FIRST = 60;        // cards on the first screenful (DESIGN.md §9 rule 14: sixty in under 100ms)
@@ -1249,15 +1249,7 @@ function shelf(key, title, list) {
     b.type = 'button';
     box.appendChild(b);
   }
-  if (open) {
-    const bar = el('div', 'collapsebar');
-    const b = button(ICON.up + ' Collapse', '', (e) => { e.preventDefault(); e.stopPropagation(); redo(false); });
-    b.type = 'button';
-    b.dataset.collapse = '1';
-    b.setAttribute('aria-label', 'Collapse ' + title);
-    bar.appendChild(b);
-    box.appendChild(bar);
-  }
+  if (open) box.appendChild(collapseBar(title, () => redo(false)));
   hydrateVotes(box, [...box.querySelectorAll('[data-k]')].map((n) => n.dataset.k));
   return box;
 }

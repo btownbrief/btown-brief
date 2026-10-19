@@ -1647,7 +1647,7 @@ async function wirePass2(browser, base) {
         const st = feed.querySelector('.rc-strip');
         return { after: kids.indexOf(st) > kids.indexOf(feed.querySelector('.wleads')), beforeRiver: !feed.querySelector('.tdiv') || (st.compareDocumentPosition(feed.querySelector('.tdiv')) & 4) > 0,
           minis: [...st.querySelectorAll('.rc-mini:not(.rc-end)')].map((m) => ({ id: m.dataset.recap, bullets: [...m.querySelectorAll('.rc-mb')].map((b) => b.textContent) })),
-          end: (st.querySelector('.rc-end') || {}).textContent || '', tog: st.querySelector('.rc-listbtn').textContent };
+          end: (st.querySelector('.rc-end') || {}).textContent || '', tog: st.querySelector('.sec [data-railmode]').textContent };
       });
       const tk = etKey(Date.now());
       if (scheme === 'light') {
@@ -1656,12 +1656,12 @@ async function wirePass2(browser, base) {
         const m = s.minis[2];
         check(m.bullets.length === 2 && m.bullets.every((b) => !/River twin/.test(b)), 'a headline the river already carries is not shown twice', JSON.stringify(m));
         check(s.end === 'All recaps' && s.tog === 'See as a list', 'the row ends in All recaps, and can be seen as a list', JSON.stringify(s));
-        await page.click('#panel-wire .rc-strip .rc-listbtn');
+        await page.click('#panel-wire .rc-strip .sec [data-railmode]');
         const l = await page.evaluate(() => { const st = document.querySelector('#panel-wire .rc-strip'); const r = st.querySelector('.rc-rail');
-          return { listed: st.classList.contains('listed'), dir: getComputedStyle(r).flexDirection, bar: !st.querySelector('.collapsebar').hidden, tog: st.querySelector('.rc-listbtn').textContent }; });
+          return { listed: r.classList.contains('aslist'), dir: getComputedStyle(r).flexDirection, bar: !st.querySelector('.collapsebar.foot').hidden, tog: st.querySelector('.sec [data-railmode]').textContent }; });
         check(l.listed && l.dir === 'column' && l.bar && l.tog === 'See as a row', 'See as a list lays the cards down the page, with the Collapse bar', JSON.stringify(l));
-        await page.click('#panel-wire .rc-strip .collapsebar button');
-        check(await page.$eval('#panel-wire .rc-strip', (st) => !st.classList.contains('listed') && st.querySelector('.collapsebar').hidden), 'Collapse puts the row back', '');
+        await page.click('#panel-wire .rc-strip .collapsebar.foot button');
+        check(await page.$eval('#panel-wire .rc-strip', (st) => !st.querySelector('.rc-rail').classList.contains('aslist') && st.querySelector('.collapsebar.foot').hidden), 'Collapse puts the row back', '');
         await toTop(page);
         await page.$eval('#panel-wire .rc-strip', (n) => n.scrollIntoView({ block: 'center' }));
         await page.waitForTimeout(200);
@@ -2722,7 +2722,7 @@ async function onAir(browser, base) {
     if (!realLists) {
       await toSide(page, 'lists');
       const ls = await page.evaluate(() => ({ tiles: document.querySelectorAll('#panel-onair [data-slot="lists"] .pl-tile').length,
-        add: document.querySelector('#panel-onair [data-add-playlist]')?.dataset.addPlaylist, empty: document.querySelector('#panel-onair [data-slot="lists"] .note')?.textContent || '' }));
+        add: document.querySelector('#panel-onair [data-add-playlist]')?.dataset.addPlaylist, empty: document.querySelector('#panel-onair [data-slot="lists"] .note:not(.pl-any)')?.textContent || '' }));
       check(!ls.tiles && ls.add === 'mail' && /first/.test(ls.empty), 'live: data/playlists.json is still TODO placeholders and the board’s SQL is not in, so no tiles, an empty line, and “Add your playlist” is an email', JSON.stringify(ls));
       await toSide(page, 'tv');
     }
@@ -2889,7 +2889,7 @@ async function onAir(browser, base) {
     await page.click('#panel-onair .railmode:not(.foot) [data-railmode="past"]');
     const after = await measure();
     check(before.sideways && !before.list && after.list && !after.sideways && after.down && after.inside, 'Past nights becomes a list you scroll down', JSON.stringify({ before, after }));
-    check(await page.evaluate(() => localStorage.getItem('allday-onair-lists')) === '{"past":1}', 'remembered on this phone', '');
+    check(await page.evaluate(() => localStorage.getItem('allday-rail-lists')) === '{"past":1}', 'remembered on this phone', '');
     await page.reload();
     await page.waitForSelector('#panel-onair [data-sec="past"]', { timeout: 8000 });
     check(await page.$eval('#panel-onair [data-rail="past"]', (r) => r.classList.contains('aslist')), 'still a list after a reload', '');
@@ -3158,6 +3158,32 @@ async function onAir(browser, base) {
     const sw = await readFile(path.join(APP, 'sw.js'), 'utf8');
     const guard = sw.indexOf("req.destination === 'audio'");
     check(guard > 0 && /req\.headers\.has\('range'\)/.test(sw) && guard < sw.indexOf('if (isWire(url))'), 'sw.js lets audio, video and byte ranges past before the raw.githubusercontent.com branch', '');
+  });
+
+  await group('On Air, playlists: any playlist link', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/all-day/?demo=1#onair/playlists');
+    await page.waitForSelector('#panel-onair [data-side="lists"]:not([hidden]) [data-sec="lists"]', { timeout: 8000 });
+    const any = await page.$eval('#panel-onair [data-slot="lists"] .pl-any', (p) => p.textContent);
+    check(/^Any playlist link: Spotify, Apple Music, YouTube, SoundCloud/.test(any), 'a short line under Add your playlist says any playlist link works', any);
+    const svc = await page.evaluate(async () => {
+      const { SERVICES } = await import('/all-day/js/modes/onair.js');
+      const which = (u) => Object.keys(SERVICES).find((k) => SERVICES[k].re.test(u)) || '';
+      return {
+        good: [
+          ['spotify', 'https://open.spotify.com/playlist/37i9dQZF1DXcBWIGoYBM5M?si=abc'], ['youtube', 'https://music.youtube.com/playlist?list=PLabcdefghijk&si=x'],
+          ['apple', 'https://music.apple.com/us/playlist/chill/pl.u-abc123'], ['soundcloud', 'https://on.soundcloud.com/AbC12'],
+          ['tidal', 'https://tidal.com/browse/playlist/6d7e3f1a-1b2c-4d5e-8f90-a1b2c3d4e5f6'], ['tidal', 'https://listen.tidal.com/playlist/6d7e3f1a-1b2c-4d5e-8f90-a1b2c3d4e5f6'],
+          ['deezer', 'https://www.deezer.com/en/playlist/1234567890'], ['deezer', 'https://link.deezer.com/s/32AbCdEfGhIj'],
+          ['amazon', 'https://music.amazon.com/user-playlists/0a1b2c3d4e5f?ref=dm_sh_x'], ['amazon', 'https://music.amazon.com/playlists/B07ABCDEFG'],
+        ].map(([want, u]) => [want, which(u), u]),
+        bad: ['http://open.spotify.com/playlist/37i9dQZF1DXcBWIGoYBM5M', 'https://evil.com/open.spotify.com/playlist/37i9dQZF1DXcBWIGoYBM5M', 'https://tidal.com.evil.io/playlist/6d7e3f1a-1b2c-4d5e-8f90-a1b2c3d4e5f6',
+          'https://music.amazon.com.evil.io/playlists/B07ABCDEFG', 'https://deezer.com/playlist/12ab', 'javascript:alert(1)'].filter((u) => which(u)),
+      };
+    });
+    check(svc.good.every((g) => g[0] === g[1]) && !svc.bad.length, 'Spotify, YouTube, Apple Music, SoundCloud, Tidal, Deezer and Amazon Music links are all recognised, https only on their own hosts', JSON.stringify(svc));
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
   });
 
   await group('On Air, playlists', async () => {
@@ -5632,7 +5658,7 @@ async function theWatch(browser, base) {
     const toc = await page.$$eval('#subnav .chip', (c) => c.map((x) => x.textContent));
     check(JSON.stringify(toc) === JSON.stringify(['Theaters', 'Coming soon', 'The list', 'Town', 'Next screening', 'Chat']), 'the chip row is the table of contents, today’s showtimes first', toc.join(' / '));
     check(!(await page.$(wPanel + ' [data-kind]')), 'a films.json with no shows has no Movies / TV switch', '');
-    const soon = await page.$$eval(wPanel + ' [data-sec="soon"] + .rail-wrap .poster', (n) => n.map((a) => [a.dataset.k, a.querySelector('.s').textContent, !!a.querySelector('.play')]));
+    const soon = await page.$$eval(wPanel + ' [data-sec="soon"] + .railmode + .rail-wrap .poster', (n) => n.map((a) => [a.dataset.k, a.querySelector('.s').textContent, !!a.querySelector('.play')]));
     check(soon.length === 5 && soon[0][1] === 'In theaters now' && soon[1][1] === 'Back in theaters' && /· theaters$/.test(soon[2][1]) && /· streaming$/.test(soon[3][1]), 'Coming soon: in theaters now (a 1966 re-release is back in theaters), then what opens, labelled theaters or streaming', JSON.stringify(soon));
     check(JSON.stringify(soon.map((x) => x[2])) === '[true,false,true,true,false]', 'a play disc only where TMDB has a trailer', JSON.stringify(soon));
     const pics = await page.$$eval(wPanel + ' .poster img.pic', (n) => n.slice(0, 3).map((i) => [i.getAttribute('src'), i.loading]));
@@ -5692,8 +5718,8 @@ async function theWatch(browser, base) {
       { ...base0, id: 990013, t: 'No Year', y: undefined, d: undefined }];
     const { ctx, page, errors } = await newPage(browser, base, { films });
     await page.goto(base + '/all-day/#watch');
-    await page.waitForSelector(wPanel + ' [data-sec="soon"] + .rail-wrap .poster', { timeout: 15000 });
-    const got = await page.$$eval(wPanel + ' [data-sec="soon"] + .rail-wrap .poster', (n) => n.slice(0, 3).map((a) => a.querySelector('.s').textContent));
+    await page.waitForSelector(wPanel + ' [data-sec="soon"] + .railmode + .rail-wrap .poster', { timeout: 15000 });
+    const got = await page.$$eval(wPanel + ' [data-sec="soon"] + .railmode + .rail-wrap .poster', (n) => n.slice(0, 3).map((a) => a.querySelector('.s').textContent));
     check(JSON.stringify(got) === '["In theaters now","Back in theaters","In theaters now"]', 'two years old is in theaters now, three is back in theaters, no year is in theaters now', JSON.stringify(got));
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
@@ -5899,7 +5925,7 @@ async function theWatch(browser, base) {
     check(await page.$eval(wPanel + ' [data-sort] [data-chip="town"]', (c) => c.getAttribute('aria-pressed')) === 'true', 'and the Town favorites chip is the one on', '');
     await page.click(wPanel + ' [data-sort] [data-chip="top"]');
     check(JSON.stringify(await wTiles(page)) === JSON.stringify(d.films.top.map((f) => 'f' + f.id)), 'Top rated puts it back', '');
-    const soon = await page.$$eval(wPanel + ' [data-sec="soon"] + .rail-wrap .poster', (n) => n.length);
+    const soon = await page.$$eval(wPanel + ' [data-sec="soon"] + .railmode + .rail-wrap .poster', (n) => n.length);
     check(soon === d.films.soon.length + d.films.now.length && soon === 10, 'Coming soon: ten trailers', soon);
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
@@ -6062,7 +6088,7 @@ async function theWatch(browser, base) {
     await page.click(wPanel + ' [data-kind] button:has-text("TV")');
     await page.waitForFunction(() => /On TV now/.test(document.querySelector('#panel-watch [data-sec="soon"]')?.innerText || ''), null, { timeout: 4000 }).catch(() => {});
     check(JSON.stringify(await wTiles(page)) === JSON.stringify(d.films.tv_top.map((f) => 'tv' + f.id)), 'TV: the top shows, in TMDB order', JSON.stringify((await wTiles(page)).slice(0, 4)));
-    const air = await page.$$eval(wPanel + ' [data-sec="soon"] + .rail-wrap .poster', (n) => n.map((a) => [a.querySelector('.t').textContent, a.querySelector('.s').textContent]));
+    const air = await page.$$eval(wPanel + ' [data-sec="soon"] + .railmode + .rail-wrap .poster', (n) => n.map((a) => [a.querySelector('.t').textContent, a.querySelector('.s').textContent]));
     check(air[0][1] === 'New season 2' && /^Season 4 · [A-Z][a-z]{2} \d+$/.test(air[1][1]) && air[2][1] === 'Airing now', 'On TV now: a new season, one coming, then airing', JSON.stringify(air));
     check(!(await page.$(wPanel + ' [data-sec="theaters"]')) && !(await page.$(wPanel + ' [data-cta]')), 'no theaters and no screening call on TV', '');
     const toc = await page.$$eval('#subnav .chip', (c) => c.map((x) => x.textContent));
@@ -6117,7 +6143,7 @@ async function theWatch(browser, base) {
     check(shelves.length > 5 && !(await page.$(wPanel + ' [data-filter="genre"]')) && !(await page.$(wPanel + ' [data-grid]')), 'By genre: a shelf per genre, and no genre chips', JSON.stringify(shelves));
     const drama = await page.$$eval(wPanel + ' [data-genre="Drama"] .poster', (n) => n.map((a) => a.dataset.id));
     check(JSON.stringify(drama) === JSON.stringify(d.films.top.filter((f) => f.g.includes('Drama')).slice(0, 20).map((f) => String(f.id))), 'each shelf ranked as Top rated', JSON.stringify(drama.slice(0, 4)));
-    const counts = await page.$$eval(wPanel + ' [data-genre]', (n) => n.map((r) => Number(r.closest('.rail-wrap').previousElementSibling.querySelector('.s').textContent.split(' ')[0])));
+    const counts = await page.$$eval(wPanel + ' [data-genre]', (n) => n.map((r) => Number(r.closest('.rail-wrap').previousElementSibling.previousElementSibling.querySelector('.s').textContent.split(' ')[0])));
     check(counts.every((c, i) => i === 0 || counts[i - 1] >= c), 'the biggest genre first', JSON.stringify(counts));
     await pick('shuffle');
     const s1 = await wTiles(page);
@@ -6184,7 +6210,7 @@ async function theWatch(browser, base) {
     await page.click(wPanel + ' [data-slot="back"] [data-collapse]');
     await page.waitForTimeout(700);
     const folded = await page.evaluate(() => { const h = document.querySelector('#panel-watch [data-sec="back"]').getBoundingClientRect().top;
-      return { rail: !!document.querySelector('#panel-watch [data-slot="back"] .rail[data-back]'), bar: !!document.querySelector('#panel-watch .collapsebar'), top: Math.round(h), ok: h >= 0 && h < innerHeight / 2 }; });
+      return { rail: !!document.querySelector('#panel-watch [data-slot="back"] .rail[data-back]'), bar: !!document.querySelector('#panel-watch .collapsebar:not([hidden])'), top: Math.round(h), ok: h >= 0 && h < innerHeight / 2 }; });
     check(folded.rail && !folded.bar && folded.ok && (await allBtn())[1] === 'closed', 'Collapse folds it into the rail and lands on Back then’s head', JSON.stringify(folded));
     check(JSON.stringify(s.ids) === JSON.stringify(ids(yearAgo)), 'that month’s big films, theaters then streaming', JSON.stringify(s.ids));
     await page.click(wPanel + ' [data-slot="back"] .dateline .nav[aria-label="Earlier day"]');
@@ -10193,6 +10219,71 @@ async function weatherBrief(browser, base) {
   });
 }
 
+/* ------------------------------------------- every sideways row has a way out */
+/* Stephen's standing rule (2026-10-19, again): "I like horizontal scroll, but
+   there must ALWAYS be the option to get out of it." Every tab drawn at 390,
+   demo mode: anything that scrolls sideways is either a chip row (filters, a
+   table of contents) in the subnav or band, which are exempt, or a content
+   rail with its "See as a list" button just above it and its Collapse bar
+   after it. A new shelf that forgets the button fails here. */
+async function railsHaveList(browser, base) {
+  await group('sideways rows: every content rail can be a list', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/all-day/?demo=1#wire', { waitUntil: 'domcontentloaded' });
+    await settle(page);
+    const scan = async (tab) => {
+      /* walk the page so lazy sections draw */
+      await page.evaluate(async () => {
+        const sc = document.querySelector('.panel:not([hidden])');
+        for (let y = 0; y < sc.scrollHeight && y < 30000; y += 700) { sc.scrollTop = y; await new Promise((r) => setTimeout(r, 40)); }
+        sc.scrollTop = 0;
+      });
+      const found = await page.evaluate(() => {
+        const out = [];
+        document.querySelectorAll('.panel:not([hidden]) *, #subnav *').forEach((n) => {
+          if (!/^(auto|scroll)$/.test(getComputedStyle(n).overflowX) || n.scrollWidth <= n.clientWidth + 4) return;
+          if (n.classList.contains('chips')) return;   // filters and tables of contents, not content
+          const wrap = n.closest('.rail-wrap');
+          const pre = wrap && wrap.previousElementSibling;
+          const post = wrap && wrap.nextElementSibling;
+          const own = n.dataset.out && !!document.querySelector('.panel:not([hidden]) ' + n.dataset.out);   // a row whose own head already opens it as a list
+          const toggle = !!(pre && pre.matches('.railmode') && /^See as a list$/.test((pre.querySelector('button') || {}).textContent || '')) && !!(post && post.matches('.collapsebar'));
+          if (!toggle && !own) out.push(n.className + (n.dataset.rail ? ' [' + n.dataset.rail + ']' : ''));
+        });
+        return out;
+      });
+      check(!found.length, tab + ': every sideways row can be turned into a list', found.join(', '));
+      /* and the button works: the first row opens down (no sideways scroll left), Collapse puts it back */
+      const first = await page.$('.panel:not([hidden]) .railmode:not(.foot) button');
+      if (first) {
+        await first.evaluate((b) => b.scrollIntoView({ block: 'center' }));
+        await first.click();
+        const open = await page.evaluate(() => {
+          const r = document.querySelector('.panel:not([hidden]) .rail.aslist');
+          const foot = r && r.closest('.rail-wrap').nextElementSibling;
+          return r && { sideways: r.scrollWidth > r.clientWidth + 4, bar: !foot.hidden && foot.matches('.collapsebar') };
+        });
+        check(open && !open.sideways && open.bar, tab + ': See as a list opens it downward with the Collapse bar', JSON.stringify(open));
+        await page.click('.panel:not([hidden]) .collapsebar:not([hidden]) button');
+        check(await page.evaluate(() => !document.querySelector('.panel:not([hidden]) .rail.aslist')), tab + ': Collapse puts the row back', '');
+      }
+    };
+    for (const tab of TABS) {
+      if (tab !== 'wire') await goTab(page, tab);
+      await scan(tab);
+    }
+    /* the Wire's other two faces: the photo feed (with Pets of Burlington) and the square */
+    for (const view of ['photos', 'square']) {
+      await page.goto(base + '/all-day/?demo=1#wire/' + view);
+      await settle(page);
+      await page.waitForTimeout(400);
+      await scan('wire ' + view);
+    }
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+}
+
 /* ----------------------------------------------------------------- run */
 const t0 = Date.now();
 await mkdir(SHOTS, { recursive: true });
@@ -10229,6 +10320,7 @@ try {
   await run(theVintage);
   await run(theWeather);
   await run(weatherBrief);
+  await run(railsHaveList);
 } finally {
   await browser.close();
   proc.kill();

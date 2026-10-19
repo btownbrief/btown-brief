@@ -79,7 +79,7 @@ import * as store from '../store.js';
 import * as boards from '../boards.js';
 import { fetchJSON } from '../wire.js';
 import { RULES, expiresAt } from '../boards-core.js';
-import { el, esc, safeHref, ICON, art, section, rail, chips, pills, button, put, dateline, divider } from '../ui.js';
+import { el, esc, safeHref, ICON, art, section, rail, chips, pills, button, put, dateline, divider, listRail } from '../ui.js';
 
 const KEY = 'watch';
 const DATA = 'https://raw.githubusercontent.com/btownbrief/btown-brief/films-data/data/';
@@ -613,7 +613,7 @@ function drawSoon(host) {
   const list = V.kind === 'tv' ? F.tvAir : [...F.now, ...F.soon];
   if (!list.length) return;
   sec(host, V.kind === 'tv' ? 'On TV now' : 'Coming soon', null, 'soon');
-  const r = rail(host);
+  const r = listRail(host, { name: V.kind === 'tv' ? 'watch-tv-now' : 'watch-soon', label: V.kind === 'tv' ? 'On TV now' : 'Coming soon', cells: 104 });
   list.forEach((f) => {
     const a = el('a', 'poster');
     a.href = '#watch/soon:' + f.id;
@@ -761,7 +761,10 @@ function drawBack(host) {
       backToggle();
     }));
     host.appendChild(wrap);
-  } else r = rail(host);
+  } else {
+    r = rail(host);
+    r.dataset.out = '[data-back-all]';   // its own head offers Show all, and the grid it opens has the Collapse bar
+  }
   r.dataset.back = cur.m;
   list.forEach((f) => { const t = tile(f, 'back:' + cur.m + ':' + f.id); if (r.classList.contains('wgrid')) t.style.width = 'auto'; r.appendChild(t); });
 }
@@ -959,7 +962,7 @@ function drawList(host) {
     shelves.forEach(([g, l]) => {
       const d = divider(host, g, plural(l.length, noun[0], noun[1]));
       d.dataset.shelf = g;
-      const r = rail(host);
+      const r = listRail(host, { name: 'watch-genre-' + g, label: g, cells: 104 });
       r.dataset.genre = g;
       l.slice(0, SHELF).forEach((f) => r.appendChild(tile(f, 'g:' + g + ':' + f.id)));
     });

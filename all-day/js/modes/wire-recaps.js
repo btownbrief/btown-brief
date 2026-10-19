@@ -25,7 +25,7 @@
    file a ctx through init(). */
 
 import * as app from '../app.js';
-import { el, esc, safeHref, ICON, button, rail } from '../ui.js';
+import { el, esc, safeHref, ICON, button, listRail, collapseBar } from '../ui.js';
 
 const OPEN = 5;            // bullets on a card before "Show all N"
 const MINI = 2;            // bullets on a small card in News' strip
@@ -114,13 +114,7 @@ export function card(r, o = {}) {
   if (open) {
     /* DESIGN §9.3's one sticky exception: the bar rides the bottom of the
        screen while this list is on it */
-    const bar = el('div', 'collapsebar');
-    const b = button(ICON.up + ' Collapse', '', (e) => { e.preventDefault(); e.stopPropagation(); o.onToggle(false); });
-    b.type = 'button';
-    b.dataset.collapse = '1';
-    b.setAttribute('aria-label', 'Collapse ' + r.title);
-    bar.appendChild(b);
-    box.appendChild(bar);
+    box.appendChild(collapseBar(r.title, () => o.onToggle(false)));
   }
   return box;
 }
@@ -129,36 +123,21 @@ export function card(r, o = {}) {
 /* The newest recap of each kind as small cards in a row that scrolls
    sideways, ending in "All recaps". Stephen's rule for every horizontal
    row: "See as a list" lays the same cards out down the page, with the
-   Collapse bar to fold them back. `inRiver` is the set of ids the river
-   already shows. Returns the section, or null with no recaps. */
-let listed = false;          // the reader asked for the list; kept for the visit
+   Collapse bar to fold them back (ui.js listRail). `inRiver` is the set of
+   ids the river already shows. Returns the section, or null with no recaps. */
 export function strip(p, inRiver) {
   const list = latestOf(p);
   if (!list.length) return null;
-  const wrap = el('section', 'rc-strip' + (listed ? ' listed' : ''));
+  const wrap = el('section', 'rc-strip');
   wrap.setAttribute('aria-label', 'Recaps');
   const head = el('div', 'sec');
   head.innerHTML = '<div><h2>Recaps</h2></div>';
-  const tog = button('', 'ghost sm rc-listbtn', () => setListed(!listed));
-  tog.type = 'button';
-  head.appendChild(tog);
   wrap.appendChild(head);
-  const track = rail(wrap, 'rc-rail');
-  const bar = el('div', 'collapsebar');
-  const fold = button(ICON.up + ' Collapse', '', (e) => { e.preventDefault(); e.stopPropagation(); setListed(false); app.jumpTo(head); tog.focus({ preventScroll: true }); });
-  fold.type = 'button';
-  fold.dataset.collapse = '1';
-  fold.setAttribute('aria-label', 'Collapse the recaps');
-  bar.appendChild(fold);
-  wrap.appendChild(bar);
-  const setListed = (on) => {
-    listed = on;
-    wrap.classList.toggle('listed', on);
-    tog.textContent = on ? 'See as a row' : 'See as a list';
-    tog.setAttribute('aria-pressed', on ? 'true' : 'false');
-    bar.hidden = !on;
-  };
-  setListed(listed);
+  /* the shell's sideways row: "See as a list" (kept per phone) and the
+     Collapse bar under it while it is a list; the button sits in the head */
+  const track = listRail(wrap, { name: 'wire-recaps', label: 'Recaps', cls: 'rc-rail' });
+  const mode = wrap.querySelector('.railmode:not(.foot)');
+  if (mode) head.appendChild(mode);
   list.forEach((r) => {
     const b = el('button', 'rc-mini');
     b.type = 'button';

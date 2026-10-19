@@ -1019,6 +1019,16 @@ body.chrome-away .mast { transform: translateY(-100%); }
 .rail.aslist > .vcard > .c-acts { grid-column: 1 / -1; }
 .rail.aslist .vcard .t, .rail.tworow.aslist .vcard .t { margin-top: 0; font-size: var(--fs-body); display: block; overflow: visible; -webkit-line-clamp: unset; }
 .rail-wrap:has(> .rail.aslist) > .rail-bar { display: none; }
+/* the same button on every tab's row (ui.js listRail): any card turns full
+   width in the list; a row of posters or tiles (.cells) opens as a grid of
+   them instead of one tall column */
+.rail.aslist > * { width: auto; min-width: 0; max-width: none; }
+.rail.vtop.aslist > .card.board { width: auto; }
+.rail.aslist.cells { display: grid; grid-template-columns: repeat(auto-fill, minmax(var(--cell, 104px), 1fr)); gap: var(--s4) var(--s3); }
+.rail.aslist.cells > .vcard { display: block; }
+.rail.aslist.cells > .vcard > * { grid-column: auto; }
+.rail.aslist.cells .vcard .t { margin-top: 8px; font-size: var(--fs-sub); }
+.rail.aslist .tdsep { grid-column: 1 / -1; writing-mode: horizontal-tb; transform: none; align-self: start; padding: 0; }
 /* On Air: the whole edition, a filled card with three covers fanned on the left */
 .wholeed { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 14px; width: calc(100% - 2 * var(--gutter)); margin: 14px var(--gutter) 4px; padding: 14px 14px 14px 16px; border-radius: var(--r-media); background: var(--ink); color: var(--on-ink); text-align: left; }
 .wholeed:active { transform: scale(.98); }
@@ -1041,6 +1051,9 @@ body.chrome-away .mast { transform: translateY(-100%); }
 .pl-tile[data-service="youtube"] .pl-cover.svc { background: var(--mark-0); }
 .pl-tile[data-service="apple"] .pl-cover.svc { background: var(--mark-6); }
 .pl-tile[data-service="soundcloud"] .pl-cover.svc { background: var(--mark-1); }
+.pl-tile[data-service="tidal"] .pl-cover.svc { background: var(--mark-3); }
+.pl-tile[data-service="deezer"] .pl-cover.svc { background: var(--mark-5); }
+.pl-tile[data-service="amazon"] .pl-cover.svc { background: var(--mark-7); }
 .pl-mark { display: flex; flex-direction: column; align-items: center; gap: var(--s2); font-size: var(--fs-meta); font-weight: 600; }
 .pl-mark .i { width: var(--s8); height: var(--s8); }
 .pl-play { position: absolute; right: var(--s2); bottom: var(--s2); display: flex; align-items: center; justify-content: center; width: var(--s8); height: var(--s8); border-radius: var(--r-round); background: var(--scrim); color: var(--on-ink); }
@@ -1051,6 +1064,7 @@ body.chrome-away .mast { transform: translateY(-100%); }
 .pl-tile .t { font-size: var(--fs-sub); font-weight: 600; line-height: 1.3; margin-top: var(--s2); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 .pl-tile .s { font-size: var(--fs-small); color: var(--ink-3); margin-top: var(--s1); line-height: 1.4; }
 .pl-tile .s.pn { color: var(--ink-2); }
+.pl-any { margin-top: var(--s2); }
 .pl-tile .oa-acts { margin-top: var(--s2); }
 .oa-addpl { width: 100%; height: var(--hit); font-size: var(--fs-button); }
 .oa-addpl .i { width: var(--s4); height: var(--s4); }
@@ -1711,7 +1725,7 @@ body.wire-float .wfloat { opacity: 1; visibility: visible; transform: none; tran
    list" lays them out down the page */
 .rc-strip { border-bottom: 1px solid var(--line); padding-bottom: var(--s3); }
 .feed.wire .rc-strip .sec { align-items: center; padding-top: var(--s6); }
-.rc-strip .rc-listbtn { flex: 0 0 auto; height: 36px; }
+.rc-strip .sec .railmode { flex: 0 0 auto; padding: 0; }
 .rc-rail { align-items: stretch; }
 .rc-mini { display: flex; flex-direction: column; gap: var(--s1); width: 272px; padding: var(--s3) var(--s3) var(--s2); border-radius: var(--r-media);
   background: var(--recap-soft); border: 1px solid var(--recap-line); text-align: left; color: var(--ink); }
@@ -1726,10 +1740,9 @@ body.wire-float .wfloat { opacity: 1; visibility: visible; transform: none; tran
 .rc-n .i { width: 16px; height: 16px; }
 .rc-mini.rc-end { width: 132px; align-items: center; justify-content: center; gap: var(--s2); text-align: center; }
 .rc-mini.rc-end .i { width: 22px; height: 22px; color: var(--recap); }
-.rc-strip.listed .rc-rail { flex-direction: column; overflow: visible; scroll-snap-type: none; }
-.rc-strip.listed .rc-mini { width: auto; }
-.rc-strip.listed .rc-mini.rc-end { flex-direction: row; padding: var(--s3); }
-.rc-strip.listed .rail-bar { display: none; }
+.rc-rail.aslist { gap: var(--s3); }
+.rc-rail.aslist > .rc-mini { width: auto; }
+.rc-rail.aslist > .rc-mini.rc-end { flex-direction: row; padding: var(--s3); }
 
 /* Photos, Everything: a picture from everywhere gets its credit and a
    link to where it ran; a Grok "Pictures of the day" post is X's own embed */
