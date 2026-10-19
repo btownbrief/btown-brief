@@ -110,6 +110,12 @@ contra dance in Corinth is not junk; it scores 1.
   the other one when `local` says so (`local` true means `ch` local). Never change
   `x`, `facebook`, `reddit`, `newsletters` or `video`.
 - **topic**: the one best fit from the list in the schema.
+- **sport**: `none` unless the topic is `sports`. For a sports story, the one it is
+  about: `nba`, `nfl`, `mlb`, `nhl`, `college` (college sports outside Vermont),
+  `soccer` (any league, any country), `local` (any Vermont team or school: UVM,
+  Vermont Green FC, the Lake Monsters, high schools, whatever the game), or `other`
+  (golf, tennis, F1, the Olympics, boxing and the rest). The page has a filter per
+  sport, so a reader who picks NBA sees exactly the `nba` stories.
 - **score**: 0 to 10, how much a Burlingtonian would care today. 9 to 10: affects many
   people here now (an emergency, a rate decision, a major closure, a council vote on
   something big). 7 to 8: solid local news (an opening, a policy step, a notable crime
@@ -118,4 +124,8 @@ contra dance in Corinth is not junk; it scores 1.
   similar weight. A post from a person scores by its use to a Burlington reader: an
   event in the Burlington area this week or a report people need (a road, a scam, a
   lost dog) 4 to 6; a local question, something given away, a photo 2 to 3; anything
-  about a place far from Burlington 1 to 2.
+  about a place far from Burlington 1 to 2. Sports news scores like other news, not
+  as fluff: a Vermont team's result, a UVM or high-school championship 5 to 7; a major
+  national sports story (a blockbuster trade or signing, a firing, a title, a star's
+  serious injury, a league decision) 4 to 5; an ordinary game recap or transaction 2 to
+  3; betting tips, fantasy advice, power rankings and listicles 0 to 1.

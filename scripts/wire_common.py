@@ -55,6 +55,32 @@ LOCAL_NEWSLETTERS = {
     "vermont-public", "vermont-sports", "vtdigger-dd84",
 }
 VIDEO_HOSTS = ("youtube.com", "youtu.be", "vimeo.com")
+
+# Sports (Stephen, 2026-10-19: "better sports coverage ... the ability to
+# select the specific sport. Like nba"). Every sports item on the Wire carries
+# a `sport`, which the page's sport chips filter on. `local` is any Vermont
+# team or school (UVM, Vermont Green FC, the Lake Monsters, high schools),
+# whatever the game; `college` is college sports elsewhere.
+SPORTS = ("nba", "nfl", "mlb", "nhl", "college", "soccer", "local", "other")
+# Sources that only ever carry one sport: their items get that sport without
+# a model. Keys are pulse source ids, or "x:@handle" (lowercase) for X posts.
+SOURCE_SPORT = {
+    "espn-com-nba": "nba", "espn-com-nfl": "nfl", "espn-mlb": "mlb", "espn-nhl": "nhl",
+    "espn-college-football": "college", "espn-college-basketball": "college",
+    "espn-soccer": "soccer",
+    "wcax-sports": "local", "mychamplainvalley-sports": "local",
+    "university-of-vermont-athletics": "local", "vermont-green-fc": "local",
+    "vermont-sports": "local",
+    "x:@shamscharania": "nba", "x:@nba": "nba", "x:@adamschefter": "nfl", "x:@nfl": "nfl",
+    "x:@jeffpassan": "mlb", "x:@mlb": "mlb", "x:@friedgehnic": "nhl", "x:@nhl": "nhl",
+    "x:@petethamel": "college", "x:@fabrizioromano": "soccer",
+    "x:@uvmathletics": "local", "x:@vermontgreenfc": "local", "x:@vtlakemonsters": "local",
+}
+
+
+def source_sport(src):
+    """The one sport a single-sport source carries, or None."""
+    return SOURCE_SPORT.get((src or "").lower())
 # The newsletter's own edition. It is always in the river (the way Stephen's
 # own events are always in the newsletter) and never judged as junk.
 OWN_SOURCES = {"btown-brief"}
@@ -309,6 +335,8 @@ def wire_items(pulse, now_ts, window_hours):
             entry["media"] = {"type": "video", "url": url}
         if item.get("r") or item.get("h"):
             entry["discuss"] = item.get("r") or item.get("h")
+        if source_sport(source["id"]):
+            entry["sport"] = source_sport(source["id"])
         out.append(entry)
     for ch, state in (pulse.get("inbox") or {}).items():
         if ch not in ("x", "facebook") or not isinstance(state, dict):
@@ -325,6 +353,8 @@ def wire_items(pulse, now_ts, window_hours):
             })
             if ch == "x" and str(post.get("from") or "").startswith("@"):
                 out[-1]["site"] = "https://x.com/" + post["from"][1:]
+            if source_sport(out[-1]["src"]):
+                out[-1]["sport"] = source_sport(out[-1]["src"])
     seen, unique = set(), []
     for entry in sorted(out, key=lambda e: e["d"], reverse=True):
         if entry["id"] in seen or not entry["title"]:
@@ -602,6 +632,13 @@ def selftest():
     assert mechanical_channel({"id": "ap", "site": "https://apnews.com/"}) == ("world", False)
     assert mechanical_channel({"id": "wcax", "local": 1}, "https://www.youtube.com/watch?v=1") == ("video", True)
     assert item_id("https://a.com/1") == item_id("https://a.com/1 ") != item_id("https://a.com/2")
+    assert source_sport("espn-com-nba") == "nba" and source_sport("x:@ShamsCharania") == "nba"
+    assert source_sport("x:@AP") is None and set(SOURCE_SPORT.values()) <= set(SPORTS)
+    pulse = {"sources": [{"id": "espn-mlb", "site": "https://www.espn.com/mlb/"}],
+             "items": [{"s": "espn-mlb", "t": "Trade", "u": "https://espn.com/1", "d": 100}],
+             "inbox": {"x": {"items": [{"u": "https://x.com/AdamSchefter/status/1", "d": 100,
+                                        "from": "@AdamSchefter", "summary": "A trade."}]}}}
+    assert sorted(item["sport"] for item in wire_items(pulse, 200, 1)) == ["mlb", "nfl"]
     assert abs(cost_usd("claude-opus-5-5", {"in": 1_000_000, "out": 100_000}) - 6.0) < 1e-9
     assert pick_engine is not None and et_now().tzinfo is not None
     assert display_name({"id": "t", "short": "Top News &amp…", "name": "Top News &amp; Analysis"}) \

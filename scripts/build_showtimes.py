@@ -13,7 +13,19 @@ page a person would open:
                   fragment, one plain GET per day (/theater/nowplaying), for
                   the days its date bar has shows on. robots.txt allows all.
   Essex Cinemas   21 Essex Way, Essex. The showtimes page carries every
-                  screening as schema.org ScreeningEvent JSON-LD.
+                  screening as schema.org ScreeningEvent JSON-LD. Its site
+                  sits behind an AWS firewall that answers GitHub's runners
+                  "405 Not Allowed" (a "Human Verification" page to other
+                  cloud machines) on every run since 2026-10-17, while a home
+                  connection gets the page. So Stephen's Mac reads that one
+                  page each morning (scripts/send_essex_showtimes.sh runs
+                  --essex-dump and hands the screenings to this workflow as
+                  its `essex` input, --essex-json here). Nothing here tries
+                  to get past the firewall.
+
+A theater whose page fails this run keeps the times it last had that are
+still ahead (--prev, the published file), with `read` saying when they were
+read, so one good morning carries the days after it.
 
 Only film titles and start times are kept: no posters, synopses or prices
 from the theaters. With TMDB_API_KEY set, each title is matched to TMDB
@@ -35,9 +47,12 @@ theater fails, nothing is written and the run exits 1, so the last good
 file stays.
 
 CLI:
-  --out PATH   where to write (default data/showtimes.json)
-  --days N     how many days ahead, today included (default 7)
-  --selftest   run the offline checks and exit
+  --out PATH         where to write (default data/showtimes.json)
+  --days N           how many days ahead, today included (default 7)
+  --prev PATH        the last published file: a theater that fails keeps its days still ahead
+  --essex-json PATH  Essex's screenings read elsewhere (the --essex-dump shape), used when its page fails here
+  --essex-dump       read Essex's page and print its screenings as JSON, for the Mac to send
+  --selftest         run the offline checks and exit
 """
 
 import argparse
@@ -241,6 +256,110 @@ def essex(doc):
     return out
 
 
+# ------------------------------------------------- Essex, read elsewhere
+HHMM_RE = re.compile(r"^([01]\d|2[0-3]):[0-5]\d$")
+RELAY_MAX = 600       # screenings: a week of a nine-screen house is about 250
+HORIZON = 21          # days ahead a relayed or carried day may be
+RELAY_FRESH = 2       # days a relay stays usable after it was read
+
+
+def real_day(s, today):
+    """s as an ISO date from today to HORIZON days out, else None (2026-99-99 is not a day)."""
+    try:
+        d = date.fromisoformat(str(s))
+    except ValueError:
+        return None
+    return d.isoformat() if today <= d <= today + timedelta(days=HORIZON) and str(s) == d.isoformat() else None
+
+
+def real_stamp(s):
+    """s as a UTC timestamp ('2026-10-19T10:30:00Z'), else None."""
+    if not re.match(r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$", str(s or "")):
+        return None
+    try:
+        return datetime.strptime(s, "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=timezone.utc)
+    except ValueError:
+        return None
+
+
+def clean_film(f):
+    """One screening row from a file we wrote before, kept only in its known shape."""
+    if not isinstance(f, dict) or not isinstance(f.get("t"), str):
+        return None
+    title = re.sub(r"\s+", " ", f["t"]).strip()[:120]
+    times = sorted({h for h in f.get("times") or [] if isinstance(h, str) and HHMM_RE.match(h)}) if isinstance(f.get("times"), list) else []
+    if not title or not times:
+        return None
+    out = {"t": title, "times": times}
+    if isinstance(f.get("id"), int) and not isinstance(f.get("id"), bool) and 0 < f["id"] < 100000000:
+        out["id"] = f["id"]
+    if isinstance(f.get("p"), str) and POSTER.match(f["p"]):
+        out["p"] = f["p"]
+    return out
+
+
+def essex_dump(web, now=None):
+    """Essex's screenings as the small JSON the workflow's `essex` input takes."""
+    now = now or datetime.now(timezone.utc)
+    got = essex(web.get(ESSEX))
+    if not got:
+        raise RuntimeError("no ScreeningEvent on the showtimes page")
+    return {"v": 1, "read": now.strftime("%Y-%m-%dT%H:%M:%SZ"),
+            "days": {d: [[t, h] for t, h in rows] for d, rows in sorted(got.items())}}
+
+
+def essex_relayed(raw, today, now=None):
+    """(days, read) from an --essex-dump document, every field checked: it
+    arrives as a workflow input, so it is treated as untrusted text. Only real
+    days from today to HORIZON out, from a read in the last RELAY_FRESH days;
+    nothing at all when the shape is wrong."""
+    try:
+        doc = json.loads(raw) if isinstance(raw, str) else raw
+    except ValueError:
+        return {}, ""
+    if not isinstance(doc, dict) or type(doc.get("v")) is not int or doc["v"] != 1 or not isinstance(doc.get("days"), dict):
+        return {}, ""
+    read = str(doc.get("read") or "")
+    at = real_stamp(read)
+    now = now or datetime.now(timezone.utc)
+    if not at or at > now + timedelta(hours=1) or now - at > timedelta(days=RELAY_FRESH):
+        return {}, ""
+    out, n = {}, 0
+    for day, rows in doc["days"].items():
+        day = real_day(day, today)
+        if not day or not isinstance(rows, list):
+            continue
+        for row in rows:
+            if not (isinstance(row, list) and len(row) == 2 and all(isinstance(x, str) for x in row)):
+                continue
+            title, when = re.sub(r"\s+", " ", row[0]).strip()[:120], row[1]
+            if title and HHMM_RE.match(when) and n < RELAY_MAX:
+                out.setdefault(day, []).append((title, when))
+                n += 1
+    return out, read
+
+
+def carried(prev, tid, today):
+    """(days, read) a failed theater keeps from the last published file: its
+    real days from today on, each screening in its known shape, and when they
+    were read. A row that was itself failing, or carried already past its
+    read, carries nothing new."""
+    if not isinstance(prev, dict) or not isinstance(prev.get("theaters"), list):
+        return {}, ""
+    row = next((t for t in prev["theaters"] if isinstance(t, dict) and t.get("id") == tid and t.get("ok") is True), None)
+    if not row or not isinstance(row.get("days"), dict):
+        return {}, ""
+    read = row.get("read") if real_stamp(row.get("read")) else prev.get("built") if real_stamp(prev.get("built")) else ""
+    days = {}
+    for d, films in row["days"].items():
+        day = real_day(d, today)
+        if day and isinstance(films, list):
+            kept = [f for f in map(clean_film, films) if f]
+            if kept:
+                days[day] = kept
+    return days, read or ""
+
+
 # --------------------------------------------------------------- the run
 class Web:
     def __init__(self, opener=None, pause=PAUSE):
@@ -346,6 +465,20 @@ def run(args, web=None, api=None, now=None):
     today = now.astimezone(ET).date()
     wanted = [(today + timedelta(days=i)).isoformat() for i in range(max(1, args.days))]
     web = web or Web()
+    prev = None
+    if getattr(args, "prev", None):
+        try:
+            with open(args.prev, encoding="utf-8") as fh:
+                prev = json.load(fh)
+        except (OSError, ValueError):
+            prev = None
+    relay = ({}, "")
+    if getattr(args, "essex_json", None):
+        try:
+            with open(args.essex_json, encoding="utf-8") as fh:
+                relay = essex_relayed(fh.read(), today, now)
+        except OSError:
+            relay = ({}, "")
     theaters = []
     for th in THEATERS:
         row = {**th, "ok": True, "closed": False, "back": "", "days": {}}
@@ -354,6 +487,18 @@ def run(args, web=None, api=None, now=None):
         except Exception as e:  # noqa: BLE001 — one theater's trouble never sinks the others
             log(f"{th['name']}: {e}")
             row["ok"] = False
+        if not row["ok"] and th["id"] == "essex" and relay[0]:
+            days = {}
+            for day, rows in relay[0].items():
+                for title, when in rows:
+                    add(days, day, title_case(title), when)
+            row.update(ok=True, days=tidy(days, wanted), read=relay[1], via="mac")
+            log(f"{th['name']}: read on the Mac at {relay[1]}")
+        if not row["ok"]:
+            days, read = carried(prev, th["id"], today)
+            if days:
+                row.update(ok=True, days=tidy(days, wanted), read=read, carried=True)
+                log(f"{th['name']}: kept its times read {read or 'earlier'}")
         theaters.append(row)
     if not any(t["ok"] and (t["days"] or t["closed"]) for t in theaters):
         log("no theater gave times or a closure; keeping the last file")
@@ -384,10 +529,16 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--out", default=OUT)
     parser.add_argument("--days", type=int, default=DAYS)
+    parser.add_argument("--prev")
+    parser.add_argument("--essex-json")
+    parser.add_argument("--essex-dump", action="store_true")
     parser.add_argument("--selftest", action="store_true")
     args = parser.parse_args()
     if args.selftest:
         selftest()
+        return
+    if args.essex_dump:
+        print(json.dumps(essex_dump(Web()), ensure_ascii=False, separators=(",", ":")))
         return
     sys.exit(run(args))
 

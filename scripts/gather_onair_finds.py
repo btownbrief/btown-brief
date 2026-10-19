@@ -344,6 +344,22 @@ def youtube_details(ids, auth):
     return out
 
 
+# ---------------------------------------------------------------------- topic
+# The curator's own category, where it has one, as On Air's topic (the
+# Topics view, modes/onair.js TOPICS). Everything else is sorted there by
+# channel and title; no model call.
+GB_TOPIC = {"satirical content": "comedy", "comedy": "comedy", "music": "music", "short films": "film",
+            "trailers": "trailer", "documentary": "docs", "documentaries": "docs", "sports": "sports"}
+
+
+def topic_of(cand):
+    if cand.get("via") == "sotw":
+        return "film"
+    if cand.get("via") == "13gb":
+        return GB_TOPIC.get(str(cand.get("cat") or "").lower(), "")
+    return ""
+
+
 # ----------------------------------------------------------------------- gate
 
 def gate(cand, detail):
@@ -367,9 +383,12 @@ def gate(cand, detail):
         return None, "clickbait"
     if not mostly_latin(title):
         return None, "not in English"
-    return {"id": cand["id"], "t": title, "ch": detail["ch"], "sec": sec, "dur": fmt_seconds(sec),
+    item = {"id": cand["id"], "t": title, "ch": detail["ch"], "sec": sec, "dur": fmt_seconds(sec),
             "b": bucket(sec, trailer), "via": cand["via"], "via_url": cand.get("url", ""),
-            "why": cand.get("why", ""), "d": cand.get("d") or now_ts()}, None
+            "why": cand.get("why", ""), "d": cand.get("d") or now_ts()}
+    if topic_of(cand):
+        item["topic"] = topic_of(cand)
+    return item, None
 
 
 def mostly_latin(title):
@@ -487,7 +506,7 @@ def run(args):
             except (TypeError, ValueError):
                 sec = 0
             if sec >= MIN_SECONDS and str(oe.get("thumbnail_url", "")).startswith("https://i.vimeocdn.com/"):
-                sotw_items.append({"id": "vm" + info["vimeo"], "vimeo": info["vimeo"], "t": film["title"],
+                sotw_items.append({"id": "vm" + info["vimeo"], "vimeo": info["vimeo"], "t": film["title"], "topic": "film",
                                    "ch": clean(oe.get("author_name"), 60), "sec": sec, "dur": fmt_seconds(sec),
                                    "b": bucket(sec, False), "via": "sotw", "via_url": film["url"],
                                    "why": info["why"], "art": oe["thumbnail_url"], "d": now})
@@ -555,6 +574,11 @@ def run(args):
             b = dict(b, clips=clips, sec=sum(c["sec"] for c in clips))
             kept_boards.append(b)
 
+    # a find from before topics were kept: Short of the Week's are films; an
+    # older 13GB find kept no category, so On Air sorts it by channel and title
+    for it in items:
+        if not it.get("topic") and topic_of(it):
+            it["topic"] = topic_of(it)
     merged = sorted(added + items, key=lambda it: -int(it.get("d", 0)))
     merged = cap_channels(merged)[:MAX_ITEMS]
     payload = {
