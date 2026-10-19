@@ -49,10 +49,10 @@ const hasFaces = () => { for (const s of liquids.values()) if (s.faces.length) r
 function kick() { if (!raf && !document.hidden && hasFaces()) raf = requestAnimationFrame(frame); }
 function nudge(sec) { const now = nowS(); liquids.forEach((s) => { s.until = Math.max(s.until, now + sec); }); kick(); }
 
-/* a bar that appears, or changes size, gets painted again */
+/* a bar that appears, or changes size, gets measured and painted again */
 const sized = 'ResizeObserver' in window ? new ResizeObserver((es) => {
   const now = nowS();
-  es.forEach((e) => liquids.forEach((s) => { if (s.faces.some((f) => f.bar === e.target)) s.until = Math.max(s.until, now + 0.25); }));
+  es.forEach((e) => liquids.forEach((s) => s.faces.forEach((f) => { if (f.bar === e.target) { f.pad = null; s.until = Math.max(s.until, now + 0.25); } })));
   kick();
 }) : null;
 /* a bar scrolled off screen is not drawn */
@@ -97,12 +97,20 @@ function mixColor(a, b, t) {
   const m = (i) => Math.round(pa[i] + (pb[i] - pa[i]) * t);
   return 'rgb(' + m(0) + ',' + m(1) + ',' + m(2) + ')';
 }
-/* the canvas fills the bar's padding box, so its corners are the bar's
-   inner radius (a pill's is half its height) */
-function radiusOf(bar) {
-  const cs = getComputedStyle(bar);
-  const r = parseFloat(cs.borderTopLeftRadius) - (parseFloat(cs.borderTopWidth) || 0);
-  return Number.isFinite(r) && !/%/.test(cs.borderTopLeftRadius) ? Math.max(0, r) : Infinity;
+/* The water sits inside the switch's padding, where the buttons are, so
+   it never reaches the rim: the canvas is placed on that inner box, and
+   its corners are the inner radius (a pill's is half its height). */
+function boxOf(f) {
+  if (!f.pad) {
+    const cs = getComputedStyle(f.bar);
+    const n = (v) => parseFloat(v) || 0;
+    const [t, r, b, l] = [n(cs.paddingTop), n(cs.paddingRight), n(cs.paddingBottom), n(cs.paddingLeft)];
+    f.pad = [t, r, b, l];
+    Object.assign(f.canvas.style, { left: l + 'px', top: t + 'px', width: 'calc(100% - ' + (l + r) + 'px)', height: 'calc(100% - ' + (t + b) + 'px)' });
+    const rad = parseFloat(cs.borderTopLeftRadius);
+    f.radius = Number.isFinite(rad) && !/%/.test(cs.borderTopLeftRadius) ? Math.max(0, rad - n(cs.borderTopWidth) - t) : Infinity;
+  }
+  return { W: Math.max(0, f.bar.clientWidth - f.pad[1] - f.pad[3]), H: Math.max(0, f.bar.clientHeight - f.pad[0] - f.pad[2]), l: f.pad[3] };
 }
 
 export function attach(bar, { key, n, idx, prop, fallback }) {
@@ -134,7 +142,7 @@ export function attach(bar, { key, n, idx, prop, fallback }) {
      (a tab often liquifies a bar before it inserts it) waits for it. */
   liquids.forEach((o) => { o.faces = o.faces.filter((f) => f.canvas !== canvas); });
   const now = nowS();
-  s.faces.push({ bar, canvas, ctx, fallback, from: null, to: null, props: '', epoch: -1, radius: null, slots: [...bar.querySelectorAll('button')], drawn: false, born: now, placed: false, vis: true });
+  s.faces.push({ bar, canvas, ctx, fallback, from: null, to: null, props: '', epoch: -1, radius: null, slots: [...bar.querySelectorAll('button')], drawn: false, born: now, placed: false, vis: true, pad: null });
   if (sized) sized.observe(bar);
   if (seen) seen.observe(bar);
   if (!raf) s.lastT = now;
@@ -159,12 +167,14 @@ function keeps(now) {
   };
 }
 
-function slotBounds(face, s, W) {
-  const b = face.slots[s.idx];
+/* the chosen segment on the inner box (W wide, starting x0 in from the
+   bar's padding edge): from halfway across the gap before it to halfway
+   across the gap after, the ends to the ends */
+function slotBounds(face, s, W, x0) {
+  const sl = face.slots, b = sl[s.idx], prev = sl[s.idx - 1], next = sl[s.idx + 1];
   if (!b || !W) return [s.idx / s.n, (s.idx + 1) / s.n];
-  const gap = 4;
-  const l = s.idx === 0 ? 0 : (b.offsetLeft - gap / 2) / W;
-  const r = s.idx === s.n - 1 ? 1 : (b.offsetLeft + b.offsetWidth + gap / 2) / W;
+  const l = s.idx === 0 || !prev ? 0 : ((prev.offsetLeft + prev.offsetWidth + b.offsetLeft) / 2 - x0) / W;
+  const r = s.idx === s.n - 1 || !next ? 1 : ((b.offsetLeft + b.offsetWidth + next.offsetLeft) / 2 - x0) / W;
   return [Math.max(0, Math.min(1, l)), Math.max(0, Math.min(1, r))];
 }
 
@@ -177,7 +187,7 @@ function frame() {
   /* the steady lap follows the reader: up quickly on a touch, flat slowly after CALM */
   level = Math.max(0, Math.min(1, level + (now - touched < CALM ? dt0 / 0.6 : -dt0 / 1.5)));
   const dpr = Math.min(window.devicePixelRatio || 1, 2);
-  const fits = (f) => f.canvas.width === Math.round(f.bar.clientWidth * dpr) && f.canvas.height === Math.round(f.bar.clientHeight * dpr);
+  const fits = (f) => { const bx = boxOf(f); return f.canvas.width === Math.round(bx.W * dpr) && f.canvas.height === Math.round(bx.H * dpr); };
   let alive = false;
   liquids.forEach((s) => {
     s.faces = s.faces.filter(keeps(now));
@@ -197,16 +207,15 @@ function frame() {
     s.lastT = now; s.paintedAt = now; s.rested = still;
     shown.forEach((f) => { if (f.epoch !== epoch || f.props !== props) { f.from = cssVar(f.bar, s.propFrom, f.fallback); f.to = cssVar(f.bar, s.propTo, f.fallback); f.epoch = epoch; f.props = props; } });
     const lead = shown[0];
-    const W = lead.bar.clientWidth, H = lead.bar.clientHeight;
-    const [tL, tR] = slotBounds(lead, s, W);
+    const lb = boxOf(lead), W = lb.W, H = lb.H;
+    const [tL, tR] = slotBounds(lead, s, W, lb.l);
     if (still) { s.bubbles.length = 0; s.L = tL; s.R = tR; s.vL = 0; s.vR = 0; }
     else step(s, W, H, dt, now, tL, tR);
     /* each canvas at its own size, the water on its own segment */
     shown.forEach((f) => {
-      const fW = f.bar.clientWidth, fH = f.bar.clientHeight;
+      const fb = boxOf(f), fW = fb.W, fH = fb.H;
       if (!fits(f)) { f.canvas.width = Math.round(fW * dpr); f.canvas.height = Math.round(fH * dpr); }
-      if (f.radius == null) f.radius = radiusOf(f.bar);
-      const [fl, fr] = f === lead ? [tL, tR] : slotBounds(f, s, fW);
+      const [fl, fr] = f === lead ? [tL, tR] : slotBounds(f, s, fW, fb.l);
       f.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       f.ctx.clearRect(0, 0, fW, fH);
       paint(s, f.ctx, { fill: mixColor(f.from, f.to, s.colorT), W: fW, H: fH, tL: fl, tR: fr, oL: fl - tL, oR: fr - tR, kx: fW / W, ky: fH / H, r: f.radius });

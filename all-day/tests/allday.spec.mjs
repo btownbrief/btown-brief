@@ -10423,6 +10423,8 @@ async function railsHaveList(browser, base) {
         document.querySelectorAll('.panel:not([hidden]) *, #subnav *').forEach((n) => {
           if (!/^(auto|scroll)$/.test(getComputedStyle(n).overflowX) || n.scrollWidth <= n.clientWidth + 4) return;
           if (n.classList.contains('chips')) return;   // filters and tables of contents, not content
+          /* a section pill (sections.js): its own All button lists every section, so it must show */
+          if (n.classList.contains('secpill-scroll')) { const all = n.parentElement.querySelector(':scope > .secpill-all'); if (all && getComputedStyle(all).display !== 'none') return; }
           const wrap = n.closest('.rail-wrap');
           const pre = wrap && wrap.previousElementSibling;
           const post = wrap && wrap.nextElementSibling;
