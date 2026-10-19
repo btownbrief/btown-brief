@@ -1,16 +1,16 @@
 {
- "updated": "2026-10-19T19:17:22+00:00",
+ "updated": "2026-10-19T20:37:26+00:00",
  "sections_updated": {
-  "now": "2026-10-19T19:17:22+00:00",
-  "forecast": "2026-10-19T19:17:22+00:00",
-  "hourly": "2026-10-19T19:17:22+00:00",
-  "alerts": "2026-10-19T19:17:22+00:00",
-  "afd": "2026-10-19T19:17:22+00:00",
-  "lake_forecast": "2026-10-19T19:17:22+00:00",
-  "lake_gage": "2026-10-19T19:17:22+00:00",
-  "air": "2026-10-19T19:17:22+00:00",
-  "sun": "2026-10-19T19:17:22+00:00",
-  "models": "2026-10-19T19:17:22+00:00"
+  "now": "2026-10-19T20:37:26+00:00",
+  "forecast": "2026-10-19T20:37:26+00:00",
+  "hourly": "2026-10-19T20:37:26+00:00",
+  "alerts": "2026-10-19T20:37:26+00:00",
+  "afd": "2026-10-19T20:37:26+00:00",
+  "lake_forecast": "2026-10-19T20:37:26+00:00",
+  "lake_gage": "2026-10-19T20:37:26+00:00",
+  "air": "2026-10-19T20:37:26+00:00",
+  "sun": "2026-10-19T20:37:26+00:00",
+  "models": "2026-10-19T20:37:26+00:00"
  },
  "now": {
   "observed_at": "2026-10-19T18:55:00+00:00",
@@ -30,13 +30,13 @@
   "periods": [
    {
     "name": "This Afternoon",
-    "start": "2026-10-19T15:00:00-04:00",
+    "start": "2026-10-19T16:00:00-04:00",
     "is_day": true,
     "temp_f": 66,
     "pop": 0,
-    "wind": "S 8 mph",
+    "wind": "S 7 mph",
     "short": "Sunny",
-    "detailed": "Sunny, with a high near 66. South wind around 8 mph."
+    "detailed": "Sunny, with a high near 66. South wind around 7 mph."
    },
    {
     "name": "Tonight",
@@ -173,20 +173,6 @@
  "hourly": {
   "updated": "2026-10-19T18:27:09+00:00",
   "hours": [
-   {
-    "t": "2026-10-19T15:00:00-04:00",
-    "temp_f": 65,
-    "feels_f": 65,
-    "pop": 0,
-    "humidity": 37,
-    "wind_mph": 8,
-    "wind_dir": "S",
-    "sky": 10,
-    "short": "Sunny",
-    "qpf_in": 0.0,
-    "snow_in": 0.0,
-    "gust_mph": 16
-   },
    {
     "t": "2026-10-19T16:00:00-04:00",
     "temp_f": 66,
@@ -676,6 +662,20 @@
     "qpf_in": 0.0,
     "snow_in": 0.0,
     "gust_mph": 7
+   },
+   {
+    "t": "2026-10-21T03:00:00-04:00",
+    "temp_f": 38,
+    "feels_f": 36,
+    "pop": 0,
+    "humidity": 100,
+    "wind_mph": 3,
+    "wind_dir": "N",
+    "sky": 0,
+    "short": "Clear",
+    "qpf_in": 0.0,
+    "snow_in": 0.0,
+    "gust_mph": 6
    }
   ],
   "days": [
@@ -983,18 +983,18 @@
  },
  "lake_gage": {
   "water_temp_f": 56,
-  "water_temp_at": "2026-10-19T15:00:00.000-04:00",
-  "level_ft": 94.08,
-  "level_at": "2026-10-19T15:00:00.000-04:00",
+  "water_temp_at": "2026-10-19T16:00:00.000-04:00",
+  "level_ft": 94.07,
+  "level_at": "2026-10-19T16:00:00.000-04:00",
   "level_status": "normal"
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 35,
+  "aqi": 37,
   "category": "Good",
   "pollutant": "OZONE",
-  "observed": "10/19/26 15:00",
-  "discussion": "On Monday, October 19th, expect generally good air quality across Vermont."
+  "observed": "10/19/26 16:00",
+  "discussion": "On Tuesday, October 20th, expect generally good air quality across Vermont."
  },
  "sun": {
   "sunrise": "2026-10-19T07:13-04:00",
@@ -1008,21 +1008,20 @@
    {
     "date": "2026-10-19",
     "high_f": {
-     "GFS": 64,
-     "Euro": 61,
+     "GFS": 65,
+     "Euro": 60,
      "ICON": 65
     },
     "pop_max": {
      "GFS": 0,
-     "Euro": 0,
-     "ICON": 0
+     "Euro": 0
     },
     "precip_in": {
      "GFS": 0.0,
      "Euro": 0.0,
      "ICON": 0.0
     },
-    "high_spread_f": 4
+    "high_spread_f": 5
    },
    {
     "date": "2026-10-20",
@@ -1033,8 +1032,7 @@
     },
     "pop_max": {
      "GFS": 0,
-     "Euro": 0,
-     "ICON": 0
+     "Euro": 0
     },
     "precip_in": {
      "GFS": 0.0,
@@ -1047,13 +1045,12 @@
     "date": "2026-10-21",
     "high_f": {
      "GFS": 51,
-     "Euro": 53,
+     "Euro": 52,
      "ICON": 54
     },
     "pop_max": {
      "GFS": 0,
-     "Euro": 0,
-     "ICON": 0
+     "Euro": 0
     },
     "precip_in": {
      "GFS": 0.0,
@@ -1066,7 +1063,7 @@
  },
  "brief": {
   "date": "2026-10-19",
-  "generated": "2026-10-19T19:17:25+00:00",
+  "generated": "2026-10-19T20:37:29+00:00",
   "text": "Sunny today, high 66. Mostly clear tonight, low 44. Tuesday, sunny and cooler, high 58.",
   "periods": [
    {
@@ -1075,7 +1072,7 @@
     "is_day": true,
     "temp_f": 66,
     "sky": "sunny",
-    "start": "2026-10-19T15:00:00-04:00",
+    "start": "2026-10-19T16:00:00-04:00",
     "end": "2026-10-19T18:00:00-04:00",
     "precip": null,
     "wind": null,
