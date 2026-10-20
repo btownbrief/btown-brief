@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-19T12:37:26-04:00",
+ "generated": "2026-10-19T19:55:38-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
@@ -9,22 +9,22 @@
   "breweries": {
    "label": "Breweries & Taprooms",
    "count": 73,
-   "seconds": 4.5
+   "seconds": 4.0
   },
   "brownell": {
    "label": "Brownell Library",
    "count": 89,
-   "seconds": 8.2
+   "seconds": 3.7
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
    "count": 203,
-   "seconds": 4.1
+   "seconds": 4.5
   },
   "churchst": {
    "label": "Church Street Marketplace",
-   "count": 75,
-   "seconds": 2.0
+   "count": 77,
+   "seconds": 1.7
   },
   "echo": {
    "label": "ECHO Leahy Center",
@@ -44,17 +44,17 @@
   "farmersmarket": {
    "label": "Burlington Farmers Market",
    "count": 2,
-   "seconds": 0.4
+   "seconds": 0.3
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
    "count": 223,
-   "seconds": 68.5
+   "seconds": 65.5
   },
   "flynn": {
    "label": "The Flynn",
    "count": 16,
-   "seconds": 0.6
+   "seconds": 0.4
   },
   "greenfc": {
    "label": "Vermont Green FC",
@@ -64,7 +64,7 @@
   "helloburlington": {
    "label": "Hello Burlington",
    "count": 623,
-   "seconds": 30.8
+   "seconds": 30.9
   },
   "higherground": {
    "label": "Higher Ground",
@@ -75,27 +75,27 @@
   "instagram": {
    "label": "Instagram (Scrape Creators)",
    "count": 1,
-   "seconds": 31.6
+   "seconds": 31.5
   },
   "loveburlington": {
    "label": "Love Burlington",
-   "count": 392,
-   "seconds": 72.7
+   "count": 344,
+   "seconds": 75.5
   },
   "meetup": {
    "label": "Meetup",
    "count": 55,
-   "seconds": 102.4
+   "seconds": 112.1
   },
   "monkeyhouse": {
    "label": "The Monkey House",
-   "count": 19,
-   "seconds": 1.5
+   "count": 21,
+   "seconds": 0.1
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
    "count": 68,
-   "seconds": 16.0
+   "seconds": 15.4
   },
   "radiobean": {
    "label": "Radio Bean",
@@ -105,18 +105,18 @@
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
-   "count": 100,
-   "seconds": 5.7
+   "count": 101,
+   "seconds": 2.8
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
    "count": 15,
-   "seconds": 21.3
+   "seconds": 21.2
   },
   "sevendays": {
    "label": "Seven Days",
    "count": 2402,
-   "seconds": 83.4
+   "seconds": 2.8
   },
   "shelburnemuseum": {
    "label": "Shelburne Museum",
@@ -126,41 +126,30 @@
   "uvm": {
    "label": "UVM & Colleges",
    "count": 478,
-   "seconds": 47.6
+   "seconds": 25.0
   },
   "uvmbored": {
    "label": "UVM Bored",
-   "count": 291,
+   "count": 290,
    "seconds": 0.3
   },
   "vcc": {
    "label": "Vermont Comedy Club",
    "count": 51,
-   "seconds": 71.7
+   "seconds": 125.6
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
    "count": 50,
-   "seconds": 0.2
+   "seconds": 0.4
   }
  },
- "gathered": 5234,
- "afterDedup": 2519,
- "duplicatesMerged": 2715,
- "final": 2618,
- "firecrawlCalls": 14,
+ "gathered": 5190,
+ "afterDedup": 2531,
+ "duplicatesMerged": 2659,
+ "final": 2631,
+ "firecrawlCalls": 1,
  "mergeLog": [
-  {
-   "kept": {
-    "title": "'Very Eric Carle' Exhibit",
-    "source": "sevendays"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "sevendays"
-   ],
-   "date": "2026-11-21"
-  },
   {
    "kept": {
     "title": "Celebrate Craft Holiday Show",
@@ -1359,6 +1348,17 @@
   },
   {
    "kept": {
+    "title": "Generator Holiday Maker Market",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-12-05"
+  },
+  {
+   "kept": {
     "title": "'Very Eric Carle' Exhibit",
     "source": "sevendays"
    },
@@ -1414,6 +1414,19 @@
   },
   {
    "kept": {
+    "title": "Cheryl A. Ossola in Conversation with Lisa DeNatale | How Long a Shadow",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "champlainvalley",
+    "churchst",
+    "loveburlington",
+    "sevendays"
+   ],
+   "date": "2026-12-06"
+  },
+  {
+   "kept": {
     "title": "'Very Eric Carle' Exhibit",
     "source": "sevendays"
    },
@@ -1426,17 +1439,6 @@
   {
    "kept": {
     "title": "Bella Voce Concert \"Cool Yule\"",
-    "source": "sevendays"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "sevendays"
-   ],
-   "date": "2026-12-06"
-  },
-  {
-   "kept": {
-    "title": "Cheryl A. Ossola in Conversation with Lisa DeNatale | How Long a Shadow",
     "source": "sevendays"
    },
    "merged_sources": [
@@ -2392,46 +2394,6 @@
  ],
  "changes": [
   {
-   "id": "fd27adfc07e0",
-   "title": "Kids' Puzzle Swap",
-   "date": "2026-10-21",
-   "change": "time",
-   "was": "2026-10-21T14:00:00-04:00",
-   "now": "2026-10-21T14:30:00-04:00"
-  },
-  {
-   "id": "e872dba934d8",
-   "title": "Kids' Puzzle Swap",
-   "date": "2026-11-18",
-   "change": "time",
-   "was": "2026-11-18T14:00:00-05:00",
-   "now": "2026-11-18T14:30:00-05:00"
-  },
-  {
-   "id": "52643c7200fc",
-   "title": "The Queen City Square Dance",
-   "date": "2026-10-28",
-   "change": "time",
-   "was": "2026-10-28T18:30:00-04:00",
-   "now": "2026-10-28T19:00:00-04:00"
-  },
-  {
-   "id": "ec901ba8eef1",
-   "title": "Senior Recitals",
-   "date": "2026-11-07",
-   "change": "time",
-   "was": "2026-11-07",
-   "now": "2026-11-07T12:00:00-05:00"
-  },
-  {
-   "id": "a6fea7752d01",
-   "title": "Senior Recitals",
-   "date": "2026-11-08",
-   "change": "time",
-   "was": "2026-11-08",
-   "now": "2026-11-08T14:30:00-05:00"
-  },
-  {
    "id": "375c196d3f76",
    "title": "Public Skate",
    "date": "2026-10-19",
@@ -2451,6 +2413,13 @@
    "date": "2026-10-19",
    "change": "missing",
    "lastSeen": "2026-10-18T09:31:18-04:00"
+  },
+  {
+   "id": "05e3b88738cd",
+   "title": "Wine Down Wednesday",
+   "date": "2026-10-19",
+   "change": "missing",
+   "lastSeen": "2026-10-19T12:37:26-04:00"
   },
   {
    "id": "933b2c99e74e",
@@ -2493,12 +2462,6 @@
    "date": "2026-10-21",
    "change": "missing",
    "lastSeen": "2026-10-18T18:35:15-04:00"
-  },
-  {
-   "id": "39fd361f0e4a",
-   "title": "Ryan La Sala & Don Martin",
-   "date": "2026-10-21",
-   "change": "dropped"
   },
   {
    "id": "c5df1fce68e7",
@@ -2620,12 +2583,6 @@
    "lastSeen": "2026-10-18T18:35:15-04:00"
   },
   {
-   "id": "a89af23cfc9f",
-   "title": "Drag Story Hour",
-   "date": "2026-10-24",
-   "change": "dropped"
-  },
-  {
    "id": "9509fbc9ec3a",
    "title": "Witch's Apothecary Adventure Dinner",
    "date": "2026-10-24",
@@ -2717,12 +2674,6 @@
    "lastSeen": "2026-10-18T18:35:15-04:00"
   },
   {
-   "id": "8a2b8d52f7e3",
-   "title": "Gordon MacFarland",
-   "date": "2026-10-27",
-   "change": "dropped"
-  },
-  {
    "id": "1d263c180fef",
    "title": "Empowerment Self-Defense (Employee Session)",
    "date": "2026-10-28",
@@ -2733,8 +2684,7 @@
    "id": "3df17270dfe2",
    "title": "An Industry View: Dunston on Cybersecurity (CAREERtalk)",
    "date": "2026-10-28",
-   "change": "missing",
-   "lastSeen": "2026-10-16T19:00:50-04:00"
+   "change": "dropped"
   },
   {
    "id": "bd8d86cc5e44",
@@ -2870,29 +2820,11 @@
    "lastSeen": "2026-10-18T09:31:18-04:00"
   },
   {
-   "id": "1639c64bed10",
-   "title": "Community Dinner with Mosaic",
-   "date": "2026-11-02",
-   "change": "dropped"
-  },
-  {
-   "id": "18f04ccc4b01",
-   "title": "First-Gen Week Kickoff",
-   "date": "2026-11-02",
-   "change": "dropped"
-  },
-  {
    "id": "1415fe9697ef",
    "title": "Tech Tuesdays - Breakfast",
    "date": "2026-11-03",
    "change": "missing",
    "lastSeen": "2026-10-18T09:31:18-04:00"
-  },
-  {
-   "id": "e7983a530899",
-   "title": "Lunch with Interfaith",
-   "date": "2026-11-03",
-   "change": "dropped"
   },
   {
    "id": "4d7b5079393c",
@@ -2916,12 +2848,6 @@
    "lastSeen": "2026-10-18T09:31:18-04:00"
   },
   {
-   "id": "8aff95ec59de",
-   "title": "UVM Trivia with First-Gen",
-   "date": "2026-11-05",
-   "change": "dropped"
-  },
-  {
    "id": "619acdd842ae",
    "title": "Minecraft Meet-up",
    "date": "2026-11-05",
@@ -2943,10 +2869,11 @@
    "lastSeen": "2026-10-07T20:24:11-04:00"
   },
   {
-   "id": "a566908ee597",
-   "title": "University Jazz Ensemble with Dennis Mackrel",
-   "date": "2026-11-05",
-   "change": "dropped"
+   "id": "c93795f9be9e",
+   "title": "Power Hour Cycling Class",
+   "date": "2026-11-06",
+   "change": "missing",
+   "lastSeen": "2026-10-19T12:37:26-04:00"
   },
   {
    "id": "ff9ac1418203",
