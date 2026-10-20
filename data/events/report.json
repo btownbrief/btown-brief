@@ -1,30 +1,30 @@
 {
- "generated": "2026-10-19T19:55:38-04:00",
+ "generated": "2026-10-20T10:27:53-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
    "count": 8,
-   "seconds": 5.8
+   "seconds": 6.9
   },
   "breweries": {
    "label": "Breweries & Taprooms",
-   "count": 73,
-   "seconds": 4.0
+   "count": 71,
+   "seconds": 6.2
   },
   "brownell": {
    "label": "Brownell Library",
-   "count": 89,
-   "seconds": 3.7
+   "count": 85,
+   "seconds": 3.4
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
-   "count": 203,
-   "seconds": 4.5
+   "count": 206,
+   "seconds": 4.0
   },
   "churchst": {
    "label": "Church Street Marketplace",
-   "count": 77,
-   "seconds": 1.7
+   "count": 78,
+   "seconds": 1.9
   },
   "echo": {
    "label": "ECHO Leahy Center",
@@ -34,7 +34,7 @@
   "eventbrite": {
    "label": "Eventbrite",
    "count": 0,
-   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-10-19&end_date=2026-12-18&page=1 (HTTP Error 405: Not Allowed)"
+   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-10-20&end_date=2026-12-19&page=1 (HTTP Error 405: Not Allowed)"
   },
   "facebook": {
    "label": "Facebook (manual drops)",
@@ -44,17 +44,17 @@
   "farmersmarket": {
    "label": "Burlington Farmers Market",
    "count": 2,
-   "seconds": 0.3
+   "seconds": 0.2
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
    "count": 223,
-   "seconds": 65.5
+   "seconds": 71.0
   },
   "flynn": {
    "label": "The Flynn",
    "count": 16,
-   "seconds": 0.4
+   "seconds": 0.5
   },
   "greenfc": {
    "label": "Vermont Green FC",
@@ -64,7 +64,7 @@
   "helloburlington": {
    "label": "Hello Burlington",
    "count": 623,
-   "seconds": 30.9
+   "seconds": 32.6
   },
   "higherground": {
    "label": "Higher Ground",
@@ -74,49 +74,50 @@
   },
   "instagram": {
    "label": "Instagram (Scrape Creators)",
-   "count": 1,
-   "seconds": 31.5
+   "count": 0,
+   "error": "skipped by design: once-daily gate, Instagram fetches on the afternoon run only",
+   "staleDays": 0
   },
   "loveburlington": {
    "label": "Love Burlington",
-   "count": 344,
-   "seconds": 75.5
+   "count": 343,
+   "seconds": 74.3
   },
   "meetup": {
    "label": "Meetup",
    "count": 55,
-   "seconds": 112.1
+   "seconds": 101.2
   },
   "monkeyhouse": {
    "label": "The Monkey House",
-   "count": 21,
-   "seconds": 0.1
+   "count": 20,
+   "seconds": 0.2
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
    "count": 68,
-   "seconds": 15.4
+   "seconds": 18.2
   },
   "radiobean": {
    "label": "Radio Bean",
    "count": 0,
    "error": "HTTP Error 404: Not Found",
-   "staleDays": 11
+   "staleDays": 12
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
-   "count": 101,
-   "seconds": 2.8
+   "count": 98,
+   "seconds": 2.3
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
-   "count": 15,
-   "seconds": 21.2
+   "count": 17,
+   "seconds": 22.1
   },
   "sevendays": {
    "label": "Seven Days",
-   "count": 2402,
-   "seconds": 2.8
+   "count": 2386,
+   "seconds": 20.7
   },
   "shelburnemuseum": {
    "label": "Shelburne Museum",
@@ -125,65 +126,31 @@
   },
   "uvm": {
    "label": "UVM & Colleges",
-   "count": 478,
-   "seconds": 25.0
+   "count": 467,
+   "seconds": 37.9
   },
   "uvmbored": {
    "label": "UVM Bored",
-   "count": 290,
+   "count": 283,
    "seconds": 0.3
   },
   "vcc": {
    "label": "Vermont Comedy Club",
-   "count": 51,
-   "seconds": 125.6
+   "count": 54,
+   "seconds": 73.3
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
-   "count": 50,
+   "count": 51,
    "seconds": 0.4
   }
  },
- "gathered": 5190,
- "afterDedup": 2531,
- "duplicatesMerged": 2659,
- "final": 2631,
- "firecrawlCalls": 1,
+ "gathered": 5154,
+ "afterDedup": 2524,
+ "duplicatesMerged": 2630,
+ "final": 2617,
+ "firecrawlCalls": 5,
  "mergeLog": [
-  {
-   "kept": {
-    "title": "Celebrate Craft Holiday Show",
-    "source": "sevendays"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "helloburlington",
-    "sevendays"
-   ],
-   "date": "2026-11-21"
-  },
-  {
-   "kept": {
-    "title": "The World is Not Enough - A James Bond Gala",
-    "source": "sevendays"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "sevendays"
-   ],
-   "date": "2026-11-21"
-  },
-  {
-   "kept": {
-    "title": "The Vermont Choral Union: The American Mercury",
-    "source": "sevendays"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "sevendays"
-   ],
-   "date": "2026-11-21"
-  },
   {
    "kept": {
     "title": "Burlington Choral Society presents Voices of Change: Songs that Shaped History",
@@ -2390,51 +2357,42 @@
     "sevendays"
    ],
    "date": "2026-12-18"
+  },
+  {
+   "kept": {
+    "title": "Good Clean Fun! (Family Friendly Show)",
+    "source": "vcc"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "vcc"
+   ],
+   "date": "2026-12-19"
+  },
+  {
+   "kept": {
+    "title": "Live DJ at Ri Ra!",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "churchst",
+    "loveburlington"
+   ],
+   "date": "2026-12-19"
+  },
+  {
+   "kept": {
+    "title": "'Very Eric Carle' Exhibit",
+    "source": "sevendays"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "sevendays"
+   ],
+   "date": "2026-12-19"
   }
  ],
  "changes": [
-  {
-   "id": "375c196d3f76",
-   "title": "Public Skate",
-   "date": "2026-10-19",
-   "change": "missing",
-   "lastSeen": "2026-10-18T18:35:15-04:00"
-  },
-  {
-   "id": "d2a559d5a606",
-   "title": "Stick & Puck",
-   "date": "2026-10-19",
-   "change": "missing",
-   "lastSeen": "2026-10-18T18:35:15-04:00"
-  },
-  {
-   "id": "1f0e013f470b",
-   "title": "Monday Night Trivia at Grazers with Burlington Beer Co.",
-   "date": "2026-10-19",
-   "change": "missing",
-   "lastSeen": "2026-10-18T09:31:18-04:00"
-  },
-  {
-   "id": "05e3b88738cd",
-   "title": "Wine Down Wednesday",
-   "date": "2026-10-19",
-   "change": "missing",
-   "lastSeen": "2026-10-19T12:37:26-04:00"
-  },
-  {
-   "id": "933b2c99e74e",
-   "title": "Trystan Bates",
-   "date": "2026-10-19",
-   "change": "missing",
-   "lastSeen": "2026-10-18T18:35:15-04:00"
-  },
-  {
-   "id": "04ca1d781c09",
-   "title": "Kathleen Schneider",
-   "date": "2026-10-19",
-   "change": "missing",
-   "lastSeen": "2026-10-18T18:35:15-04:00"
-  },
   {
    "id": "2207bb57db0a",
    "title": "Empowerment Self-Defense (Student Session)",
@@ -2457,11 +2415,32 @@
    "lastSeen": "2026-10-18T09:31:18-04:00"
   },
   {
+   "id": "ac29935ef083",
+   "title": "Trystan Bates",
+   "date": "2026-10-20",
+   "change": "missing",
+   "lastSeen": "2026-10-19T19:55:38-04:00"
+  },
+  {
+   "id": "ef67946e8ac3",
+   "title": "Kathleen Schneider",
+   "date": "2026-10-20",
+   "change": "missing",
+   "lastSeen": "2026-10-19T19:55:38-04:00"
+  },
+  {
    "id": "c59be5a2f611",
    "title": "CS Crew Presents: Eli Smith, BETA Technologies",
    "date": "2026-10-21",
    "change": "missing",
    "lastSeen": "2026-10-18T18:35:15-04:00"
+  },
+  {
+   "id": "89fe1d0a2a7b",
+   "title": "Trivia @ Citizen Cider",
+   "date": "2026-10-21",
+   "change": "missing",
+   "lastSeen": "2026-10-19T19:55:38-04:00"
   },
   {
    "id": "c5df1fce68e7",
@@ -2488,8 +2467,7 @@
    "id": "07d91732d3fd",
    "title": "Minecraft Meet-up",
    "date": "2026-10-22",
-   "change": "missing",
-   "lastSeen": "2026-10-17T09:09:14-04:00"
+   "change": "dropped"
   },
   {
    "id": "92f8f6e3278d",
@@ -2551,8 +2529,7 @@
    "id": "a80c9bb7a4f1-2030",
    "title": "Sam Jay",
    "date": "2026-10-23",
-   "change": "missing",
-   "lastSeen": "2026-10-17T09:09:14-04:00"
+   "change": "dropped"
   },
   {
    "id": "df13443c29a1",
@@ -2639,6 +2616,13 @@
    "lastSeen": "2026-10-18T18:35:15-04:00"
   },
   {
+   "id": "deb149a0a00a",
+   "title": "Condom Craft Night",
+   "date": "2026-10-26",
+   "change": "missing",
+   "lastSeen": "2026-10-19T19:55:38-04:00"
+  },
+  {
    "id": "dc65e3a0e10a",
    "title": "Monday Night Trivia at Grazers with Burlington Beer Co.",
    "date": "2026-10-26",
@@ -2681,12 +2665,6 @@
    "lastSeen": "2026-10-18T09:31:18-04:00"
   },
   {
-   "id": "3df17270dfe2",
-   "title": "An Industry View: Dunston on Cybersecurity (CAREERtalk)",
-   "date": "2026-10-28",
-   "change": "dropped"
-  },
-  {
    "id": "bd8d86cc5e44",
    "title": "Over The Garden Wall",
    "date": "2026-10-28",
@@ -2711,8 +2689,7 @@
    "id": "ddf471ea6d81",
    "title": "Minecraft Meet-up",
    "date": "2026-10-29",
-   "change": "missing",
-   "lastSeen": "2026-10-17T09:09:14-04:00"
+   "change": "dropped"
   },
   {
    "id": "463c072759bf",
@@ -2851,8 +2828,7 @@
    "id": "619acdd842ae",
    "title": "Minecraft Meet-up",
    "date": "2026-11-05",
-   "change": "missing",
-   "lastSeen": "2026-10-17T09:09:14-04:00"
+   "change": "dropped"
   },
   {
    "id": "f4fb5f868a0b",
@@ -2921,8 +2897,7 @@
    "id": "9c04ec9681cd",
    "title": "Minecraft Meet-up",
    "date": "2026-11-12",
-   "change": "missing",
-   "lastSeen": "2026-10-17T09:09:14-04:00"
+   "change": "dropped"
   },
   {
    "id": "244315ccbc16",
@@ -2984,8 +2959,7 @@
    "id": "c8e388d5e4f9",
    "title": "Minecraft Meet-up",
    "date": "2026-11-19",
-   "change": "missing",
-   "lastSeen": "2026-10-17T09:09:14-04:00"
+   "change": "dropped"
   },
   {
    "id": "e26f73cb4fa6",
