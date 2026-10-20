@@ -1,15 +1,15 @@
 {
- "generated": "2026-10-20T10:27:53-04:00",
+ "generated": "2026-10-20T19:23:28-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
    "count": 8,
-   "seconds": 6.9
+   "seconds": 6.4
   },
   "breweries": {
    "label": "Breweries & Taprooms",
-   "count": 71,
-   "seconds": 6.2
+   "count": 75,
+   "seconds": 4.5
   },
   "brownell": {
    "label": "Brownell Library",
@@ -19,12 +19,12 @@
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
    "count": 206,
-   "seconds": 4.0
+   "seconds": 4.4
   },
   "churchst": {
    "label": "Church Street Marketplace",
    "count": 78,
-   "seconds": 1.9
+   "seconds": 1.7
   },
   "echo": {
    "label": "ECHO Leahy Center",
@@ -44,17 +44,17 @@
   "farmersmarket": {
    "label": "Burlington Farmers Market",
    "count": 2,
-   "seconds": 0.2
+   "seconds": 0.3
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
    "count": 223,
-   "seconds": 71.0
+   "seconds": 65.8
   },
   "flynn": {
    "label": "The Flynn",
    "count": 16,
-   "seconds": 0.5
+   "seconds": 0.2
   },
   "greenfc": {
    "label": "Vermont Green FC",
@@ -63,40 +63,39 @@
   },
   "helloburlington": {
    "label": "Hello Burlington",
-   "count": 623,
-   "seconds": 32.6
+   "count": 621,
+   "seconds": 32.0
   },
   "higherground": {
    "label": "Higher Ground",
    "count": 0,
    "error": "HTTP Error 403: Forbidden",
-   "staleDays": 19
+   "staleDays": 20
   },
   "instagram": {
    "label": "Instagram (Scrape Creators)",
-   "count": 0,
-   "error": "skipped by design: once-daily gate, Instagram fetches on the afternoon run only",
-   "staleDays": 0
+   "count": 1,
+   "seconds": 29.1
   },
   "loveburlington": {
    "label": "Love Burlington",
-   "count": 343,
-   "seconds": 74.3
+   "count": 395,
+   "seconds": 72.7
   },
   "meetup": {
    "label": "Meetup",
-   "count": 55,
-   "seconds": 101.2
+   "count": 53,
+   "seconds": 104.6
   },
   "monkeyhouse": {
    "label": "The Monkey House",
    "count": 20,
-   "seconds": 0.2
+   "seconds": 0.1
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
    "count": 68,
-   "seconds": 18.2
+   "seconds": 15.4
   },
   "radiobean": {
    "label": "Radio Bean",
@@ -107,17 +106,17 @@
   "sblibrary": {
    "label": "South Burlington Public Library",
    "count": 98,
-   "seconds": 2.3
+   "seconds": 2.6
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
-   "count": 17,
-   "seconds": 22.1
+   "count": 20,
+   "seconds": 20.8
   },
   "sevendays": {
    "label": "Seven Days",
-   "count": 2386,
-   "seconds": 20.7
+   "count": 2375,
+   "seconds": 2.7
   },
   "shelburnemuseum": {
    "label": "Shelburne Museum",
@@ -126,18 +125,18 @@
   },
   "uvm": {
    "label": "UVM & Colleges",
-   "count": 467,
-   "seconds": 37.9
+   "count": 477,
+   "seconds": 27.2
   },
   "uvmbored": {
    "label": "UVM Bored",
-   "count": 283,
+   "count": 291,
    "seconds": 0.3
   },
   "vcc": {
    "label": "Vermont Comedy Club",
-   "count": 54,
-   "seconds": 73.3
+   "count": 55,
+   "seconds": 75.1
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
@@ -145,57 +144,12 @@
    "seconds": 0.4
   }
  },
- "gathered": 5154,
- "afterDedup": 2524,
- "duplicatesMerged": 2630,
- "final": 2617,
- "firecrawlCalls": 5,
+ "gathered": 5218,
+ "afterDedup": 2543,
+ "duplicatesMerged": 2675,
+ "final": 2644,
+ "firecrawlCalls": 1,
  "mergeLog": [
-  {
-   "kept": {
-    "title": "Burlington Choral Society presents Voices of Change: Songs that Shaped History",
-    "source": "sevendays"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "sevendays"
-   ],
-   "date": "2026-11-21"
-  },
-  {
-   "kept": {
-    "title": "Equinox Wind Quintet",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-11-22"
-  },
-  {
-   "kept": {
-    "title": "'Very Eric Carle' Exhibit",
-    "source": "sevendays"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "sevendays"
-   ],
-   "date": "2026-11-22"
-  },
-  {
-   "kept": {
-    "title": "Celebrate Craft Holiday Show",
-    "source": "sevendays"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "helloburlington",
-    "sevendays"
-   ],
-   "date": "2026-11-22"
-  },
   {
    "kept": {
     "title": "The Vermont Choral Union: The American Mercury",
@@ -225,6 +179,7 @@
    },
    "merged_sources": [
     "fletcherfree",
+    "loveburlington",
     "sevendays"
    ],
    "date": "2026-11-23"
@@ -236,6 +191,7 @@
    },
    "merged_sources": [
     "fletcherfree",
+    "loveburlington",
     "sevendays"
    ],
    "date": "2026-11-23"
@@ -291,6 +247,7 @@
    },
    "merged_sources": [
     "fletcherfree",
+    "loveburlington",
     "sevendays"
    ],
    "date": "2026-11-24"
@@ -302,7 +259,19 @@
    },
    "merged_sources": [
     "fletcherfree",
+    "loveburlington",
     "sevendays"
+   ],
+   "date": "2026-11-24"
+  },
+  {
+   "kept": {
+    "title": "Crafters Drop-In",
+    "source": "fletcherfree"
+   },
+   "merged_sources": [
+    "fletcherfree",
+    "loveburlington"
    ],
    "date": "2026-11-24"
   },
@@ -704,6 +673,7 @@
    },
    "merged_sources": [
     "fletcherfree",
+    "loveburlington",
     "sevendays"
    ],
    "date": "2026-11-30"
@@ -715,6 +685,7 @@
    },
    "merged_sources": [
     "fletcherfree",
+    "loveburlington",
     "sevendays"
    ],
    "date": "2026-11-30"
@@ -783,6 +754,7 @@
    },
    "merged_sources": [
     "fletcherfree",
+    "loveburlington",
     "sevendays"
    ],
    "date": "2026-12-01"
@@ -794,7 +766,19 @@
    },
    "merged_sources": [
     "fletcherfree",
+    "loveburlington",
     "sevendays"
+   ],
+   "date": "2026-12-01"
+  },
+  {
+   "kept": {
+    "title": "Crafters Drop-In",
+    "source": "fletcherfree"
+   },
+   "merged_sources": [
+    "fletcherfree",
+    "loveburlington"
    ],
    "date": "2026-12-01"
   },
@@ -1432,6 +1416,7 @@
    },
    "merged_sources": [
     "fletcherfree",
+    "loveburlington",
     "sevendays"
    ],
    "date": "2026-12-07"
@@ -1489,6 +1474,7 @@
    },
    "merged_sources": [
     "fletcherfree",
+    "loveburlington",
     "sevendays"
    ],
    "date": "2026-12-08"
@@ -1500,7 +1486,19 @@
    },
    "merged_sources": [
     "fletcherfree",
+    "loveburlington",
     "sevendays"
+   ],
+   "date": "2026-12-08"
+  },
+  {
+   "kept": {
+    "title": "Crafters Drop-In",
+    "source": "fletcherfree"
+   },
+   "merged_sources": [
+    "fletcherfree",
+    "loveburlington"
    ],
    "date": "2026-12-08"
   },
@@ -2073,7 +2071,19 @@
    },
    "merged_sources": [
     "fletcherfree",
+    "loveburlington",
     "sevendays"
+   ],
+   "date": "2026-12-14"
+  },
+  {
+   "kept": {
+    "title": "Documents and Details: Raul Hilberg at 100",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
    ],
    "date": "2026-12-14"
   },
@@ -2118,6 +2128,7 @@
    },
    "merged_sources": [
     "fletcherfree",
+    "loveburlington",
     "sevendays"
    ],
    "date": "2026-12-15"
@@ -2129,7 +2140,19 @@
    },
    "merged_sources": [
     "fletcherfree",
+    "loveburlington",
     "sevendays"
+   ],
+   "date": "2026-12-15"
+  },
+  {
+   "kept": {
+    "title": "Crafters Drop-In",
+    "source": "fletcherfree"
+   },
+   "merged_sources": [
+    "fletcherfree",
+    "loveburlington"
    ],
    "date": "2026-12-15"
   },
@@ -2271,18 +2294,6 @@
   },
   {
    "kept": {
-    "title": "Katelyn Tarver",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-12-17"
-  },
-  {
-   "kept": {
     "title": "UPB Game Night",
     "source": "uvm"
    },
@@ -2394,11 +2405,25 @@
  ],
  "changes": [
   {
+   "id": "1cc180c001cf",
+   "title": "Burlington Bitcoin Meetup - @ Zero Gravity",
+   "date": "2026-10-20",
+   "change": "missing",
+   "lastSeen": "2026-10-20T10:27:53-04:00"
+  },
+  {
    "id": "2207bb57db0a",
    "title": "Empowerment Self-Defense (Student Session)",
    "date": "2026-10-20",
    "change": "missing",
    "lastSeen": "2026-10-18T09:31:18-04:00"
+  },
+  {
+   "id": "0071dcaabd49",
+   "title": "5K Run @ BBCO",
+   "date": "2026-10-20",
+   "change": "missing",
+   "lastSeen": "2026-10-20T10:27:53-04:00"
   },
   {
    "id": "9ed6836cb36c",
@@ -2427,6 +2452,13 @@
    "date": "2026-10-20",
    "change": "missing",
    "lastSeen": "2026-10-19T19:55:38-04:00"
+  },
+  {
+   "id": "2ce5bc63105a",
+   "title": "How Courts are Discussed in US Elections: Noise or Silence? ft. Lisa Holmes, Political Science",
+   "date": "2026-10-21",
+   "change": "missing",
+   "lastSeen": "2026-10-20T10:27:53-04:00"
   },
   {
    "id": "c59be5a2f611",
@@ -2464,10 +2496,18 @@
    "lastSeen": "2026-10-18T18:35:15-04:00"
   },
   {
-   "id": "07d91732d3fd",
-   "title": "Minecraft Meet-up",
+   "id": "23d63b8b3722",
+   "title": "Lincoln Sprague",
    "date": "2026-10-22",
-   "change": "dropped"
+   "change": "missing",
+   "lastSeen": "2026-10-20T10:27:53-04:00"
+  },
+  {
+   "id": "109f20eb28c9",
+   "title": "Laura Fedele-Rasco",
+   "date": "2026-10-22",
+   "change": "missing",
+   "lastSeen": "2026-10-20T10:27:53-04:00"
   },
   {
    "id": "92f8f6e3278d",
@@ -2477,11 +2517,25 @@
    "lastSeen": "2026-10-18T09:31:18-04:00"
   },
   {
+   "id": "0df465a9e258",
+   "title": "Dead Gowns, Helenor, Paper Castles",
+   "date": "2026-10-22",
+   "change": "missing",
+   "lastSeen": "2026-10-20T10:27:53-04:00"
+  },
+  {
    "id": "4f55d0ca60e7",
    "title": "The Williston One Acts 2026",
    "date": "2026-10-22",
    "change": "missing",
    "lastSeen": "2026-10-18T09:31:18-04:00"
+  },
+  {
+   "id": "994a2861105f",
+   "title": "Two Sev, JP Black, Rubi, Chaston",
+   "date": "2026-10-22",
+   "change": "missing",
+   "lastSeen": "2026-10-20T10:27:53-04:00"
   },
   {
    "id": "8b04c251576a",
@@ -2505,6 +2559,20 @@
    "lastSeen": "2026-10-18T09:31:18-04:00"
   },
   {
+   "id": "b3adb69ee5e2",
+   "title": "Sibling Reverie",
+   "date": "2026-10-23",
+   "change": "missing",
+   "lastSeen": "2026-10-20T10:27:53-04:00"
+  },
+  {
+   "id": "9ef052bb62f5",
+   "title": "Two Sev, Lucky Luc, Ron Stoppable, Burly Bear, Xavier",
+   "date": "2026-10-23",
+   "change": "missing",
+   "lastSeen": "2026-10-20T10:27:53-04:00"
+  },
+  {
    "id": "a45bb3ed21dd",
    "title": "Witch's Apothecary Adventure Dinner",
    "date": "2026-10-23",
@@ -2524,12 +2592,6 @@
    "date": "2026-10-23",
    "change": "missing",
    "lastSeen": "2026-10-18T09:31:18-04:00"
-  },
-  {
-   "id": "a80c9bb7a4f1-2030",
-   "title": "Sam Jay",
-   "date": "2026-10-23",
-   "change": "dropped"
   },
   {
    "id": "df13443c29a1",
@@ -2616,13 +2678,6 @@
    "lastSeen": "2026-10-18T18:35:15-04:00"
   },
   {
-   "id": "deb149a0a00a",
-   "title": "Condom Craft Night",
-   "date": "2026-10-26",
-   "change": "missing",
-   "lastSeen": "2026-10-19T19:55:38-04:00"
-  },
-  {
    "id": "dc65e3a0e10a",
    "title": "Monday Night Trivia at Grazers with Burlington Beer Co.",
    "date": "2026-10-26",
@@ -2684,12 +2739,6 @@
    "date": "2026-10-29",
    "change": "missing",
    "lastSeen": "2026-10-18T18:35:15-04:00"
-  },
-  {
-   "id": "ddf471ea6d81",
-   "title": "Minecraft Meet-up",
-   "date": "2026-10-29",
-   "change": "dropped"
   },
   {
    "id": "463c072759bf",
@@ -2804,6 +2853,13 @@
    "lastSeen": "2026-10-18T09:31:18-04:00"
   },
   {
+   "id": "b355aa33aa99",
+   "title": "Therapy Dog Mick Visit",
+   "date": "2026-11-04",
+   "change": "missing",
+   "lastSeen": "2026-10-20T10:27:53-04:00"
+  },
+  {
    "id": "4d7b5079393c",
    "title": "Dr. Mel Houser",
    "date": "2026-11-04",
@@ -2825,12 +2881,6 @@
    "lastSeen": "2026-10-18T09:31:18-04:00"
   },
   {
-   "id": "619acdd842ae",
-   "title": "Minecraft Meet-up",
-   "date": "2026-11-05",
-   "change": "dropped"
-  },
-  {
    "id": "f4fb5f868a0b",
    "title": "Trivia Night",
    "date": "2026-11-05",
@@ -2843,13 +2893,6 @@
    "date": "2026-11-05",
    "change": "source-down",
    "lastSeen": "2026-10-07T20:24:11-04:00"
-  },
-  {
-   "id": "c93795f9be9e",
-   "title": "Power Hour Cycling Class",
-   "date": "2026-11-06",
-   "change": "missing",
-   "lastSeen": "2026-10-19T12:37:26-04:00"
   },
   {
    "id": "ff9ac1418203",
@@ -2892,12 +2935,6 @@
    "date": "2026-11-12",
    "change": "missing",
    "lastSeen": "2026-10-18T18:35:15-04:00"
-  },
-  {
-   "id": "9c04ec9681cd",
-   "title": "Minecraft Meet-up",
-   "date": "2026-11-12",
-   "change": "dropped"
   },
   {
    "id": "244315ccbc16",
@@ -2954,12 +2991,6 @@
    "date": "2026-11-18",
    "change": "missing",
    "lastSeen": "2026-10-18T09:31:18-04:00"
-  },
-  {
-   "id": "c8e388d5e4f9",
-   "title": "Minecraft Meet-up",
-   "date": "2026-11-19",
-   "change": "dropped"
   },
   {
    "id": "e26f73cb4fa6",
@@ -3072,6 +3103,13 @@
    "date": "2026-12-17",
    "change": "missing",
    "lastSeen": "2026-10-18T09:31:18-04:00"
+  },
+  {
+   "id": "187ad242cff1",
+   "title": "Katelyn Tarver",
+   "date": "2026-12-17",
+   "change": "missing",
+   "lastSeen": "2026-10-20T10:27:53-04:00"
   }
  ]
 }
