@@ -11072,6 +11072,18 @@ async function sectionPills(browser, base) {
       corners: [[0, 0], [c.width - 1, 0], [0, c.height - 1], [c.width - 1, c.height - 1]].map(([a, b]) => x.getImageData(a, b, 1, 1).data[3]) };
   });
   const near = (rgb, hex, tol = 40) => { const h = hex.trim().replace('#', ''); const t = [0, 2, 4].map((i) => parseInt(h.slice(i, i + 2), 16)); return !!rgb && rgb.every((v, i) => Math.abs(v - t[i]) <= tol); };
+  /* the water after it has settled. A pour churns, laps and floats bubbles and white
+     crests over the fill for a few seconds, so a single read can land on a bubble
+     ([111,173,180] over Local's teal once). Tell the water the reader has gone quiet
+     (liquid.js _rest), then read until the on segment is poured water of the wanted
+     colour, up to 6s; what comes back is the last read, so a real mismatch still fails. */
+  const settledWater = async (page, tone) => {
+    await page.evaluate(() => import('/all-day/js/liquid.js').then((m) => m._rest()));
+    let w = await water(page);
+    const t0 = Date.now();
+    while (!(w.canvas && near(w.rgb, tone) && w.alpha.every((a, i) => (i === w.on ? a > 200 : a < 20))) && Date.now() - t0 < 6000) { await page.waitForTimeout(150); w = await water(page); }
+    return w;
+  };
   const onKey = (page) => page.$eval('#subnav .secpill .chip.on', (b) => b.dataset.chip).catch(() => null);
   const panelSel = (tab) => '#panel-' + tab;
 
@@ -11096,7 +11108,7 @@ async function sectionPills(browser, base) {
       check(look.h >= 36 && look.h <= 42 && look.h < wireH && look.fs === '14px', tab + ': a compact pill, ' + Math.round(look.h) + 'px tall with 14px words (the Wire’s is ' + Math.round(wireH) + ')', JSON.stringify(look));
       check(/blur/.test(look.glass) && /rgba\(0, 0, 0, 0\)|transparent/.test(look.mastBg) && look.keep, tab + ': glass, floating over the paper, and it stays as the mast steps away', JSON.stringify(look));
       check(look.group === 'group' && !!look.label && look.docW <= look.vw, tab + ': a labelled group, and nothing scrolls the page sideways', JSON.stringify(look));
-      const w = await water(page);
+      const w = await settledWater(page, look.tone);
       check(w.liquid && w.canvas && w.on >= 0 && w.alpha.every((a, i) => (i === w.on ? a > 200 : a < 20)) && w.corners.every((a) => a === 0), tab + ': the one on sits in poured water, inside the pill', JSON.stringify(w));
       check(near(w.rgb, look.tone), tab + ': the water is the tab’s own ' + token + ' (' + look.tone + ')', JSON.stringify(w.rgb));
       const onBg = await page.$eval('#subnav .secpill .chip.on', (b) => getComputedStyle(b).backgroundColor);
