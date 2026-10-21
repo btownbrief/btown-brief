@@ -137,7 +137,7 @@ function seeded(seed) {
 
 export function createBuilding(K) {
   let T = K.S.town;
-  let ver = 1, t = 0;
+  let ver = 1, vBase = 1, vWork = 1, t = 0;   // ver: the state; vBase / vWork: the two cached layers
   const local = new Set();     // ids completed on this phone, ahead of the town
   const claims = new Map();    // id -> Set(who)
   const partial = new Map();   // id -> amount 0..1 (kept when released: the half-done piece stays)
@@ -334,7 +334,7 @@ export function createBuilding(K) {
     let c = claims.get(id);
     if (!c) { c = new Set(); claims.set(id, c); }
     if (c.has(who)) return true;
-    if (c.size >= p.crew) return false;
+    if (c.size >= p.crew || (s.key !== 'top' && !c.size && ahead() >= LOCAL_CAP)) { if (!c.size) claims.delete(id); return false; }
     c.add(who);
     return true;
   }
@@ -352,12 +352,13 @@ export function createBuilding(K) {
   function complete(id) {
     const s = st(), p = byId.get(id);
     if (!p || p.floor !== s.key || s.done.has(id)) return false;
-    local.add(id); claims.delete(id); partial.delete(id); ver++; save();
+    local.add(id); claims.delete(id); partial.delete(id); ver++; vWork++; save();
+    if (s.key === 'top') vBase++;          // the roof crew's scaffold comes down when the last panel is in
     K.emit('piece', { id, part: p.part, x: p.at[0], y: p.at[1] });
     return true;
   }
 
-  let prev = null, sig = '';
+  let prev = null, sigB = '', sigW = '';
   function setTown(tt) {
     T = tt;
     const now = { f: T.floors_done | 0, p: T.floor_progress || 0, topped: topped() };
@@ -384,8 +385,9 @@ export function createBuilding(K) {
     /* re-render only when what's drawn changes (the piece in progress is drawn live) */
     const L = listFor(key), P = key === 'top' ? 0 : clamp(T.floor_progress || 0, 0, 1);
     let n = 0; for (const p of L) if (p.c1 <= P + 1e-9) n++;
-    const ns = key + ':' + n + ':' + (T.windows_lit | 0) + ':' + floors();
-    if (ns !== sig) { sig = ns; ver++; }
+    const nb = key + ':' + (T.windows_lit | 0) + ':' + floors(), nw = key + ':' + n + ':' + floors();
+    if (nb !== sigB) { sigB = nb; ver++; vBase++; vWork++; }
+    if (nw !== sigW) { sigW = nw; ver++; vWork++; }
   }
 
   /* --------------------------------------------------------- colours */
@@ -853,6 +855,7 @@ export function createBuilding(K) {
       g.fillStyle = nt ? C.glassNight : C.glassDark; g.fillRect(bay.x, top + dy, bay.w, h);
       g.fillStyle = nt ? mix(C.winLitDeep, C.glassNight, 0.6) : C.glass; g.globalAlpha = 0.6; g.fillRect(bay.x + 1, top + dy, 0.6, h); g.fillRect(bay.x + 3.4, top + dy, 0.35, h); g.globalAlpha = 1;
       g.fillStyle = C.charDark; g.fillRect(bay.x, top + dy, bay.w, 0.5); g.fillRect(bay.x + bay.w / 2 - 0.15, top + dy, 0.3, h);
+      if (nt && a >= 1) { g.fillStyle = rgba(C.winLit, 0.35); g.fillRect(bay.x + 0.8, top + h * 0.35, bay.w - 1.6, 1.2); }   // the stair light
       g.restore();
       return;
     }
@@ -1098,28 +1101,19 @@ export function createBuilding(K) {
 
   /* --------------------------------------------------------- the cached layer */
   let lights = [];
-  function paint(g) {
-    const s = st(), done = (id) => s.done.has(id), F = s.F;
+  /* Two cached layers: the base (the ground once it's done, the finished floors, the roof, the
+     scaffold) changes only when a floor finishes, the light changes or a post lights a window;
+     the work strip (the floor going up, or the foundation) re-renders when a piece is finished. */
+  function paintBase(g) {
+    const s = st(), F = s.F;
     cols();
     const lit = litSet(s.fin);
     lights = [];
     g.lineCap = 'butt'; g.lineJoin = 'round';
-    /* ground: the lot, then whatever the foundation has become */
-    if (s.key === 0) drawFoundation(g, done);
-    else drawFoundation(g, () => true);
-    /* floors already built */
+    if (s.key !== 0) drawFoundation(g, () => true);
     if (cut) drawCut(g, s.fin);
     else { for (let f = 0; f < s.fin; f++) drawFloorDone(g, f, F, lit); shellOutline(g, s.fin); }
-    /* the floor going up: rooms under the new deck first, then the pieces in building order */
-    if (s.key !== 'top') {
-      const f = s.key;
-      for (let b = 0; b < NB; b++) if (done('f' + f + ':deck' + b)) drawRoom(g, f, b);
-      for (const p of s.list.drawOrder) if (p.rank >= 10 && p.rank < 30 && s.done.has(p.id)) drawPiece(g, p, 1, F);
-      if (s.fin > 0) snowCap(g, X0, floorBottom(s.fin) - 0.2, X1 - X0);
-    } else {
-      drawRoof(g, F);
-      for (const p of s.list) if (p.part === 'solar' && s.done.has(p.id)) drawSolar(g, p.i, 1, F);
-    }
+    if (s.key === 'top') drawRoof(g, F);
     if (s.scaffold) drawScaffold(g, s.work);
     /* night: every lit window is a little light */
     if (C.night > 0.3 && !cut) {
@@ -1130,6 +1124,25 @@ export function createBuilding(K) {
     }
     if (C.night > 0.3 && s.scaffold) for (const x of LAMPS) lights.push({ x, y: floorBottom(s.work) - 6, r: 22, a: 0.32, color: C.lampGlow });
     if (cut) for (const l of cutGlow) lights.push(l);
+  }
+  function paintWork(g) {
+    const s = st(), done = (id) => s.done.has(id), F = s.F;
+    cols();
+    g.lineCap = 'butt'; g.lineJoin = 'round';
+    if (s.key === 0) drawFoundation(g, done);
+    if (s.key !== 'top') {
+      const f = s.key;
+      for (let b = 0; b < NB; b++) if (done('f' + f + ':deck' + b)) drawRoom(g, f, b);
+      for (const p of s.list.drawOrder) if (p.rank >= 10 && p.rank < 30 && s.done.has(p.id)) drawPiece(g, p, 1, F);
+      if (s.fin > 0) snowCap(g, X0, floorBottom(s.fin) - 0.2, X1 - X0);
+    } else for (const p of s.list) if (p.part === 'solar' && s.done.has(p.id)) drawSolar(g, p.i, 1, F);
+  }
+  function workRegion() {
+    const s = st(), x = X0 - 6, w = X1 - X0 + 9;
+    if (s.key === 'top') { const y = floorBottom(s.F) - 6; return [x, y, w, 7]; }
+    if (s.key === 0) { const y = floorBottom(1) - 3; return [LOT0 - 2, y, LOT1 - LOT0 + 4, GY + 13 - y]; }
+    const y = floorBottom(s.key + 1) - 2;
+    return [x, y, w, floorBottom(s.key) + 1 - y];
   }
   function drawPiece(g, p, a, F) {
     switch (p.part) {
@@ -1182,7 +1195,9 @@ export function createBuilding(K) {
     const s = st();
     cols();
     const [x, y, w, h] = region();
-    K.blit('building', x, y, w, h, paint, { ver: ver * 2 + (cut ? 1 : 0) });
+    K.blit('building', x, y, w, h, paintBase, { ver: vBase });
+    const r = workRegion();
+    K.blit('building:work', r[0], r[1], r[2], r[3], paintWork, { ver: vWork });
     const L = liveList();
     for (let i = 0; i < L.length; i += 3) {
       const p = L[i];
@@ -1204,7 +1219,7 @@ export function createBuilding(K) {
   const paintStreet = (g) => { const s = st(); cols(); for (const p of s.list) if (p.rank >= 30 && s.done.has(p.id)) drawPiece(g, p, 1, s.F); };
   const streetItem = { y: GY + 8.5, draw: (ctx) => {
     const s = st();
-    K.blit('building:street', LOT0 - 2, GY - 6, LOT1 - LOT0 + 4, 17, paintStreet, { ver });
+    K.blit('building:street', LOT0 - 2, GY - 6, LOT1 - LOT0 + 4, 17, paintStreet, { ver: vWork });
     const L = liveList();
     for (let i = 0; i < L.length; i += 3) if (L[i].rank >= 30) { if (L[i + 2] < 1) ctx.globalAlpha = L[i + 2]; drawPiece(ctx, L[i], L[i + 1], s.F); ctx.globalAlpha = 1; }
   } };
@@ -1225,7 +1240,7 @@ export function createBuilding(K) {
 
   return {
     setTown, stage, jobs, claim, release, work, complete, draw, collect, topY, levelY, ladder,
-    cutaway(on, m) { const c = !!on, mm = Math.round(+m || 0); if (c !== cut || (c && mm !== yourMin)) { cut = c; yourMin = mm; ver++; } },
+    cutaway(on, m) { const c = !!on, mm = Math.round(+m || 0); if (c !== cut || (c && mm !== yourMin)) { cut = c; yourMin = mm; ver++; vBase++; } },
     step(dt) { t += dt; },
     hoist() { const s = st(); return s.scaffold ? { x: HOIST_X + 2.9, y: floorBottom(s.work) } : null; },
     liftTarget() {
