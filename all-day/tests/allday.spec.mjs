@@ -788,6 +788,19 @@ async function theWire(browser, base) {
     check(/^Updated \d{1,2}:\d{2} [ap]m$/.test(h0.sub), 'its line says when the paper last updated', h0.sub);
     await page.screenshot({ path: path.join(SHOTS, 'live-wire-today.png') });
 
+    /* the day and Local / Everything share one row at 390: today's day shows
+       whole, and even a word far longer than "Wednesday" never pushes the
+       switch off the screen (2026-10-21: "Wednesday, Oct 21" did, by 4px) */
+    const dayRow = await page.evaluate(() => {
+      const p = document.querySelector('#panel-wire'), t = p.querySelector('.wband-top .wday .t'), sw = p.querySelector('.wband-top .localsw');
+      const whole = t.scrollWidth <= t.clientWidth + 1, kept = t.innerHTML;
+      t.querySelectorAll('span').forEach((x) => { x.textContent = 'Supercalifragilisticexpialidociousday, Oct 21'; });
+      const r = { whole, sw: Math.round(sw.getBoundingClientRect().right), edge: Math.round(p.getBoundingClientRect().right), over: p.scrollWidth - p.clientWidth };
+      t.innerHTML = kept;
+      return r;
+    });
+    check(dayRow.whole && dayRow.sw <= dayRow.edge && dayRow.over <= 1, 'the day shows whole beside Local / Everything, and a longer one never pushes it off', JSON.stringify(dayRow));
+
     /* under the mast, News · Photos · Square as a floating pill; the day and
        Local / Everything wait, hidden, to float under it (Stephen, 2026-10-19) */
     const chrome = await page.evaluate(() => {

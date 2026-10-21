@@ -1566,9 +1566,9 @@ body.wire-float .wfloat { opacity: 1; visibility: visible; transform: none; tran
 /* the day: ‹ Monday, October 19 ›, as tall as the Local / Everything
    pill. The way back is green and nudges gently toward yesterday (Stephen:
    "they should know: just go to yesterday's"); still under reduced motion. */
-.wday { flex: 0 0 auto; display: inline-flex; align-items: center; height: 40px; border-radius: var(--r-pill);
+.wday { flex: 0 1 auto; min-width: 0; display: inline-flex; align-items: center; height: 40px; border-radius: var(--r-pill);
   border: 1px solid var(--line-soft); background: var(--paper-2); }
-.wday .t { padding: 0 2px; font-size: var(--fs-button); font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.wday .t { min-width: 0; padding: 0 2px; font-size: var(--fs-button); font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .wday .t .d-m, .wday .t .d-s { display: none; }
 .wday-nav { position: relative; flex: 0 0 auto; width: 34px; height: 38px; display: inline-flex; align-items: center; justify-content: center;
   border-radius: var(--r-pill); color: var(--local); }
@@ -1586,6 +1586,9 @@ body.wire-float .wfloat { opacity: 1; visibility: visible; transform: none; tran
 .wband-top .localsw-half, .wfloat .localsw-half { padding: 0 10px; }
 @media (max-width: 429px) { .wday .t .d-l { display: none; } .wday .t .d-m { display: inline; } }
 @media (max-width: 379px) { .wday .t .d-m { display: none; } .wday .t .d-s { display: inline; } }
+/* wire.js fitDay: the day's own width picks the form when the breakpoint's is too long */
+.wday[data-fit] .t > span { display: none; }
+.wday[data-fit="m"] .t .d-m, .wday[data-fit="s"] .t .d-s { display: inline; }
 
 /* the banner at the top of the paper: the day and Local / Everything, the
    chips (each row scrolls sideways; .wrap lays them all out), then
