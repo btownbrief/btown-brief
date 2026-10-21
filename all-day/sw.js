@@ -13,7 +13,7 @@
    audio — episodes are large and the browser's own HTTP cache handles them
    better than we would. */
 
-const VERSION = 'all-day-v87';   // batch merge
+const VERSION = 'all-day-v89';   // The Build: the v2 job site
 const SHELL = VERSION + '-shell';
 const DATA = 'all-day-data';   // unversioned on purpose: survives shell bumps
 
@@ -25,7 +25,7 @@ const SHELL_URLS = [
   './js/modes/people.js', './js/modes/whatnow.js', './js/modes/vintage.js', './js/modes/habits.js',
   './js/modes/onair.js', './js/modes/games.js',
   /* The Build: the tab, its API (live, this phone, the demo) and the site */
-  './js/modes/build.js', './js/build-core.js', './js/build-local.js', './js/build-fake.js', './js/build-site.js',
+  './js/modes/build.js', './js/build-core.js', './js/build-local.js', './js/build-fake.js', './js/build-site.js', './js/build-site-shared.js', './js/build-site-art.js', './js/build-site-world.js', './js/build-site-building.js', './js/build-site-crew.js', './js/build-site-director.js',
   './data/build-foreman.json', './data/build-config.json', './data/build-starters.json',
   /* What Now's engine and its feeds' loader, imported by modes/whatnow.js */
   './js/whatnow-engine.js', './js/whatnow-data.js', './js/sun.js',
