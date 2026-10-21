@@ -10,7 +10,7 @@
        drawSky(ctx)                   screen space (identity transform), fills the whole canvas
        drawBackdrop(ctx)              world space: mountains, lake, far shore, rail-line trees (cached, parallax)
        drawWeather(ctx)               world space: rain, snow, fog over the view
-       drawLights(ctx)                world space: night glows (work lights, windows bloom); called last
+       drawLights(ctx)                world space: night glows; paints every K.lights entry ({x,y,r,a,color?}) plus its own; called last
        figure(ctx, x, y, o)           a person, feet at (x, y). o = {
                                         pose: one of POSES (shared), t: seconds into the pose (drives cycles),
                                         facing: 1 | -1 | 0 (0 = facing you), colors: colorsFor(id, look),

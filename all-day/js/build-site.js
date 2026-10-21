@@ -79,6 +79,8 @@ export function createSite(canvas, opts = {}) {
        pal      lit colours by BASE name (set by art)
        gen      bumps when zoom or light changes (caches re-render)
        moment(x, y, seconds)   a milestone moment asks for the camera (the kernel may refuse; returns bool)
+       lights   this frame's light sources: push { x, y, r, a, color? } while drawing at night
+                (work lights, lit windows, a lamp); art.drawLights() paints them last
        on/emit  a tiny event bus
        blit(...) cached layers (see below)
        R        the kernel's random source (use rng(hash(...)) for anything that must be the same on every phone) */
@@ -87,7 +89,7 @@ export function createSite(canvas, opts = {}) {
     S: { town: { total_minutes: 0, floors_done: 0, floor_progress: 0, windows_lit: 0, floors: BUILDING.floors, topped_out: false },
       you: { state: 'away', look: {}, task: null, name: null }, crew: [], whistle: false,
       sky: { sunAltitude: 30, isNight: false, weather: 'clear' }, cut: false, yourMinutes: 0 },
-    t: 0, reduced, view: { W: 180, H: 150, z: 4, dpr: 1 }, cam: { x: 330, y: 330, tx: 330, ty: 330 }, light: {}, pal: {}, gen: 0,
+    t: 0, lights: [], reduced, view: { W: 180, H: 150, z: 4, dpr: 1 }, cam: { x: 330, y: 330, tx: 330, ty: 330 }, light: {}, pal: {}, gen: 0,
     R: rng(hash('watershed') ^ (Date.now() & 0xffff)),
     clockFixed: null, shiftStartT: null,
     now() { return this.clockFixed != null ? new Date(this.clockFixed + this.t * 1000) : (opts.now ? opts.now() : new Date()); },
@@ -239,6 +241,7 @@ export function createSite(canvas, opts = {}) {
     const { z } = K.view;
     const ox = Math.round(cam.x * z), oy = Math.round(cam.y * z);
     K.camPx = { x: ox / z, y: oy / z };
+    K.lights = [];
     ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.imageSmoothingEnabled = true;
     K.art.drawSky(ctx);                                   // screen space
