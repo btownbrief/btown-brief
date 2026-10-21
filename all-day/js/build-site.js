@@ -396,12 +396,18 @@ export function createSite(canvas, opts = {}) {
       return { frames: stats.frames, avgMs: stats.frames ? stats.total / stats.frames : 0, tickMs: stats.ticks ? stats.tick / stats.ticks : 0,
         p50: pct(0.5), p95: pct(0.95), maxMs: stats.max, size: [Math.round(K.view.W), Math.round(K.view.H)], town: { ...K.S.town }, z: +K.view.z.toFixed(2),
         cam: [Math.round(cam.x), Math.round(cam.y)], agents: K.crew.count ? K.crew.count() : 0, running: !!raf, cachePx: cachePixels,
-        crew: K.crew.debug ? K.crew.debug() : null, you: K.crew.youPos ? K.crew.youPos() : null,
+        /* crew: [id, x, y, state, act|'gone'] for each figure (the v1 shape the tab and tests read); crewDebug: everything */
+        crew: crewRows(), crewDebug: K.crew.debug ? K.crew.debug() : null, you: K.crew.youPos ? K.crew.youPos() : null,
         story: K.director.debug ? K.director.debug() : null, stage: K.building.stage ? K.building.stage() : null,
         following: follow ? follow.id : null, moment: !!mom };
     },
     resetStats() { stats.frames = 0; stats.total = 0; stats.max = 0; stats.samples = []; stats.tick = 0; stats.ticks = 0; },
   };
+  function crewRows() {
+    const d = K.crew.debug ? K.crew.debug() : null;
+    const list = d && Array.isArray(d.agents) ? d.agents : [];
+    return list.filter((a) => !a.hidden).map((a) => [a.id, a.x, a.y, a.state, a.gone ? 'gone' : (a.act || a.pose || '-')]);
+  }
   layout();
   start();
   return api;

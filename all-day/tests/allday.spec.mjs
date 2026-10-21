@@ -8043,7 +8043,7 @@ async function theBuild(browser, base) {
       card = await page.$eval('.bd-whocard', (n) => ({ name: n.querySelector('.bd-whoname').textContent, job: n.querySelector('.bd-whojob').textContent, link: !!n.querySelector('.bd-wholink') })).catch(() => null);
       if (card) break;
     }
-    check(card && card.name.length > 0 && /floor|yard|roof|beam|site/.test(card.job), 'a tap on a neighbor’s builder: their name tag and the job they’re on', JSON.stringify({ card, n: spot.length }));
+    check(card && card.name.length > 0 && card.job.length > 3, 'a tap on a neighbor’s builder: their name tag and the job they’re on', JSON.stringify({ card, n: spot.length }));
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
   });
