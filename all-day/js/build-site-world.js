@@ -65,6 +65,9 @@ export const EXTRA_SPOTS = {
 };
 
 const SIDEWALK_Y = 501.2, BIKE_Y = 506.6;
+/* the far side (a tall phone sees it): far curb, the verge, the bike path */
+const FAR_CURB = STREET_Y + 16.2, VERGE_Y = FAR_CURB + 11, PATH_Y0 = FAR_CURB + 18, PATH_Y1 = FAR_CURB + 25;
+const PATH_E = (PATH_Y0 + PATH_Y1) / 2 - 1.2, PATH_W = (PATH_Y0 + PATH_Y1) / 2 + 2.2;
 const FENCE_END = 722;
 const MURAL_X0 = 409, MURAL_N = 14, MURAL_W = 8.2;
 const ALIAS = { beam: 'lumber', formwork: 'lumber', panel: 'panels', bricks: 'brick', pane: 'glass', spool: 'copper', stake: 'stakes' };
@@ -276,14 +279,60 @@ export function createWorld(K) {
       g.fillStyle = rgba(pal.snowShade, 0.5);
       for (const ty of [sy + 3.4, sy + 7.3, sy + 12.4, sy + 14]) g.fillRect(x0, ty, w, 0.6);
     }
-    /* far curb, far sidewalk, lawn, the bike path */
-    const fs = sy + 16.2;
+    drawFarSide(g, x0, x1);
+  }
+  /* the far side of Lakeside Ave, which a tall phone shows: the far sidewalk, a grass verge, the
+     Burlington bike path, and the lawn beyond it with boulders, shrubs and flowers by season */
+  function drawFarSide(g, x0, x1) {
+    const pal = P(), sn = snowy(), s = season(), w = x1 - x0;
+    const fs = FAR_CURB;
     g.fillStyle = dark(pal.sidewalk, 0.28); g.fillRect(x0, fs, w, 0.6);
-    g.fillStyle = pal.sidewalk; g.fillRect(x0, fs + 0.6, w, 4);
-    g.fillStyle = dark(pal.sidewalk, 0.1); for (let x = Math.floor(x0 / 9) * 9 + 4; x < x1; x += 9) g.fillRect(x, fs + 0.6, 0.25, 4);
-    g.fillStyle = sn ? pal.snow : pal.grass; g.fillRect(x0, fs + 4.6, w, WH - fs);
-    g.fillStyle = sn ? pal.snowShade : lit('#b9b2a4'); g.fillRect(x0, fs + 12, w, 5);
-    g.fillStyle = sn ? pal.snow : lit('#e8e2d0'); for (let x = Math.floor(x0 / 8) * 8; x < x1; x += 8) g.fillRect(x, fs + 14.3, 3.5, 0.35);
+    g.fillStyle = pal.sidewalk; g.fillRect(x0, fs + 0.6, w, 4.4);
+    g.fillStyle = dark(pal.sidewalk, 0.1); for (let x = Math.floor(x0 / 9) * 9 + 4; x < x1; x += 9) g.fillRect(x, fs + 0.6, 0.25, 4.4);
+    g.fillStyle = light(pal.sidewalk, 0.2); g.fillRect(x0, fs + 0.6, w, 0.35);
+    /* the verge and the lawn */
+    const lawn = sn ? pal.snow : pal.grass;
+    const grad = g.createLinearGradient(0, fs + 5, 0, WH);
+    grad.addColorStop(0, sn ? pal.snowShade : pal.grassDark); grad.addColorStop(0.12, lawn); grad.addColorStop(1, sn ? light(pal.snow, 0.1) : mix(lawn, pal.treeLight, 0.3));
+    g.fillStyle = grad; g.fillRect(x0, fs + 5, w, WH - fs - 5);
+    for (let cx = Math.floor(x0 / 5); cx <= Math.ceil(x1 / 5); cx++) {
+      const r = rng(hash('fl' + cx));
+      for (let k = 0; k < 5; k++) {
+        const x = cx * 5 + r() * 5, y = fs + 6 + r() * (WH - fs - 7);
+        if (y > PATH_Y0 - 1 && y < PATH_Y1 + 1) continue;
+        g.strokeStyle = sn ? pal.snowShade : r() < 0.5 ? pal.grassDark : light(pal.grass, 0.18); g.lineWidth = 0.3;
+        g.beginPath(); g.moveTo(x, y); g.lineTo(x - 0.3, y - 0.9); g.moveTo(x + 0.4, y); g.lineTo(x + 0.6, y - 0.8); g.stroke();
+        /* wildflowers in spring and summer, fallen leaves in the fall */
+        if (!sn && r() < 0.18) {
+          const c = s === 'fall' || s === 'late' ? [pal.autumnA, pal.autumnB][(cx + k) % 2] : s === 'summer' || s === 'spring' ? [lit('#f4f1e8'), lit('#f2c230'), lit('#c98ad8'), lit('#ff8aa8')][(cx + k) % 4] : null;
+          if (c) { g.fillStyle = c; g.beginPath(); g.arc(x + 0.8, y - 0.6, 0.38, 0, 6.3); g.fill(); }
+        }
+      }
+    }
+    /* the bike path: paved, a dashed yellow centre line, soft edges */
+    g.fillStyle = sn ? light(pal.snowShade, 0.25) : mix(pal.asphalt, pal.sidewalk, 0.35);
+    g.fillRect(x0, PATH_Y0, w, PATH_Y1 - PATH_Y0);
+    g.fillStyle = sn ? pal.snowShade : dark(pal.grassDark, 0.1); g.fillRect(x0, PATH_Y0 - 0.4, w, 0.5); g.fillRect(x0, PATH_Y1 - 0.1, w, 0.5);
+    if (!sn) { g.fillStyle = pal.lane; for (let x = Math.floor(x0 / 7) * 7; x < x1; x += 7) g.fillRect(x, (PATH_Y0 + PATH_Y1) / 2 - 0.15, 3.4, 0.3); }
+    else { g.fillStyle = rgba(pal.snowShade, 0.8); g.fillRect(x0, PATH_Y0 + 1.4, w, 0.6); g.fillRect(x0, PATH_Y1 - 2, w, 0.6); }
+    /* a post-and-rope fence along the far edge of the lawn */
+    const fy2 = PATH_Y1 + 19;
+    g.strokeStyle = sn ? pal.snowShade : lit('#c9b48a'); g.lineWidth = 0.35;
+    g.beginPath(); for (let x = Math.floor(x0 / 12) * 12; x < x1 + 12; x += 12) { g.moveTo(x, fy2 - 3); g.quadraticCurveTo(x + 6, fy2 - 1.6, x + 12, fy2 - 3); } g.stroke();
+    for (let x = Math.floor(x0 / 12) * 12; x < x1 + 12; x += 12) { box(g, x - 0.5, fy2 - 4, 1, 4.2, pal.timberShade, 0.3, { lw: 0.25, shade: false }); if (sn) snowCap(g, x - 0.6, fy2 - 4, 1.2, 0.5); }
+    /* lakeshore boulders and low shrubs beyond the path */
+    for (let x = Math.floor(x0 / 23) * 23; x < x1 + 23; x += 23) {
+      const r = rng(hash('bd' + x)), bx = x + r() * 14, by = PATH_Y1 + 6 + r() * 9;
+      if (r() < 0.55) {
+        g.beginPath(); g.ellipse(bx, by, 2.6 + r() * 1.6, 1.6 + r() * 0.6, 0, Math.PI, 0); g.closePath();
+        g.fillStyle = sn ? pal.snow : lit('#9a9488'); g.fill(); ink(g, 0.3);
+        if (!sn) { g.fillStyle = rgba(pal.white, 0.25); g.beginPath(); g.ellipse(bx - 0.8, by - 1, 1, 0.4, 0, 0, 6.3); g.fill(); }
+      } else {
+        const c = sn ? pal.evergreen : s === 'fall' ? pal.autumnA : s === 'late' || s === 'bare' ? lit('#7a6a52') : pal.treeDark;
+        for (const [dx, rr] of [[0, 2.2], [2.4, 2.8], [4.8, 2]]) { g.beginPath(); g.arc(bx + dx, by, rr, Math.PI, 0); g.closePath(); g.fillStyle = c; g.fill(); ink(g, 0.3); }
+        if (sn) { g.fillStyle = pal.snow; g.fillRect(bx - 1.8, by - 2.7, 8, 0.7); }
+      }
+    }
   }
   function bikeGlyph(g, x, y, c) {
     g.strokeStyle = c; g.lineWidth = 0.3;
@@ -995,34 +1044,75 @@ export function createWorld(K) {
   }
 
   /* ------------------------------------------ the far-side foreground */
-  function drawFrontStrip(g, x0, x1, only) {
-    const pal = P(), y = STREET_Y + 19.4, s = season();
-    /* street trees on the far side: only their crowns rise into the bottom of the frame */
-    if (only !== 'lamps' && s !== 'bare' && s !== 'winter') {
-      for (let x = 30; x < WW; x += 160) {
-        const tx = x + (x > 380 && x < 560 ? 70 : 0);
-        if (tx < x0 - 14 || tx > x1 + 14) continue;
-        for (let i = 0; i < 5; i++) {
-          const dx = [-8, -3.5, 1.5, 6.5, 10][i], dy = [3, -1.2, -2.4, 0.4, 3.6][i], r = [4.6, 5.2, 5.6, 5, 4.2][i];
-          const c = s === 'fall' ? [pal.autumnA, pal.autumnB, lit('#b9893a')][(i + (x >> 5)) % 3] : s === 'late' ? [lit('#9a6a2a'), pal.autumnA][i % 2] : s === 'spring' ? [pal.treeLight, lit('#9cbf5a')][i % 2] : [pal.tree, pal.treeLight, pal.treeDark][i % 3];
-          g.beginPath(); g.arc(tx + dx, y + 3 + dy, r, 0, 6.3); g.fillStyle = c; g.fill();
-          g.save(); g.clip(); g.fillStyle = rgba(pal.white, 0.16); g.beginPath(); g.arc(tx + dx - r * 0.4, y + 3 + dy - r * 0.45, r * 0.5, 0, 6.3); g.fill(); g.restore();
-          g.beginPath(); g.arc(tx + dx, y + 3 + dy, r, 0, 6.3); ink(g, 0.35);
-        }
+  /* the far side's furniture, each its own little cache, sorted by depth with the people */
+  const LAMP_XS = [], TREE_XS = [], BENCH_XS = [180, 470, 760], LIBRARY_XS = [305, 612];
+  for (let x = 70; x < WW; x += 110) LAMP_XS.push(x);
+  for (let x = 20; x < WW; x += 95) if (!(x > 396 && x < 540) && !LAMP_XS.some((l) => Math.abs(l - x) < 12) && !BENCH_XS.some((b) => Math.abs(b - x) < 14) && !LIBRARY_XS.some((b) => Math.abs(b - x) < 10)) TREE_XS.push(x);
+  const LAMP_Y = FAR_CURB + 3.4;
+  function drawLamp(g, x) {
+    const pal = P(), y = LAMP_Y, on = night() > 0.35;
+    box(g, x - 0.9, y - 1.6, 1.8, 2, dark(pal.steel, 0.35), 0.3, { lw: 0.25, shade: false });
+    box(g, x - 0.4, y - 22, 0.8, 21, dark(pal.steel, 0.3), 0.2, { lw: 0.25, shade: false });
+    box(g, x - 1.2, y - 22.4, 2.4, 0.8, dark(pal.steel, 0.35), 0.2, { lw: 0.25, shade: false });
+    g.beginPath(); g.ellipse(x, y - 24.2, 1.5, 2, 0, 0, 6.3); g.fillStyle = on ? EMIT.lamp : mix(pal.white, pal.glassHi, 0.4); g.fill(); ink(g, 0.3);
+    g.beginPath(); g.moveTo(x - 1.4, y - 25.4); g.quadraticCurveTo(x, y - 27.6, x + 1.4, y - 25.4); g.closePath(); g.fillStyle = dark(pal.steel, 0.35); g.fill();
+    g.fillStyle = dark(pal.steel, 0.35); g.fillRect(x - 0.2, y - 28.2, 0.4, 1);
+    if (snowy()) snowCap(g, x - 1.3, y - 26.6, 2.6, 0.6);
+  }
+  /* a street tree on the verge: its crown rises over the far lanes */
+  function drawStreetTree(g, x) {
+    const pal = P(), y = VERGE_Y + 1, s = season();
+    shadow(g, x, y + 0.3, 5, 1, 0.16);
+    g.fillStyle = pal.trunk; g.beginPath(); g.moveTo(x - 0.9, y); g.lineTo(x - 0.5, y - 10); g.lineTo(x + 0.5, y - 10); g.lineTo(x + 0.9, y); g.closePath(); g.fill(); ink(g, 0.3);
+    g.fillStyle = dark(pal.dirt, 0.15); g.beginPath(); g.ellipse(x, y + 0.1, 2.6, 0.6, 0, 0, 6.3); g.fill();
+    if (s === 'bare' || s === 'winter') {
+      g.strokeStyle = pal.trunk; g.lineCap = 'round';
+      for (const [bx, by, ex, ey] of [[x, y - 9, x - 4.5, y - 16], [x, y - 10, x + 0.5, y - 18], [x, y - 8, x + 4.6, y - 15], [x - 2.4, y - 12.6, x - 3.6, y - 17.4], [x + 2.6, y - 12, x + 4.2, y - 17]]) {
+        g.lineWidth = 0.5; g.beginPath(); g.moveTo(bx, by); g.lineTo(ex, ey); g.stroke();
+        if (s === 'winter') { g.fillStyle = pal.snow; g.beginPath(); g.ellipse(ex, ey, 1.1, 0.35, -0.3, 0, 6.3); g.fill(); }
       }
+      return;
     }
-    /* acorn lamps, Burlington's street lamp */
-    for (let x = 70; x < WW && only !== 'trees'; x += 110) {
-      if (x < x0 - 4 || x > x1 + 4) continue;
-      const on = night() > 0.35;
-      box(g, x - 0.9, y - 1.6, 1.8, 2, dark(pal.steel, 0.35), 0.3, { lw: 0.25, shade: false });
-      box(g, x - 0.4, y - 22, 0.8, 21, dark(pal.steel, 0.3), 0.2, { lw: 0.25, shade: false });
-      box(g, x - 1.2, y - 22.4, 2.4, 0.8, dark(pal.steel, 0.35), 0.2, { lw: 0.25, shade: false });
-      g.beginPath(); g.ellipse(x, y - 24.2, 1.5, 2, 0, 0, 6.3); g.fillStyle = on ? EMIT.lamp : mix(pal.white, pal.glassHi, 0.4); g.fill(); ink(g, 0.3);
-      g.beginPath(); g.moveTo(x - 1.4, y - 25.4); g.quadraticCurveTo(x, y - 27.6, x + 1.4, y - 25.4); g.closePath(); g.fillStyle = dark(pal.steel, 0.35); g.fill();
-      g.fillStyle = dark(pal.steel, 0.35); g.fillRect(x - 0.2, y - 28.2, 0.4, 1);
+    const cs = s === 'fall' ? [pal.autumnA, pal.autumnB, lit('#b9893a')] : s === 'late' ? [lit('#9a6a2a'), pal.autumnA, lit('#7a5a3a')] : s === 'spring' ? [pal.treeLight, lit('#9cbf5a'), pal.tree] : [pal.tree, pal.treeLight, pal.treeDark];
+    const off = (x >> 3) % 3;
+    for (let i = 0; i < 5; i++) {
+      if (s === 'late' && i % 2) continue;
+      const dx = [-3.6, 3.4, 0, -2, 2.4][i], dy = [-12.5, -12.8, -16.8, -19, -18.4][i], r = [3.6, 3.6, 4.4, 3, 3][i];
+      const c = cs[(i + off) % 3];
+      g.beginPath(); g.arc(x + dx, y + dy, r, 0, 6.3); g.fillStyle = c; g.fill();
+      g.save(); g.clip(); g.fillStyle = rgba(pal.ink, 0.15); g.beginPath(); g.arc(x + dx + r * 0.45, y + dy + r * 0.45, r, 0, 6.3); g.fill(); g.fillStyle = rgba(pal.white, 0.16); g.beginPath(); g.arc(x + dx - r * 0.4, y + dy - r * 0.45, r * 0.45, 0, 6.3); g.fill(); g.restore();
+      g.beginPath(); g.arc(x + dx, y + dy, r, 0, 6.3); ink(g, 0.3);
     }
   }
+  /* a bench beside the bike path, facing it (and you) */
+  const PBENCH_Y = PATH_Y0 - 0.6;
+  function drawPathBench(g, x) {
+    const pal = P(), y = PBENCH_Y, wood = mix(pal.timber, pal.timberShade, 0.3), iron = mix(pal.ink, pal.steel, 0.35);
+    shadow(g, x, y + 0.2, 7, 0.8, 0.16);
+    for (const sy of [y - 9.4, y - 7.4]) box(g, x - 6.5, sy, 13, 1.4, wood, 0.35, { lw: 0.3 });
+    for (const lx of [x - 5.5, x + 5.5]) { line(g, lx, y, lx, y - 9.6, iron, 0.6); }
+    box(g, x - 7, y - 5.2, 14, 1.4, light(wood, 0.1), 0.3, { lw: 0.3, shade: false });
+    snowCap(g, x - 7, y - 5.2, 14, 0.6); snowCap(g, x - 6.5, y - 9.4, 13, 0.5);
+  }
+  /* a Little Free Library: a birdhouse of books on a post */
+  const LIB_Y = PATH_Y0 - 1.4;
+  function drawLibrary(g, x) {
+    const pal = P(), y = LIB_Y;
+    shadow(g, x, y + 0.2, 2.4, 0.6, 0.16);
+    box(g, x - 0.5, y - 8, 1, 8, pal.timberShade, 0.2, { lw: 0.3, shade: false });
+    box(g, x - 3, y - 13.6, 6, 5.8, lit('#3f7a6a'), 0.4);
+    box(g, x - 2.2, y - 12.6, 4.4, 4, mix(pal.glass, pal.glassHi, 0.3), 0.3, { lw: 0.25, shade: false });
+    for (let i = 0; i < 5; i++) { g.fillStyle = lit(['#d9443a', '#f2c230', '#2f6fb2', '#3fae5a', '#b85a7a'][i]); g.fillRect(x - 1.9 + i * 0.8, y - 11.4 - (i % 2) * 0.4, 0.6, 2.4 + (i % 2) * 0.4); }
+    g.fillStyle = rgba(pal.white, 0.4); g.fillRect(x - 2, y - 12.4, 0.5, 3.6);
+    g.beginPath(); g.moveTo(x - 3.8, y - 13.2); g.lineTo(x, y - 16.6); g.lineTo(x + 3.8, y - 13.2); g.closePath(); g.fillStyle = lit('#b5483a'); g.fill(); ink(g, 0.3);
+    if (snowy()) { g.fillStyle = pal.snow; g.beginPath(); g.moveTo(x - 3.6, y - 13.5); g.lineTo(x, y - 16.6); g.lineTo(x + 3.6, y - 13.5); g.lineTo(x, y - 15.4); g.closePath(); g.fill(); }
+  }
+  const FAR_ITEMS = [
+    ...LAMP_XS.map((x) => ({ y: LAMP_Y, draw: () => K.blit('w:lamp' + x, x - 3, LAMP_Y - 30, 6, 32, (g) => drawLamp(g, x), { ver: seasonCode() + (night() > 0.35 ? 10 : 0) }) })),
+    ...TREE_XS.map((x) => ({ y: VERGE_Y + 1, draw: () => K.blit('w:stree' + x, x - 9, VERGE_Y - 23, 18, 26, (g) => drawStreetTree(g, x), { ver: seasonCode() }) })),
+    ...BENCH_XS.map((x) => ({ y: PBENCH_Y, draw: () => K.blit('w:pbench' + x, x - 9, PBENCH_Y - 12, 18, 14, (g) => drawPathBench(g, x), { ver: seasonCode() }) })),
+    ...LIBRARY_XS.map((x) => ({ y: LIB_Y, draw: () => K.blit('w:lib' + x, x - 5, LIB_Y - 18, 10, 20, (g) => drawLibrary(g, x), { ver: seasonCode() }) })),
+  ];
 
   /* --------------------------------------------------- passers-by */
   function makePasser(kind, o = {}) {
@@ -1076,6 +1166,72 @@ export function createWorld(K) {
       if (q.x < cam.x - 60 || q.x > cam.x + W + 60) passers.splice(i, 1);
     }
   }
+  /* the bike path's own people: cyclists, joggers, dog walkers, a stroller, someone who sits on a
+     bench a while or stops at the little library; cross-country skiers when it's snowed */
+  const pathers = [];
+  let pathT = 2;
+  function stepPath(dt) {
+    const show = K.cam.y + K.view.H > PATH_Y0 - 2;
+    const late = night() > 0.75, wt = wet(), sn = snowy();
+    pathT -= dt;
+    if (show && pathT <= 0) {
+      pathT = (late ? 30 : 6) + K.R() * (late ? 40 : 12) + (wt ? 10 : 0);
+      if (pathers.length < 4) {
+        const r = K.R();
+        const kind = sn ? (r < 0.4 ? 'ski' : r < 0.75 ? 'walk' : 'dog')
+          : late ? (r < 0.5 ? 'walk' : r < 0.8 ? 'dog' : 'bike')
+          : r < 0.32 ? 'bike' : r < 0.5 && !wt ? 'jog' : r < 0.66 ? 'dog' : r < 0.76 ? 'stroller' : r < 0.88 ? 'bench' : 'library';
+        const q = makePasser(kind === 'bench' || kind === 'library' || kind === 'stroller' || kind === 'ski' ? 'walk' : kind);
+        q.kind = kind; q.path = true;
+        q.y = q.dir > 0 ? PATH_E : PATH_W;
+        if (kind === 'bike') { q.y -= 0.3; q.v = 16 + K.R() * 8; }
+        if (kind === 'stroller') q.v = 7 + K.R();
+        if (kind === 'ski') { q.v = 9; q.colors.hat = '#d9443a'; }
+        if (kind === 'bench' || kind === 'library') {
+          const xs = kind === 'bench' ? BENCH_XS : LIBRARY_XS;
+          const ahead = xs.filter((x) => (x - q.x) * q.dir > 10 && Math.abs(x - (K.cam.x + K.view.W / 2)) < K.view.W * 0.6);
+          if (ahead.length) q.stopX = ahead[0]; else q.kind = 'walk';
+        }
+        pathers.push(q);
+      }
+    }
+    const cam = K.cam, W = K.view.W;
+    for (let i = pathers.length - 1; i >= 0; i--) {
+      const q = pathers[i];
+      q.t += dt;
+      if (q.emote) { q.emoteT += dt; if (q.emoteT > 2.4) q.emote = null; }
+      if (q.state === 'go') {
+        q.x += q.dir * q.v * dt;
+        if (q.stopX != null && (q.x - q.stopX) * q.dir >= 0) {
+          q.x = q.stopX; q.stopX = null; q.wait = 0;
+          if (q.kind === 'bench') { q.state = 'sit'; q.y0 = q.y; q.y = PBENCH_Y + 0.4; q.hold = 14 + K.R() * 14; }
+          else { q.state = 'browse'; q.y0 = q.y; q.y = LIB_Y + 1.2; q.hold = 5; }
+        }
+      } else {
+        q.wait += dt;
+        if (q.state === 'browse' && !q.emote && q.wait > 3) { q.emote = K.R() < 0.5 ? 'heart' : 'idea'; q.emoteT = 0; }
+        if (q.wait > q.hold) { q.state = 'go'; q.y = q.y0; }
+      }
+      if (q.x < cam.x - 60 || q.x > cam.x + W + 60 || !show) pathers.splice(i, 1);
+    }
+  }
+  function drawStroller(ctx, q) {
+    const pal = K.pal, x = q.x + q.dir * 5.6, y = q.y, d = q.dir, c = lit(q.colors.vest);
+    ctx.lineWidth = 0.35; ctx.strokeStyle = pal.ink;
+    for (const wx of [x - 1.6, x + 1.6]) { ctx.fillStyle = pal.tire; ctx.beginPath(); ctx.arc(wx, y - 0.9, 0.9, 0, 6.3); ctx.fill(); }
+    ctx.beginPath(); ctx.moveTo(x - 2.6, y - 2); ctx.lineTo(x + 2.6, y - 2); ctx.quadraticCurveTo(x + 2.8, y - 5, x + d * 0.4, y - 5); ctx.lineTo(x - 2.6, y - 5); ctx.closePath();
+    ctx.fillStyle = c; ctx.fill(); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(x - d * 2.6, y - 5); ctx.quadraticCurveTo(x - d * 2.8, y - 8, x + d * 0.6, y - 7.6); ctx.lineTo(x + d * 0.4, y - 5); ctx.closePath();
+    ctx.fillStyle = dark(c, 0.2); ctx.fill(); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(x - d * 2.6, y - 4); ctx.lineTo(x - d * 4.4, y - 7.4); ctx.strokeStyle = dark(pal.steel, 0.3); ctx.lineWidth = 0.45; ctx.stroke();
+  }
+  function drawSkis(ctx, q) {
+    const pal = K.pal, x = q.x, y = q.y, slide = Math.sin(q.t * 4) * 1.4;
+    ctx.strokeStyle = lit('#d9443a'); ctx.lineWidth = 0.4; ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.moveTo(x - 4 + slide, y); ctx.lineTo(x + 4 + slide, y); ctx.moveTo(x - 4 - slide, y + 0.4); ctx.lineTo(x + 4 - slide, y + 0.4); ctx.stroke();
+    ctx.strokeStyle = dark(pal.steel, 0.3); ctx.lineWidth = 0.25;
+    ctx.beginPath(); ctx.moveTo(x - q.dir * 1 + slide, y - 7); ctx.lineTo(x - q.dir * 4 + slide, y + 0.3); ctx.moveTo(x - q.dir * 0.5 - slide, y - 7); ctx.lineTo(x - q.dir * 3.4 - slide, y + 0.3); ctx.stroke();
+  }
   function cheer(id) {
     const q = passers.find((p) => p.id === id);
     if (!q || q.cheered) return false;
@@ -1084,6 +1240,10 @@ export function createWorld(K) {
   }
   function drawPasser(ctx, q) {
     const art = K.art;
+    if (q.state === 'sit') { art.figure(ctx, q.x, q.y, { pose: 'sit', t: q.t, facing: 0, colors: q.colors, hat: false, civ: true }); return; }
+    if (q.state === 'browse') { art.figure(ctx, q.x, q.y, { pose: 'look', t: q.t, facing: 'away', colors: q.colors, hat: false, civ: true }); if (q.emote) art.emote(ctx, q.x, q.y - 17, q.emote, q.emoteT); return; }
+    if (q.kind === 'stroller') { art.figure(ctx, q.x, q.y, { pose: 'walk', t: q.t, facing: q.dir, colors: q.colors, hat: false, civ: true }); drawStroller(ctx, q); return; }
+    if (q.kind === 'ski') { drawSkis(ctx, q); art.figure(ctx, q.x, q.y - 0.3, { pose: 'walk', t: q.t * 0.6, facing: q.dir, colors: q.colors, hat: true, civ: true }); return; }
     if (q.kind === 'bike') {
       drawBike(ctx, q);
       art.figure(ctx, q.x, q.y, { pose: 'ride', t: q.t, facing: q.dir, colors: q.colors, hat: true, civ: true });
@@ -1210,7 +1370,17 @@ export function createWorld(K) {
     if ((m >= 9 || m <= 3 || h < 9) && !K.reduced) list.push(STEAM);
     while (passEntries.length < passers.length) { const e = { y: 0, q: null, draw: null }; e.draw = (ctx) => drawPasser(ctx, e.q); passEntries.push(e); }
     for (let i = 0; i < passers.length; i++) { const e = passEntries[i]; e.q = passers[i]; e.y = passers[i].y; list.push(e); }
+    /* the far side: the crew's traffic in the travel lanes, then lamps, trees, benches, the little
+       library and the people on the bike path, nearer and nearer */
+    if (K.cam.y + K.view.H > STREET_Y + 8) {
+      list.push(STREET_E);
+      for (const e of FAR_ITEMS) list.push(e);
+      while (pathEntries.length < pathers.length) { const e = { y: 0, q: null, draw: null }; e.draw = (ctx) => drawPasser(ctx, e.q); pathEntries.push(e); }
+      for (let i = 0; i < pathers.length; i++) { const e = pathEntries[i]; e.q = pathers[i]; e.y = pathers[i].y; list.push(e); }
+    }
   }
+  const STREET_E = { y: FAR_CURB - 0.2, draw: (ctx) => { if (K.crew && K.crew.drawStreet) K.crew.drawStreet(ctx); } };
+  const pathEntries = [];
 
   /* the back line, one tight cache each (a single wide layer was mostly empty pixels) */
   const BACK = [
@@ -1220,14 +1390,10 @@ export function createWorld(K) {
     ['w:shed', 287, 424, 82, 30, (g) => drawShed(g), () => seasonCode() + Math.min(3, piles.nails) * 100],
     ['w:mill', 722, 336, WW - 722, 121, (g, x0, x1) => drawMill(g, x0, x1), () => seasonCode()],
   ];
-  const FRONT = [];
-  for (let x = 70; x < WW; x += 110) FRONT.push(['w:lamp' + x, x - 3, STREET_Y - 10, 6, 34, (g, x0, x1) => drawFrontStrip(g, x0, x1, 'lamps')]);
-  for (let x = 30; x < WW; x += 160) { const tx = x + (x > 380 && x < 560 ? 70 : 0); FRONT.push(['w:stree' + x, tx - 15, STREET_Y + 9, 30, 14, (g, x0, x1) => drawFrontStrip(g, x0, x1, 'trees')]); }
   /* --------------------------------------------------- draw entries */
   function drawBack(ctx) {
     if (K.director && K.director.drawBack) K.director.drawBack(ctx);
-    /* nothing below the far sidewalk is ever in view (the camera's bottom edge stops there) */
-    K.blit('w:ground', 0, GROUND_Y - 9, WW, STREET_Y + 22 - GROUND_Y + 9, drawGround, { ver: seasonCode() });
+    K.blit('w:ground', 0, GROUND_Y - 9, WW, WH - GROUND_Y + 9, drawGround, { ver: seasonCode() });
     for (const b of BACK) K.blit(b[0], b[1], b[2], b[3], b[4], b[5], { ver: b[6]() });
     /* lights of the night */
     if (night() > 0.25) {
@@ -1239,11 +1405,10 @@ export function createWorld(K) {
     }
   }
   function drawFront(ctx) {
-    /* the crew's street traffic (a truck pulling in) passes in front of the fence and the people on
-       the sidewalk and behind the far-side lamps and trees */
+    /* the crew's street traffic is drawn in its place in the sorted list (STREET_E); this is only
+       a fallback for a crew that collects nothing (the call does nothing twice in a frame) */
     if (K.crew && K.crew.drawStreet) K.crew.drawStreet(ctx);
-    for (const f of FRONT) K.blit(f[0], f[1], f[2], f[3], f[4], f[5], { ver: seasonCode() });
-    if (night() > 0.3) for (let x = 70; x < WW; x += 110) lights(x, STREET_Y - 6, 20, 0.5);
+    if (night() > 0.3) for (const x of LAMP_XS) { lights(x, LAMP_Y - 24, 18, 0.5); lights(x, LAMP_Y - 4, 14, 0.25); }
   }
 
   /* --------------------------------------------------- state */
@@ -1253,6 +1418,7 @@ export function createWorld(K) {
     gate += clamp((want ? 1 : 0) - gate, -dt / 3, dt / 3);
     for (const k of Object.keys(tarp)) tarp[k] = clamp(tarp[k] + (tarpWant[k] ? dt / 1.5 : -dt / 2), 0, 1);
     stepPassers(dt);
+    stepPath(dt);
     const m = muralCount();
     if (lastMural >= 0 && m > lastMural) K.emit('mural', { i: m - 1, x: MURAL_X0 + (m - 1) * MURAL_W + MURAL_W / 2, y: 493 });
     lastMural = m;

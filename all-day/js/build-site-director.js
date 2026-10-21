@@ -40,7 +40,7 @@
                                      before the yard, so they pass behind the building and sheds
      } */
 
-import { GROUND_Y, YARD_FRONT, HORIZON, ZONES, BUILDING, EMIT, clamp, hash, rng, dayKey, rgba, hexRgb, rgbHex, floorBottom, SKINS, HAIRS } from './build-site-shared.js';
+import { GROUND_Y, YARD_FRONT, HORIZON, ZONES, BUILDING, EMIT, clamp, hash, rng, dayKey, rgba, mix, hexRgb, rgbHex, floorBottom, SKINS, HAIRS } from './build-site-shared.js';
 
 const STORE = 'bd-site-story';
 const SLOT_SEC = 90;
@@ -71,6 +71,8 @@ export function createDirector(K) {
   const dayR = (salt) => rng(hash(today + ':' + salt));
   const dayHash = (salt) => hash(today + ':' + salt);
   const camMid = () => K.cam.x + K.view.W / 2;
+  /* where the camera is about to be: between you and the middle of the view (the camera follows you) */
+  const focusX = () => { const y = K.crew.youPos ? K.crew.youPos() : null; return y ? (y.x + camMid()) / 2 : camMid(); };
   const inView = (x, pad = 0) => x > K.cam.x - pad && x < K.cam.x + K.view.W + pad;
 
   function newDay() {
@@ -246,15 +248,28 @@ export function createDirector(K) {
       const dx = tx - dog.x, dy = ty - dog.y, d = Math.hypot(dx, dy);
       if (d > 1.2) { const s = Math.min(d, (d > 14 ? 15 : 9) * dt); dog.x += dx / d * s; dog.y += dy / d * s; dog.facing = Math.abs(p.x - dog.x) > 1 ? (p.x > dog.x ? 1 : -1) : dog.facing; dog.pose = d > 14 ? 'trot' : 'walk'; }
       else { dog.pose = 'sit'; dog.facing = p.x > dog.x ? 1 : -1; }
+    } else if (a.k === 'watch') {
+      /* sits on the sidewalk watching the crew; keeps up along the fence if the camera moves on */
+      if (a.to != null) {
+        const dx = a.to - dog.x;
+        if (Math.abs(dx) < 0.4) a.to = null; else { dog.x += Math.sign(dx) * Math.min(Math.abs(dx), 12 * dt); dog.facing = dx > 0 ? 1 : -1; dog.pose = 'trot'; }
+      } else {
+        dog.pose = 'sit'; dog.facing = 'away';
+        if (!inView(dog.x, -14)) { a.to = clamp(camMid() + (K.R() - 0.5) * K.view.W * 0.3, 90, 700); a.dur += 3; }
+      }
+      if (a.t >= a.dur) dog.task = null;
     } else if (a.k === 'call') { dog.task = null; try { a.fn(); } catch (e) { console.error(e); } }
   }
   const DOG_ENTRY = { gate: [[72, 501], [72, 491]], side: [[640, 501], [640, 491]] };
   function dogEnter(fromX) {
-    const g = Math.abs(fromX - 72) < Math.abs(fromX - 640) ? 'gate' : 'side';
-    const dir = fromX < camMid() ? -1 : 1;
+    /* the side gate unless the action is well west (the main gate is far from the building) */
+    const g = fromX < 270 ? 'gate' : 'side';
+    const [ox] = DOG_ENTRY[g][0];
     dog.on = true; dog.tasks = []; dog.task = null; dog.plan = null;
-    dog.x = (dir < 0 ? K.cam.x - 16 : K.cam.x + K.view.W + 16); dog.y = 501.5;
-    if (Math.abs(dog.x - DOG_ENTRY[g][0][0]) > 300) dog.x = DOG_ENTRY[g][0][0] + (dir < 0 ? -60 : 60);
+    /* along the sidewalk from beyond the gate, starting just out of view when the gate is in view */
+    const away = g === 'side' ? 1 : -1;
+    dog.x = inView(ox, 0) ? (away > 0 ? Math.max(ox + 20, K.cam.x + K.view.W + 12) : Math.min(ox - 20, K.cam.x - 12)) : ox + away * 30;
+    dog.y = 501.5;
     for (const [x, y] of DOG_ENTRY[g]) dogTo(x, y, 13);
     return g;
   }
@@ -268,8 +283,9 @@ export function createDirector(K) {
   }
   /* places worth a sniff, nearest the camera first */
   const SNIFF = [[278, 474], [229, 469], [372, 474], [396, 480], [470, 482], [566, 472], [614, 474], [150, 474], [112, 474], [246, 478], [551, 489], [676, 474]];
-  const sniffs = (n) => SNIFF.slice().sort((a, b) => Math.abs(a[0] - camMid()) - Math.abs(b[0] - camMid())).slice(0, n);
-  const NAP = [258, 474];          // by the canteen, out of the way
+  const sniffs = (n) => SNIFF.slice().sort((a, b) => Math.abs(a[0] - focusX()) - Math.abs(b[0] - focusX())).slice(0, n);
+  const NAPS = [[258, 474], [541, 490], [400, 486], [626, 482]];   // by the canteen, the reel table, the mixer, the dumpster: out of the way
+  const nap = () => NAPS.slice().sort((a, b) => Math.abs(a[0] - focusX()) - Math.abs(b[0] - focusX()))[0];
   const HOUSE = [187, 470];        // the doghouse, left of the trailer steps
 
   /* steam off the mugs of anyone standing at the cable-reel table */
@@ -335,7 +351,9 @@ export function createDirector(K) {
     chat: { kind: 'ambient', title: 'Two builders between jobs stop for a chat', cool: 4,
       weight: () => (night() > 0.85 ? 0.3 : 1.6),
       start() {
-        const mid = clamp(camMid() + (K.R() - 0.5) * K.view.W * 0.3, 120, 640), y = 482 + K.R() * 4;
+        let mid = clamp(camMid() + (K.R() - 0.5) * K.view.W * 0.3, 120, 640);
+        if (mid > 398 && mid < 536) mid = mid < 467 ? 394 : 541;      // not in front of the building: that's where the work lands
+        const y = 482 + K.R() * 4;
         const ids = nearestIdle(mid, 2, K.view.W * 0.7);
         if (ids.length < 2) return null;
         const a = 2.2 + K.R(), b = 2 + K.R();
@@ -402,7 +420,7 @@ export function createDirector(K) {
         return h > 9 && h < 18 ? 2.5 : 0;
       },
       start() {
-        const stopX = clamp(camMid() + (K.R() - 0.5) * K.view.W * 0.4, 90, 700);
+        const stopX = clamp(focusX() + (K.R() - 0.5) * K.view.W * 0.4, 90, 700);
         const kid = K.world.spawn('kid', { stopX });
         let wave = null, answered = false, tick = 0;
         const off = K.on('kid:wave', (e) => { if (e.id === kid && !wave) wave = { x: e.x, t: 0 }; });
@@ -750,23 +768,23 @@ export function createDirector(K) {
     const inst = { step() { return dog.on || this.t < 2; }, end() { dogNext = K.t + 200 + K.R() * 160; } };
     if (stage === 1) {
       /* watches the crew through the fence from the sidewalk, then trots on */
-      const x = clamp(camMid() + (K.R() - 0.5) * 30, 90, 700);
+      const x = clamp(focusX() + (K.R() - 0.5) * 30, 90, 700);
       dog.on = true; dog.tasks = []; dog.task = null; dog.plan = null;
       dog.x = x < camMid() ? K.cam.x - 14 : K.cam.x + K.view.W + 14; dog.y = 501.5;
-      dogTo(x, 500.5, 12); dogDo('sit', 9, { facing: 'away' }); dogDo('stand', 1.5, { emote: 'question' }); dogDo('sit', 8, { facing: 'away' }); dogDo('wag', 3, { facing: 'away' });
+      dogTo(x, 500.5, 12); dog.tasks.push({ k: 'watch', dur: 9 }); dogDo('stand', 1.5, { emote: 'question' }); dog.tasks.push({ k: 'watch', dur: 9 }); dogDo('wag', 3, { facing: 'away' });
       dogTo(x < camMid() ? K.cam.x - 30 : K.cam.x + K.view.W + 30, 501.5, 12); dogCall(() => { dog.on = false; });
       return inst;
     }
-    dogEnter(camMid());
+    dogEnter(focusX());
     if (stage === 2) {
-      for (const [sx, sy] of sniffs(3)) { dogTo(sx, sy, 10); dogDo('sniff', 2.5 + K.R() * 2); }
+      sniffs(3).forEach(([sx, sy], i) => { dogTo(sx, sy, i ? 9 : 13); dogDo('sniff', 2.5 + K.R() * 2); });
       dogDo('sit', 3, { emote: 'question' });
       dogLeave();
       return inst;
     }
     /* 3+: someone comes over */
     const [sx, sy] = sniffs(1)[0];
-    dogTo(sx, sy, 10); dogDo('sniff', 2);
+    dogTo(sx, sy, 13); dogDo('sniff', 2);
     dogDo('sit', 1.5);
     dogCall(() => {
       const steps = [go(clamp(dog.x + 6, 70, 700), dog.y), face(-1), pose('crouch', 2, 'sandwich'), call(() => { dog.tasks.unshift({ k: 'pose', pose: 'eat', dur: 3, emote: 'heart' }); dog.task = null; }), pose('pet', 3, null)];
@@ -783,7 +801,7 @@ export function createDirector(K) {
       dogCall(() => { dog.plan = dogRoutine; });
       return { step() { return dog.on; }, end() {} };
     }
-    dogDo('sit', 30); dogTo(NAP[0], NAP[1], 9); dogDo('sleep', 40, { emote: 'zzz' });
+    { const [nx, ny] = nap(); dogDo('sit', 30); dogTo(nx, ny, 9); dogDo('sleep', 40, { emote: 'zzz' }); }
     dogLeave();
     return inst;
   }
@@ -823,7 +841,7 @@ export function createDirector(K) {
       const busy = haulers();
       if (busy.length) { const id = busy[(K.R() * busy.length) | 0]; dog.tasks.push({ k: 'follow', id, dur: 25 + K.R() * 25 }); dogDo('sit', 4); return; }
     }
-    if (r < 0.75) { dogTo(NAP[0] + (K.R() - 0.5) * 6, NAP[1] + K.R() * 2, 8); dogDo('sleep', 40 + K.R() * 40, { facing: -1, emote: 'zzz' }); return; }
+    if (r < 0.75) { const [nx, ny] = nap(); dogTo(nx + (K.R() - 0.5) * 6, ny + K.R() * 2, 8); dogDo('sleep', 40 + K.R() * 40, { facing: -1, emote: 'zzz' }); return; }
     const [sx, sy] = sniffs(4)[(K.R() * 4) | 0]; dogTo(sx, sy, 8); dogDo('sniff', 3); dogDo('sit', 6);
   }
   /* the adopted dog is around from the start of the day */
@@ -833,7 +851,7 @@ export function createDirector(K) {
       dog.on = true; dog.tasks = []; dog.task = null; dog.bandana = true; dog.plan = dogRoutine;
       const h = hour();
       if ((h < 6.5 || h > 19.5 || night() > 0.7) && story.dog.house) { dog.x = HOUSE[0] + 0.5; dog.y = HOUSE[1] + 3; }
-      else { dog.x = NAP[0]; dog.y = NAP[1]; }
+      else { const [nx, ny] = nap(); dog.x = nx; dog.y = ny; }
     }
   }
 
@@ -846,6 +864,8 @@ export function createDirector(K) {
   function milestone(m) {
     if (!m || !MOMENT[m.kind]) return;
     K.moment(m.x, m.kind === 'pour' ? m.y - 10 : m.y + 6, MOMENT[m.kind]);
+    /* the crew's own reaction (builders at a safe point look up and cheer, then carry on), when it has one */
+    if (K.crew.react) { try { K.crew.react(m.kind, MOMENT[m.kind]); } catch (e) { console.error(e); } }
     if (m.kind === 'floor' || m.kind === 'topped') { story.flag = { floor: m.floor, at: K.t, x: m.kind === 'topped' ? BUILDING.x0 + 3 : BUILDING.x1 - 3 }; save(); }
     const n = m.kind === 'topped' ? 8 : 6;
     const x0 = BUILDING.x0 + 6, span = BUILDING.x1 - BUILDING.x0 - 12;
@@ -861,6 +881,9 @@ export function createDirector(K) {
   }
   let burst = null;
   K.on('milestone', milestone);
+  /* a finished piece: a little puff of dust (sawdust, mortar) where it landed */
+  const puffs = [];
+  K.on('piece', (e) => { if (!e || e.x == null || K.reduced || !inView(e.x, 10) || puffs.length > 6) return; puffs.push({ x: e.x, y: e.y, t: 0 }); });
   K.on('mural', (e) => bubble(e.x, e.y - 6, 'star', 2.6));
 
   /* ------------------------------------------------ the scheduler */
@@ -902,6 +925,7 @@ export function createDirector(K) {
     try { stepDog(dt); } catch (e) { console.error(e); dog.tasks = []; dog.task = null; }
     for (let i = marks.length - 1; i >= 0; i--) { marks[i].t += dt; if (marks[i].t > marks[i].dur) marks.splice(i, 1); }
     if (burst) { burst.t += dt; if (burst.t > 3) burst = null; }
+    for (let i = puffs.length - 1; i >= 0; i--) { puffs[i].t += dt; if (puffs[i].t > 0.9) puffs.splice(i, 1); }
     if (story.flag && !K.S.town.topped_out && (K.S.town.floors_done | 0) < story.flag.floor) story.flag = null;   // the town moved backwards (the preview): drop the flag
     if (story.snow && !snowy() && K.light && K.light.weather) { story.snow = null; save(); }
   }
@@ -947,6 +971,7 @@ export function createDirector(K) {
     if (dog.on) { DOG_E.y = dog.y; list.push(DOG_E); }
     for (const a of active.values()) if (a.collect) a.collect(list);
     if (marks.length || burst) list.push(MARKS_E);
+    for (let i = 0; i < puffs.length; i++) { const e = PUFF_E[i] || (PUFF_E[i] = { y: 0, p: null, draw: (ctx) => drawPuff(ctx, e.p) }); e.p = puffs[i]; e.y = puffs[i].y + 0.6; list.push(e); }
     /* falling leaves off the maple in autumn */
     if ((month() === 9 || month() === 10) && !snowy() && inView(708, 30)) list.push(LEAVES_E);
   }
@@ -959,6 +984,13 @@ export function createDirector(K) {
     }
     ctx.globalAlpha = 1;
   } };
+  const PUFF_E = [];
+  function drawPuff(ctx, p) {
+    const k = p.t / 0.9, pal = K.pal;
+    ctx.globalAlpha = 0.55 * (1 - k); ctx.fillStyle = mix(pal.dirt, pal.white, 0.45);
+    for (let i = 0; i < 4; i++) { const a = i * 1.6 + 0.4; ctx.beginPath(); ctx.arc(p.x + Math.cos(a) * (1 + k * 3), p.y - 1.2 - k * 2 + Math.sin(a) * 0.6, 0.8 + k * 1.2, 0, 6.3); ctx.fill(); }
+    ctx.globalAlpha = 1;
+  }
   function drawBack(ctx) { for (const a of active.values()) if (a.back) a.back(ctx); }
 
   function drawPot(ctx, x, y, stage) {
