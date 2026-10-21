@@ -1477,7 +1477,9 @@ export function createCrew(K) {
   const hookO = { hanging: true, len: 14 };
   function drawCrane(ctx) {
     const jy = crane.jib || jibY();
-    K.blit('crew:crane', CRANE_TIP - 2, jy - 16, CRANE_TAIL - CRANE_TIP + 4, GROUND_Y - jy + 18, (g) => drawCraneStatic(g, jy), { ver: jy });
+    /* two thin cached layers (jib, mast): one big mostly-empty layer cost ~70 ms a frame at desktop zoom */
+    K.blit('crew:crane:jib', CRANE_TIP - 2, jy - 16, CRANE_TAIL - CRANE_TIP + 4, 24, (g) => drawCraneStatic(g, jy), { ver: jy });
+    K.blit('crew:crane:mast', BUILDING.craneX - 8, jy + 8, 18, GROUND_Y - jy - 4, (g) => drawCraneStatic(g, jy), { ver: jy });
     const tx = crane.x;
     ctx.fillStyle = K.pal.craneDark; ctx.strokeStyle = K.pal.ink; ctx.lineWidth = 0.35;
     rr(ctx, tx - 2.4, jy + 0.2, 4.8, 1.8, 0.5); ctx.fill(); ctx.stroke();
@@ -1785,6 +1787,7 @@ export function createCrew(K) {
       a.plan.push({ k: 'do', pose: 'stand', dur: 0.3, carry: null });
       a.borrowed = { done: onDone || null };
       a.doing = 'borrowed';
+      a.say = (actions.find((x) => x && x.say) || {}).say || 'taking a short break';
       return true;
     },
   };
