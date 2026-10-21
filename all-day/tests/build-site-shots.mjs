@@ -14,7 +14,7 @@
 
 import { createRequire } from 'node:module';
 import { spawn } from 'node:child_process';
-import { mkdir } from 'node:fs/promises';
+import { mkdir, writeFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import net from 'node:net';
 import path from 'node:path';
@@ -50,6 +50,13 @@ const STATES = {
   topped: { sunAltitude: 25, hour: 16, weather: 'clear', floors_done: 6, floor_progress: 0, topped_out: true, crew: 10, you: 'working', task: 'roof', windows_lit: 40 },
   toppednight: { sunAltitude: -15, hour: 21, weather: 'clear', floors_done: 6, floor_progress: 0, topped_out: true, crew: 4, you: 'working', task: 'lunch', windows_lit: 40 },
   empty: { ...DAY, floors_done: 0, floor_progress: 0, crew: 0, you: 'away', task: 'haul', windows_lit: 0 },
+  /* v2: the beginning, from the empty lot */
+  lot: { ...DAY, floors_done: 0, floor_progress: 0.02, crew: 3, you: 'working', task: 'haul', windows_lit: 0 },
+  stakes: { ...DAY, floors_done: 0, floor_progress: 0.07, crew: 4, you: 'working', task: 'frame', windows_lit: 0 },
+  dig: { ...DAY, floors_done: 0, floor_progress: 0.17, crew: 5, you: 'working', task: 'haul', windows_lit: 0 },
+  pour: { ...DAY, floors_done: 0, floor_progress: 0.4, crew: 6, you: 'working', task: 'frame', windows_lit: 0 },
+  groundfloor: { ...DAY, floors_done: 0, floor_progress: 0.75, crew: 7, you: 'working', task: 'window', windows_lit: 0 },
+  rain: { sunAltitude: 15, hour: 14, weather: 'rain', floors_done: 2, floor_progress: 0.5, crew: 6, you: 'working', task: 'brick', windows_lit: 8 },
   cutaway: { ...DAY, floors_done: 3, floor_progress: 0.4, crew: 4, you: 'working', task: 'wire', cut: true, your_minutes: 600, windows_lit: 8 },
 };
 const SETTLE = { off: 14, paused: 6, whistle: 3, morning: 4 };
@@ -87,6 +94,32 @@ try {
         say(!errors.length, `${name} ${sz} ${errors.length ? errors.join(' | ') : ''}`);
         await page.close();
       }
+    }
+  }
+
+  if (want('strips')) {
+    /* a vignette as a sequence: what a glance every two seconds would catch */
+    await mkdir(OUT, { recursive: true });
+    const ids = (process.env.VIGNETTES || 'dog:3,shower,lunch,m:floor,kidwave,snowman').split(',');
+    for (const id of ids) {
+      const page = await browser.newPage({ viewport: { width: 400, height: 400 }, deviceScaleFactor: 2 });
+      await page.addInitScript(() => { try { localStorage.clear(); } catch (e) { /* fine */ } });
+      await page.goto(URL_);
+      await page.waitForFunction(() => window.preview && window.site);
+      const snowy = /snow/.test(id), wet = /shower|rain/.test(id);
+      const base = { ...DAY, floors_done: 2, floor_progress: 0.45, crew: 7, you: 'working', task: 'brick', windows_lit: 9, hour: /lunch/.test(id) ? 12.2 : 14, weather: snowy ? 'snow' : wet ? 'rain' : 'clear', w: 390, h: 340 };
+      const url = await page.evaluate(async ([b, vid]) => {
+        window.preview.set(b); window.site.advance(20);
+        const ok = window.site.playVignette(vid);
+        const src = document.getElementById('site'), n = 6, cw = src.width, ch = src.height;
+        const g = document.createElement('canvas'); g.width = n * cw + (n - 1) * 8; g.height = ch; const x = g.getContext('2d');
+        x.fillStyle = '#111'; x.fillRect(0, 0, g.width, g.height);
+        for (let i = 0; i < n; i++) { window.site.advance(i ? 2.5 : 0.5); x.drawImage(src, i * (cw + 8), 0); }
+        return ok ? g.toDataURL() : null;
+      }, [base, id]);
+      if (url) await writeFile(path.join(OUT, `site-strip-${id.replace(/[^a-z0-9]+/gi, '-')}.png`), Buffer.from(url.split(',')[1], 'base64'));
+      say(!!url, `strip ${id}`);
+      await page.close();
     }
   }
 

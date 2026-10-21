@@ -330,15 +330,15 @@ export function createSite(canvas, opts = {}) {
 
   const api = {
     setTown(t = {}) {
-      const T = K.S.town;
-      Object.assign(T, {
-        total_minutes: +t.total_minutes || 0,
-        floors_done: Math.max(0, t.floors_done | 0),
-        floor_progress: clamp(+t.floor_progress || 0, 0, 1),
-        windows_lit: Math.max(0, (t.windows_lit != null ? t.windows_lit : t.posts_lit) | 0),
-        floors: t.floors ? clamp(t.floors | 0, 2, 12) : T.floors,
-        topped_out: !!t.topped_out,
-      });
+      /* a partial update changes only what it names: the tab lights a
+         window after a post with setTown({ windows_lit }) alone */
+      const T = K.S.town, has = (k) => t[k] != null;
+      if (has('total_minutes')) T.total_minutes = +t.total_minutes || 0;
+      if (has('floors_done')) T.floors_done = Math.max(0, t.floors_done | 0);
+      if (has('floor_progress')) T.floor_progress = clamp(+t.floor_progress || 0, 0, 1);
+      if (has('windows_lit') || has('posts_lit')) T.windows_lit = Math.max(0, (has('windows_lit') ? t.windows_lit : t.posts_lit) | 0);
+      if (has('floors')) T.floors = clamp(t.floors | 0, 2, 12);
+      if (has('topped_out')) T.topped_out = !!t.topped_out;
       K.building.setTown(T);
       poke();
     },
