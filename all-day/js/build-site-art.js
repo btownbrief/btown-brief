@@ -43,7 +43,7 @@ import { BASE, EMIT, WW, HORIZON, GROUND_Y, STREET_Y, clamp, lerp, mix, hexRgb, 
 
 export const PROPS = ['pallet', 'beam', 'panel', 'bricks', 'barrow', 'pane', 'spool', 'rebar', 'stakes', 'bucket', 'mug', 'thermos',
   'sandwich', 'clipboard', 'cake', 'toolbox', 'shovel', 'tarp', 'flag', 'plant', 'cone', 'truck', 'mixerTruck', 'forklift', 'dog',
-  'doghouse', 'snowman', 'sawhorse', 'mixer', 'hook', 'stake', 'lamp'];
+  'doghouse', 'snowman', 'sawhorse', 'mixer', 'hook', 'stake', 'lamp', 'excavator', 'tree', 'rustPanel', 'solar', 'mallet'];
 
 const TAU = Math.PI * 2;
 const sat = (v) => (v < 0 ? 0 : v > 1 ? 1 : v);
@@ -59,7 +59,7 @@ const EXTRA = {
   bread: '#e8c58a', crust: '#c08a4a', lettuce: '#7dbb4a', tomato: '#d9443a', cakeBody: '#f6e2c4', frosting: '#f29bb5',
   paper: '#f7f4ea', osb: '#cfa765', cardboard: '#b88d5a', terracotta: '#c0643f', thermos: '#3f7f5a', tarp: '#3d73c4',
   stripe: '#e9ecec', drum: '#efe7d6', drumStripe: '#e8742c', carrot: '#ef7d2a', coal: '#2a2522',
-  mtnFar: '#a7bdd3', mtnMid: '#8396b0', mtnNear: '#62738b', lake: '#8fb0c8', lakeDeep: '#6e90ab',
+  mtnFar: '#9ab4d2', mtnMid: '#6d89b0', mtnNear: '#4c6488', lake: '#8fb0c8', lakeDeep: '#6e90ab',
   pine: '#2f5a3a', pineLight: '#3f7048', bare: '#7b6d62', dogDark: '#7c5530', dogLight: '#d6a56a', cone: '#f07a2a',
   redbox: '#c8402f', cab: '#d9443a', chrome: '#dfe3e6', mortarMix: '#9c968c', soil: '#6b4f36', driverSkin: '#c68642', driverVest: '#ff8a2a',
 };
@@ -533,6 +533,27 @@ export function createArt(K) {
       if (R.view === SIDE) { R.a1x = 1.7; R.a1y = -4.5; R.a0x = 1.3; R.a0y = -4.6; }
       else { R.kfk = true; R.k0x = -1.0; R.k0y = -3.2; R.k1x = 1.0; R.k1y = -3.2; R.f0x = -1.05; R.f0y = ANK; R.f1x = 1.05; R.f1y = ANK; R.a0x = 0.6; R.a0y = -4.4; R.a1x = -0.6; R.a1y = -4.6; R.e0 = -1; R.e1 = 1; }
     },
+    ride(t) {
+      /* on a bike (the world draws it): saddle behind the cranks, hands on the bars, pedalling */
+      R.grip = false; R.lean = 0.3; R.hx = -0.7; R.hy = -6.75;
+      const c = t * 7.5;
+      R.f1x = 0.15 + Math.cos(c) * 1.0; R.f1y = -2.5 + Math.sin(c) * 1.0 - 0.5;
+      R.f0x = 0.15 - Math.cos(c) * 1.0; R.f0y = -2.5 - Math.sin(c) * 1.0 - 0.5;
+      R.a1x = 2.5; R.a1y = -7.9; R.a0x = 2.2; R.a0y = -8.0; R.e0 = R.e1 = 1;
+      R.ty = -Math.abs(Math.sin(c)) * 0.08;
+      if (R.view !== SIDE) { R.f0x = -0.7; R.f1x = 0.7; R.a0x = -1.6; R.a1x = 1.6; }
+    },
+    jackhammer(t) {
+      /* breaking up the old asphalt: bursts of hammering, a pause to pry */
+      const u = (t / 1.9) % 1, on = u < 0.72;
+      R.grip = false; R.lean = 0.16; R.tool = 'jackhammer';
+      const j = on ? Math.sin(t * 60) : 0;
+      R.tx = j * 0.07; R.hy = -5.1 + (on ? Math.abs(j) * 0.12 : 0);
+      R.f0x = -0.9; R.f1x = 0.7;
+      R.a1x = 2.4; R.a1y = -6.9 + j * 0.15; R.a0x = 1.5; R.a0y = -7.0 + j * 0.15; R.e0 = R.e1 = 1;
+      R.tAng = on ? 0 : -0.12 * Math.sin(seg(u, 0.72, 1) * Math.PI);
+      if (on) { R.fx = 11; R.fxT = t; }
+    },
     bend(t) {
       const u = Math.min(1, t / 1.2);
       const k = u < 0.45 ? smooth(u / 0.45) : u < 0.6 ? 1 : 1 - smooth(seg(u, 0.6, 1));
@@ -556,11 +577,11 @@ export function createArt(K) {
   function gripFor(carry, view) {
     const side = view === SIDE;
     switch (carry) {
-      case 'beam': case 'rebar': case 'shovel':
+      case 'beam': case 'rebar': case 'shovel': case 'mallet':
         if (side) { const s = shoulder(1); R.a1x = s[0] + 0.9; R.a1y = s[1] - 1.1; R.e1 = 1; }
         else { R.a1x = 1.9; R.a1y = -10.7; }
         return 'mid';
-      case 'panel': if (side) { R.a1x = 1.4; R.a1y = -9.6; R.a0x = -0.6; R.a0y = -9.8; } else { R.a0x = -2.2; R.a0y = -9.0; R.a1x = 2.2; R.a1y = -9.0; } return 'back';
+      case 'panel': case 'rustPanel': case 'solar': if (side) { R.a1x = 1.4; R.a1y = -9.6; R.a0x = -0.6; R.a0y = -9.8; } else { R.a0x = -2.2; R.a0y = -9.0; R.a1x = 2.2; R.a1y = -9.0; } return 'back';
       case 'bricks': case 'tarp': case 'spool': case 'plant': case 'cake':
         if (side) { R.a1x = 2.2; R.a1y = -6.6; R.a0x = 1.8; R.a0y = -6.8; } else { R.a0x = -1.6; R.a0y = -6.6; R.a1x = 1.6; R.a1y = -6.6; }
         return 'mid';
@@ -577,26 +598,33 @@ export function createArt(K) {
     }
   }
 
-  const fig = { x: 0, y: 0, f: 1, s: 1 };           // what is being drawn (world placement, for lights)
+  const fig = { x: 0, y: 0, f: 1, s: 1 };
+  let HAND_CIV = false;           // what is being drawn (world placement, for lights)
   let curL = null;
   function figure(ctx, x, y, o = {}) {
     const pose = P[o.pose] ? o.pose : 'stand';
     const t = o.t || 0, s = o.scale || 1;
+    const away = o.facing === 'away';
     let f = o.facing === -1 ? -1 : o.facing === 0 ? 0 : 1;
     const L = curL = look(o.colors);
     let view = SIDE;
-    if (f === 0) { if (FRONT_OK[pose]) view = FRONT; f = 1; }
-    if (FRONT_ONLY[pose]) view = FRONT;
+    if (away) { view = BACK; f = 1; }
+    else if (f === 0) { if (FRONT_OK[pose]) view = FRONT; f = 1; }
+    if (FRONT_ONLY[pose] && !away) view = FRONT;
     reset(view);
     P[pose](t);
+    if (away) R.view = BACK;
     view = R.view;
     let carry = o.carry || null;
-    const hatOff = o.hat === false;
-    if (!carry && hatOff && (pose === 'walk' || pose === 'stand' || pose === 'look' || pose === 'run')) carry = 'hat';
+    const civ = !!o.civ, hatOff = o.hat === false;
+    if (!carry && hatOff && !civ && (pose === 'walk' || pose === 'stand' || pose === 'look' || pose === 'run')) carry = 'hat';
+    /* headwear: 0 hard hat, 1 hair, 2 a winter beanie, 3 a ball cap, 4 a bike helmet */
+    const cold = K.light.snowy || (K.light.month != null && (K.light.month >= 10 || K.light.month <= 2));
+    const hw = civ ? (hatOff ? (cold && L.seed % 3 !== 0 ? 2 : 1) : pose === 'ride' ? 4 : 3) : (hatOff || carry === 'hat' ? 1 : 0);
     if (pose === 'push' && !carry) carry = 'barrow';
     let layer = null;
     if (carry && (R.grip || (carry === 'barrow' && pose === 'push'))) layer = gripFor(carry, view);
-    else if (carry && pose === 'climb' && (carry === 'beam' || carry === 'rebar' || carry === 'shovel' || carry === 'spool')) layer = 'backpack';
+    else if (carry && pose === 'climb') layer = 'backpack';
     if ((pose === 'drink' || pose === 'eat') && (!carry || FOOD[carry])) layer = 'hand';
     if (pose === 'sitbeam' && carry && FOOD[carry]) {
       const u = (t / 4.2) % 1, up = smooth(seg(u, 0, 0.15)) * (1 - smooth(seg(u, 0.4, 0.55)));
@@ -609,7 +637,7 @@ export function createArt(K) {
     if (o.shadow !== false && R.shadow && R.ty > -2) { ctx.globalAlpha = 0.2 + 0.05 * R.ty; oval(ctx, 0.3 * f, 0.1, 3.4 * s, 0.85 * s, C.shadow, false); ctx.globalAlpha = 1; }
     ctx.scale(f * s, s);
     ctx.lineCap = 'round'; ctx.lineJoin = 'round';
-    drawRig(ctx, L, f, carry, layer, o, t, hatOff || carry === 'hat');
+    drawRig(ctx, L, f, carry, layer, o, t, hw, civ);
     ctx.restore();
   }
 
@@ -617,7 +645,9 @@ export function createArt(K) {
   const wx = (lx) => fig.x + lx * fig.f * fig.s, wy = (ly) => fig.y + ly * fig.s;
   const STRIPES = [1.75, 2.85];
 
-  function drawRig(ctx, L, f, carry, layer, o, t, bare) {
+  function drawRig(ctx, L, f, carry, layer, o, t, hw, civ) {
+    const sleeve = civ ? L.vest : L.shirt, sleeveSh = civ ? L.vestSh : L.shirtSh;
+    HAND_CIV = civ;
     const view = R.view, side = view === SIDE;
     const ux = Math.sin(R.lean), uy = -Math.cos(R.lean), px = -uy, py = ux;
     const ox = R.tx, oy = R.ty;
@@ -636,7 +666,7 @@ export function createArt(K) {
     if (layer === 'back') drawCarry(ctx, carry, 'back', o, t, view);
 
     /* far arm (side view) */
-    if (side) drawArm(ctx, s0x, s0y, a0x, a0y, R.e0, L.shirtSh, L, R.tool0, R.t0Ang, true);
+    if (side) drawArm(ctx, s0x, s0y, a0x, a0y, R.e0, sleeveSh, L, R.tool0, R.t0Ang, true);
     /* legs */
     drawLeg(ctx, h0x, h0y, f0x, f0y, 0, side ? L.pantsSh : L.pants, L, view);
     drawLeg(ctx, h1x, h1y, f1x, f1y, 1, L.pants, L, view);
@@ -660,8 +690,9 @@ export function createArt(K) {
       ctx.beginPath(); ctx.moveTo(cx - px * 0.8, cy - py * 0.8); ctx.lineTo(cx - ux * 1.3, cy - uy * 1.3); ctx.lineTo(cx + px * 0.8, cy + py * 0.8);
       ctx.lineWidth = 0.75; ctx.strokeStyle = L.shirt; ctx.stroke();
     }
-    /* reflective stripes */
-    const stc = C.stripeNight;
+    /* reflective stripes (a hi-vis vest; a passer-by wears a plain jacket) */
+    const stc = civ ? L.vestSh : C.stripeNight;
+    if (!civ) {
     ctx.lineCap = 'butt';
     for (let i = 0; i < 2; i++) {
       const d = STRIPES[i], cx = hx + ux * d, cy = hy + uy * d, hw = tw / 2 - 0.05;
@@ -669,8 +700,9 @@ export function createArt(K) {
     }
     if (side) line(ctx, b1x + px * 0.75 + ux * 1.1, b1y + py * 0.75 + uy * 1.1, hx + ux * 2.55 + px * 0.75, hy + uy * 2.55 + py * 0.75, 0.45, stc);
     else { line(ctx, b1x - px * 0.95 + ux * 1.25, b1y - py * 0.95 + uy * 1.25, hx + ux * 2.55 - px * 0.95, hy + uy * 2.55 - py * 0.95, 0.45, stc); line(ctx, b1x + px * 0.95 + ux * 1.25, b1y + py * 0.95 + uy * 1.25, hx + ux * 2.55 + px * 0.95, hy + uy * 2.55 + py * 0.95, 0.45, stc); }
+    }
     ctx.lineCap = 'round';
-    if (view === FRONT) line(ctx, b1x + ux * 0.9, b1y + uy * 0.9, hx + ux * 0.4, hy + uy * 0.4, 0.22, L.vestSh);
+    if (view === FRONT || (civ && side)) line(ctx, b1x + ux * 0.9 + (side ? px * 1.2 : 0), b1y + uy * 0.9 + (side ? py * 1.2 : 0), hx + ux * 0.4 + (side ? px * 1.6 : 0), hy + uy * 0.4 + (side ? py * 1.6 : 0), civ ? 0.3 : 0.22, stc);
     if (layer === 'backpack') drawCarry(ctx, carry, 'backpack', o, t, view, scx, scy);
 
     /* front view: hanging arms go before the head, raised ones after */
@@ -679,21 +711,21 @@ export function createArt(K) {
     /* arm order: at the face (drinking, the whistle) or holding something = over the head;
        raised = behind the head (drawn after it, clipped outside the head); otherwise before the head */
     const a0k = view === SIDE ? -1 : armKind(a0x, a0y, s0y, hcx, hcy, held), a1k = armKind(a1x, a1y, s1y, hcx, hcy, held);
-    if (a1k === 0) drawArm(ctx, s1x, s1y, a1x, a1y, R.e1, L.shirt, L, R.tool, R.tAng, false);
-    if (a0k === 0) drawArm(ctx, s0x, s0y, a0x, a0y, R.e0, L.shirt, L, R.tool0, R.t0Ang, false);
+    if (a1k === 0) drawArm(ctx, s1x, s1y, a1x, a1y, R.e1, sleeve, L, R.tool, R.tAng, false);
+    if (a0k === 0) drawArm(ctx, s0x, s0y, a0x, a0y, R.e0, sleeve, L, R.tool0, R.t0Ang, false);
     /* head */
-    drawHead(ctx, hcx, hcy, L, view, f, bare, o);
+    drawHead(ctx, hcx, hcy, L, view, f, hw, o);
     if (a0k === 2 || a1k === 2) {
       ctx.save(); ctx.beginPath(); ctx.rect(hcx - 30, hcy - 30, 60, 60); ctx.arc(hcx, hcy, HR * HS + 0.15, 0, TAU); ctx.clip('evenodd');
-      if (a0k === 2) drawArm(ctx, s0x, s0y, a0x, a0y, R.e0, L.shirt, L, R.tool0, R.t0Ang, false);
-      if (a1k === 2) drawArm(ctx, s1x, s1y, a1x, a1y, R.e1, L.shirt, L, R.tool, R.tAng, false);
+      if (a0k === 2) drawArm(ctx, s0x, s0y, a0x, a0y, R.e0, sleeve, L, R.tool0, R.t0Ang, false);
+      if (a1k === 2) drawArm(ctx, s1x, s1y, a1x, a1y, R.e1, sleeve, L, R.tool, R.tAng, false);
       ctx.restore();
     }
     if (layer === 'mid') drawCarry(ctx, carry, 'mid', o, t, view, scx, scy);
     if (R.item === 'crate') drawItem(ctx, 'crate', a1x, a1y);
     if (R.item === 'mound') drawItem(ctx, 'mound', 3.3 + ox, 0);
-    if (a0k === 1) drawArm(ctx, s0x, s0y, a0x, a0y, R.e0, L.shirt, L, R.tool0, R.t0Ang, false);
-    if (a1k === 1) drawArm(ctx, s1x, s1y, a1x, a1y, R.e1, L.shirt, L, R.tool, R.tAng, false);
+    if (a0k === 1) drawArm(ctx, s0x, s0y, a0x, a0y, R.e0, sleeve, L, R.tool0, R.t0Ang, false);
+    if (a1k === 1) drawArm(ctx, s1x, s1y, a1x, a1y, R.e1, sleeve, L, R.tool, R.tAng, false);
     if (layer === 'hand') drawCarry(ctx, carry, 'hand', o, t, view);
     /* effects */
     if (R.fx) drawFx(ctx, R.fx, R.fxT, a1x, a1y, hcx, hcy, view);
@@ -732,10 +764,11 @@ export function createArt(K) {
     const ex = IK.ex, ey = IK.ey;
     limb(ctx, sx, sy, IK.jx, IK.jy, ex, ey, ARMW, col);
     if (tool) drawTool(ctx, tool, ex, ey, ang);
-    disc(ctx, ex, ey, HANDR, far ? L.gloveSh : L.glove);
+    disc(ctx, ex, ey, HANDR, HAND_CIV ? (far ? L.skinSh : L.skin) : far ? L.gloveSh : L.glove);
   }
 
-  function drawHead(ctx, cx, cy, L, view, f, bare, o) {
+  function drawHead(ctx, cx, cy, L, view, f, hw, o) {
+    const bare = hw !== 0;
     ctx.save();
     ctx.translate(cx, cy);
     if (R.tilt) ctx.rotate(R.tilt);
@@ -745,6 +778,7 @@ export function createArt(K) {
     if (st === 2 && view !== FRONT) { ctx.beginPath(); ctx.ellipse(side ? -2.3 : 0, side ? 0.6 : 1.4, 0.75, 1.25, side ? 0.5 : 0, 0, TAU); fillOut(ctx, L.hair); }
     if (st === 3) disc(ctx, side ? -1.9 : 0, side ? -0.4 : -0.15, 0.95, L.hair);
     /* the head: a shade disc, the lit face offset up-left */
+    if (view === BACK) { disc(ctx, -HR + 0.05, 0.45, 0.48, L.skinSh, true); disc(ctx, HR - 0.05, 0.45, 0.48, L.skinSh, true); }
     disc(ctx, 0, 0, HR, view === BACK ? L.hair : L.skinSh);
     if (view !== BACK) { ctx.beginPath(); ctx.arc(-0.22 * f, -0.2, HR - 0.32, 0, TAU); ctx.fillStyle = L.skin; ctx.fill(); }
     else { ctx.beginPath(); ctx.arc(0, 1.0, 1.6, 0.15 * Math.PI, 0.85 * Math.PI); ctx.closePath(); ctx.fillStyle = L.skinSh; ctx.fill(); }
@@ -758,13 +792,17 @@ export function createArt(K) {
       ctx.beginPath(); ctx.arc(0, 0, HR, 0.8 * Math.PI, 1.25 * Math.PI); ctx.lineTo(-1.2, -0.6); ctx.closePath(); ctx.fill();
       ctx.beginPath(); ctx.arc(0, 0, HR, 1.75 * Math.PI, 0.2 * Math.PI); ctx.lineTo(1.2, -0.6); ctx.closePath(); ctx.fill();
     }
-    if (bare) {
-      /* hat off: the full head of hair */
-      ctx.beginPath(); ctx.arc(0, -0.15, HR + 0.12, Math.PI * 1.02, Math.PI * 1.98); ctx.quadraticCurveTo(side ? 1.4 : 0, -1.0, -HR, -0.2); ctx.closePath(); fillOut(ctx, L.hair, 0.35);
-      ctx.globalAlpha = 0.5; ctx.beginPath(); ctx.arc(-0.5, -1.4, 1.0, Math.PI * 1.1, Math.PI * 1.6); ctx.lineWidth = 0.35; ctx.strokeStyle = L.hairHi; ctx.stroke(); ctx.globalAlpha = 1;
+    if (bare && hw !== 4 && view !== BACK) {
+      /* hat off: a head of hair with a soft fringe (a beanie or cap goes over it) */
+      ctx.beginPath(); ctx.moveTo(-HR - 0.05, 0.1); ctx.arc(0, -0.05, HR + 0.08, Math.PI * 1.03, Math.PI * 1.97);
+      if (side) { ctx.quadraticCurveTo(HR, -0.6, 1.9, -0.55); ctx.quadraticCurveTo(1.4, -1.25, 0.9, -0.75); ctx.quadraticCurveTo(0.4, -1.3, -0.2, -0.8); ctx.quadraticCurveTo(-0.6, -0.4, -1.2, 0.3); }
+      else { ctx.quadraticCurveTo(HR - 0.1, -0.4, 1.7, -0.55); ctx.quadraticCurveTo(1.1, -1.2, 0.5, -0.7); ctx.quadraticCurveTo(0, -1.3, -0.5, -0.7); ctx.quadraticCurveTo(-1.1, -1.2, -1.7, -0.55); ctx.quadraticCurveTo(-HR + 0.1, -0.4, -HR - 0.05, 0.1); }
+      ctx.closePath(); ctx.fillStyle = L.hair; ctx.fill();
+      ctx.globalAlpha = 0.55; ctx.beginPath(); ctx.arc(-0.6, -1.3, 1.0, Math.PI * 1.1, Math.PI * 1.6); ctx.lineWidth = 0.35; ctx.strokeStyle = L.hairHi; ctx.stroke(); ctx.globalAlpha = 1;
     }
     if (view !== BACK) drawFace(ctx, L, view, o);
     if (!bare) drawHat(ctx, L, view, R.hatTip);
+    else if (hw >= 2) drawCivHat(ctx, L, view, hw);
     ctx.restore();
   }
   function drawFace(ctx, L, view, o) {
@@ -792,6 +830,25 @@ export function createArt(K) {
     if (R.mouth === 1) { ctx.beginPath(); ctx.ellipse(mx, my, 0.32, 0.36, 0, 0, TAU); ctx.fill(); }
     else if (R.mouth === 2) { ctx.beginPath(); ctx.arc(mx + 0.1, my - 0.05, 0.22, 0, TAU); ctx.fill(); }
     else { ctx.lineWidth = 0.22; ctx.beginPath(); ctx.arc(mx, my - 0.35, 0.38, 0.25 * Math.PI, 0.75 * Math.PI); ctx.stroke(); }
+  }
+  function drawCivHat(ctx, L, view, hw) {
+    const side = view === SIDE;
+    if (hw === 2) {          // a knit beanie with a cuff and a pompom
+      ctx.beginPath(); ctx.ellipse(0, -0.55, 2.45, 2.35, 0, Math.PI * 1.02, Math.PI * 1.98); ctx.closePath(); fillOut(ctx, L.hat, 0.4);
+      ctx.globalAlpha = 0.45; ctx.beginPath(); for (let i = -2; i <= 2; i++) { ctx.moveTo(i * 0.7, -0.7); ctx.lineTo(i * 0.55, -2.4); } ctx.lineWidth = 0.18; ctx.strokeStyle = L.hatSh; ctx.stroke(); ctx.globalAlpha = 1;
+      box(ctx, -2.55, -1.05, 5.1, 1.0, 0.45, L.hatSh, true);
+      disc(ctx, side ? -0.4 : 0, -3.05, 0.75, L.hatHi);
+    } else if (hw === 3) {   // a ball cap, the bill forward
+      ctx.beginPath(); ctx.ellipse(0, -0.45, 2.45, 2.25, 0, Math.PI, TAU); ctx.closePath(); fillOut(ctx, L.hat, 0.4);
+      if (side) { ctx.beginPath(); ctx.moveTo(1.4, -0.5); ctx.quadraticCurveTo(3.4, -0.7, 3.6, -0.1); ctx.lineTo(1.6, -0.15); ctx.closePath(); fillOut(ctx, L.hatSh, 0.35); }
+      else { box(ctx, -2.0, -0.6, 4.0, 0.6, 0.3, L.hatSh, true); }
+      disc(ctx, 0, -2.65, 0.3, L.hatSh, false);
+    } else {                 // a bike helmet, vents and all
+      ctx.beginPath(); ctx.ellipse(side ? -0.2 : 0, -0.5, 2.6, 2.5, side ? -0.12 : 0, Math.PI * 0.98, Math.PI * 2.02); ctx.closePath(); fillOut(ctx, L.hat, 0.4);
+      ctx.beginPath(); for (let i = -1; i <= 1; i++) { ctx.moveTo(i * 0.9 - 0.2, -1.2); ctx.lineTo(i * 1.0, -2.3); } ctx.lineWidth = 0.35; ctx.strokeStyle = L.hatSh; ctx.stroke();
+      ctx.globalAlpha = 0.8; oval(ctx, -1.0, -2.2, 0.5, 0.25, L.gloss, false, -0.5); ctx.globalAlpha = 1;
+      if (side) line(ctx, 0.2, -0.2, 1.2, 1.2, 0.18, C.ink);
+    }
   }
   function drawHat(ctx, L, view, tip) {
     const side = view === SIDE;
@@ -895,6 +952,19 @@ export function createArt(K) {
         break;
       }
       case 'finger': line(ctx, x, y, x + ca * 0.9, y + sa * 0.9, 0.35, C.glove); break;
+      case 'jackhammer': {
+        /* the T handle at the hands, the body below, the steel bit down to the ground */
+        ctx.save(); ctx.translate(x - 0.4, y); ctx.rotate(a);
+        const gy = -y;                        // ground in this frame
+        bar(ctx, -1.5, 0, 1.3, 0, 0.55, C.tool);
+        box(ctx, -0.85, 0.35, 1.7, 3.6, 0.5, C.drill);
+        ctx.globalAlpha = 0.5; line(ctx, -0.45, 0.9, -0.45, 3.5, 0.35, C.drillHi); ctx.globalAlpha = 1;
+        box(ctx, -0.55, 3.9, 1.1, 0.8, 0.2, C.tool);
+        bar(ctx, 0, 4.7, 0, gy - 0.1, 0.38, C.toolSteel);
+        bar(ctx, 1.1, 1.6, 2.3, 1.2, 0.3, C.tool);      // the air hose
+        ctx.restore();
+        break;
+      }
       case 'whistle': box(ctx, x - 0.2, y - 0.75, 1.2, 0.55, 0.25, C.chrome); break;
     }
   }
@@ -945,6 +1015,13 @@ export function createArt(K) {
         if (ph < 0.6) { const q = ph / 0.6; ctx.globalAlpha = 0.55 * (1 - q); disc(ctx, cx + (view === SIDE ? 2.6 : 0.4) + q * 1.4, cy + 0.9 - q * 1.2, 0.4 + q * 0.7, C.snowFlake, false); ctx.globalAlpha = 1; }
         break;
       }
+      case 11: { // asphalt chips and dust at the bit
+        const bx = R.a1x + R.tx - 0.4;
+        for (let i = 0; i < 3; i++) { const ph = (k * 2.3 + i / 3) % 1, dir = i === 1 ? -1 : 1; ctx.globalAlpha = 1 - ph; disc(ctx, bx + dir * (0.6 + ph * 2.2), -0.2 - Math.sin(ph * Math.PI) * 1.8, 0.28, i === 2 ? C.asphaltHi : C.asphalt, false); }
+        const dp = (k * 1.1) % 1; ctx.globalAlpha = 0.35 * (1 - dp); disc(ctx, bx + 0.8 + dp * 1.5, -0.6 - dp * 1.6, 0.6 + dp * 1.2, C.gravelHi, false);
+        ctx.globalAlpha = 1;
+        break;
+      }
       case 10: { // whistle blasts
         const ph = (k * 1.6) % 1;
         if (ph < 0.55) {
@@ -974,7 +1051,11 @@ export function createArt(K) {
   function drawCarry(ctx, carry, layer, o, t, view, scx, scy) {
     const side = view === SIDE;
     const a1x = R.a1x + R.tx, a1y = R.a1y + R.ty;
+    if (layer === 'backpack') { drawBackpack(ctx, carry, scx, scy, t); return; }
     switch (carry) {
+      case 'mallet': drawMallet(ctx, a1x + 0.5, a1y + 0.4, side ? -2.7 : -2.25); break;
+      case 'rustPanel': drawRust(ctx, side ? -1.6 : -2.6, -14.2, side ? 5.0 : 5.2, 10.5); break;
+      case 'solar': ctx.save(); ctx.translate(side ? 1.0 : 0, -9.0); ctx.rotate(side ? -0.25 : 0); drawSolarPanel(ctx, -4.2, -3.0, 8.4, 5.6); ctx.restore(); break;
       case 'beam': case 'rebar': {
         if (layer === 'backpack') { ctx.save(); ctx.translate(scx, scy + 1.5); ctx.rotate(-0.9); drawTimber(ctx, -7, 0, 7, 0, carry); ctx.restore(); break; }
         if (side) { const y0 = a1y + 0.75; drawTimber(ctx, -6.5, y0 - 0.6, 9.0, y0 + 0.5, carry); }
@@ -1004,7 +1085,8 @@ export function createArt(K) {
       case 'paneL': case 'paneR': {
         /* the pane runs from this carrier toward the other one; only paneL draws the glass */
         const ld = (carry === 'paneL' ? 1 : -1) * fig.f;
-        if (carry === 'paneL') { const len = o.paneW || 12; drawGlass(ctx, ld > 0 ? 1.0 : -1.0 - len, -11.8, len, 7.2, 0); }
+        /* the crew draws the shared pane between the pair (prop 'pane', carried); o.paneW draws it here instead */
+        if (carry === 'paneL' && o.paneW) drawGlass(ctx, ld > 0 ? 1.0 : -1.0 - o.paneW, -11.8, o.paneW, 7.2, 0);
         break;
       }
       case 'clipboard': {
@@ -1018,6 +1100,55 @@ export function createArt(K) {
       case 'barrow': break;   // drawn with the legs
       default: if (layer === 'hand') drawHandItem(ctx, carry, a1x, a1y, t, view, o);
     }
+  }
+  /* climbing: big things strapped across the back, a bucket or toolbox on a hook at the hip */
+  function drawBackpack(ctx, carry, scx, scy, t) {
+    switch (carry) {
+      case 'beam': case 'rebar': ctx.save(); ctx.translate(scx, scy + 1.5); ctx.rotate(-0.9); drawTimber(ctx, -7, 0, 7, 0, carry); ctx.restore(); break;
+      case 'shovel': ctx.save(); ctx.translate(scx, scy + 1); ctx.rotate(-0.7); drawTool(ctx, 'shovel', -4, 0, 0); ctx.restore(); break;
+      case 'mallet': ctx.save(); ctx.translate(scx, scy + 1); ctx.rotate(-0.75); drawMallet(ctx, -3.2, 0, 0); ctx.restore(); break;
+      case 'spool': drawSpool(ctx, scx, scy + 2.2, 1.8); break;
+      case 'stakes': ctx.save(); ctx.translate(scx, scy + 2); ctx.rotate(-0.6); for (let i = 0; i < 4; i++) bar(ctx, -3, i * 0.45 - 0.7, 3, i * 0.45 - 0.7, 0.42, C.timber); ctx.restore(); break;
+      case 'panel': case 'pane': case 'rustPanel': case 'solar': case 'tarp': case 'bricks': {
+        const x = scx - 2.4, y = scy + 0.6;
+        if (carry === 'pane') drawGlass(ctx, x, y, 4.8, 5.6, 0);
+        else if (carry === 'rustPanel') drawRust(ctx, x + 0.4, y - 0.5, 4.0, 6.6);
+        else if (carry === 'solar') drawSolarPanel(ctx, x, y, 4.8, 5.0);
+        else if (carry === 'tarp') box(ctx, x + 0.4, y + 1.0, 4.0, 3.0, 0.8, C.tarp);
+        else if (carry === 'bricks') { box(ctx, x + 0.6, y + 0.4, 3.6, 4.2, 0.5, C.cardboard); line(ctx, x + 0.9, y + 2.4, x + 3.9, y + 2.4, 0.25, C.cardboardSh); }
+        else drawPanel(ctx, x, y, 4.8, 5.6);
+        line(ctx, scx - 1.6, scy + 0.4, scx - 1.2, scy + 6.4, 0.35, C.tool); line(ctx, scx + 1.6, scy + 0.4, scx + 1.2, scy + 6.4, 0.35, C.tool);
+        break;
+      }
+      case 'bucket': drawBucket(ctx, 2.6, -6.2, 'mortar'); break;
+      case 'toolbox': box(ctx, 1.4, -5.4, 2.8, 1.7, 0.3, C.redbox); break;
+    }
+    void t;
+  }
+  function drawRust(ctx, x, y, w, h) {
+    box(ctx, x, y, w, h, 0.25, C.rust);
+    ctx.beginPath(); for (let i = 1; i < 5; i++) { const xx = x + (w * i) / 5; ctx.moveTo(xx, y + 0.3); ctx.lineTo(xx, y + h - 0.3); }
+    ctx.lineWidth = 0.38; ctx.strokeStyle = C.rustGroove; ctx.stroke();
+    ctx.globalAlpha = 0.55; ctx.beginPath(); for (let i = 1; i < 5; i++) { const xx = x + (w * i) / 5 - 0.35; ctx.moveTo(xx, y + 0.3); ctx.lineTo(xx, y + h - 0.3); }
+    ctx.lineWidth = 0.18; ctx.strokeStyle = C.rustHi; ctx.stroke(); ctx.globalAlpha = 1;
+  }
+  function drawSolarPanel(ctx, x, y, w, h) {
+    box(ctx, x, y, w, h, 0.2, C.solar);
+    ctx.globalAlpha = 0.5; ctx.beginPath();
+    for (let i = 1; i < 4; i++) { ctx.moveTo(x + (w * i) / 4, y + 0.2); ctx.lineTo(x + (w * i) / 4, y + h - 0.2); }
+    for (let i = 1; i < 3; i++) { ctx.moveTo(x + 0.2, y + (h * i) / 3); ctx.lineTo(x + w - 0.2, y + (h * i) / 3); }
+    ctx.lineWidth = 0.18; ctx.strokeStyle = C.solarHi; ctx.stroke();
+    ctx.globalAlpha = 0.45; ctx.beginPath(); ctx.moveTo(x + w * 0.15, y + h * 0.85); ctx.lineTo(x + w * 0.45, y + h * 0.15); ctx.lineWidth = 0.5; ctx.strokeStyle = C.glassHi; ctx.stroke();
+    ctx.globalAlpha = 1;
+  }
+  function drawMallet(ctx, x, y, a) {
+    /* a tall stake mallet: a long handle, a heavy head at the far end */
+    const ca = Math.cos(a), sa = Math.sin(a), L1 = 6.8, hx = x + ca * L1, hy = y + sa * L1;
+    bar(ctx, x - ca * 0.6, y - sa * 0.6, hx, hy, 0.45, C.timberShade);
+    ctx.save(); ctx.translate(hx, hy); ctx.rotate(a);
+    box(ctx, -0.9, -1.5, 1.8, 3.0, 0.35, C.timberDark);
+    line(ctx, -0.6, -1.5, -0.6, 1.5, 0.3, C.steel); line(ctx, 0.6, -1.5, 0.6, 1.5, 0.3, C.steel);
+    ctx.restore();
   }
   function drawHandItem(ctx, carry, x, y, t, view, o) {
     let item = carry;
@@ -1125,10 +1256,17 @@ export function createArt(K) {
     if (content) { ctx.beginPath(); ctx.ellipse(x, y + 0.05, 1.0, 0.25, 0, 0, TAU); ctx.fillStyle = content === 'mortar' ? C.mortarMix : C.dirt; ctx.fill(); }
     ctx.beginPath(); ctx.moveTo(x - 1.1, y); ctx.quadraticCurveTo(x, y - 1.2, x + 1.1, y); ctx.lineWidth = 0.2; ctx.strokeStyle = C.steel; ctx.stroke();
   }
-  function drawCake(ctx, x, y, t) {
-    box(ctx, x - 1.8, y - 1.6, 3.6, 1.8, 0.4, C.cakeBody);
-    ctx.beginPath(); ctx.moveTo(x - 1.8, y - 1.0); for (let i = 1; i <= 6; i++) ctx.quadraticCurveTo(x - 1.8 + i * 0.6 - 0.3, y - 0.5, x - 1.8 + i * 0.6, y - 1.0);
-    ctx.lineTo(x + 1.8, y - 1.5); ctx.lineTo(x - 1.8, y - 1.5); ctx.closePath(); ctx.fillStyle = C.frosting; ctx.fill();
+  function drawCake(ctx, x, y, t, slices = 8, candle = true) {
+    /* slices 0..8: cut from the right, the cut face showing the layers */
+    const n = clamp(Math.round(slices), 0, 8);
+    if (!n) { ctx.beginPath(); ctx.ellipse(x, y - 0.15, 2.3, 0.45, 0, 0, TAU); fillOut(ctx, C.white, 0.3); return; }
+    ctx.beginPath(); ctx.ellipse(x, y - 0.15, 2.4, 0.5, 0, 0, TAU); fillOut(ctx, C.white, 0.3);
+    const w = 3.6 * n / 8, x0 = x - 1.8;
+    box(ctx, x0, y - 1.6, w, 1.8, n === 8 ? 0.4 : 0.25, C.cakeBody);
+    if (n < 8) { line(ctx, x0 + w - 0.15, y - 1.3, x0 + w - 0.15, y + 0.0, 0.3, C.cakeBodySh); line(ctx, x0 + w - 0.2, y - 0.75, x0 + w - 0.2, y - 0.6, 0.6, C.frosting); }
+    ctx.beginPath(); ctx.moveTo(x0, y - 1.0); for (let i = 1; i <= 6; i++) { const xi = x0 + (w * i) / 6; ctx.quadraticCurveTo(xi - w / 12, y - 0.5, xi, y - 1.0); }
+    ctx.lineTo(x0 + w, y - 1.5); ctx.lineTo(x0, y - 1.5); ctx.closePath(); ctx.fillStyle = C.frosting; ctx.fill();
+    if (!candle) return;
     line(ctx, x, y - 1.6, x, y - 2.8, 0.35, C.white);
     const fl = 0.85 + Math.sin(t * 17) * 0.15;
     oval(ctx, x + Math.sin(t * 9) * 0.05, y - 3.25, 0.28 * fl, 0.5 * fl, EMIT.candle, false);
@@ -1200,19 +1338,27 @@ export function createArt(K) {
   }
 
   /* ============================================================ props */
-  const MIRROR = { truck: 1, mixerTruck: 1, forklift: 1, dog: 1, barrow: 1, mixer: 1, shovel: 1 };
+  const MIRROR = { truck: 1, mixerTruck: 1, forklift: 1, dog: 1, barrow: 1, mixer: 1, shovel: 1, excavator: 1, mallet: 1 };
   function prop(ctx, name, x, y, o = {}) {
     const fn = PR[name];
     if (!fn) return;
-    const f = o.facing === -1 && MIRROR[name] ? -1 : 1;
+    const f = o.facing === -1 && MIRROR[name] ? -1 : 1, sc = o.scale > 0 ? o.scale : 1;
     ctx.save(); ctx.translate(x, y);
-    if (f < 0) ctx.scale(-1, 1);
+    if (f < 0 || sc !== 1) ctx.scale(f * sc, sc);
     ctx.lineCap = 'round'; ctx.lineJoin = 'round';
-    fig.x = x; fig.y = y; fig.f = f; fig.s = 1;
+    fig.x = x; fig.y = y; fig.f = f; fig.s = sc;
+    noShadow = !!(o.hanging || o.carried || o.upright || o.small);
     fn(ctx, o, o.t != null ? o.t : K.t);
     ctx.restore();
   }
-  function groundShadow(ctx, w, a = 0.2) { ctx.globalAlpha = a; oval(ctx, 0, 0.15, w, Math.max(0.6, w * 0.12), C.shadow, false); ctx.globalAlpha = 1; }
+  let noShadow = false;
+  const coatCache = new Map();
+  function coatTone(hex, k) {
+    let c = coatCache.get(hex);
+    if (!c || c.pv !== pv) { c = { pv, t: [lit(hex), lit(mix(hex, '#2a1a10', 0.3)), lit(mix(hex, '#fff2dc', 0.3))] }; coatCache.set(hex, c); }
+    return c.t[k];
+  }
+  function groundShadow(ctx, w, a = 0.2) { if (noShadow) return; ctx.globalAlpha = a; oval(ctx, 0, 0.15, w, Math.max(0.6, w * 0.12), C.shadow, false); ctx.globalAlpha = 1; }
   function palletBase(ctx, w) {
     box(ctx, -w / 2, -1.3, w, 0.55, 0.12, C.pallet);
     box(ctx, -w / 2 + 0.4, -0.8, 1.0, 0.8, 0.1, C.palletSh); box(ctx, -0.5, -0.8, 1.0, 0.8, 0.1, C.palletSh); box(ctx, w / 2 - 1.4, -0.8, 1.0, 0.8, 0.1, C.palletSh);
@@ -1264,7 +1410,8 @@ export function createArt(K) {
       }
     }
   }
-  function cab(ctx, x, h) {
+  function cab(ctx, x, h, drv) {
+    const dsk = drv ? look(drv).skin : C.driverSkin, dhat = drv ? look(drv).hat : C.crane;
     /* a rounded cab facing +x, its rear wall at x */
     ctx.beginPath();
     ctx.moveTo(x, -2.2); ctx.lineTo(x, -h + 1.2); ctx.quadraticCurveTo(x, -h, x + 1.4, -h);
@@ -1275,8 +1422,8 @@ export function createArt(K) {
     /* window with the driver */
     ctx.beginPath(); ctx.moveTo(x + 2.4, -h + 1.4); ctx.lineTo(x + 6.0, -h + 1.4); ctx.quadraticCurveTo(x + 6.9, -h + 1.6, x + 7.6, -h + 4.6); ctx.lineTo(x + 2.4, -h + 4.6); ctx.closePath();
     fillOut(ctx, C.glassDark, 0.35);
-    disc(ctx, x + 4.6, -h + 3.8, 1.0, C.driverSkin, false);
-    ctx.beginPath(); ctx.ellipse(x + 4.6, -h + 3.3, 1.1, 1.0, 0, Math.PI, TAU); ctx.closePath(); ctx.fillStyle = C.crane; ctx.fill();
+    disc(ctx, x + 4.6, -h + 3.8, 1.0, dsk, false);
+    ctx.beginPath(); ctx.ellipse(x + 4.6, -h + 3.3, 1.1, 1.0, 0, Math.PI, TAU); ctx.closePath(); ctx.fillStyle = dhat; ctx.fill();
     ctx.globalAlpha = 0.5; line(ctx, x + 6.0, -h + 1.8, x + 6.8, -h + 3.9, 0.4, C.glassHi); ctx.globalAlpha = 1;
     /* door seam, handle, mirror */
     line(ctx, x + 1.6, -h + 5.2, x + 1.6, -2.6, 0.2, C.cabSh);
@@ -1293,7 +1440,7 @@ export function createArt(K) {
   const PR = {
     pallet(ctx, o) { const w = 9; groundShadow(ctx, 5); palletLoad(ctx, o.kind || 'lumber', o.n, w); palletBase(ctx, w); },
     beam(ctx, o) { const len = o.len || 16; groundShadow(ctx, len / 2, 0.15); drawTimber(ctx, -len / 2, -0.7, len / 2, -0.7, 'beam'); },
-    panel(ctx, o) { if (o.flat) box(ctx, -4, -1.0, 8, 1.0, 0.2, C.osb); else { groundShadow(ctx, 3.5); ctx.save(); ctx.rotate(-0.12); drawPanel(ctx, -3.6, -9.4, 7.2, 9.4); ctx.restore(); } },
+    panel(ctx, o) { if (o.flat) box(ctx, -4, -1.0, 8, 1.0, 0.2, C.osb); else if (o.hanging || o.upright) drawPanel(ctx, -3.6, -9.4, 7.2, 9.4); else { groundShadow(ctx, 3.5); ctx.save(); ctx.rotate(-0.12); drawPanel(ctx, -3.6, -9.4, 7.2, 9.4); ctx.restore(); } },
     bricks(ctx, o) { groundShadow(ctx, 2.6); const n = o.n == null ? 3 : o.n; for (let i = 0; i < n; i++) box(ctx, -1.8 + (i % 2) * 0.4, -0.95 - i * 0.95, 3.2, 0.95, 0.15, i % 2 ? C.brick : C.brickHi); },
     barrow(ctx, o) { groundShadow(ctx, 4); drawBarrow(ctx, -3.2, 0, o.load || null, 0, false); },
     pane(ctx, o) { const w = o.w || 6; groundShadow(ctx, w / 2, 0.12); drawGlass(ctx, -w / 2, -8.5, w, 8.5, o.tilt || 0); },
@@ -1305,7 +1452,7 @@ export function createArt(K) {
     thermos(ctx) { box(ctx, -0.6, -3.2, 1.2, 3.2, 0.4, C.thermos); box(ctx, -0.65, -3.7, 1.3, 0.7, 0.25, C.steel); },
     sandwich(ctx) { ctx.beginPath(); ctx.moveTo(-1.2, 0); ctx.lineTo(1.2, 0); ctx.lineTo(0, -1.0); ctx.closePath(); fillOut(ctx, C.bread, 0.3); line(ctx, -0.9, -0.25, 0.9, -0.25, 0.25, C.lettuce); },
     clipboard(ctx) { box(ctx, -1.2, -0.5, 2.4, 0.5, 0.15, C.timberShade); box(ctx, -0.9, -0.6, 1.8, 0.2, 0.05, C.paper, false); },
-    cake(ctx, o, t) { drawCake(ctx, 0, 0, t); },
+    cake(ctx, o, t) { drawCake(ctx, 0, 0, K.t, o.slices == null ? 8 : o.slices, o.candle !== false); },
     toolbox(ctx) { groundShadow(ctx, 2); box(ctx, -1.8, -2.0, 3.6, 2.0, 0.35, C.redbox); ctx.beginPath(); ctx.moveTo(-0.8, -1.9); ctx.lineTo(-0.6, -2.7); ctx.lineTo(0.6, -2.7); ctx.lineTo(0.8, -1.9); ctx.lineWidth = 0.35; ctx.strokeStyle = C.ink; ctx.stroke(); line(ctx, -1.7, -1.3, 1.7, -1.3, 0.2, C.redboxSh); },
     shovel(ctx, o) { if (o.lying) drawTool(ctx, 'shovel', -4.3, -0.4, 0); else drawTool(ctx, 'shovel', -1.6, -8.6, 1.38); },
     tarp(ctx, o, t) {
@@ -1323,29 +1470,32 @@ export function createArt(K) {
     plant(ctx, o) {
       const g = clamp(o.growth == null ? 1 : o.growth, 0, 1);
       if (g < 0.15) { line(ctx, 0, 0, 0, -1.2, 0.25, C.grassDark); oval(ctx, -0.5, -1.2, 0.5, 0.28, C.lettuce, false, -0.4); oval(ctx, 0.5, -1.3, 0.5, 0.28, C.lettuce, false, 0.4); return; }
-      groundShadow(ctx, 1 + g * 2); if (g > 0.4 && !o.pot) line(ctx, -0.9, 0, -0.9, -3.5, 0.25, C.timber); drawPlant(ctx, 0, 0, g, !!o.pot);
+      const pot = !!(o.pot || o.potted); groundShadow(ctx, 1 + g * 2); if (g > 0.4 && !pot) line(ctx, -0.9, 0, -0.9, -3.5, 0.25, C.timber); drawPlant(ctx, 0, 0, g, pot);
     },
     cone(ctx) { groundShadow(ctx, 1.4); box(ctx, -1.4, -0.45, 2.8, 0.45, 0.15, C.cone); ctx.beginPath(); ctx.moveTo(-1.0, -0.4); ctx.lineTo(-0.25, -3.6); ctx.lineTo(0.25, -3.6); ctx.lineTo(1.0, -0.4); ctx.closePath(); fillOut(ctx, C.cone, 0.35); line(ctx, -0.6, -1.8, 0.6, -1.8, 0.5, C.white); },
     truck(ctx, o, t) {
-      const spin = o.wheelT || 0;
+      const spin = o.wheelT != null ? o.wheelT : -(t || 0) / 2.4, rev = !!(o.reverse || o.rev);
+      if (o.moving) ctx.translate(0, -Math.abs(Math.sin(K.t * 11)) * 0.12);
       groundShadow(ctx, 18, 0.22);
       ctx.translate(-19, 0);
       box(ctx, 1.0, -4.0, 28, 1.6, 0.3, C.tool);
       box(ctx, 0.5, -6.0, 23.5, 2.2, 0.4, C.steel);
       ctx.globalAlpha = 0.6; line(ctx, 1.0, -5.4, 23.5, -5.4, 0.3, C.steelHi); ctx.globalAlpha = 1;
       bar(ctx, 22.8, -6, 22.8, -11.2, 0.6, C.steelSh);   // headache rack
-      if (o.load && PALLET_KINDS[o.load]) { ctx.save(); ctx.translate(11.5, -6.0); palletLoad(ctx, o.load, o.n == null ? 4 : o.n, 16); palletBase(ctx, 16); ctx.restore(); }
-      cab(ctx, 24.0, 13.5);
+      if (Array.isArray(o.load)) { for (let i = 0; i < Math.min(2, o.load.length); i++) if (PALLET_KINDS[o.load[i]]) { ctx.save(); ctx.translate(17.2 - i * 11, -6.0); palletLoad(ctx, o.load[i], 4, 9.5); palletBase(ctx, 9.5); ctx.restore(); } }
+      else if (o.load && PALLET_KINDS[o.load]) { ctx.save(); ctx.translate(11.5, -6.0); palletLoad(ctx, o.load, o.n == null ? 4 : o.n, 16); palletBase(ctx, 16); ctx.restore(); }
+      cab(ctx, 24.0, 13.5, o.driver && typeof o.driver === 'object' ? o.driver : null);
       bar(ctx, 23.6, -9.0, 23.6, -15.2, 0.6, C.chrome);   // exhaust
       wheel(ctx, 6.0, -2.4, 2.4, spin); wheel(ctx, 11.0, -2.4, 2.4, spin); wheel(ctx, 31.0, -2.4, 2.4, spin);
       box(ctx, 0.0, -5.2, 0.8, 1.2, 0.2, C.flag);
-      if (o.reverse) { disc(ctx, 0.4, -3.2, 0.45, EMIT.lamp); K.lights.push({ x: wx(-19.5), y: wy(-3), r: 7, a: 0.6, color: '#fff3d6' }); }
-      const beacon = o.reverse && Math.sin(t * 9) > 0;
+      if (rev) { disc(ctx, 0.4, -3.2, 0.45, EMIT.lamp); K.lights.push({ x: wx(-19.5), y: wy(-3), r: 7, a: 0.6, color: '#fff3d6' }); }
+      const beacon = rev && Math.sin(K.t * 9) > 0;
       box(ctx, 27.2, -14.6, 1.4, 0.8, 0.3, beacon ? '#ffb02e' : C.fork);
       if (beacon) K.lights.push({ x: wx(9), y: wy(-14), r: 6, a: 0.5, color: '#ffae3a' });
     },
     mixerTruck(ctx, o, t) {
-      const spin = o.wheelT || 0;
+      const spin = o.wheelT != null ? o.wheelT : -(t || 0) / 2.4, rev = !!(o.reverse || o.rev);
+      if (o.moving) ctx.translate(0, -Math.abs(Math.sin(K.t * 11)) * 0.12);
       groundShadow(ctx, 18, 0.22);
       ctx.translate(-19, 0);
       box(ctx, 1.0, -4.0, 28, 1.6, 0.3, C.tool);
@@ -1354,7 +1504,7 @@ export function createArt(K) {
         ctx.quadraticCurveTo(21.0, -5.4, 16.0, -5.0); ctx.lineTo(8.0, -5.0); ctx.quadraticCurveTo(2.0, -5.4, 2.2, -9.0); ctx.closePath(); };
       ctx.save(); drumPath();
       ctx.fillStyle = C.drum; ctx.fill(); ctx.clip();
-      const ph = ((t * 0.9) % 1) * 4.4;
+      const dr = o.spin != null ? o.spin / TAU : K.t * 0.9, ph = ((dr % 1) + 1) % 1 * 4.4;
       ctx.beginPath(); for (let i = -2; i < 6; i++) { const xx = 1 + i * 4.4 + ph; ctx.moveTo(xx, -16); ctx.lineTo(xx + 3.6, -4); ctx.lineTo(xx + 5.2, -4); ctx.lineTo(xx + 1.6, -16); ctx.closePath(); }
       ctx.fillStyle = C.drumStripe; ctx.fill();
       ctx.globalAlpha = 0.35; ctx.fillStyle = C.drumSh; ctx.fillRect(0, -8.0, 24, 4); ctx.globalAlpha = 0.5; ctx.fillStyle = C.drumHi; ctx.fillRect(0, -14.6, 24, 1.6); ctx.globalAlpha = 1;
@@ -1363,40 +1513,121 @@ export function createArt(K) {
       bar(ctx, 21.0, -5.0, 22.6, -9.8, 0.8, C.steel);
       bar(ctx, 4.0, -5.0, 3.0, -8.0, 0.8, C.steel);
       ctx.beginPath(); ctx.moveTo(2.4, -9.6); ctx.quadraticCurveTo(-0.6, -9.6, -1.4, -6.2); ctx.lineWidth = 1.1 + OUT * 2; ctx.strokeStyle = C.ink; ctx.stroke(); ctx.lineWidth = 1.1; ctx.strokeStyle = C.steel; ctx.stroke();
-      cab(ctx, 24.0, 13.5);
+      cab(ctx, 24.0, 13.5, o.driver && typeof o.driver === 'object' ? o.driver : null);
       wheel(ctx, 6.0, -2.4, 2.4, spin); wheel(ctx, 11.0, -2.4, 2.4, spin); wheel(ctx, 31.0, -2.4, 2.4, spin);
       box(ctx, 0.6, -5.4, 0.8, 1.2, 0.2, C.flag);
-      if (o.reverse) { disc(ctx, 0.9, -3.3, 0.45, EMIT.lamp); K.lights.push({ x: wx(-19), y: wy(-3), r: 7, a: 0.6, color: '#fff3d6' }); }
+      if (rev) { disc(ctx, 0.9, -3.3, 0.45, EMIT.lamp); K.lights.push({ x: wx(-19), y: wy(-3), r: 7, a: 0.6, color: '#fff3d6' }); }
     },
     forklift(ctx, o, t) {
-      const lift = clamp(o.lift || 0, 0, 1), spin = o.wheelT || 0;
-      groundShadow(ctx, 8, 0.22);
-      bar(ctx, 6.2, -1.5, 6.2, -14.0, 0.7, C.tool); bar(ctx, 7.0, -1.5, 7.0, -14.0, 0.7, C.tool);
-      const fy = -1.0 - lift * 9.5;
-      bar(ctx, 7.4, fy, 7.4, fy - 3.2, 0.5, C.steelSh);
-      bar(ctx, 7.4, fy, 12.0, fy, 0.45, C.steelSh);
-      if (o.load && PALLET_KINDS[o.load]) { ctx.save(); ctx.translate(10.6, fy - 0.2); ctx.scale(0.8, 0.8); palletLoad(ctx, o.load, o.n == null ? 2 : o.n, 8); palletBase(ctx, 8); ctx.restore(); }
-      ctx.beginPath(); ctx.moveTo(-5.4, -2.0); ctx.lineTo(-5.4, -5.4); ctx.quadraticCurveTo(-5.4, -7.2, -3.6, -7.2); ctx.lineTo(1.2, -7.2); ctx.lineTo(2.4, -5.0); ctx.lineTo(5.8, -5.0); ctx.lineTo(5.8, -2.0); ctx.closePath();
+      /* sized for a seated builder: the crew sits its yard hand at (-2, -3.5); o.driver (colours) draws one here */
+      const lift = clamp(o.lift || 0, 0, 1), spin = o.wheelT != null ? o.wheelT : -(t || 0) / 1.9;
+      groundShadow(ctx, 9, 0.22);
+      if (o.moving) ctx.translate(0, -Math.abs(Math.sin(K.t * 13)) * 0.1);
+      /* the mast at the front (+x), forks riding up it */
+      bar(ctx, 6.6, -1.5, 6.6, -17.0, 0.75, C.tool); bar(ctx, 7.5, -1.5, 7.5, -17.0, 0.75, C.tool);
+      line(ctx, 6.6, -9.0, 7.5, -9.0, 0.4, C.toolHi);
+      const fy = -1.0 - lift * 12;
+      bar(ctx, 8.0, fy, 8.0, fy - 3.6, 0.55, C.steelSh);
+      bar(ctx, 8.0, fy, 13.2, fy, 0.5, C.steelSh);
+      if (o.load && PALLET_KINDS[o.load]) { ctx.save(); ctx.translate(11.6, fy - 0.25); ctx.scale(0.85, 0.85); palletLoad(ctx, o.load, o.n == null ? 2 : o.n, 8); palletBase(ctx, 8); ctx.restore(); }
+      /* body, counterweight, seat */
+      ctx.beginPath(); ctx.moveTo(-6.2, -2.0); ctx.lineTo(-6.2, -5.6); ctx.quadraticCurveTo(-6.2, -7.2, -4.6, -7.2); ctx.lineTo(-3.8, -7.2); ctx.lineTo(-3.8, -5.6); ctx.lineTo(1.4, -5.6); ctx.lineTo(2.8, -4.6); ctx.lineTo(6.2, -4.6); ctx.lineTo(6.2, -2.0); ctx.closePath();
       fillOut(ctx, C.fork, 0.45);
-      ctx.globalAlpha = 0.5; line(ctx, -4.6, -6.5, 0.6, -6.5, 0.45, C.forkHi); ctx.globalAlpha = 1;
-      box(ctx, -6.0, -6.6, 1.6, 4.8, 0.6, C.tool);   // counterweight
-      /* the driver */
-      box(ctx, -2.4, -9.2, 2.2, 2.4, 0.5, C.driverVest);
-      disc(ctx, -1.2, -10.8, 1.2, C.driverSkin);
-      ctx.beginPath(); ctx.ellipse(-1.15, -11.3, 1.35, 1.2, 0, Math.PI, TAU); ctx.closePath(); fillOut(ctx, C.crane, 0.35);
-      bar(ctx, 0.0, -8.6, 2.8, -7.2, 0.45, C.shirt);
+      ctx.globalAlpha = 0.5; line(ctx, -5.6, -6.6, -4.4, -6.6, 0.45, C.forkHi); line(ctx, -3.2, -5.1, 1.2, -5.1, 0.45, C.forkHi); ctx.globalAlpha = 1;
+      box(ctx, -7.0, -6.8, 1.6, 4.8, 0.6, C.tool);
+      box(ctx, -3.8, -6.9, 3.4, 1.0, 0.4, C.seat || C.tool);
+      bar(ctx, -3.7, -6.6, -3.9, -10.4, 0.9, C.tool);
+      bar(ctx, 1.2, -5.8, 2.6, -8.2, 0.35, C.tool);                                // the steering column
+      ctx.beginPath(); ctx.ellipse(2.6, -8.3, 0.9, 0.3, -0.5, 0, TAU); ctx.lineWidth = 0.3; ctx.strokeStyle = C.tool; ctx.stroke();
+      if (o.driver && typeof o.driver === 'object') { const sv = Object.assign({}, fig); figure(ctx, -2, -3.5, { pose: 'sit', t: K.t, facing: 1, colors: o.driver }); Object.assign(fig, sv); }
       /* the overhead guard */
-      ctx.beginPath(); ctx.moveTo(-4.2, -7.2); ctx.lineTo(-4.2, -13.2); ctx.lineTo(3.6, -13.2); ctx.lineTo(4.6, -5.0);
-      ctx.lineWidth = 0.55 + OUT * 2; ctx.strokeStyle = C.ink; ctx.stroke(); ctx.lineWidth = 0.55; ctx.strokeStyle = C.tool; ctx.stroke();
-      wheel(ctx, 3.6, -1.9, 1.9, spin); wheel(ctx, -3.6, -1.6, 1.6, spin);
-      const blink = Math.sin(t * 6) > 0.3;
-      disc(ctx, -0.4, -13.8, 0.45, blink ? '#ffb02e' : C.fork);
-      if (blink && K.light.night > 0.3) K.lights.push({ x: wx(-0.4), y: wy(-13.8), r: 5, a: 0.5, color: '#ffae3a' });
+      ctx.beginPath(); ctx.moveTo(-5.0, -7.2); ctx.lineTo(-5.0, -17.4); ctx.lineTo(4.6, -17.4); ctx.lineTo(5.6, -4.8);
+      ctx.lineWidth = 0.6 + OUT * 2; ctx.strokeStyle = C.ink; ctx.stroke(); ctx.lineWidth = 0.6; ctx.strokeStyle = C.tool; ctx.stroke();
+      line(ctx, -4.6, -17.4, 4.4, -17.4, 0.25, C.toolHi);
+      wheel(ctx, 3.8, -2.0, 2.0, spin); wheel(ctx, -4.0, -1.7, 1.7, spin);
+      const blink = Math.sin(K.t * 6) > 0.3;
+      disc(ctx, -0.4, -18.0, 0.5, blink ? '#ffb02e' : C.fork);
+      if (blink && K.light.night > 0.3) K.lights.push({ x: wx(-0.4), y: wy(-18), r: 5, a: 0.5, color: '#ffae3a' });
+      if (K.light.night > 0.3) { disc(ctx, 5.9, -6.0, 0.4, EMIT.lamp); K.lights.push({ x: wx(9), y: wy(-4), r: 10, a: 0.4 }); }
     },
+    excavator(ctx, o, t) {
+      /* a compact excavator: tracks, a turning house with the cab, the boom, stick and bucket.
+         o.boom (rad, up from forward), o.stick (rad, down from forward), o.bucket (rad), o.driver colours */
+      const boom = o.boom != null ? o.boom : 0.55, stick = o.stick != null ? o.stick : 1.0, bk = o.bucket != null ? o.bucket : 0.3;
+      groundShadow(ctx, 11, 0.24);
+      /* tracks */
+      box(ctx, -9.2, -3.6, 18.4, 3.6, 1.8, C.tire);
+      const od = (((t || 0) % 2.4) + 2.4) % 2.4;
+      ctx.beginPath(); for (let x = -8.4 + od * 0.0; x < 8.6; x += 1.2) { const xx = x + (od / 2.4) * 1.2; if (xx < 8.6) { ctx.moveTo(xx, -3.5); ctx.lineTo(xx, -3.1); ctx.moveTo(xx, -0.4); ctx.lineTo(xx, -0.05); } }
+      ctx.lineWidth = 0.3; ctx.strokeStyle = C.tireHi; ctx.stroke();
+      for (let i = -6.6; i <= 6.6; i += 3.3) { disc(ctx, i, -1.8, 0.85, C.steel, false); disc(ctx, i, -1.8, 0.3, C.steelSh, false); }
+      if (o.moving) ctx.translate(0, -Math.abs(Math.sin(K.t * 12)) * 0.1);
+      /* the house */
+      ctx.beginPath(); ctx.moveTo(-8.6, -4.0); ctx.lineTo(-8.6, -8.0); ctx.quadraticCurveTo(-8.6, -9.0, -7.4, -9.0); ctx.lineTo(6.0, -9.0); ctx.lineTo(7.0, -4.0); ctx.closePath(); fillOut(ctx, C.fork, 0.45);
+      ctx.globalAlpha = 0.5; line(ctx, -7.6, -8.4, 5.4, -8.4, 0.45, C.forkHi); ctx.globalAlpha = 1;
+      box(ctx, -9.2, -8.4, 2.4, 4.0, 0.9, C.tool);                                  // counterweight
+      bar(ctx, -6.0, -9.0, -6.0, -12.0, 0.55, C.tool);                                 // exhaust
+      if (o.moving || o.boom != null) { const ph = (K.t * 0.8) % 1; ctx.globalAlpha = 0.35 * (1 - ph); disc(ctx, -6.0 + ph * 1.2, -12.8 - ph * 2.5, 0.5 + ph * 0.9, C.concrete, false); ctx.globalAlpha = 1; }
+      /* the cab, with the operator */
+      ctx.beginPath(); ctx.moveTo(-4.8, -9.0); ctx.lineTo(-4.8, -15.6); ctx.quadraticCurveTo(-4.8, -16.4, -4.0, -16.4); ctx.lineTo(0.6, -16.4); ctx.quadraticCurveTo(1.6, -16.2, 2.2, -14.6); ctx.lineTo(2.4, -9.0); ctx.closePath(); fillOut(ctx, C.fork, 0.45);
+      const nightWin = K.light.night > 0.5;
+      ctx.beginPath(); ctx.moveTo(-2.6, -10.0); ctx.lineTo(-2.6, -15.4); ctx.lineTo(0.5, -15.4); ctx.quadraticCurveTo(1.2, -15.2, 1.5, -14.2); ctx.lineTo(1.6, -10.0); ctx.closePath(); fillOut(ctx, nightWin ? EMIT.winLit : C.glassHi, 0.3);
+      if (o.driver && typeof o.driver === 'object') {
+        const L = look(o.driver);
+        box(ctx, -1.6, -11.6, 2.2, 1.8, 0.6, L.vest, false);
+        disc(ctx, -0.5, -12.7, 1.05, L.skin, false);
+        ctx.beginPath(); ctx.ellipse(-0.45, -13.2, 1.2, 1.05, 0, Math.PI, TAU); ctx.closePath(); ctx.fillStyle = L.hat; ctx.fill();
+        disc(ctx, 0.1, -12.6, 0.14, C.ink, false);
+      }
+      ctx.globalAlpha = 0.5; line(ctx, 0.4, -14.8, 1.0, -11.0, 0.35, C.white); ctx.globalAlpha = 1;
+      /* the arm */
+      const px = 3.4, py = -8.6, ex = px + Math.cos(boom) * 8.5, ey = py - Math.sin(boom) * 8.5, sx = ex + Math.cos(stick) * 7, sy = ey + Math.sin(stick) * 7;
+      ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(ex, ey); ctx.lineTo(sx, sy);
+      ctx.lineWidth = 1.6 + OUT * 2; ctx.strokeStyle = C.ink; ctx.stroke(); ctx.lineWidth = 1.6; ctx.strokeStyle = C.fork; ctx.stroke();
+      line(ctx, px + 0.6, py + 1.2, lerp(px, ex, 0.6) + 0.2, lerp(py, ey, 0.6) + 0.9, 0.45, C.chrome);   // the boom ram
+      line(ctx, lerp(px, ex, 0.75), lerp(py, ey, 0.75) - 0.8, ex + Math.cos(stick) * 2.2 - 0.6, ey + Math.sin(stick) * 2.2 - 0.4, 0.4, C.chrome);
+      disc(ctx, ex, ey, 0.7, C.fork); disc(ctx, ex, ey, 0.25, C.steel, false);
+      ctx.save(); ctx.translate(sx, sy); ctx.rotate(bk);
+      ctx.beginPath(); ctx.moveTo(-0.8, -0.8); ctx.lineTo(2.8, 0.1); ctx.quadraticCurveTo(2.7, 2.9, -0.3, 2.7); ctx.closePath(); fillOut(ctx, C.steel, 0.4);
+      ctx.beginPath(); for (let i = 0; i < 3; i++) { ctx.moveTo(2.6 - i * 0.05, 0.6 + i * 0.8); ctx.lineTo(3.3, 0.8 + i * 0.8); } ctx.lineWidth = 0.3; ctx.strokeStyle = C.ink; ctx.stroke();
+      ctx.restore();
+      disc(ctx, sx, sy, 0.45, C.steelSh, false);
+      if (K.light.night > 0.3) K.lights.push({ x: wx(2), y: wy(-14), r: 16, a: 0.35 });
+    },
+    tree(ctx, o) {
+      /* the topping-out tree: a little evergreen in a pot */
+      if (o.small) ctx.scale(0.7, 0.7);
+      ctx.beginPath(); ctx.moveTo(-1.3, -1.8); ctx.lineTo(1.3, -1.8); ctx.lineTo(1.0, 0); ctx.lineTo(-1.0, 0); ctx.closePath(); fillOut(ctx, C.terracotta, 0.35);
+      line(ctx, 0, -1.8, 0, -3.0, 0.4, C.trunk);
+      for (let k = 0; k < 3; k++) {
+        const ty = -9.4 + k * 2.1, hw = 1.2 + k * 0.85;
+        ctx.beginPath(); ctx.moveTo(0, ty - 1.2); ctx.lineTo(hw, ty + 2.2); ctx.lineTo(-hw, ty + 2.2); ctx.closePath(); fillOut(ctx, k % 2 ? C.pine : C.pineLight, 0.35);
+      }
+      ctx.globalAlpha = 0.5; line(ctx, -0.4, -9.6, -1.1, -7.8, 0.35, C.pineLightHi); ctx.globalAlpha = 1;
+      if (K.light.snowy) { ctx.beginPath(); ctx.moveTo(0, -10.6); ctx.lineTo(0.6, -9.6); ctx.lineTo(-0.6, -9.6); ctx.closePath(); ctx.fillStyle = C.snow; ctx.fill(); }
+    },
+    rustPanel(ctx, o) { if (!o.hanging && !o.upright) { groundShadow(ctx, 2.6); ctx.rotate(-0.1); } drawRust(ctx, -2.5, -10.5, 5.0, 10.5); },
+    solar(ctx, o) { if (o.hanging || o.upright) drawSolarPanel(ctx, -4.2, -5.6, 8.4, 5.6); else { groundShadow(ctx, 4); ctx.save(); ctx.transform(1, 0, -0.5, 0.5, 0, 0); drawSolarPanel(ctx, -3.0, -5.0, 8.4, 5.0); ctx.restore(); } },
+    mallet(ctx) { groundShadow(ctx, 2.5, 0.15); drawMallet(ctx, -1.2, -7.4, 1.3); },
     dog(ctx, o, t) {
-      const pose = o.pose || 'walk';
+      /* o.pose walk|sit|sleep|wag|stand, o.act trot|sniff|beg|eat|play (finer), o.coat (daylight hex), o.away (back to you), o.bandana */
+      const act = o.act || o.pose || 'walk';
+      const pose = act === 'trot' ? 'walk' : act === 'beg' ? 'sit' : act;
       groundShadow(ctx, 3, 0.18);
-      const D = C.dog, Dd = C.dogDark, Dl = C.dogLight;
+      const D = o.coat ? coatTone(o.coat, 0) : C.dog, Dd = o.coat ? coatTone(o.coat, 1) : C.dogDark, Dl = o.coat ? coatTone(o.coat, 2) : C.dogLight;
+      if (o.away) {
+        /* from behind: a round rump, the tail going, ears up */
+        const wag = Math.sin(t * (pose === 'wag' || act === 'play' ? 20 : 6)) * 0.8;
+        bar(ctx, -1.0, -1.8, -1.1, -0.2, 0.8, Dd); bar(ctx, 1.0, -1.8, 1.1, -0.2, 0.8, Dd);
+        ctx.beginPath(); ctx.ellipse(0, -2.6, 2.0, 1.9, 0, 0, TAU); fillOut(ctx, D);
+        disc(ctx, 0, -5.0, 1.5, D);
+        ctx.beginPath(); ctx.ellipse(-1.2, -5.2, 0.55, 1.05, 0.5, 0, TAU); fillOut(ctx, Dd, 0.3);
+        ctx.beginPath(); ctx.ellipse(1.2, -5.2, 0.55, 1.05, -0.5, 0, TAU); fillOut(ctx, Dd, 0.3);
+        if (o.bandana) { ctx.beginPath(); ctx.moveTo(-1.2, -4.0); ctx.lineTo(1.2, -4.0); ctx.lineTo(0, -3.0); ctx.closePath(); fillOut(ctx, C.bandana, 0.25); }
+        ctx.beginPath(); ctx.moveTo(0, -2.4); ctx.quadraticCurveTo(wag * 0.6, -3.6, wag * 1.4, -4.4);
+        ctx.lineWidth = 0.7 + OUT * 2; ctx.strokeStyle = C.ink; ctx.stroke(); ctx.lineWidth = 0.7; ctx.strokeStyle = D; ctx.stroke();
+        return;
+      }
       if (pose === 'sleep') {
         const b = Math.sin(t * 1.6) * 0.12;
         ctx.beginPath(); ctx.ellipse(0, -1.4 - b, 3.0, 1.5 + b, 0, 0, TAU); fillOut(ctx, D);
@@ -1408,14 +1639,20 @@ export function createArt(K) {
         if (o.bandana) { ctx.beginPath(); ctx.moveTo(1.2, -1.9); ctx.lineTo(1.3, -0.4); ctx.lineTo(0.6, -1.0); ctx.closePath(); fillOut(ctx, C.bandana, 0.25); }
         return;
       }
-      const sit = pose === 'sit';
-      const ph = pose === 'walk' ? (t / 0.45) % 1 : 0;
-      const wag = pose === 'wag' ? Math.sin(t * 22) : Math.sin(t * 5) * 0.4;
-      const bob = pose === 'walk' ? Math.abs(Math.sin(ph * TAU)) * 0.25 : 0;
-      const leg = (x0, ofs, near) => { const a = pose === 'walk' ? Math.sin((ph + ofs) * TAU) * 0.8 : 0; bar(ctx, x0, -2.0 - bob, x0 + a, -0.3, 0.75, near ? D : Dd); };
+      const sit = pose === 'sit', beg = act === 'beg', play = act === 'play', sniff = act === 'sniff', eat = act === 'eat';
+      const walkish = pose === 'walk';
+      const ph = walkish ? (t / (act === 'trot' ? 0.36 : 0.45)) % 1 : 0;
+      const wag = pose === 'wag' || play ? Math.sin(t * 22) : sniff || eat ? Math.sin(t * 7) * 0.6 : Math.sin(t * 5) * 0.4;
+      const bob = walkish ? Math.abs(Math.sin(ph * TAU)) * 0.25 : play ? Math.abs(Math.sin(t * 5)) * 0.4 : 0;
+      /* a play bow tips the front down; sniffing and eating put the nose to the ground */
+      const tilt = play ? 0.28 : 0, headDown = sniff || eat ? 2.4 : play ? 1.6 : 0;
+      if (eat) { ctx.beginPath(); ctx.ellipse(4.4, -0.35, 1.5, 0.45, 0, 0, TAU); fillOut(ctx, C.truck, 0.35); }
+      ctx.save(); if (tilt) { ctx.translate(0, -1.4); ctx.rotate(tilt); ctx.translate(0, 1.4); }
+      const leg = (x0, ofs, near) => { const a = walkish ? Math.sin((ph + ofs) * TAU) * 0.8 : 0; bar(ctx, x0, -2.0 - bob, x0 + a, -0.3 + (tilt && x0 > 0 ? 0.6 : 0) - (tilt && x0 < 0 ? 0.7 : 0), 0.75, near ? D : Dd); };
       if (sit) {
-        ctx.beginPath(); ctx.ellipse(-0.8, -2.2, 2.0, 1.9, -0.6, 0, TAU); fillOut(ctx, D);
-        bar(ctx, 1.0, -2.5, 1.1, -0.3, 0.75, Dd); bar(ctx, 1.6, -2.5, 1.7, -0.3, 0.75, D);
+        ctx.beginPath(); ctx.ellipse(-0.8, -2.2 - (beg ? 0.6 : 0), 2.0, 1.9, beg ? -1.0 : -0.6, 0, TAU); fillOut(ctx, D);
+        if (beg) { const pw = Math.sin(t * 4) * 0.2; bar(ctx, 0.4, -4.0, 1.5, -4.4 + pw, 0.7, Dd); bar(ctx, 0.6, -3.6, 1.7, -3.9 - pw, 0.7, D); }
+        else { bar(ctx, 1.0, -2.5, 1.1, -0.3, 0.75, Dd); bar(ctx, 1.6, -2.5, 1.7, -0.3, 0.75, D); }
         oval(ctx, -1.6, -0.6, 1.3, 0.6, D);
       } else {
         leg(-1.8, 0.5, false); leg(1.6, 0, false);
@@ -1428,24 +1665,26 @@ export function createArt(K) {
       ctx.beginPath(); ctx.moveTo(tx0, ty0); ctx.quadraticCurveTo(tx0 - 1.0, ty0 - 1.2 - wag * 0.2, tx0 - 0.6 + wag * 0.7, ty0 - 2.2);
       ctx.lineWidth = 0.7 + OUT * 2; ctx.strokeStyle = C.ink; ctx.stroke(); ctx.lineWidth = 0.7; ctx.strokeStyle = D; ctx.stroke();
       /* head */
-      const hx = sit ? 1.0 : 2.8, hy = sit ? -5.0 : -4.4 - bob;
+      const hx = sit ? 1.0 + (beg ? 0.3 : 0) : 2.8 + (headDown ? 0.6 : 0), hy = (sit ? -5.0 - (beg ? 0.7 : 0) : -4.4 - bob) + headDown;
       disc(ctx, hx, hy, 1.45, D);
       oval(ctx, hx + 1.3, hy + 0.45, 0.95, 0.65, Dl);
-      disc(ctx, hx + 2.15, hy + 0.25, 0.32, C.ink, false);
-      disc(ctx, hx + 0.55, hy - 0.3, 0.24, C.ink, false);
-      ctx.globalAlpha = 0.9; disc(ctx, hx + 0.48, hy - 0.37, 0.08, C.white, false); ctx.globalAlpha = 1;
-      const ear = pose === 'walk' ? Math.sin(ph * TAU) * 0.15 : 0;
+      disc(ctx, hx + 2.15, hy + 0.25 + (sniff ? Math.sin(t * 18) * 0.06 : 0), 0.32, C.ink, false);
+      if (!eat) { disc(ctx, hx + 0.55, hy - 0.3, 0.24, C.ink, false); ctx.globalAlpha = 0.9; disc(ctx, hx + 0.48, hy - 0.37, 0.08, C.white, false); ctx.globalAlpha = 1; }
+      else line(ctx, hx + 0.3, hy - 0.3, hx + 0.8, hy - 0.3, 0.2, C.ink);
+      const ear = walkish ? Math.sin(ph * TAU) * 0.15 : play ? 0.3 : 0;
       ctx.beginPath(); ctx.ellipse(hx - 0.6, hy + 0.1, 0.55, 1.05, 0.35 + ear, 0, TAU); fillOut(ctx, Dd, 0.3);
-      if (pose === 'wag' || sit) { ctx.beginPath(); ctx.ellipse(hx + 1.6, hy + 1.05, 0.28, 0.4, 0, 0, TAU); ctx.fillStyle = C.frosting; ctx.fill(); }
+      if (pose === 'wag' || sit || play) { ctx.beginPath(); ctx.ellipse(hx + 1.6, hy + 1.05, 0.28, 0.4, 0, 0, TAU); ctx.fillStyle = C.frosting; ctx.fill(); }
       if (o.bandana) { ctx.beginPath(); ctx.moveTo(hx - 1.1, hy + 0.9); ctx.lineTo(hx + 0.7, hy + 1.3); ctx.lineTo(hx - 0.4, hy + 2.3); ctx.closePath(); fillOut(ctx, C.bandana, 0.25); }
+      ctx.restore();
+      if (sniff && Math.sin(t * 3) > 0.6) { ctx.globalAlpha = 0.4; disc(ctx, hx + 3.1, -0.4, 0.35, C.dirtHi, false); ctx.globalAlpha = 1; }
     },
-    doghouse(ctx) {
+    doghouse(ctx, o) {
       groundShadow(ctx, 4);
       ctx.beginPath(); ctx.moveTo(-3.2, 0); ctx.lineTo(-3.2, -4.4); ctx.lineTo(3.2, -4.4); ctx.lineTo(3.2, 0); ctx.closePath(); fillOut(ctx, C.timber);
       ctx.globalAlpha = 0.5; ctx.beginPath(); for (let i = 1; i < 4; i++) { ctx.moveTo(-3.0, -i * 1.1); ctx.lineTo(3.0, -i * 1.1); } ctx.lineWidth = 0.2; ctx.strokeStyle = C.timberShade; ctx.stroke(); ctx.globalAlpha = 1;
       ctx.beginPath(); ctx.moveTo(-1.3, 0); ctx.lineTo(-1.3, -2.0); ctx.arc(0, -2.0, 1.3, Math.PI, TAU); ctx.lineTo(1.3, 0); ctx.closePath(); fillOut(ctx, C.interior, 0.35);
       ctx.beginPath(); ctx.moveTo(-4.2, -4.0); ctx.lineTo(0, -7.6); ctx.lineTo(4.2, -4.0); ctx.lineTo(3.6, -3.6); ctx.lineTo(0, -6.7); ctx.lineTo(-3.6, -3.6); ctx.closePath(); fillOut(ctx, C.truck);
-      if (K.light.snowy) { ctx.beginPath(); ctx.moveTo(-4.0, -4.3); ctx.lineTo(0, -7.7); ctx.lineTo(4.0, -4.3); ctx.lineTo(3.0, -4.6); ctx.lineTo(0, -7.0); ctx.lineTo(-3.0, -4.6); ctx.closePath(); ctx.fillStyle = C.snow; ctx.fill(); }
+      if (o.snow != null ? o.snow : K.light.snowy) { ctx.beginPath(); ctx.moveTo(-4.0, -4.3); ctx.lineTo(0, -7.7); ctx.lineTo(4.0, -4.3); ctx.lineTo(3.0, -4.6); ctx.lineTo(0, -7.0); ctx.lineTo(-3.0, -4.6); ctx.closePath(); ctx.fillStyle = C.snow; ctx.fill(); }
     },
     snowman(ctx, o, t) {
       groundShadow(ctx, 3.2);
@@ -1457,6 +1696,7 @@ export function createArt(K) {
       for (let i = 0; i < 3; i++) disc(ctx, 0, -5.2 - i * 0.9, 0.2, C.coal, false);
       bar(ctx, -1.5, -9.3, 1.5, -9.3, 0.8, C.flag); bar(ctx, 1.0, -9.2, 1.4 + Math.sin(t * 2) * 0.2, -7.4, 0.7, C.flag);
       /* a hard hat, of course */
+      if (o.hat === false) return;
       ctx.beginPath(); ctx.ellipse(0, -12.0, 1.8, 1.7, 0, Math.PI, TAU); ctx.closePath(); fillOut(ctx, C.crane);
       box(ctx, -2.1, -12.2, 4.2, 0.55, 0.27, C.crane);
       ctx.globalAlpha = 0.8; oval(ctx, -0.8, -13.1, 0.35, 0.2, C.white, false, -0.6); ctx.globalAlpha = 1;
@@ -1475,16 +1715,18 @@ export function createArt(K) {
       ctx.save(); ctx.translate(0.6, -5.4); ctx.rotate(-0.35);
       ctx.beginPath(); ctx.moveTo(-2.6, -1.4); ctx.lineTo(2.6, -1.4); ctx.quadraticCurveTo(2.9, 2.6, 0, 2.8); ctx.quadraticCurveTo(-2.9, 2.6, -2.6, -1.4); ctx.closePath(); fillOut(ctx, C.bucket);
       ctx.beginPath(); ctx.ellipse(0, -1.4, 2.6, 0.7, 0, 0, TAU); fillOut(ctx, C.mortarMix, 0.35);
-      const a = t * 4;
+      const a = o.spinning === false ? 0.6 : t * 4;
       ctx.beginPath(); ctx.moveTo(Math.cos(a) * 1.9, -1.4 + Math.sin(a) * 0.45); ctx.lineTo(-Math.cos(a) * 1.9, -1.4 - Math.sin(a) * 0.45); ctx.lineWidth = 0.35; ctx.strokeStyle = C.steelSh; ctx.stroke();
       ctx.globalAlpha = 0.5; line(ctx, -1.8, -0.4, -1.2, 1.6, 0.4, C.bucketHi); ctx.globalAlpha = 1;
       ctx.restore();
     },
     hook(ctx, o, t) {
-      /* (0,0) is where the cable meets the block; everything hangs below */
-      box(ctx, -1.3, 0, 2.6, 2.4, 0.6, C.crane);
-      disc(ctx, 0, 1.0, 0.55, C.craneDark, false);
-      ctx.beginPath(); ctx.moveTo(0, 2.4); ctx.lineTo(0, 3.6); ctx.arc(-0.7, 3.6, 0.7, 0, Math.PI * 0.85);
+      /* (0,0) is the hook point where slings attach; the block sits just above it (its top at -2.2,
+         where the crane's cable ends); with o.load, the load hangs below */
+      box(ctx, -1.3, -2.2, 2.6, 2.0, 0.6, C.crane);
+      disc(ctx, 0, -1.2, 0.5, C.craneDark, false);
+      ctx.translate(0, -2.2);
+      ctx.beginPath(); ctx.moveTo(0, 2.0); ctx.lineTo(0, 2.6); ctx.arc(-0.6, 2.6, 0.6, 0, Math.PI * 0.85);
       ctx.lineWidth = 0.5 + OUT * 2; ctx.strokeStyle = C.ink; ctx.stroke(); ctx.lineWidth = 0.5; ctx.strokeStyle = C.steel; ctx.stroke();
       if (!o.load) return;
       ctx.rotate(Math.sin(t * 0.9) * 0.05);
@@ -1641,12 +1883,13 @@ export function createArt(K) {
     }
     /* the evening sun, low over the Adirondacks (the mountains are drawn over it) */
     if (L.evening && L.alt > -3 && L.alt < 16 && L.weather !== 'fog' && L.weather !== 'rain') {
-      const sx = W * L.sunX, sy = HORIZON - 9 - L.alt * 2.2;
+      const sx = W * L.sunX, sy = HORIZON - 27 - L.alt * 2.8;
       ctx.setTransform(z, 0, 0, z, 0, -cy * z);
       const wk = L.weather === 'clear' ? 1 : 0.4;
-      glow(ctx, sx, sy, 60, 0.35 * wk, '#ffb26a');
-      glow(ctx, sx, sy, 22, 0.55 * wk, '#ffd9a0');
-      ctx.globalAlpha = wk; disc(ctx, sx, sy, 4.2, L.alt < 6 ? EMIT.sunLow : EMIT.sun, false); ctx.globalAlpha = 1;
+      glow(ctx, sx, sy, 60, 0.4 * wk, '#ffb26a');
+      glow(ctx, sx, sy, 20, 0.6 * wk, '#ffe2b0');
+      ctx.globalAlpha = wk; disc(ctx, sx, sy, 5.2, L.alt < 6 ? EMIT.sunLow : EMIT.sun, false);
+      ctx.globalAlpha = 0.7 * wk; disc(ctx, sx - 0.9, sy - 0.9, 3.2, '#fff6dc', false); ctx.globalAlpha = 1;
     }
     drawClouds(ctx, cx, cy, z, W);
     ctx.restore();
@@ -1707,16 +1950,16 @@ export function createArt(K) {
   const FAR_PK = [[60, 16, 30], [190, 23, 34], [255, 15, 18], [380, 26, 38], [480, 17, 26], [600, 22, 34], [720, 16, 30], [840, 20, 32]];
   const MID_PK = [[30, 9, 22], [150, 12, 26], [300, 10, 22], [430, 13, 28], [540, 9, 18], [650, 11, 24], [790, 10, 26]];
   const NEAR_PK = [[95, 6, 34], [340, 7, 46], [560, 6, 32], [760, 7, 40]];
-  const hFar = (x) => 8.5 + 2.2 * Math.sin(x / 53) + 1.2 * Math.sin(x / 23 + 2) + 0.4 * Math.sin(x / 7.1) + gauss(x, FAR_PK) * 0.62;
-  const hMid = (x) => 4.4 + 1.4 * Math.sin(x / 31 + 1) + 0.7 * Math.sin(x / 11) + 0.3 * Math.sin(x / 4.3) + gauss(x, MID_PK) * 0.72;
-  const hNear = (x) => 1.8 + 0.9 * Math.sin(x / 17 + 3) + 0.35 * Math.sin(x / 5.3) + gauss(x, NEAR_PK) * 0.7;
+  const hFar = (x) => 12 + 2.6 * Math.sin(x / 53) + 1.4 * Math.sin(x / 23 + 2) + 0.5 * Math.sin(x / 7.1) + gauss(x, FAR_PK) * 0.7;
+  const hMid = (x) => 6.5 + 1.8 * Math.sin(x / 31 + 1) + 0.9 * Math.sin(x / 11) + 0.35 * Math.sin(x / 4.3) + gauss(x, MID_PK) * 0.95;
+  const hNear = (x) => 2.6 + 1.1 * Math.sin(x / 17 + 3) + 0.4 * Math.sin(x / 5.3) + gauss(x, NEAR_PK) * 0.95;
   function ridgeColors() {
     const L = K.light, hz = L.skyHor, f = L.haze;
     const sil = L.evening ? clamp((14 - L.alt) / 14, 0, 1) * (1 - L.night) : 0;
     return {
-      far: mix(mix(lit(EXTRA.mtnFar), hz, 0.4 + f * 0.5), '#6f6a92', sil * 0.6),
-      mid: mix(mix(lit(EXTRA.mtnMid), hz, 0.24 + f * 0.6), '#5a5680', sil * 0.6),
-      near: mix(mix(lit(EXTRA.mtnNear), hz, 0.12 + f * 0.65), '#4a4766', sil * 0.65),
+      far: mix(mix(lit(EXTRA.mtnFar), hz, 0.26 + f * 0.55), '#7a7099', sil * 0.6),
+      mid: mix(mix(lit(EXTRA.mtnMid), hz, 0.13 + f * 0.62), '#5a5680', sil * 0.62),
+      near: mix(mix(lit(EXTRA.mtnNear), hz, 0.05 + f * 0.66), '#433f62', sil * 0.66),
       hz,
       rim: L.night > 0.6 ? mix(hz, '#8090c0', 0.3) : sil > 0.2 ? mix('#ffc890', hz, 0.3) : mix(lit('#ffffff'), hz, 0.4),
     };
@@ -1724,13 +1967,13 @@ export function createArt(K) {
   const CAP = [];
   function ridge(g, x0, x1, fn, col, haze, base, snow, capH, rim) {
     const gr = g.createLinearGradient(0, base - 34, 0, base);
-    gr.addColorStop(0, col); gr.addColorStop(1, mix(col, haze, 0.38));
+    gr.addColorStop(0, col); gr.addColorStop(0.55, mix(col, haze, 0.12)); gr.addColorStop(1, mix(col, haze, 0.42));
     g.fillStyle = gr;
     g.beginPath(); g.moveTo(x0 - 2, base + 1);
     for (let x = x0 - 2; x <= x1 + 2; x += 1.5) g.lineTo(x, base - fn(x));
     g.lineTo(x1 + 2, base + 1); g.closePath(); g.fill();
     /* a soft rim of light along the crest */
-    g.globalAlpha = 0.35; g.strokeStyle = rim; g.lineWidth = 0.5; g.lineJoin = 'round';
+    g.globalAlpha = 0.55; g.strokeStyle = rim; g.lineWidth = 0.55; g.lineJoin = 'round';
     g.beginPath(); for (let x = x0 - 2; x <= x1 + 2; x += 1.5) { if (x === x0 - 2) g.moveTo(x, base - fn(x) + 0.3); else g.lineTo(x, base - fn(x) + 0.3); } g.stroke();
     g.globalAlpha = 1;
     if (snow) {
@@ -1793,9 +2036,9 @@ export function createArt(K) {
     const L = K.light, rc = ridgeColors(), m = L.month, wintery = m >= 10 || m <= 3;
     const sn = season(), sver = sn.length * 7 + (L.snowy ? 1 : 0);
     /* the Adirondacks: high peaks far off (snowcapped in the cold months), then the middle ridges, then the near shore hills */
-    K.blit('art:far', 0, HORIZON - 46, WW, 48, (g, x0, x1) => ridge(g, x0, x1, hFar, rc.far, rc.hz, HORIZON, L.snowy || wintery, 16, rc.rim), { p: 0.18, ver: sver });
-    K.blit('art:mid', 0, HORIZON - 28, WW, 30, (g, x0, x1) => ridge(g, x0, x1, hMid, rc.mid, rc.hz, HORIZON, L.snowy, 9, rc.rim), { p: 0.3, ver: sver });
-    K.blit('art:near', 0, HORIZON - 11, WW, 13, (g, x0, x1) => {
+    K.blit('art:far', 0, HORIZON - 42, WW, 44, (g, x0, x1) => ridge(g, x0, x1, hFar, rc.far, rc.hz, HORIZON, L.snowy || wintery, 25, rc.rim), { p: 0.18, ver: sver });
+    K.blit('art:mid', 0, HORIZON - 27, WW, 29, (g, x0, x1) => ridge(g, x0, x1, hMid, rc.mid, rc.hz, HORIZON, L.snowy, 15, rc.rim), { p: 0.3, ver: sver });
+    K.blit('art:near', 0, HORIZON - 13, WW, 15, (g, x0, x1) => {
       ridge(g, x0, x1, hNear, rc.near, rc.hz, HORIZON, false, 0, rc.rim);
       /* the far shore: a thin dark tree line at the water */
       g.fillStyle = mix(rc.near, '#1e2a26', 0.3);
