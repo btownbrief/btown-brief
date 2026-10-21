@@ -110,6 +110,9 @@
   --liq-vintage-ink: #FFFFFF;
   --liq-habits: #5DA142;            /* fern, for the forest */
   --liq-habits-ink: #0E2410;
+  --liq-build: #C2502E;             /* brick, for The Build (Watershed's base); its ink reads 5:1 */
+  --liq-build-ink: #FFFFFF;
+  --build-soft: rgba(194, 80, 46, .10);   /* The Build's cards */
   --liq-games: #5560D6;             /* arcade indigo */
   --liq-games-ink: #FFFFFF;
   --liq-recaps: #7A5BB0;            /* Recaps, the Wire's fourth word */
@@ -311,6 +314,7 @@
     --habit: #A3CF72;
     --habit-soft: rgba(163, 207, 114, .16);
     --habit-ink: #142006;
+    --build-soft: rgba(240, 138, 104, .13);
     --scrim: rgba(0, 0, 0, .66);
     --bar: rgba(13, 14, 16, .9);
     --on-ink: #0D0E10;
@@ -366,6 +370,7 @@
   --habit: #A3CF72;
   --habit-soft: rgba(163, 207, 114, .16);
   --habit-ink: #142006;
+  --build-soft: rgba(240, 138, 104, .13);
   --scrim: rgba(0, 0, 0, .66);
   --bar: rgba(13, 14, 16, .9);
   --on-ink: #0D0E10;
