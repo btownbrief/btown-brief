@@ -1,122 +1,119 @@
 /* The Build: pick one thing you want to finish, set the phone down face-up,
-   and go do it. While the phone sits there, your builder works on a drawing
+   and go do it. While the phone sits there your builder works on a drawing
    of Watershed, the building going up on Lakeside Avenue, beside every other
-   neighbor on shift. Stephen's spec is the product (newsletter repo,
-   reference/drafts/new-nine-2026-10/the-build/SPEC.md); BUILD-PLAN.md beside
-   it splits the work four ways. This file is the tab.
+   neighbor on shift. Stephen's spec is the vision (newsletter repo,
+   reference/drafts/new-nine-2026-10/the-build/SPEC.md), with his later word
+   on the layout: "something useful AND something gamified ... the top half
+   I envision something useful and easy to visually see, like people posting
+   on Twitter, where people can chime in with help easily", and the site in
+   the bottom half, which can be expanded.
 
    The tab took Habits' cell on the bar. A Build | Habits switch floats under
    the mast, the same as On Air's TV | Podcasts; Build is the default and
-   Habits is the tracker as it stood, untouched (modes/habits.js, its own
+   Habits is the tracker as it stood (modes/habits.js, untouched, its own
    panel and its own #habits links). The one bridge: a habit tapped done
-   drops a small load of material on the site.
+   drops a pallet on the site (the town's habit drops, counted by the
+   server, raise the building a little).
 
-   The Build side, top to bottom:
-   - the site (js/build-site.js), half the page: the building as the town
-     has raised it, everyone on shift working on it right now, lit by the
-     real sun; under it the town line (who's on shift, the week's hours,
-     the floor going up, the party);
-   - your thing: its name, why it matters, the finish line; Start shift and
-     Log it. With no thing yet, naming one (then why, then two optional
-     questions), or the starter door: four things to borrow from town;
-   - after a gap, one question with three answers instead of a neglected card;
-   - hours off your phone, by day or by week; your part of the building
-     (the cutaway); your shelf of posts;
-   - neighbors: the feed. Nice, and on a Stuck post, I can help.
+   The Build side:
+   - On top, the useful part. Your thing (its name, why it matters, this
+     week's hours off your phone) with Start shift, Log it and Post; with
+     no thing yet, naming one and four to borrow. Then neighbors, newest
+     first, one line each: Nice on any post, and on a Stuck post a big
+     "I can help" that opens a one-line reply right in the post.
+   - At the bottom, the site (js/build-site.js) in a docked panel with a
+     handle: drag or tap it up to full screen, down to just the town line.
+     Alive while docked: the crew on shift, the floors, posts lighting
+     windows, the real sun.
+   - A shift is the site full screen with the screen held awake. The clock
+     is build-core.js's: working while the app is open, waiting while it is
+     not; the foreman's whistle 15 to 30 minutes after the last touch, a
+     buzz and a raised hand on the site, three minutes to touch the phone or
+     pick it up; missed, the crew knocks off with the time to the last touch
+     banked. Clocking out: the time, one line, Keep it or Post.
 
-   A shift (build-shift.js keeps its clock) is the site full screen, the
-   screen held awake, the builder working while the app is open and waiting
-   while it is not. The foreman's whistle blows 15 to 30 minutes after the
-   last touch: a buzz and a raised hand on the site, three minutes to touch
-   the phone or pick it up. Missed, the crew knocks off with the time up to
-   the last touch banked. Clocking out: the time, one line, Keep it or Post.
-
-   No streaks, ranks, percentages or comments anywhere (DESIGN.md, the
-   spec's "What we deliberately don't do"). Two places to type on a shift,
-   both one line, both skippable.
-
-   Data: the Build API (js/build-core.js live, build-local.js signed out,
-   build-fake.js in ?demo=1). Words: data/build-foreman.json and
-   data/build-starters.json; numbers: data/build-config.json. */
+   No streaks, ranks, percentages or comments (DESIGN.md, the spec's "What
+   we deliberately don't do"). Words: data/build-foreman.json. Numbers:
+   data/build-config.json. Data: the Build API (build-local.js openBuild). */
 
 import * as app from '../app.js';
 import * as store from '../store.js';
-import { el, esc, svg, ICON, button, pills, listRail, agoShort } from '../ui.js';
+import { el, esc, svg, ICON, button, pills, mark, agoShort } from '../ui.js';
 import { liquify } from '../liquid.js';
-import * as clock from '../build-shift.js';
-import { createBuild, createSite } from '../build-standins.TEMP.js';
+import { photoUrl, queuePhoto } from '../boards.js';
 import { REASON_LABELS } from '../boards-core.js';
-import { meetsInWindow, timeLabel } from '../clubs-week.js';
+import { meetsInWindow, oneLine, redateDemo, timeLabel } from '../clubs-week.js';
+import { openBuild, createSite } from '../build-standins.TEMP.js';
 
 const KEY = 'build';
 export const ICON_BUILD = svg('<path d="M3 17.5h18M5 17.5v-1.2a7 7 0 0 1 14 0v1.2"/><path d="M10 10V7.2a2 2 0 0 1 4 0V10"/>');
 const SIDE_KEY = 'allday-build-side';      // the side last on: 'build' | 'habits'
-const SHIFT_KEY = 'allday-build-shift';    // the open shift, written on every change
+const DOCK_KEY = 'allday-build-dock';      // the site panel: 'mini' | 'dock'
 const SEEN_KEY = 'allday-build-back';      // the coming-back question, answered on this day
-const COUNT_KEY = 'allday-build-count';    // shifts clocked out on this phone, for the rare "why" question
-const STEP_KEY = 'allday-build-step';      // the smaller next step a Stuck post or a comeback named
+const COUNT_KEY = 'allday-build-count';    // shifts clocked out on this phone, for the rare "why"
+const ENDING_KEY = 'allday-build-ending';  // a clocked-out shift whose end screen is open: { minutes, missed }
+const SEEN_AT_KEY = 'allday-build-alive';  // the shift screen's last second on screen, for recovery
 const GAP_DAYS = 4;                        // this long with no hours and the next visit asks where to pick up
+const STALE_MS = 30 * 60000;               // a shift whose screen went dark longer than this opens on its end screen
 const LAT = 44.4759, LON = -73.2121;       // Burlington, for the site's sun
-const KINDS = [['progress', 'Made progress'], ['stuck', 'Stuck'], ['found', 'Found something'], ['finished', 'Finished']];
-const KIND = Object.fromEntries(KINDS);
-const NEEDS = ['hand', 'tool', 'smaller', 'different'];
-const NEED_REASON = { hand: 'skill', tool: 'skill', smaller: 'too_big', different: 'not_sure' };
-const HATS = ['amber', 'brick', 'lake', 'park', 'plum', 'white'];
-const LOG_CHOICES = [[15, '15 min'], [30, '30 min'], [45, '45 min'], [60, '1 hr'], [90, '1½ hr'], [120, '2 hr'], [180, '3 hr']];
+const KINDS = ['progress', 'stuck', 'found', 'finished'];
+const NEED_REASON = { hand: 'missing', tool: 'missing', smaller: 'too_big', different: 'unsure' };
+const HATS = [['yellow', '--sunset'], ['orange', '--liq-food'], ['red', '--liq-build'], ['blue', '--liq-square'], ['green', '--liq-lists'], ['white', '--raised']];
 
 /* ------------------------------------------------------------------ words */
-/* The foreman's lines (D's data/build-foreman.json) and what stands in until
-   it loads or if it never does. He says things; he rarely asks. */
-const FOREMAN_FALLBACK = {
-  clock_in: ['What’s the job?'],
-  clock_out: ['What got done?'],
-  why: ['Why’s this one matter to you?'],
-  come_back: ['Site’s still here. Where do you want to pick up?'],
-  site_talk: ['{crew} on the site right now.', '{hours} hours in this week.', 'Floor {floor} is going up.'],
-  stuck: { hand: 'A hand', tool: 'A tool', smaller: 'A smaller job', different: 'A different job' },
-  stuck_reply: { hand: 'Post it. Somebody in town has done this.', tool: 'Post it. Somebody in town has one.', smaller: 'Name the smaller job and start there.', different: 'Pause it. No shame in that.' },
-  comeback: { same: 'Same job', smaller: 'Smaller job', new: 'New job' },
+/* The foreman's lines (data/build-foreman.json). What stands in until the
+   file loads, or if it never does, is the smallest set the tab needs. */
+const FOREMAN = {
+  clock_in: { prompts: ['What’s the job?'], placeholder: ['outline chapter 3'], start: 'Start' },
+  clock_out: { prompts: ['What got done?'], placeholder: ['got the first page down'], rare_why: { every: 10, prompts: ['Why’s this one matter to you?'], placeholder: ['I said I would'] } },
+  whistle: { knocked_off: ['Crew knocked off. Everything up to the last whistle is banked.'] },
+  end_screen: { time: '{duration} on the job', keep: 'Keep it', post: 'Post', kept: ['Kept. It still went into the building.'],
+    post_kinds: { progress: 'Made progress', stuck: 'Stuck', found: 'Found something', finished: 'Finished' },
+    stuck_question: 'What would help you take the next step?', add_hours: 'Add the hours', brief_ok: 'OK to print this in the Brief',
+    posted: ['Posted. A window’s lit on the street side.'], finished_posted: 'Posted. Bring this one to the party.' },
+  stuck: { help_buttons: [{ key: 'hand', label: 'A hand' }, { key: 'tool', label: 'A tool' }, { key: 'smaller', label: 'A smaller job' }, { key: 'different', label: 'A different job' }] },
+  help: { offer_button: 'I can help', offer_placeholder: 'I’ve got a stand and a Tuesday', offered: 'Sent. If they say yes, you’ll both get an email.',
+    poster_sees: '{name} can help.', yes: 'Yes', no: 'No thanks', accepted: 'Done. You’ll both get an email with the other’s address.', declined: 'No problem. Nobody hears about it.', nice: 'Nice' },
+  come_back: { lines: ['Coffee’s on. Your tools are where you left them.'], buttons: [{ key: 'same', label: 'Same job' }, { key: 'smaller', label: 'Smaller job' }, { key: 'new', label: 'New job' }] },
+  site_talk: [{ text: '{hours} hours in the building this week.' }],
+  log_it: { title: 'Log it after', how_long: 'Roughly how long?', chips: [15, 30, 60, 90, 120], what: 'What was it?', what_placeholder: 'a run, a bike repair', save: 'Log it', saved: ['Logged. It’s in the building.'] },
+  town: { line: '{crew} neighbors on shift · {hours} hours this week · floor {floor} of {floors}', line_none: 'Nobody on shift right now · {hours} hours this week · floor {floor} of {floors}' },
+  party: { no_date: 'Topping out party. Date coming.', upcoming: 'Topping out {date}. Everyone who put hours in signs the beam.', today: 'Topping out today. The beam’s waiting for your name.' },
 };
-const CONFIG_FALLBACK = { HOURS_PER_FLOOR: 25, floors: 6, season: { building: 'watershed', starts: null, topping_out_date: null, party_url: null } };
+const CONFIG = { hours_per_floor: 25, floors: 6, roof: true, season: { building: 'watershed', starts: null, topping_out_date: null, party_url: '' }, rare_why_every: 10 };
 
 /* ------------------------------------------------------------------ state */
 const B = {
-  root: null, body: null, side: 'build',
+  root: null, body: null, side: 'build', active: false,
   phase: 'loading', failed: null,
   api: null, apiFor: undefined,
-  thing: undefined, town: null, record: [], shelf: [], feed: [], builder: null,
-  foreman: FOREMAN_FALLBACK, config: CONFIG_FALLBACK, starters: null,
-  draft: null,           // the thing being named: { step: 'name' | 'why' | 'more', title, why, ... }
+  thing: undefined, town: null, days: [], shelf: [], feed: [], offers: [], builder: null,
+  foreman: FOREMAN, config: CONFIG, starters: null, firstStep: '',
+  draft: null,           // a thing being named: { step: 'name' | 'more', title, first_step }
+  only: 'all',           // the feed: 'all' | 'stuck'
+  back: false,           // the coming-back question is up
   cut: false,            // the cutaway is showing
-  scale: 'days',         // hours off your phone: 'days' | 'weeks'
-  back: false,           // the coming-back question is showing
-  talk: null,            // the foreman's site line on show
-  drops: [],             // material from Habits waiting to land when the site is next on screen
   flash: null,           // a #build/<key> link waiting for its card
+  replying: null,        // the Stuck post whose reply line is open
 };
-let site = null, siteBox = null, canvas = null, talkTimer = 0, skyTimer = 0, loadGen = 0;
+let site = null, dock = null, canvas = null, talkTimer = 0, skyTimer = 0, loadGen = 0;
 const lastLine = Object.create(null);
-
 const signedIn = () => !!app.user();
 const reduced = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
+const FAIL = 'That didn’t go through. Try again.';
+/* every API door resolves { ok, ... } and never rejects; this keeps a
+   thrown error from becoming one */
+const go = (fn) => Promise.resolve().then(fn).then((r) => (r && typeof r === 'object' ? r : { ok: false, message: FAIL }), () => ({ ok: false, message: FAIL }));
 
 /* ------------------------------------------------------------- the server */
-/* One API per reader: the fake in the demo, the phone signed out, the
-   account signed in. Every answer comes back as { ok, data, message }. */
 function api() {
-  const who = app.demo ? 'demo' : signedIn() ? 'u:' + app.user().id : 'local';
+  const who = app.demo ? 'demo' + (signedIn() ? ':in' : '') : signedIn() ? 'u:' + app.user().id : 'local';
   if (!B.api || B.apiFor !== who) {
-    B.api = createBuild({ demo: app.demo, user: app.user, token: app.token });
+    B.api = openBuild({ demo: app.demo, user: () => app.user(), token: () => app.token(), url: store.SB_URL, key: store.SB_KEY, config: B.config });
     B.apiFor = who;
   }
   return B.api;
 }
-function res(p) {
-  return Promise.resolve().then(() => p).then((v) => (v && typeof v === 'object' && 'ok' in v && ('data' in v || 'message' in v || 'error' in v)
-    ? { ok: !!v.ok, data: v.data, message: v.message || (v.ok ? '' : 'That didn’t go through. Try again.') }
-    : { ok: true, data: v }), (e) => ({ ok: false, data: null, message: (e && e.message && !/^[a-z_]+$/.test(e.message) ? e.message : null) || 'That didn’t go through. Try again.' }));
-}
-const call = (fn) => res(Promise.resolve().then(fn));
 
 /* ------------------------------------------------------------------ files */
 const getJSON = (url) => fetch(url).then((r) => (r.ok ? r.json() : null)).catch(() => null);
@@ -124,26 +121,30 @@ let filesAsk = null;
 function loadFiles() {
   if (filesAsk) return filesAsk;
   filesAsk = Promise.all([getJSON('data/build-foreman.json'), getJSON('data/build-config.json')]).then(([f, c]) => {
-    if (f && typeof f === 'object') B.foreman = { ...FOREMAN_FALLBACK, ...f };
-    if (c && typeof c === 'object') B.config = { ...CONFIG_FALLBACK, ...c, season: { ...CONFIG_FALLBACK.season, ...(c.season || {}) } };
+    if (f && typeof f === 'object') B.foreman = { ...FOREMAN, ...f };
+    if (c && typeof c === 'object') {
+      /* the config file names the floor rule HOURS_PER_FLOOR; the API reads hours_per_floor */
+      B.config = { ...CONFIG, ...c, hours_per_floor: Number(c.hours_per_floor || c.HOURS_PER_FLOOR) || CONFIG.hours_per_floor,
+        season: { ...CONFIG.season, ...(c.season || {}) } };
+    }
+    B.api = null;   // the API reads the config: build it again with the real one
   });
   return filesAsk;
 }
 
-/* one of the foreman's lines for a moment, never the same twice running */
-function says(moment, vars) {
-  const pool = B.foreman[moment];
-  const list = Array.isArray(pool) ? pool.filter((x) => typeof x === 'string' && x) : typeof pool === 'string' ? [pool] : [];
-  if (!list.length) return '';
-  let i = Math.floor(Math.random() * list.length);
-  if (list.length > 1 && i === lastLine[moment]) i = (i + 1) % list.length;
-  lastLine[moment] = i;
-  return list[i].replace(/\{(\w+)\}/g, (m, k) => (vars && vars[k] != null ? String(vars[k]) : m));
+/* the foreman: one line from a group, never the same twice running */
+function pick(group, list, vars) {
+  const xs = (Array.isArray(list) ? list : typeof list === 'string' ? [list] : []).filter((x) => typeof x === 'string' && x);
+  if (!xs.length) return '';
+  let i = Math.floor(Math.random() * xs.length);
+  if (xs.length > 1 && i === lastLine[group]) i = (i + 1) % xs.length;
+  lastLine[group] = i;
+  return fill(xs[i], vars);
 }
-const word = (group, key) => {
-  const g = B.foreman[group];
-  return (g && typeof g === 'object' && typeof g[key] === 'string' && g[key]) || FOREMAN_FALLBACK[group][key];
-};
+const fill = (s, vars) => String(s || '').replace(/\{(\w+)\}/g, (m, k) => (vars && vars[k] != null ? String(vars[k]) : m));
+const dig = (root, path) => { let v = root; for (const k of path.split('.')) v = v && typeof v === 'object' ? v[k] : undefined; return v; };
+const F = (path, fallback) => { const v = dig(B.foreman, path); if (v != null) return v; const w = dig(FOREMAN, path); return w == null ? fallback : w; };
+const kindWord = (k) => F('end_screen.post_kinds.' + k, k);
 
 /* ---------------------------------------------------------------- numbers */
 export function hm(minutes) {
@@ -152,20 +153,20 @@ export function hm(minutes) {
   if (!h) return r + 'm';
   return r ? h + 'h ' + r + 'm' : h + 'h';
 }
-/* a bar's label: 45m, 2h, 2.5h */
 const short = (m) => (m < 60 ? Math.round(m) + 'm' : (Math.round(m / 6) / 10).toString().replace(/\.0$/, '') + 'h');
-const hoursWord = (minutes) => { const h = Math.floor((Number(minutes) || 0) / 60); return h === 1 ? '1 hour' : h + ' hours'; };
-const crewWord = (n) => (n === 1 ? '1 neighbor' : n + ' neighbors');
-function floorsOf(t) {
-  const total = Math.max(1, Number(B.config.floors) || 6);
-  const per = Math.max(1, Number(B.config.HOURS_PER_FLOOR) || 25) * 60;
-  const mins = Number(t && t.total_minutes) || 0;
-  const done = t && Number.isFinite(t.floors_done) ? t.floors_done : Math.min(total, Math.floor(mins / per));
-  const progress = t && Number.isFinite(t.floor_progress) ? t.floor_progress : done >= total ? 1 : (mins % per) / per;
-  return { total, done: Math.min(total, done), progress: Math.max(0, Math.min(1, progress)) };
-}
 const dayKey = (ms) => new Date(ms).toLocaleDateString('en-CA', { timeZone: 'America/New_York' });
+const keyBack = (key, n) => new Date(Date.parse(key + 'T12:00:00Z') - n * 86400000).toISOString().slice(0, 10);
 const dateWord = (key) => new Date(key + 'T12:00:00Z').toLocaleDateString('en-US', { month: 'short', day: 'numeric', timeZone: 'UTC' });
+const etHour = () => Number(new Date().toLocaleString('en-US', { timeZone: 'America/New_York', hour: 'numeric', hourCycle: 'h23' })) % 24;
+function floors() {
+  const t = B.town || {};
+  const total = Math.max(1, Number(B.config.floors) || 6);
+  const done = Math.max(0, Number(t.floors_done) || 0);
+  return { total, done, progress: Math.max(0, Math.min(1, Number(t.floor_progress) || 0)), topped: !!t.topped_out, going: Math.min(total, done + 1) };
+}
+const crewNow = () => Math.max(Number(B.town && B.town.on_shift_count) || 0, B.town && Array.isArray(B.town.on_shift) ? B.town.on_shift.length : 0);
+const weekMinutes = () => { const from = keyBack(dayKey(Date.now()), 7); let n = 0; B.days.forEach((d) => { if (d.day > from) n += Number(d.minutes) || 0; }); return n; };
+const yourMinutes = () => B.days.reduce((n, d) => n + (Number(d.minutes) || 0), 0);
 
 /* -------------------------------------------------------------- loading */
 function load() {
@@ -173,62 +174,60 @@ function load() {
   B.phase = 'loading';
   B.failed = null;
   paint();
-  const a = api();
-  const thing = call(() => a.thing.get());
-  const rest = Promise.all([
-    call(() => a.town.get()), call(() => a.record.get()), call(() => a.shelf.get()),
-    call(() => a.feed.list()), call(() => a.builder.get()), loadFiles(),
-  ]);
-  return Promise.all([thing, rest]).then(([t, [town, rec, shelf, feed, bld]]) => {
+  return loadFiles().then(() => {
+    const a = api();
+    return Promise.all([go(() => a.thing.get()), go(() => a.town.get()), go(() => a.record.get()), go(() => a.shelf.get()),
+      go(() => a.feed.list()), go(() => a.builder.get()), signedIn() ? go(() => a.help.list()) : Promise.resolve({ ok: false })]);
+  }).then(([t, town, rec, shelf, feed, bld, help]) => {
     if (my !== loadGen) return;
-    if (!t.ok) { B.failed = t.message; B.phase = 'ready'; paint(); return; }
-    B.thing = t.data && typeof t.data === 'object' && t.data.status !== 'done' ? t.data : null;
-    B.town = town.ok ? town.data : null;
-    B.record = rec.ok && Array.isArray(rec.data) ? rec.data : [];
-    B.shelf = shelf.ok && Array.isArray(shelf.data) ? shelf.data : [];
-    B.feed = feed.ok && Array.isArray(feed.data) ? feed.data : [];
-    B.builder = bld.ok && bld.data ? bld.data : null;
-    if (!B.builder || !B.builder.hat) B.builder = { ...(B.builder || {}), hat: HATS[Math.floor(Math.random() * HATS.length)], vest: 'amber' };
+    if (!t.ok && !feed.ok) { B.failed = t.message || FAIL; B.phase = 'ready'; paint(); return; }
+    B.thing = t.ok && t.thing && t.thing.status !== 'done' ? t.thing : null;
+    B.town = town.ok ? town.town : null;
+    B.days = rec.ok && Array.isArray(rec.days) ? rec.days : [];
+    B.shelf = shelf.ok && Array.isArray(shelf.posts) ? shelf.posts : [];
+    B.feed = feed.ok && Array.isArray(feed.posts) ? feed.posts : [];
+    B.builder = bld.ok && bld.builder ? bld.builder : null;
+    B.offers = help.ok && Array.isArray(help.incoming) ? help.incoming : [];
     B.back = !!B.thing && cameBack();
     B.phase = 'ready';
     paint();
     land();
     feedSite();
+    paintDock();
   });
 }
-/* the town and the feed, again: after a shift, a post, a pull */
-function reloadTown() {
+/* the town and the feed again: after a shift, a post, a pull */
+function reload() {
   const a = api();
-  return Promise.all([call(() => a.town.get()), call(() => a.feed.list()), call(() => a.record.get()), call(() => a.shelf.get())]).then(([town, feed, rec, shelf]) => {
-    if (town.ok) B.town = town.data;
-    if (feed.ok && Array.isArray(feed.data)) B.feed = feed.data;
-    if (rec.ok && Array.isArray(rec.data)) B.record = rec.data;
-    if (shelf.ok && Array.isArray(shelf.data)) B.shelf = shelf.data;
-    if (B.side === 'build' && B.phase === 'ready') { paint(); feedSite(); }
+  return Promise.all([go(() => a.town.get()), go(() => a.feed.list()), go(() => a.record.get()), go(() => a.shelf.get()),
+    signedIn() ? go(() => a.help.list()) : Promise.resolve({ ok: false })]).then(([town, feed, rec, shelf, help]) => {
+    if (town.ok) B.town = town.town;
+    if (feed.ok && Array.isArray(feed.posts)) B.feed = feed.posts;
+    if (rec.ok && Array.isArray(rec.days)) B.days = rec.days;
+    if (shelf.ok && Array.isArray(shelf.posts)) B.shelf = shelf.posts;
+    if (help.ok && Array.isArray(help.incoming)) B.offers = help.incoming;
+    if (B.phase === 'ready') { paint(); feedSite(); paintDock(); }
   });
 }
 
-/* ------------------------------------------------------ coming back */
-/* After a gap the tab asks one question instead of showing a thing that
-   looks neglected. Never says how long. */
-function lastActive() {
-  let last = 0;
-  B.record.forEach((d) => { if ((Number(d.shift_minutes) || 0) + (Number(d.logged_minutes) || 0) > 0) last = Math.max(last, Date.parse(d.day + 'T12:00:00Z')); });
-  return last;
-}
+/* after a gap the tab asks one question instead of showing a thing that
+   looks neglected, and never says how long */
 function cameBack() {
   if (store.read(SEEN_KEY, '') === dayKey(Date.now())) return false;
-  const since = lastActive() || Date.parse((B.thing && B.thing.created) || '') || 0;
+  let last = 0;
+  B.days.forEach((d) => { if ((Number(d.minutes) || 0) > 0) last = Math.max(last, Date.parse(d.day + 'T12:00:00Z')); });
+  const since = last || Date.parse((B.thing && B.thing.created_at) || '') || 0;
   return !!since && Date.now() - since >= GAP_DAYS * 86400000;
 }
 
 /* --------------------------------------------------------------- drawing */
 function paint() {
   if (!B.body) return;
+  const open = B.body.querySelector('.bd-reply input[name=line]');
+  const draft = open ? open.value : '';
   B.body.innerHTML = '';
   const wrap = el('div', 'bd');
   B.body.appendChild(wrap);
-  wrap.appendChild(siteSection());
   if (B.phase === 'loading') { wrap.appendChild(el('div', 'bd-skel', '<span class="skel w60"></span><span class="skel big"></span><span class="skel pill"></span>')); return; }
   if (B.failed) {
     const box = el('div', 'bd-gate', '<p>' + esc(B.failed) + '</p>');
@@ -236,120 +235,11 @@ function paint() {
     wrap.appendChild(box);
     return;
   }
-  const cols = el('div', 'bd-cols');
-  const left = el('div', 'bd-col'), right = el('div', 'bd-col');
-  cols.append(left, right);
-  wrap.appendChild(cols);
-  if (B.thing && B.back) left.appendChild(comebackCard());
-  left.appendChild(B.thing ? thingCard() : nameCard());
-  /* no thing yet: four to borrow, right there under the name */
-  if (!B.thing && (!B.draft || B.draft.step === 'name')) left.appendChild(starterDoor());
-  if (B.thing || yourMinutes() > 0) left.appendChild(hoursSection());
-  const shelf = shelfSection();
-  if (shelf) left.appendChild(shelf);
-  right.appendChild(feedSection());
-}
-
-/* the site, and the town line under it */
-function siteSection() {
-  const s = el('section', 'bd-site');
-  s.dataset.k = 'site';
-  if (!siteBox) {
-    siteBox = el('div', 'bd-sitebox');
-    canvas = document.createElement('canvas');
-    canvas.className = 'bd-canvas';
-    canvas.setAttribute('role', 'img');
-    canvas.setAttribute('aria-label', 'A drawing of Watershed going up on Lakeside Avenue, raised by the town’s hours');
-    siteBox.appendChild(canvas);
-    siteBox.appendChild(el('p', 'bd-talk'));
-  }
-  if (!shiftOpen()) s.appendChild(siteBox);
-  s.appendChild(townLine());
-  if (!site && canvas) {
-    try { site = createSite(canvas, { reducedMotion: reduced() }); } catch (e) { console.error('[all-day] build site', e); site = null; }
-  }
-  return s;
-}
-function townLine() {
-  const t = B.town || {};
-  const crew = Array.isArray(t.on_shift) ? t.on_shift.length : 0;
-  const f = floorsOf(t);
-  const floorWord = f.done >= f.total ? 'topped out' : 'floor ' + (f.done + 1) + ' of ' + f.total;
-  const line = el('div', 'bd-town');
-  line.innerHTML = '<p class="bd-townl"><b>' + esc(crewWord(crew)) + '</b> on shift · <b>' + esc(hoursWord(t.week_minutes)) + '</b> this week · ' + esc(floorWord) + '</p>';
-  const season = B.config.season || {};
-  const when = season.topping_out_date ? new Date(season.topping_out_date + 'T12:00:00Z').toLocaleDateString('en-US', { month: 'short', day: 'numeric', timeZone: 'UTC' }) : 'date coming';
-  const party = el(season.party_url ? 'a' : 'p', 'bd-party', esc('Topping-out party · ' + when));
-  if (season.party_url && /^https:\/\//.test(season.party_url)) { party.href = season.party_url; party.target = '_blank'; party.rel = 'noopener'; }
-  line.appendChild(party);
-  return line;
-}
-
-/* everything the site draws, from what the tab knows */
-function feedSite() {
-  if (!site) return;
-  const t = B.town || {};
-  const f = floorsOf(t);
-  try {
-    site.setTown({ total_minutes: Number(t.total_minutes) || 0, floors_done: f.done, floor_progress: f.progress, windows_lit: Number(t.posts_lit) || 0 });
-    site.setCrew((Array.isArray(t.on_shift) ? t.on_shift : []).map((c, i) => ({ id: c.id || 'c' + i, look: c.look || {}, task: c.task || null, name: c.name || null })));
-    site.setYou(youState());
-    site.setSky(sky());
-    site.cutaway(B.cut, { your_minutes: yourMinutes() });
-  } catch (e) { console.error('[all-day] build site', e); }
-  while (B.drops.length && B.side === 'build') { try { site.dropMaterial(B.drops.shift()); } catch (e) { break; } }
-}
-function youState() {
-  const look = { hat: (B.builder && B.builder.hat) || 'amber', vest: (B.builder && B.builder.vest) || 'amber' };
-  if (!S) return { state: 'off', look, task: null };
-  if (S.status !== 'on') return { state: 'off', look, task: null };
-  if (S.since == null) return { state: 'away', look, task: null };
-  return { state: paused ? 'paused' : 'working', look, task: null };
-}
-const yourMinutes = () => B.record.reduce((n, d) => n + (Number(d.shift_minutes) || 0) + (Number(d.logged_minutes) || 0), 0);
-
-/* Burlington's sun, worked out here (a few lines of the standard solar
-   position), and the weather line the What Now card reads */
-export function sunAltitude(ms, lat = LAT, lon = LON) {
-  const rad = Math.PI / 180;
-  const d = ms / 86400000 - 10957.5;
-  const g = (357.529 + 0.98560028 * d) * rad;
-  const q = 280.459 + 0.98564736 * d;
-  const L = (q + 1.915 * Math.sin(g) + 0.02 * Math.sin(2 * g)) * rad;
-  const e = (23.439 - 0.00000036 * d) * rad;
-  const ra = Math.atan2(Math.cos(e) * Math.sin(L), Math.cos(L));
-  const dec = Math.asin(Math.sin(e) * Math.sin(L));
-  const gmst = ((18.697374558 + 24.06570982441908 * d) % 24 + 24) % 24;
-  const ha = (gmst * 15 + lon) * rad - ra;
-  return Math.asin(Math.sin(lat * rad) * Math.sin(dec) + Math.cos(lat * rad) * Math.cos(dec) * Math.cos(ha)) / rad;
-}
-let weather = 'clear';
-function sky() {
-  const alt = sunAltitude(Date.now());
-  return { sunAltitude: alt, isNight: alt < -6, weather };
-}
-let wxAsk = null;
-function loadWeather() {
-  if (wxAsk || app.demo) return;
-  wxAsk = getJSON('../data/weather/latest.json').then((j) => {
-    const d = String((j && j.now && j.now.description) || '').toLowerCase();
-    weather = /snow|sleet|flurr/.test(d) ? 'snow' : /rain|shower|drizzle|storm/.test(d) ? 'rain' : /fog|mist|haze/.test(d) ? 'fog' : /cloud|overcast/.test(d) ? 'cloud' : 'clear';
-    if (site) site.setSky(sky());
-  });
-}
-
-/* the foreman says one thing about the site now and then; nothing to answer */
-function siteTalk() {
-  clearTimeout(talkTimer);
-  const p = siteBox && siteBox.querySelector('.bd-talk');
-  if (!p || B.phase !== 'ready') return;
-  const t = B.town || {};
-  const f = floorsOf(t);
-  const line = says('site_talk', { crew: Array.isArray(t.on_shift) ? t.on_shift.length : 0, hours: Math.floor((Number(t.week_minutes) || 0) / 60), floor: Math.min(f.total, f.done + 1) });
-  if (!line) return;
-  p.textContent = line;
-  p.classList.add('on');
-  talkTimer = setTimeout(() => { p.classList.remove('on'); talkTimer = setTimeout(siteTalk, 4 * 60000); }, 9000);
+  if (B.thing && B.back) wrap.appendChild(comebackCard());
+  wrap.appendChild(B.thing ? thingCard() : nameCard());
+  if (!B.thing && (!B.draft || B.draft.step === 'name')) wrap.appendChild(starterDoor());
+  wrap.appendChild(feedSection());
+  if (draft) { const i = B.body.querySelector('.bd-reply input[name=line]'); if (i) i.value = draft; }
 }
 
 /* ------------------------------------------------------------ your thing */
@@ -357,73 +247,81 @@ function thingCard() {
   const t = B.thing;
   const c = el('section', 'bd-thing');
   c.dataset.k = 'thing';
-  const meta = [t.target_date ? 'By ' + dateWord(String(t.target_date).slice(0, 10)) : '', t.for_whom ? 'For ' + t.for_whom : '', t.partner ? 'With ' + t.partner : ''].filter(Boolean);
+  const meta = [t.target_date ? 'By ' + dateWord(String(t.target_date).slice(0, 10)) : '', t.for_whom ? 'For ' + t.for_whom : '', t.partner ? 'With ' + t.partner : '', t.status === 'paused' ? 'Paused' : ''].filter(Boolean);
   c.innerHTML = '<h2 class="bd-title">' + esc(t.title) + '</h2>' +
     (t.why ? '<p class="bd-why">' + esc('“' + t.why + '”') + '</p>' : '') +
-    (meta.length ? '<p class="bd-meta">' + meta.map(esc).join(' · ') + '</p>' : '') +
-    (t.status === 'paused' ? '<p class="bd-meta">Paused</p>' : '');
-  const go = el('div', 'bd-go');
-  const start = button(ICON_BUILD + '<span>Start shift</span>', 'bd-start', () => clockInSheet());
-  const log = button('Log it', 'ghost bd-log', () => logSheet());
+    (meta.length ? '<p class="bd-meta">' + meta.map(esc).join(' · ') + '</p>' : '');
+  /* your hours off the phone, this week: the number the tab is proudest of */
+  const wk = el('button', 'bd-week', '<b>' + esc(hm(weekMinutes())) + '</b><span>off your phone this week</span>' + ICON.right);
+  wk.type = 'button';
+  wk.addEventListener('click', recordSheet);
+  c.appendChild(wk);
+  const row = el('div', 'bd-go');
+  const start = button(ICON_BUILD + '<span>Start shift</span>', 'bd-start', () => clockIn());
+  const log = button('Log it', 'ghost', logSheet);
+  const post = button('Post', 'ghost', () => postSheet({ kind: 'progress', minutes: 0 }));
   const more = el('button', 'iconbtn bd-more', ICON.more);
   more.type = 'button';
   more.setAttribute('aria-label', 'More for your thing');
   more.addEventListener('click', thingSheet);
-  go.append(start, log, more);
-  c.appendChild(go);
+  row.append(start, log, post, more);
+  c.appendChild(row);
   return c;
 }
 
-/* naming a thing: the name, then why, then the two optional questions */
+/* naming a thing: one line, then one card with why and the optional bits */
 function nameCard() {
   const d = B.draft || (B.draft = { step: 'name' });
   const c = el('section', 'bd-thing bd-name');
   c.dataset.k = 'thing';
   const form = el('form', 'bd-form');
   form.noValidate = true;
-  const field = (name, ph, value, type) => {
+  const field = (name, ph, value, type, max) => {
     const i = el('input', 'field');
-    i.name = name; i.type = type || 'text'; i.placeholder = ph || ''; i.value = value || ''; i.maxLength = 140;
+    i.name = name; i.type = type || 'text'; i.placeholder = ph || ''; i.value = value || ''; if (max) i.maxLength = max;
     i.setAttribute('aria-label', ph || name);
     return i;
   };
   const row = (...kids) => { const r = el('div', 'bd-row'); r.append(...kids); return r; };
   if (d.step === 'name') {
     form.appendChild(el('h2', 'bd-ask', esc('What do you want to finish?')));
-    const i = field('title', 'Finish the screenplay', d.title);
-    const go = button('Name it', 'bd-start');
-    go.type = 'submit';
-    form.appendChild(row(i, go));
+    const i = field('title', 'Fix my own bike', d.title, 'text', 80);
+    i.setAttribute('aria-label', 'Your thing, in a line');
+    const ok = button('Next', 'bd-start'); ok.type = 'submit';
+    form.appendChild(row(i, ok));
     form.addEventListener('submit', (e) => {
       e.preventDefault();
       const v = i.value.trim();
       if (!v) { i.focus(); return; }
-      d.title = v.slice(0, 140); d.step = 'why'; paint(); focusField();
+      d.title = v.slice(0, 80); d.step = 'more'; paint(); focusField();
     });
     c.appendChild(form);
     return c;
   }
-  /* one card for the rest: why it matters, then the two optional questions
-     (kept apart: one is who it's for, the other who's in on it) and a date */
+  /* why it matters, then the two optional questions (kept apart: who it is
+     for, who is in on it) and a date, one card, one Done */
   form.appendChild(el('p', 'bd-kicker', esc(d.title)));
-  const q = (label, input) => { const l = el('label', 'bd-q', '<span>' + esc(label) + '</span>'); l.appendChild(input); return l; };
   form.appendChild(el('h2', 'bd-ask', esc('Why does it matter to you?')));
-  form.appendChild(field('why', 'One line, or leave it', d.why));
-  form.appendChild(q('Is it for someone?', field('for_whom', 'Yourself counts', d.for_whom)));
-  form.appendChild(q('Want someone in on it?', field('partner', 'A name', d.partner)));
+  form.appendChild(field('why', 'One line, or leave it', d.why, 'text', 280));
+  const q = (label, input) => { const l = el('label', 'bd-q', '<span>' + esc(label) + '</span>'); l.appendChild(input); return l; };
+  form.appendChild(q('Is it for someone?', field('for_whom', 'Yourself counts', d.for_whom, 'text', 80)));
+  form.appendChild(q('Want someone in on it?', field('partner', 'A name', d.partner, 'text', 80)));
   form.appendChild(q('Finish by', field('target_date', '', d.target_date, 'date')));
-  const go = button('Done', 'bd-start'); go.type = 'submit';
-  form.appendChild(row(go));
+  const ok = button('Done', 'bd-start'); ok.type = 'submit';
+  const back = button('Back', 'ghost', (e) => { e.preventDefault(); d.step = 'name'; paint(); focusField(); });
+  form.appendChild(row(ok, back));
   form.addEventListener('submit', (e) => {
     e.preventDefault();
     const fd = new FormData(form);
-    const thing = { title: d.title, why: String(fd.get('why') || '').trim().slice(0, 280), for_whom: String(fd.get('for_whom') || '').trim().slice(0, 80), partner: String(fd.get('partner') || '').trim().slice(0, 80),
-      target_date: /^\d{4}-\d{2}-\d{2}$/.test(String(fd.get('target_date') || '')) ? String(fd.get('target_date')) : null };
-    go.disabled = true;
-    call(() => api().thing.set(thing)).then((r) => {
-      go.disabled = false;
-      if (!r.ok) { app.toast(r.message); return; }
-      B.thing = r.data && r.data.title ? r.data : { ...thing, status: 'active' };
+    const str = (k, n) => String(fd.get(k) || '').trim().slice(0, n);
+    const date = str('target_date', 10);
+    const thing = { title: d.title, why: str('why', 280), for_whom: str('for_whom', 80), partner: str('partner', 80), target_date: /^\d{4}-\d{2}-\d{2}$/.test(date) ? date : null };
+    ok.disabled = true;
+    go(() => api().thing.set(thing)).then((r) => {
+      ok.disabled = false;
+      if (!r.ok) { app.toast(r.message || FAIL); return; }
+      B.thing = r.thing || { ...thing, status: 'active' };
+      if (d.first_step) B.firstStep = d.first_step;
       B.draft = null; B.back = false;
       paint();
       app.flashHit(B.body, 'thing');
@@ -436,241 +334,333 @@ function focusField() {
   requestAnimationFrame(() => { const i = B.body && B.body.querySelector('.bd-name input'); if (i && matchMedia('(hover: hover)').matches) i.focus({ preventScroll: true }); });
 }
 
-/* "No thing yet?" Four things to borrow from town: a mission, a club that
-   meets this week, an Up For It idea that tipped, a neighbor's thing. */
+/* Four to borrow (data/build-starters.json): a Top 100+ mission, a club
+   that meets this week, an Up For It idea that tipped, a neighbor's thing.
+   A slot with nothing usable takes a fallback, so it always shows four. The
+   picks hold still for a Burlington week. */
 let startersAsk = null;
 function loadStarters() {
   if (startersAsk) return startersAsk;
-  startersAsk = Promise.all([getJSON('data/build-starters.json'), getJSON('../data/missions.json'), getJSON('../data/run-clubs.json')]).then(([st, mi, rc]) => {
-    const out = [];
-    const day = Math.floor(Date.now() / 86400000);
-    const missions = mi && Array.isArray(mi.missions) ? mi.missions.filter((m) => m && m.title && !m.needs_check) : [];
-    if (missions.length) { const m = missions[day % missions.length]; out.push({ k: 'st-' + m.k, kind: 'Mission', title: m.title, why: m.teaser || '', href: '#whatnow/' + m.k }); }
-    const clubs = rc && Array.isArray(rc.clubs) ? rc.clubs : [];
+  const ideas = app.demo ? Promise.resolve(null) : fetch(store.SB_URL + '/rest/v1/rpc/uf_ideas_public', { method: 'POST',
+    headers: { apikey: store.SB_KEY, Authorization: 'Bearer ' + store.SB_KEY, 'Content-Type': 'application/json' }, body: '{}' })
+    .then((r) => (r.ok ? r.json() : null)).catch(() => null);
+  startersAsk = Promise.all([getJSON('data/build-starters.json'), getJSON('../data/missions.json'),
+    getJSON(app.demo ? 'data/demo/run-clubs.json' : '../data/run-clubs.json'), ideas, go(() => api().things.public())]).then(([st, mi, rc, uf, pub]) => {
+    const rules = st && st.sources ? st.sources : {};
+    const now = Date.now();
+    const today = dayKey(now);
+    const month = Number(today.slice(5, 7));
+    const monday = keyBack(today, (new Date(today + 'T12:00:00Z').getUTCDay() + 6) % 7);
+    let seed = 0; for (const ch of monday) seed = (seed * 31 + ch.charCodeAt(0)) >>> 0;
+    const at = (list) => list[seed % list.length];
+    const slots = {};
+    /* a mission in season, the free, culture, play and outdoor themes first */
+    const months = (rules.mission && rules.mission.season_months) || {};
+    let done = {};
+    try { done = JSON.parse(localStorage.getItem('allday-missions') || '{}') || {}; } catch (e) { done = {}; }
+    const ms = (mi && Array.isArray(mi.missions) ? mi.missions : []).filter((m) => m && m.title && !m.needs_check && !done[m.mark] &&
+      (!Array.isArray(months[m.mark]) || months[m.mark].includes(month)));
+    const keen = ms.filter((m) => ['free', 'culture', 'play', 'outdoors'].includes(m.theme));
+    if (ms.length) { const m = at(keen.length ? keen : ms); slots.mission = { k: 'st-' + m.k, kind: 'Top 100+', title: m.title, line: m.teaser || '', first_step: (rules.mission && rules.mission.first_step) || '' }; }
+    /* the soonest run club this week, else the soonest meet */
     try {
-      const meets = meetsInWindow(clubs, Date.now(), Date.now() + 7 * 86400000);
-      const m = meets && meets[0];
-      if (m) { const club = m.club || {}; out.push({ k: 'st-club-' + (club.id || 'x'), kind: club.kind === 'run' ? 'Run club' : 'Meets this week', title: club.name ? 'Run with ' + club.name : 'A club this week', why: (m.day ? '' : '') + (club.what || ''), href: club.url || '#people' }); }
+      let doc = rc;
+      if (app.demo && doc) doc = redateDemo(doc, now);
+      const clubs = doc && Array.isArray(doc.clubs) ? doc.clubs : [];
+      const meets = (meetsInWindow(clubs, now, now + 7 * 86400000) || []).filter((x) => x && x.club && x.club.newcomers &&
+        !/dads only|members[- ]only|join first/i.test([x.club.what, x.club.schedule_note, x.meet && x.meet.note].join(' ')));
+      const m = meets.find((x) => x.club.kind === 'run') || meets[0];
+      if (m) {
+        const when = Number(m.start || m.at || m.ms) || now;
+        const wd = new Date(when).toLocaleDateString('en-US', { weekday: 'short', timeZone: 'America/New_York' });
+        const WD = new Date(when).toLocaleDateString('en-US', { weekday: 'long', timeZone: 'America/New_York' });
+        const time = m.meet && m.meet.time ? timeLabel(m.meet.time) : '';
+        slots.meet = { k: 'st-club-' + m.club.id, kind: m.club.kind === 'run' ? 'Run club' : 'This week', title: m.club.name + ', ' + wd + (time ? ' ' + time : ''),
+          thing: 'Go to ' + m.club.name + ' on ' + WD, line: oneLine(m.club.what || ''),
+          first_step: m.meet && m.meet.where ? 'Show up at ' + m.meet.where + (time ? ' at ' + time : '') : '' };
+      }
     } catch (e) { /* no week to show */ }
-    const extra = st && Array.isArray(st.fallback) ? st.fallback : st && Array.isArray(st.starters) ? st.starters : [];
-    const ideas = extra.filter((x) => x && x.title);
-    const things = B.feed.filter((p) => p && p.thing_title && p.thing_why).slice(0, 1).map((p) => ({ k: 'st-p-' + p.id, kind: 'A neighbor’s thing', title: p.thing_title, why: p.thing_why, href: '#build/p-' + p.id }));
-    ideas.forEach((x, i) => out.push({ k: 'st-x-' + i, kind: x.kind || 'Up For It', title: x.title, why: x.why || x.line || '', href: x.href || '#build' }));
-    out.splice(3, 0, ...things);
-    B.starters = out.slice(0, 4);
-    if (!B.thing && B.side === 'build' && B.phase === 'ready') paint();
+    /* an Up For It idea that tipped, newest first */
+    const tipped = (Array.isArray(uf) ? uf : []).filter((x) => x && x.title && x.tipped_at && ['live', 'claimed'].includes(x.status) && (!Array.isArray(x.months) || !x.months.length || x.months.includes(month)))
+      .sort((a, b) => String(b.tipped_at).localeCompare(String(a.tipped_at)));
+    if (tipped[0]) { const x = tipped[0]; slots.upforit = { k: 'st-uf-' + (x.id || 0), kind: 'Up For It', title: x.title, line: (x.yes_count || 0) + ' neighbors said they’d go', first_step: 'Tap I’d go, then pick a night' }; }
+    /* a neighbor's thing, a Finished one first */
+    const things = pub.ok && Array.isArray(pub.things) ? pub.things : [];
+    const th = things.find((x) => x.last_kind === 'finished') || things[0];
+    if (th) slots.public = { k: 'st-t-' + th.id, kind: 'A neighbor', title: th.title, line: th.why ? '“' + th.why + '”' : (th.name ? th.name + ' is working on this' : 'A neighbor is working on this'), first_step: 'Name your own version of it' };
+    /* fallbacks fill what is left */
+    const spare = (st && Array.isArray(st.fallbacks) ? st.fallbacks : []).filter((x) => x && x.title && (!x.until || x.until >= today));
+    let si = seed % Math.max(1, spare.length);
+    const out = [];
+    ((st && Array.isArray(st.slots) && st.slots) || ['mission', 'meet', 'upforit', 'public']).forEach((slot) => {
+      if (slots[slot]) { out.push(slots[slot]); return; }
+      if (!spare.length) return;
+      const x = spare[si++ % spare.length];
+      out.push({ k: 'st-' + x.id, kind: 'Try this', title: x.title, line: x.line || '', first_step: x.first_step || '' });
+    });
+    B.starters = out.slice(0, (st && st.show) || 4);
+    if (!B.thing && B.phase === 'ready') paint();
   });
   return startersAsk;
 }
 function starterDoor() {
   const s = el('section', 'bd-door');
   s.dataset.k = 'starters';
-  s.appendChild(el('div', 'bd-head', '<h2>No thing yet? Borrow one</h2>'));
+  s.appendChild(el('div', 'bd-head', '<h2>Or borrow one</h2>'));
   if (!B.starters) { s.appendChild(el('div', 'bd-skel', '<span class="skel w60"></span><span class="skel w40"></span>')); loadStarters(); return s; }
   const grid = el('div', 'bd-starters');
   B.starters.forEach((st) => {
-    const c = el('div', 'bd-starter');
-    c.dataset.k = st.k;
-    c.innerHTML = '<p class="bd-skind">' + esc(st.kind) + '</p><h3>' + esc(st.title) + '</h3>' + (st.why ? '<p class="bd-swhy">' + esc(st.why) + '</p>' : '');
-    c.appendChild(button('Pick this', 'ghost sm', () => { B.draft = { step: 'why', title: st.title }; paint(); app.flashHit(B.body, 'thing'); focusField(); }));
+    const c = el('button', 'bd-starter');
+    c.type = 'button';
+    c.dataset.st = st.k;
+    c.innerHTML = '<span class="bd-skind">' + esc(st.kind) + '</span><span class="bd-st">' + esc(st.title) + '</span>' + (st.line ? '<span class="bd-swhy">' + esc(st.line) + '</span>' : '');
+    c.addEventListener('click', () => { B.draft = { step: 'more', title: (st.thing || st.title).slice(0, 80), first_step: st.first_step || '' }; paint(); app.flashHit(B.body, 'thing'); focusField(); });
     grid.appendChild(c);
   });
   s.appendChild(grid);
   return s;
 }
 
-/* the thing's own sheet: change it, finish it, pause it, your builder */
+/* the thing's own sheet: finish it, pause it, change it, your builder */
 function thingSheet() {
   app.sheet(B.thing.title, (body, card, close) => {
-    const row = (label, cls, fn) => { const r = el('div', 'sheet-row', '<div class="t">' + esc(label) + '</div>'); const b = button(esc(label.split(' ')[0]), cls, fn); r.innerHTML = ''; r.appendChild(el('div', 't', esc(label))); r.appendChild(b); return r; };
-    body.appendChild(row('Finished it', 'sm', () => { close(); finishThing(); }));
-    body.appendChild(row(B.thing.status === 'paused' ? 'Pick it back up' : 'Pause it', 'ghost sm', () => {
+    const row = (label, cls, fn) => { const r = el('div', 'sheet-row', '<div class="t">' + esc(label[0]) + '</div>'); r.appendChild(button(esc(label[1]), cls, fn)); return r; };
+    body.appendChild(row(['Finished it', 'Finished'], 'sm bd-start', () => { close(); finishThing(); }));
+    const paused = B.thing.status === 'paused';
+    body.appendChild(row([paused ? 'Paused' : 'Put it down for a while', paused ? 'Pick it up' : 'Pause'], 'ghost sm', () => {
       close();
-      const back = B.thing.status === 'paused';
-      call(() => (back ? api().thing.set({ ...B.thing, status: 'active' }) : api().thing.pause())).then((r) => {
-        if (!r.ok) { app.toast(r.message); return; }
-        B.thing = { ...B.thing, status: back ? 'active' : 'paused' };
+      go(() => (paused ? api().thing.resume() : api().thing.pause())).then((r) => {
+        if (!r.ok) { app.toast(r.message || FAIL); return; }
+        B.thing = r.thing || { ...B.thing, status: paused ? 'active' : 'paused' };
         paint();
       });
     }));
-    body.appendChild(row('Change the thing', 'ghost sm', () => { close(); B.draft = { step: 'name', title: B.thing.title }; B.thing = null; paint(); focusField(); }));
+    body.appendChild(row(['A different thing', 'Change'], 'ghost sm', () => { close(); B.draft = { step: 'name', title: B.thing.title }; B.thing = null; paint(); focusField(); }));
     body.appendChild(el('div', 'sheet-h', 'Your builder'));
-    const hats = el('div', 'bd-hats');
-    hats.setAttribute('role', 'group');
-    hats.setAttribute('aria-label', 'Hard hat colour');
-    HATS.forEach((h) => {
-      const b = el('button', 'bd-hat' + ((B.builder && B.builder.hat) === h ? ' on' : ''));
-      b.type = 'button';
-      b.dataset.hat = h;
-      b.setAttribute('aria-label', h);
-      b.setAttribute('aria-pressed', (B.builder && B.builder.hat) === h ? 'true' : 'false');
-      b.addEventListener('click', () => {
-        B.builder = { ...(B.builder || {}), hat: h };
-        hats.querySelectorAll('.bd-hat').forEach((x) => { x.classList.toggle('on', x === b); x.setAttribute('aria-pressed', x === b ? 'true' : 'false'); });
-        call(() => api().builder.set(B.builder));
-        if (site) site.setYou(youState());
-      });
-      hats.appendChild(b);
-    });
-    body.appendChild(hats);
+    body.appendChild(builderForm());
   });
 }
+/* a hard hat colour, and the first name neighbors see (on posts always, on
+   the site only if you say so) */
+function builderForm() {
+  const f = el('form', 'bd-form bd-builder');
+  f.noValidate = true;
+  const b = B.builder || {};
+  const hats = el('div', 'bd-hats');
+  hats.setAttribute('role', 'group');
+  hats.setAttribute('aria-label', 'Hard hat');
+  let hat = b.hat || 'yellow';
+  HATS.forEach(([h, tok]) => {
+    const x = el('button', 'bd-hat' + (hat === h ? ' on' : ''));
+    x.type = 'button'; x.dataset.hat = h; x.style.setProperty('--hat', 'var(' + tok + ')');
+    x.setAttribute('aria-label', h + ' hard hat'); x.setAttribute('aria-pressed', hat === h ? 'true' : 'false');
+    x.addEventListener('click', () => { hat = h; hats.querySelectorAll('.bd-hat').forEach((y) => { y.classList.toggle('on', y === x); y.setAttribute('aria-pressed', y === x ? 'true' : 'false'); }); });
+    hats.appendChild(x);
+  });
+  f.appendChild(hats);
+  const name = el('input', 'field');
+  name.name = 'first_name'; name.maxLength = 32; name.placeholder = 'First name'; name.value = b.first_name || '';
+  name.setAttribute('aria-label', 'Your first name');
+  f.appendChild(name);
+  const show = el('label', 'bd-check', '<input type="checkbox" name="show"' + (b.first_name_public ? ' checked' : '') + '><span>Show it on the site</span>');
+  f.appendChild(show);
+  const save = button('Save', 'bd-start'); save.type = 'submit';
+  f.appendChild(save);
+  f.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const next = { hat, first_name: name.value.trim().slice(0, 32), first_name_public: !!show.querySelector('input').checked };
+    save.disabled = true;
+    go(() => api().builder.set(next)).then((r) => {
+      save.disabled = false;
+      if (!r.ok) { app.toast(r.message || FAIL); return; }
+      B.builder = r.builder || { ...b, ...next };
+      if (site) site.setYou(youState());
+      app.closeSheet();
+      app.toast('Saved');
+    });
+  });
+  return f;
+}
 function finishThing() {
-  call(() => api().thing.finish()).then((r) => {
-    if (!r.ok) { app.toast(r.message); return; }
-    const done = B.thing;
+  go(() => api().thing.finish()).then((r) => {
+    if (!r.ok) { app.toast(r.message || FAIL); return; }
     B.thing = null; B.draft = { step: 'name' };
     paint();
     /* finishing gets its own post, and its own five minutes at the party */
-    postSheet({ kind: 'finished', line: 'Finished ' + lower(done.title), minutes: 0, thing: done, after: () => {} });
+    if (signedIn()) postSheet({ kind: 'finished', minutes: 0 });
   });
 }
-const lower = (s) => String(s || '').replace(/^[A-Z](?=[a-z])/, (c) => c.toLowerCase());
 
 /* ------------------------------------------------------------ coming back */
 function comebackCard() {
   const c = el('section', 'bd-back');
   c.dataset.k = 'back';
-  c.appendChild(el('p', 'bd-foreman', esc(says('come_back'))));
+  c.appendChild(el('p', 'bd-foreman', esc(pick('come_back', F('come_back.lines', [])))));
   const r = el('div', 'bd-row');
   const done = () => { store.write(SEEN_KEY, dayKey(Date.now())); B.back = false; };
-  r.appendChild(button(esc(word('comeback', 'same')), 'bd-start', () => { done(); paint(); }));
-  r.appendChild(button(esc(word('comeback', 'smaller')), 'ghost', () => { done(); paint(); clockInSheet({ smaller: true }); }));
-  r.appendChild(button(esc(word('comeback', 'new')), 'ghost', () => { done(); B.draft = { step: 'name' }; B.thing = null; paint(); focusField(); }));
+  (F('come_back.buttons', []) || []).forEach((x, i) => {
+    const b = button(esc(x.label), i === 0 ? 'bd-start' : 'ghost', () => {
+      done();
+      if (x.key === 'new') { B.draft = { step: 'name' }; B.thing = null; paint(); focusField(); return; }
+      paint();
+      if (x.after) app.toast(x.after);
+      if (x.key === 'smaller') clockIn({ smaller: true });
+    });
+    b.dataset.back = x.key;
+    r.appendChild(b);
+  });
   c.appendChild(r);
   return c;
 }
 
-/* ------------------------------------------------------------ progress */
-function hoursSection() {
-  const s = el('section', 'bd-hours');
-  s.dataset.k = 'hours';
-  const head = el('div', 'bd-head', '<h2>Hours off your phone</h2>');
-  const sw = pills([['days', 'Days'], ['weeks', 'Weeks']], B.scale, (v) => { B.scale = v; const n = hoursSection(); s.replaceWith(n); }, 'bd-scale');
-  head.appendChild(sw);
-  s.appendChild(head);
-  const byDay = new Map(B.record.map((d) => [String(d.day).slice(0, 10), d]));
-  const today = dayKey(Date.now());
-  const back = (key, n) => { const t = Date.parse(key + 'T12:00:00Z') - n * 86400000; return new Date(t).toISOString().slice(0, 10); };
-  let bars;
-  if (B.scale === 'days') {
-    bars = Array.from({ length: 7 }, (_, i) => {
-      const k = back(today, 6 - i), d = byDay.get(k) || {};
-      return { label: new Date(k + 'T12:00:00Z').toLocaleDateString('en-US', { weekday: 'short', timeZone: 'UTC' }), shift: Number(d.shift_minutes) || 0, logged: Number(d.logged_minutes) || 0, now: k === today };
-    });
-  } else {
-    /* a week is the seven days ending on that bar's day */
-    bars = Array.from({ length: 8 }, (_, i) => {
-      const end = back(today, (7 - i) * 7);
-      let shift = 0, logged = 0;
-      for (let j = 0; j < 7; j++) { const d = byDay.get(back(end, j)); if (d) { shift += Number(d.shift_minutes) || 0; logged += Number(d.logged_minutes) || 0; } }
-      return { label: i === 7 ? 'This week' : dateWord(back(end, 6)), shift, logged, now: i === 7 };
-    });
-  }
-  const week = bars.length && B.scale === 'days' ? bars.reduce((n, b) => n + b.shift + b.logged, 0) : (bars[bars.length - 1].shift + bars[bars.length - 1].logged);
-  const max = Math.max(60, ...bars.map((b) => b.shift + b.logged));
-  s.appendChild(el('p', 'bd-big', '<b>' + esc(hm(week)) + '</b> <span>' + esc(B.scale === 'days' ? 'last 7 days' : 'this week') + '</span>'));
-  const chart = el('div', 'bd-bars' + (B.scale === 'weeks' ? ' wk' : ''));
-  chart.setAttribute('role', 'img');
-  chart.setAttribute('aria-label', bars.map((b) => b.label + ' ' + hm(b.shift + b.logged)).join(', '));
-  bars.forEach((b) => {
-    const tot = b.shift + b.logged;
-    const col = el('div', 'bd-bar' + (b.now ? ' now' : ''));
-    col.innerHTML = '<span class="bd-v">' + (tot ? esc(short(tot)) : '') + '</span><span class="bd-track"><i class="sh" style="height:' + (b.shift / max * 100).toFixed(1) + '%"></i><i class="lg" style="height:' + (b.logged / max * 100).toFixed(1) + '%"></i></span><span class="bd-l">' + esc(b.label) + '</span>';
-    chart.appendChild(col);
+/* ------------------------------------------------------- your record */
+/* Hours off your phone by day or by week (never a streak), your part of
+   the building, and your shelf: everything you posted about this thing. */
+function recordSheet() {
+  let scale = 'days';
+  app.sheet('Hours off your phone', (body, card, close) => {
+    const host = el('div', 'bd-record');
+    const paintIt = () => {
+      host.innerHTML = '';
+      const byDay = new Map(B.days.map((d) => [String(d.day).slice(0, 10), d]));
+      const today = dayKey(Date.now());
+      const sum = (from, n) => { let m = 0, l = 0; for (let j = 0; j < n; j++) { const d = byDay.get(keyBack(from, j)); if (d) { m += Number(d.minutes) || 0; l += Number(d.logged) || 0; } } return { m, l }; };
+      const bars = scale === 'days'
+        ? Array.from({ length: 7 }, (_, i) => { const k = keyBack(today, 6 - i); return { label: new Date(k + 'T12:00:00Z').toLocaleDateString('en-US', { weekday: 'short', timeZone: 'UTC' }), ...sum(k, 1), now: i === 6 }; })
+        : Array.from({ length: 8 }, (_, i) => { const end = keyBack(today, (7 - i) * 7); return { label: i === 7 ? 'Now' : dateWord(keyBack(end, 6)), ...sum(end, 7), now: i === 7 }; });
+      const head = el('div', 'bd-rhead');
+      const big = scale === 'days' ? bars.reduce((n, b) => n + b.m, 0) : bars.reduce((n, b) => n + b.m, 0);
+      head.appendChild(el('p', 'bd-big', '<b>' + esc(hm(big)) + '</b> <span>' + esc(scale === 'days' ? 'last 7 days' : 'last 8 weeks') + '</span>'));
+      head.appendChild(pills([['days', 'Days'], ['weeks', 'Weeks']], scale, (v) => { scale = v; paintIt(); }, 'bd-scale'));
+      host.appendChild(head);
+      const max = Math.max(60, ...bars.map((b) => b.m));
+      const chart = el('div', 'bd-bars' + (scale === 'weeks' ? ' wk' : ''));
+      chart.setAttribute('role', 'img');
+      chart.setAttribute('aria-label', bars.map((b) => b.label + ' ' + hm(b.m)).join(', '));
+      bars.forEach((b) => {
+        const col = el('div', 'bd-bar' + (b.now ? ' now' : ''));
+        col.innerHTML = '<span class="bd-v">' + (b.m ? esc(short(b.m)) : '') + '</span><span class="bd-track"><i class="sh" style="height:' + (Math.max(0, b.m - b.l) / max * 100).toFixed(1) +
+          '%"></i><i class="lg" style="height:' + (b.l / max * 100).toFixed(1) + '%"></i></span><span class="bd-l">' + esc(b.label) + '</span>';
+        chart.appendChild(col);
+      });
+      host.appendChild(chart);
+      if (bars.some((b) => b.l)) host.appendChild(el('p', 'bd-key', '<i class="sh"></i>Shifts <i class="lg"></i>Logged'));
+      host.appendChild(button('See your part of the building', 'ghost bd-cutbtn', () => { close(); setCut(true); setDock('full'); }));
+      if (B.shelf.length) {
+        host.appendChild(el('div', 'sheet-h', 'Your shelf'));
+        const list = el('div', 'bd-shelf');
+        B.shelf.forEach((p) => list.appendChild(el('div', 'bd-shelfrow k-' + esc(p.kind), '<p class="bd-kind">' + esc(kindWord(p.kind)) +
+          ' · ' + esc(dateWord(String(p.created_at || today).slice(0, 10))) + '</p><p class="bd-sline">' + esc(p.line) + '</p>')));
+        host.appendChild(list);
+      }
+    };
+    paintIt();
+    body.appendChild(host);
   });
-  s.appendChild(chart);
-  if (bars.some((b) => b.logged)) s.appendChild(el('p', 'bd-key', '<i class="sh"></i>Shifts <i class="lg"></i>Logged'));
-  const cut = button(B.cut ? 'Back to the whole site' : 'See your part of the building', 'ghost bd-cutbtn', () => {
-    B.cut = !B.cut;
-    if (site) site.cutaway(B.cut, { your_minutes: yourMinutes() });
-    cut.textContent = B.cut ? 'Back to the whole site' : 'See your part of the building';
-    cut.setAttribute('aria-pressed', B.cut ? 'true' : 'false');
-    if (B.cut) app.scrollTop(true);
-  });
-  cut.setAttribute('aria-pressed', B.cut ? 'true' : 'false');
-  s.appendChild(cut);
-  return s;
-}
-
-function shelfSection() {
-  if (!B.shelf.length) return null;
-  const s = el('section', 'bd-shelf');
-  s.dataset.k = 'shelf';
-  s.appendChild(el('div', 'bd-head', '<h2>Your shelf</h2>'));
-  const r = listRail(s, { name: 'build-shelf', label: 'your shelf', cls: 'bd-shelfrail' });
-  B.shelf.forEach((p) => {
-    const c = el('div', 'bd-shelfcard k-' + esc(p.kind));
-    c.innerHTML = '<p class="bd-kind">' + esc(KIND[p.kind] || 'Post') + '</p><p class="bd-sline">' + esc(p.line) + '</p><p class="bd-sdate">' + esc(dateWord(String(p.created).slice(0, 10))) + '</p>';
-    r.appendChild(c);
-  });
-  return s;
 }
 
 /* -------------------------------------------------------------- the feed */
-const postItem = (p) => ({ k: 'p-' + p.id, id: p.id, kind: 'build', title: p.line, text: p.line, author: p.name || 'A neighbor', href: '#build/p-' + p.id, post: p });
+const postItem = (p) => ({ k: 'p-' + p.id, id: p.id, kind: 'build', title: p.line, text: p.line, author: p.author || 'A neighbor', href: '#build/p-' + p.id, post: p });
 function feedSection() {
   const s = el('section', 'bd-feed');
   s.dataset.k = 'neighbors';
-  s.appendChild(el('div', 'bd-head', '<h2>Neighbors</h2>'));
-  const list = el('div', 'bd-posts');
-  const posts = B.feed.filter((p) => p && p.id && p.line);
+  const all = B.feed.filter((p) => p && p.id && p.line);
+  const stuck = all.filter((p) => p.kind === 'stuck' && !p.mine);
+  if (B.only === 'stuck' && !stuck.length) B.only = 'all';
+  const head = el('div', 'bd-head', '<h2>Neighbors</h2>');
+  if (stuck.length) {
+    const sw = pills([['all', 'All'], ['stuck', 'Stuck · ' + stuck.length]], B.only, (v) => { B.only = v; paint(); }, 'bd-only');
+    sw.setAttribute('role', 'group');
+    sw.setAttribute('aria-label', 'All posts, or only the ones stuck');
+    head.appendChild(sw);
+  }
+  s.appendChild(head);
+  const posts = B.only === 'stuck' ? stuck : all;
   app.know(posts.map(postItem));
-  if (!posts.length) list.appendChild(el('p', 'bd-empty', 'No posts yet.'));
+  const list = el('div', 'bd-posts');
+  if (!posts.length) list.appendChild(el('p', 'bd-empty', 'Nobody’s posted yet.'));
   posts.forEach((p) => list.appendChild(postCard(p)));
   s.appendChild(list);
   return s;
 }
+const needLabel = (k) => { const x = (F('stuck.help_buttons', []) || []).find((b) => b.key === k); return x ? x.label : ''; };
 function postCard(p) {
-  const c = el('article', 'card bd-post k-' + esc(p.kind));
+  const c = el('article', 'card bd-post k-' + esc(p.kind) + (p.mine ? ' mine' : ''));
   c.dataset.k = 'p-' + p.id;
-  const ago = p.created ? agoShort(Date.parse(p.created) / 1000) : '';
-  const hours = Number(p.hours_minutes || p.hours) > 0 ? hm(p.hours_minutes || p.hours) : '';
-  c.innerHTML = '<div class="c-head"><span class="c-src">' + esc(p.name || 'A neighbor') + '</span>' + (ago ? '<span>· ' + esc(ago) + '</span>' : '') + '</div>' +
-    '<p class="bd-kind">' + esc(KIND[p.kind] || 'Post') + (hours ? ' · ' + esc(hours) : '') + '</p>' +
+  const who = p.author || 'A neighbor';
+  const ago = p.created_at ? agoShort(Date.parse(p.created_at) / 1000) : '';
+  const mins = Number(p.minutes) > 0 ? hm(p.minutes) : '';
+  const pic = p.photo ? photoUrl(p.photo) : null;
+  const need = p.kind === 'stuck' && p.help_need ? needLabel(p.help_need) : '';
+  c.innerHTML = '<span class="bd-av">' + mark(who, 'round') + '</span><div class="bd-pm">' +
+    '<p class="bd-who"><b>' + esc(who) + '</b>' + (ago ? ' <span>· ' + esc(ago) + '</span>' : '') + '</p>' +
+    '<p class="bd-kind">' + esc(kindWord(p.kind)) + (p.thing ? '<span> · ' + esc(p.thing) + '</span>' : '') + (mins ? '<span> · ' + esc(mins) + '</span>' : '') + '</p>' +
     '<p class="bd-line">' + esc(p.line) + '</p>' +
-    (p.kind === 'stuck' && p.help_need ? '<p class="bd-need">' + esc(needWords(p.help_need)) + '</p>' : '') +
-    (p.photo_url ? '<span class="c-media r45"><img class="pic" loading="lazy" decoding="async" alt="" src="' + esc(p.photo_url) + '"></span>' : '');
+    (need ? '<p class="bd-need">' + esc('Could use ' + need.replace(/^A /, 'a ')) + '</p>' : '') +
+    (pic && /^https?:/.test(pic) ? '<span class="c-media r45"><img class="pic" loading="lazy" decoding="async" alt="" src="' + esc(pic) + '"></span>' : '') + '</div>';
+  const pm = c.querySelector('.bd-pm');
   const acts = el('div', 'bd-acts');
-  const nice = el('button', 'bd-nice' + (p.mine_nice ? ' on' : ''), ICON.heart + '<span>Nice</span><span class="n">' + (Number(p.nice) > 0 ? esc(p.nice) : '') + '</span>');
-  nice.type = 'button';
-  nice.dataset.act = 'bdnice';
-  nice.setAttribute('aria-pressed', p.mine_nice ? 'true' : 'false');
-  acts.appendChild(nice);
-  if (p.kind === 'stuck' && !p.mine && !p.helped) {
-    const help = el('button', 'btn sm bd-help', 'I can help');
-    help.type = 'button';
-    help.dataset.act = 'bdhelp';
-    acts.appendChild(help);
+  /* on a neighbor's Stuck post, chiming in is the big button */
+  if (p.kind === 'stuck' && !p.mine) {
+    if (p.offered) acts.appendChild(el('span', 'bd-sent', esc('Offer sent')));
+    else {
+      const help = el('button', 'btn bd-help', esc(F('help.offer_button', 'I can help')));
+      help.type = 'button'; help.dataset.act = 'bdhelp';
+      help.setAttribute('aria-expanded', B.replying === p.id ? 'true' : 'false');
+      acts.appendChild(help);
+    }
   }
-  if (p.helped) acts.appendChild(el('span', 'bd-sent', 'Offer sent'));
+  const nice = el('button', 'bd-nice' + (p.niced ? ' on' : ''), ICON.heart + '<span>' + esc(F('help.nice', 'Nice')) + '</span><span class="n">' + (Number(p.nice) > 0 ? esc(p.nice) : '') + '</span>');
+  nice.type = 'button'; nice.dataset.act = 'bdnice';
+  nice.setAttribute('aria-pressed', p.niced ? 'true' : 'false');
+  if (p.mine) nice.disabled = true;
+  acts.appendChild(nice);
   const more = el('button', 'iconbtn bd-pmore', ICON.more);
-  more.type = 'button';
-  more.dataset.act = 'bdmore';
+  more.type = 'button'; more.dataset.act = 'bdmore';
   more.setAttribute('aria-label', 'More for this post');
   acts.appendChild(more);
-  c.appendChild(acts);
-  /* the poster sees who offered, one line each, and answers */
-  const offers = Array.isArray(p.offers) ? p.offers.filter((o) => o && o.status === 'offered') : [];
-  if (p.mine && offers.length) {
-    const box = el('div', 'bd-offers');
-    offers.forEach((o) => {
-      const r = el('div', 'bd-offer');
-      r.dataset.help = o.id;
-      r.innerHTML = '<p><b>' + esc(o.helper_name || 'A neighbor') + '</b> ' + esc(o.line || '') + '</p>';
-      const yes = el('button', 'btn sm', 'Yes'); yes.type = 'button'; yes.dataset.act = 'bdyes';
-      const no = el('button', 'btn sm ghost', 'No thanks'); no.type = 'button'; no.dataset.act = 'bdno';
-      const row = el('div', 'bd-row'); row.append(yes, no);
-      r.appendChild(row);
-      box.appendChild(r);
-    });
-    c.appendChild(box);
+  pm.appendChild(acts);
+  /* I can help: one line, right here in the post */
+  if (B.replying === p.id && !p.offered) {
+    const f = el('form', 'bd-reply');
+    f.noValidate = true;
+    f.dataset.post = p.id;
+    const i = el('input', 'field');
+    i.name = 'line'; i.maxLength = 140; i.placeholder = F('help.offer_placeholder', '');
+    i.setAttribute('aria-label', 'What you can offer, in a line');
+    const send = button('Send', 'bd-start'); send.type = 'submit';
+    const r = el('div', 'bd-row'); r.append(i, send);
+    if (!(B.builder && B.builder.first_name)) {
+      const n = el('input', 'field bd-fname');
+      n.name = 'first_name'; n.maxLength = 32; n.placeholder = 'Your first name';
+      n.setAttribute('aria-label', 'Your first name');
+      f.appendChild(n);
+    }
+    f.appendChild(r);
+    pm.appendChild(f);
   }
-  const yes = Array.isArray(p.offers) ? p.offers.find((o) => o && o.status === 'accepted') : null;
-  if (p.mine && yes) c.appendChild(el('p', 'bd-sent', esc('You and ' + (yes.helper_name || 'a neighbor') + ' have each other’s email')));
+  /* your own Stuck post: who offered, one line each, and Yes or No thanks */
+  if (p.mine) {
+    const offers = B.offers.filter((o) => o.post === p.id);
+    if (offers.length) {
+      const box = el('div', 'bd-offers');
+      offers.forEach((o) => {
+        const r = el('div', 'bd-offer');
+        r.dataset.help = o.id;
+        r.innerHTML = '<p><b>' + esc(fill(F('help.poster_sees', '{name} can help.'), { name: o.name || 'A neighbor' })) + '</b> ' + esc(o.line || '') + '</p>';
+        if (o.status === 'offered') {
+          const yes = el('button', 'btn sm bd-start', esc(F('help.yes', 'Yes'))); yes.type = 'button'; yes.dataset.act = 'bdyes';
+          const no = el('button', 'btn sm ghost', esc(F('help.no', 'No thanks'))); no.type = 'button'; no.dataset.act = 'bdno';
+          const row = el('div', 'bd-row'); row.append(yes, no);
+          r.appendChild(row);
+        } else if (o.status === 'accepted') r.appendChild(el('p', 'bd-sent', esc('You’ll both get an email')));
+        box.appendChild(r);
+      });
+      pm.appendChild(box);
+    }
+  }
   return c;
 }
-const needWords = (k) => ({ hand: 'Could use a hand', tool: 'Could use a tool', smaller: 'Looking for a smaller job', different: 'Thinking about a different job' }[k] || String(k));
 
 function needSignIn(what) {
   if (signedIn()) return false;
@@ -685,58 +675,53 @@ function repaintPost(p) {
 }
 app.onAct('bdnice', (it) => {
   const p = postOf(it);
-  if (!p || needSignIn('say nice')) return;
-  p.mine_nice = !p.mine_nice;
-  p.nice = Math.max(0, (Number(p.nice) || 0) + (p.mine_nice ? 1 : -1));
+  if (!p || p.mine || needSignIn('say nice')) return;
+  p.niced = !p.niced;
+  p.nice = Math.max(0, (Number(p.nice) || 0) + (p.niced ? 1 : -1));
   repaintPost(p);
-  call(() => api().nice.toggle(p.id)).then((r) => {
-    if (r.ok) return;
-    p.mine_nice = !p.mine_nice; p.nice = Math.max(0, p.nice + (p.mine_nice ? 1 : -1));
-    repaintPost(p); app.toast(r.message);
+  go(() => api().nice.toggle(p.id)).then((r) => {
+    if (r.ok) { if (Number.isFinite(r.nice)) { p.nice = r.nice; p.niced = !!r.niced; repaintPost(p); } return; }
+    p.niced = !p.niced; p.nice = Math.max(0, p.nice + (p.niced ? 1 : -1));
+    repaintPost(p); app.toast(r.message || FAIL);
   });
 });
 app.onAct('bdhelp', (it) => {
   const p = postOf(it);
   if (!p || needSignIn('offer help')) return;
-  app.sheet('I can help', (body, card, close) => {
-    body.appendChild(el('p', 'bd-sline', esc((p.name || 'A neighbor') + '. ' + p.line)));
-    if (p.help_need) body.appendChild(el('p', 'bd-need', esc(needWords(p.help_need))));
-    const f = el('form', 'bd-form');
-    f.noValidate = true;
-    const i = el('input', 'field');
-    i.name = 'line'; i.maxLength = 140; i.placeholder = 'I’ve got a stand and a Tuesday';
-    i.setAttribute('aria-label', 'What you can offer, in a line');
-    const go = button('Send', ''); go.type = 'submit';
-    const row = el('div', 'bd-row'); row.append(i, go);
-    f.appendChild(row);
-    f.appendChild(el('p', 'sheet-note', 'If they say yes, you each get the other’s email.'));
-    f.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const line = i.value.trim();
-      if (!line) { i.focus(); return; }
-      go.disabled = true;
-      call(() => api().help.offer(p.id, line.slice(0, 140))).then((r) => {
-        go.disabled = false;
-        if (!r.ok) { app.toast(r.message); return; }
-        p.helped = true; repaintPost(p); close(); app.toast('Sent');
-      });
-    });
-    body.appendChild(f);
-    setTimeout(() => i.focus({ preventScroll: true }), 50);
-  });
+  B.replying = B.replying === p.id ? null : p.id;
+  repaintPost(p);
+  const i = B.body.querySelector('.bd-reply input');
+  if (i) i.focus({ preventScroll: true });
 });
+function sendHelp(form) {
+  const p = B.feed.find((x) => x.id === form.dataset.post);
+  if (!p) return;
+  const i = form.querySelector('input[name=line]');
+  const n = form.querySelector('input[name=first_name]');
+  const line = i.value.trim();
+  if (n && !n.value.trim()) { n.focus(); return; }
+  if (!line) { i.focus(); return; }
+  form.querySelectorAll('button, input').forEach((x) => { x.disabled = true; });
+  const named = n ? go(() => api().builder.set({ first_name: n.value.trim().slice(0, 32) })).then((r) => { if (r.ok) B.builder = r.builder || { ...(B.builder || {}), first_name: n.value.trim() }; return r; }) : Promise.resolve({ ok: true });
+  named.then((r) => (r.ok ? go(() => api().help.offer(p.id, line.slice(0, 140))) : r)).then((r) => {
+    if (!r.ok) { form.querySelectorAll('button, input').forEach((x) => { x.disabled = false; }); app.toast(r.message || FAIL); return; }
+    p.offered = true; B.replying = null; repaintPost(p);
+    app.toast(F('help.offered', 'Sent'));
+  });
+}
 function answerHelp(it, act, yes) {
   const p = postOf(it);
   const row = act.closest('[data-help]');
   if (!p || !row) return;
   const id = row.dataset.help;
   row.querySelectorAll('button').forEach((b) => { b.disabled = true; });
-  call(() => api().help.respond(id, yes)).then((r) => {
-    if (!r.ok) { row.querySelectorAll('button').forEach((b) => { b.disabled = false; }); app.toast(r.message); return; }
-    const o = (p.offers || []).find((x) => x.id === id);
+  go(() => api().help.respond(id, yes)).then((r) => {
+    if (!r.ok) { row.querySelectorAll('button').forEach((b) => { b.disabled = false; }); app.toast(r.message || FAIL); return; }
+    const o = B.offers.find((x) => x.id === id);
     if (o) o.status = yes ? 'accepted' : 'declined';
+    B.offers = B.offers.filter((x) => x.status !== 'declined');
     repaintPost(p);
-    app.toast(yes ? 'You’ll both get an email' : 'Said no thanks');
+    app.toast(yes ? F('help.accepted', 'Done') : F('help.declined', 'OK'));
   });
 }
 app.onAct('bdyes', (it, act) => answerHelp(it, act, true));
@@ -744,28 +729,38 @@ app.onAct('bdno', (it, act) => answerHelp(it, act, false));
 app.onAct('bdmore', (it) => {
   const p = postOf(it);
   if (!p) return;
-  app.sheet(p.mine ? 'Your post' : (p.name || 'A neighbor') + '’s post', (body, card, close) => {
-    if (p.mine) { body.appendChild(el('p', 'sheet-note', esc(p.line))); return; }
-    body.appendChild(el('div', 'sheet-h', 'Report this post'));
+  app.sheet(p.mine ? 'Your post' : (p.author || 'A neighbor') + '’s post', (body, card, close) => {
+    body.appendChild(el('p', 'bd-sline', esc(p.line)));
+    if (p.mine) {
+      const r = el('div', 'sheet-row', '<div class="t">Take it down</div>');
+      r.appendChild(button('Delete', 'danger sm', () => {
+        close();
+        go(() => api().post.remove(p.id)).then((x) => { if (!x.ok) { app.toast(x.message || FAIL); return; } B.feed = B.feed.filter((q) => q.id !== p.id); paint(); app.toast('Deleted'); });
+      }));
+      body.appendChild(r);
+      return;
+    }
+    body.appendChild(el('div', 'sheet-h', 'Report it'));
     Object.entries(REASON_LABELS).forEach(([k, label]) => {
       const r = el('div', 'sheet-row', '<div class="t">' + esc(label) + '</div>');
-      r.appendChild(button('Report', 'ghost sm', () => {
+      const b = button('Report', 'ghost sm', () => {
         if (needSignIn('report')) return;
         close();
-        call(() => api().report({ target: p.id, kind: 'post', reason: k })).then((x) => app.toast(x.ok ? 'Reported. Thanks.' : x.message));
-      }));
+        go(() => api().report({ post: p.id }, k)).then((x) => app.toast(x.ok ? 'Reported. Thanks.' : x.message || FAIL));
+      });
+      b.dataset.reason = k;
+      r.appendChild(b);
       body.appendChild(r);
     });
     body.appendChild(el('div', 'sheet-h', 'Block'));
-    const r = el('div', 'sheet-row', '<div class="t">' + esc('Block ' + (p.name || 'this neighbor')) + '</div>');
+    const r = el('div', 'sheet-row', '<div class="t">' + esc('Block ' + (p.author || 'this neighbor')) + '</div>');
     r.appendChild(button('Block', 'danger sm', () => {
       if (needSignIn('block')) return;
       close();
-      app.confirmBox({ title: 'Block ' + (p.name || 'this neighbor') + '?', body: 'You won’t see their posts or offers, and they can’t offer you help.', yes: 'Block', onYes() {
-        call(() => api().block(p.user)).then((x) => {
-          if (!x.ok) { app.toast(x.message); return; }
-          B.feed = B.feed.filter((q) => q.user !== p.user);
-          paint();
+      app.confirmBox({ title: 'Block ' + (p.author || 'this neighbor') + '?', body: 'You won’t see their posts, and they can’t offer you help.', yes: 'Block', onYes() {
+        go(() => api().block.add({ post: p.id })).then((x) => {
+          if (!x.ok) { app.toast(x.message || FAIL); return; }
+          reload();
           app.toast('Blocked');
         });
       } });
@@ -774,33 +769,216 @@ app.onAct('bdmore', (it) => {
   });
 });
 
+/* ------------------------------------------------------------- the dock */
+/* The site lives in a panel at the bottom of the screen, outside the tab's
+   scroll, as the player does: docked, it shows the site and the town line;
+   its handle drags (or taps) it up to full screen, or down to just the
+   town line. A shift takes it full screen. */
+function ensureDock() {
+  if (dock) return dock;
+  dock = el('div', 'bd-dock');
+  dock.dataset.state = store.read(DOCK_KEY, 'dock') === 'mini' ? 'mini' : 'dock';
+  dock.hidden = true;
+  const handle = el('button', 'bd-handle', '<i></i>');
+  handle.type = 'button';
+  bindHandle(handle);
+  const bar = el('div', 'bd-dockbar');
+  const box = el('div', 'bd-sitebox');
+  canvas = document.createElement('canvas');
+  canvas.className = 'bd-canvas';
+  canvas.setAttribute('role', 'img');
+  canvas.setAttribute('aria-label', 'A drawing of Watershed on Lakeside Avenue, raised by the town’s hours, with everyone on shift');
+  const cut = el('button', 'bd-cut', 'Your part');
+  cut.type = 'button';
+  cut.addEventListener('click', () => setCut(!B.cut));
+  box.append(canvas, el('p', 'bd-talk'), cut);
+  const foot = el('div', 'bd-shift-foot');
+  const live = el('p', 'bd-live');
+  live.setAttribute('aria-live', 'polite');
+  dock.append(handle, bar, box, foot, live);
+  dock.addEventListener('pointerdown', onTouch, { passive: true });
+  document.body.appendChild(dock);
+  try { site = createSite(canvas, { reducedMotion: reduced() }); } catch (e) { console.error('[all-day] build site', e); site = null; }
+  paintDock();
+  return dock;
+}
+function setDock(state) {
+  if (!dock) return;
+  if (shiftOpen() && state !== 'full') return;
+  dock.dataset.state = state;
+  if (state !== 'full') store.write(DOCK_KEY, state);
+  document.body.classList.toggle('bd-full', state === 'full' && !dock.hidden);
+  if (!dock.hidden) document.body.dataset.bdDock = state;
+  paintHandle();
+}
+function paintHandle() {
+  const h = dock && dock.querySelector('.bd-handle');
+  if (!h) return;
+  const s = dock.dataset.state;
+  h.setAttribute('aria-label', s === 'full' ? 'Shrink the site' : 'Open the site full screen');
+  h.setAttribute('aria-expanded', s === 'full' ? 'true' : 'false');
+  h.hidden = shiftOpen();
+}
+const STATES = ['mini', 'dock', 'full'];
+function bindHandle(h) {
+  let y0 = null, moved = 0;
+  h.addEventListener('pointerdown', (e) => { y0 = e.clientY; moved = 0; try { h.setPointerCapture(e.pointerId); } catch (x) { /* fine */ } });
+  h.addEventListener('pointermove', (e) => { if (y0 != null) moved = e.clientY - y0; });
+  h.addEventListener('pointerup', () => {
+    if (y0 == null) return;
+    const i = STATES.indexOf(dock.dataset.state);
+    y0 = null;
+    if (moved < -30) setDock(STATES[Math.min(2, i + 1)]);
+    else if (moved > 30) setDock(STATES[Math.max(0, i - 1)]);
+    else return;
+    h.dataset.dragged = '1';
+  });
+  h.addEventListener('click', () => {
+    if (h.dataset.dragged) { delete h.dataset.dragged; return; }
+    setDock(dock.dataset.state === 'full' ? 'dock' : dock.dataset.state === 'mini' ? 'dock' : 'full');
+  });
+}
+function showDock(on) {
+  ensureDock();
+  const want = !!on || shiftOpen();
+  dock.hidden = !want;
+  document.body.classList.toggle('bd-docked', want);
+  if (want) { document.body.dataset.bdDock = dock.dataset.state; document.body.classList.toggle('bd-full', dock.dataset.state === 'full'); feedSite(); }
+  else { document.body.classList.remove('bd-full'); delete document.body.dataset.bdDock; }
+}
+/* the town line, and the party, under the handle */
+function paintDock() {
+  if (!dock) return;
+  const bar = dock.querySelector('.bd-dockbar');
+  const t = B.town || {};
+  const f = floors();
+  const crew = crewNow();
+  const vars = { crew, hours: Math.floor((Number(t.week_minutes) || 0) / 60), floor: f.going, floors: f.total };
+  let line = fill(crew ? F('town.line', '') : F('town.line_none', ''), vars);
+  if (crew === 1) line = line.replace(/^1 neighbors/, '1 neighbor');
+  if (f.topped) line = line.replace(/floor \d+ of \d+/, 'topped out');
+  const season = B.config.season || {};
+  let party = F('party.no_date', '');
+  if (season.topping_out_date) {
+    const when = new Date(season.topping_out_date + 'T12:00:00Z').toLocaleDateString('en-US', { month: 'short', day: 'numeric', timeZone: 'UTC' });
+    party = season.topping_out_date === dayKey(Date.now()) ? F('party.today', '') : fill(F('party.upcoming', ''), { date: when });
+  }
+  bar.innerHTML = '<p class="bd-townl">' + esc(line) + '</p>';
+  const pp = el(season.party_url && /^https:\/\//.test(season.party_url) ? 'a' : 'p', 'bd-party', esc(party));
+  if (pp.tagName === 'A') { pp.href = season.party_url; pp.target = '_blank'; pp.rel = 'noopener'; }
+  bar.appendChild(pp);
+  const cut = dock.querySelector('.bd-cut');
+  cut.classList.toggle('on', B.cut);
+  cut.setAttribute('aria-pressed', B.cut ? 'true' : 'false');
+  paintHandle();
+}
+function setCut(on) {
+  B.cut = !!on;
+  if (site) site.cutaway(B.cut, { your_minutes: yourMinutes() });
+  paintDock();
+}
+
+/* everything the site draws, from what the tab knows */
+function feedSite() {
+  if (!site) return;
+  const t = B.town || {};
+  const f = floors();
+  try {
+    site.setTown({ total_minutes: Number(t.total_minutes) || 0, floors_done: f.done, floor_progress: f.progress, windows_lit: Number(t.windows_lit || t.posts_lit) || 0, topped_out: f.topped });
+    site.setCrew((Array.isArray(t.on_shift) ? t.on_shift : []).filter((c) => !c.me).map((c, i) => ({ id: c.id || 'c' + i, look: c.look || {}, task: c.task || null, name: c.name || null })));
+    site.setYou(youState());
+    site.setSky(sky());
+    site.cutaway(B.cut, { your_minutes: yourMinutes() });
+  } catch (e) { console.error('[all-day] build site', e); }
+}
+let tapsDown = 0;
+function youState() {
+  const look = { hat: (B.builder && B.builder.hat) || 'yellow', vest: (B.builder && B.builder.vest) || 'orange' };
+  const s = status();
+  if (!s || s.state === 'missed' || ending()) return { state: 'off', look, task: null };
+  if (s.state === 'paused' || document.visibilityState === 'hidden') return { state: 'away', look, task: s.task };
+  return { state: Date.now() < tapsDown ? 'paused' : 'working', look, task: s.task };
+}
+
+/* Burlington's sun, worked out here (the standard few lines of solar
+   position), and the weather line What Now reads */
+export function sunAltitude(ms, lat = LAT, lon = LON) {
+  const rad = Math.PI / 180;
+  const d = ms / 86400000 - 10957.5;
+  const g = (357.529 + 0.98560028 * d) * rad;
+  const q = 280.459 + 0.98564736 * d;
+  const L = (q + 1.915 * Math.sin(g) + 0.02 * Math.sin(2 * g)) * rad;
+  const e = (23.439 - 0.00000036 * d) * rad;
+  const ra = Math.atan2(Math.cos(e) * Math.sin(L), Math.cos(L));
+  const dec = Math.asin(Math.sin(e) * Math.sin(L));
+  const gmst = ((18.697374558 + 24.06570982441908 * d) % 24 + 24) % 24;
+  const ha = (gmst * 15 + lon) * rad - ra;
+  return Math.asin(Math.sin(lat * rad) * Math.sin(dec) + Math.cos(lat * rad) * Math.cos(dec) * Math.cos(ha)) / rad;
+}
+let weather = 'clear';
+function sky() { const alt = sunAltitude(Date.now()); return { sunAltitude: alt, isNight: alt < -6, weather }; }
+let wxAsk = null;
+function loadWeather() {
+  if (wxAsk || app.demo) return;
+  wxAsk = getJSON('../data/weather/latest.json').then((j) => {
+    const d = String((j && j.now && j.now.description) || '').toLowerCase();
+    weather = /snow|sleet|flurr/.test(d) ? 'snow' : /rain|shower|drizzle|storm/.test(d) ? 'rain' : /fog|mist|haze/.test(d) ? 'fog' : /cloud|overcast/.test(d) ? 'cloud' : 'clear';
+    if (site) site.setSky(sky());
+  });
+}
+
+/* the foreman says one thing about the site now and then; nothing to answer */
+function siteTalk() {
+  clearTimeout(talkTimer);
+  const p = dock && dock.querySelector('.bd-talk');
+  if (!p || B.phase !== 'ready' || dock.hidden) return;
+  const t = B.town || {};
+  const f = floors();
+  const crew = crewNow();
+  const h = etHour();
+  const when = h >= 5 && h < 11 ? 'morning' : h >= 11 && h < 17 ? 'day' : h >= 17 && h < 21 ? 'evening' : 'night';
+  const names = (Array.isArray(t.on_shift) ? t.on_shift : []).map((c) => c.name).filter(Boolean);
+  const vars = { crew, hours: Math.floor((Number(t.week_minutes) || 0) / 60), floor: f.going, floors: f.total, name: names[0] };
+  const ok = (x) => x && typeof x.text === 'string' && (!x.when || x.when === when || x.when === 'any') && (!x.weather || x.weather === weather) &&
+    (x.crew_min == null || crew >= x.crew_min) && (x.crew_max == null || crew <= x.crew_max) &&
+    [...x.text.matchAll(/\{(\w+)\}/g)].every((m) => vars[m[1]] != null && vars[m[1]] !== 0 && vars[m[1]] !== '');
+  const pool = (Array.isArray(B.foreman.site_talk) ? B.foreman.site_talk : []).filter(ok).map((x) => x.text);
+  const line = pick('site_talk', pool, vars);
+  if (!line) return;
+  p.textContent = line;
+  p.classList.add('on');
+  talkTimer = setTimeout(() => { p.classList.remove('on'); talkTimer = setTimeout(siteTalk, 4 * 60000); }, 9000);
+}
+
 /* ------------------------------------------------------------- shifts */
-/* The open shift: build-shift.js's object, written to the phone on every
-   change so a reload, a crash or a closed tab picks it back up. */
-let S = null, layer = null, tickTimer = 0, lastSave = 0, lastBeat = 0, paused = false, pauseTimer = 0, lock = null, rest = null, motionOn = false, lastMotion = 0;
-const rand = () => Math.random();
-const shiftOpen = () => !!layer;
-const saveShift = () => { if (!S) { store.write(SHIFT_KEY, null); return; } S.saved = Date.now(); lastSave = S.saved; store.write(SHIFT_KEY, S); };
+/* The clock and the running shift's record are the API's (build-core.js):
+   it keeps the shift on this phone, so a reload or a dead battery never
+   loses it. The tab draws what shift.status() says, once a second. */
+let tickTimer = 0, lastState = null, lastBeat = 0, lock = null, rest = null, motionOn = false, lastMotion = 0;
+const status = () => { try { return B.api ? api().shift.status() : null; } catch (e) { return null; } };
+const shiftOpen = () => !!(dock && dock.classList.contains('is-shift'));
+const ending = () => { const e = store.read(ENDING_KEY, null); return e && typeof e === 'object' ? e : null; };
 
 /* "What's the job?" One line, or Start and skip it. Typing spot one. */
-function clockInSheet(o = {}) {
-  const hint = store.read(STEP_KEY, '');
-  app.sheet(o.smaller ? 'A smaller job' : 'Clock in', (body, card, close) => {
-    body.appendChild(el('p', 'bd-foreman', esc(o.smaller ? 'What’s the smaller job?' : says('clock_in'))));
+function clockIn(o = {}) {
+  const s = status();
+  if (s && s.state !== 'missed') { openShift(); return; }
+  app.sheet(o.smaller ? 'A smaller job' : 'Start shift', (body, card, close) => {
+    body.appendChild(el('p', 'bd-foreman', esc(o.smaller ? 'What’s the smaller piece?' : pick('clock_in', F('clock_in.prompts', [])))));
     const f = el('form', 'bd-form');
     f.noValidate = true;
-    const i = el('input', 'field');
-    i.name = 'step'; i.maxLength = 140; i.placeholder = typeof hint === 'string' && hint ? hint : 'Outline chapter 3';
+    const i = el('input', 'field bd-step');
+    i.name = 'step'; i.maxLength = 80;
+    i.placeholder = B.firstStep || pick('clock_in_ph', F('clock_in.placeholder', []));
     i.setAttribute('aria-label', 'The next step, in a line');
-    const go = button(ICON_BUILD + '<span>Start</span>', 'bd-start'); go.type = 'submit';
-    const row = el('div', 'bd-row'); row.append(i, go);
-    f.appendChild(row);
+    const ok = button(ICON_BUILD + '<span>' + esc(F('clock_in.start', 'Start')) + '</span>', 'bd-start'); ok.type = 'submit';
+    const r = el('div', 'bd-row'); r.append(i, ok);
+    f.appendChild(r);
     f.addEventListener('submit', (e) => {
       e.preventDefault();
-      /* iPhone asks once to read the phone being picked up: in this tap */
+      /* iPhone asks once to feel the phone being picked up: in this tap */
       askMotion();
-      const step = i.value.trim().slice(0, 140);
-      store.write(STEP_KEY, '');
+      const step = i.value.trim().slice(0, 80);
       close();
       startShift(step);
     });
@@ -808,168 +986,164 @@ function clockInSheet(o = {}) {
     setTimeout(() => { if (matchMedia('(hover: hover)').matches) i.focus({ preventScroll: true }); }, 50);
   });
 }
-
 function startShift(step) {
-  if (S && S.status === 'on') { openLayer(); return; }
-  const now = Date.now();
-  S = clock.start(now, rand, { thing: B.thing && B.thing.id, step });
-  saveShift();
-  call(() => api().shift.start(step)).then((r) => { if (r.ok && r.data && S && !S.id) { S.id = r.data.id || r.data; saveShift(); } });
-  openLayer();
+  go(() => api().shift.start(step)).then((r) => {
+    if (!r.ok) { app.toast(r.message || FAIL); return; }
+    B.firstStep = '';
+    store.write(ENDING_KEY, null);
+    openShift();
+  });
 }
 
-function openLayer() {
-  if (layer) return;
-  layer = el('div', 'bd-shift');
-  layer.setAttribute('role', 'dialog');
-  layer.setAttribute('aria-modal', 'true');
-  layer.setAttribute('aria-label', 'On shift');
-  const top = el('div', 'bd-shift-site');
-  if (siteBox) top.appendChild(siteBox);
-  const foot = el('div', 'bd-shift-foot');
-  layer.append(top, foot, el('p', 'bd-live'));
-  layer.querySelector('.bd-live').setAttribute('aria-live', 'polite');
-  document.body.appendChild(layer);
+function openShift() {
+  ensureDock();
+  dock.classList.add('is-shift');
+  showDock(true);
+  setDock('full');
   document.body.classList.add('bd-shifting');
-  layer.addEventListener('pointerdown', onTouch, { passive: true });
-  layer.addEventListener('keydown', (e) => { if (e.key !== 'Tab') onTouch(e); });
-  paintFoot();
+  lastState = null;
+  lastBeat = 0;
   wake();
   watchMotion(true);
   clearInterval(tickTimer);
   tickTimer = setInterval(onTick, 1000);
-  if (site) { site.setYou(youState()); site.whistle(!!(S && S.whistleOpen)); }
-  /* the town's crew, live: you are one of them now */
-  call(() => api().town.get()).then((r) => { if (r.ok) { B.town = r.data; feedSite(); paintFoot(); } });
+  onTick();
+  /* the crew, live: you are one of them now */
+  go(() => api().town.get()).then((r) => { if (r.ok) { B.town = r.town; feedSite(); paintDock(); paintFoot(); } });
 }
-function closeLayer() {
-  if (!layer) return;
+function closeShift() {
   clearInterval(tickTimer); tickTimer = 0;
-  clearTimeout(pauseTimer); paused = false;
   watchMotion(false);
   unwake();
-  layer.remove();
-  layer = null;
+  if (!dock) return;
+  dock.classList.remove('is-shift', 'is-whistle', 'is-end');
   document.body.classList.remove('bd-shifting');
+  const foot = dock.querySelector('.bd-shift-foot');
+  foot.innerHTML = ''; delete foot.dataset.key;
+  setDock(store.read(DOCK_KEY, 'dock') === 'mini' ? 'mini' : 'dock');
+  showDock(B.active && B.side === 'build');
   if (site) { site.whistle(false); site.setYou(youState()); }
-  if (B.side === 'build') paint();
+}
+
+/* every second while the shift is up */
+function onTick() {
+  if (ending()) { paintFoot(); return; }
+  const s = status();
+  if (!s) { closeShift(); return; }
+  if (s.state !== lastState) {
+    const was = lastState;
+    lastState = s.state;
+    if (s.state === 'whistle') {
+      if (navigator.vibrate) { try { navigator.vibrate(180); } catch (x) { /* no buzz */ } }
+      if (site) site.whistle(true);
+      say('The foreman’s whistle');
+    } else if (was === 'whistle') {
+      if (site) site.whistle(false);
+      say('');
+    }
+    if (s.state === 'missed') { knockOff(); return; }
+    if (site) site.setYou(youState());
+  }
+  paintFoot();
+  if (document.visibilityState === 'visible') store.write(SEEN_AT_KEY, Date.now());
+  /* the heartbeat: the page is alive and in front (the clock pauses a shift whose page went quiet) */
+  if (document.visibilityState === 'visible' && (s.state === 'working' || s.state === 'whistle') && Date.now() - lastBeat >= 30000) {
+    lastBeat = Date.now();
+    go(() => api().shift.heartbeat({ task: s.task }));
+  }
+}
+const say = (t) => { const live = dock && dock.querySelector('.bd-live'); if (live) live.textContent = t; };
+/* missed: the crew knocks off, banked to the last touch, and straight to the end screen */
+function knockOff() {
+  const s = status();
+  if (site) { site.whistle(false); site.setYou({ ...youState(), state: 'off' }); }
+  store.write(ENDING_KEY, { missed: true, minutes: s ? s.minutes : 0 });
+  say('Crew knocked off');
+  paintFoot();
+}
+/* a hand on the phone: the tools go down a moment, and a blowing whistle is answered */
+function onTouch(e) {
+  if (!shiftOpen() || ending()) return;
+  if (e && e.target && e.target.closest && e.target.closest('.bd-out')) return;
+  const s = status();
+  if (!s || (s.state !== 'working' && s.state !== 'whistle')) return;
+  go(() => api().shift.touch()).then(() => onTick());
+  tapsDown = Date.now() + 3000;
+  if (site) site.setYou(youState());
+  setTimeout(() => { if (site) site.setYou(youState()); }, 3100);
 }
 
 function paintFoot() {
-  if (!layer) return;
-  const foot = layer.querySelector('.bd-shift-foot');
+  if (!dock || !shiftOpen()) return;
+  const foot = dock.querySelector('.bd-shift-foot');
+  const e = ending();
+  const s = status();
+  dock.classList.toggle('is-whistle', !e && !!s && s.state === 'whistle');
+  dock.classList.toggle('is-end', !!e);
+  const key = e ? 'end:' + (e.missed ? 'm' : '') : s ? s.state + ':' + (s.step || '') + ':' + crewNow() : 'none';
+  if (foot.dataset.key === key) return;
+  foot.dataset.key = key;
   foot.innerHTML = '';
-  layer.classList.toggle('is-whistle', !!(S && S.status === 'on' && S.whistleOpen));
-  layer.classList.toggle('is-off', !!(S && S.status === 'off'));
-  if (!S) return;
-  if (S.status === 'done' || S.endScreen) { endScreen(foot); return; }
-  const crew = B.town && Array.isArray(B.town.on_shift) ? B.town.on_shift.length : 0;
-  if (S.status === 'off') {
-    foot.appendChild(el('p', 'bd-shift-step', esc('Crew knocked off')));
-    foot.appendChild(el('p', 'bd-shift-crew', esc(hm(clock.minutes(S.worked)) + ' banked')));
-    const r = el('div', 'bd-row');
-    r.appendChild(button('Done', 'bd-start', () => { S.endScreen = true; saveShift(); paintFoot(); }));
-    r.appendChild(button('Start again', 'ghost on-dark', () => { finishShift({ keep: true, quiet: true }).then(() => clockInSheet()); }));
-    foot.appendChild(r);
-    return;
-  }
-  if (S.step) foot.appendChild(el('p', 'bd-shift-step', esc(S.step)));
-  foot.appendChild(el('p', 'bd-shift-crew', esc(crewWord(Math.max(1, crew)) + ' on shift')));
-  foot.appendChild(button('Clock out', 'ghost on-dark bd-out', () => { clock.end(S, Date.now()); S.endScreen = true; saveShift(); call(() => api().shift.whistleAnswered()); paintFoot(); if (site) site.setYou({ ...youState(), state: 'off' }); }));
+  if (e) { endScreen(foot, e); return; }
+  if (!s) return;
+  if (s.step) foot.appendChild(el('p', 'bd-shift-step', esc(s.step)));
+  const crew = Math.max(1, crewNow());
+  foot.appendChild(el('p', 'bd-shift-crew', esc(crew === 1 ? 'Just you on shift' : crew + ' neighbors on shift')));
+  foot.appendChild(button('Clock out', 'ghost on-dark bd-out', clockOut));
+}
+/* clocking out stops the clock now (pause), and the end screen banks it */
+function clockOut() {
+  go(() => api().shift.pause()).then(() => {
+    const s = status();
+    store.write(ENDING_KEY, { missed: false, minutes: s ? s.minutes : 0 });
+    if (site) site.setYou({ ...youState(), state: 'off' });
+    paintFoot();
+  });
 }
 
 /* the end screen: the time, one line, Keep it or Post. Typing spot two. */
-function endScreen(foot) {
-  const mins = clock.minutes(S.worked);
+function endScreen(foot, e) {
   const count = Number(store.read(COUNT_KEY, 0)) || 0;
-  const askWhy = !!B.thing && (count + 1) % 10 === 0;
-  foot.classList.add('end');
-  foot.appendChild(el('p', 'bd-endtime', esc(hm(mins))));
-  foot.appendChild(el('p', 'bd-foreman', esc(askWhy ? says('why') : says('clock_out'))));
+  const every = Number(F('clock_out.rare_why.every', 10)) || 10;
+  const askWhy = !!B.thing && count > 0 && (count + 1) % every === 0;
+  if (e.missed) foot.appendChild(el('p', 'bd-foreman bd-knock', esc(pick('knocked_off', F('whistle.knocked_off', [])))));
+  foot.appendChild(el('p', 'bd-endtime', esc(fill(F('end_screen.time', '{duration}'), { duration: hm(e.minutes) }))));
+  foot.appendChild(el('p', 'bd-foreman', esc(askWhy ? pick('why', F('clock_out.rare_why.prompts', [])) : pick('clock_out', F('clock_out.prompts', [])))));
   const f = el('form', 'bd-form');
   f.noValidate = true;
-  const i = el('input', 'field');
-  i.name = 'note'; i.maxLength = 280; i.value = S.note || '';
-  i.placeholder = askWhy ? 'One line' : 'One line, or skip it';
+  const i = el('input', 'field bd-note');
+  i.name = 'note'; i.maxLength = 200;
+  i.placeholder = pick('out_ph', askWhy ? F('clock_out.rare_why.placeholder', []) : F('clock_out.placeholder', []));
   i.setAttribute('aria-label', askWhy ? 'Why it matters, in a line' : 'What got done, in a line');
-  i.addEventListener('input', () => { S.note = i.value; });
   f.appendChild(i);
   const r = el('div', 'bd-row');
-  const keep = button('Keep it', 'ghost on-dark', (e) => { e.preventDefault(); S.note = i.value.trim(); finishShift({ keep: true }); });
-  const post = button('Post', 'bd-start', (e) => {
-    e.preventDefault();
-    S.note = i.value.trim();
+  const keep = button(esc(F('end_screen.keep', 'Keep it')), 'ghost on-dark bd-keep', (ev) => { ev.preventDefault(); bank(i.value.trim(), askWhy, false); });
+  const post = button(esc(F('end_screen.post', 'Post')), 'bd-start bd-postb', (ev) => {
+    ev.preventDefault();
     if (needSignIn('post')) return;
-    const note = S.note;
-    const done = { ...S };
-    finishShift({ keep: false }).then(() => postSheet({ kind: 'progress', line: note, minutes: clock.minutes(done.worked), thing: B.thing }));
+    bank(i.value.trim(), askWhy, true);
   });
   r.append(keep, post);
   f.appendChild(r);
-  f.addEventListener('submit', (e) => { e.preventDefault(); keep.click(); });
+  f.addEventListener('submit', (ev) => { ev.preventDefault(); keep.click(); });
   foot.appendChild(f);
 }
-
-/* the shift goes on the record (and up the building), then the layer closes */
-function finishShift(o = {}) {
-  if (!S) { closeLayer(); return Promise.resolve(); }
-  const s = S;
-  const mins = clock.minutes(s.worked);
-  const count = (Number(store.read(COUNT_KEY, 0)) || 0) + 1;
-  store.write(COUNT_KEY, count);
-  S = null;
-  saveShift();
-  if (site) { site.setYou({ ...youState(), state: 'off' }); if (mins >= 1) site.dropMaterial(mins >= 90 ? 'timber' : mins >= 30 ? 'brick' : 'lumber'); }
-  const why = !!B.thing && count % 10 === 0;
-  return call(() => api().shift.end({ id: s.id, note: why ? '' : (s.note || ''), why: why ? (s.note || '') : '', banked_minutes: mins, missed: s.status === 'off' })).then((r) => {
-    if (!r.ok) app.toast(r.message);
-    else if (!o.quiet && o.keep) app.toast(mins ? hm(mins) + ' in the building' : 'Clocked out');
-    closeLayer();
-    reloadTown();
+/* the shift goes on the record (and up the building), then the site docks */
+function bank(note, why, thenPost) {
+  const e = ending() || { minutes: 0 };
+  store.write(COUNT_KEY, (Number(store.read(COUNT_KEY, 0)) || 0) + 1);
+  /* the rare "why" answer goes on the thing card, if it had none */
+  if (why && note && B.thing && !B.thing.why) go(() => api().thing.set({ why: note })).then((r) => { if (r.ok && r.thing) B.thing = r.thing; });
+  go(() => api().shift.end({ note: why ? '' : note })).then((r) => {
+    store.write(ENDING_KEY, null);
+    if (!r.ok) { app.toast(r.message || FAIL); closeShift(); return; }
+    const mins = Number(r.minutes) || e.minutes || 0;
+    closeShift();
+    if (site && mins >= 1) site.dropMaterial(mins >= 90 ? 'timber' : mins >= 30 ? 'brick' : 'lumber');
+    if (thenPost) postSheet({ kind: 'progress', line: why ? '' : note, minutes: mins, shift: r.shift && r.shift.id });
+    else app.toast(pick('kept', F('end_screen.kept', [])) || 'Kept');
+    reload();
   });
-}
-
-/* every second while the shift screen is up */
-function onTick() {
-  if (!S) return;
-  const now = Date.now();
-  const e = clock.tick(S, now);
-  if (e === 'whistle') {
-    if (navigator.vibrate) { try { navigator.vibrate([180]); } catch (x) { /* no buzz */ } }
-    if (site) site.whistle(true);
-    const live = layer && layer.querySelector('.bd-live');
-    if (live) live.textContent = 'The foreman’s whistle';
-    saveShift();
-    paintFoot();
-  } else if (e === 'missed') {
-    missed();
-  }
-  if (S && now - lastSave >= 15000) saveShift();
-  if (S && S.status === 'on' && S.since != null && now - lastBeat >= 60000) { lastBeat = now; call(() => api().shift.heartbeat()); }
-}
-function missed() {
-  if (site) { site.whistle(false); site.setYou({ ...youState(), state: 'off' }); }
-  const live = layer && layer.querySelector('.bd-live');
-  if (live) live.textContent = 'Crew knocked off';
-  saveShift();
-  paintFoot();
-}
-/* a hand on the phone: the tools go down a moment, and a waiting whistle is answered */
-function onTouch() {
-  if (!S || S.status !== 'on') return;
-  const answered = clock.touch(S, Date.now(), rand);
-  saveShift();
-  if (answered) {
-    if (site) site.whistle(false);
-    call(() => api().shift.whistleAnswered());
-    const live = layer && layer.querySelector('.bd-live');
-    if (live) live.textContent = '';
-    paintFoot();
-  }
-  paused = true;
-  if (site) site.setYou(youState());
-  clearTimeout(pauseTimer);
-  pauseTimer = setTimeout(() => { paused = false; if (site && S) site.setYou(youState()); }, 3000);
 }
 
 /* the screen stays awake on its own; the browser can let go of that when the
@@ -990,13 +1164,17 @@ function askMotion() {
     if (D && typeof D.requestPermission === 'function') D.requestPermission().catch(() => {});
   } catch (e) { /* no motion */ }
 }
+export function pickedUp(base, g, threshold = 3) {
+  if (!base || !g) return false;
+  return Math.hypot((g.x || 0) - base.x, (g.y || 0) - base.y, (g.z || 0) - base.z) > threshold;
+}
 function onMotion(e) {
   const g = e.accelerationIncludingGravity;
   if (!g || g.x == null) return;
   const now = Date.now();
   if (!rest) { rest = { x: g.x, y: g.y, z: g.z }; return; }
-  if (clock.pickedUp(rest, g) && now - lastMotion > 2000) { lastMotion = now; onTouch(); }
-  /* the resting pull drifts slowly toward where the phone now lies */
+  if (pickedUp(rest, g) && now - lastMotion > 2000) { lastMotion = now; onTouch(); }
+  /* the resting pull drifts toward where the phone now lies */
   rest = { x: rest.x * 0.95 + g.x * 0.05, y: rest.y * 0.95 + g.y * 0.05, z: rest.z * 0.95 + g.z * 0.05 };
 }
 function watchMotion(on) {
@@ -1006,90 +1184,81 @@ function watchMotion(on) {
 
 /* leave the app and the builder stops and waits; come back and the tools go up */
 document.addEventListener('visibilitychange', () => {
-  if (!S || S.status !== 'on') return;
-  const now = Date.now();
-  if (document.visibilityState === 'hidden') {
-    clock.hide(S, now);
-    saveShift();
-    if (site) site.setYou(youState());
-    return;
-  }
-  const r = clock.show(S, now, rand);
-  saveShift();
-  if (r === 'missed') { missed(); return; }
-  if (r === 'answered') call(() => api().shift.whistleAnswered());
-  if (site) { site.whistle(false); site.setYou(youState()); }
-  wake();
-  paintFoot();
+  if (!shiftOpen() || ending()) return;
+  const s = status();
+  if (!s || s.state === 'missed') return;
+  if (document.visibilityState === 'hidden') { go(() => api().shift.pause()); if (site) site.setYou({ ...youState(), state: 'away' }); return; }
+  go(() => api().shift.resume()).then(() => { lastState = null; onTick(); wake(); });
 });
 
 /* a shift the phone was in the middle of: pick it back up */
 function recoverShift() {
-  const saved = store.read(SHIFT_KEY, null);
-  if (!clock.valid(saved)) { if (saved) store.write(SHIFT_KEY, null); return; }
-  S = saved;
-  if (S.status === 'on') {
-    const r = clock.recover(S, Date.now(), rand);
-    saveShift();
-    call(() => api().shift.recover());
-    openLayer();
-    if (r === 'missed') missed();
-    return;
-  }
-  openLayer();
+  return go(() => api().shift.recover()).then((r) => {
+    const s = r.ok ? r.shift : null;
+    if (!s) { store.write(ENDING_KEY, null); return; }
+    if (s.state === 'missed') { openShift(); knockOff(); return; }
+    if (ending()) { openShift(); return; }
+    /* a screen dark for a long while opens on its end screen; else a reload is a touch */
+    const seen = Number(store.read(SEEN_AT_KEY, 0)) || 0;
+    if (s.state === 'paused' && seen && Date.now() - seen > STALE_MS) {
+      store.write(ENDING_KEY, { missed: false, minutes: s.minutes });
+      openShift();
+      return;
+    }
+    return go(() => api().shift.resume()).then(() => openShift());
+  });
 }
 
 /* ------------------------------------------------------------- Log it */
-/* Real work away from the phone: say roughly how long, and it counts the
-   same, marked "logged" on your own record. Nobody checks. */
+/* Real work away from the phone: roughly how long, and it counts the same,
+   marked logged on your own record. Nobody checks. */
 function logSheet() {
-  app.sheet('Log it', (body, card, close) => {
-    body.appendChild(el('p', 'bd-foreman', esc('How long?')));
+  app.sheet(F('log_it.title', 'Log it'), (body, card, close) => {
+    body.appendChild(el('p', 'bd-foreman', esc(F('log_it.how_long', 'Roughly how long?'))));
     let mins = 0;
     const choose = el('div', 'bd-logs');
     choose.setAttribute('role', 'group');
     choose.setAttribute('aria-label', 'Roughly how long');
-    LOG_CHOICES.forEach(([m, label]) => {
-      const b = el('button', 'bd-logc', esc(label));
-      b.type = 'button';
-      b.dataset.min = m;
-      b.setAttribute('aria-pressed', 'false');
-      b.addEventListener('click', () => { mins = m; choose.querySelectorAll('button').forEach((x) => { x.classList.toggle('on', x === b); x.setAttribute('aria-pressed', x === b ? 'true' : 'false'); }); go.disabled = false; post.disabled = false; });
+    const chips = F('log_it.chips', []);
+    (Array.isArray(chips) && chips.length ? chips : [30, 60]).forEach((m) => {
+      const b = el('button', 'bd-logc', esc(m < 60 ? m + ' min' : (m / 60).toString().replace('.5', '½') + ' hr'));
+      b.type = 'button'; b.dataset.min = m; b.setAttribute('aria-pressed', 'false');
+      b.addEventListener('click', () => { mins = m; choose.querySelectorAll('button').forEach((x) => { x.classList.toggle('on', x === b); x.setAttribute('aria-pressed', x === b ? 'true' : 'false'); }); keep.disabled = false; post.disabled = false; });
       choose.appendChild(b);
     });
     body.appendChild(choose);
-    body.appendChild(el('p', 'bd-foreman', esc(says('clock_out'))));
     const i = el('input', 'field bd-lognote');
-    i.maxLength = 280; i.placeholder = 'One line, or skip it';
-    i.setAttribute('aria-label', 'What got done, in a line');
+    i.maxLength = 200; i.placeholder = F('log_it.what_placeholder', '');
+    i.setAttribute('aria-label', F('log_it.what', 'What was it?'));
     body.appendChild(i);
     const r = el('div', 'bd-row bd-logrow');
     const send = (thenPost) => {
       if (!mins) return;
       if (thenPost && needSignIn('post')) return;
-      go.disabled = true; post.disabled = true;
-      const note = i.value.trim().slice(0, 280);
-      call(() => api().logIt({ minutes: mins, note })).then((x) => {
-        if (!x.ok) { go.disabled = false; post.disabled = false; app.toast(x.message); return; }
+      keep.disabled = true; post.disabled = true;
+      const note = i.value.trim().slice(0, 200);
+      go(() => api().logIt({ minutes: mins, note })).then((x) => {
+        if (!x.ok) { keep.disabled = false; post.disabled = false; app.toast(x.message || FAIL); return; }
         close();
         if (site) site.dropMaterial(mins >= 90 ? 'timber' : mins >= 30 ? 'brick' : 'lumber');
-        reloadTown();
-        if (thenPost) postSheet({ kind: 'progress', line: note, minutes: mins, thing: B.thing });
-        else app.toast(hm(mins) + ' in the building');
+        reload();
+        if (thenPost) postSheet({ kind: 'progress', line: note, minutes: mins, shift: x.shift && x.shift.id });
+        else app.toast(pick('saved', F('log_it.saved', [])) || 'Logged');
       });
     };
-    const go = button('Keep it', 'ghost', () => send(false));
-    const post = button('Post', 'bd-start', () => send(true));
-    go.disabled = true; post.disabled = true;
-    r.append(go, post);
+    const keep = button(esc(F('log_it.save', 'Log it')), 'ghost bd-logkeep', () => send(false));
+    const post = button('Log and post', 'bd-start', () => send(true));
+    keep.disabled = true; post.disabled = true;
+    r.append(keep, post);
     body.appendChild(r);
   });
 }
 
 /* --------------------------------------------------------------- posting */
 /* Made progress, Stuck, Found something or Finished; one line, an optional
-   photo, hours only if you want them, and the Brief only with a separate yes. */
+   photo, hours only if you want them, the Brief only with its own yes. */
 function postSheet(o) {
+  if (needSignIn('post')) return;
   app.sheet('Post', (body, card, close) => {
     let kind = o.kind || 'progress', need = null, file = null;
     const kinds = el('div', 'bd-kinds');
@@ -1100,80 +1269,101 @@ function postSheet(o) {
       kinds.querySelectorAll('button').forEach((b) => { const on = b.dataset.kind === kind; b.classList.toggle('on', on); b.setAttribute('aria-pressed', on ? 'true' : 'false'); });
       stuck.hidden = kind !== 'stuck';
     };
-    KINDS.forEach(([k, label]) => {
-      const b = el('button', 'bd-kindb k-' + k, esc(label));
+    KINDS.forEach((k) => {
+      const b = el('button', 'bd-kindb k-' + k, esc(kindWord(k)));
       b.type = 'button'; b.dataset.kind = k;
       b.addEventListener('click', () => { kind = k; paintKinds(); });
       kinds.appendChild(b);
     });
     body.appendChild(kinds);
     const i = el('input', 'field bd-postline');
-    i.maxLength = 280; i.value = o.line || ''; i.placeholder = 'One line';
+    i.maxLength = 200; i.value = o.line || ''; i.placeholder = 'One line';
     i.setAttribute('aria-label', 'Your post, in a line');
     body.appendChild(i);
     /* what would help you take the next step? Four buttons, no typing */
-    stuck.appendChild(el('p', 'bd-foreman', esc('What would help?')));
+    stuck.appendChild(el('p', 'bd-foreman', esc(F('end_screen.stuck_question', 'What would help?'))));
     const needs = el('div', 'bd-needs');
-    NEEDS.forEach((k) => {
-      const b = el('button', 'bd-needb', esc(word('stuck', k)));
-      b.type = 'button'; b.dataset.need = k; b.setAttribute('aria-pressed', 'false');
-      b.addEventListener('click', () => { need = need === k ? null : k; needs.querySelectorAll('button').forEach((x) => { x.classList.toggle('on', x.dataset.need === need); x.setAttribute('aria-pressed', x.dataset.need === need ? 'true' : 'false'); }); });
+    (F('stuck.help_buttons', []) || []).forEach((x) => {
+      const b = el('button', 'bd-needb', esc(x.label));
+      b.type = 'button'; b.dataset.need = x.key; b.setAttribute('aria-pressed', 'false');
+      b.addEventListener('click', () => { need = need === x.key ? null : x.key; needs.querySelectorAll('button').forEach((y) => { y.classList.toggle('on', y.dataset.need === need); y.setAttribute('aria-pressed', y.dataset.need === need ? 'true' : 'false'); }); });
       needs.appendChild(b);
     });
     stuck.appendChild(needs);
     body.appendChild(stuck);
     const extras = el('div', 'bd-extras');
-    const pick = el('input'); pick.type = 'file'; pick.accept = 'image/*'; pick.hidden = true;
+    const pickF = el('input'); pickF.type = 'file'; pickF.accept = 'image/*'; pickF.hidden = true;
     const pname = el('span', 'bd-pname', '');
-    const pbtn = button(ICON.plus + ' Add a photo', 'ghost sm', (e) => { e.preventDefault(); pick.click(); });
-    pick.addEventListener('change', () => { file = (pick.files && pick.files[0]) || null; pname.textContent = file ? file.name : ''; });
-    const prow = el('div', 'bd-row bd-photo'); prow.append(pbtn, pname, pick);
-    extras.appendChild(prow);
-    const check = (name, label, on) => { const l = el('label', 'bd-check', '<input type="checkbox" name="' + name + '"' + (on ? ' checked' : '') + '><span>' + esc(label) + '</span>'); return l; };
-    if (o.minutes > 0) extras.appendChild(check('hours', 'Add ' + hm(o.minutes)));
-    extras.appendChild(check('brief', 'The Brief can print this'));
+    const consent = el('label', 'bd-check', '<input type="checkbox" name="consent"><span>I took this photo, and the Brief may show it</span>');
+    consent.hidden = true;
+    pickF.addEventListener('change', () => { file = (pickF.files && pickF.files[0]) || null; pname.textContent = file ? file.name : ''; consent.hidden = !file; });
+    const prow = el('div', 'bd-row bd-photo'); prow.append(button(ICON.plus + ' Photo', 'ghost sm', (ev) => { ev.preventDefault(); pickF.click(); }), pname, pickF);
+    extras.append(prow, consent);
+    const check = (name, label) => el('label', 'bd-check', '<input type="checkbox" name="' + name + '"><span>' + esc(label) + '</span>');
+    if (o.minutes > 0) extras.appendChild(check('hours', F('end_screen.add_hours', 'Add the hours') + ' (' + hm(o.minutes) + ')'));
+    extras.appendChild(check('brief', F('end_screen.brief_ok', 'OK to print this in the Brief')));
     body.appendChild(extras);
-    const go = button('Post', 'bd-start bd-postgo', () => {
+    /* a post carries a first name: asked once, here, when there is none */
+    let fname = null;
+    if (!(B.builder && B.builder.first_name)) {
+      fname = el('input', 'field bd-fname');
+      fname.maxLength = 32; fname.placeholder = 'Your first name';
+      fname.setAttribute('aria-label', 'Your first name');
+      body.appendChild(fname);
+    }
+    const ok = button('Post', 'bd-start bd-postgo', () => {
       const line = i.value.trim();
       if (!line) { i.focus(); return; }
-      go.disabled = true;
+      if (fname && !fname.value.trim()) { fname.focus(); return; }
+      if (file && !consent.querySelector('input').checked) { app.toast('Tick the photo box first.'); return; }
+      ok.disabled = true;
       const hours = extras.querySelector('[name=hours]');
-      const p = { kind, line: line.slice(0, 280), thing: o.thing && o.thing.id || null,
-        hours: hours && hours.checked ? o.minutes : null, brief_ok: !!extras.querySelector('[name=brief]').checked,
-        help_need: kind === 'stuck' ? need : null, stuck_reason: kind === 'stuck' && need ? NEED_REASON[need] : null, photo: file };
-      call(() => api().post.create(p)).then((r) => {
-        go.disabled = false;
-        if (!r.ok) { app.toast(r.message); return; }
+      const named = fname ? go(() => api().builder.set({ first_name: fname.value.trim().slice(0, 32) })).then((r) => { if (r.ok) B.builder = r.builder || { ...(B.builder || {}), first_name: fname.value.trim() }; return r; }) : Promise.resolve({ ok: true });
+      const photo = file ? queuePhoto(file, line).catch(() => null) : Promise.resolve(null);
+      Promise.all([named, photo]).then(([nr, path]) => {
+        if (!nr.ok) return nr;
+        if (file && !path) return { ok: false, message: 'That photo couldn’t be sent. Try again, or post without it.' };
+        return go(() => api().post.create({ kind, line: line.slice(0, 200), photo: path, minutes: hours && hours.checked ? o.minutes : null,
+          brief_ok: !!extras.querySelector('[name=brief]').checked, help_need: kind === 'stuck' ? need : null,
+          stuck_reason: kind === 'stuck' && need ? NEED_REASON[need] : null, shift: o.shift || null }));
+      }).then((r) => {
+        ok.disabled = false;
+        if (!r.ok) { app.toast(r.message || FAIL); return; }
         close();
         if (site) site.setTown({ windows_lit: (Number(B.town && B.town.posts_lit) || 0) + 1 });
-        if (kind === 'stuck' && need) {
-          app.toast(word('stuck_reply', need));
-          if (need === 'smaller') store.write(STEP_KEY, '');
-        } else app.toast(r.data && r.data.photo_waiting ? 'Posted. The photo shows once approved.' : 'Posted');
-        reloadTown();
+        const after = kind === 'stuck' && need ? ((F('stuck.help_buttons', []) || []).find((x) => x.key === need) || {}).after : null;
+        app.toast(after || (kind === 'finished' ? F('end_screen.finished_posted', 'Posted') : file ? 'Posted. The photo shows once approved.' : pick('posted', F('end_screen.posted', [])) || 'Posted'));
+        reload();
       });
     });
-    const r = el('div', 'bd-row bd-postrow'); r.appendChild(go);
+    const r = el('div', 'bd-row bd-postrow'); r.appendChild(ok);
     body.appendChild(r);
     paintKinds();
   });
 }
 
 /* ------------------------------------------------------- Habits' bridge */
-/* A habit tapped done drops a small load of material on the site (not
-   hours off your phone). Habits is untouched: this listens to its taps. */
+/* A habit tapped done drops a pallet on the site. The server counts the
+   town's habit taps into the building (habit_drops); this shows it land,
+   the next time the site is on screen. Habits is untouched: this listens
+   for its taps. */
+let pallets = 0;
 document.addEventListener('click', (e) => {
   const b = e.target.closest && e.target.closest('#panel-habits .hb-tap');
   if (!b) return;
-  /* the tap repaints its row in the same click; read it just after */
+  const row = b.closest('.hb-row');
+  const id = row && row.dataset.id;
   setTimeout(() => {
-    const row = b.isConnected ? b : null;
-    const on = row ? row.getAttribute('aria-pressed') === 'true' : !!document.querySelector('#panel-habits .hb-tap.pop');
-    if (!on) return;
-    B.drops.push('nails');
-    call(() => api().habitDrop && api().habitDrop());
+    const now = id ? document.querySelector('#panel-habits .hb-row[data-id="' + CSS.escape(id) + '"] .hb-tap') : null;
+    if (now && now.getAttribute('aria-pressed') === 'true') pallets++;
   }, 0);
 }, true);
+function dropPallets() {
+  if (!site || !pallets) return;
+  const n = Math.min(pallets, 5);
+  pallets = 0;
+  for (let k = 0; k < n; k++) setTimeout(() => { try { site.dropMaterial('nails'); } catch (e) { /* fine */ } }, 400 + k * 500);
+}
 
 /* --------------------------------------------------- deep links, the sides */
 function land() {
@@ -1182,12 +1372,11 @@ function land() {
   B.flash = null;
   if (!app.flashHit(B.body, k)) app.toast('That post has moved on');
 }
-
 function setSide(side) {
   store.write(SIDE_KEY, side);
-  if (side === 'habits') app.go('habits'); else app.go('build');
+  app.go(side === 'habits' ? 'habits' : 'build');
 }
-/* Build | Habits, poured like On Air's sides (liquid.js) */
+/* Build | Habits, poured like On Air's sides */
 function sideSwitch(on) {
   const row = el('div', 'secrow oa-sidesrow bd-sidesrow');
   const sw = pills([['build', 'Build'], ['habits', 'Habits']], on, (v) => setSide(v), 'oa-sideswitch bd-sideswitch');
@@ -1198,12 +1387,20 @@ function sideSwitch(on) {
   row.appendChild(sw);
   return row;
 }
+function wrapRow(top, row) {
+  const bar = el('div', 'secbar bd-sub');
+  bar.appendChild(top);
+  /* a hosted tab hands back its own .secbar: keep what is inside it */
+  if (row) (row.classList && row.classList.contains('secbar') ? [...row.children] : [row]).forEach((k) => bar.appendChild(k));
+  return bar;
+}
 
 /* ------------------------------------------------------------------ the tab */
 app.onAuth(() => {
-  if (!B.root) return;
   B.api = null;
-  load();
+  if (!B.root) return;
+  /* signing in: this phone's thing, hours and look move to the account once */
+  if (signedIn() && !app.demo) go(() => api().importLocal()).then(load); else load();
 });
 
 app.register(KEY, {
@@ -1215,46 +1412,48 @@ app.register(KEY, {
     B.body = el('div', 'bd-host');
     host.appendChild(B.body);
     app.bindFeed(B.body, { onPeek() {}, onSave() {} });
-    load();
+    B.body.addEventListener('submit', (e) => { const f = e.target.closest('.bd-reply'); if (f) { e.preventDefault(); sendHelp(f); } });
+    load().then(recoverShift);
     loadWeather();
-    recoverShift();
   },
   activate(param) {
     B.side = 'build';
+    B.active = true;
     store.write(SIDE_KEY, 'build');
+    if (param === 'habits') { app.go('habits'); return; }
     if (param && /^p-[\w-]{1,80}$/.test(param)) { B.flash = param; land(); }
-    else if (param === 'habits') { app.go('habits'); return; }
-    if (B.phase === 'ready') { feedSite(); clearTimeout(talkTimer); talkTimer = setTimeout(siteTalk, 1200); }
+    showDock(true);
+    if (dock && dock.dataset.state === 'full' && !shiftOpen()) setDock('dock');
+    dropPallets();
+    clearTimeout(talkTimer);
+    talkTimer = setTimeout(siteTalk, 1500);
     clearInterval(skyTimer);
     skyTimer = setInterval(() => { if (site) site.setSky(sky()); }, 5 * 60000);
   },
-  refresh() { if (B.side === 'build') paint(); },
-  deactivate() { clearTimeout(talkTimer); clearInterval(skyTimer); },
+  refresh() { paint(); },
+  deactivate() {
+    B.active = false;
+    clearTimeout(talkTimer); clearInterval(skyTimer);
+    showDock(false);
+  },
   subnav() { return wrapRow(sideSwitch('build'), null); },
-  /* Habits' own row, under the switch, when Habits is the side on screen */
+  /* Habits' own row, under the switch, while Habits is the side on screen */
   frame(child, row) {
     if (child !== 'habits') return row;
     B.side = 'habits';
     store.write(SIDE_KEY, 'habits');
     return wrapRow(sideSwitch('habits'), row);
   },
-  /* the bar's Build lands on the side the reader was last on */
+  /* the bar's Build lands on the side last on */
   landing() { return store.read(SIDE_KEY, 'build') === 'habits' ? 'habits' : 'build'; },
   keepSubnav: true,
   newSince() { return 0; },
-  pull() { return reloadTown().then(() => null); },
+  pull() { return reload().then(() => null); },
 });
-function wrapRow(top, row) {
-  const bar = el('div', 'secbar bd-sub');
-  bar.appendChild(top);
-  if (row) {
-    /* a hosted tab hands back its own .secbar: keep what is inside it */
-    const kids = row.classList && row.classList.contains('secbar') ? [...row.children] : [row];
-    kids.forEach((k) => bar.appendChild(k));
-  }
-  return bar;
-}
+/* Escape folds a full-screen site back down (never a shift) */
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && dock && !dock.hidden && dock.dataset.state === 'full' && !shiftOpen()) setDock('dock'); });
 
 /* for tests */
-export const _state = () => ({ side: B.side, phase: B.phase, thing: B.thing, shift: S ? { ...S } : null, open: shiftOpen(), lock: !!lock, drops: B.drops.slice(), back: B.back });
+export const _state = () => ({ side: B.side, phase: B.phase, thing: B.thing, shift: status(), ending: ending(), open: shiftOpen(), lock: !!lock,
+  dock: dock ? (dock.hidden ? 'hidden' : dock.dataset.state) : null, pallets, back: B.back, starters: B.starters });
 export const _api = () => api();

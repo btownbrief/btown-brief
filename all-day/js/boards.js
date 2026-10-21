@@ -206,6 +206,25 @@ function sendPhoto(board, file, title, prof) {
   });
 }
 
+/* The Build's posts (modes/build.js) send their photo through the same
+   queue and the same photo-admin.html check, then point at its path. */
+export function queuePhoto(file, caption) {
+  if (app.demo) {
+    const palettes = ['dawn', 'teal', 'plum', 'foliage', 'slate'];
+    demoPhotos++;
+    return Promise.resolve('submissions/demo-' + palettes[demoPhotos % palettes.length] + '-' + demoPhotos + '.jpg');
+  }
+  return photosLib().then(async (P) => {
+    const blob = await P.resizeImage(file);
+    const path = await P.uploadBlob(blob);
+    await P.rpc('btb_photos_submit', {
+      p_path: path, p_caption: String(caption || '').slice(0, 280), p_category: 'board', p_area: 'Greater Burlington',
+      p_spot: 'All Day · Build', p_taken: '', p_name: '', p_permission: true, p_ai: false, p_voter: store.playerId(),
+    });
+    return path;
+  });
+}
+
 /* -------------------------------------------------------------- profile */
 /* Cached for the visit, dropped when the reader signs in or out. */
 let me;              // undefined: not asked yet; null: no profile; else the profile
