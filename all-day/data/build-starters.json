@@ -1,0 +1,238 @@
+{
+  "_about": [
+    "The Build's starter door: what someone with no thing yet sees. Four cards, one per slot, in this order: a Top 100+ mission, a run club or fitness meet this week, an Up For It idea that tipped, a neighbor's public thing. Four things, never a catalog.",
+    "Each slot reads its source by the rules below. A slot with nothing usable (no tipped idea, no public things yet, a source that failed to load) takes the next unused card from fallbacks instead, so the door always shows four.",
+    "Pick once per Burlington week (Monday to Sunday), seeded by the week's Monday date, so the door holds still for a week and does not reshuffle on every visit. A card the reader picked or dismissed does not come back that week.",
+    "Picking a card names the thing (title), fills its first step (first_step) as the clock_in placeholder, and keeps the source link on the thing card. The reader can edit both before saving.",
+    "Paths are relative to all-day/index.html, the same as What Now and People use. Stephen edits fallbacks by hand; each one carries a checked block saying where its facts were read and when. Re-check any fallback older than 120 days, and drop one whose until date has passed."
+  ],
+  "show": 4,
+  "slots": ["mission", "meet", "upforit", "public"],
+  "sources": {
+    "mission": {
+      "url": "../data/missions.json",
+      "list": "missions",
+      "keep": "needs_check is false, the reader has not marked it done (the same marks What Now keeps under localStorage 'allday-missions', by the mission's mark), and the current Burlington month is in season_months for its mark when it has one",
+      "card": { "title": "title", "line": "teaser", "link": "#whatnow/{k}" },
+      "first_step": "Pick a day for it",
+      "prefer": "themes free, culture, play and outdoors over eat and drink, since a thing to work toward fits them better; then the week's seed",
+      "season_months": {
+        "_note": "Missions carry no months of their own. These marks only show in these months, read from each mission's own paragraph, so nobody is sent to a beach in January or a frozen pond in July. Any mark not listed shows all year.",
+        "m203": [5, 6, 7, 8, 9, 10],
+        "m204": [5, 6, 7, 8, 9],
+        "m206": [5, 6, 7, 8, 9, 10],
+        "m207": [5, 6, 7, 8, 9, 10],
+        "m208": [5, 6, 7, 8, 9, 10],
+        "m209": [5, 6, 7, 8, 9, 10],
+        "m211": [6, 7, 8, 9],
+        "m212": [4, 5, 6, 7, 8, 9, 10, 11],
+        "m217": [5, 6, 7, 8, 9, 10],
+        "m218": [6, 7, 8, 9, 10],
+        "m219": [6, 7, 8, 9, 10],
+        "m220": [6, 7, 8, 9],
+        "m221": [5, 6, 7, 8, 9, 10],
+        "m224": [3, 4],
+        "m231": [6, 7, 8, 9],
+        "m232": [11, 12, 1, 2, 3],
+        "m234": [6, 7, 8, 9, 10],
+        "m235": [5, 6, 7, 8, 9, 10],
+        "m236": [5, 6, 7, 8, 9],
+        "m247": [4, 5, 6, 7, 8, 9, 10],
+        "m248": [5, 6, 7, 8, 9],
+        "m249": [11, 12, 1, 2, 3],
+        "m252": [5, 6, 7, 8, 9, 10, 11],
+        "m261": [5, 6, 7, 8, 9],
+        "m269": [6, 7, 8, 9],
+        "m270": [5, 6, 7, 8, 9, 10],
+        "m271": [6, 7, 8, 9],
+        "m272": [6, 7, 8, 9],
+        "m274": [6, 7, 8, 9],
+        "m276": [6, 7, 8, 9, 10],
+        "m277": [6, 7, 8, 9],
+        "m280": [12, 1, 2, 3],
+        "m281": [12, 1, 2, 3],
+        "m282": [11, 12, 1, 2, 3],
+        "m283": [1, 2],
+        "m284": [1, 2],
+        "m285": [11, 12, 1, 2],
+        "m286": [5, 6, 7, 8, 9, 10, 11],
+        "m287": [5, 6, 7, 8, 9, 10],
+        "m295": [5, 6, 7, 8, 9, 10],
+        "m296": [12, 1, 2, 3],
+        "m297": [8],
+        "m298": [10, 11, 12, 1, 2, 3, 4, 5],
+        "m299": [4, 5, 6, 7, 8, 9, 10, 11],
+        "m302": [4, 5, 6, 7, 8, 9, 10, 11]
+      }
+    },
+    "meet": {
+      "url": "../data/run-clubs.json",
+      "demo_url": "data/demo/run-clubs.json",
+      "list": "clubs",
+      "how": "clubs-week.js meetsInWindow(clubs, now, now + 7 days), the same week People shows; the demo file goes through redateDemo first. Season, months, from, until and skip are already handled there.",
+      "keep": "a meet that has not started yet, from a club whose newcomers field is not empty, whose what, schedule_note and meet note do not match /dads only|members[- ]only|join first/i",
+      "prefer": "the soonest run club meet (kind run); when there is none this week, the soonest of any kind",
+      "card": { "title": "{club.name}, {wd} {time}", "line": "club.what, cut with oneLine()", "link": "#people/clubs" },
+      "thing_title": "Go to {club.name} on {Wd}",
+      "first_step": "Show up at {meet.where} at {time}"
+    },
+    "upforit": {
+      "rpc": "https://jnouvwxomrcffqwilqkq.supabase.co/rest/v1/rpc/uf_ideas_public",
+      "how": "POST with body {} and the same publishable anon key What Now already ships (headers apikey and Authorization: Bearer). Read only. Fails soft to a fallback.",
+      "keep": "tipped_at is set, status is live or claimed, and months is empty or includes the current Burlington month",
+      "prefer": "newest tipped_at",
+      "card": { "title": "title", "line": "{yes_count} neighbors said they'd go", "link": "https://play.btownbrief.com/up-for-it/?plan={plan_id} when plan_id is set, else https://play.btownbrief.com/up-for-it/" },
+      "first_step": "Tap I'd go, then pick a night",
+      "demo": "skip the network and take the fake backend's tipped idea if it seeds one, else a fallback",
+      "_checked": "2026-10-21: the RPC answered with 30 ideas (27 live, 3 exists) and none tipped yet, so today this slot falls through to a fallback."
+    },
+    "public": {
+      "from": "builder A's data layer (bd_*). The Build's contract has no call for this yet: it needs a small public read, for example bd_public_things(), returning things whose owner has posted about them at least once (the spec's rule for when a thing's name goes public), with the owner's first name only when bd_builder.first_name_public is true.",
+      "keep": "not the reader's own thing, not from someone they blocked, posted about in the last 30 days, status active or done",
+      "prefer": "a Finished thing first, then the one with the newest post",
+      "card": { "title": "thing title", "line": "{name} is working on this", "line_no_name": "A neighbor is working on this", "link": "the thing's shelf" },
+      "why": "The spec wants a line on why they picked it. The why is written privately on the thing card, so show it here only if the owner says yes to sharing it (a per-thing switch A would need to add). Until that exists, leave the why off.",
+      "first_step": "Name your own version of it"
+    }
+  },
+  "fallbacks": [
+    {
+      "id": "fb-contra",
+      "title": "Learn to contra dance",
+      "first_step": "Go to one Friday dance and get there for the 6:45 lesson",
+      "line": "Every dance is taught and nobody needs a partner, so the first night is the whole lesson.",
+      "link": "https://queencitycontras.com/schedule/",
+      "until": "2026-12-18",
+      "checked": {
+        "date": "2026-10-21",
+        "source": "https://queencitycontras.com/schedule/",
+        "note": "Fri Oct 23 at St. Anthony's Parish Hall, 305 Flynn Ave; Nov 27 and Dec 18 at Shelburne Town Hall. Beginner lesson 6:45, dancing 7 to 10. 'All dances are taught; no partner or experience necessary.' $12 adults, $5 ages 12 to 18 or limited budget, under 12 free. No dates posted past Dec 18."
+      }
+    },
+    {
+      "id": "fb-vcm-relay",
+      "title": "Run a Vermont City Marathon relay with friends",
+      "first_step": "Find one to four people who'd split it with you",
+      "line": "A team of two to five splits the marathon, so a first timer trains for a piece of it with friends.",
+      "link": "https://www.runvermont.org/vermont-city-marathon-relay/",
+      "until": "2027-05-30",
+      "checked": {
+        "date": "2026-10-21",
+        "source": "https://www.runvermont.org/vermont-city-marathon-relay/",
+        "note": "Race date page: 'Sunday, May 30th', 7:10 AM, Waterfront Park (2027). Main page: '2 person or 3-5 person relays'."
+      }
+    },
+    {
+      "id": "fb-penguin-plunge",
+      "title": "Do the Penguin Plunge for Special Olympics Vermont",
+      "first_step": "Register and send your page to three people",
+      "line": "It comes with a date, a fundraising goal of at least $250 and a crowd jumping in with you.",
+      "link": "https://www.penguinplunge.org/",
+      "months": [11, 12, 1, 2],
+      "checked": {
+        "date": "2026-10-21",
+        "source": "https://www.penguinplunge.org/",
+        "note": "Page title '2027 Penguin Plunge'. 'All plungers must commit to raising the minimum of $250.' Plungers under 18 need a parent or guardian to sign the waiver. The site's text does not show the date; missions.json (m285) says Saturday, February 6, 2027."
+      }
+    },
+    {
+      "id": "fb-ltrc",
+      "title": "Run with the Long Trail Running Club on a Thursday",
+      "first_step": "Join on Meetup and pick this Thursday's run",
+      "line": "All paces, all year, and they wait at the turns and hilltops so nobody gets left behind.",
+      "link": "https://www.longtrailrunningclub.com/faqs",
+      "checked": {
+        "date": "2026-10-21",
+        "source": "https://www.longtrailrunningclub.com/faqs",
+        "note": "'Our Thursday night social runs continue throughout the year.' Headlamps required in fall and winter. 'All paces welcome'; 'we wait at turns or the tops of hills.' $5 a year, charged through Meetup; start points posted on Meetup for members."
+      }
+    },
+    {
+      "id": "fb-pickup-hoops",
+      "title": "Play Wednesday pickup basketball with the Btown Brief crew",
+      "first_step": "RSVP on Meetup and bring $12 for the day pass",
+      "line": "Stephen's own weekly run, 5:30 to 7:30 at Gutterson, and a quick way to meet people in town.",
+      "link": "https://www.meetup.com/burlington-social-activites-group/events/316803943/",
+      "until": "2027-03-10",
+      "own_event": true,
+      "checked": {
+        "date": "2026-10-21",
+        "source": "https://www.meetup.com/burlington-social-activites-group/events/316803943/",
+        "note": "'Wednesday, Oct 21 · 5:30 PM to 7:30 PM EDT. Every week on Wednesday until March 10, 2027. Gutterson Fieldhouse, 147 Spear St.' 'A day pass is $12 per person, paid at the Campus Rec front desk in the Gucciardi Fitness Center.' Hosted by Steve D."
+      }
+    },
+    {
+      "id": "fb-disc-golf",
+      "title": "Learn disc golf at Awasiwi Woods",
+      "first_step": "Play the short grey tees once, all nine baskets",
+      "line": "Nine baskets in the woods in South Burlington, with short tees for a first round.",
+      "link": "https://www.southburlingtonvt.gov/677/Awasiwi-Woods---Disc-Golf-Course",
+      "months": [4, 5, 6, 7, 8, 9, 10, 11],
+      "checked": {
+        "date": "2026-10-21",
+        "source": "https://www.southburlingtonvt.gov/677/Awasiwi-Woods---Disc-Golf-Course",
+        "note": "Behind the Munsen Field track at the middle and high school campus. 'Two 18-tee course layouts, regular and long, with 9 baskets.' Grey boards mark the short course, blue the long. 'Open dawn to dusk.' The page does not state a fee. Months are ours, for snow."
+      }
+    },
+    {
+      "id": "fb-craft-night",
+      "title": "Finish the craft project in the closet",
+      "first_step": "Bring it to The Makery's craft night",
+      "line": "A free craft night at The Makery on Pine, no signup, gives the project a table and some company.",
+      "link": "https://themakeryvt.com/",
+      "checked": {
+        "date": "2026-10-21",
+        "source": "https://themakeryvt.com/",
+        "note": "'Bring your own Craft Night. Free! No registration Required.' The page lists no date for the next one; missions.json (m293) says it is monthly, at 388 Pine Street."
+      }
+    },
+    {
+      "id": "fb-park-passport",
+      "title": "Set foot in every Burlington city park",
+      "first_step": "Pick the three closest parks you've never been to",
+      "line": "Each park is a short trip, and the list tells you when you're done.",
+      "link": "https://play.btownbrief.com/challenges/?c=park-passport",
+      "checked": {
+        "date": "2026-10-21",
+        "source": "https://play.btownbrief.com/challenges/data/challenges.json",
+        "note": "Challenge park-passport: 'set foot in every Burlington city park', verified true, on the challenge board. Also listed in all-day/data/challenges.json evergreen."
+      }
+    },
+    {
+      "id": "fb-walking-tour",
+      "title": "Walk the Btown Brief walking tour, start to finish",
+      "first_step": "Pick an afternoon and start at stop one",
+      "line": "About 1.7 miles and two hours, so it's a whole finished thing in one afternoon.",
+      "link": "../walking-tour.html",
+      "checked": {
+        "date": "2026-10-21",
+        "source": "data/walking-tour.json",
+        "note": "'Roughly 1.7 miles, mostly flat with one climb back up from the lake. Budget 90–120 minutes at a casual pace.' 13 stops."
+      }
+    },
+    {
+      "id": "fb-volunteer",
+      "title": "Give one hour a week somewhere in town",
+      "first_step": "Pick one place from the volunteer guide and email them",
+      "line": "An hour has a clear finish line, and it's the fastest way to know people by name.",
+      "link": "../volunteer.html",
+      "checked": {
+        "date": "2026-10-21",
+        "source": "volunteer.html and all-day/data/challenges.json",
+        "note": "The guide's volunteer page (data/volunteers/orgs.json). Same idea as the weekly challenge w-give-an-hour, 'Volunteer one hour somewhere in town this week.'"
+      }
+    },
+    {
+      "id": "fb-library-things",
+      "title": "Borrow a tool and fix the thing that's been broken",
+      "first_step": "Look up the tool in South Burlington's Library of Things",
+      "line": "The South Burlington library lends tools on a library card, so one repair doesn't mean buying a tool.",
+      "link": "https://southburlingtonlibrary.org/library-of-things/",
+      "checked": {
+        "date": "2026-10-21",
+        "source": "https://southburlingtonlibrary.org/library-of-things/",
+        "note": "'A collection of items, such as games, consumer electronics, and tools, that you can check out with your library card.' Second floor near the DVDs; holds through the catalog."
+      }
+    }
+  ]
+}

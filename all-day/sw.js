@@ -13,7 +13,7 @@
    audio — episodes are large and the browser's own HTTP cache handles them
    better than we would. */
 
-const VERSION = 'all-day-v86';   // the day pager fits beside Local / Everything
+const VERSION = 'all-day-v87';   // batch merge
 const SHELL = VERSION + '-shell';
 const DATA = 'all-day-data';   // unversioned on purpose: survives shell bumps
 
@@ -24,6 +24,9 @@ const SHELL_URLS = [
   './js/modes/wire.js', './js/modes/wire-demo.js', './js/modes/wire-photos.js', './js/modes/wire-square.js', './js/modes/wire-recaps.js', './js/modes/watch.js', './js/modes/food.js',
   './js/modes/people.js', './js/modes/whatnow.js', './js/modes/vintage.js', './js/modes/habits.js',
   './js/modes/onair.js', './js/modes/games.js',
+  /* The Build: the tab, its API (live, this phone, the demo) and the site */
+  './js/modes/build.js', './js/build-core.js', './js/build-local.js', './js/build-fake.js', './js/build-site.js',
+  './data/build-foreman.json', './data/build-config.json', './data/build-starters.json',
   /* What Now's engine and its feeds' loader, imported by modes/whatnow.js */
   './js/whatnow-engine.js', './js/whatnow-data.js', './js/sun.js',
   /* Habits' rules, its demo server, the signed-out phone's copy and its trees, imported by modes/habits.js */
