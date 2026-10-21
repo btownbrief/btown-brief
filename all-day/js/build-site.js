@@ -221,6 +221,7 @@ const ARMS = {
   frontRaise: [[7, 5, 'T'], [7, 4, 'T'], [7, 3, 'S'], [7, 2, 'S'], [6, 4, 'K']],
   frontMug: [[6, 9, 'M'], [7, 9, 'M'], [6, 10, 'M'], [7, 10, 'C']],
   frontLunch: [[6, 9, 'S'], [6, 8, 'w'], [7, 8, 'w']],
+  frontShrug: [[1, 7, 'T'], [0, 6, 'S'], [7, 7, 'T'], [8, 6, 'S']],
   frontBite: [[5, 6, 'S'], [4, 5, 'w'], [5, 5, 'w']],
   sweepA: [[6, 7, 'T'], [7, 8, 'S'], [8, 9, 'k'], [8, 10, 'k'], [8, 11, 'k'], [7, 12, 'Y'], [8, 12, 'Y'], [9, 12, 'Y']],
   sweepB: [[6, 7, 'T'], [7, 8, 'S'], [7, 9, 'k'], [6, 10, 'k'], [5, 11, 'k'], [4, 12, 'Y'], [5, 12, 'Y'], [6, 12, 'Y']],
@@ -247,7 +248,7 @@ const POSES = {
   /* lunch on a beam, facing out, boots swinging */
   beamA: [HEAD_FRONT, BODY_FRONT, 'dangle', 'frontLunch'], beamB: [HEAD_FRONT, BODY_FRONT, 'dangleB', 'frontLunch'], beamBite: [HEAD_FRONT, BODY_FRONT, 'dangle', 'frontBite'],
   front: [HEAD_FRONT, BODY_FRONT, 'front', 'frontArms'], frontWave: [HEAD_FRONT, BODY_FRONT, 'front', 'frontWave'],
-  frontRaise: [HEAD_FRONT, BODY_FRONT, 'front', 'frontRaise'], frontMug: [HEAD_FRONT, BODY_FRONT, 'front', 'frontMug'],
+  frontRaise: [HEAD_FRONT, BODY_FRONT, 'front', 'frontRaise'], frontMug: [HEAD_FRONT, BODY_FRONT, 'front', 'frontMug'], frontShrug: [HEAD_FRONT, BODY_FRONT, 'front', 'frontShrug'],
   hatoffA: [HEAD_HATOFF, BODY, 'walkA', 'hatInHand'], hatoffB: [HEAD_HATOFF, BODY, 'walkB', 'hatInHand'],
   hatoff: [HEAD_HATOFF, BODY, 'stand', 'hatInHand'],
   civA: [HEAD_HATOFF, BODY, 'walkA', 'stand'], civB: [HEAD_HATOFF, BODY, 'walkB', 'stand'], civSit: [HEAD_HATOFF, BODY, 'sit', 'stand'],
@@ -345,9 +346,10 @@ export function createSite(canvas, opts = {}) {
     const cw = Math.max(1, r.width || canvas.clientWidth || 300), ch = Math.max(1, r.height || canvas.clientHeight || 200);
     /* CSS px per site pixel: show at least 180 x 150 of the world (small
        frames zoom in on the crew rather than shrink them), and no more than
-       260 tall (a tall phone zooms in rather than showing sky) */
+       210 tall: a tall phone (the full-screen shift) zooms in close on your
+       builder, the way Focus Friend's bean fills the screen */
     let s = Math.min(ch / 150, cw / 180);
-    s = Math.max(s, ch / 260, cw / WW, ch / WH, 0.5);
+    s = Math.max(s, ch / 210, cw / WW, ch / WH, 0.5);
     const nW = clamp(Math.round(cw / s), 40, WW), nH = clamp(Math.round(ch / s), 40, WH);
     if (nW === W && nH === H && L) return false;
     W = nW; H = nH;
@@ -376,7 +378,10 @@ export function createSite(canvas, opts = {}) {
       cx = foremanOut && meX != null && Math.abs(meX - doorX) < W - 30 ? (meX + doorX) / 2 : lerp(p, bc, foremanOut ? 0.15 : 0.3);
       if (foremanOut) cx = clamp(cx, doorX - W / 2 + 18, doorX + W / 2 - 24);
     }
-    cam.tx = clamp(Math.round(cx - W / 2), 0, WW - W);
+    /* a dead zone: the camera only follows when the action nears an edge,
+       so a builder pacing a bay doesn't swing the whole site */
+    const want = clamp(Math.round(cx - W / 2), 0, WW - W);
+    if (cam.snap || Math.abs(want - cam.tx) > W * 0.18 || foremanOut) cam.tx = want;
     /* vertical: street at the bottom when there's room, else keep the
        working level (and you) in view and crop the yard */
     const lvTop = (topped() ? L.roofY - 20 : L.fBottom[Math.min(activeFloor() + 1, L.floors)] - 12);
@@ -386,8 +391,10 @@ export function createSite(canvas, opts = {}) {
     /* frame from the crane down; whatever height is left shows the street
        and the bike path, and only then more sky */
     top = Math.min(top, craneJibY() - 14);
-    let ty = Math.min(top, WH - H);
-    if (ty + H < L.street + 2) ty = L.street + 2 - H;    // never lose the gate and the yard to sky
+    /* the bottom edge sits just past Lakeside Ave's far sidewalk; spare
+       height goes to sky, and a short frame crops the street first */
+    let ty = Math.min(top, L.street + 24 - H);
+    if (ty + H < L.street + 2) ty = L.street + 2 - H;    // never lose the gate and the yard
     cam.ty = clamp(Math.round(ty), 0, WH - H);
     if (dt > 0 && !reduced) {
       const k = Math.min(1, dt * 1.8);
@@ -724,6 +731,7 @@ export function createSite(canvas, opts = {}) {
         break;
       case 'work': {
         const rate = act.rate || 3;
+        a.tool = act.cell ? act.cell[0] : act.mark || 'frame';
         const ph = ((a.actT * rate) | 0) % 2;
         a.pose = act.pose[ph]; a.bob = 0;
         if (act.cell && ph !== a.lastPh && ph === 1) spark(a, act.cell[0]);
@@ -759,8 +767,8 @@ export function createSite(canvas, opts = {}) {
       case 'pauseHold': {
         /* tools down, turn around, look at you. A blink, a small shrug. */
         a.bob = 0;
-        const cyc = a.actT % 6;
-        a.pose = cyc > 5.6 ? 'stand' : 'front';
+        const cyc = a.actT % 7;
+        a.pose = a.actT < 0.5 ? 'bend' : cyc > 4 && cyc < 4.9 ? 'frontShrug' : cyc > 6.5 ? 'stand' : 'front';
         a.blink = (a.actT % 3.7) > 3.55;
         break;
       }
@@ -781,7 +789,7 @@ export function createSite(canvas, opts = {}) {
   }
   function enterFromGate(a, withCoffee) {
     /* along the Lakeside Ave sidewalk, in through the gate */
-    a.level = 'g'; a.street = true; a.x = L.gateX - 40 - (a.seed % 50); a.y = L.street - 1;
+    a.level = 'g'; a.street = true; a.x = L.gateX - 14 - (a.seed % 36); a.y = L.street - 1;
     a.act = null; a.plan = []; a.gone = false; a.carry = null;
     a.coffee = !!withCoffee;
     a.plan.push({ k: 'walk', x: L.gateX + 6 }, { k: 'walkY', street: false });
@@ -923,6 +931,27 @@ export function createSite(canvas, opts = {}) {
     for (let i = passers.length - 1; i >= 0; i--) {
       const q = passers[i]; q.t += dt; q.x += q.dir * q.v * dt;
       if (q.x < cam.x - 40 || q.x > cam.x + W + 40) passers.splice(i, 1);
+    }
+  }
+  /* gulls off the lake, now and then */
+  const gulls = [];
+  let gullT = 6;
+  function stepGulls(dt) {
+    gullT -= dt;
+    if (gullT <= 0 && night < 0.5 && S.weather !== 'rain') {
+      gullT = 20 + R() * 40;
+      const dir = R() < 0.5 ? 1 : -1, y = L.horizon - 10 - R() * 50, n = 1 + ((R() * 3) | 0);
+      for (let i = 0; i < n; i++) gulls.push({ x: (dir > 0 ? cam.x - 10 : cam.x + W + 10) - dir * i * (6 + R() * 6), y: y + i * 2 + R() * 3, dir, v: 10 + R() * 4, ph: R() * 6 });
+    }
+    for (let i = gulls.length - 1; i >= 0; i--) { const g = gulls[i]; g.x += g.dir * g.v * dt; g.y += Math.sin(S.t * 0.7 + g.ph) * 1.5 * dt; if (g.x < cam.x - 30 || g.x > cam.x + W + 30) gulls.splice(i, 1); }
+  }
+  function drawGulls(c) {
+    c.fillStyle = night > 0.3 ? shade('#d8dde6') : shade('#f4f4f0');
+    for (const g of gulls) {
+      const x = Math.round(g.x), y = Math.round(g.y), up = ((S.t * 3 + g.ph) | 0) % 2;
+      c.fillRect(x, y, 1, 1); c.fillStyle = shade('#5a5f68'); c.fillRect(x, y + 1, 1, 1);
+      c.fillStyle = night > 0.3 ? shade('#d8dde6') : shade('#f4f4f0');
+      c.fillRect(x - 2, y - up, 2, 1); c.fillRect(x + 1, y - up, 2, 1);
     }
   }
   function drawPasser(c, q) {
@@ -1067,9 +1096,19 @@ export function createSite(canvas, opts = {}) {
         const y = rowY + 2 - ((r2() * 3) | 0) + pass * 3;
         let col = pass ? pal.tree : pal.treeDark, hi = pass ? pal.treeLight : pal.tree, lo = pass ? pal.treeDark : mix(pal.treeDark, '#000000', 0.15);
         if (fall && r2() < 0.45) { const k = r2(); col = k < 0.4 ? pal.autumnA : k < 0.75 ? pal.autumnB : shade('#b9893a'); hi = mix(col, '#ffffff', 0.25); lo = mix(col, '#000000', 0.2); }
-        if (bare) { col = shade('#7d776e'); hi = snowy ? pal.snow : shade('#948d82'); lo = shade('#5f5a53'); }
+        if (bare) {
+          /* winter: pines along the rail line, bare maples between them */
+          if (r2() < 0.55) {
+            const h = rad * 2 + 3;
+            for (let k = 0; k < h; k++) { const hw = Math.round(k * (rad + 0.5) / h); c.fillStyle = k % 3 === 2 ? shade('#2c4a32') : shade('#36583c'); c.fillRect(x - hw, y - rad - 2 + k, hw * 2 + 1, 1); if (snowy && k % 3 === 0) { c.fillStyle = pal.snow; c.fillRect(x - hw, y - rad - 2 + k, Math.max(1, hw), 1); } }
+          } else {
+            c.fillStyle = shade('#6b5f55');
+            c.fillRect(x, y - rad, 1, rad * 2 + 2); c.fillRect(x - 2, y - rad + 1, 1, 3); c.fillRect(x + 2, y - rad, 1, 3); c.fillRect(x - 1, y - rad + 3, 1, 1); c.fillRect(x + 1, y - rad + 2, 1, 1);
+            if (snowy) { c.fillStyle = pal.snow; c.fillRect(x - 2, y - rad, 1, 1); c.fillRect(x + 2, y - rad - 1, 1, 1); c.fillRect(x, y - rad - 1, 1, 1); }
+          }
+          continue;
+        }
         crown(x, y, rad, col, hi, lo);
-        if (snowy) { c.fillStyle = pal.snow; c.fillRect(x - rad + 1, y - rad, rad * 2 - 1, 1); }
       }
     }
     /* grass bank behind the site */
@@ -1451,6 +1490,10 @@ export function createSite(canvas, opts = {}) {
     const x = doorX - 1 + Math.round(f.dx), y = gy - 2 - (inDoor ? 1 : 0) - 13 + (f.nod ? 1 : 0);
     const facing = (f.phase === 'back') ? -1 : 1;
     c.drawImage(sprite(f.pose, look, facing), x - 1, y - 1);
+    if (f.phase === 'in' && f.pose === 'frontMug' && !reduced) {
+      const k = ((S.t * 2) | 0) % 3;
+      c.fillStyle = 'rgba(244,244,240,0.7)'; c.fillRect(x + 6 + (k === 1 ? 1 : 0), y + 7 - k, 1, 1); if (k === 2) c.fillRect(x + 7, y + 4, 1, 1);
+    }
     if (f.phase === 'raise' && !reduced) {
       /* the whistle: a couple of little sound marks that pulse */
       const on = ((S.t * 3) | 0) % 2 === 0;
@@ -1572,7 +1615,7 @@ export function createSite(canvas, opts = {}) {
   }
   function drawLake(c) {
     /* glints on the water (world coordinates), and in summer the kitesurfers */
-    const lakeTop = L.horizon + 2, lakeBot = L.groundY - 23;
+    const lakeTop = L.horizon + 2, lakeBot = L.groundY - 30;
     if (lakeBot - lakeTop < 2 || reduced) return;
     const r = rng(((S.t * 2) | 0));
     c.fillStyle = night > 0.6 ? 'rgba(200,210,240,0.35)' : 'rgba(255,255,255,0.55)';
@@ -1618,13 +1661,26 @@ export function createSite(canvas, opts = {}) {
     const x = Math.round(a.x) - 4, y = Math.round(a.y) - 13 + (a.bob || 0) + (a.sitting && a.level === 'beam' ? 0 : 0);
     c.drawImage(spr, x - 1, y - 1);
     /* tools set down beside you when you pick the phone up */
-    if (a.me && a.dropped && a.state === 'paused') drawPallet(c, Math.round(a.dropped.x), Math.round(a.dropped.y), a.dropped.kind);
+    if (a.me && a.state === 'paused') {
+      if (a.dropped) drawPallet(c, Math.round(a.dropped.x), Math.round(a.dropped.y), a.dropped.kind);
+      else drawTool(c, Math.round(a.x) + 5, Math.round(a.y), a.tool);
+      /* waiting for you: three dots, one at a time, nothing sadder than that */
+      const t = a.act && a.act.k === 'pauseHold' ? a.actT : 0;
+      if (t > 1.5 && !reduced) { const n = ((t * 1.4) | 0) % 4; c.fillStyle = night > 0.5 ? EMIT.lamp : pal.outline; for (let i = 0; i < n; i++) c.fillRect(x + 7 + i * 2, y - 2, 1, 1); }
+    }
     if (a.me && a.state !== 'off') {
       /* your marker: a little gold chevron that breathes */
       const by = y - 4 - (reduced ? 0 : (((S.t * 1.5) | 0) % 2));
       c.fillStyle = pal.outline; c.fillRect(x + 2, by - 1, 5, 1);
       c.fillStyle = EMIT.lamp === pal.marker ? pal.marker : BASE.marker; c.fillRect(x + 2, by, 5, 1); c.fillRect(x + 3, by + 1, 3, 1); c.fillRect(x + 4, by + 2, 1, 1);
     }
+  }
+  function drawTool(c, x, y, kind) {
+    /* the tool set down on the plank */
+    if (kind === 'wall') { c.fillStyle = shade('#8b939b'); c.fillRect(x, y - 3, 3, 3); c.fillStyle = shade('#5f666d'); c.fillRect(x, y - 4, 3, 1); c.fillStyle = pal.mortar; c.fillRect(x, y - 3, 3, 1); return; }
+    if (kind === 'wire') { c.fillStyle = pal.timberShade; c.fillRect(x, y - 3, 3, 3); c.fillStyle = pal.copper; c.fillRect(x + 1, y - 3, 1, 3); return; }
+    if (kind === 'window' || kind === 'solar') { c.fillStyle = pal.glassHi; c.fillRect(x, y - 5, 1, 5); c.fillStyle = pal.glass; c.fillRect(x + 1, y - 4, 1, 4); return; }
+    c.fillStyle = pal.timberDark; c.fillRect(x, y - 1, 4, 1); c.fillStyle = shade('#8b939b'); c.fillRect(x + 3, y - 2, 1, 2);
   }
   function drawLabel(c, a, text) {
     const tw = textWidth(text), x = clamp(Math.round(a.x) - (tw >> 1) - 2, Math.round(cam.x) + 1, Math.round(cam.x) + W - tw - 5), y = Math.round(a.y) - 24;
@@ -1645,6 +1701,7 @@ export function createSite(canvas, opts = {}) {
     drawClouds(c);
     c.setTransform(1, 0, 0, 1, -cx, -cy);
     drawLake(c);
+    drawGulls(c);
     c.drawImage(bldCache, cx, cy, W, H, cx, cy, W, H);
     const doorX = drawTrailer(c);
     drawForeman(c, doorX);
@@ -1686,7 +1743,7 @@ export function createSite(canvas, opts = {}) {
     S.t += dt;
     for (const a of agents.values()) step(a, dt);
     for (const [id, a] of agents) if (a.gone && !a.me) agents.delete(id);
-    stepCrane(dt); stepFork(dt); stepForeman(dt); stepParticles(dt); stepPassers(dt);
+    stepCrane(dt); stepFork(dt); stepForeman(dt); stepParticles(dt); stepPassers(dt); if (!reduced) stepGulls(dt);
     aimCamera(dt);
     for (const d of S.deliveries) if (d.bounce > 0) d.bounce = Math.max(0, d.bounce - dt * 20);
     if (S.toppedAt != null && !S.beamSet && !crane.busy && !reduced) craneJob(L.bays.find((q) => q.vol === 'C').ax + 8, L.roofY, true);
@@ -1856,7 +1913,7 @@ export function createSite(canvas, opts = {}) {
     stats() {
       const s = stats.samples.slice().sort((p, q) => p - q);
       const pct = (p) => (s.length ? s[Math.min(s.length - 1, Math.floor(s.length * p))] : 0);
-      return { frames: stats.frames, avgMs: stats.frames ? stats.total / stats.frames : 0, tickMs: stats.ticks ? stats.tick / stats.ticks : 0, p50: pct(0.5), p95: pct(0.95), maxMs: stats.max, size: [W, H], cam: [Math.round(cam.x), Math.round(cam.y), cam.tx, cam.ty], agents: agents.size, running: !!raf };
+      return { frames: stats.frames, avgMs: stats.frames ? stats.total / stats.frames : 0, tickMs: stats.ticks ? stats.tick / stats.ticks : 0, p50: pct(0.5), p95: pct(0.95), maxMs: stats.max, size: [W, H], cam: [Math.round(cam.x), Math.round(cam.y), cam.tx, cam.ty], agents: agents.size, running: !!raf, you: you && !you.gone ? [Math.round(you.x - cam.x), Math.round(you.y - cam.y), you.state, you.pose] : null };
     },
     resetStats() { stats.frames = 0; stats.total = 0; stats.max = 0; stats.samples = []; stats.tick = 0; stats.ticks = 0; },
   };

@@ -36,7 +36,7 @@ const server = spawn('python3', ['-m', 'http.server', String(port), '--bind', '1
 await new Promise((r) => setTimeout(r, 700));
 const URL_ = `http://127.0.0.1:${port}/all-day/tests/build-site-preview.html?shot=1`;
 
-const SIZES = { docked: [390, 340], full: [390, 780], desk: [1440, 620] };
+const SIZES = { docked: [390, 340], half: [390, 422], full: [390, 780], desk: [1440, 620] };
 const DAY = { sunAltitude: 38, hour: 13, weather: 'clear' };
 const STATES = {
   day: { ...DAY, floors_done: 2, floor_progress: 0.4, crew: 7, you: 'working', task: 'brick', windows_lit: 8 },
