@@ -17,7 +17,7 @@
                  ten and three, lunch, the golden-hour bench, the night thermos,
                  huddling under the awning in rain, tarps over the stacks, the
                  snowman on a snow day, watering the pot on the trailer step
-     slot beats  every 3 minutes of the clock a seeded draw (dayKey + slot, the
+     slot beats  every 90 seconds of the clock a seeded draw (dayKey + slot, the
                  same on every phone) may start one small thing: geese, a
                  sailboat, kitesurfers, a kid who waves, a gull after a
                  sandwich, raking leaves
@@ -43,7 +43,7 @@
 import { GROUND_Y, YARD_FRONT, HORIZON, ZONES, BUILDING, EMIT, clamp, hash, rng, dayKey, rgba, hexRgb, rgbHex, floorBottom, SKINS, HAIRS } from './build-site-shared.js';
 
 const STORE = 'bd-site-story';
-const SLOT_MIN = 3;
+const SLOT_SEC = 90;
 const DOG_COAT = '#c08a4e';
 const go = (x, y, level) => ({ k: 'goto', x, y, level: level == null ? 'ground' : level });
 const pose = (p, dur, carry) => (carry === undefined ? { k: 'pose', pose: p, dur } : { k: 'pose', pose: p, dur, carry });
@@ -173,6 +173,42 @@ export function createDirector(K) {
     ctx.fillStyle = lit('#e3a03a'); ctx.fillRect(x + dir * (standing ? 2.2 : 1.2) - 0.3, y - (standing ? 3.3 : 0.1), 0.7, 0.35);
     if (sandwich) { ctx.fillStyle = lit('#e8c890'); ctx.fillRect(x + dir * (standing ? 2.6 : 1.6) - 0.6, y - (standing ? 3.4 : 0.2), 1.4, 0.9); ctx.fillStyle = lit('#6aa84f'); ctx.fillRect(x + dir * (standing ? 2.6 : 1.6) - 0.6, y - (standing ? 3 : -0.2), 1.4, 0.25); }
   }
+  function drawSparrow(ctx, X, Y, f, flying, ph, peck) {
+    ctx.save(); ctx.translate(X, Y); ctx.scale(1.35, 1.35);
+    drawSparrow1(ctx, 0, 0, f, flying, ph, peck);
+    ctx.restore();
+  }
+  function drawSparrow1(ctx, x, y, f, flying, ph, peck) {
+    const pal = K.pal, body = lit('#8a6a4a'), dk = lit('#5a4632');
+    if (flying) {
+      const w = Math.sin(ph);
+      ctx.strokeStyle = dk; ctx.lineWidth = 0.35; ctx.lineCap = 'round';
+      ctx.beginPath(); ctx.moveTo(x - 1.2, y - 0.6 - w); ctx.lineTo(x, y - 0.4); ctx.lineTo(x + 1.2, y - 0.6 - w); ctx.stroke();
+      ctx.fillStyle = body; ctx.beginPath(); ctx.ellipse(x, y - 0.3, 0.7, 0.4, 0, 0, 6.3); ctx.fill();
+      return;
+    }
+    ctx.fillStyle = body; ctx.beginPath(); ctx.ellipse(x, y - 0.75, 0.8, 0.55, f * -0.3, 0, 6.3); ctx.fill();
+    ctx.beginPath(); ctx.arc(x + f * 0.6, y - (peck ? 0.9 : 1.35), 0.42, 0, 6.3); ctx.fill();
+    ctx.fillStyle = lit('#e8dcc8'); ctx.beginPath(); ctx.ellipse(x + f * 0.15, y - 0.55, 0.45, 0.3, 0, 0, 6.3); ctx.fill();
+    ctx.strokeStyle = dk; ctx.lineWidth = 0.3; ctx.beginPath(); ctx.moveTo(x - f * 0.6, y - 0.8); ctx.lineTo(x - f * 1.4, y - 1.1); ctx.stroke();
+    ctx.fillStyle = pal.ink; ctx.fillRect(x + f * 0.75 - 0.08, y - (peck ? 1.0 : 1.45), 0.16, 0.16);
+    ctx.fillStyle = lit('#c89a3a'); ctx.fillRect(x + f * 1.0 - (f < 0 ? 0.3 : 0), y - (peck ? 0.85 : 1.3), 0.3, 0.14);
+  }
+  function drawSquirrel(ctx, x, y, f, sitting, ph) {
+    const pal = K.pal, c = lit('#8a8078'), lt = lit('#b8b0a6');
+    const bound = sitting ? 0 : Math.abs(Math.sin(ph)) * 0.9;
+    ctx.save(); ctx.translate(x, y - bound); ctx.scale(f, 1);
+    ctx.lineCap = 'round';
+    /* the tail: a big curl */
+    ctx.strokeStyle = c; ctx.lineWidth = 1.3;
+    ctx.beginPath(); ctx.moveTo(-1, -0.8); ctx.quadraticCurveTo(-3.4, sitting ? -1 : -0.4, sitting ? -2.2 : -3.2, sitting ? -3.6 : -2.6); ctx.stroke();
+    ctx.strokeStyle = lt; ctx.lineWidth = 0.4; ctx.beginPath(); ctx.moveTo(-1.4, -1); ctx.quadraticCurveTo(-3, sitting ? -1.2 : -0.7, sitting ? -2.3 : -3, sitting ? -3.2 : -2.4); ctx.stroke();
+    ctx.fillStyle = c;
+    if (sitting) { ctx.beginPath(); ctx.ellipse(0, -1.4, 0.8, 1.2, 0, 0, 6.3); ctx.fill(); ctx.beginPath(); ctx.arc(0.3, -2.8, 0.6, 0, 6.3); ctx.fill(); }
+    else { ctx.beginPath(); ctx.ellipse(0, -0.8, 1.3, 0.6, -0.1, 0, 6.3); ctx.fill(); ctx.beginPath(); ctx.arc(1.2, -1.2, 0.55, 0, 6.3); ctx.fill(); }
+    ctx.fillStyle = pal.ink; ctx.fillRect(sitting ? 0.5 : 1.4, sitting ? -3 : -1.4, 0.18, 0.18);
+    ctx.restore();
+  }
   function steam(ctx, x, y) {
     const t = K.t; ctx.strokeStyle = rgba(K.pal.white, 0.5); ctx.lineWidth = 0.3; ctx.lineCap = 'round';
     for (let i = 0; i < 2; i++) { const p = (t * 0.4 + i * 0.5) % 1, sx = x + Math.sin(t * 1.5 + i * 2) * 0.6, sy = y - p * 5; ctx.globalAlpha = 1 - p; ctx.beginPath(); ctx.moveTo(sx, sy + 1.6); ctx.quadraticCurveTo(sx + 0.9, sy + 0.8, sx, sy); ctx.stroke(); }
@@ -245,7 +281,7 @@ export function createDirector(K) {
   let leafPile = 0, snowmanT = 0;
   const V = {
     /* -------- the far layer -------- */
-    geese: { kind: 'ambient', title: 'Geese cross over the lake',
+    geese: { kind: 'ambient', title: 'Geese cross over the lake', cool: 12,
       weight: () => (night() > 0.5 || snowy() ? 0 : [2, 3].includes(month()) || [8, 9, 10].includes(month()) ? 2.4 : month() === 4 ? 1.2 : month() >= 5 && month() <= 7 ? 0.5 : 0.2),
       start() {
         const r = K.R, dir = r() < 0.5 ? 1 : -1, n = 5 + ((r() * 5) | 0);
@@ -258,7 +294,7 @@ export function createDirector(K) {
           back(ctx) { for (const b of g.birds) drawGoose(ctx, g.x + b.dx, g.y + b.dy, g.dir, b.ph); },
         };
       } },
-    sailboat: { kind: 'ambient', title: 'A sailboat on the lake',
+    sailboat: { kind: 'ambient', title: 'A sailboat on the lake', cool: 25,
       weight: () => (month() >= 4 && month() <= 9 && night() < 0.3 && !wet() && !snowy() ? 1.3 : 0),
       start() {
         const dir = K.R() < 0.5 ? 1 : -1;
@@ -275,7 +311,7 @@ export function createDirector(K) {
           },
         };
       } },
-    kites: { kind: 'ambient', title: 'Kitesurfers out on a windy afternoon',
+    kites: { kind: 'ambient', title: 'Kitesurfers out on a windy afternoon', cool: 40,
       weight: () => (month() >= 5 && month() <= 8 && hour() > 12 && hour() < 19 && dayHash('wind') % 3 === 0 && !wet() ? 2 : 0),
       start() {
         const ks = Array.from({ length: 2 + ((K.R() * 2) | 0) }, (_, i) => ({ x: K.cam.x + K.view.W * (0.2 + i * 0.3 + K.R() * 0.1), y: HORIZON + 5 + K.R() * 8, v: (K.R() < 0.5 ? -1 : 1) * (3 + K.R() * 2), ph: K.R() * 6, c: ['#d9443a', '#f2c230', '#3fae5a', '#ff7fae'][i % 4] }));
@@ -295,8 +331,70 @@ export function createDirector(K) {
           },
         };
       } },
+    /* -------- small things near the camera -------- */
+    chat: { kind: 'ambient', title: 'Two builders between jobs stop for a chat', cool: 4,
+      weight: () => (night() > 0.85 ? 0.3 : 1.6),
+      start() {
+        const mid = clamp(camMid() + (K.R() - 0.5) * K.view.W * 0.3, 120, 640), y = 482 + K.R() * 4;
+        const ids = nearestIdle(mid, 2, K.view.W * 0.7);
+        if (ids.length < 2) return null;
+        const a = 2.2 + K.R(), b = 2 + K.R();
+        script(ids[0], [go(mid - 3.5, y), face(1), pose('stand', 0.6), emote('dots', a), pose('point', 1.6), pose('stand', b), emote('note', 1.4), pose('nod', 1.2), pose('stand', 0.4)]);
+        script(ids[1], [go(mid + 3.5, y + 0.4), face(-1), pose('stand', a + 0.8), pose('nod', 1.2), emote(K.R() < 0.5 ? 'idea' : 'dots', b), pose('stand', 1.6), pose('clap', 1), pose('stand', 0.4)]);
+        return { step() { return this.t < 40; } };
+      } },
+    hum: { kind: 'ambient', title: 'Someone on a break sits on a stack and hums', cool: 8,
+      weight: () => (night() > 0.8 || wet() ? 0 : 1),
+      start() {
+        const seats = [[281, 471.8], [372, 472.6], [551, 488.6], [246, 476]];
+        const [sx, sy] = seats.slice().sort((p, q) => Math.abs(p[0] - camMid()) - Math.abs(q[0] - camMid()))[0];
+        if (!recruit(1, sx, () => [go(sx, sy), face(K.R() < 0.5 ? 1 : -1), pose('sit', 3), emote('note', 1.8), pose('sit', 4), emote('note', 1.8), pose('sit', 3), pose('stand', 0.4)], null, K.view.W).length) return null;
+        return { step() { return this.t < 40; } };
+      } },
+    sparrows: { kind: 'ambient', title: 'Sparrows land on the fence', cool: 6,
+      weight: () => (night() > 0.4 || wet() ? 0 : snowy() ? 0.8 : 1.4),
+      start() {
+        const n = 3 + ((K.R() * 3) | 0), x0 = clamp(camMid() + (K.R() - 0.5) * K.view.W * 0.5, 30, 700);
+        const birds = Array.from({ length: n }, (_, i) => ({ tx: x0 + i * (2.4 + K.R() * 2), x: x0 - 30 + K.R() * 10, y: K.cam.y + 10 + K.R() * 10, st: 'in', ph: K.R() * 6, hop: 0, d: 0.3 * i }));
+        const stay = 18 + K.R() * 20;
+        return {
+          step(dt) {
+            let alive = false;
+            for (const b of birds) {
+              b.ph += dt * 14;
+              if (this.t < b.d) { alive = true; continue; }
+              if (b.st === 'in') { const dx = b.tx - b.x, dy = 486.2 - b.y, d = Math.hypot(dx, dy); if (d < 0.4) { b.st = 'sit'; b.x = b.tx; b.y = 486.2; } else { const sp = Math.min(d, 24 * dt); b.x += dx / d * sp; b.y += dy / d * sp; } }
+              else if (b.st === 'sit') {
+                b.hop -= dt; if (b.hop <= 0) { b.hop = 1 + K.R() * 2.5; b.x += (K.R() - 0.5) * 1.6; b.f = K.R() < 0.5 ? -1 : 1; }
+                const near = K.world.passers && K.world.passers().some((q) => Math.abs(q.x - b.x) < 12);
+                if (this.t > stay + b.d || near) { b.st = 'out'; b.vx = (K.R() < 0.5 ? -1 : 1) * 16; }
+              } else { b.x += b.vx * dt; b.y -= 18 * dt; }
+              if (b.st !== 'out' || b.y > K.cam.y - 10) alive = true;
+            }
+            return alive && this.t < 90;
+          },
+          collect(list) {
+            list.push({ y: YARD_FRONT + 0.1, draw: (ctx) => { for (const b of birds) if (this.t >= b.d) drawSparrow(ctx, b.x, b.y, b.f || 1, b.st !== 'sit', b.ph, b.st === 'sit' && (b.hop < 0.25)); } });
+          },
+        };
+      } },
+    squirrel: { kind: 'ambient', title: 'A squirrel runs along the top of the fence', cool: 10,
+      weight: () => (night() > 0.5 || wet() ? 0 : 0.9),
+      start() {
+        const dir = K.R() < 0.5 ? 1 : -1, x = dir > 0 ? K.cam.x - 8 : K.cam.x + K.view.W + 8;
+        const q = { x, dir, pause: camMid() + (K.R() - 0.5) * 40, paused: 0, ph: 0 };
+        return {
+          step(dt) {
+            q.ph += dt * 9;
+            if (q.paused < 2.6 && (q.x - q.pause) * q.dir >= 0) { q.paused += dt; return true; }
+            q.x += q.dir * 22 * dt;
+            return (q.dir > 0 ? q.x < K.cam.x + K.view.W + 12 : q.x > K.cam.x - 12) && this.t < 30;
+          },
+          collect(list) { list.push({ y: YARD_FRONT + 0.1, draw: (ctx) => drawSquirrel(ctx, q.x, 486.4, q.dir, q.paused > 0 && q.paused < 2.6, q.ph) }); },
+        };
+      } },
     /* -------- the sidewalk -------- */
-    kidwave: { kind: 'ambient', title: 'A kid waves from the sidewalk, a builder waves back',
+    kidwave: { kind: 'ambient', title: 'A kid waves from the sidewalk, a builder waves back', cool: 10,
       weight: () => {
         const h = hour();
         if (night() > 0.5 || !K.world.spawn) return 0;
@@ -326,7 +424,7 @@ export function createDirector(K) {
         };
       } },
     /* -------- lunch and its gull -------- */
-    gull: { kind: 'ambient', title: 'A gull steals a sandwich off the picnic table',
+    gull: { kind: 'ambient', title: 'A gull steals a sandwich off the picnic table', cool: 600,
       weight: () => (lunchTime() && dayHash('gull') % 2 === 0 && !wet() && !snowy() ? 2.2 : 0),
       start(force) {
         table.sandwich = true;
@@ -547,8 +645,8 @@ export function createDirector(K) {
           },
         };
       } },
-    leaves: { kind: 'ambient', title: 'Raking leaves under the maple',
-      weight: () => ((month() === 9 || month() === 10) && !wet() && !snowy() && night() < 0.4 ? 1.2 : 0),
+    leaves: { kind: 'ambient', title: 'Raking leaves under the maple', cool: 50,
+      weight: () => ((month() === 9 || month() === 10) && !wet() && !snowy() && night() < 0.4 ? 0.7 : 0),
       start() {
         const [lx, ly] = K.world.spot('bench', 'leaves');
         const got = recruit(1, lx, () => [go(lx - 6, ly), face(1), pose('rake', 10), call(() => { leafPile = 1; }), pose('rake', 10), call(() => { leafPile = 2; }), pose('stand', 1)]);
@@ -766,17 +864,27 @@ export function createDirector(K) {
   K.on('mural', (e) => bubble(e.x, e.y - 6, 'star', 2.6));
 
   /* ------------------------------------------------ the scheduler */
+  const lastStart = {};
   function slotBeat() {
-    const d = now(), m = d.getHours() * 60 + d.getMinutes(), s = Math.floor(m / SLOT_MIN);
+    const d = now(), sec = d.getHours() * 3600 + d.getMinutes() * 60 + d.getSeconds(), s = Math.floor(sec / SLOT_SEC);
     if (s === slot) return;
+    const first = slot < 0;
     slot = s;
     if (K.S.whistle) return;
     const r = rng(hash(today + ':slot:' + s));
     const pool = [];
-    let total = 1.1;                                   // the weight of "nothing new this slot"
-    for (const [id, v] of Object.entries(V)) { if (!v.weight || active.has(id)) continue; const w = v.weight(); if (w > 0) { pool.push([id, w]); total += w; } }
+    let total = first ? 0 : 0.8;                       // the weight of "nothing new this slot" (never on opening)
+    const nowMs = +now();
+    for (const [id, v] of Object.entries(V)) {
+      if (!v.weight || active.has(id) || (lastStart[id] && nowMs - lastStart[id] < (v.cool || 10) * 6e4 && nowMs >= lastStart[id])) continue;
+      const w = v.weight(); if (w > 0) { pool.push([id, w]); total += w; }
+    }
     let x = r() * total;
-    for (const [id, w] of pool) { x -= w; if (x <= 0) { start(id); return; } }
+    /* the drawn beat first; if it can't happen (nobody free), the next ones in line */
+    let pick = -1;
+    for (let i = 0; i < pool.length; i++) { x -= pool[i][1]; if (x <= 0) { pick = i; break; } }
+    if (pick < 0) { if (!first || !pool.length) return; pick = 0; }
+    for (let k = 0; k < pool.length; k++) { const [id] = pool[(pick + k) % pool.length]; if (start(id)) { lastStart[id] = nowMs; return; } }
   }
   function rituals() {
     if (K.S.whistle) return;
