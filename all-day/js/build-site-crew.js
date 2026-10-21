@@ -186,6 +186,10 @@ export function createCrew(K) {
   const barrow = { home: spot('masonry', 'barrow'), at: spot('masonry', 'barrow'), user: null, load: null };
   const barrowPos = () => barrow.at || barrow.home;
   const mixer = { spinUntil: 0, t: 0, truck: null };
+  /* glass the forklift stages by the hoist while windows go in upstairs (the glass rack is clear across the yard) */
+  const glassStage = { n: 0 };
+  const glassStageAt = () => { const h = B().hoist && B().hoist(); return h ? [h.x - 17, GROUND_Y + 19] : null; };
+  const glassSource = (j) => (up(j) && glassStage.n > 0 && glassStageAt() ? glassStageAt() : null);
 
   /* ============================================================== CHAINS
      One per building part (job.part; job.kind when a part is unknown).
@@ -548,13 +552,13 @@ export function createCrew(K) {
     return pairChain(a, pair, true);
   }
   function glazeChain(a, pair, lead) {
-    const j = pair.j, wh = where(j.level), k = pair.key, rack = wspot('staging', 'drop2');
+    const j = pair.j, wh = where(j.level), k = pair.key, staged = glassSource(j), rack = staged || wspot('staging', 'drop2');
     const carry = lead ? 'paneL' : 'paneR', off = lead ? -4.5 : 4.5;
     const S = (n, o) => Object.assign({ k: 'sync', key: k + n, n: 2, max: lead ? 40 : 60 }, o);
     const out = [
       go(rack[0] + off, rack[1] + 6, 'ground', 'heading to the glass rack'), { k: 'face', dir: lead ? 1 : -1 },
       S(1, lead ? { max: 70, say: 'waiting for a hand with the glass', timeout: () => { soloAfterTimeout(a, pair); } } : null),
-      D(a, 'lift', 0.9, { carry, say: 'lifting a pane of glass off the rack', dur: 0.9, then: lead ? () => use('glass') : null }),
+      D(a, 'lift', 0.9, { carry, say: staged ? 'lifting a pane off the stack by the hoist' : 'lifting a pane of glass off the rack', dur: 0.9, then: lead ? () => { if (staged) glassStage.n = Math.max(0, glassStage.n - 1); else use('glass'); } : null }),
     ];
     const h = pair.up && B().hoist ? B().hoist() : null;
     if (h) {
@@ -598,8 +602,8 @@ export function createCrew(K) {
     a.plan = chGlazeSolo(a, pair.j, false);
   }
   function chGlazeSolo(a, j, waitForMate) {
-    const wh = where(j.level), rack = wspot('staging', 'drop2');
-    const out = [go(rack[0] - 3 + spread(a) * 0.4, rack[1] + 6, 'ground', 'heading to the glass rack'), { k: 'face', dir: 1 }];
+    const wh = where(j.level), staged = glassSource(j), rack = staged || wspot('staging', 'drop2');
+    const out = [go(rack[0] - 3 + spread(a) * 0.4, rack[1] + 6, 'ground', staged ? 'heading to the glass stack by the hoist' : 'heading to the glass rack'), { k: 'face', dir: 1 }];
     if (waitForMate) {
       const p = { lead: a, j, open: true, until: K.t + 90, mate: null, build: null };
       pendingPairs.push(p);
@@ -610,7 +614,7 @@ export function createCrew(K) {
           if (p.mate && p.build) a.plan = p.build();
         }));
     }
-    out.push(D(a, 'lift', 1, { carry: 'pane', say: j.part === 'storefront' ? 'lifting a storefront frame off the rack' : 'lifting a pane of glass off the rack', then: () => use('glass') }),
+    out.push(D(a, 'lift', 1, { carry: 'pane', say: j.part === 'storefront' ? 'lifting a storefront frame off the rack' : 'lifting a pane of glass off the rack', then: () => { if (staged && glassStage.n > 0) glassStage.n--; else use('glass'); } }),
       ...(hoistRun(a, j, 'pane', 'pane', 'carrying the pane to the hoist') || []),
       mark('pane'),
       ...toJob(a, j, 'carrying the pane over carefully'),
@@ -1274,6 +1278,15 @@ export function createCrew(K) {
       return;
     }
     if (!mounted) { a.plan.push(...mountSteps()); return; }
+    const gs = glassStageAt(), part = stage().part;
+    if (gs && (part === 'glaze' || part === 'storefront') && glassStage.n < 2 && pileOf('glass') > 0) {
+      a.plan.push({ k: 'fdrive', to: () => pileTarget('glass', fork.x), say: 'fetching a crate of glass for the hoist' }, { k: 'flift', to: 2.5 },
+        call(() => { fork.load = 'glass'; use('glass'); }), { k: 'flift', to: 1 },
+        { k: 'fdrive', to: [gs[0] + 11, GROUND_Y + 34, -1], say: 'staging glass by the hoist' }, { k: 'flift', to: 0 },
+        call(() => { fork.load = null; glassStage.n = Math.min(4, glassStage.n + 3); }),
+        { k: 'fdrive', to: [PARK_FORK[0], PARK_FORK[1], -1] });
+      return;
+    }
     if (Math.hypot(fork.x - PARK_FORK[0], fork.y - PARK_FORK[1]) > 1) { a.plan.push({ k: 'fdrive', to: [PARK_FORK[0], PARK_FORK[1], -1], say: 'parking the forklift' }); return; }
     fork.shuttleT -= 4;
     if (fork.shuttleT <= 0 && anyoneWorking()) {
@@ -1468,6 +1481,12 @@ export function createCrew(K) {
     crane.queue.splice(crane.queue.indexOf(r), 1); crane.queue.unshift(r);
     r.onSet = () => K.emit('crew:topbeam', { x: r.to[0], y: r.to[1] });
   });
+
+  /* the yard hand: drives the forklift, spots the trucks (no name tag) */
+  const yard = make('npc:yard', false, true);
+  yard.colors = colorsFor('npc:yard', { hat: 'white', vest: 'orange' });
+  agents.set(yard.id, yard);
+  mount(yard, fork);
 
   /* ============================================================ the foreman */
   const foreman = { phase: 'in', t: 0, x: spot('office', 'door')[0], y: spot('office', 'door')[1] };
@@ -1755,6 +1774,8 @@ export function createCrew(K) {
     }
     for (let i = 0; i < hoist.landing.length && i < 3; i++) K.art.prop(ctx, hoistProp(hoist.landing[i].load), x - i * 1.6, hoist.top - 1 - i * 0.4, hoistLoadO);
   }
+  const glassO = { kind: 'glass', n: 2 };
+  const glassItem = { y: 0, draw: (ctx) => { const gs = glassStageAt(); if (!gs) return; glassO.n = Math.min(4, glassStage.n + 1); K.art.prop(ctx, 'pallet', gs[0], gs[1], glassO); } };
   const hoistProp = (l) => (l === 'panel' || l === 'pane' || l === 'bricks' ? l : 'beam');
   /* yard equipment: sawhorses, trestles, the mortar mixer */
   function buildStatics() {
@@ -1781,6 +1802,7 @@ export function createCrew(K) {
     if (barrow.at) { barrowItem.y = barrow.at[1]; if (inView(barrow.at[0])) list.push(barrowItem); }
     if (stage().phase === 'finish' && inView(SAPLINGS[1][0])) list.push(saplingItem);
     list.push(craneItem);
+    if (glassStage.n > 0) { const gs = glassStageAt(); if (gs && inView(gs[0])) { glassItem.y = gs[1]; list.push(glassItem); } }
     if (hoist.req || hoist.landing.length) { hoistItem.y = hoist.landing.length ? hoist.top : GROUND_Y - 0.2; list.push(hoistItem); }
     for (const a of agents.values()) {
       if (a.gone || a.vehicle) continue;
@@ -1982,13 +2004,21 @@ export function createCrew(K) {
     }),
     crane: () => ({ x: crane.x, y: crane.jib, hookY: crane.hy, load: crane.load, phase: crane.cur ? crane.cur.state : 'idle' }),
     /* tests and the preview: run one job's chain on a builder now (job as from building.jobs()) */
-    testJob(id, job) {
+    testJob(id, job, mateId) {
       const a = agents.get(id);
       if (!a || !job || a.npc) return false;
       abort(a);
       const st = stage();
       a.job = Object.assign({ crew: 1, level: 'ground', y: GROUND_Y + 6, label: job.kind }, job, { stage: st.phase + ':' + st.floor });
       a.role = 'lead'; a.doing = 'job';
+      const m = mateId ? agents.get(mateId) : null;
+      if (m && a.job.crew > 1) {
+        abort(m);
+        const pair = newPair(a, m, a.job);
+        m.doing = 'job'; m.plan.push(...prefix(m, null), ...pairChain(m, pair, false));
+        a.plan.push(...prefix(a, a.job), ...pairChain(a, pair, true));
+        return true;
+      }
       a.plan.push(...prefix(a, a.job), ...chainFor(a, a.job));
       return true;
     },
