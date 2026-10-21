@@ -1,55 +1,45 @@
 {
- "updated": "2026-10-21T10:36:48+00:00",
+ "updated": "2026-10-21T14:39:28+00:00",
  "sections_updated": {
-  "now": "2026-10-21T10:36:48+00:00",
-  "forecast": "2026-10-21T10:36:48+00:00",
-  "hourly": "2026-10-21T10:36:48+00:00",
-  "alerts": "2026-10-21T10:36:48+00:00",
-  "afd": "2026-10-21T10:36:48+00:00",
-  "lake_forecast": "2026-10-21T10:36:48+00:00",
-  "lake_gage": "2026-10-21T10:36:48+00:00",
-  "air": "2026-10-21T10:36:48+00:00",
-  "sun": "2026-10-21T10:36:48+00:00",
-  "models": "2026-10-21T10:36:48+00:00"
+  "now": "2026-10-21T14:39:28+00:00",
+  "forecast": "2026-10-21T14:39:28+00:00",
+  "hourly": "2026-10-21T14:39:28+00:00",
+  "alerts": "2026-10-21T14:39:28+00:00",
+  "afd": "2026-10-21T14:39:28+00:00",
+  "lake_forecast": "2026-10-21T14:39:28+00:00",
+  "lake_gage": "2026-10-21T14:39:28+00:00",
+  "air": "2026-10-21T14:39:28+00:00",
+  "sun": "2026-10-21T14:39:28+00:00",
+  "models": "2026-10-21T14:39:28+00:00"
  },
  "now": {
-  "observed_at": "2026-10-21T10:20:00+00:00",
+  "observed_at": "2026-10-21T14:25:00+00:00",
   "station": "KBTV",
   "description": "Clear",
-  "temp_f": 32,
-  "feels_like_f": 29,
-  "humidity": 86,
-  "dewpoint_f": 28,
-  "wind_mph": 3,
+  "temp_f": 45,
+  "feels_like_f": 45,
+  "humidity": 76,
+  "dewpoint_f": 37,
+  "wind_mph": 0,
   "wind_gust_mph": null,
-  "wind_dir": "ENE",
+  "wind_dir": "N",
   "precip_last_hr_in": null
  },
  "forecast": {
   "updated": "2026-10-21T06:19:18+00:00",
   "periods": [
    {
-    "name": "Overnight",
-    "start": "2026-10-21T03:00:00-04:00",
-    "is_day": false,
-    "temp_f": 35,
-    "pop": 0,
-    "wind": "N 3 mph",
-    "short": "Mostly Clear",
-    "detailed": "Mostly clear, with a low around 35. North wind around 3 mph."
-   },
-   {
-    "name": "Wednesday",
-    "start": "2026-10-21T06:00:00-04:00",
+    "name": "Today",
+    "start": "2026-10-21T10:00:00-04:00",
     "is_day": true,
     "temp_f": 58,
     "pop": 0,
-    "wind": "N 2 to 6 mph",
+    "wind": "NW 6 mph",
     "short": "Sunny",
-    "detailed": "Sunny, with a high near 58. North wind 2 to 6 mph."
+    "detailed": "Sunny, with a high near 58. Northwest wind around 6 mph."
    },
    {
-    "name": "Wednesday Night",
+    "name": "Tonight",
     "start": "2026-10-21T18:00:00-04:00",
     "is_day": false,
     "temp_f": 35,
@@ -167,68 +157,22 @@
     "wind": "N 9 mph",
     "short": "Slight Chance Rain Showers",
     "detailed": "A slight chance of rain showers after 8am. Partly sunny, with a high near 50. North wind around 9 mph."
+   },
+   {
+    "name": "Tuesday Night",
+    "start": "2026-10-27T18:00:00-04:00",
+    "is_day": false,
+    "temp_f": 33,
+    "pop": 16,
+    "wind": "N 3 to 8 mph",
+    "short": "Slight Chance Rain Showers then Mostly Cloudy",
+    "detailed": "A slight chance of rain showers before 8pm. Mostly cloudy, with a low around 33. North wind 3 to 8 mph."
    }
   ]
  },
  "hourly": {
   "updated": "2026-10-21T06:19:18+00:00",
   "hours": [
-   {
-    "t": "2026-10-21T06:00:00-04:00",
-    "temp_f": 35,
-    "feels_f": 35,
-    "pop": 0,
-    "humidity": 96,
-    "wind_mph": 2,
-    "wind_dir": "N",
-    "sky": 6,
-    "short": "Sunny",
-    "qpf_in": 0.0,
-    "snow_in": 0.0,
-    "gust_mph": 5
-   },
-   {
-    "t": "2026-10-21T07:00:00-04:00",
-    "temp_f": 35,
-    "feels_f": 35,
-    "pop": 0,
-    "humidity": 96,
-    "wind_mph": 2,
-    "wind_dir": "N",
-    "sky": 6,
-    "short": "Sunny",
-    "qpf_in": 0.0,
-    "snow_in": 0.0,
-    "gust_mph": 5
-   },
-   {
-    "t": "2026-10-21T08:00:00-04:00",
-    "temp_f": 38,
-    "feels_f": 38,
-    "pop": 0,
-    "humidity": 85,
-    "wind_mph": 2,
-    "wind_dir": "N",
-    "sky": 6,
-    "short": "Sunny",
-    "qpf_in": 0.0,
-    "snow_in": 0.0,
-    "gust_mph": 3
-   },
-   {
-    "t": "2026-10-21T09:00:00-04:00",
-    "temp_f": 42,
-    "feels_f": 42,
-    "pop": 0,
-    "humidity": 76,
-    "wind_mph": 2,
-    "wind_dir": "N",
-    "sky": 15,
-    "short": "Sunny",
-    "qpf_in": 0.0,
-    "snow_in": 0.0,
-    "gust_mph": 3
-   },
    {
     "t": "2026-10-21T10:00:00-04:00",
     "temp_f": 46,
@@ -676,6 +620,62 @@
     "qpf_in": 0.0,
     "snow_in": 0.0,
     "gust_mph": 28
+   },
+   {
+    "t": "2026-10-22T18:00:00-04:00",
+    "temp_f": 50,
+    "feels_f": 45,
+    "pop": 0,
+    "humidity": 61,
+    "wind_mph": 14,
+    "wind_dir": "N",
+    "sky": 20,
+    "short": "Mostly Clear",
+    "qpf_in": 0.0,
+    "snow_in": 0.0,
+    "gust_mph": 25
+   },
+   {
+    "t": "2026-10-22T19:00:00-04:00",
+    "temp_f": 47,
+    "feels_f": 41,
+    "pop": 0,
+    "humidity": 68,
+    "wind_mph": 15,
+    "wind_dir": "N",
+    "sky": 12,
+    "short": "Mostly Clear",
+    "qpf_in": 0.0,
+    "snow_in": 0.0,
+    "gust_mph": 29
+   },
+   {
+    "t": "2026-10-22T20:00:00-04:00",
+    "temp_f": 45,
+    "feels_f": 39,
+    "pop": 0,
+    "humidity": 73,
+    "wind_mph": 14,
+    "wind_dir": "N",
+    "sky": 9,
+    "short": "Mostly Clear",
+    "qpf_in": 0.0,
+    "snow_in": 0.0,
+    "gust_mph": 28
+   },
+   {
+    "t": "2026-10-22T21:00:00-04:00",
+    "temp_f": 44,
+    "feels_f": 37,
+    "pop": 0,
+    "humidity": 73,
+    "wind_mph": 14,
+    "wind_dir": "N",
+    "sky": 14,
+    "short": "Mostly Clear",
+    "qpf_in": 0.0,
+    "snow_in": 0.0,
+    "gust_mph": 26
    }
   ],
   "days": [
@@ -710,13 +710,13 @@
   "active": []
  },
  "afd": {
-  "issued": "2026-10-21T06:50:00+00:00",
+  "issued": "2026-10-21T11:29:00+00:00",
   "key_messages": [
    "High pressure continues through Friday with increasing fire weather concerns on Thursday into Friday with slightly stronger winds and low humidity values.",
    "Quiet weather continues into early next week with a cooling temperature trend."
   ],
   "what_changed": "As of 248 AM EDT Wednesday... No significant changes made.",
-  "raw": "\n000\nFXUS61 KBTV 210650\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n250 AM EDT Wed Oct 21 2026\n\n.WHAT HAS CHANGED...\nAs of 248 AM EDT Wednesday...\n\nNo significant changes made.\n\n&&\n\n.KEY MESSAGES...\nAs of 248 AM EDT Wednesday...\n\n1. High pressure continues through Friday with increasing fire \nweather concerns on Thursday into Friday with slightly stronger \nwinds and low humidity values. \n\n2. Quiet weather continues into early next week with a cooling \ntemperature trend. \n\n&&\n\n.DISCUSSION...\nAs of 248 AM EDT Wednesday...\n\nKEY MESSAGE 1: GOES-19 mid level water vapor imagery shows deep dry \nlayer overhead associated with mid/upper lvl ridge, while closed \ncyclonic circulations lingers off the mid Atlantic Coast. As sfc low \npres moves slowly northward the pres gradient btwn low and high pres \nincreases late Thurs into Friday, for a period of elevated winds. In \naddition, this wl help push a weak cold acrs our cwa on Thurs aftn, \nwith slightly cooler temps on Friday. \n\nProgged 925mb temps range btwn 8-10C this aftn, combined with plenty \nof sunshine supports highs mid 50s to lower 60s, very similar to \nTuesday. Lows tonight wl be highly depend on elevation as a sharp \nllvl thermal inversion develops with poor rh recoveries possible \nacrs the mid-upper elevations within this thermal belt. Lows wl \nrange from the mid 20s to mid/upper 30s with a sharp humidity range \nfrom excellent recoveries in the valleys to poor acrs the ridges. As \nthe boundary approaches on Thurs, did note a slight increase in \n925mb to 850mb moisture, along with a strengthening low level jet of \n20 to 35 knots. Strongest winds appear to occur btwn 00z and 12z \nFriday, when mixing profiles are less favorable, but expect \nlocalized gusty winds on ridges and Lake Champlain. Once again with \ndeveloping winds poor rh recoveries are possible, especially summit \nlvl on Friday morning with a large spread in temps anticipated. \nFriday is the coolest day of the week with highs upper 30s to lower \n50s acrs our region, did utilize the max temp by elevation tool to \nhighlight sharpening gradient btwn warmer valleys and cooler \nsummits. Fire weather concerns increase Thursday aftn into Friday \nwith slightly stronger surface winds, near critically dry humidities \nand recent dry spell resulting in receptive fine fuels, especially \nleaf litter. Winds and humidities look to fall short of red flag \nconditions, but we wl continue to monitor closely in the upcoming \ndays ahead.\n\nKEY MESSAGE 2:  Surface high pressure will remain the dominant feature \nSunday into Monday, leading to a continuation of quiet weather. Late \nMonday into Tuesday, a front will drop south out of Canada, though \nthe frontal passage will once again be largely uneventful.  A few \nisolated light showers or mountain flurries are possible as the \nfront moves through, however lack of deep moisture will be a \nlimiting factor for precipitation potential. Temperatures will trend \ndownward behind the front, dropping to slightly below normal by \nmidweek.\n\n&&\n\n.AVIATION /06Z WEDNESDAY THROUGH SUNDAY/...\nThrough 06Z Thursday...Clear skies and light winds will dominate\nover the next 24 hours with high pressure remaining in control.\nThe one question will be which sites (if any) see fog\ndevelopment this morning. Best window will be between 09Z and \n12Z, though conditions don't look overall super favorable given \nthe dry air mass in place. The highest chances of fog/mist will\nbe at KMSS, and less so at KSLK, where some tempo group for BR \nhave been included in this TAF package. These sites are already \nat or below their crossover temperatures, with low dewpoint \ndepressions as of latest observations. However, despite calm \nwinds at the surface, winds increase just of the deck. This will\nkeep the lower levels somewhat mixed, making it difficult for \nany persistent fog to develop. \n\nOutlook...\n\nThursday: VFR. NO SIG WX.\nThursday Night: VFR. NO SIG WX.\nFriday: VFR. NO SIG WX.\nFriday Night: VFR. NO SIG WX.\nSaturday: VFR. NO SIG WX.\nSaturday Night: VFR. NO SIG WX.\nSunday: VFR. NO SIG WX.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Taber\nDISCUSSION...Taber/Duell\nAVIATION...Duell\n"
+  "raw": "\n000\nFXUS61 KBTV 211129\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n729 AM EDT Wed Oct 21 2026\n\n.WHAT HAS CHANGED...\nAs of 248 AM EDT Wednesday...\n\nNo significant changes made.\n\n&&\n\n.KEY MESSAGES...\nAs of 248 AM EDT Wednesday...\n\n1. High pressure continues through Friday with increasing fire \nweather concerns on Thursday into Friday with slightly stronger \nwinds and low humidity values. \n\n2. Quiet weather continues into early next week with a cooling \ntemperature trend.\n\n&&\n\n.DISCUSSION...\nAs of 248 AM EDT Wednesday...\n\nKEY MESSAGE 1: GOES-19 mid level water vapor imagery shows deep dry \nlayer overhead associated with mid/upper lvl ridge, while closed \ncyclonic circulations lingers off the mid Atlantic Coast. As sfc low \npres moves slowly northward the pres gradient btwn low and high pres \nincreases late Thurs into Friday, for a period of elevated winds. In \naddition, this wl help push a weak cold acrs our cwa on Thurs aftn, \nwith slightly cooler temps on Friday. \n\nProgged 925mb temps range btwn 8-10C this aftn, combined with plenty \nof sunshine supports highs mid 50s to lower 60s, very similar to \nTuesday. Lows tonight wl be highly depend on elevation as a sharp \nllvl thermal inversion develops with poor rh recoveries possible \nacrs the mid-upper elevations within this thermal belt. Lows wl \nrange from the mid 20s to mid/upper 30s with a sharp humidity range \nfrom excellent recoveries in the valleys to poor acrs the ridges. As \nthe boundary approaches on Thurs, did note a slight increase in \n925mb to 850mb moisture, along with a strengthening low level jet of \n20 to 35 knots. Strongest winds appear to occur btwn 00z and 12z \nFriday, when mixing profiles are less favorable, but expect \nlocalized gusty winds on ridges and Lake Champlain. Once again with \ndeveloping winds poor rh recoveries are possible, especially summit \nlvl on Friday morning with a large spread in temps anticipated. \nFriday is the coolest day of the week with highs upper 30s to lower \n50s acrs our region, did utilize the max temp by elevation tool to \nhighlight sharpening gradient btwn warmer valleys and cooler \nsummits. Fire weather concerns increase Thursday aftn into Friday \nwith slightly stronger surface winds, near critically dry humidities \nand recent dry spell resulting in receptive fine fuels, especially \nleaf litter. Winds and humidities look to fall short of red flag \nconditions, but we wl continue to monitor closely in the upcoming \ndays ahead.\n\nKEY MESSAGE 2:  Surface high pressure will remain the dominant feature \nSunday into Monday, leading to a continuation of quiet weather. Late \nMonday into Tuesday, a front will drop south out of Canada, though \nthe frontal passage will once again be largely uneventful.  A few \nisolated light showers or mountain flurries are possible as the \nfront moves through, however lack of deep moisture will be a \nlimiting factor for precipitation potential. Temperatures will trend \ndownward behind the front, dropping to slightly below normal by \nmidweek.\n\n&&\n\n.AVIATION /12Z WEDNESDAY THROUGH SUNDAY/...\nThrough 12Z Thursday...Clear skies and light surface winds will\ndominate over the next 24 hours with high pressure remaining in\ncontrol. While fog tonight cannot be completely ruled out, \nchances are very low given continued dry air mass in place and \nsome increasing winds just off the surface between 06Z and 12Z \nThursday. \n\n\nOutlook...\n\nThursday: VFR. NO SIG WX.\nThursday Night: VFR. NO SIG WX.\nFriday: VFR. NO SIG WX.\nFriday Night: VFR. NO SIG WX.\nSaturday: VFR. NO SIG WX.\nSaturday Night: VFR. NO SIG WX.\nSunday: VFR. NO SIG WX.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Taber\nDISCUSSION...Duell/Taber\nAVIATION...Duell\n"
  },
  "lake_forecast": {
   "issued": "2026-10-21T06:20:00+00:00",
@@ -961,17 +961,17 @@
  },
  "lake_gage": {
   "water_temp_f": 55,
-  "water_temp_at": "2026-10-21T06:00:00.000-04:00",
+  "water_temp_at": "2026-10-21T10:00:00.000-04:00",
   "level_ft": 94.09,
-  "level_at": "2026-10-21T06:00:00.000-04:00",
+  "level_at": "2026-10-21T10:00:00.000-04:00",
   "level_status": "normal"
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 24,
+  "aqi": 27,
   "category": "Good",
   "pollutant": "OZONE",
-  "observed": "10/21/26 6:00",
+  "observed": "10/21/26 10:00",
   "discussion": "On Wednesday, October 21st, expect generally good air quality across Vermont."
  },
  "sun": {
@@ -986,8 +986,8 @@
    {
     "date": "2026-10-21",
     "high_f": {
-     "GFS": 54,
-     "Euro": 54,
+     "GFS": 55,
+     "Euro": 53,
      "ICON": 56
     },
     "pop_max": {
@@ -1000,18 +1000,18 @@
      "Euro": 0.0,
      "ICON": 0.0
     },
-    "high_spread_f": 2
+    "high_spread_f": 3
    },
    {
     "date": "2026-10-22",
     "high_f": {
-     "GFS": 49,
-     "Euro": 54,
+     "GFS": 50,
+     "Euro": 53,
      "ICON": 56
     },
     "pop_max": {
-     "GFS": 1,
-     "Euro": 4,
+     "GFS": 2,
+     "Euro": 0,
      "ICON": 0
     },
     "precip_in": {
@@ -1019,7 +1019,7 @@
      "Euro": 0.0,
      "ICON": 0.0
     },
-    "high_spread_f": 7
+    "high_spread_f": 6
    },
    {
     "date": "2026-10-23",
@@ -1044,26 +1044,26 @@
  },
  "brief": {
   "date": "2026-10-21",
-  "generated": "2026-10-21T10:36:51+00:00",
+  "generated": "2026-10-21T14:39:32+00:00",
   "text": "Sunny today, high 58. Mostly clear tonight, low 35. Thursday, mostly sunny, high 55.",
   "periods": [
    {
     "label": "Today",
-    "name": "Wednesday",
+    "name": "Today",
     "is_day": true,
     "temp_f": 58,
     "sky": "sunny",
-    "start": "2026-10-21T06:00:00-04:00",
+    "start": "2026-10-21T10:00:00-04:00",
     "end": "2026-10-21T18:00:00-04:00",
     "precip": null,
     "wind": null,
-    "feels_lo": 35,
+    "feels_lo": 45,
     "feels_hi": 58,
     "text": "Sunny today, high 58."
    },
    {
     "label": "Tonight",
-    "name": "Wednesday Night",
+    "name": "Tonight",
     "is_day": false,
     "temp_f": 35,
     "sky": "mostly clear",
