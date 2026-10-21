@@ -151,7 +151,7 @@ export function createCrew(K) {
     const dx = opt.dx != null ? opt.dx : (a.seed % 5) - 2;
     return [
       go(at[0] + dx, at[1] + 4 + (a.seed % 3), 'ground', opt.walkSay || say),
-      W(() => pileOf(kind) > 0, { pose: 'look', max: 8, say: 'waiting on a ' + kind + ' delivery', start: () => { if (pileOf(kind) <= 0) order(kind); } }),
+      W(() => pileOf(kind) > 0, { pose: 'look', max: 8, lateSay: 'waiting on a ' + kind + ' delivery', start: () => { if (pileOf(kind) <= 0) order(kind); } }),
       D(a, opt.pose || 'bend', opt.dur || 1, { say, then: () => use(kind) }),
       D(a, 'lift', 0.55, { carry }),
     ];
@@ -447,7 +447,8 @@ export function createCrew(K) {
     const mate = findMate(a);
     if (!mate) return chGlazeSolo(a, j, true);
     const pair = newPair(a, mate, j);
-    mate.plan = glazeChain(mate, pair, false); mate.act = null; mate.held = null; mate.doing = 'job';
+    mate.plan = []; mate.act = null; mate.held = null; mate.doing = 'job';
+    mate.plan.push(...prefix(mate, null), ...glazeChain(mate, pair, false));
     if (HEAVY[mate.carry] || mate.carry === 'mug') mate.carry = null;
     return glazeChain(a, pair, true);
   }
@@ -768,9 +769,9 @@ export function createCrew(K) {
     if (a.level !== 'ground') out.push(go(ladderX(), null, 'ground', 'climbing down the stair tower'));
     out.push(D(a, 'bend', 0.6, { carry: null, held: null, say: 'putting the tools down' }),
       D(a, 'stand', 1, { face: 0, hat: false, carry: 'hat', say: 'knocking off for the day' }));
-    const side = !a.me && a.x > 500;
+    const side = a.x > (ZONES.gate.spots.in[0] + ZONES.sidegate.spots.in[0]) / 2;
     const g = side ? ZONES.sidegate.spots : ZONES.gate.spots;
-    out.push(go(g.in[0], g.in[1], 'ground', 'heading out the gate'), D(a, 'wave', 1.3, { face: 0, say: 'waving goodnight' }),
+    out.push(go(g.in[0], g.in[1], 'ground', side ? 'heading out the side gate' : 'heading out the gate'), D(a, 'wave', 1.3, { face: 0, say: 'waving goodnight' }),
       { k: 'walk', x: g.out[0], y: g.out[1], say: 'heading home along Lakeside Ave' }, { k: 'walk', x: side ? 980 : -70, y: g.out[1] }, { k: 'gone' });
     return out;
   }
@@ -919,6 +920,7 @@ export function createCrew(K) {
         if (a.actT >= x.dur) { a.act = null; if (x.then) x.then(a); }
         break;
       case 'wait':
+        if (x.lateSay && a.actT > 0.4) a.say = x.lateSay;
         setPose(a, !x.pose || x.pose === 'stand' ? (a.actT % 6 > 5.1 ? 'look' : 'stand') : x.pose);
         if (x.face != null) a.facing = x.face;
         if (x.until(a)) { a.act = null; if (x.then) x.then(a); }
@@ -1048,7 +1050,7 @@ export function createCrew(K) {
       case 'arrive': if (follow(truck, dt)) { truck.state = 'waitSpot'; truck.waitT = 0; } break;
       case 'waitSpot':
         truck.waitT += dt;
-        if (spotterReady('truck') || truck.waitT > 9) { truck.state = 'backIn'; truck.route = [{ x: 66, y: 501, rev: true, speed: 6 }, { x: 100, y: 487, rev: true, speed: 6 }, { x: 128, y: 478, rev: true, speed: 5 }]; }
+        if (spotterReady('truck') || truck.waitT > 9) { truck.state = 'backIn'; truck.route = [{ x: 66, y: 501, rev: true, speed: 8 }, { x: 100, y: 487, rev: true, speed: 8 }, { x: 128, y: 478, rev: true, speed: 6 }]; }
         break;
       case 'backIn': if (follow(truck, dt)) { truck.state = 'parked'; truck.t = 0; } break;
       case 'parked':
@@ -1654,7 +1656,7 @@ export function createCrew(K) {
   }
   const taskOk = (t) => SITE_TASKS.includes(t);
 
-  return {
+  const api = {
     setCrew(list) {
       const seen = new Set();
       for (const p of list) {
@@ -1735,6 +1737,17 @@ export function createCrew(K) {
       pending: pendingPairs.length,
     }),
     crane: () => ({ x: crane.x, y: crane.jib, hookY: crane.hy, load: crane.load, phase: crane.cur ? crane.cur.state : 'idle' }),
+    /* tests and the preview: run one job's chain on a builder now (job as from building.jobs()) */
+    testJob(id, job) {
+      const a = agents.get(id);
+      if (!a || !job || a.npc) return false;
+      abort(a);
+      const st = stage();
+      a.job = Object.assign({ crew: 1, level: 'ground', y: GROUND_Y + 6, label: job.kind }, job, { stage: st.phase + ':' + st.floor });
+      a.role = 'lead'; a.doing = 'job';
+      a.plan.push(...prefix(a, a.job), ...chainFor(a, a.job));
+      return true;
+    },
     idle: () => {
       const out = [];
       for (const a of agents.values()) if (!a.me && free(a)) out.push(a.id);
@@ -1762,4 +1775,7 @@ export function createCrew(K) {
       return true;
     },
   };
+  /* tests opt in with window.__buildSiteDebug = true before load */
+  if (typeof window !== 'undefined' && window.__buildSiteDebug) { window.__buildCrew = api; window.__buildK = K; }
+  return api;
 }
