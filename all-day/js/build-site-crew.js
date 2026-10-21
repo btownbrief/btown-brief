@@ -48,28 +48,34 @@
    and the forklift (driven by the yard hand, a figure with no name tag), the
    excavator. */
 
-import { GROUND_Y, YARD_FRONT, ZONES, BUILDING, BAYS, EMIT, SITE_TASKS, colorsFor, hash, rng, clamp, lerp } from './build-site-shared.js';
+import { GROUND_Y, ZONES, BUILDING, BAYS, EMIT, SITE_TASKS, colorsFor, hash, rng, clamp, lerp } from './build-site-shared.js';
 import * as ART from './build-site-art.js';
 
-const WALK = 11.5, CLIMB = 8;
+const WALK = 11.5, CLIMB = 8, LADDER_GAP = 14;   // a climber keeps a body and a name tag's length behind the one ahead
 const ORD = ['', '1st', '2nd', '3rd', '4th', '5th', '6th', '7th', '8th', '9th', '10th', '11th', '12th'];
 const spot = (z, s) => ZONES[z].spots[s];
 /* where each material is kept (the world's piles) */
-const PILE_AT = { lumber: ['lumber', 'rack'], brick: ['masonry', 'bricks'], glass: ['staging', 'drop2'], copper: ['tools', 'shed'],
-  nails: ['tools', 'shed'], stakes: ['tools', 'shed'], rebar: ['staging', 'drop'] };
-const NEED_PILE = { beam: 'lumber', panel: 'lumber', formwork: 'lumber', bricks: 'brick', pane: 'glass', spool: 'copper', rebar: 'rebar', stakes: 'stakes' };
+const PILE_AT = { lumber: ['lumber', 'rack'], panels: ['lumber', 'panels'], brick: ['masonry', 'bricks'], glass: ['staging', 'drop2'], copper: ['tools', 'spools'],
+  nails: ['staging', 'nails'], stakes: ['tools', 'stakes'], rebar: ['staging', 'drop'] };
+const NEED_PILE = { beam: 'lumber', panel: 'panels', formwork: 'lumber', bricks: 'brick', pane: 'glass', spool: 'copper', rebar: 'rebar', stakes: 'stakes' };
+const NEED_CARRY = { beam: 'beam', panel: 'panel', formwork: 'beam', bricks: 'bricks', pane: 'pane', spool: 'spool', rebar: 'rebar', stakes: 'stakes', shovel: 'shovel' };
 /* tools a builder keeps between jobs of the same kind, and where they go back */
-const TOOL_HOME = { shovel: ['tools', 'shed'], spool: ['tools', 'shed'], toolbox: ['tools', 'shed'], clipboard: ['office', 'step'] };
+const TOOL_HOME = { shovel: ['tools', 'shed'], spool: ['tools', 'spools'], toolbox: ['tools', 'shed'], clipboard: ['office', 'step'], mallet: ['tools', 'stakes'], bucket: ['tools', 'shed'] };
 const PLACE = { lumber: 'the lumber yard', masonry: 'the brick yard', staging: 'the staging area', tools: 'the toolshed' };
 const HEAVY = { beam: 1, panel: 1, barrow: 1, rebar: 1, paneL: 1, paneR: 1, pane: 1, bricks: 1 };
 /* task preference -> job kinds they reach for first */
-const PREF = { frame: ['frame', 'deck', 'form', 'stake'], brick: ['brick', 'pour', 'dig'], wire: ['wire', 'rebar'], window: ['glaze', 'clad'],
-  roof: ['solar', 'deck', 'frame', 'clad'], haul: ['rebar', 'brick', 'dig', 'plant'], lunch: [] };
+const PREF = { frame: ['post', 'beam', 'deck', 'stud', 'form', 'stake', 'canopy', 'frame'], brick: ['brick', 'pour', 'column', 'dig'],
+  wire: ['wire', 'rebar', 'string'], window: ['glaze', 'storefront', 'clad'], roof: ['solar', 'deck', 'beam', 'clad'],
+  haul: ['rebar', 'dig', 'clear', 'backfill', 'strip', 'tree', 'planter'], lunch: [] };
 const EARLY = { lot: 1, stakes: 1, dig: 1, rebar: 1, pour: 1, cure: 1 };
+const NO_CRANE = { lot: 1, stakes: 1, dig: 1, rebar: 1, pour: 1 };   // the tower crane goes up during cure
+const FACE_YOU = { look: 1, cheer: 1, wave: 1, sitbeam: 1 };
+/* names art may not draw yet, and what to show meanwhile (dropped when art exports POSES_DRAWN / CARRY_DRAWN) */
+const POSE_FALLBACK = {};      // art draws jackhammer, ride, rustPanel, solar and mallet now
+const CARRY_FALLBACK = {};
 const SIT = { sit: 1, sitbeam: 1, kneel: 1, crouch: 1 };
 const FOREMAN_COLORS = { hat: '#f4f1e8', vest: '#ff8a2a', skin: '#ffdbac', hair: '#8a8a8a' };
 const DRIVER_COLORS = { hat: '#3d7bd9', vest: '#f5e23a', skin: '#c68642', hair: '#1f1a17' };
-const HOIST_X = BUILDING.towerX - 6;
 const CRANE_TIP = 296, CRANE_TAIL = 590;
 const PARK_FORK = [172, 489], PARK_EXC = [596, 490];
 const MIX_Y = GROUND_Y + 24;     // the mixer truck works along the front of the pad
@@ -87,8 +93,7 @@ export function createCrew(K) {
   const levelY = (lv) => B().levelY(lv);
   const ladderX = () => B().ladder().x;
   const hour = () => { const d = K.now(); return d.getHours() + d.getMinutes() / 60; };
-  let frameNo = 0, streetFrame = -1;
-  const street = [];          // things below the fence line this frame (drawn after the street surface)
+  let frameNo = 0;
   const statics = [];         // yard equipment (sawhorses, trestles, the mortar mixer)
 
   /* ================================================================ agents */
@@ -110,7 +115,8 @@ export function createCrew(K) {
     if (level === 'ground' || level == null) { const p = stage().phase; return p === 'frame' ? 'the ground floor' : p === 'finish' ? 'the street' : 'the lot'; }
     return level >= floorsN() ? 'the roof' : 'the ' + ORD[level + 1] + ' floor';
   }
-  function workLevel() { const s = stage(); return s.phase === 'frame' && s.floor > 0 ? s.floor : s.phase === 'finish' ? floorsN() : 'ground'; }
+  const scaffoldUp = () => { const L = B().ladder ? B().ladder() : null; return !!L && L.top < levelY('ground') - 0.5; };
+  function workLevel() { const s = stage(); if (!scaffoldUp()) return 'ground'; return s.phase === 'frame' && s.floor > 0 ? s.floor : s.phase === 'finish' ? floorsN() : 'ground'; }
 
   /* ---------------------------------------------------- action builders */
   const go = (x, y, level, say) => ({ k: 'goto', x, y, level: level == null ? 'ground' : level, say });
@@ -147,18 +153,25 @@ export function createCrew(K) {
     if (uses[kind] % 3 === 0 && K.world.take) K.world.take(kind);
     if (pileOf(kind) <= 1) order(kind);
   }
+  const wspot = (z, s) => (K.world.spot ? K.world.spot(z, s) : spot(z, s));
   /* pick up material at its pile: wait a little if it's empty (a truck is on the way) */
   function fetch(a, need, carry, say, opt = {}) {
     const kind = NEED_PILE[need] || need;
-    const at = opt.at || (PILE_AT[kind] ? spot(...PILE_AT[kind]) : spot('staging', 'drop'));
-    const zone = opt.at ? 'the prefab shed' : PLACE[(PILE_AT[kind] || ['staging'])[0]];
+    const pa = PILE_AT[kind] || ['staging', 'drop'];
+    const at = opt.at || wspot(pa[0], pa[1]);
+    const zone = opt.place || PLACE[pa[0]] || 'the yard';
     const dx = opt.dx != null ? opt.dx : spread(a);
     return [
-      go(at[0] + dx, at[1] + 3 + ((a.seed >>> 6) % 4) * 1.6, 'ground', opt.walkSay || 'heading to ' + zone),
+      go(at[0] + dx, at[1] + 3.5 + ((a.seed >>> 6) % 4) * 1.6, 'ground', opt.walkSay || 'heading to ' + zone),
       W(() => pileOf(kind) > 0, { pose: 'look', max: 8, lateSay: 'waiting on a ' + kind + ' delivery', start: () => { if (pileOf(kind) <= 0) order(kind); } }),
       D(a, opt.pose || 'bend', opt.dur || 1, { say, then: () => use(kind) }),
       D(a, 'lift', 0.55, { carry }),
     ];
+  }
+  function toolFrom(a, tool, say) {
+    if (a.carry === tool) return [];
+    const h = TOOL_HOME[tool] ? wspot(...TOOL_HOME[tool]) : wspot('tools', 'shed');
+    return [go(h[0] - 3 + spread(a) * 0.5, h[1] + 4, 'ground', say || 'getting a ' + tool + ' from the toolshed'), D(a, 'bend', 0.8), D(a, 'lift', 0.4, { carry: tool })];
   }
 
   /* ----------------------------------------------- shared yard equipment */
@@ -170,102 +183,155 @@ export function createCrew(K) {
     u[i] = a.id; return stations[name][i];
   }
   function freeStations(a) { for (const n in stationUse) { const u = stationUse[n]; for (let i = 0; i < u.length; i++) if (u[i] === a.id) u[i] = null; } }
-  /* the wheelbarrow: parked at `at` (home, by the tower, beside a job), or null while someone pushes it */
+  /* the wheelbarrow: parked at `at` (home, by the hoist, beside a job), or null while someone pushes it */
   const barrow = { home: spot('masonry', 'barrow'), at: spot('masonry', 'barrow'), user: null, load: null };
   const barrowPos = () => barrow.at || barrow.home;
   const mixer = { spinUntil: 0, t: 0, truck: null };
+  /* glass the forklift stages by the hoist while windows go in upstairs (the glass rack is clear across the yard) */
+  const glassStage = { n: 0 };
+  const glassStageAt = () => { const h = B().hoist && B().hoist(); return h ? [h.x - 17, GROUND_Y + 19] : null; };
+  const glassSource = (j) => (up(j) && glassStage.n > 0 && glassStageAt() ? glassStageAt() : null);
 
   /* ============================================================== CHAINS
-     One per job kind. Each ends in finish(); a 'mark' sits where the
-     material is in hand and the builder heads for the building (a builder
-     placed mid-job on first load starts there). */
+     One per building part (job.part; job.kind when a part is unknown).
+     Each ends in finish(); a 'mark' sits where the material is in hand and
+     the builder heads for the building (a builder placed mid-job on first
+     load starts there). The building draws the piece itself as work() rises,
+     so a carried piece is put down (carry cleared) the moment work starts. */
   function finish(a, j) {
     return call(() => {
       if (a.role !== 'mate') B().complete(j.id);
-      a.job = null; a.role = null; a.held = null; a.workT += 25; freeStations(a);
-      K.emit('crew:done', { id: a.id, job: j.id, kind: j.kind });
+      a.job = null; a.role = null; a.held = null; a.req = null; a.workT += 25; freeStations(a);
+      K.emit('crew:done', { id: a.id, job: j.id, kind: j.kind, part: j.part });
     });
   }
-  function standAt(a, j, off = 4) {
-    const side = ((a.seed ^ hash(j.id)) & 1) ? 1 : -1;
-    return { x: j.x - side * off, face: side };
+  /* where to stand: the job's own feet position (a pair uses job.spots), facing the piece */
+  function standAt(a, j, idx) {
+    let x = j.x, y = j.level === 'ground' ? j.y : null;
+    if (idx != null && j.spots && j.spots[idx]) { x = j.spots[idx][0]; if (j.level === 'ground') y = j.spots[idx][1]; }
+    const ax = j.at ? j.at[0] : j.x;
+    const face = Math.abs(ax - x) > 0.6 ? Math.sign(ax - x) : (((a.seed ^ hash(j.id)) & 1) ? 1 : -1);
+    return { x, y, face };
   }
-  const jobY = (j) => (j.level === 'ground' ? (j.y || GROUND_Y + 6) + 1 : null);
-  function toJob(a, j, say, off) {
-    const s = standAt(a, j, off);
-    return [go(s.x, jobY(j), j.level, say), { k: 'face', dir: s.face }];
+  function toJob(a, j, say, idx) {
+    const s = standAt(a, j, idx);
+    return [go(s.x, s.y, j.level, say), { k: 'face', dir: s.face }];
   }
+  const up = (j) => j.level !== 'ground';
+  /* a material run: load the hoist at the bottom, climb the ladder, take it off at the landing */
+  function hoistRun(a, j, carry, load, say) {
+    const h = B().hoist ? B().hoist() : null;
+    if (!h || !up(j)) return null;
+    const bx = h.x - 5;
+    return [
+      go(bx - 1 + spread(a) * 0.3, GROUND_Y + 6, 'ground', say || 'carrying it to the hoist'), { k: 'face', dir: 1 },
+      W(() => !hoist.req || hoist.req.who === a.id, { pose: 'stand', max: 40, lateSay: 'waiting on the hoist' }),
+      D(a, 'lift', 0.8, { say: 'loading the hoist', start: () => hoistLoad(a, j, load, h), then: () => { a.carry = null; hoistSend(a); } }),
+      go(bx - 2, null, j.level, 'climbing up to ' + where(j.level)), { k: 'face', dir: 1 },
+      W(() => landed(a.id) || !sent(a.id), { pose: 'look', max: 30, lateSay: 'waiting for the hoist' }),
+      D(a, 'lift', 0.8, { carry, say: 'taking it off the hoist', start: () => takeLanded(a.id) }),
+    ];
+  }
+  /* carry something up: by the hoist when there is one, else up the ladder */
+  function carryUp(a, j, carry, load, say) {
+    return hoistRun(a, j, carry, load) || toJobSteps(a, j, say);
+  }
+  const toJobSteps = (a, j, say) => toJob(a, j, say);
 
+  function chClear(a, j) {
+    const d = wspot('tools', 'dumpster');
+    return [
+      ...toolFrom(a, 'shovel'),
+      mark('shovel'),
+      ...toJob(a, j, 'walking out to the old parking lot'),
+      D(a, 'jackhammer', 3.6, { carry: null, work: [0, 0.45], say: j.label || 'breaking up the old asphalt', start: () => { a.dust = 3.6; } }),
+      D(a, 'shovel', 2.8, { work: [0.45, 0.85], say: 'shovelling up the broken asphalt' }),
+      D(a, 'lift', 0.7, { carry: 'bucket', work: [0.85, 1] }),
+      finish(a, j),
+      go(d[0] - 7, d[1] + 3, 'ground', 'hauling old asphalt to the dumpster'), { k: 'face', dir: 1 },
+      D(a, 'throw', 0.9, { carry: null, say: 'tipping it in the dumpster' }),
+    ];
+  }
   function chStake(a, j) {
-    const st = standAt(a, j, 3), y = (j.y || GROUND_Y + 6);
     return [
       ...fetch(a, 'stakes', 'stakes', 'grabbing survey stakes at the toolshed'),
       mark('stakes'),
-      ...toJob(a, j, 'walking the stakes out to the lot', 3),
-      D(a, 'hammer', 2.8, { carry: null, held: { name: 'stake', x: j.x, y }, work: [0, 0.5], say: 'hammering in a survey stake' }),
-      D(a, 'kneel', 2.4, { work: [0.5, 0.8], say: 'running string between the stakes' }),
-      { k: 'walk', x: st.x - st.face * 6, y: y + 2 },
-      { k: 'face', dir: st.face },
-      D(a, 'measure', 1.8, { work: [0.8, 1], say: 'checking the line is straight' }),
+      ...toJob(a, j, 'walking the stakes out to the lot'),
+      D(a, 'hammer', 3, { carry: 'mallet', work: [0, 0.7], say: j.label || 'driving a survey stake' }),
+      D(a, 'measure', 1.8, { carry: null, work: [0.7, 1], say: 'checking the stake is plumb' }),
+      finish(a, j),
+    ];
+  }
+  function chString(a, j) {
+    const ax = j.at ? j.at[0] : j.x, dir = ax >= j.x ? 1 : -1;
+    return [
+      ...toJob(a, j, 'heading out to run a string line'),
+      D(a, 'kneel', 2.2, { carry: null, work: [0, 0.25], say: 'tying a string line to the stake' }),
+      { k: 'walk', x: j.x + dir * 12 },
+      { k: 'face', dir: -dir },
+      D(a, 'pullwire', 2.6, { work: [0.25, 0.7], say: 'pulling the string line tight' }),
+      { k: 'walk', x: j.x + dir * 20 },
+      D(a, 'kneel', 2.2, { work: [0.7, 1], say: 'tying it off at the next stake' }),
       finish(a, j),
     ];
   }
   function chDig(a, j) {
     /* the excavator when it's free (one builder drives it), otherwise a shovel */
-    if (a.vehicle === exc || (exc.state === 'parked' && !exc.driver && !exc.reserved && a.r() < 0.75)) {
+    if (j.part !== 'backfill' && (a.vehicle === exc || (exc.state === 'parked' && !exc.driver && !exc.reserved && a.r() < 0.75))) {
       const out = [];
       if (a.vehicle !== exc) {
         exc.reserved = a.id;
         out.push(go(exc.x + 5, exc.y - 1, 'ground', 'heading over to the excavator'), D(a, 'climb', 0.8, { say: 'climbing into the excavator', then: () => mount(a, exc) }));
       }
       out.push({ k: 'drive', x: j.x + 13, y: GROUND_Y + 23, say: 'driving the excavator over' },
-        { k: 'dig', dur: 9 * a.pace, say: 'digging out the foundation with the excavator' }, finish(a, j));
+        { k: 'dig', dur: 9 * a.pace, say: (j.label || 'digging out a footing') + ' with the excavator' }, finish(a, j));
       return out;
     }
-    const out = [];
-    const sh = spot('tools', 'shed');
-    if (a.carry !== 'shovel') out.push(go(sh[0] - 3, sh[1] + 4, 'ground', 'getting a shovel from the toolshed'), D(a, 'bend', 0.8), D(a, 'lift', 0.4, { carry: 'shovel' }));
-    out.push(mark('shovel'), ...toJob(a, j, 'walking the shovel over to the dig', 5),
-      D(a, 'shovel', 3.2, { carry: null, work: [0, 0.35], say: 'digging out the foundation' }),
+    const bf = j.part === 'backfill';
+    return [
+      ...toolFrom(a, 'shovel'),
+      mark('shovel'),
+      ...toJob(a, j, bf ? 'walking the shovel out front' : 'walking the shovel over to the dig'),
+      D(a, 'shovel', 3.2, { carry: null, work: [0, 0.35], say: j.label || 'digging out the foundation' }),
       D(a, 'stand', 0.9, { emote: 'sweat', emoteDur: 1, say: 'catching their breath' }),
-      D(a, 'shovel', 3, { work: [0.35, 0.7], say: 'digging out the foundation' }),
-      D(a, 'shovel', 2.6, { work: [0.7, 1], say: 'squaring off the trench' }),
-      call(() => { a.carry = 'shovel'; }), finish(a, j));
-    return out;
+      D(a, 'shovel', 3, { work: [0.35, 0.7], say: j.label || 'digging out the foundation' }),
+      D(a, bf ? 'rake' : 'shovel', 2.6, { work: [0.7, 1], say: bf ? 'raking the gravel level' : 'squaring off the trench' }),
+      call(() => { a.carry = 'shovel'; }), finish(a, j),
+    ];
   }
   function chRebar(a, j) {
     return [
-      ...fetch(a, 'rebar', 'rebar', 'picking up a bundle of rebar in the staging area', { walkSay: 'heading to the staging area for rebar' }),
+      ...fetch(a, 'rebar', 'rebar', 'picking up a bundle of rebar in the staging area'),
       mark('rebar'),
       ...toJob(a, j, 'carrying rebar over to the footings'),
-      D(a, 'bend', 0.8, { carry: null, held: { name: 'rebar', x: j.x, y: (j.y || GROUND_Y + 6) - 0.5 }, say: 'laying the bars in the trench' }),
-      D(a, 'kneel', 4, { work: [0, 0.65], say: 'tying rebar for the footings' }),
+      D(a, 'bend', 0.8, { carry: null, work: [0, 0.1], say: 'laying the bars in the footing' }),
+      D(a, 'kneel', 4, { work: [0.1, 0.65], say: j.label || 'tying rebar for the footings' }),
       ...breath(a, 0.25),
-      D(a, 'kneel', 2.6, { work: [0.65, 1], say: 'tying rebar for the footings' }),
+      D(a, 'kneel', 2.6, { work: [0.65, 1], say: j.label || 'tying rebar for the footings' }),
       finish(a, j),
     ];
   }
   function chForm(a, j) {
-    const rk = spot('lumber', 'rack');
-    if (/strip/i.test(j.label || '')) {
-      return [
-        mark(null),
-        ...toJob(a, j, 'heading over to strip the forms'),
-        D(a, 'hammer', 2.6, { work: [0, 0.45], say: 'prying the forms off the new concrete' }),
-        D(a, 'bend', 1.4, { work: [0.45, 0.8], say: 'stacking the form boards' }),
-        D(a, 'lift', 0.8, { carry: 'beam', work: [0.8, 1] }),
-        finish(a, j),
-        go(rk[0] + 4, rk[1] + 5, 'ground', 'carrying form boards back to the lumber yard'),
-        D(a, 'bend', 0.7, { carry: null, say: 'stacking the boards on the rack' }),
-      ];
-    }
     return [
       ...fetch(a, 'formwork', 'beam', 'picking up form boards at the lumber yard'),
       mark('beam'),
       ...toJob(a, j, 'carrying form boards over to the pad'),
-      D(a, 'bend', 0.9, { carry: null, say: 'setting up the forms' }),
-      D(a, 'hammer', 4, { work: [0, 1], say: 'nailing up the forms' }),
+      D(a, 'bend', 0.9, { carry: null, work: [0, 0.15], say: 'standing the forms up' }),
+      D(a, 'hammer', 4, { work: [0.15, 1], say: j.label || 'nailing up the forms' }),
       finish(a, j),
+    ];
+  }
+  function chStrip(a, j) {
+    const rk = wspot('lumber', 'rack');
+    return [
+      mark(null),
+      ...toJob(a, j, 'heading over to strip the forms'),
+      D(a, 'hammer', 2.6, { carry: null, work: [0, 0.45], say: 'prying the forms off the new concrete' }),
+      D(a, 'bend', 1.4, { work: [0.45, 0.85], say: 'stacking the form boards' }),
+      D(a, 'lift', 0.8, { work: [0.85, 1], then: () => { a.carry = 'beam'; } }),
+      finish(a, j),
+      go(rk[0] + 4 + spread(a) * 0.5, rk[1] + 5, 'ground', 'carrying form boards back to the lumber yard'),
+      D(a, 'bend', 0.7, { carry: null, say: 'stacking the boards on the rack' }),
     ];
   }
   function chPour(a, j) {
@@ -277,77 +343,102 @@ export function createCrew(K) {
         W(() => mixer.truck.state === 'onsite' || mixer.truck.state === 'leaving' || mixer.truck.state === 'gone', { pose: 'signal', face: 1, max: 45, say: 'waving the mixer truck in at the side gate' }),
         call(() => { a.spotting = null; }));
     }
-    out.push(mark(null), ...toJob(a, j, 'walking over to the pour', 6),
+    const s = standAt(a, j);
+    out.push(mark(null), go(s.x - 5, j.y, 'ground', 'walking over to the pour'), { k: 'face', dir: 1 },
       call(() => enqueuePour(a, j)),
-      W(() => mixer.truck.serving && mixer.truck.serving.a === a && mixer.truck.atPour, { pose: 'stand', max: 50, say: 'waiting on the mixer truck', timeout: () => donePour(a) }),
+      W(() => mixer.truck.serving && mixer.truck.serving.a === a && mixer.truck.atPour, { max: 50, lateSay: 'waiting on the mixer truck', timeout: () => donePour(a) }),
       D(a, 'point', 0.8, { say: 'calling for concrete' }),
-      D(a, 'rake', 4.6, { work: [0, 0.6], say: 'raking concrete into the forms', start: () => { mixer.truck.flow = true; } }),
+      D(a, 'rake', 4.6, { carry: null, work: [0, 0.6], say: 'raking concrete into the forms', start: () => { mixer.truck.flow = true; } }),
       call(() => donePour(a)),
-      D(a, 'rake', 2.6, { work: [0.6, 0.8], say: 'screeding the pour flat' }),
-      D(a, 'trowel', 2.6, { work: [0.8, 1], say: 'floating the concrete smooth' }),
+      D(a, 'rake', 2.6, { work: [0.6, 0.85], say: 'screeding the pour flat' }),
+      D(a, 'trowel', 2.4, { work: [0.85, 1], say: 'floating the concrete smooth' }),
       finish(a, j));
     return out;
   }
-  function chFrameTimber(a, j) {
-    const s = station('saw', a);
+  /* a concrete column: build the form, then the crane swings the pour bucket over from the mixer truck */
+  function chColumn(a, j) {
+    let req = null;
+    const top = j.at ? j.at[1] - 9 : GROUND_Y - 17;
     return [
-      ...fetch(a, 'beam', 'beam', 'picking a timber off the rack at the lumber yard', { pose: 'lift', dur: 1.2 }),
-      go(s[0] - 6, s[1] + 1, 'ground', 'carrying the timber to the saw'), { k: 'face', dir: 1 },
-      D(a, 'bend', 0.6, { carry: null, held: { name: 'beam', x: s[0], y: s[1] - 4.6, o: { len: 16 } } }),
-      D(a, 'measure', 2.4, { say: 'measuring a joist at the lumber yard' }),
-      D(a, 'saw', 3.4, { say: 'cutting a joist at the lumber yard', start: () => { a.dust = 3.4; } }),
-      ...breath(a, 0.3),
-      D(a, 'lift', 0.8, { held: null, carry: 'beam', say: 'shouldering the joist', then: () => freeStations(a) }),
-      mark('beam'),
-      ...toJob(a, j, 'carrying a joist over to Watershed'),
-      D(a, 'lift', 1.6, { work: [0, 0.35], say: 'setting a beam in the ground-floor frame' }),
-      D(a, 'hammer', 4.4, { carry: null, work: [0.35, 1], say: 'nailing it home on the ground floor' }),
+      call(() => { mixer.truck.need = K.t + 90; crane.wanted = K.t + 150; if (mixer.truck.state === 'gone') callMixer(); }),
+      ...fetch(a, 'formwork', 'beam', 'picking up column forms at the lumber yard'),
+      mark('beam', () => { mixer.truck.need = K.t + 60; }),
+      ...toJob(a, j, 'carrying the column forms over'),
+      D(a, 'bend', 0.8, { carry: null, work: [0, 0.1], say: 'standing the column form up' }),
+      D(a, 'hammer', 3.4, { work: [0.1, 0.45], say: 'nailing the column form tight' }),
+      call(() => { mixer.truck.need = K.t + 60; req = craneRequest(a, 'cbucket', () => mixerBucketAt(), [j.at ? j.at[0] : j.x, top], false); req.back = true; req.fast = 1.6; a.req = req; }),
+      W(() => !req || req.dead || req.state === 'set', { pose: 'look', face: 0, max: 80, lateSay: 'waiting for the pour bucket', timeout: () => { if (req) craneCancel(req); } }),
+      D(a, 'guide', 2.6, { work: [0.45, 0.95], say: 'guiding the pour bucket over the column', start: () => { if (req) req.pouring = true; } }),
+      D(a, 'signal', 0.8, { work: [0.95, 1], say: 'signalling the crane away', then: () => { if (req) craneRelease(req); } }),
       finish(a, j),
     ];
   }
-  /* upper floors: build a wall panel on the trestles; the crane flies it over */
-  function chFramePanel(a, j) {
-    const s = station('trestle', a), wh = where(j.level);
+  /* posts, beams, CLT deck panels: rig it at the yard, the crane flies it, guide it down, fasten it */
+  function chLifted(a, j, pair) {
+    const deck = j.part === 'deck', post = j.part === 'post';
+    const noun = deck ? 'CLT panel' : post ? 'glulam post' : 'glulam beam';
+    const pick = deck ? wspot('lumber', 'panels') : wspot('lumber', 'rack');
+    const wh = where(j.level);
+    let req = null;
     const out = [
-      ...fetch(a, 'panel', 'beam', 'fetching studs at the prefab shed', { at: spot('lumber', 'panels') }),
-      go(s[0] - 6, s[1] + 1, 'ground', 'carrying studs to the trestles'), { k: 'face', dir: 1 },
-      D(a, 'bend', 0.6, { carry: null, held: { name: 'panel', x: s[0], y: s[1] - 4.2, o: { flat: true } } }),
-      D(a, 'hammer', 3.6, { say: 'building a ' + (j.kind === 'deck' ? 'floor' : 'wall') + ' panel in the prefab shed' }),
-      D(a, 'drill', 2.2, { say: 'screwing the sheathing on' }),
+      go(pick[0] + 2 + spread(a) * 0.4, pick[1] + 6, 'ground', 'heading to the ' + (deck ? 'panel rack' : 'timber stack') + ' to rig a ' + noun),
+      W(() => crane.erect >= 1, { pose: 'look', face: 0, max: 60, lateSay: 'waiting for the crane to go up', start: () => { crane.wanted = K.t + 150; } }),
+      D(a, 'bend', 1.2, { say: 'rigging a ' + noun + ' for the crane', then: () => {
+        use(deck ? 'panels' : 'lumber');
+        const ax = j.at ? j.at[0] : j.x, ay = post ? levelY(j.level) : j.at ? j.at[1] : levelY(j.level);
+        req = craneRequest(a, deck ? 'panel' : 'beam', [pick[0], pick[1] - 2], [ax, ay], false); req.part = j.part; if (post) req.hang = 14.5; a.req = req; } }),
+      W(() => !req || req.dead || req.state === 'atPick', { pose: 'look', max: 60, lateSay: 'waiting for the crane hook', timeout: () => { if (req) craneCancel(req); } }),
+      D(a, 'guide', 1.2, { say: 'hooking the ' + noun + ' to the crane', then: () => { if (req && !req.dead) req.attached = true; } }),
+      D(a, 'signal', 1, { face: 1, say: 'signalling the crane operator' }),
     ];
-    const useCrane = crane.queue.length < 2 && j.level !== 'ground';
-    if (useCrane) {
-      let req = null;
-      out.splice(out.length - 2, 0, call(() => { req = craneRequest(a, 'panel', [s[0], s[1] - 3], [j.x, levelY(j.level)]); }));
-      out.push(
-        { k: 'walk', x: s[0] - 7, y: s[1] + 2 }, { k: 'face', dir: 1 },
-        W(() => !req || req.state === 'atPick' || req.dead, { pose: 'look', max: 60, say: 'waiting for the crane hook', timeout: () => { if (req) craneCancel(req); } }),
-        D(a, 'guide', 1.4, { say: 'hooking the panel to the crane', then: () => { if (req && !req.dead) { req.attached = true; a.held = null; } } }),
-        D(a, 'signal', 1, { face: 1, say: 'signalling the crane operator' }),
-        call(() => { if (req && req.dead && a.held) { a.held = null; a.carry = 'panel'; } }),
-        go(j.x - 5, null, j.level, 'climbing the stair tower to meet the panel'), { k: 'face', dir: 1 },
-        W(() => !req || req.dead || req.state === 'set', { pose: 'look', max: 60, say: 'watching the panel come over', timeout: () => { if (req) craneCancel(req); } }),
-        D(a, 'guide', 1.8, { work: [0, 0.3], say: 'guiding the panel in on ' + wh }),
-        call(() => { if (req) craneRelease(req); a.held = null; a.carry = null; }),
-        D(a, 'drill', 3.8, { work: [0.3, 1], say: 'fastening the panel on ' + wh }),
-        finish(a, j));
-    } else {
-      out.push(
-        D(a, 'lift', 0.9, { held: null, carry: 'panel', say: 'lifting the panel off the trestles', then: () => freeStations(a) }),
-        mark('panel'),
-        ...toJob(a, j, j.level === 'ground' ? 'carrying the panel over to Watershed' : 'carrying the panel up the stair tower'),
-        D(a, 'lift', 1.5, { work: [0, 0.3], say: 'standing the panel up on ' + wh }),
-        D(a, 'hammer', 4, { carry: null, work: [0.3, 1], say: 'nailing the panel home on ' + wh }),
-        finish(a, j));
-    }
+    if (pair) out.push(call(() => { pair.req = req; }));
+    const s = standAt(a, j, pair ? 0 : null);
+    out.push(go(s.x, s.y, j.level, up(j) ? 'climbing up to meet the ' + noun : 'walking over to meet the ' + noun), { k: 'face', dir: s.face },
+      W(() => !req || req.dead || req.state === 'set', { pose: 'look', max: 70, lateSay: 'watching the ' + noun + ' come over', timeout: () => { if (req) craneCancel(req); } }));
+    if (pair) out.push({ k: 'sync', key: pair.key + 'L', n: 2, max: 40 });
+    out.push(
+      D(a, post ? 'lift' : 'guide', 2.6, { carry: null, work: [0, 0.8], say: post ? 'pushing the post upright' : 'guiding the ' + noun + ' down onto ' + (deck ? 'the beams' : 'the posts'),
+        start: () => { if (req) req.handed = true; }, tick: (aa, k) => { if (req) req.a = k; } }),
+      D(a, 'signal', 0.8, { say: 'signalling the crane to slack off', then: () => { if (req) craneRelease(req); } }),
+      D(a, post ? 'drill' : deck ? 'drill' : 'hammer', 3.2, { work: [0.8, 1], say: post ? 'drilling the post\'s base plate' : deck ? 'screwing the panel down' : 'bolting the beam home on ' + wh }));
+    if (pair) out.push({ k: 'sync', key: pair.key + 'E', n: 2, max: 30 });
+    out.push(finish(a, j));
+    if (pair) out.push(call(() => { a.pair = null; }));
     return out;
   }
+  /* the second builder on a CLT panel: up to the other end, help guide it, screw it down */
+  function liftMateChain(a, pair) {
+    const j = pair.j, s = standAt(a, j, 1);
+    return [
+      go(s.x, s.y, j.level, up(j) ? 'climbing up to land a CLT panel' : 'heading over to land a CLT panel'), { k: 'face', dir: s.face },
+      W(() => !pair.req || pair.req.dead || pair.req.state === 'set', { pose: 'look', max: 90, lateSay: 'watching the panel come over' }),
+      { k: 'sync', key: pair.key + 'L', n: 2, max: 40 },
+      D(a, 'guide', 2.6, { carry: null, say: 'guiding the CLT panel down', dur: 2.6 }),
+      D(a, 'stand', 0.8, { say: 'holding it square' }),
+      D(a, 'drill', 3.2, { say: 'screwing the panel down' }),
+      { k: 'sync', key: pair.key + 'E', n: 2, max: 30 },
+      call(() => { a.job = null; a.role = null; a.pair = null; }),
+    ];
+  }
+  function chStud(a, j) {
+    const wh = where(j.level);
+    return [
+      ...fetch(a, 'beam', 'beam', 'picking up studs at the lumber yard'),
+      mark('beam'),
+      ...toJob(a, j, up(j) ? 'carrying studs up to ' + wh : 'carrying studs over to Watershed'),
+      D(a, 'bend', 0.7, { carry: null, work: [0, 0.1], say: 'laying out the studs' }),
+      D(a, 'hammer', 4.2, { work: [0.1, 0.8], say: j.label || 'framing a stud wall' }),
+      ...breath(a, 0.25),
+      D(a, 'hammer', 1.8, { work: [0.8, 1], say: 'nailing the top plate on' }),
+      finish(a, j),
+    ];
+  }
   function chWire(a, j) {
-    const out = [], wh = where(j.level);
-    const fy = j.level === 'ground' ? (j.y || GROUND_Y + 6) + 1 : levelY(j.level);
+    const wh = where(j.level), out = [];
+    const fy = up(j) ? levelY(j.level) : j.y;
     if (a.carry !== 'spool') out.push(...fetch(a, 'spool', 'spool', 'getting a spool of wire from the toolshed'));
     out.push(mark('spool'),
-      go(j.x - 6, jobY(j), j.level, 'carrying a spool of wire over'), { k: 'face', dir: 1 },
+      go(j.x - 6, up(j) ? null : j.y, j.level, 'carrying a spool of wire over'), { k: 'face', dir: 1 },
       D(a, 'bend', 0.5, { carry: null, held: { name: 'spool', x: j.x - 9, y: fy } }),
       D(a, 'pullwire', 3.2, { work: [0, 0.35], say: 'pulling wire through the studs on ' + wh }),
       { k: 'walk', x: j.x - 1 },
@@ -361,7 +452,7 @@ export function createCrew(K) {
     return out;
   }
   function chBrick(a, j) {
-    const wh = where(j.level), up = j.level !== 'ground';
+    const wh = where(j.level), hu = up(j) && B().hoist && B().hoist();
     const mx = spot('masonry', 'mixer'), bk = spot('masonry', 'bricks');
     const mixing = mixer.spinUntil > K.t + 2;
     const out = mixing ? [
@@ -385,32 +476,40 @@ export function createCrew(K) {
         D(a, 'lift', 3, { say: 'loading bricks into the wheelbarrow', then: () => { use('brick'); if (a.held) a.held.o = { load: 'bricks', facing: -1 }; } }),
         D(a, 'push', 0.4, { held: null, carry: 'barrow', then: () => { barrow.load = 'bricks'; } }),
         mark('barrow', () => { barrow.user = a.id; barrow.at = null; barrow.load = 'bricks'; }));
-      if (up) {
-        const tb = [HOIST_X - 2, GROUND_Y + 22];
-        out.push(go(tb[0] - 4, tb[1], 'ground', 'wheeling bricks over to Watershed'), { k: 'face', dir: 1 },
+      if (hu) {
+        const tb = [hu.x - 13, GROUND_Y + 9];
+        out.push(go(tb[0] - 3, tb[1], 'ground', 'wheeling bricks over to the hoist'), { k: 'face', dir: 1 },
+          D(a, 'bend', 0.6, { carry: null, then: () => { barrow.at = [tb[0], tb[1]]; } }),
+          D(a, 'lift', 0.6, { carry: 'bricks', say: 'stacking bricks on the hoist' }),
+          ...hoistRun(a, j, 'bricks', 'bricks'),
+          ...toJob(a, j, 'carrying bricks along ' + wh));
+      } else if (up(j)) {
+        const tb = [BUILDING.towerX - 4, GROUND_Y + 12];
+        out.push(go(tb[0] - 3, tb[1], 'ground', 'wheeling bricks over to Watershed'), { k: 'face', dir: 1 },
           D(a, 'bend', 0.6, { carry: null, then: () => { barrow.at = [tb[0], tb[1]]; } }),
           D(a, 'lift', 0.8, { carry: 'bricks', say: 'loading a hod of bricks' }),
-          go(j.x - 5, null, j.level, 'carrying a hod of bricks up the tower'), { k: 'face', dir: 1 },
-          D(a, 'bend', 0.5, { carry: null }));
+          ...toJob(a, j, 'carrying a hod of bricks up the tower'));
       } else {
-        out.push(...toJob(a, j, 'wheeling bricks over to Watershed', 8),
-          D(a, 'bend', 0.6, { carry: null, then: () => { barrow.at = [a.x - a.facing * 5, a.y + 2]; } }));
+        const s = standAt(a, j);
+        out.push(go(s.x - s.face * 6, j.y + 3, 'ground', 'wheeling bricks over to Watershed'), { k: 'face', dir: s.face },
+          D(a, 'bend', 0.6, { carry: null, then: () => { barrow.at = [a.x + a.facing * 2.5, a.y + 1.5]; } }),
+          { k: 'walk', x: s.x, y: j.y }, { k: 'face', dir: s.face });
       }
     } else {
       out.push(D(a, 'bend', 0.5, { carry: null, say: 'setting the bucket down' }),
-        ...fetch(a, 'bricks', 'bricks', 'picking up a stack of bricks'),
+        ...fetch(a, 'bricks', 'bricks', 'picking up a stack of bricks', { dx: 6 + spread(a) }),
+        ...(hoistRun(a, j, 'bricks', 'bricks', 'carrying bricks to the hoist') || []),
         mark('bricks'),
-        ...toJob(a, j, up ? 'carrying bricks up the tower' : 'carrying bricks over to Watershed'),
-        D(a, 'bend', 0.5, { carry: null }));
+        ...toJob(a, j, up(j) ? 'carrying bricks along ' + wh : 'carrying bricks over to Watershed'));
     }
     out.push(
+      D(a, 'bend', 0.5, { carry: null }),
       D(a, 'trowel', 3, { work: [0, 0.3], say: 'buttering the bed with mortar on ' + wh }),
       D(a, 'bend', 2.8, { work: [0.3, 0.75], say: 'laying a course of brick on ' + wh }),
       ...breath(a, 0.2),
       D(a, 'trowel', 2.6, { work: [0.75, 1], say: 'striking the joints' }),
       finish(a, j));
     if (useBarrow) {
-      /* bring the barrow home */
       out.push(call(() => {
         if (barrow.user !== a.id) return;
         const p = barrowPos();
@@ -423,87 +522,75 @@ export function createCrew(K) {
     return out;
   }
   function chClad(a, j) {
-    const wh = where(j.level);
+    const wh = where(j.level), charcoal = /charcoal/.test(j.label || '');
     return [
-      ...fetch(a, 'panel', 'panel', 'picking up a rust panel at the prefab shed', { at: spot('lumber', 'panels'), pose: 'lift' }),
-      mark('panel'),
-      ...toJob(a, j, j.level === 'ground' ? 'carrying a rust panel over' : 'carrying a rust panel up to ' + wh, 5),
-      D(a, 'lift', 1.5, { work: [0, 0.25], say: 'holding a rust panel in place on ' + wh }),
-      D(a, 'drill', 4.2, { carry: null, work: [0.25, 1], say: 'drilling the cladding home on ' + wh }),
+      ...fetch(a, 'panel', 'rustPanel', 'picking up a ' + (charcoal ? 'charcoal' : 'rust') + ' panel at the prefab shed', { at: wspot('lumber', 'panels'), place: 'the prefab shed', pose: 'lift' }),
+      ...(hoistRun(a, j, 'rustPanel', 'panel', 'carrying the panel to the hoist') || []),
+      mark('rustPanel'),
+      ...toJob(a, j, up(j) ? 'carrying the panel along ' + wh : 'carrying a panel over to Watershed'),
+      D(a, 'lift', 1.5, { say: 'holding the panel in place on ' + wh }),
+      D(a, 'drill', 4.2, { carry: null, work: [0, 1], say: j.label || 'drilling the cladding home on ' + wh }),
       ...breath(a, 0.25),
       finish(a, j),
     ];
   }
-  /* the material hoist beside the stair tower: load at the bottom, ride it up, unload at the top */
-  function hoistUp(a, level, load, say) {
-    const tb = [HOIST_X + 2, GROUND_Y + 5];
-    return [
-      go(tb[0] + 3, tb[1], 'ground', say || 'carrying it to the hoist'), { k: 'face', dir: -1 },
-      W(() => !hoist.req || hoist.req.who === a.id, { pose: 'stand', max: 40, say: 'waiting on the hoist' }),
-      D(a, 'lift', 0.8, { say: 'loading the hoist', start: () => { hoist.req = { who: a.id, level, load, state: 'loading' }; },
-        then: () => { a.carry = null; if (hoist.req && hoist.req.who === a.id) hoist.req.state = 'up'; } }),
-    ];
-  }
-  function hoistOff(a, carry) {
-    return [
-      W(() => !hoist.req || hoist.req.who !== a.id || hoist.req.state === 'top', { pose: 'look', face: -1, max: 30, say: 'waiting for the hoist' }),
-      D(a, 'lift', 0.8, { carry, say: 'taking it off the hoist', start: () => { if (hoist.req && hoist.req.who === a.id) hoist.req.state = 'down'; } }),
-    ];
-  }
   /* glass: two builders walk a pane over together; one guides, one drills */
-  function chGlaze(a, j) {
-    const mate = findMate(a);
-    if (!mate) return chGlazeSolo(a, j, true);
-    const pair = newPair(a, mate, j);
-    mate.plan = []; mate.act = null; mate.held = null; mate.doing = 'job';
-    mate.plan.push(...prefix(mate, null), ...glazeChain(mate, pair, false));
-    if (HEAVY[mate.carry] || mate.carry === 'mug') mate.carry = null;
-    return glazeChain(a, pair, true);
-  }
   function newPair(lead, mate, j) {
-    const pair = { key: lead.id + '>' + j.id + ':' + ((R() * 1e6) | 0), lead, mate, j, up: j.level !== 'ground', item: null };
+    const pair = { key: lead.id + '>' + j.id + ':' + ((R() * 1e6) | 0), lead, mate, j, up: up(j), req: null };
     lead.pair = pair; mate.pair = pair; mate.job = j; mate.role = 'mate';
+    B().claim(j.id, mate.id);
     return pair;
   }
+  function pairChain(a, pair, lead) {
+    return pair.j.part === 'deck' ? (lead ? chLifted(a, pair.j, pair) : liftMateChain(a, pair)) : glazeChain(a, pair, lead);
+  }
+  function chPair(a, j) {
+    const mate = findMate(a);
+    if (!mate) return j.part === 'deck' ? (crane.erect >= 1 ? chLifted(a, j, null) : chLifted(a, j, null)) : chGlazeSolo(a, j, true);
+    const pair = newPair(a, mate, j);
+    mate.plan = []; mate.act = null; mate.held = null; mate.doing = 'job';
+    mate.plan.push(...prefix(mate, null), ...pairChain(mate, pair, false));
+    return pairChain(a, pair, true);
+  }
   function glazeChain(a, pair, lead) {
-    const j = pair.j, wh = where(j.level), k = pair.key, rack = spot('staging', 'drop2');
-    const off = lead ? -4.5 : 4.5, carry = lead ? 'paneL' : 'paneR';
+    const j = pair.j, wh = where(j.level), k = pair.key, staged = glassSource(j), rack = staged || wspot('staging', 'drop2');
+    const carry = lead ? 'paneL' : 'paneR', off = lead ? -4.5 : 4.5;
     const S = (n, o) => Object.assign({ k: 'sync', key: k + n, n: 2, max: lead ? 40 : 60 }, o);
     const out = [
       go(rack[0] + off, rack[1] + 6, 'ground', 'heading to the glass rack'), { k: 'face', dir: lead ? 1 : -1 },
-      S(1, lead ? { max: 70, say: 'waiting for a hand with the glass', timeout: () => { soloAfterTimeout(a, pair); } } : { say: 'heading to the glass rack' }),
-      D(a, 'lift', 0.9, { carry, say: 'lifting a pane of glass off the rack', dur: 0.9, then: lead ? () => use('glass') : null }),
+      S(1, lead ? { max: 70, say: 'waiting for a hand with the glass', timeout: () => { soloAfterTimeout(a, pair); } } : null),
+      D(a, 'lift', 0.9, { carry, say: staged ? 'lifting a pane off the stack by the hoist' : 'lifting a pane of glass off the rack', dur: 0.9, then: lead ? () => { if (staged) glassStage.n = Math.max(0, glassStage.n - 1); else use('glass'); } : null }),
     ];
-    if (pair.up) {
-      const tb = HOIST_X + 2;
-      out.push({ k: 'walk', x: tb + off + 1, y: GROUND_Y + 6, pair: 1, say: 'walking a pane of glass over' }, { k: 'face', dir: lead ? 1 : -1 },
-        S(2));
+    const h = pair.up && B().hoist ? B().hoist() : null;
+    if (h) {
+      const bx = h.x - 5;
+      out.push({ k: 'walk', x: bx + (lead ? -9 : 0), y: GROUND_Y + 6, pair: 1, say: 'walking a pane of glass over to the hoist' }, { k: 'face', dir: 1 }, S(2));
       if (lead) {
-        out.push(W(() => !hoist.req || hoist.req.who === a.id, { pose: 'stand', max: 40, say: 'waiting on the hoist' }),
-          D(a, 'lift', 0.9, { say: 'easing the pane onto the hoist', dur: 0.9, start: () => { hoist.req = { who: a.id, level: j.level, load: 'pane', state: 'loading' }; },
-            then: () => { a.carry = null; if (hoist.req && hoist.req.who === a.id) hoist.req.state = 'up'; } }),
+        out.push(W(() => !hoist.req || hoist.req.who === a.id, { pose: 'stand', max: 40, lateSay: 'waiting on the hoist' }),
+          D(a, 'lift', 0.9, { say: 'easing the pane onto the hoist', dur: 0.9, start: () => hoistLoad(a, j, 'pane', h), then: () => { a.carry = null; hoistSend(a); } }),
           S(3),
-          go(ladderX() + 5, null, j.level, 'climbing the stair tower'),
-          W(() => !hoist.req || hoist.req.who !== a.id || hoist.req.state === 'top', { pose: 'look', face: -1, max: 30, say: 'waiting for the hoist' }),
+          go(bx - 9, null, j.level, 'climbing up to ' + wh),
+          W(() => landed(a.id) || !sent(a.id), { pose: 'look', max: 30, lateSay: 'waiting for the hoist' }),
           S(4),
-          D(a, 'lift', 0.8, { carry, dur: 0.8, say: 'taking the pane off the hoist', start: () => { if (hoist.req && hoist.req.who === a.id) hoist.req.state = 'down'; } }));
+          D(a, 'lift', 0.8, { carry, dur: 0.8, say: 'taking the pane off the hoist', start: () => takeLanded(a.id) }));
       } else {
-        out.push(W(() => !!hoist.req && hoist.req.who === pair.lead.id && hoist.req.state !== 'loading', { pose: 'guide', max: 45, say: 'steadying the pane onto the hoist', then: () => { a.carry = null; } }),
+        out.push(W(() => sent(pair.lead.id), { pose: 'guide', max: 45, say: 'steadying the pane onto the hoist', then: () => { a.carry = null; } }),
           call(() => { a.carry = null; }),
           S(3),
-          D(a, 'stand', 1.4),
-          go(ladderX() + 10, null, j.level, 'climbing the stair tower'),
+          D(a, 'stand', 1.6),
+          go(bx, null, j.level, 'climbing up to ' + wh),
           S(4),
           D(a, 'lift', 0.8, { carry, dur: 0.8 }));
       }
     }
-    out.push({ k: 'walk', x: j.x + off, y: jobY(j), pair: 1, say: 'walking the pane over to the window' },
+    /* the pane is set between the two stand spots: the west one is always paneL */
+    const s = standAt(a, j, lead ? 0 : 1);
+    out.push({ k: 'walk', x: s.x, y: up(j) ? null : s.y, pair: 1, say: 'walking the pane over to the window' },
       { k: 'face', dir: lead ? 1 : -1 },
       S(5),
-      D(a, 'guide', 2, { work: lead ? [0, 0.4] : null, say: 'setting a window on ' + wh, dur: 2 }));
-    if (lead) out.push(D(a, 'drill', 3.6, { carry: null, work: [0.4, 1], say: 'drilling the window frame in', dur: 3.6 }), S(6), finish(a, j));
-    else out.push(D(a, 'guide', 3.6, { say: 'holding the pane steady', dur: 3.6, then: () => { a.carry = null; } }), S(6),
-      call(() => { a.job = null; a.role = null; }));
+      D(a, 'guide', 2, { carry: null, work: lead ? [0, 0.4] : null, say: j.label || 'setting a window on ' + wh, dur: 2 }));
+    if (lead) out.push(D(a, 'drill', 3.6, { work: [0.4, 1], say: 'drilling the window frame in', dur: 3.6 }), S(6), finish(a, j));
+    else out.push(D(a, 'guide', 3.6, { say: 'holding the pane steady', dur: 3.6 }), S(6), call(() => { a.job = null; a.role = null; }));
     out.push(call(() => { a.pair = null; }));
     return out;
   }
@@ -516,80 +603,131 @@ export function createCrew(K) {
     a.plan = chGlazeSolo(a, pair.j, false);
   }
   function chGlazeSolo(a, j, waitForMate) {
-    const wh = where(j.level), rack = spot('staging', 'drop2');
-    const out = [go(rack[0] - 3, rack[1] + 6, 'ground', 'heading to the glass rack'), { k: 'face', dir: 1 }];
+    const wh = where(j.level), staged = glassSource(j), rack = staged || wspot('staging', 'drop2');
+    const out = [go(rack[0] - 3 + spread(a) * 0.4, rack[1] + 6, 'ground', staged ? 'heading to the glass stack by the hoist' : 'heading to the glass rack'), { k: 'face', dir: 1 }];
     if (waitForMate) {
-      /* a partner may free up while they wait at the rack */
       const p = { lead: a, j, open: true, until: K.t + 90, mate: null, build: null };
       pendingPairs.push(p);
-      out.push(W(() => !p.open || !!p.mate, { pose: 'look', max: 7, say: 'waiting for a hand with the glass' }),
+      out.push(W(() => !p.open || !!p.mate, { pose: 'look', max: 7, lateSay: 'waiting for a hand with the glass' }),
         call(() => {
           p.open = false;
           const i = pendingPairs.indexOf(p); if (i >= 0) pendingPairs.splice(i, 1);
           if (p.mate && p.build) a.plan = p.build();
         }));
     }
-    out.push(D(a, 'lift', 1, { carry: 'pane', say: 'lifting a pane of glass off the rack', then: () => use('glass') }), mark('pane'));
-    if (j.level !== 'ground') out.push(...hoistUp(a, j.level, 'pane', 'carrying a pane of glass to the hoist'), go(ladderX() + 5, null, j.level, 'climbing the stair tower'), ...hoistOff(a, 'pane'));
-    out.push(...toJob(a, j, 'carrying the pane over carefully', 5),
-      D(a, 'lift', 1.8, { work: [0, 0.35], say: 'setting a window on ' + wh }),
-      D(a, 'drill', 3.8, { carry: null, work: [0.35, 1], say: 'drilling the window frame in' }),
+    out.push(D(a, 'lift', 1, { carry: 'pane', say: j.part === 'storefront' ? 'lifting a storefront frame off the rack' : 'lifting a pane of glass off the rack', then: () => { if (staged && glassStage.n > 0) glassStage.n--; else use('glass'); } }),
+      ...(hoistRun(a, j, 'pane', 'pane', 'carrying the pane to the hoist') || []),
+      mark('pane'),
+      ...toJob(a, j, 'carrying the pane over carefully'),
+      D(a, 'lift', 1.6, { say: 'lifting it into the opening' }),
+      D(a, 'guide', 1.6, { carry: null, work: [0, 0.35], say: j.label || 'setting a window on ' + wh }),
+      D(a, 'drill', 3.6, { work: [0.35, 1], say: 'drilling the frame in' }),
       finish(a, j));
     return out;
+  }
+  function chCanopy(a, j) {
+    return [
+      ...fetch(a, 'beam', 'beam', 'picking a canopy timber off the rack'),
+      mark('beam'),
+      ...toJob(a, j, 'carrying a canopy timber over'),
+      D(a, 'lift', 1.6, { say: 'lifting the timber up to the canopy' }),
+      D(a, ((a.seed >>> 3) & 1) ? 'drill' : 'hammer', 3.8, { carry: null, work: [0, 1], say: j.label || 'hanging the timber canopy' }),
+      finish(a, j),
+    ];
   }
   function chSolar(a, j) {
-    const out = [...fetch(a, 'pane', 'pane', 'picking up a solar panel at the staging area', { walkSay: 'heading to the staging area for a solar panel' })];
-    if (j.level !== 'ground') out.push(...hoistUp(a, j.level, 'pane', 'carrying the solar panel to the hoist'), go(ladderX() + 5, null, j.level, 'climbing up to the roof'), ...hoistOff(a, 'pane'));
-    out.push(mark('pane'), ...toJob(a, j, 'carrying the panel across the roof', 5),
-      D(a, 'kneel', 1.8, { carry: null, held: { name: 'pane', x: j.x, y: j.level === 'ground' ? (j.y || GROUND_Y + 6) : levelY(j.level), o: { flat: true, solar: true } }, work: [0, 0.3], say: 'laying a solar panel on the roof' }),
+    return [
+      ...fetch(a, 'panel', 'solar', 'picking up a solar panel at the prefab shed', { at: wspot('lumber', 'panels'), place: 'the prefab shed' }),
+      ...(hoistRun(a, j, 'solar', 'panel', 'carrying the solar panel to the hoist') || []),
+      mark('solar'),
+      ...toJob(a, j, 'carrying the panel across the roof'),
+      D(a, 'kneel', 1.8, { carry: null, work: [0, 0.3], say: j.label || 'laying a solar panel on the roof' }),
       D(a, 'drill', 3.6, { work: [0.3, 1], say: 'bolting the solar panel down' }),
-      finish(a, j));
-    return out;
+      finish(a, j),
+    ];
   }
   function chPlant(a, j) {
-    const out = [];
-    const y = j.y || GROUND_Y + 30;
-    const sh = spot('tools', 'shed');
-    if (a.carry !== 'shovel') out.push(go(sh[0] - 3, sh[1] + 4, 'ground', 'getting a shovel from the toolshed'), D(a, 'bend', 0.8), D(a, 'lift', 0.4, { carry: 'shovel' }));
-    const sp = SAPLINGS[a.seed % SAPLINGS.length];
-    out.push(mark('shovel'),
-      go(j.x - 4, y, 'ground', 'walking out to the sidewalk'), { k: 'face', dir: 1 },
-      D(a, 'shovel', 3.4, { carry: null, work: [0, 0.4], say: 'digging a hole for a street tree' }),
-      D(a, 'bend', 0.5, { held: { name: 'shovel', x: j.x - 1, y, o: { stuck: true } } }),
-      go(sp[0] - 4, sp[1] + 2, 'ground', 'fetching a sapling'), D(a, 'bend', 0.8), D(a, 'lift', 0.4, { carry: 'plant' }),
-      go(j.x - 4, y, 'ground', 'carrying the sapling over'), { k: 'face', dir: 1 },
-      D(a, 'plant', 2.6, { carry: null, work: [0.4, 0.75], say: 'planting a street tree' }),
-      D(a, 'shovel', 2.6, { held: null, work: [0.75, 1], say: 'backfilling around the tree' }),
+    const y = j.y || GROUND_Y + 10, x = j.x;
+    const sp = SAPLINGS[a.seed % SAPLINGS.length], pl = j.part === 'planter';
+    return [
+      ...toolFrom(a, 'shovel'),
+      mark('shovel'),
+      go(x - 4, y, 'ground', pl ? 'heading to the planters by the door' : 'walking out to the sidewalk'), { k: 'face', dir: 1 },
+      D(a, 'shovel', 3.2, { carry: null, work: [0, 0.4], say: pl ? 'turning the soil in a planter' : 'digging a hole for a street tree' }),
+      D(a, 'bend', 0.5, { held: { name: 'shovel', x: x - 1, y, o: { stuck: true } } }),
+      go(sp[0] - 4, sp[1] + 2, 'ground', pl ? 'fetching some plants' : 'fetching a sapling'), D(a, 'bend', 0.8), D(a, 'lift', 0.4, { carry: 'plant' }),
+      go(x - 4, y, 'ground', pl ? 'carrying the plants over' : 'carrying the sapling over'), { k: 'face', dir: 1 },
+      D(a, 'plant', 2.6, { carry: null, work: [0.4, 0.75], say: j.label || 'planting a street tree' }),
+      D(a, 'shovel', 2.4, { held: null, work: [0.75, 1], say: pl ? 'firming the soil' : 'backfilling around the tree' }),
       call(() => { a.carry = 'shovel'; }),
+      finish(a, j),
+    ];
+  }
+  /* after topping out: washing windows, sweeping, watering, raking leaves, shovelling snow, paint, wreaths */
+  function chUpkeep(a, j) {
+    const out = [];
+    const tool = j.carry === 'bucket' ? 'bucket' : j.needs === 'shovel' ? 'shovel' : null;
+    if (tool) out.push(...toolFrom(a, tool, 'getting a ' + tool + ' from the toolshed'));
+    else if (j.carry === 'plant') { const sp = SAPLINGS[a.seed % SAPLINGS.length]; out.push(go(sp[0] - 4, sp[1] + 2, 'ground', 'fetching a wreath'), D(a, 'bend', 0.8), D(a, 'lift', 0.4, { carry: 'plant' })); }
+    const pose = j.pose || 'sweep', d = Math.max(6, (j.dur || 12) * 0.55);
+    const keep = pose === 'pour' || pose === 'trowel' || pose === 'guide';
+    out.push(mark(tool || null), ...toJob(a, j, 'heading out front'),
+      D(a, pose, d * 0.6, { carry: keep ? tool || j.carry || null : null, work: [0, 0.6], say: j.label || 'keeping the place nice' }),
+      ...breath(a, 0.3),
+      D(a, pose, d * 0.4, { work: [0.6, 1], say: j.label || 'keeping the place nice', then: () => { if (j.carry === 'plant') a.carry = null; } }),
       finish(a, j));
     return out;
   }
   function chGeneric(a, j) {
     const out = [];
-    if (j.needs && NEED_PILE[j.needs]) out.push(...fetch(a, j.needs, j.needs, 'fetching ' + j.needs));
-    out.push(mark(j.needs || null), ...toJob(a, j, 'heading to ' + where(j.level)),
-      D(a, 'hammer', (j.dur || 10) * 0.6, { carry: null, work: [0, 1], say: j.label || 'working on ' + where(j.level) }), finish(a, j));
+    if (j.needs && NEED_PILE[j.needs]) out.push(...fetch(a, j.needs, NEED_CARRY[j.needs] || null, 'fetching ' + j.needs));
+    out.push(mark(NEED_CARRY[j.needs] || null), ...toJob(a, j, 'heading to ' + where(j.level)),
+      D(a, 'hammer', Math.max(4, (j.dur || 10) * 0.5), { carry: null, work: [0, 1], say: j.label || 'working on ' + where(j.level) }), finish(a, j));
     return out;
   }
   function chainFor(a, j) {
+    switch (j.part) {
+      case 'clear': return chClear(a, j);
+      case 'stake': return chStake(a, j);
+      case 'string': return chString(a, j);
+      case 'dig': case 'backfill': return chDig(a, j);
+      case 'rebar': return chRebar(a, j);
+      case 'form': return chForm(a, j);
+      case 'strip': return chStrip(a, j);
+      case 'pour': return chPour(a, j);
+      case 'column': return chColumn(a, j);
+      case 'post': case 'beam': return chLifted(a, j, null);
+      case 'deck': return j.crew > 1 ? chPair(a, j) : chLifted(a, j, null);
+      case 'stud': return chStud(a, j);
+      case 'wire': return chWire(a, j);
+      case 'clad': return chClad(a, j);
+      case 'brick': return chBrick(a, j);
+      case 'storefront': case 'glaze': return j.crew > 1 ? chPair(a, j) : chGlazeSolo(a, j, false);
+      case 'canopy': return chCanopy(a, j);
+      case 'solar': return chSolar(a, j);
+      case 'tree': case 'planter': return chPlant(a, j);
+      default: break;
+    }
+    if (j.kind === 'upkeep' || j.pose) return chUpkeep(a, j);
     switch (j.kind) {
       case 'stake': return chStake(a, j);
       case 'dig': return chDig(a, j);
       case 'rebar': return chRebar(a, j);
       case 'form': return chForm(a, j);
       case 'pour': return chPour(a, j);
-      case 'frame': case 'deck': return j.needs === 'beam' || (j.level === 'ground' && j.needs !== 'panel') ? chFrameTimber(a, j) : chFramePanel(a, j);
+      case 'frame': return j.lift ? chLifted(a, j, null) : chStud(a, j);
+      case 'deck': return chLifted(a, j, null);
       case 'wire': return chWire(a, j);
       case 'brick': return chBrick(a, j);
       case 'clad': return chClad(a, j);
-      case 'glaze': return j.crew > 1 ? chGlaze(a, j) : chGlazeSolo(a, j, false);
+      case 'glaze': return j.crew > 1 ? chPair(a, j) : chGlazeSolo(a, j, false);
       case 'solar': return chSolar(a, j);
       case 'plant': return chPlant(a, j);
       default: return chGeneric(a, j);
     }
   }
 
-  /* --------------------------------------------------- pairs (glass) */
+  /* --------------------------------------------------- pairs (glass, CLT panels) */
   const pendingPairs = [];
   function free(b) {
     return b && !b.gone && !b.npc && b.state === 'working' && !b.job && !b.borrowed && !b.vehicle && !b.hold && !b.entering && !b.pair
@@ -597,10 +735,9 @@ export function createCrew(K) {
   }
   function findMate(a) {
     let best = null, bd = 1e9;
-    const rx = spot('staging', 'drop2')[0];
     for (const b of agents.values()) {
       if (b === a || b.me || !free(b)) continue;
-      const d = Math.abs(b.x - rx) + (b.level === 'ground' ? 0 : 60);
+      const d = Math.abs(b.x - a.x) + (b.level === a.level ? 0 : 40);
       if (d < bd) { bd = d; best = b; }
     }
     return best;
@@ -611,9 +748,9 @@ export function createCrew(K) {
       if (!p.open || p.mate || p.lead.gone || p.until < K.t) { pendingPairs.splice(i--, 1); continue; }
       p.mate = a; pendingPairs.splice(i, 1);
       const pair = newPair(p.lead, a, p.j);
-      p.build = () => glazeChain(p.lead, pair, true);
+      p.build = () => pairChain(p.lead, pair, true);
       a.doing = 'job';
-      a.plan.push(...prefix(a, null), ...glazeChain(a, pair, false));
+      a.plan.push(...prefix(a, null), ...pairChain(a, pair, false));
       return true;
     }
     return false;
@@ -626,12 +763,13 @@ export function createCrew(K) {
   }
 
   /* -------------------------------------------- breaks, lunch, fillers */
-  function breakChain(a) {
+  function breakChain(a, lunch) {
     a.doing = 'break';
     const h = hour(), s = stage();
-    const lunchTime = h >= 11.5 && h < 13.5;
+    const lunchTime = h >= 11.75 && h < 13.25;
     const out = [];
-    if ((lunchTime && (a.task === 'lunch' || a.r() < 0.5)) || (a.task === 'lunch' && a.r() < 0.4)) {
+    if (lunch || (lunchTime && (a.task === 'lunch' || a.r() < 0.75)) || (a.task === 'lunch' && a.r() < 0.4)) {
+      a.lunchDay = K.now().toDateString();
       if (s.phase === 'frame' && s.floor >= 1) {
         const f = s.floor, x = BUILDING.x0 + 6 + ((a.seed * 7) % (BUILDING.x1 - BUILDING.x0 - 12));
         out.push(go(x, null, f, 'heading up for lunch'), D(a, 'sitbeam', 14, { carry: 'sandwich', face: (a.seed & 1) ? 1 : -1, say: 'eating lunch on a beam' }),
@@ -686,7 +824,7 @@ export function createCrew(K) {
     if (k === 'tools') {
       const s = spot('tools', 'shed');
       return [go(s[0] + 3, s[1] + 4, 'ground', 'heading to the toolshed'), D(a, 'bend', 2.4, { say: 'sorting tools at the toolshed' }), D(a, 'lift', 0.5, { carry: 'toolbox' }),
-        go(HOIST_X + 6, GROUND_Y + 8, 'ground', 'bringing a toolbox to the tower'), D(a, 'bend', 0.6, { carry: null }), ...breath(a, 0.4)];
+        go(BUILDING.towerX - 2, GROUND_Y + 8, 'ground', 'bringing a toolbox to the tower'), D(a, 'bend', 0.6, { carry: null }), ...breath(a, 0.4)];
     }
     if (k === 'plans') {
       const s = spot('office', 'step');
@@ -710,7 +848,10 @@ export function createCrew(K) {
     for (let i = 0; i < list.length; i++) {
       const j = list[i];
       let s = i * 2.2 + Math.abs(j.x - home) * 0.32 + a.r() * 8;
-      if (pref.includes(j.kind)) s -= 40;
+      if (pref.includes(j.part) || pref.includes(j.kind)) s -= 40;
+      /* spread out: the yard a job draws from, and the bay it's in */
+      const src = NEED_PILE[j.needs] || j.part;
+      for (const b of agents.values()) if (b !== a && b.job) { if ((NEED_PILE[b.job.needs] || b.job.part) === src) s += 7; if (Math.abs(b.job.x - j.x) < 5 && b.job.level === j.level) s += 9; }
       if ((a.carry === 'shovel' && j.needs === 'shovel') || (a.carry === 'spool' && j.needs === 'spool')) s -= 18;
       if (a.vehicle === exc && j.kind === 'dig') s -= 200;
       if (s < bs) { bs = s; best = j; }
@@ -727,7 +868,7 @@ export function createCrew(K) {
     if (!a.hat) out.push(D(a, 'stand', 0.6, { hat: true, carry: a.carry === 'hat' ? null : a.carry, say: 'putting the hard hat on' }));
     const c = a.carry;
     if (c && c !== 'hat' && !(j && ((c === 'shovel' && j.needs === 'shovel') || (c === 'spool' && j.needs === 'spool')))) {
-      const home = TOOL_HOME[c] ? spot(...TOOL_HOME[c]) : null;
+      const home = TOOL_HOME[c] ? wspot(...TOOL_HOME[c]) : null;
       if (home) out.push(go(home[0] + 3, home[1] + 4, 'ground', 'putting the ' + (c === 'spool' ? 'wire' : c) + ' back'), D(a, 'bend', 0.6, { carry: null }));
       else out.push(D(a, 'bend', 0.5, { carry: null }));
     }
@@ -746,6 +887,13 @@ export function createCrew(K) {
     if (a.workT >= a.breakAt && !a.vehicle) {
       a.workT = 0; a.breakAt = 150 + a.r() * 170;
       a.plan.push(...prefix(a, null), ...breakChain(a));
+      return;
+    }
+    /* lunch, most days between quarter to twelve and quarter past one */
+    const h = hour();
+    if (h >= 11.75 && h < 13.25 && !a.vehicle && a.workT > 40 && a.lunchDay !== K.now().toDateString() && a.r() < 0.35) {
+      a.workT = 0;
+      a.plan.push(...prefix(a, null), ...breakChain(a, true));
       return;
     }
     const j = a.task === 'haul' && a.r() < 0.2 ? null : pickJob(a);
@@ -806,7 +954,7 @@ export function createCrew(K) {
 
   /* release a builder's job and everything they were holding (a climb in progress finishes first) */
   function abort(a) {
-    if (a.job) { if (a.role === 'lead') B().release(a.job.id); a.job = null; a.role = null; }
+    if (a.job) { B().release(a.job.id, a.id); a.job = null; a.role = null; }
     if (a.pair) breakPair(a);
     for (const p of pendingPairs) if (p.lead === a) p.open = false;
     if (barrow.user === a.id) {
@@ -814,9 +962,11 @@ export function createCrew(K) {
       else if (!barrow.at) barrow.at = barrow.home;
       barrow.user = null;
     }
-    if (hoist.req && hoist.req.who === a.id) hoist.req.state = 'down';
+    if (hoist.req && hoist.req.who === a.id && hoist.req.state === 'loading') hoist.req = null;
+    takeLanded(a.id);
     for (const r of crane.queue.slice()) if (r.who === a.id) craneCancel(r);
     if (crane.cur && crane.cur.who === a.id) craneCancel(crane.cur);
+    a.req = null;
     donePour(a);
     freeStations(a);
     if (exc.reserved === a.id) exc.reserved = null;
@@ -859,8 +1009,9 @@ export function createCrew(K) {
     const lx = ladderX();
     const climbing = !!g.say && /^climbing/.test(g.say);
     const down = L === 'ground' || (a.level !== 'ground' && L < a.level);
-    out.push({ k: 'walk', x: lx, y: a.level === 'ground' ? levelY('ground') : null, say: climbing ? 'heading for the stair tower' : g.say });
-    out.push({ k: 'climb', level: L, say: down ? 'climbing down the stair tower' : climbing ? g.say : L >= floorsN() ? 'climbing up to the roof' : 'climbing up to ' + where(L) });
+    out.push({ k: 'walk', x: lx - 2.5, y: a.level === 'ground' ? levelY('ground') + 1.5 : null, say: climbing ? 'heading for the stair tower' : g.say });
+    out.push({ k: 'ladder', up: !down, max: 90, lateSay: 'waiting for the ladder' });
+    out.push({ k: 'climb', level: L, up: !down, say: down ? 'climbing down the stair tower' : climbing ? g.say : L >= floorsN() ? 'climbing up to the roof' : 'climbing up to ' + where(L) });
     out.push({ k: 'walk', x: g.x, y: L === 'ground' ? gy(g.y) : null, say: climbing ? 'walking along ' + where(L) : g.say });
     return out;
   }
@@ -896,7 +1047,7 @@ export function createCrew(K) {
     const dx = x.x - a.x, dy = ty - a.y;
     const d = Math.sqrt(dx * dx + dy * dy * 1.8);
     let sp = a.speed * dt * (HEAVY[a.carry] ? 0.82 : 1) * (a.state === 'off' ? 0.85 : 1);
-    if (x.pair && a.pair) sp = WALK * 0.72 * dt;
+    if (x.pair && a.pair) sp = WALK * 0.85 * dt;
     if (d <= sp || d < 0.05) { a.x = x.x; a.y = ty; a.act = null; return; }
     a.x += dx / d * sp; a.y += dy / d * sp;
     if (Math.abs(dx) > 0.05) a.facing = dx > 0 ? 1 : -1;
@@ -908,7 +1059,25 @@ export function createCrew(K) {
     const d = ty - a.y;
     setPose(a, 'climb');
     if (Math.abs(d) <= CLIMB * dt) { a.y = ty; a.level = x.level; a.act = null; return; }
+    /* one at a time up the ladder: keep a body's length behind whoever is ahead */
+    for (const b of agents.values()) {
+      if (b === a || !b.act || b.act.k !== 'climb' || b.act.up !== x.up) continue;
+      const ahead = x.up ? a.y - b.y : b.y - a.y;
+      if ((ahead > 0 || (ahead === 0 && b.id < a.id)) && ahead < LADDER_GAP) { a.poseT -= dt; return; }
+    }
     a.y += Math.sign(d) * CLIMB * dt;
+  }
+  /* may this builder start up (or down) the ladder now? Down-goers go first; nobody passes on it */
+  function ladderFree(a, upward) {
+    const gy = levelY('ground');
+    for (const b of agents.values()) {
+      if (b === a || b.gone || !b.act) continue;
+      if (b.act.k === 'climb') {
+        if (b.act.up !== upward) return false;
+        if (upward ? gy - b.y < LADDER_GAP : b.y - a.y < LADDER_GAP && b.y >= a.y) return false;
+      } else if (upward && b.act.k === 'ladder' && !b.act.up) return false;
+    }
+    return true;
   }
   function stepAgent(a, dt) {
     if (a.gone) return;
@@ -916,6 +1085,7 @@ export function createCrew(K) {
     if (a.dust > 0) a.dust -= dt;
     if (a.me && a.state === 'paused' && !(a.act && a.act.k === 'climb')) { hold(a, dt); return; }
     if (a.hold) unhold(a);
+    if (a.react && K.t >= a.react.at) react1(a);
     let guard = 0;
     while (!a.act && guard++ < 12) if (!next(a)) break;
     if (!a.act) { setPose(a, 'stand'); return; }
@@ -927,6 +1097,7 @@ export function createCrew(K) {
       case 'do':
         setPose(a, x.pose);
         if (x.work && a.job && a.role !== 'mate') B().work(a.job.id, lerp(x.work[0], x.work[1], clamp(a.actT / x.dur, 0, 1)));
+        if (x.tick) x.tick(a, clamp(a.actT / x.dur, 0, 1));
         if (a.actT >= x.dur) { a.act = null; if (x.then) x.then(a); }
         break;
       case 'wait':
@@ -971,12 +1142,36 @@ export function createCrew(K) {
         if (Math.abs(d) <= dt * 4) { fork.lift = x.to; a.act = null; } else fork.lift += Math.sign(d) * dt * 4;
         break;
       }
+      case 'ladder': {
+        if (x.since == null) x.since = K.t;
+        if (x.lateSay && a.actT > 0.6) a.say = x.lateSay;
+        /* first come, first up: the rest wait in a short line beside the ladder */
+        let idx = 0;
+        for (const b of agents.values()) if (b !== a && b.act && b.act.k === 'ladder' && b.act.up === x.up && b.level === a.level && (b.act.since < x.since || (b.act.since === x.since && b.id < a.id))) idx++;
+        if (idx === 0 && (ladderFree(a, x.up) || a.actT > (x.max || 90))) { a.act = null; next(a); break; }   // onto the ladder this tick, so the next in line sees it
+        const tx = ladderX() + (x.up ? -2.5 - idx * 3.6 : 3 + idx * 3.6), d = tx - a.x;
+        if (Math.abs(d) > 0.2) { a.x += Math.sign(d) * Math.min(Math.abs(d), WALK * 0.6 * dt); a.facing = Math.sign(d); setPose(a, 'walk'); }
+        else { setPose(a, idx ? 'stand' : 'look'); a.facing = idx ? 1 : 0; }
+        break;
+      }
       case 'gone': a.gone = true; a.act = null; break;
       default: a.act = null;
     }
     if (a.vehicle) { a.x = a.vehicle.x; a.y = a.vehicle.y; }
   }
 
+  /* the director's reactions: glance up and cheer for a moment at a safe point, then carry on */
+  const REACT = { cheer: ['cheer', 1.6], look: ['look', 1.2], wave: ['wave', 1.4], clap: ['clap', 1.6] };
+  function react1(a) {
+    const x = a.act;
+    const safe = !x || x.k === 'walk' && !x.pair || x.k === 'wait' || x.k === 'ladder' || (x.k === 'do' && !x.work && !a.pair);
+    if (!safe) { if (K.t > a.react.at + 6) a.react = null; return; }
+    const [pose, dur] = REACT[a.react.kind] || REACT.cheer;
+    a.react = null;
+    if (x) a.plan.unshift({ k: 'face', dir: a.facing || 1 }, { k: 'resume', act: x, actT: a.actT });
+    a.act = { k: 'do', pose, dur: dur * (0.85 + a.r() * 0.3), face: 0 }; a.actT = 0;
+    begin(a, a.act);
+  }
   /* paused: tools down, turn, look at you; a blink, a small shrug, waiting dots */
   function hold(a, dt) {
     if (!a.hold) {
@@ -1078,7 +1273,7 @@ export function createCrew(K) {
   /* -- the forklift and the yard hand who drives it (and spots the trucks) */
   const fork = { kind: 'forklift', x: PARK_FORK[0], y: PARK_FORK[1], facing: -1, vel: 0, lift: 0, load: null, driver: null, shuttleT: 30, moving: false };
   function pileTarget(kind, from) {
-    const p = PILE_AT[kind] ? spot(...PILE_AT[kind]) : spot('staging', 'drop');
+    const p = PILE_AT[kind] ? wspot(...PILE_AT[kind]) : spot('staging', 'drop');
     const dir = p[0] >= from ? 1 : -1;
     return [p[0] - dir * 9, GROUND_Y + 34, dir];
   }
@@ -1107,6 +1302,15 @@ export function createCrew(K) {
       return;
     }
     if (!mounted) { a.plan.push(...mountSteps()); return; }
+    const gs = glassStageAt(), part = stage().part;
+    if (gs && (part === 'glaze' || part === 'storefront') && glassStage.n < 2 && pileOf('glass') > 0) {
+      a.plan.push({ k: 'fdrive', to: () => pileTarget('glass', fork.x), say: 'fetching a crate of glass for the hoist' }, { k: 'flift', to: 2.5 },
+        call(() => { fork.load = 'glass'; use('glass'); }), { k: 'flift', to: 1 },
+        { k: 'fdrive', to: [gs[0] + 11, GROUND_Y + 34, -1], say: 'staging glass by the hoist' }, { k: 'flift', to: 0 },
+        call(() => { fork.load = null; glassStage.n = Math.min(4, glassStage.n + 3); }),
+        { k: 'fdrive', to: [PARK_FORK[0], PARK_FORK[1], -1] });
+      return;
+    }
     if (Math.hypot(fork.x - PARK_FORK[0], fork.y - PARK_FORK[1]) > 1) { a.plan.push({ k: 'fdrive', to: [PARK_FORK[0], PARK_FORK[1], -1], say: 'parking the forklift' }); return; }
     fork.shuttleT -= 4;
     if (fork.shuttleT <= 0 && anyoneWorking()) {
@@ -1148,7 +1352,7 @@ export function createCrew(K) {
       case 'arrive': if (follow(m, dt)) { m.state = 'waitSpot'; m.waitT = 0; } break;
       case 'waitSpot':
         m.waitT += dt;
-        if (spotterReady('mixer') || m.waitT > 8) { m.state = 'backIn'; m.route = [{ x: 668, y: 501, rev: true, speed: 8 }, { x: 638, y: 491, rev: true, speed: 8 }, { x: 604, y: MIX_Y, rev: true, speed: 8 }]; }
+        if (spotterReady('mixer') || m.waitT > (spotterBusy('mixer') ? 8 : 2.5)) { m.state = 'backIn'; m.route = [{ x: 668, y: 501, rev: true, speed: 8 }, { x: 638, y: 491, rev: true, speed: 8 }, { x: 604, y: MIX_Y, rev: true, speed: 8 }]; }
         break;
       case 'backIn': if (follow(m, dt)) { m.state = 'onsite'; m.idleT = 0; } break;
       case 'onsite': {
@@ -1157,11 +1361,13 @@ export function createCrew(K) {
         if (m.serving && (m.serving.a.gone || m.serving.a.job !== m.serving.j)) { m.serving = null; m.atPour = false; m.flow = false; }
         if (m.serving) {
           m.idleT = 0;
-          const tx = m.serving.j.x + 17;
+          const tx = m.serving.j.x + 20.5;
           if (!m.atPour && moveV(m, tx, MIX_Y, 7, dt, tx < m.x)) m.atPour = true;
           m.facing = 1;
         } else {
-          m.idleT += dt;
+          /* columns: wait where the crane can reach the chute to fill its pour bucket */
+          if (m.need > K.t) { m.idleT = 0; if (Math.abs(m.x - 522) > 0.1) moveV(m, 522, MIX_Y, 6, dt, 522 < m.x); m.facing = 1; }
+          else m.idleT += dt;
           if (m.idleT > 14 && !m.queue.length) { m.state = 'leaving'; m.route = [{ x: 606, y: MIX_Y, speed: 7 }, { x: 640, y: 492, speed: 7 }, { x: 676, y: 508, speed: 8 }, { x: Math.max(camR() + 70, 760), y: 511, speed: 28 }]; }
         }
         break;
@@ -1186,26 +1392,35 @@ export function createCrew(K) {
     if (!exc.digging) exc.digT = Math.max(0, exc.digT - dt);
   }
 
-  /* -- the material hoist by the stair tower */
-  const hoist = { y: GROUND_Y + 1, req: null };
+  /* -- the material hoist (the building draws its mast and the landing cage; a load rides up it) */
+  const hoist = { y: GROUND_Y - 1, req: null, landing: [], x: 527, top: GROUND_Y };
+  function hoistLoad(a, j, load, h) { hoist.req = { who: a.id, level: j.level, load, state: 'loading', x: h.x, top: h.y }; hoist.x = h.x; hoist.top = h.y; }
+  function hoistSend(a) { if (hoist.req && hoist.req.who === a.id) hoist.req.state = 'up'; }
+  /* a load waits at the landing until its builder climbs up for it; the cage goes back down for the next */
+  const landed = (id) => hoist.landing.some((l) => l.who === id);
+  const sent = (id) => landed(id) || (!!hoist.req && hoist.req.who === id && hoist.req.state === 'up');
+  function takeLanded(id) { const i = hoist.landing.findIndex((l) => l.who === id); if (i >= 0) hoist.landing.splice(i, 1); }
   function stepHoist(dt) {
-    const r = hoist.req, base = GROUND_Y + 1;
-    if (!r) { hoist.y = Math.min(base, hoist.y + dt * 9); return; }
+    const r = hoist.req, base = GROUND_Y - 1;
+    if (!r) { hoist.y = base; return; }
     if (r.state === 'up') {
-      const ty = levelY(r.level);
-      if (Math.abs(hoist.y - ty) <= dt * 7) { hoist.y = ty; r.state = 'top'; } else hoist.y += Math.sign(ty - hoist.y) * dt * 7;
-    } else if (r.state === 'down') {
-      if (hoist.y >= base - dt * 9) { hoist.y = base; hoist.req = null; } else hoist.y += dt * 9;
+      const ty = (r.top != null ? r.top : levelY(r.level)) - 1;
+      if (Math.abs(hoist.y - ty) <= dt * 9) { hoist.landing.push({ who: r.who, load: r.load }); hoist.req = null; hoist.y = base; }
+      else hoist.y += Math.sign(ty - hoist.y) * dt * 9;
     }
-    if (r.state === 'loading' && !agents.has(r.who)) hoist.req = null;
+    if (hoist.req && hoist.req.state === 'loading' && !agents.has(hoist.req.who)) hoist.req = null;
+    if (hoist.landing.length > 6) hoist.landing.shift();
   }
 
-  /* -- the tower crane: mast by the building, jib over the pad and the prefab shed */
-  const crane = { x: (BUILDING.x0 + BUILDING.x1) / 2, hy: 0, load: null, queue: [], cur: null, sway: 0, swayV: 0, vx: 0, idleT: 0, returning: false, jib: 0 };
+  /* -- the tower crane: mast by the building, jib over the pad and the prefab shed. It isn't
+        there on the empty lot: it goes up section by section while the foundation cures. */
+  const crane = { x: (BUILDING.x0 + BUILDING.x1) / 2, hy: 0, load: null, queue: [], cur: null, sway: 0, swayV: 0, vx: 0, idleT: 0, returning: false, jib: 0, erect: 0, built: false };
   function jibY() { return Math.round(Math.min(GROUND_Y - 44, (B().topY ? B().topY() : GROUND_Y - 60) - 13)); }
-  const LOAD_H = { panel: 10, beam: 2, rebar: 2, topbeam: 2, pallet: 3 };
+  /* where the hook's top sits above a load's base (the art hangs loads 7.5 below the hook top) */
+  const HANG = { panel: 15, beam: 9.5, rebar: 9, pane: 15, topbeam: 9.5, cbucket: 14 };
+  function mixerBucketAt() { const m = mixer.truck; return m.state === 'onsite' && !m.moving && !m.serving ? [m.x - 21, MIX_Y - 3] : null; }
   function craneRequest(a, load, from, to, auto) {
-    const r = { who: a ? a.id : null, load, from, to, state: 'queued', attached: !!auto, auto: !!auto, released: false, dead: false, t: 0 };
+    const r = { who: a ? a.id : null, load, from, to, state: 'queued', attached: !!auto, auto: !!auto, released: false, dead: false, t: 0, a: 0 };
     crane.queue.push(r);
     return r;
   }
@@ -1215,63 +1430,88 @@ export function createCrew(K) {
     if (crane.cur === r) { crane.cur = null; crane.load = null; crane.returning = true; }
   }
   function craneRelease(r) { r.released = true; }
+  function stepCraneErect(dt) {
+    const want = !NO_CRANE[stage().phase] || crane.wanted > K.t;
+    if (!want) { crane.erect = 0; crane.built = false; return; }
+    if (crane.erect >= 1) return;
+    /* a fresh page on a site that's already up: the crane is simply there */
+    if (K.t < 4 || K.reduced) { crane.erect = 1; return; }
+    crane.erect = Math.min(1, crane.erect + dt / 28);
+    if (crane.erect >= 1) { crane.built = true; K.emit('crew:crane', { x: BUILDING.craneX }); }
+  }
   function stepCrane(dt) {
+    stepCraneErect(dt);
     const jy = jibY();
     crane.jib = jy;
+    if (crane.erect < 1) { crane.hy = jy + 9; crane.load = null; return; }
     if (!crane.hy) crane.hy = jy + 9;
     const top = jy + 7;
     const x0 = crane.x;
-    const mx = (x, sp0 = 17) => { const sp = sp0 * fast; return mx2(x, sp); };
-    const mx2 = (x, sp) => { const d = x - crane.x; if (Math.abs(d) <= Math.min(sp, 1 + Math.abs(d) * 1.5) * dt + 0.02) { crane.x = x; return true; } crane.x += Math.sign(d) * Math.min(sp, 1 + Math.abs(d) * 1.5) * dt; return false; };
-    const my = (y, sp0 = 11) => { const sp = sp0 * fast; return my2(y, sp); };
-    const my2 = (y, sp) => { const d = y - crane.hy; if (Math.abs(d) <= Math.min(sp, 1 + Math.abs(d) * 1.6) * dt + 0.02) { crane.hy = y; return true; } crane.hy += Math.sign(d) * Math.min(sp, 1 + Math.abs(d) * 1.6) * dt; return false; };
     let r = crane.cur;
     if (!r && crane.queue.length) { r = crane.cur = crane.queue.shift(); r.state = 'toPick'; crane.returning = false; }
-    const fast = r && r.fast ? 2.2 : 1;
+    const fast = r && r.fast ? (r.fast === true ? 2.2 : r.fast) : 1;
+    const mx = (x, sp0 = 17) => { const sp = sp0 * fast; const d = x - crane.x; const v = Math.min(sp, 1 + Math.abs(d) * 1.5) * dt; if (Math.abs(d) <= v + 0.02) { crane.x = x; return true; } crane.x += Math.sign(d) * v; return false; };
+    const my = (y, sp0 = 11) => { const sp = sp0 * fast; const d = y - crane.hy; const v = Math.min(sp, 1 + Math.abs(d) * 1.6) * dt; if (Math.abs(d) <= v + 0.02) { crane.hy = y; return true; } crane.hy += Math.sign(d) * v; return false; };
     if (!r) {
       crane.idleT += dt;
       if (my(top + 2, 6)) crane.returning = false;
       if (crane.idleT > 18) mx(BUILDING.x1 - 18, 5);
     } else {
       crane.idleT = 0; r.t += dt;
-      const h = LOAD_H[r.load] || 3;
+      const h = r.hang || HANG[r.load] || 10;
+      const from = typeof r.from === 'function' ? r.from() : r.from;
       switch (r.state) {
-        case 'toPick': if (my(top) && mx(r.from[0])) r.state = 'lower'; break;
-        case 'lower': if (my(r.from[1] - h - 4)) { r.state = 'atPick'; r.t = 0; } break;
+        case 'toPick': if (from && my(top) && mx(from[0])) r.state = 'lower'; if (r.t > 90) craneCancel(r); break;
+        case 'lower': if (!from) { r.state = 'toPick'; break; } if (my(from[1] - h)) { r.state = 'atPick'; r.t = 0; r.pick = from; } break;
         case 'atPick':
-          if (r.attached || (r.auto && r.t > 1)) { crane.load = r.load; r.state = 'lift'; }
+          if (r.attached || (r.auto && r.t > 1) || (r.load === 'cbucket' && r.t > 1.6)) { crane.load = r.load; r.state = 'lift'; }
           else if (r.t > 70) craneCancel(r);
           break;
         case 'lift': if (my(top)) r.state = 'travel'; break;
         case 'travel': if (mx(r.to[0])) r.state = 'down'; break;
-        case 'down': if (my(r.to[1] - h - 3)) { r.state = 'set'; r.t = 0; } break;
-        case 'set':
-          if (r.released || (r.auto && r.t > 2.5) || r.t > 60) { crane.load = null; r.state = 'done'; if (r.onSet) r.onSet(); }
+        case 'down': if (my(r.to[1] - h - (r.part === 'deck' ? 9 : r.part === 'beam' ? 7 : 0))) { r.state = 'set'; r.t = 0; } break;
+        case 'set': {
+          /* handed over: the building draws the piece settling as the crew guides it; the hook follows its slings */
+          if (r.handed) {
+            crane.load = null;
+            const e = r.a * r.a * (3 - 2 * r.a);
+            const hy = r.part === 'deck' ? r.to[1] - 6.2 - 9 * (1 - e) : r.part === 'beam' ? r.to[1] - 7.6 - 7 * (1 - e) : r.to[1] - (r.hang || 10);
+            my(hy, 6);
+          }
+          if (r.released || (r.auto && r.t > 2.5) || r.t > 70) {
+            r.state = r.back && r.pick ? 'back' : 'done';
+            if (r.state === 'done') crane.load = null;
+            if (r.onSet) r.onSet();
+          }
           break;
+        }
+        case 'back': if (my(top) && mx(r.pick[0])) r.state = 'backDown'; break;
+        case 'backDown': if (my(r.pick[1] - (HANG[r.load] || 10))) { crane.load = null; r.state = 'done'; } break;
         case 'done': if (my(top)) crane.cur = null; break;
         default: crane.cur = null;
       }
     }
-    /* the load swings a little: a damped pendulum kicked by the trolley */
     const v = (crane.x - x0) / Math.max(dt, 1e-3);
     const acc = (v - crane.vx) / Math.max(dt, 1e-3); crane.vx = v;
     crane.swayV += (-crane.sway * 2.2 - crane.swayV * 0.5 - clamp(acc, -60, 60) * 0.006) * dt;
     crane.sway = clamp(crane.sway + crane.swayV * dt, -0.3, 0.3);
   }
+  K.on('milestone', (m) => {
+    if (!m || m.kind !== 'topped') return;
+    /* topping out: the crane hoists the last beam, with a little tree on it, rigged beside the building */
+    crane.erect = 1;
+    const tb = B().topBeam ? B().topBeam() : { x: (BUILDING.x0 + BUILDING.x1) / 2 + 20, y: B().levelY(floorsN()) };
+    const r = craneRequest(null, 'topbeam', [BUILDING.x1 - 6, GROUND_Y + 4], [tb.x, tb.y + 0.9], true);
+    r.fast = true;
+    crane.queue.splice(crane.queue.indexOf(r), 1); crane.queue.unshift(r);
+    r.onSet = () => K.emit('crew:topbeam', { x: r.to[0], y: r.to[1] });
+  });
+
   /* the yard hand: drives the forklift, spots the trucks (no name tag) */
   const yard = make('npc:yard', false, true);
   yard.colors = colorsFor('npc:yard', { hat: 'white', vest: 'orange' });
   agents.set(yard.id, yard);
   mount(yard, fork);
-  K.on('milestone', (m) => {
-    if (!m || m.kind !== 'topped') return;
-    /* topping out: the crane hoists the last beam, with a little tree on it */
-    /* rigged at the foot of the building beside the crane, so it rises while the moment plays */
-    const r = craneRequest(null, 'topbeam', [BUILDING.x1 - 6, GROUND_Y + 4], [(BUILDING.x0 + BUILDING.x1) / 2 + 20, B().levelY(floorsN())], true);
-    r.fast = true;
-    crane.queue.splice(crane.queue.indexOf(r), 1); crane.queue.unshift(r);
-    r.onSet = () => K.emit('crew:topbeam', { x: r.to[0], y: r.to[1] });
-  });
 
   /* ============================================================ the foreman */
   const foreman = { phase: 'in', t: 0, x: spot('office', 'door')[0], y: spot('office', 'door')[1] };
@@ -1323,13 +1563,20 @@ export function createCrew(K) {
   }
 
   /* ============================================================ drawing */
+  const POSES_DRAWN = Array.isArray(ART.POSES_DRAWN) ? ART.POSES_DRAWN : null;
+  const CARRY_DRAWN = Array.isArray(ART.CARRY_DRAWN) ? ART.CARRY_DRAWN : null;
+  function drawPose(p) { return p in POSE_FALLBACK && !(POSES_DRAWN && POSES_DRAWN.includes(p)) ? POSE_FALLBACK[p] : p; }
+  function drawCarry(c) { return c && c in CARRY_FALLBACK && !(CARRY_DRAWN && CARRY_DRAWN.includes(c)) ? CARRY_FALLBACK[c] : c; }
   function blinkOf(a) { return ((a.t + (a.seed % 7)) % 4.1) < 0.13; }
   function drawAgent(ctx, a) {
     if (a.held) K.art.prop(ctx, a.held.name, a.held.x, a.held.y, a.held.o || EMPTY);
     if (a.hidden) return;
     const o = a.fig;
-    o.pose = a.pose; o.t = a.poseT; o.facing = a.pose === 'look' ? 0 : a.facing;
-    o.colors = a.colors; o.carry = a.carry; o.hat = a.hat; o.blink = blinkOf(a); o.me = a.me;
+    o.pose = drawPose(a.pose); o.t = a.poseT; o.facing = FACE_YOU[a.pose] ? 0 : a.facing;
+    o.colors = a.colors; o.carry = drawCarry(a.carry); o.hat = a.hat; o.blink = blinkOf(a); o.me = a.me;
+    o.load = a.carry === 'barrow' ? barrow.load : null;
+    o.paneW = a.carry === 'paneL' && a.pair && a.pair.mate ? clamp(Math.abs(a.pair.mate.x - a.x) - 2, 4, 14) : 8;
+    o.shadow = !(a.pose === 'climb' || a.pose === 'sitbeam');
     K.art.figure(ctx, a.x, a.y, o);
     if (a.hold) K.art.emote(ctx, a.x, a.y - 23, 'dots', a.hold.t);
     else if (a.emote && a.t < a.emote.until) K.art.emote(ctx, a.x, a.y - 23, a.emote.icon, a.t);
@@ -1344,33 +1591,24 @@ export function createCrew(K) {
     }
     ctx.globalAlpha = 1;
   }
-  /* two builders walking a pane between them */
-  function drawPair(ctx, p) {
-    const L = p.lead, M = p.mate;
-    if (!L || !M || L.carry !== 'paneL' || M.carry !== 'paneR' || L.level !== M.level) return;
-    const x0 = Math.min(L.x, M.x), x1 = Math.max(L.x, M.x);
-    if (x1 - x0 > 14) return;
-    pairO.w = Math.max(6, x1 - x0 - 3); pairO.t = L.t;
-    K.art.prop(ctx, 'pane', (x0 + x1) / 2, Math.max(L.y, M.y) - 4.5, pairO);
-  }
-  const pairO = { w: 6, carried: true, t: 0 };
+  const forkO = { facing: -1, lift: 0, load: null, wheelT: 0 }, truckO = { facing: -1 }, mixO = { facing: 1 };
   const vehFig = { pose: 'sit', t: 0, facing: 1, colors: null, carry: null, hat: true, blink: false, me: false };
   function drawFork(ctx) {
     const d = fork.driver ? agents.get(fork.driver) : null;
-    K.art.prop(ctx, 'forklift', fork.x, fork.y, { facing: fork.facing, lift: fork.lift, load: fork.load, t: fork.odo || 0, moving: fork.moving });
-    if (d) {
-      vehFig.pose = 'sit'; vehFig.t = d.poseT; vehFig.facing = fork.facing; vehFig.colors = d.colors; vehFig.me = d.me; vehFig.blink = blinkOf(d);
-      K.art.figure(ctx, fork.x - fork.facing * 2, fork.y - 3.5, vehFig);
-    }
+    /* the art draws the forklift's driver itself; the yard hand is hidden while he drives */
+    forkO.facing = fork.facing; forkO.lift = clamp(fork.lift / 3.5, 0, 1); forkO.load = fork.load; forkO.wheelT = fork.odo || 0; forkO.driver = d ? d.colors : null;
+    K.art.prop(ctx, 'forklift', fork.x, fork.y, forkO);
+    void d;
   }
   function drawTruck(ctx) {
-    K.art.prop(ctx, 'truck', truck.x, truck.y, { facing: truck.facing, load: truck.load, t: truck.odo || 0, rev: truck.rev && truck.moving, moving: truck.moving, driver: DRIVER_COLORS });
+    truckO.facing = truck.facing; truckO.load = truck.load[0] || null; truckO.n = 2 + truck.load.length; truckO.wheelT = truck.odo || 0; truckO.reverse = truck.rev && truck.moving; truckO.driver = DRIVER_COLORS;
+    K.art.prop(ctx, 'truck', truck.x, truck.y, truckO);
   }
   function drawMixerTruck(ctx) {
     const m = mixer.truck;
     if (m.state === 'onsite' && m.serving && m.atPour) {
       /* the chute from the back of the drum out over the forms */
-      const rx = m.x - 17, ry = m.y - 6, tx = m.serving.j.x, ty = (m.serving.j.y || GROUND_Y + 6) + 1;
+      const rx = m.x - 20.5, ry = m.y - 6.4, tx = m.serving.j.x, ty = (m.serving.j.y || GROUND_Y + 6) + 1;
       ctx.lineCap = 'round';
       ctx.strokeStyle = K.pal.ink; ctx.lineWidth = 1.9; ctx.beginPath(); ctx.moveTo(rx, ry); ctx.lineTo(tx + 2, ty - 2); ctx.stroke();
       ctx.strokeStyle = K.pal.steel; ctx.lineWidth = 1.3; ctx.beginPath(); ctx.moveTo(rx, ry); ctx.lineTo(tx + 2, ty - 2); ctx.stroke();
@@ -1379,7 +1617,8 @@ export function createCrew(K) {
         ctx.fillStyle = K.pal.concreteShade; ctx.beginPath(); ctx.ellipse(tx + 1, ty + 0.6, 2.4 + Math.sin(m.spin * 2) * 0.3, 0.8, 0, 0, Math.PI * 2); ctx.fill();
       }
     }
-    K.art.prop(ctx, 'mixerTruck', m.x, m.y, { facing: m.facing, t: m.odo || 0, spin: m.spin, rev: m.rev && m.moving, moving: m.moving, driver: DRIVER_COLORS });
+    mixO.facing = m.facing; mixO.t = m.spin; mixO.wheelT = m.odo || 0; mixO.reverse = m.rev && m.moving; mixO.driver = DRIVER_COLORS;
+    K.art.prop(ctx, 'mixerTruck', m.x, m.y, mixO);
   }
   function drawExc(ctx) {
     const e = exc, d = e.driver ? agents.get(e.driver) : null;
@@ -1476,61 +1715,93 @@ export function createCrew(K) {
     g.beginPath(); g.moveTo(mx + 2, top); g.lineTo(lerp(tip, mx, 0.35), tY(lerp(tip, mx, 0.35))); g.moveTo(mx + 2, top); g.lineTo(tail, jy - 1.2); g.stroke();
   }
   const craneItem = { y: GROUND_Y - 0.5, draw: (ctx) => drawCrane(ctx) };
-  const hookO = { hanging: true, len: 14 };
+  const hookO = { load: null };
   function drawCrane(ctx) {
-    const jy = crane.jib || jibY();
+    if (crane.erect <= 0) return;
+    const jy = crane.jib || jibY(), mx0 = BUILDING.craneX;
+    if (crane.erect < 1) {
+      /* going up: the mast rises section by section with its climbing frame, then the jib swings out */
+      const e1 = clamp(crane.erect / 0.72, 0, 1), sec = 4;
+      const h = Math.ceil(((GROUND_Y - jy) * e1) / sec) * sec, topY = GROUND_Y - h;
+      ctx.save(); ctx.beginPath(); ctx.rect(mx0 - 8, topY, 18, h + 3); ctx.clip();
+      ctx.translate(0, topY - jy - 2 > 0 ? 0 : 0);
+      drawCraneStatic(ctx, jy);
+      ctx.restore();
+      if (e1 < 1) {
+        ctx.fillStyle = K.pal.crane; ctx.strokeStyle = K.pal.ink; ctx.lineWidth = 0.35;
+        rr(ctx, mx0 - 1.2, topY - 3.2, 6.4, 3.4, 0.4); ctx.fill(); ctx.stroke();
+      } else {
+        const f = clamp((crane.erect - 0.72) / 0.28, 0, 1);
+        ctx.save(); ctx.beginPath(); ctx.rect(mx0 - (mx0 - CRANE_TIP + 2) * f, jy - 16, (mx0 - CRANE_TIP + 2) * f + (CRANE_TAIL - mx0 + 2) * f + 4, 24); ctx.clip();
+        drawCraneStatic(ctx, jy);
+        ctx.restore();
+      }
+      return;
+    }
     /* two thin cached layers (jib, mast): one big mostly-empty layer cost ~70 ms a frame at desktop zoom */
     K.blit('crew:crane:jib', CRANE_TIP - 2, jy - 16, CRANE_TAIL - CRANE_TIP + 4, 24, (g) => drawCraneStatic(g, jy), { ver: jy });
-    K.blit('crew:crane:mast', BUILDING.craneX - 8, jy + 8, 18, GROUND_Y - jy - 4, (g) => drawCraneStatic(g, jy), { ver: jy });
+    K.blit('crew:crane:mast', mx0 - 8, jy + 8, 18, GROUND_Y - jy - 4, (g) => drawCraneStatic(g, jy), { ver: jy });
     const tx = crane.x;
     ctx.fillStyle = K.pal.craneDark; ctx.strokeStyle = K.pal.ink; ctx.lineWidth = 0.35;
     rr(ctx, tx - 2.4, jy + 0.2, 4.8, 1.8, 0.5); ctx.fill(); ctx.stroke();
     const len = crane.hy - jy;
     const hx = tx + Math.sin(crane.sway + Math.sin(K.t * 0.9) * 0.015) * len * 0.5;
     ctx.strokeStyle = K.pal.cable; ctx.lineWidth = 0.25;
-    ctx.beginPath(); ctx.moveTo(tx - 0.7, jy + 2); ctx.lineTo(hx - 0.5, crane.hy); ctx.moveTo(tx + 0.7, jy + 2); ctx.lineTo(hx + 0.5, crane.hy); ctx.stroke();
-    if (hasProp('hook')) K.art.prop(ctx, 'hook', hx, crane.hy + 2, EMPTY);
-    else {
-      ctx.fillStyle = K.pal.crane; ctx.strokeStyle = K.pal.ink; ctx.lineWidth = 0.35;
-      rr(ctx, hx - 1.2, crane.hy - 0.5, 2.4, 2, 0.5); ctx.fill(); ctx.stroke();
-      ctx.beginPath(); ctx.arc(hx, crane.hy + 2.3, 0.7, 0, Math.PI); ctx.stroke();
-    }
-    if (crane.load) {
-      const h = LOAD_H[crane.load] || 3, by = crane.hy + 3 + h;
-      ctx.strokeStyle = K.pal.cable; ctx.lineWidth = 0.2;
-      ctx.beginPath(); ctx.moveTo(hx, crane.hy + 2); ctx.lineTo(hx - 3.5, by - h); ctx.moveTo(hx, crane.hy + 2); ctx.lineTo(hx + 3.5, by - h); ctx.stroke();
-      if (crane.load === 'topbeam') {
-        K.art.prop(ctx, 'beam', hx, by, { len: 18 });
-        K.art.prop(ctx, hasProp('tree') ? 'tree' : 'plant', hx + 5, by - 1.8, { small: true });
-        K.art.prop(ctx, 'flag', hx - 6, by - 1.8, EMPTY);
-      } else K.art.prop(ctx, crane.load, hx, by, hookO);
-    }
+    ctx.beginPath(); ctx.moveTo(tx - 0.7, jy + 2); ctx.lineTo(hx - 0.4, crane.hy); ctx.moveTo(tx + 0.7, jy + 2); ctx.lineTo(hx + 0.4, crane.hy); ctx.stroke();
+    const L = crane.load, cur = crane.cur;
+    const post = L === 'beam' && cur && cur.part === 'post';
+    hookO.load = L === 'topbeam' ? 'beam' : L === 'cbucket' || post ? null : L;
+    K.art.prop(ctx, 'hook', hx, crane.hy + 2.2, hookO);
+    if (L === 'topbeam') {
+      K.art.prop(ctx, hasProp('tree') ? 'tree' : 'plant', hx + 4.5, crane.hy + 7.9, topTreeO);
+      K.art.prop(ctx, 'flag', hx - 5.5, crane.hy + 7.9, topFlagO);
+    } else if (L === 'cbucket') drawBucketLoad(ctx, hx, crane.hy, cur);
+    else if (post) drawPostLoad(ctx, hx, crane.hy);
     /* red light on top: blinks, and glows at night */
     const night = K.light.night || 0;
     const on = (K.t % 1.6) < 1.1;
     ctx.fillStyle = on ? EMIT.craneRed : K.pal.truckDark;
-    ctx.beginPath(); ctx.arc(BUILDING.craneX + 2, jy - 14.6, 0.7, 0, Math.PI * 2); ctx.fill();
-    if (night > 0.25 && on) K.lights.push({ x: BUILDING.craneX + 2, y: jy - 14.6, r: 5, a: 0.8 * night, color: EMIT.craneRed });
-    if (night > 0.3 && anyoneWorking()) K.lights.push({ x: BUILDING.craneX - 4, y: jy + 6, r: 60, a: 0.2 * night, color: EMIT.lamp });
+    ctx.beginPath(); ctx.arc(mx0 + 2, jy - 14.6, 0.7, 0, Math.PI * 2); ctx.fill();
+    if (night > 0.25 && on) K.lights.push({ x: mx0 + 2, y: jy - 14.6, r: 5, a: 0.8 * night, color: EMIT.craneRed });
+    if (night > 0.3 && anyoneWorking()) K.lights.push({ x: mx0 - 4, y: jy + 6, r: 60, a: 0.2 * night, color: EMIT.lamp });
   }
+  const topTreeO = { small: true }, topFlagO = { h: 6 };
+  /* the concrete pour bucket (a cone with a gate at the bottom), and a glulam post hanging upright */
+  function drawBucketLoad(ctx, hx, hy, r) {
+    const y0 = hy + 3.6;
+    ctx.strokeStyle = K.pal.cable; ctx.lineWidth = 0.2;
+    ctx.beginPath(); ctx.moveTo(hx, y0); ctx.lineTo(hx - 2.4, y0 + 2.6); ctx.moveTo(hx, y0); ctx.lineTo(hx + 2.4, y0 + 2.6); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(hx - 3, y0 + 2.6); ctx.lineTo(hx + 3, y0 + 2.6); ctx.lineTo(hx + 1.1, y0 + 8.8); ctx.lineTo(hx - 1.1, y0 + 8.8); ctx.closePath();
+    ctx.fillStyle = K.pal.steel; ctx.fill(); ctx.strokeStyle = K.pal.ink; ctx.lineWidth = 0.35; ctx.stroke();
+    ctx.fillStyle = K.pal.concrete; ctx.fillRect(hx - 2.8, y0 + 2.6, 5.6, 0.7);
+    if (r && r.pouring && r.state === 'set') {
+      ctx.strokeStyle = K.pal.concreteShade; ctx.lineWidth = 0.9; ctx.lineCap = 'round';
+      ctx.beginPath(); ctx.moveTo(hx, y0 + 9); ctx.lineTo(hx + Math.sin(K.t * 7) * 0.15, y0 + 13); ctx.stroke();
+    }
+  }
+  function drawPostLoad(ctx, hx, hy) {
+    const y0 = hy + 3.6, h = 11;
+    ctx.strokeStyle = K.pal.cable; ctx.lineWidth = 0.2; ctx.beginPath(); ctx.moveTo(hx, y0); ctx.lineTo(hx, y0 + 0.8); ctx.stroke();
+    ctx.fillStyle = K.pal.timber; ctx.strokeStyle = K.pal.ink; ctx.lineWidth = 0.3;
+    rr(ctx, hx - 0.8, y0 + 0.8, 1.6, h, 0.2); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = K.pal.timberShade; ctx.fillRect(hx + 0.3, y0 + 1, 0.4, h - 0.4);
+  }
+  /* a load riding the building's material hoist up to the landing */
   const hoistItem = { y: GROUND_Y - 0.2, draw: (ctx) => drawHoist(ctx) };
+  const hoistLoadO = { w: 4.6, len: 6, n: 2 };
   function drawHoist(ctx) {
-    const wl = workLevel();
-    const top = Math.min(levelY(wl === 'ground' ? 1 : Math.min(floorsN(), (wl | 0) + 1)), GROUND_Y - 20) - 6;
-    ctx.strokeStyle = K.pal.steel; ctx.lineWidth = 0.6; ctx.lineCap = 'round';
-    ctx.beginPath(); ctx.moveTo(HOIST_X - 2.5, GROUND_Y + 1); ctx.lineTo(HOIST_X - 2.5, top); ctx.moveTo(HOIST_X + 2.5, GROUND_Y + 1); ctx.lineTo(HOIST_X + 2.5, top); ctx.stroke();
-    ctx.lineWidth = 0.25; ctx.beginPath();
-    for (let y = GROUND_Y; y > top + 5; y -= 5) { ctx.moveTo(HOIST_X - 2.5, y); ctx.lineTo(HOIST_X + 2.5, y - 5); }
-    ctx.stroke();
-    const y = hoist.y;
-    const r = hoist.req;
-    if (r && r.load && (r.state === 'up' || r.state === 'top')) K.art.prop(ctx, r.load, HOIST_X, y - 1.2, hoistLoadO);
-    ctx.fillStyle = K.pal.scaffold; ctx.strokeStyle = K.pal.ink; ctx.lineWidth = 0.35;
-    rr(ctx, HOIST_X - 3.6, y - 1.2, 7.2, 1.4, 0.3); ctx.fill(); ctx.stroke();
-    ctx.strokeStyle = K.pal.steel; ctx.lineWidth = 0.3;
-    ctx.beginPath(); ctx.moveTo(HOIST_X - 3.4, y - 1); ctx.lineTo(HOIST_X - 3.4, y - 8); ctx.lineTo(HOIST_X + 3.4, y - 8); ctx.lineTo(HOIST_X + 3.4, y - 1); ctx.stroke();
+    const r = hoist.req, x = hoist.x + 1.4;
+    if (r && r.load && r.state === 'up') {
+      const y = hoist.y;
+      ctx.fillStyle = K.pal.scaffold; ctx.strokeStyle = K.pal.ink; ctx.lineWidth = 0.3;
+      rr(ctx, x - 2.8, y - 0.9, 5.6, 1, 0.25); ctx.fill(); ctx.stroke();
+      K.art.prop(ctx, hoistProp(r.load), x, y - 0.9, hoistLoadO);
+    }
+    for (let i = 0; i < hoist.landing.length && i < 3; i++) K.art.prop(ctx, hoistProp(hoist.landing[i].load), x - i * 1.6, hoist.top - 1 - i * 0.4, hoistLoadO);
   }
-  const hoistLoadO = { upright: true, w: 6 };
+  const glassO = { kind: 'glass', n: 2 };
+  const glassItem = { y: 0, draw: (ctx) => { const gs = glassStageAt(); if (!gs) return; glassO.n = Math.min(4, glassStage.n + 1); K.art.prop(ctx, 'pallet', gs[0], gs[1], glassO); } };
+  const hoistProp = (l) => (l === 'panel' || l === 'pane' || l === 'bricks' ? l : 'beam');
   /* yard equipment: sawhorses, trestles, the mortar mixer */
   function buildStatics() {
     const add = (x, y, draw) => statics.push({ x, y, draw });
@@ -1550,27 +1821,25 @@ export function createCrew(K) {
   const foremanItem = { y: 0, draw: drawForeman };
   function collect(list) {
     frameNo++;
-    street.length = 0;
     const night = K.light.night || 0;
     if (!statics.length) buildStatics();
     for (const s of statics) if (inView(s.x, 20)) list.push(s);
     if (barrow.at) { barrowItem.y = barrow.at[1]; if (inView(barrow.at[0])) list.push(barrowItem); }
     if (stage().phase === 'finish' && inView(SAPLINGS[1][0])) list.push(saplingItem);
     list.push(craneItem);
-    if (inView(HOIST_X)) list.push(hoistItem);
+    if (glassStage.n > 0) { const gs = glassStageAt(); if (gs && inView(gs[0])) { glassItem.y = gs[1]; list.push(glassItem); } }
+    if (hoist.req || hoist.landing.length) { hoistItem.y = hoist.landing.length ? hoist.top : GROUND_Y - 0.2; list.push(hoistItem); }
     for (const a of agents.values()) {
       if (a.gone || a.vehicle) continue;
       if (a.hidden && !a.held) continue;
       if (!inView(a.x, 30)) continue;
       a.item.y = a.y;
-      if (a.y > YARD_FRONT + 0.5) street.push(a.item); else list.push(a.item);
+      list.push(a.item);      // the world sorts the fence and the sidewalk in the same list
       if (night > 0.3 && !a.hidden && a.state === 'working' && !a.npc) {
         const L = a.light, busy = a.act && a.act.k === 'do' && a.job;
         L.x = a.x + (a.facing || 1) * (busy ? 3 : 1.5); L.y = a.y - (busy ? 7 : 12); L.r = busy ? 15 : 6; L.a = (busy ? 0.42 : 0.38) * night;
         K.lights.push(L);
       }
-      const p = a.pair;
-      if (p && p.lead === a && p.mate) { if (!p.item) p.item = { y: 0, draw: (ctx) => drawPair(ctx, p) }; p.item.y = Math.max(a.y, p.mate.y) + 0.05; list.push(p.item); }
     }
     vehicle(list, fork, fork.item || (fork.item = { y: 0, draw: drawFork }));
     if (truck.state !== 'gone') vehicle(list, truck, truck.item || (truck.item = { y: 0, draw: drawTruck }));
@@ -1583,16 +1852,12 @@ export function createCrew(K) {
   function vehicle(list, v, item) {
     if (!inView(v.x, 45)) return;
     item.y = v.y;
-    if (v.y > YARD_FRONT + 0.5) street.push(item); else list.push(item);
+    list.push(item);
     const night = K.light.night || 0;
     if (night > 0.3 && v.moving) K.lights.push({ x: v.x + (v.rev ? -v.facing : v.facing) * 15, y: v.y - 5, r: 14, a: 0.4 * night, color: v.rev ? EMIT.lampGlow : undefined });
   }
-  function drawStreet(ctx) {
-    if (streetFrame === frameNo) return;
-    streetFrame = frameNo;
-    if (street.length > 1) street.sort((p, q) => p.y - q.y);
-    for (const d of street) d.draw(ctx);
-  }
+  /* kept for the interface: street traffic now sorts with the world's fence and sidewalk in collect() */
+  function drawStreet() {}
 
   /* ---------------------------------------------------------- name tags */
   const placed = [];
@@ -1601,7 +1866,7 @@ export function createCrew(K) {
     const base = a.me ? (a.name || 'You') : a.name;
     if (!base && followId !== a.id) return '';
     const nm = base ? String(base).trim().slice(0, 16) : 'Neighbour';
-    if (followId === a.id) { const j = a.job ? a.job.label : a.say; return j ? nm + ' · ' + j : nm; }
+    if (followId === a.id) { let j = a.job ? a.job.label : a.say; if (j && j.length > 34) j = j.slice(0, 33).replace(/[ ,]+\S*$/, '') + '…'; return j ? nm + ' · ' + j : nm; }
     return nm;
   }
   function overlaps(x, y, w, h) {
@@ -1611,7 +1876,6 @@ export function createCrew(K) {
     return false;
   }
   function drawTags(ctx, followId) {
-    drawStreet(ctx);
     ctx.font = '600 3.7px system-ui, -apple-system, "Segoe UI", sans-serif';
     ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
     placed.length = 0; tagOrder.length = 0;
@@ -1659,7 +1923,10 @@ export function createCrew(K) {
     checkStage();
     if (mixer.spinUntil > K.t) mixer.t += dt;
     stepForeman(dt);
-    for (const a of agents.values()) stepAgent(a, dt);
+    for (const a of agents.values()) {
+      /* one builder's bad step never freezes the site: they drop the job and pick a new one */
+      try { stepAgent(a, dt); } catch (e) { console.error(e); try { abort(a); a.act = null; } catch (e2) { a.plan = []; a.act = null; } }
+    }
     for (const [id, a] of agents) if (a.gone && !a.me && !a.npc) { abort(a); agents.delete(id); }
     stepCrane(dt); stepHoist(dt); stepTruck(dt); stepMixer(dt); stepExc(dt);
     if (barriers.size > 40) for (const [k, b] of barriers) if (K.t - b.t > 120) barriers.delete(k);
@@ -1714,6 +1981,16 @@ export function createCrew(K) {
       abort(a);
       if (st === 'working' && a.carry === 'thermos') a.plan.push(D(a, 'bend', 0.6, { carry: null, say: 'putting the thermos down' }));
     },
+    /* the director: everyone on site glances up and cheers (or looks, waves, claps) for a moment */
+    react(kind) {
+      let n = 0;
+      for (const a of agents.values()) {
+        if (a.gone || a.npc || a.vehicle || a.borrowed || a.hold || (a.state !== 'working' && a.state !== 'away')) continue;
+        a.react = { kind: REACT[kind] ? kind : 'cheer', at: K.t + a.r() * 0.7 }; n++;
+      }
+      return n;
+    },
+    ids() { const out = []; for (const a of agents.values()) if (!a.npc && !a.gone) out.push(a.id); return out; },
     whistle(on) { if (!on && foreman.phase === 'raise') { foreman.phase = 'nod'; foreman.t = 0; } },
     deliver,
     step: stepAll,
@@ -1743,25 +2020,33 @@ export function createCrew(K) {
       agents: [...agents.values()].map((a) => ({ id: a.id, x: Math.round(a.x), y: Math.round(a.y), level: a.level, state: a.state, pose: a.pose, carry: a.carry,
         job: a.job ? a.job.id : null, kind: a.job ? a.job.kind : null, role: a.role, say: a.say, act: a.act ? a.act.k : null, doing: a.doing,
         gone: a.gone, hidden: a.hidden, vehicle: a.vehicle ? a.vehicle.kind : null, name: a.name })),
-      crane: { x: Math.round(crane.x), hookY: Math.round(crane.hy), jib: crane.jib, load: crane.load, state: crane.cur ? crane.cur.state : 'idle', queue: crane.queue.length },
+      crane: { erect: +crane.erect.toFixed(2), x: Math.round(crane.x), hookY: Math.round(crane.hy), jib: crane.jib, load: crane.load, state: crane.cur ? crane.cur.state : 'idle', queue: crane.queue.length },
       truck: { state: truck.state, x: Math.round(truck.x), y: Math.round(truck.y), load: truck.load.slice(), queue: truckQueue.slice() },
       mixer: { state: mixer.truck.state, x: Math.round(mixer.truck.x), y: Math.round(mixer.truck.y), serving: mixer.truck.serving ? mixer.truck.serving.a.id : null, queue: mixer.truck.queue.length, atPour: mixer.truck.atPour, flow: mixer.truck.flow },
       fork: { x: Math.round(fork.x), y: Math.round(fork.y), lift: +fork.lift.toFixed(1), load: fork.load, driver: fork.driver },
       exc: { state: exc.state, x: Math.round(exc.x), y: Math.round(exc.y), driver: exc.driver, digging: exc.digging },
-      hoist: { y: Math.round(hoist.y), req: hoist.req ? hoist.req.state : null, who: hoist.req ? hoist.req.who : null },
+      hoist: { y: Math.round(hoist.y), req: hoist.req ? hoist.req.state : null, who: hoist.req ? hoist.req.who : null, landing: hoist.landing.map((l) => l.who + ':' + l.load) },
       barrow: { user: barrow.user, at: barrow.at },
       foreman: foreman.phase,
       pending: pendingPairs.length,
     }),
     crane: () => ({ x: crane.x, y: crane.jib, hookY: crane.hy, load: crane.load, phase: crane.cur ? crane.cur.state : 'idle' }),
     /* tests and the preview: run one job's chain on a builder now (job as from building.jobs()) */
-    testJob(id, job) {
+    testJob(id, job, mateId) {
       const a = agents.get(id);
       if (!a || !job || a.npc) return false;
       abort(a);
       const st = stage();
       a.job = Object.assign({ crew: 1, level: 'ground', y: GROUND_Y + 6, label: job.kind }, job, { stage: st.phase + ':' + st.floor });
       a.role = 'lead'; a.doing = 'job';
+      const m = mateId ? agents.get(mateId) : null;
+      if (m && a.job.crew > 1) {
+        abort(m);
+        const pair = newPair(a, m, a.job);
+        m.doing = 'job'; m.plan.push(...prefix(m, null), ...pairChain(m, pair, false));
+        a.plan.push(...prefix(a, a.job), ...pairChain(a, pair, true));
+        return true;
+      }
       a.plan.push(...prefix(a, a.job), ...chainFor(a, a.job));
       return true;
     },
