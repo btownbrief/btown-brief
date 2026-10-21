@@ -504,10 +504,24 @@ function fillPager(row) {
   const wd = weekday(date);
   row.querySelector('.t').innerHTML = '<span class="d-l">' + esc(dayName(date)) + '</span><span class="d-m">' + esc(wd + ', ' + shortDay(date)) +
     '</span><span class="d-s">' + esc(wd.slice(0, 3) + ', ' + shortDay(date)) + '</span>';
+  fitDay(row);
   row.querySelector('.prev').disabled = !olderThan(date);
   /* the paper is leading with an earlier day because today has nothing yet:
      there is no later day to go to */
   row.querySelector('.next').disabled = date >= tk || (!W.start && !!W.shownDay && date === W.shownDay);
+}
+/* the longest of the three that fits beside Local / Everything: a long
+   weekday ("Wednesday, Oct 21") at 390 takes the short form instead of
+   pushing the switch off the screen. Hidden (nothing laid out) it keeps
+   the CSS's pick, and the pill's ellipsis is the net for anything longer. */
+function fitDay(row) {
+  const t = row.querySelector('.t');
+  delete row.dataset.fit;
+  if (!t || !t.clientWidth || t.scrollWidth <= t.clientWidth + 1) return;
+  for (const f of ['m', 's']) {
+    row.dataset.fit = f;
+    if (t.scrollWidth <= t.clientWidth + 1) return;
+  }
 }
 function banner() {
   const band = el('section', 'wband' + (W.fwrap ? ' wrap' : ''));
@@ -548,6 +562,7 @@ function paperTop(root) {
 /* "Show all" only when a row of chips runs past the screen */
 function fits(band) {
   if (!band || !band.isConnected) return;
+  document.querySelectorAll('#subnav .wday, #panel-wire .wband .wday').forEach(fitDay);
   /* a chosen chip past the edge of its row (Sports, a sport) is brought into view */
   band.querySelectorAll('.wf .chips').forEach((r) => {
     const on = r.querySelector('.chip.on');

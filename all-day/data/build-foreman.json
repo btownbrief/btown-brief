@@ -1,0 +1,187 @@
+{
+  "_about": [
+    "The Build's foreman: every word the tab says on the site, in Stephen's voice. Stephen edits this file by hand; nothing builds it.",
+    "He is a good site foreman. Dry, warm, a guy in the trailer doorway with a coffee. He never cheers, never says anyone missed a day or was gone a while, never asks the same thing twice in a visit, and never mentions AI, coaches or apps.",
+    "Writing rules for new lines: no em dashes, no colon inside a sentence, no exclamation marks, no 'not X, it's Y' turns, as few hyphens as you can manage. Keep a line under about 70 characters.",
+    "Rotation: pick at random from a group, never the same line twice in a row on one device (remember the last line shown per group). The whistle has no words; the foreman raises a hand on the site and nods when the phone is touched.",
+    "Slots in site_talk: {crew} people on shift right now, counting you; {hours} town hours this week, a whole number; {floor} the floor going up now (floors_done + 1, at most {floors}); {floors} from build-config.json; {name} the first name of someone on shift who shows their name. A line whose slot has no value, or a zero, is skipped. A line with crew_min only shows when {crew} is at least that.",
+    "when (site_talk): any, morning (5 to 11), day (11 to 5), evening (5 to 9), night (9 to 5), all Burlington time. weather: clear, cloud, rain, snow, fog, matching the site's sky. Lines with no weather show in any weather."
+  ],
+  "clock_in": {
+    "prompts": [
+      "What's the job?",
+      "What are we working on?",
+      "What's the next piece?",
+      "Where are we picking up?",
+      "What's going up today?",
+      "Which part are we on?"
+    ],
+    "placeholder": ["outline chapter 3", "true the back wheel", "call the landlord", "two pages", "fix the chorus"],
+    "start": "Start",
+    "skip": "Just start",
+    "clocked_in": [
+      "Clocked in. Phone down, face up.",
+      "Clocked in. I'll whistle when I need you."
+    ]
+  },
+  "clock_out": {
+    "prompts": [
+      "What got done?",
+      "Where'd you leave it?",
+      "What got done, or what did you find?",
+      "What's different from when you started?",
+      "Anything worth writing down?"
+    ],
+    "placeholder": ["got the first page down", "found the right size wrench", "turns out it's the cable"],
+    "rare_why": {
+      "every": 10,
+      "prompts": [
+        "Why's this one matter to you?",
+        "Why this one, out of everything?",
+        "What's this one for, really?",
+        "What happens when this one's done?"
+      ],
+      "placeholder": ["I said I would", "for my kid", "I miss making things"],
+      "_note": "Shown in place of the usual clock_out prompt about one shift in ten, never two shifts running. The answer is private and goes on the thing card as its why, next to the first one."
+    }
+  },
+  "whistle": {
+    "words": null,
+    "answered": null,
+    "knocked_off": [
+      "Crew knocked off. Everything up to the last whistle is banked.",
+      "Shift's over. The hours up to the last whistle are in the building.",
+      "Hard hat's off for today. Your time up to the last whistle counts."
+    ],
+    "start_again": "Start",
+    "_note": "No words while the whistle is up. knocked_off shows once, on the next screen after a missed whistle, with nothing about how long ago."
+  },
+  "end_screen": {
+    "time": "{duration} on the job",
+    "keep": "Keep it",
+    "post": "Post",
+    "kept": [
+      "Kept. It still went into the building.",
+      "Kept. The hours are in the walls either way."
+    ],
+    "post_kinds": {
+      "progress": "Made progress",
+      "stuck": "Stuck",
+      "found": "Found something",
+      "finished": "Finished"
+    },
+    "stuck_question": "What would help you take the next step?",
+    "stuck_placeholder": "can't get the derailleur right, need someone to show me",
+    "add_hours": "Add the hours",
+    "brief_ok": "OK to print this in the Brief",
+    "posted": [
+      "Posted. A window's lit on the street side.",
+      "Posted. That's a light on in the building tonight."
+    ],
+    "finished_posted": "Posted. Bring this one to the party."
+  },
+  "stuck": {
+    "help_buttons": [
+      { "key": "hand", "label": "A hand", "after": "Posted. If someone in town can lend a hand, you'll see their name here." },
+      { "key": "tool", "label": "A tool", "after": "Posted. Somebody nearby probably has one in the garage." },
+      { "key": "smaller", "label": "A smaller job", "after": "Cut it down. Next shift, start on the smallest piece you can see." },
+      { "key": "different", "label": "A different job", "after": "Some jobs wait. Park this one and pick up another." }
+    ],
+    "reasons": [
+      { "key": "unclear", "label": "Next step unclear", "move": "shrink", "line": "Pick the smallest thing you can see from here. That's the next step." },
+      { "key": "too_big", "label": "Too big for the time I have", "move": "schedule", "line": "Put one shift on the calendar this week. One is plenty." },
+      { "key": "missing", "label": "Missing a skill or a tool", "move": "ask", "line": "Ask. Somebody in town has the tool, or has done it before." },
+      { "key": "unsure", "label": "Not sure I still want this", "move": "pause", "line": "Pause it. Nothing's lost, and it'll be here if you want it back." }
+    ],
+    "move_buttons": {
+      "shrink": "Make it smaller",
+      "schedule": "Pick a time",
+      "ask": "Ask for help",
+      "pause": "Pause it"
+    },
+    "paused": "Paused. Your hours stay in the building."
+  },
+  "help": {
+    "offer_button": "I can help",
+    "offer_prompt": "What can you offer, in a line?",
+    "offer_placeholder": "I've got a stand and a Tuesday",
+    "offered": "Sent. If they say yes, you'll both get an email.",
+    "poster_sees": "{name} can help.",
+    "yes": "Yes",
+    "no": "No thanks",
+    "accepted": "Done. You'll both get an email with the other's address.",
+    "declined": "No problem. Nobody hears about it.",
+    "nice": "Nice"
+  },
+  "come_back": {
+    "lines": [
+      "Coffee's on. Your tools are where you left them.",
+      "The building's a little taller. Pick up where you like.",
+      "Site's open. Same job or a new one, your call.",
+      "Gate's open. Grab a hat."
+    ],
+    "buttons": [
+      { "key": "same", "label": "Same job", "after": "Same job it is. Here's where you left it." },
+      { "key": "smaller", "label": "Smaller job", "after": "Good call. Name the next small piece when you clock in." },
+      { "key": "new", "label": "New job", "after": "Fair enough. Name the next one." }
+    ],
+    "_note": "Shown once, on the first visit after a gap, as a statement with three buttons (the buttons are the question, so the foreman never asks it out loud). Never says how long the gap was."
+  },
+  "site_talk": [
+    { "text": "{crew} on the site right now.", "crew_min": 2 },
+    { "text": "Just you on the site. Plenty of room.", "crew_max": 1 },
+    { "text": "{hours} hours in the building this week." },
+    { "text": "Floor {floor} of {floors} is going up." },
+    { "text": "Floor {floor} is framed. Wiring goes in next." },
+    { "text": "{name} has been on the scaffold a while." },
+    { "text": "{name} is running conduit on floor {floor}." },
+    { "text": "Night crew's in. {crew} of you and the work lights.", "when": "night", "crew_min": 2 },
+    { "text": "Day crew's walking in with coffee.", "when": "morning" },
+    { "text": "Lumber came in this morning. Somebody's been busy.", "when": "morning" },
+    { "text": "Quiet out here tonight. The building doesn't mind.", "when": "night" },
+    { "text": "Somebody lit a window on the street side." },
+    { "text": "Light's going over the lake. Work lights on soon.", "when": "evening" },
+    { "text": "Snow on the pallets. Work goes on inside.", "weather": "snow" },
+    { "text": "Rain on the tarps. Inside work today.", "weather": "rain" },
+    { "text": "Clear enough to see the Adirondacks from the top floor.", "weather": "clear", "when": "day" },
+    { "text": "Fog off the lake this morning. Takes a while to burn off.", "weather": "fog", "when": "morning" }
+  ],
+  "log_it": {
+    "button": "Log it",
+    "title": "Log it after",
+    "line": "Work you did away from the phone counts the same.",
+    "how_long": "Roughly how long?",
+    "chips": [15, 30, 60, 90, 120],
+    "what": "What was it?",
+    "what_placeholder": "a run, a bike repair, coffee with someone new",
+    "save": "Log it",
+    "saved": [
+      "Logged. It's in the building.",
+      "Logged. Same hours as any shift."
+    ],
+    "tag": "logged"
+  },
+  "town": {
+    "line": "{crew} neighbors on shift · {hours} hours this week · floor {floor} of {floors}",
+    "line_none": "Nobody on shift right now · {hours} hours this week · floor {floor} of {floors}",
+    "_note": "The town line under the site. crew counts everyone on shift; write '1 neighbor' when it is one."
+  },
+  "empty": {
+    "feed": "Nobody's posted yet. The building's going up anyway.",
+    "feed_stuck": "Nobody's stuck right now.",
+    "shelf": "Your posts about this thing land here, in order.",
+    "record": "Your hours off the phone show up here, by day.",
+    "cutaway": "Your part of the building shows up after your first shift.",
+    "on_shift": "Nobody's on shift right now. Site's yours.",
+    "no_thing": "No job yet. Pick one from the door below, or name your own."
+  },
+  "party": {
+    "no_date": "Topping out party. Date coming.",
+    "upcoming": "Topping out {date}. Everyone who put hours in signs the beam.",
+    "week_of": "Topping out {date}. Bring a pen for the beam.",
+    "today": "Topping out today. The beam's waiting for your name.",
+    "roof_on": "Roof's on. The whole town did that.",
+    "roof_next": "The beam's signed. The roof goes on next season.",
+    "after": "Beam's signed. The next building starts soon."
+  }
+}

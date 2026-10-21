@@ -17,6 +17,7 @@ import './modes/people.js';
 import './modes/whatnow.js';
 import './modes/vintage.js';
 import './modes/habits.js';
+import './modes/build.js';
 import './modes/onair.js';
 import './modes/games.js';
 

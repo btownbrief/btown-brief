@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Build site preview</title>
+<style>
+  :root { --paper: #F7F4EE; --ink: #16191D; --ink-2: #4A5058; --line: #ddd6c8; --lake: #0E2A47; }
+  body { margin: 0; font: 14px/1.4 system-ui, -apple-system, sans-serif; background: var(--paper); color: var(--ink); }
+  .wrap { display: flex; gap: 20px; padding: 16px; flex-wrap: wrap; align-items: flex-start; }
+  .stage { background: #1b1e22; padding: 10px; border-radius: 12px; }
+  #site { display: block; width: 390px; height: 340px; background: #0e1430; }
+  .controls { flex: 1 1 320px; max-width: 520px; display: grid; gap: 10px; }
+  fieldset { border: 1px solid var(--line); border-radius: 10px; padding: 8px 12px; margin: 0; }
+  legend { font-weight: 600; padding: 0 4px; }
+  label { display: flex; gap: 8px; align-items: center; margin: 4px 0; }
+  label > span { min-width: 120px; color: var(--ink-2); }
+  input[type=range] { flex: 1; }
+  button { font: inherit; padding: 4px 10px; border-radius: 8px; border: 1px solid var(--line); background: #fff; cursor: pointer; }
+  .row { display: flex; gap: 6px; flex-wrap: wrap; }
+  output { min-width: 44px; text-align: right; font-variant-numeric: tabular-nums; }
+  #stats { font-variant-numeric: tabular-nums; color: var(--ink-2); }
+  body.shot .controls { display: none; }
+  body.shot .wrap { padding: 0; }
+  body.shot .stage { padding: 0; border-radius: 0; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="stage"><canvas id="site" aria-label="The Build: Watershed going up on Lakeside Ave"></canvas></div>
+  <div class="controls">
+    <fieldset><legend>Frame</legend>
+      <div class="row">
+        <button data-size="390x340">Docked 390x340</button>
+        <button data-size="390x422">Half 390x422</button>
+        <button data-size="390x780">Full 390x780</button>
+        <button data-size="1440x620">Desktop 1440x620</button>
+        <button data-size="1440x900">Desktop full 1440x900</button>
+      </div>
+      <label><span>Reduced motion</span><input type="checkbox" id="rm"></label>
+    </fieldset>
+    <fieldset><legend>Town</legend>
+      <label><span>Floors done</span><input type="range" id="floors_done" min="0" max="6" step="1" value="2"><output></output></label>
+      <label><span>Floor progress</span><input type="range" id="floor_progress" min="0" max="1" step="0.01" value="0.35"><output></output></label>
+      <label><span>Windows lit</span><input type="range" id="windows_lit" min="0" max="60" step="1" value="9"><output></output></label>
+      <label><span>Topped out</span><input type="checkbox" id="topped_out"></label>
+    </fieldset>
+    <fieldset><legend>Crew</legend>
+      <label><span>On shift</span><input type="range" id="crew" min="0" max="30" step="1" value="6"><output></output></label>
+    </fieldset>
+    <fieldset><legend>You</legend>
+      <div class="row" id="youState">
+        <button data-state="away">away</button><button data-state="working">working</button><button data-state="paused">paused</button><button data-state="off">off</button>
+      </div>
+      <label><span>Task</span><select id="task"><option>brick</option><option>frame</option><option>haul</option><option>wire</option><option>window</option><option>roof</option><option>lunch</option></select></label>
+      <label><span>Hat</span><select id="hat"><option>yellow</option><option>white</option><option>orange</option><option>blue</option><option>red</option><option>green</option></select></label>
+      <label><span>Vest</span><select id="vest"><option>lime</option><option>orange</option><option>yellow</option><option>pink</option><option>blue</option></select></label>
+      <label><span>Whistle</span><input type="checkbox" id="whistle"></label>
+    </fieldset>
+    <fieldset><legend>Sky</legend>
+      <label><span>Sun altitude</span><input type="range" id="sunAltitude" min="-20" max="60" step="1" value="35"><output></output></label>
+      <label><span>Hour</span><input type="range" id="hour" min="0" max="23.5" step="0.5" value="14"><output></output></label>
+      <label><span>Weather</span><select id="weather"><option>clear</option><option>cloud</option><option>rain</option><option>snow</option><option>fog</option></select></label>
+    </fieldset>
+    <fieldset><legend>Extras</legend>
+      <div class="row">
+        <button data-drop="lumber">Drop lumber</button><button data-drop="brick">Drop brick</button><button data-drop="glass">Drop glass</button><button data-drop="copper">Drop copper</button>
+      </div>
+      <label><span>Cutaway</span><input type="checkbox" id="cut"></label>
+      <label><span>Your minutes</span><input type="range" id="your_minutes" min="0" max="1200" step="10" value="240"><output></output></label>
+      <div class="row"><button id="ff">Fast-forward 2 min</button><button id="ff10">10 min</button></div>
+    </fieldset>
+    <div id="stats"></div>
+  </div>
+</div>
+<script type="module">
+import { createSite } from '../js/build-site.js';
+
+const $ = (id) => document.getElementById(id);
+const canvas = $('site');
+const NAMES = ['Maya', 'Kai', 'Jo', 'Sam', 'Priya', 'Theo', 'Ruth', 'Ada', 'Cy', 'Lou', 'Nina', 'Ben', 'Tess', 'Omar', 'Lena', 'Abdi', 'Grace', 'Wes', 'Hana', 'Eli', 'Rosa', 'Finn', 'June', 'Dev', 'Ike', 'Mo', 'Pat', 'Sol', 'Uma', 'Vic'];
+const TASKS = ['brick', 'frame', 'haul', 'wire', 'window', 'roof', 'lunch'];
+const HATS = ['yellow', 'white', 'orange', 'blue', 'red', 'green'];
+const VESTS = ['orange', 'lime', 'yellow', 'pink', 'blue'];
+const params = new URLSearchParams(location.search);
+if (params.has('shot')) document.body.classList.add('shot');
+
+const state = {
+  floors_done: 2, floor_progress: 0.35, windows_lit: 9, topped_out: false, crew: 6,
+  you: 'working', task: 'brick', hat: 'yellow', vest: 'lime', whistle: false,
+  sunAltitude: 35, hour: 14, weather: 'clear', cut: false, your_minutes: 240, rm: false,
+};
+let site = null;
+
+function crewList(n) {
+  return Array.from({ length: n }, (_, i) => ({ id: 'n' + i, name: i % 4 === 3 ? undefined : NAMES[i % NAMES.length],
+    look: { hat: HATS[(i * 5 + 1) % HATS.length], vest: VESTS[(i * 3 + 2) % VESTS.length] }, task: TASKS[i % TASKS.length] }));
+}
+function push(what) {
+  if (!site) return;
+  const s = state;
+  if (!what || what === 'town') site.setTown({ total_minutes: 3000, floors_done: s.floors_done, floor_progress: s.floor_progress, windows_lit: s.windows_lit, topped_out: s.topped_out });
+  if (!what || what === 'sky') site.setSky({ sunAltitude: s.sunAltitude, isNight: s.sunAltitude < -6, weather: s.weather, hour: s.hour });
+  if (!what || what === 'crew') site.setCrew(crewList(s.crew));
+  if (!what || what === 'you') site.setYou({ state: s.you, task: s.task, look: { hat: s.hat, vest: s.vest } });
+  if (!what || what === 'whistle') site.whistle(s.whistle);
+  if (!what || what === 'cut') site.cutaway(s.cut, { your_minutes: s.your_minutes });
+}
+function make() {
+  if (site) site.destroy();
+  site = createSite(canvas, { reducedMotion: state.rm });
+  push();
+  window.site = site;
+}
+function size(w, h) { canvas.style.width = w + 'px'; canvas.style.height = h + 'px'; }
+
+/* sliders and toggles */
+for (const id of ['floors_done', 'floor_progress', 'windows_lit', 'crew', 'sunAltitude', 'hour', 'your_minutes']) {
+  const el = $(id), out = el.nextElementSibling;
+  el.value = state[id]; out.textContent = el.value;
+  el.addEventListener('input', () => {
+    state[id] = +el.value; out.textContent = el.value;
+    push({ floors_done: 'town', floor_progress: 'town', windows_lit: 'town', crew: 'crew', sunAltitude: 'sky', hour: 'sky', your_minutes: 'cut' }[id]);
+  });
+}
+for (const id of ['topped_out', 'whistle', 'cut']) $(id).addEventListener('change', (e) => { state[id] = e.target.checked; push({ topped_out: 'town', whistle: 'whistle', cut: 'cut' }[id]); });
+for (const id of ['task', 'hat', 'vest']) $(id).addEventListener('change', (e) => { state[id] = e.target.value; push('you'); });
+$('weather').addEventListener('change', (e) => { state.weather = e.target.value; push('sky'); });
+$('rm').addEventListener('change', (e) => { state.rm = e.target.checked; make(); });
+document.querySelectorAll('[data-state]').forEach((b) => b.addEventListener('click', () => { state.you = b.dataset.state; push('you'); }));
+document.querySelectorAll('[data-drop]').forEach((b) => b.addEventListener('click', () => site.dropMaterial(b.dataset.drop)));
+document.querySelectorAll('[data-size]').forEach((b) => b.addEventListener('click', () => { const [w, h] = b.dataset.size.split('x').map(Number); size(w, h); }));
+$('ff').addEventListener('click', () => site.advance(120));
+$('ff10').addEventListener('click', () => site.advance(600));
+setInterval(() => { const s = site.stats(); $('stats').textContent = `frames ${s.frames} · avg ${s.avgMs.toFixed(2)} ms · p95 ${s.p95.toFixed(2)} ms · max ${s.maxMs.toFixed(1)} ms · view ${s.size.join('x')} · figures ${s.agents}`; }, 1000);
+
+/* the shot script drives this */
+window.preview = {
+  set(o) {
+    Object.assign(state, o);
+    if (o.w && o.h) size(o.w, o.h);
+    if ('rm' in o) make(); else push();
+    site.render();   // pick up a new frame size now, not on the next resize callback
+  },
+  size,
+};
+if (params.has('w')) size(+params.get('w'), +params.get('h'));
+make();
+</script>
+</body>
+</html>

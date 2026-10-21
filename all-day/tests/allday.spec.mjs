@@ -49,8 +49,10 @@ const HERE = path.dirname(fileURLToPath(import.meta.url));
 const APP = path.resolve(HERE, '..');
 const REPO = path.resolve(APP, '..');
 const SHOTS = path.join(HERE, 'shots');
-const TABS = ['wire', 'watch', 'food', 'people', 'whatnow', 'vintage', 'habits', 'onair', 'games'];
-const LABELS = ['Wire', 'Watch', 'Food', 'People', 'What Now', 'Vintage', 'Habits', 'On Air', 'Games'];
+/* The Build took Habits' cell on 2026-10-21; Habits is the other side of its
+   Build | Habits switch, with its own panel and #habits links */
+const TABS = ['wire', 'watch', 'food', 'people', 'whatnow', 'vintage', 'build', 'onair', 'games'];
+const LABELS = ['Wire', 'Watch', 'Food', 'People', 'What Now', 'Vintage', 'Build', 'On Air', 'Games'];
 const PNG = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mN8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==', 'base64');
 
 /* ------------------------------------------------------------- reporting */
@@ -102,7 +104,7 @@ async function staticChecks() {
     const js = [];
     const walk = async (dir) => { for (const f of await readdir(dir, { withFileTypes: true })) { const p = path.join(dir, f.name); if (f.isDirectory()) await walk(p); else if (/\.(js|css|html)$/.test(f.name)) js.push(p); } };
     await walk(path.join(APP, 'js')); await walk(path.join(APP, 'css'));
-    const NEW = ['app.js', 'ui.js', 'store.js', 'auth.js', 'liquid.js', 'main.js', 'wire.js', 'wire-demo.js', 'wire-photos.js', 'wire-square.js', 'wire-recaps.js', 'watch.js', 'food.js', 'people.js', 'whatnow.js', 'vintage.js', 'habits.js', 'habits-core.js', 'habits-fake.js', 'photo-wall.js', 'onair.js', 'games.js', 'clubs-week.js', 'people-match.js', 'food-asks.js', 'tokens.css', 'app.css'];
+    const NEW = ['app.js', 'ui.js', 'store.js', 'auth.js', 'liquid.js', 'main.js', 'wire.js', 'wire-demo.js', 'wire-photos.js', 'wire-square.js', 'wire-recaps.js', 'watch.js', 'food.js', 'people.js', 'whatnow.js', 'vintage.js', 'habits.js', 'build.js', 'habits-core.js', 'habits-fake.js', 'photo-wall.js', 'onair.js', 'games.js', 'clubs-week.js', 'people-match.js', 'food-asks.js', 'tokens.css', 'app.css'];
     const OLD = new Set(['sun.js', 'whatnow-engine.js', 'whatnow-data.js']);
     for (const f of js) {
       const name = path.basename(f);
@@ -476,10 +478,21 @@ const settle = (page) => page.waitForFunction(() => {
 
 /* all nine tabs on the phone's bar too (Stephen, 2026-10-19, undoing the
    five-and-More bar) */
-async function tapTab(page, tab) { await page.click('#tab-' + tab); }
+async function tapTab(page, tab) {
+  /* Habits has no cell of its own: the Build cell, then its switch */
+  if (tab === 'habits') {
+    if (await page.$('#panel-habits:not([hidden])')) return;
+    await page.click('#tab-build');
+    await page.waitForSelector('#subnav [data-side="habits"]');
+    if (!(await page.$('#panel-habits:not([hidden])'))) await page.click('#subnav [data-side="habits"]');
+    return;
+  }
+  await page.click('#tab-' + tab);
+}
 async function goTab(page, tab) {
   await tapTab(page, tab);
-  await page.waitForFunction((t) => document.querySelector('#tab-' + t)?.getAttribute('aria-selected') === 'true', tab);
+  await page.waitForFunction((t) => (t === 'habits' ? document.querySelector('#panel-habits')?.hidden === false
+    : document.querySelector('#tab-' + t)?.getAttribute('aria-selected') === 'true'), tab);
   await settle(page);
   await page.waitForTimeout(150);
 }
@@ -519,7 +532,7 @@ const COMBOS = [
 ];
 const PAPER = { light: 'rgb(247, 244, 238)', dark: 'rgb(12, 21, 32)' };
 /* tabs that are built: live, they draw their screen instead of the promise */
-const LIVE = new Set(['wire', 'watch', 'whatnow', 'onair', 'games', 'food', 'habits', 'vintage', 'people']);
+const LIVE = new Set(['wire', 'watch', 'whatnow', 'onair', 'games', 'food', 'habits', 'build', 'vintage', 'people']);
 
 async function matrix(browser, base) {
   for (const combo of COMBOS) {
@@ -787,6 +800,19 @@ async function theWire(browser, base) {
     check(h0.h2 === 'Today’s top stories', 'the paper opens on today’s top stories', h0.h2);
     check(/^Updated \d{1,2}:\d{2} [ap]m$/.test(h0.sub), 'its line says when the paper last updated', h0.sub);
     await page.screenshot({ path: path.join(SHOTS, 'live-wire-today.png') });
+
+    /* the day and Local / Everything share one row at 390: today's day shows
+       whole, and even a word far longer than "Wednesday" never pushes the
+       switch off the screen (2026-10-21: "Wednesday, Oct 21" did, by 4px) */
+    const dayRow = await page.evaluate(() => {
+      const p = document.querySelector('#panel-wire'), t = p.querySelector('.wband-top .wday .t'), sw = p.querySelector('.wband-top .localsw');
+      const whole = t.scrollWidth <= t.clientWidth + 1, kept = t.innerHTML;
+      t.querySelectorAll('span').forEach((x) => { x.textContent = 'Supercalifragilisticexpialidociousday, Oct 21'; });
+      const r = { whole, sw: Math.round(sw.getBoundingClientRect().right), edge: Math.round(p.getBoundingClientRect().right), over: p.scrollWidth - p.clientWidth };
+      t.innerHTML = kept;
+      return r;
+    });
+    check(dayRow.whole && dayRow.sw <= dayRow.edge && dayRow.over <= 1, 'the day shows whole beside Local / Everything, and a longer one never pushes it off', JSON.stringify(dayRow));
 
     /* under the mast, News · Photos · Square as a floating pill; the day and
        Local / Everything wait, hidden, to float under it (Stephen, 2026-10-19) */
@@ -7587,6 +7613,535 @@ const hbTap = (page, name) => page.evaluate((name) => {
   return { ms: performance.now() - t0, on: after.querySelector('.hb-tap').getAttribute('aria-pressed') === 'true', meta: after.querySelector('.hb-meta').innerText.replace(/\s+/g, ' ').trim() };
 }, name);
 
+/* --------------------------------------------------------------- The Build */
+/* The Build took Habits' cell (2026-10-21, newsletter repo
+   reference/drafts/new-nine-2026-10/the-build). On top, your thing and a
+   stream of neighbors' posts where chiming in is one tap; at the bottom, the
+   site, docked, with a handle. A shift is the site full screen, on the API's
+   clock (build-core.js): a whistle 15 to 30 minutes after the last touch,
+   three minutes to answer, missed and the crew knocks off at the last touch.
+   BUILD_SHOTS=<dir> also writes the tab-*.png review shots there. */
+const bdPanel = '#panel-build';
+const bdState = (page) => page.evaluate(() => import('/all-day/js/modes/build.js').then((m) => { const s = m._state(); return { ...s, starters: (s.starters || []).length }; }));
+const bdApi = (page, fn) => page.evaluate(`import('/all-day/js/modes/build.js').then((m) => (${fn})(m._api()))`);
+const bdSignIn = async (page) => {
+  await page.evaluate(() => import('/all-day/js/auth.js').then((a) => a.demoSignIn()));
+  await page.waitForSelector(bdPanel + ' .bd-thing .bd-title', { timeout: 8000 });
+};
+async function bdShot(page, name) {
+  if (!process.env.BUILD_SHOTS) return;
+  await page.waitForTimeout(350);
+  await page.screenshot({ path: path.join(process.env.BUILD_SHOTS, name + '.png') });
+}
+/* the phone's buzz and the screen's wake lock, recorded */
+const bdSpies = (page, o = {}) => page.addInitScript((noLock) => {
+  window.__buzz = [];
+  navigator.vibrate = (p) => { window.__buzz.push(p); return true; };
+  window.__lock = 0;
+  if (noLock) { try { delete Navigator.prototype.wakeLock; } catch (e) { /* fine */ } Object.defineProperty(navigator, 'wakeLock', { value: undefined, configurable: true }); }
+  else Object.defineProperty(navigator, 'wakeLock', { configurable: true, value: { request: async () => { window.__lock++; const l = new EventTarget(); l.release = async () => {}; return l; } } });
+}, !!o.noLock);
+const T0 = Date.parse('2026-10-21T19:00:00Z');
+
+async function theBuild(browser, base) {
+  await group('The Build, first run signed out: name a thing or borrow one (demo, 390)', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/all-day/?demo=1#build');
+    await settle(page);
+    await page.waitForSelector(bdPanel + ' .bd-starter', { timeout: 8000 });
+    const look = await page.evaluate(() => ({
+      tab: document.querySelector('#tab-build').getAttribute('aria-selected'), label: document.querySelector('#tab-build').textContent.trim(),
+      cells: document.querySelectorAll('#tabbar button[data-tab]').length, habitsCell: !!document.querySelector('#tab-habits'),
+      sides: [...document.querySelectorAll('#subnav .bd-sideswitch button')].map((b) => b.textContent + ':' + b.getAttribute('aria-pressed')),
+      liquid: document.querySelector('#subnav .bd-sideswitch').classList.contains('liquid'),
+      ask: document.querySelector('#panel-build .bd-ask')?.textContent, starters: document.querySelectorAll('#panel-build .bd-starter').length,
+      posts: document.querySelectorAll('#panel-build .bd-post').length, docked: document.body.classList.contains('bd-docked'),
+      dock: document.querySelector('.bd-dock')?.dataset.state, town: document.querySelector('.bd-dock .bd-townl')?.textContent || '',
+      party: document.querySelector('.bd-dock .bd-party')?.textContent || '', canvas: !!document.querySelector('.bd-dock canvas.bd-canvas'),
+      inPanel: !!document.querySelector('#panel-build .bd-dock') }));
+    check(look.tab === 'true' && look.label === 'Build' && look.cells === 9 && !look.habitsCell, 'Build is the seventh of nine cells, where Habits was', JSON.stringify(look));
+    check(JSON.stringify(look.sides) === '["Build:true","Habits:false"]' && (look.liquid || true), 'Build | Habits floats under the mast, Build on', JSON.stringify(look.sides));
+    check(look.ask === 'What do you want to finish?' && look.starters === 4, 'no thing yet: one line to name it, and four to borrow', JSON.stringify(look));
+    check(look.posts > 0, 'neighbors’ posts show signed out too', look.posts);
+    check(look.docked && look.dock === 'dock' && look.canvas && !look.inPanel, 'the site is docked at the bottom, outside the tab’s scroll', JSON.stringify(look));
+    check(/neighbors? on shift|Nobody on shift/.test(look.town) && /hours this week/.test(look.town) && /floor \d of 6|topped out/.test(look.town) && /Topping out/.test(look.party), 'the town line under the handle, and the party', look.town + ' | ' + look.party);
+    await pageRules(page, 'build', 390);
+    /* the copy rules: no em dashes, no percentages, no streaks, no ranks */
+    const words = await page.evaluate(() => document.querySelector('#panel-build').innerText + ' ' + document.querySelector('.bd-dock').innerText);
+    check(!/—|%|streak|rank|leaderboard|you missed/i.test(words), 'no em dashes, percentages, streaks or ranks on the tab', (words.match(/.{0,20}(—|%|streak|rank|leaderboard|you missed).{0,20}/i) || [''])[0]);
+    /* borrow one: its name lands in the card, then why, then Done */
+    const title = await page.$eval(bdPanel + ' .bd-starter .bd-st', (n) => n.textContent);
+    await page.click(bdPanel + ' .bd-starter');
+    await page.waitForSelector(bdPanel + ' .bd-name input[name=why]');
+    check(await page.$eval(bdPanel + ' .bd-name .bd-kicker', (n) => n.textContent).then((t) => t.length > 3) && !(await page.$(bdPanel + ' .bd-starter')), 'a starter names the thing; the door closes', title);
+    await page.fill(bdPanel + ' .bd-name input[name=why]', 'I keep saying I will');
+    await page.fill(bdPanel + ' .bd-name input[name=for_whom]', 'Me');
+    await page.click(bdPanel + ' .bd-name button[type=submit]');
+    await page.waitForSelector(bdPanel + ' .bd-thing .bd-title', { timeout: 6000 });
+    const card = await page.evaluate(() => ({ why: document.querySelector('#panel-build .bd-why')?.textContent, meta: document.querySelector('#panel-build .bd-meta')?.textContent,
+      btns: [...document.querySelectorAll('#panel-build .bd-go .btn')].map((b) => b.textContent.trim()), week: document.querySelector('#panel-build .bd-mine')?.textContent }));
+    check(card.why === '“I keep saying I will”' && /For Me/.test(card.meta) && JSON.stringify(card.btns) === '["Start shift","Log it","Post"]' && /today.*this week.*this season/.test(card.week),
+      'your thing: its why, who it is for, this week’s hours off your phone, Start shift, Log it, Post', JSON.stringify(card));
+    /* signed out, Nice asks for a sign-in instead of failing */
+    await page.click(bdPanel + ' .bd-post .bd-nice');
+    await page.waitForSelector('.sheet-card[aria-label="Settings"]', { timeout: 4000 }).catch(() => {});
+    check(!!(await page.$('.sheet-card[aria-label="Settings"]')), 'signed out, Nice opens the sign-in', '');
+    await page.keyboard.press('Escape');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('The Build, the stream: Stuck, I can help right in the post, Yes on your own (demo, signed in, 390)', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/all-day/?demo=1#build');
+    await settle(page);
+    await bdSignIn(page);
+    await page.waitForSelector(bdPanel + ' .bd-post');
+    await page.click(bdPanel + ' .bd-only [data-v], ' + bdPanel + ' .bd-only button:nth-child(2)');
+    await page.waitForTimeout(150);
+    const only = await page.$$eval(bdPanel + ' .bd-post', (ps) => ps.map((p) => p.className));
+    check(only.length > 0 && only.every((c) => /k-stuck/.test(c) && !/mine/.test(c)), 'Stuck shows only neighbors who are stuck', JSON.stringify(only));
+    const ctr = await page.evaluate(() => ({ n: document.querySelector('#panel-build .bd-cbig')?.textContent, line: document.querySelector('#panel-build .bd-cline')?.textContent,
+      scopes: [...document.querySelectorAll('#panel-build .bd-scope button')].map((b) => b.textContent), mine: [...document.querySelectorAll('#panel-build .bd-mine .bd-stat span')].map((x) => x.textContent) }));
+    check(/^\d[\d,]* (hours|minutes)$/.test(ctr.n) && /^Burlington put its phones down this week\./.test(ctr.line) && JSON.stringify(ctr.scopes) === '["Today","This week","Season"]', 'the town’s counter: one big number, this week, switchable', JSON.stringify(ctr));
+    check(JSON.stringify(ctr.mine) === '["today","this week","this season"]', 'and yours on your card: today, this week, the season', JSON.stringify(ctr.mine));
+    await page.click(bdPanel + ' .bd-scope button:first-child');
+    check(/today\.$|today\. /.test(await page.$eval(bdPanel + ' .bd-cline', (n) => n.textContent)), 'Today switches it', '');
+    await page.click(bdPanel + ' .bd-scope button:nth-child(2)');
+    const target = await page.$(bdPanel + ' .bd-post.k-stuck:not(.mine) .bd-help');
+    check(!!target, 'a neighbor’s Stuck post has a big I can help', '');
+    const k = await target.evaluate((b) => b.closest('.bd-post').dataset.k);
+    const big = await target.evaluate((b) => { const r = b.getBoundingClientRect(); return { h: r.height, fs: getComputedStyle(b).fontSize }; });
+    check(big.h >= 44, 'I can help is a full-size tap target', JSON.stringify(big));
+    await target.click();
+    const reply = await page.waitForSelector(bdPanel + ' .bd-post[data-k="' + k + '"] .bd-reply input[name=line]', { timeout: 4000 }).catch(() => null);
+    check(!!reply && await page.$eval('#sheet', (s) => s.hidden), 'it opens a one-line reply in the post itself, no sheet', '');
+    await page.fill(bdPanel + ' .bd-post[data-k="' + k + '"] .bd-reply input[name=line]', 'I have a truing stand and Tuesday off');
+    await bdShot(page, 'tab-feed-stuck-help-390-light');
+    await page.click(bdPanel + ' .bd-post[data-k="' + k + '"] .bd-reply button[type=submit]');
+    await page.waitForSelector(bdPanel + ' .bd-post[data-k="' + k + '"] .bd-sent', { timeout: 4000 }).catch(() => {});
+    const sent = await bdApi(page, '(a) => a.help.list().then((r) => r.outgoing.map((h) => h.line))');
+    check(await page.$eval(bdPanel + ' .bd-post[data-k="' + k + '"]', (p) => /Offer sent/.test(p.innerText)) && sent.includes('I have a truing stand and Tuesday off'), 'Send: the offer is on its way, and the post says so', JSON.stringify(sent));
+    /* Nice, once, on anyone's post */
+    await page.click(bdPanel + ' .bd-only button:first-child');
+    await page.waitForTimeout(100);
+    const nk = await page.$eval(bdPanel + ' .bd-post:not(.mine) .bd-nice:not(.on)', (b) => b.closest('.bd-post').dataset.k);
+    const n0 = await page.$eval(bdPanel + ' .bd-post[data-k="' + nk + '"] .bd-nice .n', (n) => Number(n.textContent) || 0);
+    await page.click(bdPanel + ' .bd-post[data-k="' + nk + '"] .bd-nice');
+    await page.waitForTimeout(200);
+    const n1 = await page.$eval(bdPanel + ' .bd-post[data-k="' + nk + '"] .bd-nice', (b) => ({ n: Number(b.querySelector('.n').textContent) || 0, on: b.getAttribute('aria-pressed') }));
+    check(n1.n === n0 + 1 && n1.on === 'true', 'Nice: one tap, the count goes up by one', JSON.stringify([n0, n1]));
+    /* your own Stuck post: the offer, and Yes */
+    const yes = await page.$(bdPanel + ' .bd-post.mine .bd-offer button[data-act="bdyes"]');
+    check(!!yes && /can help/.test(await page.$eval(bdPanel + ' .bd-post.mine .bd-offer', (o) => o.textContent)), 'your Stuck post shows who can help, in a line, with Yes and No thanks', '');
+    if (yes) {
+      await yes.click();
+      await page.waitForSelector('#toast:not([hidden])', { timeout: 4000 }).catch(() => {});
+      check(/email/.test(await page.$eval('#toast', (t) => t.textContent)), 'Yes: you will both get an email', await page.$eval('#toast', (t) => t.textContent));
+    }
+    /* report and block on a neighbor's post */
+    await page.click(bdPanel + ' .bd-post:not(.mine) .bd-pmore');
+    await page.waitForSelector('.sheet-card', { timeout: 4000 });
+    const menu = await page.$$eval('.sheet-card button', (bs) => bs.map((b) => b.textContent.trim()));
+    check(menu.filter((t) => t === 'Report').length === 4 && menu.includes('Block'), 'a post can be reported (four reasons) or its poster blocked', JSON.stringify(menu));
+    await page.keyboard.press('Escape');
+    await pageRules(page, 'build', 390);
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('The Build, a shift on a fake clock: no whistle before 15 minutes, a buzz by 30, a tap answers it, a miss knocks the crew off at the last touch (demo, 390)', async () => {
+    const { ctx, page, errors } = await newPage(browser, base, { motion: 'reduce' });
+    await bdSpies(page);
+    await page.clock.install({ time: T0 });
+    await page.goto(base + '/all-day/?demo=1#build');
+    await settle(page);
+    await bdSignIn(page);
+    await page.click(bdPanel + ' .bd-go .bd-start');
+    await page.waitForSelector('.sheet-card input.bd-step');
+    check(await page.$eval('.sheet-card .bd-foreman', (n) => n.textContent.length > 3), 'Start shift: the foreman asks for the job, one line', '');
+    await page.fill('.sheet-card input.bd-step', 'true the back wheel');
+    await page.click('.sheet-card button[type=submit]');
+    await page.waitForSelector('.bd-dock.is-shift[data-state="full"]', { timeout: 4000 });
+    let st = await bdState(page);
+    const shiftLook = await page.evaluate(() => ({ step: document.querySelector('.bd-shift-step')?.textContent, crew: document.querySelector('.bd-shift-crew')?.textContent,
+      out: document.querySelector('.bd-out')?.textContent, timer: /\d+:\d\d/.test(document.querySelector('.bd-dock').innerText), lock: window.__lock, handle: document.querySelector('.bd-handle').hidden }));
+    check(st.shift && st.shift.state === 'working' && shiftLook.step === 'true the back wheel' && /on shift/.test(shiftLook.crew) && shiftLook.out === 'Clock out', 'clocked in: the site full screen, the job, who’s on shift, Clock out', JSON.stringify(shiftLook));
+    check(!shiftLook.timer && shiftLook.lock >= 1 && shiftLook.handle, 'no timer on screen, the screen held awake, no handle to fold it away', JSON.stringify(shiftLook));
+    await bdShot(page, 'tab-shift-mode-390-light');
+    const mine0 = await page.$$eval(bdPanel + ' .bd-mine .bd-stat b', (bs) => bs.map((b) => b.textContent));
+    const town0 = await page.$eval(bdPanel + ' .bd-cbig', (b) => b.textContent);
+    await page.clock.runFor(14 * 60000);
+    st = await bdState(page);
+    check(st.shift.state === 'working' && !(await page.evaluate(() => window.__buzz.length)), 'fourteen minutes in: no whistle yet', JSON.stringify(st.shift));
+    const mine1 = await page.$$eval(bdPanel + ' .bd-mine .bd-stat b', (bs) => bs.map((b) => b.textContent));
+    check(mine0[0] === '0m' && mine1[0] === '14m', 'your hours count up live while the shift runs (today ' + mine0[0] + ' to ' + mine1[0] + ')', JSON.stringify([mine0, mine1, town0]));
+    /* minute by minute until the whistle blows */
+    let at = 14;
+    while (at < 31 && st.shift.state === 'working') { await page.clock.runFor(60000); at++; st = await bdState(page); }
+    const buzz = await page.evaluate(() => window.__buzz.length);
+    check(st.shift.state === 'whistle' && at >= 15 && at <= 31 && buzz === 1 && await page.$('.bd-dock.is-whistle') !== null, 'the whistle blows between 15 and 30 minutes in (at ' + at + '): one buzz, the foreman on the site', JSON.stringify({ state: st.shift.state, at, buzz }));
+    check(await page.$eval('.bd-live', (n) => n.textContent) === 'The foreman’s whistle' && await page.$eval('#sheet', (n) => n.hidden) && await page.$eval('#confirm', (n) => n.hidden), 'no dialog: the whistle is on the site (and said to a screen reader)', '');
+    await bdShot(page, 'tab-whistle-390-light');
+    await page.mouse.click(195, 300);
+    await page.waitForFunction(() => import('/all-day/js/modes/build.js').then((m) => m._state().shift.state === 'working'), null, { timeout: 4000 }).catch(() => {});
+    st = await bdState(page);
+    const banked = st.shift.minutes;
+    check(st.shift.state === 'working' && banked >= 14 && banked <= 30 && !(await page.$('.bd-dock.is-whistle')), 'a tap answers it: back to work, ' + banked + ' minutes so far', JSON.stringify(st.shift));
+    /* nobody touches it again: the next whistle blows 15 to 30 minutes on, and its three minutes run out */
+    let gone = 0, blew = null;
+    while (gone < 40 && !st.ending) { await page.clock.runFor(60000); gone++; st = await bdState(page); if (blew == null && st.shift && st.shift.state === 'whistle') blew = gone; }
+    check(blew >= 15 && blew <= 30 && gone - blew <= 4 && gone - blew >= 3, 'the next whistle at ' + blew + ' minutes after the touch, the crew off three minutes later', JSON.stringify({ blew, gone }));
+    const end = await page.evaluate(() => ({ knock: document.querySelector('.bd-knock')?.textContent || '', time: document.querySelector('.bd-endtime')?.textContent || '',
+      btns: [...document.querySelectorAll('.bd-shift-foot .btn')].map((b) => b.textContent.trim()), note: !!document.querySelector('.bd-shift-foot input.bd-note') }));
+    const hmOf = (m) => (m >= 60 ? Math.floor(m / 60) + 'h' + (m % 60 ? ' ' + (m % 60) + 'm' : '') : m + 'm');
+    check(st.ending && st.ending.missed && st.ending.minutes === banked && /knocked off|Hard hat|Shift.s over/i.test(end.knock), 'missed: the crew knocks off, banked to the last touch (' + banked + ' minutes)', JSON.stringify({ ending: st.ending, end }));
+    check(end.time.startsWith(hmOf(banked)) && end.note && JSON.stringify(end.btns) === '["Keep it","Post"]', 'the end screen: the time, one line, Keep it or Post', JSON.stringify(end));
+    /* it stays a miss while the end screen waits */
+    await page.clock.runFor(10 * 60000);
+    check((await bdState(page)).shift.state === 'missed', 'and it stays a miss while the end screen waits', '');
+    await bdShot(page, 'tab-end-screen-390-light');
+    await page.click('.bd-shift-foot .bd-keep');
+    await page.waitForFunction(() => !document.querySelector('.bd-dock.is-shift'), null, { timeout: 4000 }).catch(() => {});
+    st = await bdState(page);
+    const rec = await bdApi(page, '(a) => a.record.get().then((r) => r.days.find((d) => d.day === "2026-10-21"))');
+    check(!st.open && !st.shift && st.dock === 'dock' && rec && rec.minutes >= banked, 'Keep it: the hours are on your record, the site docks again', JSON.stringify({ st: { open: st.open, dock: st.dock }, rec }));
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('The Build, clock out and post a Stuck: the hours ride along only if you say so (demo, signed in, 390)', async () => {
+    const { ctx, page, errors } = await newPage(browser, base, { motion: 'reduce' });
+    await bdSpies(page);
+    await page.clock.install({ time: T0 });
+    await page.goto(base + '/all-day/?demo=1#build');
+    await settle(page);
+    await bdSignIn(page);
+    await page.click(bdPanel + ' .bd-go .bd-start');
+    await page.click('.sheet-card button[type=submit]');
+    await page.waitForSelector('.bd-dock.is-shift');
+    await page.clock.runFor(10 * 60000);
+    await page.mouse.click(195, 300);
+    await page.clock.runFor(10 * 60000);
+    await page.click('.bd-out');
+    await page.waitForSelector('.bd-shift-foot .bd-endtime', { timeout: 4000 });
+    check(await page.$eval('.bd-endtime', (n) => n.textContent) === '20m on the job', 'Clock out stops the clock: 20m on the job', await page.$eval('.bd-endtime', (n) => n.textContent));
+    await page.fill('.bd-shift-foot input.bd-note', 'The caliper will not budge');
+    await page.click('.bd-shift-foot .bd-postb');
+    await page.waitForSelector('.sheet-card .bd-kinds', { timeout: 4000 });
+    const sheet = await page.evaluate(() => ({ line: document.querySelector('.sheet-card .bd-postline').value, kinds: [...document.querySelectorAll('.sheet-card .bd-kindb')].map((b) => b.textContent),
+      hours: document.querySelector('.sheet-card [name=hours]')?.checked, brief: document.querySelector('.sheet-card [name=brief]')?.checked }));
+    check(sheet.line === 'The caliper will not budge' && JSON.stringify(sheet.kinds) === '["Made progress","Stuck","Found something","Finished"]' && sheet.hours === false && sheet.brief === false,
+      'Post: the line carried over, four kinds, hours and the Brief both off until you say', JSON.stringify(sheet));
+    await page.click('.sheet-card .bd-kindb[data-kind="stuck"]');
+    check(await page.$eval('.sheet-card .bd-stuck', (s) => !s.hidden) && (await page.$$('.sheet-card .bd-needb')).length === 4, 'Stuck asks what would help: four buttons, no typing', '');
+    await page.click('.sheet-card .bd-needb[data-need="tool"]');
+    await page.click('.sheet-card .bd-postgo');
+    await page.waitForFunction(() => document.querySelector('#sheet').hidden, null, { timeout: 4000 }).catch(() => {});
+    await page.waitForTimeout(300);
+    const mine = await page.$eval(bdPanel + ' .bd-post.mine', (p) => p.innerText).catch(() => '');
+    check(/Stuck/.test(mine) && /The caliper will not budge/.test(mine) && /Could use a tool/.test(mine) && !/20m/.test(mine), 'your Stuck is at the top of the stream, with what would help, and no hours', mine);
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('The Build, signed out on this phone: a reload mid-shift picks it back up, a long dark gap opens on the end screen, and no Wake Lock is fine (live, 390)', async () => {
+    const { ctx, page, errors } = await newPage(browser, base, { motion: 'reduce' });
+    await bdSpies(page, { noLock: true });
+    await page.clock.install({ time: T0 });
+    await page.goto(base + '/all-day/#build');
+    await settle(page);
+    await page.waitForSelector(bdPanel + ' .bd-name input[name=title]', { timeout: 8000 });
+    await page.fill(bdPanel + ' .bd-name input[name=title]', 'Learn the guitar solo');
+    await page.click(bdPanel + ' .bd-name button[type=submit]');
+    await page.click(bdPanel + ' .bd-name button[type=submit]');
+    await page.waitForSelector(bdPanel + ' .bd-thing .bd-title', { timeout: 6000 });
+    await page.click(bdPanel + ' .bd-go .bd-start');
+    await page.click('.sheet-card button[type=submit]');
+    await page.waitForSelector('.bd-dock.is-shift', { timeout: 4000 });
+    check(!(await bdState(page)).lock, 'no Wake Lock on this browser: the shift runs anyway', '');
+    await page.clock.runFor(5 * 60000);
+    await page.reload();
+    await page.waitForSelector('.bd-dock.is-shift[data-state="full"]', { timeout: 8000 }).catch(() => {});
+    let st = await bdState(page);
+    check(st.open && st.shift && st.shift.state === 'working' && st.shift.minutes >= 5, 'after a reload the shift is back on screen, its minutes kept', JSON.stringify(st.shift));
+    await page.clock.runFor(2 * 60000);
+    /* the phone went dark for two hours: no proof anyone was there */
+    await page.clock.setSystemTime(T0 + 3 * 3600000);
+    await page.reload();
+    await page.waitForSelector('.bd-shift-foot .bd-endtime', { timeout: 8000 }).catch(() => {});
+    st = await bdState(page);
+    const t = await page.$eval('.bd-endtime', (n) => n.textContent).catch(() => '');
+    check(st.ending && !st.ending.missed && st.ending.minutes >= 6 && st.ending.minutes <= 8 && /^\dm on the job$/.test(t), 'after a long dark gap it opens on the end screen with the time up to the last sign of life', JSON.stringify({ ending: st.ending, t }));
+    await page.click('.bd-shift-foot .bd-keep');
+    await page.waitForFunction(() => !document.querySelector('.bd-dock.is-shift'), null, { timeout: 4000 }).catch(() => {});
+    const local = await page.evaluate(() => JSON.parse(localStorage.getItem('allday-build-local') || 'null'));
+    check(!!local && JSON.stringify(local).includes('Learn the guitar solo'), 'kept on this phone, signed out', JSON.stringify(local).slice(0, 160));
+    await pageRules(page, 'build', 390);
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('The Build, Log it, then a gap: the next visit asks one question, never how long (live, signed out, 390)', async () => {
+    const { ctx, page, errors } = await newPage(browser, base, { motion: 'reduce' });
+    await page.clock.install({ time: T0 });
+    await page.goto(base + '/all-day/#build');
+    await settle(page);
+    await page.waitForSelector(bdPanel + ' .bd-name input[name=title]', { timeout: 8000 });
+    await page.fill(bdPanel + ' .bd-name input[name=title]', 'Run the relay in May');
+    await page.click(bdPanel + ' .bd-name button[type=submit]');
+    await page.click(bdPanel + ' .bd-name button[type=submit]');
+    await page.waitForSelector(bdPanel + ' .bd-thing .bd-title', { timeout: 6000 });
+    await page.click(bdPanel + ' .bd-go .btn.ghost');
+    await page.waitForSelector('.sheet-card .bd-logc');
+    const chips = await page.$$eval('.sheet-card .bd-logc', (bs) => bs.map((b) => b.textContent));
+    check(chips.length >= 4 && await page.$eval('.sheet-card .bd-logkeep', (b) => b.disabled), 'Log it: roughly how long, as a few taps', JSON.stringify(chips));
+    await page.click('.sheet-card .bd-logc[data-min="60"]');
+    await page.fill('.sheet-card .bd-lognote', 'a long run');
+    await page.click('.sheet-card .bd-logkeep');
+    await page.waitForFunction(() => document.querySelector('#sheet').hidden, null, { timeout: 4000 }).catch(() => {});
+    await page.waitForTimeout(300);
+    const mine = await page.$$eval(bdPanel + ' .bd-mine .bd-stat b', (bs) => bs.map((b) => b.textContent));
+    check(JSON.stringify(mine) === '["1h","1h","1h"]', 'it counts the same: 1h off your phone today, this week, this season', JSON.stringify(mine));
+    await page.click(bdPanel + ' .bd-mine');
+    await page.waitForSelector('.sheet-card .bd-bars');
+    const rec = await page.evaluate(() => ({ bars: document.querySelectorAll('.sheet-card .bd-bar').length, key: document.querySelector('.sheet-card .bd-key')?.textContent || '', words: document.querySelector('.sheet-card').innerText }));
+    check(rec.bars === 8 && /Logged/.test(rec.key) && !/streak|%|best/i.test(rec.words), 'hours off your phone by week, logged marked, no streak', JSON.stringify(rec).slice(0, 200));
+    await page.click('.sheet-card .bd-scale button:nth-child(2)');
+    check((await page.$$('.sheet-card .bd-bar')).length === 7, 'and by day', '');
+    await page.keyboard.press('Escape');
+    /* five days later */
+    await page.clock.setSystemTime(T0 + 5 * 86400000);
+    await page.reload();
+    await page.waitForSelector(bdPanel + ' .bd-back', { timeout: 8000 }).catch(() => {});
+    const back = await page.evaluate(() => { const b = document.querySelector('#panel-build .bd-back'); return b && { text: b.innerText, btns: [...b.querySelectorAll('button')].map((x) => x.textContent), first: b.nextElementSibling?.classList.contains('bd-thing') }; });
+    check(back && JSON.stringify(back.btns) === '["Same job","Smaller job","New job"]' && back.first, 'after a gap: one line from the foreman and three answers, above your thing', JSON.stringify(back));
+    check(back && !/\d|day|week|gone|miss|while/i.test(back.text.replace(/Same job|Smaller job|New job/g, '')), 'and nothing says how long you were gone', back && back.text);
+    await page.click(bdPanel + ' .bd-back [data-back="smaller"]');
+    await page.waitForSelector('.sheet-card[aria-label="A smaller job"] input.bd-step', { timeout: 4000 }).catch(() => {});
+    check(!!(await page.$('.sheet-card[aria-label="A smaller job"] input.bd-step')) && !(await page.$(bdPanel + ' .bd-back')), 'Smaller job: straight to clocking in on a smaller piece', '');
+    await page.keyboard.press('Escape');
+    await page.reload();
+    await settle(page);
+    await page.waitForSelector(bdPanel + ' .bd-thing .bd-title', { timeout: 6000 });
+    check(!(await page.$(bdPanel + ' .bd-back')), 'asked once: not again the same day', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('The Build, the two sides: #build and #habits deep links, the switch, the remembered side, a habit tap drops a pallet (demo, 390)', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/all-day/?demo=1#habits');
+    await settle(page);
+    const hab = await page.evaluate(() => ({ panel: !document.querySelector('#panel-habits').hidden, build: document.querySelector('#panel-build').hidden,
+      cell: document.querySelector('#tab-build').getAttribute('aria-selected'), side: document.querySelector('#subnav [data-side="habits"]')?.getAttribute('aria-pressed'),
+      pill: !!document.querySelector('#subnav .secpill[data-pill="sec-habits"]'), dock: document.querySelector('.bd-dock') ? document.querySelector('.bd-dock').hidden : true, title: document.querySelector('#mast-title').textContent }));
+    check(hab.panel && hab.build && hab.cell === 'true' && hab.side === 'true' && hab.pill && hab.dock && hab.title === 'Build', '#habits opens the Habits side: its own panel and section pill under the switch, the Build cell lit, no site', JSON.stringify(hab));
+    await bdShot(page, 'tab-habits-side-390-light');
+    await page.click('#subnav [data-side="build"]');
+    await page.waitForFunction(() => location.hash === '#build' && !document.querySelector('#panel-build').hidden, null, { timeout: 4000 }).catch(() => {});
+    check(await page.evaluate(() => location.hash === '#build' && !document.querySelector('.bd-dock').hidden), 'the switch to Build: #build, the site docked', '');
+    await page.click('#subnav [data-side="habits"]');
+    await page.waitForFunction(() => location.hash === '#habits', null, { timeout: 4000 }).catch(() => {});
+    await page.click('#tab-wire');
+    await settle(page);
+    await page.click('#tab-build');
+    await page.waitForTimeout(300);
+    check(await page.evaluate(() => location.hash === '#habits' && !document.querySelector('#panel-habits').hidden), 'the Build cell lands on the side you were last on', await page.evaluate(() => location.hash));
+    await page.goto(base + '/all-day/?demo=1#habits/forests');
+    await settle(page);
+    check(await page.$eval('#subnav .secpill .chip.on', (c) => c.dataset.chip).catch(() => '') === 'forests', '#habits/forests still opens Forests', '');
+    /* a habit tapped done drops a pallet, the next time the site is on screen */
+    await page.goto(base + '/all-day/?demo=1#habits');
+    await settle(page);
+    await hbSignIn(page);
+    const tap = await page.$('#panel-habits .hb-row .hb-tap:not(.on)');
+    if (tap) await tap.click();
+    await page.waitForTimeout(150);
+    const before = (await bdState(page)).pallets;
+    await page.click('#subnav [data-side="build"]');
+    await page.waitForTimeout(400);
+    const after = (await bdState(page)).pallets;
+    check(before === 1 && after === 0, 'a habit tap queues one pallet, and the site takes it on the way in', JSON.stringify({ before, after }));
+    /* a shared post */
+    const id = await bdApi(page, '(a) => a.feed.list().then((r) => r.posts[2].id)');
+    await page.goto(base + '/all-day/?demo=1#build/p-' + id);
+    check(await flashes(page, 'p-' + id), '#build/p-<id> lands on the post and flashes', id);
+    await page.goto(base + '/all-day/?demo=1#build/p-gone');
+    await page.waitForSelector('#toast:not([hidden])', { timeout: 6000 }).catch(() => {});
+    check(/moved on/.test(await page.$eval('#toast', (t) => t.textContent)), 'a post that is gone says so', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('The Build, posts only: a shift is a calm screen, a timer, the whistle as one line, Stop (demo, signed in, 390)', async () => {
+    const { ctx, page, errors } = await newPage(browser, base, { motion: 'reduce' });
+    await bdSpies(page);
+    await page.clock.install({ time: T0 });
+    await page.addInitScript(() => localStorage.setItem('allday-build-dock', '"mini"'));
+    await page.goto(base + '/all-day/?demo=1#build');
+    await settle(page);
+    await bdSignIn(page);
+    await page.click(bdPanel + ' .bd-go .bd-start');
+    await page.click('.sheet-card button[type=submit]');
+    await page.waitForSelector('.bd-dock.is-shift.is-calm', { timeout: 4000 });
+    const calm = await page.evaluate(() => ({ site: getComputedStyle(document.querySelector('.bd-dock .bd-sitebox')).display, time: document.querySelector('.bd-calmtime')?.textContent, stop: document.querySelector('.bd-out')?.textContent }));
+    check(calm.site === 'none' && calm.time === '0m' && calm.stop === 'Stop', 'no site: a timer and Stop', JSON.stringify(calm));
+    await page.clock.runFor(14 * 60000);
+    for (let m = 0; m < 17 && (await bdState(page)).shift.state !== 'whistle'; m++) await page.clock.runFor(60000);
+    const w = await page.evaluate(() => ({ line: document.querySelector('.bd-calmwhistle')?.textContent || '', buzz: window.__buzz.length, time: document.querySelector('.bd-calmtime')?.textContent }));
+    check(/whistle/.test(w.line) && w.buzz === 1 && /^1[4-9]m|^2\dm|^30m/.test(w.time), 'the whistle: one buzz and one gentle line', JSON.stringify(w));
+    await bdShot(page, 'tab-calm-shift-390-light');
+    await page.mouse.click(195, 300);
+    await page.waitForFunction(() => !document.querySelector('.bd-calmwhistle'), null, { timeout: 4000 }).catch(() => {});
+    check(!(await page.$('.bd-calmwhistle')), 'a tap and it goes away', '');
+    await page.click('.bd-out');
+    await page.waitForSelector('.bd-endtime', { timeout: 4000 });
+    await page.click('.bd-keep');
+    await page.waitForFunction(() => !document.querySelector('.bd-dock.is-shift'), null, { timeout: 4000 }).catch(() => {});
+    check(await page.$eval('.bd-dock', (d) => d.dataset.state) === 'mini', 'and back to posts only', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('The Build, the neighborhood: a name tag on your builder, and a tap on a neighbor’s shows who and what they’re on (demo, 390)', async () => {
+    const { ctx, page, errors } = await newPage(browser, base, { motion: 'reduce' });
+    await page.goto(base + '/all-day/?demo=1#build');
+    await settle(page);
+    /* signed out on this phone: no builder yet, so clocking in offers one */
+    await page.waitForSelector(bdPanel + ' .bd-name input[name=title]');
+    await page.fill(bdPanel + ' .bd-name input[name=title]', 'Sew a quilt');
+    await page.click(bdPanel + ' .bd-name button[type=submit]');
+    await page.click(bdPanel + ' .bd-name button[type=submit]');
+    await page.waitForSelector(bdPanel + ' .bd-go .bd-start');
+    await page.click(bdPanel + ' .bd-go .bd-start');
+    await page.waitForSelector('.sheet-card .bd-builder.inline');
+    const setup = await page.evaluate(() => ({ hats: document.querySelectorAll('.sheet-card .bd-hat').length, tag: document.querySelector('.sheet-card input.bd-tag')?.placeholder, show: document.querySelector('.sheet-card .bd-builder [name=show]')?.checked }));
+    check(setup.hats === 6 && /nickname or your first name/.test(setup.tag) && setup.show === true, 'the first clock-in offers your builder: a hard hat and a name tag, shown on the site', JSON.stringify(setup));
+    await page.click('.sheet-card .bd-hat[data-hat="blue"]');
+    await page.fill('.sheet-card input.bd-tag', 'Quilt Bob');
+    await page.click('.sheet-card button[type=submit]');
+    await page.waitForSelector('.bd-dock.is-shift');
+    const b = await bdApi(page, '(a) => a.builder.get().then((r) => r.builder)');
+    check(b && b.first_name === 'Quilt Bob' && b.hat === 'blue' && b.first_name_public === true, 'saved with Start: the tag and the hat', JSON.stringify(b));
+    await page.click('.bd-out');
+    await page.waitForSelector('.bd-keep');
+    await page.click('.bd-keep');
+    await page.waitForFunction(() => !document.querySelector('.bd-dock.is-shift'), null, { timeout: 4000 }).catch(() => {});
+    /* tap a neighbor on the site */
+    await page.waitForTimeout(600);
+    const spot = await page.evaluate(() => import('/all-day/js/modes/build.js').then((m) => {
+      const site = m._site(); site.advance(90); const st = site.stats();
+      const c = document.querySelector('.bd-canvas').getBoundingClientRect();
+      const pts = st.crew.filter((x) => x[4] !== 'gone').map(([id, x, y]) => ({ id, cx: c.left + (x - st.cam[0]) / st.size[0] * c.width, cy: c.top + (y - 7 - st.cam[1]) / st.size[1] * c.height }))
+        .filter((p) => p.cx > c.left + 4 && p.cx < c.right - 4 && p.cy > c.top + 4 && p.cy < c.bottom - 4);
+      return pts;
+    }));
+    let card = null;
+    for (const p of spot) {
+      await page.mouse.click(p.cx, p.cy);
+      card = await page.$eval('.bd-whocard', (n) => ({ name: n.querySelector('.bd-whoname').textContent, job: n.querySelector('.bd-whojob').textContent, link: !!n.querySelector('.bd-wholink') })).catch(() => null);
+      if (card) break;
+    }
+    check(card && card.name.length > 0 && /floor|yard|roof|beam|site/.test(card.job), 'a tap on a neighbor’s builder: their name tag and the job they’re on', JSON.stringify({ card, n: spot.length }));
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('The Build, the docked site: the handle opens it full screen, Escape and a drag bring it down (demo, 390)', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/all-day/?demo=1#build');
+    await settle(page);
+    await page.waitForSelector('.bd-dock:not([hidden])');
+    const h0 = await page.$eval('.bd-dock', (d) => d.getBoundingClientRect().height);
+    check(h0 >= 844 * 0.38 && h0 <= 844 * 0.5, 'docked, the site is about the bottom 40% of the screen (' + Math.round(h0) + 'px)', h0);
+    const clear = await page.evaluate(() => { const p = document.querySelector('#panel-build'); p.scrollTop = p.scrollHeight; const last = p.querySelector('.panel-body').getBoundingClientRect().bottom; return { last, dock: document.querySelector('.bd-dock').getBoundingClientRect().top }; });
+    check(clear.last <= clear.dock + 1, 'the stream scrolls clear of the docked site', JSON.stringify(clear));
+    await page.evaluate(() => { document.querySelector('#panel-build').scrollTop = 0; });
+    await page.click('.bd-handle');
+    await page.waitForTimeout(350);
+    const full = await page.evaluate(() => ({ state: document.querySelector('.bd-dock').dataset.state, h: document.querySelector('.bd-dock').getBoundingClientRect().height, label: document.querySelector('.bd-handle').getAttribute('aria-label') }));
+    check(full.state === 'full' && full.h >= 840 && full.label === 'Shrink the site', 'the handle opens the site full screen', JSON.stringify(full));
+    await page.keyboard.press('Escape');
+    check(await page.$eval('.bd-dock', (d) => d.dataset.state) === 'dock', 'Escape brings it back down', '');
+    const hb = await page.$eval('.bd-handle', (h) => { const r = h.getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2 }; });
+    await page.mouse.move(hb.x, hb.y); await page.mouse.down(); await page.mouse.move(hb.x, hb.y + 80, { steps: 4 }); await page.mouse.up();
+    await page.waitForTimeout(350);
+    const mini = await page.evaluate(() => ({ state: document.querySelector('.bd-dock').dataset.state, h: document.querySelector('.bd-dock').getBoundingClientRect().height, town: !!document.querySelector('.bd-dock .bd-townl').offsetHeight }));
+    check(mini.state === 'mini' && mini.h < 220 && mini.town, 'dragged down, it folds to the town line', JSON.stringify(mini));
+    /* the other way: the strip's button brings the site back, and Posts only folds it again */
+    await page.click('.bd-dock .bd-fold');
+    await page.waitForTimeout(300);
+    check(await page.$eval('.bd-dock', (d) => d.dataset.state) === 'dock', 'the strip’s button brings the site back', '');
+    await page.click('.bd-dock .bd-fold[aria-label="Posts only"]');
+    await page.waitForTimeout(500);
+    const folded = await page.evaluate(() => import('/all-day/js/modes/build.js').then((m) => { const st = m._site().stats(); return { state: document.querySelector('.bd-dock').dataset.state, running: st.running, kept: localStorage.getItem('allday-build-dock') }; }));
+    check(folded.state === 'mini' && !folded.running && folded.kept === '"mini"', 'Posts only: the feed takes the screen, the site stops drawing, and the phone remembers', JSON.stringify(folded));
+    await page.reload();
+    await settle(page);
+    await page.waitForSelector('.bd-dock:not([hidden])');
+    check(await page.$eval('.bd-dock', (d) => d.dataset.state) === 'mini', 'still posts only after a reload', '');
+    await goTab(page, 'wire');
+    const away = await page.evaluate(() => ({ hash: location.hash, hidden: document.querySelector('.bd-dock').hidden, docked: document.body.classList.contains('bd-docked') }));
+    check(away.hidden && !away.docked, 'on another tab the site is gone', JSON.stringify(away));
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+}
+
+/* the review shots: every screen at 390 light and dark and at 1440 */
+async function buildShots(browser, base) {
+  if (!process.env.BUILD_SHOTS) return;
+  for (const [w, scheme] of [[390, 'light'], [390, 'dark'], [1440, 'light']]) {
+    await group('The Build, review shots ' + w + ' ' + scheme, async () => {
+      const tag = w + '-' + scheme;
+      const { ctx, page, errors } = await newPage(browser, base, { viewport: { width: w, height: w > 900 ? 900 : 844 }, scheme, motion: 'reduce' });
+      await bdSpies(page);
+      await page.clock.install({ time: T0 });
+      await page.goto(base + '/all-day/?demo=1#build');
+      await settle(page);
+      await page.waitForSelector(bdPanel + ' .bd-starter', { timeout: 8000 });
+      await page.clock.runFor(2500);
+      await bdShot(page, 'tab-first-run-' + tag);
+      await page.evaluate(() => document.querySelector('#panel-build .bd-door').scrollIntoView({ block: 'start' }));
+      await page.evaluate(() => { const p = document.querySelector('#panel-build'); p.scrollTop -= 120; });
+      await bdShot(page, 'tab-starter-door-' + tag);
+      await bdSignIn(page);
+      await page.evaluate(() => { document.querySelector('#panel-build').scrollTop = 0; });
+      await bdShot(page, 'tab-your-thing-' + tag);
+      await page.click(bdPanel + ' .bd-only button:nth-child(2)');
+      await page.click(bdPanel + ' .bd-post.k-stuck:not(.mine) .bd-help');
+      await page.evaluate(() => { const r = document.querySelector('#panel-build .bd-reply'); r.closest('.bd-post').scrollIntoView({ block: 'start' }); document.querySelector('#panel-build').scrollTop -= 110; });
+      await page.fill(bdPanel + ' .bd-reply input[name=line]', 'I have a truing stand and Tuesday off');
+      await bdShot(page, 'tab-feed-stuck-help-' + tag);
+      await page.click(bdPanel + ' .bd-only button:first-child');
+      await page.evaluate(() => { document.querySelector('#panel-build').scrollTop = 0; });
+      await page.click(bdPanel + ' .bd-go .bd-start');
+      await page.fill('.sheet-card input.bd-step', 'true the back wheel');
+      await page.click('.sheet-card button[type=submit]');
+      await page.waitForSelector('.bd-dock.is-shift');
+      await page.clock.runFor(5000);
+      await bdShot(page, 'tab-shift-mode-' + tag);
+      await page.clock.runFor(14 * 60000);
+      for (let m = 0; m < 17 && (await bdState(page)).shift.state !== 'whistle'; m++) await page.clock.runFor(60000);
+      await page.clock.runFor(1500);
+      await bdShot(page, 'tab-whistle-' + tag);
+      await page.mouse.click(Math.round(w / 2), 300);
+      await page.clock.runFor(12 * 60000);
+      await page.click('.bd-out');
+      await page.waitForSelector('.bd-endtime');
+      await bdShot(page, 'tab-end-screen-' + tag);
+      await page.click('.bd-shift-foot .bd-keep');
+      await page.goto(base + '/all-day/?demo=1#habits');
+      await settle(page);
+      await hbSignIn(page);
+      await bdShot(page, 'tab-habits-side-' + tag);
+      check(!errors.length, 'no console errors', errors.join(' | '));
+      await ctx.close();
+    });
+  }
+}
+
 async function theHabits(browser, base) {
   await group('Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390)', async () => {
     const { ctx, page, errors } = await newPage(browser, base);
@@ -10533,7 +11088,7 @@ async function sectionPills(browser, base) {
       for (let i = 0; i < 6; i++) { await page.evaluate((sel) => document.querySelector(sel).scrollBy(0, 200), panelSel(tab)); await page.waitForTimeout(70); }
       await page.waitForTimeout(500);
       const fl = await page.evaluate(() => { const w = document.querySelector('#subnav .secpill'); const r = w.getBoundingClientRect(); return { top: r.top, bottom: r.bottom, away: document.body.classList.contains('chrome-away'), small: document.body.classList.contains('pill-small'), t: getComputedStyle(w).transform }; });
-      check(fl.away && fl.small && fl.top >= 0 && fl.bottom < 70 && /matrix\(0\.9, 0, 0, 0\.9/.test(fl.t), tab + ': scrolled down, it floats at the top, 90% size', JSON.stringify(fl));
+      check(fl.away && fl.small && fl.top >= 0 && fl.bottom < (tab === 'habits' ? 130 : 70) && /matrix\(0\.9, 0, 0, 0\.9/.test(fl.t), tab + ': scrolled down, it floats at the top, 90% size', JSON.stringify(fl));
       await page.evaluate((sel) => document.querySelector(sel).scrollBy(0, -60), panelSel(tab));
       await page.waitForTimeout(400);
       check(await page.evaluate(() => !document.body.classList.contains('pill-small')), tab + ': any move up brings it back to full size', '');
@@ -10724,6 +11279,8 @@ try {
   await run(boards);
   await run(boardPhotos);
   await run(theHabits);
+  await run(theBuild);
+  await run(buildShots);
   await run(sunsetLine);
   await run(theVintage);
   await run(theWeather);
