@@ -18,7 +18,9 @@ name: Refresh events calendar
 # week, the next few days refreshed every morning, page one every
 # afternoon, and the rest of the window carried from a committed cache. See
 # the listing-cache note in scripts/events/sources/sevendays.py. Budget:
-# 2x16 + 5x5 + 7x1 = ~64 credits a week, was ~220.
+# 2x16 + 5x5 + 7x1 = ~64 credits a week, was ~220. Generator's GlueUp listing
+# adds at most ~3 a week (refetched only when its cache is 3 days old; the
+# event pages themselves are free) — see scripts/events/sources/generator.py.
 on:
   schedule:
     - cron: '40 9 * * 1,4'         # Mon+Thu 9:40 UTC = 5:40am Burlington (EDT): full pass
