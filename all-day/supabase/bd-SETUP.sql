@@ -738,6 +738,7 @@ begin
   return jsonb_build_object(
     'total_minutes', (select coalesce(sum(minutes), 0) from public.bd_shifts where p_since is null or day >= p_since),
     'week_minutes', (select coalesce(sum(minutes), 0) from public.bd_shifts where day >= greatest(v_week, coalesce(p_since, v_week))),
+    'today_minutes', (select coalesce(sum(minutes), 0) from public.bd_shifts where day = public.bd_today()),
     'habit_drops', v_drops,
     'posts_lit', (select count(*) from public.bd_posts where hidden_at is null and (p_since is null or public.bd_day(created_at) >= p_since)),
     'on_shift_count', (select count(*) from public.bd_presence where heartbeat > now() - interval '180 seconds'),

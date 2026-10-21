@@ -65,7 +65,7 @@
                                             outgoing: [{ id, post, post_line, name, line, status, created_at }] }
      build.report({ post } | { help }, reason)  -> { hidden }   reason: spam|unkind|unsafe|other
      build.block.add({ post } | { help }) -> {}    block.list() -> { blocks: [{ id, name }] }  block.remove(id) -> {}
-     build.town.get()                  -> { town }  { total_minutes, week_minutes, habit_drops, build_minutes,
+     build.town.get()                  -> { town }  { total_minutes, week_minutes, today_minutes, habit_drops, build_minutes,
                                           posts_lit, windows_lit, on_shift_count, on_shift: [{ id, look: { hat, vest },
                                           task, name?, me? }], floors, floors_done, floor_progress 0..1, topped_out, season }
      build.record.get()                -> { days: [{ day, minutes, logged }], weeks: [{ week, minutes }],
@@ -676,7 +676,7 @@ export function createBuild({ server, local, uid = () => null, storage = {}, con
         if (!r.ok) return fail(r.error);
         const t = r.data || {};
         const f = floorsOf(t, cfg);
-        return { ok: true, town: { total_minutes: t.total_minutes || 0, week_minutes: t.week_minutes || 0, habit_drops: t.habit_drops || 0,
+        return { ok: true, town: { total_minutes: t.total_minutes || 0, week_minutes: t.week_minutes || 0, today_minutes: t.today_minutes || 0, habit_drops: t.habit_drops || 0,
           posts_lit: t.posts_lit || 0, windows_lit: t.posts_lit || 0, on_shift_count: t.on_shift_count || 0, on_shift: t.on_shift || [],
           ...f, season: cfg.season } };
       });

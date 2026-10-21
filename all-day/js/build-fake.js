@@ -392,6 +392,7 @@ export class FakeBuild {
     return {
       total_minutes: sum((s) => !since || s.day >= since),
       week_minutes: sum((s) => s.day >= from),
+      today_minutes: sum((s) => s.day === today),
       habit_drops: this.habitTaps.filter((d) => !since || d >= since).length,
       posts_lit: this.posts.filter((p) => this._visible(p) && (!since || dayKey(p.created_at) >= since)).length,
       on_shift_count: fresh.length,

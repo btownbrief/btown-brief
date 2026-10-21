@@ -97,6 +97,8 @@ const B = {
   cut: false,            // the cutaway is showing
   flash: null,           // a #build/<key> link waiting for its card
   replying: null,        // the Stuck post whose reply line is open
+  scope: ['today', 'week', 'season'].includes(store.read('allday-build-scope', 'week')) ? store.read('allday-build-scope', 'week') : 'week',
+  season: null,          // your minutes this season (record.get)
 };
 let site = null, dock = null, canvas = null, talkTimer = 0, skyTimer = 0, loadGen = 0;
 const lastLine = Object.create(null);
@@ -170,6 +172,13 @@ function floors() {
   return { total, done, progress: Math.max(0, Math.min(1, Number(t.floor_progress) || 0)), topped: !!t.topped_out, going: Math.min(total, done + 1) };
 }
 const crewNow = () => Math.max(Number(B.town && B.town.on_shift_count) || 0, B.town && Array.isArray(B.town.on_shift) ? B.town.on_shift.length : 0);
+const live = () => { const e = ending(); if (e) return Number(e.minutes) || 0; const s = status(); return s && s.state !== 'missed' ? Number(s.minutes) || 0 : 0; };
+const todayMinutes = () => { const k = dayKey(Date.now()); const d = B.days.find((x) => x.day === k); return (d ? Number(d.minutes) || 0 : 0) + live(); };
+const seasonMinutes = () => (B.season != null ? B.season : yourMinutes()) + live();
+function mineInner() {
+  const cell = (n, label) => '<span class="bd-stat"><b>' + esc(hm(n)) + '</b><span>' + esc(label) + '</span></span>';
+  return cell(todayMinutes(), 'today') + cell(weekMinutes() + live(), 'this week') + cell(seasonMinutes(), 'this season') + ICON.right;
+}
 const weekMinutes = () => { const from = keyBack(dayKey(Date.now()), 7); let n = 0; B.days.forEach((d) => { if (d.day > from) n += Number(d.minutes) || 0; }); return n; };
 const yourMinutes = () => B.days.reduce((n, d) => n + (Number(d.minutes) || 0), 0);
 
@@ -189,6 +198,7 @@ function load() {
     B.thing = t.ok && t.thing && t.thing.status !== 'done' ? t.thing : null;
     B.town = town.ok ? town.town : null;
     B.days = rec.ok && Array.isArray(rec.days) ? rec.days : [];
+    B.season = rec.ok && Number.isFinite(rec.season_minutes) ? rec.season_minutes : null;
     B.shelf = shelf.ok && Array.isArray(shelf.posts) ? shelf.posts : [];
     B.feed = feed.ok && Array.isArray(feed.posts) ? feed.posts : [];
     B.builder = bld.ok && bld.builder ? bld.builder : null;
@@ -208,7 +218,7 @@ function reload() {
     signedIn() ? go(() => a.help.list()) : Promise.resolve({ ok: false })]).then(([town, feed, rec, shelf, help]) => {
     if (town.ok) B.town = town.town;
     if (feed.ok && Array.isArray(feed.posts)) B.feed = feed.posts;
-    if (rec.ok && Array.isArray(rec.days)) B.days = rec.days;
+    if (rec.ok && Array.isArray(rec.days)) { B.days = rec.days; B.season = Number.isFinite(rec.season_minutes) ? rec.season_minutes : null; }
     if (shelf.ok && Array.isArray(shelf.posts)) B.shelf = shelf.posts;
     if (help.ok && Array.isArray(help.incoming)) B.offers = help.incoming;
     if (B.phase === 'ready') { paint(); feedSite(); paintDock(); }
@@ -243,6 +253,9 @@ function paint() {
   if (B.thing && B.back) wrap.appendChild(comebackCard());
   wrap.appendChild(B.thing ? thingCard() : nameCard());
   if (!B.thing && (!B.draft || B.draft.step === 'name')) wrap.appendChild(starterDoor());
+  wrap.appendChild(counter());
+  const today = todayStrip();
+  if (today) wrap.appendChild(today);
   wrap.appendChild(feedSection());
   if (draft) { const i = B.body.querySelector('.bd-reply input[name=line]'); if (i) i.value = draft; }
 }
@@ -256,9 +269,12 @@ function thingCard() {
   c.innerHTML = '<h2 class="bd-title">' + esc(t.title) + '</h2>' +
     (t.why ? '<p class="bd-why">' + esc('“' + t.why + '”') + '</p>' : '') +
     (meta.length ? '<p class="bd-meta">' + meta.map(esc).join(' · ') + '</p>' : '');
-  /* your hours off the phone, this week: the number the tab is proudest of */
-  const wk = el('button', 'bd-week', '<b>' + esc(hm(weekMinutes())) + '</b><span>off your phone this week</span>' + ICON.right);
+  /* your hours off the phone: today, this week, the season. The number the
+     tab is proudest of, yours alone; it counts up while a shift runs */
+  const wk = el('button', 'bd-mine');
   wk.type = 'button';
+  wk.setAttribute('aria-label', 'Your hours off your phone');
+  wk.innerHTML = mineInner();
   wk.addEventListener('click', recordSheet);
   c.appendChild(wk);
   const row = el('div', 'bd-go');
@@ -404,7 +420,9 @@ function loadStarters() {
       out.push({ k: 'st-' + x.id, kind: 'Try this', title: x.title, line: x.line || '', first_step: x.first_step || '' });
     });
     B.starters = out.slice(0, (st && st.show) || 4);
-    if (!B.thing && B.phase === 'ready') paint();
+    /* only the door redraws: never the card someone may be typing in */
+    const door = B.body && B.body.querySelector('.bd-door');
+    if (door) door.replaceWith(starterDoor());
   });
   return startersAsk;
 }
@@ -445,11 +463,13 @@ function thingSheet() {
     body.appendChild(builderForm());
   });
 }
-/* a hard hat colour, and the first name neighbors see (on posts always, on
-   the site only if you say so) */
-function builderForm() {
-  const f = el('form', 'bd-form bd-builder');
-  f.noValidate = true;
+/* Your builder: a hard hat, and a name tag (a nickname or your first name,
+   Stephen 2026-10-21: "so that it actually feels like a neighborhood").
+   Neighbors see the tag on your posts; on the site only if you say so.
+   inline: no Save button (the clock-in sheet saves it with Start). */
+function builderForm(o = {}) {
+  const f = el(o.inline ? 'div' : 'form', 'bd-form bd-builder' + (o.inline ? ' inline' : ''));
+  if (!o.inline) f.noValidate = true;
   const b = B.builder || {};
   const hats = el('div', 'bd-hats');
   hats.setAttribute('role', 'group');
@@ -463,23 +483,26 @@ function builderForm() {
     hats.appendChild(x);
   });
   f.appendChild(hats);
-  const name = el('input', 'field');
-  name.name = 'first_name'; name.maxLength = 32; name.placeholder = 'First name'; name.value = b.first_name || '';
-  name.setAttribute('aria-label', 'Your first name');
+  const name = el('input', 'field bd-tag');
+  name.name = 'first_name'; name.maxLength = 32; name.placeholder = 'Name tag: a nickname or your first name'; name.value = b.first_name || '';
+  name.setAttribute('aria-label', 'Name tag, a nickname or your first name');
   f.appendChild(name);
-  const show = el('label', 'bd-check', '<input type="checkbox" name="show"' + (b.first_name_public ? ' checked' : '') + '><span>Show it on the site</span>');
+  const show = el('label', 'bd-check', '<input type="checkbox" name="show"' + (b.first_name_public || (!b.first_name && o.inline) ? ' checked' : '') + '><span>Show it on the site</span>');
   f.appendChild(show);
+  const values = () => ({ hat, first_name: name.value.trim().slice(0, 32), first_name_public: !!show.querySelector('input').checked });
+  const saveIt = (next) => go(() => api().builder.set(next)).then((r) => {
+    if (r.ok) { B.builder = r.builder || { ...b, ...next }; if (site) site.setYou(youState()); }
+    return r;
+  });
+  if (o.inline) { f.save = () => { const v = values(); return v.first_name || v.hat !== b.hat ? saveIt(v) : Promise.resolve({ ok: true }); }; return f; }
   const save = button('Save', 'bd-start'); save.type = 'submit';
   f.appendChild(save);
   f.addEventListener('submit', (e) => {
     e.preventDefault();
-    const next = { hat, first_name: name.value.trim().slice(0, 32), first_name_public: !!show.querySelector('input').checked };
     save.disabled = true;
-    go(() => api().builder.set(next)).then((r) => {
+    saveIt(values()).then((r) => {
       save.disabled = false;
       if (!r.ok) { app.toast(r.message || FAIL); return; }
-      B.builder = r.builder || { ...b, ...next };
-      if (site) site.setYou(youState());
       app.closeSheet();
       app.toast('Saved');
     });
@@ -522,7 +545,7 @@ function comebackCard() {
 /* Hours off your phone by day or by week (never a streak), your part of
    the building, and your shelf: everything you posted about this thing. */
 function recordSheet() {
-  let scale = 'days';
+  let scale = 'weeks';
   app.sheet('Hours off your phone', (body, card, close) => {
     const host = el('div', 'bd-record');
     const paintIt = () => {
@@ -536,7 +559,7 @@ function recordSheet() {
       const head = el('div', 'bd-rhead');
       const big = scale === 'days' ? bars.reduce((n, b) => n + b.m, 0) : bars.reduce((n, b) => n + b.m, 0);
       head.appendChild(el('p', 'bd-big', '<b>' + esc(hm(big)) + '</b> <span>' + esc(scale === 'days' ? 'last 7 days' : 'last 8 weeks') + '</span>'));
-      head.appendChild(pills([['days', 'Days'], ['weeks', 'Weeks']], scale, (v) => { scale = v; paintIt(); }, 'bd-scale'));
+      head.appendChild(pills([['weeks', 'Weeks'], ['days', 'Days']], scale, (v) => { scale = v; paintIt(); }, 'bd-scale'));
       host.appendChild(head);
       const max = Math.max(60, ...bars.map((b) => b.m));
       const chart = el('div', 'bd-bars' + (scale === 'weeks' ? ' wk' : ''));
@@ -562,6 +585,132 @@ function recordSheet() {
     paintIt();
     body.appendChild(host);
   });
+}
+
+/* The town's counter (Stephen, 2026-10-21: "people spent this many minutes
+   building and doing productive things instead of doom scrolling"): the
+   town's hours off its phones, today, this week or this season, shifts and
+   Log it (habit pallets don't count). One number for everyone, never a
+   name beside it. It counts up while your own shift runs. */
+const SCOPES = [['today', 'Today'], ['week', 'This week'], ['season', 'Season']];
+function townMinutes(scope) {
+  const t = B.town || {};
+  const base = scope === 'today' ? Number(t.today_minutes) || 0 : scope === 'week' ? Number(t.week_minutes) || 0 : Number(t.total_minutes) || 0;
+  return base + live();
+}
+function bigWords(m) {
+  if (m < 60) return [String(Math.round(m)), m === 1 ? 'minute' : 'minutes'];
+  const h = Math.floor(m / 60);
+  return [h.toLocaleString('en-US'), h === 1 ? 'hour' : 'hours'];
+}
+function counterInner() {
+  const scope = B.scope || 'week';
+  const m = townMinutes(scope);
+  const [n, unit] = bigWords(m);
+  const when = scope === 'today' ? 'today' : scope === 'week' ? 'this week' : (B.config.season && B.config.season.starts ? 'since the site opened' : 'so far');
+  const days = m >= 48 * 60 ? Math.floor(m / 1440) : 0;
+  return '<p class="bd-cbig"><b>' + esc(n) + '</b> ' + esc(unit) + '</p>' +
+    '<p class="bd-cline">' + esc('Burlington put its phones down ' + when + '.') + (days ? ' <span>' + esc('That’s ' + days + ' days, end to end.') + '</span>' : '') + '</p>';
+}
+function counter() {
+  const s = el('section', 'bd-counter');
+  s.dataset.k = 'town';
+  const body = el('div', 'bd-cbody', counterInner());
+  body.setAttribute('aria-live', 'off');
+  const sw = pills(SCOPES, B.scope || 'week', (v) => { B.scope = v; store.write('allday-build-scope', v); body.innerHTML = counterInner(); paintDock(); }, 'bd-scope');
+  sw.setAttribute('role', 'group');
+  sw.setAttribute('aria-label', 'Today, this week or the season');
+  s.append(body, sw);
+  return s;
+}
+/* a running shift ticks the numbers up, once a minute */
+let lastLive = -1;
+function tickNumbers() {
+  const n = live();
+  if (n === lastLive) return;
+  lastLive = n;
+  const c = B.body && B.body.querySelector('.bd-cbody');
+  if (c) c.innerHTML = counterInner();
+  const m = B.body && B.body.querySelector('.bd-mine');
+  if (m) m.innerHTML = mineInner();
+  paintDock();
+}
+
+/* Today on the site: short clips of today's shifts that chose to post,
+   with their time ("Maya · Set three windows · 40m"). Built from the feed's
+   own posts (no table of its own); three at most, newest first. */
+function todayStrip() {
+  const today = dayKey(Date.now());
+  const clips = B.feed.filter((p) => p && p.line && Number(p.minutes) > 0 && p.created_at && dayKey(Date.parse(p.created_at)) === today).slice(0, 3);
+  if (!clips.length) return null;
+  const s = el('section', 'bd-today');
+  s.dataset.k = 'today';
+  s.appendChild(el('h2', 'bd-todayh', 'Today on the site'));
+  const ul = el('ul', 'bd-clips');
+  clips.forEach((p) => {
+    const li = el('li', 'bd-clip');
+    const b = el('button', 'bd-clipb', '<b>' + esc(p.author || 'A neighbor') + '</b> ' + esc(oneLine(p.line, 70)) + ' <span>· ' + esc(hm(p.minutes)) + '</span>');
+    b.type = 'button';
+    b.dataset.post = p.id;
+    b.addEventListener('click', () => { if (!app.flashHit(B.body, 'p-' + p.id)) app.toast('That post has moved on'); });
+    li.appendChild(b);
+    ul.appendChild(li);
+  });
+  s.appendChild(ul);
+  return s;
+}
+
+/* Tap a neighbor's builder on the site: their name tag, the job they are
+   on, and their latest post if there is one. The site draws the tag on its
+   own; this reads where everyone is from site.stats(). */
+const JOB = { haul: 'hauling timber across the yard', frame: 'framing the {n} floor', brick: 'laying brick on the {n} floor', wire: 'running wire on the {n} floor',
+  window: 'setting windows on the {n} floor', roof: 'up on the roof', lunch: 'eating lunch on a beam' };
+const nth = (n) => n + (n % 100 >= 11 && n % 100 <= 13 ? 'th' : ['th', 'st', 'nd', 'rd'][n % 10] || 'th');
+function jobWords(task) { return fill(JOB[task] || 'on the site', { n: nth(floors().going) }); }
+let pickTimer = 0;
+function pickAt(e) {
+  if (!site || !site.stats || !canvas) return;
+  let st;
+  try { st = site.stats(); } catch (x) { return; }
+  if (!st || !Array.isArray(st.crew) || !st.size) return;
+  const r = canvas.getBoundingClientRect();
+  if (!r.width) return;
+  const x = st.cam[0] + (e.clientX - r.left) / r.width * st.size[0], y = st.cam[1] + (e.clientY - r.top) / r.height * st.size[1];
+  const crew = (B.town && Array.isArray(B.town.on_shift) ? B.town.on_shift : []);
+  let best = null, bd = 9;
+  st.crew.forEach(([id, ax, ay, , act]) => {
+    if (act === 'gone') return;
+    const c = crew.find((q) => String(q.id) === String(id).replace(/^c:/, ''));
+    if (!c || c.me) return;
+    const d = Math.abs(ax - x) + Math.abs(ay - 7 - y) * 0.7;
+    if (d < bd) { bd = d; best = c; }
+  });
+  showWho(best);
+}
+function showWho(c) {
+  const box = dock && dock.querySelector('.bd-sitebox');
+  if (!box) return;
+  const old = box.querySelector('.bd-whocard');
+  if (old) old.remove();
+  clearTimeout(pickTimer);
+  if (!c) return;
+  const name = c.name || 'A neighbor';
+  const card = el('div', 'bd-whocard');
+  card.setAttribute('role', 'status');
+  card.innerHTML = '<p class="bd-whoname">' + esc(name) + '</p><p class="bd-whojob">' + esc(jobWords(c.task)) + '</p>';
+  const post = c.name ? B.feed.find((p) => p.author === c.name && p.line) : null;
+  if (post) {
+    const a = el('button', 'bd-wholink', esc('“' + oneLine(post.line, 60) + '”'));
+    a.type = 'button';
+    a.addEventListener('click', (ev) => {
+      ev.stopPropagation();
+      if (dock.dataset.state === 'full' && !shiftOpen()) setDock('dock');
+      if (!app.flashHit(B.body, 'p-' + post.id)) app.toast('That post has moved on');
+    });
+    card.appendChild(a);
+  }
+  box.appendChild(card);
+  pickTimer = setTimeout(() => card.remove(), 7000);
 }
 
 /* -------------------------------------------------------------- the feed */
@@ -797,6 +946,7 @@ function ensureDock() {
   cut.type = 'button';
   cut.addEventListener('click', () => setCut(!B.cut));
   box.append(canvas, el('p', 'bd-talk'), cut);
+  canvas.addEventListener('click', (e) => { if (!shiftOpen()) pickAt(e); });
   const foot = el('div', 'bd-shift-foot');
   const live = el('p', 'bd-live');
   live.setAttribute('aria-live', 'polite');
@@ -814,7 +964,8 @@ function setDock(state) {
   if (state !== 'full') store.write(DOCK_KEY, state);
   document.body.classList.toggle('bd-full', state === 'full' && !dock.hidden);
   if (!dock.hidden) document.body.dataset.bdDock = state;
-  paintHandle();
+  paintDock();
+  if (state !== 'mini') feedSite();
 }
 function paintHandle() {
   const h = dock && dock.querySelector('.bd-handle');
@@ -858,10 +1009,16 @@ function paintDock() {
   const t = B.town || {};
   const f = floors();
   const crew = crewNow();
-  const vars = { crew, hours: Math.floor((Number(t.week_minutes) || 0) / 60), floor: f.going, floors: f.total };
+  const vars = { crew, hours: Math.floor(((Number(t.week_minutes) || 0) + live()) / 60), floor: f.going, floors: f.total };
   let line = fill(crew ? F('town.line', '') : F('town.line_none', ''), vars);
   if (crew === 1) line = line.replace(/^1 neighbors/, '1 neighbor');
   if (f.topped) line = line.replace(/floor \d+ of \d+/, 'topped out');
+  /* folded to a strip: the town's counter, short, and who's on shift */
+  if (dock.dataset.state === 'mini' && !shiftOpen()) {
+    const scope = B.scope || 'week';
+    const [n, unit] = bigWords(townMinutes(scope));
+    line = n + ' ' + unit + ' off phones ' + (scope === 'today' ? 'today' : scope === 'week' ? 'this week' : 'this season') + ' · ' + (crew ? crew + ' on shift' : 'nobody on shift');
+  }
   const season = B.config.season || {};
   let party = F('party.no_date', '');
   if (season.topping_out_date) {
@@ -872,6 +1029,17 @@ function paintDock() {
   const pp = el(season.party_url && /^https:\/\//.test(season.party_url) ? 'a' : 'p', 'bd-party', esc(party));
   if (pp.tagName === 'A') { pp.href = season.party_url; pp.target = '_blank'; pp.rel = 'noopener'; }
   bar.appendChild(pp);
+  /* the split works both ways: posts only (the site folds to this strip,
+     and stops drawing), or the site back */
+  if (!shiftOpen()) {
+    const mini = dock.dataset.state === 'mini';
+    if (mini) { bar.classList.add('tap'); bar.onclick = () => setDock('dock'); } else { bar.classList.remove('tap'); bar.onclick = null; }
+    const t = el('button', 'iconbtn bd-fold', mini ? ICON.up : ICON.down);
+    t.type = 'button';
+    t.setAttribute('aria-label', mini ? 'Show the site' : 'Posts only');
+    t.addEventListener('click', (e) => { e.stopPropagation(); setDock(mini ? 'dock' : 'mini'); });
+    bar.appendChild(t);
+  }
   const cut = dock.querySelector('.bd-cut');
   cut.classList.toggle('on', B.cut);
   cut.setAttribute('aria-pressed', B.cut ? 'true' : 'false');
@@ -979,13 +1147,16 @@ function clockIn(o = {}) {
     const ok = button(ICON_BUILD + '<span>' + esc(F('clock_in.start', 'Start')) + '</span>', 'bd-start'); ok.type = 'submit';
     const r = el('div', 'bd-row'); r.append(i, ok);
     f.appendChild(r);
+    /* the first time: your builder, right here (a hard hat, a name tag) */
+    const setup = B.builder && B.builder.first_name ? null : builderForm({ inline: true });
+    if (setup) { f.appendChild(el('p', 'sheet-h', 'Your builder')); f.appendChild(setup); }
     f.addEventListener('submit', (e) => {
       e.preventDefault();
       /* iPhone asks once to feel the phone being picked up: in this tap */
       askMotion();
       const step = i.value.trim().slice(0, 80);
       close();
-      startShift(step);
+      (setup ? setup.save() : Promise.resolve()).then(() => startShift(step));
     });
     body.appendChild(f);
     setTimeout(() => { if (matchMedia('(hover: hover)').matches) i.focus({ preventScroll: true }); }, 50);
@@ -1002,6 +1173,8 @@ function startShift(step) {
 
 function openShift() {
   ensureDock();
+  /* a reader who chose posts only gets a calm shift: no site, a timer, the whistle as a gentle line */
+  dock.classList.toggle('is-calm', store.read(DOCK_KEY, 'dock') === 'mini');
   dock.classList.add('is-shift');
   showDock(true);
   setDock('full');
@@ -1021,7 +1194,7 @@ function closeShift() {
   watchMotion(false);
   unwake();
   if (!dock) return;
-  dock.classList.remove('is-shift', 'is-whistle', 'is-end');
+  dock.classList.remove('is-shift', 'is-whistle', 'is-end', 'is-calm');
   document.body.classList.remove('bd-shifting');
   const foot = dock.querySelector('.bd-shift-foot');
   foot.innerHTML = ''; delete foot.dataset.key;
@@ -1050,6 +1223,7 @@ function onTick() {
     if (site) site.setYou(youState());
   }
   paintFoot();
+  tickNumbers();
   if (document.visibilityState === 'visible') store.write(SEEN_AT_KEY, Date.now());
   /* the heartbeat: the page is alive and in front (the clock pauses a shift whose page went quiet) */
   if (document.visibilityState === 'visible' && (s.state === 'working' || s.state === 'whistle') && Date.now() - lastBeat >= 30000) {
@@ -1087,16 +1261,19 @@ function paintFoot() {
   const s = status();
   dock.classList.toggle('is-whistle', !e && !!s && s.state === 'whistle');
   dock.classList.toggle('is-end', !!e);
-  const key = e ? 'end:' + (e.missed ? 'm' : '') : s ? s.state + ':' + (s.step || '') + ':' + crewNow() : 'none';
+  const calm = dock.classList.contains('is-calm');
+  const key = e ? 'end:' + (e.missed ? 'm' : '') : s ? s.state + ':' + (s.step || '') + ':' + crewNow() + (calm ? ':' + s.minutes : '') : 'none';
   if (foot.dataset.key === key) return;
   foot.dataset.key = key;
   foot.innerHTML = '';
   if (e) { endScreen(foot, e); return; }
   if (!s) return;
+  if (calm) foot.appendChild(el('p', 'bd-calmtime', esc(hm(s.minutes))));
   if (s.step) foot.appendChild(el('p', 'bd-shift-step', esc(s.step)));
+  if (calm && s.state === 'whistle') foot.appendChild(el('p', 'bd-calmwhistle', esc('The foreman’s whistle. Tap anywhere to keep going.')));
   const crew = Math.max(1, crewNow());
   foot.appendChild(el('p', 'bd-shift-crew', esc(crew === 1 ? 'Just you on shift' : crew + ' neighbors on shift')));
-  foot.appendChild(button('Clock out', 'ghost on-dark bd-out', clockOut));
+  foot.appendChild(button(calm ? 'Stop' : 'Clock out', 'ghost on-dark bd-out', clockOut));
 }
 /* clocking out stops the clock now (pause), and the end screen banks it */
 function clockOut() {
@@ -1468,3 +1645,4 @@ document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && dock && 
 export const _state = () => ({ side: B.side, phase: B.phase, thing: B.thing, shift: status(), ending: ending(), open: shiftOpen(), lock: !!lock,
   dock: dock ? (dock.hidden ? 'hidden' : dock.dataset.state) : null, pallets, back: B.back, starters: B.starters });
 export const _api = () => api();
+export const _site = () => site;
