@@ -1578,23 +1578,26 @@ export function createArt(K) {
     c.fillStyle = gr; c.fillRect(0, 0, 64, 64);
     return vig;
   }
+  const LIT = [];
   function drawLights(ctx) {
     const n = K.light.night || 0;
     if (n < 0.2) return;
     const k = clamp((n - 0.2) / 0.5, 0, 1);
     ctx.globalCompositeOperation = 'lighter';
-    const ls = K.lights;
-    for (let i = 0; i < ls.length; i++) {
-      const l = ls[i];
-      if (!l || !(l.r > 0)) continue;
+    /* additive blending costs fill rate on a phone: only lights in view, the
+       strongest 28, radius capped (lead's pass, 2026-10-21; the full-screen
+       vignette went for the same reason) */
+    const ls = K.lights, cp = K.camPx || K.cam, vx0 = cp.x - 30, vx1 = cp.x + K.view.W + 30, vy0 = cp.y - 30, vy1 = cp.y + K.view.H + 30;
+    LIT.length = 0;
+    for (let i = 0; i < ls.length; i++) { const l = ls[i]; if (l && l.r > 0 && l.x > vx0 && l.x < vx1 && l.y > vy0 && l.y < vy1) LIT.push(l); }
+    if (LIT.length > 28) LIT.sort((p, q) => (q.r * (q.a == null ? 0.4 : q.a)) - (p.r * (p.a == null ? 0.4 : p.a))).length = 28;
+    for (let i = 0; i < LIT.length; i++) {
+      const l = LIT[i], r = Math.min(l.r, 30);
       ctx.globalAlpha = Math.min(1, (l.a == null ? 0.4 : l.a) * k);
-      ctx.drawImage(glowSprite(l.color || '#ffbe64'), l.x - l.r, l.y - l.r, l.r * 2, l.r * 2);
+      ctx.drawImage(glowSprite(l.color || '#ffbe64'), l.x - r, l.y - r, r * 2, r * 2);
     }
     ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over';
-    /* a gentle vignette */
-    ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0);
-    ctx.globalAlpha = 0.45 * k; ctx.drawImage(vignette(), 0, 0, ctx.canvas.width, ctx.canvas.height);
-    ctx.restore();
+    void vignette;
   }
 
   /* ============================================================ sky (screen space) */

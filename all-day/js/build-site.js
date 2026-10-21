@@ -52,7 +52,7 @@
    most while on screen, nothing while hidden or scrolled away. Reduced
    motion draws a still every few seconds, and the stills move the work on. */
 
-import { WW, WH, GROUND_Y, STREET_Y, BUILDING, clamp, hash, rng } from './build-site-shared.js';
+import { WW, WH, GROUND_Y, STREET_Y, BUILDING, ZONES, clamp, hash, rng } from './build-site-shared.js';
 import { createArt } from './build-site-art.js';
 import { createWorld } from './build-site-world.js';
 import { createBuilding } from './build-site-building.js';
@@ -174,7 +174,12 @@ export function createSite(canvas, opts = {}) {
   function layout() {
     const r = canvas.getBoundingClientRect();
     const cw = Math.max(1, r.width || canvas.clientWidth || 300), ch = Math.max(1, r.height || canvas.clientHeight || 200);
-    const dpr = Math.min(2, (typeof devicePixelRatio === 'number' && devicePixelRatio) || 1);
+    /* backing resolution: the screen's, up to 2x, and at most ~1.3M pixels
+       (a phone gets full sharpness; a big desktop panel a touch less) */
+    let dpr = Math.min(2, (typeof devicePixelRatio === 'number' && devicePixelRatio) || 1);
+    const rr = canvas.getBoundingClientRect();
+    const area = Math.max(1, (rr.width || 300) * (rr.height || 200));
+    dpr = Math.max(0.75, Math.min(dpr, Math.sqrt(1.3e6 / area)));
     if (cw === cssW && ch === cssH && dpr === K.view.dpr && canvas.width > 1) return false;
     cssW = cw; cssH = ch;
     let s = Math.min(ch / 150, cw / 180);                 // CSS px per world unit
@@ -198,7 +203,11 @@ export function createSite(canvas, opts = {}) {
     const fp = follow ? K.crew.posOf(follow.id) : null;
     const bx0 = BUILDING.towerX - 6, bx1 = BUILDING.craneX + 8;
     let cx, fy = null;
-    if (mom) { cx = mom.x; fy = mom.y; }
+    const door = ZONES.office.spots.foreman;
+    if (K.S.whistle) {
+      /* the whistle is on the site: the trailer door is in view, with you if you fit */
+      cx = me && Math.abs(me.x - door[0]) < W - 50 ? (me.x + door[0]) / 2 : door[0] + W * 0.2; fy = me ? Math.min(me.y, door[1]) : door[1];
+    } else if (mom) { cx = mom.x; fy = mom.y; }
     else if (fp) { cx = fp.x; fy = fp.y; }
     else if (me) {
       /* keep you in view; centre the building when you both fit */
@@ -208,7 +217,7 @@ export function createSite(canvas, opts = {}) {
     const want = clamp(cx - W / 2, 0, WW - W);
     /* a dead zone: the camera follows when the action nears an edge, so a
        builder pacing a bay doesn't swing the whole site */
-    if (camSnap || mom || fp || Math.abs(want - cam.tx) > W * 0.16) cam.tx = want;
+    if (camSnap || mom || fp || K.S.whistle || Math.abs(want - cam.tx) > W * 0.16) cam.tx = want;
     cam.tx = clamp(cam.tx, 0, WW - W);
     /* vertical: the bottom edge sits just past Lakeside Ave's far sidewalk;
        spare height goes to sky; keep the top of the work and the focus in view */
@@ -232,9 +241,12 @@ export function createSite(canvas, opts = {}) {
   function tick(dt) {
     dt = Math.min(dt, 0.25);
     K.t += dt;
-    for (const m of modules) if (m.step) m.step(dt);
+    for (const m of modules) if (m.step) { try { m.step(dt); } catch (e) { report(e); } }
     aim(dt);
   }
+  let reported = 0;
+  function report(e) { if (reported++ < 5) console.error('build-site:', e); }
+  function safe(fn) { try { fn(); } catch (e) { report(e); } }
   function render() {
     if (destroyed) return;
     const t0 = performance.now();
@@ -244,19 +256,20 @@ export function createSite(canvas, opts = {}) {
     K.lights = [];
     ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.imageSmoothingEnabled = true;
-    K.art.drawSky(ctx);                                   // screen space
+    safe(() => K.art.drawSky(ctx));                       // screen space
     ctx.setTransform(z, 0, 0, z, -ox, -oy);               // world space, snapped to whole pixels
-    K.art.drawBackdrop(ctx);
-    K.world.drawBack(ctx);
-    K.building.draw(ctx);
+    safe(() => K.art.drawBackdrop(ctx));
+    safe(() => K.world.drawBack(ctx));
+    safe(() => K.building.draw(ctx));
     const list = [];
-    for (const m of modules) if (m.collect) m.collect(list);
+    for (const m of modules) if (m.collect) safe(() => m.collect(list));
     list.sort((a, b) => a.y - b.y);
-    for (const d of list) d.draw(ctx);
-    K.world.drawFront(ctx);
-    K.art.drawWeather(ctx);
-    K.art.drawLights(ctx);
-    if (K.crew.drawTags) K.crew.drawTags(ctx, follow && follow.id);
+    for (const d of list) { ctx.save(); safe(() => d.draw(ctx)); ctx.restore(); }
+    safe(() => K.world.drawFront(ctx));
+    safe(() => K.art.drawWeather(ctx));
+    safe(() => K.art.drawLights(ctx));
+    if (K.crew.drawTags) safe(() => K.crew.drawTags(ctx, follow && follow.id));
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
     const ms = performance.now() - t0;
     stats.frames++; stats.total += ms; stats.max = Math.max(stats.max, ms);
     if (stats.samples.length < 4000) stats.samples.push(ms);
