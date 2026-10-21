@@ -47,7 +47,16 @@ store.setDemo(demo);
    centre, in the one wider cell so its two words never wrap. All nine show
    on a phone too (Stephen, 2026-10-19, undoing the five-and-More bar: "I'd
    either like to keep them or only merge two together tops"). */
-export const TABS = ['wire', 'watch', 'food', 'people', 'whatnow', 'vintage', 'habits', 'onair', 'games'];
+export const TABS = ['wire', 'watch', 'food', 'people', 'whatnow', 'vintage', 'build', 'onair', 'games'];
+/* A tab can live inside another tab's slot: The Build took Habits' cell on
+   2026-10-21 (newsletter repo, reference/drafts/new-nine-2026-10/the-build),
+   and Habits, untouched, is the other side of its Build | Habits switch. A
+   hosted tab keeps its own panel, deep links (#habits, #habits/forests) and
+   scroll; the bar lights its host, and the host's frame() puts the switch
+   on top of the hosted tab's own row under the mast. */
+export const HOSTED = { habits: 'build' };
+const known = (key) => TABS.includes(key) || Object.prototype.hasOwnProperty.call(HOSTED, key);
+const barKey = (key) => HOSTED[key] || key;
 const REQUIRED = ['label', 'icon', 'promise', 'mount', 'activate', 'refresh', 'newSince'];
 
 const registry = Object.create(null);
@@ -61,7 +70,7 @@ let active = null;
 let started = false;
 
 export function register(key, mod) {
-  if (!TABS.includes(key)) throw new Error('[all-day] unknown tab ' + key);
+  if (!known(key)) throw new Error('[all-day] unknown tab ' + key);
   const missing = REQUIRED.filter((f) => mod[f] == null);
   if (missing.length) throw new Error('[all-day] tab ' + key + ' is missing ' + missing.join(', '));
   registry[key] = mod;
@@ -848,7 +857,10 @@ export function paintSubnav() {
   const s = $('subnav');
   s.innerHTML = '';
   const mod = registry[active];
-  const n = mod && mod.subnav ? mod.subnav() : null;
+  let n = mod && mod.subnav ? mod.subnav() : null;
+  /* a hosted tab's row sits under its host's switch */
+  const host = HOSTED[active] ? registry[HOSTED[active]] : null;
+  if (host && host.frame) n = host.frame(active, n);
   if (n) s.appendChild(n);
   /* a tab can keep its row under the mast while the reader scrolls */
   document.body.classList.toggle('keep-subnav', !!(n && mod && mod.keepSubnav));
@@ -944,7 +956,7 @@ export function recount() {
     const t = b.dataset.tab;
     const mod = registry[t];
     let n = 0;
-    if (mod && t !== active && !landed.has(t)) { try { n = Number(mod.newSince(base)) || 0; } catch (e) { n = 0; } }
+    if (mod && t !== barKey(active) && !landed.has(t)) { try { n = Number(mod.newSince(base)) || 0; } catch (e) { n = 0; } }
     const dot = b.querySelector('.nd');
     if (n > 0 && !dot) { const d = el('i', 'nd'); d.setAttribute('aria-label', 'New'); b.appendChild(d); }
     else if (n <= 0 && dot) dot.remove();
@@ -997,19 +1009,19 @@ function parseHash() {
   const moved = legacy(h);
   if (moved) { history.replaceState(null, '', location.pathname + location.search + '#' + moved); h = moved; }
   const m = h.match(/^([a-z]+)\/(.*)$/);
-  if (m && TABS.includes(m[1]) && registry[m[1]]) {
+  if (m && known(m[1]) && registry[m[1]]) {
     /* a shared link can carry broken percent-encoding, and an uncaught
        URIError here would take the whole router down. #food/ is #food. */
     let param;
     try { param = decodeURIComponent(m[2]); } catch (e) { param = m[2]; }
     return { tab: m[1], param: param || null };
   }
-  return { tab: TABS.includes(h) && registry[h] ? h : 'wire', param: null };
+  return { tab: known(h) && registry[h] ? h : 'wire', param: null };
 }
 
 function paintTabs() {
   $('tabbar').querySelectorAll('button[data-tab]').forEach((b) => {
-    const on = b.dataset.tab === active;
+    const on = b.dataset.tab === barKey(active);
     b.classList.toggle('on', on);
     b.setAttribute('aria-selected', on ? 'true' : 'false');
     b.tabIndex = on ? 0 : -1;
@@ -1033,6 +1045,7 @@ export function route() {
   const switched = prev !== tab;
   active = tab;
   landed.add(tab);
+  landed.add(barKey(tab));
   panels[tab].hidden = false;
   const first = !mounted[tab];
   try {
@@ -1041,8 +1054,9 @@ export function route() {
   } catch (e) { console.error('[all-day] ' + tab + ' mount threw', e); }
   paintTabs();
   paintSubnav();
-  $('mast-title').textContent = mod.label;
-  document.title = (tab === 'wire' ? 'All Day' : mod.label + ' · All Day') + ' — Burlington Brief';
+  const named = registry[barKey(tab)] || mod;
+  $('mast-title').textContent = named.label;
+  document.title = (tab === 'wire' ? 'All Day' : named.label + ' · All Day') + ' — Burlington Brief';
   /* a phone keeps each tab's place; a wide screen opens a tab at its top
      (the reviewers, 2026-10-19: Watch and What Now opened mid-page) */
   if (switched) panels[tab].scrollTop = wide.matches ? 0 : scrollMemory[tab] || 0;
@@ -1074,13 +1088,13 @@ export function start() {
   const app = $('app');
   const bar = $('tabbar');
   bar.appendChild(el('div', 'rail-brand', 'All Day'));
-  TABS.forEach((key) => {
+  TABS.concat(Object.keys(HOSTED)).forEach((key) => {
     const mod = registry[key];
     if (!mod) return;
     const p = el('section', 'panel');
     p.id = 'panel-' + key;
     p.setAttribute('role', 'tabpanel');
-    p.setAttribute('aria-labelledby', 'tab-' + key);
+    p.setAttribute('aria-labelledby', 'tab-' + barKey(key));
     p.hidden = true;
     const ptr = el('div', 'ptr', '<span></span>');
     const body = el('div', 'panel-body');
@@ -1089,6 +1103,7 @@ export function start() {
     panels[key] = p;
     bodies[key] = body;
     watchScroll(p);
+    if (HOSTED[key]) return;   // no cell of its own: its host's lights up
 
     const b = el('button', null, mod.icon + '<span>' + esc(mod.label) + '</span>');
     b.id = 'tab-' + key;
@@ -1097,8 +1112,9 @@ export function start() {
     b.setAttribute('aria-selected', 'false');
     b.setAttribute('aria-controls', 'panel-' + key);
     b.addEventListener('click', () => {
-      if (active === key) { scrollTop(true); checkNew(); }
-      else go(key);
+      if (barKey(active) === key) { scrollTop(true); checkNew(); }
+      /* a host can land on the side the reader was last on */
+      else go((mod.landing && mod.landing()) || key);
     });
     bar.appendChild(b);
   });

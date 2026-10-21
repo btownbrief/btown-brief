@@ -1,0 +1,34 @@
+{
+  "_about": [
+    "The Build's numbers. Stephen edits this by hand; nothing builds it.",
+    "HOURS_PER_FLOOR: town hours (shifts plus Log it, public or private) that raise one floor. Start at 25 and tune after the pilot so the first floor is up in the first two weeks.",
+    "floors: Watershed is drawn as 6 floors plus a roof. The roof goes on when floor 6 is done; topping out is the party, on its date, whatever got built.",
+    "season.topping_out_date: null until Stephen sets it. While it is null the tab says 'Topping out party. Date coming.' (build-foreman.json party.no_date). starts is the launch day (YYYY-MM-DD), null until launch; party_url is the party's page (Luma or a Meetup event), empty until there is one.",
+    "building.line is the sentence under the site, checked 2026-10-21 against the developer's page, the city and the press (sources and disagreements in newsletter/reference/drafts/new-nine-2026-10/the-build/watershed-facts.md). Unit counts and the affordable share stay out of the tab until the developers confirm them.",
+    "shift holds the spec's numbers for the whistle, so the tab and its tests read one place."
+  ],
+  "HOURS_PER_FLOOR": 25,
+  "floors": 6,
+  "roof": true,
+  "season": {
+    "building": "watershed",
+    "starts": null,
+    "topping_out_date": null,
+    "party_url": ""
+  },
+  "building": {
+    "name": "Watershed",
+    "line": "A drawing of Watershed, the first phase of a new South End neighborhood on Lakeside Avenue, raised by the town's hours. The real one is slated to break ground in 2027.",
+    "url": "https://www.rosecompanies.com/projects/watershed/",
+    "checked": "2026-10-21"
+  },
+  "shift": {
+    "whistle_min_minutes": 15,
+    "whistle_max_minutes": 30,
+    "answer_window_minutes": 3,
+    "heartbeat_seconds": 60,
+    "stale_after_seconds": 180
+  },
+  "habit_drop_minutes": 5,
+  "rare_why_every": 10
+}
