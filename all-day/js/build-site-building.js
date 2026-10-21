@@ -158,6 +158,47 @@ export function createBuilding(K) {
     if (!L) { L = buildList(key, F); lists.set(mk, L); for (const p of L) byId.set(p.id, p); }
     return L;
   }
+  /* Upkeep: once the finish work is done the crew keeps the place nice. Open-ended, low priority:
+     each job comes back after a cool-down; some only in their season (leaves in the fall, snow on a
+     snow day, wreaths in December). Wreaths stay up (kept on this phone); the rest leave no trace. */
+  let upList = null;
+  const upDone = new Map();          // id -> t when last done (this visit)
+  function upkeep() {
+    if (upList) return upList;
+    const L = [], gy = GY + 4;
+    const add = (o) => L.push(Object.assign({ kind: 'upkeep', level: 'ground', needs: null, crew: 1, floor: 'top', cell: null, up: true, c0: 1, c1: 1, w: 0 }, o));
+    for (let b = 0; b < NB; b++) {
+      const r = winRect(0, b); if (!r) continue;
+      const v = BAYS[b].vol;
+      add({ id: 'top:wash' + b, part: 'wash', b, x: r[0] + r[2] / 2, y: gy, at: [r[0] + r[2] / 2, r[1] + r[3] / 2], pose: 'guide', carry: 'bucket', dur: 14, cool: 150,
+        label: v === 'M' ? 'washing the storefront glass' : v === 'C' ? 'washing the shop windows on the corner' : 'washing the ground-floor windows' });
+    }
+    for (let i = 0; i < 4; i++) add({ id: 'top:sweep' + i, part: 'sweep', i, x: X0 + 12 + i * 29, y: GY + 7, at: [X0 + 12 + i * 29, GY + 7], pose: 'sweep', dur: 14, cool: 90, label: 'sweeping the sidewalk out front' });
+    for (let i = 0; i < 4; i++) add({ id: 'top:waterp' + i, part: 'water', i, tx: PLANTER_X[i], ty: GY + 4, x: PLANTER_X[i] - 4, y: GY + 8, at: [PLANTER_X[i], GY + 5], pose: 'pour', carry: 'bucket', dur: 10, cool: 180,
+      season: (m) => m >= 3 && m <= 9, label: 'watering the planters' });
+    for (let i = 0; i < TREE_X.length; i++) add({ id: 'top:watert' + i, part: 'water', i, tx: TREE_X[i], ty: GY + 8.5, x: TREE_X[i] - 4, y: GY + 10, at: [TREE_X[i], GY + 8], pose: 'pour', carry: 'bucket', dur: 10, cool: 200,
+      season: (m) => m >= 4 && m <= 8, label: 'watering the street trees' });
+    for (let i = 0; i < TREE_X.length; i++) add({ id: 'top:rake' + i, part: 'rake', i, x: TREE_X[i] + 3, y: GY + 10, at: [TREE_X[i] + 1, GY + 10], pose: 'rake', dur: 14, cool: 100,
+      season: (m) => m === 9 || m === 10, label: 'raking leaves under the street trees' });
+    for (let i = 0; i < 4; i++) add({ id: 'top:snow' + i, part: 'snow', i, x: X0 + 14 + i * 28, y: GY + 7, at: [X0 + 14 + i * 28, GY + 7], pose: 'shovel', needs: 'shovel', dur: 14, cool: 70,
+      when: () => !!(K.light && K.light.snowy), label: 'shoveling snow off the sidewalk' });
+    const posts = [BAYS[3].x - 0.7, BAYS[6].x + BAYS[6].w + 0.7];
+    posts.forEach((x, i) => add({ id: 'top:paint' + i, part: 'paint', i, px: x, x: x + (i ? 3 : -3), y: gy, at: [x, GY - 6], pose: 'trowel', carry: 'bucket', dur: 16, cool: 320,
+      label: 'touching up the paint on the canopy posts' }));
+    add({ id: 'top:paint2', part: 'paint', i: 2, px: BAYS[0].x + 1, x: BAYS[0].x + 4, y: gy, at: [BAYS[0].x + 1, GY - 6], pose: 'trowel', carry: 'bucket', dur: 16, cool: 320, label: 'touching up the trim by the west door' });
+    for (let m = 0; m < 4; m++) { const b = BAYS[3 + m]; add({ id: 'top:wreath' + m, part: 'wreath', m, x: b.cx, y: gy, at: [b.cx, CANOPY_Y - 2.6], pose: 'raise', carry: 'plant', dur: 12, cool: Infinity,
+      season: (mo) => mo === 11, label: 'hanging a wreath over the storefront' }); }
+    for (const q of L) { q.rank = { wash: 25, paint: 25, wreath: 25 }[q.part] || 30; byId.set(q.id, q); }
+    upList = L;
+    return L;
+  }
+  function upOpen(p) {
+    if (p.season && !p.season(K.now().getMonth())) return false;
+    if (p.when && !p.when()) return false;
+    if (p.part === 'wreath') return !local.has(p.id);
+    const d = upDone.get(p.id);
+    return d == null || t - d > p.cool * (0.7 + (hash(p.id) % 60) / 100);   // jittered so they don't all come due at once
+  }
   function buildList(key, F) {
     const L = [];
     const pre = key === 'top' ? 'top:' : 'f' + key + ':';
@@ -311,6 +352,8 @@ export function createBuilding(K) {
   function view(p, pace) {
     const j = { id: p.id, kind: p.kind, part: p.part, x: p.x, y: p.y, level: p.level, needs: p.needs, crew: p.crew, dur: Math.round(p.dur * pace),
       label: p.label, cell: p.cell, at: p.at, lift: !!LIFTED[p.part] };
+    if (p.pose) j.pose = p.pose;       // upkeep: a hint for the crew's generic chain
+    if (p.carry) j.carry = p.carry;
     if (p.crew > 1) j.spots = [[p.x - 3, p.y], [p.x + 3, p.y]];
     return j;
   }
@@ -326,11 +369,14 @@ export function createBuilding(K) {
       if (c && c.size >= p.crew) continue;
       out.push(view(p, pace));
     }
+    if (s.key === 'top' && s.list.every((p) => s.done.has(p.id))) {
+      for (const p of upkeep()) { const c = claims.get(p.id); if (upOpen(p) && !(c && c.size >= p.crew)) out.push(view(p, 1)); }
+    }
     return out;
   }
   function claim(id, who) {
     const s = st(), p = byId.get(id);
-    if (!p || p.floor !== s.key || s.done.has(id)) return false;
+    if (!p || p.floor !== s.key || s.done.has(id) || (p.up && !upOpen(p))) return false;
     let c = claims.get(id);
     if (!c) { c = new Set(); claims.set(id, c); }
     if (c.has(who)) return true;
@@ -352,6 +398,14 @@ export function createBuilding(K) {
   function complete(id) {
     const s = st(), p = byId.get(id);
     if (!p || p.floor !== s.key || s.done.has(id)) return false;
+    if (p.up) {
+      if (!upOpen(p)) return false;
+      upDone.set(id, t); claims.delete(id); partial.delete(id);
+      if (p.part === 'wreath') { local.add(id); save(); vBase++; }
+      if (p.part === 'snow') vWork++;
+      K.emit('piece', { id, part: p.part, x: p.at[0], y: p.at[1] });
+      return true;
+    }
     local.add(id); claims.delete(id); partial.delete(id); ver++; vWork++; save();
     if (s.key === 'top') vBase++;          // the roof crew's scaffold comes down when the last panel is in
     K.emit('piece', { id, part: p.part, x: p.at[0], y: p.at[1] });
@@ -359,6 +413,10 @@ export function createBuilding(K) {
   }
 
   let prev = null, sigB = '', sigW = '';
+  /* topping out: the last beam shows when the crew's crane sets it ('crew:topbeam'), or 25 s after
+     the milestone if nobody does; at once under reduced motion or when the town loads topped */
+  let beamUp = false, toppedAt = null;
+  K.on('crew:topbeam', () => { if (!beamUp && topped()) { beamUp = true; vBase++; } });
   function setTown(tt) {
     T = tt;
     const now = { f: T.floors_done | 0, p: T.floor_progress || 0, topped: topped() };
@@ -368,6 +426,10 @@ export function createBuilding(K) {
       if (!poured(prev) && poured(now)) K.emit('milestone', { kind: 'pour', floor: 0, x: MIDX, y: GY });
       if (now.f > prev.f && !now.topped) K.emit('milestone', { kind: 'floor', floor: now.f, x: MIDX, y: floorBottom(now.f) });
       if (!prev.topped && now.topped) K.emit('milestone', { kind: 'topped', floor: floors(), x: MIDX, y: floorBottom(floors()) });
+    }
+    if (!now.topped) { beamUp = false; toppedAt = null; }
+    else if (!beamUp && toppedAt == null) {
+      if (!prev || !prev.topped) { if (!prev || K.reduced || t < 3) beamUp = true; else toppedAt = t; }
     }
     prev = now;
     /* forget pieces from floors already passed (never from later ones: a town that reads 0 for a
@@ -407,10 +469,10 @@ export function createBuilding(K) {
       brick: p.brick, brickAlt: mix(p.brick, p.brickDark, 0.35), brickLit: mix(p.brick, p.white, 0.1), brickDark: p.brickDark, mortar: p.mortar,
       char: p.charcoal, charLine: mix(p.charcoal, p.white, 0.13), charDark: mix(p.charcoal, p.ink, 0.45),
       timber: p.timber, timberLit: mix(p.timber, p.white, 0.3), timberShade: p.timberShade, timberDark: p.timberDark, clt: mix(p.timber, p.white, 0.16), stud: mix(p.timber, p.white, 0.22),
-      concrete: p.concrete, concreteLit: mix(p.concrete, p.white, 0.2), concreteShade: p.concreteShade, slab: mix(p.concrete, p.dirt, 0.35),
+      concrete: p.concrete, concreteLit: mix(p.concrete, p.white, 0.2), concreteShade: p.concreteShade, slab: mix(p.concrete, p.dirt, 0.6), slabFace: mix(p.concreteShade, p.dirtDark, 0.45),
       wetC: wet, wetHi: mix(wet, p.white, 0.4),
       form: p.formwork, formDark: mix(p.formwork, p.timberDark, 0.5), rebar: p.rebar,
-      dirt: p.dirt, dirtLit: mix(p.dirt, p.white, 0.12), pitWall: mix(p.dirtDark, p.mud, 0.35), pitFloor: mix(p.mud, p.ink, 0.25), pitShade: mix(p.mud, p.ink, 0.45), dirtDark: p.dirtDark, mud: p.mud, gravel: p.gravel, gravelDark: mix(p.gravel, p.ink, 0.3),
+      dirt: p.dirt, dirtLit: mix(p.dirt, p.white, 0.12), pitWall: mix(p.dirtDark, p.mud, 0.35), pitFloor: mix(p.mud, p.ink, 0.25), pitShade: mix(p.mud, p.ink, 0.45), dirtDark: p.dirtDark, mud: p.mud, gravel: p.gravel, gravelDark: mix(p.gravel, p.ink, 0.3), fill: mix(p.gravel, p.dirt, 0.4),
       asph: mix(p.asphalt, p.gravel, 0.5), asphDark: mix(p.asphalt, p.ink, 0.15), asphLit: mix(p.asphalt, p.gravel, 0.75), stripe: mix(p.white, p.asphalt, 0.35),
       grass: p.grass, grassDark: p.grassDark,
       glass: p.glass, glassHi: p.glassHi, glassDark: p.glassDark, glassNight: mix(p.glassDark, p.ink, 0.25), frame: mix(p.brickDark, p.charcoal, 0.5), eyebrow: mix(p.brickDark, p.rustGroove, 0.35),
@@ -610,22 +672,27 @@ export function createBuilding(K) {
       if (a < 1) g.fillRect(x, y, w, 0.35);
     } else {
       g.fillStyle = C.slab; g.fillRect(x, GY, w, PIT_F - GY);        // the apron in front of the face: dusty, jointed
-      g.fillStyle = C.concreteLit; g.fillRect(x, y, w, 0.4); g.fillRect(x, PIT_F - 0.5, w, 0.5);
-      g.fillStyle = C.concreteShade; g.beginPath(); g.moveTo(x + w - 0.1, GY); g.lineTo(x + w + 0.6, PIT_F); g.lineTo(x + w + 0.45, PIT_F); g.lineTo(x + w - 0.25, GY); g.fill();
+      g.fillStyle = C.concreteLit; g.globalAlpha = 0.6; g.fillRect(x, y, w, 0.4); g.fillRect(x, PIT_F - 0.5, w, 0.5); g.globalAlpha = 1;
+      g.fillStyle = C.slabFace; g.beginPath(); g.moveTo(x + w - 0.1, GY); g.lineTo(x + w + 0.6, PIT_F); g.lineTo(x + w + 0.45, PIT_F); g.lineTo(x + w - 0.25, GY); g.fill();
     }
-    if (stripped) { g.fillStyle = C.concreteShade; g.fillRect(x, PIT_F, w, 1.6); g.fillStyle = C.ink; g.fillRect(x, PIT_F + 1.45, w, 0.2); }
+    if (stripped) { g.fillStyle = C.slabFace; g.fillRect(x, PIT_F, w, 1.4); g.fillStyle = C.dirtDark; g.fillRect(x, PIT_F + 1.2, w, 0.25); }
     if (C.snowy && !wet) { g.fillStyle = C.snow; g.fillRect(x, y, w, PIT_F - y); }
   }
-  function drawBackfill(g, q, a) {
-    const x0 = X0 + q * QW - (q === 0 ? 4 : 0), w = (QW + (q === 0 || q === 3 ? 4 : 0)) * a;
-    g.fillStyle = C.snowy ? C.snow : C.gravel; g.fillRect(x0, PIT_F + 1.6, w, 2.4);
-    if (C.snowy) return;
+  function drawBackfill(g, q, a) {   /* gravel along the front, its edge raked out into the yard */
+    const x0 = X0 + q * QW - (q === 0 ? 5 : 0), w = (QW + (q === 0 || q === 3 ? 5 : 0)) * a, y0 = PIT_F + 1.4;
+    if (w <= 0) return;
     const R = seeded(hash('gr' + q));
+    g.fillStyle = C.snowy ? C.snow : C.fill;
+    g.beginPath(); g.moveTo(x0, y0);
+    g.lineTo(x0 + w, y0);
+    for (let x = x0 + w; x >= x0; x -= 2.2) g.lineTo(x, y0 + 1.6 + R() * 1.4);
+    g.closePath(); g.fill();
+    if (C.snowy) return;
     g.fillStyle = C.gravelDark;
-    for (let i = 0; i < 14 * a; i++) g.fillRect(x0 + R() * w, PIT_F + 1.8 + R() * 2, 0.4, 0.3);
+    for (let i = 0; i < 16 * a; i++) g.fillRect(x0 + R() * w, y0 + 0.2 + R() * 1.8, 0.4, 0.3);
   }
-  function drawFoundation(g, done) {
-    drawLot(g, (q) => done('f0:clear' + q));
+  function drawFoundation(g, done, built) {
+    if (!built) drawLot(g, (q) => done('f0:clear' + q));   // once built, the world's yard is the ground
     let dug = 0, back = 0, anyPour = false;
     for (let b = 0; b < NB; b++) { if (done('f0:dig' + b)) { dug++; drawPit(g, b, 1); } if (done('f0:pour' + b)) anyPour = true; }
     for (let q = 0; q < 4; q++) if (done('f0:backfill' + q)) back++;
@@ -665,21 +732,24 @@ export function createBuilding(K) {
     g.fillStyle = C.concreteLit; g.fillRect(x, top, 0.6, h);
     g.fillStyle = C.concreteShade; g.fillRect(x + 1.7, top, 0.5, h);
   }
-  function lift(g, x, y, a) {   /* slings and the crane's line, while a piece is still in the air */
-    if (a >= 0.8) return;
-    line(g, x, y - 5, x, y - 60, C.steelDark, 0.25);
+  /* slings and the crane's line while a piece settles in, but only when the real tower crane's
+     trolley is over it (the crew flies pieces with it); otherwise the piece is guided in by hand */
+  function lift(g, x, y, a) {
+    if (a >= 0.6 || !K.crew || !K.crew.crane) return;
+    const c = K.crew.crane();
+    if (!c || c.load || Math.abs(c.x - x) > 6 || !(c.y < y - 6)) return;
+    line(g, c.x, c.y + 2, x, y - 5, C.steelDark, 0.25);
     g.beginPath(); g.moveTo(x - 3.5, y); g.lineTo(x, y - 5); g.lineTo(x + 3.5, y); g.lineWidth = 0.2; g.strokeStyle = C.steelDark; g.stroke();
-    g.fillStyle = C.rail; g.fillRect(x - 0.6, y - 5.8, 1.2, 1);
   }
   function drawBeam(g, f, b, a) {
-    const bay = BAYS[b], y = floorBottom(f + 1) + 1.4 - 7 * (1 - ease(a)), x = bay.x - 0.2, w = bay.w + 0.4;
+    const bay = BAYS[b], y = floorBottom(f + 1) + 1.4 - 3 * (1 - ease(a)), x = bay.x - 0.2, w = bay.w + 0.4;
     if (a < 1) lift(g, x + w / 2, y, a);
     rr(g, x, y, w, 1.9, 0.25); g.fillStyle = C.timber; g.fill(); outline(g, 0.3);
     g.fillStyle = C.timberLit; g.fillRect(x, y, w, 0.4);
     g.fillStyle = C.timberShade; g.fillRect(x, y + 1.45, w, 0.45);
   }
   function drawDeck(g, f, b, a) {
-    const bay = BAYS[b], y = floorBottom(f + 1) - 0.4 - 9 * (1 - ease(a)), x = bay.x - 0.3, w = bay.w + 0.6;
+    const bay = BAYS[b], y = floorBottom(f + 1) - 0.4 - 3 * (1 - ease(a)), x = bay.x - 0.3, w = bay.w + 0.6;
     if (a < 1) lift(g, x + w / 2, y, a);
     rr(g, x, y, w, 1.8, 0.2); g.fillStyle = C.clt; g.fill(); outline(g, 0.28);
     g.fillStyle = C.timberShade; g.fillRect(x + 0.2, y + 0.6, w - 0.4, 0.18); g.fillRect(x + 0.2, y + 1.2, w - 0.4, 0.18);
@@ -786,7 +856,7 @@ export function createBuilding(K) {
   function drawStorefront(g, b, a) {
     const bay = BAYS[b], r = winRect(0, b), top = floorBottom(1);
     const n = a >= 1 ? 7 : Math.floor(a * 7.99);
-    if (n >= 1) { rustFill(g, bay.x, top, bay.w, r[1] - 0.6 - top, 'M', false); g.fillStyle = C.rustGroove; g.fillRect(bay.x, r[1] - 0.9, bay.w, 0.3); }
+    if (n >= 1) { rustFill(g, bay.x, top, bay.w, GY - top, 'M', false); g.fillStyle = C.rustEdge; g.fillRect(bay.x, r[1] - 0.9, bay.w, 0.3); }
     if (n >= 2) opening(g, r, r[1], r[1] + r[3]);
     g.fillStyle = C.frame;
     const m = [() => g.fillRect(r[0] - 0.5, r[1] - 0.6, r[2] + 1, 0.6), () => g.fillRect(r[0] - 0.5, r[1] - 0.6, 0.6, r[3] + 0.6), () => g.fillRect(r[0] + r[2] - 0.1, r[1] - 0.6, 0.6, r[3] + 0.6),
@@ -914,7 +984,8 @@ export function createBuilding(K) {
     g.lineWidth = 0.3; g.strokeStyle = C.ink; g.strokeRect(px, py, pw, ph);
     box(g, px - 0.9, py - 0.9, pw + 1.8, 0.9, C.char, 0.25);
     snowCap(g, px - 0.9, py - 0.9, pw + 1.8);
-    /* the last beam, signed, with a little evergreen on it */
+    /* the last beam, signed, with a little evergreen on it: once the crane has set it */
+    if (!beamUp) return;
     const bx = cx0 + 3, by = ry - 4.1 - 1.9;
     rr(g, bx, by, 21, 1.9, 0.25); g.fillStyle = C.timber; g.fill(); outline(g, 0.3);
     g.fillStyle = C.timberLit; g.fillRect(bx, by, 21, 0.4);
@@ -970,6 +1041,57 @@ export function createBuilding(K) {
     if (a >= 1 && !C.snowy) { g.fillStyle = i % 2 ? C.flower1 : C.flower2; for (const dx of [-1.6, 0.4, 1.5]) g.fillRect(x + dx, y - 3.7, 0.5, 0.5); }
     if (C.snowy) snowCap(g, x - 2.7, y - 2.4, 5.4);
   }
+
+  /* --------------------------------------------------------- upkeep */
+  function drawWash(g, b, a) {   /* a squeegee sheen crossing the glass */
+    const r = winRect(0, b); if (!r) return;
+    const x = r[0] + r[2] * (a * 1.3 - 0.15);
+    g.save(); g.beginPath(); g.rect(r[0], r[1], r[2], r[3]); g.clip();
+    g.beginPath(); g.moveTo(x, r[1]); g.lineTo(x + 1.6, r[1]); g.lineTo(x - 0.6, r[1] + r[3]); g.lineTo(x - 2.2, r[1] + r[3]); g.closePath();
+    g.fillStyle = rgba(C.white, 0.55); g.fill();
+    g.fillStyle = rgba(C.glassHi, 0.35); g.fillRect(r[0], r[1], Math.max(0, x - r[0] - 1), r[3]);
+    g.restore();
+  }
+  function drawDust(g, x, y, a) {
+    if (a >= 1) return;
+    for (let i = 0; i < 3; i++) {
+      const k = (t * 0.9 + i / 3) % 1;
+      g.beginPath(); g.arc(x + i * 1.6 + k * 3, y - 0.6 - k * 2.2, 0.6 + k * 1.1, 0, 7); g.fillStyle = rgba(C.dirtLit, 0.45 * (1 - k)); g.fill();
+    }
+  }
+  function drawWater(g, x, y, tx, ty, a) {
+    if (a >= 1) return;
+    g.fillStyle = rgba(C.pipe, 0.85);
+    for (let i = 0; i < 5; i++) {
+      const k = (t * 1.6 + i / 5) % 1;
+      g.beginPath(); g.arc(x + (tx - x) * k, y + (ty - y) * k - Math.sin(k * Math.PI) * 2.5, 0.3, 0, 7); g.fill();
+    }
+  }
+  function drawLeaves(g, x, y, a) {
+    const s = ease(a);
+    if (s <= 0 || a >= 1) return;
+    g.beginPath(); g.ellipse(x, y, 2.6 * s + 0.6, 1.1 * s + 0.3, 0, Math.PI, 0); g.fillStyle = C.autumnA; g.fill();
+    g.beginPath(); g.ellipse(x + 0.8, y - 0.2, 1.4 * s + 0.3, 0.7 * s + 0.2, 0, Math.PI, 0); g.fillStyle = C.autumnB; g.fill();
+  }
+  function drawShoveled(g, i, a) {   /* a cleared path along the sidewalk */
+    if (!C.snowy) return;
+    const x0 = X0 + 4 + i * 28, w = 28 * a;
+    g.fillStyle = C.slab; g.fillRect(x0, GY + 6.6, w, 1.6);
+    g.fillStyle = C.snowShade; g.fillRect(x0, GY + 6.4, w, 0.3); g.fillRect(x0, GY + 8.1, w, 0.3);
+  }
+  function drawPaint(g, x, a) {
+    if (a >= 1) return;
+    const h = (GY - CANOPY_Y - 2) * a;
+    g.fillStyle = mix(C.charDark, C.white, 0.15); g.fillRect(x - 0.3, GY - h, 0.7, h);
+    g.fillStyle = rgba(C.white, 0.5); g.fillRect(x - 0.2, GY - h, 0.2, h);
+  }
+  function drawWreath(g, m, a) {
+    const b = BAYS[3 + m], x = b.cx, y = CANOPY_Y - 2.4, r = 1.5 * (0.4 + 0.6 * ease(a));
+    g.beginPath(); g.arc(x, y, r, 0, 7); g.lineWidth = 0.9; g.strokeStyle = C.evergreen; g.stroke();
+    g.beginPath(); g.arc(x - 0.3, y - 0.3, r, Math.PI * 0.9, Math.PI * 1.6); g.lineWidth = 0.35; g.strokeStyle = C.evergreenLit; g.stroke();
+    if (a >= 0.7) { g.fillStyle = C.flag; g.beginPath(); g.moveTo(x - 0.9, y + r + 0.2); g.lineTo(x, y + r - 0.4); g.lineTo(x + 0.9, y + r + 0.2); g.lineTo(x, y + r + 0.8); g.fill(); }
+  }
+  function wreathsUp() { return K.now().getMonth() === 11; }
 
   /* --------------------------------------------------------- scaffold, hoist, netting */
   function drawScaffold(g, lvl) {
@@ -1110,10 +1232,11 @@ export function createBuilding(K) {
     const lit = litSet(s.fin);
     lights = [];
     g.lineCap = 'butt'; g.lineJoin = 'round';
-    if (s.key !== 0) drawFoundation(g, () => true);
+    if (s.key !== 0) drawFoundation(g, () => true, true);
     if (cut) drawCut(g, s.fin);
     else { for (let f = 0; f < s.fin; f++) drawFloorDone(g, f, F, lit); shellOutline(g, s.fin); }
     if (s.key === 'top') drawRoof(g, F);
+    if (s.key === 'top' && wreathsUp()) for (let m = 0; m < 4; m++) if (local.has('top:wreath' + m)) drawWreath(g, m, 1);
     if (s.scaffold) drawScaffold(g, s.work);
     /* night: every lit window is a little light */
     if (C.night > 0.3 && !cut) {
@@ -1129,7 +1252,7 @@ export function createBuilding(K) {
     const s = st(), done = (id) => s.done.has(id), F = s.F;
     cols();
     g.lineCap = 'butt'; g.lineJoin = 'round';
-    if (s.key === 0) drawFoundation(g, done);
+    if (s.key === 0) drawFoundation(g, done, [0, 1, 2, 3].every((q) => done('f0:backfill' + q)));
     if (s.key !== 'top') {
       const f = s.key;
       for (let b = 0; b < NB; b++) if (done('f' + f + ':deck' + b)) drawRoom(g, f, b);
@@ -1168,6 +1291,13 @@ export function createBuilding(K) {
       case 'solar': drawSolar(g, p.i, a, F); break;
       case 'tree': drawTree(g, p.i, a); break;
       case 'planter': drawPlanter(g, p.i, a); break;
+      case 'wash': drawWash(g, p.b, a); break;
+      case 'sweep': drawDust(g, p.x + 3, p.y, a); break;
+      case 'water': drawWater(g, p.x + 2, p.y - 8, p.tx, p.ty, a); break;
+      case 'rake': drawLeaves(g, p.at[0], p.at[1], a); break;
+      case 'snow': drawShoveled(g, p.i, a); break;
+      case 'paint': drawPaint(g, p.px, a); break;
+      case 'wreath': drawWreath(g, p.m, a); break;
       default:
     }
   }
@@ -1206,7 +1336,7 @@ export function createBuilding(K) {
       drawPiece(ctx, p, L[i + 1], s.F);
       ctx.globalAlpha = 1;
     }
-    if (s.key === 'top') drawFlag(ctx, s.F);
+    if (s.key === 'top' && beamUp) drawFlag(ctx, s.F);
     for (let i = 0; i < lights.length; i++) K.lights.push(lights[i]);
   }
 
@@ -1216,7 +1346,11 @@ export function createBuilding(K) {
     const s = st(), yT = floorBottom(s.work);
     K.blit('building:rail', TOWER0 - 1, yT - 8.5, X1 + 5 - TOWER0, 9, paintRail, { ver: s.work });
   } };
-  const paintStreet = (g) => { const s = st(); cols(); for (const p of s.list) if (p.rank >= 30 && s.done.has(p.id)) drawPiece(g, p, 1, s.F); };
+  const paintStreet = (g) => {
+    const s = st(); cols();
+    if (C.snowy) for (const p of upkeep()) if (p.part === 'snow' && upDone.has(p.id) && t - upDone.get(p.id) < 1800) drawShoveled(g, p.i, 1);
+    for (const p of s.list) if (p.rank >= 30 && s.done.has(p.id)) drawPiece(g, p, 1, s.F);
+  };
   const streetItem = { y: GY + 8.5, draw: (ctx) => {
     const s = st();
     K.blit('building:street', LOT0 - 2, GY - 6, LOT1 - LOT0 + 4, 17, paintStreet, { ver: vWork });
@@ -1241,7 +1375,7 @@ export function createBuilding(K) {
   return {
     setTown, stage, jobs, claim, release, work, complete, draw, collect, topY, levelY, ladder,
     cutaway(on, m) { const c = !!on, mm = Math.round(+m || 0); if (c !== cut || (c && mm !== yourMin)) { cut = c; yourMin = mm; ver++; vBase++; } },
-    step(dt) { t += dt; },
+    step(dt) { t += dt; if (!beamUp && toppedAt != null && t - toppedAt > 25) { beamUp = true; vBase++; } },
     hoist() { const s = st(); return s.scaffold ? { x: HOIST_X + 2.9, y: floorBottom(s.work) } : null; },
     liftTarget() {
       const key = st().key;
@@ -1252,6 +1386,7 @@ export function createBuilding(K) {
       }
       return null;
     },
+    topBeam() { return { x: CB[0] + 13.5, y: floorBottom(floors()) - 4.1 }; },
     piece(id) { const p = byId.get(id); return p && p.floor === st().key ? view(p, 1) : null; },
     debugPieces: () => ({ local: local.size, open: jobs().length, ahead: ahead() }),
     debug: () => { const s = st(); return { key: s.key, P: s.P, done: s.done.size, of: s.list.length, local: local.size, ahead: ahead(), partial: partial.size, claims: claims.size, ver }; },
