@@ -70,7 +70,7 @@ const WEATHERS = ['clear', 'cloud', 'rain', 'snow', 'fog'];
 /* Light key frames by sun altitude: [alt, ambient rgb, sky top, sky mid, sky horizon]. We look west over the lake:
    evenings are backlit (the sun goes down behind the Adirondacks), mornings are lit from behind us. */
 const EVE = [
-  [-14, [0.25, 0.29, 0.48], '#0b1129', '#141c3c', '#222c55'],
+  [-14, [0.3, 0.33, 0.52], '#0b1129', '#141c3c', '#222c55'],
   [-6, [0.36, 0.36, 0.56], '#1a2350', '#3a3f72', '#6a5f8e'],
   [-1, [0.62, 0.52, 0.62], '#353d6e', '#9a6f92', '#e98f6c'],
   [3, [0.86, 0.68, 0.62], '#4b4f7d', '#c9839a', '#f4b67a'],
@@ -79,7 +79,7 @@ const EVE = [
   [32, [1, 1, 1], '#5f9fd6', '#a3cbe8', '#d7e6ee'],
 ];
 const MORN = [
-  [-14, [0.25, 0.29, 0.48], '#0b1129', '#141c3c', '#222c55'],
+  [-14, [0.3, 0.33, 0.52], '#0b1129', '#141c3c', '#222c55'],
   [-6, [0.4, 0.4, 0.6], '#26325f', '#4a5384', '#7a7aa8'],
   [-1, [0.74, 0.68, 0.76], '#46578a', '#8d88ad', '#efc3a6'],
   [4, [1.02, 0.93, 0.85], '#6e9fd2', '#b6c3d6', '#f5d8b0'],
@@ -391,7 +391,7 @@ export function createArt(K) {
       R.hy = lerp(-3.4, -5.2, up); R.lean = lerp(0.35, 0.02, up);
       R.f0x = -0.6; R.f1x = 0.9;
       R.a1x = lerp(2.2, 1.9, up); R.a1y = lerp(-1.6, -7.6, up); R.a0x = R.a1x - 0.4; R.a0y = R.a1y + 0.2; R.e0 = R.e1 = 1;
-      R.item = 'crate';
+      R.item = 'crate'; R.grip = false;
     },
     signal(t) {
       const mode = Math.floor(t / 3.5) % 2, c = t * TAU * 1.4;
@@ -675,15 +675,15 @@ export function createArt(K) {
 
     /* front view: hanging arms go before the head, raised ones after */
     /* arms go behind the big head unless the hand is at the face (drinking, eating, the whistle) */
-    const nf = (x, y) => (Math.abs(x - hcx) < 2.3 && y > hcy - 2.4 && y < hcy + 3.0) || ((layer === 'mid' || layer === 'hand') && y > hcy + 2.0);
-    const a0late = nf(a0x, a0y), a1late = nf(a1x, a1y);
+    const held = layer === 'mid' || layer === 'hand';
+    const a0late = atFace(a0x, a0y, hcx, hcy, held), a1late = atFace(a1x, a1y, hcx, hcy, held);
     if ((side || view === FRONT) && !a1late) drawArm(ctx, s1x, s1y, a1x, a1y, R.e1, L.shirt, L, R.tool, R.tAng, false);
     if (view === FRONT && !a0late) drawArm(ctx, s0x, s0y, a0x, a0y, R.e0, L.shirt, L, R.tool0, R.t0Ang, false);
     /* head */
     drawHead(ctx, hcx, hcy, L, view, f, bare, o);
     if (view === BACK) { drawArm(ctx, s0x, s0y, a0x, a0y, R.e0, L.shirt, L, null, 0, false); drawArm(ctx, s1x, s1y, a1x, a1y, R.e1, L.shirt, L, null, 0, false); }
     if (layer === 'mid') drawCarry(ctx, carry, 'mid', o, t, view, scx, scy);
-    if (R.item === 'crate' && !carry) drawItem(ctx, 'crate', a1x, a1y);
+    if (R.item === 'crate') drawItem(ctx, 'crate', a1x, a1y);
     if (R.item === 'mound') drawItem(ctx, 'mound', 3.3 + ox, 0);
     if (view === FRONT) {
       if (a0late) drawArm(ctx, s0x, s0y, a0x, a0y, R.e0, L.shirt, L, R.tool0, R.t0Ang, false);
@@ -692,10 +692,12 @@ export function createArt(K) {
     if (layer === 'hand') drawCarry(ctx, carry, 'hand', o, t, view);
     /* effects */
     if (R.fx) drawFx(ctx, R.fx, R.fxT, a1x, a1y, hcx, hcy, view);
+    else if (K.light.snowy && view !== BACK && !K.reduced) drawFx(ctx, 9, K.t * 0.8 + (L.seed % 50) * 0.11, a1x, a1y, hcx, hcy, view);
     if (R.item === 'ballFly') drawItem(ctx, 'ballFly', 3.6, -9.2);
     else if (R.item === 'ballHand' && (!carry || carry === 'snowball')) drawHandItem(ctx, 'snowball', a1x, a1y, t, view, o);
   }
 
+  function atFace(x, y, hcx, hcy, held) { return (Math.abs(x - hcx) < 2.3 && y > hcy - 2.4 && y < hcy + 3.0) || (held && y > hcy + 2.0); }
   function drawLeg(ctx, hx, hy, fx, fy, i, col, L, view) {
     let jx, jy;
     if (R.kfk) { jx = (i ? R.k1x : R.k0x) + R.tx; jy = (i ? R.k1y : R.k0y) + R.ty; }
@@ -802,6 +804,8 @@ export function createArt(K) {
     else rr(ctx, dx - 3.0, dy - 0.2, 6.0, 0.72, 0.36);
     fillOut(ctx, L.hat);
     ctx.globalAlpha = 0.6; line(ctx, dx - (side ? 2.4 : 2.6), dy + 0.42, dx + (side ? 3.0 : 2.6), dy + 0.42, 0.24, L.hatSh); ctx.globalAlpha = 1;
+    /* snow settles on the hat while it snows */
+    if (K.light.weather === 'snow') { ctx.beginPath(); ctx.ellipse(dx - 0.1, dy - 2.05, 1.7, 0.75, 0, Math.PI, TAU); ctx.quadraticCurveTo(dx, dy - 1.75, dx - 1.8, dy - 2.05); ctx.fillStyle = C.snowFlake; ctx.fill(); }
     ctx.restore();
   }
 
@@ -1634,7 +1638,7 @@ export function createArt(K) {
     drawClouds(ctx, cx, cy, z, W);
     ctx.restore();
   }
-  const STARS = (() => { const r = rng(77), a = []; for (let i = 0; i < 90; i++) a.push(r(), r(), r()); return a; })();
+  const STARS = (() => { const r = rng(77), a = []; for (let i = 0; i < 80; i++) a.push(r(), r(), r()); return a; })();
   let moon = null, moonPv = -1;
   function moonSprite() {
     if (moon && moonPv === pv) return moon;
@@ -1666,8 +1670,7 @@ export function createArt(K) {
     g.fillStyle = under; for (const [px, py, pr] of puffs) { g.beginPath(); g.arc(px, py + 0.8, pr, 0, TAU); g.fill(); }
     g.fillStyle = body; for (const [px, py, pr] of puffs) { g.beginPath(); g.arc(px - 0.3, py - 0.2, pr * 0.92, 0, TAU); g.fill(); }
     g.fillStyle = top; for (const [px, py, pr] of puffs) { g.beginPath(); g.arc(px - pr * 0.3, py - pr * 0.35, pr * 0.5, 0, TAU); g.fill(); }
-    g.globalCompositeOperation = 'destination-out'; g.fillRect(0, h - 2.2, w, 3);
-    cloudSprites[i] = cv;
+        cloudSprites[i] = cv;
     return cv;
   }
   function drawClouds(ctx, cx, cy, z, W) {
