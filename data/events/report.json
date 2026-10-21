@@ -1,30 +1,30 @@
 {
- "generated": "2026-10-20T19:23:28-04:00",
+ "generated": "2026-10-21T03:37:50-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
    "count": 8,
-   "seconds": 6.4
+   "seconds": 5.4
   },
   "breweries": {
    "label": "Breweries & Taprooms",
-   "count": 75,
-   "seconds": 4.5
+   "count": 77,
+   "seconds": 4.0
   },
   "brownell": {
    "label": "Brownell Library",
-   "count": 85,
-   "seconds": 3.4
+   "count": 83,
+   "seconds": 4.2
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
-   "count": 206,
-   "seconds": 4.4
+   "count": 202,
+   "seconds": 4.1
   },
   "churchst": {
    "label": "Church Street Marketplace",
-   "count": 78,
-   "seconds": 1.7
+   "count": 77,
+   "seconds": 1.9
   },
   "echo": {
    "label": "ECHO Leahy Center",
@@ -34,7 +34,7 @@
   "eventbrite": {
    "label": "Eventbrite",
    "count": 0,
-   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-10-20&end_date=2026-12-19&page=1 (HTTP Error 405: Not Allowed)"
+   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-10-21&end_date=2026-12-20&page=1 (HTTP Error 405: Not Allowed)"
   },
   "facebook": {
    "label": "Facebook (manual drops)",
@@ -44,17 +44,22 @@
   "farmersmarket": {
    "label": "Burlington Farmers Market",
    "count": 2,
-   "seconds": 0.3
+   "seconds": 0.5
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
-   "count": 223,
-   "seconds": 65.8
+   "count": 218,
+   "seconds": 73.1
   },
   "flynn": {
    "label": "The Flynn",
    "count": 16,
-   "seconds": 0.2
+   "seconds": 0.4
+  },
+  "generator": {
+   "label": "Generator Makerspace",
+   "count": 14,
+   "seconds": 32.2
   },
   "greenfc": {
    "label": "Vermont Green FC",
@@ -63,8 +68,8 @@
   },
   "helloburlington": {
    "label": "Hello Burlington",
-   "count": 621,
-   "seconds": 32.0
+   "count": 615,
+   "seconds": 30.3
   },
   "higherground": {
    "label": "Higher Ground",
@@ -74,49 +79,50 @@
   },
   "instagram": {
    "label": "Instagram (Scrape Creators)",
-   "count": 1,
-   "seconds": 29.1
+   "count": 0,
+   "error": "skipped by design: once-daily gate, Instagram fetches on the afternoon run only",
+   "staleDays": 0
   },
   "loveburlington": {
    "label": "Love Burlington",
-   "count": 395,
+   "count": 390,
    "seconds": 72.7
   },
   "meetup": {
    "label": "Meetup",
    "count": 53,
-   "seconds": 104.6
+   "seconds": 91.0
   },
   "monkeyhouse": {
    "label": "The Monkey House",
-   "count": 20,
-   "seconds": 0.1
+   "count": 19,
+   "seconds": 0.3
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
-   "count": 68,
-   "seconds": 15.4
+   "count": 70,
+   "seconds": 14.8
   },
   "radiobean": {
    "label": "Radio Bean",
    "count": 0,
    "error": "HTTP Error 404: Not Found",
-   "staleDays": 12
+   "staleDays": 13
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
-   "count": 98,
-   "seconds": 2.6
+   "count": 94,
+   "seconds": 2.7
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
    "count": 20,
-   "seconds": 20.8
+   "seconds": 21.1
   },
   "sevendays": {
    "label": "Seven Days",
-   "count": 2375,
-   "seconds": 2.7
+   "count": 2344,
+   "seconds": 7.5
   },
   "shelburnemuseum": {
    "label": "Shelburne Museum",
@@ -125,77 +131,31 @@
   },
   "uvm": {
    "label": "UVM & Colleges",
-   "count": 477,
-   "seconds": 27.2
+   "count": 475,
+   "seconds": 33.1
   },
   "uvmbored": {
    "label": "UVM Bored",
-   "count": 291,
+   "count": 282,
    "seconds": 0.3
   },
   "vcc": {
    "label": "Vermont Comedy Club",
-   "count": 55,
-   "seconds": 75.1
+   "count": 56,
+   "seconds": 75.5
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
-   "count": 51,
-   "seconds": 0.4
+   "count": 49,
+   "seconds": 0.3
   }
  },
- "gathered": 5218,
- "afterDedup": 2543,
- "duplicatesMerged": 2675,
- "final": 2644,
+ "gathered": 5164,
+ "afterDedup": 2550,
+ "duplicatesMerged": 2614,
+ "final": 2648,
  "firecrawlCalls": 1,
  "mergeLog": [
-  {
-   "kept": {
-    "title": "The Vermont Choral Union: The American Mercury",
-    "source": "sevendays"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "sevendays"
-   ],
-   "date": "2026-11-22"
-  },
-  {
-   "kept": {
-    "title": "The Bones of J.R. Jones",
-    "source": "helloburlington"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "helloburlington"
-   ],
-   "date": "2026-11-22"
-  },
-  {
-   "kept": {
-    "title": "Stories & Crafts: Animal Antics!",
-    "source": "fletcherfree"
-   },
-   "merged_sources": [
-    "fletcherfree",
-    "loveburlington",
-    "sevendays"
-   ],
-   "date": "2026-11-23"
-  },
-  {
-   "kept": {
-    "title": "Shakespeare Out Loud",
-    "source": "fletcherfree"
-   },
-   "merged_sources": [
-    "fletcherfree",
-    "loveburlington",
-    "sevendays"
-   ],
-   "date": "2026-11-23"
-  },
   {
    "kept": {
     "title": "Trivia with Craig Mitchell @ The Monkey House",
@@ -2393,6 +2353,28 @@
   },
   {
    "kept": {
+    "title": "Sculpt HIIT and Flow",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-12-19"
+  },
+  {
+   "kept": {
+    "title": "Men's Ice Hockey vs Dartmouth",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-12-19"
+  },
+  {
+   "kept": {
     "title": "'Very Eric Carle' Exhibit",
     "source": "sevendays"
    },
@@ -2401,58 +2383,31 @@
     "sevendays"
    ],
    "date": "2026-12-19"
+  },
+  {
+   "kept": {
+    "title": "Dungeons & Dragons Group B with DM Andrew",
+    "source": "fletcherfree"
+   },
+   "merged_sources": [
+    "fletcherfree",
+    "sevendays"
+   ],
+   "date": "2026-12-20"
+  },
+  {
+   "kept": {
+    "title": "'Very Eric Carle' Exhibit",
+    "source": "sevendays"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "sevendays"
+   ],
+   "date": "2026-12-20"
   }
  ],
  "changes": [
-  {
-   "id": "1cc180c001cf",
-   "title": "Burlington Bitcoin Meetup - @ Zero Gravity",
-   "date": "2026-10-20",
-   "change": "missing",
-   "lastSeen": "2026-10-20T10:27:53-04:00"
-  },
-  {
-   "id": "2207bb57db0a",
-   "title": "Empowerment Self-Defense (Student Session)",
-   "date": "2026-10-20",
-   "change": "missing",
-   "lastSeen": "2026-10-18T09:31:18-04:00"
-  },
-  {
-   "id": "0071dcaabd49",
-   "title": "5K Run @ BBCO",
-   "date": "2026-10-20",
-   "change": "missing",
-   "lastSeen": "2026-10-20T10:27:53-04:00"
-  },
-  {
-   "id": "9ed6836cb36c",
-   "title": "Rehash w/ The Flooks",
-   "date": "2026-10-20",
-   "change": "missing",
-   "lastSeen": "2026-10-18T09:31:18-04:00"
-  },
-  {
-   "id": "3e2453221ced",
-   "title": "All Them Witches",
-   "date": "2026-10-20",
-   "change": "missing",
-   "lastSeen": "2026-10-18T09:31:18-04:00"
-  },
-  {
-   "id": "ac29935ef083",
-   "title": "Trystan Bates",
-   "date": "2026-10-20",
-   "change": "missing",
-   "lastSeen": "2026-10-19T19:55:38-04:00"
-  },
-  {
-   "id": "ef67946e8ac3",
-   "title": "Kathleen Schneider",
-   "date": "2026-10-20",
-   "change": "missing",
-   "lastSeen": "2026-10-19T19:55:38-04:00"
-  },
   {
    "id": "2ce5bc63105a",
    "title": "How Courts are Discussed in US Elections: Noise or Silence? ft. Lisa Holmes, Political Science",
@@ -2468,6 +2423,13 @@
    "lastSeen": "2026-10-18T18:35:15-04:00"
   },
   {
+   "id": "1660609fd964",
+   "title": "JumpStart Speaker Series: Andrew Savage",
+   "date": "2026-10-21",
+   "change": "missing",
+   "lastSeen": "2026-10-20T19:23:28-04:00"
+  },
+  {
    "id": "89fe1d0a2a7b",
    "title": "Trivia @ Citizen Cider",
    "date": "2026-10-21",
@@ -2480,6 +2442,20 @@
    "date": "2026-10-21",
    "change": "missing",
    "lastSeen": "2026-10-18T09:31:18-04:00"
+  },
+  {
+   "id": "55bc679faee2",
+   "title": "Trystan Bates",
+   "date": "2026-10-21",
+   "change": "missing",
+   "lastSeen": "2026-10-20T19:23:28-04:00"
+  },
+  {
+   "id": "cc85e4bc3df3",
+   "title": "Kathleen Schneider",
+   "date": "2026-10-21",
+   "change": "missing",
+   "lastSeen": "2026-10-20T19:23:28-04:00"
   },
   {
    "id": "e5d6e66874ce",
