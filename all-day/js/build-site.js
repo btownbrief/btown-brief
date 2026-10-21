@@ -89,7 +89,7 @@ const VESTS = { orange: '#ff8a2a', lime: '#c8f03c', yellow: '#f5e23a', pink: '#f
   amber: '#f7b84a', lake: '#4c95ff', brick: '#ff7a4a', park: '#5fd08a', green: '#5fd08a', red: '#ff5a4a', white: '#e8e8e0' };
 const SKINS = ['#f1c9a0', '#e0ac69', '#c68642', '#8d5524', '#ffdbac', '#b9774e'];
 
-const WW = 640, WH = 480;                     // the world, in site pixels
+const WW = 640, WH = 540;                     // the world, in site pixels
 const SUN_X = 268;                            // where the evening sun sets, behind the Adirondacks
 
 export const SITE_TASKS = ['haul', 'frame', 'brick', 'wire', 'window', 'roof', 'lunch'];
@@ -187,6 +187,8 @@ const LEGS = {
   climbA: ['..pPPP...', '..p..P...', '..p......', '.BB......'],
   climbB: ['..pPPP...', '..p..P...', '.....P...', '.....BB..'],
   sit: ['...pPPPP.', '.....p.P.', '.....p.P.', '.....BBB.'],
+  dangle: ['..pPPPp..', '..p...p..', '..p...p..', '..B...B..'],
+  dangleB: ['..pPPPp..', '..p...p..', '.p.....p.', '.B.....B.'],
   bend: ['...pPP...', '...p.P...', '..pp.PP..', '..BB.BB..'],
 };
 /* Extra pixels per pose, [x, y, role], drawn over head/body/legs. */
@@ -218,6 +220,9 @@ const ARMS = {
   frontWave: [[7, 5, 'T'], [7, 4, 'S'], [7, 3, 'S']],
   frontRaise: [[7, 5, 'T'], [7, 4, 'T'], [7, 3, 'S'], [7, 2, 'S'], [6, 4, 'K']],
   frontMug: [[6, 9, 'M'], [7, 9, 'M'], [6, 10, 'M'], [7, 10, 'C']],
+  frontLunch: [[6, 9, 'S'], [6, 8, 'w'], [7, 8, 'w']],
+  frontShrug: [[1, 7, 'T'], [0, 6, 'S'], [7, 7, 'T'], [8, 6, 'S']],
+  frontBite: [[5, 6, 'S'], [4, 5, 'w'], [5, 5, 'w']],
   sweepA: [[6, 7, 'T'], [7, 8, 'S'], [8, 9, 'k'], [8, 10, 'k'], [8, 11, 'k'], [7, 12, 'Y'], [8, 12, 'Y'], [9, 12, 'Y']],
   sweepB: [[6, 7, 'T'], [7, 8, 'S'], [7, 9, 'k'], [6, 10, 'k'], [5, 11, 'k'], [4, 12, 'Y'], [5, 12, 'Y'], [6, 12, 'Y']],
   plantA: [[6, 7, 'T'], [7, 8, 'S'], [8, 9, 'k'], [8, 10, 'K']],
@@ -240,10 +245,14 @@ const POSES = {
   sweepA: [HEAD, BODY, 'stand', 'sweepA'], sweepB: [HEAD, BODY, 'walkB', 'sweepB'], plant: [HEAD, BODY, 'bend', 'plantA'],
   climbA: [HEAD_BACK, BODY_BACK, 'climbA', 'climb'], climbB: [HEAD_BACK, BODY_BACK, 'climbB', 'climbB'],
   sitA: [HEAD, BODY, 'sit', 'sandwich'], sitB: [HEAD, BODY, 'sit', 'stand'], sitMug: [HEAD, BODY, 'sit', 'drink'],
+  /* lunch on a beam, facing out, boots swinging */
+  beamA: [HEAD_FRONT, BODY_FRONT, 'dangle', 'frontLunch'], beamB: [HEAD_FRONT, BODY_FRONT, 'dangleB', 'frontLunch'], beamBite: [HEAD_FRONT, BODY_FRONT, 'dangle', 'frontBite'],
   front: [HEAD_FRONT, BODY_FRONT, 'front', 'frontArms'], frontWave: [HEAD_FRONT, BODY_FRONT, 'front', 'frontWave'],
-  frontRaise: [HEAD_FRONT, BODY_FRONT, 'front', 'frontRaise'], frontMug: [HEAD_FRONT, BODY_FRONT, 'front', 'frontMug'],
+  frontRaise: [HEAD_FRONT, BODY_FRONT, 'front', 'frontRaise'], frontMug: [HEAD_FRONT, BODY_FRONT, 'front', 'frontMug'], frontShrug: [HEAD_FRONT, BODY_FRONT, 'front', 'frontShrug'],
   hatoffA: [HEAD_HATOFF, BODY, 'walkA', 'hatInHand'], hatoffB: [HEAD_HATOFF, BODY, 'walkB', 'hatInHand'],
-  hatoff: [HEAD_HATOFF, BODY, 'stand', 'hatInHand'], frontHatoff: [HEAD_FRONT_HATOFF, BODY_FRONT, 'front', 'frontArms'],
+  hatoff: [HEAD_HATOFF, BODY, 'stand', 'hatInHand'],
+  civA: [HEAD_HATOFF, BODY, 'walkA', 'stand'], civB: [HEAD_HATOFF, BODY, 'walkB', 'stand'], civSit: [HEAD_HATOFF, BODY, 'sit', 'stand'],
+  rideA: [HEAD, BODY, 'sit', 'stand'], frontHatoff: [HEAD_FRONT_HATOFF, BODY_FRONT, 'front', 'frontArms'],
 };
 
 /* ================================================================ the site */
@@ -270,7 +279,7 @@ export function createSite(canvas, opts = {}) {
   const agents = new Map();              // id -> agent (crew + you)
   let you = null;
   let destroyed = false, raf = 0, lastFrame = 0, visible = true, onScreen = true, rmTimer = 0;
-  const stats = { frames: 0, total: 0, max: 0, last: 0, samples: [] };
+  const stats = { frames: 0, total: 0, max: 0, last: 0, samples: [], tick: 0, ticks: 0 };
   let hover = null, hoverUntil = 0;
   const R = rng(hash('watershed'));
 
@@ -335,10 +344,12 @@ export function createSite(canvas, opts = {}) {
   function layout() {
     const r = canvas.getBoundingClientRect();
     const cw = Math.max(1, r.width || canvas.clientWidth || 300), ch = Math.max(1, r.height || canvas.clientHeight || 200);
-    /* CSS px per site pixel: show at least 214 x 172 of the world, and no
-       more than 260 tall (a tall phone zooms in rather than showing sky) */
-    let s = Math.min(ch / 172, cw / 214);
-    s = Math.max(s, ch / 260, cw / WW, ch / WH, 0.5);
+    /* CSS px per site pixel: show at least 180 x 150 of the world (small
+       frames zoom in on the crew rather than shrink them), and no more than
+       210 tall: a tall phone (the full-screen shift) zooms in close on your
+       builder, the way Focus Friend's bean fills the screen */
+    let s = Math.min(ch / 150, cw / 180);
+    s = Math.max(s, ch / 210, cw / WW, ch / WH, 0.5);
     const nW = clamp(Math.round(cw / s), 40, WW), nH = clamp(Math.round(ch / s), 40, WH);
     if (nW === W && nH === H && L) return false;
     W = nW; H = nH;
@@ -357,23 +368,34 @@ export function createSite(canvas, opts = {}) {
     const foremanOut = S.whistle || foreman.phase !== 'in';
     const doorX = L.trailerX + L.trailerW - 6;
     let lo = Math.min(b0, L.trailerX - 4), hi = b1;
+    const bc0 = L.bx + L.BW / 2;
     if (meX != null) { lo = Math.min(lo, meX - 14); hi = Math.max(hi, meX + 14); }
     let cx;
     if (hi - lo <= W) cx = (lo + hi) / 2;
     else {
-      const bc = (L.bx + L.BW / 2);
+      const bc = topped() ? L.bx + L.BW * 0.62 : bc0;
       const p = foremanOut ? doorX + 10 : meX != null ? meX : bc;
       cx = foremanOut && meX != null && Math.abs(meX - doorX) < W - 30 ? (meX + doorX) / 2 : lerp(p, bc, foremanOut ? 0.15 : 0.3);
       if (foremanOut) cx = clamp(cx, doorX - W / 2 + 18, doorX + W / 2 - 24);
     }
-    cam.tx = clamp(Math.round(cx - W / 2), 0, WW - W);
+    /* a dead zone: the camera only follows when the action nears an edge,
+       so a builder pacing a bay doesn't swing the whole site */
+    const want = clamp(Math.round(cx - W / 2), 0, WW - W);
+    if (cam.snap || Math.abs(want - cam.tx) > W * 0.18 || foremanOut) cam.tx = want;
+    cam.tx = clamp(cam.tx, 0, WW - W);
     /* vertical: street at the bottom when there's room, else keep the
        working level (and you) in view and crop the yard */
     const lvTop = (topped() ? L.roofY - 20 : L.fBottom[Math.min(activeFloor() + 1, L.floors)] - 12);
     let top = lvTop;
+    if (topped()) top = Math.min(top, L.roofY - 24);
     if (you && !you.gone && you.y) top = Math.min(top, you.y - 22);
-    let ty = WH - H;
-    if (top < ty) ty = Math.max(0, Math.min(top, L.groundY + 18 - H));
+    /* frame from the crane down; whatever height is left shows the street
+       and the bike path, and only then more sky */
+    top = Math.min(top, craneJibY() - 14);
+    /* the bottom edge sits just past Lakeside Ave's far sidewalk; spare
+       height goes to sky, and a short frame crops the street first */
+    let ty = Math.min(top, L.street + 24 - H);
+    if (ty + H < L.street + 2) ty = L.street + 2 - H;    // never lose the gate and the yard
     cam.ty = clamp(Math.round(ty), 0, WH - H);
     if (dt > 0 && !reduced) {
       const k = Math.min(1, dt * 1.8);
@@ -385,7 +407,7 @@ export function createSite(canvas, opts = {}) {
   function buildWorld() {
     const floors = clamp(S.town.floors | 0 || 6, 2, 12);
     const yard = 34;
-    const groundY = WH - yard;
+    const groundY = 446;                      // the street and the bike path fill the 94 below
     /* bays: left wing 3, middle 4, glass slot, brick corner 3 */
     const bays = [];
     let x = 0;
@@ -436,7 +458,7 @@ export function createSite(canvas, opts = {}) {
   function done(phase, b, sub = 0) { return cellIndex(phase, b, sub) < baseline() || S.marks.has(cellKey(phase, b, sub)); }
   function wallLevel(b) { let s = 0; while (s < SUBS && done('wall', b, s)) s++; return s; }
   function extraMarks() { const k = baseline(), f = activeFloor() + ':'; let n = 0; for (const m of S.marks) if (m.startsWith(f) && +m.slice(f.length) >= k) n++; return n; }
-  const MARK_CAP = 12;                         // how far the crew on screen may run ahead of the town's hours
+  const MARK_CAP = 22;                         // how far the crew on screen may run ahead of the town's hours
   function canDo(phase, b) {
     if (done(phase === 'wall' ? 'wall' : phase, b, phase === 'wall' ? wallLevel(b) : 0)) return false;
     if (phase === 'frame') return true;
@@ -471,7 +493,9 @@ export function createSite(canvas, opts = {}) {
     for (let b = 0; b < NB; b++) {
       if (taken.has(phase + b)) continue;
       if (!canDo(phase, b)) continue;
-      const d = Math.abs(L.bays[b].cx - nearX) + (phase === 'wall' && L.bays[b].vol === 'C' ? -6 : 0);
+      let crowd = 0;
+      for (const t of taken) { const tb = +t.replace(/\D+/g, ''); if (Math.abs(tb - b) <= 1) crowd += 30; }
+      const d = Math.abs(L.bays[b].cx - nearX) + crowd + (phase === 'wall' && L.bays[b].vol === 'C' ? -6 : 0);
       if (d < bd) { bd = d; best = b; }
     }
     return best;
@@ -488,9 +512,11 @@ export function createSite(canvas, opts = {}) {
   function colorsFor(a) {
     const look = a.look || {};
     return { H: lookColor(look.hat, HATS, a.id, 'h'), V: lookColor(look.vest, VESTS, a.id, 'v'),
-      S: look.skin && /^#/.test(look.skin) ? look.skin : SKINS[a.seed % SKINS.length], hair: ['#3d2b20', '#1f1a17', '#7a4a2a', '#c9a36a', '#8a8a8a'][(a.seed >> 4) % 5] };
+      S: look.skin && /^#/.test(look.skin) ? look.skin : SKINS[a.seed % SKINS.length], hair: ['#3d2b20', '#1f1a17', '#7a4a2a', '#c9a36a', '#8a8a8a'][(a.seed >>> 4) % 5] };
   }
   function laneY(a) { return a.lane; }
+  /* each builder favours their own stretch of the building, so the crew spreads out */
+  function homeX(a) { return L.bays[(a.seed >>> 3) % NB].cx; }
   function levelY(level) {
     if (level === 'g') return null;
     const f = activeFloor();
@@ -547,9 +573,7 @@ export function createSite(canvas, opts = {}) {
           const b = beams[a.seed % beams.length];
           walkTo(plan, a, 'w', L.bays[b].cx);
           plan.push({ k: 'hop', level: 'beam' });
-          plan.push({ k: 'idle', pose: 'sitA', dur: 25 + a.r() * 30, sit: true, chew: true });
-          plan.push({ k: 'idle', pose: 'sitMug', dur: 10 + a.r() * 10, sit: true });
-          plan.push({ k: 'idle', pose: 'sitB', dur: 15 + a.r() * 20, sit: true, look: 'lake' });
+          plan.push({ k: 'idle', pose: 'beamA', dur: 30 + a.r() * 40, sit: true, beam: true });
           plan.push({ k: 'hop', level: 'w' });
           return plan;
         }
@@ -596,7 +620,7 @@ export function createSite(canvas, opts = {}) {
     if (phase === 'crane') {
       /* signal the crane: the deck panel it lowers frames a bay */
       const taken = reserved(a);
-      const b = pickBay('frame', a.x, taken);
+      const b = pickBay('frame', homeX(a), taken);
       if (b >= 0) {
         a.target = 'frame' + b;
         walkTo(plan, a, wl, L.bays[b].cx - 4);
@@ -610,7 +634,7 @@ export function createSite(canvas, opts = {}) {
     const order = [phase, 'frame', 'wire', 'wall', 'window'];
     const taken = reserved(a);
     let ph = null, b = -1;
-    for (const p of order) { b = pickBay(p, a.x || L.bx, taken); if (b >= 0) { ph = p; break; } }
+    for (const p of order) { b = pickBay(p, homeX(a), taken); if (b >= 0) { ph = p; break; } }
     if (b < 0 || extraMarks() >= MARK_CAP) {
       /* nothing the town's hours have opened up yet: check the work */
       const x0 = L.bx + 6 + ((a.r() * (L.BW - 12)) | 0);
@@ -629,11 +653,12 @@ export function createSite(canvas, opts = {}) {
     const vol = L.bays[b].vol;
     const pose = ph === 'frame' ? ['hammerUp', 'hammerDown'] : ph === 'wire' ? ['pullA', 'pullB']
       : ph === 'wall' ? (vol === 'C' ? ['trowelA', 'trowelB'] : ['drillA', 'drillB']) : ['drillA', 'drillB'];
-    const workX = L.bays[b].cx + (ph === 'window' || ph === 'wall' ? -5 : -4);
+    const side = (a.seed + b) % 2 ? 1 : -1;      // work the bay from the left or the right
+    const workX = L.bays[b].cx - side * (ph === 'window' || ph === 'wall' ? 5 : 4);
     walkTo(plan, a, wl, workX);
-    plan.push({ k: 'face', dir: 1 });
+    plan.push({ k: 'face', dir: side });
     plan.push({ k: 'use' });
-    plan.push({ k: 'work', pose, dur: 6 + a.r() * 5, rate: ph === 'frame' ? 4 : ph === 'wire' ? 2 : 3, cell: [ph, b] });
+    plan.push({ k: 'work', pose, dur: 12 + a.r() * 10, rate: ph === 'frame' ? 4 : ph === 'wire' ? 2 : 3, cell: [ph, b] });
     return plan;
   }
 
@@ -707,6 +732,7 @@ export function createSite(canvas, opts = {}) {
         break;
       case 'work': {
         const rate = act.rate || 3;
+        a.tool = act.cell ? act.cell[0] : act.mark || 'frame';
         const ph = ((a.actT * rate) | 0) % 2;
         a.pose = act.pose[ph]; a.bob = 0;
         if (act.cell && ph !== a.lastPh && ph === 1) spark(a, act.cell[0]);
@@ -723,6 +749,7 @@ export function createSite(canvas, opts = {}) {
         a.bob = 0;
         if (act.face) a.facing = act.face;
         if (act.chew) a.pose = ((a.actT * 0.8) | 0) % 3 === 2 ? 'sitB' : 'sitA';
+        else if (act.beam) { const k = (a.actT + a.seed % 7) % 7; a.pose = k > 6.4 ? 'beamBite' : ((a.actT * 1.3) | 0) % 2 ? 'beamB' : 'beamA'; }
         else if (act.pose === 'stand' && a.actT % 5 > 4.7) a.pose = 'front';
         else a.pose = act.pose;
         if (act.sit) a.sitting = true;
@@ -741,8 +768,8 @@ export function createSite(canvas, opts = {}) {
       case 'pauseHold': {
         /* tools down, turn around, look at you. A blink, a small shrug. */
         a.bob = 0;
-        const cyc = a.actT % 6;
-        a.pose = cyc > 5.6 ? 'stand' : 'front';
+        const cyc = a.actT % 7;
+        a.pose = a.actT < 0.5 ? 'bend' : cyc > 4 && cyc < 4.9 ? 'frontShrug' : cyc > 6.5 ? 'stand' : 'front';
         a.blink = (a.actT % 3.7) > 3.55;
         break;
       }
@@ -763,11 +790,11 @@ export function createSite(canvas, opts = {}) {
   }
   function enterFromGate(a, withCoffee) {
     /* along the Lakeside Ave sidewalk, in through the gate */
-    a.level = 'g'; a.street = true; a.x = L.gateX - 40 - (a.seed % 50); a.y = L.street - 1;
+    a.level = 'g'; a.street = true; a.x = L.gateX - 14 - (a.seed % 36); a.y = L.street - 1;
     a.act = null; a.plan = []; a.gone = false; a.carry = null;
     a.coffee = !!withCoffee;
     a.plan.push({ k: 'walk', x: L.gateX + 6 }, { k: 'walkY', street: false });
-    if (withCoffee) a.plan.push({ k: 'walk', x: L.gateX + 22 + (a.seed % 30) }, { k: 'idle', pose: 'drink', dur: 2 + a.r() * 2 });
+    if (withCoffee) a.plan.push({ k: 'walk', x: L.trailerX + 30 + (a.seed % 36) }, { k: 'idle', pose: 'drink', dur: 2 + a.r() * 2 }, { k: 'idle', pose: 'mug', dur: 1 + a.r() * 3 });
     else a.plan.push({ k: 'walk', x: L.gateX + 16 + (a.seed % 20) });
     a.plan.push({ k: 'idle', pose: 'stand', dur: 0.3 });
   }
@@ -788,7 +815,7 @@ export function createSite(canvas, opts = {}) {
     for (; n < want; n++) {
       const x = cam.x + R() * (W + 20) - 10, y = cam.y + R() * H;
       S.particles.push(w === 'snow'
-        ? { wx: 1, x, y, vx: -2 + R() * 2, vy: 7 + R() * 6, life: 1e9, c: pal.snow, sway: R() * 6, land: R() }
+        ? { wx: 1, x, y, vx: -2 + R() * 2, vy: 7 + R() * 6, life: 1e9, c: R() < 0.5 ? '#ffffff' : '#e4ecf6', sway: R() * 6, land: R(), big: R() < 0.3 }
         : { wx: 2, x, y, vx: -14, vy: 70 + R() * 30, life: 1e9, c: '#b8c6d6', land: R() });
     }
   }
@@ -884,6 +911,71 @@ export function createSite(canvas, opts = {}) {
     }
   }
 
+  /* ------------------------------------------- Lakeside Ave goes by */
+  const passers = [];
+  let passT = 4;
+  const JACKETS = ['#3d7bd9', '#d9443a', '#2f8a5a', '#e0b33a', '#7a5aa8', '#e07a4a', '#4a4f5a', '#f4f1e8'];
+  function stepPassers(dt) {
+    passT -= dt;
+    const late = night > 0.8, wet = S.weather === 'rain' || S.weather === 'snow';
+    if (passT <= 0) {
+      passT = (late ? 30 : 9) + R() * (late ? 40 : 16) + (wet ? 10 : 0);
+      if (passers.length < 4) {
+        const dir = R() < 0.5 ? 1 : -1, k = R();
+        const kind = !snowy && k < 0.5 ? 'bike' : k < 0.8 ? 'walk' : 'dog';
+        const lane = kind === 'bike' ? (R() < 0.5 ? L.street + 6 : L.street + 37) : L.street + 21;
+        const id = 'p' + ((R() * 1e6) | 0);
+        passers.push({ kind, dir, x: dir > 0 ? cam.x - 16 : cam.x + W + 16, y: lane, v: kind === 'bike' ? 26 + R() * 10 : 9 + R() * 3,
+          look: { H: JACKETS[(R() * JACKETS.length) | 0], V: JACKETS[(R() * JACKETS.length) | 0], S: SKINS[(R() * SKINS.length) | 0], hair: ['#3d2b20', '#1f1a17', '#7a4a2a', '#c9a36a'][(R() * 4) | 0] }, t: 0 });
+      }
+    }
+    for (let i = passers.length - 1; i >= 0; i--) {
+      const q = passers[i]; q.t += dt; q.x += q.dir * q.v * dt;
+      if (q.x < cam.x - 40 || q.x > cam.x + W + 40) passers.splice(i, 1);
+    }
+  }
+  /* gulls off the lake, now and then */
+  const gulls = [];
+  let gullT = 6;
+  function stepGulls(dt) {
+    gullT -= dt;
+    if (gullT <= 0 && night < 0.5 && S.weather !== 'rain') {
+      gullT = 20 + R() * 40;
+      const dir = R() < 0.5 ? 1 : -1, y = L.horizon - 10 - R() * 50, n = 1 + ((R() * 3) | 0);
+      for (let i = 0; i < n; i++) gulls.push({ x: (dir > 0 ? cam.x - 10 : cam.x + W + 10) - dir * i * (6 + R() * 6), y: y + i * 2 + R() * 3, dir, v: 10 + R() * 4, ph: R() * 6 });
+    }
+    for (let i = gulls.length - 1; i >= 0; i--) { const g = gulls[i]; g.x += g.dir * g.v * dt; g.y += Math.sin(S.t * 0.7 + g.ph) * 1.5 * dt; if (g.x < cam.x - 30 || g.x > cam.x + W + 30) gulls.splice(i, 1); }
+  }
+  function drawGulls(c) {
+    c.fillStyle = night > 0.3 ? shade('#d8dde6') : shade('#f4f4f0');
+    for (const g of gulls) {
+      const x = Math.round(g.x), y = Math.round(g.y), up = ((S.t * 3 + g.ph) | 0) % 2;
+      c.fillRect(x, y, 1, 1); c.fillStyle = shade('#5a5f68'); c.fillRect(x, y + 1, 1, 1);
+      c.fillStyle = night > 0.3 ? shade('#d8dde6') : shade('#f4f4f0');
+      c.fillRect(x - 2, y - up, 2, 1); c.fillRect(x + 1, y - up, 2, 1);
+    }
+  }
+  function drawPasser(c, q) {
+    const x = Math.round(q.x), y = Math.round(q.y), f = ((q.t * (q.kind === 'bike' ? 8 : 6)) | 0) % 2;
+    if (q.kind === 'bike') {
+      /* two wheels, a frame, a rider in a helmet */
+      c.fillStyle = shade('#2b2b30');
+      for (const wx of [x - 4, x + 3]) { c.fillRect(wx - 1, y - 3, 3, 1); c.fillRect(wx - 1, y + 1, 3, 1); c.fillRect(wx - 2, y - 2, 1, 3); c.fillRect(wx + 2, y - 2, 1, 3); }
+      c.fillStyle = shade(q.look.V); c.fillRect(x - 3, y - 2, 6, 1); c.fillRect(x - 1 + q.dir, y - 4, 1, 3);
+      c.drawImage(sprite('rideA', q.look, q.dir, 'civ'), x - 6 - q.dir, y - 16);
+      c.fillStyle = shade('#2b2b30'); c.fillRect(x - 1 + (f ? 1 : 0), y - 1, 1, 1);
+      return;
+    }
+    c.drawImage(sprite(f ? 'civB' : 'civA', q.look, q.dir, 'civ'), x - 5, y - 13 + (f ? -1 : 0));
+    if (q.kind === 'dog') {
+      const dx = x + q.dir * 7;
+      c.fillStyle = shade('#8a5a3a'); c.fillRect(dx - 2, y - 3, 5, 2); c.fillRect(dx + q.dir * 2, y - 5, 2, 2);
+      c.fillRect(dx - 2 + (f ? 0 : 1), y - 1, 1, 1); c.fillRect(dx + 2 - (f ? 0 : 1), y - 1, 1, 1);
+      c.fillRect(dx - q.dir * 3, y - 4, 1, 1);
+      c.fillStyle = shade('#3a3a3a'); for (let i = 1; i < 6; i++) c.fillRect(x + q.dir * (1 + i), y - 6 + (i >> 1), 1, 1);
+    }
+  }
+
   /* ---------------------------------------------------- the foreman */
   const foreman = { phase: 'in', t: 0, pose: 'frontMug', dx: 0 };
   function stepForeman(dt) {
@@ -891,10 +983,10 @@ export function createSite(canvas, opts = {}) {
     const f = foreman;
     switch (f.phase) {
       case 'in': f.dx = 0; f.pose = (f.t % 9) > 7.8 ? 'drink' : 'frontMug'; if (S.whistle) { f.phase = 'out'; f.t = 0; } break;
-      case 'out': f.dx = Math.min(6, f.t * 10); f.pose = f.t % 0.3 < 0.15 ? 'walkA' : 'walkB'; if (f.t > 0.6) { f.phase = 'raise'; f.t = 0; } break;
-      case 'raise': f.dx = 6; f.pose = 'frontRaise'; if (!S.whistle) { f.phase = 'nod'; f.t = 0; } break;
-      case 'nod': f.dx = 6; f.pose = 'front'; f.nod = ((f.t * 4) | 0) % 2 === 1 && f.t < 1.2; if (f.t > 1.5) { f.phase = 'back'; f.t = 0; f.nod = false; } break;
-      case 'back': f.dx = Math.max(0, 6 - f.t * 10); f.pose = f.t % 0.3 < 0.15 ? 'walkA' : 'walkB'; if (f.t > 0.6) { f.phase = 'in'; f.t = 0; } if (S.whistle) { f.phase = 'raise'; } break;
+      case 'out': f.dx = Math.min(9, f.t * 12); f.pose = f.t % 0.3 < 0.15 ? 'walkA' : 'walkB'; if (f.t > 0.75) { f.phase = 'raise'; f.t = 0; } break;
+      case 'raise': f.dx = 9; f.pose = 'frontRaise'; if (!S.whistle) { f.phase = 'nod'; f.t = 0; } break;
+      case 'nod': f.dx = 9; f.pose = 'front'; f.nod = ((f.t * 4) | 0) % 2 === 1 && f.t < 1.2; if (f.t > 1.5) { f.phase = 'back'; f.t = 0; f.nod = false; } break;
+      case 'back': f.dx = Math.max(0, 9 - f.t * 12); f.pose = f.t % 0.3 < 0.15 ? 'walkA' : 'walkB'; if (f.t > 0.75) { f.phase = 'in'; f.t = 0; } if (S.whistle) { f.phase = 'raise'; } break;
       default: f.phase = 'in';
     }
   }
@@ -908,7 +1000,8 @@ export function createSite(canvas, opts = {}) {
     const g = def[0].concat(def[1], LEGS[def[2]]).map((r) => r.split(''));
     for (const [x, y, role] of ARMS[def[3]] || []) if (g[y] && x < 9) g[y][x] = role;
     if (extra === 'blink') for (const row of g) for (let i = 0; i < 9; i++) if (row[i] === 'E') row[i] = 'S';
-    c = document.createElement('canvas'); c.width = 9; c.height = 14;
+    if (extra === 'civ') for (const row of g) for (let i = 0; i < 9; i++) if (row[i] === 'R' || row[i] === 'v') row[i] = 'V';
+    c = document.createElement('canvas'); c.width = 11; c.height = 16;   // 1px of room for the outline
     const x2 = c.getContext('2d');
     const role = {
       H: shade(colors.H), h: shade(mix(colors.H, '#000000', 0.25)), b: shade(mix(colors.H, '#000000', 0.38)),
@@ -920,8 +1013,18 @@ export function createSite(canvas, opts = {}) {
     };
     for (let y = 0; y < 14; y++) for (let x = 0; x < 9; x++) {
       const ch = g[y][x]; if (ch === '.' || !role[ch]) continue;
-      x2.fillStyle = role[ch]; x2.fillRect(facing < 0 ? 8 - x : x, y, 1, 1);
+      x2.fillStyle = role[ch]; x2.fillRect((facing < 0 ? 8 - x : x) + 1, y + 1, 1, 1);
     }
+    /* a warm dark outline, like Focus Friend's bean: it keeps a 13-pixel
+       person readable against brick, timber and the night */
+    const img = x2.getImageData(0, 0, 11, 16), d = img.data, oc = hexRgb(pal.outline);
+    const solid = (x, y) => x >= 0 && y >= 0 && x < 11 && y < 16 && d[(y * 11 + x) * 4 + 3] > 0 && !(d[(y * 11 + x) * 4 + 3] === 201);
+    for (let y = 0; y < 16; y++) for (let x = 0; x < 11; x++) {
+      const i = (y * 11 + x) * 4;
+      if (d[i + 3]) continue;
+      if (solid(x - 1, y) || solid(x + 1, y) || solid(x, y - 1) || solid(x, y + 1)) { d[i] = oc[0]; d[i + 1] = oc[1]; d[i + 2] = oc[2]; d[i + 3] = 201; }
+    }
+    x2.putImageData(img, 0, 0);
     spriteCache.set(key, c);
     return c;
   }
@@ -932,72 +1035,120 @@ export function createSite(canvas, opts = {}) {
     bgCache.width = WW; bgCache.height = WH;
     const c = bgCache.getContext('2d');
     const hz = L.horizon;
-    const g = c.createLinearGradient(0, 0, 0, hz);
-    g.addColorStop(0, pal.skyTop); g.addColorStop(1, pal.skyHor);
+    /* the sky: the gradient spans what a camera can show above the horizon,
+       solid top colour above that */
+    const skyTop = L.groundY - 250;
+    const g = c.createLinearGradient(0, skyTop, 0, hz);
+    g.addColorStop(0, pal.skyTop); g.addColorStop(0.55, mix(pal.skyTop, pal.skyHor, 0.35)); g.addColorStop(1, pal.skyHor);
     c.fillStyle = g; c.fillRect(0, 0, WW, hz + 1);
-    /* stars and moon at night */
+    /* stars at night */
     if (night > 0.7 && S.weather === 'clear') {
       const r = rng(7);
-      for (let i = 0; i < WW * hz / 260; i++) { c.fillStyle = r() < 0.2 ? EMIT.star : 'rgba(232,236,247,0.55)'; c.fillRect((r() * WW) | 0, (r() * (hz - 20)) | 0, 1, 1); }
+      for (let i = 0; i < WW * (hz - skyTop) / 240; i++) { c.fillStyle = r() < 0.2 ? EMIT.star : 'rgba(232,236,247,0.5)'; c.fillRect((r() * WW) | 0, skyTop + ((r() * (hz - 24 - skyTop)) | 0), 1, 1); }
     }
     /* the evening sun goes down behind the Adirondacks (we look west, over the lake) */
     const sunUp = S.evening && S.alt > -2 && S.alt < 14 && S.weather === 'clear';
     if (sunUp) {
-      const sx = SUN_X, sy = Math.round(hz - 4 - S.alt * 2.2);
-      const sg = c.createRadialGradient(sx, sy, 1, sx, sy, 26);
-      sg.addColorStop(0, 'rgba(255,220,150,0.55)'); sg.addColorStop(1, 'rgba(255,200,140,0)');
-      c.fillStyle = sg; c.fillRect(sx - 26, sy - 26, 52, 52);
-      c.fillStyle = S.alt < 5 ? EMIT.sunLow : EMIT.sun; c.beginPath(); c.arc(sx, sy, 4, 0, 7); c.fill();
+      const sx = SUN_X, sy = Math.round(hz - 6 - S.alt * 2.2);
+      const sg = c.createRadialGradient(sx, sy, 1, sx, sy, 40);
+      sg.addColorStop(0, 'rgba(255,220,150,0.6)'); sg.addColorStop(1, 'rgba(255,200,140,0)');
+      c.fillStyle = sg; c.fillRect(sx - 40, sy - 40, 80, 80);
+      c.fillStyle = S.alt < 5 ? EMIT.sunLow : EMIT.sun; c.fillRect(sx - 2, sy - 4, 5, 9); c.fillRect(sx - 4, sy - 2, 9, 5); c.fillRect(sx - 3, sy - 3, 7, 7);
     }
-    /* the Adirondacks: two ridgelines, far and near, softened by haze */
+    /* the Adirondacks across the lake: a long, layered ridgeline, soft peaks,
+       paler the farther away */
     const fog = S.weather === 'fog' ? 0.75 : S.weather === 'rain' ? 0.45 : S.weather === 'cloud' ? 0.2 : 0;
-    const farC = mix(shade('#94acc5'), pal.skyHor, 0.35 + fog * 0.6), nearC = mix(shade('#6e7e95'), pal.skyHor, 0.12 + fog * 0.7);
-    const ridge = (seed, amp, base, col, snowcap) => {
-      const r = rng(seed); const pts = []; let v = 0, dv = 0;
-      for (let x = 0; x <= WW; x++) { dv += (r() - 0.5) * 0.5; dv *= 0.92; v += dv; v *= 0.985; pts.push(base - amp * (0.55 + 0.45 * Math.sin(x / 37 + seed) * Math.sin(x / 13 + seed * 2)) + v); }
+    const farC = mix(shade('#9fb4cb'), pal.skyHor, 0.4 + fog * 0.55), midC = mix(shade('#7f90a8'), pal.skyHor, 0.22 + fog * 0.65), nearC = mix(shade('#66768c'), pal.skyHor, 0.1 + fog * 0.7);
+    const peaks = (x, list) => list.reduce((m, [px, h, w]) => Math.max(m, h * Math.exp(-((x - px) * (x - px)) / (2 * w * w))), 0);
+    const ridge = (fn, col, cap) => {
       c.fillStyle = col;
-      for (let x = 0; x < WW; x++) { const top = Math.round(pts[x]); c.fillRect(x, top, 1, hz - top + 1); }
-      if (snowcap) { c.fillStyle = mix(pal.snow, col, 0.25); for (let x = 0; x < WW; x++) { const top = Math.round(pts[x]); if (top < base - amp * 0.75) c.fillRect(x, top, 1, 2); } }
+      const tops = [];
+      for (let x = 0; x < WW; x++) { const top = Math.round(hz - fn(x)); tops.push(top); c.fillRect(x, top, 1, hz - top + 1); }
+      if (cap) { c.fillStyle = mix(pal.snow, col, 0.2); for (let x = 0; x < WW; x++) if (hz - tops[x] > cap) c.fillRect(x, tops[x], 1, 1 + ((hz - tops[x] - cap) > 3 ? 1 : 0)); }
+      return tops;
     };
-    ridge(11, 16, hz - 4, farC, snowy);
-    ridge(23, 9, hz, nearC, snowy);
+    ridge((x) => 9 + 3 * Math.sin(x / 41) + 2 * Math.sin(x / 17 + 2) + peaks(x, [[70, 19, 26], [205, 25, 30], [250, 16, 18], [372, 27, 34], [470, 18, 24], [575, 23, 30]]), farC, snowy ? 22 : 0);
+    ridge((x) => 6 + 2 * Math.sin(x / 29 + 1) + Math.sin(x / 9) + peaks(x, [[25, 9, 22], [140, 12, 26], [300, 10, 20], [420, 13, 28], [530, 9, 18], [620, 11, 20]]), midC, snowy ? 13 : 0);
+    ridge((x) => 2 + 1.5 * Math.sin(x / 13 + 3) + peaks(x, [[95, 4, 30], [340, 5, 40], [560, 4, 30]]), nearC, 0);
     /* the lake */
     const lakeTop = hz + 1, lakeBot = L.groundY - 22;
     const lakeC = mix(shade('#8fadc6'), pal.skyHor, 0.25 + fog * 0.4);
     c.fillStyle = lakeC; c.fillRect(0, lakeTop, WW, lakeBot - lakeTop);
     c.fillStyle = mix(lakeC, pal.skyHor, 0.45); c.fillRect(0, lakeTop, WW, 1);
+    c.fillStyle = mix(lakeC, nearC, 0.35); c.fillRect(0, lakeTop + 1, WW, 1);
     if (snowy) { c.fillStyle = shade(BASE.ice); c.fillRect(0, lakeBot - 2, WW, 2); }
-    /* far shore, then the near trees along the rail line */
-    const r2 = rng(5);
-    const treeTop = lakeBot - 5;
-    for (let x = 0; x < WW; x++) {
-      const h = 5 + Math.round(3 * Math.sin(x / 5.3) + 2 * Math.sin(x / 2.1 + 1) + r2() * 2);
-      c.fillStyle = x % 7 < 3 ? pal.treeDark : pal.tree; c.fillRect(x, treeTop + 6 - h, 1, L.groundY - (treeTop + 6 - h));
-    }
+    /* the trees along the rail line: round crowns, two rows, October colour */
     const month = nowDate().getMonth();
-    if (!snowy && (month === 9 || month === 10)) {   // October on the trees, like the rendering
-      for (let i = 0; i < WW / 3; i++) { c.fillStyle = r2() < 0.5 ? pal.autumnA : pal.autumnB; const x = (r2() * WW) | 0; c.fillRect(x, treeTop + 1 + ((r2() * 5) | 0), 2, 2); }
+    const fall = !snowy && (month === 9 || month === 10);
+    const bare = snowy || month === 11 || month <= 2;
+    const r2 = rng(5);
+    const crown = (x, y, rad, col, hi, lo) => {
+      for (let dy = -rad; dy <= rad; dy++) {
+        const half = Math.round(Math.sqrt(rad * rad - dy * dy) + 0.3);
+        c.fillStyle = dy > rad * 0.35 ? lo : col; c.fillRect(x - half, y + dy, half * 2 + 1, 1);
+      }
+      c.fillStyle = hi; c.fillRect(x - Math.round(rad * 0.5), y - rad + 1, Math.max(1, rad - 1), 1); c.fillRect(x - Math.round(rad * 0.6), y - rad + 2, 1, Math.max(1, rad - 2));
+    };
+    const rowY = lakeBot - 1;
+    c.fillStyle = bare ? shade('#6f6a62') : pal.treeDark; c.fillRect(0, rowY + 2, WW, L.groundY - rowY);
+    for (let pass = 0; pass < 2; pass++) {
+      for (let x = -4 + pass * 4; x < WW + 6; x += 6 + ((r2() * 4) | 0)) {
+        const rad = 3 + ((r2() * 3) | 0) - pass;
+        const y = rowY + 2 - ((r2() * 3) | 0) + pass * 3;
+        let col = pass ? pal.tree : pal.treeDark, hi = pass ? pal.treeLight : pal.tree, lo = pass ? pal.treeDark : mix(pal.treeDark, '#000000', 0.15);
+        if (fall && r2() < 0.45) { const k = r2(); col = k < 0.4 ? pal.autumnA : k < 0.75 ? pal.autumnB : shade('#b9893a'); hi = mix(col, '#ffffff', 0.25); lo = mix(col, '#000000', 0.2); }
+        if (bare) {
+          /* winter: pines along the rail line, bare maples between them */
+          if (r2() < 0.55) {
+            const h = rad * 2 + 3;
+            for (let k = 0; k < h; k++) { const hw = Math.round(k * (rad + 0.5) / h); c.fillStyle = k % 3 === 2 ? shade('#2c4a32') : shade('#36583c'); c.fillRect(x - hw, y - rad - 2 + k, hw * 2 + 1, 1); if (snowy && k % 3 === 0) { c.fillStyle = pal.snow; c.fillRect(x - hw, y - rad - 2 + k, Math.max(1, hw), 1); } }
+          } else {
+            c.fillStyle = shade('#6b5f55');
+            c.fillRect(x, y - rad, 1, rad * 2 + 2); c.fillRect(x - 2, y - rad + 1, 1, 3); c.fillRect(x + 2, y - rad, 1, 3); c.fillRect(x - 1, y - rad + 3, 1, 1); c.fillRect(x + 1, y - rad + 2, 1, 1);
+            if (snowy) { c.fillStyle = pal.snow; c.fillRect(x - 2, y - rad, 1, 1); c.fillRect(x + 2, y - rad - 1, 1, 1); c.fillRect(x, y - rad - 1, 1, 1); }
+          }
+          continue;
+        }
+        crown(x, y, rad, col, hi, lo);
+      }
     }
-    if (snowy) { c.fillStyle = pal.snow; for (let x = 0; x < WW; x += 2) if (r2() < 0.6) c.fillRect(x, treeTop + 2 + ((r2() * 4) | 0), 2, 1); }
     /* grass bank behind the site */
-    c.fillStyle = snowy ? pal.snow : pal.grass; c.fillRect(0, L.groundY - 8, WW, 8);
-    c.fillStyle = snowy ? pal.snowShade : pal.grassDark; c.fillRect(0, L.groundY - 8, WW, 1);
+    c.fillStyle = snowy ? pal.snow : pal.grass; c.fillRect(0, L.groundY - 7, WW, 7);
+    c.fillStyle = snowy ? pal.snowShade : pal.grassDark; c.fillRect(0, L.groundY - 7, WW, 1);
     /* the old brick mill next door, frame right (Lakeside's 1894 cotton mill) */
     drawMill(c);
     /* the site: gravel and dirt */
-    const gy = L.groundY;
-    c.fillStyle = snowy ? pal.snow : pal.dirt; c.fillRect(0, gy, WW, WH - gy);
+    const gy = L.groundY, st = L.street;
+    c.fillStyle = snowy ? pal.snow : pal.dirt; c.fillRect(0, gy, WW, st - gy);
     const r3 = rng(9);
-    for (let i = 0; i < WW * (WH - gy) / 14; i++) { c.fillStyle = snowy ? (r3() < 0.5 ? pal.snowShade : pal.white) : (r3() < 0.5 ? pal.dirtDark : pal.dirtSpeck); c.fillRect((r3() * WW) | 0, gy + ((r3() * (WH - gy)) | 0), 1, 1); }
+    for (let i = 0; i < WW * (st - gy) / 14; i++) { c.fillStyle = snowy ? (r3() < 0.5 ? pal.snowShade : pal.white) : (r3() < 0.5 ? pal.dirtDark : pal.dirtSpeck); c.fillRect((r3() * WW) | 0, gy + ((r3() * (st - gy)) | 0), 1, 1); }
     /* tire tracks from the gate */
     c.fillStyle = snowy ? pal.snowShade : pal.dirtDark;
-    for (let x = 0; x < L.bx; x += 2) { c.fillRect(x, gy + 9, 1, 1); c.fillRect(x + 1, gy + 12, 1, 1); }
-    /* sidewalk and Lakeside Ave */
-    const st = L.street;
-    c.fillStyle = pal.sidewalk; c.fillRect(0, st - 2, WW, 2);
-    c.fillStyle = pal.asphalt; c.fillRect(0, st, WW, WH - st);
-    c.fillStyle = shade('#e8e2d0'); for (let x = 0; x < WW; x += 9) c.fillRect(x, st + 3, 4, 1);
-    if (snowy) { c.fillStyle = pal.snowShade; for (let x = 0; x < WW; x += 3) c.fillRect(x, st, 2, 1); }
+    for (let x = L.gateX; x < L.bx; x += 2) { c.fillRect(x, gy + 9, 1, 1); c.fillRect(x + 1, gy + 12, 1, 1); }
+    /* Lakeside Ave: sidewalk, two lanes and a bike lane, the far sidewalk,
+       then a strip of lawn with the bike path and lamp posts */
+    c.fillStyle = pal.sidewalk; c.fillRect(0, st - 2, WW, 3);
+    c.fillStyle = pal.sidewalkLine; for (let x = 0; x < WW; x += 6) c.fillRect(x, st - 2, 1, 3);
+    c.fillStyle = pal.asphalt; c.fillRect(0, st + 1, WW, 17);
+    c.fillStyle = shade('#3e434d'); c.fillRect(0, st + 1, WW, 1);
+    c.fillStyle = shade('#e3c95a'); for (let x = 0; x < WW; x += 10) c.fillRect(x, st + 9, 5, 1);
+    c.fillStyle = shade('#e8e2d0'); c.fillRect(0, st + 4, WW, 1);
+    for (let x = 30; x < WW; x += 120) { c.fillRect(x, st + 2, 1, 1); c.fillRect(x + 1, st + 1, 1, 1); c.fillRect(x + 2, st + 2, 1, 1); }   // bike-lane chevrons
+    if (snowy) { c.fillStyle = pal.snowShade; for (let x = 0; x < WW; x += 3) c.fillRect(x, st + 1, 2, 1); c.fillRect(0, st + 17, WW, 1); }
+    c.fillStyle = pal.sidewalk; c.fillRect(0, st + 18, WW, 3);
+    c.fillStyle = snowy ? pal.snow : pal.grass; c.fillRect(0, st + 21, WW, WH - st - 21);
+    c.fillStyle = snowy ? pal.snowShade : shade('#c9c4b6'); c.fillRect(0, st + 33, WW, 4);    // the bike path
+    c.fillStyle = snowy ? pal.snow : shade('#e8e2d0'); for (let x = 0; x < WW; x += 8) c.fillRect(x, st + 35, 3, 1);
+    const r4 = rng(17);
+    for (let i = 0; i < WW * 0.09; i++) { c.fillStyle = snowy ? pal.snowShade : (r4() < 0.5 ? pal.grassDark : shade('#8fae5c')); c.fillRect((r4() * WW) | 0, st + 22 + ((r4() * (WH - st - 22)) | 0), 1, 1); }
+    /* street trees and lamp posts along the far sidewalk */
+    for (let x = 14; x < WW; x += 58) {
+      c.fillStyle = pal.trunk; c.fillRect(x, st + 14, 1, 9);
+      const col = fall ? (x % 3 ? pal.autumnA : pal.autumnB) : bare ? shade('#7d776e') : pal.tree;
+      crown(x, st + 10, 5, col, mix(col, '#ffffff', 0.25), mix(col, '#000000', 0.2));
+      if (snowy) { c.fillStyle = pal.snow; c.fillRect(x - 4, st + 5, 9, 1); }
+    }
+    for (let x = 44; x < WW; x += 58) { c.fillStyle = shade('#3a3f48'); c.fillRect(x, st + 6, 1, 15); c.fillRect(x - 1, st + 5, 3, 1); c.fillStyle = night > 0.4 ? EMIT.lamp : shade('#d8d4c8'); c.fillRect(x - 1, st + 6, 3, 1); }
     /* yard props that don't move: dumpster, port-a-john, light tower */
     const dx = L.johnX;
     if (dx > 18) {
@@ -1339,13 +1490,23 @@ export function createSite(canvas, opts = {}) {
     const inDoor = f.phase === 'in';
     const x = doorX - 1 + Math.round(f.dx), y = gy - 2 - (inDoor ? 1 : 0) - 13 + (f.nod ? 1 : 0);
     const facing = (f.phase === 'back') ? -1 : 1;
-    c.drawImage(sprite(f.pose, look, facing), x, y);
+    c.drawImage(sprite(f.pose, look, facing), x - 1, y - 1);
+    if (f.phase === 'in' && f.pose === 'frontMug' && !reduced) {
+      const k = ((S.t * 2) | 0) % 3;
+      c.fillStyle = 'rgba(244,244,240,0.7)'; c.fillRect(x + 6 + (k === 1 ? 1 : 0), y + 7 - k, 1, 1); if (k === 2) c.fillRect(x + 7, y + 4, 1, 1);
+    }
     if (f.phase === 'raise' && !reduced) {
       /* the whistle: a couple of little sound marks that pulse */
       const on = ((S.t * 3) | 0) % 2 === 0;
-      if (on) { c.fillStyle = night > 0.5 ? EMIT.lamp : pal.white; c.fillRect(x + 10, y + 1, 1, 1); c.fillRect(x + 11, y, 1, 1); c.fillRect(x + 11, y + 3, 1, 1); c.fillRect(x + 12, y + 2, 1, 1); c.fillRect(x + 13, y + 1, 1, 1); c.fillRect(x + 13, y + 4, 1, 1); }
+      const k = ((S.t * 4) | 0) % 3;
+      c.fillStyle = night > 0.5 ? EMIT.lamp : pal.outline;
+      /* three rings of sound off the whistle, pulsing outward */
+      if (k >= 0) { c.fillRect(x + 9, y, 1, 1); c.fillRect(x + 10, y + 1, 1, 2); c.fillRect(x + 9, y + 3, 1, 1); }
+      if (k >= 1) { c.fillRect(x + 11, y - 2, 1, 1); c.fillRect(x + 12, y - 1, 1, 4); c.fillRect(x + 11, y + 4, 1, 1); }
+      if (k >= 2) { c.fillRect(x + 13, y - 4, 1, 1); c.fillRect(x + 14, y - 3, 1, 7); c.fillRect(x + 13, y + 5, 1, 1); }
+      void on;
     } else if (f.phase === 'raise') {
-      c.fillStyle = pal.white; c.fillRect(x + 10, y + 1, 1, 1); c.fillRect(x + 11, y, 1, 1); c.fillRect(x + 12, y + 2, 1, 1);
+      c.fillStyle = night > 0.5 ? EMIT.lamp : pal.outline; c.fillRect(x + 9, y, 1, 1); c.fillRect(x + 10, y + 1, 1, 2); c.fillRect(x + 9, y + 3, 1, 1); c.fillRect(x + 12, y - 1, 1, 4); c.fillRect(x + 11, y - 2, 1, 1); c.fillRect(x + 11, y + 4, 1, 1);
     }
   }
 
@@ -1360,7 +1521,7 @@ export function createSite(canvas, opts = {}) {
     /* driver */
     const look = { H: HATS.yellow, V: VESTS.lime, S: SKINS[2], hair: '#1f1a17' };
     const spr = sprite('sitB', look, d);
-    c.drawImage(spr, 0, 0, 9, 9, d > 0 ? bx + 2 : bx + 1, gy - 15, 9, 9);
+    c.drawImage(spr, 0, 0, 11, 10, d > 0 ? bx + 1 : bx, gy - 16, 11, 10);
     /* mast + forks at the front */
     const mx = d > 0 ? bx + 10 : bx - 1;
     c.fillStyle = pal.mast; c.fillRect(mx, gy - 14, 1, 13);
@@ -1455,7 +1616,7 @@ export function createSite(canvas, opts = {}) {
   }
   function drawLake(c) {
     /* glints on the water (world coordinates), and in summer the kitesurfers */
-    const lakeTop = L.horizon + 2, lakeBot = L.groundY - 23;
+    const lakeTop = L.horizon + 2, lakeBot = L.groundY - 30;
     if (lakeBot - lakeTop < 2 || reduced) return;
     const r = rng(((S.t * 2) | 0));
     c.fillStyle = night > 0.6 ? 'rgba(200,210,240,0.35)' : 'rgba(255,255,255,0.55)';
@@ -1499,15 +1660,28 @@ export function createSite(canvas, opts = {}) {
     const look = a.colors || (a.colors = colorsFor(a));
     const spr = sprite(a.pose || 'stand', look, a.facing, a.blink ? 'blink' : '');
     const x = Math.round(a.x) - 4, y = Math.round(a.y) - 13 + (a.bob || 0) + (a.sitting && a.level === 'beam' ? 0 : 0);
-    c.drawImage(spr, x, y);
+    c.drawImage(spr, x - 1, y - 1);
     /* tools set down beside you when you pick the phone up */
-    if (a.me && a.dropped && a.state === 'paused') drawPallet(c, Math.round(a.dropped.x), Math.round(a.dropped.y), a.dropped.kind);
+    if (a.me && a.state === 'paused') {
+      if (a.dropped) drawPallet(c, Math.round(a.dropped.x), Math.round(a.dropped.y), a.dropped.kind);
+      else drawTool(c, Math.round(a.x) + 5, Math.round(a.y), a.tool);
+      /* waiting for you: three dots, one at a time, nothing sadder than that */
+      const t = a.act && a.act.k === 'pauseHold' ? a.actT : 0;
+      if (t > 1.5 && !reduced) { const n = ((t * 1.4) | 0) % 4; c.fillStyle = night > 0.5 ? EMIT.lamp : pal.outline; for (let i = 0; i < n; i++) c.fillRect(x + 7 + i * 2, y - 2, 1, 1); }
+    }
     if (a.me && a.state !== 'off') {
       /* your marker: a little gold chevron that breathes */
       const by = y - 4 - (reduced ? 0 : (((S.t * 1.5) | 0) % 2));
       c.fillStyle = pal.outline; c.fillRect(x + 2, by - 1, 5, 1);
       c.fillStyle = EMIT.lamp === pal.marker ? pal.marker : BASE.marker; c.fillRect(x + 2, by, 5, 1); c.fillRect(x + 3, by + 1, 3, 1); c.fillRect(x + 4, by + 2, 1, 1);
     }
+  }
+  function drawTool(c, x, y, kind) {
+    /* the tool set down on the plank */
+    if (kind === 'wall') { c.fillStyle = shade('#8b939b'); c.fillRect(x, y - 3, 3, 3); c.fillStyle = shade('#5f666d'); c.fillRect(x, y - 4, 3, 1); c.fillStyle = pal.mortar; c.fillRect(x, y - 3, 3, 1); return; }
+    if (kind === 'wire') { c.fillStyle = pal.timberShade; c.fillRect(x, y - 3, 3, 3); c.fillStyle = pal.copper; c.fillRect(x + 1, y - 3, 1, 3); return; }
+    if (kind === 'window' || kind === 'solar') { c.fillStyle = pal.glassHi; c.fillRect(x, y - 5, 1, 5); c.fillStyle = pal.glass; c.fillRect(x + 1, y - 4, 1, 4); return; }
+    c.fillStyle = pal.timberDark; c.fillRect(x, y - 1, 4, 1); c.fillStyle = shade('#8b939b'); c.fillRect(x + 3, y - 2, 1, 2);
   }
   function drawLabel(c, a, text) {
     const tw = textWidth(text), x = clamp(Math.round(a.x) - (tw >> 1) - 2, Math.round(cam.x) + 1, Math.round(cam.x) + W - tw - 5), y = Math.round(a.y) - 24;
@@ -1528,6 +1702,7 @@ export function createSite(canvas, opts = {}) {
     drawClouds(c);
     c.setTransform(1, 0, 0, 1, -cx, -cy);
     drawLake(c);
+    drawGulls(c);
     c.drawImage(bldCache, cx, cy, W, H, cx, cy, W, H);
     const doorX = drawTrailer(c);
     drawForeman(c, doorX);
@@ -1546,9 +1721,11 @@ export function createSite(canvas, opts = {}) {
       c.fillStyle = p.c;
       if (p.wx === 2) c.fillRect(Math.round(p.x), Math.round(p.y), 1, 3);
       else if (p.puff) c.fillRect(Math.round(p.x), Math.round(p.y), 2, 1);
+      else if (p.big) c.fillRect(Math.round(p.x), Math.round(p.y), 2, 2);
       else c.fillRect(Math.round(p.x), Math.round(p.y), 1, 1);
     }
     drawFence(c);
+    for (const q of passers) drawPasser(c, q);
     drawLights(c);
     if (hover && performance.now() < hoverUntil) {
       const a = agents.get(hover);
@@ -1567,7 +1744,7 @@ export function createSite(canvas, opts = {}) {
     S.t += dt;
     for (const a of agents.values()) step(a, dt);
     for (const [id, a] of agents) if (a.gone && !a.me) agents.delete(id);
-    stepCrane(dt); stepFork(dt); stepForeman(dt); stepParticles(dt);
+    stepCrane(dt); stepFork(dt); stepForeman(dt); stepParticles(dt); stepPassers(dt); if (!reduced) stepGulls(dt);
     aimCamera(dt);
     for (const d of S.deliveries) if (d.bounce > 0) d.bounce = Math.max(0, d.bounce - dt * 20);
     if (S.toppedAt != null && !S.beamSet && !crane.busy && !reduced) craneJob(L.bays.find((q) => q.vol === 'C').ax + 8, L.roofY, true);
@@ -1579,8 +1756,10 @@ export function createSite(canvas, opts = {}) {
     if (ts - lastFrame < 1000 / 30 - 2) return;   // 30fps cap
     const dt = lastFrame ? (ts - lastFrame) / 1000 : 1 / 30;
     lastFrame = ts;
-    if (layout()) { /* size changed */ }
+    layout();
+    const t0 = performance.now();
     tick(dt);
+    stats.tick += performance.now() - t0; stats.ticks++;
     render();
   }
   function start() {
@@ -1709,7 +1888,7 @@ export function createSite(canvas, opts = {}) {
       you.gone = state === 'off' ? you.gone : false;
       poke();
     },
-    whistle(on) { S.whistle = !!on; if (reduced) { foreman.phase = on ? 'raise' : 'in'; foreman.dx = on ? 6 : 0; foreman.pose = on ? 'frontRaise' : 'frontMug'; } poke(); },
+    whistle(on) { S.whistle = !!on; if (reduced) { foreman.phase = on ? 'raise' : 'in'; foreman.dx = on ? 9 : 0; foreman.pose = on ? 'frontRaise' : 'frontMug'; } poke(); },
     setSky(sky = {}) {
       S.sky = { ...S.sky, ...sky };
       if (sky.sunAltitude == null && sky.isNight != null) S.sky.sunAltitude = sky.isNight ? -15 : 30;
@@ -1735,9 +1914,9 @@ export function createSite(canvas, opts = {}) {
     stats() {
       const s = stats.samples.slice().sort((p, q) => p - q);
       const pct = (p) => (s.length ? s[Math.min(s.length - 1, Math.floor(s.length * p))] : 0);
-      return { frames: stats.frames, avgMs: stats.frames ? stats.total / stats.frames : 0, p50: pct(0.5), p95: pct(0.95), maxMs: stats.max, size: [W, H], agents: agents.size, running: !!raf };
+      return { frames: stats.frames, avgMs: stats.frames ? stats.total / stats.frames : 0, tickMs: stats.ticks ? stats.tick / stats.ticks : 0, p50: pct(0.5), p95: pct(0.95), maxMs: stats.max, size: [W, H], cam: [Math.round(cam.x), Math.round(cam.y), cam.tx, cam.ty], agents: agents.size, running: !!raf, crew: [...agents.values()].map((a) => [a.id, Math.round(a.x), Math.round(a.y), a.state, a.gone ? 'gone' : a.act ? a.act.k : '-']), you: you && !you.gone ? [Math.round(you.x - cam.x), Math.round(you.y - cam.y), you.state, you.pose] : null };
     },
-    resetStats() { stats.frames = 0; stats.total = 0; stats.max = 0; stats.samples = []; },
+    resetStats() { stats.frames = 0; stats.total = 0; stats.max = 0; stats.samples = []; stats.tick = 0; stats.ticks = 0; },
   };
   start();
   return api;

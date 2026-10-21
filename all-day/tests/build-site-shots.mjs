@@ -36,7 +36,7 @@ const server = spawn('python3', ['-m', 'http.server', String(port), '--bind', '1
 await new Promise((r) => setTimeout(r, 700));
 const URL_ = `http://127.0.0.1:${port}/all-day/tests/build-site-preview.html?shot=1`;
 
-const SIZES = { docked: [390, 340], full: [390, 780], desk: [1440, 620] };
+const SIZES = { docked: [390, 340], half: [390, 422], full: [390, 780], desk: [1440, 620] };
 const DAY = { sunAltitude: 38, hour: 13, weather: 'clear' };
 const STATES = {
   day: { ...DAY, floors_done: 2, floor_progress: 0.4, crew: 7, you: 'working', task: 'brick', windows_lit: 8 },
@@ -74,7 +74,7 @@ try {
         const base = { whistle: false, cut: false, topped_out: false, your_minutes: 0, rm: false };
         if (st.arrive) {
           await page.evaluate(([b, s, w2, h2]) => { window.preview.set({ ...b, ...s, crew: 0, w: w2, h: h2 }); window.site.advance(1); window.preview.set({ crew: s.crew }); }, [base, st, w, h]);
-          await page.evaluate(() => window.site.advance(5));
+          await page.evaluate(() => window.site.advance(11));
         } else {
           /* the crew works a while first so the marks show */
           await page.evaluate(([b, s, w2, h2]) => { window.preview.set({ ...b, ...s, whistle: false, you: s.you === 'working' ? 'working' : 'working', w: w2, h: h2 }); window.site.advance(90); }, [base, st, w, h]);
@@ -114,7 +114,7 @@ try {
       const s = await page.evaluate(() => window.site.stats());
       await cdp.send('Emulation.setCPUThrottlingRate', { rate: 1 });
       const fps = s.frames / 6;
-      console.log(`  ${label}: drawn ${fps.toFixed(1)} fps, render avg ${s.avgMs.toFixed(2)} ms, p95 ${s.p95.toFixed(2)} ms, max ${s.maxMs.toFixed(1)} ms (view ${s.size.join('x')}, ${s.agents} figures)`);
+      console.log(`  ${label}: drawn ${fps.toFixed(1)} fps, simulation ${s.tickMs.toFixed(2)} ms + render avg ${s.avgMs.toFixed(2)} ms, p95 ${s.p95.toFixed(2)} ms, max ${s.maxMs.toFixed(1)} ms (view ${s.size.join('x')}, ${s.agents} figures)`);
       say(s.p95 < 16, `p95 render under 16 ms at 4x throttle (${s.p95.toFixed(2)})`);
       say(fps <= 31, `capped at 30fps (${fps.toFixed(1)})`);
       void intervals;
