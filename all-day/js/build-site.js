@@ -219,13 +219,18 @@ export function createSite(canvas, opts = {}) {
        builder pacing a bay doesn't swing the whole site */
     if (camSnap || mom || fp || K.S.whistle || Math.abs(want - cam.tx) > W * 0.16) cam.tx = want;
     cam.tx = clamp(cam.tx, 0, WW - W);
-    /* vertical: the bottom edge sits just past Lakeside Ave's far sidewalk;
-       spare height goes to sky; keep the top of the work and the focus in view */
-    let top = (K.building.topY ? K.building.topY() : GROUND_Y - 60) - 18;
-    if (fy != null) top = Math.min(top, fy - 28);
-    let ty = Math.min(top, STREET_Y + 20 - H);
-    if (ty + H < STREET_Y - 2) ty = STREET_Y - 2 - H;
-    cam.ty = clamp(ty, 0, WH - H);
+    /* vertical: the focus (you, whoever you follow, or the working level)
+       sits about two thirds down, so a tall phone shows ground and street
+       under the action rather than a sky of nothing; the top of the work
+       stays in view. A dead zone keeps a climb from bobbing the camera. */
+    const workTop = (K.building.topY ? K.building.topY() : GROUND_Y - 60) - 18;
+    const anchor = fy != null ? fy : Math.min(GROUND_Y + 8, workTop + 60);
+    let ty = anchor - 0.64 * H;
+    if (workTop < ty && (fy == null || fy > workTop + 30)) ty = Math.max(workTop, anchor + 20 - H);
+    ty = clamp(ty, 0, WH - H);
+    const rel = (anchor - cam.ty) / H;
+    if (camSnap || mom || fp || K.S.whistle || rel < 0.4 || rel > 0.86 || Math.abs(ty - cam.ty) > H * 0.25) cam.ty = ty;
+    cam.ty = clamp(cam.ty, 0, WH - H);
     if (dt > 0 && !reduced) {
       const k = Math.min(1, dt * (mom ? 0.9 : 1.6));
       cam.x += (cam.tx - cam.x) * k; cam.y += (cam.ty - cam.y) * k;

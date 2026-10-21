@@ -61,9 +61,10 @@ export function floorHeight(f) { return f === 0 ? BUILDING.groundFloorH : BUILDI
 export const SITE_TASKS = ['haul', 'frame', 'brick', 'wire', 'window', 'roof', 'lunch'];
 export const SITE_MATERIALS = ['lumber', 'brick', 'glass', 'copper', 'nails'];
 /* What people carry. The art module draws each; the crew and director pick. */
-export const CARRY = ['beam', 'panel', 'bricks', 'barrow', 'pane', 'paneL', 'paneR', 'spool', 'rebar', 'stakes', 'bucket', 'mug', 'thermos', 'sandwich', 'clipboard', 'cake', 'toolbox', 'shovel', 'tarp', 'snowball', 'flag', 'plant', 'hat'];
+export const CARRY = ['beam', 'panel', 'bricks', 'barrow', 'pane', 'paneL', 'paneR', 'spool', 'rebar', 'stakes', 'bucket', 'mug', 'thermos', 'sandwich', 'clipboard', 'cake', 'toolbox', 'shovel', 'tarp', 'snowball', 'flag', 'plant', 'hat', 'rustPanel', 'solar', 'mallet'];
 /* Poses the art module animates. `t` is seconds into the pose; cycles loop. */
-export const POSES = ['stand', 'walk', 'run', 'climb', 'hammer', 'drill', 'trowel', 'saw', 'measure', 'pullwire', 'shovel', 'rake', 'kneel', 'pour', 'push', 'lift', 'signal', 'guide', 'sweep', 'plant', 'sit', 'sitbeam', 'drink', 'eat', 'wave', 'clap', 'point', 'look', 'shrug', 'huddle', 'throw', 'pet', 'crouch', 'stretch', 'cheer', 'nod', 'raise', 'sleep', 'bend'];
+export const POSES = ['stand', 'walk', 'run', 'climb', 'hammer', 'drill', 'trowel', 'saw', 'measure', 'pullwire', 'shovel', 'rake', 'kneel', 'pour', 'push', 'lift', 'signal', 'guide', 'sweep', 'plant', 'sit', 'sitbeam', 'drink', 'eat', 'wave', 'clap', 'point', 'look', 'shrug', 'huddle', 'throw', 'pet', 'crouch', 'stretch', 'cheer', 'nod', 'raise', 'sleep', 'bend', 'ride', 'jackhammer'];
+/* figure facing: 1 (east), -1 (west), 0 (towards you), 'away' (back to you: the bench, the fence, a crowd watching) */
 /* Wordless thought/feeling icons over a head. */
 export const EMOTES = ['heart', 'note', 'bang', 'question', 'dots', 'zzz', 'star', 'sweat', 'coffee', 'idea', 'sun', 'cake'];
 
