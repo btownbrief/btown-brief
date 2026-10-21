@@ -1,28 +1,28 @@
 {
- "updated": "2026-10-21T14:39:28+00:00",
+ "updated": "2026-10-21T15:38:46+00:00",
  "sections_updated": {
-  "now": "2026-10-21T14:39:28+00:00",
-  "forecast": "2026-10-21T14:39:28+00:00",
-  "hourly": "2026-10-21T14:39:28+00:00",
-  "alerts": "2026-10-21T14:39:28+00:00",
-  "afd": "2026-10-21T14:39:28+00:00",
-  "lake_forecast": "2026-10-21T14:39:28+00:00",
-  "lake_gage": "2026-10-21T14:39:28+00:00",
-  "air": "2026-10-21T14:39:28+00:00",
-  "sun": "2026-10-21T14:39:28+00:00",
-  "models": "2026-10-21T14:39:28+00:00"
+  "now": "2026-10-21T15:38:46+00:00",
+  "forecast": "2026-10-21T15:38:46+00:00",
+  "hourly": "2026-10-21T15:38:46+00:00",
+  "alerts": "2026-10-21T15:38:46+00:00",
+  "afd": "2026-10-21T15:38:46+00:00",
+  "lake_forecast": "2026-10-21T15:38:46+00:00",
+  "lake_gage": "2026-10-21T15:38:46+00:00",
+  "air": "2026-10-21T15:38:46+00:00",
+  "sun": "2026-10-21T15:38:46+00:00",
+  "models": "2026-10-21T15:38:46+00:00"
  },
  "now": {
-  "observed_at": "2026-10-21T14:25:00+00:00",
+  "observed_at": "2026-10-21T15:20:00+00:00",
   "station": "KBTV",
   "description": "Clear",
-  "temp_f": 45,
-  "feels_like_f": 45,
-  "humidity": 76,
+  "temp_f": 48,
+  "feels_like_f": 46,
+  "humidity": 66,
   "dewpoint_f": 37,
-  "wind_mph": 0,
+  "wind_mph": 6,
   "wind_gust_mph": null,
-  "wind_dir": "N",
+  "wind_dir": "NW",
   "precip_last_hr_in": null
  },
  "forecast": {
@@ -30,7 +30,7 @@
   "periods": [
    {
     "name": "Today",
-    "start": "2026-10-21T10:00:00-04:00",
+    "start": "2026-10-21T11:00:00-04:00",
     "is_day": true,
     "temp_f": 58,
     "pop": 0,
@@ -173,20 +173,6 @@
  "hourly": {
   "updated": "2026-10-21T06:19:18+00:00",
   "hours": [
-   {
-    "t": "2026-10-21T10:00:00-04:00",
-    "temp_f": 46,
-    "feels_f": 45,
-    "pop": 0,
-    "humidity": 68,
-    "wind_mph": 3,
-    "wind_dir": "N",
-    "sky": 5,
-    "short": "Sunny",
-    "qpf_in": 0.0,
-    "snow_in": 0.0,
-    "gust_mph": 6
-   },
    {
     "t": "2026-10-21T11:00:00-04:00",
     "temp_f": 50,
@@ -676,6 +662,20 @@
     "qpf_in": 0.0,
     "snow_in": 0.0,
     "gust_mph": 26
+   },
+   {
+    "t": "2026-10-22T22:00:00-04:00",
+    "temp_f": 43,
+    "feels_f": 37,
+    "pop": 0,
+    "humidity": 73,
+    "wind_mph": 12,
+    "wind_dir": "N",
+    "sky": 12,
+    "short": "Mostly Clear",
+    "qpf_in": 0.0,
+    "snow_in": 0.0,
+    "gust_mph": 22
    }
   ],
   "days": [
@@ -961,17 +961,17 @@
  },
  "lake_gage": {
   "water_temp_f": 55,
-  "water_temp_at": "2026-10-21T10:00:00.000-04:00",
-  "level_ft": 94.09,
-  "level_at": "2026-10-21T10:00:00.000-04:00",
+  "water_temp_at": "2026-10-21T11:00:00.000-04:00",
+  "level_ft": 94.11,
+  "level_at": "2026-10-21T11:00:00.000-04:00",
   "level_status": "normal"
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 27,
+  "aqi": 28,
   "category": "Good",
   "pollutant": "OZONE",
-  "observed": "10/21/26 10:00",
+  "observed": "10/21/26 11:00",
   "discussion": "On Wednesday, October 21st, expect generally good air quality across Vermont."
  },
  "sun": {
@@ -992,8 +992,7 @@
     },
     "pop_max": {
      "GFS": 0,
-     "Euro": 0,
-     "ICON": 0
+     "Euro": 0
     },
     "precip_in": {
      "GFS": 0.0,
@@ -1006,13 +1005,12 @@
     "date": "2026-10-22",
     "high_f": {
      "GFS": 50,
-     "Euro": 53,
+     "Euro": 52,
      "ICON": 56
     },
     "pop_max": {
      "GFS": 2,
-     "Euro": 0,
-     "ICON": 0
+     "Euro": 0
     },
     "precip_in": {
      "GFS": 0.0,
@@ -1025,26 +1023,25 @@
     "date": "2026-10-23",
     "high_f": {
      "GFS": 49,
-     "Euro": 47,
-     "ICON": 49
+     "Euro": 48,
+     "ICON": 48
     },
     "pop_max": {
      "GFS": 0,
-     "Euro": 0,
-     "ICON": 0
+     "Euro": 0
     },
     "precip_in": {
      "GFS": 0.0,
      "Euro": 0.0,
      "ICON": 0.0
     },
-    "high_spread_f": 2
+    "high_spread_f": 1
    }
   ]
  },
  "brief": {
   "date": "2026-10-21",
-  "generated": "2026-10-21T14:39:32+00:00",
+  "generated": "2026-10-21T15:38:49+00:00",
   "text": "Sunny today, high 58. Mostly clear tonight, low 35. Thursday, mostly sunny, high 55.",
   "periods": [
    {
@@ -1053,11 +1050,11 @@
     "is_day": true,
     "temp_f": 58,
     "sky": "sunny",
-    "start": "2026-10-21T10:00:00-04:00",
+    "start": "2026-10-21T11:00:00-04:00",
     "end": "2026-10-21T18:00:00-04:00",
     "precip": null,
     "wind": null,
-    "feels_lo": 45,
+    "feels_lo": 49,
     "feels_hi": 58,
     "text": "Sunny today, high 58."
    },
