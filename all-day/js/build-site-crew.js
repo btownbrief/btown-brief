@@ -366,7 +366,7 @@ export function createCrew(K) {
       ...toJob(a, j, 'carrying the column forms over'),
       D(a, 'bend', 0.8, { carry: null, work: [0, 0.1], say: 'standing the column form up' }),
       D(a, 'hammer', 3.4, { work: [0.1, 0.45], say: 'nailing the column form tight' }),
-      call(() => { mixer.truck.need = K.t + 60; req = craneRequest(a, 'cbucket', () => mixerBucketAt(), [j.at ? j.at[0] : j.x, top], false); req.back = true; a.req = req; }),
+      call(() => { mixer.truck.need = K.t + 60; req = craneRequest(a, 'cbucket', () => mixerBucketAt(), [j.at ? j.at[0] : j.x, top], false); req.back = true; req.fast = 1.6; a.req = req; }),
       W(() => !req || req.dead || req.state === 'set', { pose: 'look', face: 0, max: 80, lateSay: 'waiting for the pour bucket', timeout: () => { if (req) craneCancel(req); } }),
       D(a, 'guide', 2.6, { work: [0.45, 0.95], say: 'guiding the pour bucket over the column', start: () => { if (req) req.pouring = true; } }),
       D(a, 'signal', 0.8, { work: [0.95, 1], say: 'signalling the crane away', then: () => { if (req) craneRelease(req); } }),
@@ -1449,7 +1449,7 @@ export function createCrew(K) {
     const x0 = crane.x;
     let r = crane.cur;
     if (!r && crane.queue.length) { r = crane.cur = crane.queue.shift(); r.state = 'toPick'; crane.returning = false; }
-    const fast = r && r.fast ? 2.2 : 1;
+    const fast = r && r.fast ? (r.fast === true ? 2.2 : r.fast) : 1;
     const mx = (x, sp0 = 17) => { const sp = sp0 * fast; const d = x - crane.x; const v = Math.min(sp, 1 + Math.abs(d) * 1.5) * dt; if (Math.abs(d) <= v + 0.02) { crane.x = x; return true; } crane.x += Math.sign(d) * v; return false; };
     const my = (y, sp0 = 11) => { const sp = sp0 * fast; const d = y - crane.hy; const v = Math.min(sp, 1 + Math.abs(d) * 1.6) * dt; if (Math.abs(d) <= v + 0.02) { crane.hy = y; return true; } crane.hy += Math.sign(d) * v; return false; };
     if (!r) {
