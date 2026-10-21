@@ -521,10 +521,12 @@ export function createBuild({ server, local, uid = () => null, storage = {}, con
 
   const shift = {
     status,
+    /* A knocked-off shift still on the phone is banked first (Start is
+       "they walk back on"); a working or paused one must be ended or resumed. */
     start(step) {
       const cur = loadShift();
       if (cur && settle(cur, now(), rules).state !== 'missed') return Promise.resolve(fail('shift_running'));
-      return thing.get().then((t) => {
+      return (cur ? shift.end({}) : Promise.resolve()).then(() => thing.get()).then((t) => {
         const r = newShift({ id: uuid(random), thing: t.ok && t.thing ? t.thing.id : null, step, now: now(), random, rules });
         saveShift(r);
         const s = status();

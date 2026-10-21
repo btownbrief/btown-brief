@@ -240,6 +240,18 @@ test('a missed whistle, recovered after a reload, ends with the minutes up to th
   assert.equal(e.missed, true);
 });
 
+test('Start after the crew knocked off banks the old shift, then clocks in again', async () => {
+  const r = rig({ who: null });
+  await r.api.shift.start('');
+  for (let m = 0; m < 33; m++) { r.c.go(MIN); await r.api.shift.heartbeat(); if (m === 9) await r.api.shift.touch(); }   // touched 10:00, missed 28:00
+  assert.equal(r.api.shift.status().state, 'missed');
+  const s = await r.api.shift.start('again');
+  assert.equal(s.shift.state, 'working');
+  assert.equal(s.shift.step, 'again');
+  assert.equal((await r.api.record.get()).total_minutes, 10, 'the old shift banked up to its last touch');
+  assert.equal((await r.api.shift.start('twice')).error, 'shift_running');
+});
+
 test('a shift under a minute is not kept', async () => {
   const r = rig({ who: null });
   await r.api.shift.start('');
