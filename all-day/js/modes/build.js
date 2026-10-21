@@ -115,6 +115,7 @@ function api() {
   if (!B.api || B.apiFor !== who) {
     /* the demo's town opened three days ago, so its building is part way up */
     const config = app.demo && !B.config.season.starts ? { ...B.config, season: { ...B.config.season, starts: keyBack(dayKey(Date.now()), 3) } } : B.config;
+    B.starts = config.season && config.season.starts || null;
     B.api = openBuild({ demo: app.demo, user: () => app.user(), token: () => app.token(), url: store.SB_URL, key: store.SB_KEY, config });
     B.apiFor = who;
   }
@@ -179,7 +180,9 @@ function mineInner() {
   const cell = (n, label) => '<span class="bd-stat"><b>' + esc(hm(n)) + '</b><span>' + esc(label) + '</span></span>';
   return cell(todayMinutes(), 'today') + cell(weekMinutes() + live(), 'this week') + cell(seasonMinutes(), 'this season') + ICON.right;
 }
-const weekMinutes = () => { const from = keyBack(dayKey(Date.now()), 7); let n = 0; B.days.forEach((d) => { if (d.day > from) n += Number(d.minutes) || 0; }); return n; };
+const monday = () => { const t = dayKey(Date.now()); return keyBack(t, (new Date(t + 'T12:00:00Z').getUTCDay() + 6) % 7); };
+/* this week runs from Monday, as the town's does, and never reaches back before the season opened */
+const weekMinutes = () => { const from = monday(); let n = 0; B.days.forEach((d) => { if (d.day >= from && (!B.starts || d.day >= B.starts)) n += Number(d.minutes) || 0; }); return n; };
 const yourMinutes = () => B.days.reduce((n, d) => n + (Number(d.minutes) || 0), 0);
 
 /* -------------------------------------------------------------- loading */
