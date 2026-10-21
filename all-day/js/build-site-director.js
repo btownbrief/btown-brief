@@ -50,7 +50,7 @@ const pose = (p, dur, carry) => (carry === undefined ? { k: 'pose', pose: p, dur
 const face = (dir) => ({ k: 'face', dir });
 const emote = (icon, dur = 1.6) => ({ k: 'emote', icon, dur });
 const wait = (dur) => ({ k: 'wait', dur });
-const hold = (what) => ({ k: 'carry', what });
+const hold = (what) => ({ k: 'pose', pose: 'stand', dur: 0.05, carry: what });   // pick something up and keep it while walking
 const call = (fn) => ({ k: 'call', fn });
 
 export function createDirector(K) {
@@ -306,22 +306,31 @@ export function createDirector(K) {
       start() {
         const stopX = clamp(camMid() + (K.R() - 0.5) * K.view.W * 0.4, 90, 700);
         const kid = K.world.spawn('kid', { stopX });
-        let waved = false;
-        const off = K.on('kid:wave', (e) => {
-          if (e.id !== kid || waved) return; waved = true;
-          const ids = nearestIdle(e.x, 1, 160);
-          if (!ids.length) return;
-          const bx = clamp(e.x + (K.R() < 0.5 ? -5 : 5), 70, 700);
-          script(ids[0], [go(bx, YARD_FRONT - 9), face(0), call(() => K.world.cheer(kid)), pose('wave', 2.6), emote('heart', 1.4), pose('stand', 0.6)]);
-        });
-        return { step() { return this.t < 70; }, end: off };
+        let wave = null, answered = false, tick = 0;
+        const off = K.on('kid:wave', (e) => { if (e.id === kid && !wave) wave = { x: e.x, t: 0 }; });
+        return {
+          step(dt) {
+            /* someone between jobs comes to the fence to wave back (they have a few seconds to notice) */
+            if (wave && !answered && (wave.t += dt) < 6 && (tick -= dt) <= 0) {
+              tick = 0.5;
+              const ids = nearestIdle(wave.x, 1, 170);
+              if (ids.length) {
+                answered = true;
+                const bx = clamp(wave.x + (K.R() < 0.5 ? -5 : 5), 70, 700);
+                script(ids[0], [go(bx, YARD_FRONT - 9), face(0), call(() => K.world.cheer(kid)), pose('wave', 2.6), emote('heart', 1.4), pose('stand', 0.6)]);
+              }
+            }
+            return this.t < 70;
+          },
+          end: off,
+        };
       } },
     /* -------- lunch and its gull -------- */
     gull: { kind: 'ambient', title: 'A gull steals a sandwich off the picnic table',
       weight: () => (lunchTime() && dayHash('gull') % 2 === 0 && !wet() && !snowy() ? 2.2 : 0),
       start(force) {
         table.sandwich = true;
-        const s = { x: 205, y: 380, phase: 'in', t: 0, dir: 1, carrying: false, ph: 0 };
+        const s = { x: Math.min(K.cam.x - 10, 200), y: K.cam.y + 10, phase: 'in', t: 0, dir: 1, carrying: false, ph: 0 };
         if (force) start('lunch', true);
         return {
           step(dt) {
@@ -330,10 +339,11 @@ export function createDirector(K) {
               if (s.t < 4) return true;           // a few seconds to notice the sandwich
               const tx = 249, ty = 465, dx = tx - s.x, dy = ty - s.y, d = Math.hypot(dx, dy);
               if (d < 0.8) { s.phase = 'land'; s.t = 0; s.x = tx; s.y = ty; return true; }
-              const sp = Math.min(d, 26 * dt); s.x += dx / d * sp; s.y += dy / d * sp; s.dir = dx > 0 ? 1 : -1;
+              const sp = Math.min(d, (d < 20 ? 12 : 22) * dt); s.x += dx / d * sp; s.y += dy / d * sp + Math.sin(s.t * 2) * 0.3 * dt; s.dir = dx > 0 ? 1 : -1;
             } else if (s.phase === 'land') {
-              if (s.t > 1.6 && !s.carrying) { s.carrying = true; table.sandwich = false; const eater = lunchEaters()[0]; const p = eater && K.crew.posOf(eater); if (p) bubble(p.x, p.y - 17, 'bang', 2, eater); }
-              if (s.t > 2.4) { s.phase = 'out'; s.t = 0; s.dir = 1; }
+              if (s.t > 1.2 && s.t < 2.4) s.x += 0.6 * dt;                       // a couple of hops toward the sandwich
+              if (s.t > 2.6 && !s.carrying) { s.carrying = true; table.sandwich = false; const eater = lunchEaters()[0]; const p = eater && K.crew.posOf(eater); if (p) bubble(p.x, p.y - 17, 'bang', 2, eater); }
+              if (s.t > 3.4) { s.phase = 'out'; s.t = 0; s.dir = 1; }
             } else {
               s.x += 22 * dt; s.y -= 14 * dt;
               if (s.t > 1.5 && !this.shared) { this.shared = true; const ids = nearestIdle(249, 1, 120); if (ids.length) script(ids[0], [go(246, 476), face(-1), pose('stand', 1, 'sandwich'), emote('heart', 1.6), pose('stand', 1, null)]); }
@@ -366,7 +376,7 @@ export function createDirector(K) {
         return {
           step(dt) {
             tick -= dt;
-            if (tick <= 0) { tick = force ? 1 : 5 + K.R() * 5; recruitOne(); }
+            if (tick <= 0) { tick = force ? 0.5 : 1.5; recruitOne(); }
             if (dog.on && dogStage() >= 3 && !this.begged && used.size) { this.begged = true; dog.tasks = []; dog.task = null; dogTo(244, 479, 12); dogDo('beg', 10, { facing: 1, emote: 'heart' }); dogDo('sit', 8); }
             return force ? this.t < 90 : lunchTime();
           },
@@ -406,7 +416,7 @@ export function createDirector(K) {
         return {
           step(dt) {
             tick -= dt;
-            if (tick <= 0 && n < 4) { tick = force ? 0.5 : 3; const i = n; if (recruit(1, 460, () => [go(436 + i * 15, 484), face(0), pose('stretch', 4), pose('raise', 3), pose('bend', 3), pose('stretch', 3), emote('sun', 1.4), pose('stand', 1)]).length) n++; }
+            if (tick <= 0 && n < 4) { tick = force ? 0.5 : 1.5; const i = n; if (recruit(1, 460, () => [go(436 + i * 15, 484), face(0), pose('stretch', 4), pose('raise', 3), pose('bend', 3), pose('stretch', 3), emote('sun', 1.4), pose('stand', 1)]).length) n++; }
             return force ? this.t < 60 : V.stretch.ritual();
           },
         };
@@ -420,7 +430,7 @@ export function createDirector(K) {
           step(dt) {
             tick -= dt;
             if (tick <= 0 && n < 3) {
-              tick = force ? 0.5 : 6; const i = n;
+              tick = force ? 0.5 : 2.5; const i = n;
               const [rx, ry] = reel[i];
               if (recruit(1, 300, () => [go(229, 468), face(-1), pose('stand', 1.8), hold('mug'), go(rx, ry), face(rx < 551 ? 1 : rx > 551 ? -1 : 0), pose('drink', 16, 'mug'), emote('coffee', 1.6), pose('drink', 8, 'mug'), pose('stand', 0.5, null)]).length) n++;
             }
@@ -437,7 +447,7 @@ export function createDirector(K) {
         return {
           step(dt) {
             tick -= dt;
-            if (tick <= 0 && n < 2) { tick = force ? 0.5 : 8; const [sx, sy] = seats[n]; if (recruit(1, 676, () => [go(sx, sy), face('away'), pose('sit', 50 + K.R() * 20), emote('sun', 2), pose('sit', 12)]).length) n++; }
+            if (tick <= 0 && n < 2) { tick = force ? 0.5 : 3; const [sx, sy] = seats[n]; if (recruit(1, 676, () => [go(sx, sy), face('away'), pose('sit', 50 + K.R() * 20), emote('sun', 2), pose('sit', 12)]).length) n++; }
             if (dog.on && dogStage() >= 6 && !this.dogged && n) { this.dogged = true; dog.tasks = []; dog.task = null; dogTo(682, 472, 12); dogDo('sit', 60, { facing: -1 }); }
             return force ? this.t < 100 : V.sunset.ritual();
           },
@@ -490,7 +500,7 @@ export function createDirector(K) {
             if (raining) {
               if (this.t > 22) for (const k of kinds) K.world.cover(k, true);     // somebody off-screen got the rest
               huddleTick -= dt;
-              if (huddleTick <= 0 && huddled < 3) { huddleTick = force ? 1.5 : 6; const i = huddled; const [hx, hy] = K.world.spot('canteen', 'huddle' + (i + 1)); if (recruit(1, 240, () => [go(hx, hy), face(i === 1 ? 0 : i ? -1 : 1), pose('huddle', 24 + K.R() * 10), emote('sweat', 1.2), pose('huddle', 8), pose('stand', 0.4)]).length) huddled++; }
+              if (huddleTick <= 0 && huddled < 3) { huddleTick = force ? 1 : 2; const i = huddled; const [hx, hy] = K.world.spot('canteen', 'huddle' + (i + 1)); if (recruit(1, 240, () => [go(hx, hy), face(i === 1 ? 0 : i ? -1 : 1), pose('huddle', 24 + K.R() * 10), emote('sweat', 1.2), pose('huddle', 8), pose('stand', 0.4)]).length) huddled++; }
               dryT = 0;
               return true;
             }
@@ -678,6 +688,31 @@ export function createDirector(K) {
     dogLeave();
     return inst;
   }
+  /* builders at work on the ground, the ones carrying something first (who the dog trots after) */
+  function haulers() {
+    let rows = [];
+    try {
+      const d = K.crew.debug ? K.crew.debug() : null;
+      rows = Array.isArray(d) ? d : d && Array.isArray(d.agents) ? d.agents : [];
+    } catch (e) { rows = []; }
+    const idleNow = new Set(K.crew.idle ? K.crew.idle() : []);
+    const out = [], carrying = [];
+    for (const r of rows) {
+      const id = Array.isArray(r) ? r[0] : r && r.id;
+      if (!id || borrowed.has(id) || idleNow.has(id) || (r && r.gone) || (r && r.vehicle)) continue;
+      const p = K.crew.posOf(id);
+      if (!p || p.y <= GROUND_Y) continue;
+      (r && !Array.isArray(r) && r.carry ? carrying : out).push(id);
+    }
+    return carrying.length ? carrying : out;
+  }
+  function crewIds() {
+    let rows = [];
+    try { const d = K.crew.debug ? K.crew.debug() : null; rows = Array.isArray(d) ? d : d && Array.isArray(d.agents) ? d.agents : []; } catch (e) { rows = []; }
+    const out = [];
+    for (const r of rows) { const id = Array.isArray(r) ? r[0] : r && r.id; if (id && !(r && (r.gone || r.hidden))) out.push(id); }
+    return out;
+  }
   /* the adopted dog's day: nap by the canteen, trot after someone hauling, sleep in the doghouse at night */
   function dogRoutine() {
     if (dog.tasks.length || dog.task) return;
@@ -686,8 +721,7 @@ export function createDirector(K) {
     if ((h < 6.5 || h > 19.5 || night() > 0.7) && hasHouse) { dogTo(HOUSE[0] + 0.5, HOUSE[1] + 3, 9); dogDo('sleep', 60, { facing: 1, emote: 'zzz' }); return; }
     const r = K.R();
     if (r < 0.45) {
-      const all = K.crew.ids ? K.crew.ids() : (K.crew.debug ? (K.crew.debug() || []).map((x) => (Array.isArray(x) ? x[0] : x && x.id)) : []);
-      const busy = all.filter((id) => id && !borrowed.has(id) && !(K.crew.idle && K.crew.idle().includes(id)) && K.crew.posOf(id) && K.crew.posOf(id).y > GROUND_Y);
+      const busy = haulers();
       if (busy.length) { const id = busy[(K.R() * busy.length) | 0]; dog.tasks.push({ k: 'follow', id, dur: 25 + K.R() * 25 }); dogDo('sit', 4); return; }
     }
     if (r < 0.75) { dogTo(NAP[0] + (K.R() - 0.5) * 6, NAP[1] + K.R() * 2, 8); dogDo('sleep', 40 + K.R() * 40, { facing: -1, emote: 'zzz' }); return; }
@@ -722,6 +756,9 @@ export function createDirector(K) {
       return [go(x, y), face('away'), pose(p1, 2.6), emote(i % 3 === 0 ? 'star' : 'heart', 1.6), pose(p2, 2), face(0), pose('cheer', 1.2), pose('stand', 0.5)];
     }, null, 260);
     if (m.kind === 'pour' || m.kind === 'topped') burst = { x: m.x, y: m.y - 4, t: 0 };
+    /* everyone on site, working or not, gets a little star or heart over their head (no one stops) */
+    let k = 0;
+    for (const id of crewIds()) if (!borrowed.has(id)) { const p = K.crew.posOf(id); if (p) marks.push({ x: p.x, y: p.y - 17, icon: k % 3 === 2 ? 'heart' : 'star', t: -0.25 * (k++ % 5), dur: 2.6, followId: id }); }
   }
   let burst = null;
   K.on('milestone', milestone);
@@ -753,7 +790,7 @@ export function createDirector(K) {
     checkT -= dt;
     if (checkT <= 0) { checkT = 1; slotBeat(); rituals(); ensureResident(); }
     for (const [id, a] of [...active]) { a.t += dt; let alive = false; try { alive = a.step(dt); } catch (e) { console.error(e); } if (!alive) stop(id); }
-    stepDog(dt);
+    try { stepDog(dt); } catch (e) { console.error(e); dog.tasks = []; dog.task = null; }
     for (let i = marks.length - 1; i >= 0; i--) { marks[i].t += dt; if (marks[i].t > marks[i].dur) marks.splice(i, 1); }
     if (burst) { burst.t += dt; if (burst.t > 3) burst = null; }
     if (story.flag && !K.S.town.topped_out && (K.S.town.floors_done | 0) < story.flag.floor) story.flag = null;   // the town moved backwards (the preview): drop the flag
@@ -770,7 +807,7 @@ export function createDirector(K) {
   const SNOWMAN_E = { y: 0, draw: (ctx) => { const s = story.snow; K.art.prop(ctx, 'snowman', s.x, s.y, { stage: Math.min(3, s.stage), hat: s.stage >= 4, t: K.t }); } };
   const FLAG_E = { y: GROUND_Y - 0.5, draw: (ctx) => drawFlag(ctx) };
   const MARKS_E = { y: 600, draw: (ctx) => {
-    for (const m of marks) { let x = m.x, y = m.y; if (m.followId) { const p = K.crew.posOf(m.followId); if (p) { x = p.x; y = p.y - 17; } } K.art.emote(ctx, x, y, m.icon, m.t); }
+    for (const m of marks) { if (m.t < 0) continue; let x = m.x, y = m.y; if (m.followId) { const p = K.crew.posOf(m.followId); if (p) { x = p.x; y = p.y - 17; } } K.art.emote(ctx, x, y, m.icon, m.t); }
     if (burst) drawBurst(ctx, burst);
   } };
   const TABLE_E = { y: 474.65, draw: (ctx) => { if (table.sandwich && !table.cake) K.art.prop(ctx, 'sandwich', 249, 465.2, { t: K.t }); } };
@@ -820,11 +857,12 @@ export function createDirector(K) {
     const rise = clamp((K.t - (f.at || 0)) / 3, 0, 1);
     const pal = K.pal;
     ctx.strokeStyle = pal.steel; ctx.lineWidth = 0.4; ctx.lineCap = 'round';
-    ctx.beginPath(); ctx.moveTo(x, base); ctx.lineTo(x, base - 12); ctx.stroke();
-    const fy = base - 2.4 - rise * 9, wave = Math.sin(K.t * 3) * 0.5;
-    ctx.fillStyle = pal.flag; ctx.beginPath(); ctx.moveTo(x + 0.2, fy - 3); ctx.quadraticCurveTo(x + 2.4, fy - 3.6 + wave, x + 4.6, fy - 3 + wave); ctx.lineTo(x + 4.6, fy - 0.4 + wave); ctx.quadraticCurveTo(x + 2.4, fy - 1 + wave, x + 0.2, fy - 0.4); ctx.closePath(); ctx.fill();
-    ctx.lineWidth = 0.25; ctx.strokeStyle = pal.ink; ctx.stroke();
-    ctx.fillStyle = pal.white; ctx.beginPath(); ctx.arc(x + 2.4, fy - 1.8 + wave * 0.5, 0.55, 0, 6.3); ctx.fill();
+    ctx.lineWidth = 0.55; ctx.beginPath(); ctx.moveTo(x, base); ctx.lineTo(x, base - 17); ctx.stroke();
+    ctx.fillStyle = pal.steel; ctx.beginPath(); ctx.arc(x, base - 17.3, 0.5, 0, 6.3); ctx.fill();
+    const fy = base - 2.6 - rise * 12, wave = Math.sin(K.t * 3) * 0.6, w2 = Math.sin(K.t * 3 + 1.2) * 0.6;
+    ctx.fillStyle = pal.flag; ctx.beginPath(); ctx.moveTo(x + 0.3, fy - 4.4); ctx.quadraticCurveTo(x + 3.2, fy - 5.2 + wave, x + 6.6, fy - 4.4 + w2); ctx.lineTo(x + 6.6, fy - 0.4 + w2); ctx.quadraticCurveTo(x + 3.2, fy - 1.2 + wave, x + 0.3, fy - 0.4); ctx.closePath(); ctx.fill();
+    ctx.lineWidth = 0.3; ctx.strokeStyle = pal.ink; ctx.stroke();
+    ctx.fillStyle = pal.white; ctx.beginPath(); ctx.moveTo(x + 3.4, fy - 3.6 + wave * 0.6); for (let k = 1; k < 10; k++) { const t = -Math.PI / 2 + k * Math.PI / 5, r = k % 2 ? 0.6 : 1.4; ctx.lineTo(x + 3.4 + Math.cos(t) * r, fy - 2.3 + wave * 0.6 + Math.sin(t) * r); } ctx.closePath(); ctx.fill();
   }
   function drawBurst(ctx, b) {
     /* hats-off sparkle over the slab: a ring of little stars that rise and fade */

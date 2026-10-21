@@ -6,8 +6,9 @@
    glass A-frame, rebar and nail boxes); the site trailer with its steps; the
    canteen (a striped pop-up awning, the coffee urn, a picnic table, string
    lights); the lumber yard (a cantilever rack and the timber stack) and the
-   open prefab shed (workbench, saw table, trestles, the CLT panel A-frame);
-   brick pallets, the sand pile and the mortar mixer; the pad (the building
+   open prefab shed (workbench, pegboard, nail kegs, the CLT panel A-frame;
+   the crew draws the sawhorses and the mortar mixer because it works them);
+   brick pallets, the sand pile and cement bags; the pad (the building
    module's); the toolshed with its stakes and wire spools, the john, the
    dumpster and a cable-reel table; the side gate; a patch of lawn with a
    bench facing the lake under a big maple; and the old 1894 brick mill next
@@ -31,7 +32,8 @@
        collect(list)        push { y, draw(ctx) } for things standing in the yard that need depth
                             sorting with people (trailer, canteen, stacks, sheds, john, bench, tree),
                             the fence and both gates, and passers-by on the sidewalk and bike lane
-       drawFront(ctx)       the far sidewalk's acorn lamps and street trees (in front of everything)
+       drawFront(ctx)       the crew's street traffic (K.crew.drawStreet, if it has one), then the far
+                            sidewalk's acorn lamps and street trees (in front of everything)
        pile(kind) -> n      how full a material stack is (0..5); take(kind) / add(kind) change it
                             kinds: lumber, panels, brick, glass, copper, nails, rebar, stakes
                             (aliases: beam, formwork -> lumber; panel -> panels; bricks -> brick;
@@ -183,6 +185,8 @@ export function createWorld(K) {
       rut(off); g.strokeStyle = sn ? pal.snowShade : rgba(dark(base, 0.3), 0.55); g.lineWidth = 1.5; g.stroke();
       rut(off + 0.55); g.strokeStyle = sn ? rgba(pal.white, 0.6) : rgba(light(base, 0.25), 0.5); g.lineWidth = 0.35; g.stroke();
     }
+    /* sawdust where the crew cuts (the crew draws its sawhorses and the mortar mixer: they work) */
+    if (!sn) for (const [sx, sy, rx] of [[302, 474.4, 4], [291, 481.4, 3], [334, 477, 6]]) { if (sx + rx < x0 || sx - rx > x1) continue; g.fillStyle = rgba(light(pal.timber, 0.35), 0.75); g.beginPath(); g.ellipse(sx, sy, rx, 0.9, 0, 0, 6.3); g.fill(); }
     /* a worn footpath from the canteen to the pad */
     g.beginPath(); g.moveTo(222, gy + 16); g.bezierCurveTo(300, gy + 13, 340, gy + 17, 404, gy + 14);
     g.strokeStyle = sn ? rgba(pal.snowShade, 0.7) : rgba(light(base, 0.22), 0.55); g.lineWidth = 3; g.stroke();
@@ -267,13 +271,6 @@ export function createWorld(K) {
   }
 
   /* ------------------------------------------------ back-line structures */
-  function drawBackLine(g, x0, x1) {
-    if (x1 > 88 && x0 < 128) drawContainer(g);
-    if (x1 > 140 && x0 < 166) drawTower(g);
-    if (x1 > 264 && x0 < 296) drawRack(g);
-    if (x1 > 288 && x0 < 368) drawShed(g);
-    if (x1 > 720) drawMill(g, x0, x1);
-  }
   function drawContainer(g) {
     const pal = P(), x = 90, y = 437, w = 34, h = 15;
     const c = mix(lit('#3d6f86'), pal.shed, 0.25);
@@ -591,31 +588,6 @@ export function createWorld(K) {
     g.closePath(); ink(g, 0.4);
     if (k > 0.9) for (const gx of [x + 1, x + w - 1]) { g.fillStyle = lit('#f2efe6'); g.beginPath(); g.arc(gx, bot - 0.6, 0.35, 0, 6.3); g.fill(); }
   }
-  function drawSaw(g) {
-    const pal = P(), y0 = 474;
-    shadow(g, 300.5, y0 + 0.2, 7, 0.9);
-    g.fillStyle = rgba(light(pal.timber, 0.35), 0.8); g.beginPath(); g.ellipse(302, y0 - 0.2, 3, 0.7, 0, 0, 6.3); g.fill();   // sawdust
-    line(g, 296.5, y0, 298.5, y0 - 6, dark(pal.steel, 0.3), 0.5); line(g, 304.5, y0, 302.5, y0 - 6, dark(pal.steel, 0.3), 0.5);
-    box(g, 292.5, y0 - 6.8, 16, 0.9, pal.steel, 0.2, { lw: 0.3, shade: false });          // the extension arms
-    box(g, 296, y0 - 7.6, 9, 1.6, light(pal.steel, 0.1), 0.3, { lw: 0.35 });
-    /* the mitre saw: a yellow motor, a blade guard, the handle */
-    const yel = lit('#e3b52a');
-    g.fillStyle = mix(pal.steel, pal.white, 0.3); g.beginPath(); g.arc(300.5, y0 - 10.3, 2.4, Math.PI * 0.95, Math.PI * 2.05); g.closePath(); g.fill(); ink(g, 0.3);
-    box(g, 301.4, y0 - 13.6, 3.6, 2.6, yel, 0.9, { lw: 0.35 });
-    line(g, 300.5, y0 - 7.6, 300.5, y0 - 12.4, pal.ink, 0.35);
-    line(g, 304.6, y0 - 13, 306.2, y0 - 12, pal.ink, 0.6);
-    snowCap(g, 296, y0 - 7.6, 9, 0.5);
-  }
-  function drawTrestle(g) {
-    const pal = P(), y0 = 476;
-    for (const cx of [321, 332]) {
-      shadow(g, cx, y0 + 0.2, 3.5, 0.6, 0.15);
-      line(g, cx - 2.6, y0, cx - 1.2, y0 - 5.4, pal.timberShade, 0.6); line(g, cx + 2.6, y0, cx + 1.2, y0 - 5.4, pal.timberShade, 0.6);
-      line(g, cx - 1.9, y0 - 2.4, cx + 1.9, y0 - 2.4, pal.timberShade, 0.4);
-      box(g, cx - 3, y0 - 6.4, 6, 1.2, pal.timber, 0.25, { lw: 0.35 });
-      snowCap(g, cx - 3, y0 - 6.4, 6, 0.5);
-    }
-  }
   function drawPanels(g) {
     const pal = P(), n = piles.panels, cx = 348.5, y0 = 471;
     shadow(g, cx, y0 + 0.2, 9, 1);
@@ -714,22 +686,6 @@ export function createWorld(K) {
     /* cement bags */
     const bag = mix(pal.white, pal.timber, 0.25);
     for (const [bx, by] of [[386.4, 462.2], [390.6, 462.2], [388.5, 460.5]]) { rr(g, bx - 2, by - 1.7, 4, 1.7, 0.7); g.fillStyle = bag; g.fill(); ink(g, 0.3); g.fillStyle = rgba(lit('#3d7bd9'), 0.7); g.fillRect(bx - 0.6, by - 1.3, 1.2, 0.8); }
-  }
-  function drawMixer(g) {
-    const pal = P(), y0 = 476, cx = 396;
-    shadow(g, cx, y0 + 0.2, 6, 0.9);
-    line(g, cx - 6.5, y0 - 2, cx - 3, y0 - 3.4, dark(pal.steel, 0.2), 0.5);         // tow bar
-    box(g, cx - 3.4, y0 - 4.2, 7, 1.4, dark(pal.steel, 0.15), 0.3, { lw: 0.3 });      // frame
-    box(g, cx + 1.4, y0 - 7.6, 3.4, 3.4, dark(pal.fork, 0.1), 0.4, { lw: 0.3 });      // engine
-    for (const wx of [cx - 1.5, cx + 2.4]) { g.fillStyle = pal.tire; g.beginPath(); g.arc(wx, y0 - 1.6, 1.6, 0, 6.3); g.fill(); g.fillStyle = pal.steel; g.beginPath(); g.arc(wx, y0 - 1.6, 0.6, 0, 6.3); g.fill(); }
-    /* the drum, tipped toward you */
-    g.save(); g.translate(cx - 1.4, y0 - 8.6); g.rotate(-0.42);
-    g.beginPath(); g.moveTo(-4, 2.6); g.lineTo(-3.2, -2.6); g.lineTo(3.2, -2.6); g.lineTo(4, 2.6); g.quadraticCurveTo(0, 4.4, -4, 2.6); g.closePath();
-    g.fillStyle = pal.fork; g.fill(); ink(g, 0.35);
-    g.fillStyle = rgba(pal.white, 0.3); g.fillRect(-2.8, -2, 0.8, 4);
-    g.fillStyle = dark(pal.fork, 0.25); g.fillRect(-3.4, 0.2, 6.9, 0.5);
-    g.beginPath(); g.ellipse(0, -2.6, 3.2, 0.9, 0, 0, 6.3); g.fillStyle = pal.interior; g.fill(); ink(g, 0.3);
-    g.restore();
   }
   const shedOpen = () => working() && !(night() > 0.8 && !K.S.crew.length);
   function drawToolshed(g) {
@@ -1018,10 +974,10 @@ export function createWorld(K) {
   }
 
   /* ------------------------------------------ the far-side foreground */
-  function drawFrontStrip(g, x0, x1) {
+  function drawFrontStrip(g, x0, x1, only) {
     const pal = P(), y = STREET_Y + 19.4, s = season();
     /* street trees on the far side: only their crowns rise into the bottom of the frame */
-    if (s !== 'bare' && s !== 'winter') {
+    if (only !== 'lamps' && s !== 'bare' && s !== 'winter') {
       for (let x = 30; x < WW; x += 160) {
         const tx = x + (x > 380 && x < 560 ? 70 : 0);
         if (tx < x0 - 14 || tx > x1 + 14) continue;
@@ -1035,7 +991,7 @@ export function createWorld(K) {
       }
     }
     /* acorn lamps, Burlington's street lamp */
-    for (let x = 70; x < WW; x += 110) {
+    for (let x = 70; x < WW && only !== 'trees'; x += 110) {
       if (x < x0 - 4 || x > x1 + 4) continue;
       const on = night() > 0.35;
       box(g, x - 0.9, y - 1.6, 1.8, 2, dark(pal.steel, 0.35), 0.3, { lw: 0.25, shade: false });
@@ -1165,12 +1121,9 @@ export function createWorld(K) {
     [470.6, S('w:lumber', 266, 452, 28, 21, drawLumber, () => piles.lumber * 100 + Math.round(tarp.lumber * 8))],
     [465, S('w:shedpostL', 290, 429, 5, 37, (g) => shedPost(g, 291.6), () => 0)],
     [465, S('w:shedpostR', 361, 429, 5, 37, (g) => shedPost(g, 362.8), () => 0)],
-    [474, S('w:saw', 291, 458, 18, 18, drawSaw, () => 0)],
-    [476, S('w:trestle', 316, 468, 20, 10, drawTrestle, () => 0)],
     [471, S('w:panels', 336, 452, 24, 21, drawPanels, () => piles.panels * 100 + Math.round(tarp.panels * 8))],
     [471, S('w:bricks', 362, 452, 26, 21, drawBricks, () => piles.brick * 100 + Math.round(tarp.brick * 8))],
     [459.5, S('w:sand', 382, 444, 22, 24, drawSand, () => 0)],
-    [476, S('w:mixer', 388, 464, 16, 14, drawMixer, () => 0)],
     [470.8, S('w:glass', 101, 455, 22, 18, drawGlass, () => piles.glass)],
     [471, S('w:rebar', 137, 462, 28, 11, drawRebar, () => piles.rebar)],
     [479, S('w:nails', 155, 470, 15, 11, drawNails, () => piles.nails)],
@@ -1218,11 +1171,23 @@ export function createWorld(K) {
     for (let i = 0; i < passers.length; i++) { const e = passEntries[i]; e.q = passers[i]; e.y = passers[i].y; list.push(e); }
   }
 
+  /* the back line, one tight cache each (a single wide layer was mostly empty pixels) */
+  const BACK = [
+    ['w:container', 87, 434, 40, 20, (g) => drawContainer(g), () => seasonCode()],
+    ['w:tower', 140, 400, 24, 54, (g) => drawTower(g), () => (night() > 0.3 && working() ? 1 : 0) + seasonCode() * 10],
+    ['w:rack', 262, 426, 33, 26, (g) => drawRack(g), () => seasonCode()],
+    ['w:shed', 287, 424, 82, 30, (g) => drawShed(g), () => seasonCode() + Math.min(3, piles.nails) * 100],
+    ['w:mill', 722, 336, WW - 722, 121, (g, x0, x1) => drawMill(g, x0, x1), () => seasonCode()],
+  ];
+  const FRONT = [];
+  for (let x = 70; x < WW; x += 110) FRONT.push(['w:lamp' + x, x - 3, STREET_Y - 10, 6, 34, (g, x0, x1) => drawFrontStrip(g, x0, x1, 'lamps')]);
+  for (let x = 30; x < WW; x += 160) { const tx = x + (x > 380 && x < 560 ? 70 : 0); FRONT.push(['w:stree' + x, tx - 15, STREET_Y + 9, 30, 14, (g, x0, x1) => drawFrontStrip(g, x0, x1, 'trees')]); }
   /* --------------------------------------------------- draw entries */
   function drawBack(ctx) {
     if (K.director && K.director.drawBack) K.director.drawBack(ctx);
-    K.blit('w:ground', 0, GROUND_Y - 9, WW, WH - GROUND_Y + 9, drawGround, { ver: seasonCode() });
-    K.blit('w:back', 84, 330, WW - 84, GROUND_Y + 8 - 330, drawBackLine, { ver: (night() > 0.3 && working() ? 1 : 0) + seasonCode() * 10 + Math.min(3, piles.nails) * 100 });
+    /* nothing below the far sidewalk is ever in view (the camera's bottom edge stops there) */
+    K.blit('w:ground', 0, GROUND_Y - 9, WW, STREET_Y + 22 - GROUND_Y + 9, drawGround, { ver: seasonCode() });
+    for (const b of BACK) K.blit(b[0], b[1], b[2], b[3], b[4], b[5], { ver: b[6]() });
     /* lights of the night */
     if (night() > 0.25) {
       lights(186, 448, 10, 0.5); lights(196, 448, 8, 0.45);
@@ -1232,8 +1197,11 @@ export function createWorld(K) {
       if (K.S.whistle) lights(209, 455, 9, 0.5);
     }
   }
-  function drawFront() {
-    K.blit('w:front', 0, STREET_Y - 14, WW, 56, drawFrontStrip, { ver: seasonCode() });
+  function drawFront(ctx) {
+    /* the crew's street traffic (a truck pulling in) passes in front of the fence and the people on
+       the sidewalk and behind the far-side lamps and trees */
+    if (K.crew && K.crew.drawStreet) K.crew.drawStreet(ctx);
+    for (const f of FRONT) K.blit(f[0], f[1], f[2], f[3], f[4], f[5], { ver: seasonCode() });
     if (night() > 0.3) for (let x = 70; x < WW; x += 110) lights(x, STREET_Y - 6, 20, 0.5);
   }
 
