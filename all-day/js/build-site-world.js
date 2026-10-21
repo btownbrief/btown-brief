@@ -185,6 +185,27 @@ export function createWorld(K) {
       rut(off); g.strokeStyle = sn ? pal.snowShade : rgba(dark(base, 0.3), 0.55); g.lineWidth = 1.5; g.stroke();
       rut(off + 0.55); g.strokeStyle = sn ? rgba(pal.white, 0.6) : rgba(light(base, 0.25), 0.5); g.lineWidth = 0.35; g.stroke();
     }
+    /* the mixer truck's tracks, backing in from the side gate to the front of the pad */
+    const rut2 = (off) => { g.beginPath(); g.moveTo(642 + off, fy + 1); g.bezierCurveTo(636 + off, gy + 34, 610, gy + 25 + off, 580, gy + 25 + off); g.lineTo(412, gy + 25.5 + off * 0.8); };
+    for (const off of [-2.4, 2.4]) {
+      rut2(off); g.strokeStyle = sn ? pal.snowShade : rgba(dark(base, 0.28), 0.4); g.lineWidth = 1.3; g.stroke();
+    }
+    /* weeds along the foot of the fence, and a few offcuts lying about */
+    if (!sn) {
+      for (let cx = Math.floor(x0 / 4); cx <= Math.ceil(x1 / 4); cx++) {
+        if (cx * 4 > 646) break;
+        const r = rng(hash('wd' + cx)); if (r() < 0.45) continue;
+        const x = cx * 4 + r() * 4, y = fy - 0.6 - r() * 1.6;
+        g.strokeStyle = r() < 0.5 ? pal.grassDark : pal.grass; g.lineWidth = 0.35;
+        g.beginPath(); g.moveTo(x, y); g.lineTo(x - 0.6, y - 1.4 - r()); g.moveTo(x + 0.3, y); g.lineTo(x + 0.5, y - 1.8 - r()); g.moveTo(x + 0.6, y); g.lineTo(x + 1.3, y - 1.1); g.stroke();
+      }
+    }
+    for (const [ox, oy, len, rot] of [[352, 487, 7, 0.1], [446, 491, 5, -0.15], [512, 489, 6, 0.3], [182, 486, 6, -0.2], [596, 488, 5, 0.2]]) {
+      if (ox + len < x0 || ox - len > x1) continue;
+      g.save(); g.translate(ox, oy); g.rotate(rot);
+      box(g, -len / 2, -0.6, len, 1.2, sn ? pal.snowShade : pal.timber, 0.2, { lw: 0.3, shade: false });
+      g.restore();
+    }
     /* sawdust where the crew cuts (the crew draws its sawhorses and the mortar mixer: they work) */
     if (!sn) for (const [sx, sy, rx] of [[302, 474.4, 4], [291, 481.4, 3], [334, 477, 6]]) { if (sx + rx < x0 || sx - rx > x1) continue; g.fillStyle = rgba(light(pal.timber, 0.35), 0.75); g.beginPath(); g.ellipse(sx, sy, rx, 0.9, 0, 0, 6.3); g.fill(); }
     /* a worn footpath from the canteen to the pad */
@@ -1113,7 +1134,27 @@ export function createWorld(K) {
   /* ------------------------------------------------- the sorted list */
   const S = (key, x, y, w, h, fn, verFn) => ({ key, x, y, w, h, fn, verFn });
   function shedPost(g, x) { const pal = P(); box(g, x - 0.8, 431, 1.6, 34, pal.timberShade, 0.3, { lw: 0.35 }); box(g, x - 1.4, 464.2, 2.8, 0.9, pal.concreteShade, 0.2, { lw: 0.25, shade: false }); }
+  function drawCones(g, list) {
+    const pal = P();
+    for (const [x, y] of list) {
+      shadow(g, x, y + 0.2, 2, 0.5, 0.18);
+      g.beginPath(); g.moveTo(x - 1.1, y - 0.6); g.lineTo(x - 0.25, y - 5.2); g.lineTo(x + 0.25, y - 5.2); g.lineTo(x + 1.1, y - 0.6); g.closePath(); g.fillStyle = pal.netting; g.fill(); ink(g, 0.3);
+      g.fillStyle = pal.white; g.beginPath(); g.moveTo(x - 0.75, y - 2.4); g.lineTo(x - 0.5, y - 3.5); g.lineTo(x + 0.5, y - 3.5); g.lineTo(x + 0.75, y - 2.4); g.closePath(); g.fill();
+      box(g, x - 1.8, y - 0.8, 3.6, 0.8, dark(pal.netting, 0.25), 0.2, { lw: 0.3, shade: false });
+    }
+  }
+  function drawHose(g) {
+    const pal = P(), x = 584, y = 476, c = lit('#3fae5a');
+    shadow(g, x, y + 0.2, 4, 0.8, 0.15);
+    g.strokeStyle = c; g.lineWidth = 0.6;
+    for (let i = 0; i < 3; i++) { g.beginPath(); g.ellipse(x, y - 1 - i * 0.5, 3.2 - i * 0.4, 1.1 - i * 0.1, 0, 0, 6.3); g.stroke(); }
+    g.beginPath(); g.moveTo(x + 3, y - 1); g.quadraticCurveTo(x + 7, y + 1.5, x + 10, y - 0.5); g.stroke();
+    g.fillStyle = pal.steel; g.fillRect(x + 9.6, y - 1.1, 1.2, 0.8);
+  }
   const ITEMS = [
+    [486.5, S('w:conesL', 398, 478, 12, 10, (g) => drawCones(g, [[401, 486.5], [406, 487.5]]), () => 0)],
+    [486.5, S('w:conesR', 526, 478, 8, 10, (g) => drawCones(g, [[530, 486.5]]), () => 0)],
+    [476.2, S('w:hose', 579, 472, 14, 6, drawHose, () => 0)],
     [460, S('w:trailer', 174, 436, 46, 33, drawTrailer, () => (K.S.whistle ? 1 : 0) + (night() > 0.3 ? 2 : 0) + seasonCode() * 10)],
     [471, S('w:canteen', 216, 434, 50, 40, drawCanteen, () => (night() > 0.3 ? 1 : 0))],
     [465.5, S('w:urn', 219, 448, 18, 19, drawUrn, () => 0)],
@@ -1139,7 +1180,7 @@ export function createWorld(K) {
   ].map(([y, s]) => ({ y, draw: (ctx) => K.blit(s.key, s.x, s.y, s.w, s.h, (g) => s.fn(g), { ver: s.verFn() }) }));
   function drawHedge(g) {
     const pal = P(), y0 = 497.6, s = season();
-    const c = s === 'winter' ? pal.snowShade : pal.treeDark;
+    const c = s === 'winter' || s === 'bare' ? pal.evergreen : pal.treeDark;
     g.fillStyle = c;
     g.beginPath(); g.moveTo(FENCE_END, y0);
     for (let x = FENCE_END; x <= WW + 2; x += 3) g.quadraticCurveTo(x + 1.5, y0 - 6.4 - Math.sin(x * 0.7) * 0.8, x + 3, y0 - 5.2);
@@ -1192,7 +1233,7 @@ export function createWorld(K) {
     if (night() > 0.25) {
       lights(186, 448, 10, 0.5); lights(196, 448, 8, 0.45);
       lights(241, 452, 16, 0.4); lights(328, 438, 12, 0.45);
-      if (working()) lights(152, 406, 52, 0.55);
+      if (working()) { lights(152, 406, 52, 0.55); lights(152, 470, 40, 0.3); }
       lights(843, 446, 8, 0.4); lights(780, 425, 10, 0.3);
       if (K.S.whistle) lights(209, 455, 9, 0.5);
     }

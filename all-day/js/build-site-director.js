@@ -401,8 +401,9 @@ export function createDirector(K) {
           },
           collect(list) {
             if (table.cake) list.push({ y: 474.7, draw: (ctx) => {
-              K.art.prop(ctx, 'cake', 246, 465.2, { candle: true, slices: table.cake.slices, t: K.t });
-              if (table.cake.slices >= 8 && night() > 0.2) K.lights.push({ x: 246, y: 459, r: 9, a: 0.5, color: EMIT.candle });
+              const c = table.cake;
+              if (c.slices > 0) K.art.prop(ctx, 'cake', 246, 465.2, { candle: c.slices >= 8, slices: c.slices, t: K.t });
+              if (c.slices < 8) { const pal = K.pal; for (const px of [239.5, 242.5, 250, 253]) { ctx.fillStyle = pal.white; ctx.beginPath(); ctx.ellipse(px, 465.4, 1.1, 0.35, 0, 0, 6.3); ctx.fill(); ctx.fillStyle = lit('#f0a8b8'); ctx.fillRect(px - 0.3, 465, 0.6, 0.3); } }
             } });
           },
           end() { table.cake = null; },
@@ -798,13 +799,31 @@ export function createDirector(K) {
   }
 
   /* things drawn in the yard, depth-sorted */
+  /* the art module's dog knows walk, sit, sleep, wag and stand; the richer name rides along as `act` */
+  const DOG_POSE = { trot: 'walk', sniff: 'stand', beg: 'sit', eat: 'stand', play: 'wag' };
+  const dogO = { facing: 1, t: 0, pose: 'stand', act: 'stand', bandana: false, coat: '' };
   const DOG_E = { y: 0, draw: (ctx) => {
-    K.art.prop(ctx, 'dog', dog.x, dog.y, { facing: dog.facing, t: dog.t, pose: dog.pose, bandana: dog.bandana, coat: lit(DOG_COAT) });
+    dogO.facing = dog.facing === 'away' ? 1 : dog.facing; dogO.away = dog.facing === 'away'; dogO.t = dog.pose === 'trot' ? dog.t * 1.6 : dog.t;
+    dogO.pose = DOG_POSE[dog.pose] || dog.pose; dogO.act = dog.pose; dogO.bandana = dog.bandana; dogO.coat = lit(DOG_COAT);
+    K.art.prop(ctx, 'dog', dog.x, dog.y, dogO);
     if (dog.emote) K.art.emote(ctx, dog.x, dog.y - 9, dog.emote.icon, dog.emote.t);
   } };
   const HOUSE_E = { y: HOUSE[1] - 0.2, draw: (ctx) => K.art.prop(ctx, 'doghouse', HOUSE[0], HOUSE[1], { name: false, snow: snowy() }) };
   const POT_E = { y: ZONES.office.spots.pot[1], draw: (ctx) => drawPot(ctx, ZONES.office.spots.pot[0], ZONES.office.spots.pot[1], potStage()) };
-  const SNOWMAN_E = { y: 0, draw: (ctx) => { const s = story.snow; K.art.prop(ctx, 'snowman', s.x, s.y, { stage: Math.min(3, s.stage), hat: s.stage >= 4, t: K.t }); } };
+  const SNOWMAN_E = { y: 0, draw: (ctx) => { const s = story.snow; if (s.stage >= 4) K.art.prop(ctx, 'snowman', s.x, s.y, { t: K.t, hat: true }); else drawSnowBalls(ctx, s.x, s.y, s.stage); } };
+  /* the snowman going up, a ball at a time (the art module's snowman is the finished one, hat and all) */
+  function drawSnowBalls(ctx, x, y, n) {
+    const pal = K.pal;
+    ctx.fillStyle = rgba(pal.ink, 0.15); ctx.beginPath(); ctx.ellipse(x, y + 0.2, 3.4, 0.8, 0, 0, 6.3); ctx.fill();
+    const balls = [[-2.9, 3], [-7.3, 2.2], [-10.8, 1.6]];
+    for (let i = 0; i < Math.min(3, n); i++) {
+      const [by, r] = balls[i];
+      ctx.beginPath(); ctx.arc(x, y + by, r, 0, 6.3); ctx.fillStyle = pal.snowShade; ctx.fill();
+      ctx.beginPath(); ctx.arc(x - r * 0.12, y + by - r * 0.12, r * 0.86, 0, 6.3); ctx.fillStyle = pal.snow; ctx.fill();
+      ctx.beginPath(); ctx.arc(x, y + by, r, 0, 6.3); ctx.lineWidth = 0.35; ctx.strokeStyle = pal.ink; ctx.stroke();
+    }
+    if (n >= 3) { ctx.fillStyle = pal.ink; ctx.beginPath(); ctx.arc(x - 0.55, y - 11.1, 0.22, 0, 6.3); ctx.arc(x + 0.55, y - 11.1, 0.22, 0, 6.3); ctx.fill(); ctx.fillStyle = lit('#f07f2a'); ctx.beginPath(); ctx.moveTo(x, y - 10.7); ctx.lineTo(x + 1.9, y - 10.4); ctx.lineTo(x, y - 10.2); ctx.closePath(); ctx.fill(); }
+  }
   const FLAG_E = { y: GROUND_Y - 0.5, draw: (ctx) => drawFlag(ctx) };
   const MARKS_E = { y: 600, draw: (ctx) => {
     for (const m of marks) { if (m.t < 0) continue; let x = m.x, y = m.y; if (m.followId) { const p = K.crew.posOf(m.followId); if (p) { x = p.x; y = p.y - 17; } } K.art.emote(ctx, x, y, m.icon, m.t); }
