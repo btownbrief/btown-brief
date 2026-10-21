@@ -396,7 +396,7 @@ export function createArt(K) {
     signal(t) {
       const mode = Math.floor(t / 3.5) % 2, c = t * TAU * 1.4;
       if (R.view === SIDE) {
-        if (mode === 0) { R.a1x = 2.7 + Math.cos(c) * 0.35; R.a1y = -12.3 + Math.sin(c) * 0.35; }
+        if (mode === 0) { R.a1x = 3.9 + Math.cos(c) * 0.3; R.a1y = -10.8 + Math.sin(c) * 0.3; }
         else { R.a1x = 3.6 + Math.cos(c) * 0.3; R.a1y = -6.3 + Math.sin(c) * 0.3; }
         R.a0x = -0.6; R.a0y = -5.8;
       } else {
@@ -408,7 +408,7 @@ export function createArt(K) {
     guide(t) {
       const sw = Math.sin(t * 1.3) * 0.3;
       R.tx = sw; R.lean = -0.06; R.hdy = -0.15; R.look = 1;
-      if (R.view === SIDE) { R.a1x = 3.0; R.a1y = -12.2; R.a0x = 2.2; R.a0y = -12.5; R.e0 = R.e1 = 1; }
+      if (R.view === SIDE) { R.a1x = 4.0; R.a1y = -10.9; R.a0x = 3.5; R.a0y = -11.1; R.e0 = R.e1 = 1; }
       else { R.a1x = 3.4; R.a1y = -12.3; R.a0x = -3.4; R.a0y = -12.3; }
       const st = Math.sin(t * 1.3 + 1) * 0.25; R.f0x -= st; R.f1x += st;
     },
@@ -459,7 +459,7 @@ export function createArt(K) {
     wave(t) {
       breathe(t); R.eyes = 2;
       const s = Math.sin(t * TAU / 0.5);
-      if (R.view === SIDE) { R.a1x = 2.9 + s * 0.6; R.a1y = -12.1 + Math.abs(s) * 0.2; R.e1 = 1; }
+      if (R.view === SIDE) { R.a1x = 3.9 + s * 0.25; R.a1y = -10.8 - s * 0.45; R.e1 = 1; }
       else { R.a1x = 3.9 + s * 0.6; R.a1y = -12.0 + Math.abs(s) * 0.2; R.e1 = -1; }
       R.tilt = s * 0.04;
     },
@@ -508,7 +508,7 @@ export function createArt(K) {
     stretch(t) {
       const u = (t / 3.4) % 1, k = smooth(seg(u, 0, 0.3)) * (1 - smooth(seg(u, 0.62, 0.85)));
       R.lean = -0.12 * k; R.tilt = -0.15 * k; R.eyes = k > 0.6 ? 1 : 0; R.mouth = k > 0.6 ? 1 : 0;
-      if (R.view === SIDE) { R.a1x = lerp(0.8, 2.4, k); R.a1y = lerp(-5.2, -12.6, k); R.a0x = lerp(-0.6, -1.6, k); R.a0y = lerp(-5.2, -12.4, k); }
+      if (R.view === SIDE) { R.a1x = lerp(0.8, 3.7, k); R.a1y = lerp(-5.2, -10.9, k); R.a0x = lerp(-0.6, -3.3, k); R.a0y = lerp(-5.2, -11.0, k); }
       else { R.a0x = lerp(-2.3, -3.3, k); R.a0y = lerp(-5.3, -12.5, k); R.a1x = lerp(2.3, 3.3, k); R.a1y = lerp(-5.3, -12.5, k); }
       R.hy = -5.25 - 0.2 * k;
     },
@@ -516,14 +516,14 @@ export function createArt(K) {
       const ph = (t / 0.7) % 1, j = Math.max(0, Math.sin(ph * TAU));
       R.ty = -1.4 * j; R.eyes = 2; R.mouth = 1;
       const sh = Math.sin(t * 20) * 0.15;
-      if (R.view === SIDE) { R.a1x = 2.8 + sh; R.a1y = -12.3; R.a0x = -1.6 - sh; R.a0y = -12.2; R.e0 = R.e1 = 1; }
+      if (R.view === SIDE) { R.a1x = 3.9 + sh; R.a1y = -10.9; R.a0x = -3.4 - sh; R.a0y = -11.0; R.e0 = R.e1 = 1; }
       else { R.a0x = -3.7 + sh; R.a0y = -12.0; R.a1x = 3.7 - sh; R.a1y = -12.0; }
       R.f0y = ANK - j * 0.5; R.f1y = ANK - j * 0.5; R.hy = -5.25 + j * 0.1;
     },
     nod(t) { breathe(t); const n = Math.max(0, Math.sin(t * TAU / 0.8)); R.hdy = n * 0.3; R.tilt = n * 0.16; R.eyes = n > 0.7 ? 2 : 0; },
     raise(t) {
       breathe(t);
-      if (R.view === SIDE) { R.a1x = 2.4; R.a1y = -12.6; R.a0x = 2.2; R.a0y = -9.9; R.e0 = 1; }
+      if (R.view === SIDE) { R.a1x = 3.8; R.a1y = -10.9; R.a0x = 2.2; R.a0y = -9.9; R.e0 = 1; }
       else { R.a1x = 3.6; R.a1y = -12.3; R.a0x = 0.6; R.a0y = -9.6; R.e0 = -1; }
       R.mouth = 2; R.tool0 = 'whistle'; R.fx = 10; R.fxT = t;
     },
@@ -676,19 +676,24 @@ export function createArt(K) {
     /* front view: hanging arms go before the head, raised ones after */
     /* arms go behind the big head unless the hand is at the face (drinking, eating, the whistle) */
     const held = layer === 'mid' || layer === 'hand';
-    const a0late = atFace(a0x, a0y, hcx, hcy, held), a1late = atFace(a1x, a1y, hcx, hcy, held);
-    if ((side || view === FRONT) && !a1late) drawArm(ctx, s1x, s1y, a1x, a1y, R.e1, L.shirt, L, R.tool, R.tAng, false);
-    if (view === FRONT && !a0late) drawArm(ctx, s0x, s0y, a0x, a0y, R.e0, L.shirt, L, R.tool0, R.t0Ang, false);
+    /* arm order: at the face (drinking, the whistle) or holding something = over the head;
+       raised = behind the head (drawn after it, clipped outside the head); otherwise before the head */
+    const a0k = view === SIDE ? -1 : armKind(a0x, a0y, s0y, hcx, hcy, held), a1k = armKind(a1x, a1y, s1y, hcx, hcy, held);
+    if (a1k === 0) drawArm(ctx, s1x, s1y, a1x, a1y, R.e1, L.shirt, L, R.tool, R.tAng, false);
+    if (a0k === 0) drawArm(ctx, s0x, s0y, a0x, a0y, R.e0, L.shirt, L, R.tool0, R.t0Ang, false);
     /* head */
     drawHead(ctx, hcx, hcy, L, view, f, bare, o);
-    if (view === BACK) { drawArm(ctx, s0x, s0y, a0x, a0y, R.e0, L.shirt, L, null, 0, false); drawArm(ctx, s1x, s1y, a1x, a1y, R.e1, L.shirt, L, null, 0, false); }
+    if (a0k === 2 || a1k === 2) {
+      ctx.save(); ctx.beginPath(); ctx.rect(hcx - 30, hcy - 30, 60, 60); ctx.arc(hcx, hcy, HR * HS + 0.15, 0, TAU); ctx.clip('evenodd');
+      if (a0k === 2) drawArm(ctx, s0x, s0y, a0x, a0y, R.e0, L.shirt, L, R.tool0, R.t0Ang, false);
+      if (a1k === 2) drawArm(ctx, s1x, s1y, a1x, a1y, R.e1, L.shirt, L, R.tool, R.tAng, false);
+      ctx.restore();
+    }
     if (layer === 'mid') drawCarry(ctx, carry, 'mid', o, t, view, scx, scy);
     if (R.item === 'crate') drawItem(ctx, 'crate', a1x, a1y);
     if (R.item === 'mound') drawItem(ctx, 'mound', 3.3 + ox, 0);
-    if (view === FRONT) {
-      if (a0late) drawArm(ctx, s0x, s0y, a0x, a0y, R.e0, L.shirt, L, R.tool0, R.t0Ang, false);
-      if (a1late) drawArm(ctx, s1x, s1y, a1x, a1y, R.e1, L.shirt, L, R.tool, R.tAng, false);
-    } else if (side && a1late) drawArm(ctx, s1x, s1y, a1x, a1y, R.e1, L.shirt, L, R.tool, R.tAng, false);
+    if (a0k === 1) drawArm(ctx, s0x, s0y, a0x, a0y, R.e0, L.shirt, L, R.tool0, R.t0Ang, false);
+    if (a1k === 1) drawArm(ctx, s1x, s1y, a1x, a1y, R.e1, L.shirt, L, R.tool, R.tAng, false);
     if (layer === 'hand') drawCarry(ctx, carry, 'hand', o, t, view);
     /* effects */
     if (R.fx) drawFx(ctx, R.fx, R.fxT, a1x, a1y, hcx, hcy, view);
@@ -697,7 +702,12 @@ export function createArt(K) {
     else if (R.item === 'ballHand' && (!carry || carry === 'snowball')) drawHandItem(ctx, 'snowball', a1x, a1y, t, view, o);
   }
 
-  function atFace(x, y, hcx, hcy, held) { return (Math.abs(x - hcx) < 2.3 && y > hcy - 2.4 && y < hcy + 3.0) || (held && y > hcy + 2.0); }
+  /* 0 = before the head, 1 = over it (at the face, or holding something), 2 = behind it (raised) */
+  function armKind(x, y, sy, hcx, hcy, held) {
+    if (R.view === BACK) return 2;
+    if ((Math.abs(x - hcx) < 2.3 && y > hcy - 2.4 && y < hcy + 3.0) || (held && y > hcy + 2.0)) return 1;
+    return y < sy - 1.0 ? 2 : 0;
+  }
   function drawLeg(ctx, hx, hy, fx, fy, i, col, L, view) {
     let jx, jy;
     if (R.kfk) { jx = (i ? R.k1x : R.k0x) + R.tx; jy = (i ? R.k1y : R.k0y) + R.ty; }
