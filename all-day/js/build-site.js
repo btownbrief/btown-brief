@@ -26,7 +26,7 @@
      const site = createSite(canvas, { reducedMotion, now })
      site.setTown({ total_minutes, floors_done, floor_progress, windows_lit, floors?, topped_out? })
      site.setCrew([{ id, look:{ hat, vest }, task, name? }])    name = the tag shown (nickname or first name); omit for just a hard hat
-     site.setYou({ state: 'working'|'paused'|'off'|'away', look, task, name? })
+     site.setYou({ state: 'working'|'paused'|'off'|'away'|'ready', look, task, name? })   ready: waiting to clock in, in front of the building
      site.whistle(true|false)
      site.setSky({ sunAltitude, isNight, weather, hour?, snowCover? })
      site.dropMaterial(kind)
@@ -38,6 +38,8 @@
      site.vignettes()                [{ id, title, kind }] the director knows
      site.playVignette(id)           start one now (preview, tests)
      site.onFollow = (info|null) => {}   optional callback: { id, name, job } while following someone
+     site.closeUp(on)                a shift's camera: in close on your builder, centred
+     site.youOnScreen()              { x, y, top } your builder's feet and head as fractions of the canvas, or null
    Preview and tests: site.advance(seconds), site.render(), site.stats(), site.resetStats().
 
    Camera rules: it shows your builder (or the building when you're not on
@@ -162,6 +164,7 @@ export function createSite(canvas, opts = {}) {
   const cam = K.cam;
   let camSnap = true;
   let follow = null;            // { id, until }
+  let closeK = 1, laidK = 1;    // a shift's close-up: the zoom on top of the fitted one
   let mom = null;               // { x, y, until }
   function moment(x, y, seconds = 6) {
     /* a milestone asks for the camera; refused in the first minute of a
@@ -180,10 +183,10 @@ export function createSite(canvas, opts = {}) {
     const rr = canvas.getBoundingClientRect();
     const area = Math.max(1, (rr.width || 300) * (rr.height || 200));
     dpr = Math.max(0.75, Math.min(dpr, Math.sqrt(1.3e6 / area)));
-    if (cw === cssW && ch === cssH && dpr === K.view.dpr && canvas.width > 1) return false;
-    cssW = cw; cssH = ch;
+    if (cw === cssW && ch === cssH && dpr === K.view.dpr && closeK === laidK && canvas.width > 1) return false;
+    cssW = cw; cssH = ch; laidK = closeK;
     let s = Math.min(ch / 150, cw / 180);                 // CSS px per world unit
-    s = Math.max(s, ch / 210, cw / WW, ch / WH, 0.5);
+    s = Math.max(s, ch / 210, cw / WW, ch / WH, 0.5) * closeK;
     const W = cw / s, H = ch / s;
     canvas.width = Math.round(cw * dpr); canvas.height = Math.round(ch * dpr);
     const z = canvas.width / W;
@@ -212,7 +215,7 @@ export function createSite(canvas, opts = {}) {
     else if (me) {
       /* keep you in view; centre the building when you both fit */
       const lo = Math.min(me.x - 20, bx0), hi = Math.max(me.x + 20, bx1);
-      cx = hi - lo <= W ? (lo + hi) / 2 : me.x; fy = me.y;
+      cx = closeK > 1 || hi - lo > W ? me.x : (lo + hi) / 2; fy = me.y;
     } else cx = (bx0 + bx1) / 2;
     const want = clamp(cx - W / 2, 0, WW - W);
     /* a dead zone: the camera follows when the action nears an edge, so a
@@ -348,7 +351,7 @@ export function createSite(canvas, opts = {}) {
       poke();
     },
     setYou(y = {}) {
-      const state = ['working', 'paused', 'off', 'away'].includes(y.state) ? y.state : 'away';
+      const state = ['working', 'paused', 'off', 'away', 'ready'].includes(y.state) ? y.state : 'away';
       const prev = K.S.you.state;
       K.S.you = { state, look: y.look || K.S.you.look || {}, task: y.task || K.S.you.task, name: y.name != null ? y.name : K.S.you.name };
       if (state === 'working' && prev !== 'working' && prev !== 'paused') K.shiftStartT = K.t;
@@ -385,6 +388,12 @@ export function createSite(canvas, opts = {}) {
       poke(); return true;
     },
     onFollow: null,
+    closeUp(on) { closeK = on ? 1.4 : 1; layout(); poke(); },
+    youOnScreen() {
+      const p = K.crew.youPos ? K.crew.youPos() : null;
+      if (!p || !K.view.W) return null;
+      return { x: (p.x - cam.x) / K.view.W, y: (p.y - cam.y) / K.view.H, top: (p.y - 16 - cam.y) / K.view.H };
+    },
     vignettes() { return K.director.list ? K.director.list() : []; },
     playVignette(id) { const ok = K.director.play ? K.director.play(id) : false; poke(); return ok; },
     /* preview + tests */

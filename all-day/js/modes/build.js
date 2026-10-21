@@ -49,6 +49,14 @@ import { createSite } from '../build-site.js';
 
 const KEY = 'build';
 export const ICON_BUILD = svg('<path d="M3 17.5h18M5 17.5v-1.2a7 7 0 0 1 14 0v1.2"/><path d="M10 10V7.2a2 2 0 0 1 4 0V10"/>');
+/* the stopwatch (Clock in), the phone face up, the whistle: the three steps' icons */
+const ICON_WATCH = svg('<circle cx="12" cy="13.5" r="7.5"/><path d="M12 13.5V9.6M10 2.8h4M12 2.8v3.2M18.2 6.6l1.4-1.4"/>');
+const ICON_PHONE = svg('<rect x="7" y="2.8" width="10" height="18.4" rx="2.2"/><path d="M10.6 17.8h2.8"/>');
+const ICON_WHISTLE = svg('<path d="M4 11.5a4.5 4.5 0 1 0 8.6 1.9H20V9.6h-9.2A4.5 4.5 0 0 0 4 11.5z"/><path d="M16.5 9.6V7.4"/>');
+/* the site's own two regulars: always at work, so the site never looks empty
+   when fewer than two neighbors are on shift (hard hats, no name tags) */
+const REGULARS = [{ id: 'reg-1', look: { hat: 'white', vest: 'orange' }, task: 'brick', name: null }, { id: 'reg-2', look: { hat: 'blue', vest: 'yellow' }, task: 'frame', name: null }];
+const HOW_SHIFTS = 3;                      // the three steps show until this many shifts are banked on this phone
 const SIDE_KEY = 'allday-build-side';      // the side last on: 'build' | 'habits'
 const DOCK_KEY = 'allday-build-dock';      // the site panel: 'mini' | 'dock'
 const SEEN_KEY = 'allday-build-back';      // the coming-back question, answered on this day
@@ -197,7 +205,9 @@ function load() {
       go(() => a.feed.list()), go(() => a.builder.get()), signedIn() ? go(() => a.help.list()) : Promise.resolve({ ok: false })]);
   }).then(([t, town, rec, shelf, feed, bld, help]) => {
     if (my !== loadGen) return;
-    if (!t.ok && !feed.ok) { B.failed = t.message || FAIL; B.phase = 'ready'; paint(); return; }
+    /* no error text on this tab: a town that doesn't answer (the database
+       not installed yet, a dead network) just leaves the town parts waiting,
+       and shifts and hours work on this phone */
     B.thing = t.ok && t.thing && t.thing.status !== 'done' ? t.thing : null;
     B.town = town.ok ? town.town : null;
     B.days = rec.ok && Array.isArray(rec.days) ? rec.days : [];
@@ -254,13 +264,68 @@ function paint() {
     return;
   }
   if (B.thing && B.back) wrap.appendChild(comebackCard());
-  wrap.appendChild(B.thing ? thingCard() : nameCard());
-  if (!B.thing && (!B.draft || B.draft.step === 'name')) wrap.appendChild(starterDoor());
-  wrap.appendChild(counter());
+  if (B.thing) wrap.appendChild(thingCard());
+  else {
+    /* no thing yet: one obvious action, Clock in. Naming a thing waits
+       until after the first shift (or until someone starts naming one) */
+    wrap.appendChild(clockCard());
+    if (!fresh() || (B.draft && (B.draft.title || B.draft.step === 'more'))) {
+      wrap.appendChild(nameCard());
+      if (!B.draft || B.draft.step === 'name') wrap.appendChild(starterDoor());
+    }
+  }
+  /* the town's numbers and the stream only once there is something in them */
+  if (townMinutes('season') > 0) wrap.appendChild(counter());
   const today = todayStrip();
   if (today) wrap.appendChild(today);
-  wrap.appendChild(feedSection());
+  if (B.feed.some((p) => p && p.id && p.line)) wrap.appendChild(feedSection());
   if (draft) { const i = B.body.querySelector('.bd-reply input[name=line]'); if (i) i.value = draft; }
+}
+
+/* ------------------------------------------------------------- clock in */
+/* The first visit (Stephen, 2026-10-21: "I thought there'd be a stopwatch
+   that automatically starts up when you click a button to check in"): no
+   thing, no hours, no shift. One headline, one big Clock in, an optional
+   line for the job, and the three steps. reference/drafts/new-nine-2026-10/
+   the-build/firstrun-flow.md in the newsletter repo has the whole flow. */
+const shiftsBanked = () => Number(store.read(COUNT_KEY, 0)) || 0;
+function fresh() {
+  if (B.thing || yourMinutes() > 0 || (B.season || 0) > 0 || shiftsBanked() > 0) return false;
+  const s = status();
+  return !(s && s.state !== 'missed') && !ending();
+}
+function clockCard() {
+  const c = el('section', 'bd-clock');
+  c.dataset.k = 'clock';
+  c.appendChild(el('h2', 'bd-hero', esc('Put your phone down. Your builder works while you do.')));
+  const f = el('form', 'bd-form bd-clockform');
+  f.noValidate = true;
+  const go1 = button(ICON_WATCH + '<span>Clock in</span>', 'bd-start bd-clockin');
+  go1.type = 'submit';
+  const what = el('input', 'field bd-what');
+  what.name = 'step'; what.maxLength = 80; what.value = B.firstStep || '';
+  what.placeholder = 'What are you working on? (optional)';
+  what.setAttribute('aria-label', 'What are you working on? Optional');
+  f.append(go1, what);
+  f.addEventListener('submit', (e) => { e.preventDefault(); quickClockIn(what.value.trim().slice(0, 80)); });
+  c.appendChild(f);
+  if (shiftsBanked() < HOW_SHIFTS) {
+    const ol = el('ol', 'bd-steps');
+    ol.setAttribute('aria-label', 'How it works');
+    [[ICON_WATCH, 'Clock in'], [ICON_PHONE, 'Set your phone down, face up'], [ICON_WHISTLE, 'When the foreman whistles (every 15–30 min), tap the screen']].forEach(([i, t], n) => {
+      ol.appendChild(el('li', 'bd-step', '<span class="bd-stepn">' + (n + 1) + '</span>' + i + '<span>' + esc(t) + '</span>'));
+    });
+    c.appendChild(ol);
+  }
+  return c;
+}
+/* Clock in from the card or the bubble on the site: no questions, the stopwatch starts now */
+function quickClockIn(step) {
+  const s = status();
+  if (s && s.state !== 'missed') { openShift(); return; }
+  /* iPhone asks once to feel the phone being picked up: in this tap */
+  askMotion();
+  startShift(step || '');
 }
 
 /* ------------------------------------------------------------ your thing */
@@ -281,7 +346,7 @@ function thingCard() {
   wk.addEventListener('click', recordSheet);
   c.appendChild(wk);
   const row = el('div', 'bd-go');
-  const start = button(ICON_BUILD + '<span>Start shift</span>', 'bd-start', () => clockIn());
+  const start = button(ICON_WATCH + '<span>Clock in</span>', 'bd-start', () => clockIn());
   const log = button('Log it', 'ghost', logSheet);
   const post = button('Post', 'ghost', () => postSheet({ kind: 'progress', minutes: 0 }));
   const more = el('button', 'iconbtn bd-more', ICON.more);
@@ -611,6 +676,8 @@ function counterInner() {
   const m = townMinutes(scope);
   const [n, unit] = bigWords(m);
   const when = scope === 'today' ? 'today' : scope === 'week' ? 'this week' : (B.config.season && B.config.season.starts ? 'since the site opened' : 'so far');
+  /* never a zero: a quiet stretch says so */
+  if (m < 1) return '<p class="bd-cbig bd-quiet">' + esc('Quiet so far ' + (scope === 'today' ? 'today' : 'this week') + '.') + '</p>';
   const days = m >= 48 * 60 ? Math.floor(m / 1440) : 0;
   return '<p class="bd-cbig"><b>' + esc(n) + '</b> ' + esc(unit) + '</p>' +
     '<p class="bd-cline">' + esc('Burlington put its phones down ' + when + '.') + (days ? ' <span>' + esc('That’s ' + days + ' days, end to end.') + '</span>' : '') + '</p>';
@@ -693,6 +760,7 @@ function pickAt(e) {
 function whoFromSite(info) {
   if (!info) return showWho(null);
   const crew = (B.town && Array.isArray(B.town.on_shift) ? B.town.on_shift : []);
+  if (/^c:reg-/.test(String(info.id))) { showWho({ name: 'Site crew' }, info.job); return; }
   const c = info.me ? null : crew.find((q) => 'c:' + q.id === String(info.id));
   showWho({ ...(c || {}), name: info.me ? (info.name || 'You') : (info.name || (c && c.name) || null) }, info.job);
 }
@@ -954,7 +1022,18 @@ function ensureDock() {
   const cut = el('button', 'bd-cut', 'Your part');
   cut.type = 'button';
   cut.addEventListener('click', () => setCut(!B.cut));
-  box.append(canvas, el('p', 'bd-talk'), cut);
+  /* a shift: the stopwatch on top, and the whistle's card in the middle */
+  const watch = el('div', 'bd-watch', '<span class="bd-watchl">On shift</span><span class="bd-digits">0:00</span><span class="bd-watchjob"></span>');
+  watch.setAttribute('role', 'timer');
+  watch.setAttribute('aria-label', 'Time on shift');
+  const wcard = el('div', 'bd-wcard', '<span class="bd-wcardh">The foreman’s whistle</span><span class="bd-wcardt">Tap to answer · <b>3:00</b></span>');
+  wcard.setAttribute('aria-hidden', 'true');
+  /* not on shift: your builder waits in front of the building with this over their head */
+  const you = el('button', 'bd-you', ICON_WATCH + '<span>Clock in</span>');
+  you.type = 'button';
+  you.hidden = true;
+  you.addEventListener('click', (e) => { e.stopPropagation(); bubbleClockIn(); });
+  box.append(canvas, el('p', 'bd-talk'), cut, watch, wcard, you);
   /* a tap on a builder: the site follows them for a while and says who and
      what they're on (v2 sites); older sites only report where everyone is */
   if (site && site.follow) site.onFollow = (info) => { if (!shiftOpen()) whoFromSite(info); };
@@ -968,6 +1047,28 @@ function ensureDock() {
   try { site = createSite(canvas, { reducedMotion: reduced() }); } catch (e) { console.error('[all-day] build site', e); site = null; }
   paintDock();
   return dock;
+}
+/* the Clock in bubble rides over your builder while the site is up and no shift runs */
+let bubbleTimer = 0;
+function bubbleClockIn() {
+  if (B.thing) { clockIn(); return; }
+  const i = B.body && B.body.querySelector('.bd-clock input.bd-what');
+  quickClockIn(i ? i.value.trim().slice(0, 80) : '');
+}
+function placeBubble() {
+  const b = dock && dock.querySelector('.bd-you');
+  if (!b) return;
+  const on = !!site && !dock.hidden && !shiftOpen() && dock.dataset.state !== 'mini' && B.phase === 'ready' && !!site.youOnScreen;
+  let p = null;
+  if (on) { try { p = site.youOnScreen(); } catch (e) { p = null; } }
+  const show = !!p && p.x > 0.08 && p.x < 0.92 && p.top > 0.12 && p.y < 1;
+  b.hidden = !show;
+  if (show) { b.style.left = (p.x * 100).toFixed(2) + '%'; b.style.top = (p.top * 100).toFixed(2) + '%'; }
+}
+function watchBubble(on) {
+  clearInterval(bubbleTimer);
+  bubbleTimer = on ? setInterval(placeBubble, 200) : 0;
+  placeBubble();
 }
 function setDock(state) {
   if (!dock) return;
@@ -1013,6 +1114,7 @@ function showDock(on) {
   document.body.classList.toggle('bd-docked', want);
   if (want) { document.body.dataset.bdDock = dock.dataset.state; document.body.classList.toggle('bd-full', dock.dataset.state === 'full'); feedSite(); }
   else { document.body.classList.remove('bd-full'); delete document.body.dataset.bdDock; }
+  watchBubble(want);
 }
 /* the town line, and the party, under the handle */
 function paintDock() {
@@ -1021,15 +1123,18 @@ function paintDock() {
   const t = B.town || {};
   const f = floors();
   const crew = crewNow();
-  const vars = { crew, hours: Math.floor(((Number(t.week_minutes) || 0) + live()) / 60), floor: f.going, floors: f.total };
-  let line = fill(crew ? F('town.line', '') : F('town.line_none', ''), vars);
-  if (crew === 1) line = line.replace(/^1 neighbors/, '1 neighbor');
-  if (f.topped) line = line.replace(/floor \d+ of \d+/, 'topped out');
+  const hours = Math.floor(((Number(t.week_minutes) || 0) + live()) / 60);
+  /* never a zero: each part only when it is more than nothing, and a quiet
+     town is just the place */
+  const built = f.done > 0 || f.progress > 0 || f.topped || Number(t.total_minutes) > 0;
+  let line = [crew ? crew + (crew === 1 ? ' neighbor' : ' neighbors') + ' on shift' : '', hours ? hours + (hours === 1 ? ' hour' : ' hours') + ' this week' : '',
+    f.topped ? 'topped out' : built ? 'floor ' + f.going + ' of ' + f.total : ''].filter(Boolean).join(' · ') || 'Watershed, on Lakeside Ave';
   /* folded to a strip: the town's counter, short, and who's on shift */
   if (dock.dataset.state === 'mini' && !shiftOpen()) {
     const scope = B.scope || 'week';
-    const [n, unit] = bigWords(townMinutes(scope));
-    line = n + ' ' + unit + ' off phones ' + (scope === 'today' ? 'today' : scope === 'week' ? 'this week' : 'this season') + ' · ' + (crew ? crew + ' on shift' : 'nobody on shift');
+    const m = townMinutes(scope);
+    const [n, unit] = bigWords(m);
+    line = [m >= 1 ? n + ' ' + unit + ' off phones ' + (scope === 'today' ? 'today' : scope === 'week' ? 'this week' : 'this season') : '', crew ? crew + ' on shift' : ''].filter(Boolean).join(' · ') || 'Watershed, on Lakeside Ave';
   }
   const season = B.config.season || {};
   let party = F('party.no_date', '');
@@ -1038,9 +1143,12 @@ function paintDock() {
     party = season.topping_out_date === dayKey(Date.now()) ? F('party.today', '') : fill(F('party.upcoming', ''), { date: when });
   }
   bar.innerHTML = '<p class="bd-townl">' + esc(line) + '</p>';
-  const pp = el(season.party_url && /^https:\/\//.test(season.party_url) ? 'a' : 'p', 'bd-party', esc(party));
-  if (pp.tagName === 'A') { pp.href = season.party_url; pp.target = '_blank'; pp.rel = 'noopener'; }
-  bar.appendChild(pp);
+  /* the first visit keeps the strip to one line: the party can wait */
+  if (!fresh()) {
+    const pp = el(season.party_url && /^https:\/\//.test(season.party_url) ? 'a' : 'p', 'bd-party', esc(party));
+    if (pp.tagName === 'A') { pp.href = season.party_url; pp.target = '_blank'; pp.rel = 'noopener'; }
+    bar.appendChild(pp);
+  }
   /* the split works both ways: posts only (the site folds to this strip,
      and stops drawing), or the site back */
   if (!shiftOpen()) {
@@ -1053,6 +1161,8 @@ function paintDock() {
     bar.appendChild(t);
   }
   const cut = dock.querySelector('.bd-cut');
+  /* your part waits until there is a part */
+  cut.hidden = yourMinutes() < 1 && !B.cut;
   cut.classList.toggle('on', B.cut);
   cut.setAttribute('aria-pressed', B.cut ? 'true' : 'false');
   paintHandle();
@@ -1070,7 +1180,8 @@ function feedSite() {
   const f = floors();
   try {
     site.setTown({ total_minutes: Number(t.total_minutes) || 0, floors: f.total, floors_done: Math.min(f.done, f.total), floor_progress: f.progress, windows_lit: Number(t.windows_lit || t.posts_lit) || 0, topped_out: f.topped });
-    site.setCrew((Array.isArray(t.on_shift) ? t.on_shift : []).filter((c) => !c.me).map((c, i) => ({ id: c.id || 'c' + i, look: c.look || {}, task: c.task || null, name: c.name || null })));
+    const crew = (Array.isArray(t.on_shift) ? t.on_shift : []).filter((c) => !c.me).map((c, i) => ({ id: c.id || 'c' + i, look: c.look || {}, task: c.task || null, name: c.name || null }));
+    site.setCrew(crew.length >= 2 ? crew : crew.concat(REGULARS.slice(0, 2 - crew.length)));
     site.setYou(youState());
     site.setSky(sky());
     site.cutaway(B.cut, { your_minutes: yourMinutes() });
@@ -1081,7 +1192,9 @@ function youState() {
   const look = { hat: (B.builder && B.builder.hat) || 'yellow', vest: (B.builder && B.builder.vest) || 'orange' };
   const name = (B.builder && B.builder.first_name) || null;     // your own tag, on your own screen
   const s = status();
-  if (!s || s.state === 'missed' || ending()) return { state: 'off', look, task: null, name };
+  if (ending() || (s && s.state === 'missed')) return { state: 'off', look, task: null, name };
+  /* not on shift: waiting in front of the building, to clock in */
+  if (!s) return { state: 'ready', look, task: null, name };
   if (s.state === 'paused' || document.visibilityState === 'hidden') return { state: 'away', look, task: s.task, name };
   return { state: Date.now() < tapsDown ? 'paused' : 'working', look, task: s.task, name };
 }
@@ -1121,6 +1234,8 @@ function siteTalk() {
   const t = B.town || {};
   const f = floors();
   const crew = crewNow();
+  /* a quiet town and you not clocked in: nothing to say ("just you on the site" would be wrong) */
+  if (!crew && !shiftOpen()) return;
   const h = etHour();
   const when = h >= 5 && h < 11 ? 'morning' : h >= 11 && h < 17 ? 'day' : h >= 17 && h < 21 ? 'evening' : 'night';
   const names = (Array.isArray(t.on_shift) ? t.on_shift : []).map((c) => c.name).filter(Boolean);
@@ -1149,7 +1264,7 @@ const ending = () => { const e = store.read(ENDING_KEY, null); return e && typeo
 function clockIn(o = {}) {
   const s = status();
   if (s && s.state !== 'missed') { openShift(); return; }
-  app.sheet(o.smaller ? 'A smaller job' : 'Start shift', (body, card, close) => {
+  app.sheet(o.smaller ? 'A smaller job' : 'Clock in', (body, card, close) => {
     body.appendChild(el('p', 'bd-foreman', esc(o.smaller ? 'What’s the smaller piece?' : pick('clock_in', F('clock_in.prompts', [])))));
     const f = el('form', 'bd-form');
     f.noValidate = true;
@@ -1157,7 +1272,7 @@ function clockIn(o = {}) {
     i.name = 'step'; i.maxLength = 80;
     i.placeholder = B.firstStep || pick('clock_in_ph', F('clock_in.placeholder', []));
     i.setAttribute('aria-label', 'The next step, in a line');
-    const ok = button(ICON_BUILD + '<span>' + esc(F('clock_in.start', 'Start')) + '</span>', 'bd-start'); ok.type = 'submit';
+    const ok = button(ICON_WATCH + '<span>' + esc(F('clock_in.start', 'Start')) + '</span>', 'bd-start'); ok.type = 'submit';
     const r = el('div', 'bd-row'); r.append(i, ok);
     f.appendChild(r);
     /* the first time: your builder, right here (a hard hat, a name tag) */
@@ -1196,6 +1311,9 @@ function openShift() {
   lastBeat = 0;
   wake();
   watchMotion(true);
+  placeBubble();
+  /* the camera comes in close on your builder (not for a calm shift: no site) */
+  if (site && site.closeUp) site.closeUp(!dock.classList.contains('is-calm'));
   clearInterval(tickTimer);
   tickTimer = setInterval(onTick, 1000);
   onTick();
@@ -1209,6 +1327,7 @@ function closeShift() {
   if (!dock) return;
   dock.classList.remove('is-shift', 'is-whistle', 'is-end', 'is-calm');
   document.body.classList.remove('bd-shifting');
+  if (site && site.closeUp) site.closeUp(false);
   const foot = dock.querySelector('.bd-shift-foot');
   foot.innerHTML = ''; delete foot.dataset.key;
   setDock(store.read(DOCK_KEY, 'dock') === 'mini' ? 'mini' : 'dock');
@@ -1217,6 +1336,22 @@ function closeShift() {
 }
 
 /* every second while the shift is up */
+/* the stopwatch: m:ss, then h:mm:ss */
+export function clockDigits(ms) {
+  const t = Math.max(0, Math.floor((Number(ms) || 0) / 1000));
+  const h = Math.floor(t / 3600), m = Math.floor((t % 3600) / 60), sec = t % 60;
+  const two = (n) => String(n).padStart(2, '0');
+  return h ? h + ':' + two(m) + ':' + two(sec) : m + ':' + two(sec);
+}
+function paintWatch(s) {
+  if (!dock) return;
+  const d = dock.querySelector('.bd-digits');
+  if (d && s) d.textContent = clockDigits(s.worked_ms != null ? s.worked_ms : s.minutes * 60000);
+  const job = dock.querySelector('.bd-watchjob');
+  if (job) { const t = (s && s.step) || ''; if (job.textContent !== t) job.textContent = t; job.hidden = !t; }
+  const left = dock.querySelector('.bd-wcardt b');
+  if (left && s && s.state === 'whistle' && s.whistle_ends) left.textContent = clockDigits(Math.max(0, s.whistle_ends - Date.now()));
+}
 function onTick() {
   if (ending()) { paintFoot(); return; }
   const s = status();
@@ -1236,6 +1371,7 @@ function onTick() {
     if (site) site.setYou(youState());
   }
   paintFoot();
+  paintWatch(s);
   tickNumbers();
   if (document.visibilityState === 'visible') store.write(SEEN_AT_KEY, Date.now());
   /* the heartbeat: the page is alive and in front (the clock pauses a shift whose page went quiet) */
@@ -1275,18 +1411,20 @@ function paintFoot() {
   dock.classList.toggle('is-whistle', !e && !!s && s.state === 'whistle');
   dock.classList.toggle('is-end', !!e);
   const calm = dock.classList.contains('is-calm');
-  const key = e ? 'end:' + (e.missed ? 'm' : '') : s ? s.state + ':' + (s.step || '') + ':' + crewNow() + (calm ? ':' + s.minutes : '') : 'none';
+  const key = e ? 'end:' + (e.missed ? 'm' : '') + (B.thing ? 't' : '') : s ? s.state + ':' + (s.step || '') + ':' + crewNow() + (calm ? ':' + s.minutes : '') : 'none';
   if (foot.dataset.key === key) return;
   foot.dataset.key = key;
   foot.innerHTML = '';
   if (e) { endScreen(foot, e); return; }
   if (!s) return;
   if (calm) foot.appendChild(el('p', 'bd-calmtime', esc(hm(s.minutes))));
-  if (s.step) foot.appendChild(el('p', 'bd-shift-step', esc(s.step)));
+  if (calm && s.step) foot.appendChild(el('p', 'bd-shift-step', esc(s.step)));
   if (calm && s.state === 'whistle') foot.appendChild(el('p', 'bd-calmwhistle', esc('The foreman’s whistle. Tap anywhere to keep going.')));
-  const crew = Math.max(1, crewNow());
-  foot.appendChild(el('p', 'bd-shift-crew', esc(crew === 1 ? 'Just you on shift' : crew + ' neighbors on shift')));
-  foot.appendChild(button(calm ? 'Stop' : 'Clock out', 'ghost on-dark bd-out', clockOut));
+  /* the one rule, on screen the whole shift */
+  foot.appendChild(el('p', 'bd-hint', ICON_WHISTLE + '<span>' + esc('Foreman whistles every 15–30 min. Tap when he does.') + '</span>'));
+  const others = (B.town && Array.isArray(B.town.on_shift) ? B.town.on_shift : []).filter((c) => !c.me).length;
+  if (others) foot.appendChild(el('p', 'bd-shift-crew', esc(others === 1 ? '1 neighbor on shift with you' : others + ' neighbors on shift with you')));
+  foot.appendChild(button('Stop', 'ghost on-dark bd-out', clockOut));
 }
 /* clocking out stops the clock now (pause), and the end screen banks it */
 function clockOut() {
@@ -1313,12 +1451,23 @@ function endScreen(foot, e) {
   i.placeholder = pick('out_ph', askWhy ? F('clock_out.rare_why.placeholder', []) : F('clock_out.placeholder', []));
   i.setAttribute('aria-label', askWhy ? 'Why it matters, in a line' : 'What got done, in a line');
   f.appendChild(i);
+  /* no thing yet: the first end screen invites one, one optional line */
+  let name = null;
+  if (!B.thing) {
+    const l = el('label', 'bd-q bd-namething', '<span>' + esc('Name your thing') + '</span>');
+    name = el('input', 'field bd-thingname');
+    name.name = 'thing'; name.maxLength = 80; name.placeholder = 'Finish the screenplay (optional)';
+    name.setAttribute('aria-label', 'Name your thing, optional');
+    l.appendChild(name);
+    f.appendChild(l);
+  }
+  const named = () => (name ? name.value.trim().slice(0, 80) : '');
   const r = el('div', 'bd-row');
-  const keep = button(esc(F('end_screen.keep', 'Keep it')), 'ghost on-dark bd-keep', (ev) => { ev.preventDefault(); bank(i.value.trim(), askWhy, false); });
+  const keep = button(esc(F('end_screen.keep', 'Keep it')), 'ghost on-dark bd-keep', (ev) => { ev.preventDefault(); bank(i.value.trim(), askWhy, false, named()); });
   const post = button(esc(F('end_screen.post', 'Post')), 'bd-start bd-postb', (ev) => {
     ev.preventDefault();
     if (needSignIn('post')) return;
-    bank(i.value.trim(), askWhy, true);
+    bank(i.value.trim(), askWhy, true, named());
   });
   r.append(keep, post);
   f.appendChild(r);
@@ -1326,9 +1475,11 @@ function endScreen(foot, e) {
   foot.appendChild(f);
 }
 /* the shift goes on the record (and up the building), then the site docks */
-function bank(note, why, thenPost) {
+function bank(note, why, thenPost, title) {
   const e = ending() || { minutes: 0 };
   store.write(COUNT_KEY, (Number(store.read(COUNT_KEY, 0)) || 0) + 1);
+  /* named on the end screen: it becomes your thing card */
+  if (title && !B.thing) go(() => api().thing.set({ title })).then((r) => { if (r.ok) { B.thing = r.thing || { title, status: 'active' }; B.draft = null; paint(); } else app.toast(r.message || FAIL); });
   /* the rare "why" answer goes on the thing card, if it had none */
   if (why && note && B.thing && !B.thing.why) go(() => api().thing.set({ why: note })).then((r) => { if (r.ok && r.thing) B.thing = r.thing; });
   go(() => api().shift.end({ note: why ? '' : note })).then((r) => {

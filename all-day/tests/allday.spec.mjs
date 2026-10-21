@@ -7642,13 +7642,32 @@ const bdSpies = (page, o = {}) => page.addInitScript((noLock) => {
   else Object.defineProperty(navigator, 'wakeLock', { configurable: true, value: { request: async () => { window.__lock++; const l = new EventTarget(); l.release = async () => {}; return l; } } });
 }, !!o.noLock);
 const T0 = Date.parse('2026-10-21T19:00:00Z');
+/* the first visit's way to a thing: Clock in, Stop, name it on the end screen, Keep it */
+async function bdFirstShift(page, title) {
+  await page.click(bdPanel + ' .bd-clockin');
+  await page.waitForSelector('.bd-dock.is-shift', { timeout: 4000 });
+  await page.click('.bd-out');
+  await page.waitForSelector('.bd-shift-foot input.bd-thingname', { timeout: 4000 });
+  await page.fill('.bd-shift-foot input.bd-thingname', title);
+  await page.click('.bd-shift-foot .bd-keep');
+  await page.waitForSelector(bdPanel + ' .bd-thing .bd-title', { timeout: 6000 });
+}
 
 async function theBuild(browser, base) {
-  await group('The Build, first run signed out: name a thing or borrow one (demo, 390)', async () => {
+  await group('The Build, first run signed out: one big Clock in, then name a thing or borrow one after the first shift (demo, 390)', async () => {
     const { ctx, page, errors } = await newPage(browser, base);
     await page.goto(base + '/all-day/?demo=1#build');
     await settle(page);
-    await page.waitForSelector(bdPanel + ' .bd-starter', { timeout: 8000 });
+    await page.waitForSelector(bdPanel + ' .bd-clock .bd-clockin', { timeout: 8000 });
+    const hero = await page.evaluate(() => ({ head: document.querySelector('#panel-build .bd-hero')?.textContent, btn: document.querySelector('#panel-build .bd-clockin')?.textContent.trim(),
+      steps: [...document.querySelectorAll('#panel-build .bd-step')].map((x) => x.textContent), what: document.querySelector('#panel-build .bd-what')?.placeholder,
+      name: !!document.querySelector('#panel-build .bd-name'), door: !!document.querySelector('#panel-build .bd-door'),
+      above: document.querySelector('#panel-build .bd-clockin').getBoundingClientRect().bottom <= document.querySelector('.bd-dock').getBoundingClientRect().top }));
+    check(hero.head === 'Put your phone down. Your builder works while you do.' && hero.btn === 'Clock in' && hero.above, 'the first visit: one headline and one big Clock in, above the docked site', JSON.stringify(hero));
+    check(JSON.stringify(hero.steps) === '["1Clock in","2Set your phone down, face up","3When the foreman whistles (every 15–30 min), tap the screen"]' && /optional/.test(hero.what), 'three steps, and an optional line for the job', JSON.stringify(hero));
+    check(!hero.name && !hero.door, 'naming a thing waits until after the first shift', JSON.stringify(hero));
+    await page.waitForFunction(() => !document.querySelector('.bd-dock .bd-you').hidden, null, { timeout: 6000 }).catch(() => {});
+    check(await page.$eval('.bd-dock .bd-you', (b) => !b.hidden && /Clock in/.test(b.textContent)), 'your builder waits on the site with a Clock in bubble', '');
     const look = await page.evaluate(() => ({
       tab: document.querySelector('#tab-build').getAttribute('aria-selected'), label: document.querySelector('#tab-build').textContent.trim(),
       cells: document.querySelectorAll('#tabbar button[data-tab]').length, habitsCell: !!document.querySelector('#tab-habits'),
@@ -7661,14 +7680,23 @@ async function theBuild(browser, base) {
       inPanel: !!document.querySelector('#panel-build .bd-dock') }));
     check(look.tab === 'true' && look.label === 'Build' && look.cells === 9 && !look.habitsCell, 'Build is the seventh of nine cells, where Habits was', JSON.stringify(look));
     check(JSON.stringify(look.sides) === '["Build:true","Habits:false"]' && (look.liquid || true), 'Build | Habits floats under the mast, Build on', JSON.stringify(look.sides));
-    check(look.ask === 'What do you want to finish?' && look.starters === 4, 'no thing yet: one line to name it, and four to borrow', JSON.stringify(look));
     check(look.posts > 0, 'neighbors’ posts show signed out too', look.posts);
     check(look.docked && look.dock === 'dock' && look.canvas && !look.inPanel, 'the site is docked at the bottom, outside the tab’s scroll', JSON.stringify(look));
-    check(/neighbors? on shift|Nobody on shift/.test(look.town) && /hours this week/.test(look.town) && /floor \d of 6|topped out/.test(look.town) && /Topping out/.test(look.party), 'the town line under the handle, and the party', look.town + ' | ' + look.party);
+    check(/neighbors? on shift/.test(look.town) && /hours this week/.test(look.town) && /floor \d of 6|topped out/.test(look.town) && !look.party, 'the town line under the handle (the party waits on a first visit)', look.town + ' | ' + look.party);
     await pageRules(page, 'build', 390);
     /* the copy rules: no em dashes, no percentages, no streaks, no ranks */
     const words = await page.evaluate(() => document.querySelector('#panel-build').innerText + ' ' + document.querySelector('.bd-dock').innerText);
     check(!/—|%|streak|rank|leaderboard|you missed/i.test(words), 'no em dashes, percentages, streaks or ranks on the tab', (words.match(/.{0,20}(—|%|streak|rank|leaderboard|you missed).{0,20}/i) || [''])[0]);
+    /* a first shift, straight from the card: the end screen invites a thing, Keep it, and the door opens */
+    await page.click(bdPanel + ' .bd-clockin');
+    await page.waitForSelector('.bd-dock.is-shift', { timeout: 4000 });
+    await page.click('.bd-out');
+    await page.waitForSelector('.bd-shift-foot input.bd-thingname', { timeout: 4000 });
+    await page.click('.bd-shift-foot .bd-keep');
+    await page.waitForSelector(bdPanel + ' .bd-starter', { timeout: 8000 });
+    const after = await page.evaluate(() => ({ ask: document.querySelector('#panel-build .bd-ask')?.textContent, starters: document.querySelectorAll('#panel-build .bd-starter').length,
+      clock: !!document.querySelector('#panel-build .bd-clock .bd-clockin'), party: document.querySelector('.bd-dock .bd-party')?.textContent || '' }));
+    check(after.ask === 'What do you want to finish?' && after.starters === 4 && after.clock && /Topping out/.test(after.party), 'after the first shift: Clock in stays, then one line to name a thing, and four to borrow', JSON.stringify(after));
     /* borrow one: its name lands in the card, then why, then Done */
     const title = await page.$eval(bdPanel + ' .bd-starter .bd-st', (n) => n.textContent);
     await page.click(bdPanel + ' .bd-starter');
@@ -7680,8 +7708,8 @@ async function theBuild(browser, base) {
     await page.waitForSelector(bdPanel + ' .bd-thing .bd-title', { timeout: 6000 });
     const card = await page.evaluate(() => ({ why: document.querySelector('#panel-build .bd-why')?.textContent, meta: document.querySelector('#panel-build .bd-meta')?.textContent,
       btns: [...document.querySelectorAll('#panel-build .bd-go .btn')].map((b) => b.textContent.trim()), week: document.querySelector('#panel-build .bd-mine')?.textContent }));
-    check(card.why === '“I keep saying I will”' && /For Me/.test(card.meta) && JSON.stringify(card.btns) === '["Start shift","Log it","Post"]' && /today.*this week.*this season/.test(card.week),
-      'your thing: its why, who it is for, this week’s hours off your phone, Start shift, Log it, Post', JSON.stringify(card));
+    check(card.why === '“I keep saying I will”' && /For Me/.test(card.meta) && JSON.stringify(card.btns) === '["Clock in","Log it","Post"]' && /today.*this week.*this season/.test(card.week),
+      'your thing: its why, who it is for, this week’s hours off your phone, Clock in, Log it, Post', JSON.stringify(card));
     /* signed out, Nice asks for a sign-in instead of failing */
     await page.click(bdPanel + ' .bd-post .bd-nice');
     await page.waitForSelector('.sheet-card[aria-label="Settings"]', { timeout: 4000 }).catch(() => {});
@@ -7690,6 +7718,70 @@ async function theBuild(browser, base) {
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
   });
+
+  /* Stephen's first visit, live (2026-10-21: "All I see when I open is the
+     text that says 'nobody on shift right now, zero hours this week'"): an
+     empty town, and a town whose database isn't there at all. No zeros, no
+     error text, one Clock in, a stopwatch, a whistle nobody can miss. */
+  for (const [kind, scheme] of [['empty', 'light'], ['nobackend', 'dark']]) {
+    await group('The Build, a first visit with ' + (kind === 'empty' ? 'an empty town' : 'the town’s database missing') + ': Clock in, the stopwatch, the whistle, Stop, name it (live, signed out, 390 ' + scheme + ')', async () => {
+      const gone = kind === 'nobackend';
+      const { ctx, page, errors } = await newPage(browser, base, { motion: 'reduce', scheme,
+        rpc: (fn) => (gone && /^bd_/.test(fn) ? { status: 404, body: { code: 'PGRST202', message: 'Could not find the function public.' + fn } } : undefined) });
+      await bdSpies(page);
+      await page.clock.install({ time: T0 });
+      await page.goto(base + '/all-day/#build');
+      await settle(page);
+      await page.waitForSelector(bdPanel + ' .bd-clock .bd-clockin', { timeout: 8000 });
+      await page.clock.runFor(2500);
+      const look = await page.evaluate(() => ({ panel: document.querySelector('#panel-build').innerText, dock: document.querySelector('.bd-dock').innerText,
+        town: document.querySelector('.bd-dock .bd-townl')?.textContent, counter: !!document.querySelector('#panel-build .bd-counter'), feed: !!document.querySelector('#panel-build .bd-feed'),
+        cut: document.querySelector('.bd-dock .bd-cut').hidden, you: !document.querySelector('.bd-dock .bd-you').hidden }));
+      const all = look.panel + ' ' + look.dock;
+      check(!/\b0\s*(m\b|hours?|minutes?|neighbors?)|nobody|zero|didn.t go through|try again|error/i.test(all), 'no zeros and no error text anywhere on the first screen', all.replace(/\s+/g, ' ').slice(0, 300));
+      check(look.town === 'Watershed, on Lakeside Ave' && !look.counter && !look.feed && look.cut && look.you, 'a quiet town is just the place: no counter, no empty feed, no Your part, your builder waiting with Clock in', JSON.stringify({ ...look, panel: undefined, dock: undefined }));
+      const crew = await page.evaluate(() => import('/all-day/js/modes/build.js').then((m) => m._site().stats().crew.filter((c) => /^c:reg-/.test(c[0])).length));
+      check(crew === 2, 'two of the site’s regulars are at work, so the site never looks empty', crew);
+      await bdShot(page, 'firstrun-' + kind + '-1-open-390-' + scheme);
+      await page.click(bdPanel + ' .bd-clockin');
+      await page.waitForSelector('.bd-dock.is-shift[data-state="full"]', { timeout: 4000 });
+      await page.clock.runFor(3000);
+      const on = await page.evaluate(() => ({ digits: document.querySelector('.bd-digits').textContent, sheet: document.querySelector('#sheet').hidden, stop: document.querySelector('.bd-out')?.textContent,
+        crew: document.querySelector('.bd-shift-crew')?.textContent || '' }));
+      const me = await page.evaluate(() => import('/all-day/js/modes/build.js').then((m) => m._site().youOnScreen()));
+      check(on.sheet && on.digits === '0:03' && on.stop === 'Stop' && !on.crew, 'one tap: no sheet, the stopwatch running, Stop, and no "just you" line', JSON.stringify(on));
+      check(me && me.x > 0.15 && me.x < 0.85, 'the camera stays on your builder', JSON.stringify(me));
+      await bdShot(page, 'firstrun-' + kind + '-2-shift-390-' + scheme);
+      let at = 0;
+      while (at < 32 && (await bdState(page)).shift.state !== 'whistle') { await page.clock.runFor(60000); at++; }
+      await page.clock.runFor(1500);
+      const w = await page.evaluate(() => ({ card: getComputedStyle(document.querySelector('.bd-wcard')).display, text: document.querySelector('.bd-wcardt').textContent, buzz: window.__buzz.length }));
+      await page.clock.runFor(2000);
+      const w2 = await page.$eval('.bd-wcardt', (n) => n.textContent);
+      const secs = (t) => { const m = t.match(/(\d):(\d\d)$/); return m ? Number(m[1]) * 60 + Number(m[2]) : NaN; };
+      check(w.card !== 'none' && /^Tap to answer · [012]:[0-5]\d$/.test(w.text) && w.buzz === 1 && secs(w.text) - secs(w2) === 2, 'the whistle at ' + at + ' minutes: a buzz and Tap to answer, counting down', JSON.stringify({ ...w, w2 }));
+      await bdShot(page, 'firstrun-' + kind + '-3-whistle-390-' + scheme);
+      await page.mouse.click(195, 420);
+      await page.waitForFunction(() => !document.querySelector('.bd-dock.is-whistle'), null, { timeout: 4000 }).catch(() => {});
+      check(await page.$eval('.bd-wcard', (n) => getComputedStyle(n).display === 'none') && (await bdState(page)).shift.state === 'working', 'a tap and the card clears, back to work', '');
+      await page.clock.runFor(5 * 60000);
+      await page.click('.bd-out');
+      await page.waitForSelector('.bd-shift-foot input.bd-thingname', { timeout: 4000 });
+      await bdShot(page, 'firstrun-' + kind + '-4-end-390-' + scheme);
+      await page.fill('.bd-shift-foot input.bd-note', 'outlined the second act');
+      await page.fill('.bd-shift-foot input.bd-thingname', 'Finish the screenplay');
+      await page.click('.bd-shift-foot .bd-keep');
+      await page.waitForSelector(bdPanel + ' .bd-thing .bd-title', { timeout: 6000 });
+      const after = await page.evaluate(() => ({ title: document.querySelector('#panel-build .bd-title').textContent, mine: document.querySelector('#panel-build .bd-mine b')?.textContent,
+        btn: document.querySelector('#panel-build .bd-go .bd-start').textContent.trim(), err: /didn.t go through/.test(document.body.innerText) }));
+      check(after.title === 'Finish the screenplay' && /^\d+m$/.test(after.mine) && after.mine !== '0m' && after.btn === 'Clock in' && !after.err, 'Keep it: the hours on this phone, and the thing card with its own Clock in', JSON.stringify(after));
+      await bdShot(page, 'firstrun-' + kind + '-5-after-390-' + scheme);
+      await pageRules(page, 'build', 390);
+      const real = errors.filter((e) => !(gone && /Failed to load resource: the server responded with a status of 404/.test(e)));
+      check(!real.length, 'no console errors' + (gone ? ' (beyond the missing database’s 404s)' : ''), real.join(' | '));
+      await ctx.close();
+    });
+  }
 
   await group('The Build, the stream: Stuck, I can help right in the post, Yes on your own (demo, signed in, 390)', async () => {
     const { ctx, page, errors } = await newPage(browser, base);
@@ -7759,29 +7851,37 @@ async function theBuild(browser, base) {
     await bdSignIn(page);
     await page.click(bdPanel + ' .bd-go .bd-start');
     await page.waitForSelector('.sheet-card input.bd-step');
-    check(await page.$eval('.sheet-card .bd-foreman', (n) => n.textContent.length > 3), 'Start shift: the foreman asks for the job, one line', '');
+    check(await page.$eval('.sheet-card .bd-foreman', (n) => n.textContent.length > 3), 'Clock in: the foreman asks for the job, one line', '');
     await page.fill('.sheet-card input.bd-step', 'true the back wheel');
     await page.click('.sheet-card button[type=submit]');
     await page.waitForSelector('.bd-dock.is-shift[data-state="full"]', { timeout: 4000 });
     let st = await bdState(page);
-    const shiftLook = await page.evaluate(() => ({ step: document.querySelector('.bd-shift-step')?.textContent, crew: document.querySelector('.bd-shift-crew')?.textContent,
-      out: document.querySelector('.bd-out')?.textContent, timer: /\d+:\d\d/.test(document.querySelector('.bd-dock').innerText), lock: window.__lock, handle: document.querySelector('.bd-handle').hidden }));
-    check(st.shift && st.shift.state === 'working' && shiftLook.step === 'true the back wheel' && /on shift/.test(shiftLook.crew) && shiftLook.out === 'Clock out', 'clocked in: the site full screen, the job, who’s on shift, Clock out', JSON.stringify(shiftLook));
-    check(!shiftLook.timer && shiftLook.lock >= 1 && shiftLook.handle, 'no timer on screen, the screen held awake, no handle to fold it away', JSON.stringify(shiftLook));
+    const shiftLook = await page.evaluate(() => ({ step: document.querySelector('.bd-watchjob')?.textContent, crew: document.querySelector('.bd-shift-crew')?.textContent,
+      out: document.querySelector('.bd-out')?.textContent, label: document.querySelector('.bd-watchl')?.textContent, digits: document.querySelector('.bd-digits')?.textContent,
+      watch: getComputedStyle(document.querySelector('.bd-watch')).display, hint: document.querySelector('.bd-hint')?.textContent, lock: window.__lock, handle: document.querySelector('.bd-handle').hidden,
+      bar: getComputedStyle(document.querySelector('.bd-dockbar')).display }));
+    check(st.shift && st.shift.state === 'working' && shiftLook.step === 'true the back wheel' && /on shift with you/.test(shiftLook.crew) && shiftLook.out === 'Stop', 'clocked in: the site full screen, the job, who’s on shift with you, Stop', JSON.stringify(shiftLook));
+    check(shiftLook.watch !== 'none' && shiftLook.label === 'On shift' && shiftLook.digits === '0:00' && shiftLook.bar === 'none', 'a stopwatch on top: On shift, 0:00', JSON.stringify(shiftLook));
+    check(shiftLook.hint === 'Foreman whistles every 15–30 min. Tap when he does.' && shiftLook.lock >= 1 && shiftLook.handle, 'the one rule on screen the whole shift, the screen held awake, no handle to fold it away', JSON.stringify(shiftLook));
+    await page.clock.runFor(65000);
+    check(await page.$eval('.bd-digits', (n) => n.textContent) === '1:05', 'the stopwatch counts up by the second', await page.$eval('.bd-digits', (n) => n.textContent));
     await bdShot(page, 'tab-shift-mode-390-light');
     const mine0 = await page.$$eval(bdPanel + ' .bd-mine .bd-stat b', (bs) => bs.map((b) => b.textContent));
     const town0 = await page.$eval(bdPanel + ' .bd-cbig', (b) => b.textContent);
-    await page.clock.runFor(14 * 60000);
+    await page.clock.runFor(14 * 60000 - 65000);
     st = await bdState(page);
     check(st.shift.state === 'working' && !(await page.evaluate(() => window.__buzz.length)), 'fourteen minutes in: no whistle yet', JSON.stringify(st.shift));
     const mine1 = await page.$$eval(bdPanel + ' .bd-mine .bd-stat b', (bs) => bs.map((b) => b.textContent));
-    check(mine0[0] === '0m' && mine1[0] === '14m', 'your hours count up live while the shift runs (today ' + mine0[0] + ' to ' + mine1[0] + ')', JSON.stringify([mine0, mine1, town0]));
+    check(mine0[0] === '1m' && mine1[0] === '14m', 'your hours count up live while the shift runs (today ' + mine0[0] + ' to ' + mine1[0] + ')', JSON.stringify([mine0, mine1, town0]));
     /* minute by minute until the whistle blows */
     let at = 14;
     while (at < 31 && st.shift.state === 'working') { await page.clock.runFor(60000); at++; st = await bdState(page); }
     const buzz = await page.evaluate(() => window.__buzz.length);
     check(st.shift.state === 'whistle' && at >= 15 && at <= 31 && buzz === 1 && await page.$('.bd-dock.is-whistle') !== null, 'the whistle blows between 15 and 30 minutes in (at ' + at + '): one buzz, the foreman on the site', JSON.stringify({ state: st.shift.state, at, buzz }));
     check(await page.$eval('.bd-live', (n) => n.textContent) === 'The foreman’s whistle' && await page.$eval('#sheet', (n) => n.hidden) && await page.$eval('#confirm', (n) => n.hidden), 'no dialog: the whistle is on the site (and said to a screen reader)', '');
+    await page.clock.runFor(2000);
+    const card = await page.evaluate(() => ({ shown: getComputedStyle(document.querySelector('.bd-wcard')).display, text: document.querySelector('.bd-wcardt')?.textContent }));
+    check(card.shown !== 'none' && /^Tap to answer · [012]:[0-5]\d$/.test(card.text), 'a big card in the middle: Tap to answer, counting down from three minutes', JSON.stringify(card));
     await bdShot(page, 'tab-whistle-390-light');
     await page.mouse.click(195, 300);
     await page.waitForFunction(() => import('/all-day/js/modes/build.js').then((m) => m._state().shift.state === 'working'), null, { timeout: 4000 }).catch(() => {});
@@ -7851,14 +7951,12 @@ async function theBuild(browser, base) {
     await page.clock.install({ time: T0 });
     await page.goto(base + '/all-day/#build');
     await settle(page);
-    await page.waitForSelector(bdPanel + ' .bd-name input[name=title]', { timeout: 8000 });
-    await page.fill(bdPanel + ' .bd-name input[name=title]', 'Learn the guitar solo');
-    await page.click(bdPanel + ' .bd-name button[type=submit]');
-    await page.click(bdPanel + ' .bd-name button[type=submit]');
-    await page.waitForSelector(bdPanel + ' .bd-thing .bd-title', { timeout: 6000 });
-    await page.click(bdPanel + ' .bd-go .bd-start');
-    await page.click('.sheet-card button[type=submit]');
+    /* the first visit's Clock in: no sheet, no thing needed */
+    await page.waitForSelector(bdPanel + ' .bd-clock .bd-clockin', { timeout: 8000 });
+    await page.fill(bdPanel + ' .bd-clock input.bd-what', 'bars one to eight');
+    await page.click(bdPanel + ' .bd-clockin');
     await page.waitForSelector('.bd-dock.is-shift', { timeout: 4000 });
+    check(await page.$eval('#sheet', (n) => n.hidden) && await page.$eval('.bd-watchjob', (n) => n.textContent) === 'bars one to eight', 'Clock in starts the shift at once, the job under the stopwatch', '');
     check(!(await bdState(page)).lock, 'no Wake Lock on this browser: the shift runs anyway', '');
     await page.clock.runFor(5 * 60000);
     await page.reload();
@@ -7873,6 +7971,8 @@ async function theBuild(browser, base) {
     st = await bdState(page);
     const t = await page.$eval('.bd-endtime', (n) => n.textContent).catch(() => '');
     check(st.ending && !st.ending.missed && st.ending.minutes >= 6 && st.ending.minutes <= 8 && /^\dm on the job$/.test(t), 'after a long dark gap it opens on the end screen with the time up to the last sign of life', JSON.stringify({ ending: st.ending, t }));
+    /* no thing yet: the end screen invites one */
+    await page.fill('.bd-shift-foot input.bd-thingname', 'Learn the guitar solo');
     await page.click('.bd-shift-foot .bd-keep');
     await page.waitForFunction(() => !document.querySelector('.bd-dock.is-shift'), null, { timeout: 4000 }).catch(() => {});
     const local = await page.evaluate(() => JSON.parse(localStorage.getItem('allday-build-local') || 'null'));
@@ -7887,11 +7987,8 @@ async function theBuild(browser, base) {
     await page.clock.install({ time: T0 });
     await page.goto(base + '/all-day/#build');
     await settle(page);
-    await page.waitForSelector(bdPanel + ' .bd-name input[name=title]', { timeout: 8000 });
-    await page.fill(bdPanel + ' .bd-name input[name=title]', 'Run the relay in May');
-    await page.click(bdPanel + ' .bd-name button[type=submit]');
-    await page.click(bdPanel + ' .bd-name button[type=submit]');
-    await page.waitForSelector(bdPanel + ' .bd-thing .bd-title', { timeout: 6000 });
+    await page.waitForSelector(bdPanel + ' .bd-clock .bd-clockin', { timeout: 8000 });
+    await bdFirstShift(page, 'Run the relay in May');
     await page.click(bdPanel + ' .bd-go .btn.ghost');
     await page.waitForSelector('.sheet-card .bd-logc');
     const chips = await page.$$eval('.sheet-card .bd-logc', (bs) => bs.map((b) => b.textContent));
@@ -8009,11 +8106,8 @@ async function theBuild(browser, base) {
     await page.goto(base + '/all-day/?demo=1#build');
     await settle(page);
     /* signed out on this phone: no builder yet, so clocking in offers one */
-    await page.waitForSelector(bdPanel + ' .bd-name input[name=title]');
-    await page.fill(bdPanel + ' .bd-name input[name=title]', 'Sew a quilt');
-    await page.click(bdPanel + ' .bd-name button[type=submit]');
-    await page.click(bdPanel + ' .bd-name button[type=submit]');
-    await page.waitForSelector(bdPanel + ' .bd-go .bd-start');
+    await page.waitForSelector(bdPanel + ' .bd-clock .bd-clockin');
+    await bdFirstShift(page, 'Sew a quilt');
     await page.click(bdPanel + ' .bd-go .bd-start');
     await page.waitForSelector('.sheet-card .bd-builder.inline');
     const setup = await page.evaluate(() => ({ hats: document.querySelectorAll('.sheet-card .bd-hat').length, tag: document.querySelector('.sheet-card input.bd-tag')?.placeholder, show: document.querySelector('.sheet-card .bd-builder [name=show]')?.checked }));
@@ -8118,12 +8212,9 @@ async function buildShots(browser, base) {
       await page.clock.install({ time: T0 });
       await page.goto(base + '/all-day/?demo=1#build');
       await settle(page);
-      await page.waitForSelector(bdPanel + ' .bd-starter', { timeout: 8000 });
+      await page.waitForSelector(bdPanel + ' .bd-clock .bd-clockin', { timeout: 8000 });
       await page.clock.runFor(2500);
       await bdShot(page, 'tab-first-run-' + tag);
-      await page.evaluate(() => document.querySelector('#panel-build .bd-door').scrollIntoView({ block: 'start' }));
-      await page.evaluate(() => { const p = document.querySelector('#panel-build'); p.scrollTop -= 120; });
-      await bdShot(page, 'tab-starter-door-' + tag);
       await bdSignIn(page);
       await page.evaluate(() => { document.querySelector('#panel-build').scrollTop = 0; });
       await bdShot(page, 'tab-your-thing-' + tag);
