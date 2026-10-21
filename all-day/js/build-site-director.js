@@ -936,7 +936,7 @@ export function createDirector(K) {
   const dogO = { facing: 1, t: 0, pose: 'stand', act: 'stand', bandana: false, coat: '' };
   const DOG_E = { y: 0, draw: (ctx) => {
     dogO.facing = dog.facing === 'away' ? 1 : dog.facing; dogO.away = dog.facing === 'away'; dogO.t = dog.pose === 'trot' ? dog.t * 1.6 : dog.t;
-    dogO.pose = DOG_POSE[dog.pose] || dog.pose; dogO.act = dog.pose; dogO.bandana = dog.bandana; dogO.coat = lit(DOG_COAT);
+    dogO.pose = DOG_POSE[dog.pose] || dog.pose; dogO.act = dog.pose; dogO.bandana = dog.bandana; dogO.coat = DOG_COAT;   // raw daylight hex: art lights it
     K.art.prop(ctx, 'dog', dog.x, dog.y, dogO);
     if (dog.emote) K.art.emote(ctx, dog.x, dog.y - 9, dog.emote.icon, dog.emote.t);
   } };
