@@ -228,7 +228,7 @@ export function createCrew(K) {
       W(() => !hoist.req || hoist.req.who === a.id, { pose: 'stand', max: 40, lateSay: 'waiting on the hoist' }),
       D(a, 'lift', 0.8, { say: 'loading the hoist', start: () => hoistLoad(a, j, load, h), then: () => { a.carry = null; hoistSend(a); } }),
       go(bx - 2, null, j.level, 'climbing up to ' + where(j.level)), { k: 'face', dir: 1 },
-      W(() => landed(a.id) || !sent(a.id), { pose: 'look', max: 30, lateSay: 'waiting for the hoist' }),
+      W(() => landed(a.id) || !sent(a.id), { prep: PREP.hoist, max: 30 }),
       D(a, 'lift', 0.8, { carry, say: 'taking it off the hoist', start: () => takeLanded(a.id) }),
     ];
   }
@@ -340,13 +340,14 @@ export function createCrew(K) {
       const g = spot('sidegate', 'in');
       out.push(go(g[0] - 3, g[1] - 2, 'ground', 'heading to the side gate for the mixer truck'),
         call(() => { a.spotting = 'mixer'; callMixer(); }),
-        W(() => mixer.truck.state === 'onsite' || mixer.truck.state === 'leaving' || mixer.truck.state === 'gone', { pose: 'signal', face: 1, max: 45, say: 'waving the mixer truck in at the side gate' }),
+        W(() => mixer.truck.state === 'onsite' || mixer.truck.state === 'leaving' || mixer.truck.state === 'gone', { max: 45, say: 'waving the mixer truck in at the side gate',
+          prep: [['wave', 'waving the mixer truck in at the side gate'], ['signal', 'spotting the mixer truck back through the gate'], ['point', 'pointing it toward the pad']] }),
         call(() => { a.spotting = null; }));
     }
     const s = standAt(a, j);
     out.push(mark(null), go(s.x - 5, j.y, 'ground', 'walking over to the pour'), { k: 'face', dir: 1 },
       call(() => enqueuePour(a, j)),
-      W(() => mixer.truck.serving && mixer.truck.serving.a === a && mixer.truck.atPour, { max: 50, lateSay: 'waiting on the mixer truck', timeout: () => donePour(a) }),
+      W(() => mixer.truck.serving && mixer.truck.serving.a === a && mixer.truck.atPour, { max: 60, prep: PREP.pour, timeout: () => donePour(a) }),
       D(a, 'point', 0.8, { say: 'calling for concrete' }),
       D(a, 'rake', 4.6, { carry: null, work: [0, 0.6], say: 'raking concrete into the forms', start: () => { mixer.truck.flow = true; } }),
       call(() => donePour(a)),
@@ -367,13 +368,25 @@ export function createCrew(K) {
       D(a, 'bend', 0.8, { carry: null, work: [0, 0.1], say: 'standing the column form up' }),
       D(a, 'hammer', 3.4, { work: [0.1, 0.45], say: 'nailing the column form tight' }),
       call(() => { mixer.truck.need = K.t + 60; req = craneRequest(a, 'cbucket', () => mixerBucketAt(), [j.at ? j.at[0] : j.x, top], false); req.back = true; req.fast = 1.6; a.req = req; }),
-      W(() => !req || req.dead || req.state === 'set', { pose: 'look', face: 0, max: 80, lateSay: 'waiting for the pour bucket', timeout: () => { if (req) craneCancel(req); } }),
+      W(() => !req || req.dead || req.state === 'set', { prep: PREP.bucket, max: 80, timeout: () => { if (req) craneCancel(req); } }),
       D(a, 'guide', 2.6, { work: [0.45, 0.95], say: 'guiding the pour bucket over the column', start: () => { if (req) req.pouring = true; } }),
       D(a, 'signal', 0.8, { work: [0.95, 1], say: 'signalling the crane away', then: () => { if (req) craneRelease(req); } }),
       finish(a, j),
     ];
   }
   /* posts, beams, CLT deck panels: rig it at the yard, the crane flies it, guide it down, fasten it */
+  /* busy hands while something else is on its way: every few seconds, the next bit of real prep */
+  const PREP = {
+    yard: (noun) => [['bend', 'checking the slings on the ' + noun], ['measure', 'measuring the ' + noun + ' against the plans'], ['signal', 'signalling the crane operator'], ['look', 'watching the hook swing over']],
+    deck: (noun) => [['measure', 'marking the bolt holes while the crane swings over'], ['drill', 'pre-drilling the bolt holes'], ['bend', 'clearing a spot for the ' + noun], ['signal', 'guiding the crane operator in'], ['look', 'watching the ' + noun + ' come over']],
+    hoist: [['look', 'watching the hoist come up'], ['bend', 'clearing a spot on the deck'], ['measure', 'measuring the opening']],
+    pour: [['rake', 'raking the forms level'], ['bend', 'checking the form ties'], ['point', 'calling the mixer truck over'], ['look', 'watching the chute']],
+    bucket: [['hammer', 'tapping the column form tight'], ['measure', 'checking the form is plumb'], ['signal', 'calling the crane over'], ['look', 'watching the pour bucket swing over']],
+    pane: [['measure', 'measuring the window opening'], ['bend', 'laying out the glazing tools'], ['look', 'watching for a hand with the glass']],
+  };
+  /* posts, beams, CLT deck panels: rig it at the yard, the crane flies it, guide it down, fasten it.
+     The crane never keeps anyone standing: prep while it comes, a glulam post or beam goes up by hand
+     if the crane is tied up, and if the builder isn't there yet the crane lands the piece on the deck. */
   function chLifted(a, j, pair) {
     const deck = j.part === 'deck', post = j.part === 'post';
     const noun = deck ? 'CLT panel' : post ? 'glulam post' : 'glulam beam';
@@ -382,41 +395,71 @@ export function createCrew(K) {
     let req = null;
     const out = [
       go(pick[0] + 2 + spread(a) * 0.4, pick[1] + 6, 'ground', 'heading to the ' + (deck ? 'panel rack' : 'timber stack') + ' to rig a ' + noun),
-      W(() => crane.erect >= 1, { pose: 'look', face: 0, max: 60, lateSay: 'waiting for the crane to go up', start: () => { crane.wanted = K.t + 150; } }),
+      call(() => { crane.wanted = K.t + 150; }),
       D(a, 'bend', 1.2, { say: 'rigging a ' + noun + ' for the crane', then: () => {
         use(deck ? 'panels' : 'lumber');
         const ax = j.at ? j.at[0] : j.x, ay = post ? levelY(j.level) : j.at ? j.at[1] : levelY(j.level);
-        req = craneRequest(a, deck ? 'panel' : 'beam', [pick[0], pick[1] - 2], [ax, ay], false); req.part = j.part; if (post) req.hang = 14.5; a.req = req; } }),
-      W(() => !req || req.dead || req.state === 'atPick', { pose: 'look', max: 60, lateSay: 'waiting for the crane hook', timeout: () => { if (req) craneCancel(req); } }),
+        req = craneRequest(a, deck ? 'panel' : 'beam', [pick[0], pick[1] - 2], [ax, ay], false); req.part = j.part; req.floorY = levelY(j.level); if (post) req.hang = 14.5; a.req = req; } }),
+      W(() => !req || req.dead || req.state === 'atPick', { prep: PREP.yard(noun), max: deck ? 150 : 15, timeout: (aa) => {
+        if (deck) { if (req) craneCancel(req); return; }
+        /* the crane is tied up: a glulam post or beam goes up by hand */
+        if (req) craneCancel(req);
+        aa.plan = liftedByHand(aa, j);
+      } }),
       D(a, 'guide', 1.2, { say: 'hooking the ' + noun + ' to the crane', then: () => { if (req && !req.dead) req.attached = true; } }),
       D(a, 'signal', 1, { face: 1, say: 'signalling the crane operator' }),
     ];
     if (pair) out.push(call(() => { pair.req = req; }));
     const s = standAt(a, j, pair ? 0 : null);
     out.push(go(s.x, s.y, j.level, up(j) ? 'climbing up to meet the ' + noun : 'walking over to meet the ' + noun), { k: 'face', dir: s.face },
-      W(() => !req || req.dead || req.state === 'set', { pose: 'look', max: 70, lateSay: 'watching the ' + noun + ' come over', timeout: () => { if (req) craneCancel(req); } }));
-    if (pair) out.push({ k: 'sync', key: pair.key + 'L', n: 2, max: 40 });
-    out.push(
-      D(a, post ? 'lift' : 'guide', 2.6, { carry: null, work: [0, 0.8], say: post ? 'pushing the post upright' : 'guiding the ' + noun + ' down onto ' + (deck ? 'the beams' : 'the posts'),
-        start: () => { if (req) req.handed = true; }, tick: (aa, k) => { if (req) req.a = k; } }),
-      D(a, 'signal', 0.8, { say: 'signalling the crane to slack off', then: () => { if (req) craneRelease(req); } }),
+      W(() => !req || req.dead || req.state === 'set' || req.landed, { prep: PREP.deck(noun), max: 45, timeout: () => { if (req) craneCancel(req); } }));
+    if (pair) out.push({ k: 'sync', key: pair.key + 'L', n: 2, max: 20, prep: PREP.deck(noun) });
+    out.push(call(() => {
+      /* landed on the deck while they were on the way: swing it into place by hand */
+      if (req && req.landed) a.plan.unshift(...settle(a, j, req, noun));
+      else a.plan.unshift(
+        D(a, post ? 'lift' : 'guide', 2.6, { carry: null, work: [0, 0.8], say: post ? 'pushing the post upright' : 'guiding the ' + noun + ' down onto ' + (deck ? 'the beams' : 'the posts'),
+          start: () => { if (req) req.handed = true; }, tick: (aa, k) => { if (req) req.a = k; } }),
+        D(a, 'signal', 0.8, { say: 'signalling the crane to slack off', then: () => { if (req) craneRelease(req); } }));
+    }),
       D(a, post ? 'drill' : deck ? 'drill' : 'hammer', 3.2, { work: [0.8, 1], say: post ? 'drilling the post\'s base plate' : deck ? 'screwing the panel down' : 'bolting the beam home on ' + wh }));
-    if (pair) out.push({ k: 'sync', key: pair.key + 'E', n: 2, max: 30 });
+    if (pair) out.push({ k: 'sync', key: pair.key + 'E', n: 2, max: 20 });
     out.push(finish(a, j));
     if (pair) out.push(call(() => { a.pair = null; }));
     return out;
+  }
+  /* a landed piece: lift it off the deck and set it (the building draws it in place from 0.8) */
+  function settle(a, j, req, noun) {
+    return [
+      D(a, 'bend', 0.8, { say: 'picking up the ' + noun + ' the crane landed', start: () => { req.landed = false; landedPieces.delete(req); }, carry: j.part === 'deck' ? 'panel' : 'beam' }),
+      D(a, 'lift', 1.6, { say: j.part === 'post' ? 'standing the post up' : 'lifting it into place', then: () => { a.carry = null; } }),
+      D(a, 'stand', 0.2, { work: [0.8, 0.8] }),
+    ];
+  }
+  /* the crane is busy: carry the post or beam up the ladder on a shoulder */
+  function liftedByHand(a, j) {
+    const post = j.part === 'post', wh = where(j.level), noun = post ? 'glulam post' : 'glulam beam';
+    return [
+      D(a, 'lift', 0.9, { carry: 'beam', say: 'shouldering the ' + noun + ' (the crane is busy)' }),
+      mark('beam'),
+      ...toJob(a, j, up(j) ? 'carrying the ' + noun + ' up the stair tower' : 'carrying the ' + noun + ' over'),
+      D(a, 'lift', 1.8, { say: post ? 'standing the post up' : 'lifting the beam onto the posts' }),
+      D(a, 'stand', 0.2, { carry: null, work: [0.8, 0.8] }),
+      D(a, post ? 'drill' : 'hammer', 3.2, { work: [0.8, 1], say: post ? 'drilling the post\'s base plate' : 'bolting the beam home on ' + wh }),
+      finish(a, j),
+    ];
   }
   /* the second builder on a CLT panel: up to the other end, help guide it, screw it down */
   function liftMateChain(a, pair) {
     const j = pair.j, s = standAt(a, j, 1);
     return [
       go(s.x, s.y, j.level, up(j) ? 'climbing up to land a CLT panel' : 'heading over to land a CLT panel'), { k: 'face', dir: s.face },
-      W(() => !pair.req || pair.req.dead || pair.req.state === 'set', { pose: 'look', max: 90, lateSay: 'watching the panel come over' }),
-      { k: 'sync', key: pair.key + 'L', n: 2, max: 40 },
+      W(() => !pair.req || pair.req.dead || pair.req.state === 'set' || pair.req.landed, { prep: PREP.deck('CLT panel'), max: 60 }),
+      { k: 'sync', key: pair.key + 'L', n: 2, max: 20, prep: PREP.deck('CLT panel') },
       D(a, 'guide', 2.6, { carry: null, say: 'guiding the CLT panel down', dur: 2.6 }),
       D(a, 'stand', 0.8, { say: 'holding it square' }),
       D(a, 'drill', 3.2, { say: 'screwing the panel down' }),
-      { k: 'sync', key: pair.key + 'E', n: 2, max: 30 },
+      { k: 'sync', key: pair.key + 'E', n: 2, max: 20, prep: [['measure', 'checking the panel is flush']] },
       call(() => { a.job = null; a.role = null; a.pair = null; }),
     ];
   }
@@ -555,7 +598,7 @@ export function createCrew(K) {
   function glazeChain(a, pair, lead) {
     const j = pair.j, wh = where(j.level), k = pair.key, staged = glassSource(j), rack = staged || wspot('staging', 'drop2');
     const carry = lead ? 'paneL' : 'paneR', off = lead ? -4.5 : 4.5;
-    const S = (n, o) => Object.assign({ k: 'sync', key: k + n, n: 2, max: lead ? 40 : 60 }, o);
+    const S = (n, o) => Object.assign({ k: 'sync', key: k + n, n: 2, max: lead ? 40 : 60, prep: n === 1 ? PREP.pane : PREP.hoist }, o);
     const out = [
       go(rack[0] + off, rack[1] + 6, 'ground', 'heading to the glass rack'), { k: 'face', dir: lead ? 1 : -1 },
       S(1, lead ? { max: 70, say: 'waiting for a hand with the glass', timeout: () => { soloAfterTimeout(a, pair); } } : null),
@@ -570,7 +613,7 @@ export function createCrew(K) {
           D(a, 'lift', 0.9, { say: 'easing the pane onto the hoist', dur: 0.9, start: () => hoistLoad(a, j, 'pane', h), then: () => { a.carry = null; hoistSend(a); } }),
           S(3),
           go(bx - 9, null, j.level, 'climbing up to ' + wh),
-          W(() => landed(a.id) || !sent(a.id), { pose: 'look', max: 30, lateSay: 'waiting for the hoist' }),
+          W(() => landed(a.id) || !sent(a.id), { prep: PREP.hoist, max: 30 }),
           S(4),
           D(a, 'lift', 0.8, { carry, dur: 0.8, say: 'taking the pane off the hoist', start: () => takeLanded(a.id) }));
       } else {
@@ -608,7 +651,7 @@ export function createCrew(K) {
     if (waitForMate) {
       const p = { lead: a, j, open: true, until: K.t + 90, mate: null, build: null };
       pendingPairs.push(p);
-      out.push(W(() => !p.open || !!p.mate, { pose: 'look', max: 7, lateSay: 'waiting for a hand with the glass' }),
+      out.push(W(() => !p.open || !!p.mate, { prep: PREP.pane, max: 7 }),
         call(() => {
           p.open = false;
           const i = pendingPairs.indexOf(p); if (i >= 0) pendingPairs.splice(i, 1);
@@ -1102,8 +1145,9 @@ export function createCrew(K) {
         break;
       case 'wait':
         if (x.lateSay && a.actT > 0.4) a.say = x.lateSay;
-        setPose(a, !x.pose || x.pose === 'stand' ? (a.actT % 6 > 5.1 ? 'look' : 'stand') : x.pose);
-        if (x.face != null) a.facing = x.face;
+        if (x.prep && a.actT > 0.5) prep(a, x);
+        else setPose(a, !x.pose || x.pose === 'stand' ? (a.actT % 6 > 5.1 ? 'look' : 'stand') : x.pose);
+        if (x.face != null && !x.prep) a.facing = x.face;
         if (x.until(a)) { a.act = null; if (x.then) x.then(a); }
         else if (a.actT >= (x.max || 30)) { a.act = null; if (x.timeout) x.timeout(a); }
         break;
@@ -1111,7 +1155,8 @@ export function createCrew(K) {
         const b = barrier(x.key, x.n);
         if (b.size >= b.n) { a.act = null; b.done++; if (b.done >= b.n) barriers.delete(x.key); }
         else {
-          setPose(a, a.carry === 'paneL' || a.carry === 'paneR' ? 'stand' : (a.actT % 5 > 3.8 ? 'look' : 'stand'));
+          if (x.prep && a.actT > 0.5 && a.carry !== 'paneL' && a.carry !== 'paneR') prep(a, x);
+          else setPose(a, a.carry === 'paneL' || a.carry === 'paneR' ? 'stand' : (a.actT % 5 > 3.8 ? 'look' : 'stand'));
           if (a.actT > (x.max || 30)) { a.act = null; barriers.delete(x.key); if (x.timeout) x.timeout(a); }
         }
         break;
@@ -1171,6 +1216,12 @@ export function createCrew(K) {
     if (x) a.plan.unshift({ k: 'face', dir: a.facing || 1 }, { k: 'resume', act: x, actT: a.actT });
     a.act = { k: 'do', pose, dur: dur * (0.85 + a.r() * 0.3), face: 0 }; a.actT = 0;
     begin(a, a.act);
+  }
+  /* waiting on the crane, the hoist, the mixer or a partner: cycle through real prep, a plain line each */
+  function prep(a, x) {
+    const list = x.prep, k = Math.floor((a.actT - 0.5) / 2.8 + (a.seed % 3)) % list.length;
+    if (x.prepK !== k) { x.prepK = k; a.say = list[k][1]; if (list[k][0] === 'look' || list[k][0] === 'signal') a.facing = a.facing || 1; }
+    setPose(a, list[k][0]);
   }
   /* paused: tools down, turn, look at you; a blink, a small shrug, waiting dots */
   function hold(a, dt) {
@@ -1357,7 +1408,7 @@ export function createCrew(K) {
       case 'backIn': if (follow(m, dt)) { m.state = 'onsite'; m.idleT = 0; } break;
       case 'onsite': {
         m.moving = false;
-        if (!m.serving && m.queue.length) { m.serving = m.queue.shift(); m.atPour = false; }
+        if (!m.serving && m.queue.length) { let i = m.queue.findIndex((q) => q.a.me); if (i < 0) i = 0; m.serving = m.queue.splice(i, 1)[0]; m.atPour = false; }
         if (m.serving && (m.serving.a.gone || m.serving.a.job !== m.serving.j)) { m.serving = null; m.atPour = false; m.flow = false; }
         if (m.serving) {
           m.idleT = 0;
@@ -1448,10 +1499,15 @@ export function createCrew(K) {
     const top = jy + 7;
     const x0 = crane.x;
     let r = crane.cur;
-    if (!r && crane.queue.length) { r = crane.cur = crane.queue.shift(); r.state = 'toPick'; crane.returning = false; }
+    if (!r && crane.queue.length) {
+      /* your builder first, then whoever has waited longest (the queue is in arrival order) */
+      let i = crane.queue.findIndex((q) => q.who === 'you');
+      if (i < 0) i = 0;
+      r = crane.cur = crane.queue.splice(i, 1)[0]; r.state = 'toPick'; crane.returning = false;
+    }
     const fast = r && r.fast ? (r.fast === true ? 2.2 : r.fast) : 1;
-    const mx = (x, sp0 = 17) => { const sp = sp0 * fast; const d = x - crane.x; const v = Math.min(sp, 1 + Math.abs(d) * 1.5) * dt; if (Math.abs(d) <= v + 0.02) { crane.x = x; return true; } crane.x += Math.sign(d) * v; return false; };
-    const my = (y, sp0 = 11) => { const sp = sp0 * fast; const d = y - crane.hy; const v = Math.min(sp, 1 + Math.abs(d) * 1.6) * dt; if (Math.abs(d) <= v + 0.02) { crane.hy = y; return true; } crane.hy += Math.sign(d) * v; return false; };
+    const mx = (x, sp0 = 24) => { const sp = sp0 * fast; const d = x - crane.x; const v = Math.min(sp, 1 + Math.abs(d) * 1.5) * dt; if (Math.abs(d) <= v + 0.02) { crane.x = x; return true; } crane.x += Math.sign(d) * v; return false; };
+    const my = (y, sp0 = 16) => { const sp = sp0 * fast; const d = y - crane.hy; const v = Math.min(sp, 1 + Math.abs(d) * 1.6) * dt; if (Math.abs(d) <= v + 0.02) { crane.hy = y; return true; } crane.hy += Math.sign(d) * v; return false; };
     if (!r) {
       crane.idleT += dt;
       if (my(top + 2, 6)) crane.returning = false;
@@ -1461,13 +1517,13 @@ export function createCrew(K) {
       const h = r.hang || HANG[r.load] || 10;
       const from = typeof r.from === 'function' ? r.from() : r.from;
       switch (r.state) {
-        case 'toPick': if (from && my(top) && mx(from[0])) r.state = 'lower'; if (r.t > 90) craneCancel(r); break;
+        case 'toPick': { if (!from) { if (r.t > 90) craneCancel(r); break; } const ux = my(top), xx = mx(from[0]); if (ux && xx) r.state = 'lower'; if (r.t > 90) craneCancel(r); break; }
         case 'lower': if (!from) { r.state = 'toPick'; break; } if (my(from[1] - h)) { r.state = 'atPick'; r.t = 0; r.pick = from; } break;
         case 'atPick':
           if (r.attached || (r.auto && r.t > 1) || (r.load === 'cbucket' && r.t > 1.6)) { crane.load = r.load; r.state = 'lift'; }
           else if (r.t > 70) craneCancel(r);
           break;
-        case 'lift': if (my(top)) r.state = 'travel'; break;
+        case 'lift': { const ux = my(top); if (crane.hy < top + 22) { if (mx(r.to[0]) && ux) r.state = 'down'; } break; }   // swing over as soon as it clears
         case 'travel': if (mx(r.to[0])) r.state = 'down'; break;
         case 'down': if (my(r.to[1] - h - (r.part === 'deck' ? 9 : r.part === 'beam' ? 7 : 0))) { r.state = 'set'; r.t = 0; } break;
         case 'set': {
@@ -1477,6 +1533,11 @@ export function createCrew(K) {
             const e = r.a * r.a * (3 - 2 * r.a);
             const hy = r.part === 'deck' ? r.to[1] - 6.2 - 9 * (1 - e) : r.part === 'beam' ? r.to[1] - 7.6 - 7 * (1 - e) : r.to[1] - (r.hang || 10);
             my(hy, 6);
+          }
+          /* nobody there yet: set it down on the deck and go serve the next one (a lift cycle stays ~25 s) */
+          if (!r.handed && !r.auto && r.load !== 'cbucket' && r.t > 4) {
+            r.landed = true; crane.load = null; landedPieces.add(r); r.state = 'done';
+            break;
           }
           if (r.released || (r.auto && r.t > 2.5) || r.t > 70) {
             r.state = r.back && r.pick ? 'back' : 'done';
@@ -1496,6 +1557,7 @@ export function createCrew(K) {
     crane.swayV += (-crane.sway * 2.2 - crane.swayV * 0.5 - clamp(acc, -60, 60) * 0.006) * dt;
     crane.sway = clamp(crane.sway + crane.swayV * dt, -0.3, 0.3);
   }
+  const landedPieces = new Set();
   K.on('milestone', (m) => {
     if (!m || m.kind !== 'topped') return;
     /* topping out: the crane hoists the last beam, with a little tree on it, rigged beside the building */
@@ -1799,7 +1861,7 @@ export function createCrew(K) {
     }
     for (let i = 0; i < hoist.landing.length && i < 3; i++) K.art.prop(ctx, hoistProp(hoist.landing[i].load), x - i * 1.6, hoist.top - 1 - i * 0.4, hoistLoadO);
   }
-  const glassO = { kind: 'glass', n: 2 };
+  const glassO = { kind: 'glass', n: 2 }, flatO = { flat: true }, shortO = { len: 10 };
   const glassItem = { y: 0, draw: (ctx) => { const gs = glassStageAt(); if (!gs) return; glassO.n = Math.min(4, glassStage.n + 1); K.art.prop(ctx, 'pallet', gs[0], gs[1], glassO); } };
   const hoistProp = (l) => (l === 'panel' || l === 'pane' || l === 'bricks' ? l : 'beam');
   /* yard equipment: sawhorses, trestles, the mortar mixer */
@@ -1827,6 +1889,12 @@ export function createCrew(K) {
     if (barrow.at) { barrowItem.y = barrow.at[1]; if (inView(barrow.at[0])) list.push(barrowItem); }
     if (stage().phase === 'finish' && inView(SAPLINGS[1][0])) list.push(saplingItem);
     list.push(craneItem);
+    for (const r of landedPieces) {
+      if (r.dead || !agents.has(r.who)) { landedPieces.delete(r); continue; }
+      if (!r.item) r.item = { y: 0, draw: (ctx) => K.art.prop(ctx, r.load === 'panel' ? 'panel' : 'beam', r.to[0] + 3, r.landY, r.load === 'panel' ? flatO : shortO) };
+      r.landY = r.floorY != null ? r.floorY : r.to[1];
+      r.item.y = r.landY - 0.1; if (inView(r.to[0])) list.push(r.item);
+    }
     if (glassStage.n > 0) { const gs = glassStageAt(); if (gs && inView(gs[0])) { glassItem.y = gs[1]; list.push(glassItem); } }
     if (hoist.req || hoist.landing.length) { hoistItem.y = hoist.landing.length ? hoist.top : GROUND_Y - 0.2; list.push(hoistItem); }
     for (const a of agents.values()) {
