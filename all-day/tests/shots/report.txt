@@ -3177,7 +3177,7 @@
   ok   Habits, swipe to archive with Undo, drag and keys to reorder, edit (demo, 1280, dark) › habits: at most 2 subnav rows
   ok   Habits, swipe to archive with Undo, drag and keys to reorder, edit (demo, 1280, dark) › no console errors
   ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › twenty habits, in order
-  ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › twenty habits and a year of taps: a tap still shows at once (12, 11, 12, 11 ms)
+  ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › twenty habits and a year of taps: a tap still shows at once (12, 11, 13, 11 ms)
   ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › the heat map is all there, and four taps leave it as it was
   ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › every row keeps its seven dots and its 48px tap
   ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › the list is longer than the screen, and the panel scrolls
@@ -3303,7 +3303,7 @@
   ok   Habits, the forest: a tree per habit, a leaf per tap, flowers, help, starters (demo, 390) › the “?” opens How Habits works: four lines
   ok   Habits, the forest: a tree per habit, a leaf per tap, flowers, help, starters (demo, 390) › a starter adds a daily habit in one tap, and the starters step aside
   ok   Habits, the forest: a tree per habit, a leaf per tap, flowers, help, starters (demo, 390) › and plants its tree: no leaves yet (one name for the button, the picture itself decorative)
-  ok   Habits, the forest: a tree per habit, a leaf per tap, flowers, help, starters (demo, 390) › a tap grows a leaf, in the same click (4 ms)
+  ok   Habits, the forest: a tree per habit, a leaf per tap, flowers, help, starters (demo, 390) › a tap grows a leaf, in the same click (3 ms)
   ok   Habits, the forest: a tree per habit, a leaf per tap, flowers, help, starters (demo, 390) › Got it puts the help away
   ok   Habits, the forest: a tree per habit, a leaf per tap, flowers, help, starters (demo, 390) › one tree per habit, in the list’s order
   ok   Habits, the forest: a tree per habit, a leaf per tap, flowers, help, starters (demo, 390) › each tree has a leaf for every day done in the last 370
@@ -3382,11 +3382,11 @@
   ok   The Build, a shift on a fake clock: no whistle before 15 minutes, a buzz by 30, a tap answers it, a miss knocks the crew off at the last touch (demo, 390) › no timer on screen, the screen held awake, no handle to fold it away
   ok   The Build, a shift on a fake clock: no whistle before 15 minutes, a buzz by 30, a tap answers it, a miss knocks the crew off at the last touch (demo, 390) › fourteen minutes in: no whistle yet
   ok   The Build, a shift on a fake clock: no whistle before 15 minutes, a buzz by 30, a tap answers it, a miss knocks the crew off at the last touch (demo, 390) › your hours count up live while the shift runs (today 0m to 14m)
-  ok   The Build, a shift on a fake clock: no whistle before 15 minutes, a buzz by 30, a tap answers it, a miss knocks the crew off at the last touch (demo, 390) › the whistle blows between 15 and 30 minutes in (at 29): one buzz, the foreman on the site
+  ok   The Build, a shift on a fake clock: no whistle before 15 minutes, a buzz by 30, a tap answers it, a miss knocks the crew off at the last touch (demo, 390) › the whistle blows between 15 and 30 minutes in (at 19): one buzz, the foreman on the site
   ok   The Build, a shift on a fake clock: no whistle before 15 minutes, a buzz by 30, a tap answers it, a miss knocks the crew off at the last touch (demo, 390) › no dialog: the whistle is on the site (and said to a screen reader)
-  ok   The Build, a shift on a fake clock: no whistle before 15 minutes, a buzz by 30, a tap answers it, a miss knocks the crew off at the last touch (demo, 390) › a tap answers it: back to work, 29 minutes so far
-  ok   The Build, a shift on a fake clock: no whistle before 15 minutes, a buzz by 30, a tap answers it, a miss knocks the crew off at the last touch (demo, 390) › the next whistle at 27 minutes after the touch, the crew off three minutes later
-  ok   The Build, a shift on a fake clock: no whistle before 15 minutes, a buzz by 30, a tap answers it, a miss knocks the crew off at the last touch (demo, 390) › missed: the crew knocks off, banked to the last touch (29 minutes)
+  ok   The Build, a shift on a fake clock: no whistle before 15 minutes, a buzz by 30, a tap answers it, a miss knocks the crew off at the last touch (demo, 390) › a tap answers it: back to work, 19 minutes so far
+  ok   The Build, a shift on a fake clock: no whistle before 15 minutes, a buzz by 30, a tap answers it, a miss knocks the crew off at the last touch (demo, 390) › the next whistle at 19 minutes after the touch, the crew off three minutes later
+  ok   The Build, a shift on a fake clock: no whistle before 15 minutes, a buzz by 30, a tap answers it, a miss knocks the crew off at the last touch (demo, 390) › missed: the crew knocks off, banked to the last touch (19 minutes)
   ok   The Build, a shift on a fake clock: no whistle before 15 minutes, a buzz by 30, a tap answers it, a miss knocks the crew off at the last touch (demo, 390) › the end screen: the time, one line, Keep it or Post
   ok   The Build, a shift on a fake clock: no whistle before 15 minutes, a buzz by 30, a tap answers it, a miss knocks the crew off at the last touch (demo, 390) › and it stays a miss while the end screen waits
   ok   The Build, a shift on a fake clock: no whistle before 15 minutes, a buzz by 30, a tap answers it, a miss knocks the crew off at the last touch (demo, 390) › Keep it: the hours are on your record, the site docks again

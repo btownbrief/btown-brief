@@ -690,7 +690,13 @@ function pickAt(e) {
   });
   showWho(best);
 }
-function showWho(c) {
+function whoFromSite(info) {
+  if (!info) return showWho(null);
+  const crew = (B.town && Array.isArray(B.town.on_shift) ? B.town.on_shift : []);
+  const c = info.me ? null : crew.find((q) => 'c:' + q.id === String(info.id));
+  showWho({ ...(c || {}), name: info.me ? (info.name || 'You') : (info.name || (c && c.name) || null) }, info.job);
+}
+function showWho(c, job) {
   const box = dock && dock.querySelector('.bd-sitebox');
   if (!box) return;
   const old = box.querySelector('.bd-whocard');
@@ -700,7 +706,7 @@ function showWho(c) {
   const name = c.name || 'A neighbor';
   const card = el('div', 'bd-whocard');
   card.setAttribute('role', 'status');
-  card.innerHTML = '<p class="bd-whoname">' + esc(name) + '</p><p class="bd-whojob">' + esc(jobWords(c.task)) + '</p>';
+  card.innerHTML = '<p class="bd-whoname">' + esc(name) + '</p><p class="bd-whojob">' + esc(job || jobWords(c.task)) + '</p>';
   const post = c.name ? B.feed.find((p) => p.author === c.name && p.line) : null;
   if (post) {
     const a = el('button', 'bd-wholink', esc('“' + oneLine(post.line, 60) + '”'));
@@ -949,7 +955,10 @@ function ensureDock() {
   cut.type = 'button';
   cut.addEventListener('click', () => setCut(!B.cut));
   box.append(canvas, el('p', 'bd-talk'), cut);
-  canvas.addEventListener('click', (e) => { if (!shiftOpen()) pickAt(e); });
+  /* a tap on a builder: the site follows them for a while and says who and
+     what they're on (v2 sites); older sites only report where everyone is */
+  if (site && site.follow) site.onFollow = (info) => { if (!shiftOpen()) whoFromSite(info); };
+  else canvas.addEventListener('click', (e) => { if (!shiftOpen()) pickAt(e); });
   const foot = el('div', 'bd-shift-foot');
   const live = el('p', 'bd-live');
   live.setAttribute('aria-live', 'polite');
@@ -1070,10 +1079,11 @@ function feedSite() {
 let tapsDown = 0;
 function youState() {
   const look = { hat: (B.builder && B.builder.hat) || 'yellow', vest: (B.builder && B.builder.vest) || 'orange' };
+  const name = (B.builder && B.builder.first_name) || null;     // your own tag, on your own screen
   const s = status();
-  if (!s || s.state === 'missed' || ending()) return { state: 'off', look, task: null };
-  if (s.state === 'paused' || document.visibilityState === 'hidden') return { state: 'away', look, task: s.task };
-  return { state: Date.now() < tapsDown ? 'paused' : 'working', look, task: s.task };
+  if (!s || s.state === 'missed' || ending()) return { state: 'off', look, task: null, name };
+  if (s.state === 'paused' || document.visibilityState === 'hidden') return { state: 'away', look, task: s.task, name };
+  return { state: Date.now() < tapsDown ? 'paused' : 'working', look, task: s.task, name };
 }
 
 /* Burlington's sun, worked out here (the standard few lines of solar
