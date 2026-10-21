@@ -10,7 +10,8 @@
    INTERFACE:
      createCrew(K) -> {
        setCrew(list)            [{ id, look, task, name? }] neighbours on shift (task is a preference)
-       setYou(you)              { state: working|paused|off|away, look, task, name? }
+       setYou(you)              { state: working|paused|off|away|ready, look, task, name? }
+                                ready = not clocked in: waits in front of the building, facing you
        whistle(on)              the foreman steps out of the trailer and raises a hand / nods and goes back in
        deliver(kind)            a material delivery (truck or forklift) for dropMaterial
        step(dt)
@@ -54,6 +55,8 @@ import * as ART from './build-site-art.js';
 const WALK = 11.5, CLIMB = 8, LADDER_GAP = 14;   // a climber keeps a body and a name tag's length behind the one ahead
 const ORD = ['', '1st', '2nd', '3rd', '4th', '5th', '6th', '7th', '8th', '9th', '10th', '11th', '12th'];
 const spot = (z, s) => ZONES[z].spots[s];
+/* where your builder waits to clock in: in front of the building, so the docked camera has both */
+const READY = [452, 489];
 /* where each material is kept (the world's piles) */
 const PILE_AT = { lumber: ['lumber', 'rack'], panels: ['lumber', 'panels'], brick: ['masonry', 'bricks'], glass: ['staging', 'drop2'], copper: ['tools', 'spools'],
   nails: ['staging', 'nails'], stakes: ['tools', 'stakes'], rebar: ['staging', 'drop'] };
@@ -925,6 +928,7 @@ export function createCrew(K) {
     if (a.npc) return planYard(a);
     if (a.state === 'away') { a.plan.push(...awayChain(a)); return; }
     if (a.state === 'off') { a.plan.push(...leaveChain(a)); return; }
+    if (a.state === 'ready') { a.plan.push(...readyChain(a)); return; }
     if (a.state !== 'working') return;
     if (joinPending(a)) return;
     if (a.workT >= a.breakAt && !a.vehicle) {
@@ -961,6 +965,21 @@ export function createCrew(K) {
       out.push(go(seat[0], seat[1], 'ground', 'heading to the canteen'), D(a, 'bend', 0.5, { carry: 'thermos', say: 'pouring a cup from the thermos' }));
     }
     out.push(D(a, 'sit', 8, { carry: 'thermos', face: 1, say: 'on a break at the canteen, looking at the lake' }), D(a, 'drink', 2.4), D(a, 'sit', 9, { face: 1 }), D(a, 'look', 1.4, { face: 0 }));
+    return out;
+  }
+  /* ready: your builder, not clocked in yet, waits in front of the building
+     facing you (the tab puts a Clock in bubble over their head) */
+  function readyChain(a) {
+    a.doing = 'ready';
+    const out = [];
+    const near = Math.abs(a.x - READY[0]) < 2 && Math.abs(a.y - READY[1]) < 2;
+    if (!near) {
+      if (a.level !== 'ground') out.push(go(ladderX(), null, 'ground', 'climbing down the stair tower'));
+      if (a.carry) out.push(D(a, 'bend', 0.5, { carry: null }));
+      if (!a.hat) out.push(D(a, 'stand', 0.5, { hat: true }));
+      out.push(go(READY[0], READY[1], 'ground', 'waiting to clock in'));
+    }
+    out.push(D(a, 'stand', 4, { face: 0, say: 'waiting to clock in' }), D(a, 'wave', 1.2, { face: 0 }), D(a, 'stand', 5, { face: 0 }), D(a, 'look', 1.2, { face: 1 }));
     return out;
   }
   function leaveChain(a) {
@@ -2046,6 +2065,7 @@ export function createCrew(K) {
       if (fresh) {
         if (st === 'working' || st === 'paused') placeMid(a);
         else if (st === 'away') { const s = spot('canteen', 'seat1'); a.x = s[0]; a.y = s[1]; a.carry = 'thermos'; }
+        else if (st === 'ready') { a.x = READY[0]; a.y = READY[1]; a.facing = 0; }
         else a.gone = true;
         return;
       }
@@ -2053,7 +2073,7 @@ export function createCrew(K) {
       if (st === 'paused' && prev === 'working') return;     // stepAgent sets the tools down and turns to you
       if (st === 'working' && prev === 'paused') return;     // the hold lets go; they pick the tools back up
       if (a.hold) { if (a.hold.carry && !a.carry) a.carry = a.hold.carry; a.hold = null; }
-      if (a.gone && (st === 'working' || st === 'away' || st === 'paused')) { enter(a, st !== 'away' && morning()); return; }
+      if (a.gone && (st === 'working' || st === 'away' || st === 'paused' || st === 'ready')) { enter(a, (st === 'working' || st === 'paused') && morning()); return; }
       abort(a);
       if (st === 'working' && a.carry === 'thermos') a.plan.push(D(a, 'bend', 0.6, { carry: null, say: 'putting the thermos down' }));
     },
