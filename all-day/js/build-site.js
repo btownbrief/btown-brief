@@ -1817,14 +1817,16 @@ export function createSite(canvas, opts = {}) {
   const api = {
     setTown(t = {}) {
       const prevTop = topped(), prevF = activeFloor(), prevBase = baseline(), prevLit = S.town.windows_lit;
-      Object.assign(S.town, {
-        total_minutes: +t.total_minutes || 0,
-        floors_done: Math.max(0, t.floors_done | 0),
-        floor_progress: clamp(+t.floor_progress || 0, 0, 1),
-        windows_lit: Math.max(0, (t.windows_lit != null ? t.windows_lit : t.posts_lit) | 0),
-        floors: t.floors ? clamp(t.floors | 0, 2, 12) : S.town.floors,
-        topped_out: !!t.topped_out,
-      });
+      /* a partial update changes only what it names: the tab lights a window
+         after a post with setTown({ windows_lit }) alone, and that must not
+         knock the building back to an empty lot */
+      const T = S.town, has = (k) => t[k] != null;
+      if (has('total_minutes')) T.total_minutes = +t.total_minutes || 0;
+      if (has('floors_done')) T.floors_done = Math.max(0, t.floors_done | 0);
+      if (has('floor_progress')) T.floor_progress = clamp(+t.floor_progress || 0, 0, 1);
+      if (has('windows_lit') || has('posts_lit')) T.windows_lit = Math.max(0, (has('windows_lit') ? t.windows_lit : t.posts_lit) | 0);
+      if (has('floors')) T.floors = clamp(t.floors | 0, 2, 12);
+      if (has('topped_out')) T.topped_out = !!t.topped_out;
       if (L && L.floors !== S.town.floors) { L = null; layout(); }
       if (activeFloor() !== prevF) { pruneMarks(); saveMarks(); for (const a of agents.values()) { a.plan = []; a.act = null; a.target = null; if (a.level !== 'g') { a.level = workLevel(); a.y = yFor(a); } } }
       if (!prevTop && topped()) { S.toppedAt = S.t; S.beamSet = reduced || !L; }
@@ -1914,7 +1916,7 @@ export function createSite(canvas, opts = {}) {
     stats() {
       const s = stats.samples.slice().sort((p, q) => p - q);
       const pct = (p) => (s.length ? s[Math.min(s.length - 1, Math.floor(s.length * p))] : 0);
-      return { frames: stats.frames, avgMs: stats.frames ? stats.total / stats.frames : 0, tickMs: stats.ticks ? stats.tick / stats.ticks : 0, p50: pct(0.5), p95: pct(0.95), maxMs: stats.max, size: [W, H], cam: [Math.round(cam.x), Math.round(cam.y), cam.tx, cam.ty], agents: agents.size, running: !!raf, crew: [...agents.values()].map((a) => [a.id, Math.round(a.x), Math.round(a.y), a.state, a.gone ? 'gone' : a.act ? a.act.k : '-']), you: you && !you.gone ? [Math.round(you.x - cam.x), Math.round(you.y - cam.y), you.state, you.pose] : null };
+      return { frames: stats.frames, avgMs: stats.frames ? stats.total / stats.frames : 0, tickMs: stats.ticks ? stats.tick / stats.ticks : 0, p50: pct(0.5), p95: pct(0.95), maxMs: stats.max, size: [W, H], town: { ...S.town }, cam: [Math.round(cam.x), Math.round(cam.y), cam.tx, cam.ty], agents: agents.size, running: !!raf, crew: [...agents.values()].map((a) => [a.id, Math.round(a.x), Math.round(a.y), a.state, a.gone ? 'gone' : a.act ? a.act.k : '-']), you: you && !you.gone ? [Math.round(you.x - cam.x), Math.round(you.y - cam.y), you.state, you.pose] : null };
     },
     resetStats() { stats.frames = 0; stats.total = 0; stats.max = 0; stats.samples = []; stats.tick = 0; stats.ticks = 0; },
   };

@@ -8087,6 +8087,24 @@ async function theBuild(browser, base) {
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
   });
+
+  await group('The Build, the site: a partial setTown changes only what it names (a post lights a window, the floors stay)', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/all-day/tests/build-site-preview.html?shot=1');
+    await page.waitForFunction(() => window.site);
+    const r = await page.evaluate(() => {
+      const s = window.site;
+      s.setTown({ total_minutes: 4000, floors: 6, floors_done: 3, floor_progress: 0.4, windows_lit: 5, topped_out: false });
+      const before = s.stats().town;
+      s.setTown({ windows_lit: 6 });      // what the tab sends after a post
+      const after = s.stats().town;
+      return { before, after };
+    });
+    check(r.after.windows_lit === 6 && r.after.floors_done === 3 && r.after.floor_progress === 0.4 && r.after.total_minutes === 4000 && r.after.floors === 6 && r.after.topped_out === false,
+      'a post lights one more window; floors, progress and hours stay where they were', JSON.stringify(r));
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
 }
 
 /* the review shots: every screen at 390 light and dark and at 1440 */
