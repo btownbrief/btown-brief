@@ -60,7 +60,7 @@ const PILE_AT = { lumber: ['lumber', 'rack'], panels: ['lumber', 'panels'], bric
 const NEED_PILE = { beam: 'lumber', panel: 'panels', formwork: 'lumber', bricks: 'brick', pane: 'glass', spool: 'copper', rebar: 'rebar', stakes: 'stakes' };
 const NEED_CARRY = { beam: 'beam', panel: 'panel', formwork: 'beam', bricks: 'bricks', pane: 'pane', spool: 'spool', rebar: 'rebar', stakes: 'stakes', shovel: 'shovel' };
 /* tools a builder keeps between jobs of the same kind, and where they go back */
-const TOOL_HOME = { shovel: ['tools', 'shed'], spool: ['tools', 'spools'], toolbox: ['tools', 'shed'], clipboard: ['office', 'step'], mallet: ['tools', 'stakes'] };
+const TOOL_HOME = { shovel: ['tools', 'shed'], spool: ['tools', 'spools'], toolbox: ['tools', 'shed'], clipboard: ['office', 'step'], mallet: ['tools', 'stakes'], bucket: ['tools', 'shed'] };
 const PLACE = { lumber: 'the lumber yard', masonry: 'the brick yard', staging: 'the staging area', tools: 'the toolshed' };
 const HEAVY = { beam: 1, panel: 1, barrow: 1, rebar: 1, paneL: 1, paneR: 1, pane: 1, bricks: 1 };
 /* task preference -> job kinds they reach for first */
@@ -71,8 +71,8 @@ const EARLY = { lot: 1, stakes: 1, dig: 1, rebar: 1, pour: 1, cure: 1 };
 const NO_CRANE = { lot: 1, stakes: 1, dig: 1, rebar: 1, pour: 1 };   // the tower crane goes up during cure
 const FACE_YOU = { look: 1, cheer: 1, wave: 1, sitbeam: 1 };
 /* names art may not draw yet, and what to show meanwhile (dropped when art exports POSES_DRAWN / CARRY_DRAWN) */
-const POSE_FALLBACK = { jackhammer: 'shovel', ride: 'sit' };
-const CARRY_FALLBACK = { rustPanel: 'panel', solar: 'pane', mallet: null };
+const POSE_FALLBACK = {};      // art draws jackhammer, ride, rustPanel, solar and mallet now
+const CARRY_FALLBACK = {};
 const SIT = { sit: 1, sitbeam: 1, kneel: 1, crouch: 1 };
 const FOREMAN_COLORS = { hat: '#f4f1e8', vest: '#ff8a2a', skin: '#ffdbac', hair: '#8a8a8a' };
 const DRIVER_COLORS = { hat: '#3d7bd9', vest: '#f5e23a', skin: '#c68642', hair: '#1f1a17' };
@@ -115,7 +115,8 @@ export function createCrew(K) {
     if (level === 'ground' || level == null) { const p = stage().phase; return p === 'frame' ? 'the ground floor' : p === 'finish' ? 'the street' : 'the lot'; }
     return level >= floorsN() ? 'the roof' : 'the ' + ORD[level + 1] + ' floor';
   }
-  function workLevel() { const s = stage(); return s.phase === 'frame' && s.floor > 0 ? s.floor : s.phase === 'finish' ? floorsN() : 'ground'; }
+  const scaffoldUp = () => { const L = B().ladder ? B().ladder() : null; return !!L && L.top < levelY('ground') - 0.5; };
+  function workLevel() { const s = stage(); if (!scaffoldUp()) return 'ground'; return s.phase === 'frame' && s.floor > 0 ? s.floor : s.phase === 'finish' ? floorsN() : 'ground'; }
 
   /* ---------------------------------------------------- action builders */
   const go = (x, y, level, say) => ({ k: 'goto', x, y, level: level == null ? 'ground' : level, say });
@@ -359,7 +360,7 @@ export function createCrew(K) {
     let req = null;
     const top = j.at ? j.at[1] - 9 : GROUND_Y - 17;
     return [
-      call(() => { mixer.truck.need = K.t + 90; if (mixer.truck.state === 'gone') callMixer(); }),
+      call(() => { mixer.truck.need = K.t + 90; crane.wanted = K.t + 150; if (mixer.truck.state === 'gone') callMixer(); }),
       ...fetch(a, 'formwork', 'beam', 'picking up column forms at the lumber yard'),
       mark('beam', () => { mixer.truck.need = K.t + 60; }),
       ...toJob(a, j, 'carrying the column forms over'),
@@ -381,7 +382,7 @@ export function createCrew(K) {
     let req = null;
     const out = [
       go(pick[0] + 2 + spread(a) * 0.4, pick[1] + 6, 'ground', 'heading to the ' + (deck ? 'panel rack' : 'timber stack') + ' to rig a ' + noun),
-      W(() => crane.erect >= 1, { pose: 'look', face: 0, max: 60, lateSay: 'waiting for the crane to go up' }),
+      W(() => crane.erect >= 1, { pose: 'look', face: 0, max: 60, lateSay: 'waiting for the crane to go up', start: () => { crane.wanted = K.t + 150; } }),
       D(a, 'bend', 1.2, { say: 'rigging a ' + noun + ' for the crane', then: () => {
         use(deck ? 'panels' : 'lumber');
         const ax = j.at ? j.at[0] : j.x, ay = post ? levelY(j.level) : j.at ? j.at[1] : levelY(j.level);
@@ -662,6 +663,21 @@ export function createCrew(K) {
       finish(a, j),
     ];
   }
+  /* after topping out: washing windows, sweeping, watering, raking leaves, shovelling snow, paint, wreaths */
+  function chUpkeep(a, j) {
+    const out = [];
+    const tool = j.carry === 'bucket' ? 'bucket' : j.needs === 'shovel' ? 'shovel' : null;
+    if (tool) out.push(...toolFrom(a, tool, 'getting a ' + tool + ' from the toolshed'));
+    else if (j.carry === 'plant') { const sp = SAPLINGS[a.seed % SAPLINGS.length]; out.push(go(sp[0] - 4, sp[1] + 2, 'ground', 'fetching a wreath'), D(a, 'bend', 0.8), D(a, 'lift', 0.4, { carry: 'plant' })); }
+    const pose = j.pose || 'sweep', d = Math.max(6, (j.dur || 12) * 0.55);
+    const keep = pose === 'pour' || pose === 'trowel' || pose === 'guide';
+    out.push(mark(tool || null), ...toJob(a, j, 'heading out front'),
+      D(a, pose, d * 0.6, { carry: keep ? tool || j.carry || null : null, work: [0, 0.6], say: j.label || 'keeping the place nice' }),
+      ...breath(a, 0.3),
+      D(a, pose, d * 0.4, { work: [0.6, 1], say: j.label || 'keeping the place nice', then: () => { if (j.carry === 'plant') a.carry = null; } }),
+      finish(a, j));
+    return out;
+  }
   function chGeneric(a, j) {
     const out = [];
     if (j.needs && NEED_PILE[j.needs]) out.push(...fetch(a, j.needs, NEED_CARRY[j.needs] || null, 'fetching ' + j.needs));
@@ -692,6 +708,7 @@ export function createCrew(K) {
       case 'tree': case 'planter': return chPlant(a, j);
       default: break;
     }
+    if (j.kind === 'upkeep' || j.pose) return chUpkeep(a, j);
     switch (j.kind) {
       case 'stake': return chStake(a, j);
       case 'dig': return chDig(a, j);
@@ -851,7 +868,7 @@ export function createCrew(K) {
     if (!a.hat) out.push(D(a, 'stand', 0.6, { hat: true, carry: a.carry === 'hat' ? null : a.carry, say: 'putting the hard hat on' }));
     const c = a.carry;
     if (c && c !== 'hat' && !(j && ((c === 'shovel' && j.needs === 'shovel') || (c === 'spool' && j.needs === 'spool')))) {
-      const home = TOOL_HOME[c] ? spot(...TOOL_HOME[c]) : null;
+      const home = TOOL_HOME[c] ? wspot(...TOOL_HOME[c]) : null;
       if (home) out.push(go(home[0] + 3, home[1] + 4, 'ground', 'putting the ' + (c === 'spool' ? 'wire' : c) + ' back'), D(a, 'bend', 0.6, { carry: null }));
       else out.push(D(a, 'bend', 0.5, { carry: null }));
     }
@@ -993,7 +1010,7 @@ export function createCrew(K) {
     const climbing = !!g.say && /^climbing/.test(g.say);
     const down = L === 'ground' || (a.level !== 'ground' && L < a.level);
     out.push({ k: 'walk', x: lx - 2.5, y: a.level === 'ground' ? levelY('ground') + 1.5 : null, say: climbing ? 'heading for the stair tower' : g.say });
-    out.push({ k: 'ladder', up: !down, max: 25, lateSay: 'waiting for the ladder' });
+    out.push({ k: 'ladder', up: !down, max: 90, lateSay: 'waiting for the ladder' });
     out.push({ k: 'climb', level: L, up: !down, say: down ? 'climbing down the stair tower' : climbing ? g.say : L >= floorsN() ? 'climbing up to the roof' : 'climbing up to ' + where(L) });
     out.push({ k: 'walk', x: g.x, y: L === 'ground' ? gy(g.y) : null, say: climbing ? 'walking along ' + where(L) : g.say });
     return out;
@@ -1046,7 +1063,7 @@ export function createCrew(K) {
     for (const b of agents.values()) {
       if (b === a || !b.act || b.act.k !== 'climb' || b.act.up !== x.up) continue;
       const ahead = x.up ? a.y - b.y : b.y - a.y;
-      if (ahead > 0 && ahead < LADDER_GAP) { a.poseT -= dt; return; }
+      if ((ahead > 0 || (ahead === 0 && b.id < a.id)) && ahead < LADDER_GAP) { a.poseT -= dt; return; }
     }
     a.y += Math.sign(d) * CLIMB * dt;
   }
@@ -1125,11 +1142,18 @@ export function createCrew(K) {
         if (Math.abs(d) <= dt * 4) { fork.lift = x.to; a.act = null; } else fork.lift += Math.sign(d) * dt * 4;
         break;
       }
-      case 'ladder':
-        setPose(a, 'look'); a.facing = 0;
+      case 'ladder': {
+        if (x.since == null) x.since = K.t;
         if (x.lateSay && a.actT > 0.6) a.say = x.lateSay;
-        if (ladderFree(a, x.up) || a.actT > (x.max || 25)) a.act = null;
+        /* first come, first up: the rest wait in a short line beside the ladder */
+        let idx = 0;
+        for (const b of agents.values()) if (b !== a && b.act && b.act.k === 'ladder' && b.act.up === x.up && b.level === a.level && (b.act.since < x.since || (b.act.since === x.since && b.id < a.id))) idx++;
+        if (idx === 0 && (ladderFree(a, x.up) || a.actT > (x.max || 90))) { a.act = null; next(a); break; }   // onto the ladder this tick, so the next in line sees it
+        const tx = ladderX() + (x.up ? -2.5 - idx * 3.6 : 3 + idx * 3.6), d = tx - a.x;
+        if (Math.abs(d) > 0.2) { a.x += Math.sign(d) * Math.min(Math.abs(d), WALK * 0.6 * dt); a.facing = Math.sign(d); setPose(a, 'walk'); }
+        else { setPose(a, idx ? 'stand' : 'look'); a.facing = idx ? 1 : 0; }
         break;
+      }
       case 'gone': a.gone = true; a.act = null; break;
       default: a.act = null;
     }
@@ -1249,7 +1273,7 @@ export function createCrew(K) {
   /* -- the forklift and the yard hand who drives it (and spots the trucks) */
   const fork = { kind: 'forklift', x: PARK_FORK[0], y: PARK_FORK[1], facing: -1, vel: 0, lift: 0, load: null, driver: null, shuttleT: 30, moving: false };
   function pileTarget(kind, from) {
-    const p = PILE_AT[kind] ? spot(...PILE_AT[kind]) : spot('staging', 'drop');
+    const p = PILE_AT[kind] ? wspot(...PILE_AT[kind]) : spot('staging', 'drop');
     const dir = p[0] >= from ? 1 : -1;
     return [p[0] - dir * 9, GROUND_Y + 34, dir];
   }
@@ -1407,7 +1431,7 @@ export function createCrew(K) {
   }
   function craneRelease(r) { r.released = true; }
   function stepCraneErect(dt) {
-    const want = !NO_CRANE[stage().phase];
+    const want = !NO_CRANE[stage().phase] || crane.wanted > K.t;
     if (!want) { crane.erect = 0; crane.built = false; return; }
     if (crane.erect >= 1) return;
     /* a fresh page on a site that's already up: the crane is simply there */
@@ -1476,7 +1500,8 @@ export function createCrew(K) {
     if (!m || m.kind !== 'topped') return;
     /* topping out: the crane hoists the last beam, with a little tree on it, rigged beside the building */
     crane.erect = 1;
-    const r = craneRequest(null, 'topbeam', [BUILDING.x1 - 6, GROUND_Y + 4], [(BUILDING.x0 + BUILDING.x1) / 2 + 20, B().levelY(floorsN())], true);
+    const tb = B().topBeam ? B().topBeam() : { x: (BUILDING.x0 + BUILDING.x1) / 2 + 20, y: B().levelY(floorsN()) };
+    const r = craneRequest(null, 'topbeam', [BUILDING.x1 - 6, GROUND_Y + 4], [tb.x, tb.y + 0.9], true);
     r.fast = true;
     crane.queue.splice(crane.queue.indexOf(r), 1); crane.queue.unshift(r);
     r.onSet = () => K.emit('crew:topbeam', { x: r.to[0], y: r.to[1] });
@@ -1571,7 +1596,7 @@ export function createCrew(K) {
   function drawFork(ctx) {
     const d = fork.driver ? agents.get(fork.driver) : null;
     /* the art draws the forklift's driver itself; the yard hand is hidden while he drives */
-    forkO.facing = fork.facing; forkO.lift = clamp(fork.lift / 3.5, 0, 1); forkO.load = fork.load; forkO.wheelT = fork.odo || 0;
+    forkO.facing = fork.facing; forkO.lift = clamp(fork.lift / 3.5, 0, 1); forkO.load = fork.load; forkO.wheelT = fork.odo || 0; forkO.driver = d ? d.colors : null;
     K.art.prop(ctx, 'forklift', fork.x, fork.y, forkO);
     void d;
   }
@@ -1726,10 +1751,10 @@ export function createCrew(K) {
     const L = crane.load, cur = crane.cur;
     const post = L === 'beam' && cur && cur.part === 'post';
     hookO.load = L === 'topbeam' ? 'beam' : L === 'cbucket' || post ? null : L;
-    K.art.prop(ctx, 'hook', hx, crane.hy, hookO);
+    K.art.prop(ctx, 'hook', hx, crane.hy + 2.2, hookO);
     if (L === 'topbeam') {
-      K.art.prop(ctx, hasProp('tree') ? 'tree' : 'plant', hx + 5, crane.hy + 7.9, topTreeO);
-      K.art.prop(ctx, 'flag', hx - 6, crane.hy + 7.9, topFlagO);
+      K.art.prop(ctx, hasProp('tree') ? 'tree' : 'plant', hx + 4.5, crane.hy + 7.9, topTreeO);
+      K.art.prop(ctx, 'flag', hx - 5.5, crane.hy + 7.9, topFlagO);
     } else if (L === 'cbucket') drawBucketLoad(ctx, hx, crane.hy, cur);
     else if (post) drawPostLoad(ctx, hx, crane.hy);
     /* red light on top: blinks, and glows at night */
@@ -1740,7 +1765,7 @@ export function createCrew(K) {
     if (night > 0.25 && on) K.lights.push({ x: mx0 + 2, y: jy - 14.6, r: 5, a: 0.8 * night, color: EMIT.craneRed });
     if (night > 0.3 && anyoneWorking()) K.lights.push({ x: mx0 - 4, y: jy + 6, r: 60, a: 0.2 * night, color: EMIT.lamp });
   }
-  const topTreeO = { small: true, growth: 0.6, pot: true }, topFlagO = { h: 6 };
+  const topTreeO = { small: true }, topFlagO = { h: 6 };
   /* the concrete pour bucket (a cone with a gate at the bottom), and a glulam post hanging upright */
   function drawBucketLoad(ctx, hx, hy, r) {
     const y0 = hy + 3.6;
@@ -1898,7 +1923,10 @@ export function createCrew(K) {
     checkStage();
     if (mixer.spinUntil > K.t) mixer.t += dt;
     stepForeman(dt);
-    for (const a of agents.values()) stepAgent(a, dt);
+    for (const a of agents.values()) {
+      /* one builder's bad step never freezes the site: they drop the job and pick a new one */
+      try { stepAgent(a, dt); } catch (e) { console.error(e); try { abort(a); a.act = null; } catch (e2) { a.plan = []; a.act = null; } }
+    }
     for (const [id, a] of agents) if (a.gone && !a.me && !a.npc) { abort(a); agents.delete(id); }
     stepCrane(dt); stepHoist(dt); stepTruck(dt); stepMixer(dt); stepExc(dt);
     if (barriers.size > 40) for (const [k, b] of barriers) if (K.t - b.t > 120) barriers.delete(k);
