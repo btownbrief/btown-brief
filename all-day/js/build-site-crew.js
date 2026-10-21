@@ -60,6 +60,7 @@ const PILE_AT = { lumber: ['lumber', 'rack'], brick: ['masonry', 'bricks'], glas
 const NEED_PILE = { beam: 'lumber', panel: 'lumber', formwork: 'lumber', bricks: 'brick', pane: 'glass', spool: 'copper', rebar: 'rebar', stakes: 'stakes' };
 /* tools a builder keeps between jobs of the same kind, and where they go back */
 const TOOL_HOME = { shovel: ['tools', 'shed'], spool: ['tools', 'shed'], toolbox: ['tools', 'shed'], clipboard: ['office', 'step'] };
+const PLACE = { lumber: 'the lumber yard', masonry: 'the brick yard', staging: 'the staging area', tools: 'the toolshed' };
 const HEAVY = { beam: 1, panel: 1, barrow: 1, rebar: 1, paneL: 1, paneR: 1, pane: 1, bricks: 1 };
 /* task preference -> job kinds they reach for first */
 const PREF = { frame: ['frame', 'deck', 'form', 'stake'], brick: ['brick', 'pour', 'dig'], wire: ['wire', 'rebar'], window: ['glaze', 'clad'],
@@ -150,9 +151,10 @@ export function createCrew(K) {
   function fetch(a, need, carry, say, opt = {}) {
     const kind = NEED_PILE[need] || need;
     const at = opt.at || (PILE_AT[kind] ? spot(...PILE_AT[kind]) : spot('staging', 'drop'));
+    const zone = opt.at ? 'the prefab shed' : PLACE[(PILE_AT[kind] || ['staging'])[0]];
     const dx = opt.dx != null ? opt.dx : spread(a);
     return [
-      go(at[0] + dx, at[1] + 3 + ((a.seed >>> 6) % 4) * 1.6, 'ground', opt.walkSay || say),
+      go(at[0] + dx, at[1] + 3 + ((a.seed >>> 6) % 4) * 1.6, 'ground', opt.walkSay || 'heading to ' + zone),
       W(() => pileOf(kind) > 0, { pose: 'look', max: 8, lateSay: 'waiting on a ' + kind + ' delivery', start: () => { if (pileOf(kind) <= 0) order(kind); } }),
       D(a, opt.pose || 'bend', opt.dur || 1, { say, then: () => use(kind) }),
       D(a, 'lift', 0.55, { carry }),
@@ -310,7 +312,7 @@ export function createCrew(K) {
       ...fetch(a, 'panel', 'beam', 'fetching studs at the prefab shed', { at: spot('lumber', 'panels') }),
       go(s[0] - 6, s[1] + 1, 'ground', 'carrying studs to the trestles'), { k: 'face', dir: 1 },
       D(a, 'bend', 0.6, { carry: null, held: { name: 'panel', x: s[0], y: s[1] - 4.2, o: { flat: true } } }),
-      D(a, 'hammer', 3.6, { say: 'building a wall panel in the prefab shed' }),
+      D(a, 'hammer', 3.6, { say: 'building a ' + (j.kind === 'deck' ? 'floor' : 'wall') + ' panel in the prefab shed' }),
       D(a, 'drill', 2.2, { say: 'screwing the sheathing on' }),
     ];
     const useCrane = crane.queue.length < 2 && j.level !== 'ground';
