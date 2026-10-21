@@ -118,6 +118,8 @@ export function createCrew(K) {
   function D(a, pose, dur, o) { const x = { k: 'do', pose, dur: dur * a.pace * (0.88 + a.r() * 0.24) }; if (o) Object.assign(x, o); return x; }
   function W(until, o) { return Object.assign({ k: 'wait', until, max: 30 }, o); }
   const pick = (a, arr) => arr[(a.r() * arr.length) | 0];
+  /* each builder stands at their own spot around a shared place, so a crowd fans out */
+  const spread = (a) => (((a.seed >>> 2) % 9) - 4) * 1.4;
   /* a small, human pause between steps: a glance at you, a stretch, a breath */
   function breath(a, p = 0.3) {
     if (a.r() > p) return [];
@@ -148,9 +150,9 @@ export function createCrew(K) {
   function fetch(a, need, carry, say, opt = {}) {
     const kind = NEED_PILE[need] || need;
     const at = opt.at || (PILE_AT[kind] ? spot(...PILE_AT[kind]) : spot('staging', 'drop'));
-    const dx = opt.dx != null ? opt.dx : (a.seed % 5) - 2;
+    const dx = opt.dx != null ? opt.dx : spread(a);
     return [
-      go(at[0] + dx, at[1] + 4 + (a.seed % 3), 'ground', opt.walkSay || say),
+      go(at[0] + dx, at[1] + 3 + ((a.seed >>> 6) % 4) * 1.6, 'ground', opt.walkSay || say),
       W(() => pileOf(kind) > 0, { pose: 'look', max: 8, lateSay: 'waiting on a ' + kind + ' delivery', start: () => { if (pileOf(kind) <= 0) order(kind); } }),
       D(a, opt.pose || 'bend', opt.dur || 1, { say, then: () => use(kind) }),
       D(a, 'lift', 0.55, { carry }),
@@ -359,9 +361,13 @@ export function createCrew(K) {
   function chBrick(a, j) {
     const wh = where(j.level), up = j.level !== 'ground';
     const mx = spot('masonry', 'mixer'), bk = spot('masonry', 'bricks');
-    const out = [
+    const mixing = mixer.spinUntil > K.t + 2;
+    const out = mixing ? [
+      go(mx[0] + 7 + spread(a) * 0.4, mx[1] + 3, 'ground', 'heading to the brick yard'), { k: 'face', dir: -1 },
+      D(a, 'pour', 1.6, { say: 'scooping mortar from the mixer', carry: 'bucket' }),
+    ] : [
       go(mx[0] - 7, mx[1] + 2, 'ground', 'heading to the brick yard'), { k: 'face', dir: 1 },
-      D(a, 'shovel', 3.4, { say: 'shovelling sand into the mortar mixer', start: () => { mixer.spinUntil = K.t + 9; } }),
+      D(a, 'shovel', 3.4, { say: 'shovelling sand into the mortar mixer', start: () => { mixer.spinUntil = K.t + 12; } }),
       D(a, 'look', 1, { say: 'watching the mortar turn' }),
       D(a, 'pour', 1.4, { say: 'tipping mortar into a bucket', carry: 'bucket' }),
     ];
@@ -638,7 +644,7 @@ export function createCrew(K) {
     const k = a.r();
     if (k < 0.45) {
       const urn = spot('canteen', 'urn');
-      out.push(go(urn[0] + 2 + (a.seed % 4), urn[1] + 3, 'ground', 'grabbing a coffee at the canteen'), D(a, 'bend', 0.9, { carry: 'mug' }),
+      out.push(go(urn[0] + 3 + spread(a), urn[1] + 3 + ((a.seed >>> 6) % 4) * 1.5, 'ground', 'grabbing a coffee at the canteen'), D(a, 'bend', 0.9, { carry: 'mug' }),
         D(a, 'drink', 2.4, { say: 'having a coffee at the canteen' }), D(a, 'stand', 3, { face: (a.seed & 1) ? 1 : -1 }), D(a, 'drink', 2), D(a, 'look', 1.2, { face: 0 }),
         D(a, 'bend', 0.6, { carry: null }));
     } else if (k < 0.7) {
@@ -660,7 +666,9 @@ export function createCrew(K) {
     const kinds = pref === 'haul' ? ['offcuts', 'bricks', 'tools', 'offcuts', 'sweep']
       : pref === 'brick' ? ['bricks', 'sweep', 'measure'] : pref === 'wire' ? ['tools', 'plans', 'sweep']
         : pref === 'frame' || pref === 'roof' ? ['measure', 'sweep', 'offcuts'] : ['sweep', 'measure', 'plans', 'offcuts', 'tools'];
-    const k = pick(a, kinds);
+    let k = pick(a, kinds);
+    if (k === a.lastFiller) k = kinds[(kinds.indexOf(k) + 1) % kinds.length];
+    a.lastFiller = k;
     const bx = () => BUILDING.x0 + 6 + a.r() * (BUILDING.x1 - BUILDING.x0 - 12);
     const gy = lv === 'ground' ? GROUND_Y + 7 : null;
     if (k === 'offcuts') {
@@ -1211,10 +1219,13 @@ export function createCrew(K) {
     if (!crane.hy) crane.hy = jy + 9;
     const top = jy + 7;
     const x0 = crane.x;
-    const mx = (x, sp = 17) => { const d = x - crane.x; if (Math.abs(d) <= Math.min(sp, 1 + Math.abs(d) * 1.5) * dt + 0.02) { crane.x = x; return true; } crane.x += Math.sign(d) * Math.min(sp, 1 + Math.abs(d) * 1.5) * dt; return false; };
-    const my = (y, sp = 11) => { const d = y - crane.hy; if (Math.abs(d) <= Math.min(sp, 1 + Math.abs(d) * 1.6) * dt + 0.02) { crane.hy = y; return true; } crane.hy += Math.sign(d) * Math.min(sp, 1 + Math.abs(d) * 1.6) * dt; return false; };
+    const mx = (x, sp0 = 17) => { const sp = sp0 * fast; return mx2(x, sp); };
+    const mx2 = (x, sp) => { const d = x - crane.x; if (Math.abs(d) <= Math.min(sp, 1 + Math.abs(d) * 1.5) * dt + 0.02) { crane.x = x; return true; } crane.x += Math.sign(d) * Math.min(sp, 1 + Math.abs(d) * 1.5) * dt; return false; };
+    const my = (y, sp0 = 11) => { const sp = sp0 * fast; return my2(y, sp); };
+    const my2 = (y, sp) => { const d = y - crane.hy; if (Math.abs(d) <= Math.min(sp, 1 + Math.abs(d) * 1.6) * dt + 0.02) { crane.hy = y; return true; } crane.hy += Math.sign(d) * Math.min(sp, 1 + Math.abs(d) * 1.6) * dt; return false; };
     let r = crane.cur;
     if (!r && crane.queue.length) { r = crane.cur = crane.queue.shift(); r.state = 'toPick'; crane.returning = false; }
+    const fast = r && r.fast ? 2.2 : 1;
     if (!r) {
       crane.idleT += dt;
       if (my(top + 2, 6)) crane.returning = false;
@@ -1253,8 +1264,10 @@ export function createCrew(K) {
   K.on('milestone', (m) => {
     if (!m || m.kind !== 'topped') return;
     /* topping out: the crane hoists the last beam, with a little tree on it */
-    const h = spot('lumber', 'hook');
-    const r = craneRequest(null, 'topbeam', [h[0], h[1]], [(BUILDING.x0 + BUILDING.x1) / 2 + 20, B().levelY(floorsN())], true);
+    /* rigged at the foot of the building beside the crane, so it rises while the moment plays */
+    const r = craneRequest(null, 'topbeam', [BUILDING.x1 - 6, GROUND_Y + 4], [(BUILDING.x0 + BUILDING.x1) / 2 + 20, B().levelY(floorsN())], true);
+    r.fast = true;
+    crane.queue.splice(crane.queue.indexOf(r), 1); crane.queue.unshift(r);
     r.onSet = () => K.emit('crew:topbeam', { x: r.to[0], y: r.to[1] });
   });
 
