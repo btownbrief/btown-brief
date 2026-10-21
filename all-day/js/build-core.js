@@ -372,6 +372,8 @@ const MESSAGES = {
   bad_import: 'Couldn’t move this phone’s hours.',
   no_shift: 'No shift running.',
   shift_running: 'A shift is already running.',
+  bad_task: 'That didn’t work.',
+  bad_range: 'Couldn’t load that stretch.',
 };
 export const message = (code) => MESSAGES[code] || MESSAGES.offline;
 
