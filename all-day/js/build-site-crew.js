@@ -1885,9 +1885,16 @@ export function createCrew(K) {
       if (!inView(a.x, 10)) continue;
       tagOrder.push(a);
     }
-    tagOrder.sort((p, q) => (q.me - p.me) || ((q.id === followId) - (p.id === followId)) || (q.y - p.y));
+    /* a quiet neighbourhood, not a crowd of labels: you, whoever you follow,
+       and the few nearest the middle of the action (lead, 2026-10-21) */
+    const me = agents.get('you'), cp = K.camPx || K.cam;
+    const cx = me && !me.gone && inView(me.x, 0) ? me.x : cp.x + K.view.W / 2;
+    tagOrder.sort((p, q) => (q.me - p.me) || ((q.id === followId) - (p.id === followId)) || (Math.abs(p.x - cx) - Math.abs(q.x - cx)));
+    const cap = Math.max(4, Math.floor(K.view.W / 30));
+    let shown = 0;
     const night = K.light.night || 0;
     for (const a of tagOrder) {
+      if (!(a.me || a.id === followId) && shown >= cap) break;
       const text = tagTextOf(a, followId);
       if (!text) continue;
       if (text !== a.tagText) { a.tagText = text; a.tagW = ctx.measureText(text).width; }
@@ -1900,6 +1907,7 @@ export function createCrew(K) {
       if (!ok) { y -= h + 0.8; ok = !overlaps(x, y, w, h); }
       if (!ok && !important) continue;
       placed.push(x, y, w, h);
+      if (!important) shown++;
       ctx.fillStyle = a.me ? 'rgba(255,207,58,0.95)' : a.id === followId ? 'rgba(22,25,29,0.86)' : (night > 0.5 ? 'rgba(10,12,16,0.62)' : 'rgba(22,25,29,0.55)');
       rr(ctx, x, y, w, h, 2.2); ctx.fill();
       if (a.me) { ctx.beginPath(); ctx.moveTo(a.x - 1.2, y + h); ctx.lineTo(a.x, y + h + 1.3); ctx.lineTo(a.x + 1.2, y + h); ctx.fill(); }

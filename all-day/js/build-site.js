@@ -224,7 +224,7 @@ export function createSite(canvas, opts = {}) {
        under the action rather than a sky of nothing; the top of the work
        stays in view. A dead zone keeps a climb from bobbing the camera. */
     const workTop = (K.building.topY ? K.building.topY() : GROUND_Y - 60) - 18;
-    const anchor = fy != null ? fy : Math.min(GROUND_Y + 8, workTop + 60);
+    const anchor = fy != null ? fy : GROUND_Y + 8;
     let ty = anchor - 0.64 * H;
     if (workTop < ty && (fy == null || fy > workTop + 30)) ty = Math.max(workTop, anchor + 20 - H);
     ty = clamp(ty, 0, WH - H);
