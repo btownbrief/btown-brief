@@ -44,8 +44,16 @@ test('bd_rules() in bd-SETUP.sql is exactly BUILD_RULES', () => {
   assert.ok(m, 'bd-SETUP.sql has a $json$ rules block');
   assert.deepEqual(JSON.parse(m[1]), R, 'run: node scripts/test-build-core.mjs --write-sql');
 });
-test('data/build-config.json is exactly BUILD_CONFIG', () => {
-  assert.deepEqual(JSON.parse(readFileSync(path.join(ROOT, 'all-day/data/build-config.json'), 'utf8')), core.BUILD_CONFIG);
+/* the config file is Stephen's (D wrote it, with more in it than the API
+   reads); the numbers the floor math uses must match BUILD_CONFIG */
+test('data/build-config.json agrees with BUILD_CONFIG on the floor rule', () => {
+  const c = JSON.parse(readFileSync(path.join(ROOT, 'all-day/data/build-config.json'), 'utf8'));
+  assert.equal(Number(c.hours_per_floor || c.HOURS_PER_FLOOR), core.BUILD_CONFIG.hours_per_floor);
+  assert.equal(c.floors, core.BUILD_CONFIG.floors);
+  assert.equal(c.roof, core.BUILD_CONFIG.roof);
+  assert.equal(c.habit_drop_minutes, core.BUILD_CONFIG.habit_drop_minutes);
+  assert.equal(c.season.building, core.BUILD_CONFIG.season.building);
+  assert.equal(core.floorsOf({ total_minutes: 30 * 60 }, c).floors_done, core.floorsOf({ total_minutes: 30 * 60 }).floors_done);
 });
 test('the fake answers exactly the bd_ doors the SQL grants to the app', () => {
   const g = SQL.match(/grant execute on function([\s\S]*?)to anon, authenticated;/);

@@ -1,7 +1,6 @@
 /* TEMPORARY stand-ins while builders A (data) and B (the site) are not
    merged. A's API comes from its worktree through an untracked symlink (_a);
    the site is a placeholder drawing. Deleted before the PR. Not shipped. */
-export { openBuild } from './_a/build-local.js';
 
 export function createSite(canvas) {
   const ctx = canvas.getContext('2d');

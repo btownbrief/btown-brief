@@ -40,10 +40,12 @@ import * as app from '../app.js';
 import * as store from '../store.js';
 import { el, esc, svg, ICON, button, pills, mark, agoShort } from '../ui.js';
 import { liquify } from '../liquid.js';
+import * as boards from '../boards.js';
 import { photoUrl, queuePhoto } from '../boards.js';
 import { REASON_LABELS } from '../boards-core.js';
 import { meetsInWindow, oneLine, redateDemo, timeLabel } from '../clubs-week.js';
-import { openBuild, createSite } from '../build-standins.TEMP.js';
+import { openBuild } from '../build-local.js';
+import { createSite } from '../build-standins.TEMP.js';
 
 const KEY = 'build';
 export const ICON_BUILD = svg('<path d="M3 17.5h18M5 17.5v-1.2a7 7 0 0 1 14 0v1.2"/><path d="M10 10V7.2a2 2 0 0 1 4 0V10"/>');
@@ -1396,6 +1398,10 @@ function wrapRow(top, row) {
 }
 
 /* ------------------------------------------------------------------ the tab */
+/* Settings' "Delete my account and posts" (boards.js) takes your thing,
+   hours, posts and builder too */
+boards.onDeleteMe(() => go(() => api().deleteMine()).then((r) => ({ ok: !!r.ok, message: r.message })));
+
 app.onAuth(() => {
   B.api = null;
   if (!B.root) return;
