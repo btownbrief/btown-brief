@@ -291,7 +291,7 @@ export function createArt(K) {
       const ph = (t / 0.9) % 1, s = Math.sin(ph * TAU);
       R.view = BACK; R.shadow = false; R.grip = false;
       R.tx = s * 0.15;
-      R.a0x = -1.3; R.a0y = -12.7 + s * 0.7; R.a1x = 1.3; R.a1y = -12.7 - s * 0.7; R.e0 = 1; R.e1 = -1;
+      R.a0x = -2.5; R.a0y = -12.0 + s * 0.8; R.a1x = 2.5; R.a1y = -12.0 - s * 0.8; R.e0 = 1; R.e1 = -1;
       R.f0x = -0.8; R.f0y = ANK - 1.4 * Math.max(0, -s); R.f1x = 0.8; R.f1y = ANK - 1.4 * Math.max(0, s);
       R.hy = -5.25 + 0.2 * Math.abs(s);
     },
@@ -396,11 +396,11 @@ export function createArt(K) {
     signal(t) {
       const mode = Math.floor(t / 3.5) % 2, c = t * TAU * 1.4;
       if (R.view === SIDE) {
-        if (mode === 0) { R.a1x = 0.7 + Math.cos(c) * 0.35; R.a1y = -13.4 + Math.sin(c) * 0.35; }
+        if (mode === 0) { R.a1x = 2.7 + Math.cos(c) * 0.35; R.a1y = -12.3 + Math.sin(c) * 0.35; }
         else { R.a1x = 3.6 + Math.cos(c) * 0.3; R.a1y = -6.3 + Math.sin(c) * 0.3; }
         R.a0x = -0.6; R.a0y = -5.8;
       } else {
-        if (mode === 0) { R.a1x = 2.1 + Math.cos(c) * 0.35; R.a1y = -13.4 + Math.sin(c) * 0.35; R.a0x = -2.4; R.a0y = -5.8; }
+        if (mode === 0) { R.a1x = 3.5 + Math.cos(c) * 0.35; R.a1y = -12.2 + Math.sin(c) * 0.35; R.a0x = -2.4; R.a0y = -5.8; }
         else { R.a1x = 4.2; R.a1y = -9.0 + Math.sin(c) * 0.5; R.a0x = -4.2; R.a0y = -9.0 - Math.sin(c) * 0.5; }
       }
       R.hdy = -0.1; R.look = 1;
@@ -408,8 +408,8 @@ export function createArt(K) {
     guide(t) {
       const sw = Math.sin(t * 1.3) * 0.3;
       R.tx = sw; R.lean = -0.06; R.hdy = -0.15; R.look = 1;
-      if (R.view === SIDE) { R.a1x = 1.6; R.a1y = -13.0; R.a0x = 0.5; R.a0y = -12.8; R.e0 = R.e1 = 1; }
-      else { R.a1x = 1.6; R.a1y = -13.2; R.a0x = -1.6; R.a0y = -13.2; }
+      if (R.view === SIDE) { R.a1x = 3.0; R.a1y = -12.2; R.a0x = 2.2; R.a0y = -12.5; R.e0 = R.e1 = 1; }
+      else { R.a1x = 3.4; R.a1y = -12.3; R.a0x = -3.4; R.a0y = -12.3; }
       const st = Math.sin(t * 1.3 + 1) * 0.25; R.f0x -= st; R.f1x += st;
     },
     sweep(t) {
@@ -459,8 +459,8 @@ export function createArt(K) {
     wave(t) {
       breathe(t); R.eyes = 2;
       const s = Math.sin(t * TAU / 0.5);
-      if (R.view === SIDE) { R.a1x = 1.6 + s * 0.7; R.a1y = -12.6 + Math.abs(s) * 0.2; R.e1 = -1; }
-      else { R.a1x = 3.0 + s * 0.7; R.a1y = -12.4 + Math.abs(s) * 0.2; R.e1 = -1; }
+      if (R.view === SIDE) { R.a1x = 2.9 + s * 0.6; R.a1y = -12.1 + Math.abs(s) * 0.2; R.e1 = 1; }
+      else { R.a1x = 3.9 + s * 0.6; R.a1y = -12.0 + Math.abs(s) * 0.2; R.e1 = -1; }
       R.tilt = s * 0.04;
     },
     clap(t) {
@@ -472,7 +472,7 @@ export function createArt(K) {
     },
     point(t) {
       breathe(t);
-      R.a1x = 4.2; R.a1y = -10.6 + Math.sin(t * 2) * 0.1; R.e1 = 1;
+      R.a1x = 4.4; R.a1y = -9.7 + Math.sin(t * 2) * 0.1; R.e1 = 1;
       const s0 = shoulder(0); R.a0x = s0[0] - 0.3; R.a0y = s0[1] + 3.2; R.e0 = -1;
       R.tool = 'finger'; R.tAng = -0.5; R.look = 1;
     },
@@ -508,23 +508,23 @@ export function createArt(K) {
     stretch(t) {
       const u = (t / 3.4) % 1, k = smooth(seg(u, 0, 0.3)) * (1 - smooth(seg(u, 0.62, 0.85)));
       R.lean = -0.12 * k; R.tilt = -0.15 * k; R.eyes = k > 0.6 ? 1 : 0; R.mouth = k > 0.6 ? 1 : 0;
-      if (R.view === SIDE) { R.a1x = lerp(0.8, 0.4, k); R.a1y = lerp(-5.6, -14.2, k); R.a0x = lerp(-0.7, -0.4, k); R.a0y = lerp(-5.6, -14.0, k); }
-      else { R.a0x = lerp(-2.35, -1.2, k); R.a0y = lerp(-5.75, -14.3, k); R.a1x = lerp(2.35, 1.2, k); R.a1y = lerp(-5.75, -14.3, k); }
+      if (R.view === SIDE) { R.a1x = lerp(0.8, 2.4, k); R.a1y = lerp(-5.2, -12.6, k); R.a0x = lerp(-0.6, -1.6, k); R.a0y = lerp(-5.2, -12.4, k); }
+      else { R.a0x = lerp(-2.3, -3.3, k); R.a0y = lerp(-5.3, -12.5, k); R.a1x = lerp(2.3, 3.3, k); R.a1y = lerp(-5.3, -12.5, k); }
       R.hy = -5.25 - 0.2 * k;
     },
     cheer(t) {
       const ph = (t / 0.7) % 1, j = Math.max(0, Math.sin(ph * TAU));
       R.ty = -1.4 * j; R.eyes = 2; R.mouth = 1;
       const sh = Math.sin(t * 20) * 0.15;
-      if (R.view === SIDE) { R.a1x = 1.6 + sh; R.a1y = -14.0; R.a0x = 0.2 - sh; R.a0y = -14.0; R.e0 = R.e1 = -1; }
-      else { R.a0x = -2.6 + sh; R.a0y = -13.9; R.a1x = 2.6 - sh; R.a1y = -13.9; }
+      if (R.view === SIDE) { R.a1x = 2.8 + sh; R.a1y = -12.3; R.a0x = -1.6 - sh; R.a0y = -12.2; R.e0 = R.e1 = 1; }
+      else { R.a0x = -3.7 + sh; R.a0y = -12.0; R.a1x = 3.7 - sh; R.a1y = -12.0; }
       R.f0y = ANK - j * 0.5; R.f1y = ANK - j * 0.5; R.hy = -5.25 + j * 0.1;
     },
     nod(t) { breathe(t); const n = Math.max(0, Math.sin(t * TAU / 0.8)); R.hdy = n * 0.3; R.tilt = n * 0.16; R.eyes = n > 0.7 ? 2 : 0; },
     raise(t) {
       breathe(t);
-      if (R.view === SIDE) { R.a1x = 0.9; R.a1y = -13.6; R.a0x = 2.0; R.a0y = -10.6; R.e0 = 1; }
-      else { R.a1x = 2.3; R.a1y = -13.6; R.a0x = 0.7; R.a0y = -10.5; R.e0 = -1; }
+      if (R.view === SIDE) { R.a1x = 2.4; R.a1y = -12.6; R.a0x = 2.2; R.a0y = -9.9; R.e0 = 1; }
+      else { R.a1x = 3.6; R.a1y = -12.3; R.a0x = 0.6; R.a0y = -9.6; R.e0 = -1; }
       R.mouth = 2; R.tool0 = 'whistle'; R.fx = 10; R.fxT = t;
     },
     sleep(t) {
@@ -634,7 +634,6 @@ export function createArt(K) {
     const f0x = R.f0x + ox, f0y = R.f0y + oy, f1x = R.f1x + ox, f1y = R.f1y + oy;
 
     if (layer === 'back') drawCarry(ctx, carry, 'back', o, t, view);
-    if (layer === 'backpack') drawCarry(ctx, carry, 'backpack', o, t, view, scx, scy);
 
     /* far arm (side view) */
     if (side) drawArm(ctx, s0x, s0y, a0x, a0y, R.e0, L.shirtSh, L, R.tool0, R.t0Ang, true);
@@ -672,14 +671,17 @@ export function createArt(K) {
     else { line(ctx, b1x - px * 0.95 + ux * 1.25, b1y - py * 0.95 + uy * 1.25, hx + ux * 2.55 - px * 0.95, hy + uy * 2.55 - py * 0.95, 0.45, stc); line(ctx, b1x + px * 0.95 + ux * 1.25, b1y + py * 0.95 + uy * 1.25, hx + ux * 2.55 + px * 0.95, hy + uy * 2.55 + py * 0.95, 0.45, stc); }
     ctx.lineCap = 'round';
     if (view === FRONT) line(ctx, b1x + ux * 0.9, b1y + uy * 0.9, hx + ux * 0.4, hy + uy * 0.4, 0.22, L.vestSh);
+    if (layer === 'backpack') drawCarry(ctx, carry, 'backpack', o, t, view, scx, scy);
 
     /* front view: hanging arms go before the head, raised ones after */
-    const a0late = a0y < s0y - 1.5, a1late = a1y < s1y - 1.2;
+    /* arms go behind the big head unless the hand is at the face (drinking, eating, the whistle) */
+    const nf = (x, y) => (Math.abs(x - hcx) < 2.3 && y > hcy - 2.4 && y < hcy + 3.0) || ((layer === 'mid' || layer === 'hand') && y > hcy + 2.0);
+    const a0late = nf(a0x, a0y), a1late = nf(a1x, a1y);
     if ((side || view === FRONT) && !a1late) drawArm(ctx, s1x, s1y, a1x, a1y, R.e1, L.shirt, L, R.tool, R.tAng, false);
     if (view === FRONT && !a0late) drawArm(ctx, s0x, s0y, a0x, a0y, R.e0, L.shirt, L, R.tool0, R.t0Ang, false);
-    if (view === BACK) { drawArm(ctx, s0x, s0y, a0x, a0y, R.e0, L.shirt, L, null, 0, false); drawArm(ctx, s1x, s1y, a1x, a1y, R.e1, L.shirt, L, null, 0, false); }
     /* head */
     drawHead(ctx, hcx, hcy, L, view, f, bare, o);
+    if (view === BACK) { drawArm(ctx, s0x, s0y, a0x, a0y, R.e0, L.shirt, L, null, 0, false); drawArm(ctx, s1x, s1y, a1x, a1y, R.e1, L.shirt, L, null, 0, false); }
     if (layer === 'mid') drawCarry(ctx, carry, 'mid', o, t, view, scx, scy);
     if (R.item === 'crate' && !carry) drawItem(ctx, 'crate', a1x, a1y);
     if (R.item === 'mound') drawItem(ctx, 'mound', 3.3 + ox, 0);
@@ -708,7 +710,13 @@ export function createArt(K) {
     ctx.lineWidth = bw + OUT * 2; ctx.strokeStyle = C.ink; ctx.stroke(); ctx.lineWidth = bw; ctx.strokeStyle = bc; ctx.stroke();
   }
   function drawArm(ctx, sx, sy, hx, hy, dir, col, L, tool, ang, far) {
-    ik(sx, sy, hx, hy, UPPER, FORE, dir);
+    /* raised arms keep their elbows out and down, never across the face */
+    if (hy < sy - 1.0) {
+      ik(sx, sy, hx, hy, UPPER, FORE, 1); const ax = IK.jx, ay = IK.jy;
+      ik(sx, sy, hx, hy, UPPER, FORE, -1);
+      const out = R.view === SIDE ? (ay > IK.jy) : (Math.abs(ax) > Math.abs(IK.jx));
+      if (out) ik(sx, sy, hx, hy, UPPER, FORE, 1);
+    } else ik(sx, sy, hx, hy, UPPER, FORE, dir);
     const ex = IK.ex, ey = IK.ey;
     limb(ctx, sx, sy, IK.jx, IK.jy, ex, ey, ARMW, col);
     if (tool) drawTool(ctx, tool, ex, ey, ang);
@@ -1616,7 +1624,7 @@ export function createArt(K) {
     }
     /* the evening sun, low over the Adirondacks (the mountains are drawn over it) */
     if (L.evening && L.alt > -3 && L.alt < 16 && L.weather !== 'fog' && L.weather !== 'rain') {
-      const sx = W * L.sunX, sy = HORIZON - 30 - L.alt * 3.0;
+      const sx = W * L.sunX, sy = HORIZON - 9 - L.alt * 2.2;
       ctx.setTransform(z, 0, 0, z, 0, -cy * z);
       const wk = L.weather === 'clear' ? 1 : 0.4;
       glow(ctx, sx, sy, 60, 0.35 * wk, '#ffb26a');
@@ -1673,19 +1681,19 @@ export function createArt(K) {
       const lx = ((c.x + K.t * c.sp - cx * p) % span + span) % span - 60;
       if (lx > W + 4 || lx < -50) continue;
       const big = w === 'clear' ? 1 : 1.4, cw = c.w * big, ch = cw * 14 / 36;
-      ctx.drawImage(cloudSprite(c.shape, z * big), lx, HORIZON - 52 - c.y * 120 - ch, cw, ch);
+      ctx.drawImage(cloudSprite(c.shape, z * big), lx, HORIZON - 20 - c.y * 110 - ch, cw, ch);
     }
     ctx.globalAlpha = 1;
   }
 
   /* ============================================================ backdrop (world space, cached) */
   const gauss = (x, list) => { let m = 0; for (const [px, h, w] of list) { const d = x - px, v = h * Math.exp(-(d * d) / (2 * w * w)); if (v > m) m = v; } return m; };
-  const FAR_PK = [[60, 26, 34], [190, 36, 40], [255, 24, 22], [380, 40, 46], [480, 28, 30], [600, 34, 40], [720, 26, 36], [840, 32, 38]];
-  const MID_PK = [[30, 14, 26], [150, 19, 30], [300, 16, 26], [430, 21, 34], [540, 14, 22], [650, 18, 28], [790, 15, 30]];
+  const FAR_PK = [[60, 16, 30], [190, 23, 34], [255, 15, 18], [380, 26, 38], [480, 17, 26], [600, 22, 34], [720, 16, 30], [840, 20, 32]];
+  const MID_PK = [[30, 9, 22], [150, 12, 26], [300, 10, 22], [430, 13, 28], [540, 9, 18], [650, 11, 24], [790, 10, 26]];
   const NEAR_PK = [[95, 6, 34], [340, 7, 46], [560, 6, 32], [760, 7, 40]];
-  const hFar = (x) => 16 + 4 * Math.sin(x / 53) + 2.5 * Math.sin(x / 23 + 2) + gauss(x, FAR_PK);
-  const hMid = (x) => 8 + 2.5 * Math.sin(x / 31 + 1) + 1.2 * Math.sin(x / 11) + gauss(x, MID_PK);
-  const hNear = (x) => 2.2 + 1.2 * Math.sin(x / 17 + 3) + 0.5 * Math.sin(x / 5.3) + gauss(x, NEAR_PK);
+  const hFar = (x) => 8.5 + 2.2 * Math.sin(x / 53) + 1.2 * Math.sin(x / 23 + 2) + 0.4 * Math.sin(x / 7.1) + gauss(x, FAR_PK) * 0.62;
+  const hMid = (x) => 4.4 + 1.4 * Math.sin(x / 31 + 1) + 0.7 * Math.sin(x / 11) + 0.3 * Math.sin(x / 4.3) + gauss(x, MID_PK) * 0.72;
+  const hNear = (x) => 1.8 + 0.9 * Math.sin(x / 17 + 3) + 0.35 * Math.sin(x / 5.3) + gauss(x, NEAR_PK) * 0.7;
   function ridgeColors() {
     const L = K.light, hz = L.skyHor, f = L.haze;
     const sil = L.evening ? clamp((14 - L.alt) / 14, 0, 1) * (1 - L.night) : 0;
@@ -1694,21 +1702,21 @@ export function createArt(K) {
       mid: mix(mix(lit(EXTRA.mtnMid), hz, 0.24 + f * 0.6), '#5a5680', sil * 0.6),
       near: mix(mix(lit(EXTRA.mtnNear), hz, 0.12 + f * 0.65), '#4a4766', sil * 0.65),
       hz,
+      rim: L.night > 0.6 ? mix(hz, '#8090c0', 0.3) : sil > 0.2 ? mix('#ffc890', hz, 0.3) : mix(lit('#ffffff'), hz, 0.4),
     };
   }
   const CAP = [];
-  function ridge(g, x0, x1, fn, col, haze, base, snow, capH) {
-    const gr = g.createLinearGradient(0, base - 48, 0, base);
+  function ridge(g, x0, x1, fn, col, haze, base, snow, capH, rim) {
+    const gr = g.createLinearGradient(0, base - 34, 0, base);
     gr.addColorStop(0, col); gr.addColorStop(1, mix(col, haze, 0.38));
     g.fillStyle = gr;
     g.beginPath(); g.moveTo(x0 - 2, base + 1);
     for (let x = x0 - 2; x <= x1 + 2; x += 1.5) g.lineTo(x, base - fn(x));
     g.lineTo(x1 + 2, base + 1); g.closePath(); g.fill();
-    /* sunlit flanks: a light wash where the ridge climbs to the right (lit from the left) */
-    g.globalAlpha = 0.16; g.fillStyle = mix(col, '#ffffff', 0.5);
-    g.beginPath();
-    for (let x = x0 - 2; x <= x1 + 2; x += 1.5) { const h0 = fn(x), h1 = fn(x + 1.5); if (h1 > h0 + 0.25) { g.moveTo(x, base - h0); g.lineTo(x + 1.5, base - h1); g.lineTo(x + 1.5, base - h1 + (h1 - h0) * 3); g.lineTo(x, base - h0 + (h1 - h0) * 3); g.closePath(); } }
-    g.fill(); g.globalAlpha = 1;
+    /* a soft rim of light along the crest */
+    g.globalAlpha = 0.35; g.strokeStyle = rim; g.lineWidth = 0.5; g.lineJoin = 'round';
+    g.beginPath(); for (let x = x0 - 2; x <= x1 + 2; x += 1.5) { if (x === x0 - 2) g.moveTo(x, base - fn(x) + 0.3); else g.lineTo(x, base - fn(x) + 0.3); } g.stroke();
+    g.globalAlpha = 1;
     if (snow) {
       g.fillStyle = mix(lit('#f2f6fa'), col, 0.18);
       g.beginPath();
@@ -1717,7 +1725,7 @@ export function createArt(K) {
       for (let x = x0 - 2; x <= x1 + 2; x += 1) {
         const h = fn(x), d = h - capH;
         if (d > 0) {
-          const depth = Math.min(d, 2 + d * 0.6) * (0.75 + 0.25 * Math.sin(x * 1.7));
+          const depth = Math.min(d, 1.5 + d * 0.55) * (0.7 + 0.3 * Math.sin(x * 0.45) * Math.sin(x * 0.17));
           if (!open) { g.moveTo(x, base - capH); open = true; }
           g.lineTo(x, base - h);
           CAP.push(x, base - h + depth);
@@ -1769,10 +1777,10 @@ export function createArt(K) {
     const L = K.light, rc = ridgeColors(), m = L.month, wintery = m >= 10 || m <= 3;
     const sn = season(), sver = sn.length * 7 + (L.snowy ? 1 : 0);
     /* the Adirondacks: high peaks far off (snowcapped in the cold months), then the middle ridges, then the near shore hills */
-    K.blit('art:far', 0, HORIZON - 64, WW, 66, (g, x0, x1) => ridge(g, x0, x1, hFar, rc.far, rc.hz, HORIZON, L.snowy || wintery, 30), { p: 0.18, ver: sver });
-    K.blit('art:mid', 0, HORIZON - 40, WW, 42, (g, x0, x1) => ridge(g, x0, x1, hMid, rc.mid, rc.hz, HORIZON, L.snowy, 17), { p: 0.3, ver: sver });
-    K.blit('art:near', 0, HORIZON - 14, WW, 16, (g, x0, x1) => {
-      ridge(g, x0, x1, hNear, rc.near, rc.hz, HORIZON, false, 0);
+    K.blit('art:far', 0, HORIZON - 46, WW, 48, (g, x0, x1) => ridge(g, x0, x1, hFar, rc.far, rc.hz, HORIZON, L.snowy || wintery, 16, rc.rim), { p: 0.18, ver: sver });
+    K.blit('art:mid', 0, HORIZON - 28, WW, 30, (g, x0, x1) => ridge(g, x0, x1, hMid, rc.mid, rc.hz, HORIZON, L.snowy, 9, rc.rim), { p: 0.3, ver: sver });
+    K.blit('art:near', 0, HORIZON - 11, WW, 13, (g, x0, x1) => {
+      ridge(g, x0, x1, hNear, rc.near, rc.hz, HORIZON, false, 0, rc.rim);
       /* the far shore: a thin dark tree line at the water */
       g.fillStyle = mix(rc.near, '#1e2a26', 0.3);
       g.beginPath(); g.moveTo(x0 - 2, HORIZON + 0.6);
@@ -1875,7 +1883,7 @@ export function createArt(K) {
       const t = K.t;
       ctx.globalAlpha = 0.16 + 0.1 * (1 - L.night); ctx.fillStyle = L.skyHor; ctx.fillRect(cx, cy, W, H);
       for (let b = 0; b < 3; b++) {
-        const by = b === 0 ? HORIZON + 6 : b === 1 ? GROUND_Y - 22 : GROUND_Y + 30, a = b === 0 ? 0.55 : b === 1 ? 0.5 : 0.35, sp = b === 0 ? 2.0 : b === 1 ? 1.4 : 1.1;
+        const by = b === 0 ? HORIZON + 6 : b === 1 ? GROUND_Y - 22 : GROUND_Y + 30, a = b === 0 ? 0.55 : b === 1 ? 0.42 : 0.22, sp = b === 0 ? 2.0 : b === 1 ? 1.4 : 1.1;
         for (let j = 0; j < 3; j++) {
           const x = cx + (((j * 160 + t * sp * (b + 1) - cx * 0.3) % 480) + 480) % 480 - 160;
           ctx.globalAlpha = a * (1 - L.night * 0.5); ctx.drawImage(fogSprite, x, by - 14, 150, 30);
