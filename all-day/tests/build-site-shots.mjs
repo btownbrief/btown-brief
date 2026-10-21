@@ -74,7 +74,7 @@ try {
         const base = { whistle: false, cut: false, topped_out: false, your_minutes: 0, rm: false };
         if (st.arrive) {
           await page.evaluate(([b, s, w2, h2]) => { window.preview.set({ ...b, ...s, crew: 0, w: w2, h: h2 }); window.site.advance(1); window.preview.set({ crew: s.crew }); }, [base, st, w, h]);
-          await page.evaluate(() => window.site.advance(5));
+          await page.evaluate(() => window.site.advance(11));
         } else {
           /* the crew works a while first so the marks show */
           await page.evaluate(([b, s, w2, h2]) => { window.preview.set({ ...b, ...s, whistle: false, you: s.you === 'working' ? 'working' : 'working', w: w2, h: h2 }); window.site.advance(90); }, [base, st, w, h]);

@@ -382,6 +382,7 @@ export function createSite(canvas, opts = {}) {
        so a builder pacing a bay doesn't swing the whole site */
     const want = clamp(Math.round(cx - W / 2), 0, WW - W);
     if (cam.snap || Math.abs(want - cam.tx) > W * 0.18 || foremanOut) cam.tx = want;
+    cam.tx = clamp(cam.tx, 0, WW - W);
     /* vertical: street at the bottom when there's room, else keep the
        working level (and you) in view and crop the yard */
     const lvTop = (topped() ? L.roofY - 20 : L.fBottom[Math.min(activeFloor() + 1, L.floors)] - 12);
@@ -793,7 +794,7 @@ export function createSite(canvas, opts = {}) {
     a.act = null; a.plan = []; a.gone = false; a.carry = null;
     a.coffee = !!withCoffee;
     a.plan.push({ k: 'walk', x: L.gateX + 6 }, { k: 'walkY', street: false });
-    if (withCoffee) a.plan.push({ k: 'walk', x: L.gateX + 22 + (a.seed % 30) }, { k: 'idle', pose: 'drink', dur: 2 + a.r() * 2 });
+    if (withCoffee) a.plan.push({ k: 'walk', x: L.trailerX + 30 + (a.seed % 36) }, { k: 'idle', pose: 'drink', dur: 2 + a.r() * 2 }, { k: 'idle', pose: 'mug', dur: 1 + a.r() * 3 });
     else a.plan.push({ k: 'walk', x: L.gateX + 16 + (a.seed % 20) });
     a.plan.push({ k: 'idle', pose: 'stand', dur: 0.3 });
   }
@@ -1913,7 +1914,7 @@ export function createSite(canvas, opts = {}) {
     stats() {
       const s = stats.samples.slice().sort((p, q) => p - q);
       const pct = (p) => (s.length ? s[Math.min(s.length - 1, Math.floor(s.length * p))] : 0);
-      return { frames: stats.frames, avgMs: stats.frames ? stats.total / stats.frames : 0, tickMs: stats.ticks ? stats.tick / stats.ticks : 0, p50: pct(0.5), p95: pct(0.95), maxMs: stats.max, size: [W, H], cam: [Math.round(cam.x), Math.round(cam.y), cam.tx, cam.ty], agents: agents.size, running: !!raf, you: you && !you.gone ? [Math.round(you.x - cam.x), Math.round(you.y - cam.y), you.state, you.pose] : null };
+      return { frames: stats.frames, avgMs: stats.frames ? stats.total / stats.frames : 0, tickMs: stats.ticks ? stats.tick / stats.ticks : 0, p50: pct(0.5), p95: pct(0.95), maxMs: stats.max, size: [W, H], cam: [Math.round(cam.x), Math.round(cam.y), cam.tx, cam.ty], agents: agents.size, running: !!raf, crew: [...agents.values()].map((a) => [a.id, Math.round(a.x), Math.round(a.y), a.state, a.gone ? 'gone' : a.act ? a.act.k : '-']), you: you && !you.gone ? [Math.round(you.x - cam.x), Math.round(you.y - cam.y), you.state, you.pose] : null };
     },
     resetStats() { stats.frames = 0; stats.total = 0; stats.max = 0; stats.samples = []; stats.tick = 0; stats.ticks = 0; },
   };
