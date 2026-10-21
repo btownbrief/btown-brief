@@ -140,6 +140,7 @@ window.preview = {
     Object.assign(state, o);
     if (o.w && o.h) size(o.w, o.h);
     if ('rm' in o) make(); else push();
+    site.render();   // pick up a new frame size now, not on the next resize callback
   },
   size,
 };

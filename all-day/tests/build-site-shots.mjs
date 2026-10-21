@@ -114,7 +114,7 @@ try {
       const s = await page.evaluate(() => window.site.stats());
       await cdp.send('Emulation.setCPUThrottlingRate', { rate: 1 });
       const fps = s.frames / 6;
-      console.log(`  ${label}: drawn ${fps.toFixed(1)} fps, render avg ${s.avgMs.toFixed(2)} ms, p95 ${s.p95.toFixed(2)} ms, max ${s.maxMs.toFixed(1)} ms (view ${s.size.join('x')}, ${s.agents} figures)`);
+      console.log(`  ${label}: drawn ${fps.toFixed(1)} fps, simulation ${s.tickMs.toFixed(2)} ms + render avg ${s.avgMs.toFixed(2)} ms, p95 ${s.p95.toFixed(2)} ms, max ${s.maxMs.toFixed(1)} ms (view ${s.size.join('x')}, ${s.agents} figures)`);
       say(s.p95 < 16, `p95 render under 16 ms at 4x throttle (${s.p95.toFixed(2)})`);
       say(fps <= 31, `capped at 30fps (${fps.toFixed(1)})`);
       void intervals;
