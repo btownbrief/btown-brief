@@ -2181,17 +2181,18 @@ body.desk { overflow: auto; }
 .bd-gate { display: flex; flex-direction: column; align-items: flex-start; gap: var(--s3); padding: var(--s4) var(--gutter); color: var(--ink-2); }
 /* the tab scrolls clear of the docked site */
 body.bd-docked #panel-build { padding-bottom: calc(var(--bd-dock) + var(--s4)); }
-body { --bd-dock: min(44vh, 400px); }
+body { --bd-dock: min(46vh, 420px); }
 body[data-bd-dock="mini"] { --bd-dock: calc(var(--tab-h) + var(--dock-lift) + var(--safe-b) + 92px); }
 
 /* your thing */
-.bd-thing, .bd-back { margin: var(--s3) var(--gutter) 0; padding: var(--s4); background: var(--build-soft); border-radius: var(--r-media); }
+.bd-thing, .bd-back { margin: var(--s3) var(--gutter) 0; padding: var(--s3) var(--s4) var(--s4); background: var(--build-soft); border-radius: var(--r-media); }
 .bd-back { background: var(--paper-2); }
-.bd-title { font-family: var(--serif); font-size: var(--fs-hero); font-weight: 500; line-height: var(--lh-tight); color: var(--ink); }
-.bd-why { margin-top: 6px; font-family: var(--serif); font-style: italic; font-size: var(--fs-body); color: var(--ink-2); line-height: var(--lh-body); }
-.bd-meta { margin-top: 6px; font-size: var(--fs-meta); color: var(--ink-3); }
-.bd-week { display: flex; align-items: baseline; gap: 6px; min-height: var(--hit); margin-top: var(--s1); font-size: var(--fs-meta); color: var(--ink-2); text-align: left; }
-.bd-week b { font-family: var(--serif); font-size: var(--fs-date); font-weight: 500; color: var(--ink); }
+.bd-title { font-family: var(--serif); font-size: var(--fs-sec); font-weight: 500; line-height: var(--lh-tight); color: var(--ink); }
+.bd-why { margin-top: 4px; font-family: var(--serif); font-style: italic; font-size: var(--fs-body); color: var(--ink-2); line-height: 1.4;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.bd-meta { margin-top: 4px; font-size: var(--fs-meta); color: var(--ink-3); }
+.bd-week { display: flex; align-items: baseline; gap: 6px; min-height: 40px; font-size: var(--fs-meta); color: var(--ink-2); text-align: left; }
+.bd-week b { font-family: var(--serif); font-size: var(--fs-title); font-weight: 500; color: var(--ink); }
 .bd-week .i { width: 14px; height: 14px; align-self: center; color: var(--ink-3); }
 .bd-go { display: flex; align-items: center; gap: var(--s2); }
 .btn.bd-start { height: var(--hit); padding: 0 18px; background: var(--liq-build); color: var(--liq-build-ink); }
@@ -2310,11 +2311,13 @@ body[data-bd-dock="mini"] { --bd-dock: calc(var(--tab-h) + var(--dock-lift) + va
 .bd-handle i { width: 40px; height: 5px; border-radius: var(--r-pill); background: var(--lake-line); }
 .bd-handle:hover i { background: var(--lake-muted); }
 .bd-handle[hidden] { display: none; }
-.bd-dockbar { flex: 0 0 auto; padding: 0 var(--gutter) var(--s2); }
+.bd-dockbar { flex: 0 0 auto; padding: 0 var(--gutter) 6px; }
 .bd-townl { font-size: var(--fs-meta); font-weight: 600; line-height: 1.35; color: var(--lake-ink); }
 .bd-party { margin-top: 1px; font-size: var(--fs-small); color: var(--lake-muted); }
 a.bd-party { text-decoration: underline; text-underline-offset: 3px; }
 .bd-sitebox { position: relative; flex: 1 1 auto; min-height: 0; background: var(--lake-hover); }
+/* docked, the site ends where the floating tab bar begins */
+.bd-dock[data-state="dock"] .bd-sitebox { margin-bottom: calc(var(--tab-h) + var(--dock-lift) + var(--safe-b) + var(--s1)); }
 .bd-dock[data-state="mini"] .bd-sitebox { display: none; }
 .bd-canvas { display: block; width: 100%; height: 100%; }
 .bd-talk { position: absolute; left: var(--s3); top: var(--s3); max-width: calc(100% - 120px); padding: 7px 12px; border-radius: var(--r-pill);
@@ -2362,5 +2365,9 @@ body.bd-full { overflow: hidden; }
   .bd { max-width: none; }
   .bd-dock { left: var(--main-x); right: auto; width: var(--main); bottom: 16px; border-radius: var(--r-media); }
   .bd-dock[data-state="full"] { left: 0; width: 100%; bottom: 0; border-radius: 0; }
+  .bd-dock[data-state="dock"] .bd-sitebox { margin-bottom: 0; }
   body.bd-docked #panel-build { padding-bottom: calc(var(--bd-dock) + 32px); }
+}
+@media (min-width: 1024px) {
+  .bd-go .bd-start { flex: 0 0 auto; padding: 0 28px; }
 }

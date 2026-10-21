@@ -45,7 +45,7 @@ import { photoUrl, queuePhoto } from '../boards.js';
 import { REASON_LABELS } from '../boards-core.js';
 import { meetsInWindow, oneLine, redateDemo, timeLabel } from '../clubs-week.js';
 import { openBuild } from '../build-local.js';
-import { createSite } from '../build-standins.TEMP.js';
+import { createSite } from '../build-site.js';
 
 const KEY = 'build';
 export const ICON_BUILD = svg('<path d="M3 17.5h18M5 17.5v-1.2a7 7 0 0 1 14 0v1.2"/><path d="M10 10V7.2a2 2 0 0 1 4 0V10"/>');
@@ -111,7 +111,9 @@ const go = (fn) => Promise.resolve().then(fn).then((r) => (r && typeof r === 'ob
 function api() {
   const who = app.demo ? 'demo' + (signedIn() ? ':in' : '') : signedIn() ? 'u:' + app.user().id : 'local';
   if (!B.api || B.apiFor !== who) {
-    B.api = openBuild({ demo: app.demo, user: () => app.user(), token: () => app.token(), url: store.SB_URL, key: store.SB_KEY, config: B.config });
+    /* the demo's town opened three days ago, so its building is part way up */
+    const config = app.demo && !B.config.season.starts ? { ...B.config, season: { ...B.config.season, starts: keyBack(dayKey(Date.now()), 3) } } : B.config;
+    B.api = openBuild({ demo: app.demo, user: () => app.user(), token: () => app.token(), url: store.SB_URL, key: store.SB_KEY, config });
     B.apiFor = who;
   }
   return B.api;
@@ -146,6 +148,7 @@ function pick(group, list, vars) {
 const fill = (s, vars) => String(s || '').replace(/\{(\w+)\}/g, (m, k) => (vars && vars[k] != null ? String(vars[k]) : m));
 const dig = (root, path) => { let v = root; for (const k of path.split('.')) v = v && typeof v === 'object' ? v[k] : undefined; return v; };
 const F = (path, fallback) => { const v = dig(B.foreman, path); if (v != null) return v; const w = dig(FOREMAN, path); return w == null ? fallback : w; };
+const lower = (x) => String(x || '').replace(/^(My|Our|The|A|An|Your)\b/, (w) => w.toLowerCase());
 const kindWord = (k) => F('end_screen.post_kinds.' + k, k);
 
 /* ---------------------------------------------------------------- numbers */
@@ -249,7 +252,7 @@ function thingCard() {
   const t = B.thing;
   const c = el('section', 'bd-thing');
   c.dataset.k = 'thing';
-  const meta = [t.target_date ? 'By ' + dateWord(String(t.target_date).slice(0, 10)) : '', t.for_whom ? 'For ' + t.for_whom : '', t.partner ? 'With ' + t.partner : '', t.status === 'paused' ? 'Paused' : ''].filter(Boolean);
+  const meta = [t.target_date ? 'By ' + dateWord(String(t.target_date).slice(0, 10)) : '', t.for_whom ? 'For ' + lower(t.for_whom) : '', t.partner ? 'With ' + t.partner : '', t.status === 'paused' ? 'Paused' : ''].filter(Boolean);
   c.innerHTML = '<h2 class="bd-title">' + esc(t.title) + '</h2>' +
     (t.why ? '<p class="bd-why">' + esc('“' + t.why + '”') + '</p>' : '') +
     (meta.length ? '<p class="bd-meta">' + meta.map(esc).join(' · ') + '</p>' : '');
@@ -886,7 +889,7 @@ function feedSite() {
   const t = B.town || {};
   const f = floors();
   try {
-    site.setTown({ total_minutes: Number(t.total_minutes) || 0, floors_done: f.done, floor_progress: f.progress, windows_lit: Number(t.windows_lit || t.posts_lit) || 0, topped_out: f.topped });
+    site.setTown({ total_minutes: Number(t.total_minutes) || 0, floors: f.total, floors_done: Math.min(f.done, f.total), floor_progress: f.progress, windows_lit: Number(t.windows_lit || t.posts_lit) || 0, topped_out: f.topped });
     site.setCrew((Array.isArray(t.on_shift) ? t.on_shift : []).filter((c) => !c.me).map((c, i) => ({ id: c.id || 'c' + i, look: c.look || {}, task: c.task || null, name: c.name || null })));
     site.setYou(youState());
     site.setSky(sky());
@@ -1057,6 +1060,8 @@ function onTick() {
 const say = (t) => { const live = dock && dock.querySelector('.bd-live'); if (live) live.textContent = t; };
 /* missed: the crew knocks off, banked to the last touch, and straight to the end screen */
 function knockOff() {
+  /* one more heartbeat writes the miss down, so it stays a miss after the page goes quiet */
+  go(() => api().shift.heartbeat({}));
   const s = status();
   if (site) { site.whistle(false); site.setYou({ ...youState(), state: 'off' }); }
   store.write(ENDING_KEY, { missed: true, minutes: s ? s.minutes : 0 });
