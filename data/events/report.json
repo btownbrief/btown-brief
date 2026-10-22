@@ -1,30 +1,30 @@
 {
- "generated": "2026-10-22T10:39:26-04:00",
+ "generated": "2026-10-22T19:35:46-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
    "count": 8,
-   "seconds": 5.7
+   "seconds": 6.2
   },
   "breweries": {
    "label": "Breweries & Taprooms",
-   "count": 78,
-   "seconds": 7.0
+   "count": 86,
+   "seconds": 5.4
   },
   "brownell": {
    "label": "Brownell Library",
    "count": 81,
-   "seconds": 3.8
+   "seconds": 5.2
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
    "count": 198,
-   "seconds": 4.5
+   "seconds": 3.6
   },
   "churchst": {
    "label": "Church Street Marketplace",
    "count": 75,
-   "seconds": 1.6
+   "seconds": 2.0
   },
   "echo": {
    "label": "ECHO Leahy Center",
@@ -48,13 +48,13 @@
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
-   "count": 213,
-   "seconds": 65.7
+   "count": 214,
+   "seconds": 72.4
   },
   "flynn": {
    "label": "The Flynn",
    "count": 15,
-   "seconds": 0.3
+   "seconds": 0.5
   },
   "generator": {
    "label": "Generator Makerspace",
@@ -69,7 +69,7 @@
   "helloburlington": {
    "label": "Hello Burlington",
    "count": 616,
-   "seconds": 31.0
+   "seconds": 32.0
   },
   "higherground": {
    "label": "Higher Ground",
@@ -78,29 +78,28 @@
   },
   "instagram": {
    "label": "Instagram (Scrape Creators)",
-   "count": 0,
-   "error": "skipped by design: once-daily gate, Instagram fetches on the afternoon run only",
-   "staleDays": 0
+   "count": 1,
+   "seconds": 27.5
   },
   "loveburlington": {
    "label": "Love Burlington",
    "count": 383,
-   "seconds": 73.5
+   "seconds": 75.8
   },
   "meetup": {
    "label": "Meetup",
    "count": 54,
-   "seconds": 95.5
+   "seconds": 106.8
   },
   "monkeyhouse": {
    "label": "The Monkey House",
    "count": 18,
-   "seconds": 1.2
+   "seconds": 0.5
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
    "count": 72,
-   "seconds": 16.9
+   "seconds": 15.8
   },
   "radiobean": {
    "label": "Radio Bean",
@@ -110,18 +109,18 @@
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
-   "count": 90,
-   "seconds": 7.2
+   "count": 93,
+   "seconds": 2.1
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
    "count": 20,
-   "seconds": 20.9
+   "seconds": 23.7
   },
   "sevendays": {
    "label": "Seven Days",
    "count": 2394,
-   "seconds": 70.8
+   "seconds": 3.3
   },
   "shelburnemuseum": {
    "label": "Shelburne Museum",
@@ -130,86 +129,31 @@
   },
   "uvm": {
    "label": "UVM & Colleges",
-   "count": 493,
-   "seconds": 43.6
+   "count": 509,
+   "seconds": 23.7
   },
   "uvmbored": {
    "label": "UVM Bored",
-   "count": 290,
-   "seconds": 0.2
+   "count": 306,
+   "seconds": 0.3
   },
   "vcc": {
    "label": "Vermont Comedy Club",
    "count": 54,
-   "seconds": 70.3
+   "seconds": 72.3
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
    "count": 48,
-   "seconds": 0.3
+   "seconds": 0.4
   }
  },
- "gathered": 5215,
- "afterDedup": 2606,
- "duplicatesMerged": 2609,
- "final": 2634,
- "firecrawlCalls": 17,
+ "gathered": 5260,
+ "afterDedup": 2634,
+ "duplicatesMerged": 2626,
+ "final": 2670,
+ "firecrawlCalls": 1,
  "mergeLog": [
-  {
-   "kept": {
-    "title": "Queer/LGBTQ+ Horror Book Club",
-    "source": "churchst"
-   },
-   "merged_sources": [
-    "churchst",
-    "loveburlington"
-   ],
-   "date": "2026-11-24"
-  },
-  {
-   "kept": {
-    "title": "Sculpt HIIT and Flow",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-11-24"
-  },
-  {
-   "kept": {
-    "title": "UPB Art Attack",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-11-24"
-  },
-  {
-   "kept": {
-    "title": "802sDay",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-11-24"
-  },
-  {
-   "kept": {
-    "title": "'Very Eric Carle' Exhibit",
-    "source": "sevendays"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "sevendays"
-   ],
-   "date": "2026-11-24"
-  },
   {
    "kept": {
     "title": "EZ Breezy Bike Rides",
@@ -709,6 +653,17 @@
   },
   {
    "kept": {
+    "title": "UVM Costa Rica Davis Center Atrium Tabling",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-12-01"
+  },
+  {
+   "kept": {
     "title": "UPB Art Attack",
     "source": "uvm"
    },
@@ -772,6 +727,17 @@
     "churchst",
     "loveburlington",
     "sevendays"
+   ],
+   "date": "2026-12-02"
+  },
+  {
+   "kept": {
+    "title": "Holiday Bazaar and Food Drive",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
    ],
    "date": "2026-12-02"
   },
@@ -1429,6 +1395,17 @@
   },
   {
    "kept": {
+    "title": "UVM Costa Rica Davis Center Atrium Tabling",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-12-08"
+  },
+  {
+   "kept": {
     "title": "UPB Art Attack",
     "source": "uvm"
    },
@@ -1565,6 +1542,17 @@
   {
    "kept": {
     "title": "Board Game Night",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-12-09"
+  },
+  {
+   "kept": {
+    "title": "Student Recital IV",
     "source": "uvm"
    },
    "merged_sources": [
@@ -2084,6 +2072,17 @@
   },
   {
    "kept": {
+    "title": "UVM Costa Rica Davis Center Atrium Tabling",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-12-15"
+  },
+  {
+   "kept": {
     "title": "802sDay",
     "source": "loveburlington"
    },
@@ -2409,12 +2408,19 @@
  ],
  "changes": [
   {
-   "id": "7e00b66836de",
-   "title": "From Vermont to Palestine: Building Global Solidarity",
-   "date": "2026-10-23",
+   "id": "86173b2b546a",
+   "title": "Craftytown! Burlap Bunting",
+   "date": "2026-11-03",
    "change": "time",
-   "was": "2026-10-23T16:30:00-04:00",
-   "now": "2026-10-23T04:30:00-04:00"
+   "was": "2026-11-03T15:00:00-05:00",
+   "now": "2026-11-03T13:00:00-05:00"
+  },
+  {
+   "id": "4199b1783a7f",
+   "title": "Minecraft Meet-up",
+   "date": "2026-10-22",
+   "change": "missing",
+   "lastSeen": "2026-10-22T10:39:26-04:00"
   },
   {
    "id": "8b04c251576a",
@@ -2436,6 +2442,13 @@
    "date": "2026-10-22",
    "change": "missing",
    "lastSeen": "2026-10-21T19:37:10-04:00"
+  },
+  {
+   "id": "dd5d0a8e4dd8",
+   "title": "Costume Accessory Open Build",
+   "date": "2026-10-23",
+   "change": "missing",
+   "lastSeen": "2026-10-22T10:39:26-04:00"
   },
   {
    "id": "cf394fc49770",
@@ -2473,11 +2486,25 @@
    "lastSeen": "2026-10-21T19:37:10-04:00"
   },
   {
+   "id": "2211cacbebff",
+   "title": "Blue Sundays",
+   "date": "2026-10-25",
+   "change": "missing",
+   "lastSeen": "2026-10-22T10:39:26-04:00"
+  },
+  {
    "id": "b2e9d10559ff",
    "title": "Wednesday Walks",
    "date": "2026-10-28",
    "change": "missing",
    "lastSeen": "2026-10-21T10:38:13-04:00"
+  },
+  {
+   "id": "899d56097989",
+   "title": "Minecraft Meet-up",
+   "date": "2026-10-29",
+   "change": "missing",
+   "lastSeen": "2026-10-22T10:39:26-04:00"
   },
   {
    "id": "6d3476347263",
@@ -2520,6 +2547,20 @@
    "date": "2026-11-01",
    "change": "missing",
    "lastSeen": "2026-10-21T19:37:10-04:00"
+  },
+  {
+   "id": "bae8886e4a9d",
+   "title": "Blue Sundays",
+   "date": "2026-11-01",
+   "change": "missing",
+   "lastSeen": "2026-10-22T10:39:26-04:00"
+  },
+  {
+   "id": "ef2275a4a684",
+   "title": "Cookbook Club: My Harvest Kitchen",
+   "date": "2026-11-03",
+   "change": "missing",
+   "lastSeen": "2026-10-22T10:39:26-04:00"
   },
   {
    "id": "b355aa33aa99",
@@ -2585,6 +2626,13 @@
    "lastSeen": "2026-10-21T19:37:10-04:00"
   },
   {
+   "id": "24d3678c4f54",
+   "title": "Hold for Minecraft",
+   "date": "2026-12-04",
+   "change": "missing",
+   "lastSeen": "2026-10-22T10:39:26-04:00"
+  },
+  {
    "id": "c87d2c8d312b",
    "title": "Wednesday Walks",
    "date": "2026-12-09",
@@ -2599,11 +2647,25 @@
    "lastSeen": "2026-10-21T10:38:13-04:00"
   },
   {
+   "id": "1d93378ebe49",
+   "title": "Hold for Minecraft",
+   "date": "2026-12-11",
+   "change": "missing",
+   "lastSeen": "2026-10-22T10:39:26-04:00"
+  },
+  {
    "id": "bc886f973700",
    "title": "Wednesday Walks",
    "date": "2026-12-16",
    "change": "missing",
    "lastSeen": "2026-10-21T10:38:13-04:00"
+  },
+  {
+   "id": "0e2121d70159",
+   "title": "Hold for Minecraft",
+   "date": "2026-12-18",
+   "change": "missing",
+   "lastSeen": "2026-10-22T10:39:26-04:00"
   }
  ]
 }
