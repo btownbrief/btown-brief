@@ -436,8 +436,9 @@ body.chrome-away .mast { transform: translateY(-100%); }
   .mast-title { display: block; font-size: var(--fs-wordmark); }
   .app { left: 0; right: 0; }
   .panel { padding-bottom: calc(64px + var(--player-h, 0px)); }
-  .panel-body { margin-left: var(--main-x); width: var(--main); }
+  .panel-body, .panel-top, .panel-foot { margin-left: var(--main-x); width: var(--main); }
   .panel-body .feed, .panel-body .hb, .panel-body .sq-compose { max-width: none; }
+  .panel-top .fullpage { max-width: none; }
   .tabbar { left: var(--edge); right: auto; top: 0; bottom: 0; width: var(--nav-w); height: auto; padding: 22px 0;
     display: flex; flex-direction: column; gap: 4px; background: transparent; border: 0;
     margin-inline: 0; max-width: none; border-radius: 0; box-shadow: none;
@@ -883,6 +884,14 @@ body.chrome-away .mast { transform: translateY(-100%); }
 .wxtop .toolrow .pills button { padding: 0 6px; font-size: var(--fs-meta); }
 .wxcard { display: flex; flex-direction: column; gap: 6px; width: 158px; padding: 8px 10px; border-radius: var(--r-box); background: var(--accent-soft); color: var(--ink); }
 .wxcard:active { transform: scale(.98); }
+/* it reads as a button to the full weather page (Stephen, 2026-10-22: "it
+   needs to be more obvious that you can click it"): a raised edge, and
+   its own "Full weather" line at its foot */
+.wxcard { border: 1px solid var(--line); box-shadow: var(--shadow-pill); transition: box-shadow .15s ease, transform .15s ease; }
+.wxcard:hover { box-shadow: var(--shadow-float); }
+.wxc-go { display: flex; align-items: center; justify-content: center; gap: 4px; margin: 0 -10px -8px; padding: 6px 0 7px;
+  border-top: 1px solid var(--line-soft); font-size: var(--fs-small); font-weight: 700; color: var(--accent); }
+.wxc-go .i { width: 13px; height: 13px; }
 .wxcard .i { width: 16px; height: 16px; }
 .wxc-top { display: flex; align-items: center; gap: 6px; }
 .wxc-ic { color: var(--accent); display: flex; }
@@ -2224,6 +2233,15 @@ body.desk { overflow: auto; }
 .secbar .localsw-half { padding: 0 8px; }
 .mast .secbar .localsw .localsw-half:not(.on) { color: var(--dock-ink); }
 .secbar .secrow .secpill { flex: 0 1 auto; }
+/* a tab whose pill is its only switch (Food, People, What Now, Vintage,
+   Games): the pill at the Wire's size, 16px words in a 54px pill (Stephen,
+   2026-10-22). The Build, Watch and On Air keep their big switch over a
+   small pill. */
+.secbar.lead > .secpill { height: calc(var(--hit) + 10px); padding: 4px; }
+.secbar.lead > .secpill .secpill-track { gap: 4px; }
+.secbar.lead > .secpill .chip { padding: 0 14px; gap: 6px; font-size: var(--fs-w-seg); font-weight: 700; }
+.secbar.lead > .secpill .secpill-all { padding: 0 10px 0 12px; margin-left: 4px; font-size: var(--fs-w-seg); font-weight: 700; }
+.secbar.lead > .secpill .secpill-all .i { width: 16px; height: 16px; }
 
 /* ============================================================ The Build */
 /* The Build (modes/build.js, Stephen's spec 2026-10-21 and his word on the
@@ -2624,3 +2642,39 @@ body.bd-full { overflow: hidden; }
 .sp-ours { border-color: var(--liq-sports); }
 .sp-people { background: var(--liq-sports); color: var(--liq-sports-ink); border-color: var(--liq-sports); }
 .sp-more { display: inline-flex; align-items: center; gap: 4px; margin: var(--s2) var(--gutter) 0; min-height: var(--hit); font-size: var(--fs-meta); color: var(--ink-2); }
+
+/* ================================================ the shell's slots (2026-10-22) */
+/* Above each tab: an ask when one is due (asks.js), then the tab's "Full
+   page" link to its page on the guide (app.js FULL). Below the Wire: the
+   apps, for when you do want them. */
+.askslot:empty { display: none; }
+.fullpage { display: flex; justify-content: flex-end; max-width: var(--col); margin: 0 auto; padding: var(--s1) var(--gutter) 0; }
+.fullpage a { display: inline-flex; align-items: center; gap: 4px; min-height: 32px; padding: 0 2px;
+  font-size: var(--fs-meta); font-weight: 600; color: var(--ink-2); }
+.fullpage a .i { width: 14px; height: 14px; }
+.fullpage a:hover span { text-decoration: underline; }
+.outrow { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 4px 0 8px; }
+.outrow-l { font-size: var(--fs-meta); font-weight: 600; color: var(--ink-3); }
+.outrow.panel-foot { justify-content: center; padding: var(--s6) var(--gutter) 0; }
+
+/* the two asks: a card in the page, never a modal */
+.askcard { max-width: var(--col); margin: var(--s3) var(--gutter) 0; padding: var(--s3) var(--s3) var(--s3) var(--s4);
+  border-radius: var(--r-media); background: var(--accent-soft); color: var(--ink); }
+@media (min-width: 672px) { .askcard { margin-left: auto; margin-right: auto; } }
+.ask-head { display: flex; align-items: center; gap: var(--s2); }
+.ask-t { flex: 1 1 auto; min-width: 0; margin: 0; font-size: var(--fs-lead); font-weight: 700; line-height: 1.3; }
+.ask-x { flex: 0 0 auto; margin: -6px -4px -6px 0; }
+.ask-how { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; margin-top: var(--s2); }
+.ask-step { display: inline-flex; align-items: center; gap: 6px; font-size: var(--fs-meta); font-weight: 600; color: var(--ink); }
+.ask-key { display: inline-flex; align-items: center; justify-content: center; min-width: 30px; height: 30px; padding: 0 6px;
+  border-radius: var(--r-tile); background: var(--raised); border: 1px solid var(--line); color: var(--accent);
+  font-size: var(--fs-meta); font-weight: 700; }
+.ask-key .i { width: 18px; height: 18px; }
+.ask-key.wide { padding: 0 8px; }
+.ask-then { display: inline-flex; color: var(--ink-3); }
+.ask-then .i { width: 14px; height: 14px; }
+.ask-embed { display: block; width: 100%; height: 52px; margin-top: var(--s2); border: 0; border-radius: var(--r-tile); background: transparent; }
+.ask-foot { display: flex; justify-content: flex-end; margin-top: var(--s2); }
+.homehow { padding: 0 0 var(--s3); }
+.homehow .ask-how { margin-top: 0; }
+.homerow .t .i { width: 16px; height: 16px; vertical-align: -3px; color: var(--good); }

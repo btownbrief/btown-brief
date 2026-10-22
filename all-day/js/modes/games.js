@@ -803,6 +803,9 @@ function drawArcade(host) {
     const more = button('All ' + plural(list.length, 'game', 'games'), 'ghost more', () => { G.arcOpen = true; drawArcadeSlot(); });
     more.dataset.allgames = '1';
     host.appendChild(more);
+  } else if (G.arcOpen && rest.length > CABS) {
+    /* every game opened in place folds back from anywhere in it (2026-10-22) */
+    host.appendChild(collapseBar('all the games', () => { G.arcOpen = false; drawArcadeSlot(); app.jumpTo(G.root.querySelector('[data-sec="arcade"]')); }));
   }
   return true;
 }
