@@ -341,7 +341,7 @@ def link_games(clips, games):
 def reddit_top(key, client):
     sub = LEAGUES[key]["sub"]
     route, data = client.read(f"r/{sub}/top", t="day", limit=30)
-    if route == "oauth":
+    if route != "rss":  # oauth, shreddit and mirror all hand back a listing dict
         posts, _ = reddit.parse_listing(data, "r/" + sub)
     else:
         posts = reddit.parse_atom(data, "r/" + sub)
