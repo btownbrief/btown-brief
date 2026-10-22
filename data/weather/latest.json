@@ -1,28 +1,28 @@
 {
- "updated": "2026-10-22T10:47:05+00:00",
+ "updated": "2026-10-22T12:07:09+00:00",
  "sections_updated": {
-  "now": "2026-10-22T10:47:05+00:00",
-  "forecast": "2026-10-22T10:47:05+00:00",
-  "hourly": "2026-10-22T10:47:05+00:00",
-  "alerts": "2026-10-22T10:47:05+00:00",
-  "afd": "2026-10-22T10:47:05+00:00",
-  "lake_forecast": "2026-10-22T10:47:05+00:00",
-  "lake_gage": "2026-10-22T10:47:05+00:00",
-  "air": "2026-10-22T10:47:05+00:00",
-  "sun": "2026-10-22T10:47:05+00:00",
-  "models": "2026-10-22T10:47:05+00:00"
+  "now": "2026-10-22T12:07:09+00:00",
+  "forecast": "2026-10-22T12:07:09+00:00",
+  "hourly": "2026-10-22T12:07:09+00:00",
+  "alerts": "2026-10-22T12:07:09+00:00",
+  "afd": "2026-10-22T12:07:09+00:00",
+  "lake_forecast": "2026-10-22T12:07:09+00:00",
+  "lake_gage": "2026-10-22T12:07:09+00:00",
+  "air": "2026-10-22T12:07:09+00:00",
+  "sun": "2026-10-22T12:07:09+00:00",
+  "models": "2026-10-22T12:07:09+00:00"
  },
  "now": {
-  "observed_at": "2026-10-22T10:30:00+00:00",
+  "observed_at": "2026-10-22T11:55:00+00:00",
   "station": "KBTV",
   "description": "Clear",
   "temp_f": 30,
-  "feels_like_f": 30,
+  "feels_like_f": 27,
   "humidity": 93,
   "dewpoint_f": 28,
-  "wind_mph": 0,
+  "wind_mph": 3,
   "wind_gust_mph": null,
-  "wind_dir": "N",
+  "wind_dir": "E",
   "precip_last_hr_in": null
  },
  "forecast": {
@@ -30,7 +30,7 @@
   "periods": [
    {
     "name": "Today",
-    "start": "2026-10-22T06:00:00-04:00",
+    "start": "2026-10-22T08:00:00-04:00",
     "is_day": true,
     "temp_f": 55,
     "pop": 0,
@@ -173,34 +173,6 @@
  "hourly": {
   "updated": "2026-10-22T06:11:10+00:00",
   "hours": [
-   {
-    "t": "2026-10-22T06:00:00-04:00",
-    "temp_f": 35,
-    "feels_f": 31,
-    "pop": 0,
-    "humidity": 92,
-    "wind_mph": 5,
-    "wind_dir": "NE",
-    "sky": 14,
-    "short": "Sunny",
-    "qpf_in": 0.0,
-    "snow_in": 0.0,
-    "gust_mph": 7
-   },
-   {
-    "t": "2026-10-22T07:00:00-04:00",
-    "temp_f": 35,
-    "feels_f": 31,
-    "pop": 0,
-    "humidity": 92,
-    "wind_mph": 5,
-    "wind_dir": "NE",
-    "sky": 15,
-    "short": "Sunny",
-    "qpf_in": 0.0,
-    "snow_in": 0.0,
-    "gust_mph": 7
-   },
    {
     "t": "2026-10-22T08:00:00-04:00",
     "temp_f": 36,
@@ -676,6 +648,34 @@
     "qpf_in": 0.0,
     "snow_in": 0.0,
     "gust_mph": 12
+   },
+   {
+    "t": "2026-10-23T18:00:00-04:00",
+    "temp_f": 48,
+    "feels_f": 45,
+    "pop": 0,
+    "humidity": 46,
+    "wind_mph": 7,
+    "wind_dir": "N",
+    "sky": 3,
+    "short": "Clear",
+    "qpf_in": 0.0,
+    "snow_in": 0.0,
+    "gust_mph": 10
+   },
+   {
+    "t": "2026-10-23T19:00:00-04:00",
+    "temp_f": 45,
+    "feels_f": 42,
+    "pop": 0,
+    "humidity": 55,
+    "wind_mph": 6,
+    "wind_dir": "N",
+    "sky": 7,
+    "short": "Mostly Clear",
+    "qpf_in": 0.0,
+    "snow_in": 0.0,
+    "gust_mph": 9
    }
   ],
   "days": [
@@ -710,13 +710,13 @@
   "active": []
  },
  "afd": {
-  "issued": "2026-10-22T06:10:00+00:00",
+  "issued": "2026-10-22T11:35:00+00:00",
   "key_messages": [
    "Dry and seasonable weather will continue through the weekend.",
    "Quiet and dry weather is expected to continue into early next week."
   ],
   "what_changed": "As of 209 AM EDT Thursday... No significant changes have been made with this forecast package.",
-  "raw": "\n000\nFXUS61 KBTV 220610\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n210 AM EDT Thu Oct 22 2026\n\n.WHAT HAS CHANGED...\nAs of 209 AM EDT Thursday...\n\nNo significant changes have been made with this forecast package.\n\n&&\n\n.KEY MESSAGES...\nAs of 209 AM EDT Thursday...\n\n1. Dry and seasonable weather will continue through the weekend.\n\n2. Quiet and dry weather is expected to continue into early \nnext week.\n\n&&\n\n.DISCUSSION...\nAs of 209 AM EDT Thursday...\n\nKEY MESSAGE 1: Another seasonal day is on tap today with highs in the \nmid 50s this afternoon. A cold front will bring another shot of \nbelow normal temperatures to the region tonight through Saturday \nwith temperatures moderating a bit on Sunday. Gusty north winds will \nbe seen behind the cold front this evening with gusts in the 20-30 \nmph range. The strongest gusts will be across the Champlain Valley \nand generally occur between 6 PM and midnight. We will likely see a \nfew hours of 25 kt sustained winds on Lake Champlain this evening \nand may need to issue a Lake Wind Advisory with the afternoon \nforecast package. Otherwise, a strong 1034 mb surface high pressure \nsystem will settle into the region this weekend with continued dry \nweather and clear skies expected.\n\nKEY MESSAGE 2: Our continued dry spell does not look to let up even \ninto next week. Ridging will continue well into early next week with \ngenerally high confidence in dry and seasonable conditions by Monday \nand Tuesday. As the center of the ridge axis shifts slightly east \nlate Sunday into Monday, southwest flow will keep temperatures in \nthe upper 50s to low 60s areawide, with some locations in \nsoutheastern Vermont pushing the mid 60s. A moisture starved cold \nfront will move through late Monday into Monday night, and while a \nbrief sprinkle in the mountains may be possible, most areas will \nremain dry. Given how dominating our dry our antecedent conditions \nwill be by Monday, a strong front will be needed to dislodge our dry \nair and overcome the surface low relative humidities. This front \nwill not be that case, and most precipitation, should any occur, \nlikely will be virga. While precipitation will be lacking, \ntemperatures will cool slightly behind the front with cooler north \nwinds lowering high temperatures Tuesday to the upper 40s to low \n50s. While a prolonged stretch of dry weather will continue with \nsome days of low relative humidity values, winds look to be too \nlight to note any serious fire weather concerns right now.\n\n&&\n\n.AVIATION /06Z THURSDAY THROUGH MONDAY/...\nThrough 06Z Friday...High confidence in VFR conditions through the\nentire TAF period for all terminals outside of MSS. Again, some\nbrief sunrise fog is noted with a TEMPO group at MSS between 11-13Z\nwith about a 40% chance for IFR visibilities driven by fog. Given\nthe detachment from any rain, and little fog last night areawide,\nconfidence in any fog at other terminals is low, with MSS driven\nmainly by persistence forecasting. Beyond 13Z, a weak frontal\nboundary will pass through generally between 15-17Z as light and\nvariable winds turn prevailing from the north. As the front moves\nthrough, increasing clouds will lower scattered cigs towards\n3000-4000ft agl. Winds will increase slightly behind the front\nthrough the rest of the day with north winds around 10 knots across\nVermont, and occasional gusts between 15-20 knots. In northern New\nYork, any gusts should remain below 15 knots. Winds weaken after 00Z\ntowards light and terrain driven.\n\nOutlook...\n\nFriday: VFR. NO SIG WX.\nFriday Night: VFR. NO SIG WX.\nSaturday: VFR. NO SIG WX.\nSaturday Night: VFR. NO SIG WX.\nSunday: VFR. NO SIG WX.\nSunday Night: VFR. NO SIG WX.\nMonday: Mainly VFR, with local MVFR possible. NO SIG WX.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Clay\nDISCUSSION...Clay/Danzig\nAVIATION...Danzig\n"
+  "raw": "\n000\nFXUS61 KBTV 221135\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n735 AM EDT Thu Oct 22 2026\n\n.WHAT HAS CHANGED...\nAs of 209 AM EDT Thursday...\n\nNo significant changes have been made with this forecast package.\n\n&&\n\n.KEY MESSAGES...\nAs of 209 AM EDT Thursday...\n\n1. Dry and seasonable weather will continue through the weekend.\n\n2. Quiet and dry weather is expected to continue into early \nnext week.\n\n&&\n\n.DISCUSSION...\nAs of 209 AM EDT Thursday...\n\nKEY MESSAGE 1: Another seasonal day is on tap today with highs in the \nmid 50s this afternoon. A cold front will bring another shot of \nbelow normal temperatures to the region tonight through Saturday \nwith temperatures moderating a bit on Sunday. Gusty north winds will \nbe seen behind the cold front this evening with gusts in the 20-30 \nmph range. The strongest gusts will be across the Champlain Valley \nand generally occur between 6 PM and midnight. We will likely see a \nfew hours of 25 kt sustained winds on Lake Champlain this evening \nand may need to issue a Lake Wind Advisory with the afternoon \nforecast package. Otherwise, a strong 1034 mb surface high pressure \nsystem will settle into the region this weekend with continued dry \nweather and clear skies expected.\n\nKEY MESSAGE 2: Our continued dry spell does not look to let up even \ninto next week. Ridging will continue well into early next week with \ngenerally high confidence in dry and seasonable conditions by Monday \nand Tuesday. As the center of the ridge axis shifts slightly east \nlate Sunday into Monday, southwest flow will keep temperatures in \nthe upper 50s to low 60s areawide, with some locations in \nsoutheastern Vermont pushing the mid 60s. A moisture starved cold \nfront will move through late Monday into Monday night, and while a \nbrief sprinkle in the mountains may be possible, most areas will \nremain dry. Given how dominating our dry our antecedent conditions \nwill be by Monday, a strong front will be needed to dislodge our dry \nair and overcome the surface low relative humidities. This front \nwill not be that case, and most precipitation, should any occur, \nlikely will be virga. While precipitation will be lacking, \ntemperatures will cool slightly behind the front with cooler north \nwinds lowering high temperatures Tuesday to the upper 40s to low \n50s. While a prolonged stretch of dry weather will continue with \nsome days of low relative humidity values, winds look to be too \nlight to note any serious fire weather concerns right now.\n\n&&\n\n.AVIATION /12Z THURSDAY THROUGH MONDAY/...\nThrough 12Z Friday...Despite a prolonged detachment from rain, and\nanticipated persistence forecasting, area of localized fog has\ndeveloped around MPV/SLK this morning, with VCFG at RUT. Any\nlingering IFR vis/cig reductions are expected to trend to VFR by\n13Z. Beyond 13Z, a weak frontal boundary will pass through generally\nbetween 15-17Z as light and variable winds turn prevailing from the\nnorth. As the front moves through, increasing clouds will lower\nscattered cigs towards 3000-4000ft agl. Winds will increase slightly\nbehind the front through the rest of the day with north winds around\n10 knots across Vermont, and occasional gusts between 15-20 knots.\nIn northern New York, any gusts should remain below 15 knots. Winds\nweaken after 00Z towards light and terrain driven. Another clear and\ncalm night is expected for all terminals tonight, with some hints at\nrepeat fog at MSS/SLK/MPV, though it will be tied to the later\nportion of tonight, with some subtle flow aloft in the beginning\nportion of the night limiting early fog development. Given low \nconfidence at this time, have left out any fog or terminal \nreductions in this TAF package.\n\nOutlook...\n\nFriday: VFR. NO SIG WX.\nFriday Night: VFR. NO SIG WX.\nSaturday: VFR. NO SIG WX.\nSaturday Night: VFR. NO SIG WX.\nSunday: VFR. NO SIG WX.\nSunday Night: VFR. NO SIG WX.\nMonday: Mainly VFR, with local MVFR possible. NO SIG WX.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Clay\nDISCUSSION...Clay/Danzig\nAVIATION...Danzig\n"
  },
  "lake_forecast": {
   "issued": "2026-10-22T06:11:00+00:00",
@@ -961,17 +961,17 @@
  },
  "lake_gage": {
   "water_temp_f": 54,
-  "water_temp_at": "2026-10-22T06:00:00.000-04:00",
-  "level_ft": 94.1,
-  "level_at": "2026-10-22T06:00:00.000-04:00",
+  "water_temp_at": "2026-10-22T07:00:00.000-04:00",
+  "level_ft": 94.11,
+  "level_at": "2026-10-22T07:00:00.000-04:00",
   "level_status": "normal"
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 26,
+  "aqi": 35,
   "category": "Good",
   "pollutant": "PM2.5",
-  "observed": "10/22/26 6:00",
+  "observed": "10/22/26 7:00",
   "discussion": "On Thursday, October 22nd, expect generally good air quality across Vermont."
  },
  "sun": {
@@ -986,12 +986,12 @@
    {
     "date": "2026-10-22",
     "high_f": {
-     "GFS": 50,
+     "GFS": 51,
      "Euro": 55,
      "ICON": 55
     },
     "pop_max": {
-     "GFS": 1,
+     "GFS": 0,
      "Euro": 0,
      "ICON": 0
     },
@@ -1000,7 +1000,7 @@
      "Euro": 0.0,
      "ICON": 0.0
     },
-    "high_spread_f": 5
+    "high_spread_f": 4
    },
    {
     "date": "2026-10-23",
@@ -1024,7 +1024,7 @@
    {
     "date": "2026-10-24",
     "high_f": {
-     "GFS": 53,
+     "GFS": 54,
      "Euro": 53,
      "ICON": 57
     },
@@ -1044,7 +1044,7 @@
  },
  "brief": {
   "date": "2026-10-22",
-  "generated": "2026-10-22T10:47:08+00:00",
+  "generated": "2026-10-22T12:07:12+00:00",
   "text": "Mostly sunny today, high 55. Mostly clear tonight, low 31. Friday, sunny and cooler, high 50.",
   "periods": [
    {
@@ -1053,11 +1053,11 @@
     "is_day": true,
     "temp_f": 55,
     "sky": "mostly sunny",
-    "start": "2026-10-22T06:00:00-04:00",
+    "start": "2026-10-22T08:00:00-04:00",
     "end": "2026-10-22T18:00:00-04:00",
     "precip": null,
     "wind": null,
-    "feels_lo": 31,
+    "feels_lo": 32,
     "feels_hi": 55,
     "text": "Mostly sunny today, high 55."
    },
