@@ -1,16 +1,16 @@
 {
- "updated": "2026-10-22T21:50:59+00:00",
+ "updated": "2026-10-22T22:46:38+00:00",
  "sections_updated": {
-  "now": "2026-10-22T21:50:59+00:00",
-  "forecast": "2026-10-22T21:50:59+00:00",
-  "hourly": "2026-10-22T21:50:59+00:00",
-  "alerts": "2026-10-22T21:50:59+00:00",
-  "afd": "2026-10-22T21:50:59+00:00",
-  "lake_forecast": "2026-10-22T21:50:59+00:00",
-  "lake_gage": "2026-10-22T21:50:59+00:00",
-  "air": "2026-10-22T21:50:59+00:00",
-  "sun": "2026-10-22T21:50:59+00:00",
-  "models": "2026-10-22T21:50:59+00:00"
+  "now": "2026-10-22T22:46:38+00:00",
+  "forecast": "2026-10-22T22:46:38+00:00",
+  "hourly": "2026-10-22T22:46:38+00:00",
+  "alerts": "2026-10-22T22:46:38+00:00",
+  "afd": "2026-10-22T22:46:38+00:00",
+  "lake_forecast": "2026-10-22T22:46:38+00:00",
+  "lake_gage": "2026-10-22T22:46:38+00:00",
+  "air": "2026-10-22T22:46:38+00:00",
+  "sun": "2026-10-22T22:46:38+00:00",
+  "models": "2026-10-22T22:46:38+00:00"
  },
  "now": {
   "observed_at": "2026-10-22T13:20:00+00:00",
@@ -26,27 +26,17 @@
   "precip_last_hr_in": null
  },
  "forecast": {
-  "updated": "2026-10-22T18:20:34+00:00",
+  "updated": "2026-10-22T22:36:02+00:00",
   "periods": [
-   {
-    "name": "This Afternoon",
-    "start": "2026-10-22T14:00:00-04:00",
-    "is_day": true,
-    "temp_f": 55,
-    "pop": 0,
-    "wind": "N 14 mph",
-    "short": "Partly Sunny",
-    "detailed": "Partly sunny, with a high near 55. North wind around 14 mph."
-   },
    {
     "name": "Tonight",
     "start": "2026-10-22T18:00:00-04:00",
     "is_day": false,
     "temp_f": 34,
     "pop": 0,
-    "wind": "N 7 to 14 mph",
+    "wind": "N 5 to 10 mph",
     "short": "Mostly Clear",
-    "detailed": "Mostly clear, with a low around 34. North wind 7 to 14 mph."
+    "detailed": "Mostly clear, with a low around 34. North wind 5 to 10 mph, with gusts as high as 21 mph."
    },
    {
     "name": "Friday",
@@ -54,9 +44,9 @@
     "is_day": true,
     "temp_f": 54,
     "pop": 0,
-    "wind": "N 9 mph",
+    "wind": "N 5 to 9 mph",
     "short": "Sunny",
-    "detailed": "Sunny, with a high near 54. North wind around 9 mph."
+    "detailed": "Sunny, with a high near 54. North wind 5 to 9 mph."
    },
    {
     "name": "Friday Night",
@@ -167,103 +157,99 @@
     "wind": "S 5 to 10 mph",
     "short": "Partly Cloudy",
     "detailed": "Partly cloudy, with a low around 36. South wind 5 to 10 mph."
+   },
+   {
+    "name": "Thursday",
+    "start": "2026-10-29T06:00:00-04:00",
+    "is_day": true,
+    "temp_f": 57,
+    "pop": 8,
+    "wind": "S 10 to 15 mph",
+    "short": "Partly Sunny",
+    "detailed": "Partly sunny, with a high near 57. South wind 10 to 15 mph."
    }
   ]
  },
  "hourly": {
-  "updated": "2026-10-22T18:20:34+00:00",
+  "updated": "2026-10-22T22:36:02+00:00",
   "hours": [
-   {
-    "t": "2026-10-22T17:00:00-04:00",
-    "temp_f": 54,
-    "feels_f": 54,
-    "pop": 0,
-    "humidity": 50,
-    "wind_mph": 13,
-    "wind_dir": "N",
-    "sky": 43,
-    "short": "Mostly Sunny",
-    "qpf_in": 0.0,
-    "snow_in": 0.0,
-    "gust_mph": 20
-   },
    {
     "t": "2026-10-22T18:00:00-04:00",
     "temp_f": 51,
     "feels_f": 51,
     "pop": 0,
-    "humidity": 54,
-    "wind_mph": 14,
+    "humidity": 63,
+    "wind_mph": 10,
     "wind_dir": "N",
     "sky": 81,
     "short": "Mostly Cloudy",
     "qpf_in": 0.0,
     "snow_in": 0.0,
-    "gust_mph": 21
+    "gust_mph": 18
    },
    {
     "t": "2026-10-22T19:00:00-04:00",
-    "temp_f": 49,
-    "feels_f": 44,
+    "temp_f": 50,
+    "feels_f": 46,
     "pop": 0,
-    "humidity": 58,
-    "wind_mph": 14,
+    "humidity": 63,
+    "wind_mph": 9,
     "wind_dir": "N",
     "sky": 60,
     "short": "Mostly Cloudy",
     "qpf_in": 0.0,
     "snow_in": 0.0,
-    "gust_mph": 23
+    "gust_mph": 18
    },
    {
     "t": "2026-10-22T20:00:00-04:00",
     "temp_f": 48,
-    "feels_f": 42,
+    "feels_f": 44,
     "pop": 0,
-    "humidity": 71,
-    "wind_mph": 14,
+    "humidity": 68,
+    "wind_mph": 9,
     "wind_dir": "N",
     "sky": 13,
     "short": "Mostly Clear",
     "qpf_in": 0.0,
     "snow_in": 0.0,
-    "gust_mph": 22
+    "gust_mph": 17
    },
    {
     "t": "2026-10-22T21:00:00-04:00",
-    "temp_f": 46,
-    "feels_f": 40,
+    "temp_f": 47,
+    "feels_f": 43,
     "pop": 0,
-    "humidity": 76,
-    "wind_mph": 14,
+    "humidity": 68,
+    "wind_mph": 9,
     "wind_dir": "N",
     "sky": 7,
     "short": "Mostly Clear",
     "qpf_in": 0.0,
     "snow_in": 0.0,
-    "gust_mph": 22
+    "gust_mph": 21
    },
    {
     "t": "2026-10-22T22:00:00-04:00",
-    "temp_f": 43,
-    "feels_f": 36,
+    "temp_f": 45,
+    "feels_f": 40,
     "pop": 0,
-    "humidity": 79,
-    "wind_mph": 14,
+    "humidity": 70,
+    "wind_mph": 9,
     "wind_dir": "N",
     "sky": 3,
     "short": "Clear",
     "qpf_in": 0.0,
     "snow_in": 0.0,
-    "gust_mph": 22
+    "gust_mph": 21
    },
    {
     "t": "2026-10-22T23:00:00-04:00",
-    "temp_f": 41,
-    "feels_f": 34,
+    "temp_f": 43,
+    "feels_f": 38,
     "pop": 0,
-    "humidity": 79,
-    "wind_mph": 13,
+    "humidity": 73,
+    "wind_mph": 9,
     "wind_dir": "N",
     "sky": 2,
     "short": "Clear",
@@ -273,53 +259,53 @@
    },
    {
     "t": "2026-10-23T00:00:00-04:00",
-    "temp_f": 40,
-    "feels_f": 33,
+    "temp_f": 42,
+    "feels_f": 37,
     "pop": 0,
-    "humidity": 82,
-    "wind_mph": 12,
+    "humidity": 76,
+    "wind_mph": 8,
     "wind_dir": "N",
     "sky": 1,
     "short": "Clear",
     "qpf_in": 0.0,
     "snow_in": 0.0,
-    "gust_mph": 18
+    "gust_mph": 17
    },
    {
     "t": "2026-10-23T01:00:00-04:00",
-    "temp_f": 39,
-    "feels_f": 32,
+    "temp_f": 40,
+    "feels_f": 35,
     "pop": 0,
-    "humidity": 82,
-    "wind_mph": 10,
+    "humidity": 79,
+    "wind_mph": 7,
     "wind_dir": "N",
     "sky": 2,
     "short": "Clear",
     "qpf_in": 0.0,
     "snow_in": 0.0,
-    "gust_mph": 16
+    "gust_mph": 15
    },
    {
     "t": "2026-10-23T02:00:00-04:00",
-    "temp_f": 39,
-    "feels_f": 33,
+    "temp_f": 40,
+    "feels_f": 36,
     "pop": 0,
-    "humidity": 82,
-    "wind_mph": 9,
+    "humidity": 79,
+    "wind_mph": 6,
     "wind_dir": "N",
     "sky": 4,
     "short": "Clear",
     "qpf_in": 0.0,
     "snow_in": 0.0,
-    "gust_mph": 14
+    "gust_mph": 13
    },
    {
     "t": "2026-10-23T03:00:00-04:00",
-    "temp_f": 38,
-    "feels_f": 32,
+    "temp_f": 39,
+    "feels_f": 35,
     "pop": 0,
-    "humidity": 82,
-    "wind_mph": 8,
+    "humidity": 79,
+    "wind_mph": 6,
     "wind_dir": "N",
     "sky": 3,
     "short": "Clear",
@@ -330,10 +316,10 @@
    {
     "t": "2026-10-23T04:00:00-04:00",
     "temp_f": 38,
-    "feels_f": 32,
+    "feels_f": 34,
     "pop": 0,
     "humidity": 82,
-    "wind_mph": 8,
+    "wind_mph": 6,
     "wind_dir": "N",
     "sky": 4,
     "short": "Clear",
@@ -343,25 +329,25 @@
    },
    {
     "t": "2026-10-23T05:00:00-04:00",
-    "temp_f": 37,
-    "feels_f": 32,
+    "temp_f": 38,
+    "feels_f": 34,
     "pop": 0,
-    "humidity": 85,
-    "wind_mph": 7,
+    "humidity": 82,
+    "wind_mph": 5,
     "wind_dir": "N",
     "sky": 7,
     "short": "Mostly Clear",
     "qpf_in": 0.0,
     "snow_in": 0.0,
-    "gust_mph": 13
+    "gust_mph": 12
    },
    {
     "t": "2026-10-23T06:00:00-04:00",
     "temp_f": 37,
-    "feels_f": 32,
+    "feels_f": 33,
     "pop": 0,
     "humidity": 85,
-    "wind_mph": 7,
+    "wind_mph": 5,
     "wind_dir": "N",
     "sky": 10,
     "short": "Sunny",
@@ -372,16 +358,16 @@
    {
     "t": "2026-10-23T07:00:00-04:00",
     "temp_f": 36,
-    "feels_f": 30,
+    "feels_f": 31,
     "pop": 0,
     "humidity": 85,
-    "wind_mph": 7,
+    "wind_mph": 6,
     "wind_dir": "N",
     "sky": 9,
     "short": "Sunny",
     "qpf_in": 0.0,
     "snow_in": 0.0,
-    "gust_mph": 12
+    "gust_mph": 10
    },
    {
     "t": "2026-10-23T08:00:00-04:00",
@@ -676,6 +662,20 @@
     "qpf_in": 0.0,
     "snow_in": 0.0,
     "gust_mph": 2
+   },
+   {
+    "t": "2026-10-24T05:00:00-04:00",
+    "temp_f": 32,
+    "feels_f": 32,
+    "pop": 0,
+    "humidity": 96,
+    "wind_mph": 2,
+    "wind_dir": "SE",
+    "sky": 51,
+    "short": "Mostly Cloudy",
+    "qpf_in": 0.0,
+    "snow_in": 0.0,
+    "gust_mph": 3
    }
   ],
   "days": [
@@ -1007,17 +1007,17 @@
  },
  "lake_gage": {
   "water_temp_f": 55,
-  "water_temp_at": "2026-10-22T17:00:00.000-04:00",
-  "level_ft": 94.06,
-  "level_at": "2026-10-22T17:00:00.000-04:00",
+  "water_temp_at": "2026-10-22T18:00:00.000-04:00",
+  "level_ft": 94.09,
+  "level_at": "2026-10-22T18:00:00.000-04:00",
   "level_status": "normal"
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 29,
+  "aqi": 30,
   "category": "Good",
   "pollutant": "PM2.5",
-  "observed": "10/22/26 17:00",
+  "observed": "10/22/26 18:00",
   "discussion": "On Friday, October 23rd, expect generally good air quality across Vermont."
  },
  "sun": {
@@ -1090,23 +1090,9 @@
  },
  "brief": {
   "date": "2026-10-22",
-  "generated": "2026-10-22T21:51:04+00:00",
-  "text": "Partly sunny today, high 55. Mostly clear tonight, low 34. Friday, sunny, high 54.",
+  "generated": "2026-10-22T22:46:42+00:00",
+  "text": "Mostly clear tonight, low 34. Friday, sunny, high 54.",
   "periods": [
-   {
-    "label": "Today",
-    "name": "This Afternoon",
-    "is_day": true,
-    "temp_f": 55,
-    "sky": "partly sunny",
-    "start": "2026-10-22T21:00:00+00:00",
-    "end": "2026-10-22T18:00:00-04:00",
-    "precip": null,
-    "wind": null,
-    "feels_lo": 54,
-    "feels_hi": 54,
-    "text": "Partly sunny today, high 55."
-   },
    {
     "label": "Tonight",
     "name": "Tonight",
@@ -1117,9 +1103,23 @@
     "end": "2026-10-23T06:00:00-04:00",
     "precip": null,
     "wind": null,
-    "feels_lo": 32,
+    "feels_lo": 34,
     "feels_hi": 51,
     "text": "Mostly clear tonight, low 34."
+   },
+   {
+    "label": "Friday",
+    "name": "Friday",
+    "is_day": true,
+    "temp_f": 54,
+    "sky": "sunny",
+    "start": "2026-10-23T06:00:00-04:00",
+    "end": "2026-10-23T18:00:00-04:00",
+    "precip": null,
+    "wind": null,
+    "feels_lo": 30,
+    "feels_hi": 54,
+    "text": "Friday, sunny, high 54."
    }
   ]
  }
