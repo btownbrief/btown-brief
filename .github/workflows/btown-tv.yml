@@ -79,7 +79,11 @@ jobs:
           YT_OAUTH_CLIENT_ID: ${{ secrets.YT_OAUTH_CLIENT_ID }}
           YT_OAUTH_CLIENT_SECRET: ${{ secrets.YT_OAUTH_CLIENT_SECRET }}
           YT_OAUTH_REFRESH_TOKEN: ${{ secrets.YT_OAUTH_REFRESH_TOKEN }}
+          # the taste doctrine is a private Actions secret (scripts/private_prompts.py);
+          # without it this step fails red and the branch keeps its last edition
+          PROMPT_TV_TASTE: ${{ secrets.PROMPT_TV_TASTE }}
         run: |
+          python3 scripts/private_prompts.py --check tv-taste.md
           python3 scripts/curate_tv.py --selftest
           # an empty prior file must not read as "history = {}" forever —
           # drop zero-byte leftovers so the script falls back to the branch URL

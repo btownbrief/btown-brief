@@ -21,6 +21,25 @@ sys.path.insert(0, os.path.join(HERE, "..", "scripts"))
 import curate_wire as cw  # noqa: E402
 import tag_wire as tw  # noqa: E402
 import wire_common as wc  # noqa: E402
+import private_prompts  # noqa: E402
+
+# The taste prompts are private (scripts/private_prompts.py). Where they are
+# not on this machine, the pipeline tests run on a stand-in and the tests
+# that check a prompt's own wording skip.
+STAND_IN = "(stand-in: the private prompt is not on this machine)\n"
+for _name in ("wire-taste.md", "wire-tags.md"):
+    try:
+        private_prompts.load(_name)
+    except private_prompts.PromptMissing:
+        os.environ[private_prompts.env_name(_name)] = STAND_IN
+
+
+def private_prompt(name):
+    """The real prompt's text, or skip the wording test."""
+    text = wc.read_prompt(name)
+    if text == STAND_IN:
+        raise unittest.SkipTest(f"private prompt {name} is not on this machine")
+    return text
 
 # 2:10 pm Eastern on Friday, October 16, 2026
 NOW = datetime(2026, 10, 16, 18, 10, tzinfo=timezone.utc)
@@ -572,7 +591,7 @@ class FableRuleTests(unittest.TestCase):
 
     def test_the_prompt_says_one_list(self):
         self.assertIn("single list by importance, not two lists", cw.TASK)
-        doctrine = wc.read_prompt("wire-taste.md")
+        doctrine = private_prompt("wire-taste.md")
         self.assertIn("One list, by importance", doctrine)
         self.assertNotIn("Local first", doctrine)
 

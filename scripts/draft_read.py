@@ -4,7 +4,7 @@ Draft the "My Read" weather report into the review queue.
 
 Reads data/weather/latest.json (run refresh_weather.py first — the GitHub
 Action does), builds a compact source packet, and drafts the report with
-Claude using prompts/weather-read.md (the shared weather brain).
+Claude using the private weather-read.md (the shared weather brain).
 
 Three editions a day (--edition morning|midday|evening) so the page has a
 fresh read by 7 AM, noon, and 5 PM Burlington time. Each edition writes
@@ -28,12 +28,12 @@ from datetime import datetime, timezone
 from zoneinfo import ZoneInfo
 
 import outlets as outlets_mod
+import private_prompts
 
 ROOT = os.path.join(os.path.dirname(__file__), "..")
 LATEST = os.path.join(ROOT, "data", "weather", "latest.json")
 DRAFT = os.path.join(ROOT, "data", "weather", "read-draft.json")
 READ = os.path.join(ROOT, "data", "weather", "read.json")
-BRAIN = os.path.join(ROOT, "prompts", "weather-read.md")
 
 # Edition windows, Burlington time. --auto drafts whichever edition the
 # clock says should be live, so a skipped or hours-late GitHub cron heals
@@ -188,7 +188,7 @@ def build_packet(d, outlets):
 
     # The lake's boating forecast (knots, waves) only in swim season, and
     # never as the story (Stephen, 2026-10-19: "Idk why it's talking so
-    # much about knots and wind and boats"). See prompts/weather-read.md.
+    # much about knots and wind and boats"). See the private weather-read.md.
     lk = d.get("lake_forecast") or {}
     local_month = datetime.now(ZoneInfo("America/New_York")).month
     if lk.get("broad") and not lk.get("suspended") and 6 <= local_month <= 9:
@@ -456,8 +456,9 @@ def main():
 
     with open(LATEST) as f:
         data = json.load(f)
-    with open(BRAIN) as f:
-        brain = f.read()
+    # The weather brain is private (scripts/private_prompts.py); without it
+    # this raises before anything is written, so the live read stays up.
+    brain = private_prompts.load("weather-read.md")
 
     # What the other outlets are telling readers (never load-bearing)
     try:

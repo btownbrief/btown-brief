@@ -30,3 +30,8 @@ out-loud/decisions*.json
 # Editor's Desk — weekly ops page + its state (local-only; repo is public)
 desk.html
 desk-state.json
+
+# Stephen's taste prompts are private (scripts/private_prompts.py): Actions
+# secrets in CI, ~/btownbrief/newsletter/allday-prompts/ on his Mac. Never
+# commit them here again.
+prompts/

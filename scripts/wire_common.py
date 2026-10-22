@@ -442,8 +442,9 @@ def write_json(path, value):
 
 
 def read_prompt(name):
-    with open(os.path.join(ROOT, "prompts", name), encoding="utf-8") as src:
-        return src.read()
+    """A private taste prompt (scripts/private_prompts.py); raises if missing."""
+    import private_prompts
+    return private_prompts.load(name)
 
 
 def step_summary(text):
