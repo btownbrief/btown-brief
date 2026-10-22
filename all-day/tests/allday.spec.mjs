@@ -37,6 +37,7 @@ import net from 'node:net';
 import path from 'node:path';
 import { FakeHabits } from '../js/habits-fake.js';
 import { directoryFrom } from '../js/food-asks.js';
+import * as CH from '../js/challenge-core.js';
 
 const require = createRequire(import.meta.url);
 let chromium;
@@ -11807,6 +11808,290 @@ async function onAirSports(browser, base) {
   });
 }
 
+/* ------------------------------------------------ the No-algorithm challenge */
+/* js/challenge.js and challenge-core.js (wave 8, 2026-10-22): a card at the
+   top of the Wire for a reader who joined or came from the newsletter, the
+   #challenge link, five one-tap days, a roundup, and a form that reaches
+   Stephen through nn_challenge_send and nothing else. */
+const chalToday = () => { const o = etParts(Date.now()); return o.year + '-' + o.month + '-' + o.day; };
+const chalShot = async (page, name, el) => (await page.waitForTimeout(450), el ? page.locator(el).screenshot({ path: path.join(SHOTS, 'challenge-' + name + '.png') })
+  : page.screenshot({ path: path.join(SHOTS, 'challenge-' + name + '.png') }));
+const chalState = (page) => page.evaluate(() => JSON.parse(localStorage.getItem('allday-challenge') || 'null'));
+const chalCard = (page, kind) => page.waitForSelector('#panel-wire > .chal-slot:not([hidden]) .chal-card[data-chal="' + kind + '"]', { timeout: 8000 });
+const toastText = async (page) => { await page.waitForSelector('#toast:not([hidden])', { timeout: 4000 }).catch(() => {}); return page.$eval('#toast', (t) => t.textContent).catch(() => ''); };
+
+async function theChallenge(browser, base) {
+  await group('challenge: the lists and limits are the same in the app and the SQL', async () => {
+    const sql = await readFile(path.join(APP, 'supabase/nn-CHALLENGE.sql'), 'utf8');
+    const list = (name) => ((sql.match(new RegExp("'" + name + "', jsonb_build_array\\(([^)]*)\\)")) || [])[1] || '').match(/'([a-z]+)'/g)?.map((s) => s.slice(1, -1)) || [];
+    check(JSON.stringify(list('feelings')) === JSON.stringify(CH.FEELINGS.map((f) => f[0])), 'feelings match', list('feelings').join(','));
+    check(JSON.stringify(list('missed')) === JSON.stringify(CH.MISSED.map((f) => f[0])), 'what you missed matches', list('missed').join(','));
+    check(JSON.stringify(list('archetypes')) === JSON.stringify(CH.ARCHETYPES.map((f) => f[0])), 'the kinds of person match', list('archetypes').join(','));
+    const lim = Object.entries(CH.LIMITS).filter(([k, n]) => !sql.includes('char_length(' + k + ') <= ' + n));
+    check(!lim.length, 'every length limit is the same', lim.map((x) => x[0]).join(', '));
+    check(/enable row level security/.test(sql) && /revoke all on table public\.nn_challenge_feedback from anon, authenticated/.test(sql) && !/create policy/i.test(sql),
+      'the table is RLS with no policies and revoked from the public key', '');
+    check(/grant execute on function\s+public\.nn_challenge_send\([^)]*\),\s+public\.nn_challenge_list\(text\)\s+to anon, authenticated;/.test(sql)
+      && /security definer/.test(sql) && /nn_mod_ok\(p_secret\)/.test(sql), 'only the send door and the passphrase-gated list are granted', '');
+    const t = '2026-10-23';
+    let s = CH.join(CH.normalize(null), t, 'newsletter');
+    s = CH.checkIn(CH.checkIn(CH.checkIn(s, t, 'calmer'), '2026-10-24', 'caved'), '2026-10-27', 'great');
+    check(CH.phase(s, '2026-10-26') === 'on' && CH.phase(s, '2026-10-27') === 'done' && CH.phase(s, '2026-10-28') === 'done', 'day five logged, or a sixth day, ends it', '');
+    check(CH.headline(CH.summary(s, '2026-10-27')) === 'You made it 2 of 5 days without the feeds', 'a slip does not count as a day without the feeds', CH.headline(CH.summary(s, '2026-10-27')));
+    check(CH.checkIn(s, '2026-10-28', 'great') === s && CH.checkIn(s, t, 'bogus') === s, 'no check-in after day five or with a made-up feeling', '');
+    check(JSON.stringify(CH.normalize({ joined: t, feel: { '2026-10-22': 'great', '2026-10-29': 'great', [t]: 'nope', '2026-10-24': 'same' } }).feel) === '{"2026-10-24":"same"}',
+      'a stored copy keeps only real days inside the five', '');
+    check(CH.feedbackArgs(Object.assign({}, s, { cid: 'abcdefgh12' }), {}, t).error === 'empty', 'an empty form is not sent', '');
+  });
+
+  await group('challenge: a stranger sees no card, and nothing is asked of Supabase for it (live)', async () => {
+    const { ctx, page, errors, supabase } = await newPage(browser, base);
+    await page.goto(base + '/all-day/');
+    await settle(page);
+    await page.waitForSelector('#panel-wire > .chal-slot', { state: 'attached', timeout: 6000 }).catch(() => {});
+    await page.waitForTimeout(400);
+    const r = await page.evaluate(() => ({ slot: !!document.querySelector('#panel-wire > .chal-slot'), hidden: document.querySelector('#panel-wire > .chal-slot')?.hidden, sheet: !document.querySelector('#sheet').hidden }));
+    check(r.slot && r.hidden && !r.sheet, 'the slot is there and empty; no sheet opens', JSON.stringify(r));
+    check(!supabase.some((u) => /nn_challenge/.test(u)) && (await chalState(page)) === null, 'no call, nothing stored', supabase.join(' '));
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('challenge: the newsletter’s #challenge link opens it; one tap joins, one tap logs the day (live)', async () => {
+    const { ctx, page, errors, supabase } = await newPage(browser, base);
+    await page.goto(base + '/all-day/?utm_source=www.btownbrief.com&utm_medium=newsletter&_bhlid=abc123#challenge');
+    await page.waitForSelector('#sheet:not([hidden]) .chal-sheet .chal-go', { timeout: 8000 });
+    const r = await page.evaluate(() => ({ hash: location.hash, tab: document.querySelector('#tab-wire').getAttribute('aria-selected'), text: document.querySelector('#sheet').innerText }));
+    check(r.hash === '#wire' && r.tab === 'true', 'it lands on the Wire, and the address bar says #wire', JSON.stringify(r));
+    check(/Five days without the feeds/.test(r.text) && /I’m in/.test(r.text), 'the sheet says what it is, with one button', r.text);
+    await chalShot(page, 'sheet-390');
+    await page.click('#sheet .chal-go');
+    await chalCard(page, 'checkin');
+    check(await page.$eval('#sheet', (s) => s.hidden), 'joining closes the sheet', '');
+    const c = await page.$eval('#panel-wire .chal-card', (n) => n.innerText.replace(/\s+/g, ' '));
+    check(/Day 1 of 5/i.test(c) && /How did today feel without the feeds\?/.test(c), 'the card on the Wire says day 1 of 5 and asks how today felt', c);
+    const top = await page.evaluate(() => { const s = document.querySelector('#panel-wire > .chal-slot'); return s.nextElementSibling === document.querySelector('#panel-wire > .panel-body'); });
+    check(top, 'the card sits above the Wire’s own feed', '');
+    check(/Day 1 starts now/.test(await toastText(page)), 'a toast says day 1 has started', '');
+    await chalShot(page, 'checkin-390');
+    await page.click('#panel-wire [data-feel="calmer"]');
+    await chalCard(page, 'logged');
+    const logged = await page.$eval('#panel-wire .chal-card', (n) => ({ h: n.querySelector('.chal-h').textContent, free: n.querySelectorAll('.chal-dot.free').length, now: n.querySelector('.chal-dot.now')?.classList.contains('free') }));
+    check(logged.h === 'Day 1 felt calmer' && logged.free === 1 && logged.now, 'one tap logs it: "Day 1 felt calmer", the first dot filled', JSON.stringify(logged));
+    await chalShot(page, 'logged-390', '#panel-wire .chal-card');
+    const st = await chalState(page);
+    check(st && st.joined === chalToday() && st.source === 'newsletter' && st.feel[chalToday()] === 'calmer' && /^[A-Za-z0-9-]{8,64}$/.test(st.cid), 'kept on this phone: the day joined, where they came from, today’s feeling', JSON.stringify(st));
+    const gc = await page.evaluate(() => window.__gc.filter((p) => /challenge/.test(p)));
+    check(JSON.stringify(gc) === JSON.stringify(['all-day-challenge-link', 'all-day-challenge-join', 'all-day-challenge-day1-calmer']), 'GoatCounter counts the link, the join and the day', JSON.stringify(gc));
+    await pageRules(page, 'wire (challenge card)', 390);
+    await page.click('#panel-wire .chal-card button:has-text("Change")');
+    await chalCard(page, 'checkin');
+    check(await page.$eval('#panel-wire [data-feel="calmer"]', (b) => b.getAttribute('aria-pressed')) === 'true', 'Change shows the five again, today’s pressed', '');
+    await page.click('#panel-wire [data-feel="caved"]');
+    await chalCard(page, 'logged');
+    check(await page.$eval('#panel-wire .chal-h', (h) => h.textContent) === 'Day 1 was a slip' && await page.$$eval('#panel-wire .chal-dot.slip', (n) => n.length) === 1, 'a slip says so, and its dot is a ring', '');
+    await page.goto(base + '/all-day/');
+    await chalCard(page, 'logged');
+    check(true, 'a plain visit the next time still shows the card', '');
+    check(!supabase.some((u) => /nn_challenge/.test(u)), 'joining and checking in send nothing to Supabase', supabase.filter((u) => /nn_/.test(u)).join(' '));
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('challenge: a newsletter link without the hash shows the invite; Not now hides it for good (live)', async () => {
+    for (const scheme of ['light', 'dark']) {
+      const { ctx, page, errors } = await newPage(browser, base, { scheme });
+      await page.goto(base + '/all-day/?utm_source=www.btownbrief.com&utm_medium=newsletter&_bhlid=xyz');
+      await chalCard(page, 'invite');
+      check(await page.$eval('#sheet', (s) => s.hidden), scheme + ': the invite is a card, no sheet', '');
+      const text = await page.$eval('#panel-wire .chal-card', (n) => n.innerText.replace(/\s+/g, ' '));
+      check(/Five days without the feeds/.test(text) && /I’m in/.test(text) && /Not now/.test(text), scheme + ': it says what it is, with I’m in and Not now', text);
+      await chalShot(page, 'invite-390-' + scheme);
+      if (scheme === 'dark') { check(!errors.length, 'dark: no console errors', errors.join(' | ')); await ctx.close(); continue; }
+      await page.click('#panel-wire .chal-card button:has-text("Not now")');
+      await page.waitForSelector('#panel-wire > .chal-slot[hidden]', { state: 'attached' });
+      check(/Challenge hidden/.test(await toastText(page)), 'Not now hides it, with Undo', '');
+      await page.click('#toast button');
+      await chalCard(page, 'invite');
+      await page.click('#panel-wire .chal-card button:has-text("Not now")');
+      await page.waitForSelector('#panel-wire > .chal-slot[hidden]', { state: 'attached' });
+      await page.goto(base + '/all-day/?utm_medium=newsletter&_bhlid=again');
+      await settle(page);
+      await page.waitForTimeout(500);
+      check(await page.$eval('#panel-wire > .chal-slot', (s) => s.hidden), 'the next newsletter visit leaves it hidden', '');
+      await page.goto(base + '/all-day/#challenge');
+      await page.waitForSelector('#sheet:not([hidden]) .chal-sheet', { timeout: 8000 });
+      await page.click('#sheet .iconbtn');
+      await chalCard(page, 'invite');
+      check(true, 'the #challenge link itself brings it back', '');
+      check(!errors.length, 'no console errors', errors.join(' | '));
+      await ctx.close();
+    }
+  });
+
+  await group('challenge: day five ends in a roundup, and the form reaches Stephen anonymously (live)', async () => {
+    const sent = [];
+    const { ctx, page, errors } = await newPage(browser, base, {
+      rpc: (fn, args, headers) => { if (fn === 'nn_challenge_send') { sent.push({ args, auth: headers.authorization || null }); return { ok: true }; } return undefined; },
+    });
+    const t = chalToday(), d = (n) => CH.addDays(t, n);
+    await page.goto(base + '/all-day/');
+    await settle(page);
+    await page.evaluate((s) => localStorage.setItem('allday-challenge', JSON.stringify(s)),
+      { v: 1, cid: 'test-cid-0001', joined: d(-4), source: 'link', feel: { [d(-4)]: 'calmer', [d(-3)]: 'caved', [d(-1)]: 'great' } });
+    await page.reload();
+    await chalCard(page, 'checkin');
+    check(/Day 5 of 5/i.test(await page.$eval('#panel-wire .chal-card', (n) => n.innerText)), 'the fifth day asks too', '');
+    await page.click('#panel-wire [data-feel="great"]');
+    await chalCard(page, 'roundup');
+    const ru = await page.$eval('#panel-wire .chal-card', (n) => ({ h: n.querySelector('.chal-h').textContent, words: [...n.querySelectorAll('.chal-dot .n')].map((x) => x.textContent) }));
+    check(ru.h === 'You made it 3 of 5 days without the feeds', 'the roundup counts the days without the feeds', ru.h);
+    check(JSON.stringify(ru.words) === JSON.stringify(['Calmer', 'I caved', 'Day 3', 'Great', 'Great']), 'and shows how each day felt', JSON.stringify(ru.words));
+    check(/That’s all five days/.test(await toastText(page)), 'the fifth tap says that’s all five', '');
+    await chalShot(page, 'roundup-390', '#panel-wire .chal-card');
+    await page.click('#panel-wire .chal-card .chal-go');
+    await page.waitForSelector('#sheet:not([hidden]) .chal-form');
+    await chalShot(page, 'form-390');
+    await page.click('#sheet .chal-send');
+    check(/Pick or write at least one thing first/.test(await page.$eval('#sheet .chal-msg', (m) => m.textContent)) && !sent.length, 'an empty form says what to do and sends nothing', '');
+    await page.click('#sheet [data-missed="friends"]');
+    await page.click('#sheet [data-missed="messages"]');
+    await page.fill('#sheet input[name="missed_other"]', 'Bird photos from the Intervale group');
+    await page.fill('#sheet textarea[name="switch_for"]', 'A place for my run club’s chat');
+    await page.click('#sheet [data-kind="joiner"]');
+    await page.click('#sheet .sheet-head .iconbtn');
+    await page.click('#panel-wire .chal-card .chal-go');
+    await page.waitForSelector('#sheet:not([hidden]) .chal-form');
+    const kept = await page.evaluate(() => ({ on: [...document.querySelectorAll('#sheet .chal-chip.on')].map((b) => b.dataset.missed), sw: document.querySelector('#sheet textarea').value,
+      kind: document.querySelector('#sheet .chal-kind.on')?.dataset.kind }));
+    check(JSON.stringify(kept) === JSON.stringify({ on: ['friends', 'messages'], sw: 'A place for my run club’s chat', kind: 'joiner' }), 'a closed sheet keeps the draft', JSON.stringify(kept));
+    await chalShot(page, 'form-filled-390', '#sheet .sheet-card');
+    await page.click('#sheet .chal-send');
+    await chalCard(page, 'sent');
+    const a = sent[0] && sent[0].args;
+    check(sent.length === 1 && a.p_cid === 'test-cid-0001' && a.p_source === 'link' && a.p_joined === d(-4) && a.p_day === 5
+      && JSON.stringify(a.p_feelings) === JSON.stringify(['1:calmer', '2:caved', '4:great', '5:great'])
+      && JSON.stringify(a.p_missed) === '["friends","messages"]' && a.p_missed_other === 'Bird photos from the Intervale group'
+      && a.p_switch_for === 'A place for my run club’s chat' && a.p_archetype === 'joiner', 'one call to nn_challenge_send with the days and the answers', JSON.stringify(sent));
+    check(sent[0] && !sent[0].auth && !Object.keys(a).some((k) => /mail|name|user/.test(k)), 'no account, name or email goes with it', JSON.stringify(sent[0]));
+    check(/Sent\. Thank you!/.test(await toastText(page)) && /Thanks for telling us/.test(await page.$eval('#panel-wire .chal-card', (n) => n.innerText)), 'the card thanks them', '');
+    check(!!(await chalState(page)).sent, 'and remembers it was sent', '');
+    await page.click('#panel-wire .chal-card button:has-text("Close")');
+    await page.waitForSelector('#panel-wire > .chal-slot[hidden]', { state: 'attached' });
+    await page.reload();
+    await settle(page);
+    await page.waitForTimeout(500);
+    check(await page.$eval('#panel-wire > .chal-slot', (s) => s.hidden), 'Close puts it away for good', '');
+    await page.evaluate((j) => localStorage.setItem('allday-challenge', JSON.stringify({ v: 1, cid: 'test-cid-0002', joined: j, feel: {} })), d(-5));
+    await page.reload();
+    await chalCard(page, 'roundup');
+    check(await page.$eval('#panel-wire .chal-h', (h) => h.textContent) === 'Your five days are up', 'five days with no check-ins still end in a roundup', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('challenge: a send that fails keeps the answers and says so (live)', async () => {
+    const { ctx, page, errors } = await newPage(browser, base, {
+      rpc: (fn) => (fn === 'nn_challenge_send' ? { status: 404, body: { code: 'PGRST202', message: 'Could not find the function' } } : undefined),
+    });
+    await page.goto(base + '/all-day/#challenge/feedback');
+    await page.waitForSelector('#sheet:not([hidden]) .chal-form', { timeout: 8000 });
+    check(await page.evaluate(() => location.hash) === '#wire', '#challenge/feedback opens the form straight away', '');
+    await page.fill('#sheet textarea[name="switch_for"]', 'Trail conditions');
+    await page.click('#sheet .chal-send');
+    await page.waitForFunction(() => /Couldn’t send it/.test(document.querySelector('#sheet .chal-msg')?.textContent || ''), null, { timeout: 6000 }).catch(() => {});
+    const st = await chalState(page);
+    check(/Couldn’t send it just now/.test(await page.$eval('#sheet .chal-msg', (m) => m.textContent)), 'the form says it couldn’t send', '');
+    check(st && st.draft.switch_for === 'Trail conditions' && !st.sent && !st.joined, 'the answer is kept, nothing is marked sent, and nobody was signed up', JSON.stringify(st));
+    check(!errors.filter((e) => !/404/.test(e)).length, 'no console errors (beyond the 404)', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('challenge: Stop the challenge clears the days (live)', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/all-day/#challenge');
+    await page.waitForSelector('#sheet:not([hidden]) .chal-go', { timeout: 8000 });
+    await page.click('#sheet .chal-go');
+    await chalCard(page, 'checkin');
+    await page.click('#panel-wire .chal-eye');
+    await page.waitForSelector('#sheet:not([hidden]) .chal-stop');
+    await page.click('#sheet .chal-stop');
+    await page.click('#confirm [data-yes]');
+    await page.waitForSelector('#panel-wire > .chal-slot[hidden]', { state: 'attached' });
+    const st = await chalState(page);
+    check(st && !st.joined && !Object.keys(st.feel).length && st.dismissed, 'stopped: no days kept, the card gone', JSON.stringify(st));
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('challenge: a wide screen lines the card up with the Wire’s column (live, 1280 dark)', async () => {
+    const { ctx, page, errors } = await newPage(browser, base, { viewport: { width: 1280, height: 800 }, scheme: 'dark' });
+    await page.goto(base + '/all-day/#challenge');
+    await page.waitForSelector('#sheet:not([hidden]) .chal-go', { timeout: 8000 });
+    await page.click('#sheet .chal-go');
+    await chalCard(page, 'checkin');
+    await page.waitForTimeout(300);
+    const r = await page.evaluate(() => { const c = document.querySelector('#panel-wire .chal-slot').getBoundingClientRect(), b = document.querySelector('#panel-wire .panel-body').getBoundingClientRect();
+      return { cl: Math.round(c.left), bl: Math.round(b.left), cw: Math.round(c.width), bw: Math.round(b.width), docW: document.documentElement.scrollWidth, vw: innerWidth }; });
+    check(Math.abs(r.cl - r.bl) <= 2 && Math.abs(r.cw - r.bw) <= 2 && r.docW <= r.vw, 'the card is the column’s width, over the feed', JSON.stringify(r));
+    await chalShot(page, 'checkin-1280-dark');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('challenge: the demo plays it through and keeps and sends nothing', async () => {
+    const { ctx, page, errors, supabase } = await newPage(browser, base);
+    await page.goto(base + '/all-day/?demo=1#challenge');
+    await page.waitForSelector('#sheet:not([hidden]) .chal-go', { timeout: 8000 });
+    await page.click('#sheet .chal-go');
+    await chalCard(page, 'checkin');
+    await page.click('#panel-wire [data-feel="great"]');
+    await chalCard(page, 'logged');
+    await page.click('#panel-wire .chal-card button:has-text("Tell us")');
+    await page.waitForSelector('#sheet:not([hidden]) .chal-form');
+    await page.click('#sheet [data-missed="memes"]');
+    await page.click('#sheet .chal-send');
+    check(/Nothing is sent from the demo/.test(await toastText(page)), 'Send in the demo says nothing was sent', '');
+    check(!supabase.some((u) => /nn_challenge/.test(u)) && (await chalState(page)) === null, 'no call and nothing in localStorage', supabase.join(' '));
+    const gc = await page.evaluate(() => window.__gc.filter((p) => /challenge/.test(p)));
+    check(!gc.length, 'and nothing counted', gc.join(' '));
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('challenge: the boards desk shows Stephen the answers behind the passphrase', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/all-day/mod.html?demo=1');
+    await page.fill('#pass', 'demo');
+    await page.click('#gate button[type=submit]');
+    await page.waitForSelector('#desk:not([hidden]) [data-challenge-btn]');
+    await page.click('[data-challenge-btn]');
+    await page.waitForSelector('[data-challenge]');
+    const t = await page.$eval('#desk', (d) => d.innerText);
+    check(await page.$$eval('[data-challenge]', (n) => n.length) === 2 && /2 answers so far/.test(t) && /Kinds of person: (Joiner|Night owl) 1/.test(t) && /Missed: Friends’ posts 2/.test(t),
+      'demo: tallies, then each answer', t.slice(0, 300));
+    await ctx.close();
+    const asked = [];
+    const live = await newPage(browser, base, { rpc: (fn, args) => {
+      if (fn === 'nn_mod_list') return { waiting: [], reported: [], hidden: [], recent: [], bans: [] };
+      if (fn === 'nn_challenge_list') { asked.push(args); return { count: 1, archetypes: { foodie: 1 }, missed: { news: 1 }, feelings: { calmer: 1 },
+        rows: [{ updated_at: new Date().toISOString(), source: 'newsletter', day: 2, feed_free_days: 1, feelings: ['1:calmer'], missed: ['news'], missed_other: '<b>x</b>', switch_for: 'More food trucks', archetype: 'foodie', archetype_words: '' }] }; }
+      return undefined;
+    } });
+    await live.page.goto(base + '/all-day/mod.html');
+    await live.page.fill('#pass', 'test-pass');
+    await live.page.click('#gate button[type=submit]');
+    await live.page.waitForSelector('#desk:not([hidden]) [data-challenge-btn]');
+    await live.page.click('[data-challenge-btn]');
+    await live.page.waitForSelector('[data-challenge]');
+    const row = await live.page.$eval('[data-challenge]', (n) => ({ text: n.innerText, html: n.innerHTML }));
+    check(asked.length === 1 && asked[0].p_secret === 'test-pass', 'live: the list is asked for with the passphrase', JSON.stringify(asked));
+    check(/Foodie · day 2 · 1 feed-free · from newsletter/.test(row.text) && /More food trucks/.test(row.text) && !/<b>/.test(row.html.replace(/&lt;b&gt;/g, '')), 'live: one answer, its words escaped', row.text);
+    check(!errors.length && !live.errors.length, 'no console errors', errors.concat(live.errors).join(' | '));
+    await live.ctx.close();
+  });
+}
+
 /* ----------------------------------------------------------------- run */
 const t0 = Date.now();
 await mkdir(SHOTS, { recursive: true });
@@ -11848,6 +12133,7 @@ try {
   await run(weatherBrief);
   await run(sectionPills);
   await run(railsHaveList);
+  await run(theChallenge);
 } finally {
   await browser.close();
   proc.kill();

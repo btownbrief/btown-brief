@@ -224,6 +224,26 @@ Handles section.
 once the boards' next update is in." (the rest of the profile saves), and the new boards stay
 closed.
 
+## G. The No-algorithm challenge's feedback (2 minutes)
+
+One paste, from the newsletter repo: `bash scripts/setup_boards.sh challenge` copies
+`all-day/supabase/nn-CHALLENGE.sql` and opens the SQL editor. Click in the big box, press Cmd+V,
+click **Run**. It should end with "Success. No rows returned." Safe to run again.
+
+What it turns on: the challenge's **Send** button. Each phone that sends the form leaves one row
+in `nn_challenge_feedback` (what they missed, what would make them switch, which kind of person
+they are, how far into the five days they got and how each day felt). No name, email or account
+goes with it, and nobody but you can read it: the table has row level security with no policies,
+so the app's public key can only add a phone's own answers.
+
+**Reading the answers:** the boards desk (`mod.html`) has a **No-algorithm challenge** section;
+**Show the feedback** gives the tallies and every answer, newest first. Or open Supabase's
+**Table Editor → nn_challenge_feedback**.
+
+**Before part G is done:** everything in the challenge works on the phone (joining, the daily
+check-in, the roundup); only Send says "Couldn’t send it just now. Your answers are kept here, so
+try again later." and keeps what they wrote, so a reader can send it once you have pasted.
+
 ## One trade-off to know about: the saved sign-in
 
 When a reader signs in, All Day keeps a **refresh token** in the browser so they stay signed in for
