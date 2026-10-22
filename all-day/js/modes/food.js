@@ -74,7 +74,7 @@
 import * as app from '../app.js';
 import * as store from '../store.js';
 import * as data from '../wire.js';
-import { el, esc, safeHref, ICON, art, mark, section, listRail, chips, pills, button, agoShort, cards as feedCards, put } from '../ui.js';
+import { el, esc, safeHref, ICON, art, mark, section, listRail, collapseBar, chips, pills, button, agoShort, cards as feedCards, put } from '../ui.js';
 import { asksFrom, directoryFrom, GROUPS } from '../food-asks.js';
 import { sectionBar } from '../sections.js';
 
@@ -638,6 +638,9 @@ function paintOpen(host) {
     host.appendChild(el('p', 'note pad', esc(next ? 'Nothing opens this week.' : f.key === 'open' || f.key === 'patio' ? 'Nothing open right now.' : 'Nothing fits that today.')));
   } else if (list.length > shown.length) {
     host.appendChild(button('All ' + list.length + ' ' + ICON.arrow, 'ghost more', () => { S.all = true; paint('open'); }));
+  } else if (S.all && list.length > FIRST_ROWS) {
+    /* the long list opened in place folds back from anywhere in it (2026-10-22) */
+    host.appendChild(collapseBar('the places', () => { S.all = false; paint('open'); jump('open'); }));
   }
   const r = el('div', 'addrow linkrow');
   if (list.length <= shown.length) r.appendChild(outLink('All restaurants', GUIDE_URL, 'btn ghost sm', true));
@@ -1029,6 +1032,7 @@ function paintBest(host) {
   shown.forEach((q) => grid.appendChild(qCard(q)));
   host.appendChild(grid);
   if (list.length > shown.length) host.appendChild(button('All ' + list.length + ' ' + ICON.arrow, 'ghost more', () => { S.bestAll = true; paint('best'); }));
+  else if (S.bestAll && list.length > Q_FIRST) host.appendChild(collapseBar('the questions', () => { S.bestAll = false; paint('best'); jump('best'); }));
 }
 
 /* A card is a link to its newest thread (rule 4: every item has a URL), and

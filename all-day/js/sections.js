@@ -219,11 +219,16 @@ function allSheet(P) {
   });
 }
 
-/* the row under the mast: the pill, floating */
+/* the row under the mast: the pill, floating. On its own it is the tab's
+   one switch, so it is the Wire's size (`lead`; Stephen, 2026-10-22: "when
+   there's no big one, it just makes sense to make the bubbles bigger"). A
+   tab that puts its own big switch on top (The Build over Habits, Watch's
+   Upcoming | Past) takes the pill out of this bar, and the pill is the
+   small second row again. */
 export function sectionBar(o) {
   const p = pill(o);
   if (!p) return null;
-  const bar = el('div', 'secbar');
+  const bar = el('div', 'secbar lead');
   bar.appendChild(p);
   return bar;
 }

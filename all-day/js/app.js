@@ -34,6 +34,7 @@ import * as auth from './auth.js';
 import { bindGestures } from './gestures.js';
 import { el, esc, safeHref, ICON, art, mark, cards, pills, button, setPalette, setJump } from './ui.js';
 import { bindShell, spy as spySections } from './sections.js';
+import * as asks from './asks.js';
 
 const $ = (id) => document.getElementById(id);
 const root = document.documentElement;
@@ -55,6 +56,20 @@ export const TABS = ['wire', 'watch', 'food', 'people', 'whatnow', 'vintage', 'b
    scroll; the bar lights its host, and the host's frame() puts the switch
    on top of the hosted tab's own row under the mast. */
 export const HOSTED = { habits: 'build' };
+/* Each tab's full page on the guide, where one exists (Stephen, 2026-10-22:
+   "every main page should basically link out to its main page ... so if
+   they just wanted the news they don't have to have this UI"). The shell
+   draws one small "Full page" link at the top of the tab, so the tabs
+   carry none of it. Watch, Vintage, The Build, Habits and On Air have no
+   page of their own to go to: tv.html, listen.html and playlist.html now
+   redirect here, and the shop guide and The Build only live in this app. */
+export const FULL = {
+  wire: ['../pulse.html', 'The Pulse, the full news page'],
+  food: ['../restaurants.html', 'the full restaurant guide'],
+  people: ['../clubs.html', 'every club, league and pickup game'],
+  whatnow: ['../things-to-do.html', 'the full things-to-do guide'],
+  games: ['https://play.btownbrief.com/', 'the BTown Games arcade'],
+};
 const known = (key) => TABS.includes(key) || Object.prototype.hasOwnProperty.call(HOSTED, key);
 const barKey = (key) => HOSTED[key] || key;
 const REQUIRED = ['label', 'icon', 'promise', 'mount', 'activate', 'refresh', 'newSince'];
@@ -65,6 +80,7 @@ const stale = Object.create(null);
 const scrollMemory = Object.create(null);
 const panels = Object.create(null);
 const bodies = Object.create(null);
+const askSlots = Object.create(null);
 const landed = new Set();
 let active = null;
 let started = false;
@@ -550,6 +566,9 @@ function settingsSheet() {
       body.appendChild(r);
     });
 
+    /* Your phone (Add to home screen, the widget) and X, Facebook and Reddit for when you want them (asks.js) */
+    asks.settingsRows(body);
+
     body.appendChild(el('div', 'sheet-h', 'More from the Brief'));
     const links = el('div', 'linkrow');
     MORE.forEach(([label, href]) => {
@@ -559,13 +578,6 @@ function settingsSheet() {
       links.appendChild(a);
     });
     body.appendChild(links);
-    /* the Scriptable widget's setup page (widget/index.html) */
-    const widget = el('div', 'sheet-row', '<div class="t">Home screen widget</div>');
-    const setUp = el('a', 'btn ghost sm', 'Set up');
-    setUp.href = 'widget/';
-    setUp.dataset.widget = '1';
-    widget.appendChild(setUp);
-    body.appendChild(widget);
     const tip = el('a', 'btn ghost tip-link', ICON.heart + ' Tip jar ' + ICON.ext);
     tip.href = 'https://ko-fi.com/btownbrief';
     tip.target = '_blank'; tip.rel = 'noopener';
@@ -1070,6 +1082,8 @@ export function route() {
   showChrome();
   closePeek();
   try { mod.activate(param, first); } catch (e) { console.error('[all-day] ' + tab + ' activate threw', e); }
+  /* one gentle ask per page load, once it is earned (asks.js) */
+  asks.landed(askSlots[tab]);
   store.touchVisit();
   recount();
 
@@ -1085,6 +1099,25 @@ export function route() {
       event: true,
     });
   }
+}
+
+/* "Full page ↗": the tab's own page on the guide, in a new tab */
+function fullLink(key) {
+  const [href, what] = FULL[key];
+  const row = el('div', 'fullpage');
+  const a = el('a', null, '<span>Full page</span>' + ICON.ext);
+  a.href = href;
+  a.target = '_blank';
+  a.rel = 'noopener';
+  a.dataset.full = key;
+  a.setAttribute('aria-label', 'Full page: ' + what + ' (opens in a new tab)');
+  a.addEventListener('click', () => {
+    if (!demo && window.goatcounter && window.goatcounter.count) {
+      window.goatcounter.count({ path: 'all-day-fullpage-' + key, title: 'All Day full page: ' + key, event: true });
+    }
+  });
+  row.appendChild(a);
+  return row;
 }
 
 /* ------------------------------------------------------------------- boot */
@@ -1110,10 +1143,19 @@ export function start() {
     p.hidden = true;
     const ptr = el('div', 'ptr', '<span></span>');
     const body = el('div', 'panel-body');
-    p.append(ptr, body);
+    /* the shell's slot above the tab: an ask when one is due, then the
+       tab's Full page link where it has one */
+    const top = el('div', 'panel-top');
+    const ask = el('div', 'askslot');
+    top.appendChild(ask);
+    if (FULL[key]) top.appendChild(fullLink(key));
+    p.append(ptr, top, body);
+    /* the Wire's foot: the apps, for when you do want them (asks.js) */
+    if (key === 'wire') p.appendChild(asks.outRow('panel-foot'));
     app.appendChild(p);
     panels[key] = p;
     bodies[key] = body;
+    askSlots[key] = ask;
     watchScroll(p);
     if (HOSTED[key]) return;   // no cell of its own: its host's lights up
 
@@ -1130,6 +1172,9 @@ export function start() {
     });
     bar.appendChild(b);
   });
+
+  /* visits, time on screen, and a reader arriving from the newsletter */
+  asks.boot(demo, toast);
 
   /* the emailed sign-in link lands on a hash the router must not see */
   const signin = auth.consumeHash();

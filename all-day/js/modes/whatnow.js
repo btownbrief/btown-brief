@@ -441,7 +441,8 @@ function weatherCard() {
     '<span class="wxc-m">' + (x.feels != null ? '<span class="wxc-feels">Feels ' + esc(x.feels) + '°</span>' : '') +
     (hl ? '<span class="wxc-hl">' + esc(hl) + '</span>' : '') + '</span></span>' +
     (x.hours.length ? '<span class="wxc-hrs">' + x.hours.map((h) => '<span class="wxc-h" data-wxicon="' + esc(h.icon) + '"><i>' + esc(h.label) + '</i>' +
-      WX_ICON[h.icon] + '<b>' + esc(h.temp) + '°</b></span>').join('') + '</span>' : '');
+      WX_ICON[h.icon] + '<b>' + esc(h.temp) + '°</b></span>').join('') + '</span>' : '') +
+    '<span class="wxc-go" aria-hidden="true">Full weather ' + ICON.ext + '</span>';
   return a;
 }
 
