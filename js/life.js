@@ -5,10 +5,14 @@
    (Steve's approved read), and data/weather/beaches.json.
 
    Sections, top to bottom:
-     alerts → hero (now + the plain-words brief) → today and
-     tonight (when, how much) → the next hours (strip + plain-English
-     story + model check) → the week ahead (range rows) → radar →
-     My read → life scores (score, best window, sparkline, why?) → swim.
+     alerts → hero (now, feels like, when the rain comes, what to
+     wear, the plain-words brief) → today and tonight (when, how much)
+     → hourly (a line you read as temp, feels like or rain chance; a
+     list on request) → rain and radar (js/radar.js) → the week (range
+     rows) → the tile grid (feels like, rain today, air, UV, wind,
+     humidity, lake) and the sun → My read → the local forecasters →
+     life scores (score, best window, sparkline, why?) → swim.
+     The look is Wethr's (Stephen, 2026-10-22): a sky, glass cards.
 
    The six LIFE SCORES are computed here, client-side, so they
    track the actual hour of day between data refreshes.
@@ -113,15 +117,10 @@
 
   function cap(s) { return s ? s.charAt(0).toUpperCase() + s.slice(1) : s; }
 
-  // Compass → degrees the wind blows FROM. The arrow glyph points where
-  // the air is going, so the rotation adds 180°.
+  // Compass → degrees the wind blows FROM (the wind tile's arrow adds 180°
+  // to point where the air is going).
   var COMPASS = { N: 0, NNE: 22.5, NE: 45, ENE: 67.5, E: 90, ESE: 112.5, SE: 135, SSE: 157.5,
                   S: 180, SSW: 202.5, SW: 225, WSW: 247.5, W: 270, WNW: 292.5, NW: 315, NNW: 337.5 };
-  function windArrow(dir) {
-    var deg = COMPASS[(dir || '').toUpperCase()];
-    if (deg == null) return '';
-    return '<span class="wx-arrow" aria-hidden="true" style="transform:rotate(' + ((deg + 180) % 360) + 'deg)">↑</span>';
-  }
 
   // One glyph per sky. Order matters: the nastiest condition mentioned
   // in the short forecast wins, because "Mostly Sunny then Thunderstorms"
@@ -484,7 +483,6 @@
      refresh skipped a few runs) its "today" and "tonight" may be the wrong
      ones, so it is not shown at all. */
   var BRIEF_MAX_AGE = 4 * HOUR;
-  var WIND_NOTABLE_MPH = 20, GUST_NOTABLE_MPH = 30;   // the brief's own bar (weather_brief.py)
   function freshBrief(d) {
     var b = d && d.brief;
     if (!b || !b.text || !b.generated) return null;
@@ -495,41 +493,47 @@
     return b;
   }
 
+  /* What to wear, Wethr's quiet line under the headline: the coldest
+     feels-like in the next six hours (the NWS hourly rows) sets the layer,
+     and an hour of 50%+ rain or snow in the next twelve adds an umbrella
+     or boots. Advice, not a number, so it is only ever this one phrase. */
+  function wearHint(d) {
+    var now = d.now || {};
+    var hours = upcomingHours(d);
+    var soon = hours.filter(function (h) { return new Date(h.t).getTime() < Date.now() + 6 * HOUR; });
+    var feels = soon.map(function (h) { return h.feels_f; }).filter(function (v) { return v != null && isFinite(v); });
+    if (now.feels_like_f != null) feels.push(now.feels_like_f);
+    if (!feels.length) return '';
+    var lo = Math.min.apply(null, feels), hi = Math.max.apply(null, feels);
+    var layer = lo <= 15 ? 'Heavy coat, hat and gloves' : lo <= 30 ? 'Winter coat' : lo <= 45 ? 'Warm jacket'
+      : lo <= 58 ? 'Light jacket' : lo <= 68 ? 'Long sleeves' : hi >= 86 ? 'Dress for the heat' : 'T-shirt weather';
+    var wet = hours.filter(function (h) { return new Date(h.t).getTime() < Date.now() + 12 * HOUR && (h.pop || 0) >= 50; });
+    if (wet.length) {
+      var snowy = wet.some(function (h) { return /snow|flurr|sleet|ice/i.test(h.short || ''); });
+      layer += snowy ? ' and boots' : ' and an umbrella';
+    }
+    return layer;
+  }
+
   function renderNow(d) {
     var box = el('rn-stats');
     if (!box) return;
     var now = d.now || {};
-    var sun = d.sun || {};
-    var air = d.air || {};
-    var gage = d.lake_gage || {};
+    var night = !isDaylight(new Date().toISOString(), d.__ctx);
 
-    // Headline: the big number, the sky, and feels-like only when it
-    // actually differs (5°+). Apple's "feels like" is a second number;
-    // Dark Sky put it in words. We do words, and only when it matters.
-    var head = [];
-    if (now.temp_f != null) head.push('<span class="rn-big">' + now.temp_f + '°</span>');
-    if (now.description) head.push('<span class="rn-desc">' + esc(now.description.toLowerCase()) + '</span>');
-    if (now.temp_f != null && now.feels_like_f != null && Math.abs(now.feels_like_f - now.temp_f) >= 5) {
-      head.push('<span class="rn-feels">feels like ' + now.feels_like_f + '°</span>');
-    }
-    box.innerHTML = head.join('');
+    // Wethr's hero: a sky glyph beside a huge temperature, then the sky in
+    // words and what it feels like, always (the feels-like tile says why).
+    box.innerHTML = now.temp_f != null
+      ? '<span class="rn-glyph" aria-hidden="true">' + skyGlyph(now.description, null, night) + '</span>' +
+        '<span class="rn-big">' + now.temp_f + '°</span>'
+      : '';
+    var feelsLine = [];
+    if (now.description) feelsLine.push('<span class="rn-desc">' + esc(cap(now.description.toLowerCase())) + '</span>');
+    if (now.feels_like_f != null) feelsLine.push('<span class="rn-feels-v">Feels ' + now.feels_like_f + '°</span>');
+    el('rn-feels').innerHTML = feelsLine.join('<span class="rn-dot" aria-hidden="true">·</span>');
 
-    // Chips: the glanceable secondary numbers. Wind only when someone on
-    // foot or a bike would feel it (Stephen, 2026-10-19: "Idk why it's
-    // talking so much about knots and wind and boats"); humidity is gone,
-    // the running score carries mugginess.
-    var chips = [];
-    if (now.wind_mph != null && (now.wind_mph >= WIND_NOTABLE_MPH || (now.wind_gust_mph || 0) >= GUST_NOTABLE_MPH)) {
-      chips.push('<span class="rn-chip" title="Wind">' + windArrow(now.wind_dir) +
-        ' ' + esc(now.wind_dir || '') + ' ' + now.wind_mph + ' mph' +
-        (now.wind_gust_mph ? ', gusts ' + now.wind_gust_mph + ' mph' : '') + '</span>');
-    }
-    if (gage.water_temp_f != null) chips.push('<a class="rn-chip" href="#swim-section" title="Lake Champlain water temperature">🌊 lake ' + gage.water_temp_f + '°</a>');
-    if (air.aqi != null) chips.push('<span class="rn-chip rn-chip-aqi-' + esc((air.category || '').toLowerCase().replace(/\s+/g, '-')) +
-      '" title="Air quality index">AQI ' + air.aqi + ' ' + esc((air.category || '').toLowerCase()) + '</span>');
-    if (sun.uv_max != null) chips.push('<span class="rn-chip" title="Peak UV index today">UV ' + Math.round(sun.uv_max) + ' max</span>');
-    if (sun.sunset) chips.push('<a class="rn-chip" href="sunset.html" title="Sunset tracker">🌇 ' + fmtClock(sun.sunset) + '</a>');
-    el('rn-chips').innerHTML = chips.join('');
+    var wear = el('rn-wear');
+    if (wear) { var w = wearHint(d); wear.textContent = w; wear.hidden = !w; }
 
     // The plain-words brief (scripts/weather_brief.py) while it is fresh;
     // otherwise one compact day line from the first NWS period.
@@ -554,6 +558,109 @@
       el('rn-updated').textContent = 'Observed ' + fmtClock(now.observed_at) + ' at the airport' +
         (observedAge > 2 * HOUR ? ' · ' + fmtAgo(now.observed_at) : '');
     }
+    renderTiles(d);
+  }
+
+  /* ============================================================
+     AT A GLANCE — Wethr's grid of square tiles. Every number is one
+     latest.json already carries: the airport observation (feels like,
+     wind, humidity, dew point), the NWS grid's rain and snow total for
+     today, AirNow's AQI, the day's peak UV, the USGS lake gauge. A tile
+     with no number is left out rather than drawn empty.
+  ============================================================ */
+
+  // A ring gauge: `frac` of the way round from the bottom-left, Wethr-style.
+  function ring(frac, color, inner) {
+    var r = 30, c = 2 * Math.PI * r, arc = c * 0.75;
+    var f = clamp(frac, 0, 1);
+    return '<span class="wx-ring"><svg viewBox="0 0 80 80" aria-hidden="true">' +
+      '<circle class="wx-ring-bg" cx="40" cy="40" r="' + r + '" stroke-dasharray="' + arc + ' ' + c + '" transform="rotate(135 40 40)"></circle>' +
+      '<circle class="wx-ring-fg" cx="40" cy="40" r="' + r + '" stroke-dasharray="' + (arc * f) + ' ' + c + '" transform="rotate(135 40 40)" style="stroke:' + color + '"></circle>' +
+      '</svg><span class="wx-ring-v">' + inner + '</span></span>';
+  }
+
+  var AQI_BANDS = [[50, 'Good', '#4ADE80'], [100, 'Moderate', '#FACC15'], [150, 'Unhealthy for sensitive groups', '#FB923C'],
+                   [200, 'Unhealthy', '#F87171'], [300, 'Very unhealthy', '#C084FC'], [Infinity, 'Hazardous', '#BE123C']];
+  var UV_BANDS = [[2, 'Low', '#4ADE80'], [5, 'Moderate', '#FACC15'], [7, 'High', '#FB923C'], [10, 'Very high', '#F87171'], [Infinity, 'Extreme', '#C084FC']];
+  function band(list, v) { for (var i = 0; i < list.length; i++) if (v <= list[i][0]) return list[i]; return list[list.length - 1]; }
+
+  // the week's temperature hue, lifted so it reads on the sky
+  function tileTempColor(t) {
+    if (t == null || !isFinite(t)) return '#fff';
+    var hue = 200 - clamp((t - 30) / 60, 0, 1) * 190;
+    return 'hsl(' + Math.round(hue) + ' 90% 78%)';
+  }
+
+  function tile(key, label, body, note, href) {
+    var tag = href ? 'a' : 'div';
+    return '<' + tag + ' class="wx-tile wx-tile-' + key + '"' + (href ? ' href="' + esc(href) + '"' : '') + '>' +
+      '<span class="wx-tile-k">' + esc(label) + (href ? '<span class="wx-tile-go" aria-hidden="true">›</span>' : '') + '</span>' +
+      '<span class="wx-tile-b">' + body + '</span>' +
+      (note ? '<span class="wx-tile-n">' + note + '</span>' : '') +
+      '</' + tag + '>';
+  }
+
+  function renderTiles(d) {
+    var grid = el('wx-tiles'), sec = el('tiles-section');
+    if (!grid || !sec) return;
+    var now = d.now || {}, sun = d.sun || {}, air = d.air || {}, gage = d.lake_gage || {};
+    var out = [];
+
+    if (now.feels_like_f != null) {
+      var diff = now.temp_f != null ? now.feels_like_f - now.temp_f : 0;
+      var why = diff <= -3 ? ((now.wind_mph || 0) >= 3 ? 'Wind makes it feel colder' : 'Feels colder than it is')
+              : diff >= 3 ? 'Humidity makes it feel warmer' : 'About the same as the air';
+      out.push(tile('feels', 'Feels like', '<span class="wx-tile-big" style="color:' + tileTempColor(now.feels_like_f) + '">' + esc(now.feels_like_f) + '°</span>',
+        esc(why) + (now.temp_f != null ? '<br>Air ' + esc(now.temp_f) + '°' : '')));
+    }
+
+    // today's rain or snow: the NWS grid total for the Burlington day, the
+    // same number (and the same rounding) as today's row in the week
+    var todayAmt = null;
+    (((d.hourly || {}).days) || []).forEach(function (a) { if (a && a.date === btvDayKey(new Date())) todayAmt = a; });
+    if (todayAmt) {
+      var snow = todayAmt.snow_in != null && todayAmt.snow_in >= 0.5;
+      var amt = snow ? (todayAmt.snow_in < 0.75 ? '<1' : String(Math.floor(todayAmt.snow_in + 0.5 + 1e-9))) + ' in'
+        : todayAmt.precip_in >= 0.05 ? (Math.floor(todayAmt.precip_in * 10 + 0.5 + 1e-9) / 10) + ' in'
+        : todayAmt.precip_in > 0 ? '<0.1 in' : 'None';
+      out.push(tile('precip', snow ? 'Snow' : 'Rain', '<span class="wx-tile-big wx-tile-wet">' + esc(amt) + '</span>',
+        (amt === 'None' ? 'None expected today' : 'Expected today') + '<br>NWS forecast'));
+    }
+
+    if (air.aqi != null && isFinite(air.aqi)) {
+      var ab = band(AQI_BANDS, air.aqi);
+      out.push(tile('air', 'Air quality', ring(air.aqi / 200, ab[2], '<b>' + Math.round(air.aqi) + '</b>'),
+        esc(air.category || ab[1]) + '<br>AirNow'));
+    }
+
+    if (sun.uv_max != null && isFinite(sun.uv_max)) {
+      var uv = Math.round(sun.uv_max), ub = band(UV_BANDS, uv);
+      out.push(tile('uv', 'UV index', ring(uv / 11, ub[2], '<b>' + uv + '</b>'), esc(ub[1]) + '<br>Today’s peak'));
+    }
+
+    if (now.wind_mph != null) {
+      var deg = COMPASS[(now.wind_dir || '').toUpperCase()];
+      var dial = '<span class="wx-compass" aria-hidden="true"><span class="wx-compass-n">N</span>' +
+        (deg != null && now.wind_mph > 0 ? '<span class="wx-compass-arrow" style="transform:rotate(' + ((deg + 180) % 360) + 'deg)"></span>' : '') +
+        '<span class="wx-compass-v"><b>' + esc(now.wind_mph) + '</b><small>mph</small></span></span>';
+      out.push(tile('wind', 'Wind', dial, now.wind_mph === 0 ? 'Calm'
+        : esc(now.wind_dir ? 'From the ' + now.wind_dir : '') + (now.wind_gust_mph ? (now.wind_dir ? ', ' : '') + 'gusts ' + esc(now.wind_gust_mph) + ' mph' : '')));
+    }
+
+    if (now.humidity != null && isFinite(now.humidity)) {
+      var dp = now.dewpoint_f;
+      var feel = dp == null ? '' : dp < 55 ? 'Comfortable' : dp < 65 ? 'A bit sticky' : 'Muggy';
+      out.push(tile('humid', 'Humidity', ring(now.humidity / 100, '#7DD3FC', '<b>' + Math.round(now.humidity) + '%</b>'),
+        esc(feel) + (dp != null ? '<br>Dew point ' + esc(dp) + '°' : '')));
+    }
+
+    if (gage.water_temp_f != null) {
+      out.push(tile('lake', 'Lake', '<span class="wx-tile-big">' + esc(gage.water_temp_f) + '°</span>',
+        'Lake Champlain water<br>Can I swim?', '#swim-section'));
+    }
+
+    grid.innerHTML = out.join('');
+    sec.hidden = false;
   }
 
   /* ============================================================
@@ -905,10 +1012,6 @@
     });
     events.sort(function (a, b) { return a.t - b.t; });
 
-    var temps = hours.map(function (h) { return h.temp_f; });
-    var tMin = Math.min.apply(null, temps), tMax = Math.max.apply(null, temps);
-    if (tMax - tMin < 6) { tMax += 3; tMin -= 3; } // flat days shouldn't look like cliffs
-
     var cells = [];
     var ei = 0;
     hours.forEach(function (h, i) {
@@ -929,7 +1032,7 @@
           '<span class="hr-glyph" aria-hidden="true">' + c.ev.glyph + '</span>' +
           '<span class="hr-band"></span>' +
           '<span class="hr-temp hr-sun-label">' + c.ev.label + '</span>' +
-          '<span class="hr-pop"></span><span class="hr-wind"></span></div>';
+          '<span class="hr-feels"></span><span class="hr-pop"></span></div>';
       }
       var h = c.h, i = c.i;
       var night = !isDaylight(h.t, ctx);
@@ -937,17 +1040,17 @@
       var label = i === 0 ? 'Now' : hh === 0 ? btvWeekday(h.t, 'short') : fmtHour(h.t);
       var pop = h.pop || 0;
       var popTxt = pop >= 15 ? Math.round(pop / 10) * 10 + '%' : '';
+      var feels = h.feels_f != null ? h.feels_f : h.temp_f;
       return '<div class="hr-cell hr-hour' + (i === 0 ? ' is-now' : '') + (night ? ' is-night' : '') +
-        (hh === 0 && i !== 0 ? ' is-midnight' : '') + '" data-temp="' + h.temp_f + '" data-pop="' + pop + '">' +
+        (hh === 0 && i !== 0 ? ' is-midnight' : '') + '" data-temp="' + h.temp_f + '" data-feels="' + feels + '" data-pop="' + pop + '">' +
         '<span class="hr-time">' + esc(label) + '</span>' +
         '<span class="hr-glyph" aria-hidden="true">' + skyGlyph(h.short, pop, night) + '</span>' +
         '<span class="hr-band"></span>' +
-        '<span class="hr-temp">' + h.temp_f + '°</span>' +
-        '<span class="hr-pop' + (pop >= 40 ? ' is-wet' : '') + '">' + popTxt + '</span>' +
-        '<span class="hr-wind" title="Wind ' + esc(h.wind_dir || '') + ' ' + (h.wind_mph || 0) + ' mph">' +
-          windArrow(h.wind_dir) + (h.wind_mph != null ? ' ' + h.wind_mph : '') + '</span>' +
-        '<span class="sr-only">' + esc(label) + ': ' + h.temp_f + ' degrees, ' + esc(h.short || '') +
-          (popTxt ? ', ' + popTxt + ' chance of rain' : '') + ', wind ' + esc(h.wind_dir || '') + ' ' + (h.wind_mph || 0) + ' mph</span>' +
+        '<span class="hr-temp" aria-hidden="true">' + h.temp_f + '°</span>' +
+        '<span class="hr-feels" aria-hidden="true">feels ' + feels + '°</span>' +
+        '<span class="hr-pop' + (pop >= 40 ? ' is-wet' : '') + '" aria-hidden="true">' + (popTxt ? popTxt + '<span class="hr-pop-w"> rain</span>' : '') + '</span>' +
+        '<span class="sr-only">' + esc(label) + ': ' + h.temp_f + ' degrees, feels like ' + feels + ', ' + esc(h.short || '') +
+          (popTxt ? ', ' + popTxt + ' chance of rain' : '') + '</span>' +
         '</div>';
     }).join('');
     track.innerHTML = html + '<svg class="hr-chart" aria-hidden="true"></svg>';
@@ -957,46 +1060,115 @@
     renderHoursContext(d, hours);
 
     sec.hidden = false;
-    // Draw the temperature line + rain bars once the cells have layout.
-    requestAnimationFrame(function () { drawHourChart(track, tMin, tMax); });
-    window.addEventListener('resize', function () { drawHourChart(track, tMin, tMax); });
+    // Draw the line once the cells have layout.
+    hourMetric(hourState.metric);
+    if (!hourState.wired) wireHours(track);
   }
 
-  function drawHourChart(track, tMin, tMax) {
+  /* Wethr's Hourly card: one line, three ways to read it (Temp, Feels
+     like, Rain chance), and Stephen's rule for every sideways row: "See as
+     a list" turns it into rows you scroll down, with the Collapse bar under
+     it. The list choice is this browser's (localStorage, in try). */
+  var HOUR_LIST_KEY = 'wx-hourly-list';
+  var hourState = { metric: 'temp', wired: false };
+  function hourList() { try { return localStorage.getItem(HOUR_LIST_KEY) === '1'; } catch (e) { return false; } }
+  function setHourList(on) {
+    try { if (on) localStorage.setItem(HOUR_LIST_KEY, '1'); else localStorage.removeItem(HOUR_LIST_KEY); } catch (e) { /* kept for the visit */ }
+    paintHourMode(on);
+  }
+  function paintHourMode(on) {
+    var sec = el('hours-section'), btn = el('hr-mode'), bar = el('hr-collapse'), scroll = el('hr-scroll');
+    if (!sec || !btn) return;
+    sec.classList.toggle('is-list', on);
+    btn.textContent = on ? 'See as a row' : 'See as a list';
+    btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+    btn.setAttribute('aria-label', btn.textContent + ': the hourly forecast');
+    if (bar) bar.hidden = !on;
+    if (scroll) {
+      scroll.scrollLeft = 0;
+      scroll.setAttribute('aria-label', on ? 'Hour-by-hour forecast' : 'Hour-by-hour forecast, scroll sideways');
+    }
+    if (!on) requestAnimationFrame(function () { hourMetric(hourState.metric); });
+  }
+  function hourMetric(metric) {
+    hourState.metric = metric;
+    var track = el('hr-track');
+    if (!track) return;
+    Array.prototype.forEach.call(document.querySelectorAll('#hr-toggles .hr-toggle'), function (b) {
+      var on = b.getAttribute('data-metric') === metric;
+      b.classList.toggle('is-on', on);
+      b.setAttribute('aria-pressed', on ? 'true' : 'false');
+    });
+    var sec = el('hours-section');
+    if (sec) sec.setAttribute('data-metric', metric);
+    // the number under each point is the one the line is drawing
+    Array.prototype.forEach.call(track.querySelectorAll('.hr-hour'), function (c) {
+      var v = c.getAttribute('data-' + metric);
+      c.querySelector('.hr-temp').textContent = metric === 'pop' ? Math.round(Number(v)) + '%' : v + '°';
+    });
+    requestAnimationFrame(function () { drawHourChart(track, metric); });
+  }
+  function wireHours(track) {
+    hourState.wired = true;
+    var toggles = el('hr-toggles');
+    if (toggles) toggles.addEventListener('click', function (e) {
+      var b = e.target.closest('.hr-toggle');
+      if (b) hourMetric(b.getAttribute('data-metric'));
+    });
+    var btn = el('hr-mode');
+    if (btn) btn.addEventListener('click', function () { setHourList(!el('hours-section').classList.contains('is-list')); });
+    var bar = el('hr-collapse');
+    if (bar) bar.querySelector('button').addEventListener('click', function () {
+      setHourList(false);
+      var sec = el('hours-section');
+      if (sec) sec.scrollIntoView({ block: 'start' });
+      if (btn) btn.focus({ preventScroll: true });
+    });
+    paintHourMode(hourList());
+    window.addEventListener('resize', function () { drawHourChart(track, hourState.metric); });
+  }
+
+  function drawHourChart(track, metric) {
     var svg = track.querySelector('.hr-chart');
     var hourCells = track.querySelectorAll('.hr-hour');
     var anyBand = track.querySelector('.hr-band');
-    if (!svg || !hourCells.length || !anyBand) return;
+    if (!svg || !hourCells.length || !anyBand || !anyBand.offsetHeight) { if (svg) svg.innerHTML = ''; return; }
+    metric = metric || 'temp';
+    var vals = Array.prototype.map.call(hourCells, function (c) { return parseFloat(c.getAttribute('data-' + metric)); });
+    var lo, hi;
+    if (metric === 'pop') { lo = 0; hi = 100; }
+    else {
+      lo = Math.min.apply(null, vals); hi = Math.max.apply(null, vals);
+      if (hi - lo < 6) { hi += 3; lo -= 3; }   // flat days shouldn't look like cliffs
+    }
     var W = track.scrollWidth, bandTop = anyBand.offsetTop, bandH = anyBand.offsetHeight;
     svg.setAttribute('width', W); svg.setAttribute('height', bandH);
     svg.setAttribute('viewBox', '0 0 ' + W + ' ' + bandH);
     svg.style.top = bandTop + 'px';
-    var pad = 6;
-    var pts = [], bars = [];
-    Array.prototype.forEach.call(hourCells, function (c) {
+    var pad = 7;
+    var pts = [], bars = [], dots = [];
+    Array.prototype.forEach.call(hourCells, function (c, i) {
       var x = c.offsetLeft + c.offsetWidth / 2;
-      var temp = parseFloat(c.getAttribute('data-temp'));
-      var pop = parseFloat(c.getAttribute('data-pop')) || 0;
-      var y = pad + (1 - (temp - tMin) / (tMax - tMin)) * (bandH - pad * 2);
+      var y = pad + (1 - (vals[i] - lo) / (hi - lo)) * (bandH - pad * 2);
       pts.push([x, y]);
-      if (pop >= 10) {
+      dots.push('<circle class="hr-dot" cx="' + x + '" cy="' + y + '" r="' + (i ? 3 : 4) + '"></circle>');
+      var pop = parseFloat(c.getAttribute('data-pop')) || 0;
+      if (metric !== 'pop' && pop >= 10) {
         var bh = Math.max(2, (pop / 100) * (bandH - 4));
-        bars.push('<rect class="hr-rain" x="' + (x - 9) + '" y="' + (bandH - bh) + '" width="18" height="' + bh + '" rx="2"></rect>');
+        bars.push('<rect class="hr-rain" x="' + (x - 9) + '" y="' + (bandH - bh) + '" width="18" height="' + bh + '" rx="3"></rect>');
       }
     });
-    // Smooth-ish polyline: a Catmull-Rom-lite using midpoints.
+    // smooth-ish: a cubic through the midpoints
     var dpath = '';
     pts.forEach(function (p, i) {
       if (i === 0) { dpath += 'M' + p[0] + ' ' + p[1]; return; }
-      var prev = pts[i - 1];
-      var mx = (prev[0] + p[0]) / 2;
+      var prev = pts[i - 1], mx = (prev[0] + p[0]) / 2;
       dpath += ' C' + mx + ' ' + prev[1] + ' ' + mx + ' ' + p[1] + ' ' + p[0] + ' ' + p[1];
     });
     var area = dpath + ' L' + pts[pts.length - 1][0] + ' ' + bandH + ' L' + pts[0][0] + ' ' + bandH + ' Z';
-    svg.innerHTML = bars.join('') +
-      '<path class="hr-area" d="' + area + '"></path>' +
-      '<path class="hr-line" d="' + dpath + '"></path>' +
-      '<circle class="hr-now-dot" cx="' + pts[0][0] + '" cy="' + pts[0][1] + '" r="3.5"></circle>';
+    svg.setAttribute('class', 'hr-chart is-' + metric);
+    svg.innerHTML = bars.join('') + '<path class="hr-area" d="' + area + '"></path>' +
+      '<path class="hr-line" d="' + dpath + '"></path>' + dots.join('');
   }
 
   /* ============================================================
@@ -1179,8 +1351,8 @@
       return '<div class="wk-row' + (isToday ? ' is-today' : '') + '" data-day="' + i + '">' +
         '<button class="wk-main" type="button" aria-expanded="false" aria-controls="wk-more-' + i + '">' +
           '<span class="wk-day"><span class="wk-day-name">' + esc(label) + '</span>' + (sub ? '<span class="wk-day-date">' + esc(sub) + '</span>' : '') + '</span>' +
-          '<span class="wk-glyph" aria-hidden="true">' + skyGlyph(short, pop) + '</span>' +
-          '<span class="wk-pop">' + popShown + (amtShort ? '<span class="wk-amt">' + esc(amtShort) + '</span>' : '') + '</span>' +
+          '<span class="wk-sky"><span class="wk-glyph" aria-hidden="true">' + skyGlyph(short, pop) + '</span>' +
+          '<span class="wk-pop">' + popShown + (amtShort ? '<span class="wk-amt">' + esc(amtShort) + '</span>' : '') + '</span></span>' +
           '<span class="wk-lo">' + (lo != null ? lo + '°' : '—') + '</span>' +
           bar +
           '<span class="wk-hi">' + (hi != null ? hi + '°' : '—') + '</span>' +
@@ -1213,9 +1385,11 @@
     var issued = (d.forecast || {}).updated || (d.sections_updated || {}).forecast;
     var note = el('week-note');
     if (note && issued) {
-      note.innerHTML = 'Forecast issued ' + esc(fmtAgo(issued)) +
+      note.innerHTML = 'Tap a day for details. Forecast issued ' + esc(fmtAgo(issued)) +
         ' by <a href="https://www.weather.gov/btv/" target="_blank" rel="noopener">NWS Burlington</a>.';
     }
+    var wt = el('week-title');
+    if (wt) wt.textContent = days.length + '-day forecast';
     sec.hidden = false;
   }
 

@@ -10651,6 +10651,25 @@ async function theWeather(browser, base) {
     check((await radarState(page)).idx >= 6, 'Play from a past frame goes forward, through Now, into the forecast', '');
     await page.click('#radar-play');
 
+    /* Wethr's time chips: each jumps to the frame nearest that far from Now, and pauses */
+    const near1h = want.fc.reduce((b, t, i) => (Math.abs(t - (NOW - 4 * MIN + HOUR)) < Math.abs(want.fc[b] - (NOW - 4 * MIN + HOUR)) ? i : b), 0);
+    await page.click('#radar-jumps [data-jump="60"]');
+    const j1 = await radarState(page);
+    const chips = await page.$$eval('#radar-jumps button', (bs) => bs.map((b) => b.textContent + (b.getAttribute('aria-pressed') === 'true' ? '*' : '')).join(' '));
+    check(j1.idx === 6 + near1h && j1.playing === false && chips === '−50m Now +1h* +2h +6h +12h', 'the +1h chip: the forecast frame nearest an hour on, paused, the chip lit', JSON.stringify({ idx: j1.idx, want: 6 + near1h, chips }));
+    await page.click('#radar-jumps [data-jump="-50"]');
+    check((await radarState(page)).idx === 0, 'and −50m goes to the oldest radar frame', '');
+    /* Full screen: the map over the whole page, Done or Escape to come back */
+    await page.click('#radar-full');
+    await page.waitForTimeout(100);
+    const fs1 = await page.evaluate(() => { const r = document.querySelector('#radar .radar-inner').getBoundingClientRect();
+      return { full: document.getElementById('radar').classList.contains('is-full'), locked: document.documentElement.classList.contains('wx-radar-open'),
+        label: document.querySelector('#radar-full .radar-full-label').textContent, w: Math.round(r.width), h: Math.round(r.height), vw: innerWidth, vh: innerHeight }; });
+    check(fs1.full && fs1.locked && fs1.label === 'Done' && fs1.w === fs1.vw && fs1.h === fs1.vh, 'Full screen fills the screen and says Done', JSON.stringify(fs1));
+    await page.keyboard.press('Escape');
+    await page.waitForTimeout(150);
+    check(await page.evaluate(() => !document.getElementById('radar').classList.contains('is-full') && !document.documentElement.classList.contains('wx-radar-open')), 'Escape brings the page back', '');
+
     check(!errors.length, 'no console errors', errors.join(' | '));
     await w.ctx.close();
   });
@@ -10922,7 +10941,12 @@ async function weatherBrief(browser, base) {
     const w = await newPage(browser, base, { clock: NOW, routes: [[/\/data\/weather\/latest\.json/, body], [/\/data\/weather\/read\.json/, read]], ...opts });
     await w.page.route(/play\.btownbrief\.com\/nav\.js/, (r) => r.fulfill({ status: 200, body: '', contentType: 'text/javascript' }));
     await w.page.route(/api\.weather\.gov/, (r) => r.fulfill({ status: 200, body: '{}', contentType: 'application/geo+json' }));
-    /* the radar stays below the fold; anything else outside answers empty */
+    /* the rain card now sits above the week, close enough to the fold to
+       wake the radar: anything outside answers empty, and the stand-in
+       Leaflet is let past its integrity hash so the map just steps aside
+       (the radar has its own groups) */
+    await w.page.addInitScript(() => ['HTMLScriptElement', 'HTMLLinkElement'].forEach((k) =>
+      Object.defineProperty(window[k].prototype, 'integrity', { configurable: true, set() {}, get() { return ''; } })));
     await w.page.route(/unpkg\.com|opengeo\.ncep\.noaa\.gov|mesonet\.agron\.iastate\.edu|air-quality-api|airnow/, (r) => r.fulfill({ status: 200, body: '{}', contentType: 'application/json' }));
     await w.page.goto(base + '/weather.html');
     await w.page.waitForSelector('#rn-page:not([hidden])', { timeout: 15000 });
@@ -10936,9 +10960,14 @@ async function weatherBrief(browser, base) {
     const s = await page.evaluate(() => {
       const q = (sel) => document.querySelector(sel);
       const rows = (card) => [...card.querySelectorAll('.day-card-rows div')].map((r) => r.querySelector('dt').textContent + ': ' + r.querySelector('dd').textContent);
-      const order = ['#rn-stats', '#day-section', '#hours-section', '#week-section', '#radar', '#read-section', '#life-section', '#swim-section'].map((x) => q(x));
+      const order = ['#rn-stats', '#day-section', '#hours-section', '#radar', '#week-section', '#tiles-section', '#read-section', '#life-section', '#swim-section'].map((x) => q(x));
       return { sub: q('#rn-sub').textContent, brief: q('#rn-sub').classList.contains('is-brief'),
-        chips: [...document.querySelectorAll('#rn-chips .rn-chip')].map((c) => c.textContent.trim()),
+        big: q('#rn-stats .rn-big').textContent, feels: q('#rn-feels').textContent, rain: q('#rn-rain').hidden ? null : q('#rn-rain').textContent,
+        wear: q('#rn-wear').hidden ? null : q('#rn-wear').textContent,
+        tiles: [...document.querySelectorAll('#wx-tiles .wx-tile')].map((c) => [...c.children].map((x) => x.innerText.replace(/\s+/g, ' ').trim()).join(' | ')),
+        lakeHref: q('.wx-tile-lake') && q('.wx-tile-lake').getAttribute('href'),
+        peak: q('#radar-rainline').hidden ? null : q('#radar-peak').textContent,
+        bars: [...document.querySelectorAll('#radar-timeline .tl-bar')].map((b) => b.style.getPropertyValue('--p')).join(','),
         dayHidden: q('#day-section').hidden, title: q('#day-title').textContent,
         cards: [...document.querySelectorAll('.day-card')].map((c) => ({ name: c.querySelector('.day-card-name').textContent, temp: c.querySelector('.day-card-temp').textContent,
           sky: c.querySelector('.day-card-sky').textContent, rows: rows(c), wet: c.classList.contains('is-wet') })),
@@ -10949,7 +10978,17 @@ async function weatherBrief(browser, base) {
         text: document.body.innerText, vw: innerWidth, sw: document.documentElement.scrollWidth };
     });
     check(s.sub === WANT && s.brief, 'the hero carries the brief, word for word', s.sub);
-    check(!s.chips.some((c) => /mph|%/.test(c)) && s.chips.some((c) => /lake 54°/.test(c)), 'no humidity chip, and no wind chip on a 6 mph morning', s.chips.join(' | '));
+    /* Wethr's hero (Stephen, 2026-10-22): the observation, feels like, the
+       rain line the radar card says, and what to wear */
+    check(s.big === '47°' && s.feels === 'Cloudy·Feels 44°', 'the hero: the airport’s 47°, cloudy, feels 44°', JSON.stringify([s.big, s.feels]));
+    check(s.rain === 'Rain from about 2 to 7pm.', 'the headline is the radar card’s line: when the rain comes', s.rain);
+    check(s.wear === 'Warm jacket and an umbrella', 'what to wear: feels 44° at the coldest, and an 80% hour ahead', s.wear);
+    /* the tiles, each number the payload's own; wind in mph, never knots */
+    const T = ['FEELS LIKE | 44° | Wind makes it feel colder Air 47°', 'RAIN | 0.4 in | Expected today NWS forecast', 'AIR QUALITY | 30 | Good AirNow',
+      'UV INDEX | 3 | Moderate Today’s peak', 'WIND | N 6 mph | From the S', 'HUMIDITY | 80% | Comfortable Dew point 40°', 'LAKE › | 54° | Lake Champlain water Can I swim?'];
+    check(s.tiles.join(' || ') === T.join(' || ') && s.lakeHref === '#swim-section', 'the tile grid: feels like, today’s rain, air, UV, wind, humidity, the lake', s.tiles.join(' || '));
+    check(s.peak === 'Highest chance of rain: 80% at 2pm' && s.bars.split(',').length === 12 && s.bars.startsWith('5,5,5,5,5,5,80'),
+      'the rain card: the peak chance and when, over twelve hourly bars', JSON.stringify([s.peak, s.bars]));
     check(!s.dayHidden && s.title === 'Today and tonight', 'a Today and tonight section under the hero', s.title);
     const [t, n] = s.cards;
     check(t && t.name === 'Today' && t.temp === 'High 55°' && t.sky === 'Rain' && t.wet &&
@@ -10959,11 +10998,30 @@ async function weatherBrief(browser, base) {
     check(/topping out near 55 today/.test(s.story) && /low near 41 tonight/.test(s.story), 'the next-hours story uses the same NWS high and low, not the hourly extremes', s.story);
     check(s.amt === '0.4″', 'the week row says how much: today’s NWS rain total', String(s.amt));
     check(!/\bkt\b|knots?\b|boats?\b/i.test(s.text) && s.swim.some((c) => /Wind\s*to 23 mph/.test(c)), 'no knots or boats anywhere; the swim card’s lake wind is in mph', s.swim.join(' | '));
-    check(s.order, 'in order: now, today and tonight, the next hours, the week, radar, my read, the scores, swimming', '');
+    check(s.order, 'in order: now, today and tonight, hourly, rain and radar, the week, the tiles, my read, the scores, swimming', '');
     check(s.sw <= s.vw, 'nothing scrolls sideways at 390', s.sw + ' > ' + s.vw);
     /* clicked in place: scrolling down would wake the radar, which has its own group */
     await page.$eval('.wk-row.is-today .wk-main', (b) => b.click());
     check(/How much: about 0\.4 inch of rain\./.test(await page.$eval('.wk-row.is-today .wk-more', (m) => m.textContent)), 'and opening the row says it in words', '');
+    /* Hourly: Temp, Feels like, Rain chance; and Stephen's way out of the sideways row */
+    const hr = () => page.evaluate(() => ({ first: document.querySelector('.hr-hour .hr-temp').textContent, wet: document.querySelectorAll('.hr-hour .hr-temp')[6].textContent,
+      list: document.getElementById('hours-section').classList.contains('is-list'), btn: document.getElementById('hr-mode').textContent,
+      bar: !document.getElementById('hr-collapse').hidden, rows: getComputedStyle(document.getElementById('hr-track')).display,
+      sw: document.getElementById('hr-scroll').scrollWidth - document.getElementById('hr-scroll').clientWidth }));
+    const h0 = await hr();
+    check(h0.first === '48°' && !h0.list && h0.btn === 'See as a list' && !h0.bar && h0.sw > 0, 'the hourly row: temperatures, sideways, with See as a list above it', JSON.stringify(h0));
+    await page.click('.hr-toggle[data-metric="feels"]');
+    const h1 = await hr();
+    await page.click('.hr-toggle[data-metric="pop"]');
+    const h2 = await hr();
+    check(h1.first === '45°' && h2.first === '5%' && h2.wet === '80%', 'Feels like and Rain chance redraw the line with their own numbers', JSON.stringify([h1.first, h2.first, h2.wet]));
+    await page.click('#hr-mode');
+    const h3 = await hr();
+    check(h3.list && h3.btn === 'See as a row' && h3.bar && h3.rows === 'block' && h3.sw <= 0, 'See as a list: one hour a row, nothing sideways, and the Collapse bar under it', JSON.stringify(h3));
+    await page.click('#hr-collapse button');
+    const h4 = await hr();
+    check(!h4.list && !h4.bar && h4.btn === 'See as a list', 'Collapse folds it back into the row', JSON.stringify(h4));
+    await page.click('.hr-toggle[data-metric="temp"]');
     await page.screenshot({ path: path.join(SHOTS, 'weather-brief-390.png') });
     check(!errors.length, 'no console errors', errors.join(' | '));
     await w.ctx.close();
@@ -11013,6 +11071,8 @@ async function weatherBrief(browser, base) {
     };
     const dry = await variant(() => ({ pop: 5, short: 'Sunny' }));
     check(dry === 'No rain expected in the next 12 hours.', 'a dry day says so', dry);
+    const heroDry = await page.evaluate(() => [document.getElementById('rn-rain').textContent, document.getElementById('radar-peak').textContent]);
+    check(heroDry[0] === dry && heroDry[1] === 'Highest chance of rain: 5% right now', 'the hero headline and the rain card follow the same hours', JSON.stringify(heroDry));
     const cold = await variant(() => ({ pop: 10, short: 'Mostly Cloudy', temp_f: 30 }));
     check(cold === 'No rain or snow expected in the next 12 hours.', 'a dry cold day says rain or snow', cold);
     /* 10am to noon and 1pm, snow at 60%: likely, on and off */
@@ -11026,7 +11086,8 @@ async function weatherBrief(browser, base) {
     check(late === 'A chance of showers from about 5pm on.', 'a 40% chance: "a chance of", from when, with no end inside the twelve hours', late);
     const stale = await page.evaluate((d) => { window.dispatchEvent(new CustomEvent('btown:weather-data', { detail: d })); return document.getElementById('radar-answer').hidden; },
       { ...payload, hourly: { ...payload.hourly, hours: hours.slice(0, 6) } });
-    check(stale, 'a file that no longer covers the next twelve hours says nothing', '');
+    check(stale && await page.evaluate(() => document.getElementById('rn-rain').hidden && document.getElementById('radar-rainline').hidden),
+      'a file that no longer covers the next twelve hours says nothing, here or in the hero', '');
     check(!errors.length, 'no console errors', errors.join(' | '));
     await w.ctx.close();
   });
