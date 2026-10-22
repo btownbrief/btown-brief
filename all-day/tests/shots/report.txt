@@ -20,6 +20,8 @@
   ok   source rules › js/modes/games.js: no colour, type size, caps or fixed position of its own
   ok   source rules › js/modes/habits.js: no monospace
   ok   source rules › js/modes/habits.js: no colour, type size, caps or fixed position of its own
+  ok   source rules › js/modes/onair-sports.js: no monospace
+  ok   source rules › js/modes/onair-sports.js: no colour, type size, caps or fixed position of its own
   ok   source rules › js/modes/onair.js: no monospace
   ok   source rules › js/modes/onair.js: no colour, type size, caps or fixed position of its own
   ok   source rules › js/modes/people.js: no monospace
@@ -1219,7 +1221,7 @@
   ok   deep links, live Wire › a shared national card far down today lands and flashes for a Local reader
   ok   deep links, live Wire › and the switch moved to Everything to show it
   ok   deep links, live Wire › a card from yesterday’s edition lands and flashes
-  ok   deep links, live Wire › #wire/2026-10-20 opens that edition: “Tuesday’s top stories”
+  ok   deep links, live Wire › #wire/2026-10-21 opens that edition: “Wednesday’s top stories”
   ok   deep links, live Wire › an old URL link opens Unfiltered and flashes the headline
   ok   deep links, live Wire › live: an unknown key says the card has moved on
   ok   deep links, live Wire › #food/ lands on Food
@@ -1267,9 +1269,9 @@
   ok   the Wire, live › the chip counts are recounted without the muted source
   ok   the Wire, live › Settings lists mutes
   ok   the Wire, live › no console errors
-  ok   the Wire, walking back (Filters › Day) › one day back: “Tuesday’s top stories”, its date and count under it, no filter line
+  ok   the Wire, walking back (Filters › Day) › one day back: “Wednesday’s top stories”, its date and count under it, no filter line
   ok   the Wire, walking back (Filters › Day) › the banner’s day follows
-  ok   the Wire, walking back (Filters › Day) › two days back: Monday, October 19
+  ok   the Wire, walking back (Filters › Day) › two days back: Tuesday, October 20
   ok   the Wire, walking back (Filters › Day) › and that is as far as the archive goes
   ok   the Wire, walking back (Filters › Day) › the edition is in the address, so it can be shared
   ok   the Wire, walking back (Filters › Day) › › › comes back to today
@@ -1971,14 +1973,14 @@
   ok   Food, deals verified more than 60 days ago stay off (live) › with only old deals: “No recently verified deals today.”
   ok   People: the rules in the module and the SQL agree › PEOPLE_RULES in people.js is nn_people_rules() in nn-people.sql
   ok   People: the rules in the module and the SQL agree › the tab never imports boards-fake.js; its mirror is its own
-  ok   People, live: Stephen’s meetups, the clubs, an empty board › every one of Stephen’s own events in the next two weeks shows, first, as a short row (6)
+  ok   People, live: Stephen’s meetups, the clubs, an empty board › every one of Stephen’s own events in the next two weeks shows, first, as a short row (4)
   ok   People, live: Stephen’s meetups, the clubs, an empty board › none is missed
   ok   People, live: Stephen’s meetups, the clubs, an empty board › and nothing that isn’t his
   ok   People, live: Stephen’s meetups, the clubs, an empty board › one thirteen days out, only on his Meetup calendar, shows (place: on Meetup, never guessed)
   ok   People, live: Stephen’s meetups, the clubs, an empty board › an event in both sources shows once
   ok   People, live: Stephen’s meetups, the clubs, an empty board › and no Meetup interest count
   ok   People, live: Stephen’s meetups, the clubs, an empty board › the mixers: seven days from today
-  ok   People, live: Stephen’s meetups, the clubs, an empty board › with the calendar’s mixers counted on each (40 this week)
+  ok   People, live: Stephen’s meetups, the clubs, an empty board › with the calendar’s mixers counted on each (45 this week)
   ok   People, live: Stephen’s meetups, the clubs, an empty board › a day’s rows: each links to its event page, none of them his
   ok   People, live: Stephen’s meetups, the clubs, an empty board › and no kids’ or teens’ event is a mixer
   ok   People, live: Stephen’s meetups, the clubs, an empty board › today’s are the calendar’s, past ones gone
@@ -2028,6 +2030,35 @@
   ok   People, live: a late directory answer never reaches the next reader › the tab now belongs to reader B
   ok   People, live: a late directory answer never reaches the next reader › reader A’s late directory never draws for reader B, who is not in it
   ok   People, live: a late directory answer never reaches the next reader › no console errors
+  ok   People: Dating and Pets, the hand-checked file holds › every entry links out and carries its check: a source, a quote, a date not in the future (16)
+  ok   People: Dating and Pets, the hand-checked file holds › no em dash in what readers see
+  ok   People: Dating and Pets, the hand-checked file holds › Starr Farm and Wheeler are there, each park with its town’s rules
+  ok   People: Dating and Pets, the hand-checked file holds › pet events: dogs and pets, never a hot dog, a DJ or a kids’ program
+  ok   People: Dating and Pets, the hand-checked file holds › singles: speed dating and mixers, never a tennis ladder or single-origin coffee
+  ok   People: Dating and Pets, the hand-checked file holds › a group that says it is not for dating never comes up for Single
+  ok   People, live: Dating and Pets › Dating, then Pets, under the mixers and the host card
+  ok   People, live: Dating and Pets › no singles night on the calendar: it says so and points at the mixers
+  ok   People, live: Dating and Pets › going as a group: the readers’ singles plans, and only those
+  ok   People, live: Dating and Pets › Post a singles plan is a rose button
+  ok   People, live: Dating and Pets › meet someone here: Seven Days Personals and I Spy
+  ok   People, live: Dating and Pets › dating news: a few headlines, outlet and date on each
+  ok   People, live: Dating and Pets › and More dating news links out
+  ok   People, live: Dating and Pets › dog parks: Starr Farm first, Wheeler in South Burlington, five in all
+  ok   People, live: Dating and Pets › pet events: the calendar’s, never a hot dog (2)
+  ok   People, live: Dating and Pets › pet people: the readers’ dog park plans
+  ok   People, live: Dating and Pets › Post a dog park plan is a sunset button
+  ok   People, live: Dating and Pets › and the shelter, to volunteer or adopt
+  ok   People, live: Dating and Pets › both Every club and league buttons are coloured key buttons
+  ok   People, live: Dating and Pets › the sheet: Burlington’s dog park rules
+  ok   People, live: Dating and Pets › a map to the park, the city’s rules page, and Meet people here
+  ok   People, live: Dating and Pets › Meet people here, signed out: the plan sheet asks you to sign in
+  ok   People, live: Dating and Pets › a plan row flashes the plan’s card in Open to strangers
+  ok   People, live: Dating and Pets › Single and A pet person: For you rows to Dating and Pets
+  ok   People, live: Dating and Pets › and a tap goes there
+  ok   People, live: Dating and Pets › no console errors
+  ok   People, live: Dating and Pets › #people/pets lands on Pets
+  ok   People, live: Dating and Pets › the demo: its singles mixer shows under Singles nights
+  ok   People, live: Dating and Pets › no console errors
   ok   People, demo: who you are reorders the plans and the clubs › the demo’s plans, each with its going count
   ok   People, demo: who you are reorders the plans and the clubs › Trail person: a trail plan moves to the top
   ok   People, demo: who you are reorders the plans and the clubs › and an outdoors club leads the clubs
@@ -2262,8 +2293,8 @@
   ok   Run clubs, What Now: nothing in the window says so and names the next (live, 1280) › which opens on People, on Fitness, its sheet up
   ok   Run clubs, What Now: nothing in the window says so and names the next (live, 1280) › no console errors
   ok   On Air, demo › nothing autoplays: the shell’s audio is paused and no frame is loaded
-  ok   On Air, demo › a TV | Podcasts | Playlists switch at the top, TV first and on (Stephen, 2026-10-19)
-  ok   On Air, demo › the three sides get a full-width row of their own, nothing cut off at 390
+  ok   On Air, demo › a TV | Podcasts | Playlists | Sports switch at the top, TV first and on (Stephen, 2026-10-19 and 10-22)
+  ok   On Air, demo › the four sides get a full-width row of their own, nothing cut off at 390
   ok   On Air, demo › on TV the chip row is lengths, in minutes
   ok   On Air, demo › TV: Btown TV first, then more, Live and Past nights; no podcasts on this side
   ok   On Air, demo › “Pick a vid for me”, a big button
@@ -2409,11 +2440,11 @@
   ok   On Air, the audio card › none: no console errors
   ok   On Air, the audio card › the retired daily recap’s clips (no kind) never show, even before the first edition run prunes them
   ok   On Air, the audio card › recap: no console errors
-  ok   On Air, the audio card › no edition today: the latest one, with its date (October 17)
+  ok   On Air, the audio card › no edition today: the latest one, with its date (October 18)
   ok   On Air, the audio card › titled by its weekday
   ok   On Air, the audio card › the header carries no subtitle
   ok   On Air, the audio card › older: no console errors
-  ok   On Air, the Brief plays › today: the play button loads 2026-10-21.mp3 from the wire-audio branch
+  ok   On Air, the Brief plays › today: the play button loads 2026-10-22.mp3 from the wire-audio branch
   ok   On Air, the Brief plays › today: the play promise resolves
   ok   On Air, the Brief plays › today: and the clip is actually playing: its clock moves past half a second
   ok   On Air, the Brief plays › today: served as audio/mpeg
@@ -2421,7 +2452,7 @@
   ok   On Air, the Brief plays › today: the button turns to pause and the player is up
   ok   On Air, the Brief plays › today: a second tap pauses
   ok   On Air, the Brief plays › today: no console errors
-  ok   On Air, the Brief plays › older: the play button loads 2026-10-17.mp3 from the wire-audio branch
+  ok   On Air, the Brief plays › older: the play button loads 2026-10-18.mp3 from the wire-audio branch
   ok   On Air, the Brief plays › older: the play promise resolves
   ok   On Air, the Brief plays › older: and the clip is actually playing: its clock moves past half a second
   ok   On Air, the Brief plays › older: served as audio/mpeg
@@ -2490,6 +2521,24 @@
   ok   On Air, topics › still Topics after a reload
   ok   On Air, topics › Feed brings Btown TV back
   ok   On Air, topics › no console errors
+  ok   On Air: Sports, demo › #onair/sports opens the Sports side
+  ok   On Air: Sports, demo › its pill: NBA (on), NFL, Local hoops
+  ok   On Air: Sports, demo › no Local switch on Sports
+  ok   On Air: Sports, demo › NBA: games, then highlights, Starting 5, X, Reddit, then the rest of the week
+  ok   On Air: Sports, demo › last night’s games carry a Highlights button
+  ok   On Air: Sports, demo › it plays that game in On Air’s player
+  ok   On Air: Sports, demo › Starting 5: five stories, read it on NBA.com, get it by email
+  ok   On Air: Sports, demo › From X links the posts on X
+  ok   On Air: Sports, demo › no section explains itself: a subtitle is only a count, a day or a time
+  ok   On Air: Sports, demo › NFL is #onair/nfl
+  ok   On Air: Sports, demo › NFL: games first, no Starting 5
+  ok   On Air: Sports, demo › Local hoops: UVM basketball, the pros, Play basketball
+  ok   On Air: Sports, demo › the Revolution, the Coyotes and Stephen’s pickup
+  ok   On Air: Sports, demo › pickup joins on Meetup; the leagues list; and People’s every club
+  ok   On Air: Sports, demo › nothing scrolls sideways at 390
+  ok   On Air: Sports, demo › no console errors
+  ok   On Air: Sports, a stranger on the live file › the committed onair-sports.json draws the NBA side
+  ok   On Air: Sports, a stranger on the live file › no console errors
   ok   Games, live › one get_leaderboard call per live board, for this month in Burlington
   ok   Games, live › the tab only ever reads
   ok   Games, live › before a name, no row is marked as yours
@@ -2645,14 +2694,13 @@
   ok   Games, demo › the demo never calls Supabase
   ok   Games, demo › no console errors
   ok   Games, 390 shots › no console errors
-  ok   Watch, live from films.json › films.json is the list, and its subtitle is only the count to go
-  ok   Watch, live from films.json › every film in its TMDB order
-  ok   Watch, live from films.json › the chip row is the table of contents, today’s showtimes first
+  ok   Watch, live from films.json › Upcoming | Past floats at the top, on Upcoming
+  ok   Watch, live from films.json › Upcoming’s chip row, today’s showtimes first; no Streaming when nothing is coming to streaming
+  ok   Watch, live from films.json › the list and the town’s ratings wait on Past
   ok   Watch, live from films.json › a films.json with no shows has no Movies / TV switch
   ok   Watch, live from films.json › Coming soon: in theaters now (a 1966 re-release is back in theaters), then what opens, labelled theaters or streaming
   ok   Watch, live from films.json › a play disc only where TMDB has a trailer
   ok   Watch, live from films.json › posters are TMDB paths at w342, loaded lazily
-  ok   Watch, live from films.json › a poster reserves its 2:3 box
   ok   Watch, live from films.json › TMDB’s logo mark is on the tab, and only the mark
   ok   Watch, live from films.json › TMDB’s logo and notice are in Settings, About
   ok   Watch, live from films.json › nothing plays before a tap
@@ -2660,6 +2708,10 @@
   ok   Watch, live from films.json › closing the box stops it
   ok   Watch, live from films.json › the re-release’s sheet says it is back in theaters
   ok   Watch, live from films.json › a film with no trailer opens its sheet instead, and says so
+  ok   Watch, live from films.json › Past: the town and the list (no time machine yet), from the top, and nothing coming
+  ok   Watch, live from films.json › films.json is the list, and its subtitle is only the count to go
+  ok   Watch, live from films.json › every film in its TMDB order
+  ok   Watch, live from films.json › a poster reserves its 2:3 box
   ok   Watch, live from films.json › the film sheet: overview, year, runtime, genres
   ok   Watch, live from films.json › and TMDB’s mark (the notice is in Settings)
   ok   Watch, live from films.json › Trailer in the sheet closes it and plays in the box
@@ -2667,9 +2719,9 @@
   ok   Watch, live from films.json › no console errors
   ok   Watch, a re-release is three or more years old (live) › two years old is in theaters now, three is back in theaters, no year is in theaters now
   ok   Watch, a re-release is three or more years old (live) › no console errors
-  ok   Watch, the starter list, two dots and a reload (live, signed out) › the seed list is marked as the seed, and counts what is left
-  ok   Watch, the starter list, two dots and a reload (live, signed out) › with no films.json there is no Coming soon (the seed has none)
-  ok   Watch, the starter list, two dots and a reload (live, signed out) › and the table of contents leaves it out
+  ok   Watch, the starter list, two dots and a reload (live, signed out) › with no films.json there is no Coming soon or Coming to streaming (the seed has neither)
+  ok   Watch, the starter list, two dots and a reload (live, signed out) › and the table of contents leaves them out
+  ok   Watch, the starter list, two dots and a reload (live, signed out) › #watch/past: the seed list is marked as the seed, and counts what is left
   ok   Watch, the starter list, two dots and a reload (live, signed out) › all sixty films
   ok   Watch, the starter list, two dots and a reload (live, signed out) › alone: one dot on every poster, none filled
   ok   Watch, the starter list, two dots and a reload (live, signed out) › the partner mode is a switch that says what it is: Watching with someone, off
@@ -2733,6 +2785,7 @@
   ok   Watch, town ratings and the screening vote (demo) › a show the town rated is among them
   ok   Watch, town ratings and the screening vote (demo) › Causeway and Kindling, two ratings each this week, are left out
   ok   Watch, town ratings and the screening vote (demo) › most-rated first
+  ok   Watch, town ratings and the screening vote (demo) › #watch/town lands on Past, where the town’s ratings are
   ok   Watch, town ratings and the screening vote (demo) › five films on the ballot
   ok   Watch, town ratings and the screening vote (demo) › most votes first
   ok   Watch, town ratings and the screening vote (demo) › each film shows its count out of five, and no rule paragraph
@@ -2767,10 +2820,11 @@
   ok   Watch, deep links (demo) › no console errors
   ok   Watch, Movies and TV (demo) › a Movies / TV switch at the top, on Movies
   ok   Watch, Movies and TV (demo) › and it is the first thing on the tab
-  ok   Watch, Movies and TV (demo) › TV: the top shows, in TMDB order
   ok   Watch, Movies and TV (demo) › On TV now: a new season, one coming, then airing
   ok   Watch, Movies and TV (demo) › no theaters and no screening call on TV
   ok   Watch, Movies and TV (demo) › the table of contents follows
+  ok   Watch, Movies and TV (demo) › TV on Past: the top shows, in TMDB order
+  ok   Watch, Movies and TV (demo) › and Past’s contents
   ok   Watch, Movies and TV (demo) › a show carries the same two dots
   ok   Watch, Movies and TV (demo) › the show sheet: seasons, episode length, genres
   ok   Watch, Movies and TV (demo) › a show’s rating carries TV_BASE plus its TMDB id, in the same film field
@@ -2822,7 +2876,7 @@
   ok   Watch, in theaters near you and the screening call (demo, 10 am) › the three theaters
   ok   Watch, in theaters near you and the screening call (demo, 10 am) › Partizanfilm is closed, so the tab opens on today’s times at the next theater
   ok   Watch, in theaters near you and the screening call (demo, 10 am) › today’s showtimes come before Coming soon
-  ok   Watch, in theaters near you and the screening call (demo, 10 am) › Partizanfilm: Back Nov 3
+  ok   Watch, in theaters near you and the screening call (demo, 10 am) › Partizanfilm: Back Nov 4
   ok   Watch, in theaters near you and the screening call (demo, 10 am) › and the first day back’s schedule
   ok   Watch, in theaters near you and the screening call (demo, 10 am) › its Showtimes button
   ok   Watch, in theaters near you and the screening call (demo, 10 am) › Majestic 10: the rest of today’s times, by first show; a title the tab knows gets a trailer button
@@ -2852,8 +2906,38 @@
   ok   Watch, showtimes, the time machine and TV from the films-data branch (live) › the switch is remembered on this phone
   ok   Watch, showtimes, the time machine and TV from the films-data branch (live) › a deep link to a title from back then opens its sheet once the time machine arrives
   ok   Watch, showtimes, the time machine and TV from the films-data branch (live) › no console errors
-  ok   Watch, no time machine or showtimes yet (live) › no time-machine file: no Back then
+  ok   Watch, Upcoming | Past, coming to streaming and the colour buttons (demo) › Upcoming | Past is poured like Build | Habits, with the side’s sections in the small pill under it
+  ok   Watch, Upcoming | Past, coming to streaming and the colour buttons (demo) › Upcoming: the switch, showtimes, coming to theaters, coming to streaming, the screening vote, chat
+  ok   Watch, Upcoming | Past, coming to streaming and the colour buttons (demo) › the two rows say where: theaters, streaming
+  ok   Watch, Upcoming | Past, coming to streaming and the colour buttons (demo) › Coming to streaming: the service and the day, soonest first; a film with no service named says Streaming
+  ok   Watch, Upcoming | Past, coming to streaming and the colour buttons (demo) › a film out this week says Out now
+  ok   Watch, Upcoming | Past, coming to streaming and the colour buttons (demo) › the streaming row can be a list
+  ok   Watch, Upcoming | Past, coming to streaming and the colour buttons (demo) › and as a list it carries the Collapse bar
+  ok   Watch, Upcoming | Past, coming to streaming and the colour buttons (demo) › Movies | TV in colour: Movies filled in its own tone, TV tinted in another, both big
+  ok   Watch, Upcoming | Past, coming to streaming and the colour buttons (demo) › the theater picker: three colours, the one picked filled, all inside the gutter
+  ok   Watch, Upcoming | Past, coming to streaming and the colour buttons (demo) › a tap fills the theater it picks
+  ok   Watch, Upcoming | Past, coming to streaming and the colour buttons (demo) › TV: “Season 2 · Netflix”, “New series · Hulu”, with the day
+  ok   Watch, Upcoming | Past, coming to streaming and the colour buttons (demo) › Past: the switch, back then, the town’s ratings, the list, chat
+  ok   Watch, Upcoming | Past, coming to streaming and the colour buttons (demo) › a coming-to-streaming poster lands on Upcoming and flashes
+  ok   Watch, Upcoming | Past, coming to streaming and the colour buttons (demo) › a film on the list lands on Past
+  ok   Watch, Upcoming | Past, coming to streaming and the colour buttons (demo) › #watch/upcoming opens Upcoming
+  ok   Watch, Upcoming | Past, coming to streaming and the colour buttons (demo) › a new visit opens on Upcoming again: the side is not remembered
+  ok   Watch, Upcoming | Past, coming to streaming and the colour buttons (demo) › watch: nothing fixed or sticky inside the tab
+  ok   Watch, Upcoming | Past, coming to streaming and the colour buttons (demo) › watch: uppercase only in the caps roles
+  ok   Watch, Upcoming | Past, coming to streaming and the colour buttons (demo) › watch: no monospace
+  ok   Watch, Upcoming | Past, coming to streaming and the colour buttons (demo) › watch: no escaped markup, undefined or NaN on the page
+  ok   Watch, Upcoming | Past, coming to streaming and the colour buttons (demo) › watch: no sideways scroll at 390
+  ok   Watch, Upcoming | Past, coming to streaming and the colour buttons (demo) › watch: at most 2 subnav rows
+  ok   Watch, Upcoming | Past, coming to streaming and the colour buttons (demo) › no console errors
+  ok   Watch, coming to streaming from films.json, credited to JustWatch (live) › live: the file’s films, last month’s left out, titles as text
+  ok   Watch, coming to streaming from films.json, credited to JustWatch (live) › the services are credited to JustWatch, as TMDB’s terms ask
+  ok   Watch, coming to streaming from films.json, credited to JustWatch (live) › its sheet says where: On Netflix now
+  ok   Watch, coming to streaming from films.json, credited to JustWatch (live) › a film with no service named: Streaming from its day
+  ok   Watch, coming to streaming from films.json, credited to JustWatch (live) › Streaming joins Upcoming’s contents
+  ok   Watch, coming to streaming from films.json, credited to JustWatch (live) › TV: a new season on HBO Max (the network is TMDB’s own, so no JustWatch credit)
+  ok   Watch, coming to streaming from films.json, credited to JustWatch (live) › no console errors
   ok   Watch, no time machine or showtimes yet (live) › no showtimes file: the theater rows still offer their Showtimes button
+  ok   Watch, no time machine or showtimes yet (live) › no time-machine file: no Back then on Past
   ok   Watch, no time machine or showtimes yet (live) › nothing but the two 404s in the console
   ok   interactions, demo › the star saves and lights the mast
   ok   interactions, demo › the Saved sheet lists it
@@ -2881,7 +2965,7 @@
   ok   sign-in fails soft › a bad address is caught before any request
   ok   sign-in fails soft › no link was requested
   ok   sign-in fails soft › no console errors
-  ok   performance › the live Wire redraws 60 cards in 24ms (budget 100)
+  ok   performance › the live Wire redraws 60 cards in 23ms (budget 100)
   ok   shell fixes: a rail never snaps flush to the edge › 390: .rail carries scroll-padding of one gutter
   ok   shell fixes: a rail never snaps flush to the edge › 390: a card scrolled to the start stops at the gutter
   ok   shell fixes: a rail never snaps flush to the edge › 390: no console errors
@@ -3216,7 +3300,7 @@
   ok   Habits, the day turns at midnight New York, not the phone’s (demo, a reader in Tokyo) › and a tap now is Thursday’s
   ok   Habits, the day turns at midnight New York, not the phone’s (demo, a reader in Tokyo) › no console errors
   ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 390, light) › a first visit: one line, the starters and Add habit, nothing seeded, no sign-in wall
-  ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 390, light) › three habits, two tapped, at once (4 ms)
+  ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 390, light) › three habits, two tapped, at once (3 ms)
   ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 390, light) › and nothing personal went to the server (the season and the public forests only)
   ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 390, light) › kept on this phone, under one versioned key
   ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 390, light) › one quiet line under the list: Sync across devices
@@ -3303,7 +3387,7 @@
   ok   Habits, the forest: a tree per habit, a leaf per tap, flowers, help, starters (demo, 390) › the “?” opens How Habits works: four lines
   ok   Habits, the forest: a tree per habit, a leaf per tap, flowers, help, starters (demo, 390) › a starter adds a daily habit in one tap, and the starters step aside
   ok   Habits, the forest: a tree per habit, a leaf per tap, flowers, help, starters (demo, 390) › and plants its tree: no leaves yet (one name for the button, the picture itself decorative)
-  ok   Habits, the forest: a tree per habit, a leaf per tap, flowers, help, starters (demo, 390) › a tap grows a leaf, in the same click (5 ms)
+  ok   Habits, the forest: a tree per habit, a leaf per tap, flowers, help, starters (demo, 390) › a tap grows a leaf, in the same click (4 ms)
   ok   Habits, the forest: a tree per habit, a leaf per tap, flowers, help, starters (demo, 390) › Got it puts the help away
   ok   Habits, the forest: a tree per habit, a leaf per tap, flowers, help, starters (demo, 390) › one tree per habit, in the list’s order
   ok   Habits, the forest: a tree per habit, a leaf per tap, flowers, help, starters (demo, 390) › each tree has a leaf for every day done in the last 370
@@ -3367,7 +3451,7 @@
   ok   The Build, a first visit with an empty town: Clock in, the stopwatch, the whistle, Stop, name it (live, signed out, 390 light) › two of the site’s regulars are at work, so the site never looks empty
   ok   The Build, a first visit with an empty town: Clock in, the stopwatch, the whistle, Stop, name it (live, signed out, 390 light) › one tap: no sheet, the stopwatch running, Stop, and no "just you" line
   ok   The Build, a first visit with an empty town: Clock in, the stopwatch, the whistle, Stop, name it (live, signed out, 390 light) › the camera stays on your builder
-  ok   The Build, a first visit with an empty town: Clock in, the stopwatch, the whistle, Stop, name it (live, signed out, 390 light) › the whistle at 20 minutes: a buzz and Tap to answer, counting down
+  ok   The Build, a first visit with an empty town: Clock in, the stopwatch, the whistle, Stop, name it (live, signed out, 390 light) › the whistle at 26 minutes: a buzz and Tap to answer, counting down
   ok   The Build, a first visit with an empty town: Clock in, the stopwatch, the whistle, Stop, name it (live, signed out, 390 light) › a tap and the card clears, back to work
   ok   The Build, a first visit with an empty town: Clock in, the stopwatch, the whistle, Stop, name it (live, signed out, 390 light) › Keep it: the hours on this phone, and the thing card with its own Clock in
   ok   The Build, a first visit with an empty town: Clock in, the stopwatch, the whistle, Stop, name it (live, signed out, 390 light) › build: nothing fixed or sticky inside the tab
@@ -3382,7 +3466,7 @@
   ok   The Build, a first visit with the town’s database missing: Clock in, the stopwatch, the whistle, Stop, name it (live, signed out, 390 dark) › two of the site’s regulars are at work, so the site never looks empty
   ok   The Build, a first visit with the town’s database missing: Clock in, the stopwatch, the whistle, Stop, name it (live, signed out, 390 dark) › one tap: no sheet, the stopwatch running, Stop, and no "just you" line
   ok   The Build, a first visit with the town’s database missing: Clock in, the stopwatch, the whistle, Stop, name it (live, signed out, 390 dark) › the camera stays on your builder
-  ok   The Build, a first visit with the town’s database missing: Clock in, the stopwatch, the whistle, Stop, name it (live, signed out, 390 dark) › the whistle at 21 minutes: a buzz and Tap to answer, counting down
+  ok   The Build, a first visit with the town’s database missing: Clock in, the stopwatch, the whistle, Stop, name it (live, signed out, 390 dark) › the whistle at 28 minutes: a buzz and Tap to answer, counting down
   ok   The Build, a first visit with the town’s database missing: Clock in, the stopwatch, the whistle, Stop, name it (live, signed out, 390 dark) › a tap and the card clears, back to work
   ok   The Build, a first visit with the town’s database missing: Clock in, the stopwatch, the whistle, Stop, name it (live, signed out, 390 dark) › Keep it: the hours on this phone, and the thing card with its own Clock in
   ok   The Build, a first visit with the town’s database missing: Clock in, the stopwatch, the whistle, Stop, name it (live, signed out, 390 dark) › build: nothing fixed or sticky inside the tab
@@ -3418,12 +3502,12 @@
   ok   The Build, a shift on a fake clock: no whistle before 15 minutes, a buzz by 30, a tap answers it, a miss knocks the crew off at the last touch (demo, 390) › the stopwatch counts up by the second
   ok   The Build, a shift on a fake clock: no whistle before 15 minutes, a buzz by 30, a tap answers it, a miss knocks the crew off at the last touch (demo, 390) › fourteen minutes in: no whistle yet
   ok   The Build, a shift on a fake clock: no whistle before 15 minutes, a buzz by 30, a tap answers it, a miss knocks the crew off at the last touch (demo, 390) › your hours count up live while the shift runs (today 1m to 14m)
-  ok   The Build, a shift on a fake clock: no whistle before 15 minutes, a buzz by 30, a tap answers it, a miss knocks the crew off at the last touch (demo, 390) › the whistle blows between 15 and 30 minutes in (at 26): one buzz, the foreman on the site
+  ok   The Build, a shift on a fake clock: no whistle before 15 minutes, a buzz by 30, a tap answers it, a miss knocks the crew off at the last touch (demo, 390) › the whistle blows between 15 and 30 minutes in (at 21): one buzz, the foreman on the site
   ok   The Build, a shift on a fake clock: no whistle before 15 minutes, a buzz by 30, a tap answers it, a miss knocks the crew off at the last touch (demo, 390) › no dialog: the whistle is on the site (and said to a screen reader)
   ok   The Build, a shift on a fake clock: no whistle before 15 minutes, a buzz by 30, a tap answers it, a miss knocks the crew off at the last touch (demo, 390) › a big card in the middle: Tap to answer, counting down from three minutes
-  ok   The Build, a shift on a fake clock: no whistle before 15 minutes, a buzz by 30, a tap answers it, a miss knocks the crew off at the last touch (demo, 390) › a tap answers it: back to work, 26 minutes so far
+  ok   The Build, a shift on a fake clock: no whistle before 15 minutes, a buzz by 30, a tap answers it, a miss knocks the crew off at the last touch (demo, 390) › a tap answers it: back to work, 21 minutes so far
   ok   The Build, a shift on a fake clock: no whistle before 15 minutes, a buzz by 30, a tap answers it, a miss knocks the crew off at the last touch (demo, 390) › the next whistle at 20 minutes after the touch, the crew off three minutes later
-  ok   The Build, a shift on a fake clock: no whistle before 15 minutes, a buzz by 30, a tap answers it, a miss knocks the crew off at the last touch (demo, 390) › missed: the crew knocks off, banked to the last touch (26 minutes)
+  ok   The Build, a shift on a fake clock: no whistle before 15 minutes, a buzz by 30, a tap answers it, a miss knocks the crew off at the last touch (demo, 390) › missed: the crew knocks off, banked to the last touch (21 minutes)
   ok   The Build, a shift on a fake clock: no whistle before 15 minutes, a buzz by 30, a tap answers it, a miss knocks the crew off at the last touch (demo, 390) › the end screen: the time, one line, Keep it or Post
   ok   The Build, a shift on a fake clock: no whistle before 15 minutes, a buzz by 30, a tap answers it, a miss knocks the crew off at the last touch (demo, 390) › and it stays a miss while the end screen waits
   ok   The Build, a shift on a fake clock: no whistle before 15 minutes, a buzz by 30, a tap answers it, a miss knocks the crew off at the last touch (demo, 390) › Keep it: the hours are on your record, the site docks again
@@ -3523,6 +3607,19 @@
   ok   Vintage, fit checks and Spotted share the first screen at 390; a tile opens the fit’s own card; New in is the shops’ own posts (demo) › vintage: at most 2 subnav rows
   ok   Vintage, fit checks and Spotted share the first screen at 390; a tile opens the fit’s own card; New in is the shops’ own posts (demo) › no console errors
   ok   Vintage, New in reads the shops’ accounts from the guide and leaves the rest out (live) › only the guide’s own account’s fresh post shows, opening Instagram in a new tab
+  ok   Vintage, New in reads the shops’ accounts from the guide and leaves the rest out (live) › one post: no “See more”
+  ok   Vintage, New in reads the shops’ accounts from the guide and leaves the rest out (live) › no console errors
+  ok   Vintage, New in reads the shops’ accounts from the guide and leaves the rest out (live) › New in opens as a grid, three rows of two at 390, not one sideways row, with “See more” under it
+  ok   Vintage, New in reads the shops’ accounts from the guide and leaves the rest out (live) › “See more” adds three more rows, and the Collapse bar shows once it has grown
+  ok   Vintage, New in reads the shops’ accounts from the guide and leaves the rest out (live) › then the last two, and “See more” goes once there is no more
+  ok   Vintage, New in reads the shops’ accounts from the guide and leaves the rest out (live) › the Collapse bar is the shell’s sticky one
+  ok   Vintage, New in reads the shops’ accounts from the guide and leaves the rest out (live) › Collapse folds it back to the first rows and brings the heading back into view
+  ok   Vintage, New in reads the shops’ accounts from the guide and leaves the rest out (live) › vintage: nothing fixed or sticky inside the tab
+  ok   Vintage, New in reads the shops’ accounts from the guide and leaves the rest out (live) › vintage: uppercase only in the caps roles
+  ok   Vintage, New in reads the shops’ accounts from the guide and leaves the rest out (live) › vintage: no monospace
+  ok   Vintage, New in reads the shops’ accounts from the guide and leaves the rest out (live) › vintage: no escaped markup, undefined or NaN on the page
+  ok   Vintage, New in reads the shops’ accounts from the guide and leaves the rest out (live) › vintage: no sideways scroll at 390
+  ok   Vintage, New in reads the shops’ accounts from the guide and leaves the rest out (live) › vintage: at most 2 subnav rows
   ok   Vintage, New in reads the shops’ accounts from the guide and leaves the rest out (live) › no console errors
   ok   Vintage, a find posts with its fields and shows days left; “Someone got it” thanks you (demo) › the shop field suggests the guide’s shops; anything typed still goes
   ok   Vintage, a find posts with its fields and shows days left; “Someone got it” thanks you (demo) › the fields are the kind’s: shop (needed), size and price (optional)
@@ -3573,10 +3670,14 @@
   ok   Vintage, the shop guide walks in order and invents no hours (live) › each shop’s week is its things.json hours, day by day
   ok   Vintage, the shop guide walks in order and invents no hours (live) › hours show only where the guide has them; a checked shop without them says call ahead, the rest “Hours not checked yet”
   ok   Vintage, the shop guide walks in order and invents no hours (live) › Map opens a search on Google Maps
+  ok   Vintage, the shop guide walks in order and invents no hours (live) › every shop has its picture, numbered: its own photo credited to the page it came from, else its newest Instagram post credited to the account, else its initials tile
+  ok   Vintage, the shop guide walks in order and invents no hours (live) › 18 shops show their own photo, hotlinked from the shop’s own host (never re-hosted here), each with the page it came from
+  ok   Vintage, the shop guide walks in order and invents no hours (live) › the guide carries every photo in data/vintage-photos.json, as it is
   ok   Vintage, the shop guide walks in order and invents no hours (live) › gaps are marked in the file for Stephen to fill
   ok   Vintage, the shop guide walks in order and invents no hours (live) › every shop in the walk has a street address; a shop without one is named in left_out instead
   ok   Vintage, the shop guide walks in order and invents no hours (live) › no console errors
   ok   Vintage, the shop guide walks in order and invents no hours (live) › the walk to the next shop where both have coordinates; only the next stop where they don’t
+  ok   Vintage, the shop guide walks in order and invents no hours (live) › a photo that fails to load leaves the shop’s initials tile, never a grey hole; a logo is drawn whole
   ok   Vintage, the designs rail links to the merch site (live) › 28 previews in all-day/assets/merch, each under 60 KB
   ok   Vintage, the designs rail links to the merch site (live) › each preview is the full design (the merch data’s variant art), not the small left-chest patch it calls `front`
   ok   Vintage, the designs rail links to the merch site (live) › every design links to its own page on merch.btownbrief.com, where it is shown on a model
@@ -3584,6 +3685,8 @@
   ok   Vintage, the designs rail links to the merch site (live) › the previews load
   ok   Vintage, the designs rail links to the merch site (live) › and the last tile, “All 87 designs in the shop”, goes to the shop
   ok   Vintage, the designs rail links to the merch site (live) › Make a tee and Send in your design are one block: the button is in its head, no card of its own
+  ok   Vintage, the designs rail links to the merch site (live) › Make a tee opens as two rows of designs, the shop’s tile last, with “See more” under them
+  ok   Vintage, the designs rail links to the merch site (live) › “See more” shows two more rows
   ok   Vintage, the designs rail links to the merch site (live) › nothing on the rail takes money or names a price
   ok   Vintage, the designs rail links to the merch site (live) › vintage: nothing fixed or sticky inside the tab
   ok   Vintage, the designs rail links to the merch site (live) › vintage: uppercase only in the caps roles
@@ -3847,15 +3950,15 @@
   ok   section pills: every tab floats a liquid pill in its own water › games: any move up brings it back to full size
   ok   section pills: every tab floats a liquid pill in its own water › each tab’s water is its own colour
   ok   section pills: every tab floats a liquid pill in its own water › no console errors
-  ok   section pills: the water follows the scroll, and a tap scrolls there › watch: at the top, the first section is on (theaters, soon, back, list, town, vote, chat)
-  ok   section pills: the water follows the scroll, and a tap scrolls there › watch: scrolled to back, the water pours there and it shows in the pill
-  ok   section pills: the water follows the scroll, and a tap scrolls there › watch: a tap on town lands its head just under the floating pill, and the water stays there
+  ok   section pills: the water follows the scroll, and a tap scrolls there › watch: at the top, the first section is on (theaters, soon, stream, vote, chat)
+  ok   section pills: the water follows the scroll, and a tap scrolls there › watch: scrolled to stream, the water pours there and it shows in the pill
+  ok   section pills: the water follows the scroll, and a tap scrolls there › watch: a tap on vote lands its head just under the floating pill, and the water stays there
   ok   section pills: the water follows the scroll, and a tap scrolls there › food: at the top, the first section is on (asks, bite, open, deals, best, kitchens, add)
   ok   section pills: the water follows the scroll, and a tap scrolls there › food: scrolled to open, the water pours there and it shows in the pill
   ok   section pills: the water follows the scroll, and a tap scrolls there › food: a tap on best lands its head just under the floating pill, and the water stays there
-  ok   section pills: the water follows the scroll, and a tap scrolls there › people: at the top, the first section is on (arch, clubs, plans, mix, groups, quiz, dir)
+  ok   section pills: the water follows the scroll, and a tap scrolls there › people: at the top, the first section is on (arch, clubs, plans, mix, dating, pets, groups, quiz, dir)
   ok   section pills: the water follows the scroll, and a tap scrolls there › people: scrolled to plans, the water pours there and it shows in the pill
-  ok   section pills: the water follows the scroll, and a tap scrolls there › people: a tap on groups lands its head just under the floating pill, and the water stays there
+  ok   section pills: the water follows the scroll, and a tap scrolls there › people: a tap on dating lands its head just under the floating pill, and the water stays there
   ok   section pills: the water follows the scroll, and a tap scrolls there › vintage: at the top, the first section is on (fit, spotted, swaps, tees, newin, shops)
   ok   section pills: the water follows the scroll, and a tap scrolls there › vintage: scrolled to swaps, the water pours there and it shows in the pill
   ok   section pills: the water follows the scroll, and a tap scrolls there › vintage: a tap on newin lands its head just under the floating pill, and the water stays there
@@ -3911,3 +4014,75 @@
   ok   sideways rows: every content rail can be a list › wire photos: Collapse puts the row back
   ok   sideways rows: every content rail can be a list › wire square: every sideways row can be turned into a list
   ok   sideways rows: every content rail can be a list › no console errors
+  ok   challenge: the lists and limits are the same in the app and the SQL › feelings match
+  ok   challenge: the lists and limits are the same in the app and the SQL › what you missed matches
+  ok   challenge: the lists and limits are the same in the app and the SQL › the kinds of person match
+  ok   challenge: the lists and limits are the same in the app and the SQL › every length limit is the same
+  ok   challenge: the lists and limits are the same in the app and the SQL › the table is RLS with no policies and revoked from the public key
+  ok   challenge: the lists and limits are the same in the app and the SQL › only the send door and the passphrase-gated list are granted
+  ok   challenge: the lists and limits are the same in the app and the SQL › day five logged, or a sixth day, ends it
+  ok   challenge: the lists and limits are the same in the app and the SQL › a slip does not count as a day without the feeds
+  ok   challenge: the lists and limits are the same in the app and the SQL › no check-in after day five or with a made-up feeling
+  ok   challenge: the lists and limits are the same in the app and the SQL › a stored copy keeps only real days inside the five
+  ok   challenge: the lists and limits are the same in the app and the SQL › an empty form is not sent
+  ok   challenge: a stranger sees no card, and nothing is asked of Supabase for it (live) › the slot is there and empty; no sheet opens
+  ok   challenge: a stranger sees no card, and nothing is asked of Supabase for it (live) › no call, nothing stored
+  ok   challenge: a stranger sees no card, and nothing is asked of Supabase for it (live) › no console errors
+  ok   challenge: the newsletter’s #challenge link opens it; one tap joins, one tap logs the day (live) › it lands on the Wire, and the address bar says #wire
+  ok   challenge: the newsletter’s #challenge link opens it; one tap joins, one tap logs the day (live) › the sheet says what it is, with one button
+  ok   challenge: the newsletter’s #challenge link opens it; one tap joins, one tap logs the day (live) › joining closes the sheet
+  ok   challenge: the newsletter’s #challenge link opens it; one tap joins, one tap logs the day (live) › the card on the Wire says day 1 of 5 and asks how today felt
+  ok   challenge: the newsletter’s #challenge link opens it; one tap joins, one tap logs the day (live) › the card sits above the Wire’s own feed
+  ok   challenge: the newsletter’s #challenge link opens it; one tap joins, one tap logs the day (live) › a toast says day 1 has started
+  ok   challenge: the newsletter’s #challenge link opens it; one tap joins, one tap logs the day (live) › one tap logs it: "Day 1 felt calmer", the first dot filled
+  ok   challenge: the newsletter’s #challenge link opens it; one tap joins, one tap logs the day (live) › kept on this phone: the day joined, where they came from, today’s feeling
+  ok   challenge: the newsletter’s #challenge link opens it; one tap joins, one tap logs the day (live) › GoatCounter counts the link, the join and the day
+  ok   challenge: the newsletter’s #challenge link opens it; one tap joins, one tap logs the day (live) › wire (challenge card): nothing fixed or sticky inside the tab
+  ok   challenge: the newsletter’s #challenge link opens it; one tap joins, one tap logs the day (live) › wire (challenge card): uppercase only in the caps roles
+  ok   challenge: the newsletter’s #challenge link opens it; one tap joins, one tap logs the day (live) › wire (challenge card): no monospace
+  ok   challenge: the newsletter’s #challenge link opens it; one tap joins, one tap logs the day (live) › wire (challenge card): no escaped markup, undefined or NaN on the page
+  ok   challenge: the newsletter’s #challenge link opens it; one tap joins, one tap logs the day (live) › wire (challenge card): no sideways scroll at 390
+  ok   challenge: the newsletter’s #challenge link opens it; one tap joins, one tap logs the day (live) › wire (challenge card): at most 2 subnav rows
+  ok   challenge: the newsletter’s #challenge link opens it; one tap joins, one tap logs the day (live) › Change shows the five again, today’s pressed
+  ok   challenge: the newsletter’s #challenge link opens it; one tap joins, one tap logs the day (live) › a slip says so, and its dot is a ring
+  ok   challenge: the newsletter’s #challenge link opens it; one tap joins, one tap logs the day (live) › a plain visit the next time still shows the card
+  ok   challenge: the newsletter’s #challenge link opens it; one tap joins, one tap logs the day (live) › joining and checking in send nothing to Supabase
+  ok   challenge: the newsletter’s #challenge link opens it; one tap joins, one tap logs the day (live) › no console errors
+  ok   challenge: a newsletter link without the hash shows the invite; Not now hides it for good (live) › light: the invite is a card, no sheet
+  ok   challenge: a newsletter link without the hash shows the invite; Not now hides it for good (live) › light: it says what it is, with I’m in and Not now
+  ok   challenge: a newsletter link without the hash shows the invite; Not now hides it for good (live) › Not now hides it, with Undo
+  ok   challenge: a newsletter link without the hash shows the invite; Not now hides it for good (live) › the next newsletter visit leaves it hidden
+  ok   challenge: a newsletter link without the hash shows the invite; Not now hides it for good (live) › the #challenge link itself brings it back
+  ok   challenge: a newsletter link without the hash shows the invite; Not now hides it for good (live) › no console errors
+  ok   challenge: a newsletter link without the hash shows the invite; Not now hides it for good (live) › dark: the invite is a card, no sheet
+  ok   challenge: a newsletter link without the hash shows the invite; Not now hides it for good (live) › dark: it says what it is, with I’m in and Not now
+  ok   challenge: a newsletter link without the hash shows the invite; Not now hides it for good (live) › dark: no console errors
+  ok   challenge: day five ends in a roundup, and the form reaches Stephen anonymously (live) › the fifth day asks too
+  ok   challenge: day five ends in a roundup, and the form reaches Stephen anonymously (live) › the roundup counts the days without the feeds
+  ok   challenge: day five ends in a roundup, and the form reaches Stephen anonymously (live) › and shows how each day felt
+  ok   challenge: day five ends in a roundup, and the form reaches Stephen anonymously (live) › the fifth tap says that’s all five
+  ok   challenge: day five ends in a roundup, and the form reaches Stephen anonymously (live) › an empty form says what to do and sends nothing
+  ok   challenge: day five ends in a roundup, and the form reaches Stephen anonymously (live) › a closed sheet keeps the draft
+  ok   challenge: day five ends in a roundup, and the form reaches Stephen anonymously (live) › one call to nn_challenge_send with the days and the answers
+  ok   challenge: day five ends in a roundup, and the form reaches Stephen anonymously (live) › no account, name or email goes with it
+  ok   challenge: day five ends in a roundup, and the form reaches Stephen anonymously (live) › the card thanks them
+  ok   challenge: day five ends in a roundup, and the form reaches Stephen anonymously (live) › and remembers it was sent
+  ok   challenge: day five ends in a roundup, and the form reaches Stephen anonymously (live) › Close puts it away for good
+  ok   challenge: day five ends in a roundup, and the form reaches Stephen anonymously (live) › five days with no check-ins still end in a roundup
+  ok   challenge: day five ends in a roundup, and the form reaches Stephen anonymously (live) › no console errors
+  ok   challenge: a send that fails keeps the answers and says so (live) › #challenge/feedback opens the form straight away
+  ok   challenge: a send that fails keeps the answers and says so (live) › the form says it couldn’t send
+  ok   challenge: a send that fails keeps the answers and says so (live) › the answer is kept, nothing is marked sent, and nobody was signed up
+  ok   challenge: a send that fails keeps the answers and says so (live) › no console errors (beyond the 404)
+  ok   challenge: Stop the challenge clears the days (live) › stopped: no days kept, the card gone
+  ok   challenge: Stop the challenge clears the days (live) › no console errors
+  ok   challenge: a wide screen lines the card up with the Wire’s column (live, 1280 dark) › the card is the column’s width, over the feed
+  ok   challenge: a wide screen lines the card up with the Wire’s column (live, 1280 dark) › no console errors
+  ok   challenge: the demo plays it through and keeps and sends nothing › Send in the demo says nothing was sent
+  ok   challenge: the demo plays it through and keeps and sends nothing › no call and nothing in localStorage
+  ok   challenge: the demo plays it through and keeps and sends nothing › and nothing counted
+  ok   challenge: the demo plays it through and keeps and sends nothing › no console errors
+  ok   challenge: the boards desk shows Stephen the answers behind the passphrase › demo: tallies, then each answer
+  ok   challenge: the boards desk shows Stephen the answers behind the passphrase › live: the list is asked for with the passphrase
+  ok   challenge: the boards desk shows Stephen the answers behind the passphrase › live: one answer, its words escaped
+  ok   challenge: the boards desk shows Stephen the answers behind the passphrase › no console errors

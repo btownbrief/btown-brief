@@ -1178,6 +1178,9 @@ export function start() {
 
   store.touchVisit();
   route();
+  /* the No-algorithm challenge: its card on the Wire and #challenge. Loaded
+     after the first route, so it can never hold up or break the boot. */
+  import('./challenge.js').then((m) => m.start(panels.wire)).catch((e) => console.error('[all-day] challenge', e));
 }
 
 store.applyTheme(store.theme());

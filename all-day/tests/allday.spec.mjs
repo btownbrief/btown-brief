@@ -37,6 +37,7 @@ import net from 'node:net';
 import path from 'node:path';
 import { FakeHabits } from '../js/habits-fake.js';
 import { directoryFrom } from '../js/food-asks.js';
+import * as CH from '../js/challenge-core.js';
 
 const require = createRequire(import.meta.url);
 let chromium;
@@ -104,7 +105,7 @@ async function staticChecks() {
     const js = [];
     const walk = async (dir) => { for (const f of await readdir(dir, { withFileTypes: true })) { const p = path.join(dir, f.name); if (f.isDirectory()) await walk(p); else if (/\.(js|css|html)$/.test(f.name)) js.push(p); } };
     await walk(path.join(APP, 'js')); await walk(path.join(APP, 'css'));
-    const NEW = ['app.js', 'ui.js', 'store.js', 'auth.js', 'asks.js', 'liquid.js', 'main.js', 'wire.js', 'wire-demo.js', 'wire-photos.js', 'wire-square.js', 'wire-recaps.js', 'watch.js', 'food.js', 'people.js', 'whatnow.js', 'vintage.js', 'habits.js', 'build.js', 'habits-core.js', 'habits-fake.js', 'photo-wall.js', 'onair.js', 'games.js', 'clubs-week.js', 'people-match.js', 'food-asks.js', 'tokens.css', 'app.css'];
+    const NEW = ['app.js', 'ui.js', 'store.js', 'auth.js', 'asks.js', 'liquid.js', 'main.js', 'wire.js', 'wire-demo.js', 'wire-photos.js', 'wire-square.js', 'wire-recaps.js', 'watch.js', 'food.js', 'people.js', 'whatnow.js', 'vintage.js', 'habits.js', 'build.js', 'habits-core.js', 'habits-fake.js', 'photo-wall.js', 'onair.js', 'onair-sports.js', 'games.js', 'clubs-week.js', 'people-match.js', 'food-asks.js', 'tokens.css', 'app.css'];
     const OLD = new Set(['sun.js', 'whatnow-engine.js', 'whatnow-data.js']);
     for (const f of js) {
       const name = path.basename(f);
@@ -2474,10 +2475,10 @@ async function onAir(browser, base) {
     await page.waitForSelector('#panel-onair [data-sec="past"]', { timeout: 8000 });
     check(await page.evaluate(() => document.querySelector('audio').paused && !document.querySelector('#panel-onair iframe')), 'nothing autoplays: the shell’s audio is paused and no frame is loaded', '');
     const sw = await page.$$eval('#subnav .oa-sideswitch button', (bs) => bs.map((b) => b.textContent + '|' + b.getAttribute('aria-pressed')));
-    check(JSON.stringify(sw) === JSON.stringify(['TV|true', 'Podcasts|false', 'Playlists|false']), 'a TV | Podcasts | Playlists switch at the top, TV first and on (Stephen, 2026-10-19)', JSON.stringify(sw));
+    check(JSON.stringify(sw) === JSON.stringify(['TV|true', 'Podcasts|false', 'Playlists|false', 'Sports|false']), 'a TV | Podcasts | Playlists | Sports switch at the top, TV first and on (Stephen, 2026-10-19 and 10-22)', JSON.stringify(sw));
     const sides = await page.$eval('#subnav .oa-sideswitch', (g) => { const r = g.getBoundingClientRect(); return { w: Math.round(r.width), vw: innerWidth, row: !g.closest('.secrow').querySelector('.localsw'),
       cut: [...g.children].some((b) => b.getBoundingClientRect().right > innerWidth || b.getBoundingClientRect().height < 36) }; });
-    check(sides.row && sides.w >= sides.vw * 0.8 && !sides.cut, 'the three sides get a full-width row of their own, nothing cut off at 390', JSON.stringify(sides));
+    check(sides.row && sides.w >= sides.vw * 0.8 && !sides.cut, 'the four sides get a full-width row of their own, nothing cut off at 390', JSON.stringify(sides));
     const chipsTV = await page.$$eval('#subnav .chip', (cs) => cs.map((c) => c.innerText.trim()));
     check(chipsTV[0] === 'All lengths' && chipsTV.slice(1).every((c) => ['Under 15 min', '15–30 min', '30 min+', 'Trailers'].includes(c)) && chipsTV.length >= 3,
       'on TV the chip row is lengths, in minutes', JSON.stringify(chipsTV));
@@ -2500,7 +2501,7 @@ async function onAir(browser, base) {
     });
     check(f.w >= f.vw - 32 - 1 && f.title >= 20 && f.dur, 'the feature: a full-width picture with its length, a big title', JSON.stringify(f));
     check(f.buttons.length === 2 && /^Watch /.test(f.buttons[0]) && /^More for /.test(f.buttons[1]) && f.why, 'its reason, one Watch button and ⋯, nothing else', JSON.stringify(f));
-    const rows = await page.$$eval('#panel-onair .oa-row', (rs) => rs.map((r) => ({ t: parseFloat(getComputedStyle(r.querySelector('.t')).fontSize),
+    const rows = await page.$$eval('#panel-onair [data-side="tv"] .oa-row', (rs) => rs.map((r) => ({ t: parseFloat(getComputedStyle(r.querySelector('.t')).fontSize),
       buttons: r.querySelectorAll('button').length, dur: !!r.querySelector('.dur'), w: Math.round(r.querySelector('.c-media').getBoundingClientRect().width) })));
     check(rows.length && rows.every((r) => r.t >= 16 && r.buttons === 2 && r.dur && r.w >= 140), 'every row: a readable title, the length on the picture, Watch and ⋯', JSON.stringify(rows.slice(0, 3)));
 
@@ -5754,20 +5755,19 @@ async function theWatch(browser, base) {
     const { ctx, page, errors, supabase } = await newPage(browser, base, { films });
     await page.route(/youtube-nocookie\.com|youtube\.com\/embed/, (r) => r.fulfill({ status: 200, body: '<!doctype html><title>YouTube</title>', contentType: 'text/html' }));
     await page.goto(base + '/all-day/#watch');
-    await page.waitForSelector(wPanel + ' [data-grid]', { timeout: 15000 });
-    check(!(await page.$(wPanel + ' [data-sec="list"][data-seed]')) && /12 of 12 to go/.test(await page.$eval(wPanel + ' [data-sec="list"]', (s) => s.innerText)),
-      'films.json is the list, and its subtitle is only the count to go', await page.$eval(wPanel + ' [data-sec="list"]', (s) => s.innerText));
-    check(JSON.stringify(await wTiles(page)) === JSON.stringify(films.top.map((f) => 'f' + f.id)), 'every film in its TMDB order', '');
-    const toc = await page.$$eval('#subnav .chip', (c) => c.map((x) => x.textContent));
-    check(JSON.stringify(toc) === JSON.stringify(['Theaters', 'Coming soon', 'The list', 'Town', 'Next screening', 'Chat']), 'the chip row is the table of contents, today’s showtimes first', toc.join(' / '));
+    await page.waitForSelector(wPanel + ' [data-sec="soon"]', { timeout: 15000 });
+    /* Upcoming | Past (Stephen, 2026-10-22): a fresh visit opens on Upcoming */
+    const sides = await page.$$eval('#subnav [data-sides] button', (b) => b.map((x) => [x.dataset.side, x.textContent, x.getAttribute('aria-pressed'), x.classList.contains('on')]));
+    check(JSON.stringify(sides) === '[["up","Upcoming","true",true],["past","Past","false",false]]', 'Upcoming | Past floats at the top, on Upcoming', JSON.stringify(sides));
+    const toc = await page.$$eval('#subnav .secpill .chip', (c) => c.map((x) => x.textContent));
+    check(JSON.stringify(toc) === JSON.stringify(['Theaters', 'Coming soon', 'Next screening', 'Chat']), 'Upcoming’s chip row, today’s showtimes first; no Streaming when nothing is coming to streaming', toc.join(' / '));
+    check(!(await page.$(wPanel + ' [data-grid]')) && !(await page.$(wPanel + ' [data-sec="town"]')) && !(await page.$(wPanel + ' [data-sec="stream"]')), 'the list and the town’s ratings wait on Past', '');
     check(!(await page.$(wPanel + ' [data-kind]')), 'a films.json with no shows has no Movies / TV switch', '');
     const soon = await page.$$eval(wPanel + ' [data-sec="soon"] + .railmode + .rail-wrap .poster', (n) => n.map((a) => [a.dataset.k, a.querySelector('.s').textContent, !!a.querySelector('.play')]));
     check(soon.length === 5 && soon[0][1] === 'In theaters now' && soon[1][1] === 'Back in theaters' && /· theaters$/.test(soon[2][1]) && /· streaming$/.test(soon[3][1]), 'Coming soon: in theaters now (a 1966 re-release is back in theaters), then what opens, labelled theaters or streaming', JSON.stringify(soon));
     check(JSON.stringify(soon.map((x) => x[2])) === '[true,false,true,true,false]', 'a play disc only where TMDB has a trailer', JSON.stringify(soon));
     const pics = await page.$$eval(wPanel + ' .poster img.pic', (n) => n.slice(0, 3).map((i) => [i.getAttribute('src'), i.loading]));
     check(pics.length && pics.every(([src, lazy]) => /^https:\/\/image\.tmdb\.org\/t\/p\/w342\/[A-Za-z0-9]+\.jpg$/.test(src) && lazy === 'lazy'), 'posters are TMDB paths at w342, loaded lazily', JSON.stringify(pics));
-    const box = await page.$eval(wPanel + ' [data-grid] .poster .c-media', (m) => { const r = m.getBoundingClientRect(); return Math.round(r.height / r.width * 100) / 100; });
-    check(box === 1.5, 'a poster reserves its 2:3 box', box);
     const credit = await page.$eval(wPanel + ' [data-credit]', (c) => ({ text: c.innerText, logo: c.querySelector('img') && c.querySelector('img').getAttribute('src'), href: c.querySelector('a').href }));
     check(!credit.text.trim() && credit.logo === '../assets/img/tmdb.svg' && credit.href === 'https://www.themoviedb.org/', 'TMDB’s logo mark is on the tab, and only the mark', JSON.stringify(credit));
     const about = await settingsText(page);
@@ -5794,6 +5794,19 @@ async function theWatch(browser, base) {
     await page.waitForSelector('.sheet-body', { timeout: 4000 });
     check(await page.$eval('#vbox', (b) => b.hidden) && /No trailer yet\./.test(await page.$eval('.sheet-body', (b) => b.innerText)), 'a film with no trailer opens its sheet instead, and says so', '');
     await page.click('.sheet-head .iconbtn');
+    /* Past: what is already out, the list among it */
+    await page.click('#subnav [data-side="past"]');
+    await page.waitForSelector(wPanel + ' [data-grid]', { timeout: 6000 });
+    const past = await page.evaluate(() => ({ on: [...document.querySelectorAll('#subnav [data-sides] button')].map((b) => b.getAttribute('aria-pressed')),
+      toc: [...document.querySelectorAll('#subnav .secpill .chip')].map((c) => c.textContent), soon: !!document.querySelector('#panel-watch [data-sec="soon"], #panel-watch [data-sec="theaters"]'),
+      top: document.querySelector('#panel-watch').scrollTop }));
+    check(JSON.stringify(past.on) === '["false","true"]' && JSON.stringify(past.toc) === '["Town","The list","Chat"]' && !past.soon && past.top === 0,
+      'Past: the town and the list (no time machine yet), from the top, and nothing coming', JSON.stringify(past));
+    check(!(await page.$(wPanel + ' [data-sec="list"][data-seed]')) && /12 of 12 to go/.test(await page.$eval(wPanel + ' [data-sec="list"]', (s) => s.innerText)),
+      'films.json is the list, and its subtitle is only the count to go', await page.$eval(wPanel + ' [data-sec="list"]', (s) => s.innerText));
+    check(JSON.stringify(await wTiles(page)) === JSON.stringify(films.top.map((f) => 'f' + f.id)), 'every film in its TMDB order', '');
+    const box = await page.$eval(wPanel + ' [data-grid] .poster .c-media', (m) => { const r = m.getBoundingClientRect(); return Math.round(r.height / r.width * 100) / 100; });
+    check(box === 1.5, 'a poster reserves its 2:3 box', box);
     /* the film sheet's trailer button: the same box */
     await page.click(wPanel + ' [data-k="f' + films.top[1].id + '"]');
     await page.waitForSelector('.sheet-body [data-trailer]');
@@ -5831,12 +5844,14 @@ async function theWatch(browser, base) {
   await group('Watch, the starter list, two dots and a reload (live, signed out)', async () => {
     const { ctx, page, errors, supabase } = await newPage(browser, base);
     await page.goto(base + '/all-day/#watch');
+    await page.waitForSelector(wPanel + ' [data-sec="theaters"]', { timeout: 15000 });
+    check(!(await page.$(wPanel + ' [data-sec="soon"]')) && !(await page.$(wPanel + ' [data-sec="stream"]')), 'with no films.json there is no Coming soon or Coming to streaming (the seed has neither)', '');
+    const toc = await page.$$eval('#subnav .secpill .chip', (c) => c.map((x) => x.textContent));
+    check(JSON.stringify(toc) === JSON.stringify(['Theaters', 'Next screening', 'Chat']), 'and the table of contents leaves them out', toc.join(' / '));
+    await page.goto(base + '/all-day/#watch/past');
     await page.waitForSelector(wPanel + ' [data-grid]', { timeout: 15000 });
     const head = await page.$eval(wPanel + ' [data-sec="list"]', (s) => ({ seed: s.dataset.seed, text: s.innerText }));
-    check(head.seed === '1' && /60 of 60 to go/.test(head.text), 'the seed list is marked as the seed, and counts what is left', head.text);
-    check(!(await page.$(wPanel + ' [data-sec="soon"]')), 'with no films.json there is no Coming soon (the seed has none)', '');
-    const toc = await page.$$eval('#subnav .chip', (c) => c.map((x) => x.textContent));
-    check(JSON.stringify(toc) === JSON.stringify(['Theaters', 'The list', 'Town', 'Next screening', 'Chat']), 'and the table of contents leaves it out', toc.join(' / '));
+    check(head.seed === '1' && /60 of 60 to go/.test(head.text), '#watch/past: the seed list is marked as the seed, and counts what is left', head.text);
     check((await wTiles(page)).length === 60, 'all sixty films', '');
     const dots = () => page.$$eval(wPanel + ' [data-grid] .poster', (n) => n.map((a) => [a.dataset.k, [...a.querySelectorAll('.seen i')].map((i) => (i.classList.contains('on') ? 1 : 0)).join('')]));
     check((await dots()).every((d) => d[1] === '0'), 'alone: one dot on every poster, none filled', JSON.stringify((await dots()).slice(0, 3)));
@@ -5928,7 +5943,7 @@ async function theWatch(browser, base) {
     const { ctx, page, errors } = await newPage(browser, base, { rpc });
     await page.goto(base + '/all-day/?x=1');
     await page.evaluate(([s, c]) => { localStorage.setItem('allday-auth', s); localStorage.setItem('allday-watch', JSON.stringify({ mode: 'me', seen: { [c]: [1, 0] } })); }, [SESSION(), C]);
-    await page.goto(base + '/all-day/#watch');
+    await page.goto(base + '/all-day/#watch/past');
     await page.waitForSelector(wPanel + ' [data-grid]', { timeout: 15000 });
     await page.waitForFunction((c) => { const w = JSON.parse(localStorage.getItem('allday-watch') || '{}'); return w.syncedFor && !Object.keys(w.dirty || {}).length; }, C, { timeout: 6000 }).catch(() => {});
     const local = () => page.evaluate(() => JSON.parse(localStorage.getItem('allday-watch') || '{}'));
@@ -5965,7 +5980,7 @@ async function theWatch(browser, base) {
 
   await group('Watch, a missing films branch falls back to the starter list (live)', async () => {
     const { ctx, page, errors } = await newPage(browser, base, { films: null });
-    await page.goto(base + '/all-day/#watch');
+    await page.goto(base + '/all-day/#watch/past');
     await page.waitForSelector(wPanel + ' [data-grid]', { timeout: 15000 });
     check(await page.$(wPanel + ' [data-sec="list"][data-seed]') !== null && (await wTiles(page)).length === 60, 'a 404 from films-data: the starter list, labelled', '');
     check(errors.every((e) => /404/.test(e)), 'and nothing but the 404 itself in the console', errors.join(' | '));
@@ -5976,7 +5991,7 @@ async function theWatch(browser, base) {
     const d = await watchDemo();
     const ratings = watchRatings(d);
     const { ctx, page, errors } = await newPage(browser, base);
-    await page.goto(base + '/all-day/?demo=1#watch');
+    await page.goto(base + '/all-day/?demo=1#watch/past');
     await page.waitForSelector(wPanel + ' [data-grid] .rate', { timeout: 15000 });
     check(JSON.stringify(await wTiles(page)) === JSON.stringify(d.films.top.map((f) => 'f' + f.id)), 'all sixty, in list order', '');
     const today = wDayNum(wToday());
@@ -6028,6 +6043,8 @@ async function theWatch(browser, base) {
     check(await page.$eval(wPanel + ' [data-sort] [data-chip="town"]', (c) => c.getAttribute('aria-pressed')) === 'true', 'and the Town favorites chip is the one on', '');
     await page.click(wPanel + ' [data-sort] [data-chip="top"]');
     check(JSON.stringify(await wTiles(page)) === JSON.stringify(d.films.top.map((f) => 'f' + f.id)), 'Top rated puts it back', '');
+    await page.click('#subnav [data-side="up"]');
+    await page.waitForSelector(wPanel + ' [data-sec="soon"]', { timeout: 4000 });
     const soon = await page.$$eval(wPanel + ' [data-sec="soon"] + .railmode + .rail-wrap .poster', (n) => n.length);
     check(soon === d.films.soon.length + d.films.now.length && soon === 10, 'Coming soon: ten trailers', soon);
     check(!errors.length, 'no console errors', errors.join(' | '));
@@ -6047,6 +6064,9 @@ async function theWatch(browser, base) {
     check(rows.some((r) => r[0] === 'town:' + (TV_BASE + 7003) && /^Cold Case Vermont/.test(r[2])), 'a show the town rated is among them', JSON.stringify(rows));
     check(!rows.some((r) => /Causeway|Kindling/.test(r[2])), 'Causeway and Kindling, two ratings each this week, are left out', '');
     check(rows.every((r, i) => i === 0 || rows[i - 1][1] >= r[1]), 'most-rated first', '');
+    check(await page.$eval('#subnav [data-side="past"]', (b) => b.getAttribute('aria-pressed')) === 'true', '#watch/town lands on Past, where the town’s ratings are', '');
+    await page.click('#subnav [data-side="up"]');
+    await page.waitForSelector(wPanel + ' [data-ballot] .vote-opt', { timeout: 4000 });
 
     const opts = () => page.$$eval(wPanel + ' [data-ballot] .vote-opt', (n) => n.map((o) => ({ k: o.dataset.k, on: o.getAttribute('aria-pressed'), n: o.querySelector('.l span').textContent, w: parseFloat(o.querySelector('.bar i').style.width) })));
     const before = await opts();
@@ -6102,7 +6122,7 @@ async function theWatch(browser, base) {
   await group('Watch, a rating posts with stars in meta (demo)', async () => {
     const d = await watchDemo();
     const { ctx, page, errors } = await newPage(browser, base);
-    await page.goto(base + '/all-day/?demo=1#watch');
+    await page.goto(base + '/all-day/?demo=1#watch/past');
     await page.waitForSelector(wPanel + ' [data-grid] .rate', { timeout: 15000 });
     const f = d.films.top.find((x) => x.t === 'Fieldwork');
     await page.click(wPanel + ' [data-k="f' + f.id + '"]');
@@ -6139,7 +6159,9 @@ async function theWatch(browser, base) {
     check(JSON.stringify(mine.sort()) === JSON.stringify([2, 5]), 'rating again replaces your last rating: one each, the old one gone', JSON.stringify(mine));
     await page.click('.sheet-head .iconbtn');
 
-    /* a pick from the list */
+    /* a pick from the list, on the ballot (Upcoming) */
+    await page.click('#subnav [data-side="up"]');
+    await page.waitForSelector(wPanel + ' [data-suggest]', { timeout: 4000 });
     await page.click(wPanel + ' [data-suggest]');
     await page.waitForSelector('.sheet-body [data-results] [data-film]');
     await page.fill('.sheet-body input[type=search]', 'orchard');
@@ -6190,12 +6212,15 @@ async function theWatch(browser, base) {
     check(await page.$eval(wPanel, (p) => p.querySelector('[data-slot]').dataset.slot) === 'kind', 'and it is the first thing on the tab', '');
     await page.click(wPanel + ' [data-kind] button:has-text("TV")');
     await page.waitForFunction(() => /On TV now/.test(document.querySelector('#panel-watch [data-sec="soon"]')?.innerText || ''), null, { timeout: 4000 }).catch(() => {});
-    check(JSON.stringify(await wTiles(page)) === JSON.stringify(d.films.tv_top.map((f) => 'tv' + f.id)), 'TV: the top shows, in TMDB order', JSON.stringify((await wTiles(page)).slice(0, 4)));
     const air = await page.$$eval(wPanel + ' [data-sec="soon"] + .railmode + .rail-wrap .poster', (n) => n.map((a) => [a.querySelector('.t').textContent, a.querySelector('.s').textContent]));
     check(air[0][1] === 'New season 2' && /^Season 4 · [A-Z][a-z]{2} \d+$/.test(air[1][1]) && air[2][1] === 'Airing now', 'On TV now: a new season, one coming, then airing', JSON.stringify(air));
     check(!(await page.$(wPanel + ' [data-sec="theaters"]')) && !(await page.$(wPanel + ' [data-cta]')), 'no theaters and no screening call on TV', '');
-    const toc = await page.$$eval('#subnav .chip', (c) => c.map((x) => x.textContent));
-    check(JSON.stringify(toc) === JSON.stringify(['On TV now', 'Back then', 'The list', 'Town', 'Next screening', 'Chat']), 'the table of contents follows', toc.join(' / '));
+    const toc = await page.$$eval('#subnav .secpill .chip', (c) => c.map((x) => x.textContent));
+    check(JSON.stringify(toc) === JSON.stringify(['On TV now', 'Streaming', 'Next screening', 'Chat']), 'the table of contents follows', toc.join(' / '));
+    await page.click('#subnav [data-side="past"]');
+    await page.waitForSelector(wPanel + ' [data-grid]', { timeout: 4000 });
+    check(JSON.stringify(await wTiles(page)) === JSON.stringify(d.films.tv_top.map((f) => 'tv' + f.id)), 'TV on Past: the top shows, in TMDB order', JSON.stringify((await wTiles(page)).slice(0, 4)));
+    check(JSON.stringify(await page.$$eval('#subnav .secpill .chip', (c) => c.map((x) => x.textContent))) === '["Back then","Town","The list","Chat"]', 'and Past’s contents', '');
     const dots = await page.$eval(wPanel + ' [data-grid] [data-k="tv7001"]', (a) => [...a.querySelectorAll('.seen i')].map((i) => (i.classList.contains('on') ? 1 : 0)).join(''));
     check(dots === '11', 'a show carries the same two dots', dots);
     await page.click(wPanel + ' [data-grid] [data-k="tv7003"]');
@@ -6237,9 +6262,15 @@ async function theWatch(browser, base) {
     check(JSON.stringify(await wTiles(page)) === JSON.stringify(d.films.trend.map((f) => 'f' + f.id)), 'Trending: TMDB’s week, in its order', JSON.stringify(await wTiles(page)));
     await pick('new');
     const today = wToday();
-    const pool = [...new Map([...d.films.top, ...d.films.trend, ...d.films.now].map((f) => [f.id, f])).values()];
+    /* watchDemo() has already moved the top films to today; trending and in
+       theaters still carry the file's dates. Each film once, its first copy,
+       as watch.js's pool() keeps it. (Moving the top films a second time
+       pushed them forward by the days since the demo's anchor, so this check
+       broke on every date but the anchor itself.) */
     const moveD = (f) => { const nd = new Date((wDayNum(f.d) + wDayNum(today) - wDayNum(d._anchor)) * W_DAY + 12 * 3600000).toISOString().slice(0, 10); return nd; };
-    const newest = pool.map((f) => ({ ...f, d: moveD(f) })).filter((f) => f.d <= today).sort((a, b) => b.d.localeCompare(a.d) || a.t.localeCompare(b.t)).map((f) => 'f' + f.id);
+    const moved = [...d.films.top, ...[...d.films.trend, ...d.films.now].map((f) => ({ ...f, d: moveD(f) }))];
+    const pool = moved.filter((f, i) => moved.findIndex((x) => x.id === f.id) === i);
+    const newest = pool.filter((f) => f.d <= today).sort((a, b) => b.d.localeCompare(a.d) || a.t.localeCompare(b.t)).map((f) => 'f' + f.id);
     check(JSON.stringify(await wTiles(page)) === JSON.stringify(newest.slice(0, 60)), 'Newest: everything released, newest first', JSON.stringify((await wTiles(page)).slice(0, 5)));
     await pick('genre');
     const shelves = await page.$$eval(wPanel + ' [data-shelf]', (n) => n.map((x) => x.dataset.shelf));
@@ -6265,7 +6296,7 @@ async function theWatch(browser, base) {
   await group('Watch, the time machine (demo)', async () => {
     const d = await watchDemo();
     const { ctx, page, errors } = await newPage(browser, base);
-    await page.goto(base + '/all-day/?demo=1#watch');
+    await page.goto(base + '/all-day/?demo=1#watch/past');
     await page.waitForSelector(wPanel + ' [data-sec="back"]', { timeout: 15000 });
     const thisMonth = wToday().slice(0, 7);
     const mi = (m) => Number(m.slice(0, 4)) * 12 + Number(m.slice(5, 7)) - 1;
@@ -6405,6 +6436,13 @@ async function theWatch(browser, base) {
     await page.evaluate(() => document.querySelector('#panel-watch [data-sec="theaters"]').scrollIntoView());
     await page.waitForTimeout(200);
     await page.screenshot({ path: path.join(SHOTS, 'demo-watch-390-theaters.png') });
+    await page.evaluate(() => document.querySelector('#panel-watch [data-sec="stream"]').scrollIntoView());
+    await page.waitForTimeout(200);
+    await page.screenshot({ path: path.join(SHOTS, 'demo-watch-390-streaming.png') });
+    await page.click('#subnav [data-side="past"]');
+    await page.waitForSelector(wPanel + ' [data-sec="back"]', { timeout: 4000 });
+    await page.waitForTimeout(700);
+    await page.screenshot({ path: path.join(SHOTS, 'demo-watch-390-past-top.png') });
     await page.evaluate(() => document.querySelector('#panel-watch [data-sec="back"]').scrollIntoView());
     await page.waitForTimeout(200);
     await page.screenshot({ path: path.join(SHOTS, 'demo-watch-390-back-then.png') });
@@ -6439,7 +6477,7 @@ async function theWatch(browser, base) {
       { id: 'essex', name: 'Essex Cinemas', town: 'Essex', url: 'https://evil.example/', ok: false, closed: false, back: '', days: {} },
       { id: 'nowhere', name: 'Elsewhere', town: 'Nowhere', url: 'https://x.example/', ok: true, days: {} }] };
     const { ctx, page, errors } = await newPage(browser, base, { films, tm, showtimes, clock: etAt(12) });
-    await page.goto(base + '/all-day/#watch');
+    await page.goto(base + '/all-day/#watch/past');
     await page.waitForSelector(wPanel + ' [data-sec="back"]', { timeout: 15000 });
     const back = await page.$$eval(wPanel + ' [data-back] .poster', (n) => n.map((a) => [a.dataset.id, a.querySelector('.t').textContent, a.querySelector('img') && a.querySelector('img').getAttribute('src')]));
     check(back.length === 2 && back[0][0] === String(t0.id) && back[0][2] === 'https://image.tmdb.org/t/p/w342' + t0.p, 'Back then: TMDB posters at w342, a key that disagrees with its id left out', JSON.stringify(back));
@@ -6449,6 +6487,8 @@ async function theWatch(browser, base) {
     await page.click(wPanel + ' [data-slot="back"] .dateline .nav[aria-label="Earlier day"]');
     check(await page.$eval(wPanel + ' [data-slot="back"] .dateline .s', (n) => n.textContent) === 'Most popular on TMDB', 'a month the archive missed says it is TMDB’s most popular, not the front page', '');
     await page.click(wPanel + ' [data-slot="back"] .dateline .nav[aria-label="Later day"]');
+    await page.click('#subnav [data-side="up"]');
+    await page.waitForSelector(wPanel + ' [data-theater]', { timeout: 4000 });
     const th = await page.$$eval(wPanel + ' [data-theater] button', (n) => n.map((b) => b.textContent));
     check(JSON.stringify(th) === '["Partizanfilm","Majestic 10","Essex Cinemas"]', 'theaters are the known three, whatever the file adds', JSON.stringify(th));
     const rows = await page.$$eval(wPanel + ' [data-showing] .lrow', (n) => n.map((r) => [r.querySelector('.t').textContent, r.querySelector('[data-times]').textContent, r.querySelector('img') && r.querySelector('img').getAttribute('src')]));
@@ -6462,7 +6502,8 @@ async function theWatch(browser, base) {
     await page.click(wPanel + ' [data-theater] button:has-text("Partizanfilm")');
     check(await page.$eval(wPanel + ' [data-status]', (p) => p.textContent) === 'Burlington · Times on their site' && !(await page.$(wPanel + ' [data-showing] .lrow')), 'a theater missing from the file: one plain line and its button', '');
     await page.click(wPanel + ' [data-kind] button:has-text("TV")');
-    await page.waitForTimeout(100);
+    await page.click('#subnav [data-side="past"]');
+    await page.waitForSelector(wPanel + ' [data-grid]', { timeout: 4000 });
     check(JSON.stringify((await wTiles(page)).slice(0, 2)) === '["tv1400","tv1401"]', 'live TV shelves from films.json', JSON.stringify((await wTiles(page)).slice(0, 2)));
     await page.click(wPanel + ' [data-grid] [data-k="tv1400"]');
     await page.waitForSelector('.sheet-body a[href*="themoviedb"]');
@@ -6482,14 +6523,127 @@ async function theWatch(browser, base) {
     await ctx.close();
   });
 
+  /* Stephen, 2026-10-22: "make it more obvious that you have upcoming …
+     and then you have past", a new "upcoming streaming" category, and
+     colourful Movies | TV and theater buttons "so they're hard to miss" */
+  await group('Watch, Upcoming | Past, coming to streaming and the colour buttons (demo)', async () => {
+    const d = await watchDemo();
+    const { ctx, page, errors } = await newPage(browser, base, { dpr: 2 });
+    await page.goto(base + '/all-day/?demo=1#watch');
+    await page.waitForSelector(wPanel + ' [data-sec="stream"]', { timeout: 15000 });
+    const sw = await page.$eval('#subnav [data-sides]', (g) => ({ liquid: g.classList.contains('liquid'), canvas: !!g.querySelector(':scope > canvas.lsw-canvas'), label: g.getAttribute('aria-label'),
+      row: g.closest('.secrow').classList.contains('oa-sidesrow'), next: !!g.closest('.secbar').querySelector(':scope > .secrow + .secpill') }));
+    check(sw.liquid && sw.canvas && sw.label === 'Upcoming or past' && sw.row && sw.next, 'Upcoming | Past is poured like Build | Habits, with the side’s sections in the small pill under it', JSON.stringify(sw));
+    const slots = await page.$$eval(wPanel + ' [data-slot]', (n) => n.map((x) => x.dataset.slot));
+    check(JSON.stringify(slots) === '["kind","theaters","soon","cta","stream","vote","chat"]', 'Upcoming: the switch, showtimes, coming to theaters, coming to streaming, the screening vote, chat', JSON.stringify(slots));
+    check(await page.$eval(wPanel + ' [data-sec="soon"] h2', (h) => h.textContent) === 'Coming to theaters' && await page.$eval(wPanel + ' [data-sec="stream"] h2', (h) => h.textContent) === 'Coming to streaming',
+      'the two rows say where: theaters, streaming', '');
+    const stream = await page.$$eval(wPanel + ' [data-stream] .poster', (n) => n.map((a) => [a.dataset.k, a.querySelector('.s').textContent]));
+    const when = (k) => { const nd = new Date((wDayNum(k) + wDayNum(wToday()) - wDayNum(d._anchor)) * W_DAY + 12 * 3600000).toISOString().slice(0, 10);
+      return nd <= wToday() ? 'Out now' : new Intl.DateTimeFormat('en-US', { timeZone: 'UTC', month: 'short', day: 'numeric' }).format(new Date(nd + 'T12:00:00Z')); };
+    const want = d.films.stream.map((f) => ['stream:' + f.id, (f.on || 'Streaming') + ' · ' + when(f.d)]);
+    check(JSON.stringify(stream) === JSON.stringify(want), 'Coming to streaming: the service and the day, soonest first; a film with no service named says Streaming', JSON.stringify(stream));
+    check(stream[0][1] === 'Netflix · Out now', 'a film out this week says Out now', stream[0][1]);
+    check(await page.$eval(wPanel + ' [data-railmode="watch-stream"]', (b) => b.textContent) === 'See as a list', 'the streaming row can be a list', '');
+    await page.click(wPanel + ' [data-railmode="watch-stream"]');
+    const listed = await page.$eval(wPanel + ' [data-rail="watch-stream"]', (r) => ({ list: r.classList.contains('aslist'), bar: !r.closest('.rail-wrap').nextElementSibling.hidden }));
+    check(listed.list && listed.bar, 'and as a list it carries the Collapse bar', JSON.stringify(listed));
+    await page.click(wPanel + ' [data-slot="stream"] .collapsebar:not([hidden]) button');
+    /* the colour buttons: each its own tone, filled while on, tinted while off */
+    const tones = await page.evaluate(() => {
+      const look = (sel) => [...document.querySelectorAll('#panel-watch ' + sel + ' button')].map((b) => { const cs = getComputedStyle(b); return { on: b.classList.contains('on'), pressed: b.getAttribute('aria-pressed'), bg: cs.backgroundColor, border: cs.borderTopColor, h: Math.round(b.getBoundingClientRect().height) }; });
+      return { kind: look('[data-kind]'), th: look('[data-theater]'), vw: innerWidth, right: Math.max(...[...document.querySelectorAll('#panel-watch [data-theater] button')].map((b) => b.getBoundingClientRect().right)) };
+    });
+    const k = tones.kind;
+    check(k.length === 2 && k[0].on && k[0].pressed === 'true' && k[0].bg === k[0].border && k[1].bg !== k[1].border && k[0].border !== k[1].border && k[0].h >= 44,
+      'Movies | TV in colour: Movies filled in its own tone, TV tinted in another, both big', JSON.stringify(k));
+    const th = tones.th;
+    check(th.length === 3 && new Set(th.map((t) => t.border)).size === 3 && th.filter((t) => t.on && t.bg === t.border).length === 1 && tones.right <= tones.vw - 12,
+      'the theater picker: three colours, the one picked filled, all inside the gutter', JSON.stringify(tones));
+    await page.click(wPanel + ' [data-theater] button:has-text("Essex")');
+    check(await page.$eval(wPanel + ' [data-theater] button.on', (b) => [b.textContent, b.getAttribute('aria-pressed')].join()) === 'Essex Cinemas,true', 'a tap fills the theater it picks', '');
+    /* TV: new shows and new seasons on the streamers */
+    await page.click(wPanel + ' [data-kind] button:has-text("TV")');
+    await page.waitForSelector(wPanel + ' [data-stream="tv"]', { timeout: 4000 });
+    const tv = await page.$$eval(wPanel + ' [data-stream="tv"] .poster .s', (n) => n.map((x) => x.textContent));
+    const wantTv = d.films.tv_stream.map((f) => [f.ns === 1 ? 'New series' : 'Season ' + f.ns, f.on, when(f.d)].join(' · '));
+    check(JSON.stringify(tv) === JSON.stringify(wantTv), 'TV: “Season 2 · Netflix”, “New series · Hulu”, with the day', JSON.stringify(tv));
+    await page.click(wPanel + ' [data-kind] button:has-text("Movies")');
+    /* Past: what is already out */
+    await page.click('#subnav [data-side="past"]');
+    await page.waitForSelector(wPanel + ' [data-grid]', { timeout: 4000 });
+    const p = await page.evaluate(() => ({ slots: [...document.querySelectorAll('#panel-watch [data-slot]')].map((x) => x.dataset.slot), on: document.querySelector('#subnav [data-side].on').dataset.side }));
+    check(JSON.stringify(p) === '{"slots":["kind","back","town","list","chat"],"on":"past"}', 'Past: the switch, back then, the town’s ratings, the list, chat', JSON.stringify(p));
+    await page.screenshot({ path: path.join(SHOTS, 'demo-watch-past.png') });
+    /* deep links pick the side */
+    await page.goto(base + '/all-day/?demo=1#watch/stream:9404');
+    await page.reload();
+    check(await flashes(page, 'stream:9404'), 'a coming-to-streaming poster lands on Upcoming and flashes', '');
+    await page.goto(base + '/all-day/?demo=1#watch/f' + d.films.top[3].id);
+    check(await flashes(page, 'f' + d.films.top[3].id) && await page.$eval('#subnav [data-side="past"]', (b) => b.classList.contains('on')), 'a film on the list lands on Past', '');
+    await page.goto(base + '/all-day/?demo=1#watch/upcoming');
+    await page.waitForFunction(() => document.querySelector('#subnav [data-side="up"]')?.classList.contains('on'), null, { timeout: 4000 }).catch(() => {});
+    check(!!(await page.$(wPanel + ' [data-sec="stream"]')), '#watch/upcoming opens Upcoming', '');
+    await page.goto(base + '/all-day/?demo=1#watch/past');
+    await page.waitForSelector(wPanel + ' [data-grid]', { timeout: 4000 });
+    await page.goto(base + '/all-day/?demo=1#watch');
+    await page.reload();
+    await page.waitForSelector(wPanel + ' [data-sec="stream"]', { timeout: 15000 });
+    check(await page.$eval('#subnav [data-side="up"]', (b) => b.classList.contains('on')), 'a new visit opens on Upcoming again: the side is not remembered', '');
+    await pageRules(page, 'watch', 390);
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Watch, coming to streaming from films.json, credited to JustWatch (live)', async () => {
+    const films = await watchFilms();
+    const seed = JSON.parse(await readFile(path.join(APP, 'data/films-seed.json'), 'utf8'));
+    const day = (n) => new Date(Date.parse(wToday() + 'T12:00:00Z') + n * W_DAY).toISOString().slice(0, 10);
+    films.stream = [{ ...seed.top[30], id: 991001, t: 'Netflix Thing', d: day(-2), where: 'streaming', on: 'Netflix', yt: '' },
+      { ...seed.top[31], id: 991002, t: 'Unnamed Service', d: day(6), where: 'streaming', on: '', yt: '' },
+      { ...seed.top[32], id: 991003, t: 'Last Month', d: day(-20), where: 'streaming', on: 'Hulu' },
+      { ...seed.top[33], id: 991004, t: '<b>Rented</b>', d: day(3), where: 'streaming', on: 'Rent or buy', yt: '' }];
+    films.tv_top = seed.top.slice(40, 50).map((f, i) => ({ ...f, id: 1500 + i, t: 'Show ' + i, sn: 2 }));
+    films.tv_stream = [{ ...films.tv_top[0], id: 1601, t: 'New Season Show', d: day(9), ns: 3, on: 'HBO Max', where: 'streaming' }];
+    const { ctx, page, errors } = await newPage(browser, base, { films });
+    await page.goto(base + '/all-day/#watch');
+    await page.waitForSelector(wPanel + ' [data-stream] .poster', { timeout: 15000 });
+    const got = await page.$$eval(wPanel + ' [data-stream] .poster', (n) => n.map((a) => [a.querySelector('.t').textContent, a.querySelector('.s').textContent]));
+    check(got.length === 3 && got[0][1] === 'Netflix · Out now' && /^Streaming · [A-Z][a-z]{2} \d+$/.test(got[1][1]) && got[2][0] === '<b>Rented</b>' && /^Rent or buy · /.test(got[2][1]) && !(await page.$(wPanel + ' [data-stream] b')),
+      'live: the file’s films, last month’s left out, titles as text', JSON.stringify(got));
+    const jw = await page.$eval(wPanel + ' [data-slot="stream"] [data-jw]', (c) => ({ text: c.textContent, href: c.querySelector('a').getAttribute('href'), target: c.querySelector('a').target }));
+    check(jw.text === 'Where to stream: JustWatch' && jw.href === 'https://www.justwatch.com/us/new' && jw.target === '_blank', 'the services are credited to JustWatch, as TMDB’s terms ask', JSON.stringify(jw));
+    await page.click(wPanel + ' [data-k="stream:991001"]');
+    await page.waitForSelector('.sheet-body [data-streams]', { timeout: 4000 });
+    check(await page.$eval('.sheet-body [data-streams]', (n) => n.textContent) === 'On Netflix now', 'its sheet says where: On Netflix now', await page.$eval('.sheet-body [data-streams]', (n) => n.textContent));
+    await page.click('.sheet-head .iconbtn');
+    await page.click(wPanel + ' [data-k="stream:991002"]');
+    await page.waitForSelector('.sheet-body [data-streams]', { timeout: 4000 });
+    check(/^Streaming from [A-Z][a-z]{2} \d+$/.test(await page.$eval('.sheet-body [data-streams]', (n) => n.textContent)), 'a film with no service named: Streaming from its day', '');
+    await page.click('.sheet-head .iconbtn');
+    const toc = await page.$$eval('#subnav .secpill .chip', (c) => c.map((x) => x.textContent));
+    check(JSON.stringify(toc) === '["Theaters","Coming soon","Streaming","Next screening","Chat"]', 'Streaming joins Upcoming’s contents', toc.join(' / '));
+    await page.click(wPanel + ' [data-kind] button:has-text("TV")');
+    await page.waitForSelector(wPanel + ' [data-stream="tv"] .poster', { timeout: 4000 });
+    check(/^Season 3 · HBO Max · [A-Z][a-z]{2} \d+$/.test(await page.$eval(wPanel + ' [data-stream="tv"] .poster .s', (n) => n.textContent)) && !(await page.$(wPanel + ' [data-slot="stream"] [data-jw]')),
+      'TV: a new season on HBO Max (the network is TMDB’s own, so no JustWatch credit)', '');
+    await page.click(wPanel + ' [data-kind] button:has-text("Movies")');
+    await page.screenshot({ path: path.join(SHOTS, 'live-watch-upcoming.png') });
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
   await group('Watch, no time machine or showtimes yet (live)', async () => {
     const { ctx, page, errors } = await newPage(browser, base, { films: await watchFilms(), tm: null, showtimes: null });
     await page.goto(base + '/all-day/#watch');
     await page.waitForSelector(wPanel + ' [data-sec="theaters"]', { timeout: 15000 });
     await page.waitForTimeout(500);
-    check(!(await page.$(wPanel + ' [data-sec="back"]')), 'no time-machine file: no Back then', '');
     const btns = await page.$$eval(wPanel + ' [data-showtimes]', (n) => n.map((a) => a.getAttribute('href')));
     check(JSON.stringify(btns) === '["https://www.partizanfilm.org/"]' && !(await page.$(wPanel + ' [data-showing] .lrow')), 'no showtimes file: the theater rows still offer their Showtimes button', JSON.stringify(btns));
+    await page.goto(base + '/all-day/#watch/past');
+    await page.waitForSelector(wPanel + ' [data-sec="list"]', { timeout: 6000 });
+    await page.waitForTimeout(300);
+    check(!(await page.$(wPanel + ' [data-sec="back"]')), 'no time-machine file: no Back then on Past', '');
     check(errors.every((e) => /404/.test(e)), 'nothing but the two 404s in the console', errors.join(' | '));
     await ctx.close();
   });
@@ -7060,7 +7214,7 @@ async function theVintage(browser, base) {
     await page.click('.sheet-head .iconbtn');
     const d = await readFile(path.join(APP, 'data/demo/vintage.json'), 'utf8').then(JSON.parse);
     const fresh = d.instagramPosts.filter((x) => d.instagram.includes(x.h) && Date.parse(d.anchor) / 1000 - x.ts < 14 * 86400).sort((a, b) => b.ts - a.ts);
-    const ig = await page.$$eval(vslot('newin') + ' [data-rail=newin] a.vcard', (as) => as.map((a) => ({ href: a.getAttribute('href'), who: a.querySelector('.t').textContent, s: a.querySelector('.s').textContent })));
+    const ig = await page.$$eval(vslot('newin') + ' [data-grid=newin] a.vcard', (as) => as.map((a) => ({ href: a.getAttribute('href'), who: a.querySelector('.t').textContent, s: a.querySelector('.s').textContent })));
     check(ig.length === fresh.length && ig.length >= 3 && ig.every((x, i) => x.href === fresh[i].u && x.who === '@' + fresh[i].h), 'New in: the shops’ own posts from the last two weeks, newest first, each credited to its account and linked to the post', JSON.stringify(ig));
     check(!ig.some((x) => /DemoVin5|DemoVin6/.test(x.href)), 'a three-week-old post and an account that is not a shop stay off', JSON.stringify(ig.map((x) => x.href)));
     const chipN = await page.$eval('#subnav .chip[data-chip="newin"] .n', (n) => n.textContent);
@@ -7086,11 +7240,50 @@ async function theVintage(browser, base) {
     await page.route(/scontent\.example/, (r) => r.fulfill({ status: 200, body: PNG, contentType: 'image/png' }));
     await page.goto(base + '/all-day/#vintage');
     await settle(page);
-    await page.waitForSelector(vslot('newin') + ' [data-rail=newin] a.vcard', { timeout: 6000 }).catch(() => {});
-    const ig = await page.$$eval(vslot('newin') + ' [data-rail=newin] a.vcard', (as) => as.map((a) => ({ href: a.href, target: a.target })));
+    await page.waitForSelector(vslot('newin') + ' [data-grid=newin] a.vcard', { timeout: 6000 }).catch(() => {});
+    const ig = await page.$$eval(vslot('newin') + ' [data-grid=newin] a.vcard', (as) => as.map((a) => ({ href: a.href, target: a.target })));
     check(file.instagram.length >= 1 && ig.length === 1 && ig[0].href === 'https://www.instagram.com/p/LiveVin1/' && ig[0].target === '_blank', 'only the guide’s own account’s fresh post shows, opening Instagram in a new tab', JSON.stringify(ig));
+    check(await page.$eval(vslot('newin') + ' .linkrow.vmore', (r) => r.hidden && getComputedStyle(r).display === 'none'), 'one post: no “See more”', '');
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
+
+    /* Stephen, 2026-10-22: "I only see one row but I want to see more rows ...
+       a see more at the end so you can keep on going down". Fourteen posts:
+       three rows of two at 390, "See more" adds three more rows, then the last
+       two; the Collapse bar folds it back to the first rows and the heading. */
+    const many = Array.from({ length: 14 }, (_, i) => ({ h: shopHandle, ts: now - 3600 * (i + 1), i: 'https://scontent.example/m' + i + '.jpg', u: 'https://www.instagram.com/p/LiveMany' + i + '/', w: 480, c: 'Rack ' + i, s: 'do' }));
+    const two = await newPage(browser, base, { routes: [[/\/all-day\/data\/instagram\.json/, { generated: new Date().toISOString(), handles: [], posts: many }]] });
+    await two.page.route(/scontent\.example/, (r) => r.fulfill({ status: 200, body: PNG, contentType: 'image/png' }));
+    await two.page.goto(base + '/all-day/#vintage/newin');
+    await settle(two.page);
+    await two.page.waitForSelector(vslot('newin') + ' [data-grid=newin] a.vcard', { timeout: 6000 }).catch(() => {});
+    const state = () => two.page.evaluate((sel) => {
+      const g = document.querySelector(sel + ' [data-grid=newin]');
+      const shown = [...g.children].filter((c) => !c.hidden && getComputedStyle(c).display !== 'none');
+      const tops = [...new Set(shown.map((c) => Math.round(c.getBoundingClientRect().top)))];
+      const more = document.querySelector(sel + ' [data-more=newin]');
+      const bar = document.querySelector(sel + ' .collapsebar');
+      return { n: g.children.length, shown: shown.length, rows: tops.length, more: !!more && !more.closest('[hidden]'), bar: !!bar && !bar.hidden,
+        sideways: g.scrollWidth > g.clientWidth + 2, k: shown.map((c) => c.dataset.k) };
+    }, vslot('newin'));
+    const s0 = await state();
+    check(s0.n === 14 && s0.shown === 6 && s0.rows === 3 && s0.more && !s0.bar && !s0.sideways, 'New in opens as a grid, three rows of two at 390, not one sideways row, with “See more” under it', JSON.stringify(s0));
+    await two.page.click(vslot('newin') + ' [data-more=newin]');
+    const s1 = await state();
+    check(s1.shown === 12 && s1.rows === 6 && s1.more && s1.bar, '“See more” adds three more rows, and the Collapse bar shows once it has grown', JSON.stringify(s1));
+    await two.page.click(vslot('newin') + ' [data-more=newin]');
+    const s2 = await state();
+    check(s2.shown === 14 && !s2.more && s2.bar, 'then the last two, and “See more” goes once there is no more', JSON.stringify(s2));
+    const pinned = await two.page.evaluate((sel) => getComputedStyle(document.querySelector(sel + ' .collapsebar')).position, vslot('newin'));
+    check(pinned === 'sticky', 'the Collapse bar is the shell’s sticky one', pinned);
+    await two.page.click(vslot('newin') + ' .collapsebar:not([hidden]) button');
+    await two.page.waitForTimeout(400);
+    const s3 = await state();
+    const headTop = await two.page.$eval(vslot('newin') + ' .sec', (h) => Math.round(h.getBoundingClientRect().top));
+    check(s3.shown === 6 && s3.more && !s3.bar && headTop >= 0 && headTop < 400, 'Collapse folds it back to the first rows and brings the heading back into view', JSON.stringify({ s3, headTop }));
+    await pageRules(two.page, 'vintage', 390);
+    check(!two.errors.length, 'no console errors', two.errors.join(' | '));
+    await two.ctx.close();
   });
 
   await group('Vintage, a find posts with its fields and shows days left; “Someone got it” thanks you (demo)', async () => {
@@ -7179,6 +7372,10 @@ async function theVintage(browser, base) {
     const file = await vintageShops();
     const things = JSON.parse(await readFile(path.join(REPO, 'data/things.json'), 'utf8'));
     const { ctx, page, errors } = await newPage(browser, base);
+    /* the shops' photos live on their own hosts (and Instagram's); here each answers with a pixel */
+    const igFile = JSON.parse(await readFile(path.join(APP, 'data/instagram.json'), 'utf8'));
+    const picHosts = new Set(file.shops.filter((s) => s.photo).map((s) => new URL(s.photo.src).hostname));
+    await page.route((u) => picHosts.has(u.hostname) || /cdninstagram\.com|fbcdn\.net/.test(u.hostname), (r) => r.fulfill({ status: 200, body: PNG, contentType: 'image/png' }));
     await page.goto(base + '/all-day/#vintage');
     await settle(page);
     await page.waitForSelector(vslot('shops') + ' .lrow');
@@ -7215,6 +7412,32 @@ async function theVintage(browser, base) {
     });
     check(shown.every(Boolean), 'hours show only where the guide has them; a checked shop without them says call ahead, the rest “Hours not checked yet”', JSON.stringify(rows.map((r) => r.hours)));
     check(rows.every((r) => /^https:\/\/www\.google\.com\/maps\/search\//.test(r.map)), 'Map opens a search on Google Maps', rows[0].map);
+
+    /* Stephen, 2026-10-22: a photo of each shop, "easy to find" and colour.
+       The shop's own picture (data/vintage-photos.json), hotlinked from its
+       own host with a credit to the page it came from; else its newest
+       Instagram post; else a tile in its kind's colour with its initials. */
+    await page.waitForFunction((n) => document.querySelectorAll('.panel:not([hidden]) [data-sec="shops"] .lrow .vpic').length === n, file.shops.length);
+    const pics = await page.$$eval(vslot('shops') + ' .lrow', (rs) => rs.map((r) => {
+      const v = r.querySelector('.vpic'), img = v && v.querySelector('img'), c = r.querySelector('[data-credit] a');
+      return { kind: v && v.dataset.pic, src: img && img.getAttribute('src'), tile: (v.querySelector('.vtile') || {}).textContent || '', badge: (v.querySelector('.num.vbadge') || {}).textContent,
+        credit: c && { href: c.href, text: c.textContent, target: c.target } };
+    }));
+    const nowS = Date.now() / 1000;
+    const lapsed = (u) => { const m = /[?&]oe=([0-9a-f]+)/i.exec(u); return m && parseInt(m[1], 16) <= nowS; };
+    const want = file.shops.map((s) => {
+      if (s.photo) return { kind: 'site', src: s.photo.src, href: s.photo.page, text: s.photo.credit };
+      const post = s.instagram && igFile.posts.filter((x) => x.h && x.h.toLowerCase() === s.instagram && x.i && x.u && !lapsed(x.i)).sort((a, b) => b.ts - a.ts)[0];
+      return post ? { kind: 'ig', src: post.i, href: post.u, text: '@' + post.h } : { kind: 'tile' };
+    });
+    const off = pics.map((p, i) => [file.shops[i].id, p, want[i], i]).filter(([, p, w, i]) => p.kind !== w.kind || p.badge !== String(i + 1) || !p.tile ||
+      (w.kind === 'tile' ? p.src || p.credit : p.src !== w.src || !p.credit || p.credit.href !== w.href || p.credit.text !== w.text || p.credit.target !== '_blank'));
+    check(!off.length, 'every shop has its picture, numbered: its own photo credited to the page it came from, else its newest Instagram post credited to the account, else its initials tile', JSON.stringify(off.slice(0, 3)));
+    const site = file.shops.filter((s) => s.photo);
+    check(site.length >= 15 && file.photos === site.length && site.every((s) => /^https:\/\//.test(s.photo.src) && !/btownbrief/i.test(new URL(s.photo.src).hostname) && /^https:\/\//.test(s.photo.page) && s.photo.credit),
+      site.length + ' shops show their own photo, hotlinked from the shop’s own host (never re-hosted here), each with the page it came from', JSON.stringify(site.filter((s) => !/^https:\/\//.test(s.photo.src)).map((s) => s.id)));
+    const photos = JSON.parse(await readFile(path.join(REPO, 'data/vintage-photos.json'), 'utf8')).photos;
+    check(Object.keys(photos).every((id) => file.shops.some((s) => s.id === id && s.photo && s.photo.src === photos[id].src)), 'the guide carries every photo in data/vintage-photos.json, as it is', '');
     check(file.shops.every((s) => Array.isArray(s.gaps)) && file.gaps, 'gaps are marked in the file for Stephen to fill', JSON.stringify(file.gaps));
     const noStreet = things.filter((t) => t.group === 'Shopping' && !/^\d/.test(t.address || '')).map((t) => t.id);
     check(file.shops.every((s) => /^\d/.test(s.address || '')) && file.left_out.every((s) => noStreet.includes(s.id)),
@@ -7224,16 +7447,27 @@ async function theVintage(browser, base) {
 
     /* the walk between two shops, from a file that has coordinates for both */
     const fixture = { count: 3, gaps: {}, shops: [
-      { id: 'a', name: 'Shop A', kinds: ['Vintage'], neighborhood: 'Downtown / Church St', address: '1 Main St', coords: [44.4759, -73.2121], hours: null, blurb: 'A.', gaps: ['hours'], next: { miles: 0.5, minutes: 10, mode: 'walk' } },
-      { id: 'b', name: 'Shop B', kinds: ['Thrift'], neighborhood: 'South End', address: null, coords: null, hours: null, blurb: 'B.', gaps: ['address', 'coords', 'hours'], next: { unknown: true } },
+      { id: 'a', name: 'Shop A', kinds: ['Vintage'], neighborhood: 'Downtown / Church St', address: '1 Main St', coords: [44.4759, -73.2121], hours: null, blurb: 'A.', gaps: ['hours'], next: { miles: 0.5, minutes: 10, mode: 'walk' },
+        photo: { src: 'https://photo.example/gone.jpg', page: 'https://shopa.example/', credit: 'shopa.example' } },
+      { id: 'b', name: 'Shop B', kinds: ['Thrift'], neighborhood: 'South End', address: null, coords: null, hours: null, blurb: 'B.', gaps: ['address', 'coords', 'hours'], next: { unknown: true },
+        photo: { src: 'https://photo.example/ok.png', page: 'https://shopb.example/', credit: 'shopb.example', fit: 'contain' } },
       { id: 'c', name: 'Shop C', kinds: ['Antiques'], neighborhood: 'Essex / Essex Jct', address: null, coords: null, hours: null, blurb: 'C.', gaps: [], next: null },
     ] };
     const two = await newPage(browser, base, { routes: [[/\/data\/vintage-shops\.json/, fixture]] });
+    await two.page.route(/photo\.example\/gone/, (r) => r.fulfill({ status: 404, body: '' }));
+    await two.page.route(/photo\.example\/ok/, (r) => r.fulfill({ status: 200, body: PNG, contentType: 'image/png' }));
     await two.page.goto(base + '/all-day/#vintage');
     await settle(two.page);
     await two.page.waitForSelector(vslot('shops') + ' .lrow');
     const legs = await two.page.$$eval(vslot('shops') + ' .lrow', (rs) => rs.map((r) => (r.querySelector('[data-leg]') || {}).textContent || ''));
     check(legs[0] === 'Then about 10 minutes on foot to Shop B' && legs[1] === 'Then Shop C, Essex / Essex Jct' && legs[2] === '', 'the walk to the next shop where both have coordinates; only the next stop where they don’t', JSON.stringify(legs));
+    await two.page.$eval(vslot('shops'), (s) => s.scrollIntoView());
+    await two.page.waitForFunction(() => !document.querySelector('.panel:not([hidden]) [data-sec="shops"] .lrow[data-k="s-a"] .vpic img')).catch(() => {});
+    await two.page.waitForFunction(() => { const i = document.querySelector('.panel:not([hidden]) [data-sec="shops"] .lrow[data-k="s-b"] .vpic img'); return i && i.complete && i.naturalWidth > 0; }).catch(() => {});
+    const fall = await two.page.$$eval(vslot('shops') + ' .lrow .vpic', (vs) => vs.map((v) => ({ img: !!v.querySelector('img'), tile: v.querySelector('.vtile').textContent,
+      tileShows: getComputedStyle(v.querySelector('.vtile')).display !== 'none' && v.querySelector('.vtile').getBoundingClientRect().width > 40, fit: v.classList.contains('fit') })));
+    check(!fall[0].img && fall[0].tile === 'SA' && fall[0].tileShows && fall[1].img && fall[1].fit && !fall[2].img && fall[2].tile === 'SC',
+      'a photo that fails to load leaves the shop’s initials tile, never a grey hole; a logo is drawn whole', JSON.stringify(fall));
     await two.ctx.close();
   });
 
@@ -7259,6 +7493,18 @@ async function theVintage(browser, base) {
     const all = await page.$eval(vslot('tees') + ' a.vall', (a) => ({ href: a.href, target: a.target, label: a.getAttribute('aria-label'), last: a.parentElement.lastElementChild === a }));
     check(all.href === 'https://merch.btownbrief.com/' && all.target === '_blank' && all.last && new RegExp('All ' + d.total + ' designs').test(all.label), 'and the last tile, “All ' + d.total + ' designs in the shop”, goes to the shop', JSON.stringify(all));
     check(!(await page.$(vslot('tees') + ' .textcard')) && !(await page.$('.panel:not([hidden]) [data-sec="make"]')), 'Make a tee and Send in your design are one block: the button is in its head, no card of its own', '');
+    /* Stephen, 2026-10-22: "I have so many t-shirts, what if people could see more of them" -
+       two rows of four at 1280 (the whole-shop tile ends them), "See more" for the next two */
+    const tg = () => page.$eval(vslot('tees') + ' [data-grid=tees]', (g) => {
+      const shown = [...g.children].filter((c) => getComputedStyle(c).display !== 'none');
+      return { shown: shown.length, rows: new Set(shown.map((c) => Math.round(c.getBoundingClientRect().top))).size, lastIsShop: shown[shown.length - 1].classList.contains('vall'),
+        more: !g.parentElement.querySelector('.linkrow.vmore').hidden };
+    });
+    const t0 = await tg();
+    check(t0.shown === 8 && t0.rows === 2 && t0.lastIsShop && t0.more, 'Make a tee opens as two rows of designs, the shop’s tile last, with “See more” under them', JSON.stringify(t0));
+    await page.click(vslot('tees') + ' [data-more=tees]');
+    const t1 = await tg();
+    check(t1.shown === 16 && t1.rows === 4 && t1.lastIsShop, '“See more” shows two more rows', JSON.stringify(t1));
     const money = await page.$eval(vslot('tees'), (s) => s.innerText);
     check(!/\$\s?\d|buy now|checkout|add to (cart|bag)/i.test(money), 'nothing on the rail takes money or names a price', money.slice(0, 100));
     await pageRules(page, 'vintage', 1280);
@@ -7374,7 +7620,7 @@ async function theVintage(browser, base) {
     await page.waitForSelector(vslot('spotted') + ' [data-grid="spotted"]');
     const lists = calls.filter((c) => c.fn === 'nn_posts_list').map((c) => c.args.p_board + ':' + c.args.p_filter.kind + ':' + c.args.p_limit).sort();
     check(JSON.stringify(lists) === '["vintage:design:60","vintage:fit:60","vintage:spotted:60","vintage:swap:60"]', 'four lists, one per kind, the server’s most', JSON.stringify(lists));
-    const titles = await page.evaluate(() => Object.fromEntries([...document.querySelectorAll('.panel:not([hidden]) [data-grid]')].map((g) => [g.dataset.grid, [...g.querySelectorAll('.b-title, .ftile .t')].map((t) => t.textContent)])));
+    const titles = await page.evaluate(() => Object.fromEntries([...document.querySelectorAll('.panel:not([hidden]) [data-grid]:not([data-grid=tees]):not([data-grid=newin])')].map((g) => [g.dataset.grid, [...g.querySelectorAll('.b-title, .ftile .t')].map((t) => t.textContent)])));
     check(JSON.stringify(titles) === JSON.stringify({ fit: ['My Sunday fit', 'Head to toe Old Gold'], spotted: ['Barn jacket'], swaps: ['Band tees'], sent: ['Moth on the steeple', 'Lake ink'] }),
       'a find in Spotted, a swap in Swaps, designs in Sent in and fit checks with their photos in Fit check, newest first, the old tagged ones among them; a fit whose photo still waits, and a find someone got, nowhere', JSON.stringify(titles));
     const thanks = await page.$eval(vslot('spotted') + ' [data-thanks]', (p) => p.dataset.thanks);
@@ -9562,7 +9808,7 @@ async function thePeople(browser, base) {
       /^Plans & Meetups/.test(doors[1][0]) && doors[1][1] === 'https://www.btownbrief.com/community/channels/meetups-hangouts' &&
       /^Telegram/.test(doors[2][0]) && doors[2][1] === base + '/telegram.html', 'one door card: Find Each Other, Plans & Meetups, Telegram', JSON.stringify(doors));
     const chipsTxt = await page.$$eval('#subnav .chip', (cs) => cs.map((c) => c.textContent));
-    check(JSON.stringify(chipsTxt) === JSON.stringify(['Who you are', 'Run clubs', 'Open to strangers', 'Mixers', 'Clubs', 'Quiz', 'People here']), 'the chip row is the table of contents', JSON.stringify(chipsTxt));
+    check(JSON.stringify(chipsTxt) === JSON.stringify(['Who you are', 'Run clubs', 'Open to strangers', 'Mixers', 'Dating', 'Pets', 'Clubs', 'Quiz', 'People here']), 'the chip row is the table of contents', JSON.stringify(chipsTxt));
     await page.evaluate(() => document.querySelector('#panel-people').scrollTo(0, 0));
     await page.waitForTimeout(400);
     await page.click('#subnav .chip[data-chip="quiz"]');
@@ -9670,6 +9916,127 @@ async function thePeople(browser, base) {
     check(!/Lee Q\./.test(txt) && await page.$(peoplePanel + ' [data-dir="join"]') !== null, 'reader A’s late directory never draws for reader B, who is not in it', txt.slice(0, 160));
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
+  });
+
+  /* Dating and Pets (Stephen's walk, 2026-10-22): singles nights, a group
+     of singles going out, the local ways to meet someone, dating news; the
+     dog parks with their town's rules, pet events, dog park plans */
+  await group('People: Dating and Pets, the hand-checked file holds', async () => {
+    const dp = JSON.parse(await readFile(path.join(REPO, 'data/dating-pets.json'), 'utf8'));
+    const today = BTV_DAY.format(new Date());
+    const all = [].concat(dp.dating.ways, dp.dating.news, [dp.dating.more], dp.pets.parks, Object.values(dp.pets.rules), dp.pets.help);
+    const bad = all.filter((x) => !x || !/^https:\/\//.test(x.url || '') || !x.checked || !/^https:\/\//.test(x.checked.source || '') || !(x.checked.note || '').length ||
+      !/^\d{4}-\d{2}-\d{2}$/.test(x.checked.date || '') || x.checked.date > today);
+    check(!bad.length, 'every entry links out and carries its check: a source, a quote, a date not in the future (' + all.length + ')', JSON.stringify(bad).slice(0, 300));
+    const words = JSON.stringify([dp.dating.ways.map((w) => w.line), dp.dating.news.map((n) => n.title), dp.pets.parks.map((x) => [x.name, x.where, x.line]), Object.values(dp.pets.rules).map((r) => r.items), dp.pets.help.map((h) => h.line)]);
+    check(!/—/.test(words), 'no em dash in what readers see', '');
+    const names = dp.pets.parks.map((x) => x.name);
+    check(names.includes('Starr Farm Dog Park') && names.includes('Wheeler Nature Park dog area') && dp.pets.parks.every((x) => dp.pets.rules[x.rules]), 'Starr Farm and Wheeler are there, each park with its town’s rules', JSON.stringify(names));
+    const PM = await import(path.join(APP, 'js/people-match.js'));
+    const pet = (title) => PM.petEvent({ title, url: 'https://example.com/e' });
+    check(pet('Barktober Halloween Bash at the Tap Room') && pet('Yappy Hour at Foam') && pet('Aging in Place With Pets Volunteer Day') &&
+      !pet('Hot Dog & A Can Thursdays') && !pet('DJ Big Dog') && !pet('Pet Store: A Live Sitcom') && !pet('Read to a Dog (kids)'), 'pet events: dogs and pets, never a hot dog, a DJ or a kids’ program', '');
+    check(PM.fitsText('Speed dating at Foam', ['single']) && PM.fitsText('Singles mixer', ['single']) && !PM.fitsText('Singles tennis ladder', ['single']) && !PM.fitsText('Single-origin coffee tasting', ['single']) &&
+      !PM.fitsText('Trivia, need a fifth', ['single']), 'singles: speed dating and mixers, never a tennis ladder or single-origin coffee', '');
+    const g = JSON.parse(await readFile(path.join(REPO, 'data/groups.json'), 'utf8')).groups;
+    const notDating = g.filter((x) => /not (?:for |a )?dating/i.test(x.what || ''));
+    check(notDating.every((x) => PM.groupScore(x, ['single']) === 0), 'a group that says it is not for dating never comes up for Single', notDating.map((x) => x.name).join(', '));
+  });
+
+  await group('People, live: Dating and Pets', async () => {
+    const now = new Date();
+    const post = (id, title, place, h) => ({ id, board: 'people', kind: 'plan', title, body: '', place, meta: { when: btvWhen(+now + h * 3600000), spots: 3 }, photo: null,
+      author: 'Priya N.', author_arch: null, created_at: new Date(now - 3600000).toISOString(), expires_at: new Date(+now + 13 * 86400000).toISOString(), votes: 1, voted: false, mine: false });
+    const singles = post('22222222-aaaa-4aaa-8aaa-000000000001', 'Singles trivia night, come join our group', 'Three Needs', 5);
+    const dogs = post('22222222-aaaa-4aaa-8aaa-000000000002', 'Dog park hang, bring your pup', 'Starr Farm Dog Park', 20);
+    const other = post('22222222-aaaa-4aaa-8aaa-000000000003', 'Board game night, need two more', 'Mill Street', 8);
+    const { ctx, page, errors } = await newPage(browser, base, { rpc: (fn, body) => (fn === 'nn_posts_list' ? (body.p_board === 'people' ? [singles, dogs, other] : [])
+      : fn === 'nn_people_directory' ? { count: 3, me: false, people: [] } : undefined) });
+    await page.goto(base + '/all-day/#people');
+    await peopleReady(page);
+    await page.waitForSelector(peoplePanel + ' [data-sec="dating"] [data-ways]', { timeout: 15000 });
+    await page.waitForSelector(peoplePanel + ' [data-sec="pets"] [data-parks]', { timeout: 15000 });
+    await page.waitForFunction((s) => !document.querySelector(s + ' [data-sec="dating"] .loading, ' + s + ' [data-sec="pets"] .loading'), peoplePanel, { timeout: 10000 });
+    const order = await secOrder(page);
+    check(order.indexOf('dating') === order.indexOf('host') + 1 && order.indexOf('pets') === order.indexOf('dating') + 1, 'Dating, then Pets, under the mixers and the host card', order.join(' '));
+    /* singles nights: the calendar's, from now on */
+    const PM = await import(path.join(APP, 'js/people-match.js'));
+    const w = JSON.parse(await readFile(path.join(APP, 'data/whatnow.json'), 'utf8'));
+    const later = (e) => (Date.parse(e.end) || (/T\d/.test(e.start || '') ? Date.parse(e.start) + 2 * 3600000 : Date.parse(e.date + 'T23:59:00-04:00'))) > Date.now();
+    const wantS = new Set(w.events.filter((e) => /^https?:/.test(e.url || '') && later(e) && (PM.mixerKind(e) === 'singles' || PM.SINGLES.test(e.title))).map((e) => e.date + e.title)).size;
+    const sRows = await page.$$eval(peoplePanel + ' [data-singles] .lrow', (rs) => rs.map((r) => ({ t: r.querySelector('.t').textContent, href: r.getAttribute('href') })));
+    if (wantS) check(sRows.length === wantS && sRows.every((r) => /^https?:/.test(r.href)), 'singles nights: every one on the calendar from now on (' + wantS + ')', JSON.stringify(sRows));
+    else check(!sRows.length && await page.$(peoplePanel + ' [data-sec="dating"] [data-to-mix]') !== null, 'no singles night on the calendar: it says so and points at the mixers', '');
+    const sp = await page.$$eval(peoplePanel + ' [data-singles-plans] [data-plan-row]', (rs) => rs.map((r) => r.dataset.planRow));
+    check(sp.length === 1 && sp[0] === singles.id, 'going as a group: the readers’ singles plans, and only those', JSON.stringify(sp));
+    const colour = (sel) => page.$eval(sel, (b) => getComputedStyle(b).backgroundColor);
+    const tone = (name) => page.evaluate((n) => { const d = document.createElement('div'); d.style.color = 'var(' + n + ')'; document.body.appendChild(d); const c = getComputedStyle(d).color; d.remove(); return c; }, name);
+    check(await colour(peoplePanel + ' [data-singles-post]') === await tone('--liq-watch'), 'Post a singles plan is a rose button', await colour(peoplePanel + ' [data-singles-post]'));
+    const ways = await page.$$eval(peoplePanel + ' [data-ways] a', (as) => as.map((a) => [a.querySelector('.t').textContent, a.href]));
+    check(ways.length === 2 && ways[0][0] === 'Seven Days Personals' && ways.every((x) => /^https:\/\/dating\.sevendaysvt\.com\//.test(x[1])), 'meet someone here: Seven Days Personals and I Spy', JSON.stringify(ways));
+    const news = await page.$$eval(peoplePanel + ' [data-dating-news] a', (as) => as.map((a) => [a.querySelector('.t').textContent, a.querySelector('.s').textContent, a.href]));
+    check(news.length >= 1 && news.length <= 4 && news.every((n) => /^https:/.test(n[2]) && /· [A-Z][a-z]{2} \d{1,2}, \d{4}/.test(n[1])), 'dating news: a few headlines, outlet and date on each', JSON.stringify(news));
+    check(await page.$eval(peoplePanel + ' [data-more-news] a', (a) => a.href) === 'https://theconversation.com/topics/dating-apps-43406', 'and More dating news links out', '');
+    /* pets */
+    const parks = await page.$$eval(peoplePanel + ' [data-parks] .lrow', (rs) => rs.map((r) => ({ k: r.dataset.k, t: r.querySelector('.t').textContent, s: r.querySelector('.s').textContent })));
+    check(parks.length === 5 && parks[0].t === 'Starr Farm Dog Park' && parks.some((x) => x.t === 'Wheeler Nature Park dog area' && /^South Burlington · /.test(x.s)), 'dog parks: Starr Farm first, Wheeler in South Burlington, five in all', JSON.stringify(parks.map((x) => x.t)));
+    const wantP = new Set(w.events.filter((e) => later(e) && PM.petEvent(e)).map((e) => e.date + e.title)).size;
+    const pRows = await page.$$eval(peoplePanel + ' [data-pet-events] .lrow .t', (ts) => ts.map((t) => t.textContent));
+    check(pRows.length === wantP && pRows.every((t) => !/hot dog|\bdj\b|pet store/i.test(t)), 'pet events: the calendar’s, never a hot dog (' + wantP + ')', JSON.stringify(pRows));
+    const pp = await page.$$eval(peoplePanel + ' [data-pet-plans] [data-plan-row]', (rs) => rs.map((r) => r.dataset.planRow));
+    check(pp.length === 1 && pp[0] === dogs.id, 'pet people: the readers’ dog park plans', JSON.stringify(pp));
+    check(await colour(peoplePanel + ' [data-pets-post]') === await tone('--sunset'), 'Post a dog park plan is a sunset button', '');
+    check(/Humane Society of Chittenden County/.test(await page.$eval(peoplePanel + ' [data-pet-help]', (g) => g.textContent)), 'and the shelter, to volunteer or adopt', '');
+    /* the clubs buttons are coloured now, so they are clicked, not scrolled past */
+    const every = await page.$$eval(peoplePanel + ' a.btn', (as) => as.filter((a) => /^Every club and league/.test(a.textContent.trim())).map((a) => [a.className, getComputedStyle(a).backgroundColor]));
+    check(every.length === 2 && every.every(([c, bg]) => /pkey/.test(c) && bg !== 'rgba(0, 0, 0, 0)'), 'both Every club and league buttons are coloured key buttons', JSON.stringify(every));
+    await page.evaluate(() => document.querySelector('#panel-people').scrollTo(0, 0));
+    await page.click('#subnav .chip[data-chip="dating"]');
+    await page.waitForTimeout(900);
+    await page.screenshot({ path: path.join(SHOTS, 'live-people-dating.png') });
+    await page.click('#subnav .chip[data-chip="pets"]');
+    await page.waitForTimeout(900);
+    await page.screenshot({ path: path.join(SHOTS, 'live-people-pets.png') });
+    /* a park's sheet: the rules, the map, a plan to meet people there */
+    await page.click(peoplePanel + ' [data-k="park-starr-farm"]');
+    await page.waitForSelector('[data-park-sheet="starr-farm"]');
+    const sh = await page.$eval('[data-park-sheet="starr-farm"]', (b) => ({ rules: [...b.querySelectorAll('[data-rules] li')].map((l) => l.textContent),
+      links: [...b.querySelectorAll('[data-links] a')].map((a) => [a.textContent.trim(), a.href]), go: !!b.querySelector('[data-park-plan]') }));
+    check(sh.rules.length === 8 && sh.rules[0] === 'Open dawn to dusk.' && sh.rules.includes('Three dogs per person at most.'), 'the sheet: Burlington’s dog park rules', JSON.stringify(sh.rules));
+    check(sh.links.some(([t, h]) => /^Map/.test(t) && /query=44\.51321%2C-73\.26779$/.test(h)) && sh.links.some(([t, h]) => /rules page/.test(t) && h === 'https://www.burlingtonvt.gov/942/Rules-Regulations') && sh.go,
+      'a map to the park, the city’s rules page, and Meet people here', JSON.stringify(sh.links));
+    await page.waitForTimeout(400);
+    await page.screenshot({ path: path.join(SHOTS, 'live-people-park.png') });
+    await page.click('[data-park-plan]');
+    await page.waitForTimeout(500);
+    check(/Sign in to post\./.test(await page.$eval('.sheet-body', (b) => b.innerText)), 'Meet people here, signed out: the plan sheet asks you to sign in', '');
+    await page.keyboard.press('Escape');
+    await page.waitForTimeout(400);
+    /* a singles plan row brings up its card */
+    await page.click(peoplePanel + ' [data-singles-plans] [data-plan-row]');
+    await page.waitForTimeout(600);
+    check(await page.$eval(peoplePanel + ' [data-plans] [data-plan="' + singles.id + '"]', (c) => c.classList.contains('flash')), 'a plan row flashes the plan’s card in Open to strangers', '');
+    /* Single and A pet person: For you points at their sections */
+    await page.click(peoplePanel + ' [data-tags="I’m…"] .chip[data-chip="single"]');
+    await page.click(peoplePanel + ' [data-tags="I’m…"] .chip[data-chip="pets"]');
+    await page.waitForTimeout(200);
+    const fy = await forYou(page);
+    check(fy && fy.some((r) => r.name === 'Dating') && fy.some((r) => r.name === 'Pets'), 'Single and A pet person: For you rows to Dating and Pets', JSON.stringify(fy));
+    await page.click(peoplePanel + ' [data-foryou] [data-k="fy:pets"]');
+    await page.waitForTimeout(900);
+    check(await page.$eval(peoplePanel + ' [data-sec="pets"]', (s) => s.getBoundingClientRect().top < 300), 'and a tap goes there', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+    /* a deep link lands on the section */
+    const p2 = await newPage(browser, base, { clock: SAT_1PM });
+    await p2.page.goto(base + '/all-day/?demo=1#people/pets');
+    await p2.page.waitForSelector(peoplePanel + ' [data-parks] .lrow', { timeout: 15000 });
+    await p2.page.waitForTimeout(1500);
+    check(await p2.page.$eval(peoplePanel + ' [data-sec="pets"]', (s) => { const t = s.getBoundingClientRect().top; return t > -40 && t < 320; }), '#people/pets lands on Pets', '');
+    const ds = await p2.page.$$eval(peoplePanel + ' [data-singles] .lrow .t', (ts) => ts.map((t) => t.textContent));
+    check(ds.includes('Singles Mixer: Board Games Edition'), 'the demo: its singles mixer shows under Singles nights', JSON.stringify(ds));
+    check(!p2.errors.length, 'no console errors', p2.errors.join(' | '));
+    await p2.ctx.close();
   });
 
   await group('People, demo: who you are reorders the plans and the clubs', async () => {
@@ -11246,8 +11613,9 @@ async function sectionPills(browser, base) {
       }, token);
       /* where the pill is the tab's one switch it is the Wire's size (Stephen,
          2026-10-22: "when there's no big one ... make the bubbles bigger");
-         under The Build's switch, Habits keeps the compact one */
-      if (tab === 'habits') check(look.h >= 36 && look.h <= 42 && look.h < wireH && look.fs === '14px', tab + ': under a big switch, a compact pill, ' + Math.round(look.h) + 'px tall with 14px words (the Wire’s is ' + Math.round(wireH) + ')', JSON.stringify(look));
+         under a big switch (Habits under Build | Habits, Watch under
+         Upcoming | Past) it stays the compact second row */
+      if (tab === 'habits' || tab === 'watch') check(look.h >= 36 && look.h <= 42 && look.h < wireH && look.fs === '14px', tab + ': under a big switch, a compact pill, ' + Math.round(look.h) + 'px tall with 14px words (the Wire’s is ' + Math.round(wireH) + ')', JSON.stringify(look));
       else check(Math.abs(look.h - wireH) <= 2 && look.fs === '16px' && look.fw === '700', tab + ': the tab’s one switch, as big as the Wire’s, ' + Math.round(look.h) + 'px tall with 16px bold words (the Wire’s is ' + Math.round(wireH) + ')', JSON.stringify(look));
       check(/blur/.test(look.glass) && /rgba\(0, 0, 0, 0\)|transparent/.test(look.mastBg) && look.keep, tab + ': glass, floating over the paper, and it stays as the mast steps away', JSON.stringify(look));
       check(look.group === 'group' && !!look.label && look.docW <= look.vw, tab + ': a labelled group, and nothing scrolls the page sideways', JSON.stringify(look));
@@ -11261,7 +11629,7 @@ async function sectionPills(browser, base) {
       for (let i = 0; i < 6; i++) { await page.evaluate((sel) => document.querySelector(sel).scrollBy(0, 200), panelSel(tab)); await page.waitForTimeout(70); }
       await page.waitForTimeout(500);
       const fl = await page.evaluate(() => { const w = document.querySelector('#subnav .secpill'); const r = w.getBoundingClientRect(); return { top: r.top, bottom: r.bottom, away: document.body.classList.contains('chrome-away'), small: document.body.classList.contains('pill-small'), t: getComputedStyle(w).transform }; });
-      check(fl.away && fl.small && fl.top >= 0 && fl.bottom < (tab === 'habits' ? 130 : 70) && /matrix\(0\.9, 0, 0, 0\.9/.test(fl.t), tab + ': scrolled down, it floats at the top, 90% size', JSON.stringify(fl));
+      check(fl.away && fl.small && fl.top >= 0 && fl.bottom < (tab === 'habits' || tab === 'watch' ? 130 : 70) && /matrix\(0\.9, 0, 0, 0\.9/.test(fl.t), tab + ': scrolled down, it floats at the top, 90% size', JSON.stringify(fl));
       await page.evaluate((sel) => document.querySelector(sel).scrollBy(0, -60), panelSel(tab));
       await page.waitForTimeout(400);
       check(await page.evaluate(() => !document.body.classList.contains('pill-small')), tab + ': any move up brings it back to full size', '');
@@ -11417,6 +11785,363 @@ async function sectionPills(browser, base) {
     check(Math.abs(r.l - r.r) <= 2 && r.docW <= r.vw, 'the pill sits centred in the mast’s column', JSON.stringify(r));
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
+  });
+}
+
+/* ------------------------------------------------------- On Air: Sports */
+/* Stephen, 2026-10-22: NBA first, then NFL, then local hoops; highlights tied
+   to the games; X and Reddit; the leagues people can join. The demo carries a
+   real 2026-10-22 snapshot, re-dated; the live file is the committed one. */
+async function onAirSports(browser, base) {
+  await group('On Air: Sports, demo', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/all-day/?demo=1#onair/sports');
+    await settle(page);
+    await page.waitForSelector('#panel-onair [data-side="sports"] [data-sec="sp-games"]', { timeout: 8000 });
+    const sw = await page.$$eval('#subnav .oa-sideswitch button', (bs) => bs.map((b) => b.textContent + '|' + b.getAttribute('aria-pressed')));
+    check(sw[3] === 'Sports|true', '#onair/sports opens the Sports side', JSON.stringify(sw));
+    const lg = await page.$$eval('#subnav .secpill .chip', (cs) => cs.map((c) => c.textContent.trim() + '|' + c.classList.contains('on')));
+    check(JSON.stringify(lg) === JSON.stringify(['NBA|true', 'NFL|false', 'Local hoops|false']), 'its pill: NBA (on), NFL, Local hoops', JSON.stringify(lg));
+    check(!(await page.$('#subnav .localsw')), 'no Local switch on Sports', '');
+    const order = await page.$$eval('#panel-onair [data-side="sports"] [data-sec]', (h) => h.map((x) => x.dataset.sec));
+    check(order[0] === 'sp-games' && order[1] === 'sp-hl' && order.includes('sp-s5') && order.includes('sp-x') && order.includes('sp-reddit') && order.indexOf('sp-hl') < order.indexOf('sp-coming'),
+      'NBA: games, then highlights, Starting 5, X, Reddit, then the rest of the week', JSON.stringify(order));
+    const hl = await page.$$eval('#panel-onair [data-side="sports"] .sp-game .sp-hl', (b) => b.length);
+    check(hl >= 3, 'last night’s games carry a Highlights button', String(hl));
+    await page.click('#panel-onair [data-side="sports"] .sp-game .sp-hl');
+    await page.waitForSelector('.sheet-card', { timeout: 3000 });
+    const sheet = await page.$eval('.sheet-card', (c) => c.innerText);
+    const stage = await page.$('.oa-player .oa-stage');
+    check(/Highlights/.test(sheet) && !!stage && / at /.test(sheet), 'it plays that game in On Air’s player', sheet.slice(0, 120));
+    await page.keyboard.press('Escape');
+    await page.waitForTimeout(300);
+    const s5 = await page.$eval('#panel-onair .sp-s5', (b) => ({ n: b.querySelectorAll('.sp-s5l li').length, read: [...b.querySelectorAll('a')].map((a) => a.href) }));
+    check(s5.n === 5 && s5.read.some((h) => /nba\.com\/news\/starting-5/.test(h)) && s5.read.includes('https://www.nba.com/starting5'), 'Starting 5: five stories, read it on NBA.com, get it by email', JSON.stringify(s5));
+    const x = await page.$$eval('#panel-onair [data-sec="sp-x"] ~ .sp-links-list a.sp-link', (as) => as.slice(0, 5).map((a) => a.href));
+    check(x.length && x.every((h) => /^https:\/\/x\.com\//.test(h)), 'From X links the posts on X', JSON.stringify(x.slice(0, 2)));
+    const subs = await page.$$eval('#panel-onair [data-side="sports"] .sec p', (p) => p.filter((n) => n.offsetParent !== null).map((n) => n.textContent).filter((t) => !/^\d+ games?$|^(Today|Yesterday|\w+day)$|^\d{1,2}:\d{2} [ap]m$/.test(t)));
+    check(!subs.length, 'no section explains itself: a subtitle is only a count, a day or a time', JSON.stringify(subs));
+
+    /* NFL: its own address and its own games */
+    await page.click('#subnav .secpill .chip[data-chip="nfl"]');
+    await page.waitForTimeout(500);
+    check(/#onair\/nfl$/.test(await page.evaluate(() => location.hash)), 'NFL is #onair/nfl', await page.evaluate(() => location.hash));
+    const nfl = await page.$$eval('#panel-onair [data-side="sports"] [data-sec]', (h) => h.map((x) => x.dataset.sec));
+    check(nfl[0] === 'sp-games' && !nfl.includes('sp-s5'), 'NFL: games first, no Starting 5', JSON.stringify(nfl));
+
+    /* Local hoops: UVM, the pros, and where to play, with People's whole list */
+    await page.goto(base + '/all-day/?demo=1#onair/hoops');
+    await settle(page);
+    await page.waitForSelector('#panel-onair [data-sec="sp-play"]', { timeout: 8000 });
+    const hoops = await page.evaluate(() => {
+      const side = document.querySelector('#panel-onair [data-side="sports"]');
+      return { secs: [...side.querySelectorAll('[data-sec]')].map((x) => x.dataset.sec), teams: [...side.querySelectorAll('.sp-card .t')].map((t) => t.textContent),
+        ours: side.querySelector('.sp-ours a')?.href || '', people: side.querySelector('.sp-people')?.getAttribute('href'), play: side.querySelectorAll('[data-sec="sp-play"] ~ .sp-links-list .sp-link').length };
+    });
+    check(JSON.stringify(hoops.secs) === JSON.stringify(['sp-uvm', 'sp-teams', 'sp-play']), 'Local hoops: UVM basketball, the pros, Play basketball', JSON.stringify(hoops.secs));
+    check(hoops.teams.includes('Burlington Revolution') && hoops.teams.includes('Vermont Coyotes') && hoops.teams.some((t) => /pickup/i.test(t)), 'the Revolution, the Coyotes and Stephen’s pickup', JSON.stringify(hoops.teams));
+    check(/meetup\.com\/burlington-social-activites-group\/events\//.test(hoops.ours) && hoops.people === '#people/groups' && hoops.play >= 5, 'pickup joins on Meetup; the leagues list; and People’s every club', JSON.stringify(hoops));
+    const wide = await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth);
+    check(wide, 'nothing scrolls sideways at 390', '');
+    await page.screenshot({ path: path.join(SHOTS, 'onair-sports-hoops.png') });
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('On Air: Sports, a stranger on the live file', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/all-day/#onair/sports');
+    await settle(page);
+    await page.waitForSelector('#panel-onair [data-side="sports"] [data-sec]', { timeout: 8000 });
+    const secs = await page.$$eval('#panel-onair [data-side="sports"] [data-sec]', (h) => h.map((x) => x.dataset.sec));
+    check(secs.length >= 2, 'the committed onair-sports.json draws the NBA side', JSON.stringify(secs));
+    await page.screenshot({ path: path.join(SHOTS, 'onair-sports-live.png') });
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+}
+
+/* ------------------------------------------------ the No-algorithm challenge */
+/* js/challenge.js and challenge-core.js (wave 8, 2026-10-22): a card at the
+   top of the Wire for a reader who joined or came from the newsletter, the
+   #challenge link, five one-tap days, a roundup, and a form that reaches
+   Stephen through nn_challenge_send and nothing else. */
+const chalToday = () => { const o = etParts(Date.now()); return o.year + '-' + o.month + '-' + o.day; };
+const chalShot = async (page, name, el) => (await page.waitForTimeout(450), el ? page.locator(el).screenshot({ path: path.join(SHOTS, 'challenge-' + name + '.png') })
+  : page.screenshot({ path: path.join(SHOTS, 'challenge-' + name + '.png') }));
+const chalState = (page) => page.evaluate(() => JSON.parse(localStorage.getItem('allday-challenge') || 'null'));
+const chalCard = (page, kind) => page.waitForSelector('#panel-wire > .chal-slot:not([hidden]) .chal-card[data-chal="' + kind + '"]', { timeout: 8000 });
+const toastText = async (page) => { await page.waitForSelector('#toast:not([hidden])', { timeout: 4000 }).catch(() => {}); return page.$eval('#toast', (t) => t.textContent).catch(() => ''); };
+
+async function theChallenge(browser, base) {
+  await group('challenge: the lists and limits are the same in the app and the SQL', async () => {
+    const sql = await readFile(path.join(APP, 'supabase/nn-CHALLENGE.sql'), 'utf8');
+    const list = (name) => ((sql.match(new RegExp("'" + name + "', jsonb_build_array\\(([^)]*)\\)")) || [])[1] || '').match(/'([a-z]+)'/g)?.map((s) => s.slice(1, -1)) || [];
+    check(JSON.stringify(list('feelings')) === JSON.stringify(CH.FEELINGS.map((f) => f[0])), 'feelings match', list('feelings').join(','));
+    check(JSON.stringify(list('missed')) === JSON.stringify(CH.MISSED.map((f) => f[0])), 'what you missed matches', list('missed').join(','));
+    check(JSON.stringify(list('archetypes')) === JSON.stringify(CH.ARCHETYPES.map((f) => f[0])), 'the kinds of person match', list('archetypes').join(','));
+    const lim = Object.entries(CH.LIMITS).filter(([k, n]) => !sql.includes('char_length(' + k + ') <= ' + n));
+    check(!lim.length, 'every length limit is the same', lim.map((x) => x[0]).join(', '));
+    check(/enable row level security/.test(sql) && /revoke all on table public\.nn_challenge_feedback from anon, authenticated/.test(sql) && !/create policy/i.test(sql),
+      'the table is RLS with no policies and revoked from the public key', '');
+    check(/grant execute on function\s+public\.nn_challenge_send\([^)]*\),\s+public\.nn_challenge_list\(text\)\s+to anon, authenticated;/.test(sql)
+      && /security definer/.test(sql) && /nn_mod_ok\(p_secret\)/.test(sql), 'only the send door and the passphrase-gated list are granted', '');
+    const t = '2026-10-23';
+    let s = CH.join(CH.normalize(null), t, 'newsletter');
+    s = CH.checkIn(CH.checkIn(CH.checkIn(s, t, 'calmer'), '2026-10-24', 'caved'), '2026-10-27', 'great');
+    check(CH.phase(s, '2026-10-26') === 'on' && CH.phase(s, '2026-10-27') === 'done' && CH.phase(s, '2026-10-28') === 'done', 'day five logged, or a sixth day, ends it', '');
+    check(CH.headline(CH.summary(s, '2026-10-27')) === 'You made it 2 of 5 days without the feeds', 'a slip does not count as a day without the feeds', CH.headline(CH.summary(s, '2026-10-27')));
+    check(CH.checkIn(s, '2026-10-28', 'great') === s && CH.checkIn(s, t, 'bogus') === s, 'no check-in after day five or with a made-up feeling', '');
+    check(JSON.stringify(CH.normalize({ joined: t, feel: { '2026-10-22': 'great', '2026-10-29': 'great', [t]: 'nope', '2026-10-24': 'same' } }).feel) === '{"2026-10-24":"same"}',
+      'a stored copy keeps only real days inside the five', '');
+    check(CH.feedbackArgs(Object.assign({}, s, { cid: 'abcdefgh12' }), {}, t).error === 'empty', 'an empty form is not sent', '');
+  });
+
+  await group('challenge: a stranger sees no card, and nothing is asked of Supabase for it (live)', async () => {
+    const { ctx, page, errors, supabase } = await newPage(browser, base);
+    await page.goto(base + '/all-day/');
+    await settle(page);
+    await page.waitForSelector('#panel-wire > .chal-slot', { state: 'attached', timeout: 6000 }).catch(() => {});
+    await page.waitForTimeout(400);
+    const r = await page.evaluate(() => ({ slot: !!document.querySelector('#panel-wire > .chal-slot'), hidden: document.querySelector('#panel-wire > .chal-slot')?.hidden, sheet: !document.querySelector('#sheet').hidden }));
+    check(r.slot && r.hidden && !r.sheet, 'the slot is there and empty; no sheet opens', JSON.stringify(r));
+    check(!supabase.some((u) => /nn_challenge/.test(u)) && (await chalState(page)) === null, 'no call, nothing stored', supabase.join(' '));
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('challenge: the newsletter’s #challenge link opens it; one tap joins, one tap logs the day (live)', async () => {
+    const { ctx, page, errors, supabase } = await newPage(browser, base);
+    await page.goto(base + '/all-day/?utm_source=www.btownbrief.com&utm_medium=newsletter&_bhlid=abc123#challenge');
+    await page.waitForSelector('#sheet:not([hidden]) .chal-sheet .chal-go', { timeout: 8000 });
+    const r = await page.evaluate(() => ({ hash: location.hash, tab: document.querySelector('#tab-wire').getAttribute('aria-selected'), text: document.querySelector('#sheet').innerText }));
+    check(r.hash === '#wire' && r.tab === 'true', 'it lands on the Wire, and the address bar says #wire', JSON.stringify(r));
+    check(/Five days without the feeds/.test(r.text) && /I’m in/.test(r.text), 'the sheet says what it is, with one button', r.text);
+    await chalShot(page, 'sheet-390');
+    await page.click('#sheet .chal-go');
+    await chalCard(page, 'checkin');
+    check(await page.$eval('#sheet', (s) => s.hidden), 'joining closes the sheet', '');
+    const c = await page.$eval('#panel-wire .chal-card', (n) => n.innerText.replace(/\s+/g, ' '));
+    check(/Day 1 of 5/i.test(c) && /How did today feel without the feeds\?/.test(c), 'the card on the Wire says day 1 of 5 and asks how today felt', c);
+    const top = await page.evaluate(() => { const s = document.querySelector('#panel-wire > .chal-slot'); return s.nextElementSibling === document.querySelector('#panel-wire > .panel-body'); });
+    check(top, 'the card sits above the Wire’s own feed', '');
+    check(/Day 1 starts now/.test(await toastText(page)), 'a toast says day 1 has started', '');
+    await chalShot(page, 'checkin-390');
+    await page.click('#panel-wire [data-feel="calmer"]');
+    await chalCard(page, 'logged');
+    const logged = await page.$eval('#panel-wire .chal-card', (n) => ({ h: n.querySelector('.chal-h').textContent, free: n.querySelectorAll('.chal-dot.free').length, now: n.querySelector('.chal-dot.now')?.classList.contains('free') }));
+    check(logged.h === 'Day 1 felt calmer' && logged.free === 1 && logged.now, 'one tap logs it: "Day 1 felt calmer", the first dot filled', JSON.stringify(logged));
+    await chalShot(page, 'logged-390', '#panel-wire .chal-card');
+    const st = await chalState(page);
+    check(st && st.joined === chalToday() && st.source === 'newsletter' && st.feel[chalToday()] === 'calmer' && /^[A-Za-z0-9-]{8,64}$/.test(st.cid), 'kept on this phone: the day joined, where they came from, today’s feeling', JSON.stringify(st));
+    const gc = await page.evaluate(() => window.__gc.filter((p) => /challenge/.test(p)));
+    check(JSON.stringify(gc) === JSON.stringify(['all-day-challenge-link', 'all-day-challenge-join', 'all-day-challenge-day1-calmer']), 'GoatCounter counts the link, the join and the day', JSON.stringify(gc));
+    await pageRules(page, 'wire (challenge card)', 390);
+    await page.click('#panel-wire .chal-card button:has-text("Change")');
+    await chalCard(page, 'checkin');
+    check(await page.$eval('#panel-wire [data-feel="calmer"]', (b) => b.getAttribute('aria-pressed')) === 'true', 'Change shows the five again, today’s pressed', '');
+    await page.click('#panel-wire [data-feel="caved"]');
+    await chalCard(page, 'logged');
+    check(await page.$eval('#panel-wire .chal-h', (h) => h.textContent) === 'Day 1 was a slip' && await page.$$eval('#panel-wire .chal-dot.slip', (n) => n.length) === 1, 'a slip says so, and its dot is a ring', '');
+    await page.goto(base + '/all-day/');
+    await chalCard(page, 'logged');
+    check(true, 'a plain visit the next time still shows the card', '');
+    check(!supabase.some((u) => /nn_challenge/.test(u)), 'joining and checking in send nothing to Supabase', supabase.filter((u) => /nn_/.test(u)).join(' '));
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('challenge: a newsletter link without the hash shows the invite; Not now hides it for good (live)', async () => {
+    for (const scheme of ['light', 'dark']) {
+      const { ctx, page, errors } = await newPage(browser, base, { scheme });
+      await page.goto(base + '/all-day/?utm_source=www.btownbrief.com&utm_medium=newsletter&_bhlid=xyz');
+      await chalCard(page, 'invite');
+      check(await page.$eval('#sheet', (s) => s.hidden), scheme + ': the invite is a card, no sheet', '');
+      const text = await page.$eval('#panel-wire .chal-card', (n) => n.innerText.replace(/\s+/g, ' '));
+      check(/Five days without the feeds/.test(text) && /I’m in/.test(text) && /Not now/.test(text), scheme + ': it says what it is, with I’m in and Not now', text);
+      await chalShot(page, 'invite-390-' + scheme);
+      if (scheme === 'dark') { check(!errors.length, 'dark: no console errors', errors.join(' | ')); await ctx.close(); continue; }
+      await page.click('#panel-wire .chal-card button:has-text("Not now")');
+      await page.waitForSelector('#panel-wire > .chal-slot[hidden]', { state: 'attached' });
+      check(/Challenge hidden/.test(await toastText(page)), 'Not now hides it, with Undo', '');
+      await page.click('#toast button');
+      await chalCard(page, 'invite');
+      await page.click('#panel-wire .chal-card button:has-text("Not now")');
+      await page.waitForSelector('#panel-wire > .chal-slot[hidden]', { state: 'attached' });
+      await page.goto(base + '/all-day/?utm_medium=newsletter&_bhlid=again');
+      await settle(page);
+      await page.waitForTimeout(500);
+      check(await page.$eval('#panel-wire > .chal-slot', (s) => s.hidden), 'the next newsletter visit leaves it hidden', '');
+      await page.goto(base + '/all-day/#challenge');
+      await page.waitForSelector('#sheet:not([hidden]) .chal-sheet', { timeout: 8000 });
+      await page.click('#sheet .iconbtn');
+      await chalCard(page, 'invite');
+      check(true, 'the #challenge link itself brings it back', '');
+      check(!errors.length, 'no console errors', errors.join(' | '));
+      await ctx.close();
+    }
+  });
+
+  await group('challenge: day five ends in a roundup, and the form reaches Stephen anonymously (live)', async () => {
+    const sent = [];
+    const { ctx, page, errors } = await newPage(browser, base, {
+      rpc: (fn, args, headers) => { if (fn === 'nn_challenge_send') { sent.push({ args, auth: headers.authorization || null }); return { ok: true }; } return undefined; },
+    });
+    const t = chalToday(), d = (n) => CH.addDays(t, n);
+    await page.goto(base + '/all-day/');
+    await settle(page);
+    await page.evaluate((s) => localStorage.setItem('allday-challenge', JSON.stringify(s)),
+      { v: 1, cid: 'test-cid-0001', joined: d(-4), source: 'link', feel: { [d(-4)]: 'calmer', [d(-3)]: 'caved', [d(-1)]: 'great' } });
+    await page.reload();
+    await chalCard(page, 'checkin');
+    check(/Day 5 of 5/i.test(await page.$eval('#panel-wire .chal-card', (n) => n.innerText)), 'the fifth day asks too', '');
+    await page.click('#panel-wire [data-feel="great"]');
+    await chalCard(page, 'roundup');
+    const ru = await page.$eval('#panel-wire .chal-card', (n) => ({ h: n.querySelector('.chal-h').textContent, words: [...n.querySelectorAll('.chal-dot .n')].map((x) => x.textContent) }));
+    check(ru.h === 'You made it 3 of 5 days without the feeds', 'the roundup counts the days without the feeds', ru.h);
+    check(JSON.stringify(ru.words) === JSON.stringify(['Calmer', 'I caved', 'Day 3', 'Great', 'Great']), 'and shows how each day felt', JSON.stringify(ru.words));
+    check(/That’s all five days/.test(await toastText(page)), 'the fifth tap says that’s all five', '');
+    await chalShot(page, 'roundup-390', '#panel-wire .chal-card');
+    await page.click('#panel-wire .chal-card .chal-go');
+    await page.waitForSelector('#sheet:not([hidden]) .chal-form');
+    await chalShot(page, 'form-390');
+    await page.click('#sheet .chal-send');
+    check(/Pick or write at least one thing first/.test(await page.$eval('#sheet .chal-msg', (m) => m.textContent)) && !sent.length, 'an empty form says what to do and sends nothing', '');
+    await page.click('#sheet [data-missed="friends"]');
+    await page.click('#sheet [data-missed="messages"]');
+    await page.fill('#sheet input[name="missed_other"]', 'Bird photos from the Intervale group');
+    await page.fill('#sheet textarea[name="switch_for"]', 'A place for my run club’s chat');
+    await page.click('#sheet [data-kind="joiner"]');
+    await page.click('#sheet .sheet-head .iconbtn');
+    await page.click('#panel-wire .chal-card .chal-go');
+    await page.waitForSelector('#sheet:not([hidden]) .chal-form');
+    const kept = await page.evaluate(() => ({ on: [...document.querySelectorAll('#sheet .chal-chip.on')].map((b) => b.dataset.missed), sw: document.querySelector('#sheet textarea').value,
+      kind: document.querySelector('#sheet .chal-kind.on')?.dataset.kind }));
+    check(JSON.stringify(kept) === JSON.stringify({ on: ['friends', 'messages'], sw: 'A place for my run club’s chat', kind: 'joiner' }), 'a closed sheet keeps the draft', JSON.stringify(kept));
+    await chalShot(page, 'form-filled-390', '#sheet .sheet-card');
+    await page.click('#sheet .chal-send');
+    await chalCard(page, 'sent');
+    const a = sent[0] && sent[0].args;
+    check(sent.length === 1 && a.p_cid === 'test-cid-0001' && a.p_source === 'link' && a.p_joined === d(-4) && a.p_day === 5
+      && JSON.stringify(a.p_feelings) === JSON.stringify(['1:calmer', '2:caved', '4:great', '5:great'])
+      && JSON.stringify(a.p_missed) === '["friends","messages"]' && a.p_missed_other === 'Bird photos from the Intervale group'
+      && a.p_switch_for === 'A place for my run club’s chat' && a.p_archetype === 'joiner', 'one call to nn_challenge_send with the days and the answers', JSON.stringify(sent));
+    check(sent[0] && !sent[0].auth && !Object.keys(a).some((k) => /mail|name|user/.test(k)), 'no account, name or email goes with it', JSON.stringify(sent[0]));
+    check(/Sent\. Thank you!/.test(await toastText(page)) && /Thanks for telling us/.test(await page.$eval('#panel-wire .chal-card', (n) => n.innerText)), 'the card thanks them', '');
+    check(!!(await chalState(page)).sent, 'and remembers it was sent', '');
+    await page.click('#panel-wire .chal-card button:has-text("Close")');
+    await page.waitForSelector('#panel-wire > .chal-slot[hidden]', { state: 'attached' });
+    await page.reload();
+    await settle(page);
+    await page.waitForTimeout(500);
+    check(await page.$eval('#panel-wire > .chal-slot', (s) => s.hidden), 'Close puts it away for good', '');
+    await page.evaluate((j) => localStorage.setItem('allday-challenge', JSON.stringify({ v: 1, cid: 'test-cid-0002', joined: j, feel: {} })), d(-5));
+    await page.reload();
+    await chalCard(page, 'roundup');
+    check(await page.$eval('#panel-wire .chal-h', (h) => h.textContent) === 'Your five days are up', 'five days with no check-ins still end in a roundup', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('challenge: a send that fails keeps the answers and says so (live)', async () => {
+    const { ctx, page, errors } = await newPage(browser, base, {
+      rpc: (fn) => (fn === 'nn_challenge_send' ? { status: 404, body: { code: 'PGRST202', message: 'Could not find the function' } } : undefined),
+    });
+    await page.goto(base + '/all-day/#challenge/feedback');
+    await page.waitForSelector('#sheet:not([hidden]) .chal-form', { timeout: 8000 });
+    check(await page.evaluate(() => location.hash) === '#wire', '#challenge/feedback opens the form straight away', '');
+    await page.fill('#sheet textarea[name="switch_for"]', 'Trail conditions');
+    await page.click('#sheet .chal-send');
+    await page.waitForFunction(() => /Couldn’t send it/.test(document.querySelector('#sheet .chal-msg')?.textContent || ''), null, { timeout: 6000 }).catch(() => {});
+    const st = await chalState(page);
+    check(/Couldn’t send it just now/.test(await page.$eval('#sheet .chal-msg', (m) => m.textContent)), 'the form says it couldn’t send', '');
+    check(st && st.draft.switch_for === 'Trail conditions' && !st.sent && !st.joined, 'the answer is kept, nothing is marked sent, and nobody was signed up', JSON.stringify(st));
+    check(!errors.filter((e) => !/404/.test(e)).length, 'no console errors (beyond the 404)', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('challenge: Stop the challenge clears the days (live)', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/all-day/#challenge');
+    await page.waitForSelector('#sheet:not([hidden]) .chal-go', { timeout: 8000 });
+    await page.click('#sheet .chal-go');
+    await chalCard(page, 'checkin');
+    await page.click('#panel-wire .chal-eye');
+    await page.waitForSelector('#sheet:not([hidden]) .chal-stop');
+    await page.click('#sheet .chal-stop');
+    await page.click('#confirm [data-yes]');
+    await page.waitForSelector('#panel-wire > .chal-slot[hidden]', { state: 'attached' });
+    const st = await chalState(page);
+    check(st && !st.joined && !Object.keys(st.feel).length && st.dismissed, 'stopped: no days kept, the card gone', JSON.stringify(st));
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('challenge: a wide screen lines the card up with the Wire’s column (live, 1280 dark)', async () => {
+    const { ctx, page, errors } = await newPage(browser, base, { viewport: { width: 1280, height: 800 }, scheme: 'dark' });
+    await page.goto(base + '/all-day/#challenge');
+    await page.waitForSelector('#sheet:not([hidden]) .chal-go', { timeout: 8000 });
+    await page.click('#sheet .chal-go');
+    await chalCard(page, 'checkin');
+    await page.waitForTimeout(300);
+    const r = await page.evaluate(() => { const c = document.querySelector('#panel-wire .chal-slot').getBoundingClientRect(), b = document.querySelector('#panel-wire .panel-body').getBoundingClientRect();
+      return { cl: Math.round(c.left), bl: Math.round(b.left), cw: Math.round(c.width), bw: Math.round(b.width), docW: document.documentElement.scrollWidth, vw: innerWidth }; });
+    check(Math.abs(r.cl - r.bl) <= 2 && Math.abs(r.cw - r.bw) <= 2 && r.docW <= r.vw, 'the card is the column’s width, over the feed', JSON.stringify(r));
+    await chalShot(page, 'checkin-1280-dark');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('challenge: the demo plays it through and keeps and sends nothing', async () => {
+    const { ctx, page, errors, supabase } = await newPage(browser, base);
+    await page.goto(base + '/all-day/?demo=1#challenge');
+    await page.waitForSelector('#sheet:not([hidden]) .chal-go', { timeout: 8000 });
+    await page.click('#sheet .chal-go');
+    await chalCard(page, 'checkin');
+    await page.click('#panel-wire [data-feel="great"]');
+    await chalCard(page, 'logged');
+    await page.click('#panel-wire .chal-card button:has-text("Tell us")');
+    await page.waitForSelector('#sheet:not([hidden]) .chal-form');
+    await page.click('#sheet [data-missed="memes"]');
+    await page.click('#sheet .chal-send');
+    check(/Nothing is sent from the demo/.test(await toastText(page)), 'Send in the demo says nothing was sent', '');
+    check(!supabase.some((u) => /nn_challenge/.test(u)) && (await chalState(page)) === null, 'no call and nothing in localStorage', supabase.join(' '));
+    const gc = await page.evaluate(() => window.__gc.filter((p) => /challenge/.test(p)));
+    check(!gc.length, 'and nothing counted', gc.join(' '));
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('challenge: the boards desk shows Stephen the answers behind the passphrase', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/all-day/mod.html?demo=1');
+    await page.fill('#pass', 'demo');
+    await page.click('#gate button[type=submit]');
+    await page.waitForSelector('#desk:not([hidden]) [data-challenge-btn]');
+    await page.click('[data-challenge-btn]');
+    await page.waitForSelector('[data-challenge]');
+    const t = await page.$eval('#desk', (d) => d.innerText);
+    check(await page.$$eval('[data-challenge]', (n) => n.length) === 2 && /2 answers so far/.test(t) && /Kinds of person: (Joiner|Night owl) 1/.test(t) && /Missed: Friends’ posts 2/.test(t),
+      'demo: tallies, then each answer', t.slice(0, 300));
+    await ctx.close();
+    const asked = [];
+    const live = await newPage(browser, base, { rpc: (fn, args) => {
+      if (fn === 'nn_mod_list') return { waiting: [], reported: [], hidden: [], recent: [], bans: [] };
+      if (fn === 'nn_challenge_list') { asked.push(args); return { count: 1, archetypes: { foodie: 1 }, missed: { news: 1 }, feelings: { calmer: 1 },
+        rows: [{ updated_at: new Date().toISOString(), source: 'newsletter', day: 2, feed_free_days: 1, feelings: ['1:calmer'], missed: ['news'], missed_other: '<b>x</b>', switch_for: 'More food trucks', archetype: 'foodie', archetype_words: '' }] }; }
+      return undefined;
+    } });
+    await live.page.goto(base + '/all-day/mod.html');
+    await live.page.fill('#pass', 'test-pass');
+    await live.page.click('#gate button[type=submit]');
+    await live.page.waitForSelector('#desk:not([hidden]) [data-challenge-btn]');
+    await live.page.click('[data-challenge-btn]');
+    await live.page.waitForSelector('[data-challenge]');
+    const row = await live.page.$eval('[data-challenge]', (n) => ({ text: n.innerText, html: n.innerHTML }));
+    check(asked.length === 1 && asked[0].p_secret === 'test-pass', 'live: the list is asked for with the passphrase', JSON.stringify(asked));
+    check(/Foodie · day 2 · 1 feed-free · from newsletter/.test(row.text) && /More food trucks/.test(row.text) && !/<b>/.test(row.html.replace(/&lt;b&gt;/g, '')), 'live: one answer, its words escaped', row.text);
+    check(!errors.length && !live.errors.length, 'no console errors', errors.concat(live.errors).join(' | '));
+    await live.ctx.close();
   });
 }
 
@@ -11660,6 +12385,7 @@ try {
   await run(thePeople);
   await run(theClubs);
   await run(onAir);
+  await run(onAirSports);
   await run(theGames);
   await run(theWatch);
   await run(interactions);
@@ -11676,6 +12402,7 @@ try {
   await run(weatherBrief);
   await run(sectionPills);
   await run(railsHaveList);
+  await run(theChallenge);
   await run(fullPagesAndAsks);
 } finally {
   await browser.close();
