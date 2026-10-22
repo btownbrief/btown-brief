@@ -6254,9 +6254,15 @@ async function theWatch(browser, base) {
     check(JSON.stringify(await wTiles(page)) === JSON.stringify(d.films.trend.map((f) => 'f' + f.id)), 'Trending: TMDB’s week, in its order', JSON.stringify(await wTiles(page)));
     await pick('new');
     const today = wToday();
-    const pool = [...new Map([...d.films.top, ...d.films.trend, ...d.films.now].map((f) => [f.id, f])).values()];
+    /* watchDemo() has already moved the top films to today; trending and in
+       theaters still carry the file's dates. Each film once, its first copy,
+       as watch.js's pool() keeps it. (Moving the top films a second time
+       pushed them forward by the days since the demo's anchor, so this check
+       broke on every date but the anchor itself.) */
     const moveD = (f) => { const nd = new Date((wDayNum(f.d) + wDayNum(today) - wDayNum(d._anchor)) * W_DAY + 12 * 3600000).toISOString().slice(0, 10); return nd; };
-    const newest = pool.map((f) => ({ ...f, d: moveD(f) })).filter((f) => f.d <= today).sort((a, b) => b.d.localeCompare(a.d) || a.t.localeCompare(b.t)).map((f) => 'f' + f.id);
+    const moved = [...d.films.top, ...[...d.films.trend, ...d.films.now].map((f) => ({ ...f, d: moveD(f) }))];
+    const pool = moved.filter((f, i) => moved.findIndex((x) => x.id === f.id) === i);
+    const newest = pool.filter((f) => f.d <= today).sort((a, b) => b.d.localeCompare(a.d) || a.t.localeCompare(b.t)).map((f) => 'f' + f.id);
     check(JSON.stringify(await wTiles(page)) === JSON.stringify(newest.slice(0, 60)), 'Newest: everything released, newest first', JSON.stringify((await wTiles(page)).slice(0, 5)));
     await pick('genre');
     const shelves = await page.$$eval(wPanel + ' [data-shelf]', (n) => n.map((x) => x.dataset.shelf));
