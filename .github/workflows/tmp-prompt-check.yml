@@ -1,0 +1,27 @@
+name: TEMP private prompt check (delete before merge)
+on:
+  push:
+    branches: [security/private-prompts-license]
+    paths: [.github/workflows/tmp-prompt-check.yml]
+permissions:
+  contents: read
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    env:
+      PROMPT_WIRE_TASTE: ${{ secrets.PROMPT_WIRE_TASTE }}
+      PROMPT_WIRE_TAGS: ${{ secrets.PROMPT_WIRE_TAGS }}
+      PROMPT_TV_TASTE: ${{ secrets.PROMPT_TV_TASTE }}
+      PROMPT_WEATHER_READ: ${{ secrets.PROMPT_WEATHER_READ }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Every private prompt loads (lengths and hashes only)
+        run: python3 scripts/private_prompts.py --check
+      - name: The wire tests run against the real prompts (none skipped)
+        run: python3 -m unittest discover -s tests -p 'test_wire*.py' -v 2>&1 | tail -5
+      - name: A missing prompt fails loudly
+        run: |
+          if PROMPT_TV_TASTE= BTOWN_PROMPTS_DIR=/nonexistent python3 scripts/private_prompts.py --check tv-taste.md; then
+            echo "expected a failure"; exit 1
+          fi
+          echo "missing prompt correctly refused"
