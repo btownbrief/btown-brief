@@ -5,6 +5,7 @@
   ok   source rules › uppercase lives only in the one caps rule
   ok   source rules › nothing is position: sticky but the Collapse bar under an opened list
   ok   source rules › js/app.js: no monospace
+  ok   source rules › js/asks.js: no monospace
   ok   source rules › js/auth.js: no monospace
   ok   source rules › js/clubs-week.js: no monospace
   ok   source rules › js/food-asks.js: no monospace
@@ -1773,7 +1774,7 @@
   ok   What Now, at a glance: the weather card and Happening today (demo, 2 pm) › a tile opens its own listing
   ok   What Now, at a glance: the weather card and Happening today (demo, 2 pm) › and a link to the full events calendar
   ok   What Now, at a glance: the weather card and Happening today (demo, 2 pm) › no console errors
-  ok   What Now, at a glance: the weather card and Happening today (demo, 2 pm) › dark and 1280: the card keeps its fill and its height, sky and all
+  ok   What Now, at a glance: the weather card and Happening today (demo, 2 pm) › dark and 1280: the card keeps its fill and its height, sky, Full weather and all
   ok   What Now, at a glance: the weather card and Happening today (demo, 2 pm) › no console errors
   ok   What Now, at a glance on Burlington’s clock (live, a reader in Los Angeles) › the card leads with the fresh observation, mostly cloudy
   ok   What Now, at a glance on Burlington’s clock (live, a reader in Los Angeles) › today’s high, and tonight’s low rather than last night’s
@@ -2992,7 +2993,7 @@
   ok   sign-in fails soft › a bad address is caught before any request
   ok   sign-in fails soft › no link was requested
   ok   sign-in fails soft › no console errors
-  ok   performance › the live Wire redraws 60 cards in 25ms (budget 100)
+  ok   performance › the live Wire redraws 60 cards in 24ms (budget 100)
   ok   shell fixes: a rail never snaps flush to the edge › 390: .rail carries scroll-padding of one gutter
   ok   shell fixes: a rail never snaps flush to the edge › 390: a card scrolled to the start stops at the gutter
   ok   shell fixes: a rail never snaps flush to the edge › 390: no console errors
@@ -3235,7 +3236,7 @@
   ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › shared with the pod is off by default
   ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › it lands at the bottom: Daily, no streak yet, not done
   ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › today’s dot is today’s, in Burlington
-  ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › a tap shows at once (4 ms)
+  ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › a tap shows at once (3 ms)
   ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › the streak ticks up to 1 day
   ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › and today’s dot fills
   ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › the server has the tap, for today in Burlington
@@ -3288,7 +3289,7 @@
   ok   Habits, swipe to archive with Undo, drag and keys to reorder, edit (demo, 1280, dark) › habits: at most 2 subnav rows
   ok   Habits, swipe to archive with Undo, drag and keys to reorder, edit (demo, 1280, dark) › no console errors
   ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › twenty habits, in order
-  ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › twenty habits and a year of taps: a tap still shows at once (13, 12, 13, 12 ms)
+  ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › twenty habits and a year of taps: a tap still shows at once (12, 12, 12, 12 ms)
   ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › the heat map is all there, and four taps leave it as it was
   ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › every row keeps its seven dots and its 48px tap
   ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › the list is longer than the screen, and the panel scrolls
@@ -3327,7 +3328,7 @@
   ok   Habits, the day turns at midnight New York, not the phone’s (demo, a reader in Tokyo) › and a tap now is Thursday’s
   ok   Habits, the day turns at midnight New York, not the phone’s (demo, a reader in Tokyo) › no console errors
   ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 390, light) › a first visit: one line, the starters and Add habit, nothing seeded, no sign-in wall
-  ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 390, light) › three habits, two tapped, at once (3 ms)
+  ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 390, light) › three habits, two tapped, at once (4 ms)
   ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 390, light) › and nothing personal went to the server (the season and the public forests only)
   ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 390, light) › kept on this phone, under one versioned key
   ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 390, light) › one quiet line under the list: Sync across devices
@@ -3414,7 +3415,7 @@
   ok   Habits, the forest: a tree per habit, a leaf per tap, flowers, help, starters (demo, 390) › the “?” opens How Habits works: four lines
   ok   Habits, the forest: a tree per habit, a leaf per tap, flowers, help, starters (demo, 390) › a starter adds a daily habit in one tap, and the starters step aside
   ok   Habits, the forest: a tree per habit, a leaf per tap, flowers, help, starters (demo, 390) › and plants its tree: no leaves yet (one name for the button, the picture itself decorative)
-  ok   Habits, the forest: a tree per habit, a leaf per tap, flowers, help, starters (demo, 390) › a tap grows a leaf, in the same click (16 ms)
+  ok   Habits, the forest: a tree per habit, a leaf per tap, flowers, help, starters (demo, 390) › a tap grows a leaf, in the same click (4 ms)
   ok   Habits, the forest: a tree per habit, a leaf per tap, flowers, help, starters (demo, 390) › Got it puts the help away
   ok   Habits, the forest: a tree per habit, a leaf per tap, flowers, help, starters (demo, 390) › one tree per habit, in the list’s order
   ok   Habits, the forest: a tree per habit, a leaf per tap, flowers, help, starters (demo, 390) › each tree has a leaf for every day done in the last 370
@@ -3478,7 +3479,7 @@
   ok   The Build, a first visit with an empty town: Clock in, the stopwatch, the whistle, Stop, name it (live, signed out, 390 light) › two of the site’s regulars are at work, so the site never looks empty
   ok   The Build, a first visit with an empty town: Clock in, the stopwatch, the whistle, Stop, name it (live, signed out, 390 light) › one tap: no sheet, the stopwatch running, Stop, and no "just you" line
   ok   The Build, a first visit with an empty town: Clock in, the stopwatch, the whistle, Stop, name it (live, signed out, 390 light) › the camera stays on your builder
-  ok   The Build, a first visit with an empty town: Clock in, the stopwatch, the whistle, Stop, name it (live, signed out, 390 light) › the whistle at 20 minutes: a buzz and Tap to answer, counting down
+  ok   The Build, a first visit with an empty town: Clock in, the stopwatch, the whistle, Stop, name it (live, signed out, 390 light) › the whistle at 17 minutes: a buzz and Tap to answer, counting down
   ok   The Build, a first visit with an empty town: Clock in, the stopwatch, the whistle, Stop, name it (live, signed out, 390 light) › a tap and the card clears, back to work
   ok   The Build, a first visit with an empty town: Clock in, the stopwatch, the whistle, Stop, name it (live, signed out, 390 light) › Keep it: the hours on this phone, and the thing card with its own Clock in
   ok   The Build, a first visit with an empty town: Clock in, the stopwatch, the whistle, Stop, name it (live, signed out, 390 light) › build: nothing fixed or sticky inside the tab
@@ -3493,7 +3494,7 @@
   ok   The Build, a first visit with the town’s database missing: Clock in, the stopwatch, the whistle, Stop, name it (live, signed out, 390 dark) › two of the site’s regulars are at work, so the site never looks empty
   ok   The Build, a first visit with the town’s database missing: Clock in, the stopwatch, the whistle, Stop, name it (live, signed out, 390 dark) › one tap: no sheet, the stopwatch running, Stop, and no "just you" line
   ok   The Build, a first visit with the town’s database missing: Clock in, the stopwatch, the whistle, Stop, name it (live, signed out, 390 dark) › the camera stays on your builder
-  ok   The Build, a first visit with the town’s database missing: Clock in, the stopwatch, the whistle, Stop, name it (live, signed out, 390 dark) › the whistle at 17 minutes: a buzz and Tap to answer, counting down
+  ok   The Build, a first visit with the town’s database missing: Clock in, the stopwatch, the whistle, Stop, name it (live, signed out, 390 dark) › the whistle at 20 minutes: a buzz and Tap to answer, counting down
   ok   The Build, a first visit with the town’s database missing: Clock in, the stopwatch, the whistle, Stop, name it (live, signed out, 390 dark) › a tap and the card clears, back to work
   ok   The Build, a first visit with the town’s database missing: Clock in, the stopwatch, the whistle, Stop, name it (live, signed out, 390 dark) › Keep it: the hours on this phone, and the thing card with its own Clock in
   ok   The Build, a first visit with the town’s database missing: Clock in, the stopwatch, the whistle, Stop, name it (live, signed out, 390 dark) › build: nothing fixed or sticky inside the tab
@@ -3529,12 +3530,12 @@
   ok   The Build, a shift on a fake clock: no whistle before 15 minutes, a buzz by 30, a tap answers it, a miss knocks the crew off at the last touch (demo, 390) › the stopwatch counts up by the second
   ok   The Build, a shift on a fake clock: no whistle before 15 minutes, a buzz by 30, a tap answers it, a miss knocks the crew off at the last touch (demo, 390) › fourteen minutes in: no whistle yet
   ok   The Build, a shift on a fake clock: no whistle before 15 minutes, a buzz by 30, a tap answers it, a miss knocks the crew off at the last touch (demo, 390) › your hours count up live while the shift runs (today 1m to 14m)
-  ok   The Build, a shift on a fake clock: no whistle before 15 minutes, a buzz by 30, a tap answers it, a miss knocks the crew off at the last touch (demo, 390) › the whistle blows between 15 and 30 minutes in (at 25): one buzz, the foreman on the site
+  ok   The Build, a shift on a fake clock: no whistle before 15 minutes, a buzz by 30, a tap answers it, a miss knocks the crew off at the last touch (demo, 390) › the whistle blows between 15 and 30 minutes in (at 21): one buzz, the foreman on the site
   ok   The Build, a shift on a fake clock: no whistle before 15 minutes, a buzz by 30, a tap answers it, a miss knocks the crew off at the last touch (demo, 390) › no dialog: the whistle is on the site (and said to a screen reader)
   ok   The Build, a shift on a fake clock: no whistle before 15 minutes, a buzz by 30, a tap answers it, a miss knocks the crew off at the last touch (demo, 390) › a big card in the middle: Tap to answer, counting down from three minutes
-  ok   The Build, a shift on a fake clock: no whistle before 15 minutes, a buzz by 30, a tap answers it, a miss knocks the crew off at the last touch (demo, 390) › a tap answers it: back to work, 25 minutes so far
-  ok   The Build, a shift on a fake clock: no whistle before 15 minutes, a buzz by 30, a tap answers it, a miss knocks the crew off at the last touch (demo, 390) › the next whistle at 23 minutes after the touch, the crew off three minutes later
-  ok   The Build, a shift on a fake clock: no whistle before 15 minutes, a buzz by 30, a tap answers it, a miss knocks the crew off at the last touch (demo, 390) › missed: the crew knocks off, banked to the last touch (25 minutes)
+  ok   The Build, a shift on a fake clock: no whistle before 15 minutes, a buzz by 30, a tap answers it, a miss knocks the crew off at the last touch (demo, 390) › a tap answers it: back to work, 21 minutes so far
+  ok   The Build, a shift on a fake clock: no whistle before 15 minutes, a buzz by 30, a tap answers it, a miss knocks the crew off at the last touch (demo, 390) › the next whistle at 19 minutes after the touch, the crew off three minutes later
+  ok   The Build, a shift on a fake clock: no whistle before 15 minutes, a buzz by 30, a tap answers it, a miss knocks the crew off at the last touch (demo, 390) › missed: the crew knocks off, banked to the last touch (21 minutes)
   ok   The Build, a shift on a fake clock: no whistle before 15 minutes, a buzz by 30, a tap answers it, a miss knocks the crew off at the last touch (demo, 390) › the end screen: the time, one line, Keep it or Post
   ok   The Build, a shift on a fake clock: no whistle before 15 minutes, a buzz by 30, a tap answers it, a miss knocks the crew off at the last touch (demo, 390) › and it stays a miss while the end screen waits
   ok   The Build, a shift on a fake clock: no whistle before 15 minutes, a buzz by 30, a tap answers it, a miss knocks the crew off at the last touch (demo, 390) › Keep it: the hours are on your record, the site docks again
@@ -3974,7 +3975,7 @@
   ok   What Now: today in plain words and a Full weather link, under the card (390, live) › no console errors
   ok   What Now: today in plain words and a Full weather link, under the card (390, live) › the demo carries its brief too (its weekday said as Tomorrow, since the demo moves to today)
   ok   What Now: today in plain words and a Full weather link, under the card (390, live) › no console errors
-  ok   section pills: every tab floats a liquid pill in its own water › watch: a compact pill, 40px tall with 14px words (the Wire’s is 54)
+  ok   section pills: every tab floats a liquid pill in its own water › watch: under a big switch, a compact pill, 40px tall with 14px words (the Wire’s is 54)
   ok   section pills: every tab floats a liquid pill in its own water › watch: glass, floating over the paper, and it stays as the mast steps away
   ok   section pills: every tab floats a liquid pill in its own water › watch: a labelled group, and nothing scrolls the page sideways
   ok   section pills: every tab floats a liquid pill in its own water › watch: the one on sits in poured water, inside the pill
@@ -3982,7 +3983,7 @@
   ok   section pills: every tab floats a liquid pill in its own water › watch: the canvas carries the colour, not the button
   ok   section pills: every tab floats a liquid pill in its own water › watch: scrolled down, it floats at the top, 90% size
   ok   section pills: every tab floats a liquid pill in its own water › watch: any move up brings it back to full size
-  ok   section pills: every tab floats a liquid pill in its own water › food: a compact pill, 40px tall with 14px words (the Wire’s is 54)
+  ok   section pills: every tab floats a liquid pill in its own water › food: the tab’s one switch, as big as the Wire’s, 54px tall with 16px bold words (the Wire’s is 54)
   ok   section pills: every tab floats a liquid pill in its own water › food: glass, floating over the paper, and it stays as the mast steps away
   ok   section pills: every tab floats a liquid pill in its own water › food: a labelled group, and nothing scrolls the page sideways
   ok   section pills: every tab floats a liquid pill in its own water › food: the one on sits in poured water, inside the pill
@@ -3990,7 +3991,7 @@
   ok   section pills: every tab floats a liquid pill in its own water › food: the canvas carries the colour, not the button
   ok   section pills: every tab floats a liquid pill in its own water › food: scrolled down, it floats at the top, 90% size
   ok   section pills: every tab floats a liquid pill in its own water › food: any move up brings it back to full size
-  ok   section pills: every tab floats a liquid pill in its own water › people: a compact pill, 40px tall with 14px words (the Wire’s is 54)
+  ok   section pills: every tab floats a liquid pill in its own water › people: the tab’s one switch, as big as the Wire’s, 54px tall with 16px bold words (the Wire’s is 54)
   ok   section pills: every tab floats a liquid pill in its own water › people: glass, floating over the paper, and it stays as the mast steps away
   ok   section pills: every tab floats a liquid pill in its own water › people: a labelled group, and nothing scrolls the page sideways
   ok   section pills: every tab floats a liquid pill in its own water › people: the one on sits in poured water, inside the pill
@@ -3998,7 +3999,7 @@
   ok   section pills: every tab floats a liquid pill in its own water › people: the canvas carries the colour, not the button
   ok   section pills: every tab floats a liquid pill in its own water › people: scrolled down, it floats at the top, 90% size
   ok   section pills: every tab floats a liquid pill in its own water › people: any move up brings it back to full size
-  ok   section pills: every tab floats a liquid pill in its own water › whatnow: a compact pill, 40px tall with 14px words (the Wire’s is 54)
+  ok   section pills: every tab floats a liquid pill in its own water › whatnow: the tab’s one switch, as big as the Wire’s, 54px tall with 16px bold words (the Wire’s is 54)
   ok   section pills: every tab floats a liquid pill in its own water › whatnow: glass, floating over the paper, and it stays as the mast steps away
   ok   section pills: every tab floats a liquid pill in its own water › whatnow: a labelled group, and nothing scrolls the page sideways
   ok   section pills: every tab floats a liquid pill in its own water › whatnow: the one on sits in poured water, inside the pill
@@ -4006,7 +4007,7 @@
   ok   section pills: every tab floats a liquid pill in its own water › whatnow: the canvas carries the colour, not the button
   ok   section pills: every tab floats a liquid pill in its own water › whatnow: scrolled down, it floats at the top, 90% size
   ok   section pills: every tab floats a liquid pill in its own water › whatnow: any move up brings it back to full size
-  ok   section pills: every tab floats a liquid pill in its own water › vintage: a compact pill, 40px tall with 14px words (the Wire’s is 54)
+  ok   section pills: every tab floats a liquid pill in its own water › vintage: the tab’s one switch, as big as the Wire’s, 54px tall with 16px bold words (the Wire’s is 54)
   ok   section pills: every tab floats a liquid pill in its own water › vintage: glass, floating over the paper, and it stays as the mast steps away
   ok   section pills: every tab floats a liquid pill in its own water › vintage: a labelled group, and nothing scrolls the page sideways
   ok   section pills: every tab floats a liquid pill in its own water › vintage: the one on sits in poured water, inside the pill
@@ -4014,7 +4015,7 @@
   ok   section pills: every tab floats a liquid pill in its own water › vintage: the canvas carries the colour, not the button
   ok   section pills: every tab floats a liquid pill in its own water › vintage: scrolled down, it floats at the top, 90% size
   ok   section pills: every tab floats a liquid pill in its own water › vintage: any move up brings it back to full size
-  ok   section pills: every tab floats a liquid pill in its own water › habits: a compact pill, 40px tall with 14px words (the Wire’s is 54)
+  ok   section pills: every tab floats a liquid pill in its own water › habits: under a big switch, a compact pill, 40px tall with 14px words (the Wire’s is 54)
   ok   section pills: every tab floats a liquid pill in its own water › habits: glass, floating over the paper, and it stays as the mast steps away
   ok   section pills: every tab floats a liquid pill in its own water › habits: a labelled group, and nothing scrolls the page sideways
   ok   section pills: every tab floats a liquid pill in its own water › habits: the one on sits in poured water, inside the pill
@@ -4022,7 +4023,7 @@
   ok   section pills: every tab floats a liquid pill in its own water › habits: the canvas carries the colour, not the button
   ok   section pills: every tab floats a liquid pill in its own water › habits: scrolled down, it floats at the top, 90% size
   ok   section pills: every tab floats a liquid pill in its own water › habits: any move up brings it back to full size
-  ok   section pills: every tab floats a liquid pill in its own water › games: a compact pill, 40px tall with 14px words (the Wire’s is 54)
+  ok   section pills: every tab floats a liquid pill in its own water › games: the tab’s one switch, as big as the Wire’s, 54px tall with 16px bold words (the Wire’s is 54)
   ok   section pills: every tab floats a liquid pill in its own water › games: glass, floating over the paper, and it stays as the mast steps away
   ok   section pills: every tab floats a liquid pill in its own water › games: a labelled group, and nothing scrolls the page sideways
   ok   section pills: every tab floats a liquid pill in its own water › games: the one on sits in poured water, inside the pill
@@ -4071,31 +4072,32 @@
   ok   section pills: a wide screen centres the pill over the column › the pill sits centred in the mast’s column
   ok   section pills: a wide screen centres the pill over the column › no console errors
   ok   sideways rows: every content rail can be a list › wire: every sideways row can be turned into a list
-  ok   sideways rows: every content rail can be a list › wire: See as a list opens it downward with the Collapse bar
-  ok   sideways rows: every content rail can be a list › wire: Collapse puts the row back
+  ok   sideways rows: every content rail can be a list › wire: every See as a list (1) opens downward with the sticky Collapse bar, and Collapse puts it back
   ok   sideways rows: every content rail can be a list › watch: every sideways row can be turned into a list
-  ok   sideways rows: every content rail can be a list › watch: See as a list opens it downward with the Collapse bar
-  ok   sideways rows: every content rail can be a list › watch: Collapse puts the row back
+  ok   sideways rows: every content rail can be a list › watch: every See as a list (2) opens downward with the sticky Collapse bar, and Collapse puts it back
   ok   sideways rows: every content rail can be a list › food: every sideways row can be turned into a list
-  ok   sideways rows: every content rail can be a list › food: See as a list opens it downward with the Collapse bar
-  ok   sideways rows: every content rail can be a list › food: Collapse puts the row back
+  ok   sideways rows: every content rail can be a list › food: every See as a list (1) opens downward with the sticky Collapse bar, and Collapse puts it back
   ok   sideways rows: every content rail can be a list › people: every sideways row can be turned into a list
   ok   sideways rows: every content rail can be a list › whatnow: every sideways row can be turned into a list
-  ok   sideways rows: every content rail can be a list › whatnow: See as a list opens it downward with the Collapse bar
-  ok   sideways rows: every content rail can be a list › whatnow: Collapse puts the row back
+  ok   sideways rows: every content rail can be a list › whatnow: every See as a list (1) opens downward with the sticky Collapse bar, and Collapse puts it back
   ok   sideways rows: every content rail can be a list › vintage: every sideways row can be turned into a list
-  ok   sideways rows: every content rail can be a list › vintage: See as a list opens it downward with the Collapse bar
-  ok   sideways rows: every content rail can be a list › vintage: Collapse puts the row back
+  ok   sideways rows: every content rail can be a list › vintage: every See as a list (2) opens downward with the sticky Collapse bar, and Collapse puts it back
   ok   sideways rows: every content rail can be a list › build: every sideways row can be turned into a list
   ok   sideways rows: every content rail can be a list › onair: every sideways row can be turned into a list
-  ok   sideways rows: every content rail can be a list › onair: See as a list opens it downward with the Collapse bar
-  ok   sideways rows: every content rail can be a list › onair: Collapse puts the row back
+  ok   sideways rows: every content rail can be a list › onair: every See as a list (4) opens downward with the sticky Collapse bar, and Collapse puts it back
   ok   sideways rows: every content rail can be a list › games: every sideways row can be turned into a list
   ok   sideways rows: every content rail can be a list › wire photos: every sideways row can be turned into a list
-  ok   sideways rows: every content rail can be a list › wire photos: See as a list opens it downward with the Collapse bar
-  ok   sideways rows: every content rail can be a list › wire photos: Collapse puts the row back
+  ok   sideways rows: every content rail can be a list › wire photos: every See as a list (1) opens downward with the sticky Collapse bar, and Collapse puts it back
   ok   sideways rows: every content rail can be a list › wire square: every sideways row can be turned into a list
   ok   sideways rows: every content rail can be a list › no console errors
+  ok   long lists opened in place: the Collapse bar folds them back › food open: All opens the whole list with the sticky Collapse bar
+  ok   long lists opened in place: the Collapse bar folds them back › food open: Collapse folds it back to its first rows
+  ok   long lists opened in place: the Collapse bar folds them back › food best: All opens the whole list with the sticky Collapse bar
+  ok   long lists opened in place: the Collapse bar folds them back › food best: Collapse folds it back to its first rows
+  ok   long lists opened in place: the Collapse bar folds them back › games arcade: All opens the whole list with the sticky Collapse bar
+  ok   long lists opened in place: the Collapse bar folds them back › games arcade: Collapse folds it back to its first rows
+  ok   long lists opened in place: the Collapse bar folds them back › at least two long lists were there to open (3)
+  ok   long lists opened in place: the Collapse bar folds them back › no console errors
   ok   challenge: the lists and limits are the same in the app and the SQL › feelings match
   ok   challenge: the lists and limits are the same in the app and the SQL › what you missed matches
   ok   challenge: the lists and limits are the same in the app and the SQL › the kinds of person match
@@ -4168,3 +4170,73 @@
   ok   challenge: the boards desk shows Stephen the answers behind the passphrase › live: the list is asked for with the passphrase
   ok   challenge: the boards desk shows Stephen the answers behind the passphrase › live: one answer, its words escaped
   ok   challenge: the boards desk shows Stephen the answers behind the passphrase › no console errors
+  ok   full pages: each tab links out to its own page, where it has one › live wire: "Full page" opens ../pulse.html in a new tab
+  ok   full pages: each tab links out to its own page, where it has one › live wire: at the top, above the tab’s own first section, on screen as it lands
+  ok   full pages: each tab links out to its own page, where it has one › live watch: no page of its own, so no link
+  ok   full pages: each tab links out to its own page, where it has one › live food: "Full page" opens ../restaurants.html in a new tab
+  ok   full pages: each tab links out to its own page, where it has one › live food: at the top, above the tab’s own first section, on screen as it lands
+  ok   full pages: each tab links out to its own page, where it has one › live people: "Full page" opens ../clubs.html in a new tab
+  ok   full pages: each tab links out to its own page, where it has one › live people: at the top, above the tab’s own first section, on screen as it lands
+  ok   full pages: each tab links out to its own page, where it has one › live whatnow: "Full page" opens ../things-to-do.html in a new tab
+  ok   full pages: each tab links out to its own page, where it has one › live whatnow: at the top, above the tab’s own first section, on screen as it lands
+  ok   full pages: each tab links out to its own page, where it has one › live vintage: no page of its own, so no link
+  ok   full pages: each tab links out to its own page, where it has one › live build: no page of its own, so no link
+  ok   full pages: each tab links out to its own page, where it has one › live onair: no page of its own, so no link
+  ok   full pages: each tab links out to its own page, where it has one › live games: "Full page" opens https://play.btownbrief.com/ in a new tab
+  ok   full pages: each tab links out to its own page, where it has one › live games: at the top, above the tab’s own first section, on screen as it lands
+  ok   full pages: each tab links out to its own page, where it has one › live habits: no page of its own, so no link
+  ok   full pages: each tab links out to its own page, where it has one › live: no console errors
+  ok   full pages: each tab links out to its own page, where it has one › demo wire: "Full page" opens ../pulse.html in a new tab
+  ok   full pages: each tab links out to its own page, where it has one › demo wire: at the top, above the tab’s own first section, on screen as it lands
+  ok   full pages: each tab links out to its own page, where it has one › demo watch: no page of its own, so no link
+  ok   full pages: each tab links out to its own page, where it has one › demo food: "Full page" opens ../restaurants.html in a new tab
+  ok   full pages: each tab links out to its own page, where it has one › demo food: at the top, above the tab’s own first section, on screen as it lands
+  ok   full pages: each tab links out to its own page, where it has one › demo people: "Full page" opens ../clubs.html in a new tab
+  ok   full pages: each tab links out to its own page, where it has one › demo people: at the top, above the tab’s own first section, on screen as it lands
+  ok   full pages: each tab links out to its own page, where it has one › demo whatnow: "Full page" opens ../things-to-do.html in a new tab
+  ok   full pages: each tab links out to its own page, where it has one › demo whatnow: at the top, above the tab’s own first section, on screen as it lands
+  ok   full pages: each tab links out to its own page, where it has one › demo vintage: no page of its own, so no link
+  ok   full pages: each tab links out to its own page, where it has one › demo build: no page of its own, so no link
+  ok   full pages: each tab links out to its own page, where it has one › demo onair: no page of its own, so no link
+  ok   full pages: each tab links out to its own page, where it has one › demo games: "Full page" opens https://play.btownbrief.com/ in a new tab
+  ok   full pages: each tab links out to its own page, where it has one › demo games: at the top, above the tab’s own first section, on screen as it lands
+  ok   full pages: each tab links out to its own page, where it has one › demo habits: no page of its own, so no link
+  ok   full pages: each tab links out to its own page, where it has one › demo: no console errors
+  ok   full pages: each tab links out to its own page, where it has one › wire: ../pulse.html is a page of its own (The Pulse — Burlington Brief)
+  ok   full pages: each tab links out to its own page, where it has one › food: ../restaurants.html is a page of its own (Restaurants Open Now in Burlington, VT — Burlington Brief)
+  ok   full pages: each tab links out to its own page, where it has one › people: ../clubs.html is a page of its own (Clubs, Leagues &amp; Pickup Games in Burlington | Burlington Brief)
+  ok   full pages: each tab links out to its own page, where it has one › whatnow: ../things-to-do.html is a page of its own (Things To Do in Burlington, VT — Burlington Brief)
+  ok   the weather card reads as a button to the full weather page › the card itself says Full weather, with a raised edge, and opens weather.html
+  ok   the weather card reads as a button to the full weather page › no console errors
+  ok   Settings: add to home screen, and X, Facebook and Reddit › a permanent Add to home screen row
+  ok   Settings: add to home screen, and X, Facebook and Reddit › on a desktop browser with no install prompt, it shows the bookmark keys
+  ok   Settings: add to home screen, and X, Facebook and Reddit › Elsewhere: Open X, Facebook, Reddit (r/burlington), each in a new tab
+  ok   Settings: add to home screen, and X, Facebook and Reddit › the Wire’s foot carries the same three, and only the Wire’s
+  ok   Settings: add to home screen, and X, Facebook and Reddit › installed: the row says it is on your home screen
+  ok   Settings: add to home screen, and X, Facebook and Reddit › no console errors
+  ok   asks: a stranger’s first visits ask for nothing › no card and no Beehiiv frame on a first visit, across tabs and a reload
+  ok   asks: a stranger’s first visits ask for nothing › a reload inside half an hour is the same visit
+  ok   asks: a stranger’s first visits ask for nothing › demo mode never asks
+  ok   asks: a stranger’s first visits ask for nothing › no console errors
+  ok   asks: the home screen, after three visits, at most once a week › the third visit: on an iPhone, the two taps drawn small (Share, then Add to Home Screen)
+  ok   asks: the home screen, after three visits, at most once a week › a card in the page, never a modal, and it will not come back for a week
+  ok   asks: the home screen, after three visits, at most once a week › one ask per page load: the next tab has none
+  ok   asks: the home screen, after three visits, at most once a week › a week has not passed: no ask
+  ok   asks: the home screen, after three visits, at most once a week › a week on it asks again; its close button puts it away for another week
+  ok   asks: the home screen, after three visits, at most once a week › opened from the home screen: never asks, and remembers it is installed
+  ok   asks: the home screen, after three visits, at most once a week › no console errors
+  ok   asks: the newsletter, after real use, typed only into Beehiiv › the third visit over two days: Beehiiv’s own form in a frame, and no address field of ours
+  ok   asks: the newsletter, after real use, typed only into Beehiiv › the frame can submit its form but can never steer the app away
+  ok   asks: the newsletter, after real use, typed only into Beehiiv › and an “I’m already subscribed” way out
+  ok   asks: the newsletter, after real use, typed only into Beehiiv › a look-alike message from anywhere but Beehiiv is ignored
+  ok   asks: the newsletter, after real use, typed only into Beehiiv › Beehiiv’s “submitted” marks this phone a reader, and the address is kept nowhere here
+  ok   asks: the newsletter, after real use, typed only into Beehiiv › the address never went anywhere but Beehiiv
+  ok   asks: the newsletter, after real use, typed only into Beehiiv › a subscriber is never shown it again
+  ok   asks: the newsletter, after real use, typed only into Beehiiv › “I’m already subscribed” puts it away for good
+  ok   asks: the newsletter, after real use, typed only into Beehiiv › its close button puts it away for two weeks
+  ok   asks: the newsletter, after real use, typed only into Beehiiv › ten minutes on screen earns it on a first day too
+  ok   asks: the newsletter, after real use, typed only into Beehiiv › the frame loaded from Beehiiv
+  ok   asks: the newsletter, after real use, typed only into Beehiiv › no console errors
+  ok   asks: a visit from the newsletter is a reader, forever › Beehiiv’s _bhlid marks a reader, and leaves the address bar (the rest stays)
+  ok   asks: a visit from the newsletter is a reader, forever › with every bit of use, the newsletter card never shows
+  ok   asks: a visit from the newsletter is a reader, forever › no console errors
