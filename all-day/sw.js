@@ -13,7 +13,7 @@
    audio — episodes are large and the browser's own HTTP cache handles them
    better than we would. */
 
-const VERSION = 'all-day-v95';   // batch merge
+const VERSION = 'all-day-v96';   // batch merge + The Build: the intro, and your builder's jobs
 const SHELL = VERSION + '-shell';
 const DATA = 'all-day-data';   // unversioned on purpose: survives shell bumps
 
