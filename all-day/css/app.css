@@ -2471,3 +2471,59 @@ body.bd-full { overflow: hidden; }
 @media (min-width: 1024px) {
   .bd-clockform, .bd-steps { max-width: 520px; }
 }
+/* What is The Build? The ? beside Build | Habits, and the intro it opens (Stephen, 2026-10-22) */
+.secbar .bd-sidesrow { position: relative; }
+.secbar .oa-sidesrow .bd-sideswitch { max-width: calc(100% - 104px); }
+.iconbtn.bd-whatis { position: absolute; top: 50%; right: max(8px, calc(25% - 92px)); width: 34px; height: 34px; transform: translateY(-50%); border-radius: var(--r-round);
+  font-size: var(--fs-body); font-weight: 700; color: var(--dock-ink); border: 1px solid var(--dock-edge); box-shadow: var(--dock-shadow);
+  background: linear-gradient(var(--dock-sheen), var(--dock-clear)), var(--dock-glass); backdrop-filter: var(--dock-filter); -webkit-backdrop-filter: var(--dock-filter); }
+.mast .secbar .iconbtn.bd-whatis, .iconbtn.bd-whatis:hover { color: var(--dock-ink); }
+.iconbtn.bd-whatis::after { content: ""; position: absolute; inset: -6px; }
+.bd-introp { font-size: var(--fs-body); line-height: 1.5; color: var(--ink); margin-bottom: var(--s3); }
+.bd-introp:first-child { font-family: var(--serif); font-size: var(--fs-date); line-height: 1.35; }
+.btn.bd-gotit { width: 100%; margin-top: var(--s2); }
+/* your builder's jobs: 15 minutes each, in order; drag the grip, or up and down */
+.bd-jobs { margin: var(--s3) var(--gutter) 0; padding: var(--s3); border: 1px solid var(--line); border-radius: var(--r-media); background: var(--paper); }
+.bd-jobs.in-sheet { margin: 0; padding: 0; border: 0; background: transparent; }
+.bd-jobs-head { display: flex; align-items: baseline; justify-content: space-between; gap: var(--s2); padding: 0 var(--s1) var(--s2); }
+.bd-jobs-h { font-family: var(--serif); font-size: var(--fs-date); font-weight: 500; line-height: var(--lh-tight); color: var(--ink); }
+.bd-jobs-each { font-size: var(--fs-meta); color: var(--ink-3); white-space: nowrap; }
+.bd-joblist { list-style: none; display: grid; }
+.bd-job { position: relative; display: grid; grid-template-columns: 24px 22px minmax(0, 1fr) auto; grid-template-rows: auto auto; align-items: center; column-gap: var(--s2);
+  min-height: 52px; padding: 4px 0; border-top: 1px solid var(--line); transition: transform .14s ease; }
+.bd-job:first-child { border-top: 0; }
+.bd-job .bd-grip { grid-row: 1 / 3; align-self: stretch; display: grid; place-items: center; touch-action: none; cursor: grab; color: var(--ink-3); }
+.bd-job .bd-grip .i { width: 20px; height: 20px; fill: currentColor; stroke: none; }
+.bd-job .bd-grip.off { cursor: default; }
+.bd-jobn { grid-row: 1 / 3; display: grid; place-items: center; width: 22px; height: 22px; border-radius: var(--r-round); background: var(--liq-build); color: var(--liq-build-ink); font-size: var(--fs-tag); font-weight: 700; }
+.bd-jobn .i { width: 14px; height: 14px; }
+.bd-jobt { grid-column: 3; font-size: var(--fs-body); font-weight: 600; line-height: 1.25; color: var(--ink); }
+.bd-jobat { grid-column: 3; grid-row: 2; font-size: var(--fs-small); color: var(--ink-3); font-variant-numeric: tabular-nums; }
+.bd-jobtools { grid-column: 4; grid-row: 1 / 3; display: flex; align-items: center; }
+.bd-jobtools .iconbtn { width: 34px; height: 40px; }
+.bd-jobtools .iconbtn .i { width: 18px; height: 18px; }
+.bd-jobtools .iconbtn:disabled { opacity: .3; pointer-events: none; }
+.bd-job.done .bd-jobt { color: var(--ink-3); text-decoration: line-through; font-weight: 500; }
+.bd-job.done .bd-jobn { background: var(--paper-2); color: var(--ink-3); }
+.bd-job.now .bd-jobat { color: var(--liq-build); font-weight: 700; }
+.bd-job.drag { z-index: 2; transition: none; border-radius: var(--r-media); background: var(--raised); box-shadow: var(--shadow-float); }
+.bd-job.drag .bd-grip { cursor: grabbing; }
+.bd-adds { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: var(--s2); padding-top: var(--s3); border-top: 1px solid var(--line); }
+.bd-addh { font-size: var(--fs-meta); font-weight: 700; color: var(--ink-2); margin-right: 2px; }
+.chip.bd-add { height: 34px; white-space: normal; text-align: left; }
+.chip.bd-add .i { color: var(--liq-build); }
+.bd-peek { display: flex; align-items: center; gap: var(--s2); width: 100%; min-height: var(--hit); margin-top: var(--s2); padding: 4px var(--s3); border-radius: var(--r-media);
+  background: var(--paper); text-align: left; color: var(--ink); }
+.bd-peek > .i { flex: 0 0 auto; width: 20px; height: 20px; color: var(--liq-build); }
+.bd-peekt { flex: 1 1 auto; min-width: 0; display: grid; font-size: var(--fs-body); font-weight: 600; line-height: 1.25; }
+.bd-peekl { font-size: var(--fs-small); font-weight: 600; color: var(--ink-3); }
+.bd-peekn { flex: 0 0 auto; font-size: var(--fs-meta); color: var(--ink-2); white-space: nowrap; }
+.bd-peek > .i:last-child { width: 16px; height: 16px; color: var(--ink-3); }
+.btn.bd-jobsreset { margin-top: var(--s3); height: 32px; font-size: var(--fs-meta); }
+/* the stopwatch's job line: the job now, and a bar of 15-minute pieces */
+.bd-watchjobs { display: grid; justify-items: center; gap: 5px; width: 100%; min-width: 180px; margin-top: 4px; padding: 2px 0; color: var(--dock-ink); }
+.bd-watchjobs[hidden] { display: none; }
+.bd-wjt { max-width: 280px; font-size: var(--fs-meta); font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.bd-wjbar { display: flex; gap: 3px; width: 100%; }
+.bd-wjbar i { flex: 1 1 0; height: 5px; border-radius: var(--r-hair); background: color-mix(in srgb, var(--dock-ink) 28%, transparent); overflow: hidden; }
+.bd-wjbar b { display: block; height: 100%; width: 0; background: var(--sunset); }

@@ -26,7 +26,9 @@
      const site = createSite(canvas, { reducedMotion, now })
      site.setTown({ total_minutes, floors_done, floor_progress, windows_lit, floors?, topped_out? })
      site.setCrew([{ id, look:{ hat, vest }, task, name? }])    name = the tag shown (nickname or first name); omit for just a hard hat
-     site.setYou({ state: 'working'|'paused'|'off'|'away'|'ready', look, task, name? })   ready: waiting to clock in, in front of the building
+     site.setYou({ state: 'working'|'paused'|'off'|'away'|'ready', look, task, name?, job? })   ready: waiting to clock in, in front of the building
+                                      job: a SITE_JOBS key from your list; your builder works that trade (its pieces
+                                      when the building has one open, else the prep for it at the yard)
      site.whistle(true|false)
      site.setSky({ sunAltitude, isNight, weather, hour?, snowCover? })
      site.dropMaterial(kind)
@@ -40,6 +42,7 @@
      site.onFollow = (info|null) => {}   optional callback: { id, name, job } while following someone
      site.closeUp(on)                a shift's camera: in close on your builder, centred
      site.youOnScreen()              { x, y, top } your builder's feet and head as fractions of the canvas, or null
+     site.needs()                    [{ key, label }] the jobs your builder can line up, in the order the building needs them
    Preview and tests: site.advance(seconds), site.render(), site.stats(), site.resetStats().
 
    Camera rules: it shows your builder (or the building when you're not on
@@ -61,7 +64,7 @@ import { createBuilding } from './build-site-building.js';
 import { createCrew } from './build-site-crew.js';
 import { createDirector } from './build-site-director.js';
 
-export { SITE_TASKS, SITE_MATERIALS } from './build-site-shared.js';
+export { SITE_TASKS, SITE_MATERIALS, SITE_JOBS, jobLabel } from './build-site-shared.js';
 
 export function createSite(canvas, opts = {}) {
   const ctx = canvas.getContext('2d', { alpha: false });
@@ -353,7 +356,7 @@ export function createSite(canvas, opts = {}) {
     setYou(y = {}) {
       const state = ['working', 'paused', 'off', 'away', 'ready'].includes(y.state) ? y.state : 'away';
       const prev = K.S.you.state;
-      K.S.you = { state, look: y.look || K.S.you.look || {}, task: y.task || K.S.you.task, name: y.name != null ? y.name : K.S.you.name };
+      K.S.you = { state, look: y.look || K.S.you.look || {}, task: y.task || K.S.you.task, name: y.name != null ? y.name : K.S.you.name, job: y.job || null };
       if (state === 'working' && prev !== 'working' && prev !== 'paused') K.shiftStartT = K.t;
       K.crew.setYou(K.S.you);
       poke();
@@ -394,6 +397,7 @@ export function createSite(canvas, opts = {}) {
       if (!p || !K.view.W) return null;
       return { x: (p.x - cam.x) / K.view.W, y: (p.y - cam.y) / K.view.H, top: (p.y - 16 - cam.y) / K.view.H };
     },
+    needs() { return K.building.needs ? K.building.needs() : []; },
     vignettes() { return K.director.list ? K.director.list() : []; },
     playVignette(id) { const ok = K.director.play ? K.director.play(id) : false; poke(); return ok; },
     /* preview + tests */

@@ -45,7 +45,7 @@ import { photoUrl, queuePhoto } from '../boards.js';
 import { REASON_LABELS } from '../boards-core.js';
 import { meetsInWindow, oneLine, redateDemo, timeLabel } from '../clubs-week.js';
 import { openBuild } from '../build-local.js';
-import { createSite } from '../build-site.js';
+import { createSite, SITE_JOBS, jobLabel } from '../build-site.js';
 
 const KEY = 'build';
 export const ICON_BUILD = svg('<path d="M3 17.5h18M5 17.5v-1.2a7 7 0 0 1 14 0v1.2"/><path d="M10 10V7.2a2 2 0 0 1 4 0V10"/>');
@@ -68,6 +68,10 @@ const STALE_MS = 30 * 60000;               // a shift whose screen went dark lon
 const LAT = 44.4759, LON = -73.2121;       // Burlington, for the site's sun
 const KINDS = ['progress', 'stuck', 'found', 'finished'];
 const NEED_REASON = { hand: 'missing', tool: 'missing', smaller: 'too_big', different: 'unsure' };
+const INTRO_KEY = 'allday-build-intro';   // the first-open intro was seen on this phone
+const JOBS_KEY = 'allday-build-jobs';     // your builder's list: { list: [SITE_JOBS keys], edited, shift }
+const CHUNK_MIN = 15;                     // each job on the list is this many minutes of your shift
+const JOBS_MAX = 8;                       // two hours lined up, at most
 const HATS = [['yellow', '--sunset'], ['orange', '--liq-food'], ['red', '--liq-build'], ['blue', '--liq-square'], ['green', '--liq-lists'], ['white', '--raised']];
 
 /* ------------------------------------------------------------------ words */
@@ -264,11 +268,13 @@ function paint() {
     return;
   }
   if (B.thing && B.back) wrap.appendChild(comebackCard());
-  if (B.thing) wrap.appendChild(thingCard());
+  if (B.thing) { wrap.appendChild(thingCard()); wrap.appendChild(jobsCard()); }
   else {
-    /* no thing yet: one obvious action, Clock in. Naming a thing waits
-       until after the first shift (or until someone starts naming one) */
+    /* no thing yet: one obvious action, Clock in, and the jobs your builder
+       will do. Naming a thing waits until after the first shift (or until
+       someone starts naming one) */
     wrap.appendChild(clockCard());
+    wrap.appendChild(jobsCard());
     if (!fresh() || (B.draft && (B.draft.title || B.draft.step === 'more'))) {
       wrap.appendChild(nameCard());
       if (!B.draft || B.draft.step === 'name') wrap.appendChild(starterDoor());
@@ -309,6 +315,7 @@ function clockCard() {
   f.append(go1, what);
   f.addEventListener('submit', (e) => { e.preventDefault(); quickClockIn(what.value.trim().slice(0, 80)); });
   c.appendChild(f);
+  c.appendChild(jobsPeek());
   if (shiftsBanked() < HOW_SHIFTS) {
     const ol = el('ol', 'bd-steps');
     ol.setAttribute('aria-label', 'How it works');
@@ -326,6 +333,252 @@ function quickClockIn(step) {
   /* iPhone asks once to feel the phone being picked up: in this tap */
   askMotion();
   startShift(step || '');
+}
+
+/* ---------------------------------------------------------- the intro */
+/* Stephen, 2026-10-22: "a little instruction when people open up the build
+   tab because it's not quite obvious ... a few sentences on what it is, what
+   its purpose is." Once, the first time the tab opens on this phone; the ?
+   beside Build | Habits brings it back. */
+function introSheet() {
+  store.write(INTRO_KEY, 1);
+  app.sheet('The Build', (body, card, close) => {
+    const say = [
+      'Put your phone down and go do your thing. While it sits face up, your builder works on Watershed, the new building on Lakeside Ave, alongside everyone else in town on shift.',
+      'It counts the hours you spend off your phone. Everyone’s hours raise the building, and when it tops out the town throws a party.',
+      'Line up your builder’s jobs, tap Clock in and set the phone down. When the foreman whistles, every 15 to 30 minutes, tap the screen so the crew keeps going.',
+    ];
+    say.forEach((t) => body.appendChild(el('p', 'bd-introp', esc(t))));
+    const ok = button('Got it', 'bd-start bd-gotit', close);
+    body.appendChild(ok);
+    setTimeout(() => ok.focus({ preventScroll: true }), 30);
+  });
+}
+function helpButton() {
+  const b = el('button', 'iconbtn bd-whatis', '?');
+  b.type = 'button';
+  b.setAttribute('aria-label', 'What is The Build?');
+  b.addEventListener('click', introSheet);
+  return b;
+}
+/* the first open: after the tab has painted, never over a shift or a link to a post */
+let introTimer = 0;
+function maybeIntro() {
+  clearTimeout(introTimer);
+  if (store.read(INTRO_KEY, 0)) return;
+  introTimer = setTimeout(() => {
+    if (!B.active || B.side !== 'build' || store.read(INTRO_KEY, 0) || shiftOpen() || running() || ending() || !sheetFree()) return;
+    introSheet();
+  }, 600);
+}
+const sheetFree = () => { const sh = document.getElementById('sheet'); return !sh || sh.hidden; };
+
+/* --------------------------------------------------- your builder's jobs */
+/* Stephen, 2026-10-22, after his girlfriend asked "it's cool, but do you do
+   anything?": you line up your builder's jobs, 15 minutes each, and during a
+   shift the builder works through them on the site, so a glance tells you
+   roughly how far in you are ("on the windows, so about 30 minutes in").
+   The jobs are the building's own (site.needs(): what it needs next, in
+   order, plus Haul materials). A list you never touch is the building's
+   next four. Jobs worked to the end drop off when the shift is banked;
+   the rest wait for the next one. The list is this phone's. */
+const CHUNK_MS = CHUNK_MIN * 60000;
+const jobsStore = () => { const v = store.read(JOBS_KEY, null); return v && typeof v === 'object' && Array.isArray(v.list) ? v : { list: [], edited: false, shift: null }; };
+const knownJob = (k) => typeof k === 'string' && Object.prototype.hasOwnProperty.call(SITE_JOBS, k);
+/* the floor the work is on, in the building's words (until the site can say) */
+function floorWord() { const f = floors(); return f.topped ? 'roof' : f.done === 0 ? 'ground floor' : nth(f.done + 1) + ' floor'; }
+function needsNow() {
+  let n = null;
+  try { n = site && site.needs ? site.needs() : null; } catch (e) { n = null; }
+  if (Array.isArray(n) && n.length) return n.filter((x) => x && knownJob(x.key));
+  return ['frame', 'wire', 'glaze', 'haul'].map((key) => ({ key, label: jobLabel(key, floorWord()) }));
+}
+function jobWordsOf(key) { const n = needsNow().find((x) => x.key === key); return n ? n.label : jobLabel(key, floorWord()); }
+function defaultJobs() {
+  const keys = needsNow().map((x) => x.key).filter((k) => k !== 'haul').slice(0, 4);
+  if (keys.length < 3) keys.push('haul');
+  return keys;
+}
+const running = () => { const s = status(); return s && s.state !== 'missed' ? s : null; };
+/* the list as it stands: frozen for the shift that's running; otherwise
+   yours (less anything the building is past) or the building's next four */
+function jobList() {
+  const j = jobsStore();
+  const s = running();
+  if (s && j.shift === s.id && j.list.length) return j.list.filter(knownJob);
+  if (!j.edited) return defaultJobs();
+  const open = new Set(needsNow().map((x) => x.key));
+  const mine = j.list.filter((k) => knownJob(k) && open.has(k)).slice(0, JOBS_MAX);
+  return mine.length ? mine : defaultJobs();
+}
+function saveJobs(list, edited) {
+  const s = running();
+  store.write(JOBS_KEY, { list: list.filter(knownJob).slice(0, JOBS_MAX), edited: !!edited, shift: s ? s.id : null });
+}
+/* clocking in: the list holds still for this shift */
+function freezeJobs(id) { const j = jobsStore(); store.write(JOBS_KEY, { list: jobList(), edited: j.edited, shift: id || null }); }
+/* banked: the jobs worked to the end drop off; an emptied list goes back to the building's */
+function consumeJobs(minutes) {
+  const j = jobsStore();
+  const list = (j.list.length ? j.list : jobList()).filter(knownJob);
+  const left = list.slice(Math.min(list.length, Math.floor((Number(minutes) || 0) / CHUNK_MIN)));
+  store.write(JOBS_KEY, { list: left, edited: !!j.edited && left.length > 0, shift: null });
+}
+/* where the shift is on the list: the job now, its place, how far into it */
+function jobAt(s) {
+  if (!s || s.state === 'missed') return null;
+  const ms = s.worked_ms != null ? s.worked_ms : (Number(s.minutes) || 0) * 60000;
+  const list = jobList(), i = Math.floor(ms / CHUNK_MS);
+  return { i, n: list.length, key: list[i] || null, frac: (ms % CHUNK_MS) / CHUNK_MS, list };
+}
+/* when a job comes up, in the words a glance wants ("so about 30 minutes in") */
+const at = (i) => (i ? hm(i * CHUNK_MIN) + ' in' : 'First');
+const ICON_UP = svg('<path d="m6 14.5 6-6 6 6"/>');
+const ICON_GRIP = svg('<circle cx="9" cy="6.5" r="1.3"/><circle cx="15" cy="6.5" r="1.3"/><circle cx="9" cy="12" r="1.3"/><circle cx="15" cy="12" r="1.3"/><circle cx="9" cy="17.5" r="1.3"/><circle cx="15" cy="17.5" r="1.3"/>');
+
+/* the list, on the tab (and in a sheet during a shift): drag the grip, or
+   up and down; x takes one off; a short row of what the building needs next
+   adds one to the end */
+function jobsCard(inSheet) {
+  const c = el('section', 'bd-jobs');
+  if (inSheet) c.classList.add('in-sheet'); else c.dataset.k = 'jobs';
+  paintJobs(c);
+  return c;
+}
+/* on the Clock in card: the job your builder starts on, and a way to the list */
+function jobsPeek() {
+  const list = jobList();
+  const b = el('button', 'bd-peek', ICON_BUILD + '<span class="bd-peekt"><span class="bd-peekl">' + esc('First job') + '</span>' + esc(jobWordsOf(list[0])) + '</span>' +
+    '<span class="bd-peekn">' + esc(list.length === 1 ? 'Change' : list.length + ' lined up') + '</span>' + ICON.right);
+  b.type = 'button';
+  b.setAttribute('aria-label', 'Your builder’s first job: ' + jobWordsOf(list[0]) + '. See the list');
+  b.addEventListener('click', () => {
+    const c = B.body && B.body.querySelector('.bd-jobs[data-k="jobs"]');
+    if (!c) return;
+    c.scrollIntoView({ behavior: reduced() ? 'auto' : 'smooth', block: 'start' });
+    app.flashHit(B.body, 'jobs');
+  });
+  return b;
+}
+function paintJobs(c) {
+  const s = running(), now = jobAt(s);
+  const lock = now ? Math.min(now.i + 1, now.list.length) : 0;   // done and current: they stay put
+  const list = jobList();
+  c.innerHTML = '';
+  c.dataset.sig = jobsSig();
+  const head = el('div', 'bd-jobs-head', (c.classList.contains('in-sheet') ? '' : '<h3 class="bd-jobs-h">' + esc('Your builder’s jobs') + '</h3>') + '<span class="bd-jobs-each">' + esc(CHUNK_MIN + ' min each') + '</span>');
+  c.appendChild(head);
+  const ol = el('ol', 'bd-joblist');
+  ol.setAttribute('aria-label', 'Your builder’s jobs, in order');
+  const commit = (next) => { saveJobs(next, true); paintJobs(c); syncJobs(); };
+  list.forEach((key, i) => {
+    const li = el('li', 'bd-job');
+    li.dataset.key = key; li.dataset.i = String(i);
+    const done = now && i < now.i, cur = now && i === now.i, fixed = i < lock;
+    if (done) li.classList.add('done');
+    if (cur) li.classList.add('now');
+    const name = jobWordsOf(key);
+    li.innerHTML = (fixed ? '<span class="bd-grip off" aria-hidden="true"></span>' : '<span class="bd-grip" aria-hidden="true">' + ICON_GRIP + '</span>') +
+      '<span class="bd-jobn">' + (done ? ICON.check : String(i + 1)) + '</span>' +
+      '<span class="bd-jobt">' + esc(name) + '</span>' +
+      '<span class="bd-jobat">' + esc(done ? 'Done' : cur ? 'Now' : at(i)) + '</span>';
+    if (!fixed) {
+      const tools = el('span', 'bd-jobtools');
+      const mv = (d) => { const b = el('button', 'iconbtn bd-jobmv', d < 0 ? ICON_UP : ICON.down); b.type = 'button';
+        b.setAttribute('aria-label', (d < 0 ? 'Move up: ' : 'Move down: ') + name);
+        b.disabled = d < 0 ? i <= lock : i >= list.length - 1;
+        b.addEventListener('click', () => { const n = list.slice(); [n[i], n[i + d]] = [n[i + d], n[i]]; commit(n); requestAnimationFrame(() => { const q = c.querySelector('.bd-job[data-i="' + (i + d) + '"] .bd-jobmv' + (d < 0 ? ':first-child' : ':nth-child(2)')); if (q && !q.disabled) q.focus({ preventScroll: true }); }); });
+        return b; };
+      const x = el('button', 'iconbtn bd-jobx', ICON.x); x.type = 'button';
+      x.setAttribute('aria-label', 'Take off the list: ' + name);
+      x.disabled = list.length <= 1;
+      x.addEventListener('click', () => { const n = list.slice(); n.splice(i, 1); commit(n); });
+      tools.append(mv(-1), mv(1), x);
+      li.appendChild(tools);
+      dragRow(li, ol, lock, (from, to) => { const n = list.slice(); const [k] = n.splice(from, 1); n.splice(to, 0, k); commit(n); });
+    }
+    ol.appendChild(li);
+  });
+  c.appendChild(ol);
+  if (list.length < JOBS_MAX) {
+    const adds = el('div', 'bd-adds');
+    adds.setAttribute('role', 'group');
+    adds.setAttribute('aria-label', 'Add a job');
+    adds.appendChild(el('span', 'bd-addh', esc('Add')));
+    /* what the building needs next that isn't on the list yet, then Haul materials (always) */
+    const needs = needsNow().filter((x) => x.key !== 'haul');
+    let next = needs.filter((x) => !list.includes(x.key)).slice(0, 4);
+    if (next.length < 2) next = next.concat(needs.filter((x) => list.includes(x.key)).slice(0, 2 - next.length));
+    next = next.concat({ key: 'haul', label: jobLabel('haul') });
+    next.forEach((n) => {
+      const b = el('button', 'chip bd-add', ICON.plus + '<span>' + esc(n.label) + '</span>');
+      b.type = 'button'; b.dataset.key = n.key;
+      b.addEventListener('click', () => commit(list.concat(n.key)));
+      adds.appendChild(b);
+    });
+    c.appendChild(adds);
+  }
+  if (jobsStore().edited && !s) {
+    const reset = button('Back to the building’s list', 'ghost bd-jobsreset', () => { store.write(JOBS_KEY, { list: [], edited: false, shift: null }); paintJobs(c); syncJobs(); });
+    c.appendChild(reset);
+  }
+}
+/* drag a row by its grip (mouse, finger or pen); rows above `lock` stay put */
+function dragRow(li, ol, lock, done) {
+  const grip = li.querySelector('.bd-grip');
+  if (!grip) return;
+  grip.addEventListener('pointerdown', (e) => {
+    if (e.button > 0) return;
+    e.preventDefault();
+    const rows = [...ol.children], from = rows.indexOf(li);
+    const mids = rows.map((r) => { const b = r.getBoundingClientRect(); return b.top + b.height / 2; });
+    const y0 = e.clientY;
+    let to = from;
+    li.classList.add('drag');
+    try { grip.setPointerCapture(e.pointerId); } catch (x) { /* fine */ }
+    const move = (ev) => {
+      const dy = ev.clientY - y0, y = mids[from] + dy;
+      li.style.transform = 'translateY(' + dy + 'px)';
+      let k = 0;
+      while (k < mids.length - 1 && y > (mids[k] + mids[k + 1]) / 2) k++;
+      to = Math.max(lock, k);
+      rows.forEach((r, j) => { if (r === li) return; const shift = from < to && j > from && j <= to ? -1 : from > to && j >= to && j < from ? 1 : 0; r.style.transform = shift ? 'translateY(' + shift * li.offsetHeight + 'px)' : ''; });
+    };
+    const up = () => {
+      grip.removeEventListener('pointermove', move); grip.removeEventListener('pointerup', up); grip.removeEventListener('pointercancel', up);
+      rows.forEach((r) => { r.style.transform = ''; });
+      li.classList.remove('drag');
+      if (to !== from) done(from, to);
+    };
+    grip.addEventListener('pointermove', move); grip.addEventListener('pointerup', up); grip.addEventListener('pointercancel', up);
+  });
+}
+const jobsSig = () => jobList().join(',') + '|' + needsNow().map((x) => x.key + ':' + x.label).join(',') + '|' + (jobAt(running()) || { i: -1 }).i;
+/* the site's needs or the list changed: the card on the tab, an open sheet, and your builder follow */
+function syncJobs() {
+  document.querySelectorAll('.bd-jobs').forEach((c) => { if (c.dataset.sig !== jobsSig()) paintJobs(c); });
+  document.querySelectorAll('#panel-build .bd-peek').forEach((p) => { const n = jobsPeek(); if (n.textContent !== p.textContent) p.replaceWith(n); });
+  paintJobPill();
+  if (site) site.setYou(youState());
+}
+/* during a shift: the list in a sheet, done jobs ticked, the one on now fixed */
+function jobsSheet() {
+  app.sheet('Your builder’s jobs', (body) => { body.appendChild(jobsCard(true)); });
+}
+/* the stopwatch's job line: the job now, one of n, and a bar of 15-minute pieces */
+function paintJobPill() {
+  const w = dock && dock.querySelector('.bd-watchjobs');
+  if (!w) return;
+  const j = jobAt(running());
+  if (!j || !j.n) { w.hidden = true; return; }
+  w.hidden = false;
+  const t = w.querySelector('.bd-wjt');
+  const words = j.key ? (j.n > 1 ? 'Job ' + (j.i + 1) + ' of ' + j.n + ' · ' : '') + jobWordsOf(j.key) : 'List done · helping where it’s needed';
+  if (t.textContent !== words) t.textContent = words;
+  w.setAttribute('aria-label', words + '. Your builder’s jobs');
+  const bar = w.querySelector('.bd-wjbar');
+  if (bar.children.length !== j.n) { bar.innerHTML = ''; for (let k = 0; k < j.n; k++) bar.appendChild(el('i', '', '<b></b>')); }
+  [...bar.children].forEach((seg, k) => { seg.firstChild.style.width = (k < j.i ? 100 : k === j.i ? Math.round(j.frac * 100) : 0) + '%'; });
 }
 
 /* ------------------------------------------------------------ your thing */
@@ -1024,6 +1277,12 @@ function ensureDock() {
   cut.addEventListener('click', () => setCut(!B.cut));
   /* a shift: the stopwatch on top, and the whistle's card in the middle */
   const watch = el('div', 'bd-watch', '<span class="bd-watchl">On shift</span><span class="bd-digits">0:00</span><span class="bd-watchjob"></span>');
+  /* your list: the job now, and a bar of 15-minute pieces; a tap opens the list */
+  const jobs = el('button', 'bd-watchjobs', '<span class="bd-wjt"></span><span class="bd-wjbar" aria-hidden="true"></span>');
+  jobs.type = 'button';
+  jobs.hidden = true;
+  jobs.addEventListener('click', jobsSheet);
+  watch.appendChild(jobs);
   watch.setAttribute('role', 'timer');
   watch.setAttribute('aria-label', 'Time on shift');
   const wcard = el('div', 'bd-wcard', '<span class="bd-wcardh">The foreman’s whistle</span><span class="bd-wcardt">Tap to answer · <b>3:00</b></span>');
@@ -1186,8 +1445,9 @@ function feedSite() {
     site.setSky(sky());
     site.cutaway(B.cut, { your_minutes: yourMinutes() });
   } catch (e) { console.error('[all-day] build site', e); }
+  syncJobs();
 }
-let tapsDown = 0;
+let tapsDown = 0, lastJob = -1;
 function youState() {
   const look = { hat: (B.builder && B.builder.hat) || 'yellow', vest: (B.builder && B.builder.vest) || 'orange' };
   const name = (B.builder && B.builder.first_name) || null;     // your own tag, on your own screen
@@ -1195,8 +1455,11 @@ function youState() {
   if (ending() || (s && s.state === 'missed')) return { state: 'off', look, task: null, name };
   /* not on shift: waiting in front of the building, to clock in */
   if (!s) return { state: 'ready', look, task: null, name };
-  if (s.state === 'paused' || document.visibilityState === 'hidden') return { state: 'away', look, task: s.task, name };
-  return { state: Date.now() < tapsDown ? 'paused' : 'working', look, task: s.task, name };
+  /* the job on your list right now: your builder works that trade */
+  const j = jobAt(s), job = j && j.key ? j.key : null;
+  const task = job && SITE_JOBS[job].task ? SITE_JOBS[job].task : s.task;
+  if (s.state === 'paused' || document.visibilityState === 'hidden') return { state: 'away', look, task, name, job };
+  return { state: Date.now() < tapsDown ? 'paused' : 'working', look, task, name, job };
 }
 
 /* Burlington's sun, worked out here (the standard few lines of solar
@@ -1295,6 +1558,7 @@ function startShift(step) {
     if (!r.ok) { app.toast(r.message || FAIL); return; }
     B.firstStep = '';
     store.write(ENDING_KEY, null);
+    freezeJobs(r.shift && r.shift.id);
     openShift();
   });
 }
@@ -1309,6 +1573,10 @@ function openShift() {
   document.body.classList.add('bd-shifting');
   lastState = null;
   lastBeat = 0;
+  lastJob = -1;
+  /* a shift picked back up (a reload, an older version of the tab): its list holds still from here */
+  const run = running();
+  if (run && jobsStore().shift !== run.id) freezeJobs(run.id);
   wake();
   watchMotion(true);
   placeBubble();
@@ -1372,12 +1640,15 @@ function onTick() {
   }
   paintFoot();
   paintWatch(s);
+  /* a new job on the list: your builder moves on to it */
+  const j = jobAt(s), ji = j ? j.i : -1;
+  if (ji !== lastJob) { lastJob = ji; syncJobs(); } else paintJobPill();
   tickNumbers();
   if (document.visibilityState === 'visible') store.write(SEEN_AT_KEY, Date.now());
   /* the heartbeat: the page is alive and in front (the clock pauses a shift whose page went quiet) */
   if (document.visibilityState === 'visible' && (s.state === 'working' || s.state === 'whistle') && Date.now() - lastBeat >= 30000) {
     lastBeat = Date.now();
-    go(() => api().shift.heartbeat({ task: s.task }));
+    go(() => api().shift.heartbeat({ task: youState().task || s.task }));
   }
 }
 const say = (t) => { const live = dock && dock.querySelector('.bd-live'); if (live) live.textContent = t; };
@@ -1486,6 +1757,7 @@ function bank(note, why, thenPost, title) {
     store.write(ENDING_KEY, null);
     if (!r.ok) { app.toast(r.message || FAIL); closeShift(); return; }
     const mins = Number(r.minutes) || e.minutes || 0;
+    consumeJobs(mins);
     closeShift();
     if (site && mins >= 1) site.dropMaterial(mins >= 90 ? 'timber' : mins >= 30 ? 'brick' : 'lumber');
     if (thenPost) postSheet({ kind: 'progress', line: why ? '' : note, minutes: mins, shift: r.shift && r.shift.id });
@@ -1733,6 +2005,8 @@ function sideSwitch(on) {
   [...sw.children].forEach((b, i) => { b.dataset.side = ['build', 'habits'][i]; b.setAttribute('aria-pressed', String(b.dataset.side === on)); });
   liquify(sw, { key: 'bd-side', idx: on === 'habits' ? 1 : 0, colors: ['--liq-build', '--liq-habits'] });
   row.appendChild(sw);
+  /* What is The Build? The intro again, on the Build side */
+  if (on === 'build') row.appendChild(helpButton());
   return row;
 }
 function wrapRow(top, row) {
@@ -1774,6 +2048,7 @@ app.register(KEY, {
     store.write(SIDE_KEY, 'build');
     if (param === 'habits') { app.go('habits'); return; }
     if (param && /^p-[\w-]{1,80}$/.test(param)) { B.flash = param; land(); }
+    else maybeIntro();
     showDock(true);
     if (dock && dock.dataset.state === 'full' && !shiftOpen()) setDock('dock');
     dropPallets();
@@ -1785,6 +2060,7 @@ app.register(KEY, {
   refresh() { paint(); },
   deactivate() {
     B.active = false;
+    clearTimeout(introTimer);
     clearTimeout(talkTimer); clearInterval(skyTimer);
     showDock(false);
   },
