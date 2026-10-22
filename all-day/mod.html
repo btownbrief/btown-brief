@@ -9,7 +9,8 @@
        Photos on board posts are moderated where every reader photo is, in
        ../photo-admin.html; this page is for the posts themselves: what two
        reports took down, what a pre-moderated board is holding, bans, and
-       People's list of plans whose hosts are down for Meetup. Opening it
+       People's list of plans whose hosts are down for Meetup, and the
+       No-algorithm challenge's feedback (nn-CHALLENGE.sql). Opening it
        also sweeps stray board photos (nn-ROUND2.sql): queue photos nobody
        posted, and picture files that never made it into the queue.
        ?demo=1 runs on the in-memory fake with passphrase "demo". -->
@@ -43,6 +44,7 @@
     import * as store from './js/store.js';
     import { BOARD_LABELS, REASON_LABELS } from './js/boards-core.js';
     import { FakeBoards, seedDemo } from './js/boards-fake.js';
+    import { ARCHETYPES, MISSED, FEELINGS } from './js/challenge-core.js';
 
     const demo = new URLSearchParams(location.search).get('demo') === '1';
     const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -137,6 +139,46 @@
       });
     }
 
+    /* The No-algorithm challenge's answers (nn_challenge_list, behind the same
+       passphrase; supabase/nn-CHALLENGE.sql). Tallies first, then every
+       answer, newest first. No names: a row is a phone, never a person. */
+    const DEMO_CHALLENGE = { count: 2, archetypes: { nightowl: 1, foodie: 1 }, missed: { friends: 2, messages: 1 }, feelings: { calmer: 3, caved: 1, great: 2 },
+      rows: [
+        { updated_at: new Date().toISOString(), source: 'newsletter', day: 6, feed_free_days: 4, feelings: ['1:calmer', '2:great', '3:caved', '4:calmer', '5:great'], missed: ['friends', 'messages'], missed_other: 'Bird photos from the Intervale group', switch_for: 'A place for my run club’s chat', archetype: 'joiner', archetype_words: '' },
+        { updated_at: new Date(Date.now() - 86400000).toISOString(), source: 'link', day: 3, feed_free_days: 2, feelings: ['1:calmer', '2:calmer'], missed: ['friends'], missed_other: '', switch_for: 'Show times for Higher Ground on the Wire', archetype: 'nightowl', archetype_words: 'night shift nurse' },
+      ] };
+    async function challenge(host, btn) {
+      btn.disabled = true;
+      const r = demo ? DEMO_CHALLENGE : await rpc('nn_challenge_list', { p_secret: secret });
+      btn.disabled = false;
+      host.innerHTML = '';
+      const note = (t) => { const p = document.createElement('p'); p.className = 'sheet-note'; p.textContent = t; host.appendChild(p); return p; };
+      if (!r || r.error) { note(r && r.error === 'not_installed' ? 'The challenge’s table isn’t set up yet: run bash scripts/setup_boards.sh challenge (newsletter repo) and paste.' : 'Didn’t work: ' + ((r && r.error) || 'offline')); return; }
+      const name = (list, k) => (list.find((x) => x[0] === k) || [k, k])[1];
+      const tally = (label, obj, list) => {
+        const bits = Object.entries(obj || {}).sort((a, b) => b[1] - a[1]).map(([k, n]) => name(list, k) + ' ' + n);
+        note(label + ': ' + (bits.length ? bits.join(' · ') : 'none yet'));
+      };
+      note((r.count || 0) + (r.count === 1 ? ' answer' : ' answers') + ' so far.');
+      tally('Kinds of person', r.archetypes, ARCHETYPES);
+      tally('Missed', r.missed, MISSED);
+      tally('How days felt', r.feelings, FEELINGS);
+      (r.rows || []).forEach((x) => {
+        const d = document.createElement('div');
+        d.className = 'desk-post';
+        d.dataset.challenge = '';
+        const top = [x.archetype ? name(ARCHETYPES, x.archetype) : '', x.archetype_words ? '“' + x.archetype_words + '”' : '',
+          x.day ? (x.day > 5 ? 'finished' : 'day ' + x.day) : 'not joined', (x.feed_free_days || 0) + ' feed-free', 'from ' + x.source, when(x.updated_at)].filter(Boolean);
+        const feel = (x.feelings || []).map((f) => 'day ' + f.split(':')[0] + ' ' + name(FEELINGS, f.split(':')[1]).toLowerCase()).join(', ');
+        const missed = (x.missed || []).map((k) => name(MISSED, k)).concat(x.missed_other ? [x.missed_other] : []).join(', ');
+        d.innerHTML = '<div><div class="t">' + esc(top.join(' · ')) + '</div>' +
+          (x.switch_for ? '<p class="desk-body">' + esc(x.switch_for) + '</p>' : '') +
+          (missed ? '<div class="d">Missed: ' + esc(missed) + '</div>' : '') +
+          (feel ? '<div class="d">' + esc(feel) + '</div>' : '') + '</div>';
+        host.appendChild(d);
+      });
+    }
+
     let toastT = 0;
     function toast(m) { const t = $('toast'); t.textContent = m; t.hidden = false; clearTimeout(toastT); toastT = setTimeout(() => { t.hidden = true; }, 2400); }
     const photoUrl = (path) => (demo ? null : store.SB_URL + '/storage/v1/object/public/btb-photos/' + path.split('/').map(encodeURIComponent).join('/'));
@@ -212,6 +254,19 @@
       mbtn.addEventListener('click', () => meetups(mlist, mbtn));
       mrow.appendChild(mbtn);
       desk.append(mrow, mlist);
+      const ch = document.createElement('h2');
+      ch.className = 'sheet-h';
+      ch.textContent = 'No-algorithm challenge';
+      const crow = document.createElement('div');
+      crow.className = 'linkrow';
+      const cbtn = document.createElement('button');
+      cbtn.className = 'btn sm';
+      cbtn.textContent = 'Show the feedback';
+      cbtn.dataset.challengeBtn = '';
+      const clist = document.createElement('div');
+      cbtn.addEventListener('click', () => challenge(clist, cbtn));
+      crow.appendChild(cbtn);
+      desk.append(ch, crow, clist);
       section(desk, 'Reported once, still up', r.reported, [['approve', 'Keep it'], ['hide', 'Hide'], ['ban', 'Ban', 'danger']], 'No open reports.');
       section(desk, 'Live now, newest 50', r.recent, [['hide', 'Hide'], ['delete', 'Delete']], 'No posts yet.');
       section(desk, 'Hidden', r.hidden, [['approve', 'Put it back']], 'Nothing hidden.');

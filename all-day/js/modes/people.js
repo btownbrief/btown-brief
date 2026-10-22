@@ -41,6 +41,17 @@
      tables, other Meetup groups; people-match.js's mixerKind) and the
      readers' approved gatherings, marked as reader-posted. A link to the
      full events calendar, and a card asking people to host.
+   - Dating (Stephen's walk, 2026-10-22). The calendar's singles nights and
+     speed dating from now to the end of the events file; readers' plans
+     whose words say singles, with a rose "Post a singles plan" (a plan
+     filled in: going out as a group, join us; the board needs no new
+     field); the local ways to meet someone and a few dating headlines,
+     from data/dating-pets.json, checked by hand.
+   - Pets. The dog parks (a sheet each with its town's rules, a map and
+     "Meet people here"), the calendar's pet events (people-match.js's
+     petEvent: never a hot dog or a kids' program), readers' dog park plans
+     and the shelter. "Single" and "A pet person" are who-you-are tags:
+     they stay on this device and put a row to their section in For you.
    - Clubs. data/groups.json's groups that fit the reader, or a featured one
      and a fresh handful each visit, and the clubs page.
    - The quiz. Seven plain questions; it never asks age, gender or
@@ -74,7 +85,7 @@ import * as boards from '../boards.js';
 import { el, esc, safeHref, ICON, mark, section, chips, pills, button, cards, meetRow, rail, listRail } from '../ui.js';
 import * as cw from '../clubs-week.js';
 import { sectionBar } from '../sections.js';
-import { MATCH, KIND_WORDS, bestFor, fitsText, mixerKind, MIXER_WORDS, handleLink, gatheringWhen } from '../people-match.js';
+import { MATCH, KIND_WORDS, bestFor, fitsText, mixerKind, MIXER_WORDS, handleLink, gatheringWhen, SINGLES, petEvent } from '../people-match.js';
 import { RULES, ARCHETYPE_LABELS, NEIGHBORHOOD_LABELS, HANDLE_LABELS, message, checkPost } from '../boards-core.js';
 
 const KEY = 'people';
@@ -85,6 +96,9 @@ const EVENTS_PAGE = '../events.html';   // the guide's full events calendar
 const HOST_MAIL = 'mailto:btownbrief@gmail.com?subject=' + encodeURIComponent('I’d like to host something with the crew') + '&body=' +
   encodeURIComponent('Hi Steve,\n\nI’d like to host something for the Btown Brief crew.\n\nWhat I’d host:\nWhen:\nWhere:\n\nA good time for coffee:\n');
 const RUN_CLUBS_URL = '../data/run-clubs.json';
+/* Dating and Pets: the ways to meet someone, dating news, the dog parks and their rules, checked by hand */
+const DP_URL = '../data/dating-pets.json';
+const NEWS_DAYS = 180;     // a dating headline older than this stops showing, unless it is evergreen
 const MEETUP_GROUP = 'https://www.meetup.com/burlington-social-activites-group/';
 /* Stephen's own Meetup calendar: Up For It's copy of the group's iCal,
    refreshed every six hours and a month deep (up-for-it/.github/workflows/
@@ -129,10 +143,10 @@ const ARCH = [
 const FOR = { new: 'new in town', regular: 'weeknight regulars', trail: 'trail people', games: 'game night people' };
 /* who you are: kept on this device, never sent anywhere */
 const WHO = [['student', 'A college student'], ['grad', 'Just graduated'], ['moved', 'Just moved here'], ['older', 'Older, looking for things to do'],
-  ['women', 'A woman finding my people'], ['lgbtq', 'LGBTQ+, finding my people'], ['sober', 'Sober']];
+  ['women', 'A woman finding my people'], ['lgbtq', 'LGBTQ+, finding my people'], ['sober', 'Sober'], ['single', 'Single'], ['pets', 'A pet person']];
 /* the short name of each tile, for the line over the For you strip */
 const TAG_NAME = { student: 'college students', grad: 'recent grads', moved: 'people new to town', older: 'older adults', women: 'women',
-  lgbtq: 'LGBTQ+', sober: 'Sober' };
+  lgbtq: 'LGBTQ+', sober: 'Sober', single: 'singles', pets: 'pet people' };
 /* what you are into: the ones the directory may show, if you join it */
 const INTO = [['sports', 'An athlete'], ['games', 'A gamer'], ['running', 'A runner'], ['outdoors', 'Outdoorsy'], ['music', 'Into live music'],
   ['dance', 'A dancer'], ['books', 'A reader'], ['making', 'A maker'], ['languages', 'Learning a language'], ['food', 'Into food and drink']];
@@ -142,7 +156,7 @@ const AGES = { twenties: 'Mostly 20s', thirties: 'Mostly 30s', forties: 'Mostly 
 
 const AGE_CHIP = { twenties: '20s', thirties: '30s', forties: '40s', fifties: '50+' };
 const ACT_CHIP = { sports: 'Sports', running: 'Running', outdoors: 'Outdoors', games: 'Games', music: 'Music', dance: 'Dancing', books: 'Books',
-  making: 'Making', languages: 'Languages', food: 'Food & drink' };
+  making: 'Making', languages: 'Languages', food: 'Food & drink', single: 'Singles', pets: 'Pets' };
 /* the plan the quiz suggests posting, by what it learned (first tag, else the archetype) */
 const PLAN_IDEAS = { new: 'Coffee and a walk, new in town', regular: 'Trivia night, need a team', trail: 'Saturday hike, who’s in?',
   games: 'Board game night, need players', running: 'Easy group run, all paces', sports: 'Pickup game, need a few more',
@@ -209,9 +223,11 @@ const S = {
   q: null,                             // the quiz in progress or done
   rc: null, rcFailed: false,           // data/run-clubs.json's clubs
   rcKind: null, rcDay: null,           // the Run / Fitness switch and the day picked on the strip, for the visit
+  dp: null, dpFailed: false,           // data/dating-pets.json
 };
 let root = null, slots = null, pending = null, demoD = null, plansRun = 0;
-const SECS = [['arch', 'Who you are'], ['clubs', 'Run clubs'], ['plans', 'Open to strangers'], ['mix', 'Mixers'], ['groups', 'Clubs'], ['quiz', 'Quiz'], ['dir', 'People here']];
+const SECS = [['arch', 'Who you are'], ['clubs', 'Run clubs'], ['plans', 'Open to strangers'], ['mix', 'Mixers'], ['dating', 'Dating'], ['pets', 'Pets'], ['groups', 'Clubs'],
+  ['quiz', 'Quiz'], ['dir', 'People here']];
 /* every tile and tag the reader has picked, as MATCH keys: the archetype
    as 'a:<tile>', then the tags, then what the quiz learned */
 const picks = () => (S.arch ? ['a:' + S.arch] : []).concat(S.tags, S.quizTags.filter((t) => !S.tags.includes(t))).filter((k) => MATCH[k]);
@@ -459,7 +475,7 @@ function loadPlans() {
       S.posts = posts;
       S.plansState = 'ok';
     });
-  }).then(() => { if (run === plansRun) { drawPlans(); app.recount(); land(); } });
+  }).then(() => { if (run === plansRun) { drawPlans(); drawDating(); drawPets(); app.recount(); land(); } });
 }
 
 /* `adopt`: the profile's archetype becomes the tab's. Not while the tab's
@@ -553,7 +569,7 @@ function feedEvents(j) {
   });
 }
 function loadLive() {
-  data.load('whatnow', (j) => { S.events = j.events; drawMix(); land(); }, () => { S.eventsFailed = true; drawMix(); land(); });
+  data.load('whatnow', (j) => { S.events = j.events; drawMix(); drawDating(); drawPets(); land(); }, () => { S.eventsFailed = true; drawMix(); drawDating(); drawPets(); land(); });
   data.fetchJSON(MEETUP_FEED, 8000).then((j) => { S.feed = feedEvents(j); }, () => { S.feed = []; }).then(() => { drawMix(); land(); });
   data.fetchJSON(GROUPS_URL, 8000).then((j) => {
     if (!j || !Array.isArray(j.groups)) throw new Error('bad shape');
@@ -563,9 +579,17 @@ function loadLive() {
     if (!j || !Array.isArray(j.clubs)) throw new Error('bad shape');
     S.rc = j.clubs;
   }).catch(() => { S.rcFailed = true; }).then(() => { drawClubs(); drawForYou(); land(); });
+  loadDP();
   loadPlans();
   loadGatherings();
   loadProfile().then(() => Promise.all([loadDir(), loadHandles()]));
+}
+/* the hand-checked Dating and Pets file, the same live and in the demo */
+function loadDP() {
+  data.fetchJSON(DP_URL, 8000).then((j) => {
+    if (!j || !j.dating || !j.pets) throw new Error('bad shape');
+    S.dp = j;
+  }).catch(() => { S.dpFailed = true; }).then(() => { drawDating(); drawPets(); drawForYou(); land(); });
 }
 
 function loadDemo() {
@@ -576,6 +600,7 @@ function loadDemo() {
     S.groups = demoD.groups;
     render();
     app.demoData('run-clubs').then((j) => { S.rc = cw.redateDemo(j, Date.now()).clubs; }, () => { S.rcFailed = true; }).then(() => { drawClubs(); drawForYou(); land(); });
+    loadDP();
     loadPlans();
     loadGatherings();
     loadProfile().then(() => Promise.all([loadDir(), loadHandles()]));
@@ -736,10 +761,10 @@ function render() {
   if (!slots) {
     root.innerHTML = '';
     slots = {};
-    ['chat', 'arch', 'foryou', 'clubs', 'plans', 'mix', 'host', 'groups', 'quiz', 'dir', 'talk'].forEach((k) => { const s = el('div'); s.dataset.sec = k; slots[k] = s; root.appendChild(s); });
+    ['chat', 'arch', 'foryou', 'clubs', 'plans', 'mix', 'host', 'dating', 'pets', 'groups', 'quiz', 'dir', 'talk'].forEach((k) => { const s = el('div'); s.dataset.sec = k; slots[k] = s; root.appendChild(s); });
     root.appendChild(el('div', 'spacer'));
   }
-  drawChat(); drawArch(); drawForYou(); drawClubs(); drawPlans(); drawMix(); drawHost(); drawGroups(); drawQuiz(); drawDir(); drawTalk();
+  drawChat(); drawArch(); drawForYou(); drawClubs(); drawPlans(); drawMix(); drawHost(); drawDating(); drawPets(); drawGroups(); drawQuiz(); drawDir(); drawTalk();
 }
 
 /* The group chat, first thing on the tab: a title, one line, one button.
@@ -836,8 +861,17 @@ function drawForYou() {
   s.appendChild(box);
   if (!S.groups && !S.groupsFailed) { box.appendChild(el('p', 'loading', 'One moment…')); return; }
   const best = bestFor(keys, (S.groups || []).filter(usableGroup), (S.rc || []).filter(usableClub), FOR_YOU, Date.now());
-  if (!best.length) { box.appendChild(el('p', 'note', 'Nothing yet for that.')); return; }
+  /* Single and A pet person have a section of their own: a row to it */
+  const jumps = [['single', 'dating', 'Dating', 'Singles nights and where to meet someone'], ['pets', 'pets', 'Pets', 'Dog parks and pet events']].filter(([k]) => keys.includes(k));
+  if (!best.length && !jumps.length) { box.appendChild(el('p', 'note', 'Nothing yet for that.')); return; }
   best.forEach((x) => box.appendChild(matchRow(x, 'fy')));
+  jumps.forEach(([, key, name, line]) => {
+    const r = el('button', 'lrow mixrow', mark(name, 'round lg') + '<div><div class="t">' + esc(name) + '</div><div class="s one">' + esc(line) + '</div></div>' + ICON.down);
+    r.type = 'button';
+    r.dataset.k = 'fy:' + key;
+    r.addEventListener('click', () => app.jumpTo(slots && slots[key]));
+    box.appendChild(r);
+  });
 }
 
 /* ------------------------------------------------------ the club week */
@@ -862,7 +896,7 @@ function drawClubs() {
   sw.dataset.rcKind = kind;
   sec(s, kind === 'run' ? 'Run clubs this week' : 'Fitness this week', '', sw);
   /* the clubs page, right under the week, whatever state the week is in */
-  const every = () => { const r = el('div', 'addrow'); r.dataset.everyClub = '1'; r.appendChild(linkBtn('Every club and league in town', CLUBS_PAGE, 'ghost')); s.appendChild(r); };
+  const every = () => { const r = el('div', 'addrow'); r.dataset.everyClub = '1'; r.appendChild(linkBtn('Every club and league in town', CLUBS_PAGE, 'pkey')); s.appendChild(r); };
   if (!S.rc) { s.appendChild(el('p', S.rcFailed ? 'note pad' : 'loading', S.rcFailed ? 'The clubs didn’t load.' : 'One moment…')); every(); return; }
   const now = Date.now();
   const week = cw.weekStrip(S.rc, now, kind === 'run' ? runClub : fitClub).map((d) => ({ ...d, meets: d.meets.filter((o) => !o.past) }));
@@ -1234,6 +1268,221 @@ function drawHost() {
   s.appendChild(tc);
 }
 
+/* ------------------------------------------------- dating and pets */
+/* The calendar's events that pass `keep`, from now to the end of the
+   events file, soonest first, as mixer rows with their day in the second
+   line ("Sat, Oct 25 · Switchback"). */
+const SHORT_EV = new Intl.DateTimeFormat('en-US', { timeZone: BTV, weekday: 'short', month: 'short', day: 'numeric' });
+function calRows(keep, label, prefix, now = Date.now()) {
+  const seen = new Set(), out = [];
+  (S.events || []).forEach((e) => {
+    if (!e || !e.title || !/^https?:/i.test(String(e.url || '')) || !e.date || !keep(e)) return;
+    const allDay = !!e.allDay || !/T\d/.test(String(e.start || ''));
+    const [y, mo, d] = String(e.date).split('-').map(Number);
+    const at = allDay ? cw.wall(y, mo, d, 0, 0) : Date.parse(e.start);
+    if (!at) return;
+    const end = allDay ? cw.wall(y, mo, d, 23, 59) : (Date.parse(e.end) || at + 2 * 3600000);
+    if (end <= now) return;
+    const k = e.date + '|' + norm(e.title);
+    if (seen.has(k)) return;
+    seen.add(k);
+    const venue = String(e.venue || '').trim();
+    out.push({ k: prefix + String(e.id || slug(e.title + '-' + e.date)), title: String(e.title), href: e.url, date: e.date, at, allDay, kind: prefix.slice(0, -1),
+      where: [SHORT_EV.format(new Date(allDay ? cw.wall(y, mo, d, 12, 0) : at)), venue, e.town && e.town !== 'Burlington' ? e.town : ''].filter(Boolean).join(' · '),
+      label, reader: false });
+  });
+  return out.sort((a, b) => a.at - b.at || a.title.localeCompare(b.title));
+}
+/* a short heading inside a section */
+const subHead = (host, text) => host.appendChild(el('p', 'subh pad', '<b>' + esc(text) + '</b>'));
+/* a plan that fits `key`, as one row: its title and when; it opens the plan's card */
+function planRow(p) {
+  const r = el('button', 'lrow mixrow', mark(p.author || p.title, 'round lg') + '<div><div class="t">' + esc(p.title) + '</div><div class="s one">' +
+    esc(planMeta(p) || 'Open to strangers') + '</div></div>' + ICON.right);
+  r.type = 'button';
+  r.dataset.planRow = p.id;
+  r.addEventListener('click', () => {
+    S.filter = 'all'; S.fAge = null; S.fAct = null;
+    drawPlans();
+    app.flashHit(slots.plans, 'b-' + p.id);
+  });
+  return r;
+}
+/* a link out, as one row: a mark, a name, one line */
+function outRow(name, line, href, key) {
+  const a = el('a', 'lrow', mark(name, 'round lg') + '<div><div class="t">' + esc(name) + '</div>' + (line ? '<div class="s">' + esc(line) + '</div>' : '') + '</div>' + ICON.ext);
+  a.href = safeHref(href);
+  a.target = '_blank';
+  a.rel = 'noopener';
+  if (key) a.dataset.k = key;
+  return a;
+}
+/* the plans on the board whose words fit `key` (Single, A pet person) */
+const plansFor = (key) => (S.plansState === 'ok' ? upcomingPlans().filter((p) => fitsText(planText(p), [key])) : [])
+  .sort((a, b) => (a.at == null) - (b.at == null) || (a.at || 0) - (b.at || 0));
+/* a bright button that starts a plan, filled in */
+function keyPlan(label, cls, pre, data) {
+  const b = button(ICON.plus + ' ' + esc(label), 'pkey ' + cls, () => planSheet(pre));
+  b.type = 'button';
+  b.dataset[data] = '1';
+  const r = el('div', 'addrow');
+  r.appendChild(b);
+  return r;
+}
+const NEWS_DAY = new Intl.DateTimeFormat('en-US', { timeZone: 'UTC', month: 'short', day: 'numeric', year: 'numeric' });
+const isDay = (d) => typeof d === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(d);
+
+/* Dating: the calendar's singles nights, readers' plans to go out as a
+   group of singles, the local ways to meet someone, and a few headlines. */
+function drawDating() {
+  const s = slots && slots.dating;
+  if (!s) return;
+  s.innerHTML = '';
+  sec(s, 'Dating');
+  /* singles nights, from the whole calendar */
+  subHead(s, 'Singles nights');
+  if (!S.events && !S.eventsFailed) s.appendChild(el('p', 'loading', 'Reading the calendar…'));
+  else {
+    const rows = calRows((e) => mixerKind(e) === 'singles' || SINGLES.test(e.title), '', 'dt-');
+    const list = el('div', 'meets');
+    list.dataset.singles = '1';
+    rows.forEach((x) => list.appendChild(mixRow(x, false)));
+    if (rows.length) s.appendChild(list);
+    else {
+      const p = el('p', 'note pad', esc('None on the calendar this week. The mixers are the next best thing. '));
+      const a = el('a', null, 'See the mixers');
+      a.href = '#people/mix';
+      a.dataset.toMix = '1';
+      a.addEventListener('click', (ev) => { ev.preventDefault(); app.jumpTo(slots && slots.mix); });
+      p.appendChild(a);
+      s.appendChild(p);
+    }
+  }
+  /* going out as a group of singles: readers' plans, and the button to post one */
+  subHead(s, 'Going as a group');
+  const mine = plansFor('single');
+  if (mine.length) {
+    const g = el('div', 'dplist');
+    g.dataset.singlesPlans = '1';
+    mine.slice(0, 3).forEach((p) => g.appendChild(planRow(p)));
+    s.appendChild(g);
+  }
+  s.appendChild(keyPlan('Post a singles plan', 'rose', { title: 'Going out with a few single friends, join us' }, 'singlesPost'));
+  if (!S.dp) { if (!S.dpFailed) s.appendChild(el('p', 'loading', 'One moment…')); return; }
+  /* the local ways in */
+  subHead(s, 'Meet someone here');
+  const ways = el('div', 'dplist');
+  ways.dataset.ways = '1';
+  (S.dp.dating.ways || []).filter((w) => w && w.name && /^https:\/\//.test(String(w.url || ''))).forEach((w) => ways.appendChild(outRow(w.name, w.line, w.url, 'dw:' + w.id)));
+  s.appendChild(ways);
+  /* the news: the freshest few, a local one marked */
+  const cut = Date.now() - NEWS_DAYS * DAY;
+  const news = (S.dp.dating.news || []).filter((n) => n && n.title && /^https:\/\//.test(String(n.url || '')) && isDay(n.date) &&
+    (n.evergreen || Date.parse(n.date + 'T12:00:00Z') > cut)).sort((a, b) => b.date.localeCompare(a.date)).slice(0, 4);
+  const more = S.dp.dating.more;
+  if (news.length || more) subHead(s, 'Dating news');
+  if (news.length) {
+    const g = el('div', 'dplist');
+    g.dataset.datingNews = '1';
+    news.forEach((n) => {
+      const a = el('a', 'lrow news', '<div><div class="t">' + esc(n.title) + '</div><div class="s">' + esc(n.outlet + ' · ' + NEWS_DAY.format(new Date(n.date + 'T12:00:00Z'))) +
+        (n.local ? ' <span class="tag tag-local">Local</span>' : '') + '</div></div>' + ICON.ext);
+      a.href = safeHref(n.url);
+      a.target = '_blank';
+      a.rel = 'noopener';
+      g.appendChild(a);
+    });
+    s.appendChild(g);
+  }
+  if (more && /^https:\/\//.test(String(more.url || ''))) {
+    const r = el('div', 'addrow');
+    r.dataset.moreNews = '1';
+    r.appendChild(linkBtn(more.label || 'More dating news', more.url, 'ghost sm'));
+    s.appendChild(r);
+  }
+}
+
+/* Pets: the dog parks (a sheet each, with the town's rules), the
+   calendar's pet events, readers' dog park plans, and the shelter. */
+function drawPets() {
+  const s = slots && slots.pets;
+  if (!s) return;
+  s.innerHTML = '';
+  sec(s, 'Pets');
+  subHead(s, 'Dog parks');
+  if (!S.dp) s.appendChild(el('p', S.dpFailed ? 'note pad' : 'loading', S.dpFailed ? 'The dog parks didn’t load.' : 'One moment…'));
+  else {
+    const g = el('div', 'dplist');
+    g.dataset.parks = '1';
+    (S.dp.pets.parks || []).filter((x) => x && x.name && /^https:\/\//.test(String(x.url || ''))).forEach((x) => {
+      const r = el('button', 'lrow mixrow', mark(x.name, 'round lg') + '<div><div class="t">' + esc(x.name) + '</div><div class="s">' +
+        esc([x.town, x.line].filter(Boolean).join(' · ')) + '</div></div>' + ICON.right);
+      r.type = 'button';
+      r.dataset.k = 'park-' + x.id;
+      r.addEventListener('click', () => parkSheet(x));
+      g.appendChild(r);
+    });
+    s.appendChild(g);
+  }
+  subHead(s, 'Pet events');
+  if (!S.events && !S.eventsFailed) s.appendChild(el('p', 'loading', 'Reading the calendar…'));
+  else {
+    const rows = calRows(petEvent, '', 'pt-');
+    const list = el('div', 'meets');
+    list.dataset.petEvents = '1';
+    rows.forEach((x) => list.appendChild(mixRow(x, false)));
+    if (rows.length) s.appendChild(list);
+    else s.appendChild(el('p', 'note pad', 'None on the calendar this week.'));
+  }
+  subHead(s, 'Pet people');
+  const mine = plansFor('pets');
+  if (mine.length) {
+    const g = el('div', 'dplist');
+    g.dataset.petPlans = '1';
+    mine.slice(0, 3).forEach((p) => g.appendChild(planRow(p)));
+    s.appendChild(g);
+  }
+  s.appendChild(keyPlan('Post a dog park plan', 'sun', { title: 'Dog park hang, bring your pup' }, 'petsPost'));
+  const help = S.dp ? (S.dp.pets.help || []).filter((h) => h && h.name && /^https:\/\//.test(String(h.url || ''))) : [];
+  if (help.length) {
+    const g = el('div', 'dplist');
+    g.dataset.petHelp = '1';
+    help.forEach((h) => g.appendChild(outRow(h.name, h.line, h.url, 'ph:' + h.id)));
+    s.appendChild(g);
+  }
+}
+
+/* A dog park's sheet: where, its one line, the town's rules, the map, the
+   rules page, and a plan to meet people there. */
+function parkSheet(x) {
+  app.sheet(x.name, (body) => {
+    body.classList.add('parksheet');
+    body.dataset.parkSheet = x.id;
+    body.appendChild(el('p', 'pick-why', esc([x.where, x.town].filter(Boolean).join(', '))));
+    if (x.line) body.appendChild(el('p', 'sheet-note', esc(x.line)));
+    const rules = S.dp && S.dp.pets.rules && S.dp.pets.rules[x.rules];
+    if (rules && Array.isArray(rules.items) && rules.items.length) {
+      body.appendChild(el('div', 'sheet-h', esc(rules.title || 'The rules')));
+      const ul = el('ul', 'rules');
+      ul.dataset.rules = x.rules;
+      rules.items.forEach((t) => ul.appendChild(el('li', null, esc(t))));
+      body.appendChild(ul);
+    }
+    const links = el('div', 'linkrow');
+    links.dataset.links = '1';
+    const map = cw.mapUrl(x);
+    if (map) links.appendChild(linkBtn('Map', map));
+    const page = (rules && rules.url) || x.url;
+    if (/^https:\/\//.test(String(page || ''))) links.appendChild(linkBtn('The rules page', page));
+    body.appendChild(links);
+    const go = el('div', 'linkrow go');
+    const b = button(ICON.plus + ' Meet people here', 'pkey sun', () => planSheet({ title: x.rules === 'beach' ? 'Beach time with the dogs, bring your pup' : 'Dog park hang, bring your pup', place: x.name }));
+    b.dataset.parkPlan = x.id;
+    go.appendChild(b);
+    body.appendChild(go);
+  });
+}
+
 /* Clubs: the ones that fit, or a featured one and a fresh handful */
 function drawGroups() {
   const s = slots && slots.groups;
@@ -1249,7 +1498,7 @@ function drawGroups() {
     s.appendChild(g);
   }
   const r = el('div', 'addrow');
-  r.appendChild(linkBtn('Every club and league in town', CLUBS_PAGE));
+  r.appendChild(linkBtn('Every club and league in town', CLUBS_PAGE, 'pkey'));
   s.appendChild(r);
 }
 function clubRow(c) {
@@ -1646,6 +1895,9 @@ function planForm(body, close, prof, pre) {
 function land() {
   if (!pending || !root) return;
   const k = pending;
+  /* Dating and Pets sit under the plans and the mixers: wait until what is
+     above them, and they themselves, have their height */
+  if ((k === 'dating' || k === 'pets') && ((!S.dp && !S.dpFailed) || !(S.events || S.eventsFailed) || S.plansState === 'loading')) return;
   if (SECS.some(([key]) => key === k) || k === 'talk' || k === 'host') {
     pending = null;
     app.jumpTo(slots && slots[k]);

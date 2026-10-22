@@ -29,7 +29,10 @@
    - New in. The shops' own Instagram posts from the last two weeks
      (all-day/data/instagram.json, the accounts data/vintage-shops.json
      names), each a photo credited to its account and linked to the post.
-     No posts, no section.
+     No posts, no section. A grid that grows down on purpose (Stephen,
+     2026-10-22: "I want to see more rows"): three rows of two on a phone,
+     then "See more" for the next rows, and the shell's Collapse bar folds
+     it back once it has grown. Make a tee's designs grow the same way.
    - The shop guide. data/vintage-shops.json (scripts/build_vintage_shops.py
      from data/things.json): every vintage, thrift, consignment and antique
      shop in greater Burlington the Brief's guide has a street address for,
@@ -38,6 +41,12 @@
      own site. Used books come last, after the walk. Hours only where someone has read them off the shop's own
      page (the shop's `checked` date and source); a checked shop that posts
      none says to call ahead, and an unchecked one "Hours not checked yet".
+     Each shop has a picture (Stephen, 2026-10-22: "easy to find ... adds
+     more color"), its number badge on it: the shop's own photo from
+     data/vintage-photos.json, hotlinked from the shop's host with a credit
+     line to the page it came from; else its newest Instagram post from
+     instagram.json, credited to the account; else a tile in its kind's
+     colour with its initials, which is also what shows if a photo fails.
      Colour, so the list is not a wall of grey: each kind of shop has its
      colour (thrift, vintage, consignment, antiques, used books), the
      number is a badge in the shop's first kind's colour, and a coloured
@@ -78,7 +87,7 @@ import * as data from '../wire.js';
 import * as boards from '../boards.js';
 import { message } from '../boards-core.js';
 import { sectionBar } from '../sections.js';
-import { el, esc, safeHref, ICON, art, section, button, pills, cards, agoShort, listRail } from '../ui.js';
+import { el, esc, safeHref, ICON, art, section, button, pills, cards, agoShort, listRail, collapseBar } from '../ui.js';
 
 const KEY = 'vintage';
 const SHOPS_URL = '../data/vintage-shops.json';
@@ -90,7 +99,7 @@ const HOMES_KEY = 'allday-vintage-homes';     // { 'YYYY-MM': finds this device 
 const NOTE_MAX = 140;
 const DAY = 86400000;
 const NEW_IN_DAYS = 14;
-const NEW_IN_MAX = 12;
+const NEW_IN_MAX = 48;       // New in grows down on purpose now, so it holds more than a row
 const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
 const SECTIONS = [['fit', 'Fit checks'], ['spotted', 'Spotted'], ['swaps', 'Swaps'], ['newin', 'New in'], ['shops', 'Shops'], ['tees', 'Make a tee']];
@@ -223,6 +232,7 @@ function loadLive() {
   data.load('instagram', (j) => {
     S.posts = j && Array.isArray(j.posts) ? j.posts.filter((p) => p && p.h && p.u && p.i) : [];
     paint('newin');
+    paint('shops');               // a shop with no photo of its own takes its newest post
     if (app.activeTab() === KEY) app.paintSubnav();
   }, () => { S.posts = []; });
   data.fetchJSON(DESIGNS_URL, 8000).then((j) => { S.designs = Array.isArray(j && j.designs) ? j.designs : []; S.designsTotal = Number(j && j.total) || null; })
@@ -478,10 +488,27 @@ function miles(a, b) {
 /* the divider a shop sits under: its neighborhood on the walk, then Used books */
 const groupOf = (s) => (s.after_walk ? 'Used books' : s.neighborhood || '');
 
-/* One shop as a row: the number as a badge in its kind's colour, the name,
-   its kinds each in their own colour, hours, street, the blurb and the way
-   to the next shop, with Map and Site. The sheet a map pin opens draws the
-   same row. */
+/* A shop's picture: its own photo from the guide (hotlinked from the shop's
+   host, credited to the page it came from), else its newest Instagram post
+   whose signed link hasn't lapsed (credited to the account, linked to the
+   post), else none, and the row shows a tile in its kind's colour with the
+   shop's initials. The tile sits under every photo, so one that fails to
+   load (the shell removes it) uncovers the tile, never a grey hole. */
+function shopPic(s) {
+  const p = s.photo;
+  if (p && p.src) return { src: p.src, href: p.page, credit: p.credit || 'the shop’s site', fit: p.fit === 'contain' };
+  const h = String(s.instagram || '').toLowerCase();
+  if (!h || !S.posts) return null;
+  const post = S.posts.filter((x) => String(x.h).toLowerCase() === h && unlapsed(x)).sort((a, b) => b.ts - a.ts)[0];
+  return post ? { src: post.i, href: post.u, credit: '@' + post.h } : null;
+}
+const initialsOf = (name) => String(name || '').replace(/^the\s+/i, '').replace(/[’'`]s\b/g, '').split(/[\s&/-]+/)
+  .filter((w) => /^[A-Za-z0-9]/.test(w)).slice(0, 2).map((w) => w[0].toUpperCase()).join('');
+
+/* One shop as a row: its picture with the number as a badge in its kind's
+   colour, the name, its kinds each in their own colour, hours, street, the
+   blurb, the way to the next shop and the photo's credit, with Map and Site.
+   The sheet a map pin opens draws the same row. */
 function shopRow(s, i, next, inSheet) {
   const row = el('div', 'lrow vshop');
   if (!inSheet) row.dataset.k = 's-' + s.id;
@@ -494,9 +521,23 @@ function shopRow(s, i, next, inSheet) {
     : esc(s.checked ? 'No weekly hours posted; call ahead' + (s.phone ? ' at ' + s.phone : '') + (s.hours_note ? '. ' + s.hours_note : '') : 'Hours not checked yet');
   const where = s.address ? s.address.replace(/,\s*VT\s*\d{5}$/, '') : '';
   const leg = inSheet ? '' : legText(s, next);
-  row.innerHTML = '<span class="num vbadge k-' + kindOf(s) + '">' + (i + 1) + '</span><div><div class="t">' + esc(s.name) + '</div>' +
+  const pic = shopPic(s);
+  row.innerHTML = '<span class="vpic k-' + kindOf(s) + (pic && pic.fit ? ' fit' : '') + '" data-pic="' + (pic ? (s.photo ? 'site' : 'ig') : 'tile') + '">' +
+    '<span class="vtile" aria-hidden="true">' + esc(initialsOf(s.name)) + '</span>' + (pic ? art(pic.src) : '') +
+    '<span class="num vbadge k-' + kindOf(s) + '">' + (i + 1) + '</span></span><div><div class="t">' + esc(s.name) + '</div>' +
     '<div class="s" data-kinds>' + kinds + hood + '</div><div class="s" data-hours>' + hours + '</div>' + (where ? '<div class="s" data-where>' + esc(where) + '</div>' : '') +
     (s.blurb ? '<div class="s">' + esc(s.blurb) + '</div>' : '') + (leg ? '<div class="s" data-leg>' + esc(leg) + '</div>' : '') + '</div>';
+  if (pic && pic.href) {
+    const c = el('div', 's vcredit', esc('Photo: '));
+    c.dataset.credit = '';
+    const a = el('a', '', esc(pic.credit));
+    a.href = safeHref(pic.href);
+    a.target = '_blank';
+    a.rel = 'noopener';
+    if (app.demo) a.addEventListener('click', (e) => { e.preventDefault(); app.toast('Opens where the photo is from in the real build'); });
+    c.appendChild(a);
+    row.children[1].appendChild(c);
+  }
   const links = el('div', 'vlinks');
   links.appendChild(outLink('Map', mapUrl(s), 'pillbtn', 'Map for ' + s.name));
   if (s.website) links.appendChild(outLink('Site', s.website, 'pillbtn', s.name + '’s website'));
@@ -724,13 +765,12 @@ function paintTees(host) {
   const total = S.designsTotal || (S.designs ? S.designs.length : 0);
   const send = button(ICON.plus + ' ' + esc('Send in your design'), 'ghost sm', designSheet);
   send.dataset.act = 'vsend';
-  section(host, 'Make a tee', total ? '<b>' + esc(plural(total, 'design', 'designs')) + '</b>' : null, send);
+  const head = section(host, 'Make a tee', total ? '<b>' + esc(plural(total, 'design', 'designs')) + '</b>' : null, send);
   if (!S.designs) {
     host.appendChild(el('p', 'note pad', esc(S.designsFailed ? 'The designs didn’t load.' : 'Loading the designs…')));
   } else if (S.designs.length) {
-    const r = listRail(host, { name: 'vintage-designs', label: 'the designs', cls: 'pad-top', cells: 150 });
-    S.designs.forEach((d) => {
-      const a = el('a', 'vcard w150');
+    const cells = S.designs.map((d) => {
+      const a = el('a', 'vcard');
       a.href = safeHref(d.href);
       a.target = '_blank';
       a.rel = 'noopener';
@@ -739,16 +779,16 @@ function paintTees(host) {
       a.innerHTML = '<span class="c-media r11">' + art('./' + String(d.img || '').replace(/^\.?\//, '')) + '</span>' +
         '<span class="t">' + esc(d.name) + '</span><span class="s">' + esc('See it on a model') + ' ' + ICON.ext + '</span>';
       if (app.demo) a.addEventListener('click', (e) => { e.preventDefault(); app.toast('Opens ' + d.name + ' in the merch shop in the real build'); });
-      r.appendChild(a);
+      return a;
     });
-    const all = el('a', 'vcard w150 vall');
+    const all = el('a', 'vcard vall');
     all.href = safeHref(SHOP_URL);
     all.target = '_blank';
     all.rel = 'noopener';
     all.setAttribute('aria-label', 'All ' + (total || S.designs.length) + ' designs in the shop');
     all.innerHTML = '<span class="c-media r11"><b>' + esc('All ' + (total || S.designs.length)) + '</b></span><span class="t">' + esc('The whole shop') + '</span><span class="s">' + esc('Opens the shop') + ' ' + ICON.ext + '</span>';
     if (app.demo) all.addEventListener('click', (e) => { e.preventDefault(); app.toast('The merch shop opens in the real build'); });
-    r.appendChild(all);
+    moreGrid(host, { name: 'tees', label: 'the designs', head, cells, last: all });
     return;
   }
   const links = el('div', 'linkrow addrow');
@@ -836,22 +876,68 @@ const sigExpiry = (u) => { const m = /[?&]oe=([0-9a-f]+)/i.exec(String(u || ''))
 const trim = (t, n) => { const v = String(t || '').replace(/\s+/g, ' ').trim(); return v.length > n ? v.slice(0, n - 1).trimEnd() + '…' : v; };
 const igKey = (p) => { const m = /\/(?:p|reel)\/([A-Za-z0-9_-]+)/.exec(p.u); return 'ig-' + (m ? m[1] : p.h + '-' + p.ts); };
 
+const unlapsed = (p) => { const e = sigExpiry(p.i); return e === null || e > Date.now() / 1000; };
+
 function newIn() {
   if (!S.posts || !S.handles) return [];
-  const nowS = Date.now() / 1000;
-  const since = nowS - NEW_IN_DAYS * 86400;
+  const since = Date.now() / 1000 - NEW_IN_DAYS * 86400;
   return S.posts.filter((p) => S.handles.has(String(p.h).toLowerCase()) && Number(p.ts) > since)
-    .filter((p) => { const e = sigExpiry(p.i); return e === null || e > nowS; })
+    .filter(unlapsed)
     .sort((a, b) => b.ts - a.ts).slice(0, NEW_IN_MAX);
+}
+
+/* A grid that grows down on purpose (Stephen, 2026-10-22: "I only see one
+   row but I want to see more rows ... a see more at the end so you can keep
+   on going down ... you're choosing to"). It opens on three rows of two on a
+   phone (two rows of three, or of four on a wide screen: .vgrid's columns),
+   "See more" adds as many again, and once it has grown the shell's Collapse
+   bar rides the bottom of the screen and folds it back to its first rows
+   and its heading. `last` (Make a tee's whole-shop tile) always ends what
+   shows. How far a grid is open lasts the visit, across repaints. */
+const grown = Object.create(null);
+const pageSize = () => {
+  const cols = window.matchMedia('(min-width: 1024px)').matches ? 4 : window.matchMedia('(min-width: 560px)').matches ? 3 : 2;
+  return cols * (cols === 2 ? 3 : 2);
+};
+function moreGrid(host, o) {
+  const g = el('div', 'vgrid');
+  g.dataset.grid = o.name;
+  o.cells.forEach((c) => g.appendChild(c));
+  if (o.last) g.appendChild(o.last);
+  host.appendChild(g);
+  const step = pageSize();
+  const first = step - (o.last ? 1 : 0);
+  const row = el('div', 'linkrow vmore');
+  const more = button(esc('See more'), 'ghost');
+  more.type = 'button';
+  more.dataset.more = o.name;
+  more.setAttribute('aria-label', 'See more of ' + o.label);
+  row.appendChild(more);
+  const foot = collapseBar(o.label, () => {
+    grown[o.name] = 0;
+    paint();
+    app.jumpTo(o.head || g);
+    more.focus({ preventScroll: true });
+  });
+  foot.classList.add('foot');
+  host.append(row, foot);
+  function paint() {
+    const shown = Math.max(first, grown[o.name] || 0);
+    o.cells.forEach((c, i) => { c.hidden = i >= shown; });
+    row.hidden = shown >= o.cells.length;
+    foot.hidden = shown <= first;
+  }
+  more.addEventListener('click', () => { grown[o.name] = Math.max(first, grown[o.name] || 0) + step; paint(); });
+  paint();
+  return g;
 }
 
 function paintNewIn(host) {
   const posts = newIn();
   if (!posts.length) return;
-  section(host, 'New in');
-  const r = listRail(host, { name: 'newin', label: 'New in', cells: 150 });
-  posts.forEach((p) => {
-    const a = el('a', 'vcard w150');
+  const head = section(host, 'New in');
+  const cells = posts.map((p) => {
+    const a = el('a', 'vcard');
     a.href = safeHref(p.u);
     a.target = '_blank';
     a.rel = 'noopener';
@@ -860,8 +946,9 @@ function paintNewIn(host) {
     a.innerHTML = '<span class="c-media r11">' + art(p.i) + '</span><span class="t">' + esc(trim('@' + p.h, 22)) + '</span>' +
       '<span class="s">' + esc([trim(p.c, 50), Number(p.ts) ? agoShort(p.ts) : ''].filter(Boolean).join(' · ')) + '</span>';
     if (app.demo) a.addEventListener('click', (e) => { e.preventDefault(); app.toast('Opens the post on Instagram in the real build'); });
-    r.appendChild(a);
+    return a;
   });
+  moreGrid(host, { name: 'newin', label: 'New in', head, cells });
 }
 
 function signInNote(body) {

@@ -1,5 +1,5 @@
 {
- "_": "Demo data for ?demo=1. The people, finds, swaps, fit checks and designs sent in are invented; vintage.js adds them to the demo boards (boards-fake.js), which already holds three of the finds and one of the swaps by title. The shops are the first fourteen of data/vintage-shops.json (downtown, the Waterfront and the South End) and the designs six of all-day/data/merch-designs.json, copied as they are, so the demo never shows an hour or an address that is not real. days is how long a post has left; photo is a placeholder palette. New in: instagram names the invented shop accounts as data/vintage-shops.json names the real ones, and instagramPosts are invented posts in all-day/data/instagram.json's shape; their times move with the reader's clock (anchor). One post is three weeks old and one is from an account that is not a shop: neither shows.",
+ "_": "Demo data for ?demo=1. The people, finds, swaps, fit checks and designs sent in are invented; vintage.js adds them to the demo boards (boards-fake.js), which already holds three of the finds and one of the swaps by title. The shops are the first fourteen of data/vintage-shops.json (downtown, the Waterfront and the South End) and the designs six of all-day/data/merch-designs.json, copied as they are, so the demo never shows an hour or an address that is not real. days is how long a post has left; photo is a placeholder palette. New in: instagram names the invented shop accounts as data/vintage-shops.json names the real ones, and instagramPosts are invented posts in all-day/data/instagram.json's shape; their times move with the reader's clock (anchor). One post is three weeks old and one is from an account that is not a shop: neither shows. A shop's photo in the demo is a placeholder palette credited to the real shop's page; the rest show their initials tile.",
  "anchor": "2026-10-16T12:00:00-04:00",
  "homesThisMonth": 2,
  "people": [
@@ -239,6 +239,11 @@
     "miles": 0.16,
     "minutes": 3,
     "mode": "walk"
+   },
+   "photo": {
+    "src": "mustard",
+    "page": "https://www.hunnymusturdshop.com/",
+    "credit": "hunnymusturdshop.com"
    }
   },
   {
@@ -278,6 +283,11 @@
     "miles": 0.15,
     "minutes": 3,
     "mode": "walk"
+   },
+   "photo": {
+    "src": "brick",
+    "page": "https://www.batterystjeans.com/",
+    "credit": "batterystjeans.com"
    }
   },
   {
@@ -397,6 +407,11 @@
     "miles": 0.04,
     "minutes": 1,
     "mode": "walk"
+   },
+   "photo": {
+    "src": "street",
+    "page": "https://www.gearx.com/pages/hours-location",
+    "credit": "gearx.com"
    }
   },
   {
@@ -471,6 +486,11 @@
     "miles": 0.01,
     "minutes": 1,
     "mode": "walk"
+   },
+   "photo": {
+    "src": "cherry",
+    "page": "https://www.thevaultcollective.com/pages/vermont-1",
+    "credit": "thevaultcollective.com"
    }
   },
   {
@@ -583,6 +603,11 @@
     "miles": 0.38,
     "minutes": 8,
     "mode": "walk"
+   },
+   "photo": {
+    "src": "teal",
+    "page": "https://www.billiejeanvintage.com/",
+    "credit": "billiejeanvintage.com"
    }
   },
   {
@@ -662,6 +687,11 @@
     "miles": 0.1,
     "minutes": 2,
     "mode": "walk"
+   },
+   "photo": {
+    "src": "slate",
+    "page": "https://resourcevt.org/store-location-hours/",
+    "credit": "resourcevt.org"
    }
   },
   {
