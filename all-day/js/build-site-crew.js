@@ -10,8 +10,12 @@
    INTERFACE:
      createCrew(K) -> {
        setCrew(list)            [{ id, look, task, name? }] neighbours on shift (task is a preference)
-       setYou(you)              { state: working|paused|off|away|ready, look, task, name? }
+       setYou(you)              { state: working|paused|off|away|ready, look, task, name?, job? }
                                 ready = not clocked in: waits in front of the building, facing you
+                                job = a SITE_JOBS key from your list: your builder takes only that
+                                trade's pieces, and when the building has none open (not reached yet,
+                                or the crew is as far ahead of the town as it may go) does the prep for
+                                it at the yard (cutting timber, mixing mortar, measuring off wire)
        whistle(on)              the foreman steps out of the trailer and raises a hand / nods and goes back in
        deliver(kind)            a material delivery (truck or forklift) for dropMaterial
        step(dt)
@@ -49,7 +53,7 @@
    and the forklift (driven by the yard hand, a figure with no name tag), the
    excavator. */
 
-import { GROUND_Y, ZONES, BUILDING, BAYS, EMIT, SITE_TASKS, colorsFor, hash, rng, clamp, lerp } from './build-site-shared.js';
+import { GROUND_Y, ZONES, BUILDING, BAYS, EMIT, SITE_TASKS, SITE_JOBS, colorsFor, hash, rng, clamp, lerp } from './build-site-shared.js';
 import * as ART from './build-site-art.js';
 
 const WALK = 11.5, CLIMB = 8, LADDER_GAP = 14;   // a climber keeps a body and a name tag's length behind the one ahead
@@ -890,9 +894,12 @@ export function createCrew(K) {
     const list = B().jobs();
     if (!list || !list.length) return null;
     const pref = PREF[a.task] || [], home = homeX(a);
+    /* your builder works your list: only the trade on it right now */
+    const only = a.me && a.want && SITE_JOBS[a.want] ? SITE_JOBS[a.want].parts : null;
     let best = null, bs = 1e9;
     for (let i = 0; i < list.length; i++) {
       const j = list[i];
+      if (only && !only.includes(j.part)) continue;
       let s = i * 2.2 + Math.abs(j.x - home) * 0.32 + a.r() * 8;
       if (pref.includes(j.part) || pref.includes(j.kind)) s -= 40;
       /* spread out: the yard a job draws from, and the bay it's in */
@@ -943,15 +950,123 @@ export function createCrew(K) {
       a.plan.push(...prefix(a, null), ...breakChain(a, true));
       return;
     }
-    const j = a.task === 'haul' && a.r() < 0.2 ? null : pickJob(a);
+    const listed = a.me && a.want && SITE_JOBS[a.want] ? a.want : null;
+    const j = (a.task === 'haul' && !listed && a.r() < 0.2) || listed === 'haul' ? null : pickJob(a);
     if (j) {
       a.doing = 'job';
       const c = chainFor(a, j);
       a.plan.push(...prefix(a, j), ...c);
       return;
     }
-    a.plan.push(...prefix(a, null), ...filler(a));
+    a.plan.push(...prefix(a, null), ...(listed ? prepChain(a, listed) : filler(a)));
     a.workT += 8;
+  }
+  /* Your list's trade with no piece open for it right now: the prep for
+     it, at the yard where that trade's material lives, so a glance still
+     shows your builder on the job you lined up. Nothing is completed on
+     the building; the next plan takes a real piece as soon as one opens. */
+  function prepChain(a, key) {
+    a.doing = 'prep';
+    const lv = workLevel(), gy = lv === 'ground' ? GROUND_Y + 7 : null;
+    /* the floor the work is on; before the frame goes up, the ground floor it's getting ready for */
+    const ph = stage().phase, wh = ph === 'frame' || ph === 'finish' ? where(lv) : 'the ground floor';
+    const bx = () => BUILDING.x0 + 6 + a.r() * (BUILDING.x1 - BUILDING.x0 - 12);
+    const tower = [BUILDING.towerX - 3 + spread(a) * 0.4, GROUND_Y + 8];
+    const done = call(() => freeStations(a));
+    if (key === 'frame' || key === 'stake' || key === 'form') {
+      const s = station('saw', a), what = key === 'stake' ? 'survey stakes' : key === 'form' ? 'plywood for the footing forms' : 'studs for ' + wh;
+      return [go(s[0] - 4, s[1] + 2, 'ground', 'heading to the lumber yard'), { k: 'face', dir: 1 },
+        D(a, 'measure', 2.2, { say: 'measuring ' + what }),
+        D(a, 'saw', 4.2, { say: 'cutting ' + what + ' at the lumber yard', start: () => { a.dust = 4.2; } }),
+        D(a, 'bend', 0.7), D(a, 'lift', 0.5, { carry: key === 'stake' ? 'stakes' : 'beam' }), done,
+        go(tower[0], tower[1], 'ground', 'carrying the cut ' + (key === 'stake' ? 'stakes' : 'timber') + ' over to Watershed'), { k: 'face', dir: 1 },
+        D(a, 'bend', 0.7, { carry: null, say: 'stacking it by the stair tower' }), ...breath(a, 0.4)];
+    }
+    if (key === 'deck') {
+      const p = wspot('lumber', 'panels');
+      return [go(p[0] - 3 + spread(a) * 0.4, p[1] + 6, 'ground', 'heading to the timber panel rack'), { k: 'face', dir: 1 },
+        D(a, 'measure', 2.4, { say: 'marking out a timber deck panel' }), D(a, 'drill', 3.6, { say: 'pre-drilling a deck panel at the lumber yard' }),
+        D(a, 'bend', 1.2, { say: 'checking the slings for the crane' }), D(a, 'look', 1, { face: 0 }), ...breath(a, 0.4)];
+    }
+    if (key === 'wire' || key === 'rebar') {
+      if (key === 'rebar') {
+        const r = wspot('staging', 'drop');
+        return [go(r[0] + spread(a), r[1] + 5, 'ground', 'heading to the rebar bundle'), D(a, 'kneel', 3.4, { carry: null, say: 'bending rebar at the staging area' }),
+          D(a, 'lift', 0.6, { carry: 'rebar' }), go(bx(), GROUND_Y + 7, 'ground', 'carrying rebar out to the footings'),
+          D(a, 'kneel', 3, { carry: null, say: 'laying out rebar for the footings' }), ...breath(a, 0.4)];
+      }
+      const out = [];
+      if (a.carry !== 'spool') out.push(...fetch(a, 'spool', 'spool', 'getting a spool of wire from the toolshed'));
+      const x = bx();
+      out.push(go(x, gy, lv, lv === 'ground' ? 'carrying the wire over' : 'carrying the wire up to ' + wh),
+        D(a, 'pullwire', 3.2, { say: 'measuring off wire on ' + wh }), { k: 'walk', x: clamp(x + 6, BUILDING.x0 + 3, BUILDING.x1 - 3), y: gy },
+        D(a, 'drill', 2.4, { say: 'drilling holes for the wire on ' + wh }), D(a, 'look', 0.9, { face: 0 }), ...breath(a, 0.3));
+      return out;
+    }
+    if (key === 'brick' || key === 'pour') {
+      const mx = spot('masonry', 'mixer');
+      if (key === 'pour') {
+        return [...toolFrom(a, 'shovel'), go(bx(), GROUND_Y + 7, 'ground', 'heading out to the pad'),
+          D(a, 'rake', 4, { carry: null, say: 'raking the gravel level for the pour' }), D(a, 'measure', 2, { say: 'checking the forms are level' }), ...breath(a, 0.4)];
+      }
+      return [go(mx[0] - 7, mx[1] + 2, 'ground', 'heading to the brick yard'), { k: 'face', dir: 1 },
+        D(a, 'shovel', 3.4, { say: 'mixing mortar for the brick', start: () => { mixer.spinUntil = Math.max(mixer.spinUntil, K.t + 10); } }),
+        D(a, 'look', 1, { say: 'watching the mortar turn' }),
+        D(a, 'pour', 1.4, { say: 'tipping mortar into a bucket', carry: 'bucket' }),
+        go(tower[0], tower[1], 'ground', 'carrying mortar over to Watershed'), D(a, 'bend', 0.6, { carry: null, say: 'setting the mortar by the stair tower' }), ...breath(a, 0.4)];
+    }
+    if (key === 'clad') {
+      const p = wspot('lumber', 'panels');
+      return [go(p[0] - 3 + spread(a) * 0.4, p[1] + 6, 'ground', 'heading to the panel rack'), D(a, 'measure', 2.4, { say: 'measuring the rust panels' }),
+        D(a, 'drill', 2.6, { say: 'pre-drilling a rust panel' }), D(a, 'lift', 0.6, { carry: 'rustPanel' }),
+        go(tower[0], tower[1], 'ground', 'carrying a rust panel over to Watershed'), D(a, 'bend', 0.6, { carry: null, say: 'leaning it by the stair tower' }), ...breath(a, 0.4)];
+    }
+    if (key === 'glaze') {
+      const g = wspot('staging', 'drop2');
+      return [go(g[0] + 4 + spread(a) * 0.4, g[1] + 6, 'ground', 'heading to the glass rack'), { k: 'face', dir: -1 },
+        D(a, 'guide', 2.6, { say: 'checking the window glass at the staging area' }), D(a, 'measure', 2.2, { say: 'measuring the glass for ' + wh }),
+        D(a, 'bend', 1.2, { say: 'laying out the glazing tools' }), ...breath(a, 0.4)];
+    }
+    if (key === 'solar') {
+      const d = wspot('staging', 'drop');
+      return [go(d[0] + spread(a), d[1] + 5, 'ground', 'heading to the staging area'), D(a, 'bend', 2, { say: 'unpacking solar panels' }),
+        D(a, 'lift', 0.6, { carry: 'solar' }), go(tower[0], tower[1], 'ground', 'carrying a solar panel to the stair tower'),
+        D(a, 'bend', 0.6, { carry: null, say: 'stacking solar panels by the tower' }), ...breath(a, 0.4)];
+    }
+    if (key === 'clear' || key === 'dig' || key === 'plant') {
+      const x = bx(), d = wspot('tools', 'dumpster');
+      if (key === 'clear') {
+        return [go(x, GROUND_Y - 2, 'ground', 'walking out to the old parking lot'), D(a, 'bend', 1.4, { say: 'picking up broken asphalt' }),
+          D(a, 'lift', 0.5, { carry: 'bucket' }), go(d[0] - 7, d[1] + 3, 'ground', 'hauling old asphalt to the dumpster'), { k: 'face', dir: 1 },
+          D(a, 'throw', 0.9, { carry: null, say: 'tipping the asphalt in the dumpster' }), ...breath(a, 0.4)];
+      }
+      const early = key === 'dig' && /^(lot|stakes)$/.test(stage().phase);   // nothing dug yet: getting the ground ready
+      return [...toolFrom(a, 'shovel'), go(x, GROUND_Y + (key === 'plant' ? 10 : 2), 'ground', key === 'plant' ? 'walking out front with a shovel' : 'walking out to the footings'),
+        D(a, 'shovel', 4, { carry: 'shovel', say: key === 'plant' ? 'loosening the soil for the street trees' : early ? 'loosening the ground where the footings go' : 'squaring off the sides of the footings' }),
+        D(a, 'measure', 1.8, { say: key === 'plant' ? 'marking where the trees go' : early ? 'marking out where the footings go' : 'checking the depth' }), ...breath(a, 0.4)];
+    }
+    if (key === 'upkeep') {
+      const x = bx();
+      return [go(x, GROUND_Y + 7, 'ground', 'heading out front'), D(a, 'sweep', 5, { say: 'sweeping the sidewalk out front' }),
+        { k: 'walk', x: clamp(x + 10, BUILDING.x0 + 3, BUILDING.x1 - 3), y: GROUND_Y + 7 }, D(a, 'sweep', 4), ...breath(a, 0.3)];
+    }
+    /* haul: timber, brick or offcuts across the yard */
+    const k = a.r();
+    if (k < 0.45) {
+      const r = wspot('lumber', 'rack');
+      return [go(r[0] + 2 + spread(a) * 0.4, r[1] + 6, 'ground', 'heading to the lumber yard'), D(a, 'bend', 1, { say: 'picking up timber at the lumber yard', then: () => use('lumber') }),
+        D(a, 'lift', 0.6, { carry: 'beam' }), go(tower[0], tower[1], 'ground', 'hauling timber across the yard'),
+        D(a, 'bend', 0.7, { carry: null, say: 'stacking timber by the stair tower' }), ...breath(a, 0.4)];
+    }
+    if (k < 0.8) {
+      const b = spot('masonry', 'bricks');
+      return [go(b[0] + 2, b[1] + 4, 'ground', 'heading to the brick yard'), D(a, 'bend', 1.2, { say: 'loading up a stack of bricks', then: () => use('brick') }),
+        D(a, 'lift', 0.6, { carry: 'bricks' }), go(tower[0], tower[1], 'ground', 'hauling bricks across the yard'),
+        D(a, 'bend', 0.7, { carry: null, say: 'stacking bricks by the stair tower' }), ...breath(a, 0.4)];
+    }
+    const sw = spot('lumber', 'saw'), dm = wspot('tools', 'dumpster');
+    return [go(sw[0] + 3, sw[1] + 4, 'ground', 'gathering offcuts at the lumber yard'), D(a, 'bend', 1.4), D(a, 'lift', 0.5, { carry: 'beam' }),
+      go(dm[0] - 7, dm[1] + 3, 'ground', 'hauling offcuts to the dumpster'), { k: 'face', dir: 1 }, D(a, 'throw', 0.9, { carry: null, say: 'tossing offcuts in the dumpster' }), ...breath(a, 0.5)];
   }
   function awayChain(a) {
     a.doing = 'break';
@@ -2062,6 +2177,12 @@ export function createCrew(K) {
       a.task = taskOk(y.task) ? y.task : null;
       const prev = fresh ? null : a.state, st = y.state;
       a.state = st;
+      /* the next job on your list: a real piece runs to the end, prep or a filler drops at once */
+      const want = SITE_JOBS[y.job] ? y.job : null;
+      if (want !== a.want) {
+        a.want = want;
+        if (!fresh && prev === 'working' && st === 'working' && !a.vehicle && !a.borrowed && (a.doing === 'prep' || a.doing === 'filler')) abort(a);
+      }
       if (fresh) {
         if (st === 'working' || st === 'paused') placeMid(a);
         else if (st === 'away') { const s = spot('canteen', 'seat1'); a.x = s[0]; a.y = s[1]; a.carry = 'thermos'; }
@@ -2114,7 +2235,7 @@ export function createCrew(K) {
     count: () => { let n = 0; for (const a of agents.values()) if (!a.npc && !a.gone) n++; return n; },
     debug: () => ({
       agents: [...agents.values()].map((a) => ({ id: a.id, x: Math.round(a.x), y: Math.round(a.y), level: a.level, state: a.state, pose: a.pose, carry: a.carry,
-        job: a.job ? a.job.id : null, kind: a.job ? a.job.kind : null, role: a.role, say: a.say, act: a.act ? a.act.k : null, doing: a.doing,
+        job: a.job ? a.job.id : null, kind: a.job ? a.job.kind : null, part: a.job ? a.job.part : null, want: a.want || null, role: a.role, say: a.say, act: a.act ? a.act.k : null, doing: a.doing,
         gone: a.gone, hidden: a.hidden, vehicle: a.vehicle ? a.vehicle.kind : null, name: a.name })),
       crane: { erect: +crane.erect.toFixed(2), x: Math.round(crane.x), hookY: Math.round(crane.hy), jib: crane.jib, load: crane.load, state: crane.cur ? crane.cur.state : 'idle', queue: crane.queue.length },
       truck: { state: truck.state, x: Math.round(truck.x), y: Math.round(truck.y), load: truck.load.slice(), queue: truckQueue.slice() },

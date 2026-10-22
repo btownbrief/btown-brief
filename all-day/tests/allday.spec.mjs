@@ -377,6 +377,9 @@ async function newPage(browser, base, opts = {}) {
     ...(opts.geo ? { geolocation: opts.geo, permissions: ['geolocation'] } : {}),
   });
   const page = await ctx.newPage();
+  /* The Build's intro opens once per phone, the first time the tab does;
+     groups that aren't about it start past it (opts.buildIntro: a new phone) */
+  if (!opts.buildIntro) await page.addInitScript(() => { try { if (!localStorage.getItem('allday-build-intro')) localStorage.setItem('allday-build-intro', '1'); } catch (e) { /* storage blocked */ } });
   /* opts.clock (ms) fixes the page's Date while its timers keep running;
      opts.seed makes Math.random a fixed sequence (mulberry32). Together they
      make a random pick from a time-of-day pool the same pick every run. */
@@ -8449,6 +8452,163 @@ async function theBuild(browser, base) {
     });
     check(r.after.windows_lit === 6 && r.after.floors_done === 3 && r.after.floor_progress === 0.4 && r.after.total_minutes === 4000 && r.after.floors === 6 && r.after.topped_out === false,
       'a post lights one more window; floors, progress and hours stay where they were', JSON.stringify(r));
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  /* Stephen, 2026-10-22: "a little instruction when people open up the build
+     tab because it's not quite obvious ... a few sentences on what it is,
+     what its purpose is". Once, on a new phone; the ? brings it back. */
+  await group('The Build, the intro: a few sentences the first time the tab opens, Got it, and the ? brings it back (live, signed out, 390)', async () => {
+    const { ctx, page, errors } = await newPage(browser, base, { buildIntro: true });
+    await page.goto(base + '/all-day/#build');
+    await settle(page);
+    const card = await page.waitForSelector('.sheet-card[aria-label="The Build"]', { timeout: 6000 }).catch(() => null);
+    const intro = card ? await page.evaluate(() => ({ ps: [...document.querySelectorAll('.sheet-card .bd-introp')].map((p) => p.textContent), ok: document.querySelector('.sheet-card .bd-gotit')?.textContent })) : null;
+    check(!!intro && intro.ps.length === 3 && intro.ok === 'Got it' && /Watershed/.test(intro.ps[0]) && /off your phone/.test(intro.ps[1]) && /Line up your builder’s jobs/.test(intro.ps[2]),
+      'the first open: what it is, why, and how, in three short paragraphs, and Got it', JSON.stringify(intro));
+    check(!!intro && !/—|:\s/.test(intro.ps.join(' ')), 'no em dashes or colon sentences in it', intro && intro.ps.join(' '));
+    await bdShot(page, 'intro-390-light');
+    await page.click('.sheet-card .bd-gotit');
+    check(await page.$eval('#sheet', (sh) => sh.hidden), 'Got it closes it', '');
+    await page.reload();
+    await settle(page);
+    await page.waitForSelector(bdPanel + ' .bd-clockin', { timeout: 8000 });
+    await page.waitForTimeout(1200);
+    check(await page.$eval('#sheet', (sh) => sh.hidden), 'and it never opens on its own again', '');
+    const q = await page.$eval('#subnav .bd-whatis', (b) => ({ label: b.getAttribute('aria-label'), text: b.textContent, w: b.getBoundingClientRect().width,
+      clear: b.getBoundingClientRect().left >= document.querySelector('#subnav .bd-sideswitch').getBoundingClientRect().right }));
+    check(q.label === 'What is The Build?' && q.text === '?' && q.clear, 'a ? beside Build | Habits, clear of the switch', JSON.stringify(q));
+    await page.click('#subnav .bd-whatis');
+    check(!!(await page.waitForSelector('.sheet-card[aria-label="The Build"]', { timeout: 3000 }).catch(() => null)), 'the ? opens it again', '');
+    await page.click('.sheet-card .bd-gotit');
+    await goTab(page, 'habits');
+    check(!(await page.$('#subnav .bd-whatis')), 'Habits keeps its own row, no ?', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  /* Stephen, 2026-10-22, after his girlfriend asked "it's cool, but do you do
+     anything?": line up your builder's jobs, 15 minutes each, reorder them,
+     and during a shift the builder works through YOUR list on the site. */
+  await group('The Build, your builder’s jobs: the building’s next four, drag or up and down, add one, and a shift works through them (live empty town, signed out, 390)', async () => {
+    const { ctx, page, errors } = await newPage(browser, base, { motion: 'reduce' });
+    await bdSpies(page);
+    await page.clock.install({ time: T0 });
+    await page.goto(base + '/all-day/#build');
+    await settle(page);
+    await page.waitForSelector(bdPanel + ' .bd-jobs .bd-job', { timeout: 8000 });
+    await page.clock.runFor(1500);
+    const rows = () => page.$$eval(bdPanel + ' .bd-jobs .bd-job', (ls) => ls.map((l) => l.querySelector('.bd-jobt').textContent));
+    const first = await page.evaluate(() => ({ head: document.querySelector('#panel-build .bd-jobs-h')?.textContent, each: document.querySelector('#panel-build .bd-jobs-each')?.textContent,
+      at: [...document.querySelectorAll('#panel-build .bd-jobat')].map((x) => x.textContent), adds: [...document.querySelectorAll('#panel-build .bd-add')].map((x) => x.textContent),
+      peek: document.querySelector('#panel-build .bd-clock .bd-peek')?.textContent }));
+    check(JSON.stringify(await rows()) === '["Break up the old parking lot","Stake out the building","Dig the footings","Tie the rebar"]' && first.head === 'Your builder’s jobs' && first.each === '15 min each',
+      'an empty lot: the building’s next four jobs, in its order', JSON.stringify({ rows: await rows(), ...first }));
+    check(JSON.stringify(first.at) === '["First","15m in","30m in","45m in"]', 'each one says when it comes up', JSON.stringify(first.at));
+    check(first.adds.length >= 2 && first.adds.length <= 6 && first.adds[first.adds.length - 1] === 'Haul materials' && !first.adds.slice(0, -1).some((a) => (/Break up|Stake out|Dig the|Tie the/).test(a)),
+      'a short row of what the building needs next to add, and Haul materials', JSON.stringify(first.adds));
+    check(/^First jobBreak up the old parking lot4 lined up$/.test(first.peek || ''), 'the Clock in card says what your builder starts on', first.peek);
+    await bdShot(page, 'jobs-1-default-390-light');
+    /* down, then up */
+    await page.click(bdPanel + ' .bd-job:nth-child(1) .bd-jobmv:nth-child(2)');
+    const down = await rows();
+    await page.click(bdPanel + ' .bd-job:nth-child(2) .bd-jobmv:nth-child(1)');
+    const up = await rows();
+    check(down[0] === 'Stake out the building' && down[1] === 'Break up the old parking lot' && up[0] === 'Break up the old parking lot', 'down and up swap a job with its neighbor', JSON.stringify({ down, up }));
+    check(await page.$eval(bdPanel + ' .bd-job:nth-child(1) .bd-jobmv:nth-child(1)', (b) => b.disabled) && await page.$eval(bdPanel + ' .bd-job:nth-child(4) .bd-jobmv:nth-child(2)', (b) => b.disabled),
+      'the top can’t go up, the bottom can’t go down', '');
+    /* drag the third to the top by its grip (the list scrolled up clear of the docked site) */
+    await page.$eval(bdPanel + ' .bd-jobs', (c) => c.scrollIntoView({ block: 'start' }));
+    const g = await (await page.$(bdPanel + ' .bd-job:nth-child(3) .bd-grip')).boundingBox();
+    const top = await (await page.$(bdPanel + ' .bd-job:nth-child(1)')).boundingBox();
+    await page.mouse.move(g.x + g.width / 2, g.y + g.height / 2);
+    await page.mouse.down();
+    await page.mouse.move(g.x + g.width / 2, top.y + 6, { steps: 6 });
+    await page.mouse.up();
+    const dragged = await rows();
+    check(JSON.stringify(dragged) === '["Dig the footings","Break up the old parking lot","Stake out the building","Tie the rebar"]', 'drag the grip: Dig the footings moves to the top', JSON.stringify(dragged));
+    await page.click(bdPanel + ' .bd-add[data-key="haul"]');
+    const added = await rows();
+    check(added.length === 5 && added[4] === 'Haul materials' && /5 lined up/.test(await page.$eval(bdPanel + ' .bd-peek', (b) => b.textContent)), 'Add puts it at the end', JSON.stringify(added));
+    await page.click(bdPanel + ' .bd-job:nth-child(4) .bd-jobx');
+    const less = await rows();
+    check(JSON.stringify(less) === '["Dig the footings","Break up the old parking lot","Stake out the building","Haul materials"]', 'x takes one off', JSON.stringify(less));
+    await bdShot(page, 'jobs-2-edited-390-light');
+    await page.reload();
+    await settle(page);
+    await page.waitForSelector(bdPanel + ' .bd-jobs .bd-job', { timeout: 8000 });
+    check(JSON.stringify(await rows()) === JSON.stringify(less) && !!(await page.$(bdPanel + ' .bd-jobsreset')), 'this phone keeps the list, with a way back to the building’s', JSON.stringify(await rows()));
+    /* the shift: your builder works your first job, and the stopwatch says where you are */
+    await page.click(bdPanel + ' .bd-clockin');
+    await page.waitForSelector('.bd-dock.is-shift', { timeout: 4000 });
+    await page.clock.runFor(3000);
+    const you = () => page.evaluate(() => import('/all-day/js/modes/build.js').then((m) => { const s = m._site(); s.advance(3); const a = s.stats().crewDebug.agents.find((x) => x.id === 'you'); return a && { want: a.want, part: a.part, doing: a.doing, say: a.say }; }));
+    const pill = () => page.$eval('.bd-watchjobs', (w) => ({ hidden: w.hidden, text: w.querySelector('.bd-wjt').textContent, segs: [...w.querySelectorAll('.bd-wjbar b')].map((b) => parseInt(b.style.width, 10)) }));
+    const p1 = await pill(), y1 = await you();
+    check(!p1.hidden && p1.text === 'Job 1 of 4 · Dig the footings' && p1.segs.length === 4, 'on shift: Job 1 of 4 under the stopwatch, and a bar of four', JSON.stringify(p1));
+    check(y1 && y1.want === 'dig' && (y1.part === 'dig' || y1.part === 'backfill' || y1.doing === 'prep'), 'your builder is on Dig the footings (a footing, or getting ready for one)', JSON.stringify(y1));
+    await bdShot(page, 'jobs-3-shift-390-light');
+    for (let m = 0; m < 16; m++) { await page.clock.runFor(60000); if (m % 5 === 4) await page.mouse.click(195, 420); }
+    await page.clock.runFor(1500);
+    const p2 = await pill(), y2 = await you();
+    check(p2.text === 'Job 2 of 4 · Break up the old parking lot' && p2.segs[0] === 100 && p2.segs[1] > 0 && p2.segs[1] < 100 && p2.segs[2] === 0, 'fifteen minutes in: Job 2, the first piece of the bar full', JSON.stringify(p2));
+    check(y2 && y2.want === 'clear', 'and your builder moves on to it', JSON.stringify(y2));
+    /* the list during a shift: done, now, and the rest still yours to move */
+    await page.click('.bd-watchjobs');
+    await page.waitForSelector('.sheet-card[aria-label="Your builder’s jobs"] .bd-job', { timeout: 3000 });
+    const sh = await page.evaluate(() => [...document.querySelectorAll('.sheet-card .bd-job')].map((l) => l.className.replace('bd-job', '').trim() + ':' + l.querySelector('.bd-jobat').textContent + ':' + !!l.querySelector('.bd-jobmv')));
+    check(JSON.stringify(sh) === '["done:Done:false","now:Now:false",":30m in:true",":45m in:true"]', 'the shift’s list: done, now, and the rest movable', JSON.stringify(sh));
+    check(await page.$eval('.sheet-card .bd-job:nth-child(3) .bd-jobmv:nth-child(1)', (b) => b.disabled), 'nothing moves above the job on now', '');
+    await bdShot(page, 'jobs-4-shift-sheet-390-light');
+    await page.click('.sheet-card .iconbtn[aria-label="Close"]');
+    await page.click('.bd-out');
+    await page.waitForSelector('.bd-shift-foot .bd-keep', { timeout: 4000 });
+    await page.click('.bd-shift-foot .bd-keep');
+    await page.waitForFunction(() => !document.querySelector('.bd-dock.is-shift'), null, { timeout: 6000 }).catch(() => {});
+    await page.clock.runFor(1500);
+    /* the crew cleared and staked the lot on this phone while you worked, so those are past too */
+    const after = await rows();
+    const open = await page.evaluate(() => import('/all-day/js/modes/build.js').then((m) => m._site().needs().map((n) => n.label)));
+    check(after[0] !== 'Dig the footings' && after[after.length - 1] === 'Haul materials' && after.every((a) => open.includes(a)) && after.every((a) => less.includes(a)),
+      'banked: the job done drops off, and the rest the building still needs wait for next time', JSON.stringify({ after, open }));
+    await pageRules(page, 'build', 390);
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('The Build, your builder’s jobs drive the site: each job on the list is the trade your builder works (demo, the 3rd floor, 390)', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/all-day/?demo=1#build');
+    await settle(page);
+    await page.waitForSelector(bdPanel + ' .bd-jobs .bd-job', { timeout: 8000 });
+    await page.waitForTimeout(800);
+    const needs = await page.evaluate(() => import('/all-day/js/modes/build.js').then((m) => m._site().needs()));
+    check(needs.length >= 4 && needs[needs.length - 1].key === 'haul' && needs.some((n) => /^Frame the \d\w\w floor$|^Run wire on the \d\w\w floor$|^Set the windows on the \d\w\w floor$/.test(n.label)),
+      'a timber floor: the building names its jobs with the floor they’re on', JSON.stringify(needs));
+    const PARTS = { frame: ['post', 'beam', 'stud', 'canopy'], deck: ['deck'], wire: ['wire'], clad: ['clad', 'storefront'], brick: ['brick'], glaze: ['glaze'], haul: [] };
+    const seen = {};
+    for (const key of ['wire', 'brick', 'glaze', 'haul']) {
+      await page.evaluate((k) => localStorage.setItem('allday-build-jobs', JSON.stringify({ list: [k], edited: true, shift: null })), key);
+      await page.evaluate(() => import('/all-day/js/modes/build.js').then((m) => m._site() && document.querySelectorAll('.bd-jobs')));
+      await page.click(bdPanel + ' .bd-clockin');
+      await page.waitForSelector('.bd-dock.is-shift', { timeout: 4000 });
+      const says = new Set();
+      let ok = true;
+      for (let i = 0; i < 8; i++) {
+        const a = await page.evaluate(() => import('/all-day/js/modes/build.js').then((m) => { const s = m._site(); s.advance(4); return s.stats().crewDebug.agents.find((x) => x.id === 'you'); }));
+        if (!a || a.want !== key || (a.part && !PARTS[key].includes(a.part))) ok = false;
+        if (a && a.say) says.add(a.say);
+      }
+      seen[key] = [...says].slice(0, 4);
+      check(ok, key + ' on the list: your builder works only that trade', JSON.stringify(seen[key]));
+      await page.click('.bd-out');
+      await page.waitForSelector('.bd-shift-foot .bd-keep', { timeout: 4000 });
+      await page.click('.bd-shift-foot .bd-keep');
+      await page.waitForFunction(() => !document.querySelector('.bd-dock.is-shift'), null, { timeout: 6000 }).catch(() => {});
+    }
+    check(seen.wire.some((x) => /wire/.test(x)) && seen.brick.some((x) => /mortar|brick/.test(x)) && seen.glaze.some((x) => /glass|window|glaz/.test(x)) && seen.haul.some((x) => /haul|timber|brick|offcuts|lumber/.test(x)),
+      'and says so, in the trade’s own words', JSON.stringify(seen));
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
   });
