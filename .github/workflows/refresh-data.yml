@@ -31,6 +31,10 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Refresh r/GoodBurlington data
+        env:  # optional; without them Inoreader only
+          REDDIT_CLIENT_ID: ${{ secrets.REDDIT_CLIENT_ID }}
+          REDDIT_CLIENT_SECRET: ${{ secrets.REDDIT_CLIENT_SECRET }}
+          REDDIT_USER_AGENT: ${{ vars.REDDIT_USER_AGENT }}
         run: python3 scripts/refresh_goodburlington.py
 
       - name: Fetch newsletter data

@@ -200,7 +200,7 @@ export function outRow(cls) {
   return row;
 }
 
-/* Settings: the permanent home-screen row and the ways out */
+/* Settings: Your phone (the permanent home-screen row, the widget) and the ways out */
 export function settingsRows(body) {
   body.appendChild(el('div', 'sheet-h', 'Your phone'));
   const r = el('div', 'sheet-row homerow');
@@ -220,6 +220,13 @@ export function settingsRows(body) {
     r.appendChild(b);
     body.append(r, how);
   }
+  /* the Scriptable widget's setup page (widget/index.html) */
+  const widget = el('div', 'sheet-row', '<div class="t">Home screen widget</div>');
+  const setUp = el('a', 'btn ghost sm', 'Set up');
+  setUp.href = 'widget/';
+  setUp.dataset.widget = '1';
+  widget.appendChild(setUp);
+  body.appendChild(widget);
   body.appendChild(el('div', 'sheet-h', 'Elsewhere'));
   body.appendChild(outRow());
 }

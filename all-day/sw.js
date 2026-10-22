@@ -13,7 +13,7 @@
    audio — episodes are large and the browser's own HTTP cache handles them
    better than we would. */
 
-const VERSION = 'all-day-v97';   // the shell: Full page links, the two asks, bigger pills
+const VERSION = 'all-day-v98';   // the shell: Full page links, the two asks, bigger pills
 const SHELL = VERSION + '-shell';
 const DATA = 'all-day-data';   // unversioned on purpose: survives shell bumps
 
@@ -105,7 +105,10 @@ self.addEventListener('fetch', (e) => {
   if (url.origin !== self.location.origin) return;
   if (!url.pathname.startsWith('/all-day/')) return;
 
-  if (req.mode === 'navigate') {
+  /* Only the app's own page becomes the offline shell. Another page in
+     this directory (widget/, mod.html) is cached as itself below, or a
+     visit to it would overwrite the shell with it. */
+  if (req.mode === 'navigate' && /\/all-day\/(index\.html)?$/.test(url.pathname)) {
     e.respondWith(
       fetch(req)
         .then((res) => {

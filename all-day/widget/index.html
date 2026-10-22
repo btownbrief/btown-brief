@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Home screen widget · All Day</title>
+  <meta name="description" content="All Day on your iPhone home screen: the weather, the Wire's top stories and tonight's picks, in a free Scriptable widget.">
+  <meta name="theme-color" content="#0E2A47">
+  <link rel="icon" href="../../assets/favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png">
+  <!-- The setup page for all-day/widget/btown-widget.js, the Scriptable
+       widget that reads all-day/data/widget.json (scripts/build_widget.py).
+       Linked from All Day's Settings. Copy rules: DESIGN.md section 10, so
+       the steps are the only words. -->
+  <script>
+    try {
+      var t = localStorage.getItem('allday-theme');
+      if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t);
+      var dark = t === 'dark' || (t !== 'light' && matchMedia('(prefers-color-scheme: dark)').matches);
+      document.documentElement.style.background = dark ? '#0C1520' : '#F7F4EE';
+    } catch (e) { /* the stylesheet default stands */ }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..600;1,400..600&family=Archivo:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/tokens.css?v=20261022w">
+  <style>
+    * { box-sizing: border-box; }
+    html { background: var(--paper); -webkit-text-size-adjust: 100%; }
+    body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(--sans); font-size: var(--fs-body); line-height: var(--lh-body); }
+    .mast { background: var(--lake); color: var(--lake-ink); padding: calc(var(--safe-t) + var(--s3)) var(--gutter) var(--s3); }
+    .mast a { color: var(--lake-ink); text-decoration: none; font-family: var(--serif); font-size: var(--fs-section); font-weight: 500; display: inline-flex; align-items: center; gap: var(--s2); min-height: var(--hit); }
+    main { max-width: var(--col); margin: 0 auto; padding: var(--s6) var(--gutter) calc(var(--s8) + var(--safe-b)); }
+    h1 { font-family: var(--serif); font-size: var(--fs-w-head); font-weight: 500; line-height: var(--lh-tight); margin: 0 0 var(--s5); }
+
+    /* the preview: the medium widget, drawn from the same widget.json */
+    .wg { background: linear-gradient(135deg, var(--lake), var(--sky-night-a)); color: var(--lake-ink); border-radius: var(--r-sheet);
+      padding: var(--s4); display: grid; grid-template-columns: 96px 1fr; gap: var(--s3); box-shadow: var(--shadow-float); margin: 0 0 var(--s6); }
+    .wg[hidden] { display: none; }
+    .wg .brand { color: var(--sunset); font-weight: 700; font-size: var(--fs-small); }
+    .wg .temp { font-size: var(--fs-count); font-weight: 700; line-height: 1.05; margin-top: var(--s1); }
+    .wg .muted { color: var(--lake-muted); font-size: var(--fs-small); line-height: var(--lh-title); }
+    .wg .hl { font-size: var(--fs-small); font-weight: 600; line-height: var(--lh-title); }
+    .wg .eyebrow { color: var(--sunset); font-size: var(--fs-label); font-weight: 700; letter-spacing: .04em; text-transform: uppercase; }
+    .wg .col { display: flex; flex-direction: column; gap: var(--s1); min-width: 0; }
+    .wg .clip { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; }
+    .wg .one { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .wg .when { color: var(--sunset); font-weight: 700; }
+
+    ol { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--s5); }
+    li { display: grid; grid-template-columns: 32px 1fr; gap: var(--s3); align-items: start; }
+    .n { width: 32px; height: 32px; border-radius: var(--r-round); background: var(--sunset); color: var(--sunset-ink); font-weight: 700;
+      display: flex; align-items: center; justify-content: center; font-size: var(--fs-meta); }
+    li p { margin: 5px 0 0; font-size: var(--fs-lead); line-height: var(--lh-title); }
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: var(--hit); margin-top: var(--s3);
+      padding: 0 var(--s5); border-radius: var(--r-pill); font: 600 var(--fs-button) var(--sans); text-decoration: none; cursor: pointer;
+      border: 1px solid var(--line); background: transparent; color: var(--ink); }
+    .btn.primary { background: var(--lake); color: var(--lake-ink); border-color: var(--lake); }
+    .btn:active { transform: scale(.97); }
+    textarea { width: 100%; height: 160px; margin-top: var(--s3); font: var(--fs-small) var(--sans); color: var(--ink); background: var(--paper-2);
+      border: 1px solid var(--line); border-radius: var(--r-tile); padding: var(--s2); }
+    textarea[hidden] { display: none; }
+    b { font-weight: 600; }
+  </style>
+</head>
+<body>
+  <header class="mast"><a href="../" aria-label="Back to All Day">&larr; All Day</a></header>
+  <main>
+    <h1>Home screen widget</h1>
+
+    <div class="wg" id="preview" hidden aria-hidden="true">
+      <div class="col">
+        <div class="brand">All Day</div>
+        <div class="temp" data-temp></div>
+        <div class="muted one" data-sky></div>
+        <div class="muted" data-hilo></div>
+      </div>
+      <div class="col">
+        <div class="eyebrow">The Wire</div>
+        <div class="hl clip" data-h1></div>
+        <div class="hl clip" data-h2></div>
+        <div class="eyebrow" data-tl>Tonight</div>
+        <div class="muted one" data-pick></div>
+      </div>
+    </div>
+
+    <ol>
+      <li><span class="n">1</span><div>
+        <p>Get <b>Scriptable</b>, free on the App Store.</p>
+        <a class="btn" id="store" href="https://apps.apple.com/us/app/scriptable/id1405459188" target="_blank" rel="noopener">Scriptable on the App Store</a>
+      </div></li>
+      <li><span class="n">2</span><div>
+        <p>Copy the script.</p>
+        <button class="btn primary" id="copy" type="button">Copy the script</button>
+        <textarea id="script-text" readonly hidden aria-label="The widget script"></textarea>
+      </div></li>
+      <li><span class="n">3</span><div>
+        <p>In Scriptable, tap <b>+</b>, paste, and name it <b>Btown Brief</b>.</p>
+      </div></li>
+      <li><span class="n">4</span><div>
+        <p>Hold your home screen, tap <b>Edit</b>, then <b>Add Widget</b>, and pick <b>Scriptable</b>.</p>
+      </div></li>
+      <li><span class="n">5</span><div>
+        <p>Hold the new widget, tap <b>Edit Widget</b>, and choose <b>Btown Brief</b>.</p>
+      </div></li>
+    </ol>
+  </main>
+
+  <script>
+    (function () {
+      var SCRIPT = 'btown-widget.js';
+      var text = null;
+      var got = fetch(SCRIPT, { cache: 'no-cache' }).then(function (r) { if (!r.ok) throw new Error(r.status); return r.text(); })
+        .then(function (t) { text = t; return t; });
+      got.catch(function () {});
+
+      var btn = document.getElementById('copy');
+      var box = document.getElementById('script-text');
+      function done() { btn.textContent = 'Copied'; setTimeout(function () { btn.textContent = 'Copy the script'; }, 2500); }
+      function fallback() {
+        got.then(function (t) {
+          box.value = t; box.hidden = false; box.focus(); box.select();
+          btn.textContent = 'Select all and copy';
+        }, function () { btn.textContent = 'Couldn’t load it'; });
+      }
+      btn.addEventListener('click', function () {
+        var cb = navigator.clipboard;
+        /* Safari only lets the click write if the write starts inside it:
+           the text is fetched on load, and a ClipboardItem can wait for it */
+        if (cb && text != null && cb.writeText) { cb.writeText(text).then(done, fallback); return; }
+        if (cb && cb.write && window.ClipboardItem) {
+          var blob = got.then(function (t) { return new Blob([t], { type: 'text/plain' }); });
+          cb.write([new ClipboardItem({ 'text/plain': blob })]).then(done, fallback);
+          return;
+        }
+        fallback();
+      });
+
+      /* the preview, from the widget's own file */
+      var $ = function (k) { return document.querySelector('#preview [data-' + k + ']'); };
+      fetch('../data/widget.json', { cache: 'no-cache' }).then(function (r) { return r.json(); }).then(function (d) {
+        var w = d && d.weather;
+        if (!w || w.temp == null) return;
+        $('temp').textContent = w.temp + '°';
+        $('sky').textContent = w.sky || '';
+        $('hilo').textContent = [w.hi != null ? 'H ' + w.hi + '°' : '', w.lo != null ? 'L ' + w.lo + '°' : ''].filter(Boolean).join('  ');
+        var h = d.wire || [];
+        $('h1').textContent = h[0] ? h[0].title : '';
+        $('h2').textContent = h[1] ? h[1].title : '';
+        var p = (d.tonight || [])[0];
+        if (p) {
+          var when = document.createElement('span');
+          when.className = 'when';
+          when.textContent = p.time + ' ';
+          $('pick').append(when, document.createTextNode(p.title));
+        } else { $('tl').hidden = true; $('pick').hidden = true; }
+        document.getElementById('preview').hidden = false;
+      }).catch(function () { /* no preview, the steps stand */ });
+    })();
+  </script>
+</body>
+</html>

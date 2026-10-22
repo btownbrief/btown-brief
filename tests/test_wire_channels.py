@@ -13,6 +13,25 @@ sys.path.insert(0, os.path.join(HERE, "..", "scripts"))
 import refresh_pulse as rp  # noqa: E402
 import tag_wire as tw  # noqa: E402
 import wire_common as wc  # noqa: E402
+import private_prompts  # noqa: E402
+
+# The taste prompts are private (scripts/private_prompts.py). Where they are
+# not on this machine, the pipeline tests run on a stand-in and the tests
+# that check a prompt's own wording skip.
+STAND_IN = "(stand-in: the private prompt is not on this machine)\n"
+for _name in ("wire-taste.md", "wire-tags.md"):
+    try:
+        private_prompts.load(_name)
+    except private_prompts.PromptMissing:
+        os.environ[private_prompts.env_name(_name)] = STAND_IN
+
+
+def private_prompt(name):
+    """The real prompt's text, or skip the wording test."""
+    text = wc.read_prompt(name)
+    if text == STAND_IN:
+        raise unittest.SkipTest(f"private prompt {name} is not on this machine")
+    return text
 
 NOW_TS = 1_792_180_000
 
@@ -298,7 +317,7 @@ class NeighborPostTests(unittest.TestCase):
         self.assertEqual(set(got.values()), {"promo"}, got)
 
     def test_the_junk_words_are_the_prompts_words(self):
-        rules = wc.read_prompt("wire-tags.md")
+        rules = private_prompt("wire-tags.md")
         for word in tw.JUNK[1:]:
             self.assertIn(f"`{word}`", rules, word)
         # "giveaway" pulled a neighbor's free ticket into junk; the word is "contest"
@@ -308,7 +327,7 @@ class NeighborPostTests(unittest.TestCase):
                                           posts({"reddit": ["Free ticket!"]}), 1), {})
 
     def test_the_prompt_carries_the_neighbor_rules(self):
-        rules = " ".join(wc.read_prompt("wire-tags.md").split())   # unwrapped
+        rules = " ".join(private_prompt("wire-tags.md").split())   # unwrapped
         for phrase in ("Announces an event", "Asks a question", "Reports something",
                        "Gives something away", "the bot's words, not a verdict",
                        "a business advertising what it sells"):

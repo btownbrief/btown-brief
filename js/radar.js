@@ -38,6 +38,11 @@
    page is hidden or the map is off screen, and waits paused on Now
    for readers who ask for reduced motion.
 
+   Wethr's radar (Stephen, 2026-10-22): the same line is the page's
+   headline, a chance-of-rain timeline sits under it, time chips jump
+   the map (Now, +1h … +12h), and Full screen opens the map over the
+   whole page with the controls on a glass sheet.
+
    Test hooks: window.btownRadar exposes the frame list, the Now
    index and the current index once mounted.
 ============================================================ */
@@ -75,7 +80,8 @@
   var SETTLE_MS = 8000;          // the loop starts by then even if a frame is slow
   var MIN = 60000, HOUR = 3600000;
 
-  var root, mapEl, controls, playBtn, scrub, timeEl, stamp, failEl, badge, nowMark, answerEl;
+  var root, mapEl, controls, playBtn, scrub, timeEl, stamp, failEl, badge, nowMark, answerEl, heroEl, jumpsEl, fullBtn, rainBox, peakEl, lineEl;
+  var full = false, pushed = false;
   var map = null, frames = [], nowIdx = 0, idx = 0, playing = false, timer = null;
   var pastLayers = [], retired = [], fcLayers = {}, fcAdded = false, pastDone = false, fcLeft = 0, lastRun = null;
   var onScreen = false, started = false, rebuildT = null, gen = 0, settled = false, shown = false, lastCheck = 0;
@@ -320,6 +326,8 @@
     scrub.setAttribute('aria-valuetext', badge.textContent);
     root.classList.toggle('is-forecast', fc);
     root.setAttribute('data-frame', String(idx));
+    paintJumps();
+    paintCursor();
   }
 
   /* the Now tick on the scrubber, and the line beside the title */
@@ -343,7 +351,7 @@
   function schedule() {
     clearTimeout(timer);
     timer = null;
-    if (!playing || !onScreen || document.hidden) return;
+    if (!playing || !(onScreen || full) || document.hidden) return;
     var last = frames.length - 1;
     timer = setTimeout(function () { show(idx >= last ? loopStart() : idx + 1); schedule(); },
       idx >= last ? HOLD_MS : idx === nowIdx ? NOW_MS : FRAME_MS);
@@ -354,6 +362,7 @@
     playBtn.setAttribute('aria-pressed', playing ? 'true' : 'false');
     playBtn.setAttribute('aria-label', playing ? 'Pause' : 'Play');
     root.classList.toggle('is-playing', playing);
+    paintJumps();
     schedule();
   }
 
@@ -366,7 +375,9 @@
     if (mapEl) mapEl.hidden = true;
     controls.hidden = true;
     badge.hidden = true;
+    if (jumpsEl) jumpsEl.hidden = true;
     failEl.hidden = false;
+    if (full) closeFull();
   }
 
   /* The radar list is required; the forecast run is not (without it the
@@ -395,7 +406,7 @@
      A reader on Now (or watching it play) moves with Now; one parked on a
      frame stays on the nearest frame in time. */
   function refresh() {
-    if (!map || !onScreen || document.hidden || root.classList.contains('is-failed') || Date.now() - lastCheck < REFRESH_MS) return;
+    if (!map || !(onScreen || full) || document.hidden || root.classList.contains('is-failed') || Date.now() - lastCheck < REFRESH_MS) return;
     frameList().then(function (next) {
       if (!next.frames.length) return;
       var same = next.frames.length === frames.length && next.frames.every(function (f, i) {
@@ -441,6 +452,8 @@
       markNow();
       controls.hidden = false;
       badge.hidden = false;
+      if (jumpsEl) jumpsEl.hidden = false;
+      if (full) setTimeout(fitMap, 0);
       buildPast();
       show(idx);
       map.on('moveend', function () {
@@ -552,6 +565,131 @@
     var line = weather ? rainLine(weather, Date.now()) : '';
     answerEl.textContent = line;
     answerEl.hidden = !line;
+    /* the same line is the hero's headline (Wethr's "Dry for the next 105 min") */
+    if (heroEl) { heroEl.textContent = line; heroEl.hidden = !line; }
+    renderTimeline(line ? weather : null);
+  }
+
+  /* ============================================================
+     The chance-of-rain timeline under the answer (Wethr's Next 2 Hours
+     card, stretched to twelve): one bar per hour from Now, its height the
+     NWS hourly chance, in the colour of what is falling. No intensity:
+     the only hourly amount the NWS grid gives is a six-hour total split
+     evenly, which would draw a flat, made-up rate. A thin line marks the
+     forecast frame the map is showing.
+  ============================================================ */
+  var tlStart = 0;
+  function renderTimeline(d) {
+    if (!rainBox) return;
+    var now = Date.now();
+    var rows = ((((d || {}).hourly || {}).hours) || []).filter(function (h) {
+      var t = Date.parse(h && h.t);
+      return isFinite(t) && t + HOUR > now && t < now + FC_HOURS * HOUR;
+    }).slice(0, FC_HOURS);
+    if (rows.length < FC_HOURS) { rainBox.hidden = true; return; }
+    tlStart = Date.parse(rows[0].t);
+    var pop = function (h) { return Math.max(0, Math.min(100, Number(h.pop) || 0)); };
+    var peak = rows[0];
+    rows.forEach(function (h) { if (pop(h) > pop(peak)) peak = h; });
+    var cold = rows.some(function (h) { return h.temp_f != null && h.temp_f <= 34; });
+    var what = cold ? 'rain or snow' : 'rain';
+    peakEl.textContent = !pop(peak) ? 'Chance of ' + what + ': 0% every hour.'
+      : 'Highest chance of ' + what + ': ' + pop(peak) + '%' + (Date.parse(peak.t) <= now ? ' right now' : ' at ' + briefClock(Date.parse(peak.t)));
+    var bars = rows.map(function (h) {
+      var sh = String(h.short || '');
+      var cls = /thunder|t-storm/i.test(sh) ? 'is-storm' : /snow|flurr|sleet|ice|wintry|freezing/i.test(sh) ? 'is-snow' : '';
+      return '<span class="tl-bar ' + cls + (pop(h) >= 50 ? ' is-likely' : '') + '" style="--p:' + pop(h) + '" title="' +
+        briefClock(Date.parse(h.t)) + ': ' + pop(h) + '%"></span>';
+    }).join('');
+    /* each label sits under its own bar */
+    var tick = function (i) { return '<span style="left:' + ((i + 0.5) / FC_HOURS * 100) + '%">' + (i ? briefClock(tlStart + i * HOUR) : 'Now') + '</span>'; };
+    lineEl.innerHTML = '<div class="tl-plot"><div class="tl-bars">' + bars + '</div>' +
+      '<span class="tl-y tl-y-100">100%</span><span class="tl-y tl-y-50">50%</span><span class="tl-y tl-y-0">0%</span>' +
+      '<span class="tl-cursor" hidden></span></div>' +
+      '<div class="tl-x">' + tick(0) + tick(3) + tick(6) + tick(9) + tick(FC_HOURS - 1) + '</div>';
+    rainBox.hidden = false;
+    paintCursor();
+  }
+  function paintCursor() {
+    if (!lineEl) return;
+    var c = lineEl.querySelector('.tl-cursor');
+    if (!c) return;
+    var f = frames[idx];
+    var at = f && f.kind === 'forecast' ? (f.ms - tlStart) / (FC_HOURS * HOUR) : -1;
+    c.hidden = !(at >= 0 && at <= 1);
+    if (!c.hidden) c.style.left = (at * 100) + '%';
+  }
+
+  /* ============================================================
+     The time chips (Wethr's −1 h · +1 h · +2 h · +8 h · +24 h): each
+     jumps to the frame nearest that far from Now and pauses there. The
+     oldest frame is fifty minutes back, so that chip says so.
+  ============================================================ */
+  function jumpTarget(mins) {
+    if (!frames.length) return -1;
+    if (mins < 0) return 0;
+    if (!mins) return nowIdx;
+    var want = frames[nowIdx].ms + mins * MIN, best = -1;
+    frames.forEach(function (f, i) {
+      if (f.kind !== 'forecast') return;
+      if (best < 0 || Math.abs(f.ms - want) < Math.abs(frames[best].ms - want)) best = i;
+    });
+    return best;
+  }
+  function paintJumps() {
+    if (!jumpsEl) return;
+    Array.prototype.forEach.call(jumpsEl.querySelectorAll('button'), function (b) {
+      var t = jumpTarget(Number(b.getAttribute('data-jump')));
+      b.disabled = t < 0;
+      var on = t === idx && !playing;
+      b.classList.toggle('is-on', on);
+      b.setAttribute('aria-pressed', on ? 'true' : 'false');
+    });
+  }
+
+  /* ============================================================
+     Full screen (Wethr's Radar tab): the map fills the screen, the
+     answer, timeline and controls ride a glass sheet at the bottom, the
+     map drags with one finger, and Done (or Escape, or Back) returns to
+     the page where it was. Opening it wakes the radar if it was asleep.
+  ============================================================ */
+  function fitMap() {
+    if (!map) return;
+    if (map.invalidateSize) map.invalidateSize();
+    if (map.dragging && window.L && window.L.Browser && window.L.Browser.mobile) {
+      if (full) map.dragging.enable(); else map.dragging.disable();
+    }
+    if (map.getSize && frames.length) { clearTimeout(rebuildT); rebuildT = setTimeout(buildPast, 250); }
+  }
+  function setFull(on) {
+    if (on === full) return;
+    full = on;
+    /* hold the section's place so the page under the overlay does not move */
+    root.style.minHeight = on ? root.offsetHeight + 'px' : '';
+    root.classList.toggle('is-full', on);
+    document.documentElement.classList.toggle('wx-radar-open', on);
+    fullBtn.setAttribute('aria-pressed', on ? 'true' : 'false');
+    fullBtn.querySelector('.radar-full-label').textContent = on ? 'Done' : 'Full screen';
+    if (on) {
+      start();
+      fullBtn.focus({ preventScroll: true });
+    } else {
+      root.scrollIntoView({ block: 'start' });
+    }
+    setTimeout(fitMap, 30);
+    schedule();
+  }
+  function openFull() {
+    if (full) return;
+    /* a radar that failed has nothing to fill the screen with: show its card and links instead */
+    if (root.classList.contains('is-failed')) { root.scrollIntoView({ block: 'start' }); return; }
+    try { history.pushState({ wxRadar: 1 }, '', '#radar'); pushed = true; } catch (e) { pushed = false; }
+    setFull(true);
+  }
+  function closeFull() {
+    if (!full) return;
+    if (pushed) { pushed = false; try { history.back(); return; } catch (e) { /* fall through */ } }
+    setFull(false);
   }
 
   function init() {
@@ -567,6 +705,12 @@
     badge = document.getElementById('radar-badge');
     nowMark = document.getElementById('radar-now');
     answerEl = document.getElementById('radar-answer');
+    heroEl = document.getElementById('rn-rain');
+    jumpsEl = document.getElementById('radar-jumps');
+    fullBtn = document.getElementById('radar-full');
+    rainBox = document.getElementById('radar-rainline');
+    peakEl = document.getElementById('radar-peak');
+    lineEl = document.getElementById('radar-timeline');
 
     /* the answer needs only the page's own forecast file, so it shows
        straight away, whether or not the map ever loads */
@@ -583,6 +727,20 @@
       setPlaying(false);
       show(parseInt(scrub.value, 10) || 0);
     });
+    if (jumpsEl) jumpsEl.addEventListener('click', function (e) {
+      var b = e.target.closest('button[data-jump]');
+      if (!b || b.disabled) return;
+      var t = jumpTarget(Number(b.getAttribute('data-jump')));
+      if (t < 0) return;
+      setPlaying(false);
+      show(t);
+    });
+    if (fullBtn) fullBtn.addEventListener('click', function () { if (full) closeFull(); else openFull(); });
+    Array.prototype.forEach.call(document.querySelectorAll('[data-radar-open]'), function (a) {
+      a.addEventListener('click', function (e) { e.preventDefault(); openFull(); });
+    });
+    document.addEventListener('keydown', function (e) { if (full && e.key === 'Escape') closeFull(); });
+    window.addEventListener('popstate', function () { if (full) { pushed = false; setFull(false); } });
     document.addEventListener('visibilitychange', function () { schedule(); refresh(); });
 
     /* nothing loads until the radar is about to come into view */

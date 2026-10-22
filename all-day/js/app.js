@@ -566,7 +566,7 @@ function settingsSheet() {
       body.appendChild(r);
     });
 
-    /* Add to home screen, and X, Facebook and Reddit for when you want them (asks.js) */
+    /* Your phone (Add to home screen, the widget) and X, Facebook and Reddit for when you want them (asks.js) */
     asks.settingsRows(body);
 
     body.appendChild(el('div', 'sheet-h', 'More from the Brief'));

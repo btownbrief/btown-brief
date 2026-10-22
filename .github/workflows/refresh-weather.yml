@@ -31,6 +31,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Refresh weather data
+        id: refresh
         # GOOGLE_WEATHER_API_KEY is optional: without it the google section
         # is skipped and the page shows no Google layer at all.
         env:
@@ -38,6 +39,7 @@ jobs:
         run: python3 scripts/refresh_weather.py
 
       - name: Score the forecasts against the airport
+        id: verify
         # Private for now — verification.json feeds the read, not the page.
         run: python3 scripts/verify.py
 
@@ -48,20 +50,39 @@ jobs:
         # be live (morning 5:30 / midday 11:30 / evening 4:30), and drafts
         # it only if read-draft.json / read.json don't already carry it —
         # every hourly run is a chance to heal a missed window.
+        #
+        # The weather brain is a private Actions secret, not a file in this
+        # public repo (scripts/private_prompts.py). Without it this step fails
+        # red, nothing is drafted, and the live read stays up.
         env:
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
-        run: python3 scripts/draft_read.py --auto
+          PROMPT_WEATHER_READ: ${{ secrets.PROMPT_WEATHER_READ }}
+        run: |
+          python3 scripts/private_prompts.py --check weather-read.md
+          python3 scripts/draft_read.py --auto
 
       - name: Publish the update if due
+        id: publish
         # Midday/evening publish immediately; a morning draft is held by the
         # script until 6:35 AM Burlington time (Stephen's review window).
         run: python3 scripts/auto_publish_read.py
 
+      - name: Build the home-screen widget's data
+        # all-day/data/widget.json (scripts/build_widget.py): this hour's
+        # weather plus the Wire's top Local stories, tonight's top picks and
+        # the next UVM game, all from files already published. It rides this
+        # hourly run so the widget costs no schedule of its own. A failure
+        # keeps the last good file and never blocks the weather commit.
+        run: python3 scripts/build_widget.py || echo "widget build skipped"
+
       - name: Commit if changed
+        # Still commit the fresh weather data when only the draft step failed
+        # (say, a missing prompt): that run is red, but the new data still lands.
+        if: ${{ !cancelled() && steps.refresh.outcome == 'success' && steps.verify.outcome == 'success' && steps.publish.outcome != 'failure' }}
         run: |
           git config user.name "btown-brief-bot"
           git config user.email "actions@users.noreply.github.com"
-          git add data/weather/
+          git add data/weather/ all-day/data/widget.json
           if git diff --cached --quiet; then
             echo "No weather changes."
           else
