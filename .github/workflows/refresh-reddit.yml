@@ -22,6 +22,16 @@ name: Refresh Reddit intake
 # Failure posture: a dead route is data, not a failure. The intake only
 # exits non-zero on a bug, and then nothing is pushed and the last good
 # files stay up.
+#
+# Stephen's Mac (scripts/reddit_mac_runner.sh, every 30 minutes while it's
+# awake) is the main writer since 2026-10-22: Reddit answers it logged out
+# and blocks this runner. While the Mac's last push is under 90 minutes old
+# this run steps aside; when the Mac sleeps, it takes over with the routes
+# that still work from here, keeping everything the Mac stored (the intake
+# never drops a held post, and data/reddit-listings.json, the copy GitHub's
+# other jobs read, is carried forward untouched). The push is leased on the
+# commit it started from, so it never overwrites a Mac push that landed
+# mid-run.
 
 on:
   schedule:
@@ -46,29 +56,57 @@ jobs:
         run: python3 -m unittest discover -s tests -p 'test_reddit*.py' -v
 
       - name: Pull the previous intake from the reddit-data branch
+        id: prev
         run: |
+          mkdir -p /tmp/reddit-out/data
           if git ls-remote --exit-code --heads origin reddit-data >/dev/null; then
             # The branch exists, so a fetch failure must fail the run rather
             # than restart the rolling store from nothing.
             git fetch -q origin reddit-data --depth 1
+            echo "sha=$(git rev-parse FETCH_HEAD)" >> "$GITHUB_OUTPUT"
             git show FETCH_HEAD:data/reddit-intake.json > /tmp/reddit-prev.json
             [ -s /tmp/reddit-prev.json ]
+            # The Mac's listings copy rides along unchanged; this runner
+            # can't refresh it, and must never drop it.
+            git show FETCH_HEAD:data/reddit-listings.json > /tmp/reddit-out/data/reddit-listings.json 2>/dev/null \
+              || rm -f /tmp/reddit-out/data/reddit-listings.json
           else
             echo '{}' > /tmp/reddit-prev.json   # true first run
+            echo "sha=" >> "$GITHUB_OUTPUT"
           fi
 
+      - name: Step aside while the Mac runner is fresh
+        id: mac
+        run: |
+          python3 - >> "$GITHUB_OUTPUT" <<'PY'
+          import json
+          from datetime import datetime, timezone
+          try:
+              prev = json.load(open("/tmp/reddit-prev.json"))
+              when = datetime.fromisoformat(prev.get("generated", "").replace("Z", "+00:00"))
+              age = (datetime.now(timezone.utc) - when).total_seconds() / 60
+          except (ValueError, TypeError, AttributeError):
+              prev, age = {}, None
+          fresh = prev.get("by") == "mac" and age is not None and age < 90
+          print("fresh=" + ("true" if fresh else "false"))
+          PY
+          grep -q 'fresh=true' "$GITHUB_OUTPUT" \
+            && echo "The Mac pushed the intake under 90 minutes ago; nothing to do." | tee -a "$GITHUB_STEP_SUMMARY" \
+            || true
+
       - name: Collect from every route
+        if: steps.mac.outputs.fresh != 'true'
         env:
           REDDIT_CLIENT_ID: ${{ secrets.REDDIT_CLIENT_ID }}
           REDDIT_CLIENT_SECRET: ${{ secrets.REDDIT_CLIENT_SECRET }}
           REDDIT_USER_AGENT: ${{ vars.REDDIT_USER_AGENT }}
         run: |
-          mkdir -p /tmp/reddit-out/data
           python3 scripts/reddit_intake.py \
             --store /tmp/reddit-prev.json \
             --out /tmp/reddit-out/data/reddit-intake.json
 
       - name: Compare the routes
+        if: steps.mac.outputs.fresh != 'true'
         run: |
           python3 scripts/reddit_report.py \
             --intake /tmp/reddit-out/data/reddit-intake.json \
@@ -77,13 +115,24 @@ jobs:
             | tee -a "$GITHUB_STEP_SUMMARY"
 
       - name: Force-push the single-commit reddit-data branch
+        if: steps.mac.outputs.fresh != 'true'
+        env:
+          PREV_SHA: ${{ steps.prev.outputs.sha }}
         run: |
           cd /tmp/reddit-out
           git init -q -b reddit-data
           git config user.name "btown-brief-bot"
           git config user.email "actions@users.noreply.github.com"
-          git add data/reddit-intake.json data/reddit-report.json data/reddit-report.md
+          git add data/
           git commit -q -m "Reddit intake $(date -u +%FT%TZ)"
-          git push -q --force \
+          # Leased on the commit this run started from: if the Mac pushed
+          # meanwhile, its newer files win and this run's are dropped.
+          if ! git push -q --force-with-lease="refs/heads/reddit-data:$PREV_SHA" \
             "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" \
-            reddit-data
+            HEAD:refs/heads/reddit-data 2>/tmp/push.err; then
+            if grep -q "stale info" /tmp/push.err; then
+              echo "reddit-data moved during this run (the Mac pushed); keeping its files." | tee -a "$GITHUB_STEP_SUMMARY"
+            else
+              cat /tmp/push.err; exit 1
+            fi
+          fi

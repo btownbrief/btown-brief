@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """
 Hot posts from r/burlington. Reddit's own listing (with scores) comes through
-scripts/reddit_client.py's OAuth route once REDDIT_CLIENT_ID/SECRET are set;
-until then, Stephen's Inoreader stream is the scoreless fallback. (The
-logged-out hot.json this used to try has 403'd since May 2026.)
+scripts/reddit_client.py's listing routes: OAuth once REDDIT_CLIENT_ID/SECRET
+are set, the logged-out shreddit page, or the copy Stephen's Mac pushed to the
+reddit-data branch. Stephen's Inoreader stream is the scoreless fallback.
+(The logged-out hot.json this used to try has 403'd since May 2026.)
 
 State shape:  {"posts": [{"id", "title", "url", "score", "comments", "created"}]}
 Diff:         new posts over 25 points, plus posts gaining 150 points per run
@@ -47,9 +48,7 @@ def snapshot(client=None):
     posts = []
     client = client or Client()
     try:
-        if not client.oauth:
-            raise LookupError("no Reddit keys; Inoreader only")
-        data = client.oauth_json(LISTING, limit=25)
+        _route, data = client.listing(LISTING, limit=25)
         for child in data.get("data", {}).get("children", []):
             post = child.get("data", {})
             if post.get("stickied"):
