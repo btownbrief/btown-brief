@@ -13,7 +13,7 @@
    audio — episodes are large and the browser's own HTTP cache handles them
    better than we would. */
 
-const VERSION = 'all-day-v90';   // The Build: the first visit, one Clock in
+const VERSION = 'all-day-v91';   // Vintage: shop photos, New in and Make a tee grow down
 const SHELL = VERSION + '-shell';
 const DATA = 'all-day-data';   // unversioned on purpose: survives shell bumps
 

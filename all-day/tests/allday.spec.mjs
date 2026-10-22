@@ -7053,7 +7053,7 @@ async function theVintage(browser, base) {
     await page.click('.sheet-head .iconbtn');
     const d = await readFile(path.join(APP, 'data/demo/vintage.json'), 'utf8').then(JSON.parse);
     const fresh = d.instagramPosts.filter((x) => d.instagram.includes(x.h) && Date.parse(d.anchor) / 1000 - x.ts < 14 * 86400).sort((a, b) => b.ts - a.ts);
-    const ig = await page.$$eval(vslot('newin') + ' [data-rail=newin] a.vcard', (as) => as.map((a) => ({ href: a.getAttribute('href'), who: a.querySelector('.t').textContent, s: a.querySelector('.s').textContent })));
+    const ig = await page.$$eval(vslot('newin') + ' [data-grid=newin] a.vcard', (as) => as.map((a) => ({ href: a.getAttribute('href'), who: a.querySelector('.t').textContent, s: a.querySelector('.s').textContent })));
     check(ig.length === fresh.length && ig.length >= 3 && ig.every((x, i) => x.href === fresh[i].u && x.who === '@' + fresh[i].h), 'New in: the shops’ own posts from the last two weeks, newest first, each credited to its account and linked to the post', JSON.stringify(ig));
     check(!ig.some((x) => /DemoVin5|DemoVin6/.test(x.href)), 'a three-week-old post and an account that is not a shop stay off', JSON.stringify(ig.map((x) => x.href)));
     const chipN = await page.$eval('#subnav .chip[data-chip="newin"] .n', (n) => n.textContent);
@@ -7079,11 +7079,50 @@ async function theVintage(browser, base) {
     await page.route(/scontent\.example/, (r) => r.fulfill({ status: 200, body: PNG, contentType: 'image/png' }));
     await page.goto(base + '/all-day/#vintage');
     await settle(page);
-    await page.waitForSelector(vslot('newin') + ' [data-rail=newin] a.vcard', { timeout: 6000 }).catch(() => {});
-    const ig = await page.$$eval(vslot('newin') + ' [data-rail=newin] a.vcard', (as) => as.map((a) => ({ href: a.href, target: a.target })));
+    await page.waitForSelector(vslot('newin') + ' [data-grid=newin] a.vcard', { timeout: 6000 }).catch(() => {});
+    const ig = await page.$$eval(vslot('newin') + ' [data-grid=newin] a.vcard', (as) => as.map((a) => ({ href: a.href, target: a.target })));
     check(file.instagram.length >= 1 && ig.length === 1 && ig[0].href === 'https://www.instagram.com/p/LiveVin1/' && ig[0].target === '_blank', 'only the guide’s own account’s fresh post shows, opening Instagram in a new tab', JSON.stringify(ig));
+    check(await page.$eval(vslot('newin') + ' .linkrow.vmore', (r) => r.hidden && getComputedStyle(r).display === 'none'), 'one post: no “See more”', '');
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
+
+    /* Stephen, 2026-10-22: "I only see one row but I want to see more rows ...
+       a see more at the end so you can keep on going down". Fourteen posts:
+       three rows of two at 390, "See more" adds three more rows, then the last
+       two; the Collapse bar folds it back to the first rows and the heading. */
+    const many = Array.from({ length: 14 }, (_, i) => ({ h: shopHandle, ts: now - 3600 * (i + 1), i: 'https://scontent.example/m' + i + '.jpg', u: 'https://www.instagram.com/p/LiveMany' + i + '/', w: 480, c: 'Rack ' + i, s: 'do' }));
+    const two = await newPage(browser, base, { routes: [[/\/all-day\/data\/instagram\.json/, { generated: new Date().toISOString(), handles: [], posts: many }]] });
+    await two.page.route(/scontent\.example/, (r) => r.fulfill({ status: 200, body: PNG, contentType: 'image/png' }));
+    await two.page.goto(base + '/all-day/#vintage/newin');
+    await settle(two.page);
+    await two.page.waitForSelector(vslot('newin') + ' [data-grid=newin] a.vcard', { timeout: 6000 }).catch(() => {});
+    const state = () => two.page.evaluate((sel) => {
+      const g = document.querySelector(sel + ' [data-grid=newin]');
+      const shown = [...g.children].filter((c) => !c.hidden && getComputedStyle(c).display !== 'none');
+      const tops = [...new Set(shown.map((c) => Math.round(c.getBoundingClientRect().top)))];
+      const more = document.querySelector(sel + ' [data-more=newin]');
+      const bar = document.querySelector(sel + ' .collapsebar');
+      return { n: g.children.length, shown: shown.length, rows: tops.length, more: !!more && !more.closest('[hidden]'), bar: !!bar && !bar.hidden,
+        sideways: g.scrollWidth > g.clientWidth + 2, k: shown.map((c) => c.dataset.k) };
+    }, vslot('newin'));
+    const s0 = await state();
+    check(s0.n === 14 && s0.shown === 6 && s0.rows === 3 && s0.more && !s0.bar && !s0.sideways, 'New in opens as a grid, three rows of two at 390, not one sideways row, with “See more” under it', JSON.stringify(s0));
+    await two.page.click(vslot('newin') + ' [data-more=newin]');
+    const s1 = await state();
+    check(s1.shown === 12 && s1.rows === 6 && s1.more && s1.bar, '“See more” adds three more rows, and the Collapse bar shows once it has grown', JSON.stringify(s1));
+    await two.page.click(vslot('newin') + ' [data-more=newin]');
+    const s2 = await state();
+    check(s2.shown === 14 && !s2.more && s2.bar, 'then the last two, and “See more” goes once there is no more', JSON.stringify(s2));
+    const pinned = await two.page.evaluate((sel) => getComputedStyle(document.querySelector(sel + ' .collapsebar')).position, vslot('newin'));
+    check(pinned === 'sticky', 'the Collapse bar is the shell’s sticky one', pinned);
+    await two.page.click(vslot('newin') + ' .collapsebar:not([hidden]) button');
+    await two.page.waitForTimeout(400);
+    const s3 = await state();
+    const headTop = await two.page.$eval(vslot('newin') + ' .sec', (h) => Math.round(h.getBoundingClientRect().top));
+    check(s3.shown === 6 && s3.more && !s3.bar && headTop >= 0 && headTop < 400, 'Collapse folds it back to the first rows and brings the heading back into view', JSON.stringify({ s3, headTop }));
+    await pageRules(two.page, 'vintage', 390);
+    check(!two.errors.length, 'no console errors', two.errors.join(' | '));
+    await two.ctx.close();
   });
 
   await group('Vintage, a find posts with its fields and shows days left; “Someone got it” thanks you (demo)', async () => {
@@ -7172,6 +7211,10 @@ async function theVintage(browser, base) {
     const file = await vintageShops();
     const things = JSON.parse(await readFile(path.join(REPO, 'data/things.json'), 'utf8'));
     const { ctx, page, errors } = await newPage(browser, base);
+    /* the shops' photos live on their own hosts (and Instagram's); here each answers with a pixel */
+    const igFile = JSON.parse(await readFile(path.join(APP, 'data/instagram.json'), 'utf8'));
+    const picHosts = new Set(file.shops.filter((s) => s.photo).map((s) => new URL(s.photo.src).hostname));
+    await page.route((u) => picHosts.has(u.hostname) || /cdninstagram\.com|fbcdn\.net/.test(u.hostname), (r) => r.fulfill({ status: 200, body: PNG, contentType: 'image/png' }));
     await page.goto(base + '/all-day/#vintage');
     await settle(page);
     await page.waitForSelector(vslot('shops') + ' .lrow');
@@ -7208,6 +7251,32 @@ async function theVintage(browser, base) {
     });
     check(shown.every(Boolean), 'hours show only where the guide has them; a checked shop without them says call ahead, the rest “Hours not checked yet”', JSON.stringify(rows.map((r) => r.hours)));
     check(rows.every((r) => /^https:\/\/www\.google\.com\/maps\/search\//.test(r.map)), 'Map opens a search on Google Maps', rows[0].map);
+
+    /* Stephen, 2026-10-22: a photo of each shop, "easy to find" and colour.
+       The shop's own picture (data/vintage-photos.json), hotlinked from its
+       own host with a credit to the page it came from; else its newest
+       Instagram post; else a tile in its kind's colour with its initials. */
+    await page.waitForFunction((n) => document.querySelectorAll('.panel:not([hidden]) [data-sec="shops"] .lrow .vpic').length === n, file.shops.length);
+    const pics = await page.$$eval(vslot('shops') + ' .lrow', (rs) => rs.map((r) => {
+      const v = r.querySelector('.vpic'), img = v && v.querySelector('img'), c = r.querySelector('[data-credit] a');
+      return { kind: v && v.dataset.pic, src: img && img.getAttribute('src'), tile: (v.querySelector('.vtile') || {}).textContent || '', badge: (v.querySelector('.num.vbadge') || {}).textContent,
+        credit: c && { href: c.href, text: c.textContent, target: c.target } };
+    }));
+    const nowS = Date.now() / 1000;
+    const lapsed = (u) => { const m = /[?&]oe=([0-9a-f]+)/i.exec(u); return m && parseInt(m[1], 16) <= nowS; };
+    const want = file.shops.map((s) => {
+      if (s.photo) return { kind: 'site', src: s.photo.src, href: s.photo.page, text: s.photo.credit };
+      const post = s.instagram && igFile.posts.filter((x) => x.h && x.h.toLowerCase() === s.instagram && x.i && x.u && !lapsed(x.i)).sort((a, b) => b.ts - a.ts)[0];
+      return post ? { kind: 'ig', src: post.i, href: post.u, text: '@' + post.h } : { kind: 'tile' };
+    });
+    const off = pics.map((p, i) => [file.shops[i].id, p, want[i], i]).filter(([, p, w, i]) => p.kind !== w.kind || p.badge !== String(i + 1) || !p.tile ||
+      (w.kind === 'tile' ? p.src || p.credit : p.src !== w.src || !p.credit || p.credit.href !== w.href || p.credit.text !== w.text || p.credit.target !== '_blank'));
+    check(!off.length, 'every shop has its picture, numbered: its own photo credited to the page it came from, else its newest Instagram post credited to the account, else its initials tile', JSON.stringify(off.slice(0, 3)));
+    const site = file.shops.filter((s) => s.photo);
+    check(site.length >= 15 && file.photos === site.length && site.every((s) => /^https:\/\//.test(s.photo.src) && !/btownbrief/i.test(new URL(s.photo.src).hostname) && /^https:\/\//.test(s.photo.page) && s.photo.credit),
+      site.length + ' shops show their own photo, hotlinked from the shop’s own host (never re-hosted here), each with the page it came from', JSON.stringify(site.filter((s) => !/^https:\/\//.test(s.photo.src)).map((s) => s.id)));
+    const photos = JSON.parse(await readFile(path.join(REPO, 'data/vintage-photos.json'), 'utf8')).photos;
+    check(Object.keys(photos).every((id) => file.shops.some((s) => s.id === id && s.photo && s.photo.src === photos[id].src)), 'the guide carries every photo in data/vintage-photos.json, as it is', '');
     check(file.shops.every((s) => Array.isArray(s.gaps)) && file.gaps, 'gaps are marked in the file for Stephen to fill', JSON.stringify(file.gaps));
     const noStreet = things.filter((t) => t.group === 'Shopping' && !/^\d/.test(t.address || '')).map((t) => t.id);
     check(file.shops.every((s) => /^\d/.test(s.address || '')) && file.left_out.every((s) => noStreet.includes(s.id)),
@@ -7217,16 +7286,27 @@ async function theVintage(browser, base) {
 
     /* the walk between two shops, from a file that has coordinates for both */
     const fixture = { count: 3, gaps: {}, shops: [
-      { id: 'a', name: 'Shop A', kinds: ['Vintage'], neighborhood: 'Downtown / Church St', address: '1 Main St', coords: [44.4759, -73.2121], hours: null, blurb: 'A.', gaps: ['hours'], next: { miles: 0.5, minutes: 10, mode: 'walk' } },
-      { id: 'b', name: 'Shop B', kinds: ['Thrift'], neighborhood: 'South End', address: null, coords: null, hours: null, blurb: 'B.', gaps: ['address', 'coords', 'hours'], next: { unknown: true } },
+      { id: 'a', name: 'Shop A', kinds: ['Vintage'], neighborhood: 'Downtown / Church St', address: '1 Main St', coords: [44.4759, -73.2121], hours: null, blurb: 'A.', gaps: ['hours'], next: { miles: 0.5, minutes: 10, mode: 'walk' },
+        photo: { src: 'https://photo.example/gone.jpg', page: 'https://shopa.example/', credit: 'shopa.example' } },
+      { id: 'b', name: 'Shop B', kinds: ['Thrift'], neighborhood: 'South End', address: null, coords: null, hours: null, blurb: 'B.', gaps: ['address', 'coords', 'hours'], next: { unknown: true },
+        photo: { src: 'https://photo.example/ok.png', page: 'https://shopb.example/', credit: 'shopb.example', fit: 'contain' } },
       { id: 'c', name: 'Shop C', kinds: ['Antiques'], neighborhood: 'Essex / Essex Jct', address: null, coords: null, hours: null, blurb: 'C.', gaps: [], next: null },
     ] };
     const two = await newPage(browser, base, { routes: [[/\/data\/vintage-shops\.json/, fixture]] });
+    await two.page.route(/photo\.example\/gone/, (r) => r.fulfill({ status: 404, body: '' }));
+    await two.page.route(/photo\.example\/ok/, (r) => r.fulfill({ status: 200, body: PNG, contentType: 'image/png' }));
     await two.page.goto(base + '/all-day/#vintage');
     await settle(two.page);
     await two.page.waitForSelector(vslot('shops') + ' .lrow');
     const legs = await two.page.$$eval(vslot('shops') + ' .lrow', (rs) => rs.map((r) => (r.querySelector('[data-leg]') || {}).textContent || ''));
     check(legs[0] === 'Then about 10 minutes on foot to Shop B' && legs[1] === 'Then Shop C, Essex / Essex Jct' && legs[2] === '', 'the walk to the next shop where both have coordinates; only the next stop where they don’t', JSON.stringify(legs));
+    await two.page.$eval(vslot('shops'), (s) => s.scrollIntoView());
+    await two.page.waitForFunction(() => !document.querySelector('.panel:not([hidden]) [data-sec="shops"] .lrow[data-k="s-a"] .vpic img')).catch(() => {});
+    await two.page.waitForFunction(() => { const i = document.querySelector('.panel:not([hidden]) [data-sec="shops"] .lrow[data-k="s-b"] .vpic img'); return i && i.complete && i.naturalWidth > 0; }).catch(() => {});
+    const fall = await two.page.$$eval(vslot('shops') + ' .lrow .vpic', (vs) => vs.map((v) => ({ img: !!v.querySelector('img'), tile: v.querySelector('.vtile').textContent,
+      tileShows: getComputedStyle(v.querySelector('.vtile')).display !== 'none' && v.querySelector('.vtile').getBoundingClientRect().width > 40, fit: v.classList.contains('fit') })));
+    check(!fall[0].img && fall[0].tile === 'SA' && fall[0].tileShows && fall[1].img && fall[1].fit && !fall[2].img && fall[2].tile === 'SC',
+      'a photo that fails to load leaves the shop’s initials tile, never a grey hole; a logo is drawn whole', JSON.stringify(fall));
     await two.ctx.close();
   });
 
@@ -7252,6 +7332,18 @@ async function theVintage(browser, base) {
     const all = await page.$eval(vslot('tees') + ' a.vall', (a) => ({ href: a.href, target: a.target, label: a.getAttribute('aria-label'), last: a.parentElement.lastElementChild === a }));
     check(all.href === 'https://merch.btownbrief.com/' && all.target === '_blank' && all.last && new RegExp('All ' + d.total + ' designs').test(all.label), 'and the last tile, “All ' + d.total + ' designs in the shop”, goes to the shop', JSON.stringify(all));
     check(!(await page.$(vslot('tees') + ' .textcard')) && !(await page.$('.panel:not([hidden]) [data-sec="make"]')), 'Make a tee and Send in your design are one block: the button is in its head, no card of its own', '');
+    /* Stephen, 2026-10-22: "I have so many t-shirts, what if people could see more of them" -
+       two rows of four at 1280 (the whole-shop tile ends them), "See more" for the next two */
+    const tg = () => page.$eval(vslot('tees') + ' [data-grid=tees]', (g) => {
+      const shown = [...g.children].filter((c) => getComputedStyle(c).display !== 'none');
+      return { shown: shown.length, rows: new Set(shown.map((c) => Math.round(c.getBoundingClientRect().top))).size, lastIsShop: shown[shown.length - 1].classList.contains('vall'),
+        more: !g.parentElement.querySelector('.linkrow.vmore').hidden };
+    });
+    const t0 = await tg();
+    check(t0.shown === 8 && t0.rows === 2 && t0.lastIsShop && t0.more, 'Make a tee opens as two rows of designs, the shop’s tile last, with “See more” under them', JSON.stringify(t0));
+    await page.click(vslot('tees') + ' [data-more=tees]');
+    const t1 = await tg();
+    check(t1.shown === 16 && t1.rows === 4 && t1.lastIsShop, '“See more” shows two more rows', JSON.stringify(t1));
     const money = await page.$eval(vslot('tees'), (s) => s.innerText);
     check(!/\$\s?\d|buy now|checkout|add to (cart|bag)/i.test(money), 'nothing on the rail takes money or names a price', money.slice(0, 100));
     await pageRules(page, 'vintage', 1280);
@@ -7367,7 +7459,7 @@ async function theVintage(browser, base) {
     await page.waitForSelector(vslot('spotted') + ' [data-grid="spotted"]');
     const lists = calls.filter((c) => c.fn === 'nn_posts_list').map((c) => c.args.p_board + ':' + c.args.p_filter.kind + ':' + c.args.p_limit).sort();
     check(JSON.stringify(lists) === '["vintage:design:60","vintage:fit:60","vintage:spotted:60","vintage:swap:60"]', 'four lists, one per kind, the server’s most', JSON.stringify(lists));
-    const titles = await page.evaluate(() => Object.fromEntries([...document.querySelectorAll('.panel:not([hidden]) [data-grid]')].map((g) => [g.dataset.grid, [...g.querySelectorAll('.b-title, .ftile .t')].map((t) => t.textContent)])));
+    const titles = await page.evaluate(() => Object.fromEntries([...document.querySelectorAll('.panel:not([hidden]) [data-grid]:not([data-grid=tees]):not([data-grid=newin])')].map((g) => [g.dataset.grid, [...g.querySelectorAll('.b-title, .ftile .t')].map((t) => t.textContent)])));
     check(JSON.stringify(titles) === JSON.stringify({ fit: ['My Sunday fit', 'Head to toe Old Gold'], spotted: ['Barn jacket'], swaps: ['Band tees'], sent: ['Moth on the steeple', 'Lake ink'] }),
       'a find in Spotted, a swap in Swaps, designs in Sent in and fit checks with their photos in Fit check, newest first, the old tagged ones among them; a fit whose photo still waits, and a find someone got, nowhere', JSON.stringify(titles));
     const thanks = await page.$eval(vslot('spotted') + ' [data-thanks]', (p) => p.dataset.thanks);
