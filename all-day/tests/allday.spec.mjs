@@ -12327,6 +12327,82 @@ async function theChallenge(browser, base) {
   });
 }
 
+/* ------------------------------------------------- the home-screen widget */
+/* all-day/widget/: the Scriptable widget's setup page, and the Settings row
+   that leads to it. The widget's own drawing is tested under node in
+   tests/widget.test.mjs; here, its source is held to one request and no
+   other host. */
+async function theWidget(browser, base) {
+  const W_DATA = { v: 1, updated: new Date().toISOString(), app: 'https://guide.btownbrief.com/all-day/',
+    weather: { temp: 52, sky: 'Sunny', from: 'airport', hi: 55, lo: 31, rain: 'Dry through tonight', obs: null, hours: [], link: 'https://guide.btownbrief.com/weather.html' },
+    wire: [{ title: 'CSWD drop-off center fire tied to improper disposal', src: 'WCAX', url: 'https://x.test/1', link: 'https://guide.btownbrief.com/all-day/#wire/a1' },
+      { title: 'Scott and Janoo differ on healthcare in first debate', src: 'Vermont Public', url: 'https://x.test/2', link: 'https://guide.btownbrief.com/all-day/#wire/a2' }],
+    tonight: [{ title: 'Gaelic Storm', time: '7 pm', venue: 'Higher Ground', start: new Date(Date.now() + 7200000).toISOString(), end: null, url: 'https://e.test/1', link: 'https://guide.btownbrief.com/all-day/#whatnow/tonight' }],
+    game: null };
+
+  await group('widget: the script asks one file, on our own site, and nothing else', async () => {
+    const src = await readFile(path.join(APP, 'widget/btown-widget.js'), 'utf8');
+    const code = src.replace(/^\s*\/\/.*$/gm, '');
+    check((code.match(/new Request\(/g) || []).length === 1, 'one Request in the whole script', '');
+    const hosts = [...new Set((code.match(/https?:\/\/[^/'"\s]+/g) || []))];
+    check(hosts.length === 1 && hosts[0] === 'https://guide.btownbrief.com', 'every URL in it is guide.btownbrief.com', hosts.join(' '));
+    check(!/goatcounter|analytics|Device\.(name|model|systemName)|Location\.|Keychain|Contacts|Photos\./.test(code), 'no counting, no device or location reads', '');
+  });
+
+  for (const scheme of ['light', 'dark']) {
+    await group('widget: the setup page at 390 (' + scheme + ')', async () => {
+      const ctx = await browser.newContext({ viewport: { width: 390, height: 844 }, colorScheme: scheme, serviceWorkers: 'block',
+        permissions: ['clipboard-read', 'clipboard-write'] });
+      const page = await ctx.newPage();
+      const errors = [];
+      page.on('console', (m) => { if (m.type() === 'error') errors.push(m.text()); });
+      page.on('pageerror', (e) => errors.push('pageerror: ' + e.message));
+      await page.route(/\/all-day\/data\/widget\.json/, (r) => r.fulfill({ status: 200, body: JSON.stringify(W_DATA), contentType: 'application/json' }));
+      await page.goto(base + '/all-day/widget/');
+      await page.waitForSelector('#preview:not([hidden])', { timeout: 6000 }).catch(() => {});
+      const t = await page.evaluate(() => ({
+        h1: document.querySelector('h1').textContent,
+        steps: [...document.querySelectorAll('ol > li p')].map((p) => p.textContent.trim()),
+        paras: document.querySelectorAll('main p').length,
+        store: document.getElementById('store').href,
+        back: document.querySelector('.mast a').getAttribute('href'),
+        preview: document.getElementById('preview').innerText.replace(/\s+/g, ' '),
+        docW: document.documentElement.scrollWidth, vw: innerWidth,
+        bg: getComputedStyle(document.body).backgroundColor,
+      }));
+      check(t.h1 === 'Home screen widget', 'the title', t.h1);
+      check(t.steps.length === 5 && t.paras === 5, 'five steps and no other paragraph', JSON.stringify(t.steps));
+      check(t.steps.every((x) => x.split(/\s+/).length <= 14), 'each step is one short line', JSON.stringify(t.steps));
+      check(t.store === 'https://apps.apple.com/us/app/scriptable/id1405459188', 'the App Store link is Scriptable’s', t.store);
+      check(t.back === '../', 'the mast goes back to All Day', t.back);
+      check(/52°/.test(t.preview) && /CSWD drop-off/.test(t.preview) && /7 pm Gaelic Storm/.test(t.preview), 'the preview draws the widget file', t.preview);
+      check(t.docW <= t.vw, 'no sideways scroll', t.docW + ' > ' + t.vw);
+      check(scheme === 'dark' ? t.bg === 'rgb(12, 21, 32)' : t.bg === 'rgb(247, 244, 238)', 'the page is the app’s paper', t.bg);
+      await page.click('#copy');
+      await page.waitForFunction(() => document.getElementById('copy').textContent === 'Copied', null, { timeout: 4000 }).catch(() => {});
+      const clip = await page.evaluate(() => navigator.clipboard.readText()).catch((e) => 'ERR ' + e.message);
+      check(/guide\.btownbrief\.com\/all-day\/data\/widget\.json/.test(clip) && /Script\.setWidget/.test(clip), 'Copy the script puts the whole script on the clipboard', clip.slice(0, 80));
+      check(!errors.length, 'no console errors', errors.join(' | '));
+      await ctx.close();
+    });
+  }
+
+  await group('widget: Settings has a Home screen widget row that opens the page', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.route(/\/all-day\/data\/widget\.json/, (r) => r.fulfill({ status: 200, body: JSON.stringify(W_DATA), contentType: 'application/json' }));
+    await page.goto(base + '/all-day/');
+    await settle(page);
+    const text = await settingsText(page);
+    check(/Home screen widget\s*Set up/.test(text), 'the row and its button', text.slice(-400));
+    const a = await page.$('.sheet-body a[data-widget]');
+    check(a && await a.getAttribute('href') === 'widget/', 'it links to widget/', '');
+    await Promise.all([page.waitForURL(/\/all-day\/widget\/$/), page.click('.sheet-body a[data-widget]')]);
+    check(await page.$eval('h1', (h) => h.textContent) === 'Home screen widget', 'and lands on the setup page', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+}
+
 /* ----------------------------------------------------------------- run */
 const t0 = Date.now();
 await mkdir(SHOTS, { recursive: true });
@@ -12341,6 +12417,7 @@ try {
   await run(matrix);
   await run(lakeSunset);
   await run(lakePalette);
+  await run(theWidget);
   await run(deepLinks);
   await run(theWire);
   /* Wire pass 2 runs with theWire (or alone, as ONLY=wirePass2) */
