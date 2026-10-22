@@ -8,9 +8,10 @@ runners — see SUMMARY-chatter.md). Also feeds the "Recently on
 r/GoodBurlington" strip on best-of-reddit.html.
 
 Reddit's own listing (real upvote scores) comes first, through
-scripts/reddit_client.py's read-only OAuth route once REDDIT_CLIENT_ID/SECRET
-are set (skipped without them: the logged-out .json 403s since May 2026),
-then Steve's
+scripts/reddit_client.py's listing routes: read-only OAuth once
+REDDIT_CLIENT_ID/SECRET are set, the logged-out shreddit page, or the copy
+Stephen's Mac pushed to the reddit-data branch (the logged-out .json 403s
+since May 2026), then Steve's
 public Inoreader stream is tried as a fallback/supplement (no auth, but
 Inoreader never carries a score — those posts get score 0 so the existing
 "▲ N" badge in js/app.js never renders blank). On any failure, or if too
@@ -145,12 +146,13 @@ def load_posts(fixtures=None, client=None):
     groups = []
     used_reddit = used_inoreader = False
     client = client or reddit_client.Client()
-    if client.oauth:
-        try:
-            groups.append(parse_reddit_json(client.oauth_json("r/GoodBurlington/hot", limit=25)))
-            used_reddit = True
-        except reddit_client.RedditError as exc:
-            print(f"reddit GoodBurlington failed: {exc}", file=sys.stderr)
+    try:
+        route, data = client.listing("r/GoodBurlington/hot", limit=25)
+        groups.append(parse_reddit_json(data))
+        used_reddit = True
+        print(f"reddit GoodBurlington via {route}", file=sys.stderr)
+    except reddit_client.RedditError as exc:
+        print(f"reddit GoodBurlington failed: {exc}", file=sys.stderr)
     try:
         raw = fetch_bytes(INOREADER_URL, "application/rss+xml, application/xml")
         groups.append(parse_inoreader_xml(raw))

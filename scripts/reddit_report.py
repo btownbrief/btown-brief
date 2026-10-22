@@ -38,7 +38,7 @@ from reddit_intake import ROUTES, iso, load_json, parse_iso, utcnow, write_json,
 
 HOURS = 24
 STALE_INTAKE_HOURS = 6
-LABEL = {"inoreader": "Inoreader", "rss": "RSS", "oauth": "OAuth"}
+LABEL = {"inoreader": "Inoreader", "rss": "RSS", "oauth": "OAuth", "shreddit": "Reddit web"}
 
 
 def fmt_day(dt):
@@ -186,7 +186,9 @@ def route_phrase(route, summary):
 def brief_line(report):
     """One line, same shape as the brief's "Machine:" line."""
     total = sum(data["new_24h"] for data in report["subs"].values())
-    routes = ", ".join(route_phrase(r, report["routes"][r]) for r in ROUTES)
+    # a route this intake never ran (shreddit before the Mac runner) isn't news
+    routes = ", ".join(route_phrase(r, report["routes"][r]) for r in ROUTES
+                       if report["routes"][r]["status"] != "no runs")
     hours = report["window_hours"]
     if report["level"] == "green":
         return f"Reddit: green, {total} new posts in {hours}h ({routes})"
