@@ -9871,6 +9871,51 @@ async function shellFixes(browser, base) {
     check(sp.h === '152px' && sp.r === '12px' && sp.b === '0px' && sp.d === 'block', '.embed.spotify is Spotify’s 152px, the media radius, no border', JSON.stringify(sp));
     await ctx.close();
   });
+
+  /* Stephen, 2026-10-22: "All Day", then his Btown Brief logo, a step away,
+     because it is his project. The logo is his Beehiiv publication logo. */
+  await group('shell fixes: the Btown Brief logo sits beside All Day', async () => {
+    const sw = await readFile(path.join(APP, 'sw.js'), 'utf8');
+    check(sw.includes("'./assets/brand/btown-brief-logo.png'"), 'the offline shell caches the logo', '');
+    for (const [width, scheme] of [[390, 'light'], [390, 'dark'], [360, 'light']]) {
+      const { ctx, page, errors } = await newPage(browser, base, { viewport: { width, height: 844 }, scheme, dpr: 2 });
+      await page.goto(base + '/all-day/?demo=1#wire');
+      await settle(page);
+      const tag = width + ' ' + scheme + ': ';
+      const link = page.getByRole('link', { name: 'Btown Brief', exact: true }).first();
+      const m = await page.evaluate(() => {
+        const box = (n) => { const r = n.getBoundingClientRect(); return { l: r.left, r: r.right, t: r.top, b: r.bottom, w: r.width, h: r.height }; };
+        const row = document.querySelector('#mast .mast-row'), a = document.getElementById('brand'), img = a.querySelector('img');
+        const kids = ['wordmark', 'brand', 'theme-btn', 'saved-btn', 'settings-btn'].map((id) => [id, box(document.getElementById(id))]);
+        const overlaps = [];
+        for (let i = 1; i < kids.length; i++) if (kids[i][1].l < kids[i - 1][1].r - 0.5) overlaps.push(kids[i - 1][0] + '/' + kids[i][0]);
+        return { href: a.href, target: a.target, rel: a.rel, loaded: img.complete && img.naturalWidth > 0, img: box(img), row: box(row),
+          over: row.scrollWidth - row.clientWidth, doc: document.documentElement.scrollWidth - innerWidth, overlaps,
+          gap: kids[1][1].l - kids[0][1].r, wm: document.getElementById('wordmark').scrollWidth - document.getElementById('wordmark').clientWidth,
+          saved: document.getElementById('saved-btn').getAttribute('aria-label'), word: getComputedStyle(document.querySelector('#saved-btn > span')).display };
+      });
+      check(await link.isVisible() && m.href === 'https://www.btownbrief.com/' && m.target === '_blank' && /noopener/.test(m.rel), tag + 'a link named "Btown Brief" opens btownbrief.com in a new tab', JSON.stringify(m));
+      check(m.loaded && m.img.h === 36 && m.img.w > 55, tag + 'the logo picture loads at 36px tall', JSON.stringify(m.img));
+      check(m.gap >= 16, tag + 'the logo stands a clear step away from All Day', String(m.gap));
+      check(m.over <= 0 && m.doc <= 0 && !m.overlaps.length && m.wm <= 0, tag + 'the mast row fits: nothing overflows, nothing overlaps, All Day is whole', JSON.stringify(m));
+      check(m.img.t >= m.row.t && m.img.b <= m.row.b, tag + 'the logo sits inside the 52px row', JSON.stringify([m.img, m.row]));
+      check(m.saved === 'Saved' && (width < 380 ? m.word === 'none' : m.word !== 'none'), tag + (width < 380 ? 'Saved is the star alone, still named Saved' : 'Saved keeps its word'), JSON.stringify(m));
+      check(!errors.length, tag + 'no console errors', errors.join(' | '));
+      await ctx.close();
+    }
+    const { ctx, page, errors } = await newPage(browser, base, { viewport: { width: 1280, height: 800 } });
+    await page.goto(base + '/all-day/?demo=1#wire');
+    await settle(page);
+    const w = await page.evaluate(() => {
+      const r = document.querySelector('.rail-brand a'), img = r && r.querySelector('img'), b = img && img.getBoundingClientRect();
+      return { mastShown: getComputedStyle(document.getElementById('brand')).display !== 'none', href: r && r.href, target: r && r.target, alt: img && img.alt,
+        loaded: !!img && img.naturalWidth > 0, h: b && b.height, word: document.querySelector('.rail-brand').textContent.trim() };
+    });
+    check(!w.mastShown && w.word === 'All Day' && w.href === 'https://www.btownbrief.com/' && w.target === '_blank' && w.alt === 'Btown Brief' && w.loaded && w.h === 36,
+      '1280: the mast shows the tab, and the rail carries All Day with the logo beside it', JSON.stringify(w));
+    check(!errors.length, '1280: no console errors', errors.join(' | '));
+    await ctx.close();
+  });
 }
 
 /* -------------------------------------------------------------- People */
