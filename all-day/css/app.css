@@ -1980,6 +1980,19 @@ body.desk { overflow: auto; }
 #panel-people [data-chat] { background: var(--lake-soft); border-color: var(--line); }
 #panel-people .arch button.on { background: var(--lake); color: var(--lake-ink); }
 #panel-people .arch button.on span { color: var(--lake-ink); opacity: 1; }
+/* People's key buttons: the ones worth tapping, in colour so the eye stops
+   on them (Stephen, 2026-10-22). Teal for the clubs, rose for Dating,
+   sunset for Pets; the park sheet's button rides in a sheet, hence .pkey */
+.btn.pkey { height: var(--hit); padding: 0 20px; border: 0; background: var(--liq-people); color: var(--liq-people-ink); box-shadow: var(--dock-shadow); }
+.btn.pkey .i { color: currentColor; }
+.btn.pkey.rose { background: var(--liq-watch); color: var(--liq-watch-ink); }
+.btn.pkey.sun { background: var(--sunset); color: var(--sunset-ink); }
+#panel-people .addrow .btn.pkey { width: 100%; }
+.parksheet ul.rules { margin: 0 0 var(--s3); padding-left: 1.2em; }
+.parksheet ul.rules li { padding: 3px 0; line-height: 1.4; }
+#panel-people .lrow.news { grid-template-columns: minmax(0, 1fr) auto; }
+#panel-people [data-sec="dating"] .subh, #panel-people [data-sec="pets"] .subh { padding-top: var(--s4); }
+#panel-people [data-to-mix] { color: var(--ink); text-decoration: underline; text-underline-offset: 2px; }
 .hb-tile { background: var(--park-soft); }
 .audio, .wholeed { --ink: var(--lake); --on-ink: var(--lake-ink); }
 .gm-quiz { background: var(--sunset-soft); }

@@ -18,6 +18,21 @@
 import * as cw from './clubs-week.js';
 
 const DRINKING = /brew|beer|\bpints?\b|\bpubs?\b|\bbars?\b|taproom|tap room|cocktail|\bwine|cider|distill|happy hour|\bale\b|\bipa\b/i;
+/* singles nights: an event or a plan that says it is for singles (not a
+   tennis singles match, not single-origin coffee) */
+export const SINGLES = /\bsingles\b(?! ?(?:tennis|match|matches|game|games|play|scull|track|ladder))|\bsingle (?:friends|people|folks|and (?:looking|ready))|speed[- ]?dat|\bdating\b|blind date/i;
+/* ...and what says it isn't: a group "not for dating", tennis singles and doubles */
+const NOT_SINGLES = /not (?:for |a )?dating|no dating|\bdoubles\b/i;
+/* pets: dogs, cats and the shelter, by the words people use for them */
+export const PETS = /\bdogs?\b|\bpups?\b|\bpuppy|puppies|\bdogg(?:y|ie)|yappy|\bbark(?:tober\w*)?\b|canine|\bpets?\b|kitten|\bcat caf|humane society|howl-?o-?ween|four[- ]legged|furry friends/i;
+/* ...and the words that only look like them, and kids' programs */
+export const NOT_PETS = /hot ?dogs?|corn ?dogs?|chili dog|big dog|top dog|underdog|dog ?fish|dogwood|dog days|salty dog|black dog|sea dogs|reservoir dogs|pet (?:store|shop|sounds|peeve|project)|petting|\bdj\b|storytime|\bkids?\b|toddler|read(?:ing)? to (?:a )?dog/i;
+/* A calendar event about pets: its title says so, and it isn't a kids' program */
+export function petEvent(e) {
+  if (!e || typeof e.title !== 'string' || !/^https?:/i.test(String(e.url || ''))) return false;
+  if (Array.isArray(e.tags) && e.tags.some((x) => ['kids', 'teens', 'family', 'older kids', 'storytime'].includes(x))) return false;
+  return PETS.test(e.title) && !NOT_PETS.test(e.title);
+}
 export const MATCH = {
   'a:new': { kinds: ['social', 'language', 'trivia'], words: /newcomer|new (?:in|to) (?:town|burlington|the area)|first connections/i,
     ev: /mixer|social|coffee club|newcomer|new in town|welcome|meet[- ]?up|happy hour/i },
@@ -45,6 +60,11 @@ export const MATCH = {
   making: { kinds: ['making'], ev: /craft|maker|knit|carv|paint|sew|crochet/i },
   languages: { kinds: ['language'], ev: /language|french|spanish|italian|mandarin|irish|conversation/i },
   food: { words: /cookbook|potluck|food (?:club|lovers)|dinner club|supper club|tasting|brewery book/i, ev: /coffee|food|dinner|brunch|crawl|drink|lunch|potluck|tasting/i },
+  /* Single: the social groups and dance socials, and anything that says it is for singles;
+     never a group that says it is not for dating */
+  single: { kinds: ['social', 'dance'], words: /\bsingles\b|dating|speed[- ]?dat/i, ev: SINGLES, not: NOT_SINGLES },
+  /* A pet person: what says dogs or pets, never a hot dog or a DJ called Big Dog */
+  pets: { words: /\bdogs?\b|\bpets?\b|\bpup|canine|humane society/i, ev: PETS, not: NOT_PETS },
 };
 
 /* the groups.json kinds in words, for a row's second line */

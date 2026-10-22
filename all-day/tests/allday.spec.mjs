@@ -9647,7 +9647,7 @@ async function thePeople(browser, base) {
       /^Plans & Meetups/.test(doors[1][0]) && doors[1][1] === 'https://www.btownbrief.com/community/channels/meetups-hangouts' &&
       /^Telegram/.test(doors[2][0]) && doors[2][1] === base + '/telegram.html', 'one door card: Find Each Other, Plans & Meetups, Telegram', JSON.stringify(doors));
     const chipsTxt = await page.$$eval('#subnav .chip', (cs) => cs.map((c) => c.textContent));
-    check(JSON.stringify(chipsTxt) === JSON.stringify(['Who you are', 'Run clubs', 'Open to strangers', 'Mixers', 'Clubs', 'Quiz', 'People here']), 'the chip row is the table of contents', JSON.stringify(chipsTxt));
+    check(JSON.stringify(chipsTxt) === JSON.stringify(['Who you are', 'Run clubs', 'Open to strangers', 'Mixers', 'Dating', 'Pets', 'Clubs', 'Quiz', 'People here']), 'the chip row is the table of contents', JSON.stringify(chipsTxt));
     await page.evaluate(() => document.querySelector('#panel-people').scrollTo(0, 0));
     await page.waitForTimeout(400);
     await page.click('#subnav .chip[data-chip="quiz"]');
@@ -9755,6 +9755,127 @@ async function thePeople(browser, base) {
     check(!/Lee Q\./.test(txt) && await page.$(peoplePanel + ' [data-dir="join"]') !== null, 'reader A’s late directory never draws for reader B, who is not in it', txt.slice(0, 160));
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
+  });
+
+  /* Dating and Pets (Stephen's walk, 2026-10-22): singles nights, a group
+     of singles going out, the local ways to meet someone, dating news; the
+     dog parks with their town's rules, pet events, dog park plans */
+  await group('People: Dating and Pets, the hand-checked file holds', async () => {
+    const dp = JSON.parse(await readFile(path.join(REPO, 'data/dating-pets.json'), 'utf8'));
+    const today = BTV_DAY.format(new Date());
+    const all = [].concat(dp.dating.ways, dp.dating.news, [dp.dating.more], dp.pets.parks, Object.values(dp.pets.rules), dp.pets.help);
+    const bad = all.filter((x) => !x || !/^https:\/\//.test(x.url || '') || !x.checked || !/^https:\/\//.test(x.checked.source || '') || !(x.checked.note || '').length ||
+      !/^\d{4}-\d{2}-\d{2}$/.test(x.checked.date || '') || x.checked.date > today);
+    check(!bad.length, 'every entry links out and carries its check: a source, a quote, a date not in the future (' + all.length + ')', JSON.stringify(bad).slice(0, 300));
+    const words = JSON.stringify([dp.dating.ways.map((w) => w.line), dp.dating.news.map((n) => n.title), dp.pets.parks.map((x) => [x.name, x.where, x.line]), Object.values(dp.pets.rules).map((r) => r.items), dp.pets.help.map((h) => h.line)]);
+    check(!/—/.test(words), 'no em dash in what readers see', '');
+    const names = dp.pets.parks.map((x) => x.name);
+    check(names.includes('Starr Farm Dog Park') && names.includes('Wheeler Nature Park dog area') && dp.pets.parks.every((x) => dp.pets.rules[x.rules]), 'Starr Farm and Wheeler are there, each park with its town’s rules', JSON.stringify(names));
+    const PM = await import(path.join(APP, 'js/people-match.js'));
+    const pet = (title) => PM.petEvent({ title, url: 'https://example.com/e' });
+    check(pet('Barktober Halloween Bash at the Tap Room') && pet('Yappy Hour at Foam') && pet('Aging in Place With Pets Volunteer Day') &&
+      !pet('Hot Dog & A Can Thursdays') && !pet('DJ Big Dog') && !pet('Pet Store: A Live Sitcom') && !pet('Read to a Dog (kids)'), 'pet events: dogs and pets, never a hot dog, a DJ or a kids’ program', '');
+    check(PM.fitsText('Speed dating at Foam', ['single']) && PM.fitsText('Singles mixer', ['single']) && !PM.fitsText('Singles tennis ladder', ['single']) && !PM.fitsText('Single-origin coffee tasting', ['single']) &&
+      !PM.fitsText('Trivia, need a fifth', ['single']), 'singles: speed dating and mixers, never a tennis ladder or single-origin coffee', '');
+    const g = JSON.parse(await readFile(path.join(REPO, 'data/groups.json'), 'utf8')).groups;
+    const notDating = g.filter((x) => /not (?:for |a )?dating/i.test(x.what || ''));
+    check(notDating.every((x) => PM.groupScore(x, ['single']) === 0), 'a group that says it is not for dating never comes up for Single', notDating.map((x) => x.name).join(', '));
+  });
+
+  await group('People, live: Dating and Pets', async () => {
+    const now = new Date();
+    const post = (id, title, place, h) => ({ id, board: 'people', kind: 'plan', title, body: '', place, meta: { when: btvWhen(+now + h * 3600000), spots: 3 }, photo: null,
+      author: 'Priya N.', author_arch: null, created_at: new Date(now - 3600000).toISOString(), expires_at: new Date(+now + 13 * 86400000).toISOString(), votes: 1, voted: false, mine: false });
+    const singles = post('22222222-aaaa-4aaa-8aaa-000000000001', 'Singles trivia night, come join our group', 'Three Needs', 5);
+    const dogs = post('22222222-aaaa-4aaa-8aaa-000000000002', 'Dog park hang, bring your pup', 'Starr Farm Dog Park', 20);
+    const other = post('22222222-aaaa-4aaa-8aaa-000000000003', 'Board game night, need two more', 'Mill Street', 8);
+    const { ctx, page, errors } = await newPage(browser, base, { rpc: (fn, body) => (fn === 'nn_posts_list' ? (body.p_board === 'people' ? [singles, dogs, other] : [])
+      : fn === 'nn_people_directory' ? { count: 3, me: false, people: [] } : undefined) });
+    await page.goto(base + '/all-day/#people');
+    await peopleReady(page);
+    await page.waitForSelector(peoplePanel + ' [data-sec="dating"] [data-ways]', { timeout: 15000 });
+    await page.waitForSelector(peoplePanel + ' [data-sec="pets"] [data-parks]', { timeout: 15000 });
+    await page.waitForFunction((s) => !document.querySelector(s + ' [data-sec="dating"] .loading, ' + s + ' [data-sec="pets"] .loading'), peoplePanel, { timeout: 10000 });
+    const order = await secOrder(page);
+    check(order.indexOf('dating') === order.indexOf('host') + 1 && order.indexOf('pets') === order.indexOf('dating') + 1, 'Dating, then Pets, under the mixers and the host card', order.join(' '));
+    /* singles nights: the calendar's, from now on */
+    const PM = await import(path.join(APP, 'js/people-match.js'));
+    const w = JSON.parse(await readFile(path.join(APP, 'data/whatnow.json'), 'utf8'));
+    const later = (e) => (Date.parse(e.end) || (/T\d/.test(e.start || '') ? Date.parse(e.start) + 2 * 3600000 : Date.parse(e.date + 'T23:59:00-04:00'))) > Date.now();
+    const wantS = new Set(w.events.filter((e) => /^https?:/.test(e.url || '') && later(e) && (PM.mixerKind(e) === 'singles' || PM.SINGLES.test(e.title))).map((e) => e.date + e.title)).size;
+    const sRows = await page.$$eval(peoplePanel + ' [data-singles] .lrow', (rs) => rs.map((r) => ({ t: r.querySelector('.t').textContent, href: r.getAttribute('href') })));
+    if (wantS) check(sRows.length === wantS && sRows.every((r) => /^https?:/.test(r.href)), 'singles nights: every one on the calendar from now on (' + wantS + ')', JSON.stringify(sRows));
+    else check(!sRows.length && await page.$(peoplePanel + ' [data-sec="dating"] [data-to-mix]') !== null, 'no singles night on the calendar: it says so and points at the mixers', '');
+    const sp = await page.$$eval(peoplePanel + ' [data-singles-plans] [data-plan-row]', (rs) => rs.map((r) => r.dataset.planRow));
+    check(sp.length === 1 && sp[0] === singles.id, 'going as a group: the readers’ singles plans, and only those', JSON.stringify(sp));
+    const colour = (sel) => page.$eval(sel, (b) => getComputedStyle(b).backgroundColor);
+    const tone = (name) => page.evaluate((n) => { const d = document.createElement('div'); d.style.color = 'var(' + n + ')'; document.body.appendChild(d); const c = getComputedStyle(d).color; d.remove(); return c; }, name);
+    check(await colour(peoplePanel + ' [data-singles-post]') === await tone('--liq-watch'), 'Post a singles plan is a rose button', await colour(peoplePanel + ' [data-singles-post]'));
+    const ways = await page.$$eval(peoplePanel + ' [data-ways] a', (as) => as.map((a) => [a.querySelector('.t').textContent, a.href]));
+    check(ways.length === 2 && ways[0][0] === 'Seven Days Personals' && ways.every((x) => /^https:\/\/dating\.sevendaysvt\.com\//.test(x[1])), 'meet someone here: Seven Days Personals and I Spy', JSON.stringify(ways));
+    const news = await page.$$eval(peoplePanel + ' [data-dating-news] a', (as) => as.map((a) => [a.querySelector('.t').textContent, a.querySelector('.s').textContent, a.href]));
+    check(news.length >= 1 && news.length <= 4 && news.every((n) => /^https:/.test(n[2]) && /· [A-Z][a-z]{2} \d{1,2}, \d{4}/.test(n[1])), 'dating news: a few headlines, outlet and date on each', JSON.stringify(news));
+    check(await page.$eval(peoplePanel + ' [data-more-news] a', (a) => a.href) === 'https://theconversation.com/topics/dating-apps-43406', 'and More dating news links out', '');
+    /* pets */
+    const parks = await page.$$eval(peoplePanel + ' [data-parks] .lrow', (rs) => rs.map((r) => ({ k: r.dataset.k, t: r.querySelector('.t').textContent, s: r.querySelector('.s').textContent })));
+    check(parks.length === 5 && parks[0].t === 'Starr Farm Dog Park' && parks.some((x) => x.t === 'Wheeler Nature Park dog area' && /^South Burlington · /.test(x.s)), 'dog parks: Starr Farm first, Wheeler in South Burlington, five in all', JSON.stringify(parks.map((x) => x.t)));
+    const wantP = new Set(w.events.filter((e) => later(e) && PM.petEvent(e)).map((e) => e.date + e.title)).size;
+    const pRows = await page.$$eval(peoplePanel + ' [data-pet-events] .lrow .t', (ts) => ts.map((t) => t.textContent));
+    check(pRows.length === wantP && pRows.every((t) => !/hot dog|\bdj\b|pet store/i.test(t)), 'pet events: the calendar’s, never a hot dog (' + wantP + ')', JSON.stringify(pRows));
+    const pp = await page.$$eval(peoplePanel + ' [data-pet-plans] [data-plan-row]', (rs) => rs.map((r) => r.dataset.planRow));
+    check(pp.length === 1 && pp[0] === dogs.id, 'pet people: the readers’ dog park plans', JSON.stringify(pp));
+    check(await colour(peoplePanel + ' [data-pets-post]') === await tone('--sunset'), 'Post a dog park plan is a sunset button', '');
+    check(/Humane Society of Chittenden County/.test(await page.$eval(peoplePanel + ' [data-pet-help]', (g) => g.textContent)), 'and the shelter, to volunteer or adopt', '');
+    /* the clubs buttons are coloured now, so they are clicked, not scrolled past */
+    const every = await page.$$eval(peoplePanel + ' a.btn', (as) => as.filter((a) => /^Every club and league/.test(a.textContent.trim())).map((a) => [a.className, getComputedStyle(a).backgroundColor]));
+    check(every.length === 2 && every.every(([c, bg]) => /pkey/.test(c) && bg !== 'rgba(0, 0, 0, 0)'), 'both Every club and league buttons are coloured key buttons', JSON.stringify(every));
+    await page.evaluate(() => document.querySelector('#panel-people').scrollTo(0, 0));
+    await page.click('#subnav .chip[data-chip="dating"]');
+    await page.waitForTimeout(900);
+    await page.screenshot({ path: path.join(SHOTS, 'live-people-dating.png') });
+    await page.click('#subnav .chip[data-chip="pets"]');
+    await page.waitForTimeout(900);
+    await page.screenshot({ path: path.join(SHOTS, 'live-people-pets.png') });
+    /* a park's sheet: the rules, the map, a plan to meet people there */
+    await page.click(peoplePanel + ' [data-k="park-starr-farm"]');
+    await page.waitForSelector('[data-park-sheet="starr-farm"]');
+    const sh = await page.$eval('[data-park-sheet="starr-farm"]', (b) => ({ rules: [...b.querySelectorAll('[data-rules] li')].map((l) => l.textContent),
+      links: [...b.querySelectorAll('[data-links] a')].map((a) => [a.textContent.trim(), a.href]), go: !!b.querySelector('[data-park-plan]') }));
+    check(sh.rules.length === 8 && sh.rules[0] === 'Open dawn to dusk.' && sh.rules.includes('Three dogs per person at most.'), 'the sheet: Burlington’s dog park rules', JSON.stringify(sh.rules));
+    check(sh.links.some(([t, h]) => /^Map/.test(t) && /query=44\.51321%2C-73\.26779$/.test(h)) && sh.links.some(([t, h]) => /rules page/.test(t) && h === 'https://www.burlingtonvt.gov/942/Rules-Regulations') && sh.go,
+      'a map to the park, the city’s rules page, and Meet people here', JSON.stringify(sh.links));
+    await page.waitForTimeout(400);
+    await page.screenshot({ path: path.join(SHOTS, 'live-people-park.png') });
+    await page.click('[data-park-plan]');
+    await page.waitForTimeout(500);
+    check(/Sign in to post\./.test(await page.$eval('.sheet-body', (b) => b.innerText)), 'Meet people here, signed out: the plan sheet asks you to sign in', '');
+    await page.keyboard.press('Escape');
+    await page.waitForTimeout(400);
+    /* a singles plan row brings up its card */
+    await page.click(peoplePanel + ' [data-singles-plans] [data-plan-row]');
+    await page.waitForTimeout(600);
+    check(await page.$eval(peoplePanel + ' [data-plans] [data-plan="' + singles.id + '"]', (c) => c.classList.contains('flash')), 'a plan row flashes the plan’s card in Open to strangers', '');
+    /* Single and A pet person: For you points at their sections */
+    await page.click(peoplePanel + ' [data-tags="I’m…"] .chip[data-chip="single"]');
+    await page.click(peoplePanel + ' [data-tags="I’m…"] .chip[data-chip="pets"]');
+    await page.waitForTimeout(200);
+    const fy = await forYou(page);
+    check(fy && fy.some((r) => r.name === 'Dating') && fy.some((r) => r.name === 'Pets'), 'Single and A pet person: For you rows to Dating and Pets', JSON.stringify(fy));
+    await page.click(peoplePanel + ' [data-foryou] [data-k="fy:pets"]');
+    await page.waitForTimeout(900);
+    check(await page.$eval(peoplePanel + ' [data-sec="pets"]', (s) => s.getBoundingClientRect().top < 300), 'and a tap goes there', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+    /* a deep link lands on the section */
+    const p2 = await newPage(browser, base, { clock: SAT_1PM });
+    await p2.page.goto(base + '/all-day/?demo=1#people/pets');
+    await p2.page.waitForSelector(peoplePanel + ' [data-parks] .lrow', { timeout: 15000 });
+    await p2.page.waitForTimeout(1500);
+    check(await p2.page.$eval(peoplePanel + ' [data-sec="pets"]', (s) => { const t = s.getBoundingClientRect().top; return t > -40 && t < 320; }), '#people/pets lands on Pets', '');
+    const ds = await p2.page.$$eval(peoplePanel + ' [data-singles] .lrow .t', (ts) => ts.map((t) => t.textContent));
+    check(ds.includes('Singles Mixer: Board Games Edition'), 'the demo: its singles mixer shows under Singles nights', JSON.stringify(ds));
+    check(!p2.errors.length, 'no console errors', p2.errors.join(' | '));
+    await p2.ctx.close();
   });
 
   await group('People, demo: who you are reorders the plans and the clubs', async () => {
