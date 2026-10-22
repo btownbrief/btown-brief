@@ -46,6 +46,12 @@
    Podcasts: The Brief out loud (the newsletter read aloud, small card, with
    speeds), then the Brief's own show and every local show.
 
+   Sports (Stephen, 2026-10-22: "I love the NBA"): NBA | NFL | Local hoops,
+   the games with their highlights, the leagues' own full-game highlights,
+   the NBA's Starting 5, X and Reddit, and basketball around here. The side
+   is drawn by onair-sports.js from data/onair-sports.json
+   (scripts/gather_onair_sports.py) and the Wire's wire-today.json.
+
    Playlists: "Add your playlist" first, then Stephen's own and readers'
    (data/playlists.json, and the readers' playlists board, which Stephen
    approves first: supabase/nn-PLAYLISTS.sql), as cover tiles, newest first;
@@ -68,6 +74,7 @@ import { RULES } from '../boards-core.js';
 import { el, esc, safeHref, ICON, svg, art, section, chips, pills, divider, cards, button, localSwitch, geo, setGeo, agoShort, listRail } from '../ui.js';
 import { liquify } from '../liquid.js';
 import { pill } from '../sections.js';
+import * as sports from './onair-sports.js';
 
 const KEY = 'onair';
 const NATIONAL = 2;         // shows from away on Everything
@@ -89,6 +96,8 @@ const RATE_KEY = 'allday-brief-rate';
    (refresh-onair-finds.yml) and lives inside /all-day/, so the service
    worker caches it like music.json. */
 const FINDS_URL = 'data/onair-finds.json';
+/* Sports, committed every three hours by the same workflow */
+const SPORTS_URL = 'data/onair-sports.json';
 
 const plural = (n, one, many) => n + ' ' + (n === 1 ? one : many);
 const arr = (v) => (Array.isArray(v) ? v : []);
@@ -136,6 +145,16 @@ function loadFinds(ok, fail) {
   fetch(FINDS_URL, { cache: 'no-cache' }).then((r) => (r.ok ? r.json() : Promise.reject(new Error(String(r.status)))))
     .then((j) => (j && Array.isArray(j.items) ? ok(j) : fail()), fail);
 }
+/* Sports: its own file, and the Wire's day for X and the headlines */
+function loadSports(ok, fail) {
+  if (app.demo) { load('sports', ok, fail); return; }
+  fetch(SPORTS_URL, { cache: 'no-cache' }).then((r) => (r.ok ? r.json() : Promise.reject(new Error(String(r.status)))))
+    .then((j) => (j && j.leagues && typeof j.leagues === 'object' ? ok(j) : fail()), fail);
+}
+function loadWireToday(ok, fail) {
+  if (app.demo) { load('today', ok, fail); return; }
+  data.load('today', ok, fail);
+}
 const clipUrl = (file) => (app.demo ? '#onair/brief' : data.audioUrl(file));
 
 /* The demo file is written on 2026-10-16; move every date and timestamp by
@@ -157,6 +176,22 @@ function redate(d) {
   arr(d.pulse && d.pulse.items).forEach(shiftV);
   arr(d.finds && d.finds.items).forEach(shiftV);
   arr(d.news && d.news.items).forEach(shiftV);
+  /* Sports: its games, highlights and local dates, and the Wire's day */
+  const sp = d.sports || {};
+  Object.values(sp.leagues || {}).forEach((L) => {
+    arr(L && L.games).forEach((g) => { g.start = Number(g.start) + secs; if (isDate(g.day)) g.day = addDays(g.day, days); });
+    arr(L && L.clips).forEach((c) => { c.d = Number(c.d) + secs; if (isDate(c.day)) c.day = addDays(c.day, days); });
+    if (L && L.starting5) L.starting5.d = Number(L.starting5.d) + secs;
+  });
+  const loc = sp.local || {};
+  arr(loc.uvm).forEach((g) => { if (isDate(g.day)) g.day = addDays(g.day, days); if (g.start) g.start = Number(g.start) + secs; });
+  arr(loc.teams).forEach((t) => arr(t.games).forEach((g) => { if (isDate(g.date)) g.date = addDays(g.date, days); }));
+  if (loc.pickup && loc.pickup.next) loc.pickup.next.start = Number(loc.pickup.next.start) + secs;
+  const iso = (s) => new Date(Date.parse(s) + secs * 1000).toISOString();
+  if (d.today) {
+    arr(d.today.recaps).forEach((r) => { if (r.posted_at) r.posted_at = iso(r.posted_at); });
+    Object.values(d.today.sports || {}).forEach((l) => arr(l).forEach((it) => { if (it.posted_at) it.posted_at = iso(it.posted_at); }));
+  }
   arr(d.audio && d.audio.clips).forEach((c) => {
     if (isDate(c.date)) c.date = addDays(c.date, days);
     if (c.made) c.made = new Date(Date.parse(c.made) + secs * 1000).toISOString();
@@ -181,6 +216,9 @@ const O = {
   board: null,                 // that board is installed: true, false, or null (not asked yet)
   news: null,                  // data/onair-news.json, the news recaps
   finds: null,                 // the earlier night the TV block shows, or null for tonight (the visit only)
+  sports: null,                // data/onair-sports.json
+  wtoday: null,                // the Wire's wire-today.json: Grok's Sports recap and the sports lanes
+  lg: 'nba',                   // the Sports side's league: nba | nfl | hoops, for the visit
 };
 
 /* TV reactions: the store's (tv.html's key, and the Supabase calls that
@@ -869,7 +907,7 @@ function collapseBar(what, onCollapse) {
    back to its heading */
 function setOpen(key, on) {
   if (on) O.exp[key] = 1; else delete O.exp[key];
-  drawTVSide();
+  if (/^sp:/.test(key)) drawSportsSide(); else drawTVSide();
   const head = O.root && O.root.querySelector('[data-open-head="' + CSS.escape(key) + '"]');
   if (!head) return;
   if (!on) app.jumpTo(head);
@@ -1731,17 +1769,41 @@ function drawPast(host) {
    visit; the side is in the URL (#onair/podcasts, #onair/playlists) so a
    link can land on it. Every side is drawn and the others hidden, so the
    Brief's own show (and a Spotify frame in it) is never torn down by a flip. */
-const SIDES = { tv: '', pods: 'podcasts', lists: 'playlists' };
+const SIDES = { tv: '', pods: 'podcasts', lists: 'playlists', sports: 'sports' };
+const SIDE_KEYS = ['tv', 'pods', 'lists', 'sports'];
+/* a league is its own address: #onair/nfl, #onair/hoops (NBA is #onair/sports) */
+const LG_PARAM = { nba: 'sports', nfl: 'nfl', hoops: 'hoops' };
 function setSide(side, quiet) {
   O.side = SIDES[side] != null ? side : 'tv';
   const S = O.slots;
-  if (S) { S.tvSide.hidden = O.side !== 'tv'; S.podSide.hidden = O.side !== 'pods'; S.listSide.hidden = O.side !== 'lists'; }
+  if (S) { S.tvSide.hidden = O.side !== 'tv'; S.podSide.hidden = O.side !== 'pods'; S.listSide.hidden = O.side !== 'lists'; S.sportSide.hidden = O.side !== 'sports'; }
   if (!quiet) {
-    try { history.replaceState(null, '', '#onair' + (SIDES[O.side] ? '/' + SIDES[O.side] : '')); } catch (e) { /* a sandboxed frame */ }
+    const param = O.side === 'sports' ? LG_PARAM[O.lg] : SIDES[O.side];
+    try { history.replaceState(null, '', '#onair' + (param ? '/' + param : '')); } catch (e) { /* a sandboxed frame */ }
     app.scrollTop();
   }
   paintCovers();
   if (app.activeTab() === KEY) app.paintSubnav();
+}
+function setLeague(lg, quiet) {
+  O.lg = LG_PARAM[lg] ? lg : 'nba';
+  drawSportsSide();
+  if (!quiet) {
+    try { history.replaceState(null, '', '#onair/' + LG_PARAM[O.lg]); } catch (e) { /* a sandboxed frame */ }
+    app.scrollTop();
+  }
+  if (app.activeTab() === KEY) app.paintSubnav();
+}
+function drawSportsSide() {
+  const S = O.slots;
+  if (!S) return;
+  const host = S.sports;
+  if (!O.settled.sports) { host.innerHTML = '<p class="loading">Finding the games…</p>'; S.sportEnd.innerHTML = ''; return; }
+  const any = sports.draw(host, O.lg, O.sports, O.wtoday);
+  if (!any) host.appendChild(el('p', 'note pad sp-empty', esc(O.lg === 'hoops' ? 'No local games yet.' : 'No games this week.')));
+  app.paintPlayButtons();
+  S.sportEnd.innerHTML = '';
+  S.sportEnd.appendChild(cards.caught({ title: 'That’s On Air', check: false }));
 }
 function setLen(k) {
   O.len = LEN[k] ? k : '';
@@ -1788,11 +1850,13 @@ function render() {
     const tvSide = side('tv');
     const podSide = side('pods');
     const listSide = side('lists');
+    const sportSide = side('sports');
     const mk = (host, name) => { const s = el('div'); s.dataset.slot = name; host.appendChild(s); return s; };
     O.slots = { tvSide, podSide, listSide,
       pick: mk(tvSide, 'pick'), tv: mk(tvSide, 'tv'), news: mk(tvSide, 'news'), more: mk(tvSide, 'more'), topics: mk(tvSide, 'topics'), live: mk(tvSide, 'live'), past: mk(tvSide, 'past'), tvEnd: mk(tvSide, 'end'),
       brief: mk(podSide, 'brief'), podsHead: mk(podSide, 'pods-head'), own: mk(podSide, 'own'), pods: mk(podSide, 'pods'), podEnd: mk(podSide, 'end'),
-      lists: mk(listSide, 'lists'), boards: mk(listSide, 'boards'), listEnd: mk(listSide, 'end') };
+      lists: mk(listSide, 'lists'), boards: mk(listSide, 'boards'), listEnd: mk(listSide, 'end'),
+      sportSide, sports: mk(sportSide, 'sports'), sportEnd: mk(sportSide, 'end') };
     O.built = true;
     setSide(O.side, true);
   }
@@ -1807,6 +1871,7 @@ function render() {
   drawPods(S.pods);
   S.podEnd.appendChild(cards.caught({ title: 'That’s On Air', check: false }));
   drawListsSide();
+  drawSportsSide();
   app.paintPlayButtons();
   if (app.activeTab() === KEY) app.paintSubnav();
   land();
@@ -1814,6 +1879,7 @@ function render() {
 
 /* ------------------------------------------------------------ the clicks */
 function onClick(e) {
+  if (sports.onClick(e, O.sports)) return;
   const pick = e.target.closest('[data-pick]');
   if (pick) { e.preventDefault(); pickForMe(); return; }
   const ex = e.target.closest('button[data-expand]');
@@ -1829,7 +1895,7 @@ function onClick(e) {
     if (it.clips) { openPlayer(it.clips, 0, it.title); return; }
     const list = card._list || [it];
     const at = Math.max(0, list.findIndex((x) => x.k === it.k));
-    openPlayer(list, at, card.closest('.sheet-body') ? 'The whole edition' : card.dataset.run || (it.live ? 'Live' : O.len ? LEN[O.len].title : it.via === 'Btown TV' ? 'Btown TV' : 'More to watch'));
+    openPlayer(list, at, card.closest('.sheet-body') ? 'The whole edition' : card.dataset.run || (it.sport ? 'Highlights' : it.live ? 'Live' : O.len ? LEN[O.len].title : it.via === 'Btown TV' ? 'Btown TV' : 'More to watch'));
     return;
   }
   const more = e.target.closest('[data-more]');
@@ -1892,7 +1958,7 @@ function allVideos() {
 }
 function land() {
   let k = O.pending;
-  if (!k || !O.root || !O.built || !FEEDS.every((f) => O.settled[f]) || !O.settled.playlists || !O.settled.finds || !O.settled.news) return;
+  if (!k || !O.root || !O.built || !FEEDS.every((f) => O.settled[f]) || !O.settled.playlists || !O.settled.finds || !O.settled.news || !O.settled.sports) return;
   O.pending = null;
   if (k === 'brief') { const c = currentClip(); if (c) k = 'brief:' + c.date; }   // the old #listen/brief
   let hit = findHit(k);
@@ -1902,6 +1968,11 @@ function land() {
     if (view() === 'topics') viewMem = 'feed';
     drawTVSide();
     hit = findHit(k);
+  }
+  if (!hit && /^yt:/.test(k)) {
+    /* a shared highlight: its league's side */
+    const it = sports.items(O.sports).find((x) => x.k === k);
+    if (it) { O.lg = it.sport; drawSportsSide(); hit = findHit(k); }
   }
   if (!hit && /^(yt|vm):/.test(k)) {
     /* a shared video that the page as drawn does not show (a find while on
@@ -1932,6 +2003,7 @@ function land() {
 /* ----------------------------------------------------------------- the tab */
 function mount(root) {
   O.root = root;
+  sports.init({ sec, openable, row, feature, openPlayer, todayKey, etDay, addDays, weekday, clock: (ms) => clock(ms) });
   render();
   root.addEventListener('click', onClick);
   root.addEventListener('keydown', onKey);
@@ -1947,6 +2019,9 @@ function mount(root) {
   loadPlaylists((j) => { O.playlists = j; O.settled.playlists = true; render(); }, () => { O.settled.playlists = true; render(); });
   loadFinds((j) => { O.finds = j; O.settled.finds = true; render(); }, () => { O.settled.finds = true; render(); });
   loadNews((j) => { O.news = j; O.settled.news = true; render(); }, () => { O.settled.news = true; render(); });
+  loadSports((j) => { O.sports = j; O.settled.sports = true; render(); }, () => { O.settled.sports = true; render(); });
+  /* the Wire's day: X's sports bullets and the headlines, if it comes */
+  loadWireToday((j) => { O.wtoday = j; if (O.built) drawSportsSide(); }, () => {});
   loadBoard();
   /* a playlist approved, deleted or taken down elsewhere in the app */
   window.addEventListener('allday-boards', (e) => {
@@ -1976,6 +2051,8 @@ app.register(KEY, {
       if (O.root) render();
       return;
     }
+    const lg = Object.keys(LG_PARAM).find((x) => LG_PARAM[x] === param && x !== 'nba') || (param === 'nba' ? 'nba' : null);
+    if (lg) { O.pending = null; O.lg = lg; setSide('sports', true); if (O.root) drawSportsSide(); return; }
     const side = Object.keys(SIDES).find((k) => SIDES[k] && SIDES[k] === param) || (param === 'tv' ? 'tv' : null);
     if (side) { O.pending = null; setSide(side, true); return; }
     O.pending = param || null;
@@ -1992,15 +2069,21 @@ app.register(KEY, {
        lengths, or the podcast sections, which follow the scroll */
     const wrap = el('div', 'secbar oa-sub');
     const top = el('div', 'secrow oa-sidesrow');
-    const sw = pills([['tv', 'TV'], ['pods', 'Podcasts'], ['lists', 'Playlists']], O.side, (v) => setSide(v), 'oa-sideswitch');
+    const sw = pills([['tv', 'TV'], ['pods', 'Podcasts'], ['lists', 'Playlists'], ['sports', 'Sports']], O.side, (v) => setSide(v), 'oa-sideswitch');
     sw.setAttribute('role', 'group');
-    sw.setAttribute('aria-label', 'TV, podcasts or playlists');
-    [...sw.children].forEach((b, i) => { b.dataset.side = ['tv', 'pods', 'lists'][i]; b.setAttribute('aria-pressed', String(b.dataset.side === O.side)); });
+    sw.setAttribute('aria-label', 'TV, podcasts, playlists or sports');
+    [...sw.children].forEach((b, i) => { b.dataset.side = SIDE_KEYS[i]; b.setAttribute('aria-pressed', String(b.dataset.side === O.side)); });
     /* the side you are on sits in poured water, its own colour (2026-10-19) */
-    liquify(sw, { key: 'oa-side', idx: ['tv', 'pods', 'lists'].indexOf(O.side), colors: ['--liq-tv', '--liq-pods', '--liq-lists'] });
+    liquify(sw, { key: 'oa-side', idx: SIDE_KEYS.indexOf(O.side), colors: ['--liq-tv', '--liq-pods', '--liq-lists', '--liq-sports'] });
     top.appendChild(sw);
     wrap.appendChild(top);
     const band = el('div', 'secrow');
+    /* Sports has no Local switch (its local is its own league): the leagues */
+    if (O.side === 'sports') {
+      band.appendChild(pill({ key: 'sec-onair-sports', title: 'Leagues', items: sports.LEAGUES.map(([key, label]) => ({ key, label })), current: O.lg, color: '--liq-sports', onPick: (k) => setLeague(k) }));
+      wrap.appendChild(band);
+      return wrap;
+    }
     band.appendChild(localSwitch(() => { render(); app.scrollTop(); }));
     if (O.side === 'tv') {
       const pool = O.built ? (() => { const keep = O.len; O.len = ''; const all = pool_(); O.len = keep; return all; })() : [];

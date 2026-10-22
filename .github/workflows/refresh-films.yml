@@ -2,9 +2,12 @@ name: Refresh the Watch tab's films
 
 # Builds the three files All Day's Watch tab reads off the `films-data` branch:
 #
-#   data/films.json         scripts/build_films.py, Mondays. TMDB's top 300
-#                           films, trending films, coming soon, in theaters
-#                           now, and the shows: top rated, trending, airing.
+#   data/films.json         scripts/build_films.py, Mondays and Thursdays.
+#                           TMDB's top 300 films, trending films, coming
+#                           soon, in theaters now, coming to streaming
+#                           (with JustWatch's services, via TMDB), and the
+#                           shows: top rated, trending, airing, and new
+#                           seasons coming to the streamers.
 #   data/time-machine.json  scripts/build_time_machine.py, the 2nd of each
 #                           month. What was big each month for five years:
 #                           the titles in data/time-machine-titles.json
@@ -39,8 +42,9 @@ name: Refresh the Watch tab's films
 
 on:
   schedule:
-    # films: Mondays, about 6:20 am Eastern (TMDB's "upcoming" turns over weekly)
-    - cron: '20 10 * * 1'
+    # films: Mondays and Thursdays, about 6:20 am Eastern (TMDB's "upcoming"
+    # turns over weekly; Thursday catches the weekend's streaming drops)
+    - cron: '20 10 * * 1,4'
     # the time machine: the 2nd of the month, about 6:40 am Eastern
     - cron: '40 10 2 * *'
     # showtimes: every morning, about 6:05 am Eastern
@@ -83,7 +87,7 @@ jobs:
           films=false; tm=false; shows=false
           if [ "$EVENT" = "schedule" ]; then
             case "$SCHEDULE" in
-              '20 10 * * 1') films=true ;;
+              '20 10 * * 1,4') films=true ;;
               '40 10 2 * *') tm=true ;;
               *) shows=true ;;
             esac

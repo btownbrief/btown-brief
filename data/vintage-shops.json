@@ -2,6 +2,7 @@
  "_": "Built by scripts/build_vintage_shops.py from data/things.json (Shopping group: vintage, thrift, consignment and antique shops in greater Burlington). Walking order downtown, then a drive; used books last. Nothing here is typed by hand; a fact things.json lacks is listed in the shop's gaps. Add or fix a shop in things.json and rebuild.",
  "source": "data/things.json",
  "count": 36,
+ "photos": 18,
  "gaps": {
   "address": 0,
   "coords": 0,
@@ -115,6 +116,11 @@
     "miles": 0.16,
     "minutes": 3,
     "mode": "walk"
+   },
+   "photo": {
+    "src": "https://images.squarespace-cdn.com/content/v1/664f491b63c7623f1edc9533/d20a6bef-2da9-4ada-a1a9-694f0785357b/IMG_4497.jpeg?format=750w",
+    "page": "https://www.hunnymusturdshop.com/",
+    "credit": "hunnymusturdshop.com"
    }
   },
   {
@@ -154,6 +160,11 @@
     "miles": 0.15,
     "minutes": 3,
     "mode": "walk"
+   },
+   "photo": {
+    "src": "https://images.squarespace-cdn.com/content/v1/65258138ee6cf67fb615c295/3de65d61-e5ff-4fab-a50a-bdaa4682650a/IMG_7844.jpg?format=750w",
+    "page": "https://www.batterystjeans.com/",
+    "credit": "batterystjeans.com"
    }
   },
   {
@@ -193,6 +204,12 @@
     "miles": 0.06,
     "minutes": 1,
     "mode": "walk"
+   },
+   "photo": {
+    "src": "https://www.dirtchicvt.com/uploads/2/7/9/1/27914165/published/1396543709.png?1599499101",
+    "page": "https://www.dirtchicvt.com/",
+    "credit": "dirtchicvt.com",
+    "fit": "contain"
    }
   },
   {
@@ -262,17 +279,25 @@
    "hours_note": null,
    "phone": "802-860-0190",
    "blurb": "Church Street's legendary gear shop — new equipment up top, and a consignment section where patient people score serious deals on used outdoor kit.",
-   "verified": "2026-10-17",
+   "verified": "2026-10-19",
    "checked": {
-    "date": "2026-10-17",
-    "source": "https://www.gearx.com/pages/hours-location",
-    "note": "Hours and address from the shop's Hours & Location page; coordinates from the Google Maps link on that page."
+    "date": "2026-10-19",
+    "source": "https://www.gearx.com/pages/consignment",
+    "note": "\"head to the consignment desk in the basement\"; 37 Church Street",
+    "also": [
+     "https://www.churchstmarketplace.com/outdoor-gear-exchange"
+    ]
    },
    "gaps": [],
    "next": {
     "miles": 0.04,
     "minutes": 1,
     "mode": "walk"
+   },
+   "photo": {
+    "src": "https://www.gearx.com/cdn/shop/files/ogestorefronthq_result_1.webp?width=750",
+    "page": "https://www.gearx.com/pages/hours-location",
+    "credit": "gearx.com"
    }
   },
   {
@@ -347,6 +372,11 @@
     "miles": 0.01,
     "minutes": 1,
     "mode": "walk"
+   },
+   "photo": {
+    "src": "https://www.thevaultcollective.com/cdn/shop/files/IMG_6467.jpg?v=1688451156&width=750",
+    "page": "https://www.thevaultcollective.com/pages/vermont-1",
+    "credit": "thevaultcollective.com"
    }
   },
   {
@@ -459,6 +489,11 @@
     "miles": 0.38,
     "minutes": 8,
     "mode": "walk"
+   },
+   "photo": {
+    "src": "https://static.wixstatic.com/media/cc3bfb_0a3a04ea6e7c43edb196edca00dd5c2e~mv2.jpeg/v1/fill/w_600,h_600,al_c,q_80/DSCF3033.jpeg",
+    "page": "https://www.billiejeanvintage.com/",
+    "credit": "billiejeanvintage.com"
    }
   },
   {
@@ -538,6 +573,11 @@
     "miles": 0.1,
     "minutes": 2,
     "mode": "walk"
+   },
+   "photo": {
+    "src": "https://resourcevt.org/wp-content/uploads/elementor/thumbs/ReSOURCE-r2gv816eega4ej00jlk3klkjoz5qjtntcfjsv4o1lk.jpg",
+    "page": "https://resourcevt.org/store-location-hours/",
+    "credit": "resourcevt.org"
    }
   },
   {
@@ -558,11 +598,11 @@
    "hours_note": "It posts the day's hours on Facebook",
    "phone": "802-497-7119",
    "blurb": "Vintage furniture and home decor in the Pine Street building it shares with Speaking Volumes: mid-century design, old industrial pieces and farmhouse finds.",
-   "verified": "2026-10-17",
+   "verified": "2026-10-19",
    "checked": {
-    "date": "2026-10-17",
-    "source": "https://www.facebook.com/bargecanalmarket/about",
-    "note": "No weekly hours published anywhere reachable; the shop posts the day's hours on Facebook. Its old domain bargecanalmarket.com now redirects to an unrelated gambling site, so it is not linked. Coordinates: OpenStreetMap's building at 377 Pine St. What it sells is from the intro on its Facebook page."
+    "date": "2026-10-19",
+    "source": "https://www.facebook.com/bargecanalmarket/",
+    "note": "Read logged-out in a browser: intro 'Buying and selling a wide variety of antique vintage furnishings and decor. Focusing on mid 20th century design , American industrial and vintage farmhouse'; '377 Pine St, Burlington, VT'; most recent post 'a day ago' and 'Open now' during the read, so it is operating."
    },
    "gaps": [
     "hours"
@@ -611,6 +651,11 @@
     "miles": 1.87,
     "minutes": 37,
     "mode": "drive"
+   },
+   "photo": {
+    "src": "https://povintage.com/cdn/shop/files/IMG_3135_copy.jpg?v=1644856902&width=750",
+    "page": "https://povintage.com/",
+    "credit": "povintage.com"
    }
   },
   {
@@ -651,6 +696,11 @@
     "miles": 0.39,
     "minutes": 8,
     "mode": "walk"
+   },
+   "photo": {
+    "src": "https://ohavizedek.org/wp-content/uploads/2025/02/building-300x225.png",
+    "page": "https://ohavizedek.org/about-ohavi-zedek-synagogue/shalom-shuk-thrift-store/",
+    "credit": "ohavizedek.org"
    }
   },
   {
@@ -720,17 +770,22 @@
    "hours_note": "Show nights run late",
    "phone": "802-865-9983",
    "blurb": "North Winooski Avenue's dig-for-it thrift trove — furniture, oddities, and the occasional genuine score priced like nobody checked.",
-   "verified": "2026-10-17",
+   "verified": "2026-10-19",
    "checked": {
-    "date": "2026-10-17",
+    "date": "2026-10-19",
     "source": "https://www.junktiques.net/",
-    "note": "Address, phone and hours from the shop's site footer: 'HOURS Wed – Sat · 11a – 7p Sun · 12p – 5p Show nights run late.' Monday and Tuesday are not listed, so the guide says so rather than calling them closed. Coordinates: OpenStreetMap's building at 324 N Winooski Ave."
+    "note": "'A reuse shop dedicated to reducing landfill waste, providing used materials for artists, and offering low cost quality goods'; 'We are the only shop in Burlington that encourages barter, trades, and haggling'; 'Wed – Sat · 11a – 7p Sun · 12p – 5p Show nights run late.'; October 2026 shows listed."
    },
    "gaps": [],
    "next": {
     "miles": 5.09,
     "minutes": 102,
     "mode": "drive"
+   },
+   "photo": {
+    "src": "https://www.junktiques.net/wp-content/uploads/2016/12/o-4.jpg",
+    "page": "https://www.junktiques.net/",
+    "credit": "junktiques.net"
    }
   },
   {
@@ -771,6 +826,11 @@
     "miles": 1.41,
     "minutes": 28,
     "mode": "drive"
+   },
+   "photo": {
+    "src": "https://exchangevt.com/s/cdn/v1.0/i/m?url=https%3A%2F%2Fstorage.googleapis.com%2Fproduction-constantcontact-v1-0-9%2F519%2F494519%2FLVLijneM%2F61f4d1d84f6a41a89be126102fa602de&methods=resize%2C500%2C5000",
+    "page": "https://exchangevt.com/",
+    "credit": "exchangevt.com"
    }
   },
   {
@@ -849,6 +909,11 @@
     "miles": 1.58,
     "minutes": 32,
     "mode": "drive"
+   },
+   "photo": {
+    "src": "https://www.fccej.org/v5/wp-content/uploads/2022/10/thrift_shop_2022.jpg",
+    "page": "https://www.fccej.org/v5/serving-others/heavenly-cents-thrift-shop/",
+    "credit": "fccej.org"
    }
   },
   {
@@ -888,6 +953,11 @@
     "miles": 1.96,
     "minutes": 39,
     "mode": "drive"
+   },
+   "photo": {
+    "src": "https://cdn.firespring.com/images/351af80f-6979-4ba3-b922-d9539a328eb5.jpg",
+    "page": "https://vermonthabitat.org/restore/restore-locations.html",
+    "credit": "vermonthabitat.org"
    }
   },
   {
@@ -928,6 +998,11 @@
     "miles": 0.19,
     "minutes": 4,
     "mode": "walk"
+   },
+   "photo": {
+    "src": "https://static.wixstatic.com/media/838926_3dfcf4e4b9074ac69b487b01793031e3~mv2.png/v1/fill/w_600,h_450,al_c,q_80/838926_3dfcf4e4b9074ac69b487b01793031e3~mv2.jpg",
+    "page": "https://www.bohobabyvt.com/",
+    "credit": "bohobabyvt.com"
    }
   },
   {
@@ -1006,6 +1081,11 @@
     "miles": 0.43,
     "minutes": 9,
     "mode": "walk"
+   },
+   "photo": {
+    "src": "https://resourcevt.org/wp-content/uploads/elementor/thumbs/Williston-r2gv8rhvpta5flxs9wxniexgbrk0jckas1teavl0rc.jpg",
+    "page": "https://resourcevt.org/store-location-hours/",
+    "credit": "resourcevt.org"
    }
   },
   {
@@ -1225,20 +1305,29 @@
     "sat": "10:00-18:00",
     "sun": "12:00-18:00"
    },
-   "hours_note": null,
+   "hours_note": "Monday to Saturday 10am to 6pm; Sunday noon to 6pm",
    "phone": "802-488-5766",
    "blurb": "More than 60 antique and vintage dealers under one roof at Dorset Street and Williston Road, with old paper ephemera and craft supplies alongside the furniture and decor.",
-   "verified": "2026-10-17",
+   "verified": "2026-10-19",
    "checked": {
-    "date": "2026-10-17",
-    "source": "https://www.vintageinspiredmarketplace.com/contact",
-    "note": "Address, phone and hours ('Mon-Sat 10-6 Sun 12-6') from the shop's contact page and home page; coordinates from the Google Maps link on its home page. A June 2026 Hello Burlington guide says closed Tuesdays and Suite 8B; the shop's own 'open daily' and '#2' are used. It moved from Flynn Ave to Dorset St in 2023. 'Over 60 antique & vintage vendors' and the ephemera and craft supplies are from the shop's home page."
+    "date": "2026-10-19",
+    "source": "https://www.vintageinspiredmarketplace.com/",
+    "note": "'OPEN DAILY MON-SAT 10-6 SUN 12-6'; 'With over 60 antique & vintage vendors'; 'real vintage ephemera crafting supplies'; '10 Dorset St. #2 South Burlington, VT 05403'.",
+    "also": [
+     "https://www.vintageinspiredmarketplace.com/contact"
+    ]
    },
    "gaps": [],
    "next": {
     "miles": 3.21,
     "minutes": 64,
     "mode": "drive"
+   },
+   "photo": {
+    "src": "https://static.wixstatic.com/media/52d41e_4ca55b191ca24eb09514f1840f0f2bfa~mv2.png/v1/fit/w_400,h_400,al_c/52d41e_4ca55b191ca24eb09514f1840f0f2bfa~mv2.png",
+    "page": "https://www.vintageinspiredmarketplace.com/",
+    "credit": "vintageinspiredmarketplace.com",
+    "fit": "contain"
    }
   },
   {
@@ -1317,6 +1406,11 @@
     "miles": 0.09,
     "minutes": 2,
     "mode": "walk"
+   },
+   "photo": {
+    "src": "https://www.bittnerantiques.com/uploads/7/1/5/4/7154706/background-images/2130531846.jpg",
+    "page": "https://www.bittnerantiques.com/",
+    "credit": "bittnerantiques.com"
    }
   },
   {
@@ -1422,15 +1516,23 @@
    "hours_note": "Tue and Wed may close early; one page of its site says Fri until 9pm",
    "phone": "802-540-0107",
    "blurb": "Tens of thousands of used and rare books on Pine Street, with vintage ephemera, magazines and art mixed in.",
-   "verified": "2026-10-17",
+   "verified": "2026-10-19",
    "checked": {
-    "date": "2026-10-17",
-    "source": "https://www.speakingvolumesvt.com/",
-    "note": "Hours from 'Bookstore Hours' on the home page. The site's /bookstore page says Friday 10 to 9 and drops the '(or earlier)' on Tue and Wed; the home page, which also carries the newer Randolph store, is used. Coordinates from the Google Maps link on the shop's site. The Marble Ave record store was sold in 2026 and is a separate shop now. What it sells is from https://www.speakingvolumesvt.com/bookstore ('tens of thousands of used titles')."
+    "date": "2026-10-19",
+    "source": "https://www.speakingvolumesvt.com/bookstore",
+    "note": "'tens of thousands of used titles comprising a unique and varied collection of rare, vintage, antiquarian and modern volumes. In-between the shelves you'll find vintage ephemera, art, antiques, magazines'; '377 Pine Street'. Records and maps are no longer part of the Burlington shop's description (why_special still says books-plus-records-plus-maps).",
+    "also": [
+     "https://www.speakingvolumesvt.com/"
+    ]
    },
    "after_walk": true,
    "gaps": [],
-   "next": null
+   "next": null,
+   "photo": {
+    "src": "https://images.squarespace-cdn.com/content/v1/626c0e8c20dff048ffa84355/cc71f11a-9af3-468d-b38f-c66088e2f70c/241680915_4367064123362410_4161185825250658367_n.jpg?format=750w",
+    "page": "https://www.speakingvolumesvt.com/",
+    "credit": "speakingvolumesvt.com"
+   }
   }
  ]
 }

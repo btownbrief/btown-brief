@@ -13,7 +13,7 @@
    audio — episodes are large and the browser's own HTTP cache handles them
    better than we would. */
 
-const VERSION = 'all-day-v90';   // The Build: the first visit, one Clock in
+const VERSION = 'all-day-v95';   // batch merge
 const SHELL = VERSION + '-shell';
 const DATA = 'all-day-data';   // unversioned on purpose: survives shell bumps
 
@@ -23,7 +23,7 @@ const SHELL_URLS = [
   './js/liquid.js', './js/sections.js', './js/gestures.js', './js/auth.js',
   './js/modes/wire.js', './js/modes/wire-demo.js', './js/modes/wire-photos.js', './js/modes/wire-square.js', './js/modes/wire-recaps.js', './js/modes/watch.js', './js/modes/food.js',
   './js/modes/people.js', './js/modes/whatnow.js', './js/modes/vintage.js', './js/modes/habits.js',
-  './js/modes/onair.js', './js/modes/games.js',
+  './js/modes/onair.js', './js/modes/onair-sports.js', './js/modes/games.js',
   /* The Build: the tab, its API (live, this phone, the demo) and the site */
   './js/modes/build.js', './js/build-core.js', './js/build-local.js', './js/build-fake.js', './js/build-site.js', './js/build-site-shared.js', './js/build-site-art.js', './js/build-site-world.js', './js/build-site-building.js', './js/build-site-crew.js', './js/build-site-director.js',
   './data/build-foreman.json', './data/build-config.json', './data/build-starters.json',
@@ -43,6 +43,8 @@ const SHELL_URLS = [
   './js/boards.js', './js/boards-core.js', './js/boards-fake.js',
   /* Watch's starter list, so the tab has films to show offline */
   './data/films-seed.json',
+  /* the No-algorithm challenge, loaded by app.js after the first route */
+  './js/challenge.js', './js/challenge-core.js', './css/challenge.css',
 ];
 
 self.addEventListener('install', (e) => {
