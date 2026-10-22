@@ -7,8 +7,10 @@ index.html (js/app.js:57 fetches data/reddit.json, which has been
 runners — see SUMMARY-chatter.md). Also feeds the "Recently on
 r/GoodBurlington" strip on best-of-reddit.html.
 
-Same proven pattern as scripts/refresh_chatter.py: direct Reddit JSON is
-tried first (gives real upvote scores) across a few hosts, then Steve's
+Reddit's own listing (real upvote scores) comes first, through
+scripts/reddit_client.py's read-only OAuth route once REDDIT_CLIENT_ID/SECRET
+are set (skipped without them: the logged-out .json 403s since May 2026),
+then Steve's
 public Inoreader stream is tried as a fallback/supplement (no auth, but
 Inoreader never carries a score — those posts get score 0 so the existing
 "▲ N" badge in js/app.js never renders blank). On any failure, or if too
@@ -27,6 +29,9 @@ import sys
 import urllib.parse
 import urllib.request
 import xml.etree.ElementTree as ET
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import reddit_client  # noqa: E402
 
 ROOT = os.path.join(os.path.dirname(__file__), "..")
 OUT = os.path.join(ROOT, "data", "reddit.json")
@@ -68,7 +73,8 @@ def fetch_bytes(url, accept):
 
 def parse_reddit_json(raw):
     posts = []
-    children = (json.loads(raw).get("data") or {}).get("children", [])
+    data = raw if isinstance(raw, dict) else json.loads(raw)
+    children = (data.get("data") or {}).get("children", [])
     for child in children[:25]:
         row = child.get("data") or {}
         if row.get("stickied"):
@@ -123,7 +129,7 @@ def merge_posts(groups):
     return list(merged.values())
 
 
-def load_posts(fixtures=None):
+def load_posts(fixtures=None, client=None):
     if fixtures:
         groups = []
         json_path = os.path.join(fixtures, "reddit-goodburlington.json")
@@ -138,14 +144,13 @@ def load_posts(fixtures=None):
 
     groups = []
     used_reddit = used_inoreader = False
-    for host in ("www.reddit.com", "old.reddit.com", "api.reddit.com"):
+    client = client or reddit_client.Client()
+    if client.oauth:
         try:
-            raw = fetch_bytes(f"https://{host}/r/GoodBurlington/hot.json?limit=25", "application/json")
-            groups.append(parse_reddit_json(raw))
+            groups.append(parse_reddit_json(client.oauth_json("r/GoodBurlington/hot", limit=25)))
             used_reddit = True
-            break
-        except Exception as exc:
-            print(f"reddit {host} GoodBurlington failed: {exc}", file=sys.stderr)
+        except reddit_client.RedditError as exc:
+            print(f"reddit GoodBurlington failed: {exc}", file=sys.stderr)
     try:
         raw = fetch_bytes(INOREADER_URL, "application/rss+xml, application/xml")
         groups.append(parse_inoreader_xml(raw))

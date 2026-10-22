@@ -15,11 +15,11 @@ should only read the ones worth reading, so this pass gives each NEW item:
 Posts from people (Facebook groups, Reddit) are judged by narrower junk
 rules: a neighbor announcing an event, asking, reporting or giving something
 away is never junk; only a business advertising what it sells, an engagement
-contest, spam and empty chatter are (prompts/wire-tags.md, 2026-10-17).
+contest, spam and empty chatter are (the private wire-tags.md, 2026-10-17).
 
 Tags are kept in data/wire-tags.json, keyed by item id, so an item is tagged
 once. The model is Claude Haiku 5.5 when ANTHROPIC_API_KEY exists, else GLM
-5.3 Flash through OPENROUTER_API_KEY; the rules are prompts/wire-tags.md.
+5.3 Flash through OPENROUTER_API_KEY; the rules are the private wire-tags.md.
 
 Honesty rules, as in curate_top.py: the model answers by INDEX into the
 numbered list and only chooses from fixed vocabularies; every tag maps back to

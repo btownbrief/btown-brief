@@ -45,7 +45,6 @@ CLI:
 """
 
 import argparse
-import base64
 import html
 import io
 import json
@@ -60,6 +59,8 @@ import xml.etree.ElementTree as ET
 from datetime import datetime, timedelta, timezone
 from email.utils import parsedate_to_datetime
 
+import reddit_client
+
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
 OUT = os.path.join(ROOT, "data", "reddit-intake.json")
 
@@ -70,16 +71,15 @@ INOREADER = {
     "r/burlington": "https://www.inoreader.com/stream/user/1003590800/tag/Reddit%20%28r%2Fburlington%29?n=100",
     "r/vermont": "https://www.inoreader.com/stream/user/1003590800/tag/Reddit%20%28r%2FVermont%29?n=100",
 }
-RSS_URL = "https://www.reddit.com/r/{short}/new/.rss?limit=100"
-TOKEN_URL = "https://www.reddit.com/api/v1/access_token"
-OAUTH_URL = "https://oauth.reddit.com/r/{short}/new?limit=100&raw_json=1"
+# Every Reddit call goes through reddit_client.py (one User-Agent, rate
+# limits, token cache, secrets never in messages). These are the URLs it
+# builds, kept here for the fixture fetcher.
+RSS_URL = reddit_client.rss_url("r/{short}/new", limit=100)
+TOKEN_URL = reddit_client.TOKEN_URL
+OAUTH_URL = reddit_client.oauth_url("r/{short}/new", limit=100)
 
-SITE_UA = "btown-brief-site/1.0 (reddit intake)"
-BROWSER_UA = ("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 "
-              "(KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36")
-# Reddit asks API clients for "<platform>:<app id>:<version> (by /u/<name>)".
-# REDDIT_USER_AGENT overrides this once the approved app has a username.
-API_UA = "script:btownbrief-local-digest:1.0 (by btownbrief.com)"
+SITE_UA = "btown-brief-site/1.0 (reddit intake)"   # Inoreader only
+API_UA = reddit_client.DEFAULT_UA
 
 WINDOW_DAYS = 10          # a Wednesday-to-Wednesday week plus slack
 RUN_HISTORY_DAYS = 8      # receipts kept for the daily comparison
@@ -168,6 +168,8 @@ def outbound(description):
 
 
 def short_error(exc):
+    if isinstance(exc, reddit_client.RedditError):
+        return str(exc)[:ERROR_MAX]  # already short and secret-free
     if isinstance(exc, urllib.error.HTTPError):
         try:
             exc.close()  # an HTTPError holds the open response
@@ -310,26 +312,12 @@ def fixture_fetch(directory):
     return fetch
 
 
-def oauth_token(fetch, env):
-    cid = (env.get("REDDIT_CLIENT_ID") or "").strip()
-    secret = (env.get("REDDIT_CLIENT_SECRET") or "").strip()
-    if not cid or not secret:
-        return None
-    basic = base64.b64encode(f"{cid}:{secret}".encode()).decode()
-    raw = fetch(TOKEN_URL, {"User-Agent": env.get("REDDIT_USER_AGENT") or API_UA,
-                            "Authorization": "Basic " + basic},
-                b"grant_type=client_credentials")
-    token = json.loads(raw).get("access_token")
-    if not token:
-        raise RuntimeError("token response had no access_token")
-    return token
-
-
 def collect(fetch=http_fetch, env=None, subs=SUBS, routes=ROUTES, sleep=time.sleep):
     """Ask every route about every sub. Returns
     {route: {sub: {"status", "posts", "removed", "error"}}}."""
     env = os.environ if env is None else env
     results = {route: {} for route in routes}
+    client = reddit_client.Client(env=env, fetch=fetch, sleep=sleep)
 
     def record(route, sub, posts=None, error=None, skipped=None, removed=None):
         if skipped:
@@ -351,12 +339,9 @@ def collect(fetch=http_fetch, env=None, subs=SUBS, routes=ROUTES, sleep=time.sle
                 record("inoreader", sub, error=short_error(exc))
 
     if "rss" in routes:
-        for index, sub in enumerate(subs):
-            if index:
-                sleep(3)  # Reddit 429s back-to-back unauthenticated fetches
-            try:
-                raw = fetch(RSS_URL.format(short=sub[2:]),
-                            {"User-Agent": BROWSER_UA, "Accept": "application/atom+xml, application/xml"})
+        for sub in subs:
+            try:  # the client waits out Reddit's rate-limit window between subs
+                raw = client.rss(f"{sub}/new", limit=100)
                 record("rss", sub, parse_atom(raw, sub))
             except Exception as exc:  # noqa: BLE001
                 record("rss", sub, error=short_error(exc))
@@ -364,7 +349,7 @@ def collect(fetch=http_fetch, env=None, subs=SUBS, routes=ROUTES, sleep=time.sle
     if "oauth" in routes:
         token, token_error = None, None
         try:
-            token = oauth_token(fetch, env)
+            token = client.token()
         except Exception as exc:  # noqa: BLE001
             token_error = "token: " + short_error(exc)
         for sub in subs:
@@ -375,10 +360,7 @@ def collect(fetch=http_fetch, env=None, subs=SUBS, routes=ROUTES, sleep=time.sle
                 record("oauth", sub, skipped="REDDIT_CLIENT_ID/SECRET not set")
                 continue
             try:
-                raw = fetch(OAUTH_URL.format(short=sub[2:]),
-                            {"User-Agent": env.get("REDDIT_USER_AGENT") or API_UA,
-                             "Authorization": "Bearer " + token})
-                posts, removed = parse_listing(json.loads(raw), sub)
+                posts, removed = parse_listing(client.oauth_json(f"{sub}/new", limit=100), sub)
                 record("oauth", sub, posts, removed=removed)
             except Exception as exc:  # noqa: BLE001
                 record("oauth", sub, error=short_error(exc))

@@ -2965,7 +2965,7 @@
   ok   sign-in fails soft › a bad address is caught before any request
   ok   sign-in fails soft › no link was requested
   ok   sign-in fails soft › no console errors
-  ok   performance › the live Wire redraws 60 cards in 26ms (budget 100)
+  ok   performance › the live Wire redraws 60 cards in 23ms (budget 100)
   ok   shell fixes: a rail never snaps flush to the edge › 390: .rail carries scroll-padding of one gutter
   ok   shell fixes: a rail never snaps flush to the edge › 390: a card scrolled to the start stops at the gutter
   ok   shell fixes: a rail never snaps flush to the edge › 390: no console errors
@@ -3261,7 +3261,7 @@
   ok   Habits, swipe to archive with Undo, drag and keys to reorder, edit (demo, 1280, dark) › habits: at most 2 subnav rows
   ok   Habits, swipe to archive with Undo, drag and keys to reorder, edit (demo, 1280, dark) › no console errors
   ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › twenty habits, in order
-  ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › twenty habits and a year of taps: a tap still shows at once (12, 13, 12, 11 ms)
+  ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › twenty habits and a year of taps: a tap still shows at once (12, 13, 11, 11 ms)
   ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › the heat map is all there, and four taps leave it as it was
   ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › every row keeps its seven dots and its 48px tap
   ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › the list is longer than the screen, and the panel scrolls
@@ -3466,7 +3466,7 @@
   ok   The Build, a first visit with the town’s database missing: Clock in, the stopwatch, the whistle, Stop, name it (live, signed out, 390 dark) › two of the site’s regulars are at work, so the site never looks empty
   ok   The Build, a first visit with the town’s database missing: Clock in, the stopwatch, the whistle, Stop, name it (live, signed out, 390 dark) › one tap: no sheet, the stopwatch running, Stop, and no "just you" line
   ok   The Build, a first visit with the town’s database missing: Clock in, the stopwatch, the whistle, Stop, name it (live, signed out, 390 dark) › the camera stays on your builder
-  ok   The Build, a first visit with the town’s database missing: Clock in, the stopwatch, the whistle, Stop, name it (live, signed out, 390 dark) › the whistle at 16 minutes: a buzz and Tap to answer, counting down
+  ok   The Build, a first visit with the town’s database missing: Clock in, the stopwatch, the whistle, Stop, name it (live, signed out, 390 dark) › the whistle at 19 minutes: a buzz and Tap to answer, counting down
   ok   The Build, a first visit with the town’s database missing: Clock in, the stopwatch, the whistle, Stop, name it (live, signed out, 390 dark) › a tap and the card clears, back to work
   ok   The Build, a first visit with the town’s database missing: Clock in, the stopwatch, the whistle, Stop, name it (live, signed out, 390 dark) › Keep it: the hours on this phone, and the thing card with its own Clock in
   ok   The Build, a first visit with the town’s database missing: Clock in, the stopwatch, the whistle, Stop, name it (live, signed out, 390 dark) › build: nothing fixed or sticky inside the tab
@@ -3502,12 +3502,12 @@
   ok   The Build, a shift on a fake clock: no whistle before 15 minutes, a buzz by 30, a tap answers it, a miss knocks the crew off at the last touch (demo, 390) › the stopwatch counts up by the second
   ok   The Build, a shift on a fake clock: no whistle before 15 minutes, a buzz by 30, a tap answers it, a miss knocks the crew off at the last touch (demo, 390) › fourteen minutes in: no whistle yet
   ok   The Build, a shift on a fake clock: no whistle before 15 minutes, a buzz by 30, a tap answers it, a miss knocks the crew off at the last touch (demo, 390) › your hours count up live while the shift runs (today 1m to 14m)
-  ok   The Build, a shift on a fake clock: no whistle before 15 minutes, a buzz by 30, a tap answers it, a miss knocks the crew off at the last touch (demo, 390) › the whistle blows between 15 and 30 minutes in (at 26): one buzz, the foreman on the site
+  ok   The Build, a shift on a fake clock: no whistle before 15 minutes, a buzz by 30, a tap answers it, a miss knocks the crew off at the last touch (demo, 390) › the whistle blows between 15 and 30 minutes in (at 20): one buzz, the foreman on the site
   ok   The Build, a shift on a fake clock: no whistle before 15 minutes, a buzz by 30, a tap answers it, a miss knocks the crew off at the last touch (demo, 390) › no dialog: the whistle is on the site (and said to a screen reader)
   ok   The Build, a shift on a fake clock: no whistle before 15 minutes, a buzz by 30, a tap answers it, a miss knocks the crew off at the last touch (demo, 390) › a big card in the middle: Tap to answer, counting down from three minutes
-  ok   The Build, a shift on a fake clock: no whistle before 15 minutes, a buzz by 30, a tap answers it, a miss knocks the crew off at the last touch (demo, 390) › a tap answers it: back to work, 26 minutes so far
-  ok   The Build, a shift on a fake clock: no whistle before 15 minutes, a buzz by 30, a tap answers it, a miss knocks the crew off at the last touch (demo, 390) › the next whistle at 29 minutes after the touch, the crew off three minutes later
-  ok   The Build, a shift on a fake clock: no whistle before 15 minutes, a buzz by 30, a tap answers it, a miss knocks the crew off at the last touch (demo, 390) › missed: the crew knocks off, banked to the last touch (26 minutes)
+  ok   The Build, a shift on a fake clock: no whistle before 15 minutes, a buzz by 30, a tap answers it, a miss knocks the crew off at the last touch (demo, 390) › a tap answers it: back to work, 20 minutes so far
+  ok   The Build, a shift on a fake clock: no whistle before 15 minutes, a buzz by 30, a tap answers it, a miss knocks the crew off at the last touch (demo, 390) › the next whistle at 28 minutes after the touch, the crew off three minutes later
+  ok   The Build, a shift on a fake clock: no whistle before 15 minutes, a buzz by 30, a tap answers it, a miss knocks the crew off at the last touch (demo, 390) › missed: the crew knocks off, banked to the last touch (20 minutes)
   ok   The Build, a shift on a fake clock: no whistle before 15 minutes, a buzz by 30, a tap answers it, a miss knocks the crew off at the last touch (demo, 390) › the end screen: the time, one line, Keep it or Post
   ok   The Build, a shift on a fake clock: no whistle before 15 minutes, a buzz by 30, a tap answers it, a miss knocks the crew off at the last touch (demo, 390) › and it stays a miss while the end screen waits
   ok   The Build, a shift on a fake clock: no whistle before 15 minutes, a buzz by 30, a tap answers it, a miss knocks the crew off at the last touch (demo, 390) › Keep it: the hours are on your record, the site docks again
