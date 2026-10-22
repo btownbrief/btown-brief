@@ -2965,7 +2965,7 @@
   ok   sign-in fails soft › a bad address is caught before any request
   ok   sign-in fails soft › no link was requested
   ok   sign-in fails soft › no console errors
-  ok   performance › the live Wire redraws 60 cards in 24ms (budget 100)
+  ok   performance › the live Wire redraws 60 cards in 26ms (budget 100)
   ok   shell fixes: a rail never snaps flush to the edge › 390: .rail carries scroll-padding of one gutter
   ok   shell fixes: a rail never snaps flush to the edge › 390: a card scrolled to the start stops at the gutter
   ok   shell fixes: a rail never snaps flush to the edge › 390: no console errors
@@ -3228,7 +3228,7 @@
   ok   Habits, the numbers: today on top, the heat map, a habit’s month and best streak (demo, 390, Wednesday Oct 14) › Wednesday: the walk done, reading and the gym still to do; every due day of the last week done
   ok   Habits, the numbers: today on top, the heat map, a habit’s month and best streak (demo, 390, Wednesday Oct 14) › sixteen weeks, Monday to Sunday, ending this week
   ok   Habits, the numbers: today on top, the heat map, a habit’s month and best streak (demo, 390, Wednesday Oct 14) › today half done and marked, yesterday all done, tomorrow blank, before the habits began nothing
-  ok   Habits, the numbers: today on top, the heat map, a habit’s month and best streak (demo, 390, Wednesday Oct 14) › a tap moves today’s count and today’s square in the same click (4 ms)
+  ok   Habits, the numbers: today on top, the heat map, a habit’s month and best streak (demo, 390, Wednesday Oct 14) › a tap moves today’s count and today’s square in the same click (3 ms)
   ok   Habits, the numbers: today on top, the heat map, a habit’s month and best streak (demo, 390, Wednesday Oct 14) › all three: “All done today”, and the bar full
   ok   Habits, the numbers: today on top, the heat map, a habit’s month and best streak (demo, 390, Wednesday Oct 14) › the streak, the best streak and the last thirty days
   ok   Habits, the numbers: today on top, the heat map, a habit’s month and best streak (demo, 390, Wednesday Oct 14) › this month: the 1st is a Thursday, and no month after it
@@ -3261,7 +3261,7 @@
   ok   Habits, swipe to archive with Undo, drag and keys to reorder, edit (demo, 1280, dark) › habits: at most 2 subnav rows
   ok   Habits, swipe to archive with Undo, drag and keys to reorder, edit (demo, 1280, dark) › no console errors
   ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › twenty habits, in order
-  ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › twenty habits and a year of taps: a tap still shows at once (13, 12, 12, 12 ms)
+  ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › twenty habits and a year of taps: a tap still shows at once (12, 13, 12, 11 ms)
   ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › the heat map is all there, and four taps leave it as it was
   ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › every row keeps its seven dots and its 48px tap
   ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › the list is longer than the screen, and the panel scrolls
@@ -3326,7 +3326,7 @@
   ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 390, light) › habits: at most 2 subnav rows
   ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 390, light) › no console errors
   ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 1280, dark) › a first visit: one line, the starters and Add habit, nothing seeded, no sign-in wall
-  ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 1280, dark) › three habits, two tapped, at once (4 ms)
+  ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 1280, dark) › three habits, two tapped, at once (3 ms)
   ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 1280, dark) › and nothing personal went to the server (the season and the public forests only)
   ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 1280, dark) › kept on this phone, under one versioned key
   ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 1280, dark) › one quiet line under the list: Sync across devices
@@ -3451,7 +3451,7 @@
   ok   The Build, a first visit with an empty town: Clock in, the stopwatch, the whistle, Stop, name it (live, signed out, 390 light) › two of the site’s regulars are at work, so the site never looks empty
   ok   The Build, a first visit with an empty town: Clock in, the stopwatch, the whistle, Stop, name it (live, signed out, 390 light) › one tap: no sheet, the stopwatch running, Stop, and no "just you" line
   ok   The Build, a first visit with an empty town: Clock in, the stopwatch, the whistle, Stop, name it (live, signed out, 390 light) › the camera stays on your builder
-  ok   The Build, a first visit with an empty town: Clock in, the stopwatch, the whistle, Stop, name it (live, signed out, 390 light) › the whistle at 25 minutes: a buzz and Tap to answer, counting down
+  ok   The Build, a first visit with an empty town: Clock in, the stopwatch, the whistle, Stop, name it (live, signed out, 390 light) › the whistle at 30 minutes: a buzz and Tap to answer, counting down
   ok   The Build, a first visit with an empty town: Clock in, the stopwatch, the whistle, Stop, name it (live, signed out, 390 light) › a tap and the card clears, back to work
   ok   The Build, a first visit with an empty town: Clock in, the stopwatch, the whistle, Stop, name it (live, signed out, 390 light) › Keep it: the hours on this phone, and the thing card with its own Clock in
   ok   The Build, a first visit with an empty town: Clock in, the stopwatch, the whistle, Stop, name it (live, signed out, 390 light) › build: nothing fixed or sticky inside the tab
@@ -3466,7 +3466,7 @@
   ok   The Build, a first visit with the town’s database missing: Clock in, the stopwatch, the whistle, Stop, name it (live, signed out, 390 dark) › two of the site’s regulars are at work, so the site never looks empty
   ok   The Build, a first visit with the town’s database missing: Clock in, the stopwatch, the whistle, Stop, name it (live, signed out, 390 dark) › one tap: no sheet, the stopwatch running, Stop, and no "just you" line
   ok   The Build, a first visit with the town’s database missing: Clock in, the stopwatch, the whistle, Stop, name it (live, signed out, 390 dark) › the camera stays on your builder
-  ok   The Build, a first visit with the town’s database missing: Clock in, the stopwatch, the whistle, Stop, name it (live, signed out, 390 dark) › the whistle at 29 minutes: a buzz and Tap to answer, counting down
+  ok   The Build, a first visit with the town’s database missing: Clock in, the stopwatch, the whistle, Stop, name it (live, signed out, 390 dark) › the whistle at 16 minutes: a buzz and Tap to answer, counting down
   ok   The Build, a first visit with the town’s database missing: Clock in, the stopwatch, the whistle, Stop, name it (live, signed out, 390 dark) › a tap and the card clears, back to work
   ok   The Build, a first visit with the town’s database missing: Clock in, the stopwatch, the whistle, Stop, name it (live, signed out, 390 dark) › Keep it: the hours on this phone, and the thing card with its own Clock in
   ok   The Build, a first visit with the town’s database missing: Clock in, the stopwatch, the whistle, Stop, name it (live, signed out, 390 dark) › build: nothing fixed or sticky inside the tab
@@ -3502,12 +3502,12 @@
   ok   The Build, a shift on a fake clock: no whistle before 15 minutes, a buzz by 30, a tap answers it, a miss knocks the crew off at the last touch (demo, 390) › the stopwatch counts up by the second
   ok   The Build, a shift on a fake clock: no whistle before 15 minutes, a buzz by 30, a tap answers it, a miss knocks the crew off at the last touch (demo, 390) › fourteen minutes in: no whistle yet
   ok   The Build, a shift on a fake clock: no whistle before 15 minutes, a buzz by 30, a tap answers it, a miss knocks the crew off at the last touch (demo, 390) › your hours count up live while the shift runs (today 1m to 14m)
-  ok   The Build, a shift on a fake clock: no whistle before 15 minutes, a buzz by 30, a tap answers it, a miss knocks the crew off at the last touch (demo, 390) › the whistle blows between 15 and 30 minutes in (at 28): one buzz, the foreman on the site
+  ok   The Build, a shift on a fake clock: no whistle before 15 minutes, a buzz by 30, a tap answers it, a miss knocks the crew off at the last touch (demo, 390) › the whistle blows between 15 and 30 minutes in (at 26): one buzz, the foreman on the site
   ok   The Build, a shift on a fake clock: no whistle before 15 minutes, a buzz by 30, a tap answers it, a miss knocks the crew off at the last touch (demo, 390) › no dialog: the whistle is on the site (and said to a screen reader)
   ok   The Build, a shift on a fake clock: no whistle before 15 minutes, a buzz by 30, a tap answers it, a miss knocks the crew off at the last touch (demo, 390) › a big card in the middle: Tap to answer, counting down from three minutes
-  ok   The Build, a shift on a fake clock: no whistle before 15 minutes, a buzz by 30, a tap answers it, a miss knocks the crew off at the last touch (demo, 390) › a tap answers it: back to work, 28 minutes so far
+  ok   The Build, a shift on a fake clock: no whistle before 15 minutes, a buzz by 30, a tap answers it, a miss knocks the crew off at the last touch (demo, 390) › a tap answers it: back to work, 26 minutes so far
   ok   The Build, a shift on a fake clock: no whistle before 15 minutes, a buzz by 30, a tap answers it, a miss knocks the crew off at the last touch (demo, 390) › the next whistle at 29 minutes after the touch, the crew off three minutes later
-  ok   The Build, a shift on a fake clock: no whistle before 15 minutes, a buzz by 30, a tap answers it, a miss knocks the crew off at the last touch (demo, 390) › missed: the crew knocks off, banked to the last touch (28 minutes)
+  ok   The Build, a shift on a fake clock: no whistle before 15 minutes, a buzz by 30, a tap answers it, a miss knocks the crew off at the last touch (demo, 390) › missed: the crew knocks off, banked to the last touch (26 minutes)
   ok   The Build, a shift on a fake clock: no whistle before 15 minutes, a buzz by 30, a tap answers it, a miss knocks the crew off at the last touch (demo, 390) › the end screen: the time, one line, Keep it or Post
   ok   The Build, a shift on a fake clock: no whistle before 15 minutes, a buzz by 30, a tap answers it, a miss knocks the crew off at the last touch (demo, 390) › and it stays a miss while the end screen waits
   ok   The Build, a shift on a fake clock: no whistle before 15 minutes, a buzz by 30, a tap answers it, a miss knocks the crew off at the last touch (demo, 390) › Keep it: the hours are on your record, the site docks again
@@ -3849,6 +3849,10 @@
   ok   Weather page: the radar looks ahead, the last hour then twelve of forecast (390, a stand-in Leaflet) › a pan redraws the six radar images at the new view, on the same frame, and keeps the forecast layers
   ok   Weather page: the radar looks ahead, the last hour then twelve of forecast (390, a stand-in Leaflet) › two quick pans while the images are slow: only the last view’s six stay on the map
   ok   Weather page: the radar looks ahead, the last hour then twelve of forecast (390, a stand-in Leaflet) › Play from a past frame goes forward, through Now, into the forecast
+  ok   Weather page: the radar looks ahead, the last hour then twelve of forecast (390, a stand-in Leaflet) › the +1h chip: the forecast frame nearest an hour on, paused, the chip lit
+  ok   Weather page: the radar looks ahead, the last hour then twelve of forecast (390, a stand-in Leaflet) › and −50m goes to the oldest radar frame
+  ok   Weather page: the radar looks ahead, the last hour then twelve of forecast (390, a stand-in Leaflet) › Full screen fills the screen and says Done
+  ok   Weather page: the radar looks ahead, the last hour then twelve of forecast (390, a stand-in Leaflet) › Escape brings the page back
   ok   Weather page: the radar looks ahead, the last hour then twelve of forecast (390, a stand-in Leaflet) › no console errors
   ok   Weather page: the radar for reduced motion, a new radar scan and forecast run, and when NOAA or IEM is down › reduced motion: it waits on Now for a tap
   ok   Weather page: the radar for reduced motion, a new radar scan and forecast run, and when NOAA or IEM is down › ten minutes on screen: it reads both again and moves with Now
@@ -3897,16 +3901,27 @@
   ok   The weather brief: written by rules from the NWS numbers (weather_brief.py on a rainy day) › when, how much, the NWS high and low, wind only when it gusts, in mph
   ok   The weather brief: written by rules from the NWS numbers (weather_brief.py on a rainy day) › its cards are today and tonight
   ok   Weather page: now, today and tonight in plain words, when and how much (390, 8:30 am) › the hero carries the brief, word for word
-  ok   Weather page: now, today and tonight in plain words, when and how much (390, 8:30 am) › no humidity chip, and no wind chip on a 6 mph morning
+  ok   Weather page: now, today and tonight in plain words, when and how much (390, 8:30 am) › the hero: the airport’s 47°, cloudy, feels 44°
+  ok   Weather page: now, today and tonight in plain words, when and how much (390, 8:30 am) › the headline is the radar card’s line: when the rain comes
+  ok   Weather page: now, today and tonight in plain words, when and how much (390, 8:30 am) › what to wear: feels 44° at the coldest, and an 80% hour ahead
+  ok   Weather page: now, today and tonight in plain words, when and how much (390, 8:30 am) › the tile grid: feels like, today’s rain, air, UV, wind, humidity, the lake
+  ok   Weather page: now, today and tonight in plain words, when and how much (390, 8:30 am) › the rain card: the peak chance and when, over twelve hourly bars
   ok   Weather page: now, today and tonight in plain words, when and how much (390, 8:30 am) › a Today and tonight section under the hero
   ok   Weather page: now, today and tonight in plain words, when and how much (390, 8:30 am) › today: the NWS high, when the rain starts, the chance, how much, feels like
   ok   Weather page: now, today and tonight in plain words, when and how much (390, 8:30 am) › tonight: when it stops, how much, and the gusts in mph
   ok   Weather page: now, today and tonight in plain words, when and how much (390, 8:30 am) › the next-hours story uses the same NWS high and low, not the hourly extremes
   ok   Weather page: now, today and tonight in plain words, when and how much (390, 8:30 am) › the week row says how much: today’s NWS rain total
   ok   Weather page: now, today and tonight in plain words, when and how much (390, 8:30 am) › no knots or boats anywhere; the swim card’s lake wind is in mph
-  ok   Weather page: now, today and tonight in plain words, when and how much (390, 8:30 am) › in order: now, today and tonight, the next hours, the week, radar, my read, the scores, swimming
+  ok   Weather page: now, today and tonight in plain words, when and how much (390, 8:30 am) › in order: now, today and tonight, hourly, rain and radar, the week, the tiles, my read, the scores, swimming
   ok   Weather page: now, today and tonight in plain words, when and how much (390, 8:30 am) › nothing scrolls sideways at 390
   ok   Weather page: now, today and tonight in plain words, when and how much (390, 8:30 am) › and opening the row says it in words
+  ok   Weather page: now, today and tonight in plain words, when and how much (390, 8:30 am) › the hourly row: temperatures, sideways, with See as a list above it
+  ok   Weather page: now, today and tonight in plain words, when and how much (390, 8:30 am) › Feels like and Rain chance redraw the line with their own numbers
+  ok   Weather page: now, today and tonight in plain words, when and how much (390, 8:30 am) › See as a list: one hour a row, nothing sideways, and the Collapse bar under it
+  ok   Weather page: now, today and tonight in plain words, when and how much (390, 8:30 am) › Collapse folds it back into the row
+  ok   Weather page: now, today and tonight in plain words, when and how much (390, 8:30 am) › no console errors
+  ok   Weather page: now, today and tonight in plain words, when and how much (390, 8:30 am) › a stale airport reading: the hero shows this hour’s forecast, and says so
+  ok   Weather page: now, today and tonight in plain words, when and how much (390, 8:30 am) › and the tiles agree with the hero
   ok   Weather page: now, today and tonight in plain words, when and how much (390, 8:30 am) › no console errors
   ok   Weather page: now, today and tonight in plain words, when and how much (390, 8:30 am) › a brief six hours old is not shown: the NWS day line instead, and no cards
   ok   Weather page: now, today and tonight in plain words, when and how much (390, 8:30 am) › no console errors
@@ -3917,11 +3932,12 @@
   ok   Weather page: one line over the radar says when the rain or snow comes in the next 12 hours (390) › and the brief agrees
   ok   Weather page: one line over the radar says when the rain or snow comes in the next 12 hours (390) › above the map, under the title, before the radar has loaded anything
   ok   Weather page: one line over the radar says when the rain or snow comes in the next 12 hours (390) › a dry day says so
+  ok   Weather page: one line over the radar says when the rain or snow comes in the next 12 hours (390) › the hero headline and the rain card follow the same hours
   ok   Weather page: one line over the radar says when the rain or snow comes in the next 12 hours (390) › a dry cold day says rain or snow
   ok   Weather page: one line over the radar says when the rain or snow comes in the next 12 hours (390) › snow at 60%: "likely", and on and off when the wet hours break
   ok   Weather page: one line over the radar says when the rain or snow comes in the next 12 hours (390) › already raining: when it stops
   ok   Weather page: one line over the radar says when the rain or snow comes in the next 12 hours (390) › a 40% chance: "a chance of", from when, with no end inside the twelve hours
-  ok   Weather page: one line over the radar says when the rain or snow comes in the next 12 hours (390) › a file that no longer covers the next twelve hours says nothing
+  ok   Weather page: one line over the radar says when the rain or snow comes in the next 12 hours (390) › a file that no longer covers the next twelve hours says nothing, here or in the hero
   ok   Weather page: one line over the radar says when the rain or snow comes in the next 12 hours (390) › no console errors
   ok   What Now: today in plain words and a Full weather link, under the card (390, live) › the same brief as the weather page, word for word
   ok   What Now: today in plain words and a Full weather link, under the card (390, live) › an obvious Full weather button to the guide’s weather page
