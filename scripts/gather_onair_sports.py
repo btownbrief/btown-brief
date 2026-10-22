@@ -40,7 +40,8 @@ newsletter repo. In short:
     calls a league. Undocumented and Disney's terms restrict automated use,
     so it stays small and every game links back to ESPN. No User-Agent, per
     build_sports.py ("a custom one gets 403'd at their edge").
-  * Reddit: reddit_intake.py's parsers and token. OAuth (top of the day, with
+  * Reddit: reddit_client.py (the shared door: User-Agent, rate limits,
+    token) and reddit_intake.py's parsers. OAuth (top of the day, with
     scores) when REDDIT_CLIENT_ID/SECRET exist, else the public top RSS.
     Reddit ends RSS on 2026-11-13; without OAuth after that the block is
     empty and On Air leaves it out.
@@ -64,6 +65,7 @@ import xml.etree.ElementTree as ET
 from datetime import date, datetime, timedelta, timezone
 
 import gather_onair_finds as finds
+import reddit_client
 import reddit_intake as reddit
 
 try:
@@ -336,16 +338,13 @@ def link_games(clips, games):
 
 # ------------------------------------------------------------------- reddit
 
-def reddit_top(key, env, fetch=reddit.http_fetch):
+def reddit_top(key, client):
     sub = LEAGUES[key]["sub"]
-    token = reddit.oauth_token(fetch, env)
-    if token:
-        raw = fetch(f"https://oauth.reddit.com/r/{sub}/top?t=day&limit=30&raw_json=1",
-                    {"User-Agent": env.get("REDDIT_USER_AGENT") or reddit.API_UA, "Authorization": "bearer " + token})
-        posts, _ = reddit.parse_listing(json.loads(raw), "r/" + sub)
+    route, data = client.read(f"r/{sub}/top", t="day", limit=30)
+    if route == "oauth":
+        posts, _ = reddit.parse_listing(data, "r/" + sub)
     else:
-        raw = fetch(f"https://www.reddit.com/r/{sub}/top/.rss?t=day&limit=30", {"User-Agent": reddit.BROWSER_UA})
-        posts = reddit.parse_atom(raw, "r/" + sub)
+        posts = reddit.parse_atom(data, "r/" + sub)
     return shape_reddit(posts)
 
 
@@ -545,6 +544,7 @@ def run(args, env=None):
     seen = {k: v for k, v in (prev.get("seen") or {}).items() if now - int(v) < SEEN_DAYS * 86400}
     report = {}
     auth = finds.safe("youtube-auth", finds.youtube_auth, report)
+    rc = reddit_client.Client(env=env, sleep=(lambda _s: None) if env.get("ONAIR_SPORTS_NO_SLEEP") else time.sleep)
     leagues, pending_all = {}, []
     for key in LEAGUES:
         old = prev_leagues.get(key) or {}
@@ -582,7 +582,7 @@ def run(args, env=None):
         clips = link_games(sorted(clips, key=lambda c: -int(c["d"]))[:MAX_CLIPS], games)
         # reddit_at is when the list last CHANGED, so a quiet run commits
         # nothing; a dead route keeps the last list for a day and a half
-        posts = finds.safe(key + "-reddit", lambda: reddit_top(key, env), report)
+        posts = finds.safe(key + "-reddit", lambda: reddit_top(key, rc), report)
         at = old.get("reddit_at", 0)
         if posts is None:
             posts = old.get("reddit", []) if at > now - 36 * 3600 else []

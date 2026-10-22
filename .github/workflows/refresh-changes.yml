@@ -32,6 +32,12 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Run change pipeline
+        # Reddit keys are optional: without them r/burlington comes from
+        # Inoreader (scripts/reddit_client.py decides).
+        env:
+          REDDIT_CLIENT_ID: ${{ secrets.REDDIT_CLIENT_ID }}
+          REDDIT_CLIENT_SECRET: ${{ secrets.REDDIT_CLIENT_SECRET }}
+          REDDIT_USER_AGENT: ${{ vars.REDDIT_USER_AGENT }}
         run: python3 -m scripts.changes.update
 
       - name: Commit if changed

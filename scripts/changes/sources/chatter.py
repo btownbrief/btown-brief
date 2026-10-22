@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 """
-Hot posts from r/burlington, with RSS as a scoreless fallback when Reddit's
-JSON endpoint rate-limits script clients.
+Hot posts from r/burlington. Reddit's own listing (with scores) comes through
+scripts/reddit_client.py's OAuth route once REDDIT_CLIENT_ID/SECRET are set;
+until then, Stephen's Inoreader stream is the scoreless fallback. (The
+logged-out hot.json this used to try has 403'd since May 2026.)
 
 State shape:  {"posts": [{"id", "title", "url", "score", "comments", "created"}]}
 Diff:         new posts over 25 points, plus posts gaining 150 points per run
@@ -10,11 +12,12 @@ Diff:         new posts over 25 points, plus posts gaining 150 points per run
 import re
 from datetime import datetime, timedelta, timezone
 
-from ..common import get, get_json, parse_feed, event, parse_when, now_utc, iso, strip_tags
+from ..common import get, parse_feed, event, parse_when, now_utc, iso, strip_tags
+from ...reddit_client import Client
 
 ID = "reddit-burlington"
 NAME = "r/burlington"
-JSON_URL = "https://www.reddit.com/r/burlington/hot.json?limit=25&raw_json=1"
+LISTING = "r/burlington/hot"
 # Reddit 403s non-browser clients; Stephen's Inoreader account republishes
 # r/burlington as RSS (data/sources.json: ino-reddit-burlington). Scoreless,
 # but every item links straight to the reddit thread.
@@ -40,10 +43,13 @@ def _post_id(url, fallback):
     return m.group(1) if m else fallback
 
 
-def snapshot():
+def snapshot(client=None):
     posts = []
+    client = client or Client()
     try:
-        data = get_json(JSON_URL)
+        if not client.oauth:
+            raise LookupError("no Reddit keys; Inoreader only")
+        data = client.oauth_json(LISTING, limit=25)
         for child in data.get("data", {}).get("children", []):
             post = child.get("data", {})
             if post.get("stickied"):
