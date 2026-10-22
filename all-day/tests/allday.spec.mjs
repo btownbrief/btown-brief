@@ -11026,6 +11026,20 @@ async function weatherBrief(browser, base) {
     check(!errors.length, 'no console errors', errors.join(' | '));
     await w.ctx.close();
 
+    /* an airport reading three hours old: the hero and the tiles take this
+       hour's forecast row instead (8 am: 48°, feels 45°, partly sunny) */
+    const oldObs = { ...payload, now: { ...payload.now, observed_at: new Date(NOW - 3 * 3600000).toISOString(), temp_f: 37, feels_like_f: 33, description: 'Clear' } };
+    const o = await wxPage(oldObs);
+    const os = await o.page.evaluate(() => ({ big: document.querySelector('#rn-stats .rn-big').textContent, feels: document.getElementById('rn-feels').textContent,
+      upd: document.getElementById('rn-updated').textContent,
+      tile: [...document.querySelector('.wx-tile-feels').children].map((x) => x.innerText.replace(/\s+/g, ' ').trim()).join(' | '),
+      humid: document.querySelector('.wx-tile-humid').innerText.replace(/\s+/g, ' ').trim() }));
+    check(os.big === '48°' && os.feels === 'Partly sunny·Feels 45°' && /^This hour’s forecast · the airport last reported \d{1,2}:30 AM$/.test(os.upd),
+      'a stale airport reading: the hero shows this hour’s forecast, and says so', JSON.stringify(os));
+    check(os.tile === 'FEELS LIKE | 45° | Wind makes it feel colder Air 48°' && os.humid === 'HUMIDITY 70%', 'and the tiles agree with the hero', JSON.stringify([os.tile, os.humid]));
+    check(!o.errors.length, 'no console errors', o.errors.join(' | '));
+    await o.ctx.close();
+
     const st = await wxPage(stale, { scheme: 'dark' });
     const ss = await st.page.evaluate(() => ({ sub: document.querySelector('#rn-sub').textContent, day: document.querySelector('#day-section').hidden }));
     check(ss.sub === 'Today: partly sunny then rain, high near 55, 80% chance of rain.' && ss.day, 'a brief six hours old is not shown: the NWS day line instead, and no cards', JSON.stringify(ss));

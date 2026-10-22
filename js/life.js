@@ -493,16 +493,39 @@
     return b;
   }
 
+  /* Right now, for the hero and the tiles: the airport observation while
+     it is fresh, else this hour's NWS forecast row. An observation hours
+     old (the station feed lags at times) next to an hourly "Now" twenty
+     degrees warmer reads as wrong, so past OBS_MAX_AGE, or with no
+     reading at all, every "now" number on the page comes from the same
+     forecast hour: temperature, feels like, sky, wind and humidity. */
+  var OBS_MAX_AGE = 90 * 60000;
+  function currentConditions(d) {
+    var now = d.now || {};
+    var at = now.observed_at ? new Date(now.observed_at).getTime() : NaN;
+    if (now.temp_f != null && isFinite(at) && Date.now() - at <= OBS_MAX_AGE) {
+      return { temp: now.temp_f, feels: now.feels_like_f, sky: now.description, wind: now.wind_mph, dir: now.wind_dir,
+               gust: now.wind_gust_mph, humidity: now.humidity, dewpoint: now.dewpoint_f, observed: now.observed_at, forecast: false };
+    }
+    var h = upcomingHours(d)[0];
+    if (!h || h.temp_f == null) {
+      return { temp: now.temp_f, feels: now.feels_like_f, sky: now.description, wind: now.wind_mph, dir: now.wind_dir,
+               gust: now.wind_gust_mph, humidity: now.humidity, dewpoint: now.dewpoint_f, observed: now.observed_at, forecast: false };
+    }
+    return { temp: h.temp_f, feels: h.feels_f != null ? h.feels_f : h.temp_f, sky: h.short, wind: h.wind_mph, dir: h.wind_dir,
+             gust: null, humidity: h.humidity, dewpoint: null, observed: now.observed_at || null, forecast: true };
+  }
+
   /* What to wear, Wethr's quiet line under the headline: the coldest
      feels-like in the next six hours (the NWS hourly rows) sets the layer,
      and an hour of 50%+ rain or snow in the next twelve adds an umbrella
      or boots. Advice, not a number, so it is only ever this one phrase. */
   function wearHint(d) {
-    var now = d.now || {};
+    var cur = currentConditions(d);
     var hours = upcomingHours(d);
     var soon = hours.filter(function (h) { return new Date(h.t).getTime() < Date.now() + 6 * HOUR; });
     var feels = soon.map(function (h) { return h.feels_f; }).filter(function (v) { return v != null && isFinite(v); });
-    if (now.feels_like_f != null) feels.push(now.feels_like_f);
+    if (cur.feels != null) feels.push(cur.feels);
     if (!feels.length) return '';
     var lo = Math.min.apply(null, feels), hi = Math.max.apply(null, feels);
     var layer = lo <= 15 ? 'Heavy coat, hat and gloves' : lo <= 30 ? 'Winter coat' : lo <= 45 ? 'Warm jacket'
@@ -518,18 +541,18 @@
   function renderNow(d) {
     var box = el('rn-stats');
     if (!box) return;
-    var now = d.now || {};
+    var cur = currentConditions(d);
     var night = !isDaylight(new Date().toISOString(), d.__ctx);
 
     // Wethr's hero: a sky glyph beside a huge temperature, then the sky in
     // words and what it feels like, always (the feels-like tile says why).
-    box.innerHTML = now.temp_f != null
-      ? '<span class="rn-glyph" aria-hidden="true">' + skyGlyph(now.description, null, night) + '</span>' +
-        '<span class="rn-big">' + now.temp_f + '°</span>'
+    box.innerHTML = cur.temp != null
+      ? '<span class="rn-glyph" aria-hidden="true">' + skyGlyph(cur.sky, null, night) + '</span>' +
+        '<span class="rn-big">' + esc(cur.temp) + '°</span>'
       : '';
     var feelsLine = [];
-    if (now.description) feelsLine.push('<span class="rn-desc">' + esc(cap(now.description.toLowerCase())) + '</span>');
-    if (now.feels_like_f != null) feelsLine.push('<span class="rn-feels-v">Feels ' + now.feels_like_f + '°</span>');
+    if (cur.sky) feelsLine.push('<span class="rn-desc">' + esc(cap(String(cur.sky).toLowerCase())) + '</span>');
+    if (cur.feels != null) feelsLine.push('<span class="rn-feels-v">Feels ' + esc(cur.feels) + '°</span>');
     el('rn-feels').innerHTML = feelsLine.join('<span class="rn-dot" aria-hidden="true">·</span>');
 
     var wear = el('rn-wear');
@@ -553,10 +576,12 @@
       sub.innerHTML = '';
     }
 
-    if (now.observed_at) {
-      var observedAge = Date.now() - new Date(now.observed_at).getTime();
-      el('rn-updated').textContent = 'Observed ' + fmtClock(now.observed_at) + ' at the airport' +
-        (observedAge > 2 * HOUR ? ' · ' + fmtAgo(now.observed_at) : '');
+    var upd = el('rn-updated');
+    if (cur.forecast) {
+      upd.textContent = 'This hour\u2019s forecast' + (cur.observed ? ' · the airport last reported ' + fmtClock(cur.observed) : '');
+    } else if (cur.observed) {
+      var observedAge = Date.now() - new Date(cur.observed).getTime();
+      upd.textContent = 'Observed ' + fmtClock(cur.observed) + ' at the airport' + (observedAge > OBS_MAX_AGE ? ' · ' + fmtAgo(cur.observed) : '');
     }
     renderTiles(d);
   }
@@ -603,15 +628,15 @@
   function renderTiles(d) {
     var grid = el('wx-tiles'), sec = el('tiles-section');
     if (!grid || !sec) return;
-    var now = d.now || {}, sun = d.sun || {}, air = d.air || {}, gage = d.lake_gage || {};
+    var cur = currentConditions(d), sun = d.sun || {}, air = d.air || {}, gage = d.lake_gage || {};
     var out = [];
 
-    if (now.feels_like_f != null) {
-      var diff = now.temp_f != null ? now.feels_like_f - now.temp_f : 0;
-      var why = diff <= -3 ? ((now.wind_mph || 0) >= 3 ? 'Wind makes it feel colder' : 'Feels colder than it is')
+    if (cur.feels != null) {
+      var diff = cur.temp != null ? cur.feels - cur.temp : 0;
+      var why = diff <= -3 ? ((cur.wind || 0) >= 3 ? 'Wind makes it feel colder' : 'Feels colder than it is')
               : diff >= 3 ? 'Humidity makes it feel warmer' : 'About the same as the air';
-      out.push(tile('feels', 'Feels like', '<span class="wx-tile-big" style="color:' + tileTempColor(now.feels_like_f) + '">' + esc(now.feels_like_f) + '°</span>',
-        esc(why) + (now.temp_f != null ? '<br>Air ' + esc(now.temp_f) + '°' : '')));
+      out.push(tile('feels', 'Feels like', '<span class="wx-tile-big" style="color:' + tileTempColor(cur.feels) + '">' + esc(cur.feels) + '°</span>',
+        esc(why) + (cur.temp != null ? '<br>Air ' + esc(cur.temp) + '°' : '')));
     }
 
     // today's rain or snow: the NWS grid total for the Burlington day, the
@@ -638,19 +663,19 @@
       out.push(tile('uv', 'UV index', ring(uv / 11, ub[2], '<b>' + uv + '</b>'), esc(ub[1]) + '<br>Today’s peak'));
     }
 
-    if (now.wind_mph != null) {
-      var deg = COMPASS[(now.wind_dir || '').toUpperCase()];
+    if (cur.wind != null) {
+      var deg = COMPASS[(cur.dir || '').toUpperCase()];
       var dial = '<span class="wx-compass" aria-hidden="true"><span class="wx-compass-n">N</span>' +
-        (deg != null && now.wind_mph > 0 ? '<span class="wx-compass-arrow" style="transform:rotate(' + ((deg + 180) % 360) + 'deg)"></span>' : '') +
-        '<span class="wx-compass-v"><b>' + esc(now.wind_mph) + '</b><small>mph</small></span></span>';
-      out.push(tile('wind', 'Wind', dial, now.wind_mph === 0 ? 'Calm'
-        : esc(now.wind_dir ? 'From the ' + now.wind_dir : '') + (now.wind_gust_mph ? (now.wind_dir ? ', ' : '') + 'gusts ' + esc(now.wind_gust_mph) + ' mph' : '')));
+        (deg != null && cur.wind > 0 ? '<span class="wx-compass-arrow" style="transform:rotate(' + ((deg + 180) % 360) + 'deg)"></span>' : '') +
+        '<span class="wx-compass-v"><b>' + esc(cur.wind) + '</b><small>mph</small></span></span>';
+      out.push(tile('wind', 'Wind', dial, cur.wind === 0 ? 'Calm'
+        : esc(cur.dir ? 'From the ' + cur.dir : '') + (cur.gust ? (cur.dir ? ', ' : '') + 'gusts ' + esc(cur.gust) + ' mph' : '')));
     }
 
-    if (now.humidity != null && isFinite(now.humidity)) {
-      var dp = now.dewpoint_f;
+    if (cur.humidity != null && isFinite(cur.humidity)) {
+      var dp = cur.dewpoint;
       var feel = dp == null ? '' : dp < 55 ? 'Comfortable' : dp < 65 ? 'A bit sticky' : 'Muggy';
-      out.push(tile('humid', 'Humidity', ring(now.humidity / 100, '#7DD3FC', '<b>' + Math.round(now.humidity) + '%</b>'),
+      out.push(tile('humid', 'Humidity', ring(cur.humidity / 100, '#7DD3FC', '<b>' + Math.round(cur.humidity) + '%</b>'),
         esc(feel) + (dp != null ? '<br>Dew point ' + esc(dp) + '°' : '')));
     }
 
