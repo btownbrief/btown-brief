@@ -13,7 +13,7 @@
    audio — episodes are large and the browser's own HTTP cache handles them
    better than we would. */
 
-const VERSION = 'all-day-v90';   // The Build: the first visit, one Clock in
+const VERSION = 'all-day-v91';   // the No-algorithm challenge
 const SHELL = VERSION + '-shell';
 const DATA = 'all-day-data';   // unversioned on purpose: survives shell bumps
 
@@ -43,6 +43,8 @@ const SHELL_URLS = [
   './js/boards.js', './js/boards-core.js', './js/boards-fake.js',
   /* Watch's starter list, so the tab has films to show offline */
   './data/films-seed.json',
+  /* the No-algorithm challenge, loaded by app.js after the first route */
+  './js/challenge.js', './js/challenge-core.js', './css/challenge.css',
 ];
 
 self.addEventListener('install', (e) => {
