@@ -4542,7 +4542,9 @@ async function theWhatNow(browser, base) {
     await d.page.goto(base + '/all-day/?demo=1#whatnow');
     await d.page.waitForSelector(wnPanel + ' .wxcard', { timeout: 15000 });
     const dk = await d.page.$eval(wnPanel + ' .wxcard', (a) => ({ bg: getComputedStyle(a).backgroundColor, ink: getComputedStyle(a).color, h: a.getBoundingClientRect().height }));
-    check(dk.bg !== 'rgba(0, 0, 0, 0)' && dk.h < 140, 'dark and 1280: the card keeps its fill and its height, sky and all', JSON.stringify(dk));
+    /* under 175 with its own "Full weather" foot (2026-10-22); a card that
+       stretched with its grid row would be far taller */
+    check(dk.bg !== 'rgba(0, 0, 0, 0)' && dk.h < 175, 'dark and 1280: the card keeps its fill and its height, sky, Full weather and all', JSON.stringify(dk));
     await d.page.screenshot({ path: path.join(SHOTS, 'demo-whatnow-glance-desktop-dark.png') });
     check(!d.errors.length, 'no console errors', d.errors.join(' | '));
     await d.ctx.close();
