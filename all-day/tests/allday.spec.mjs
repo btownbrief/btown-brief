@@ -104,7 +104,7 @@ async function staticChecks() {
     const js = [];
     const walk = async (dir) => { for (const f of await readdir(dir, { withFileTypes: true })) { const p = path.join(dir, f.name); if (f.isDirectory()) await walk(p); else if (/\.(js|css|html)$/.test(f.name)) js.push(p); } };
     await walk(path.join(APP, 'js')); await walk(path.join(APP, 'css'));
-    const NEW = ['app.js', 'ui.js', 'store.js', 'auth.js', 'liquid.js', 'main.js', 'wire.js', 'wire-demo.js', 'wire-photos.js', 'wire-square.js', 'wire-recaps.js', 'watch.js', 'food.js', 'people.js', 'whatnow.js', 'vintage.js', 'habits.js', 'build.js', 'habits-core.js', 'habits-fake.js', 'photo-wall.js', 'onair.js', 'games.js', 'clubs-week.js', 'people-match.js', 'food-asks.js', 'tokens.css', 'app.css'];
+    const NEW = ['app.js', 'ui.js', 'store.js', 'auth.js', 'asks.js', 'liquid.js', 'main.js', 'wire.js', 'wire-demo.js', 'wire-photos.js', 'wire-square.js', 'wire-recaps.js', 'watch.js', 'food.js', 'people.js', 'whatnow.js', 'vintage.js', 'habits.js', 'build.js', 'habits-core.js', 'habits-fake.js', 'photo-wall.js', 'onair.js', 'games.js', 'clubs-week.js', 'people-match.js', 'food-asks.js', 'tokens.css', 'app.css'];
     const OLD = new Set(['sun.js', 'whatnow-engine.js', 'whatnow-data.js']);
     for (const f of js) {
       const name = path.basename(f);
@@ -370,6 +370,7 @@ async function newPage(browser, base, opts = {}) {
     reducedMotion: opts.motion || 'no-preference',
     deviceScaleFactor: opts.dpr || 1,
     serviceWorkers: 'block',
+    ...(opts.ua ? { userAgent: opts.ua } : {}),
     ...(opts.timezoneId ? { timezoneId: opts.timezoneId } : {}),
     /* opts.geo: a position the reader has allowed; without it, location is refused */
     ...(opts.geo ? { geolocation: opts.geo, permissions: ['geolocation'] } : {}),
@@ -466,6 +467,10 @@ async function newPage(browser, base, opts = {}) {
     if (r.request().resourceType() === 'image') return r.fulfill({ status: 200, body: PNG, contentType: 'image/png' });
     return r.fallback();
   });
+  /* The shell's two asks (asks.js: home screen, newsletter) wait for real
+     use, which a group that runs the clock forward can reach by accident;
+     every group but the asks' own starts as a subscribed, installed reader */
+  if (!opts.asks) await page.addInitScript(() => { try { if (!localStorage.getItem('allday-asks')) localStorage.setItem('allday-asks', JSON.stringify({ subscribed: true, installed: true })); } catch (e) { /* blocked */ } });
   /* GoatCounter's own script is stubbed; this records what the app asks it to count */
   await page.addInitScript(() => { window.__gc = []; window.goatcounter = { count: (o) => window.__gc.push(o.path) }; });
   return { ctx, page, errors, supabase };
@@ -11105,20 +11110,32 @@ async function railsHaveList(browser, base) {
         return out;
       });
       check(!found.length, tab + ': every sideways row can be turned into a list', found.join(', '));
-      /* and the button works: the first row opens down (no sideways scroll left), Collapse puts it back */
-      const first = await page.$('.panel:not([hidden]) .railmode:not(.foot) button');
-      if (first) {
-        await first.evaluate((b) => b.scrollIntoView({ block: 'center' }));
-        await first.click();
-        const open = await page.evaluate(() => {
-          const r = document.querySelector('.panel:not([hidden]) .rail.aslist');
+      /* and every button works: each row opens down (no sideways scroll left)
+         with the sticky Collapse bar showing under it (Stephen, 2026-10-22:
+         "I love the collapse all that pops up on the screen"), and Collapse
+         puts it back */
+      const n = await page.$$eval('.panel:not([hidden]) .railmode:not(.foot) button', (bs) => bs.length);
+      const bad = [];
+      for (let i = 0; i < n; i++) {
+        const b = (await page.$$('.panel:not([hidden]) .railmode:not(.foot) button'))[i];
+        if (!b || !/^See as a list$/.test(await b.textContent())) continue;
+        const name = await b.getAttribute('data-railmode');
+        await b.evaluate((x) => x.scrollIntoView({ block: 'center' }));
+        await b.evaluate((x) => x.click());
+        await page.waitForTimeout(120);
+        const open = await page.evaluate((nm) => {
+          const r = document.querySelector('.panel:not([hidden]) .rail.aslist[data-rail="' + nm + '"]');
           const foot = r && r.closest('.rail-wrap').nextElementSibling;
-          return r && { sideways: r.scrollWidth > r.clientWidth + 4, bar: !foot.hidden && foot.matches('.collapsebar') };
-        });
-        check(open && !open.sideways && open.bar, tab + ': See as a list opens it downward with the Collapse bar', JSON.stringify(open));
-        await page.click('.panel:not([hidden]) .collapsebar:not([hidden]) button');
-        check(await page.evaluate(() => !document.querySelector('.panel:not([hidden]) .rail.aslist')), tab + ': Collapse puts the row back', '');
+          if (!r || !foot) return null;
+          const fb = foot.getBoundingClientRect();
+          return { sideways: r.scrollWidth > r.clientWidth + 4, bar: !foot.hidden && foot.matches('.collapsebar') && getComputedStyle(foot).position === 'sticky' && fb.height > 0 && !!foot.querySelector('button[data-collapse]') };
+        }, name);
+        if (!open || open.sideways || !open.bar) { bad.push(name + ' ' + JSON.stringify(open)); continue; }
+        await page.evaluate((nm) => { const r = document.querySelector('.panel:not([hidden]) .rail.aslist[data-rail="' + nm + '"]'); r.closest('.rail-wrap').nextElementSibling.querySelector('button').click(); }, name);
+        await page.waitForTimeout(120);
+        if (await page.evaluate((nm) => !!document.querySelector('.panel:not([hidden]) .rail.aslist[data-rail="' + nm + '"]'), name)) bad.push(name + ': Collapse left it a list');
       }
+      if (n) check(!bad.length, tab + ': every See as a list (' + n + ') opens downward with the sticky Collapse bar, and Collapse puts it back', bad.join(' | '));
     };
     for (const tab of TABS) {
       if (tab !== 'wire') await goTab(page, tab);
@@ -11131,6 +11148,35 @@ async function railsHaveList(browser, base) {
       await page.waitForTimeout(400);
       await scan('wire ' + view);
     }
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('long lists opened in place: the Collapse bar folds them back', async () => {
+    /* Food's places and Best of r/burlington, and the Games arcade, open in
+       place past their first rows ("All 130"); each now carries the same
+       sticky Collapse bar as an opened row (2026-10-22) */
+    const { ctx, page, errors } = await newPage(browser, base);
+    let opened = 0;
+    for (const [tab, attr, slots] of [['food', 'data-sec', ['open', 'best']], ['games', 'data-slot', ['arcade']]]) {
+      await page.goto(base + '/all-day/#' + tab);
+      await settle(page);
+      await page.waitForTimeout(1500);
+      for (const slot of slots) {
+        const q = '#panel-' + tab + ' .panel-body [' + attr + '="' + slot + '"]';
+        const more = await page.$(q + ' > button.more');
+        if (!more || !/^All \d+/.test((await more.textContent()).trim())) continue;
+        await more.evaluate((b) => b.click());
+        await page.waitForTimeout(300);
+        const bar = await page.evaluate((qq) => { const b = document.querySelector(qq + ' .collapsebar:not([hidden])'); return b ? { sticky: getComputedStyle(b).position, more: !!document.querySelector(qq + ' > button.more') } : null; }, q);
+        check(bar && bar.sticky === 'sticky' && !bar.more, tab + ' ' + slot + ': All opens the whole list with the sticky Collapse bar', JSON.stringify(bar));
+        await page.evaluate((qq) => document.querySelector(qq + ' .collapsebar button').click(), q);
+        await page.waitForTimeout(500);
+        check(await page.evaluate((qq) => !document.querySelector(qq + ' .collapsebar') && !!document.querySelector(qq + ' > button.more'), q), tab + ' ' + slot + ': Collapse folds it back to its first rows', '');
+        opened++;
+      }
+    }
+    check(opened >= 2, 'at least two long lists were there to open (' + opened + ')', opened);
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
   });
@@ -11192,11 +11238,15 @@ async function sectionPills(browser, base) {
         const w = document.querySelector('#subnav .secpill'), mast = document.querySelector('#mast');
         const r = w.getBoundingClientRect(), chip = w.querySelector('.chip');
         const cs = getComputedStyle(w);
-        return { h: r.height, top: r.top, fs: getComputedStyle(chip).fontSize, glass: cs.backdropFilter || cs.webkitBackdropFilter || '', mastBg: getComputedStyle(mast).backgroundColor,
+        return { h: r.height, top: r.top, fs: getComputedStyle(chip).fontSize, fw: getComputedStyle(chip).fontWeight, glass: cs.backdropFilter || cs.webkitBackdropFilter || '', mastBg: getComputedStyle(mast).backgroundColor,
           keep: document.body.classList.contains('keep-subnav'), tone: getComputedStyle(w).getPropertyValue(tk).trim(), docW: document.documentElement.scrollWidth, vw: innerWidth,
           group: w.querySelector('.secpill-track').getAttribute('role'), label: w.querySelector('.secpill-track').getAttribute('aria-label') };
       }, token);
-      check(look.h >= 36 && look.h <= 42 && look.h < wireH && look.fs === '14px', tab + ': a compact pill, ' + Math.round(look.h) + 'px tall with 14px words (the Wire’s is ' + Math.round(wireH) + ')', JSON.stringify(look));
+      /* where the pill is the tab's one switch it is the Wire's size (Stephen,
+         2026-10-22: "when there's no big one ... make the bubbles bigger");
+         under The Build's switch, Habits keeps the compact one */
+      if (tab === 'habits') check(look.h >= 36 && look.h <= 42 && look.h < wireH && look.fs === '14px', tab + ': under a big switch, a compact pill, ' + Math.round(look.h) + 'px tall with 14px words (the Wire’s is ' + Math.round(wireH) + ')', JSON.stringify(look));
+      else check(Math.abs(look.h - wireH) <= 2 && look.fs === '16px' && look.fw === '700', tab + ': the tab’s one switch, as big as the Wire’s, ' + Math.round(look.h) + 'px tall with 16px bold words (the Wire’s is ' + Math.round(wireH) + ')', JSON.stringify(look));
       check(/blur/.test(look.glass) && /rgba\(0, 0, 0, 0\)|transparent/.test(look.mastBg) && look.keep, tab + ': glass, floating over the paper, and it stays as the mast steps away', JSON.stringify(look));
       check(look.group === 'group' && !!look.label && look.docW <= look.vw, tab + ': a labelled group, and nothing scrolls the page sideways', JSON.stringify(look));
       const w = await settledWater(page, look.tone);
@@ -11368,6 +11418,222 @@ async function sectionPills(browser, base) {
   });
 }
 
+/* ------------------------------------------- full pages, the asks, the ways out */
+/* Stephen's walk, 2026-10-22 (newsletter repo, reference/drafts/new-nine-2026-10/
+   stephen-walk-2026-10-22.txt): every tab links out to its own page where one
+   exists; the weather card reads as a button; a gentle "keep it on your home
+   screen" and a newsletter signup that only Beehiiv ever sees, both earned
+   by real use and never shown to a stranger's first visit or to a reader;
+   and X, Facebook and Reddit one tap away, for when you want them. */
+const IPHONE = 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0 Mobile/15E148 Safari/604.1';
+const etDay = (ms) => new Intl.DateTimeFormat('en-CA', { timeZone: 'America/New_York', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date(ms));
+/* a stand-in for Beehiiv's embed: an address field and a button that posts
+   Beehiiv's own "submitted" message, as their real embed does */
+const BEEHIIV_STUB = '<!doctype html><meta charset="utf-8"><body style="margin:0"><form id="f"><input name="email" type="email" value="reader@example.com"><button>Go</button></form>' +
+  '<script>document.getElementById("f").addEventListener("submit",function(e){e.preventDefault();parent.postMessage({type:"BEEHIIV_SUBSCRIBER_FORM_SUBMITTED",email:"reader@example.com",externalEmbedId:"x"},"*");});</script>';
+async function fullPagesAndAsks(browser, base) {
+  const WANT = { wire: '../pulse.html', food: '../restaurants.html', people: '../clubs.html', whatnow: '../things-to-do.html', games: 'https://play.btownbrief.com/' };
+
+  await group('full pages: each tab links out to its own page, where it has one', async () => {
+    for (const mode of ['live', 'demo']) {
+      const { ctx, page, errors } = await newPage(browser, base);
+      await page.goto(base + '/all-day/' + (mode === 'demo' ? '?demo=1' : '') + '#wire');
+      await settle(page);
+      for (const tab of TABS.concat('habits')) {
+        if (tab !== 'wire') await goTab(page, tab);
+        const r = await page.evaluate((t) => {
+          const p = document.querySelector('#panel-' + t), a = p.querySelector('.panel-top .fullpage a');
+          if (!a) return { none: true };
+          const ar = a.getBoundingClientRect(), body = p.querySelector('.panel-body').getBoundingClientRect();
+          return { href: a.getAttribute('href'), target: a.target, rel: a.rel, text: a.textContent.trim(), label: a.getAttribute('aria-label'), above: ar.bottom <= body.top + 1, onScreen: ar.top >= 0 && ar.bottom <= innerHeight, docW: document.documentElement.scrollWidth, vw: innerWidth };
+        }, tab);
+        if (WANT[tab]) {
+          check(r.href === WANT[tab] && r.target === '_blank' && /noopener/.test(r.rel) && r.text === 'Full page' && /opens in a new tab/.test(r.label || ''), mode + ' ' + tab + ': "Full page" opens ' + WANT[tab] + ' in a new tab', JSON.stringify(r));
+          check(r.above && r.onScreen && r.docW <= r.vw, mode + ' ' + tab + ': at the top, above the tab’s own first section, on screen as it lands', JSON.stringify(r));
+        } else check(r.none, mode + ' ' + tab + ': no page of its own, so no link', JSON.stringify(r));
+      }
+      check(!errors.length, mode + ': no console errors', errors.join(' | '));
+      await ctx.close();
+    }
+    /* each guide page is really there, and is not one of the pages that moved into All Day */
+    for (const [tab, href] of Object.entries(WANT)) {
+      if (!href.startsWith('../')) continue;
+      const html = await readFile(path.join(REPO, href.slice(3)), 'utf8').catch(() => '');
+      const title = (html.match(/<title>([^<]*)/) || [])[1] || '';
+      check(html && !/moved to All Day/i.test(title), tab + ': ' + href + ' is a page of its own (' + title + ')', title);
+    }
+  });
+
+  await group('the weather card reads as a button to the full weather page', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/all-day/?demo=1#whatnow');
+    await page.waitForSelector(wnPanel + ' .wxcard', { timeout: 15000 });
+    const c = await page.$eval(wnPanel + ' .wxcard', (a) => ({ href: a.getAttribute('href'), go: a.querySelector('.wxc-go')?.textContent.trim(), goIn: !!a.querySelector('.wxc-go .i'), shadow: getComputedStyle(a).boxShadow, border: getComputedStyle(a).borderTopWidth, label: a.getAttribute('aria-label') }));
+    check(c.href === '../weather.html' && c.go === 'Full weather' && c.goIn && c.shadow !== 'none' && c.border === '1px' && /full forecast/.test(c.label), 'the card itself says Full weather, with a raised edge, and opens weather.html', JSON.stringify(c));
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Settings: add to home screen, and X, Facebook and Reddit', async () => {
+    const { ctx, page, errors } = await newPage(browser, base, { asks: true });
+    await page.goto(base + '/all-day/#wire');
+    await settle(page);
+    await page.click('#settings-btn');
+    const home = await page.$eval('.sheet-body .homerow', (r) => ({ t: r.querySelector('.t').textContent.trim(), btn: r.querySelector('button[data-home]')?.textContent }));
+    check(home.t === 'Add to home screen' && home.btn === 'Show me', 'a permanent Add to home screen row', JSON.stringify(home));
+    await page.click('.sheet-body .homerow button[data-home]');
+    const how = await page.$eval('.sheet-body .homehow', (h) => ({ shown: !h.hidden, text: h.innerText.replace(/\s+/g, ' ').trim() }));
+    check(how.shown && /Bookmark it/.test(how.text) && /(⌘|Ctrl) D/.test(how.text), 'on a desktop browser with no install prompt, it shows the bookmark keys', JSON.stringify(how));
+    const out = await page.$$eval('.sheet-body .outrow a', (as) => as.map((a) => [a.textContent.trim(), a.getAttribute('href'), a.target]));
+    check(JSON.stringify(out) === JSON.stringify([['X', 'https://x.com/', '_blank'], ['Facebook', 'https://www.facebook.com/', '_blank'], ['Reddit', 'https://www.reddit.com/r/burlington/', '_blank']]), 'Elsewhere: Open X, Facebook, Reddit (r/burlington), each in a new tab', JSON.stringify(out));
+    await page.click('.sheet-head .iconbtn');
+    const foot = await page.$$eval('#panel-wire > .panel-foot a', (as) => as.map((a) => a.getAttribute('href')));
+    check(foot.length === 3 && foot[2] === 'https://www.reddit.com/r/burlington/' && (await page.$$('#panel-food > .panel-foot')).length === 0, 'the Wire’s foot carries the same three, and only the Wire’s', JSON.stringify(foot));
+    await ctx.close();
+    /* opened from the home screen: it says so, and offers nothing */
+    const b = await newPage(browser, base, { asks: true });
+    await b.page.goto(base + '/all-day/?source=pwa#wire');
+    await settle(b.page);
+    await b.page.click('#settings-btn');
+    const t = await b.page.$eval('.sheet-body .homerow', (r) => ({ t: r.textContent.trim(), btn: !!r.querySelector('button') }));
+    check(t.t === 'On your home screen' && !t.btn, 'installed: the row says it is on your home screen', JSON.stringify(t));
+    check(!errors.length && !b.errors.length, 'no console errors', errors.concat(b.errors).join(' | '));
+    await b.ctx.close();
+  });
+
+  await group('asks: a stranger’s first visits ask for nothing', async () => {
+    const { ctx, page, errors } = await newPage(browser, base, { asks: true, ua: IPHONE });
+    await page.goto(base + '/all-day/#wire');
+    await settle(page);
+    for (const tab of ['food', 'people', 'whatnow']) await goTab(page, tab);
+    await page.reload();
+    await settle(page);
+    const r = await page.evaluate(() => ({ cards: document.querySelectorAll('.askcard').length, frames: document.querySelectorAll('iframe').length, use: JSON.parse(localStorage.getItem('allday-use') || '{}') }));
+    check(r.cards === 0 && r.frames === 0, 'no card and no Beehiiv frame on a first visit, across tabs and a reload', JSON.stringify(r));
+    check(r.use.visits === 1 && r.use.days.length === 1, 'a reload inside half an hour is the same visit', JSON.stringify(r.use));
+    /* demo mode never asks, however much use this phone has */
+    await page.evaluate((d) => localStorage.setItem('allday-use', JSON.stringify({ visits: 9, last: 1, days: d, secs: 5000 })), [etDay(Date.now() - 86400000), etDay(Date.now())]);
+    await page.goto(base + '/all-day/?demo=1#food');
+    await settle(page);
+    check(await page.evaluate(() => !document.querySelector('.askcard')), 'demo mode never asks', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('asks: the home screen, after three visits, at most once a week', async () => {
+    const { ctx, page, errors } = await newPage(browser, base, { asks: true, ua: IPHONE });
+    await page.goto(base + '/all-day/#food');
+    await settle(page);
+    /* two earlier visits today, the last two hours ago: this load is the third */
+    await page.evaluate((d) => { localStorage.setItem('allday-use', JSON.stringify({ visits: 2, last: Math.floor(Date.now() / 1000) - 7200, days: [d], secs: 60 })); localStorage.removeItem('allday-asks'); }, etDay(Date.now()));
+    await page.reload();
+    await settle(page);
+    const card = await page.evaluate(() => {
+      const c = document.querySelector('#panel-food .panel-top .askcard');
+      return c && { kind: c.dataset.ask, title: c.querySelector('.ask-t').textContent, text: c.querySelector('.ask-how').innerText.replace(/\s+/g, ' ').trim(), keys: c.querySelectorAll('.ask-key svg').length,
+        modal: !!document.querySelector('#sheet:not([hidden]), #confirm:not([hidden])'), next: JSON.parse(localStorage.getItem('allday-asks') || '{}').homeNext, frames: document.querySelectorAll('iframe').length };
+    });
+    check(card && card.kind === 'home' && card.title === 'Keep All Day on your home screen' && /Share/.test(card.text) && /Add to Home Screen/.test(card.text) && card.keys === 2 && card.frames === 0, 'the third visit: on an iPhone, the two taps drawn small (Share, then Add to Home Screen)', JSON.stringify(card));
+    check(card && !card.modal && card.next > Date.now() + 6 * 86400000, 'a card in the page, never a modal, and it will not come back for a week', JSON.stringify(card));
+    await goTab(page, 'people');
+    check(await page.evaluate(() => document.querySelectorAll('.askcard').length === 1), 'one ask per page load: the next tab has none', '');
+    await page.goto(base + '/all-day/#food');
+    await page.evaluate(() => { localStorage.setItem('allday-use', JSON.stringify({ visits: 6, last: Math.floor(Date.now() / 1000) - 7200, days: [], secs: 60 })); });
+    await page.reload();
+    await settle(page);
+    check(await page.evaluate(() => !document.querySelector('.askcard')), 'a week has not passed: no ask', '');
+    /* a week on, it asks again, and its close button snoozes it */
+    await page.evaluate(() => { const a = JSON.parse(localStorage.getItem('allday-asks')); a.homeNext = Date.now() - 1000; localStorage.setItem('allday-asks', JSON.stringify(a)); });
+    await page.reload();
+    await settle(page);
+    await page.click('#panel-food .askcard .ask-x');
+    const after = await page.evaluate(() => ({ gone: !document.querySelector('.askcard'), next: JSON.parse(localStorage.getItem('allday-asks')).homeNext }));
+    check(after.gone && after.next > Date.now() + 6 * 86400000, 'a week on it asks again; its close button puts it away for another week', JSON.stringify(after));
+    /* opened from the home screen, never */
+    await page.evaluate(() => { const a = JSON.parse(localStorage.getItem('allday-asks')); a.homeNext = 0; localStorage.setItem('allday-asks', JSON.stringify(a)); });
+    await page.goto(base + '/all-day/?source=pwa#food');
+    await settle(page);
+    const pwa = await page.evaluate(() => ({ cards: document.querySelectorAll('.askcard').length, installed: JSON.parse(localStorage.getItem('allday-asks')).installed }));
+    check(pwa.cards === 0 && pwa.installed === true, 'opened from the home screen: never asks, and remembers it is installed', JSON.stringify(pwa));
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('asks: the newsletter, after real use, typed only into Beehiiv', async () => {
+    const { ctx, page, errors } = await newPage(browser, base, { asks: true });
+    const beehiiv = [];
+    await page.route(/embeds\.beehiiv\.com/, (r) => { beehiiv.push(r.request().url()); return r.fulfill({ status: 200, contentType: 'text/html', body: BEEHIIV_STUB }); });
+    const sent = [];
+    page.on('request', (q) => { const body = q.postData() || ''; if (/reader@example\.com/.test(body + q.url()) && !/beehiiv\.com/.test(q.url())) sent.push(q.url()); });
+    const realUse = (extra) => page.evaluate(([d, x]) => { localStorage.setItem('allday-use', JSON.stringify({ visits: 2, last: Math.floor(Date.now() / 1000) - 7200, days: d, secs: 30 })); if (x) localStorage.setItem('allday-asks', JSON.stringify(x)); else localStorage.removeItem('allday-asks'); },
+      [[etDay(Date.now() - 86400000), etDay(Date.now())], extra || null]);
+    await page.goto(base + '/all-day/#people');
+    await settle(page);
+    /* the third visit, on a second Burlington day */
+    await realUse();
+    await page.reload();
+    await settle(page);
+    await page.waitForSelector('#panel-people .askcard[data-ask="news"] iframe', { timeout: 8000 });
+    const f = await page.$eval('#panel-people .askcard[data-ask="news"]', (c) => {
+      const fr = c.querySelector('iframe');
+      return { title: c.querySelector('.ask-t').textContent, src: fr.getAttribute('src'), sandbox: fr.getAttribute('sandbox'), inputs: c.querySelectorAll('input').length, already: c.querySelector('.ask-foot button')?.textContent };
+    });
+    check(f.title === 'Get the Btown Brief in your inbox' && /^https:\/\/embeds\.beehiiv\.com\/a1c106df-f519-4dfc-a892-61261d0f8389/.test(f.src) && f.inputs === 0, 'the third visit over two days: Beehiiv’s own form in a frame, and no address field of ours', JSON.stringify(f));
+    check(/allow-forms/.test(f.sandbox) && /allow-scripts/.test(f.sandbox) && !/allow-top-navigation/.test(f.sandbox), 'the frame can submit its form but can never steer the app away', f.sandbox);
+    check(f.already === 'I’m already subscribed', 'and an “I’m already subscribed” way out', JSON.stringify(f));
+    /* a message that is not Beehiiv's changes nothing */
+    await page.evaluate(() => window.postMessage({ type: 'BEEHIIV_SUBSCRIBER_FORM_SUBMITTED', email: 'reader@example.com' }, '*'));
+    await page.waitForTimeout(200);
+    check(await page.evaluate(() => !JSON.parse(localStorage.getItem('allday-asks') || '{}').subscribed), 'a look-alike message from anywhere but Beehiiv is ignored', '');
+    /* the reader signs up inside the frame */
+    const frame = page.frames().find((x) => /embeds\.beehiiv\.com/.test(x.url()));
+    await frame.click('button');
+    await page.waitForFunction(() => JSON.parse(localStorage.getItem('allday-asks') || '{}').subscribed === true, null, { timeout: 4000 });
+    const done = await page.evaluate(() => ({ text: document.querySelector('.askcard[data-ask="news"]')?.textContent || '', stored: Object.keys(localStorage).some((k) => /reader@example\.com/.test(localStorage.getItem(k) || '')) }));
+    check(/You’re in/.test(done.text) && !done.stored, 'Beehiiv’s “submitted” marks this phone a reader, and the address is kept nowhere here', JSON.stringify(done));
+    check(!sent.length, 'the address never went anywhere but Beehiiv', sent.join(' | '));
+    /* a reader is never asked again */
+    await realUse({ subscribed: true });
+    await page.reload();
+    await settle(page);
+    check(await page.evaluate(() => !document.querySelector('.askcard[data-ask="news"]')), 'a subscriber is never shown it again', '');
+    /* "I'm already subscribed" is for good; the close button is two weeks */
+    await realUse();
+    await page.reload();
+    await settle(page);
+    await page.click('#panel-people .askcard[data-ask="news"] .ask-foot button');
+    check(await page.evaluate(() => !document.querySelector('.askcard') && JSON.parse(localStorage.getItem('allday-asks')).subscribed === true), '“I’m already subscribed” puts it away for good', '');
+    await realUse();
+    await page.reload();
+    await settle(page);
+    await page.click('#panel-people .askcard[data-ask="news"] .ask-x');
+    check(await page.evaluate(() => JSON.parse(localStorage.getItem('allday-asks')).newsNext > Date.now() + 13 * 86400000 && !document.querySelector('.askcard')), 'its close button puts it away for two weeks', '');
+    /* ten minutes on screen is real use too */
+    await page.evaluate(() => { localStorage.setItem('allday-use', JSON.stringify({ visits: 1, last: Math.floor(Date.now() / 1000), days: [], secs: 600 })); localStorage.removeItem('allday-asks'); });
+    await page.reload();
+    await settle(page);
+    check(await page.evaluate(() => !!document.querySelector('.askcard[data-ask="news"]')), 'ten minutes on screen earns it on a first day too', '');
+    check(beehiiv.length >= 1, 'the frame loaded from Beehiiv', beehiiv.length);
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('asks: a visit from the newsletter is a reader, forever', async () => {
+    const { ctx, page, errors } = await newPage(browser, base, { asks: true });
+    await page.route(/embeds\.beehiiv\.com/, (r) => r.fulfill({ status: 200, contentType: 'text/html', body: BEEHIIV_STUB }));
+    await page.goto(base + '/all-day/?_bhlid=abc123&utm_source=www.btownbrief.com#food');
+    await settle(page);
+    const r = await page.evaluate(() => ({ search: location.search, hash: location.hash, sub: JSON.parse(localStorage.getItem('allday-asks') || '{}').subscribed }));
+    check(r.sub === true && !/_bhlid/.test(r.search) && /utm_source/.test(r.search) && r.hash === '#food', 'Beehiiv’s _bhlid marks a reader, and leaves the address bar (the rest stays)', JSON.stringify(r));
+    await page.evaluate((d) => localStorage.setItem('allday-use', JSON.stringify({ visits: 2, last: Math.floor(Date.now() / 1000) - 7200, days: d, secs: 900 })), [etDay(Date.now() - 86400000), etDay(Date.now())]);
+    await page.goto(base + '/all-day/#food');
+    await settle(page);
+    check(await page.evaluate(() => !document.querySelector('.askcard[data-ask="news"]')), 'with every bit of use, the newsletter card never shows', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+}
+
 /* ----------------------------------------------------------------- run */
 const t0 = Date.now();
 await mkdir(SHOTS, { recursive: true });
@@ -11408,6 +11674,7 @@ try {
   await run(weatherBrief);
   await run(sectionPills);
   await run(railsHaveList);
+  await run(fullPagesAndAsks);
 } finally {
   await browser.close();
   proc.kill();

@@ -377,6 +377,50 @@ export function touchVisit() {
   write(VISIT_KEY, { base: (!last || now - last > VISIT_GAP) ? (last || now) : (Number(v.base) || now), last: now });
 }
 
+/* ---------------------------------------------------------------- use */
+/* How much this phone has used the app, so the two gentle asks (keep it on
+   your home screen, get the newsletter) wait for real use: visits (a new
+   one after 30 quiet minutes), the Burlington days they fell on, and the
+   seconds the app was on screen. Counts only, on this phone; never sent. */
+const USE_KEY = 'allday-use';            // { visits, last, days: ['2026-10-22'], secs }
+const DAY = new Intl.DateTimeFormat('en-CA', { timeZone: 'America/New_York', year: 'numeric', month: '2-digit', day: '2-digit' });
+export function use() {
+  const u = obj(read(USE_KEY, {}));
+  return { visits: Number(u.visits) || 0, last: Number(u.last) || 0, days: arr(u.days).filter((d) => typeof d === 'string'), secs: Number(u.secs) || 0 };
+}
+/* once per page load: a new visit if the last sign of use was 30 minutes ago */
+export function countVisit() {
+  if (DEMO) return use();
+  const u = use();
+  const now = Math.floor(Date.now() / 1000);
+  if (!u.last || now - u.last > VISIT_GAP) u.visits += 1;
+  u.last = now;
+  const today = DAY.format(new Date());
+  if (!u.days.includes(today)) u.days = u.days.concat(today).slice(-14);
+  write(USE_KEY, u);
+  return u;
+}
+/* seconds on screen, added a few at a time while the page is visible */
+export function addUse(secs) {
+  if (DEMO) return;
+  const u = use();
+  u.secs = Math.min(1e7, u.secs + (Number(secs) || 0));
+  u.last = Math.floor(Date.now() / 1000);
+  write(USE_KEY, u);
+}
+
+/* The asks' own memory: { subscribed, installed, homeNext, newsNext }. The
+   two flags are forever; the two times (epoch ms) are when each ask may
+   show again. Demo mode never writes it. */
+const ASKS_KEY = 'allday-asks';
+export function asks() { return obj(read(ASKS_KEY, {})); }
+export function setAsk(key, value) {
+  if (DEMO) return;
+  const a = asks();
+  a[key] = value;
+  write(ASKS_KEY, a);
+}
+
 /* ------------------------------------------------------------- Supabase */
 /* Raw REST against security-definer functions. RLS is on with no policies,
    so the anon key can only reach data through these. Analytics must never
