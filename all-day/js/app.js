@@ -1094,7 +1094,12 @@ export function start() {
   started = true;
   const app = $('app');
   const bar = $('tabbar');
-  bar.appendChild(el('div', 'rail-brand', 'All Day'));
+  /* a wide screen hides the mast's wordmark, so the rail carries the name and the logo */
+  const brand = el('div', 'rail-brand', '<span>All Day</span>');
+  const logo = $('brand').cloneNode(true);
+  logo.removeAttribute('id');
+  brand.appendChild(logo);
+  bar.appendChild(brand);
   TABS.concat(Object.keys(HOSTED)).forEach((key) => {
     const mod = registry[key];
     if (!mod) return;

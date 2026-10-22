@@ -62,9 +62,17 @@ body.chrome-away .mast { transform: translateY(-100%); }
   padding: 0 var(--s2) 0 var(--gutter); max-width: var(--col); margin: 0 auto;
 }
 .wordmark {
-  flex: 1; min-width: 0; font-family: var(--serif); font-size: var(--fs-wordmark);
+  flex: 0 1 auto; min-width: 0; font-family: var(--serif); font-size: var(--fs-wordmark);
   font-weight: 500; line-height: 1; letter-spacing: .005em; color: var(--ink);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
+/* the Btown Brief logo beside the wordmark, a clear step away from it
+   (Stephen, 2026-10-22); it opens btownbrief.com. The faint rim keeps the
+   logo's cream corner from melting into cream paper on the wide rail. */
+.brandlink { flex: 0 0 auto; display: block; position: relative; margin: 0 auto 0 var(--s5); line-height: 0; border-radius: var(--r-tile); }
+.brandlink::after { content: ""; position: absolute; inset: -4px 0; }
+.brandlink img { display: block; height: var(--brand-h); width: auto; border-radius: var(--r-tile); box-shadow: 0 0 0 1px var(--line); }
+.brandlink:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .mast-title { display: none; flex: 1; min-width: 0; font-family: var(--serif);
   font-size: var(--fs-section); font-weight: 500; line-height: 1; }
 .iconbtn {
@@ -79,6 +87,11 @@ body.chrome-away .mast { transform: translateY(-100%); }
 .savedbtn::after { content: ""; position: absolute; inset: -4px 0; }
 .savedbtn .i { width: 18px; height: 18px; }
 .savedbtn:hover { background: var(--paper-2); }
+/* a narrow phone keeps the star and drops the word, so the logo has room */
+@media (max-width: 379px) {
+  .savedbtn { width: 36px; padding: 0; justify-content: center; }
+  .savedbtn > span { display: none; }
+}
 .savedbtn.on .i { color: var(--sunset); fill: var(--sunset); }
 .iconbtn.on { color: var(--accent); }
 .iconbtn.on .i { fill: currentColor; }
@@ -432,7 +445,7 @@ body.chrome-away .mast { transform: translateY(-100%); }
   .mast:has(.wbar, .secbar)::before { border-radius: 0 0 var(--r-media) var(--r-media); }
   .mast-row, .subnav { max-width: none; }
   .mast-row { padding-left: var(--gutter); }
-  .wordmark { display: none; }
+  .wordmark, .mast .brandlink { display: none; }
   .mast-title { display: block; font-size: var(--fs-wordmark); }
   .app { left: 0; right: 0; }
   .panel { padding-bottom: calc(64px + var(--player-h, 0px)); }
@@ -442,8 +455,8 @@ body.chrome-away .mast { transform: translateY(-100%); }
     display: flex; flex-direction: column; gap: 4px; background: transparent; border: 0;
     margin-inline: 0; max-width: none; border-radius: 0; box-shadow: none;
     backdrop-filter: none; -webkit-backdrop-filter: none; }
-  .rail-brand { display: block; font-family: var(--serif); font-size: var(--fs-empty); font-weight: 500;
-    padding: 4px 14px 26px; color: var(--ink); }
+  .rail-brand { display: flex; align-items: center; font-family: var(--serif); font-size: var(--fs-empty); font-weight: 500;
+    line-height: 1; padding: 4px 14px 26px; color: var(--ink); }
   .tabbar button { display: flex; align-items: center; gap: 14px; height: 48px; padding: 0 14px; border-radius: var(--r-media);
     font-size: var(--fs-lead); font-weight: 500; letter-spacing: 0; color: var(--ink-2); }
   .tabbar button > .i { width: var(--icon); height: var(--icon); }
