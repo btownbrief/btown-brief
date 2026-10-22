@@ -16,6 +16,21 @@ Seven shelves, every title in the same small shape:
             season that premiered in the last two weeks (or premieres in
             the next two) first, marked `ns` (its season number) and `d`
             (the premiere date).
+  stream    films coming to streaming in the US: TMDB's discover, films
+            with a US digital release (release type 4) from three days ago
+            to five weeks out, most popular first, kept only when first out
+            in the last ~18 months (TMDB also dates old films reaching a
+            new streamer), then soonest first. `d` is that digital date and
+            `on` says where: the service the release's own note names
+            ("Netflix"); for one already out, the subscription service
+            JustWatch lists for the US (via TMDB's watch providers), else
+            "Rent or buy"; else "" (the page says "Streaming").
+  tv_stream new shows and new seasons coming to the big streamers
+            (Netflix, Prime Video, Disney+, Apple TV, Hulu, HBO Max, HBO,
+            Peacock, Paramount+; TMDB network ids checked on
+            themoviedb.org/network/<id>, 2026-10-22) in the same window:
+            `ns` the season (1 is a new series), `d` its first episode,
+            `on` the network's name.
 
 A show has the same shape as a film (`d` and `y` from its first air date,
 `rt` its episode length) plus `sn`, its number of seasons. Show ids are
@@ -24,14 +39,18 @@ apart (see watch.js, TV_BASE).
 
 A film is { id, t (title), y (year), d (US release date, YYYY-MM-DD), g
 (genre names), o (overview, trimmed), rt (minutes), p (poster PATH), yt
-(YouTube trailer key) }, plus `where` and `d` on the soon and now shelves.
+(YouTube trailer key) }, plus `where` and `d` on the soon, now and stream
+shelves, and `on` on the stream shelves.
 Only the poster's path is kept, never a picture: the page builds the URL
 from `images` + a size + the path, so TMDB serves its own images. A film
 with no YouTube trailer on TMDB has yt "" and the tab says so; a key is
 never guessed.
 
 TMDB's attribution travels in the file (`source`, `notice`) and the tab
-prints it wherever this data shows, with TMDB's logo. TMDB's API is free
+prints it wherever this data shows, with TMDB's logo. The streaming
+services come from JustWatch through TMDB, and TMDB's terms ask that
+JustWatch is credited wherever they show: the file carries `stream_source`
+and the tab credits JustWatch under the streaming row. TMDB's API is free
 for non-commercial use with that attribution; its terms allow cached data
 for six months, and this file is rebuilt weekly.
 
@@ -82,6 +101,17 @@ TV_TREND_PAGES = 2
 TV_AIR_PAGES = 2
 TV_AIR_MAX = 30
 PREMIERE_DAYS = 14       # a season premiere this close to today is "new"
+STREAM_BACK = 3          # coming to streaming: from three days ago
+STREAM_AHEAD = 35        # to five weeks out
+STREAM_PAGES = 2
+STREAM_MAX = 24
+STREAM_NEW_DAYS = 540    # a film first out more than ~18 months ago is not new to streaming
+TV_STREAM_PAGES = 2
+TV_STREAM_MAX = 24
+PROVIDER_MAX = 40
+# the streamers whose new shows and seasons count, by TMDB network id
+STREAMERS = {213: "Netflix", 1024: "Prime Video", 2739: "Disney+", 2552: "Apple TV", 453: "Hulu",
+             3186: "HBO Max", 49: "HBO", 3353: "Peacock", 4330: "Paramount+"}
 OVERVIEW_MAX = 420
 PAUSE = 0.06             # TMDB allows about 40 requests a second; we use ~15
 ATTEMPTS = 3
@@ -202,6 +232,90 @@ def us_release(detail):
     return "", ""
 
 
+def us_digital(detail, lo, hi):
+    """(date, note) of the soonest US digital release (type 4) between lo
+    and hi, or ("", ""). TMDB's editors often name the service in the
+    release's note ("Netflix")."""
+    rows = []
+    for country in ((detail.get("release_dates") or {}).get("results") or []):
+        if country.get("iso_3166_1") != "US":
+            continue
+        for r in country.get("release_dates") or []:
+            day = str(r.get("release_date") or "")[:10]
+            if r.get("type") in DIGITAL_TYPES and DAY.match(day) and lo <= day <= hi:
+                rows.append((day, str(r.get("note") or "")))
+    return min(rows) if rows else ("", "")
+
+
+# a service's name as readers know it, from a release note or a JustWatch
+# provider ("HBO Max Amazon Channel" is HBO Max, "Disney Plus" is Disney+);
+# the specific services before Amazon, which also sells the others' channels
+SERVICES = [
+    (r"\bnetflix\b", "Netflix"), (r"\bhulu\b", "Hulu"), (r"\bdisney\s*(\+|plus)", "Disney+"), (r"\bhbo\b|^max\b|\bhbo max\b", "HBO Max"),
+    (r"\bpeacock\b", "Peacock"), (r"\bparamount\s*(\+|plus)", "Paramount+"), (r"\bapple\s*tv\b", "Apple TV"), (r"\bshudder\b", "Shudder"),
+    (r"\bmubi\b", "MUBI"), (r"\bstarz\b", "Starz"), (r"\bcriterion\b", "Criterion Channel"), (r"\btubi\b", "Tubi"),
+    (r"\bamc\s*\+", "AMC+"), (r"\bcrunchyroll\b", "Crunchyroll"), (r"\bkanopy\b", "Kanopy"), (r"\bhoopla\b", "Hoopla"),
+    (r"\bprime\s*video\b|\bamazon\b", "Prime Video"),
+]
+
+
+def service(name):
+    low = str(name or "").lower().strip()
+    for pattern, label in SERVICES:
+        if re.search(pattern, low):
+            return label
+    return ""
+
+
+def where_streams(detail, note, day, today):
+    """Where a film streams: the service its digital release's note names;
+    for a release already out, the first subscription service JustWatch
+    lists for the US (via TMDB's watch providers), else "Rent or buy" when
+    it is only for rent or sale; else "" (the page says "Streaming"). A
+    date still ahead never borrows today's providers: a film on Hulu now
+    may be coming to Netflix."""
+    named = service(note)
+    if named:
+        return named
+    if not day or day > today:
+        return ""
+    us = (((detail.get("watch/providers") or {}).get("results") or {}).get("US")) or {}
+    for row in us.get("flatrate") or []:
+        raw = str((row or {}).get("provider_name") or "")
+        name = service(raw) or trim(re.sub(r"\s+(amazon|apple tv|roku premium)\s+channel$", "", raw, flags=re.I), PROVIDER_MAX)
+        if name:
+            return name
+    if us.get("rent") or us.get("buy"):
+        return "Rent or buy"
+    return ""
+
+
+def network(detail):
+    """The streamer a show is on: the first of its networks we count."""
+    for row in detail.get("networks") or []:
+        if isinstance(row, dict) and row.get("id") in STREAMERS:
+            return trim(str(row.get("name") or STREAMERS[row["id"]]), PROVIDER_MAX)
+    return ""
+
+
+def upcoming_season(detail, lo, hi):
+    """(season number, date) when a season's first episode airs between lo
+    and hi: the newest numbered season's air date, else the next episode
+    when it is an episode one. None otherwise."""
+    seasons = [s for s in detail.get("seasons") or [] if isinstance(s, dict) and isinstance(s.get("season_number"), int)
+               and s["season_number"] > 0 and DAY.match(str(s.get("air_date") or ""))]
+    if seasons:
+        s = max(seasons, key=lambda s: s["season_number"])
+        if lo <= s["air_date"] <= hi:
+            return s["season_number"], s["air_date"]
+    ep = detail.get("next_episode_to_air") or {}
+    day = str(ep.get("air_date") or "")
+    if ep.get("episode_number") == 1 and isinstance(ep.get("season_number"), int) and ep["season_number"] > 0 \
+            and DAY.match(day) and lo <= day <= hi:
+        return ep["season_number"], day
+    return None
+
+
 def film(detail, genres_by_id=None):
     """One film in the file's shape, or None for anything unusable."""
     if not isinstance(detail, dict) or not isinstance(detail.get("id"), int):
@@ -296,7 +410,7 @@ def details(api, ids, cache):
     out = []
     for i in ids:
         if i not in cache:
-            cache[i] = api.get(f"/movie/{i}", language="en-US", append_to_response="videos,release_dates")
+            cache[i] = api.get(f"/movie/{i}", language="en-US", append_to_response="videos,release_dates,watch/providers")
         f = film(cache[i])
         if f:
             f["_raw"] = cache[i]
@@ -345,6 +459,42 @@ def shelf_soon(films, today):
     return out[:SOON_MAX]
 
 
+def shelf_stream(films, today):
+    """Coming to streaming: films with a US digital date in the window and
+    a poster, soonest first, each with where it streams."""
+    lo, hi = today_minus(today, STREAM_BACK), today_minus(today, -STREAM_AHEAD)
+    new = today_minus(today, STREAM_NEW_DAYS)
+    out = []
+    for f in films:
+        day, note = us_digital(f["_raw"], lo, hi)
+        # TMDB also lists old films' new digital dates (a 2015 film reaching
+        # a streamer): only films first out in the last ~18 months count
+        if not day or not f["p"] or (f["d"] and f["d"] < new):
+            continue
+        out.append({**f, "d": day, "where": "streaming", "on": where_streams(f["_raw"], note, day, today)})
+    out.sort(key=lambda f: (f["d"], f["t"]))
+    return out[:STREAM_MAX]
+
+
+def shelf_tv_stream(shows, today):
+    """New shows and seasons on the streamers, soonest first."""
+    lo, hi = today_minus(today, STREAM_BACK), today_minus(today, -STREAM_AHEAD)
+    out = []
+    for f in shows:
+        s = upcoming_season(f["_raw"], lo, hi)
+        on = network(f["_raw"])
+        if not s or not on or not f["p"]:
+            continue
+        out.append({**f, "ns": s[0], "d": s[1], "where": "streaming", "on": on})
+    out.sort(key=lambda f: (f["d"], f["t"]))
+    return out[:TV_STREAM_MAX]
+
+
+def stream_window(today):
+    lo, hi = today_minus(today, STREAM_BACK), today_minus(today, -STREAM_AHEAD)
+    return {"release_date.gte": lo, "release_date.lte": hi}, {"air_date.gte": lo, "air_date.lte": hi}
+
+
 def shelf_now(films):
     return [{**f, "where": "theaters"} for f in films][:NOW_MAX]
 
@@ -357,7 +507,7 @@ def clean(films):
     return [{k: v for k, v in f.items() if k != "_raw"} for f in films]
 
 
-def build_payload(top, soon, now, built, trend=(), tv_top=(), tv_trend=(), tv_air=()):
+def build_payload(top, soon, now, built, trend=(), tv_top=(), tv_trend=(), tv_air=(), stream=(), tv_stream=()):
     return {
         "v": 1,
         "built": built.strftime("%Y-%m-%dT%H:%M:%SZ"),
@@ -371,6 +521,9 @@ def build_payload(top, soon, now, built, trend=(), tv_top=(), tv_trend=(), tv_ai
         "tv_top": clean(tv_top),
         "tv_trend": clean(tv_trend),
         "tv_air": clean(tv_air),
+        "stream_source": "JustWatch",
+        "stream": clean(stream),
+        "tv_stream": clean(tv_stream),
     }
 
 
@@ -394,6 +547,11 @@ def run(args, api=None):
         tv_top = show_details(api, listing(api, "/tv/top_rated", TV_TOP_COUNT // 20)[:TV_TOP_COUNT], cache)
         tv_trend = show_details(api, listing(api, "/trending/tv/week", TV_TREND_PAGES), cache)
         tv_air = shelf_air(show_details(api, listing(api, "/tv/on_the_air", TV_AIR_PAGES), cache), today)
+        mwin, twin = stream_window(today)
+        stream = shelf_stream(details(api, listing(api, "/discover/movie", STREAM_PAGES, region="US", with_release_type="4",
+                                                   sort_by="popularity.desc", **mwin), cache), today)
+        tv_stream = shelf_tv_stream(show_details(api, listing(api, "/discover/tv", TV_STREAM_PAGES, sort_by="popularity.desc",
+                                                              with_networks="|".join(str(i) for i in STREAMERS), **twin), cache), today)
     except urllib.error.HTTPError as e:
         log(f"TMDB said HTTP {e.code}" + (" (is the key right?)" if e.code == 401 else "") + "; keeping the last file")
         return 1
@@ -406,8 +564,9 @@ def run(args, api=None):
     if len(tv_top) < MIN_TV_TOP:
         log(f"only {len(tv_top)} top shows came back; keeping the last file")
         return 1
-    write_json(args.out, build_payload(top, soon, now, utcnow(), trend, tv_top, tv_trend, tv_air))
+    write_json(args.out, build_payload(top, soon, now, utcnow(), trend, tv_top, tv_trend, tv_air, stream, tv_stream))
     log(f"wrote {args.out}: {len(top)} top, {len(trend)} trending, {len(soon)} soon, {len(now)} now, "
+        f"{len(stream)} to streaming, {len(tv_stream)} shows to streaming, "
         f"{len(tv_top)} top shows, {len(tv_trend)} trending shows, {len(tv_air)} airing, "
         f"{sum(1 for f in top if f['yt'])} top trailers, {api.calls} calls")
     return 0
@@ -425,6 +584,7 @@ def fixture_detail(i, title, day, **o):
         "genres": [{"id": 18, "name": "Drama"}],
         "videos": {"results": o.get("videos", [])},
         "release_dates": {"results": o.get("releases", [])},
+        "watch/providers": {"results": o.get("providers", {})},
     }
 
 
@@ -459,12 +619,43 @@ def selftest():
     assert g["y"] is None and g["d"] == "" and g["g"] == ["Crime"] and g["yt"] == "" and g["rt"] is None
     print("build_films: film shape ok (trimmed, paths only, nothing invented)")
 
+    ep = lambda day, s, e: {"air_date": day, "season_number": s, "episode_number": e}
+
     # release labels
     rel = lambda rows: {"release_dates": {"results": [{"iso_3166_1": "US", "release_dates": rows}, {"iso_3166_1": "FR", "release_dates": [{"release_date": "2026-01-01T00:00:00.000Z", "type": 3}]}]}}
     assert us_release(rel([{"release_date": "2026-11-20T00:00:00.000Z", "type": 3}, {"release_date": "2026-12-10T00:00:00.000Z", "type": 4}])) == ("2026-11-20", "theaters")
     assert us_release(rel([{"release_date": "2026-12-10T00:00:00.000Z", "type": 4}])) == ("2026-12-10", "streaming")
     assert us_release({}) == ("", "")
     print("build_films: release labels ok (US only; theaters before streaming)")
+
+    # coming to streaming: the US digital date in the window, and where
+    digi = rel([{"release_date": "2026-10-01T00:00:00.000Z", "type": 4}, {"release_date": "2026-10-30T00:00:00.000Z", "type": 4},
+                {"release_date": "2026-10-25T00:00:00.000Z", "type": 3}])
+    assert us_digital(digi, "2026-10-19", "2026-11-26") == ("2026-10-30", ""), "a theatrical date is not a streaming date"
+    assert us_digital(digi, "2026-10-19", "2026-10-29") == ("", "") and us_digital({}, "2026-01-01", "2026-12-31") == ("", "")
+    assert us_digital(rel([{"release_date": "2026-10-24T00:00:00.000Z", "type": 4, "note": "Netflix"}]), "2026-10-19", "2026-11-26") == ("2026-10-24", "Netflix")
+    names = ("Netflix", "HBO Max Amazon Channel", "Max", "Disney Plus", "Peacock Premium", "Starz Amazon Channel", "Amazon Prime Video", "4K UHD", "", "Maximum Effort")
+    assert [service(x) for x in names] == ["Netflix", "HBO Max", "HBO Max", "Disney+", "Peacock", "Starz", "Prime Video", "", "", ""], [service(x) for x in names]
+    wp = lambda us: {"watch/providers": {"results": {"US": us, "GB": {"flatrate": [{"provider_name": "BBC"}]}}}}
+    assert where_streams(wp({"flatrate": [{"provider_name": "Hulu"}]}), "Netflix", "2026-10-30", "2026-10-22") == "Netflix", "the release's own note wins"
+    assert where_streams(wp({"flatrate": [{"provider_name": "Hulu"}]}), "", "2026-10-30", "2026-10-22") == "", "a date ahead never borrows today's service"
+    assert where_streams(wp({"flatrate": [{"provider_name": "Philo"}, {"provider_name": "Hulu"}], "rent": [{}]}), "", "2026-10-20", "2026-10-22") == "Philo"
+    assert where_streams(wp({"buy": [{"provider_name": "Apple TV"}]}), "Digital", "2026-10-20", "2026-10-22") == "Rent or buy"
+    assert where_streams(wp({}), "", "2026-10-20", "2026-10-22") == "" and where_streams({}, "", "2026-10-20", "2026-10-22") == ""
+    assert network({"networks": [{"id": 1, "name": "ABC"}, {"id": 213, "name": "Netflix"}]}) == "Netflix" and network({"networks": [{"id": 1, "name": "ABC"}]}) == ""
+    up = lambda **o: upcoming_season(o, "2026-10-19", "2026-11-26")
+    assert up(seasons=[{"season_number": 1, "air_date": "2024-01-01"}, {"season_number": 2, "air_date": "2026-11-07"}]) == (2, "2026-11-07")
+    assert up(next_episode_to_air=ep("2026-10-24", 1, 1)) == (1, "2026-10-24"), "a new series"
+    assert up(next_episode_to_air=ep("2026-10-24", 3, 2)) is None, "episode two is not a premiere"
+    assert up(seasons=[{"season_number": 0, "air_date": "2026-10-24"}]) is None, "a special is not a season"
+    assert up(seasons=[{"season_number": 4, "air_date": "2027-03-01"}]) is None, "too far out"
+    st = shelf_stream([{**g, "id": 1, "t": "B", "p": "/b.jpg", "_raw": rel([{"release_date": "2026-10-30T00:00:00.000Z", "type": 4, "note": "HBO Max"}])},
+                       {**g, "id": 2, "t": "A", "p": "", "_raw": digi},
+                       {**g, "id": 3, "t": "C", "p": "/c.jpg", "d": "2026-06-01", "_raw": {**rel([{"release_date": "2026-10-20T00:00:00.000Z", "type": 4}]), **wp({"flatrate": [{"provider_name": "Hulu"}]})}},
+                       {**g, "id": 4, "t": "Old", "p": "/o.jpg", "d": "2015-06-12", "_raw": rel([{"release_date": "2026-10-25T00:00:00.000Z", "type": 4, "note": "Apple TV"}])}], "2026-10-22")
+    assert [(f["id"], f["d"], f["on"], f["where"]) for f in st] == [(3, "2026-10-20", "Hulu", "streaming"), (1, "2026-10-30", "HBO Max", "streaming")], \
+        "soonest first; no poster, no row; three days back still counts; a 2015 film is not new to streaming"
+    print("build_films: coming to streaming ok (digital dates, the service, new seasons on the streamers)")
 
     # a show: the same shape plus seasons; a new season is found from either side
     sh = show({"id": 1399, "name": " Long  Winter ", "first_air_date": "2011-04-17", "episode_run_time": [0, 57],
@@ -473,7 +664,6 @@ def selftest():
     assert sh == {"id": 1399, "t": "Long Winter", "y": 2011, "d": "2011-04-17", "g": ["Drama"], "o": "Snow.", "rt": 57,
                   "p": "/sh.jpg", "yt": "newtrailer1", "sn": 8}, sh
     assert show({"id": 2, "title": "A film, not a show"}) is None and show({"id": "x", "name": "No"}) is None
-    ep = lambda day, s, e: {"air_date": day, "season_number": s, "episode_number": e}
     assert premiere({"last_episode_to_air": ep("2026-10-10", 3, 1)}, "2026-10-16") == (3, "2026-10-10")
     assert premiere({"next_episode_to_air": ep("2026-10-23", 2, 1), "last_episode_to_air": ep("2025-01-01", 1, 8)}, "2026-10-16") == (2, "2026-10-23")
     assert premiere({"last_episode_to_air": ep("2026-10-10", 3, 2)}, "2026-10-16") is None, "episode two is not a premiere"
@@ -499,7 +689,10 @@ def selftest():
         "/tv/top_rated": [[{"id": 500 + i} for i in range(20)], [{"id": 520}]],
         "/trending/tv/week": [[{"id": 501}, {"id": 600}]],
         "/tv/on_the_air": [[{"id": 600}, {"id": 601}]],
+        "/discover/movie": [[{"id": 401}, {"id": 402}, {"id": 403}]],
+        "/discover/tv": [[{"id": 700}, {"id": 701}, {"id": 702}]],
     }
+    soon_day = lambda n: today_minus(utcnow().date().isoformat(), -n)
     asked = []
 
     def opener(url, headers):
@@ -515,9 +708,11 @@ def selftest():
         if m:
             i = int(m.group(1))
             last = {"air_date": today_minus(utcnow().date().isoformat(), 3), "season_number": 2, "episode_number": 1} if i == 601 else {}
+            nxt = {700: ep(soon_day(10), 3, 1), 701: ep(soon_day(10), 2, 1), 702: ep(soon_day(10), 2, 2)}.get(i, {})
+            nets = [{"id": 999, "name": "Local Broadcast"}] if i == 701 else [{"id": 213, "name": "Netflix"}]
             return {"id": i, "name": f"Show {i}", "first_air_date": "2010-01-01", "number_of_seasons": 2,
                     "poster_path": f"/s{i}.jpg", "genres": [{"id": 18, "name": "Drama"}], "last_episode_to_air": last,
-                    "videos": {"results": []}}
+                    "next_episode_to_air": nxt, "networks": nets, "videos": {"results": []}}
         m = re.match(r"^/movie/(\d+)$", path)
         if m:
             i = int(m.group(1))
@@ -528,7 +723,14 @@ def selftest():
                 rows = [{"release_date": "2099-01-02T00:00:00.000Z", "type": 3}]
             if i == 102:
                 rows = [{"release_date": "2099-01-01T00:00:00.000Z", "type": 4}]
-            return fixture_detail(i, f"Film {i}", "2001-05-0" + str(i % 9 + 1), releases=[{"iso_3166_1": "US", "release_dates": rows}],
+            providers = {}
+            first = "2001-05-0" + str(i % 9 + 1)
+            if i in (401, 402, 403):
+                # 401 names its service in the note, 403 is out and only for rent, 402 is too far out
+                first = soon_day(-60)
+                rows = [{"release_date": soon_day({401: 5, 402: 40, 403: -1}[i]) + "T00:00:00.000Z", "type": 4, "note": "Netflix" if i == 401 else ""}]
+                providers = {401: {"US": {"flatrate": [{"provider_name": "Hulu"}]}}, 403: {"US": {"rent": [{"provider_name": "Apple TV"}]}}}.get(i, {})
+            return fixture_detail(i, f"Film {i}", first, releases=[{"iso_3166_1": "US", "release_dates": rows}], providers=providers,
                                   videos=[{"site": "YouTube", "key": f"trailer{i:04d}"[:11].ljust(11, "x"), "type": "Trailer", "official": True}])
         raise AssertionError("unexpected call " + url)
 
@@ -611,7 +813,13 @@ def selftest():
     assert len(whole["tv_top"]) == 21 and set(whole["tv_top"][0]) == {"id", "t", "y", "d", "g", "o", "rt", "p", "yt", "sn"}
     assert [f["id"] for f in whole["tv_trend"]] == [501, 600]
     assert [(f["id"], f.get("ns")) for f in whole["tv_air"]] == [(601, 2), (600, None)], whole["tv_air"]
-    print("build_films: a whole run writes films, trending and the three TV shelves ok")
+    assert [(f["id"], f["on"]) for f in whole["stream"]] == [(403, "Rent or buy"), (401, "Netflix")], whole["stream"]
+    assert set(whole["stream"][0]) == {"id", "t", "y", "d", "g", "o", "rt", "p", "yt", "where", "on"} and whole["stream_source"] == "JustWatch"
+    assert [(f["id"], f["ns"], f["on"]) for f in whole["tv_stream"]] == [(700, 3, "Netflix")], whole["tv_stream"]
+    discover = [u for u, _ in asked if "/discover/" in u]
+    assert any("with_release_type=4" in u and "region=US" in u and "release_date.gte=" in u for u in discover), discover
+    assert any("with_networks=213%7C1024" in u and "air_date.lte=" in u for u in discover), discover
+    print("build_films: a whole run writes films, trending, the three TV shelves and both streaming shelves ok")
 
     # the baked starter list the tab falls back to keeps the same shape
     seed_path = os.path.join(ROOT, "all-day", "data", "films-seed.json")

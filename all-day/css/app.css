@@ -654,6 +654,25 @@ body.chrome-away .mast { transform: translateY(-100%); }
 .wlegend i { width: 10px; height: 10px; border-radius: var(--r-round); border: 2px solid var(--ink-3); }
 .wlegend i.on { background: var(--ink-2); border-color: var(--ink-2); }
 .grid3.wgrid { grid-template-columns: repeat(auto-fill, minmax(104px, 1fr)); gap: var(--s4) var(--s3); padding-bottom: var(--s2); }
+/* Watch's colour buttons (Stephen, 2026-10-22: "colorful buttons … so
+   they're hard to miss"): Movies | TV and the theater picker, each button
+   in its own --tone, tinted while off and filled while on */
+.pills.wt-tint { gap: 8px; padding: 0; background: transparent; }
+.pills.wt-tint button { height: 42px; padding: 0 14px; border: 2px solid var(--tone); font-weight: 700; color: var(--ink);
+  background: color-mix(in srgb, var(--tone) 16%, var(--raised)); }
+.pills.wt-tint button:hover { background: color-mix(in srgb, var(--tone) 28%, var(--raised)); }
+.pills.wt-tint button.on { background: var(--tone); color: var(--tone-ink); box-shadow: var(--shadow-pill); }
+.pills.wt-kind button { height: 46px; font-size: var(--fs-title); }
+.pills.wt-theaters { gap: 6px; }
+.pills.wt-theaters button { flex: 1 1 0; min-width: 0; padding: 0 6px; }
+@media (max-width: 420px) { .pills.wt-theaters button { font-size: var(--fs-meta); } }
+.wjw { padding-top: 6px; font-size: var(--fs-small); color: var(--ink-3); }
+.wjw a { color: inherit; text-decoration: underline; text-underline-offset: 3px; }
+/* Upcoming | Past, poured at the top like Build | Habits (the liquid's
+   transparent rule further down wins once the water is poured) */
+.secbar .oa-sidesrow .wt-sideswitch { grid-template-columns: repeat(2, minmax(0, 1fr)); flex-basis: 300px; }
+.mast .oa-sideswitch button[data-side="up"].on { background: var(--liq-watch); color: var(--liq-watch-ink); }
+.mast .oa-sideswitch button[data-side="past"].on { background: var(--liq-pods); color: var(--liq-pods-ink); }
 /* an opened list (Watch's Back then, People's own mixers) and its Collapse
    bar: the one sticky thing in a tab, and only while that list is on screen.
    It rides just above the tab bar and the player and rests at the list's
