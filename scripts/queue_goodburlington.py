@@ -18,10 +18,12 @@ rejected it (logged with a reason in data/goodburlington-curated.json so
 his taste audits stay possible). Without OPENROUTER_API_KEY the last good
 queue is left untouched — nothing unjudged is ever queued.
 
-Reddit's own listings come through scripts/reddit_client.py's read-only
-OAuth route once REDDIT_CLIENT_ID/SECRET are set (an app-only token: it
-never signs in as Stephen and cannot post). Without the keys, Reddit is
-skipped (its logged-out .json 403s since May 2026).
+Reddit's own listings come through scripts/reddit_client.py's listing
+routes: read-only OAuth once REDDIT_CLIENT_ID/SECRET are set (an app-only
+token: it never signs in as Stephen and cannot post), the logged-out
+shreddit page, or the copy Stephen's Mac pushed to the reddit-data branch.
+None of them carries a post body, so Inoreader's copy fills that in while
+it lasts (Nov 13).
 
 "Already on r/GoodBurlington" has to work without Reddit: since Sept 2026
 Reddit 403s every listing from Actions, so the check reads the sub's
@@ -76,7 +78,7 @@ def fetch(url, accept):
 
 
 # ----------------------------------------------------------------------
-# Candidates — Reddit's OAuth listing when keys exist, plus Inoreader RSS
+# Candidates — Reddit's own listing (OAuth, shreddit or the Mac mirror), plus Inoreader RSS
 # ----------------------------------------------------------------------
 
 def listing_data(raw):
@@ -124,9 +126,9 @@ def parse_inoreader(raw, sub):
 def load_candidates(client=None):
     merged = {}
     client = client or reddit_client.Client()
-    for sub in SOURCE_SUBS if client.oauth else ():
+    for sub in SOURCE_SUBS:
         try:
-            for post in parse_listing(client.oauth_json(f"r/{sub}/hot", limit=40), sub):
+            for post in parse_listing(client.listing(f"r/{sub}/hot", limit=40)[1], sub):
                 merged.setdefault(post["id"], post)
         except reddit_client.RedditError as exc:
             print(f"reddit {sub} failed: {exc}", file=sys.stderr)
@@ -134,7 +136,9 @@ def load_candidates(client=None):
         try:
             raw = fetch(url, "application/rss+xml, application/xml")
             for post in parse_inoreader(raw, sub):
-                merged.setdefault(post["id"], post)
+                held = merged.setdefault(post["id"], post)
+                if not held.get("body"):   # listings carry no body; the judge reads it
+                    held["body"] = post["body"]
         except Exception as exc:
             print(f"inoreader {sub} failed: {exc}", file=sys.stderr)
     return list(merged.values())
@@ -181,13 +185,12 @@ def target_taken(client=None):
     data/reddit.json so a dead feed never empties the check."""
     ids, titles = set(), set()
     client = client or reddit_client.Client()
-    if client.oauth:
-        try:
-            got_ids, got_titles = parse_target_listing(client.oauth_json(f"r/{TARGET_SUB}/new", limit=100))
-            ids |= got_ids
-            titles |= got_titles
-        except reddit_client.RedditError as exc:
-            print(f"reddit {TARGET_SUB} failed: {exc}", file=sys.stderr)
+    try:
+        got_ids, got_titles = parse_target_listing(client.listing(f"r/{TARGET_SUB}/new", limit=100)[1])
+        ids |= got_ids
+        titles |= got_titles
+    except reddit_client.RedditError as exc:
+        print(f"reddit {TARGET_SUB} failed: {exc}", file=sys.stderr)
     try:
         got_ids, got_titles = parse_target_inoreader(fetch(TARGET_INOREADER, "application/rss+xml, application/xml"))
         ids |= got_ids

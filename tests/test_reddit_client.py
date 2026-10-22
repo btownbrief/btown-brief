@@ -192,7 +192,8 @@ class RateLimitTests(Offline):
         fake = FakeReddit(script={"rss": [http_error("x", 429, {"Retry-After": "2"})] * 2})
         with self.assertRaises(rc.RateLimited):
             self.client(env={}, fetch=fake).read("r/vermont/new")
-        self.assertEqual(len(fake.calls), 2)
+        self.assertEqual(len([u for u in fake.urls() if ".rss" in u]), 2)
+        self.assertFalse([u for u in fake.urls() if "/svc/shreddit/" in u])  # a 429 stops www.reddit.com
 
     def test_spent_window_is_waited_out_before_the_next_call(self):
         spent = (ATOM, {"x-ratelimit-remaining": "0.0", "x-ratelimit-reset": "28"})

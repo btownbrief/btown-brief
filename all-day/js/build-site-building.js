@@ -51,6 +51,8 @@
                                       parts: clear, stake, string, dig, rebar, form, pour, strip, backfill, column, post, beam,
                                         deck, stud, wire, clad, brick, storefront, glaze, canopy, solar, tree, planter
                                       needs: stakes, shovel, rebar, formwork, beam, panel, bricks, spool, pane, null
+       needs() -> [{ key, label }]    the jobs your builder can line up (SITE_JOBS keys), in the order the
+                                      building needs them, 'haul' last ('Frame the 3rd floor', 'Haul materials')
        claim(id, who) -> bool         up to job.crew people may claim one job
        release(id, who?)              a released half-done piece stays drawn, faded, and resumes where it was
        work(id, amount 0..1)          partial progress you can see (a course half laid, a post rising,
@@ -73,7 +75,7 @@
      emits K.emit('milestone', { kind: 'pour'|'floor'|'topped', floor, x, y }) when the town crosses one,
      and K.emit('piece', { id, part, x, y }) when a piece is completed on this phone. */
 
-import { GROUND_Y, BUILDING, BAYS, EMIT, floorBottom, clamp, hash, mix, rgba, ease, hexRgb, rgbHex } from './build-site-shared.js';
+import { GROUND_Y, BUILDING, BAYS, EMIT, JOB_OF_PART, jobLabel, floorBottom, clamp, hash, mix, rgba, ease, hexRgb, rgbHex } from './build-site-shared.js';
 
 const NB = BAYS.length;
 const GY = GROUND_Y, X0 = BUILDING.x0, X1 = BUILDING.x1, MIDX = (X0 + X1) / 2;
@@ -372,6 +374,18 @@ export function createBuilding(K) {
     if (s.key === 'top' && s.list.every((p) => s.done.has(p.id))) {
       for (const p of upkeep()) { const c = claims.get(p.id); if (upOpen(p) && !(c && c.size >= p.crew)) out.push(view(p, 1)); }
     }
+    return out;
+  }
+  /* the jobs your builder can line up (SITE_JOBS keys), in the order the
+     building needs them: every trade with a piece still to do on this stage,
+     then haul (always). Topped out and finished: keeping the place nice. */
+  function needs() {
+    const s = st(), out = [], seen = new Set();
+    const floor = s.key === 'top' ? 'roof' : fl(s.key);
+    const add = (k) => { if (k && !seen.has(k)) { seen.add(k); out.push({ key: k, label: jobLabel(k, floor) }); } };
+    for (const p of s.list) if (!s.done.has(p.id)) add(JOB_OF_PART[p.part]);
+    if (s.key === 'top' && !out.length) add('upkeep');
+    add('haul');
     return out;
   }
   function claim(id, who) {
@@ -1373,7 +1387,7 @@ export function createBuilding(K) {
   function ladder() { const s = st(); return { x: LADDER_X, top: s.scaffold ? floorBottom(s.work) : GY + 4 }; }
 
   return {
-    setTown, stage, jobs, claim, release, work, complete, draw, collect, topY, levelY, ladder,
+    setTown, stage, jobs, needs, claim, release, work, complete, draw, collect, topY, levelY, ladder,
     cutaway(on, m) { const c = !!on, mm = Math.round(+m || 0); if (c !== cut || (c && mm !== yourMin)) { cut = c; yourMin = mm; ver++; vBase++; } },
     step(dt) { t += dt; if (!beamUp && toppedAt != null && t - toppedAt > 25) { beamUp = true; vBase++; } },
     hoist() { const s = st(); return s.scaffold ? { x: HOIST_X + 2.9, y: floorBottom(s.work) } : null; },

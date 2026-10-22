@@ -15,13 +15,21 @@ Routes. Each one is optional, bounded, and fails on its own:
   rss        Reddit's own /new/.rss Atom feed. Answers home IPs, usually 403s
              datacenter IPs (so expect "error" from Actions). Ends Nov 13.
   oauth      Reddit's Data API with an app-only token. Runs only when
-             REDDIT_CLIENT_ID and REDDIT_CLIENT_SECRET are set. The only route
-             with scores, comment counts and flair. Ends March 2027 unless
-             Reddit says otherwise.
+             REDDIT_CLIENT_ID and REDDIT_CLIENT_SECRET are set. Ends March
+             2027 unless Reddit says otherwise.
+  shreddit   The logged-out reddit.com page fragment (reddit_client.py).
+             Exact times, scores, comment counts and flair, one page (~24
+             posts) per sub. Answers Stephen's Mac, which runs this every 30
+             minutes (scripts/reddit_mac_runner.sh); expect 403 from Actions.
+
+Subs: r/burlington and r/vermont by default, read newest-first. The Mac
+runner adds the national subs the Pulse's "Unfiltered" wire used to get from
+Inoreader (NATIONAL_SUBS, read by "hot", Reddit's default feed order); RSS and
+Inoreader only ever cover the two local subs.
 
 Output (default data/reddit-intake.json), schema v1:
 
-  {"v": 1, "generated": ISO, "subs": [...], "window_days": 10,
+  {"v": 1, "generated": ISO, "by": "mac|actions|local", "subs": [...], "window_days": 10,
    "state": {"paused": bool, "since": ISO|null, "newest_first_seen": ISO|null,
              "pause_after_hours": 36, "routes_live": [...], "reason": str},
    "routes": {route: {sub: {"status": "ok|empty|error|skipped",
@@ -42,6 +50,7 @@ CLI:
   python3 scripts/reddit_intake.py --store PREV --out NEW
   python3 scripts/reddit_intake.py --fixtures DIR --dry-run
   python3 scripts/reddit_intake.py --routes inoreader,rss
+  python3 scripts/reddit_intake.py --routes shreddit --subs r/burlington,r/news
 """
 
 import argparse
@@ -65,7 +74,13 @@ ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
 OUT = os.path.join(ROOT, "data", "reddit-intake.json")
 
 SUBS = ("r/burlington", "r/vermont")
-ROUTES = ("inoreader", "rss", "oauth")
+LOCAL_SUBS = SUBS
+# The Pulse's national subreddit sources (its Inoreader "Unfiltered" roster,
+# 2026-10-22). Inoreader's copies stop with Reddit RSS on Nov 13; the Pulse
+# feeds any roster subreddit from this intake (refresh_pulse.intake_items).
+NATIONAL_SUBS = ("r/news", "r/worldnews", "r/technology", "r/science",
+                 "r/artificial", "r/Jokes", "r/nba")
+ROUTES = ("inoreader", "rss", "oauth", "shreddit")
 # Same public tag streams refresh_chatter.py and refresh_pulse.py read.
 INOREADER = {
     "r/burlington": "https://www.inoreader.com/stream/user/1003590800/tag/Reddit%20%28r%2Fburlington%29?n=100",
@@ -201,6 +216,12 @@ def write_json(path, value):
 # Parsers: one per route, all returning the same normalized post shape
 # ----------------------------------------------------------------------
 
+def sub_sort(sub):
+    """Local subs newest-first; national ones by Reddit's default "hot",
+    which is what the Inoreader copies of them carried."""
+    return "new" if sub.lower() in {s.lower() for s in LOCAL_SUBS} else "hot"
+
+
 def blank_post(pid, sub, title, url, created, exact):
     return {"id": pid, "sub": sub, "title": title, "url": url, "created": created,
             "created_exact": exact, "kind": "self", "out": None, "score": None,
@@ -240,8 +261,10 @@ def parse_atom(raw, sub):
 
 
 def parse_listing(data, sub):
-    """OAuth /new listing → (posts, removed_ids)."""
+    """OAuth or shreddit listing → (posts, removed_ids)."""
     posts, removed = [], set()
+    for pid in ((data or {}).get("data") or {}).get("removed_ids") or ():
+        removed.add(str(pid).lower())  # shreddit already dropped these rows
     for child in ((data or {}).get("data") or {}).get("children", []):
         row = child.get("data") or {}
         pid = str(row.get("id") or "").lower()
@@ -302,6 +325,9 @@ def fixture_fetch(directory):
                     name = f"rss-{short.lower()}.xml"
                 elif url == OAUTH_URL.format(short=short):
                     name = f"oauth-{short.lower()}.json"
+            for sub in SUBS + NATIONAL_SUBS:
+                if url == reddit_client.shreddit_url(f"{sub}/{sub_sort(sub)}"):
+                    name = f"shreddit-{sub[2:].lower()}-{sub_sort(sub)}.html"
         if not name:
             raise RuntimeError(f"fixture fetch refused unknown URL {url}")
         path = os.path.join(directory, name)
@@ -312,12 +338,18 @@ def fixture_fetch(directory):
     return fetch
 
 
-def collect(fetch=http_fetch, env=None, subs=SUBS, routes=ROUTES, sleep=time.sleep):
+def collect(fetch=http_fetch, env=None, subs=SUBS, routes=ROUTES, sleep=time.sleep,
+            client=None, shreddit_listings=None):
     """Ask every route about every sub. Returns
-    {route: {sub: {"status", "posts", "removed", "error"}}}."""
+    {route: {sub: {"status", "posts", "removed", "error"}}}.
+
+    shreddit_listings: {sub: listing dict} the caller already fetched this
+    run (the Mac runner shares one polite fetch between the intake and the
+    listings mirror). A sub missing from it is "skipped" (not due this run)."""
     env = os.environ if env is None else env
     results = {route: {} for route in routes}
-    client = reddit_client.Client(env=env, fetch=fetch, sleep=sleep)
+    client = client or reddit_client.Client(env=env, fetch=fetch, sleep=sleep)
+    local = {s.lower() for s in LOCAL_SUBS}
 
     def record(route, sub, posts=None, error=None, skipped=None, removed=None):
         if skipped:
@@ -331,6 +363,8 @@ def collect(fetch=http_fetch, env=None, subs=SUBS, routes=ROUTES, sleep=time.sle
 
     if "inoreader" in routes:
         for sub in subs:
+            if sub not in INOREADER:
+                continue
             try:
                 raw = fetch(INOREADER[sub], {"User-Agent": SITE_UA,
                                              "Accept": "application/rss+xml, application/xml"})
@@ -340,6 +374,8 @@ def collect(fetch=http_fetch, env=None, subs=SUBS, routes=ROUTES, sleep=time.sle
 
     if "rss" in routes:
         for sub in subs:
+            if sub.lower() not in local:
+                continue  # RSS ends Nov 13; it only ever covered the local subs
             try:  # the client waits out Reddit's rate-limit window between subs
                 raw = client.rss(f"{sub}/new", limit=100)
                 record("rss", sub, parse_atom(raw, sub))
@@ -360,10 +396,25 @@ def collect(fetch=http_fetch, env=None, subs=SUBS, routes=ROUTES, sleep=time.sle
                 record("oauth", sub, skipped="REDDIT_CLIENT_ID/SECRET not set")
                 continue
             try:
-                posts, removed = parse_listing(client.oauth_json(f"{sub}/new", limit=100), sub)
+                posts, removed = parse_listing(client.oauth_json(f"{sub}/{sub_sort(sub)}", limit=100), sub)
                 record("oauth", sub, posts, removed=removed)
             except Exception as exc:  # noqa: BLE001
                 record("oauth", sub, error=short_error(exc))
+
+    if "shreddit" in routes:
+        for sub in subs:
+            try:
+                if shreddit_listings is not None:
+                    data = shreddit_listings.get(sub)
+                    if data is None:
+                        record("shreddit", sub, skipped="not due this run")
+                        continue
+                else:
+                    data = client.shreddit_json(f"{sub}/{sub_sort(sub)}")
+                posts, removed = parse_listing(data, sub)
+                record("shreddit", sub, posts, removed=removed)
+            except Exception as exc:  # noqa: BLE001
+                record("shreddit", sub, error=short_error(exc))
     return results
 
 
@@ -391,7 +442,8 @@ def load_store(previous):
     return posts, removed, runs
 
 
-ROUTE_RANK = {"oauth": 3, "rss": 2, "inoreader": 1}
+ROUTE_RANK = {"oauth": 4, "shreddit": 3, "rss": 2, "inoreader": 1}
+COUNTED_ROUTES = ("oauth", "shreddit")  # the routes that know scores and flair
 
 
 def upsert(store, post, route, now):
@@ -421,7 +473,7 @@ def upsert(store, post, route, now):
     if post.get("out") and not held.get("out"):
         held["out"] = post["out"]
     held["kind"] = "link" if held.get("out") else "self"
-    if route == "oauth":  # the only route that knows these; newest wins
+    if route in COUNTED_ROUTES:  # the only routes that know these; newest wins
         for key in ("score", "comments", "flair", "nsfw"):
             held[key] = post.get(key)
     return first_for_route
@@ -443,8 +495,9 @@ def merge(store, removed, results, now):
                     continue
                 returned.add(post["id"])
                 new += upsert(store, post, route, now)
-            if route == "oauth" and result["status"] == "ok":
-                # Reddit's own listing is the authority on what still exists:
+            if route == "oauth" and result["status"] == "ok" and sub_sort(sub) == "new":
+                # Reddit's own /new listing is the authority on what still exists
+                # (a "hot" listing is not a time span, so it never removes):
                 # a stored post inside the span it just returned, but missing
                 # from it, was removed or deleted, and leaves on this refresh.
                 # A stickied post can be months old, so it never sets the span.
@@ -501,7 +554,7 @@ def intake_state(store, receipt, now, last_delivery=None):
             "routes_live": live, "reason": reason}
 
 
-def serialize(store, removed, runs, receipt, subs, now, last_delivery=None):
+def serialize(store, removed, runs, receipt, subs, now, last_delivery=None, by=None):
     def out(held):
         row = {key: held.get(key) for key in ("id", "sub", "title", "url", "created_exact", "kind",
                                                "out", "score", "comments", "flair", "nsfw")}
@@ -513,21 +566,30 @@ def serialize(store, removed, runs, receipt, subs, now, last_delivery=None):
         return row
 
     posts = sorted(store.values(), key=lambda p: p.get("created") or p["first_seen"], reverse=True)
-    return {"v": 1, "generated": iso(now), "subs": list(subs), "window_days": WINDOW_DAYS,
+    return {"v": 1, "generated": iso(now), "by": by or default_by(), "subs": list(subs),
+            "window_days": WINDOW_DAYS,
             "state": intake_state(store, receipt, now, last_delivery), "routes": receipt, "runs": runs,
             "removed": {pid: iso(ts) for pid, ts in sorted(removed.items())},
             "posts": [out(p) for p in posts]}
 
 
-def refresh(previous, fetch=http_fetch, env=None, subs=SUBS, routes=ROUTES, now=None, sleep=time.sleep):
-    """previous payload (or {}) → new payload. Pure apart from fetch()."""
+def default_by():
+    return "actions" if os.environ.get("GITHUB_ACTIONS") == "true" else "local"
+
+
+def refresh(previous, fetch=http_fetch, env=None, subs=SUBS, routes=ROUTES, now=None, sleep=time.sleep,
+            client=None, shreddit_listings=None, by=None):
+    """previous payload (or {}) → new payload. Pure apart from fetch().
+    Never empties the store on a failed run: every post already held stays
+    until it ages out of the window or Reddit shows it as removed."""
     now = now or utcnow()
     store, removed, runs = load_store(previous or {})
     last_delivery = parse_iso(((previous or {}).get("state") or {}).get("newest_first_seen"))
-    receipt = merge(store, removed, collect(fetch, env, subs, routes, sleep), now)
+    results = collect(fetch, env, subs, routes, sleep, client=client, shreddit_listings=shreddit_listings)
+    receipt = merge(store, removed, results, now)
     runs.append({"ts": iso(now), "routes": receipt})
     runs = prune(store, removed, runs, now)
-    return serialize(store, removed, runs, receipt, subs, now, last_delivery)
+    return serialize(store, removed, runs, receipt, subs, now, last_delivery, by=by)
 
 
 def summary(payload):
@@ -552,6 +614,9 @@ def main(argv=None):
     parser.add_argument("--out", default=OUT)
     parser.add_argument("--routes", default=",".join(ROUTES),
                         help="comma list from: " + ", ".join(ROUTES))
+    parser.add_argument("--subs", default=",".join(SUBS),
+                        help="comma list of subreddits (default: the two local subs)")
+    parser.add_argument("--by", choices=("mac", "actions", "local"), help="who ran this (default: detected)")
     parser.add_argument("--fixtures", metavar="DIR", help="answer every fetch from DIR (no network)")
     parser.add_argument("--dry-run", action="store_true", help="print instead of writing")
     args = parser.parse_args(argv)
@@ -561,7 +626,11 @@ def main(argv=None):
         parser.error("unknown route(s): " + ", ".join(unknown))
     fetch = fixture_fetch(args.fixtures) if args.fixtures else http_fetch
     previous = load_json(args.store or args.out, {})
-    payload = refresh(previous, fetch=fetch, routes=routes,
+    subs = tuple(s for s in (x.strip() for x in args.subs.split(",")) if s)
+    bad = [s for s in subs if not reddit_client.split_listing_path(f"{s}/new")]
+    if bad:
+        parser.error("not a subreddit: " + ", ".join(bad))
+    payload = refresh(previous, fetch=fetch, routes=routes, subs=subs, by=args.by,
                       sleep=(lambda _s: None) if args.fixtures else time.sleep)
     if args.dry_run:
         print(json.dumps(payload, indent=1, ensure_ascii=False))
