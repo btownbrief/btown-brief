@@ -5747,20 +5747,19 @@ async function theWatch(browser, base) {
     const { ctx, page, errors, supabase } = await newPage(browser, base, { films });
     await page.route(/youtube-nocookie\.com|youtube\.com\/embed/, (r) => r.fulfill({ status: 200, body: '<!doctype html><title>YouTube</title>', contentType: 'text/html' }));
     await page.goto(base + '/all-day/#watch');
-    await page.waitForSelector(wPanel + ' [data-grid]', { timeout: 15000 });
-    check(!(await page.$(wPanel + ' [data-sec="list"][data-seed]')) && /12 of 12 to go/.test(await page.$eval(wPanel + ' [data-sec="list"]', (s) => s.innerText)),
-      'films.json is the list, and its subtitle is only the count to go', await page.$eval(wPanel + ' [data-sec="list"]', (s) => s.innerText));
-    check(JSON.stringify(await wTiles(page)) === JSON.stringify(films.top.map((f) => 'f' + f.id)), 'every film in its TMDB order', '');
-    const toc = await page.$$eval('#subnav .chip', (c) => c.map((x) => x.textContent));
-    check(JSON.stringify(toc) === JSON.stringify(['Theaters', 'Coming soon', 'The list', 'Town', 'Next screening', 'Chat']), 'the chip row is the table of contents, today’s showtimes first', toc.join(' / '));
+    await page.waitForSelector(wPanel + ' [data-sec="soon"]', { timeout: 15000 });
+    /* Upcoming | Past (Stephen, 2026-10-22): a fresh visit opens on Upcoming */
+    const sides = await page.$$eval('#subnav [data-sides] button', (b) => b.map((x) => [x.dataset.side, x.textContent, x.getAttribute('aria-pressed'), x.classList.contains('on')]));
+    check(JSON.stringify(sides) === '[["up","Upcoming","true",true],["past","Past","false",false]]', 'Upcoming | Past floats at the top, on Upcoming', JSON.stringify(sides));
+    const toc = await page.$$eval('#subnav .secpill .chip', (c) => c.map((x) => x.textContent));
+    check(JSON.stringify(toc) === JSON.stringify(['Theaters', 'Coming soon', 'Next screening', 'Chat']), 'Upcoming’s chip row, today’s showtimes first; no Streaming when nothing is coming to streaming', toc.join(' / '));
+    check(!(await page.$(wPanel + ' [data-grid]')) && !(await page.$(wPanel + ' [data-sec="town"]')) && !(await page.$(wPanel + ' [data-sec="stream"]')), 'the list and the town’s ratings wait on Past', '');
     check(!(await page.$(wPanel + ' [data-kind]')), 'a films.json with no shows has no Movies / TV switch', '');
     const soon = await page.$$eval(wPanel + ' [data-sec="soon"] + .railmode + .rail-wrap .poster', (n) => n.map((a) => [a.dataset.k, a.querySelector('.s').textContent, !!a.querySelector('.play')]));
     check(soon.length === 5 && soon[0][1] === 'In theaters now' && soon[1][1] === 'Back in theaters' && /· theaters$/.test(soon[2][1]) && /· streaming$/.test(soon[3][1]), 'Coming soon: in theaters now (a 1966 re-release is back in theaters), then what opens, labelled theaters or streaming', JSON.stringify(soon));
     check(JSON.stringify(soon.map((x) => x[2])) === '[true,false,true,true,false]', 'a play disc only where TMDB has a trailer', JSON.stringify(soon));
     const pics = await page.$$eval(wPanel + ' .poster img.pic', (n) => n.slice(0, 3).map((i) => [i.getAttribute('src'), i.loading]));
     check(pics.length && pics.every(([src, lazy]) => /^https:\/\/image\.tmdb\.org\/t\/p\/w342\/[A-Za-z0-9]+\.jpg$/.test(src) && lazy === 'lazy'), 'posters are TMDB paths at w342, loaded lazily', JSON.stringify(pics));
-    const box = await page.$eval(wPanel + ' [data-grid] .poster .c-media', (m) => { const r = m.getBoundingClientRect(); return Math.round(r.height / r.width * 100) / 100; });
-    check(box === 1.5, 'a poster reserves its 2:3 box', box);
     const credit = await page.$eval(wPanel + ' [data-credit]', (c) => ({ text: c.innerText, logo: c.querySelector('img') && c.querySelector('img').getAttribute('src'), href: c.querySelector('a').href }));
     check(!credit.text.trim() && credit.logo === '../assets/img/tmdb.svg' && credit.href === 'https://www.themoviedb.org/', 'TMDB’s logo mark is on the tab, and only the mark', JSON.stringify(credit));
     const about = await settingsText(page);
@@ -5787,6 +5786,19 @@ async function theWatch(browser, base) {
     await page.waitForSelector('.sheet-body', { timeout: 4000 });
     check(await page.$eval('#vbox', (b) => b.hidden) && /No trailer yet\./.test(await page.$eval('.sheet-body', (b) => b.innerText)), 'a film with no trailer opens its sheet instead, and says so', '');
     await page.click('.sheet-head .iconbtn');
+    /* Past: what is already out, the list among it */
+    await page.click('#subnav [data-side="past"]');
+    await page.waitForSelector(wPanel + ' [data-grid]', { timeout: 6000 });
+    const past = await page.evaluate(() => ({ on: [...document.querySelectorAll('#subnav [data-sides] button')].map((b) => b.getAttribute('aria-pressed')),
+      toc: [...document.querySelectorAll('#subnav .secpill .chip')].map((c) => c.textContent), soon: !!document.querySelector('#panel-watch [data-sec="soon"], #panel-watch [data-sec="theaters"]'),
+      top: document.querySelector('#panel-watch').scrollTop }));
+    check(JSON.stringify(past.on) === '["false","true"]' && JSON.stringify(past.toc) === '["Town","The list","Chat"]' && !past.soon && past.top === 0,
+      'Past: the town and the list (no time machine yet), from the top, and nothing coming', JSON.stringify(past));
+    check(!(await page.$(wPanel + ' [data-sec="list"][data-seed]')) && /12 of 12 to go/.test(await page.$eval(wPanel + ' [data-sec="list"]', (s) => s.innerText)),
+      'films.json is the list, and its subtitle is only the count to go', await page.$eval(wPanel + ' [data-sec="list"]', (s) => s.innerText));
+    check(JSON.stringify(await wTiles(page)) === JSON.stringify(films.top.map((f) => 'f' + f.id)), 'every film in its TMDB order', '');
+    const box = await page.$eval(wPanel + ' [data-grid] .poster .c-media', (m) => { const r = m.getBoundingClientRect(); return Math.round(r.height / r.width * 100) / 100; });
+    check(box === 1.5, 'a poster reserves its 2:3 box', box);
     /* the film sheet's trailer button: the same box */
     await page.click(wPanel + ' [data-k="f' + films.top[1].id + '"]');
     await page.waitForSelector('.sheet-body [data-trailer]');
@@ -5824,12 +5836,14 @@ async function theWatch(browser, base) {
   await group('Watch, the starter list, two dots and a reload (live, signed out)', async () => {
     const { ctx, page, errors, supabase } = await newPage(browser, base);
     await page.goto(base + '/all-day/#watch');
+    await page.waitForSelector(wPanel + ' [data-sec="theaters"]', { timeout: 15000 });
+    check(!(await page.$(wPanel + ' [data-sec="soon"]')) && !(await page.$(wPanel + ' [data-sec="stream"]')), 'with no films.json there is no Coming soon or Coming to streaming (the seed has neither)', '');
+    const toc = await page.$$eval('#subnav .secpill .chip', (c) => c.map((x) => x.textContent));
+    check(JSON.stringify(toc) === JSON.stringify(['Theaters', 'Next screening', 'Chat']), 'and the table of contents leaves them out', toc.join(' / '));
+    await page.goto(base + '/all-day/#watch/past');
     await page.waitForSelector(wPanel + ' [data-grid]', { timeout: 15000 });
     const head = await page.$eval(wPanel + ' [data-sec="list"]', (s) => ({ seed: s.dataset.seed, text: s.innerText }));
-    check(head.seed === '1' && /60 of 60 to go/.test(head.text), 'the seed list is marked as the seed, and counts what is left', head.text);
-    check(!(await page.$(wPanel + ' [data-sec="soon"]')), 'with no films.json there is no Coming soon (the seed has none)', '');
-    const toc = await page.$$eval('#subnav .chip', (c) => c.map((x) => x.textContent));
-    check(JSON.stringify(toc) === JSON.stringify(['Theaters', 'The list', 'Town', 'Next screening', 'Chat']), 'and the table of contents leaves it out', toc.join(' / '));
+    check(head.seed === '1' && /60 of 60 to go/.test(head.text), '#watch/past: the seed list is marked as the seed, and counts what is left', head.text);
     check((await wTiles(page)).length === 60, 'all sixty films', '');
     const dots = () => page.$$eval(wPanel + ' [data-grid] .poster', (n) => n.map((a) => [a.dataset.k, [...a.querySelectorAll('.seen i')].map((i) => (i.classList.contains('on') ? 1 : 0)).join('')]));
     check((await dots()).every((d) => d[1] === '0'), 'alone: one dot on every poster, none filled', JSON.stringify((await dots()).slice(0, 3)));
@@ -5921,7 +5935,7 @@ async function theWatch(browser, base) {
     const { ctx, page, errors } = await newPage(browser, base, { rpc });
     await page.goto(base + '/all-day/?x=1');
     await page.evaluate(([s, c]) => { localStorage.setItem('allday-auth', s); localStorage.setItem('allday-watch', JSON.stringify({ mode: 'me', seen: { [c]: [1, 0] } })); }, [SESSION(), C]);
-    await page.goto(base + '/all-day/#watch');
+    await page.goto(base + '/all-day/#watch/past');
     await page.waitForSelector(wPanel + ' [data-grid]', { timeout: 15000 });
     await page.waitForFunction((c) => { const w = JSON.parse(localStorage.getItem('allday-watch') || '{}'); return w.syncedFor && !Object.keys(w.dirty || {}).length; }, C, { timeout: 6000 }).catch(() => {});
     const local = () => page.evaluate(() => JSON.parse(localStorage.getItem('allday-watch') || '{}'));
@@ -5958,7 +5972,7 @@ async function theWatch(browser, base) {
 
   await group('Watch, a missing films branch falls back to the starter list (live)', async () => {
     const { ctx, page, errors } = await newPage(browser, base, { films: null });
-    await page.goto(base + '/all-day/#watch');
+    await page.goto(base + '/all-day/#watch/past');
     await page.waitForSelector(wPanel + ' [data-grid]', { timeout: 15000 });
     check(await page.$(wPanel + ' [data-sec="list"][data-seed]') !== null && (await wTiles(page)).length === 60, 'a 404 from films-data: the starter list, labelled', '');
     check(errors.every((e) => /404/.test(e)), 'and nothing but the 404 itself in the console', errors.join(' | '));
@@ -5969,7 +5983,7 @@ async function theWatch(browser, base) {
     const d = await watchDemo();
     const ratings = watchRatings(d);
     const { ctx, page, errors } = await newPage(browser, base);
-    await page.goto(base + '/all-day/?demo=1#watch');
+    await page.goto(base + '/all-day/?demo=1#watch/past');
     await page.waitForSelector(wPanel + ' [data-grid] .rate', { timeout: 15000 });
     check(JSON.stringify(await wTiles(page)) === JSON.stringify(d.films.top.map((f) => 'f' + f.id)), 'all sixty, in list order', '');
     const today = wDayNum(wToday());
@@ -6021,6 +6035,8 @@ async function theWatch(browser, base) {
     check(await page.$eval(wPanel + ' [data-sort] [data-chip="town"]', (c) => c.getAttribute('aria-pressed')) === 'true', 'and the Town favorites chip is the one on', '');
     await page.click(wPanel + ' [data-sort] [data-chip="top"]');
     check(JSON.stringify(await wTiles(page)) === JSON.stringify(d.films.top.map((f) => 'f' + f.id)), 'Top rated puts it back', '');
+    await page.click('#subnav [data-side="up"]');
+    await page.waitForSelector(wPanel + ' [data-sec="soon"]', { timeout: 4000 });
     const soon = await page.$$eval(wPanel + ' [data-sec="soon"] + .railmode + .rail-wrap .poster', (n) => n.length);
     check(soon === d.films.soon.length + d.films.now.length && soon === 10, 'Coming soon: ten trailers', soon);
     check(!errors.length, 'no console errors', errors.join(' | '));
@@ -6040,6 +6056,9 @@ async function theWatch(browser, base) {
     check(rows.some((r) => r[0] === 'town:' + (TV_BASE + 7003) && /^Cold Case Vermont/.test(r[2])), 'a show the town rated is among them', JSON.stringify(rows));
     check(!rows.some((r) => /Causeway|Kindling/.test(r[2])), 'Causeway and Kindling, two ratings each this week, are left out', '');
     check(rows.every((r, i) => i === 0 || rows[i - 1][1] >= r[1]), 'most-rated first', '');
+    check(await page.$eval('#subnav [data-side="past"]', (b) => b.getAttribute('aria-pressed')) === 'true', '#watch/town lands on Past, where the town’s ratings are', '');
+    await page.click('#subnav [data-side="up"]');
+    await page.waitForSelector(wPanel + ' [data-ballot] .vote-opt', { timeout: 4000 });
 
     const opts = () => page.$$eval(wPanel + ' [data-ballot] .vote-opt', (n) => n.map((o) => ({ k: o.dataset.k, on: o.getAttribute('aria-pressed'), n: o.querySelector('.l span').textContent, w: parseFloat(o.querySelector('.bar i').style.width) })));
     const before = await opts();
@@ -6095,7 +6114,7 @@ async function theWatch(browser, base) {
   await group('Watch, a rating posts with stars in meta (demo)', async () => {
     const d = await watchDemo();
     const { ctx, page, errors } = await newPage(browser, base);
-    await page.goto(base + '/all-day/?demo=1#watch');
+    await page.goto(base + '/all-day/?demo=1#watch/past');
     await page.waitForSelector(wPanel + ' [data-grid] .rate', { timeout: 15000 });
     const f = d.films.top.find((x) => x.t === 'Fieldwork');
     await page.click(wPanel + ' [data-k="f' + f.id + '"]');
@@ -6132,7 +6151,9 @@ async function theWatch(browser, base) {
     check(JSON.stringify(mine.sort()) === JSON.stringify([2, 5]), 'rating again replaces your last rating: one each, the old one gone', JSON.stringify(mine));
     await page.click('.sheet-head .iconbtn');
 
-    /* a pick from the list */
+    /* a pick from the list, on the ballot (Upcoming) */
+    await page.click('#subnav [data-side="up"]');
+    await page.waitForSelector(wPanel + ' [data-suggest]', { timeout: 4000 });
     await page.click(wPanel + ' [data-suggest]');
     await page.waitForSelector('.sheet-body [data-results] [data-film]');
     await page.fill('.sheet-body input[type=search]', 'orchard');
@@ -6183,12 +6204,15 @@ async function theWatch(browser, base) {
     check(await page.$eval(wPanel, (p) => p.querySelector('[data-slot]').dataset.slot) === 'kind', 'and it is the first thing on the tab', '');
     await page.click(wPanel + ' [data-kind] button:has-text("TV")');
     await page.waitForFunction(() => /On TV now/.test(document.querySelector('#panel-watch [data-sec="soon"]')?.innerText || ''), null, { timeout: 4000 }).catch(() => {});
-    check(JSON.stringify(await wTiles(page)) === JSON.stringify(d.films.tv_top.map((f) => 'tv' + f.id)), 'TV: the top shows, in TMDB order', JSON.stringify((await wTiles(page)).slice(0, 4)));
     const air = await page.$$eval(wPanel + ' [data-sec="soon"] + .railmode + .rail-wrap .poster', (n) => n.map((a) => [a.querySelector('.t').textContent, a.querySelector('.s').textContent]));
     check(air[0][1] === 'New season 2' && /^Season 4 · [A-Z][a-z]{2} \d+$/.test(air[1][1]) && air[2][1] === 'Airing now', 'On TV now: a new season, one coming, then airing', JSON.stringify(air));
     check(!(await page.$(wPanel + ' [data-sec="theaters"]')) && !(await page.$(wPanel + ' [data-cta]')), 'no theaters and no screening call on TV', '');
-    const toc = await page.$$eval('#subnav .chip', (c) => c.map((x) => x.textContent));
-    check(JSON.stringify(toc) === JSON.stringify(['On TV now', 'Back then', 'The list', 'Town', 'Next screening', 'Chat']), 'the table of contents follows', toc.join(' / '));
+    const toc = await page.$$eval('#subnav .secpill .chip', (c) => c.map((x) => x.textContent));
+    check(JSON.stringify(toc) === JSON.stringify(['On TV now', 'Streaming', 'Next screening', 'Chat']), 'the table of contents follows', toc.join(' / '));
+    await page.click('#subnav [data-side="past"]');
+    await page.waitForSelector(wPanel + ' [data-grid]', { timeout: 4000 });
+    check(JSON.stringify(await wTiles(page)) === JSON.stringify(d.films.tv_top.map((f) => 'tv' + f.id)), 'TV on Past: the top shows, in TMDB order', JSON.stringify((await wTiles(page)).slice(0, 4)));
+    check(JSON.stringify(await page.$$eval('#subnav .secpill .chip', (c) => c.map((x) => x.textContent))) === '["Back then","Town","The list","Chat"]', 'and Past’s contents', '');
     const dots = await page.$eval(wPanel + ' [data-grid] [data-k="tv7001"]', (a) => [...a.querySelectorAll('.seen i')].map((i) => (i.classList.contains('on') ? 1 : 0)).join(''));
     check(dots === '11', 'a show carries the same two dots', dots);
     await page.click(wPanel + ' [data-grid] [data-k="tv7003"]');
@@ -6258,7 +6282,7 @@ async function theWatch(browser, base) {
   await group('Watch, the time machine (demo)', async () => {
     const d = await watchDemo();
     const { ctx, page, errors } = await newPage(browser, base);
-    await page.goto(base + '/all-day/?demo=1#watch');
+    await page.goto(base + '/all-day/?demo=1#watch/past');
     await page.waitForSelector(wPanel + ' [data-sec="back"]', { timeout: 15000 });
     const thisMonth = wToday().slice(0, 7);
     const mi = (m) => Number(m.slice(0, 4)) * 12 + Number(m.slice(5, 7)) - 1;
@@ -6398,6 +6422,13 @@ async function theWatch(browser, base) {
     await page.evaluate(() => document.querySelector('#panel-watch [data-sec="theaters"]').scrollIntoView());
     await page.waitForTimeout(200);
     await page.screenshot({ path: path.join(SHOTS, 'demo-watch-390-theaters.png') });
+    await page.evaluate(() => document.querySelector('#panel-watch [data-sec="stream"]').scrollIntoView());
+    await page.waitForTimeout(200);
+    await page.screenshot({ path: path.join(SHOTS, 'demo-watch-390-streaming.png') });
+    await page.click('#subnav [data-side="past"]');
+    await page.waitForSelector(wPanel + ' [data-sec="back"]', { timeout: 4000 });
+    await page.waitForTimeout(700);
+    await page.screenshot({ path: path.join(SHOTS, 'demo-watch-390-past-top.png') });
     await page.evaluate(() => document.querySelector('#panel-watch [data-sec="back"]').scrollIntoView());
     await page.waitForTimeout(200);
     await page.screenshot({ path: path.join(SHOTS, 'demo-watch-390-back-then.png') });
@@ -6432,7 +6463,7 @@ async function theWatch(browser, base) {
       { id: 'essex', name: 'Essex Cinemas', town: 'Essex', url: 'https://evil.example/', ok: false, closed: false, back: '', days: {} },
       { id: 'nowhere', name: 'Elsewhere', town: 'Nowhere', url: 'https://x.example/', ok: true, days: {} }] };
     const { ctx, page, errors } = await newPage(browser, base, { films, tm, showtimes, clock: etAt(12) });
-    await page.goto(base + '/all-day/#watch');
+    await page.goto(base + '/all-day/#watch/past');
     await page.waitForSelector(wPanel + ' [data-sec="back"]', { timeout: 15000 });
     const back = await page.$$eval(wPanel + ' [data-back] .poster', (n) => n.map((a) => [a.dataset.id, a.querySelector('.t').textContent, a.querySelector('img') && a.querySelector('img').getAttribute('src')]));
     check(back.length === 2 && back[0][0] === String(t0.id) && back[0][2] === 'https://image.tmdb.org/t/p/w342' + t0.p, 'Back then: TMDB posters at w342, a key that disagrees with its id left out', JSON.stringify(back));
@@ -6442,6 +6473,8 @@ async function theWatch(browser, base) {
     await page.click(wPanel + ' [data-slot="back"] .dateline .nav[aria-label="Earlier day"]');
     check(await page.$eval(wPanel + ' [data-slot="back"] .dateline .s', (n) => n.textContent) === 'Most popular on TMDB', 'a month the archive missed says it is TMDB’s most popular, not the front page', '');
     await page.click(wPanel + ' [data-slot="back"] .dateline .nav[aria-label="Later day"]');
+    await page.click('#subnav [data-side="up"]');
+    await page.waitForSelector(wPanel + ' [data-theater]', { timeout: 4000 });
     const th = await page.$$eval(wPanel + ' [data-theater] button', (n) => n.map((b) => b.textContent));
     check(JSON.stringify(th) === '["Partizanfilm","Majestic 10","Essex Cinemas"]', 'theaters are the known three, whatever the file adds', JSON.stringify(th));
     const rows = await page.$$eval(wPanel + ' [data-showing] .lrow', (n) => n.map((r) => [r.querySelector('.t').textContent, r.querySelector('[data-times]').textContent, r.querySelector('img') && r.querySelector('img').getAttribute('src')]));
@@ -6455,7 +6488,8 @@ async function theWatch(browser, base) {
     await page.click(wPanel + ' [data-theater] button:has-text("Partizanfilm")');
     check(await page.$eval(wPanel + ' [data-status]', (p) => p.textContent) === 'Burlington · Times on their site' && !(await page.$(wPanel + ' [data-showing] .lrow')), 'a theater missing from the file: one plain line and its button', '');
     await page.click(wPanel + ' [data-kind] button:has-text("TV")');
-    await page.waitForTimeout(100);
+    await page.click('#subnav [data-side="past"]');
+    await page.waitForSelector(wPanel + ' [data-grid]', { timeout: 4000 });
     check(JSON.stringify((await wTiles(page)).slice(0, 2)) === '["tv1400","tv1401"]', 'live TV shelves from films.json', JSON.stringify((await wTiles(page)).slice(0, 2)));
     await page.click(wPanel + ' [data-grid] [data-k="tv1400"]');
     await page.waitForSelector('.sheet-body a[href*="themoviedb"]');
@@ -6475,14 +6509,127 @@ async function theWatch(browser, base) {
     await ctx.close();
   });
 
+  /* Stephen, 2026-10-22: "make it more obvious that you have upcoming …
+     and then you have past", a new "upcoming streaming" category, and
+     colourful Movies | TV and theater buttons "so they're hard to miss" */
+  await group('Watch, Upcoming | Past, coming to streaming and the colour buttons (demo)', async () => {
+    const d = await watchDemo();
+    const { ctx, page, errors } = await newPage(browser, base, { dpr: 2 });
+    await page.goto(base + '/all-day/?demo=1#watch');
+    await page.waitForSelector(wPanel + ' [data-sec="stream"]', { timeout: 15000 });
+    const sw = await page.$eval('#subnav [data-sides]', (g) => ({ liquid: g.classList.contains('liquid'), canvas: !!g.querySelector(':scope > canvas.lsw-canvas'), label: g.getAttribute('aria-label'),
+      row: g.closest('.secrow').classList.contains('oa-sidesrow'), next: !!g.closest('.secbar').querySelector(':scope > .secrow + .secpill') }));
+    check(sw.liquid && sw.canvas && sw.label === 'Upcoming or past' && sw.row && sw.next, 'Upcoming | Past is poured like Build | Habits, with the side’s sections in the small pill under it', JSON.stringify(sw));
+    const slots = await page.$$eval(wPanel + ' [data-slot]', (n) => n.map((x) => x.dataset.slot));
+    check(JSON.stringify(slots) === '["kind","theaters","soon","cta","stream","vote","chat"]', 'Upcoming: the switch, showtimes, coming to theaters, coming to streaming, the screening vote, chat', JSON.stringify(slots));
+    check(await page.$eval(wPanel + ' [data-sec="soon"] h2', (h) => h.textContent) === 'Coming to theaters' && await page.$eval(wPanel + ' [data-sec="stream"] h2', (h) => h.textContent) === 'Coming to streaming',
+      'the two rows say where: theaters, streaming', '');
+    const stream = await page.$$eval(wPanel + ' [data-stream] .poster', (n) => n.map((a) => [a.dataset.k, a.querySelector('.s').textContent]));
+    const when = (k) => { const nd = new Date((wDayNum(k) + wDayNum(wToday()) - wDayNum(d._anchor)) * W_DAY + 12 * 3600000).toISOString().slice(0, 10);
+      return nd <= wToday() ? 'Out now' : new Intl.DateTimeFormat('en-US', { timeZone: 'UTC', month: 'short', day: 'numeric' }).format(new Date(nd + 'T12:00:00Z')); };
+    const want = d.films.stream.map((f) => ['stream:' + f.id, (f.on || 'Streaming') + ' · ' + when(f.d)]);
+    check(JSON.stringify(stream) === JSON.stringify(want), 'Coming to streaming: the service and the day, soonest first; a film with no service named says Streaming', JSON.stringify(stream));
+    check(stream[0][1] === 'Netflix · Out now', 'a film out this week says Out now', stream[0][1]);
+    check(await page.$eval(wPanel + ' [data-railmode="watch-stream"]', (b) => b.textContent) === 'See as a list', 'the streaming row can be a list', '');
+    await page.click(wPanel + ' [data-railmode="watch-stream"]');
+    const listed = await page.$eval(wPanel + ' [data-rail="watch-stream"]', (r) => ({ list: r.classList.contains('aslist'), bar: !r.closest('.rail-wrap').nextElementSibling.hidden }));
+    check(listed.list && listed.bar, 'and as a list it carries the Collapse bar', JSON.stringify(listed));
+    await page.click(wPanel + ' [data-slot="stream"] .collapsebar:not([hidden]) button');
+    /* the colour buttons: each its own tone, filled while on, tinted while off */
+    const tones = await page.evaluate(() => {
+      const look = (sel) => [...document.querySelectorAll('#panel-watch ' + sel + ' button')].map((b) => { const cs = getComputedStyle(b); return { on: b.classList.contains('on'), pressed: b.getAttribute('aria-pressed'), bg: cs.backgroundColor, border: cs.borderTopColor, h: Math.round(b.getBoundingClientRect().height) }; });
+      return { kind: look('[data-kind]'), th: look('[data-theater]'), vw: innerWidth, right: Math.max(...[...document.querySelectorAll('#panel-watch [data-theater] button')].map((b) => b.getBoundingClientRect().right)) };
+    });
+    const k = tones.kind;
+    check(k.length === 2 && k[0].on && k[0].pressed === 'true' && k[0].bg === k[0].border && k[1].bg !== k[1].border && k[0].border !== k[1].border && k[0].h >= 44,
+      'Movies | TV in colour: Movies filled in its own tone, TV tinted in another, both big', JSON.stringify(k));
+    const th = tones.th;
+    check(th.length === 3 && new Set(th.map((t) => t.border)).size === 3 && th.filter((t) => t.on && t.bg === t.border).length === 1 && tones.right <= tones.vw - 12,
+      'the theater picker: three colours, the one picked filled, all inside the gutter', JSON.stringify(tones));
+    await page.click(wPanel + ' [data-theater] button:has-text("Essex")');
+    check(await page.$eval(wPanel + ' [data-theater] button.on', (b) => [b.textContent, b.getAttribute('aria-pressed')].join()) === 'Essex Cinemas,true', 'a tap fills the theater it picks', '');
+    /* TV: new shows and new seasons on the streamers */
+    await page.click(wPanel + ' [data-kind] button:has-text("TV")');
+    await page.waitForSelector(wPanel + ' [data-stream="tv"]', { timeout: 4000 });
+    const tv = await page.$$eval(wPanel + ' [data-stream="tv"] .poster .s', (n) => n.map((x) => x.textContent));
+    const wantTv = d.films.tv_stream.map((f) => [f.ns === 1 ? 'New series' : 'Season ' + f.ns, f.on, when(f.d)].join(' · '));
+    check(JSON.stringify(tv) === JSON.stringify(wantTv), 'TV: “Season 2 · Netflix”, “New series · Hulu”, with the day', JSON.stringify(tv));
+    await page.click(wPanel + ' [data-kind] button:has-text("Movies")');
+    /* Past: what is already out */
+    await page.click('#subnav [data-side="past"]');
+    await page.waitForSelector(wPanel + ' [data-grid]', { timeout: 4000 });
+    const p = await page.evaluate(() => ({ slots: [...document.querySelectorAll('#panel-watch [data-slot]')].map((x) => x.dataset.slot), on: document.querySelector('#subnav [data-side].on').dataset.side }));
+    check(JSON.stringify(p) === '{"slots":["kind","back","town","list","chat"],"on":"past"}', 'Past: the switch, back then, the town’s ratings, the list, chat', JSON.stringify(p));
+    await page.screenshot({ path: path.join(SHOTS, 'demo-watch-past.png') });
+    /* deep links pick the side */
+    await page.goto(base + '/all-day/?demo=1#watch/stream:9404');
+    await page.reload();
+    check(await flashes(page, 'stream:9404'), 'a coming-to-streaming poster lands on Upcoming and flashes', '');
+    await page.goto(base + '/all-day/?demo=1#watch/f' + d.films.top[3].id);
+    check(await flashes(page, 'f' + d.films.top[3].id) && await page.$eval('#subnav [data-side="past"]', (b) => b.classList.contains('on')), 'a film on the list lands on Past', '');
+    await page.goto(base + '/all-day/?demo=1#watch/upcoming');
+    await page.waitForFunction(() => document.querySelector('#subnav [data-side="up"]')?.classList.contains('on'), null, { timeout: 4000 }).catch(() => {});
+    check(!!(await page.$(wPanel + ' [data-sec="stream"]')), '#watch/upcoming opens Upcoming', '');
+    await page.goto(base + '/all-day/?demo=1#watch/past');
+    await page.waitForSelector(wPanel + ' [data-grid]', { timeout: 4000 });
+    await page.goto(base + '/all-day/?demo=1#watch');
+    await page.reload();
+    await page.waitForSelector(wPanel + ' [data-sec="stream"]', { timeout: 15000 });
+    check(await page.$eval('#subnav [data-side="up"]', (b) => b.classList.contains('on')), 'a new visit opens on Upcoming again: the side is not remembered', '');
+    await pageRules(page, 'watch', 390);
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Watch, coming to streaming from films.json, credited to JustWatch (live)', async () => {
+    const films = await watchFilms();
+    const seed = JSON.parse(await readFile(path.join(APP, 'data/films-seed.json'), 'utf8'));
+    const day = (n) => new Date(Date.parse(wToday() + 'T12:00:00Z') + n * W_DAY).toISOString().slice(0, 10);
+    films.stream = [{ ...seed.top[30], id: 991001, t: 'Netflix Thing', d: day(-2), where: 'streaming', on: 'Netflix', yt: '' },
+      { ...seed.top[31], id: 991002, t: 'Unnamed Service', d: day(6), where: 'streaming', on: '', yt: '' },
+      { ...seed.top[32], id: 991003, t: 'Last Month', d: day(-20), where: 'streaming', on: 'Hulu' },
+      { ...seed.top[33], id: 991004, t: '<b>Rented</b>', d: day(3), where: 'streaming', on: 'Rent or buy', yt: '' }];
+    films.tv_top = seed.top.slice(40, 50).map((f, i) => ({ ...f, id: 1500 + i, t: 'Show ' + i, sn: 2 }));
+    films.tv_stream = [{ ...films.tv_top[0], id: 1601, t: 'New Season Show', d: day(9), ns: 3, on: 'HBO Max', where: 'streaming' }];
+    const { ctx, page, errors } = await newPage(browser, base, { films });
+    await page.goto(base + '/all-day/#watch');
+    await page.waitForSelector(wPanel + ' [data-stream] .poster', { timeout: 15000 });
+    const got = await page.$$eval(wPanel + ' [data-stream] .poster', (n) => n.map((a) => [a.querySelector('.t').textContent, a.querySelector('.s').textContent]));
+    check(got.length === 3 && got[0][1] === 'Netflix · Out now' && /^Streaming · [A-Z][a-z]{2} \d+$/.test(got[1][1]) && got[2][0] === '<b>Rented</b>' && /^Rent or buy · /.test(got[2][1]) && !(await page.$(wPanel + ' [data-stream] b')),
+      'live: the file’s films, last month’s left out, titles as text', JSON.stringify(got));
+    const jw = await page.$eval(wPanel + ' [data-slot="stream"] [data-jw]', (c) => ({ text: c.textContent, href: c.querySelector('a').getAttribute('href'), target: c.querySelector('a').target }));
+    check(jw.text === 'Where to stream: JustWatch' && jw.href === 'https://www.justwatch.com/us/new' && jw.target === '_blank', 'the services are credited to JustWatch, as TMDB’s terms ask', JSON.stringify(jw));
+    await page.click(wPanel + ' [data-k="stream:991001"]');
+    await page.waitForSelector('.sheet-body [data-streams]', { timeout: 4000 });
+    check(await page.$eval('.sheet-body [data-streams]', (n) => n.textContent) === 'On Netflix now', 'its sheet says where: On Netflix now', await page.$eval('.sheet-body [data-streams]', (n) => n.textContent));
+    await page.click('.sheet-head .iconbtn');
+    await page.click(wPanel + ' [data-k="stream:991002"]');
+    await page.waitForSelector('.sheet-body [data-streams]', { timeout: 4000 });
+    check(/^Streaming from [A-Z][a-z]{2} \d+$/.test(await page.$eval('.sheet-body [data-streams]', (n) => n.textContent)), 'a film with no service named: Streaming from its day', '');
+    await page.click('.sheet-head .iconbtn');
+    const toc = await page.$$eval('#subnav .secpill .chip', (c) => c.map((x) => x.textContent));
+    check(JSON.stringify(toc) === '["Theaters","Coming soon","Streaming","Next screening","Chat"]', 'Streaming joins Upcoming’s contents', toc.join(' / '));
+    await page.click(wPanel + ' [data-kind] button:has-text("TV")');
+    await page.waitForSelector(wPanel + ' [data-stream="tv"] .poster', { timeout: 4000 });
+    check(/^Season 3 · HBO Max · [A-Z][a-z]{2} \d+$/.test(await page.$eval(wPanel + ' [data-stream="tv"] .poster .s', (n) => n.textContent)) && !(await page.$(wPanel + ' [data-slot="stream"] [data-jw]')),
+      'TV: a new season on HBO Max (the network is TMDB’s own, so no JustWatch credit)', '');
+    await page.click(wPanel + ' [data-kind] button:has-text("Movies")');
+    await page.screenshot({ path: path.join(SHOTS, 'live-watch-upcoming.png') });
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
   await group('Watch, no time machine or showtimes yet (live)', async () => {
     const { ctx, page, errors } = await newPage(browser, base, { films: await watchFilms(), tm: null, showtimes: null });
     await page.goto(base + '/all-day/#watch');
     await page.waitForSelector(wPanel + ' [data-sec="theaters"]', { timeout: 15000 });
     await page.waitForTimeout(500);
-    check(!(await page.$(wPanel + ' [data-sec="back"]')), 'no time-machine file: no Back then', '');
     const btns = await page.$$eval(wPanel + ' [data-showtimes]', (n) => n.map((a) => a.getAttribute('href')));
     check(JSON.stringify(btns) === '["https://www.partizanfilm.org/"]' && !(await page.$(wPanel + ' [data-showing] .lrow')), 'no showtimes file: the theater rows still offer their Showtimes button', JSON.stringify(btns));
+    await page.goto(base + '/all-day/#watch/past');
+    await page.waitForSelector(wPanel + ' [data-sec="list"]', { timeout: 6000 });
+    await page.waitForTimeout(300);
+    check(!(await page.$(wPanel + ' [data-sec="back"]')), 'no time-machine file: no Back then on Past', '');
     check(errors.every((e) => /404/.test(e)), 'nothing but the two 404s in the console', errors.join(' | '));
     await ctx.close();
   });
@@ -11209,7 +11356,7 @@ async function sectionPills(browser, base) {
       for (let i = 0; i < 6; i++) { await page.evaluate((sel) => document.querySelector(sel).scrollBy(0, 200), panelSel(tab)); await page.waitForTimeout(70); }
       await page.waitForTimeout(500);
       const fl = await page.evaluate(() => { const w = document.querySelector('#subnav .secpill'); const r = w.getBoundingClientRect(); return { top: r.top, bottom: r.bottom, away: document.body.classList.contains('chrome-away'), small: document.body.classList.contains('pill-small'), t: getComputedStyle(w).transform }; });
-      check(fl.away && fl.small && fl.top >= 0 && fl.bottom < (tab === 'habits' ? 130 : 70) && /matrix\(0\.9, 0, 0, 0\.9/.test(fl.t), tab + ': scrolled down, it floats at the top, 90% size', JSON.stringify(fl));
+      check(fl.away && fl.small && fl.top >= 0 && fl.bottom < (tab === 'habits' || tab === 'watch' ? 130 : 70) && /matrix\(0\.9, 0, 0, 0\.9/.test(fl.t), tab + ': scrolled down, it floats at the top, 90% size', JSON.stringify(fl));
       await page.evaluate((sel) => document.querySelector(sel).scrollBy(0, -60), panelSel(tab));
       await page.waitForTimeout(400);
       check(await page.evaluate(() => !document.body.classList.contains('pill-small')), tab + ': any move up brings it back to full size', '');

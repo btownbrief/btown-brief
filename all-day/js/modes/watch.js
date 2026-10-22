@@ -109,7 +109,7 @@ const CHAT_URL = 'https://www.btownbrief.com/community/channels/meetups-hangouts
 const MEETUP_URL = 'https://www.meetup.com/burlington-social-activites-group/';
 const TMDB_URL = 'https://www.themoviedb.org/';
 const TMDB_LOGO = '../assets/img/tmdb.svg';
-const JUSTWATCH_URL = 'https://www.justwatch.com/us';
+const JUSTWATCH_URL = 'https://www.justwatch.com/us/new';
 const LOCAL_KEY = 'allday-watch';
 const TV_BASE = 50000000;   // a show's number: TV_BASE + its TMDB TV id
 const PAGE = 60;            // posters drawn at a time
@@ -707,7 +707,7 @@ function drawStream(host) {
   /* the services are JustWatch's, through TMDB, whose terms ask for this credit */
   if (V.kind === 'movie' && !app.demo) {
     const c = el('p', 'note pad wjw', 'Where to stream: <a href="' + esc(JUSTWATCH_URL) + '" target="_blank" rel="noopener">JustWatch</a>');
-    c.dataset.credit = 'justwatch';
+    c.dataset.jw = '1';
     host.appendChild(c);
   }
 }
@@ -1620,7 +1620,8 @@ app.register(KEY, {
     const sec = (key) => root.querySelector('[data-sec="' + key + '"]');
     const toc = TOC().filter(([key]) => sec(key)).map(([key, label]) => ({ key, label }));
     const p = sectionBar({ key: 'sec-watch', title: 'Watch', items: toc, color: '--liq-watch', find: sec, onPick: (key) => app.jumpTo(sec(key)) });
-    if (p) { const row = el('div', 'secrow'); [...p.children].forEach((k) => row.appendChild(k)); bar.appendChild(row); }
+    /* the pill straight under the bar, as Habits' sits, so it settles smaller on the way down */
+    if (p) [...p.children].forEach((k) => bar.appendChild(k));
     return bar;
   },
   keepSubnav: true,

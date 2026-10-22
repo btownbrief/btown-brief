@@ -665,6 +665,7 @@ body.chrome-away .mast { transform: translateY(-100%); }
 .pills.wt-kind button { height: 46px; font-size: var(--fs-title); }
 .pills.wt-theaters { gap: 6px; }
 .pills.wt-theaters button { flex: 1 1 0; min-width: 0; padding: 0 6px; }
+@media (max-width: 420px) { .pills.wt-theaters button { font-size: var(--fs-meta); } }
 .wjw { padding-top: 6px; font-size: var(--fs-small); color: var(--ink-3); }
 .wjw a { color: inherit; text-decoration: underline; text-underline-offset: 3px; }
 /* Upcoming | Past, poured at the top like Build | Habits (the liquid's
