@@ -2,7 +2,7 @@
 <html lang="en" data-theme="light">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Burlington Weather — today, tonight and the week ahead — Burlington Brief</title>
   <meta name="description" content="Burlington, Vermont weather in plain words: right now, today and tonight, when rain or snow starts and how much, the week ahead, and radar.">
   <meta property="og:type" content="website">
@@ -27,7 +27,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css?v=20260904b">
-  <link rel="stylesheet" href="css/weather.css?v=20261019b">
+  <link rel="stylesheet" href="css/weather.css?v=20261022a">
   <script>
     /* Theme before first paint, from the cached sunrise/sunset. js/auto-theme.js
        refreshes the cache; this only avoids the white flash after dark. */
@@ -65,7 +65,7 @@ src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
 <script data-goatcounter="https://btown-brief.goatcounter.com/count"
         async src="//gc.zgo.at/count.js"></script>
 </head>
-<body>
+<body class="wx-body">
 
   <!-- SITE HEADER (same chrome as the list page) -->
   <header class="site-header" id="site-header">
@@ -100,78 +100,104 @@ src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
     <!-- ============ ALERTS (only when NWS has something active) ============ -->
     <div class="wx-alerts" id="rn-alerts" hidden role="region" aria-label="Weather alerts"></div>
 
-    <!-- ============ BURLINGTON RIGHT NOW ============ -->
+    <!-- ============ BURLINGTON RIGHT NOW ============
+         Wethr's hero (Stephen, 2026-10-22): the place, a huge temperature,
+         feels like, then the one thing people want: when the rain comes. -->
     <section class="rn-hero" aria-label="Current conditions">
       <div class="rn-hero-inner">
-        <h1 class="rn-title">Burlington, right now</h1>
+        <h1 class="rn-title">Burlington<span class="sr-only">, right now</span></h1>
         <p class="rn-stats" id="rn-stats"></p>
-        <div class="rn-chips" id="rn-chips"></div>
+        <p class="rn-feels" id="rn-feels"></p>
+        <p class="rn-rain" id="rn-rain" hidden></p>
+        <p class="rn-wear" id="rn-wear" hidden></p>
         <p class="rn-sub" id="rn-sub"></p>
-        <p class="rn-updated" id="rn-updated"></p>
-
-        <!-- Daylight arc — same live arc as the list page; #sun-arc is a deep link -->
-        <div class="sun-arc rn-sun-arc" id="sun-arc" hidden aria-label="Daylight remaining today"></div>
+        <div class="rn-meta">
+          <span class="rn-updated" id="rn-updated"></span>
+          <a class="rn-radar-link" href="#radar" data-radar-open>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2z"/><path d="M9 4v14M15 6v14"/></svg>
+            Radar <span aria-hidden="true">›</span>
+          </a>
+        </div>
       </div>
     </section>
 
     <!-- ============ TODAY AND TONIGHT (data/weather/latest.json's brief) ============ -->
     <section class="day-section" id="day-section" hidden aria-labelledby="day-title">
       <div class="day-inner">
-        <h2 class="day-title" id="day-title">Today and tonight</h2>
+        <h2 class="day-title wx-label" id="day-title">Today and tonight</h2>
         <div class="day-grid" id="day-grid"></div>
       </div>
     </section>
 
-    <!-- ============ THE NEXT HOURS ============ -->
-    <section class="hours-section" id="hours-section" hidden aria-label="The next hours">
-      <div class="hours-inner">
+    <!-- ============ HOURLY ============ -->
+    <section class="hours-section" id="hours-section" hidden aria-labelledby="hours-title">
+      <div class="hours-inner wx-card">
         <div class="hours-head">
-          <h2 class="hours-title">The next hours</h2>
+          <h2 class="hours-title wx-label" id="hours-title">Hourly</h2>
+          <button type="button" class="wx-listbtn" id="hr-mode" aria-pressed="false">See as a list</button>
         </div>
         <p class="hours-story" id="hours-story"></p>
-        <p class="hours-stamps" id="hours-stamps"></p>
-        <p class="hours-second" id="hours-second" hidden></p>
+        <div class="hr-toggles" id="hr-toggles" role="group" aria-label="What the line shows">
+          <button type="button" class="hr-toggle is-on" data-metric="temp" aria-pressed="true">Temp</button>
+          <button type="button" class="hr-toggle" data-metric="feels" aria-pressed="false">Feels like</button>
+          <button type="button" class="hr-toggle" data-metric="pop" aria-pressed="false">Rain chance</button>
+        </div>
         <div class="hr-scroll" id="hr-scroll" tabindex="0" aria-label="Hour-by-hour forecast, scroll sideways">
           <div class="hr-track" id="hr-track"></div>
         </div>
-      </div>
-    </section>
-
-    <!-- ============ THE WEEK AHEAD ============ -->
-    <section class="week-section" id="week-section" hidden aria-label="Seven-day forecast">
-      <div class="week-inner">
-        <div class="week-head">
-          <h2 class="week-title">The week ahead</h2>
+        <div class="wx-collapsebar" id="hr-collapse" hidden>
+          <button type="button" aria-label="Collapse the hourly list">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 15 6-6 6 6"/></svg>
+            Collapse
+          </button>
         </div>
-        <div class="week-grid" id="week-grid"></div>
-        <p class="week-note" id="week-note"></p>
+        <p class="hours-stamps" id="hours-stamps"></p>
+        <p class="hours-second" id="hours-second" hidden></p>
       </div>
     </section>
 
-    <!-- ============ RADAR (js/radar.js; nothing loads until it is near the screen) ============ -->
-    <section class="radar-section" id="radar" aria-label="Radar">
-      <div class="radar-inner">
+    <!-- ============ RAIN AND RADAR (js/radar.js; nothing loads until it is near the screen) ============ -->
+    <section class="radar-section" id="radar" aria-label="Rain and radar">
+      <div class="radar-inner wx-card">
         <div class="radar-head">
-          <h2 class="radar-title">Radar</h2>
+          <h2 class="radar-title wx-label">Rain · next 12 hours</h2>
           <span class="radar-stamp" id="radar-stamp"></span>
+          <button type="button" class="radar-full" id="radar-full" aria-pressed="false">
+            <svg class="ic-open" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
+            <span class="radar-full-label">Full screen</span>
+          </button>
         </div>
         <p class="radar-answer" id="radar-answer" hidden></p>
+        <div class="radar-rainline" id="radar-rainline" hidden>
+          <p class="radar-peak" id="radar-peak"></p>
+          <div class="radar-timeline" id="radar-timeline" aria-hidden="true"></div>
+        </div>
         <div class="radar-stage">
           <div class="radar-map" id="radar-map" role="img" aria-label="Radar around Burlington: the last hour, then the forecast for the next 12 hours"></div>
           <span class="radar-badge" id="radar-badge" hidden></span>
         </div>
-        <div class="radar-controls" id="radar-controls" hidden>
-          <button type="button" class="radar-play" id="radar-play" aria-label="Play" aria-pressed="false">
-            <svg class="ic-play" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l12.5-7.5z"/></svg>
-            <svg class="ic-pause" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6" y="4.5" width="4" height="15" rx="1"/><rect x="14" y="4.5" width="4" height="15" rx="1"/></svg>
-          </button>
-          <div class="radar-track">
-            <input type="range" class="radar-scrub" id="radar-scrub" min="0" max="0" step="1" value="0" aria-label="Radar and forecast time">
-            <span class="radar-now" id="radar-now" aria-hidden="true">Now</span>
+        <div class="radar-sheet">
+          <div class="radar-jumps" id="radar-jumps" role="group" aria-label="Jump the radar to a time" hidden>
+            <button type="button" data-jump="-50">−50m</button>
+            <button type="button" data-jump="0">Now</button>
+            <button type="button" data-jump="60">+1h</button>
+            <button type="button" data-jump="120">+2h</button>
+            <button type="button" data-jump="360">+6h</button>
+            <button type="button" data-jump="720">+12h</button>
           </div>
-          <span class="radar-time" id="radar-time"></span>
+          <div class="radar-controls" id="radar-controls" hidden>
+            <button type="button" class="radar-play" id="radar-play" aria-label="Play" aria-pressed="false">
+              <svg class="ic-play" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l12.5-7.5z"/></svg>
+              <svg class="ic-pause" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6" y="4.5" width="4" height="15" rx="1"/><rect x="14" y="4.5" width="4" height="15" rx="1"/></svg>
+            </button>
+            <div class="radar-track">
+              <input type="range" class="radar-scrub" id="radar-scrub" min="0" max="0" step="1" value="0" aria-label="Radar and forecast time">
+              <span class="radar-now" id="radar-now" aria-hidden="true">Now</span>
+            </div>
+            <span class="radar-time" id="radar-time"></span>
+          </div>
+          <p class="radar-legend" aria-hidden="true">Light rain <i></i> Heavy rain</p>
         </div>
-        <p class="radar-legend" aria-hidden="true">Light <i></i> Heavy</p>
         <p class="radar-fail" id="radar-fail" hidden>Radar didn't load. These have it:</p>
         <p class="radar-links">
           <a href="https://radar.weather.gov/station/kcxx/standard" target="_blank" rel="noopener">NWS Burlington radar</a>
@@ -180,11 +206,31 @@ src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
       </div>
     </section>
 
+    <!-- ============ THE WEEK AHEAD ============ -->
+    <section class="week-section" id="week-section" hidden aria-labelledby="week-title">
+      <div class="week-inner wx-card">
+        <div class="week-head">
+          <h2 class="week-title wx-label" id="week-title">The week ahead</h2>
+        </div>
+        <div class="week-grid" id="week-grid"></div>
+        <p class="week-note" id="week-note"></p>
+      </div>
+    </section>
+
+    <!-- ============ AT A GLANCE: Wethr's tile grid, from the same file ============ -->
+    <section class="tiles-section" id="tiles-section" hidden aria-label="At a glance">
+      <div class="tiles-inner">
+        <div class="wx-tiles" id="wx-tiles"></div>
+        <!-- Daylight: the live Champlain panorama (js/sun.js); #sun-arc is a deep link -->
+        <div class="sun-arc rn-sun-arc" id="sun-arc" hidden aria-label="Daylight remaining today"></div>
+      </div>
+    </section>
+
     <!-- ============ MY READ ============ -->
     <section class="read-section" id="read-section" hidden aria-label="Steve's weather read">
-      <div class="read-inner">
+      <div class="read-inner wx-card">
         <div class="read-head">
-          <h2 class="read-title">My read</h2>
+          <h2 class="read-title wx-label">My read</h2>
           <span class="read-stamp" id="read-stamp"></span>
         </div>
         <div class="read-text" id="read-text"></div>
@@ -192,19 +238,40 @@ src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
       </div>
     </section>
 
+    <!-- ============ THE LOCAL FORECASTERS ============ -->
+    <section class="takes-section" aria-labelledby="takes-title">
+      <div class="takes-inner wx-card">
+        <h2 class="takes-title wx-label" id="takes-title">What the local forecasters say</h2>
+        <div class="takes-list">
+          <a class="take" href="https://forecast.weather.gov/product.php?site=BTV&amp;issuedby=BTV&amp;product=AFD" target="_blank" rel="noopener">
+            <span class="take-who">NWS Burlington</span><span class="take-what">The forecasters' own reasoning, updated through the day</span><span class="take-go" aria-hidden="true">›</span>
+          </a>
+          <a class="take" href="https://www.wcax.com/weather/" target="_blank" rel="noopener">
+            <span class="take-who">WCAX</span><span class="take-what">Channel 3's forecast and video</span><span class="take-go" aria-hidden="true">›</span>
+          </a>
+          <a class="take" href="https://www.mynbc5.com/weather" target="_blank" rel="noopener">
+            <span class="take-who">NBC5</span><span class="take-what">The NBC5 meteorologists' forecast</span><span class="take-go" aria-hidden="true">›</span>
+          </a>
+          <a class="take" href="https://forecast.weather.gov/product.php?site=BTV&amp;issuedby=BTV&amp;product=REC" target="_blank" rel="noopener">
+            <span class="take-who">Lake forecast</span><span class="take-what">NWS on Lake Champlain, for a day on the water</span><span class="take-go" aria-hidden="true">›</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
     <!-- ============ LIFE SCORES ============ -->
     <section class="life-section" id="life-section" aria-label="Life scores">
       <div class="life-inner">
-        <h2 class="life-title">Should I…?</h2>
+        <h2 class="life-title wx-label">Should I…?</h2>
         <div class="life-grid" id="life-grid"></div>
       </div>
     </section>
 
     <!-- ============ CAN I SWIM ============ -->
     <section class="swim-section" id="swim-section" aria-label="Can I swim?">
-      <div class="swim-inner">
+      <div class="swim-inner wx-card">
         <div class="swim-head">
-          <h2 class="swim-title">Can I swim?</h2>
+          <h2 class="swim-title wx-label">Can I swim?</h2>
           <span class="swim-verdict" id="swim-verdict" hidden></span>
         </div>
         <p class="swim-sentence" id="swim-sentence"></p>
@@ -266,9 +333,9 @@ src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
 
   <script src="js/theme.js?v=20260711k"></script>
   <script src="js/sunset-score.js?v=20260827a"></script>
-  <script src="js/life.js?v=20261019a"></script>
+  <script src="js/life.js?v=20261022a"></script>
   <script src="js/sun.js?v=20260904b"></script>
-  <script src="js/radar.js?v=20261019a"></script>
+  <script src="js/radar.js?v=20261022a"></script>
   <script src="js/auto-theme.js?v=20260711k"></script>
   <script src="https://play.btownbrief.com/nav.js" defer></script>
 </body>
