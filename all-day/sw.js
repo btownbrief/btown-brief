@@ -13,7 +13,7 @@
    audio — episodes are large and the browser's own HTTP cache handles them
    better than we would. */
 
-const VERSION = 'all-day-v98';   // the shell: Full page links, the two asks, bigger pills
+const VERSION = 'all-day-v99';   // the shell: Full page links, the two asks, bigger pills, the Btown Brief logo
 const SHELL = VERSION + '-shell';
 const DATA = 'all-day-data';   // unversioned on purpose: survives shell bumps
 
@@ -45,6 +45,8 @@ const SHELL_URLS = [
   './data/films-seed.json',
   /* the No-algorithm challenge, loaded by app.js after the first route */
   './js/challenge.js', './js/challenge-core.js', './css/challenge.css',
+  /* the Btown Brief logo in the mast */
+  './assets/brand/btown-brief-logo.png',
 ];
 
 self.addEventListener('install', (e) => {
