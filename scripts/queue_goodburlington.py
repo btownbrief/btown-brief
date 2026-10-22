@@ -3,8 +3,8 @@
 
 Stephen posts everything himself — this script never touches his Reddit
 account and needs no Reddit app or token (he declined the API route). It
-reads r/burlington + r/vermont the same way the Pulse does (public listing
-JSON when reachable, Inoreader RSS as fallback), screens candidates with
+reads r/burlington + r/vermont (Reddit's own listing when the optional
+Reddit keys exist, Inoreader RSS always), screens candidates with
 the Pulse's deterministic filters, asks Claude which ones genuinely belong
 on r/GoodBurlington, and writes the survivors to
 data/goodburlington-queue.json. goodburlington-queue.html renders that as
@@ -17,6 +17,11 @@ r/GoodBurlington (he posted it), ages past 48h (he passed), or the judge
 rejected it (logged with a reason in data/goodburlington-curated.json so
 his taste audits stay possible). Without OPENROUTER_API_KEY the last good
 queue is left untouched — nothing unjudged is ever queued.
+
+Reddit's own listings come through scripts/reddit_client.py's read-only
+OAuth route once REDDIT_CLIENT_ID/SECRET are set (an app-only token: it
+never signs in as Stephen and cannot post). Without the keys, Reddit is
+skipped (its logged-out .json 403s since May 2026).
 
 "Already on r/GoodBurlington" has to work without Reddit: since Sept 2026
 Reddit 403s every listing from Actions, so the check reads the sub's
@@ -41,6 +46,7 @@ import urllib.request
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import refresh_chatter as chatter
+import reddit_client
 
 ROOT = os.path.join(os.path.dirname(__file__), "..")
 QUEUE = os.path.join(ROOT, "data", "goodburlington-queue.json")
@@ -70,12 +76,16 @@ def fetch(url, accept):
 
 
 # ----------------------------------------------------------------------
-# Candidates — public listing JSON first, Inoreader RSS fallback
+# Candidates — Reddit's OAuth listing when keys exist, plus Inoreader RSS
 # ----------------------------------------------------------------------
+
+def listing_data(raw):
+    return raw if isinstance(raw, dict) else json.loads(raw)
+
 
 def parse_listing(raw, sub):
     posts = []
-    for child in (json.loads(raw).get("data") or {}).get("children", []):
+    for child in (listing_data(raw).get("data") or {}).get("children", []):
         row = child.get("data") or {}
         if row.get("stickied") or row.get("over_18") or row.get("distinguished"):
             continue
@@ -111,17 +121,15 @@ def parse_inoreader(raw, sub):
     return posts
 
 
-def load_candidates():
+def load_candidates(client=None):
     merged = {}
-    for sub in SOURCE_SUBS:
-        for host in ("www.reddit.com", "old.reddit.com", "api.reddit.com"):
-            try:
-                raw = fetch(f"https://{host}/r/{sub}/hot.json?limit=40&raw_json=1", "application/json")
-                for post in parse_listing(raw, sub):
-                    merged.setdefault(post["id"], post)
-                break
-            except Exception as exc:
-                print(f"reddit {host} {sub} failed: {exc}", file=sys.stderr)
+    client = client or reddit_client.Client()
+    for sub in SOURCE_SUBS if client.oauth else ():
+        try:
+            for post in parse_listing(client.oauth_json(f"r/{sub}/hot", limit=40), sub):
+                merged.setdefault(post["id"], post)
+        except reddit_client.RedditError as exc:
+            print(f"reddit {sub} failed: {exc}", file=sys.stderr)
     for sub, url in chatter.INOREADER.items():
         try:
             raw = fetch(url, "application/rss+xml, application/xml")
@@ -140,7 +148,7 @@ def title_key(title):
 
 def parse_target_listing(raw):
     ids, titles = set(), set()
-    for child in (json.loads(raw).get("data") or {}).get("children", []):
+    for child in (listing_data(raw).get("data") or {}).get("children", []):
         row = child.get("data") or {}
         ids.add((row.get("id") or "").lower())
         for parent in row.get("crosspost_parent_list") or []:
@@ -165,22 +173,21 @@ def parse_target_inoreader(raw):
     return ids - {""}, titles - {""}
 
 
-def target_taken():
+def target_taken(client=None):
     """(ids, title keys) already on r/GoodBurlington — native posts and the
     sources of existing crossposts — so the queue never offers a duplicate.
     Reddit's own listing is tried first (blocked from Actions since Sept
     2026), then the sub's Inoreader stream, always merged with the site's
     data/reddit.json so a dead feed never empties the check."""
     ids, titles = set(), set()
-    for host in ("www.reddit.com", "old.reddit.com", "api.reddit.com"):
+    client = client or reddit_client.Client()
+    if client.oauth:
         try:
-            raw = fetch(f"https://{host}/r/{TARGET_SUB}/new.json?limit=100&raw_json=1", "application/json")
-            got_ids, got_titles = parse_target_listing(raw)
+            got_ids, got_titles = parse_target_listing(client.oauth_json(f"r/{TARGET_SUB}/new", limit=100))
             ids |= got_ids
             titles |= got_titles
-            break
-        except Exception as exc:
-            print(f"reddit {host} {TARGET_SUB} failed: {exc}", file=sys.stderr)
+        except reddit_client.RedditError as exc:
+            print(f"reddit {TARGET_SUB} failed: {exc}", file=sys.stderr)
     try:
         got_ids, got_titles = parse_target_inoreader(fetch(TARGET_INOREADER, "application/rss+xml, application/xml"))
         ids |= got_ids
@@ -301,7 +308,8 @@ def run(dry_run=False):
     previous = chatter.load_json(QUEUE, {})
     old_queue = previous.get("items") or []
 
-    taken = target_taken()
+    client = reddit_client.Client()
+    taken = target_taken(client)
     now_ts = utcnow().timestamp()
     # Items he hasn't posted yet stay queued until they age out or appear on
     # the sub — no re-judging needed, a past yes stays a yes.
@@ -312,7 +320,7 @@ def run(dry_run=False):
     kept_ids = {item["id"] for item in keep}
 
     candidates, screened = [], 0
-    for post in load_candidates():
+    for post in load_candidates(client):
         if post["id"] in kept_ids:
             continue
         reason = screen(post, rejected, taken)

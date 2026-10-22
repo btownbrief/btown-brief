@@ -43,6 +43,9 @@ import xml.etree.ElementTree as ET
 from datetime import datetime
 from zoneinfo import ZoneInfo
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import reddit_client  # noqa: E402
+
 ROOT = os.path.join(os.path.dirname(__file__), "..")
 TEMPLATE = os.path.join(os.path.dirname(__file__), "topic_page_template.html")
 TOPICS_DIR = os.path.join(ROOT, "topics")
@@ -409,16 +412,24 @@ def youtube(query):
 ATOM = "{http://www.w3.org/2005/Atom}"
 
 
-def reddit(query):
-    """Reddit's public search feed. Cloud IPs are often blocked — that's fine."""
-    url = ("https://www.reddit.com/search.rss?q=" + urllib.parse.quote(query)
-           + "&sort=top&t=month&limit=8")
+def reddit(query, client=None):
+    """Reddit search, through reddit_client.py: OAuth when REDDIT_CLIENT_ID/
+    SECRET are set, else the public search feed (cloud IPs are often
+    blocked, and it ends 2026-11-13 — that's fine, it's a nicety)."""
+    client = client or reddit_client.Client()
     try:
-        raw = fetch(url)
-    except Exception as exc:  # noqa: BLE001 — 403/429 from a runner is expected
+        route, raw = client.read("search", q=query, sort="top", t="month", limit=8)
+    except reddit_client.RedditError as exc:  # 403/429 from a runner is expected
         print(f"  reddit skip: {exc}", file=sys.stderr)
         return []
     threads = []
+    if route == "oauth":
+        for child in ((raw or {}).get("data") or {}).get("children", []):
+            row = child.get("data") or {}
+            title = clean(row.get("title") or "")
+            if title and row.get("permalink") and not row.get("over_18"):
+                threads.append({"title": title, "url": "https://www.reddit.com" + row["permalink"]})
+        return threads
     try:
         for entry in ET.fromstring(raw).iter(ATOM + "entry"):
             title = clean((entry.findtext(ATOM + "title") or ""))
