@@ -104,7 +104,7 @@ async function staticChecks() {
     const js = [];
     const walk = async (dir) => { for (const f of await readdir(dir, { withFileTypes: true })) { const p = path.join(dir, f.name); if (f.isDirectory()) await walk(p); else if (/\.(js|css|html)$/.test(f.name)) js.push(p); } };
     await walk(path.join(APP, 'js')); await walk(path.join(APP, 'css'));
-    const NEW = ['app.js', 'ui.js', 'store.js', 'auth.js', 'liquid.js', 'main.js', 'wire.js', 'wire-demo.js', 'wire-photos.js', 'wire-square.js', 'wire-recaps.js', 'watch.js', 'food.js', 'people.js', 'whatnow.js', 'vintage.js', 'habits.js', 'build.js', 'habits-core.js', 'habits-fake.js', 'photo-wall.js', 'onair.js', 'games.js', 'clubs-week.js', 'people-match.js', 'food-asks.js', 'tokens.css', 'app.css'];
+    const NEW = ['app.js', 'ui.js', 'store.js', 'auth.js', 'liquid.js', 'main.js', 'wire.js', 'wire-demo.js', 'wire-photos.js', 'wire-square.js', 'wire-recaps.js', 'watch.js', 'food.js', 'people.js', 'whatnow.js', 'vintage.js', 'habits.js', 'build.js', 'habits-core.js', 'habits-fake.js', 'photo-wall.js', 'onair.js', 'onair-sports.js', 'games.js', 'clubs-week.js', 'people-match.js', 'food-asks.js', 'tokens.css', 'app.css'];
     const OLD = new Set(['sun.js', 'whatnow-engine.js', 'whatnow-data.js']);
     for (const f of js) {
       const name = path.basename(f);
@@ -2469,10 +2469,10 @@ async function onAir(browser, base) {
     await page.waitForSelector('#panel-onair [data-sec="past"]', { timeout: 8000 });
     check(await page.evaluate(() => document.querySelector('audio').paused && !document.querySelector('#panel-onair iframe')), 'nothing autoplays: the shell’s audio is paused and no frame is loaded', '');
     const sw = await page.$$eval('#subnav .oa-sideswitch button', (bs) => bs.map((b) => b.textContent + '|' + b.getAttribute('aria-pressed')));
-    check(JSON.stringify(sw) === JSON.stringify(['TV|true', 'Podcasts|false', 'Playlists|false']), 'a TV | Podcasts | Playlists switch at the top, TV first and on (Stephen, 2026-10-19)', JSON.stringify(sw));
+    check(JSON.stringify(sw) === JSON.stringify(['TV|true', 'Podcasts|false', 'Playlists|false', 'Sports|false']), 'a TV | Podcasts | Playlists | Sports switch at the top, TV first and on (Stephen, 2026-10-19 and 10-22)', JSON.stringify(sw));
     const sides = await page.$eval('#subnav .oa-sideswitch', (g) => { const r = g.getBoundingClientRect(); return { w: Math.round(r.width), vw: innerWidth, row: !g.closest('.secrow').querySelector('.localsw'),
       cut: [...g.children].some((b) => b.getBoundingClientRect().right > innerWidth || b.getBoundingClientRect().height < 36) }; });
-    check(sides.row && sides.w >= sides.vw * 0.8 && !sides.cut, 'the three sides get a full-width row of their own, nothing cut off at 390', JSON.stringify(sides));
+    check(sides.row && sides.w >= sides.vw * 0.8 && !sides.cut, 'the four sides get a full-width row of their own, nothing cut off at 390', JSON.stringify(sides));
     const chipsTV = await page.$$eval('#subnav .chip', (cs) => cs.map((c) => c.innerText.trim()));
     check(chipsTV[0] === 'All lengths' && chipsTV.slice(1).every((c) => ['Under 15 min', '15–30 min', '30 min+', 'Trailers'].includes(c)) && chipsTV.length >= 3,
       'on TV the chip row is lengths, in minutes', JSON.stringify(chipsTV));
@@ -2495,7 +2495,7 @@ async function onAir(browser, base) {
     });
     check(f.w >= f.vw - 32 - 1 && f.title >= 20 && f.dur, 'the feature: a full-width picture with its length, a big title', JSON.stringify(f));
     check(f.buttons.length === 2 && /^Watch /.test(f.buttons[0]) && /^More for /.test(f.buttons[1]) && f.why, 'its reason, one Watch button and ⋯, nothing else', JSON.stringify(f));
-    const rows = await page.$$eval('#panel-onair .oa-row', (rs) => rs.map((r) => ({ t: parseFloat(getComputedStyle(r.querySelector('.t')).fontSize),
+    const rows = await page.$$eval('#panel-onair [data-side="tv"] .oa-row', (rs) => rs.map((r) => ({ t: parseFloat(getComputedStyle(r.querySelector('.t')).fontSize),
       buttons: r.querySelectorAll('button').length, dur: !!r.querySelector('.dur'), w: Math.round(r.querySelector('.c-media').getBoundingClientRect().width) })));
     check(rows.length && rows.every((r) => r.t >= 16 && r.buttons === 2 && r.dur && r.w >= 140), 'every row: a readable title, the length on the picture, Watch and ⋯', JSON.stringify(rows.slice(0, 3)));
 
@@ -11368,6 +11368,79 @@ async function sectionPills(browser, base) {
   });
 }
 
+/* ------------------------------------------------------- On Air: Sports */
+/* Stephen, 2026-10-22: NBA first, then NFL, then local hoops; highlights tied
+   to the games; X and Reddit; the leagues people can join. The demo carries a
+   real 2026-10-22 snapshot, re-dated; the live file is the committed one. */
+async function onAirSports(browser, base) {
+  await group('On Air: Sports, demo', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/all-day/?demo=1#onair/sports');
+    await settle(page);
+    await page.waitForSelector('#panel-onair [data-side="sports"] [data-sec="sp-games"]', { timeout: 8000 });
+    const sw = await page.$$eval('#subnav .oa-sideswitch button', (bs) => bs.map((b) => b.textContent + '|' + b.getAttribute('aria-pressed')));
+    check(sw[3] === 'Sports|true', '#onair/sports opens the Sports side', JSON.stringify(sw));
+    const lg = await page.$$eval('#subnav .secpill .chip', (cs) => cs.map((c) => c.textContent.trim() + '|' + c.classList.contains('on')));
+    check(JSON.stringify(lg) === JSON.stringify(['NBA|true', 'NFL|false', 'Local hoops|false']), 'its pill: NBA (on), NFL, Local hoops', JSON.stringify(lg));
+    check(!(await page.$('#subnav .localsw')), 'no Local switch on Sports', '');
+    const order = await page.$$eval('#panel-onair [data-side="sports"] [data-sec]', (h) => h.map((x) => x.dataset.sec));
+    check(order[0] === 'sp-games' && order[1] === 'sp-hl' && order.includes('sp-s5') && order.includes('sp-x') && order.includes('sp-reddit') && order.indexOf('sp-hl') < order.indexOf('sp-coming'),
+      'NBA: games, then highlights, Starting 5, X, Reddit, then the rest of the week', JSON.stringify(order));
+    const hl = await page.$$eval('#panel-onair [data-side="sports"] .sp-game .sp-hl', (b) => b.length);
+    check(hl >= 3, 'last night’s games carry a Highlights button', String(hl));
+    await page.click('#panel-onair [data-side="sports"] .sp-game .sp-hl');
+    await page.waitForSelector('.sheet-card', { timeout: 3000 });
+    const sheet = await page.$eval('.sheet-card', (c) => c.innerText);
+    const stage = await page.$('.oa-player .oa-stage');
+    check(/Highlights/.test(sheet) && !!stage && / at /.test(sheet), 'it plays that game in On Air’s player', sheet.slice(0, 120));
+    await page.keyboard.press('Escape');
+    await page.waitForTimeout(300);
+    const s5 = await page.$eval('#panel-onair .sp-s5', (b) => ({ n: b.querySelectorAll('.sp-s5l li').length, read: [...b.querySelectorAll('a')].map((a) => a.href) }));
+    check(s5.n === 5 && s5.read.some((h) => /nba\.com\/news\/starting-5/.test(h)) && s5.read.includes('https://www.nba.com/starting5'), 'Starting 5: five stories, read it on NBA.com, get it by email', JSON.stringify(s5));
+    const x = await page.$$eval('#panel-onair [data-sec="sp-x"] ~ .sp-links-list a.sp-link', (as) => as.slice(0, 5).map((a) => a.href));
+    check(x.length && x.every((h) => /^https:\/\/x\.com\//.test(h)), 'From X links the posts on X', JSON.stringify(x.slice(0, 2)));
+    const subs = await page.$$eval('#panel-onair [data-side="sports"] .sec p', (p) => p.filter((n) => n.offsetParent !== null).map((n) => n.textContent).filter((t) => !/^\d+ games?$|^(Today|Yesterday|\w+day)$|^\d{1,2}:\d{2} [ap]m$/.test(t)));
+    check(!subs.length, 'no section explains itself: a subtitle is only a count, a day or a time', JSON.stringify(subs));
+
+    /* NFL: its own address and its own games */
+    await page.click('#subnav .secpill .chip[data-chip="nfl"]');
+    await page.waitForTimeout(500);
+    check(/#onair\/nfl$/.test(await page.evaluate(() => location.hash)), 'NFL is #onair/nfl', await page.evaluate(() => location.hash));
+    const nfl = await page.$$eval('#panel-onair [data-side="sports"] [data-sec]', (h) => h.map((x) => x.dataset.sec));
+    check(nfl[0] === 'sp-games' && !nfl.includes('sp-s5'), 'NFL: games first, no Starting 5', JSON.stringify(nfl));
+
+    /* Local hoops: UVM, the pros, and where to play, with People's whole list */
+    await page.goto(base + '/all-day/?demo=1#onair/hoops');
+    await settle(page);
+    await page.waitForSelector('#panel-onair [data-sec="sp-play"]', { timeout: 8000 });
+    const hoops = await page.evaluate(() => {
+      const side = document.querySelector('#panel-onair [data-side="sports"]');
+      return { secs: [...side.querySelectorAll('[data-sec]')].map((x) => x.dataset.sec), teams: [...side.querySelectorAll('.sp-card .t')].map((t) => t.textContent),
+        ours: side.querySelector('.sp-ours a')?.href || '', people: side.querySelector('.sp-people')?.getAttribute('href'), play: side.querySelectorAll('[data-sec="sp-play"] ~ .sp-links-list .sp-link').length };
+    });
+    check(JSON.stringify(hoops.secs) === JSON.stringify(['sp-uvm', 'sp-teams', 'sp-play']), 'Local hoops: UVM basketball, the pros, Play basketball', JSON.stringify(hoops.secs));
+    check(hoops.teams.includes('Burlington Revolution') && hoops.teams.includes('Vermont Coyotes') && hoops.teams.some((t) => /pickup/i.test(t)), 'the Revolution, the Coyotes and Stephen’s pickup', JSON.stringify(hoops.teams));
+    check(/meetup\.com\/burlington-social-activites-group\/events\//.test(hoops.ours) && hoops.people === '#people/groups' && hoops.play >= 5, 'pickup joins on Meetup; the leagues list; and People’s every club', JSON.stringify(hoops));
+    const wide = await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth);
+    check(wide, 'nothing scrolls sideways at 390', '');
+    await page.screenshot({ path: path.join(SHOTS, 'onair-sports-hoops.png') });
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('On Air: Sports, a stranger on the live file', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/all-day/#onair/sports');
+    await settle(page);
+    await page.waitForSelector('#panel-onair [data-side="sports"] [data-sec]', { timeout: 8000 });
+    const secs = await page.$$eval('#panel-onair [data-side="sports"] [data-sec]', (h) => h.map((x) => x.dataset.sec));
+    check(secs.length >= 2, 'the committed onair-sports.json draws the NBA side', JSON.stringify(secs));
+    await page.screenshot({ path: path.join(SHOTS, 'onair-sports-live.png') });
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+}
+
 /* ----------------------------------------------------------------- run */
 const t0 = Date.now();
 await mkdir(SHOTS, { recursive: true });
@@ -11392,6 +11465,7 @@ try {
   await run(thePeople);
   await run(theClubs);
   await run(onAir);
+  await run(onAirSports);
   await run(theGames);
   await run(theWatch);
   await run(interactions);
