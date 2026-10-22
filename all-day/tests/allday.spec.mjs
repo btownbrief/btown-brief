@@ -5565,6 +5565,13 @@ async function theFood(browser, base) {
 const SESSION = (o = {}) => JSON.stringify({ access_token: 'a.b.c', refresh_token: 'r1', expires_at: o.expires || 4102444800, user: { id: 'u-1', ...(o.user || {}) } });
 async function settingsText(page) {
   if (await page.$eval('#sheet', (x) => !x.hidden)) { await page.keyboard.press('Escape'); await page.waitForTimeout(50); }
+  /* scrolled down, the mast (and Settings in it) has stepped away by design;
+     a reader scrolls up a little to bring it back, so the helper does too */
+  if (await page.evaluate(() => document.body.classList.contains('chrome-away'))) {
+    await page.evaluate(() => document.querySelector('.panel:not([hidden])').scrollBy(0, -60));
+    await page.waitForFunction(() => !document.body.classList.contains('chrome-away'), null, { timeout: 3000 });
+    await page.waitForTimeout(300);
+  }
   await page.click('#settings-btn');
   await page.waitForFunction(() => { const b = document.querySelector('.sheet-body'); return b && !/Checking…|One moment…/.test(b.innerText); }, null, { timeout: 6000 }).catch(() => {});
   return page.$eval('.sheet-body', (b) => b.innerText);
@@ -11323,7 +11330,8 @@ async function theWeather(browser, base) {
     const want = arcAt((t0 - rise) / (set - rise), 1);
     check(s.body === 'sun' && close(s.x, want.x) && close(s.y, want.y), 'at 2 pm the sun is on its arc, 63% of the way from sunrise to sunset', JSON.stringify({ got: [s.x, s.y], want: [want.x.toFixed(1), want.y.toFixed(1)] }));
     check(s.sky === 'day' && s.cls === 'is-clear' && !s.clouds && !s.rain && !s.snow && !s.fog && /gradient/.test(s.bg), 'a clear day sky: no clouds, nothing falling', JSON.stringify(s));
-    check(s.sh <= 30 && s.h < 140, 'the strip is 30px; the card stays compact', s.sh + ' / ' + s.h);
+    /* compact: 137px of card, plus its own "Full weather" foot since 2026-10-22 (168) */
+    check(s.sh <= 30 && s.h < 175, 'the strip is 30px; the card stays compact', s.sh + ' / ' + s.h);
     const box = await page.evaluate(() => { const p = document.querySelector('#panel-whatnow'); const c = p.querySelector('.wxcard').getBoundingClientRect(), big = p.querySelector('.spin .big').getBoundingClientRect();
       return { right: c.right, bottom: c.bottom, bigTop: big.top, vw: innerWidth, scroll: document.documentElement.scrollWidth }; });
     check(box.right <= box.vw - 15 && box.bottom <= box.bigTop && box.scroll <= box.vw, 'at 390 it still sits above Spin with nothing sideways', JSON.stringify(box));
