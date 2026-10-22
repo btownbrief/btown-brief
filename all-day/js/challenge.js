@@ -368,13 +368,14 @@ async function submit(draft, go, msg) {
   let s = load();
   if (!C.isId(s.cid)) s = update({ cid: C.newId() });
   const r = C.feedbackArgs(s, draft, today());
-  if (r.error) { msg.textContent = SAY[r.error] || SAY.bad_input; return; }
+  if (r.error) { msg.textContent = SAY[r.error] || SAY.bad_input; msg.scrollIntoView({ block: 'nearest' }); return; }
   go.disabled = true;
   msg.textContent = '';
   const out = await send(r.args);
   go.disabled = false;
   if (!out || !out.ok) {
     msg.textContent = SAY[out && out.error] || 'Couldn’t send it just now. Your answers are kept here, so try again later.';
+    msg.scrollIntoView({ block: 'nearest' });
     return;
   }
   update({ sent: Date.now() });
