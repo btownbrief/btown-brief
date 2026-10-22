@@ -2,6 +2,8 @@
 
 A curated guide to Burlington, Vermont — built for the [Burlington Brief](https://btownbrief.com).
 
+All rights reserved: this code is published for viewing only and is not open source (see [LICENSE](LICENSE)).
+
 Static HTML + vanilla JavaScript, no build step required.
 
 ## Previewing locally

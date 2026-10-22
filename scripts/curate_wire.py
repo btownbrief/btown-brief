@@ -3,7 +3,7 @@
 
 Reads pulse.json (the firehose, plus the X and Facebook inbox), the tags
 tag_wire.py left in data/wire-tags.json, and the day so far, then asks the
-editor model, with prompts/wire-taste.md as its doctrine, for:
+editor model, with the private wire-taste.md as its doctrine, for:
 
   * "What matters today": 40 ranked picks, each with a one-line reason and a
     local flag, ranked as one list by importance with local and national

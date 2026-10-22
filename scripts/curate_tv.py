@@ -11,7 +11,7 @@ three hours. This script is the editor that runs once a day on top of it:
      or one the page already showed), livestreams (quarantined to their own
      rail), and anything a reader flagged "not for me" on the page.
   2. The editor. One Claude call reads the gated candidates plus the taste
-     doctrine in prompts/tv-taste.md and picks by INDEX: one Tonight's pick
+     doctrine in the private tv-taste.md and picks by INDEX: one Tonight's pick
      and a handful per shelf, each with a one-line reason. Titles are used
      verbatim — the model never writes a headline — and every pick maps back
      to a real item with the URL, channel and timestamp the source gave us.
@@ -70,7 +70,6 @@ HISTORY = os.path.join(ROOT, "data", "tv-history.json")
 VAULT_LIVE = os.path.join(ROOT, "data", "tv-vault-live.json")
 EDITIONS = os.path.join(ROOT, "data", "tv-editions.json")
 VAULT_SEED = os.path.join(ROOT, "data", "tv-vault.json")
-TASTE = os.path.join(ROOT, "prompts", "tv-taste.md")
 CHANNELS_FILE = os.path.join(ROOT, "data", "youtube-channels.json")
 
 RAW = "https://raw.githubusercontent.com/btownbrief/btown-brief"
@@ -649,12 +648,11 @@ log, not the page) on what today's field looked like.
 """.strip()
 
 
-def load_taste(path=TASTE):
-    try:
-        with open(path, encoding="utf-8") as src:
-            return src.read().strip()
-    except OSError:
-        return "(no taste doctrine found — use good judgment)"
+def load_taste():
+    # Private (scripts/private_prompts.py). A missing doctrine raises: the
+    # edition is never picked without it, and the branch keeps its last one.
+    import private_prompts
+    return private_prompts.load("tv-taste.md").strip()
 
 
 def age_label(ts, now_ts):

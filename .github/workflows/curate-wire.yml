@@ -16,7 +16,8 @@ name: Curate the Wire
 # estimate in data/wire-cost.json reaches $60 (of the $100 monthly API credits).
 #
 # Failure posture: no key, the cap, or API trouble ends the run green and the
-# branch keeps its last good paper. A paper left unchecked for 4 hours fails
+# branch keeps its last good paper. A missing private prompt fails it red,
+# before anything is pulled or pushed. A paper left unchecked for 4 hours fails
 # the run so a stale Wire is seen.
 
 on:
@@ -46,8 +47,18 @@ jobs:
   curate:
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    env:
+      # The taste prompts are private Actions secrets, not files in this
+      # public repo (scripts/private_prompts.py).
+      PROMPT_WIRE_TASTE: ${{ secrets.PROMPT_WIRE_TASTE }}
+      PROMPT_WIRE_TAGS: ${{ secrets.PROMPT_WIRE_TAGS }}
     steps:
       - uses: actions/checkout@v4
+
+      - name: Check the private prompts are here
+        # Before the pull, so a missing prompt fails the run red and the
+        # force-push never runs: the branch keeps its last good paper.
+        run: python3 scripts/private_prompts.py --check wire-taste.md wire-tags.md
 
       - name: Offline tests and selftests (no network, no model)
         run: |
