@@ -13,7 +13,7 @@
    audio — episodes are large and the browser's own HTTP cache handles them
    better than we would. */
 
-const VERSION = 'all-day-v96';   // the widget page is not the app shell
+const VERSION = 'all-day-v97';   // the widget page is not the app shell
 const SHELL = VERSION + '-shell';
 const DATA = 'all-day-data';   // unversioned on purpose: survives shell bumps
 

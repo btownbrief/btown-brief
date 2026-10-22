@@ -1980,7 +1980,7 @@
   ok   People, live: Stephen’s meetups, the clubs, an empty board › an event in both sources shows once
   ok   People, live: Stephen’s meetups, the clubs, an empty board › and no Meetup interest count
   ok   People, live: Stephen’s meetups, the clubs, an empty board › the mixers: seven days from today
-  ok   People, live: Stephen’s meetups, the clubs, an empty board › with the calendar’s mixers counted on each (45 this week)
+  ok   People, live: Stephen’s meetups, the clubs, an empty board › with the calendar’s mixers counted on each (44 this week)
   ok   People, live: Stephen’s meetups, the clubs, an empty board › a day’s rows: each links to its event page, none of them his
   ok   People, live: Stephen’s meetups, the clubs, an empty board › and no kids’ or teens’ event is a mixer
   ok   People, live: Stephen’s meetups, the clubs, an empty board › today’s are the calendar’s, past ones gone
@@ -2965,7 +2965,7 @@
   ok   sign-in fails soft › a bad address is caught before any request
   ok   sign-in fails soft › no link was requested
   ok   sign-in fails soft › no console errors
-  ok   performance › the live Wire redraws 60 cards in 23ms (budget 100)
+  ok   performance › the live Wire redraws 60 cards in 24ms (budget 100)
   ok   shell fixes: a rail never snaps flush to the edge › 390: .rail carries scroll-padding of one gutter
   ok   shell fixes: a rail never snaps flush to the edge › 390: a card scrolled to the start stops at the gutter
   ok   shell fixes: a rail never snaps flush to the edge › 390: no console errors
@@ -3228,7 +3228,7 @@
   ok   Habits, the numbers: today on top, the heat map, a habit’s month and best streak (demo, 390, Wednesday Oct 14) › Wednesday: the walk done, reading and the gym still to do; every due day of the last week done
   ok   Habits, the numbers: today on top, the heat map, a habit’s month and best streak (demo, 390, Wednesday Oct 14) › sixteen weeks, Monday to Sunday, ending this week
   ok   Habits, the numbers: today on top, the heat map, a habit’s month and best streak (demo, 390, Wednesday Oct 14) › today half done and marked, yesterday all done, tomorrow blank, before the habits began nothing
-  ok   Habits, the numbers: today on top, the heat map, a habit’s month and best streak (demo, 390, Wednesday Oct 14) › a tap moves today’s count and today’s square in the same click (3 ms)
+  ok   Habits, the numbers: today on top, the heat map, a habit’s month and best streak (demo, 390, Wednesday Oct 14) › a tap moves today’s count and today’s square in the same click (4 ms)
   ok   Habits, the numbers: today on top, the heat map, a habit’s month and best streak (demo, 390, Wednesday Oct 14) › all three: “All done today”, and the bar full
   ok   Habits, the numbers: today on top, the heat map, a habit’s month and best streak (demo, 390, Wednesday Oct 14) › the streak, the best streak and the last thirty days
   ok   Habits, the numbers: today on top, the heat map, a habit’s month and best streak (demo, 390, Wednesday Oct 14) › this month: the 1st is a Thursday, and no month after it
@@ -3261,7 +3261,7 @@
   ok   Habits, swipe to archive with Undo, drag and keys to reorder, edit (demo, 1280, dark) › habits: at most 2 subnav rows
   ok   Habits, swipe to archive with Undo, drag and keys to reorder, edit (demo, 1280, dark) › no console errors
   ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › twenty habits, in order
-  ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › twenty habits and a year of taps: a tap still shows at once (13, 13, 11, 12 ms)
+  ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › twenty habits and a year of taps: a tap still shows at once (13, 12, 12, 12 ms)
   ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › the heat map is all there, and four taps leave it as it was
   ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › every row keeps its seven dots and its 48px tap
   ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › the list is longer than the screen, and the panel scrolls
@@ -3300,7 +3300,7 @@
   ok   Habits, the day turns at midnight New York, not the phone’s (demo, a reader in Tokyo) › and a tap now is Thursday’s
   ok   Habits, the day turns at midnight New York, not the phone’s (demo, a reader in Tokyo) › no console errors
   ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 390, light) › a first visit: one line, the starters and Add habit, nothing seeded, no sign-in wall
-  ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 390, light) › three habits, two tapped, at once (3 ms)
+  ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 390, light) › three habits, two tapped, at once (4 ms)
   ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 390, light) › and nothing personal went to the server (the season and the public forests only)
   ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 390, light) › kept on this phone, under one versioned key
   ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 390, light) › one quiet line under the list: Sync across devices
@@ -3326,7 +3326,7 @@
   ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 390, light) › habits: at most 2 subnav rows
   ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 390, light) › no console errors
   ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 1280, dark) › a first visit: one line, the starters and Add habit, nothing seeded, no sign-in wall
-  ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 1280, dark) › three habits, two tapped, at once (3 ms)
+  ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 1280, dark) › three habits, two tapped, at once (4 ms)
   ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 1280, dark) › and nothing personal went to the server (the season and the public forests only)
   ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 1280, dark) › kept on this phone, under one versioned key
   ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 1280, dark) › one quiet line under the list: Sync across devices
@@ -3451,7 +3451,7 @@
   ok   The Build, a first visit with an empty town: Clock in, the stopwatch, the whistle, Stop, name it (live, signed out, 390 light) › two of the site’s regulars are at work, so the site never looks empty
   ok   The Build, a first visit with an empty town: Clock in, the stopwatch, the whistle, Stop, name it (live, signed out, 390 light) › one tap: no sheet, the stopwatch running, Stop, and no "just you" line
   ok   The Build, a first visit with an empty town: Clock in, the stopwatch, the whistle, Stop, name it (live, signed out, 390 light) › the camera stays on your builder
-  ok   The Build, a first visit with an empty town: Clock in, the stopwatch, the whistle, Stop, name it (live, signed out, 390 light) › the whistle at 26 minutes: a buzz and Tap to answer, counting down
+  ok   The Build, a first visit with an empty town: Clock in, the stopwatch, the whistle, Stop, name it (live, signed out, 390 light) › the whistle at 25 minutes: a buzz and Tap to answer, counting down
   ok   The Build, a first visit with an empty town: Clock in, the stopwatch, the whistle, Stop, name it (live, signed out, 390 light) › a tap and the card clears, back to work
   ok   The Build, a first visit with an empty town: Clock in, the stopwatch, the whistle, Stop, name it (live, signed out, 390 light) › Keep it: the hours on this phone, and the thing card with its own Clock in
   ok   The Build, a first visit with an empty town: Clock in, the stopwatch, the whistle, Stop, name it (live, signed out, 390 light) › build: nothing fixed or sticky inside the tab
@@ -3466,7 +3466,7 @@
   ok   The Build, a first visit with the town’s database missing: Clock in, the stopwatch, the whistle, Stop, name it (live, signed out, 390 dark) › two of the site’s regulars are at work, so the site never looks empty
   ok   The Build, a first visit with the town’s database missing: Clock in, the stopwatch, the whistle, Stop, name it (live, signed out, 390 dark) › one tap: no sheet, the stopwatch running, Stop, and no "just you" line
   ok   The Build, a first visit with the town’s database missing: Clock in, the stopwatch, the whistle, Stop, name it (live, signed out, 390 dark) › the camera stays on your builder
-  ok   The Build, a first visit with the town’s database missing: Clock in, the stopwatch, the whistle, Stop, name it (live, signed out, 390 dark) › the whistle at 28 minutes: a buzz and Tap to answer, counting down
+  ok   The Build, a first visit with the town’s database missing: Clock in, the stopwatch, the whistle, Stop, name it (live, signed out, 390 dark) › the whistle at 29 minutes: a buzz and Tap to answer, counting down
   ok   The Build, a first visit with the town’s database missing: Clock in, the stopwatch, the whistle, Stop, name it (live, signed out, 390 dark) › a tap and the card clears, back to work
   ok   The Build, a first visit with the town’s database missing: Clock in, the stopwatch, the whistle, Stop, name it (live, signed out, 390 dark) › Keep it: the hours on this phone, and the thing card with its own Clock in
   ok   The Build, a first visit with the town’s database missing: Clock in, the stopwatch, the whistle, Stop, name it (live, signed out, 390 dark) › build: nothing fixed or sticky inside the tab
@@ -3502,12 +3502,12 @@
   ok   The Build, a shift on a fake clock: no whistle before 15 minutes, a buzz by 30, a tap answers it, a miss knocks the crew off at the last touch (demo, 390) › the stopwatch counts up by the second
   ok   The Build, a shift on a fake clock: no whistle before 15 minutes, a buzz by 30, a tap answers it, a miss knocks the crew off at the last touch (demo, 390) › fourteen minutes in: no whistle yet
   ok   The Build, a shift on a fake clock: no whistle before 15 minutes, a buzz by 30, a tap answers it, a miss knocks the crew off at the last touch (demo, 390) › your hours count up live while the shift runs (today 1m to 14m)
-  ok   The Build, a shift on a fake clock: no whistle before 15 minutes, a buzz by 30, a tap answers it, a miss knocks the crew off at the last touch (demo, 390) › the whistle blows between 15 and 30 minutes in (at 21): one buzz, the foreman on the site
+  ok   The Build, a shift on a fake clock: no whistle before 15 minutes, a buzz by 30, a tap answers it, a miss knocks the crew off at the last touch (demo, 390) › the whistle blows between 15 and 30 minutes in (at 28): one buzz, the foreman on the site
   ok   The Build, a shift on a fake clock: no whistle before 15 minutes, a buzz by 30, a tap answers it, a miss knocks the crew off at the last touch (demo, 390) › no dialog: the whistle is on the site (and said to a screen reader)
   ok   The Build, a shift on a fake clock: no whistle before 15 minutes, a buzz by 30, a tap answers it, a miss knocks the crew off at the last touch (demo, 390) › a big card in the middle: Tap to answer, counting down from three minutes
-  ok   The Build, a shift on a fake clock: no whistle before 15 minutes, a buzz by 30, a tap answers it, a miss knocks the crew off at the last touch (demo, 390) › a tap answers it: back to work, 21 minutes so far
-  ok   The Build, a shift on a fake clock: no whistle before 15 minutes, a buzz by 30, a tap answers it, a miss knocks the crew off at the last touch (demo, 390) › the next whistle at 20 minutes after the touch, the crew off three minutes later
-  ok   The Build, a shift on a fake clock: no whistle before 15 minutes, a buzz by 30, a tap answers it, a miss knocks the crew off at the last touch (demo, 390) › missed: the crew knocks off, banked to the last touch (21 minutes)
+  ok   The Build, a shift on a fake clock: no whistle before 15 minutes, a buzz by 30, a tap answers it, a miss knocks the crew off at the last touch (demo, 390) › a tap answers it: back to work, 28 minutes so far
+  ok   The Build, a shift on a fake clock: no whistle before 15 minutes, a buzz by 30, a tap answers it, a miss knocks the crew off at the last touch (demo, 390) › the next whistle at 29 minutes after the touch, the crew off three minutes later
+  ok   The Build, a shift on a fake clock: no whistle before 15 minutes, a buzz by 30, a tap answers it, a miss knocks the crew off at the last touch (demo, 390) › missed: the crew knocks off, banked to the last touch (28 minutes)
   ok   The Build, a shift on a fake clock: no whistle before 15 minutes, a buzz by 30, a tap answers it, a miss knocks the crew off at the last touch (demo, 390) › the end screen: the time, one line, Keep it or Post
   ok   The Build, a shift on a fake clock: no whistle before 15 minutes, a buzz by 30, a tap answers it, a miss knocks the crew off at the last touch (demo, 390) › and it stays a miss while the end screen waits
   ok   The Build, a shift on a fake clock: no whistle before 15 minutes, a buzz by 30, a tap answers it, a miss knocks the crew off at the last touch (demo, 390) › Keep it: the hours are on your record, the site docks again
@@ -3567,6 +3567,45 @@
   ok   The Build, the docked site: the handle opens it full screen, Escape and a drag bring it down (demo, 390) › no console errors
   ok   The Build, the site: a partial setTown changes only what it names (a post lights a window, the floors stay) › a post lights one more window; floors, progress and hours stay where they were
   ok   The Build, the site: a partial setTown changes only what it names (a post lights a window, the floors stay) › no console errors
+  ok   The Build, the intro: a few sentences the first time the tab opens, Got it, and the ? brings it back (live, signed out, 390) › the first open: what it is, why, and how, in three short paragraphs, and Got it
+  ok   The Build, the intro: a few sentences the first time the tab opens, Got it, and the ? brings it back (live, signed out, 390) › no em dashes or colon sentences in it
+  ok   The Build, the intro: a few sentences the first time the tab opens, Got it, and the ? brings it back (live, signed out, 390) › Got it closes it
+  ok   The Build, the intro: a few sentences the first time the tab opens, Got it, and the ? brings it back (live, signed out, 390) › and it never opens on its own again
+  ok   The Build, the intro: a few sentences the first time the tab opens, Got it, and the ? brings it back (live, signed out, 390) › a ? beside Build | Habits, clear of the switch
+  ok   The Build, the intro: a few sentences the first time the tab opens, Got it, and the ? brings it back (live, signed out, 390) › the ? opens it again
+  ok   The Build, the intro: a few sentences the first time the tab opens, Got it, and the ? brings it back (live, signed out, 390) › Habits keeps its own row, no ?
+  ok   The Build, the intro: a few sentences the first time the tab opens, Got it, and the ? brings it back (live, signed out, 390) › no console errors
+  ok   The Build, your builder’s jobs: the building’s next four, drag or up and down, add one, and a shift works through them (live empty town, signed out, 390) › an empty lot: the building’s next four jobs, in its order
+  ok   The Build, your builder’s jobs: the building’s next four, drag or up and down, add one, and a shift works through them (live empty town, signed out, 390) › each one says when it comes up
+  ok   The Build, your builder’s jobs: the building’s next four, drag or up and down, add one, and a shift works through them (live empty town, signed out, 390) › a short row of what the building needs next to add, and Haul materials
+  ok   The Build, your builder’s jobs: the building’s next four, drag or up and down, add one, and a shift works through them (live empty town, signed out, 390) › the Clock in card says what your builder starts on
+  ok   The Build, your builder’s jobs: the building’s next four, drag or up and down, add one, and a shift works through them (live empty town, signed out, 390) › down and up swap a job with its neighbor
+  ok   The Build, your builder’s jobs: the building’s next four, drag or up and down, add one, and a shift works through them (live empty town, signed out, 390) › the top can’t go up, the bottom can’t go down
+  ok   The Build, your builder’s jobs: the building’s next four, drag or up and down, add one, and a shift works through them (live empty town, signed out, 390) › drag the grip: Dig the footings moves to the top
+  ok   The Build, your builder’s jobs: the building’s next four, drag or up and down, add one, and a shift works through them (live empty town, signed out, 390) › Add puts it at the end
+  ok   The Build, your builder’s jobs: the building’s next four, drag or up and down, add one, and a shift works through them (live empty town, signed out, 390) › x takes one off
+  ok   The Build, your builder’s jobs: the building’s next four, drag or up and down, add one, and a shift works through them (live empty town, signed out, 390) › this phone keeps the list, with a way back to the building’s
+  ok   The Build, your builder’s jobs: the building’s next four, drag or up and down, add one, and a shift works through them (live empty town, signed out, 390) › on shift: Job 1 of 4 under the stopwatch, and a bar of four
+  ok   The Build, your builder’s jobs: the building’s next four, drag or up and down, add one, and a shift works through them (live empty town, signed out, 390) › your builder is on Dig the footings (a footing, or getting ready for one)
+  ok   The Build, your builder’s jobs: the building’s next four, drag or up and down, add one, and a shift works through them (live empty town, signed out, 390) › fifteen minutes in: Job 2, the first piece of the bar full
+  ok   The Build, your builder’s jobs: the building’s next four, drag or up and down, add one, and a shift works through them (live empty town, signed out, 390) › and your builder moves on to it
+  ok   The Build, your builder’s jobs: the building’s next four, drag or up and down, add one, and a shift works through them (live empty town, signed out, 390) › the shift’s list: done, now, and the rest movable
+  ok   The Build, your builder’s jobs: the building’s next four, drag or up and down, add one, and a shift works through them (live empty town, signed out, 390) › nothing moves above the job on now
+  ok   The Build, your builder’s jobs: the building’s next four, drag or up and down, add one, and a shift works through them (live empty town, signed out, 390) › banked: the job done drops off, and the rest the building still needs wait for next time
+  ok   The Build, your builder’s jobs: the building’s next four, drag or up and down, add one, and a shift works through them (live empty town, signed out, 390) › build: nothing fixed or sticky inside the tab
+  ok   The Build, your builder’s jobs: the building’s next four, drag or up and down, add one, and a shift works through them (live empty town, signed out, 390) › build: uppercase only in the caps roles
+  ok   The Build, your builder’s jobs: the building’s next four, drag or up and down, add one, and a shift works through them (live empty town, signed out, 390) › build: no monospace
+  ok   The Build, your builder’s jobs: the building’s next four, drag or up and down, add one, and a shift works through them (live empty town, signed out, 390) › build: no escaped markup, undefined or NaN on the page
+  ok   The Build, your builder’s jobs: the building’s next four, drag or up and down, add one, and a shift works through them (live empty town, signed out, 390) › build: no sideways scroll at 390
+  ok   The Build, your builder’s jobs: the building’s next four, drag or up and down, add one, and a shift works through them (live empty town, signed out, 390) › build: at most 2 subnav rows
+  ok   The Build, your builder’s jobs: the building’s next four, drag or up and down, add one, and a shift works through them (live empty town, signed out, 390) › no console errors
+  ok   The Build, your builder’s jobs drive the site: each job on the list is the trade your builder works (demo, the 3rd floor, 390) › a timber floor: the building names its jobs with the floor they’re on
+  ok   The Build, your builder’s jobs drive the site: each job on the list is the trade your builder works (demo, the 3rd floor, 390) › wire on the list: your builder works only that trade
+  ok   The Build, your builder’s jobs drive the site: each job on the list is the trade your builder works (demo, the 3rd floor, 390) › brick on the list: your builder works only that trade
+  ok   The Build, your builder’s jobs drive the site: each job on the list is the trade your builder works (demo, the 3rd floor, 390) › glaze on the list: your builder works only that trade
+  ok   The Build, your builder’s jobs drive the site: each job on the list is the trade your builder works (demo, the 3rd floor, 390) › haul on the list: your builder works only that trade
+  ok   The Build, your builder’s jobs drive the site: each job on the list is the trade your builder works (demo, the 3rd floor, 390) › and says so, in the trade’s own words
+  ok   The Build, your builder’s jobs drive the site: each job on the list is the trade your builder works (demo, the 3rd floor, 390) › no console errors
   ok   What Now, the sunset in the weather line says a score only when there is one (live) › a 0.0 (the forecast missing) is no score: the time, and that it is tomorrow’s
   ok   What Now, the sunset in the weather line says a score only when there is one (live) › a score worked out without the forecast is not shown either
   ok   What Now, the sunset in the weather line says a score only when there is one (live) › a real score is shown beside the time
