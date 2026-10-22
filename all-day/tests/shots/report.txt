@@ -1193,6 +1193,33 @@
   ok   Lake and Sunset content dark › green sources and National meet 4.5:1 contrast
   ok   Lake and Sunset content dark › reduced motion disables new tab feedback
   ok   Lake and Sunset content dark › Settings restores the existing Btown Brief tip jar
+  ok   widget: the script asks one file, on our own site, and nothing else › one Request in the whole script
+  ok   widget: the script asks one file, on our own site, and nothing else › every URL in it is guide.btownbrief.com
+  ok   widget: the script asks one file, on our own site, and nothing else › no counting, no device or location reads
+  ok   widget: the setup page at 390 (light) › the title
+  ok   widget: the setup page at 390 (light) › five steps and no other paragraph
+  ok   widget: the setup page at 390 (light) › each step is one short line
+  ok   widget: the setup page at 390 (light) › the App Store link is Scriptable’s
+  ok   widget: the setup page at 390 (light) › the mast goes back to All Day
+  ok   widget: the setup page at 390 (light) › the preview draws the widget file
+  ok   widget: the setup page at 390 (light) › no sideways scroll
+  ok   widget: the setup page at 390 (light) › the page is the app’s paper
+  ok   widget: the setup page at 390 (light) › Copy the script puts the whole script on the clipboard
+  ok   widget: the setup page at 390 (light) › no console errors
+  ok   widget: the setup page at 390 (dark) › the title
+  ok   widget: the setup page at 390 (dark) › five steps and no other paragraph
+  ok   widget: the setup page at 390 (dark) › each step is one short line
+  ok   widget: the setup page at 390 (dark) › the App Store link is Scriptable’s
+  ok   widget: the setup page at 390 (dark) › the mast goes back to All Day
+  ok   widget: the setup page at 390 (dark) › the preview draws the widget file
+  ok   widget: the setup page at 390 (dark) › no sideways scroll
+  ok   widget: the setup page at 390 (dark) › the page is the app’s paper
+  ok   widget: the setup page at 390 (dark) › Copy the script puts the whole script on the clipboard
+  ok   widget: the setup page at 390 (dark) › no console errors
+  ok   widget: Settings has a Home screen widget row that opens the page › the row and its button
+  ok   widget: Settings has a Home screen widget row that opens the page › it links to widget/
+  ok   widget: Settings has a Home screen widget row that opens the page › and lands on the setup page
+  ok   widget: Settings has a Home screen widget row that opens the page › no console errors
   ok   deep links, demo › #wire/w13 lands on its card and flashes
   ok   deep links, demo › #wire/w13: no console errors
   ok   deep links, demo › #wire/y4 lands on its card and flashes
@@ -1980,7 +2007,7 @@
   ok   People, live: Stephen’s meetups, the clubs, an empty board › an event in both sources shows once
   ok   People, live: Stephen’s meetups, the clubs, an empty board › and no Meetup interest count
   ok   People, live: Stephen’s meetups, the clubs, an empty board › the mixers: seven days from today
-  ok   People, live: Stephen’s meetups, the clubs, an empty board › with the calendar’s mixers counted on each (44 this week)
+  ok   People, live: Stephen’s meetups, the clubs, an empty board › with the calendar’s mixers counted on each (43 this week)
   ok   People, live: Stephen’s meetups, the clubs, an empty board › a day’s rows: each links to its event page, none of them his
   ok   People, live: Stephen’s meetups, the clubs, an empty board › and no kids’ or teens’ event is a mixer
   ok   People, live: Stephen’s meetups, the clubs, an empty board › today’s are the calendar’s, past ones gone
@@ -2965,7 +2992,7 @@
   ok   sign-in fails soft › a bad address is caught before any request
   ok   sign-in fails soft › no link was requested
   ok   sign-in fails soft › no console errors
-  ok   performance › the live Wire redraws 60 cards in 23ms (budget 100)
+  ok   performance › the live Wire redraws 60 cards in 27ms (budget 100)
   ok   shell fixes: a rail never snaps flush to the edge › 390: .rail carries scroll-padding of one gutter
   ok   shell fixes: a rail never snaps flush to the edge › 390: a card scrolled to the start stops at the gutter
   ok   shell fixes: a rail never snaps flush to the edge › 390: no console errors
@@ -3228,7 +3255,7 @@
   ok   Habits, the numbers: today on top, the heat map, a habit’s month and best streak (demo, 390, Wednesday Oct 14) › Wednesday: the walk done, reading and the gym still to do; every due day of the last week done
   ok   Habits, the numbers: today on top, the heat map, a habit’s month and best streak (demo, 390, Wednesday Oct 14) › sixteen weeks, Monday to Sunday, ending this week
   ok   Habits, the numbers: today on top, the heat map, a habit’s month and best streak (demo, 390, Wednesday Oct 14) › today half done and marked, yesterday all done, tomorrow blank, before the habits began nothing
-  ok   Habits, the numbers: today on top, the heat map, a habit’s month and best streak (demo, 390, Wednesday Oct 14) › a tap moves today’s count and today’s square in the same click (3 ms)
+  ok   Habits, the numbers: today on top, the heat map, a habit’s month and best streak (demo, 390, Wednesday Oct 14) › a tap moves today’s count and today’s square in the same click (4 ms)
   ok   Habits, the numbers: today on top, the heat map, a habit’s month and best streak (demo, 390, Wednesday Oct 14) › all three: “All done today”, and the bar full
   ok   Habits, the numbers: today on top, the heat map, a habit’s month and best streak (demo, 390, Wednesday Oct 14) › the streak, the best streak and the last thirty days
   ok   Habits, the numbers: today on top, the heat map, a habit’s month and best streak (demo, 390, Wednesday Oct 14) › this month: the 1st is a Thursday, and no month after it
@@ -3261,7 +3288,7 @@
   ok   Habits, swipe to archive with Undo, drag and keys to reorder, edit (demo, 1280, dark) › habits: at most 2 subnav rows
   ok   Habits, swipe to archive with Undo, drag and keys to reorder, edit (demo, 1280, dark) › no console errors
   ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › twenty habits, in order
-  ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › twenty habits and a year of taps: a tap still shows at once (12, 13, 11, 11 ms)
+  ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › twenty habits and a year of taps: a tap still shows at once (12, 12, 11, 11 ms)
   ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › the heat map is all there, and four taps leave it as it was
   ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › every row keeps its seven dots and its 48px tap
   ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › the list is longer than the screen, and the panel scrolls
@@ -3466,7 +3493,7 @@
   ok   The Build, a first visit with the town’s database missing: Clock in, the stopwatch, the whistle, Stop, name it (live, signed out, 390 dark) › two of the site’s regulars are at work, so the site never looks empty
   ok   The Build, a first visit with the town’s database missing: Clock in, the stopwatch, the whistle, Stop, name it (live, signed out, 390 dark) › one tap: no sheet, the stopwatch running, Stop, and no "just you" line
   ok   The Build, a first visit with the town’s database missing: Clock in, the stopwatch, the whistle, Stop, name it (live, signed out, 390 dark) › the camera stays on your builder
-  ok   The Build, a first visit with the town’s database missing: Clock in, the stopwatch, the whistle, Stop, name it (live, signed out, 390 dark) › the whistle at 19 minutes: a buzz and Tap to answer, counting down
+  ok   The Build, a first visit with the town’s database missing: Clock in, the stopwatch, the whistle, Stop, name it (live, signed out, 390 dark) › the whistle at 23 minutes: a buzz and Tap to answer, counting down
   ok   The Build, a first visit with the town’s database missing: Clock in, the stopwatch, the whistle, Stop, name it (live, signed out, 390 dark) › a tap and the card clears, back to work
   ok   The Build, a first visit with the town’s database missing: Clock in, the stopwatch, the whistle, Stop, name it (live, signed out, 390 dark) › Keep it: the hours on this phone, and the thing card with its own Clock in
   ok   The Build, a first visit with the town’s database missing: Clock in, the stopwatch, the whistle, Stop, name it (live, signed out, 390 dark) › build: nothing fixed or sticky inside the tab
@@ -3502,12 +3529,12 @@
   ok   The Build, a shift on a fake clock: no whistle before 15 minutes, a buzz by 30, a tap answers it, a miss knocks the crew off at the last touch (demo, 390) › the stopwatch counts up by the second
   ok   The Build, a shift on a fake clock: no whistle before 15 minutes, a buzz by 30, a tap answers it, a miss knocks the crew off at the last touch (demo, 390) › fourteen minutes in: no whistle yet
   ok   The Build, a shift on a fake clock: no whistle before 15 minutes, a buzz by 30, a tap answers it, a miss knocks the crew off at the last touch (demo, 390) › your hours count up live while the shift runs (today 1m to 14m)
-  ok   The Build, a shift on a fake clock: no whistle before 15 minutes, a buzz by 30, a tap answers it, a miss knocks the crew off at the last touch (demo, 390) › the whistle blows between 15 and 30 minutes in (at 20): one buzz, the foreman on the site
+  ok   The Build, a shift on a fake clock: no whistle before 15 minutes, a buzz by 30, a tap answers it, a miss knocks the crew off at the last touch (demo, 390) › the whistle blows between 15 and 30 minutes in (at 21): one buzz, the foreman on the site
   ok   The Build, a shift on a fake clock: no whistle before 15 minutes, a buzz by 30, a tap answers it, a miss knocks the crew off at the last touch (demo, 390) › no dialog: the whistle is on the site (and said to a screen reader)
   ok   The Build, a shift on a fake clock: no whistle before 15 minutes, a buzz by 30, a tap answers it, a miss knocks the crew off at the last touch (demo, 390) › a big card in the middle: Tap to answer, counting down from three minutes
-  ok   The Build, a shift on a fake clock: no whistle before 15 minutes, a buzz by 30, a tap answers it, a miss knocks the crew off at the last touch (demo, 390) › a tap answers it: back to work, 20 minutes so far
-  ok   The Build, a shift on a fake clock: no whistle before 15 minutes, a buzz by 30, a tap answers it, a miss knocks the crew off at the last touch (demo, 390) › the next whistle at 28 minutes after the touch, the crew off three minutes later
-  ok   The Build, a shift on a fake clock: no whistle before 15 minutes, a buzz by 30, a tap answers it, a miss knocks the crew off at the last touch (demo, 390) › missed: the crew knocks off, banked to the last touch (20 minutes)
+  ok   The Build, a shift on a fake clock: no whistle before 15 minutes, a buzz by 30, a tap answers it, a miss knocks the crew off at the last touch (demo, 390) › a tap answers it: back to work, 21 minutes so far
+  ok   The Build, a shift on a fake clock: no whistle before 15 minutes, a buzz by 30, a tap answers it, a miss knocks the crew off at the last touch (demo, 390) › the next whistle at 25 minutes after the touch, the crew off three minutes later
+  ok   The Build, a shift on a fake clock: no whistle before 15 minutes, a buzz by 30, a tap answers it, a miss knocks the crew off at the last touch (demo, 390) › missed: the crew knocks off, banked to the last touch (21 minutes)
   ok   The Build, a shift on a fake clock: no whistle before 15 minutes, a buzz by 30, a tap answers it, a miss knocks the crew off at the last touch (demo, 390) › the end screen: the time, one line, Keep it or Post
   ok   The Build, a shift on a fake clock: no whistle before 15 minutes, a buzz by 30, a tap answers it, a miss knocks the crew off at the last touch (demo, 390) › and it stays a miss while the end screen waits
   ok   The Build, a shift on a fake clock: no whistle before 15 minutes, a buzz by 30, a tap answers it, a miss knocks the crew off at the last touch (demo, 390) › Keep it: the hours are on your record, the site docks again

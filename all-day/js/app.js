@@ -559,6 +559,13 @@ function settingsSheet() {
       links.appendChild(a);
     });
     body.appendChild(links);
+    /* the Scriptable widget's setup page (widget/index.html) */
+    const widget = el('div', 'sheet-row', '<div class="t">Home screen widget</div>');
+    const setUp = el('a', 'btn ghost sm', 'Set up');
+    setUp.href = 'widget/';
+    setUp.dataset.widget = '1';
+    widget.appendChild(setUp);
+    body.appendChild(widget);
     const tip = el('a', 'btn ghost tip-link', ICON.heart + ' Tip jar ' + ICON.ext);
     tip.href = 'https://ko-fi.com/btownbrief';
     tip.target = '_blank'; tip.rel = 'noopener';
