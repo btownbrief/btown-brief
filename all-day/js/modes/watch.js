@@ -1,6 +1,15 @@
-/* Watch: films and shows for a couple and for the town. Top to bottom:
+/* Watch: films and shows for a couple and for the town.
 
-   - Movies | TV: one switch at the top. Everything below shows that kind;
+   Upcoming | Past (Stephen, 2026-10-22: "make it more obvious that you have
+   upcoming … and then you have past", like Build | Habits): a liquid switch
+   floating at the top, Upcoming first because it changes most. Upcoming is
+   what is ahead: today's showtimes, coming to theaters, coming to
+   streaming, the screening vote. Past is what is already out: the time
+   machine, the town's ratings, the list. The chat closes both. The side is
+   not remembered: every visit opens on Upcoming. Top to bottom:
+
+   - Movies | TV: one switch, in colour so the eye finds it first (Stephen,
+     2026-10-22). Everything below shows that kind;
      the dots, the want list and the town ratings work the same for both.
      On Movies, today's showtimes come first (fresh first, 2026-10-19),
      opening on the first theater with shows still to come today.
@@ -12,6 +21,10 @@
      line a first-time visitor needs: Steve (Stephen's name on the page)
      hosts the movie night (a link to his Meetup group), and this picks the film.
      On TV the rail is what is airing this week, new seasons first.
+   - Coming to streaming: films with a US digital release in the next five
+     weeks, with the service JustWatch lists (credited under the row, as
+     TMDB's terms ask), or on TV new shows and seasons on the big streamers
+     (build_films.py's stream and tv_stream shelves).
    - In theaters near you (Movies): Partizanfilm, Majestic 10 and Essex
      Cinemas, one at a time, with the rest of today's times read off each
      theater's own page (scripts/build_showtimes.py, every morning), or the
@@ -79,6 +92,7 @@ import * as store from '../store.js';
 import * as boards from '../boards.js';
 import { fetchJSON } from '../wire.js';
 import { sectionBar } from '../sections.js';
+import { liquify } from '../liquid.js';
 import { RULES, expiresAt } from '../boards-core.js';
 import { el, esc, safeHref, ICON, art, section, rail, chips, pills, button, put, dateline, divider, listRail } from '../ui.js';
 
@@ -95,6 +109,7 @@ const CHAT_URL = 'https://www.btownbrief.com/community/channels/meetups-hangouts
 const MEETUP_URL = 'https://www.meetup.com/burlington-social-activites-group/';
 const TMDB_URL = 'https://www.themoviedb.org/';
 const TMDB_LOGO = '../assets/img/tmdb.svg';
+const JUSTWATCH_URL = 'https://www.justwatch.com/us';
 const LOCAL_KEY = 'allday-watch';
 const TV_BASE = 50000000;   // a show's number: TV_BASE + its TMDB TV id
 const PAGE = 60;            // posters drawn at a time
@@ -118,6 +133,9 @@ const THEATERS = [
   { id: 'majestic10', name: 'Majestic 10', town: 'Williston', url: 'https://www.majestic10.com/movies' },
   { id: 'essex', name: 'Essex Cinemas', town: 'Essex', url: 'https://www.essexcinemas.com/vermont/essex/essex-cinemas-9/showtimes' },
 ];
+
+/* each theater's colour on its picker button */
+const THEATER_TONE = { partizanfilm: '--liq-food', majestic10: '--liq-people', essex: '--liq-games' };
 
 const RECENCY = [
   ['any', 'Any time'], ['1m', 'Last month', 0, 31], ['6m', '6 months', 0, 183], ['1y', '1 year', 0, 366], ['2y', '2 years', 0, 731],
@@ -154,7 +172,7 @@ const byId = new Map();     // id -> title (films and shows; a show's id is TV_B
 const byKey = new Map();    // "title|year" -> title
 const byTitle = new Map();  // "title" -> title, or null when two share it
 const slots = Object.create(null);
-const V = { kind: 'movie', recency: 'any', genre: 'all', sort: 'top', show: 'all', shown: PAGE, seed: 1, month: '', theater: '', picked: false, backAll: false };
+const V = { side: 'up', kind: 'movie', recency: 'any', genre: 'all', sort: 'top', show: 'all', shown: PAGE, seed: 1, month: '', theater: '', picked: false, backAll: false };
 const P = { state: 'loading', ratings: [], picks: [], agg: new Map() };
 let L = null;               // this device's dots, partner, want list, own ratings
 
@@ -172,7 +190,8 @@ function film(raw, extra, kind) {
     sn: tv && Number.isInteger(raw.sn) && raw.sn > 0 ? raw.sn : null,
     ns: tv && Number.isInteger(raw.ns) && raw.ns > 0 ? raw.ns : null,
     p: POSTER.test(String(raw.p || '')) ? raw.p : '', yt: YT.test(String(raw.yt || '')) ? raw.yt : '',
-    art: app.demo ? String(raw.art || 'paper') : '', where: String(raw.where || ''), dur: String(raw.dur || ''), ...extra,
+    art: app.demo ? String(raw.art || 'paper') : '', where: String(raw.where || ''), dur: String(raw.dur || ''),
+    on: String(raw.on || '').replace(/\s+/g, ' ').trim().slice(0, 40), ...extra,
   };
 }
 const norm = (t) => String(t || '').normalize('NFKD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '').slice(0, 80);
@@ -198,8 +217,10 @@ function setFilms(j) {
   F.tvTop = list('tv_top', 'tv');
   F.tvTrend = list('tv_trend', 'tv');
   F.tvAir = list('tv_air', 'tv', { shelf: 'air' });
+  F.stream = list('stream', 'movie', { shelf: 'stream' });
+  F.tvStream = list('tv_stream', 'tv', { shelf: 'stream' });
   byId.clear(); byKey.clear(); byTitle.clear();
-  [...F.top, ...F.trend, ...F.now, ...F.soon, ...F.tvTop, ...F.tvTrend, ...F.tvAir].forEach(know);
+  [...F.top, ...F.trend, ...F.now, ...F.soon, ...F.tvTop, ...F.tvTrend, ...F.tvAir, ...F.stream, ...F.tvStream].forEach(know);
 }
 const hasTV = () => F.tvTop.length > 0;
 const tops = () => (V.kind === 'tv' ? F.tvTop : F.top);
@@ -320,7 +341,7 @@ function redate(d) {
   };
   const films = d.films || {};
   const out = { ...films };
-  ['top', 'soon', 'now', 'trend', 'tv_top', 'tv_trend', 'tv_air'].forEach((k) => { out[k] = arr(films[k]).map(move); });
+  ['top', 'soon', 'now', 'trend', 'tv_top', 'tv_trend', 'tv_air', 'stream', 'tv_stream'].forEach((k) => { out[k] = arr(films[k]).map(move); });
   const tm = d.tm && { ...d.tm, months: arr(d.tm.months).map((m) => ({ ...m, m: monthOf(monthIndex(m.m) + mshift) })) };
   const st = d.showtimes && { ...d.showtimes, theaters: arr(d.showtimes.theaters).map((t) => ({ ...t, back: t.back ? moveDay(t.back) : '',
     days: Object.fromEntries(Object.entries(t.days || {}).map(([k, v]) => [moveDay(k), v])) })) };
@@ -547,23 +568,41 @@ function seedDemo() {
 /* ------------------------------------------------------------- drawing */
 const sec = (host, title, sub, key, right) => { const s = section(host, title, sub, right); s.dataset.sec = key; return s; };
 /* what is on today first (Stephen, 2026-10-19: "when someone opens to a
-   tab, the fresh content is the first thing they see"): today's showtimes,
-   then what is in theaters and coming, then the rest */
-const SECTIONS = ['kind', 'theaters', 'soon', 'cta', 'back', 'list', 'town', 'vote', 'chat'];
+   tab, the fresh content is the first thing they see"): on Upcoming,
+   today's showtimes, then what is coming to theaters and to streaming;
+   on Past, the time machine, the town's ratings, then the long list */
+const SIDES = {
+  up: ['kind', 'theaters', 'soon', 'cta', 'stream', 'vote', 'chat'],
+  past: ['kind', 'back', 'town', 'list', 'chat'],
+};
+const SIDE_OF = { theaters: 'up', soon: 'up', cta: 'up', stream: 'up', vote: 'up', back: 'past', town: 'past', list: 'past' };
+const SECTIONS = [...new Set([...SIDES.up, ...SIDES.past])];
 
 function draw(name) {
   const host = slots[name];
   if (!host) return;
   host.innerHTML = '';
-  ({ kind: drawKind, soon: drawSoon, cta: drawCta, theaters: drawTheaters, back: drawBack, list: drawList,
+  ({ kind: drawKind, soon: drawSoon, cta: drawCta, stream: drawStream, theaters: drawTheaters, back: drawBack, list: drawList,
     town: drawTown, vote: drawVote, chat: drawChat })[name](host);
 }
 
 function render() {
   root.innerHTML = '';
-  SECTIONS.forEach((s) => { slots[s] = el('div'); slots[s].dataset.slot = s; root.appendChild(slots[s]); draw(s); });
+  root.dataset.side = V.side;
+  Object.keys(slots).forEach((k) => delete slots[k]);
+  SIDES[V.side].forEach((s) => { slots[s] = el('div'); slots[s].dataset.slot = s; root.appendChild(slots[s]); draw(s); });
   put(root, credit());
   root.appendChild(el('div', 'spacer'));
+}
+
+/* Upcoming or Past: the page redraws on that side, from its top */
+function setSide(s, quiet) {
+  if (!SIDES[s] || s === V.side) return false;
+  V.side = s;
+  render();
+  if (app.activeTab() === KEY) app.paintSubnav();
+  if (!quiet) app.scrollTop();
+  return true;
 }
 
 /* Movies or TV: everything below follows it */
@@ -582,13 +621,27 @@ function setKind(k) {
 function drawKind(host) {
   if (!hasTV()) return;
   const row = el('div', 'toolrow');
-  const p = pills([['movie', 'Movies'], ['tv', 'TV']], V.kind, (v) => setKind(v));
+  const p = tinted(pills([['movie', 'Movies'], ['tv', 'TV']], V.kind, (v) => setKind(v), 'wt-tint wt-kind'), ['--liq-watch', '--liq-topics']);
   p.dataset.kind = '1';
   p.style.flex = '1 1 auto';
   p.setAttribute('role', 'group');
   p.setAttribute('aria-label', 'Movies or TV');
   row.appendChild(p);
   host.appendChild(row);
+}
+
+/* a switch in colour (Stephen, 2026-10-22: "colorful buttons … so they're
+   hard to miss"): each button wears its own --liq-* tone, tinted while
+   off and filled while on */
+function tinted(p, tones) {
+  [...p.children].forEach((b, i) => {
+    const t = tones[i % tones.length];
+    b.style.setProperty('--tone', 'var(' + t + ')');
+    b.style.setProperty('--tone-ink', 'var(' + t + '-ink)');
+    b.setAttribute('aria-pressed', b.classList.contains('on') ? 'true' : 'false');
+    b.addEventListener('click', () => [...p.children].forEach((c) => c.setAttribute('aria-pressed', c === b ? 'true' : 'false')));
+  });
+  return p;
 }
 
 /* TMDB's attribution, with its logo, wherever its data shows */
@@ -607,25 +660,56 @@ function credit(inSheet) {
 const BACK_YEARS = 3;
 const nowLabel = (f) => (f.y && f.y <= Number(todayKey().slice(0, 4)) - BACK_YEARS ? 'Back in theaters' : 'In theaters now');
 const airLabel = (f) => (f.ns ? (f.d > todayKey() ? 'Season ' + f.ns + ' · ' + dateLabel(f.d) : 'New season ' + f.ns) : 'Airing now');
-const railLabel = (f) => (f.shelf === 'air' ? airLabel(f) : f.shelf === 'now' ? nowLabel(f)
+/* coming to streaming: "Netflix · Oct 24", "Season 3 · Hulu · Nov 2",
+   "New series · Apple TV · Out now"; a film with no service named yet says
+   Streaming */
+const streamWhen = (f) => (f.d <= todayKey() ? 'Out now' : dateLabel(f.d));
+const streamLabel = (f) => (f.kind === 'tv' ? [f.ns === 1 ? 'New series' : f.ns ? 'Season ' + f.ns : '', f.on] : [f.on || 'Streaming'])
+  .concat(streamWhen(f)).filter(Boolean).join(' · ');
+const railLabel = (f) => (f.shelf === 'air' ? airLabel(f) : f.shelf === 'now' ? nowLabel(f) : f.shelf === 'stream' ? streamLabel(f)
   : (f.d ? dateLabel(f.d) + ' · ' : '') + (f.where === 'streaming' ? 'streaming' : 'theaters'));
+
+/* a poster on an upcoming rail: a tap plays the trailer, or opens the sheet */
+function railPoster(f, key) {
+  const a = el('a', 'poster');
+  a.href = '#watch/' + key;
+  a.dataset.k = key;
+  a.setAttribute('aria-label', (hasTrailer(f) ? 'Play the trailer for ' : '') + f.t + ', ' + railLabel(f));
+  a.innerHTML = '<span class="c-media">' + picture(f, 'w342') +
+    (hasTrailer(f) ? '<span class="play">' + ICON.play + '</span>' + (f.dur ? '<span class="dur">' + esc(f.dur) + '</span>' : '') : '') + '</span>' +
+    '<span class="t">' + esc(f.t) + '</span><span class="s">' + esc(railLabel(f)) + '</span>';
+  a.addEventListener('click', (e) => { e.preventDefault(); if (hasTrailer(f)) playTrailer(f); else filmSheet(f); });
+  return a;
+}
 
 function drawSoon(host) {
   const list = V.kind === 'tv' ? F.tvAir : [...F.now, ...F.soon];
   if (!list.length) return;
-  sec(host, V.kind === 'tv' ? 'On TV now' : 'Coming soon', null, 'soon');
-  const r = listRail(host, { name: V.kind === 'tv' ? 'watch-tv-now' : 'watch-soon', label: V.kind === 'tv' ? 'On TV now' : 'Coming soon', cells: 104 });
-  list.forEach((f) => {
-    const a = el('a', 'poster');
-    a.href = '#watch/soon:' + f.id;
-    a.dataset.k = 'soon:' + f.id;
-    a.setAttribute('aria-label', (hasTrailer(f) ? 'Play the trailer for ' : '') + f.t + ', ' + railLabel(f));
-    a.innerHTML = '<span class="c-media">' + picture(f, 'w342') +
-      (hasTrailer(f) ? '<span class="play">' + ICON.play + '</span>' + (f.dur ? '<span class="dur">' + esc(f.dur) + '</span>' : '') : '') + '</span>' +
-      '<span class="t">' + esc(f.t) + '</span><span class="s">' + esc(railLabel(f)) + '</span>';
-    a.addEventListener('click', (e) => { e.preventDefault(); if (hasTrailer(f)) playTrailer(f); else filmSheet(f); });
-    r.appendChild(a);
-  });
+  const title = V.kind === 'tv' ? 'On TV now' : 'Coming to theaters';
+  sec(host, title, null, 'soon');
+  const r = listRail(host, { name: V.kind === 'tv' ? 'watch-tv-now' : 'watch-soon', label: title, cells: 104 });
+  list.forEach((f) => r.appendChild(railPoster(f, 'soon:' + f.id)));
+}
+
+/* what is still ahead, or out this past week: a file a few days old never
+   offers last month's drop as coming */
+const streamList = () => {
+  const floor = keyOf(dayNum(todayKey()) - 7);
+  return (V.kind === 'tv' ? F.tvStream : F.stream).filter((f) => f.d && f.d >= floor);
+};
+function drawStream(host) {
+  const list = streamList();
+  if (!list.length) return;
+  sec(host, 'Coming to streaming', null, 'stream');
+  const r = listRail(host, { name: V.kind === 'tv' ? 'watch-tv-stream' : 'watch-stream', label: 'Coming to streaming', cells: 104 });
+  r.dataset.stream = V.kind;
+  list.forEach((f) => r.appendChild(railPoster(f, 'stream:' + f.id)));
+  /* the services are JustWatch's, through TMDB, whose terms ask for this credit */
+  if (V.kind === 'movie' && !app.demo) {
+    const c = el('p', 'note pad wjw', 'Where to stream: <a href="' + esc(JUSTWATCH_URL) + '" target="_blank" rel="noopener">JustWatch</a>');
+    c.dataset.credit = 'justwatch';
+    host.appendChild(c);
+  }
 }
 
 /* who is screening, for a first-time visitor: one line, with the Meetup link */
@@ -660,7 +744,8 @@ function drawTheaters(host) {
   const today = todayKey();
   const tonight = (t) => t.ok && (!t.closed || (t.back && t.back <= today)) && (showDay(t) || {}).day === today;
   if (!V.picked) V.theater = (all.find((t) => tonight(t) && !t.carried) || all.find(tonight) || all.find((t) => t.ok) || all[0]).id;
-  const pick = pills(all.map((t) => [t.id, t.name]), V.theater, (v) => { V.theater = v; V.picked = true; draw('theaters'); });
+  const pick = tinted(pills(all.map((t) => [t.id, t.name]), V.theater, (v) => { V.theater = v; V.picked = true; draw('theaters'); }, 'wt-tint wt-theaters'),
+    all.map((t) => THEATER_TONE[t.id] || '--liq-watch'));
   pick.dataset.theater = '1';
   pick.style.flex = '1 1 auto';
   const pr = el('div', 'toolrow');
@@ -1010,6 +1095,13 @@ function drawList(host) {
 }
 
 /* -------------------------------------------------------- the sheets */
+/* "On Netflix from Oct 24", "Season 3 on Hulu from Nov 2", "Streaming from Oct 30" */
+function streamSheet(f) {
+  const what = f.kind === 'tv' ? (f.ns === 1 ? 'New series' : f.ns ? 'Season ' + f.ns : 'New season') + (f.on ? ' on ' + f.on : '')
+    : f.on && f.on !== 'Rent or buy' ? 'On ' + f.on : f.on ? 'To rent or buy' : 'Streaming';
+  return what + (f.d <= todayKey() ? ' now' : ' from ' + dateLabel(f.d));
+}
+
 function filmSheet(f) {
   app.sheet(f.t, (body, card, close) => {
     const top = el('div');
@@ -1027,7 +1119,8 @@ function filmSheet(f) {
       (t ? '<p class="sheet-note" data-town>Town rating <b>' + esc(avg(t.sum, t.n).toFixed(1)) + '</b> from ' + esc(plural(t.n, 'rating', 'ratings')) + '</p>' : '') +
       (f.shelf === 'soon' && f.d ? '<p class="sheet-note">' + esc((f.where === 'streaming' ? 'Streaming from ' : 'In theaters from ') + dateLabel(f.d)) + '</p>' : '') +
       (f.shelf === 'now' ? '<p class="sheet-note">' + esc(nowLabel(f)) + '</p>' : '') +
-      (f.shelf === 'air' ? '<p class="sheet-note">' + esc(airLabel(f)) + '</p>' : '');
+      (f.shelf === 'air' ? '<p class="sheet-note">' + esc(airLabel(f)) + '</p>' : '') +
+      (f.shelf === 'stream' && f.d ? '<p class="sheet-note" data-streams>' + esc(streamSheet(f)) + '</p>' : '');
     const tr = el('div', 'linkrow');
     if (hasTrailer(f)) {
       const b = button(ICON.play + ' Trailer', '', () => { close(); playTrailer(f); });
@@ -1418,18 +1511,28 @@ function drawChat(host) {
 }
 
 /* ------------------------------------------------------------ landing */
-const TOC = () => [['theaters', 'Theaters'], ['soon', V.kind === 'tv' ? 'On TV now' : 'Coming soon'], ['back', 'Back then'], ['list', 'The list'],
-  ['town', 'Town'], ['vote', 'Next screening'], ['chat', 'Chat']];
+const TOC = () => (V.side === 'past' ? [['back', 'Back then'], ['town', 'Town'], ['list', 'The list'], ['chat', 'Chat']]
+  : [['theaters', 'Theaters'], ['soon', V.kind === 'tv' ? 'On TV now' : 'Coming soon'], ['stream', 'Streaming'], ['vote', 'Next screening'], ['chat', 'Chat']]);
+
+/* the side a deep link's card lives on */
+function sideOfKey(k) {
+  if (SIDE_OF[k]) return SIDE_OF[k];
+  if (/^(soon|stream|pick|th):/.test(k)) return 'up';
+  if (/^(town|g|back):/.test(k)) return 'past';
+  return '';
+}
 
 function land() {
   if (!pending || !ready) return;
   const k = pending;
   pending = null;
-  /* #watch/tv and #watch/movies pick the kind */
+  /* #watch/upcoming and #watch/past pick the side, #watch/tv and #watch/movies the kind */
+  if (k === 'upcoming' || k === 'past') { setSide(k === 'past' ? 'past' : 'up', true); app.scrollTop(); return; }
   if (k === 'tv' || k === 'movies') { setKind(k === 'tv' ? 'tv' : 'movie'); app.scrollTop(); return; }
   const bm = /^back:(\d{4}-\d{2})$/.exec(k);
   /* the time machine and the theaters' times arrive after the list */
   if (!extras && (bm || k === 'back' || k === 'theaters')) { pending = k; return; }
+  if (sideOfKey(k)) setSide(sideOfKey(k), true);
   if (SECTIONS.includes(k)) { const s = root.querySelector('[data-sec="' + k + '"]'); if (s) { app.jumpTo(s); return; } }
   /* #watch/back:2021-10 opens the time machine on that month */
   if (bm) {
@@ -1444,6 +1547,9 @@ function land() {
     if (!byId.has(id) && !extras) { pending = k; return; }
     const f = byId.get(id);
     if (f && f.kind !== V.kind) setKind(f.kind);
+    /* a title on the list is on Past; one only coming is on Upcoming */
+    const ahead = !pool().some((x) => x.id === id) && [...F.now, ...F.soon, ...F.tvAir, ...streamList()].some((x) => x.id === id);
+    setSide(ahead ? 'up' : 'past', true);
     let at = filtered().findIndex((x) => x.id === id);
     if (at < 0 && pool().some((x) => x.id === id)) { V.recency = 'any'; V.genre = 'all'; V.show = 'all'; if (V.sort === 'genre' || V.sort === 'shuffle') V.sort = 'top'; at = filtered().findIndex((x) => x.id === id); }
     if (at < 0 && pool().some((x) => x.id === id) && V.sort !== 'top') { V.sort = 'top'; at = filtered().findIndex((x) => x.id === id); }
@@ -1451,7 +1557,7 @@ function land() {
       if (at >= V.shown) V.shown = Math.ceil((at + 1) / PAGE) * PAGE;
       draw('list');
     } else if (f) {
-      if (app.flashHit(root, 'soon:' + id)) return;
+      if (app.flashHit(root, 'soon:' + id) || app.flashHit(root, 'stream:' + id)) return;
       filmSheet(f);
       return;
     }
@@ -1497,11 +1603,25 @@ app.register(KEY, {
   refresh() { if (ready && root) render(); },
   deactivate() {},
   /* the sections as a floating pill in the tab's water, following the scroll (sections.js) */
+  /* two rows floating over the paper, like Build | Habits: Upcoming |
+     Past poured in water, then the side's sections as the small pill */
   subnav() {
     if (!ready || !root) return null;
+    const bar = el('div', 'secbar wt-sub');
+    const top = el('div', 'secrow oa-sidesrow wt-sidesrow');
+    const sw = pills([['up', 'Upcoming'], ['past', 'Past']], V.side, (v) => setSide(v), 'oa-sideswitch wt-sideswitch');
+    sw.setAttribute('role', 'group');
+    sw.setAttribute('aria-label', 'Upcoming or past');
+    sw.dataset.sides = '1';
+    [...sw.children].forEach((b, i) => { b.dataset.side = ['up', 'past'][i]; b.setAttribute('aria-pressed', String(b.dataset.side === V.side)); });
+    liquify(sw, { key: 'wt-side', idx: V.side === 'past' ? 1 : 0, colors: ['--liq-watch', '--liq-pods'] });
+    top.appendChild(sw);
+    bar.appendChild(top);
     const sec = (key) => root.querySelector('[data-sec="' + key + '"]');
     const toc = TOC().filter(([key]) => sec(key)).map(([key, label]) => ({ key, label }));
-    return sectionBar({ key: 'sec-watch', title: 'Watch', items: toc, color: '--liq-watch', find: sec, onPick: (key) => app.jumpTo(sec(key)) });
+    const p = sectionBar({ key: 'sec-watch', title: 'Watch', items: toc, color: '--liq-watch', find: sec, onPick: (key) => app.jumpTo(sec(key)) });
+    if (p) { const row = el('div', 'secrow'); [...p.children].forEach((k) => row.appendChild(k)); bar.appendChild(row); }
+    return bar;
   },
   keepSubnav: true,
   /* new picks for the screening vote since the reader last looked */
