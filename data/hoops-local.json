@@ -1,0 +1,49 @@
+{
+ "_comment": "On Air's Local hoops block, the parts no feed carries. scripts/gather_onair_sports.py copies this into all-day/data/onair-sports.json next to UVM's games (from data/sports.json) and the basketball leagues and pickup in data/clubs.json + data/groups.json. Every line was checked on the organiser's own page on the `checked` date; re-check before trusting a date. Research: reference/drafts/new-nine-2026-10/research/sports-sources-2026-10-22.md in the newsletter repo. A game here is {date (YYYY-MM-DD), time ('7:00pm'), vs, home (true/false), where}; past ones drop off by themselves.",
+ "checked": "2026-10-22",
+ "teams": [
+  {
+   "id": "revolution",
+   "name": "Burlington Revolution",
+   "league": "ABA",
+   "what": "Burlington's new pro team in the American Basketball Association, first season this winter. Home games at Burlington High School, streamed free on NSN.",
+   "where": "Burlington High School",
+   "url": "https://burlingtonrevolution.com/pages/schedule",
+   "watch": "https://nsnsports.net",
+   "note": "Game times not posted yet",
+   "games": []
+  },
+  {
+   "id": "coyotes",
+   "name": "Vermont Coyotes",
+   "league": "ABA",
+   "what": "Vermont's other ABA team, in Barre. This is their last season at the Barre Auditorium; home games start in December.",
+   "where": "Barre Auditorium",
+   "url": "https://www.vtcoyotes.com/seasonticketpassesfullschedule",
+   "note": "",
+   "games": [
+    { "date": "2026-12-05", "time": "7:00pm", "vs": "Hartford Colts", "home": true, "where": "Barre Auditorium" },
+    { "date": "2026-12-06", "time": "6:00pm", "vs": "Bridgeport Kings", "home": true, "where": "Barre Auditorium" },
+    { "date": "2027-02-13", "time": "7:00pm", "vs": "Central Vermont Pioneers (wheelchair basketball)", "home": true, "where": "Barre Auditorium" }
+   ]
+  }
+ ],
+ "pickup": {
+  "name": "Btown Brief pickup basketball",
+  "when": "Wednesdays 5:30pm",
+  "where": "Gutterson Fieldhouse, UVM",
+  "url": "https://www.meetup.com/burlington-social-activites-group/events/",
+  "group": "https://www.meetup.com/burlington-social-activites-group/"
+ },
+ "play": [
+  {
+   "id": "uvm-campus-rec",
+   "name": "UVM Campus Rec community membership",
+   "what": "Anyone can join UVM's rec center: open-rec basketball on the indoor courts.",
+   "when": "Open rec hours",
+   "where": "UVM Campus Rec",
+   "cost": "$45 a month + $25 to start, or $12 a day",
+   "url": "https://uvmcampusrec.com/sports/2017/7/5/membership"
+  }
+ ]
+}
