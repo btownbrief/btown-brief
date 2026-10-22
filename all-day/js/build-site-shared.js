@@ -60,6 +60,37 @@ export function floorHeight(f) { return f === 0 ? BUILDING.groundFloorH : BUILDI
 /* Vocabularies (shared with build-core.js). */
 export const SITE_TASKS = ['haul', 'frame', 'brick', 'wire', 'window', 'roof', 'lunch'];
 export const SITE_MATERIALS = ['lumber', 'brick', 'glass', 'copper', 'nails'];
+/* Your builder's job list (the tab's queue; Stephen, 2026-10-22: "organize
+   the queue of what their worker is doing"). Each job is a trade on the
+   building: the pieces (building parts) it covers, its words for the list
+   ({floor} becomes 'ground floor', '3rd floor'), and the SITE_TASKS word the
+   town sees on your builder. 'haul' is always open: the yard always has
+   something to bring over. The building's needs() lists the rest in the
+   order it needs them. */
+export const SITE_JOBS = {
+  clear: { parts: ['clear'], label: 'Break up the old parking lot', task: 'haul' },
+  stake: { parts: ['stake', 'string'], label: 'Stake out the building', task: 'frame' },
+  dig: { parts: ['dig', 'backfill'], label: 'Dig the footings', task: 'haul' },
+  rebar: { parts: ['rebar'], label: 'Tie the rebar', task: 'wire' },
+  form: { parts: ['form', 'strip'], label: 'Build the footing forms', task: 'frame' },
+  pour: { parts: ['pour', 'column'], label: 'Pour the concrete', task: 'brick' },
+  frame: { parts: ['post', 'beam', 'stud', 'canopy'], label: 'Frame the {floor}', task: 'frame' },
+  deck: { parts: ['deck'], label: 'Lay the timber deck', task: 'frame' },
+  wire: { parts: ['wire'], label: 'Run wire on the {floor}', task: 'wire' },
+  clad: { parts: ['clad', 'storefront'], label: 'Hang the rust panels', task: 'window' },
+  brick: { parts: ['brick'], label: 'Lay brick on the corner', task: 'brick' },
+  glaze: { parts: ['glaze'], label: 'Set the windows on the {floor}', task: 'window' },
+  solar: { parts: ['solar'], label: 'Put solar on the roof', task: 'roof' },
+  plant: { parts: ['tree', 'planter'], label: 'Plant the street trees', task: 'haul' },
+  upkeep: { parts: ['wash', 'sweep', 'water', 'rake', 'snow', 'paint', 'wreath'], label: 'Keep the place nice', task: 'haul' },
+  haul: { parts: [], label: 'Haul materials', task: 'haul' },
+};
+export const JOB_OF_PART = (() => { const m = {}; for (const k in SITE_JOBS) for (const p of SITE_JOBS[k].parts) m[p] = k; return m; })();
+/* a job's words for the list, on a floor ('ground floor', '3rd floor') */
+export function jobLabel(key, floor) {
+  const j = SITE_JOBS[key];
+  return j ? j.label.replace('{floor}', floor || 'building') : '';
+}
 /* What people carry. The art module draws each; the crew and director pick. */
 export const CARRY = ['beam', 'panel', 'bricks', 'barrow', 'pane', 'paneL', 'paneR', 'spool', 'rebar', 'stakes', 'bucket', 'mug', 'thermos', 'sandwich', 'clipboard', 'cake', 'toolbox', 'shovel', 'tarp', 'snowball', 'flag', 'plant', 'hat', 'rustPanel', 'solar', 'mallet'];
 /* Poses the art module animates. `t` is seconds into the pose; cycles loop. */
