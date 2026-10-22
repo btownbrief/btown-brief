@@ -1,16 +1,16 @@
 {
- "updated": "2026-10-22T22:46:38+00:00",
+ "updated": "2026-10-22T23:30:12+00:00",
  "sections_updated": {
-  "now": "2026-10-22T22:46:38+00:00",
-  "forecast": "2026-10-22T22:46:38+00:00",
-  "hourly": "2026-10-22T22:46:38+00:00",
-  "alerts": "2026-10-22T22:46:38+00:00",
-  "afd": "2026-10-22T22:46:38+00:00",
-  "lake_forecast": "2026-10-22T22:46:38+00:00",
-  "lake_gage": "2026-10-22T22:46:38+00:00",
-  "air": "2026-10-22T22:46:38+00:00",
-  "sun": "2026-10-22T22:46:38+00:00",
-  "models": "2026-10-22T22:46:38+00:00"
+  "now": "2026-10-22T23:30:12+00:00",
+  "forecast": "2026-10-22T23:30:12+00:00",
+  "hourly": "2026-10-22T23:30:12+00:00",
+  "alerts": "2026-10-22T23:30:12+00:00",
+  "afd": "2026-10-22T23:30:12+00:00",
+  "lake_forecast": "2026-10-22T23:30:12+00:00",
+  "lake_gage": "2026-10-22T23:30:12+00:00",
+  "air": "2026-10-22T23:30:12+00:00",
+  "sun": "2026-10-22T23:30:12+00:00",
+  "models": "2026-10-22T23:30:12+00:00"
  },
  "now": {
   "observed_at": "2026-10-22T13:20:00+00:00",
@@ -30,13 +30,13 @@
   "periods": [
    {
     "name": "Tonight",
-    "start": "2026-10-22T18:00:00-04:00",
+    "start": "2026-10-22T19:00:00-04:00",
     "is_day": false,
     "temp_f": 34,
     "pop": 0,
-    "wind": "N 5 to 10 mph",
+    "wind": "N 5 to 9 mph",
     "short": "Mostly Clear",
-    "detailed": "Mostly clear, with a low around 34. North wind 5 to 10 mph, with gusts as high as 21 mph."
+    "detailed": "Mostly clear, with a low around 34. North wind 5 to 9 mph, with gusts as high as 21 mph."
    },
    {
     "name": "Friday",
@@ -173,20 +173,6 @@
  "hourly": {
   "updated": "2026-10-22T22:36:02+00:00",
   "hours": [
-   {
-    "t": "2026-10-22T18:00:00-04:00",
-    "temp_f": 51,
-    "feels_f": 51,
-    "pop": 0,
-    "humidity": 63,
-    "wind_mph": 10,
-    "wind_dir": "N",
-    "sky": 81,
-    "short": "Mostly Cloudy",
-    "qpf_in": 0.0,
-    "snow_in": 0.0,
-    "gust_mph": 18
-   },
    {
     "t": "2026-10-22T19:00:00-04:00",
     "temp_f": 50,
@@ -676,6 +662,20 @@
     "qpf_in": 0.0,
     "snow_in": 0.0,
     "gust_mph": 3
+   },
+   {
+    "t": "2026-10-24T06:00:00-04:00",
+    "temp_f": 32,
+    "feels_f": 32,
+    "pop": 0,
+    "humidity": 92,
+    "wind_mph": 2,
+    "wind_dir": "SE",
+    "sky": 52,
+    "short": "Partly Sunny",
+    "qpf_in": 0.0,
+    "snow_in": 0.0,
+    "gust_mph": 3
    }
   ],
   "days": [
@@ -705,13 +705,13 @@
   "active": []
  },
  "afd": {
-  "issued": "2026-10-22T19:05:00+00:00",
+  "issued": "2026-10-22T23:20:00+00:00",
   "key_messages": [
    "Localized gusty north winds this evening will taper off, then dry and seasonable weather with a warming trend will follow through the weekend.",
    "Quiet and dry weather is expected to continue into early next week."
   ],
   "what_changed": "As of 305 PM EDT Thursday... No significant changes have been made.",
-  "raw": "\n000\nFXUS61 KBTV 221905\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n305 PM EDT Thu Oct 22 2026\n\n.WHAT HAS CHANGED...\nAs of 305 PM EDT Thursday...\n\nNo significant changes have been made.\n\n&&\n\n.KEY MESSAGES...\nAs of 305 PM EDT Thursday...\n\n1. Localized gusty north winds this evening will taper off, \nthen dry and seasonable weather with a warming trend will follow\nthrough the weekend.\n\n2. Quiet and dry weather is expected to continue into early \nnext week.\n\n&&\n\n.DISCUSSION...\nAs of 305 PM EDT Thursday...\n\nKEY MESSAGE 1: Sensible weather will continue to be quite agreeable for \noutdoor activities. Aside from a ribbon of clouds moving through \nfrom north to south this evening, a return to sunny days is expected \nas high pressure slowly builds in through the weekend. Main impacts \nfor this period will be related to winds this evening on Lake \nChamplain, and then possible fire weather concerns over the weekend \nwith critically low relative humidity values likely in parts of\nthe region.\n\nA moisture-starved cold front passed through the region today, \ndetached from a ribbon of higher moisture behind it. Satellite \nimagery shows this cloud cover is tied to a corridor of higher \nrelative humidity in the 925-850 millibar layer, with the air mass \nabove that layer very dry. Hence, north of this region there are \njust some diurnally driven clouds and we can expect skies in our \nregion to trend clear overnight. \n\nA period of relatively fast pressure rises this evening is \nexpected with accelerated northerly flow through the Champlain \nValley as skies clear out again. Roughly between 7 PM and 10 PM \nwe expect the strongest northerly winds in the 20 to 30 knot \nrange on Lake Champlain with similar gusts in the eastern \nChamplain Valley. Northerly, rather than a more common \nnorthwesterly, flow will continue into Friday with a general \ndecay of wind speeds as high pressure builds in. \n\nThe lightening wind will lead to a chilly night and have leaned\ntowards colder guidance. At perennial cool spot SLK/Adirondack \nRegional Airport, a daily minimum temperature is possible (14 \ndegrees). Any passing high clouds should have little affect on \nsurface temperatures during the period. Also, as temperatures \nmoderate aloft, both Saturday and Sunday will feature the return\nof the typical cold season surface inversion with mountain \nsummits relative mild. Generally Sunday morning looks a bit less\ncold than Saturday morning as light south winds will interfere\nwith the nocturnal boundary layer.\n\nForecast soundings through the next three days show very dry air\naloft and correspondingly anomalously low precipitable water.\nWhile localized low humidity is expected tomorrow, cool\nnortherly advection doesn't favor particularly low surface\nhumidity at the surface. Dew points in the 20s are expected \nover the next couple of days, and with milder temperatures on \nSaturday reaching the upper 50s in most locations, this is the\nday when most locations will likely see their lowest relative \nhumidities. Slight improvement on Sunday is expected with \nregards to fire weather concerns as some modest moisture\nadvection occurs. Light winds through the weekend should\nminimize fire spread, however.\n\nKEY MESSAGE 2: The stretch of quiet and dry weather looks continue into \nnext week as the region remains under the influence of high \npressure. The ridge axis will shift slightly eastward late Sunday \ninto Monday, allowing for some light southwest flow and warmer \ntemperatures. Daytime high temperatures on Monday look to warm into \nthe upper 50s to mid 60s. A weak cold front looks to move through \nlate Monday, but it will be quite moisture starved with no \nprecipitation expected from this feature. Some cooler air will move \nin behind the front, with high temperatures on Tuesday expected to \nbe in the mid 40s to low 50s. At this time, it looks like the dry \nstretch will continue through much of next week. Despite the \nprolonged stretch of dryness, winds look to remain light enough to \nlimit any fore weather concerns at this time.\n\n&&\n\n.AVIATION /12Z THURSDAY THROUGH MONDAY/...\nThrough 12Z Friday...Despite a prolonged detachment from rain, and\nanticipated persistence forecasting, area of localized fog has\ndeveloped around MPV/SLK this morning, with VCFG at RUT. Any\nlingering IFR vis/cig reductions are expected to trend to VFR by\n13Z. Beyond 13Z, a weak frontal boundary will pass through generally\nbetween 15-17Z as light and variable winds turn prevailing from the\nnorth. As the front moves through, increasing clouds will lower\nscattered cigs towards 3000-4000ft agl. Winds will increase slightly\nbehind the front through the rest of the day with north winds around\n10 knots across Vermont, and occasional gusts between 15-20 knots.\nIn northern New York, any gusts should remain below 15 knots. Winds\nweaken after 00Z towards light and terrain driven. Another clear and\ncalm night is expected for all terminals tonight, with some hints at\nrepeat fog at MSS/SLK/MPV, though it will be tied to the later\nportion of tonight, with some subtle flow aloft in the beginning\nportion of the night limiting early fog development. Given low \nconfidence at this time, have left out any fog or terminal \nreductions in this TAF package.\n\nOutlook...\n\nFriday Night: VFR. NO SIG WX.\nSaturday: VFR. NO SIG WX.\nSaturday Night: VFR. NO SIG WX.\nSunday: VFR. NO SIG WX.\nSunday Night: VFR. NO SIG WX.\nMonday: Mainly VFR, with local MVFR possible. NO SIG WX.\nMonday Night: Mainly VFR, with local MVFR possible. NO SIG WX.\nTuesday: VFR. NO SIG WX.\n\n&&\n\n.MARINE...\nA Lake Wind Advisory has been issued for this afternoon and evening\nduring a period of marginally strong north flow. Winds today have\ngradually ramped up, particularly in the broad and southern \nwaters as typical for these events. Expect they will mainly be 20\nto 30 knots through this evening before gradually subsiding \novernight into the 15 to 25 knot range, and then 10 to 20 knot \nrange by daybreak. Corresponding peak wave heights will tend to \nbe 2 to 4 feet, with localized 3 to 5 feet briefly near \nWillsboro Point towards midnight, and then relax into the 1 to 3\nfeet range overnight.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Kutikoff\nDISCUSSION...Kutikoff/Kremer\nAVIATION...Kremer\nMARINE...Kutikoff\n"
+  "raw": "\n000\nFXUS61 KBTV 222320\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n720 PM EDT Thu Oct 22 2026\n\n.WHAT HAS CHANGED...\nAs of 305 PM EDT Thursday...\n\nNo significant changes have been made.\n\n&&\n\n.KEY MESSAGES...\nAs of 305 PM EDT Thursday...\n\n1. Localized gusty north winds this evening will taper off, \nthen dry and seasonable weather with a warming trend will follow\nthrough the weekend.\n\n2. Quiet and dry weather is expected to continue into early \nnext week.\n\n&&\n\n.DISCUSSION...\nAs of 305 PM EDT Thursday...\n\nKEY MESSAGE 1: Sensible weather will continue to be quite \nagreeable for outdoor activities. Aside from a ribbon of clouds \nmoving through from north to south this evening, a return to \nsunny days is expected as high pressure slowly builds in through\nthe weekend. Main impacts for this period will be related to \nwinds this evening on Lake Champlain, and then possible fire \nweather concerns over the weekend with critically low relative \nhumidity values likely in parts of the region.\n\nA moisture-starved cold front passed through the region today, \ndetached from a ribbon of higher moisture behind it. Satellite \nimagery shows this cloud cover is tied to a corridor of higher \nrelative humidity in the 925-850 millibar layer, with the air mass \nabove that layer very dry. Hence, north of this region there are \njust some diurnally driven clouds and we can expect skies in our \nregion to trend clear overnight. \n\nA period of relatively fast pressure rises this evening is \nexpected with accelerated northerly flow through the Champlain \nValley as skies clear out again. Roughly between 7 PM and 10 PM \nwe expect the strongest northerly winds in the 20 to 30 knot \nrange on Lake Champlain with similar gusts in the eastern \nChamplain Valley. Northerly, rather than a more common \nnorthwesterly, flow will continue into Friday with a general \ndecay of wind speeds as high pressure builds in. \n\nThe lightening wind will lead to a chilly night and have leaned\ntowards colder guidance. At perennial cool spot SLK/Adirondack \nRegional Airport, a daily minimum temperature is possible (14 \ndegrees). Any passing high clouds should have little affect on \nsurface temperatures during the period. Also, as temperatures \nmoderate aloft, both Saturday and Sunday will feature the return\nof the typical cold season surface inversion with mountain \nsummits relative mild. Generally Sunday morning looks a bit less\ncold than Saturday morning as light south winds will interfere\nwith the nocturnal boundary layer.\n\nForecast soundings through the next three days show very dry air\naloft and correspondingly anomalously low precipitable water.\nWhile localized low humidity is expected tomorrow, cool\nnortherly advection doesn't favor particularly low surface\nhumidity at the surface. Dew points in the 20s are expected \nover the next couple of days, and with milder temperatures on \nSaturday reaching the upper 50s in most locations, this is the\nday when most locations will likely see their lowest relative \nhumidities. Slight improvement on Sunday is expected with \nregards to fire weather concerns as some modest moisture\nadvection occurs. Light winds through the weekend should\nminimize fire spread, however.\n\nKEY MESSAGE 2: The stretch of quiet and dry weather looks \ncontinue into next week as the region remains under the \ninfluence of high pressure. The ridge axis will shift slightly \neastward late Sunday into Monday, allowing for some light \nsouthwest flow and warmer temperatures. Daytime high \ntemperatures on Monday look to warm into the upper 50s to mid \n60s. A weak cold front looks to move through late Monday, but it\nwill be quite moisture starved with no precipitation expected \nfrom this feature. Some cooler air will move in behind the \nfront, with high temperatures on Tuesday expected to be in the \nmid 40s to low 50s. At this time, it looks like the dry stretch \nwill continue through much of next week. Despite the prolonged \nstretch of dryness, winds look to remain light enough to limit \nany fore weather concerns at this time.\n\n&&\n\n.AVIATION /00Z FRIDAY THROUGH TUESDAY/...\nThrough 00Z Saturday...Cloud cover is slowly thinning now that a\ncold front has shifted south of the region. The layer exists\nbetween 4000-7000 ft agl, and will dissipate over the coming 6-9\nhours. North winds will remain 5-10 knots for locations\nunsheltered from winds out of the north, but a few areas like \nKRUT and KSLK should transition towards light and variable \nconditions. Flow aloft is somewhat fast, and there could be \nlocalized regions that meet LLWS criteria during the next 6 \nhours, but are not shown explicitly for any terminals. This\ncould also prevent fog from developing, though a brief reduction\nin visibility towards sunrise is not impossible.\n\nOutlook...\n\nFriday Night: VFR. NO SIG WX.\nSaturday: VFR. NO SIG WX.\nSaturday Night: VFR. NO SIG WX.\nSunday: VFR. NO SIG WX.\nSunday Night: VFR. NO SIG WX.\nMonday: Mainly VFR, with local MVFR possible. NO SIG WX.\nMonday Night: VFR. NO SIG WX.\nTuesday: VFR. NO SIG WX.\n\n&&\n\n.MARINE...\nA Lake Wind Advisory has been issued for this afternoon and evening\nduring a period of marginally strong north flow. Winds today have\ngradually ramped up, particularly in the broad and southern \nwaters as typical for these events. Expect they will mainly be 20\nto 30 knots through this evening before gradually subsiding \novernight into the 15 to 25 knot range, and then 10 to 20 knot \nrange by daybreak. Corresponding peak wave heights will tend to \nbe 2 to 4 feet, with localized 3 to 5 feet briefly near \nWillsboro Point towards midnight, and then relax into the 1 to 3\nfeet range overnight.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Kutikoff\nDISCUSSION...Kremer/Kutikoff\nAVIATION...Haynes\nMARINE...Kutikoff\n"
  },
  "lake_forecast": {
   "issued": "2026-10-22T18:32:00+00:00",
@@ -1007,17 +1007,17 @@
  },
  "lake_gage": {
   "water_temp_f": 55,
-  "water_temp_at": "2026-10-22T18:00:00.000-04:00",
+  "water_temp_at": "2026-10-22T19:00:00.000-04:00",
   "level_ft": 94.09,
-  "level_at": "2026-10-22T18:00:00.000-04:00",
+  "level_at": "2026-10-22T19:00:00.000-04:00",
   "level_status": "normal"
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 30,
+  "aqi": 31,
   "category": "Good",
   "pollutant": "PM2.5",
-  "observed": "10/22/26 18:00",
+  "observed": "10/22/26 19:00",
   "discussion": "On Friday, October 23rd, expect generally good air quality across Vermont."
  },
  "sun": {
@@ -1090,7 +1090,7 @@
  },
  "brief": {
   "date": "2026-10-22",
-  "generated": "2026-10-22T22:46:42+00:00",
+  "generated": "2026-10-22T23:30:18+00:00",
   "text": "Mostly clear tonight, low 34. Friday, sunny, high 54.",
   "periods": [
    {
@@ -1099,12 +1099,12 @@
     "is_day": false,
     "temp_f": 34,
     "sky": "mostly clear",
-    "start": "2026-10-22T18:00:00-04:00",
+    "start": "2026-10-22T19:00:00-04:00",
     "end": "2026-10-23T06:00:00-04:00",
     "precip": null,
     "wind": null,
     "feels_lo": 34,
-    "feels_hi": 51,
+    "feels_hi": 46,
     "text": "Mostly clear tonight, low 34."
    },
    {
