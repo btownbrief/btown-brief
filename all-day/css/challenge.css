@@ -1,0 +1,63 @@
+/* challenge.css — the No-algorithm challenge's card on the Wire and its two
+   sheets (js/challenge.js loads this file itself). Tokens only, as in
+   app.css: every colour, size, space and radius is a tokens.css name. */
+
+.chal-slot { max-width: var(--col); margin: 0 auto; padding: var(--s3) var(--gutter) var(--s1); }
+@media (min-width: 1024px) {
+  .chal-slot { max-width: none; margin-left: var(--main-x); width: var(--main); }
+}
+
+.chal-card { display: grid; gap: var(--s2); padding: var(--s4); border-radius: var(--r-box);
+  background: var(--sunset-soft); color: var(--ink); }
+.chal-eye { justify-self: start; display: inline-flex; align-items: center; gap: 2px; min-height: 24px; }
+.chal-eye .i { width: 14px; height: 14px; }
+.chal-h { font-family: var(--serif); font-size: var(--fs-w-lead); font-weight: 500; line-height: var(--lh-tight); }
+.chal-p { color: var(--ink-2); font-size: var(--fs-sub); line-height: var(--lh-body); }
+.chal-acts { display: flex; flex-wrap: wrap; gap: var(--s2); padding-top: var(--s1); }
+.btn.chal-go { background: var(--sunset); color: var(--sunset-ink); }
+.chal-card .btn.ghost { border-color: var(--line); }
+
+/* one tap: how today felt */
+/* five equal pills on one row, even at 360 wide */
+.chal-feels { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; padding-top: var(--s1); }
+.chal-feel { min-height: var(--hit); padding: 0 2px; border-radius: var(--r-pill); background: var(--raised); text-align: center;
+  border: 1px solid var(--line); font-size: var(--fs-sub); font-weight: 600; line-height: var(--lh-tight); transition: transform .12s ease; }
+.chal-feel:active { transform: scale(.96); }
+.chal-feel.on { background: var(--local); color: var(--local-ink); border-color: var(--local); }
+.chal-feel.slip { color: var(--warn); }
+.chal-feel.slip.on { background: var(--warn); color: var(--on-ink); border-color: var(--warn); }
+
+/* the five days */
+.chal-dots { list-style: none; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: var(--s1); padding-top: var(--s2); }
+.chal-dot { display: grid; justify-items: center; gap: var(--s1); }
+.chal-dot .o { width: 18px; height: 18px; border-radius: var(--r-round); border: 2px solid var(--line); }
+.chal-dot.now .o { border-color: var(--accent); }
+.chal-dot.free .o { background: var(--local); border-color: var(--local); }
+.chal-dot.slip .o { border-color: var(--warn); background: var(--warn-soft); }
+.chal-dot .n { font-size: var(--fs-small); color: var(--ink-3); text-align: center; line-height: var(--lh-tight);
+  overflow-wrap: anywhere; }
+.chal-dot.now .n { color: var(--ink); font-weight: 600; }
+
+/* the sheets */
+.chal-lede { font-size: var(--fs-lead); line-height: var(--lh-body); color: var(--ink-2); padding-bottom: var(--s3); }
+.chal-sh { font-family: var(--serif); font-size: var(--fs-section); font-weight: 500; line-height: var(--lh-tight); padding-top: var(--s2); }
+.chal-sheet .chal-acts { padding-top: var(--s4); }
+.chal-sheet .chal-acts .btn { height: var(--hit); padding: 0 var(--s6); }
+.btn.chal-stop { margin-top: var(--s5); color: var(--ink-3); }
+.chal-form { display: grid; gap: var(--s2); }
+.chal-q { font-size: var(--fs-title); font-weight: 600; line-height: var(--lh-title); padding-top: var(--s4); }
+.chal-chips { display: flex; flex-wrap: wrap; gap: var(--s2); }
+.chal-chip { min-height: 36px; padding: 0 var(--s3); border-radius: var(--r-pill); border: 1px solid var(--line);
+  font-size: var(--fs-sub); font-weight: 500; }
+.chal-chip.on { background: var(--ink); color: var(--on-ink); border-color: var(--ink); }
+.chal-in { flex: none; width: 100%; }
+textarea.chal-area { height: auto; min-height: 88px; padding: 10px 14px; border-radius: var(--r-box);
+  line-height: var(--lh-body); resize: vertical; font: inherit; }
+.chal-kinds { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s2); }
+.chal-kind { display: grid; gap: 2px; align-content: start; padding: var(--s3); border-radius: var(--r-media);
+  border: 1px solid var(--line); background: var(--raised); min-height: var(--hit); }
+.chal-kind b { font-weight: 600; font-size: var(--fs-sub); }
+.chal-kind span { font-size: var(--fs-small); color: var(--ink-3); line-height: var(--lh-tight); }
+.chal-kind.on { border-color: var(--accent); background: var(--accent-soft); box-shadow: inset 0 0 0 1px var(--accent); }
+.chal-send { justify-self: start; height: var(--hit); padding: 0 var(--s6); margin-top: var(--s2); }
+.chal-msg:empty { display: none; }

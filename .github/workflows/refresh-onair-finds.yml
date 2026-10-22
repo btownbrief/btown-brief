@@ -33,6 +33,14 @@
 # when onair-finds.json is under 22 hours old, so it keeps to the 15:10 UTC
 # run (11:10 EDT, after the curators' mornings) and still runs when GitHub's
 # best-effort cron fires late. No step depends on WHICH schedule fired.
+#
+# Sports (scripts/gather_onair_sports.py -> all-day/data/onair-sports.json)
+# rides along every three hours too: the NBA's and NFL's own full-game
+# highlights (YouTube uploads playlists, ~5 quota units), ESPN's scoreboard
+# by month (2-4 calls), r/nba and r/nfl's top of the day (Reddit RSS until it
+# ends 2026-11-13; OAuth once REDDIT_CLIENT_ID/SECRET exist), the NBA's
+# Starting 5 newsletter from NBA.com, and Local hoops from data/sports.json,
+# data/clubs.json, data/groups.json and data/hoops-local.json. $0, no model.
 
 name: Refresh On Air finds
 
@@ -64,7 +72,7 @@ jobs:
           python-version: "3.12"
 
       - name: Offline checks
-        run: python3 -m unittest tests.test_gather_onair_finds tests.test_gather_onair_news
+        run: python3 -m unittest tests.test_gather_onair_finds tests.test_gather_onair_news tests.test_gather_onair_sports
 
       - name: Is a finds run due?
         id: due
@@ -97,14 +105,24 @@ jobs:
           YT_OAUTH_REFRESH_TOKEN: ${{ secrets.YT_OAUTH_REFRESH_TOKEN }}
         run: python3 scripts/gather_onair_news.py
 
+      - name: Gather sports
+        env:
+          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+          YT_OAUTH_CLIENT_ID: ${{ secrets.YT_OAUTH_CLIENT_ID }}
+          YT_OAUTH_CLIENT_SECRET: ${{ secrets.YT_OAUTH_CLIENT_SECRET }}
+          YT_OAUTH_REFRESH_TOKEN: ${{ secrets.YT_OAUTH_REFRESH_TOKEN }}
+          REDDIT_CLIENT_ID: ${{ secrets.REDDIT_CLIENT_ID }}
+          REDDIT_CLIENT_SECRET: ${{ secrets.REDDIT_CLIENT_SECRET }}
+        run: python3 scripts/gather_onair_sports.py || echo "sports gather skipped"
+
       - name: Commit if it changed
         run: |
           git config user.name "btown-brief-bot"
           git config user.email "actions@users.noreply.github.com"
-          git add all-day/data/onair-finds.json all-day/data/onair-news.json
+          git add all-day/data/onair-finds.json all-day/data/onair-news.json all-day/data/onair-sports.json
           if git diff --cached --quiet; then
-            echo "No On Air finds or news changes."
+            echo "No On Air finds, news or sports changes."
           else
-            git commit -m "Auto-refresh On Air finds and news recaps"
+            git commit -m "Auto-refresh On Air finds, news recaps and sports"
             git push origin HEAD:main || (git pull --rebase origin main && git push origin HEAD:main)
           fi
