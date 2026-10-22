@@ -50,6 +50,14 @@ site links it. The file lists those handles (plus the vintage markets in
 MARKETS, which are not shops) so the tab's "New in" rail can pick the
 shops' own posts out of all-day/data/instagram.json.
 
+Photos: data/vintage-photos.json names one picture per shop, the shop's own
+(its site's og:image, hero or store-page photo), chosen by hand so a logo,
+a stock photo or another branch's storefront stays out. Each is copied onto
+its shop as `photo`: the picture's URL on the shop's own host (hotlinked,
+never re-hosted), the page it came from, and the credit the tab prints (the
+page's domain). A photo for a shop that is not in the guide stops the build,
+so a renamed id can't quietly drop a picture.
+
     python3 scripts/build_vintage_shops.py          # writes the file
     python3 scripts/build_vintage_shops.py --check  # exits 1 if it is stale
 """
@@ -63,6 +71,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 SRC = ROOT / "data" / "things.json"
 OUT = ROOT / "data" / "vintage-shops.json"
+PHOTOS = ROOT / "data" / "vintage-photos.json"
 
 # What makes a Shopping entry a shop for this guide, and which kind.
 KINDS = [
@@ -268,6 +277,29 @@ def legs(ordered):
         ordered[-1]["next"] = None
 
 
+def credit_of(page):
+    """The page's domain, as the credit line says it: "batterystjeans.com"."""
+    m = re.match(r"^https://(?:www\.)?([^/]+)", page or "")
+    return m.group(1) if m else None
+
+
+def add_photos(shops):
+    photos = json.loads(PHOTOS.read_text()).get("photos", {}) if PHOTOS.exists() else {}
+    ids = {s["id"] for s in shops}
+    stray = sorted(set(photos) - ids)
+    if stray:
+        sys.exit("data/vintage-photos.json names shops the guide does not have: " + ", ".join(stray))
+    for s in shops:
+        p = photos.get(s["id"])
+        if not p:
+            continue
+        if not (str(p.get("src", "")).startswith("https://") and credit_of(p.get("page"))):
+            sys.exit(f"{s['id']}: a photo needs an https src and the https page it came from")
+        s["photo"] = {"src": p["src"], "page": p["page"], "credit": credit_of(p["page"])}
+        if p.get("fit") == "contain":
+            s["photo"]["fit"] = "contain"
+
+
 def build():
     things = json.loads(SRC.read_text())
     picked = [t for t in things if t.get("group") == "Shopping" and t.get("category") not in NOT_THRIFT
@@ -282,12 +314,14 @@ def build():
     left_out = [{"id": s["id"], "name": s["name"], "why": "outside greater Burlington"} for s in every if s not in inside]
     left_out += [{"id": s["id"], "name": s["name"], "why": "no verified street address"} for s in inside if not s["address"]]
     legs(shops)
+    add_photos(shops)
     gaps = {g: sum(1 for s in shops if g in s["gaps"]) for g in ("address", "coords", "hours", "website")}
     return {
         "_": "Built by scripts/build_vintage_shops.py from data/things.json (Shopping group: vintage, thrift, consignment and antique shops in greater Burlington). "
              "Walking order downtown, then a drive; used books last. Nothing here is typed by hand; a fact things.json lacks is listed in the shop's gaps. Add or fix a shop in things.json and rebuild.",
         "source": "data/things.json",
         "count": len(shops),
+        "photos": sum(1 for s in shops if s.get("photo")),
         "gaps": gaps,
         "left_out": left_out,
         "instagram": sorted({s["instagram"] for s in shops if s.get("instagram")} | set(MARKETS)),

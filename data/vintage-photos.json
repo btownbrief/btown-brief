@@ -1,0 +1,24 @@
+{
+ "_": "One picture per shop for the Vintage tab's shop guide (Stephen, 2026-10-22: photos of each thrift store make it 'easy to find' and add colour). Every picture is the shop's own, read off the page in `page` (its og:image, hero or a photo on its store page), and it is HOTLINKED from the shop's own host with a credit line to that page: never downloaded into this repo or re-hosted. Chosen by hand, so a logo, a stock photo or another branch's storefront stays out, and so does a picture its host won't serve to another site (Karen's Kloset's Google Sites photos send Cross-Origin-Resource-Policy: same-site); `fit: contain` marks a logo, drawn whole on a light tile. A shop not listed here shows its newest Instagram post from all-day/data/instagram.json when the guide knows its handle, else a coloured tile with its initials. scripts/build_vintage_shops.py copies each entry into data/vintage-shops.json; rebuild after editing.",
+ "checked": "2026-10-22",
+ "photos": {
+  "battery-street-jeans": {"src": "https://images.squarespace-cdn.com/content/v1/65258138ee6cf67fb615c295/3de65d61-e5ff-4fab-a50a-bdaa4682650a/IMG_7844.jpg?format=750w", "page": "https://www.batterystjeans.com/"},
+  "hunnymusturd-shop": {"src": "https://images.squarespace-cdn.com/content/v1/664f491b63c7623f1edc9533/d20a6bef-2da9-4ada-a1a9-694f0785357b/IMG_4497.jpeg?format=750w", "page": "https://www.hunnymusturdshop.com/"},
+  "dirt-chic": {"src": "https://www.dirtchicvt.com/uploads/2/7/9/1/27914165/published/1396543709.png?1599499101", "page": "https://www.dirtchicvt.com/", "fit": "contain"},
+  "outdoor-gear-exchange": {"src": "https://www.gearx.com/cdn/shop/files/ogestorefronthq_result_1.webp?width=750", "page": "https://www.gearx.com/pages/hours-location"},
+  "vault-collective": {"src": "https://www.thevaultcollective.com/cdn/shop/files/IMG_6467.jpg?v=1688451156&width=750", "page": "https://www.thevaultcollective.com/pages/vermont-1"},
+  "billie-jean-vintage": {"src": "https://static.wixstatic.com/media/cc3bfb_0a3a04ea6e7c43edb196edca00dd5c2e~mv2.jpeg/v1/fill/w_600,h_600,al_c,q_80/DSCF3033.jpeg", "page": "https://www.billiejeanvintage.com/"},
+  "resource-burlington": {"src": "https://resourcevt.org/wp-content/uploads/elementor/thumbs/ReSOURCE-r2gv816eega4ej00jlk3klkjoz5qjtntcfjsv4o1lk.jpg", "page": "https://resourcevt.org/store-location-hours/"},
+  "project-object-vintage": {"src": "https://povintage.com/cdn/shop/files/IMG_3135_copy.jpg?v=1644856902&width=750", "page": "https://povintage.com/"},
+  "shalom-shuk": {"src": "https://ohavizedek.org/wp-content/uploads/2025/02/building-300x225.png", "page": "https://ohavizedek.org/about-ohavi-zedek-synagogue/shalom-shuk-thrift-store/"},
+  "junktiques": {"src": "https://www.junktiques.net/wp-content/uploads/2016/12/o-4.jpg", "page": "https://www.junktiques.net/"},
+  "the-exchange-essex-junction": {"src": "https://exchangevt.com/s/cdn/v1.0/i/m?url=https%3A%2F%2Fstorage.googleapis.com%2Fproduction-constantcontact-v1-0-9%2F519%2F494519%2FLVLijneM%2F61f4d1d84f6a41a89be126102fa602de&methods=resize%2C500%2C5000", "page": "https://exchangevt.com/"},
+  "heavenly-cents-thrift-shop": {"src": "https://www.fccej.org/v5/wp-content/uploads/2022/10/thrift_shop_2022.jpg", "page": "https://www.fccej.org/v5/serving-others/heavenly-cents-thrift-shop/"},
+  "habitat-restore-williston": {"src": "https://cdn.firespring.com/images/351af80f-6979-4ba3-b922-d9539a328eb5.jpg", "page": "https://vermonthabitat.org/restore/restore-locations.html"},
+  "boho-baby-williston": {"src": "https://static.wixstatic.com/media/838926_3dfcf4e4b9074ac69b487b01793031e3~mv2.png/v1/fill/w_600,h_450,al_c,q_80/838926_3dfcf4e4b9074ac69b487b01793031e3~mv2.jpg", "page": "https://www.bohobabyvt.com/"},
+  "resource-williston": {"src": "https://resourcevt.org/wp-content/uploads/elementor/thumbs/Williston-r2gv8rhvpta5flxs9wxniexgbrk0jckas1teavl0rc.jpg", "page": "https://resourcevt.org/store-location-hours/"},
+  "vintage-inspired-marketplace": {"src": "https://static.wixstatic.com/media/52d41e_4ca55b191ca24eb09514f1840f0f2bfa~mv2.png/v1/fit/w_400,h_400,al_c/52d41e_4ca55b191ca24eb09514f1840f0f2bfa~mv2.png", "page": "https://www.vintageinspiredmarketplace.com/", "fit": "contain"},
+  "bittner-antiques-shelburne": {"src": "https://www.bittnerantiques.com/uploads/7/1/5/4/7154706/background-images/2130531846.jpg", "page": "https://www.bittnerantiques.com/"},
+  "speaking-volumes": {"src": "https://images.squarespace-cdn.com/content/v1/626c0e8c20dff048ffa84355/cc71f11a-9af3-468d-b38f-c66088e2f70c/241680915_4367064123362410_4161185825250658367_n.jpg?format=750w", "page": "https://www.speakingvolumesvt.com/"}
+ }
+}
