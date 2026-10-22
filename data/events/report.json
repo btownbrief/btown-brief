@@ -1,30 +1,30 @@
 {
- "generated": "2026-10-21T19:37:10-04:00",
+ "generated": "2026-10-22T10:39:26-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
    "count": 8,
-   "seconds": 6.0
+   "seconds": 5.7
   },
   "breweries": {
    "label": "Breweries & Taprooms",
-   "count": 79,
-   "seconds": 6.5
+   "count": 78,
+   "seconds": 7.0
   },
   "brownell": {
    "label": "Brownell Library",
-   "count": 83,
-   "seconds": 3.7
+   "count": 81,
+   "seconds": 3.8
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
-   "count": 206,
-   "seconds": 3.6
+   "count": 198,
+   "seconds": 4.5
   },
   "churchst": {
    "label": "Church Street Marketplace",
-   "count": 77,
-   "seconds": 1.5
+   "count": 75,
+   "seconds": 1.6
   },
   "echo": {
    "label": "ECHO Leahy Center",
@@ -34,7 +34,7 @@
   "eventbrite": {
    "label": "Eventbrite",
    "count": 0,
-   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-10-21&end_date=2026-12-20&page=1 (HTTP Error 405: Not Allowed)"
+   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-10-22&end_date=2026-12-21&page=1 (HTTP Error 405: Not Allowed)"
   },
   "facebook": {
    "label": "Facebook (manual drops)",
@@ -44,22 +44,22 @@
   "farmersmarket": {
    "label": "Burlington Farmers Market",
    "count": 2,
-   "seconds": 0.5
+   "seconds": 0.3
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
-   "count": 219,
-   "seconds": 76.9
+   "count": 213,
+   "seconds": 65.7
   },
   "flynn": {
    "label": "The Flynn",
-   "count": 16,
-   "seconds": 0.6
+   "count": 15,
+   "seconds": 0.3
   },
   "generator": {
    "label": "Generator Makerspace",
-   "count": 14,
-   "seconds": 30.6
+   "count": 13,
+   "seconds": 32.0
   },
   "greenfc": {
    "label": "Vermont Green FC",
@@ -69,59 +69,59 @@
   "helloburlington": {
    "label": "Hello Burlington",
    "count": 616,
-   "seconds": 37.3
+   "seconds": 31.0
   },
   "higherground": {
    "label": "Higher Ground",
    "count": 0,
-   "error": "HTTP Error 403: Forbidden",
-   "staleDays": 21
+   "error": "HTTP Error 403: Forbidden"
   },
   "instagram": {
    "label": "Instagram (Scrape Creators)",
-   "count": 1,
-   "seconds": 42.3
+   "count": 0,
+   "error": "skipped by design: once-daily gate, Instagram fetches on the afternoon run only",
+   "staleDays": 0
   },
   "loveburlington": {
    "label": "Love Burlington",
-   "count": 391,
-   "seconds": 68.3
+   "count": 383,
+   "seconds": 73.5
   },
   "meetup": {
    "label": "Meetup",
-   "count": 53,
-   "seconds": 101.4
+   "count": 54,
+   "seconds": 95.5
   },
   "monkeyhouse": {
    "label": "The Monkey House",
-   "count": 19,
-   "seconds": 1.4
+   "count": 18,
+   "seconds": 1.2
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
-   "count": 68,
-   "seconds": 17.5
+   "count": 72,
+   "seconds": 16.9
   },
   "radiobean": {
    "label": "Radio Bean",
    "count": 0,
    "error": "HTTP Error 404: Not Found",
-   "staleDays": 13
+   "staleDays": 14
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
-   "count": 95,
-   "seconds": 6.9
+   "count": 90,
+   "seconds": 7.2
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
    "count": 20,
-   "seconds": 22.6
+   "seconds": 20.9
   },
   "sevendays": {
    "label": "Seven Days",
-   "count": 2344,
-   "seconds": 3.5
+   "count": 2394,
+   "seconds": 70.8
   },
   "shelburnemuseum": {
    "label": "Shelburne Museum",
@@ -130,121 +130,31 @@
   },
   "uvm": {
    "label": "UVM & Colleges",
-   "count": 484,
-   "seconds": 35.3
+   "count": 493,
+   "seconds": 43.6
   },
   "uvmbored": {
    "label": "UVM Bored",
-   "count": 295,
-   "seconds": 0.3
+   "count": 290,
+   "seconds": 0.2
   },
   "vcc": {
    "label": "Vermont Comedy Club",
-   "count": 55,
-   "seconds": 78.7
+   "count": 54,
+   "seconds": 70.3
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
-   "count": 49,
-   "seconds": 0.1
+   "count": 48,
+   "seconds": 0.3
   }
  },
- "gathered": 5194,
- "afterDedup": 2560,
- "duplicatesMerged": 2634,
- "final": 2609,
- "firecrawlCalls": 1,
+ "gathered": 5215,
+ "afterDedup": 2606,
+ "duplicatesMerged": 2609,
+ "final": 2634,
+ "firecrawlCalls": 17,
  "mergeLog": [
-  {
-   "kept": {
-    "title": "Trivia with Craig Mitchell @ The Monkey House",
-    "source": "monkeyhouse"
-   },
-   "merged_sources": [
-    "monkeyhouse",
-    "sevendays"
-   ],
-   "date": "2026-11-23"
-  },
-  {
-   "kept": {
-    "title": "Art Wall: Photography by Jeffrey Trubisz",
-    "source": "sblibrary"
-   },
-   "merged_sources": [
-    "sblibrary",
-    "sevendays"
-   ],
-   "date": "2026-11-23"
-  },
-  {
-   "kept": {
-    "title": "Industry Day",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-11-23"
-  },
-  {
-   "kept": {
-    "title": "'Very Eric Carle' Exhibit",
-    "source": "sevendays"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "sevendays"
-   ],
-   "date": "2026-11-23"
-  },
-  {
-   "kept": {
-    "title": "Sing-Along with Linda Bassick",
-    "source": "fletcherfree"
-   },
-   "merged_sources": [
-    "fletcherfree",
-    "loveburlington",
-    "sevendays"
-   ],
-   "date": "2026-11-24"
-  },
-  {
-   "kept": {
-    "title": "Spanish Conversation",
-    "source": "fletcherfree"
-   },
-   "merged_sources": [
-    "fletcherfree",
-    "loveburlington",
-    "sevendays"
-   ],
-   "date": "2026-11-24"
-  },
-  {
-   "kept": {
-    "title": "Crafters Drop-In",
-    "source": "fletcherfree"
-   },
-   "merged_sources": [
-    "fletcherfree",
-    "loveburlington"
-   ],
-   "date": "2026-11-24"
-  },
-  {
-   "kept": {
-    "title": "Super Smash Tuesdays",
-    "source": "churchst"
-   },
-   "merged_sources": [
-    "churchst",
-    "loveburlington"
-   ],
-   "date": "2026-11-24"
-  },
   {
    "kept": {
     "title": "Queer/LGBTQ+ Horror Book Club",
@@ -342,7 +252,8 @@
    "merged_sources": [
     "breweries",
     "helloburlington",
-    "loveburlington"
+    "loveburlington",
+    "sevendays"
    ],
    "date": "2026-11-25"
   },
@@ -590,6 +501,17 @@
     "helloburlington"
    ],
    "date": "2026-11-28"
+  },
+  {
+   "kept": {
+    "title": "Build It Big: Second Story",
+    "source": "fletcherfree"
+   },
+   "merged_sources": [
+    "fletcherfree",
+    "sevendays"
+   ],
+   "date": "2026-11-29"
   },
   {
    "kept": {
@@ -1313,6 +1235,17 @@
   },
   {
    "kept": {
+    "title": "Build It Big: Second Story",
+    "source": "fletcherfree"
+   },
+   "merged_sources": [
+    "fletcherfree",
+    "sevendays"
+   ],
+   "date": "2026-12-06"
+  },
+  {
+   "kept": {
     "title": "Holiday Pops",
     "source": "flynn"
    },
@@ -1546,6 +1479,7 @@
    "merged_sources": [
     "bca",
     "churchst",
+    "helloburlington",
     "loveburlington"
    ],
    "date": "2026-12-09"
@@ -1992,6 +1926,17 @@
   },
   {
    "kept": {
+    "title": "Build It Big: Second Story",
+    "source": "fletcherfree"
+   },
+   "merged_sources": [
+    "fletcherfree",
+    "sevendays"
+   ],
+   "date": "2026-12-13"
+  },
+  {
+   "kept": {
     "title": "Dad Guild Playgroup (drop-in)",
     "source": "fletcherfree"
    },
@@ -2253,6 +2198,17 @@
   },
   {
    "kept": {
+    "title": "Katelyn Tarver",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-12-17"
+  },
+  {
+   "kept": {
     "title": "UPB Game Night",
     "source": "uvm"
    },
@@ -2404,132 +2360,61 @@
     "sevendays"
    ],
    "date": "2026-12-20"
+  },
+  {
+   "kept": {
+    "title": "Solaris Season of Light - Burlington, VT",
+    "source": "sevendays"
+   },
+   "merged_sources": [
+    "champlainvalley",
+    "sevendays"
+   ],
+   "date": "2026-12-20"
+  },
+  {
+   "kept": {
+    "title": "Stories & Crafts: Animal Antics!",
+    "source": "fletcherfree"
+   },
+   "merged_sources": [
+    "fletcherfree",
+    "loveburlington",
+    "sevendays"
+   ],
+   "date": "2026-12-21"
+  },
+  {
+   "kept": {
+    "title": "Industry Day",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-12-21"
+  },
+  {
+   "kept": {
+    "title": "'Very Eric Carle' Exhibit",
+    "source": "sevendays"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "sevendays"
+   ],
+   "date": "2026-12-21"
   }
  ],
  "changes": [
   {
-   "id": "3ded9dffe32c",
-   "title": "Public Skate",
-   "date": "2026-10-21",
-   "change": "missing",
-   "lastSeen": "2026-10-21T03:37:50-04:00"
-  },
-  {
-   "id": "819ee62b6e3b",
-   "title": "Babytime",
-   "date": "2026-10-21",
-   "change": "missing",
-   "lastSeen": "2026-10-21T03:37:50-04:00"
-  },
-  {
-   "id": "e899300d685d",
-   "title": "Stick & Puck",
-   "date": "2026-10-21",
-   "change": "missing",
-   "lastSeen": "2026-10-21T10:38:13-04:00"
-  },
-  {
-   "id": "2ce5bc63105a",
-   "title": "How Courts are Discussed in US Elections: Noise or Silence? ft. Lisa Holmes, Political Science",
-   "date": "2026-10-21",
-   "change": "missing",
-   "lastSeen": "2026-10-20T10:27:53-04:00"
-  },
-  {
-   "id": "a97d99814562",
-   "title": "Wednesday Walks",
-   "date": "2026-10-21",
-   "change": "missing",
-   "lastSeen": "2026-10-21T10:38:13-04:00"
-  },
-  {
-   "id": "c59be5a2f611",
-   "title": "CS Crew Presents: Eli Smith, BETA Technologies",
-   "date": "2026-10-21",
-   "change": "dropped"
-  },
-  {
-   "id": "8d90ab511232",
-   "title": "Pick-up Basketball",
-   "date": "2026-10-21",
-   "change": "missing",
-   "lastSeen": "2026-10-21T10:38:13-04:00"
-  },
-  {
-   "id": "1660609fd964",
-   "title": "JumpStart Speaker Series: Andrew Savage",
-   "date": "2026-10-21",
-   "change": "missing",
-   "lastSeen": "2026-10-20T19:23:28-04:00"
-  },
-  {
-   "id": "89fe1d0a2a7b",
-   "title": "Trivia @ Citizen Cider",
-   "date": "2026-10-21",
-   "change": "missing",
-   "lastSeen": "2026-10-19T19:55:38-04:00"
-  },
-  {
-   "id": "be6724bf451b",
-   "title": "VCA: $5 Improv Night!",
-   "date": "2026-10-21",
-   "change": "missing",
-   "lastSeen": "2026-10-21T10:38:13-04:00"
-  },
-  {
-   "id": "c5df1fce68e7",
-   "title": "Creating Calm Amidst Chaos",
-   "date": "2026-10-21",
-   "change": "missing",
-   "lastSeen": "2026-10-21T10:38:13-04:00"
-  },
-  {
-   "id": "55bc679faee2",
-   "title": "Trystan Bates",
-   "date": "2026-10-21",
-   "change": "missing",
-   "lastSeen": "2026-10-20T19:23:28-04:00"
-  },
-  {
-   "id": "cc85e4bc3df3",
-   "title": "Kathleen Schneider",
-   "date": "2026-10-21",
-   "change": "missing",
-   "lastSeen": "2026-10-20T19:23:28-04:00"
-  },
-  {
-   "id": "2b254f834364",
-   "title": "Toddlertime",
-   "date": "2026-10-22",
-   "change": "dropped"
-  },
-  {
-   "id": "23d63b8b3722",
-   "title": "Lincoln Sprague",
-   "date": "2026-10-22",
-   "change": "missing",
-   "lastSeen": "2026-10-21T10:38:13-04:00"
-  },
-  {
-   "id": "109f20eb28c9",
-   "title": "Laura Fedele-Rasco",
-   "date": "2026-10-22",
-   "change": "missing",
-   "lastSeen": "2026-10-21T10:38:13-04:00"
-  },
-  {
-   "id": "0df465a9e258",
-   "title": "Dead Gowns, Helenor, Paper Castles",
-   "date": "2026-10-22",
-   "change": "missing",
-   "lastSeen": "2026-10-21T10:38:13-04:00"
-  },
-  {
-   "id": "994a2861105f",
-   "title": "Two Sev, JP Black, Rubi, Chaston",
-   "date": "2026-10-22",
-   "change": "missing",
-   "lastSeen": "2026-10-21T10:38:13-04:00"
+   "id": "7e00b66836de",
+   "title": "From Vermont to Palestine: Building Global Solidarity",
+   "date": "2026-10-23",
+   "change": "time",
+   "was": "2026-10-23T16:30:00-04:00",
+   "now": "2026-10-23T04:30:00-04:00"
   },
   {
    "id": "8b04c251576a",
@@ -2539,78 +2424,32 @@
    "lastSeen": "2026-10-07T20:24:11-04:00"
   },
   {
-   "id": "30156d8444cb",
-   "title": "BTV Votes",
+   "id": "c092bf11c627",
+   "title": "Trystan Bates",
+   "date": "2026-10-22",
+   "change": "missing",
+   "lastSeen": "2026-10-21T19:37:10-04:00"
+  },
+  {
+   "id": "9a3c33655c14",
+   "title": "Kathleen Schneider",
+   "date": "2026-10-22",
+   "change": "missing",
+   "lastSeen": "2026-10-21T19:37:10-04:00"
+  },
+  {
+   "id": "cf394fc49770",
+   "title": "Bow Thayer - Album Release for Ninevah!",
    "date": "2026-10-23",
    "change": "missing",
-   "lastSeen": "2026-10-21T10:38:13-04:00"
+   "lastSeen": "2026-10-21T19:37:10-04:00"
   },
   {
-   "id": "2c7a54f1c0d4",
-   "title": "LEGO Builders",
-   "date": "2026-10-23",
-   "change": "dropped"
-  },
-  {
-   "id": "b3adb69ee5e2",
-   "title": "Sibling Reverie",
-   "date": "2026-10-23",
-   "change": "missing",
-   "lastSeen": "2026-10-21T10:38:13-04:00"
-  },
-  {
-   "id": "9ef052bb62f5",
-   "title": "Two Sev, Lucky Luc, Ron Stoppable, Burly Bear, Xavier",
-   "date": "2026-10-23",
-   "change": "missing",
-   "lastSeen": "2026-10-21T10:38:13-04:00"
-  },
-  {
-   "id": "968e0684553a",
-   "title": "Chartarum, Skinhynger, Germanic Iron",
-   "date": "2026-10-23",
-   "change": "missing",
-   "lastSeen": "2026-10-21T10:38:13-04:00"
-  },
-  {
-   "id": "f7041d10a9ad",
-   "title": "The Jeff Salisbury Band",
-   "date": "2026-10-23",
-   "change": "missing",
-   "lastSeen": "2026-10-21T10:38:13-04:00"
-  },
-  {
-   "id": "4dbb87658048",
-   "title": "Sift, Clive, Moondogs",
-   "date": "2026-10-23",
-   "change": "missing",
-   "lastSeen": "2026-10-21T10:38:13-04:00"
-  },
-  {
-   "id": "28c8d07321ac",
-   "title": "Sweet Val",
-   "date": "2026-10-23",
-   "change": "missing",
-   "lastSeen": "2026-10-21T10:38:13-04:00"
-  },
-  {
-   "id": "e7e6b327bbc2",
-   "title": "McMaple",
-   "date": "2026-10-23",
-   "change": "missing",
-   "lastSeen": "2026-10-21T10:38:13-04:00"
-  },
-  {
-   "id": "b50b64299219",
-   "title": "Fire Safety Story Time",
+   "id": "2fc7035b1b26",
+   "title": "Calum Graham",
    "date": "2026-10-24",
-   "change": "dropped"
-  },
-  {
-   "id": "cb1c2ff30140",
-   "title": "'No Country for Mothers'",
-   "date": "2026-10-24",
-   "change": "dropped"
+   "change": "missing",
+   "lastSeen": "2026-10-21T19:37:10-04:00"
   },
   {
    "id": "c4152cb325c3",
@@ -2620,12 +2459,6 @@
    "lastSeen": "2026-10-07T20:24:11-04:00"
   },
   {
-   "id": "d47e23c4cb96",
-   "title": "Winooski Farmers Market",
-   "date": "2026-10-25",
-   "change": "dropped"
-  },
-  {
    "id": "aab22522b9a5",
    "title": "Hold for Youth event",
    "date": "2026-10-25",
@@ -2633,34 +2466,11 @@
    "lastSeen": "2026-10-21T03:37:50-04:00"
   },
   {
-   "id": "dec1910da07a",
-   "title": "She Bravely Returns: An Immersive Women's Wellness & Writing Experience",
+   "id": "20ba029bf623",
+   "title": "Shaun Booher Live in Burlington",
    "date": "2026-10-25",
-   "change": "dropped"
-  },
-  {
-   "id": "6bf03d16161d",
-   "title": "Middle Grade Movie: 'How to Train Your Dragon'",
-   "date": "2026-10-26",
-   "change": "dropped"
-  },
-  {
-   "id": "3088e87d8e03",
-   "title": "Craftytown",
-   "date": "2026-10-27",
-   "change": "dropped"
-  },
-  {
-   "id": "a8e0b185f666",
-   "title": "Evening Book Group",
-   "date": "2026-10-27",
-   "change": "dropped"
-  },
-  {
-   "id": "185f27c555bc",
-   "title": "Allison Russell w/ Autumn Nicholas",
-   "date": "2026-10-27",
-   "change": "dropped"
+   "change": "missing",
+   "lastSeen": "2026-10-21T19:37:10-04:00"
   },
   {
    "id": "b2e9d10559ff",
@@ -2670,48 +2480,32 @@
    "lastSeen": "2026-10-21T10:38:13-04:00"
   },
   {
-   "id": "bd8d86cc5e44",
-   "title": "Over The Garden Wall",
-   "date": "2026-10-28",
-   "change": "dropped",
-   "lastSeen": "2026-09-30T12:03:45-04:00"
-  },
-  {
-   "id": "74e18b891405",
-   "title": "Tyler Daniel Bean",
-   "date": "2026-10-28",
-   "change": "dropped",
-   "lastSeen": "2026-09-30T12:03:45-04:00"
-  },
-  {
-   "id": "047fbcf1fd9c",
-   "title": "Toddlertime",
+   "id": "6d3476347263",
+   "title": "Turning Pages with Mary - Live!",
    "date": "2026-10-29",
-   "change": "dropped"
+   "change": "missing",
+   "lastSeen": "2026-10-21T19:37:10-04:00"
   },
   {
-   "id": "cf0520ff0236",
-   "title": "Spirits Night",
+   "id": "ba71c8da46b4",
+   "title": "Spotlight 802: Olympian Julia Kern",
    "date": "2026-10-29",
-   "change": "dropped"
+   "change": "missing",
+   "lastSeen": "2026-10-21T19:37:10-04:00"
   },
   {
-   "id": "659f18b0fad8",
-   "title": "Monsters Ball Adventure Dinner",
-   "date": "2026-10-29",
-   "change": "dropped"
+   "id": "75e518017f41",
+   "title": "Green Mountain Woodcarvers October Carve-In & Annual Meeting",
+   "date": "2026-10-31",
+   "change": "missing",
+   "lastSeen": "2026-10-21T19:37:10-04:00"
   },
   {
-   "id": "361f5b4d9984",
-   "title": "LEGO Builders",
-   "date": "2026-10-30",
-   "change": "dropped"
-  },
-  {
-   "id": "0f126a81a667",
-   "title": "Monsters Ball Adventure Dinner",
-   "date": "2026-10-30",
-   "change": "dropped"
+   "id": "4c946c0c093f",
+   "title": "Half Dead",
+   "date": "2026-10-31",
+   "change": "missing",
+   "lastSeen": "2026-10-21T19:37:10-04:00"
   },
   {
    "id": "88db379efc65",
@@ -2721,6 +2515,13 @@
    "lastSeen": "2026-10-07T20:24:11-04:00"
   },
   {
+   "id": "7a668ba2482d",
+   "title": "Burlington Baroque presents Requiem for a King - Jean Gilles & Marc-Antoine Charpentier in Burlington",
+   "date": "2026-11-01",
+   "change": "missing",
+   "lastSeen": "2026-10-21T19:37:10-04:00"
+  },
+  {
    "id": "b355aa33aa99",
    "title": "Therapy Dog Mick Visit",
    "date": "2026-11-04",
@@ -2728,11 +2529,11 @@
    "lastSeen": "2026-10-20T10:27:53-04:00"
   },
   {
-   "id": "9370caed8517",
-   "title": "Wednesday Walks",
+   "id": "53d1ff6ed491",
+   "title": "Dr. Mel Houser | Phoenix Books Essex",
    "date": "2026-11-04",
    "change": "missing",
-   "lastSeen": "2026-10-21T10:38:13-04:00"
+   "lastSeen": "2026-10-21T19:37:10-04:00"
   },
   {
    "id": "aa2da2a62757",
@@ -2749,92 +2550,11 @@
    "lastSeen": "2026-10-07T20:24:11-04:00"
   },
   {
-   "id": "c869794740ea",
-   "title": "Vets Town Hall: South Burlington, VT",
-   "date": "2026-11-08",
-   "change": "dropped"
-  },
-  {
-   "id": "0bfcaa443762",
-   "title": "New Moon Sound Bath",
-   "date": "2026-11-08",
-   "change": "dropped"
-  },
-  {
-   "id": "a3a0b61eaeb9",
-   "title": "Wednesday Walks",
-   "date": "2026-11-11",
+   "id": "a6a61f3206f3",
+   "title": "Read to a Therapy Dog",
+   "date": "2026-11-15",
    "change": "missing",
-   "lastSeen": "2026-10-21T10:38:13-04:00"
-  },
-  {
-   "id": "d8dbf9b9f434",
-   "title": "IFA Power Up Lecture with Nessa Richman",
-   "date": "2026-11-12",
-   "change": "dropped"
-  },
-  {
-   "id": "78c5a0c15c0b",
-   "title": "Good Time Line Dancing",
-   "date": "2026-11-13",
-   "change": "dropped",
-   "lastSeen": "2026-09-30T12:03:45-04:00"
-  },
-  {
-   "id": "923ed396656b",
-   "title": "Zen Sketch",
-   "date": "2026-11-18",
-   "change": "missing",
-   "lastSeen": "2026-10-21T10:38:13-04:00"
-  },
-  {
-   "id": "693970ac113b",
-   "title": "Wednesday Yoga",
-   "date": "2026-11-18",
-   "change": "missing",
-   "lastSeen": "2026-10-21T10:38:13-04:00"
-  },
-  {
-   "id": "c49eff18347f",
-   "title": "Intramural Basketball",
-   "date": "2026-11-18",
-   "change": "missing",
-   "lastSeen": "2026-10-21T10:38:13-04:00"
-  },
-  {
-   "id": "bbf585b7f1f3",
-   "title": "Lunch & Learn: From Refugee to Changemaker: Building Inclusive, Thriving Workplaces",
-   "date": "2026-11-19",
-   "change": "missing",
-   "lastSeen": "2026-10-21T10:38:13-04:00"
-  },
-  {
-   "id": "75a763281e0c",
-   "title": "Zen Sketch",
-   "date": "2026-11-19",
-   "change": "missing",
-   "lastSeen": "2026-10-21T10:38:13-04:00"
-  },
-  {
-   "id": "5a12f591829e",
-   "title": "Intramural Volleyball",
-   "date": "2026-11-19",
-   "change": "missing",
-   "lastSeen": "2026-10-21T10:38:13-04:00"
-  },
-  {
-   "id": "89da6a53bfd2",
-   "title": "Bagel Friday",
-   "date": "2026-11-20",
-   "change": "missing",
-   "lastSeen": "2026-10-21T10:38:13-04:00"
-  },
-  {
-   "id": "cb3c9f7879cb",
-   "title": "Students Demand Action Weekly Meeting",
-   "date": "2026-11-24",
-   "change": "missing",
-   "lastSeen": "2026-10-21T10:38:13-04:00"
+   "lastSeen": "2026-10-21T19:37:10-04:00"
   },
   {
    "id": "c2f68592bc2a",
@@ -2844,18 +2564,11 @@
    "lastSeen": "2026-10-21T10:38:13-04:00"
   },
   {
-   "id": "8e7d28e629fc",
-   "title": "Zen Sketch",
-   "date": "2026-11-25",
+   "id": "448a1b4d7d16",
+   "title": "Friendsgiving at Linda’s House",
+   "date": "2026-11-29",
    "change": "missing",
-   "lastSeen": "2026-10-21T10:38:13-04:00"
-  },
-  {
-   "id": "57eda5c0288b",
-   "title": "House of Sparkle",
-   "date": "2026-11-27",
-   "change": "dropped",
-   "lastSeen": "2026-09-30T12:03:45-04:00"
+   "lastSeen": "2026-10-21T19:37:10-04:00"
   },
   {
    "id": "203faa10789a",
@@ -2863,6 +2576,13 @@
    "date": "2026-12-02",
    "change": "missing",
    "lastSeen": "2026-10-21T10:38:13-04:00"
+  },
+  {
+   "id": "899a81223e17",
+   "title": "Ladies Book Club - Eleanor Oliphant is Completely Fine",
+   "date": "2026-12-02",
+   "change": "missing",
+   "lastSeen": "2026-10-21T19:37:10-04:00"
   },
   {
    "id": "c87d2c8d312b",
@@ -2884,19 +2604,6 @@
    "date": "2026-12-16",
    "change": "missing",
    "lastSeen": "2026-10-21T10:38:13-04:00"
-  },
-  {
-   "id": "83d55aac4b1a",
-   "title": "Kids Puzzle Swap",
-   "date": "2026-12-16",
-   "change": "dropped"
-  },
-  {
-   "id": "187ad242cff1",
-   "title": "Katelyn Tarver",
-   "date": "2026-12-17",
-   "change": "missing",
-   "lastSeen": "2026-10-20T10:27:53-04:00"
   }
  ]
 }
