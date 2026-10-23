@@ -49,7 +49,7 @@ def main():
         print("Draft has no generated text — leaving for manual review.")
         return
 
-    if os.path.exists(READ):
+    if os.path.exists(READ) and "--force" not in sys.argv:
         with open(READ) as f:
             current = json.load(f)
         if (current.get("date") == draft.get("date")
