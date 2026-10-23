@@ -876,28 +876,9 @@ a.wx-tile:hover { background: var(--glass-2); text-decoration: none; color: #fff
 .read-text p { font-family: var(--font-display); font-size: var(--text-md); line-height: 1.7; color: #fff; }
 .read-byline { color: var(--ink-3); }
 .read-byline a { color: #fff; }
-
-/* ---------------- the local forecasters ---------------- */
-
-.takes-inner { padding: var(--space-4) 0 var(--space-2); }
-.takes-title { margin: 0 var(--space-4) var(--space-1); }
-.take {
-  display: grid;
-  grid-template-columns: 7.5em 1fr auto;
-  align-items: center;
-  gap: var(--space-3);
-  min-height: 52px;
-  margin: 0 var(--space-4);
-  border-bottom: 1px solid var(--line-soft);
-  color: #fff;
-  text-decoration: none;
-}
-.take:last-child { border-bottom: 0; }
-.take:hover { color: #fff; text-decoration: none; }
-.take:hover .take-who { text-decoration: underline; }
-.take-who { font-weight: 700; font-size: var(--text-base); }
-.take-what { font-size: var(--text-sm); color: var(--ink-3); line-height: 1.35; }
-.take-go { color: var(--ink-4); font-size: 1.2rem; }
+.read-others { margin-top: var(--space-2); font-size: var(--text-xs); color: var(--ink-4); line-height: 1.6; }
+.read-others a { color: var(--ink-3); text-decoration: underline; text-decoration-color: var(--line-soft); text-underline-offset: 2px; }
+.read-others a:hover { color: #fff; }
 
 /* ---------------- life scores ---------------- */
 
@@ -983,7 +964,6 @@ a.wx-tile:hover { background: var(--glass-2); text-decoration: none; color: #fff
   .wk-call { font-size: var(--text-xs); }
   .wk-more { padding-left: 0; }
   .wk-model-chip { display: none; }
-  .take { grid-template-columns: 6.5em 1fr auto; }
   /* the scores two by two, like the tiles */
   .life-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .life-card { padding: var(--space-3); }
