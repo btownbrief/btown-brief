@@ -55,7 +55,7 @@ jobs:
         # public repo (scripts/private_prompts.py). Without it this step fails
         # red, nothing is drafted, and the live read stays up.
         env:
-          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           PROMPT_WEATHER_READ: ${{ secrets.PROMPT_WEATHER_READ }}
         run: |
           python3 scripts/private_prompts.py --check weather-read.md

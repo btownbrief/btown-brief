@@ -84,9 +84,12 @@ def fetch_wcax():
                 "low_f": (fc.get("temperatureMin") or [None] * 3)[i],
                 "narrative": (fc.get("narrative") or [None] * 3)[i],
             })
-    # meteorologist discussion: longest text block mentioning a weekday/temps
-    discussion = None
-    texts = re.findall(r'"content"\s*:\s*"((?:[^"\\]|\\.){120,})"', m.group(1))
+    # The meteorologist's discussion: every story paragraph that talks about
+    # days and temps, in page order (today, the weekend, next week). Taking
+    # only the longest one dropped the day-by-day story that makes it read
+    # like a person talking.
+    paras = []
+    texts = re.findall(r'"content"\s*:\s*"((?:[^"\\]|\\.){80,})"', m.group(1))
     for t in texts:
         try:
             t = json.loads(f'"{t}"')
@@ -94,20 +97,20 @@ def fetch_wcax():
             continue
         t = re.sub(r"<[^>]+>", " ", t)
         t = re.sub(r"\s+", " ", t).strip()
-        if re.search(r"(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday)", t) \
-                and re.search(r"\b\d{2}s?\b", t):
-            if discussion is None or len(t) > len(discussion):
-                discussion = t
-    if discussion and len(discussion) > 900:
-        discussion = discussion[:900].rsplit(". ", 1)[0] + "."
+        if re.search(r"(today|tonight|Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday|weekend)", t, re.I) \
+                and re.search(r"\b\d{2}s?\b", t) and t not in paras:
+            paras.append(t)
+    discussion = " ".join(paras) or None
+    if discussion and len(discussion) > 2500:
+        discussion = discussion[:2500].rsplit(". ", 1)[0] + "."
     if not days and not discussion:
         return None
     return {"outlet": "WCAX (Channel 3)", "days": days, "discussion": discussion}
 
 
 def fetch_nbc5():
-    """NBC5: latest First Warning forecast article headline + lede (two-hop:
-    weather page ld+json ItemList → article)."""
+    """NBC5: the latest forecast article's headline and body (two hops:
+    weather page ld+json ItemList, then the article's own ld+json)."""
     page = _get("https://www.mynbc5.com/weather")
     m = re.search(r'<script[^>]*type="application/ld\+json"[^>]*>(.*?)</script>', page, re.S)
     if not m:
@@ -120,24 +123,25 @@ def fetch_nbc5():
     if not url:
         return None
     art = _get(url)
-    am = re.search(r'<script[^>]*type="application/ld\+json"[^>]*>(.*?)</script>', art, re.S)
-    headline, published = None, None
-    if am:
+    headline, published, body = None, None, None
+    for am in re.finditer(r'<script[^>]*type="application/ld\+json"[^>]*>(.*?)</script>', art, re.S):
         try:
             ald = json.loads(am.group(1))
+        except Exception:
+            continue
+        if isinstance(ald, dict) and ald.get("articleBody"):
             headline = ald.get("headline")
             published = ald.get("datePublished")
-        except Exception:
-            pass
-    lede = None
-    pm = re.search(r"<p[^>]*>(.{60,}?)</p>", art, re.S)
-    if pm:
-        lede = re.sub(r"<[^>]+>", "", pm.group(1))
-        lede = re.sub(r"\s+", " ", html.unescape(lede)).strip()
-    if not headline and not lede:
+            body = re.sub(r"\s+", " ", html.unescape(ald["articleBody"])).strip()
+            break
+    if body:
+        # The forecast comes first; the station's promo boilerplate follows.
+        body = re.split(r"\s(?:Watch the video|Want more local news|STAY WEATHER-AWARE)", body)[0].strip()
+        body = body[:1500]
+    if not headline and not body:
         return None
-    return {"outlet": "NBC5 First Warning", "headline": headline,
-            "published": published, "lede": lede, "url": url}
+    return {"outlet": "NBC5", "headline": headline,
+            "published": published, "body": body, "url": url}
 
 
 def fetch_all():
