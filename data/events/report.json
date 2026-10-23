@@ -1,30 +1,30 @@
 {
- "generated": "2026-10-22T19:35:46-04:00",
+ "generated": "2026-10-23T10:24:04-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
    "count": 8,
-   "seconds": 6.2
+   "seconds": 5.5
   },
   "breweries": {
    "label": "Breweries & Taprooms",
-   "count": 86,
-   "seconds": 5.4
+   "count": 83,
+   "seconds": 5.0
   },
   "brownell": {
    "label": "Brownell Library",
-   "count": 81,
-   "seconds": 5.2
+   "count": 80,
+   "seconds": 4.7
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
-   "count": 198,
-   "seconds": 3.6
+   "count": 190,
+   "seconds": 2.9
   },
   "churchst": {
    "label": "Church Street Marketplace",
-   "count": 75,
-   "seconds": 2.0
+   "count": 72,
+   "seconds": 1.8
   },
   "echo": {
    "label": "ECHO Leahy Center",
@@ -34,7 +34,7 @@
   "eventbrite": {
    "label": "Eventbrite",
    "count": 0,
-   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-10-22&end_date=2026-12-21&page=1 (HTTP Error 405: Not Allowed)"
+   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-10-23&end_date=2026-12-22&page=1 (HTTP Error 405: Not Allowed)"
   },
   "facebook": {
    "label": "Facebook (manual drops)",
@@ -48,17 +48,17 @@
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
-   "count": 214,
-   "seconds": 72.4
+   "count": 216,
+   "seconds": 68.3
   },
   "flynn": {
    "label": "The Flynn",
-   "count": 15,
-   "seconds": 0.5
+   "count": 14,
+   "seconds": 0.4
   },
   "generator": {
    "label": "Generator Makerspace",
-   "count": 13,
+   "count": 10,
    "seconds": 32.0
   },
   "greenfc": {
@@ -68,8 +68,8 @@
   },
   "helloburlington": {
    "label": "Hello Burlington",
-   "count": 616,
-   "seconds": 32.0
+   "count": 608,
+   "seconds": 30.1
   },
   "higherground": {
    "label": "Higher Ground",
@@ -78,49 +78,51 @@
   },
   "instagram": {
    "label": "Instagram (Scrape Creators)",
-   "count": 1,
-   "seconds": 27.5
+   "count": 0,
+   "error": "skipped by design: once-daily gate, Instagram fetches on the afternoon run only",
+   "staleDays": 0
   },
   "loveburlington": {
    "label": "Love Burlington",
-   "count": 383,
-   "seconds": 75.8
+   "count": 382,
+   "seconds": 74.1
   },
   "meetup": {
    "label": "Meetup",
-   "count": 54,
-   "seconds": 106.8
+   "count": 56,
+   "seconds": 96.5
   },
   "monkeyhouse": {
    "label": "The Monkey House",
-   "count": 18,
-   "seconds": 0.5
+   "count": 17,
+   "seconds": 1.4
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
    "count": 72,
-   "seconds": 15.8
+   "seconds": 15.5
   },
   "radiobean": {
    "label": "Radio Bean",
    "count": 0,
    "error": "HTTP Error 404: Not Found",
-   "staleDays": 14
+   "staleDays": 15
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
-   "count": 93,
-   "seconds": 2.1
+   "count": 0,
+   "error": "events listing markup not found (page layout changed?)",
+   "staleDays": 0
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
-   "count": 20,
-   "seconds": 23.7
+   "count": 19,
+   "seconds": 21.3
   },
   "sevendays": {
    "label": "Seven Days",
-   "count": 2394,
-   "seconds": 3.3
+   "count": 2357,
+   "seconds": 23.2
   },
   "shelburnemuseum": {
    "label": "Shelburne Museum",
@@ -129,65 +131,31 @@
   },
   "uvm": {
    "label": "UVM & Colleges",
-   "count": 509,
-   "seconds": 23.7
+   "count": 492,
+   "seconds": 60.4
   },
   "uvmbored": {
    "label": "UVM Bored",
-   "count": 306,
+   "count": 294,
    "seconds": 0.3
   },
   "vcc": {
    "label": "Vermont Comedy Club",
-   "count": 54,
-   "seconds": 72.3
+   "count": 53,
+   "seconds": 74.1
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
-   "count": 48,
-   "seconds": 0.4
+   "count": 47,
+   "seconds": 0.5
   }
  },
- "gathered": 5260,
- "afterDedup": 2634,
- "duplicatesMerged": 2626,
- "final": 2670,
- "firecrawlCalls": 1,
+ "gathered": 5072,
+ "afterDedup": 2498,
+ "duplicatesMerged": 2574,
+ "final": 2625,
+ "firecrawlCalls": 5,
  "mergeLog": [
-  {
-   "kept": {
-    "title": "EZ Breezy Bike Rides",
-    "source": "sevendays"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "sevendays"
-   ],
-   "date": "2026-11-24"
-  },
-  {
-   "kept": {
-    "title": "Wine Down Wednesday",
-    "source": "churchst"
-   },
-   "merged_sources": [
-    "churchst",
-    "loveburlington"
-   ],
-   "date": "2026-11-25"
-  },
-  {
-   "kept": {
-    "title": "TRIVIA NIGHT",
-    "source": "churchst"
-   },
-   "merged_sources": [
-    "churchst",
-    "loveburlington",
-    "sevendays"
-   ],
-   "date": "2026-11-25"
-  },
   {
    "kept": {
     "title": "Live Music: Lloyd Tyler Band",
@@ -376,17 +344,6 @@
    },
    "merged_sources": [
     "fletcherfree",
-    "sevendays"
-   ],
-   "date": "2026-11-28"
-  },
-  {
-   "kept": {
-    "title": "Chess Club",
-    "source": "sblibrary"
-   },
-   "merged_sources": [
-    "sblibrary",
     "sevendays"
    ],
    "date": "2026-11-28"
@@ -1463,17 +1420,6 @@
   },
   {
    "kept": {
-    "title": "Italian Conversation Group",
-    "source": "sblibrary"
-   },
-   "merged_sources": [
-    "sblibrary",
-    "sevendays"
-   ],
-   "date": "2026-12-09"
-  },
-  {
-   "kept": {
     "title": "Wine Down Wednesday",
     "source": "churchst"
    },
@@ -2117,17 +2063,6 @@
   },
   {
    "kept": {
-    "title": "Puzzle Swap",
-    "source": "sblibrary"
-   },
-   "merged_sources": [
-    "sblibrary",
-    "sevendays"
-   ],
-   "date": "2026-12-16"
-  },
-  {
-   "kept": {
     "title": "Wine Down Wednesday",
     "source": "churchst"
    },
@@ -2404,44 +2339,99 @@
     "sevendays"
    ],
    "date": "2026-12-21"
+  },
+  {
+   "kept": {
+    "title": "Sing-Along with Linda Bassick",
+    "source": "fletcherfree"
+   },
+   "merged_sources": [
+    "fletcherfree",
+    "loveburlington",
+    "sevendays"
+   ],
+   "date": "2026-12-22"
+  },
+  {
+   "kept": {
+    "title": "Spanish Conversation",
+    "source": "fletcherfree"
+   },
+   "merged_sources": [
+    "fletcherfree",
+    "loveburlington",
+    "sevendays"
+   ],
+   "date": "2026-12-22"
+  },
+  {
+   "kept": {
+    "title": "Crafters Drop-In",
+    "source": "fletcherfree"
+   },
+   "merged_sources": [
+    "fletcherfree",
+    "loveburlington"
+   ],
+   "date": "2026-12-22"
+  },
+  {
+   "kept": {
+    "title": "Super Smash Tuesdays",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "churchst",
+    "loveburlington"
+   ],
+   "date": "2026-12-22"
+  },
+  {
+   "kept": {
+    "title": "802sDay",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-12-22"
+  },
+  {
+   "kept": {
+    "title": "'Very Eric Carle' Exhibit",
+    "source": "sevendays"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "sevendays"
+   ],
+   "date": "2026-12-22"
   }
  ],
  "changes": [
   {
-   "id": "86173b2b546a",
-   "title": "Craftytown! Burlap Bunting",
-   "date": "2026-11-03",
+   "id": "6ae8fb9edcc0",
+   "title": "Movie Night: You Can See Everything (the Elizabeth Holmes Doc)",
+   "date": "2026-10-23",
    "change": "time",
-   "was": "2026-11-03T15:00:00-05:00",
-   "now": "2026-11-03T13:00:00-05:00"
+   "was": "2026-10-23T19:00:00-04:00",
+   "now": "2026-10-23T20:10:00-04:00"
   },
   {
-   "id": "4199b1783a7f",
-   "title": "Minecraft Meet-up",
-   "date": "2026-10-22",
+   "id": "e872dba934d8",
+   "title": "Kids Puzzle Swap",
+   "date": "2026-11-18",
+   "change": "time",
+   "was": "2026-11-18T14:30:00-05:00",
+   "now": "2026-11-18T14:00:00-05:00"
+  },
+  {
+   "id": "933ca87599b3",
+   "title": "Friday LEGO Builders",
+   "date": "2026-10-23",
    "change": "missing",
-   "lastSeen": "2026-10-22T10:39:26-04:00"
-  },
-  {
-   "id": "8b04c251576a",
-   "title": "Radio Bean Presents: Dead Gowns w/ Helenor @ The Monkey House",
-   "date": "2026-10-22",
-   "change": "source-down",
-   "lastSeen": "2026-10-07T20:24:11-04:00"
-  },
-  {
-   "id": "c092bf11c627",
-   "title": "Trystan Bates",
-   "date": "2026-10-22",
-   "change": "missing",
-   "lastSeen": "2026-10-21T19:37:10-04:00"
-  },
-  {
-   "id": "9a3c33655c14",
-   "title": "Kathleen Schneider",
-   "date": "2026-10-22",
-   "change": "missing",
-   "lastSeen": "2026-10-21T19:37:10-04:00"
+   "lastSeen": "2026-10-22T19:35:46-04:00"
   },
   {
    "id": "dd5d0a8e4dd8",
@@ -2456,6 +2446,34 @@
    "date": "2026-10-23",
    "change": "missing",
    "lastSeen": "2026-10-21T19:37:10-04:00"
+  },
+  {
+   "id": "dc4e1762ba25",
+   "title": "Trystan Bates",
+   "date": "2026-10-23",
+   "change": "missing",
+   "lastSeen": "2026-10-22T19:35:46-04:00"
+  },
+  {
+   "id": "122d877cdeb3",
+   "title": "Kathleen Schneider",
+   "date": "2026-10-23",
+   "change": "missing",
+   "lastSeen": "2026-10-22T19:35:46-04:00"
+  },
+  {
+   "id": "33c7e208bb66",
+   "title": "Fire Safety Storytime",
+   "date": "2026-10-24",
+   "change": "missing",
+   "lastSeen": "2026-10-22T19:35:46-04:00"
+  },
+  {
+   "id": "0f178be56add",
+   "title": "Free Movie: No Country for Mothers",
+   "date": "2026-10-24",
+   "change": "missing",
+   "lastSeen": "2026-10-22T19:35:46-04:00"
   },
   {
    "id": "2fc7035b1b26",
@@ -2493,11 +2511,67 @@
    "lastSeen": "2026-10-22T10:39:26-04:00"
   },
   {
+   "id": "32a893a8f6ab",
+   "title": "Art Wall: Photography by Jeffrey Trubisz",
+   "date": "2026-10-26",
+   "change": "missing",
+   "lastSeen": "2026-10-22T19:35:46-04:00"
+  },
+  {
+   "id": "ce76e17a39cd",
+   "title": "Middle Grade Movie: How to Train Your Dragon (2025)",
+   "date": "2026-10-26",
+   "change": "missing",
+   "lastSeen": "2026-10-22T19:35:46-04:00"
+  },
+  {
+   "id": "5ea8c648081b",
+   "title": "Storybook Craftytown- Arlo Needs Glasses",
+   "date": "2026-10-27",
+   "change": "missing",
+   "lastSeen": "2026-10-22T19:35:46-04:00"
+  },
+  {
+   "id": "49ca0bd930fe",
+   "title": "MATH Help Sessions",
+   "date": "2026-10-27",
+   "change": "missing",
+   "lastSeen": "2026-10-22T19:35:46-04:00"
+  },
+  {
+   "id": "fe9227b86dab",
+   "title": "Evening Book Group: A Grandmother Begins the Story",
+   "date": "2026-10-27",
+   "change": "missing",
+   "lastSeen": "2026-10-22T19:35:46-04:00"
+  },
+  {
    "id": "b2e9d10559ff",
    "title": "Wednesday Walks",
    "date": "2026-10-28",
    "change": "missing",
    "lastSeen": "2026-10-21T10:38:13-04:00"
+  },
+  {
+   "id": "66a4f45e83b4",
+   "title": "MATH Help Sessions",
+   "date": "2026-10-28",
+   "change": "missing",
+   "lastSeen": "2026-10-22T19:35:46-04:00"
+  },
+  {
+   "id": "a0544b5f5f27",
+   "title": "Toddlertime- 9:15am Session",
+   "date": "2026-10-29",
+   "change": "missing",
+   "lastSeen": "2026-10-22T19:35:46-04:00"
+  },
+  {
+   "id": "75ef6b855680",
+   "title": "MATH Help Sessions",
+   "date": "2026-10-29",
+   "change": "missing",
+   "lastSeen": "2026-10-22T19:35:46-04:00"
   },
   {
    "id": "899d56097989",
@@ -2519,6 +2593,13 @@
    "date": "2026-10-29",
    "change": "missing",
    "lastSeen": "2026-10-21T19:37:10-04:00"
+  },
+  {
+   "id": "cd8fe5063ade",
+   "title": "Friday LEGO Builders",
+   "date": "2026-10-30",
+   "change": "missing",
+   "lastSeen": "2026-10-22T19:35:46-04:00"
   },
   {
    "id": "75e518017f41",
@@ -2556,6 +2637,27 @@
    "lastSeen": "2026-10-22T10:39:26-04:00"
   },
   {
+   "id": "4f6436fef009",
+   "title": "Art Wall: Photography by Jeffrey Trubisz",
+   "date": "2026-11-02",
+   "change": "missing",
+   "lastSeen": "2026-10-22T19:35:46-04:00"
+  },
+  {
+   "id": "f8385e2f5b53",
+   "title": "MATH Help Sessions",
+   "date": "2026-11-02",
+   "change": "missing",
+   "lastSeen": "2026-10-22T19:35:46-04:00"
+  },
+  {
+   "id": "5ff32f3a3825",
+   "title": "MATH Help Sessions",
+   "date": "2026-11-03",
+   "change": "missing",
+   "lastSeen": "2026-10-22T19:35:46-04:00"
+  },
+  {
    "id": "ef2275a4a684",
    "title": "Cookbook Club: My Harvest Kitchen",
    "date": "2026-11-03",
@@ -2568,6 +2670,13 @@
    "date": "2026-11-04",
    "change": "missing",
    "lastSeen": "2026-10-20T10:27:53-04:00"
+  },
+  {
+   "id": "b850d115642d",
+   "title": "MATH Help Sessions",
+   "date": "2026-11-04",
+   "change": "missing",
+   "lastSeen": "2026-10-22T19:35:46-04:00"
   },
   {
    "id": "53d1ff6ed491",
@@ -2584,6 +2693,13 @@
    "lastSeen": "2026-10-07T20:24:11-04:00"
   },
   {
+   "id": "8906e688af74",
+   "title": "MATH Help Sessions",
+   "date": "2026-11-05",
+   "change": "missing",
+   "lastSeen": "2026-10-22T19:35:46-04:00"
+  },
+  {
    "id": "c5c93bd8ff50",
    "title": "The Lowest Pair",
    "date": "2026-11-05",
@@ -2591,11 +2707,102 @@
    "lastSeen": "2026-10-07T20:24:11-04:00"
   },
   {
+   "id": "7fdf9f102d76",
+   "title": "Vets Town Hall",
+   "date": "2026-11-08",
+   "change": "missing",
+   "lastSeen": "2026-10-22T19:35:46-04:00"
+  },
+  {
+   "id": "75c15f063da8",
+   "title": "Art Wall: Photography by Jeffrey Trubisz",
+   "date": "2026-11-09",
+   "change": "missing",
+   "lastSeen": "2026-10-22T19:35:46-04:00"
+  },
+  {
+   "id": "167bfd958404",
+   "title": "MATH Help Sessions",
+   "date": "2026-11-09",
+   "change": "missing",
+   "lastSeen": "2026-10-22T19:35:46-04:00"
+  },
+  {
+   "id": "bf4dcf9e6cf2",
+   "title": "MATH Help Sessions",
+   "date": "2026-11-10",
+   "change": "missing",
+   "lastSeen": "2026-10-22T19:35:46-04:00"
+  },
+  {
+   "id": "50fca8321fec",
+   "title": "MATH Help Sessions",
+   "date": "2026-11-11",
+   "change": "missing",
+   "lastSeen": "2026-10-22T19:35:46-04:00"
+  },
+  {
+   "id": "202168631b0f",
+   "title": "MATH Help Sessions",
+   "date": "2026-11-12",
+   "change": "missing",
+   "lastSeen": "2026-10-22T19:35:46-04:00"
+  },
+  {
    "id": "a6a61f3206f3",
    "title": "Read to a Therapy Dog",
    "date": "2026-11-15",
    "change": "missing",
    "lastSeen": "2026-10-21T19:37:10-04:00"
+  },
+  {
+   "id": "bc31c6f7292f",
+   "title": "Art Wall: Photography by Jeffrey Trubisz",
+   "date": "2026-11-16",
+   "change": "missing",
+   "lastSeen": "2026-10-22T19:35:46-04:00"
+  },
+  {
+   "id": "ada684707bc0",
+   "title": "MATH Help Sessions",
+   "date": "2026-11-16",
+   "change": "missing",
+   "lastSeen": "2026-10-22T19:35:46-04:00"
+  },
+  {
+   "id": "3759a29b5f8d",
+   "title": "MATH Help Sessions",
+   "date": "2026-11-17",
+   "change": "missing",
+   "lastSeen": "2026-10-22T19:35:46-04:00"
+  },
+  {
+   "id": "16d2586f68ef",
+   "title": "MATH Help Sessions",
+   "date": "2026-11-18",
+   "change": "missing",
+   "lastSeen": "2026-10-22T19:35:46-04:00"
+  },
+  {
+   "id": "c2fb21c26763",
+   "title": "MATH Help Sessions",
+   "date": "2026-11-19",
+   "change": "missing",
+   "lastSeen": "2026-10-22T19:35:46-04:00"
+  },
+  {
+   "id": "83ea4c58c6e5",
+   "title": "Shelburne Farms November Walk",
+   "date": "2026-11-22",
+   "change": "missing",
+   "lastSeen": "2026-10-22T19:35:46-04:00"
+  },
+  {
+   "id": "73338132928e",
+   "title": "Art Wall: Photography by Jeffrey Trubisz",
+   "date": "2026-11-23",
+   "change": "missing",
+   "lastSeen": "2026-10-22T19:35:46-04:00"
   },
   {
    "id": "c2f68592bc2a",
@@ -2612,11 +2819,32 @@
    "lastSeen": "2026-10-21T19:37:10-04:00"
   },
   {
+   "id": "fd42ac39974e",
+   "title": "MATH Help Sessions",
+   "date": "2026-11-30",
+   "change": "missing",
+   "lastSeen": "2026-10-22T19:35:46-04:00"
+  },
+  {
+   "id": "cf182e60d143",
+   "title": "MATH Help Sessions",
+   "date": "2026-12-01",
+   "change": "missing",
+   "lastSeen": "2026-10-22T19:35:46-04:00"
+  },
+  {
    "id": "203faa10789a",
    "title": "Wednesday Walks",
    "date": "2026-12-02",
    "change": "missing",
    "lastSeen": "2026-10-21T10:38:13-04:00"
+  },
+  {
+   "id": "f2762f588188",
+   "title": "MATH Help Sessions",
+   "date": "2026-12-02",
+   "change": "missing",
+   "lastSeen": "2026-10-22T19:35:46-04:00"
   },
   {
    "id": "899a81223e17",
@@ -2626,11 +2854,32 @@
    "lastSeen": "2026-10-21T19:37:10-04:00"
   },
   {
+   "id": "3da775c39bd6",
+   "title": "MATH Help Sessions",
+   "date": "2026-12-03",
+   "change": "missing",
+   "lastSeen": "2026-10-22T19:35:46-04:00"
+  },
+  {
    "id": "24d3678c4f54",
    "title": "Hold for Minecraft",
    "date": "2026-12-04",
    "change": "missing",
    "lastSeen": "2026-10-22T10:39:26-04:00"
+  },
+  {
+   "id": "6069fba6e4ce",
+   "title": "MATH Help Sessions",
+   "date": "2026-12-07",
+   "change": "missing",
+   "lastSeen": "2026-10-22T19:35:46-04:00"
+  },
+  {
+   "id": "39eaab89d2b8",
+   "title": "MATH Help Sessions",
+   "date": "2026-12-08",
+   "change": "missing",
+   "lastSeen": "2026-10-22T19:35:46-04:00"
   },
   {
    "id": "c87d2c8d312b",
@@ -2647,6 +2896,13 @@
    "lastSeen": "2026-10-21T10:38:13-04:00"
   },
   {
+   "id": "75fc2603dda6",
+   "title": "MATH Help Sessions",
+   "date": "2026-12-09",
+   "change": "missing",
+   "lastSeen": "2026-10-22T19:35:46-04:00"
+  },
+  {
    "id": "1d93378ebe49",
    "title": "Hold for Minecraft",
    "date": "2026-12-11",
@@ -2659,6 +2915,13 @@
    "date": "2026-12-16",
    "change": "missing",
    "lastSeen": "2026-10-21T10:38:13-04:00"
+  },
+  {
+   "id": "ff7780931f1c",
+   "title": "Puzzle Swap",
+   "date": "2026-12-16",
+   "change": "missing",
+   "lastSeen": "2026-10-22T19:35:46-04:00"
   },
   {
    "id": "0e2121d70159",
