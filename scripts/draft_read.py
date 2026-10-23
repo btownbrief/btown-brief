@@ -467,6 +467,9 @@ def main():
                         help="draft whichever edition is due by the clock, "
                              "unless it is already drafted or live; exits "
                              "quietly otherwise")
+    parser.add_argument("--force", action="store_true",
+                        help="with --auto: redraft the due edition even if "
+                             "it is already drafted or live")
     args = parser.parse_args()
 
     # Burlington-local date (the Action runs in UTC; DST-safe via zoneinfo)
@@ -480,7 +483,7 @@ def main():
             print("auto: no edition due at this hour — nothing to do")
             return
         today_iso = local.date().isoformat()
-        for path in (DRAFT, READ):
+        for path in () if args.force else (DRAFT, READ):
             cur = load_json(path)
             if (cur and cur.get("date") == today_iso
                     and EDITION_RANK.get(cur.get("edition", "morning"), 0)
