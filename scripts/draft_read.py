@@ -13,7 +13,7 @@ directly. scripts/auto_publish_read.py (or Stephen, via
 scripts/approve_read.py) promotes it to data/weather/read.json, the only
 file the dashboard displays.
 
-Without OPENROUTER_API_KEY the script still writes the draft entry with the
+Without ANTHROPIC_API_KEY the script still writes the draft entry with the
 full packet and an empty text, so the review queue and packet are always
 there to write from by hand (or from a Claude Code session).
 """
@@ -58,11 +58,9 @@ def load_json(path):
     except (OSError, ValueError):
         return None
 
-# GLM's reasoning is mandatory, unbounded and billed as output: providers
-# burned entire max_tokens budgets on thinking and returned no text (GMICloud
-# 7998/8000). Short-output calls use a non-reasoning model instead - same
-# OpenRouter key and endpoint, fewer tokens, and no empty-reply failure mode.
-MODEL = os.environ.get("WEATHER_READ_MODEL", "openai/gpt-5.6-luna")
+# Straight to the Anthropic API on Stephen's own key (2026-10-23: Sonnet 5.5
+# writes the read, not an OpenRouter model).
+MODEL = os.environ.get("WEATHER_READ_MODEL", "claude-sonnet-5-5")
 
 
 VERIFICATION = os.path.join(ROOT, "data", "weather", "verification.json")
@@ -156,6 +154,39 @@ def scoreboard_lines():
             "bears on today's call, e.g. 'Google has had the better read on afternoon highs lately'):"] + out
 
 
+def is_friday():
+    return datetime.now(ZoneInfo("America/New_York")).weekday() == 4
+
+
+def forecast_periods(fc):
+    """How many NWS periods the read sees: today and tomorrow, or on a
+    Friday everything through Sunday night so the read can call the
+    weekend."""
+    if not is_friday():
+        return 4
+    n = 0
+    for p in fc:
+        try:
+            start = datetime.fromisoformat(p["start"]).astimezone(ZoneInfo("America/New_York"))
+        except (KeyError, ValueError, TypeError):
+            break
+        if start.weekday() not in (4, 5, 6):
+            break
+        n += 1
+    return max(n, 4)
+
+
+def afd_discussion(raw):
+    """The .DISCUSSION section of the forecasters' AFD: the reasoning in
+    their own words, which the key messages boil away."""
+    m = re.search(r"\.DISCUSSION\.\.\.(.*?)(?:\n&&|\n\.AVIATION)", raw or "", re.S)
+    if not m:
+        return None
+    text = re.sub(r"As of [^\n]*\.\.\.\s*", "", m.group(1))
+    text = re.sub(r"\s+", " ", text).strip()
+    return text[:3000] or None
+
+
 def build_packet(d, outlets):
     """A compact, human-readable packet — small enough to read at review
     time, complete enough to write from."""
@@ -172,7 +203,7 @@ def build_packet(d, outlets):
     fc = (d.get("forecast") or {}).get("periods") or []
     if fc:
         lines.append("NWS FORECAST:")
-        for p in fc[:4]:
+        for p in fc[:forecast_periods(fc)]:
             lines.append(f"  {p['name']}: {p['detailed']}")
 
     afd = d.get("afd") or {}
@@ -185,6 +216,10 @@ def build_packet(d, outlets):
             lines.append(f"  {i}. {m}")
     if afd.get("what_changed"):
         lines.append(f"AFD WHAT CHANGED (same regional caveat): {afd['what_changed']}")
+    discussion = afd_discussion(afd.get("raw"))
+    if discussion:
+        lines.append("AFD DISCUSSION (the forecaster's full reasoning, same regional "
+                     f"caveat; their temps are area-wide ranges):\n{discussion}")
 
     # The lake's boating forecast (knots, waves) only in swim season, and
     # never as the story (Stephen, 2026-10-19: "Idk why it's talking so
@@ -247,9 +282,9 @@ def build_packet(d, outlets):
         lines.append("WCAX METEOROLOGIST (regional station — Burlington relevance "
                      f"only, never their branding): {wcax['discussion']}")
     nbc5 = outlets.get("nbc5")
-    if nbc5 and nbc5.get("headline"):
-        lines.append(f"NBC5 ({nbc5.get('published', '?')} — same caveat): "
-                     f"{nbc5['headline']} — {nbc5.get('lede') or ''}")
+    if nbc5 and (nbc5.get("headline") or nbc5.get("body")):
+        lines.append(f"NBC5 METEOROLOGIST ({nbc5.get('published', '?')} — same caveat): "
+                     f"{nbc5.get('headline') or ''} — {nbc5.get('body') or ''}")
 
     return "\n".join(lines)
 
@@ -314,13 +349,13 @@ EDITIONS = {
 
 
 def get_api_key():
-    key = (os.environ.get("OPENROUTER_API_KEY") or "").strip()
+    key = (os.environ.get("ANTHROPIC_API_KEY") or "").strip()
     if not key:
-        return None, "no OPENROUTER_API_KEY — packet-only draft"
+        return None, "no ANTHROPIC_API_KEY — packet-only draft"
     if not key.isascii():
         # classic paste accident: copying the *displayed* truncated key
         # ("sk-ant-…") instead of using the console's Copy button
-        return None, ("OPENROUTER_API_KEY contains invalid characters (a '…'?) — "
+        return None, ("ANTHROPIC_API_KEY contains invalid characters (a '…'?) — "
                       "re-copy the full key with the Copy button and update the secret")
     return key, None
 
@@ -335,20 +370,15 @@ REGIONAL_RE = re.compile(
     r"southern vermont|central vermont|first alert|first warning)\b", re.I)
 
 
-def api_call(key, brain, prompt, max_tokens=8000):
+def api_call(key, brain, prompt, max_tokens=2000):
     body = json.dumps({
         "model": MODEL,
         "max_tokens": max_tokens,
         "system": brain,
-        # Advisory only: providers largely ignore this cap (measured 1.2k-4.2k
-        # against a requested 1024). It matters only if MODEL is pointed back at
-        # a reasoning model via WEATHER_READ_MODEL; the budgets above carry the
-        # real headroom either way.
-        "reasoning": {"max_tokens": 1024},
         "messages": [{"role": "user", "content": prompt}],
     }).encode()
     req = urllib.request.Request(
-        "https://openrouter.ai/api/v1/messages",
+        "https://api.anthropic.com/v1/messages",
         data=body,
         headers={"x-api-key": key, "anthropic-version": "2023-06-01",
                  "content-type": "application/json"},
@@ -365,8 +395,15 @@ def api_call(key, brain, prompt, max_tokens=8000):
     return text, stop
 
 
+# Friday's read carries the weekend (Stephen, 2026-10-23).
+WEEKEND = (" It's Friday, so carry the read through the weekend: give Saturday "
+           "and Sunday each a real look (sky, highs, any rain and when), not a "
+           "single trailing line. Up to 240 words for this one.")
+
+
 def call_claude(key, brain, packet, today, edition):
-    prompt = (f"Today is {today} in Burlington VT. {EDITIONS[edition]} "
+    prompt = (f"Today is {today} in Burlington VT. {EDITIONS[edition]}"
+              f"{WEEKEND if is_friday() else ''} "
               f"Output the read only.\n\n{packet}")
     text, _ = api_call(key, brain, prompt)
     m = text and REGIONAL_RE.search(text)
@@ -398,7 +435,7 @@ def call_claude_week(key, brain, week_packet, dates, today):
         "YYYY-MM-DD | blurb\n"
         "covering these dates: " + ", ".join(dates) + ". No other text.\n\n"
         + week_packet)
-    raw, stop = api_call(key, brain, prompt, max_tokens=24000)
+    raw, stop = api_call(key, brain, prompt, max_tokens=4000)
     lines = raw.splitlines()
     if stop == "max_tokens" and lines:
         # The reply was cut off mid-generation; the last line may end
