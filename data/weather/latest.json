@@ -1,43 +1,33 @@
 {
- "updated": "2026-10-24T21:52:54+00:00",
+ "updated": "2026-10-24T22:39:54+00:00",
  "sections_updated": {
-  "now": "2026-10-24T21:52:54+00:00",
-  "forecast": "2026-10-24T21:52:54+00:00",
-  "hourly": "2026-10-24T21:52:54+00:00",
-  "alerts": "2026-10-24T21:52:54+00:00",
-  "afd": "2026-10-24T21:52:54+00:00",
-  "lake_forecast": "2026-10-24T21:52:54+00:00",
-  "lake_gage": "2026-10-24T21:52:54+00:00",
-  "air": "2026-10-24T21:52:54+00:00",
-  "sun": "2026-10-24T21:52:54+00:00",
-  "models": "2026-10-24T21:52:54+00:00"
+  "now": "2026-10-24T22:39:54+00:00",
+  "forecast": "2026-10-24T22:39:54+00:00",
+  "hourly": "2026-10-24T22:39:54+00:00",
+  "alerts": "2026-10-24T22:39:54+00:00",
+  "afd": "2026-10-24T22:39:54+00:00",
+  "lake_forecast": "2026-10-24T22:39:54+00:00",
+  "lake_gage": "2026-10-24T22:39:54+00:00",
+  "air": "2026-10-24T22:39:54+00:00",
+  "sun": "2026-10-24T22:39:54+00:00",
+  "models": "2026-10-24T22:39:54+00:00"
  },
  "now": {
-  "observed_at": "2026-10-24T21:40:00+00:00",
+  "observed_at": "2026-10-24T22:15:00+00:00",
   "station": "KBTV",
   "description": "Clear",
-  "temp_f": 54,
-  "feels_like_f": 54,
-  "humidity": 41,
-  "dewpoint_f": 30,
+  "temp_f": 48,
+  "feels_like_f": 47,
+  "humidity": 57,
+  "dewpoint_f": 34,
   "wind_mph": 3,
   "wind_gust_mph": null,
-  "wind_dir": "W",
+  "wind_dir": "WNW",
   "precip_last_hr_in": null
  },
  "forecast": {
   "updated": "2026-10-24T18:19:52+00:00",
   "periods": [
-   {
-    "name": "This Afternoon",
-    "start": "2026-10-24T17:00:00-04:00",
-    "is_day": true,
-    "temp_f": 56,
-    "pop": 0,
-    "wind": "NW 2 mph",
-    "short": "Sunny",
-    "detailed": "Sunny, with a high near 56. Northwest wind around 2 mph."
-   },
    {
     "name": "Tonight",
     "start": "2026-10-24T18:00:00-04:00",
@@ -167,26 +157,22 @@
     "wind": "N 7 mph",
     "short": "Mostly Cloudy",
     "detailed": "Mostly cloudy, with a low around 41. North wind around 7 mph."
+   },
+   {
+    "name": "Saturday",
+    "start": "2026-10-31T06:00:00-04:00",
+    "is_day": true,
+    "temp_f": 59,
+    "pop": 5,
+    "wind": "NW 8 mph",
+    "short": "Mostly Sunny",
+    "detailed": "Mostly sunny, with a high near 59. Northwest wind around 8 mph."
    }
   ]
  },
  "hourly": {
   "updated": "2026-10-24T18:19:52+00:00",
   "hours": [
-   {
-    "t": "2026-10-24T17:00:00-04:00",
-    "temp_f": 53,
-    "feels_f": 53,
-    "pop": 0,
-    "humidity": 46,
-    "wind_mph": 2,
-    "wind_dir": "NW",
-    "sky": 3,
-    "short": "Sunny",
-    "qpf_in": 0.0,
-    "snow_in": 0.0,
-    "gust_mph": 6
-   },
    {
     "t": "2026-10-24T18:00:00-04:00",
     "temp_f": 50,
@@ -676,6 +662,20 @@
     "qpf_in": 0.0,
     "snow_in": 0.0,
     "gust_mph": 10
+   },
+   {
+    "t": "2026-10-26T05:00:00-04:00",
+    "temp_f": 44,
+    "feels_f": 39,
+    "pop": 2,
+    "humidity": 76,
+    "wind_mph": 9,
+    "wind_dir": "S",
+    "sky": 41,
+    "short": "Partly Cloudy",
+    "qpf_in": 0.0,
+    "snow_in": 0.0,
+    "gust_mph": 10
    }
   ],
   "days": [
@@ -705,13 +705,13 @@
   "active": []
  },
  "afd": {
-  "issued": "2026-10-24T18:26:00+00:00",
+  "issued": "2026-10-24T22:33:00+00:00",
   "key_messages": [
    "Dry weather to persist into early next week, with minimal chances of light rain with a frontal passage on Monday.",
    "High pressure continues through mid to late next week with little to no rain in the forecast."
   ],
   "what_changed": "As of 225 PM EDT Saturday... No significant changes have been made with this forecast package.",
-  "raw": "\n000\nFXUS61 KBTV 241826\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n226 PM EDT Sat Oct 24 2026\n\n.WHAT HAS CHANGED...\nAs of 225 PM EDT Saturday...\n\nNo significant changes have been made with this forecast package.\n\n&&\n\n.KEY MESSAGES...\nAs of 225 PM EDT Saturday...\n\n1. Dry weather to persist into early next week, with minimal \nchances of light rain with a frontal passage on Monday. \n\n2. High pressure continues through mid to late next week with \nlittle to no rain in the forecast. \n\n&&\n\n.DISCUSSION...\nAs of 225 PM EDT Saturday...\n\nKEY MESSAGE 1: A beautiful start to the weekend so far today with high \npressure positioned over the region. The clear skies, light winds, \nand seasonable temperatures will continue through tonight. Expect \nanother round of fairly heavy frost by Sunday morning, with lows in \nthe low 20s to low 30s. Tomorrow will be a near repeat of today, \nthough south flow will increase a bit later in the day as the ridge \naxis shifts east of the region. Relative humidity values will once \nagain drop to around 30% tomorrow afternoon, and highs will be \na little warmer than today, mainly in the low to mid 60s. \n\nThe south flow will continue Sunday night ahead of a cold front, \nhelping to keep temperatures quite a bit warmer than the past couple \nof nights, especially in the Champlain/St Lawrence Valleys. The \nfront will push southward out of Canada and through our area on \nMonday, bringing mainly increasing clouds as it does so. A few light \nrain showers can't be ruled out, mainly over the higher terrain in \nthe northern mountains. However, given recent trends and the very \ndry antecedent airmass, expect most areas will see only sprinkles, \nif anything. Winds will turn to the northwest behind the front, \nushering in another cool and dry airmass. We'll see a return to much \ncooler temperatures; Tuesday will likely only get into the 40s to \nlow 50s in most areas after morning lows in the 20s to around 30F.\n\nKEY MESSAGE 2: A strong area of high pressure will build in overhead \nearly Wednesday behind our Tuesday cold front helping to extend our \ndry period for many. Southerly flow associated with the high will \nalso help to rebound our temperatures into the late week with highs \nwarming from the the low to mid 50s Wednesday to the upper 50s to \nmid 60s by Friday. There is another chance for a weak frontal \npassage late week, but it looks rather unimpressive and unable to \nbreak us from this dry pattern. Of note in the ensemblistic \nguidance, both the GEFS and euro ensembles show only a 30-40% chance \nfor a cumulative inch of rain through the first week of November. \nWhile the prolonged stretch of dry weather will continue with some \ndays of low relative humidity values next week, prevailing wind \nconditions look too light to note any serious fire weather concerns \nright now. That said, channeled southerly flow Thursday afternoon \ncould see trends towards marginal critical winds with gusts in the \nforecast between 20 to 25 MPH. It is still to far out to say with \nany certainty, but Thursday winds will need to be monitored going \nforward for any fire weather concerns.\n\n&&\n\n.AVIATION /18Z SATURDAY THROUGH THURSDAY/...\nThrough 18Z Sunday...High confidence in VFR conditions are expected\nat all terminals through the entire TAF package. Light and mainly\nvariable winds will continue into the overnight period before\ngradually turning more south to southwest after sunrise tomorrow\nmorning. As winds turn to the south to southwest tomorrow, winds\nwill increase in the wider valleys to around 10 knots or less for\nBTV/PBG/SLK. RUT may also see a typical overnight southeast drainage\nwind, before also turning prevailing southerly by the end of the TAF\npackage. Have denoted a 6SM BR at MPV, based on persistence from\nlast night which featured intermittent fog. Though confidence in fog\nremains low due to detachment from fog. Otherwise fog potential\ntonight is low to 0%.\n\nOutlook...\n\nSunday Night: VFR. NO SIG WX.\nMonday: VFR. NO SIG WX.\nMonday Night: VFR. NO SIG WX.\nTuesday: VFR. NO SIG WX.\nTuesday Night: VFR. NO SIG WX.\nWednesday: VFR. NO SIG WX.\nWednesday Night: VFR. NO SIG WX.\nThursday: VFR. Slight chance SHRA.\n\n&&\n\n.EQUIPMENT...\nRoutine observations from KSLK ASOS are unavailable until\nfurther notice. While the site is operating, it is not able to\ndisseminate observations normally at this time. Technicians are\naware of the issue, but time of return to service is unknown.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Hastings\nDISCUSSION...Hastings/Danzig\nAVIATION...Danzig\nEQUIPMENT...NWS BTV\n"
+  "raw": "\n000\nFXUS61 KBTV 242233\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n633 PM EDT Sat Oct 24 2026\n\n.WHAT HAS CHANGED...\nAs of 225 PM EDT Saturday...\n\nNo significant changes have been made with this forecast package.\n\n&&\n\n.KEY MESSAGES...\nAs of 225 PM EDT Saturday...\n\n1. Dry weather to persist into early next week, with minimal \nchances of light rain with a frontal passage on Monday. \n\n2. High pressure continues through mid to late next week with \nlittle to no rain in the forecast.\n\n&&\n\n.DISCUSSION...\nAs of 225 PM EDT Saturday...\n\nKEY MESSAGE 1: A beautiful start to the weekend so far today with high \npressure positioned over the region. The clear skies, light winds, \nand seasonable temperatures will continue through tonight. Expect \nanother round of fairly heavy frost by Sunday morning, with lows in \nthe low 20s to low 30s. Tomorrow will be a near repeat of today, \nthough south flow will increase a bit later in the day as the ridge \naxis shifts east of the region. Relative humidity values will once \nagain drop to around 30% tomorrow afternoon, and highs will be \na little warmer than today, mainly in the low to mid 60s. \n\nThe south flow will continue Sunday night ahead of a cold front, \nhelping to keep temperatures quite a bit warmer than the past couple \nof nights, especially in the Champlain/St Lawrence Valleys. The \nfront will push southward out of Canada and through our area on \nMonday, bringing mainly increasing clouds as it does so. A few light \nrain showers can't be ruled out, mainly over the higher terrain in \nthe northern mountains. However, given recent trends and the very \ndry antecedent airmass, expect most areas will see only sprinkles, \nif anything. Winds will turn to the northwest behind the front, \nushering in another cool and dry airmass. We'll see a return to much \ncooler temperatures; Tuesday will likely only get into the 40s to \nlow 50s in most areas after morning lows in the 20s to around 30F.\n\nKEY MESSAGE 2: A strong area of high pressure will build in overhead \nearly Wednesday behind our Tuesday cold front helping to extend our \ndry period for many. Southerly flow associated with the high will \nalso help to rebound our temperatures into the late week with highs \nwarming from the the low to mid 50s Wednesday to the upper 50s to \nmid 60s by Friday. There is another chance for a weak frontal \npassage late week, but it looks rather unimpressive and unable to \nbreak us from this dry pattern. Of note in the ensemblistic \nguidance, both the GEFS and euro ensembles show only a 30-40% chance \nfor a cumulative inch of rain through the first week of November. \nWhile the prolonged stretch of dry weather will continue with some \ndays of low relative humidity values next week, prevailing wind \nconditions look too light to note any serious fire weather concerns \nright now. That said, channeled southerly flow Thursday afternoon \ncould see trends towards marginal critical winds with gusts in the \nforecast between 20 to 25 MPH. It is still to far out to say with \nany certainty, but Thursday winds will need to be monitored going \nforward for any fire weather concerns.\n\n&&\n\n.AVIATION /00Z SUNDAY THROUGH THURSDAY/...\nThrough 00Z Monday...High confidence in VFR conditions are expected\nat all terminals through the entire TAF package. Light and mainly\nvariable winds will continue into the overnight period before\ngradually turning more south to southwest after sunrise tomorrow\nmorning. As winds turn to the south to southwest tomorrow, winds\nwill increase in the wider valleys to around 10 knots or less for\nBTV/PBG/SLK. RUT may also see a typical overnight southeast drainage\nwind, before also turning prevailing southerly by the end of the TAF\npackage. \n\nOutlook...\n\nSunday Night: VFR. NO SIG WX.\nMonday: VFR. NO SIG WX.\nMonday Night: VFR. NO SIG WX.\nTuesday: VFR. NO SIG WX.\nTuesday Night: VFR. NO SIG WX.\nWednesday: VFR. NO SIG WX.\nWednesday Night: VFR. NO SIG WX.\nThursday: VFR. Slight chance SHRA.\n\n&&\n\n.EQUIPMENT...\nRoutine observations from KSLK ASOS are unavailable until\nfurther notice. While the site is operating, it is not able to\ndisseminate observations normally at this time. Technicians are\naware of the issue, but time of return to service is unknown.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Hastings\nDISCUSSION...Danzig/Hastings\nAVIATION...Danzig/SLW\nEQUIPMENT...NWS BTV\n"
  },
  "lake_forecast": {
   "issued": "2026-10-24T18:22:00+00:00",
@@ -982,18 +982,18 @@
   }
  },
  "lake_gage": {
-  "water_temp_f": 55,
-  "water_temp_at": "2026-10-24T17:00:00.000-04:00",
+  "water_temp_f": 54,
+  "water_temp_at": "2026-10-24T18:00:00.000-04:00",
   "level_ft": 94.06,
-  "level_at": "2026-10-24T17:00:00.000-04:00",
+  "level_at": "2026-10-24T18:00:00.000-04:00",
   "level_status": "normal"
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 29,
+  "aqi": 30,
   "category": "Good",
   "pollutant": "OZONE",
-  "observed": "10/24/26 17:00",
+  "observed": "10/24/26 18:00",
   "discussion": "On Sunday, October 25th, expect moderate air quality in mountain valley locations with nearby air emission sources, such as Rutland.  Expect generally good air quality in other areas of the state which are more exposed to prevailing wind flows."
  },
  "sun": {
@@ -1066,23 +1066,9 @@
  },
  "brief": {
   "date": "2026-10-24",
-  "generated": "2026-10-24T21:52:57+00:00",
-  "text": "Sunny today, high 56. Clear tonight, low 35. Sunday, sunny and warmer, high 61.",
+  "generated": "2026-10-24T22:39:57+00:00",
+  "text": "Clear tonight, low 35. Sunday, sunny, high 61.",
   "periods": [
-   {
-    "label": "Today",
-    "name": "This Afternoon",
-    "is_day": true,
-    "temp_f": 56,
-    "sky": "sunny",
-    "start": "2026-10-24T17:00:00-04:00",
-    "end": "2026-10-24T18:00:00-04:00",
-    "precip": null,
-    "wind": null,
-    "feels_lo": 53,
-    "feels_hi": 53,
-    "text": "Sunny today, high 56."
-   },
    {
     "label": "Tonight",
     "name": "Tonight",
@@ -1096,6 +1082,20 @@
     "feels_lo": 33,
     "feels_hi": 50,
     "text": "Clear tonight, low 35."
+   },
+   {
+    "label": "Sunday",
+    "name": "Sunday",
+    "is_day": true,
+    "temp_f": 61,
+    "sky": "sunny",
+    "start": "2026-10-25T06:00:00-04:00",
+    "end": "2026-10-25T18:00:00-04:00",
+    "precip": null,
+    "wind": null,
+    "feels_lo": 31,
+    "feels_hi": 61,
+    "text": "Sunday, sunny, high 61."
    }
   ]
  }
