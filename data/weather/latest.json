@@ -1,42 +1,42 @@
 {
- "updated": "2026-10-24T16:52:40+00:00",
+ "updated": "2026-10-24T17:37:41+00:00",
  "sections_updated": {
-  "now": "2026-10-24T16:52:40+00:00",
-  "forecast": "2026-10-24T16:52:40+00:00",
-  "hourly": "2026-10-24T16:52:40+00:00",
-  "alerts": "2026-10-24T16:52:40+00:00",
-  "afd": "2026-10-24T16:52:40+00:00",
-  "lake_forecast": "2026-10-24T16:52:40+00:00",
-  "lake_gage": "2026-10-24T16:52:40+00:00",
-  "air": "2026-10-24T16:52:40+00:00",
-  "sun": "2026-10-24T16:52:40+00:00",
-  "models": "2026-10-24T16:52:40+00:00"
+  "now": "2026-10-24T17:37:41+00:00",
+  "forecast": "2026-10-24T17:37:41+00:00",
+  "hourly": "2026-10-24T17:37:41+00:00",
+  "alerts": "2026-10-24T17:37:41+00:00",
+  "afd": "2026-10-24T17:37:41+00:00",
+  "lake_forecast": "2026-10-24T17:37:41+00:00",
+  "lake_gage": "2026-10-24T17:37:41+00:00",
+  "air": "2026-10-24T17:37:41+00:00",
+  "sun": "2026-10-24T17:37:41+00:00",
+  "models": "2026-10-24T17:37:41+00:00"
  },
  "now": {
-  "observed_at": "2026-10-24T16:30:00+00:00",
+  "observed_at": "2026-10-24T16:54:00+00:00",
   "station": "KBTV",
-  "description": null,
-  "temp_f": 52,
-  "feels_like_f": 52,
-  "humidity": 43,
-  "dewpoint_f": 30,
-  "wind_mph": 3,
+  "description": "Mostly Clear",
+  "temp_f": 53,
+  "feels_like_f": 53,
+  "humidity": null,
+  "dewpoint_f": null,
+  "wind_mph": 0,
   "wind_gust_mph": null,
-  "wind_dir": "WNW",
+  "wind_dir": "N",
   "precip_last_hr_in": null
  },
  "forecast": {
   "updated": "2026-10-24T10:20:50+00:00",
   "periods": [
    {
-    "name": "This Afternoon",
-    "start": "2026-10-24T12:00:00-04:00",
+    "name": "Today",
+    "start": "2026-10-24T06:00:00-04:00",
     "is_day": true,
     "temp_f": 56,
     "pop": 0,
-    "wind": "W 2 mph",
+    "wind": "SW 2 mph",
     "short": "Sunny",
-    "detailed": "Sunny, with a high near 56. West wind around 2 mph."
+    "detailed": "Sunny, with a high near 56. Southwest wind around 2 mph."
    },
    {
     "name": "Tonight",
@@ -173,20 +173,6 @@
  "hourly": {
   "updated": "2026-10-24T10:20:50+00:00",
   "hours": [
-   {
-    "t": "2026-10-24T12:00:00-04:00",
-    "temp_f": 50,
-    "feels_f": 50,
-    "pop": 0,
-    "humidity": 50,
-    "wind_mph": 2,
-    "wind_dir": "SW",
-    "sky": 3,
-    "short": "Sunny",
-    "qpf_in": 0.0,
-    "snow_in": 0.0,
-    "gust_mph": 5
-   },
    {
     "t": "2026-10-24T13:00:00-04:00",
     "temp_f": 53,
@@ -676,6 +662,20 @@
     "qpf_in": 0.0,
     "snow_in": 0.0,
     "gust_mph": 14
+   },
+   {
+    "t": "2026-10-26T00:00:00-04:00",
+    "temp_f": 45,
+    "feels_f": 41,
+    "pop": 0,
+    "humidity": 70,
+    "wind_mph": 8,
+    "wind_dir": "S",
+    "sky": 34,
+    "short": "Partly Cloudy",
+    "qpf_in": 0.0,
+    "snow_in": 0.0,
+    "gust_mph": 14
    }
   ],
   "days": [
@@ -956,17 +956,17 @@
  },
  "lake_gage": {
   "water_temp_f": 54,
-  "water_temp_at": "2026-10-24T12:00:00.000-04:00",
+  "water_temp_at": "2026-10-24T13:00:00.000-04:00",
   "level_ft": 94.06,
-  "level_at": "2026-10-24T12:00:00.000-04:00",
+  "level_at": "2026-10-24T13:00:00.000-04:00",
   "level_status": "normal"
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 28,
+  "aqi": 29,
   "category": "Good",
   "pollutant": "OZONE",
-  "observed": "10/24/26 12:00",
+  "observed": "10/24/26 13:00",
   "discussion": "On Sunday, October 25th, expect moderate air quality in mountain valley locations with nearby air emission sources, such as Rutland.  Expect generally good air quality in other areas of the state which are more exposed to prevailing wind flows."
  },
  "sun": {
@@ -981,7 +981,7 @@
    {
     "date": "2026-10-24",
     "high_f": {
-     "GFS": 54,
+     "GFS": 55,
      "Euro": 54,
      "ICON": 56
     },
@@ -1019,7 +1019,7 @@
    {
     "date": "2026-10-26",
     "high_f": {
-     "GFS": 59,
+     "GFS": 58,
      "Euro": 54,
      "ICON": 60
     },
@@ -1029,7 +1029,7 @@
      "ICON": 13
     },
     "precip_in": {
-     "GFS": 0.05,
+     "GFS": 0.07,
      "Euro": 0.0,
      "ICON": 0.0
     },
@@ -1039,20 +1039,20 @@
  },
  "brief": {
   "date": "2026-10-24",
-  "generated": "2026-10-24T16:52:43+00:00",
+  "generated": "2026-10-24T17:37:45+00:00",
   "text": "Sunny today, high 56. Clear tonight, low 35. Sunday, sunny and warmer, high 61.",
   "periods": [
    {
     "label": "Today",
-    "name": "This Afternoon",
+    "name": "Today",
     "is_day": true,
     "temp_f": 56,
     "sky": "sunny",
-    "start": "2026-10-24T12:00:00-04:00",
+    "start": "2026-10-24T17:00:00+00:00",
     "end": "2026-10-24T18:00:00-04:00",
     "precip": null,
     "wind": null,
-    "feels_lo": 50,
+    "feels_lo": 53,
     "feels_hi": 56,
     "text": "Sunny today, high 56."
    },
