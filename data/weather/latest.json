@@ -1,28 +1,28 @@
 {
- "updated": "2026-10-24T13:34:19+00:00",
+ "updated": "2026-10-24T14:07:33+00:00",
  "sections_updated": {
-  "now": "2026-10-24T13:34:19+00:00",
-  "forecast": "2026-10-24T13:34:19+00:00",
-  "hourly": "2026-10-24T13:34:19+00:00",
-  "alerts": "2026-10-24T13:34:19+00:00",
-  "afd": "2026-10-24T13:34:19+00:00",
-  "lake_forecast": "2026-10-24T13:34:19+00:00",
-  "lake_gage": "2026-10-24T13:34:19+00:00",
-  "air": "2026-10-24T13:34:19+00:00",
-  "sun": "2026-10-24T13:34:19+00:00",
-  "models": "2026-10-24T13:34:19+00:00"
+  "now": "2026-10-24T14:07:33+00:00",
+  "forecast": "2026-10-24T14:07:33+00:00",
+  "hourly": "2026-10-24T14:07:33+00:00",
+  "alerts": "2026-10-24T14:07:33+00:00",
+  "afd": "2026-10-24T14:07:33+00:00",
+  "lake_forecast": "2026-10-24T14:07:33+00:00",
+  "lake_gage": "2026-10-24T14:07:33+00:00",
+  "air": "2026-10-24T14:07:33+00:00",
+  "sun": "2026-10-24T14:07:33+00:00",
+  "models": "2026-10-24T14:07:33+00:00"
  },
  "now": {
-  "observed_at": "2026-10-24T12:55:00+00:00",
+  "observed_at": "2026-10-24T13:50:00+00:00",
   "station": "KBTV",
   "description": null,
-  "temp_f": 34,
-  "feels_like_f": 31,
-  "humidity": 80,
-  "dewpoint_f": 28,
-  "wind_mph": 3,
+  "temp_f": 37,
+  "feels_like_f": 37,
+  "humidity": 75,
+  "dewpoint_f": 30,
+  "wind_mph": 0,
   "wind_gust_mph": null,
-  "wind_dir": "E",
+  "wind_dir": "N",
   "precip_last_hr_in": null
  },
  "forecast": {
@@ -30,7 +30,7 @@
   "periods": [
    {
     "name": "Today",
-    "start": "2026-10-24T09:00:00-04:00",
+    "start": "2026-10-24T10:00:00-04:00",
     "is_day": true,
     "temp_f": 56,
     "pop": 0,
@@ -173,20 +173,6 @@
  "hourly": {
   "updated": "2026-10-24T10:20:50+00:00",
   "hours": [
-   {
-    "t": "2026-10-24T09:00:00-04:00",
-    "temp_f": 36,
-    "feels_f": 36,
-    "pop": 0,
-    "humidity": 79,
-    "wind_mph": 2,
-    "wind_dir": "S",
-    "sky": 23,
-    "short": "Sunny",
-    "qpf_in": 0.0,
-    "snow_in": 0.0,
-    "gust_mph": 6
-   },
    {
     "t": "2026-10-24T10:00:00-04:00",
     "temp_f": 41,
@@ -676,6 +662,20 @@
     "qpf_in": 0.0,
     "snow_in": 0.0,
     "gust_mph": 15
+   },
+   {
+    "t": "2026-10-25T21:00:00-04:00",
+    "temp_f": 48,
+    "feels_f": 44,
+    "pop": 0,
+    "humidity": 63,
+    "wind_mph": 8,
+    "wind_dir": "S",
+    "sky": 10,
+    "short": "Mostly Clear",
+    "qpf_in": 0.0,
+    "snow_in": 0.0,
+    "gust_mph": 15
    }
   ],
   "days": [
@@ -1025,7 +1025,7 @@
     },
     "pop_max": {
      "GFS": 2,
-     "Euro": 8,
+     "Euro": 6,
      "ICON": 3
     },
     "precip_in": {
@@ -1039,7 +1039,7 @@
  },
  "brief": {
   "date": "2026-10-24",
-  "generated": "2026-10-24T13:34:22+00:00",
+  "generated": "2026-10-24T14:07:37+00:00",
   "text": "Sunny today, high 56. Clear tonight, low 35. Sunday, sunny and warmer, high 61.",
   "periods": [
    {
@@ -1048,11 +1048,11 @@
     "is_day": true,
     "temp_f": 56,
     "sky": "sunny",
-    "start": "2026-10-24T09:00:00-04:00",
+    "start": "2026-10-24T10:00:00-04:00",
     "end": "2026-10-24T18:00:00-04:00",
     "precip": null,
     "wind": null,
-    "feels_lo": 36,
+    "feels_lo": 41,
     "feels_hi": 56,
     "text": "Sunny today, high 56."
    },
