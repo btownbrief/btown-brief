@@ -1,30 +1,30 @@
 {
- "generated": "2026-10-24T09:33:48-04:00",
+ "generated": "2026-10-24T18:43:31-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
    "count": 8,
-   "seconds": 5.6
+   "seconds": 5.8
   },
   "breweries": {
    "label": "Breweries & Taprooms",
-   "count": 82,
-   "seconds": 5.2
+   "count": 84,
+   "seconds": 5.4
   },
   "brownell": {
    "label": "Brownell Library",
    "count": 82,
-   "seconds": 4.7
+   "seconds": 3.3
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
    "count": 213,
-   "seconds": 4.5
+   "seconds": 4.0
   },
   "churchst": {
    "label": "Church Street Marketplace",
    "count": 72,
-   "seconds": 1.7
+   "seconds": 2.0
   },
   "echo": {
    "label": "ECHO Leahy Center",
@@ -49,17 +49,17 @@
   "fletcherfree": {
    "label": "Fletcher Free Library",
    "count": 214,
-   "seconds": 65.4
+   "seconds": 70.7
   },
   "flynn": {
    "label": "The Flynn",
    "count": 14,
-   "seconds": 0.3
+   "seconds": 0.5
   },
   "generator": {
    "label": "Generator Makerspace",
    "count": 13,
-   "seconds": 33.6
+   "seconds": 31.9
   },
   "greenfc": {
    "label": "Vermont Green FC",
@@ -69,7 +69,7 @@
   "helloburlington": {
    "label": "Hello Burlington",
    "count": 615,
-   "seconds": 96.7
+   "seconds": 33.0
   },
   "higherground": {
    "label": "Higher Ground",
@@ -78,29 +78,28 @@
   },
   "instagram": {
    "label": "Instagram (Scrape Creators)",
-   "count": 0,
-   "error": "skipped by design: once-daily gate, Instagram fetches on the afternoon run only",
-   "staleDays": 0
+   "count": 1,
+   "seconds": 46.2
   },
   "loveburlington": {
    "label": "Love Burlington",
    "count": 383,
-   "seconds": 73.8
+   "seconds": 75.4
   },
   "meetup": {
    "label": "Meetup",
-   "count": 55,
-   "seconds": 95.5
+   "count": 56,
+   "seconds": 101.3
   },
   "monkeyhouse": {
    "label": "The Monkey House",
    "count": 25,
-   "seconds": 0.2
+   "seconds": 0.4
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
    "count": 73,
-   "seconds": 15.8
+   "seconds": 15.5
   },
   "radiobean": {
    "label": "Radio Bean",
@@ -111,17 +110,17 @@
   "sblibrary": {
    "label": "South Burlington Public Library",
    "count": 87,
-   "seconds": 2.2
+   "seconds": 2.0
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
    "count": 18,
-   "seconds": 19.7
+   "seconds": 20.8
   },
   "sevendays": {
    "label": "Seven Days",
-   "count": 2313,
-   "seconds": 19.7
+   "count": 2304,
+   "seconds": 2.0
   },
   "shelburnemuseum": {
    "label": "Shelburne Museum",
@@ -130,42 +129,31 @@
   },
   "uvm": {
    "label": "UVM & Colleges",
-   "count": 474,
-   "seconds": 40.1
+   "count": 476,
+   "seconds": 26.5
   },
   "uvmbored": {
    "label": "UVM Bored",
-   "count": 278,
-   "seconds": 0.3
+   "count": 280,
+   "seconds": 0.2
   },
   "vcc": {
    "label": "Vermont Comedy Club",
    "count": 53,
-   "seconds": 67.7
+   "seconds": 71.2
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
-   "count": 47,
-   "seconds": 0.3
+   "count": 48,
+   "seconds": 0.4
   }
  },
  "gathered": 5121,
- "afterDedup": 2554,
- "duplicatesMerged": 2567,
- "final": 2625,
- "firecrawlCalls": 6,
+ "afterDedup": 2551,
+ "duplicatesMerged": 2570,
+ "final": 2626,
+ "firecrawlCalls": 1,
  "mergeLog": [
-  {
-   "kept": {
-    "title": "Thanksgiving",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "brownell",
-    "uvm"
-   ],
-   "date": "2026-11-27"
-  },
   {
    "kept": {
     "title": "Men's Ice Hockey vs St. Cloud State",
@@ -473,6 +461,17 @@
   {
    "kept": {
     "title": "Sculpt HIIT and Flow",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-12-01"
+  },
+  {
+   "kept": {
+    "title": "The Partial Figure: Visualizing HIV / AIDS",
     "source": "uvm"
    },
    "merged_sources": [
@@ -1298,7 +1297,9 @@
     "bca",
     "churchst",
     "helloburlington",
-    "loveburlington"
+    "loveburlington",
+    "uvm",
+    "uvmbored"
    ],
    "date": "2026-12-09"
   },
@@ -2406,11 +2407,32 @@
  ],
  "changes": [
   {
+   "id": "a1081d3af3e8",
+   "title": "Board Game Brunch",
+   "date": "2026-10-24",
+   "change": "missing",
+   "lastSeen": "2026-10-24T09:33:48-04:00"
+  },
+  {
+   "id": "9c5457ea8774",
+   "title": "BTown Coffee Club x Social Pulse",
+   "date": "2026-10-24",
+   "change": "missing",
+   "lastSeen": "2026-10-24T09:33:48-04:00"
+  },
+  {
    "id": "b50b64299219",
    "title": "Fire Safety Story Time",
    "date": "2026-10-24",
    "change": "missing",
    "lastSeen": "2026-10-23T10:24:04-04:00"
+  },
+  {
+   "id": "da480231c88a",
+   "title": "Learn & Play Unmatched",
+   "date": "2026-10-24",
+   "change": "missing",
+   "lastSeen": "2026-10-24T09:33:48-04:00"
   },
   {
    "id": "cb1c2ff30140",
@@ -2448,10 +2470,11 @@
    "lastSeen": "2026-10-23T19:29:19-04:00"
   },
   {
-   "id": "aab22522b9a5",
-   "title": "Hold for Youth event",
+   "id": "84e4a13997df",
+   "title": "Sunday Sadhana and Meditation",
    "date": "2026-10-25",
-   "change": "dropped"
+   "change": "missing",
+   "lastSeen": "2026-10-24T09:33:48-04:00"
   },
   {
    "id": "20ba029bf623",
@@ -2499,8 +2522,7 @@
    "id": "b2e9d10559ff",
    "title": "Wednesday Walks",
    "date": "2026-10-28",
-   "change": "missing",
-   "lastSeen": "2026-10-21T10:38:13-04:00"
+   "change": "dropped"
   },
   {
    "id": "66a4f45e83b4",
@@ -2552,11 +2574,11 @@
    "lastSeen": "2026-10-23T10:24:04-04:00"
   },
   {
-   "id": "d74ff56a591a",
-   "title": "BTown Coffee Club",
+   "id": "d92aa099cf17",
+   "title": "BTown Coffee Club x Social Pulse",
    "date": "2026-10-31",
    "change": "missing",
-   "lastSeen": "2026-10-23T10:24:04-04:00"
+   "lastSeen": "2026-10-24T09:33:48-04:00"
   },
   {
    "id": "75e518017f41",
@@ -2578,6 +2600,13 @@
    "date": "2026-10-31",
    "change": "source-down",
    "lastSeen": "2026-10-07T20:24:11-04:00"
+  },
+  {
+   "id": "8c14d6380320",
+   "title": "Sunday Sadhana and Meditation",
+   "date": "2026-11-01",
+   "change": "missing",
+   "lastSeen": "2026-10-24T09:33:48-04:00"
   },
   {
    "id": "7a668ba2482d",
@@ -2650,11 +2679,11 @@
    "lastSeen": "2026-10-07T20:24:11-04:00"
   },
   {
-   "id": "2bb71c0a7fbf",
-   "title": "BTown Coffee Club",
+   "id": "652d03721837",
+   "title": "BTown Coffee Club x Social Pulse",
    "date": "2026-11-07",
    "change": "missing",
-   "lastSeen": "2026-10-23T10:24:04-04:00"
+   "lastSeen": "2026-10-24T09:33:48-04:00"
   },
   {
    "id": "a8196d0b72a3",
@@ -2662,6 +2691,13 @@
    "date": "2026-11-07",
    "change": "missing",
    "lastSeen": "2026-10-23T10:24:04-04:00"
+  },
+  {
+   "id": "cac74827bb20",
+   "title": "Sunday Sadhana and Meditation",
+   "date": "2026-11-08",
+   "change": "missing",
+   "lastSeen": "2026-10-24T09:33:48-04:00"
   },
   {
    "id": "c869794740ea",
@@ -2699,11 +2735,18 @@
    "lastSeen": "2026-10-22T19:35:46-04:00"
   },
   {
-   "id": "b5fec84d51f4",
-   "title": "BTown Coffee Club",
+   "id": "976a2a813e54",
+   "title": "BTown Coffee Club x Social Pulse",
    "date": "2026-11-14",
    "change": "missing",
-   "lastSeen": "2026-10-23T10:24:04-04:00"
+   "lastSeen": "2026-10-24T09:33:48-04:00"
+  },
+  {
+   "id": "897e8bbdcb5b",
+   "title": "Sunday Sadhana and Meditation",
+   "date": "2026-11-15",
+   "change": "missing",
+   "lastSeen": "2026-10-24T09:33:48-04:00"
   },
   {
    "id": "a6a61f3206f3",
@@ -2741,25 +2784,31 @@
    "lastSeen": "2026-10-22T19:35:46-04:00"
   },
   {
-   "id": "570dea8dfa90",
-   "title": "BTown Coffee Club",
+   "id": "03811bb47797",
+   "title": "BTown Coffee Club x Social Pulse",
    "date": "2026-11-21",
    "change": "missing",
-   "lastSeen": "2026-10-23T10:24:04-04:00"
+   "lastSeen": "2026-10-24T09:33:48-04:00"
   },
   {
-   "id": "83ea4c58c6e5",
-   "title": "Shelburne Farms November Walk",
+   "id": "cc1db944a981",
+   "title": "Sunday Sadhana and Meditation",
    "date": "2026-11-22",
    "change": "missing",
-   "lastSeen": "2026-10-22T19:35:46-04:00"
+   "lastSeen": "2026-10-24T09:33:48-04:00"
   },
   {
    "id": "c2f68592bc2a",
    "title": "Wednesday Walks",
    "date": "2026-11-25",
+   "change": "dropped"
+  },
+  {
+   "id": "45dc20b79037",
+   "title": "Sunday Sadhana and Meditation",
+   "date": "2026-11-29",
    "change": "missing",
-   "lastSeen": "2026-10-21T10:38:13-04:00"
+   "lastSeen": "2026-10-24T09:33:48-04:00"
   },
   {
    "id": "448a1b4d7d16",
@@ -2786,8 +2835,7 @@
    "id": "203faa10789a",
    "title": "Wednesday Walks",
    "date": "2026-12-02",
-   "change": "missing",
-   "lastSeen": "2026-10-21T10:38:13-04:00"
+   "change": "dropped"
   },
   {
    "id": "f2762f588188",
@@ -2818,6 +2866,13 @@
    "lastSeen": "2026-10-22T10:39:26-04:00"
   },
   {
+   "id": "eedf82b71b31",
+   "title": "Sunday Sadhana and Meditation",
+   "date": "2026-12-06",
+   "change": "missing",
+   "lastSeen": "2026-10-24T09:33:48-04:00"
+  },
+  {
    "id": "6069fba6e4ce",
    "title": "MATH Help Sessions",
    "date": "2026-12-07",
@@ -2842,15 +2897,13 @@
    "id": "c87d2c8d312b",
    "title": "Wednesday Walks",
    "date": "2026-12-09",
-   "change": "missing",
-   "lastSeen": "2026-10-21T10:38:13-04:00"
+   "change": "dropped"
   },
   {
    "id": "3bd93a4f3450",
    "title": "Hold for youth event",
    "date": "2026-12-09",
-   "change": "missing",
-   "lastSeen": "2026-10-21T10:38:13-04:00"
+   "change": "dropped"
   },
   {
    "id": "75fc2603dda6",
@@ -2867,6 +2920,13 @@
    "lastSeen": "2026-10-22T10:39:26-04:00"
   },
   {
+   "id": "7871174f635e",
+   "title": "Sunday Sadhana and Meditation",
+   "date": "2026-12-13",
+   "change": "missing",
+   "lastSeen": "2026-10-24T09:33:48-04:00"
+  },
+  {
    "id": "cd68653832c7",
    "title": "Trivia with Craig Mitchell",
    "date": "2026-12-14",
@@ -2877,8 +2937,7 @@
    "id": "bc886f973700",
    "title": "Wednesday Walks",
    "date": "2026-12-16",
-   "change": "missing",
-   "lastSeen": "2026-10-21T10:38:13-04:00"
+   "change": "dropped"
   },
   {
    "id": "83d55aac4b1a",
@@ -2893,6 +2952,13 @@
    "date": "2026-12-18",
    "change": "missing",
    "lastSeen": "2026-10-22T10:39:26-04:00"
+  },
+  {
+   "id": "a1dcc990973c",
+   "title": "Sunday Sadhana and Meditation",
+   "date": "2026-12-20",
+   "change": "missing",
+   "lastSeen": "2026-10-24T09:33:48-04:00"
   },
   {
    "id": "33272ce2dbc4",
