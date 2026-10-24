@@ -1,28 +1,28 @@
 {
- "updated": "2026-10-24T01:32:06+00:00",
+ "updated": "2026-10-24T02:52:09+00:00",
  "sections_updated": {
-  "now": "2026-10-24T01:32:06+00:00",
-  "forecast": "2026-10-24T01:32:06+00:00",
-  "hourly": "2026-10-24T01:32:06+00:00",
-  "alerts": "2026-10-24T01:32:06+00:00",
-  "afd": "2026-10-24T01:32:06+00:00",
-  "lake_forecast": "2026-10-24T01:32:06+00:00",
-  "lake_gage": "2026-10-24T01:32:06+00:00",
-  "air": "2026-10-24T01:32:06+00:00",
-  "sun": "2026-10-24T01:32:06+00:00",
-  "models": "2026-10-24T01:32:06+00:00"
+  "now": "2026-10-24T02:52:09+00:00",
+  "forecast": "2026-10-24T02:52:09+00:00",
+  "hourly": "2026-10-24T02:52:09+00:00",
+  "alerts": "2026-10-24T02:52:09+00:00",
+  "afd": "2026-10-24T02:52:09+00:00",
+  "lake_forecast": "2026-10-24T02:52:09+00:00",
+  "lake_gage": "2026-10-24T02:52:09+00:00",
+  "air": "2026-10-24T02:52:09+00:00",
+  "sun": "2026-10-24T02:52:09+00:00",
+  "models": "2026-10-24T02:52:09+00:00"
  },
  "now": {
-  "observed_at": "2026-10-24T01:05:00+00:00",
+  "observed_at": "2026-10-24T02:30:00+00:00",
   "station": "KBTV",
   "description": "Clear",
-  "temp_f": 37,
-  "feels_like_f": 35,
-  "humidity": 75,
+  "temp_f": 36,
+  "feels_like_f": 33,
+  "humidity": 81,
   "dewpoint_f": 30,
   "wind_mph": 3,
   "wind_gust_mph": null,
-  "wind_dir": "ESE",
+  "wind_dir": "ENE",
   "precip_last_hr_in": null
  },
  "forecast": {
@@ -30,13 +30,13 @@
   "periods": [
    {
     "name": "Tonight",
-    "start": "2026-10-23T19:00:00-04:00",
+    "start": "2026-10-23T22:00:00-04:00",
     "is_day": false,
     "temp_f": 31,
     "pop": 0,
-    "wind": "NE 1 to 7 mph",
+    "wind": "NE 2 mph",
     "short": "Mostly Cloudy",
-    "detailed": "Mostly cloudy, with a low around 31. Northeast wind 1 to 7 mph."
+    "detailed": "Mostly cloudy, with a low around 31. Northeast wind around 2 mph."
    },
    {
     "name": "Saturday",
@@ -173,20 +173,6 @@
  "hourly": {
   "updated": "2026-10-23T22:36:01+00:00",
   "hours": [
-   {
-    "t": "2026-10-23T21:00:00-04:00",
-    "temp_f": 41,
-    "feels_f": 39,
-    "pop": 0,
-    "humidity": 65,
-    "wind_mph": 3,
-    "wind_dir": "NE",
-    "sky": 58,
-    "short": "Mostly Cloudy",
-    "qpf_in": 0.0,
-    "snow_in": 0.0,
-    "gust_mph": 7
-   },
    {
     "t": "2026-10-23T22:00:00-04:00",
     "temp_f": 39,
@@ -676,6 +662,20 @@
     "qpf_in": 0.0,
     "snow_in": 0.0,
     "gust_mph": 9
+   },
+   {
+    "t": "2026-10-25T09:00:00-04:00",
+    "temp_f": 41,
+    "feels_f": 37,
+    "pop": 0,
+    "humidity": 70,
+    "wind_mph": 6,
+    "wind_dir": "S",
+    "sky": 0,
+    "short": "Sunny",
+    "qpf_in": 0.0,
+    "snow_in": 0.0,
+    "gust_mph": 10
    }
   ],
   "days": [
@@ -983,17 +983,17 @@
  },
  "lake_gage": {
   "water_temp_f": 54,
-  "water_temp_at": "2026-10-23T21:00:00.000-04:00",
-  "level_ft": 94.08,
-  "level_at": "2026-10-23T21:00:00.000-04:00",
+  "water_temp_at": "2026-10-23T22:00:00.000-04:00",
+  "level_ft": 94.07,
+  "level_at": "2026-10-23T22:00:00.000-04:00",
   "level_status": "normal"
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 23,
+  "aqi": 22,
   "category": "Good",
-  "pollutant": "OZONE",
-  "observed": "10/23/26 21:00",
+  "pollutant": "PM2.5",
+  "observed": "10/23/26 22:00",
   "discussion": "On Saturday, October 24th, expect moderate air quality in mountain valley locations with nearby air emission sources, such as Rutland.  Expect generally good air quality in other areas of the state which are more exposed to prevailing wind flows."
  },
  "sun": {
@@ -1009,7 +1009,7 @@
     "date": "2026-10-23",
     "high_f": {
      "GFS": 52,
-     "Euro": 49,
+     "Euro": 50,
      "ICON": 51
     },
     "pop_max": {
@@ -1022,13 +1022,13 @@
      "Euro": 0.0,
      "ICON": 0.0
     },
-    "high_spread_f": 3
+    "high_spread_f": 2
    },
    {
     "date": "2026-10-24",
     "high_f": {
-     "GFS": 56,
-     "Euro": 54,
+     "GFS": 55,
+     "Euro": 55,
      "ICON": 57
     },
     "pop_max": {
@@ -1041,12 +1041,12 @@
      "Euro": 0.0,
      "ICON": 0.0
     },
-    "high_spread_f": 3
+    "high_spread_f": 2
    },
    {
     "date": "2026-10-25",
     "high_f": {
-     "GFS": 61,
+     "GFS": 63,
      "Euro": 59,
      "ICON": 63
     },
@@ -1066,7 +1066,7 @@
  },
  "brief": {
   "date": "2026-10-23",
-  "generated": "2026-10-24T01:32:10+00:00",
+  "generated": "2026-10-24T02:52:12+00:00",
   "text": "Mostly cloudy tonight, low 31. Saturday, sunny, high 55.",
   "periods": [
    {
@@ -1075,7 +1075,7 @@
     "is_day": false,
     "temp_f": 31,
     "sky": "mostly cloudy",
-    "start": "2026-10-24T01:00:00+00:00",
+    "start": "2026-10-23T22:00:00-04:00",
     "end": "2026-10-24T06:00:00-04:00",
     "precip": null,
     "wind": null,
