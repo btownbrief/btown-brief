@@ -1,5 +1,5 @@
 {
-  "generated": "2026-10-23T15:42:23+00:00",
+  "generated": "2026-10-24T14:25:52+00:00",
   "upcoming": [
     {
       "body": "Board of Finance",
@@ -95,7 +95,7 @@
       "agenda_url": "https://burlingtonvt.portal.civicclerk.com/event/10274/files",
       "packet_url": null,
       "minutes_url": null,
-      "video_url": null,
+      "video_url": "https://www.youtube.com/live/NzGjWBOQrZ0?si=PTXQO6PiRVOV_9EP",
       "summary_text": null,
       "summary_status": "pending"
     },
@@ -106,7 +106,21 @@
       "start": "2026-10-27T14:30:00-04:00",
       "time_uncertain": false,
       "venue": "Sharon Bushor Conference Room, 149 Church Street, Burlington, Vermont, 05401",
-      "agenda_url": "https://burlingtonvt.api.civicclerk.com/stream/BURLINGTONVT/aba5b5f9-262c-4208-acc6-f6c6b48fe561.pdf",
+      "agenda_url": "https://burlingtonvt.api.civicclerk.com/stream/BURLINGTONVT/1d203b48-fed6-4c43-ab50-9272420f6c9b.pdf",
+      "packet_url": "https://burlingtonvt.api.civicclerk.com/stream/BURLINGTONVT/ab7b4929-a6ca-4277-a89f-0674df77f1f7.pdf",
+      "minutes_url": null,
+      "video_url": null,
+      "summary_text": null,
+      "summary_status": "pending"
+    },
+    {
+      "body": "General",
+      "body_id": "general",
+      "title": "Police Commission Complaints Committee Meeting",
+      "start": "2026-10-27T15:00:00-04:00",
+      "time_uncertain": false,
+      "venue": null,
+      "agenda_url": "https://burlingtonvt.portal.civicclerk.com/event/10275/files",
       "packet_url": null,
       "minutes_url": null,
       "video_url": null,
@@ -1360,20 +1374,6 @@
       "video_url": null,
       "summary_text": null,
       "summary_status": "pending"
-    },
-    {
-      "body": "Wards 4 & 7 NPA",
-      "body_id": "wards-4-7-npa",
-      "title": "Wards 4&7 NPA Meeting *New Location*",
-      "start": "2026-09-23T14:30:00-04:00",
-      "time_uncertain": false,
-      "venue": "Elks Lodge, 925 North Ave, or Remotely via Zoom",
-      "agenda_url": "https://burlingtonvt.api.civicclerk.com/stream/BURLINGTONVT/cabd49f4-2061-4214-bb82-c6089eab3c65.pdf",
-      "packet_url": "https://burlingtonvt.api.civicclerk.com/stream/BURLINGTONVT/bf009b2d-ee11-48b2-963d-0aa59b119f24.pdf",
-      "minutes_url": "https://burlingtonvt.api.civicclerk.com/stream/BURLINGTONVT/e13d71d6-bb8d-4726-8436-4b6a7a1f5b51.pdf",
-      "video_url": "https://www.youtube.com/watch?v=787-LcBNCuE",
-      "summary_text": null,
-      "summary_status": "pending"
     }
   ],
   "bodies": [
@@ -1548,6 +1548,14 @@
     {
       "id": "fire-commission",
       "name": "Fire Commission",
+      "typical_schedule": "Schedule varies; see posted meetings",
+      "source_url": "https://www.burlingtonvt.gov/412/Public-Boards-Commissions-Committees",
+      "video_url": null,
+      "in_feed": true
+    },
+    {
+      "id": "general",
+      "name": "General",
       "typical_schedule": "Schedule varies; see posted meetings",
       "source_url": "https://www.burlingtonvt.gov/412/Public-Boards-Commissions-Committees",
       "video_url": null,
