@@ -1,24 +1,24 @@
 {
- "updated": "2026-10-24T14:07:33+00:00",
+ "updated": "2026-10-24T15:32:37+00:00",
  "sections_updated": {
-  "now": "2026-10-24T14:07:33+00:00",
-  "forecast": "2026-10-24T14:07:33+00:00",
-  "hourly": "2026-10-24T14:07:33+00:00",
-  "alerts": "2026-10-24T14:07:33+00:00",
-  "afd": "2026-10-24T14:07:33+00:00",
-  "lake_forecast": "2026-10-24T14:07:33+00:00",
-  "lake_gage": "2026-10-24T14:07:33+00:00",
-  "air": "2026-10-24T14:07:33+00:00",
-  "sun": "2026-10-24T14:07:33+00:00",
-  "models": "2026-10-24T14:07:33+00:00"
+  "now": "2026-10-24T15:32:37+00:00",
+  "forecast": "2026-10-24T15:32:37+00:00",
+  "hourly": "2026-10-24T15:32:37+00:00",
+  "alerts": "2026-10-24T15:32:37+00:00",
+  "afd": "2026-10-24T15:32:37+00:00",
+  "lake_forecast": "2026-10-24T15:32:37+00:00",
+  "lake_gage": "2026-10-24T15:32:37+00:00",
+  "air": "2026-10-24T15:32:37+00:00",
+  "sun": "2026-10-24T15:32:37+00:00",
+  "models": "2026-10-24T15:32:37+00:00"
  },
  "now": {
-  "observed_at": "2026-10-24T13:50:00+00:00",
+  "observed_at": "2026-10-24T14:55:00+00:00",
   "station": "KBTV",
-  "description": null,
-  "temp_f": 37,
-  "feels_like_f": 37,
-  "humidity": 75,
+  "description": "Clear",
+  "temp_f": 46,
+  "feels_like_f": 46,
+  "humidity": 53,
   "dewpoint_f": 30,
   "wind_mph": 0,
   "wind_gust_mph": null,
@@ -30,7 +30,7 @@
   "periods": [
    {
     "name": "Today",
-    "start": "2026-10-24T10:00:00-04:00",
+    "start": "2026-10-24T11:00:00-04:00",
     "is_day": true,
     "temp_f": 56,
     "pop": 0,
@@ -173,20 +173,6 @@
  "hourly": {
   "updated": "2026-10-24T10:20:50+00:00",
   "hours": [
-   {
-    "t": "2026-10-24T10:00:00-04:00",
-    "temp_f": 41,
-    "feels_f": 41,
-    "pop": 0,
-    "humidity": 67,
-    "wind_mph": 2,
-    "wind_dir": "S",
-    "sky": 7,
-    "short": "Sunny",
-    "qpf_in": 0.0,
-    "snow_in": 0.0,
-    "gust_mph": 6
-   },
    {
     "t": "2026-10-24T11:00:00-04:00",
     "temp_f": 46,
@@ -676,6 +662,20 @@
     "qpf_in": 0.0,
     "snow_in": 0.0,
     "gust_mph": 15
+   },
+   {
+    "t": "2026-10-25T22:00:00-04:00",
+    "temp_f": 47,
+    "feels_f": 43,
+    "pop": 0,
+    "humidity": 65,
+    "wind_mph": 8,
+    "wind_dir": "S",
+    "sky": 20,
+    "short": "Mostly Clear",
+    "qpf_in": 0.0,
+    "snow_in": 0.0,
+    "gust_mph": 15
    }
   ],
   "days": [
@@ -956,17 +956,17 @@
  },
  "lake_gage": {
   "water_temp_f": 53,
-  "water_temp_at": "2026-10-24T09:00:00.000-04:00",
+  "water_temp_at": "2026-10-24T11:00:00.000-04:00",
   "level_ft": 94.07,
-  "level_at": "2026-10-24T09:00:00.000-04:00",
+  "level_at": "2026-10-24T11:00:00.000-04:00",
   "level_status": "normal"
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 28,
+  "aqi": 29,
   "category": "Good",
   "pollutant": "OZONE",
-  "observed": "10/24/26 9:00",
+  "observed": "10/24/26 11:00",
   "discussion": "On Saturday, October 24th, expect moderate air quality in mountain valley locations with nearby air emission sources, such as Rutland.  Expect generally good air quality in other areas of the state which are more exposed to prevailing wind flows."
  },
  "sun": {
@@ -1024,8 +1024,8 @@
      "ICON": 59
     },
     "pop_max": {
-     "GFS": 2,
-     "Euro": 6,
+     "GFS": 3,
+     "Euro": 2,
      "ICON": 3
     },
     "precip_in": {
@@ -1039,7 +1039,7 @@
  },
  "brief": {
   "date": "2026-10-24",
-  "generated": "2026-10-24T14:07:37+00:00",
+  "generated": "2026-10-24T15:32:40+00:00",
   "text": "Sunny today, high 56. Clear tonight, low 35. Sunday, sunny and warmer, high 61.",
   "periods": [
    {
@@ -1048,11 +1048,11 @@
     "is_day": true,
     "temp_f": 56,
     "sky": "sunny",
-    "start": "2026-10-24T10:00:00-04:00",
+    "start": "2026-10-24T11:00:00-04:00",
     "end": "2026-10-24T18:00:00-04:00",
     "precip": null,
     "wind": null,
-    "feels_lo": 41,
+    "feels_lo": 46,
     "feels_hi": 56,
     "text": "Sunny today, high 56."
    },
