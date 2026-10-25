@@ -1,30 +1,30 @@
 {
- "generated": "2026-10-24T18:43:31-04:00",
+ "generated": "2026-10-25T09:53:36-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
-   "count": 8,
-   "seconds": 5.8
+   "count": 7,
+   "seconds": 5.6
   },
   "breweries": {
    "label": "Breweries & Taprooms",
-   "count": 84,
-   "seconds": 5.4
+   "count": 81,
+   "seconds": 6.4
   },
   "brownell": {
    "label": "Brownell Library",
    "count": 82,
-   "seconds": 3.3
+   "seconds": 3.7
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
-   "count": 213,
-   "seconds": 4.0
+   "count": 202,
+   "seconds": 3.9
   },
   "churchst": {
    "label": "Church Street Marketplace",
-   "count": 72,
-   "seconds": 2.0
+   "count": 70,
+   "seconds": 1.6
   },
   "echo": {
    "label": "ECHO Leahy Center",
@@ -34,7 +34,7 @@
   "eventbrite": {
    "label": "Eventbrite",
    "count": 0,
-   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-10-24&end_date=2026-12-23&page=1 (HTTP Error 405: Not Allowed)"
+   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-10-25&end_date=2026-12-24&page=1 (HTTP Error 405: Not Allowed)"
   },
   "facebook": {
    "label": "Facebook (manual drops)",
@@ -43,23 +43,23 @@
   },
   "farmersmarket": {
    "label": "Burlington Farmers Market",
-   "count": 2,
-   "seconds": 0.2
+   "count": 1,
+   "seconds": 0.3
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
-   "count": 214,
-   "seconds": 70.7
+   "count": 211,
+   "seconds": 71.1
   },
   "flynn": {
    "label": "The Flynn",
    "count": 14,
-   "seconds": 0.5
+   "seconds": 0.4
   },
   "generator": {
    "label": "Generator Makerspace",
-   "count": 13,
-   "seconds": 31.9
+   "count": 10,
+   "seconds": 30.9
   },
   "greenfc": {
    "label": "Vermont Green FC",
@@ -68,8 +68,8 @@
   },
   "helloburlington": {
    "label": "Hello Burlington",
-   "count": 615,
-   "seconds": 33.0
+   "count": 604,
+   "seconds": 32.2
   },
   "higherground": {
    "label": "Higher Ground",
@@ -78,49 +78,50 @@
   },
   "instagram": {
    "label": "Instagram (Scrape Creators)",
-   "count": 1,
-   "seconds": 46.2
+   "count": 0,
+   "error": "skipped by design: once-daily gate, Instagram fetches on the afternoon run only",
+   "staleDays": 0
   },
   "loveburlington": {
    "label": "Love Burlington",
-   "count": 383,
-   "seconds": 75.4
+   "count": 380,
+   "seconds": 74.3
   },
   "meetup": {
    "label": "Meetup",
    "count": 56,
-   "seconds": 101.3
+   "seconds": 99.9
   },
   "monkeyhouse": {
    "label": "The Monkey House",
-   "count": 25,
+   "count": 24,
    "seconds": 0.4
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
    "count": 73,
-   "seconds": 15.5
+   "seconds": 15.2
   },
   "radiobean": {
    "label": "Radio Bean",
    "count": 0,
    "error": "HTTP Error 404: Not Found",
-   "staleDays": 16
+   "staleDays": 17
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
-   "count": 87,
-   "seconds": 2.0
+   "count": 84,
+   "seconds": 2.1
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
-   "count": 18,
-   "seconds": 20.8
+   "count": 13,
+   "seconds": 18.3
   },
   "sevendays": {
    "label": "Seven Days",
-   "count": 2304,
-   "seconds": 2.0
+   "count": 2255,
+   "seconds": 28.2
   },
   "shelburnemuseum": {
    "label": "Shelburne Museum",
@@ -129,108 +130,31 @@
   },
   "uvm": {
    "label": "UVM & Colleges",
-   "count": 476,
-   "seconds": 26.5
+   "count": 461,
+   "seconds": 36.0
   },
   "uvmbored": {
    "label": "UVM Bored",
-   "count": 280,
+   "count": 269,
    "seconds": 0.2
   },
   "vcc": {
    "label": "Vermont Comedy Club",
-   "count": 53,
-   "seconds": 71.2
+   "count": 52,
+   "seconds": 75.8
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
    "count": 48,
-   "seconds": 0.4
+   "seconds": 0.2
   }
  },
- "gathered": 5121,
- "afterDedup": 2551,
- "duplicatesMerged": 2570,
- "final": 2626,
- "firecrawlCalls": 1,
+ "gathered": 4997,
+ "afterDedup": 2497,
+ "duplicatesMerged": 2500,
+ "final": 2547,
+ "firecrawlCalls": 5,
  "mergeLog": [
-  {
-   "kept": {
-    "title": "Men's Ice Hockey vs St. Cloud State",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-11-27"
-  },
-  {
-   "kept": {
-    "title": "Pub Hour",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-11-27"
-  },
-  {
-   "kept": {
-    "title": "'Very Eric Carle' Exhibit",
-    "source": "sevendays"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "sevendays"
-   ],
-   "date": "2026-11-27"
-  },
-  {
-   "kept": {
-    "title": "The Poetry Experience",
-    "source": "fletcherfree"
-   },
-   "merged_sources": [
-    "fletcherfree",
-    "sevendays"
-   ],
-   "date": "2026-11-28"
-  },
-  {
-   "kept": {
-    "title": "Chess Club",
-    "source": "sblibrary"
-   },
-   "merged_sources": [
-    "sblibrary",
-    "sevendays"
-   ],
-   "date": "2026-11-28"
-  },
-  {
-   "kept": {
-    "title": "Live DJ at Ri Ra!",
-    "source": "churchst"
-   },
-   "merged_sources": [
-    "churchst",
-    "loveburlington"
-   ],
-   "date": "2026-11-28"
-  },
-  {
-   "kept": {
-    "title": "Sculpt HIIT and Flow",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-11-28"
-  },
   {
    "kept": {
     "title": "Men's Ice Hockey vs St. Cloud State",
@@ -2403,85 +2327,118 @@
     "sevendays"
    ],
    "date": "2026-12-23"
+  },
+  {
+   "kept": {
+    "title": "Italian Conversation Group",
+    "source": "fletcherfree"
+   },
+   "merged_sources": [
+    "fletcherfree",
+    "loveburlington",
+    "sevendays"
+   ],
+   "date": "2026-12-24"
+  },
+  {
+   "kept": {
+    "title": "Queer/LGBTQ+ Horror Book Club",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "churchst",
+    "loveburlington"
+   ],
+   "date": "2026-12-24"
+  },
+  {
+   "kept": {
+    "title": "Thirsty Thursday",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "churchst",
+    "loveburlington",
+    "sevendays"
+   ],
+   "date": "2026-12-24"
+  },
+  {
+   "kept": {
+    "title": "Pub Hour",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-12-24"
+  },
+  {
+   "kept": {
+    "title": "Open Studio",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington",
+    "sevendays"
+   ],
+   "date": "2026-12-24"
+  },
+  {
+   "kept": {
+    "title": "'Very Eric Carle' Exhibit",
+    "source": "sevendays"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "sevendays"
+   ],
+   "date": "2026-12-24"
+  },
+  {
+   "kept": {
+    "title": "Trivia",
+    "source": "sevendays"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "sevendays"
+   ],
+   "date": "2026-12-24"
   }
  ],
  "changes": [
   {
-   "id": "a1081d3af3e8",
-   "title": "Board Game Brunch",
-   "date": "2026-10-24",
-   "change": "missing",
-   "lastSeen": "2026-10-24T09:33:48-04:00"
+   "id": "085b54284193",
+   "title": "Leahy Public Policy Forum",
+   "date": "2026-10-28",
+   "change": "time",
+   "was": "2026-10-28",
+   "now": "2026-10-28T17:00:00-04:00"
   },
   {
-   "id": "9c5457ea8774",
-   "title": "BTown Coffee Club x Social Pulse",
-   "date": "2026-10-24",
-   "change": "missing",
-   "lastSeen": "2026-10-24T09:33:48-04:00"
+   "id": "9e482ef0330a",
+   "title": "Leahy Public Policy Forum",
+   "date": "2026-10-29",
+   "change": "time",
+   "was": "2026-10-29",
+   "now": "2026-10-29T09:00:00-04:00"
   },
   {
-   "id": "b50b64299219",
-   "title": "Fire Safety Story Time",
-   "date": "2026-10-24",
-   "change": "missing",
-   "lastSeen": "2026-10-23T10:24:04-04:00"
-  },
-  {
-   "id": "da480231c88a",
-   "title": "Learn & Play Unmatched",
-   "date": "2026-10-24",
-   "change": "missing",
-   "lastSeen": "2026-10-24T09:33:48-04:00"
-  },
-  {
-   "id": "cb1c2ff30140",
-   "title": "'No Country for Mothers'",
-   "date": "2026-10-24",
-   "change": "missing",
-   "lastSeen": "2026-10-23T10:24:04-04:00"
-  },
-  {
-   "id": "2fc7035b1b26",
-   "title": "Calum Graham",
-   "date": "2026-10-24",
-   "change": "missing",
-   "lastSeen": "2026-10-21T19:37:10-04:00"
-  },
-  {
-   "id": "c4152cb325c3",
-   "title": "Radio Bean Presents: Lamplight, The Clearwater Swimmers, & Fowl @ The Monkey House",
-   "date": "2026-10-24",
-   "change": "source-down",
-   "lastSeen": "2026-10-07T20:24:11-04:00"
-  },
-  {
-   "id": "9e69de80f527",
-   "title": "Trystan Bates",
-   "date": "2026-10-24",
-   "change": "missing",
-   "lastSeen": "2026-10-23T19:29:19-04:00"
-  },
-  {
-   "id": "4b202c65a43e",
-   "title": "Kathleen Schneider",
-   "date": "2026-10-24",
-   "change": "missing",
-   "lastSeen": "2026-10-23T19:29:19-04:00"
-  },
-  {
-   "id": "84e4a13997df",
-   "title": "Sunday Sadhana and Meditation",
-   "date": "2026-10-25",
-   "change": "missing",
-   "lastSeen": "2026-10-24T09:33:48-04:00"
+   "id": "7f5cf660eef3",
+   "title": "WordPress Help Desk",
+   "date": "2026-10-28",
+   "change": "time",
+   "was": "2026-10-28T17:00:00-04:00",
+   "now": "2026-10-28T12:00:00-04:00"
   },
   {
    "id": "20ba029bf623",
    "title": "Shaun Booher Live in Burlington",
    "date": "2026-10-25",
-   "change": "missing",
-   "lastSeen": "2026-10-21T19:37:10-04:00"
+   "change": "dropped"
   },
   {
    "id": "2211cacbebff",
@@ -2489,6 +2446,20 @@
    "date": "2026-10-25",
    "change": "missing",
    "lastSeen": "2026-10-22T10:39:26-04:00"
+  },
+  {
+   "id": "f2fc9aae386b",
+   "title": "Trystan Bates",
+   "date": "2026-10-25",
+   "change": "missing",
+   "lastSeen": "2026-10-24T18:43:31-04:00"
+  },
+  {
+   "id": "3cdf51568455",
+   "title": "Kathleen Schneider",
+   "date": "2026-10-25",
+   "change": "missing",
+   "lastSeen": "2026-10-24T18:43:31-04:00"
   },
   {
    "id": "6bf03d16161d",
@@ -2517,12 +2488,6 @@
    "date": "2026-10-27",
    "change": "missing",
    "lastSeen": "2026-10-23T10:24:04-04:00"
-  },
-  {
-   "id": "b2e9d10559ff",
-   "title": "Wednesday Walks",
-   "date": "2026-10-28",
-   "change": "dropped"
   },
   {
    "id": "66a4f45e83b4",
@@ -2556,15 +2521,13 @@
    "id": "6d3476347263",
    "title": "Turning Pages with Mary - Live!",
    "date": "2026-10-29",
-   "change": "missing",
-   "lastSeen": "2026-10-21T19:37:10-04:00"
+   "change": "dropped"
   },
   {
    "id": "ba71c8da46b4",
    "title": "Spotlight 802: Olympian Julia Kern",
    "date": "2026-10-29",
-   "change": "missing",
-   "lastSeen": "2026-10-21T19:37:10-04:00"
+   "change": "dropped"
   },
   {
    "id": "361f5b4d9984",
@@ -2584,15 +2547,13 @@
    "id": "75e518017f41",
    "title": "Green Mountain Woodcarvers October Carve-In & Annual Meeting",
    "date": "2026-10-31",
-   "change": "missing",
-   "lastSeen": "2026-10-21T19:37:10-04:00"
+   "change": "dropped"
   },
   {
    "id": "4c946c0c093f",
    "title": "Half Dead",
    "date": "2026-10-31",
-   "change": "missing",
-   "lastSeen": "2026-10-21T19:37:10-04:00"
+   "change": "dropped"
   },
   {
    "id": "88db379efc65",
@@ -2602,18 +2563,10 @@
    "lastSeen": "2026-10-07T20:24:11-04:00"
   },
   {
-   "id": "8c14d6380320",
-   "title": "Sunday Sadhana and Meditation",
-   "date": "2026-11-01",
-   "change": "missing",
-   "lastSeen": "2026-10-24T09:33:48-04:00"
-  },
-  {
    "id": "7a668ba2482d",
    "title": "Burlington Baroque presents Requiem for a King - Jean Gilles & Marc-Antoine Charpentier in Burlington",
    "date": "2026-11-01",
-   "change": "missing",
-   "lastSeen": "2026-10-21T19:37:10-04:00"
+   "change": "dropped"
   },
   {
    "id": "bae8886e4a9d",
@@ -2654,8 +2607,7 @@
    "id": "53d1ff6ed491",
    "title": "Dr. Mel Houser | Phoenix Books Essex",
    "date": "2026-11-04",
-   "change": "missing",
-   "lastSeen": "2026-10-21T19:37:10-04:00"
+   "change": "dropped"
   },
   {
    "id": "aa2da2a62757",
@@ -2691,13 +2643,6 @@
    "date": "2026-11-07",
    "change": "missing",
    "lastSeen": "2026-10-23T10:24:04-04:00"
-  },
-  {
-   "id": "cac74827bb20",
-   "title": "Sunday Sadhana and Meditation",
-   "date": "2026-11-08",
-   "change": "missing",
-   "lastSeen": "2026-10-24T09:33:48-04:00"
   },
   {
    "id": "c869794740ea",
@@ -2742,18 +2687,10 @@
    "lastSeen": "2026-10-24T09:33:48-04:00"
   },
   {
-   "id": "897e8bbdcb5b",
-   "title": "Sunday Sadhana and Meditation",
-   "date": "2026-11-15",
-   "change": "missing",
-   "lastSeen": "2026-10-24T09:33:48-04:00"
-  },
-  {
    "id": "a6a61f3206f3",
    "title": "Read to a Therapy Dog",
    "date": "2026-11-15",
-   "change": "missing",
-   "lastSeen": "2026-10-21T19:37:10-04:00"
+   "change": "dropped"
   },
   {
    "id": "ada684707bc0",
@@ -2791,33 +2728,6 @@
    "lastSeen": "2026-10-24T09:33:48-04:00"
   },
   {
-   "id": "cc1db944a981",
-   "title": "Sunday Sadhana and Meditation",
-   "date": "2026-11-22",
-   "change": "missing",
-   "lastSeen": "2026-10-24T09:33:48-04:00"
-  },
-  {
-   "id": "c2f68592bc2a",
-   "title": "Wednesday Walks",
-   "date": "2026-11-25",
-   "change": "dropped"
-  },
-  {
-   "id": "45dc20b79037",
-   "title": "Sunday Sadhana and Meditation",
-   "date": "2026-11-29",
-   "change": "missing",
-   "lastSeen": "2026-10-24T09:33:48-04:00"
-  },
-  {
-   "id": "448a1b4d7d16",
-   "title": "Friendsgiving at Linda’s House",
-   "date": "2026-11-29",
-   "change": "missing",
-   "lastSeen": "2026-10-21T19:37:10-04:00"
-  },
-  {
    "id": "fd42ac39974e",
    "title": "MATH Help Sessions",
    "date": "2026-11-30",
@@ -2832,24 +2742,11 @@
    "lastSeen": "2026-10-22T19:35:46-04:00"
   },
   {
-   "id": "203faa10789a",
-   "title": "Wednesday Walks",
-   "date": "2026-12-02",
-   "change": "dropped"
-  },
-  {
    "id": "f2762f588188",
    "title": "MATH Help Sessions",
    "date": "2026-12-02",
    "change": "missing",
    "lastSeen": "2026-10-22T19:35:46-04:00"
-  },
-  {
-   "id": "899a81223e17",
-   "title": "Ladies Book Club - Eleanor Oliphant is Completely Fine",
-   "date": "2026-12-02",
-   "change": "missing",
-   "lastSeen": "2026-10-21T19:37:10-04:00"
   },
   {
    "id": "3da775c39bd6",
@@ -2864,13 +2761,6 @@
    "date": "2026-12-04",
    "change": "missing",
    "lastSeen": "2026-10-22T10:39:26-04:00"
-  },
-  {
-   "id": "eedf82b71b31",
-   "title": "Sunday Sadhana and Meditation",
-   "date": "2026-12-06",
-   "change": "missing",
-   "lastSeen": "2026-10-24T09:33:48-04:00"
   },
   {
    "id": "6069fba6e4ce",
@@ -2894,18 +2784,6 @@
    "lastSeen": "2026-10-22T19:35:46-04:00"
   },
   {
-   "id": "c87d2c8d312b",
-   "title": "Wednesday Walks",
-   "date": "2026-12-09",
-   "change": "dropped"
-  },
-  {
-   "id": "3bd93a4f3450",
-   "title": "Hold for youth event",
-   "date": "2026-12-09",
-   "change": "dropped"
-  },
-  {
    "id": "75fc2603dda6",
    "title": "MATH Help Sessions",
    "date": "2026-12-09",
@@ -2920,24 +2798,11 @@
    "lastSeen": "2026-10-22T10:39:26-04:00"
   },
   {
-   "id": "7871174f635e",
-   "title": "Sunday Sadhana and Meditation",
-   "date": "2026-12-13",
-   "change": "missing",
-   "lastSeen": "2026-10-24T09:33:48-04:00"
-  },
-  {
    "id": "cd68653832c7",
    "title": "Trivia with Craig Mitchell",
    "date": "2026-12-14",
    "change": "missing",
    "lastSeen": "2026-10-23T10:24:04-04:00"
-  },
-  {
-   "id": "bc886f973700",
-   "title": "Wednesday Walks",
-   "date": "2026-12-16",
-   "change": "dropped"
   },
   {
    "id": "83d55aac4b1a",
@@ -2952,13 +2817,6 @@
    "date": "2026-12-18",
    "change": "missing",
    "lastSeen": "2026-10-22T10:39:26-04:00"
-  },
-  {
-   "id": "a1dcc990973c",
-   "title": "Sunday Sadhana and Meditation",
-   "date": "2026-12-20",
-   "change": "missing",
-   "lastSeen": "2026-10-24T09:33:48-04:00"
   },
   {
    "id": "33272ce2dbc4",
