@@ -1,20 +1,20 @@
 {
- "generated": "2026-10-25T09:53:36-04:00",
+ "generated": "2026-10-25T18:47:59-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
    "count": 7,
-   "seconds": 5.6
+   "seconds": 5.9
   },
   "breweries": {
    "label": "Breweries & Taprooms",
-   "count": 81,
-   "seconds": 6.4
+   "count": 80,
+   "seconds": 2.8
   },
   "brownell": {
    "label": "Brownell Library",
    "count": 82,
-   "seconds": 3.7
+   "seconds": 3.4
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
@@ -24,7 +24,7 @@
   "churchst": {
    "label": "Church Street Marketplace",
    "count": 70,
-   "seconds": 1.6
+   "seconds": 1.8
   },
   "echo": {
    "label": "ECHO Leahy Center",
@@ -44,22 +44,22 @@
   "farmersmarket": {
    "label": "Burlington Farmers Market",
    "count": 1,
-   "seconds": 0.3
+   "seconds": 0.1
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
    "count": 211,
-   "seconds": 71.1
+   "seconds": 72.0
   },
   "flynn": {
    "label": "The Flynn",
    "count": 14,
-   "seconds": 0.4
+   "seconds": 0.5
   },
   "generator": {
    "label": "Generator Makerspace",
    "count": 10,
-   "seconds": 30.9
+   "seconds": 31.5
   },
   "greenfc": {
    "label": "Vermont Green FC",
@@ -78,19 +78,18 @@
   },
   "instagram": {
    "label": "Instagram (Scrape Creators)",
-   "count": 0,
-   "error": "skipped by design: once-daily gate, Instagram fetches on the afternoon run only",
-   "staleDays": 0
+   "count": 2,
+   "seconds": 50.5
   },
   "loveburlington": {
    "label": "Love Burlington",
    "count": 380,
-   "seconds": 74.3
+   "seconds": 74.0
   },
   "meetup": {
    "label": "Meetup",
-   "count": 56,
-   "seconds": 99.9
+   "count": 55,
+   "seconds": 105.8
   },
   "monkeyhouse": {
    "label": "The Monkey House",
@@ -99,7 +98,7 @@
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
-   "count": 73,
+   "count": 72,
    "seconds": 15.2
   },
   "radiobean": {
@@ -111,17 +110,17 @@
   "sblibrary": {
    "label": "South Burlington Public Library",
    "count": 84,
-   "seconds": 2.1
+   "seconds": 6.1
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
    "count": 13,
-   "seconds": 18.3
+   "seconds": 18.8
   },
   "sevendays": {
    "label": "Seven Days",
-   "count": 2255,
-   "seconds": 28.2
+   "count": 2243,
+   "seconds": 2.2
   },
   "shelburnemuseum": {
    "label": "Shelburne Museum",
@@ -131,7 +130,7 @@
   "uvm": {
    "label": "UVM & Colleges",
    "count": 461,
-   "seconds": 36.0
+   "seconds": 23.0
   },
   "uvmbored": {
    "label": "UVM Bored",
@@ -141,19 +140,19 @@
   "vcc": {
    "label": "Vermont Comedy Club",
    "count": 52,
-   "seconds": 75.8
+   "seconds": 73.4
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
    "count": 48,
-   "seconds": 0.2
+   "seconds": 0.4
   }
  },
- "gathered": 4997,
- "afterDedup": 2497,
- "duplicatesMerged": 2500,
- "final": 2547,
- "firecrawlCalls": 5,
+ "gathered": 4984,
+ "afterDedup": 2488,
+ "duplicatesMerged": 2496,
+ "final": 2544,
+ "firecrawlCalls": 1,
  "mergeLog": [
   {
    "kept": {
@@ -2411,41 +2410,61 @@
  ],
  "changes": [
   {
-   "id": "085b54284193",
-   "title": "Leahy Public Policy Forum",
-   "date": "2026-10-28",
-   "change": "time",
-   "was": "2026-10-28",
-   "now": "2026-10-28T17:00:00-04:00"
-  },
-  {
-   "id": "9e482ef0330a",
-   "title": "Leahy Public Policy Forum",
-   "date": "2026-10-29",
-   "change": "time",
-   "was": "2026-10-29",
-   "now": "2026-10-29T09:00:00-04:00"
-  },
-  {
    "id": "7f5cf660eef3",
    "title": "WordPress Help Desk",
    "date": "2026-10-28",
    "change": "time",
-   "was": "2026-10-28T17:00:00-04:00",
-   "now": "2026-10-28T12:00:00-04:00"
+   "was": "2026-10-28T12:00:00-04:00",
+   "now": "2026-10-28T17:00:00-04:00"
   },
   {
-   "id": "20ba029bf623",
-   "title": "Shaun Booher Live in Burlington",
+   "id": "e075df922ef6",
+   "title": "Half Dead Halloween Show!",
+   "date": "2026-10-31",
+   "change": "time",
+   "was": "2026-10-31T18:00:00-04:00",
+   "now": "2026-10-31T17:00:00-04:00"
+  },
+  {
+   "id": "84e4a13997df",
+   "title": "Sunday Sadhana and Meditation",
    "date": "2026-10-25",
-   "change": "dropped"
+   "change": "missing",
+   "lastSeen": "2026-10-25T09:53:36-04:00"
+  },
+  {
+   "id": "84f8f42f65a0",
+   "title": "Hike in Wiliston, VT @ Sucker Brook Hollow",
+   "date": "2026-10-25",
+   "change": "missing",
+   "lastSeen": "2026-10-25T09:53:36-04:00"
+  },
+  {
+   "id": "8987f54a4229",
+   "title": "The Amazing Puzzle Race",
+   "date": "2026-10-25",
+   "change": "missing",
+   "lastSeen": "2026-10-25T09:53:36-04:00"
+  },
+  {
+   "id": "80f96c0c66bc",
+   "title": "Dead Men Strumming - EARLY DEAD show ft songs from the 1960s!",
+   "date": "2026-10-25",
+   "change": "missing",
+   "lastSeen": "2026-10-25T09:53:36-04:00"
+  },
+  {
+   "id": "5ac546f76cc1",
+   "title": "Public Skate",
+   "date": "2026-10-25",
+   "change": "missing",
+   "lastSeen": "2026-10-25T09:53:36-04:00"
   },
   {
    "id": "2211cacbebff",
    "title": "Blue Sundays",
    "date": "2026-10-25",
-   "change": "missing",
-   "lastSeen": "2026-10-22T10:39:26-04:00"
+   "change": "dropped"
   },
   {
    "id": "f2fc9aae386b",
@@ -2514,19 +2533,6 @@
    "id": "899d56097989",
    "title": "Minecraft Meet-up",
    "date": "2026-10-29",
-   "change": "missing",
-   "lastSeen": "2026-10-22T10:39:26-04:00"
-  },
-  {
-   "id": "6d3476347263",
-   "title": "Turning Pages with Mary - Live!",
-   "date": "2026-10-29",
-   "change": "dropped"
-  },
-  {
-   "id": "ba71c8da46b4",
-   "title": "Spotlight 802: Olympian Julia Kern",
-   "date": "2026-10-29",
    "change": "dropped"
   },
   {
@@ -2544,18 +2550,6 @@
    "lastSeen": "2026-10-24T09:33:48-04:00"
   },
   {
-   "id": "75e518017f41",
-   "title": "Green Mountain Woodcarvers October Carve-In & Annual Meeting",
-   "date": "2026-10-31",
-   "change": "dropped"
-  },
-  {
-   "id": "4c946c0c093f",
-   "title": "Half Dead",
-   "date": "2026-10-31",
-   "change": "dropped"
-  },
-  {
    "id": "88db379efc65",
    "title": "Radio Bean Presents: SHEBAD @ Foam",
    "date": "2026-10-31",
@@ -2563,17 +2557,24 @@
    "lastSeen": "2026-10-07T20:24:11-04:00"
   },
   {
-   "id": "7a668ba2482d",
-   "title": "Burlington Baroque presents Requiem for a King - Jean Gilles & Marc-Antoine Charpentier in Burlington",
+   "id": "8c14d6380320",
+   "title": "Sunday Sadhana and Meditation",
    "date": "2026-11-01",
-   "change": "dropped"
+   "change": "missing",
+   "lastSeen": "2026-10-25T09:53:36-04:00"
+  },
+  {
+   "id": "04052b69b88e",
+   "title": "Saru",
+   "date": "2026-11-01",
+   "change": "missing",
+   "lastSeen": "2026-10-25T09:53:36-04:00"
   },
   {
    "id": "bae8886e4a9d",
    "title": "Blue Sundays",
    "date": "2026-11-01",
-   "change": "missing",
-   "lastSeen": "2026-10-22T10:39:26-04:00"
+   "change": "dropped"
   },
   {
    "id": "f8385e2f5b53",
@@ -2593,8 +2594,7 @@
    "id": "ef2275a4a684",
    "title": "Cookbook Club: My Harvest Kitchen",
    "date": "2026-11-03",
-   "change": "missing",
-   "lastSeen": "2026-10-22T10:39:26-04:00"
+   "change": "dropped"
   },
   {
    "id": "b850d115642d",
@@ -2602,12 +2602,6 @@
    "date": "2026-11-04",
    "change": "missing",
    "lastSeen": "2026-10-22T19:35:46-04:00"
-  },
-  {
-   "id": "53d1ff6ed491",
-   "title": "Dr. Mel Houser | Phoenix Books Essex",
-   "date": "2026-11-04",
-   "change": "dropped"
   },
   {
    "id": "aa2da2a62757",
@@ -2643,6 +2637,13 @@
    "date": "2026-11-07",
    "change": "missing",
    "lastSeen": "2026-10-23T10:24:04-04:00"
+  },
+  {
+   "id": "cac74827bb20",
+   "title": "Sunday Sadhana and Meditation",
+   "date": "2026-11-08",
+   "change": "missing",
+   "lastSeen": "2026-10-25T09:53:36-04:00"
   },
   {
    "id": "c869794740ea",
@@ -2687,10 +2688,11 @@
    "lastSeen": "2026-10-24T09:33:48-04:00"
   },
   {
-   "id": "a6a61f3206f3",
-   "title": "Read to a Therapy Dog",
+   "id": "897e8bbdcb5b",
+   "title": "Sunday Sadhana and Meditation",
    "date": "2026-11-15",
-   "change": "dropped"
+   "change": "missing",
+   "lastSeen": "2026-10-25T09:53:36-04:00"
   },
   {
    "id": "ada684707bc0",
@@ -2728,6 +2730,20 @@
    "lastSeen": "2026-10-24T09:33:48-04:00"
   },
   {
+   "id": "cc1db944a981",
+   "title": "Sunday Sadhana and Meditation",
+   "date": "2026-11-22",
+   "change": "missing",
+   "lastSeen": "2026-10-25T09:53:36-04:00"
+  },
+  {
+   "id": "45dc20b79037",
+   "title": "Sunday Sadhana and Meditation",
+   "date": "2026-11-29",
+   "change": "missing",
+   "lastSeen": "2026-10-25T09:53:36-04:00"
+  },
+  {
    "id": "fd42ac39974e",
    "title": "MATH Help Sessions",
    "date": "2026-11-30",
@@ -2759,8 +2775,14 @@
    "id": "24d3678c4f54",
    "title": "Hold for Minecraft",
    "date": "2026-12-04",
+   "change": "dropped"
+  },
+  {
+   "id": "eedf82b71b31",
+   "title": "Sunday Sadhana and Meditation",
+   "date": "2026-12-06",
    "change": "missing",
-   "lastSeen": "2026-10-22T10:39:26-04:00"
+   "lastSeen": "2026-10-25T09:53:36-04:00"
   },
   {
    "id": "6069fba6e4ce",
@@ -2794,8 +2816,14 @@
    "id": "1d93378ebe49",
    "title": "Hold for Minecraft",
    "date": "2026-12-11",
+   "change": "dropped"
+  },
+  {
+   "id": "7871174f635e",
+   "title": "Sunday Sadhana and Meditation",
+   "date": "2026-12-13",
    "change": "missing",
-   "lastSeen": "2026-10-22T10:39:26-04:00"
+   "lastSeen": "2026-10-25T09:53:36-04:00"
   },
   {
    "id": "cd68653832c7",
@@ -2815,8 +2843,14 @@
    "id": "0e2121d70159",
    "title": "Hold for Minecraft",
    "date": "2026-12-18",
+   "change": "dropped"
+  },
+  {
+   "id": "a1dcc990973c",
+   "title": "Sunday Sadhana and Meditation",
+   "date": "2026-12-20",
    "change": "missing",
-   "lastSeen": "2026-10-22T10:39:26-04:00"
+   "lastSeen": "2026-10-25T09:53:36-04:00"
   },
   {
    "id": "33272ce2dbc4",
