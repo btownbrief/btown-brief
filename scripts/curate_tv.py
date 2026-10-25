@@ -92,6 +92,11 @@ OPENROUTER_BASE_URL = "https://openrouter.ai/api"
 # curate_top.py (PR #240): the SDK's native thinking parameter — a "reasoning"
 # key in extra_body is silently ignored here, budget_tokens is honoured.
 REASONING_MAX_TOKENS = 4000
+# Three tries, not two: on 2026-10-24 both of two attempts ran out of tokens
+# and the page sat on Friday's edition for a day (the same model was fine at
+# the next TOP run). Each try is a minute of the cheap model; the job has a
+# 20-minute timeout.
+MODEL_ATTEMPTS = 3
 WHY_MAX = 90              # the prompt's hard ceiling
 WHY_KEEP = 100            # what validate() tolerates before trimming
 FRESH_DAYS = 7            # an "upload" is this week's
@@ -738,7 +743,7 @@ def ask_model(prompt):
     # two nights (8/29–8/30) while the Watch tab froze. Same incident as
     # curate_top.py; see PR #233. Never remove it.
     last = None
-    for attempt in (1, 2):
+    for attempt in range(1, MODEL_ATTEMPTS + 1):
         try:
             with client.messages.stream(
                 model=MODEL,
@@ -756,9 +761,9 @@ def ask_model(prompt):
             text = next(block.text for block in response.content
                         if block.type == "text")
             return json.loads(text)
-        except Exception as exc:  # noqa: BLE001 — one retry, then surface
+        except Exception as exc:  # noqa: BLE001 — retried, then surfaced
             last = exc
-            print(f"curate_tv: attempt {attempt}/2 failed ({exc})",
+            print(f"curate_tv: attempt {attempt}/{MODEL_ATTEMPTS} failed ({exc})",
                   file=sys.stderr)
     raise last
 
