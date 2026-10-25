@@ -612,6 +612,28 @@ def fetch_bytes(url, tries=3, timeout=30):
     raise RuntimeError(f"fetch failed after {tries} tries: {url} ({last})")
 
 
+def fetch_stream(url, tries=2):
+    """fetch_bytes for an Inoreader stream, refetched if the body won't parse.
+
+    Inoreader now and then hands back a body cut off mid-item (2026-10-25
+    11:24 UTC: "unclosed CDATA section"); the next request is fine. One
+    refetch keeps that from failing the run and emailing Stephen. A body that
+    is still broken after the refetch raises exactly as before.
+    """
+    for attempt in range(tries):
+        raw = fetch_bytes(url)
+        try:
+            ET.fromstring(raw)
+            return raw
+        except ET.ParseError as exc:
+            if attempt + 1 >= tries:
+                raise
+            print(f"WARNING: stream did not parse ({exc}); fetching it again",
+                  file=sys.stderr)
+            time.sleep(2)
+    raise AssertionError("unreachable")
+
+
 def folder_opml_url(label):
     return (f"{INO}/reader/subscriptions/export/user/{USER}/label/"
             + urllib.parse.quote(label, safe=""))
@@ -1421,7 +1443,7 @@ def run(args):
     def stream_raw(label, kind):
         count = SEED_STREAM_N if args.seed else STREAM_N[kind]
         if (label, count) not in streams:
-            streams[(label, count)] = fetch_bytes(folder_stream_url(label, count))
+            streams[(label, count)] = fetch_stream(folder_stream_url(label, count))
         return streams[(label, count)]
 
     folder_outlines = []
@@ -1851,6 +1873,23 @@ def selftest():
     assert dedupe_key("https://airy.so/") == dedupe_key("http://www.airy.so")
     assert dedupe_key("https://a.com/x%e2%80%91y") == dedupe_key("https://a.com/x%E2%80%91y")
     assert dedupe_key("https://a.com/p?q=1") != dedupe_key("https://a.com/p?q=2")
+
+    # a stream cut off once is refetched; cut off twice still fails the run
+    global fetch_bytes
+    real_fetch, bodies = fetch_bytes, []
+    fetch_bytes = lambda url: bodies.pop(0)
+    real_sleep, time.sleep = time.sleep, lambda s: None
+    try:
+        bodies[:] = [STREAM_FIXTURE[:len(STREAM_FIXTURE) // 2], STREAM_FIXTURE]
+        assert fetch_stream("https://example.test/s") == STREAM_FIXTURE
+        bodies[:] = [b"<rss><![CDATA[", b"<rss><![CDATA["]
+        try:
+            fetch_stream("https://example.test/s")
+            raise AssertionError("a stream broken twice must still raise")
+        except ET.ParseError:
+            pass
+    finally:
+        fetch_bytes, time.sleep = real_fetch, real_sleep
 
     items = parse_stream(STREAM_FIXTURE)
     assert len(items) == 5
