@@ -1,25 +1,20 @@
 {
  "v": 1,
- "updated": "2026-10-25T21:15:35+00:00",
+ "updated": "2026-10-25T22:44:35+00:00",
  "app": "https://guide.btownbrief.com/all-day/",
  "weather": {
-  "temp": 63,
+  "temp": 55,
   "sky": "Clear",
   "from": "airport",
-  "hi": 61,
+  "hi": 57,
   "lo": 41,
-  "rain": "Dry through tonight",
+  "rain": "Dry through Monday",
   "obs": {
-   "temp": 63,
+   "temp": 55,
    "sky": "Clear",
-   "at": "2026-10-25T20:55:00+00:00"
+   "at": "2026-10-25T22:25:00+00:00"
   },
   "hours": [
-   {
-    "t": "2026-10-25T17:00:00-04:00",
-    "temp": 60,
-    "sky": "Sunny"
-   },
    {
     "t": "2026-10-25T18:00:00-04:00",
     "temp": 58,
@@ -43,6 +38,11 @@
    {
     "t": "2026-10-25T22:00:00-04:00",
     "temp": 49,
+    "sky": "Partly Cloudy"
+   },
+   {
+    "t": "2026-10-25T23:00:00-04:00",
+    "temp": 47,
     "sky": "Partly Cloudy"
    }
   ],
@@ -107,13 +107,13 @@
   }
  ],
  "game": {
-  "title": "UVM Men's Ice Hockey at Clarkson",
-  "when": "Today 4 pm",
-  "start": "2026-10-25T20:00:00+00:00",
+  "title": "UVM Women's Basketball vs Saint Michael's College (Exhibition)",
+  "when": "Wed 5 pm",
+  "start": "2026-10-28T21:00:00+00:00",
   "all_day": false,
-  "home": false,
-  "tv": "ESPN+",
-  "url": "https://uvmathletics.com/calendar.aspx?game_id=6903&sport_id=5",
-  "link": "https://guide.btownbrief.com/sports.html"
+  "home": true,
+  "tv": "",
+  "url": "https://uvmathletics.com/calendar.aspx?game_id=6949&sport_id=10",
+  "link": "https://guide.btownbrief.com/all-day/#onair/hoops"
  }
 }
