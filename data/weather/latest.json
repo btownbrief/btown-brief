@@ -1,45 +1,35 @@
 {
- "updated": "2026-10-26T09:47:05+00:00",
+ "updated": "2026-10-26T10:07:06+00:00",
  "sections_updated": {
-  "now": "2026-10-26T09:47:05+00:00",
-  "forecast": "2026-10-26T09:47:05+00:00",
-  "hourly": "2026-10-26T09:47:05+00:00",
-  "alerts": "2026-10-26T09:47:05+00:00",
-  "afd": "2026-10-26T09:47:05+00:00",
-  "lake_forecast": "2026-10-26T09:47:05+00:00",
-  "lake_gage": "2026-10-26T09:47:05+00:00",
-  "air": "2026-10-26T09:47:05+00:00",
-  "sun": "2026-10-26T09:47:05+00:00",
-  "models": "2026-10-26T09:47:05+00:00"
+  "now": "2026-10-26T10:07:06+00:00",
+  "forecast": "2026-10-26T10:07:06+00:00",
+  "hourly": "2026-10-26T10:07:06+00:00",
+  "alerts": "2026-10-26T10:07:06+00:00",
+  "afd": "2026-10-26T10:07:06+00:00",
+  "lake_forecast": "2026-10-26T10:07:06+00:00",
+  "lake_gage": "2026-10-26T10:07:06+00:00",
+  "air": "2026-10-26T10:07:06+00:00",
+  "sun": "2026-10-26T10:07:06+00:00",
+  "models": "2026-10-26T10:07:06+00:00"
  },
  "now": {
-  "observed_at": "2026-10-26T09:30:00+00:00",
+  "observed_at": "2026-10-26T09:55:00+00:00",
   "station": "KBTV",
   "description": "Clear",
   "temp_f": 39,
-  "feels_like_f": 39,
+  "feels_like_f": 36,
   "humidity": 81,
   "dewpoint_f": 34,
-  "wind_mph": 0,
+  "wind_mph": 5,
   "wind_gust_mph": null,
-  "wind_dir": "N",
+  "wind_dir": "E",
   "precip_last_hr_in": null
  },
  "forecast": {
   "updated": "2026-10-26T06:08:25+00:00",
   "periods": [
    {
-    "name": "Overnight",
-    "start": "2026-10-26T05:00:00-04:00",
-    "is_day": false,
-    "temp_f": 41,
-    "pop": 1,
-    "wind": "S 8 mph",
-    "short": "Mostly Cloudy",
-    "detailed": "Mostly cloudy, with a low around 41. South wind around 8 mph."
-   },
-   {
-    "name": "Monday",
+    "name": "Today",
     "start": "2026-10-26T06:00:00-04:00",
     "is_day": true,
     "temp_f": 57,
@@ -49,7 +39,7 @@
     "detailed": "Partly sunny, with a high near 57. West wind 2 to 9 mph."
    },
    {
-    "name": "Monday Night",
+    "name": "Tonight",
     "start": "2026-10-26T18:00:00-04:00",
     "is_day": false,
     "temp_f": 31,
@@ -167,26 +157,22 @@
     "wind": "S 6 to 10 mph",
     "short": "Partly Sunny then Slight Chance Rain Showers",
     "detailed": "A slight chance of rain showers after 1pm. Partly sunny, with a high near 59. South wind 6 to 10 mph."
+   },
+   {
+    "name": "Sunday Night",
+    "start": "2026-11-01T18:00:00-05:00",
+    "is_day": false,
+    "temp_f": 44,
+    "pop": 28,
+    "wind": "S 9 mph",
+    "short": "Chance Rain Showers",
+    "detailed": "A chance of rain showers. Mostly cloudy, with a low around 44. South wind around 9 mph. Chance of precipitation is 30%."
    }
   ]
  },
  "hourly": {
   "updated": "2026-10-26T06:08:25+00:00",
   "hours": [
-   {
-    "t": "2026-10-26T05:00:00-04:00",
-    "temp_f": 42,
-    "feels_f": 37,
-    "pop": 1,
-    "humidity": 79,
-    "wind_mph": 8,
-    "wind_dir": "S",
-    "sky": 54,
-    "short": "Mostly Cloudy",
-    "qpf_in": 0.0,
-    "snow_in": 0.0,
-    "gust_mph": 14
-   },
    {
     "t": "2026-10-26T06:00:00-04:00",
     "temp_f": 43,
@@ -676,6 +662,20 @@
     "qpf_in": 0.0,
     "snow_in": 0.0,
     "gust_mph": 13
+   },
+   {
+    "t": "2026-10-27T17:00:00-04:00",
+    "temp_f": 44,
+    "feels_f": 41,
+    "pop": 0,
+    "humidity": 47,
+    "wind_mph": 6,
+    "wind_dir": "N",
+    "sky": 8,
+    "short": "Sunny",
+    "qpf_in": 0.0,
+    "snow_in": 0.0,
+    "gust_mph": 12
    }
   ],
   "days": [
@@ -1044,26 +1044,12 @@
  },
  "brief": {
   "date": "2026-10-26",
-  "generated": "2026-10-26T09:47:08+00:00",
-  "text": "Mostly cloudy overnight, low 41. Partly sunny today, high 57.",
+  "generated": "2026-10-26T10:07:09+00:00",
+  "text": "Partly sunny today, high 57. Partly cloudy tonight, low 31. Tuesday, sunny and cooler, high 47.",
   "periods": [
    {
-    "label": "Overnight",
-    "name": "Overnight",
-    "is_day": false,
-    "temp_f": 41,
-    "sky": "mostly cloudy",
-    "start": "2026-10-26T05:00:00-04:00",
-    "end": "2026-10-26T06:00:00-04:00",
-    "precip": null,
-    "wind": null,
-    "feels_lo": 37,
-    "feels_hi": 37,
-    "text": "Mostly cloudy overnight, low 41."
-   },
-   {
     "label": "Today",
-    "name": "Monday",
+    "name": "Today",
     "is_day": true,
     "temp_f": 57,
     "sky": "partly sunny",
@@ -1074,6 +1060,20 @@
     "feels_lo": 38,
     "feels_hi": 57,
     "text": "Partly sunny today, high 57."
+   },
+   {
+    "label": "Tonight",
+    "name": "Tonight",
+    "is_day": false,
+    "temp_f": 31,
+    "sky": "partly cloudy",
+    "start": "2026-10-26T18:00:00-04:00",
+    "end": "2026-10-27T06:00:00-04:00",
+    "precip": null,
+    "wind": null,
+    "feels_lo": 27,
+    "feels_hi": 47,
+    "text": "Partly cloudy tonight, low 31."
    }
   ]
  }
