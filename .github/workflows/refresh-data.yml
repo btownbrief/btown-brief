@@ -172,5 +172,5 @@ jobs:
             echo "No data changes."
           else
             git commit -m "Auto-refresh community data"
-            git push
+            git push || (git pull --rebase && git push)
           fi
