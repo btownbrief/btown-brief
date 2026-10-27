@@ -1,30 +1,30 @@
 {
- "generated": "2026-10-26T12:18:04-04:00",
+ "generated": "2026-10-26T20:04:15-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
    "count": 7,
-   "seconds": 6.7
+   "seconds": 6.3
   },
   "breweries": {
    "label": "Breweries & Taprooms",
    "count": 76,
-   "seconds": 6.6
+   "seconds": 5.8
   },
   "brownell": {
    "label": "Brownell Library",
-   "count": 82,
-   "seconds": 4.5
+   "count": 90,
+   "seconds": 3.5
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
    "count": 196,
-   "seconds": 3.1
+   "seconds": 3.6
   },
   "churchst": {
    "label": "Church Street Marketplace",
    "count": 70,
-   "seconds": 1.6
+   "seconds": 1.5
   },
   "echo": {
    "label": "ECHO Leahy Center",
@@ -44,22 +44,22 @@
   "farmersmarket": {
    "label": "Burlington Farmers Market",
    "count": 1,
-   "seconds": 0.5
+   "seconds": 0.4
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
    "count": 206,
-   "seconds": 76.8
+   "seconds": 74.5
   },
   "flynn": {
    "label": "The Flynn",
    "count": 14,
-   "seconds": 0.5
+   "seconds": 0.6
   },
   "generator": {
    "label": "Generator Makerspace",
    "count": 10,
-   "seconds": 31.2
+   "seconds": 32.3
   },
   "greenfc": {
    "label": "Vermont Green FC",
@@ -69,7 +69,7 @@
   "helloburlington": {
    "label": "Hello Burlington",
    "count": 594,
-   "seconds": 34.1
+   "seconds": 34.3
   },
   "higherground": {
    "label": "Higher Ground",
@@ -79,27 +79,27 @@
   "instagram": {
    "label": "Instagram (Scrape Creators)",
    "count": 2,
-   "seconds": 51.0
+   "seconds": 53.9
   },
   "loveburlington": {
    "label": "Love Burlington",
    "count": 397,
-   "seconds": 69.2
+   "seconds": 70.1
   },
   "meetup": {
    "label": "Meetup",
    "count": 56,
-   "seconds": 104.5
+   "seconds": 103.7
   },
   "monkeyhouse": {
    "label": "The Monkey House",
    "count": 23,
-   "seconds": 1.6
+   "seconds": 1.7
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
    "count": 70,
-   "seconds": 19.5
+   "seconds": 16.4
   },
   "radiobean": {
    "label": "Radio Bean",
@@ -110,17 +110,17 @@
   "sblibrary": {
    "label": "South Burlington Public Library",
    "count": 84,
-   "seconds": 7.8
+   "seconds": 6.5
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
    "count": 13,
-   "seconds": 18.9
+   "seconds": 19.3
   },
   "sevendays": {
    "label": "Seven Days",
    "count": 2307,
-   "seconds": 59.0
+   "seconds": 2.6
   },
   "shelburnemuseum": {
    "label": "Shelburne Museum",
@@ -129,44 +129,31 @@
   },
   "uvm": {
    "label": "UVM & Colleges",
-   "count": 457,
-   "seconds": 45.1
+   "count": 459,
+   "seconds": 19.8
   },
   "uvmbored": {
    "label": "UVM Bored",
-   "count": 264,
-   "seconds": 0.3
+   "count": 266,
+   "seconds": 0.2
   },
   "vcc": {
    "label": "Vermont Comedy Club",
    "count": 53,
-   "seconds": 71.9
+   "seconds": 72.3
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
    "count": 48,
-   "seconds": 0.3
+   "seconds": 0.5
   }
  },
- "gathered": 5030,
- "afterDedup": 2522,
- "duplicatesMerged": 2508,
- "final": 2547,
- "firecrawlCalls": 14,
+ "gathered": 5042,
+ "afterDedup": 2531,
+ "duplicatesMerged": 2511,
+ "final": 2562,
+ "firecrawlCalls": 1,
  "mergeLog": [
-  {
-   "kept": {
-    "title": "Pints & Pups in the Old Tap Room",
-    "source": "breweries"
-   },
-   "merged_sources": [
-    "breweries",
-    "helloburlington",
-    "loveburlington",
-    "sevendays"
-   ],
-   "date": "2026-11-29"
-  },
   {
    "kept": {
     "title": "'Very Eric Carle' Exhibit",
@@ -352,6 +339,17 @@
   {
    "kept": {
     "title": "Sculpt HIIT and Flow",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-12-01"
+  },
+  {
+   "kept": {
+    "title": "The Partial Figure: Visualizing HIV / AIDS",
     "source": "uvm"
    },
    "merged_sources": [
@@ -2414,28 +2412,12 @@
  ],
  "changes": [
   {
-   "id": "085b54284193",
-   "title": "Leahy Public Policy Forum",
-   "date": "2026-10-28",
+   "id": "f31a156fe860",
+   "title": "The Library closes early due to the Thanksgiving holiday",
+   "date": "2026-11-25",
    "change": "time",
-   "was": "2026-10-28",
-   "now": "2026-10-28T17:00:00-04:00"
-  },
-  {
-   "id": "9e482ef0330a",
-   "title": "Leahy Public Policy Forum",
-   "date": "2026-10-29",
-   "change": "time",
-   "was": "2026-10-29",
-   "now": "2026-10-29T09:00:00-04:00"
-  },
-  {
-   "id": "7f5cf660eef3",
-   "title": "WordPress Help Desk",
-   "date": "2026-10-28",
-   "change": "time",
-   "was": "2026-10-28T17:00:00-04:00",
-   "now": "2026-10-28T12:00:00-04:00"
+   "was": "2026-11-25T08:00:00-05:00",
+   "now": "2026-11-25T17:00:00-05:00"
   },
   {
    "id": "becf6a3045b1",
@@ -2452,12 +2434,6 @@
    "lastSeen": "2026-10-25T18:47:59-04:00"
   },
   {
-   "id": "6bf03d16161d",
-   "title": "Middle Grade Movie: 'How to Train Your Dragon'",
-   "date": "2026-10-26",
-   "change": "dropped"
-  },
-  {
    "id": "1bee01062d45",
    "title": "Trystan Bates",
    "date": "2026-10-26",
@@ -2472,46 +2448,11 @@
    "lastSeen": "2026-10-25T18:47:59-04:00"
   },
   {
-   "id": "3088e87d8e03",
-   "title": "Craftytown",
-   "date": "2026-10-27",
-   "change": "dropped"
-  },
-  {
-   "id": "49ca0bd930fe",
-   "title": "MATH Help Sessions",
-   "date": "2026-10-27",
-   "change": "dropped"
-  },
-  {
-   "id": "a8e0b185f666",
-   "title": "Evening Book Group",
-   "date": "2026-10-27",
-   "change": "dropped"
-  },
-  {
-   "id": "66a4f45e83b4",
-   "title": "MATH Help Sessions",
+   "id": "6a7ece1d95cf",
+   "title": "BTV City Council Meeting and Insomnia Cookies",
    "date": "2026-10-28",
-   "change": "dropped"
-  },
-  {
-   "id": "047fbcf1fd9c",
-   "title": "Toddlertime",
-   "date": "2026-10-29",
-   "change": "dropped"
-  },
-  {
-   "id": "75ef6b855680",
-   "title": "MATH Help Sessions",
-   "date": "2026-10-29",
-   "change": "dropped"
-  },
-  {
-   "id": "361f5b4d9984",
-   "title": "LEGO Builders",
-   "date": "2026-10-30",
-   "change": "dropped"
+   "change": "missing",
+   "lastSeen": "2026-10-26T12:18:04-04:00"
   },
   {
    "id": "d92aa099cf17",
@@ -2549,23 +2490,11 @@
    "lastSeen": "2026-10-25T09:53:36-04:00"
   },
   {
-   "id": "f8385e2f5b53",
-   "title": "MATH Help Sessions",
-   "date": "2026-11-02",
-   "change": "dropped"
-  },
-  {
    "id": "c8097a10f33b",
    "title": "Ben Lerner - Public Reading and Moderated Conversation",
    "date": "2026-11-02",
    "change": "missing",
    "lastSeen": "2026-10-25T18:47:59-04:00"
-  },
-  {
-   "id": "5ff32f3a3825",
-   "title": "MATH Help Sessions",
-   "date": "2026-11-03",
-   "change": "dropped"
   },
   {
    "id": "b7eb149a3de2",
@@ -2582,12 +2511,6 @@
    "lastSeen": "2026-10-25T18:47:59-04:00"
   },
   {
-   "id": "b850d115642d",
-   "title": "MATH Help Sessions",
-   "date": "2026-11-04",
-   "change": "dropped"
-  },
-  {
    "id": "af0f4e97d6db",
    "title": "Porch Light",
    "date": "2026-11-04",
@@ -2600,12 +2523,6 @@
    "date": "2026-11-04",
    "change": "source-down",
    "lastSeen": "2026-10-07T20:24:11-04:00"
-  },
-  {
-   "id": "8906e688af74",
-   "title": "MATH Help Sessions",
-   "date": "2026-11-05",
-   "change": "dropped"
   },
   {
    "id": "c5c93bd8ff50",
@@ -2629,40 +2546,18 @@
    "lastSeen": "2026-10-24T09:33:48-04:00"
   },
   {
-   "id": "a8196d0b72a3",
-   "title": "Jefferson Hammer",
-   "date": "2026-11-07",
-   "change": "dropped"
-  },
-  {
-   "id": "c869794740ea",
-   "title": "Vets Town Hall: South Burlington, VT",
-   "date": "2026-11-08",
-   "change": "dropped"
-  },
-  {
-   "id": "167bfd958404",
-   "title": "MATH Help Sessions",
-   "date": "2026-11-09",
-   "change": "dropped"
-  },
-  {
-   "id": "bf4dcf9e6cf2",
-   "title": "MATH Help Sessions",
-   "date": "2026-11-10",
-   "change": "dropped"
-  },
-  {
-   "id": "50fca8321fec",
-   "title": "MATH Help Sessions",
+   "id": "5c820b11a748",
+   "title": "Play Time",
    "date": "2026-11-11",
-   "change": "dropped"
+   "change": "missing",
+   "lastSeen": "2026-10-26T12:18:04-04:00"
   },
   {
-   "id": "202168631b0f",
-   "title": "MATH Help Sessions",
-   "date": "2026-11-12",
-   "change": "dropped"
+   "id": "da32301c0624",
+   "title": "Dungeons & Dragons",
+   "date": "2026-11-13",
+   "change": "missing",
+   "lastSeen": "2026-10-26T12:18:04-04:00"
   },
   {
    "id": "e33d0539adce",
@@ -2686,30 +2581,6 @@
    "lastSeen": "2026-10-25T18:47:59-04:00"
   },
   {
-   "id": "ada684707bc0",
-   "title": "MATH Help Sessions",
-   "date": "2026-11-16",
-   "change": "dropped"
-  },
-  {
-   "id": "3759a29b5f8d",
-   "title": "MATH Help Sessions",
-   "date": "2026-11-17",
-   "change": "dropped"
-  },
-  {
-   "id": "16d2586f68ef",
-   "title": "MATH Help Sessions",
-   "date": "2026-11-18",
-   "change": "dropped"
-  },
-  {
-   "id": "c2fb21c26763",
-   "title": "MATH Help Sessions",
-   "date": "2026-11-19",
-   "change": "dropped"
-  },
-  {
    "id": "48c0947d7bac",
    "title": "Jasper Hill Fondue Nights with Special VT Winemakers",
    "date": "2026-11-20",
@@ -2731,6 +2602,20 @@
    "lastSeen": "2026-10-24T09:33:48-04:00"
   },
   {
+   "id": "60696549db63",
+   "title": "The Library closes early due to the Thanksgiving holiday",
+   "date": "2026-11-26",
+   "change": "missing",
+   "lastSeen": "2026-10-26T12:18:04-04:00"
+  },
+  {
+   "id": "32df1d98283d",
+   "title": "Story Time",
+   "date": "2026-11-26",
+   "change": "missing",
+   "lastSeen": "2026-10-26T12:18:04-04:00"
+  },
+  {
    "id": "526796931479",
    "title": "Holiday Jasper Hill Fondue Night",
    "date": "2026-11-28",
@@ -2738,77 +2623,18 @@
    "lastSeen": "2026-10-25T18:47:59-04:00"
   },
   {
-   "id": "fd42ac39974e",
-   "title": "MATH Help Sessions",
-   "date": "2026-11-30",
-   "change": "dropped"
-  },
-  {
-   "id": "df437cb47d22",
-   "title": "The Partial Figure: Visualizing HIV / AIDS",
-   "date": "2026-12-01",
-   "change": "missing",
-   "lastSeen": "2026-10-25T18:47:59-04:00"
-  },
-  {
-   "id": "cf182e60d143",
-   "title": "MATH Help Sessions",
-   "date": "2026-12-01",
-   "change": "dropped"
-  },
-  {
-   "id": "f2762f588188",
-   "title": "MATH Help Sessions",
+   "id": "899a81223e17",
+   "title": "Ladies Book Club - Eleanor Oliphant is Completely Fine",
    "date": "2026-12-02",
-   "change": "dropped"
+   "change": "missing",
+   "lastSeen": "2026-10-26T12:18:04-04:00"
   },
   {
-   "id": "3da775c39bd6",
-   "title": "MATH Help Sessions",
-   "date": "2026-12-03",
-   "change": "dropped"
-  },
-  {
-   "id": "6069fba6e4ce",
-   "title": "MATH Help Sessions",
-   "date": "2026-12-07",
-   "change": "dropped"
-  },
-  {
-   "id": "9700977fd4dc",
-   "title": "Trivia with Craig Mitchell",
-   "date": "2026-12-07",
-   "change": "dropped"
-  },
-  {
-   "id": "39eaab89d2b8",
-   "title": "MATH Help Sessions",
-   "date": "2026-12-08",
-   "change": "dropped"
-  },
-  {
-   "id": "75fc2603dda6",
-   "title": "MATH Help Sessions",
-   "date": "2026-12-09",
-   "change": "dropped"
-  },
-  {
-   "id": "cd68653832c7",
-   "title": "Trivia with Craig Mitchell",
-   "date": "2026-12-14",
-   "change": "dropped"
-  },
-  {
-   "id": "83d55aac4b1a",
-   "title": "Kids Puzzle Swap",
-   "date": "2026-12-16",
-   "change": "dropped"
-  },
-  {
-   "id": "33272ce2dbc4",
-   "title": "Trivia with Craig Mitchell",
-   "date": "2026-12-21",
-   "change": "dropped"
+   "id": "37a4ba5067e6",
+   "title": "Dungeons & Dragons",
+   "date": "2026-12-11",
+   "change": "missing",
+   "lastSeen": "2026-10-26T12:18:04-04:00"
   }
  ]
 }
