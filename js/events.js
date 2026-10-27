@@ -36,6 +36,7 @@
     events: [],          // active events, hydrated
     ongoing: [],         // long-running exhibits/series (tag "ongoing")
     byId: new Map(),
+    along: new Map(),    // event id → open "come along" (a Btown group going), from Up For It's ca_public()
     meta: null,
     view: 'list',
     daysShown: 7,
@@ -191,6 +192,40 @@
     setView(state.view);
     renderAll();
     if (deep) openEvent(deep, { scroll: true });
+  }
+
+  /* ---------------- come along ----------------
+     Up For It's ca_public() lists the open come-alongs: a Btown host taking a
+     group to an event on this calendar. Where one exists for a row we show a
+     chip; nowhere else. Read-only, best effort: a 404 (SQL not pasted yet),
+     an outage or a blocker means no chips and nothing else changes. */
+  const ALONG_URL = 'https://play.btownbrief.com/up-for-it/go/';
+  function loadAlong() {
+    const SB = 'https://jnouvwxomrcffqwilqkq.supabase.co';
+    const KEY = 'sb_publishable_RkMJQopffWlV6DSwCRkndQ_Xw6GJMf3';
+    return fetch(SB + '/rest/v1/rpc/ca_public', {
+      method: 'POST', headers: { apikey: KEY, 'Content-Type': 'application/json' }, body: '{}',
+    })
+      .then((r) => (r.ok ? r.json() : []))
+      .then((rows) => {
+        if (!Array.isArray(rows)) return;
+        const byUrl = new Map();
+        state.events.forEach((e) => { if (e.url) byUrl.set(e.url, e.id); });
+        rows.forEach((a) => {
+          if (!a || !/^[23456789A-HJKMNP-Z]{6}$/.test(a.code || '')) return;
+          const id = (a.event_id && state.byId.has(a.event_id)) ? a.event_id : byUrl.get(a.event_url);
+          if (id && !state.along.has(id)) state.along.set(id, a);
+        });
+        if (state.along.size) renderAll();
+      })
+      .catch(() => {});
+  }
+  function alongHtml(a, { long } = {}) {
+    const href = `${ALONG_URL}?c=${esc(a.code)}`;
+    const n = Number(a.going_count) || 0;
+    const who = n ? ` · ${n} coming` : '';
+    if (long) return `<a class="ev-act ev-act-along" href="${href}" target="_blank" rel="noopener">Going with Btown? → come along${who}</a>`;
+    return `<a class="ev-row-flag ev-along" href="${href}" target="_blank" rel="noopener" title="A Btown host is taking a group. Meet them there.">Going with Btown →</a>`;
   }
 
   function loadWeather() {
@@ -594,6 +629,7 @@
       meta.push(`<span class="ev-row-cat ev-cat-${esc(e.category)}"><span class="ev-dot" aria-hidden="true"></span>${esc(CATEGORY_LABELS[e.category] || e.category)}</span>`);
     const flags = [];
     if (hasTag(e, 'series')) flags.push('<span class="ev-row-flag" title="A weekly regular">↻ regular</span>');
+    if (state.along.has(e.id)) flags.push(alongHtml(state.along.get(e.id)));
     if (e.age && !/all ages/i.test(e.age)) flags.push(`<span class="ev-row-flag">${esc(e.age)}</span>`);
     const metaHtml = meta.join('<span class="ev-sep">·</span>') + (flags.length ? ' ' + flags.join(' ') : '');
 
@@ -696,6 +732,7 @@
     parts.push(
       `<div class="ev-d-actions">` +
         (main ? `<a class="ev-act ev-act-primary" href="${esc(main)}" target="_blank" rel="noopener">Details &amp; tickets ↗</a>` : '') +
+        (state.along.has(e.id) ? alongHtml(state.along.get(e.id), { long: true }) : '') +
         `<a class="ev-act" data-act="gcal" href="${esc(gcalUrl(e))}" target="_blank" rel="noopener">+ Google Cal</a>` +
         `<a class="ev-act" data-act="ics" href="${esc(icsUrl(e))}" download="${esc(slug(e.title))}.ics">+ Apple / .ics</a>` +
         `<button class="ev-act" data-act="share" type="button">Share</button>` +
@@ -1085,6 +1122,6 @@
   }
 
   wire();
-  load();
+  load().then(loadAlong);
   loadWeather();
 })();
