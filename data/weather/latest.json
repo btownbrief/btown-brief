@@ -1,28 +1,28 @@
 {
- "updated": "2026-10-28T13:57:04+00:00",
+ "updated": "2026-10-28T15:17:30+00:00",
  "sections_updated": {
-  "now": "2026-10-28T13:57:04+00:00",
-  "forecast": "2026-10-28T13:57:04+00:00",
-  "hourly": "2026-10-28T13:57:04+00:00",
-  "alerts": "2026-10-28T13:57:04+00:00",
-  "afd": "2026-10-28T13:57:04+00:00",
-  "lake_forecast": "2026-10-28T13:57:04+00:00",
-  "lake_gage": "2026-10-28T13:57:04+00:00",
-  "air": "2026-10-28T13:57:04+00:00",
-  "sun": "2026-10-28T13:57:04+00:00",
-  "models": "2026-10-28T13:57:04+00:00"
+  "now": "2026-10-28T15:17:30+00:00",
+  "forecast": "2026-10-28T15:17:30+00:00",
+  "hourly": "2026-10-28T15:17:30+00:00",
+  "alerts": "2026-10-28T15:17:30+00:00",
+  "afd": "2026-10-28T15:17:30+00:00",
+  "lake_forecast": "2026-10-28T15:17:30+00:00",
+  "lake_gage": "2026-10-28T15:17:30+00:00",
+  "air": "2026-10-28T15:17:30+00:00",
+  "sun": "2026-10-28T15:17:30+00:00",
+  "models": "2026-10-28T15:17:30+00:00"
  },
  "now": {
-  "observed_at": "2026-10-28T13:35:00+00:00",
+  "observed_at": "2026-10-28T14:45:00+00:00",
   "station": "KBTV",
-  "description": "Clear",
-  "temp_f": 37,
-  "feels_like_f": 32,
-  "humidity": 65,
+  "description": "Partly Cloudy",
+  "temp_f": 41,
+  "feels_like_f": 37,
+  "humidity": 56,
   "dewpoint_f": 27,
-  "wind_mph": 7,
+  "wind_mph": 6,
   "wind_gust_mph": null,
-  "wind_dir": "S",
+  "wind_dir": "SSE",
   "precip_last_hr_in": null
  },
  "forecast": {
@@ -30,13 +30,13 @@
   "periods": [
    {
     "name": "Today",
-    "start": "2026-10-28T09:00:00-04:00",
+    "start": "2026-10-28T11:00:00-04:00",
     "is_day": true,
     "temp_f": 53,
     "pop": 7,
-    "wind": "S 6 to 9 mph",
+    "wind": "S 9 mph",
     "short": "Mostly Cloudy",
-    "detailed": "Mostly cloudy, with a high near 53. South wind 6 to 9 mph."
+    "detailed": "Mostly cloudy, with a high near 53. South wind around 9 mph."
    },
    {
     "name": "Tonight",
@@ -173,34 +173,6 @@
  "hourly": {
   "updated": "2026-10-28T06:22:08+00:00",
   "hours": [
-   {
-    "t": "2026-10-28T09:00:00-04:00",
-    "temp_f": 35,
-    "feels_f": 30,
-    "pop": 3,
-    "humidity": 66,
-    "wind_mph": 6,
-    "wind_dir": "S",
-    "sky": 66,
-    "short": "Partly Sunny",
-    "qpf_in": 0.0,
-    "snow_in": 0.0,
-    "gust_mph": 9
-   },
-   {
-    "t": "2026-10-28T10:00:00-04:00",
-    "temp_f": 40,
-    "feels_f": 35,
-    "pop": 5,
-    "humidity": 55,
-    "wind_mph": 7,
-    "wind_dir": "S",
-    "sky": 70,
-    "short": "Mostly Cloudy",
-    "qpf_in": 0.0,
-    "snow_in": 0.0,
-    "gust_mph": 10
-   },
    {
     "t": "2026-10-28T11:00:00-04:00",
     "temp_f": 45,
@@ -676,6 +648,34 @@
     "qpf_in": 0.002,
     "snow_in": 0.0,
     "gust_mph": 24
+   },
+   {
+    "t": "2026-10-29T21:00:00-04:00",
+    "temp_f": 60,
+    "feels_f": 60,
+    "pop": 30,
+    "humidity": 72,
+    "wind_mph": 16,
+    "wind_dir": "S",
+    "sky": 95,
+    "short": "Chance Rain Showers",
+    "qpf_in": 0.002,
+    "snow_in": 0.0,
+    "gust_mph": 25
+   },
+   {
+    "t": "2026-10-29T22:00:00-04:00",
+    "temp_f": 58,
+    "feels_f": 58,
+    "pop": 30,
+    "humidity": 77,
+    "wind_mph": 15,
+    "wind_dir": "S",
+    "sky": 90,
+    "short": "Chance Rain Showers",
+    "qpf_in": 0.002,
+    "snow_in": 0.0,
+    "gust_mph": 24
    }
   ],
   "days": [
@@ -961,17 +961,17 @@
  },
  "lake_gage": {
   "water_temp_f": 52,
-  "water_temp_at": "2026-10-28T09:00:00.000-04:00",
+  "water_temp_at": "2026-10-28T11:00:00.000-04:00",
   "level_ft": 93.98,
-  "level_at": "2026-10-28T09:00:00.000-04:00",
+  "level_at": "2026-10-28T11:00:00.000-04:00",
   "level_status": "normal"
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 28,
+  "aqi": 27,
   "category": "Good",
   "pollutant": "PM2.5",
-  "observed": "10/28/26 9:00",
+  "observed": "10/28/26 11:00",
   "discussion": "On Wednesday October 28th, expect moderate levels of fine particulate matter (PM25), in mountain valley locations such as Rutland, especially in the overnight hours as thermal inversions strengthen.  Expect generally good air quality in the Champlain Valley, higher elevation locations throughout the remainder of the state, and valley locations without air emission sources."
  },
  "sun": {
@@ -986,12 +986,12 @@
    {
     "date": "2026-10-28",
     "high_f": {
-     "GFS": 54,
+     "GFS": 53,
      "Euro": 52,
      "ICON": 51
     },
     "pop_max": {
-     "GFS": 4,
+     "GFS": 7,
      "Euro": 20,
      "ICON": 8
     },
@@ -1000,7 +1000,7 @@
      "Euro": 0.04,
      "ICON": 0.0
     },
-    "high_spread_f": 3
+    "high_spread_f": 2
    },
    {
     "date": "2026-10-29",
@@ -1010,7 +1010,7 @@
      "ICON": 64
     },
     "pop_max": {
-     "GFS": 30,
+     "GFS": 21,
      "Euro": 71,
      "ICON": 25
     },
@@ -1024,17 +1024,17 @@
    {
     "date": "2026-10-30",
     "high_f": {
-     "GFS": 58,
+     "GFS": 60,
      "Euro": 55,
      "ICON": 60
     },
     "pop_max": {
-     "GFS": 30,
+     "GFS": 21,
      "Euro": 75,
      "ICON": 30
     },
     "precip_in": {
-     "GFS": 0.04,
+     "GFS": 0.01,
      "Euro": 0.2,
      "ICON": 0.0
     },
@@ -1044,7 +1044,7 @@
  },
  "brief": {
   "date": "2026-10-28",
-  "generated": "2026-10-28T13:57:07+00:00",
+  "generated": "2026-10-28T15:17:34+00:00",
   "text": "Mostly cloudy today, high 53. Mostly clear tonight, low 43. Thursday, sunny and warmer, high 66.",
   "periods": [
    {
@@ -1053,11 +1053,11 @@
     "is_day": true,
     "temp_f": 53,
     "sky": "mostly cloudy",
-    "start": "2026-10-28T09:00:00-04:00",
+    "start": "2026-10-28T11:00:00-04:00",
     "end": "2026-10-28T18:00:00-04:00",
     "precip": null,
     "wind": null,
-    "feels_lo": 30,
+    "feels_lo": 41,
     "feels_hi": 53,
     "text": "Mostly cloudy today, high 53."
    },
