@@ -1,30 +1,30 @@
 {
- "generated": "2026-10-27T11:31:29-04:00",
+ "generated": "2026-10-27T19:59:30-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
    "count": 7,
-   "seconds": 5.8
+   "seconds": 6.1
   },
   "breweries": {
    "label": "Breweries & Taprooms",
    "count": 75,
-   "seconds": 9.7
+   "seconds": 3.5
   },
   "brownell": {
    "label": "Brownell Library",
    "count": 87,
-   "seconds": 3.8
+   "seconds": 3.3
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
    "count": 191,
-   "seconds": 2.4
+   "seconds": 3.1
   },
   "churchst": {
    "label": "Church Street Marketplace",
    "count": 71,
-   "seconds": 1.6
+   "seconds": 2.0
   },
   "echo": {
    "label": "ECHO Leahy Center",
@@ -44,22 +44,22 @@
   "farmersmarket": {
    "label": "Burlington Farmers Market",
    "count": 1,
-   "seconds": 0.4
+   "seconds": 0.2
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
    "count": 205,
-   "seconds": 74.4
+   "seconds": 68.2
   },
   "flynn": {
    "label": "The Flynn",
    "count": 13,
-   "seconds": 0.5
+   "seconds": 0.4
   },
   "generator": {
    "label": "Generator Makerspace",
    "count": 13,
-   "seconds": 33.3
+   "seconds": 31.7
   },
   "greenfc": {
    "label": "Vermont Green FC",
@@ -69,7 +69,7 @@
   "helloburlington": {
    "label": "Hello Burlington",
    "count": 593,
-   "seconds": 32.9
+   "seconds": 29.3
   },
   "higherground": {
    "label": "Higher Ground",
@@ -78,29 +78,28 @@
   },
   "instagram": {
    "label": "Instagram (Scrape Creators)",
-   "count": 0,
-   "error": "skipped by design: once-daily gate, Instagram fetches on the afternoon run only",
-   "staleDays": 0
+   "count": 2,
+   "seconds": 52.7
   },
   "loveburlington": {
    "label": "Love Burlington",
-   "count": 398,
-   "seconds": 70.3
+   "count": 401,
+   "seconds": 73.4
   },
   "meetup": {
    "label": "Meetup",
    "count": 53,
-   "seconds": 105.2
+   "seconds": 98.9
   },
   "monkeyhouse": {
    "label": "The Monkey House",
-   "count": 22,
-   "seconds": 0.4
+   "count": 23,
+   "seconds": 1.3
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
    "count": 71,
-   "seconds": 16.9
+   "seconds": 15.1
   },
   "radiobean": {
    "label": "Radio Bean",
@@ -116,12 +115,12 @@
   "sbrec": {
    "label": "South Burlington Rec & Parks",
    "count": 16,
-   "seconds": 21.8
+   "seconds": 19.9
   },
   "sevendays": {
    "label": "Seven Days",
-   "count": 2834,
-   "seconds": 25.0
+   "count": 2344,
+   "seconds": 2.8
   },
   "shelburnemuseum": {
    "label": "Shelburne Museum",
@@ -130,42 +129,31 @@
   },
   "uvm": {
    "label": "UVM & Colleges",
-   "count": 454,
-   "seconds": 56.6
+   "count": 462,
+   "seconds": 27.1
   },
   "uvmbored": {
    "label": "UVM Bored",
-   "count": 263,
+   "count": 270,
    "seconds": 0.3
   },
   "vcc": {
    "label": "Vermont Comedy Club",
    "count": 54,
-   "seconds": 73.7
+   "seconds": 67.8
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
    "count": 48,
-   "seconds": 0.6
+   "seconds": 0.2
   }
  },
- "gathered": 5549,
- "afterDedup": 2558,
- "duplicatesMerged": 2991,
- "final": 2588,
- "firecrawlCalls": 6,
+ "gathered": 5080,
+ "afterDedup": 2549,
+ "duplicatesMerged": 2531,
+ "final": 2606,
+ "firecrawlCalls": 1,
  "mergeLog": [
-  {
-   "kept": {
-    "title": "Trivia with Craig Mitchell @ The Monkey House",
-    "source": "monkeyhouse"
-   },
-   "merged_sources": [
-    "monkeyhouse",
-    "sevendays"
-   ],
-   "date": "2026-11-30"
-  },
   {
    "kept": {
     "title": "CAT ECare Training",
@@ -315,6 +303,17 @@
   },
   {
    "kept": {
+    "title": "Let's Talk at WAGE",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-12-01"
+  },
+  {
+   "kept": {
     "title": "UPB Art Attack",
     "source": "uvm"
    },
@@ -357,17 +356,6 @@
     "sevendays"
    ],
    "date": "2026-12-01"
-  },
-  {
-   "kept": {
-    "title": "Standup Open Mic",
-    "source": "vcc"
-   },
-   "merged_sources": [
-    "sevendays",
-    "vcc"
-   ],
-   "date": "2026-12-02"
   },
   {
    "kept": {
@@ -1091,6 +1079,17 @@
   },
   {
    "kept": {
+    "title": "Let's Talk at WAGE",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-12-08"
+  },
+  {
+   "kept": {
     "title": "UPB Art Attack",
     "source": "uvm"
    },
@@ -1794,6 +1793,17 @@
   },
   {
    "kept": {
+    "title": "Let's Talk at WAGE",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-12-15"
+  },
+  {
+   "kept": {
     "title": "802sDay",
     "source": "loveburlington"
    },
@@ -1834,17 +1844,6 @@
    "merged_sources": [
     "sblibrary",
     "sevendays"
-   ],
-   "date": "2026-12-16"
-  },
-  {
-   "kept": {
-    "title": "Standup Open Mic",
-    "source": "vcc"
-   },
-   "merged_sources": [
-    "sevendays",
-    "vcc"
    ],
    "date": "2026-12-16"
   },
@@ -2411,20 +2410,12 @@
  ],
  "changes": [
   {
-   "id": "f1ea3fd458cb",
-   "title": "Crosstalk between tumor extracellular vesicles with cells at distant organ sites supporting metastasis and systemic disease",
-   "date": "2026-11-11",
+   "id": "36e307f1ad6e",
+   "title": "The Magic School Bus",
+   "date": "2026-12-09",
    "change": "time",
-   "was": "2026-11-11T12:00:00-05:00",
-   "now": "2026-11-11T10:30:00-05:00"
-  },
-  {
-   "id": "49dd402fd349",
-   "title": "A Civic Reads Conversation with Author Dr. Lindsay Owens",
-   "date": "2026-11-30",
-   "change": "time",
-   "was": "2026-11-30T18:30:00-05:00",
-   "now": "2026-11-30T17:30:00-05:00"
+   "was": "2026-12-09T17:00:00-05:00",
+   "now": "2026-12-09T18:00:00-05:00"
   },
   {
    "id": "08ba73a94d6a",
@@ -2439,6 +2430,62 @@
    "date": "2026-10-27",
    "change": "missing",
    "lastSeen": "2026-10-26T20:04:15-04:00"
+  },
+  {
+   "id": "66726d69ddf0",
+   "title": "Art at City Hall: Community Steamroller Block Prints",
+   "date": "2026-10-27",
+   "change": "missing",
+   "lastSeen": "2026-10-27T11:31:29-04:00"
+  },
+  {
+   "id": "05ef80cffb5e",
+   "title": "Art at the Hospital: Kari Meyer",
+   "date": "2026-10-27",
+   "change": "missing",
+   "lastSeen": "2026-10-27T11:31:29-04:00"
+  },
+  {
+   "id": "72c588d1bd9f",
+   "title": "Art at the Airport: Carol Boucher",
+   "date": "2026-10-27",
+   "change": "missing",
+   "lastSeen": "2026-10-27T11:31:29-04:00"
+  },
+  {
+   "id": "786f9307c7d9",
+   "title": "Art at the Hospital: Lorraine Manley",
+   "date": "2026-10-27",
+   "change": "missing",
+   "lastSeen": "2026-10-27T11:31:29-04:00"
+  },
+  {
+   "id": "dfaf63ea0f73",
+   "title": "Art at the Hospital: Kelly O'Neal",
+   "date": "2026-10-27",
+   "change": "missing",
+   "lastSeen": "2026-10-27T11:31:29-04:00"
+  },
+  {
+   "id": "1e2ceb618a88",
+   "title": "Art at the Hospital: Trevor Tebbs",
+   "date": "2026-10-27",
+   "change": "missing",
+   "lastSeen": "2026-10-27T11:31:29-04:00"
+  },
+  {
+   "id": "ec47766844e8",
+   "title": "Art at the Hospital: Robert Waldo Brunelle Jr.",
+   "date": "2026-10-27",
+   "change": "missing",
+   "lastSeen": "2026-10-27T11:31:29-04:00"
+  },
+  {
+   "id": "854a7b19a934",
+   "title": "Art at the Hospital: Carol Boucher",
+   "date": "2026-10-27",
+   "change": "missing",
+   "lastSeen": "2026-10-27T11:31:29-04:00"
   },
   {
    "id": "4f3400eb36df",
@@ -2462,10 +2509,74 @@
    "lastSeen": "2026-10-26T12:18:04-04:00"
   },
   {
-   "id": "d92aa099cf17",
-   "title": "BTown Coffee Club x Social Pulse",
-   "date": "2026-10-31",
-   "change": "dropped"
+   "id": "49ac50b54abe",
+   "title": "Lincoln Sprague",
+   "date": "2026-10-29",
+   "change": "missing",
+   "lastSeen": "2026-10-27T11:31:29-04:00"
+  },
+  {
+   "id": "5c766a054e06",
+   "title": "Bob Cotton",
+   "date": "2026-10-29",
+   "change": "missing",
+   "lastSeen": "2026-10-27T11:31:29-04:00"
+  },
+  {
+   "id": "50c59aa2231e",
+   "title": "Improv Class Show",
+   "date": "2026-10-29",
+   "change": "missing",
+   "lastSeen": "2026-10-27T11:31:29-04:00"
+  },
+  {
+   "id": "5e420fde54dc",
+   "title": "Barbacoa Plays the Ramones",
+   "date": "2026-10-29",
+   "change": "missing",
+   "lastSeen": "2026-10-27T11:31:29-04:00"
+  },
+  {
+   "id": "7b4e9a5cf634",
+   "title": "TwoSev, JP Black, Xavier, Chaston",
+   "date": "2026-10-29",
+   "change": "missing",
+   "lastSeen": "2026-10-27T11:31:29-04:00"
+  },
+  {
+   "id": "b37a2ac5a487",
+   "title": "We Bite",
+   "date": "2026-10-29",
+   "change": "missing",
+   "lastSeen": "2026-10-27T11:31:29-04:00"
+  },
+  {
+   "id": "ffaecf61bda4",
+   "title": "Barbacoa",
+   "date": "2026-10-30",
+   "change": "missing",
+   "lastSeen": "2026-10-27T11:31:29-04:00"
+  },
+  {
+   "id": "b7c172e222a6",
+   "title": "Mitch & Devon",
+   "date": "2026-10-30",
+   "change": "missing",
+   "lastSeen": "2026-10-27T11:31:29-04:00"
+  },
+  {
+   "id": "a9fdaf0dd956",
+   "title": "Jonathan \"Doc\" Kaplan",
+   "date": "2026-10-30",
+   "change": "missing",
+   "lastSeen": "2026-10-27T11:31:29-04:00"
+  },
+  {
+   "id": "6bf99fb1ec5f",
+   "title": "OK Commuter",
+   "date": "2026-10-30",
+   "change": "missing",
+   "lastSeen": "2026-10-27T11:31:29-04:00"
   },
   {
    "id": "7147b479295c",
@@ -2503,6 +2614,20 @@
    "lastSeen": "2026-10-25T18:47:59-04:00"
   },
   {
+   "id": "c79293771878",
+   "title": "Mindfulness Meditation with The Writing Center featuring FirstGen@UVM",
+   "date": "2026-11-03",
+   "change": "missing",
+   "lastSeen": "2026-10-27T11:31:29-04:00"
+  },
+  {
+   "id": "021bd5164e9f",
+   "title": "Rainbow Loom with SGA",
+   "date": "2026-11-03",
+   "change": "missing",
+   "lastSeen": "2026-10-27T11:31:29-04:00"
+  },
+  {
    "id": "b7eb149a3de2",
    "title": "Giles Corey",
    "date": "2026-11-03",
@@ -2515,6 +2640,20 @@
    "date": "2026-11-03",
    "change": "missing",
    "lastSeen": "2026-10-25T18:47:59-04:00"
+  },
+  {
+   "id": "4de0cd4a510d",
+   "title": "Button Making Social with Prism",
+   "date": "2026-11-04",
+   "change": "missing",
+   "lastSeen": "2026-10-27T11:31:29-04:00"
+  },
+  {
+   "id": "bfb6fcb32bf3",
+   "title": "Cooking with First-Gen",
+   "date": "2026-11-04",
+   "change": "missing",
+   "lastSeen": "2026-10-27T11:31:29-04:00"
   },
   {
    "id": "0e4ad4617d0c",
@@ -2545,11 +2684,32 @@
    "lastSeen": "2026-10-26T20:04:15-04:00"
   },
   {
+   "id": "4eb64205f710",
+   "title": "Jeopardy with First-Gen",
+   "date": "2026-11-05",
+   "change": "missing",
+   "lastSeen": "2026-10-27T11:31:29-04:00"
+  },
+  {
+   "id": "7383e0872216",
+   "title": "UVM Engineering and Technology Fair",
+   "date": "2026-11-05",
+   "change": "missing",
+   "lastSeen": "2026-10-27T11:31:29-04:00"
+  },
+  {
    "id": "c5c93bd8ff50",
    "title": "The Lowest Pair",
    "date": "2026-11-05",
    "change": "source-down",
    "lastSeen": "2026-10-07T20:24:11-04:00"
+  },
+  {
+   "id": "c93795f9be9e",
+   "title": "Power Hour Cycling Class",
+   "date": "2026-11-06",
+   "change": "missing",
+   "lastSeen": "2026-10-27T11:31:29-04:00"
   },
   {
    "id": "94341ab871aa",
@@ -2559,17 +2719,18 @@
    "lastSeen": "2026-10-25T18:47:59-04:00"
   },
   {
-   "id": "652d03721837",
-   "title": "BTown Coffee Club x Social Pulse",
-   "date": "2026-11-07",
-   "change": "dropped"
-  },
-  {
    "id": "5c820b11a748",
    "title": "Play Time",
    "date": "2026-11-11",
    "change": "missing",
    "lastSeen": "2026-10-26T12:18:04-04:00"
+  },
+  {
+   "id": "908eec694f66",
+   "title": "Standup Open Mic",
+   "date": "2026-11-11",
+   "change": "missing",
+   "lastSeen": "2026-10-27T11:31:29-04:00"
   },
   {
    "id": "da32301c0624",
@@ -2584,12 +2745,6 @@
    "date": "2026-11-13",
    "change": "missing",
    "lastSeen": "2026-10-25T18:47:59-04:00"
-  },
-  {
-   "id": "976a2a813e54",
-   "title": "BTown Coffee Club x Social Pulse",
-   "date": "2026-11-14",
-   "change": "dropped"
   },
   {
    "id": "fddc2d8eddff",
@@ -2613,10 +2768,11 @@
    "lastSeen": "2026-10-25T18:47:59-04:00"
   },
   {
-   "id": "03811bb47797",
-   "title": "BTown Coffee Club x Social Pulse",
-   "date": "2026-11-21",
-   "change": "dropped"
+   "id": "5484f0e47a04",
+   "title": "Standup Open Mic",
+   "date": "2026-11-25",
+   "change": "missing",
+   "lastSeen": "2026-10-27T11:31:29-04:00"
   },
   {
    "id": "60696549db63",
@@ -2640,11 +2796,25 @@
    "lastSeen": "2026-10-25T18:47:59-04:00"
   },
   {
+   "id": "b3d386dbee2d",
+   "title": "Standup Open Mic",
+   "date": "2026-12-09",
+   "change": "missing",
+   "lastSeen": "2026-10-27T11:31:29-04:00"
+  },
+  {
    "id": "37a4ba5067e6",
    "title": "Dungeons & Dragons",
    "date": "2026-12-11",
    "change": "missing",
    "lastSeen": "2026-10-26T12:18:04-04:00"
+  },
+  {
+   "id": "0ca4a0c895e7",
+   "title": "Standup Open Mic",
+   "date": "2026-12-23",
+   "change": "missing",
+   "lastSeen": "2026-10-27T11:31:29-04:00"
   }
  ]
 }
