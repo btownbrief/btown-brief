@@ -1,30 +1,30 @@
 {
- "generated": "2026-10-27T19:59:30-04:00",
+ "generated": "2026-10-28T12:15:14-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
-   "count": 7,
-   "seconds": 6.1
+   "count": 8,
+   "seconds": 6.3
   },
   "breweries": {
    "label": "Breweries & Taprooms",
-   "count": 75,
-   "seconds": 3.5
+   "count": 77,
+   "seconds": 7.6
   },
   "brownell": {
    "label": "Brownell Library",
-   "count": 87,
-   "seconds": 3.3
+   "count": 85,
+   "seconds": 4.2
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
-   "count": 191,
-   "seconds": 3.1
+   "count": 186,
+   "seconds": 3.2
   },
   "churchst": {
    "label": "Church Street Marketplace",
-   "count": 71,
-   "seconds": 2.0
+   "count": 70,
+   "seconds": 1.7
   },
   "echo": {
    "label": "ECHO Leahy Center",
@@ -34,7 +34,7 @@
   "eventbrite": {
    "label": "Eventbrite",
    "count": 0,
-   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-10-27&end_date=2026-12-26&page=1 (HTTP Error 405: Not Allowed)"
+   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-10-28&end_date=2026-12-27&page=1 (HTTP Error 405: Not Allowed)"
   },
   "facebook": {
    "label": "Facebook (manual drops)",
@@ -44,22 +44,22 @@
   "farmersmarket": {
    "label": "Burlington Farmers Market",
    "count": 1,
-   "seconds": 0.2
+   "seconds": 0.3
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
-   "count": 205,
-   "seconds": 68.2
+   "count": 201,
+   "seconds": 65.7
   },
   "flynn": {
    "label": "The Flynn",
-   "count": 13,
+   "count": 12,
    "seconds": 0.4
   },
   "generator": {
    "label": "Generator Makerspace",
-   "count": 13,
-   "seconds": 31.7
+   "count": 10,
+   "seconds": 31.0
   },
   "greenfc": {
    "label": "Vermont Green FC",
@@ -68,8 +68,8 @@
   },
   "helloburlington": {
    "label": "Hello Burlington",
-   "count": 593,
-   "seconds": 29.3
+   "count": 600,
+   "seconds": 29.6
   },
   "higherground": {
    "label": "Higher Ground",
@@ -79,48 +79,48 @@
   "instagram": {
    "label": "Instagram (Scrape Creators)",
    "count": 2,
-   "seconds": 52.7
+   "seconds": 50.8
   },
   "loveburlington": {
    "label": "Love Burlington",
-   "count": 401,
-   "seconds": 73.4
+   "count": 393,
+   "seconds": 73.1
   },
   "meetup": {
    "label": "Meetup",
    "count": 53,
-   "seconds": 98.9
+   "seconds": 95.7
   },
   "monkeyhouse": {
    "label": "The Monkey House",
-   "count": 23,
+   "count": 22,
    "seconds": 1.3
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
-   "count": 71,
-   "seconds": 15.1
+   "count": 70,
+   "seconds": 22.4
   },
   "radiobean": {
    "label": "Radio Bean",
    "count": 0,
    "error": "HTTP Error 404: Not Found",
-   "staleDays": 19
+   "staleDays": 20
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
    "count": 80,
-   "seconds": 2.3
+   "seconds": 2.6
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
-   "count": 16,
-   "seconds": 19.9
+   "count": 15,
+   "seconds": 19.7
   },
   "sevendays": {
    "label": "Seven Days",
-   "count": 2344,
-   "seconds": 2.8
+   "count": 2809,
+   "seconds": 26.6
   },
   "shelburnemuseum": {
    "label": "Shelburne Museum",
@@ -129,123 +129,31 @@
   },
   "uvm": {
    "label": "UVM & Colleges",
-   "count": 462,
-   "seconds": 27.1
+   "count": 470,
+   "seconds": 45.8
   },
   "uvmbored": {
    "label": "UVM Bored",
-   "count": 270,
-   "seconds": 0.3
+   "count": 287,
+   "seconds": 0.2
   },
   "vcc": {
    "label": "Vermont Comedy Club",
    "count": 54,
-   "seconds": 67.8
+   "seconds": 69.0
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
-   "count": 48,
+   "count": 46,
    "seconds": 0.2
   }
  },
- "gathered": 5080,
- "afterDedup": 2549,
- "duplicatesMerged": 2531,
- "final": 2606,
- "firecrawlCalls": 1,
+ "gathered": 5551,
+ "afterDedup": 2586,
+ "duplicatesMerged": 2965,
+ "final": 2642,
+ "firecrawlCalls": 5,
  "mergeLog": [
-  {
-   "kept": {
-    "title": "CAT ECare Training",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-11-30"
-  },
-  {
-   "kept": {
-    "title": "Bonobo at Higher Ground",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "helloburlington",
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-11-30"
-  },
-  {
-   "kept": {
-    "title": "Industry Day",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-11-30"
-  },
-  {
-   "kept": {
-    "title": "'Very Eric Carle' Exhibit",
-    "source": "sevendays"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "sevendays"
-   ],
-   "date": "2026-11-30"
-  },
-  {
-   "kept": {
-    "title": "Sing-Along with Linda Bassick",
-    "source": "fletcherfree"
-   },
-   "merged_sources": [
-    "fletcherfree",
-    "loveburlington",
-    "sevendays"
-   ],
-   "date": "2026-12-01"
-  },
-  {
-   "kept": {
-    "title": "Spanish Conversation",
-    "source": "fletcherfree"
-   },
-   "merged_sources": [
-    "fletcherfree",
-    "loveburlington",
-    "sevendays"
-   ],
-   "date": "2026-12-01"
-  },
-  {
-   "kept": {
-    "title": "Crafters Drop-In",
-    "source": "fletcherfree"
-   },
-   "merged_sources": [
-    "fletcherfree",
-    "loveburlington"
-   ],
-   "date": "2026-12-01"
-  },
-  {
-   "kept": {
-    "title": "Super Smash Tuesdays",
-    "source": "churchst"
-   },
-   "merged_sources": [
-    "churchst",
-    "loveburlington"
-   ],
-   "date": "2026-12-01"
-  },
   {
    "kept": {
     "title": "Monthly Interfaith Breakfast with Chi Alpha",
@@ -356,6 +264,17 @@
     "sevendays"
    ],
    "date": "2026-12-01"
+  },
+  {
+   "kept": {
+    "title": "Standup Open Mic",
+    "source": "vcc"
+   },
+   "merged_sources": [
+    "sevendays",
+    "vcc"
+   ],
+   "date": "2026-12-02"
   },
   {
    "kept": {
@@ -660,6 +579,17 @@
   },
   {
    "kept": {
+    "title": "Yoga with Hayki at Reststop",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-12-04"
+  },
+  {
+   "kept": {
     "title": "Welcome to Night Vale at Higher Ground",
     "source": "uvm"
    },
@@ -949,6 +879,17 @@
    "merged_sources": [
     "monkeyhouse",
     "sevendays"
+   ],
+   "date": "2026-12-07"
+  },
+  {
+   "kept": {
+    "title": "Yoga with Hayki at Reststop",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
    ],
    "date": "2026-12-07"
   },
@@ -1428,6 +1369,17 @@
   },
   {
    "kept": {
+    "title": "Yoga with Hayki at Reststop",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-12-11"
+  },
+  {
+   "kept": {
     "title": "Board Game Night",
     "source": "uvm"
    },
@@ -1619,6 +1571,17 @@
    "merged_sources": [
     "fletcherfree",
     "sevendays"
+   ],
+   "date": "2026-12-13"
+  },
+  {
+   "kept": {
+    "title": "5K Fun Run/Walk: Ugly Sweater Run Adult Registration 2026",
+    "source": "sbrec"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "sbrec"
    ],
    "date": "2026-12-13"
   },
@@ -1844,6 +1807,17 @@
    "merged_sources": [
     "sblibrary",
     "sevendays"
+   ],
+   "date": "2026-12-16"
+  },
+  {
+   "kept": {
+    "title": "Standup Open Mic",
+    "source": "vcc"
+   },
+   "merged_sources": [
+    "sevendays",
+    "vcc"
    ],
    "date": "2026-12-16"
   },
@@ -2398,6 +2372,17 @@
   },
   {
    "kept": {
+    "title": "Sculpt HIIT and Flow",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-12-26"
+  },
+  {
+   "kept": {
     "title": "'Very Eric Carle' Exhibit",
     "source": "sevendays"
    },
@@ -2406,100 +2391,40 @@
     "sevendays"
    ],
    "date": "2026-12-26"
+  },
+  {
+   "kept": {
+    "title": "'Very Eric Carle' Exhibit",
+    "source": "sevendays"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "sevendays"
+   ],
+   "date": "2026-12-27"
   }
  ],
  "changes": [
   {
-   "id": "36e307f1ad6e",
-   "title": "The Magic School Bus",
-   "date": "2026-12-09",
-   "change": "time",
-   "was": "2026-12-09T17:00:00-05:00",
-   "now": "2026-12-09T18:00:00-05:00"
+   "id": "d3c969f93541",
+   "title": "Public Skate",
+   "date": "2026-10-28",
+   "change": "missing",
+   "lastSeen": "2026-10-27T19:59:30-04:00"
   },
   {
-   "id": "08ba73a94d6a",
-   "title": "Tech Tuesdays - Breakfast",
-   "date": "2026-10-27",
+   "id": "4a4ee314483d",
+   "title": "Stick & Puck",
+   "date": "2026-10-28",
    "change": "missing",
-   "lastSeen": "2026-10-26T20:04:15-04:00"
+   "lastSeen": "2026-10-27T19:59:30-04:00"
   },
   {
-   "id": "2ca7355af555",
-   "title": "Burlington Bitcoin Meetup - @ Zero Gravity",
-   "date": "2026-10-27",
+   "id": "44d1e3b730bd",
+   "title": "Retro Study Hall!",
+   "date": "2026-10-28",
    "change": "missing",
-   "lastSeen": "2026-10-26T20:04:15-04:00"
-  },
-  {
-   "id": "66726d69ddf0",
-   "title": "Art at City Hall: Community Steamroller Block Prints",
-   "date": "2026-10-27",
-   "change": "missing",
-   "lastSeen": "2026-10-27T11:31:29-04:00"
-  },
-  {
-   "id": "05ef80cffb5e",
-   "title": "Art at the Hospital: Kari Meyer",
-   "date": "2026-10-27",
-   "change": "missing",
-   "lastSeen": "2026-10-27T11:31:29-04:00"
-  },
-  {
-   "id": "72c588d1bd9f",
-   "title": "Art at the Airport: Carol Boucher",
-   "date": "2026-10-27",
-   "change": "missing",
-   "lastSeen": "2026-10-27T11:31:29-04:00"
-  },
-  {
-   "id": "786f9307c7d9",
-   "title": "Art at the Hospital: Lorraine Manley",
-   "date": "2026-10-27",
-   "change": "missing",
-   "lastSeen": "2026-10-27T11:31:29-04:00"
-  },
-  {
-   "id": "dfaf63ea0f73",
-   "title": "Art at the Hospital: Kelly O'Neal",
-   "date": "2026-10-27",
-   "change": "missing",
-   "lastSeen": "2026-10-27T11:31:29-04:00"
-  },
-  {
-   "id": "1e2ceb618a88",
-   "title": "Art at the Hospital: Trevor Tebbs",
-   "date": "2026-10-27",
-   "change": "missing",
-   "lastSeen": "2026-10-27T11:31:29-04:00"
-  },
-  {
-   "id": "ec47766844e8",
-   "title": "Art at the Hospital: Robert Waldo Brunelle Jr.",
-   "date": "2026-10-27",
-   "change": "missing",
-   "lastSeen": "2026-10-27T11:31:29-04:00"
-  },
-  {
-   "id": "854a7b19a934",
-   "title": "Art at the Hospital: Carol Boucher",
-   "date": "2026-10-27",
-   "change": "missing",
-   "lastSeen": "2026-10-27T11:31:29-04:00"
-  },
-  {
-   "id": "4f3400eb36df",
-   "title": "Trystan Bates",
-   "date": "2026-10-27",
-   "change": "missing",
-   "lastSeen": "2026-10-26T20:04:15-04:00"
-  },
-  {
-   "id": "01964b768863",
-   "title": "Kathleen Schneider",
-   "date": "2026-10-27",
-   "change": "missing",
-   "lastSeen": "2026-10-26T20:04:15-04:00"
+   "lastSeen": "2026-10-27T19:59:30-04:00"
   },
   {
    "id": "6a7ece1d95cf",
@@ -2509,74 +2434,25 @@
    "lastSeen": "2026-10-26T12:18:04-04:00"
   },
   {
-   "id": "49ac50b54abe",
-   "title": "Lincoln Sprague",
+   "id": "c895f31934a6",
+   "title": "Trystan Bates",
+   "date": "2026-10-28",
+   "change": "missing",
+   "lastSeen": "2026-10-27T19:59:30-04:00"
+  },
+  {
+   "id": "26c46b00a722",
+   "title": "Kathleen Schneider",
+   "date": "2026-10-28",
+   "change": "missing",
+   "lastSeen": "2026-10-27T19:59:30-04:00"
+  },
+  {
+   "id": "facf1687421d",
+   "title": "Retro Study Hall!",
    "date": "2026-10-29",
    "change": "missing",
-   "lastSeen": "2026-10-27T11:31:29-04:00"
-  },
-  {
-   "id": "5c766a054e06",
-   "title": "Bob Cotton",
-   "date": "2026-10-29",
-   "change": "missing",
-   "lastSeen": "2026-10-27T11:31:29-04:00"
-  },
-  {
-   "id": "50c59aa2231e",
-   "title": "Improv Class Show",
-   "date": "2026-10-29",
-   "change": "missing",
-   "lastSeen": "2026-10-27T11:31:29-04:00"
-  },
-  {
-   "id": "5e420fde54dc",
-   "title": "Barbacoa Plays the Ramones",
-   "date": "2026-10-29",
-   "change": "missing",
-   "lastSeen": "2026-10-27T11:31:29-04:00"
-  },
-  {
-   "id": "7b4e9a5cf634",
-   "title": "TwoSev, JP Black, Xavier, Chaston",
-   "date": "2026-10-29",
-   "change": "missing",
-   "lastSeen": "2026-10-27T11:31:29-04:00"
-  },
-  {
-   "id": "b37a2ac5a487",
-   "title": "We Bite",
-   "date": "2026-10-29",
-   "change": "missing",
-   "lastSeen": "2026-10-27T11:31:29-04:00"
-  },
-  {
-   "id": "ffaecf61bda4",
-   "title": "Barbacoa",
-   "date": "2026-10-30",
-   "change": "missing",
-   "lastSeen": "2026-10-27T11:31:29-04:00"
-  },
-  {
-   "id": "b7c172e222a6",
-   "title": "Mitch & Devon",
-   "date": "2026-10-30",
-   "change": "missing",
-   "lastSeen": "2026-10-27T11:31:29-04:00"
-  },
-  {
-   "id": "a9fdaf0dd956",
-   "title": "Jonathan \"Doc\" Kaplan",
-   "date": "2026-10-30",
-   "change": "missing",
-   "lastSeen": "2026-10-27T11:31:29-04:00"
-  },
-  {
-   "id": "6bf99fb1ec5f",
-   "title": "OK Commuter",
-   "date": "2026-10-30",
-   "change": "missing",
-   "lastSeen": "2026-10-27T11:31:29-04:00"
+   "lastSeen": "2026-10-27T19:59:30-04:00"
   },
   {
    "id": "7147b479295c",
@@ -2603,8 +2479,7 @@
    "id": "04052b69b88e",
    "title": "Saru",
    "date": "2026-11-01",
-   "change": "missing",
-   "lastSeen": "2026-10-25T09:53:36-04:00"
+   "change": "dropped"
   },
   {
    "id": "c8097a10f33b",
@@ -2612,6 +2487,13 @@
    "date": "2026-11-02",
    "change": "missing",
    "lastSeen": "2026-10-25T18:47:59-04:00"
+  },
+  {
+   "id": "44839d2e93d1",
+   "title": "Retro Study Hall!",
+   "date": "2026-11-03",
+   "change": "missing",
+   "lastSeen": "2026-10-27T19:59:30-04:00"
   },
   {
    "id": "c79293771878",
@@ -2642,15 +2524,15 @@
    "lastSeen": "2026-10-25T18:47:59-04:00"
   },
   {
-   "id": "4de0cd4a510d",
-   "title": "Button Making Social with Prism",
+   "id": "aff1f567ee1d",
+   "title": "Retro Study Hall!",
    "date": "2026-11-04",
    "change": "missing",
-   "lastSeen": "2026-10-27T11:31:29-04:00"
+   "lastSeen": "2026-10-27T19:59:30-04:00"
   },
   {
-   "id": "bfb6fcb32bf3",
-   "title": "Cooking with First-Gen",
+   "id": "4de0cd4a510d",
+   "title": "Button Making Social with Prism",
    "date": "2026-11-04",
    "change": "missing",
    "lastSeen": "2026-10-27T11:31:29-04:00"
@@ -2698,6 +2580,13 @@
    "lastSeen": "2026-10-27T11:31:29-04:00"
   },
   {
+   "id": "7f9bf5f36055",
+   "title": "Retro Study Hall!",
+   "date": "2026-11-05",
+   "change": "missing",
+   "lastSeen": "2026-10-27T19:59:30-04:00"
+  },
+  {
    "id": "c5c93bd8ff50",
    "title": "The Lowest Pair",
    "date": "2026-11-05",
@@ -2705,11 +2594,11 @@
    "lastSeen": "2026-10-07T20:24:11-04:00"
   },
   {
-   "id": "c93795f9be9e",
-   "title": "Power Hour Cycling Class",
+   "id": "f8889b65eb66",
+   "title": "Pack the Gut: Women's Hockey v.s. Northeastern",
    "date": "2026-11-06",
    "change": "missing",
-   "lastSeen": "2026-10-27T11:31:29-04:00"
+   "lastSeen": "2026-10-27T19:59:30-04:00"
   },
   {
    "id": "94341ab871aa",
@@ -2719,6 +2608,13 @@
    "lastSeen": "2026-10-25T18:47:59-04:00"
   },
   {
+   "id": "3b829748f6e0",
+   "title": "Retro Study Hall!",
+   "date": "2026-11-10",
+   "change": "missing",
+   "lastSeen": "2026-10-27T19:59:30-04:00"
+  },
+  {
    "id": "5c820b11a748",
    "title": "Play Time",
    "date": "2026-11-11",
@@ -2726,11 +2622,18 @@
    "lastSeen": "2026-10-26T12:18:04-04:00"
   },
   {
-   "id": "908eec694f66",
-   "title": "Standup Open Mic",
+   "id": "d9498697be2a",
+   "title": "Retro Study Hall!",
    "date": "2026-11-11",
    "change": "missing",
-   "lastSeen": "2026-10-27T11:31:29-04:00"
+   "lastSeen": "2026-10-27T19:59:30-04:00"
+  },
+  {
+   "id": "dd98c4255e05",
+   "title": "Retro Study Hall!",
+   "date": "2026-11-12",
+   "change": "missing",
+   "lastSeen": "2026-10-27T19:59:30-04:00"
   },
   {
    "id": "da32301c0624",
@@ -2754,6 +2657,27 @@
    "lastSeen": "2026-10-25T18:47:59-04:00"
   },
   {
+   "id": "71b908e81e94",
+   "title": "Retro Study Hall!",
+   "date": "2026-11-17",
+   "change": "missing",
+   "lastSeen": "2026-10-27T19:59:30-04:00"
+  },
+  {
+   "id": "7a5702b0f123",
+   "title": "Retro Study Hall!",
+   "date": "2026-11-18",
+   "change": "missing",
+   "lastSeen": "2026-10-27T19:59:30-04:00"
+  },
+  {
+   "id": "6086afc3430b",
+   "title": "Retro Study Hall!",
+   "date": "2026-11-19",
+   "change": "missing",
+   "lastSeen": "2026-10-27T19:59:30-04:00"
+  },
+  {
    "id": "48c0947d7bac",
    "title": "Jasper Hill Fondue Nights with Special VT Winemakers",
    "date": "2026-11-20",
@@ -2768,11 +2692,18 @@
    "lastSeen": "2026-10-25T18:47:59-04:00"
   },
   {
-   "id": "5484f0e47a04",
-   "title": "Standup Open Mic",
+   "id": "6af9ce4bac0a",
+   "title": "Retro Study Hall!",
+   "date": "2026-11-24",
+   "change": "missing",
+   "lastSeen": "2026-10-27T19:59:30-04:00"
+  },
+  {
+   "id": "7fdaee6574a5",
+   "title": "Retro Study Hall!",
    "date": "2026-11-25",
    "change": "missing",
-   "lastSeen": "2026-10-27T11:31:29-04:00"
+   "lastSeen": "2026-10-27T19:59:30-04:00"
   },
   {
    "id": "60696549db63",
@@ -2789,6 +2720,13 @@
    "lastSeen": "2026-10-26T12:18:04-04:00"
   },
   {
+   "id": "843a5cc75481",
+   "title": "Retro Study Hall!",
+   "date": "2026-11-26",
+   "change": "missing",
+   "lastSeen": "2026-10-27T19:59:30-04:00"
+  },
+  {
    "id": "526796931479",
    "title": "Holiday Jasper Hill Fondue Night",
    "date": "2026-11-28",
@@ -2796,11 +2734,53 @@
    "lastSeen": "2026-10-25T18:47:59-04:00"
   },
   {
-   "id": "b3d386dbee2d",
-   "title": "Standup Open Mic",
+   "id": "b50982dfcd77",
+   "title": "Retro Study Hall!",
+   "date": "2026-12-01",
+   "change": "missing",
+   "lastSeen": "2026-10-27T19:59:30-04:00"
+  },
+  {
+   "id": "b2bd3bcaa156",
+   "title": "Retro Study Hall!",
+   "date": "2026-12-02",
+   "change": "missing",
+   "lastSeen": "2026-10-27T19:59:30-04:00"
+  },
+  {
+   "id": "9b5eea99fa56",
+   "title": "State of the research on legume-only polyculture ft. Sandi Dincki",
+   "date": "2026-12-03",
+   "change": "missing",
+   "lastSeen": "2026-10-27T19:59:30-04:00"
+  },
+  {
+   "id": "dc67245a4122",
+   "title": "Retro Study Hall!",
+   "date": "2026-12-03",
+   "change": "missing",
+   "lastSeen": "2026-10-27T19:59:30-04:00"
+  },
+  {
+   "id": "ae6eb425e5b0",
+   "title": "Retro Study Hall!",
+   "date": "2026-12-08",
+   "change": "missing",
+   "lastSeen": "2026-10-27T19:59:30-04:00"
+  },
+  {
+   "id": "6980beec1a14",
+   "title": "Retro Study Hall!",
    "date": "2026-12-09",
    "change": "missing",
-   "lastSeen": "2026-10-27T11:31:29-04:00"
+   "lastSeen": "2026-10-27T19:59:30-04:00"
+  },
+  {
+   "id": "18b59598f52d",
+   "title": "Retro Study Hall!",
+   "date": "2026-12-10",
+   "change": "missing",
+   "lastSeen": "2026-10-27T19:59:30-04:00"
   },
   {
    "id": "37a4ba5067e6",
@@ -2810,11 +2790,18 @@
    "lastSeen": "2026-10-26T12:18:04-04:00"
   },
   {
-   "id": "0ca4a0c895e7",
-   "title": "Standup Open Mic",
-   "date": "2026-12-23",
+   "id": "c9818f5455ce",
+   "title": "Retro Study Hall!",
+   "date": "2026-12-15",
    "change": "missing",
-   "lastSeen": "2026-10-27T11:31:29-04:00"
+   "lastSeen": "2026-10-27T19:59:30-04:00"
+  },
+  {
+   "id": "98619e88f30b",
+   "title": "Retro Study Hall!",
+   "date": "2026-12-16",
+   "change": "missing",
+   "lastSeen": "2026-10-27T19:59:30-04:00"
   }
  ]
 }
