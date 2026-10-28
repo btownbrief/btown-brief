@@ -1,28 +1,28 @@
 {
- "updated": "2026-10-27T23:55:17+00:00",
+ "updated": "2026-10-28T01:13:03+00:00",
  "sections_updated": {
-  "now": "2026-10-27T23:55:17+00:00",
-  "forecast": "2026-10-27T23:55:17+00:00",
-  "hourly": "2026-10-27T23:55:17+00:00",
-  "alerts": "2026-10-27T23:55:17+00:00",
-  "afd": "2026-10-27T23:55:17+00:00",
-  "lake_forecast": "2026-10-27T23:55:17+00:00",
-  "lake_gage": "2026-10-27T23:55:17+00:00",
-  "air": "2026-10-27T23:55:17+00:00",
-  "sun": "2026-10-27T23:55:17+00:00",
-  "models": "2026-10-27T23:55:17+00:00"
+  "now": "2026-10-28T01:13:03+00:00",
+  "forecast": "2026-10-28T01:13:03+00:00",
+  "hourly": "2026-10-28T01:13:03+00:00",
+  "alerts": "2026-10-28T01:13:03+00:00",
+  "afd": "2026-10-28T01:13:03+00:00",
+  "lake_forecast": "2026-10-28T01:13:03+00:00",
+  "lake_gage": "2026-10-28T01:13:03+00:00",
+  "air": "2026-10-28T01:13:03+00:00",
+  "sun": "2026-10-28T01:13:03+00:00",
+  "models": "2026-10-28T01:13:03+00:00"
  },
  "now": {
-  "observed_at": "2026-10-27T23:25:00+00:00",
+  "observed_at": "2026-10-28T00:40:00+00:00",
   "station": "KBTV",
   "description": "Clear",
-  "temp_f": 37,
-  "feels_like_f": 35,
-  "humidity": 60,
+  "temp_f": 36,
+  "feels_like_f": 36,
+  "humidity": 64,
   "dewpoint_f": 25,
-  "wind_mph": 3,
+  "wind_mph": 0,
   "wind_gust_mph": null,
-  "wind_dir": "NE",
+  "wind_dir": "N",
   "precip_last_hr_in": null
  },
  "forecast": {
@@ -173,34 +173,6 @@
  "hourly": {
   "updated": "2026-10-27T18:15:19+00:00",
   "hours": [
-   {
-    "t": "2026-10-27T19:00:00-04:00",
-    "temp_f": 40,
-    "feels_f": 37,
-    "pop": 0,
-    "humidity": 57,
-    "wind_mph": 5,
-    "wind_dir": "NE",
-    "sky": 10,
-    "short": "Mostly Clear",
-    "qpf_in": 0.0,
-    "snow_in": 0.0,
-    "gust_mph": 7
-   },
-   {
-    "t": "2026-10-27T20:00:00-04:00",
-    "temp_f": 38,
-    "feels_f": 34,
-    "pop": 0,
-    "humidity": 62,
-    "wind_mph": 5,
-    "wind_dir": "NE",
-    "sky": 14,
-    "short": "Mostly Clear",
-    "qpf_in": 0.0,
-    "snow_in": 0.0,
-    "gust_mph": 7
-   },
    {
     "t": "2026-10-27T21:00:00-04:00",
     "temp_f": 35,
@@ -676,6 +648,34 @@
     "qpf_in": 0.0,
     "snow_in": 0.0,
     "gust_mph": 17
+   },
+   {
+    "t": "2026-10-29T07:00:00-04:00",
+    "temp_f": 41,
+    "feels_f": 35,
+    "pop": 0,
+    "humidity": 100,
+    "wind_mph": 10,
+    "wind_dir": "S",
+    "sky": 2,
+    "short": "Sunny",
+    "qpf_in": 0.0,
+    "snow_in": 0.0,
+    "gust_mph": 17
+   },
+   {
+    "t": "2026-10-29T08:00:00-04:00",
+    "temp_f": 42,
+    "feels_f": 36,
+    "pop": 0,
+    "humidity": 96,
+    "wind_mph": 12,
+    "wind_dir": "S",
+    "sky": 2,
+    "short": "Sunny",
+    "qpf_in": 0.0,
+    "snow_in": 0.0,
+    "gust_mph": 18
    }
   ],
   "days": [
@@ -705,14 +705,14 @@
   "active": []
  },
  "afd": {
-  "issued": "2026-10-27T18:28:00+00:00",
+  "issued": "2026-10-28T01:02:00+00:00",
   "key_messages": [
    "Cold winter like temperatures tonight will be followed by gradual warming towards the late week.",
    "A cold front late Thursday into Friday will bring chances for light rain showers in addition to breezy to gusty winds.",
    "Dry weather this weekend, shower chances return next week."
   ],
   "what_changed": "As of 224 PM EDT Tuesday... Have increased the winds in the wider valleys of the region late Thursday and Friday ahead and associated with a cold frontal passage.",
-  "raw": "\n000\nFXUS61 KBTV 271828\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n228 PM EDT Tue Oct 27 2026\n\n.WHAT HAS CHANGED...\nAs of 224 PM EDT Tuesday...\n\nHave increased the winds in the wider valleys of the region late \nThursday and Friday ahead and associated with a cold frontal passage.\n\n&&\n\n.KEY MESSAGES...\nAs of 224 PM EDT Tuesday...\n\n1. Cold winter like temperatures tonight will be followed by \ngradual warming towards the late week.\n\n2. A cold front late Thursday into Friday will bring chances \nfor light rain showers in addition to breezy to gusty winds.\n\n3. Dry weather this weekend, shower chances return next week.   \n\n&&\n\n.DISCUSSION...\nAs of 224 PM EDT Tuesday...\n\nKEY MESSAGE 1: High pressure centered over the Southeast will continue \nto drive clear skies and cold northwest air into the region through \ntonight. With clear skies remaining into tonight, strong radiational \ncooling will take place with many locations seeing the coldest air \nof the season, with near record cold across portions of Vermont. \nTemperatures will fall to the low 20s for most of the region, \noutside of the higher terrain where a steep inversion will keep lows \nin the upper 20s to near 30. Near record cold at our climate sites \nincluding Montpelier, St. Johnsbury, and Plattsburgh will be \npossible tonight. A few high clouds late tonight look to limit the \nprime radiational cooling time tonight across much of northern New \nYork, otherwise a few records there might also be in jeopardy.\n\nTemperatures will gradually warm and trend to normal as high \npressure shifts east offshore Wednesday turning winds to the south, \nadvecting in warmer air. A glancing mid level trough will bring some \ncloudy skies through the area tomorrow, but surface-mid levels will \nbe too dry to see any precipitation. Temperatures will be 5-10 \ndegrees warmer tomorrow with highs in the low to mid 50s, with our \ncool spots near the International Border and the Northeast Kingdom.\n\nKEY MESSAGE 2: By Thursday, southwest strong waa ushered in by a 45-55 \nknot 850 LLJ will warm temperatures steeply well into the 60s. Highs \nin the mid to upper 60s will be possible with areas in the St. \nLawrence Valley nearing even 70. The warm temperatures will come at \na price though, as southwest winds will increase to 20-30 MPH, \nparticularly in the St. Lawrence and Champlain Valleys. Model \nsoundings continue to trend up with top of the mixed layer in the \nrecent model suite averaging around 35 MPH. Mixing of these stronger \nwinds will be complex as the timing of the precipitation associated \nwith the cold front will be entering the region around the time of \npeak mixing, which could temper gusts slightly lower. Regardless, \nThursday afternoon in the St. Lawrence Valley and near Lake \nChamplain will be gusty. Precipitation will generally be scattered \nwith the front due to lingering dry air at the surface, though \nmoisture advection with this system will be better than our system \nMonday. A few hundreths up to a tenth of an inch or rainfall is \nexpected, focused in the St. Lawrence Valley, Adirondacks, and \nnorthern Greens. A few showers will linger into Friday along the \nnorthern mountains, but we will begin to trend drier by Friday \nafternoon. Winds will turn to the west northwest behind the front \nwhich will bring drier and cooler air by Friday afternoon. Lapse \nrates will steepen Friday afternoon as we dry out with good vertical \nmixing across our northern wider valleys. Winds will increase with \nbetter chances for seeing some stronger winds up to 30 MPH. Have \ntrended winds up as confidence grows for these stronger channeled \nwinds Friday afternoon.\n\nKEY MESSAGE 3: Surface high pressure builds over our region for the \nweekend bringing dry weather and temperatures slightly warmer than \nseasonal normals for daytime highs, and cooler than normal overnight \nminimum temperatures. Sunday night into early next week high \npressure moves east of our region and will have some shower chances \nnext week, though lots of uncertainty at this stage.\n\n&&\n\n.AVIATION /18Z TUESDAY THROUGH SUNDAY/...\nThrough 18Z Wednesday...VFR conditions will continue to prevail\nat all terminals, with mostly clear skies anticipated. Winds \ncontinue to be north to northwesterly and will continue through \nmuch of the day, although winds trend lighter and terrain \ninfluenced overnight. Some increased high clouds may move in \nafter 00Z Wednesday, but VFR conditions are expected over the \nnext 24 hours. \n\nOutlook...\n\nWednesday Night: VFR. NO SIG WX.\nThursday: VFR. NO SIG WX.\nThursday Night: Mainly VFR, with local MVFR possible. Chance\nSHRA.\nFriday: VFR. Slight chance SHRA.\nFriday Night: Mainly VFR, with local MVFR possible. NO SIG WX.\nSaturday: Mainly VFR, with local MVFR possible. NO SIG WX.\nSaturday Night: VFR. NO SIG WX.\nSunday: VFR. NO SIG WX.\n\n&&\n\n.CLIMATE...\nA couple daily record lows are possible for October 28th. Below\nis the current record and the current forecast as of 230 PM \nOctober 27th.\n\nOctober 28:\nKMPV: 20/1974 - Forecast 21F\nKPBG: 21/1999 - Forecast 25F\nK1V4: 22/1999 - Forecast 19F\n\n&&\n\n.EQUIPMENT...\nRoutine observations from KSLK ASOS are unavailable until\nfurther notice. While the site is operating, it is not able to\ndisseminate observations normally at this time. Technicians are\naware of the issue, but time of return to service is unknown.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Danzig\nDISCUSSION...Neiles/Danzig\nAVIATION...Neiles\nCLIMATE...NWS BTV\nEQUIPMENT...NWS BTV\n"
+  "raw": "\n000\nFXUS61 KBTV 280102\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n902 PM EDT Tue Oct 27 2026\n\n.WHAT HAS CHANGED...\nAs of 224 PM EDT Tuesday...\n\nHave increased the winds in the wider valleys of the region late \nThursday and Friday ahead and associated with a cold frontal passage.\n\n&&\n\n.KEY MESSAGES...\nAs of 224 PM EDT Tuesday...\n\n1. Cold winter like temperatures tonight will be followed by \ngradual warming towards the late week.\n\n2. A cold front late Thursday into Friday will bring chances \nfor light rain showers in addition to breezy to gusty winds.\n\n3. Dry weather this weekend, shower chances return next week.\n\n&&\n\n.DISCUSSION...\nAs of 224 PM EDT Tuesday...\n\nKEY MESSAGE 1: High pressure centered over the Southeast will continue \nto drive clear skies and cold northwest air into the region through \ntonight. With clear skies remaining into tonight, strong radiational \ncooling will take place with many locations seeing the coldest air \nof the season, with near record cold across portions of Vermont. \nTemperatures will fall to the low 20s for most of the region, \noutside of the higher terrain where a steep inversion will keep lows \nin the upper 20s to near 30. Near record cold at our climate sites \nincluding Montpelier, St. Johnsbury, and Plattsburgh will be \npossible tonight. A few high clouds late tonight look to limit the \nprime radiational cooling time tonight across much of northern New \nYork, otherwise a few records there might also be in jeopardy.\n\nTemperatures will gradually warm and trend to normal as high \npressure shifts east offshore Wednesday turning winds to the south, \nadvecting in warmer air. A glancing mid level trough will bring some \ncloudy skies through the area tomorrow, but surface-mid levels will \nbe too dry to see any precipitation. Temperatures will be 5-10 \ndegrees warmer tomorrow with highs in the low to mid 50s, with our \ncool spots near the International Border and the Northeast Kingdom.\n\nKEY MESSAGE 2: By Thursday, southwest strong waa ushered in by a 45-55 \nknot 850 LLJ will warm temperatures steeply well into the 60s. Highs \nin the mid to upper 60s will be possible with areas in the St. \nLawrence Valley nearing even 70. The warm temperatures will come at \na price though, as southwest winds will increase to 20-30 MPH, \nparticularly in the St. Lawrence and Champlain Valleys. Model \nsoundings continue to trend up with top of the mixed layer in the \nrecent model suite averaging around 35 MPH. Mixing of these stronger \nwinds will be complex as the timing of the precipitation associated \nwith the cold front will be entering the region around the time of \npeak mixing, which could temper gusts slightly lower. Regardless, \nThursday afternoon in the St. Lawrence Valley and near Lake \nChamplain will be gusty. Precipitation will generally be scattered \nwith the front due to lingering dry air at the surface, though \nmoisture advection with this system will be better than our system \nMonday. A few hundreths up to a tenth of an inch or rainfall is \nexpected, focused in the St. Lawrence Valley, Adirondacks, and \nnorthern Greens. A few showers will linger into Friday along the \nnorthern mountains, but we will begin to trend drier by Friday \nafternoon. Winds will turn to the west northwest behind the front \nwhich will bring drier and cooler air by Friday afternoon. Lapse \nrates will steepen Friday afternoon as we dry out with good vertical \nmixing across our northern wider valleys. Winds will increase with \nbetter chances for seeing some stronger winds up to 30 MPH. Have \ntrended winds up as confidence grows for these stronger channeled \nwinds Friday afternoon.\n\nKEY MESSAGE 3: Surface high pressure builds over our region for the \nweekend bringing dry weather and temperatures slightly warmer than \nseasonal normals for daytime highs, and cooler than normal overnight \nminimum temperatures. Sunday night into early next week high \npressure moves east of our region and will have some shower chances \nnext week, though lots of uncertainty at this stage.\n\n&&\n\n.AVIATION /01Z WEDNESDAY THROUGH SUNDAY/...\nThrough 00Z Thursday...There will be minimal weather concerns to\naviators for this forecast period with the region under high\npressure. Light winds expected overnight becoming light out of\nthe south after 12Z with CIGS over 8000ft moving in. There could\nbe some light virga from this deck at times, but the sub-cloud\nlayer is dry and any liquid is unlikely to reach the ground. \n\nOutlook...\n\nWednesday Night: VFR. NO SIG WX.\nThursday: VFR. Chance SHRA.\nThursday Night: Mainly VFR, with local MVFR possible. Chance\nSHRA.\nFriday: Mainly VFR, with local MVFR possible. Slight chance SHRA.\nFriday Night: VFR. NO SIG WX.\nSaturday: Mainly VFR, with local MVFR possible. NO SIG WX.\nSaturday Night: VFR. NO SIG WX.\nSunday: VFR. NO SIG WX.\n\n&&\n\n.CLIMATE...\nA couple daily record lows are possible for October 28th. Below\nis the current record and the current forecast as of 230 PM \nOctober 27th.\n\nOctober 28:\nKMPV: 20/1974 - Forecast 21F\nKPBG: 21/1999 - Forecast 25F\nK1V4: 22/1999 - Forecast 19F\n\n&&\n\n.EQUIPMENT...\nRoutine observations from KSLK ASOS are unavailable until\nfurther notice. While the site is operating, it is not able to\ndisseminate observations normally at this time. Technicians are\naware of the issue, but time of return to service is unknown.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Danzig\nDISCUSSION...Neiles/Danzig\nAVIATION...Boyd\nCLIMATE...NWS BTV\nEQUIPMENT...NWS BTV\n"
  },
  "lake_forecast": {
   "issued": "2026-10-27T18:16:00+00:00",
@@ -983,18 +983,18 @@
   }
  },
  "lake_gage": {
-  "water_temp_f": 54,
-  "water_temp_at": "2026-10-27T19:00:00.000-04:00",
-  "level_ft": 94.02,
-  "level_at": "2026-10-27T19:00:00.000-04:00",
+  "water_temp_f": 53,
+  "water_temp_at": "2026-10-27T21:00:00.000-04:00",
+  "level_ft": 94.01,
+  "level_at": "2026-10-27T21:00:00.000-04:00",
   "level_status": "normal"
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 30,
+  "aqi": 29,
   "category": "Good",
   "pollutant": "OZONE",
-  "observed": "10/27/26 19:00",
+  "observed": "10/27/26 20:00",
   "discussion": "On Wednesday October 28th, expect moderate levels of fine particulate matter (PM25), in mountain valley locations such as Rutland, especially in the overnight hours as thermal inversions strengthen.  Expect generally good air quality in the Champlain Valley, higher elevation locations throughout the remainder of the state, and valley locations without air emission sources."
  },
  "sun": {
@@ -1034,7 +1034,7 @@
     },
     "pop_max": {
      "GFS": 7,
-     "Euro": 0,
+     "Euro": 25,
      "ICON": 8
     },
     "precip_in": {
@@ -1047,13 +1047,13 @@
    {
     "date": "2026-10-29",
     "high_f": {
-     "GFS": 65,
+     "GFS": 64,
      "Euro": 62,
      "ICON": 64
     },
     "pop_max": {
      "GFS": 34,
-     "Euro": 59,
+     "Euro": 67,
      "ICON": 25
     },
     "precip_in": {
@@ -1061,13 +1061,13 @@
      "Euro": 0.0,
      "ICON": 0.07
     },
-    "high_spread_f": 3
+    "high_spread_f": 2
    }
   ]
  },
  "brief": {
   "date": "2026-10-27",
-  "generated": "2026-10-27T23:55:20+00:00",
+  "generated": "2026-10-28T01:13:07+00:00",
   "text": "Mostly clear tonight, low 28. Wednesday, partly sunny, high 53.",
   "periods": [
    {
@@ -1076,12 +1076,12 @@
     "is_day": false,
     "temp_f": 28,
     "sky": "mostly clear",
-    "start": "2026-10-27T23:00:00+00:00",
+    "start": "2026-10-28T01:00:00+00:00",
     "end": "2026-10-28T06:00:00-04:00",
     "precip": null,
     "wind": null,
     "feels_lo": 29,
-    "feels_hi": 37,
+    "feels_hi": 32,
     "text": "Mostly clear tonight, low 28."
    },
    {
