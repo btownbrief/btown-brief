@@ -1,28 +1,28 @@
 {
- "updated": "2026-10-28T23:57:36+00:00",
+ "updated": "2026-10-29T00:12:51+00:00",
  "sections_updated": {
-  "now": "2026-10-28T23:57:36+00:00",
-  "forecast": "2026-10-28T23:57:36+00:00",
-  "hourly": "2026-10-28T23:57:36+00:00",
-  "alerts": "2026-10-28T23:57:36+00:00",
-  "afd": "2026-10-28T23:57:36+00:00",
-  "lake_forecast": "2026-10-28T23:57:36+00:00",
-  "lake_gage": "2026-10-28T23:57:36+00:00",
-  "air": "2026-10-28T23:57:36+00:00",
-  "sun": "2026-10-28T23:57:36+00:00",
-  "models": "2026-10-28T23:57:36+00:00"
+  "now": "2026-10-29T00:12:51+00:00",
+  "forecast": "2026-10-29T00:12:51+00:00",
+  "hourly": "2026-10-29T00:12:51+00:00",
+  "alerts": "2026-10-29T00:12:51+00:00",
+  "afd": "2026-10-29T00:12:51+00:00",
+  "lake_forecast": "2026-10-29T00:12:51+00:00",
+  "lake_gage": "2026-10-29T00:12:51+00:00",
+  "air": "2026-10-29T00:12:51+00:00",
+  "sun": "2026-10-29T00:12:51+00:00",
+  "models": "2026-10-29T00:12:51+00:00"
  },
  "now": {
-  "observed_at": "2026-10-28T23:35:00+00:00",
+  "observed_at": "2026-10-28T23:55:00+00:00",
   "station": "KBTV",
-  "description": "Mostly Cloudy",
-  "temp_f": 48,
-  "feels_like_f": 45,
-  "humidity": 62,
-  "dewpoint_f": 36,
-  "wind_mph": 7,
+  "description": "Cloudy",
+  "temp_f": 52,
+  "feels_like_f": 52,
+  "humidity": 47,
+  "dewpoint_f": 32,
+  "wind_mph": 6,
   "wind_gust_mph": null,
-  "wind_dir": "SSE",
+  "wind_dir": "S",
   "precip_last_hr_in": null
  },
  "forecast": {
@@ -30,13 +30,13 @@
   "periods": [
    {
     "name": "Tonight",
-    "start": "2026-10-28T18:00:00-04:00",
+    "start": "2026-10-28T20:00:00-04:00",
     "is_day": false,
     "temp_f": 42,
-    "pop": 5,
-    "wind": "S 7 to 12 mph",
-    "short": "Partly Cloudy",
-    "detailed": "Partly cloudy, with a low around 42. South wind 7 to 12 mph."
+    "pop": 2,
+    "wind": "S 12 mph",
+    "short": "Mostly Clear",
+    "detailed": "Mostly clear, with a low around 42. South wind around 12 mph."
    },
    {
     "name": "Thursday",
@@ -173,20 +173,6 @@
  "hourly": {
   "updated": "2026-10-28T18:12:44+00:00",
   "hours": [
-   {
-    "t": "2026-10-28T19:00:00-04:00",
-    "temp_f": 49,
-    "feels_f": 46,
-    "pop": 5,
-    "humidity": 50,
-    "wind_mph": 8,
-    "wind_dir": "S",
-    "sky": 42,
-    "short": "Partly Cloudy",
-    "qpf_in": 0.0,
-    "snow_in": 0.0,
-    "gust_mph": 16
-   },
    {
     "t": "2026-10-28T20:00:00-04:00",
     "temp_f": 47,
@@ -676,6 +662,20 @@
     "qpf_in": 0.0,
     "snow_in": 0.0,
     "gust_mph": 12
+   },
+   {
+    "t": "2026-10-30T07:00:00-04:00",
+    "temp_f": 50,
+    "feels_f": 47,
+    "pop": 7,
+    "humidity": 89,
+    "wind_mph": 7,
+    "wind_dir": "W",
+    "sky": 72,
+    "short": "Mostly Cloudy",
+    "qpf_in": 0.0,
+    "snow_in": 0.0,
+    "gust_mph": 13
    }
   ],
   "days": [
@@ -964,9 +964,9 @@
  },
  "lake_gage": {
   "water_temp_f": 53,
-  "water_temp_at": "2026-10-28T19:00:00.000-04:00",
-  "level_ft": 93.96,
-  "level_at": "2026-10-28T19:00:00.000-04:00",
+  "water_temp_at": "2026-10-28T20:00:00.000-04:00",
+  "level_ft": 93.98,
+  "level_at": "2026-10-28T20:00:00.000-04:00",
   "level_status": "normal"
  },
  "air": {
@@ -995,7 +995,7 @@
     },
     "pop_max": {
      "GFS": 9,
-     "Euro": 43,
+     "Euro": 24,
      "ICON": 5
     },
     "precip_in": {
@@ -1014,7 +1014,7 @@
     },
     "pop_max": {
      "GFS": 19,
-     "Euro": 57,
+     "Euro": 53,
      "ICON": 28
     },
     "precip_in": {
@@ -1033,7 +1033,7 @@
     },
     "pop_max": {
      "GFS": 4,
-     "Euro": 72,
+     "Euro": 56,
      "ICON": 20
     },
     "precip_in": {
@@ -1047,22 +1047,22 @@
  },
  "brief": {
   "date": "2026-10-28",
-  "generated": "2026-10-28T23:57:40+00:00",
-  "text": "Special Weather Statement until 6am Thursday. Partly cloudy tonight, low 42. Thursday, sunny, high 65.",
+  "generated": "2026-10-29T00:12:54+00:00",
+  "text": "Special Weather Statement until 6am Thursday. Mostly clear tonight, low 42. Thursday, sunny, high 65.",
   "periods": [
    {
     "label": "Tonight",
     "name": "Tonight",
     "is_day": false,
     "temp_f": 42,
-    "sky": "partly cloudy",
-    "start": "2026-10-28T23:00:00+00:00",
+    "sky": "mostly clear",
+    "start": "2026-10-28T20:00:00-04:00",
     "end": "2026-10-29T06:00:00-04:00",
     "precip": null,
     "wind": null,
     "feels_lo": 38,
-    "feels_hi": 46,
-    "text": "Partly cloudy tonight, low 42."
+    "feels_hi": 43,
+    "text": "Mostly clear tonight, low 42."
    },
    {
     "label": "Thursday",
