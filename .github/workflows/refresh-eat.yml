@@ -11,7 +11,7 @@ name: Refresh Eat data (openings + inspections)
 #   to a GitHub issue for Stephen to confirm. A filing or permit is a lead,
 #   never an opening.
 # - data/eat/inspections.json is re-read from the Vermont Department of
-#   Health's public inspection portal (about 15 minutes, one request a
+#   Health's public inspection portal (about an hour: the portal is slow and we send one request a
 #   second).
 #
 # Runs an hour after the old openings radar so the two never collide.
@@ -32,7 +32,7 @@ concurrency:
 jobs:
   eat:
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 150
     steps:
       - uses: actions/checkout@v4
 

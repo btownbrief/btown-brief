@@ -200,6 +200,10 @@ def match(restaurants, rows):
             same_street = rk is not None and rk == street_key(row["portal_address"])
             same_town = rt and rt.upper() in row["portal_address"].upper()
             score = nscore + (0.5 if same_street else 0)
+            # A restaurant's food truck or catering licence shares its address;
+            # prefer the restaurant's own licence.
+            if re.search(r"MOBILE|CATERING", row["portal_name"]) and not re.search(r"truck|mobile|catering", rest["name"], re.I):
+                score -= 0.3
             if same_street and nscore >= 0.45 or (same_town and nscore >= 0.9):
                 if score > best_score:
                     best, best_score, how = row, score, "address+name" if same_street else "name+town"
@@ -209,6 +213,14 @@ def match(restaurants, rows):
 
 
 # ---------- the PDF ----------
+
+# Page headers, footers and the "Unofficial Copy" watermark that pdftotext
+# drops into the middle of the violations table.
+PAGE_FURNITURE = re.compile(
+    r"Department of Health|State Drive|Waterbury, VT|802-863-7221|Page \d+ of \d+|"
+    r"Observations and Corrective|Violations cited|Item\s+Violation of|Number\s+Code")
+WATERMARK = re.compile(r"^\s*[A-Za-z]{1,4}\s*$")
+
 
 def parse_pdf(data, key):
     with tempfile.NamedTemporaryFile(suffix=".pdf") as f:
@@ -227,14 +239,14 @@ def parse_pdf(data, key):
         body = section[1].split("Inspection Published Comment:", 1)[0]
         current = None
         for line in body.split("\n"):
-            m = re.match(r"\s{0,3}(\d+(?:\([a-z]\))?)\s{2,}(\d-\d{3}\.\d+\S*)?\s+(.*)", line)
-            if m and not line.strip().startswith(("Item", "Number", "Violations cited")):
+            if not line.strip() or PAGE_FURNITURE.search(line) or WATERMARK.match(line):
+                continue
+            m = re.match(r"\s{0,6}(\d+(?:\([a-z]\))?)\s{2,}(\d-\d{3}\.\d+\S*)?\s*(.*)", line)
+            if m:
                 item, code, rest = m.groups()
                 current = {"item": item, "code": code, "comment": rest.strip()}
                 violations.append(current)
-            elif current and line.strip() and not re.search(r"^\s*(Co|py|al|fic|i|Un|of)\s*$", line):
-                if "Correct By" in line or "Item" in line.split()[:1]:
-                    continue
+            elif current:
                 current["comment"] += " " + line.strip()
     for v in violations:
         c = re.sub(r"[\x00-\x1f]", "", v["comment"])
@@ -246,7 +258,7 @@ def parse_pdf(data, key):
             c = c[m.end():]
         v["corrected_on_site"] = bool(re.search(r"\bCOS\b", c))
         c = re.sub(r"\s*\bCOS\b\s*", " ", c)
-        d = re.search(r"\s(\d\d/\d\d/\d{4})\s", " " + c + " ")
+        d = re.search(r"\s(\d{1,2}/\d{1,2}/\d{4})\s", " " + c + " ")
         v["correct_by"] = mdy(d.group(1)).isoformat() if d else None
         if d:
             c = c.replace(d.group(1), " ")
@@ -256,7 +268,8 @@ def parse_pdf(data, key):
         v["critical"] = bool(k.get("critical"))
         v["plain_english"] = k.get("plain_english", "Not in our key yet; read the inspector's note.")
         # The inspector's note is "what the rule says- what to do"; keep both halves.
-        v["inspector_note"] = v.pop("comment")
+        # Some reports cut the comment off; an empty note says so honestly.
+        v["inspector_note"] = v.pop("comment") or None
     info["violations"] = violations
     info["critical_count"] = sum(1 for v in violations if v["critical"])
     return info
@@ -278,14 +291,16 @@ def main():
 
     portal = Portal()
     begin = today.replace(year=today.year - YEARS_BACK)
-    records, pdfs, seen = {}, 0, set()
+    records, pdfs = {}, 0
     for town in towns:
         local = [r for r in restaurants if town_of(r.get("address")) == town]
         n, page = 1, portal.search(town, begin, today)
         town_rows = 0
         while True:
-            rows = [r for r in parse_results(page) if r["portal_key"] not in seen]
-            seen.update(r["portal_key"] for r in rows)
+            # A "Burlington" search also returns South Burlington rows, so rows
+            # are not de-duplicated across towns; each pass only matches its
+            # own town's restaurants.
+            rows = parse_results(page)
             town_rows += len(rows)
             for rid, (row, how) in match(local, rows).items():
                 if rid in records and records[rid]["latest"]["date"] >= row["date"]:
@@ -314,6 +329,7 @@ def main():
                     "as_of": today.isoformat(),
                     "source_url": SEARCH,
                 }
+            print(f"  {town} page {n}: {len(rows)} rows, {pdfs} reports so far", file=sys.stderr, flush=True)
             n += 1
             if not next_page_exists(page, n):
                 break
