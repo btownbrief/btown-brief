@@ -25,7 +25,7 @@ import sys
 from datetime import datetime, timedelta, timezone
 
 from .common import (CITY_ARCGIS, OUT_DIR, arcgis_layer_info, arcgis_query, get_text,
-                     only_filter, page_text, parse_feed, rec, run_sections, strip_tags)
+                     only_filter, page_text, parse_feed, rec, require, run_sections, strip_tags)
 
 OUT = os.path.join(OUT_DIR, "alerts.json")
 
@@ -75,7 +75,8 @@ def _feed_items(url, since_hours):
 def recycling(verified):
     info = arcgis_layer_info(RECYCLING_LAYER)
     edited = (info.get("editingInfo") or {}).get("dataLastEditDate")
-    rows = arcgis_query(RECYCLING_LAYER, out_fields="FACILITYID,Day,PARKINGBAN,Zone,Address_From")
+    rows = require(arcgis_query(RECYCLING_LAYER, out_fields="FACILITYID,Day,PARKINGBAN,Zone,Address_From"),
+                   300, "recycling streets")
     seen, streets = set(), []
     for a in rows:
         street = (a.get("FACILITYID") or "").strip()
@@ -165,7 +166,8 @@ def parking_ban(verified):
 
 # ---------------------------------------------------------------- greenway
 def greenway(verified):
-    rows = arcgis_query(GREENWAY_LAYER, out_fields="Segment_Name,Plowing_Status,Ski_Condition,Condition_Notes,LastPlowedDate,EditDate")
+    rows = require(arcgis_query(GREENWAY_LAYER, out_fields="Segment_Name,Plowing_Status,Ski_Condition,Condition_Notes,LastPlowedDate,EditDate"),
+                   3, "greenway segments")
     items = []
     for a in rows:
         last = a.get("LastPlowedDate")
@@ -215,7 +217,11 @@ def _wcax(verified):
         org, status = m.group(1).strip(), m.group(2).strip()
         if AREA_RE.search(org):
             lines.append(rec(WCAX_CLOSINGS, verified, org=org, status=status, outlet="WCAX"))
-    return lines, ("no closings" in text.lower())
+    tail = text.split("Organization Status Type", 1)[-1].strip() if "Organization Status Type" in text else None
+    empty = tail == "" or "no closings" in text.lower()
+    if not lines and not empty:
+        raise RuntimeError("WCAX closings block has rows the parser did not recognize; check the page")
+    return lines, empty
 
 
 def closings(verified):
@@ -280,7 +286,7 @@ def main():
     args = ap.parse_args()
     print("Town alerts:")
     failed = run_sections(OUT, only_filter(args.only, SECTIONS),
-                          {"sources_file": "data/town/alerts-sources.json"})
+                          {"sources_file": "data/town/alerts-sources.json"}, [n for n, _ in SECTIONS])
     sys.exit(1 if failed == len(only_filter(args.only, SECTIONS)) else 0)
 
 

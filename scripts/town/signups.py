@@ -86,7 +86,7 @@ def civicrec(verified):
         raise RuntimeError("CivicRec catalog page no longer exposes checkoutData.key")
     key = m.group(1)
     tabs = json.loads(s.get(f"{REC1}/catalog/getTabs/{key}"))["tabs"]
-    items, seen = [], set()
+    items, seen, failed = [], set(), []
     for t in tabs:
         if any(x in t["label"] for x in REC1_SKIP_TABS):
             continue
@@ -96,9 +96,15 @@ def civicrec(verified):
             if g.get("type") != "activity" or g["id"] in seen:
                 continue
             seen.add(g["id"])
-            try:
-                sess = json.loads(s.get(f"{REC1}/catalog/getActivitySessions/{key}/{t['id']}/{g['id']}"))
-            except (ValueError, OSError):
+            sess = None
+            for _ in range(2):
+                try:
+                    sess = json.loads(s.get(f"{REC1}/catalog/getActivitySessions/{key}/{t['id']}/{g['id']}"))
+                    break
+                except (ValueError, OSError):
+                    continue
+            if sess is None:
+                failed.append(g.get("name") or g["id"])
                 continue
             for it in sess.get("items", []):
                 opens, closes, line = _parse_window(it.get("basicInfo"), it.get("regStart"))
@@ -110,8 +116,8 @@ def civicrec(verified):
                                  closed=bool(it.get("registrationOver")),
                                  full=bool(it.get("sessionFull")),
                                  details=[x for x in (it.get("basicInfo") or []) if not x.lower().startswith("registration")][:3]))
-    if not items:
-        raise RuntimeError("CivicRec returned no sessions")
+    if not items or failed:
+        raise RuntimeError(f"CivicRec incomplete: {len(items)} sessions, failed groups {failed[:5]}")
     today = date.today().isoformat()
     upcoming = sorted({i["opens"] for i in items if i["opens"] and i["opens"] >= today})
     return {"verified": verified, "groups": len(seen), "next_open_dates": upcoming[:10], "items": items}
@@ -212,7 +218,7 @@ def main():
     args = ap.parse_args()
     print("Town signups:")
     chosen = only_filter(args.only, SECTIONS)
-    failed = run_sections(OUT, chosen, {"seed_file": "data/town/signups.json"})
+    failed = run_sections(OUT, chosen, {"seed_file": "data/town/signups.json"}, [n for n, _ in SECTIONS])
     sys.exit(1 if failed == len(chosen) else 0)
 
 

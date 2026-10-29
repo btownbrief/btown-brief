@@ -15,7 +15,8 @@ Sections (each fails on its own; data/town/streets-sources.json explains every s
   projects   City construction portal layer, one record per project for "one page per project"
 
 Privacy rules baked in (the repository is public):
-  - permits: the Applicant field is never copied (often a homeowner); contractor names are kept
+  - permits: the Applicant field is never copied (often a homeowner); the contractor field keeps
+            only a business name, since it is often "Person / Company" or the owner's own name
   - sales:  individual buyer and seller names are never copied; only entity names (LLC, Inc,
             university, city...) are kept, and trusts and estates are treated as individuals
   - blotter: press releases are stored as headline + link only; the written column applies
@@ -31,7 +32,7 @@ from collections import Counter, defaultdict
 from datetime import date, datetime, timedelta, timezone
 
 from .common import (CITY_ARCGIS, OUT_DIR, arcgis_first_layer, arcgis_query, epoch_ms_to_iso,
-                     get_text, only_filter, parse_feed, rec, run_sections, strip_tags)
+                     get_text, only_filter, parse_feed, rec, require, run_sections, strip_tags)
 
 OUT = os.path.join(OUT_DIR, "streets.json")
 
@@ -67,6 +68,25 @@ BPD_DASHBOARD = "https://data.burlingtonvt.gov/"
 
 PROJECTS = f"{CITY_ARCGIS}/Construction_and_Planning_Datasets_Public_View_v2/FeatureServer/2"
 PROJECTS_PAGE = "https://www.burlingtonvt.gov/323/Construction-Portal"
+# A project's headline status is its most active segment's, not its majority's.
+STATUS_PRIORITY = ["Under Construction", "Approved/In-Design", "In Design", "Proposed", "Postponed",
+                   "Completed", "Canceled"]
+
+
+BUSINESS_RE = re.compile(r"\b(LLC|L\.L\.C|INC|CORP|CO\b|COMPANY|LTD|ELECTRIC|ELECTRICAL|CONSTRUCTION|CONSTRCUTION|"
+                         r"BUILDERS?|BUILDING|SOLAR|PLUMBING|HEATING|HVAC|ROOFING|SIDING|SYSTEMS|SERVICES|CONTRACTING|"
+                         r"CONTRACTORS?|DESIGN|SIGNS?|GLASS|MASONRY|FENCE|DEPOT|MANAGEMENT|MAINTENANCE|RENOVATIONS?|"
+                         r"MECHANICAL|RESTORATION|PAINTING|PAINT|WINDOWS?|EXTERIORS|BASEMENT|BATH|LANDSCAP\w*|HOMES|"
+                         r"REMODEL\w*|GROUP|BROTHERS|SONS|AUTHORITY|ENERGY|INSULATION|FLOORING|CARPENTRY|WOODWORKS|"
+                         r"PROPERTIES|ASSOCIATES|ENTERPRISES|INDUSTRIES|TECHNOLOGIES|PUROCLEAN|BRICKLINERS)\b", re.I)
+
+
+def _contractor(raw):
+    """Keep only a business name. The field is often 'Person / Company', and owner-builders
+    put their own name in it, so a part with no business word is dropped."""
+    parts = [x.strip(" ,") for x in (raw or "").split("/")]
+    biz = [x for x in parts if x and BUSINESS_RE.search(x)]
+    return biz[-1] if biz else None
 
 
 def _clean(html_text, n=420):
@@ -134,8 +154,9 @@ def permits(verified):
                              applied=applied,
                              week=(datetime.fromisoformat(applied).strftime("%G-W%V") if applied else None),
                              start=epoch_ms_to_iso(a.get("ConstructionStartDate"), date_only=True),
-                             contractor=(a.get("ContractorOrOrganizationName") or "").strip() or None,
+                             contractor=_contractor(a.get("ContractorOrOrganizationName")),
                              notable=bool(reasons), notable_reasons=reasons))
+    require(items, 20, "permits in the window")  # ~80 a week in practice
     items.sort(key=lambda r: (r["applied"] or "", r["permit_no"]), reverse=True)
     weeks = defaultdict(lambda: {"total": 0, "notable": 0, "by_kind": Counter(), "est_cost_total": 0})
     for p in items:
@@ -174,6 +195,7 @@ def sales(verified):
                                     "blCn1Desc,intPrpType,intUDPdesc,prTxEx,bUsePrDesc,sUsePrDesc,buyEntNam,"
                                     "sellEntNam,buyerState,buyerCity,ttlBuyers,landSize"),
                         order_by="closeDate DESC")
+    require(rows, 100, "Burlington property transfers in 13 months")
     all_sales, sold = [], []
     cutoff = (date.today() - timedelta(days=SOLD_DAYS)).isoformat()
     for a in rows:
@@ -287,26 +309,31 @@ def projects(verified):
                                               "CONSTYR,TOTCOST,EXPSTDAT,EXPCOMPDATE,COMPLETEDATE,PRJMAN,MANPHONE,"
                                               "MANEMAIL,LINK,StreetName,HouseNumbers,Ward_num,PublicOutreach,"
                                               "last_edited_date"))
+    require(rows, 500, "construction segments")
     keep_after = (date.today() - timedelta(days=365)).isoformat()
     groups = defaultdict(list)
     for a in rows:
-        name = (a.get("PROJNAME") or "").strip()
+        name = re.sub(r"\s+", " ", (a.get("PROJNAME") or "")).strip()
         if not name:
             continue
-        groups[name].append(a)
+        groups[_slug(name)].append(a)  # group by slug so case/spacing variants are one project
     out = []
-    for name, segs in groups.items():
+    for slug, segs in groups.items():
+        name = Counter(re.sub(r"\s+", " ", s["PROJNAME"]).strip() for s in segs).most_common(1)[0][0]
         statuses = Counter(s.get("CIPSTAT") or "Unknown" for s in segs)
-        done = epoch_ms_to_iso(max((s.get("COMPLETEDATE") or 0) for s in segs) or None, date_only=True)
-        if set(statuses) <= {"Completed", "Canceled"} and (not done or done < keep_after):
+        finished = set(statuses) <= {"Completed", "Canceled"}
+        done = (epoch_ms_to_iso(max((s.get("COMPLETEDATE") or 0) for s in segs) or None, date_only=True)
+                if finished else None)
+        if finished and (not done or done < keep_after):
             continue  # finished more than a year ago (or never dated): not a living page any more
+        status = next((st for st in STATUS_PRIORITY if st in statuses), statuses.most_common(1)[0][0])
         first = segs[0]
         links = sorted({s["LINK"] for s in segs if isinstance(s.get("LINK"), str) and s["LINK"].startswith("http")})
         edited = max((s.get("last_edited_date") or 0) for s in segs)
         cost = sum(s.get("TOTCOST") or 0 for s in segs) or None
         out.append(rec(links[0] if links else PROJECTS_PAGE, verified,
-                       slug=_slug(name), name=name, department=first.get("PRJDEPT"), type=first.get("PRJ_TYPE"),
-                       status=statuses.most_common(1)[0][0], status_counts=dict(statuses),
+                       slug=slug, name=name, department=first.get("PRJDEPT"), type=first.get("PRJ_TYPE"),
+                       status=status, status_counts=dict(statuses),
                        stage=first.get("PROJ_STAGE"),
                        description=_clean(first.get("PRJDESC") or first.get("Description"), 600) or None,
                        construction_year=first.get("CONSTYR"), total_cost=cost,
@@ -335,7 +362,7 @@ def main():
     args = ap.parse_args()
     print("Town streets:")
     chosen = only_filter(args.only, SECTIONS)
-    failed = run_sections(OUT, chosen, {"sources_file": "data/town/streets-sources.json"})
+    failed = run_sections(OUT, chosen, {"sources_file": "data/town/streets-sources.json"}, [n for n, _ in SECTIONS])
     sys.exit(1 if failed == len(chosen) else 0)
 
 

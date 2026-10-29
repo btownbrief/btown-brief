@@ -6,7 +6,7 @@ name: Refresh Town data
 # good copy (marked stale), and a file is rewritten only when its content changed,
 # so most hourly runs commit nothing.
 #
-#   alerts.py   hourly, plus extra runs 5-7am Eastern for school delays
+#   alerts.py   hourly, plus two more runs an hour 5-7am Eastern for school delays
 #   signups.py  daily
 #   streets.py  daily (permits export is weekly, sales post a few times a week)
 #
@@ -16,7 +16,7 @@ name: Refresh Town data
 on:
   schedule:
     - cron: '40 * * * *'        # alerts, hourly at :40 (offset from changes :25 and weather :45)
-    - cron: '5,20 10,11 * * *'  # alerts, early-morning closings window
+    - cron: '5,20 9-12 * * *'   # alerts, early-morning closings window (UTC 9-12 covers 5-7am Eastern in both EST and EDT)
     - cron: '50 10 * * *'       # daily: signups + streets
   workflow_dispatch:
     inputs:
@@ -50,15 +50,15 @@ jobs:
           echo "which=$which" >> "$GITHUB_OUTPUT"
 
       - name: Alerts
-        if: steps.pick.outputs.which == 'alerts' || steps.pick.outputs.which == 'all'
+        if: ${{ !cancelled() && (steps.pick.outputs.which == 'alerts' || steps.pick.outputs.which == 'all') }}
         run: python3 -m scripts.town.alerts
 
       - name: Signups
-        if: steps.pick.outputs.which == 'daily' || steps.pick.outputs.which == 'all'
+        if: ${{ !cancelled() && (steps.pick.outputs.which == 'daily' || steps.pick.outputs.which == 'all') }}
         run: python3 -m scripts.town.signups
 
       - name: Streets
-        if: steps.pick.outputs.which == 'daily' || steps.pick.outputs.which == 'all'
+        if: ${{ !cancelled() && (steps.pick.outputs.which == 'daily' || steps.pick.outputs.which == 'all') }}
         run: python3 -m scripts.town.streets
 
       - name: Commit if changed

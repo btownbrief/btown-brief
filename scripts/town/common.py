@@ -94,13 +94,22 @@ def arcgis_query(layer_url, where="1=1", out_fields="*", order_by=None, page=200
         data = get_json(f"{layer_url}/query?{urllib.parse.urlencode(params)}", timeout=60)
         if "error" in data:
             raise RuntimeError(f"ArcGIS error from {layer_url}: {data['error']}")
-        feats = [f.get("attributes", {}) for f in data.get("features", [])]
+        if "features" not in data:
+            raise RuntimeError(f"ArcGIS response from {layer_url} has no 'features'")
+        feats = [f.get("attributes", {}) for f in data["features"]]
         rows.extend(feats)
         if limit and len(rows) >= limit:
             return rows[:limit]
         if not data.get("exceededTransferLimit") or not feats:
             return rows
         offset += len(feats)
+
+
+def require(rows, minimum, what):
+    """Fail loudly (keeping last good data) when a layer that is never this small comes back small."""
+    if len(rows) < minimum:
+        raise RuntimeError(f"{what}: got {len(rows)} rows, expected at least {minimum}")
+    return rows
 
 
 def arcgis_layer_info(layer_url):
@@ -150,7 +159,7 @@ def write_json(path, data):
     os.replace(tmp, path)
 
 
-def run_sections(out_path, sections, meta):
+def run_sections(out_path, sections, meta, all_names=None):
     """Run each (name, fn) section; a failure keeps the previous copy marked stale.
 
     fn(verified) returns a dict. The output file is {"generated", ..., "sections": {name: {...}}}.
@@ -179,8 +188,10 @@ def run_sections(out_path, sections, meta):
             else:
                 result[name] = {"ok": False, "stale": True, "error": str(e)[:300]}
             print(f"  FAIL  {name}: {e}")
+    known = set(all_names or [n for n, _ in sections])
     for name, old in previous.items():  # --only runs keep the sections they skipped
-        result.setdefault(name, old)
+        if name in known:
+            result.setdefault(name, old)
     data = {"generated": now_iso()}
     data.update(meta)
     data["sections"] = result
