@@ -7,8 +7,7 @@ I started this list for myself. Every day I'd tell myself I was going to work ou
 Some of these are daily and some are a few times a week. That's on purpose. Flossing three times a week that actually happens beats a daily goal I quit after ten days.
 
 - **Brush my teeth** every day, and **floss** a few times a week, at least once.
-- **DermaDry** for my hands and feet several times a week. It's a treatment where you submerge your hands and feet, and it keeps me from sweating through everything as much as I do.
-- **Acne medication** every day, so my face stays clear and hydrated.
+- **Skin care**, two parts. DermaDry for my hands and feet several times a week, a treatment where you submerge them so I don't sweat through everything as much as I do. And acne medication every day, so my face stays clear and hydrated.
 - **Breathing breaks** through the day. More on that below.
 - **The gym** three times a week, and **sprints** at least once.
 - **Water**, a **protein shake** and **creatine** every day.
@@ -46,9 +45,9 @@ Sleep is the big one. It's when all the work pays off. I track mine, and the Sle
 
 I try to take small moments through the day to calm down. My go-to is a breathing exercise I picked up from Andrew Huberman, where you breathe in through your nose, take a second little breath on top of it, and then let it all out slowly. Doing that for a couple of minutes really settles me. It's become more important since I've been getting into caffeine, and the Breathe tab has a timer so you can just follow along.
 
-## More caffeine, less weed
+## Caffeine, with care
 
-This one's a work in progress. I've used weed a lot through the day, and I want to see if I can save it for the end of the day or cut it back, and lean on caffeine with L-theanine, working out and plain old endorphins to perk me up instead. The Fuel tab has a "less of" counter where you pick the thing you want to cut back on and set your own limit, plus notes on caffeine, L-theanine and NAC with the research behind them. Talk to your doctor before you start any supplement.
+I've been leaning on caffeine with L-theanine, working out and plain old endorphins as my daytime lift. The Fuel tab has a "less of" counter where you pick anything you want to cut back on and set your own limit, plus notes on caffeine, L-theanine and NAC with the research behind them. Talk to your doctor before you start any supplement.
 
 ## Water
 
