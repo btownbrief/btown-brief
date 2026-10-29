@@ -119,6 +119,40 @@
   --liq-games-ink: #FFFFFF;
   --liq-recaps: #7A5BB0;            /* Recaps, the Wire's fourth word */
   --liq-recaps-ink: #FFFFFF;
+  /* Real life / Online (2026-10-29): sunset amber for going out, violet
+     for reading and posting; the same in both themes, so the inks hold */
+  --liq-irl: #F2A93B;
+  --liq-irl-ink: #2B1606;
+  --liq-online: #7A5BB0;
+  --liq-online-ink: #FFFFFF;
+  /* The eight apps (2026-10-29). Each has a deep colour, its mast and its
+     home-screen icon (cream reads 10:1 or better on every one), and a pop,
+     its top tabs' water and the ring on its tile in the switcher. All Day's
+     is the navy mast it has always had. */
+  --app-all-day: #0E2A47;
+  --app-all-day-pop: #F5B04B;
+  --app-all-day-pop-ink: #2B1606;
+  --app-out: #3A1E52;               /* night plum */
+  --app-out-pop: #F28C5B;           /* sunset coral */
+  --app-out-pop-ink: #2B1606;
+  --app-eat: #4A2316;               /* cast iron */
+  --app-eat-pop: #E46B32;           /* paprika, Food's own */
+  --app-eat-pop-ink: #2B1606;
+  --app-people: #0D3B40;            /* deep lake teal */
+  --app-people-pop: #1D7F8A;        /* People's own teal */
+  --app-people-pop-ink: #FFFFFF;
+  --app-body: #183D26;              /* forest */
+  --app-body-pop: #5DA142;          /* Habits' fern */
+  --app-body-pop-ink: #0E2410;
+  --app-town: #2A3442;              /* slate, city hall */
+  --app-town-pop: #2F6FB2;          /* lake blue */
+  --app-town-pop-ink: #FFFFFF;
+  --app-play: #241E5C;              /* arcade night */
+  --app-play-pop: #5560D6;          /* Games' indigo */
+  --app-play-pop-ink: #FFFFFF;
+  --app-paper: #26221D;             /* printer's ink */
+  --app-paper-pop: #C8A15A;         /* newsprint gold */
+  --app-paper-pop-ink: #1E1608;
   --recap: #5B3F94;                 /* a recap's kind title */
   --recap-soft: #EEE8F6;            /* a recap's card */
   --recap-line: rgba(91, 63, 148, .18);
@@ -205,6 +239,8 @@
   /* Archivo 500: the phone bar's nine labels, as big as nine fit: 10px on a
      360px phone, about 10.8 at 390, 11.8 at 430 ("Vintage" is the widest) */
   --fs-nav: clamp(10px, calc(10px + (100vw - 360px) * .026), 12px);
+  /* the bar's labels when an app has five to seven tabs, not nine */
+  --fs-nav-few: clamp(11px, calc(11px + (100vw - 360px) * .03), 13px);
   --fs-button: 0.875rem;     /* 14, Archivo 600 */
   --fs-caps: 0.75rem;        /* 12, Archivo 700, the only uppercase: eyebrow, new-since line, "Coming in the rebuild" */
   --fs-tag: 0.6875rem;       /* 11, Archivo 600: Local, Btown Brief */
@@ -383,3 +419,32 @@
   --shadow-float: 0 12px 40px rgba(0, 0, 0, .6), 0 2px 8px rgba(0, 0, 0, .4);
   --shadow-pill: 0 1px 3px rgba(0, 0, 0, .5);
 }
+
+/* Each app's mast is its own deep colour (2026-10-29), so the eight read as
+   eight apps side by side on a home screen and in the switcher; the iPhone
+   status bar follows it (store.js paintStatusBar reads --lake). All Day has
+   no block here: its mast is the navy above. Dark mode lifts each a step,
+   as the navy is lifted. These come last so they win over the dark blocks. */
+:root[data-app="out"] { --lake: var(--app-out); --lake-hover: #4E2C69; }
+:root[data-app="eat"] { --lake: var(--app-eat); --lake-hover: #603323; }
+:root[data-app="people"] { --lake: var(--app-people); --lake-hover: #174E54; }
+:root[data-app="body"] { --lake: var(--app-body); --lake-hover: #245134; }
+:root[data-app="town"] { --lake: var(--app-town); --lake-hover: #3A4657; }
+:root[data-app="play"] { --lake: var(--app-play); --lake-hover: #332C78; }
+:root[data-app="paper"] { --lake: var(--app-paper); --lake-hover: #39332C; }
+@media (prefers-color-scheme: dark) {
+  :root[data-app="out"]:not([data-theme="light"]) { --lake: #45285E; }
+  :root[data-app="eat"]:not([data-theme="light"]) { --lake: #57301F; }
+  :root[data-app="people"]:not([data-theme="light"]) { --lake: #154850; }
+  :root[data-app="body"]:not([data-theme="light"]) { --lake: #214A30; }
+  :root[data-app="town"]:not([data-theme="light"]) { --lake: #343F4E; }
+  :root[data-app="play"]:not([data-theme="light"]) { --lake: #2E2869; }
+  :root[data-app="paper"]:not([data-theme="light"]) { --lake: #312C26; }
+}
+:root[data-app="out"][data-theme="dark"] { --lake: #45285E; }
+:root[data-app="eat"][data-theme="dark"] { --lake: #57301F; }
+:root[data-app="people"][data-theme="dark"] { --lake: #154850; }
+:root[data-app="body"][data-theme="dark"] { --lake: #214A30; }
+:root[data-app="town"][data-theme="dark"] { --lake: #343F4E; }
+:root[data-app="play"][data-theme="dark"] { --lake: #2E2869; }
+:root[data-app="paper"][data-theme="dark"] { --lake: #312C26; }

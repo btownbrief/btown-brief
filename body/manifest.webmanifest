@@ -1,0 +1,32 @@
+{
+  "name": "Body — Btown Brief",
+  "short_name": "Body",
+  "description": "Your daily template: habits, training, recovery, fuel, a coach, and workouts with others in Burlington.",
+  "id": "/body/",
+  "start_url": "/body/?source=pwa",
+  "scope": "/body/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#183D26",
+  "theme_color": "#183D26",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

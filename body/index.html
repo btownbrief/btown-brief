@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en" data-app="body">
+<head>
+  <meta charset="utf-8">
+  <!-- One shell, eight apps (wave 0, 2026-10-29). Everything relative on this
+       page and in the shared code resolves against /all-day/, where the shell,
+       its modes and its data live; this folder holds only the page, the
+       manifest and the icons. app.js keeps #links and history in this app. -->
+  <base href="../all-day/">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Body — Burlington Brief</title>
+  <meta name="description" content="Your daily template: habits, training, recovery, fuel, a coach, and workouts with others in Burlington.">
+  <meta property="og:title" content="Body — Burlington Brief">
+  <meta property="og:description" content="Your daily template: habits, training, recovery, fuel, a coach, and workouts with others in Burlington.">
+  <meta property="og:image" content="../assets/og/og-guide.jpg">
+  <!-- The strip iOS draws the clock on is this app's mast colour.
+       store.js repaints it to match the theme. -->
+  <meta name="theme-color" content="#183D26">
+  <link rel="icon" href="../assets/favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="apple-touch-icon" href="../body/apple-touch-icon.png">
+  <link rel="manifest" href="../body/manifest.webmanifest">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Body">
+  <script>
+    /* Paint the chosen theme before first paint, or a dark-mode phone gets a
+       white flash on every load. The two colours mirror --paper in
+       tokens.css, which has not loaded yet. Mirrors store.js applyTheme(). */
+    try {
+      var t = localStorage.getItem('allday-theme');
+      if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t);
+      var dark = t === 'dark' || (t !== 'light' && matchMedia('(prefers-color-scheme: dark)').matches);
+      document.documentElement.style.background = dark ? '#0C1520' : '#F7F4EE';
+    } catch (e) { /* private mode: the stylesheet default stands */ }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..600;1,400..600&family=Archivo:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/tokens.css?v=20261029a">
+  <link rel="stylesheet" href="css/app.css?v=20261029a">
+<!-- GoatCounter -->
+<script data-goatcounter="https://btown-brief.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
+</head>
+<body>
+  <header class="mast" id="mast">
+    <div class="mast-row">
+      <a class="wordmark" href="#" id="wordmark">Body</a>
+      <!-- Stephen's Btown Brief logo (his Beehiiv publication logo, cropped to
+           the lettering and the Lab), so it reads as his project (2026-10-22) -->
+      <a class="brandlink" id="brand" href="https://www.btownbrief.com/" target="_blank" rel="noopener"><img src="assets/brand/btown-brief-logo.png" alt="Btown Brief" width="240" height="142"></a>
+      <span class="mast-title" id="mast-title"></span>
+      <button class="iconbtn" id="theme-btn" aria-label="Switch theme"></button>
+      <button class="savedbtn" id="saved-btn" aria-label="Saved"></button>
+      <button class="iconbtn" id="settings-btn" aria-label="Settings"></button>
+    </div>
+    <div class="subnav" id="subnav"></div>
+  </header>
+
+  <main class="app" id="app"></main>
+
+  <aside class="aside" id="aside" aria-label="More on this tab" hidden></aside>
+
+  <div class="player" id="player" hidden>
+    <div class="p-bar" id="p-bar" aria-hidden="true"><i></i></div>
+    <span class="p-art"></span>
+    <span class="p-meta"><span class="p-title" id="p-title"></span><span class="p-show" id="p-show"></span></span>
+    <button class="iconbtn" id="p-toggle" aria-label="Play or pause"></button>
+    <button class="iconbtn" id="p-close" aria-label="Close player"></button>
+  </div>
+
+  <nav class="tabbar" id="tabbar" role="tablist" aria-label="Body sections"></nav>
+
+  <div class="vbox" id="vbox" hidden>
+    <div class="vbox-card" role="dialog" aria-label="Video">
+      <div class="vbox-head">
+        <span class="t" id="vbox-title"></span>
+        <button class="iconbtn" id="vbox-close" aria-label="Close video"></button>
+      </div>
+      <div class="vbox-frame" id="vbox-frame"></div>
+      <div class="vbox-foot">
+        <span class="note" id="vbox-hint" hidden>Not playing? Some videos block embedding.</span>
+        <a class="btn ghost sm" id="vbox-open" target="_blank" rel="noopener">Open in YouTube ↗</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="sheet" id="sheet" hidden></div>
+  <div class="confirm" id="confirm" hidden></div>
+  <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+  <audio id="audio" preload="none"></audio>
+
+  <noscript><p class="empty">Body needs JavaScript.</p></noscript>
+
+
+  <script type="module" src="js/main.js?v=20261029a"></script>
+</body>
+</html>

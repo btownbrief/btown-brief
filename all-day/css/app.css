@@ -2691,3 +2691,64 @@ body.bd-full { overflow: hidden; }
 .homehow { padding: 0 0 var(--s3); }
 .homehow .ask-how { margin-top: 0; }
 .homerow .t .i { width: 16px; height: 16px; vertical-align: -3px; color: var(--good); }
+
+/* ============================================================ the eight apps */
+/* Wave 0 (2026-10-29): the same shell runs eight apps (js/apps/). */
+
+/* five to seven tabs share the phone's bar evenly, with bigger words than
+   nine can have; All Day's nine keep their grid above */
+.tabbar[data-n] { grid-template-columns: repeat(var(--tab-n), minmax(0, 1fr)); }
+.tabbar[data-n] button { font-size: var(--fs-nav-few); }
+@media (min-width: 1024px) { .tabbar[data-n] button { font-size: var(--fs-lead); } }
+
+/* the switcher's button: small, right after the wordmark (and the rail's
+   name), so the mast keeps its line */
+.appsbtn { width: 28px; position: relative; color: var(--lake-muted); }
+.appsbtn::after { content: ""; position: absolute; inset: 0 -6px; }
+.appsbtn .i { width: 17px; height: 17px; }
+/* the room it takes comes out of the gap before the logo and around Saved,
+   so All Day's wordmark still fits a 390 phone */
+.mast .appsbtn + .brandlink { margin-left: 6px; }
+.mast .appsbtn ~ .savedbtn { margin: 0 2px; }
+/* a longer app name than the row holds: Saved keeps its star, drops its word */
+.mast.tight .savedbtn { width: 36px; padding: 0; justify-content: center; }
+.mast.tight .savedbtn > span { display: none; }
+@media (min-width: 1024px) { .mast .appsbtn { display: none; } }
+.rail-brand .appsbtn { margin-left: 6px; color: var(--ink-3); }
+.rail-brand .appsbtn:hover { color: var(--ink); }
+
+/* the sheet: eight tiles, this one ringed, then the home-screen card */
+.appgrid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--s4) var(--s2); padding: var(--s2) 0 var(--s4); }
+.appcell { display: grid; justify-items: center; gap: 6px; padding: var(--s1) 0; border-radius: var(--r-media); text-align: center; }
+.appcell:hover .appname { text-decoration: underline; }
+.appname { font-size: var(--fs-meta); font-weight: 600; color: var(--ink); line-height: var(--lh-tight); }
+.appcell.on .appname { font-weight: 700; }
+.apptile { display: grid; place-items: center; width: 56px; height: 56px; border-radius: var(--r-sheet);
+  background: var(--tile); color: var(--lake-ink); box-shadow: inset 0 0 0 1px var(--lake-line); }
+.apptile .i { width: 28px; height: 28px; stroke-width: 1.9; }
+.appcell.on .apptile { box-shadow: 0 0 0 2px var(--paper), 0 0 0 4px var(--tile-pop); }
+.apptile.sm { width: 40px; height: 40px; border-radius: var(--r-media); }
+.apptile.sm .i { width: 22px; height: 22px; }
+.installcard { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; gap: var(--s3);
+  padding: var(--s3); border: 1px solid var(--line); border-radius: var(--r-media); background: var(--paper-2); }
+.ic-words b { font-size: var(--fs-lead); font-weight: 600; line-height: var(--lh-tight); }
+.ic-row { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: center; gap: var(--s2); }
+.ic-row .ask-how { margin-top: 0; }
+.howto + .howto { margin-top: var(--s4); }
+.howto-steps { list-style: none; display: grid; gap: var(--s2); }
+.howto-steps li { display: flex; align-items: center; gap: var(--s3); font-size: var(--fs-lead); }
+
+/* a shelf: a tab not built yet. Live, its promise and the top tabs to come */
+.promise-tops { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; margin-top: var(--s4); }
+.promise-tops .chip { cursor: default; }
+.shelf-sec + .shelf-sec { margin-top: var(--s2); }
+
+/* a dot on a top tab with something new since the last visit */
+.secpill .chip .nd, .secsheet-row .nd { width: 7px; height: 7px; border-radius: var(--r-round); background: var(--sunset); flex: 0 0 auto; }
+.secpill .chip .nd { align-self: flex-start; margin: 9px 0 0 -1px; }
+.secbar.lead > .secpill .chip .nd { margin-top: 12px; }
+.secpill .chip.on .nd { background: currentColor; }
+
+/* Real life / Online: the Local / Everything switch in its own two waters */
+.worldsw { --local: var(--liq-irl); --local-ink: var(--liq-irl-ink); --every: var(--liq-online); --every-ink: var(--liq-online-ink); }
+body[data-world="irl"] .panel [data-world="online"], body[data-world="online"] .panel [data-world="irl"] { display: none; }

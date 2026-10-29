@@ -1,0 +1,736 @@
+{
+  "_": "Invented demo data for Play’s tabs that are not built yet; every name, place detail and post is made up.",
+  "tabs": {
+    "daily": {
+      "sections": [
+        {
+          "key": "wordle",
+          "label": "Wordle",
+          "hours": 6,
+          "items": [
+            {
+              "k": "hl-1",
+              "kind": "headline",
+              "src": "Daily",
+              "title": "Today’s Btown Wordle: most people got it in four",
+              "ago": "6h",
+              "thumb": "mustard"
+            },
+            {
+              "k": "po-1",
+              "kind": "post",
+              "author": "Lou F.",
+              "title": "Streak hanging on",
+              "text": "Day 41 of my streak. Today’s word nearly ended it.",
+              "ago": "10h",
+              "comments": "6"
+            }
+          ]
+        },
+        {
+          "key": "crossings",
+          "label": "Crossings",
+          "hours": 2,
+          "items": [
+            {
+              "k": "hl-2",
+              "kind": "headline",
+              "src": "Daily",
+              "title": "Crossings: connect the bridges in seven moves",
+              "ago": "2h",
+              "thumb": "lake"
+            },
+            {
+              "k": "po-2",
+              "kind": "post",
+              "author": "Bea N.",
+              "title": "Six moves",
+              "text": "Solved it in six by going over the Winooski bridge last.",
+              "ago": "4h",
+              "comments": "3"
+            }
+          ]
+        },
+        {
+          "key": "news-quiz",
+          "label": "News quiz",
+          "hours": 0.3,
+          "items": [
+            {
+              "k": "hl-3",
+              "kind": "headline",
+              "src": "Daily",
+              "title": "Five questions on this week’s Burlington news",
+              "ago": "18m",
+              "thumb": "paper"
+            },
+            {
+              "k": "hl-4",
+              "kind": "headline",
+              "src": "Daily",
+              "title": "Last week’s quiz: the question almost everyone missed",
+              "ago": "2h",
+              "thumb": "slate"
+            }
+          ]
+        },
+        {
+          "key": "higher-lower",
+          "label": "Higher or lower",
+          "hours": 12,
+          "items": [
+            {
+              "k": "hl-5",
+              "kind": "headline",
+              "src": "Daily",
+              "title": "Higher or lower: which street is longer",
+              "ago": "12h",
+              "thumb": "street"
+            },
+            {
+              "k": "hl-6",
+              "kind": "headline",
+              "src": "Daily",
+              "title": "Higher or lower: which park is bigger",
+              "ago": "20h",
+              "thumb": "field"
+            }
+          ]
+        },
+        {
+          "key": "where",
+          "label": "Where in Btown",
+          "hours": 3,
+          "items": [
+            {
+              "k": "hl-7",
+              "kind": "headline",
+              "src": "Daily",
+              "title": "Where in Btown: a mural, a fire escape and a cat",
+              "ago": "3h",
+              "thumb": "brick"
+            },
+            {
+              "k": "po-3",
+              "kind": "post",
+              "author": "Gil H.",
+              "title": "Found it",
+              "text": "Got it from the shadow of the steeple. Took me ten minutes.",
+              "ago": "5h",
+              "comments": "8"
+            }
+          ]
+        },
+        {
+          "key": "real-fake",
+          "label": "Real or fake",
+          "hours": 30,
+          "items": [
+            {
+              "k": "hl-8",
+              "kind": "headline",
+              "src": "Daily",
+              "title": "Real or fake: five Burlington street names",
+              "ago": "1d",
+              "thumb": "sand"
+            },
+            {
+              "k": "hl-9",
+              "kind": "headline",
+              "src": "Daily",
+              "title": "Real or fake: old menus from downtown diners",
+              "ago": "2d",
+              "thumb": "coffee"
+            }
+          ]
+        }
+      ]
+    },
+    "city": {
+      "sections": [
+        {
+          "key": "missions",
+          "label": "Missions",
+          "hours": 8,
+          "items": [
+            {
+              "k": "pk-1",
+              "kind": "pick",
+              "src": "Btown Brief",
+              "eyebrow": "Mission",
+              "title": "Visit a shop you’ve never walked into",
+              "why": "Most of us walk past the same doors every day.",
+              "media": "street"
+            },
+            {
+              "k": "pk-2",
+              "kind": "pick",
+              "src": "Btown Brief",
+              "eyebrow": "Mission",
+              "title": "Watch the sunset from three different piers",
+              "why": "The lake looks different from every angle.",
+              "media": "dawn"
+            }
+          ]
+        },
+        {
+          "key": "streets",
+          "label": "Streets",
+          "hours": 1.5,
+          "items": [
+            {
+              "k": "po-4",
+              "kind": "post",
+              "author": "Mae T.",
+              "title": "Fourteen streets",
+              "text": "Claimed fourteen streets in the Old North End this weekend. My feet disagree with my score.",
+              "ago": "2h",
+              "comments": "5"
+            },
+            {
+              "k": "po-5",
+              "kind": "post",
+              "author": "Rhys K.",
+              "title": "One street left",
+              "text": "Every street in the South End is done except one dead end I can’t find.",
+              "ago": "4h",
+              "comments": "9"
+            }
+          ]
+        },
+        {
+          "key": "lit",
+          "label": "Lit",
+          "hours": 20,
+          "items": [
+            {
+              "k": "bd-1",
+              "kind": "board",
+              "author": "Ola P.",
+              "title": "Litter walk along the bike path",
+              "metaLine": "Sat 10 am · 8 spots · bags provided",
+              "text": "We’ll cover North Beach to the Moran plant.",
+              "place": "North Beach",
+              "ago": "20h",
+              "left": "2d left"
+            },
+            {
+              "k": "bd-2",
+              "kind": "board",
+              "author": "Finn E.",
+              "title": "Ten-minute pickup on my block",
+              "metaLine": "Every evening · 2 spots",
+              "text": "Join for a few minutes or a few weeks.",
+              "place": "Hill Section",
+              "ago": "1d",
+              "left": "1w left"
+            }
+          ]
+        },
+        {
+          "key": "dibs",
+          "label": "Dibs",
+          "hours": 3,
+          "items": [
+            {
+              "k": "bd-3",
+              "kind": "board",
+              "author": "Iris J.",
+              "title": "Dibs on the sunniest bench at Battery Park",
+              "metaLine": "Today · noon · reading",
+              "text": "I’ll share it with anyone who brings a good book.",
+              "place": "Battery Park",
+              "ago": "3h",
+              "left": "5h left"
+            },
+            {
+              "k": "bd-4",
+              "kind": "board",
+              "author": "Teo V.",
+              "title": "Dibs on the corner table at the library",
+              "metaLine": "Afternoons · this week",
+              "text": "First to sit there gets the points.",
+              "place": "Fletcher Free Library",
+              "ago": "5h",
+              "left": "3d left"
+            }
+          ]
+        },
+        {
+          "key": "photo-quests",
+          "label": "Photo quests",
+          "hours": 50,
+          "items": [
+            {
+              "k": "pk-3",
+              "kind": "pick",
+              "src": "Btown Brief",
+              "eyebrow": "Photo quest",
+              "title": "Find five painted doors in the Old North End",
+              "why": "A whole neighborhood of color, if you look up.",
+              "media": "cherry"
+            },
+            {
+              "k": "pk-4",
+              "kind": "pick",
+              "src": "Btown Brief",
+              "eyebrow": "Photo quest",
+              "title": "Photograph the lake at the same spot each week",
+              "why": "By spring you’ll have a season in one folder.",
+              "media": "lake"
+            }
+          ]
+        },
+        {
+          "key": "crews",
+          "label": "Crews",
+          "hours": 0.6,
+          "items": [
+            {
+              "k": "po-6",
+              "kind": "post",
+              "author": "Nadia S.",
+              "title": "Crew standings",
+              "text": "Old North End crew passed the South End this week. Rematch is on.",
+              "ago": "36m",
+              "comments": "14"
+            },
+            {
+              "k": "po-7",
+              "kind": "post",
+              "author": "Cole B.",
+              "title": "Winooski crew",
+              "text": "Winooski crew needs two more walkers for the weekend push.",
+              "ago": "3h",
+              "comments": "4"
+            }
+          ]
+        },
+        {
+          "key": "season",
+          "label": "Season",
+          "hours": 200,
+          "items": [
+            {
+              "k": "hl-10",
+              "kind": "headline",
+              "src": "City game",
+              "title": "The fall season ends soon: what’s left to collect",
+              "ago": "1w",
+              "thumb": "foliage"
+            },
+            {
+              "k": "hl-11",
+              "kind": "headline",
+              "src": "City game",
+              "title": "Winter season preview: ice, lights and warm cafes",
+              "ago": "2w",
+              "thumb": "rink"
+            }
+          ]
+        }
+      ]
+    },
+    "draw": {
+      "sections": [
+        {
+          "key": "aquarium",
+          "label": "Aquarium",
+          "hours": 7,
+          "items": [
+            {
+              "k": "hl-12",
+              "kind": "headline",
+              "src": "Aquarium",
+              "title": "Two hundred fish now swim in the shared tank",
+              "ago": "7h",
+              "thumb": "teal"
+            },
+            {
+              "k": "po-8",
+              "kind": "post",
+              "author": "Ivy C.",
+              "title": "My pike",
+              "text": "Drew a pike with a tiny hat. It’s eating everything.",
+              "ago": "12h",
+              "comments": "7"
+            }
+          ]
+        },
+        {
+          "key": "truck",
+          "label": "The truck",
+          "hours": 2,
+          "items": [
+            {
+              "k": "hl-13",
+              "kind": "headline",
+              "src": "The truck",
+              "title": "Square wheels finish the course, eventually",
+              "ago": "2h",
+              "thumb": "mustard"
+            },
+            {
+              "k": "po-9",
+              "kind": "post",
+              "author": "Ben S.",
+              "title": "Big wheels",
+              "text": "Drew giant wheels and my truck flipped on the first hill.",
+              "ago": "4h",
+              "comments": "5"
+            }
+          ]
+        },
+        {
+          "key": "gallery",
+          "label": "Gallery",
+          "hours": 0.5,
+          "items": [
+            {
+              "k": "hl-14",
+              "kind": "headline",
+              "src": "Gallery",
+              "title": "This week’s gallery: a lot of lake monsters",
+              "ago": "30m",
+              "thumb": "plum"
+            },
+            {
+              "k": "hl-15",
+              "kind": "headline",
+              "src": "Gallery",
+              "title": "The most-liked drawing of the month",
+              "ago": "2h",
+              "thumb": "neon"
+            }
+          ]
+        },
+        {
+          "key": "prompt",
+          "label": "Prompt of the week",
+          "hours": 90,
+          "items": [
+            {
+              "k": "pk-5",
+              "kind": "pick",
+              "src": "Btown Brief",
+              "eyebrow": "Prompt",
+              "title": "Draw your favorite Burlington building",
+              "why": "The winner goes into next month’s game.",
+              "media": "brick"
+            },
+            {
+              "k": "pk-6",
+              "kind": "pick",
+              "src": "Btown Brief",
+              "eyebrow": "Prompt",
+              "title": "Draw the lake in November",
+              "why": "Gray, blue, silver, or whatever you saw.",
+              "media": "slate"
+            }
+          ]
+        }
+      ]
+    },
+    "party": {
+      "sections": [
+        {
+          "key": "btown-party",
+          "label": "Btown Party",
+          "hours": 30,
+          "items": [
+            {
+              "k": "ev-1",
+              "kind": "event",
+              "src": "Btown Party",
+              "title": "Party game night, teams of four",
+              "dow": "Fri",
+              "dom": "6",
+              "when": "8 pm",
+              "where": "Copper Kettle Taproom, Pine St",
+              "price": "Free",
+              "going": "32"
+            },
+            {
+              "k": "ev-2",
+              "kind": "event",
+              "src": "Btown Party",
+              "title": "Family party night, all ages",
+              "dow": "Sat",
+              "dom": "14",
+              "when": "5 pm",
+              "where": "Old North End community room",
+              "price": "Free",
+              "going": "25"
+            }
+          ]
+        },
+        {
+          "key": "trivia",
+          "label": "Trivia",
+          "hours": 3,
+          "items": [
+            {
+              "k": "ev-3",
+              "kind": "event",
+              "src": "Church Street Trivia",
+              "title": "Burlington history trivia",
+              "dow": "Tue",
+              "dom": "10",
+              "when": "7 pm",
+              "where": "The Maple Room, Church St",
+              "price": "Free",
+              "going": "40"
+            },
+            {
+              "k": "ev-4",
+              "kind": "event",
+              "src": "Church Street Trivia",
+              "title": "Music trivia, the nineties round",
+              "dow": "Thu",
+              "dom": "12",
+              "when": "8 pm",
+              "where": "Juniper Room, Pine St",
+              "price": "Free",
+              "going": "29"
+            }
+          ]
+        },
+        {
+          "key": "arcade-night",
+          "label": "Arcade Night",
+          "hours": 9,
+          "items": [
+            {
+              "k": "ev-5",
+              "kind": "event",
+              "src": "Arcade Night",
+              "title": "Arcade night, bring your phone",
+              "dow": "Sat",
+              "dom": "7",
+              "when": "8 pm",
+              "where": "Copper Kettle Taproom, Pine St",
+              "price": "Free",
+              "going": "37"
+            },
+            {
+              "k": "ev-6",
+              "kind": "event",
+              "src": "Arcade Night",
+              "title": "Arcade night, the rematch",
+              "dow": "Sat",
+              "dom": "14",
+              "when": "8 pm",
+              "where": "Copper Kettle Taproom, Pine St",
+              "price": "Free",
+              "going": "18"
+            }
+          ]
+        },
+        {
+          "key": "stay-awhile",
+          "label": "Stay Awhile",
+          "hours": 1,
+          "items": [
+            {
+              "k": "po-10",
+              "kind": "post",
+              "author": "June W.",
+              "title": "Two hours in",
+              "text": "Played Stay Awhile for two hours with my roommates. We learned too much about each other.",
+              "ago": "1h",
+              "comments": "4"
+            },
+            {
+              "k": "po-11",
+              "kind": "post",
+              "author": "Kai D.",
+              "title": "First jobs",
+              "text": "The Stay Awhile question about first jobs started a whole night of stories.",
+              "ago": "3h",
+              "comments": "6"
+            }
+          ]
+        },
+        {
+          "key": "table-talk",
+          "label": "Table Talk",
+          "hours": 60,
+          "items": [
+            {
+              "k": "pk-7",
+              "kind": "pick",
+              "src": "Btown Brief",
+              "eyebrow": "Table Talk",
+              "title": "Questions for a dinner with new friends",
+              "why": "Better than talking about the weather, again.",
+              "media": "coffee"
+            },
+            {
+              "k": "pk-8",
+              "kind": "pick",
+              "src": "Btown Brief",
+              "eyebrow": "Table Talk",
+              "title": "The holiday dinner deck",
+              "why": "For the table with three generations at it.",
+              "media": "cherry"
+            }
+          ]
+        }
+      ]
+    },
+    "boards": {
+      "sections": [
+        {
+          "key": "leaderboards",
+          "label": "Leaderboards",
+          "hours": 15,
+          "items": [
+            {
+              "k": "hl-16",
+              "kind": "headline",
+              "src": "Leaderboards",
+              "title": "This week’s top ten across the arcade",
+              "ago": "15h",
+              "thumb": "neon"
+            },
+            {
+              "k": "hl-17",
+              "kind": "headline",
+              "src": "Leaderboards",
+              "title": "The South End holds the crew lead, barely",
+              "ago": "1d",
+              "thumb": "street"
+            }
+          ]
+        },
+        {
+          "key": "predictions",
+          "label": "Predictions",
+          "hours": 1,
+          "items": [
+            {
+              "k": "po-12",
+              "kind": "post",
+              "author": "Abe L.",
+              "title": "First snow",
+              "text": "First real snow by November 20. Calling it now.",
+              "ago": "1h",
+              "comments": "22"
+            },
+            {
+              "k": "po-13",
+              "kind": "post",
+              "author": "Sol M.",
+              "title": "Lake freeze",
+              "text": "The lake freezes over in February this year, mark it down.",
+              "ago": "3h",
+              "comments": "15"
+            }
+          ]
+        },
+        {
+          "key": "bracket",
+          "label": "Bracket",
+          "hours": 3,
+          "items": [
+            {
+              "k": "hl-18",
+              "kind": "headline",
+              "src": "Bracket",
+              "title": "Best bagel bracket: round two results",
+              "ago": "3h",
+              "thumb": "coffee"
+            },
+            {
+              "k": "hl-19",
+              "kind": "headline",
+              "src": "Bracket",
+              "title": "Best view bracket: the waterfront vs. the Hill",
+              "ago": "5h",
+              "thumb": "lake"
+            }
+          ]
+        },
+        {
+          "key": "playing",
+          "label": "Playing",
+          "hours": 0.4,
+          "items": [
+            {
+              "k": "po-14",
+              "kind": "post",
+              "author": "Zoe R.",
+              "title": "Office break",
+              "text": "Three people in my office are on Crossings right now. Work can wait.",
+              "ago": "24m",
+              "comments": "3"
+            },
+            {
+              "k": "po-15",
+              "kind": "post",
+              "author": "Quinn H.",
+              "title": "Back again",
+              "text": "Back on the arcade after a month off. Lost my spot on every board.",
+              "ago": "2h",
+              "comments": "2"
+            }
+          ]
+        },
+        {
+          "key": "lfg",
+          "label": "Looking for a group",
+          "hours": 25,
+          "items": [
+            {
+              "k": "bd-5",
+              "kind": "board",
+              "author": "Lev A.",
+              "title": "Two more for a weekly board game group",
+              "metaLine": "Wednesdays · 2 spots · any age",
+              "text": "Strategy games, snacks, and patience for slow turns.",
+              "place": "Winooski, Main St",
+              "ago": "1d",
+              "left": "5d left"
+            },
+            {
+              "k": "bd-6",
+              "kind": "board",
+              "author": "Dara P.",
+              "title": "Looking for a co-op video game crew",
+              "metaLine": "Weeknights · 3 spots · twenties",
+              "text": "Online most nights, in person once a month.",
+              "place": "Online",
+              "ago": "2d",
+              "left": "1w left"
+            }
+          ]
+        },
+        {
+          "key": "gamertags",
+          "label": "Gamertags",
+          "hours": 80,
+          "items": [
+            {
+              "k": "po-16",
+              "kind": "post",
+              "author": "Max T.",
+              "title": "Swap tags",
+              "text": "Swap your gamertag here if you want a friendly rival in Burlington.",
+              "ago": "3d",
+              "comments": "12"
+            },
+            {
+              "k": "po-17",
+              "kind": "post",
+              "author": "Ren K.",
+              "title": "Puzzle player",
+              "text": "Mostly puzzle games, very bad at shooters. Add me.",
+              "ago": "6d",
+              "comments": "3"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

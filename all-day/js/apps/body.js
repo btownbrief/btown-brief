@@ -1,0 +1,30 @@
+/* Body: the daily template (APP-MAP.html, app 5). Habits is hosted on
+   Today as it is; here it has no Build beside it. */
+export default {
+  id: 'body',
+  name: 'Body',
+  short: 'Body',
+  icon: 'body',
+  accent: '--app-body',
+  href: '../body/',
+  url: 'https://guide.btownbrief.com/body/',
+  line: 'Your daily template.',
+  tabs: [
+    { mode: 'habits', label: 'Today', top: ['Habits', 'Template', 'Season', 'Forest', 'Wall'] },
+    { key: 'train', label: 'Train', icon: 'dumbbell',
+      promise: 'The gyms, three workouts, and a log of your effort.',
+      top: ['Gyms', 'Beginner', 'Intermediate', 'Hardcore', 'Sprints', 'Log', 'Book Stephen'] },
+    { key: 'recover', label: 'Recover', icon: 'leaf',
+      promise: 'Stretch, sauna, breathe and sleep, with a timer.',
+      top: ['Stretch', 'Yoga', 'Roll', 'Sauna & cold', 'Breathe', 'Sleep'] },
+    { key: 'fuel', label: 'Fuel', icon: 'drop',
+      promise: 'Water, protein and calories, one tap each.',
+      top: ['Water', 'Protein', 'Calories', 'Basics', 'Supplements'] },
+    { key: 'coach', label: 'Coach', icon: 'comment',
+      promise: 'A coach that logs what you tell it and nudges you.',
+      top: ['Chat', 'Morning', 'Capture', 'How I do it'] },
+    { key: 'together', label: 'Together', icon: 'people',
+      promise: 'Workouts and recovery with others, this week.',
+      top: ['This week', 'Work out', 'Recover', 'Adult Social Sports', 'Join'] },
+  ],
+};
