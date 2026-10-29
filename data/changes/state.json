@@ -2,6 +2,15 @@
  "nws-weather": {
   "alerts": [
    {
+    "id": "urn:oid:2.49.0.1.840.0.6cc6e2ab9afc736dcefaebec62f2d1daac4cce60.001.1",
+    "event": "Special Weather Statement",
+    "headline": "Special Weather Statement issued October 29 at 3:31AM EDT by NWS Burlington VT",
+    "severity": "Moderate",
+    "onset": "2026-10-29T03:31:00-04:00",
+    "ends": "2026-10-29T20:15:00-04:00",
+    "url": "https://forecast.weather.gov/MapClick.php?lat=44.4759&lon=-73.2121"
+   },
+   {
     "id": "urn:oid:2.49.0.1.840.0.2b9bdd9a75b1c0cfb9ba85b3a930084a81368268.001.1",
     "event": "Special Weather Statement",
     "headline": "Special Weather Statement issued October 28 at 4:40PM EDT by NWS Burlington VT",
@@ -927,23 +936,37 @@
       "summary": "A (nearly) all high school edition of the High Five featuring a changing of the guard for girl's cross country state champs, and tracking the top two dogs in football as the regular season comes to a close."
      },
      {
-      "id": "https://www.vermontpublic.org/local-news/2026-10-26/vermont-making-apple-cider-community-endeavor",
-      "title": "In small town Vermont, making apple cider is a community endeavor",
-      "link": "https://www.vermontpublic.org/local-news/2026-10-26/vermont-making-apple-cider-community-endeavor",
-      "ts": "2026-10-26T09:00:00+00:00",
-      "summary": "On a picturesque dirt road in Johnson, a cider party is a decidedly uncomplicated good time."
-     },
-     {
       "id": "https://www.vermontpublic.org/local-news/2026-10-26/fearing-trump-vermont-nonprofits-rolled-back-racial-equity-loans",
       "title": "Fearing Trump, Vermont nonprofits rolled back racial equity loans",
       "link": "https://www.vermontpublic.org/local-news/2026-10-26/fearing-trump-vermont-nonprofits-rolled-back-racial-equity-loans",
       "ts": "2026-10-26T09:00:00+00:00",
       "summary": "Programs for homebuyers and entrepreneurs of color were billed as innovative and reparative. Now, they’re disappearing."
+     },
+     {
+      "id": "https://www.vermontpublic.org/local-news/2026-10-26/vermont-making-apple-cider-community-endeavor",
+      "title": "In small town Vermont, making apple cider is a community endeavor",
+      "link": "https://www.vermontpublic.org/local-news/2026-10-26/vermont-making-apple-cider-community-endeavor",
+      "ts": "2026-10-26T09:00:00+00:00",
+      "summary": "On a picturesque dirt road in Johnson, a cider party is a decidedly uncomplicated good time."
      }
     ]
    },
    "wcax": {
     "items": [
+     {
+      "id": "UAFFXY3RUBADFGMHJVMIFEU5HU",
+      "title": "Boil water order in effect for Montpelier neighborhood",
+      "link": "https://www.wcax.com/2026/10/29/boil-water-order-effect-montpelier-neighborhood/",
+      "ts": "2026-10-29T02:43:59+00:00",
+      "summary": "Montpelier’s Department of Public Works says crews are repairing a water main break."
+     },
+     {
+      "id": "BP5C6CMPQNEJBOW4CZW6CYN2VE",
+      "title": "Route 5 shut down in Newbury following car crash",
+      "link": "https://www.wcax.com/2026/10/29/route-5-shut-down-newbury-following-car-crash/",
+      "ts": "2026-10-29T02:39:13+00:00",
+      "summary": "State police say Route 5 in Newbury has both lanes blocked due to a crash."
+     },
      {
       "id": "DSE7R55ZIJHODOCGBRAN4YIOFI",
       "title": "Rutland senator arrested, pleads not guilty to domestic assault",
@@ -1279,164 +1302,150 @@
       "link": "https://www.wcax.com/2026/10/27/vermont-pub-brewery-announces-closure-after-almost-38-years/",
       "ts": "2026-10-27T01:47:42+00:00",
       "summary": "Vermont’s oldest craft brewery announced on Monday that it will close its doors."
-     },
-     {
-      "id": "JTRJLBLVXRHF5LI77WRD3ZU4PE",
-      "title": "Made in Vermont: Keeping fabrics out of landfills and giving winter gear a second life",
-      "link": "https://www.wcax.com/2026/10/26/made-vermont-keeping-fabrics-out-landfills-giving-winter-gear-second-life/",
-      "ts": "2026-10-26T23:00:18+00:00",
-      "summary": "The motto of BirdieBlue’s sustainable workshop is reduce, reuse and upcycle."
-     },
-     {
-      "id": "AK7QTV3GL5AGVOLXVFPQZFVE6E",
-      "title": "Officials affirm Vermont elections are secure ahead of Nov. 3",
-      "link": "https://www.wcax.com/2026/10/26/officials-affirm-vermont-elections-are-secure-ahead-nov-3/",
-      "ts": "2026-10-26T22:30:07+00:00",
-      "summary": "With just over a week to go until Election Day, leaders are assuring Vermonters that the state's elections are safe and secure."
      }
     ]
    },
    "mynbc5": {
     "items": [
      {
-      "id": "74271855",
-      "title": "Defeated Brazilian presidential candidate Flávio Bolsonaro and his family land in Miami",
-      "link": "https://www.mynbc5.com/article/flavio-bolsonaro-miami-fleeing-brazil-election/74271855",
-      "ts": "2026-10-29T01:30:00+00:00",
-      "summary": "Defeated Brazilian presidential candidate Flávio Bolsonaro and his family have landed in Miami after fleeing Brazil."
-     },
-     {
-      "id": "74278468",
-      "title": "Judge denies federal request to segregate California ballots, says it would 'wreak havoc' on voting",
-      "link": "https://www.mynbc5.com/article/judge-denies-federal-request-segregate-california-ballots/74278468",
-      "ts": "2026-10-29T01:19:00+00:00",
-      "summary": "A federal judge has rejected a Trump administration request to stop California from processing the ballots of up to 20,000 people, warning it would “wreak havoc” on the midterm elections."
-     },
-     {
-      "id": "74275395",
-      "title": "Alvin K. Hellerstein, a federal judge who handled Trump, Maduro and 9/11 cases, dies at 92",
-      "link": "https://www.mynbc5.com/article/alvin-hellerstein-dies-at-92-trump-maduro-911/74275395",
-      "ts": "2026-10-29T01:18:00+00:00",
-      "summary": "Alvin K. Hellerstein, a Manhattan federal judge who presided over matters involving President Trump, former Venezuelan President Maduro and the 9/11 attacks, has died."
+      "id": "74280022",
+      "title": "Police arrest 78-year-old from Sullivan County; accused of the driving wrong way on I-89",
+      "link": "https://www.mynbc5.com/article/wrong-way-driver-interstate-89-nh/74280022",
+      "ts": "2026-10-29T08:33:00+00:00",
+      "summary": "New Hampshire State Police arrested a 78-year-old from Charlestown for driving south in the northbound lanes of I-89 near Hopkinton. Police said the driver evaded multiple attempts to stop him."
      },
      {
       "id": "74278505",
       "title": "Fire at von Trapp Family Resort in Stowe; No Injuries Reported",
       "link": "https://www.mynbc5.com/article/fire-at-von-trapp-family-resort-in-stowe-no-injuries-reported/74278505",
-      "ts": "2026-10-29T01:07:00+00:00",
+      "ts": "2026-10-29T07:05:00+00:00",
       "summary": "Multiple fire crews responded after flames were reported coming from one of the resort’s villas Wednesday evening. The fire is out, and all residents are safe."
      },
      {
-      "id": "74278336",
-      "title": "US warns allies to prepare for possible Iran strikes, retaliation after elections, AP sources say",
-      "link": "https://www.mynbc5.com/article/us-warns-allies-to-prepare-for-possible-iran-strikes-retaliation-after-elections/74278336",
-      "ts": "2026-10-29T00:54:00+00:00",
-      "summary": "U.S. officials have told several Middle East countries and regional allies to be prepared for potential military action against Iran after next week’s midterms."
+      "id": "74279710",
+      "title": "Device as small as 'grain of rice' offers hope for rare eye disease",
+      "link": "https://www.mynbc5.com/article/device-offers-new-hope-for-rare-eye-disease/74279710",
+      "ts": "2026-10-29T05:31:00+00:00",
+      "summary": "A tiny implant is providing a groundbreaking treatment for macular telangiectasia, a rare eye disease, by slowing or stopping its progression."
      },
      {
-      "id": "74275321",
-      "title": "TV personality Ernie Johnson says this will be final season on 'Inside the NBA'",
-      "link": "https://www.mynbc5.com/article/ernie-johnson-final-season-inside-the-nba/74275321",
-      "ts": "2026-10-29T00:26:00+00:00",
-      "summary": "Ernie Johnson, the longtime television personality and sportscaster, announced Wednesday that this will be his final season hosting \"Inside the NBA.\""
+      "id": "74279462",
+      "title": "Best friends become rivals during World Series",
+      "link": "https://www.mynbc5.com/article/best-friends-become-rivals-world-series/74279462",
+      "ts": "2026-10-29T04:15:00+00:00",
+      "summary": "Two best friends have become temporary rivals as their MLB teams face each other in the World Series."
      },
      {
-      "id": "74277962",
-      "title": "Cornell faculty to move forward with no-confidence vote over handling of sexual assault allegations",
-      "link": "https://www.mynbc5.com/article/cornell-faculty-move-forward-with-no-confidence-vote-sexual-assault-allegations/74277962",
-      "ts": "2026-10-29T00:23:00+00:00",
-      "summary": "Cornell faculty members are now moving forward with an electronic vote on a proposed no-confidence resolution in the university’s administration, with voting set to conclude Nov. 6."
+      "id": "74279431",
+      "title": "Milwaukee's William Contreras wins World Series MVP",
+      "link": "https://www.mynbc5.com/article/milwaukee-william-contreras-wins-world-series-mvp/74279431",
+      "ts": "2026-10-29T04:00:00+00:00",
+      "summary": "William Contreras became the eighth catcher voted the World Series MVP after lifting the Milwaukee Brewers to their first World Series championship."
      },
      {
-      "id": "74264615",
-      "title": "Driver found dead after pursuit tied to Moira death investigation",
-      "link": "https://www.mynbc5.com/article/investigation-south-woods-road-moira-ny/74264615",
-      "ts": "2026-10-28T23:45:00+00:00",
-      "summary": "State police identified Melissa Pelc-Lohr, 50, and Norman Lohr Jr., 50, after both were found dead Tuesday in separate scenes in Franklin and Wayne counties."
+      "id": "74171786",
+      "title": "2026 Section VII Girls' Soccer Playoff Bracket",
+      "link": "https://www.mynbc5.com/article/2026-section-vii-girls-soccer-playoff-bracket/74171786",
+      "ts": "2026-10-29T03:43:00+00:00",
+      "summary": "See the latest scores, highlights and schedule from the postseason on the pitch"
      },
      {
-      "id": "74277059",
-      "title": "As AI in politics becomes more common, here's how voters can stay vigilant",
-      "link": "https://www.mynbc5.com/article/as-ai-in-politics-becomes-more-common-heres-how-voters-can-stay-vigilant/74277059",
-      "ts": "2026-10-28T23:42:00+00:00",
-      "summary": "Experts say voters cannot rely on visual clues alone to spot fake election content."
+      "id": "74173368",
+      "title": "2026 Section VII Boys' Soccer Playoff Bracket",
+      "link": "https://www.mynbc5.com/article/2026-section-vii-boys-soccer-playoff-bracket/74173368",
+      "ts": "2026-10-29T03:43:00+00:00",
+      "summary": "See the latest scores, highlights and schedule from the postseason on the courts"
      },
      {
-      "id": "74277755",
-      "title": "Police in South Carolina close Hayden Panettiere death investigation with no charges",
-      "link": "https://www.mynbc5.com/article/hayden-panettiere-case-closed-greenville-police/74277755",
-      "ts": "2026-10-28T23:18:00+00:00",
-      "summary": "The investigation into the death of Hayden Panettiere has been closed by police in Greenville, South Carolina"
+      "id": "74171640",
+      "title": "2026 VPA Boys' Volleyball Playoffs Bracket",
+      "link": "https://www.mynbc5.com/article/2026-vpa-boys-volleyball-playoffs-bracket/74171640",
+      "ts": "2026-10-29T03:41:00+00:00",
+      "summary": "See the latest scores, highlights and schedule from the postseason on the courts"
      },
      {
-      "id": "74277873",
-      "title": "Perkins Museum of Geology reopens at UVM after six-year closure",
-      "link": "https://www.mynbc5.com/article/perkins-museum-of-geology-reopens/74277873",
-      "ts": "2026-10-28T23:18:00+00:00",
-      "summary": "After six years of being closed to the public, the Perkins Museum of Geology at the University of Vermont has reopened its doors."
+      "id": "74279175",
+      "title": "Halloween festivities get modified amid high fire risk in Vermont",
+      "link": "https://www.mynbc5.com/article/fire-officials-vermonters-cautious-halloween-weather/74279175",
+      "ts": "2026-10-29T03:41:00+00:00",
+      "summary": "Fire officials urge people to be extra cautious this Halloween with ongoing dry conditions and potential high wind gusts."
      },
      {
-      "id": "74277809",
-      "title": "Historic Burlington church clock returns to service after months-long restoration",
-      "link": "https://www.mynbc5.com/article/historic-church-clock-restored/74277809",
-      "ts": "2026-10-28T23:14:00+00:00",
-      "summary": "Crews spent Wednesday reinstalling the historic tower clock at the First Unitarian Universalist Society of Burlington (FUUSB), completing a months-long restoration project aimed at preserving the landmark's original mechanical timekeeping system."
+      "id": "74173746",
+      "title": "2026 VPA Field Hockey Playoff Bracket",
+      "link": "https://www.mynbc5.com/article/2026-vpa-field-hockey-playoff-bracket/74173746",
+      "ts": "2026-10-29T03:41:00+00:00",
+      "summary": "See the latest scores, highlights and schedule from the postseason on the astro turf"
      },
      {
-      "id": "74275216",
-      "title": "‘It’s big’: Astronomers make startling discovery of a possible dwarf planet beyond Pluto",
-      "link": "https://www.mynbc5.com/article/its-big-astronomers-make-startling-discovery-of-a-possible-dwarf-planet-beyond-pluto-kuiper-belt-space-astronomy/74275216",
-      "ts": "2026-10-28T23:08:00+00:00",
-      "summary": "Astronomers using the world's largest telescope have spotted a new dwarf planet candidate in our solar system, beyond the orbit of Pluto."
+      "id": "74173583",
+      "title": "2026 VPA Girls' Soccer Playoff Bracket",
+      "link": "https://www.mynbc5.com/article/2026-vpa-girls-soccer-playoff-bracket/74173583",
+      "ts": "2026-10-29T03:40:00+00:00",
+      "summary": "See the latest scores, highlights and schedule from the postseason on the pitch"
      },
      {
-      "id": "74277617",
-      "title": "Vermont Statehouse offers first-ever haunted tours",
-      "link": "https://www.mynbc5.com/article/vermont-statehouse-haunted-tours/74277617",
-      "ts": "2026-10-28T22:56:00+00:00",
-      "summary": "Behind the Scenes: Vermont Statehouse hosted haunted tours for the first time this year, featuring ghost stories that some of the organizers have a first-hand experience with."
+      "id": "74279080",
+      "title": "Brewers win first World Series title",
+      "link": "https://www.mynbc5.com/article/brewers-win-first-world-series-title/74279080",
+      "ts": "2026-10-29T03:35:00+00:00",
+      "summary": "The small-ball Milwaukee Brewers, playing in the smallest market in the majors, are World Series champions for the first time in franchise history."
      },
      {
-      "id": "74277451",
-      "title": "Wendy's, struggling with beef prices and growing competition, gets a buyout offer",
-      "link": "https://www.mynbc5.com/article/wendys-struggling-with-beef-prices-and-growing-competition-gets-a-buyout-offer/74277451",
-      "ts": "2026-10-28T22:54:00+00:00",
-      "summary": "Wendy’s shares jumped more than 14% on Wednesday after a noted investor made an offer to buy the chain, which has been struggling with high beef prices, aging stores."
+      "id": "74173432",
+      "title": "2026 VPA Boys' Soccer Playoff Bracket",
+      "link": "https://www.mynbc5.com/article/2026-vpa-boys-soccer-playoff-bracket/74173432",
+      "ts": "2026-10-29T03:02:00+00:00",
+      "summary": "See the latest scores, highlights and schedule from the postseason on the pitch"
      },
      {
-      "id": "74277186",
-      "title": "Experts debunk claim that voting machines in Cook County, Illinois, are 'rigged'",
-      "link": "https://www.mynbc5.com/article/cook-county-illinois-voting-machine-debunked/74277186",
-      "ts": "2026-10-28T22:40:00+00:00",
-      "summary": "Cook County election officials clarify that voting machines do not display candidate popularity, explaining that notifications are related to undervoting as required by federal election laws."
+      "id": "74171708",
+      "title": "2026 VPA Girls' Volleyball Playoff Bracket",
+      "link": "https://www.mynbc5.com/article/2026-girls-volleyball-playoff-bracket/74171708",
+      "ts": "2026-10-29T02:50:00+00:00",
+      "summary": "See the latest scores, highlights and schedule from the postseason on the courts"
      },
      {
-      "id": "74271421",
-      "title": "Vermont state senator, accused of domestic assault, enters not guilty plea at Wednesday arraignment",
-      "link": "https://www.mynbc5.com/article/vt-senator-arrested-assault-rutland-county/74271421",
-      "ts": "2026-10-28T22:24:00+00:00",
-      "summary": "Vermont State Police have arrested Terry Williams, a state senator from Poultney, for an alleged assault against a family member."
+      "id": "74275649",
+      "title": "State's Attorney pens letter calling out alleged behavior by Barre City officer",
+      "link": "https://www.mynbc5.com/article/states-attorney-letter-barre-city-officer/74275649",
+      "ts": "2026-10-29T02:35:00+00:00",
+      "summary": "The prosecutor's concerns stem from a May incident when a woman was arrested."
      },
      {
-      "id": "74277078",
-      "title": "Candidates for Vermont auditor share how they would handle the job if elected",
-      "link": "https://www.mynbc5.com/article/candidates-for-vt-auditor-share-how-they-would-handle-the-job-if-elected/74277078",
-      "ts": "2026-10-28T22:16:00+00:00",
-      "summary": "Deputy auditor Tim Ashe (D) and Ivar Kronick (R) are running for the open seat."
+      "id": "74278857",
+      "title": "Cooper Pratt sets World Series record",
+      "link": "https://www.mynbc5.com/article/cooper-pratt-sets-world-series-record/74278857",
+      "ts": "2026-10-29T02:21:00+00:00",
+      "summary": "Cooper Pratt has made World Series history. He has had six straight hits while at bat, the most of any rookie in history for the championship game."
      },
      {
-      "id": "74276977",
-      "title": "Suspects in alleged school shooting plot in Georgia had floor plan, had chosen a date, warrants say",
-      "link": "https://www.mynbc5.com/article/suspects-in-alleged-school-shooting-plot-in-georgia-had-floor-plan-had-chosen-a-date-warrants-say/74276977",
-      "ts": "2026-10-28T22:07:00+00:00",
-      "summary": "Three people arrested over an alleged plot to carry out a shooting at a Georgia high school had gotten a floor plan of the school, according to arrest warrants."
+      "id": "74275324",
+      "title": "NFL players help build mobility ramp for veteran in need",
+      "link": "https://www.mynbc5.com/article/cincinnati-bengals-risner-operation-ramp-it-up/74275324",
+      "ts": "2026-10-29T02:08:00+00:00",
+      "summary": "NFL players and members of the Cincinnati Bengals teamed up with Operation Ramp It Up volunteers to help give one Cincinnati veteran a better quality of life."
      },
      {
-      "id": "74268356",
-      "title": "Tanker truck hit, totaled while responding to separate crash on I-89 in Vermont",
-      "link": "https://www.mynbc5.com/article/brookfield-tanker-truck-totaled-interstate-crash-vt/74268356",
-      "ts": "2026-10-28T22:04:00+00:00",
-      "summary": "The Brookfield Fire Department said its tanker truck was parked on Interstate 89 with its emergency lights activated while crews responded to a separate crash."
+      "id": "74275087",
+      "title": "Hiker found dead on Camel’s Hump identified as Colorado man",
+      "link": "https://www.mynbc5.com/article/first-responders-recover-body-on-camels-hump/74275087",
+      "ts": "2026-10-29T02:07:00+00:00",
+      "summary": "Vermont State Police say the death of a Denver man on Camel's Hump is not suspicious."
+     },
+     {
+      "id": "74278672",
+      "title": "Smoke from LA fires exposed millions of people to high levels of toxic heavy metals, study says",
+      "link": "https://www.mynbc5.com/article/smoke-from-la-fires-exposed-millions-of-people-to-high-levels-of-toxic-heavy-metals-study-says/74278672",
+      "ts": "2026-10-29T02:05:00+00:00",
+      "summary": "A new study reveals that at the height of the Los Angeles fires in 2025, millions of residents were exposed in a 24-hour period to toxic lead levels from smoke that were 80 times higher than the typical background level."
+     },
+     {
+      "id": "74271855",
+      "title": "Defeated Brazilian presidential candidate Flávio Bolsonaro and his family land in Miami",
+      "link": "https://www.mynbc5.com/article/flavio-bolsonaro-miami-fleeing-brazil-election/74271855",
+      "ts": "2026-10-29T01:30:00+00:00",
+      "summary": "Defeated Brazilian presidential candidate Flávio Bolsonaro and his family have landed in Miami after fleeing Brazil."
      }
     ]
    },
@@ -1526,84 +1535,100 @@
  "reddit-burlington": {
   "posts": [
    {
-    "id": "1xhp0un",
-    "title": "Former Burlington Administrator Stole $1.8M from School District",
-    "url": "https://www.reddit.com/r/burlington/comments/1xhp0un/former_burlington_administrator_stole_18m_from/",
-    "score": 148,
-    "comments": 76,
-    "created": "2026-10-28T14:05:54+00:00"
-   },
-   {
     "id": "1xhyp4l",
     "title": "Vote!",
     "url": "https://www.reddit.com/r/burlington/comments/1xhyp4l/vote/",
-    "score": 50,
+    "score": 60,
     "comments": 0,
     "created": "2026-10-28T19:56:19+00:00"
+   },
+   {
+    "id": "1xhp0un",
+    "title": "Former Burlington Administrator Stole $1.8M from School District",
+    "url": "https://www.reddit.com/r/burlington/comments/1xhp0un/former_burlington_administrator_stole_18m_from/",
+    "score": 166,
+    "comments": 81,
+    "created": "2026-10-28T14:05:54+00:00"
    },
    {
     "id": "1xhy6lb",
     "title": "The Handys",
     "url": "https://www.reddit.com/r/burlington/comments/1xhy6lb/the_handys/",
-    "score": 38,
-    "comments": 41,
+    "score": 48,
+    "comments": 55,
     "created": "2026-10-28T19:37:11+00:00"
    },
    {
     "id": "1xi2291",
     "title": "I-89 northbound exit 15",
     "url": "https://www.reddit.com/r/burlington/comments/1xi2291/i89_northbound_exit_15/",
-    "score": 16,
-    "comments": 6,
+    "score": 17,
+    "comments": 9,
     "created": "2026-10-28T22:05:24+00:00"
    },
    {
     "id": "1xhr76n",
     "title": "any cheap pasta around?",
     "url": "https://www.reddit.com/r/burlington/comments/1xhr76n/any_cheap_pasta_around/",
-    "score": 52,
-    "comments": 53,
+    "score": 54,
+    "comments": 59,
     "created": "2026-10-28T15:28:05+00:00"
-   },
-   {
-    "id": "1xhkfwp",
-    "title": "Moose euthanized",
-    "url": "https://www.reddit.com/r/burlington/comments/1xhkfwp/moose_euthanized/",
-    "score": 84,
-    "comments": 51,
-    "created": "2026-10-28T10:32:38+00:00"
    },
    {
     "id": "1xhynts",
     "title": "Help Make Shower Bags For Cancer Patients at the UVM Medical Center Oncology Unit... Saturday & Sunday, November 21-22 from 10am-2pm in Burlington.",
     "url": "https://www.reddit.com/r/burlington/comments/1xhynts/help_make_shower_bags_for_cancer_patients_at_the/",
-    "score": 13,
+    "score": 17,
     "comments": 0,
     "created": "2026-10-28T19:55:01+00:00"
+   },
+   {
+    "id": "1xhkfwp",
+    "title": "Moose euthanized",
+    "url": "https://www.reddit.com/r/burlington/comments/1xhkfwp/moose_euthanized/",
+    "score": 89,
+    "comments": 52,
+    "created": "2026-10-28T10:32:38+00:00"
    },
    {
     "id": "1xhmg6d",
     "title": "Accident on 89S",
     "url": "https://www.reddit.com/r/burlington/comments/1xhmg6d/accident_on_89s/",
-    "score": 49,
+    "score": 51,
     "comments": 53,
     "created": "2026-10-28T12:16:13+00:00"
+   },
+   {
+    "id": "1xibngf",
+    "title": "Does anyone have a Meowth costume or a beige/tan onesie that would fit a 6 year old?",
+    "url": "https://www.reddit.com/r/burlington/comments/1xibngf/does_anyone_have_a_meowth_costume_or_a_beigetan/",
+    "score": 2,
+    "comments": 0,
+    "created": "2026-10-29T05:42:33+00:00"
    },
    {
     "id": "1xhqot5",
     "title": "Accident on Spear Street just south UVM farm",
     "url": "https://www.reddit.com/r/burlington/comments/1xhqot5/accident_on_spear_street_just_south_uvm_farm/",
     "score": 13,
-    "comments": 0,
+    "comments": 1,
     "created": "2026-10-28T15:09:46+00:00"
    },
    {
     "id": "1xhr2bw",
     "title": "Serious question re: Mayor",
     "url": "https://www.reddit.com/r/burlington/comments/1xhr2bw/serious_question_re_mayor/",
-    "score": 9,
-    "comments": 44,
+    "score": 11,
+    "comments": 50,
     "created": "2026-10-28T15:23:16+00:00"
+   },
+   {
+    "id": "1xi8uky",
+    "title": "Acupuncture that takes insurance?",
+    "url": "https://www.reddit.com/r/burlington/comments/1xi8uky/acupuncture_that_takes_insurance/",
+    "score": 1,
+    "comments": 2,
+    "created": "2026-10-29T03:08:13+00:00"
    },
    {
     "id": "1xhmv0o",
@@ -1617,32 +1642,40 @@
     "id": "1xhpfvd",
     "title": "Finding Aides in Vermont",
     "url": "https://www.reddit.com/r/burlington/comments/1xhpfvd/finding_aides_in_vermont/",
-    "score": 6,
+    "score": 7,
     "comments": 18,
     "created": "2026-10-28T14:22:33+00:00"
-   },
-   {
-    "id": "1xhka95",
-    "title": "How’s the Burlington music scene? Any great local bands?",
-    "url": "https://www.reddit.com/r/burlington/comments/1xhka95/hows_the_burlington_music_scene_any_great_local/",
-    "score": 10,
-    "comments": 56,
-    "created": "2026-10-28T10:23:43+00:00"
    },
    {
     "id": "1xhseoz",
     "title": "Free Haircuts at Burlington Barber Shop 10/29, 10/30, 10/31.",
     "url": "https://www.reddit.com/r/burlington/comments/1xhseoz/free_haircuts_at_burlington_barber_shop_1029_1030/",
-    "score": 3,
+    "score": 5,
     "comments": 1,
     "created": "2026-10-28T16:11:07+00:00"
+   },
+   {
+    "id": "1xhka95",
+    "title": "How’s the Burlington music scene? Any great local bands?",
+    "url": "https://www.reddit.com/r/burlington/comments/1xhka95/hows_the_burlington_music_scene_any_great_local/",
+    "score": 12,
+    "comments": 59,
+    "created": "2026-10-28T10:23:43+00:00"
+   },
+   {
+    "id": "1xhqanx",
+    "title": "Burlington Councilors Seek to Compromise on Public Safety Debate",
+    "url": "https://www.reddit.com/r/burlington/comments/1xhqanx/burlington_councilors_seek_to_compromise_on/",
+    "score": 5,
+    "comments": 24,
+    "created": "2026-10-28T14:55:13+00:00"
    },
    {
     "id": "1xhvfnn",
     "title": "party sized pizzas",
     "url": "https://www.reddit.com/r/burlington/comments/1xhvfnn/party_sized_pizzas/",
     "score": 2,
-    "comments": 7,
+    "comments": 9,
     "created": "2026-10-28T17:58:39+00:00"
    },
    {
@@ -1654,28 +1687,20 @@
     "created": "2026-10-28T15:36:24+00:00"
    },
    {
-    "id": "1xhqanx",
-    "title": "Burlington Councilors Seek to Compromise on Public Safety Debate",
-    "url": "https://www.reddit.com/r/burlington/comments/1xhqanx/burlington_councilors_seek_to_compromise_on/",
-    "score": 3,
-    "comments": 23,
-    "created": "2026-10-28T14:55:13+00:00"
-   },
-   {
     "id": "1xha5aj",
     "title": "Break-ins?",
     "url": "https://www.reddit.com/r/burlington/comments/1xha5aj/breakins/",
-    "score": 12,
+    "score": 11,
     "comments": 14,
     "created": "2026-10-28T00:48:33+00:00"
    },
    {
-    "id": "1xi1pf1",
-    "title": "Locally made beef tallow?",
-    "url": "https://www.reddit.com/r/burlington/comments/1xi1pf1/locally_made_beef_tallow/",
-    "score": 0,
-    "comments": 7,
-    "created": "2026-10-28T21:51:24+00:00"
+    "id": "1xgyyrr",
+    "title": "Missing cat in old north end",
+    "url": "https://www.reddit.com/r/burlington/comments/1xgyyrr/missing_cat_in_old_north_end/",
+    "score": 30,
+    "comments": 2,
+    "created": "2026-10-27T17:30:18+00:00"
    },
    {
     "id": "1xh66f2",
@@ -1686,36 +1711,20 @@
     "created": "2026-10-27T21:59:40+00:00"
    },
    {
-    "id": "1xgyyrr",
-    "title": "Missing cat in old north end",
-    "url": "https://www.reddit.com/r/burlington/comments/1xgyyrr/missing_cat_in_old_north_end/",
-    "score": 28,
-    "comments": 2,
-    "created": "2026-10-27T17:30:18+00:00"
+    "id": "1xi1pf1",
+    "title": "Locally made beef tallow?",
+    "url": "https://www.reddit.com/r/burlington/comments/1xi1pf1/locally_made_beef_tallow/",
+    "score": 0,
+    "comments": 8,
+    "created": "2026-10-28T21:51:24+00:00"
    },
    {
     "id": "1xgez75",
     "title": "Vermont Pub & Brewery closing",
     "url": "https://www.reddit.com/r/burlington/comments/1xgez75/vermont_pub_brewery_closing/",
-    "score": 340,
-    "comments": 251,
+    "score": 341,
+    "comments": 257,
     "created": "2026-10-27T01:08:33+00:00"
-   },
-   {
-    "id": "1xh64oh",
-    "title": "Seeking sourdough starter!",
-    "url": "https://www.reddit.com/r/burlington/comments/1xh64oh/seeking_sourdough_starter/",
-    "score": 6,
-    "comments": 3,
-    "created": "2026-10-27T21:57:42+00:00"
-   },
-   {
-    "id": "1xh69pi",
-    "title": "Reading Groups?",
-    "url": "https://www.reddit.com/r/burlington/comments/1xh69pi/reading_groups/",
-    "score": 5,
-    "comments": 3,
-    "created": "2026-10-27T22:03:05+00:00"
    }
   ]
  },
