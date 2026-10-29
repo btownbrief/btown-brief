@@ -5,7 +5,7 @@
 
 Reads the hand-kept list in data/town/signups.json and writes what the live
 sources say right now. It never edits signups.json (one writer per file); when a
-watched page changes, the program is flagged "changed": true so a person (or a
+watched page changes, the program is flagged "changed_since_review": true so a person (or a
 reviewed routine) re-reads it and updates signups.json.
 
 Sections:
@@ -152,6 +152,17 @@ def libcal(verified):
 
 
 # ---------------------------------------------------------------- pages
+DATEISH = re.compile(r"regist|enrol|lottery|deadline|opens?\b|closes?\b|sign[- ]?up|apply|waitlist|"
+                     r"\b20[2-3]\d\b|\b(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\.? \d", re.I)
+
+
+def _fingerprint(text):
+    """Hash only the sentences that talk about dates or registration, so rotating
+    banners, nonces and news teasers don't flag a page as changed."""
+    sentences = [x.strip() for x in re.split(r"(?<=[.!?])\s+|\s{2,}", text) if DATEISH.search(x)]
+    return hashlib.sha256("\n".join(sorted(set(sentences))).encode()).hexdigest()[:16]
+
+
 def pages(verified):
     seed = load_json(SEED, {}) or {}
     prev = {i["id"]: i for i in ((load_json(OUT, {}) or {}).get("sections", {}).get("pages", {}).get("items") or [])}
@@ -165,7 +176,7 @@ def pages(verified):
             if url not in fetched:
                 fetched[url] = page_text(get_text(url, browser=True, timeout=30))
             text = fetched[url]
-            fp = hashlib.sha256(text.encode()).hexdigest()[:16]
+            fp = _fingerprint(text)
             hint = p.get("check_hint") or ""
             hint_found = None
             if hint:  # hints are short phrases, some with "|" alternatives
@@ -174,18 +185,20 @@ def pages(verified):
                 except re.error:
                     hint_found = hint.lower() in text.lower()
             old = prev.get(p["id"]) or {}
+            baseline = p.get("reviewed_fingerprint")
             entry.update(fetch_ok=True, fingerprint=fp, hint=hint or None, hint_found=hint_found,
-                         changed=bool(old.get("fingerprint")) and old.get("fingerprint") != fp,
-                         first_seen_fingerprint=old.get("first_seen_fingerprint") or fp,
+                         changed_since_review=bool(baseline) and baseline != fp,
+                         changed_since_last_run=bool(old.get("fingerprint")) and old.get("fingerprint") != fp,
                          years_mentioned=sorted(set(re.findall(r"\b(202[6-9])\b", text))))
         except Exception as e:  # noqa: BLE001 — Cloudflare (ECHO, Flynn) and the YMCA's rate limit land here
             old = prev.get(p["id"]) or {}
             entry.update(fetch_ok=False, error=str(e)[:160], fingerprint=old.get("fingerprint"),
-                         changed=False, needs_browser_check=True)
+                         changed_since_review=None, needs_browser_check=True)
         items.append(rec(url, verified, **entry))
     return {"verified": verified,
-            "notes": ("changed=true means the page text differs from the previous run: re-read it and update "
-                      "data/town/signups.json. Fingerprints also move on cosmetic edits, so this is a nudge, "
+            "notes": ("changed_since_review=true means the page's date and registration sentences differ from "
+                      "the reviewed_fingerprint stored in data/town/signups.json: re-read the page, update that "
+                      "program's dates and copy the new fingerprint into reviewed_fingerprint. It is a nudge, "
                       "not a fact."),
             "items": items}
 

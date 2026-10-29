@@ -4,7 +4,9 @@
 Same house style as scripts/changes/common.py: stdlib only, every section fails
 on its own, polite client. Two extra rules for the Town app:
 
-  - every record carries "source_url" and "verified" (the UTC time this run saw it)
+  - every record carries "source_url" and "verified" (the Burlington date this run saw it)
+  - a file is only rewritten when something other than its "generated" stamp changed, so the
+    hourly workflow commits real changes, not timestamps
   - a section that fails keeps the last good copy from the previous output file,
     marked "stale": true, so one bad fetch never blanks a tab
 
@@ -20,6 +22,7 @@ import urllib.error
 import urllib.parse
 import urllib.request
 from datetime import datetime, timezone
+from zoneinfo import ZoneInfo
 
 from scripts.changes.common import parse_feed, parse_when, strip_tags  # noqa: F401 (re-exported)
 
@@ -30,12 +33,17 @@ ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 OUT_DIR = os.path.join(ROOT, "data", "town")
 CITY_ARCGIS = "https://services1.arcgis.com/1bO0c7PxQdsGidPK/arcgis/rest/services"
 CITY_HOST = "www.burlingtonvt.gov"
+BTV_TZ = ZoneInfo("America/New_York")
 CITY_DELAY = 10  # seconds, from burlingtonvt.gov robots.txt Crawl-delay
 _last_city_hit = [0.0]
 
 
 def now_iso():
     return datetime.now(timezone.utc).isoformat(timespec="seconds")
+
+
+def today_btv():
+    return datetime.now(BTV_TZ).date().isoformat()
 
 
 def get(url, timeout=30, retries=1, headers=None, browser=False):
@@ -148,8 +156,9 @@ def run_sections(out_path, sections, meta):
     fn(verified) returns a dict. The output file is {"generated", ..., "sections": {name: {...}}}.
     Returns the number of sections that failed.
     """
-    previous = (load_json(out_path, {}) or {}).get("sections", {})
-    verified = now_iso()
+    prev_file = load_json(out_path, {}) or {}
+    previous = prev_file.get("sections", {})
+    verified = today_btv()
     result, failed = {}, 0
     for name, fn in sections:
         try:
@@ -172,10 +181,15 @@ def run_sections(out_path, sections, meta):
             print(f"  FAIL  {name}: {e}")
     for name, old in previous.items():  # --only runs keep the sections they skipped
         result.setdefault(name, old)
-    data = {"generated": verified}
+    data = {"generated": now_iso()}
     data.update(meta)
     data["sections"] = result
-    write_json(out_path, data)
+    unchanged = {k: v for k, v in prev_file.items() if k != "generated"} == \
+        json.loads(json.dumps({k: v for k, v in data.items() if k != "generated"}))
+    if unchanged:
+        print("  (no change; file left as is)")
+    else:
+        write_json(out_path, data)
     return failed
 
 
