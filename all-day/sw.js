@@ -13,7 +13,7 @@
    audio — episodes are large and the browser's own HTTP cache handles them
    better than we would. */
 
-const VERSION = 'all-day-v99';   // the shell: Full page links, the two asks, bigger pills, the Btown Brief logo
+const VERSION = 'all-day-v100';   // the shell runs eight apps: per-app configs, shelves, the switcher, Real life / Online
 const SHELL = VERSION + '-shell';
 const DATA = 'all-day-data';   // unversioned on purpose: survives shell bumps
 
@@ -21,6 +21,10 @@ const SHELL_URLS = [
   './', './index.html', './manifest.webmanifest', './css/tokens.css', './css/app.css',
   './js/main.js', './js/app.js', './js/store.js', './js/wire.js', './js/ui.js',
   './js/liquid.js', './js/sections.js', './js/gestures.js', './js/auth.js', './js/asks.js',
+  /* the eight apps (2026-10-29): their configs, the shelf a tab gets until
+     its mode is built, the switcher, and the shelves' demo */
+  './js/apps/index.js', './js/apps/all-day.js', './js/apps/out.js', './js/apps/eat.js', './js/apps/people.js', './js/apps/body.js',
+  './js/apps/town.js', './js/apps/play.js', './js/apps/paper.js', './js/shelf.js', './js/switcher.js',
   './js/modes/wire.js', './js/modes/wire-demo.js', './js/modes/wire-photos.js', './js/modes/wire-square.js', './js/modes/wire-recaps.js', './js/modes/watch.js', './js/modes/food.js',
   './js/modes/people.js', './js/modes/whatnow.js', './js/modes/vintage.js', './js/modes/habits.js',
   './js/modes/onair.js', './js/modes/onair-sports.js', './js/modes/games.js',
