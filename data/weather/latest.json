@@ -1,26 +1,26 @@
 {
- "updated": "2026-10-29T09:57:49+00:00",
+ "updated": "2026-10-29T10:17:55+00:00",
  "sections_updated": {
-  "now": "2026-10-29T09:57:49+00:00",
-  "forecast": "2026-10-29T09:57:49+00:00",
-  "hourly": "2026-10-29T09:57:49+00:00",
-  "alerts": "2026-10-29T09:57:49+00:00",
-  "afd": "2026-10-29T09:57:49+00:00",
-  "lake_forecast": "2026-10-29T09:57:49+00:00",
-  "lake_gage": "2026-10-29T09:57:49+00:00",
-  "air": "2026-10-29T09:57:49+00:00",
-  "sun": "2026-10-29T09:57:49+00:00",
-  "models": "2026-10-29T09:57:49+00:00"
+  "now": "2026-10-29T10:17:55+00:00",
+  "forecast": "2026-10-29T10:17:55+00:00",
+  "hourly": "2026-10-29T10:17:55+00:00",
+  "alerts": "2026-10-29T10:17:55+00:00",
+  "afd": "2026-10-29T10:17:55+00:00",
+  "lake_forecast": "2026-10-29T10:17:55+00:00",
+  "lake_gage": "2026-10-29T10:17:55+00:00",
+  "air": "2026-10-29T10:17:55+00:00",
+  "sun": "2026-10-29T10:17:55+00:00",
+  "models": "2026-10-29T10:17:55+00:00"
  },
  "now": {
-  "observed_at": "2026-10-29T08:55:00+00:00",
+  "observed_at": "2026-10-29T09:40:00+00:00",
   "station": "KBTV",
-  "description": "Clear",
-  "temp_f": 50,
-  "feels_like_f": 50,
+  "description": "Mostly Cloudy",
+  "temp_f": 52,
+  "feels_like_f": 52,
   "humidity": 58,
-  "dewpoint_f": 36,
-  "wind_mph": 7,
+  "dewpoint_f": 37,
+  "wind_mph": 9,
   "wind_gust_mph": null,
   "wind_dir": "SSW",
   "precip_last_hr_in": null
@@ -29,17 +29,7 @@
   "updated": "2026-10-29T06:19:08+00:00",
   "periods": [
    {
-    "name": "Overnight",
-    "start": "2026-10-29T05:00:00-04:00",
-    "is_day": false,
-    "temp_f": 42,
-    "pop": 1,
-    "wind": "S 12 mph",
-    "short": "Mostly Clear",
-    "detailed": "Mostly clear, with a low around 42. South wind around 12 mph."
-   },
-   {
-    "name": "Thursday",
+    "name": "Today",
     "start": "2026-10-29T06:00:00-04:00",
     "is_day": true,
     "temp_f": 65,
@@ -49,7 +39,7 @@
     "detailed": "Sunny, with a high near 65. South wind 12 to 16 mph, with gusts as high as 29 mph."
    },
    {
-    "name": "Thursday Night",
+    "name": "Tonight",
     "start": "2026-10-29T18:00:00-04:00",
     "is_day": false,
     "temp_f": 49,
@@ -167,26 +157,22 @@
     "wind": "S 10 mph",
     "short": "Chance Rain Showers",
     "detailed": "A chance of rain showers. Partly sunny, with a high near 59. South wind around 10 mph. Chance of precipitation is 40%."
+   },
+   {
+    "name": "Wednesday Night",
+    "start": "2026-11-04T18:00:00-05:00",
+    "is_day": false,
+    "temp_f": 42,
+    "pop": 33,
+    "wind": "S 9 mph",
+    "short": "Chance Rain Showers",
+    "detailed": "A chance of rain showers. Mostly cloudy, with a low around 42. South wind around 9 mph. Chance of precipitation is 30%."
    }
   ]
  },
  "hourly": {
   "updated": "2026-10-29T06:19:08+00:00",
   "hours": [
-   {
-    "t": "2026-10-29T05:00:00-04:00",
-    "temp_f": 45,
-    "feels_f": 39,
-    "pop": 1,
-    "humidity": 79,
-    "wind_mph": 12,
-    "wind_dir": "S",
-    "sky": 14,
-    "short": "Mostly Clear",
-    "qpf_in": 0.0,
-    "snow_in": 0.0,
-    "gust_mph": 20
-   },
    {
     "t": "2026-10-29T06:00:00-04:00",
     "temp_f": 45,
@@ -676,6 +662,20 @@
     "qpf_in": 0.0,
     "snow_in": 0.0,
     "gust_mph": 25
+   },
+   {
+    "t": "2026-10-30T17:00:00-04:00",
+    "temp_f": 55,
+    "feels_f": 55,
+    "pop": 2,
+    "humidity": 51,
+    "wind_mph": 13,
+    "wind_dir": "NW",
+    "sky": 80,
+    "short": "Mostly Cloudy",
+    "qpf_in": 0.0,
+    "snow_in": 0.0,
+    "gust_mph": 25
    }
   ],
   "days": [
@@ -713,12 +713,6 @@
     "headline": "Special Weather Statement issued October 29 at 3:31AM EDT by NWS Burlington VT",
     "severity": "Moderate",
     "expires": "2026-10-29T20:15:00-04:00"
-   },
-   {
-    "event": "Special Weather Statement",
-    "headline": "Special Weather Statement issued October 28 at 4:40PM EDT by NWS Burlington VT",
-    "severity": "Moderate",
-    "expires": "2026-10-29T06:00:00-04:00"
    }
   ]
  },
@@ -1009,7 +1003,7 @@
   "aqi": 30,
   "category": "Good",
   "pollutant": "OZONE",
-  "observed": "10/29/26 5:00",
+  "observed": "10/29/26 6:00",
   "discussion": "On Thursday October 29th, expect moderate levels of fine particulate matter (PM25) across the state, especially in mountain valley areas with emissions sources, including residential wood combustion, during calm conditions."
  },
  "sun": {
@@ -1082,26 +1076,12 @@
  },
  "brief": {
   "date": "2026-10-29",
-  "generated": "2026-10-29T09:57:52+00:00",
-  "text": "Special Weather Statement until 8:15pm. Mostly clear overnight, low 42. Sunny today, high 65.",
+  "generated": "2026-10-29T10:17:59+00:00",
+  "text": "Special Weather Statement until 8:15pm. Sunny today, high 65. Mostly cloudy tonight, low 49.",
   "periods": [
    {
-    "label": "Overnight",
-    "name": "Overnight",
-    "is_day": false,
-    "temp_f": 42,
-    "sky": "mostly clear",
-    "start": "2026-10-29T05:00:00-04:00",
-    "end": "2026-10-29T06:00:00-04:00",
-    "precip": null,
-    "wind": null,
-    "feels_lo": 39,
-    "feels_hi": 39,
-    "text": "Mostly clear overnight, low 42."
-   },
-   {
     "label": "Today",
-    "name": "Thursday",
+    "name": "Today",
     "is_day": true,
     "temp_f": 65,
     "sky": "sunny",
@@ -1112,6 +1092,20 @@
     "feels_lo": 36,
     "feels_hi": 65,
     "text": "Sunny today, high 65."
+   },
+   {
+    "label": "Tonight",
+    "name": "Tonight",
+    "is_day": false,
+    "temp_f": 49,
+    "sky": "mostly cloudy",
+    "start": "2026-10-29T18:00:00-04:00",
+    "end": "2026-10-30T06:00:00-04:00",
+    "precip": null,
+    "wind": null,
+    "feels_lo": 52,
+    "feels_hi": 63,
+    "text": "Mostly cloudy tonight, low 49."
    }
   ]
  }
