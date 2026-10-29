@@ -427,6 +427,34 @@ class Build(unittest.TestCase):
         restored = order[2]
         self.assertEqual(led["last"].get(restored), 5 if restored == "c" else None)
 
+    def test_a_run_out_of_time_writes_what_it_has_and_gives_back_the_rest(self):
+        """Past FETCH_BUDGET_S the run stops asking, still writes a payload
+        from the accounts that answered (the 30-minute step kill used to lose
+        all of them), and gives the unasked accounts their rotation places."""
+        doc = answer()
+        now = doc["fetched_at"]
+        month = bi.month_key(bi.local_day(now))
+        roster = [{"h": h, "tier": 1, "category": "venue"} for h in ("foambrewers", "b", "c")]
+        calls = []
+        fetch = lambda h, k: calls.append(h) or doc["items"]
+        clock = iter([0.0, 0.0, bi.FETCH_BUDGET_S + 1.0])   # start, before #1, before #2
+        with tempfile.TemporaryDirectory() as tmp, \
+                mock.patch.object(bi.time, "monotonic", lambda: next(clock, bi.FETCH_BUDGET_S + 2.0)):
+            code, got, led = self.run_main(
+                tmp, roster, ["--execute", "--no-carry"], fetch, now,
+                {"month": month, "spent": 50, "last": {"c": 7},
+                 "pending": {"handles": ["foambrewers", "b", "c"], "tagged": False,
+                             "at": int(now) - 600, "month": month,
+                             "prev": {"foambrewers": 0, "b": 0, "c": 7}}})
+        self.assertEqual(code, 0)
+        self.assertEqual(calls, ["foambrewers"])
+        self.assertTrue(got["posts"])
+        self.assertEqual({p["h"] for p in got["posts"]}, {"foambrewers"})
+        self.assertEqual(led["spent"], 50)                     # counted when reserved
+        self.assertNotIn("pending", led)
+        self.assertEqual(led["last"].get("c"), 7)              # place restored
+        self.assertIsNone(led["last"].get("b"))
+
     def test_reserve_counts_and_names_the_run_without_a_request(self):
         now = at(2026, 10, 17)
         with tempfile.TemporaryDirectory() as tmp:
