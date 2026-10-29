@@ -1,0 +1,97 @@
+name: Refresh Eat data (openings + inspections)
+
+# On the 1st and 15th: rebuild the Eat app's New tab data and the health
+# inspection history.
+#
+# - data/eat/openings.json only ever holds verified, hand-curated entries
+#   (data/openings.json + data/eat/openings-additions.json). This run just
+#   recomputes statuses from dates (just opened, closing soon -> closed).
+# - data/eat/openings-candidates.json lists possible new openings/closings
+#   from the archive and news feeds. They are NOT published; they are posted
+#   to a GitHub issue for Stephen to confirm. A filing or permit is a lead,
+#   never an opening.
+# - data/eat/inspections.json is re-read from the Vermont Department of
+#   Health's public inspection portal (about 15 minutes, one request a
+#   second).
+#
+# Runs an hour after the old openings radar so the two never collide.
+
+on:
+  schedule:
+    - cron: '30 12 1,15 * *'   # 1st + 15th, 12:30 UTC (~7:30/8:30 AM Burlington)
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+  issues: write
+
+concurrency:
+  group: refresh-eat
+  cancel-in-progress: false
+
+jobs:
+  eat:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Fetch the archive repo (editions)
+        run: |
+          curl -fsSL -o /tmp/archive.tar.gz \
+            https://github.com/btownbrief/archive/archive/refs/heads/main.tar.gz \
+            && mkdir -p /tmp/archive-src \
+            && tar -xzf /tmp/archive.tar.gz -C /tmp/archive-src --strip-components=1 \
+            || echo "archive fetch failed — edition links and archive candidates skipped"
+
+      - name: Install pdftotext
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq poppler-utils
+
+      - name: Openings and candidates
+        env:
+          BTB_ARCHIVE: /tmp/archive-src
+          BTB_ARCHIVE_EDITIONS: /tmp/archive-src/editions
+        # Only the last ~two weeks, so each issue comment is new news.
+        run: python3 scripts/eat/openings.py --since "$(date -u -d '16 days ago' +%F)"
+
+      - name: Inspections
+        run: python3 scripts/eat/inspections.py || echo "inspections run failed — keeping the last file"
+
+      - name: Post candidates for Stephen
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          N=$(python3 -c "import json;print(len(json.load(open('data/eat/openings-candidates.json'))['candidates']))")
+          echo "Candidates: $N"
+          [ "$N" = "0" ] && exit 0
+          gh label create eat-openings --color C2703D \
+            --description "Opening/closing candidates for the Eat app to confirm" 2>/dev/null || true
+          python3 - > /tmp/eat-body.md <<'PY'
+          import json
+          d = json.load(open("data/eat/openings-candidates.json"))
+          print("Possible openings and closings for the Eat app's New tab. **None of these is published.**")
+          print("Check each story; add the real ones to `data/eat/openings-additions.json`.")
+          print("A filing, permit or plan is a lead, not an opening.\n")
+          for c in d["candidates"]:
+              tag = "LEAD (filing only)" if c["kind"] == "lead" else c["kind"]
+              print(f"- [ ] **{tag}** [{c['headline']}]({c['url']}) · {c['found_in']} · {c['date'] or ''}")
+          PY
+          ISSUE=$(gh issue list --label eat-openings --state open --json number --jq '.[0].number // empty')
+          if [ -n "$ISSUE" ]; then
+            gh issue comment "$ISSUE" --body-file /tmp/eat-body.md
+          else
+            gh issue create --label eat-openings \
+              --title "Eat: $N opening/closing candidate(s) to confirm" --body-file /tmp/eat-body.md
+          fi
+
+      - name: Commit
+        run: |
+          git config user.name "btown-brief-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data/eat/openings.json data/eat/openings-candidates.json data/eat/inspections.json
+          git diff --cached --quiet && { echo "No changes."; exit 0; }
+          git commit -q -m "Auto-refresh Eat data"
+          git pull --rebase origin main
+          git push
