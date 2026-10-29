@@ -9,15 +9,6 @@
     "onset": "2026-10-29T03:31:00-04:00",
     "ends": "2026-10-29T20:15:00-04:00",
     "url": "https://forecast.weather.gov/MapClick.php?lat=44.4759&lon=-73.2121"
-   },
-   {
-    "id": "urn:oid:2.49.0.1.840.0.2b9bdd9a75b1c0cfb9ba85b3a930084a81368268.001.1",
-    "event": "Special Weather Statement",
-    "headline": "Special Weather Statement issued October 28 at 4:40PM EDT by NWS Burlington VT",
-    "severity": "Moderate",
-    "onset": "2026-10-28T16:40:00-04:00",
-    "ends": "2026-10-29T06:00:00-04:00",
-    "url": "https://forecast.weather.gov/MapClick.php?lat=44.4759&lon=-73.2121"
    }
   ],
   "forecast_flag": {
@@ -565,11 +556,13 @@
      "DRB Packet V1"
     ]
    },
-   "10105": {
-    "name": "Board of Finance Meeting",
-    "start": "2026-11-09T17:00:00+00:00",
-    "hasAgenda": false,
-    "files": []
+   "10280": {
+    "name": "Burlington Walk Bike Council",
+    "start": "2026-11-04T17:30:00+00:00",
+    "hasAgenda": true,
+    "files": [
+     "11.04.2026 Burlington Walk Bike Council Agenda"
+    ]
    }
   }
  },
@@ -577,6 +570,27 @@
   "feeds": {
    "sevendays-news": {
     "items": [
+     {
+      "id": "https://www.sevendaysvt.com/?p=222240",
+      "title": "Stuck in Vermont: Exploring M.T. Anderson’s Haunted House in Calais",
+      "link": "https://www.sevendaysvt.com/arts-culture/stuckinvermont/stuck-in-vermont-exploring-m-t-andersons-haunted-house-in-calais/",
+      "ts": "2026-10-29T11:30:00+00:00",
+      "summary": "Episode 779: Award-winning author M.T. Anderson found his 1796 home a decade ago on a dirt road in rural Vermont. Eva Sollberger got a candlelit tour and heard some tall tales. The post Stuck in Vermont: Exploring M.T. Anderson’s Haunted House in Calais appeared first on Seven Days . (Image: Eva Sollberger © Seven Days)"
+     },
+     {
+      "id": "https://www.sevendaysvt.com/?p=223157",
+      "title": "Obituary: Norman Peryea, 1963-2026",
+      "link": "https://www.sevendaysvt.com/life-lines/obituaries/obituary-norman-peryea-1963-2026/",
+      "ts": "2026-10-29T10:00:00+00:00",
+      "summary": "Norm was born in South Carolina, the son of Norman and Claire Peryea. He was a longtime Vermont resident. He is survived by siblings Gary (Brenda) Peryea, Frank (Elizabeth Beers) Peryea, Cindy (Frank Mullen) Peryea and Joseph Peryea. He is predeceased by his parents. A memorial celebration will be held after the 2027 mud season. The post Obituary: Norman Peryea, 1963-2026 appeared first on Seven D"
+     },
+     {
+      "id": "https://www.sevendaysvt.com/?p=223153",
+      "title": "Obituary: Josephine Ritter, 1949-2026",
+      "link": "https://www.sevendaysvt.com/life-lines/obituaries/obituary-josephine-ritter-1949-2026/",
+      "ts": "2026-10-29T10:00:00+00:00",
+      "summary": "Sudbury woman had two great passions in life: horses and music The post Obituary: Josephine Ritter, 1949-2026 appeared first on Seven Days . (Image: Courtesy)"
+     },
      {
       "id": "https://www.sevendaysvt.com/?p=223084",
       "title": "Vermont Inks Deal to Explore Nova Scotia Wind Power",
@@ -625,32 +639,18 @@
       "link": "https://www.sevendaysvt.com/news/802much/craftsbury-community-donates-apples-for-cidermaking-fundraiser/",
       "ts": "2026-10-28T13:48:00+00:00",
       "summary": "Cedar Hannan knows there are a lot of apple trees in the Northeast Kingdom. With help, the Wildbranch Cider owner is collecting donated fruit for a good cause. The post Craftsbury Community Donates Apples for Cidermaking Fundraiser appeared first on Seven Days . (Image: File: Jordan Barry)"
-     },
-     {
-      "id": "https://www.sevendaysvt.com/?p=222735",
-      "title": "From the Publisher: Mutual Aid",
-      "link": "https://www.sevendaysvt.com/news/fromthepublisher/from-the-publisher-mutual-aid/",
-      "ts": "2026-10-28T13:47:00+00:00",
-      "summary": "Competition fuels the media business. But these days, collaboration makes increasing sense in a state that has finite resources to support good journalism. The post From the Publisher: Mutual Aid appeared first on Seven Days . (Image: Daria Bishop)"
-     },
-     {
-      "id": "https://www.sevendaysvt.com/?p=222648",
-      "title": "Letters to the Editor (10/28/26)",
-      "link": "https://www.sevendaysvt.com/news/letters/letters-to-the-editor-10-28-26/",
-      "ts": "2026-10-28T13:46:00+00:00",
-      "summary": "Readers react to recent articles The post Letters to the Editor (10/28/26) appeared first on Seven Days ."
-     },
-     {
-      "id": "https://www.sevendaysvt.com/?p=222528",
-      "title": "‘Dark Botanica’ at BCA Center Presents the Unsettling Side of Flowers",
-      "link": "https://www.sevendaysvt.com/arts-culture/artreview/dark-botanica-at-bca-center-presents-the-unsettling-side-of-flora/",
-      "ts": "2026-10-28T13:45:00+00:00",
-      "summary": "Seven artists from Vermont and elsewhere expand on flowers’ association with the feminine through works that are political, unstable and a bit threatening. The post ‘Dark Botanica’ at BCA Center Presents the Unsettling Side of Flowers appeared first on Seven Days . (Image: Courtesy)"
      }
     ]
    },
    "vtdigger": {
     "items": [
+     {
+      "id": "https://vtdigger.org/?p=658120",
+      "title": "Dartmouth provost resigns after review finds undisclosed AI use",
+      "link": "https://vtdigger.org/2026/10/29/dartmouth-provost-resigns-after-review-finds-undisclosed-ai-use/",
+      "ts": "2026-10-29T15:59:17+00:00",
+      "summary": "A committee found that Santiago Schnell “failed to disclose his use of AI in clear violation of a national newspaper’s stated policy, was not forthcoming about his AI use,” and fell short of Dartmouth’s ethics and professionalism standards. Read the story on VTDigger here: Dartmouth provost resigns after review finds undisclosed AI use ."
+     },
      {
       "id": "https://vtdigger.org/?p=658075",
       "title": "Accountability court docket to continue in ‘modified fashion’",
@@ -853,18 +853,18 @@
       "link": "https://vtdigger.org/2026/10/25/whats-behind-the-vermont-catholic-churchs-ever-evolving-bankruptcy-case-and-whats-next/",
       "ts": "2026-10-25T13:22:00+00:00",
       "summary": "A primer from people in the know about the state’s largest religious denomination and its two years (and counting) of Chapter 11 plot twists. Read the story on VTDigger here: What’s behind the Vermont Catholic Church’s ever-evolving bankruptcy case — and what’s next ."
-     },
-     {
-      "id": "https://vtdigger.org/?p=657505",
-      "title": "‘Anti-homelessness landscaping’ in Middlebury raises questions over approaches to rural encampments",
-      "link": "https://vtdigger.org/2026/10/25/anti-homelessness-landscaping-in-middlebury-raises-questions-over-approaches-to-rural-encampments/",
-      "ts": "2026-10-25T12:33:00+00:00",
-      "summary": "As winter approaches and debates rage in Montpelier over Vermont’s approach to homelessness, the small municipality faces a difficult balance between the competing needs of its constituents. Read the story on VTDigger here: ‘Anti-homelessness landscaping’ in Middlebury raises questions over approaches to rural encampments ."
      }
     ]
    },
    "vermont-public": {
     "items": [
+     {
+      "id": "https://www.vermontpublic.org/local-news/2026-10-29/scientists-cyanobacteria-treatment-lake-carmi-success-for-now",
+      "title": "State scientists say cyanobacteria treatment on Lake Carmi was a success — for now",
+      "link": "https://www.vermontpublic.org/local-news/2026-10-29/scientists-cyanobacteria-treatment-lake-carmi-success-for-now",
+      "ts": "2026-10-29T09:00:00+00:00",
+      "summary": "Last year, a contractor applied an alum treatment to the lake. Now, camp owners say the lake is the cleanest and clearest it’s been after many years of cynaobacteria blooms, sometimes called blue-green algae."
+     },
      {
       "id": "https://www.vermontpublic.org/local-news/2026-10-28/cases-under-review-prosecutors-raise-credibility-concerns-barre-cop",
       "title": "Dozens of cases under review after prosecutors raise credibility concerns about Barre cop",
@@ -894,18 +894,18 @@
       "summary": "Vermont State Police say two-term Sen. Terry Williams, of Poultney, struck a family member in the face Monday evening."
      },
      {
-      "id": "https://www.vermontpublic.org/local-news/2026-10-28/build-or-tax-governor-candidates-emphasize-different-elements-housing-policy",
-      "title": "Build or tax? Vermont’s governor candidates emphasize different elements of housing policy",
-      "link": "https://www.vermontpublic.org/local-news/2026-10-28/build-or-tax-governor-candidates-emphasize-different-elements-housing-policy",
-      "ts": "2026-10-28T09:00:00+00:00",
-      "summary": "Both candidates vying for Vermont’s top job want to bring down housing costs and make the state a more affordable place to live. But Gov. Phil Scott and challenger Amanda Janoo have starkly different ideas about what’s driving the state’s housing problems — and how to fix them."
-     },
-     {
       "id": "https://www.vermontpublic.org/local-news/2026-10-28/phil-scott-built-broad-coalition-now-showing-cracks",
       "title": "Phil Scott built a broad coalition. Now it's showing cracks",
       "link": "https://www.vermontpublic.org/local-news/2026-10-28/phil-scott-built-broad-coalition-now-showing-cracks",
       "ts": "2026-10-28T09:00:00+00:00",
       "summary": "Once widely considered unbeatable at the ballot box, the Republican incumbent is saddled with a stubborn affordability crisis, a toxic national party brand and an unexpectedly formidable challenger."
+     },
+     {
+      "id": "https://www.vermontpublic.org/local-news/2026-10-28/build-or-tax-governor-candidates-emphasize-different-elements-housing-policy",
+      "title": "Build or tax? Vermont’s governor candidates emphasize different elements of housing policy",
+      "link": "https://www.vermontpublic.org/local-news/2026-10-28/build-or-tax-governor-candidates-emphasize-different-elements-housing-policy",
+      "ts": "2026-10-28T09:00:00+00:00",
+      "summary": "Both candidates vying for Vermont’s top job want to bring down housing costs and make the state a more affordable place to live. But Gov. Phil Scott and challenger Amanda Janoo have starkly different ideas about what’s driving the state’s housing problems — and how to fix them."
      },
      {
       "id": "https://www.vermontpublic.org/local-news/2026-10-27/former-franklin-county-prosecutor-dog-bit-people-pets-euthanized",
@@ -936,13 +936,6 @@
       "summary": "A (nearly) all high school edition of the High Five featuring a changing of the guard for girl's cross country state champs, and tracking the top two dogs in football as the regular season comes to a close."
      },
      {
-      "id": "https://www.vermontpublic.org/local-news/2026-10-26/fearing-trump-vermont-nonprofits-rolled-back-racial-equity-loans",
-      "title": "Fearing Trump, Vermont nonprofits rolled back racial equity loans",
-      "link": "https://www.vermontpublic.org/local-news/2026-10-26/fearing-trump-vermont-nonprofits-rolled-back-racial-equity-loans",
-      "ts": "2026-10-26T09:00:00+00:00",
-      "summary": "Programs for homebuyers and entrepreneurs of color were billed as innovative and reparative. Now, they’re disappearing."
-     },
-     {
       "id": "https://www.vermontpublic.org/local-news/2026-10-26/vermont-making-apple-cider-community-endeavor",
       "title": "In small town Vermont, making apple cider is a community endeavor",
       "link": "https://www.vermontpublic.org/local-news/2026-10-26/vermont-making-apple-cider-community-endeavor",
@@ -954,18 +947,88 @@
    "wcax": {
     "items": [
      {
+      "id": "W5VEOFEBTVD5ZALVUSTV2JHYHA",
+      "title": "TRAFFIC ALERT: Part of I-89 South shutdown due to a fire",
+      "link": "https://www.wcax.com/2026/10/29/traffic-alert-part-i-89-south-shutdown-due-fire/",
+      "ts": "2026-10-29T15:53:25+00:00",
+      "summary": "Interstate 89 South is closed around St. Albans due to a fire."
+     },
+     {
+      "id": "ZS3TCZMO4BDU5OPR73IAQAG5UA",
+      "title": "Tickets available for Shelburne Museum’s ‘Winter Lights’",
+      "link": "https://www.wcax.com/2026/10/29/tickets-available-shelburne-museums-winter-lights/",
+      "ts": "2026-10-29T15:45:38+00:00",
+      "summary": "An annual holiday tradition returns to the Shelburne Museum for its sixth season on the day after Thanksgiving."
+     },
+     {
+      "id": "IR3PTWPMSRC4VAIQZHEXI2Y53A",
+      "title": "802 News: Breaking down the race for Vermont Governor, plus in-depth interviews with Amanda Janoo, Phil Scott",
+      "link": "https://www.wcax.com/2026/10/21/802-news-interviews-with-amanda-janoo-phil-scott/",
+      "ts": "2026-10-29T15:33:13+00:00",
+      "summary": "Mark Johnson sits down for long-form conversations with the major party candidates for Vermont governor."
+     },
+     {
+      "id": "TKFR57SH6BCZXGL46UYHLCHGXQ",
+      "title": "Death on Camel’s Hump not believed suspicious, police say",
+      "link": "https://www.wcax.com/2026/10/28/death-camels-hump-not-believed-suspicious-police-say/",
+      "ts": "2026-10-29T15:28:20+00:00",
+      "summary": "Police say a person was found dead on Camel's Hump in Huntington on Wednesday."
+     },
+     {
+      "id": "AVPBTAAGZ5CPFJO5FX4TA64TMM",
+      "title": "Scott, Janoo face off in Vermont governor’s debate",
+      "link": "https://www.wcax.com/2026/10/29/scott-janoo-face-off-vermont-governors-debate/",
+      "ts": "2026-10-29T15:26:55+00:00",
+      "summary": "The top candidates for Vermont governor faced off in a debate on WCAX Wednesday evening, less than a week before Election Day."
+     },
+     {
+      "id": "DQ4DOW5B5BGT5IABIA36LIXU2I",
+      "title": "Dartmouth provost resigns after commitee finds he used AI in academic writing",
+      "link": "https://www.wcax.com/2026/10/29/dartmouth-provost-resigns-after-commitee-finds-he-used-ai-academic-writing/",
+      "ts": "2026-10-29T13:34:21+00:00",
+      "summary": "Dartmouth College Provost Santiago Schnell has resigned after a faculty-led committee concluded that he used AI to meaningfully alter his writing for at least one publication and was not forthcoming about his AI use."
+     },
+     {
+      "id": "PO5Y6BM3IZGBNJJHYM7OJ2EUUI",
+      "title": "Multi-vehicle crash on I-89 southbound causes traffic delays",
+      "link": "https://www.wcax.com/2026/10/29/multi-vehicle-crash-i-89-southbound-causes-traffic-delays/",
+      "ts": "2026-10-29T12:35:38+00:00",
+      "summary": "Franklin County fire crews responded to a multi-vehicle crash on Interstate 89 southbound at mile marker 104 Thursday morning."
+     },
+     {
+      "id": "P2S2O6PGUVCGNNKACZAQ7FXMJY",
+      "title": "Wheels for Warmth tire program returns",
+      "link": "https://www.wcax.com/2026/10/29/wheels-warmth-tire-program-returns/",
+      "ts": "2026-10-29T12:14:37+00:00",
+      "summary": "The Vermont nonprofit Wheels for Warmth returns to help Vermonters get winter tires at a discount and raise money for heating assistance."
+     },
+     {
+      "id": "FFKAIRR2O5CGFEFBA5Q4IJ3YEI",
+      "title": "More Vermonters searching for meals as food shelves try to keep up",
+      "link": "https://www.wcax.com/2026/10/29/more-vermonters-searching-meals-food-shelves-try-keep-up/",
+      "ts": "2026-10-29T11:32:40+00:00",
+      "summary": "Many Vermont food banks are finding they need to purchase more food each month than they did a year ago, all to make sure no neighbor goes hungry."
+     },
+     {
+      "id": "FIBYYRRWM5DCXP4NOTT6G444VY",
+      "title": "TRAFFIC ALERT: Tractor-trailer crash shuts down interstate lane in Georgia",
+      "link": "https://www.wcax.com/2026/10/29/traffic-alert-tractor-trailer-crash-shuts-down-interstate-lane-georgia/",
+      "ts": "2026-10-29T10:55:42+00:00",
+      "summary": "Interstate 89 northbound at Exit 18 was down to one lane Thursday morning to allow crews to remove a tractor-trailer following a crash."
+     },
+     {
       "id": "UAFFXY3RUBADFGMHJVMIFEU5HU",
       "title": "Boil water order in effect for Montpelier neighborhood",
       "link": "https://www.wcax.com/2026/10/29/boil-water-order-effect-montpelier-neighborhood/",
       "ts": "2026-10-29T02:43:59+00:00",
-      "summary": "Montpelier’s Department of Public Works says crews are repairing a water main break."
+      "summary": "Water was shut off in a section of Montpelier Wednesday night, where Department of Public Works crews worked to repair a water main break."
      },
      {
       "id": "BP5C6CMPQNEJBOW4CZW6CYN2VE",
       "title": "Route 5 shut down in Newbury following car crash",
       "link": "https://www.wcax.com/2026/10/29/route-5-shut-down-newbury-following-car-crash/",
       "ts": "2026-10-29T02:39:13+00:00",
-      "summary": "State police say Route 5 in Newbury has both lanes blocked due to a crash."
+      "summary": "State police said a crash blocked both lanes of Route 5 in Newbury Wednesday night."
      },
      {
       "id": "DSE7R55ZIJHODOCGBRAN4YIOFI",
@@ -973,13 +1036,6 @@
       "link": "https://www.wcax.com/2026/10/28/rutland-senator-arrested-pleads-not-guilty-domestic-assault/",
       "ts": "2026-10-29T01:46:12+00:00",
       "summary": "According to court documents, Vermont state Sen. Terry Williams hit his adult daughter in the face during an argument at his home in Poultney."
-     },
-     {
-      "id": "AVPBTAAGZ5CPFJO5FX4TA64TMM",
-      "title": "Scott, Janoo face off in Vermont governor’s debate",
-      "link": "https://www.wcax.com/2026/10/29/scott-janoo-face-off-vermont-governors-debate/",
-      "ts": "2026-10-29T01:40:01+00:00",
-      "summary": "The top candidates for Vermont governor faced off in a debate on WCAX Wednesday evening, less than a week before Election Day."
      },
      {
       "id": "AH4NSFN2DBHWFFH5DKVNYRIQSQ",
@@ -1057,13 +1113,6 @@
       "link": "https://www.wcax.com/2026/10/28/lebanon-prepares-midterm-election-absentee-ballots-drop-50/",
       "ts": "2026-10-28T21:22:10+00:00",
       "summary": "With the midterm elections less than a week away, Lebanon and other municipalities across the region are getting ready for Election Day."
-     },
-     {
-      "id": "TKFR57SH6BCZXGL46UYHLCHGXQ",
-      "title": "Death on Camel’s Hump not believed suspicious, police say",
-      "link": "https://www.wcax.com/2026/10/28/death-camels-hump-not-believed-suspicious-police-say/",
-      "ts": "2026-10-28T19:01:55+00:00",
-      "summary": "Police say a person was found dead on Camel's Hump in Huntington on Wednesday."
      },
      {
       "id": "Z7WOXLNPNBCHZBOWGPZ4DATMGM",
@@ -1246,206 +1295,150 @@
       "link": "https://www.wcax.com/2026/10/27/energy-department-map-appears-omit-vermont/",
       "ts": "2026-10-27T18:38:23+00:00",
       "summary": "A map of America posted on X by the U.S. Department of Energy appears to omit the entire state of Vermont."
-     },
-     {
-      "id": "P46V63OB3BDS7KXNQMAKOLI3XM",
-      "title": "Firefighters from 3 states battling New York brush fire",
-      "link": "https://www.wcax.com/2026/10/27/firefighters-3-states-battling-new-york-brush-fire/",
-      "ts": "2026-10-27T18:10:03+00:00",
-      "summary": "A brush fire in eastern New York has now spread to the Massachusetts border."
-     },
-     {
-      "id": "BFZ4YMBT25B4JHCWA2YBSK5VHM",
-      "title": "New Hampshire man taken into custody following long standoff",
-      "link": "https://www.wcax.com/2026/10/27/new-hampshire-man-taken-into-custody-following-long-standoff/",
-      "ts": "2026-10-27T16:39:47+00:00",
-      "summary": "New Hampshire State Police have taken a man into custody after an hourslong standoff that ended Tuesday morning."
-     },
-     {
-      "id": "HCDZDNAM7FBZTEIIMCZQZNHOJI",
-      "title": "Vermont State University defies national trends with an increase in new students",
-      "link": "https://www.wcax.com/2026/10/27/vermont-state-university-defies-national-trends-with-an-increase-new-students/",
-      "ts": "2026-10-27T15:08:56+00:00",
-      "summary": "Vermont State University is reporting an increase of more than 11% in new students."
-     },
-     {
-      "id": "CIDEQGNWG5CLHJDO3ASVWHPSQI",
-      "title": "Vermont high school learns lessons in lifesaving care",
-      "link": "https://www.wcax.com/2026/10/27/vermont-high-school-learns-lessons-life-saving-care/",
-      "ts": "2026-10-27T11:24:31+00:00",
-      "summary": "Champlain Valley Union High School is dedicating two days to building students’ confidence during an emergency."
-     },
-     {
-      "id": "55WDAO4EX5GV3BZEYRQ2BZK2LQ",
-      "title": "PROGRAMMING NOTE: ‘Catamount Corner’ airs on WCAX at 6:30 pm; 6 pm news shortened",
-      "link": "https://www.wcax.com/2026/10/27/programming-note-catamount-corner-airs-wcax-630-pm-6-pm-news-shortened/",
-      "ts": "2026-10-27T10:47:18+00:00",
-      "summary": "A programming note for Tuesday, Oct. 27: A new episode of Catamount Corner begins at 6:30 p.m."
-     },
-     {
-      "id": "6NK2F4FDJVCWJBPHSECB7A6V3Q",
-      "title": "Burlington Forward public safety resolution vote postponed",
-      "link": "https://www.wcax.com/2026/10/27/burlington-forward-public-safety-resolution-vote-postponed/",
-      "ts": "2026-10-27T10:28:15+00:00",
-      "summary": "Burlington city councilors postponed a vote on a controversial public safety resolution Monday night."
-     },
-     {
-      "id": "7ZITWXJABJDBNOBPA3DCPIHTRU",
-      "title": "Amtrak ridership in Vermont up 40% from pre-pandemic levels",
-      "link": "https://www.wcax.com/2026/10/27/vermont-sees-40-jump-amtrak-ridership-since-before-pandemic/",
-      "ts": "2026-10-27T03:30:32+00:00",
-      "summary": "It has been four years since Amtrak service returned to Burlington, connecting the Queen City to New York City. Now, the state is seeing high ridership numbers."
-     },
-     {
-      "id": "B3BYER6F7NEUHAPDRB7AQMW5OQ",
-      "title": "The Vermont Pub & Brewery announces closure after almost 38 years",
-      "link": "https://www.wcax.com/2026/10/27/vermont-pub-brewery-announces-closure-after-almost-38-years/",
-      "ts": "2026-10-27T01:47:42+00:00",
-      "summary": "Vermont’s oldest craft brewery announced on Monday that it will close its doors."
      }
     ]
    },
    "mynbc5": {
     "items": [
      {
-      "id": "74280022",
-      "title": "Police arrest 78-year-old from Sullivan County; accused of the driving wrong way on I-89",
-      "link": "https://www.mynbc5.com/article/wrong-way-driver-interstate-89-nh/74280022",
-      "ts": "2026-10-29T08:33:00+00:00",
-      "summary": "New Hampshire State Police arrested a 78-year-old from Charlestown for driving south in the northbound lanes of I-89 near Hopkinton. Police said the driver evaded multiple attempts to stop him."
+      "id": "74282562",
+      "title": "Vermont play series inspires national movement ahead of Election Day",
+      "link": "https://www.mynbc5.com/article/vermont-plays-national-movement-midterms/74282562",
+      "ts": "2026-10-29T16:14:00+00:00",
+      "summary": "The November Midterm is fast approaching, and some Vermont playwrights are drawing inspiration from the current political environment to start a national movement."
+     },
+     {
+      "id": "74284685",
+      "title": "Man accused in Cornell rape lawsuit wants Letitia James removed from investigation over her posts",
+      "link": "https://www.mynbc5.com/article/cornell-rape-lawsuit-letitia-james-social-posts/74284685",
+      "ts": "2026-10-29T16:06:00+00:00",
+      "summary": "One of at least two cases against James contends she is biased because she posted messages expressing support for the accuser just days before she was appointed to the case."
+     },
+     {
+      "id": "74284578",
+      "title": "Father pulled in by current drowns while trying to save seagull stuck on fishing line",
+      "link": "https://www.mynbc5.com/article/father-drowns-rescue-seagull-stuck-fishing-line/74284578",
+      "ts": "2026-10-29T16:05:00+00:00",
+      "summary": "Family and friends are remembering a Florida dad who drowned while trying to help a bird that got caught in his fishing line."
+     },
+     {
+      "id": "74284453",
+      "title": "Senate is skeptical about making daylight saving time permanent despite Trump's pressure",
+      "link": "https://www.mynbc5.com/article/senate-stalls-permanent-daylight-saving-time-bill/74284453",
+      "ts": "2026-10-29T15:44:00+00:00",
+      "summary": "Get ready to fall back. The Senate is unlikely to act on a bill that would make daylight saving time permanent, despite pressure from President Trump."
+     },
+     {
+      "id": "74265586",
+      "title": "Senate races to watch in the 2026 midterm election",
+      "link": "https://www.mynbc5.com/article/key-senate-races-2026-midterm-election/74265586",
+      "ts": "2026-10-29T15:32:00+00:00",
+      "summary": "Control of the U.S. Senate is up for grabs. And Republicans increasingly find themselves on defense as they try to hold on to their majority in the chamber."
+     },
+     {
+      "id": "74283914",
+      "title": "Lindsay Clancy may testify in Patrick Clancy's wrongful death lawsuit, attorney says",
+      "link": "https://www.mynbc5.com/article/patrick-clancys-attorneys-due-in-court-in-wrongful-death-lawsuit/74283914",
+      "ts": "2026-10-29T15:05:00+00:00",
+      "summary": "Patrick Clancy, the husband of Lindsay Clancy—the Massachusetts mother accused of killing her three children—is suing his wife's medical providers."
+     },
+     {
+      "id": "74230370",
+      "title": "More than 41 million voters have already cast early ballots; here's where",
+      "link": "https://www.mynbc5.com/article/2026-midterm-election-early-voting-turnout/74230370",
+      "ts": "2026-10-29T14:56:00+00:00",
+      "summary": "More than 40 million voters have already cast early ballots ahead of key races."
+     },
+     {
+      "id": "74280590",
+      "title": "Which races could determine control of Congress?",
+      "link": "https://www.mynbc5.com/article/five-days-until-midterms-which-races-could-determine-control-congress/74280590",
+      "ts": "2026-10-29T14:52:00+00:00",
+      "summary": "With five days until the midterm elections, both parties are making their final push, with key figures like President Trump and former President Obama rallying voters in critical states."
+     },
+     {
+      "id": "74260690",
+      "title": "Vermont castle combines 19th-century charm with tales of paranormal activity",
+      "link": "https://www.mynbc5.com/article/proctor-vermont-wilson-castle-paranormal/74260690",
+      "ts": "2026-10-29T14:45:00+00:00",
+      "summary": "This Is Our Home: Inside the Wilson Castle in Proctor, Vermont, visitors get full tours offering both history and paranormal intrigue."
+     },
+     {
+      "id": "74283314",
+      "title": "Alaska's governor orders probe into Democratic candidate over Dan Sullivan ballot controversy",
+      "link": "https://www.mynbc5.com/article/alaska-senate-investigation-dan-sullivan-ballot-confusion/74283314",
+      "ts": "2026-10-29T13:57:00+00:00",
+      "summary": "Alaska's governor has ordered an investigation into the Democratic Senate candidate after allegations that her campaign was involved in recruiting another candidate with the same name as Republican Dan Sullivan."
+     },
+     {
+      "id": "74283239",
+      "title": "NICU nurse creates handmade Halloween costumes for babies",
+      "link": "https://www.mynbc5.com/article/pennsylvania-hospital-nicu-halloween-costumes-babies/74283239",
+      "ts": "2026-10-29T13:53:00+00:00",
+      "summary": "A nurse at UPMC Magee-Womens Hospital brought Halloween cheer to families in the NICU by crafting handmade costumes for every baby."
+     },
+     {
+      "id": "74282734",
+      "title": "DoorDash agrees to buy Instacart for $17 billion",
+      "link": "https://www.mynbc5.com/article/doordash-buys-instacart-grocery-delivery/74282734",
+      "ts": "2026-10-29T13:49:00+00:00",
+      "summary": "DoorDash has agreed to buy Instacart for $17 billion in a big consolidation of the grocery delivery business."
+     },
+     {
+      "id": "74283105",
+      "title": "Pet Connection: Oct. 29, 2026",
+      "link": "https://www.mynbc5.com/article/pet-connection-oct-29-2026/74283105",
+      "ts": "2026-10-29T13:47:00+00:00",
+      "summary": "Pet Connection: Make your Halloween scary good by adopting one of our featured pets!"
+     },
+     {
+      "id": "74264615",
+      "title": "Driver found dead after pursuit tied to Moira death investigation",
+      "link": "https://www.mynbc5.com/article/investigation-south-woods-road-moira-ny/74264615",
+      "ts": "2026-10-29T13:39:00+00:00",
+      "summary": "State police identified Melissa Pelc-Lohr, 50, and Norman Lohr Jr., 50, after both were found dead Tuesday at separate scenes in Franklin and Wayne counties."
+     },
+     {
+      "id": "74282905",
+      "title": "'Is this what I think it is?\": TSA officers recover wolverine-like claws in airport carry-on",
+      "link": "https://www.mynbc5.com/article/tsa-officers-wolverine-like-claws-airport-carry-on/74282905",
+      "ts": "2026-10-29T13:13:00+00:00",
+      "summary": "\"Is this what I think this is?\" That's what two Transportation Security Administration officers asked themselves after discovering an unusual object inside an airport carry-on bag."
+     },
+     {
+      "id": "74282989",
+      "title": "92-year-old accused of trying to kill his wife at senior living home",
+      "link": "https://www.mynbc5.com/article/man-charged-with-attempted-murder-louisville-senior-home/74282989",
+      "ts": "2026-10-29T13:08:00+00:00",
+      "summary": "A 92-year-old man was arrested after police said he tried to murder his wife by putting a plastic bag over her head at a senior living home in Kentucky."
+     },
+     {
+      "id": "74271421",
+      "title": "Vermont state senator, accused of domestic assault, enters not guilty plea at Wednesday arraignment",
+      "link": "https://www.mynbc5.com/article/vt-senator-arrested-assault-rutland-county/74271421",
+      "ts": "2026-10-29T12:34:00+00:00",
+      "summary": "Vermont State Police have arrested Terry Williams, a state senator from Poultney, for an alleged assault against a family member."
      },
      {
       "id": "74278505",
-      "title": "Fire at von Trapp Family Resort in Stowe; No Injuries Reported",
+      "title": "Fire at von Trapp Family Resort in Stowe; No injuries reported",
       "link": "https://www.mynbc5.com/article/fire-at-von-trapp-family-resort-in-stowe-no-injuries-reported/74278505",
-      "ts": "2026-10-29T07:05:00+00:00",
+      "ts": "2026-10-29T12:33:00+00:00",
       "summary": "Multiple fire crews responded after flames were reported coming from one of the resort’s villas Wednesday evening. The fire is out, and all residents are safe."
      },
      {
-      "id": "74279710",
-      "title": "Device as small as 'grain of rice' offers hope for rare eye disease",
-      "link": "https://www.mynbc5.com/article/device-offers-new-hope-for-rare-eye-disease/74279710",
-      "ts": "2026-10-29T05:31:00+00:00",
-      "summary": "A tiny implant is providing a groundbreaking treatment for macular telangiectasia, a rare eye disease, by slowing or stopping its progression."
+      "id": "74282695",
+      "title": "FTC orders Walmart, Delta and others to share how they use personal data to set prices",
+      "link": "https://www.mynbc5.com/article/ftc-probes-personalized-pricing/74282695",
+      "ts": "2026-10-29T12:32:00+00:00",
+      "summary": "The FTC is ordering Delta Air Lines, Walmart and other companies to provide detailed information on how they use consumers’ data when they're setting prices."
      },
      {
-      "id": "74279462",
-      "title": "Best friends become rivals during World Series",
-      "link": "https://www.mynbc5.com/article/best-friends-become-rivals-world-series/74279462",
-      "ts": "2026-10-29T04:15:00+00:00",
-      "summary": "Two best friends have become temporary rivals as their MLB teams face each other in the World Series."
-     },
-     {
-      "id": "74279431",
-      "title": "Milwaukee's William Contreras wins World Series MVP",
-      "link": "https://www.mynbc5.com/article/milwaukee-william-contreras-wins-world-series-mvp/74279431",
-      "ts": "2026-10-29T04:00:00+00:00",
-      "summary": "William Contreras became the eighth catcher voted the World Series MVP after lifting the Milwaukee Brewers to their first World Series championship."
-     },
-     {
-      "id": "74171786",
-      "title": "2026 Section VII Girls' Soccer Playoff Bracket",
-      "link": "https://www.mynbc5.com/article/2026-section-vii-girls-soccer-playoff-bracket/74171786",
-      "ts": "2026-10-29T03:43:00+00:00",
-      "summary": "See the latest scores, highlights and schedule from the postseason on the pitch"
-     },
-     {
-      "id": "74173368",
-      "title": "2026 Section VII Boys' Soccer Playoff Bracket",
-      "link": "https://www.mynbc5.com/article/2026-section-vii-boys-soccer-playoff-bracket/74173368",
-      "ts": "2026-10-29T03:43:00+00:00",
-      "summary": "See the latest scores, highlights and schedule from the postseason on the courts"
-     },
-     {
-      "id": "74171640",
-      "title": "2026 VPA Boys' Volleyball Playoffs Bracket",
-      "link": "https://www.mynbc5.com/article/2026-vpa-boys-volleyball-playoffs-bracket/74171640",
-      "ts": "2026-10-29T03:41:00+00:00",
-      "summary": "See the latest scores, highlights and schedule from the postseason on the courts"
-     },
-     {
-      "id": "74279175",
-      "title": "Halloween festivities get modified amid high fire risk in Vermont",
-      "link": "https://www.mynbc5.com/article/fire-officials-vermonters-cautious-halloween-weather/74279175",
-      "ts": "2026-10-29T03:41:00+00:00",
-      "summary": "Fire officials urge people to be extra cautious this Halloween with ongoing dry conditions and potential high wind gusts."
-     },
-     {
-      "id": "74173746",
-      "title": "2026 VPA Field Hockey Playoff Bracket",
-      "link": "https://www.mynbc5.com/article/2026-vpa-field-hockey-playoff-bracket/74173746",
-      "ts": "2026-10-29T03:41:00+00:00",
-      "summary": "See the latest scores, highlights and schedule from the postseason on the astro turf"
-     },
-     {
-      "id": "74173583",
-      "title": "2026 VPA Girls' Soccer Playoff Bracket",
-      "link": "https://www.mynbc5.com/article/2026-vpa-girls-soccer-playoff-bracket/74173583",
-      "ts": "2026-10-29T03:40:00+00:00",
-      "summary": "See the latest scores, highlights and schedule from the postseason on the pitch"
-     },
-     {
-      "id": "74279080",
-      "title": "Brewers win first World Series title",
-      "link": "https://www.mynbc5.com/article/brewers-win-first-world-series-title/74279080",
-      "ts": "2026-10-29T03:35:00+00:00",
-      "summary": "The small-ball Milwaukee Brewers, playing in the smallest market in the majors, are World Series champions for the first time in franchise history."
-     },
-     {
-      "id": "74173432",
-      "title": "2026 VPA Boys' Soccer Playoff Bracket",
-      "link": "https://www.mynbc5.com/article/2026-vpa-boys-soccer-playoff-bracket/74173432",
-      "ts": "2026-10-29T03:02:00+00:00",
-      "summary": "See the latest scores, highlights and schedule from the postseason on the pitch"
-     },
-     {
-      "id": "74171708",
-      "title": "2026 VPA Girls' Volleyball Playoff Bracket",
-      "link": "https://www.mynbc5.com/article/2026-girls-volleyball-playoff-bracket/74171708",
-      "ts": "2026-10-29T02:50:00+00:00",
-      "summary": "See the latest scores, highlights and schedule from the postseason on the courts"
-     },
-     {
-      "id": "74275649",
-      "title": "State's Attorney pens letter calling out alleged behavior by Barre City officer",
-      "link": "https://www.mynbc5.com/article/states-attorney-letter-barre-city-officer/74275649",
-      "ts": "2026-10-29T02:35:00+00:00",
-      "summary": "The prosecutor's concerns stem from a May incident when a woman was arrested."
-     },
-     {
-      "id": "74278857",
-      "title": "Cooper Pratt sets World Series record",
-      "link": "https://www.mynbc5.com/article/cooper-pratt-sets-world-series-record/74278857",
-      "ts": "2026-10-29T02:21:00+00:00",
-      "summary": "Cooper Pratt has made World Series history. He has had six straight hits while at bat, the most of any rookie in history for the championship game."
-     },
-     {
-      "id": "74275324",
-      "title": "NFL players help build mobility ramp for veteran in need",
-      "link": "https://www.mynbc5.com/article/cincinnati-bengals-risner-operation-ramp-it-up/74275324",
-      "ts": "2026-10-29T02:08:00+00:00",
-      "summary": "NFL players and members of the Cincinnati Bengals teamed up with Operation Ramp It Up volunteers to help give one Cincinnati veteran a better quality of life."
-     },
-     {
-      "id": "74275087",
-      "title": "Hiker found dead on Camel’s Hump identified as Colorado man",
-      "link": "https://www.mynbc5.com/article/first-responders-recover-body-on-camels-hump/74275087",
-      "ts": "2026-10-29T02:07:00+00:00",
-      "summary": "Vermont State Police say the death of a Denver man on Camel's Hump is not suspicious."
-     },
-     {
-      "id": "74278672",
-      "title": "Smoke from LA fires exposed millions of people to high levels of toxic heavy metals, study says",
-      "link": "https://www.mynbc5.com/article/smoke-from-la-fires-exposed-millions-of-people-to-high-levels-of-toxic-heavy-metals-study-says/74278672",
-      "ts": "2026-10-29T02:05:00+00:00",
-      "summary": "A new study reveals that at the height of the Los Angeles fires in 2025, millions of residents were exposed in a 24-hour period to toxic lead levels from smoke that were 80 times higher than the typical background level."
-     },
-     {
-      "id": "74271855",
-      "title": "Defeated Brazilian presidential candidate Flávio Bolsonaro and his family land in Miami",
-      "link": "https://www.mynbc5.com/article/flavio-bolsonaro-miami-fleeing-brazil-election/74271855",
-      "ts": "2026-10-29T01:30:00+00:00",
-      "summary": "Defeated Brazilian presidential candidate Flávio Bolsonaro and his family have landed in Miami after fleeing Brazil."
+      "id": "74282673",
+      "title": "What to know about the impacts of Flávio Bolsonaro’s move from Brazil to the US",
+      "link": "https://www.mynbc5.com/article/impacts-flavio-bolsonaros-brazil-united-states/74282673",
+      "ts": "2026-10-29T12:19:00+00:00",
+      "summary": "Flávio Bolsonaro is now in Miami after fleeing to the U.S. following his stunning defeat to Luiz Inácio Lula da Silva in Brazil’s presidential elections."
      }
     ]
    },
@@ -1535,10 +1528,42 @@
  "reddit-burlington": {
   "posts": [
    {
+    "id": "1xiiu0v",
+    "title": "Charlie’s Boathouse to turn into public park after family sells to Winooski Valley Park District",
+    "url": "https://www.reddit.com/r/burlington/comments/1xiiu0v/charlies_boathouse_to_turn_into_public_park_after/",
+    "score": 56,
+    "comments": 5,
+    "created": "2026-10-29T12:38:52+00:00"
+   },
+   {
+    "id": "1xil1p3",
+    "title": "Reckless Driving on S Prospect St in front of the University Green",
+    "url": "https://www.reddit.com/r/burlington/comments/1xil1p3/reckless_driving_on_s_prospect_st_in_front_of_the/",
+    "score": 13,
+    "comments": 11,
+    "created": "2026-10-29T14:09:40+00:00"
+   },
+   {
+    "id": "1xil6ii",
+    "title": "TOMORROW NIGHT AT HIGHER GROUND!!! Get ready for mosh and get your fright on for a night of punk rock! The last show of the year for both Doom Service and Vallory Falls, catch them while you can this year along with Dead Street Dreamers and Violet Crimes!!",
+    "url": "https://www.reddit.com/r/burlington/comments/1xil6ii/tomorrow_night_at_higher_ground_get_ready_for/",
+    "score": 9,
+    "comments": 1,
+    "created": "2026-10-29T14:14:41+00:00"
+   },
+   {
+    "id": "1xike2s",
+    "title": "Dog trainer for reactivity",
+    "url": "https://www.reddit.com/r/burlington/comments/1xike2s/dog_trainer_for_reactivity/",
+    "score": 3,
+    "comments": 3,
+    "created": "2026-10-29T13:44:59+00:00"
+   },
+   {
     "id": "1xhyp4l",
     "title": "Vote!",
     "url": "https://www.reddit.com/r/burlington/comments/1xhyp4l/vote/",
-    "score": 60,
+    "score": 68,
     "comments": 0,
     "created": "2026-10-28T19:56:19+00:00"
    },
@@ -1546,23 +1571,47 @@
     "id": "1xhp0un",
     "title": "Former Burlington Administrator Stole $1.8M from School District",
     "url": "https://www.reddit.com/r/burlington/comments/1xhp0un/former_burlington_administrator_stole_18m_from/",
-    "score": 166,
-    "comments": 81,
+    "score": 174,
+    "comments": 98,
     "created": "2026-10-28T14:05:54+00:00"
    },
    {
     "id": "1xhy6lb",
     "title": "The Handys",
     "url": "https://www.reddit.com/r/burlington/comments/1xhy6lb/the_handys/",
-    "score": 48,
-    "comments": 55,
+    "score": 55,
+    "comments": 61,
     "created": "2026-10-28T19:37:11+00:00"
+   },
+   {
+    "id": "1xihsh8",
+    "title": "Do any nearby retail stores sell physical Lego gift cards?",
+    "url": "https://www.reddit.com/r/burlington/comments/1xihsh8/do_any_nearby_retail_stores_sell_physical_lego/",
+    "score": 2,
+    "comments": 3,
+    "created": "2026-10-29T11:50:03+00:00"
+   },
+   {
+    "id": "1ximy0h",
+    "title": "What do you do when a 21 year lady gives a 17 year old girl alcohol and drugs? She blames everything on being bipolar I feel if your old enough to bye minors alcohol bipolar or not you shout have charges pressed.",
+    "url": "https://www.reddit.com/r/burlington/comments/1ximy0h/what_do_you_do_when_a_21_year_lady_gives_a_17/",
+    "score": 1,
+    "comments": 1,
+    "created": "2026-10-29T15:22:05+00:00"
+   },
+   {
+    "id": "1xibngf",
+    "title": "Does anyone have a Meowth costume or a beige/tan onesie that would fit a 6 year old?",
+    "url": "https://www.reddit.com/r/burlington/comments/1xibngf/does_anyone_have_a_meowth_costume_or_a_beigetan/",
+    "score": 5,
+    "comments": 1,
+    "created": "2026-10-29T05:42:33+00:00"
    },
    {
     "id": "1xi2291",
     "title": "I-89 northbound exit 15",
     "url": "https://www.reddit.com/r/burlington/comments/1xi2291/i89_northbound_exit_15/",
-    "score": 17,
+    "score": 18,
     "comments": 9,
     "created": "2026-10-28T22:05:24+00:00"
    },
@@ -1570,15 +1619,15 @@
     "id": "1xhr76n",
     "title": "any cheap pasta around?",
     "url": "https://www.reddit.com/r/burlington/comments/1xhr76n/any_cheap_pasta_around/",
-    "score": 54,
-    "comments": 59,
+    "score": 60,
+    "comments": 60,
     "created": "2026-10-28T15:28:05+00:00"
    },
    {
     "id": "1xhynts",
     "title": "Help Make Shower Bags For Cancer Patients at the UVM Medical Center Oncology Unit... Saturday & Sunday, November 21-22 from 10am-2pm in Burlington.",
     "url": "https://www.reddit.com/r/burlington/comments/1xhynts/help_make_shower_bags_for_cancer_patients_at_the/",
-    "score": 17,
+    "score": 22,
     "comments": 0,
     "created": "2026-10-28T19:55:01+00:00"
    },
@@ -1586,25 +1635,25 @@
     "id": "1xhkfwp",
     "title": "Moose euthanized",
     "url": "https://www.reddit.com/r/burlington/comments/1xhkfwp/moose_euthanized/",
-    "score": 89,
-    "comments": 52,
+    "score": 93,
+    "comments": 55,
     "created": "2026-10-28T10:32:38+00:00"
    },
    {
     "id": "1xhmg6d",
     "title": "Accident on 89S",
     "url": "https://www.reddit.com/r/burlington/comments/1xhmg6d/accident_on_89s/",
-    "score": 51,
-    "comments": 53,
+    "score": 50,
+    "comments": 54,
     "created": "2026-10-28T12:16:13+00:00"
    },
    {
-    "id": "1xibngf",
-    "title": "Does anyone have a Meowth costume or a beige/tan onesie that would fit a 6 year old?",
-    "url": "https://www.reddit.com/r/burlington/comments/1xibngf/does_anyone_have_a_meowth_costume_or_a_beigetan/",
-    "score": 2,
-    "comments": 0,
-    "created": "2026-10-29T05:42:33+00:00"
+    "id": "1xhr2bw",
+    "title": "Serious question re: Mayor",
+    "url": "https://www.reddit.com/r/burlington/comments/1xhr2bw/serious_question_re_mayor/",
+    "score": 13,
+    "comments": 58,
+    "created": "2026-10-28T15:23:16+00:00"
    },
    {
     "id": "1xhqot5",
@@ -1615,20 +1664,20 @@
     "created": "2026-10-28T15:09:46+00:00"
    },
    {
-    "id": "1xhr2bw",
-    "title": "Serious question re: Mayor",
-    "url": "https://www.reddit.com/r/burlington/comments/1xhr2bw/serious_question_re_mayor/",
-    "score": 11,
-    "comments": 50,
-    "created": "2026-10-28T15:23:16+00:00"
-   },
-   {
     "id": "1xi8uky",
     "title": "Acupuncture that takes insurance?",
     "url": "https://www.reddit.com/r/burlington/comments/1xi8uky/acupuncture_that_takes_insurance/",
     "score": 1,
-    "comments": 2,
+    "comments": 4,
     "created": "2026-10-29T03:08:13+00:00"
+   },
+   {
+    "id": "1xhseoz",
+    "title": "Free Haircuts at Burlington Barber Shop 10/29, 10/30, 10/31.",
+    "url": "https://www.reddit.com/r/burlington/comments/1xhseoz/free_haircuts_at_burlington_barber_shop_1029_1030/",
+    "score": 6,
+    "comments": 1,
+    "created": "2026-10-28T16:11:07+00:00"
    },
    {
     "id": "1xhmv0o",
@@ -1643,88 +1692,24 @@
     "title": "Finding Aides in Vermont",
     "url": "https://www.reddit.com/r/burlington/comments/1xhpfvd/finding_aides_in_vermont/",
     "score": 7,
-    "comments": 18,
+    "comments": 22,
     "created": "2026-10-28T14:22:33+00:00"
-   },
-   {
-    "id": "1xhseoz",
-    "title": "Free Haircuts at Burlington Barber Shop 10/29, 10/30, 10/31.",
-    "url": "https://www.reddit.com/r/burlington/comments/1xhseoz/free_haircuts_at_burlington_barber_shop_1029_1030/",
-    "score": 5,
-    "comments": 1,
-    "created": "2026-10-28T16:11:07+00:00"
    },
    {
     "id": "1xhka95",
     "title": "How’s the Burlington music scene? Any great local bands?",
     "url": "https://www.reddit.com/r/burlington/comments/1xhka95/hows_the_burlington_music_scene_any_great_local/",
-    "score": 12,
-    "comments": 59,
+    "score": 13,
+    "comments": 62,
     "created": "2026-10-28T10:23:43+00:00"
    },
    {
     "id": "1xhqanx",
     "title": "Burlington Councilors Seek to Compromise on Public Safety Debate",
     "url": "https://www.reddit.com/r/burlington/comments/1xhqanx/burlington_councilors_seek_to_compromise_on/",
-    "score": 5,
-    "comments": 24,
+    "score": 4,
+    "comments": 27,
     "created": "2026-10-28T14:55:13+00:00"
-   },
-   {
-    "id": "1xhvfnn",
-    "title": "party sized pizzas",
-    "url": "https://www.reddit.com/r/burlington/comments/1xhvfnn/party_sized_pizzas/",
-    "score": 2,
-    "comments": 9,
-    "created": "2026-10-28T17:58:39+00:00"
-   },
-   {
-    "id": "1xhrfhp",
-    "title": "Pellet stove installation recommendations",
-    "url": "https://www.reddit.com/r/burlington/comments/1xhrfhp/pellet_stove_installation_recommendations/",
-    "score": 3,
-    "comments": 2,
-    "created": "2026-10-28T15:36:24+00:00"
-   },
-   {
-    "id": "1xha5aj",
-    "title": "Break-ins?",
-    "url": "https://www.reddit.com/r/burlington/comments/1xha5aj/breakins/",
-    "score": 11,
-    "comments": 14,
-    "created": "2026-10-28T00:48:33+00:00"
-   },
-   {
-    "id": "1xgyyrr",
-    "title": "Missing cat in old north end",
-    "url": "https://www.reddit.com/r/burlington/comments/1xgyyrr/missing_cat_in_old_north_end/",
-    "score": 30,
-    "comments": 2,
-    "created": "2026-10-27T17:30:18+00:00"
-   },
-   {
-    "id": "1xh66f2",
-    "title": "Transparency? Seriously?",
-    "url": "https://www.reddit.com/r/burlington/comments/1xh66f2/transparency_seriously/",
-    "score": 13,
-    "comments": 56,
-    "created": "2026-10-27T21:59:40+00:00"
-   },
-   {
-    "id": "1xi1pf1",
-    "title": "Locally made beef tallow?",
-    "url": "https://www.reddit.com/r/burlington/comments/1xi1pf1/locally_made_beef_tallow/",
-    "score": 0,
-    "comments": 8,
-    "created": "2026-10-28T21:51:24+00:00"
-   },
-   {
-    "id": "1xgez75",
-    "title": "Vermont Pub & Brewery closing",
-    "url": "https://www.reddit.com/r/burlington/comments/1xgez75/vermont_pub_brewery_closing/",
-    "score": 341,
-    "comments": 257,
-    "created": "2026-10-27T01:08:33+00:00"
    }
   ]
  },
