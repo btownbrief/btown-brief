@@ -1,0 +1,75 @@
+name: Refresh Town data
+
+# Feeds the Town app (Alerts, City Hall, Streets) from official sources.
+# Scripts live in scripts/town/ and write only data/town/. Same contract as the
+# other refresh workflows: the site stays static, a failed section keeps its last
+# good copy (marked stale), and a file is rewritten only when its content changed,
+# so most hourly runs commit nothing.
+#
+#   alerts.py   hourly, plus extra runs 5-7am Eastern for school delays
+#   signups.py  daily
+#   streets.py  daily (permits export is weekly, sales post a few times a week)
+#
+# Manual run: Actions tab -> "Refresh Town data" -> Run workflow (pick which).
+# Local run:  python3 -m scripts.town.alerts   (from the repo root)
+
+on:
+  schedule:
+    - cron: '40 * * * *'        # alerts, hourly at :40 (offset from changes :25 and weather :45)
+    - cron: '5,20 10,11 * * *'  # alerts, early-morning closings window
+    - cron: '50 10 * * *'       # daily: signups + streets
+  workflow_dispatch:
+    inputs:
+      which:
+        description: 'alerts, daily (signups + streets), or all'
+        default: all
+        type: choice
+        options: [all, alerts, daily]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: refresh-town
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Decide what to run
+        id: pick
+        run: |
+          which="${{ github.event.inputs.which }}"
+          if [ -z "$which" ]; then
+            if [ "${{ github.event.schedule }}" = "50 10 * * *" ]; then which=daily; else which=alerts; fi
+          fi
+          echo "which=$which" >> "$GITHUB_OUTPUT"
+
+      - name: Alerts
+        if: steps.pick.outputs.which == 'alerts' || steps.pick.outputs.which == 'all'
+        run: python3 -m scripts.town.alerts
+
+      - name: Signups
+        if: steps.pick.outputs.which == 'daily' || steps.pick.outputs.which == 'all'
+        run: python3 -m scripts.town.signups
+
+      - name: Streets
+        if: steps.pick.outputs.which == 'daily' || steps.pick.outputs.which == 'all'
+        run: python3 -m scripts.town.streets
+
+      - name: Commit if changed
+        if: always()
+        run: |
+          git config user.name "btown-brief-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data/town/
+          if git diff --cached --quiet; then
+            echo "No Town data changes."
+          else
+            git commit -m "Auto-refresh Town data"
+            git push || (git pull --rebase && git push)
+          fi

@@ -1,0 +1,1270 @@
+{
+ "generated": "2026-10-29",
+ "about": "Every source behind the Town app's City Hall tab: Town Meeting Day 2027 filing, the budget and tax rates for a 'your tax bill, explained' page, and bids, RFPs and contract awards. Meetings, agendas and minutes are already covered by scripts/refresh_civic.py (data/civic.json) and the newsletter's scripts/city_hall.py; nothing here refetches them. No City Hall fetcher is wired yet; 'automatable' says what a script could do.",
+ "robots": "burlingtonvt.gov/robots.txt (fetched 2026-10-29; edited 2026-10-20 per an in-file comment) has two relevant groups. (1) 'User-agent: *' with Crawl-delay: 10 disallows /RSS.aspx and /rss.aspx (the feed index page), /Search*, /Map.aspx, /currentevents*, /publiclogin.aspx, /common/modules/icalendar/ and others. It does NOT disallow /RSSFeed.aspx or /Bids.aspx. (2) A named group for AI and SEO crawlers (ClaudeBot, Claude-SearchBot, GPTBot, OAI-SearchBot, PerplexityBot, CCBot, Amazonbot, AhrefsBot, SemrushBot and others) repeats the * rules and adds 'expensive-endpoint blocks': /calendar.aspx, /rssfeed.aspx, /RSSFeed.aspx, /civicalerts.aspx, /bids.aspx, /Bids.aspx, /faq.aspx and /common/modules/icalendar/. Baiduspider and Yandex are fully disallowed. So RSSFeed.aspx and Bids.aspx ARE disallowed for ClaudeBot and similar bots, and allowed (with a 10 s crawl delay) for generic crawlers. A Btown Brief script should identify itself honestly (not as ClaudeBot), poll at most a few times a day, and keep 10 s or more between requests. Better still, use the city's email 'Notify Me' alerts for bids. During this research I fetched Bids.aspx, RSSFeed.aspx and RSS.aspx a handful of times by hand with a browser user agent, at the user's request. Other hosts used (burlingtonvt.api.civicclerk.com, data.burlingtonvt.gov, bsdvt.org, burlingtonelectric.com, btv.aero) are not covered by this file. Their own robots.txt files were not checked.",
+ "derived": {
+  "town_meeting_day_2027": {
+   "election_date": "2027-03-02",
+   "filing_deadline": "2027-01-25 17:00",
+   "withdrawal_deadline": "2027-01-27 17:00",
+   "basis": "Computed from 17 V.S.A. 2681 (sixth Monday before the election, 5 pm) and the 2026 SOS calendar pattern (Jan 26, 2026); the clerk and Secretary of State have not yet posted 2027 dates. Confirm with the Clerk/Treasurer (802-865-7000) before publishing.",
+   "offices_expected": [
+    "Mayor (three-year term; charter cycle 2003 + every 3 years)",
+    "City Council: Central, East, North and South district seats",
+    "School commissioners: the four district seats (inferred from 2023 and 2025)",
+    "Ward clerks and inspectors of election"
+   ],
+   "ballot_questions_seen": [
+    "Charter change: non-citizen voter protections",
+    "Charter change: modernizing city government (both on the Oct 26, 2026 council agenda)"
+   ],
+   "petition_signatures": "Mayor 150 (charter); other offices 30 voters or 1%, whichever is less (17 V.S.A. 2681)",
+   "candidate_list": "The clerk does not appear to post a pre-election candidate list; the warning lists offices only. After the election a scanned 'Declaration of Elected Candidates' PDF is posted on /179/Election-Results. Who's Running therefore needs a records request or a call to the clerk the day after the filing deadline, plus candidates' own announcements.",
+   "source_urls": [
+    "https://www.burlingtonvt.gov/986/Elections",
+    "https://legislature.vermont.gov/statutes/section/17/055/02681",
+    "https://legislature.vermont.gov/statutes/section/24APPENDIX/003/00003",
+    "https://outside.vermont.gov/dept/sos/Elections_Division/town_clerks_local_elections/election_procedure/elections_calendar.pdf"
+   ],
+   "verified": "2026-10-29"
+  },
+  "tax_rates": {
+   "per_100_of_grand_list": {
+    "FY2027": {
+     "homestead_education": 1.5489,
+     "non_homestead_education": 1.5154,
+     "municipal": 0.9097,
+     "local_agreement": 0.0004
+    },
+    "FY2026": {
+     "homestead_education": 1.5264,
+     "non_homestead_education": 1.5072,
+     "municipal": 0.8557,
+     "local_agreement": 0.0004
+    }
+   },
+   "formula": "Grand list value = appraised value / 100; residential tax = GL x (education + municipal + local agreement). Commercial municipal tax uses appraised value x 1.2.",
+   "payments": "Quarterly, due the 12th of August, November, March and June",
+   "fy27_municipal_components_top": {
+    "general_city": 0.1932,
+    "retirement": 0.1849,
+    "debt_service": 0.1534
+   },
+   "fy27_status": "The FY27 budget page is still labelled DRAFT; the FY26 tax resolution is the signed adopted copy.",
+   "source_urls": [
+    "https://www.burlingtonvt.gov/215/Tax-Rates-Calculations",
+    "https://www.burlingtonvt.gov/DocumentCenter/View/12141",
+    "https://tax.vermont.gov/property/education-property-tax-rates"
+   ],
+   "verified": "2026-10-29"
+  }
+ },
+ "sources": [
+  {
+   "id": "btv-elections-page",
+   "topic": "elections",
+   "name": "City of Burlington Elections page",
+   "source_url": "https://www.burlingtonvt.gov/986/Elections",
+   "publisher": "City of Burlington Clerk/Treasurer (DFA)",
+   "format": "html",
+   "automated": "no",
+   "automatable": "partly",
+   "how": "curl -sL -A \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 Chrome/130 Safari/537.36\" https://www.burlingtonvt.gov/986/Elections, then extract #moduleContent text. This is a CivicPlus page with free-text content that staff rewrite each cycle, so diff the text hash weekly and have a person review changes. /986/ is not disallowed for the * group in robots.txt.",
+   "cadence": "Rewritten each election cycle; expect the March 2027 content around Dec 2026 to Jan 2027",
+   "what_it_has": "Election-cycle landing page. Right now it covers only the November 3, 2026 General Election: early voting, drop boxes and key dates. It has nothing yet on March 2027 candidate filing and no candidate list.",
+   "key_facts": [
+    {
+     "fact": "Current content covers",
+     "value": "November 3, 2026 General Election",
+     "evidence": "November 3, 2026 General Election"
+    },
+    {
+     "fact": "Ballots mailed",
+     "value": "by October 1 to all active registered voters",
+     "evidence": "All active registered voters in Burlington will be mailed a ballot by October 1"
+    },
+    {
+     "fact": "Early in-person voting cutoff",
+     "value": "Mon Nov 2, 2026, 1:00 pm at Clerk/Treasurer's Office",
+     "evidence": "no later than Monday, November 2nd at 1:00pm"
+    },
+    {
+     "fact": "Drop box deadline",
+     "value": "Nov 2, 2026, 4:30 pm",
+     "evidence": "November 2nd, 4:30 p.m. – deadline to drop off your voted ballot"
+    },
+    {
+     "fact": "Drop box locations",
+     "value": "City Hall (Main St side), DPW 645 Pine St, Fire Station #2, Robert Miller Community Center, Fire Station #3",
+     "evidence": "City Hall – Main Street side of the building across from the Flynn Theater"
+    },
+    {
+     "fact": "Local elections open to non-citizen legal residents",
+     "value": "yes, municipal and school items",
+     "evidence": "open to all legal residents, regardless of citizenship status"
+    }
+   ],
+   "verified": "2026-10-29"
+  },
+  {
+   "id": "btv-election-results",
+   "topic": "elections",
+   "name": "Election Results (candidate declarations, all years)",
+   "source_url": "https://www.burlingtonvt.gov/179/Election-Results",
+   "publisher": "City of Burlington Clerk/Treasurer",
+   "format": "html",
+   "automated": "no",
+   "automatable": "partly",
+   "how": "curl -sL -A \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 Chrome/130 Safari/537.36\" the page, then regex the year headings and /DocumentCenter/View/{id} links. Summary-report PDFs work with pdftotext -layout. Declaration PDFs are scanned images and need OCR, for example tesseract.",
+   "cadence": "After each election: unofficial results on election night, official declarations a few days later",
+   "what_it_has": "Year-by-year list of PDFs: Declaration of Election Results for candidates and for questions (official), Election Summary Report (unofficial), and Statement of Votes Cast. It is the best official record of which offices are elected in which year. The declaration PDFs are scanned images with no text layer, so they need OCR. The Election Summary Report PDFs have text.",
+   "key_facts": [
+    {
+     "fact": "2026 Annual City Election offices (even year)",
+     "value": "Ward councilors (Wards 1-8), ward school commissioners, inspectors of election, Ward 3 clerk",
+     "evidence": "DECLARATION OF ELECTED CANDIDATES ANNUAL CITY ELECTION – MARCH 3, 2026"
+    },
+    {
+     "fact": "2025 Annual City Election offices (odd year)",
+     "value": "District councilors (Central, East, North, South), district school commissioners, ward clerks, inspectors",
+     "evidence": "Central District City Councilor ... Melo Grant"
+    },
+    {
+     "fact": "2026 declaration PDF",
+     "value": "https://www.burlingtonvt.gov/DocumentCenter/View/11781",
+     "evidence": "Declaration of Election Results - Candidates (Official) (PDF)"
+    },
+    {
+     "fact": "2024 mayor result (sets 3-year cycle)",
+     "value": "Emma Mulvaney-Stanak 7,612 (51.18%) vs Joan Shannon 6,696",
+     "evidence": "EMMA MULVANEY-STANAK 7,612 51.18%"
+    }
+   ],
+   "verified": "2026-10-29"
+  },
+  {
+   "id": "btv-charter-sec3",
+   "topic": "elections",
+   "name": "Burlington City Charter § 3: Election of Mayor and City Councilors",
+   "source_url": "https://legislature.vermont.gov/statutes/section/24APPENDIX/003/00003",
+   "publisher": "Vermont General Assembly",
+   "format": "html",
+   "automated": "no",
+   "automatable": "no",
+   "how": "Statute text. Read it by hand once and check yearly for amendments.",
+   "cadence": "Rarely changes (charter amendments need legislative approval)",
+   "what_it_has": "Charter rules on which seats are elected in which years, and the mayor petition requirement.",
+   "key_facts": [
+    {
+     "fact": "Mayor cycle",
+     "value": "First Tuesday in March 2003 and every three years after, so 2027 is a mayoral year",
+     "evidence": "On the first Tuesday in March 2003 and triennially thereafter"
+    },
+    {
+     "fact": "Mayor petition signatures",
+     "value": "at least 150 registered voters, filed within the 17 V.S.A. ch. 55 deadlines",
+     "evidence": "signed by at least 150 registered voters of the City"
+    },
+    {
+     "fact": "District councilors",
+     "value": "Elected in March 2015 and every two years after (odd years), so 2027 includes all 4 districts",
+     "evidence": "On the first Tuesday in March 2015 and biennially thereafter"
+    },
+    {
+     "fact": "Ward councilors",
+     "value": "Elected from March 2018 every two years (even years), so they are not on the 2027 ballot",
+     "evidence": "On the first Tuesday in March 2018 and biennially thereafter"
+    },
+    {
+     "fact": "Ninth-Monday deadline",
+     "value": "Applies only to special elections",
+     "evidence": "For all special elections ... ninth Monday preceding the day of the election"
+    }
+   ],
+   "verified": "2026-10-29"
+  },
+  {
+   "id": "vt-17vsa-2681",
+   "topic": "elections",
+   "name": "17 V.S.A. § 2681: Municipal nominations, petitions, consents",
+   "source_url": "https://legislature.vermont.gov/statutes/section/17/055/02681",
+   "publisher": "Vermont General Assembly",
+   "format": "html",
+   "automated": "no",
+   "automatable": "no",
+   "how": "Statute text. Calculate dates from the election date.",
+   "cadence": "Rarely changes",
+   "what_it_has": "Statewide rule for petition and consent filing deadlines and signature counts in Australian-ballot municipalities. Burlington's charter points to this chapter for the mayor's deadline.",
+   "key_facts": [
+    {
+     "fact": "Filing deadline rule",
+     "value": "5:00 pm on the sixth Monday before the election, which works out to Monday Jan 25, 2027 for March 2, 2027 (my calculation)",
+     "evidence": "not later than 5:00 p.m. on the sixth Monday preceding the day of the election"
+    },
+    {
+     "fact": "Signatures (general)",
+     "value": "30 voters or 1% of voters, whichever is less (the mayor needs 150 under the charter)",
+     "evidence": "at least 30 valid signatures of voters of the municipality or one percent"
+    },
+    {
+     "fact": "Withdrawal deadline",
+     "value": "5:00 pm Wednesday after the filing deadline, so Jan 27, 2027 (my calculation)",
+     "evidence": "no later than 5:00 p.m. on the Wednesday after the filing deadline"
+    },
+    {
+     "fact": "Who supplies petition forms",
+     "value": "Town/city clerk",
+     "evidence": "The town clerk shall make petition forms and consent forms available"
+    }
+   ],
+   "verified": "2026-10-29"
+  },
+  {
+   "id": "vt-sos-elections-calendar",
+   "topic": "elections",
+   "name": "Vermont SOS Elections Calendar (PDF)",
+   "source_url": "https://outside.vermont.gov/dept/sos/Elections_Division/town_clerks_local_elections/election_procedure/elections_calendar.pdf",
+   "publisher": "Vermont Secretary of State, Elections Division",
+   "format": "pdf",
+   "automated": "no",
+   "automatable": "partly",
+   "how": "curl -sL -A \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 Chrome/130 Safari/537.36\" -o cal.pdf <url>; pdftotext -layout cal.pdf -; split on bullet date lines. Check the stable URL monthly for a 2027 edition, and also try the URL ending {YEAR}_elections_calendar.pdf.",
+   "cadence": "Annual, plus revisions logged in the PDF change log",
+   "what_it_has": "Statewide calendar of election deadlines. The current file is the 2026 calendar (v1.2, July 1, 2026), which includes the 2026 Town Meeting deadlines. No 2027 calendar was published yet: the URL ending 2027_elections_calendar.pdf returned 404.",
+   "key_facts": [
+    {
+     "fact": "2026 pattern: candidate filing",
+     "value": "Jan 26, 2026 (Monday, 6th Monday before), 5:00 pm",
+     "evidence": "January 26 (Monday, 6th Monday before the election)"
+    },
+    {
+     "fact": "2026 pattern: candidate withdrawal",
+     "value": "Jan 28, 2026",
+     "evidence": "January 28 (Wednesday after the filing deadline)"
+    },
+    {
+     "fact": "2026 pattern: last day to post warning / designate polling places",
+     "value": "Jan 22, 2026 (40 days before)",
+     "evidence": "January 22 (Thursday, 40 days before town meeting)"
+    },
+    {
+     "fact": "2026 pattern: voter petition for a ballot article",
+     "value": "Jan 15, 2026 (47 days before)",
+     "evidence": "January 15 (Thursday, 47 days before town meeting)"
+    },
+    {
+     "fact": "2027 calendar",
+     "value": "not yet published (404)",
+     "evidence": ""
+    }
+   ],
+   "verified": "2026-10-29"
+  },
+  {
+   "id": "vt-sos-calendar-page",
+   "topic": "elections",
+   "name": "Vermont SOS Elections Calendar page and Town Clerks & Local Elections",
+   "source_url": "https://sos.vermont.gov/elections/elections-calendar",
+   "publisher": "Vermont Secretary of State",
+   "format": "html",
+   "automated": "no",
+   "automatable": "partly",
+   "how": "Scrape for the calendar PDF href and watch it for changes.",
+   "cadence": "Annual",
+   "what_it_has": "HTML wrapper that links the calendar PDF and the Town Clerks & Local Elections section (/elections/town-clerks). It has no candidate lists for local races: local filings stay with the city clerk.",
+   "key_facts": [
+    {
+     "fact": "Links calendar PDF",
+     "value": "yes",
+     "evidence": "Prefer print? Download a copy of the Elections Calendar (PDF)."
+    }
+   ],
+   "verified": "2026-10-29"
+  },
+  {
+   "id": "btv-2026-warning-notice",
+   "topic": "elections",
+   "name": "City of Burlington Warning Notice, 2026 Annual City Meeting (legal notice)",
+   "source_url": "https://www.sevendaysvt.com/legal-notices/publicmeetings/city-of-burlington-warning-notice-2026-annual-city-meeting/",
+   "publisher": "City of Burlington (published in Seven Days legal notices)",
+   "format": "html",
+   "automated": "no",
+   "automatable": "partly",
+   "how": "Watch Seven Days legal notices for the title 'Warning Notice 2027 Annual City Meeting' in late January to February 2027. Read through WebFetch: a plain curl was not tested.",
+   "cadence": "Once a year (late Jan to Feb)",
+   "what_it_has": "The official warning listing the offices on the ballot. It does not name candidates. It shows the pattern for when the 2027 warning will appear.",
+   "key_facts": [
+    {
+     "fact": "Lists candidate names",
+     "value": "no (offices and terms only)",
+     "evidence": ""
+    },
+    {
+     "fact": "Warning date",
+     "value": "January 27, 2026 (signed by Mayor Mulvaney-Stanak); page published Feb 18, 2026",
+     "evidence": ""
+    }
+   ],
+   "verified": "2026-10-29"
+  },
+  {
+   "id": "btv-council-agenda-2027-charter",
+   "topic": "elections",
+   "name": "City Council 10/26/2026 agenda: March 2, 2027 charter-change resolutions",
+   "source_url": "https://burlingtonvt.api.civicclerk.com/v1/Meetings/9934",
+   "publisher": "City of Burlington City Council (CivicClerk)",
+   "format": "json",
+   "automated": "no",
+   "automatable": "yes",
+   "how": "GET https://burlingtonvt.api.civicclerk.com/v1/Meetings/{agendaId} and walk items[].childItems[].agendaObjectItemName. Get agendaId from the Events endpoint (see the bids-civicclerk-api source).",
+   "cadence": "Before each meeting",
+   "what_it_has": "The council is already putting ballot questions for March 2, 2027 on its agendas.",
+   "key_facts": [
+    {
+     "fact": "2027 ballot item",
+     "value": "Charter change re: Non-Citizen Voter Protections (Councilors Bergman and Schachter)",
+     "evidence": "March 2, 2027 Annual City Meeting - Charter Change Re: Non-Citizen Voter Protections"
+    },
+    {
+     "fact": "2027 ballot item",
+     "value": "Charter change re: Modernizing City Government (Councilor Bergman)",
+     "evidence": "Charter Change Re: Modernizing City Government"
+    }
+   ],
+   "verified": "2026-10-29"
+  },
+  {
+   "id": "btv-tax-rates",
+   "topic": "budget",
+   "name": "Tax Rates & Calculations",
+   "source_url": "https://www.burlingtonvt.gov/215/Tax-Rates-Calculations",
+   "publisher": "City of Burlington Assessor / DFA",
+   "format": "html",
+   "automated": "no",
+   "automatable": "yes",
+   "how": "curl -sL -A \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 Chrome/130 Safari/537.36\" the page, then regex 'FY (\\d{4}) Tax Rates Education: Homestead: ([\\d.]+) Non-Homestead: ([\\d.]+) Municipal: Tax Rate: ([\\d.]+) Local Agreement: ([\\d.]+)' on the #moduleContent text.",
+   "cadence": "Once a year, around July when the new fiscal year's rates are set",
+   "what_it_has": "Headline FY2027 and FY2026 education and municipal rates, plus the formula for computing a tax bill. This page explains how the tax bill is calculated.",
+   "key_facts": [
+    {
+     "fact": "FY2027 homestead education rate",
+     "value": "1.5489",
+     "evidence": "Homestead: 1.5489"
+    },
+    {
+     "fact": "FY2027 non-homestead education rate",
+     "value": "1.5154",
+     "evidence": "Non-Homestead: 1.5154"
+    },
+    {
+     "fact": "FY2027 municipal rate",
+     "value": "0.9097",
+     "evidence": "Municipal: Tax Rate: 0.9097"
+    },
+    {
+     "fact": "FY2027 local agreement rate",
+     "value": "0.0004",
+     "evidence": "Local Agreement: 0.0004"
+    },
+    {
+     "fact": "FY2026 homestead education rate",
+     "value": "1.5264",
+     "evidence": "Homestead: 1.5264"
+    },
+    {
+     "fact": "FY2026 non-homestead education rate",
+     "value": "1.5072",
+     "evidence": "Non-Homestead: 1.5072"
+    },
+    {
+     "fact": "FY2026 municipal rate",
+     "value": "0.8557",
+     "evidence": "Municipal: Tax Rate: 0.8557"
+    },
+    {
+     "fact": "FY2026 local agreement rate",
+     "value": "0.0004",
+     "evidence": "Local Agreement: 0.0004"
+    },
+    {
+     "fact": "Units",
+     "value": "Per $1 of grand list value, where grand list value = appraised value divided by 100. That makes each rate equal to dollars per $100 of appraised value.",
+     "evidence": "[Appraised Value] ÷ 100 = [Grand List Value]"
+    },
+    {
+     "fact": "Implied FY27 homestead total",
+     "value": "2.4590 per $100 (1.5489 + 0.9097 + 0.0004; my sum)",
+     "evidence": ""
+    },
+    {
+     "fact": "Commercial assessed list factor",
+     "value": "Appraised value x 1.2 for the municipal rate",
+     "evidence": "([Appraised Value] x 1.2) ÷ 100 = [Assessed Grand List Value]"
+    },
+    {
+     "fact": "Payment due dates",
+     "value": "12th of Aug, Nov, Mar, Jun",
+     "evidence": "Payments are due on the 12th of August, November, March, and June"
+    },
+    {
+     "fact": "Parcel count",
+     "value": "about 10,888 taxable parcels",
+     "evidence": "approximately 10,888 taxable real estate parcels"
+    }
+   ],
+   "verified": "2026-10-29"
+  },
+  {
+   "id": "btv-fy27-budget",
+   "topic": "budget",
+   "name": "Fiscal Year 2027 Budget page",
+   "source_url": "https://www.burlingtonvt.gov/1225/Fiscal-Year-2027-Budget",
+   "publisher": "City of Burlington DFA",
+   "format": "html",
+   "automated": "no",
+   "automatable": "partly",
+   "how": "curl -sL -A \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 Chrome/130 Safari/537.36\" the page and collect /DocumentCenter/View/{id} links. The rate-sheet PDF (12141) has a text layer, so pdftotext -layout works. A new page ID is created each year (FY26=1085, FY27=1225); find it through the /197/Finance-Budgets or /505/Budgets list.",
+   "cadence": "Yearly. Proposed budget in May to June, adopted in June, sometimes reposted later",
+   "what_it_has": "Links to the FY27 budget PDFs: appropriation resolution, Mayor's memo, tax assessment resolution, municipal tax rate sheet, and department budgets. The page heading still says 'Budget Documents (DRAFT)', and the posted resolutions are unsigned versions with a blank Action/Date. The city's tax-rate page lists 0.9097 as the FY27 rate.",
+   "key_facts": [
+    {
+     "fact": "Page status label",
+     "value": "Budget Documents (DRAFT)",
+     "evidence": "Budget Documents (DRAFT)"
+    },
+    {
+     "fact": "Mayor's memo date",
+     "value": "June 15, 2026",
+     "evidence": "June 15, 2026 Proposed Fiscal Year 2027 Budget"
+    },
+    {
+     "fact": "FY27 structural gap noted",
+     "value": "$11M; 26 vacant positions eliminated or held open",
+     "evidence": "eliminate or hold open 26 vacant positions to help close a chronic structural budget gap"
+    },
+    {
+     "fact": "FY27 grand list per $100",
+     "value": "$58,151,844",
+     "evidence": "Grand List / $100 $58,151,844"
+    },
+    {
+     "fact": "FY27 municipal levy subtotal",
+     "value": "$52,898,934 at 0.9097",
+     "evidence": "Subtotal 0.9097 $ 52,898,934"
+    },
+    {
+     "fact": "Municipal rate sheet PDF",
+     "value": "https://www.burlingtonvt.gov/DocumentCenter/View/12141",
+     "evidence": "4 - Municipal Tax Rate"
+    }
+   ],
+   "verified": "2026-10-29"
+  },
+  {
+   "id": "btv-fy27-municipal-rate-components",
+   "topic": "budget",
+   "name": "FY27 municipal tax rate components (rate sheet + tax assessment resolution)",
+   "source_url": "https://www.burlingtonvt.gov/DocumentCenter/View/12141",
+   "publisher": "City of Burlington DFA",
+   "format": "pdf",
+   "automated": "no",
+   "automatable": "yes",
+   "how": "curl -sL -A \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 Chrome/130 Safari/537.36\" -o r.pdf https://www.burlingtonvt.gov/DocumentCenter/View/12141; pdftotext -layout r.pdf - ; parse lines matching '^\\s*(.+?)\\s+(0\\.\\d{4})'.",
+   "cadence": "Once a year",
+   "what_it_has": "Breakdown of the 0.9097 FY27 municipal rate into components, with projected dollars. The FY27 resolution (DocumentCenter/View/12155) has the same numbers, plus a downtown parking rate of 0.0350 for non-residential properties in the downtown improvement district, which sits outside the 0.9097 total.",
+   "key_facts": [
+    {
+     "fact": "General City",
+     "value": "0.1932 ($11,234,936)",
+     "evidence": "General City 0.1932 $ 11,234,936"
+    },
+    {
+     "fact": "Bike Path Maintenance",
+     "value": "0.0020",
+     "evidence": "Bike Path Maintenance Fund 0.0020"
+    },
+    {
+     "fact": "Police",
+     "value": "0.0945",
+     "evidence": "Police 0.0945 5,495,349"
+    },
+    {
+     "fact": "Fire",
+     "value": "0.0640",
+     "evidence": "Fire 0.0640 3,721,718"
+    },
+    {
+     "fact": "Parks",
+     "value": "0.0581",
+     "evidence": "Parks 0.0581"
+    },
+    {
+     "fact": "Penny for Parks",
+     "value": "0.0100",
+     "evidence": "Penny for Parks 0.0100"
+    },
+    {
+     "fact": "Highway",
+     "value": "0.0443",
+     "evidence": "Highway 0.0443"
+    },
+    {
+     "fact": "Street Capital & Greenbelt",
+     "value": "0.0441",
+     "evidence": "Street Capital & Greenbelt 0.0441"
+    },
+    {
+     "fact": "Library",
+     "value": "0.0050",
+     "evidence": "Library Tax 0.0050"
+    },
+    {
+     "fact": "Housing Trust",
+     "value": "0.0100",
+     "evidence": "Housing Trust 0.0100"
+    },
+    {
+     "fact": "Open Space / Conservation Legacy",
+     "value": "0.0039",
+     "evidence": "Open Space - Conservation Legacy 0.0039"
+    },
+    {
+     "fact": "Green Mountain Transit",
+     "value": "0.0381",
+     "evidence": "GMT 0.0381"
+    },
+    {
+     "fact": "County Tax",
+     "value": "0.0042",
+     "evidence": "County Tax 0.0042"
+    },
+    {
+     "fact": "Retirement",
+     "value": "0.1849 ($10,754,800)",
+     "evidence": "Retirement 0.1849 10,754,800"
+    },
+    {
+     "fact": "Debt Service",
+     "value": "0.1534 ($8,919,770)",
+     "evidence": "Debt Service 0.1534 8,919,770"
+    },
+    {
+     "fact": "Total municipal",
+     "value": "0.9097",
+     "evidence": "Subtotal 0.9097"
+    },
+    {
+     "fact": "Downtown parking (DID non-residential only, excluded from total)",
+     "value": "0.0350",
+     "evidence": "($.0350) on the dollar of non-residential properties located in the downtown improvement district"
+    }
+   ],
+   "verified": "2026-10-29"
+  },
+  {
+   "id": "btv-fy26-tax-resolution",
+   "topic": "budget",
+   "name": "FY26 Resolution: Annual Tax Assessments on the Property Grand List (adopted)",
+   "source_url": "https://www.burlingtonvt.gov/DocumentCenter/View/9034",
+   "publisher": "City of Burlington City Council",
+   "format": "pdf",
+   "automated": "no",
+   "automatable": "partly",
+   "how": "Download the PDF, then OCR it (no text layer). Alternatively use the FY26 rate-sheet PDF on /1085/ if one is posted. The FY26 page lists only resolution 31 for rates.",
+   "cadence": "Once a year",
+   "what_it_has": "The signed, adopted FY26 tax-levy resolution (Resolution 3.2) with the component rates. It is a scanned PDF with no text layer.",
+   "key_facts": [
+    {
+     "fact": "Adopted",
+     "value": "06/25/25; signed by Mayor 06/27/25",
+     "evidence": "Action: adopted Date: 06/25/25"
+    },
+    {
+     "fact": "General City",
+     "value": "0.1932",
+     "evidence": "($.1932) on the dollar"
+    },
+    {
+     "fact": "Bike path",
+     "value": "0.0020",
+     "evidence": ""
+    },
+    {
+     "fact": "Police & Fire facility / Police",
+     "value": "0.0695 and 0.0390",
+     "evidence": "($.0695) ... ($.0390)"
+    },
+    {
+     "fact": "Parks / Penny for Parks",
+     "value": "0.0581 / 0.0100",
+     "evidence": ""
+    },
+    {
+     "fact": "Highway / Streets & greenbelt",
+     "value": "0.0443 / 0.0441",
+     "evidence": ""
+    },
+    {
+     "fact": "Library / Housing Trust / Open space",
+     "value": "0.0050 / 0.0100 / 0.0039",
+     "evidence": ""
+    },
+    {
+     "fact": "GMT / County",
+     "value": "0.0384 / 0.0043",
+     "evidence": "($.0384) ... Green Mountain Transit"
+    },
+    {
+     "fact": "Retirement",
+     "value": "0.1974",
+     "evidence": "($.1974)"
+    },
+    {
+     "fact": "Debt service",
+     "value": "0.1365",
+     "evidence": "($.1365)"
+    },
+    {
+     "fact": "Total FY26 municipal",
+     "value": "0.8557",
+     "evidence": "($.8557) on the dollar of said Grand List"
+    },
+    {
+     "fact": "Local agreement",
+     "value": "0.0004",
+     "evidence": "($.0.0004)"
+    }
+   ],
+   "verified": "2026-10-29"
+  },
+  {
+   "id": "btv-fy26-budget",
+   "topic": "budget",
+   "name": "Fiscal Year 2026 Budget page",
+   "source_url": "https://www.burlingtonvt.gov/1085/Fiscal-Year-2026-Budget",
+   "publisher": "City of Burlington",
+   "format": "html",
+   "automated": "no",
+   "automatable": "partly",
+   "how": "Same method as the FY27 page.",
+   "cadence": "Static after adoption",
+   "what_it_has": "Links to the FY26 budget PDFs: the appropriation resolution (DocumentCenter/View/9028), Mayor's memo (9048), department budgets, and the tax assessment resolution (9034).",
+   "key_facts": [
+    {
+     "fact": "Tax resolution link",
+     "value": "/DocumentCenter/View/9034",
+     "evidence": "31 - Resolution re Annual Tax Assessments on the Property Grand List of the City for FY26"
+    }
+   ],
+   "verified": "2026-10-29"
+  },
+  {
+   "id": "btv-finance-budgets-index",
+   "topic": "budget",
+   "name": "Finance & Budgets index",
+   "source_url": "https://www.burlingtonvt.gov/197/Finance-Budgets",
+   "publisher": "City of Burlington",
+   "format": "html",
+   "automated": "no",
+   "automatable": "yes",
+   "how": "Scrape the links labelled 'Fiscal Year NNNN Budget'.",
+   "cadence": "Yearly",
+   "what_it_has": "Index of budget pages FY2006 to FY2027, plus audits (ACFR), Capital Plan FY27-31, Moody's reports and financial policies. Use it to find each new year's budget page ID.",
+   "key_facts": [
+    {
+     "fact": "Budget years listed",
+     "value": "FY2006 to FY2027",
+     "evidence": "Fiscal Year 2027 Budget Fiscal Year 2026 Budget"
+    },
+    {
+     "fact": "Capital plan report",
+     "value": "/DocumentCenter/View/10490",
+     "evidence": "Capital Plan Report FY27-FY-31"
+    }
+   ],
+   "verified": "2026-10-29"
+  },
+  {
+   "id": "vt-tax-ed-rates",
+   "topic": "budget",
+   "name": "Vermont Dept. of Taxes: Education Property Tax Rates (FY2027 table)",
+   "source_url": "https://tax.vermont.gov/property/education-property-tax-rates",
+   "publisher": "Vermont Department of Taxes",
+   "format": "html",
+   "automated": "no",
+   "automatable": "yes",
+   "how": "curl -sL -A \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 Chrome/130 Safari/537.36\" the page and parse the HTML table row where Town == 'Burlington'. Be careful: 'South Burlington' also matches a substring search, so match the cell exactly. Or download the linked xlsx. A 'Prior Year Rates' link exists for history.",
+   "cadence": "Once a year (July to August), with updates as towns finish their budgets",
+   "what_it_has": "Statewide town table with CLA, district rate, homestead rate, state rate and nonhomestead rate. An xlsx download link is on the page. Burlington's row matches the city's FY27 education rates.",
+   "key_facts": [
+    {
+     "fact": "Table as-of",
+     "value": "FY2027 summary as of July 29, 2026",
+     "evidence": "FY2027 Education Property Tax Rate Table - Summary as of July 29, 2026"
+    },
+    {
+     "fact": "Burlington CLA",
+     "value": "76.25%",
+     "evidence": "Burlington | 76.25% | 70.33% | 1.0842 | 1.6793 | 1.5489 | 1.643 | 1.5154"
+    },
+    {
+     "fact": "Burlington district rate",
+     "value": "1.6793",
+     "evidence": ""
+    },
+    {
+     "fact": "Burlington homestead rate FY27",
+     "value": "1.5489",
+     "evidence": ""
+    },
+    {
+     "fact": "Statewide state (nonhomestead base) rate FY27",
+     "value": "1.643",
+     "evidence": ""
+    },
+    {
+     "fact": "Burlington nonhomestead rate FY27",
+     "value": "1.5154",
+     "evidence": ""
+    }
+   ],
+   "verified": "2026-10-29"
+  },
+  {
+   "id": "vt-tax-ptc",
+   "topic": "budget",
+   "name": "Vermont Property Tax Credit",
+   "source_url": "https://tax.vermont.gov/ptc",
+   "publisher": "Vermont Department of Taxes",
+   "format": "html",
+   "automated": "no",
+   "automatable": "partly",
+   "how": "Static explainer. Monitor it yearly for limit changes.",
+   "cadence": "Yearly (tax season)",
+   "what_it_has": "Explains the income-based property tax credit (formerly the property tax adjustment) and its eligibility rules: a Homestead Declaration (HS-122) plus HI-144. Related page: https://tax.vermont.gov/property/homestead-declaration (loaded, 200).",
+   "key_facts": [
+    {
+     "fact": "Max credit, education portion",
+     "value": "$5,600",
+     "evidence": "The maximum credit is $5,600 for the State education property tax portion"
+    },
+    {
+     "fact": "Max credit, municipal portion",
+     "value": "$2,400",
+     "evidence": "$2,400 for the municipal property tax portion"
+    }
+   ],
+   "verified": "2026-10-29"
+  },
+  {
+   "id": "btv-property-taxes",
+   "topic": "budget",
+   "name": "Property Taxes overview (city)",
+   "source_url": "https://www.burlingtonvt.gov/213/Property-Taxes",
+   "publisher": "City of Burlington Clerk/Treasurer",
+   "format": "html",
+   "automated": "no",
+   "automatable": "no",
+   "how": "Static explainer.",
+   "cadence": "Rarely",
+   "what_it_has": "Payment methods, delinquency rules, and the homestead / property tax credit explainer with links to HS-122 and HI-144. Note: the 'HS-122 and the Vermont Homestead' link on /215/ points to a stale state.vt.us URL.",
+   "key_facts": [
+    {
+     "fact": "Homestead credit share",
+     "value": "about 70% of homestead-declaring owners receive a credit",
+     "evidence": "Approximately, 70% of Burlington property owners who declare their homestead"
+    },
+    {
+     "fact": "Delinquency",
+     "value": "Unpaid after June 22: 8% penalty plus $1 warrant fee",
+     "evidence": "one time 8% (eight %) Delinquent Penalty fee and a $1 Warrant Fee"
+    }
+   ],
+   "verified": "2026-10-29"
+  },
+  {
+   "id": "btv-assessor",
+   "topic": "budget",
+   "name": "Assessor's Office",
+   "source_url": "https://www.burlingtonvt.gov/166/Assessors-Office",
+   "publisher": "City of Burlington Assessor",
+   "format": "html",
+   "automated": "no",
+   "automatable": "no",
+   "how": "Static.",
+   "cadence": "Rarely",
+   "what_it_has": "Assessor overview. It has no dedicated tax-bill explainer: the bill formula is on /215/Tax-Rates-Calculations. Parcel lookup is at https://property.burlingtonvt.gov/ (linked, not tested).",
+   "key_facts": [
+    {
+     "fact": "Total taxable value",
+     "value": "about $5.9 billion",
+     "evidence": "Total taxable property value is approximately $5.9 billion"
+    }
+   ],
+   "verified": "2026-10-29"
+  },
+  {
+   "id": "bsd-budget",
+   "topic": "budget",
+   "name": "Burlington School District Budget page",
+   "source_url": "https://www.bsdvt.org/district/budget/",
+   "publisher": "Burlington School District",
+   "format": "html",
+   "automated": "no",
+   "automatable": "partly",
+   "how": "curl -sL -A \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 Chrome/130 Safari/537.36\" the page and pick out the wp-content/uploads PDF links. The one-pager has a text layer. WordPress REST also works: https://www.bsdvt.org/wp-json/wp/v2/search?search=budget",
+   "cadence": "Yearly cycle: drafts Dec to Jan, board vote in January, Town Meeting in March",
+   "what_it_has": "FY27 line-item budgets (by object and by function), the board-approved proposal (1/26/26), the FY27 one-pager, an archive back to FY15, audits, and the FY28 budget timeline.",
+   "key_facts": [
+    {
+     "fact": "FY27 budget voted",
+     "value": "$140,807,830",
+     "evidence": "approve the School Board to expend $140,807,830"
+    },
+    {
+     "fact": "FY26 budget",
+     "value": "$134.7 million",
+     "evidence": "Total Current Year Budget (FY26) $134.7 million"
+    },
+    {
+     "fact": "FY27 change",
+     "value": "+4.47%",
+     "evidence": "Percent Change from FY26 Budget 4.47%"
+    },
+    {
+     "fact": "FY27 per-pupil education spending",
+     "value": "$15,774.58 (+6.40%)",
+     "evidence": "per pupil education spending of $15,774.58"
+    },
+    {
+     "fact": "FY27 est. homestead tax impact",
+     "value": "+4.7%; $266 on a $370K homestead",
+     "evidence": "Impact on $370K homestead $266"
+    },
+    {
+     "fact": "FY28 timeline",
+     "value": "Board approves final budget in January; Town Meeting vote in March",
+     "evidence": "Board approves final budget"
+    },
+    {
+     "fact": "FY27 one-pager PDF",
+     "value": "https://www.bsdvt.org/wp-content/uploads/2026/01/FY27-Budget-One-Pager-Final.pdf",
+     "evidence": ""
+    }
+   ],
+   "verified": "2026-10-29"
+  },
+  {
+   "id": "btv-opengov-transparency",
+   "topic": "budget",
+   "name": "City OpenGov transparency portal",
+   "source_url": "https://burlingtonvt.opengov.com/transparency",
+   "publisher": "OpenGov (City of Burlington account)",
+   "format": "html",
+   "automated": "no",
+   "automatable": "no",
+   "how": "Not worth automating. Re-check once a year in case the city revives it.",
+   "cadence": "Unchanged since around FY23",
+   "what_it_has": "Exists but is effectively stale. The page's embedded config lists one public report, 'Draft FY23 Budget Capital Projects'. No checkbook or vendor-payment report is published. stories.opengov.com/burlingtonvt returned 404.",
+   "key_facts": [
+    {
+     "fact": "Public reports",
+     "value": "1: Draft FY23 Budget Capital Projects (id 62824)",
+     "evidence": "\"name\":\"Draft FY23 Budget Capital Projects\""
+    }
+   ],
+   "verified": "2026-10-29"
+  },
+  {
+   "id": "btv-open-data-hub",
+   "topic": "budget",
+   "name": "BTVstat Open Data Portal (ArcGIS Hub)",
+   "source_url": "https://data.burlingtonvt.gov/",
+   "publisher": "City of Burlington",
+   "format": "api",
+   "automated": "no",
+   "automatable": "yes",
+   "how": "Search: GET https://data.burlingtonvt.gov/api/search/v1/collections/all/items?q=budget&limit=20. Data: GET <FeatureServer>/0/query?where=1=1&outFields=*&f=json",
+   "cadence": "Budget dataset appears stale (2023)",
+   "what_it_has": "ArcGIS Hub with a search API. A 'General Fund Budget by Fiscal Year' feature service exists (last modified 2023-10-30). Searches for 'vendor', 'checkbook', 'expenditure' and 'contract' found no spending or checkbook dataset.",
+   "key_facts": [
+    {
+     "fact": "Budget dataset",
+     "value": "General Fund Budget by Fiscal Year: https://services1.arcgis.com/1bO0c7PxQdsGidPK/arcgis/rest/services/General_Fund_Budget_by_Fiscal_Year/FeatureServer",
+     "evidence": "modified 2023-10-30"
+    },
+    {
+     "fact": "Checkbook / vendor payments",
+     "value": "none found (0 matches for checkbook/expenditure)",
+     "evidence": ""
+    }
+   ],
+   "verified": "2026-10-29"
+  },
+  {
+   "id": "btv-bids",
+   "topic": "bids",
+   "name": "City Bid Postings (CivicPlus)",
+   "source_url": "https://www.burlingtonvt.gov/Bids.aspx",
+   "publisher": "City of Burlington (all departments)",
+   "format": "html",
+   "automated": "no",
+   "automatable": "partly",
+   "how": "curl -sL -A \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 Chrome/130 Safari/537.36\" 'https://www.burlingtonvt.gov/Bids.aspx?showAllBids=on', then regex bidID=(\\d+) and the 'Status: Closes: (Open|Closed) date' text. Fetch Bids.aspx?bidID=N for details. Space requests 10 s apart (Crawl-delay: 10 for *). Do not use ClaudeBot or other AI-bot user agents, which are disallowed. Better: subscribe to the city's 'Notify Me' bid alerts by email and parse the alert emails.",
+   "cadence": "A few new bids a month",
+   "what_it_has": "Open RFPs, RFQs and bids, with a 'Show Closed/Awarded/Cancelled' toggle. Each bid has a detail page at Bids.aspx?bidID=N with title, category, status, description, publication and closing date/time, contact, and attachments. Award information was not seen: statuses appear only as Open or Closed. There is also a 'Notify Me' text/email signup. Robots.txt disallows /Bids.aspx for named AI/SEO bots (ClaudeBot, GPTBot and others) but not for the * group.",
+   "key_facts": [
+    {
+     "fact": "Open bids today",
+     "value": "2: DPW-WRD aeration blower (closes 11/6/2026 3:00 PM); RFPQ underwater infrastructure inspection (closes 11/13/2026 3:00 PM)",
+     "evidence": "Status: Closes: Open 11/13/2026 3:00 PM"
+    },
+    {
+     "fact": "All bids incl. closed (?showAllBids=on)",
+     "value": "140 bid IDs returned, closing dates back to at least Jan 2025",
+     "evidence": ""
+    },
+    {
+     "fact": "Detail fields",
+     "value": "Bid Title, Category, Status, Description, Publication Date/Time, Closing Date/Time, Contact Person",
+     "evidence": "Publication Date/Time: 10/23/2026 3:00 PM Closing Date/Time: 11/13/2026 3:00 PM"
+    },
+    {
+     "fact": "Award status values seen",
+     "value": "Open, Closed only (no 'Awarded')",
+     "evidence": ""
+    }
+   ],
+   "verified": "2026-10-29"
+  },
+  {
+   "id": "btv-rss-modid76",
+   "topic": "bids",
+   "name": "CivicPlus RSSFeed.aspx?ModID=76 (tested)",
+   "source_url": "https://www.burlingtonvt.gov/RSSFeed.aspx?ModID=76",
+   "publisher": "City of Burlington",
+   "format": "rss",
+   "automated": "no",
+   "automatable": "no",
+   "how": "No bid feed exists. Use Bids.aspx scraping or email alerts instead. The Pages feed (ModID=76) could flag edits to the elections and budget pages: filter <link> for /986, /215, /1225.",
+   "cadence": "Pages feed updates daily",
+   "what_it_has": "On this site ModID=76 is the 'Pages' feed (recently updated CMS pages), not bids. The RSS index (RSS.aspx) lists feeds for Pages (76), Agenda Center (65), Alert Center (63), Blog (51), Calendar (58), News Flash (1) and Photo Gallery (53). It offers no Bid Postings feed. ModID=66 returned an empty 'Jobs' feed. RSSFeed.aspx is disallowed for named AI/SEO bots, and RSS.aspx is disallowed for all.",
+   "key_facts": [
+    {
+     "fact": "ModID=76 channel title",
+     "value": "Burlington, VT - Pages",
+     "evidence": "<title>Burlington, VT - Pages</title>"
+    },
+    {
+     "fact": "Bid RSS feed",
+     "value": "not offered",
+     "evidence": "Available Feeds: Pages Agenda Center Alert Center Blog Calendar News Flash Photo Gallery"
+    },
+    {
+     "fact": "Useful alternate",
+     "value": "News Flash all: RSSFeed.aspx?ModID=1&CID=All-newsflash.xml; Public Notices: ModID=63&CID=Public-Notices-5",
+     "evidence": ""
+    }
+   ],
+   "verified": "2026-10-29"
+  },
+  {
+   "id": "bids-civicclerk-api",
+   "topic": "bids",
+   "name": "CivicClerk public API: City Council and Board of Finance agendas (contract awards via consent agenda)",
+   "source_url": "https://burlingtonvt.api.civicclerk.com/v1/Events",
+   "publisher": "City of Burlington (CivicClerk)",
+   "format": "api",
+   "automated": "no",
+   "automatable": "yes",
+   "how": "GET https://burlingtonvt.api.civicclerk.com/v1/Events?$top=20&$orderby=startDateTime desc&$filter=categoryName eq 'City Council' or categoryName eq 'Board of Finance' (URL-encode it). Then GET /v1/Meetings/{agendaId} for item titles and search them for 'contract|award|agreement|bid|RFP'. PDFs: /v1/Meetings/GetMeetingFileStream(fileId={id},plainText=false). Not covered by burlingtonvt.gov robots.txt (separate host).",
+   "cadence": "Council about twice a month; Board of Finance before council meetings",
+   "what_it_has": "OData JSON of all meetings, with published agenda, agenda packet and minutes file IDs. Contract authorizations and awards appear as items on City Council consent and deliberative agendas and on Board of Finance agendas. Portal: https://burlingtonvt.portal.civicclerk.com/",
+   "key_facts": [
+    {
+     "fact": "Latest past council meeting",
+     "value": "2026-10-26, agendaId 9934, Agenda + Agenda Packet published",
+     "evidence": "City Council Meeting 2026-10-26T18:00:00Z"
+    },
+    {
+     "fact": "Latest Board of Finance",
+     "value": "2026-10-26, with minutes published",
+     "evidence": "October 26, 2026 Board of Finance Meeting Minutes"
+    },
+    {
+     "fact": "Upcoming scheduled",
+     "value": "Board of Finance Jan 11, Jan 25, Feb 8, 2027; City Council Feb 8, 2027",
+     "evidence": ""
+    },
+    {
+     "fact": "File download",
+     "value": "GetMeetingFileStream returns application/pdf",
+     "evidence": ""
+    }
+   ],
+   "verified": "2026-10-29"
+  },
+  {
+   "id": "btv-board-of-finance",
+   "topic": "bids",
+   "name": "Board of Finance page",
+   "source_url": "https://www.burlingtonvt.gov/822/Board-of-Finance",
+   "publisher": "City of Burlington",
+   "format": "html",
+   "automated": "no",
+   "automatable": "partly",
+   "how": "Scrape the text.",
+   "cadence": "After each March election",
+   "what_it_has": "Membership with party and term-end year. It confirms that the mayor's term ends in 2027. Meetings and agendas are in CivicClerk.",
+   "key_facts": [
+    {
+     "fact": "Mayor term",
+     "value": "Emma Mulvaney-Stanak, Progressive, 2027",
+     "evidence": "Mayor Emma Mulvaney-Stanak Progressive, 2027"
+    },
+    {
+     "fact": "Members",
+     "value": "Traverse (D, 2028), Barlow (D, 2027), Bergman (P, 2028), Carpenter (D, 2028); CAO Schad non-voting",
+     "evidence": "Mark Barlow Democrat, 2027"
+    }
+   ],
+   "verified": "2026-10-29"
+  },
+  {
+   "id": "bed-rfp",
+   "topic": "bids",
+   "name": "Burlington Electric Department RFP System",
+   "source_url": "https://www.burlingtonelectric.com/rfp",
+   "publisher": "Burlington Electric Department",
+   "format": "html",
+   "automated": "no",
+   "automatable": "yes",
+   "how": "curl -sL -A \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 Chrome/130 Safari/537.36\" https://www.burlingtonelectric.com/rfp; regex /rfpdetail\\?rfp=([\\d-]+) and the 'RFP# NNN-YY Title Deadline' text; then fetch each detail page.",
+   "cadence": "Several a month",
+   "what_it_has": "Open RFPs with number, title and deadline, each with a detail page at /rfpdetail?rfp=NNN-YY. Vendor email alerts via Mailchimp (eepurl). No RSS for RFPs: /feed/ is the generic WordPress site feed.",
+   "key_facts": [
+    {
+     "fact": "Open RFPs today",
+     "value": "6, incl. 024-27 Network Hardware (Nov 6, 2026 5:00 pm) and transformer RFPs 018-27 to 022-27 (Oct 30, 2026)",
+     "evidence": "024-27 RFP# 024-27 Network Hardware November 6, 2026 5:00 pm"
+    },
+    {
+     "fact": "Contact",
+     "value": "Paul Charbonneau, Purchasing, 802-865-7456",
+     "evidence": ""
+    }
+   ],
+   "verified": "2026-10-29"
+  },
+  {
+   "id": "btv-airport-rfps",
+   "topic": "bids",
+   "name": "Leahy Burlington International Airport RFPs",
+   "source_url": "https://btv.aero/rfps/",
+   "publisher": "Patrick Leahy Burlington International Airport (City of Burlington)",
+   "format": "html",
+   "automated": "no",
+   "automatable": "partly",
+   "how": "curl -sL -A \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 Chrome/130 Safari/537.36\" https://btv.aero/rfps/ and diff the <main> text plus wp-content/uploads PDF links.",
+   "cadence": "Infrequent",
+   "what_it_has": "Current RFPs and procurement notices with attached PDFs. Today it lists one ongoing request for letters of interest for an aeronautical development site ground lease. https://btv.aero/rfps/feed/ is only a WordPress comments feed, not useful for RFPs.",
+   "key_facts": [
+    {
+     "fact": "Current listing",
+     "value": "Letters of interest for Airport Aeronautical Development Sites ground lease; deadline Ongoing",
+     "evidence": "Submission Deadline Ongoing"
+    },
+    {
+     "fact": "Attachment",
+     "value": "https://btv.aero/wp-content/uploads/2026/09/Request-for-Letters-of-Interest-for-a-Ground-Lease-of-Airport-Aeronautical-and-Non-Aeronautical-Use-8-7-26.pdf",
+     "evidence": ""
+    }
+   ],
+   "verified": "2026-10-29"
+  },
+  {
+   "id": "bsd-procurement",
+   "topic": "bids",
+   "name": "Burlington School District RFPs (no dedicated page)",
+   "source_url": "https://www.bsdvt.org/wp-json/wp/v2/search?search=rfp&per_page=10",
+   "publisher": "Burlington School District",
+   "format": "json",
+   "automated": "no",
+   "automatable": "yes",
+   "how": "GET https://www.bsdvt.org/wp-json/wp/v2/posts?search=RFP&orderby=date&per_page=20 (the search endpoint worked; the posts endpoint was not tested), filtered by date.",
+   "cadence": "Rare",
+   "what_it_has": "BSD has no procurement or bids page: the Business Office page lists contacts only. RFPs appear as news posts. The WordPress REST search finds them, with the latest found from Jan 2023 (BHS/BTC Clerk of the Works).",
+   "key_facts": [
+    {
+     "fact": "Most recent RFP post found",
+     "value": "BSD Posts BHS/BTC Clerk of the Works RFP (2023-01-09)",
+     "evidence": "BSD Posts BHS/BTC Clerk of the Works RFP"
+    },
+    {
+     "fact": "Business office page",
+     "value": "https://www.bsdvt.org/departments/business-office/ (contacts only)",
+     "evidence": ""
+    }
+   ],
+   "verified": "2026-10-29"
+  },
+  {
+   "id": "btv-public-records",
+   "topic": "bids",
+   "name": "Public Records & Open Data (spending transparency check)",
+   "source_url": "https://www.burlingtonvt.gov/845/Public-Records-Open-Data",
+   "publisher": "City of Burlington",
+   "format": "html",
+   "automated": "no",
+   "automatable": "no",
+   "how": "Manual public records request.",
+   "cadence": "n/a",
+   "what_it_has": "Links to the public-records request portal (ViewpointCloud) and the BTVstat open data hub. No checkbook or vendor-payment transparency data is published. Vendor payment data would need a public records request.",
+   "key_facts": [
+    {
+     "fact": "Records request portal",
+     "value": "https://burlingtonvt.viewpointcloud.com/categories/1101/record-types/6594",
+     "evidence": ""
+    },
+    {
+     "fact": "Checkbook",
+     "value": "not published",
+     "evidence": ""
+    }
+   ],
+   "verified": "2026-10-29"
+  },
+  {
+   "id": "btv-polling-places",
+   "topic": "voting",
+   "name": "Maps - Wards, State Districts, & Polling Places",
+   "source_url": "https://www.burlingtonvt.gov/188/Maps---Wards-State-Districts-Polling-Pla",
+   "publisher": "City of Burlington Clerk/Treasurer",
+   "format": "html",
+   "automated": "no",
+   "automatable": "yes",
+   "how": "curl -sL -A \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 Chrome/130 Safari/537.36\" the page; regex 'Ward (\\d) Location: ([^W]+?)(?= Ward \\d|$)' on the #moduleContent text.",
+   "cadence": "Per election (fixed 40+ days before)",
+   "what_it_has": "Polling places by ward, ward and district maps, and a ward lookup tool (https://www2.burlingtonvt.gov/Clerk/Elections/Map/). The Elections page also links /CT/Maps-Wards-State-Districts-and-Polling-Places, which serves the same content.",
+   "key_facts": [
+    {
+     "fact": "Hours",
+     "value": "7 am to 7 pm",
+     "evidence": "Polls Open 7 am to 7 pm"
+    },
+    {
+     "fact": "Ward 1",
+     "value": "Mater Christi School, 50 Mansfield Ave",
+     "evidence": ""
+    },
+    {
+     "fact": "Ward 2",
+     "value": "Integrated Arts Academy/H.O. Wheeler, 6 Archibald St",
+     "evidence": ""
+    },
+    {
+     "fact": "Ward 3",
+     "value": "Sustainability Academy/Lawrence Barnes, 123 North St",
+     "evidence": ""
+    },
+    {
+     "fact": "Ward 4",
+     "value": "Burlington High School, 110 Seahorse St (new for Nov 2026)",
+     "evidence": "This is a new location for the November 2026 election"
+    },
+    {
+     "fact": "Ward 5",
+     "value": "Burlington Electric Department, 585 Pine St",
+     "evidence": ""
+    },
+    {
+     "fact": "Ward 6",
+     "value": "Edmunds Elementary School gym, 299 Main St (moved from Middle School gym)",
+     "evidence": ""
+    },
+    {
+     "fact": "Ward 7",
+     "value": "Robert Miller Recreation Center, 130 Gosse Ct",
+     "evidence": ""
+    },
+    {
+     "fact": "Ward 8",
+     "value": "Fletcher Free Library, 235 College St",
+     "evidence": ""
+    },
+    {
+     "fact": "Set deadline",
+     "value": "At least 40 days before an election",
+     "evidence": "must be set at least 40 days prior to an election"
+    }
+   ],
+   "verified": "2026-10-29"
+  },
+  {
+   "id": "btv-early-voting",
+   "topic": "voting",
+   "name": "Early / absentee voting (on Elections page) + VT My Voter Page",
+   "source_url": "https://www.burlingtonvt.gov/986/Elections",
+   "publisher": "City of Burlington Clerk/Treasurer; Vermont SOS",
+   "format": "html",
+   "automated": "no",
+   "automatable": "partly",
+   "how": "Same text-diff approach as the elections page. For March 2027 the sample ballot will be a city ballot rather than one per Chittenden district.",
+   "cadence": "Per election",
+   "what_it_has": "The city has no separate early-voting page: early and absentee voting is covered on /986/Elections, which links the state's My Voter Page (https://mvp.vermont.gov/) and online registration (https://olvr.vermont.gov/). Sample ballots and warnings are on /192/Sample-Ballots-Warnings-Notices, which currently shows Nov 2026 PDFs for Chittenden 13 to 18.",
+   "key_facts": [
+    {
+     "fact": "Mail-out",
+     "value": "All active voters mailed a ballot by Oct 1 (Nov 2026 general)",
+     "evidence": ""
+    },
+    {
+     "fact": "Mail return advice",
+     "value": "Mail back by Oct 20",
+     "evidence": "we recommend that you mail your ballot back no later than October 20th"
+    },
+    {
+     "fact": "Accessible options",
+     "value": "Curbside voting, electronic ballot delivery, home delivery by Justices of the Peace",
+     "evidence": "request curbside voting at their polling place, electronic ballot delivery"
+    },
+    {
+     "fact": "Sample ballots page",
+     "value": "https://www.burlingtonvt.gov/192/Sample-Ballots-Warnings-Notices",
+     "evidence": "Sample Ballots: Chittenden 13 Chittenden 14"
+    }
+   ],
+   "verified": "2026-10-29"
+  },
+  {
+   "id": "btv-property-taxes-layer",
+   "topic": "budget",
+   "name": "Property Taxes by parcel (city ArcGIS)",
+   "source_url": "https://services1.arcgis.com/1bO0c7PxQdsGidPK/arcgis/rest/services/Property_Taxes/FeatureServer/1",
+   "publisher": "City of Burlington",
+   "format": "arcgis-json",
+   "automated": "no",
+   "automatable": "yes",
+   "how": "Query by TaxParcelId or SPAN for a parcel: TaxYear, IsHomestead, LandValue, BuildingValue, RealValue, HomesteadValue, PropertyTaxAmount. 217,350 rows; last edit 2026-09-29.",
+   "cadence": "Yearly with the tax bills",
+   "what_it_has": "Each parcel's assessed values and tax amount: the data for a 'your tax bill, explained' lookup when combined with the rates on /215/Tax-Rates-Calculations.",
+   "key_facts": [],
+   "verified": "2026-10-29"
+  },
+  {
+   "id": "btv-general-fund-budget-layer",
+   "topic": "budget",
+   "name": "General Fund Budget by Fiscal Year (open data)",
+   "source_url": "https://services1.arcgis.com/1bO0c7PxQdsGidPK/arcgis/rest/services/General_Fund_Budget_by_Fiscal_Year/FeatureServer",
+   "publisher": "City of Burlington",
+   "format": "arcgis-json",
+   "automated": "no",
+   "automatable": "yes",
+   "how": "Found by the research pass on data.burlingtonvt.gov; read its fields before relying on it.",
+   "cadence": "Yearly",
+   "what_it_has": "General fund budget lines by year.",
+   "key_facts": [],
+   "verified": "2026-10-29"
+  }
+ ]
+}
