@@ -488,8 +488,9 @@ const settle = (page) => page.waitForFunction(() => {
 /* all nine tabs on the phone's bar too (Stephen, 2026-10-19, undoing the
    five-and-More bar) */
 async function tapTab(page, tab) {
-  /* Habits has no cell of its own: the Build cell, then its switch */
-  if (tab === 'habits') {
+  /* Habits has no cell of its own in All Day: the Build cell, then its
+     switch (in Body it is a tab of its own, Today) */
+  if (tab === 'habits' && !(await page.$('#tab-habits'))) {
     if (await page.$('#panel-habits:not([hidden])')) return;
     await page.click('#tab-build');
     await page.waitForSelector('#subnav [data-side="habits"]');
@@ -8421,6 +8422,9 @@ async function theBuild(browser, base) {
     check(full.state === 'full' && full.h >= 840 && full.label === 'Shrink the site', 'the handle opens the site full screen', JSON.stringify(full));
     await page.keyboard.press('Escape');
     check(await page.$eval('.bd-dock', (d) => d.dataset.state) === 'dock', 'Escape brings it back down', '');
+    /* the dock's height eases for 260ms (app.css): read the handle where it
+       comes to rest, not mid-way, or the drag starts on the paper above it */
+    await page.waitForTimeout(350);
     const hb = await page.$eval('.bd-handle', (h) => { const r = h.getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2 }; });
     await page.mouse.move(hb.x, hb.y); await page.mouse.down(); await page.mouse.move(hb.x, hb.y + 80, { steps: 4 }); await page.mouse.up();
     await page.waitForTimeout(350);
@@ -12725,6 +12729,409 @@ async function theWidget(browser, base) {
   });
 }
 
+/* ------------------------------------------------------------ the eight apps */
+/* Wave 0 (2026-10-29): one shell, eight app folders, each with its own config
+   (all-day/js/apps/), bar, mast colour, manifest and icons. These groups read
+   the configs and the folders, then open every app at 390 and 1280, light and
+   dark, live and ?demo=1, and walk the shell rules the apps add: the shelf a
+   tab gets until its mode is built, the top tabs (sticky, scroll-spy,
+   freshest first, new dots), Real life / Online, the switcher, the
+   home-screen card, and the <base> every app but All Day shares. */
+const APP_IDS = ['all-day', 'out', 'eat', 'people', 'body', 'town', 'play', 'paper'];
+const appsIndex = () => import('../js/apps/index.js');
+const demoApp = async (id) => JSON.parse(await readFile(path.join(APP, 'data/demo/apps/' + id + '.json'), 'utf8'));
+const pngSize = (buf) => [buf.readUInt32BE(16), buf.readUInt32BE(20)];
+const COMBOS4 = [
+  { viewport: { width: 390, height: 844 }, scheme: 'light' }, { viewport: { width: 390, height: 844 }, scheme: 'dark' },
+  { viewport: { width: 1280, height: 800 }, scheme: 'light' }, { viewport: { width: 1280, height: 800 }, scheme: 'dark' },
+];
+/* the first tab of an app that is a shelf, or its first tab */
+const firstShelf = (cfg) => { const t = cfg.tabs.find((x) => !x.mode) || cfg.tabs[0]; return t.mode || t.key; };
+
+async function theApps(browser, base) {
+  const { APPS, problems, keyOf } = await appsIndex();
+  const ui = await readFile(path.join(APP, 'js/ui.js'), 'utf8');
+  const tokens = await readFile(path.join(APP, 'css/tokens.css'), 'utf8');
+  const tok = (name) => (tokens.match(new RegExp('--' + name + ':\\s*(#[0-9A-Fa-f]{6})')) || [])[1];
+
+  await group('apps: the config loader', async () => {
+    check(JSON.stringify(APPS.map((a) => a.id)) === JSON.stringify(APP_IDS), 'eight apps, in the map’s order', APPS.map((a) => a.id).join(', '));
+    for (const a of APPS) {
+      const bad = problems(a);
+      check(!bad.length, a.id + ': its config is sound', bad.join('; '));
+      const n = a.tabs.length;
+      check(a.id === 'all-day' ? n === 9 && a.nine === true : n >= 5 && n <= 7 && !a.nine, a.id + ': ' + (a.id === 'all-day' ? 'nine tabs, the one exception until wave 1' : 'five to seven bottom tabs'), n);
+      for (const t of a.tabs) {
+        if (t.mode) {
+          const exists = await readFile(path.join(APP, 'js/modes/' + t.mode + '.js'), 'utf8').then(() => true, () => false);
+          check(exists, a.id + ': ' + t.mode + ' is a mode that exists', '');
+        }
+        const icon = t.icon || null;
+        if (icon) check(new RegExp('\\n  ' + icon + ': svg\\(').test(ui), a.id + ': ' + keyOf(t) + '’s icon ' + icon + ' is in ui.js', '');
+      }
+      check(new RegExp('\\n  ' + a.icon + ': svg\\(').test(ui), a.id + ': its own icon ' + a.icon + ' is in ui.js', '');
+      check(!!tok(a.accent.slice(2)) && !!tok(a.accent.slice(2) + '-pop') && !!tok(a.accent.slice(2) + '-pop-ink'), a.id + ': its colours are tokens', a.accent);
+    }
+    const ad = APPS[0];
+    check(JSON.stringify(ad.tabs.map(keyOf)) === JSON.stringify(TABS), 'All Day’s config is today’s nine tabs, in order', ad.tabs.map(keyOf).join(', '));
+    check(ad.tabs.every((t) => t.mode && !t.label && !t.icon), 'All Day’s tabs keep their own words and icons', '');
+    check(JSON.stringify(ad.hosted) === JSON.stringify({ habits: 'build' }), 'Habits still lives in The Build’s cell', JSON.stringify(ad.hosted));
+    check(JSON.stringify(Object.keys(ad.full)) === JSON.stringify(['wire', 'food', 'people', 'whatnow', 'games']), 'the five Full page links stay', Object.keys(ad.full).join(', '));
+    /* the map's bottom tabs, word for word */
+    const MAP = {
+      out: ['Now', 'Events', 'Nightlife', 'Sports', 'Explore'],
+      eat: ['Open now', 'Deals', 'New', 'Bites', 'Market', 'Dinner Club'],
+      people: ['You', 'Plans', 'Clubs', 'Dating', 'Neighbors', 'Pets', 'Talk'],
+      body: ['Today', 'Train', 'Recover', 'Fuel', 'Coach', 'Together'],
+      town: ['Alerts', 'City Hall', 'Streets', 'Guides', 'Work'],
+      play: ['Arcade', 'Daily', 'City', 'Draw', 'Party', 'Boards'],
+      paper: ['Front', 'Editions', 'Picks', 'Gossip', 'Everything', 'Story'],
+    };
+    for (const [id, labels] of Object.entries(MAP)) {
+      const a = APPS.find((x) => x.id === id);
+      check(JSON.stringify(a.tabs.map((t) => t.label)) === JSON.stringify(labels), id + ': the map’s bottom tabs', a.tabs.map((t) => t.label).join(', '));
+    }
+    /* a mode is hosted once per app and its route is its own key */
+    check(APPS.every((a) => new Set(a.tabs.filter((t) => t.mode).map((t) => t.mode)).size === a.tabs.filter((t) => t.mode).length), 'no app hosts a mode twice', '');
+    const hosts = APPS.flatMap((a) => a.tabs.filter((t) => t.mode).map((t) => a.id + ':' + t.mode));
+    check(['out:whatnow', 'eat:food', 'people:people', 'body:habits', 'play:games'].every((h) => hosts.includes(h)), 'the built modes are hosted where the map puts them', hosts.join(', '));
+    /* problems() says what is wrong, in words */
+    const broken = { ...APPS[1], id: 'x', tabs: APPS[1].tabs.slice(0, 4).concat([{ key: 'events', label: 'Again', icon: 'calendar', promise: 'p' }, { key: 'Bad-Key' }]) };
+    const said = problems(broken).join(' | ');
+    check(/twice/.test(said) && /lowercase key/.test(said) && /needs a label, an icon and a promise/.test(said), 'a broken config is named in plain words', said);
+    check(/4 bottom tabs/.test(problems({ ...APPS[1], tabs: APPS[1].tabs.slice(0, 4) }).join(' ')), 'four tabs is too few', '');
+    check(/hosted by/.test(problems({ ...APPS[0], hosted: { habits: 'nowhere' } }).join(' ')), 'a hosted tab needs a host', '');
+  });
+
+  await group('apps: eight folders, each its own installable app', async () => {
+    for (const a of APPS) {
+      const dir = path.join(REPO, a.id);
+      const html = await readFile(path.join(dir, 'index.html'), 'utf8').catch(() => '');
+      check(!!html, a.id + ': has index.html', '');
+      check(new RegExp('<html lang="en" data-app="' + a.id + '">').test(html), a.id + ': names its app on <html>', '');
+      const own = a.id === 'all-day';
+      check(own ? !/<base /.test(html) : /<base href="\.\.\/all-day\/">/.test(html), a.id + ': ' + (own ? 'no <base>, it is the shell’s own folder' : 'its <base> is the shared shell'), '');
+      const mHref = (html.match(/<link rel="manifest" href="([^"]+)">/) || [])[1];
+      check(mHref === (own ? 'manifest.webmanifest' : '../' + a.id + '/manifest.webmanifest'), a.id + ': links its own manifest', mHref);
+      const m = JSON.parse(await readFile(path.join(dir, 'manifest.webmanifest'), 'utf8'));
+      check(m.short_name === a.short && m.id === '/' + a.id + '/' && m.scope === '/' + a.id + '/' && m.start_url === '/' + a.id + '/?source=pwa' && m.display === 'standalone',
+        a.id + ': its manifest installs it on its own (name, id, scope, start)', JSON.stringify([m.short_name, m.id, m.scope, m.start_url]));
+      check((html.match(/<meta name="apple-mobile-web-app-title" content="([^"]+)">/) || [])[1] === a.short, a.id + ': the iPhone home-screen name', '');
+      const theme = (html.match(/<meta name="theme-color" content="([^"]+)">/) || [])[1];
+      check(theme && theme.toUpperCase() === tok(a.accent.slice(2)).toUpperCase() && m.theme_color.toUpperCase() === theme.toUpperCase(), a.id + ': its theme colour is its mast colour', theme + ' ' + m.theme_color);
+      for (const ic of m.icons) {
+        const file = path.resolve(dir, ic.src);
+        const buf = await readFile(file).catch(() => null);
+        const [w, h] = buf ? pngSize(buf) : [0, 0];
+        check(buf && ic.sizes === w + 'x' + h, a.id + ': icon ' + ic.src + ' is a ' + ic.sizes + ' PNG', w + 'x' + h);
+      }
+      if (!own) {
+        const touch = (html.match(/<link rel="apple-touch-icon" href="([^"]+)">/) || [])[1];
+        check(touch === '../' + a.id + '/apple-touch-icon.png', a.id + ': its own iPhone icon', touch);
+        const buf = await readFile(path.join(dir, 'apple-touch-icon.png')).catch(() => null);
+        check(buf && pngSize(buf).join('x') === '180x180', a.id + ': the iPhone icon is 180 square', buf ? pngSize(buf).join('x') : 'missing');
+        check(/<script type="module" src="js\/main\.js\?v=[\w]+"><\/script>/.test(html) && /href="css\/app\.css\?v=/.test(html), a.id + ': loads the shared JS and CSS', '');
+        /* the demo of every tab that is a shelf */
+        const d = await demoApp(a.id).catch(() => null);
+        const shelves = a.tabs.filter((t) => !t.mode);
+        check(d && shelves.every((t) => d.tabs[t.key] && d.tabs[t.key].sections.length >= 2), a.id + ': ?demo=1 has every shelf tab', shelves.filter((t) => !(d && d.tabs[t.key])).map((t) => t.key).join(', '));
+        if (d) for (const t of shelves) {
+          const secs = (d.tabs[t.key] || { sections: [] }).sections;
+          check(secs.every((s) => t.top.includes(s.label) && s.items.length >= 1), a.id + '/' + t.key + ': each demo section is one of its top tabs', secs.map((s) => s.label).filter((l) => !t.top.includes(l)).join(', '));
+          check(secs.some((s) => s.world) === !!t.mixed, a.id + '/' + t.key + ': sections say real life or online only on a tab that mixes them', '');
+        }
+      }
+    }
+  });
+
+  for (const a of APPS) {
+    for (const combo of COMBOS4) {
+      for (const demo of [false, true]) {
+        const label = 'app ' + a.id + ' ' + combo.viewport.width + ' ' + combo.scheme + (demo ? ' demo' : ' live');
+        await group(label, async () => {
+          const { ctx, page, errors } = await newPage(browser, base, combo);
+          await page.goto(base + '/' + a.id + '/' + (demo ? '?demo=1' : ''), { waitUntil: 'domcontentloaded' });
+          await settle(page);
+          await page.evaluate(() => document.fonts.ready);
+          const keys = a.tabs.map(keyOf);
+          const bar = await page.$$eval('#tabbar button[data-tab]', (bs) => bs.map((b) => [b.dataset.tab, b.textContent.trim()]));
+          const words = a.tabs.map((t) => t.label || null);
+          check(JSON.stringify(bar.map((b) => b[0])) === JSON.stringify(keys), 'the bar is the config’s tabs, in order', JSON.stringify(bar));
+          if (a.id !== 'all-day') check(JSON.stringify(bar.map((b) => b[1])) === JSON.stringify(words), 'with the config’s words', JSON.stringify(bar.map((b) => b[1])));
+          const chrome = await page.evaluate(() => ({ meta: document.querySelector('meta[name="theme-color"]').content, lake: getComputedStyle(document.documentElement).getPropertyValue('--lake').trim(),
+            bg: getComputedStyle(document.body).backgroundColor, mast: getComputedStyle(document.querySelector('.mast-row')).getPropertyValue('--lake').trim(), n: document.querySelector('#tabbar').dataset.n || '',
+            wm: (() => { const w = document.getElementById('wordmark'); return w.offsetParent ? [w.textContent, w.scrollWidth <= w.clientWidth + 1] : [w.textContent, true]; })(),
+            rail: (document.querySelector('.rail-brand span') || {}).textContent || '' }));
+          check(chrome.meta === chrome.lake, 'the phone’s status bar is this app’s mast colour', JSON.stringify(chrome));
+          check(chrome.bg === PAPER[combo.scheme], 'body is the ' + combo.scheme + ' paper', chrome.bg);
+          check(a.id === 'all-day' ? chrome.n === '' : chrome.n === String(keys.length), a.id === 'all-day' ? 'All Day keeps its nine-cell grid' : 'the bar shares its width ' + keys.length + ' ways', chrome.n);
+          check(chrome.wm[0] === a.name && chrome.wm[1], 'the mast says ' + a.name + ', in full', JSON.stringify(chrome.wm));
+          check(chrome.rail === a.name, 'the wide rail says ' + a.name, chrome.rail);
+          if (combo.viewport.width < 1024) {
+            const cells = await page.$$eval('#tabbar button[data-tab]', (bs) => bs.map((b) => { const r = b.getBoundingClientRect(); return [Math.round(r.width), Math.round(r.height), b.scrollWidth <= b.clientWidth + 1]; }));
+            check(cells.every((c) => c[1] >= 44 && c[2]), 'every tab a 44px target whose word fits', JSON.stringify(cells));
+          }
+          for (const t of a.tabs) {
+            const key = keyOf(t);
+            if (key !== keys[0]) await goTab(page, key);
+            if (key === 'games' && !demo) await page.waitForFunction(() => !/Loading \d+ boards/.test(document.querySelector('#panel-games').innerText), null, { timeout: 15000 });
+            const st = await page.evaluate(() => {
+              const p = document.querySelector('.panel:not([hidden])');
+              return { id: p.id, promise: !!p.querySelector('.promise'), h2: p.querySelector('.promise h2')?.textContent || '', line: p.querySelector('.promise p')?.textContent || '',
+                tops: [...p.querySelectorAll('.promise-tops .chip')].map((c) => c.textContent), secs: [...p.querySelectorAll('.shelf-sec')].map((s) => s.dataset.sec),
+                cards: p.querySelectorAll('[data-k]').length + p.querySelectorAll('.sec').length, err: !!p.querySelector('.errbox'), title: document.getElementById('mast-title').textContent,
+                doc: document.title, world: !!document.querySelector('#subnav .worldsw') };
+            });
+            check(st.id === 'panel-' + key && !st.err, key + ': its panel shows, no error box', JSON.stringify(st));
+            if (a.id !== 'all-day') check(st.title === t.label, key + ': the mast names it ' + t.label, st.title);
+            if (!t.mode && !demo) {
+              check(st.promise && st.h2 === t.label && st.line === t.promise && JSON.stringify(st.tops) === JSON.stringify(t.top), key + ': live, its promise and the top tabs to come', JSON.stringify(st));
+              check(!st.world, key + ': no Real life / Online over a promise', '');
+            } else if (!t.mode) {
+              const d = await demoApp(a.id);
+              check(!st.promise && st.secs.length === d.tabs[key].sections.length && st.cards > 0, key + ': the demo draws every top tab', JSON.stringify(st.secs));
+              check(st.world === !!t.mixed, key + ': Real life / Online ' + (t.mixed ? 'shows' : 'stays away'), '');
+            } else {
+              check(!st.promise && st.cards > 0, key + ': the hosted mode draws its screen', JSON.stringify(st));
+              check(!st.world, key + ': no Real life / Online on a mode that does not mix', '');
+            }
+            if (a.id !== 'all-day') check(st.doc === (key === keys[0] ? a.name : t.label + ' · ' + a.name) + ' — Burlington Brief', key + ': the page title', st.doc);
+            await pageRules(page, key, combo.viewport.width);
+          }
+          /* the screenshot: the first shelf tab, at its top */
+          const shot = firstShelf(a);
+          await goTab(page, shot);
+          await page.evaluate(() => document.querySelector('.panel:not([hidden])').scrollTo(0, 0));
+          await page.waitForTimeout(300);
+          if (demo || a.id === 'all-day') await page.screenshot({ path: path.join(SHOTS, 'app-' + a.id + '-' + combo.viewport.width + '-' + combo.scheme + (demo ? '' : '-live') + '.png') });
+          const gc = await page.evaluate(() => window.__gc);
+          check(gc[0] === a.id + '-tab-' + keys[0] && gc.every((p) => p.startsWith(a.id + '-tab-')), 'GoatCounter counts this app’s tabs under its own name', JSON.stringify(gc.slice(0, 3)));
+          check(!errors.length, 'no console errors', errors.slice(0, 5).join(' | '));
+          await ctx.close();
+        });
+      }
+    }
+  }
+
+  await group('apps: top tabs stay, follow the scroll, lead with the freshest, and dot what is new', async () => {
+    const d = await demoApp('out');
+    const secs = d.tabs.events.sections.filter((s) => s.world !== 'online');
+    const byFresh = secs.map((s, i) => [s, i]).sort((x, y) => x[0].hours - y[0].hours || x[1] - y[1]).map((x) => x[0].key);
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/out/?demo=1#events');
+    await settle(page);
+    await page.waitForTimeout(300);
+    const read = () => page.evaluate(() => ({ chips: [...document.querySelectorAll('#subnav .secpill .chip')].map((c) => c.dataset.chip),
+      on: (document.querySelector('#subnav .secpill .chip.on') || {}).dataset?.chip || null,
+      dots: [...document.querySelectorAll('#subnav .secpill .chip[data-new] .nd')].map((n) => n.closest('.chip').dataset.chip),
+      page: [...document.querySelectorAll('#panel-events .shelf-sec')].filter((s) => s.offsetParent).map((s) => s.dataset.sec) }));
+    let r = await read();
+    check(JSON.stringify(r.chips) === JSON.stringify(byFresh), 'the top tabs run freshest first', JSON.stringify(r.chips) + ' vs ' + JSON.stringify(byFresh));
+    check(JSON.stringify(r.page) === JSON.stringify(byFresh), 'and the page’s sections follow the same order', JSON.stringify(r.page));
+    check(byFresh[0] !== d.tabs.events.sections[0].key, 'which is not the config’s order', byFresh[0]);
+    const fresh = secs.filter((s) => s.hours < 4).map((s) => s.key).sort();
+    check(JSON.stringify([...r.dots].sort()) === JSON.stringify(fresh) && fresh.length > 0, 'a dot on each top tab with something new since the last visit', JSON.stringify(r.dots));
+    check(r.on === byFresh[0], 'the first top tab is on at the top', r.on);
+    /* sticky: scroll down, the mast's top line steps away, the top tabs stay */
+    await page.evaluate(() => document.querySelector('#panel-events').scrollBy(0, 400));
+    await page.waitForTimeout(120);
+    await page.evaluate(() => document.querySelector('#panel-events').scrollBy(0, 400));
+    await page.waitForTimeout(500);
+    const stay = await page.evaluate(() => ({ away: document.body.classList.contains('chrome-away'), keep: document.body.classList.contains('keep-subnav'),
+      top: document.querySelector('#subnav .secpill').getBoundingClientRect().top, mastRow: document.querySelector('.mast-row').getBoundingClientRect().bottom }));
+    check(stay.away && stay.keep && stay.top >= 0 && stay.top < 60 && stay.mastRow <= 1, 'scrolled down, the mast steps away and the top tabs stay under it', JSON.stringify(stay));
+    /* scroll-spy: a tap lands its section under the pill and lights it; scrolling on lights the next */
+    const third = byFresh[2];
+    await page.click('#subnav .secpill .chip[data-chip="' + third + '"]');
+    await page.waitForTimeout(1200);
+    r = await read();
+    const landed = await page.evaluate((k) => { const s = document.querySelector('#panel-events .shelf-sec[data-sec="' + k + '"]').getBoundingClientRect().top; const p = document.querySelector('#subnav .secpill').getBoundingClientRect().bottom; return [Math.round(s), Math.round(p)]; }, third);
+    check(r.on === third && landed[0] >= landed[1] - 8 && landed[0] < landed[1] + 90, 'a tapped top tab lands its section just under the pill and lights', JSON.stringify([r.on, landed]));
+    const fourth = byFresh[3];
+    await page.evaluate((k) => { const p = document.querySelector('#panel-events'); const s = p.querySelector('.shelf-sec[data-sec="' + k + '"]'); p.scrollTo(0, s.offsetTop - 60); }, fourth);
+    await page.waitForTimeout(900);
+    r = await read();
+    check(r.on === fourth, 'scrolling to the next section lights its top tab', r.on + ' vs ' + fourth);
+    /* the bottom bar: its order never moves; a dot on each tab with something new */
+    const bar = await page.$$eval('#tabbar button[data-tab]', (bs) => bs.map((b) => [b.dataset.tab, !!b.querySelector('.nd')]));
+    check(JSON.stringify(bar.map((b) => b[0])) === JSON.stringify(['whatnow', 'events', 'nightlife', 'sports', 'explore']), 'the bottom bar keeps its order', JSON.stringify(bar));
+    const wantDot = (k) => k !== 'events' && k !== 'whatnow' && d.tabs[k].sections.some((s) => s.hours < 4);
+    check(bar.filter((b) => b[0] !== 'whatnow').every(([k, dot]) => dot === wantDot(k)), 'a dot on every other tab with something new, none on the one you are on', JSON.stringify(bar));
+    /* the rule itself, for any mode: dated first, newest first, the rest in order */
+    const order = await page.evaluate(() => import('/all-day/js/sections.js').then((m) => m.freshOrder([{ key: 'a' }, { key: 'b', newest: 10 }, { key: 'c' }, { key: 'd', newest: 30 }, { key: 'e', newest: 10 }]).map((x) => x.key).join('')));
+    check(order === 'dbeac', 'freshOrder: newest first, ties and undated keep their order', order);
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+    /* All Day's tabs pass no `newest`, so none of them has a dot or moved */
+    const ad = await newPage(browser, base);
+    await ad.page.goto(base + '/all-day/?demo=1#vintage');
+    await settle(ad.page);
+    check(!(await ad.page.$('#subnav .secpill .nd')), 'All Day: no top-tab dots where a mode passes no times', '');
+    await ad.ctx.close();
+  });
+
+  await group('apps: Real life / Online on a tab that mixes them, and nowhere else', async () => {
+    const d = await demoApp('out');
+    const side = (w) => d.tabs.events.sections.filter((s) => s.world === w).map((s) => s.key).sort();
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/out/?demo=1#events');
+    await settle(page);
+    const look = () => page.evaluate(() => ({ world: document.body.dataset.world || null,
+      on: [...document.querySelectorAll('#subnav .worldsw .localsw-half')].map((b) => b.classList.contains('on')),
+      shown: [...document.querySelectorAll('#panel-events .shelf-sec')].filter((s) => s.offsetParent).map((s) => s.dataset.sec).sort(),
+      chips: [...document.querySelectorAll('#subnav .secpill .chip')].map((c) => c.dataset.chip).sort(),
+      row: !!document.querySelector('#subnav .secbar .secrow .worldsw + .secpill') }));
+    let s = await look();
+    check(s.world === 'irl' && JSON.stringify(s.on) === '[true,false]' && s.row, 'it starts on Real life, beside the top tabs', JSON.stringify(s));
+    check(JSON.stringify(s.shown) === JSON.stringify(side('irl')) && JSON.stringify(s.chips) === JSON.stringify(side('irl')), 'Real life shows the real-life sections, and only their top tabs', JSON.stringify(s));
+    await page.click('#subnav .worldsw [data-world="online"]');
+    await page.waitForTimeout(300);
+    s = await look();
+    check(s.world === 'online' && JSON.stringify(s.on) === '[false,true]' && JSON.stringify(s.shown) === JSON.stringify(side('online')) && JSON.stringify(s.chips) === JSON.stringify(side('online')),
+      'Online shows the online sections, and only their top tabs', JSON.stringify(s));
+    await goTab(page, 'nightlife');
+    const night = await page.evaluate(() => ({ world: document.body.dataset.world, on: [...document.querySelectorAll('#subnav .worldsw .localsw-half')].map((b) => b.classList.contains('on')) }));
+    check(night.world === 'online' && JSON.stringify(night.on) === '[false,true]', 'one setting: Nightlife opens on Online too', JSON.stringify(night));
+    await goTab(page, 'sports');
+    check(!(await page.$('#subnav .worldsw')) && !(await page.evaluate(() => document.body.dataset.world)), 'Sports does not mix: no switch, nothing hidden', '');
+    await goTab(page, 'whatnow');
+    check(!(await page.$('#subnav .worldsw')), 'nor does What Now', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+    /* the reader's choice stays on the phone (a fresh page in the same context keeps it) */
+    const { ctx: c2, page: p2 } = await newPage(browser, base, { motion: 'reduce' });
+    await p2.goto(base + '/people/?demo=1#dating');
+    await settle(p2);
+    const still = await p2.evaluate(() => ({ sw: !!document.querySelector('#subnav .worldsw'), canvas: !!document.querySelector('#subnav .worldsw canvas') }));
+    check(still.sw && !still.canvas, 'People’s Dating has it too; under reduced motion it is a plain fill', JSON.stringify(still));
+    await c2.close();
+    /* live, the reader's choice stays on this phone (the demo saves nothing) */
+    const { ctx: c3, page: p3 } = await newPage(browser, base);
+    await p3.goto(base + '/out/#events');
+    await settle(p3);
+    await p3.evaluate(() => import('/all-day/js/ui.js').then((m) => m.setWorld('online')));
+    await p3.reload();
+    await settle(p3);
+    check(await p3.evaluate(() => import('/all-day/js/ui.js').then((m) => m.world())) === 'online', 'live, the choice is remembered on this phone', '');
+    await c3.close();
+    /* All Day: no tab mixes yet, so nothing changes there */
+    const ad = await newPage(browser, base);
+    await ad.page.goto(base + '/all-day/');
+    await settle(ad.page);
+    let any = false;
+    for (const t of TABS) { if (t !== 'wire') await goTab(ad.page, t); if (await ad.page.$('#subnav .worldsw')) any = true; }
+    check(!any && !(await ad.page.evaluate(() => document.body.dataset.world)), 'All Day: no Real life / Online on any of its nine tabs', '');
+    await ad.ctx.close();
+  });
+
+  await group('apps: the switcher in the mast and the home-screen card', async () => {
+    const IPHONE = 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0 Mobile/15E148 Safari/604.1';
+    const ANDROID = 'Mozilla/5.0 (Linux; Android 15; Pixel 9) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Mobile Safari/537.36';
+    const { ctx, page, errors } = await newPage(browser, base, { ua: IPHONE, asks: true });
+    await page.goto(base + '/out/');
+    await settle(page);
+    const btn = await page.$('#mast .appsbtn');
+    check(btn && await btn.evaluate((b) => b.previousElementSibling && b.previousElementSibling.id === 'wordmark'), 'a switcher button right after the wordmark', '');
+    await page.click('#mast .appsbtn');
+    await page.waitForSelector('.sheet-card .appgrid');
+    const sw = await page.evaluate(() => ({ title: document.querySelector('.sheet-head h2').textContent,
+      cells: [...document.querySelectorAll('.appgrid .appcell')].map((a) => [a.dataset.app, a.textContent.trim(), new URL(a.href).pathname, a.getAttribute('aria-current')]),
+      card: document.querySelector('.installcard')?.innerText || '', how: document.querySelector('.installcard .ask-how')?.innerText || '' }));
+    check(sw.title === 'Btown apps' && JSON.stringify(sw.cells.map((c) => c[0])) === JSON.stringify(APP_IDS), 'the sheet: the eight apps, in order', JSON.stringify(sw.cells));
+    check(sw.cells.every((c) => c[2] === '/' + c[0] + '/'), 'each a link to its own folder', JSON.stringify(sw.cells.map((c) => c[2])));
+    check(sw.cells.filter((c) => c[3] === 'page').map((c) => c[0]).join() === 'out', 'this app is marked', JSON.stringify(sw.cells.map((c) => c[3])));
+    check(/Put Out on your home screen/.test(sw.card) && /Share/.test(sw.how) && /Add to Home Screen/.test(sw.how) && /How to bookmark this/.test(sw.card), 'the home-screen card: an iPhone gets Share, then Add to Home Screen', JSON.stringify(sw));
+    await page.click('.installcard [data-howto]');
+    await page.waitForSelector('.howto-sheet');
+    const how = await page.evaluate(() => ({ title: document.querySelector('.sheet-head h2').textContent, order: [...document.querySelectorAll('.howto')].map((h) => h.dataset.platform),
+      text: document.querySelector('.howto-sheet').innerText }));
+    check(how.title === 'Keep Out handy' && JSON.stringify(how.order) === '["iphone","android","computer"]' && /Add to Home Screen/.test(how.text) && /Add to Home screen/.test(how.text),
+      'How to bookmark this: iPhone first, then Android, then a computer', JSON.stringify(how));
+    await page.keyboard.press('Escape');
+    await page.click('#mast .appsbtn');
+    await page.waitForSelector('.appgrid');
+    await Promise.all([page.waitForURL(/\/eat\/$/), page.click('.appgrid .appcell[data-app="eat"]')]);
+    await settle(page);
+    const eat = await page.$$eval('#tabbar button[data-tab]', (bs) => bs.map((b) => b.textContent.trim()));
+    check(eat[0] === 'Open now' && eat.length === 6, 'a tile opens that app', JSON.stringify(eat));
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+    /* Android reads its own steps first; the demo's tiles stay in the demo; an installed app says so */
+    const and = await newPage(browser, base, { ua: ANDROID, asks: true });
+    await and.page.goto(base + '/town/?demo=1&source=pwa');
+    await settle(and.page);
+    await and.page.click('#mast .appsbtn');
+    await and.page.waitForSelector('.appgrid');
+    const a2 = await and.page.evaluate(() => ({ hrefs: [...document.querySelectorAll('.appgrid .appcell')].map((a) => new URL(a.href).search), card: document.querySelector('.installcard').innerText }));
+    check(a2.hrefs.every((s) => s === '?demo=1'), 'in the demo, the tiles open the other apps’ demos', JSON.stringify(a2.hrefs));
+    check(/Town is on your home screen/.test(a2.card) && !/Add to Home/.test(a2.card), 'opened from the home screen, the card says it is there', a2.card);
+    await and.page.click('.installcard [data-howto]');
+    await and.page.waitForSelector('.howto-sheet');
+    check(await and.page.evaluate(() => document.querySelector('.howto').dataset.platform) === 'android', 'an Android phone sees its own steps first', '');
+    await and.ctx.close();
+    /* the wide screen: the rail's name carries the button; the mast's is hidden */
+    const wide = await newPage(browser, base, { viewport: { width: 1280, height: 800 } });
+    await wide.page.goto(base + '/all-day/');
+    await settle(wide.page);
+    const w = await wide.page.evaluate(() => ({ mast: !!document.querySelector('#mast .appsbtn').offsetParent, rail: !!document.querySelector('.rail-brand .appsbtn').offsetParent }));
+    check(!w.mast && w.rail, 'wide: the switcher sits by the rail’s name', JSON.stringify(w));
+    await wide.page.click('.rail-brand .appsbtn');
+    await wide.page.waitForSelector('.appgrid');
+    check(await wide.page.evaluate(() => document.querySelector('.appgrid .appcell.on').dataset.app) === 'all-day' && /\/all-day\/$/.test(wide.page.url()), 'and opens the same sheet, All Day marked, nowhere navigated', wide.page.url());
+    await wide.ctx.close();
+    /* every app's name fits the mast at 390 (a long one drops Saved's word) */
+    for (const id of APP_IDS) {
+      const p = await newPage(browser, base);
+      await p.page.goto(base + '/' + id + '/');
+      await settle(p.page);
+      await p.page.evaluate(() => document.fonts.ready);
+      await p.page.waitForTimeout(100);
+      const fit = await p.page.evaluate(() => { const w = document.getElementById('wordmark'); const row = document.querySelector('.mast-row');
+        return { fits: w.scrollWidth <= w.clientWidth + 1, row: row.scrollWidth <= row.clientWidth + 1, tight: document.getElementById('mast').classList.contains('tight') }; });
+      check(fit.fits && fit.row && (id === 'all-day' ? !fit.tight : true), id + ': its name fits the mast at 390' + (id === 'all-day' ? ', Saved keeps its word' : ''), JSON.stringify(fit));
+      await p.ctx.close();
+    }
+  });
+
+  await group('apps: one shell, eight doors (the shared <base>)', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.addInitScript(() => { navigator.share = (o) => { window.__shared = o; return Promise.resolve(); }; });
+    await page.goto(base + '/out/');
+    await settle(page);
+    const now = await page.evaluate(() => document.querySelectorAll('#panel-whatnow [data-k], #panel-whatnow .sec').length);
+    check(now > 0, 'What Now draws in Out from the shared data/ (the <base> at work)', now);
+    /* a #fragment link stays in this app */
+    await page.evaluate(() => { const a = document.createElement('a'); a.href = '#sports'; a.id = 'frag'; a.textContent = 'x'; document.querySelector('#panel-whatnow .panel-body').prepend(a); });
+    await page.click('#frag');
+    await page.waitForFunction(() => document.querySelector('#tab-sports').getAttribute('aria-selected') === 'true');
+    check(new URL(page.url()).pathname === '/out/' && /#sports$/.test(page.url()), 'a #link stays in Out', page.url());
+    /* a mode's relative history call keeps Out's path */
+    await page.evaluate(() => history.replaceState(null, '', location.search + '#whatnow'));
+    check(new URL(page.url()).pathname === '/out/', 'a relative replaceState keeps Out’s path', page.url());
+    /* shares carry Out's address */
+    await page.evaluate(() => import('/all-day/js/app.js').then((m) => m.share('events', 'k1', 'A thing')));
+    check(await page.evaluate(() => window.__shared && window.__shared.url) === 'https://guide.btownbrief.com/out/#events/k1', 'a share link is Out’s', await page.evaluate(() => JSON.stringify(window.__shared)));
+    /* an unknown tab lands on Out's first */
+    await page.evaluate(() => { location.hash = 'wire'; });
+    await page.waitForTimeout(400);
+    check(await page.evaluate(() => document.querySelector('#tab-whatnow').getAttribute('aria-selected')) === 'true', 'a tab Out has not got opens Out’s first', '');
+    /* the visit is Out's own; All Day's is untouched */
+    const keys = await page.evaluate(() => [localStorage.getItem('allday-visit-out') ? 1 : 0, localStorage.getItem('allday-visit') ? 1 : 0]);
+    check(JSON.stringify(keys) === '[1,0]', '“new since you last looked” is per app', JSON.stringify(keys));
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+    /* a mode that fails to load becomes a shelf, and the rest of the app runs */
+    const br = await newPage(browser, base);
+    await br.page.route(/\/all-day\/js\/modes\/whatnow\.js/, (r) => r.fulfill({ status: 404, body: '' }));
+    await br.page.goto(base + '/out/');
+    await settle(br.page);
+    const fell = await br.page.evaluate(() => ({ promise: document.querySelector('#panel-whatnow .promise h2')?.textContent || '', bar: document.querySelectorAll('#tabbar button[data-tab]').length }));
+    check(fell.promise === 'Now' && fell.bar === 5, 'a mode that fails to load leaves its promise, and the bar is whole', JSON.stringify(fell));
+    check(br.errors.some((e) => /mode whatnow did not load/.test(e)), 'and the failure is logged', br.errors.join(' | '));
+    await br.ctx.close();
+  });
+}
+
 /* ----------------------------------------------------------------- run */
 const t0 = Date.now();
 await mkdir(SHOTS, { recursive: true });
@@ -12769,6 +13176,7 @@ try {
   await run(railsHaveList);
   await run(theChallenge);
   await run(fullPagesAndAsks);
+  await run(theApps);
 } finally {
   await browser.close();
   proc.kill();

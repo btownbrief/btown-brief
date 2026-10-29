@@ -2699,6 +2699,8 @@ body.bd-full { overflow: hidden; }
    nine can have; All Day's nine keep their grid above */
 .tabbar[data-n] { grid-template-columns: repeat(var(--tab-n), minmax(0, 1fr)); }
 .tabbar[data-n] button { font-size: var(--fs-nav-few); }
+/* seven share a 390 phone as tightly as nine nearly do ("Neighbors") */
+.tabbar[data-n="7"] button { font-size: var(--fs-nav); }
 @media (min-width: 1024px) { .tabbar[data-n] button { font-size: var(--fs-lead); } }
 
 /* the switcher's button: small, right after the wordmark (and the rail's
@@ -2714,7 +2716,7 @@ body.bd-full { overflow: hidden; }
 .mast.tight .savedbtn { width: 36px; padding: 0; justify-content: center; }
 .mast.tight .savedbtn > span { display: none; }
 @media (min-width: 1024px) { .mast .appsbtn { display: none; } }
-.rail-brand .appsbtn { margin-left: 6px; color: var(--ink-3); }
+.rail-brand .appsbtn { margin-left: auto; color: var(--ink-3); }
 .rail-brand .appsbtn:hover { color: var(--ink); }
 
 /* the sheet: eight tiles, this one ringed, then the home-screen card */

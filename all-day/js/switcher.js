@@ -23,8 +23,10 @@ export function bind(o) { S = { ...S, ...o }; }
 
 /* the button: 'mast' sits after the wordmark, 'rail' after the rail's name */
 export function button_(where) {
-  const b = el('button', 'iconbtn appsbtn', ICON.apps);
-  b.type = 'button';
+  /* on the rail it is a link-shaped control, not a <button>: the rail is
+     the tab bar, whose buttons are the tabs */
+  const b = el(where === 'rail' ? 'a' : 'button', 'iconbtn appsbtn', ICON.apps);
+  if (where === 'rail') { b.href = '#'; b.setAttribute('role', 'button'); b.addEventListener('click', (e) => e.preventDefault()); } else b.type = 'button';
   b.dataset.apps = where;
   b.setAttribute('aria-label', 'All Btown apps');
   b.setAttribute('aria-haspopup', 'dialog');

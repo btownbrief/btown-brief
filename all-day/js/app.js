@@ -1192,10 +1192,10 @@ export function start() {
   const bar = $('tabbar');
   /* a wide screen hides the mast's wordmark, so the rail carries the name and the logo */
   const brand = el('div', 'rail-brand', '<span>' + esc(APP.name) + '</span>');
-  brand.appendChild(switcher.button('rail'));
   const logo = $('brand').cloneNode(true);
   logo.removeAttribute('id');
   brand.appendChild(logo);
+  brand.appendChild(switcher.button('rail'));
   bar.appendChild(brand);
   /* All Day's nine keep their grid (What Now's wider centre cell); any
      other app's five to seven share the bar evenly */
