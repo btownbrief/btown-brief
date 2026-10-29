@@ -1,27 +1,27 @@
 {
- "updated": "2026-10-29T14:40:08+00:00",
+ "updated": "2026-10-29T15:38:09+00:00",
  "sections_updated": {
-  "now": "2026-10-29T14:40:08+00:00",
-  "forecast": "2026-10-29T14:40:08+00:00",
-  "hourly": "2026-10-29T14:40:08+00:00",
-  "alerts": "2026-10-29T14:40:08+00:00",
-  "afd": "2026-10-29T14:40:08+00:00",
-  "lake_forecast": "2026-10-29T14:40:08+00:00",
-  "lake_gage": "2026-10-29T14:40:08+00:00",
-  "air": "2026-10-29T14:40:08+00:00",
-  "sun": "2026-10-29T14:40:08+00:00",
-  "models": "2026-10-29T14:40:08+00:00"
+  "now": "2026-10-29T15:38:09+00:00",
+  "forecast": "2026-10-29T15:38:09+00:00",
+  "hourly": "2026-10-29T15:38:09+00:00",
+  "alerts": "2026-10-29T15:38:09+00:00",
+  "afd": "2026-10-29T15:38:09+00:00",
+  "lake_forecast": "2026-10-29T15:38:09+00:00",
+  "lake_gage": "2026-10-29T15:38:09+00:00",
+  "air": "2026-10-29T15:38:09+00:00",
+  "sun": "2026-10-29T15:38:09+00:00",
+  "models": "2026-10-29T15:38:09+00:00"
  },
  "now": {
-  "observed_at": "2026-10-29T13:54:00+00:00",
+  "observed_at": "2026-10-29T14:55:00+00:00",
   "station": "KBTV",
   "description": "Clear",
-  "temp_f": 55,
-  "feels_like_f": 55,
-  "humidity": 62,
-  "dewpoint_f": 42,
+  "temp_f": 57,
+  "feels_like_f": 57,
+  "humidity": 59,
+  "dewpoint_f": 43,
   "wind_mph": null,
-  "wind_gust_mph": 30,
+  "wind_gust_mph": null,
   "wind_dir": null,
   "precip_last_hr_in": null
  },
@@ -30,7 +30,7 @@
   "periods": [
    {
     "name": "Today",
-    "start": "2026-10-29T10:00:00-04:00",
+    "start": "2026-10-29T11:00:00-04:00",
     "is_day": true,
     "temp_f": 65,
     "pop": 1,
@@ -173,20 +173,6 @@
  "hourly": {
   "updated": "2026-10-29T06:19:08+00:00",
   "hours": [
-   {
-    "t": "2026-10-29T10:00:00-04:00",
-    "temp_f": 52,
-    "feels_f": 52,
-    "pop": 0,
-    "humidity": 71,
-    "wind_mph": 15,
-    "wind_dir": "S",
-    "sky": 4,
-    "short": "Sunny",
-    "qpf_in": 0.0,
-    "snow_in": 0.0,
-    "gust_mph": 20
-   },
    {
     "t": "2026-10-29T11:00:00-04:00",
     "temp_f": 55,
@@ -676,6 +662,20 @@
     "qpf_in": 0.0,
     "snow_in": 0.0,
     "gust_mph": 24
+   },
+   {
+    "t": "2026-10-30T22:00:00-04:00",
+    "temp_f": 45,
+    "feels_f": 38,
+    "pop": 9,
+    "humidity": 76,
+    "wind_mph": 15,
+    "wind_dir": "NW",
+    "sky": 58,
+    "short": "Mostly Cloudy",
+    "qpf_in": 0.0,
+    "snow_in": 0.0,
+    "gust_mph": 26
    }
   ],
   "days": [
@@ -1000,10 +1000,10 @@
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 37,
+  "aqi": 40,
   "category": "Good",
   "pollutant": "PM2.5",
-  "observed": "10/29/26 10:00",
+  "observed": "10/29/26 11:00",
   "discussion": "On Thursday October 29th, expect moderate levels of fine particulate matter (PM25) across the state, especially in mountain valley areas with emissions sources, including residential wood combustion, during calm conditions."
  },
  "sun": {
@@ -1023,7 +1023,7 @@
      "ICON": 65
     },
     "pop_max": {
-     "GFS": 25,
+     "GFS": 24,
      "Euro": 80,
      "ICON": 35
     },
@@ -1042,7 +1042,7 @@
      "ICON": 59
     },
     "pop_max": {
-     "GFS": 23,
+     "GFS": 19,
      "Euro": 79,
      "ICON": 15
     },
@@ -1061,7 +1061,7 @@
      "ICON": 45
     },
     "pop_max": {
-     "GFS": 4,
+     "GFS": 6,
      "Euro": 18,
      "ICON": 0
     },
@@ -1076,7 +1076,7 @@
  },
  "brief": {
   "date": "2026-10-29",
-  "generated": "2026-10-29T14:40:12+00:00",
+  "generated": "2026-10-29T15:38:14+00:00",
   "text": "Special Weather Statement until 8:15pm. Sunny today, high 65. Mostly cloudy tonight, low 49.",
   "periods": [
    {
@@ -1085,11 +1085,11 @@
     "is_day": true,
     "temp_f": 65,
     "sky": "sunny",
-    "start": "2026-10-29T10:00:00-04:00",
+    "start": "2026-10-29T11:00:00-04:00",
     "end": "2026-10-29T18:00:00-04:00",
     "precip": null,
     "wind": null,
-    "feels_lo": 52,
+    "feels_lo": 55,
     "feels_hi": 65,
     "text": "Sunny today, high 65."
    },
