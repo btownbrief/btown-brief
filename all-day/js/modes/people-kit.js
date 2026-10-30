@@ -129,6 +129,13 @@ export function tab(o) {
         items: secs.map((s) => ({ key: s.key, label: s.label, world: s.world || undefined, newest: s.newest ? s.newest() : 0 })) });
     },
     keepSubnav: true,
+    /* pull to refresh, or a tap on the tab it's on: the boards again, and a
+       word when something new came in (the shell says "Nothing new" else) */
+    pull() {
+      if (!o.reload) return null;
+      const before = o.count ? o.count(0) : 0;
+      return Promise.resolve(o.reload()).then(() => { draw(); const n = (o.count ? o.count(0) : 0) - before; return n > 0 ? (n === 1 ? 'One new post' : n + ' new posts') : null; });
+    },
     newSince(ts) { return o.count ? o.count(Number(ts) || nowSec() - 4 * 3600) : 0; },
     redraw: draw,
   };

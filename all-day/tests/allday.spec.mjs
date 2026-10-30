@@ -13433,6 +13433,11 @@ async function thePeopleApp(browser, base) {
     await page.waitForSelector('#sheet[hidden]', { state: 'attached' });
     await page.waitForFunction(() => [...document.querySelectorAll('.pp-sec[data-sec="borrow"] .b-title')].some((t) => t.textContent === 'A pressure washer for a deck'), null, { timeout: 5000 });
     check(true, 'a borrow post lands in Borrow', '');
+    /* someone else posts while the page is open: a tap on the tab brings it in, and says so */
+    await page.evaluate(() => import('/all-day/js/boards.js').then((B) => B._fake().as('demo-0000-4000-8000-00000000maya').nn_post_create({ p_board: 'neighbors', p_kind: 'free', p_title: 'A box of paperbacks' })));
+    await page.click('#tab-neighbors');
+    await page.waitForFunction(() => /One new post/.test(document.getElementById('toast').textContent), null, { timeout: 5000 });
+    check(await page.$$eval('.pp-sec[data-sec="free"] .b-title', (t) => t.some((x) => x.textContent === 'A box of paperbacks')), 'a tap on the tab it’s on brings in a new post and says so', '');
     await page.click('.pp-sec[data-sec="borrow"] .card.board:has(.b-title:text-is("A pressure washer for a deck")) [data-done]');
     await page.waitForFunction(() => [...document.querySelectorAll('.pp-sec[data-sec="borrow"] .card.board')].some((c) => c.querySelector('.b-title').textContent === 'A pressure washer for a deck' && /Lent/.test(c.querySelector('.b-meta')?.textContent || '')), null, { timeout: 5000 });
     check(await page.$eval('.pp-sec[data-sec="borrow"] .card.board:has(.b-title:text-is("A pressure washer for a deck")) [data-done]', (b) => b.textContent) === 'Undo', 'the poster marks it lent, and can undo it', '');
@@ -13532,7 +13537,7 @@ async function thePeopleApp(browser, base) {
   for (const combo of COMBOS4) {
     await group('people: shots ' + combo.viewport.width + ' ' + combo.scheme, async () => {
       const { ctx, page, errors } = await newPage(browser, base, combo);
-      await page.goto(base + '/people/?demo=1#plans');
+      await page.goto(base + '/people/?demo=1');
       await settle(page);
       for (const t of PEOPLE_TABS) {
         await goTab(page, t);
