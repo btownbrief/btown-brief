@@ -34,6 +34,8 @@ const SEEN_KEY = 'allday-social-seen';
 const FIRST_LOOK = 24 * 3600000;
 const PAGE = 30;
 const EARLIER = 2;
+/* the desks that post fifty times a day: the Wire already has them, and they would fill this feed */
+const DESKS = new Set(['abc', 'cbsnews', 'nbcnews', 'reuters', 'business', 'wsj', 'washingtonpost', 'axios', 'nytimes']);
 
 const S = { on: 'all', blocks: [], loaded: false, base: 0, root: null, list: null, shown: 0, cell: 0, watcher: null, pulse: null, ig: null, reddit: null };
 const seenAt = () => Number(store.read(SEEN_KEY, 0)) || Date.now() - FIRST_LOOK;
@@ -53,7 +55,7 @@ function gather() {
   };
   const box = (S.pulse && S.pulse.inbox) || {};
   const items = (k) => (box[k] && !box[k].paused && Array.isArray(box[k].items) ? box[k].items : []);
-  items('x').forEach((x) => { const h = String(x.from || '').replace(/^@/, ''); if (h) put('x', h, x.name || '@' + h, 'https://x.com/' + h, post(x.u, x.d * 1000, x.summary, '', !!x.local)); });
+  items('x').forEach((x) => { const h = String(x.from || '').replace(/^@/, ''); if (h && !DESKS.has(h.toLowerCase())) put('x', h, x.name || '@' + h, 'https://x.com/' + h, post(x.u, x.d * 1000, x.summary, '', !!x.local)); });
   items('facebook').forEach((x) => {
     const g = /^https:\/\/(?:www\.)?facebook\.com\/groups\/[^/]+/.exec(x.u || '');
     put('facebook', x.name || x.from, x.name || x.from, g ? g[0] : 'https://www.facebook.com/', post(x.u, x.d * 1000, x.summary, '', true));

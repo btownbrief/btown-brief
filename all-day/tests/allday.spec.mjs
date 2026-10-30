@@ -12834,7 +12834,7 @@ async function theApps(browser, base) {
     const ad = APPS[0];
     check(JSON.stringify(ad.tabs.map(keyOf)) === JSON.stringify(TABS), 'All Day’s config is today’s nine tabs, in order', ad.tabs.map(keyOf).join(', '));
     check(ad.tabs.every((t) => t.mode && !t.label && !t.icon), 'All Day’s tabs keep their own words and icons', '');
-    check(!ad.hosted, 'All Day hosts nothing: Habits and The Build live in Body', JSON.stringify(ad.hosted));
+    check(JSON.stringify(ad.hosted) === '{"reddit":"social"}', 'All Day hosts Reddit under Social, and Habits and The Build live in Body', JSON.stringify(ad.hosted));
     check(JSON.stringify(Object.keys(ad.full)) === JSON.stringify(['wire', 'food', 'people', 'whatnow', 'games']), 'the five Full page links stay', Object.keys(ad.full).join(', '));
     /* the map's bottom tabs, word for word */
     const MAP = {
@@ -13446,7 +13446,8 @@ async function theSocial(browser, base) {
     x: { paused: false, items: [
       { u: 'https://x.com/wcax/status/1', d: now - 600, from: '@wcax', name: 'Channel 3 News', summary: 'Newest of all', ch: 'x', local: true },
       { u: 'https://x.com/wcax/status/2', d: now - 7200, from: '@wcax', name: 'Channel 3 News', summary: 'An earlier post', ch: 'x', local: true },
-      { u: 'https://x.com/Reuters/status/3', d: now - 300, from: '@Reuters', name: 'Reuters', summary: 'A national post', ch: 'x', local: false }] },
+      { u: 'https://x.com/BNONews/status/3', d: now - 300, from: '@BNONews', name: 'BNO News', summary: 'A national post', ch: 'x', local: false },
+      { u: 'https://x.com/Reuters/status/4', d: now - 200, from: '@Reuters', name: 'Reuters', summary: 'A desk post', ch: 'x', local: false }] },
     facebook: { paused: false, items: [{ u: 'https://facebook.com/groups/123/permalink/4/', d: now - 1200, from: 'Group', name: 'Burlington Group', summary: 'A group post', ch: 'facebook', local: true }] },
     recaps: { paused: true, items: [] } } };
   await group('Social: one block per account, the freshest on top', async () => {
@@ -13457,7 +13458,7 @@ async function theSocial(browser, base) {
     await page.waitForTimeout(800);
     const names = () => page.$$eval(panel + ' .so-name', (a) => a.map((n) => n.textContent));
     const local = await names();
-    check(local.includes('Channel 3 News') && local.includes('Burlington Group') && !local.includes('Reuters'), 'Local leaves out the national accounts', local.join());
+    check(local.includes('Channel 3 News') && local.includes('Burlington Group') && !local.includes('BNO News'), 'Local leaves out the national accounts', local.join());
     check(local.filter((n) => n === 'Channel 3 News').length === 1, 'an account is one block', local.join());
     const c3 = await page.$eval(panel + ' .so-x', (c) => ({ top: c.querySelector('.so-text').textContent, rows: c.querySelectorAll('.so-row').length, href: c.querySelector('.so-text').href, target: c.querySelector('.so-text').target }));
     check(c3.top === 'Newest of all' && c3.rows === 1, 'a block leads with its newest post and lists the one before it', JSON.stringify(c3));
@@ -13466,7 +13467,7 @@ async function theSocial(browser, base) {
     await page.click('.localsw-half:has-text("Everything")');
     await page.waitForTimeout(300);
     const every = await names();
-    check(every.indexOf('Reuters') >= 0 && every.indexOf('Reuters') < every.indexOf('Channel 3 News'), 'Everything brings them in, and the last to post goes first', every.join());
+    check(every.indexOf('BNO News') >= 0 && every.indexOf('BNO News') < every.indexOf('Channel 3 News') && !every.includes('Reuters'), 'Everything brings them in, the last to post goes first, and the fifty-a-day desks stay out', every.join());
     await page.click('#subnav .secpill .chip:has-text("Facebook"), #subnav button:has-text("Facebook")');
     await page.waitForTimeout(300);
     check((await names()).join() === 'Burlington Group', 'a platform pill leaves only that platform', (await names()).join());
