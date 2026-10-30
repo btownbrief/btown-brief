@@ -134,7 +134,6 @@ function load() {
   });
   return loading;
 }
-setTimeout(load, 0);
 
 function land() {
   const want = S.pending;
@@ -165,8 +164,8 @@ app.register(KEY, {
   },
   keepSubnav: true,
   newSince(ts) {
-    if (!S.data || !S.data.chatter) return 0;
+    if (!S.data) return 0;
     const base = Number(ts) || P.now() - 4 * 3600;
-    return (S.data.chatter.highlights || []).filter((h) => keep(h) && t2s(h.when) > base).length;
+    return Object.values(S.data.at).filter((t) => t > base).length;
   },
 });

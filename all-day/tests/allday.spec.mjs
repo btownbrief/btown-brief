@@ -13278,11 +13278,12 @@ const PAPER_GAMES = { sections: [{ id: 'arcade-action', title: 'Action & Arcade'
   games: [{ slug: 'queen-city-chess', name: 'Queen City Chess', emoji: '♛', pitch: 'Pass the phone, or race a friend.', section: 'board-card', live: true },
     { slug: 'creemee-drop', name: 'Creemee Drop', emoji: '🍦', pitch: 'Stack Vermont soft-serve to the sky.', section: 'arcade-action', live: true }] };
 async function paperPage(browser, base, opts = {}) {
-  const A = paperArchive();
+  const A = opts.archive || paperArchive();
   const routes = [[/play\.btownbrief\.com\/games\.json/, PAPER_GAMES]];
-  if (!opts.archiveDown) routes.push([/play\.btownbrief\.com\/archive\/data\/editions\.json/, A.eds], [/play\.btownbrief\.com\/archive\/data\/stories-lite\.json/, A.stories]);
+  if (!opts.archiveDown) routes.push([/play\.btownbrief\.com\/archive\/data\/editions\.json/, A.eds]);
+  if (!opts.archiveDown && !opts.storiesDown) routes.push([/play\.btownbrief\.com\/archive\/data\/stories-lite\.json/, A.stories]);
   const P = await newPage(browser, base, { ...opts, routes });
-  if (opts.archiveDown) await P.page.route(/play\.btownbrief\.com\/archive\/data\//, (r) => r.fulfill({ status: 503, body: '' }));
+  if (opts.archiveDown || opts.storiesDown) await P.page.route(opts.archiveDown ? /play\.btownbrief\.com\/archive\/data\// : /stories-lite\.json/, (r) => r.fulfill({ status: 503, body: '' }));
   await P.page.route(/embeds\.beehiiv\.com/, (r) => r.fulfill({ status: 200, body: '<!doctype html><title>Beehiiv</title><input placeholder="email">', contentType: 'text/html' }));
   return { ...P, A };
 }
@@ -13315,15 +13316,15 @@ async function thePaper(browser, base) {
     const { ctx, page, errors } = await paperPage(browser, base, { asks: true });
     await page.goto(base + '/paper/');
     await settle(page);
-    await page.waitForSelector('#panel-front .pp-lead .c-title');
+    await page.waitForSelector('#panel-front .pp-lead .pp-lead-t');
     const f = await page.evaluate(() => {
       const p = document.querySelector('#panel-front');
       const top = (s) => { const n = p.querySelector(s); return n ? Math.round(n.getBoundingClientRect().top) : -1; };
       const fr = p.querySelector('.pp-mail iframe');
       return { mission: p.querySelector('.pp-mission')?.textContent, missionTop: top('.pp-mission'), mailTop: top('.pp-mail'), qTop: top('.pp-qs'), leadTop: top('.pp-lead'),
         frame: fr ? { src: fr.src, sandbox: fr.getAttribute('sandbox') } : null, qs: [...p.querySelectorAll('.pp-qs .chip')].map((c) => c.textContent),
-        lead: p.querySelector('.pp-lead .c-title')?.textContent, leadHref: p.querySelector('.pp-lead .c-title')?.getAttribute('href'),
-        rundown: p.querySelectorAll('.pp-rundown li').length, apps: p.querySelectorAll('.pp-apprail .pp-app').length, appsList: !!p.querySelector('.railmode [data-railmode="paper-apps"]'),
+        lead: p.querySelector('.pp-lead .pp-lead-t')?.textContent, leadHref: p.querySelector('.pp-lead .pp-lead-t')?.getAttribute('href'),
+        rundown: p.querySelectorAll('.pp-rundown li').length, apps: [...p.querySelectorAll('.pp-apprail .pp-app')].filter((a) => a.offsetParent).length, appsList: !!p.querySelector('.railmode [data-railmode="paper-apps"]'),
         picks: p.querySelectorAll('[data-sec="picks"] .pp-row').length, spot: [...p.querySelectorAll('[data-sec="picks"] .eyebrow')].map((e) => e.textContent),
         pill: [...document.querySelectorAll('#subnav .secpill .chip')].map((c) => c.textContent.trim()), h: innerHeight };
     });
@@ -13403,10 +13404,41 @@ async function thePaper(browser, base) {
     await down.page.goto(base + '/paper/#editions');
     await settle(down.page);
     await down.page.waitForFunction(() => document.querySelector('#panel-editions .pp-big'));
-    const d = await down.page.evaluate(() => ({ note: document.querySelector('#panel-editions [data-sec="latest"] .pp-note')?.textContent || '', rows: document.querySelectorAll('#panel-editions [data-sec="latest"] .pp-row').length }));
+    const d = await down.page.evaluate(() => {
+      const rows = [...document.querySelectorAll('#panel-editions [data-sec="latest"] .pp-row')];
+      return { note: document.querySelector('#panel-editions [data-sec="latest"] .pp-note')?.textContent || '', rows: rows.length,
+        keys: new Set(rows.map((r) => r.dataset.k)).size, lines: new Set(rows.map((r) => r.querySelector('.pp-s')?.textContent)).size };
+    });
     check(/last few editions/.test(d.note) && d.rows >= 1, 'with the archive down, the last few editions and a plain note', JSON.stringify(d));
+    check(d.keys === d.rows && d.lines === d.rows, 'each with its own key and its own stories', JSON.stringify(d));
     check(!down.errors.filter((x) => !/Failed to load resource/.test(x)).length, 'and nothing breaks', down.errors.join(' | '));
     await down.ctx.close();
+  });
+
+  await group('paper: hostile data and a stories-only outage', async () => {
+    const A = paperArchive();
+    A.eds[A.eds.length - 1].title = '<img src=x onerror="window.__pwn=1">Hostile';
+    A.stories.unshift({ h: '<b id="pwn">bold</b> pizza place', u: 'javascript:window.__pwn=1', e: A.eds[A.eds.length - 1].slug, d: A.eds[A.eds.length - 1].date, g: 0 });
+    const { ctx, page, errors } = await paperPage(browser, base, { archive: A });
+    await page.goto(base + '/paper/#editions');
+    await settle(page);
+    await page.waitForFunction(() => /\d+ stories/.test(document.querySelector('#panel-editions [data-sec="interest"] .pp-count')?.textContent || ''));
+    await page.fill('#panel-editions [data-sec="search"] input', 'pizza place');
+    await page.waitForFunction(() => document.querySelector('#panel-editions [data-sec="search"] .pp-row'));
+    const h = await page.evaluate(() => ({ pwn: window.__pwn, img: !!document.querySelector('#panel-editions img[src="x"], #pwn'),
+      bad: [...document.querySelectorAll('#panel-editions a[href]')].map((a) => a.getAttribute('href')).filter((u) => !/^(https?:|#)/.test(u)),
+      shown: document.querySelector('#panel-editions [data-sec="latest"] .pp-big h3')?.textContent }));
+    check(!h.pwn && !h.img && /^<img/.test(h.shown || ''), 'markup in a title shows as text, never runs', JSON.stringify(h));
+    check(!h.bad.length, 'and every link is http(s) or in the app', h.bad.join(' '));
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+    const so = await paperPage(browser, base, { storiesDown: true });
+    await so.page.goto(base + '/paper/#editions');
+    await settle(so.page);
+    const msg = await so.page.waitForFunction(() => /Couldn’t load the stories/.test(document.querySelector('#panel-editions [data-sec="interest"]')?.textContent || ''), null, { timeout: 8000 }).then(() => true, () => false);
+    check(msg, 'stories down: By interest says so, the editions still show', '');
+    check(await so.page.evaluate(() => document.querySelectorAll('.pp-day').length > 50), 'and By date is whole', '');
+    await so.ctx.close();
   });
 
   await group('paper: Picks, Gossip, Everything and Story, live', async () => {
@@ -13510,7 +13542,17 @@ async function thePaper(browser, base) {
         await page.waitForTimeout(t === 'editions' ? 700 : 300);
         const st = await page.evaluate(() => { const p = document.querySelector('.panel:not([hidden])'); return { secs: p.querySelectorAll('.pp-sec').length, items: p.querySelectorAll('[data-k]').length, demo: !!p.querySelector('.pp-mail-row') }; });
         check(st.secs >= 3 && (t === 'story' || st.items > 0), t + ': the demo draws its sections', JSON.stringify(st));
-        if (t === 'front') check(st.demo, 'front: the demo draws the strip without loading Beehiiv', '');
+        if (t === 'front') {
+          check(st.demo, 'front: the demo draws the strip without loading Beehiiv', '');
+          /* a link out in the demo stays put and says where it would go */
+          await page.click('#panel-front .pp-qs .chip');
+          await page.waitForSelector('#sheet:not([hidden]) .sheet-row a');
+          const at = page.url();
+          await page.click('#sheet .sheet-row a');
+          await page.waitForTimeout(200);
+          check(page.url() === at && /Demo: opens/.test(await page.evaluate(() => document.getElementById('toast').textContent)), 'front: a question’s link in the demo toasts instead of leaving', page.url());
+          await page.keyboard.press('Escape');
+        }
         await page.evaluate(() => document.querySelector('.panel:not([hidden])').scrollTo(0, 0));
         await page.waitForTimeout(250);
         await page.screenshot({ path: path.join(SHOTS, 'paper-' + t + '-' + combo.viewport.width + '-' + combo.scheme + '.png') });

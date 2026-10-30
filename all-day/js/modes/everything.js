@@ -163,7 +163,6 @@ function load() {
   });
   return loading;
 }
-setTimeout(load, 0);
 
 function land() {
   const want = S.pending;

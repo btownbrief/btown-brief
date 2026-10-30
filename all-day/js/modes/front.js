@@ -15,7 +15,7 @@
 
 import * as app from '../app.js';
 import * as store from '../store.js';
-import { el, esc, safeHref, ICON, cards, chips, listRail } from '../ui.js';
+import { el, esc, safeHref, ICON, chips, listRail } from '../ui.js';
 import { sectionBar } from '../sections.js';
 import { BEEHIIV_EMBED, subscribed } from '../asks.js';
 import * as P from './paper-core.js';
@@ -70,6 +70,7 @@ function mailStrip() {
 function openQuestion(q) {
   app.sheet(q.q, (body) => {
     body.classList.add('pp-qsheet');
+    P.demoLinks(body);
     (q.links || []).slice(0, 4).forEach((l) => {
       const href = safeHref(l.href);
       const ext = /^https?:/.test(href);
@@ -85,6 +86,20 @@ function openQuestion(q) {
   if (!app.demo && window.goatcounter && window.goatcounter.count) {
     window.goatcounter.count({ path: 'paper-question-' + q.key, title: 'The Paper question: ' + q.q, event: true });
   }
+}
+
+/* the lead: the paper's own card (the Wire's has buttons only the Wire answers) */
+function leadCard(it, at) {
+  const c = el('article', 'card pp-lead');
+  c.dataset.k = it.k;
+  const on = store.isSaved(it.k);
+  c.innerHTML = '<span class="eyebrow">' + esc('The latest edition') + '</span>' +
+    '<a class="pp-lead-t" href="' + esc(it.href) + '" target="_blank" rel="noopener" data-open>' + esc(it.title) + '</a>' +
+    (it.text ? '<p class="pp-lead-d">' + esc(it.text) + '</p>' : '') +
+    '<div class="pp-lead-m"><span>' + esc(at ? P.ago(at) : '') + '</span>' +
+    '<button class="act sh" data-act="share" aria-label="Share">' + ICON.share + '</button>' +
+    '<button class="act star' + (on ? ' on' : '') + '" data-act="save" aria-label="Save" aria-pressed="' + on + '">' + ICON.star + '</button></div>';
+  return c;
 }
 
 /* ----------------------------------------------------------------- draw */
@@ -122,12 +137,8 @@ function draw(d) {
     const dt = new Date(L.date);
     const at = isNaN(dt) ? 0 : Math.floor(dt.getTime() / 1000);
     S.edAt = at;
-    const it = app.know([{ kind: 'lead', k: 'front-lead', title: L.title, why: String(L.preview || '').replace(/\s+/g, ' '), href: safeHref(L.url),
-      src: 'The Btown Brief', sid: 'btownbrief', own: true, ago: at ? P.ago(at) : '' }])[0];
-    const wrap = el('div', 'pp-lead');
-    const card = cards.lead(it, { tag: 'The latest edition' + (at ? ' · ' + P.shortDate(new Date(at * 1000)) : '') });
-    if (card) wrap.appendChild(card);
-    ed.appendChild(wrap);
+    const it = app.know([{ kind: 'headline', k: 'front-lead', title: L.title, text: String(L.preview || '').replace(/\s+/g, ' '), href: safeHref(L.url), src: 'The Btown Brief' }])[0];
+    ed.appendChild(leadCard(it, at));
     const stories = d.rundown.slice(0, 6);
     if (stories.length) {
       ed.appendChild(el('div', 'tdiv', '<span>In this edition</span>'));

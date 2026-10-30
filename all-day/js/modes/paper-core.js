@@ -110,6 +110,15 @@ export function ago(sec) {
   if (s < 8 * DAY) return Math.round(s / DAY) + 'd ago';
   return shortDate(new Date(sec * 1000));
 }
+/* today's number on Burlington's calendar (days since 1970), so a daily
+   rotation turns over at midnight there, wherever the reader is */
+export function townDay(ms = Date.now()) {
+  try {
+    const [y, m, d] = new Intl.DateTimeFormat('en-CA', { timeZone: 'America/New_York', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date(ms)).split('-').map(Number);
+    if (y && m && d) return Math.floor(Date.UTC(y, m - 1, d) / 86400000);
+  } catch (e) { /* no time zone data: the reader's own day */ }
+  return Math.floor((ms - new Date(ms).getTimezoneOffset() * 60000) / 86400000);
+}
 /* a minute a 230 words, rounded up, for the edition's line */
 export const readMins = (words) => Math.max(1, Math.round((Number(words) || 0) / 230));
 
@@ -120,7 +129,7 @@ export const editionHref = (e) => safeHref(e && e.slug ? ARCHIVE + 'e/' + encode
 /* the archive's list, newest first, each with a key and a Date */
 export function editionList(j) {
   const list = (Array.isArray(j) ? j : (j && j.editions) || []).filter((e) => e && e.slug && isoDay(e.date));
-  return list.map((e) => ({ ...e, d: isoDay(e.date) })).sort((a, b) => b.d - a.d);
+  return list.map((e) => ({ ...e, key: e.slug, d: isoDay(e.date) })).sort((a, b) => b.d - a.d);
 }
 
 /* The topics a reader can follow, each a timeline. The words are the
@@ -197,13 +206,27 @@ export function appCards(host, tab, o = {}) {
 }
 
 /* the whole-row link opens the item (bindFeed's data-open); demo toasts */
-export function bind(host) { app.bindFeed(host); return host; }
+export function bind(host) { app.bindFeed(host); demoLinks(host); return host; }
+/* the demo never leaves the page: a link out says where it would go */
+export function demoLinks(host) {
+  if (!app.demo) return host;
+  host.addEventListener('click', (e) => {
+    if (e.defaultPrevented) return;
+    const a = e.target.closest && e.target.closest('a[href^="http"]');
+    if (!a) return;
+    e.preventDefault();
+    let where = '';
+    try { where = new URL(a.href).hostname.replace(/^www\./, ''); } catch (err) { where = ''; }
+    app.toast('Demo: opens ' + (where || 'the page') + ' in the real build');
+  });
+  return host;
+}
 
 /* ---------------------------------------------------------------- picks */
 /* the day's three picks and the spotlight, the same all day for everyone */
 export function todaysPicks(pj, catalog, n = 3) {
   const list = (pj && Array.isArray(pj.picks) ? pj.picks : []).filter((p) => p && p.title && p.href);
-  const day = Math.floor(Date.now() / 86400000);
+  const day = townDay();
   const out = [];
   for (let i = 0; i < Math.min(n, list.length); i++) out.push(list[(day * n + i) % list.length]);
   const spot = spotlight(catalog, day);
@@ -211,7 +234,7 @@ export function todaysPicks(pj, catalog, n = 3) {
   return out;
 }
 /* one guide page a day, round the whole catalog */
-export function spotlight(catalog, day = Math.floor(Date.now() / 86400000)) {
+export function spotlight(catalog, day = townDay()) {
   const all = ((catalog && catalog.groups) || []).flatMap((g) => g.cards || []).filter((c) => c && c.title && c.href);
   if (!all.length) return null;
   const c = all[day % all.length];
@@ -225,7 +248,7 @@ const CSS = `
 .pp-sec + .pp-sec { margin-top: var(--s2); }
 .pp-dateline { padding: var(--s4) var(--gutter) 0; color: var(--ink-3); }
 .pp-dateline .eyebrow { color: var(--ink-3); }
-.pp-mission { padding: var(--s2) var(--gutter) var(--s3); font-family: var(--serif); font-size: var(--fs-hero); font-weight: 500; line-height: var(--lh-tight); color: var(--ink); }
+.pp-mission { padding: var(--s2) var(--gutter) var(--s4); font-family: var(--serif); font-size: var(--fs-w-lead-xl); font-weight: 500; line-height: var(--lh-tight); color: var(--ink); }
 .pp-creed { padding: 0 var(--gutter) var(--s3); font-family: var(--serif); font-size: var(--fs-lead); font-style: italic; line-height: 1.45; color: var(--ink-2); }
 .pp-mail { margin: 0 var(--gutter); padding: var(--s3) var(--s3) var(--s2) var(--s4); border-radius: var(--r-media); background: var(--accent-soft); }
 .pp-mail .ask-t { font-size: var(--fs-body); }
@@ -233,10 +256,18 @@ const CSS = `
 .pp-mail-row { display: flex; align-items: center; gap: var(--s2); margin-top: var(--s2); }
 .pp-mail-row .field { background: var(--raised); }
 .pp-mail-foot { display: flex; justify-content: flex-end; margin-top: var(--s1); }
-.chips.pp-qs { padding-top: var(--s1); }
-.chips.pp-qs .chip { height: auto; min-height: var(--hit); padding: var(--s2) var(--s3); white-space: normal; max-width: 220px; text-align: left; line-height: 1.25; border-radius: var(--r-media); background: var(--raised); border: 1px solid var(--line); color: var(--ink); font-weight: 600; }
+/* the questions: two rows that swipe together, so four or more show at once */
+.chips.pp-qs { display: grid; grid-auto-flow: column; grid-template-rows: auto auto; grid-auto-columns: max-content; gap: var(--s2); padding-top: var(--s1); }
+.chips.pp-qs::after { display: none; }
+.chips.pp-qs .chip { height: auto; min-height: var(--hit); padding: var(--s2) var(--s3); white-space: nowrap; border-radius: var(--r-pill); background: var(--raised); border: 1px solid var(--line); color: var(--ink); font-weight: 600; }
 .chips.pp-qs .chip:hover { border-color: var(--ink-3); }
-.pp-lead .wlead .c-title { font-size: var(--fs-w-lead-xl); }
+.pp-lead { display: block; padding: var(--s4) var(--gutter) var(--s3); border-bottom: 1px solid var(--line); }
+.pp-lead .eyebrow { display: block; margin-bottom: var(--s2); }
+.pp-lead-t { display: block; font-family: var(--serif); font-size: var(--fs-w-lead-xl); font-weight: 500; line-height: 1.15; color: var(--ink); }
+.pp-lead-t:hover { text-decoration: underline; }
+.pp-lead-d { margin-top: var(--s2); color: var(--ink-2); font-size: var(--fs-w-dek); line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.pp-lead-m { display: flex; align-items: center; gap: var(--s1); margin-top: var(--s2); font-size: var(--fs-meta); color: var(--ink-3); }
+.pp-lead-m span { flex: 1; }
 .pp-rundown { padding: 0 var(--gutter); }
 .pp-rundown.flush { padding: 0; margin-top: var(--s2); }
 .pp-rundown li { list-style: none; display: grid; grid-template-columns: auto minmax(0, 1fr); gap: var(--s2); padding: var(--s2) 0; border-bottom: 1px solid var(--line-soft); line-height: 1.35; }
@@ -267,7 +298,7 @@ const CSS = `
 .pp-apps.col { grid-template-columns: minmax(0, 1fr); padding: 0; }
 .pp-app { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; gap: var(--s2); padding: var(--s2); border: 1px solid var(--line); border-radius: var(--r-media); background: var(--raised); color: var(--ink); }
 .rail .pp-app { width: 236px; }
-body.has-aside .pp-apps-sec { display: none; }
+@media (min-width: 1280px) { body.has-aside .pp-apps-sec { display: none; } }
 .pp-go { display: inline-flex; color: var(--ink-3); }
 .pp-go .i { width: 18px; height: 18px; }
 .pp-app:hover { border-color: var(--ink-3); }
@@ -302,7 +333,7 @@ body.has-aside .pp-apps-sec { display: none; }
 .pp-big .pp-more { padding: var(--s3) 0 0; }
 .pp-qsheet .sheet-row a.t { color: var(--ink); }
 .aside .pp-aside h3 { font-family: var(--serif); font-size: var(--fs-section); font-weight: 500; padding: 0 0 var(--s2); }
-@media (min-width: 1280px) { .pp-mission { font-size: var(--fs-w-lead-xl); } }
+@media (min-width: 1024px) { .pp-mission { font-size: var(--fs-count); } }
 `;
 let styled = false;
 export function style() {

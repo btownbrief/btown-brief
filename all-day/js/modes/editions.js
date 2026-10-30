@@ -23,15 +23,20 @@ import * as P from './paper-core.js';
 const KEY = 'editions';
 const SECS = [['latest', 'Latest'], ['bydate', 'By date'], ['interest', 'By interest'], ['search', 'Search'], ['lastyear', 'This week last year'], ['random', 'Random'], ['ask', 'Ask']];
 const PAGE = 15;
-const S = { root: null, slots: {}, eds: [], bySlug: {}, stories: null, fallback: false, topic: 'food', shown: PAGE, pick: null, q: '', pending: null, ready: false };
+const S = { root: null, slots: {}, eds: [], bySlug: {}, byEd: new Map(), stories: null, storiesFailed: false, fallback: false, topic: 'food', shown: PAGE, pick: null, q: '', pending: null, ready: false };
 
 const dow3 = (d) => ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][d.getDay()];
-const storiesOf = (slug) => (S.stories || []).filter((s) => s.e === slug);
+/* an edition's stories, from an index built once */
+const storiesOf = (key) => S.byEd.get(key) || [];
+function index() {
+  S.byEd = new Map();
+  (S.stories || []).forEach((s) => { if (!S.byEd.has(s.e)) S.byEd.set(s.e, []); S.byEd.get(s.e).push(s); });
+}
 
 /* one edition as a row: the date tile, the title, its first headlines */
 function edRow(e, o = {}) {
-  const st = storiesOf(e.slug);
-  const it = P.item(KEY, e.slug, { title: e.title, href: P.editionHref(e),
+  const st = storiesOf(e.key);
+  const it = P.item(KEY, e.key, { title: e.title, href: P.editionHref(e),
     line: st.length ? st.slice(0, 2).map((s) => s.h).join(' · ') : P.longDate(e.d) + (e.d.getFullYear() !== new Date().getFullYear() ? ', ' + e.d.getFullYear() : '') });
   app.know([it]);
   return P.row(it, { date: [String(e.d.getDate()), dow3(e.d)], cls: o.cls });
@@ -40,8 +45,8 @@ function edRow(e, o = {}) {
 /* the big card: an edition, its date, how many stories, the first three */
 function bigCard(e, eyebrow, lines) {
   const box = el('div', 'pp-big');
-  const st = storiesOf(e.slug);
-  box.dataset.k = KEY + '-big-' + e.slug;
+  const st = storiesOf(e.key);
+  box.dataset.k = KEY + '-big-' + e.key;
   box.innerHTML = (eyebrow ? '<span class="eyebrow">' + esc(eyebrow) + '</span>' : '') + '<h3><a href="' + esc(P.editionHref(e)) + '" target="_blank" rel="noopener">' + esc(e.title) + '</a></h3>' +
     (lines ? '<p>' + esc(lines) + '</p>' : '');
   if (st.length) {
@@ -96,7 +101,7 @@ function drawInterest(box) {
   const paint = () => {
     host.innerHTML = '';
     const t = P.TOPICS.find((x) => x.key === S.topic) || P.TOPICS[0];
-    if (!S.stories) { host.appendChild(el('p', 'note pad', esc('Loading…'))); return; }
+    if (!S.stories) { host.appendChild(el('p', 'note pad', esc(S.storiesFailed ? 'Couldn’t load the stories.' : 'Loading…'))); return; }
     const hits = S.stories.filter((s) => P.inTopic(t, s.h));
     host.appendChild(el('p', 'pp-count', esc(hits.length + ' stories')));
     let year = null;
@@ -140,6 +145,7 @@ function drawSearch(box) {
     out.innerHTML = '';
     const q = S.q.trim().toLowerCase();
     if (q.length < 2) return;
+    if (!S.stories) { out.appendChild(el('p', 'pp-count', esc(S.storiesFailed ? 'Couldn’t load the headlines.' : 'Loading…'))); return; }
     const words = q.split(/\s+/).filter(Boolean);
     const hits = (S.stories || []).filter((s) => { const h = s.h.toLowerCase(); return words.every((w) => h.includes(w)); });
     out.appendChild(el('p', 'pp-count', esc(hits.length ? hits.length + (hits.length === 1 ? ' headline' : ' headlines') : 'No headlines match.')));
@@ -166,9 +172,10 @@ function drawSearch(box) {
 }
 
 function drawLastYear(box) {
-  const t = new Date();
-  const back = new Date(t.getFullYear() - 1, t.getMonth(), t.getDate(), 12);
-  const lo = back.getTime() - 3 * 86400000, hi = back.getTime() + 4 * 86400000;
+  /* the same Monday-to-Sunday week, a year ago (52 weeks keeps the weekday) */
+  const back = new Date(); back.setHours(12, 0, 0, 0); back.setDate(back.getDate() - 364);
+  back.setDate(back.getDate() - ((back.getDay() + 6) % 7));
+  const lo = back.getTime() - 12 * 3600000, hi = lo + 7 * 86400000;
   let hits = S.eds.filter((e) => e.d.getTime() >= lo && e.d.getTime() < hi);
   if (!hits.length) {
     const before = S.eds.find((e) => e.d.getTime() < lo);
@@ -232,9 +239,11 @@ function load() {
       S.fallback = !app.demo;
       S.eds = ((recent && recent.editions) || []).filter((e) => e && e.url && e.d).map((e) => {
         const d = new Date(e.d * 1000);
-        return { slug: '', url: e.url, title: e.edition, d: new Date(d.getFullYear(), d.getMonth(), d.getDate(), 12) };
+        const day = new Date(d.getFullYear(), d.getMonth(), d.getDate(), 12);
+        return { slug: '', key: 'nl-' + P.ymd(day), url: e.url, title: e.edition, d: day };
       }).sort((a, b) => b.d - a.d);
-      S.stories = ((recent && recent.editions) || []).flatMap((e) => (e.stories || []).map((s) => ({ h: s.t, u: s.u, e: '', d: P.ymd(new Date(e.d * 1000)) })));
+      S.stories = ((recent && recent.editions) || []).flatMap((e) => { const k = 'nl-' + P.ymd(new Date(e.d * 1000)); return (e.stories || []).map((s) => ({ h: s.t, u: s.u, e: k, d: k.slice(3) })); });
+      index();
     }
     S.bySlug = Object.create(null);
     S.eds.forEach((e) => { if (e.slug) S.bySlug[e.slug] = e; });
@@ -247,7 +256,9 @@ let storying = null;
 function loadStories() {
   if (!storying) storying = load().then(() => (S.stories ? null : P.load('stories'))).then((j) => {
     if (S.stories) return;
-    S.stories = (Array.isArray(j) ? j : []).filter((s) => s && s.h && s.u).sort((a, b) => (a.d < b.d ? 1 : a.d > b.d ? -1 : 0));
+    if (!Array.isArray(j)) { S.storiesFailed = true; storiesIn(); return; }
+    S.stories = j.filter((s) => s && s.h && s.u).sort((a, b) => (a.d < b.d ? 1 : a.d > b.d ? -1 : 0));
+    index();
     storiesIn();
   });
   return storying;

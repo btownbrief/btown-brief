@@ -68,20 +68,18 @@ function load() {
     const eds = ((recent && recent.editions) || []).filter((e) => e && e.d && Array.isArray(e.stories)).sort((a, b) => b.d - a.d);
     const first = eds[0] ? new Date(eds[0].d * 1000) : null;
     const same = (e) => { const t = new Date(e.d * 1000); return first && t.getMonth() === first.getMonth() && t.getFullYear() === first.getFullYear(); };
-    const day = Math.floor(Date.now() / 86400000);
     S.data = {
       picks: (pj && pj.picks) || [],
       bestof: (pj && pj.bestof) || [],
       month: eds.filter(same),
       monthLabel: first ? P.monthName(first.getMonth()) + ' ' + first.getFullYear() : '',
-      spot: [P.spotlight(cat, day)].filter(Boolean),
+      spot: [P.spotlight(cat)].filter(Boolean),
     };
     S.ready = true;
     app.recount();
   });
   return loading;
 }
-setTimeout(load, 0);
 
 function land() {
   const want = S.pending;
