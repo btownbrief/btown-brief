@@ -1,5 +1,8 @@
-/* Body: the daily template (APP-MAP.html, app 5). Habits is hosted on
-   Today as it is; here it has no Build beside it. */
+/* Body: the daily template (APP-MAP.html, app 5). Wave 1 (2026-10-29):
+   Today is the habits tracker, hosted in the Today cell beside Stephen's
+   template (modes/template.js, the way All Day hosts Habits under The
+   Build); the other five tabs are built (modes/train.js, recover.js,
+   fuel.js, coach.js, together.js, sharing modes/body-kit.js). */
 export default {
   id: 'body',
   name: 'Body',
@@ -10,21 +13,17 @@ export default {
   url: 'https://guide.btownbrief.com/body/',
   line: 'Your daily template, for you first and then for anyone who wants it.',
   tabs: [
-    { mode: 'habits', label: 'Today', top: ['Habits', 'Template', 'Season', 'Forest', 'Wall'] },
-    { key: 'train', label: 'Train', icon: 'dumbbell',
-      promise: 'The gyms, three workouts, and a log of your effort.',
+    { mode: 'template', label: 'Today', icon: 'habits', top: ['Habits', 'Template', 'Forests', 'Season', 'Wall'] },
+    { mode: 'train', label: 'Train', icon: 'dumbbell',
       top: ['Gyms', 'Beginner', 'Intermediate', 'Hardcore', 'Sprints', 'Log', 'Book Stephen'] },
-    { key: 'recover', label: 'Recover', icon: 'leaf',
-      promise: 'Stretch, sauna, breathe and sleep, with a timer.',
+    { mode: 'recover', label: 'Recover', icon: 'leaf',
       top: ['Stretch', 'Yoga', 'Roll', 'Sauna & cold', 'Breathe', 'Sleep'] },
-    { key: 'fuel', label: 'Fuel', icon: 'drop',
-      promise: 'Water, protein and calories, one tap each.',
-      top: ['Water', 'Protein', 'Calories', 'Basics', 'Supplements'] },
-    { key: 'coach', label: 'Coach', icon: 'comment',
-      promise: 'A coach that logs what you tell it and nudges you.',
-      top: ['Chat', 'Morning', 'Capture', 'How I do it'] },
-    { key: 'together', label: 'Together', icon: 'people',
-      promise: 'Workouts and recovery with others, this week.',
-      top: ['This week', 'Work out', 'Recover', 'Adult Social Sports', 'Join'] },
+    { mode: 'fuel', label: 'Fuel', icon: 'drop',
+      top: ['Water', 'Protein', 'Calories', 'Basics', 'Supplements', 'Less of'] },
+    { mode: 'coach', label: 'Coach', icon: 'comment',
+      top: ['How I do it', 'Capture', 'Chat'] },
+    { mode: 'together', label: 'Together', icon: 'people',
+      top: ['Run clubs', 'Fitness this week', 'Work out', 'Recover', 'Adult Social Sports'] },
   ],
+  hosted: { habits: 'template' },
 };
