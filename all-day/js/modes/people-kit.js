@@ -338,7 +338,8 @@ export function eventList(host, items, empty) {
   if (!items.length) { host.appendChild(el('p', 'note pad', empty)); return; }
   const f = el('div', 'feed');
   app.know(items);
-  items.forEach((it) => { const n = cards.event(it); if (n) f.appendChild(n); });
+  /* no comment button: live it only says comments are coming */
+  items.forEach((it) => { const n = cards.event(it, { noComments: true }); if (n) f.appendChild(n); });
   host.appendChild(f);
 }
 

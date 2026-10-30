@@ -13379,6 +13379,7 @@ async function thePeopleApp(browser, base) {
     check(friends.includes('New in town, looking for friends to try the climbing gym') && friends.every((t) => !/singles/i.test(t)), 'Friends: the friend-finder lane, never a singles plan', JSON.stringify(friends));
     const ev = await page.$$eval('.pp-sec[data-sec="events"] .card.event .c-title', (n) => n.map((x) => x.textContent));
     check(ev.includes('Speed dating, 30s and 40s') && ev.includes('Newcomers social and happy hour'), 'Events: singles nights and mixers from the calendar', JSON.stringify(ev));
+    check(!(await page.$('.pp-sec[data-sec="events"] .card.event [data-act="comment"]')), 'an event card has no comment button that goes nowhere', '');
     check(await page.$eval('.pp-sec[data-sec="pitch"]', (s) => /RSVP on Meetup/.test(s.innerText) && /A back room on Church Street/.test(s.innerText) && [...s.querySelectorAll('a')].some((a) => /meetup\.com\/burlington-social-activites-group\/events\/demo-pitch/.test(a.href))), 'Pitch a friend: the next night from the Meetup calendar, with its RSVP', '');
     check(!!(await page.$('#subnav .worldsw')), 'Real life / Online shows', '');
     const vis = () => page.$$eval('.panel:not([hidden]) .pp-sec', (s) => s.filter((x) => x.offsetParent).map((x) => x.dataset.sec));
