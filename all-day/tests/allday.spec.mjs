@@ -1989,7 +1989,7 @@ async function thePhotos(browser, base) {
     await page.reload();
     await settle(page);
     check(await pmOn(page) && await viewPressed(page) === 'news:false photos:true square:false recaps:false', 'a reload opens on the photos again', await viewPressed(page));
-    await page.goto(base + '/all-day/?demo=1');
+    await page.goto(base + '/all-day/?demo=1#wire');
     await settle(page);
     check(await pmOn(page), 'and so does a new visit to the Wire', '');
     await page.click('#subnav .wmode[data-view="news"]');
@@ -4242,8 +4242,10 @@ async function theWhatNow(browser, base) {
   await group('What Now, Spin (demo)', async () => {
     /* the pool depends on the hour and the pick on Math.random, so a real
        clock let "the answer spells out its reason" fail when a late-night
-       pick had no reason to give: a Burlington afternoon and a fixed seed */
-    const { ctx, page, errors } = await newPage(browser, base, { clock: etAt(14), seed: 20261017 });
+       pick had no reason to give: a Burlington afternoon and a fixed seed
+       (20261029 since What Now moved to Out, whose shell draws its own
+       random numbers first, so the old seed landed on a pick with no reason) */
+    const { ctx, page, errors } = await newPage(browser, base, { clock: etAt(14), seed: 20261029 });
     await page.goto(base + '/all-day/?demo=1#whatnow');
     await page.waitForSelector(wnPanel + ' .spin .big:not([disabled])', { timeout: 15000 });
     check(await page.$eval('#subnav .chip.on', (b) => /Spin/.test(b.innerText)), 'the chip row is the mode switch, Spin first', '');
@@ -12026,15 +12028,15 @@ async function sectionPills(browser, base) {
       return { sheet: !document.querySelector('#sheet:not([hidden]) .secsheet'), on: on.dataset.chip, head: Math.round(head.top), vh: innerHeight, shown: r.left >= sc.left - 1 && r.right <= sc.right + 1 };
     }, last);
     check(after.sheet && after.on === last && after.head < after.vh && after.shown, 'a row closes the sheet, scrolls to that section, and the pill scrolls to show it on', JSON.stringify(after));
-    /* a pill that fits shows no All button: the first of these whose pill fits at 390 (Habits under Build | Habits did, before wave 1 moved it) */
-    let fitTab = null, habitsFit = null;
-    for (const t of ['habits', 'watch', 'onair', 'people', 'vintage', 'games']) {
-      await goTab(page, t);
-      await page.waitForTimeout(400);
-      const r = await page.$eval('#subnav .secpill', (w) => ({ over: w.classList.contains('over'), all: getComputedStyle(w.querySelector('.secpill-all')).display })).catch(() => null);
-      if (r && !r.over) { fitTab = t; habitsFit = r; break; }
-    }
-    check(!!fitTab && habitsFit.all === 'none', 'a pill that fits (' + fitTab + ') has no All button', JSON.stringify(habitsFit));
+    /* a pill that fits shows no All button. At 390 every tab's pill runs past the edge since wave 1
+       (Habits, the one that fit, sat under The Build's switch); on a wide screen Watch's fits */
+    const wide = await newPage(browser, base, { viewport: { width: 1280, height: 800 } });
+    await wide.page.goto(base + '/all-day/?demo=1#watch');
+    await settle(wide.page);
+    await wide.page.waitForTimeout(400);
+    const habitsFit = await wide.page.$eval('#subnav .secpill', (w) => ({ over: w.classList.contains('over'), all: getComputedStyle(w.querySelector('.secpill-all')).display }));
+    check(!habitsFit.over && habitsFit.all === 'none', 'a pill that fits (Watch, at 1280) has no All button', JSON.stringify(habitsFit));
+    await wide.ctx.close();
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
   });
