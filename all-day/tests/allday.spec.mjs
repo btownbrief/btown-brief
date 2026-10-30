@@ -13632,6 +13632,30 @@ async function theEatMarket(browser, base) {
     await ctx.close();
   });
 
+  await group('eat market: the rescue board, live once its SQL is pasted', async () => {
+    const posts = [
+      { id: 'r1', board: 'rescue', kind: 'rescue', title: 'Six bowls of pho at close', body: '', author: 'Linh', meta: { spot: 'A pho shop on North Ave', until: '9 pm', portions: 6 }, created_at: new Date(Date.now() - 3600e3).toISOString(), expires_at: new Date(Date.now() + 20 * 3600e3).toISOString() },
+      { id: 'r2', board: 'rescue', kind: 'rescue', title: 'Bread, two dollars', body: '', author: 'Sam', meta: { spot: 'A bakery', until: '7 pm', price: 2 }, created_at: new Date(Date.now() - 7200e3).toISOString(), expires_at: new Date(Date.now() + 20 * 3600e3).toISOString() },
+    ];
+    const calls = [];
+    const rpc = (fn, body) => {
+      calls.push([fn, body]);
+      if (fn === 'nn_rules') return { version: 3, boards: { rescue: { premod: false } } };
+      if (fn === 'nn_posts_list') return body.p_board === 'rescue' ? posts : [];
+      return undefined;
+    };
+    const { ctx, page, errors } = await newPage(browser, base, { rpc });
+    await page.goto(base + '/eat/#market/rescue');
+    await page.waitForSelector('#panel-market [data-sec="rescue"] .card.board', { timeout: 15000 });
+    const shown = await page.$$eval('#panel-market [data-sec="rescue"] .card.board', (cs) => cs.map((c) => c.dataset.k));
+    check(JSON.stringify(shown) === JSON.stringify(['b-r1']), 'the live board shows the free post, never the priced one', shown.join(','));
+    check(calls.some(([fn, b]) => fn === 'nn_posts_list' && b.p_board === 'rescue'), 'it reads the rescue board on the server', '');
+    check(!!(await page.$('#panel-market [data-sec="rescue"] .sec .btn')), 'Post leftovers is offered', '');
+    check(!/Opens soon/.test(await page.$eval('#panel-market [data-sec="rescue"]', (s) => s.innerText)), 'and Opens soon is gone', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
   await group('eat market: the demo', async () => {
     const { ctx, page, errors } = await newPage(browser, base);
     await page.goto(base + '/eat/?demo=1#market');
