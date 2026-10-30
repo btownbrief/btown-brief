@@ -38,6 +38,7 @@ import path from 'node:path';
 import { FakeHabits } from '../js/habits-fake.js';
 import { directoryFrom } from '../js/food-asks.js';
 import * as CH from '../js/challenge-core.js';
+import { bodyTests } from './body-app.mjs';
 
 const require = createRequire(import.meta.url);
 let chromium;
@@ -12797,7 +12798,8 @@ async function theApps(browser, base) {
     }
     /* a mode is hosted once per app and its route is its own key */
     check(APPS.every((a) => new Set(a.tabs.filter((t) => t.mode).map((t) => t.mode)).size === a.tabs.filter((t) => t.mode).length), 'no app hosts a mode twice', '');
-    const hosts = APPS.flatMap((a) => a.tabs.filter((t) => t.mode).map((t) => a.id + ':' + t.mode));
+    /* a mode can be on the bar or hosted in another tab's cell (Body's Habits, in Today) */
+    const hosts = APPS.flatMap((a) => a.tabs.filter((t) => t.mode).map((t) => a.id + ':' + t.mode).concat(Object.keys(a.hosted || {}).map((m) => a.id + ':' + m)));
     check(['out:whatnow', 'eat:food', 'people:people', 'body:habits', 'play:games'].every((h) => hosts.includes(h)), 'the built modes are hosted where the map puts them', hosts.join(', '));
     /* problems() says what is wrong, in words */
     const broken = { ...APPS[1], id: 'x', tabs: APPS[1].tabs.slice(0, 4).concat([{ key: 'events', label: 'Again', icon: 'calendar', promise: 'p' }, { key: 'Bad-Key' }]) };
@@ -12886,7 +12888,9 @@ async function theApps(browser, base) {
                 cards: p.querySelectorAll('[data-k]').length + p.querySelectorAll('.sec').length, err: !!p.querySelector('.errbox'), title: document.getElementById('mast-title').textContent,
                 doc: document.title, world: !!document.querySelector('#subnav .worldsw') };
             });
-            check(st.id === 'panel-' + key && !st.err, key + ': its panel shows, no error box', JSON.stringify(st));
+            /* a cell can land on a mode it hosts (Body's Today opens Habits) */
+            const hostedHere = (a.hosted || {})[st.id.replace(/^panel-/, '')] === key;
+            check((st.id === 'panel-' + key || hostedHere) && !st.err, key + ': its panel shows, no error box', JSON.stringify(st));
             if (a.id !== 'all-day') check(st.title === t.label, key + ': the mast names it ' + t.label, st.title);
             if (!t.mode && !demo) {
               check(st.promise && st.h2 === t.label && st.line === t.promise && JSON.stringify(st.tops) === JSON.stringify(t.top), key + ': live, its promise and the top tabs to come', JSON.stringify(st));
@@ -12899,7 +12903,7 @@ async function theApps(browser, base) {
               check(!st.promise && st.cards > 0, key + ': the hosted mode draws its screen', JSON.stringify(st));
               check(!st.world, key + ': no Real life / Online on a mode that does not mix', '');
             }
-            if (a.id !== 'all-day') check(st.doc === (key === keys[0] ? a.name : t.label + ' · ' + a.name) + ' — Burlington Brief', key + ': the page title', st.doc);
+            if (a.id !== 'all-day') check(st.doc === (key === keys[0] && !hostedHere ? a.name : t.label + ' · ' + a.name) + ' — Burlington Brief', key + ': the page title', st.doc);
             await pageRules(page, key, combo.viewport.width);
           }
           /* the screenshot: the first shelf tab, at its top */
@@ -13301,6 +13305,9 @@ await mkdir(SHOTS, { recursive: true });
 await staticChecks();
 const { base, proc } = await serve();
 const browser = await chromium.launch();
+/* Body's tabs (wave 1): their cases are in body-app.mjs */
+const theBody = (browser, base) => bodyTests(browser, base, { group, check, newPage, pageRules, SHOTS, REPO });
+
 /* ONLY=shellFixes,boards runs just those groups while iterating; the full
    matrix is the one that counts. */
 const ONLY = (process.env.ONLY || '').split(',').filter(Boolean);
@@ -13341,6 +13348,7 @@ try {
   await run(fullPagesAndAsks);
   await run(theApps);
   await run(accountData);
+  await run(theBody);
 } finally {
   await browser.close();
   proc.kill();

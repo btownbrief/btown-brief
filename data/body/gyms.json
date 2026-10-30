@@ -1,0 +1,1679 @@
+{
+ "_comment": "Body app, Train tab, Gyms. Every gym and fitness facility in Burlington, South Burlington, Winooski, Essex, Williston and Colchester that we could confirm open. Prices and hours are copied as published on each facility's own site (or the booking page its site links to) on the date in 'verified'. 'verified' is null when the core facts (address, hours, at least one price) could not all be confirmed on the facility's own site; 'unverified' names each missing or shaky field and why. In 'has', null means the site does not say. Prices change; re-check before quoting one in an edition.",
+ "updated": "2026-10-29",
+ "region": [
+  "Burlington",
+  "South Burlington",
+  "Winooski",
+  "Essex",
+  "Williston",
+  "Colchester"
+ ],
+ "kinds": {
+  "gym": "Gym",
+  "rec-center": "Rec center",
+  "campus-rec": "Campus rec",
+  "crossfit": "CrossFit and functional",
+  "studio": "Class studio",
+  "climbing": "Climbing",
+  "boxing": "Boxing",
+  "martial-arts": "Martial arts",
+  "yoga": "Yoga",
+  "pilates": "Pilates"
+ },
+ "gyms": [
+  {
+   "id": "snap-fitness-burlington",
+   "name": "Snap Fitness Burlington",
+   "kind": "gym",
+   "town": "Burlington",
+   "address": "1127 North Ave, Burlington, VT 05408",
+   "hours": "Members 24/7; staffed Mon-Thu 10am-6pm, Fri-Sat 10am-2pm, Sun not staffed",
+   "day_pass": null,
+   "membership": null,
+   "intro_offer": null,
+   "has": {
+    "machines": true,
+    "free_weights": true,
+    "pool": null,
+    "sauna": null,
+    "courts": null,
+    "classes": true,
+    "childcare": null
+   },
+   "also": "24-hour key card access, private showers and bathrooms, Rogue racks, Myzone, personal training",
+   "beginner": "Fine for a beginner during staffed hours, when you can get a tour and ask staff; outside those hours you are on your own.",
+   "url": "https://www.snapfitness.com/us/gyms/burlington-vt",
+   "source_urls": [
+    "https://www.snapfitness.com/us/gyms/burlington-vt",
+    "https://www.snapfitness.com/us/gyms"
+   ],
+   "verified": null,
+   "unverified": [
+    "day_pass: not published; call 802-881-6553",
+    "membership: prices not published on the club page (a 2024 member review mentions $50/month, which is not a price source)"
+   ],
+   "notes": "Locally owned franchise. Snap's own list shows no Colchester or Winooski club; the nearest other one is Milton (outside scope). A 'Prepay and Save' special is advertised without a price."
+  },
+  {
+   "id": "rehabgym-colchester",
+   "name": "The RehabGYM (Colchester)",
+   "kind": "gym",
+   "town": "Colchester",
+   "address": "905 Roosevelt Hwy, Colchester, VT",
+   "hours": null,
+   "day_pass": null,
+   "membership": null,
+   "intro_offer": null,
+   "has": {
+    "machines": null,
+    "free_weights": null,
+    "pool": null,
+    "sauna": null,
+    "courts": null,
+    "classes": true,
+    "childcare": null
+   },
+   "also": "physical therapy and athletic training on site",
+   "beginner": "Likely comfortable for a cautious beginner, since trainers work alongside physical therapists, but details of the gym floor are not published.",
+   "url": "https://rehabgym.com/colchester-rehabgym/",
+   "source_urls": [
+    "https://rehabgym.com/",
+    "https://rehabgym.com/colchester-rehabgym/",
+    "http://rehabgym.com/fitness-contact"
+   ],
+   "verified": null,
+   "unverified": [
+    "address: ZIP not shown on the location page",
+    "hours: not published",
+    "day_pass: not published",
+    "membership: offered but price not published (contact form only); call 802-861-0111",
+    "has: equipment not listed"
+   ],
+   "notes": "Primarily a physical therapy clinic that also sells gym memberships and group classes; Colchester site opened July 2023 per staff bio."
+  },
+  {
+   "id": "planet-fitness-essex-junction",
+   "name": "Planet Fitness Essex Junction",
+   "kind": "gym",
+   "town": "Essex",
+   "address": "87 Pearl St, Essex Junction, VT 05452",
+   "hours": "Open and staffed 24/7 (holiday hours vary)",
+   "day_pass": "Free day pass through the PF app or by stopping by the club",
+   "membership": "$15/mo Classic ($29 startup fee) or $24.99/mo PF Black Card ($1 startup fee, offer expires Nov 1), plus $49 annual fee and taxes/fees; no commitment",
+   "intro_offer": null,
+   "has": {
+    "machines": true,
+    "free_weights": true,
+    "pool": null,
+    "sauna": null,
+    "courts": null,
+    "classes": true,
+    "childcare": null
+   },
+   "also": "massage chairs, tanning and Total Body Enhancement (Black Card), functional training area, Smith machines",
+   "beginner": "Very beginner friendly: certified trainers give free in-club orientation and instruction on the machines, and the club markets itself as a Judgement Free Zone.",
+   "url": "https://www.planetfitness.com/gyms/essex-junction-vt",
+   "source_urls": [
+    "https://www.planetfitness.com/gyms/essex-junction-vt",
+    "https://www.planetfitness.com/daypass",
+    "https://www.planetfitness.com/clubs/vt"
+   ],
+   "verified": "2026-10-29",
+   "unverified": [],
+   "notes": "Planet Fitness's site blocks simple fetches; pages were read in a browser. Promo pricing (the $1 Black Card startup fee) expires Nov 1, 2026, so startup fees may change. Some directories list this club at 57 River Rd; the club's own page says 87 Pearl St. The annual fee is billed on or shortly after Dec 1."
+  },
+  {
+   "id": "edge-essex-gauthier-drive",
+   "name": "The EDGE Sports & Fitness (Gauthier Drive, Essex)",
+   "kind": "gym",
+   "town": "Essex",
+   "address": "4 Gauthier Drive, Essex, VT 05452",
+   "hours": "Mon-Thu 5am-9pm, Fri 5am-8pm, Sat 7am-6pm, Sun 7am-5pm",
+   "day_pass": "$25 plus tax (adult 14+, Active EDGE level); $10 plus tax ages 2-13 with a paying adult; $30 plus tax for tennis-level use",
+   "membership": null,
+   "intro_offer": null,
+   "has": {
+    "machines": true,
+    "free_weights": true,
+    "pool": true,
+    "sauna": true,
+    "courts": true,
+    "classes": true,
+    "childcare": null
+   },
+   "also": "4 indoor and 2 outdoor tennis courts, 6-lane lap pool, therapy pool, 1/8-mile indoor track, gymnasium, hot tub, cycling studio, physical therapy",
+   "beginner": "Friendly for a first-timer: a full fitness center with circuit machines and staff, and the club offers fitness consultations and personal training.",
+   "url": "https://edgevt.com/members/club-locations/",
+   "source_urls": [
+    "https://edgevt.com/members/club-locations/",
+    "https://edgevt.com/wp-content/uploads/2026/07/Hours-Locations-Updated-7.2.26.png",
+    "https://edgevt.com/members/locations-2-2/",
+    "https://edgevt.com/our-facilities/",
+    "https://edgevt.com/kids-fitness/kids-and-fitness/"
+   ],
+   "verified": "2026-10-29",
+   "unverified": [
+    "membership: monthly membership prices are not published on edgevt.com (Join page is a contact form); call 802-860-3343",
+    "has.childcare: site describes a Kids & Fitness early-childhood childcare program (6 weeks to 5 years, Mon-Fri 8am-5pm) in Essex and South Burlington, not a drop-in kids room; which building it is in is not stated"
+   ],
+   "notes": "Hours are published only as an image ('Hours & Locations, effective July 2, 2026') on the Club Locations page; aquatic centers close 30 minutes before the club. Day fees and guest passes allow use of any EDGE location that day; guests need a guest registration form and photo ID. The Edge lists exactly four locations (two Essex, two South Burlington); no Williston location appears on its site. Membership levels named on the guest page: Active EDGE, Fitness EDGE, Ultimate EDGE (tennis), Pickleball."
+  },
+  {
+   "id": "edge-essex-morse-drive",
+   "name": "The EDGE Sports & Fitness (Morse Drive, Essex, pool only)",
+   "kind": "gym",
+   "town": "Essex",
+   "address": "4 Morse Drive, Essex, VT 05452",
+   "hours": "Mon-Thu 6am-7pm, Fri 6am-3pm, Sat-Sun 9am-1pm",
+   "day_pass": "$25 plus tax (adult 14+, Active EDGE level); $10 plus tax ages 2-13 with a paying adult; $30 plus tax for tennis-level use",
+   "membership": null,
+   "intro_offer": null,
+   "has": {
+    "machines": false,
+    "free_weights": false,
+    "pool": true,
+    "sauna": null,
+    "courts": false,
+    "classes": null,
+    "childcare": null
+   },
+   "also": "6-lane lap pool, hot tub",
+   "beginner": "Not a place to use machines: the site describes this building as pool only.",
+   "url": "https://edgevt.com/members/club-locations/",
+   "source_urls": [
+    "https://edgevt.com/members/club-locations/",
+    "https://edgevt.com/wp-content/uploads/2026/07/Hours-Locations-Updated-7.2.26.png",
+    "https://edgevt.com/members/locations-2-2/",
+    "https://edgevt.com/our-facilities/"
+   ],
+   "verified": "2026-10-29",
+   "unverified": [
+    "membership: monthly membership prices are not published on edgevt.com (Join page is a contact form); call 802-860-3343",
+    "has.sauna: features list names a lap pool and hot tub only; sauna not mentioned"
+   ],
+   "notes": "Pool-only site ('4 Morse Dr. - Essex - Pool Only' on the facilities page). Hours are published only as an image ('Hours & Locations, effective July 2, 2026') on the Club Locations page; aquatic centers close 30 minutes before the club. Day fees and guest passes allow use of any EDGE location that day; guests need a guest registration form and photo ID. The Edge lists exactly four locations (two Essex, two South Burlington); no Williston location appears on its site. Membership levels named on the guest page: Active EDGE, Fitness EDGE, Ultimate EDGE (tennis), Pickleball."
+  },
+  {
+   "id": "crunch-fitness-south-burlington",
+   "name": "Crunch Fitness Burlington",
+   "kind": "gym",
+   "town": "South Burlington",
+   "address": "937 Shelburne Road, South Burlington, VT 05403",
+   "hours": "Mon-Thu 5am-11pm, Fri 5am-9pm, Sat-Sun 7am-5pm",
+   "day_pass": "Free one-day trial pass",
+   "membership": "Base $11.99/mo with 12-month commitment ($17.99/mo month-to-month), Peak $29.99/mo, Peak Results $34.99/mo; $69.99 annual fee, $2 processing fee and taxes; enrollment fee shown as $0.31 promo (regularly $75)",
+   "intro_offer": null,
+   "has": {
+    "machines": true,
+    "free_weights": true,
+    "pool": null,
+    "sauna": null,
+    "courts": null,
+    "classes": true,
+    "childcare": null
+   },
+   "also": "HIIT Zone, indoor cycling (Ride) classes, Power Half Hour circuit, HydroMassage and tanning (Peak Results), Pilates classes, personal training",
+   "beginner": "Beginner friendly: a dedicated 30-minute strength circuit and a CrunchONE Kickoff orientation help new members learn the machines.",
+   "url": "https://www.crunch.com/locations/burlington",
+   "source_urls": [
+    "https://www.crunch.com/locations/burlington"
+   ],
+   "verified": "2026-10-29",
+   "unverified": [
+    "has.sauna: club copy mentions 'saunas, steam rooms' only as general brand language, not confirmed for this club"
+   ],
+   "notes": "There is a local Crunch. Crunch calls it 'Burlington' but it is in South Burlington on Shelburne Road (former Kmart space per 2023 press coverage). Some listings say 935 Shelburne Rd; the club page says 937. Promo enrollment pricing may change. Pages were read in a browser."
+  },
+  {
+   "id": "edge-south-burlington-eastwood-drive",
+   "name": "The EDGE Sports & Fitness (Eastwood Drive, South Burlington)",
+   "kind": "gym",
+   "town": "South Burlington",
+   "address": "75 Eastwood Drive, South Burlington, VT 05403",
+   "hours": "Mon-Thu 5am-9pm, Fri 5am-8pm, Sat 7am-6pm, Sun 7am-5pm",
+   "day_pass": "$25 plus tax (adult 14+, Active EDGE level); $10 plus tax ages 2-13 with a paying adult; $30 plus tax for tennis-level use",
+   "membership": null,
+   "intro_offer": null,
+   "has": {
+    "machines": true,
+    "free_weights": true,
+    "pool": true,
+    "sauna": true,
+    "courts": true,
+    "classes": null,
+    "childcare": null
+   },
+   "also": "3 indoor and 4 outdoor tennis courts, 8-lane lap pool, splash pool, hot tub, cardio center, physical therapy",
+   "beginner": "Friendly for a first-timer: a staffed fitness and cardio center, with fitness consultations and personal training available.",
+   "url": "https://edgevt.com/members/club-locations/",
+   "source_urls": [
+    "https://edgevt.com/members/club-locations/",
+    "https://edgevt.com/wp-content/uploads/2026/07/Hours-Locations-Updated-7.2.26.png",
+    "https://edgevt.com/members/locations-2-2/",
+    "https://edgevt.com/our-facilities/",
+    "https://edgevt.com/kids-fitness/kids-and-fitness/"
+   ],
+   "verified": "2026-10-29",
+   "unverified": [
+    "membership: monthly membership prices are not published on edgevt.com (Join page is a contact form); call 802-860-3343",
+    "has.childcare: site describes a Kids & Fitness early-childhood childcare program (6 weeks to 5 years, Mon-Fri 8am-5pm) in Essex and South Burlington, not a drop-in kids room; which building it is in is not stated",
+    "has.classes: group fitness studios are not listed among this location's features"
+   ],
+   "notes": "Hours are published only as an image ('Hours & Locations, effective July 2, 2026') on the Club Locations page; aquatic centers close 30 minutes before the club. Day fees and guest passes allow use of any EDGE location that day; guests need a guest registration form and photo ID. The Edge lists exactly four locations (two Essex, two South Burlington); no Williston location appears on its site. Membership levels named on the guest page: Active EDGE, Fitness EDGE, Ultimate EDGE (tennis), Pickleball."
+  },
+  {
+   "id": "edge-south-burlington-twin-oaks",
+   "name": "The EDGE Sports & Fitness (West Twin Oaks Terrace, South Burlington)",
+   "kind": "gym",
+   "town": "South Burlington",
+   "address": "142 West Twin Oaks Terrace, South Burlington, VT 05403",
+   "hours": "Mon-Thu 5:30am-9pm, Fri 5:30am-8pm, Sat 7am-6pm, Sun 7am-5pm",
+   "day_pass": "$25 plus tax (adult 14+, Active EDGE level); $10 plus tax ages 2-13 with a paying adult; $30 plus tax for tennis-level use; pickleball open play (2 hours) $30 plus tax",
+   "membership": null,
+   "intro_offer": null,
+   "has": {
+    "machines": true,
+    "free_weights": true,
+    "pool": null,
+    "sauna": true,
+    "courts": true,
+    "classes": true,
+    "childcare": null
+   },
+   "also": "3 indoor tennis courts, 9 indoor and 8 outdoor pickleball courts, 3 squash courts, 1 racquetball court, cycling studio, wellness lounge, physical therapy, nutrition services",
+   "beginner": "Friendly for a first-timer: a staffed fitness center plus fitness consultations and personal training.",
+   "url": "https://edgevt.com/members/club-locations/",
+   "source_urls": [
+    "https://edgevt.com/members/club-locations/",
+    "https://edgevt.com/wp-content/uploads/2026/07/Hours-Locations-Updated-7.2.26.png",
+    "https://edgevt.com/members/locations-2-2/",
+    "https://edgevt.com/our-facilities/",
+    "https://edgevt.com/kids-fitness/kids-and-fitness/"
+   ],
+   "verified": "2026-10-29",
+   "unverified": [
+    "membership: monthly membership prices are not published on edgevt.com (Join page is a contact form); call 802-860-3343",
+    "has.childcare: site describes a Kids & Fitness early-childhood childcare program (6 weeks to 5 years, Mon-Fri 8am-5pm) in Essex and South Burlington, not a drop-in kids room; which building it is in is not stated",
+    "has.pool: no pool is listed among this location's features"
+   ],
+   "notes": "Hours are published only as an image ('Hours & Locations, effective July 2, 2026') on the Club Locations page; aquatic centers close 30 minutes before the club. Day fees and guest passes allow use of any EDGE location that day; guests need a guest registration form and photo ID. The Edge lists exactly four locations (two Essex, two South Burlington); no Williston location appears on its site. Membership levels named on the guest page: Active EDGE, Fitness EDGE, Ultimate EDGE (tennis), Pickleball."
+  },
+  {
+   "id": "rehabgym-williston",
+   "name": "The RehabGYM (Williston)",
+   "kind": "gym",
+   "town": "Williston",
+   "address": "373 Blair Park Rd, Williston, VT",
+   "hours": null,
+   "day_pass": null,
+   "membership": null,
+   "intro_offer": null,
+   "has": {
+    "machines": null,
+    "free_weights": null,
+    "pool": null,
+    "sauna": null,
+    "courts": null,
+    "classes": true,
+    "childcare": null
+   },
+   "also": "physical therapy and athletic training on site, personal training",
+   "beginner": "Likely comfortable for a cautious beginner, since trainers work alongside physical therapists, but details of the gym floor are not published.",
+   "url": "https://rehabgym.com/williston-rehabgym/",
+   "source_urls": [
+    "https://rehabgym.com/",
+    "https://rehabgym.com/williston-rehabgym/",
+    "http://rehabgym.com/fitness-contact"
+   ],
+   "verified": null,
+   "unverified": [
+    "address: ZIP not shown on the location page",
+    "hours: not published",
+    "day_pass: not published",
+    "membership: offered but price not published (contact form only); call 802-876-6000",
+    "has: equipment not listed"
+   ],
+   "notes": "Primarily a physical therapy clinic that also sells gym memberships and group classes."
+  },
+  {
+   "id": "greater-burlington-ymca",
+   "name": "Greater Burlington YMCA (Pomerleau Family Y)",
+   "kind": "rec-center",
+   "town": "Burlington",
+   "address": "298 College Street, Burlington, VT",
+   "hours": "Mon-Thu 5am-9pm, Fri 5am-8pm, Sat-Sun 8am-6pm (holiday hours vary; Thanksgiving 8am-noon)",
+   "day_pass": "$15 adult (18-64), $10 teen/youth (17 and under), $10 senior (65+), $25 family; card only, no cash",
+   "membership": "$38-$98/mo plus $40-$60 join fee (adult 24-64: $67/mo plus $40); month-to-month; financial assistance available",
+   "intro_offer": null,
+   "has": {
+    "machines": true,
+    "free_weights": true,
+    "pool": true,
+    "sauna": true,
+    "courts": true,
+    "classes": true,
+    "childcare": true
+   },
+   "also": "indoor walking track, lap pool and 86-degree program pool, splash pad, pool-deck sauna, gymnasium (basketball, volleyball, pickleball), turf functional area, cycling studio, universal locker room",
+   "beginner": "Very beginner friendly: floor staff help you get started, machines are arranged in a circuit with QR-code how-to videos, and the Y publishes tips for starting strength training.",
+   "url": "https://www.gbymca.org/membership/membership-types-rates/",
+   "source_urls": [
+    "https://www.gbymca.org/",
+    "https://www.gbymca.org/membership/membership-types-rates/",
+    "https://www.gbymca.org/membership/hours-schedules/",
+    "http://gbymca.org/wellness/cardio-and-strength",
+    "https://www.gbymca.org/programs/child-care-camps/member-child-care/"
+   ],
+   "verified": "2026-10-29",
+   "unverified": [
+    "address: ZIP code not shown on the Y's site (only '298 College Street, Burlington, VT')"
+   ],
+   "notes": "Member Child Care is free for Family members only (ages 0-10, reservations encouraged) and is not available to day-pass users. Join fee waived if you join within 30 days after 2 or more day-pass visits. 2.5% fee on card payments. Teens 13-17 need a Teen Wellness Orientation for the fitness floor."
+  },
+  {
+   "id": "miller-community-recreation-center",
+   "name": "Robert Miller Community & Recreation Center",
+   "kind": "rec-center",
+   "town": "Burlington",
+   "address": "130 Gosse Court, Burlington, VT 05408",
+   "hours": "Office Mon, Wed-Fri 8am-8pm; Tue 8am-4pm. CLOSED for renovations Sept 21 - Nov 6, 2026",
+   "day_pass": "No fitness room or open-gym day pass listed; drop-in pickleball $7 per player (10-visit card $50, 25-visit $100), Oct-May",
+   "membership": null,
+   "intro_offer": null,
+   "has": {
+    "machines": false,
+    "free_weights": false,
+    "pool": null,
+    "sauna": null,
+    "courts": true,
+    "classes": null,
+    "childcare": null
+   },
+   "also": "7,000 sq ft gymnasium with locker rooms and showers, free Tue-Fri morning walking program, outdoor fitness equipment by the entrance, disc golf discs to borrow",
+   "beginner": "Not a machine gym: there is no indoor fitness or weight room listed, so a first-timer looking for machines should go elsewhere.",
+   "url": "https://www.burlingtonvt.gov/Facilities/Facility/Details/Robert-Miller-Community-Recreation-Cente-11",
+   "source_urls": [
+    "https://www.burlingtonvt.gov/Facilities/Facility/Details/Robert-Miller-Community-Recreation-Cente-11",
+    "https://www.burlingtonvt.gov/735/Parks-Recreation-Waterfront"
+   ],
+   "verified": "2026-10-29",
+   "unverified": [
+    "membership: no membership is mentioned on the city page",
+    "has.machines/has.free_weights: set false because the page lists no fitness or weight room among its spaces (gym, art room, community room, conference room); not stated outright"
+   ],
+   "notes": "The old enjoyburlington.com page now redirects to burlingtonvt.gov (HTTPS refused today). Drop-in pickleball schedule: beginner Thu 1-3pm; intermediate Mon, Tue, Fri 1-3pm; high intermediate Tue, Thu 11am-1pm and Sat 8:30-10:30am; advanced Mon, Wed, Fri 11am-1pm. The gym reopens for voting Nov 3. Gym rental $65/hour. Info: 802-540-1058."
+  },
+  {
+   "id": "colchester-recreation-center",
+   "name": "Colchester Recreation Center",
+   "kind": "rec-center",
+   "town": "Colchester",
+   "address": "80 Dick Mazza Drive, Colchester, VT 05446",
+   "hours": "Mon-Thu 5:30am-9pm, Fri 5:30am-8pm, Sat 7am-6pm, Sun 7am-5pm",
+   "day_pass": "$15 resident / $18 non-resident adult; $12/$15 senior (62+); $28/$34 family",
+   "membership": "Adult annual $600 ($50/mo) resident or $780 ($65/mo) non-resident; 3-month $200/$240; senior $504/$612 a year; studio classes add $15/$25 per month",
+   "intro_offer": null,
+   "has": {
+    "machines": true,
+    "free_weights": true,
+    "pool": false,
+    "sauna": null,
+    "courts": true,
+    "classes": true,
+    "childcare": null
+   },
+   "also": "elevated indoor walking/running track, full-size gymnasium with open play and pickleball, fitness studio, personal training, walking-track-only membership ($75/$100 for 3 months)",
+   "beginner": "Very beginner friendly: the town encourages every new member to book a free 20-minute equipment orientation.",
+   "url": "https://www.colchestervt.gov/3336/Memberships",
+   "source_urls": [
+    "https://www.colchestervt.gov/3336/Memberships",
+    "https://www.colchestervt.gov/3338/Colchester-Recreation-Center",
+    "https://www.colchestervt.gov/DocumentCenter/View/10930/Membership-Guide"
+   ],
+   "verified": "2026-10-29",
+   "unverified": [
+    "has.pool: no pool listed among amenities (set false on that basis)"
+   ],
+   "notes": "Opened Feb 2025. Memberships must be bought in person (no online sign-up). Prices from the April 2026 Membership Guide; 3% surcharge on credit cards. Ages 15+ for the fitness center. Doors lock 15 minutes before closing."
+  },
+  {
+   "id": "uvm-campus-recreation",
+   "name": "UVM Campus Recreation (Gucciardi Fitness Center)",
+   "kind": "campus-rec",
+   "town": "Burlington",
+   "address": "131 Catamount Way, Burlington, VT 05405",
+   "hours": null,
+   "day_pass": "$12 community day pass",
+   "membership": "Community: $45/mo plus $25 activation fee, monthly auto-renew; $40 5-visit pass (summer only); group fitness costs extra",
+   "intro_offer": null,
+   "has": {
+    "machines": true,
+    "free_weights": true,
+    "pool": true,
+    "sauna": null,
+    "courts": true,
+    "classes": true,
+    "childcare": null
+   },
+   "also": "indoor track and courts, squash courts, Gutterson ice rink, about 8,000 sq ft fitness center with 56 cardio machines, Olympic platforms",
+   "beginner": "Workable for a beginner: staff can explain how machines work and there are selectorized machine demo videos, but staff do not coach exercise technique, and under-18s are not allowed in the fitness center.",
+   "url": "https://uvmcampusrec.com/sports/2026/5/8/community-membership.aspx",
+   "source_urls": [
+    "https://uvmcampusrec.com/sports/2026/5/8/community-membership.aspx",
+    "https://uvmcampusrec.com/sports/2017/7/5/membership",
+    "https://uvmcampusrec.com/sports/2017/11/15/gucciardi-fitness-center.aspx?id=85",
+    "https://uvmcampusrec.com/sports/2017/7/5/contact-us",
+    "https://uvmcampusrec.com/sports/2017/7/5/facility-schedules",
+    "https://uvmcampusrec.com/news/2026/10/19/group-fitness-price-drop"
+   ],
+   "verified": null,
+   "unverified": [
+    "hours: published only in UVM's EMS calendar ('Open Rec' schedules), which returned an error when fetched; call the front desk at 802-656-4483",
+    "address: 131 Catamount Way is Campus Rec's mailing address; the gym is in the Campus Recreation & Fitness Center in the PFG Athletic/Rec Complex",
+    "has.sauna: not mentioned"
+   ],
+   "notes": "Yes, UVM sells community access: buy the membership or $12 day pass in person at the Gucciardi Fitness Center front desk. Group fitness is not included: $12 single class, or $75 semester / $200 academic year for facility members (a $25 mid-semester price drop began Oct 19). Hours vary during academic breaks. Under 16 must be with an adult."
+  },
+  {
+   "id": "activevt",
+   "name": "ActiveVT (Activity CrossFit)",
+   "kind": "crossfit",
+   "town": "Burlington",
+   "address": "1 Main St, Burlington, VT 05401 (inside Union Station)",
+   "hours": "Mon, Wed, Fri 6:45am-6:15pm; Tue, Thu 6:45am-7:30pm; Sat-Sun closed",
+   "day_pass": "$25 single class drop-in (experienced exercisers only)",
+   "membership": "$150-$200 per 4 weeks ($200 unlimited CrossFit, $200 Active Aging, $150 Strength for Life or Lunch Crunch)",
+   "intro_offer": null,
+   "has": {
+    "machines": null,
+    "free_weights": true,
+    "pool": null,
+    "sauna": null,
+    "courts": null,
+    "classes": true,
+    "childcare": null
+   },
+   "also": "Free intro; CrossFit membership requires 6 On Ramp sessions; Active Aging program for 60+; showers and about 100 lockers; personal training $125/session; nutrition coaching; no open gym",
+   "beginner": "Built for beginners: book a free No Sweat Intro, then complete 1-on-1 On Ramp sessions before joining classes.",
+   "url": "https://activevt.com/pricing/",
+   "source_urls": [
+    "https://activevt.com/",
+    "https://activevt.com/pricing/",
+    "https://activevt.com/drop-in/"
+   ],
+   "verified": "2026-10-29",
+   "unverified": [
+    "has.machines: not stated on site"
+   ],
+   "notes": "Listed on CrossFit.com as Activity CrossFit; its own site now brands it ActiveVT. Coaching-only gym: the site says it is not an access gym and offers no senior or student discounts. Waterfront location by the bike path."
+  },
+  {
+   "id": "crossfit-burlington",
+   "name": "CrossFit Burlington",
+   "kind": "crossfit",
+   "town": "Burlington",
+   "address": "39 Birchcliff Pkwy, Burlington, VT 05401",
+   "hours": "Mon-Fri 5-11am and 12-6:30pm, Sat 8am-12:30pm, Sun closed",
+   "day_pass": null,
+   "membership": "$135-$199 per 4 weeks ($188-$199 unlimited, $168 for 12 classes, $135 student unlimited); 10-class punch card $195",
+   "intro_offer": null,
+   "has": {
+    "machines": null,
+    "free_weights": true,
+    "pool": null,
+    "sauna": null,
+    "courts": null,
+    "classes": true,
+    "childcare": null
+   },
+   "also": "Free No-Sweat Intro consultation; Elements on-ramp package $225 (private $315); HYROX training; adaptive program; semi-private training $480-$650 per 4 weeks; personal training $90/session; limited open gym memberships",
+   "beginner": "Very beginner friendly: start with a free No-Sweat Intro talk, then the required four-session Elements package before joining group classes.",
+   "url": "https://crossfitburlington.com/pricing/",
+   "source_urls": [
+    "https://crossfitburlington.com/",
+    "https://crossfitburlington.com/pricing/",
+    "https://crossfitburlington.com/drop-in/"
+   ],
+   "verified": "2026-10-29",
+   "unverified": [
+    "day_pass: drop-ins welcome but no drop-in price is published; you fill out a form and a coach replies",
+    "has.machines: not stated on site"
+   ],
+   "notes": "South End box near Oakledge Park and the bike path, open since 2012. Drop-ins require 3+ months of barbell experience, including Olympic lifts. Memberships bill every 4 weeks, not monthly."
+  },
+  {
+   "id": "hwpo-gym-vt",
+   "name": "HWPO Gym VT (formerly 802 CrossFit)",
+   "kind": "crossfit",
+   "town": "Williston",
+   "address": "520 Avenue D, Williston, VT 05495",
+   "hours": "Class schedule only; see site (PushPress calendar)",
+   "day_pass": "$30 daily drop-in, $70 weekly; pre-booking required, no 5:30am drop-ins",
+   "membership": "$160-$200 per 4 weeks ($185-$200 unlimited, $175 for 12 sessions, $160 for 8 sessions); 10-session punch pass $250",
+   "intro_offer": null,
+   "has": {
+    "machines": null,
+    "free_weights": true,
+    "pool": null,
+    "sauna": true,
+    "courts": null,
+    "classes": true,
+    "childcare": null
+   },
+   "also": "Free trial class; Foundations on-ramp $225 (3 intro classes plus 4 weeks unlimited); cold plunge and sauna included with unlimited; open gym, Barbell Basics, Longevity and HYROX classes; student and military discounts on request",
+   "beginner": "Beginner friendly with a free trial class and a Foundations on-ramp; affiliate classes require prior CrossFit experience or Foundations, but Longevity, Barbell Basics, HYROX and open gym do not.",
+   "url": "https://gym.hwpotraining.com/pricing",
+   "source_urls": [
+    "https://gym.hwpotraining.com/802-crossfit",
+    "https://gym.hwpotraining.com/pricing",
+    "https://gym.hwpotraining.com/classes/drop-in",
+    "https://gym.hwpotraining.com/schedule"
+   ],
+   "verified": "2026-10-29",
+   "unverified": [
+    "hours: class times live in an embedded PushPress calendar that did not load as text",
+    "has.machines: not stated on site"
+   ],
+   "notes": "Home gym of five-time CrossFit Games champion Mat Fraser. 802 CrossFit moved operations here and rebranded; the CrossFit.com listing calls it Hard Work Pays Off CrossFit. Drop-ins need 24 hours notice."
+  },
+  {
+   "id": "ethos-athletics",
+   "name": "Ethos Athletics",
+   "kind": "studio",
+   "town": "Burlington",
+   "address": "208 Flynn Avenue, Suite 2Z, Burlington, VT 05401",
+   "hours": "Class schedule only; see site (Mindbody schedule)",
+   "day_pass": "$25 single group class drop-in; 5-class pass $100 (cash or Venmo to the instructor)",
+   "membership": null,
+   "intro_offer": null,
+   "has": {
+    "machines": null,
+    "free_weights": null,
+    "pool": null,
+    "sauna": null,
+    "courts": null,
+    "classes": true,
+    "childcare": null
+   },
+   "also": "Boxing-inspired classes (Do the Fight Thing, Boxfit), Strength Social class; personal training from $39 (30 min) and $80 (60 min), cheaper per person in groups of 2-4; massage therapy; 15% military discount",
+   "beginner": "Friendly to newcomers: the boxing classes say no experience is needed and all levels are welcome.",
+   "url": "https://www.ethosathleticsvt.com/pricing",
+   "source_urls": [
+    "https://www.ethosathleticsvt.com/",
+    "https://www.ethosathleticsvt.com/pricing",
+    "https://www.ethosathleticsvt.com/packages",
+    "https://www.ethosathleticsvt.com/schedule"
+   ],
+   "verified": "2026-10-29",
+   "unverified": [
+    "membership: no recurring membership published, only drop-ins, class passes and training packages",
+    "hours: site lists every day as 'Open' with no times; class times are in a Mindbody widget I could not read"
+   ],
+   "notes": "Private training studio in the South End. Note the domain is ethosathleticsvt.com; ethosathletics.com is a parked domain."
+  },
+  {
+   "id": "orangetheory-burlington",
+   "name": "Orangetheory Fitness Burlington",
+   "kind": "studio",
+   "town": "Burlington",
+   "address": "580 Shelburne Rd, Burlington, VT 05401",
+   "hours": "Mon-Fri 5am-8pm, Sat-Sun 6:45am-2pm",
+   "day_pass": "First class free; no single-class price published; 5-class pack $115, 10-class pack $219",
+   "membership": "$69-$169/mo (Basic $69, Elite $109, Premier unlimited $169; commitment rates lower)",
+   "intro_offer": null,
+   "has": {
+    "machines": true,
+    "free_weights": true,
+    "pool": null,
+    "sauna": null,
+    "courts": null,
+    "classes": true,
+    "childcare": null
+   },
+   "also": "Heart-rate-based interval classes with treadmills, rowers and strength; 30-day risk-free guarantee; late-2026 online promo of 50% off the first 2 months on Elite and Premier",
+   "beginner": "Easy for first-timers: first class is free and workouts scale to your heart rate.",
+   "url": "https://www.orangetheory.com/en-us/locations/burlington-vermont-1060",
+   "source_urls": [
+    "https://www.orangetheory.com/en-us/locations/burlington-vermont-1060"
+   ],
+   "verified": "2026-10-29",
+   "unverified": [
+    "has.machines and has.free_weights: inferred from the Orangetheory format, not stated on the studio page text I read",
+    "membership: prices read from the studio page's embedded product data; confirm the live display"
+   ],
+   "notes": "On Shelburne Rd at the Burlington and South Burlington line. Studio hours on the page are front-desk hours; book classes in the app."
+  },
+  {
+   "id": "artemis-fitness",
+   "name": "Artemis Fitness",
+   "kind": "studio",
+   "town": "South Burlington",
+   "address": "57 Fayette Dr, South Burlington, VT 05403",
+   "hours": "Session schedule only: small-group training Mon-Thu roughly 7am-6pm, Fri 6-11am, Sat 8-9am; Body Blast classes Mon and Wed 6am, Sat 10am",
+   "day_pass": null,
+   "membership": "$176-$396/mo for 4 to 12 semi-private sessions ($33-$44 per session); first month OnBoard program $99",
+   "intro_offer": null,
+   "has": {
+    "machines": null,
+    "free_weights": null,
+    "pool": null,
+    "sauna": null,
+    "courts": null,
+    "classes": true,
+    "childcare": null
+   },
+   "also": "Women only; small groups of 4-5 with a trainer; 30-day OnBoard program ($99 for 1 private and 3 small-group sessions); members-only bonus classes; month-to-month, no contract",
+   "beginner": "Built for beginners and women nervous about gyms: the $99 OnBoard month starts with a one-on-one session.",
+   "url": "https://www.artemisfitnessvt.com/membership-options",
+   "source_urls": [
+    "https://www.artemisfitnessvt.com/",
+    "https://www.artemisfitnessvt.com/membership-options",
+    "https://www.artemisfitnessvt.com/onboard",
+    "https://www.artemisfitnessvt.com/schedule"
+   ],
+   "verified": "2026-10-29",
+   "unverified": [
+    "day_pass: no drop-ins; sessions are by membership or the OnBoard program"
+   ],
+   "notes": "Woman-run, women-only small-group personal training gym operating about 15 years. Unused sessions expire at the end of each month."
+  },
+  {
+   "id": "fitness-options",
+   "name": "Fitness Options Personal Training Studio",
+   "kind": "studio",
+   "town": "South Burlington",
+   "address": "89 Rye Circle, South Burlington, VT 05403",
+   "hours": null,
+   "day_pass": null,
+   "membership": "Personal training from $72/hour, in 2-, 4- or 8-hour monthly packages",
+   "intro_offer": null,
+   "has": {
+    "machines": null,
+    "free_weights": null,
+    "pool": null,
+    "sauna": null,
+    "courts": null,
+    "classes": true,
+    "childcare": null
+   },
+   "also": "Free consultation and fitness assessment; small-group training up to 6 people (45-minute sessions); buddy training; occasional group classes such as $10 beginner line dancing; massage and on-site physical therapy",
+   "beginner": "Very approachable: starts with a free consultation and assessment, and every session is trainer-led.",
+   "url": "https://www.fitnessoptionsvt.com/new-member-info",
+   "source_urls": [
+    "https://www.fitnessoptionsvt.com/",
+    "https://www.fitnessoptionsvt.com/new-member-info",
+    "https://www.fitnessoptionsvt.com/faqs",
+    "https://www.fitnessoptionsvt.com/group-classes",
+    "https://www.fitnessoptionsvt.com/small-group-training"
+   ],
+   "verified": null,
+   "unverified": [
+    "hours: no operating hours published; sessions are by appointment",
+    "day_pass: no walk-in or open gym use; FAQ says sessions are scheduled in advance",
+    "membership: small-group training price not published"
+   ],
+   "notes": "Appointment-based personal training studio, not an open gym. Included because it runs small-group strength sessions."
+  },
+  {
+   "id": "pure-barre-south-burlington",
+   "name": "Pure Barre South Burlington",
+   "kind": "studio",
+   "town": "South Burlington",
+   "address": null,
+   "hours": null,
+   "day_pass": null,
+   "membership": null,
+   "intro_offer": null,
+   "has": {
+    "machines": null,
+    "free_weights": null,
+    "pool": null,
+    "sauna": null,
+    "courts": null,
+    "classes": true,
+    "childcare": null
+   },
+   "also": "Barre classes",
+   "beginner": "Pure Barre generally offers a free intro class to first-timers, but I could not confirm this studio's offer on its own page.",
+   "url": "https://www.purebarre.com/location/south-burlington-vt",
+   "source_urls": [],
+   "verified": null,
+   "unverified": [
+    "address: own page blocked automated access (Cloudflare 403); Wellhub and ClassPass list 150 Dorset St, South Burlington, VT 05403",
+    "hours: own page blocked",
+    "day_pass: own page blocked",
+    "membership: own page blocked"
+   ],
+   "notes": "Studio clearly exists per several third-party listings, but nothing here is verified from its own site. Check the page in a normal browser before publishing."
+  },
+  {
+   "id": "align-studio",
+   "name": "ALIGN Studio (ALIGN Cycling and ALIGN Fit)",
+   "kind": "studio",
+   "town": "Williston",
+   "address": "31 Cottonwood Dr, Suite 107, Williston, VT 05495 (cycling and fit); second studio at 274 Market Street, South Burlington, VT 05403 (fit only)",
+   "hours": "Class schedule only; see site (Mariana Tek booking)",
+   "day_pass": null,
+   "membership": null,
+   "intro_offer": null,
+   "has": {
+    "machines": null,
+    "free_weights": null,
+    "pool": null,
+    "sauna": null,
+    "courts": null,
+    "classes": true,
+    "childcare": null
+   },
+   "also": "32 Stages bikes with headset audio; 45-minute cycle classes; strength and conditioning ALIGN Fit classes; HYROX affiliate; red light therapy; cycling shoe rental $3; students get 20% off class packs and $25 off memberships; teacher and nurse discounts",
+   "beginner": "Very beginner friendly: no intro class needed, any class can be your first; arrive 10-15 minutes early for bike setup, and late entry is not allowed for first-timers.",
+   "url": "https://alignstudiovt.com/faq",
+   "source_urls": [
+    "https://alignstudiovt.com/",
+    "https://alignstudiovt.com/faq",
+    "https://alignstudiovt.com/buy",
+    "https://aligncycling.marianatek.com/api/customer/v1/locations"
+   ],
+   "verified": null,
+   "unverified": [
+    "day_pass: class prices load in a Mariana Tek widget I could not read; check alignstudiovt.com/buy",
+    "membership: same widget; FAQ says memberships exist and some need a multi-month commitment"
+   ],
+   "notes": "Formerly REV Indoor Cycling on Pine St in Burlington. Seven Daysies Best Boutique Fitness Studio 2026, per Seven Days (third party). Passes work at both locations. $10 late-cancel or no-show fee on memberships."
+  },
+  {
+   "id": "orangetheory-williston",
+   "name": "Orangetheory Fitness Williston",
+   "kind": "studio",
+   "town": "Williston",
+   "address": "28 Walnut St Unit C25, Williston, VT 05495",
+   "hours": "Mon-Fri 5am-6:15pm, Sat-Sun 8am-11:30am",
+   "day_pass": "First class free; no single-class price published; 5-class pack $115, 10-class pack $219",
+   "membership": "$69-$169/mo (Basic $69, Elite $109, Premier unlimited $169; commitment rates lower)",
+   "intro_offer": null,
+   "has": {
+    "machines": true,
+    "free_weights": true,
+    "pool": null,
+    "sauna": null,
+    "courts": null,
+    "classes": true,
+    "childcare": null
+   },
+   "also": "Heart-rate-based interval classes; 30-day risk-free guarantee; late-2026 online promo of 50% off the first 2 months on Elite and Premier",
+   "beginner": "Easy for first-timers: first class is free and workouts scale to your heart rate.",
+   "url": "https://www.orangetheory.com/en-us/locations/williston-vermont-1541",
+   "source_urls": [
+    "https://www.orangetheory.com/en-us/locations/williston-vermont-1541"
+   ],
+   "verified": "2026-10-29",
+   "unverified": [
+    "has.machines and has.free_weights: inferred from the Orangetheory format, not stated on the studio page text I read",
+    "membership: prices read from the studio page's embedded product data; confirm the live display"
+   ],
+   "notes": "Opened in 2023 by Empire Portfolio Group, the same franchisee as the Burlington studio."
+  },
+  {
+   "id": "petra-cliffs",
+   "name": "Petra Cliffs Climbing Center",
+   "kind": "climbing",
+   "town": "Burlington",
+   "address": "105 Briggs St, Burlington, VT 05401",
+   "hours": "Mon-Fri 10am-10pm, Sat 10am-8pm, Sun 10am-6pm; members-only early hours Mon-Fri and Sun 8-10am",
+   "day_pass": "$23 adult day pass ($19 student/discount, $15 ages 4-11, under 4 free); gear package $10 (shoes $6, harness $4, chalk $2); prices before 7% sales tax",
+   "membership": "$80/mo adult recurring ($72 student, $55 junior, $130 family); 10-visit punch card $195 adult",
+   "intro_offer": null,
+   "has": {
+    "machines": null,
+    "free_weights": null,
+    "pool": null,
+    "sauna": null,
+    "courts": null,
+    "classes": true,
+    "childcare": null
+   },
+   "also": "Bouldering (100+ problems), top rope and lead (50+ routes), 15+ auto belay routes; belay lesson $10 anytime; Beginner Belay Package $35; bouldering progression series; youth teams and camps; mountaineering school",
+   "beginner": "Very easy to start: bouldering and auto belays need no partner, staff give an auto belay orientation, and a $10 belay lesson needs no reservation.",
+   "url": "https://www.petracliffs.com/day-passes",
+   "source_urls": [
+    "https://www.petracliffs.com/",
+    "https://www.petracliffs.com/day-passes",
+    "https://www.petracliffs.com/memberships",
+    "https://www.petracliffs.com/yourfirstvisit",
+    "https://www.petracliffs.com/hours"
+   ],
+   "verified": "2026-10-29",
+   "unverified": [
+    "day_pass: the day-pass table rendered as scrambled text; age bands read as Junior 4-11 $15, Student 12+ $19, Adult 18+ $23, which matches the membership price order but should be eyeballed on the live page",
+    "has.free_weights: not stated on site"
+   ],
+   "notes": "Climbing in Burlington since 2000. Closed Thanksgiving, July 4, Labor Day, Dec 24-25 and Jan 1; 10am-5pm on New Year's Eve. Student discount also covers teachers, first responders, military and 65+."
+  },
+  {
+   "id": "metrorock-vermont",
+   "name": "MetroRock Vermont",
+   "kind": "climbing",
+   "town": "Essex",
+   "address": "320 Sunderland Way, Essex Junction, VT 05452",
+   "hours": "Mon-Fri 10am-10pm, Sat 9am-9pm, Sun 9am-7pm; members-only early bird Mon-Fri 7-10am",
+   "day_pass": "$26 adult day pass ($22 student/discount, $10 under 7, under 4 free); full gear package $8; $18 community-night day pass weeknights from 5pm",
+   "membership": "$99/mo adult EFT ($82 student/discount) plus $39 activation fee; $126 one-month non-recurring; $1,089/yr adult",
+   "intro_offer": null,
+   "has": {
+    "machines": null,
+    "free_weights": true,
+    "pool": null,
+    "sauna": null,
+    "courts": null,
+    "classes": true,
+    "childcare": null
+   },
+   "also": "Bouldering and rope climbing; weight room; weekly yoga; Learn The Ropes class Mondays 7-9pm ($60 non-members, includes 10 free climbing days with gear); Learn to Lead $100; ropes course; weekly community nights (women and nonbinary, BIPOC, queer, Crag VT, teachers)",
+   "beginner": "Good for first-timers: bouldering needs no certification, and the weekly Learn The Ropes class teaches belaying and includes 10 days of free climbing.",
+   "url": "https://vt.metrorock.com/vt-hour-and-rates",
+   "source_urls": [
+    "https://vt.metrorock.com/",
+    "https://vt.metrorock.com/vt-hour-and-rates",
+    "https://vt.metrorock.com/vt-rates-info",
+    "https://vt.metrorock.com/vt-first-visit"
+   ],
+   "verified": "2026-10-29",
+   "unverified": [
+    "has.machines: site mentions an equipped weight room but not which equipment"
+   ],
+   "notes": "Largest climbing gym in the area. Closed Thanksgiving, Christmas and July 4; closes early Christmas Eve (4pm) and New Year's Eve (6pm). Discount rate covers students, teachers, healthcare workers, Crag VT members, seniors and military. Some directories list an old address on Susie Wilson Rd; the gym's own site says 320 Sunderland Way."
+  },
+  {
+   "id": "king-james-boxing",
+   "name": "King James Boxing & Fitness",
+   "kind": "boxing",
+   "town": "Winooski",
+   "address": "94 West Canal Street, Winooski, VT 05404",
+   "hours": "By appointment only; Mon-Sun 6am-9pm",
+   "day_pass": "$25 drop-in (any class or open gym); 3-class trial $50; 10-session punch card $200",
+   "membership": "$99-$199/mo ($99 open gym only, $150 Box N Burn, Boxing 101 or Fit Fem Bootcamp unlimited, $199 Crown Club any class)",
+   "intro_offer": null,
+   "has": {
+    "machines": null,
+    "free_weights": null,
+    "pool": null,
+    "sauna": null,
+    "courts": null,
+    "classes": true,
+    "childcare": null
+   },
+   "also": "Boxing 101 and Box N Burn classes; Fit Fem women's bootcamp; Kid Box 6-week course ages 7+; women's self-defense; Taekwondo; private boxing and kickboxing sessions $35-$75",
+   "beginner": "Beginner friendly: classes say no experience necessary and a 3-class trial costs $50.",
+   "url": "https://kingjamesboxing.com/contact",
+   "source_urls": [
+    "https://kingjamesboxing.com/",
+    "https://kingjamesboxing.com/contact",
+    "https://kingjamesboxing.com/group-sessions",
+    "https://kingjamesboxing.com/what-we-do",
+    "https://kingjamesboxing.com/private-sessions",
+    "https://kingjamesboxing.pushpress.com/landing/plans"
+   ],
+   "verified": "2026-10-29",
+   "unverified": [
+    "day_pass and membership: taken from the gym's PushPress plans page (linked from its site), not from a price list on the main site",
+    "has.free_weights and has.machines: not stated on site"
+   ],
+   "notes": "Run by coach James 'King' McMillan. The yolasite.com King James Boxing site belongs to an unrelated Texas gym; the Vermont gym's site is kingjamesboxing.com."
+  },
+  {
+   "id": "gracie-jiu-jitsu-vermont",
+   "name": "Gracie Jiu Jitsu Vermont",
+   "kind": "martial-arts",
+   "town": "Essex",
+   "address": "90 Center Road, Essex Junction, VT 05452",
+   "hours": "Class schedule only: adults Tue-Thu 11:30am and Mon, Tue, Thu 6:45-8:45pm; women's class Wed 6-7:30pm; open mat Sat 11am-1pm",
+   "day_pass": null,
+   "membership": null,
+   "intro_offer": null,
+   "has": {
+    "machines": null,
+    "free_weights": null,
+    "pool": null,
+    "sauna": null,
+    "courts": null,
+    "classes": true,
+    "childcare": null
+   },
+   "also": "Free first class; women-only class; kids classes ages 3-13; private lessons most days",
+   "beginner": "Beginner friendly: the first class is free, and the women's class is pitched as a starting point for beginners.",
+   "url": "https://www.gracievermont.com/classes",
+   "source_urls": [
+    "https://www.gracievermont.com/",
+    "https://www.gracievermont.com/classes"
+   ],
+   "verified": null,
+   "unverified": [
+    "day_pass: no drop-in price published; call or text (919) 685-5181",
+    "membership: no prices published"
+   ],
+   "notes": "Run by Seth Shamp, a Royce Gracie black belt. The phone number on its own site has a 919 area code."
+  },
+  {
+   "id": "high-hat-bjj",
+   "name": "High Hat Brazilian Jiu Jitsu",
+   "kind": "martial-arts",
+   "town": "South Burlington",
+   "address": "338 Dorset Street, South Burlington, VT 05403",
+   "hours": "Class schedule only: early morning, midday and evening classes Mon-Fri; Sun yoga 10:15am and open mat 11am-1pm",
+   "day_pass": null,
+   "membership": "$100/mo unlimited classes plus Sunday open mat",
+   "intro_offer": null,
+   "has": {
+    "machines": null,
+    "free_weights": null,
+    "pool": null,
+    "sauna": null,
+    "courts": null,
+    "classes": true,
+    "childcare": null
+   },
+   "also": "Free trial class for new students; gi and no-gi BJJ, judo, striking for grappling, competition training, yoga; loaner gis; law enforcement and first responder grappling",
+   "beginner": "Very beginner friendly: free trial class, loaner uniforms, and every class is open to all levels, with Monday Gi Fundamentals suggested as the first class.",
+   "url": "https://www.highhatbjj.com/schedule",
+   "source_urls": [
+    "https://www.highhatbjj.com/",
+    "https://www.highhatbjj.com/pricing",
+    "https://www.highhatbjj.com/schedule",
+    "https://www.highhatbjj.com/faqs"
+   ],
+   "verified": "2026-10-29",
+   "unverified": [
+    "day_pass: no drop-in price published; email highhatbjj@gmail.com to ask"
+   ],
+   "notes": "Opened in 2023 by coach Shayne Fenton. 2026 schedule posted on its site."
+  },
+  {
+   "id": "vermont-bjj",
+   "name": "Vermont Brazilian Jiu-Jitsu",
+   "kind": "martial-arts",
+   "town": "Williston",
+   "address": "55 Leroy Road, Williston, VT",
+   "hours": "Class schedule only: weekday classes from 11am or 4pm into the evening with open mats most nights, Sat 8:30am-noon plus open mat, Sun 9-10am (blue belt and up)",
+   "day_pass": null,
+   "membership": null,
+   "intro_offer": null,
+   "has": {
+    "machines": null,
+    "free_weights": null,
+    "pool": null,
+    "sauna": null,
+    "courts": null,
+    "classes": true,
+    "childcare": null
+   },
+   "also": "Free 30-minute one-on-one intro private class for adults; visitors may watch a class; Adults BJJ Intro program (four intro classes); Friday adult boxing and MMA fundamentals; open mats; kids programs ages 4-15",
+   "beginner": "Beginner friendly: adults can book a free 30-minute private intro class, and no martial arts experience is required.",
+   "url": "https://vermontbjj.com/class-schedule",
+   "source_urls": [
+    "https://vermontbjj.com/",
+    "https://vermontbjj.com/class-schedule",
+    "https://vermontbjj.com/contact-us",
+    "https://vermontbjj.com/programs"
+   ],
+   "verified": null,
+   "unverified": [
+    "day_pass: no drop-in price published; call or text (802) 598-2839",
+    "membership: no prices published; site says to ask about membership options",
+    "address: site gives no ZIP code"
+   ],
+   "notes": "Seven Daysies Best Martial Arts Studio three years running, per its site. Head instructor Julio 'Foca' Fernandez Nunes, a Carlson Gracie lineage coral belt."
+  },
+  {
+   "id": "combat-fitness-mma",
+   "name": "Combat Fitness MMA",
+   "kind": "martial-arts",
+   "town": "Winooski",
+   "address": "276 East Allen St, Hill Side Park Unit 8, Winooski, VT 05404",
+   "hours": "Members' gym access Mon-Thu 7am-7pm; Fri class times only; Sat closed; Sun 11am-2pm (MMA class, then members' open gym)",
+   "day_pass": "$15 drop-in/day pass; 6-pass punch card $90",
+   "membership": "$75-$135/mo ($75 gym space only, $109 striking or grappling, $135 all access; 3-month minimum, 20% more for 1-month)",
+   "intro_offer": null,
+   "has": {
+    "machines": null,
+    "free_weights": null,
+    "pool": null,
+    "sauna": null,
+    "courts": null,
+    "classes": true,
+    "childcare": null
+   },
+   "also": "First class free; boxing, kickboxing, Brazilian jiu-jitsu, judo, MMA; free beginners-only striking class on the third Sunday of each month; 3-week beginner boxing bootcamp $80; private training $70-$80/hour",
+   "beginner": "Welcoming to newcomers: first class is free, boxing and kickboxing need no experience, but BJJ beginners must email first and MMA class requires prior striking and grappling.",
+   "url": "https://combatfitnessmma.com/schedule/",
+   "source_urls": [
+    "https://combatfitnessmma.com/",
+    "https://combatfitnessmma.com/schedule/",
+    "https://combatfitnessmma.com/rates/",
+    "https://combatfitnessmma.com/contact-us/"
+   ],
+   "verified": "2026-10-29",
+   "unverified": [
+    "has.free_weights and has.machines: not stated on site"
+   ],
+   "notes": "Schedule and rates are published as images (schedule image uploaded June 2026). A $99 cancellation fee applies before a 3-month commitment ends. Friday competitor boxing is invite only. The posted bootcamp dates (Sept 24 to Oct 8) may be past."
+  },
+  {
+   "id": "grow-prenatal-family-center",
+   "name": "GROW Prenatal & Family Center",
+   "kind": "yoga",
+   "town": "Burlington",
+   "address": "696 Pine St., Burlington, VT 05401",
+   "hours": "Class schedule; prenatal and postnatal/parents yoga at the Pine St studio most days, e.g. Sun 10:30am, Mon 5:30pm, Tue and Fri noon, Wed 5:45pm",
+   "day_pass": "$29 drop-in",
+   "membership": "$99/mo unlimited; $79/mo Mini (about one class a week); $29/mo Villager (one class a month); $49/mo online; 10-class pass $225; The Table (BIPOC) pay what you can $25/$50/$75",
+   "intro_offer": "$39 for 2 weeks unlimited",
+   "has": {
+    "machines": false,
+    "free_weights": false,
+    "pool": false,
+    "sauna": false,
+    "courts": false,
+    "classes": true,
+    "childcare": false
+   },
+   "also": "Prenatal yoga, postnatal and parents yoga, postpartum strength (GROW Strong), flow yoga, plus baby and kids classes, childbirth education and support groups; classes also streamed on Zoom.",
+   "beginner": "Made for people new to exercise in pregnancy and postpartum, with teachers trained specifically for those stages.",
+   "url": "https://www.growfamilyvt.com/pricing",
+   "source_urls": [
+    "https://www.growfamilyvt.com/pricing",
+    "https://www.growfamilyvt.com/locations",
+    "https://www.growfamilyvt.com/new-members",
+    "https://growfamilyvt.punchpass.com/passes",
+    "https://growfamilyvt.punchpass.com/calendar"
+   ],
+   "verified": "2026-10-29",
+   "unverified": [],
+   "notes": "A niche pick: aimed at pregnant people and new parents. Need-blind 25% BIPOC discount. Its Essex Junction site (37 Lincoln St) hosts childbirth education rather than yoga; flow yoga and weights classes are mostly in Richmond (out of area)."
+  },
+  {
+   "id": "hot-yoga-burlington",
+   "name": "Hot Yoga Burlington",
+   "kind": "yoga",
+   "town": "Burlington",
+   "address": "294 N Winooski Ave Suite 212A, Burlington, VT 05401",
+   "hours": "Class schedule; first class 7am weekdays and Saturday, 9am Sunday; last classes around 6:30pm",
+   "day_pass": "$15 single class; $5 online single class",
+   "membership": "$119/mo unlimited (recurring); $37/week unlimited; 5-pack $65; 10-pack $115; 15-pack $165; 20-pack $199; online and livestream $25 every 4 weeks",
+   "intro_offer": "Free intro class; $75 online beginner series (4 parts) plus a 5-class pass",
+   "has": {
+    "machines": false,
+    "free_weights": false,
+    "pool": false,
+    "sauna": false,
+    "courts": false,
+    "classes": true,
+    "childcare": false
+   },
+   "also": "Far infrared heated rooms (two studios); Level 1, All Levels, Level 2, Fire Flow (100 degrees), Carve (yoga with weights), Inferno Hot Pilates, Pilates Sculpt, Barre, Restorative, Yoga Nidra, Black Light Yoga; free Sunday community mindfulness meditation; mats to rent or buy.",
+   "beginner": "Friendly to first-timers: the first class is free and Level 1 and Slow Flow classes plus an Intro to Yoga series are aimed at beginners.",
+   "url": "https://hotyogabvt.punchpass.com/passes",
+   "source_urls": [
+    "https://www.hotyogaburlingtonvt.com/",
+    "https://www.hotyogaburlingtonvt.com/location-hot-yoga-burlington/",
+    "https://www.hotyogaburlingtonvt.com/classes/",
+    "https://www.hotyogaburlingtonvt.com/intro-to-yoga/",
+    "https://hotyogabvt.punchpass.com/passes",
+    "https://hotyogabvt.punchpass.com/calendar"
+   ],
+   "verified": "2026-10-29",
+   "unverified": [],
+   "notes": "Free parking; use the lot and side entrance at the back of the building. Door locks at class start; $10 fee for cancelling less than 3 hours ahead. The homepage still shows older rates ($30 weekly, $119-$125 monthly); the booking page prices above are newer."
+  },
+  {
+   "id": "iyengar-yoga-center-of-vermont",
+   "name": "Iyengar Yoga Center of Vermont",
+   "kind": "yoga",
+   "town": "Burlington",
+   "address": "74 Main St, Burlington, VT 05401",
+   "hours": "Weekly schedule; earliest classes 7am Fri and 8:30am Mon and Thu; evening classes 5:30pm Tue and Wed; Sunday 10am and 5pm",
+   "day_pass": "$20 single class",
+   "membership": "$108/mo unlimited (full price; Supportive and Equity prices offered at checkout); 8-class pass $136, expires after 4 months",
+   "intro_offer": "New students: 3 classes for $30, use within one month",
+   "has": {
+    "machines": false,
+    "free_weights": false,
+    "pool": false,
+    "sauna": false,
+    "courts": false,
+    "classes": true,
+    "childcare": false
+   },
+   "also": "Iyengar method with props; Level I, II and III, Gentle/Therapeutic, prenatal and postpartum, yoga therapy, sutra study, free Wednesday open practice for experienced students, recorded classes, teacher education; private sessions $95/hour (sliding scale).",
+   "beginner": "Good for careful beginners: Level I is designed for people with little or no yoga experience, and Gentle classes suit those working around injuries.",
+   "url": "https://www.iycvt.com/make-a-purchase",
+   "source_urls": [
+    "https://www.iycvt.com/make-a-purchase",
+    "https://www.iycvt.com/contact",
+    "https://www.iycvt.com/class-schedule",
+    "https://www.iycvt.com/class-descriptions",
+    "https://www.iycvt.com/scholarship"
+   ],
+   "verified": "2026-10-29",
+   "unverified": [],
+   "notes": "Street parking on Main St or the garage at College and S. Champlain. Scholarships available by emailing the director; no financial questions asked."
+  },
+  {
+   "id": "laughing-river-yoga",
+   "name": "Laughing River Yoga",
+   "kind": "yoga",
+   "town": "Burlington",
+   "address": "One Mill Street Suite 148, Burlington, VT 05401",
+   "hours": "See schedule",
+   "day_pass": "$15 live single class; $13 virtual single class",
+   "membership": "10-class card $130 (live and virtual, valid one year)",
+   "intro_offer": "$29 for one month of unlimited virtual classes (new clients only)",
+   "has": {
+    "machines": false,
+    "free_weights": false,
+    "pool": false,
+    "sauna": false,
+    "courts": false,
+    "classes": true,
+    "childcare": false
+   },
+   "also": "Vinyasa, gentle, yin, restorative and workshop-style classes in the Chace Mill; livestream and on-demand library; summer outdoor classes at the Burlington Surf Club (resume May 2027); props available at the mill; 200- and 300-hour teacher trainings; Pay What You Can pass; BIPOC affinity classes via the Burlington Yoga Equity Project.",
+   "beginner": "Welcoming to all levels with gentle and yin options, but the site does not advertise a dedicated beginner series; pre-registration is required for every class.",
+   "url": "https://www.laughingriveryoga.com/plans-pricing",
+   "source_urls": [
+    "https://www.laughingriveryoga.com/plans-pricing",
+    "https://www.laughingriveryoga.com/contact",
+    "https://www.laughingriveryoga.com/lry-locations",
+    "https://www.laughingriveryoga.com/faq",
+    "https://www.laughingriveryoga.com/theyogaequityproject"
+   ],
+   "verified": "2026-10-29",
+   "unverified": [
+    "hours: schedule is on Union.fit (laughingriveryoga.union.site), which blocked automated access",
+    "membership: no unlimited monthly price appears on the own-site pricing page; the full pass list is on Union.fit and could not be read",
+    "day_pass: prices come from the site's Wix pricing-plans page; they may differ from the live Union.fit pass list"
+   ],
+   "notes": "Entrance through the front of the Chace Mill, down the hall to the left behind Pingala Cafe. Minimum age 13. Has a Pay What You Can pass linked from the site menu (amount not readable)."
+  },
+  {
+   "id": "sangha-studio-north",
+   "name": "Sangha Studio (North)",
+   "kind": "yoga",
+   "town": "Burlington",
+   "address": "237 North Winooski Ave., Burlington, VT 05401",
+   "hours": "See schedule",
+   "day_pass": "Donation-based drop-in (pay what you can)",
+   "membership": "$80/mo Sustaining; $120/mo Gold Glitter; Choose Your Own Donation $0-$120/mo (sign up in studio); all unlimited at every location plus livestream",
+   "intro_offer": "5-class pack $50, use within 30 days",
+   "has": {
+    "machines": false,
+    "free_weights": false,
+    "pool": false,
+    "sauna": false,
+    "courts": false,
+    "classes": true,
+    "childcare": false
+   },
+   "also": "Nonprofit, donation-based studio. Gentle Yoga, Slow Flow, Yin, 30-minute Flow, 60-minute Flow and Strength, Flow II, Vigorous Flow, Core Flow; livestream and replay library; free community classes for specific groups; outdoor classes in season.",
+   "beginner": "Very beginner friendly: the site steers first-timers to Gentle, Slow Flow, Yin and 30-minute Flow classes marked 'beginners encouraged'.",
+   "url": "https://www.sanghastudio.org/north.html",
+   "source_urls": [
+    "https://www.sanghastudio.org/north.html",
+    "https://www.sanghastudio.org/pine.html",
+    "https://www.sanghastudio.org/memberships.html",
+    "https://www.sanghastudio.org/practice.html",
+    "https://www.sanghastudio.org/beginneryogaclasses.html",
+    "https://www.sanghastudio.org/about-us.html",
+    "https://www.sanghastudio.org/outdoorclasses.html"
+   ],
+   "verified": "2026-10-29",
+   "unverified": [
+    "hours: class times live on Union.fit, which blocked automated access (Cloudflare), so no start times could be confirmed",
+    "day_pass: site says drop-ins are donation-based but publishes no suggested drop-in amount"
+   ],
+   "notes": "The Pine Street studio (120 Pine St) has moved its drop-in classes to North and Williston and is hosting only special events through the end of 2026, per the studio's Pine page. Members get a mat cubby at North. Late cancel or no-show fee is $5 for members."
+  },
+  {
+   "id": "second-circle-yoga",
+   "name": "Second Circle",
+   "kind": "yoga",
+   "town": "Burlington",
+   "address": "209 College Street, Burlington, VT 05401",
+   "hours": "Classes seven days a week; see schedule",
+   "day_pass": "$15 suggested, pay what you can",
+   "membership": "$75/mo associate member (5 classes a month); $100/mo full member (unlimited)",
+   "intro_offer": null,
+   "has": {
+    "machines": false,
+    "free_weights": false,
+    "pool": false,
+    "sauna": false,
+    "courts": false,
+    "classes": true,
+    "childcare": false
+   },
+   "also": "Member-run yoga club. Foundations, Flow, Roll and Restore, Seven Salutations, Kripalu, Vinyasa, Yin and Dumbbells; 60-minute classes; loaner mats.",
+   "beginner": "Explicitly welcomes people who have never done yoga; Foundations and Kripalu are gentle starting points and guests can come to any class.",
+   "url": "https://secondcircleyoga.com/",
+   "source_urls": [
+    "https://secondcircleyoga.com/"
+   ],
+   "verified": "2026-10-29",
+   "unverified": [
+    "hours: the weekly class list loads by script and could not be read",
+    "intro_offer: none published beyond pay-what-you-can guest classes"
+   ],
+   "notes": "Up one flight of stairs, just to the right of Stone Soup. Membership is arranged in person at the studio. Text 215-290-2681 for directions."
+  },
+  {
+   "id": "soulshine-power-yoga-burlington",
+   "name": "SoulShine Power Yoga (Downtown Burlington)",
+   "kind": "yoga",
+   "town": "Burlington",
+   "address": "100 Church Street, 3rd Floor, Burlington, VT 05401",
+   "hours": "Class schedule; light at this location (about two to four classes a week in the weeks checked, e.g. Wed 5:45pm, Fri and Sat)",
+   "day_pass": "$16 drop-in",
+   "membership": "$99/mo sustaining (both studios); $66/mo Burlington-only sustaining; 30 days unlimited $150; 3 months unlimited $299 (sale); 6 months $699; 1 year prepaid $999; 5-class pass $70; 10-class pass $130",
+   "intro_offer": "$49 for 30 days unlimited at both studios (pricing page); the New Students page instead lists $59 for both studios or $49 Burlington-only",
+   "has": {
+    "machines": false,
+    "free_weights": false,
+    "pool": false,
+    "sauna": false,
+    "courts": false,
+    "classes": true,
+    "childcare": false
+   },
+   "also": "Infrared-heated room (85 to 92 degrees); Power Flow, Vinyasa, Hatha Flow, Sculpt HIIT and Flow; livestream classes; mats to borrow, mat towel rental $5, blocks and straps free.",
+   "beginner": "Beginner friendly in tone (the site recommends a Gentle class first and runs beginner series), but most beginner-level classes are at the Essex studio.",
+   "url": "https://soulshinepoweryoga.com/class-passes-membership-plans/",
+   "source_urls": [
+    "https://soulshinepoweryoga.com/",
+    "https://soulshinepoweryoga.com/class-passes-membership-plans/",
+    "https://soulshinepoweryoga.com/new-students/",
+    "https://soulshinepoweryoga.com/faqs/",
+    "https://soulshinepoweryoga.com/class-info/",
+    "https://soulshinepoweryoga.com/class-schedule/",
+    "https://widgets.mindbodyonline.com/widgets/schedules/a61542752f17/load_markup"
+   ],
+   "verified": "2026-10-29",
+   "unverified": [
+    "intro_offer: the studio's own pages conflict ($49 both studios vs $59 both studios / $49 Burlington-only)"
+   ],
+   "notes": "Entrance on Church Street, above Free People Movement; pay to park downtown (free Sundays). Doors lock at class start. Only a handful of Burlington classes were on the Mindbody schedule for late October to mid November 2026, so check before going. Minimum age 12."
+  },
+  {
+   "id": "soulshine-power-yoga-essex",
+   "name": "SoulShine Power Yoga (Essex)",
+   "kind": "yoga",
+   "town": "Essex",
+   "address": "1 Market Pl #16, Essex Junction, VT 05452",
+   "hours": "Class schedule; first class 6:15am Tue, 8 to 8:30am other weekdays, about 9am weekends",
+   "day_pass": "$16 drop-in",
+   "membership": "$99/mo sustaining (both studios); $66/mo Burlington-only sustaining; 30 days unlimited $150; 3 months unlimited $299 (sale); 6 months $699; 1 year prepaid $999; 5-class pass $70; 10-class pass $130",
+   "intro_offer": "$49 for 30 days unlimited at both studios (pricing page); the New Students page instead lists $59 for both studios or $49 Burlington-only",
+   "has": {
+    "machines": false,
+    "free_weights": false,
+    "pool": false,
+    "sauna": false,
+    "courts": false,
+    "classes": true,
+    "childcare": false
+   },
+   "also": "Infrared-heated rooms (85 to 92 degrees); Power Flow, Vinyasa, Gentle Flow, Yin, Yoga for Beginners, Back to Basics Beginner Yoga, Sculpt HIIT and Flow (light hand weights), Inferno Hot Pilates, Kickboxing HIIT, Yoga Nidra; livestream versions of many classes; mats to borrow, towel rental, blocks and straps free.",
+   "beginner": "Good for first-timers: weekly Back to Basics Beginner Yoga and Gentle Flow classes, and the site recommends starting with a Gentle class.",
+   "url": "https://soulshinepoweryoga.com/class-passes-membership-plans/",
+   "source_urls": [
+    "https://soulshinepoweryoga.com/",
+    "https://soulshinepoweryoga.com/class-passes-membership-plans/",
+    "https://soulshinepoweryoga.com/new-students/",
+    "https://soulshinepoweryoga.com/faqs/",
+    "https://soulshinepoweryoga.com/class-info/",
+    "https://soulshinepoweryoga.com/class-schedule/",
+    "https://widgets.mindbodyonline.com/widgets/schedules/a61542752f17/load_markup"
+   ],
+   "verified": "2026-10-29",
+   "unverified": [
+    "intro_offer: the studio's own pages conflict ($49 both studios vs $59 both studios)"
+   ],
+   "notes": "In the Red Mall off Susie Wilson Road; parking lot on site. Free anniversary classes were scheduled Saturday Nov 7, 2026. Minimum age 12."
+  },
+  {
+   "id": "yogasix-south-burlington",
+   "name": "YogaSix South Burlington",
+   "kind": "yoga",
+   "town": "South Burlington",
+   "address": "57 Fayette Drive, Suite 1, South Burlington, VT 05403",
+   "hours": "See schedule",
+   "day_pass": null,
+   "membership": null,
+   "intro_offer": "3 classes for $36",
+   "has": {
+    "machines": false,
+    "free_weights": false,
+    "pool": false,
+    "sauna": false,
+    "courts": false,
+    "classes": true,
+    "childcare": false
+   },
+   "also": "Franchise studio with hot yoga, sculpt and flow, and restorative formats; free parking; on-demand classes.",
+   "beginner": "Pitches itself to first-timers and all levels, but the site gives no detail on a beginner series.",
+   "url": "https://www.yogasix.com/location/south-burlington",
+   "source_urls": [
+    "https://www.yogasix.com/location/south-burlington"
+   ],
+   "verified": "2026-10-29",
+   "unverified": [
+    "day_pass: not published; the site says to contact the studio for memberships and packages",
+    "membership: not published on the location page",
+    "hours: schedule loads by script and could not be read"
+   ],
+   "notes": "Phone (802) 872-1157. Membership pricing is by inquiry."
+  },
+  {
+   "id": "sangha-studio-williston",
+   "name": "Sangha Studio (Williston)",
+   "kind": "yoga",
+   "town": "Williston",
+   "address": "373 Blair Park Road Suite 205, Williston, VT 05495",
+   "hours": "See schedule",
+   "day_pass": "Donation-based drop-in (pay what you can)",
+   "membership": "$80/mo Sustaining; $120/mo Gold Glitter; Choose Your Own Donation $0-$120/mo (sign up in studio); all unlimited at every location plus livestream",
+   "intro_offer": "5-class pack $50, use within 30 days",
+   "has": {
+    "machines": false,
+    "free_weights": false,
+    "pool": false,
+    "sauna": false,
+    "courts": false,
+    "classes": true,
+    "childcare": false
+   },
+   "also": "Nonprofit, donation-based studio. Gentle Yoga, Slow Flow, Yin, 30-minute Flow, 60-minute Flow and Strength, Flow II, Vigorous Flow, Core Flow; livestream and replay library; free community classes for specific groups; outdoor classes in season.",
+   "beginner": "Very beginner friendly: the site steers first-timers to Gentle, Slow Flow, Yin and 30-minute Flow classes marked 'beginners encouraged'.",
+   "url": "https://www.sanghastudio.org/williston.html",
+   "source_urls": [
+    "https://www.sanghastudio.org/williston.html",
+    "https://www.sanghastudio.org/pine.html",
+    "https://www.sanghastudio.org/memberships.html",
+    "https://www.sanghastudio.org/practice.html",
+    "https://www.sanghastudio.org/beginneryogaclasses.html"
+   ],
+   "verified": "2026-10-29",
+   "unverified": [
+    "hours: class times live on Union.fit, which blocked automated access (Cloudflare)",
+    "day_pass: no suggested drop-in amount published"
+   ],
+   "notes": "Same memberships as the Burlington studio; one membership covers all Sangha locations. This is the address older listings give for Yoga Roots' Williston studio."
+  },
+  {
+   "id": "williston-hot-yoga",
+   "name": "Williston Hot Yoga",
+   "kind": "yoga",
+   "town": "Williston",
+   "address": "135 Allen Brook Lane, Suite 102, Williston, VT 05495",
+   "hours": "Class schedule; first class 7am Tue, Wed and Fri, 9am Mon and Thu, 7:30 to 9am weekends",
+   "day_pass": "$22 per class (as listed on its booking schedule)",
+   "membership": "$150/mo unlimited autopay; $179 one month non-autopay; 6 months $840; 1 year $1,600; 5-pack autorefill $90; 10-pack $200; 30-pack $540",
+   "intro_offer": "$59 first month unlimited, then $100/mo on autopay",
+   "has": {
+    "machines": false,
+    "free_weights": false,
+    "pool": false,
+    "sauna": false,
+    "courts": false,
+    "classes": true,
+    "childcare": false
+   },
+   "also": "Bikram-method hot yoga (60, 75 and 90 minutes), Mix Tape Bikram, Hot Pilates HIIT with weights and bands, monthly Pop Up Fridays (yin, kirtan and more) September to May; yearly members get mat, towel and shower towel service.",
+   "beginner": "Most Bikram classes are labeled Beginner, and the fixed sequence makes it easy for a first-timer to follow, though the heat takes getting used to.",
+   "url": "https://willistonhotyoga.com/pricing",
+   "source_urls": [
+    "https://willistonhotyoga.com/",
+    "https://willistonhotyoga.com/pricing",
+    "https://willistonhotyoga.com/schedule",
+    "https://api.momence.com/host-plugins/host/44387/host-schedule/sessions"
+   ],
+   "verified": "2026-10-29",
+   "unverified": [],
+   "notes": "Private class $150. The yearly membership mentions a shower towel, which suggests showers on site."
+  },
+  {
+   "id": "momentum-physical-therapy-pilates",
+   "name": "Momentum Physical Therapy (Pilates classes)",
+   "kind": "pilates",
+   "town": "South Burlington",
+   "address": "10 Farrell St, Unit 8, South Burlington, VT 05403",
+   "hours": "Class schedule; reformer classes start 7:30 to 9am weekdays with more in the afternoon, plus Saturday mornings; clinic open Mon-Fri 7am-7pm",
+   "day_pass": "$26 reformer class; $15 mat class; virtual mat $5-$20 sliding scale",
+   "membership": "Reformer 5-pack $125, 10-pack $240; mat 5-pack $70, 10-pack $130; private Pilates $90 a session",
+   "intro_offer": null,
+   "has": {
+    "machines": true,
+    "free_weights": false,
+    "pool": false,
+    "sauna": false,
+    "courts": false,
+    "classes": true,
+    "childcare": false
+   },
+   "also": "Reformer (Foundational, Mixed Level, Advanced, Jump!, Osteoporosis/Scoliosis) and in-studio and virtual mat Pilates taught by physical therapists; also strength classes.",
+   "beginner": "Good for cautious beginners or people with injuries: Foundational Reformer classes and PT-trained instructors, and you do not need to be a patient.",
+   "url": "https://momentumpt.punchpass.com/passes",
+   "source_urls": [
+    "https://www.momentumpt.net/pilates",
+    "https://www.momentumpt.net/faq",
+    "https://momentumpt.punchpass.com/passes",
+    "https://momentumpt.punchpass.com/calendar"
+   ],
+   "verified": "2026-10-29",
+   "unverified": [
+    "intro_offer: none published",
+    "address: the site lists Unit 7 for the clinic and Unit 8 for the class studio, and prints both 05401 and 05403 as the zip; 05403 is used here"
+   ],
+   "notes": "Classes are in a fitness studio next to the clinic. The site footer still shows an old 160 Flynn Avenue, Burlington address."
+  },
+  {
+   "id": "the-body-lab-south-burlington",
+   "name": "The Body Lab (South Burlington)",
+   "kind": "pilates",
+   "town": "South Burlington",
+   "address": "41 IDX Drive, South Burlington, VT 05403",
+   "hours": "See schedule",
+   "day_pass": "$37 drop-in",
+   "membership": "4x/mo $118; 8x/mo $208; 12x/mo $288; 16x/mo $349; class packs 4 for $136, 8 for $256, 12 for $348 (1-year expiration); credits work at all locations",
+   "intro_offer": "New client special: 1 week unlimited, 7 classes in 7 days for $50",
+   "has": {
+    "machines": true,
+    "free_weights": false,
+    "pool": false,
+    "sauna": false,
+    "courts": false,
+    "classes": true,
+    "childcare": false
+   },
+   "also": "Reformer Pilates: Reformer Flow, Flow 2, Athletic Reformer, Tone, Tower and Props; grip socks required (sold at studio); private sessions and parties.",
+   "beginner": "Beginner friendly: no experience needed, Reformer Flow and Flow 2 are recommended starting points, and first-timers get a short tour and machine orientation if they arrive 10 minutes early.",
+   "url": "https://thebodylabvt.com/body-lab",
+   "source_urls": [
+    "https://thebodylabvt.com/",
+    "https://thebodylabvt.com/body-lab",
+    "https://thebodylabvt.com/faq",
+    "https://thebodylabvt.com/pricing"
+   ],
+   "verified": "2026-10-29",
+   "unverified": [
+    "hours: schedule is in the Mariana Tek app and could not be read"
+   ],
+   "notes": "Phone 802-923-9381. Student discounts by email. Booking through the studio app."
+  },
+  {
+   "id": "the-body-lab-x-the-palace",
+   "name": "The Body Lab X (The Palace)",
+   "kind": "pilates",
+   "town": "South Burlington",
+   "address": "17 Reel Road, South Burlington, VT 05403",
+   "hours": "See schedule",
+   "day_pass": "$37 drop-in",
+   "membership": "4x/mo $118; 8x/mo $208; 12x/mo $288; 16x/mo $349; class packs 4 for $136, 8 for $256, 12 for $348 (1-year expiration); credits work at all locations",
+   "intro_offer": "New client special: 1 week unlimited, 7 classes in 7 days for $50",
+   "has": {
+    "machines": true,
+    "free_weights": false,
+    "pool": false,
+    "sauna": false,
+    "courts": false,
+    "classes": true,
+    "childcare": false
+   },
+   "also": "Xformer machine strength classes (Signature 50, high-intensity, low-impact Pilates-style training, 50 minutes).",
+   "beginner": "Open to newcomers with an orientation, but the Xformer class is billed as intense, so true beginners may prefer the Body Lab reformer studios first.",
+   "url": "https://thebodylabvt.com/body-lab-x",
+   "source_urls": [
+    "https://thebodylabvt.com/",
+    "https://thebodylabvt.com/body-lab-x",
+    "https://thebodylabvt.com/faq"
+   ],
+   "verified": "2026-10-29",
+   "unverified": [
+    "hours: schedule is in the Mariana Tek app and could not be read"
+   ],
+   "notes": "Phone 802-338-2320. Same price list and shared credits as the other Body Lab studios. A Stowe location also exists (out of area)."
+  },
+  {
+   "id": "club-pilates-williston",
+   "name": "Club Pilates Williston",
+   "kind": "pilates",
+   "town": "Williston",
+   "address": "62 Merchants Row, Williston, VT 05495",
+   "hours": "See schedule",
+   "day_pass": null,
+   "membership": null,
+   "intro_offer": "Free 30-minute intro class, no credit card required",
+   "has": {
+    "machines": true,
+    "free_weights": false,
+    "pool": false,
+    "sauna": false,
+    "courts": false,
+    "classes": true,
+    "childcare": false
+   },
+   "also": "Reformer-based group classes; eight class types and four skill levels; grip socks required (sold at studio); ClassPoints rewards; HSA/FSA payment through Truemed.",
+   "beginner": "Built for beginners: a free 30-minute guided intro class and skill-level ladder, and instructors brief newcomers on the equipment 15 minutes before class.",
+   "url": "https://www.clubpilates.com/williston",
+   "source_urls": [
+    "https://www.clubpilates.com/williston"
+   ],
+   "verified": null,
+   "unverified": [
+    "day_pass: single class drop-in is offered but no price is published on the studio page",
+    "membership: 4-class, 8-class and unlimited monthly plans are listed without prices",
+    "hours: opening hours and schedule load by script and could not be read"
+   ],
+   "notes": "Phone +1 802-448-0825. The clubpilates.com/burlington page is a Burlington, Massachusetts studio; do not confuse them."
+  },
+  {
+   "id": "the-body-lab-williston",
+   "name": "The Body Lab (Williston)",
+   "kind": "pilates",
+   "town": "Williston",
+   "address": "31 Cottonwood Drive, Williston, VT 05495",
+   "hours": "See schedule",
+   "day_pass": "$37 drop-in",
+   "membership": "4x/mo $118; 8x/mo $208; 12x/mo $288; 16x/mo $349; class packs 4 for $136, 8 for $256, 12 for $348 (1-year expiration); credits work at all locations",
+   "intro_offer": "New client special: 1 week unlimited, 7 classes in 7 days for $50",
+   "has": {
+    "machines": true,
+    "free_weights": false,
+    "pool": false,
+    "sauna": false,
+    "courts": false,
+    "classes": true,
+    "childcare": false
+   },
+   "also": "Reformer Pilates: Reformer Flow, Flow 2, Athletic Reformer, Tone, Tower and Props; grip socks required (sold at studio).",
+   "beginner": "Beginner friendly: no experience needed, Reformer Flow and Flow 2 are recommended starting points, and first-timers get a machine orientation.",
+   "url": "https://thebodylabvt.com/body-lab",
+   "source_urls": [
+    "https://thebodylabvt.com/",
+    "https://thebodylabvt.com/body-lab",
+    "https://thebodylabvt.com/faq"
+   ],
+   "verified": "2026-10-29",
+   "unverified": [
+    "hours: schedule is in the Mariana Tek app and could not be read"
+   ],
+   "notes": "Phone 802-497-7440."
+  }
+ ],
+ "checked_not_listed": [
+  {
+   "name": "Planet Fitness South Burlington",
+   "why": "Planet Fitness's own Vermont club list no longer includes it and its club page returns a 404. Directories still show a Community Drive address. Probably closed; call before listing."
+  },
+  {
+   "name": "The Edge, Williston",
+   "why": "The Edge's site lists four clubs (two Essex, two South Burlington) and no Williston club. A directory still shows 115 Wellness Drive."
+  },
+  {
+   "name": "Anytime Fitness",
+   "why": "No club found in the six towns."
+  },
+  {
+   "name": "Saint Michael's College fitness",
+   "why": "Needs a college ID, Family Pass or Alumni Card. No community access published."
+  },
+  {
+   "name": "Champlain College fitness center",
+   "why": "Presented as students only. No public access published."
+  },
+  {
+   "name": "Mountain Trail CrossFit, Colchester",
+   "why": "Website expired and it is gone from CrossFit.com's Vermont list. Possibly closed."
+  },
+  {
+   "name": "CrossFit TT, South Burlington",
+   "why": "A directory marks it permanently closed."
+  },
+  {
+   "name": "Champlain Valley CrossFit, Williston",
+   "why": "Still on CrossFit.com's affiliate list but no website found."
+  },
+  {
+   "name": "REV Indoor Cycling",
+   "why": "Now ALIGN in Williston; no longer in Burlington."
+  },
+  {
+   "name": "Kula, 100 Dorset St, South Burlington",
+   "why": "Its own site says it closed."
+  },
+  {
+   "name": "Evolution Physical Therapy & Yoga, 20 Kilburn St",
+   "why": "Site does not respond and a directory lists it permanently closed."
+  },
+  {
+   "name": "Yoga Roots, Williston",
+   "why": "Its domain now points to an unrelated site and Sangha Williston occupies the old address."
+  },
+  {
+   "name": "Sangha Studio Pine Street",
+   "why": "Drop-in classes moved to Sangha North and Williston; Pine hosts special events only through the end of 2026."
+  },
+  {
+   "name": "Villari's, South Burlington",
+   "why": "Traditional karate with no fitness drop-ins or prices; out of scope."
+  }
+ ],
+ "leads_to_check": [
+  "White Cap Fitness, 426 Industrial Ave, Williston (directory listings only)",
+  "Colchester Health & Fitness (CH Fitness), 278 Prim Rd, Colchester (directory listings only)",
+  "Hammer Fit, 21 Essex Way, Essex Junction (only a 2005 article)",
+  "Lily's Gym, Essex Junction (no address found)",
+  "Town rec fitness rooms in South Burlington, Essex Westford, Williston and Winooski (not confirmed either way)",
+  "Grind BJJ, 294 N Winooski Ave; United Fighting Arts Institute; Green Mountain Martial Arts Collaborative (no websites found)",
+  "Burlington Yoga and Tapna Yoga (websites do not respond)"
+ ]
+}
