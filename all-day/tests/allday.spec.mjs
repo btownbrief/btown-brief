@@ -9875,11 +9875,7 @@ async function shellFixes(browser, base) {
     const mods = [];
     const walkJs = async (dir) => { for (const f of await readdir(dir, { withFileTypes: true })) { const p = path.join(dir, f.name); if (f.isDirectory()) await walkJs(p); else if (f.name.endsWith('.js')) mods.push(path.relative(APP, p).split(path.sep).join('/')); } };
     await walkJs(path.join(APP, 'js'));
-    /* wave 1 builders may not touch sw.js (a shell file); their new modes join
-       the list at the next shell wave, as their reports ask. The worker is not
-       registered by the page today, so nothing is offline-only meanwhile. */
-    const NEXT_SHELL = ['js/modes/today.js'];
-    check(mods.every((f) => listed.includes(f) || NEXT_SHELL.includes(f)), 'every module in js/ is in the offline list', mods.filter((f) => !listed.includes(f) && !NEXT_SHELL.includes(f)).join(', '));
+    check(mods.every((f) => listed.includes(f)), 'every module in js/ is in the offline list', mods.filter((f) => !listed.includes(f)).join(', '));
     check(listed.every((f) => mods.includes(f)), 'and nothing in the offline list is missing from js/', listed.filter((f) => !mods.includes(f)).join(', '));
     const files = [...sw.matchAll(/'\.\/([\w/.-]+\.[a-z]+)'/g)].map((m) => m[1]);
     const gone = [];
