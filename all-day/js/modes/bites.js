@@ -46,7 +46,6 @@ let root = null, slots = null, pending = null, ready = false;
 
 /* ------------------------------------------------------- the Weekly Bite */
 function paintBite(host) {
-  section(host, 'The Weekly Bite');
   if (E.S.dish === undefined) { host.appendChild(el('p', 'loading', 'Finding this week’s bite…')); return; }
   const p = E.S.dish;
   if (!p) {
@@ -122,9 +121,9 @@ function photoCard(p) {
 /* every approved reader dish, newest first, then the form to send one */
 function paintPhotos(host) {
   const list = E.S.dishes || [];
-  section(host, 'Photos', list.length ? '<b>' + esc(E.plural(list.length, 'dish', 'dishes')) + '</b> · from readers, newest first' : null);
+  section(host, 'Photos');
   if (E.S.dish === undefined) host.appendChild(el('p', 'loading', 'Loading the photos…'));
-  else if (!list.length) host.appendChild(el('p', 'note pad', esc('No reader photos yet. Be the first.')));
+  else if (!list.length) host.appendChild(el('p', 'note pad', esc('No reader photos yet.')));
   else {
     const grid = el('div', 'fgrid');
     const shown = S.dishAll ? list : list.slice(0, DISH_FIRST);
@@ -151,7 +150,6 @@ function paintAdd(host) {
   form.noValidate = true;
   const names = (E.S.places || []).map((r) => '<option value="' + esc(r.name) + '"></option>').join('');
   form.innerHTML =
-    '<p class="note">' + esc('A dish you loved somewhere, or one you made at home.') + '</p>' +
     '<div class="row where"></div>' +
     '<div class="row"><button type="button" class="btn ghost pick">' + ICON.plus + ' ' + esc('Choose a photo') + '</button><span class="note fname">' + esc('No photo yet') + '</span>' +
       '<input type="file" name="file" accept="image/*" hidden></div>' +
@@ -242,7 +240,7 @@ function paintMenus(host) {
     return;
   }
   const all = E.S.menuList.slice().sort((a, b) => a.name.localeCompare(b.name));
-  section(host, 'Menus', '<b>' + esc(E.plural(all.length, 'menu', 'menus')) + '</b> · A to Z · from Small Bites', E.outLink('Small Bites', E.SMALL_BITES_PAGE, 'btn ghost sm', true));
+  section(host, 'Menus');
   const tools = el('div', 'toolrow foodtools');
   const q = el('input', 'field menu-q');
   q.type = 'search';
@@ -285,7 +283,7 @@ function paintAsks(host) {
     host.appendChild(E.S.asksFailed ? el('p', 'note pad', esc('Didn’t load. Try again later.')) : el('p', 'loading', 'Loading the threads…'));
   } else {
     const list = E.asksShown();
-    section(host, 'Asked on Reddit', list.length ? '<b>' + esc(E.plural(list.length, 'thread', 'threads')) + '</b> · newest first' : null, sub);
+    section(host, 'Asked on Reddit', null, sub);
     if (!list.length) host.appendChild(el('p', 'note pad', esc(E.S.asks.length ? 'You muted these subreddits.' : 'No new food questions.')));
     else {
       const items = app.know(list.map(askItem));
@@ -309,7 +307,7 @@ function paintBest(host) {
   }
   if (S.bestGroup !== 'all' && !E.S.best.some((q) => q.group === S.bestGroup)) S.bestGroup = 'all';
   const list = E.S.best.filter((q) => S.bestGroup === 'all' || q.group === S.bestGroup);
-  section(host, 'Best of r/burlington', '<b>' + esc(E.plural(list.length, 'question', 'questions')) + '</b> · most asked first');
+  section(host, 'Best of r/burlington');
   const kinds = [['all', 'All']].concat(GROUPS.filter(([g]) => E.S.best.some((q) => q.group === g)).map(([g, label]) => [g, label]));
   const tools = el('div', 'toolrow foodtools');
   const p = pills(kinds, S.bestGroup, (v) => { S.bestGroup = v; S.bestAll = false; repaintBest(); }, 'kinds');

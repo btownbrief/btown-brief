@@ -13306,16 +13306,14 @@ async function theEat(browser, base) {
   await group('Eat, Inspections: dates and plain English, never a score (live)', async () => {
     const { ctx, page, errors } = await eatOpen(browser, base, '/eat/#food/insp');
     await page.waitForSelector(foodPanel + ' [data-sec="insp"] .lrow.insp', { timeout: 20000 });
-    const head = await page.$eval(foodPanel + ' [data-sec="insp"] .sec', (h) => h.innerText);
-    check(new RegExp('\\b' + matched.size + ' places').test(head), 'every place matched to a record is listed (' + matched.size + ')', head);
     await page.click(foodPanel + ' [data-sec="insp"] .btn.more');
     const rows = await page.$$eval(foodPanel + ' [data-sec="insp"] .lrow.insp', (rs) => rs.map((r) => ({ k: r.dataset.k, t: r.innerText })));
-    check(rows.length === matched.size, 'All opens the whole list', rows.length);
-    check(rows.every((r) => /Inspected [A-Z][a-z]{2} \d{1,2}, \d{4} · /.test(r.t) && /as of [A-Z][a-z]{2} \d{1,2}, \d{4}/.test(r.t)), 'every row: the visit date, its age, and an as-of line', rows.find((r) => !/as of/.test(r.t))?.t);
+    check(rows.length === matched.size, 'every place matched to a record is listed (' + matched.size + ')', rows.length);
+    check(rows.every((r) => /Inspected [A-Z][a-z]{2} \d{1,2}, \d{4} · \S.* ago|Inspected .* · (today|yesterday)/.test(r.t)), 'every row: the visit date and its age', rows.find((r) => !/as of/.test(r.t))?.t);
     const names = await page.$$eval(foodPanel + ' [data-sec="insp"] .lrow.insp .open .t', (ts) => ts.map((t) => t.textContent));
     check(names.every((n, i) => !i || names[i - 1].localeCompare(n) <= 0), 'A to Z, not by score', '');
     const text = await page.$eval(foodPanel + ' [data-sec="insp"]', (s) => s.innerText);
-    check(!NO_GRADE.test(text.replace(/Not a score and not a ranking/, '')), 'no score, grade or pass/fail anywhere in the list', (text.match(NO_GRADE) || [])[0]);
+    check(!NO_GRADE.test(text), 'no score, grade or pass/fail anywhere in the list', (text.match(NO_GRADE) || [])[0]);
     /* the search box narrows it */
     const one = byId[withV.restaurant_id];
     await page.fill(foodPanel + ' .insp-q', one.name.slice(0, 6));
@@ -13328,8 +13326,8 @@ async function theEat(browser, base) {
     const vs = withV.latest.violations;
     check(sheet.items.length === vs.length, 'the sheet lists each of the ' + vs.length + ' items', sheet.items.length);
     check(vs.every((v) => sheet.text.includes(KEY[v.item] ? KEY[v.item].plain_english : v.plain_english)), 'each in the plain-English key', '');
-    check(/critical item/i.test(sheet.items[0]), 'a critical item leads, and says what critical means', sheet.items[0].slice(0, 120));
-    check(/As of [A-Z][a-z]{2} \d{1,2}, \d{4}, from the Vermont Department of Health/.test(sheet.text) && /may have been fixed since/.test(sheet.text), 'the as-of line and the fixed-since caveat', '');
+    check(/Critical/.test(sheet.items[0]), 'a critical item leads, marked Critical', sheet.items[0].slice(0, 120));
+    check(/As of [A-Z][a-z]{2} \d{1,2}, \d{4}/.test(sheet.text) && /fixed since/.test(sheet.text), 'the record’s as-of line and the fixed-since caveat', '');
     check(!NO_GRADE.test(sheet.text), 'no score in the sheet', (sheet.text.match(NO_GRADE) || [])[0]);
     check(!sheet.text.includes(String(withV.latest.score) + ' ') || withV.latest.score < 10, 'the state’s number is not shown', withV.latest.score);
     await page.keyboard.press('Escape');
@@ -13343,7 +13341,7 @@ async function theEat(browser, base) {
     await p2.page.evaluate((id) => { location.hash = 'food/r-' + id; }, one.id);
     await p2.page.waitForSelector('.sheet-body .insp-row a.t', { timeout: 8000 });
     const line = await p2.page.$eval('.sheet-body .insp-row', (r) => r.innerText);
-    check(/^Inspected .* ago/.test(line) && /plain-English list/.test(line), 'a place’s sheet has its inspection line', line);
+    check(/^Inspected .* ago/.test(line) && /noted/i.test(line), 'a place’s sheet has its inspection line', line);
     check(!p2.errors.length, 'no console errors', p2.errors.join(' | '));
     await p2.ctx.close();
   });
@@ -13552,7 +13550,7 @@ async function theEatMarket(browser, base) {
     for (const f of market.community_fridges.filter((x) => !/^(confirmed|active)$/i.test(x.status || ''))) {
       check(!text.includes(f.address.split(',')[0]) && !rows.includes('m-' + f.id), 'the unconfirmed fridge’s address is never shown (' + f.id + ')', '');
     }
-    check(/No community fridge we could confirm in 2026/.test(text), 'no confirmed fridge: it says so', '');
+    check(/None confirmed/.test(text), 'no confirmed fridge: it says so', '');
     check(await page.$eval('#panel-market [data-k="m-fridge-none"] a[href^="mailto:"]', (a) => a.href).then((h) => /^mailto:btownbrief@gmail\.com/.test(h), () => false), 'and asks to be told, by email', '');
     /* apps: "unclear" is said as unclear, never as working here */
     for (const a of rescue.apps) {
@@ -13619,8 +13617,8 @@ async function theEatMarket(browser, base) {
     check(!names.some((n) => /price/.test(n)), 'the form has no price field', names.join(','));
     check(['m:spot', 'm:until', 'm:portions'].every((n) => names.includes(n)), 'it asks for the restaurant, pick-up time and portions', names.join(','));
     const form = await page.$eval('.sheet-body form.bform', (f) => f.innerText);
-    check(/Free only/.test(form) && /Good Samaritan/.test(form), 'it says free only, and why', '');
-    check(/135°F/.test(form) && /allergens/.test(form), 'and the safety line: held hot or cold, allergens listed', '');
+    check(/Free food only/.test(form), 'it says free only', '');
+    check(/kept hot or cold/.test(form) && /allergens/.test(form), 'and the safety line: kept hot or cold, allergens listed', '');
     await page.fill('input[name=title]', 'Six bowls of soup');
     const nameField = await page.$('input[name=display_name]');
     if (nameField) await nameField.fill('Robin');
@@ -13682,7 +13680,7 @@ async function theEatDinner(browser, base) {
     check(next.includes(day), 'its day in plain words (' + day + ')', next);
     check(await page.$eval('#panel-dinner [data-signup]', (a) => a.href) === bites.url, 'Sign up on Meetup links to the event', '');
     const soon = await page.$eval('#panel-dinner [data-k="d-past-soon"]', (n) => n.innerText).catch(() => '');
-    check(/Photos from past dinners land here/.test(soon) && /Coming/.test(soon), 'Past dinners: one card, plainly coming', soon);
+    check(/Photos after the next dinner/.test(soon), 'Past dinners: one card, plainly coming', soon);
     check(!!(await page.$('#panel-dinner [data-railmode="dinner-past"]')), 'the shelf has See as a list', '');
     const mails = await page.$$eval('#panel-dinner a[href^="mailto:"]', (a) => a.map((x) => decodeURIComponent(x.href)));
     check(mails.some((m) => /^mailto:btownbrief@gmail\.com\?subject=Host a Btown Bites table$/.test(m)), 'Host a table emails us', mails.join(' | '));
@@ -13692,7 +13690,7 @@ async function theEatDinner(browser, base) {
     await page.goto(base + '/eat/#dinner/host');
     await settle(page);
     await page.waitForTimeout(400);
-    check(await page.$eval('#panel-dinner [data-sec="host"]', (s) => s.getBoundingClientRect().top) < 300, '#dinner/host jumps to Host a table', '');
+    check(await page.$eval('#panel-dinner [data-sec="host"]', (s) => { const p = s.closest('.panel'); return s.getBoundingClientRect().top < 300 || (p.scrollTop > 0 && p.scrollTop + p.clientHeight >= p.scrollHeight - 2); }), '#dinner/host jumps to Host a table', '');
     check(!errors.length, 'no console errors', errors.join(' | '));
     for (const [w, h] of [[390, 844], [1280, 900]]) for (const scheme of ['light', 'dark']) {
       const s = await newPage(browser, base, { viewport: { width: w, height: h }, scheme, routes: feed([bites]) });
@@ -13710,7 +13708,7 @@ async function theEatDinner(browser, base) {
     await page.goto(base + '/eat/#dinner');
     await settle(page);
     const t = await page.$eval('#panel-dinner [data-sec="next"]', (s) => s.innerText);
-    check(/No dinner on the calendar yet\. The next one is posted on Meetup first\./.test(t), 'no dinner: it says so', t);
+    check(/No dinner on the calendar yet\./.test(t), 'no dinner: it says so', t);
     check(await page.$eval('#panel-dinner [data-k="d-next-none"] a', (a) => a.href) === 'https://www.meetup.com/burlington-social-activites-group/', 'with the group’s link', '');
     check(!/noodle|barbecue joint|Ramen night/.test(await page.$eval('#panel-dinner', (p) => p.innerText)), 'live never shows the demo’s dinners', '');
     check(!errors.length, 'no console errors', errors.join(' | '));

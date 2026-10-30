@@ -44,9 +44,9 @@ const SECTIONS = [['week', 'This week'], ['season', 'In season'], ['farms', 'Far
 const DAYS = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
 const DAY_PLURAL = { sun: 'Sundays', mon: 'Mondays', tue: 'Tuesdays', wed: 'Wednesdays', thu: 'Thursdays', fri: 'Fridays', sat: 'Saturdays' };
 const MONTHS = ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december'];
-const FREE_NOTE = 'Free only. Food sold at a discount isn’t covered by Vermont’s Good Samaritan law, so this board is for food you give away.';
+const FREE_NOTE = 'Free food only.';
 /* from rescue.json's rules: vt-time-temperature, vt-no-reservice, allergen-disclosure */
-const SAFE_NOTE = 'Only food that never left the kitchen, held hot (135°F or above) or cold (41°F or below), with its ingredients and allergens listed.';
+const SAFE_NOTE = 'Food that never left the kitchen, kept hot or cold, allergens listed.';
 
 const S = {
   root: null, slots: null, pending: null, ready: false,
@@ -212,7 +212,7 @@ function pillButton(label, aria, fn) {
   b.addEventListener('click', fn);
   return b;
 }
-const failNote = (box, what) => box.appendChild(el('p', 'note pad', esc(what + ' didn’t load. Try again later.')));
+const failNote = (box, what) => box.appendChild(el('p', 'note pad', esc('Didn’t load.')));
 
 /* ------------------------------------------------------------ This week */
 /* a market on a day: its summer season, else its winter dates */
@@ -248,7 +248,7 @@ function whenBack(m, today) {
 }
 
 function paintWeek(box) {
-  section(box, 'This week', S.market ? esc('Farmers markets, the next seven days') : null);
+  section(box, 'This week');
   if (!S.market) { failNote(box, 'The markets'); return; }
   const today = todayIso();
   const days = Array.from({ length: 7 }, (_, i) => addDays(today, i));
@@ -314,12 +314,12 @@ function vendorSheet(x) {
   app.sheet('Vendors: ' + x.name, (body) => {
     const list = x.vendors || [];
     if (!list.length) {
-      body.appendChild(el('p', 'sheet-note', esc('No vendor list we could read for this one.')));
+      body.appendChild(el('p', 'sheet-note', esc('No vendor list.')));
       if (x.vendorsUrl) { const r = el('div', 'linkrow'); r.appendChild(outLink('The market’s own list', x.vendorsUrl, 'btn sm')); body.appendChild(r); }
       return;
     }
     const byCat = list.every((v) => /category only/i.test(v.sells || ''));
-    body.appendChild(el('p', 'sheet-note', esc(list.length + ' vendors' + (byCat ? ', by kind. The market lists kinds, not what each one sells.' : '.'))));
+    body.appendChild(el('p', 'sheet-note', esc(list.length + ' vendors')));
     let last = null;
     list.forEach((v) => {
       const cat = byCat ? cleanSells(v.sells) : null;
@@ -333,7 +333,7 @@ function vendorSheet(x) {
 
 /* ------------------------------------------------------------ In season */
 function paintSeason(box) {
-  section(box, 'In season', S.market ? esc('Vermont produce this month') : null);
+  section(box, 'In season');
   if (!S.market) { failNote(box, 'The produce chart'); return; }
   const m = Number(todayIso().slice(5, 7));
   const months = S.market.in_season || [];
@@ -343,8 +343,7 @@ function paintSeason(box) {
   const tc = el('div', 'textcard');
   tc.dataset.k = key;
   tc.innerHTML = '<h3 class="serif">' + esc(now.month_name) + '</h3><p>' + esc((now.produce || []).join(' · ')) + '</p>' +
-    (next ? '<p class="fine">' + esc('In ' + next.month_name + ': ' + (next.produce || []).join(' · ')) + '</p>' : '') +
-    '<p class="fine">' + esc('Grown in Vermont, stored and greenhouse crops included.') + '</p>';
+    (next ? '<p class="fine">' + esc('In ' + next.month_name + ': ' + (next.produce || []).join(' · ')) + '</p>' : '');
   const row = el('div', 'row');
   row.appendChild(outLink('Source: ' + esc(host(now.source_url)), now.source_url));
   tc.appendChild(row);
@@ -354,7 +353,7 @@ function paintSeason(box) {
 /* ---------------------------------------------------------------- Farms */
 function paintFarms(box) {
   const all = S.market ? S.market.farms_direct || [] : [];
-  section(box, 'Farms', S.market ? esc(all.length + ' farms that sell to you direct') : null);
+  section(box, 'Farms');
   if (!S.market) { failNote(box, 'The farms'); return; }
   if (!all.length) { box.appendChild(el('p', 'note pad', esc('No farms listed yet.'))); return; }
   const shown = S.farmsAll ? all : all.slice(0, FIRST_FARMS);
@@ -386,7 +385,7 @@ function farmSheet(key, f, sells) {
 
 /* --------------------------------------------------------------- Fridge */
 function paintFridge(box) {
-  section(box, 'Fridge', S.market ? esc('Food shelves, and free fridges') : null);
+  section(box, 'Fridge');
   if (!S.market) { failNote(box, 'The food shelves'); return; }
   box.appendChild(el('div', 'tdiv', '<span>' + esc('Food shelves') + '</span>'));
   (S.market.food_shelves || []).forEach((f) => {
@@ -415,7 +414,7 @@ function paintFridge(box) {
   if (!ok.length) {
     const tc = el('div', 'textcard gap');
     tc.dataset.k = 'm-fridge-none';
-    tc.innerHTML = '<p>' + esc('No community fridge we could confirm in 2026. Know one? Tell us.') + '</p>';
+    tc.innerHTML = '<p>' + esc('None confirmed.') + '</p>';
     const row = el('div', 'row');
     const a = el('a', 'btn ghost sm', ICON.mail + ' ' + esc('Tell us'));
     a.href = mailto('A community fridge in Burlington');
@@ -455,14 +454,14 @@ function fridgeSheet(key, f) {
 function paintRescue(box) {
   const post = S.board ? button(ICON.plus + ' ' + esc('Post leftovers'), 'ghost sm', postLeftovers) : null;
   if (post) { post.dataset.act = 'rescuepost'; post.setAttribute('aria-label', 'Post free leftovers'); }
-  section(box, 'Rescue', esc('Free food at closing, and who rescues it'), post);
+  section(box, 'Rescue', null, post);
   const b = el('div', 'tdiv', '<span>' + esc('Free food at closing') + '</span>');
   box.appendChild(b);
   if (S.board === undefined) box.appendChild(el('p', 'note pad', esc('Checking the board…')));
   else if (S.board === false) {
     const tc = el('div', 'textcard gap');
     tc.dataset.k = 'm-board-soon';
-    tc.innerHTML = '<h3>' + esc('Opens soon') + '</h3><p>' + esc('Kitchens will post the food they have left at closing, free, for you to pick up that night.') + '</p>';
+    tc.innerHTML = '<h3>' + esc('Opens soon') + '</h3>';
     const row = el('div', 'row');
     const a = el('a', 'btn ghost sm', ICON.mail + ' ' + esc('Run a kitchen? Tell us'));
     a.href = mailto('The rescue board: count our kitchen in');
@@ -472,14 +471,13 @@ function paintRescue(box) {
   } else {
     const feed = el('div', 'feed rescue-board');
     if (S.boardFailed) feed.appendChild(el('p', 'note pad', esc('The board didn’t load. Try again later.')));
-    else if (!S.posts.length) feed.appendChild(el('p', 'note pad', esc('Nothing posted tonight. Kitchens post what’s left at closing, and it’s gone by morning.')));
+    else if (!S.posts.length) feed.appendChild(el('p', 'note pad', esc('Nothing posted tonight.')));
     else boards.draw(feed, S.posts, { tab: KEY, meta: boardMeta });
     app.bindFeed(feed);
     box.appendChild(feed);
-    box.appendChild(el('p', 'note pad', esc(FREE_NOTE)));
   }
 
-  box.appendChild(el('div', 'tdiv', '<span>' + esc('Who rescues food here') + '</span>'));
+  box.appendChild(el('div', 'tdiv', '<span>' + esc('Rescue groups') + '</span>'));
   if (!S.rescue) { failNote(box, 'The rescue groups'); return; }
   S.rescue.organizations.forEach((o) => {
     const key = 'm-' + o.id;
@@ -491,7 +489,7 @@ function paintRescue(box) {
     }));
   });
 
-  box.appendChild(el('div', 'tdiv', '<span>' + esc('The apps') + '</span><span class="s">' + esc('Do they work in Burlington?') + '</span>'));
+  box.appendChild(el('div', 'tdiv', '<span>' + esc('Apps') + '</span>'));
   const rank = (a) => (a.serves_burlington === true ? 0 : a.serves_burlington === false ? 2 : 1);
   S.rescue.apps.slice().sort((a, b) => rank(a) - rank(b)).forEach((a) => {
     const key = 'm-' + a.id;
@@ -539,7 +537,7 @@ function orgSheet(key, o) {
 }
 function appSheet(key, a) {
   app.sheet(a.name, (body) => {
-    body.appendChild(el('p', 'sheet-note', esc(servesWord(a.serves_burlington) + (a.serves_burlington === 'unclear' || a.serves_burlington == null ? '. Nobody we could find says it works here.' : '.'))));
+    body.appendChild(el('p', 'sheet-note', esc(servesWord(a.serves_burlington) + '')));
     sheetRow(body, 'What it is', a.what_it_is);
     sheetRow(body, 'What we found', a.evidence);
     sheetRow(body, 'How to use it', a.how_to_use);

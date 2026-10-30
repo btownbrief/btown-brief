@@ -86,8 +86,7 @@ function paintNext(box) {
   const tc = el('div', 'textcard');
   if (!n) {
     tc.dataset.k = 'd-next-none';
-    tc.innerHTML = '<p>' + esc(S.failed ? 'The calendar didn’t load. Dinners are posted on Meetup first.'
-      : 'No dinner on the calendar yet. The next one is posted on Meetup first.') + '</p>';
+    tc.innerHTML = '<p>' + esc(S.failed ? 'Didn’t load.' : 'No dinner on the calendar yet.') + '</p>';
     const row = el('div', 'row');
     row.appendChild(outLink('Btown Bites on Meetup ' + ICON.ext, S.group, 'btn sm'));
     tc.appendChild(row);
@@ -96,7 +95,7 @@ function paintNext(box) {
   }
   const ms = Date.parse(n.starts_at);
   tc.dataset.k = 'd-next';
-  tc.innerHTML = '<span class="eyebrow">' + esc('Tables of six') + '</span><h3 class="serif">' + esc(n.title) + '</h3>' +
+  tc.innerHTML = '<h3 class="serif">' + esc(n.title) + '</h3>' +
     '<p><b>' + esc(dayWords(ms)) + '</b> · ' + esc(timeWords(ms)) + '</p>' +
     (n.location ? '<p>' + ICON.pin + ' ' + esc(n.location) + '</p>' : '');
   const row = el('div', 'row');
@@ -104,7 +103,6 @@ function paintNext(box) {
   go.dataset.signup = '1';
   row.appendChild(go);
   tc.appendChild(row);
-  tc.appendChild(el('p', 'fine', esc('We book the table ahead, so RSVP early.')));
   box.appendChild(tc);
 }
 
@@ -112,10 +110,7 @@ function paintSignup(box) {
   section(box, 'Sign up');
   const tc = el('div', 'textcard');
   tc.dataset.k = 'd-signup';
-  tc.innerHTML = '<h3>' + esc('How it works') + '</h3>' +
-    '<p>' + esc('Btown Bites is a dinner for 21 to 35 year olds who’d like to meet a few new people over a good meal.') + '</p>' +
-    '<p>' + esc('You sit at a table of six. Say yes on Meetup, and we make the reservation ahead, so RSVP early.') + '</p>' +
-    '<p>' + esc('Come as you are. Coming on your own is the point.') + '</p>';
+  tc.innerHTML = '<p>' + esc('Dinner for 21 to 35, at tables of six. RSVP on Meetup.') + '</p>';
   const row = el('div', 'row');
   row.appendChild(outLink('Join the group on Meetup ' + ICON.ext, S.group, 'btn sm'));
   tc.appendChild(row);
@@ -130,8 +125,7 @@ function paintPast(box) {
     a.dataset.k = 'd-past-soon';
     a.href = safeHref(S.group);
     a.target = '_blank'; a.rel = 'noopener';
-    a.innerHTML = '<span class="c-media r45"><b>' + esc('Coming') + '</b></span><span class="t">' + esc('Photos from past dinners land here.') + '</span>' +
-      '<span class="s">' + esc('After the next one.') + '</span>';
+    a.innerHTML = '<span class="c-media r45"><b>' + esc('Coming') + '</b></span><span class="t">' + esc('Photos after the next dinner.') + '</span>';
     r.appendChild(a);
     return;
   }
@@ -149,8 +143,7 @@ function paintHost(box) {
   section(box, 'Host a table');
   const tc = el('div', 'textcard');
   tc.dataset.k = 'd-host';
-  tc.innerHTML = '<p>' + esc('Have a favorite spot and a free evening? Host a table: pick the place and the night, and we post it on Meetup so five people can join you.') + '</p>' +
-    '<p>' + esc('You don’t need to know anyone. Just be the one who says hello first.') + '</p>';
+  tc.innerHTML = '<p>' + esc('Pick a place and a night. We post it on Meetup.') + '</p>';
   const row = el('div', 'row');
   row.appendChild(mailLink('Email us', 'Host a Btown Bites table'));
   tc.appendChild(row);
@@ -162,8 +155,7 @@ function paintRestaurants(box) {
   section(box, 'Restaurants');
   const tc = el('div', 'textcard');
   tc.dataset.k = 'd-restaurants';
-  tc.innerHTML = '<p>' + esc('Have room for a table of six on a weeknight? Host Btown Bites at your restaurant. We book ahead and bring a table of new faces.') + '</p>' +
-    '<p>' + esc('Tell us your nights and how many tables you can hold.') + '</p>';
+  tc.innerHTML = '<p>' + esc('Room for a table of six? Host Btown Bites.') + '</p>';
   const row = el('div', 'row');
   row.appendChild(mailLink('Email us', 'Host Btown Bites at our restaurant'));
   tc.appendChild(row);

@@ -63,9 +63,9 @@ function paintToday(host) {
   const all = deck(t);
   const cards = all.slice(0, DECK_MAX);
   const every = E.outLink('See all deals', E.DEALS_PAGE, 'btn ghost sm alldeals', true);
-  section(host, 'Deals today', all.length ? '<b>' + esc(E.plural(all.length, 'deal', 'deals')) + '</b> · now first' : null, every);
+  section(host, 'Deals today', null, every);
   if (!cards.length) {
-    host.appendChild(el('p', 'note pad', esc(E.S.staleDeals ? 'No recently verified deals today.' : 'No deals on today.')));
+    host.appendChild(el('p', 'note pad', esc('No deals today.')));
     return;
   }
   if (S.deal > cards.length) S.deal = 0;
@@ -129,7 +129,7 @@ function happyHours(t) {
 function paintHH(host) {
   const t = E.now();
   const list = happyHours(t);
-  section(host, 'Happy hour', list.length ? '<b>' + esc(E.plural(list.length, 'happy hour', 'happy hours')) + '</b> · today, by start time' : null);
+  section(host, 'Happy hour');
   if (!list.length) { host.appendChild(el('p', 'note pad', esc('No happy hours left today.'))); return; }
   const box = el('div', 'places');
   list.forEach((x) => {
@@ -165,8 +165,8 @@ function cheapDeals(t) {
 function paintCheap(host) {
   const t = E.now();
   const list = cheapDeals(t);
-  section(host, 'Under $10', list.length ? '<b>' + esc(E.plural(list.length, 'deal', 'deals')) + '</b> · $10 or less, today’s first' : null);
-  if (!list.length) { host.appendChild(el('p', 'note pad', esc('No deals at $10 or less this week.'))); return; }
+  section(host, 'Under $10');
+  if (!list.length) { host.appendChild(el('p', 'note pad', esc('None this week.'))); return; }
   const box = el('div', 'places');
   list.forEach(({ d }) => {
     const when = E.deal12([F().dealDaysLabel(d), F().dealTimeLabel(d)].filter(Boolean).join(' · '));
@@ -174,7 +174,6 @@ function paintCheap(host) {
     box.appendChild(dealRow(d, t, (on ? '<span class="ok">' + esc('Today') + '</span> · ' : '') + esc([when, E.verified(d.last_verified, t)].filter(Boolean).join(' · ')), 'cheap'));
   });
   host.appendChild(box);
-  host.appendChild(el('p', 'note pad', esc('Read off each deal’s own words. Check with the place before you go.')));
 }
 
 /* ---------------------------------------------------------------- render */

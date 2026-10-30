@@ -44,8 +44,8 @@ const SECS = [
 /* the section a place belongs to, by its status (a deep link lands there) */
 const HOME = { just_opened: 'just', coming_soon: 'soon', closing_soon: 'closing', closed: 'closed' };
 const EMPTY = {
-  just: 'Nothing new opened lately.', soon: 'Nothing announced yet.', closing: 'Nothing closing soon.',
-  closed: 'Nothing has closed lately.', month: 'Nothing new this past month.', reminisce: 'No past editions to look back on yet.',
+  just: 'Nothing new.', soon: 'Nothing announced.', closing: 'Nothing closing soon.',
+  closed: 'Nothing closed lately.', month: 'Nothing this month.', reminisce: 'Nothing yet.',
 };
 const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 const DAYS_LONG = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
@@ -148,7 +148,7 @@ function newestOf(k, list) {
 function dateLine(e) {
   const P = e.P;
   if (e.status === 'just_opened') return P.o ? 'Opened ' + plainDay(P.o) : 'Just opened';
-  if (e.status === 'closing_soon') return P.c ? 'Last day ' + plainDay(P.c, true) + ' · go before it closes' : 'Closing soon · go while you can';
+  if (e.status === 'closing_soon') return P.c ? 'Last day ' + plainDay(P.c, true) : 'Closing soon';
   if (e.status === 'closed') return P.x ? 'Closed ' + plainDay(P.x) : P.c ? 'Closed ' + plainDay(P.c) : 'Closed';
   if (e.status === 'coming_soon') {
     if (P.e && P.e.n >= S.today) return 'Expected ' + plainDay(P.e);
@@ -215,9 +215,7 @@ function render() {
     const list = L[k];
     const box = el('section', 'shelf-sec');
     box.dataset.sec = k;
-    const sub = k === 'closing' ? 'Go before they close · soonest first' : k === 'reminisce' ? 'Places the Brief wrote about'
-      : k === 'month' ? 'Opened, announced or closed in the last 31 days' : 'Newest first';
-    section(box, label, list.length ? '<b>' + esc(plural(list.length, 'place', 'places')) + '</b> · ' + esc(sub) : null);
+    section(box, label);
     if (!list.length) box.appendChild(el('p', 'note pad', esc(EMPTY[k])));
     const capped = CAPPED.includes(k);
     const shown = capped && !S.open[k] ? list.slice(0, FIRST) : list;

@@ -150,7 +150,7 @@ function paintOpen(host) {
   const f = filterOf(S.f);
   const { next, list } = shownPlaces(t);
   const by = S.sort === 'me' && !S.me ? sortOf('near') : sortOf(S.sort);
-  section(host, next ? 'Opening next' : 'Open now', '<b>' + esc(E.plural(list.length, 'place', 'places')) + '</b> · ' + esc(next ? 'soonest first' : by.sub), mapButton(list));
+  section(host, next ? 'Opening next' : 'Open now', null, mapButton(list));
   host.appendChild(chips(FILTERS.map((x) => ({ key: x.key, label: x.label, n: listFor(x.key, t).length })), next ? null : S.f,
     (k) => { S.f = k; S.chose = true; S.all = false; S.pick = null; paint('open'); paint('random'); }, 'filters'));
   const tools = el('div', 'toolrow foodtools');
@@ -248,8 +248,8 @@ function placeRow(r, t, cls) {
 function paintRandom(host) {
   const t = E.now();
   const { next, list } = shownPlaces(t);
-  section(host, 'Randomizer', esc(next ? 'From what opens next' : 'From the ' + filterOf(S.f).label.toLowerCase() + ' list'));
-  if (!list.length) { host.appendChild(el('p', 'note pad', esc('Nothing on the list to pick from right now.'))); return; }
+  section(host, 'Randomizer');
+  if (!list.length) { host.appendChild(el('p', 'note pad', esc('Nothing to pick from.'))); return; }
   if (S.pick && !list.includes(S.pick)) S.pick = null;
   const box = el('div', 'places spinbox');
   if (S.pick) box.appendChild(placeRow(S.pick, t, 'spun'));
@@ -276,8 +276,7 @@ function paintInsp(host) {
     return;
   }
   const all = inspPlaces();
-  section(host, 'Inspections', '<b>' + esc(E.plural(all.length, 'place', 'places')) + '</b> · A to Z · Vermont Department of Health');
-  host.appendChild(el('p', 'note pad', esc('The latest health inspection for each place, in plain English, with its date. Not a score and not a ranking. An item listed may have been fixed since.')));
+  section(host, 'Inspections');
   const tools = el('div', 'toolrow foodtools');
   const q = el('input', 'field insp-q');
   q.type = 'search';
@@ -302,22 +301,16 @@ function paintInspList(box) {
     const row = el('div', 'lrow insp');
     row.dataset.k = 'i-' + r.id;
     const b = el('button', 'open', '<div class="t">' + esc(r.name) + '</div><div class="s">' + esc(E.inspLine(rec, now)) + '</div>' +
-      '<div class="s">' + esc(E.inspNoted(rec) + ' · as of ' + E.longDate(rec.as_of)) + '</div>');
+      '<div class="s">' + esc(E.inspNoted(rec)) + '</div>');
     b.setAttribute('aria-label', r.name + ': ' + E.inspLine(rec, now) + '. The plain-English list');
     b.addEventListener('click', () => E.inspSheet(r));
     row.append(el('span', 'th bare', mark(r.name, 'round')), b);
     rows.appendChild(row);
   });
   box.appendChild(rows);
-  if (!list.length) box.appendChild(el('p', 'note pad', esc(want ? 'No place by that name in the records we matched.' : 'No inspections matched yet.')));
+  if (!list.length) box.appendChild(el('p', 'note pad', esc(want ? 'No place by that name.' : 'No inspections yet.')));
   else if (list.length > shown.length) box.appendChild(button('All ' + list.length + ' ' + ICON.arrow, 'ghost more', () => { S.inspAll = true; paintInspList(box); }));
   else if (S.inspAll && !want && list.length > INSP_FIRST) box.appendChild(collapseBar('the inspections', () => { S.inspAll = false; paintInspList(box); jump('insp'); }));
-  if (E.S.inspMeta && E.S.inspMeta.portal) {
-    const links = el('div', 'linkrow');
-    links.appendChild(E.outLink('The state’s records', E.S.inspMeta.portal));
-    if (E.S.inspMeta.guide) links.appendChild(E.outLink('How to read a report', E.S.inspMeta.guide));
-    box.appendChild(links);
-  }
 }
 
 /* ---------------------------------------------------------------- the map */
@@ -359,11 +352,9 @@ function dropMap() { if (M) { try { M.remove(); } catch (e) { /* already gone */
 
 function openMap() {
   const t = E.now();
-  const f = filterOf(S.f);
   const shown = shownPlaces(t);
   const list = shown.list.filter((r) => r.coords && r.coords.length === 2);
   app.sheet('Map', (body) => {
-    body.appendChild(el('p', 'sheet-note', '<b>' + esc(E.plural(list.length, 'place', 'places')) + '</b> · ' + esc(shown.next ? 'opening next' : f.label.toLowerCase())));
     const box = el('div', 'foodmap');
     box.dataset.k = 'map';
     const bar = el('div', 'linkrow');

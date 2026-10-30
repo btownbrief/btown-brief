@@ -41,7 +41,6 @@ const FOOD_LIB = '../js/food-lib.js';
 export const PHOTOS_LIB = '../js/photos-lib.js';
 export const GUIDE_URL = '../restaurants.html';
 export const DEALS_PAGE = '../restaurants.html?view=deals';
-export const SMALL_BITES_PAGE = '../small-bites.html';
 const DIRECTORY_URL = './data/food-directory.json';
 const INTAKE_URL = 'https://raw.githubusercontent.com/btownbrief/btown-brief/reddit-data/data/reddit-intake.json';
 const BESTOF_URL = '../data/best-of-reddit.json';
@@ -318,7 +317,7 @@ export function inspNoted(rec) {
   if (!vs.length) return 'Nothing noted';
   return vs.length === 1 ? 'One item noted' : vs.length + ' items noted';
 }
-export const asOfLine = (rec) => 'As of ' + longDate(rec.as_of) + ', from the Vermont Department of Health’s public records.';
+export const asOfLine = (rec) => 'As of ' + longDate(rec.as_of);
 
 /* The inspection sheet: the visit, its age, each item in plain English
    (the critical ones first, marked as the kind most tied to illness, and
@@ -330,18 +329,17 @@ export function inspSheet(r) {
   const now = Date.now();
   app.sheet(r.name, (body) => {
     const l = rec.latest;
-    body.appendChild(el('p', 'sheet-note', esc('Health inspection · ' + inspLine(rec, now) + (l.type ? ' · ' + l.type.toLowerCase() + ' visit' : ''))));
+    body.appendChild(el('p', 'sheet-note', esc(longDate(l.date) + ' · ' + ageWords(l.date, now))));
     const vs = (l.violations || []).slice().sort((a, b) => (b.critical ? 1 : 0) - (a.critical ? 1 : 0));
-    body.appendChild(el('div', 'sheet-h', esc(vs.length ? 'What the inspector noted' : 'What the inspector noted: nothing')));
+    body.appendChild(el('div', 'sheet-h', esc(vs.length ? 'Noted' : 'Nothing noted')));
     vs.forEach((v) => {
-      const bits = [v.critical ? 'A critical item: the kind most tied to foodborne illness' : '', v.corrected_on_site ? 'Fixed on the spot' : '',
+      const bits = [v.critical ? 'Critical' : '', v.corrected_on_site ? 'Fixed on the spot' : '',
         v.correct_by ? 'To fix by ' + longDate(v.correct_by) : ''].filter(Boolean);
-      const said = v.inspector_note ? '<div class="d">' + esc('The inspector: “' + trim(v.inspector_note, 220) + '”') + '</div>' : '';
-      const row = el('div', 'sheet-row insp-v', '<div class="t">' + esc(vSay(v)) + (bits.length ? '<div class="d">' + esc(bits.join(' · ')) + '</div>' : '') + said + '</div>');
+      const row = el('div', 'sheet-row insp-v', '<div class="t">' + esc(vSay(v)) + (bits.length ? '<div class="d">' + esc(bits.join(' · ')) + '</div>' : '') + '</div>');
       row.dataset.k = 'v-' + String(v.item);
       body.appendChild(row);
     });
-    if (vs.length) body.appendChild(el('p', 'sheet-note', esc('An item listed here may have been fixed since. The state’s records don’t show later fixes.')));
+    if (vs.length) body.appendChild(el('p', 'sheet-note', esc('Some may be fixed since.')));
     const earlier = (rec.history || []).filter((h) => h && h.date && h.date !== l.date).slice(0, 6);
     if (earlier.length) {
       body.appendChild(el('div', 'sheet-h', esc('Earlier visits')));
@@ -350,8 +348,7 @@ export function inspSheet(r) {
     body.appendChild(el('p', 'sheet-note insp-asof', esc(asOfLine(rec))));
     const links = el('div', 'linkrow');
     const src = rec.source_url || S.inspMeta.portal;
-    if (src) links.appendChild(outLink('The state’s records', src));
-    if (S.inspMeta.guide) links.appendChild(outLink('How to read a report', S.inspMeta.guide));
+    if (src) links.appendChild(outLink('State records', src));
     body.appendChild(links);
   });
 }
@@ -502,7 +499,7 @@ export function placeSheet(r) {
     if (rec) {
       body.appendChild(el('div', 'sheet-h', esc('Health inspection')));
       const row = el('div', 'sheet-row insp-row');
-      const b = el('a', 't', esc(inspLine(rec, Date.now())) + ' ' + ICON.arrow + '<div class="d">' + esc(inspNoted(rec) + ' · the plain-English list') + '</div>');
+      const b = el('a', 't', esc(inspLine(rec, Date.now())) + ' ' + ICON.arrow + '<div class="d">' + esc(inspNoted(rec)) + '</div>');
       b.href = '#' + KEY + '/i-' + encodeURIComponent(r.id);
       b.addEventListener('click', (e) => { e.preventDefault(); inspSheet(r); });
       row.appendChild(b);
@@ -572,9 +569,8 @@ function postTile(p, close) {
 /* Owners: send a clip of your own dishes, we add it free. A mailto, no form. */
 export function ownerSheet(r) {
   app.sheet('Feature your restaurant', (body) => {
-    body.appendChild(el('p', 'sheet-note', esc('Send a clip of your own dishes. We add it free.')));
     const row = el('div', 'linkrow');
-    const a = el('a', 'btn mailto', ICON.mail + ' ' + esc('Email a clip'));
+    const a = el('a', 'btn mailto', ICON.mail + ' ' + esc('Email a clip of your dishes'));
     a.href = 'mailto:' + OWNER_MAIL + '?subject=' + encodeURIComponent('Feature my restaurant' + (r ? ': ' + r.name : ''));
     row.appendChild(a);
     body.appendChild(row);
