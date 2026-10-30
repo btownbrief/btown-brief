@@ -87,9 +87,10 @@ function drawAZ(box) {
     if (!letters.has(L)) letters.set(L, []);
     letters.get(L).push(it);
   });
+  /* an index: names only, no pictures */
   letters.forEach((list, L) => {
     box.appendChild(el('div', 'pp-tl-year', esc(L)));
-    rows(box, list, 'x', { cls: 'tight' });
+    rows(box, list.map((it) => ({ ...it, emoji: null })), 'x', { cls: 'tight' });
   });
 }
 

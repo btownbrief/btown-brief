@@ -62,7 +62,7 @@ function drawLatest(box, latest) {
   const [first, ...rest] = S.eds;
   if (!first) { P.noteLine(box, 'Couldn’t load the editions.'); return; }
   const preview = latest && latest.url === first.url ? String(latest.preview || '').replace(/\s+/g, ' ') : '';
-  box.appendChild(bigCard(first, 'The latest edition', preview));
+  box.appendChild(bigCard(first, '', preview));
   const list = el('div', 'pp-list');
   rest.slice(0, 6).forEach((e) => { const n = edRow(e); if (n) list.appendChild(n); });
   box.appendChild(list);
@@ -182,10 +182,9 @@ function drawLastYear(box) {
     if (before) hits = [before];
   }
   if (!hits.length) { P.noteLine(box, 'Nothing from a year ago.'); return; }
-  hits.slice().reverse().forEach((e, i) => {
-    if (i) box.appendChild(el('div', 'pp-gap'));
-    box.appendChild(bigCard(e, String(e.d.getFullYear()), ''));
-  });
+  const list = el('div', 'pp-list');
+  hits.slice().reverse().forEach((e) => { const n = edRow(e); if (n) list.appendChild(n); });
+  box.appendChild(list);
 }
 
 function drawRandom(box) {

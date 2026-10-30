@@ -13374,7 +13374,7 @@ async function thePaper(browser, base) {
       return { secs: [...p.querySelectorAll('.pp-sec')].map((s) => s.dataset.sec), big: p.querySelector('[data-sec="latest"] .pp-big h3 a')?.getAttribute('href'),
         rows: p.querySelectorAll('[data-sec="latest"] .pp-row').length, days: p.querySelectorAll('.pp-day').length, months: p.querySelectorAll('.pp-month').length,
         topics: [...p.querySelectorAll('[data-sec="interest"] .chip')].map((c) => c.textContent), food: p.querySelector('[data-sec="interest"] .pp-count')?.textContent,
-        lastyear: p.querySelectorAll('[data-sec="lastyear"] .pp-big').length, random: !!p.querySelector('[data-sec="random"] .pp-big'),
+        lastyear: p.querySelectorAll('[data-sec="lastyear"] .pp-row').length, random: !!p.querySelector('[data-sec="random"] .pp-big'),
         ask: p.querySelector('[data-sec="ask"] a.btn')?.getAttribute('href') };
     });
     check(JSON.stringify(e.secs) === JSON.stringify(['latest', 'bydate', 'interest', 'search', 'lastyear', 'random', 'ask']), 'the seven top tabs, in order', JSON.stringify(e.secs));

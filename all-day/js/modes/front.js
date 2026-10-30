@@ -107,7 +107,8 @@ function draw(d) {
   const root = S.root;
   root.innerHTML = '';
   S.slots = {};
-  const page = P.bind(el('div', 'pp'));
+  const page = P.bind(el('div', 'pp' + (S.arrived ? '' : ' arrive')));
+  S.arrived = true;
 
   /* Today: the date, the mission, the strip */
   const today = P.block(page, 'today', 'Today');

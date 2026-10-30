@@ -32,7 +32,8 @@ function threadRows(host, list, prefix) {
   const items = list.filter(keep).map((x, i) => {
     const at = t2s(x.when);
     return P.item(KEY, prefix + '-' + i + '-' + x.url, { kind: 'post', title: clean(x.title), href: x.url, eyebrow: x.label || x.slot_label || null,
-      line: [x.blurb ? '“' + clean(x.blurb).slice(0, 140) + '”' : '', [x.sub, at ? P.ago(at) : ''].filter(Boolean).join(' · ')].filter(Boolean).join(' ') });
+      /* a thread's title and where, never its comments: they are strangers' words */
+      line: [x.sub, at ? P.ago(at) : ''].filter(Boolean).join(' · ') });
   });
   app.know(items);
   const box = el('div', 'pp-list');

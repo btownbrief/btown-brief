@@ -246,7 +246,8 @@ export function spotlight(catalog, day = townDay()) {
 const CSS = `
 .pp { max-width: var(--col); margin: 0 auto; padding-bottom: var(--s6); }
 .pp-sec + .pp-sec { margin-top: var(--s2); }
-.pp-dateline { padding: var(--s4) var(--gutter) 0; color: var(--ink-3); }
+.pp-dateline { margin: var(--s4) var(--gutter) 0; padding-bottom: var(--s2); border-bottom: 1px solid var(--line); color: var(--ink-3); }
+.pp-dateline + .pp-mission { padding-top: var(--s3); }
 .pp-dateline .eyebrow { color: var(--ink-3); }
 .pp-mission { padding: var(--s2) var(--gutter) var(--s4); font-family: var(--serif); font-size: var(--fs-w-lead-xl); font-weight: 500; line-height: var(--lh-tight); color: var(--ink); }
 .pp-creed { padding: 0 var(--gutter) var(--s3); font-family: var(--serif); font-size: var(--fs-lead); font-style: italic; line-height: 1.45; color: var(--ink-2); }
@@ -297,7 +298,6 @@ const CSS = `
 .pp-apps { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s2); padding: 0 var(--gutter); }
 .pp-apps.col { grid-template-columns: minmax(0, 1fr); padding: 0; }
 .pp-app { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; gap: var(--s2); padding: var(--s2); border: 1px solid var(--line); border-radius: var(--r-media); background: var(--raised); color: var(--ink); }
-.rail .pp-app { width: 236px; }
 @media (min-width: 1280px) { body.has-aside .pp-apps-sec { display: none; } }
 .pp-go { display: inline-flex; color: var(--ink-3); }
 .pp-go .i { width: 18px; height: 18px; }
@@ -305,7 +305,8 @@ const CSS = `
 .pp-app.on { border-color: var(--ink); }
 .pp-app-w { min-width: 0; line-height: 1.25; }
 .pp-app-w b { display: block; font-size: var(--fs-button); font-weight: 700; }
-.pp-app-w span { display: block; font-size: var(--fs-small); color: var(--ink-3); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pp-app-w span { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; font-size: var(--fs-small); color: var(--ink-3); }
+.rail .pp-app { width: 200px; align-items: start; }
 .pp-note { margin-top: var(--s2); }
 .pp-tl-year { padding: var(--s4) var(--gutter) var(--s1); font-family: var(--serif); font-size: var(--fs-date); font-weight: 500; color: var(--ink); border-bottom: 1px solid var(--line); }
 .pp-months { padding: 0 var(--gutter); }
@@ -334,6 +335,12 @@ const CSS = `
 .pp-qsheet .sheet-row a.t { color: var(--ink); }
 .aside .pp-aside h3 { font-family: var(--serif); font-size: var(--fs-section); font-weight: 500; padding: 0 0 var(--s2); }
 @media (min-width: 1024px) { .pp-mission { font-size: var(--fs-count); } }
+/* the first screen settles in once, gently; never for a reader who asks for less motion */
+.pp.arrive .pp-mission, .pp.arrive .pp-mail, .pp.arrive [data-sec="questions"], .pp.arrive .pp-lead { animation: rise .45s cubic-bezier(.2, .7, .2, 1) both; }
+.pp.arrive .pp-mail { animation-delay: .06s; }
+.pp.arrive [data-sec="questions"] { animation-delay: .12s; }
+.pp.arrive .pp-lead { animation-delay: .18s; }
+@media (prefers-reduced-motion: reduce) { .pp.arrive * { animation: none !important; } }
 `;
 let styled = false;
 export function style() {
