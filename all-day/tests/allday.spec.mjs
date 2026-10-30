@@ -13293,10 +13293,10 @@ async function theEat(browser, base) {
     /* the randomizer picks from the list as filtered */
     const open = (await foodFilter(page, 'open')).rows;
     await page.click(foodPanel + ' [data-sec="random"] .btn');
-    const spun = await page.$eval(foodPanel + ' [data-sec="random"] .lrow.spun', (r) => r.dataset.k.replace(/^spun-/, ''));
+    const spun = await page.$eval(foodPanel + ' [data-sec="random"] .spin[data-k^="spun-"]', (r) => r.dataset.k.replace(/^spun-/, ''));
     check(open.includes(spun), 'the randomizer picks a place on the Open now list', spun);
-    await page.click(foodPanel + ' [data-sec="random"] .linkrow .btn');
-    const again = await page.$eval(foodPanel + ' [data-sec="random"] .lrow.spun', (r) => r.dataset.k.replace(/^spun-/, ''));
+    await page.click(foodPanel + ' [data-sec="random"] .spin .row .btn');
+    const again = await page.$eval(foodPanel + ' [data-sec="random"] .spin[data-k^="spun-"]', (r) => r.dataset.k.replace(/^spun-/, ''));
     check(open.includes(again) && (open.length < 2 || again !== spun), 'Spin again picks another', again);
     check(!errors.length, 'no console errors', errors.join(' | '));
     await page.screenshot({ path: path.join(SHOTS, 'eat-open-live-9pm.png') });
@@ -13380,13 +13380,13 @@ async function theEat(browser, base) {
 
   await group('Eat, Bites: five top tabs, photos, menus (demo)', async () => {
     const { ctx, page, errors } = await eatOpen(browser, base, '/eat/?demo=1#bites');
-    await page.waitForSelector(eatPanel('bites') + ' [data-sec="menus"] .chip', { timeout: 15000 });
+    await page.waitForSelector(eatPanel('bites') + ' [data-sec="menus"] .qcard', { timeout: 15000 });
     const pill = await page.$$eval('#subnav [data-chip]', (bs) => bs.map((b) => b.dataset.chip).sort());
     check(JSON.stringify(pill) === JSON.stringify(['asks', 'bite', 'kitchens', 'menus', 'photos']), 'the pill has the five top tabs', pill.join(', '));
     const st = await page.evaluate(() => {
       const p = document.querySelector('#panel-bites');
       return { form: !!p.querySelector('[data-sec="photos"] form.dish'), dishes: p.querySelectorAll('[data-sec="photos"] .ftile').length,
-        menus: [...p.querySelectorAll('[data-sec="menus"] a.chip')].map((a) => a.href), best: !!p.querySelector('[data-sec="best"] .qcard'), asks: p.querySelectorAll('[data-sec="asks"] .feed .row, [data-sec="asks"] .feed > *').length };
+        menus: [...p.querySelectorAll('[data-sec="menus"] a.qcard')].map((a) => a.href), best: !!p.querySelector('[data-sec="best"] .qcard'), asks: p.querySelectorAll('[data-sec="asks"] .feed .row, [data-sec="asks"] .feed > *').length };
     });
     check(st.form, 'Photos carries the Feature a dish form', '');
     check(st.dishes > 0, 'and the readers’ dishes', st.dishes);
@@ -13679,9 +13679,12 @@ async function theEatDinner(browser, base) {
     const day = new Date(bites.starts_at).toLocaleDateString('en-US', { timeZone: 'America/New_York', weekday: 'long', month: 'long', day: 'numeric' });
     check(next.includes(day), 'its day in plain words (' + day + ')', next);
     check(await page.$eval('#panel-dinner [data-signup]', (a) => a.href) === bites.url, 'Sign up on Meetup links to the event', '');
-    const soon = await page.$eval('#panel-dinner [data-k="d-past-soon"]', (n) => n.innerText).catch(() => '');
-    check(/Photos after the next dinner/.test(soon), 'Past dinners: one card, plainly coming', soon);
-    check(!!(await page.$('#panel-dinner [data-railmode="dinner-past"]')), 'the shelf has See as a list', '');
+    const DIN = JSON.parse(await readFile(path.join(REPO, 'data/eat/dinners.json'), 'utf8'));
+    const bb = DIN.past[0];
+    const past = await page.$eval('#panel-dinner [data-k="d-past-' + bb.id + '"]', (n) => ({ t: n.innerText, hrefs: [...n.querySelectorAll('a')].map((a) => a.href) })).catch(() => null);
+    check(!!past && past.t.includes(bb.place) && /Thursday, September 17/.test(past.t), 'Past dinners: ' + bb.place + ', with its day, from data/eat/dinners.json', past && past.t);
+    check(!!past && past.hrefs.includes(bb.meetup_url) && past.hrefs.includes(bb.edition.archive_url), 'with its Meetup event and the edition that announced it', past && past.hrefs.join(' '));
+    check(!(await page.$('#panel-dinner [data-railmode="dinner-past"]')), 'no photo shelf until a dinner has photos', '');
     const mails = await page.$$eval('#panel-dinner a[href^="mailto:"]', (a) => a.map((x) => decodeURIComponent(x.href)));
     check(mails.some((m) => /^mailto:btownbrief@gmail\.com\?subject=Host a Btown Bites table$/.test(m)), 'Host a table emails us', mails.join(' | '));
     check(mails.some((m) => /^mailto:btownbrief@gmail\.com\?subject=Host Btown Bites at our restaurant$/.test(m)), 'Restaurants email us', mails.join(' | '));
@@ -13723,7 +13726,24 @@ async function theEatDinner(browser, base) {
     const day = new Date(Date.now() + 5 * 86400000).toLocaleDateString('en-US', { timeZone: 'America/New_York', weekday: 'long', month: 'long', day: 'numeric' });
     check(/noodle/.test(next) && next.includes(day), 'an invented next dinner, five days out', next);
     const past = await page.$$eval('#panel-dinner [data-rail="dinner-past"] .vcard', (n) => n.map((x) => x.dataset.k));
-    check(past.length === 4 && past.every((k) => /^d-past-/.test(k)), 'the invented past dinners, with pictures', past.join(','));
+    check(past.length === 4 && past.every((k) => /^d-photo-/.test(k)), 'the invented past dinners’ photos, as a shelf', past.join(','));
+    check(await page.$$eval('#panel-dinner [data-sec="past"] .lrow', (r) => r.length) === 4, 'and each dinner as a row', '');
+    /* the matching form: it asks for each answer, then writes them into the email */
+    const form = '#panel-dinner form.dinnerform';
+    await page.click(form + ' .send');
+    check(/Add your first name/.test(await page.$eval(form + ' .err', (e) => e.textContent)), 'the form asks for a first name first', '');
+    await page.fill(form + ' [name="name"]', 'Maya');
+    await page.click(form + ' .ages button:nth-child(2)');
+    await page.click(form + ' .send');
+    check(/Pick a night/.test(await page.$eval(form + ' .err', (e) => e.textContent)), 'then a night', '');
+    await page.click(form + ' [data-night="tue"]');
+    await page.click(form + ' [data-night="thu"]');
+    await page.fill(form + ' [name="skip"]', 'shellfish');
+    await page.click(form + ' .send');
+    const mail = decodeURIComponent(await page.$eval(form, (f) => f.dataset.mail || ''));
+    check(/^mailto:btownbrief@gmail\.com\?subject=Btown Bites: count me in&body=/.test(mail) && /Name: Maya/.test(mail) && /Age: 26-30/.test(mail) && /Nights: Tue, Thu/.test(mail) && /shellfish/.test(mail),
+      'the answers go into an email to the Brief', mail);
+    check(await page.$eval(form + ' .err', (e) => e.hidden), 'and the error line clears', '');
     check(!errors.length, 'no console errors', errors.join(' | '));
     for (const [w, h] of [[390, 844], [1280, 900]]) for (const scheme of ['light', 'dark']) {
       const s = await newPage(browser, base, { viewport: { width: w, height: h }, scheme });

@@ -10,9 +10,49 @@
   "url": "https://www.meetup.com/burlington-social-activites-group/events/demo-next/"
  },
  "past": [
-  { "id": "bbq", "title": "Btown Bites at a barbecue joint", "place": "Pine St", "days_from_now": -21, "time": "19:00", "photo": "brick", "seats": 6 },
-  { "id": "ramen", "title": "Ramen night", "place": "Downtown", "days_from_now": -49, "time": "19:00", "photo": "night", "seats": 12 },
-  { "id": "patio", "title": "Last patio dinner of summer", "place": "The waterfront", "days_from_now": -77, "time": "18:30", "photo": "lake", "seats": 6 },
-  { "id": "tacos", "title": "Tacos and a long table", "place": "Old North End", "days_from_now": -105, "time": "19:00", "photo": "mustard", "seats": 18 }
+  {
+   "id": "bbq",
+   "title": "Btown Bites at a barbecue joint",
+   "place": "Pine St",
+   "days_from_now": -21,
+   "time": "19:00",
+   "seats": 6,
+   "photos": [
+    "brick"
+   ]
+  },
+  {
+   "id": "ramen",
+   "title": "Ramen night",
+   "place": "Downtown",
+   "days_from_now": -49,
+   "time": "19:00",
+   "seats": 12,
+   "photos": [
+    "night"
+   ]
+  },
+  {
+   "id": "patio",
+   "title": "Last patio dinner of summer",
+   "place": "The waterfront",
+   "days_from_now": -77,
+   "time": "18:30",
+   "seats": 6,
+   "photos": [
+    "lake"
+   ]
+  },
+  {
+   "id": "tacos",
+   "title": "Tacos and a long table",
+   "place": "Old North End",
+   "days_from_now": -105,
+   "time": "19:00",
+   "seats": 18,
+   "photos": [
+    "mustard"
+   ]
+  }
  ]
 }
