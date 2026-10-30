@@ -60,7 +60,10 @@ function mailStrip() {
   already.addEventListener('click', () => {
     if (!app.demo) store.setAsk('subscribed', true);
     app.toast('Thanks for reading');
+    /* keyboard focus goes on to the questions, not into nowhere */
+    const next = S.root && S.root.querySelector('.pp-qs .chip');
     box.remove();
+    if (next) next.focus({ preventScroll: true });
   });
   head.appendChild(already);
   return box;

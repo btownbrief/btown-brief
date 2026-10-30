@@ -104,18 +104,23 @@ function drawInterest(box) {
     if (!S.stories) { host.appendChild(el('p', 'note pad', esc(S.storiesFailed ? 'Couldn’t load the stories.' : 'Loading…'))); return; }
     const hits = S.stories.filter((s) => P.inTopic(t, s.h));
     host.appendChild(el('p', 'pp-count', esc(hits.length + ' stories')));
-    let year = null;
-    const list = el('div', 'pp-list');
+    /* a timeline: month by month, a rule down the side, a dot per story */
+    let month = null, line = null;
     hits.slice(0, S.shown).forEach((s) => {
       const d = P.isoDay(s.d);
-      if (d && d.getFullYear() !== year) { year = d.getFullYear(); list.appendChild(el('div', 'pp-tl-year', String(year))); }
+      const m = d ? P.monthName(d.getMonth()) + ' ' + d.getFullYear() : '';
+      if (m !== month || !line) {
+        month = m;
+        host.appendChild(el('h3', 'pp-tl-month', esc(m)));
+        line = el('div', 'pp-list pp-tl-line');
+        host.appendChild(line);
+      }
       const ed = S.bySlug[s.e];
-      const it = P.item(KEY, 't-' + t.key + '-' + s.u, { title: s.h, href: s.u, line: (d ? P.shortDate(d) : '') + (ed ? ' · in ' + ed.title : '') });
+      const it = P.item(KEY, 't-' + t.key + '-' + s.u, { title: s.h, href: s.u, line: (d ? P.shortDate(d) : '') + (ed ? ' · ' + ed.title : '') });
       app.know([it]);
       const n = P.row(it, { cls: 'tight' });
-      if (n) list.appendChild(n);
+      if (n) line.appendChild(n);
     });
-    host.appendChild(list);
     const more = el('div', 'pp-more');
     if (hits.length > S.shown) more.appendChild(button('Show ' + Math.min(PAGE, hits.length - S.shown) + ' more', 'ghost sm', () => { S.shown += PAGE; paint(); }));
     host.appendChild(more);
@@ -224,7 +229,21 @@ function draw() {
 /* the stories arrive after the page: the timeline, search and cards fill in */
 function storiesIn() {
   if (!S.root || !S.root.firstChild) return;
+  /* the reader stays where they were: the section at the top of the screen
+     keeps its place while the ones above it grow */
+  const panel = S.root.closest('.panel');
+  let anchor = null, off = 0;
+  const was = panel ? panel.scrollTop : 0;
+  if (panel) {
+    const top = panel.getBoundingClientRect().top;
+    SECS.forEach(([k]) => { const n = S.slots[k]; if (n && n.getBoundingClientRect().top - top <= 120) { anchor = k; off = n.getBoundingClientRect().top - top; } });
+  }
   draw();
+  if (panel && S.toTopic) { S.toTopic = false; app.jumpTo(S.slots.interest); }
+  else if (panel && anchor && S.slots[anchor] && was > 0) {
+    panel.scrollTop = was;
+    panel.scrollTop += S.slots[anchor].getBoundingClientRect().top - panel.getBoundingClientRect().top - off;
+  }
   land();
 }
 
@@ -270,8 +289,17 @@ function land() {
   S.pending = null;
   if (S.slots[want]) { app.jumpTo(S.slots[want]); return; }
   const topic = P.TOPICS.find((t) => t.key === want);
-  if (topic) { S.topic = topic.key; S.shown = PAGE; draw(); app.jumpTo(S.slots.interest); return; }
-  if (!app.flashHit(S.root, want)) app.toast('That’s not in Editions now.');
+  if (topic) { S.topic = topic.key; S.shown = PAGE; S.toTopic = !S.stories; draw(); app.jumpTo(S.slots.interest); return; }
+  if (app.flashHit(S.root, want)) return;
+  /* a story's row needs the stories: wait for them, then open its timeline far enough to show it */
+  if (!S.stories && !S.storiesFailed) { S.pending = want; return; }
+  const m = /^editions-t-([a-z]+)-/.exec(want);
+  const t = m && P.TOPICS.find((x) => x.key === m[1]);
+  if (t && S.stories) {
+    const at = S.stories.filter((s) => P.inTopic(t, s.h)).findIndex((s) => P.item(KEY, 't-' + t.key + '-' + s.u, { title: '', href: s.u }).k === want);
+    if (at >= 0) { S.topic = t.key; S.shown = Math.max(PAGE, Math.ceil((at + 1) / PAGE) * PAGE); draw(); if (app.flashHit(S.root, want)) return; }
+  }
+  app.toast('That’s not in Editions now.');
 }
 
 app.register(KEY, {

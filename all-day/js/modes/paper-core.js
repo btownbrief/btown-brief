@@ -64,6 +64,7 @@ const LIVE = {
   weeks: () => soft(getJSON('../data/paper/gossip-archive.json')),
   catalog: () => soft(getJSON('../data/catalog.json')),
   games: () => soft(getJSON('https://play.btownbrief.com/games.json')),
+  index: () => soft(getJSON('https://play.btownbrief.com/search-index.json')),
   chatter: () => soft(getJSON('../data/chatter.json')),
   bestof: () => soft(getJSON('../data/best-of-reddit.json')),
 };
@@ -310,6 +311,10 @@ const CSS = `
 .rail .pp-app { width: 200px; align-items: start; }
 .pp-note { margin-top: var(--s2); }
 .pp-tl-year { padding: var(--s4) var(--gutter) var(--s1); font-family: var(--serif); font-size: var(--fs-date); font-weight: 500; color: var(--ink); border-bottom: 1px solid var(--line); }
+.pp-tl-month { padding: var(--s4) var(--gutter) var(--s1); font-family: var(--serif); font-size: var(--fs-body); font-weight: 500; color: var(--ink-2); }
+.pp-tl-line { margin-left: calc(var(--gutter) + 3px); border-left: 2px solid var(--line); }
+.pp-tl-line .card.pp-row { position: relative; padding-left: var(--s4); border-bottom: 0; }
+.pp-tl-line .card.pp-row::before { content: ""; position: absolute; left: -6px; top: calc(var(--s2) + 7px); width: 10px; height: 10px; border-radius: var(--r-round); background: var(--paper); border: 2px solid var(--accent); }
 .pp-months { padding: 0 var(--gutter); }
 .pp-month { display: grid; grid-template-columns: 7.5em minmax(0, 1fr); gap: var(--s2); align-items: baseline; padding: var(--s2) 0; border-bottom: 1px solid var(--line-soft); }
 .pp-month h3 { font-family: var(--serif); font-size: var(--fs-body); font-weight: 500; color: var(--ink); }

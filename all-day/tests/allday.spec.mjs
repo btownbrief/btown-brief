@@ -13277,9 +13277,11 @@ function paperArchive() {
 const PAPER_GAMES = { sections: [{ id: 'arcade-action', title: 'Action & Arcade' }, { id: 'board-card', title: 'Board & Card Classics' }],
   games: [{ slug: 'queen-city-chess', name: 'Queen City Chess', emoji: '♛', pitch: 'Pass the phone, or race a friend.', section: 'board-card', live: true },
     { slug: 'creemee-drop', name: 'Creemee Drop', emoji: '🍦', pitch: 'Stack Vermont soft-serve to the sky.', section: 'arcade-action', live: true }] };
+const PAPER_INDEX = { pages: [{ title: 'Merch — BTown Brief store', url: 'https://merch.btownbrief.com/', keywords: 'shirts shop store' },
+  { title: 'History of Winooski', url: 'https://guide.btownbrief.com/history-winooski.html', keywords: 'onion city mills' }] };
 async function paperPage(browser, base, opts = {}) {
   const A = opts.archive || paperArchive();
-  const routes = [[/play\.btownbrief\.com\/games\.json/, PAPER_GAMES]];
+  const routes = [[/play\.btownbrief\.com\/games\.json/, PAPER_GAMES], [/play\.btownbrief\.com\/search-index\.json/, PAPER_INDEX]];
   if (!opts.archiveDown) routes.push([/play\.btownbrief\.com\/archive\/data\/editions\.json/, A.eds]);
   if (!opts.archiveDown && !opts.storiesDown) routes.push([/play\.btownbrief\.com\/archive\/data\/stories-lite\.json/, A.stories]);
   const P = await newPage(browser, base, { ...opts, routes });
@@ -13350,7 +13352,9 @@ async function thePaper(browser, base) {
     check(await page.evaluate(() => document.querySelector('#sheet h2').textContent) === questions[4].q, '#front/<question> opens that question', '');
     await page.keyboard.press('Escape');
     /* I'm already subscribed: the strip goes, and stays gone */
-    await page.click('#panel-front .pp-mail .pp-already');
+    await page.focus('#panel-front .pp-mail .pp-already');
+    await page.keyboard.press('Enter');
+    check(await page.evaluate(() => document.activeElement && document.activeElement.matches('.pp-qs .chip')), 'and keyboard focus goes on to the questions', '');
     check(await page.evaluate(() => !document.querySelector('#panel-front .pp-mail')), '“I’m already subscribed” takes the strip away', '');
     await page.screenshot({ path: path.join(SHOTS, 'paper-front-390-live.png') });
     check(!errors.length, 'no console errors', errors.join(' | '));
@@ -13397,6 +13401,15 @@ async function thePaper(browser, base) {
     await page.evaluate(() => { location.hash = 'editions/music'; });
     await page.waitForFunction(() => document.querySelector('#panel-editions [data-sec="interest"] .chip.on')?.dataset.chip === 'music');
     check(true, '#editions/music opens the music timeline', '');
+    /* and a cold open of that link lands there, and stays there once the stories arrive */
+    const cold = await paperPage(browser, base);
+    await cold.page.goto(base + '/paper/#editions/music');
+    await settle(cold.page);
+    await cold.page.waitForFunction(() => /\d+ stories/.test(document.querySelector('#panel-editions [data-sec="interest"] .pp-count')?.textContent || ''));
+    await cold.page.waitForTimeout(900);
+    const where = await cold.page.evaluate(() => { const p = document.querySelector('#panel-editions'); const s = p.querySelector('[data-sec="interest"]'); return [Math.round(s.getBoundingClientRect().top - p.getBoundingClientRect().top), document.querySelector('#panel-editions [data-sec="interest"] .chip.on')?.dataset.chip]; });
+    check(where[1] === 'music' && where[0] >= 0 && where[0] < 200, 'a cold #editions/music lands on the music timeline', JSON.stringify(where));
+    await cold.ctx.close();
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
     /* the archive down: the guide's own last eight, said plainly */
@@ -13410,7 +13423,20 @@ async function thePaper(browser, base) {
         keys: new Set(rows.map((r) => r.dataset.k)).size, lines: new Set(rows.map((r) => r.querySelector('.pp-s')?.textContent)).size };
     });
     check(/last few editions/.test(d.note) && d.rows >= 1, 'with the archive down, the last few editions and a plain note', JSON.stringify(d));
-    check(d.keys === d.rows && d.lines === d.rows, 'each with its own key and its own stories', JSON.stringify(d));
+    const np = await read('data/newsletter-picks.json');
+    const eds = np.editions.slice().sort((x, y) => y.d - x.d);
+    const firstLine = await down.page.evaluate(() => document.querySelector('#panel-editions [data-sec="latest"] .pp-row .pp-s')?.textContent || '');
+    check(d.keys === d.rows && d.lines === d.rows && eds[1] && firstLine.startsWith(eds[1].stories[0].t), 'each with its own key and its own stories', JSON.stringify(d) + ' ' + firstLine.slice(0, 60));
+    /* a story's row shared from a timeline still opens on a cold load */
+    const A2 = paperArchive();
+    const sport = A2.stories.filter((x) => /hockey/i.test(x.h))[20];
+    const k = ('editions-t-sports-' + sport.u.replace(/[^\w-]+/g, '-')).slice(0, 'editions-'.length + 80);
+    const sp = await paperPage(browser, base, { archive: A2 });
+    await sp.page.goto(base + '/paper/#editions/' + encodeURIComponent(k));
+    await settle(sp.page);
+    const lit = await sp.page.waitForFunction((key) => !!document.querySelector('#panel-editions [data-k="' + key + '"]'), k, { timeout: 8000 }).then(() => true, () => false);
+    check(lit, 'a shared story row, 21st in Sports, opens on a cold load', k);
+    await sp.ctx.close();
     check(!down.errors.filter((x) => !/Failed to load resource/.test(x)).length, 'and nothing breaks', down.errors.join(' | '));
     await down.ctx.close();
   });
@@ -13481,6 +13507,9 @@ async function thePaper(browser, base) {
     await page.fill('#panel-everything .pp-find input', 'catamounts');
     const byKw = await page.waitForFunction(() => [...document.querySelectorAll('#panel-everything .pp-results .pp-t')].some((t) => t.textContent === 'Sports'), null, { timeout: 3000 }).then(() => true, () => false);
     check(byKw, 'and a page by the hub’s keywords', '');
+    await page.fill('#panel-everything .pp-find input', 'onion city');
+    const byIndex = await page.waitForFunction(() => [...document.querySelectorAll('#panel-everything .pp-results .pp-t')].some((t) => t.textContent === 'History of Winooski'), null, { timeout: 3000 }).then(() => true, () => false);
+    check(byIndex, 'and the network search index’s pages and words (a page only the index has joins More)', '');
 
     await goTab(page, 'story');
     const st = await page.evaluate(() => {

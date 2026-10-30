@@ -36,7 +36,7 @@ function rows(host, list, prefix, o = {}) {
 
 /* everything, once: the hub's shelves, then what the catalog and the
    arcade have that the shelves don't */
-function build(shelvesJ, catalog, games) {
+function build(shelvesJ, catalog, games, index) {
   /* each list is whole on its own (a party game is on the hub's At the
      table shelf and in Games too); the A to Z has everything once */
   const adder = () => { const seen = new Set(); return (list, it) => { const k = norm(it.href); if (!it.title || !it.href || seen.has(k)) return; seen.add(k); list.push(it); }; };
@@ -65,6 +65,17 @@ function build(shelvesJ, catalog, games) {
   [...pages, ...gameShelves].forEach((s) => s.items.forEach((i) => addAll(all, i)));
   const byHref = Object.create(null);
   all.forEach((i) => { byHref[norm(i.href)] = i; });
+  /* the network's search words (play.btownbrief.com/search-index.json, the
+     hub's search): words added to a page we have, a page we don't joins More */
+  ((index && index.pages) || []).forEach((p) => {
+    if (!p || !p.title || !/^https?:/.test(p.url || '')) return;
+    const have = byHref[norm(p.url)];
+    if (have) { have.kw = [have.kw, p.keywords, p.title].filter(Boolean).join(' '); return; }
+    const it = { title: String(p.title).split(' — ')[0], line: String(p.title).split(' — ')[1] || '', href: p.url, kw: p.keywords || '' };
+    let sh = pages.find((s) => s.key === 'more');
+    if (!sh) { sh = { key: 'more', label: 'More pages', items: [] }; pages.push(sh); }
+    sh.items.push(it); all.push(it); byHref[norm(p.url)] = it;
+  });
   const start = ((shelvesJ && shelvesJ.start) || []).map((h) => byHref[norm(h)]).filter(Boolean);
   return { pages, games: gameShelves, all, start, gamesLive: !!gj };
 }
@@ -157,8 +168,8 @@ function draw() {
 
 let loading = null;
 function load() {
-  if (!loading) loading = Promise.all([P.load('shelves'), P.load('catalog'), P.load('games')]).then(([sh, cat, games]) => {
-    S.data = build(sh, cat, games);
+  if (!loading) loading = Promise.all([P.load('shelves'), P.load('catalog'), P.load('games'), P.load('index')]).then(([sh, cat, games, index]) => {
+    S.data = build(sh, cat, games, index);
     S.ready = true;
     app.recount();
   });
