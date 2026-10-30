@@ -24,9 +24,11 @@ const KEY = 'front';
 const S = { root: null, slots: {}, latest: null, qs: [], pending: null, ready: false, edAt: 0 };
 
 /* -------------------------------------------------------------- the strip */
+/* the shell's own newsletter card, when it has chosen this landing for its one ask */
+const shellAsk = () => { const p = S.root && S.root.closest('.panel'); return p ? p.querySelector('.askcard[data-ask="news"]:not(.pp-mail)') : null; };
 function mailStrip() {
-  /* a reader who already gets it needs no strip */
-  if (!app.demo && subscribed()) return null;
+  /* a reader who already gets it needs no strip, and one ask is enough */
+  if (!app.demo && (subscribed() || shellAsk())) return null;
   const box = el('div', 'askcard pp-mail');
   box.dataset.ask = 'news';
   box.setAttribute('role', 'region');
@@ -221,7 +223,12 @@ app.register(KEY, {
     root.appendChild(el('p', 'loading', esc('Loading the Front…')));
     load().then((d) => { draw(d); land(); });
   },
-  activate(param) { S.pending = param || null; land(); },
+  activate(param) {
+    S.pending = param || null;
+    land();
+    /* the shell may put its newsletter card above the tab right after this: then the strip steps aside */
+    setTimeout(() => { if (shellAsk()) S.root.querySelectorAll('.pp-mail').forEach((n) => n.remove()); }, 0);
+  },
   refresh() { if (S.data && S.root) draw(S.data); },
   deactivate() {},
   subnav() {

@@ -13359,6 +13359,15 @@ async function thePaper(browser, base) {
     await page.screenshot({ path: path.join(SHOTS, 'paper-front-390-live.png') });
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
+    /* when the shell's own newsletter card picks this landing, the strip steps aside: one ask, not two */
+    const both = await paperPage(browser, base, { asks: true });
+    await both.page.addInitScript(() => { try { if (!sessionStorage.getItem('seeded')) { sessionStorage.setItem('seeded', '1'); localStorage.setItem('allday-use', JSON.stringify({ visits: 5, last: Math.floor(Date.now() / 1000) - 7200, days: ['2026-01-01', '2026-01-02'], secs: 900 })); localStorage.setItem('allday-asks', JSON.stringify({ 'installed-paper': true })); } } catch (e) { /* blocked */ } });
+    await both.page.goto(base + '/paper/');
+    await settle(both.page);
+    await both.page.waitForTimeout(400);
+    const asks2 = await both.page.evaluate(() => ({ shell: document.querySelectorAll('#panel-front .askcard[data-ask="news"]:not(.pp-mail)').length, strip: document.querySelectorAll('#panel-front .pp-mail').length }));
+    check(asks2.shell === 1 && asks2.strip === 0, 'the shell’s newsletter card and the strip never show together', JSON.stringify(asks2));
+    await both.ctx.close();
     /* a reader who already gets it sees no strip, and no frame loads */
     const sub = await paperPage(browser, base);
     await sub.page.goto(base + '/paper/');
