@@ -151,7 +151,7 @@ function draw(d) {
       const ol = el('ol', 'pp-rundown');
       stories.forEach((s, i) => {
         const li = el('li', '', '<span class="n">' + (i + 1) + '</span><span><a href="' + esc(safeHref(s.u)) + '" target="_blank" rel="noopener">' + esc(s.t) + '</a>' +
-          (s.s ? '<span class="src">' + esc(s.s) + '</span>' : '') + '</span>');
+          (s.s ? '<span class="src">' + esc(P.outlet(s.s)) + '</span>' : '') + '</span>');
         ol.appendChild(li);
       });
       ed.appendChild(ol);

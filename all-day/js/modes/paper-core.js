@@ -123,6 +123,12 @@ export function townDay(ms = Date.now()) {
 /* a minute a 230 words, rounded up, for the edition's line */
 export const readMins = (words) => Math.max(1, Math.round((Number(words) || 0) / 230));
 
+/* an outlet's name for its domain, the ones the Brief quotes most; else the domain */
+const OUTLETS = { 'wcax.com': 'WCAX', 'mynbc5.com': 'NBC5', 'sevendaysvt.com': 'Seven Days', 'vtdigger.org': 'VTDigger', 'vermontpublic.org': 'Vermont Public',
+  'burlingtonfreepress.com': 'Burlington Free Press', 'vermontbiz.com': 'Vermont Business Magazine', 'mychamplainvalley.com': 'Local 22 & 44', 'vtcynic.com': 'The Vermont Cynic',
+  'uvmathletics.com': 'UVM Athletics', 'vtcommunitynews.org': 'Vermont Community News', 'vtcng.com': 'Vermont Community Newspaper Group' };
+export const outlet = (d) => OUTLETS[String(d || '').replace(/^www\./, '').toLowerCase()] || String(d || '');
+
 /* ------------------------------------------------------------- editions */
 /* The archive's edition page: the paper look the archive already draws
    (play.btownbrief.com/archive/e/<slug>/), else the email's own page. */

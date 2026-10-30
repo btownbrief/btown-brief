@@ -47,7 +47,7 @@ function draw() {
   if (d.month.length) {
     d.month.forEach((e) => {
       month.appendChild(el('div', 'tdiv', '<span>' + esc(e.edition) + '</span>'));
-      rows(month, (e.stories || []).slice(0, 6).map((s) => ({ title: s.t, line: s.s || '', href: s.u })), 'm-' + e.d, { cls: 'tight' });
+      rows(month, (e.stories || []).slice(0, 6).map((s) => ({ title: s.t, line: P.outlet(s.s), href: s.u })), 'm-' + e.d, { cls: 'tight' });
     });
   } else P.noteLine(month, 'Couldn’t load this month.');
   S.slots.month = month;
