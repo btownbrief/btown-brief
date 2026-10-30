@@ -37,6 +37,8 @@ const BOARD_MS = 8000;
 const W = { draw: null, live: false, board: null };
 
 const monthKey = () => new Intl.DateTimeFormat('en-CA', { timeZone: TZ, year: 'numeric', month: '2-digit' }).format(new Date()).slice(0, 7);
+/* daily: the arcade's list is rebuilt each day, so a launch shows the next day at the latest */
+const today = () => new Intl.DateTimeFormat('en-CA', { timeZone: TZ }).format(new Date());
 const monthName = () => new Intl.DateTimeFormat('en-US', { timeZone: TZ, month: 'long' }).format(new Date());
 /* a part of the game by its own route (#lake, #truck, #gallery, #prompt) */
 const routeUrl = (r) => String(W.draw.play || '').split('#')[0] + '#' + r;
@@ -138,5 +140,5 @@ function load() {
 app.register(KEY, tab({
   key: KEY, label: 'Draw', icon: 'pencil', promise: 'Draw a fish and watch it swim in the shared tank.',
   tops: [['lake', 'Aquarium'], ['truck', 'The truck'], ['gallery', 'Gallery'], ['prompt', 'Prompt of the week']],
-  load, draw, stamp: monthKey,
+  load, draw, stamp: today,
 }));

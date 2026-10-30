@@ -13378,12 +13378,23 @@ async function thePlay(browser, base) {
     await settle(page);
     await page.click('#panel-daily [data-tick="btown-wordle"]');
     const before = await page.$eval('#panel-daily [data-tick="btown-wordle"]', (b) => b.getAttribute('aria-pressed'));
+    /* the phone wakes after midnight with the tab showing (visibilitychange) */
     await page.clock.setFixedTime(at(dayMinus(today, -1), 0, 2));
-    await goTab(page, 'city');
-    await goTab(page, 'daily');
+    await page.evaluate(() => document.dispatchEvent(new Event('visibilitychange')));
     await page.waitForTimeout(300);
-    const after = await page.evaluate(() => ({ on: document.querySelector('#panel-daily [data-tick="btown-wordle"]').getAttribute('aria-pressed'), head: document.querySelector('#panel-daily [data-sec="today"] .sec p').textContent }));
-    check(before === 'true' && after.on === 'false' && after.head === '0 of 6 played today', 'a new Burlington day redraws Daily: yesterday’s tick is yesterday’s', JSON.stringify({ before, after }));
+    const read = () => page.evaluate(() => ({ on: document.querySelector('#panel-daily [data-tick="btown-wordle"]').getAttribute('aria-pressed'), head: document.querySelector('#panel-daily [data-sec="today"] .sec p').textContent }));
+    const after = await read();
+    check(before === 'true' && after.on === 'false' && after.head === '0 of 6 played today', 'waking after midnight redraws Daily: yesterday’s tick is yesterday’s', JSON.stringify({ before, after }));
+    /* another day on, by coming back to the tab; what was stored meanwhile is read again */
+    const next = dayMinus(today, -2);
+    await page.evaluate((d) => localStorage.setItem('play-daily', JSON.stringify({ 'btown-wordle': [d] })), next);
+    await page.clock.setFixedTime(at(next, 9, 0));
+    await goTab(page, 'city');
+    await page.evaluate(() => { location.hash = 'daily/news-quiz'; });
+    await page.waitForTimeout(600);
+    const later = await read();
+    check(later.on === 'true' && later.head === '1 of 6 played today', 'coming back to the tab a day later loads it again', JSON.stringify(later));
+    check(await page.evaluate(() => { const c = document.querySelector('#panel-daily [data-sec="news-quiz"]').getBoundingClientRect(); return c.top >= 0 && c.top < innerHeight; }), 'and a deep link given then lands on the fresh page', '');
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
   });
@@ -13449,7 +13460,7 @@ async function thePlay(browser, base) {
       const cat = JSON.parse(await readFile(path.join(REPO, 'data/games-catalog.json'), 'utf8'));
       if (live) cat.games.push({ slug: 'btown-draw', name: 'Btown Draw', emoji: '🐟', pitch: 'Draw it.', section: 'local-more', live: true, leaderboard: true, first_seen: '2026-10-30', live_since: '2026-10-30' });
       const asked = [];
-      const rpc = (fn, body) => { if (fn !== 'get_leaderboard') return undefined; asked.push(body.p_game); return ROWS(['Ada W.', 'Cy F.', 'Ada W.']); };
+      const rpc = (fn, body) => { if (fn !== 'get_leaderboard') return undefined; asked.push(body.p_game + ' ' + body.p_month); return ROWS(['Ada W.', 'Cy F.', 'Ada W.']); };
       const { ctx, page, errors } = await newPage(browser, base, { routes: [[/\/data\/games-catalog\.json$/, cat]], rpc });
       await page.goto(base + '/play/#draw');
       await settle(page);
@@ -13469,7 +13480,7 @@ async function thePlay(browser, base) {
         check(st.buttons.every((b) => b.tag === 'A') && hrefs[0] === 'https://play.btownbrief.com/btown-draw/#lake' && ['#lake', '#truck', '#gallery', '#prompt'].every((h) => hrefs.includes('https://play.btownbrief.com/btown-draw/' + h)),
           'the day the arcade lists it live: Play, the two pictures and Gallery and Prompt open the game at their own places', JSON.stringify(hrefs));
         const board = await page.$$eval('#panel-draw [data-board="btown-draw"] .r', (r) => r.map((x) => x.querySelector('.t').textContent + ' ' + x.querySelector('.sc').textContent));
-        check(asked.length === 1 && asked[0] === 'btown-draw' && JSON.stringify(board) === JSON.stringify(['Ada W. 1,000 m', 'Cy F. 990 m']), 'and the truck’s monthly board shows, each player once, in metres', JSON.stringify(board));
+        check(asked.length === 1 && asked[0] === 'btown-draw ' + etKey(Date.now()).slice(0, 7) && JSON.stringify(board) === JSON.stringify(['Ada W. 1,000 m', 'Cy F. 990 m']), 'and the truck’s monthly board shows, each player once, in metres', JSON.stringify(board));
       }
       check(!errors.length, (live ? 'live' : 'not live') + ': no console errors', errors.join(' | '));
       await ctx.close();
@@ -13490,7 +13501,8 @@ async function thePlay(browser, base) {
       'On the TV opens what the TV shows: Btown Party’s screen, Trivia’s host page, Arcade Night', JSON.stringify(tv));
     check(night[0].links.some((l) => l[0] === 'Host' && l[1] === 'https://play.btownbrief.com/btown-party/host.html'), 'Btown Party’s host runs from a phone', JSON.stringify(night[0].links));
     const table = await rows('table');
-    check(table[0].k === 'party:table-talk' && table[0].links[0][1] === base + '/table.html', 'at a table: Table Talk, the guide’s own table.html', JSON.stringify(table));
+    check(JSON.stringify(table.map((r) => r.k)) === JSON.stringify(['party:table-talk', 'party:stay-awhile-home']) && table[0].links[0][1] === base + '/table.html' && table[1].links[0][1] === 'https://play.btownbrief.com/stay-awhile/',
+      'at a table: Table Talk (the guide’s own table.html) and Stay Awhile', JSON.stringify(table));
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
   });

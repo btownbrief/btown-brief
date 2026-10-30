@@ -104,15 +104,22 @@ export function tab(o) {
     const back = focus && page.querySelector(focus);
     if (back) back.focus({ preventScroll: true });
   }
+  /* the stamp a load was for is kept only once that load worked */
   function load() {
-    return Promise.resolve().then(o.load).then(() => { S.ready = true; S.failed = false; S.stamp = o.stamp ? o.stamp() : ''; },
+    const want = o.stamp ? o.stamp() : '';
+    return Promise.resolve().then(o.load).then(() => { S.ready = true; S.failed = false; S.stamp = want; },
       (e) => { console.error('[play] ' + o.key, e); S.failed = true; });
   }
-  /* a new day (or month) since the page was drawn: load it again */
+  /* A new day (or month) since the page was drawn: load it again, once at a
+     time. If that load fails, the page keeps what it had and the stamp stays
+     old, so the next showing tries again; a pending deep link waits for it. */
+  let refreshing = null;
+  const stale = () => !!o.stamp && S.ready && !S.failed && S.stamp !== o.stamp();
   function fresh() {
-    if (!o.stamp || !S.ready || S.stamp === o.stamp()) return;
-    S.stamp = o.stamp();
-    load().then(() => { render(); app.recount(); });
+    if (refreshing || !stale()) return;
+    const want = o.stamp();
+    refreshing = Promise.resolve().then(o.load).then(() => { S.stamp = want; }, (e) => { console.error('[play] ' + o.key + ' refresh', e); })
+      .then(() => { refreshing = null; render(); land(); app.recount(); if (stale() && S.stamp === want) fresh(); });
   }
   document.addEventListener('visibilitychange', () => { if (!document.hidden && app.activeTab() === o.key) fresh(); });
   /* by comparing, not a selector, so any text in a link is safe to look up */
@@ -121,7 +128,7 @@ export function tab(o) {
   const here = () => app.activeTab() === o.key;
   function land() {
     const k = S.pending;
-    if (!k || !S.ready || !S.root || !here()) return;
+    if (!k || !S.ready || !S.root || !here() || refreshing) return;
     S.pending = null;
     const at = find(k);
     if (at) { requestAnimationFrame(() => { if (here()) app.jumpTo(at); }); return; }
