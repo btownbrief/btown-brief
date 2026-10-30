@@ -1,16 +1,16 @@
 {
- "updated": "2026-10-30T10:18:48+00:00",
+ "updated": "2026-10-30T10:38:49+00:00",
  "sections_updated": {
-  "now": "2026-10-30T10:18:48+00:00",
-  "forecast": "2026-10-30T10:18:48+00:00",
-  "hourly": "2026-10-30T10:18:48+00:00",
-  "alerts": "2026-10-30T10:18:48+00:00",
-  "afd": "2026-10-30T10:18:48+00:00",
-  "lake_forecast": "2026-10-30T10:18:48+00:00",
-  "lake_gage": "2026-10-30T10:18:48+00:00",
-  "air": "2026-10-30T10:18:48+00:00",
-  "sun": "2026-10-30T10:18:48+00:00",
-  "models": "2026-10-30T10:18:48+00:00"
+  "now": "2026-10-30T10:38:49+00:00",
+  "forecast": "2026-10-30T10:38:49+00:00",
+  "hourly": "2026-10-30T10:38:49+00:00",
+  "alerts": "2026-10-30T10:38:49+00:00",
+  "afd": "2026-10-30T10:38:49+00:00",
+  "lake_forecast": "2026-10-30T10:38:49+00:00",
+  "lake_gage": "2026-10-30T10:38:49+00:00",
+  "air": "2026-10-30T10:38:49+00:00",
+  "sun": "2026-10-30T10:38:49+00:00",
+  "models": "2026-10-30T10:38:49+00:00"
  },
  "now": {
   "observed_at": "2026-10-30T09:35:00+00:00",
@@ -29,7 +29,17 @@
   "updated": "2026-10-30T06:20:32+00:00",
   "periods": [
    {
-    "name": "Today",
+    "name": "Overnight",
+    "start": "2026-10-30T05:00:00-04:00",
+    "is_day": false,
+    "temp_f": 49,
+    "pop": 2,
+    "wind": "W 7 mph",
+    "short": "Partly Cloudy",
+    "detailed": "Partly cloudy, with a low around 49. West wind around 7 mph."
+   },
+   {
+    "name": "Friday",
     "start": "2026-10-30T06:00:00-04:00",
     "is_day": true,
     "temp_f": 54,
@@ -39,7 +49,7 @@
     "detailed": "Partly sunny, with a high near 54. West wind 7 to 13 mph, with gusts as high as 25 mph."
    },
    {
-    "name": "Tonight",
+    "name": "Friday Night",
     "start": "2026-10-30T18:00:00-04:00",
     "is_day": false,
     "temp_f": 34,
@@ -157,22 +167,26 @@
     "wind": "S 12 mph",
     "short": "Chance Rain Showers",
     "detailed": "A chance of rain showers. Partly sunny, with a high near 62. South wind around 12 mph, with gusts as high as 23 mph. Chance of precipitation is 50%."
-   },
-   {
-    "name": "Thursday Night",
-    "start": "2026-11-05T18:00:00-05:00",
-    "is_day": false,
-    "temp_f": 48,
-    "pop": 56,
-    "wind": "S 7 to 10 mph",
-    "short": "Rain Showers Likely",
-    "detailed": "Rain showers likely. Mostly cloudy, with a low around 48. South wind 7 to 10 mph. Chance of precipitation is 60%."
    }
   ]
  },
  "hourly": {
   "updated": "2026-10-30T06:20:32+00:00",
   "hours": [
+   {
+    "t": "2026-10-30T05:00:00-04:00",
+    "temp_f": 52,
+    "feels_f": 52,
+    "pop": 2,
+    "humidity": 93,
+    "wind_mph": 7,
+    "wind_dir": "W",
+    "sky": 30,
+    "short": "Partly Cloudy",
+    "qpf_in": 0.0,
+    "snow_in": 0.0,
+    "gust_mph": 12
+   },
    {
     "t": "2026-10-30T06:00:00-04:00",
     "temp_f": 51,
@@ -662,20 +676,6 @@
     "qpf_in": 0.0,
     "snow_in": 0.0,
     "gust_mph": 6
-   },
-   {
-    "t": "2026-10-31T17:00:00-04:00",
-    "temp_f": 48,
-    "feels_f": 48,
-    "pop": 0,
-    "humidity": 46,
-    "wind_mph": 2,
-    "wind_dir": "NW",
-    "sky": 20,
-    "short": "Sunny",
-    "qpf_in": 0.0,
-    "snow_in": 0.0,
-    "gust_mph": 5
    }
   ],
   "days": [
@@ -989,7 +989,7 @@
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 43,
+  "aqi": 41,
   "category": "Good",
   "pollutant": "PM2.5",
   "observed": "10/30/26 6:00",
@@ -1065,12 +1065,12 @@
  },
  "brief": {
   "date": "2026-10-30",
-  "generated": "2026-10-30T10:18:51+00:00",
+  "generated": "2026-10-30T10:38:52+00:00",
   "text": "Partly sunny today, high 54. Partly cloudy tonight, low 34. Saturday, sunny, high 50.",
   "periods": [
    {
     "label": "Today",
-    "name": "Today",
+    "name": "Friday",
     "is_day": true,
     "temp_f": 54,
     "sky": "partly sunny",
@@ -1084,7 +1084,7 @@
    },
    {
     "label": "Tonight",
-    "name": "Tonight",
+    "name": "Friday Night",
     "is_day": false,
     "temp_f": 34,
     "sky": "partly cloudy",
