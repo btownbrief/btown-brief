@@ -38,6 +38,7 @@ import path from 'node:path';
 import { FakeHabits } from '../js/habits-fake.js';
 import { directoryFrom } from '../js/food-asks.js';
 import * as CH from '../js/challenge-core.js';
+import { townCases } from './town.cases.mjs';
 
 const require = createRequire(import.meta.url);
 let chromium;
@@ -13251,6 +13252,9 @@ async function theApps(browser, base) {
   });
 }
 
+/* the Town app's own cases (tests/town.cases.mjs), with this file's helpers */
+const theTown = (browser, base) => townCases({ browser, base, group, check, newPage, settle, goTab, pageRules, SHOTS, REPO });
+
 /* ----------------------------------------------------------------- run */
 const t0 = Date.now();
 await mkdir(SHOTS, { recursive: true });
@@ -13296,6 +13300,7 @@ try {
   await run(theChallenge);
   await run(fullPagesAndAsks);
   await run(theApps);
+  await run(theTown);
 } finally {
   await browser.close();
   proc.kill();

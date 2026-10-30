@@ -27,7 +27,7 @@
 import * as app from '../app.js';
 import * as boards from '../boards.js';
 import { el, esc, ICON } from '../ui.js';
-import { townMode, getJSON, row, card, links, line, list, stats, today, plusDays, fmtDay, ago, epoch, money } from './town-kit.js';
+import { townMode, getJSON, row, card, links, line, list, stats, today, plusDays, fmtDay, ago, epoch, money, shortMoney } from './town-kit.js';
 
 const WHAT = [['pothole', 'Pothole'], ['streetlight', 'Streetlight out'], ['sidewalk', 'Sidewalk'], ['crosswalk', 'Crosswalk'], ['sign', 'Sign'], ['graffiti', 'Graffiti'], ['trash', 'Trash'], ['tree', 'Tree'], ['other', 'Something else']];
 const WHAT_LABEL = Object.fromEntries(WHAT);
@@ -48,7 +48,7 @@ const jobName = (x) => (x.project && !/^project_\d+$/i.test(x.project.trim()) ? 
 function drawGoing(box, d) {
   const p = sec(d, 'permits');
   const wk = (p.weekly_roundup || []).slice(0, 2);
-  if (wk.length) stats(box, [[String(wk[0].total), 'Permits filed the week of ' + mondayOf(wk[0].week)], [String(wk[0].notable), 'Worth a look'], [money(wk[0].est_cost_total), 'Estimated work']]);
+  if (wk.length) stats(box, [[String(wk[0].total), 'Permits filed the week of ' + mondayOf(wk[0].week)], [String(wk[0].notable), 'Worth a look'], [shortMoney(wk[0].est_cost_total), 'Estimated work']]);
   const seen = new Set();
   const jobs = (p.items || []).filter((x) => x.notable).sort((a, b) => b.applied.localeCompare(a.applied)).filter((x) => {
     const key = (x.address + '|' + (x.project || '')).toLowerCase();
@@ -117,7 +117,7 @@ function drawSold(box, d) {
   const from = plusDays(today(), -60);
   const sales = (s.items || []).filter((x) => x.arms_length && x.price > 0 && x.closed >= from).sort((a, b) => b.closed.localeCompare(a.closed));
   const m = s.medians || {};
-  stats(box, [[money((m['30d'] || {}).all_residential) || '—', 'Median home, last 30 days'], [money((m['90d'] || {}).all_residential) || '—', 'Last 90 days (' + ((m['90d'] || {}).count || 0) + ' sales)'], [money((m['365d'] || {}).all_residential) || '—', 'Last year']]);
+  stats(box, [[shortMoney((m['30d'] || {}).all_residential) || '—', 'Median home, last 30 days'], [shortMoney((m['90d'] || {}).all_residential) || '—', 'Last 90 days (' + ((m['90d'] || {}).count || 0) + ' sales)'], [shortMoney((m['365d'] || {}).all_residential) || '—', 'Last year']]);
   /* the out-of-state flag, only as each week's share */
   const weeks = new Map();
   sales.forEach((x) => { const w = weekOf(x.closed); const o = weeks.get(w) || { n: 0, out: 0 }; o.n += 1; if (x.out_of_state_buyer) o.out += 1; weeks.set(w, o); });

@@ -79,7 +79,9 @@ function drawTrash(box, d, ctx) {
     out.innerHTML = '';
     const n = norm(q);
     if (!n) return;
-    const exact = rec.items.filter((x) => norm(x.street) === n);
+    /* the name as typed first ("Pine St"), then the same name with any ending ("Pine Pl") */
+    const typed = rec.items.filter((x) => x.street.toLowerCase() === String(q).trim().toLowerCase());
+    const exact = typed.length ? typed : rec.items.filter((x) => norm(x.street) === n);
     const hits = exact.length ? exact : rec.items.filter((x) => norm(x.street).startsWith(n)).slice(0, 8);
     if (!hits.length) { out.appendChild(el('p', 'note', esc('No street by that name on the city’s map. Try the first word only, or use the city’s map.'))); return; }
     const seen = new Set();

@@ -61,6 +61,8 @@ export function ago(iso) {
 }
 /* days from today to a day key (negative: past) */
 export const daysTo = (key) => Math.round((noon(key) - noon(today())) / (DAY * 1000));
+/* '$6.4M', '$426K': a sum short enough for a stat box at 390 */
+export const shortMoney = (n) => { const v = Number(n); if (!Number.isFinite(v) || n === null) return ''; return v >= 1e6 ? '$' + (v / 1e6).toFixed(1).replace(/\.0$/, '') + 'M' : v >= 1e4 ? '$' + Math.round(v / 1e3) + 'K' : money(v); };
 export const money = (n) => (Number.isFinite(Number(n)) && n !== null ? '$' + Math.round(Number(n)).toLocaleString('en-US') : '');
 
 /* ------------------------------------------------------------ data */
@@ -152,6 +154,8 @@ export function quietForm(host, o) {
     } else if (fd.type === 'textarea') {
       i = el('textarea', 'field bf-in');
       i.rows = 3;
+      /* a textarea's own face is monospace; the page's instead */
+      i.style.fontFamily = 'inherit';
     } else {
       i = el('input', 'field bf-in');
       i.type = fd.type || 'text';
