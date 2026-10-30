@@ -43,7 +43,8 @@ export function sec(host, key, title, sub, right) {
   return box;
 }
 
-/* a link out as a pill or a button; a page in this repo stays in this tab */
+/* a link out as a pill or a button; a page in this repo stays in this tab.
+   The label is markup: esc() any words that come from data. */
 export function link(label, href, cls, aria) {
   const a = el('a', cls || 'pillbtn on', label);
   a.href = safeHref(href);
@@ -95,13 +96,16 @@ export function tab(o) {
     app.bindFeed(page);
     if (app.activeTab() === o.key) app.paintSubnav();
   }
-  const find = (k) => (S.root ? S.root.querySelector('[data-sec="' + k + '"]') : null);
+  /* by comparing, not a selector, so any text in a link is safe to look up */
+  const find = (k) => (S.root ? [...S.root.querySelectorAll('[data-sec]')].find((n) => n.dataset.sec === k) || null : null);
+  /* only while this tab is the one showing: a slow load must not scroll or toast another */
+  const here = () => app.activeTab() === o.key;
   function land() {
     const k = S.pending;
-    if (!k || !S.ready || !S.root) return;
+    if (!k || !S.ready || !S.root || !here()) return;
     S.pending = null;
     const at = find(k);
-    if (at) { requestAnimationFrame(() => app.jumpTo(at)); return; }
+    if (at) { requestAnimationFrame(() => { if (here()) app.jumpTo(at); }); return; }
     if (!app.flashHit(S.root, k)) app.toast('That’s gone from ' + o.label + ' now.');
   }
 

@@ -13262,7 +13262,12 @@ async function theApps(browser, base) {
 const PLAY_TABS = { daily: ['Wordle', 'Crossings', 'News quiz', 'Higher or lower', 'Where in Btown', 'Real or fake'],
   city: ['Missions', 'Streets', 'Lit', 'Dibs', 'Photo quests', 'Crews', 'Season'], draw: ['Aquarium', 'The truck', 'Gallery', 'Prompt of the week'],
   party: ['Btown Party', 'Trivia', 'Arcade Night', 'Stay Awhile', 'Table Talk'], ranks: ['Leaderboards', 'Predictions', 'Bracket', 'Playing', 'Looking for a group', 'Gamertags'] };
-const playPill = (page) => page.evaluate(() => [...document.querySelectorAll('#subnav [data-k], #subnav .secpill button, #subnav button[data-key]')].map((b) => b.textContent.trim()).filter(Boolean));
+/* each top tab's section key, in the pill's order: every one is a deep link */
+const PLAY_SECS = { daily: ['btown-wordle', 'btown-crossings', 'news-quiz', 'higher-or-lower', 'where-in-btown', 'real-or-fake'],
+  city: ['missions', 'streets', 'lit', 'dibs', 'photos', 'crews', 'season'], draw: ['lake', 'truck', 'gallery', 'prompt'],
+  party: ['btown-party', 'church-street-trivia', 'arcade-night', 'stay-awhile', 'table-talk'], ranks: ['leaders', 'predictions', 'bracket', 'playing', 'lfg', 'tags'] };
+/* everything Boards may ask Supabase: reads only */
+const PLAY_READS = new Set(['get_leaderboard', 'nn_posts_list', 'nn_handles_recent', 'nn_rules', 'nn_rules_version']);
 
 async function thePlay(browser, base) {
   for (const combo of COMBOS4) {
@@ -13289,6 +13294,28 @@ async function thePlay(browser, base) {
       });
     }
   }
+
+  await group('play: every top tab is a deep link', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    for (const [tab, keys] of Object.entries(PLAY_SECS)) {
+      for (const k of keys) {
+        await page.goto(base + '/play/#' + tab + '/' + k);
+        await settle(page);
+        const seen = await page.waitForFunction(([t, key]) => {
+          const n = [...document.querySelectorAll('#panel-' + t + ' [data-sec]')].find((x) => x.dataset.sec === key);
+          const r = n && n.getBoundingClientRect();
+          return !!r && r.top < innerHeight - 40 && r.bottom > 60;
+        }, [tab, k], { timeout: 4000 }).then(() => true, () => false);
+        check(seen, '#' + tab + '/' + k + ' lands on its section', '');
+      }
+    }
+    await page.goto(base + '/play/#daily/%22%5D');
+    await settle(page);
+    await page.waitForTimeout(300);
+    check(/gone from Daily/.test(await page.$eval('#toast', (t) => t.textContent)), 'a link to nothing says so', await page.$eval('#toast', (t) => t.textContent));
+    check(!errors.length, 'no console errors, even for a mangled link', errors.join(' | '));
+    await ctx.close();
+  });
 
   await group('play: Daily keeps its ticks on the phone', async () => {
     const { ctx, page, errors, supabase } = await newPage(browser, base);
@@ -13421,7 +13448,8 @@ async function thePlay(browser, base) {
     check(asked.length === 2 && asked[1] === 'creemee-drop', 'picking another game asks for that one board', asked.join(', '));
     await page.click(P + ' .pl-games [data-chip="church-street-skate"]');
     check(asked.length === 2, 'and a board already read is not asked again', asked.join(', '));
-    check(supabase.every((u) => /rpc\/(get_leaderboard|nn_)/.test(u) && !/nn_post_create|nn_vote/.test(u)), 'Boards only reads', supabase.join(', '));
+    const fns = supabase.map((u) => (u.match(/\/rpc\/(\w+)/) || [])[1] || (/^GET /.test(u) ? 'GET' : u));
+    check(fns.every((f) => f === 'GET' || PLAY_READS.has(f)), 'Boards only reads (an exact list of read calls)', [...new Set(fns)].join(', '));
     const st = await page.evaluate((p) => ({ pred: document.querySelector(p + ' [data-k="boards:predictions"]')?.dataset.placeholder, predWords: document.querySelector(p + ' [data-sec="predictions"]')?.innerText || '',
       bracket: document.querySelector(p + ' [data-k="boards:bracket"] a')?.href, every: document.querySelector(p + ' [data-sec="leaders"] a[href="#games/board"]') !== null,
       opens: ['playing', 'lfg', 'tags'].map((k) => document.querySelector(p + ' [data-sec="' + k + '"] a[href="#games/' + k + '"]') !== null), tags: document.querySelector(p + ' [data-tags]')?.dataset.tags }), P);

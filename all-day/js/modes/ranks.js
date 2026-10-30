@@ -41,7 +41,7 @@ const GROUPS = 2;
 const GAMER = ['psn', 'xbox', 'steam', 'switch', 'discord', 'epic', 'riot', 'chess'];
 const PLAT = { pc: 'PC', ps5: 'PS5', xbox: 'Xbox', switch: 'Switch', mobile: 'Phone', vr: 'VR', board: 'Board games', tabletop: 'Tabletop' };
 
-const B = { words: {}, catalog: null, demoBoards: null, pick: '', rows: Object.create(null), posts: null, tags: null };
+const B = { words: {}, catalog: null, demoBoards: null, pick: '', rows: Object.create(null), posts: null, tags: null, postRun: 0, tagRun: 0 };
 
 const TZ = 'America/New_York';
 const monthKey = () => new Intl.DateTimeFormat('en-CA', { timeZone: TZ, year: 'numeric', month: '2-digit' }).format(new Date()).slice(0, 7);
@@ -50,13 +50,18 @@ const num = (n) => Number(n || 0).toLocaleString('en-US');
 const boardGames = () => arr(B.catalog && B.catalog.games).filter((g) => g && SLUG.test(String(g.slug || '')) && g.name && g.live === true && g.leaderboard === true);
 
 /* ------------------------------------------------------- leaderboards */
-function ask(slug) {
-  if (B.rows[slug] !== undefined) return;
-  if (B.demoBoards) { B.rows[slug] = arr(B.demoBoards[slug]); return; }
-  B.rows[slug] = 'loading';
-  Promise.race([store.rpc('get_leaderboard', { p_game: slug, p_month: monthKey() }), new Promise((res) => setTimeout(() => res(null), BOARD_MS))])
-    .then((rows) => { B.rows[slug] = Array.isArray(rows) ? rows : null; })
-    .catch(() => { B.rows[slug] = null; })
+/* kept by month and game, so a tab left open past the 1st reads the new
+   month; a board that failed is asked again only when its chip is tapped */
+const rowKey = (slug) => monthKey() + ':' + slug;
+const rowsOf = (slug) => B.rows[rowKey(slug)];
+function ask(slug, retry) {
+  const k = rowKey(slug);
+  if (B.rows[k] !== undefined && !(retry && B.rows[k] === null)) return;
+  if (B.demoBoards) { B.rows[k] = arr(B.demoBoards[slug]); return; }
+  B.rows[k] = 'loading';
+  Promise.race([store.rpc('get_leaderboard', { p_game: slug, p_month: k.slice(0, 7) }), new Promise((res) => setTimeout(() => res(null), BOARD_MS))])
+    .then((rows) => { B.rows[k] = Array.isArray(rows) ? rows : null; })
+    .catch(() => { B.rows[k] = null; })
     .then(() => { if (B.pick === slug) mode.redraw(); });
 }
 /* one row per player, under their best score (the arcade sends best first) */
@@ -71,10 +76,10 @@ function drawLeaders(page) {
   if (!list.length) { box.appendChild(el('p', 'note pad', esc('No game keeps a board right now.'))); return; }
   if (!list.some((g) => g.slug === B.pick)) B.pick = list[0].slug;
   ask(B.pick);
-  const row0 = chips(list.map((g) => ({ key: g.slug, label: g.name })), B.pick, (k) => { B.pick = k; ask(k); mode.redraw(); }, 'pl-games');
+  const row0 = chips(list.map((g) => ({ key: g.slug, label: g.name })), B.pick, (k) => { B.pick = k; ask(k, true); mode.redraw(); }, 'pl-games');
   box.appendChild(row0);
   const g = list.find((x) => x.slug === B.pick);
-  const rows = B.rows[B.pick];
+  const rows = rowsOf(B.pick);
   const b = el('div', 'board');
   b.dataset.board = B.pick;
   if (rows === 'loading') box.appendChild(el('p', 'note pad', esc('Loading ' + g.name + '’s board…')));
@@ -89,22 +94,27 @@ function drawLeaders(page) {
     box.appendChild(b);
   }
   const go = el('div', 'linkrow');
-  go.append(link('Play ' + g.name, 'https://play.btownbrief.com/' + g.slug + '/', 'btn sm'), link('Every board', '#games/board', 'btn ghost sm'));
+  go.append(link(esc('Play ' + g.name), 'https://play.btownbrief.com/' + g.slug + '/', 'btn sm'), link('Every board', '#games/board', 'btn ghost sm'));
   box.appendChild(el('div', 'addrow')).appendChild(go);
 }
 
 /* ------------------------------------------------------ the games board */
+/* each load is numbered; an older answer that arrives late is dropped */
 function loadPosts() {
+  const run = ++B.postRun;
   return Promise.all([
     boards.list(BOARD, { kind: 'playing', limit: 50 }),
     boards.list(BOARD, { kind: 'lfg', limit: 20 }),
   ]).then(([pl, lf]) => {
+    if (run !== B.postRun) return;
     B.posts = { playing: pl.ok ? pl.posts : null, lfg: lf.ok ? lf.posts : null, err: pl.error || lf.error || '' };
-  }, () => { B.posts = { playing: null, lfg: null, err: '' }; });
+  }, () => { if (run === B.postRun) B.posts = { playing: null, lfg: null, err: '' }; });
 }
 function loadTags() {
+  const run = ++B.tagRun;
   if (!app.user()) { B.tags = { state: 'out', n: 0 }; return Promise.resolve(); }
   return boards.handlesRecent(GAMER, 40).then((r) => {
+    if (run !== B.tagRun) return;
     B.tags = r.ok ? { state: 'ok', n: r.people.filter((p) => p && GAMER.some((k) => p.handles && typeof p.handles[k] === 'string' && p.handles[k].trim())).length }
       : { state: r.error === 'off' ? 'off' : 'err', n: 0 };
   });
@@ -195,4 +205,8 @@ const mode = tab({
 app.register(KEY, mode);
 /* signing in or out changes the gamertags line; a post in Arcade changes the board */
 app.onAuth(() => { loadTags().then(() => mode.redraw()); });
-window.addEventListener('allday-boards', (e) => { if ((e.detail || {}).board === BOARD) loadPosts().then(() => mode.redraw()); });
+/* the same events Games listens for: a post on its board, a hidden or deleted post, an account deleted */
+window.addEventListener('allday-boards', (e) => {
+  const d = e.detail || {};
+  if (d.board === BOARD || d.what === 'hidden' || d.what === 'delete' || d.what === 'deleteme') loadPosts().then(() => mode.redraw());
+});
