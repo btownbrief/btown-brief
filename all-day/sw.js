@@ -51,6 +51,8 @@ const SHELL_URLS = [
   './js/challenge.js', './js/challenge-core.js', './css/challenge.css',
   /* the Btown Brief logo in the mast */
   './assets/brand/btown-brief-logo.png',
+  /* Town (wave 1) */
+  './js/modes/town-kit.js', './js/modes/alerts.js', './js/modes/cityhall.js', './js/modes/streets.js', './js/modes/guides.js', './js/modes/work.js',
 ];
 
 self.addEventListener('install', (e) => {
