@@ -935,8 +935,14 @@ function paintWorld() {
   else delete document.body.dataset.world;
 }
 function withWorld(n) {
-  /* the sections follow by CSS, so the tab is not redrawn; the pill is */
-  const sw = worldSwitch(() => { paintWorld(); paintSubnav(); });
+  /* the sections follow by CSS, so the tab is not redrawn; the pill is,
+     and the keyboard stays on the side just chosen */
+  const sw = worldSwitch((w) => {
+    paintWorld();
+    paintSubnav();
+    const b = document.querySelector('#subnav .worldsw [data-world="' + w + '"]');
+    if (b) b.focus({ preventScroll: true });
+  });
   const bar = n.matches('.secbar') ? n : n.querySelector('.secbar');
   if (!bar) { const wrap = el('div', 'secbar'); const row = el('div', 'secrow'); row.appendChild(sw); wrap.append(row, n); return wrap; }
   /* the pill and the switch share one row, the switch first */
@@ -1195,7 +1201,6 @@ export function start() {
   const logo = $('brand').cloneNode(true);
   logo.removeAttribute('id');
   brand.appendChild(logo);
-  brand.appendChild(switcher.button('rail'));
   bar.appendChild(brand);
   /* All Day's nine keep their grid (What Now's wider centre cell); any
      other app's five to seven share the bar evenly */
@@ -1241,10 +1246,15 @@ export function start() {
     bar.appendChild(b);
   });
 
+  /* a wide screen's rail ends with the eight apps (switcher.js); the
+     rail's name and logo stay as they were */
+  bar.appendChild(switcher.button('rail'));
+
   /* visits, time on screen, and a reader arriving from the newsletter */
   asks.boot(demo, toast, APP);
 
   /* the emailed sign-in link lands on a hash the router must not see */
+  auth.setHome(HOME);
   const signin = auth.consumeHash();
   if (signin) signin.then((msg) => { if (msg) toast(msg); });
   else auth.refresh();
@@ -1292,6 +1302,13 @@ switcher.bind({ sheet, toast, app: APP, demo });
    with a relative address ('?demo=1#whatnow/spin') keeps this app's path. */
 const based = !!document.querySelector('base[href]');
 if (based) {
+  /* a #link's real address is this app's, so a long-press, a middle click,
+     "open in new tab" or a copied link carry /out/#sports, not /all-day/#sports */
+  const own = (e) => {
+    const a = e.target.closest && e.target.closest('a[href^="#"]');
+    if (a) a.setAttribute('href', location.pathname + location.search + a.getAttribute('href'));
+  };
+  ['pointerdown', 'focusin', 'contextmenu', 'auxclick'].forEach((t) => document.addEventListener(t, own, true));
   document.addEventListener('click', (e) => {
     if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
     const a = e.target.closest && e.target.closest('a[href^="#"]');

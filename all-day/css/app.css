@@ -2716,8 +2716,12 @@ body.bd-full { overflow: hidden; }
 .mast.tight .savedbtn { width: 36px; padding: 0; justify-content: center; }
 .mast.tight .savedbtn > span { display: none; }
 @media (min-width: 1024px) { .mast .appsbtn { display: none; } }
-.rail-brand .appsbtn { margin-left: auto; color: var(--ink-3); }
-.rail-brand .appsbtn:hover { color: var(--ink); }
+.rail-apps { display: none; }
+@media (min-width: 1024px) {
+  .tabbar .rail-apps { display: flex; align-items: center; gap: 14px; height: 48px; padding: 0 14px; margin-top: var(--s4);
+    border-radius: var(--r-media); border-top: 1px solid var(--line-soft); color: var(--ink-3); font-size: var(--fs-lead); font-weight: 500; }
+  .tabbar .rail-apps:hover { color: var(--ink); background: var(--paper-2); }
+}
 
 /* the sheet: eight tiles, this one ringed, then the home-screen card */
 .appgrid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--s4) var(--s2); padding: var(--s2) 0 var(--s4); }

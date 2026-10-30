@@ -21,12 +21,19 @@ import * as asks from './asks.js';
 let S = { sheet: null, toast: () => {}, app: null, demo: false };
 export function bind(o) { S = { ...S, ...o }; }
 
-/* the button: 'mast' sits after the wordmark, 'rail' after the rail's name */
+/* the button: 'mast' sits after the wordmark; 'rail' is the last row of a
+   wide screen's tab list, "Btown apps" */
 export function button_(where) {
   /* on the rail it is a link-shaped control, not a <button>: the rail is
      the tab bar, whose buttons are the tabs */
-  const b = el(where === 'rail' ? 'a' : 'button', 'iconbtn appsbtn', ICON.apps);
-  if (where === 'rail') { b.href = '#'; b.setAttribute('role', 'button'); b.addEventListener('click', (e) => e.preventDefault()); } else b.type = 'button';
+  const b = where === 'rail' ? el('a', 'rail-apps', ICON.apps + '<span>Btown apps</span>') : el('button', 'iconbtn appsbtn', ICON.apps);
+  if (where === 'rail') {
+    b.href = '#';
+    b.setAttribute('role', 'button');
+    b.addEventListener('click', (e) => e.preventDefault());
+    /* a button answers Space as well as Enter */
+    b.addEventListener('keydown', (e) => { if (e.key === ' ') { e.preventDefault(); open(); } });
+  } else b.type = 'button';
   b.dataset.apps = where;
   b.setAttribute('aria-label', 'All Btown apps');
   b.setAttribute('aria-haspopup', 'dialog');
@@ -37,7 +44,9 @@ export { button_ as button };
 
 /* an app's tile: its glyph on its own colour */
 export function tile(a, cls) {
-  return '<span class="apptile' + (cls ? ' ' + cls : '') + '" style="--tile:var(' + a.accent + ');--tile-pop:var(' + a.accent + '-pop)">' + (ICON[a.icon] || ICON.grid) + '</span>';
+  /* the accent is a token name from a config: only --a-z, never anything else */
+  const t = /^--[a-z-]+$/.test(a.accent || '') ? a.accent : '--app-all-day';
+  return '<span class="apptile' + (cls === 'sm' ? ' sm' : '') + '" style="--tile:var(' + t + ');--tile-pop:var(' + t + '-pop)">' + (ICON[a.icon] || ICON.grid) + '</span>';
 }
 
 export function open() {

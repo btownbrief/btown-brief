@@ -12,7 +12,7 @@
 -- says the same in four lines.)
 --
 -- What it does, in plain words: it replaces one function, nn_rules(), with
--- the same rules plus seven new boards and their twelve kinds of post:
+-- the same rules plus eight new boards and their twelve kinds of post:
 --   nightlife  open_tonight                    Out: "my group is out tonight"
 --   sports     session                         Out and Body: pickup, a workout
 --   stage      logged                          Out: a show you saw

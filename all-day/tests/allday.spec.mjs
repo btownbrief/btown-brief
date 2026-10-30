@@ -11551,7 +11551,8 @@ async function weatherBrief(browser, base) {
     const s = await page.evaluate(() => {
       const q = (sel) => document.querySelector(sel);
       const rows = (card) => [...card.querySelectorAll('.day-card-rows div')].map((r) => r.querySelector('dt').textContent + ': ' + r.querySelector('dd').textContent);
-      const order = ['#rn-stats', '#day-section', '#hours-section', '#radar', '#week-section', '#tiles-section', '#read-section', '#life-section', '#swim-section'].map((x) => q(x));
+      /* My read leads the page since 2026-10-23 (#428), right under the hero */
+      const order = ['#rn-stats', '#read-section', '#day-section', '#hours-section', '#radar', '#week-section', '#tiles-section', '#life-section', '#swim-section'].map((x) => q(x));
       return { sub: q('#rn-sub').textContent, brief: q('#rn-sub').classList.contains('is-brief'),
         big: q('#rn-stats .rn-big').textContent, feels: q('#rn-feels').textContent, rain: q('#rn-rain').hidden ? null : q('#rn-rain').textContent,
         wear: q('#rn-wear').hidden ? null : q('#rn-wear').textContent,
@@ -11589,7 +11590,7 @@ async function weatherBrief(browser, base) {
     check(/topping out near 55 today/.test(s.story) && /low near 41 tonight/.test(s.story), 'the next-hours story uses the same NWS high and low, not the hourly extremes', s.story);
     check(s.amt === '0.4″', 'the week row says how much: today’s NWS rain total', String(s.amt));
     check(!/\bkt\b|knots?\b|boats?\b/i.test(s.text) && s.swim.some((c) => /Wind\s*to 23 mph/.test(c)), 'no knots or boats anywhere; the swim card’s lake wind is in mph', s.swim.join(' | '));
-    check(s.order, 'in order: now, today and tonight, hourly, rain and radar, the week, the tiles, my read, the scores, swimming', '');
+    check(s.order, 'in order: now, my read, today and tonight, hourly, rain and radar, the week, the tiles, the scores, swimming', '');
     check(s.sw <= s.vw, 'nothing scrolls sideways at 390', s.sw + ' > ' + s.vw);
     /* clicked in place: scrolling down would wake the radar, which has its own group */
     await page.$eval('.wk-row.is-today .wk-main', (b) => b.click());
@@ -13073,9 +13074,10 @@ async function theApps(browser, base) {
     const wide = await newPage(browser, base, { viewport: { width: 1280, height: 800 } });
     await wide.page.goto(base + '/all-day/');
     await settle(wide.page);
-    const w = await wide.page.evaluate(() => ({ mast: !!document.querySelector('#mast .appsbtn').offsetParent, rail: !!document.querySelector('.rail-brand .appsbtn').offsetParent }));
-    check(!w.mast && w.rail, 'wide: the switcher sits by the rail’s name', JSON.stringify(w));
-    await wide.page.click('.rail-brand .appsbtn');
+    const w = await wide.page.evaluate(() => ({ mast: !!document.querySelector('#mast .appsbtn').offsetParent, rail: (document.querySelector('#tabbar .rail-apps') || {}).offsetParent ? document.querySelector('#tabbar .rail-apps').textContent.trim() : '',
+      name: (() => { const s = document.querySelector('.rail-brand span'); return s.getBoundingClientRect().height < 40; })() }));
+    check(!w.mast && w.rail === 'Btown apps' && w.name, 'wide: the switcher is the rail’s last row, and the rail’s name stays on one line', JSON.stringify(w));
+    await wide.page.click('#tabbar .rail-apps');
     await wide.page.waitForSelector('.appgrid');
     check(await wide.page.evaluate(() => document.querySelector('.appgrid .appcell.on').dataset.app) === 'all-day' && /\/all-day\/$/.test(wide.page.url()), 'and opens the same sheet, All Day marked, nowhere navigated', wide.page.url());
     await wide.ctx.close();

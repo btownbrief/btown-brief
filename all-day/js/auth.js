@@ -120,12 +120,15 @@ function keep(tok, id) {
    sign-in, it is taken out of the address bar (so a shared link never carries
    it) and the reader lands on the Wire. Returns a promise of a message for
    the toast, or null when the hash was not ours. */
+/* the tab a sign-in lands on: the app's first (app.js sets it; All Day's is the Wire) */
+let LAND = 'wire';
+export function setHome(k) { if (k) LAND = String(k); }
 export function consumeHash() {
   if (store.isDemo()) return null;
   const h = location.hash.replace(/^#/, '');
   if (!/(^|&)(access_token|error_code|error)=/.test(h)) return null;
   const p = new URLSearchParams(h);
-  history.replaceState(null, '', location.pathname + location.search + '#wire');
+  history.replaceState(null, '', location.pathname + location.search + '#' + LAND);
   if (p.get('error') || p.get('error_code')) {
     return Promise.resolve(p.get('error_code') === 'otp_expired'
       ? 'That sign-in link has expired. Send a new one from Settings.'

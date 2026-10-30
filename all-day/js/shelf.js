@@ -104,7 +104,7 @@ export function shelf(tab, cfg) {
     mount(root) {
       S.root = root;
       if (!app.demo) { S.ready = true; drawPromise(); land(); return; }
-      root.appendChild(el('p', 'loading', 'Loading ' + tab.label + '…'));
+      root.appendChild(el('p', 'loading', esc('Loading ' + tab.label + '…')));
       load().then(() => { draw(); land(); });
     },
     activate(param) { S.pending = param || null; land(); },

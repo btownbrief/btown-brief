@@ -38,7 +38,7 @@
    rule on a kind.
 
    The eight apps (2026-10-29, wave 0; the map's "new post kinds ... on the
-   existing boards framework with its moderation") add seven boards and
+   existing boards framework with its moderation") add eight boards and
    twelve kinds, with no new field type and nothing taken away, so the
    rules stay at version 3 and the SQL is one function (nn-APPS.sql):
      nightlife  open_tonight   Out · Nightlife · Open tonight: "my group is
