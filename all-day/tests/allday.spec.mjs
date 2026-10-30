@@ -50,10 +50,29 @@ const HERE = path.dirname(fileURLToPath(import.meta.url));
 const APP = path.resolve(HERE, '..');
 const REPO = path.resolve(APP, '..');
 const SHOTS = path.join(HERE, 'shots');
-/* The Build took Habits' cell on 2026-10-21; Habits is the other side of its
-   Build | Habits switch, with its own panel and #habits links */
-const TABS = ['wire', 'watch', 'food', 'people', 'whatnow', 'vintage', 'build', 'onair', 'games'];
-const LABELS = ['Wire', 'Watch', 'Food', 'People', 'What Now', 'Vintage', 'Build', 'On Air', 'Games'];
+/* All Day's five since wave 1 of the eight apps (2026-10-29): Today, the
+   front page, then the Wire and the media. Food, People, What Now, The
+   Build with Habits, and Games moved to their own apps. */
+const TABS = ['today', 'wire', 'watch', 'onair', 'vintage'];
+const LABELS = ['Today', 'Wire', 'Watch', 'On Air', 'Vintage'];
+/* Where a tab lives now: All Day when it has it, else the app that took it,
+   by the shell's own cross-app rule (app.js elsewhere()). A test written
+   for /all-day/#food opens /eat/#food straight away, the place the shell
+   would send it, rather than racing the shell's redirect; the old links'
+   own group (todayApp) follows the real redirect. */
+const { APPS: APP_CFGS, keyOf: cfgKey } = await import('../js/apps/index.js');
+const hostsTab = (a, k) => a.tabs.some((t) => cfgKey(t) === k) || Object.prototype.hasOwnProperty.call(a.hosted || {}, k);
+function appOf(tab) {
+  if (hostsTab(APP_CFGS[0], tab)) return 'all-day';
+  const a = APP_CFGS.find((x) => x.id !== 'all-day' && hostsTab(x, tab));
+  return a ? a.id : 'all-day';
+}
+function rehome(url) {
+  const m = String(url).match(/^(.*?)\/all-day\/(\?[^#]*)?#([a-z]+)(.*)$/);
+  if (!m) return url;
+  const id = appOf(m[3]);
+  return id === 'all-day' ? url : m[1] + '/' + id + '/' + (m[2] || '') + '#' + m[3] + m[4];
+}
 const PNG = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mN8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==', 'base64');
 
 /* ------------------------------------------------------------- reporting */
@@ -377,6 +396,9 @@ async function newPage(browser, base, opts = {}) {
     ...(opts.geo ? { geolocation: opts.geo, permissions: ['geolocation'] } : {}),
   });
   const page = await ctx.newPage();
+  /* a tab All Day gave away opens in its app (rehome() above); gotoRaw is the unrehomed address */
+  page.gotoRaw = page.goto.bind(page);
+  page.goto = (u, o) => page.gotoRaw(rehome(u), o);
   /* The Build's intro opens once per phone, the first time the tab does;
      groups that aren't about it start past it (opts.buildIntro: a new phone) */
   if (!opts.buildIntro) await page.addInitScript(() => { try { if (!localStorage.getItem('allday-build-intro')) localStorage.setItem('allday-build-intro', '1'); } catch (e) { /* storage blocked */ } });
@@ -491,8 +513,17 @@ const settle = (page) => page.waitForFunction(() => {
 /* all nine tabs on the phone's bar too (Stephen, 2026-10-19, undoing the
    five-and-More bar) */
 async function tapTab(page, tab) {
-  /* Habits has no cell of its own in All Day: the Build cell, then its
-     switch (in Body it is a tab of its own, Today) */
+  /* a tab this app has not got opens in the app that has it now */
+  if (!(await page.$('#tab-' + tab)) && !(await page.$('#panel-' + tab))) {
+    const u = new URL(page.url());
+    const id = appOf(tab);
+    if (u.pathname !== '/' + id + '/') {
+      await page.goto(u.origin + '/' + id + '/' + u.search + '#' + tab);
+      return;
+    }
+  }
+  /* Habits has no cell of its own where The Build hosts it: the Build cell,
+     then its switch (in Body it is a tab of its own, Today) */
   if (tab === 'habits' && !(await page.$('#tab-habits'))) {
     if (await page.$('#panel-habits:not([hidden])')) return;
     await page.click('#tab-build');
@@ -545,7 +576,7 @@ const COMBOS = [
 ];
 const PAPER = { light: 'rgb(247, 244, 238)', dark: 'rgb(12, 21, 32)' };
 /* tabs that are built: live, they draw their screen instead of the promise */
-const LIVE = new Set(['wire', 'watch', 'whatnow', 'onair', 'games', 'food', 'habits', 'build', 'vintage', 'people']);
+const LIVE = new Set(['today', 'wire', 'watch', 'whatnow', 'onair', 'games', 'food', 'habits', 'build', 'vintage', 'people']);
 
 async function matrix(browser, base) {
   for (const combo of COMBOS) {
@@ -566,13 +597,13 @@ async function matrix(browser, base) {
         /* measure the bar in its own font, not the fallback it shows for a moment while Archivo loads */
         await page.evaluate(() => document.fonts.ready);
         const bar = await page.$$eval('#tabbar button[data-tab]', (bs) => bs.map((b) => [b.dataset.tab, b.textContent.trim()]));
-        check(JSON.stringify(bar.map((b) => b[0])) === JSON.stringify(TABS), 'nine tabs in order', JSON.stringify(bar));
-        check(JSON.stringify(bar.map((b) => b[1])) === JSON.stringify(LABELS), 'the nine labels', JSON.stringify(bar.map((b) => b[1])));
-        /* what the reader sees: all nine, in order, on a phone as on a wide screen */
+        check(JSON.stringify(bar.map((b) => b[0])) === JSON.stringify(TABS), 'five tabs in order', JSON.stringify(bar));
+        check(JSON.stringify(bar.map((b) => b[1])) === JSON.stringify(LABELS), 'the five labels', JSON.stringify(bar.map((b) => b[1])));
+        /* what the reader sees: all five, in order, on a phone as on a wide screen */
         const seen = await page.$$eval('#tabbar button', (bs) => bs.filter((b) => b.offsetParent !== null)
           .map((b) => ({ x: Math.round(b.getBoundingClientRect().left), y: Math.round(b.getBoundingClientRect().top), t: b.textContent.trim() }))
           .sort((a, b) => a.y - b.y || a.x - b.x).map((b) => b.t));
-        check(JSON.stringify(seen) === JSON.stringify(LABELS) && !(await page.$('#tab-more')), 'all nine showing, in order, and no More', JSON.stringify(seen));
+        check(JSON.stringify(seen) === JSON.stringify(LABELS) && !(await page.$('#tab-more')), 'all five showing, in order, and no More', JSON.stringify(seen));
         check(!(await page.$('script[src*="nav.js"], .btnav')), 'the network bar is gone', '');
         const bg = await page.evaluate(() => getComputedStyle(document.body).backgroundColor);
         check(bg === PAPER[combo.scheme], 'body is the ' + combo.scheme + ' paper', bg);
@@ -590,19 +621,13 @@ async function matrix(browser, base) {
           check(!over.length, 'no tab label overflows the rail', over.join(', '));
         } else {
           const cells = await page.$$eval('#tabbar button', (bs) => bs.filter((b) => b.offsetParent !== null).map((b) => { const r = b.getBoundingClientRect(); return [b.dataset.tab || 'more', Math.round(r.width), Math.round(r.height), b.scrollWidth <= b.clientWidth + 1]; }));
-          check(cells.length === 9 && cells.every((c) => c[2] >= 44), 'nine tab targets, each at least 44px tall', JSON.stringify(cells));
-          /* as big as nine fit: 10px at 360, about 11 at 390, 12 at 430 */
-          const labelPx = await page.$eval('#tab-wire span', (x) => parseFloat(getComputedStyle(x).fontSize));
-          check(labelPx >= 10 + (Math.min(430, combo.viewport.width) - 360) * .026 - .05, 'the bar’s labels are as big as nine fit (' + labelPx + 'px)', labelPx);
+          check(cells.length === 5 && cells.every((c) => c[2] >= 44), 'five tab targets, each at least 44px tall', JSON.stringify(cells));
           check(cells.every((c) => c[3]), 'no tab label overflows its cell', JSON.stringify(cells.filter((c) => !c[3])));
-          const wn = cells.find((c) => c[0] === 'whatnow');
-          check(wn[1] > cells[0][1], 'What Now gets the wider cell', JSON.stringify(cells));
-          check(new Set(cells.map((c) => c[2])).size === 1, 'the disc grows no cell: all nine the same height', JSON.stringify(cells));
+          /* five share the bar evenly, as every app's do (wave 1: What Now's wider centre cell went to Out with it) */
+          check(new Set(cells.map((c) => c[1])).size <= 2 && new Set(cells.map((c) => c[2])).size === 1, 'five even cells, all the same height', JSON.stringify(cells));
+          check(await page.$eval('#tabbar', (b) => b.dataset.n) === '5', 'the bar shares its width five ways', '');
         }
-        /* What Now is the bar's centre: its icon in a filled disc, its label bold (Stephen, 2026-10-17) */
-        const disc = await page.$eval('#tab-whatnow .i', (i) => { const c = getComputedStyle(i), r = i.getBoundingClientRect();
-          return { radius: c.borderTopLeftRadius, bg: c.backgroundColor, w: Math.round(r.width), h: Math.round(r.height), weight: getComputedStyle(i.nextElementSibling).fontWeight }; });
-        check(disc.radius === '50%' && !/^(transparent|rgba\(0, 0, 0, 0\))$/.test(disc.bg) && disc.w === disc.h && disc.weight === '700', 'What Now’s icon sits in a filled disc, its label bold', JSON.stringify(disc));
+        check(await page.$eval('#tabbar .holdcell', (b) => b.id) === 'tab-watch', 'Watch is the centre cell, the one to hold for the apps', '');
         if (!demo && combo.motion !== 'reduce') await page.locator('#tabbar').screenshot({ path: path.join(SHOTS, 'tabbar-' + combo.viewport.width + '-' + combo.scheme + '.png') });
         if (combo.motion === 'reduce') {
           const still = await page.evaluate(() => ({ canvas: !!document.querySelector('.lsw-canvas'), sw: !!document.querySelector('.localsw'),
@@ -611,11 +636,7 @@ async function matrix(browser, base) {
           check(/^0s/.test(still.tr), 'reduced motion: no transitions', still.tr);
         }
         for (const tab of TABS) {
-          if (tab !== 'wire') await goTab(page, tab);
-          if (tab === 'games' && !demo) {
-            await page.waitForFunction(() => !/Loading \d+ boards/.test(document.querySelector('#panel-games').innerText), null, { timeout: 15000 });
-            check(boardsAsked.length > 0 && boardsAsked.includes('btown-wordle'), 'games: every leaderboard call is answered by the suite, never the network', boardsAsked.join(', '));
-          }
+          await goTab(page, tab);
           const state = await page.evaluate(() => {
             const p = document.querySelector('.panel:not([hidden])');
             return { id: p.id, promise: !!p.querySelector('.promise'), h2: p.querySelector('.promise h2')?.textContent || '', cards: p.querySelectorAll('[data-k]').length + p.querySelectorAll('.sec').length + p.querySelectorAll('.spin').length,
@@ -641,7 +662,7 @@ async function matrix(browser, base) {
         }
         const gc = await page.evaluate(() => window.__gc);
         check(JSON.stringify(gc) === JSON.stringify(TABS.map((t) => 'all-day-tab-' + t)), 'one GoatCounter tab-landing event per landing', JSON.stringify(gc));
-        await tapTab(page, 'games');
+        await tapTab(page, 'vintage');
         await page.waitForTimeout(100);
         check((await page.evaluate(() => window.__gc.length)) === TABS.length, 'tapping the tab you are on counts nothing', '');
         check(!errors.length, 'no console errors', errors.slice(0, 5).join(' | '));
@@ -11803,7 +11824,7 @@ async function railsHaveList(browser, base) {
       if (n) check(!bad.length, tab + ': every See as a list (' + n + ') opens downward with the sticky Collapse bar, and Collapse puts it back', bad.join(' | '));
     };
     for (const tab of TABS) {
-      if (tab !== 'wire') await goTab(page, tab);
+      await goTab(page, tab);
       await scan(tab);
     }
     /* the Wire's other two faces: the photo feed (with Pets of Burlington) and the square */
@@ -12463,7 +12484,7 @@ async function fullPagesAndAsks(browser, base) {
       await page.goto(base + '/all-day/' + (mode === 'demo' ? '?demo=1' : '') + '#wire');
       await settle(page);
       for (const tab of TABS.concat('habits')) {
-        if (tab !== 'wire') await goTab(page, tab);
+        await goTab(page, tab);
         const r = await page.evaluate((t) => {
           const p = document.querySelector('#panel-' + t), a = p.querySelector('.panel-top .fullpage a');
           if (!a) return { none: true };
@@ -13023,7 +13044,7 @@ async function theApps(browser, base) {
     await ad.page.goto(base + '/all-day/');
     await settle(ad.page);
     let any = false;
-    for (const t of TABS) { if (t !== 'wire') await goTab(ad.page, t); if (await ad.page.$('#subnav .worldsw')) any = true; }
+    for (const t of TABS) { await goTab(ad.page, t); if (await ad.page.$('#subnav .worldsw')) any = true; }
     check(!any && !(await ad.page.evaluate(() => document.body.dataset.world)), 'All Day: no Real life / Online on any of its nine tabs', '');
     await ad.ctx.close();
   });
@@ -13251,6 +13272,173 @@ async function theApps(browser, base) {
   });
 }
 
+/* ------------------------------------------------------------- Today */
+/* All Day's front page (wave 1, 2026-10-29, js/modes/today.js): the
+   dateline and five short shelves from data other apps already read, each
+   linking to the app that has the rest; and every old link to a tab that
+   left All Day still arriving where that tab lives now. */
+const TODAY_SHELVES = ['matters', 'tonight', 'open', 'plans', 'habits'];
+const TODAY_MORE = { matters: ['wire', 'More in the Wire'], tonight: ['whatnow/tonight', 'More in Out'], open: ['food', 'More in Eat'], plans: ['people', 'More in People'], habits: ['habits', 'More in Body'] };
+/* a fixed Wednesday, 3 pm in Burlington, so the demo's tonight, open now and this week's plans are the same every run */
+const TODAY_CLOCK = Date.parse('2026-10-28T19:00:00Z');
+const todayShelves = (page) => page.$$eval('#panel-today .shelf-sec', (ss) => ss.map((sx) => ({ key: sx.dataset.sec, h2: sx.querySelector('.sec h2')?.textContent || '',
+  rows: [...sx.querySelectorAll('.lrow')].map((r) => ({ k: r.dataset.k, href: r.getAttribute('href'), t: r.querySelector('.t')?.textContent || '', s: r.querySelector('.s')?.textContent || '' })),
+  more: [sx.querySelector('[data-more]')?.getAttribute('href') || '', sx.querySelector('[data-more]')?.textContent || ''], empty: sx.querySelector('.empty-shelf')?.textContent || '' })));
+async function todayApp(browser, base) {
+  await group('today: the front page, demo', async () => {
+    const { ctx, page, errors, supabase } = await newPage(browser, base, { clock: TODAY_CLOCK });
+    await page.goto(base + '/all-day/?demo=1');
+    await settle(page);
+    check(await page.$eval('#tabbar button[aria-selected="true"]', (b) => b.id) === 'tab-today', 'Today is the first tab and the bare app opens on it', '');
+    check(await page.$eval('#mast-title', (t) => t.textContent) === 'Today', 'the mast says Today', '');
+    const head = await page.$eval('#panel-today .today-head', (h) => ({ h2: h.querySelector('h2').textContent, sub: h.querySelector('.sec p').textContent, wx: h.querySelector('.wx')?.textContent || '' }));
+    check(head.h2 === 'Today in Burlington' && head.sub === 'Wednesday, October 28', 'the dateline: Today in Burlington, the date in Burlington', JSON.stringify(head));
+    check(/54°mostly cloudy/.test(head.wx) && /51° feels like/.test(head.wx) && /52° lake/.test(head.wx) && /5:52 sunset/.test(head.wx), 'and the weather line Out’s card carries: the sky, feels like, the lake, sunset', head.wx);
+    const sh = await todayShelves(page);
+    check(JSON.stringify(sh.map((x) => x.key).slice().sort()) === JSON.stringify(TODAY_SHELVES.slice().sort()), 'five shelves', sh.map((x) => x.key).join(', '));
+    check(JSON.stringify(sh.map((x) => x.key)) === JSON.stringify(['matters', 'plans', 'tonight', 'open', 'habits']), 'freshest first: the newest pick, the newest plan, tonight’s calendar, the restaurant list, then your habits', sh.map((x) => x.key).join(', '));
+    const pill = await page.$$eval('#subnav .secpill .chip', (cs) => cs.map((c) => c.dataset.chip));
+    check(JSON.stringify(pill) === JSON.stringify(sh.map((x) => x.key)), 'the pill of top tabs is in the page’s order', pill.join(', '));
+    for (const x of sh) {
+      check(x.rows.length >= 3 && x.rows.length <= 5, x.key + ': three to five things', x.rows.length);
+      check(x.more[0] === '#' + TODAY_MORE[x.key][0] && x.more[1] === TODAY_MORE[x.key][1], x.key + ': “' + TODAY_MORE[x.key][1] + '” opens ' + TODAY_MORE[x.key][0], JSON.stringify(x.more));
+      check(x.rows.every((r) => r.k && r.href && r.t && r.s), x.key + ': every row has a key, a link, a title and a line', JSON.stringify(x.rows.filter((r) => !(r.k && r.href && r.t && r.s))));
+    }
+    const by = Object.fromEntries(sh.map((x) => [x.key, x]));
+    check(JSON.stringify(by.matters.rows.map((r) => r.k)) === JSON.stringify(['td-w1', 'td-w2', 'td-w3', 'td-w4', 'td-w5']), 'What matters: the local picks in rank order, five at most, no national one', by.matters.rows.map((r) => r.k).join(', '));
+    check(by.matters.rows.every((r) => /^https:\/\/example\.org\//.test(r.href)), 'a pick opens its story', '');
+    check(JSON.stringify(by.tonight.rows.map((r) => r.k)) === JSON.stringify(['e-td-e7', 'e-td-e1', 'e-td-e2', 'e-td-e3', 'e-td-e4']), 'Tonight: from 5 pm on, soonest first, no cancelled or morning listing', by.tonight.rows.map((r) => r.k).join(', '));
+    check(by.tonight.rows.every((r) => r.href === '#whatnow/' + r.k), 'a listing opens in Out’s Tonight', '');
+    check(by.open.rows[0].k === 'r-td-all-night-diner' && by.open.rows.every((r) => /^Open (until|all night)/.test(r.s) && r.href === '#food/' + r.k) && !by.open.rows.some((r) => /closed|north-end|bakery/.test(r.k)),
+      'Open now: open this minute, written-up places first, each opens in Eat', JSON.stringify(by.open.rows.map((r) => [r.k, r.s])));
+    check(by.plans.rows.length === 3 && by.plans.rows.every((r) => /^b-/.test(r.k) && r.href === '#people/' + r.k), 'Open plans: this week’s plans on the People board, each opens in People', JSON.stringify(by.plans.rows));
+    check(by.plans.rows[0].t === 'A slow walk through the Intervale', 'soonest first (Saturday before Sunday)', by.plans.rows.map((r) => r.t).join(' | '));
+    check(by.habits.rows.some((r) => r.t === 'Morning walk' && r.s === 'Done today') && by.habits.rows.every((r) => r.href === '#habits'), 'Your habits: today’s, ticked or due, each opens Body', JSON.stringify(by.habits.rows));
+    await pageRules(page, 'today', 390);
+    /* a deep link to a shelf, and to a row */
+    await page.goto(base + '/all-day/?demo=1#today/r-td-noodle-bar');
+    check(await flashes(page, 'r-td-noodle-bar'), '#today/<row> lands on that row and flashes it', '');
+    await page.goto(base + '/all-day/?demo=1#today/nope');
+    await page.waitForSelector('#toast:not([hidden])', { timeout: 6000 }).catch(() => {});
+    check(/gone from Today/.test(await page.$eval('#toast', (t) => t.textContent)), 'an unknown key says so', '');
+    /* a demo story never leaves the page */
+    await page.goto(base + '/all-day/?demo=1');
+    await settle(page);
+    await page.click('#panel-today .lrow[data-k="td-w1"]');
+    await page.waitForSelector('#toast:not([hidden])', { timeout: 4000 }).catch(() => {});
+    check(/real build/.test(await page.$eval('#toast', (t) => t.textContent)) && ctx.pages().length === 1, 'demo: a story says it opens in the real build', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    check(!supabase.length, 'demo never calls Supabase', supabase.join(', '));
+    await ctx.close();
+  });
+
+  await group('today: “More in …” and a row open the app that has the rest', async () => {
+    const { ctx, page, errors } = await newPage(browser, base, { clock: TODAY_CLOCK });
+    for (const [sel, path_, hash, tab] of [['[data-sec="open"] [data-more]', '/eat/', '#food', 'food'], ['[data-sec="plans"] [data-more]', '/people/', '#people', 'people'],
+      ['[data-sec="habits"] [data-more]', '/body/', '#habits', 'habits'], ['[data-sec="tonight"] [data-more]', '/out/', '#whatnow/tonight', 'whatnow'], ['[data-sec="open"] .lrow[data-k="r-td-noodle-bar"]', '/eat/', '#food/r-td-noodle-bar', 'food']]) {
+      await page.goto(base + '/all-day/?demo=1');
+      await settle(page);
+      await Promise.all([page.waitForURL((u) => u.pathname === path_, { timeout: 8000 }).catch(() => {}), page.click('#panel-today ' + sel)]);
+      await settle(page).catch(() => {});
+      const got = await page.evaluate(() => ({ path: location.pathname, search: location.search, hash: location.hash, on: document.querySelector('#tabbar button[aria-selected="true"]')?.dataset.tab || '' }));
+      check(got.path === path_ && got.search === '?demo=1' && got.hash === hash && got.on === tab, sel.replace(/\[data-sec="(\w+)"\].*/, '$1') + ': ' + hash + ' opens in ' + path_ + ', still the demo', JSON.stringify(got));
+    }
+    await page.goto(base + '/all-day/?demo=1');
+    await settle(page);
+    await page.click('#panel-today [data-sec="matters"] [data-more]');
+    await page.waitForFunction(() => document.querySelector('#tab-wire')?.getAttribute('aria-selected') === 'true');
+    check(new URL(page.url()).pathname === '/all-day/', 'More in the Wire stays in All Day', page.url());
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('today: old links to the tabs that left arrive in their apps', async () => {
+    /* the shell's cross-app rule, followed for real (gotoRaw: no shortcut) */
+    const OLD = [['food', '/eat/'], ['food/r-demo-all-night-diner', '/eat/'], ['food/deals', '/eat/'], ['people', '/people/'], ['people/b-1', '/people/'], ['people/clubs', '/people/'],
+      ['whatnow', '/out/'], ['whatnow/tonight', '/out/'], ['whatnow/missions', '/out/'], ['games', '/play/'], ['games/btown-wordle', '/play/'], ['habits', '/body/'], ['habits/forests', '/body/']];
+    if (appOf('build') !== 'all-day') OLD.push(['build', '/' + appOf('build') + '/']);
+    for (const demo of [false, true]) {
+      const { ctx, page, errors } = await newPage(browser, base);
+      for (const [h, where] of OLD) {
+        await Promise.all([page.waitForURL((u) => u.pathname === where, { timeout: 10000 }).catch(() => {}), page.gotoRaw(base + '/all-day/' + (demo ? '?demo=1' : '') + '#' + h)]);
+        await settle(page).catch(() => {});
+        const got = await page.evaluate(() => ({ path: location.pathname, search: location.search, hash: location.hash, on: document.querySelector('#tabbar button[aria-selected="true"]')?.dataset.tab || '' }));
+        const tab = h.split('/')[0];
+        check(got.path === where && got.hash === '#' + h && got.search === (demo ? '?demo=1' : '') && (got.on === tab || (tab === 'habits' && got.on === 'habits')),
+          (demo ? 'demo ' : '') + '/all-day/#' + h + ' opens in ' + where, JSON.stringify(got));
+      }
+      /* the tabs that stayed do not move */
+      for (const h of ['wire', 'watch/past', 'onair/podcasts', 'vintage', 'today/open']) {
+        await page.gotoRaw(base + '/all-day/' + (demo ? '?demo=1' : '') + '#' + h);
+        await settle(page);
+        check(new URL(page.url()).pathname === '/all-day/' && await page.$eval('#tabbar button[aria-selected="true"]', (b) => b.dataset.tab) === h.split('/')[0], (demo ? 'demo ' : '') + '#' + h + ' stays in All Day', page.url());
+      }
+      check(!errors.length, (demo ? 'demo' : 'live') + ': no console errors', errors.join(' | '));
+      await ctx.close();
+    }
+  });
+
+  await group('today: live, from the real payloads', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/all-day/');
+    await settle(page);
+    await page.waitForFunction(() => import('/all-day/js/modes/today.js').then((m) => m._state().ready));
+    const sh = await todayShelves(page);
+    check(sh.length === 5 && sh.every((x) => (x.rows.length >= 1 && x.rows.length <= 5) || x.empty), 'five shelves, each with one to five things or its empty line', JSON.stringify(sh.map((x) => [x.key, x.rows.length, x.empty])));
+    const today = wireFiles()['wire-today.json'];
+    const want = today.picks.filter((x) => x.local && !x.own).sort((a, b) => a.rank - b.rank).slice(0, 5).map((x) => String(x.id));
+    const matters = sh.find((x) => x.key === 'matters');
+    check(JSON.stringify(matters.rows.map((r) => r.k)) === JSON.stringify(want), 'What matters is the Wire’s current local picks, in rank order', JSON.stringify([matters.rows.map((r) => r.k), want]));
+    const open = sh.find((x) => x.key === 'open');
+    check(open.rows.every((r) => /^r-/.test(r.k) && /^Open (until|all night)/.test(r.s)), 'Open now reads restaurants.json through the hours engine', JSON.stringify(open.rows.map((r) => r.s)));
+    check(!!(await page.$('#panel-today .today-head .wx')), 'the weather line is there', '');
+    await page.screenshot({ path: path.join(SHOTS, 'live-today.png') });
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('today: every shelf says what will appear when it is empty', async () => {
+    const empty = { restaurants: { generated: '2026-10-28', restaurants: [] }, whatnow: { generated: new Date().toISOString(), events: [] } };
+    const { ctx, page, errors } = await newPage(browser, base, { clock: TODAY_CLOCK });
+    await page.route(/\/data\/restaurants\.json$/, (r) => r.fulfill({ status: 200, body: JSON.stringify(empty.restaurants), contentType: 'application/json' }));
+    await page.route(/\/all-day\/data\/whatnow\.json$/, (r) => r.fulfill({ status: 200, body: JSON.stringify(empty.whatnow), contentType: 'application/json' }));
+    await page.route(/wire-data\/data\/wire-today\.json$/, (r) => r.fulfill({ status: 200, body: JSON.stringify({ v: 1, date: '2026-10-28', updated: new Date(TODAY_CLOCK).toISOString(), updates: [], picks: [] }), contentType: 'application/json' }));
+    await page.goto(base + '/all-day/');
+    await settle(page);
+    await page.waitForFunction(() => import('/all-day/js/modes/today.js').then((m) => m._state().ready));
+    const sh = await todayShelves(page);
+    const said = Object.fromEntries(sh.map((x) => [x.key, x.empty]));
+    check(sh.every((x) => !x.rows.length && x.empty.length > 30), 'all five empty, each with its line', JSON.stringify(said));
+    check(/first update/.test(said.matters) && /5 pm/.test(said.tonight) && /opens next/.test(said.open) && /People board/.test(said.plans) && /Start one there/.test(said.habits),
+      'and each names what will appear there (the habits one is the invitation to Body)', JSON.stringify(said));
+    check(sh.every((x) => x.more[0]), 'every empty shelf still links to its app', '');
+    await page.screenshot({ path: path.join(SHOTS, 'today-empty-390.png') });
+    /* a habit kept on this phone, signed out, shows on the day it is due */
+    await page.evaluate(() => localStorage.setItem('allday-habits-local', JSON.stringify({ v: 1, habits: [{ id: 'l-1', text: 'Twenty pages', frequency: 'daily', n: null, shared: false, position: 1, archived_at: null, created_at: 0 }], taps: {}, merged: {} })));
+    await page.reload();
+    await settle(page);
+    await page.waitForFunction(() => import('/all-day/js/modes/today.js').then((m) => m._state().ready));
+    const hb = (await todayShelves(page)).find((x) => x.key === 'habits');
+    check(hb.rows.length === 1 && hb.rows[0].t === 'Twenty pages' && hb.rows[0].s === 'Due today', 'a habit on this phone, signed out, is due today', JSON.stringify(hb));
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('today: the gallery, 390 and 1280, light and dark', async () => {
+    for (const combo of COMBOS4) {
+      const { ctx, page, errors } = await newPage(browser, base, { ...combo, clock: TODAY_CLOCK });
+      await page.goto(base + '/all-day/?demo=1');
+      await settle(page);
+      await page.evaluate(() => document.fonts.ready);
+      await page.waitForTimeout(300);
+      await pageRules(page, 'today', combo.viewport.width);
+      await page.screenshot({ path: path.join(SHOTS, 'today-' + combo.viewport.width + '-' + combo.scheme + '.png') });
+      check(!errors.length, combo.viewport.width + ' ' + combo.scheme + ': no console errors', errors.join(' | '));
+      await ctx.close();
+    }
+  });
+}
+
 /* ----------------------------------------------------------------- run */
 const t0 = Date.now();
 await mkdir(SHOTS, { recursive: true });
@@ -13295,6 +13483,7 @@ try {
   await run(railsHaveList);
   await run(theChallenge);
   await run(fullPagesAndAsks);
+  await run(todayApp);
   await run(theApps);
 } finally {
   await browser.close();
