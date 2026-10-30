@@ -90,7 +90,7 @@ const mode = kit.tab({
         b.appendChild(r);
         if (S.rl && !S.rl.ok) kit.boardNote(b, S.rl);
         else if (!S.lost.length) b.appendChild(el('p', 'note pad', 'No lost pets.'));
-        else kit.feed(b, S.lost, { tab: KEY, meta: lostMeta, map: true, vote: 'I’ll look', ratio: 'r169' });
+        else kit.feed(b, S.lost, { tab: KEY, meta: lostMeta, map: true, vote: 'I’ll look', ratio: 'r11' });
         const help = S.dp ? (S.dp.pets.help || []).filter((h) => h && h.name && /^https:\/\//.test(String(h.url || ''))) : [];
         if (help.length) kit.rowList(b, help.map((h) => kit.outRow(h.name, h.line, h.url, 'ph:' + h.id)));
       } },

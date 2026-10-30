@@ -13355,13 +13355,6 @@ async function thePeopleApp(browser, base) {
     check(wanted.length && wanted.every((t) => !ready.includes(t)) && wv.every((v, i) => !i || v <= wv[i - 1]), 'Wanted: the unstarted ideas, most wanted first', JSON.stringify(wanted));
     const music = await ppTitles(page, 'musicians');
     check(music.length >= 2 && music.includes('Bass player for a garage soul band') && !music.includes('A sketching club at the waterfront'), 'Musicians: the music ideas only', JSON.stringify(music));
-    await page.click('.pp-sec[data-sec="start"] [data-days]');
-    await page.waitForSelector('.sheet-body [data-day-sheet] .chip[data-day="tue"]');
-    await page.click('.sheet-body .chip[data-day="tue"]');
-    await page.click('.sheet-body .chip[data-day="thu"]');
-    await page.keyboard.press('Escape');
-    await page.waitForTimeout(300);
-    check(/Your days: Tue, Thu/.test(await page.$eval('.pp-sec[data-sec="start"] [data-days]', (b) => b.textContent)), 'the days that work for you, kept and shown on the idea', '');
     await page.click('.pp-sec[data-sec="start"] [data-first]');
     await page.waitForSelector('.sheet-body');
     check(/Propose|first|Sign in to post/i.test(await page.$eval('.sheet', (s) => s.innerText)), 'the first gathering opens the gatherings form', '');

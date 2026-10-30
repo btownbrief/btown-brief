@@ -13,16 +13,14 @@
      in mind and how many it needs (`size`). The vote is "I'm in". Once the
      votes reach the size, the card offers "Propose the first gathering",
      which opens the gatherings board's form (Stephen looks first). The
-     days that work for you are ticked under each idea and kept on this
-     phone: the board has no field for a reader's days yet, so they are
-     your note to yourself until a shared tally is built (a server change).
+     poster's days ride on the idea; a reader's own days need a board
+     field that doesn't exist yet (a shell ask in the report).
    - Wanted: the same ideas still short of their number, most wanted first:
      the library of things nobody has started yet.
    - Musicians: the ideas whose kind is music (a band, a jam, a choir), the
      first vertical of the map's musician finder, with its own post button. */
 
 import * as app from '../app.js';
-import * as store from '../store.js';
 import * as cw from '../clubs-week.js';
 import { el, esc, chips, meetRow, button, ICON } from '../ui.js';
 import { RULES } from '../boards-core.js';
@@ -33,18 +31,8 @@ const KEY = 'clubs';
 const KIND_LABEL = { run: 'Run clubs', league: 'Leagues', pickup: 'Pickup & drop-in', games: 'Games', trivia: 'Trivia', books: 'Books', language: 'Languages',
   music: 'Music & choirs', dance: 'Dance', making: 'Making & crafts', outdoors: 'Outdoors', social: 'Social', other: 'Other' };
 const IDEA_KIND = { sport: 'Sport', outdoors: 'Outdoors', music: 'Music', books: 'Books', food: 'Food', games: 'Games', making: 'Making', social: 'Social', learning: 'Learning', other: 'Something else' };
-const DAYS = [['mon', 'Mon'], ['tue', 'Tue'], ['wed', 'Wed'], ['thu', 'Thu'], ['fri', 'Fri'], ['sat', 'Sat'], ['sun', 'Sun']];
 const SHOWN = 8;
-const DAYS_KEY = 'people-idea-days';
 const S = { groups: null, rc: null, ideas: [], r: null, kind: 'all', all: false, rcDay: null };
-
-/* the days you ticked, per idea: on this phone; in the demo, for the visit */
-let memo = {};
-const myDays = () => (app.demo ? memo : (store.read(DAYS_KEY, {}) || {}));
-function setDays(id, days) {
-  const all = { ...myDays(), [id]: days };
-  if (app.demo) memo = all; else store.write(DAYS_KEY, all);
-}
 
 function load() {
   if (app.demo) {
@@ -73,44 +61,15 @@ function ideaMeta(p) {
   return [IDEA_KIND[m.kind] || '', m.days || '', count].filter(Boolean).join(' · ');
 }
 
-/* under an idea: the first gathering once enough are in, and your days */
-const DAY_WORD = Object.fromEntries(DAYS);
+/* under an idea with enough people in: propose the first gathering */
 function under(p) {
+  if (!ready(p)) return null;
+  const go = button(ICON.calendar + ' Propose the first gathering', 'pkey', () => firstGathering(p));
+  go.type = 'button';
+  go.dataset.first = p.id;
   const r = el('div', 'linkrow pp-under');
-  if (ready(p)) {
-    const go = button(ICON.calendar + ' Propose the first gathering', 'pkey', () => firstGathering(p));
-    go.type = 'button';
-    go.dataset.first = p.id;
-    r.appendChild(go);
-  }
-  const mine = myDays()[p.id] || [];
-  const d = button(esc(mine.length ? 'Your days: ' + mine.map((k) => DAY_WORD[k]).join(', ') : 'Days that work for you'), 'ghost sm', () => daySheet(p));
-  d.type = 'button';
-  d.dataset.days = p.id;
-  r.appendChild(d);
+  r.appendChild(go);
   return r;
-}
-function daySheet(p) {
-  app.sheet('Days that work for you', (body) => {
-    const mine = new Set(myDays()[p.id] || []);
-    const row = el('div', 'chips');
-    row.dataset.daySheet = p.id;
-    DAYS.forEach(([k, w]) => {
-      const b = el('button', 'chip' + (mine.has(k) ? ' on' : ''), '<span>' + esc(w) + '</span>');
-      b.type = 'button';
-      b.dataset.day = k;
-      b.setAttribute('aria-pressed', mine.has(k) ? 'true' : 'false');
-      b.addEventListener('click', () => {
-        if (mine.has(k)) mine.delete(k); else mine.add(k);
-        setDays(p.id, DAYS.map((x) => x[0]).filter((x) => mine.has(x)));
-        b.classList.toggle('on', mine.has(k));
-        b.setAttribute('aria-pressed', mine.has(k) ? 'true' : 'false');
-        mode.redraw();
-      });
-      row.appendChild(b);
-    });
-    body.appendChild(row);
-  });
 }
 
 function firstGathering(p) {
@@ -212,4 +171,4 @@ const mode = kit.tab({
   ],
 });
 app.register(KEY, mode);
-export const _peek = () => ({ ideas: S.ideas.map((p) => ({ title: p.title, votes: p.votes, size: size(p), ready: ready(p) })), days: myDays() });
+export const _peek = () => ({ ideas: S.ideas.map((p) => ({ title: p.title, votes: p.votes, size: size(p), ready: ready(p) })) });

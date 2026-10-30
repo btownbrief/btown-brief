@@ -81,7 +81,7 @@ const mode = kit.tab({
     { key: 'free', label: 'Free', newest: () => kit.newest(of('free')),
       draw(b) {
         b.appendChild(post('Give something away', 'free', { title: 'What it is', titlePlaceholder: 'A couch, you carry it', place: 'Neighborhood', placePlaceholder: 'Winooski', body: 'Size, state, when to come' }));
-        lane(b, S.r, of('free'), { meta, vote: 'I want it', ratio: 'r169', after: doneButton }, 'Nothing up for grabs.');
+        lane(b, S.r, of('free'), { meta, vote: 'I want it', ratio: 'r11', after: doneButton }, 'Nothing up for grabs.');
       } },
     { key: 'favor', label: 'Favor', newest: () => kit.newest(of('favor')),
       draw(b) {
@@ -98,7 +98,7 @@ const mode = kit.tab({
           post('I found something', 'found', { title: 'What you found', titlePlaceholder: 'Keys on a red lanyard', fields, place: 'A place for the map', placePlaceholder: 'A corner or a landmark', body: 'Ask them to describe it' })]
           .forEach((x) => { if (x.firstChild) r.appendChild(x.firstChild); });
         b.appendChild(r);
-        lane(b, S.r, of('lost', 'found'), { meta, map: true, vote: 'I’ll look', ratio: 'r169', after: doneButton }, 'Nothing lost or found.');
+        lane(b, S.r, of('lost', 'found'), { meta, map: true, vote: 'I’ll look', ratio: 'r11', after: doneButton }, 'Nothing lost or found.');
       } },
     { key: 'shifts', label: 'Shifts', newest: () => Math.max(kit.newest(S.shifts), S.orgsAt),
       draw(b) {
