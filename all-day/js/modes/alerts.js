@@ -26,8 +26,8 @@
 
 import * as app from '../app.js';
 import * as store from '../store.js';
-import { el, esc, ICON } from '../ui.js';
-import { townMode, getJSON, row, card, links, line, list, today, dayOf, fmtDay, ago, epoch, daysTo } from './town-kit.js';
+import { el, esc, ICON, divider } from '../ui.js';
+import { townMode, getJSON, maybeJSON, NOT_LOADED, row, card, links, line, list, today, dayOf, fmtDay, ago, epoch, daysTo } from './town-kit.js';
 
 const STREET_KEY = 'town-street';
 const CAT = { news: 'News', events: 'New event', chatter: 'r/burlington', cityhall: 'City Hall', roads: 'Roads', food: 'Food', weather: 'Weather', beaches: 'Beaches', transit: 'Transit', police: 'Police' };
@@ -37,16 +37,46 @@ const CLOSINGS = [
   { label: 'Burlington School District', href: 'https://www.bsdvt.org/' },
 ];
 
+/* the long names programs carry, as a reader says them */
+const ORG = { 'Burlington Parks, Recreation & Waterfront': 'City Parks', 'Burlington City Arts': 'BCA', 'Fletcher Free Library': 'The library',
+  'Greater Burlington YMCA': 'The Y', 'Petra Cliffs Climbing Center & Mountaineering School': 'Petra Cliffs' };
 const newestOf = (list, f) => list.reduce((m, x) => Math.max(m, epoch(f(x))), 0);
 
 /* ---------------------------------------------------------------- Today */
-function drawToday(box, d) {
-  const ev = ((d.changes && d.changes.events) || []).slice().sort((a, b) => epoch(b.ts) - epoch(a.ts));
-  if (!ev.length) { line(box, 'Nothing new.'); return; }
-  const rows = ev.map((e, i) => row({ k: 'chg-' + i + '-' + epoch(e.ts), href: e.url || '../changes.html', title: e.headline,
-    sub: esc([...new Set([CAT[e.category] || e.category, e.detail, e.sourceName, ago(e.ts)].filter(Boolean))].join(' · ')),
-    tag: e.category === 'weather' ? ['Weather', 'live'] : null }));
-  list(box, rows, 12);
+/* the four answers first (ban, schools, your recycling day, the next
+   signup), each opening its section; then the civic changes. News,
+   events and r/burlington are other apps' feeds and stay on the full
+   Since You Checked page. */
+const CIVIC = new Set(['weather', 'cityhall', 'roads', 'transit', 'beaches', 'police']);
+const same = (h) => String(h).replace(/\s*\(#\d+\)\s*$/, '');
+function glance(box, d, ctx) {
+  const a = d.alerts.sections;
+  const ban = ((a.parking_ban || {}).items || [])[0];
+  const cl = ((a.closings || {}).items || []).length + ((a.closings || {}).district_posts || []).length;
+  const mine = ctx.demo ? d.demoStreet : store.read(STREET_KEY, '');
+  const hit = mine && ((a.recycling || {}).items || []).find((x) => x.street === mine);
+  const su = signupsOf(d)[0];
+  const g = el('div', 'plist');
+  g.append(
+    row({ k: 'at-ban', href: '#alerts/trash', icon: ICON.cone, title: ban ? ban.headline : 'No parking ban', sub: ban ? esc(ago(ban.posted)) : '', tag: ban ? ['Ban', 'live'] : null }),
+    row({ k: 'at-schools', href: '#alerts/schools', icon: ICON.book, title: cl ? cl + (cl === 1 ? ' school closing or delay' : ' school closings or delays') : 'Schools open, no delays', tag: cl ? ['Schools', 'live'] : null }),
+    row({ k: 'at-recycling', href: '#alerts/trash', icon: ICON.calcheck, title: hit ? 'Recycling ' + hit.recycling_day : 'Your recycling day',
+      sub: hit ? esc(mine + ' · ban zone ' + hit.parking_ban_zone) : esc('Add your street') }),
+  );
+  if (su) g.appendChild(row({ k: 'at-signup', href: '#alerts/signups', icon: ICON.calendar, title: su.p.name, sub: esc(su.what + ' ' + fmtDay(su.date)) }));
+  box.appendChild(g);
+}
+function drawToday(box, d, ctx) {
+  glance(box, d, ctx);
+  const seen = new Set();
+  const ev = ((d.changes && d.changes.events) || []).filter((e) => CIVIC.has(e.category)).sort((a, b) => epoch(b.ts) - epoch(a.ts))
+    .filter((e) => { const k = e.category + same(e.headline); if (seen.has(k)) return false; seen.add(k); return true; });
+  divider(box, 'What changed');
+  if (d.changes.failed) line(box, NOT_LOADED);
+  else if (!ev.length) line(box, 'Nothing new.');
+  else list(box, ev.map((e, i) => row({ k: 'chg-' + i + '-' + epoch(e.ts), href: e.url || '../changes.html', title: same(e.headline),
+    sub: esc([...new Set([CAT[e.category] || e.category, e.detail, ago(e.ts)].filter(Boolean))].join(' · ')),
+    tag: e.category === 'weather' ? ['Weather', 'live'] : null })), 8);
   box.appendChild(links([{ label: 'Since You Checked', href: '../changes.html' }]));
 }
 
@@ -72,9 +102,11 @@ function drawTrash(box, d, ctx) {
   r.append(input, dl);
   form.appendChild(r);
   const out = el('div', 'plist');
+  out.setAttribute('role', 'status');
   form.appendChild(out);
   box.appendChild(form);
-  const norm = (s) => String(s || '').toLowerCase().replace(/\b(street|st|avenue|ave|road|rd|drive|dr|lane|ln|place|pl|court|ct|terrace|ter)\b\.?/g, '').replace(/[^a-z0-9]/g, '');
+  /* only the street's last word is its type: "St Paul St" keeps its saint */
+  const norm = (s) => String(s || '').toLowerCase().replace(/\s+(street|st|avenue|ave|road|rd|drive|dr|lane|ln|place|pl|court|ct|terrace|ter|parkway|pkwy|circle|cir|way)\.?\s*$/, '').replace(/^saint\s+/, 'st ').replace(/[^a-z0-9]/g, '');
   function show(q, save) {
     out.innerHTML = '';
     const n = norm(q);
@@ -95,7 +127,8 @@ function drawTrash(box, d, ctx) {
     if (exact.length > 1 && new Set(exact.map((x) => x.recycling_day + x.parking_ban_zone)).size > 1) {
       out.appendChild(el('p', 'note', esc('Split street: check the city’s map.')));
     }
-    if (save && exact.length && !ctx.demo) store.write(STREET_KEY, exact[0].street);
+    /* kept only when the name points at one street */
+    if (save && exact.length && new Set(exact.map((x) => x.street)).size === 1 && !ctx.demo) store.write(STREET_KEY, exact[0].street);
   }
   input.addEventListener('input', () => show(input.value, true));
   const mine = ctx.demo ? (d.demoStreet || '') : store.read(STREET_KEY, '');
@@ -127,10 +160,13 @@ function drawPlows(box, d) {
   const g = d.alerts.sections.greenway || { items: [] };
   card(box, { k: 'no-tracker', title: 'Burlington has no street plow tracker',
     links: [{ label: 'How the city plows', href: 'https://www.burlingtonvt.gov/610/Snowfighting-Program' }] });
-  const rows = (g.items || []).map((s, i) => row({ k: 'gw-' + i, href: s.source_url, icon: ICON.leaf, title: s.segment,
-    sub: esc([s.notes, s.last_plowed ? 'Last plowed ' + fmtDay(dayOf(s.last_plowed)) : 'No plow date yet'].filter(Boolean).join(' · ')),
-    tag: s.plowed_in_winter_program ? ['Plowed in winter', 'local'] : ['Not plowed', 'left'] }));
-  if (rows.length) list(box, rows, 6);
+  /* the layer sleeps from spring to the first snow: last winter's notes
+     would read as today's, so out of season it is one line */
+  const fresh = (g.items || []).some((s) => epoch(s.updated) > Date.now() / 1000 - 14 * 86400);
+  if (!fresh) { line(box, 'The bike path’s plow status starts with the first snow.'); return; }
+  list(box, (g.items || []).map((s, i) => row({ k: 'gw-' + i, href: s.source_url, icon: ICON.leaf, title: s.segment,
+    sub: esc([s.notes, s.last_plowed ? 'Plowed ' + ago(s.last_plowed) : ''].filter(Boolean).join(' · ')),
+    tag: s.plowed_in_winter_program ? null : ['Not plowed', 'left'] })), 6);
 }
 
 /* -------------------------------------------------------------- Schools */
@@ -153,7 +189,7 @@ function drawShelters(box, d) {
   if (!(s.items || []).length) line(box, 'No warming or cooling announcements.');
   const st = (d.shelters && d.shelters.places) || [];
   list(box, st.map((p) => row({ k: 'shelter-' + p.id, href: p.source_url, icon: ICON.home, title: p.name, sub: esc([p.what, p.phone].filter(Boolean).join(' · ')) })), 8);
-  card(box, { k: 'shelter-hand', paras: [esc('Cold-snap openings are checked by hand. Call 2-1-1 or COTS, 802-864-7402, for a bed.')],
+  card(box, { k: 'shelter-hand', paras: [esc('Cold-snap openings are checked by hand. For a bed tonight, call 2-1-1.')],
     links: [{ label: 'Vermont 2-1-1', href: 'https://vermont211.org/' }, { label: 'COTS', href: 'https://www.cotsonline.org/' }] });
 }
 
@@ -170,11 +206,12 @@ function signupsOf(d) {
 }
 function drawSignups(box, d) {
   const s = signupsOf(d);
+  if (d.signups.failed) { line(box, NOT_LOADED); return; }
   if (!s.length) { line(box, 'No signups coming up.'); return; }
   list(box, s.map((x) => {
     const n = daysTo(x.date);
     return row({ k: 'su-' + x.p.id, href: x.p.page, date: x.date, title: x.p.name,
-      sub: esc([x.what + ' ' + fmtDay(x.date), x.p.org, x.p.season].filter(Boolean).join(' · ')),
+      sub: esc([x.what + ' ' + fmtDay(x.date), ORG[x.p.org] || x.p.org].filter(Boolean).join(' · ')),
       tag: n <= 3 ? [n <= 0 ? 'Today' : n === 1 ? 'Tomorrow' : 'In ' + n + ' days', 'live'] : null });
   }), 8);
 }
@@ -183,9 +220,9 @@ app.register('alerts', townMode({
   key: 'alerts', label: 'Alerts', icon: 'bell', promise: 'Trash day, parking bans, plows and school delays.',
   demo: 'town-alerts',
   load: () => Promise.all([
-    getJSON('../data/changes/changes.json').catch(() => ({ events: [] })),
+    maybeJSON('../data/changes/changes.json'),
     getJSON('../data/town/alerts.json'),
-    getJSON('../data/town/signups.json').catch(() => ({ programs: [] })),
+    maybeJSON('../data/town/signups.json'),
     getJSON('../data/town/shelters.json').catch(() => ({ places: [] })),
   ]).then(([changes, alerts, signups, shelters]) => ({ changes, alerts, signups, shelters })),
   sections: [

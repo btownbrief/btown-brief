@@ -47,7 +47,7 @@ export async function townCases(h) {
         const s = await sections(page);
         check(JSON.stringify(s.secs) === JSON.stringify(t.top), t.mode + ': one section per top tab, in order', JSON.stringify(s.secs));
         check(s.pill.length === t.top.length && t.top.every((x) => s.pill.includes(x)), t.mode + ': the pill names every top tab', JSON.stringify(s.pill));
-        check(!/didn’t load just now|didn’t draw/.test(s.text), t.mode + ': every section drew', (s.text.match(/.{0,60}(didn’t load just now|didn’t draw).{0,20}/) || [''])[0]);
+        check(!/Didn’t load|didn’t draw/.test(s.text), t.mode + ': every section drew', (s.text.match(/.{0,60}(Didn’t load|didn’t draw).{0,20}/) || [''])[0]);
         await pageRules(page, 'town/' + t.mode, 390);
       }
       check(!errors.length, 'no console errors', errors.slice(0, 5).join(' | '));
@@ -133,9 +133,12 @@ export async function townCases(h) {
     check(!owners.some((c) => txt.includes(c)), 'no buyer or seller names on sales', owners.filter((c) => txt.includes(c)).join(', '));
     const saleRows = await page.$$eval('#panel-streets [data-sec="sold"] .lrow[data-k^="sale-"]', (rs) => rs.map((r) => r.innerText));
     check(saleRows.length > 0 && saleRows.every((r) => !/out of state|out-of-state|outside vermont/i.test(r)), 'no out-of-state flag on any sale', saleRows.find((r) => /out/i.test(r)) || '');
-    check(await page.$$eval('#panel-streets [data-sec="sold"] .lrow[data-k^="wk-"]', (rs) => rs.length > 0 && rs.every((r) => /of \d+ sales? to an out-of-state address/.test(r.innerText))), 'only each week’s out-of-state share', '');
-    const heads = await page.$$eval('#panel-streets [data-sec="blotter"] .lrow[data-k^="pr-"] .t', (as) => as.map((a) => a.textContent));
-    check(heads.every((x) => /\|\s*\d{2}[A-Z]{2}\d{5,}$|^Police press release/.test(x)), 'blotter headlines are an offence and a case number', heads.join(' / '));
+    const share = await page.$eval('#panel-streets [data-sec="sold"] .stat', (n) => n.innerText);
+    check(/\d+%\s+Buyers from out of state, past year/.test(share), 'out-of-state buyers only as the past year’s share, which the listed sales can’t be matched to', share);
+    const heads = await page.$$eval('#panel-streets [data-sec="blotter"] .lrow[data-k^="pr-"]', (rs) => rs.map((r) => [r.querySelector('.t').textContent, r.querySelector('.s').textContent]));
+    check(heads.length > 0 && heads.every(([t, sub]) => /^[A-Za-z /&,-]+$/.test(t.trim()) && /case \d{2}[A-Z]{2}\d{5,}/.test(sub)), 'blotter rows are an offence and a case number, one per case', JSON.stringify(heads));
+    const cases = (s.blotter.press_releases || []).map((x) => x.case_number);
+    check(heads.length === new Set(cases).size, 'an update folds into its case', heads.length + ' rows for ' + new Set(cases).size + ' cases');
     await ctx.close();
   });
 
@@ -171,6 +174,43 @@ export async function townCases(h) {
     await ctx.close();
   });
 
+  await group('town: the demo writes nothing of its own; a missing file says so; hostile data stays inert', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/town/?demo=1');
+    await settle(page);
+    const before = await page.evaluate(() => Object.keys(localStorage).sort());
+    for (const t of TABS.slice(1)) await goTab(page, t);
+    await page.goto(base + '/town/?demo=1#alerts/trash');
+    await settle(page);
+    await page.fill('#panel-alerts input[name="street"]', 'Pine St');
+    await page.goto(base + '/town/?demo=1#guides/newhere');
+    await settle(page);
+    await page.click('#panel-guides [data-k="new-library"] button');
+    /* btown-player-id is the shell's anonymous device id, written by boards.js for any board, demo or not */
+    const after = await page.evaluate(() => Object.keys(localStorage).filter((k) => /^town-/.test(k)));
+    check(!after.length, 'no town- key is written in the demo', JSON.stringify({ before, after }));
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+    const f = await newPage(browser, base);
+    await f.page.route(/\/data\/(changes\/changes|town\/signups)\.json$/, (r) => r.fulfill({ status: 404, body: '' }));
+    await f.page.goto(base + '/town/#alerts');
+    await settle(f.page);
+    const t = await f.page.evaluate(() => ['today', 'signups', 'trash'].map((k) => document.querySelector('#panel-alerts [data-sec="' + k + '"]').innerText));
+    check(/Didn’t load/.test(t[0]) && !/Nothing new/.test(t[0]) && /Didn’t load/.test(t[1]) && !/No signups/.test(t[1]), 'a file that fails says it didn’t load, never “nothing”', JSON.stringify(t.map((x) => x.slice(0, 80))));
+    check(/Your street/.test(t[2]), 'and the rest of the tab still works', '');
+    await f.ctx.close();
+    const h = await newPage(browser, base);
+    const real = await json('data/changes/changes.json');
+    real.events.unshift({ ts: new Date().toISOString(), category: 'cityhall', headline: '<img src=x onerror="window.__pwn=1">Agenda posted', detail: '', url: 'javascript:window.__pwn=1', sourceName: 'x', kind: 'added' });
+    await h.page.route(/\/data\/changes\/changes\.json$/, (r) => r.fulfill({ status: 200, body: JSON.stringify(real), contentType: 'application/json' }));
+    await h.page.goto(base + '/town/#alerts');
+    await settle(h.page);
+    const bad = await h.page.evaluate(() => { const a = [...document.querySelectorAll('#panel-alerts [data-sec="today"] .lrow a.t')].find((x) => /Agenda posted/.test(x.textContent));
+      return a ? { href: a.getAttribute('href'), text: a.textContent, img: !!document.querySelector('#panel-alerts img[src="x"]'), pwn: !!window.__pwn } : null; });
+    check(bad && bad.href === '#' && /<img/.test(bad.text) && !bad.img && !bad.pwn, 'a javascript: link becomes #, and markup in a headline is shown as text', JSON.stringify(bad));
+    await h.ctx.close();
+  });
+
   await group('town: New here’s ticks stay on the phone', async () => {
     const { ctx, page } = await newPage(browser, base);
     await page.goto(base + '/town/#guides/newhere');
@@ -180,8 +220,8 @@ export async function townCases(h) {
     await page.reload();
     await settle(page);
     check(await page.$eval('#panel-guides [data-k="new-library"]', (r) => r.classList.contains('done')), 'and is still ticked next time', '');
-    const pages = await page.$$eval('#panel-guides [data-sec="all"] .lrow a.t', (as) => as.map((a) => a.getAttribute('href')));
-    check(['../housing.html', '../contractors.html', '../volunteer.html', '../beaches.html', '../hobbies.html', '../history.html', '../gifts.html'].every((x) => pages.includes(x)), 'All guides opens each guide page', JSON.stringify(pages));
+    const pages = await page.$$eval('#panel-guides [data-sec="all"] .lrow a.t', (as) => as.map((a) => new URL(a.href).pathname));
+    check(['/housing.html', '/contractors.html', '/volunteer.html', '/beaches.html', '/hobbies.html', '/history.html', '/gifts.html'].every((x) => pages.includes(x)), 'All guides opens each guide page', JSON.stringify(pages));
     await ctx.close();
   });
 

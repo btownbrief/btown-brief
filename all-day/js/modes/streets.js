@@ -31,9 +31,12 @@ import { townMode, getJSON, row, card, links, line, list, stats, today, plusDays
 
 const WHAT = [['pothole', 'Pothole'], ['streetlight', 'Streetlight out'], ['sidewalk', 'Sidewalk'], ['crosswalk', 'Crosswalk'], ['sign', 'Sign'], ['graffiti', 'Graffiti'], ['trash', 'Trash'], ['tree', 'Tree'], ['other', 'Something else']];
 const WHAT_LABEL = Object.fromEntries(WHAT);
-const REASON = { demolition: 'Demolition', adu: 'An ADU', restaurant_or_fitout: 'Restaurant, bar or fit-out', commercial_occupancy: 'Change of use', new_building: 'New building', big_project: '$250K or more', units: '10 or more units' };
+const REASON = { demolition: 'Demolition', adu: 'An ADU', restaurant_or_fitout: 'Restaurant, bar or fit-out', commercial_occupancy: 'Change of use', new_building: 'New building', big_project: 'A big project', units: '10 or more units' };
 const CONCERN = 'https://www.burlingtonvt.gov/862/Report-a-Concern';
-const cls = (c) => String(c || 'Property').replace(/^\d+\.\s*/, '');
+const KIND = { 'Single Family Dwelling': 'House', Condominium: 'Condo', 'Multi Family': 'Multi-family', 'Office Buildings': 'Office', Retail: 'Retail' };
+const cls = (c) => { const k = String(c || '').replace(/^\d+\.\s*/, ''); return KIND[k] || (k && k !== 'Other' ? k : 'Property'); };
+/* 'NECTARS/CAPONES REFIT' → 'Nectars/Capones Refit' */
+const calm = (t) => (/[a-z]/.test(t) ? t : t.toLowerCase().replace(/(^|[\s/(-])([a-z])/g, (m, p, c) => p + c.toUpperCase()));
 const sec = (d, k) => ((d.streets || {}).sections || {})[k] || {};
 
 /* ------------------------------------------------------------- Going in */
@@ -44,7 +47,17 @@ function mondayOf(w) {
   const mon = new Date(jan4.getTime() + ((n - 1) * 7 - ((jan4.getUTCDay() + 6) % 7)) * 864e5);
   return fmtDay(mon.toISOString().slice(0, 10)).replace(/^\w+, /, '');
 }
-const jobName = (x) => (x.project && !/^project_\d+$/i.test(x.project.trim()) ? x.project : x.kind + ' at ' + x.address);
+/* the job in a few words: the project's own name, without the address
+   and town people type into it; the reason it's notable when the name is
+   only an address or a record number */
+function jobName(x) {
+  const num = String(x.address || '').match(/^\d+[-\d]*/);
+  let t = String(x.project || '').replace(/\b(burlington,?\s*(vt|vermont)?\s*\d{0,5})\s*$/i, '').trim();
+  if (num) t = t.replace(new RegExp('\\s*' + num[0] + '\\s+[A-Za-z .]+$'), '').trim();
+  t = t.replace(/^[-\d\s]+[A-Za-z .]*(street|st|avenue|ave|road|rd|place|pl|lane|ln|drive|dr)\b\.?\s*[-–:]?\s*/i, '').trim();
+  if (!t || /^project_\d+$/i.test(t) || /^\d/.test(t)) t = ((x.notable_reasons || []).map((r) => REASON[r]).filter(Boolean)[0]) || x.kind;
+  return calm(t);
+}
 function drawGoing(box, d) {
   const p = sec(d, 'permits');
   const wk = (p.weekly_roundup || []).slice(0, 2);
@@ -58,7 +71,7 @@ function drawGoing(box, d) {
   });
   if (!jobs.length) line(box, 'Nothing notable lately.');
   else list(box, jobs.map((x) => row({ k: 'pm-' + x.permit_no, href: x.source_url, date: x.applied, title: jobName(x),
-    sub: esc([x.address, (x.notable_reasons || []).map((r) => REASON[r] || r).join(', '), x.est_cost ? money(x.est_cost) : '', x.status].filter(Boolean).join(' · ')) })), 6);
+    sub: esc([x.address, x.est_cost ? money(x.est_cost) : ''].filter(Boolean).join(' · ')) })), 6);
 }
 
 /* ------------------------------------------------------------- Torn up */
@@ -68,7 +81,7 @@ function drawTorn(box, d) {
   const n = pr.filter((x) => x.status === 'Under Construction').length;
   line(box, n + ' under construction');
   list(box, pr.map((x) => row({ k: 'pj-' + x.slug, href: (x.links || [])[0] || x.source_url, icon: ICON.cone, title: x.name,
-    sub: esc([x.type, x.department, [...new Set((x.wards || []).join(';').split(/[;,]/).map((w) => w.trim()).filter(Boolean))].join(', '), x.construction_year && /^\d{4}$/.test(x.construction_year) ? 'Build ' + x.construction_year : ''].filter(Boolean).join(' · ')),
+    sub: esc([x.type, [...new Set((x.wards || []).join(';').split(/[;,]/).map((w) => w.trim()).filter(Boolean))].join(', '), Number(x.construction_year) >= Number(today().slice(0, 4)) ? x.construction_year : ''].filter(Boolean).join(' · ')),
     tag: [x.status || 'Unknown', x.status === 'Under Construction' ? 'live' : x.status === 'Completed' ? 'local' : 'left'] })), 10);
   box.appendChild(links([{ label: 'Construction portal', href: 'https://www.burlingtonvt.gov/323/Construction-Portal' }]));
 }
@@ -108,29 +121,26 @@ function drawReport(box) {
 }
 
 /* ----------------------------------------------------------------- Sold */
-const weekOf = (key) => { const [y, m, dd] = key.split('-').map(Number); const t = new Date(Date.UTC(y, m - 1, dd)); const dow = (t.getUTCDay() + 6) % 7; return plusDays(key, -dow); };
 function drawSold(box, d) {
   const s = sec(d, 'sales');
   const from = plusDays(today(), -60);
   const sales = (s.items || []).filter((x) => x.arms_length && x.price > 0 && x.closed >= from).sort((a, b) => b.closed.localeCompare(a.closed));
   const m = s.medians || {};
-  stats(box, [[shortMoney((m['30d'] || {}).all_residential) || '—', 'Median home, last 30 days'], [shortMoney((m['90d'] || {}).all_residential) || '—', 'Last 90 days (' + ((m['90d'] || {}).count || 0) + ' sales)'], [shortMoney((m['365d'] || {}).all_residential) || '—', 'Last year']]);
-  /* the out-of-state flag, only as each week's share */
-  const weeks = new Map();
-  sales.forEach((x) => { const w = weekOf(x.closed); const o = weeks.get(w) || { n: 0, out: 0 }; o.n += 1; if (x.out_of_state_buyer) o.out += 1; weeks.set(w, o); });
-  const wl = [...weeks.entries()].sort((a, b) => b[0].localeCompare(a[0])).slice(0, 6);
-  if (wl.length) {
-    divider(box, 'Out-of-state buyers');
-    list(box, wl.map(([w, o]) => row({ k: 'wk-' + w, href: s.items[0] ? s.items[0].source_url : 'https://geodata.vermont.gov/', date: w, title: 'Week of ' + fmtDay(w).replace(/^\w+, /, ''),
-      sub: esc(o.out + ' of ' + o.n + ' sale' + (o.n === 1 ? '' : 's') + ' to an out-of-state address') })), 6);
-  }
+  /* The out-of-state flag only as the share over the past year (370-odd
+     sales), never on a sale. A week's share sat beside the dated rows
+     and gave sales away ("0 of 2" names both buyers in-state), so the
+     window is one the list can't be matched against. */
+  const yr = m['365d'] || {};
+  const share = Number(yr.out_of_state_share);
+  stats(box, [[shortMoney((m['90d'] || {}).all_residential) || '—', 'Median sale, last 90 days'], [String(sales.length), 'Sales, last 60 days'],
+    [Number.isFinite(share) && yr.count >= 100 ? Math.round(share * 100) + '%' : '—', 'Buyers from out of state, past year']]);
   if (!sales.length) line(box, 'No sales posted lately.');
   else list(box, sales.map((x) => row({ k: 'sale-' + x.return_id, href: x.source_url, date: x.closed, title: x.address,
     sub: '<b>' + esc(money(x.price)) + '</b> · ' + esc([cls(x.property_class), x.buyer_entity ? 'bought by a company' : ''].filter(Boolean).join(' · ')) })), 8);
 }
 
 /* -------------------------------------------------------------- Blotter */
-const SAFE_HEAD = /^(UPDATE\s+)?\d{1,2}\/\d{1,2}\/\d{4}\s+[A-Za-z /&,-]+\|\s*\d{2}[A-Z]{2}\d{5,}$/;
+const SAFE_HEAD = /^(UPDATE\s+)?(\d{1,2}\/\d{1,2}\/\d{4})\s+([A-Za-z /&,-]+)\|\s*\d{2}[A-Z]{2}\d{5,}$/;
 const top = (o, n) => Object.entries(o || {}).filter(([k]) => k !== 'NA').sort((a, b) => b[1] - a[1]).slice(0, n);
 const mon = (k) => (k ? new Intl.DateTimeFormat('en-US', { timeZone: 'UTC', month: 'long' }).format(new Date(k + '-15T12:00:00Z')) : '');
 function drawBlotter(box, d) {
@@ -140,9 +150,15 @@ function drawBlotter(box, d) {
   const pr = b.press_releases || [];
   if (pr.length) {
     divider(box, 'Police press releases');
-    list(box, pr.map((x, i) => row({ k: 'pr-' + (x.case_number || i) + (x.is_update ? '-u' : '') + '-' + i, href: x.source_url, icon: ICON.flag,
-      title: SAFE_HEAD.test(String(x.headline).trim()) ? x.headline : 'Police press release' + (x.case_number ? ', case ' + x.case_number : ''),
-      sub: esc(ago(x.posted)), tag: x.is_update ? ['Update', 'left'] : null })), 5);
+    const cases = new Map();
+    pr.slice().sort((a, b) => epoch(b.posted) - epoch(a.posted)).forEach((x) => { const k = x.case_number || x.source_url; if (!cases.has(k)) cases.set(k, { x, updated: false }); else cases.get(k).updated = true; });
+    list(box, [...cases.values()].map(({ x, updated }, i) => {
+      const m = String(x.headline).trim().match(SAFE_HEAD);
+      const on = m ? m[2] : '';
+      return row({ k: 'pr-' + (x.case_number || i), href: x.source_url, icon: ICON.flag, title: m ? calm(m[3].trim()) : 'Police press release',
+        sub: esc([on ? fmtDay(on.replace(/^(\d+)\/(\d+)\/(\d{4})$/, (q, mo, dd, y) => y + '-' + mo.padStart(2, '0') + '-' + dd.padStart(2, '0'))).replace(/^\w+, /, '') : '', x.case_number ? 'case ' + x.case_number : ''].filter(Boolean).join(' · ')),
+        tag: x.is_update || updated ? ['Update', 'left'] : null });
+    }), 5);
   }
   const groups = top(pi.by_call_type_group, 6);
   if (groups.length) {

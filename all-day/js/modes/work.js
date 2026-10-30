@@ -20,7 +20,7 @@
 
 import * as app from '../app.js';
 import { el, esc, ICON, divider } from '../ui.js';
-import { townMode, getJSON, row, card, links, line, list, quietForm, today, plusDays, fmtDay, epoch } from './town-kit.js';
+import { townMode, getJSON, maybeJSON, NOT_LOADED, row, card, links, line, list, quietForm, today, plusDays, fmtDay, epoch } from './town-kit.js';
 
 const DAYS = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
 const CAT = { tech: 'Tech', office: 'Office', healthcare: 'Health care', community: 'Community', education: 'Education', government: 'Government', trades: 'Trades', other: 'Other' };
@@ -60,23 +60,30 @@ function nowET() { const o = {}; ET.formatToParts(new Date()).forEach((p) => { o
 const toMin = (s) => { const [h, m] = s.split(':').map(Number); return h * 60 + (m || 0); };
 const clock = (m) => { const h = Math.floor(m / 60) % 24, mm = m % 60; return (h % 12 || 12) + (mm ? ':' + String(mm).padStart(2, '0') : '') + (h < 12 ? ' am' : ' pm'); };
 const SPAN = /^\d{1,2}:\d{2}-\d{1,2}:\d{2}$/;
+const spansOf = (week, day) => String((week || {})[day] || '').split(',').map((r) => r.trim()).filter((r) => SPAN.test(r)).map((r) => r.split('-').map(toMin));
+const DAYNAME = { sun: 'Sunday', mon: 'Monday', tue: 'Tuesday', wed: 'Wednesday', thu: 'Thursday', fri: 'Friday', sat: 'Saturday' };
+/* open now and until when, or the next time it opens this week; `soon`
+   is minutes to that opening, for the order */
 function openState(week, at) {
-  const raw = String((week || {})[at.day] || '');
-  if (raw && !raw.split(',').some((r) => SPAN.test(r.trim()))) return { open: false, unknown: true, words: 'Hours not listed for today' };
-  const spans = String((week || {})[at.day] || '').split(',').map((r) => r.trim()).filter((r) => SPAN.test(r)).map((r) => r.split('-').map(toMin));
-  const on = spans.find(([a, b]) => at.min >= a && at.min < b);
-  if (on) return { open: true, words: 'Open until ' + clock(on[1]) };
-  const next = spans.find(([a]) => a > at.min);
-  return { open: false, words: next ? 'Opens at ' + clock(next[0]) : 'Closed for today' };
+  const on = spansOf(week, at.day).find(([a, b]) => at.min >= a && at.min < b);
+  if (on) return { open: true, soon: 0, words: 'Open until ' + clock(on[1]) };
+  const d0 = DAYS.indexOf(at.day);
+  for (let n = 0; n < 7; n++) {
+    const day = DAYS[(d0 + n) % 7];
+    const next = spansOf(week, day).find(([a]) => n > 0 || a > at.min);
+    if (next) return { open: false, soon: n * 1440 + next[0] - at.min, words: 'Opens ' + (n === 0 ? '' : n === 1 ? 'tomorrow ' : DAYNAME[day] + ' ') + clock(next[0]) };
+  }
+  return { open: false, soon: 1e9, words: 'Hours not listed' };
 }
 function drawShops(box, d, ctx) {
+  if (d.shops.failed) { line(box, NOT_LOADED); return; }
   const shops = ((d.shops || {}).shops || []).filter((s) => s.week && Object.values(s.week).some((v) => SPAN.test(String(v || '').split(',')[0].trim())));
   const at = ctx.demo && d.demoNow ? d.demoNow : nowET();
-  const rows = shops.map((s) => ({ s, st: openState(s.week, at) })).sort((a, b) => b.st.open - a.st.open || a.s.name.localeCompare(b.s.name));
+  const rows = shops.map((s) => ({ s, st: openState(s.week, at) })).sort((a, b) => a.st.soon - b.st.soon || a.s.name.localeCompare(b.s.name));
   const n = rows.filter((x) => x.st.open).length;
   line(box, n + ' of ' + rows.length + ' open now');
   if (rows.length) list(box, rows.map(({ s, st }) => row({ k: 'shop-' + s.id, href: s.website || '#vintage', icon: ICON.tag, title: s.name,
-    sub: esc([st.words, s.neighborhood, (s.kinds || []).join(', ')].filter(Boolean).join(' · ')), tag: st.open ? ['Open', 'local'] : st.unknown ? null : ['Closed', 'left'] })), 8);
+    sub: esc([st.words, s.neighborhood, (s.kinds || []).join(', ')].filter(Boolean).join(' · ')), tag: st.open ? ['Open', 'local'] : null })), 8);
   box.appendChild(links([{ label: 'Food: Open now in Eat', href: '#food' }]));
 }
 
@@ -84,29 +91,25 @@ function drawShops(box, d, ctx) {
 function drawBusinesses(box) {
   quietForm(box, { k: 'listing-form', title: 'List your business, free',
     intro: 'Stephen reads each one before it goes up.',
-    fields: [{ name: 'name', label: 'Business name' }, { name: 'what', label: 'What you do, in a line' }, { name: 'where', label: 'Street address, or “online only”' },
-      { name: 'hours', label: 'Hours', placeholder: 'Tue–Sat 10 to 6' }, { name: 'link', label: 'Website or Instagram', type: 'url', placeholder: 'https://' },
-      { name: 'email', label: 'Your email, so Stephen can confirm', type: 'email' },
-      { name: 'sponsor', label: 'Would you like to hear about sponsoring the Brief?', type: 'select', options: ['Not now', 'Yes, send me the details', 'Maybe later'] }],
+    fields: [{ name: 'name', label: 'Business name' }, { name: 'link', label: 'Website or Instagram', type: 'url', placeholder: 'https://' },
+      { name: 'email', label: 'Your email', type: 'email' },
+      { name: 'sponsor', label: 'Interested in sponsoring the Brief?', type: 'select', options: ['Not now', 'Yes, tell me more'] }],
     button: 'Send my listing',
     after: 'Not sent: this form isn’t live yet. Email btownbrief@gmail.com.' });
 }
 
 /* --------------------------------------------------------- Get a website */
 function drawWebsite(box) {
-  card(box, { k: 'website-what', title: 'A website for your business',
-    paras: [esc('Your hours, menu, map and ordering, kept up for you.')] });
-  quietForm(box, { k: 'website-form', title: 'What do you need?',
-    fields: [{ name: 'name', label: 'Business name' }, { name: 'now', label: 'Your site today, if you have one', type: 'url', placeholder: 'https://' },
-      { name: 'need', label: 'What it should do', type: 'select', options: ['Show who we are and our hours', 'Take orders', 'Take bookings', 'Something else'] },
-      { name: 'more', label: 'Anything else', type: 'textarea' }, { name: 'email', label: 'Your email', type: 'email' }],
+  quietForm(box, { k: 'website-form', title: 'A website for your business', intro: 'Your hours, menu, map and ordering, kept up for you.',
+    fields: [{ name: 'name', label: 'Business name' }, { name: 'need', label: 'It should', type: 'select', options: ['Show our hours and info', 'Take orders', 'Take bookings', 'Something else'] },
+      { name: 'email', label: 'Your email', type: 'email' }],
     button: 'Ask about a website',
     after: 'Not sent: this form isn’t live yet. Email btownbrief@gmail.com.' });
 }
 
 /* ------------------------------------------------------ Tees for your team */
 function drawTees(box) {
-  card(box, { k: 'team-tees', title: 'Tees for your team',
+  card(box, { k: 'team-tees',
     paras: [esc('Shirts for a league team, a run club or a race. Team orders are coming.')],
     links: [{ label: 'The Brief’s merch shop', href: 'https://merch.btownbrief.com/', primary: true }, { label: 'Make a tee in Vintage', href: '#vintage' }] });
 }
@@ -121,7 +124,7 @@ function drawSponsor(box) {
 app.register('work', townMode({
   key: 'work', label: 'Work', icon: 'briefcase', promise: 'Who’s hiring, local shops, and help for businesses.',
   demo: 'town-work',
-  load: () => Promise.all([getJSON('../data/jobs.json'), getJSON('../data/vintage-shops.json').catch(() => ({ shops: [] }))]).then(([jobs, shops]) => ({ jobs, shops })),
+  load: () => Promise.all([getJSON('../data/jobs.json'), maybeJSON('../data/vintage-shops.json')]).then(([jobs, shops]) => ({ jobs, shops })),
   sections: [
     { key: 'jobs', label: 'Jobs', draw: drawJobs, newest: (d) => epoch((d.jobs || {}).updated) },
     { key: 'hiring', label: 'Who’s hiring', draw: drawHiring },

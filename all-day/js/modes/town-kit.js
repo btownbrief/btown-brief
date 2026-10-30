@@ -21,7 +21,7 @@
    link to the outside world toasts instead of leaving, as cards do. */
 
 import * as app from '../app.js';
-import { el, esc, ICON, section } from '../ui.js';
+import { el, esc, safeHref, ICON, section } from '../ui.js';
 import { sectionBar } from '../sections.js';
 
 const HOUR = 3600;
@@ -70,6 +70,10 @@ export const money = (n) => (Number.isFinite(Number(n)) && n !== null ? '$' + Ma
 export function getJSON(url) {
   return fetch(url).then((r) => { if (!r.ok) throw new Error('HTTP ' + r.status + ' ' + url); return r.json(); });
 }
+/* a file one section needs and the rest can do without: a failure comes
+   back as { failed: true }, so that section says so instead of "nothing" */
+export const maybeJSON = (url) => getJSON(url).catch((e) => { console.warn('[town] ' + e.message); return { failed: true }; });
+export const NOT_LOADED = 'Didn’t load. Pull down to try again.';
 
 /* ------------------------------------------------------------ drawing */
 /* a date tile: the day's number over its month */
@@ -84,7 +88,7 @@ export function row(o) {
   r.dataset.k = o.k;
   const out = isOut(o.href);
   r.innerHTML = (o.date !== undefined ? tile(o.date) : o.icon ? '<span class="th bare">' + o.icon + '</span>' : '<span></span>') +
-    '<div><a class="t" href="' + esc(o.href) + '"' + (out ? ' target="_blank" rel="noopener"' : '') + '>' + esc(o.title) + '</a>' +
+    '<div><a class="t" href="' + esc(safeHref(o.href)) + '"' + (out ? ' target="_blank" rel="noopener"' : '') + '>' + esc(o.title) + '</a>' +
     (o.sub ? '<p class="s">' + o.sub + '</p>' : '') + '</div>' +
     (o.tag ? '<span class="tag tag-' + esc(o.tag[1] || 'left') + '">' + esc(o.tag[0]) + '</span>' : '<span></span>');
   return r;
@@ -107,7 +111,7 @@ export function links(list, inCard) {
   const r = el('div', inCard ? 'row' : 'linkrow todaylinks');
   list.filter((l) => l && l.href).forEach((l) => {
     const a = el('a', 'btn sm' + (l.primary ? '' : ' ghost'), esc(l.label) + (isOut(l.href) ? ' ' + ICON.ext : ''));
-    a.href = l.href;
+    a.href = safeHref(l.href);
     if (isOut(l.href)) { a.target = '_blank'; a.rel = 'noopener'; }
     r.appendChild(a);
   });
@@ -132,7 +136,7 @@ export function list(host, rows, n) {
   host.appendChild(box);
   if (rows.length > n) {
     const b = el('button', 'btn ghost more', esc('Show all ' + rows.length));
-    b.addEventListener('click', () => { rows.forEach((r) => { r.hidden = false; }); b.remove(); });
+    b.addEventListener('click', () => { rows.forEach((r) => { r.hidden = false; }); b.remove(); const a = rows[n] && rows[n].querySelector('a'); if (a) a.focus(); });
     host.appendChild(b);
   }
   return box;
@@ -151,11 +155,6 @@ export function quietForm(host, o) {
     if (fd.type === 'select') {
       i = el('select', 'field bf-in');
       i.innerHTML = fd.options.map((x) => '<option value="' + esc(x) + '">' + esc(x) + '</option>').join('');
-    } else if (fd.type === 'textarea') {
-      i = el('textarea', 'field bf-in');
-      i.rows = 3;
-      /* a textarea's own face is monospace; the page's instead */
-      i.style.fontFamily = 'inherit';
     } else {
       i = el('input', 'field bf-in');
       i.type = fd.type || 'text';
@@ -217,7 +216,7 @@ export function townMode(spec) {
       const box = el('section', 'shelf-sec');
       box.dataset.sec = sec.key;
       section(box, sec.label, sec.sub ? esc(sec.sub) : null);
-      if (!S.data) line(box, 'This didn’t load just now. Pull down to try again, or come back in a minute.');
+      if (!S.data) line(box, NOT_LOADED);
       else {
         try { sec.draw(box, S.data, ctx); } catch (e) {
           console.warn('[town] ' + spec.key + '/' + sec.key + ': ' + (e && e.message));

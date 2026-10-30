@@ -22,8 +22,8 @@
 
 import * as app from '../app.js';
 import * as boards from '../boards.js';
-import { el, esc, ICON, divider } from '../ui.js';
-import { townMode, getJSON, row, card, links, line, list, stats, today, fmtDay, fmtLong, epoch, daysTo, money } from './town-kit.js';
+import { el, esc, safeHref, ICON, divider } from '../ui.js';
+import { townMode, getJSON, maybeJSON, NOT_LOADED, row, card, links, line, list, stats, today, fmtDay, fmtLong, epoch, daysTo, money } from './town-kit.js';
 
 const VOTEY = /\b(vote|voting|votes|election|elections|results|ballot|debate|town meeting|watch party|candidate|mayor|council)\b/i;
 const PORTAL = 'https://burlingtonvt.portal.civicclerk.com/';
@@ -44,7 +44,7 @@ function when(m) {
 }
 function meetingRow(m, i, past) {
   const docs = [['Agenda', m.agenda_url], ['Packet', m.packet_url], ['Minutes', m.minutes_url], ['Video', m.video_url]].filter((x) => x[1])
-    .map(([t, u]) => '<a href="' + esc(u) + '" target="_blank" rel="noopener">' + t + '</a>').join(' · ');
+    .map(([t, u]) => '<a href="' + esc(safeHref(u)) + '" target="_blank" rel="noopener">' + t + '</a>').join(' · ');
   const key = wallDay(m.start);
   return row({ k: 'mtg-' + (past ? 'p' : 'u') + i + '-' + key, href: m.agenda_url || m.video_url || PORTAL, date: key, title: m.title,
     sub: esc([fmtDay(key) + ', ' + when(m), m.venue].filter(Boolean).join(' · ')) + (docs ? '<br>' + docs : ''),
@@ -80,7 +80,7 @@ function drawVotes(box, d) {
 /* ------------------------------------------------------------ Elections */
 function drawElections(box, d) {
   const t = (((d.cityhall || {}).derived) || {}).town_meeting_day_2027;
-  if (!t) { line(box, 'The 2027 election dates aren’t in yet.'); return; }
+  if (!t) { line(box, d.cityhall.failed ? NOT_LOADED : 'The 2027 dates aren’t in yet.'); return; }
   const [fd, ft] = String(t.filing_deadline || '').split(' ');
   const [wd] = String(t.withdrawal_deadline || '').split(' ');
   const n = daysTo(t.election_date);
@@ -89,26 +89,28 @@ function drawElections(box, d) {
     paras: ['To get on the ballot, file a petition with the city clerk by <b>' + esc(fmtLong(fd)) + (ft ? ' at 5 pm' : '') + '</b>. The last day to withdraw is ' + esc(fmtLong(wd)) + '.',
       esc('Worked out from state law. Confirm with the clerk, 802-865-7000.')],
     links: [{ label: 'City elections page', href: 'https://www.burlingtonvt.gov/986/Elections', primary: true }, { label: 'The state law', href: 'https://legislature.vermont.gov/statutes/section/17/055/02681' }] });
-  list(box, (t.offices_expected || []).map((o, i) => row({ k: 'office-' + i, href: 'https://www.burlingtonvt.gov/986/Elections', icon: ICON.columns, title: o.replace(/\s*\(.*\)$/, ''), sub: esc((o.match(/\((.*)\)$/) || [])[1] || 'Up in March 2027') })), 6);
+  divider(box, 'On the ballot');
+  list(box, (t.offices_expected || []).map((o, i) => row({ k: 'office-' + i, href: 'https://www.burlingtonvt.gov/986/Elections', icon: ICON.columns, title: o.replace(/\s*\(.*\)$/, '') })), 6);
 }
 
 /* ---------------------------------------------------------------- Money */
 function drawMoney(box, d) {
   const tx = ((d.cityhall || {}).derived || {}).tax_rates;
-  if (!tx) { line(box, 'The tax rates aren’t in yet.'); return; }
+  if (!tx) { line(box, d.cityhall.failed ? NOT_LOADED : 'The tax rates aren’t in yet.'); return; }
   const r = tx.per_100_of_grand_list.FY2027;
   const rate = r.homestead_education + r.municipal + r.local_agreement;
-  stats(box, [[r.municipal.toFixed(4), 'City rate per $100'], [r.homestead_education.toFixed(4), 'School rate per $100 (homestead)'], [rate.toFixed(4), 'Together']]);
-  const c = card(box, { k: 'tax-estimate', title: 'What your tax bill is made of',
-    paras: [esc('Appraised value ÷ 100 × the rates above. Due in four parts: the 12th of August, November, March and June.')] });
+  stats(box, [['$' + rate.toFixed(2), 'Tax per $100 of home value'], ['$' + r.municipal.toFixed(2), 'Of that, to the city'], ['$' + r.homestead_education.toFixed(2), 'And to schools']]);
+  const c = card(box, { k: 'tax-estimate', title: 'Your tax bill',
+    paras: [esc('Due in four parts: the 12th of August, November, March and June.')] });
   const r2 = el('div', 'row');
   const input = el('input', 'field');
   input.type = 'number'; input.inputMode = 'numeric'; input.min = '0'; input.step = '1000'; input.name = 'value';
-  input.placeholder = 'Appraised value, like 450000';
+  input.placeholder = 'Your home’s appraised value';
   input.setAttribute('aria-label', 'Appraised value of your home');
   r2.appendChild(input);
   c.appendChild(r2);
   const out = el('p', '', '');
+  out.setAttribute('role', 'status');
   c.appendChild(out);
   input.addEventListener('input', () => {
     const v = Number(input.value);
@@ -116,7 +118,7 @@ function drawMoney(box, d) {
   });
   const top = tx.fy27_municipal_components_top || {};
   card(box, { k: 'city-rate-parts', title: 'The biggest pieces of the city rate',
-    paras: [esc('General city services ' + top.general_city + ', retirement ' + top.retirement + ', debt ' + top.debt_service + ', per $100.')],
+    paras: [esc('Of the city’s $' + r.municipal.toFixed(2) + ': $' + top.general_city.toFixed(2) + ' runs the city, $' + top.retirement.toFixed(2) + ' pays pensions, $' + top.debt_service.toFixed(2) + ' pays down debt.')],
     links: [{ label: 'FY27 budget', href: 'https://www.burlingtonvt.gov/1225/Fiscal-Year-2027-Budget', primary: true }, { label: 'Rate sheet', href: 'https://www.burlingtonvt.gov/DocumentCenter/View/12141' },
       { label: 'Tax rates', href: 'https://www.burlingtonvt.gov/215/Tax-Rates-Calculations' }, { label: 'School budget', href: 'https://www.bsdvt.org/district/budget/' },
       { label: 'Property tax credit', href: 'https://tax.vermont.gov/ptc' }] });
@@ -146,7 +148,7 @@ function drawTogether(box, d, ctx) {
 app.register('cityhall', townMode({
   key: 'cityhall', label: 'City Hall', icon: 'columns', promise: 'Every meeting and vote, in plain English.',
   demo: 'town-cityhall',
-  load: () => Promise.all([getJSON('../data/civic.json'), getJSON('../data/town/cityhall-sources.json').catch(() => ({}))]).then(([civic, cityhall]) => ({ civic, cityhall })),
+  load: () => Promise.all([getJSON('../data/civic.json'), maybeJSON('../data/town/cityhall-sources.json')]).then(([civic, cityhall]) => ({ civic, cityhall })),
   sections: [
     { key: 'meetings', label: 'Meetings', draw: drawMeetings, newest: (d) => epoch((d.civic || {}).generated) },
     { key: 'votes', label: 'Votes', draw: drawVotes },
