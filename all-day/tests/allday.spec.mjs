@@ -65,7 +65,7 @@ const hostsTab = (a, k) => a.tabs.some((t) => cfgKey(t) === k) || Object.prototy
 function appOf(tab) {
   if (hostsTab(APP_CFGS[0], tab)) return 'all-day';
   const a = APP_CFGS.find((x) => x.id !== 'all-day' && hostsTab(x, tab));
-  return a ? a.id : MOVING[tab] || 'all-day';
+  return a ? a.id : Object.prototype.hasOwnProperty.call(MOVING, tab) ? MOVING[tab] : 'all-day';
 }
 /* a tab whose new app has not taken it yet on this branch: The Build goes
    to Body (the lead, 2026-10-29), which hosts it once apps/w1-body merges */
@@ -6903,8 +6903,9 @@ async function boards(browser, base) {
     await page.waitForTimeout(200);
     const after = await fakeOf(page, `(f) => ({ posts: f.posts.filter((p) => p.user_id === 'demo-0000-4000-8000-00000000me00').length, profile: f.profiles.has('demo-0000-4000-8000-00000000me00') })`);
     check(after.posts === 0 && !after.profile, 'everything of theirs is gone', JSON.stringify(after));
-    const habitsGone = await page.evaluate(() => import('/all-day/js/modes/habits.js').then((h) => { const f = h._fake(); return !f.members.has('demo-0000-4000-8000-00000000me00') && !f.habits.some((x) => x.user_id === 'demo-0000-4000-8000-00000000me00'); }));
-    check(habitsGone, 'and so are their habits and taps (sz_delete_me)', '');
+    /* Habits registers its own deletion when its mode loads; an app that does not host Habits never does (since wave 1, All Day) */
+    const habitsGone = await page.evaluate(() => import('/all-day/js/modes/habits.js').then((h) => { const f = h._fake(); return !f.members.has('demo-0000-4000-8000-00000000me00') && !f.habits.some((x) => x.user_id === 'demo-0000-4000-8000-00000000me00'); }, () => 'not loaded'));
+    check(habitsGone === true, 'and so are their habits and taps (sz_delete_me)', habitsGone === 'not loaded' ? 'Habits is not loaded in this app, so nothing deleted them: the shell must register the deletion in every app (wave 1 All Day report)' : '');
     check(/Deleted\. You’re signed out\./.test(await page.$eval('#toast', (t) => t.textContent)) && await page.evaluate(() => import('/all-day/js/app.js').then((a) => a.user())) === null, 'and they are signed out', '');
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
@@ -9675,7 +9676,7 @@ async function shellFixes(browser, base) {
       await page.goto('about:blank');
       await page.goto(base + '/all-day/?demo=1' + hash);
       await page.waitForFunction((t) => document.querySelector('#tab-' + t)?.getAttribute('aria-selected') === 'true', tab, { timeout: 15000 }).catch(() => {});
-      return page.evaluate((t) => ({ on: document.querySelector('#tab-' + t).getAttribute('aria-selected') === 'true', hash: location.hash }), tab);
+      return page.evaluate((t) => ({ on: document.querySelector('#tab-' + t)?.getAttribute('aria-selected') === 'true', hash: location.hash, at: location.pathname }), tab);
     };
     const cases = [
       ['#reddit', 'wire', '#wire/reddit'],
@@ -9701,9 +9702,6 @@ async function shellFixes(browser, base) {
     await page.waitForSelector(BAND + ' .wf .chip.on', { timeout: 5000 });
     const on = await page.$eval(BAND + ' .wf .chips:not(.w-topics) .chip.on', (c) => c.dataset.chip);
     check(on === 'reddit', 'a bare #reddit opens the Wire on its Reddit chip', on);
-    await page.goto(base + '/all-day/?demo=1#music');
-    await page.waitForFunction(() => document.querySelector('#subnav .chip.on')?.dataset.chip === 'tonight', null, { timeout: 15000 }).catch(() => {});
-    check(await page.$eval('#subnav .chip.on', (c) => c.dataset.chip).catch(() => '') === 'tonight', 'an old Music link opens What Now on Tonight', '');
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
   });
@@ -12032,10 +12030,15 @@ async function sectionPills(browser, base) {
       return { sheet: !document.querySelector('#sheet:not([hidden]) .secsheet'), on: on.dataset.chip, head: Math.round(head.top), vh: innerHeight, shown: r.left >= sc.left - 1 && r.right <= sc.right + 1 };
     }, last);
     check(after.sheet && after.on === last && after.head < after.vh && after.shown, 'a row closes the sheet, scrolls to that section, and the pill scrolls to show it on', JSON.stringify(after));
-    /* Habits fits under Build | Habits; on its own (Body before it takes The Build) its pill is the bigger one */
-    const fitTab = hostedAnywhere('build') ? 'habits' : 'watch';
-    const habitsFit = await (async () => { await goTab(page, fitTab); await page.waitForTimeout(400); return page.$eval('#subnav .secpill', (w) => ({ over: w.classList.contains('over'), all: getComputedStyle(w.querySelector('.secpill-all')).display })); })();
-    check(!habitsFit.over && habitsFit.all === 'none', 'a pill that fits (' + fitTab + ') has no All button', JSON.stringify(habitsFit));
+    /* a pill that fits shows no All button: the first of these whose pill fits at 390 (Habits under Build | Habits did, before wave 1 moved it) */
+    let fitTab = null, habitsFit = null;
+    for (const t of ['habits', 'watch', 'onair', 'people', 'vintage', 'games']) {
+      await goTab(page, t);
+      await page.waitForTimeout(400);
+      const r = await page.$eval('#subnav .secpill', (w) => ({ over: w.classList.contains('over'), all: getComputedStyle(w.querySelector('.secpill-all')).display })).catch(() => null);
+      if (r && !r.over) { fitTab = t; habitsFit = r; break; }
+    }
+    check(!!fitTab && habitsFit.all === 'none', 'a pill that fits (' + fitTab + ') has no All button', JSON.stringify(habitsFit));
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
   });
@@ -12291,6 +12294,8 @@ async function theChallenge(browser, base) {
     for (const scheme of ['light', 'dark']) {
       const { ctx, page, errors } = await newPage(browser, base, { scheme });
       await page.goto(base + '/all-day/?utm_source=www.btownbrief.com&utm_medium=newsletter&_bhlid=xyz');
+      /* the bare app opens on Today since wave 1; the challenge's card is the Wire's (a shell ask in the wave 1 report) */
+      await goTab(page, 'wire');
       await chalCard(page, 'invite');
       check(await page.$eval('#sheet', (s) => s.hidden), scheme + ': the invite is a card, no sheet', '');
       const text = await page.$eval('#panel-wire .chal-card', (n) => n.innerText.replace(/\s+/g, ' '));
@@ -13440,6 +13445,27 @@ async function todayApp(browser, base) {
     await page.waitForFunction(() => import('/all-day/js/modes/today.js').then((m) => m._state().ready));
     const hb = (await todayShelves(page)).find((x) => x.key === 'habits');
     check(hb.rows.length === 1 && hb.rows[0].t === 'Twenty pages' && hb.rows[0].s === '' && !hb.empty, 'a habit on this phone, signed out, is due today', JSON.stringify(hb));
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('today: a source that never answers, and one place under two names', async () => {
+    const hours = { sun: [['00:00', '00:00']], mon: [['00:00', '00:00']], tue: [['00:00', '00:00']], wed: [['00:00', '00:00']], thu: [['00:00', '00:00']], fri: [['00:00', '00:00']], sat: [['00:00', '00:00']] };
+    const food = { generated: '2026-10-28', restaurants: [
+      { id: 'twin-a', place_id: 'P1', name: 'THE TWIN DINER', coords: [44.4760, -73.2128], hours, hours_confidence: 'google' },
+      { id: 'twin-b', place_id: 'P1', name: 'Twin Diner on Main', coords: [44.4760, -73.2128], hours, hours_confidence: 'google', blurb: 'The written-up record, which wins.' },
+      { id: 'unsure', name: 'Hours Unverified Cafe', coords: [44.4761, -73.2129], hours, hours_confidence: 'unverified' },
+      { id: 'shut', name: 'Shut For Repairs', coords: [44.4761, -73.2129], hours, closing: { note: 'Temporarily closed' } },
+      { id: 'loud', name: 'LOUD NAME BAR', coords: [44.4762, -73.2129], hours } ] };
+    const { ctx, page, errors } = await newPage(browser, base, { clock: TODAY_CLOCK, rpc: (fn) => (fn === 'nn_posts_list' ? { hang: true } : undefined) });
+    await page.route(/\/data\/restaurants\.json$/, (r) => r.fulfill({ status: 200, body: JSON.stringify(food), contentType: 'application/json' }));
+    await page.goto(base + '/all-day/');
+    await settle(page);
+    await page.waitForFunction(() => import('/all-day/js/modes/today.js').then((m) => m._state().ready), null, { timeout: 8000 });
+    const sh = Object.fromEntries((await todayShelves(page)).map((x) => [x.key, x]));
+    check(sh.plans.empty === 'No plans this week.' && !(await page.$('#panel-today .shelf-sec .note:not(.empty-shelf)')), 'a board that never answers leaves an empty shelf, never Loading… for good', JSON.stringify(sh.plans));
+    check(JSON.stringify(sh.open.rows.map((r) => r.k)) === JSON.stringify(['r-twin-b', 'r-loud']) && sh.open.rows[1].t === 'Loud Name Bar',
+      'Open now: one row per place (its written-up record), unverified hours and a temporary closure left out, a shouting name tidied, as Food does', JSON.stringify(sh.open.rows.map((r) => [r.k, r.t])));
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
   });

@@ -235,23 +235,33 @@ function tonight(j) {
   return { rows, newest: sec(Date.parse(j.generated) || 0), sub: '' };
 }
 
+/* Food's own rules for a place (food.js takePlaces and hasHours): one row
+   per Google place, the record with the write-up winning; hours marked
+   unverified are not trusted; a temporary closure is left out */
+const worth = (r) => (r.blurb ? 4 : 0) + (r.hours_confidence === 'google' ? 2 : 0) + (r.place_id ? 1 : 0);
+const hasHours = (r) => !!r.hours && Object.keys(r.hours).length > 0 && r.hours_confidence !== 'unverified';
+const tidyName = (n) => (/[a-z]/.test(n) || !/[A-Z]{3}/.test(n) ? n : n.toLowerCase().replace(/(^|[\s(\/-])([a-z])/g, (m, a, b) => a + b.toUpperCase()));
+function places(list) {
+  const keep = new Map();
+  list.filter((r) => r && r.id && r.name && !r.closed && !(r.closing && /temporar/i.test(r.closing.note || ''))).forEach((r) => {
+    const k = r.place_id || 'id:' + r.id;
+    const had = keep.get(k);
+    if (!had || worth(r) > worth(had)) keep.set(k, r);
+  });
+  return [...keep.values()];
+}
+
 function openNow(j) {
   const F = window.BTFood;
   if (!F || !j || !Array.isArray(j.restaurants)) return null;
-  const t = F.now(), names = new Set();
-  const open = j.restaurants.filter((r) => {
-    if (!r || !r.id || !r.name || r.closed || !r.hours || !Object.keys(r.hours).length) return false;
-    if (r.closing && /temporar/i.test(r.closing.note || '')) return false;
-    const n = r.name.toLowerCase();
-    if (names.has(n) || !F.isOpenAt(r.hours, t.day, t.minutes)) return false;
-    names.add(n);
-    return true;
-  }).map((r) => ({ r, mi: r.coords && r.coords.length === 2 ? F.haversineMiles(r.coords, CHURCH_ST) : 99 }))
+  const t = F.now();
+  const open = places(j.restaurants).filter((r) => hasHours(r) && F.isOpenAt(r.hours, t.day, t.minutes))
+    .map((r) => ({ r, mi: r.coords && r.coords.length === 2 ? F.haversineMiles(r.coords, CHURCH_ST) : 99 }))
     .sort((a, b) => (b.r.blurb ? 1 : 0) - (a.r.blurb ? 1 : 0) || a.mi - b.mi);
   const rows = open.slice(0, MAX).map(({ r }) => {
     const allNight = (r.hours[t.day] || []).some(([o, c]) => o === c);
     const until = allNight ? 'Open all night' : 'Open until ' + hhmm(F.closingTime(r.hours, t.day, t.minutes));
-    return { k: 'r-' + r.id, href: '#food/r-' + r.id, title: r.name, sub: [until, r.neighborhood].filter(Boolean).join(' · '), mark: r.name, ok: true };
+    return { k: 'r-' + r.id, href: '#food/r-' + r.id, title: tidyName(r.name), sub: [until, r.neighborhood].filter(Boolean).join(' · '), mark: r.name, ok: true };
   });
   return { rows, newest: sec(Date.parse(j.generated) || 0), sub: '' };
 }
@@ -284,8 +294,7 @@ function habits() {
     return { k: 'h-' + h.id, href: '#habits', title: h.text, done,
       sub: done ? 'Done' : n ? n + (h.frequency === 'n_per_week' ? (n === 1 ? ' week' : ' weeks') : (n === 1 ? ' day' : ' days')) + ' in a row' : '', check: true };
   });
-  const left = due.filter((h) => !tapsOf(h.id).includes(today)).length;
-  return { rows, newest: 0, sub: due.length && !left ? 'All done' : '' };
+  return { rows, newest: 0, sub: '' };
 }
 
 /* -------------------------------------------------------------- render */
@@ -382,26 +391,56 @@ function land() {
   if (!app.flashHit(S.root, want)) app.toast('That’s gone from Today now.');
 }
 
+/* Each shelf keeps its source's payload and is worked out again from it:
+   when a later payload arrives (the Wire's hourly update, a fresh weather
+   file), and when the reader comes back to the tab on another minute's
+   clock, so Open now and Tonight are never this morning's */
+const SHELF_OF = { matters: matters, tonight: tonight, open: openNow, plans: plans, habits: habits };
+const raw = Object.create(null);
+function take(key, v) {
+  raw[key] = v;
+  let got = null;
+  try { got = SHELF_OF[key](v); } catch (e) { console.error('[all-day] today: ' + key, e); }
+  S.got[key] = got;
+  if (S.drawn) { paintShelf(SHELVES.find((s) => s.key === key)); app.recount(); }
+}
+const takeWx = (w) => {
+  S.wx = w;
+  const h = S.drawn && S.root.querySelector('.today-head');
+  if (h) h.replaceWith(dateline());
+};
 let loading = null;
 function load() {
   if (loading) return loading;
-  const take = (key, fn) => (v) => {
-    let got = null;
-    try { got = fn(v); } catch (e) { console.error('[all-day] today: ' + key, e); }
-    S.got[key] = got;
-    if (S.drawn) { paintShelf(SHELVES.find((s) => s.key === key)); app.recount(); }
-  };
   const soft = (p) => Promise.resolve().then(p).catch(() => null);
   const all = [
-    soft(SRC.weather).then((w) => { S.wx = w; if (S.drawn) { const h = S.root.querySelector('.today-head'); if (h) h.replaceWith(dateline()); } }),
-    soft(SRC.wire).then(take('matters', matters)),
-    soft(SRC.whatnow).then(take('tonight', tonight)),
-    soft(SRC.restaurants).then(take('open', openNow)),
-    soft(() => boards.list('people', { kind: 'plan', limit: 60 })).then(take('plans', plans)),
-    soft(() => null).then(take('habits', habits)),
+    soft(SRC.weather).then(takeWx),
+    soft(SRC.wire).then((v) => take('matters', v)),
+    soft(SRC.whatnow).then((v) => take('tonight', v)),
+    soft(SRC.restaurants).then((v) => take('open', v)),
+    soft(() => boards.list('people', { kind: 'plan', limit: 60 })).then((v) => take('plans', v)),
+    soft(() => null).then((v) => take('habits', v)),
   ];
-  loading = Promise.race([Promise.allSettled(all), new Promise((res) => setTimeout(res, WAIT_MS))]);
+  /* a source still out at the deadline is an empty shelf until it answers */
+  loading = Promise.race([Promise.allSettled(all), new Promise((res) => setTimeout(res, WAIT_MS))]).then(() => {
+    SHELVES.forEach((sh) => { if (S.got[sh.key] === undefined) S.got[sh.key] = null; });
+    S.at = Date.now();
+    S.day = et(S.at).date;
+    /* the Wire and the weather poll for fresh copies: take each one that lands */
+    if (!app.demo) { data.load('today', (v) => { if (v !== raw.matters) take('matters', v); }); data.load('weather', (w) => { if (w !== S.wx) takeWx(w); }); }
+  });
   return loading;
+}
+
+/* back on the tab a minute or more later: every shelf from its payload again */
+function rework() {
+  if (!S.ready || Date.now() - S.at < 60000) return;
+  S.at = Date.now();
+  const day = et(S.at).date;
+  Object.keys(SHELF_OF).forEach((k) => { if (k in raw) { try { S.got[k] = SHELF_OF[k](raw[k]); } catch (e) { S.got[k] = null; } } });
+  if (day !== S.day) { S.day = day; draw(); return; }
+  SHELVES.forEach(paintShelf);
+  app.recount();
 }
 
 app.register(KEY, {
@@ -413,7 +452,7 @@ app.register(KEY, {
     root.innerHTML = '<p class="loading">Putting today together…</p>';
     load().then(() => { S.ready = true; draw(); land(); app.recount(); });
   },
-  activate(param) { S.pending = param || null; land(); },
+  activate(param) { S.pending = param || null; rework(); land(); },
   refresh() {
     if (!S.ready) return;
     /* the habits are this phone's and can change in Body; the rest redraws as is */
