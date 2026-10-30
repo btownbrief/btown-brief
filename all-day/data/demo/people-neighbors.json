@@ -1,0 +1,15 @@
+{
+ "_": "Invented posts for People · Neighbors on ?demo=1 (all-day/js/modes/neighbors.js), on top of the four neighbors posts and three shifts boards-fake.js already seeds. Every name, group and place here is made up. ago: hours since posted; day/at: a shift's date (days from today) and time.",
+ "posts": [
+  { "who": 1, "board": "neighbors", "kind": "borrow", "title": "A carpet cleaner for one afternoon", "ago": 3, "votes": 2, "meta": { "item": "Carpet cleaner", "when": "Sunday" }, "place": "South End" },
+  { "who": 4, "board": "neighbors", "kind": "borrow", "title": "Tent for a two-night trip", "ago": 20, "votes": 1, "meta": { "item": "Two-person tent", "when": "Next weekend", "got": true }, "place": "New North End" },
+  { "who": 2, "board": "neighbors", "kind": "free", "title": "Box of canning jars, about thirty", "ago": 1, "votes": 3, "place": "Hill Section", "body": "On the porch, take them all or a few." },
+  { "who": 0, "board": "neighbors", "kind": "free", "title": "Kid's bike, outgrown", "ago": 26, "votes": 5, "place": "Old North End", "meta": { "got": true } },
+  { "who": 3, "board": "neighbors", "kind": "favor", "title": "Someone to water plants while I'm away", "ago": 5, "votes": 1, "meta": { "when": "Next week, three visits" }, "place": "Winooski" },
+  { "who": 5, "board": "neighbors", "kind": "lost", "title": "Black lab mix, red collar, answers to Juno", "ago": 2, "votes": 11, "meta": { "what": "pet", "seen": "Oakledge Park trail", "when": "This morning" }, "place": "Oakledge Park", "photo": "submissions/demo-pine.jpg", "body": "Friendly but shy. Please don't chase her." },
+  { "who": 1, "board": "neighbors", "kind": "found", "title": "Keys on a green carabiner", "ago": 6, "votes": 2, "meta": { "what": "keys", "seen": "Bench on Church Street", "when": "Yesterday" }, "place": "Church Street and Bank Street" },
+  { "who": 4, "board": "neighbors", "kind": "lost", "title": "Blue backpack with a laptop", "ago": 30, "votes": 4, "meta": { "what": "bag", "seen": "The 2 bus, North Ave" }, "place": "North Avenue" },
+  { "who": 2, "board": "shifts", "kind": "shift", "title": "Sorting coats for the winter drive", "ago": 7, "votes": 4, "day": 2, "at": "10 am", "meta": { "org": "A coat drive", "hours": 2, "slots": 8, "link": "https://example.org/demo-coat-drive" }, "place": "A church hall downtown" },
+  { "who": 0, "board": "shifts", "kind": "shift", "title": "Reading buddies at an after-school program", "ago": 22, "votes": 2, "day": 6, "at": "3 pm", "meta": { "org": "An after-school program", "hours": 2, "slots": 4, "link": "https://example.org/demo-reading" } }
+ ]
+}

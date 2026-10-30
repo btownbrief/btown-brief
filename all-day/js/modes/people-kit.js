@@ -1,0 +1,416 @@
+/* people-kit.js — what the People app's six new tabs share (wave 1 of the
+   eight apps, 2026-10-29). Not a mode: plans.js, clubs.js, dating.js,
+   neighbors.js, pets.js and talk.js import it.
+
+   The People mode (people.js) is hosted whole on You. Its sections draw
+   inside one closure and export only their helpers (whenMs, whenLabel,
+   isOwnEvent), so the other tabs are built on the same foundations it is:
+   the boards (boards.js), the club week (clubs-week.js), the matchers
+   (people-match.js), the calendar (wire.js's whatnow file) and the
+   hand-checked Dating and Pets file. A row that belongs to You opens there
+   (#people/<key>), so nothing is drawn twice with two behaviours.
+
+   tab(o) is the whole mode contract around a list of sections, one per top
+   tab: it draws each section's heading and body, gives the pill its items
+   (freshest first when o.fresh), lands a deep link on a section or a card,
+   and counts the tab's dot from the posts it was handed. A section is
+     { key, label, world: 'irl' | 'online', draw(box), newest() }
+   draw() redraws the section's body; newest() is the epoch seconds of its
+   newest thing, or 0. o.load() fetches what the tab needs (and in the demo
+   seeds the demo board first), resolving when the sections can draw. */
+
+import * as app from '../app.js';
+import * as data from '../wire.js';
+import * as boards from '../boards.js';
+import { el, esc, safeHref, ICON, mark, section, button, cards, world, setWorld } from '../ui.js';
+import { sectionBar } from '../sections.js';
+import { RULES, KIND_LABELS, expiresAt, photoRequired } from '../boards-core.js';
+import { whenLabel, et, etWall, isOwnEvent } from './people.js';
+
+const HOUR = 3600000;
+export const DAY = 86400000;
+export const MEETUP_GROUP = 'https://www.meetup.com/burlington-social-activites-group/';
+export const DP_URL = '../data/dating-pets.json';
+export const GROUPS_URL = '../data/groups.json';
+export const RUN_CLUBS_URL = '../data/run-clubs.json';
+export const CLUBS_PAGE = '../clubs.html';
+export const TELEGRAM_PAGE = '../telegram.html';
+export const nowSec = () => Math.floor(Date.now() / 1000);
+
+/* ------------------------------------------------------------- the tab */
+export function tab(o) {
+  const S = { root: null, slots: null, pending: null, ready: false, posts: [] };
+  const secs = o.sections;
+
+  function draw() {
+    if (!S.root) return;
+    if (!S.slots) {
+      S.root.innerHTML = '';
+      S.slots = Object.create(null);
+      const wrap = el('div', 'pp-tab');
+      wrap.dataset.pp = o.key;
+      secs.forEach((s) => {
+        const box = el('section', 'shelf-sec pp-sec');
+        box.dataset.sec = s.key;
+        if (s.world) box.dataset.world = s.world;
+        section(box, s.label, s.sub || null);
+        const body = el('div', 'pp-body');
+        box.appendChild(body);
+        wrap.appendChild(box);
+        S.slots[s.key] = box;
+      });
+      S.root.appendChild(wrap);
+      S.root.appendChild(el('div', 'spacer'));
+      app.bindFeed(wrap);
+      /* boards.js repaints only the vote it was given; a tab whose lanes count
+         votes (Clubs: who is in) reloads once the vote has gone through */
+      if (o.votesCount) wrap.addEventListener('click', (e) => {
+        if (!e.target.closest('[data-act="bvote"]')) return;
+        clearTimeout(S.voteT);
+        S.voteT = setTimeout(() => again().then(draw), 800);
+      });
+    }
+    secs.forEach((s) => {
+      const body = S.slots[s.key].querySelector('.pp-body');
+      body.innerHTML = '';
+      if (!S.ready) { body.appendChild(el('p', 'loading', 'One moment…')); return; }
+      try { s.draw(body); } catch (e) { console.error('[people] ' + o.key + '/' + s.key, e); body.appendChild(el('p', 'note pad', 'This part didn’t load.')); }
+    });
+    if (app.activeTab() === o.key) app.paintSubnav();
+  }
+
+  /* a link to the other side of Real life / Online turns the switch first */
+  function side(node) {
+    const w = node && node.closest('[data-world]');
+    if (!w || w.dataset.world === world()) return;
+    /* the switch's own half, so the shell repaints the page's side with it */
+    const half = document.querySelector('#subnav .worldsw [data-world="' + w.dataset.world + '"]');
+    if (half) half.click(); else setWorld(w.dataset.world);
+  }
+  function land() {
+    const want = S.pending;
+    if (!want || !S.ready || !S.slots) return;
+    S.pending = null;
+    if (S.slots[want]) { side(S.slots[want]); app.jumpTo(S.slots[want]); return; }
+    side(S.root.querySelector('[data-k="' + CSS.escape(want) + '"]'));
+    if (o.land && o.land(want, S.slots)) return;
+    if (!app.flashHit(S.root, want)) app.toast('That’s gone from ' + app.labelOf(o.key) + ' now.');
+  }
+
+  /* reloads run one after another, so an older answer never lands on a newer one */
+  let chain = Promise.resolve();
+  const again = () => (chain = chain.then(() => o.reload && o.reload()).catch((e) => console.error('[people] ' + o.key + ' reload', e)));
+  let loading = null;
+  function load() {
+    if (!loading) loading = Promise.resolve().then(o.load).catch((e) => console.error('[people] ' + o.key + ' load', e))
+      .then(() => { S.ready = true; draw(); land(); app.recount(); });
+    return loading;
+  }
+  /* the dot is honest from the first paint, so the tab loads before it is opened */
+  setTimeout(load, 0);
+
+  /* a board changed (a post, a vote, a delete): reload the boards this tab reads */
+  window.addEventListener('allday-boards', (e) => {
+    const b = e && e.detail && e.detail.board;
+    if (!o.boards || (b && !o.boards.includes(b))) return;
+    again().then(draw);
+  });
+
+  return {
+    label: o.label,
+    icon: ICON[o.icon] || ICON.people,
+    promise: o.promise,
+    mixed: !!o.mixed,
+    /* loaded at start for the dot; opened later, it reads the boards again */
+    mount(root) { S.root = root; S.slots = null; draw(); if (S.ready) again().then(draw); else load(); },
+    activate(param) { S.pending = param || null; land(); },
+    refresh() { if (S.slots) draw(); },
+    deactivate() {},
+    subnav() {
+      if (!S.slots) return null;
+      return sectionBar({ key: 'sec-people-' + o.key, title: app.labelOf(o.key), color: '--app-people-pop', fresh: !!o.fresh,
+        find: (k) => S.slots && S.slots[k], onPick: (k) => app.jumpTo(S.slots && S.slots[k]),
+        items: secs.map((s) => ({ key: s.key, label: s.label, world: s.world || undefined, newest: s.newest ? s.newest() : 0 })) });
+    },
+    keepSubnav: true,
+    /* pull to refresh, or a tap on the tab it's on: the boards again, and a
+       word when something new came in (the shell says "Nothing new" else) */
+    pull() {
+      if (!o.reload) return null;
+      const seen = new Set((o.posts ? o.posts() : []).map((p) => p.id));
+      refreshFailed = false;
+      return again().then(() => {
+        draw();
+        if (refreshFailed) return 'Couldn’t refresh.';
+        const n = (o.posts ? o.posts() : []).filter((p) => !seen.has(p.id)).length;
+        return n > 0 ? (n === 1 ? 'One new post' : n + ' new posts') : null;
+      });
+    },
+    newSince(ts) { return o.count ? o.count(Number(ts) || nowSec() - 4 * 3600) : 0; },
+    redraw: draw,
+  };
+}
+
+/* ------------------------------------------------------------- boards */
+/* the board's posts, or [] with the reason kept (off: the SQL is not pasted) */
+/* A board the server's rules don't carry yet (nn-APPS.sql not pasted)
+   answers bad_board; the PostgREST function missing altogether is 'off'.
+   Both mean "not switched on", and its post buttons stay away. */
+const offBoards = new Set();
+/* the last good read of each list: a refresh that fails keeps it on screen */
+const lastGood = new Map();
+let refreshFailed = false;
+export function listBoard(board, opts = {}) {
+  const key = board + '|' + (opts.kind || '');
+  return boards.list(board, { limit: 60, ...opts }).then((r) => {
+    if (r.ok) { offBoards.delete(board); lastGood.set(key, r.posts); return { ok: true, posts: r.posts }; }
+    const off = r.error === 'off' || r.error === 'bad_board';
+    if (off) offBoards.add(board);
+    else if (lastGood.has(key)) { refreshFailed = true; return { ok: true, posts: lastGood.get(key) }; }
+    return { ok: false, posts: [], error: off ? 'off' : r.error, message: r.message };
+  });
+}
+/* posts newer than ts (epoch seconds) */
+export const newer = (posts, ts) => posts.filter((p) => Date.parse(p.created_at) / 1000 > ts).length;
+export const newest = (posts) => posts.reduce((m, p) => Math.max(m, Math.floor((Date.parse(p.created_at) || 0) / 1000)), 0);
+
+/* A board's cards in a feed, each with its kind's word ahead of its own
+   meta line; opts.map adds a Map pill under a post that names a place
+   (Lost & found). */
+export function feed(host, posts, opts = {}) {
+  host.appendChild(el('div', 'spacer'));
+  const f = el('div', 'feed');
+  const items = boards.draw(f, posts, { tab: opts.tab, meta: opts.meta, ratio: opts.ratio });
+  items.forEach((it) => {
+    const card = f.querySelector('.card[data-k="' + CSS.escape(it.k) + '"]');
+    if (!card) return;
+    /* a plan ends when it happens: its `when` says so, not a countdown */
+    if (opts.noLeft) { const l = card.querySelector('.tag-left'); if (l) l.remove(); }
+    /* the vote in the tab's words (I'd go, I'm in, Me too), its count kept */
+    const v = opts.vote && card.querySelector('[data-act="bvote"]');
+    if (v) { v.setAttribute('aria-label', opts.vote); v.insertBefore(el('span', 'pp-vote', esc(opts.vote)), v.querySelector('.n')); }
+  });
+  if (opts.map) items.forEach((it) => {
+    if (!it.place) return;
+    const card = f.querySelector('.card[data-k="' + CSS.escape(it.k) + '"] .c-body');
+    if (card) card.appendChild(mapPill(it.place));
+  });
+  if (opts.after) items.forEach((it, i) => {
+    const card = f.querySelector('.card[data-k="' + CSS.escape(it.k) + '"]');
+    const add = card && opts.after(posts[i], it);
+    if (add) card.appendChild(add);
+  });
+  host.appendChild(f);
+  return items;
+}
+/* a place on the map, by its words (Burlington, VT appended) */
+export function mapPill(place, lat, lng) {
+  const a = el('a', 'pillbtn map', ICON.pin + ' Map');
+  a.href = safeHref(lat != null && lng != null ? 'https://www.google.com/maps/search/?api=1&query=' + lat + ',' + lng
+    : 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(place + ', Burlington, VT'));
+  a.target = '_blank';
+  a.rel = 'noopener';
+  a.setAttribute('aria-label', 'Map: ' + place);
+  a.dataset.map = '1';
+  const r = el('div', 'linkrow pp-map');
+  r.appendChild(a);
+  return r;
+}
+
+/* When a board's posts didn't come: why, in a line */
+export function boardNote(host, r, empty) {
+  if (r && r.ok === false) {
+    /* a read that never reached the server comes back "sign in first" (boards.js
+       reads a failed fetch as a lost session); for a list, it is the connection */
+    host.appendChild(el('p', 'note pad', r.error === 'off' ? 'Opening soon.'
+      : r.error === 'not_signed_in' || r.error === 'offline' ? 'Didn’t load.' : (r.message || 'Didn’t load.')));
+    return;
+  }
+  host.appendChild(el('p', 'note pad', empty));
+}
+
+/* a bright Post button that opens boards.compose */
+export function postButton(label, opts) {
+  const r = el('div', 'addrow');
+  if (offBoards.has(opts.board)) { r.hidden = true; return r; }
+  /* each field's length is the board's own limit (RULES), so what the form
+     takes the server takes; the tab reloads on the board's change event */
+  const spec = (RULES.boards[opts.board] || {}).meta || {};
+  const fields = (opts.fields || []).map((f) => ({ ...f, max: f.max || (spec[f.key] && spec[f.key].max) || undefined }));
+  const b = button(ICON.plus + ' ' + esc(label), 'pkey', () => boards.compose({ ...opts, fields }));
+  b.type = 'button';
+  b.dataset.post = opts.board + ':' + opts.kind;
+  r.appendChild(b);
+  return r;
+}
+
+/* A kind's word and its own fields, for a card's meta line */
+export const kindWord = (k) => KIND_LABELS[k] || k;
+
+/* ------------------------------------------------------- the demo board */
+/* Demo posts onto the in-memory board (boards-fake.js), once per file:
+   each { who, board, kind, title, body, place, meta, ago (hours), votes,
+   on: [days from today, hour, minute] (a plan's `when`, in words), day
+   and at (days from today and '9 am': a shift's `when`, date first) }. They go in approved, as Stephen would leave them. */
+const seeded = new Set();
+const DEMO_FOLK = [
+  ['demo-0000-4000-8000-0000000pp001', 'Nadia F.', 'old-north-end', 'new'],
+  ['demo-0000-4000-8000-0000000pp002', 'Theo B.', 'south-end', 'regular'],
+  ['demo-0000-4000-8000-0000000pp003', 'Rosa G.', 'hill', 'trail'],
+  ['demo-0000-4000-8000-0000000pp004', 'Marcus D.', 'winooski', 'games'],
+  ['demo-0000-4000-8000-0000000pp005', 'June K.', 'new-north-end', null],
+  ['demo-0000-4000-8000-0000000pp006', 'Eli W.', 'downtown', 'regular'],
+];
+let nextId = 0;
+const ETD = new Intl.DateTimeFormat('en-CA', { timeZone: 'America/New_York', year: 'numeric', month: '2-digit', day: '2-digit' });
+export const etDay = (ms) => ETD.format(new Date(ms));
+/* n calendar days from today in Burlington, as 2026-11-07 (never 24-hour blocks) */
+export function dayFromToday(n) {
+  const x = et(Date.now());
+  const noon = etWall(x.y, x.mo, x.d, 12, 0);
+  return etDay(noon + Number(n || 0) * DAY);
+}
+/* a Burlington wall time on that day, as an ISO string with its own offset */
+export const wallISO = (date, hhmm) => date + 'T' + hhmm + ':00' + offset(date);
+export function seed(name, posts) {
+  const f = boards._fake();
+  if (!f || seeded.has(name)) return;
+  seeded.add(name);
+  const t = f.now();
+  DEMO_FOLK.forEach(([id, n, hood, arch]) => { if (!f.profiles.has(id)) f.profiles.set(id, { display_name: n, neighborhood: hood, archetype: arch, interests: [] }); });
+  (posts || []).forEach((o) => {
+    const created = t - (Number(o.ago) || 1) * HOUR;
+    const meta = { ...(o.meta || {}) };
+    if (o.on) { const [y, m, d] = dayFromToday(o.on[0]).split('-').map(Number); meta.when = whenLabel(etWall(y, m - 1, d, Number(o.on[1]) || 0, Number(o.on[2]) || 0)); }
+    if (o.day != null) meta.when = dayFromToday(o.day) + (o.at ? ', ' + o.at : '');
+    if (o.photo) f.addPhoto(o.photo, 'approved');
+    const id = '00000000-0000-4000-8000-' + String(++nextId + 700000).padStart(12, '0');
+    f.posts.push({
+      id, board: o.board, user_id: DEMO_FOLK[(Number(o.who) || 0) % DEMO_FOLK.length][0], kind: o.kind, title: o.title, body: o.body || '',
+      photo_path: o.photo || null, photo_req: photoRequired(RULES, o.board, o.kind), meta, place: o.place || '',
+      expires_at: expiresAt(RULES, o.board, o.kind, created, meta), status: 'approved', reports: 0, created_at: created, decided_at: null,
+    });
+    for (let i = 0; i < (Number(o.votes) || 0); i++) f.votes.add(id + '|p_pp' + String(i).padStart(4, '0'));
+  });
+}
+
+/* Every People demo file, seeded together before any tab lists a board,
+   so a post one tab seeds (Neighbors' lost dog) is there for another
+   (Pets) however the tabs race. demo(name) resolves that file's JSON. */
+const DEMO_FILES = ['plans', 'clubs', 'dating', 'neighbors', 'pets', 'talk'];
+let demoAll = null;
+export function demo(name) {
+  if (!demoAll) demoAll = Promise.all(DEMO_FILES.map((n) => app.demoJSON('data/demo/people-' + n + '.json').catch(() => ({}))))
+    .then((files) => { const by = {}; files.forEach((d, i) => { by[DEMO_FILES[i]] = d || {}; seed(DEMO_FILES[i], (d || {}).posts); }); return by; });
+  return demoAll.then((by) => by[name] || {});
+}
+
+/* ------------------------------------------------------ the calendar */
+/* The guide's events (wire.js's whatnow file, rebuilt daily) live; on
+   ?demo=1, the tab's own demo events dated `day` days from today. */
+/* when the calendar file was built, epoch seconds: its sections' "newest" */
+let eventsAt = 0;
+export const calendarAt = () => eventsAt;
+export function events(demoEvents, onChange) {
+  if (app.demo) {
+    eventsAt = nowSec() - 2 * 3600;
+    return Promise.resolve((demoEvents || []).map((e) => {
+      const date = dayFromToday(e.day);
+      return { ...e, date, start: e.time ? wallISO(date, e.time) : date, allDay: !e.time };
+    }));
+  }
+  /* wire.js hands every later refresh to the same callback: after the
+     first, the tab hears it through onChange */
+  let first = true;
+  return new Promise((res) => data.load('whatnow', (j) => {
+    const list = (j && j.events) || [];
+    eventsAt = Math.floor((Date.parse(j && j.generated) || Date.now()) / 1000);
+    if (first) { first = false; res(list); } else if (onChange) onChange(list);
+  }, () => { if (first) { first = false; res(null); } }));
+}
+/* Burlington's UTC offset on that day, as -04:00 or -05:00 */
+function offset(date) {
+  const noon = Date.parse(date + 'T12:00:00Z');
+  const h = Number(new Intl.DateTimeFormat('en-US', { timeZone: 'America/New_York', hour: 'numeric', hourCycle: 'h23' }).format(new Date(noon)));
+  return '-' + String(12 - h).padStart(2, '0') + ':00';
+}
+const EV_DOW = new Intl.DateTimeFormat('en-US', { timeZone: 'America/New_York', weekday: 'short' });
+const EV_DOM = new Intl.DateTimeFormat('en-US', { timeZone: 'America/New_York', day: 'numeric' });
+const EV_TIME = new Intl.DateTimeFormat('en-US', { timeZone: 'America/New_York', hour: 'numeric', minute: '2-digit' });
+/* calendar events that pass keep(), from now to `days` ahead, soonest
+   first, one per title a day, as event cards (prefix keys them) */
+export function eventItems(list, keep, prefix, days = 14) {
+  const now = Date.now(), seen = new Set(), out = [];
+  (list || []).forEach((e) => {
+    if (!e || !e.title || !/^https?:/i.test(String(e.url || '')) || !e.date || !keep(e)) return;
+    const allDay = !!e.allDay || !/T\d/.test(String(e.start || ''));
+    const at = allDay ? Date.parse(e.date + 'T12:00:00' + offset(e.date)) : Date.parse(e.start);
+    if (!at || at < now - (allDay ? 12 : 2) * HOUR || at > now + days * DAY) return;
+    const k = e.date + '|' + String(e.title).toLowerCase();
+    if (seen.has(k)) return;
+    seen.add(k);
+    const d = new Date(at);
+    out.push({ k: prefix + String(e.id || e.date + '-' + out.length), kind: 'event', title: String(e.title), href: e.url, at, own: isOwnEvent(e),
+      src: e.venue || 'The calendar', dow: EV_DOW.format(d), dom: EV_DOM.format(d),
+      when: allDay ? 'All day' : EV_TIME.format(d), where: [e.venue, e.town].filter(Boolean).join(', ') || 'Burlington', price: e.price || (e.free ? 'Free' : '') });
+  });
+  return out.sort((a, b) => a.at - b.at);
+}
+export function eventList(host, items, empty) {
+  if (!items.length) { host.appendChild(el('p', 'note pad', empty)); return; }
+  const f = el('div', 'feed');
+  app.know(items);
+  /* no comment button: live it only says comments are coming */
+  items.forEach((it) => { const n = cards.event(it, { noComments: true }); if (n) f.appendChild(n); });
+  host.appendChild(f);
+}
+
+/* ------------------------------------------------------------ rows */
+/* a link out, as one row: a mark, a name, one line */
+export function outRow(name, line, href, key) {
+  const ext = /^https?:/.test(href);
+  const a = el('a', 'lrow', mark(name, 'round lg') + '<div><div class="t">' + esc(name) + '</div>' + (line ? '<div class="s">' + esc(line) + '</div>' : '') + '</div>' + (ext ? ICON.ext : ICON.right));
+  a.href = safeHref(href);
+  if (ext) { a.target = '_blank'; a.rel = 'noopener'; }
+  if (key) a.dataset.k = key;
+  return a;
+}
+export function rowList(host, rows) {
+  const g = el('div', 'dplist');
+  rows.forEach((r) => { if (r) g.appendChild(r); });
+  host.appendChild(g);
+  return g;
+}
+/* a short card of words with buttons under it */
+export function textCard(host, title, words, buttons, key) {
+  const tc = el('div', 'textcard', (title ? '<h3 class="serif">' + esc(title) + '</h3>' : '') + words.map((w) => '<p>' + esc(w) + '</p>').join(''));
+  if (key) tc.dataset.card = key;
+  if (buttons && buttons.length) {
+    const r = el('div', 'row');
+    buttons.forEach((b) => r.appendChild(b));
+    tc.appendChild(r);
+  }
+  host.appendChild(tc);
+  return tc;
+}
+export function linkBtn(label, href, cls) {
+  const a = el('a', 'btn' + (cls ? ' ' + cls : ''), esc(label));
+  a.href = safeHref(href);
+  if (/^https?:/.test(href)) { a.target = '_blank'; a.rel = 'noopener'; }
+  return a;
+}
+/* what is coming to a part of a tab that is not built yet, in plain words */
+export function soon(host, title, words, key) {
+  const tc = textCard(host, title, words, null, key);
+  tc.classList.add('pp-soon');
+  tc.appendChild(el('span', 'soon', 'Coming soon'));
+  return tc;
+}
+
+/* the hand-checked Dating and Pets file */
+let dp = null;
+export function datingPets() {
+  if (!dp) dp = data.fetchJSON(DP_URL, 8000).then((j) => (j && j.dating && j.pets ? j : null), () => null);
+  return dp;
+}
+export function json(url) { return data.fetchJSON(url, 8000).then((j) => j, () => null); }

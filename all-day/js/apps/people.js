@@ -1,6 +1,9 @@
-/* People: find your people (APP-MAP.html, app 4). The People mode is hosted
-   whole on You until wave 1 splits it across Plans, Dating & Friends and
-   Pets. */
+/* People: find your people (APP-MAP.html, app 4). Wave 1 (2026-10-29):
+   the People mode (people.js) is hosted whole on You, as it was; each other
+   tab is its own mode (plans.js, clubs.js, dating.js, neighbors.js, pets.js,
+   talk.js), built on the same boards, club week and calendar, with what
+   they share in modes/people-kit.js. A row that belongs to You still opens
+   there (#people/<key>). */
 export default {
   id: 'people',
   name: 'People',
@@ -12,24 +15,12 @@ export default {
   line: 'Find your people.',
   tabs: [
     { mode: 'people', label: 'You', icon: 'user', top: ['Who you are', 'Interests', 'Your profile', 'Directory'] },
-    { key: 'plans', label: 'Plans', icon: 'calendar',
-      promise: 'Plans open to strangers this week, with room for you.',
-      top: ['Open to strangers', 'This week', 'Mine', 'Down for Meetup'] },
-    { key: 'clubs', label: 'Clubs', icon: 'flag',
-      promise: 'Every club in town, and the ones still being started.',
-      top: ['Every club', 'Run clubs', 'Start something', 'Wanted', 'Musicians'] },
-    { key: 'dating', label: 'Dating', icon: 'heart', mixed: true,
-      promise: 'Friends and dating, in real life and online.',
-      top: ['Singles', 'Friends', 'Events', 'Pitch a friend', 'Posts'] },
-    { key: 'neighbors', label: 'Neighbors', icon: 'hand',
-      promise: 'Borrow a ladder, give a couch, grab a two-hour shift.',
-      top: ['Borrow', 'Free', 'Favor', 'Lost & found', 'Shifts'] },
-    { key: 'pets', label: 'Pets', icon: 'paw',
-      promise: 'Dog-park meetups, lost pets and vets you can afford.',
-      top: ['Dog parks', 'Meetups', 'Lost', 'Vets'] },
-    { key: 'talk', label: 'Talk', icon: 'comment',
-      promise: 'Ask a regular, and the town’s group chats.',
-      top: ['Telegram', 'Community', 'Ask a regular'] },
+    { mode: 'plans', label: 'Plans', icon: 'calendar', top: ['Open to strangers', 'This week', 'Mine', 'Down for Meetup'] },
+    { mode: 'clubs', label: 'Clubs', icon: 'flag', top: ['Every club', 'Run clubs', 'Start something', 'Wanted', 'Musicians'] },
+    { mode: 'dating', label: 'Dating', icon: 'heart', mixed: true, top: ['Singles', 'Friends', 'Events', 'Pitch a friend', 'Posts'] },
+    { mode: 'neighbors', label: 'Neighbors', icon: 'hand', top: ['Borrow', 'Free', 'Favor', 'Lost & found', 'Shifts'] },
+    { mode: 'pets', label: 'Pets', icon: 'paw', top: ['Dog parks', 'Meetups', 'Lost', 'Vets'] },
+    { mode: 'talk', label: 'Talk', icon: 'comment', top: ['Telegram', 'Community', 'Ask a regular'] },
   ],
   full: { people: ['../clubs.html', 'every club, league and pickup game'] },
 };
