@@ -2,7 +2,8 @@
    games board, in one place.
 
    - Leaderboards: this month's board for one game at a time, picked from a
-     chip row of every live game that keeps one. It is the arcade's own
+     chip row of every live game that keeps one, busiest first (players per
+     board in the arcade's champions.json, which Games reads too). It is the arcade's own
      read-only get_leaderboard call (store.rpc, the same one Games and the
      arcade's /leaderboards/ page use), one request per pick, so opening
      the tab never fires thirty. "Every board" opens Arcade's full board.
@@ -41,13 +42,22 @@ const GROUPS = 2;
 const GAMER = ['psn', 'xbox', 'steam', 'switch', 'discord', 'epic', 'riot', 'chess'];
 const PLAT = { pc: 'PC', ps5: 'PS5', xbox: 'Xbox', switch: 'Switch', mobile: 'Phone', vr: 'VR', board: 'Board games', tabletop: 'Tabletop' };
 
-const B = { words: {}, catalog: null, demoBoards: null, pick: '', rows: Object.create(null), posts: null, tags: null, postRun: 0, tagRun: 0 };
+const B = { words: {}, catalog: null, champs: null, demoBoards: null, pick: '', rows: Object.create(null), posts: null, tags: null, postRun: 0, tagRun: 0 };
 
 const TZ = 'America/New_York';
 const monthKey = () => new Intl.DateTimeFormat('en-CA', { timeZone: TZ, year: 'numeric', month: '2-digit' }).format(new Date()).slice(0, 7);
 const monthName = () => new Intl.DateTimeFormat('en-US', { timeZone: TZ, month: 'long' }).format(new Date());
 const num = (n) => Number(n || 0).toLocaleString('en-US');
-const boardGames = () => arr(B.catalog && B.catalog.games).filter((g) => g && SLUG.test(String(g.slug || '')) && g.name && g.live === true && g.leaderboard === true);
+/* the games that keep a board, the busiest this month first (the arcade's
+   champions file: players per board), so the first one shown has scores */
+function boardGames() {
+  const list = arr(B.catalog && B.catalog.games).filter((g) => g && SLUG.test(String(g.slug || '')) && g.name && g.live === true && g.leaderboard === true);
+  const fresh = B.champs && B.champs.month === monthKey();
+  const busy = new Map(fresh ? arr(B.champs.games).filter((c) => c && c.champ).map((c) => [c.slug, Number(c.players) || 1]) : []);
+  return list.map((g, i) => [g, busy.get(g.slug) || 0, i]).sort((a, b) => b[1] - a[1] || a[2] - b[2]).map((x) => x[0]);
+}
+/* champions.json through the shell's loader, or null */
+const champions = () => new Promise((res) => data.load('champions', res, () => res(null)));
 
 /* ------------------------------------------------------- leaderboards */
 /* kept by month and game, so a tab left open past the 1st reads the new
@@ -187,10 +197,11 @@ function load() {
     playData(),
     app.demo ? app.demoData('games').catch(() => null) : data.fetchJSON(CATALOG_URL, 8000).catch(() => null),
     demoOf('play-boards'),
-  ]).then(([j, cat, demo]) => {
+    app.demo ? null : champions(),
+  ]).then(([j, cat, demo, champs]) => {
     B.words = j.boards || {};
     if (app.demo) { B.catalog = cat && cat.catalog; B.demoBoards = (cat && cat.boards) || {}; B.pick = (demo && demo.pick) || ''; }
-    else B.catalog = cat && Array.isArray(cat.games) ? cat : null;
+    else { B.catalog = cat && Array.isArray(cat.games) ? cat : null; B.champs = champs; }
     return Promise.all([loadPosts(), loadTags()]);
   });
 }

@@ -13430,23 +13430,28 @@ async function thePlay(browser, base) {
     const rpc = (fn, body) => {
       if (fn !== 'get_leaderboard') return undefined;
       asked.push(body.p_game);
-      if (body.p_game === 'church-street-skate') return ROWS(['Ada W.', 'Cy F.', 'Ada W.', 'Max T.']);
+      if (body.p_game === 'pothole-patrol') return ROWS(['Ada W.', 'Cy F.', 'Ada W.', 'Max T.']);
       return [];
     };
-    const { ctx, page, errors, supabase } = await newPage(browser, base, { rpc });
+    /* this month's champions: Pothole Patrol the busiest board, so Boards opens on it */
+    const champions = { updated: new Date().toISOString(), month: etKey(Date.now()).slice(0, 7), monthLabel: '', royalty: [],
+      games: [{ slug: 'pothole-patrol', name: 'Pothole Patrol', champ: 'Ada W.', score: 1000, players: 3 }, { slug: 'filed', name: 'FILED!', champ: 'Cy', score: 9, players: 1 }] };
+    const { ctx, page, errors, supabase } = await newPage(browser, base, { rpc, champions });
     await page.goto(base + '/play/#ranks');
     await settle(page);
     const P = '#panel-ranks';
     await page.waitForSelector(P + ' [data-board] .r', { timeout: 6000 });
     const cat = JSON.parse(await readFile(path.join(REPO, 'data/games-catalog.json'), 'utf8'));
-    const first = cat.games.filter((g) => g.live && g.leaderboard)[0].slug;
+    const first = 'pothole-patrol';
+    const chipOrder = await page.$$eval(P + ' .pl-games [data-chip]', (c) => c.map((x) => x.dataset.chip));
+    check(chipOrder[0] === 'pothole-patrol' && chipOrder[1] === 'filed' && chipOrder.length === cat.games.filter((g) => g.live && g.leaderboard).length, 'the busiest boards this month come first', chipOrder.slice(0, 4).join(', '));
     const rows = await page.$$eval(P + ' [data-board] .r .t', (t) => t.map((x) => x.textContent));
-    check(first === 'church-street-skate' && asked.length === 1 && asked[0] === first, 'opening the tab asks for one board, not thirty', asked.join(', '));
+    check(asked.length === 1 && asked[0] === first, 'opening the tab asks for one board, not thirty: the busiest', asked.join(', '));
     check(JSON.stringify(rows) === JSON.stringify(['Ada W.', 'Cy F.', 'Max T.']), 'each player once, under their best', rows.join(', '));
     await page.click(P + ' .pl-games [data-chip="creemee-drop"]');
     await page.waitForFunction((p) => /No scores yet/.test(document.querySelector(p).innerText), P, { timeout: 4000 });
     check(asked.length === 2 && asked[1] === 'creemee-drop', 'picking another game asks for that one board', asked.join(', '));
-    await page.click(P + ' .pl-games [data-chip="church-street-skate"]');
+    await page.click(P + ' .pl-games [data-chip="pothole-patrol"]');
     check(asked.length === 2, 'and a board already read is not asked again', asked.join(', '));
     const fns = supabase.map((u) => (u.match(/\/rpc\/(\w+)/) || [])[1] || (/^GET /.test(u) ? 'GET' : u));
     check(fns.every((f) => f === 'GET' || PLAY_READS.has(f)), 'Boards only reads (an exact list of read calls)', [...new Set(fns)].join(', '));
