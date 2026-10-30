@@ -1,0 +1,183 @@
+{
+ "_comment": "Body app, Recover tab. Mat routines (stretch, yoga, roll) with durations in seconds so the app can run them as timers, the breathing exercise with its timer spec, sleep basics, and a comparison of sleep trackers. Tracker prices were read on each maker's own US store on 2026-10-29; anything not read there is marked. Places to sauna, plunge and get a massage are in recover-spots.json. General wellness information, not medical advice.",
+ "updated": "2026-10-29",
+ "why": "Recovery is almost as important as the workout. Muscles grow on the days off, sleep is when your body repairs, and a few minutes on a mat keeps you moving well enough to train again.",
+ "routines": [
+  {
+   "id": "stretch-10",
+   "name": "Ten-minute stretch",
+   "tab": "Stretch",
+   "when": "After any workout, or on its own at night.",
+   "total_seconds": 600,
+   "cue": "Breathe slowly and ease in. A stretch should feel like a gentle pull. Back off if anything pinches or hurts.",
+   "moves": [
+    {"name": "Standing calf stretch", "seconds": 60, "sides": 2, "how": "Hands on a wall, one foot back with the heel down, lean in until you feel the calf. Thirty seconds a side."},
+    {"name": "Standing quad stretch", "seconds": 60, "sides": 2, "how": "Hold a wall, pull one heel toward your butt, knees together, hips pushed slightly forward."},
+    {"name": "Hamstring stretch", "seconds": 60, "sides": 2, "how": "Lie on your back, loop a towel around one foot and lift the straight leg until you feel the back of the thigh."},
+    {"name": "Kneeling hip flexor stretch", "seconds": 60, "sides": 2, "how": "One knee down, other foot forward. Squeeze the back glute and shift your hips forward."},
+    {"name": "Figure four", "seconds": 60, "sides": 2, "how": "On your back, cross one ankle over the other knee and pull the bottom leg toward your chest."},
+    {"name": "Child's pose", "seconds": 60, "sides": 1, "how": "Knees wide, sit back on your heels and reach your arms long in front of you."},
+    {"name": "Doorway chest stretch", "seconds": 60, "sides": 2, "how": "Forearm on a door frame at shoulder height, step through until you feel the front of the chest."},
+    {"name": "Cross-body shoulder stretch", "seconds": 60, "sides": 2, "how": "Pull one arm across your chest with the other hand."},
+    {"name": "Seated spinal twist", "seconds": 60, "sides": 2, "how": "Sit tall, cross one foot over the other knee and turn toward the bent knee."},
+    {"name": "Neck side stretch", "seconds": 60, "sides": 2, "how": "Ear toward shoulder, opposite hand reaching toward the floor."}
+   ]
+  },
+  {
+   "id": "yoga-20",
+   "name": "Twenty-minute yoga for people who don't do yoga",
+   "tab": "Yoga",
+   "when": "Rest days, mornings, or anytime you feel stiff. No flexibility required.",
+   "total_seconds": 1200,
+   "cue": "Move with your breath. If a pose doesn't feel right, rest in child's pose and pick it back up on the next one.",
+   "moves": [
+    {"name": "Easy seat and breathing", "seconds": 90, "sides": 1, "how": "Sit cross-legged on a folded blanket and take slow breaths through your nose."},
+    {"name": "Cat and cow", "seconds": 90, "sides": 1, "how": "On hands and knees, round your back as you breathe out and arch it as you breathe in."},
+    {"name": "Thread the needle", "seconds": 90, "sides": 2, "how": "From hands and knees, slide one arm under your body and rest that shoulder on the mat."},
+    {"name": "Downward dog", "seconds": 60, "sides": 1, "how": "Hips up and back, knees bent as much as you need, pedal your heels."},
+    {"name": "Low lunge", "seconds": 120, "sides": 2, "how": "One foot forward between your hands, back knee down, lift your chest."},
+    {"name": "Half split", "seconds": 90, "sides": 2, "how": "From the low lunge, shift your hips back and straighten the front leg."},
+    {"name": "Lizard", "seconds": 120, "sides": 2, "how": "Front foot outside your hand, back knee down, sink your hips."},
+    {"name": "Pigeon or figure four", "seconds": 120, "sides": 2, "how": "Front shin across the mat and fold forward, or do figure four on your back if pigeon hurts your knee."},
+    {"name": "Bridge", "seconds": 60, "sides": 1, "how": "On your back, feet flat, press your hips up and hold, then lower slowly. Do it three times."},
+    {"name": "Supine twist", "seconds": 120, "sides": 2, "how": "On your back, drop both knees to one side and look the other way."},
+    {"name": "Happy baby", "seconds": 60, "sides": 1, "how": "Grab the outsides of your feet and rock side to side."},
+    {"name": "Lying still", "seconds": 180, "sides": 1, "how": "Lie flat, arms by your sides, and do the breathing exercise below or just let your breath slow down."}
+   ]
+  },
+  {
+   "id": "roll-10",
+   "name": "Ten-minute foam roll",
+   "tab": "Roll",
+   "when": "Before a workout as a warmup (go quicker) or after one, or on rest days.",
+   "total_seconds": 600,
+   "cue": "Roll slowly, about an inch a second. When you find a tender spot, stop and breathe on it for a few breaths. Skip the lower back and anything bony.",
+   "moves": [
+    {"name": "Calves", "seconds": 60, "sides": 2, "how": "Roller under one calf, other leg crossed on top for more pressure."},
+    {"name": "Hamstrings", "seconds": 60, "sides": 1, "how": "Roller under the back of your thighs, hands behind you."},
+    {"name": "Quads", "seconds": 90, "sides": 1, "how": "Face down on your forearms, roller under the front of your thighs."},
+    {"name": "Outer hip and IT band area", "seconds": 60, "sides": 2, "how": "On your side, roller under the outer thigh, top foot on the floor to control the pressure."},
+    {"name": "Glutes", "seconds": 60, "sides": 2, "how": "Sit on the roller, cross one ankle over the other knee and lean toward that side."},
+    {"name": "Upper back", "seconds": 90, "sides": 1, "how": "Roller across your shoulder blades, hands behind your head, roll from mid back to the top of the shoulders."},
+    {"name": "Lats", "seconds": 60, "sides": 2, "how": "On your side, arm overhead, roller just under the armpit."}
+   ],
+   "gear": "A medium-density foam roller, about 18 to 36 inches. A lacrosse ball works for glutes and shoulders."
+  }
+ ],
+ "breathe": {
+  "id": "double-inhale",
+  "name": "The double inhale",
+  "tab": "Breathe",
+  "aka": "Cyclic sighing, sometimes called the physiological sigh. Stephen learned it from Andrew Huberman's podcast.",
+  "what": "Breathe in through your nose, take a second short sip of air on top to fill your lungs all the way, then let it all out in a long, slow exhale through your mouth. Repeat for a few minutes. It calms you down fast, which helps when the caffeine kicks in.",
+  "timer": {
+   "phases": [
+    {"key": "inhale", "label": "Breathe in through your nose", "seconds": 3},
+    {"key": "top_up", "label": "Sip in a little more", "seconds": 1},
+    {"key": "exhale", "label": "Long, slow breath out through your mouth", "seconds": 6}
+   ],
+   "round_seconds": 10,
+   "presets": [
+    {"key": "one", "label": "One to three sighs", "rounds": 3, "minutes": 0.5, "use": "Anytime you feel stressed. Takes thirty seconds."},
+    {"key": "quick", "label": "Two minutes", "rounds": 12, "minutes": 2, "use": "Between meetings, before a call, after coffee."},
+    {"key": "full", "label": "Five minutes", "rounds": 30, "minutes": 5, "use": "Once a day. This is the length used in the Stanford study."}
+   ],
+   "editable": ["inhale", "top_up", "exhale", "rounds"],
+   "rule": "The exhale should always be longer than both inhales together. If you feel light-headed, stop and breathe normally.",
+   "cues": "A soft chime at each phase change and a gentle haptic tap at the start of each exhale, so you can do it with your eyes closed."
+  },
+  "nudges": {
+   "habit": "Breathing breaks, daily",
+   "suggested_times": ["09:30", "13:00", "16:00", "21:30"],
+   "note": "Small moments through the day count. The Coach tab can send these as reminders."
+  },
+  "meditation": [
+   {"name": "One-minute reset", "seconds": 60, "how": "Close your eyes and count ten slow breaths. If you lose count, start over at one."},
+   {"name": "Three-minute body scan", "seconds": 180, "how": "Notice your feet, legs, belly, chest, shoulders, jaw and face, one at a time, and let each one soften."},
+   {"name": "Five-minute walk", "seconds": 300, "how": "Walk outside without your phone in your hand and pay attention to what you see and hear."}
+  ],
+  "sources": [
+   {"title": "Balban et al., Brief structured respiration practices enhance mood and reduce physiological arousal, Cell Reports Medicine, 2023", "url": "https://pubmed.ncbi.nlm.nih.gov/36630953/", "says": "Five minutes a day of cyclic sighing for a month improved mood and lowered breathing rate more than mindfulness meditation did."}
+  ]
+ },
+ "sleep": {
+  "tab": "Sleep",
+  "why": "Sleep is when your muscles repair and your brain resets. Short sleep makes workouts harder, cravings stronger and moods worse. The CDC says adults 18 to 60 need seven or more hours a night.",
+  "basics": [
+   "Same wake-up time every day, weekends too. A steady schedule matters more than an early one.",
+   "Get outside light in the first hour after you wake up.",
+   "Cut off caffeine about eight hours before bed. A 3 pm coffee is still in your system at 11.",
+   "Keep the bedroom cool, dark and quiet.",
+   "Put the phone across the room and give yourself thirty minutes of wind-down without a screen.",
+   "Finish big meals and alcohol a few hours before bed. Alcohol can knock you out but tends to make sleep lighter later in the night.",
+   "If you can't sleep after twenty minutes, get up, do something calm in dim light, and go back when you're sleepy."
+  ],
+  "habit": {"text": "Track sleep", "target_hours": 7.5, "editable": true},
+  "sources": [
+   {"title": "CDC, About Sleep", "url": "https://www.cdc.gov/sleep/about/index.html", "says": "Adults 18 to 60 need 7 or more hours of sleep a night."}
+  ],
+  "trackers": [
+   {
+    "id": "apple-watch",
+    "name": "Apple Watch",
+    "form": "Watch",
+    "measures": "Sleep stages (awake, REM, core, deep), heart rate, breathing disturbances and sleep apnea notifications, wrist temperature on newer models, and a sleep score in the latest watchOS.",
+    "cost": "Apple Watch SE 3 from $249, Series 12 from $399. No subscription needed for sleep tracking.",
+    "best_for": "iPhone users who want one device for workouts, sleep and everything else.",
+    "tradeoff": "Needs charging most days, so you have to find a time to top it up.",
+    "url": "https://www.apple.com/shop/buy-watch/apple-watch-se",
+    "verified": "2026-10-29",
+    "unverified": ["Series 12 $399 read from Apple's lease footnote on apple.com/watch, not the buy page", "Ultra 4 price not read"]
+   },
+   {
+    "id": "google-fitbit",
+    "name": "Google Fitbit and Pixel Watch",
+    "form": "Band, screenless band or watch",
+    "measures": "Sleep stages, sleep score, heart rate and heart rate variability, blood oxygen, and sleep goals from the Google Health Coach with Premium.",
+    "cost": "Fitbit Air (screenless) from $99.99, Fitbit Edge from $179.99, Pixel Watch from $399.99. Google Health Premium starts at $9.99 a month.",
+    "best_for": "Android users, or anyone who wants a cheap band that lasts days between charges.",
+    "tradeoff": "The deeper sleep insights and coaching sit behind the Premium subscription.",
+    "url": "https://store.google.com/us/category/watches_trackers",
+    "verified": "2026-10-29",
+    "unverified": ["Exact sleep features per device not read on each product page; the Fitbit lineup was renamed in 2026, so check the model before buying"]
+   },
+   {
+    "id": "oura",
+    "name": "Oura Ring",
+    "form": "Ring",
+    "measures": "Sleep score, sleep stages, sleep debt and regularity, resting heart rate, heart rate variability, body temperature trends, and a daily readiness score.",
+    "cost": "Oura Ring 4 from $349, Oura Ring 5 from $399, plus a membership of $5.99 a month or $69.99 a year.",
+    "best_for": "People who hate sleeping in a watch. Battery lasts several days.",
+    "tradeoff": "Most of the insights need the membership, and you need a sizing kit before you order.",
+    "url": "https://ouraring.com/store",
+    "verified": "2026-10-29",
+    "unverified": []
+   },
+   {
+    "id": "whoop",
+    "name": "WHOOP",
+    "form": "Screenless band",
+    "measures": "Sleep, strain and recovery scores, sleep need and sleep debt, heart rate variability, resting heart rate, breathing rate and skin temperature.",
+    "cost": "Membership only, with the band included. WHOOP One $199 a year, Peak $239 a year, Life $359 a year.",
+    "best_for": "People who train a lot and want a daily recovery score to decide how hard to go.",
+    "tradeoff": "No screen, and you pay every year for as long as you use it.",
+    "url": "https://www.whoop.com/us/en/membership/",
+    "verified": "2026-10-29",
+    "unverified": ["Which sleep features are in each tier not compared"]
+   },
+   {
+    "id": "phone-apps",
+    "name": "Phone apps",
+    "form": "Your phone, no wearable",
+    "measures": "The iPhone's built-in Sleep schedule and Health app log time in bed and wind-down. Apps like Sleep Cycle use the microphone or motion to estimate sleep and wake you during light sleep. Accuracy is rougher than a wearable.",
+    "cost": "Free to start. Built into iPhone (Health and the Clock app's Sleep schedule) and Android (Digital Wellbeing bedtime mode). Sleep Cycle and similar apps have paid tiers.",
+    "best_for": "Trying out sleep tracking before you spend money on a device.",
+    "tradeoff": "The phone has to be on the bed or nightstand, which works against keeping it across the room.",
+    "url": null,
+    "verified": null,
+    "unverified": ["Third-party app prices not checked"]
+   }
+  ],
+  "tracker_tip": "Any of these will show you the one number that matters most, how many hours you actually slept. Start with that before you worry about stages and scores."
+ }
+}
