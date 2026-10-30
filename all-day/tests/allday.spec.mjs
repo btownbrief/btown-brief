@@ -13402,7 +13402,7 @@ async function theEat(browser, base) {
   });
 
   await group('Eat, every tab on demo data, 390 and 1280, light and dark', async () => {
-    for (const tab of ['food', 'deals', 'new', 'bites', 'market', 'dinner']) {
+    for (const tab of ['food', 'deals', 'openings', 'bites', 'market', 'dinner']) {
       for (const [w, h] of [[390, 844], [1280, 900]]) {
         for (const scheme of ['light', 'dark']) {
           const { ctx, page, errors } = await eatOpen(browser, base, '/eat/?demo=1#' + tab, { viewport: { width: w, height: h }, scheme });
@@ -13445,19 +13445,19 @@ async function theEatNew(browser, base) {
     const p = await newPage(browser, base, combo);
     await p.page.goto(base + url, { waitUntil: 'domcontentloaded' });
     await settle(p.page);
-    await p.page.waitForSelector('#panel-new .shelf-sec, #panel-new .errbox', { timeout: 15000 });
+    await p.page.waitForSelector('#panel-openings .shelf-sec, #panel-openings .errbox', { timeout: 15000 });
     await p.page.waitForTimeout(300);
     return p;
   };
 
   await group('eat new: live, from data/eat/openings.json', async () => {
-    const { ctx, page, errors } = await open('/eat/#new');
+    const { ctx, page, errors } = await open('/eat/#openings');
     const pill = await pillOf(page);
     check(JSON.stringify(Object.keys(pill).sort()) === JSON.stringify(SECS.slice().sort()), 'the pill is the six top tabs', JSON.stringify(pill));
     const food = want('food');
     check(SECS.every((k) => pill[k] === food[k]), 'each section counts the file’s food places', JSON.stringify({ pill, food }));
     const st = await page.evaluate(() => {
-      const p = document.querySelector('#panel-new');
+      const p = document.querySelector('#panel-openings');
       const rows = [...p.querySelectorAll('.shelf-sec [data-k]')];
       return { on: p.querySelector('.newcats .chip.on')?.dataset.chip, err: !!p.querySelector('.errbox'),
         keyed: rows.every((r) => /^n-/.test(r.dataset.k) && r.querySelector('a[href]')), n: rows.length,
@@ -13468,16 +13468,16 @@ async function theEatNew(browser, base) {
     check(st.closed === Math.min(12, food.closed), 'Closed shows twelve, then All', st.closed);
     check(!/\b(rating|rated|scores?|stars?|best|ranked|ranking|top \d+)\b/i.test(st.text), 'no scores, ratings or rankings', (st.text.match(/\b(rating|rated|scores?|stars?|best|ranked|ranking)\b/i) || [])[0]);
     /* Reminisce links each place to the edition that covered it */
-    const mem = await page.$$eval('#panel-new [data-sec="reminisce"] [data-k]', (rs) => rs.map((r) => [r.dataset.k, [...r.querySelectorAll('a')].map((a) => a.href)]));
+    const mem = await page.$$eval('#panel-openings [data-sec="reminisce"] [data-k]', (rs) => rs.map((r) => [r.dataset.k, [...r.querySelectorAll('a')].map((a) => a.href)]));
     const byK = Object.fromEntries(E.map((e) => ['n-' + e.id, e]));
     check(mem.length > 0 && mem.every(([k, hrefs]) => byK[k] && byK[k].status === 'closed' && hrefs.includes(byK[k].edition.archive_url)), 'Reminisce rows link to their edition', JSON.stringify(mem.slice(0, 2)));
     /* the non-food chip switches every section */
-    await page.click('#panel-new .newcats [data-chip="non-food"]');
+    await page.click('#panel-openings .newcats [data-chip="non-food"]');
     await page.waitForTimeout(250);
     const other = await pillOf(page), nf = want('non-food');
     check(SECS.every((k) => other[k] === nf[k]), 'Everything else counts the file’s non-food places', JSON.stringify({ other, nf }));
-    check(await page.$eval('#panel-new .newcats .chip.on', (c) => c.dataset.chip) === 'non-food', 'the chip shows it is on', '');
-    if (!nf.closing) check(/Nothing closing soon/.test(await page.$eval('#panel-new [data-sec="closing"]', (s) => s.innerText)), 'an empty section says so', '');
+    check(await page.$eval('#panel-openings .newcats .chip.on', (c) => c.dataset.chip) === 'non-food', 'the chip shows it is on', '');
+    if (!nf.closing) check(/Nothing closing soon/.test(await page.$eval('#panel-openings [data-sec="closing"]', (s) => s.innerText)), 'an empty section says so', '');
     check(!mine(errors).length, 'no console errors', mine(errors).join(' | '));
     await ctx.close();
   });
@@ -13485,16 +13485,16 @@ async function theEatNew(browser, base) {
   await group('eat new: deep links', async () => {
     /* the oldest food closing sits past the first twelve: the link opens Closed in full and flashes it */
     const old = E.filter((e) => e.status === 'closed' && e.category === 'food').sort((a, b) => dayN(a.closed) - dayN(b.closed))[0];
-    const { ctx, page, errors } = await open('/eat/#new/n-' + old.id);
+    const { ctx, page, errors } = await open('/eat/#openings/n-' + old.id);
     await page.waitForTimeout(400);
-    const hit = await page.evaluate((k) => { const n = document.querySelector('#panel-new [data-sec="closed"] [data-k="' + k + '"]'); return n ? n.classList.contains('flash') : null; }, 'n-' + old.id);
+    const hit = await page.evaluate((k) => { const n = document.querySelector('#panel-openings [data-sec="closed"] [data-k="' + k + '"]'); return n ? n.classList.contains('flash') : null; }, 'n-' + old.id);
     check(hit === true, 'a place’s link flashes it in Closed', String(hit));
     const nfe = E.find((e) => e.category === 'non-food' && e.status === 'closed');
-    await page.evaluate((k) => { location.hash = 'new/' + k; }, 'n-' + nfe.id);
+    await page.evaluate((k) => { location.hash = 'openings/' + k; }, 'n-' + nfe.id);
     await page.waitForTimeout(500);
-    check(await page.$eval('#panel-new .newcats .chip.on', (c) => c.dataset.chip) === 'non-food', 'a non-food place’s link switches the chip', '');
-    check(await page.$('#panel-new [data-k="n-' + nfe.id + '"].flash') !== null, 'and flashes it', nfe.id);
-    await page.evaluate(() => { location.hash = 'new/n-no-such-place'; });
+    check(await page.$eval('#panel-openings .newcats .chip.on', (c) => c.dataset.chip) === 'non-food', 'a non-food place’s link switches the chip', '');
+    check(await page.$('#panel-openings [data-k="n-' + nfe.id + '"].flash') !== null, 'and flashes it', nfe.id);
+    await page.evaluate(() => { location.hash = 'openings/n-no-such-place'; });
     await page.waitForTimeout(300);
     check(/isn’t on New/.test(await page.evaluate(() => document.body.innerText)), 'an unknown place says so', '');
     check(!mine(errors).length, 'no console errors', mine(errors).join(' | '));
@@ -13502,10 +13502,10 @@ async function theEatNew(browser, base) {
   });
 
   await group('eat new: demo', async () => {
-    const { ctx, page, errors } = await open('/eat/?demo=1#new');
+    const { ctx, page, errors } = await open('/eat/?demo=1#openings');
     const pill = await pillOf(page);
     check(SECS.every((k) => pill[k] > 0), 'the demo fills all six top tabs', JSON.stringify(pill));
-    check(await page.$$eval('#panel-new [data-k]', (r) => r.length) > 5, 'with rows', '');
+    check(await page.$$eval('#panel-openings [data-k]', (r) => r.length) > 5, 'with rows', '');
     check(!mine(errors).length, 'no console errors', mine(errors).join(' | '));
     await ctx.close();
   });
@@ -13513,7 +13513,7 @@ async function theEatNew(browser, base) {
   await group('eat new: screenshots', async () => {
     for (const [w, h] of [[390, 844], [1280, 900]]) {
       for (const scheme of ['light', 'dark']) {
-        const { ctx, page, errors } = await open('/eat/#new', { viewport: { width: w, height: h }, scheme });
+        const { ctx, page, errors } = await open('/eat/#openings', { viewport: { width: w, height: h }, scheme });
         await page.evaluate(() => document.fonts.ready);
         await page.screenshot({ path: path.join(SHOTS, 'eat-new-' + w + '-' + scheme + '.png') });
         check(!mine(errors).length, w + ' ' + scheme + ': no console errors', mine(errors).join(' | '));

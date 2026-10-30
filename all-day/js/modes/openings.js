@@ -4,7 +4,7 @@
 
    Data: data/eat/openings.json (scripts/eat/openings.py: every entry a
    verified news story, statuses recomputed from its dates each run). On
-   ?demo=1, data/demo/eat-new.json, the same shape on invented places, its
+   ?demo=1, data/demo/eat-openings.json, the same shape on invented places, its
    dates moved so the file's `updated` day is today.
 
    A Food / Everything else chip on top (Food first; the choice lasts the
@@ -22,7 +22,7 @@
    in the restaurant guide. Month-only dates (YYYY-MM) count as mid-month,
    as the build script treats them.
 
-   Deep links: #new/<section key> jumps there; #new/n-<id> flashes that
+   Deep links: #openings/<section key> jumps there; #openings/n-<id> flashes that
    place in its own section (switching the chip, opening Closed in full). */
 
 import * as app from '../app.js';
@@ -30,9 +30,9 @@ import * as data from '../wire.js';
 import { el, esc, safeHref, ICON, mark, section, chips, button, collapseBar } from '../ui.js';
 import { sectionBar } from '../sections.js';
 
-const KEY = 'new';
+const KEY = 'openings';
 const URL_LIVE = '../data/eat/openings.json';
-const URL_DEMO = 'data/demo/eat-new.json';
+const URL_DEMO = 'data/demo/eat-openings.json';
 const FIRST = 12;                        // Closed and Reminisce show this many, then All N
 const CAPPED = ['closed', 'reminisce'];
 const MONTH_DAYS = 31;
@@ -234,7 +234,7 @@ function render() {
   root.appendChild(el('div', 'spacer'));
 }
 
-/* #new/<section> jumps there; #new/n-<id> flashes that place where it lives */
+/* #openings/<section> jumps there; #openings/n-<id> flashes that place where it lives */
 function land() {
   if (!pending || !S.ready || !root) return;
   const k = pending; pending = null;
