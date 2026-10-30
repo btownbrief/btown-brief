@@ -241,7 +241,7 @@ app.register(KEY, {
     const t = E.now();
     const n = { today: deck(t).length, hh: happyHours(t).length, cheap: cheapDeals(t).length };
     return sectionBar({ key: 'sec-eat-deals', title: 'Deals', color: '--app-eat-pop', find: (k) => slots && slots[k], onPick: jump,
-      items: SECTIONS.map(([key, label]) => ({ key, label, n: n[key] })) });
+      items: SECTIONS.map(([key, label]) => ({ key, label, n: n[key] || null })) });
   },
   keepSubnav: true,
   /* deals verified since the last visit: the one thing here that changes */

@@ -39,6 +39,7 @@ const ASKS_STALE = 15 * 60000;
 const SUB_URL = 'https://www.reddit.com/r/burlington/';
 const SECTIONS = [['bite', 'Weekly Bite'], ['kitchens', 'In their own words'], ['photos', 'Photos'], ['menus', 'Menus'], ['asks', 'Asked on Reddit']];
 const AREA_OF = { 'Essex': 'Essex / Essex Jct', 'Burlington': 'Greater Burlington' };
+const cap = (x) => (x ? String(x).charAt(0).toUpperCase() + String(x).slice(1) : '');
 const NEGATIVE = /\b(worst|terrible|awful|gross|disgusting|overpriced|bland|rude|avoid|never again|inedible|mid)\b/i;
 
 const S = { dishAll: false, menuQ: '', menuAll: false, bestGroup: 'all', bestAll: false };
@@ -263,7 +264,7 @@ function paintMenus(host) {
     const grid = el('div', 'qgrid menus');
     shown.forEach((m) => {
       const a = E.outLink(m.name, m.url, 'qcard');
-      a.innerHTML = '<span class="t">' + esc(m.name) + '</span><span class="s">' + esc(E.trim([(m.cuisine || [])[0], m.walk ? m.walk + ' min walk' : ''].filter(Boolean).join(' · ') || 'Menu', 40)) + ' ' + ICON.ext + '</span>';
+      a.innerHTML = '<span class="t">' + esc(m.name) + '</span><span class="s">' + esc(E.trim([cap((m.cuisine || [])[0]), m.walk ? m.walk + ' min walk' : ''].filter(Boolean).join(' · ') || 'Menu', 40)) + ' ' + ICON.ext + '</span>';
       a.dataset.k = 'mn-' + m.id;
       a.setAttribute('aria-label', 'Menu for ' + m.name);
       grid.appendChild(a);
