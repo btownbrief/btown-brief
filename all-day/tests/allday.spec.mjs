@@ -7246,7 +7246,7 @@ async function theVintage(browser, base) {
     const tee = await page.$eval(vslot('tees'), (s) => ({ head: s.querySelector('.sec h2').textContent, btn: (s.querySelector('.sec button') || {}).textContent || '', cards: s.querySelectorAll('.textcard').length, top: Math.round(s.getBoundingClientRect().top), h: Math.round(s.getBoundingClientRect().height) }));
     check(tee.head === 'Make a tee' && /Send in your design/.test(tee.btn) && tee.cards === 0, 'Make a tee and Send in your design are one block: the button sits in the head, there is no card of its own', JSON.stringify(tee));
     const why = await page.$eval(vslot('spotted') + ' .sec + p', (p) => p.textContent).catch(() => '');
-    check(why === 'Saw something great that wasn’t your size? Post it so someone else can grab it.', 'one plain line under Spotted this week says what it is for', why);
+    check(why === 'Not your size? Post it for someone else.', 'one short line under Spotted this week says what it is for', why);
     check(top.fitBottom <= top.vh && top.spotHeadBottom <= top.vh && top.spotCard < top.vh, 'at 390 by 844 the fit tiles, the Spotted head and the first find are all on the first screen', JSON.stringify(top));
     const tiles = await page.$$eval(vslot('fit') + ' .ftile', (ts) => ts.map((t) => ({ k: t.dataset.k, pic: !!t.querySelector('.c-media.r45 .ph, .c-media.r45 img'), t: t.querySelector('.t').textContent, s: t.querySelector('.s').textContent })));
     check(tiles.length === 3 && tiles.every((t) => t.pic && /^b-/.test(t.k) && t.t && t.s), 'each fit check is a photo tile with its title and first name', JSON.stringify(tiles));
@@ -7290,6 +7290,13 @@ async function theVintage(browser, base) {
     const ig = await page.$$eval(vslot('newin') + ' [data-grid=newin] a.vcard', (as) => as.map((a) => ({ href: a.href, target: a.target })));
     check(file.instagram.length >= 1 && ig.length === 1 && ig[0].href === 'https://www.instagram.com/p/LiveVin1/' && ig[0].target === '_blank', 'only the guide’s own account’s fresh post shows, opening Instagram in a new tab', JSON.stringify(ig));
     check(await page.$eval(vslot('newin') + ' .linkrow.vmore', (r) => r.hidden && getComputedStyle(r).display === 'none'), 'one post: no “See more”', '');
+    /* an empty board: the shops' own posts lead, the neighbors' trio waits together under Make a tee (wave 1) */
+    await page.waitForFunction(() => document.querySelector('#panel-vintage [data-sec="newin"]')?.parentElement.firstElementChild?.dataset.sec === 'newin', null, { timeout: 6000 }).catch(() => {});
+    const order = await page.$$eval('#panel-vintage [data-sec]', (ns) => ns.map((n) => n.dataset.sec));
+    const pillOrder = await page.$$eval('#subnav .chip', (cs) => cs.map((c) => c.dataset.chip));
+    check(JSON.stringify(order) === JSON.stringify(['newin', 'tees', 'sent', 'fit', 'spotted', 'swaps', 'shops']), 'nothing posted yet: New in leads, then Make a tee, then Fit checks, Spotted and Swaps together', JSON.stringify(order));
+    check(JSON.stringify(pillOrder) === JSON.stringify(['newin', 'tees', 'fit', 'spotted', 'swaps', 'shops']), 'and the pill follows the page', JSON.stringify(pillOrder));
+    await page.screenshot({ path: path.join(SHOTS, 'live-vintage-empty-board.png') });
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
 
