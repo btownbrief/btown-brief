@@ -44,7 +44,7 @@ function load() {
   return Promise.all([
     app.demo ? kit.demo('dating').then((d) => d.events || []) : null,
     kit.datingPets().then((j) => { S.dp = j; }),
-  ]).then(([demoEvents]) => Promise.all([kit.events(demoEvents).then((e) => { S.events = e; }), reload()]));
+  ]).then(([demoEvents]) => Promise.all([kit.events(demoEvents, (e) => { S.events = e; mode.redraw(); }).then((e) => { S.events = e; }), reload()]));
 }
 function reload() { return kit.listBoard('people', { kind: 'plan' }).then((r) => { S.r = r; S.posts = r.posts; }); }
 
@@ -56,7 +56,7 @@ function lane(host, list, empty) {
 function planButton(label, placeholder, note) {
   return kit.postButton(label, { board: 'people', kind: 'plan', heading: label, title: 'What’s the plan', titlePlaceholder: placeholder,
     fields: [{ key: 'when', label: 'When', placeholder: 'Friday, 8 pm' }, { key: 'spots', label: 'Spots', type: 'int', placeholder: '3' }],
-    place: 'Where', placePlaceholder: 'A bar, a show, a trail', body: 'Anything to know', notes: [note, 'Meet somewhere public.'] }, () => reload().then(mode.redraw));
+    place: 'Where', placePlaceholder: 'A bar, a show, a trail', body: 'Anything to know', notes: [note, 'Meet somewhere public.'] });
 }
 
 const calendarItems = () => kit.eventItems(S.events || [], (e) => { const k = mixerKind(e); return k === 'singles' || k === 'social' || SINGLES.test(e.title); }, 'dt-');

@@ -16,7 +16,8 @@
    Lanes run freshest first, like every top-tab pill. */
 
 import * as app from '../app.js';
-import { el } from '../ui.js';
+import { el, esc, button } from '../ui.js';
+import * as boards from '../boards.js';
 import { RULES } from '../boards-core.js';
 import * as kit from './people-kit.js';
 
@@ -49,8 +50,7 @@ function lane(host, r, list, opts, empty) {
   if (!list.length) { host.appendChild(el('p', 'note pad', empty)); return; }
   kit.feed(host, list, { tab: KEY, ...opts });
 }
-const after = () => reload().then(mode.redraw);
-const post = (label, kind, o) => kit.postButton(label, { board: 'neighbors', kind, heading: label, ...o }, after);
+const post = (label, kind, o) => kit.postButton(label, { board: 'neighbors', kind, heading: label, ...o });
 const whatOptions = RULES.boards.neighbors.meta.what.values.map((v) => [v, WHAT[v]]);
 
 const mode = kit.tab({
@@ -65,20 +65,20 @@ const mode = kit.tab({
           fields: [{ key: 'item', label: 'The thing', placeholder: 'Extension ladder' }, { key: 'when', label: 'When', placeholder: 'This Saturday' }],
           place: 'Neighborhood', placePlaceholder: 'Old North End', body: 'Anything to know' }));
         kit.rules(b, ['Things to lend, not to rent.', 'Give it back as you got it, and say thanks.', 'Meet on a porch or a corner you both know.']);
-        lane(b, S.r, of('borrow'), { meta, vote: 'I can lend' }, 'Nobody needs to borrow anything right now.');
+        lane(b, S.r, of('borrow'), { meta, vote: 'I can lend', after: doneButton }, 'Nobody needs to borrow anything right now.');
       } },
     { key: 'free', label: 'Free', newest: () => kit.newest(of('free')),
       draw(b) {
         b.appendChild(post('Give something away', 'free', { title: 'What it is', titlePlaceholder: 'A couch, you carry it', place: 'Neighborhood', placePlaceholder: 'Winooski', body: 'Size, state, when to come' }));
         kit.rules(b, ['Free means free: nothing for sale, no services.', 'First to say “I want it” and show up gets it.', 'Mark it given when it’s gone.']);
-        lane(b, S.r, of('free'), { meta, vote: 'I want it', ratio: 'r169' }, 'Nothing up for grabs right now.');
+        lane(b, S.r, of('free'), { meta, vote: 'I want it', ratio: 'r169', after: doneButton }, 'Nothing up for grabs right now.');
       } },
     { key: 'favor', label: 'Favor', newest: () => kit.newest(of('favor')),
       draw(b) {
         b.appendChild(post('Ask a favor', 'favor', { title: 'What you need', titlePlaceholder: 'An hour of help moving a dresser',
           fields: [{ key: 'when', label: 'When', placeholder: 'Sunday afternoon' }], place: 'Neighborhood', placePlaceholder: 'South End', body: 'How long it takes' }));
         kit.rules(b, ['An hour or two of help, given for free.', 'Nothing that needs a license or a pro.', 'Say thanks in public.']);
-        lane(b, S.r, of('favor'), { meta, vote: 'I can help' }, 'No favors asked right now.');
+        lane(b, S.r, of('favor'), { meta, vote: 'I can help', after: doneButton }, 'No favors asked right now.');
       } },
     { key: 'lost', label: 'Lost & found', newest: () => kit.newest(of('lost', 'found')),
       draw(b) {
@@ -87,10 +87,10 @@ const mode = kit.tab({
         const r = el('div', 'linkrow chlinks');
         [post('I lost something', 'lost', { title: 'What you lost', titlePlaceholder: 'Grey cat, white socks', fields, place: 'A place for the map', placePlaceholder: 'A corner or a landmark', body: 'How to know it' }),
           post('I found something', 'found', { title: 'What you found', titlePlaceholder: 'Keys on a red lanyard', fields, place: 'A place for the map', placePlaceholder: 'A corner or a landmark', body: 'Ask them to describe it' })]
-          .forEach((x) => r.appendChild(x.firstChild));
+          .forEach((x) => { if (x.firstChild) r.appendChild(x.firstChild); });
         b.appendChild(r);
         kit.rules(b, ['A corner or a landmark on the map, never your home address.', 'Found something? Ask the owner to describe it before handing it over.', 'Mark it home again when it is.']);
-        lane(b, S.r, of('lost', 'found'), { meta, map: true, vote: 'I’ll look', ratio: 'r169' }, 'Nothing lost or found right now.');
+        lane(b, S.r, of('lost', 'found'), { meta, map: true, vote: 'I’ll look', ratio: 'r169', after: doneButton }, 'Nothing lost or found right now.');
       } },
     { key: 'shifts', label: 'Shifts', newest: () => kit.newest(S.shifts),
       draw(b) {
@@ -98,13 +98,29 @@ const mode = kit.tab({
           fields: [{ key: 'org', label: 'The nonprofit', placeholder: 'The food shelf' }, { key: 'when', label: 'When', placeholder: kit.etDay(Date.now() + 3 * kit.DAY) + ', 9 am', hint: 'The date first, then the time.' },
             { key: 'hours', label: 'Hours', type: 'int', placeholder: '2' }, { key: 'slots', label: 'People needed', type: 'int', placeholder: '6' },
             { key: 'link', label: 'Sign-up link', type: 'url', placeholder: 'https://' }],
-          place: 'Where', body: 'What to bring', notes: ['For nonprofits. Stephen looks at every shift and its link before it shows.'] }, after));
+          place: 'Where', body: 'What to bring', notes: ['For nonprofits. Stephen looks at every shift and its link before it shows.'] }));
         kit.rules(b, ['Nonprofits and community groups only.', 'A few hours, a date, and a real sign-up link.', 'Stephen checks each one first.']);
         lane(b, S.rs, S.shifts, { meta: shiftMeta, vote: 'I’m going', after: (p) => ((p.meta || {}).link ? signUp(p.meta.link) : null) }, 'No shifts posted this week.');
         b.appendChild(kit.outRow('More ways to help', 'The guide’s volunteer page, by the time you’ve got', VOLUNTEER_PAGE, 'volunteer'));
       } },
   ],
 });
+/* your own post: mark it lent, given, done or home again, and undo it
+   (boards.put, round two's nn_post_meta_set; the board's change event reloads) */
+const DONE_WORD = { borrow: 'Mark it lent', free: 'Mark it given', favor: 'Mark it done', lost: 'Mark it home again', found: 'Mark it home again' };
+function doneButton(p, it) {
+  if (!it.mine) return null;
+  const got = !!(p.meta || {}).got;
+  const r = el('div', 'linkrow pp-done');
+  const b = button(esc(got ? 'Undo' : DONE_WORD[p.kind] || 'Mark it done'), 'ghost sm', () => {
+    b.disabled = true;
+    boards.put(p.id, { got: got ? null : true }).then((x) => { if (!x.ok) { b.disabled = false; app.toast(x.message); } });
+  });
+  b.type = 'button';
+  b.dataset.done = p.id;
+  r.appendChild(b);
+  return r;
+}
 function signUp(href) {
   const r = el('div', 'linkrow pp-signup');
   r.appendChild(kit.linkBtn('Sign up', href, 'ghost sm'));

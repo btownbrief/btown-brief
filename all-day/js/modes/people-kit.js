@@ -22,7 +22,7 @@
 import * as app from '../app.js';
 import * as data from '../wire.js';
 import * as boards from '../boards.js';
-import { el, esc, safeHref, ICON, mark, section, button, cards } from '../ui.js';
+import { el, esc, safeHref, ICON, mark, section, button, cards, world, setWorld } from '../ui.js';
 import { sectionBar } from '../sections.js';
 import { RULES, KIND_LABELS, expiresAt, photoRequired } from '../boards-core.js';
 import { whenLabel, et, etWall } from './people.js';
@@ -62,6 +62,13 @@ export function tab(o) {
       S.root.appendChild(wrap);
       S.root.appendChild(el('div', 'spacer'));
       app.bindFeed(wrap);
+      /* boards.js repaints only the vote it was given; a tab whose lanes count
+         votes (Clubs: who is in) reloads once the vote has gone through */
+      if (o.votesCount) wrap.addEventListener('click', (e) => {
+        if (!e.target.closest('[data-act="bvote"]')) return;
+        clearTimeout(S.voteT);
+        S.voteT = setTimeout(() => Promise.resolve(o.reload && o.reload()).then(draw), 800);
+      });
     }
     secs.forEach((s) => {
       const body = S.slots[s.key].querySelector('.pp-body');
@@ -72,11 +79,20 @@ export function tab(o) {
     if (app.activeTab() === o.key) app.paintSubnav();
   }
 
+  /* a link to the other side of Real life / Online turns the switch first */
+  function side(node) {
+    const w = node && node.closest('[data-world]');
+    if (!w || w.dataset.world === world()) return;
+    /* the switch's own half, so the shell repaints the page's side with it */
+    const half = document.querySelector('#subnav .worldsw [data-world="' + w.dataset.world + '"]');
+    if (half) half.click(); else setWorld(w.dataset.world);
+  }
   function land() {
     const want = S.pending;
     if (!want || !S.ready || !S.slots) return;
     S.pending = null;
-    if (S.slots[want]) { app.jumpTo(S.slots[want]); return; }
+    if (S.slots[want]) { side(S.slots[want]); app.jumpTo(S.slots[want]); return; }
+    side(S.root.querySelector('[data-k="' + CSS.escape(want) + '"]'));
     if (o.land && o.land(want, S.slots)) return;
     if (!app.flashHit(S.root, want)) app.toast('That’s gone from ' + app.labelOf(o.key) + ' now.');
   }
@@ -120,8 +136,17 @@ export function tab(o) {
 
 /* ------------------------------------------------------------- boards */
 /* the board's posts, or [] with the reason kept (off: the SQL is not pasted) */
+/* A board the server's rules don't carry yet (nn-APPS.sql not pasted)
+   answers bad_board; the PostgREST function missing altogether is 'off'.
+   Both mean "not switched on", and its post buttons stay away. */
+const offBoards = new Set();
 export function listBoard(board, opts = {}) {
-  return boards.list(board, { limit: 60, ...opts }).then((r) => (r.ok ? { ok: true, posts: r.posts } : { ok: false, posts: [], error: r.error, message: r.message }));
+  return boards.list(board, { limit: 60, ...opts }).then((r) => {
+    if (r.ok) { offBoards.delete(board); return { ok: true, posts: r.posts }; }
+    const off = r.error === 'off' || r.error === 'bad_board';
+    if (off) offBoards.add(board);
+    return { ok: false, posts: [], error: off ? 'off' : r.error, message: r.message };
+  });
 }
 /* posts newer than ts (epoch seconds) */
 export const newer = (posts, ts) => posts.filter((p) => Date.parse(p.created_at) / 1000 > ts).length;
@@ -176,7 +201,7 @@ export function boardNote(host, r, empty) {
     /* a read that never reached the server comes back "sign in first" (boards.js
        reads a failed fetch as a lost session); for a list, it is the connection */
     host.appendChild(el('p', 'note pad', r.error === 'off' ? 'This board opens once Stephen switches it on.'
-      : r.error === 'not_signed_in' || r.error === 'offline' ? 'The posts didn’t load. Check your connection and pull to refresh.' : (r.message || 'The posts didn’t load.')));
+      : r.error === 'not_signed_in' || r.error === 'offline' ? 'The posts didn’t load. Check your connection.' : (r.message || 'The posts didn’t load.')));
     return;
   }
   host.appendChild(el('p', 'note pad', empty));
@@ -189,11 +214,16 @@ export function rules(host, lines) {
 }
 
 /* a bright Post button that opens boards.compose */
-export function postButton(label, opts, onPosted) {
-  const b = button(ICON.plus + ' ' + esc(label), 'pkey', () => boards.compose({ ...opts, onPosted: (p) => { if (onPosted) onPosted(p); } }));
+export function postButton(label, opts) {
+  const r = el('div', 'addrow');
+  if (offBoards.has(opts.board)) { r.hidden = true; return r; }
+  /* each field's length is the board's own limit (RULES), so what the form
+     takes the server takes; the tab reloads on the board's change event */
+  const spec = (RULES.boards[opts.board] || {}).meta || {};
+  const fields = (opts.fields || []).map((f) => ({ ...f, max: f.max || (spec[f.key] && spec[f.key].max) || undefined }));
+  const b = button(ICON.plus + ' ' + esc(label), 'pkey', () => boards.compose({ ...opts, fields }));
   b.type = 'button';
   b.dataset.post = opts.board + ':' + opts.kind;
-  const r = el('div', 'addrow');
   r.appendChild(b);
   return r;
 }
@@ -254,7 +284,7 @@ export function demo(name) {
 /* ------------------------------------------------------ the calendar */
 /* The guide's events (wire.js's whatnow file, rebuilt daily) live; on
    ?demo=1, the tab's own demo events dated `day` days from today. */
-export function events(demoEvents) {
+export function events(demoEvents, onChange) {
   if (app.demo) {
     const t = Date.now();
     return Promise.resolve((demoEvents || []).map((e) => {
@@ -262,7 +292,13 @@ export function events(demoEvents) {
       return { ...e, date, start: e.time ? date + 'T' + e.time + ':00' + offset(date) : date, allDay: !e.time };
     }));
   }
-  return new Promise((res) => data.load('whatnow', (j) => res((j && j.events) || []), () => res(null)));
+  /* wire.js hands every later refresh to the same callback: after the
+     first, the tab hears it through onChange */
+  let first = true;
+  return new Promise((res) => data.load('whatnow', (j) => {
+    const list = (j && j.events) || [];
+    if (first) { first = false; res(list); } else if (onChange) onChange(list);
+  }, () => { if (first) { first = false; res(null); } }));
 }
 /* Burlington's UTC offset on that day, as -04:00 or -05:00 */
 function offset(date) {

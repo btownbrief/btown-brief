@@ -13427,6 +13427,10 @@ async function thePeopleApp(browser, base) {
     await page.waitForSelector('#sheet[hidden]', { state: 'attached' });
     await page.waitForFunction(() => [...document.querySelectorAll('.pp-sec[data-sec="borrow"] .b-title')].some((t) => t.textContent === 'A pressure washer for a deck'), null, { timeout: 5000 });
     check(true, 'a borrow post lands in Borrow', '');
+    await page.click('.pp-sec[data-sec="borrow"] .card.board:has(.b-title:text-is("A pressure washer for a deck")) [data-done]');
+    await page.waitForFunction(() => [...document.querySelectorAll('.pp-sec[data-sec="borrow"] .card.board')].some((c) => c.querySelector('.b-title').textContent === 'A pressure washer for a deck' && /Lent/.test(c.querySelector('.b-meta')?.textContent || '')), null, { timeout: 5000 });
+    check(await page.$eval('.pp-sec[data-sec="borrow"] .card.board:has(.b-title:text-is("A pressure washer for a deck")) [data-done]', (b) => b.textContent) === 'Undo', 'the poster marks it lent, and can undo it', '');
+    check(!(await page.$('.pp-sec[data-sec="borrow"] .card.board:has(.b-title:text-is("Tent for a two-night trip")) [data-done]')), 'never on someone else’s post', '');
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
   });
@@ -13477,6 +13481,15 @@ async function thePeopleApp(browser, base) {
         return top > -40 && (top < 320 || p.scrollTop >= p.scrollHeight - p.clientHeight - 2) ? 'ok' : top; });
       check(y === 'ok', '#' + t + '/' + sec + ' lands on its section', y);
     }
+    /* a link to the other side of Real life / Online turns the switch */
+    await page.goto(base + '/people/?demo=1#dating/posts');
+    await settle(page); await ppReady(page);
+    await page.waitForTimeout(800);
+    check(await page.evaluate(() => document.body.dataset.world === 'online' && !!document.querySelector('.pp-sec[data-sec="posts"]').offsetParent), '#dating/posts turns on Online and lands there', '');
+    await page.goto(base + '/people/?demo=1#dating/singles');
+    await settle(page); await ppReady(page);
+    await page.waitForTimeout(800);
+    check(await page.evaluate(() => document.body.dataset.world === 'irl'), '#dating/singles turns Real life back on', '');
     await page.goto(base + '/people/?demo=1#neighbors');
     await settle(page); await ppReady(page);
     const k = await page.$eval('.pp-sec[data-sec="free"] .card.board', (c) => c.dataset.k);
@@ -13492,14 +13505,19 @@ async function thePeopleApp(browser, base) {
     await ctx.close();
   });
 
-  await group('people: the boards not switched on yet (live)', async () => {
-    const { ctx, page, errors } = await newPage(browser, base, { rpc: (fn, a) => (fn === 'nn_posts_list' && a.p_board !== 'people' ? { status: 404, body: { code: 'PGRST202', message: 'no' } } : undefined) });
-    await page.goto(base + '/people/#neighbors');
-    await settle(page); await ppReady(page);
-    check(/opens once Stephen switches it on/.test(await ppText(page, 'borrow')) && /opens once Stephen switches it on/.test(await ppText(page, 'shifts')), 'Neighbors says the board opens once it is switched on', '');
-    check(!errors.filter((e) => !/404/.test(e)).length, 'no console errors but the 404s themselves', errors.join(' | '));
-    await ctx.close();
-  });
+  /* before nn-APPS.sql the server knows nn_posts_list but not the new boards:
+     it answers bad_board (P0001); with no boards at all, 404 PGRST202 */
+  for (const [what, answer] of [['bad_board', { status: 400, body: { code: 'P0001', message: 'bad_board' } }], ['404', { status: 404, body: { code: 'PGRST202', message: 'no' } }]]) {
+    await group('people: the boards not switched on yet, ' + what + ' (live)', async () => {
+      const { ctx, page, errors } = await newPage(browser, base, { rpc: (fn, a) => (fn === 'nn_posts_list' && a.p_board !== 'people' ? answer : undefined) });
+      await page.goto(base + '/people/#neighbors');
+      await settle(page); await ppReady(page);
+      check(/opens once Stephen switches it on/.test(await ppText(page, 'borrow')) && /opens once Stephen switches it on/.test(await ppText(page, 'shifts')), 'Neighbors says the board opens once it is switched on', '');
+      check(!(await page.$('.panel:not([hidden]) [data-post]:not([hidden])')) && !(await page.$$eval('.panel:not([hidden]) .addrow:not([hidden])', (n) => n.length)), 'and offers no post button that would be refused', '');
+      check(!errors.filter((e) => !/40[04]/.test(e)).length, 'no console errors but the refusals themselves', errors.join(' | '));
+      await ctx.close();
+    });
+  }
 
   /* the gallery: each tab at 390 and 1280, light and dark, on the demo */
   for (const combo of COMBOS4) {

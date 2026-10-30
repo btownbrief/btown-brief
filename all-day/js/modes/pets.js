@@ -29,7 +29,7 @@ function load() {
   return Promise.all([
     app.demo ? kit.demo('pets').then((d) => d.events || []) : null,
     kit.datingPets().then((j) => { S.dp = j; }),
-  ]).then(([demoEvents]) => Promise.all([kit.events(demoEvents).then((e) => { S.events = e; }), reload()]));
+  ]).then(([demoEvents]) => Promise.all([kit.events(demoEvents, (e) => { S.events = e; mode.redraw(); }).then((e) => { S.events = e; }), reload()]));
 }
 function reload() {
   return Promise.all([
@@ -40,7 +40,6 @@ function reload() {
 const words = (p) => [p.title, p.body, p.place].filter(Boolean).join(' ');
 const petPlans = () => S.plans.filter((p) => PETS.test(words(p))).filter((p) => { const at = whenMs((p.meta || {}).when, Date.parse(p.created_at)); return at == null || at > Date.now() - PAST_GRACE; });
 const lostMeta = (p) => { const m = p.meta || {}; return [kit.kindWord(p.kind), m.seen ? 'Seen ' + m.seen : '', m.when || '', m.got ? 'Home again' : ''].filter(Boolean).join(' · '); };
-const after = () => reload().then(mode.redraw);
 
 function parkRow(x) {
   const r = el('div', 'lrow');
@@ -72,7 +71,7 @@ const mode = kit.tab({
       draw(b) {
         b.appendChild(kit.postButton('Post a dog park plan', { board: 'people', kind: 'plan', heading: 'A dog park plan', title: 'What’s the plan', titlePlaceholder: 'Dog park hang, bring your pup',
           fields: [{ key: 'when', label: 'When', placeholder: 'Saturday, 9 am' }, { key: 'spots', label: 'Spots', type: 'int', placeholder: '5' }],
-          place: 'Which park', placePlaceholder: 'Starr Farm Dog Park', body: 'Anything to know', notes: ['Say “dog” or “pup” in the title so it lands here.'] }, after));
+          place: 'Which park', placePlaceholder: 'Starr Farm Dog Park', body: 'Anything to know', notes: ['Say “dog” or “pup” in the title so it lands here.'] }));
         const plans = petPlans();
         if (plans.length) kit.feed(b, plans, { tab: KEY, noLeft: true, vote: 'I’d go', meta: (p) => [(p.meta || {}).when, (p.meta || {}).spots ? p.meta.spots + ' spots' : ''].filter(Boolean).join(' · ') });
         else if (S.rp && !S.rp.ok) kit.boardNote(b, S.rp);
@@ -86,9 +85,9 @@ const mode = kit.tab({
           { key: 'when', label: 'When', placeholder: 'This morning' }];
         const r = el('div', 'linkrow chlinks');
         [kit.postButton('Lost a pet', { board: 'neighbors', kind: 'lost', heading: 'A lost pet', title: 'Who they are', titlePlaceholder: 'Grey cat, white socks, answers to Moss', fields,
-          place: 'A place for the map', placePlaceholder: 'A corner or a landmark', body: 'How to know them' }, after),
+          place: 'A place for the map', placePlaceholder: 'A corner or a landmark', body: 'How to know them' }),
         kit.postButton('Found a pet', { board: 'neighbors', kind: 'found', heading: 'A found pet', title: 'Who you found', titlePlaceholder: 'Small brown dog, no collar', fields,
-          place: 'A place for the map', placePlaceholder: 'A corner or a landmark', body: 'Where they are now' }, after)].forEach((x) => r.appendChild(x.firstChild));
+          place: 'A place for the map', placePlaceholder: 'A corner or a landmark', body: 'Where they are now' })].forEach((x) => { if (x.firstChild) r.appendChild(x.firstChild); });
         b.appendChild(r);
         if (S.rl && !S.rl.ok) kit.boardNote(b, S.rl);
         else if (!S.lost.length) b.appendChild(el('p', 'note pad', 'No lost or found pets posted. Good news.'));

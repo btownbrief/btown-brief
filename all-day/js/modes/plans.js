@@ -36,7 +36,7 @@ const meta = (p) => { const m = p.meta || {}; return [m.when, m.spots ? plural(m
 function load() {
   return Promise.all([
     app.demo ? kit.demo('plans') : null,
-    boards.roundTwo().then((v) => { S.round2 = v !== false; }),
+    boards.roundTwo().then((v) => { S.round2 = v === true; }),
   ]).then(reload);
 }
 function reload() {
@@ -60,7 +60,7 @@ function compose() {
   if (S.round2) fields.push({ key: 'ages', label: 'Rough age band', type: 'enum', options: PEOPLE_RULES.ages.map((a) => [a, AGES[a]]), hint: 'On the plan only, never on your profile.' });
   return kit.postButton('Post a plan', { board: 'people', kind: 'plan', heading: 'A plan, open to strangers', title: 'What’s the plan', titlePlaceholder: 'Trivia at Three Needs, need a fifth',
     fields, place: 'Where', placePlaceholder: 'A bar, a park, a corner', body: 'Anything to know',
-    notes: ['Meet somewhere public. To put it on Meetup too, post it from the You tab.'] }, () => reload().then(mode.redraw));
+    notes: ['Meet somewhere public. To put it on Meetup too, post it from the You tab.'] });
 }
 
 const mode = kit.tab({

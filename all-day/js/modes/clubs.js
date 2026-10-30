@@ -136,7 +136,7 @@ function ideaButton(label, kinds, note) {
       { key: 'days', label: 'Which days', placeholder: 'Tuesday nights' },
       { key: 'size', label: 'How many to start', type: 'int', placeholder: '6', hint: 'When this many say they’re in, the first gathering can be planned.' },
     ],
-    body: 'What it would be like', notes: [note] }, () => reload().then(mode.redraw));
+    body: 'What it would be like', notes: [note] });
 }
 
 /* the clubs page's list, one kind at a time */
@@ -190,7 +190,7 @@ const unstarted = () => S.ideas.filter((p) => !ready(p)).sort((a, c) => (Number(
 const music = () => S.ideas.filter((p) => (p.meta || {}).kind === 'music');
 
 const mode = kit.tab({
-  key: KEY, label: 'Clubs', icon: 'flag', boards: ['clubs'],
+  key: KEY, label: 'Clubs', icon: 'flag', boards: ['clubs'], votesCount: true,
   promise: 'Every club in town, and the ones still being started.',
   load, reload,
   count: (ts) => kit.newer(S.ideas, ts),
