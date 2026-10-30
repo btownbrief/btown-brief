@@ -1,0 +1,508 @@
+{
+ "_": "Invented demo data for Out's Events and Nightlife tabs; every name, place, date and price is made up. Dates are days from today ('in'), times are Burlington's ('at').",
+ "lanes": {},
+ "events": [
+  {
+   "id": "d1",
+   "title": "Btown Coffee Club",
+   "in": 2,
+   "at": "10:00",
+   "hours": 2,
+   "days": null,
+   "venue": "Lakeview Roasters",
+   "town": "Burlington",
+   "price": null,
+   "free": null,
+   "url": "https://example.org/out-demo/ev-1",
+   "src": "Meetup",
+   "lanes": [],
+   "own": true,
+   "online": false
+  },
+  {
+   "id": "d2",
+   "title": "Wednesday pickup basketball",
+   "in": 6,
+   "at": "17:30",
+   "hours": 2,
+   "days": null,
+   "venue": "Hillside Fieldhouse",
+   "town": "Burlington",
+   "price": null,
+   "free": null,
+   "url": "https://example.org/out-demo/ev-2",
+   "src": "Meetup",
+   "lanes": [],
+   "own": true,
+   "online": false
+  },
+  {
+   "id": "d3",
+   "title": "Porch jazz, three nights running",
+   "in": -1,
+   "at": "18:00",
+   "hours": 2,
+   "days": 1,
+   "venue": "Maple Porch Stage",
+   "town": "Burlington",
+   "price": "$8",
+   "free": null,
+   "url": "https://example.org/out-demo/ev-3",
+   "src": "Listing Weekly",
+   "lanes": [
+    "live-music"
+   ],
+   "own": false,
+   "online": false
+  },
+  {
+   "id": "d4",
+   "title": "The Lantern Puppets, fall run",
+   "in": -2,
+   "at": "14:00",
+   "hours": 2,
+   "days": 4,
+   "venue": "Harbor Street Theater",
+   "town": "Burlington",
+   "price": "$12; kids $6",
+   "free": null,
+   "url": "https://example.org/out-demo/ev-4",
+   "src": "Listing Weekly",
+   "lanes": [
+    "family"
+   ],
+   "own": false,
+   "online": false
+  },
+  {
+   "id": "d5",
+   "title": "Prints and Paper, the fall show",
+   "in": -3,
+   "at": "10:00",
+   "hours": 2,
+   "days": 20,
+   "venue": "Foundry Gallery",
+   "town": "Winooski",
+   "price": "Free",
+   "free": true,
+   "url": "https://example.org/out-demo/ev-5",
+   "src": "Listing Weekly",
+   "lanes": [
+    "gallery",
+    "free"
+   ],
+   "own": false,
+   "online": false
+  },
+  {
+   "id": "d10",
+   "title": "Fiddle and Feet contra dance",
+   "in": 1,
+   "at": "18:00",
+   "hours": 2,
+   "days": null,
+   "venue": "Grange Hall North",
+   "town": "Essex",
+   "price": "$10",
+   "free": null,
+   "url": "https://example.org/out-demo/ev-10",
+   "src": "Listing Weekly",
+   "lanes": [
+    "live-music"
+   ],
+   "own": false,
+   "online": false
+  },
+  {
+   "id": "d11",
+   "title": "Songwriter open mic, sign-up at 7",
+   "in": 2,
+   "at": "19:30",
+   "hours": 2,
+   "days": null,
+   "venue": "Juniper Listening Room",
+   "town": "Burlington",
+   "price": "Free",
+   "free": true,
+   "url": "https://example.org/out-demo/ev-11",
+   "src": "Listing Weekly",
+   "lanes": [
+    "open-mic",
+    "free"
+   ],
+   "own": false,
+   "online": false
+  },
+  {
+   "id": "d12",
+   "title": "Poetry open mic, five minutes each",
+   "in": 3,
+   "at": "10:00",
+   "hours": 2,
+   "days": null,
+   "venue": "Marble Street Books",
+   "town": "Winooski",
+   "price": "Free",
+   "free": true,
+   "url": "https://example.org/out-demo/ev-12",
+   "src": "Listing Weekly",
+   "lanes": [
+    "open-mic",
+    "free"
+   ],
+   "own": false,
+   "online": false
+  },
+  {
+   "id": "d13",
+   "title": "First Friday gallery walk",
+   "in": 4,
+   "at": "20:00",
+   "hours": 2,
+   "days": null,
+   "venue": "Pine Street studios",
+   "town": "Burlington",
+   "price": "Free",
+   "free": true,
+   "url": "https://example.org/out-demo/ev-13",
+   "src": "Listing Weekly",
+   "lanes": [
+    "gallery",
+    "free"
+   ],
+   "own": false,
+   "online": false
+  },
+  {
+   "id": "d14",
+   "title": "Story time with the harbor seal",
+   "in": 1,
+   "at": "11:00",
+   "hours": 2,
+   "days": null,
+   "venue": "Northgate Library",
+   "town": "South Burlington",
+   "price": "Free",
+   "free": true,
+   "url": "https://example.org/out-demo/ev-14",
+   "src": "Listing Weekly",
+   "lanes": [
+    "family",
+    "free"
+   ],
+   "own": false,
+   "online": false
+  },
+  {
+   "id": "d15",
+   "title": "Lantern walk in the Intervale",
+   "in": 2,
+   "at": "18:00",
+   "hours": 2,
+   "days": null,
+   "venue": "Riverbend Farm",
+   "town": "Burlington",
+   "price": "$5",
+   "free": null,
+   "url": "https://example.org/out-demo/ev-15",
+   "src": "Listing Weekly",
+   "lanes": [
+    "outdoors"
+   ],
+   "own": false,
+   "online": false
+  },
+  {
+   "id": "d16",
+   "title": "Shoreline cleanup and cider",
+   "in": 3,
+   "at": "19:30",
+   "hours": 2,
+   "days": null,
+   "venue": "Pier Seven",
+   "town": "Burlington",
+   "price": "Free",
+   "free": true,
+   "url": "https://example.org/out-demo/ev-16",
+   "src": "Listing Weekly",
+   "lanes": [
+    "civic",
+    "free"
+   ],
+   "own": false,
+   "online": false
+  },
+  {
+   "id": "d17",
+   "title": "Ward 3 neighborhood meeting",
+   "in": 4,
+   "at": "10:00",
+   "hours": 2,
+   "days": null,
+   "venue": "Elm Street Community Room",
+   "town": "Burlington",
+   "price": "Free",
+   "free": true,
+   "url": "https://example.org/out-demo/ev-17",
+   "src": "Listing Weekly",
+   "lanes": [
+    "civic",
+    "free"
+   ],
+   "own": false,
+   "online": false
+  },
+  {
+   "id": "d18",
+   "title": "Basement funk night",
+   "in": 1,
+   "at": "20:30",
+   "hours": 2,
+   "days": null,
+   "venue": "The Low Room",
+   "town": "Burlington",
+   "price": "$10",
+   "free": null,
+   "url": "https://example.org/out-demo/ev-18",
+   "src": "Listing Weekly",
+   "lanes": [
+    "nightlife"
+   ],
+   "own": false,
+   "online": false
+  },
+  {
+   "id": "d19",
+   "title": "Late set: the Quiet Hours trio",
+   "in": 2,
+   "at": "11:00",
+   "hours": 2,
+   "days": null,
+   "venue": "Copper Kettle",
+   "town": "Burlington",
+   "price": "$15",
+   "free": null,
+   "url": "https://example.org/out-demo/ev-19",
+   "src": "Listing Weekly",
+   "lanes": [
+    "live-music"
+   ],
+   "own": false,
+   "online": false
+  },
+  {
+   "id": "d20",
+   "title": "Leaf-peeping bike ride, easy pace",
+   "in": 3,
+   "at": "18:00",
+   "hours": 2,
+   "days": null,
+   "venue": "Causeway trailhead",
+   "town": "Colchester",
+   "price": "Free",
+   "free": true,
+   "url": "https://example.org/out-demo/ev-20",
+   "src": "Listing Weekly",
+   "lanes": [
+    "outdoors",
+    "free"
+   ],
+   "own": false,
+   "online": false
+  },
+  {
+   "id": "d21",
+   "title": "Pumpkin carving for little ones",
+   "in": 4,
+   "at": "19:30",
+   "hours": 2,
+   "days": null,
+   "venue": "Hillcrest Rec Center",
+   "town": "Williston",
+   "price": "$4",
+   "free": null,
+   "url": "https://example.org/out-demo/ev-21",
+   "src": "Listing Weekly",
+   "lanes": [
+    "family"
+   ],
+   "own": false,
+   "online": false
+  },
+  {
+   "id": "d22",
+   "title": "Indie rock triple bill",
+   "in": 1,
+   "at": "10:00",
+   "hours": 2,
+   "days": null,
+   "venue": "The Signal Room",
+   "town": "South Burlington",
+   "price": "$18",
+   "free": null,
+   "url": "https://example.org/out-demo/ev-22",
+   "src": "Listing Weekly",
+   "lanes": [
+    "live-music"
+   ],
+   "own": false,
+   "online": false
+  },
+  {
+   "id": "d23",
+   "title": "Opening night: small paintings",
+   "in": 2,
+   "at": "20:00",
+   "hours": 2,
+   "days": null,
+   "venue": "Hollow Frame Studio",
+   "town": "Burlington",
+   "price": "Free",
+   "free": true,
+   "url": "https://example.org/out-demo/ev-23",
+   "src": "Listing Weekly",
+   "lanes": [
+    "gallery",
+    "free"
+   ],
+   "own": false,
+   "online": false
+  },
+  {
+   "id": "d24",
+   "title": "Board game social",
+   "in": 3,
+   "at": "20:30",
+   "hours": 2,
+   "days": null,
+   "venue": "Rook and Pawn Cafe",
+   "town": "Winooski",
+   "price": "Free",
+   "free": true,
+   "url": "https://example.org/out-demo/ev-24",
+   "src": "Listing Weekly",
+   "lanes": [
+    "nightlife",
+    "free"
+   ],
+   "own": false,
+   "online": false
+  },
+  {
+   "id": "d40",
+   "title": "Thirties mixer on the rooftop",
+   "in": 2,
+   "at": "18:30",
+   "hours": 2,
+   "days": null,
+   "venue": "Skyline Terrace",
+   "town": "Burlington",
+   "price": "$5",
+   "free": null,
+   "url": "https://example.org/out-demo/ev-40",
+   "src": "Listing Weekly",
+   "lanes": [
+    "nightlife"
+   ],
+   "own": false,
+   "online": false
+  },
+  {
+   "id": "d41",
+   "title": "Trivia night, teams of six",
+   "in": 3,
+   "at": "19:00",
+   "hours": 2,
+   "days": null,
+   "venue": "The Stag and Lantern",
+   "town": "Burlington",
+   "price": "Free",
+   "free": true,
+   "url": "https://example.org/out-demo/ev-41",
+   "src": "Listing Weekly",
+   "lanes": [
+    "nightlife",
+    "free"
+   ],
+   "own": false,
+   "online": false
+  },
+  {
+   "id": "d42",
+   "title": "Singles speed dating, 40s and up",
+   "in": 4,
+   "at": "19:00",
+   "hours": 2,
+   "days": null,
+   "venue": "Velvet Hour Bar",
+   "town": "Burlington",
+   "price": "$25; ticketed",
+   "free": null,
+   "url": "https://example.org/out-demo/ev-42",
+   "src": "Listing Weekly",
+   "lanes": [
+    "nightlife"
+   ],
+   "own": false,
+   "online": false
+  },
+  {
+   "id": "d43",
+   "title": "Karaoke Thursdays",
+   "in": 6,
+   "at": "21:00",
+   "hours": 2,
+   "days": null,
+   "venue": "Neon Mule",
+   "town": "Winooski",
+   "price": "Free",
+   "free": true,
+   "url": "https://example.org/out-demo/ev-43",
+   "src": "Listing Weekly",
+   "lanes": [
+    "nightlife",
+    "free"
+   ],
+   "own": false,
+   "online": false
+  },
+  {
+   "id": "d50",
+   "title": "Rent-to-own, explained (webinar)",
+   "in": 3,
+   "at": "12:00",
+   "hours": 2,
+   "days": null,
+   "venue": "Online",
+   "town": "",
+   "price": "Free",
+   "free": true,
+   "url": "https://example.org/out-demo/ev-50",
+   "src": "Listing Weekly",
+   "lanes": [
+    "free"
+   ],
+   "own": false,
+   "online": true
+  },
+  {
+   "id": "d51",
+   "title": "Lake history talk, livestreamed",
+   "in": 5,
+   "at": "19:00",
+   "hours": 2,
+   "days": null,
+   "venue": "Harbor Museum and online",
+   "town": "Burlington",
+   "price": "Free",
+   "free": true,
+   "url": "https://example.org/out-demo/ev-51",
+   "src": "Listing Weekly",
+   "lanes": [
+    "free"
+   ],
+   "own": false,
+   "online": true
+  }
+ ]
+}

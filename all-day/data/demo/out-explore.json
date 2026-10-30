@@ -1,0 +1,237 @@
+{
+ "_": "Invented demo data for Out's Explore tab; every name, place, date and price is made up. Dates are days from today ('in'), times are Burlington's ('at').",
+ "walks": {
+  "tour": {
+   "name": "A downtown walking tour",
+   "duration": "About a mile, an hour at an easy pace.",
+   "stops": [
+    {
+     "title": "The white church"
+    },
+    {
+     "title": "The old ferry dock"
+    }
+   ]
+  },
+  "routes": [
+   {
+    "id": "r1",
+    "title": "The waterfront loop",
+    "blurb": "Down the hill to the lake and back up by the old rail yard.",
+    "pins": [
+     "p1",
+     "p2",
+     "p3"
+    ]
+   }
+  ],
+  "pins": [
+   {
+    "id": "p0",
+    "title": "The white church",
+    "tease": "The steeple everyone gives directions from.",
+    "audio": "audio/demo.mp3",
+    "secs": 100
+   },
+   {
+    "id": "p1",
+    "title": "The old ferry dock",
+    "tease": "Where the boats to the islands tied up.",
+    "audio": "audio/demo.mp3",
+    "secs": 107
+   },
+   {
+    "id": "p2",
+    "title": "The rail yard",
+    "tease": "A roundhouse once stood where the bike path bends.",
+    "audio": "audio/demo.mp3",
+    "secs": 114
+   },
+   {
+    "id": "p3",
+    "title": "The corner bakery",
+    "tease": "Ninety years of bread on one corner.",
+    "audio": "audio/demo.mp3",
+    "secs": 121
+   }
+  ]
+ },
+ "then": {
+  "places": [
+   {
+    "id": "t0",
+    "kind": "building",
+    "address": "2 Church St",
+    "now": "a bookshop",
+    "photos": 2,
+    "lat": 44.48,
+    "lng": -73.2127,
+    "timeline": [
+     {
+      "from": "1890",
+      "to": "1955",
+      "what": "A hat maker and a tailor upstairs",
+      "url": "https://example.org/out-demo/th-a0"
+     },
+     {
+      "from": "1955",
+      "to": null,
+      "what": "A five-and-dime",
+      "url": "https://example.org/out-demo/th-b0"
+     }
+    ]
+   },
+   {
+    "id": "t1",
+    "kind": "building",
+    "address": "14 Church St",
+    "now": "a cafe",
+    "photos": 0,
+    "lat": 44.4788,
+    "lng": -73.2123,
+    "timeline": [
+     {
+      "from": "1902",
+      "to": "1971",
+      "what": "A dry goods store",
+      "url": "https://example.org/out-demo/th-a1"
+     },
+     {
+      "from": "1971",
+      "to": null,
+      "what": "A record shop",
+      "url": "https://example.org/out-demo/th-b1"
+     }
+    ]
+   },
+   {
+    "id": "t2",
+    "kind": "building",
+    "address": "31 Church St",
+    "now": "offices",
+    "photos": 3,
+    "lat": 44.477599999999995,
+    "lng": -73.2127,
+    "timeline": [
+     {
+      "from": "1885",
+      "to": "1960",
+      "what": "A hotel with a ballroom",
+      "url": "https://example.org/out-demo/th-a2"
+     },
+     {
+      "from": "1960",
+      "to": null,
+      "what": "A department store",
+      "url": "https://example.org/out-demo/th-b2"
+     }
+    ]
+   },
+   {
+    "id": "t3",
+    "kind": "building",
+    "address": "48 Church St",
+    "now": null,
+    "photos": 1,
+    "lat": 44.4764,
+    "lng": -73.2123,
+    "timeline": [
+     {
+      "from": "1920",
+      "to": "1988",
+      "what": "A movie house",
+      "url": "https://example.org/out-demo/th-a3"
+     },
+     {
+      "from": "1988",
+      "to": null,
+      "what": "A shoe store",
+      "url": "https://example.org/out-demo/th-b3"
+     }
+    ]
+   }
+  ]
+ },
+ "conditions": {
+  "counts": {
+   "machine_readable_ids": [
+    "c1",
+    "c2"
+   ]
+  },
+  "sources": [
+   {
+    "id": "c1",
+    "name": "City trail alerts",
+    "owner": "Lakeside Parks",
+    "url": "https://example.org/out-demo/c1",
+    "covers": [
+     "trail closures",
+     "mud season"
+    ],
+    "update_cadence": "Posted as things change"
+   },
+   {
+    "id": "c2",
+    "name": "Skating rink status",
+    "owner": "Lakeside Parks",
+    "url": "https://example.org/out-demo/c2",
+    "covers": [
+     "outdoor rinks",
+     "ice"
+    ],
+    "update_cadence": "Daily in winter"
+   },
+   {
+    "id": "c3",
+    "name": "Mountain bike trail report",
+    "owner": "Trail club",
+    "url": "https://example.org/out-demo/c3",
+    "covers": [
+     "bike trails",
+     "wet closures"
+    ],
+    "update_cadence": "Weekly"
+   }
+  ],
+  "dog_parks": [
+   {
+    "id": "d1",
+    "name": "Lakeshore Dog Run",
+    "town": "Burlington",
+    "kind": "off-leash fenced dog park",
+    "hours": "Dawn to dusk",
+    "leash_rule": "Off-leash inside the fence",
+    "source_url": "https://example.org/out-demo/d1"
+   },
+   {
+    "id": "d2",
+    "name": "North Cove Dog Beach",
+    "town": "Burlington",
+    "kind": "dog beach",
+    "hours": "Dawn to dusk",
+    "season": "May to October",
+    "leash_rule": "Off-leash in the water",
+    "source_url": "https://example.org/out-demo/d2"
+   }
+  ]
+ },
+ "beaches": {
+  "beaches": [
+   {
+    "name": "North Cove",
+    "status": "open",
+    "reason": "Safe",
+    "ecoli": 12,
+    "sampled": "this morning"
+   },
+   {
+    "name": "South Cove",
+    "status": "closed",
+    "reason": "Cyanobacteria",
+    "ecoli": null,
+    "sampled": "this morning"
+   }
+  ]
+ }
+}

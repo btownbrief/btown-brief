@@ -1,0 +1,47 @@
+{
+  "_about": "Spec for Out's reader-submitted event form (Events > Submit). Nothing here is built yet: this is the contract a builder implements. The verification rules are the newsletter's own (newsletter/AGENTS.md golden rules 'Every event ships with a URL', 2026-07-10, and 'Real before accurate', 2026-08-17, written after the Water Lantern Festival scam shipped). Submissions land in a moderation queue; nothing a reader types is ever shown before Stephen or a check approves it.",
+  "generated": "2026-10-29",
+  "fields": [
+    {"key": "title", "label": "Event name", "type": "text", "required": true, "max": 120},
+    {"key": "start", "label": "Starts", "type": "datetime-local", "required": true, "rule": "Must be in the future and within 120 days."},
+    {"key": "end", "label": "Ends", "type": "datetime-local", "required": false, "rule": "After start; multi-day allowed up to 60 days (exhibits)."},
+    {"key": "recurring", "label": "Repeats", "type": "select", "options": ["no", "weekly", "monthly", "other (describe)"], "required": true},
+    {"key": "venue", "label": "Venue or place", "type": "text", "required": true, "autocomplete": "scripts/events/venues.json names"},
+    {"key": "address", "label": "Street address", "type": "text", "required": true, "rule": "Must resolve to a coverage town (Burlington, South Burlington, Winooski, Essex, Essex Junction, Williston, Shelburne, Colchester) or be flagged out-of-area."},
+    {"key": "url", "label": "Link to the event's own page", "type": "url", "required": true, "rule": "https only; must return 200 and mention the title or date. No link, no listing: 'events with no findable URL get cut, not shipped bare'."},
+    {"key": "price", "label": "Cost", "type": "select+text", "options": ["Free", "By donation", "Paid (enter the price)", "Paid, ticketed (enter price and ticket link)"], "required": true, "rule": "Never defaults to Free."},
+    {"key": "ticket_url", "label": "Ticket link", "type": "url", "required_if": "price is ticketed"},
+    {"key": "lanes", "label": "What kind of event", "type": "multiselect", "options": ["live-music", "open-mic", "gallery", "free", "family", "outdoors", "sports-watch", "civic", "nightlife"], "required": false, "rule": "Reader's pick is a suggestion; scripts/out/lanes.py tag_event() runs on approval and its result wins where they disagree, with both kept for review."},
+    {"key": "age", "label": "Who it's for", "type": "select", "options": ["All ages", "Kids and families", "18+", "21+"], "required": false},
+    {"key": "description", "label": "Two sentences about it", "type": "textarea", "required": true, "max": 400},
+    {"key": "organizer_name", "label": "Who's putting it on", "type": "text", "required": true},
+    {"key": "organizer_relation", "label": "You are", "type": "select", "options": ["the organizer", "the venue", "a performer", "just spreading the word"], "required": true},
+    {"key": "independent_source_url", "label": "Another page that lists it (venue site, city calendar, news, another calendar)", "type": "url", "required_if": "ticketed AND organizer not on the known list", "help": "We need one page the organizer doesn't control before we list ticketed events from new organizers."},
+    {"key": "contact_email", "label": "Your email (never shown)", "type": "email", "required": true, "privacy": "Stored for follow-up only; never published, never added to the newsletter list without a separate opt-in."},
+    {"key": "photo", "label": "Poster or photo", "type": "image", "required": false, "max_mb": 5}
+  ],
+  "verification": {
+    "always": [
+      "url returns 200 over https and its text contains the title or the date (automatic check).",
+      "Denylist: reject if title, url, venue or description matches newsletter/reference/scam-operators.md (today: lunaticketing, 'Light the Night'); same regex as merge_events.py SCAM_OPERATORS.",
+      "Duplicate check against data/events/events.json (same date, similar title, same venue): attach to the existing listing instead of a second row.",
+      "Online-only and yard/garage/estate sales are routed elsewhere (online: rejected; yard sales: the seasonal yard-sale map, see data/out/yard-sale-sources.json)."
+    ],
+    "ticketed_unknown_organizer": {
+      "rule": "For any TICKETED event whose organizer is not a known local venue, institution, or person, the organizer's own pages (their FB event, their ticketing site) count for details but NEVER for existence. Existence needs ONE source the organizer doesn't control: the venue's own site or socials, the city/parks department, local press, or a second independent calendar source.",
+      "known_organizer_test": "Organizer or venue matches a venue in scripts/events/venues.json, a source in scripts/events/sources/, a club in data/groups.json, or Stephen's own events (STEPHEN_OWN).",
+      "independent_source_test": "independent_source_url's domain differs from url's and ticket_url's domains and is not a ticketing or social domain (eventbrite, ticketleap, lunaticketing, facebook, instagram, allevents, eventbrite clones).",
+      "plausibility": "Sanity-check physical plausibility (a lantern float needs water; Overlook Park is a hilltop). Flag, don't auto-reject.",
+      "if_unverified": "Hold in the queue and tell Stephen; never auto-publish."
+    },
+    "free_or_known": "Free community events and known venues/organizers need only the always-checks plus Stephen's one-tap approve."
+  },
+  "states": ["submitted", "auto-checked", "needs-independent-source", "approved", "rejected", "expired"],
+  "storage": "A Supabase table beside the existing boards (all-day/supabase/), insert-only for anon with a rate limit per email and IP, read of approved rows only. Built by the shell agent, not here.",
+  "display": "Approved rows join the Events lanes with source 'reader' and a 'Submitted by the organizer' or 'Submitted by a reader' line; the newsletter pipeline can read the same approved rows as one more source.",
+  "open_questions_for_stephen": [
+    "Who approves: Stephen only, or a trusted second person?",
+    "Should approved reader events also flow into the Monday/Friday calendar automatically, or only into the app?",
+    "Paid placement: free listings only, or a paid 'featured' option later?"
+  ]
+}
