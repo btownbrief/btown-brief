@@ -7,7 +7,7 @@ export default {
   accent: '--app-paper',
   href: '../paper/',
   url: 'https://guide.btownbrief.com/paper/',
-  line: 'The Btown Brief, front to back.',
+  line: 'The news outlet and the front door.',
   tabs: [
     { key: 'front', label: 'Front', icon: 'paper',
       promise: 'Today’s edition, the questions, and today’s picks.',

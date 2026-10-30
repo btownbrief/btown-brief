@@ -41,7 +41,7 @@ import { bindGestures } from './gestures.js';
 import { el, esc, safeHref, ICON, art, mark, cards, pills, button, setPalette, setJump, worldSwitch, world } from './ui.js';
 import { bindShell, spy as spySections } from './sections.js';
 import * as asks from './asks.js';
-import { current as currentApp, keyOf, problems } from './apps/index.js';
+import { APPS, current as currentApp, keyOf, problems } from './apps/index.js';
 import * as switcher from './switcher.js';
 
 const $ = (id) => document.getElementById(id);
@@ -538,6 +538,14 @@ function settingsSheet() {
   sheet('Settings', (body) => {
     body.appendChild(el('div', 'sheet-h', 'Appearance'));
     body.appendChild(pills([['auto', 'Follow phone'], ['light', 'Light'], ['dark', 'Dark']], store.theme(), (v) => { store.setTheme(v); paintThemeBtn(); }));
+
+    /* the keyboard's and the screen reader's way to the switcher (the pill's hold is the thumb's) */
+    body.appendChild(el('div', 'sheet-h', 'Btown apps'));
+    const apps = el('div', 'sheet-row', '<div class="t">' + esc('Switch apps') + '</div>');
+    const sw = button('Show all eight', 'ghost sm', () => { closeSheet(); switcher.open(); });
+    sw.dataset.apps = '1';
+    apps.appendChild(sw);
+    body.appendChild(apps);
 
     body.appendChild(el('div', 'sheet-h', 'Your account'));
     const acct = el('div');
@@ -1091,8 +1099,23 @@ function legacy(h) {
   return { ig: 'wire', music: 'whatnow/tonight', wander: 'whatnow' }[m[1]];
 }
 
+/* A link to a tab this app has not got, that another app has (a
+   restaurant card's #food/<key> read in Out), opens in that app: the app
+   the map gives it before All Day, which still hosts its nine until wave
+   1. True when the page is on its way there. */
+const hostsTab = (a, k) => a.tabs.some((t) => keyOf(t) === k) || Object.prototype.hasOwnProperty.call(a.hosted || {}, k);
+function elsewhere(h) {
+  const k = (h.match(/^([a-z]+)(\/|$)/) || [])[1];
+  if (!k || known(k)) return false;
+  const there = APPS.filter((a) => a.id !== APP.id && hostsTab(a, k)).sort((a, b) => (a.id === 'all-day') - (b.id === 'all-day'))[0];
+  if (!there) return false;
+  location.replace(new URL(there.href, document.baseURI).pathname + (demo ? '?demo=1' : '') + '#' + h);
+  return true;
+}
+
 function parseHash() {
   let h = location.hash.replace(/^#/, '');
+  if (elsewhere(h)) return { tab: null, param: null };
   const moved = APP.id === 'all-day' ? legacy(h) : null;
   if (moved) { history.replaceState(null, '', location.pathname + location.search + '#' + moved); h = moved; }
   const m = h.match(/^([a-z]+)\/(.*)$/);
@@ -1117,6 +1140,7 @@ function paintTabs() {
 
 export function route() {
   const { tab, param } = parseHash();
+  if (!tab) return;
   const mod = registry[tab];
   if (!mod) return;
   /* a new address is a new place: a sheet left open (Settings, a mission,
@@ -1246,9 +1270,9 @@ export function start() {
     bar.appendChild(b);
   });
 
-  /* a wide screen's rail ends with the eight apps (switcher.js); the
-     rail's name and logo stay as they were */
-  bar.appendChild(switcher.button('rail'));
+  /* the eight apps: hold the bar's centre cell (switcher.js) */
+  const cells = bar.querySelectorAll('button[data-tab]');
+  if (cells.length) switcher.bindHold(cells[switcher.centreIndex(cells.length)]);
 
   /* visits, time on screen, and a reader arriving from the newsletter */
   asks.boot(demo, toast, APP);
@@ -1263,6 +1287,8 @@ export function start() {
   route();
   /* the No-algorithm challenge: its card on the Wire and #challenge. Loaded
      after the first route, so it can never hold up or break the boot. */
+  /* once, on a first visit: "Hold the middle button to switch apps" */
+  setTimeout(() => switcher.coach(), 800);
   if (panels.wire) import('./challenge.js').then((m) => m.start(panels.wire)).catch((e) => console.error('[all-day] challenge', e));
 }
 
@@ -1289,9 +1315,33 @@ $('wordmark').addEventListener('click', (e) => {
   e.preventDefault();
   if (active === HOME) { scrollTop(true); checkNew(); } else go(HOME);
 });
-/* the eight apps and the home-screen card, from the mast (switcher.js) */
-$('wordmark').after(switcher.button('mast'));
-switcher.bind({ sheet, toast, app: APP, demo });
+/* the home-screen card, from the mast, until this app is on the home
+   screen; the switcher's bubble and what is new in the other apps */
+const installBtn = switcher.installButton();
+installBtn.hidden = asks.installed();
+$('theme-btn').before(installBtn);
+switcher.bind({ sheet, toast, app: APP, demo, newIn });
+
+/* Whether another app has something new since the reader last looked
+   there, for the dot in the switcher. Honest and cheap: a tab of that app
+   whose mode is loaded here too (All Day's Food is Eat's Open now) answers
+   newSince() against that app's own last visit; on ?demo=1 the shelves'
+   demo files say (the demo pretends the last look was four hours ago).
+   Anything else is unknown, and unknown is no dot. */
+const otherDemo = Object.create(null);
+function newIn(a) {
+  if (demo) {
+    const d = otherDemo[a.id];
+    return !!(d && Object.values(d.tabs || {}).some((t) => (t.sections || []).some((s) => Number(s.hours) < 4)));
+  }
+  const base = switcher.visitBaseOf(a.id);
+  if (!base) return false;
+  return a.tabs.some((t) => {
+    const mod = t.mode && registry[t.mode];
+    try { return !!mod && Number(mod.newSince(base)) > 0; } catch (e) { return false; }
+  });
+}
+if (demo) setTimeout(() => APPS.forEach((a) => { if (a.id !== 'all-day') demoJSON('data/demo/apps/' + a.id + '.json').then((j) => { otherDemo[a.id] = j; }, () => {}); }), 1200);
 
 /* -------------------------------------------------- one shell, eight doors */
 /* Every app but All Day has <base href="../all-day/">, so the shared code's

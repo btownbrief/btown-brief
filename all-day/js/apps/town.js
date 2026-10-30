@@ -9,7 +9,7 @@ export default {
   accent: '--app-town',
   href: '../town/',
   url: 'https://guide.btownbrief.com/town/',
-  line: 'Living here.',
+  line: 'Living here: alerts, city hall, the streets, the guides, and work.',
   tabs: [
     { key: 'alerts', label: 'Alerts', icon: 'bell',
       promise: 'Trash day, parking bans, plows and school delays.',

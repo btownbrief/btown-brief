@@ -474,7 +474,10 @@ async function newPage(browser, base, opts = {}) {
   /* The shell's two asks (asks.js: home screen, newsletter) wait for real
      use, which a group that runs the clock forward can reach by accident;
      every group but the asks' own starts as a subscribed, installed reader */
-  if (!opts.asks) await page.addInitScript(() => { try { if (!localStorage.getItem('allday-asks')) localStorage.setItem('allday-asks', JSON.stringify({ subscribed: true, installed: true })); } catch (e) { /* blocked */ } });
+  /* the switcher's coach mark shows once per phone; groups not about it start past it (opts.coach: a new phone) */
+  if (!opts.coach) await page.addInitScript(() => { try { if (!localStorage.getItem('allday-coach-apps')) localStorage.setItem('allday-coach-apps', '1'); } catch (e) { /* blocked */ } });
+  if (!opts.asks) await page.addInitScript(() => { try { if (!localStorage.getItem('allday-asks')) localStorage.setItem('allday-asks', JSON.stringify({ subscribed: true, installed: true, 'installed-out': true, 'installed-eat': true, 'installed-people': true,
+    'installed-body': true, 'installed-town': true, 'installed-play': true, 'installed-paper': true })); } catch (e) { /* blocked */ } });
   /* GoatCounter's own script is stubbed; this records what the app asks it to count */
   await page.addInitScript(() => { window.__gc = []; window.goatcounter = { count: (o) => window.__gc.push(o.path) }; });
   return { ctx, page, errors, supabase };
@@ -13025,73 +13028,175 @@ async function theApps(browser, base) {
     await ad.ctx.close();
   });
 
-  await group('apps: the switcher in the mast and the home-screen card', async () => {
+  await group('apps: hold the pill’s centre to switch apps (a 3, 2, 1 ring, then the bubble)', async () => {
+    const SW = await readFile(path.join(APP, 'js/switcher.js'), 'utf8');
+    const HOLD = Number((SW.match(/export const HOLD_MS = (\d+);/) || [])[1]);
+    const GRACE = Number((SW.match(/export const GRACE_MS = (\d+);/) || [])[1]);
+    check(HOLD === 1500 && GRACE === 150 && /export const HOLD_TICKS = 3;/.test(SW), 'one named hold: 1.5 s in three ticks, after a 150 ms grace', HOLD + ' ' + GRACE);
+    const { ctx, page, errors } = await newPage(browser, base, { coach: true });
+    await page.addInitScript(() => { window.__buzz = []; navigator.vibrate = (ms) => { window.__buzz.push(ms); return true; }; });
+    await page.goto(base + '/out/?demo=1#events');
+    await settle(page);
+    /* the coach mark, once, on a first visit */
+    await page.waitForSelector('.coachmark', { timeout: 4000 }).catch(() => null);
+    const coachText = await page.evaluate(() => (document.querySelector('.coachmark') || {}).textContent || '');
+    check(coachText === 'Hold the middle button to switch apps', 'a first visit gets the coach mark', coachText);
+    const cell = await page.$eval('#tabbar .holdcell', (b) => { const r = b.getBoundingClientRect(); return { id: b.id, x: r.left + r.width / 2, y: r.top + r.height / 2 }; });
+    check(cell.id === 'tab-nightlife', 'the centre cell of Out’s five is Nightlife, the third', cell.id);
+    const cm = await page.evaluate(() => { const e = new MouseEvent('contextmenu', { bubbles: true, cancelable: true }); document.querySelector('#tabbar .holdcell').dispatchEvent(e); return e.defaultPrevented; });
+    check(cm, 'the browser’s long-press menu is kept off the centre cell', '');
+    await page.screenshot({ path: path.join(SHOTS, 'app-switch-coach-390.png') });
+    /* a plain tap opens its tab, with no ring and no bubble */
+    await page.mouse.click(cell.x, cell.y);
+    await page.waitForTimeout(GRACE + 150);
+    const tap = await page.evaluate(() => ({ sel: document.querySelector('#tab-nightlife').getAttribute('aria-selected'), ring: !!document.querySelector('.holdring'), bubble: !!document.querySelector('.appbubble') }));
+    check(tap.sel === 'true' && !tap.ring && !tap.bubble, 'a plain tap opens Nightlife: no ring, no bubble', JSON.stringify(tap));
+    await page.evaluate(() => { location.hash = 'events'; });
+    await page.waitForFunction(() => document.querySelector('#tab-events').getAttribute('aria-selected') === 'true');
+    /* hold: the ring shows after the grace, counts 3, 2, 1; lifting early cancels it */
+    await page.mouse.move(cell.x, cell.y);
+    await page.mouse.down();
+    await page.waitForTimeout(80);
+    const early = await page.evaluate(() => !!document.querySelector('.holdring'));
+    await page.waitForTimeout(GRACE + 120);
+    const n3 = await page.evaluate(() => (document.querySelector('.holdring .hr-n') || {}).textContent || '');
+    await page.waitForTimeout(HOLD / 3);
+    const n2 = await page.evaluate(() => (document.querySelector('.holdring .hr-n') || {}).textContent || '');
+    const at = await page.$eval('.holdring', (r) => { const b = r.getBoundingClientRect(); return [Math.round(b.left + b.width / 2), Math.round(b.top + b.height / 2)]; });
+    await page.screenshot({ path: path.join(SHOTS, 'app-switch-countdown-390.png') });
+    await page.mouse.up();
+    await page.waitForTimeout(HOLD);
+    const cancel = await page.evaluate(() => ({ ring: !!document.querySelector('.holdring'), bubble: !!document.querySelector('.appbubble'), buzz: window.__buzz.length }));
+    check(!early, 'no ring during the grace, so a tap never flashes it', '');
+    check(n3 === '3' && n2 === '2', 'the ring counts down: 3, then 2', n3 + ' ' + n2);
+    check(Math.abs(at[0] - cell.x) <= 2 && Math.abs(at[1] - cell.y) <= 2, 'the ring sits under the finger', JSON.stringify([at, cell]));
+    const stay = await page.evaluate(() => document.querySelector('#tabbar button[aria-selected="true"]').dataset.tab);
+    check(!cancel.ring && !cancel.bubble && !cancel.buzz && stay === 'events', 'lifting once the ring shows cancels it: no bubble, no buzz, no change of tab', JSON.stringify([cancel, stay]));
+    /* the whole hold: the bubble opens on 0, with a light buzz; the tab under the finger does not change */
+    await page.mouse.down();
+    await page.waitForTimeout(GRACE + HOLD + 250);
+    await page.mouse.up();
+    await page.waitForTimeout(200);
+    const b = await page.evaluate(() => ({ rows: [...document.querySelectorAll('.appbubble .ab-row')].map((r) => [r.dataset.app, r.querySelector('.ab-name').textContent, r.querySelector('.ab-line').textContent,
+      new URL(r.href).pathname + new URL(r.href).search, r.getAttribute('aria-current'), !!r.dataset.new]), buzz: window.__buzz, coach: !!document.querySelector('.coachmark'),
+      tab: document.querySelector('#tabbar button[aria-selected="true"]').dataset.tab,
+      above: document.querySelector('.appbubble').getBoundingClientRect().bottom <= document.getElementById('tabbar').getBoundingClientRect().top }));
+    check(JSON.stringify(b.rows.map((r) => r[0])) === JSON.stringify(APP_IDS), 'the bubble: the eight apps, in order', JSON.stringify(b.rows.map((r) => r[0])));
+    check(b.rows.every((r) => r[1] === APPS.find((a) => a.id === r[0]).name && r[2] === APPS.find((a) => a.id === r[0]).line && r[2].length > 0), 'each with its name and its line from the map', JSON.stringify(b.rows.map((r) => r.slice(1, 3))));
+    check(b.rows.every((r) => r[3] === '/' + r[0] + '/?demo=1'), 'each opens its own folder (the demo stays a demo)', JSON.stringify(b.rows.map((r) => r[3])));
+    check(b.rows.filter((r) => r[4] === 'page').map((r) => r[0]).join() === 'out', 'this app is marked', '');
+    const d = await Promise.all(APP_IDS.slice(1).map((id) => demoApp(id).then((j) => [id, Object.values(j.tabs).some((t) => t.sections.some((s) => s.hours < 4))])));
+    const want = Object.fromEntries(d);
+    check(b.rows.every((r) => r[0] === 'out' || r[0] === 'all-day' ? !r[5] : r[5] === want[r[0]]), 'a dot on each other app with something new since the last look there', JSON.stringify(b.rows.map((r) => [r[0], r[5]])));
+    check(JSON.stringify(b.buzz) === '[12]' && b.above && b.tab === 'events', 'a light buzz as it opens, above the pill, and the tab stays put', JSON.stringify([b.buzz, b.above, b.tab]));
+    check(!b.coach, 'using the hold retires the coach mark', '');
+    await page.screenshot({ path: path.join(SHOTS, 'app-switch-bubble-390.png') });
+    await page.keyboard.press('Escape');
+    check(!(await page.$('.appbubble')), 'Escape closes it', '');
+    /* the coach mark never comes back, in any app */
+    await page.goto(base + '/eat/?demo=1');
+    await settle(page);
+    await page.waitForTimeout(1100);
+    check(!(await page.$('.coachmark')), 'and the coach mark stays gone, in every app', '');
+    /* a tile opens that app */
+    const eatCell = await page.$eval('#tabbar .holdcell', (x) => { const r = x.getBoundingClientRect(); return { id: x.id, x: r.left + r.width / 2, y: r.top + r.height / 2 }; });
+    check(eatCell.id === 'tab-bites', 'Eat’s centre cell of six is Bites, the fourth', eatCell.id);
+    await page.mouse.move(eatCell.x, eatCell.y); await page.mouse.down(); await page.waitForTimeout(GRACE + HOLD + 250); await page.mouse.up();
+    await page.waitForSelector('.appbubble');
+    await Promise.all([page.waitForURL(/\/people\/\?demo=1$/), page.click('.appbubble .ab-row[data-app="people"]')]);
+    await settle(page);
+    check((await page.$$eval('#tabbar button[data-tab]', (bs) => bs.map((x) => x.textContent.trim()))).join() === 'You,Plans,Clubs,Dating,Neighbors,Pets,Talk', 'a row opens that app', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+    /* a coach mark closed with its x is gone for good */
+    const c2 = await newPage(browser, base, { coach: true });
+    await c2.page.goto(base + '/all-day/');
+    await settle(c2.page);
+    await c2.page.waitForSelector('.coachmark', { timeout: 4000 }).catch(() => null);
+    const adCell = await c2.page.$eval('#tabbar .holdcell', (x) => x.id);
+    check(adCell === 'tab-whatnow', 'All Day’s centre cell is What Now, fifth of nine', adCell);
+    await c2.page.click('.coachmark button');
+    await c2.page.reload();
+    await settle(c2.page);
+    await c2.page.waitForTimeout(1100);
+    check(!(await c2.page.$('.coachmark')), 'dismissed, the coach mark never comes back', '');
+    /* the keyboard's way: Settings → Btown apps opens the same bubble */
+    await c2.page.click('#settings-btn');
+    await c2.page.click('.sheet-body [data-apps]');
+    await c2.page.waitForSelector('.appbubble');
+    check(await c2.page.evaluate(() => document.activeElement && document.activeElement.closest('.appbubble') && document.activeElement.dataset.app) === 'all-day', 'Settings opens it too, with the focus on this app', '');
+    await c2.ctx.close();
+    /* a wide screen: press and hold the rail's centre row; the bubble opens beside the rail */
+    const w = await newPage(browser, base, { viewport: { width: 1280, height: 800 } });
+    await w.page.goto(base + '/all-day/?demo=1');
+    await settle(w.page);
+    const wc = await w.page.$eval('#tabbar .holdcell', (x) => { const r = x.getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2 }; });
+    await w.page.mouse.move(wc.x, wc.y); await w.page.mouse.down(); await w.page.waitForTimeout(GRACE + HOLD / 2);
+    await w.page.screenshot({ path: path.join(SHOTS, 'app-switch-countdown-1280.png') });
+    await w.page.waitForTimeout(HOLD / 2 + 250); await w.page.mouse.up();
+    await w.page.waitForSelector('.appbubble');
+    const side = await w.page.evaluate(() => document.querySelector('.appbubble').getBoundingClientRect().left >= document.getElementById('tabbar').getBoundingClientRect().right);
+    check(side, 'wide: the bubble opens beside the rail', '');
+    await w.page.screenshot({ path: path.join(SHOTS, 'app-switch-bubble-1280.png') });
+    await w.ctx.close();
+    /* under reduced motion the ring still counts, without the sweep */
+    const r = await newPage(browser, base, { motion: 'reduce' });
+    await r.page.goto(base + '/town/');
+    await settle(r.page);
+    const rc = await r.page.$eval('#tabbar .holdcell', (x) => { const b = x.getBoundingClientRect(); return { id: x.id, x: b.left + b.width / 2, y: b.top + b.height / 2 }; });
+    await r.page.mouse.move(rc.x, rc.y); await r.page.mouse.down(); await r.page.waitForTimeout(GRACE + 150);
+    const rm = await r.page.evaluate(() => ({ n: document.querySelector('.holdring .hr-n').textContent, anim: getComputedStyle(document.querySelector('.holdring .hr-fill')).animationName }));
+    await r.page.mouse.up();
+    check(rc.id === 'tab-streets' && rm.n === '3' && rm.anim === 'none', 'reduced motion: the numbers count, the ring does not sweep', JSON.stringify([rc.id, rm]));
+    await r.ctx.close();
+  });
+
+  await group('apps: the home-screen card in every mast', async () => {
     const IPHONE = 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0 Mobile/15E148 Safari/604.1';
     const ANDROID = 'Mozilla/5.0 (Linux; Android 15; Pixel 9) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Mobile Safari/537.36';
     const { ctx, page, errors } = await newPage(browser, base, { ua: IPHONE, asks: true });
     await page.goto(base + '/out/');
     await settle(page);
-    const btn = await page.$('#mast .appsbtn');
-    check(btn && await btn.evaluate((b) => b.previousElementSibling && b.previousElementSibling.id === 'wordmark'), 'a switcher button right after the wordmark', '');
-    await page.click('#mast .appsbtn');
-    await page.waitForSelector('.sheet-card .appgrid');
-    const sw = await page.evaluate(() => ({ title: document.querySelector('.sheet-head h2').textContent,
-      cells: [...document.querySelectorAll('.appgrid .appcell')].map((a) => [a.dataset.app, a.textContent.trim(), new URL(a.href).pathname, a.getAttribute('aria-current')]),
-      card: document.querySelector('.installcard')?.innerText || '', how: document.querySelector('.installcard .ask-how')?.innerText || '' }));
-    check(sw.title === 'Btown apps' && JSON.stringify(sw.cells.map((c) => c[0])) === JSON.stringify(APP_IDS), 'the sheet: the eight apps, in order', JSON.stringify(sw.cells));
-    check(sw.cells.every((c) => c[2] === '/' + c[0] + '/'), 'each a link to its own folder', JSON.stringify(sw.cells.map((c) => c[2])));
-    check(sw.cells.filter((c) => c[3] === 'page').map((c) => c[0]).join() === 'out', 'this app is marked', JSON.stringify(sw.cells.map((c) => c[3])));
-    check(/Put Out on your home screen/.test(sw.card) && /Share/.test(sw.how) && /Add to Home Screen/.test(sw.how) && /How to bookmark this/.test(sw.card), 'the home-screen card: an iPhone gets Share, then Add to Home Screen', JSON.stringify(sw));
+    check(!!(await page.$('#mast #install-btn:not([hidden])')) && !(await page.$('#mast .appsbtn')), 'the mast carries Add to home screen, and no switcher', '');
+    await page.click('#install-btn');
+    await page.waitForSelector('.sheet-card .installcard');
+    const sw = await page.evaluate(() => ({ title: document.querySelector('.sheet-head h2').textContent, card: document.querySelector('.installcard').innerText, how: document.querySelector('.installcard .ask-how')?.innerText || '' }));
+    check(sw.title === 'On your home screen' && /Put Out on your home screen/.test(sw.card) && /Share/.test(sw.how) && /Add to Home Screen/.test(sw.how) && /How to bookmark this/.test(sw.card),
+      'the card: an iPhone gets Share, then Add to Home Screen, and How to bookmark this', JSON.stringify(sw));
     await page.click('.installcard [data-howto]');
     await page.waitForSelector('.howto-sheet');
-    const how = await page.evaluate(() => ({ title: document.querySelector('.sheet-head h2').textContent, order: [...document.querySelectorAll('.howto')].map((h) => h.dataset.platform),
-      text: document.querySelector('.howto-sheet').innerText }));
+    const how = await page.evaluate(() => ({ title: document.querySelector('.sheet-head h2').textContent, order: [...document.querySelectorAll('.howto')].map((h) => h.dataset.platform), text: document.querySelector('.howto-sheet').innerText }));
     check(how.title === 'Keep Out handy' && JSON.stringify(how.order) === '["iphone","android","computer"]' && /Add to Home Screen/.test(how.text) && /Add to Home screen/.test(how.text),
       'How to bookmark this: iPhone first, then Android, then a computer', JSON.stringify(how));
-    await page.keyboard.press('Escape');
-    await page.click('#mast .appsbtn');
-    await page.waitForSelector('.appgrid');
-    await Promise.all([page.waitForURL(/\/eat\/$/), page.click('.appgrid .appcell[data-app="eat"]')]);
-    await settle(page);
-    const eat = await page.$$eval('#tabbar button[data-tab]', (bs) => bs.map((b) => b.textContent.trim()));
-    check(eat[0] === 'Open now' && eat.length === 6, 'a tile opens that app', JSON.stringify(eat));
+    await page.screenshot({ path: path.join(SHOTS, 'app-install-howto-390.png') });
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
-    /* Android reads its own steps first; the demo's tiles stay in the demo; an installed app says so */
     const and = await newPage(browser, base, { ua: ANDROID, asks: true });
-    await and.page.goto(base + '/town/?demo=1&source=pwa');
+    await and.page.goto(base + '/town/');
     await settle(and.page);
-    await and.page.click('#mast .appsbtn');
-    await and.page.waitForSelector('.appgrid');
-    const a2 = await and.page.evaluate(() => ({ hrefs: [...document.querySelectorAll('.appgrid .appcell')].map((a) => new URL(a.href).search), card: document.querySelector('.installcard').innerText }));
-    check(a2.hrefs.every((s) => s === '?demo=1'), 'in the demo, the tiles open the other apps’ demos', JSON.stringify(a2.hrefs));
-    check(/Town is on your home screen/.test(a2.card) && !/Add to Home/.test(a2.card), 'opened from the home screen, the card says it is there', a2.card);
+    await and.page.click('#install-btn');
     await and.page.click('.installcard [data-howto]');
     await and.page.waitForSelector('.howto-sheet');
     check(await and.page.evaluate(() => document.querySelector('.howto').dataset.platform) === 'android', 'an Android phone sees its own steps first', '');
     await and.ctx.close();
-    /* the wide screen: the rail's name carries the button; the mast's is hidden */
-    const wide = await newPage(browser, base, { viewport: { width: 1280, height: 800 } });
-    await wide.page.goto(base + '/all-day/');
-    await settle(wide.page);
-    const w = await wide.page.evaluate(() => ({ mast: !!document.querySelector('#mast .appsbtn').offsetParent, rail: (document.querySelector('#tabbar .rail-apps') || {}).offsetParent ? document.querySelector('#tabbar .rail-apps').textContent.trim() : '',
-      name: (() => { const s = document.querySelector('.rail-brand span'); return s.getBoundingClientRect().height < 40; })() }));
-    check(!w.mast && w.rail === 'Btown apps' && w.name, 'wide: the switcher is the rail’s last row, and the rail’s name stays on one line', JSON.stringify(w));
-    await wide.page.click('#tabbar .rail-apps');
-    await wide.page.waitForSelector('.appgrid');
-    check(await wide.page.evaluate(() => document.querySelector('.appgrid .appcell.on').dataset.app) === 'all-day' && /\/all-day\/$/.test(wide.page.url()), 'and opens the same sheet, All Day marked, nowhere navigated', wide.page.url());
-    await wide.ctx.close();
-    /* every app's name fits the mast at 390 (a long one drops Saved's word) */
+    const pwa = await newPage(browser, base, { asks: true });
+    await pwa.page.goto(base + '/town/?source=pwa');
+    await settle(pwa.page);
+    check(!!(await pwa.page.$('#install-btn[hidden]')), 'opened from the home screen, the button steps aside', '');
+    await pwa.ctx.close();
+    /* every app's name fits the mast at 390, the button showing or not (a long name drops Saved's word) */
     for (const id of APP_IDS) {
-      const p = await newPage(browser, base);
-      await p.page.goto(base + '/' + id + '/');
-      await settle(p.page);
-      await p.page.evaluate(() => document.fonts.ready);
-      await p.page.waitForTimeout(100);
-      const fit = await p.page.evaluate(() => { const w = document.getElementById('wordmark'); const row = document.querySelector('.mast-row');
-        return { fits: w.scrollWidth <= w.clientWidth + 1, row: row.scrollWidth <= row.clientWidth + 1, tight: document.getElementById('mast').classList.contains('tight') }; });
-      check(fit.fits && fit.row && (id === 'all-day' ? !fit.tight : true), id + ': its name fits the mast at 390' + (id === 'all-day' ? ', Saved keeps its word' : ''), JSON.stringify(fit));
-      await p.ctx.close();
+      for (const asks of [false, true]) {
+        const p = await newPage(browser, base, { asks });
+        await p.page.goto(base + '/' + id + '/');
+        await settle(p.page);
+        await p.page.evaluate(() => document.fonts.ready);
+        await p.page.waitForTimeout(100);
+        const fit = await p.page.evaluate(() => { const w = document.getElementById('wordmark'); const row = document.querySelector('.mast-row');
+          return { fits: w.scrollWidth <= w.clientWidth + 1, row: row.scrollWidth <= row.clientWidth + 1, tight: document.getElementById('mast').classList.contains('tight'), btn: !document.getElementById('install-btn').hidden }; });
+        check(fit.fits && fit.row && fit.btn === asks && (id === 'all-day' ? !fit.tight : true), id + ': its name fits the mast at 390, ' + (asks ? 'with' : 'without') + ' the home-screen button' + (id === 'all-day' ? ', Saved keeps its word' : ''), JSON.stringify(fit));
+        await p.ctx.close();
+      }
     }
   });
 
@@ -13113,13 +13218,25 @@ async function theApps(browser, base) {
     /* shares carry Out's address */
     await page.evaluate(() => import('/all-day/js/app.js').then((m) => m.share('events', 'k1', 'A thing')));
     check(await page.evaluate(() => window.__shared && window.__shared.url) === 'https://guide.btownbrief.com/out/#events/k1', 'a share link is Out’s', await page.evaluate(() => JSON.stringify(window.__shared)));
-    /* an unknown tab lands on Out's first */
-    await page.evaluate(() => { location.hash = 'wire'; });
-    await page.waitForTimeout(400);
-    check(await page.evaluate(() => document.querySelector('#tab-whatnow').getAttribute('aria-selected')) === 'true', 'a tab Out has not got opens Out’s first', '');
     /* the visit is Out's own; All Day's is untouched */
     const keys = await page.evaluate(() => [localStorage.getItem('allday-visit-out') ? 1 : 0, localStorage.getItem('allday-visit') ? 1 : 0]);
     check(JSON.stringify(keys) === '[1,0]', '“new since you last looked” is per app', JSON.stringify(keys));
+    /* a tab no app has opens Out's first */
+    await page.evaluate(() => { location.hash = 'nowhere'; });
+    await page.waitForTimeout(400);
+    check(await page.evaluate(() => document.querySelector('#tab-whatnow').getAttribute('aria-selected')) === 'true' && /\/out\/#nowhere$/.test(await page.evaluate(() => location.href)), 'a tab no app has opens Out’s first', '');
+    /* a card's link to another app's tab opens in that app: a restaurant in Eat, a plan in People, a game in Play, the Wire in All Day */
+    for (const [h, where] of [['food/some-place', '/eat/'], ['people/plan-1', '/people/'], ['games/btown-wordle', '/play/'], ['wire', '/all-day/']]) {
+      await page.goto(base + '/out/');
+      await settle(page);
+      await Promise.all([page.waitForURL((u) => u.pathname === where), page.evaluate((x) => { location.hash = x; }, h)]);
+      await settle(page);
+      const got = await page.evaluate(() => ({ path: location.pathname, hash: location.hash, on: (document.querySelector('#tabbar button[aria-selected="true"]') || {}).dataset?.tab || '' }));
+      check(got.path === where && got.hash === '#' + h && got.on === h.split('/')[0], '#' + h + ' from Out opens in ' + where, JSON.stringify(got));
+    }
+    await page.goto(base + '/all-day/#food');
+    await settle(page);
+    check(new URL(page.url()).pathname === '/all-day/', 'All Day keeps its own Food', page.url());
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
     /* a mode that fails to load becomes a shelf, and the rest of the app runs */

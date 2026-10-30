@@ -8,7 +8,7 @@ export default {
   accent: '--app-eat',
   href: '../eat/',
   url: 'https://guide.btownbrief.com/eat/',
-  line: 'Where to eat right now.',
+  line: 'Where to eat right now, what’s new, what’s closing, and the dinner club.',
   tabs: [
     { mode: 'food', label: 'Open now', top: ['Open', 'Late', 'Patios', 'Map', 'Randomizer', 'Inspections'] },
     { key: 'deals', label: 'Deals', icon: 'tag',

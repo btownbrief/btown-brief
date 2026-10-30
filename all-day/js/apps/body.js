@@ -8,7 +8,7 @@ export default {
   accent: '--app-body',
   href: '../body/',
   url: 'https://guide.btownbrief.com/body/',
-  line: 'Your daily template.',
+  line: 'Your daily template, for you first and then for anyone who wants it.',
   tabs: [
     { mode: 'habits', label: 'Today', top: ['Habits', 'Template', 'Season', 'Forest', 'Wall'] },
     { key: 'train', label: 'Train', icon: 'dumbbell',

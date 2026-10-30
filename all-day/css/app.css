@@ -2705,23 +2705,54 @@ body.bd-full { overflow: hidden; }
 
 /* the switcher's button: small, right after the wordmark (and the rail's
    name), so the mast keeps its line */
-.appsbtn { width: 28px; position: relative; color: var(--lake-muted); }
-.appsbtn::after { content: ""; position: absolute; inset: 0 -6px; }
-.appsbtn .i { width: 17px; height: 17px; }
-/* the room it takes comes out of the gap before the logo and around Saved,
-   so All Day's wordmark still fits a 390 phone */
-.mast .appsbtn + .brandlink { margin-left: 6px; }
-.mast .appsbtn ~ .savedbtn { margin: 0 2px; }
+.installbtn { width: 30px; position: relative; color: var(--lake-muted); }
+.installbtn::after { content: ""; position: absolute; inset: 0 -6px; }
+.installbtn .i { width: 19px; height: 19px; }
+/* the room it takes, while it shows, comes out of the gap before the logo
+   and around Saved, so All Day's wordmark still fits a 390 phone */
+.mast-row:has(.installbtn:not([hidden])) .brandlink { margin-left: 6px; }
+.mast-row:has(.installbtn:not([hidden])) .savedbtn { margin: 0 2px; }
 /* a longer app name than the row holds: Saved keeps its star, drops its word */
 .mast.tight .savedbtn { width: 36px; padding: 0; justify-content: center; }
 .mast.tight .savedbtn > span { display: none; }
-@media (min-width: 1024px) { .mast .appsbtn { display: none; } }
-.rail-apps { display: none; }
-@media (min-width: 1024px) {
-  .tabbar .rail-apps { display: flex; align-items: center; gap: 14px; height: 48px; padding: 0 14px; margin-top: var(--s4);
-    border-radius: var(--r-media); border-top: 1px solid var(--line-soft); color: var(--ink-3); font-size: var(--fs-lead); font-weight: 500; }
-  .tabbar .rail-apps:hover { color: var(--ink); background: var(--paper-2); }
-}
+
+/* the switcher: hold the bar's centre cell. The browser's own long-press
+   menu and text selection stay off it */
+.tabbar .holdcell { -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; }
+/* the countdown under the finger: a ring that fills, 3, 2, 1 */
+.holdring { position: fixed; z-index: 70; width: 92px; height: 92px; margin: -46px 0 0 -46px; pointer-events: none;
+  display: grid; place-items: center; border-radius: var(--r-round); background: var(--dock-glass);
+  backdrop-filter: var(--dock-filter); -webkit-backdrop-filter: var(--dock-filter); box-shadow: var(--dock-shadow); }
+.holdring svg { position: absolute; inset: 0; width: 100%; height: 100%; transform: rotate(-90deg); }
+.holdring circle { fill: none; stroke-width: 5; }
+.holdring .hr-track { stroke: var(--dock-edge); }
+.holdring .hr-fill { stroke: var(--sunset); stroke-linecap: round; stroke-dasharray: 100; stroke-dashoffset: 100;
+  animation: holdring-fill var(--hold-ms) linear forwards; }
+.holdring .hr-n { position: relative; font-family: var(--serif); font-size: var(--fs-hero); font-weight: 600; color: var(--dock-ink); }
+@keyframes holdring-fill { to { stroke-dashoffset: 0; } }
+@media (prefers-reduced-motion: reduce) { .holdring .hr-fill { animation: none; stroke-dashoffset: 0; } }
+/* the bubble above the pill: the eight apps, this one marked */
+.appbubble { position: fixed; z-index: 60; left: var(--dock-inset); right: var(--dock-inset); max-width: 440px; margin-inline: auto;
+  padding: var(--s2); border-radius: var(--r-sheet); background: var(--paper); color: var(--ink);
+  border: 1px solid var(--line); box-shadow: var(--shadow-float); }
+.appbubble.side { right: auto; width: 360px; margin: 0; }
+.ab-list { display: grid; gap: 2px; }
+.ab-row { position: relative; display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: var(--s3);
+  min-height: 52px; padding: var(--s1) var(--s2); border-radius: var(--r-media); }
+.ab-row:hover, .ab-row:focus-visible { background: var(--paper-2); }
+.ab-row.on { background: var(--paper-2); }
+.ab-row.on .apptile { box-shadow: 0 0 0 2px var(--paper), 0 0 0 4px var(--tile-pop); }
+.ab-words { display: grid; min-width: 0; }
+.ab-name { font-size: var(--fs-lead); font-weight: 600; line-height: var(--lh-tight); }
+.ab-line { font-size: var(--fs-meta); color: var(--ink-3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ab-row .nd { width: 8px; height: 8px; border-radius: var(--r-round); background: var(--sunset); }
+.ab-here .i { width: 18px; height: 18px; color: var(--ink-3); }
+/* once, on a first visit: the coach mark over the centre cell */
+.coachmark { position: fixed; z-index: 55; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: var(--s1);
+  max-width: calc(100vw - 32px); padding: var(--s1) var(--s1) var(--s1) var(--s4); border-radius: var(--r-pill);
+  background: var(--lake); color: var(--lake-ink); font-size: var(--fs-button); font-weight: 600; box-shadow: var(--shadow-float); white-space: nowrap; }
+.coachmark .iconbtn { color: var(--lake-ink); }
+.coachmark.side { transform: none; }
 
 /* the sheet: eight tiles, this one ringed, then the home-screen card */
 .appgrid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--s4) var(--s2); padding: var(--s2) 0 var(--s4); }

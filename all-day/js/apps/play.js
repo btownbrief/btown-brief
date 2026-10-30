@@ -8,7 +8,7 @@ export default {
   accent: '--app-play',
   href: '../play/',
   url: 'https://guide.btownbrief.com/play/',
-  line: 'The arcade and the city game.',
+  line: 'The arcade, the city game, the drawing world and the boards.',
   tabs: [
     { mode: 'games', label: 'Arcade', top: ['New', 'Sections', 'Champs', 'Challenge a neighbor', 'Out in Burlington'] },
     { key: 'daily', label: 'Daily', icon: 'calcheck',

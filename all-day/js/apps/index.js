@@ -17,7 +17,7 @@
               the mast takes the app's own --lake there too
      href     the folder, relative to /all-day/ (the <base> every app shares)
      url      the folder on the live site, for share links
-     line     the app in a few words, for the switcher
+     line     the app's one line from the map, under its name in the switcher
      tabs     the bottom bar, in its fixed order: five to seven
        { mode: 'food', label: 'Open now', icon, top }
                 hosts a mode that exists. The route is the mode's own key
