@@ -1,7 +1,8 @@
 /* template.js — Body's Today cell (wave 1, 2026-10-29). Today is the
-   habits tracker (modes/habits.js, untouched, hosted in this cell the way
-   All Day hosts it under The Build) with a Habits | Template switch over
-   it. Template is Stephen's own daily list (data/body/template-stephen.json):
+   habits tracker (modes/habits.js, untouched) with a Habits · Template ·
+   Build switch over it. The Build (modes/build.js, untouched) is hosted in
+   the same cell, so its Build | Habits pairing holds: a habit tapped done
+   still drops a pallet on the site. Template is Stephen's own daily list (data/body/template-stephen.json):
    each habit with its one-line why, and one tap that copies all sixteen
    into the reader's tracker.
 
@@ -36,18 +37,23 @@ async function until(fn, ms = 10000) {
 }
 const onList = () => new Set([...document.querySelectorAll(HB + ' .hb-row .hb-name')].map((n) => n.textContent.trim().toLowerCase()));
 
-/* Add each habit through the tracker's form; resolves { added, had, error } */
+/* Add each habit through the tracker's form; resolves { added, had, error }.
+   A habit counts as added only once its row is on the list. */
 async function copy(list) {
   app.go('habits');
   const ready = await until(() => q('.hb-addbtn') || q('.hb-form'));
-  if (!ready) return { added: 0, had: 0, error: 'Your habits didn’t open. Try again in a moment.' };
+  if (!ready) return { added: 0, had: 0, error: 'Your habits didn’t open. Try again.' };
+  /* a habit the reader is in the middle of typing is theirs: leave it */
+  const draft = q('.hb-form input[name="text"]');
+  if (draft && draft.value.trim()) return { added: 0, had: 0, error: 'Finish the habit you’re adding first.' };
   const have = onList();
   let added = 0, had = 0;
   for (const h of list) {
-    if (have.has(h.text.trim().toLowerCase())) { had++; continue; }
-    if (!q('.hb-form')) { const b = q('.hb-addbtn'); if (!b) break; b.click(); }
+    const name = h.text.trim().toLowerCase();
+    if (have.has(name)) { had++; continue; }
+    if (!q('.hb-form')) { const b = q('.hb-addbtn'); if (!b) return { added, had, error: 'Stopped after ' + added + '.' }; b.click(); }
     const f = await until(() => q('.hb-form'), 3000);
-    if (!f) return { added, had, error: 'The Add form didn’t open.' };
+    if (!f) return { added, had, error: 'Stopped after ' + added + '.' };
     f.querySelector('input[name="text"]').value = h.text;
     const fb = f.querySelector('[data-freq="' + h.frequency + '"]');
     if (fb) fb.click();
@@ -55,15 +61,15 @@ async function copy(list) {
     const share = f.querySelector('input[name="shared"]');
     if (share) share.checked = !!h.shared;
     f.requestSubmit();
-    /* done when the form closes; a refusal stays on the form as its message */
-    const end = await until(() => (!q('.hb-form') ? 'ok' : (q('.hb-form .bf-msg.err') || {}).textContent || ''), 8000);
+    /* done when its row is on the list; a refusal stays on the form as its message */
+    const end = await until(() => (onList().has(name) && !q('.hb-form') ? 'ok' : (q('.hb-form .bf-msg.err') || {}).textContent || ''), 8000);
     if (end !== 'ok') {
       const open = q('.hb-form .ghost');
       if (open) open.click();   // Cancel, so the list is left as it was
-      return { added, had, error: end || 'That took too long. What was added is on your list.' };
+      return { added, had, error: end || 'Stopped after ' + added + '.' };
     }
     added++;
-    have.add(h.text.trim().toLowerCase());
+    have.add(name);
   }
   return { added, had, error: null };
 }
@@ -72,7 +78,7 @@ function run(list) {
   if (S.busy) return;
   S.busy = true;
   paint();
-  copy(list).then((r) => {
+  copy(list).catch(() => ({ added: 0, had: 0, error: 'That didn’t work. Try again.' })).then((r) => {
     S.busy = false;
     S.done = r;
     paint();
@@ -98,9 +104,8 @@ function paint() {
   const list = (t.habits || []).filter((h) => h && h.text);
   const wrap = el('div', 'tp');
   wrap.dataset.template = t.id;
-  section(wrap, t.name, esc('By ' + t.by + ' · ' + plural(list.length, 'habit', 'habits')));
+  section(wrap, t.name, esc(plural(list.length, 'habit', 'habits')));
   para(wrap, t.blurb);
-  para(wrap, 'Read why each one is on the list, then copy them all at the bottom, or add just the ones you want.', 'note');
   list.forEach((h, i) => {
     const k = 't-' + (i + 1);
     const add = el('button', 'pillbtn', ICON.plus + '<span>Add</span>');
@@ -128,14 +133,11 @@ function paint() {
   all.dataset.copyAll = '1';
   all.disabled = S.busy;
   go.appendChild(all);
-  go.appendChild(el('p', 'note', esc(app.user() ? 'They go on your account, so every device you sign in on has them.'
-    : 'They’re kept on this phone. Sign in later and they move to your account.')));
-  if (S.done && !S.busy && !S.done.error) go.appendChild(el('p', 'note', esc('Done: ' + S.done.added + ' added' + (S.done.had ? ', ' + S.done.had + ' already there' : '') + '.')));
   wrap.appendChild(go);
   if (t.page) {
     const more = el('div', 'addrow');
     const a = el('a', 'pillbtn', 'How Stephen does it');
-    a.href = '#coach/how';
+    a.href = '#coach/how-i-do-it';
     more.appendChild(a);
     wrap.appendChild(more);
   }
@@ -148,14 +150,16 @@ function load() {
   return data('template-stephen.json').then((j) => { S.tpl = j; }, () => { S.failed = true; }).then(paint);
 }
 
-/* -------------------------------------------------------- Habits | Template */
+/* ------------------------------------------------ Habits · Template · Build */
+const SIDES = [['habits', 'Habits', '--liq-habits'], ['template', 'Template', '--app-body-pop'], ['build', 'Build', '--liq-build']];
 function sideSwitch(on) {
   const r = el('div', 'secrow oa-sidesrow bd-sidesrow');
-  const sw = pills([['habits', 'Habits'], ['template', 'Template']], on, (v) => (v === 'habits' ? app.go('habits') : app.go(KEY, 'stephen')), 'oa-sideswitch bd-sideswitch');
+  const sides = SIDES.filter(([k]) => k === 'template' || app.registered(k));
+  const sw = pills(sides.map(([k, l]) => [k, l]), on, (v) => (v === 'template' ? app.go(KEY, 'stephen') : app.go(v)), 'oa-sideswitch bd-sideswitch');
   sw.setAttribute('role', 'group');
-  sw.setAttribute('aria-label', 'Your habits or the template');
-  [...sw.children].forEach((b, i) => { b.dataset.side = ['habits', 'template'][i]; b.setAttribute('aria-pressed', String(b.dataset.side === on)); });
-  liquify(sw, { key: 'body-side', idx: on === 'template' ? 1 : 0, colors: ['--liq-habits', '--app-body-pop'] });
+  sw.setAttribute('aria-label', 'Today');
+  [...sw.children].forEach((b, i) => { b.dataset.side = sides[i][0]; b.setAttribute('aria-pressed', String(sides[i][0] === on)); });
+  liquify(sw, { key: 'body-side', idx: Math.max(0, sides.findIndex(([k]) => k === on)), colors: sides.map((x) => x[2]) });
   r.appendChild(sw);
   return r;
 }
@@ -164,6 +168,14 @@ function wrapRow(top, inner) {
   bar.appendChild(top);
   if (inner) (inner.classList && inner.classList.contains('secbar') ? [...inner.children] : [inner]).forEach((k) => bar.appendChild(k));
   return bar;
+}
+/* The Build's own row is its Build | Habits switch and its "?": this
+   switch replaces the first, and the "?" joins it */
+function buildRow(inner) {
+  const top = sideSwitch('build');
+  const help = inner && inner.querySelector('.bd-whatis');
+  if (help) top.appendChild(help);
+  return wrapRow(top, null);
 }
 
 app.register(KEY, {
@@ -183,7 +195,7 @@ app.register(KEY, {
   deactivate() {},
   subnav() { return wrapRow(sideSwitch('template'), null); },
   /* Habits' own row, under the switch */
-  frame(child, inner) { return child === 'habits' ? wrapRow(sideSwitch('habits'), inner) : inner; },
+  frame(child, inner) { return child === 'habits' ? wrapRow(sideSwitch('habits'), inner) : child === 'build' ? buildRow(inner) : inner; },
   landing() { return 'habits'; },
   keepSubnav: true,
   newSince() { return 0; },

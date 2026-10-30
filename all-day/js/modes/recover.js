@@ -24,8 +24,7 @@ const stepsOf = (r) => r.moves.map((m) => ({ name: m.name, seconds: Number(m.sec
 function drawRoutine(box, rec, tab) {
   const r = (rec.routines || []).find((x) => x.tab === tab);
   if (!r) { para(box, 'This routine isn’t in the file.'); return; }
-  section(box, r.name, esc(plural(r.moves.length, 'move', 'moves') + ' · ' + mmss(r.total_seconds) + ' · ' + r.when));
-  if (tab === 'Stretch' && rec.why) para(box, rec.why);
+  section(box, r.name, esc(plural(r.moves.length, 'move', 'moves') + ' · ' + mmss(r.total_seconds)));
   para(box, r.cue, 'note');
   const go = button(ICON.play + ' Play it through', '', () => player(r.name, stepsOf(r)));
   go.dataset.play = r.id;
@@ -54,7 +53,7 @@ function spotSheet(s, kinds) {
 function drawSpots(box, spots) {
   const kinds = spots.kinds || {};
   const list = (spots.spots || []).slice().sort((a, b) => !!b.verified - !!a.verified);
-  section(box, 'Sauna & cold', esc(plural(list.length, 'place', 'places') + ' to sweat, plunge, float or get worked on'));
+  section(box, 'Sauna & cold', esc(plural(list.length, 'place', 'places')));
   list.forEach((s) => {
     const p = (s.prices || [])[0];
     const r = row({
@@ -68,25 +67,23 @@ function drawSpots(box, spots) {
     box.appendChild(r);
   });
   if ((spots.gym_saunas || []).length) {
-    divider(box, 'Gyms with a sauna', 'with a day pass or membership');
+    divider(box, 'Gyms with a sauna', null);
     spots.gym_saunas.forEach((g) => box.appendChild(row({ k: 'gs-' + g.gym_id, tile: { icon: ICON.dumbbell }, title: g.name, lines: [g.note], right: tabLink('Gym', 'train/g-' + g.gym_id) })));
   }
   if ((spots.yoga_studios || []).length) {
-    divider(box, 'Yoga studios', 'drop-in classes');
+    divider(box, 'Yoga studios', null);
     spots.yoga_studios.forEach((g) => box.appendChild(row({ k: 'ys-' + g.gym_id, tile: { icon: ICON.leaf }, title: g.name, lines: [g.drop_in || g.note], right: tabLink('Studio', 'train/g-' + g.gym_id) })));
   }
 }
 
 /* ------------------------------------------------------------- breathe */
-/* '13:00' as '1 pm', '09:30' as '9:30 am' */
-const clock = (hm) => { const [h, m] = String(hm).split(':').map(Number); return (h % 12 || 12) + (m ? ':' + String(m).padStart(2, '0') : '') + (h < 12 ? ' am' : ' pm'); };
 const B = { preset: 'quick', inhale: 3, top_up: 1, exhale: 6, rounds: 12, running: false, paused: false, timer: 0 };
 function stopBreath() { clearInterval(B.timer); B.running = false; B.paused = false; }
 function drawBreathe(box, rec, ctx) {
   const b = rec.breathe;
   const t = b.timer;
   const phase = Object.fromEntries(t.phases.map((p) => [p.key, p]));
-  section(box, b.name, esc(b.aka));
+  section(box, b.name, null);
   para(box, b.what);
   const live = el('div', 'br-live');
   live.dataset.breathe = 'idle';
@@ -124,7 +121,7 @@ function drawBreathe(box, rec, ctx) {
   box.appendChild(act).classList.add('addrow');
   /* the four numbers stay folded until someone wants them */
   const more = el('details', 'hb-gate');
-  more.appendChild(el('summary', 'bf-label', 'Change the seconds and rounds'));
+  more.appendChild(el('summary', 'bf-label', 'Timing'));
   f.classList.remove('hb-gate');
   more.appendChild(f);
   box.appendChild(more);
@@ -148,7 +145,7 @@ function drawBreathe(box, rec, ctx) {
     B.timer = setInterval(() => {
       if (!live.isConnected) { stopBreath(); return; }
       const now = Date.now();
-      if (!B.paused) left -= (now - last) / 1000;
+      if (!B.paused) left -= Math.min(1, (now - last) / 1000);   // a locked phone pauses it
       last = now;
       if (left > 0) { const n = live.querySelector('.hb-num'); if (n) n.textContent = String(Math.ceil(left)); return; }
       p++;
@@ -167,13 +164,10 @@ function drawBreathe(box, rec, ctx) {
   }
   para(box, t.rule, 'note');
   if (b.meditation && b.meditation.length) {
-    divider(box, 'Short meditations', 'if you want to sit a little longer');
+    divider(box, 'Short meditations', null);
     b.meditation.forEach((m, i) => box.appendChild(row({ k: 'med-' + i, tile: { big: m.seconds >= 60 ? Math.round(m.seconds / 60) : m.seconds, small: m.seconds >= 60 ? 'min' : 'sec' },
       title: m.name, lines: [m.how], right: pill('Play', () => player(m.name, [{ name: m.name, seconds: m.seconds, how: m.how }])) })));
   }
-  /* the note's first sentence only: its reminders wait for the coach */
-  if (b.nudges) bullets(box, [String(b.nudges.note || '').split('. ')[0].replace(/\.?$/, '.'),
-    'Good times to try it: ' + (b.nudges.suggested_times || []).map(clock).join(', ') + '.'], 'When');
   sources(box, b.sources);
 }
 
@@ -181,10 +175,8 @@ function drawBreathe(box, rec, ctx) {
 function drawSleep(box, rec) {
   const s = rec.sleep;
   section(box, 'Sleep', esc('Aim for ' + s.habit.target_hours + ' hours'));
-  para(box, s.why);
   bullets(box, s.basics, 'The basics');
-  divider(box, 'Trackers', 'what each measures and costs');
-  para(box, s.tracker_tip, 'note');
+  divider(box, 'Trackers', null);
   (s.trackers || []).forEach((t) => box.appendChild(row({
     k: 'tk-' + t.id, tile: { icon: ICON.clock }, title: t.name,
     lines: [[t.form, '· ' + t.cost], t.measures, ['Best for', t.best_for], ['Trade-off', t.tradeoff],

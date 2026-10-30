@@ -17,7 +17,7 @@ import * as app from '../app.js';
 import * as boards from '../boards.js';
 import { el, esc, ICON, button, cards, meetRow } from '../ui.js';
 import * as cw from '../clubs-week.js';
-import { page, data, para, bullets, ext, links, section, plural, shortDay } from './body-kit.js';
+import { page, data, para, bullets, ext, links, section, plural } from './body-kit.js';
 
 const KEY = 'together';
 const BOARD = 'sports';
@@ -32,7 +32,7 @@ const fitClub = (c) => usable(c) && cw.isFitness(c);
 /* ------------------------------------------------------------- the clubs */
 function drawWeek(box, ctx, kind) {
   const run = kind === 'run';
-  section(box, run ? 'Run clubs this week' : 'Fitness this week', esc(run ? 'Group runs, free and open' : 'Rides, hikes, climbs, paddles and pickup'));
+  section(box, run ? 'Run clubs this week' : 'Fitness this week', null);
   if (!ctx.clubs) { para(box, 'The clubs didn’t load.'); return; }
   const week = cw.weekStrip(ctx.clubs, Date.now(), run ? runClub : fitClub).map((d) => ({ ...d, meets: d.meets.filter((o) => !o.past) }));
   if (!week.some((d) => d.key === S.day[kind])) S.day[kind] = (week.find((d) => d.meets.length) || week[0]).key;
@@ -71,7 +71,6 @@ const goingWords = (n) => (Number(n) > 0 ? n + ' going' : 'Be the first');
 function sessionCard(p) {
   const m = p.meta || {};
   const it = boards.item(p, { tab: KEY, meta: () => [SPORT[m.sport], m.when, m.where, m.spots ? plural(Number(m.spots), 'spot', 'spots') : '', LEVEL[m.level] || ''].filter(Boolean).join(' · ') });
-  it.left = null;   // a session ends when it happens; its "when" says so
   app.know([it]);
   const node = cards.board(it);
   if (!node) return null;
@@ -108,14 +107,14 @@ function compose(kind) {
       { key: 'level', label: 'Pace', type: 'enum', options: Object.entries(LEVEL) },
     ],
     body: 'More', bodyPlaceholder: 'What to bring, where to meet',
-    notes: ['Up for two days. Others tap I’m in, and you see how many are coming.'],
+    notes: ['Up for two days.'],
     cta: 'Post it',
   });
 }
 function drawSessions(box, ctx, kind) {
   const work = kind === 'work';
   const want = work ? ctx.t.work_out_sports : ctx.t.recover_sports;
-  section(box, work ? 'Work out' : 'Recover', esc(work ? 'Who is going where, and when' : 'Sauna, yoga and stretch, together'));
+  section(box, work ? 'Work out' : 'Recover', null);
   if (S.posts == null) { box.appendChild(el('p', 'loading', 'One moment…')); return; }
   const list = S.posts.filter((p) => want.includes(p.meta.sport));
   const feed = el('div', 'feed');
@@ -125,7 +124,7 @@ function drawSessions(box, ctx, kind) {
   app.bindFeed(feed);
   watchGoing(feed);
   if (S.failed) para(box, S.failed, 'note');
-  else if (!list.length) para(box, work ? 'Nobody has posted a workout yet. Be the first: say where and when.' : 'No recovery sessions yet. Post one and see who comes.');
+  else if (!list.length) para(box, work ? 'No workouts posted yet.' : 'No recovery sessions yet.');
   links(box, [button(ICON.plus + (work ? ' Post a workout' : ' Post a recovery session'), '', () => compose(kind))]);
 }
 
@@ -134,10 +133,9 @@ function drawASS(box, t) {
   const a = t.adult_social_sports;
   section(box, 'Adult Social Sports', esc(a.members.toLocaleString('en-US') + ' members on Meetup'));
   para(box, a.line);
-  const card = bullets(box, [a.status, 'Join on Meetup now and you’ll hear when the first events are posted.']);
+  const card = bullets(box, [a.status]);
   card.dataset.ass = 'relaunching';
   links(box, [ext('Join the group', a.url, 'btn')]);
-  para(box, 'Checked on Meetup on ' + shortDay(a.checked) + '.', 'note');
 }
 
 /* -------------------------------------------------------------- the tab */

@@ -37,7 +37,7 @@ export async function bodyTests(browser, base, h) {
     const { default: cfg } = await import('../js/apps/body.js');
     check(JSON.stringify(cfg.tabs.map((t) => t.mode)) === JSON.stringify(TABS), 'six tabs, each a built mode', cfg.tabs.map((t) => t.mode).join(', '));
     check(JSON.stringify(cfg.tabs.map((t) => t.label)) === JSON.stringify(LABELS), 'the map’s words', '');
-    check(JSON.stringify(cfg.hosted) === JSON.stringify({ habits: 'template' }), 'Habits lives in Today’s cell', JSON.stringify(cfg.hosted));
+    check(JSON.stringify(cfg.hosted) === JSON.stringify({ habits: 'template', build: 'template' }), 'Habits and The Build live in Today’s cell', JSON.stringify(cfg.hosted));
     check(tpl.habits.length === 16, 'the template has sixteen habits', tpl.habits.length);
   });
 
@@ -47,8 +47,8 @@ export async function bodyTests(browser, base, h) {
     await page.waitForSelector(panel('habits') + ' .hb-addbtn', { timeout: 10000 });
     check(await page.$eval(panel('habits'), (p) => !p.hidden), 'the bare app opens on the habits tracker', '');
     check(await page.$eval('#tab-template', (b) => b.getAttribute('aria-selected')) === 'true' && (await text(page, '#mast-title')) === 'Today', 'the Today cell is lit and the mast says Today', '');
-    check(!!(await page.$('#subnav [data-side="habits"]')) && !!(await page.$('#subnav [data-side="template"]')) && !!(await page.$('#subnav .chip[data-chip="forests"]')),
-      'the switch, Habits | Template, sits over Habits’ own chips', await text(page, '#subnav'));
+    check(JSON.stringify(await page.$$eval('#subnav .bd-sideswitch button', (b) => b.map((x) => x.dataset.side))) === '["habits","template","build"]' && !!(await page.$('#subnav .chip[data-chip="forests"]')),
+      'the switch, Habits · Template · Build, sits over Habits’ own chips', await text(page, '#subnav'));
     await page.click('#subnav [data-side="template"]');
     await page.waitForSelector(panel('template') + ' [data-template="stephen"]', { timeout: 6000 });
     check(await page.evaluate(() => location.hash) === '#template/stephen', 'Template has its own link', await page.evaluate(() => location.hash));
@@ -115,6 +115,36 @@ export async function bodyTests(browser, base, h) {
     check(tpl.habits.every((x) => onServer.includes(x.text)), 'signed in, every habit lands on the account (the demo’s server)', JSON.stringify(onServer.slice(0, 4)) + ' before ' + before);
     check(!errors.length, 'no console errors (signed in)', errors.slice(0, 3).join(' | '));
     await ctx.close();
+  });
+
+  await group('Body, Today: The Build lives in Today’s cell, its links land there, and a habit tapped done still reaches the site (demo, 390)', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/body/?demo=1#build');
+    await page.waitForSelector(panel('build') + ':not([hidden])', { timeout: 10000 });
+    check(await page.$eval('#tab-template', (b) => b.getAttribute('aria-selected')) === 'true', '#build opens The Build with Today lit', '');
+    check(!(await page.$('#tab-build')), 'The Build has no cell of its own', '');
+    check(JSON.stringify(await page.$$eval('#subnav .bd-sideswitch button', (b) => b.map((x) => x.dataset.side))) === '["habits","template","build"]' && !!(await page.$('#subnav .bd-whatis')),
+      'one switch over it, Habits · Template · Build, and its “?”', await text(page, '#subnav'));
+    await page.click('#subnav [data-side="habits"]');
+    await page.waitForSelector(panel('habits') + ':not([hidden]) .hb-addbtn', { timeout: 6000 });
+    await page.click(panel('habits') + ' .hb-start');
+    await page.waitForSelector(panel('habits') + ' .hb-row', { timeout: 6000 });
+    await page.click(panel('habits') + ' .hb-row .hb-tap');
+    await sleep(100);
+    const owed = await page.evaluate(() => import('/all-day/js/modes/build.js').then((m) => m._state().pallets));
+    check(owed >= 1, 'a habit tapped done owes the site a pallet (build.js’s own bridge)', owed);
+    await page.click('#subnav [data-side="build"]');
+    await page.waitForSelector(panel('build') + ':not([hidden])');
+    const st = await page.evaluate(() => import('/all-day/js/modes/build.js').then((m) => m._state()));
+    check(st.side === 'build' && (await page.evaluate(() => location.hash)) === '#build', 'the switch goes back to The Build', JSON.stringify({ side: st.side }));
+    check(!errors.length, 'no console errors', errors.slice(0, 3).join(' | '));
+    await ctx.close();
+    /* from another app, #build and #habits open in Body */
+    const p2 = await newPage(browser, base);
+    await p2.page.goto(base + '/out/?demo=1#habits');
+    await p2.page.waitForURL(/\/body\/\?demo=1#habits/, { timeout: 8000 }).catch(() => {});
+    check(/\/body\/\?demo=1#habits/.test(p2.page.url()), 'a #habits link from Out opens in Body', p2.page.url());
+    await p2.ctx.close();
   });
 
   await group('Body, Train: gyms with what each has and when it was checked, three routines to follow, sprints, a log kept on the phone, Book Stephen unpriced (live, 390)', async () => {
@@ -250,8 +280,13 @@ export async function bodyTests(browser, base, h) {
     check((await page.$$(sec('fuel', 'less') + ' [data-less]')).length === 0 && !!(await page.$(sec('fuel', 'less') + ' form.fu-less')), 'Less of: nothing preset, the form to set one', '');
     await page.fill(sec('fuel', 'less') + ' input[name="name"]', 'Late-night snacks');
     await page.selectOption(sec('fuel', 'less') + ' select[name="limit"]', '1');
+    await page.click(sec('fuel', 'less') + ' .fu-gives .chip[data-chip="Bored"]');
+    await page.fill(sec('fuel', 'less') + ' input[name="swap"]', 'A cup of tea');
     await page.click(sec('fuel', 'less') + ' form button[type="submit"]');
+    const lr = await text(page, sec('fuel', 'less') + ' [data-less]');
+    check(/Instead A cup of tea.*Gives you Bored/.test(lr), 'the swap shows first, then what it gives you', lr);
     await page.click(sec('fuel', 'less') + ' [data-less] .pillbtn');
+    check(/^Instead: A cup of tea/.test(await toast(page)), 'a slip shows the swap first', '');
     await page.click(sec('fuel', 'less') + ' [data-less] .pillbtn');
     check(/2\/1/.test(await text(page, sec('fuel', 'less') + ' [data-less]')) && /Over your limit/.test(await text(page, sec('fuel', 'less') + ' [data-less]')), 'counting past the limit says so', await text(page, sec('fuel', 'less') + ' [data-less]'));
     check(!errors.length, 'no console errors', errors.slice(0, 3).join(' | '));
@@ -265,11 +300,11 @@ export async function bodyTests(browser, base, h) {
     await page.goto(base + '/body/#coach');
     await ready(page, 'coach');
     const heads = (MD.match(/^## .+$/gm) || []).map((x) => x.slice(3).trim());
-    const got = await page.$$eval(sec('coach', 'how') + ' .tdiv span:first-child', (n) => n.map((x) => x.textContent));
+    const got = await page.$$eval(sec('coach', 'how-i-do-it') + ' .tdiv span:first-child', (n) => n.map((x) => x.textContent));
     check(JSON.stringify(got) === JSON.stringify(heads), 'every heading of how-i-do-it.md, in order', JSON.stringify(got));
-    const how = await page.$eval(sec('coach', 'how'), (n) => n.innerHTML);
+    const how = await page.$eval(sec('coach', 'how-i-do-it'), (n) => n.innerHTML);
     check(!/\*\*|&lt;|##/.test(how) && /<b>Brush my teeth<\/b>/.test(how), 'the Markdown is drawn (bold, lists), none of it left showing', '');
-    check(/Copy the list to Today/.test(await text(page, sec('coach', 'how'))), 'and it links to the template', '');
+    check(/Copy the list to Today/.test(await text(page, sec('coach', 'how-i-do-it'))), 'and it links to the template', '');
     check((await page.$$(sec('coach', 'capture') + ' .lrow')).length >= 5, 'Capture: the steps', '');
     const chat = await text(page, sec('coach', 'chat'));
     check(/The coach is coming/.test(chat) && /Nothing here talks to a model yet/.test(chat), 'Chat says the coach is coming and what it will do', chat.slice(0, 120));
@@ -313,7 +348,7 @@ export async function bodyTests(browser, base, h) {
     const { ctx, page, errors } = await newPage(browser, base, { viewport: { width: 1280, height: 800 } });
     await page.goto(base + '/body/#together');
     await ready(page, 'together');
-    check(/Nobody has posted a workout yet/.test(await text(page, sec('together', 'work'))), 'Work out, empty: an invitation to post', '');
+    check(/^Work out No workouts posted yet\. Post a workout$/.test(await text(page, sec('together', 'work'))), 'Work out, empty: a few words and the button', await text(page, sec('together', 'work')));
     check(!errors.length, 'no console errors', errors.slice(0, 3).join(' | '));
     await ctx.close();
   });

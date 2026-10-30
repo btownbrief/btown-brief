@@ -29,7 +29,7 @@ export { addDays };
 export const today = () => dayKey(Date.now());
 const SHORT = new Intl.DateTimeFormat('en-US', { timeZone: 'UTC', month: 'short', day: 'numeric' });
 /* '2026-10-29' as 'Oct 29' */
-export const shortDay = (key) => (/^\d{4}-\d{2}-\d{2}$/.test(String(key || '')) ? SHORT.format(new Date(key + 'T12:00:00Z')) : '');
+export const shortDay = (key) => { try { return /^\d{4}-\d{2}-\d{2}$/.test(String(key || '')) ? SHORT.format(new Date(key + 'T12:00:00Z')) : ''; } catch (e) { return ''; } };
 export const plural = (n, one, many) => n + ' ' + (n === 1 ? one : many);
 
 /* ------------------------------------------------------------------ data */
@@ -54,7 +54,9 @@ export function keep(key, fallback) {
 }
 export function put(key, value) {
   if (app.demo) { MEM[key] = value; return true; }
-  return store.write(key, value);
+  const ok = store.write(key, value);
+  if (!ok) app.toast('This phone didn’t save that.');
+  return ok;
 }
 /* the demo's starting state for a key, once */
 export function seed(key, value) { if (app.demo && !Object.prototype.hasOwnProperty.call(MEM, key)) MEM[key] = value; }
@@ -207,7 +209,6 @@ export function player(title, steps) {
       clearInterval(timer);
       box.innerHTML = '';
       box.appendChild(stat({ num: 'Done', label: title + ', ' + mmss(total) }));
-      box.appendChild(el('p', 'sheet-note', 'Nice work. Tap it done on your Today list if it’s one of your habits.'));
       ctrl.innerHTML = '';
       ctrl.appendChild(tabLink('Today', 'habits', 'btn sm'));
       body.dataset.player = 'done';
@@ -227,7 +228,8 @@ export function player(title, steps) {
     timer = setInterval(() => {
       if (!body.isConnected) { clearInterval(timer); return; }
       const now = Date.now();
-      if (!paused) { left -= (now - last) / 1000; if (left <= 0) go(i + 1); else paintClock(); }
+      /* a locked phone or a hidden tab pauses it rather than skipping ahead */
+      if (!paused) { left -= Math.min(1, (now - last) / 1000); if (left <= 0) go(i + 1); else paintClock(); }
       last = now;
     }, 250);
     const paintClock = () => { const n = box.querySelector('.hb-num'); if (n) n.textContent = mmss(left); };
@@ -258,6 +260,7 @@ export function page(o) {
   function draw() {
     const root = S.root;
     root.innerHTML = '';
+    S.day = today();
     if (S.failed) {
       const box = el('div', 'hb-gate');
       box.appendChild(el('p', 'hb-empty', esc(o.label + ' didn’t load. Check your connection.')));
@@ -298,7 +301,11 @@ export function page(o) {
       root.appendChild(el('p', 'loading', esc('Loading ' + o.label + '…')));
       load().then(() => { draw(); land(); });
     },
-    activate(param) { S.pending = param || null; land(); if (o.activate) o.activate(param, S.ctx); },
+    activate(param) {
+      /* a page drawn yesterday (New York) is drawn again for today */
+      if (S.slots && S.day && S.day !== today()) draw();
+      S.pending = param || null; land(); if (o.activate) o.activate(param, S.ctx);
+    },
     refresh() { if (S.ready && !S.failed) draw(); },
     deactivate() { if (o.deactivate) o.deactivate(S.ctx); },
     subnav() {
@@ -310,6 +317,9 @@ export function page(o) {
     keepSubnav: true,
     newSince(ts) { return o.newSince && S.ctx ? Number(o.newSince(ts, S.ctx)) || 0 : 0; },
   };
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible' && S.slots && S.day !== today() && app.activeTab() === o.key) draw();
+  });
   /* the dot needs the data before the tab is opened, as the shelf's does */
   if (o.newSince) setTimeout(load, 0);
   return mod;

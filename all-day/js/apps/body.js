@@ -1,7 +1,8 @@
 /* Body: the daily template (APP-MAP.html, app 5). Wave 1 (2026-10-29):
    Today is the habits tracker, hosted in the Today cell beside Stephen's
-   template (modes/template.js, the way All Day hosts Habits under The
-   Build); the other five tabs are built (modes/train.js, recover.js,
+   template and The Build (modes/template.js holds the switch: Habits ·
+   Template · Build; habits.js and build.js are untouched, so a habit tapped
+   done still drops a pallet on the site); the other five tabs are built (modes/train.js, recover.js,
    fuel.js, coach.js, together.js, sharing modes/body-kit.js). */
 export default {
   id: 'body',
@@ -13,7 +14,7 @@ export default {
   url: 'https://guide.btownbrief.com/body/',
   line: 'Your daily template, for you first and then for anyone who wants it.',
   tabs: [
-    { mode: 'template', label: 'Today', icon: 'habits', top: ['Habits', 'Template', 'Forests', 'Season', 'Wall'] },
+    { mode: 'template', label: 'Today', icon: 'habits', top: ['Habits', 'Template', 'Build'] },
     { mode: 'train', label: 'Train', icon: 'dumbbell',
       top: ['Gyms', 'Beginner', 'Intermediate', 'Hardcore', 'Sprints', 'Log', 'Book Stephen'] },
     { mode: 'recover', label: 'Recover', icon: 'leaf',
@@ -25,5 +26,5 @@ export default {
     { mode: 'together', label: 'Together', icon: 'people',
       top: ['Run clubs', 'Fitness this week', 'Work out', 'Recover', 'Adult Social Sports'] },
   ],
-  hosted: { habits: 'template' },
+  hosted: { habits: 'template', build: 'template' },
 };

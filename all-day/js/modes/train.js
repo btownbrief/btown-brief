@@ -26,7 +26,7 @@ const SHOW = 10;
 const HAS = [['machines', 'Machines'], ['free_weights', 'Free weights'], ['pool', 'Pool'], ['sauna', 'Sauna'], ['courts', 'Courts'], ['classes', 'Classes'], ['childcare', 'Childcare']];
 const S = { town: 'all', more: false, done: new Set() };
 
-const logList = () => { const l = keep(LOG, []); return Array.isArray(l) ? l.filter((x) => x && x.machine) : []; };
+const logList = () => { const l = keep(LOG, []); return Array.isArray(l) ? l.filter((x) => x && typeof x.machine === 'string' && x.machine) : []; };
 const daysOf = (r) => (Array.isArray(r.days) ? r.days : [{ name: null, exercises: r.exercises || [] }]);
 const money = (s) => (String(s || '').match(/\$\d+(?:\.\d\d)?/) || [''])[0];
 /* the field an unverified note is about: "day_pass: not published" → "day pass" */
@@ -54,7 +54,7 @@ function gymSheet(g, kinds) {
 function drawGyms(box, ctx) {
   const all = ctx.gyms.gyms || [];
   const kinds = ctx.gyms.kinds || {};
-  section(box, 'Gyms', esc(plural(all.length, 'place', 'places') + ' around Burlington · prices from their own sites'));
+  section(box, 'Gyms', esc(plural(all.length, 'place', 'places')));
   const towns = Object.entries(all.reduce((m, g) => { m[g.town] = (m[g.town] || 0) + 1; return m; }, {})).sort((a, b) => b[1] - a[1]).map(([t]) => t);
   const pick = chips([{ key: 'all', label: 'All' }].concat(towns.map((t) => ({ key: t, label: t }))), S.town, (k) => { S.town = k; S.more = false; ctx.redraw('gyms'); }, 'tb-towns');
   const wrap = el('div', 'addrow');
@@ -117,7 +117,7 @@ function drawRoutine(box, w, id) {
   if (id === 'beginner' && w.first_day) tools.unshift(pill('Your first day', () => firstDaySheet(w)));
   links(box, tools);
   daysOf(r).forEach((d, di) => {
-    if (d.name) divider(box, d.name, plural(d.exercises.length, 'machine', 'machines'));
+    if (d.name) divider(box, d.name, null);
     d.exercises.forEach((x, xi) => {
       const k = 'x-' + id + '-' + di + '-' + xi;
       const log = el('button', 'pillbtn', esc('Log'));
@@ -144,7 +144,6 @@ function drawSprints(box, w) {
   const s = w.sprints;
   const m = s.main;
   section(box, s.name, esc(m.rounds + ' rounds · ' + m.work_seconds + ' s hard · ' + m.rest_seconds + ' s walking back'));
-  para(box, s.why);
   bullets(box, ['How often: ' + s.days_per_week, 'Where: ' + s.where, 'Effort: ' + m.effort, m.rest_how, m.progression]);
   const steps = s.warmup.map((x) => ({ name: x.what, seconds: Math.round(Number(x.minutes) * 60), how: 'Warm-up' }));
   for (let i = 1; i <= m.rounds; i++) {
@@ -159,7 +158,6 @@ function drawSprints(box, w) {
   box.appendChild(row({ k: 'sp-main', tile: { big: m.rounds + '×', small: m.work_seconds + ' s' }, title: 'Sprint, then walk back', lines: [m.effort, 'Rest ' + m.rest_seconds + ' s between'] }));
   box.appendChild(row({ k: 'sp-cool', tile: { big: s.cooldown.minutes, small: 'min' }, title: 'Cool down', lines: [s.cooldown.what] }));
   para(box, s.safety, 'note');
-  para(box, 'Log: ' + s.log, 'note');
 }
 
 /* ------------------------------------------------------------------- log */
@@ -219,9 +217,8 @@ let redrawLog = () => {};
 function drawLog(box, w, ctx) {
   redrawLog = () => ctx.redraw('log');
   const list = logList();
-  section(box, 'Log', esc(list.length ? plural(list.length, 'line', 'lines') + ' on this phone' : 'Kept on this phone'));
-  para(box, w.log.how);
-  if (!list.length) para(box, 'Example: ' + w.log.example, 'note');
+  section(box, 'Log', null);
+  if (!list.length) para(box, 'Nothing logged yet.');
   links(box, [button(ICON.plus + ' Log a machine', '', () => logSheet(w, ''))]);
   list.slice(0, 40).forEach((x, i) => {
     const del = el('button', 'act del', ICON.trash);
@@ -239,7 +236,6 @@ function drawLog(box, w, ctx) {
     const [mo, d] = shortDay(x.date).split(' ');
     box.appendChild(row({ k: 'log-' + i, tile: { big: d || '', small: mo || '' }, title: x.machine, lines: [lineOf(x), x.note], right: del }));
   });
-  if (list.length > 40) para(box, 'Showing the newest 40.', 'note');
 }
 
 /* ------------------------------------------------------------ Book Stephen */
@@ -248,10 +244,9 @@ function drawBook(box, w) {
   section(box, 'Book Stephen', null);
   para(box, b.what || 'One session with Stephen at a gym of your choice.');
   const price = b.price != null && String(b.price).trim() ? String(b.price) : null;
-  const card = bullets(box, [price ? 'Price: ' + price + ', plus your day pass' : 'Not offered yet. The price goes here once Stephen sets one.',
-    'Until then, the first-day walkthrough in Beginner covers the same ground.']);
+  const card = bullets(box, [price ? 'Price: ' + price + ', plus your day pass' : 'Not offered yet.']);
   card.dataset.book = price ? 'priced' : 'unpriced';
-  links(box, [tabLink('Your first day', 'train/beginner'), tabLink('How Stephen does it', 'coach/how')]);
+  links(box, [tabLink('Your first day', 'train/beginner')]);
 }
 
 /* -------------------------------------------------------------- the tab */

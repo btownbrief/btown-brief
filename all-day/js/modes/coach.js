@@ -8,7 +8,7 @@
 
 import * as app from '../app.js';
 import { el, esc, ICON } from '../ui.js';
-import { page, data, row, para, bullets, links, tabLink, section, divider, sources } from './body-kit.js';
+import { page, data, row, bullets, links, tabLink, section, divider, sources } from './body-kit.js';
 
 const KEY = 'coach';
 
@@ -32,7 +32,7 @@ function markdown(box, md) {
 }
 
 function drawHow(box, md) {
-  section(box, 'How I do it', esc('Stephen’s list, and why'));
+  section(box, 'How I do it', null);
   const page = el('div', 'co-page');
   page.dataset.page = 'how-i-do-it';
   markdown(page, md);
@@ -42,13 +42,11 @@ function drawHow(box, md) {
 
 function drawCapture(box, c) {
   const cap = c.capture;
-  section(box, 'Capture', esc('A voice note in one tap'));
-  para(box, cap.intro);
+  section(box, 'Capture', null);
   divider(box, cap.iphone.name, null);
   cap.iphone.steps.forEach((s, i) => box.appendChild(row({ k: 'cap-i' + i, tile: { big: i + 1, small: 'step' }, title: s })));
   divider(box, cap.android.name, null);
   cap.android.steps.forEach((s, i) => box.appendChild(row({ k: 'cap-a' + i, tile: { icon: ICON.comment }, title: s })));
-  bullets(box, [cap.tip]);
   sources(box, cap.iphone.sources);
 }
 
@@ -61,17 +59,15 @@ function drawChat(box, c) {
   p.innerHTML = '<p><b>' + esc('The coach is coming') + '</b></p><p>' + esc(ch.status) + '</p>';
   box.appendChild(p);
   bullets(box, ch.will, 'What it will do');
-  para(box, ch.privacy, 'note');
-  links(box, [tabLink('Your habits today', 'habits'), tabLink('Breathing timer', 'recover/breathe')]);
 }
 
 app.register(KEY, page({
   key: KEY, label: 'Coach', icon: 'comment',
   promise: 'A coach that logs what you tell it and nudges you.',
-  sections: [['how', 'How I do it'], ['capture', 'Capture'], ['chat', 'Chat']],
+  sections: [['how-i-do-it', 'How I do it'], ['capture', 'Capture'], ['chat', 'Chat']],
   load: () => Promise.all([data('how-i-do-it.md'), data('coach.json')]).then(([md, c]) => ({ md, c })),
   draw(k, box, ctx) {
-    if (k === 'how') drawHow(box, ctx.md);
+    if (k === 'how-i-do-it') drawHow(box, ctx.md);
     else if (k === 'capture') drawCapture(box, ctx.c);
     else if (k === 'chat') drawChat(box, ctx.c);
   },
