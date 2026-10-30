@@ -53,6 +53,9 @@ const SHELL_URLS = [
   './js/challenge.js', './js/challenge-core.js', './css/challenge.css',
   /* the Btown Brief logo in the mast */
   './assets/brand/btown-brief-logo.png',
+  /* Eat (wave 1) */
+  './js/modes/eat-lib.js', './js/modes/eat-open.js', './js/modes/deals.js', './js/modes/openings.js',
+  './js/modes/bites.js', './js/modes/market.js', './js/modes/dinner.js',
 ];
 
 self.addEventListener('install', (e) => {

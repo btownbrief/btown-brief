@@ -1,0 +1,495 @@
+{
+ "_": "Demo data for Eat · Market on ?demo=1. Every market, farm, food shelf, fridge, group and app here is invented; the shapes are data/eat/market.json's and data/eat/rescue.json's (under 'rescue'). Dates are written on the anchor day and move by whole weeks to the reader's today.",
+ "anchor": "2026-10-29",
+ "updated": "2026-10-29",
+ "markets": [
+  {
+   "id": "demo-lakeside-market",
+   "name": "Lakeside Saturday Market",
+   "town": "Burlington",
+   "address": "1 Demo Pier Rd, Burlington, VT",
+   "coords": null,
+   "days": [
+    "sat"
+   ],
+   "hours": "9:00-13:00",
+   "season": "May-Oct",
+   "season_dates": "May 2 - October 31, 2026",
+   "season_year": 2026,
+   "winter": {
+    "name": "Lakeside Winter Market",
+    "days": [
+     "sat"
+    ],
+    "hours": "10:00-13:00",
+    "location": "The Old Mill Hall, 2 Demo Mill St, Burlington, VT",
+    "dates": [
+     "2026-11-14",
+     "2026-11-28",
+     "2026-12-12",
+     "2027-01-09"
+    ],
+    "accepts": [
+     "Cash",
+     "Debit/Credit",
+     "SNAP/3SquaresVT"
+    ],
+    "vendors": [
+     {
+      "name": "Hilltop Greens",
+      "sells": "agriculture (category only)"
+     },
+     {
+      "name": "Two Goats Dairy",
+      "sells": "agriculture (category only)"
+     },
+     {
+      "name": "Morning Loaf",
+      "sells": "prepared foods (category only)"
+     },
+     {
+      "name": "Clay & Kiln",
+      "sells": "crafts (category only)"
+     }
+    ],
+    "source_url": "https://example.org/demo-source/lakeside-winter"
+   },
+   "accepts": [
+    "Cash",
+    "Debit/Credit",
+    "SNAP/3SquaresVT",
+    "Crop Cash"
+   ],
+   "vendors": [
+    {
+     "name": "Hilltop Greens",
+     "sells": "salad greens and herbs"
+    },
+    {
+     "name": "Two Goats Dairy",
+     "sells": "goat cheese and yogurt"
+    },
+    {
+     "name": "Morning Loaf",
+     "sells": "sourdough and pastries"
+    },
+    {
+     "name": "Orchard Row",
+     "sells": "apples and cider"
+    },
+    {
+     "name": "Little Fern Farm",
+     "sells": "eggs and squash"
+    }
+   ],
+   "vendors_url": "https://example.org/demo-source/lakeside-vendors",
+   "website": "https://example.org/lakeside",
+   "source_url": "https://example.org/demo-source/lakeside"
+  },
+  {
+   "id": "demo-thursday-market",
+   "name": "Thursday Evening Market",
+   "town": "South End",
+   "address": "40 Demo Arts Way, Burlington, VT",
+   "coords": null,
+   "days": [
+    "thu"
+   ],
+   "hours": "15:00-18:30",
+   "season": "Apr-Dec",
+   "season_dates": "April 30 - December 17, 2026",
+   "season_year": 2026,
+   "accepts": [
+    "Cash",
+    "Debit/Credit"
+   ],
+   "vendors": [
+    {
+     "name": "Rooftop Honey",
+     "sells": null
+    },
+    {
+     "name": "Pickle Barn",
+     "sells": "pickles and krauts"
+    }
+   ],
+   "vendors_url": null,
+   "website": "https://example.org/thursday",
+   "source_url": "https://example.org/demo-source/thursday"
+  },
+  {
+   "id": "demo-north-market",
+   "name": "North End Tuesday Market",
+   "town": "Old North End",
+   "address": "Demo Park, Burlington, VT",
+   "coords": null,
+   "days": [
+    "tue"
+   ],
+   "hours": "15:00-18:30",
+   "season": "Jun-Oct",
+   "season_dates": "June 2 - October 27, 2026",
+   "season_year": 2026,
+   "accepts": [
+    "Cash",
+    "SNAP/3SquaresVT"
+   ],
+   "vendors": [],
+   "vendors_url": null,
+   "website": null,
+   "source_url": "https://example.org/demo-source/north"
+  },
+  {
+   "id": "demo-river-market",
+   "name": "Riverside Sunday Market",
+   "town": "Winooski",
+   "address": "5 Demo Falls Way, Winooski, VT",
+   "coords": null,
+   "days": [
+    "sun"
+   ],
+   "hours": "10:00-14:00",
+   "season": "May-Oct",
+   "season_dates": "May 17 - October 25, 2026",
+   "season_year": 2026,
+   "winter": {
+    "name": "Riverside Winter Market",
+    "days": [
+     "sun"
+    ],
+    "hours": "10:00-14:00",
+    "location": "The Demo Senior Center, Winooski, VT",
+    "source_url": "https://example.org/demo-source/river-winter"
+   },
+   "accepts": [
+    "Cash",
+    "Venmo"
+   ],
+   "vendors": [],
+   "vendors_url": null,
+   "website": "https://example.org/river",
+   "source_url": "https://example.org/demo-source/river"
+  }
+ ],
+ "in_season": [
+  {
+   "month": 1,
+   "month_name": "January",
+   "produce": [
+    "Apples",
+    "Cabbage",
+    "Carrots",
+    "Onions",
+    "Potatoes",
+    "Winter squash"
+   ],
+   "source_url": "https://example.org/demo-source/produce-chart"
+  },
+  {
+   "month": 2,
+   "month_name": "February",
+   "produce": [
+    "Apples",
+    "Beets",
+    "Carrots",
+    "Parsnips",
+    "Potatoes"
+   ],
+   "source_url": "https://example.org/demo-source/produce-chart"
+  },
+  {
+   "month": 3,
+   "month_name": "March",
+   "produce": [
+    "Apples",
+    "Carrots",
+    "Salad greens",
+    "Potatoes",
+    "Spinach"
+   ],
+   "source_url": "https://example.org/demo-source/produce-chart"
+  },
+  {
+   "month": 4,
+   "month_name": "April",
+   "produce": [
+    "Asparagus",
+    "Salad greens",
+    "Ramps",
+    "Spinach",
+    "Rhubarb"
+   ],
+   "source_url": "https://example.org/demo-source/produce-chart"
+  },
+  {
+   "month": 5,
+   "month_name": "May",
+   "produce": [
+    "Asparagus",
+    "Radishes",
+    "Rhubarb",
+    "Salad greens",
+    "Peas"
+   ],
+   "source_url": "https://example.org/demo-source/produce-chart"
+  },
+  {
+   "month": 6,
+   "month_name": "June",
+   "produce": [
+    "Strawberries",
+    "Peas",
+    "Scallions",
+    "Kale",
+    "Garlic scapes"
+   ],
+   "source_url": "https://example.org/demo-source/produce-chart"
+  },
+  {
+   "month": 7,
+   "month_name": "July",
+   "produce": [
+    "Blueberries",
+    "Cucumbers",
+    "Zucchini",
+    "Beans",
+    "Sweet corn"
+   ],
+   "source_url": "https://example.org/demo-source/produce-chart"
+  },
+  {
+   "month": 8,
+   "month_name": "August",
+   "produce": [
+    "Tomatoes",
+    "Sweet corn",
+    "Peppers",
+    "Peaches",
+    "Melons"
+   ],
+   "source_url": "https://example.org/demo-source/produce-chart"
+  },
+  {
+   "month": 9,
+   "month_name": "September",
+   "produce": [
+    "Apples",
+    "Tomatoes",
+    "Leeks",
+    "Winter squash",
+    "Pears"
+   ],
+   "source_url": "https://example.org/demo-source/produce-chart"
+  },
+  {
+   "month": 10,
+   "month_name": "October",
+   "produce": [
+    "Apples",
+    "Brussels sprouts",
+    "Pumpkins",
+    "Leeks",
+    "Cauliflower",
+    "Cranberries"
+   ],
+   "source_url": "https://example.org/demo-source/produce-chart"
+  },
+  {
+   "month": 11,
+   "month_name": "November",
+   "produce": [
+    "Apples",
+    "Cabbage",
+    "Carrots",
+    "Celeriac",
+    "Sweet potatoes"
+   ],
+   "source_url": "https://example.org/demo-source/produce-chart"
+  },
+  {
+   "month": 12,
+   "month_name": "December",
+   "produce": [
+    "Apples",
+    "Beets",
+    "Onions",
+    "Parsnips",
+    "Potatoes"
+   ],
+   "source_url": "https://example.org/demo-source/produce-chart"
+  }
+ ],
+ "farms_direct": [
+  {
+   "id": "demo-hilltop-greens",
+   "name": "Hilltop Greens",
+   "town": "Burlington",
+   "sells": [
+    "csa",
+    "farm stand"
+   ],
+   "how_to_order": "Sign up for a share on the farm’s site.",
+   "pickup": "At the farm, Thursdays 3-6 pm.",
+   "price_note": "About $30 a week for a small share.",
+   "website": "https://example.org/hilltop",
+   "source_url": "https://example.org/demo-source/hilltop"
+  },
+  {
+   "id": "demo-orchard-row",
+   "name": "Orchard Row",
+   "town": "Shelburne",
+   "sells": [
+    "pick-your-own apples",
+    "cider"
+   ],
+   "how_to_order": "Just come by; no order needed.",
+   "pickup": "The barn, daily 10 am-5 pm through October.",
+   "price_note": null,
+   "website": "https://example.org/orchard",
+   "source_url": "https://example.org/demo-source/orchard"
+  },
+  {
+   "id": "demo-two-goats",
+   "name": "Two Goats Dairy",
+   "town": "Charlotte",
+   "sells": [
+    "cheese",
+    "yogurt"
+   ],
+   "how_to_order": "Order online by Wednesday.",
+   "pickup": "Saturday at the Lakeside market.",
+   "price_note": "Cheese from $8.",
+   "website": null,
+   "source_url": "https://example.org/demo-source/goats"
+  },
+  {
+   "id": "demo-little-fern",
+   "name": "Little Fern Farm",
+   "town": "Hinesburg",
+   "sells": [
+    "eggs",
+    "winter squash",
+    "meat shares"
+   ],
+   "how_to_order": "Email the farm.",
+   "pickup": "Farm porch, any day.",
+   "price_note": "Eggs $6 a dozen.",
+   "website": "https://example.org/fern",
+   "source_url": "https://example.org/demo-source/fern"
+  }
+ ],
+ "community_fridges": [
+  {
+   "id": "demo-porch-fridge",
+   "name": "The Porch Fridge",
+   "address": "A porch on Demo St, Burlington",
+   "hours": "Always open",
+   "status": "active",
+   "what_they_ask_for": [
+    "sealed snacks",
+    "fruit",
+    "labeled meals"
+   ],
+   "what_not_to_leave": [
+    "raw meat",
+    "opened food"
+   ],
+   "operator": "Neighbors on Demo St",
+   "source_url": "https://example.org/demo-source/porch-fridge"
+  },
+  {
+   "id": "demo-unconfirmed-fridge",
+   "name": "An unconfirmed fridge",
+   "address": "99 Secret Demo Lane, Burlington",
+   "hours": null,
+   "status": "unconfirmed",
+   "what_they_ask_for": [],
+   "what_not_to_leave": [],
+   "operator": null,
+   "source_url": "https://example.org/demo-source/unconfirmed"
+  }
+ ],
+ "food_shelves": [
+  {
+   "id": "demo-north-food-shelf",
+   "name": "North Street Food Shelf (a demo)",
+   "address": "10 Demo North St, Burlington, VT 05401",
+   "hours": "Mon-Fri 9 am-2 pm. Groceries and hot meals.",
+   "who_can_use": "Anyone who needs food. No ID asked.",
+   "what_they_ask_for": "Canned protein, rice, pasta sauce, diapers.",
+   "how_to_donate": "Drop off weekdays 8:30 am-3 pm, or give online.",
+   "operator": "A demo nonprofit",
+   "source_url": "https://example.org/demo-source/north-shelf"
+  },
+  {
+   "id": "demo-river-food-shelf",
+   "name": "River Town Food Shelf",
+   "address": "3 Demo Church St, Winooski, VT 05404",
+   "hours": "2nd and 4th Saturdays, 9-11 am.",
+   "who_can_use": "Residents of the town; bring a piece of mail.",
+   "what_they_ask_for": "Money first, then staples.",
+   "how_to_donate": "Give online or mail a check.",
+   "operator": "All volunteer",
+   "source_url": "https://example.org/demo-source/river-shelf",
+   "wishlist_url": "https://example.org/demo-source/river-wishlist"
+  }
+ ],
+ "rescue": {
+  "apps": [
+   {
+    "id": "demo-app-share",
+    "name": "Neighbor Share (a demo app)",
+    "what_it_is": "Free app for giving away extra food to neighbors.",
+    "serves_burlington": true,
+    "evidence": "Invented for the demo.",
+    "how_to_use": "Install it and set your town.",
+    "website": "https://example.org/share",
+    "source_url": "https://example.org/demo-source/share"
+   },
+   {
+    "id": "demo-app-bags",
+    "name": "Surprise Bags (a demo app)",
+    "what_it_is": "App that sells bags of a shop’s extra food at a discount.",
+    "serves_burlington": "unclear",
+    "evidence": "Invented for the demo: no listing here we could find.",
+    "how_to_use": "Check the app for your town.",
+    "website": "https://example.org/bags",
+    "source_url": "https://example.org/demo-source/bags"
+   },
+   {
+    "id": "demo-app-far",
+    "name": "Far Away Grocer (a demo app)",
+    "what_it_is": "Discount groceries near their date.",
+    "serves_burlington": false,
+    "evidence": "Invented for the demo: no partner stores in Vermont.",
+    "how_to_use": "Not available here.",
+    "website": "https://example.org/far",
+    "source_url": "https://example.org/demo-source/far"
+   }
+  ],
+  "organizations": [
+   {
+    "id": "demo-org-glean",
+    "name": "Valley Gleaners (a demo)",
+    "what_they_do": "Volunteers pick what farms leave in the field and give it away free.",
+    "restaurants_donate": "Not for restaurants; farms email the coordinator.",
+    "people_get_food": "A free weekly produce share in summer.",
+    "area": "Burlington and around",
+    "website": "https://example.org/glean",
+    "source_url": "https://example.org/demo-source/glean"
+   },
+   {
+    "id": "demo-org-rescue",
+    "name": "Kitchen to Table (a demo)",
+    "what_they_do": "Picks up surplus from restaurants and stores for meal programs.",
+    "restaurants_donate": "Call to set a pickup; food must never have left the kitchen.",
+    "people_get_food": "Through the food shelves it supplies.",
+    "area": "The county",
+    "website": "https://example.org/k2t",
+    "contact_url": "https://example.org/k2t/donate",
+    "source_url": "https://example.org/demo-source/k2t"
+   }
+  ],
+  "rules": []
+ }
+}

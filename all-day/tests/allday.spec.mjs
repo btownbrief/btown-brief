@@ -13251,6 +13251,548 @@ async function theApps(browser, base) {
   });
 }
 
+
+/* ------------------------------------------------- Eat (wave 1, 2026-10-29) */
+/* Eat's Open now (eat-open.js, under food's route), Deals (deals.js) and
+   Bites (bites.js): food.js's sections split across three tabs, plus
+   Inspections, the randomizer, Under $10, Photos and Menus. All Day's
+   Food is theFood's, unchanged. */
+const eatPanel = (k) => '#panel-' + k;
+async function eatOpen(browser, base, url, opts = {}) {
+  const p = await newPage(browser, base, opts);
+  if (opts.at) await p.page.clock.setFixedTime(opts.at);
+  await p.page.goto(base + url, { waitUntil: 'domcontentloaded' });
+  await settle(p.page);
+  await p.page.waitForTimeout(400);
+  return p;
+}
+const NO_GRADE = /\b(scores?|scored|\d{2,3}\s*\/\s*100|passed|failed|grade|rating|ranked|ranking|worst)\b/i;
+
+async function theEat(browser, base) {
+  const NINE = Date.parse('2026-10-16T21:00:00-04:00');
+  const fd = await foodData(NINE);
+  const at9 = foodExpect(fd, 'fri', 21 * 60);
+  const INSP = JSON.parse(await readFile(path.join(REPO, 'data/eat/inspections.json'), 'utf8'));
+  const KEY = JSON.parse(await readFile(path.join(REPO, 'data/eat/inspection-key.json'), 'utf8')).items;
+  const byId = Object.fromEntries(fd.places.flatMap((r) => r.aka.map((id) => [id, r])));
+  const matched = new Set(INSP.records.map((x) => byId[x.restaurant_id]).filter(Boolean).map((r) => r.id));
+  const withV = INSP.records.find((x) => byId[x.restaurant_id] && x.latest.violations.some((v) => v.critical) && x.latest.violations.length >= 2);
+
+  await group('Eat, Open now keeps food’s route and list (live, frozen Friday 9 pm)', async () => {
+    const { ctx, page, errors } = await eatOpen(browser, base, '/eat/#food', { timezoneId: 'America/Los_Angeles', at: NINE });
+    await page.waitForSelector(foodPanel + ' .lrow.place', { timeout: 15000 });
+    const pill = await page.$$eval('#subnav [data-chip]', (bs) => bs.map((b) => b.dataset.chip));
+    check(JSON.stringify(pill) === JSON.stringify(['open', 'random', 'insp']), 'the pill: Open now, Randomizer, Inspections', pill.join(', '));
+    check(await page.$eval('#tab-food', (b) => b.innerText.trim()) === 'Open now', 'the bar calls it Open now', '');
+    const secs = await page.$$eval(foodPanel + ' .panel-body > .slot', (s) => s.map((x) => x.dataset.sec));
+    check(JSON.stringify(secs) === JSON.stringify(['open', 'random', 'insp']), 'Eat’s Open now draws only its three sections (no Deals, Bite or Reddit)', secs.join(', '));
+    for (const k of ['open', 'late', 'patio', 'cheap']) {
+      const got = await foodFilter(page, k);
+      check(got.rows.length === at9[k].length && got.n === at9[k].length, 'the ' + k + ' chip lists its ' + at9[k].length + ' places', got.rows.length + ' rows, chip ' + got.n);
+    }
+    /* each matched place's row says how long ago it was inspected, in plain words */
+    await page.waitForSelector(foodPanel + ' [data-sec="open"] .insp-age', { timeout: 15000 });
+    const ages = await page.$$eval(foodPanel + ' [data-sec="open"] .lrow.place', (rs) => rs.map((r) => [r.dataset.k.slice(2), (r.querySelector('.insp-age') || {}).textContent || '']));
+    check(ages.length && ages.every(([id, t]) => (matched.has(id) ? /^Inspected (today|yesterday|\d+ (days|weeks|months) ago|\d+ years?(, \d+ months?)? ago)$/.test(t) : t === '')),
+      'a matched place’s row says when it was inspected; an unmatched one says nothing', JSON.stringify(ages.slice(0, 3)));
+    /* the randomizer picks from the list as filtered */
+    const open = (await foodFilter(page, 'open')).rows;
+    await page.click(foodPanel + ' [data-sec="random"] .btn');
+    const spun = await page.$eval(foodPanel + ' [data-sec="random"] .spin[data-k^="spun-"]', (r) => r.dataset.k.replace(/^spun-/, ''));
+    check(open.includes(spun), 'the randomizer picks a place on the Open now list', spun);
+    await page.click(foodPanel + ' [data-sec="random"] .spin .row .btn');
+    const again = await page.$eval(foodPanel + ' [data-sec="random"] .spin[data-k^="spun-"]', (r) => r.dataset.k.replace(/^spun-/, ''));
+    check(open.includes(again) && (open.length < 2 || again !== spun), 'Spin again picks another', again);
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await page.screenshot({ path: path.join(SHOTS, 'eat-open-live-9pm.png') });
+    await ctx.close();
+  });
+
+  await group('Eat, Inspections: dates and plain English, never a score (live)', async () => {
+    const { ctx, page, errors } = await eatOpen(browser, base, '/eat/#food/insp');
+    await page.waitForSelector(foodPanel + ' [data-sec="insp"] .lrow.insp', { timeout: 20000 });
+    await page.click(foodPanel + ' [data-sec="insp"] .btn.more');
+    const rows = await page.$$eval(foodPanel + ' [data-sec="insp"] .lrow.insp', (rs) => rs.map((r) => ({ k: r.dataset.k, t: r.innerText })));
+    check(rows.length === matched.size, 'every place matched to a record is listed (' + matched.size + ')', rows.length);
+    check(rows.every((r) => /Inspected [A-Z][a-z]{2} \d{1,2}, \d{4} · \S.* ago|Inspected .* · (today|yesterday)/.test(r.t)), 'every row: the visit date and its age', rows.find((r) => !/as of/.test(r.t))?.t);
+    const names = await page.$$eval(foodPanel + ' [data-sec="insp"] .lrow.insp .open .t', (ts) => ts.map((t) => t.textContent));
+    check(names.every((n, i) => !i || names[i - 1].localeCompare(n) <= 0), 'A to Z, not by score', '');
+    const text = await page.$eval(foodPanel + ' [data-sec="insp"]', (s) => s.innerText);
+    check(!NO_GRADE.test(text), 'no score, grade or pass/fail anywhere in the list', (text.match(NO_GRADE) || [])[0]);
+    /* the search box narrows it */
+    const one = byId[withV.restaurant_id];
+    await page.fill(foodPanel + ' .insp-q', one.name.slice(0, 6));
+    const found = await page.$$eval(foodPanel + ' [data-sec="insp"] .lrow.insp', (rs) => rs.map((r) => r.dataset.k));
+    check(found.includes('i-' + one.id) && found.length < rows.length, 'the search box finds ' + one.name, found.length);
+    /* the sheet: each item in the key's words, critical first, the source, the as-of line */
+    await page.click(foodPanel + ' [data-k="i-' + one.id + '"] .open');
+    await page.waitForSelector('.sheet-body .insp-v');
+    const sheet = await page.$eval('.sheet-body', (b) => ({ text: b.innerText, items: [...b.querySelectorAll('.insp-v')].map((r) => r.innerText) }));
+    const vs = withV.latest.violations;
+    check(sheet.items.length === vs.length, 'the sheet lists each of the ' + vs.length + ' items', sheet.items.length);
+    check(vs.every((v) => sheet.text.includes(KEY[v.item] ? KEY[v.item].plain_english : v.plain_english)), 'each in the plain-English key', '');
+    check(/Critical/.test(sheet.items[0]), 'a critical item leads, marked Critical', sheet.items[0].slice(0, 120));
+    check(/As of [A-Z][a-z]{2} \d{1,2}, \d{4}/.test(sheet.text) && /fixed since/.test(sheet.text), 'the record’s as-of line and the fixed-since caveat', '');
+    check(!NO_GRADE.test(sheet.text), 'no score in the sheet', (sheet.text.match(NO_GRADE) || [])[0]);
+    check(!sheet.text.includes(String(withV.latest.score) + ' ') || withV.latest.score < 10, 'the state’s number is not shown', withV.latest.score);
+    await page.keyboard.press('Escape');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+    /* a place's sheet carries its inspection line, and #food/i-<id> opens it */
+    const p2 = await eatOpen(browser, base, '/eat/#food/i-' + one.id);
+    await p2.page.waitForSelector('.sheet-body .insp-v', { timeout: 20000 });
+    check(true, '#food/i-<id> opens that inspection', '');
+    await p2.page.keyboard.press('Escape');
+    await p2.page.evaluate((id) => { location.hash = 'food/r-' + id; }, one.id);
+    await p2.page.waitForSelector('.sheet-body .insp-row a.t', { timeout: 8000 });
+    const line = await p2.page.$eval('.sheet-body .insp-row', (r) => r.innerText);
+    check(/^Inspected .* ago/.test(line) && /noted/i.test(line), 'a place’s sheet has its inspection line', line);
+    check(!p2.errors.length, 'no console errors', p2.errors.join(' | '));
+    await p2.ctx.close();
+  });
+
+  await group('Eat, food’s old links follow the sections that moved', async () => {
+    const { ctx, page, errors } = await eatOpen(browser, base, '/eat/?demo=1#food/deals');
+    await page.waitForFunction(() => /^#deals/.test(location.hash), null, { timeout: 8000 });
+    check(true, '#food/deals lands on Deals', '');
+    /* a place's link flashes its row, through the late loads that rebuild the list */
+    const p2 = await newPage(browser, base);
+    await p2.page.goto(base + '/eat/?demo=1#food/r-demo-all-night-diner');
+    const lit = await p2.page.waitForSelector(foodPanel + ' [data-k="r-demo-all-night-diner"].flash', { timeout: 3000 }).then(() => true, () => false);
+    await p2.page.waitForTimeout(1200);
+    check(lit && !!(await p2.page.$(foodPanel + ' [data-k="r-demo-all-night-diner"].flash')), '#food/r-<id> flashes its row, and it stays lit after the late loads', '');
+    await p2.ctx.close();
+    for (const [from, to] of [['asks', 'bites'], ['add', 'bites'], ['bite', 'bites']]) {
+      await page.evaluate((h) => { location.hash = h; }, 'food/' + from);
+      await page.waitForFunction((t) => location.hash.startsWith('#' + t), to, { timeout: 8000 });
+      check(true, '#food/' + from + ' lands on ' + to, '');
+    }
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Eat, Deals: today, happy hour, under $10 (live)', async () => {
+    const NOON = Date.parse('2026-10-16T12:00:00-04:00');
+    const { ctx, page, errors } = await eatOpen(browser, base, '/eat/#deals', { at: NOON });
+    await page.waitForSelector(eatPanel('deals') + ' [data-sec="cheap"] .sec', { timeout: 15000 });
+    const pill = await page.$$eval('#subnav [data-chip]', (bs) => bs.map((b) => b.dataset.chip));
+    check(JSON.stringify(pill) === JSON.stringify(['today', 'hh', 'cheap']), 'the pill: Today, Happy hour, Under $10', pill.join(', '));
+    const P = await page.evaluate(() => import('/all-day/js/modes/deals.js').then((m) => ['$5 margaritas', '$10 for 2 tacos + 16oz lager', '$5 off all burgers', 'Two beers and a pizza for $15', 'Free pool', '$0.75 wings', '$15 off'].map(m.priceOf)));
+    check(JSON.stringify(P) === JSON.stringify([5, 10, null, 15, null, 0.75, null]), 'a deal’s price is read off its words; "$5 off" is not a price', JSON.stringify(P));
+    const cheap = await page.$$eval(eatPanel('deals') + ' [data-sec="cheap"] .lrow .t', (ts) => ts.map((t) => t.textContent));
+    const prices = await page.evaluate((ts) => import('/all-day/js/modes/deals.js').then((m) => ts.map(m.priceOf)), cheap);
+    check(cheap.length > 0 && prices.every((p) => p !== null && p <= 10), 'Under $10 lists only deals at $10 or less (' + cheap.length + ')', JSON.stringify(cheap.slice(0, 4)));
+    const hh = await page.$$eval(eatPanel('deals') + ' [data-sec="hh"] .lrow', (rs) => rs.length);
+    const hhWant = fd.deals.filter((d) => d.type === 'happy-hour' && (!d.days || d.days.includes('fri'))).length;
+    check(hh <= hhWant, 'Happy hour shows today’s happy hours only (' + hh + ' of ' + hhWant + ')', '');
+    check(await page.$(eatPanel('deals') + ' [data-sec="today"] .deck, ' + eatPanel('deals') + ' [data-sec="today"] .note') !== null, 'Today has the deck (or says there are none)', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Eat, Bites: five top tabs, photos, menus (demo)', async () => {
+    const { ctx, page, errors } = await eatOpen(browser, base, '/eat/?demo=1#bites');
+    await page.waitForSelector(eatPanel('bites') + ' [data-sec="menus"] .qcard', { timeout: 15000 });
+    const pill = await page.$$eval('#subnav [data-chip]', (bs) => bs.map((b) => b.dataset.chip).sort());
+    check(JSON.stringify(pill) === JSON.stringify(['asks', 'bite', 'kitchens', 'menus', 'photos']), 'the pill has the five top tabs', pill.join(', '));
+    const st = await page.evaluate(() => {
+      const p = document.querySelector('#panel-bites');
+      return { form: !!p.querySelector('[data-sec="photos"] form.dish'), dishes: p.querySelectorAll('[data-sec="photos"] .ftile').length,
+        menus: [...p.querySelectorAll('[data-sec="menus"] a.qcard')].map((a) => a.href), best: !!p.querySelector('[data-sec="best"] .qcard'), asks: p.querySelectorAll('[data-sec="asks"] .feed .row, [data-sec="asks"] .feed > *').length };
+    });
+    check(st.form, 'Photos carries the Feature a dish form', '');
+    check(st.dishes > 0, 'and the readers’ dishes', st.dishes);
+    check(st.menus.length > 0 && st.menus.every((h) => /^https?:/.test(h)), 'Menus is a shelf of links', st.menus.length);
+    check(st.asks > 0 && st.best, 'Asked on Reddit and Best of r/burlington', '');
+    /* the menu search narrows the shelf */
+    await page.fill(eatPanel('bites') + ' .menu-q', 'zzzz');
+    check(/No menu by that name/.test(await page.$eval(eatPanel('bites') + ' [data-sec="menus"]', (s) => s.innerText)), 'a search with no match says so', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Eat, every tab on demo data, 390 and 1280, light and dark', async () => {
+    for (const tab of ['food', 'deals', 'openings', 'bites', 'market', 'dinner']) {
+      for (const [w, h] of [[390, 844], [1280, 900]]) {
+        for (const scheme of ['light', 'dark']) {
+          const { ctx, page, errors } = await eatOpen(browser, base, '/eat/?demo=1#' + tab, { viewport: { width: w, height: h }, scheme });
+          await page.waitForTimeout(600);
+          await page.evaluate(() => document.fonts.ready);
+          const st = await page.evaluate((t) => ({ shelf: !!document.querySelector('#panel-' + t + ' .promise'), err: !!document.querySelector('#panel-' + t + ' .errbox'),
+            wide: document.documentElement.scrollWidth > innerWidth + 1 }), tab);
+          check(!st.shelf && !st.err, tab + ' ' + w + ' ' + scheme + ': a built tab, not a shelf or an error', JSON.stringify(st));
+          check(!st.wide, tab + ' ' + w + ' ' + scheme + ': no sideways scroll', '');
+          await page.screenshot({ path: path.join(SHOTS, 'eat-' + tab + '-demo-' + w + '-' + scheme + '.png') });
+          check(!errors.length, tab + ' ' + w + ' ' + scheme + ': no console errors', errors.join(' | '));
+          await ctx.close();
+        }
+      }
+    }
+  });
+}
+
+async function theEatNew(browser, base) {
+// Body of:  async function theEatNew(browser, base) { ...this file... }
+// Uses the spec's group, check, newPage, settle, SHOTS, path, readFile, REPO.
+// The Eat app's New tab (js/modes/new.js) on data/eat/openings.json, live and ?demo=1.
+
+  const file = JSON.parse(await readFile(path.join(REPO, 'data/eat/openings.json'), 'utf8'));
+  const E = file.entries;
+  /* the tab's own rules, restated: Burlington's today, month-only dates mid-month, Last month = 31 days */
+  const dayN = (s) => { const x = /^(\d{4})-(\d{2})(?:-(\d{2}))?$/.exec(String(s || '')); return x ? Date.UTC(+x[1], +x[2] - 1, x[3] ? +x[3] : 15) / 864e5 : 0; };
+  const today = dayN(new Intl.DateTimeFormat('en-CA', { timeZone: 'America/New_York', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date()));
+  const recent = (e) => [e.announced, e.opened, e.closed].map(dayN).some((n) => n && n <= today && n > today - 32);
+  const want = (cat) => {
+    const m = E.filter((e) => (e.category === 'non-food' ? 'non-food' : 'food') === cat && ['just_opened', 'coming_soon', 'closing_soon', 'closed', 'open'].includes(e.status));
+    return { just: m.filter((e) => e.status === 'just_opened').length, soon: m.filter((e) => e.status === 'coming_soon').length,
+      closing: m.filter((e) => e.status === 'closing_soon').length, closed: m.filter((e) => e.status === 'closed').length,
+      month: m.filter(recent).length, reminisce: m.filter((e) => e.status === 'closed' && e.edition && e.edition.archive_url).length };
+  };
+  const SECS = ['just', 'soon', 'closing', 'closed', 'month', 'reminisce'];
+  const pillOf = (page) => page.$$eval('#subnav [data-chip]', (bs) => Object.fromEntries(bs.map((b) => [b.dataset.chip, Number((b.querySelector('.n') || {}).textContent)])));
+  const mine = (errors) => errors;
+  const open = async (url, combo = {}) => {
+    const p = await newPage(browser, base, combo);
+    await p.page.goto(base + url, { waitUntil: 'domcontentloaded' });
+    await settle(p.page);
+    await p.page.waitForSelector('#panel-openings .shelf-sec, #panel-openings .errbox', { timeout: 15000 });
+    await p.page.waitForTimeout(300);
+    return p;
+  };
+
+  await group('eat new: live, from data/eat/openings.json', async () => {
+    const { ctx, page, errors } = await open('/eat/#openings');
+    const pill = await pillOf(page);
+    check(JSON.stringify(Object.keys(pill).sort()) === JSON.stringify(SECS.slice().sort()), 'the pill is the six top tabs', JSON.stringify(pill));
+    const food = want('food');
+    check(SECS.every((k) => pill[k] === food[k]), 'each section counts the file’s food places', JSON.stringify({ pill, food }));
+    const st = await page.evaluate(() => {
+      const p = document.querySelector('#panel-openings');
+      const rows = [...p.querySelectorAll('.shelf-sec [data-k]')];
+      return { on: p.querySelector('.newcats .chip.on')?.dataset.chip, err: !!p.querySelector('.errbox'),
+        keyed: rows.every((r) => /^n-/.test(r.dataset.k) && r.querySelector('a[href]')), n: rows.length,
+        closed: p.querySelectorAll('[data-sec="closed"] [data-k]').length, text: p.innerText };
+    });
+    check(st.on === 'food' && !st.err, 'Food is the default chip, no error box', JSON.stringify(st.on));
+    check(st.n > 0 && st.keyed, 'every row has an n- key and a link', st.n);
+    check(st.closed === Math.min(12, food.closed), 'Closed shows twelve, then All', st.closed);
+    check(!/\b(rating|rated|scores?|stars?|best|ranked|ranking|top \d+)\b/i.test(st.text), 'no scores, ratings or rankings', (st.text.match(/\b(rating|rated|scores?|stars?|best|ranked|ranking)\b/i) || [])[0]);
+    /* Reminisce links each place to the edition that covered it */
+    const mem = await page.$$eval('#panel-openings [data-sec="reminisce"] [data-k]', (rs) => rs.map((r) => [r.dataset.k, [...r.querySelectorAll('a')].map((a) => a.href)]));
+    const byK = Object.fromEntries(E.map((e) => ['n-' + e.id, e]));
+    check(mem.length > 0 && mem.every(([k, hrefs]) => byK[k] && byK[k].status === 'closed' && hrefs.includes(byK[k].edition.archive_url)), 'Reminisce rows link to their edition', JSON.stringify(mem.slice(0, 2)));
+    /* the non-food chip switches every section */
+    await page.click('#panel-openings .newcats [data-chip="non-food"]');
+    await page.waitForTimeout(250);
+    const other = await pillOf(page), nf = want('non-food');
+    check(SECS.every((k) => other[k] === nf[k]), 'Everything else counts the file’s non-food places', JSON.stringify({ other, nf }));
+    check(await page.$eval('#panel-openings .newcats .chip.on', (c) => c.dataset.chip) === 'non-food', 'the chip shows it is on', '');
+    if (!nf.closing) check(/Nothing closing soon/.test(await page.$eval('#panel-openings [data-sec="closing"]', (s) => s.innerText)), 'an empty section says so', '');
+    check(!mine(errors).length, 'no console errors', mine(errors).join(' | '));
+    await ctx.close();
+  });
+
+  await group('eat new: deep links', async () => {
+    /* the oldest food closing sits past the first twelve: the link opens Closed in full and flashes it */
+    const old = E.filter((e) => e.status === 'closed' && e.category === 'food').sort((a, b) => dayN(a.closed) - dayN(b.closed))[0];
+    const { ctx, page, errors } = await open('/eat/#openings/n-' + old.id);
+    await page.waitForTimeout(400);
+    const hit = await page.evaluate((k) => { const n = document.querySelector('#panel-openings [data-sec="closed"] [data-k="' + k + '"]'); return n ? n.classList.contains('flash') : null; }, 'n-' + old.id);
+    check(hit === true, 'a place’s link flashes it in Closed', String(hit));
+    const nfe = E.find((e) => e.category === 'non-food' && e.status === 'closed');
+    await page.evaluate((k) => { location.hash = 'openings/' + k; }, 'n-' + nfe.id);
+    await page.waitForTimeout(500);
+    check(await page.$eval('#panel-openings .newcats .chip.on', (c) => c.dataset.chip) === 'non-food', 'a non-food place’s link switches the chip', '');
+    check(await page.$('#panel-openings [data-k="n-' + nfe.id + '"].flash') !== null, 'and flashes it', nfe.id);
+    await page.evaluate(() => { location.hash = 'openings/n-no-such-place'; });
+    await page.waitForTimeout(300);
+    check(/isn’t on New/.test(await page.evaluate(() => document.body.innerText)), 'an unknown place says so', '');
+    check(!mine(errors).length, 'no console errors', mine(errors).join(' | '));
+    await ctx.close();
+  });
+
+  await group('eat new: demo', async () => {
+    const { ctx, page, errors } = await open('/eat/?demo=1#openings');
+    const pill = await pillOf(page);
+    check(SECS.every((k) => pill[k] > 0), 'the demo fills all six top tabs', JSON.stringify(pill));
+    check(await page.$$eval('#panel-openings [data-k]', (r) => r.length) > 5, 'with rows', '');
+    check(!mine(errors).length, 'no console errors', mine(errors).join(' | '));
+    await ctx.close();
+  });
+
+  await group('eat new: screenshots', async () => {
+    for (const [w, h] of [[390, 844], [1280, 900]]) {
+      for (const scheme of ['light', 'dark']) {
+        const { ctx, page, errors } = await open('/eat/#openings', { viewport: { width: w, height: h }, scheme });
+        await page.evaluate(() => document.fonts.ready);
+        await page.screenshot({ path: path.join(SHOTS, 'eat-new-' + w + '-' + scheme + '.png') });
+        check(!mine(errors).length, w + ' ' + scheme + ': no console errors', mine(errors).join(' | '));
+        await ctx.close();
+      }
+    }
+  });
+
+}
+
+/* Eat · Market and Eat · Dinner Club (wave 1, 2026-10-29). Two test bodies
+   for all-day/tests/allday.spec.mjs: paste both functions next to theApps()
+   and call them from main() after it. They use the spec's own helpers
+   (group, check, newPage, settle, SHOTS, path, readFile, REPO). */
+
+async function theEatMarket(browser, base) {
+  const market = JSON.parse(await readFile(path.join(REPO, 'data/eat/market.json'), 'utf8'));
+  const rescue = JSON.parse(await readFile(path.join(REPO, 'data/eat/rescue.json'), 'utf8'));
+  const pillKeys = (page) => page.$$eval('#subnav [data-pill="sec-market"] .chip', (b) => b.map((x) => x.dataset.chip));
+
+  await group('eat market: live, from the real files', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/eat/#market');
+    await settle(page);
+    await page.waitForSelector('#panel-market [data-sec="rescue"] .tdiv', { timeout: 8000 });
+    const keys = await pillKeys(page);
+    check(['week', 'season', 'farms', 'fridge', 'rescue'].every((k) => keys.includes(k)) && keys.length === 5, 'the pill has the five top tabs', keys.join(','));
+    await page.waitForSelector('#panel-market [data-k="m-board-soon"]', { timeout: 8000 }).catch(() => {});
+    const text = await page.$eval('#panel-market', (p) => p.innerText);
+    check(/Opens soon/.test(text), 'live, with no rescue board on the server: Opens soon, not an error', '');
+    const rows = await page.$$eval('#panel-market [data-k]', (n) => n.map((x) => x.dataset.k));
+    check(rows.length > 20 && rows.every((k) => /^(m|b)-/.test(k)), 'every row has its m- key', rows.length + ' ' + rows.filter((k) => !/^(m|b)-/.test(k)).join(','));
+    check(market.food_shelves.every((f) => rows.includes('m-' + f.id)), 'every food shelf is a row', '');
+    check(rescue.organizations.every((o) => rows.includes('m-' + o.id)) && rescue.apps.every((a) => rows.includes('m-' + a.id)), 'every rescue group and app is a row', '');
+    /* an unconfirmed fridge may be someone's home: nothing of it is drawn */
+    for (const f of market.community_fridges.filter((x) => !/^(confirmed|active)$/i.test(x.status || ''))) {
+      check(!text.includes(f.address.split(',')[0]) && !rows.includes('m-' + f.id), 'the unconfirmed fridge’s address is never shown (' + f.id + ')', '');
+    }
+    check(/None confirmed/.test(text), 'no confirmed fridge: it says so', '');
+    check(await page.$eval('#panel-market [data-k="m-fridge-none"] a[href^="mailto:"]', (a) => a.href).then((h) => /^mailto:btownbrief@gmail\.com/.test(h), () => false), 'and asks to be told, by email', '');
+    /* apps: "unclear" is said as unclear, never as working here */
+    for (const a of rescue.apps) {
+      const line = await page.$eval('#panel-market [data-k="m-' + a.id + '"]', (r) => r.innerText).catch(() => '');
+      const want = a.serves_burlington === true ? /Serves Burlington/ : a.serves_burlington === false ? /Not in Burlington/ : /Unclear here/;
+      check(want.test(line) && (a.serves_burlington === true || !/Serves Burlington/.test(line)), a.name + ': ' + String(a.serves_burlington), line);
+    }
+    /* this week, or when each market is back */
+    const week = await page.$eval('#panel-market [data-sec="week"]', (s) => s.innerText);
+    check(market.markets.every((m) => week.includes(m.name) || (m.winter && week.includes(m.winter.name))), 'every market is in This week, on its day or saying when it’s back', '');
+    check(!/\b\d{1,2}:\d{2}-\d{1,2}:\d{2}\b/.test(week), 'hours in plain words, never 9:00-14:00', '');
+    /* every row's source link is a real page */
+    const srcs = await page.$$eval('#panel-market .lrow a.pillbtn', (a) => a.map((x) => x.href));
+    check(srcs.length > 20 && srcs.every((h) => /^https:\/\//.test(h)), 'every row links out to its source or website', srcs.filter((h) => !/^https:/.test(h)).join(' '));
+    /* the vendors sit behind a button */
+    const v = await page.$('#panel-market [data-sec="week"] .lrow button.pillbtn');
+    if (v) {
+      await v.click();
+      await page.waitForSelector('.sheet-card .sheet-body', { timeout: 4000 });
+      check(/vendor|list/i.test(await page.$eval('.sheet-body', (b) => b.innerText)), 'Vendors opens the vendor list', '');
+      await page.click('.sheet-head .iconbtn');
+    }
+    /* deep links */
+    await page.goto(base + '/eat/#market/m-' + market.food_shelves[0].id);
+    await settle(page);
+    await page.waitForSelector('.sheet-card .sheet-body', { timeout: 4000 }).catch(() => {});
+    check(/Hours/.test(await page.$eval('.sheet-body', (b) => b.innerText).catch(() => '')), '#market/m-<id> opens that food shelf', '');
+    await page.goto(base + '/eat/#market/fridge');
+    await settle(page);
+    await page.waitForTimeout(400);
+    const top = await page.$eval('#panel-market [data-sec="fridge"]', (s) => s.getBoundingClientRect().top);
+    check(top < 300, '#market/fridge jumps to the Fridge section', top);
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    for (const [w, h] of [[390, 844], [1280, 900]]) for (const scheme of ['light', 'dark']) {
+      const s = await newPage(browser, base, { viewport: { width: w, height: h }, scheme });
+      await s.page.goto(base + '/eat/#market');
+      await settle(s.page);
+      await s.page.waitForSelector('#panel-market [data-sec="rescue"] .tdiv', { timeout: 8000 });
+      await s.page.screenshot({ path: path.join(SHOTS, 'eat-market-' + w + '-' + scheme + '.png') });
+      check(!s.errors.length, w + ' ' + scheme + ': no console errors', s.errors.join(' | '));
+      await s.ctx.close();
+    }
+    await ctx.close();
+  });
+
+  await group('eat market: the rescue board is free only', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/eat/?demo=1#market/rescue');
+    await settle(page);
+    await page.waitForSelector('#panel-market .rescue-board .card.board', { timeout: 8000 });
+    const titles = await page.$$eval('#panel-market .rescue-board .card.board .b-title', (n) => n.map((x) => x.textContent));
+    /* boards-fake seeds three rescue posts, two of them priced */
+    check(titles.length === 1 && /noodles/.test(titles[0]), 'only the free post shows; the two priced ones are dropped', titles.join(' | '));
+    check(/Free/.test(await page.$eval('#panel-market .rescue-board .b-meta', (n) => n.textContent)), 'the card says Free', '');
+    check(!/half price|\$\d/.test(await page.$eval('#panel-market [data-sec="rescue"]', (s) => s.innerText)), 'no price anywhere in Rescue', '');
+    await page.click('#panel-market [data-act="rescuepost"]');
+    await page.waitForSelector('.sheet-body', { timeout: 4000 });
+    check(/Sign in to post/.test(await page.$eval('.sheet-body', (b) => b.innerText)), 'signed out, posting asks for the sign-in', '');
+    await page.click('.sheet-head .iconbtn');
+    await page.evaluate(() => import('/all-day/js/auth.js').then((a) => a.demoSignIn()));
+    await page.click('#panel-market [data-act="rescuepost"]');
+    await page.waitForSelector('.sheet-body form.bform', { timeout: 4000 });
+    const names = await page.$$eval('.sheet-body form.bform [name]', (n) => n.map((x) => x.name));
+    check(!names.some((n) => /price/.test(n)), 'the form has no price field', names.join(','));
+    check(['m:spot', 'm:until', 'm:portions'].every((n) => names.includes(n)), 'it asks for the restaurant, pick-up time and portions', names.join(','));
+    const form = await page.$eval('.sheet-body form.bform', (f) => f.innerText);
+    check(/Free food only/.test(form), 'it says free only', '');
+    check(/kept hot or cold/.test(form) && /allergens/.test(form), 'and the safety line: kept hot or cold, allergens listed', '');
+    await page.fill('input[name=title]', 'Six bowls of soup');
+    const nameField = await page.$('input[name=display_name]');
+    if (nameField) await nameField.fill('Robin');
+    await page.fill('input[name="m:spot"]', 'A soup place on Pine St');
+    await page.fill('input[name="m:until"]', '9 pm');
+    await page.fill('input[name="m:portions"]', '6');
+    await page.click('.bform button[type=submit]');
+    await page.waitForSelector('#panel-market .rescue-board .card.board:has-text("Six bowls of soup")', { timeout: 4000 }).catch(() => {});
+    check(!!(await page.$('#panel-market .rescue-board .card.board:has-text("Six bowls of soup")')), 'a free post, posted, is on the board', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('eat market: the rescue board, live once its SQL is pasted', async () => {
+    const posts = [
+      { id: 'r1', board: 'rescue', kind: 'rescue', title: 'Six bowls of pho at close', body: '', author: 'Linh', meta: { spot: 'A pho shop on North Ave', until: '9 pm', portions: 6 }, created_at: new Date(Date.now() - 3600e3).toISOString(), expires_at: new Date(Date.now() + 20 * 3600e3).toISOString() },
+      { id: 'r2', board: 'rescue', kind: 'rescue', title: 'Bread, two dollars', body: '', author: 'Sam', meta: { spot: 'A bakery', until: '7 pm', price: 2 }, created_at: new Date(Date.now() - 7200e3).toISOString(), expires_at: new Date(Date.now() + 20 * 3600e3).toISOString() },
+    ];
+    const calls = [];
+    const rpc = (fn, body) => {
+      calls.push([fn, body]);
+      if (fn === 'nn_rules') return { version: 3, boards: { rescue: { premod: false } } };
+      if (fn === 'nn_posts_list') return body.p_board === 'rescue' ? posts : [];
+      return undefined;
+    };
+    const { ctx, page, errors } = await newPage(browser, base, { rpc });
+    await page.goto(base + '/eat/#market/rescue');
+    await page.waitForSelector('#panel-market [data-sec="rescue"] .card.board', { timeout: 15000 });
+    const shown = await page.$$eval('#panel-market [data-sec="rescue"] .card.board', (cs) => cs.map((c) => c.dataset.k));
+    check(JSON.stringify(shown) === JSON.stringify(['b-r1']), 'the live board shows the free post, never the priced one', shown.join(','));
+    check(calls.some(([fn, b]) => fn === 'nn_posts_list' && b.p_board === 'rescue'), 'it reads the rescue board on the server', '');
+    check(!!(await page.$('#panel-market [data-sec="rescue"] .sec .btn')), 'Post leftovers is offered', '');
+    check(!/Opens soon/.test(await page.$eval('#panel-market [data-sec="rescue"]', (s) => s.innerText)), 'and Opens soon is gone', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('eat market: the demo', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/eat/?demo=1#market');
+    await settle(page);
+    await page.waitForSelector('#panel-market [data-sec="rescue"] .rescue-board', { timeout: 8000 });
+    const keys = await pillKeys(page);
+    check(keys.length === 5, 'the pill has the five top tabs', keys.join(','));
+    const text = await page.$eval('#panel-market', (p) => p.innerText);
+    check(/Lakeside|Thursday Evening/.test(text), 'the invented markets show', '');
+    check(!/99 Secret Demo Lane/.test(text), 'the demo’s unconfirmed fridge address is never shown', '');
+    check(/The Porch Fridge/.test(text), 'an active fridge does show', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    for (const [w, h] of [[390, 844], [1280, 900]]) for (const scheme of ['light', 'dark']) {
+      const s = await newPage(browser, base, { viewport: { width: w, height: h }, scheme });
+      await s.page.goto(base + '/eat/?demo=1#market');
+      await settle(s.page);
+      await s.page.waitForSelector('#panel-market .rescue-board', { timeout: 8000 });
+      await s.page.screenshot({ path: path.join(SHOTS, 'eat-market-demo-' + w + '-' + scheme + '.png') });
+      await s.ctx.close();
+    }
+    await ctx.close();
+  });
+}
+
+async function theEatDinner(browser, base) {
+  const FEED = /play\.btownbrief\.com\/up-for-it\/data\/meetup\.json/;
+  const pillKeys = (page) => page.$$eval('#subnav [data-pill="sec-dinner"] .chip', (b) => b.map((x) => x.dataset.chip));
+  const inDays = (d) => new Date(Date.now() + d * 86400000).toISOString();
+  const bites = { uid: 'bb-1', title: 'Btown Bites: Dinner at a barbecue place', starts_at: inDays(4), url: 'https://www.meetup.com/burlington-social-activites-group/events/123456/', location: 'Pine St, Burlington' };
+  const feed = (events) => [[FEED, { fetched: new Date().toISOString(), events }]];
+
+  await group('eat dinner: live, with a Btown Bites dinner on the calendar', async () => {
+    const { ctx, page, errors } = await newPage(browser, base, { routes: feed([
+      { uid: 'x', title: 'Trivia night', starts_at: inDays(1), url: 'https://www.meetup.com/x/events/1/', location: 'A pub' },
+      { uid: 'old', title: 'Btown Bites: last month', starts_at: inDays(-20), url: 'https://www.meetup.com/x/events/2/', location: 'Gone' },
+      bites,
+      { uid: 'later', title: 'Btown Bites: the one after', starts_at: inDays(30), url: 'https://www.meetup.com/x/events/3/', location: 'Later' },
+    ]) });
+    await page.goto(base + '/eat/#dinner');
+    await settle(page);
+    const keys = await pillKeys(page);
+    check(JSON.stringify(keys) === JSON.stringify(['next', 'signup', 'past', 'host', 'restaurants']), 'the pill has the five top tabs', keys.join(','));
+    const next = await page.$eval('#panel-dinner [data-k="d-next"]', (n) => n.innerText).catch(() => '');
+    check(/barbecue/.test(next) && !/Trivia|last month|the one after/.test(next), 'the next upcoming dinner, not trivia, not a past or later one', next);
+    const day = new Date(bites.starts_at).toLocaleDateString('en-US', { timeZone: 'America/New_York', weekday: 'long', month: 'long', day: 'numeric' });
+    check(next.includes(day), 'its day in plain words (' + day + ')', next);
+    check(await page.$eval('#panel-dinner [data-signup]', (a) => a.href) === bites.url, 'Sign up on Meetup links to the event', '');
+    const DIN = JSON.parse(await readFile(path.join(REPO, 'data/eat/dinners.json'), 'utf8'));
+    const bb = DIN.past[0];
+    const past = await page.$eval('#panel-dinner [data-k="d-past-' + bb.id + '"]', (n) => ({ t: n.innerText, hrefs: [...n.querySelectorAll('a')].map((a) => a.href) })).catch(() => null);
+    check(!!past && past.t.includes(bb.place) && /Thursday, September 17/.test(past.t), 'Past dinners: ' + bb.place + ', with its day, from data/eat/dinners.json', past && past.t);
+    check(!!past && past.hrefs.includes(bb.meetup_url) && past.hrefs.includes(bb.edition.archive_url), 'with its Meetup event and the edition that announced it', past && past.hrefs.join(' '));
+    check(!(await page.$('#panel-dinner [data-railmode="dinner-past"]')), 'no photo shelf until a dinner has photos', '');
+    const mails = await page.$$eval('#panel-dinner a[href^="mailto:"]', (a) => a.map((x) => decodeURIComponent(x.href)));
+    check(mails.some((m) => /^mailto:btownbrief@gmail\.com\?subject=Host a Btown Bites table$/.test(m)), 'Host a table emails us', mails.join(' | '));
+    check(mails.some((m) => /^mailto:btownbrief@gmail\.com\?subject=Host Btown Bites at our restaurant$/.test(m)), 'Restaurants email us', mails.join(' | '));
+    const ks = await page.$$eval('#panel-dinner [data-k]', (n) => n.map((x) => x.dataset.k));
+    check(ks.every((k) => /^d-/.test(k)) && ks.length >= 5, 'every card has its d- key', ks.join(','));
+    await page.goto(base + '/eat/#dinner/host');
+    await settle(page);
+    await page.waitForTimeout(400);
+    check(await page.$eval('#panel-dinner [data-sec="host"]', (s) => { const p = s.closest('.panel'); return s.getBoundingClientRect().top < 300 || (p.scrollTop > 0 && p.scrollTop + p.clientHeight >= p.scrollHeight - 2); }), '#dinner/host jumps to Host a table', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    for (const [w, h] of [[390, 844], [1280, 900]]) for (const scheme of ['light', 'dark']) {
+      const s = await newPage(browser, base, { viewport: { width: w, height: h }, scheme, routes: feed([bites]) });
+      await s.page.goto(base + '/eat/#dinner');
+      await settle(s.page);
+      await s.page.screenshot({ path: path.join(SHOTS, 'eat-dinner-' + w + '-' + scheme + '.png') });
+      check(!s.errors.length, w + ' ' + scheme + ': no console errors', s.errors.join(' | '));
+      await s.ctx.close();
+    }
+    await ctx.close();
+  });
+
+  await group('eat dinner: live, nothing on the calendar', async () => {
+    const { ctx, page, errors } = await newPage(browser, base, { routes: feed([{ uid: 'x', title: 'Trivia night', starts_at: inDays(1), url: 'https://www.meetup.com/x/events/1/' }]) });
+    await page.goto(base + '/eat/#dinner');
+    await settle(page);
+    const t = await page.$eval('#panel-dinner [data-sec="next"]', (s) => s.innerText);
+    check(/No dinner on the calendar yet\./.test(t), 'no dinner: it says so', t);
+    check(await page.$eval('#panel-dinner [data-k="d-next-none"] a', (a) => a.href) === 'https://www.meetup.com/burlington-social-activites-group/', 'with the group’s link', '');
+    check(!/noodle|barbecue joint|Ramen night/.test(await page.$eval('#panel-dinner', (p) => p.innerText)), 'live never shows the demo’s dinners', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('eat dinner: the demo', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/eat/?demo=1#dinner');
+    await settle(page);
+    const next = await page.$eval('#panel-dinner [data-k="d-next"]', (n) => n.innerText).catch(() => '');
+    const day = new Date(Date.now() + 5 * 86400000).toLocaleDateString('en-US', { timeZone: 'America/New_York', weekday: 'long', month: 'long', day: 'numeric' });
+    check(/noodle/.test(next) && next.includes(day), 'an invented next dinner, five days out', next);
+    const past = await page.$$eval('#panel-dinner [data-rail="dinner-past"] .vcard', (n) => n.map((x) => x.dataset.k));
+    check(past.length === 4 && past.every((k) => /^d-photo-/.test(k)), 'the invented past dinners’ photos, as a shelf', past.join(','));
+    check(await page.$$eval('#panel-dinner [data-sec="past"] .lrow', (r) => r.length) === 4, 'and each dinner as a row', '');
+    /* the matching form: it asks for each answer, then writes them into the email */
+    const form = '#panel-dinner form.dinnerform';
+    await page.click(form + ' .send');
+    check(/Add your first name/.test(await page.$eval(form + ' .err', (e) => e.textContent)), 'the form asks for a first name first', '');
+    await page.fill(form + ' [name="name"]', 'Maya');
+    await page.click(form + ' .ages button:nth-child(2)');
+    await page.click(form + ' .send');
+    check(/Pick a night/.test(await page.$eval(form + ' .err', (e) => e.textContent)), 'then a night', '');
+    await page.click(form + ' [data-night="tue"]');
+    await page.click(form + ' [data-night="thu"]');
+    await page.fill(form + ' [name="skip"]', 'shellfish');
+    await page.click(form + ' .send');
+    const mail = decodeURIComponent(await page.$eval(form, (f) => f.dataset.mail || ''));
+    check(/^mailto:btownbrief@gmail\.com\?subject=Btown Bites: count me in&body=/.test(mail) && /Name: Maya/.test(mail) && /Age: 26-30/.test(mail) && /Nights: Tue, Thu/.test(mail) && /shellfish/.test(mail),
+      'the answers go into an email to the Brief', mail);
+    check(await page.$eval(form + ' .err', (e) => e.hidden), 'and the error line clears', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    for (const [w, h] of [[390, 844], [1280, 900]]) for (const scheme of ['light', 'dark']) {
+      const s = await newPage(browser, base, { viewport: { width: w, height: h }, scheme });
+      await s.page.goto(base + '/eat/?demo=1#dinner');
+      await settle(s.page);
+      await s.page.screenshot({ path: path.join(SHOTS, 'eat-dinner-demo-' + w + '-' + scheme + '.png') });
+      await s.ctx.close();
+    }
+    await ctx.close();
+  });
+}
+
+
 /* ----------------------------------------------------------------- run */
 /* account-data.js: deleting the account from an app that does not load
    Habits or The Build still deletes their server data (wave 0 bug found by
@@ -13341,6 +13883,10 @@ try {
   await run(fullPagesAndAsks);
   await run(theApps);
   await run(accountData);
+  await run(theEat);
+  await run(theEatNew);
+  await run(theEatMarket);
+  await run(theEatDinner);
 } finally {
   await browser.close();
   proc.kill();
