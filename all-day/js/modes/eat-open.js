@@ -229,8 +229,9 @@ function placeRow(r, t, cls) {
   const pic = E.thumbOf(fd);
   row.append(pic ? el('span', 'th', art(pic)) : el('span', 'th bare', mark(r.name, 'round')), open);
   const acts = el('div', 'placeacts');
-  if (fd.posts.length || fd.dishes.length) {
-    const b = el('button', 'pillbtn theirs', esc('Their food'));
+  const nPics = fd.dishes.length + Math.min(fd.posts.length, 12);
+  if (nPics) {
+    const b = el('button', 'pillbtn theirs', esc(E.plural(nPics, 'photo', 'photos')));
     b.setAttribute('aria-label', 'Their food at ' + r.name);
     b.addEventListener('click', () => E.foodSheet(r));
     acts.appendChild(b);
