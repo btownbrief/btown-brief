@@ -26,7 +26,7 @@
 
 import * as app from '../app.js';
 import * as boards from '../boards.js';
-import { el, esc, ICON } from '../ui.js';
+import { el, esc, ICON, divider } from '../ui.js';
 import { townMode, getJSON, row, card, links, line, list, stats, today, plusDays, fmtDay, ago, epoch, money, shortMoney } from './town-kit.js';
 
 const WHAT = [['pothole', 'Pothole'], ['streetlight', 'Streetlight out'], ['sidewalk', 'Sidewalk'], ['crosswalk', 'Crosswalk'], ['sign', 'Sign'], ['graffiti', 'Graffiti'], ['trash', 'Trash'], ['tree', 'Tree'], ['other', 'Something else']];
@@ -123,7 +123,7 @@ function drawSold(box, d) {
   sales.forEach((x) => { const w = weekOf(x.closed); const o = weeks.get(w) || { n: 0, out: 0 }; o.n += 1; if (x.out_of_state_buyer) o.out += 1; weeks.set(w, o); });
   const wl = [...weeks.entries()].sort((a, b) => b[0].localeCompare(a[0])).slice(0, 6);
   if (wl.length) {
-    box.appendChild(el('p', 'note pad', esc('Each week, how many buyers had a mailing address outside Vermont')));
+    divider(box, 'Out-of-state buyers', 'each week, by mailing address');
     list(box, wl.map(([w, o]) => row({ k: 'wk-' + w, href: s.items[0] ? s.items[0].source_url : 'https://geodata.vermont.gov/', date: w, title: 'Week of ' + fmtDay(w).replace(/^\w+, /, ''),
       sub: esc(o.out + ' of ' + o.n + ' sale' + (o.n === 1 ? '' : 's') + ' to an out-of-state address') })), 6);
   }
@@ -143,14 +143,14 @@ function drawBlotter(box, d) {
   stats(box, [[(pi.total || 0).toLocaleString('en-US'), 'Police calls in ' + mon(pi.month)], [(fi.total || 0).toLocaleString('en-US'), 'Fire and rescue calls in ' + mon(fi.month)], [String(ar.total || 0), 'Arrests in ' + mon(ar.month)]]);
   const pr = b.press_releases || [];
   if (pr.length) {
-    box.appendChild(el('p', 'note pad', esc('Police press releases')));
+    divider(box, 'Police press releases');
     list(box, pr.map((x, i) => row({ k: 'pr-' + (x.case_number || i) + (x.is_update ? '-u' : '') + '-' + i, href: x.source_url, icon: ICON.flag,
       title: SAFE_HEAD.test(String(x.headline).trim()) ? x.headline : 'Police press release' + (x.case_number ? ', case ' + x.case_number : ''),
       sub: esc(ago(x.posted)), tag: x.is_update ? ['Update', 'left'] : null })), 5);
   }
   const groups = top(pi.by_call_type_group, 6);
   if (groups.length) {
-    box.appendChild(el('p', 'note pad', esc('What the police were called for in ' + mon(pi.month))));
+    divider(box, 'What the police were called for', mon(pi.month));
     list(box, groups.map(([k, v]) => row({ k: 'pc-' + k.toLowerCase().replace(/\W+/g, '-'), href: pi.source_url, title: k, sub: esc(v.toLocaleString('en-US') + ' calls') })), 6);
   }
   line(box, 'The city publishes no daily log, and these counts are a month behind and anonymous. A written weekly column comes later.');

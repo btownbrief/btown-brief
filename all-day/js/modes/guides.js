@@ -15,7 +15,7 @@
 
 import * as app from '../app.js';
 import * as store from '../store.js';
-import { el, esc, ICON } from '../ui.js';
+import { el, esc, ICON, divider } from '../ui.js';
 import { townMode, row, card, line } from './town-kit.js';
 
 const DONE_KEY = 'town-newhere';
@@ -66,7 +66,7 @@ function drawAll(box) {
   PAGES.forEach((p) => box.appendChild(row({ k: 'guide-' + p.id, href: p.href, icon: ICON[p.icon] || ICON.book, title: p.title, sub: esc(p.line) })));
   const soon = el('div', 'linkrow todaylinks');
   SOON.forEach((s) => soon.appendChild(el('span', 'chip', '<span>' + esc(s) + '</span>')));
-  box.appendChild(el('p', 'note pad', esc('Coming to the shelf, on one template')));
+  divider(box, 'Coming to the shelf');
   box.appendChild(soon);
 }
 

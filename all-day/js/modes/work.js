@@ -19,7 +19,7 @@
      sponsor-plumbing branch), so this says what will be here. */
 
 import * as app from '../app.js';
-import { el, esc, ICON } from '../ui.js';
+import { el, esc, ICON, divider } from '../ui.js';
 import { townMode, getJSON, row, card, links, line, list, quietForm, today, plusDays, fmtDay, epoch } from './town-kit.js';
 
 const DAYS = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
@@ -34,7 +34,7 @@ function drawJobs(box, d) {
   const groups = [['Today', (j) => j.posted >= t], ['This week', (j) => j.posted < t && j.posted >= wk], ['Earlier', (j) => j.posted < wk]];
   groups.forEach(([name, test]) => {
     const g = jobs.filter(test);
-    box.appendChild(el('p', 'note pad', esc(name + (g.length ? ' · ' + g.length : ''))));
+    divider(box, name, g.length ? g.length + ' posted' : '');
     if (!g.length) { line(box, name === 'Today' ? 'Nothing new posted yet today.' : 'Nothing from these days.'); return; }
     list(box, g.map((j) => row({ k: 'job-' + j.id, href: j.url, date: j.posted, title: j.title,
       sub: esc([j.employer, pay(j), CAT[j.cat] || '', j.source && j.source !== j.employer ? 'via ' + j.source : ''].filter(Boolean).join(' · ')) })), name === 'Earlier' ? 4 : 6);

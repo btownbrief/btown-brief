@@ -22,7 +22,7 @@
 
 import * as app from '../app.js';
 import * as boards from '../boards.js';
-import { el, esc, ICON } from '../ui.js';
+import { el, esc, ICON, divider } from '../ui.js';
 import { townMode, getJSON, row, card, links, line, list, stats, today, fmtDay, fmtLong, epoch, daysTo, money } from './town-kit.js';
 
 const VOTEY = /\b(vote|voting|votes|election|elections|results|ballot|debate|town meeting|watch party|candidate|mayor|council)\b/i;
@@ -59,7 +59,7 @@ function drawMeetings(box, d) {
   if (up.length) list(box, up.map((m, i) => meetingRow(m, i, false)), 6);
   else line(box, 'No meetings posted for the next two weeks yet.');
   if (past.length) {
-    box.appendChild(el('p', 'note pad', esc('Recent meetings, with minutes once they’re posted')));
+    divider(box, 'Recent meetings', 'minutes once they’re posted');
     list(box, past.map((m, i) => meetingRow(m, i, true)), 4);
   }
   box.appendChild(links([{ label: 'The full civic calendar', href: '../civic.html' }, { label: 'City meeting portal', href: PORTAL }]));

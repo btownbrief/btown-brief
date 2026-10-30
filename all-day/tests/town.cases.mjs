@@ -165,7 +165,7 @@ export async function townCases(h) {
     check(!sent.length, 'the forms post nowhere', sent.join(', '));
     const shops = await page.$eval('#panel-work [data-sec="shops"]', (n) => n.innerText);
     check(/4 of 5 vintage, thrift and book shops open right now/.test(shops), 'Shops: open now, from each shop’s own hours (the demo’s Saturday at 2 pm: one shop closed at noon)', shops.slice(0, 120));
-    const groups = await page.$$eval('#panel-work [data-sec="jobs"] .note.pad', (n) => n.map((x) => x.textContent.split(' · ')[0]));
+    const groups = await page.$$eval('#panel-work [data-sec="jobs"] .tdiv > span:first-child', (n) => n.map((x) => x.textContent));
     check(JSON.stringify(groups.slice(0, 3)) === '["Today","This week","Earlier"]', 'Jobs: Today, This week, Earlier', JSON.stringify(groups));
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
