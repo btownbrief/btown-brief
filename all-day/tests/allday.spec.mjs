@@ -13332,6 +13332,9 @@ async function thePaper(browser, base) {
         picks: p.querySelectorAll('[data-sec="picks"] .pp-row').length, spot: [...p.querySelectorAll('[data-sec="picks"] .eyebrow')].map((e) => e.textContent),
         pill: [...document.querySelectorAll('#subnav .secpill .chip')].map((c) => c.textContent.trim()), h: innerHeight };
     });
+    /* the first screen a first-time reader sees, before anything is touched */
+    await page.waitForTimeout(700);
+    await page.screenshot({ path: path.join(SHOTS, 'paper-front-390-live.png') });
     check(f.mission === MISSION, 'the mission line, word for word', f.mission);
     check(f.missionTop > 0 && f.missionTop < f.mailTop && f.mailTop < f.qTop && f.qTop < f.leadTop && f.leadTop < f.h, 'first screen: mission, email strip, questions, then the lead peeking', JSON.stringify(f));
     check(f.frame && f.frame.src === EMBED && /allow-forms/.test(f.frame.sandbox) && !/allow-top-navigation/.test(f.frame.sandbox), 'the email strip is the shell’s Beehiiv embed, sandboxed, never a form of ours', JSON.stringify(f.frame));
@@ -13358,7 +13361,6 @@ async function thePaper(browser, base) {
     await page.keyboard.press('Enter');
     check(await page.evaluate(() => document.activeElement && document.activeElement.matches('.pp-qs .chip')), 'and keyboard focus goes on to the questions', '');
     check(await page.evaluate(() => !document.querySelector('#panel-front .pp-mail')), '“I’m already subscribed” takes the strip away', '');
-    await page.screenshot({ path: path.join(SHOTS, 'paper-front-390-live.png') });
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
     /* when the shell's own newsletter card picks this landing, the strip steps aside: one ask, not two */
