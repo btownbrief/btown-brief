@@ -1,4 +1,6 @@
-/* The Paper: the news outlet and the front door (APP-MAP.html, app 8). */
+/* The Paper: the news outlet and the front door (APP-MAP.html, app 8).
+   Wave 1 (2026-10-29): every tab is built (js/modes/paper-*.js); the top
+   tabs are in page order. */
 export default {
   id: 'paper',
   name: 'The Paper',
@@ -9,23 +11,17 @@ export default {
   url: 'https://guide.btownbrief.com/paper/',
   line: 'The news outlet and the front door.',
   tabs: [
-    { key: 'front', label: 'Front', icon: 'paper',
-      promise: 'Today’s edition, the questions, and today’s picks.',
-      top: ['Today', 'The edition', 'Questions', 'Picks'] },
-    { key: 'editions', label: 'Editions', icon: 'stack',
-      promise: 'Every edition, by date or by what you’re into.',
+    { mode: 'front', label: 'Front', icon: 'paper',
+      top: ['Today', 'Questions', 'The edition', 'Picks'] },
+    { mode: 'editions', label: 'Editions', icon: 'stack',
       top: ['Latest', 'By date', 'By interest', 'Search', 'This week last year', 'Random', 'Ask'] },
-    { key: 'picks', label: 'Picks', icon: 'star',
-      promise: 'Stephen’s picks, each with a reason.',
+    { mode: 'picks', label: 'Picks', icon: 'star',
       top: ['Stephen’s picks', 'Best of', 'This month', 'Spotlight'] },
-    { key: 'gossip', label: 'Gossip', icon: 'comment',
-      promise: 'What Burlington is talking about, no names.',
+    { mode: 'gossip', label: 'Gossip', icon: 'comment',
       top: ['This week', 'Threads', 'Archive'] },
-    { key: 'everything', label: 'Everything', icon: 'grid',
-      promise: 'Every app, page and game, A to Z.',
+    { mode: 'everything', label: 'Everything', icon: 'grid',
       top: ['Apps', 'Pages', 'Games', 'A to Z', 'Start here'] },
-    { key: 'story', label: 'Story', icon: 'heart',
-      promise: 'The mission, the story and the merch.',
+    { mode: 'story', label: 'Story', icon: 'heart',
       top: ['Mission', 'About', 'Merch', 'Support', 'How I live'] },
   ],
 };
