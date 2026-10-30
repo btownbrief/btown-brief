@@ -1,55 +1,45 @@
 {
- "updated": "2026-10-30T10:38:49+00:00",
+ "updated": "2026-10-30T11:58:52+00:00",
  "sections_updated": {
-  "now": "2026-10-30T10:38:49+00:00",
-  "forecast": "2026-10-30T10:38:49+00:00",
-  "hourly": "2026-10-30T10:38:49+00:00",
-  "alerts": "2026-10-30T10:38:49+00:00",
-  "afd": "2026-10-30T10:38:49+00:00",
-  "lake_forecast": "2026-10-30T10:38:49+00:00",
-  "lake_gage": "2026-10-30T10:38:49+00:00",
-  "air": "2026-10-30T10:38:49+00:00",
-  "sun": "2026-10-30T10:38:49+00:00",
-  "models": "2026-10-30T10:38:49+00:00"
+  "now": "2026-10-30T11:58:52+00:00",
+  "forecast": "2026-10-30T11:58:52+00:00",
+  "hourly": "2026-10-30T11:58:52+00:00",
+  "alerts": "2026-10-30T11:58:52+00:00",
+  "afd": "2026-10-30T11:58:52+00:00",
+  "lake_forecast": "2026-10-30T11:58:52+00:00",
+  "lake_gage": "2026-10-30T11:58:52+00:00",
+  "air": "2026-10-30T11:58:52+00:00",
+  "sun": "2026-10-30T11:58:52+00:00",
+  "models": "2026-10-30T11:58:52+00:00"
  },
  "now": {
-  "observed_at": "2026-10-30T09:35:00+00:00",
+  "observed_at": "2026-10-30T11:30:00+00:00",
   "station": "KBTV",
-  "description": "Clear",
-  "temp_f": 57,
-  "feels_like_f": 57,
-  "humidity": 72,
-  "dewpoint_f": 48,
-  "wind_mph": 7,
+  "description": "Mostly Clear",
+  "temp_f": 55,
+  "feels_like_f": 55,
+  "humidity": 67,
+  "dewpoint_f": 45,
+  "wind_mph": 9,
   "wind_gust_mph": null,
-  "wind_dir": "WNW",
+  "wind_dir": "NW",
   "precip_last_hr_in": null
  },
  "forecast": {
-  "updated": "2026-10-30T06:20:32+00:00",
+  "updated": "2026-10-30T10:33:53+00:00",
   "periods": [
    {
-    "name": "Overnight",
-    "start": "2026-10-30T05:00:00-04:00",
-    "is_day": false,
-    "temp_f": 49,
-    "pop": 2,
-    "wind": "W 7 mph",
-    "short": "Partly Cloudy",
-    "detailed": "Partly cloudy, with a low around 49. West wind around 7 mph."
-   },
-   {
-    "name": "Friday",
-    "start": "2026-10-30T06:00:00-04:00",
+    "name": "Today",
+    "start": "2026-10-30T07:00:00-04:00",
     "is_day": true,
     "temp_f": 54,
     "pop": 5,
-    "wind": "W 7 to 13 mph",
+    "wind": "NW 7 to 13 mph",
     "short": "Partly Sunny",
-    "detailed": "Partly sunny, with a high near 54. West wind 7 to 13 mph, with gusts as high as 25 mph."
+    "detailed": "Partly sunny, with a high near 54. Northwest wind 7 to 13 mph, with gusts as high as 25 mph."
    },
    {
-    "name": "Friday Night",
+    "name": "Tonight",
     "start": "2026-10-30T18:00:00-04:00",
     "is_day": false,
     "temp_f": 34,
@@ -167,40 +157,22 @@
     "wind": "S 12 mph",
     "short": "Chance Rain Showers",
     "detailed": "A chance of rain showers. Partly sunny, with a high near 62. South wind around 12 mph, with gusts as high as 23 mph. Chance of precipitation is 50%."
+   },
+   {
+    "name": "Thursday Night",
+    "start": "2026-11-05T18:00:00-05:00",
+    "is_day": false,
+    "temp_f": 48,
+    "pop": 56,
+    "wind": "S 7 to 10 mph",
+    "short": "Rain Showers Likely",
+    "detailed": "Rain showers likely. Mostly cloudy, with a low around 48. South wind 7 to 10 mph. Chance of precipitation is 60%."
    }
   ]
  },
  "hourly": {
-  "updated": "2026-10-30T06:20:32+00:00",
+  "updated": "2026-10-30T10:33:53+00:00",
   "hours": [
-   {
-    "t": "2026-10-30T05:00:00-04:00",
-    "temp_f": 52,
-    "feels_f": 52,
-    "pop": 2,
-    "humidity": 93,
-    "wind_mph": 7,
-    "wind_dir": "W",
-    "sky": 30,
-    "short": "Partly Cloudy",
-    "qpf_in": 0.0,
-    "snow_in": 0.0,
-    "gust_mph": 12
-   },
-   {
-    "t": "2026-10-30T06:00:00-04:00",
-    "temp_f": 51,
-    "feels_f": 51,
-    "pop": 3,
-    "humidity": 89,
-    "wind_mph": 7,
-    "wind_dir": "W",
-    "sky": 35,
-    "short": "Mostly Sunny",
-    "qpf_in": 0.0,
-    "snow_in": 0.0,
-    "gust_mph": 12
-   },
    {
     "t": "2026-10-30T07:00:00-04:00",
     "temp_f": 50,
@@ -676,14 +648,37 @@
     "qpf_in": 0.0,
     "snow_in": 0.0,
     "gust_mph": 6
+   },
+   {
+    "t": "2026-10-31T17:00:00-04:00",
+    "temp_f": 48,
+    "feels_f": 48,
+    "pop": 0,
+    "humidity": 46,
+    "wind_mph": 2,
+    "wind_dir": "NW",
+    "sky": 20,
+    "short": "Sunny",
+    "qpf_in": 0.0,
+    "snow_in": 0.0,
+    "gust_mph": 5
+   },
+   {
+    "t": "2026-10-31T18:00:00-04:00",
+    "temp_f": 45,
+    "feels_f": 45,
+    "pop": 0,
+    "humidity": 53,
+    "wind_mph": 2,
+    "wind_dir": "W",
+    "sky": 16,
+    "short": "Mostly Clear",
+    "qpf_in": 0.0,
+    "snow_in": 0.0,
+    "gust_mph": 3
    }
   ],
   "days": [
-   {
-    "date": "2026-10-29",
-    "precip_in": 0.0,
-    "snow_in": 0.0
-   },
    {
     "date": "2026-10-30",
     "precip_in": 0.0,
@@ -710,14 +705,14 @@
   "active": []
  },
  "afd": {
-  "issued": "2026-10-30T06:26:00+00:00",
+  "issued": "2026-10-30T11:26:00+00:00",
   "key_messages": [
    "Some lingering showers and cooler weather is expected across the region today following a cold front. Mostly dry and seasonable conditions are expected through the weekend into the start of next week.",
    "Increased fire weather concerns through this weekend.",
    "Two fronts with little moisture or forcing will offer low end chances for rain early next week, before becoming dry and warm."
   ],
   "what_changed": "As of 224 AM EDT Friday... No significant changes have been made to the forecast.",
-  "raw": "\n000\nFXUS61 KBTV 300626\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n226 AM EDT Fri Oct 30 2026\n\n.WHAT HAS CHANGED...\nAs of 224 AM EDT Friday...\n\nNo significant changes have been made to the forecast.\n\n&&\n\n.KEY MESSAGES...\nAs of 224 AM EDT Friday...\n\n1. Some lingering showers and cooler weather is expected across \nthe region today following a cold front. Mostly dry and seasonable \nconditions are expected through the weekend into the start of next \nweek. \n\n2. Increased fire weather concerns through this weekend. \n\n3. Two fronts with little moisture or forcing will offer low \nend chances for rain early next week, before becoming dry and warm.\n\n&&\n\n.DISCUSSION...\nAs of 224 AM EDT Friday...\n\nKEY MESSAGE 1: The cold front continues to move through the region this \nmorning, with dwindling rain showers and plentiful cloud cover along \nwith it. Rainfall amounts with this feature have generally been a \nfew hundredths, although some locations across northern New York \nhave observed a few tenths on an inch of rain. Strong cold air \nadvection will take place behind the front today, with increased \nclouds and some chances for some lingering showers in the favored \nupslope areas with some flurries possible in the higher terrain. \nTemperatures on Friday will be more seasonable compared to \nyesterday, with highs in the upper 40s and 50s. \n\nHeading into the weekend and the start of next week, surface high \npressure looks to build into the region once again. This will lead \nto another stretch of dry weather, with ample sunshine, light winds, \nand pleasant conditions to round out October and welcome the start \nof November. Temperatures on Saturday will be a little on the cooler \nside, with highs generally in the mid 40s to low 50s, moderating \ntowards the start of next week.\n\nKEY MESSAGE 2: Breezy winds and lower relative humidity values will \nlead to increased fire weather concerns over the next few days, \nespecially given the plentiful dry leaf litter across the area \nserving as fuel. Wind gusts today and Friday will generally be in \nthe 15 to 25 mph range, with some higher gusts are possible. Minimum \nrelative humidity values will generally be between 40 to 55 percent \nfor today. Heading into the weekend, minimum relative humidity \nvalues should drop into the 30 to 45 percent range, but winds look \nto be much lighter. Recent rainfall amounts remain rather \nnegligible, with most locations only receiving a few hundredths of \nan inch, but a few locations across northern New York received over \n0.1 inches of rain with these showers. Cloud cover across the region \ntoday will help limit some of these fire weather concerns.\n\nKEY MESSAGE 3: There remains little change to the details regarding a \nfrontal boundary expected to shift southwards Monday night into \nTuesday. Upper level vorticity will shift east, and an incoming \nridge will help dissipate the front. It's very possible it does not \neven make it to the international border, but a handful of scenarios \ndepict it reaching at least far northern Vermont. For late Tuesday \ninto Wednesday, a surface low will lift from the Plains north \ntowards James Bay. It will send a warm front into the region. Better \nmoisture and dynamics will remain well to our north and west as \nsurface high pressure moving from far eastern Canada into the \nmaritimes will keep stable, southeasterly flow filtering into the \nregion. Again, some rain could develop with a handful of forecast \nscenarios depicting light rain along the international border.\n\nThereafter, the large scale pattern amplifies. The NBM is only \nforecasting lower 60s, but 925mb temperatures ranging from 10-13 C \nsuggest that some upper 60s could be in the cards. Overall, there's \nstill spread in terms of the evolution of a compact upper low across \nthe Plains, and how it interacts with a rich moisture plume off the \nAtlantic, but the timing is looking more consistent with an arrival \nof next Thursday night into Friday. This could be a very soaking \nrain. The NBM mean ranges from 0.50-1.00\", but the overall pattern \nsuggests we could see more. Seeing long range guidance with 1\" \nprobabilities of 25-40% and 2\" probabilities of 5-15% certainly \nsuggest some potential for a little more. We'll have plenty of time \nto monitor the evolution of this feature.\n\n&&\n\n.AVIATION /06Z FRIDAY THROUGH TUESDAY/...\nThrough 06Z Saturday...A weak cold front is moving southeast across\nthe region. Light rain showers extend from about Newcomb, NY\nnortheast towards Morrisville, VT as of 150am. Some MVFR ceilings\nwill likely settle into KSLK and KEFK. It's not impossible that\nKBTV, KRUT, and KMSS could observe some ceilings around 2500-3000 ft\nagl as well, but thinking most terminals will remain around\n3000-5000 ft agl for much of the next 24 hours. Southwest or\nvariable flow will become west to west- northwest over the next 6\nhours, and accelerate after 14Z. Additional troughs will settle\nthrough the area, the first passing southeast around 10Z-14Z. Most\nwill not observe precipitation, except perhaps KSLK, but it will\nreinforce the borderline MVFR ceilings. It will bring wind speeds\nand gusts upwards towards 9-14 knots sustained with gusts 16-25\nknots possible. Another will shift southeast about 22Z-03Z, which\nwill then bring a more appreciable shift to northwest winds and\ncould keep sustained winds from totally dropping off. It should\nstill gradually subside, and then clouds will begin to lift and\nscatter behind this last trough.\n\nOutlook...\n\nSaturday: VFR. NO SIG WX.\nSaturday Night: VFR. NO SIG WX.\nSunday: VFR. NO SIG WX.\nSunday Night: VFR. NO SIG WX.\nMonday: VFR. NO SIG WX.\nMonday Night: VFR. NO SIG WX.\nTuesday: VFR. Slight chance SHRA.\n\n&&\n\n.MARINE...\nAs of 224 AM EDT Friday...\n\nA Lake Wind Advisory is in effect for today. After a lull in winds \nthis morning, northwesterly winds will increase throughout the day, \nbetween the 15-25 KT range, with gusts closer to 30 knots. \nWaves will generally build to 2-4 feet towards this evening. \nWinds are expected to gradually diminish overnight tonight into\nSaturday morning.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Kremer\nDISCUSSION...Kremer/Haynes\nAVIATION...Haynes\nMARINE...Kremer\n"
+  "raw": "\n000\nFXUS61 KBTV 301126\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n726 AM EDT Fri Oct 30 2026\n\n.WHAT HAS CHANGED...\nAs of 224 AM EDT Friday...\n\nNo significant changes have been made to the forecast.\n\n&&\n\n.KEY MESSAGES...\nAs of 224 AM EDT Friday...\n\n1. Some lingering showers and cooler weather is expected across \nthe region today following a cold front. Mostly dry and seasonable \nconditions are expected through the weekend into the start of next \nweek. \n\n2. Increased fire weather concerns through this weekend. \n\n3. Two fronts with little moisture or forcing will offer low \nend chances for rain early next week, before becoming dry and warm.\n\n&&\n\n.DISCUSSION...\nAs of 224 AM EDT Friday...\n\nKEY MESSAGE 1: The cold front continues to move through the region this \nmorning, with dwindling rain showers and plentiful cloud cover along \nwith it. Rainfall amounts with this feature have generally been a \nfew hundredths, although some locations across northern New York \nhave observed a few tenths on an inch of rain. Strong cold air \nadvection will take place behind the front today, with increased \nclouds and some chances for some lingering showers in the favored \nupslope areas with some flurries possible in the higher terrain. \nTemperatures on Friday will be more seasonable compared to \nyesterday, with highs in the upper 40s and 50s. \n\nHeading into the weekend and the start of next week, surface high \npressure looks to build into the region once again. This will lead \nto another stretch of dry weather, with ample sunshine, light winds, \nand pleasant conditions to round out October and welcome the start \nof November. Temperatures on Saturday will be a little on the cooler \nside, with highs generally in the mid 40s to low 50s, moderating \ntowards the start of next week.\n\nKEY MESSAGE 2: Breezy winds and lower relative humidity values will \nlead to increased fire weather concerns over the next few days, \nespecially given the plentiful dry leaf litter across the area \nserving as fuel. Wind gusts today and Friday will generally be in \nthe 15 to 25 mph range, with some higher gusts are possible. Minimum \nrelative humidity values will generally be between 40 to 55 percent \nfor today. Heading into the weekend, minimum relative humidity \nvalues should drop into the 30 to 45 percent range, but winds look \nto be much lighter. Recent rainfall amounts remain rather \nnegligible, with most locations only receiving a few hundredths of \nan inch, but a few locations across northern New York received over \n0.1 inches of rain with these showers. Cloud cover across the region \ntoday will help limit some of these fire weather concerns.\n\nKEY MESSAGE 3: There remains little change to the details regarding a \nfrontal boundary expected to shift southwards Monday night into \nTuesday. Upper level vorticity will shift east, and an incoming \nridge will help dissipate the front. It's very possible it does not \neven make it to the international border, but a handful of scenarios \ndepict it reaching at least far northern Vermont. For late Tuesday \ninto Wednesday, a surface low will lift from the Plains north \ntowards James Bay. It will send a warm front into the region. Better \nmoisture and dynamics will remain well to our north and west as \nsurface high pressure moving from far eastern Canada into the \nmaritimes will keep stable, southeasterly flow filtering into the \nregion. Again, some rain could develop with a handful of forecast \nscenarios depicting light rain along the international border.\n\nThereafter, the large scale pattern amplifies. The NBM is only \nforecasting lower 60s, but 925mb temperatures ranging from 10-13 C \nsuggest that some upper 60s could be in the cards. Overall, there's \nstill spread in terms of the evolution of a compact upper low across \nthe Plains, and how it interacts with a rich moisture plume off the \nAtlantic, but the timing is looking more consistent with an arrival \nof next Thursday night into Friday. This could be a very soaking \nrain. The NBM mean ranges from 0.50-1.00\", but the overall pattern \nsuggests we could see more. Seeing long range guidance with 1\" \nprobabilities of 25-40% and 2\" probabilities of 5-15% certainly \nsuggest some potential for a little more. We'll have plenty of time \nto monitor the evolution of this feature.\n\n&&\n\n.AVIATION /12Z FRIDAY THROUGH TUESDAY/...\nThrough 12Z Saturday...Currently, all terminals are VFR, with\nceilings mainly ranging from 3500-6000 ft agl. There are patchy\nclouds around 1500-2500 ft agl. Winds have turned more west to\nnorthwesterly, and are beginning to pick up with a few gusts in\nthe teens in knots being observed. For much of the next 12\nhours, ceilings will remain the same, and wind speeds will\nincrease to around 10-16 knots sustained with gusts 18-26 knots\ncommon across the region. A few troughs will shift southeast,\nand could produce a shower or two near KSLK or KEFK. Otherwise,\nwinds will begin to subside mainly after 06z and skies will\ntrend clear.\n\nOutlook...\n\nSaturday: VFR. NO SIG WX.\nSaturday Night: VFR. NO SIG WX.\nSunday: VFR. NO SIG WX.\nSunday Night: VFR. NO SIG WX.\nMonday: VFR. NO SIG WX.\nMonday Night: VFR. NO SIG WX.\nTuesday: VFR. Slight chance SHRA.\n\n&&\n\n.MARINE...\nAs of 224 AM EDT Friday...\n\nA Lake Wind Advisory is in effect for today. After a lull in winds \nthis morning, northwesterly winds will increase throughout the day, \nbetween the 15-25 KT range, with gusts closer to 30 knots. \nWaves will generally build to 2-4 feet towards this evening. \nWinds are expected to gradually diminish overnight tonight into\nSaturday morning.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Kremer\nDISCUSSION...Kremer/Haynes\nAVIATION...Haynes\nMARINE...Kremer\n"
  },
  "lake_forecast": {
   "issued": "2026-10-30T06:23:00+00:00",
@@ -982,17 +977,17 @@
  },
  "lake_gage": {
   "water_temp_f": 54,
-  "water_temp_at": "2026-10-30T06:00:00.000-04:00",
-  "level_ft": 93.94,
-  "level_at": "2026-10-30T06:00:00.000-04:00",
+  "water_temp_at": "2026-10-30T07:00:00.000-04:00",
+  "level_ft": 93.96,
+  "level_at": "2026-10-30T07:00:00.000-04:00",
   "level_status": "normal"
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 41,
+  "aqi": 39,
   "category": "Good",
   "pollutant": "PM2.5",
-  "observed": "10/30/26 6:00",
+  "observed": "10/30/26 7:00",
   "discussion": "On Friday, October 30th, expect generally good air quality across Vermont.  Conditions may be moderate in the morning, but are expected to clean out over the course of the day."
  },
  "sun": {
@@ -1065,16 +1060,16 @@
  },
  "brief": {
   "date": "2026-10-30",
-  "generated": "2026-10-30T10:38:52+00:00",
+  "generated": "2026-10-30T11:58:56+00:00",
   "text": "Partly sunny today, high 54. Partly cloudy tonight, low 34. Saturday, sunny, high 50.",
   "periods": [
    {
     "label": "Today",
-    "name": "Friday",
+    "name": "Today",
     "is_day": true,
     "temp_f": 54,
     "sky": "partly sunny",
-    "start": "2026-10-30T06:00:00-04:00",
+    "start": "2026-10-30T07:00:00-04:00",
     "end": "2026-10-30T18:00:00-04:00",
     "precip": null,
     "wind": null,
@@ -1084,7 +1079,7 @@
    },
    {
     "label": "Tonight",
-    "name": "Friday Night",
+    "name": "Tonight",
     "is_day": false,
     "temp_f": 34,
     "sky": "partly cloudy",
