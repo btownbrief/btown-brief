@@ -76,12 +76,8 @@ const pastOf = (list) => (Array.isArray(list) ? list : []).filter((p) => p && p.
 function load() {
   if (app.demo) {
     return app.demoJSON(DEMO_FILE).then((d) => {
-      const at = (days, hhmm) => {
-        const t = new Date(Date.now() + days * 86400000);
-        const [h, m] = String(hhmm || '19:00').split(':').map(Number);
-        t.setHours(h, m || 0, 0, 0);
-        return t.getTime();
-      };
+      /* a demo dinner sits a set number of days from Burlington's today, at its own time there */
+      const at = (days, hhmm) => btvMs(new Date(Date.now() + days * 86400000).toLocaleDateString('en-CA', { timeZone: TZ }), hhmm);
       const n = d.next;
       S.next = n ? { title: n.title, url: n.url, location: n.location, starts_at: new Date(at(n.days_from_now, n.time)).toISOString() } : null;
       S.past = pastOf((d.past || []).map((p) => ({ ...p, ms: at(p.days_from_now, p.time) })));
@@ -92,7 +88,7 @@ function load() {
   const file = data.fetchJSON(DINNERS_URL, 8000).catch(() => null);
   return Promise.all([feed, file]).then(([n, d]) => {
     if (d && d.group) S.group = d.group;
-    const own = d && d.next && d.next.date && Date.parse(d.next.date) > Date.now() - 86400000 ? {
+    const own = d && d.next && d.next.date && btvMs(d.next.date, d.next.time) > Date.now() ? {
       title: d.next.title, url: d.next.meetup_url || S.group, location: [d.next.place, d.next.address].filter(Boolean).join(', '),
       starts_at: new Date(btvMs(d.next.date, d.next.time)).toISOString() } : null;
     S.next = n || own;

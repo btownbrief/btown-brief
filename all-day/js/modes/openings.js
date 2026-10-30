@@ -117,7 +117,7 @@ function load() {
   if (!loading) {
     S.today = todayNum();
     const got = app.demo ? app.demoJSON(URL_DEMO) : data.fetchJSON(URL_LIVE, 10000);
-    loading = got.then((j) => take(j, app.demo)).catch(() => { S.all = null; S.failed = true; })
+    loading = got.then((j) => { S.raw = j; take(j, app.demo); }).catch(() => { S.all = null; S.failed = true; })
       .then(() => { S.ready = true; app.recount(); });
   }
   return loading;
@@ -273,7 +273,12 @@ app.register(KEY, {
       land();
     });
   },
-  activate(param) { pending = param || null; land(); },
+  activate(param) {
+    pending = param || null;
+    /* past midnight in Burlington: today, yesterday and Last month move */
+    if (S.ready && S.raw && todayNum() !== S.today) { S.today = todayNum(); take(S.raw, app.demo); if (root) render(); }
+    land();
+  },
   refresh() { if (S.ready && root) render(); },
   deactivate() {},
   subnav() {

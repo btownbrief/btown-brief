@@ -51,7 +51,7 @@ const SECTIONS = [['open', 'Open now'], ['random', 'Randomizer'], ['insp', 'Insp
 const MOVED = { bite: 'bites', kitchens: 'bites', asks: 'bites', best: 'bites', add: 'bites', deals: 'deals' };
 
 const S = { f: 'open', all: false, sort: 'near', meal: 'any', chose: false, me: null, drawn: 0, pick: null, q: '', inspAll: false };
-let root = null, slots = null, pending = null, ready = false;
+let root = null, slots = null, pending = null, ready = false, tick = 0;
 const F = () => E.F;
 
 /* ------------------------------------------------------------- the list */
@@ -490,10 +490,13 @@ app.register(KEY, {
   activate(param) {
     pending = param || null;
     if (ready && Date.now() - S.drawn > STALE_MS) { paint('open'); paint('random'); S.drawn = Date.now(); }
+    /* who is open changes by the minute: staying on the tab redraws the list too */
+    clearInterval(tick);
+    tick = setInterval(() => { if (ready && app.activeTab() === KEY) { paint('open'); S.drawn = Date.now(); } }, STALE_MS);
     land();
   },
   refresh() { if (ready) { paint('open'); paint('random'); } },
-  deactivate() { app.closeVideo(); if (M && !M.getContainer().isConnected) dropMap(); },
+  deactivate() { clearInterval(tick); app.closeVideo(); if (M && !M.getContainer().isConnected) dropMap(); },
   subnav() {
     if (!ready) return null;
     const t = E.now();

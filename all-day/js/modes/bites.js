@@ -410,8 +410,20 @@ function paintPhotosHead(host) {
   const add = host.querySelector('[data-sec="add"]');
   if (add) add.remove();
 }
-const jump = (k) => {
+/* a section the reader was just sent to is scrolled to again if late data
+   redraws the sections above it; the reader scrolling cancels it */
+let jumped = null, settleT = 0, watching = null;
+function resettle() {
+  clearTimeout(settleT);
+  settleT = setTimeout(() => { if (jumped && Date.now() - jumped.t < 6000 && app.activeTab() === KEY) jump(jumped.k, true); }, 60);
+}
+const jump = (k, again) => {
   if (!slots) return;
+  if (!again) {
+    jumped = { k, t: Date.now() };
+    const p = root && root.closest('.panel');
+    if (p && watching !== p) { watching = p; ['wheel', 'touchstart', 'keydown'].forEach((ev) => p.addEventListener(ev, () => { jumped = null; }, { passive: true })); }
+  }
   const n = slots[k] || (slots.photos && k === 'add' ? slots.photos.querySelector('[data-sec="add"]') : null) || (slots.asks && k === 'best' ? slots.asks.querySelector('[data-sec="best"]') : null);
   if (n) app.jumpTo(n);
 };
@@ -446,6 +458,13 @@ function land() {
     return;
   }
   if (/^ig-/.test(k) && !E.S.posts && !E.S.igFailed) { pending = k; return; }
+  if (/^ig-/.test(k) && !app.flashHit(root, k)) {
+    /* an older post, past the row's twelve: open it on its own */
+    const p = E.kitchenFood().find((x) => E.keyOf(x) === k);
+    if (!p) { app.toast('That one has moved on.'); return; }
+    if (E.hasClip(p, Date.now() / 1000)) E.openClip(p); else window.open(safeHref(p.u), '_blank', 'noopener');
+    return;
+  }
   if (/^dish-/.test(k) && E.S.dish === undefined) { pending = k; return; }
   if (/^dish-/.test(k) && !slots.photos.querySelector('[data-k="' + CSS.escape(k) + '"]')) { S.dishAll = true; paint('photos'); }
   if (/^mn-/.test(k) && !E.S.menuList && !E.S.menusFailed) { pending = k; return; }
@@ -457,7 +476,7 @@ E.onData((what) => {
   if (!ready) return;
   const map = { dishes: ['bite', 'photos'], kitchens: ['kitchens'], menus: ['menus'], asks: ['asks'], best: ['asks'] };
   (map[what] || []).forEach(paint);
-  if (map[what]) { if (app.activeTab() === KEY) app.paintSubnav(); app.recount(); land(); }
+  if (map[what]) { if (app.activeTab() === KEY) app.paintSubnav(); app.recount(); land(); resettle(); }
 });
 
 app.register(KEY, {

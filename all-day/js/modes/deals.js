@@ -23,7 +23,7 @@
 
 import './eat-open.js';
 import * as app from '../app.js';
-import { el, esc, ICON, art, section, button } from '../ui.js';
+import { el, esc, safeHref, ICON, art, section, button } from '../ui.js';
 import { sectionBar } from '../sections.js';
 import * as E from './eat-lib.js';
 
@@ -35,7 +35,7 @@ const SECTIONS = [['today', 'Today'], ['hh', 'Happy hour'], ['cheap', 'Under $10
 const DAY_ORDER = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
 
 const S = { deal: 0, drawn: 0 };
-let root = null, slots = null, pending = null, ready = false;
+let root = null, slots = null, pending = null, ready = false, tick = 0;
 const F = () => E.F;
 
 /* ------------------------------------------------------------------ Today */
@@ -116,7 +116,7 @@ function dealRow(d, t, sub, cls) {
     '<div class="s">' + sub + '</div>');
   b.setAttribute('aria-label', d.title + ' at ' + d.business);
   if (r) b.addEventListener('click', () => E.placeSheet(r));
-  else if (/^https?:/i.test(d.link || '')) b.addEventListener('click', () => window.open(d.link, '_blank', 'noopener'));
+  else if (/^https?:/i.test(d.link || '')) b.addEventListener('click', () => window.open(safeHref(d.link), '_blank', 'noopener'));
   const pic = r ? E.thumbOf(E.foodOf(r)) : '';
   row.append(pic ? el('span', 'th', art(pic)) : el('span', 'th', E.tint(d.id)), b);
   return row;
@@ -230,12 +230,15 @@ app.register(KEY, {
   },
   activate(param) {
     pending = param || null;
-    /* the deck is about this minute: coming back later redraws it */
+    /* the deck is about this minute: coming back later redraws it, and so
+       does staying on the tab */
     if (ready && Date.now() - S.drawn > STALE_MS) { SECTIONS.forEach(([k]) => paint(k)); S.drawn = Date.now(); }
+    clearInterval(tick);
+    tick = setInterval(() => { if (ready && app.activeTab() === KEY) { SECTIONS.forEach(([k]) => paint(k)); app.paintSubnav(); S.drawn = Date.now(); } }, STALE_MS);
     land();
   },
   refresh() { if (ready) SECTIONS.forEach(([k]) => paint(k)); },
-  deactivate() {},
+  deactivate() { clearInterval(tick); },
   subnav() {
     if (!ready) return null;
     const t = E.now();
