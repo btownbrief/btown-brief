@@ -51,137 +51,99 @@
   ok   source rules › js/wire.js: no monospace
   ok   source rules › css/app.css: no monospace
   ok   source rules › css/tokens.css: no monospace
-  ok   What Now, Spin (demo) › the chip row is the mode switch, Spin first
-  ok   What Now, Spin (demo) › the weather line: the lake and sunset (feels like is on the card)
-  ok   What Now, Spin (demo) › the weather line is one line at 390
-  ok   What Now, Spin (demo) › the seven path chips
-  ok   What Now, Spin (demo) › Spin returns an answer
-  ok   What Now, Spin (demo) › the answer spells out its reason
-  ok   What Now, Spin (demo) › the answer says it is for right now
-  ok   What Now, Spin (demo) › Another changes the answer
-  ok   What Now, Spin (demo) › Do it ends the session: “Now put the phone down.”
-  ok   What Now, Spin (demo) › the window: Tomorrow plans tomorrow
-  ok   What Now, Spin (demo) › Teach me something swaps the hat for the hobbies
-  ok   What Now, Spin (demo) › a path chip shows it is on
-  ok   What Now, Spin (demo) › no console errors
-  ok   What Now, Spin (live, reduced motion) › reduced motion: the answer lands at once, no reel
-  ok   What Now, Spin (live, reduced motion) › live: the real engine answers (or says honestly that nothing fits)
-  ok   What Now, Spin (live, reduced motion) › the pool line says how many things fit
-  ok   What Now, Spin (live, reduced motion) › no console errors
-  ok   What Now, the missions under the spinner (demo) › Spin opens with the whole missions list right below it
-  ok   What Now, the missions under the spinner (demo) › and “Run with a club” leads the list, unnumbered
-  ok   What Now, the missions under the spinner (demo) › and the Spin chip is the one lit
-  ok   What Now, the missions under the spinner (demo) › the demo spins onto mission 2’s first place
-  ok   What Now, the missions under the spinner (demo) › the spin marks its mission in the list and scrolls to it
-  ok   What Now, the missions under the spinner (demo) › only that one row is marked
-  ok   What Now, the missions under the spinner (demo) › the Missions chip jumps down to the list, just under the mast
-  ok   What Now, the missions under the spinner (demo) › and the answer is still there above it
-  ok   What Now, the missions under the spinner (demo) › no console errors
-  ok   What Now, Missions (live) › data/missions.json holds a mission for every Top 100+ entry (102)
-  ok   What Now, Missions (live) › every paragraph is 60 to 120 words
-  ok   What Now, Missions (live) › no dashes or exclamation points, a known theme, at least one place
-  ok   What Now, Missions (live) › needs_check is counted honestly (0)
-  ok   What Now, Missions (live) › all of them, numbered 1 to 102
-  ok   What Now, Missions (live) › under the Top 100+ name
-  ok   What Now, Missions (live) › a theme shows its own missions only, not the club one
-  ok   What Now, Missions (live) › a theme chip filters to its missions, and its count is right (8)
-  ok   What Now, Missions (live) › Mark done marks it
-  ok   What Now, Missions (live) › a mission marked done survives a reload
-  ok   What Now, Missions (live) › and the Missions chip counts it: 1/102
-  ok   What Now, Missions (live) › signed out, nothing goes to the account
-  ok   What Now, Missions (live) › Surprise me scrolls the list to a highlighted mission
-  ok   What Now, Missions (live) › and it is one you have not done
-  ok   What Now, Missions (live) › focus lands on it too
-  ok   What Now, Missions (live) › no modal: the list itself moves
-  ok   What Now, Missions (live) › tapping a mission opens its paragraph
-  ok   What Now, Missions (live) › with its places, linked to their sites
-  ok   What Now, Missions (live) › signed in, marks are read from and written to the account
-  ok   What Now, Missions (live) › and the device copy stands either way
-  ok   What Now, Missions (live) › no console errors
-  ok   What Now, the teasers and the old done marks (live) › every mission has a teaser of at most 90 characters, no dash, colon or exclamation point
-  ok   What Now, the teasers and the old done marks (live) › every mission has its own stable mark, m200 to m999
-  ok   What Now, the teasers and the old done marks (live) › each old rank moves to one mission at most
-  ok   What Now, the teasers and the old done marks (live) › the tile shows the teaser under the title
-  ok   What Now, the teasers and the old done marks (live) › old marks land on the missions that replaced them: two old entries nested into m2 mark it once, m19 marks m17
-  ok   What Now, the teasers and the old done marks (live) › and the device keeps them under the stable marks, the old keys gone, the latest time kept
-  ok   What Now, the teasers and the old done marks (live) › the move happens once: a reload keeps the same two, and the chip counts 2/102
-  ok   What Now, the teasers and the old done marks (live) › the sheet gives each place its line on why it is the pick
-  ok   What Now, the teasers and the old done marks (live) › no console errors
-  ok   What Now, the teasers and the old done marks (live) › the account’s old rank and its stable mark both land on the right missions, and nothing else
-  ok   What Now, the teasers and the old done marks (live) › and the account is moved too: the old row deleted, the stable mark set
-  ok   What Now, the teasers and the old done marks (live) › no console errors
-  ok   What Now, Tonight (live, a reader in Los Angeles) › Tonight lists only items after 5 pm today in America/New_York
-  ok   What Now, Tonight (live, a reader in Los Angeles) › tonight’s late listing is there
-  ok   What Now, Tonight (live, a reader in Los Angeles) › a listing posted twice shows once
-  ok   What Now, Tonight (live, a reader in Los Angeles) › every date tile is today in Burlington
-  ok   What Now, Tonight (live, a reader in Los Angeles) › Playing this week: tonight’s and this week’s artists, soonest first, not next week’s
-  ok   What Now, Tonight (live, a reader in Los Angeles) › the old Music tab’s why lines come along (the genre when there is no why)
-  ok   What Now, Tonight (live, a reader in Los Angeles) › nothing is embedded until you ask
-  ok   What Now, Tonight (live, a reader in Los Angeles) › Listen builds that artist’s Bandcamp player, which does not autoplay
-  ok   What Now, Tonight (live, a reader in Los Angeles) › the player is the shell’s .embed: full width, the media radius, its own height
-  ok   What Now, Tonight (live, a reader in Los Angeles) › pressing it again takes the player away
-  ok   What Now, Tonight (live, a reader in Los Angeles) › the list ends, and says so
-  ok   What Now, Tonight (live, a reader in Los Angeles) › no console errors
-  ok   What Now, deep links and wide › #whatnow/m42 opens Missions and flashes mission 42
-  ok   What Now, deep links and wide › a mission link lands even while the list is filtered to another theme
-  ok   What Now, deep links and wide › #whatnow/tonight opens Tonight
-  ok   What Now, deep links and wide › the demo carries six missions
-  ok   What Now, deep links and wide › demo marks never reach localStorage
-  ok   What Now, deep links and wide › no console errors
-  ok   What Now, deep links and wide › in December the demo’s 5:45 pm and 6 pm listings are still tonight
-  ok   What Now, deep links and wide › and its sunset still reads 6:06
-  ok   What Now, deep links and wide › no console errors
-  ok   What Now, at a glance: the weather card and Happening today (demo, 2 pm) › the card: the temperature, feels like, today’s high and low
-  ok   What Now, at a glance: the weather card and Happening today (demo, 2 pm) › a condition icon, and the card says it all to a screen reader
-  ok   What Now, at a glance: the weather card and Happening today (demo, 2 pm) › the next six hours, from the hour after now
-  ok   What Now, at a glance: the weather card and Happening today (demo, 2 pm) › the card opens the guide’s weather page
-  ok   What Now, at a glance: the weather card and Happening today (demo, 2 pm) › at 390 the card sits to the right, beside the pills and under the lake and sunset line, overlapping nothing
-  ok   What Now, at a glance: the weather card and Happening today (demo, 2 pm) › above Spin, which keeps its full width, and nothing scrolls sideways
-  ok   What Now, at a glance: the weather card and Happening today (demo, 2 pm) › Happening today sits under Spin and above the challenges
-  ok   What Now, at a glance: the weather card and Happening today (demo, 2 pm) › the rest of today in time order, the morning’s gone, then tonight’s under a Tonight mark
-  ok   What Now, at a glance: the weather card and Happening today (demo, 2 pm) › a tile opens its own listing
-  ok   What Now, at a glance: the weather card and Happening today (demo, 2 pm) › and a link to the full events calendar
-  ok   What Now, at a glance: the weather card and Happening today (demo, 2 pm) › no console errors
-  ok   What Now, at a glance: the weather card and Happening today (demo, 2 pm) › dark and 1280: the card keeps its fill and its height, sky, Full weather and all
-  ok   What Now, at a glance: the weather card and Happening today (demo, 2 pm) › no console errors
-  ok   What Now, at a glance on Burlington’s clock (live, a reader in Los Angeles) › the card leads with the fresh observation, mostly cloudy
-  ok   What Now, at a glance on Burlington’s clock (live, a reader in Los Angeles) › today’s high, and tonight’s low rather than last night’s
-  ok   What Now, at a glance on Burlington’s clock (live, a reader in Los Angeles) › the next six hours in Burlington’s clock, with rain where it is forecast and the moon after the 6:05 sunset
-  ok   What Now, at a glance on Burlington’s clock (live, a reader in Los Angeles) › today in Burlington: on now, then what’s next, then tonight; not the morning, the all-afternoon fair, the all-day exhibit, the cancelled show, last night or tomorrow
-  ok   What Now, at a glance on Burlington’s clock (live, a reader in Los Angeles) › a title with markup in it prints as text
-  ok   What Now, at a glance on Burlington’s clock (live, a reader in Los Angeles) › a tile opens its listing in a new tab
-  ok   What Now, at a glance on Burlington’s clock (live, a reader in Los Angeles) › no console errors
-  ok   What Now, at a glance on Burlington’s clock (live, a reader in Los Angeles) › after the last one tonight, the strip turns to tomorrow
-  ok   What Now, at a glance on Burlington’s clock (live, a reader in Los Angeles) › no console errors
-  ok   What Now, at a glance on Burlington’s clock (live, a reader in Los Angeles) › at 12:30 am, last night’s late set still on shows as on now
-  ok   What Now, at a glance on Burlington’s clock (live, a reader in Los Angeles) › no console errors
-  ok   What Now, at a glance on Burlington’s clock (live, a reader in Los Angeles) › nothing today and nothing tomorrow: Happening today, “Nothing else today.”
-  ok   What Now, at a glance on Burlington’s clock (live, a reader in Los Angeles) › no console errors
-  ok   What Now, Btown Challenges (live) › challenges.json holds weekly and evergreen challenges
-  ok   What Now, Btown Challenges (live) › every one has an id, a title, a line, a known kind and a page
-  ok   What Now, Btown Challenges (live) › no id twice
-  ok   What Now, Btown Challenges (live) › no dashes or exclamation points
-  ok   What Now, Btown Challenges (live) › w-new-sunset: its guide page exists (../sunset.html)
-  ok   What Now, Btown Challenges (live) › w-solo-event: its guide page exists (../events.html)
-  ok   What Now, Btown Challenges (live) › w-walked-past: its guide page exists (../restaurants.html)
-  ok   What Now, Btown Challenges (live) › w-give-an-hour: its guide page exists (../volunteer.html)
-  ok   What Now, Btown Challenges (live) › w-coffee-week: its guide page exists (../restaurants.html)
-  ok   What Now, Btown Challenges (live) › w-go-to-a-game: its guide page exists (../sports.html)
-  ok   What Now, Btown Challenges (live) › w-take-a-class: its guide page exists (../hobbies.html)
-  ok   What Now, Btown Challenges (live) › w-walking-tour: its guide page exists (../walking-tour.html)
-  ok   What Now, Btown Challenges (live) › Btown Challenges sits above the Top 100+
-  ok   What Now, Btown Challenges (live) › this week’s challenge is the one for Burlington’s week
-  ok   What Now, Btown Challenges (live) › and three evergreen ones under it
-  ok   What Now, Btown Challenges (live) › Suggest one writes to btownbrief@gmail.com
-  ok   What Now, Btown Challenges (live) › All challenges opens the challenge board
-  ok   What Now, Btown Challenges (live) › Mark done ticks it
-  ok   What Now, Btown Challenges (live) › and both survive a reload, on this device
-  ok   What Now, Btown Challenges (live) › kept under allday-challenges, like the missions’ marks
-  ok   What Now, Btown Challenges (live) › tapping one opens its line and its page
-  ok   What Now, Btown Challenges (live) › #whatnow/c-<id> lands on the challenge
-  ok   What Now, Btown Challenges (live) › no console errors
-  ok   What Now, challenges and colour (demo) › a challenge without a real page never shows
-  ok   What Now, challenges and colour (demo) › demo: Mark done ticks
-  ok   What Now, challenges and colour (demo) › and never reaches localStorage
-  ok   What Now, challenges and colour (demo) › theme chips carry a colour dot, and the week’s challenge a tint
-  ok   What Now, challenges and colour (demo) › no console errors
+  ok   section pills: every tab floats a liquid pill in its own water › watch: under a big switch, a compact pill, 40px tall with 14px words (the Wire’s is 54)
+  ok   section pills: every tab floats a liquid pill in its own water › watch: glass, floating over the paper, and it stays as the mast steps away
+  ok   section pills: every tab floats a liquid pill in its own water › watch: a labelled group, and nothing scrolls the page sideways
+  ok   section pills: every tab floats a liquid pill in its own water › watch: the one on sits in poured water, inside the pill
+  ok   section pills: every tab floats a liquid pill in its own water › watch: the water is the tab’s own --liq-watch (#C8466E)
+  ok   section pills: every tab floats a liquid pill in its own water › watch: the canvas carries the colour, not the button
+  ok   section pills: every tab floats a liquid pill in its own water › watch: scrolled down, it floats at the top, 90% size
+  ok   section pills: every tab floats a liquid pill in its own water › watch: any move up brings it back to full size
+  ok   section pills: every tab floats a liquid pill in its own water › food: the tab’s one switch, as big as the Wire’s, 54px tall with 16px bold words (the Wire’s is 54)
+  ok   section pills: every tab floats a liquid pill in its own water › food: glass, floating over the paper, and it stays as the mast steps away
+  ok   section pills: every tab floats a liquid pill in its own water › food: a labelled group, and nothing scrolls the page sideways
+  ok   section pills: every tab floats a liquid pill in its own water › food: the one on sits in poured water, inside the pill
+  ok   section pills: every tab floats a liquid pill in its own water › food: the water is the tab’s own --liq-food (#E46B32)
+  ok   section pills: every tab floats a liquid pill in its own water › food: the canvas carries the colour, not the button
+  ok   section pills: every tab floats a liquid pill in its own water › food: scrolled down, it floats at the top, 90% size
+  ok   section pills: every tab floats a liquid pill in its own water › food: any move up brings it back to full size
+  ok   section pills: every tab floats a liquid pill in its own water › people: the tab’s one switch, as big as the Wire’s, 54px tall with 16px bold words (the Wire’s is 54)
+  ok   section pills: every tab floats a liquid pill in its own water › people: glass, floating over the paper, and it stays as the mast steps away
+  ok   section pills: every tab floats a liquid pill in its own water › people: a labelled group, and nothing scrolls the page sideways
+  ok   section pills: every tab floats a liquid pill in its own water › people: the one on sits in poured water, inside the pill
+  ok   section pills: every tab floats a liquid pill in its own water › people: the water is the tab’s own --liq-people (#1D7F8A)
+  ok   section pills: every tab floats a liquid pill in its own water › people: the canvas carries the colour, not the button
+  ok   section pills: every tab floats a liquid pill in its own water › people: scrolled down, it floats at the top, 90% size
+  ok   section pills: every tab floats a liquid pill in its own water › people: any move up brings it back to full size
+  ok   section pills: every tab floats a liquid pill in its own water › whatnow: the tab’s one switch, as big as the Wire’s, 54px tall with 16px bold words (the Wire’s is 54)
+  ok   section pills: every tab floats a liquid pill in its own water › whatnow: glass, floating over the paper, and it stays as the mast steps away
+  ok   section pills: every tab floats a liquid pill in its own water › whatnow: a labelled group, and nothing scrolls the page sideways
+  ok   section pills: every tab floats a liquid pill in its own water › whatnow: the one on sits in poured water, inside the pill
+  ok   section pills: every tab floats a liquid pill in its own water › whatnow: the water is the tab’s own --liq-whatnow (#F2A93B)
+  ok   section pills: every tab floats a liquid pill in its own water › whatnow: the canvas carries the colour, not the button
+  ok   section pills: every tab floats a liquid pill in its own water › whatnow: scrolled down, it floats at the top, 90% size
+  ok   section pills: every tab floats a liquid pill in its own water › whatnow: any move up brings it back to full size
+  ok   section pills: every tab floats a liquid pill in its own water › vintage: the tab’s one switch, as big as the Wire’s, 54px tall with 16px bold words (the Wire’s is 54)
+  ok   section pills: every tab floats a liquid pill in its own water › vintage: glass, floating over the paper, and it stays as the mast steps away
+  ok   section pills: every tab floats a liquid pill in its own water › vintage: a labelled group, and nothing scrolls the page sideways
+  ok   section pills: every tab floats a liquid pill in its own water › vintage: the one on sits in poured water, inside the pill
+  ok   section pills: every tab floats a liquid pill in its own water › vintage: the water is the tab’s own --liq-vintage (#9B4F96)
+  ok   section pills: every tab floats a liquid pill in its own water › vintage: the canvas carries the colour, not the button
+  ok   section pills: every tab floats a liquid pill in its own water › vintage: scrolled down, it floats at the top, 90% size
+  ok   section pills: every tab floats a liquid pill in its own water › vintage: any move up brings it back to full size
+  ok   section pills: every tab floats a liquid pill in its own water › habits: the tab’s one switch, as big as the Wire’s, 54px tall with 16px bold words (the Wire’s is 54)
+  ok   section pills: every tab floats a liquid pill in its own water › habits: glass, floating over the paper, and it stays as the mast steps away
+  ok   section pills: every tab floats a liquid pill in its own water › habits: a labelled group, and nothing scrolls the page sideways
+  ok   section pills: every tab floats a liquid pill in its own water › habits: the one on sits in poured water, inside the pill
+  ok   section pills: every tab floats a liquid pill in its own water › habits: the water is the tab’s own --liq-habits (#5DA142)
+  ok   section pills: every tab floats a liquid pill in its own water › habits: the canvas carries the colour, not the button
+  ok   section pills: every tab floats a liquid pill in its own water › habits: scrolled down, it floats at the top, 90% size
+  ok   section pills: every tab floats a liquid pill in its own water › habits: any move up brings it back to full size
+  ok   section pills: every tab floats a liquid pill in its own water › games: the tab’s one switch, as big as the Wire’s, 54px tall with 16px bold words (the Wire’s is 54)
+  ok   section pills: every tab floats a liquid pill in its own water › games: glass, floating over the paper, and it stays as the mast steps away
+  ok   section pills: every tab floats a liquid pill in its own water › games: a labelled group, and nothing scrolls the page sideways
+  ok   section pills: every tab floats a liquid pill in its own water › games: the one on sits in poured water, inside the pill
+  ok   section pills: every tab floats a liquid pill in its own water › games: the water is the tab’s own --liq-games (#5560D6)
+  ok   section pills: every tab floats a liquid pill in its own water › games: the canvas carries the colour, not the button
+  ok   section pills: every tab floats a liquid pill in its own water › games: scrolled down, it floats at the top, 90% size
+  ok   section pills: every tab floats a liquid pill in its own water › games: any move up brings it back to full size
+  ok   section pills: every tab floats a liquid pill in its own water › each tab’s water is its own colour
+  ok   section pills: every tab floats a liquid pill in its own water › no console errors
+  ok   section pills: the water follows the scroll, and a tap scrolls there › watch: at the top, the first section is on (theaters, soon, stream, vote, chat)
+  ok   section pills: the water follows the scroll, and a tap scrolls there › watch: scrolled to stream, the water pours there and it shows in the pill
+  ok   section pills: the water follows the scroll, and a tap scrolls there › watch: a tap on vote lands its head just under the floating pill, and the water stays there
+  ok   section pills: the water follows the scroll, and a tap scrolls there › food: at the top, the first section is on (asks, bite, open, deals, best, kitchens, add)
+  ok   section pills: the water follows the scroll, and a tap scrolls there › food: scrolled to open, the water pours there and it shows in the pill
+  ok   section pills: the water follows the scroll, and a tap scrolls there › food: a tap on best lands its head just under the floating pill, and the water stays there
+  ok   section pills: the water follows the scroll, and a tap scrolls there › people: at the top, the first section is on (arch, clubs, plans, mix, dating, pets, groups, quiz, dir)
+  ok   section pills: the water follows the scroll, and a tap scrolls there › people: scrolled to plans, the water pours there and it shows in the pill
+  ok   section pills: the water follows the scroll, and a tap scrolls there › people: a tap on dating lands its head just under the floating pill, and the water stays there
+  ok   section pills: the water follows the scroll, and a tap scrolls there › vintage: at the top, the first section is on (fit, spotted, swaps, tees, newin, shops)
+  ok   section pills: the water follows the scroll, and a tap scrolls there › vintage: scrolled to swaps, the water pours there and it shows in the pill
+  ok   section pills: the water follows the scroll, and a tap scrolls there › vintage: a tap on newin lands its head just under the floating pill, and the water stays there
+  ok   section pills: the water follows the scroll, and a tap scrolls there › games: at the top, the first section is on (arcade, picks, playing, lfg, tags, vr, challenge, board, champs)
+  ok   section pills: the water follows the scroll, and a tap scrolls there › games: scrolled to playing, the water pours there and it shows in the pill
+  ok   section pills: the water follows the scroll, and a tap scrolls there › games: a tap on tags lands its head just under the floating pill, and the water stays there
+  ok   section pills: the water follows the scroll, and a tap scrolls there › no console errors
+  ok   section pills: "All" lists every section, no sideways scroll needed › at 360 the Games pill runs past its edge, scrolls inside itself, and shows All
+  ok   section pills: "All" lists every section, no sideways scroll needed › All opens a sheet with every section, the one you are on marked
+  ok   section pills: "All" lists every section, no sideways scroll needed › a row closes the sheet, scrolls to that section, and the pill scrolls to show it on
+  ok   section pills: "All" lists every section, no sideways scroll needed › a pill that fits (Watch, at 1280) has no All button
+  ok   section pills: "All" lists every section, no sideways scroll needed › no console errors
+  ok   section pills: views, deep links, On Air and both themes › What Now opens on Spin
+  ok   section pills: views, deep links, On Air and both themes › scrolled down to the missions, the water pours to Missions
+  ok   section pills: views, deep links, On Air and both themes › a tap on Spin goes back up, the water with it
+  ok   section pills: views, deep links, On Air and both themes › Tonight is its own view, poured
+  ok   section pills: views, deep links, On Air and both themes › Habits: Forests takes the water and the address
+  ok   section pills: views, deep links, On Air and both themes › a view switch says which view is pressed
+  ok   section pills: views, deep links, On Air and both themes › dark: the words off the water are the dock’s ink
+  ok   section pills: views, deep links, On Air and both themes › #vintage/shops lands on Shops, and the pill says so
+  ok   section pills: views, deep links, On Air and both themes › #food/deals lands on Deals, and the pill says so
+  ok   section pills: views, deep links, On Air and both themes › On Air: the sides in glass, then Local and the lengths as a small pill, All lengths on
+  ok   section pills: views, deep links, On Air and both themes › and the lengths pill pours too
+  ok   section pills: views, deep links, On Air and both themes › no console errors
+  ok   section pills: reduced motion is a plain fill that does not shrink › no canvas: the one on is filled in Food’s paprika
+  ok   section pills: reduced motion is a plain fill that does not shrink › and scrolling down leaves it full size
+  ok   section pills: reduced motion is a plain fill that does not shrink › no console errors
+  ok   section pills: a wide screen centres the pill over the column › the pill sits centred in the mast’s column
+  ok   section pills: a wide screen centres the pill over the column › no console errors
