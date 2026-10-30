@@ -1,7 +1,8 @@
 /* neighbors.js — People · Neighbors (wave 1, 2026-10-29; APP-MAP rows 24,
    25 and 27): the Neighbor Exchange, Lost & found and volunteer shifts,
    each a lane on its board kind (boards-core.js, wave 0), drawn with the
-   shell's board cards, with its post form and its rules.
+   shell's board cards and a post form carrying the board's rule in one line
+   (DESIGN.md §10: no rules on the tab face).
 
    - Borrow, Free, Favor: the neighbors board's borrow, free and favor
      kinds. The vote is "I can help". `got` on a post marks it done (lent,
@@ -50,7 +51,10 @@ function lane(host, r, list, opts, empty) {
   if (!list.length) { host.appendChild(el('p', 'note pad', empty)); return; }
   kit.feed(host, list, { tab: KEY, ...opts });
 }
-const post = (label, kind, o) => kit.postButton(label, { board: 'neighbors', kind, heading: label, ...o });
+const RULE = { borrow: 'To lend, never to rent.', free: 'Free means free. Nothing for sale.', favor: 'An hour or two, for free.',
+  lost: 'A corner or a landmark, never your address.', found: 'A corner or a landmark, never your address.' };
+/* the board's rule, one short line in the form, where it matters */
+const post = (label, kind, o) => kit.postButton(label, { board: 'neighbors', kind, heading: label, notes: [RULE[kind]], ...o });
 const whatOptions = RULES.boards.neighbors.meta.what.values.map((v) => [v, WHAT[v]]);
 
 const mode = kit.tab({
@@ -64,21 +68,18 @@ const mode = kit.tab({
         b.appendChild(post('Ask to borrow', 'borrow', { title: 'What you need', titlePlaceholder: 'A tall ladder for Saturday',
           fields: [{ key: 'item', label: 'The thing', placeholder: 'Extension ladder' }, { key: 'when', label: 'When', placeholder: 'This Saturday' }],
           place: 'Neighborhood', placePlaceholder: 'Old North End', body: 'Anything to know' }));
-        kit.rules(b, ['Things to lend, not to rent.', 'Give it back as you got it, and say thanks.', 'Meet on a porch or a corner you both know.']);
-        lane(b, S.r, of('borrow'), { meta, vote: 'I can lend', after: doneButton }, 'Nobody needs to borrow anything right now.');
+        lane(b, S.r, of('borrow'), { meta, vote: 'I can lend', after: doneButton }, 'Nothing asked for.');
       } },
     { key: 'free', label: 'Free', newest: () => kit.newest(of('free')),
       draw(b) {
         b.appendChild(post('Give something away', 'free', { title: 'What it is', titlePlaceholder: 'A couch, you carry it', place: 'Neighborhood', placePlaceholder: 'Winooski', body: 'Size, state, when to come' }));
-        kit.rules(b, ['Free means free: nothing for sale, no services.', 'First to say “I want it” and show up gets it.', 'Mark it given when it’s gone.']);
-        lane(b, S.r, of('free'), { meta, vote: 'I want it', ratio: 'r169', after: doneButton }, 'Nothing up for grabs right now.');
+        lane(b, S.r, of('free'), { meta, vote: 'I want it', ratio: 'r169', after: doneButton }, 'Nothing up for grabs.');
       } },
     { key: 'favor', label: 'Favor', newest: () => kit.newest(of('favor')),
       draw(b) {
         b.appendChild(post('Ask a favor', 'favor', { title: 'What you need', titlePlaceholder: 'An hour of help moving a dresser',
           fields: [{ key: 'when', label: 'When', placeholder: 'Sunday afternoon' }], place: 'Neighborhood', placePlaceholder: 'South End', body: 'How long it takes' }));
-        kit.rules(b, ['An hour or two of help, given for free.', 'Nothing that needs a license or a pro.', 'Say thanks in public.']);
-        lane(b, S.r, of('favor'), { meta, vote: 'I can help', after: doneButton }, 'No favors asked right now.');
+        lane(b, S.r, of('favor'), { meta, vote: 'I can help', after: doneButton }, 'No favors asked.');
       } },
     { key: 'lost', label: 'Lost & found', newest: () => kit.newest(of('lost', 'found')),
       draw(b) {
@@ -89,19 +90,17 @@ const mode = kit.tab({
           post('I found something', 'found', { title: 'What you found', titlePlaceholder: 'Keys on a red lanyard', fields, place: 'A place for the map', placePlaceholder: 'A corner or a landmark', body: 'Ask them to describe it' })]
           .forEach((x) => { if (x.firstChild) r.appendChild(x.firstChild); });
         b.appendChild(r);
-        kit.rules(b, ['A corner or a landmark on the map, never your home address.', 'Found something? Ask the owner to describe it before handing it over.', 'Mark it home again when it is.']);
-        lane(b, S.r, of('lost', 'found'), { meta, map: true, vote: 'I’ll look', ratio: 'r169', after: doneButton }, 'Nothing lost or found right now.');
+        lane(b, S.r, of('lost', 'found'), { meta, map: true, vote: 'I’ll look', ratio: 'r169', after: doneButton }, 'Nothing lost or found.');
       } },
     { key: 'shifts', label: 'Shifts', newest: () => kit.newest(S.shifts),
       draw(b) {
         b.appendChild(kit.postButton('Post a shift', { board: 'shifts', kind: 'shift', heading: 'A volunteer shift', title: 'What the shift is', titlePlaceholder: 'Two hours sorting at the food shelf',
-          fields: [{ key: 'org', label: 'The nonprofit', placeholder: 'The food shelf' }, { key: 'when', label: 'When', placeholder: kit.etDay(Date.now() + 3 * kit.DAY) + ', 9 am', hint: 'The date first, then the time.' },
+          fields: [{ key: 'org', label: 'The nonprofit', placeholder: 'The food shelf' }, { key: 'when', label: 'When', placeholder: kit.etDay(Date.now() + 3 * kit.DAY) + ', 9 am' },
             { key: 'hours', label: 'Hours', type: 'int', placeholder: '2' }, { key: 'slots', label: 'People needed', type: 'int', placeholder: '6' },
             { key: 'link', label: 'Sign-up link', type: 'url', placeholder: 'https://' }],
-          place: 'Where', body: 'What to bring', notes: ['For nonprofits. Stephen looks at every shift and its link before it shows.'] }));
-        kit.rules(b, ['Nonprofits and community groups only.', 'A few hours, a date, and a real sign-up link.', 'Stephen checks each one first.']);
-        lane(b, S.rs, S.shifts, { meta: shiftMeta, vote: 'I’m going', after: (p) => ((p.meta || {}).link ? signUp(p.meta.link) : null) }, 'No shifts posted this week.');
-        b.appendChild(kit.outRow('More ways to help', 'The guide’s volunteer page, by the time you’ve got', VOLUNTEER_PAGE, 'volunteer'));
+          place: 'Where', body: 'What to bring', notes: ['Nonprofits only. Shows once approved.'] }));
+        lane(b, S.rs, S.shifts, { meta: shiftMeta, vote: 'I’m going', after: (p) => ((p.meta || {}).link ? signUp(p.meta.link) : null) }, 'No shifts this week.');
+        b.appendChild(kit.outRow('More ways to help', '', VOLUNTEER_PAGE, 'volunteer'));
       } },
   ],
 });

@@ -53,10 +53,10 @@ function lane(host, list, empty) {
   if (!list.length) { host.appendChild(el('p', 'note pad', empty)); return; }
   kit.feed(host, list, { tab: KEY, meta, noLeft: true, vote: 'I’d go' });
 }
-function planButton(label, placeholder, note) {
+function planButton(label, placeholder, word) {
   return kit.postButton(label, { board: 'people', kind: 'plan', heading: label, title: 'What’s the plan', titlePlaceholder: placeholder,
     fields: [{ key: 'when', label: 'When', placeholder: 'Friday, 8 pm' }, { key: 'spots', label: 'Spots', type: 'int', placeholder: '3' }],
-    place: 'Where', placePlaceholder: 'A bar, a show, a trail', body: 'Anything to know', notes: [note, 'Meet somewhere public.'] });
+    place: 'Where', placePlaceholder: 'A bar, a show, a trail', body: 'Anything to know', notes: ['Say “' + word + '” in the title.'] });
 }
 
 const calendarItems = () => kit.eventItems(S.events || [], (e) => { const k = mixerKind(e); return k === 'singles' || k === 'social' || SINGLES.test(e.title); }, 'dt-');
@@ -69,33 +69,29 @@ const mode = kit.tab({
   sections: [
     { key: 'singles', label: 'Singles', world: 'irl', newest: () => kit.newest(singles()),
       draw(b) {
-        b.appendChild(planButton('Post a singles plan', 'Going out with a few single friends, join us', 'Say “singles” in the title so it lands here.'));
-        lane(b, singles(), 'No singles plans this week. Post the first one.');
+        b.appendChild(planButton('Post a singles plan', 'Going out with a few single friends, join us', 'singles'));
+        lane(b, singles(), 'No singles plans yet.');
       } },
     { key: 'friends', label: 'Friends', world: 'irl', newest: () => kit.newest(friends()),
       draw(b) {
-        b.appendChild(el('p', 'note pad', 'New in town, or just short on friends? Post what you’d like to do and who you’d like to meet.'));
-        b.appendChild(planButton('Post a friends plan', 'Looking for friends to try the climbing gym with', 'Say “friends” in the title so it lands here.'));
-        lane(b, friends(), 'No friend-finder posts yet. Post the first one.');
+        b.appendChild(planButton('Post a friends plan', 'Looking for friends to try the climbing gym with', 'friends'));
+        lane(b, friends(), 'No friend posts yet.');
       } },
     { key: 'events', label: 'Events', world: 'irl', newest: () => 0,
       draw(b) {
-        if (S.events === null) { b.appendChild(el('p', 'note pad', 'The calendar didn’t load.')); return; }
-        kit.eventList(b, calendarItems(), 'No singles nights or mixers on the calendar in the next two weeks.');
-        b.appendChild(kit.outRow('Every mixer, on You', 'Socials, trivia, run clubs and game nights this week', '#people/mix', 'to-mix'));
+        if (S.events === null) { b.appendChild(el('p', 'note pad', 'Didn’t load.')); return; }
+        kit.eventList(b, calendarItems(), 'Nothing in the next two weeks.');
+        b.appendChild(kit.outRow('Every mixer', '', '#people/mix', 'to-mix'));
       } },
     { key: 'pitch', label: 'Pitch a friend', world: 'irl', newest: () => 0,
       draw(b) {
-        kit.textCard(b, 'Pitch a friend', [
-          'Bring a single friend and sell them to the room. Each pitcher gets two minutes: their friend’s best qualities, worst habits and one good story. The friends being pitched mostly just sit there and blush.',
-          'Afterwards everyone mingles, and anyone can say who they’d like to meet. No apps, no swiping.',
-          'The next one goes up on the Btown Brief Meetup group first.',
+        kit.textCard(b, null, [
+          'Bring a single friend and sell them to the room: two minutes each, their best qualities, worst habits and one good story. Then everyone mingles.',
         ], [kit.linkBtn('See it on Meetup', kit.MEETUP_GROUP, 'pkey')], 'pitch');
       } },
     { key: 'posts', label: 'Posts', world: 'online', newest: () => 0,
       draw(b) {
-        if (!S.dp) { b.appendChild(el('p', 'note pad', 'This list didn’t load.')); return; }
-        b.appendChild(el('p', 'subh pad', '<b>Meet someone online, locally</b>'));
+        if (!S.dp) { b.appendChild(el('p', 'note pad', 'Didn’t load.')); return; }
         kit.rowList(b, (S.dp.dating.ways || []).filter((w) => w && w.name && /^https:\/\//.test(String(w.url || ''))).map((w) => kit.outRow(w.name, w.line, w.url, 'dw:' + w.id)));
         const cut = Date.now() - NEWS_DAYS * kit.DAY;
         const news = (S.dp.dating.news || []).filter((n) => n && n.title && /^https:\/\//.test(String(n.url || '')) && /^\d{4}-\d{2}-\d{2}$/.test(String(n.date)) &&

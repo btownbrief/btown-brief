@@ -200,17 +200,11 @@ export function boardNote(host, r, empty) {
   if (r && r.ok === false) {
     /* a read that never reached the server comes back "sign in first" (boards.js
        reads a failed fetch as a lost session); for a list, it is the connection */
-    host.appendChild(el('p', 'note pad', r.error === 'off' ? 'This board opens once Stephen switches it on.'
-      : r.error === 'not_signed_in' || r.error === 'offline' ? 'The posts didn’t load. Check your connection.' : (r.message || 'The posts didn’t load.')));
+    host.appendChild(el('p', 'note pad', r.error === 'off' ? 'Opening soon.'
+      : r.error === 'not_signed_in' || r.error === 'offline' ? 'Didn’t load.' : (r.message || 'Didn’t load.')));
     return;
   }
   host.appendChild(el('p', 'note pad', empty));
-}
-
-/* the board's house rules, short */
-export function rules(host, lines) {
-  host.appendChild(el('div', 'spacer'));
-  host.appendChild(el('p', 'note pad pp-rules', '<b>The rules.</b> ' + lines.map(esc).join(' ')));
 }
 
 /* a bright Post button that opens boards.compose */

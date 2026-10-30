@@ -13319,12 +13319,12 @@ async function thePeopleApp(browser, base) {
     check(open.includes('Potluck for people new in town') && !week.includes('Potluck for people new in town') && week.includes('Board games at the library, new faces welcome'),
       'This week keeps the next seven days; Open to strangers has the rest too', JSON.stringify(week));
     check(meetup.length >= 3 && meetup.every((x) => open.includes(x)) && !meetup.includes('Thursday trivia, our team needs a sixth'), 'Down for Meetup: only the plans that asked', JSON.stringify(meetup));
-    check(/Sign in to see the plans you posted/.test(await ppText(page, 'mine')), 'Mine asks a stranger to sign in', '');
+    check(/Sign in to see yours/.test(await ppText(page, 'mine')), 'Mine asks a stranger to sign in', '');
     check(await page.$eval('.pp-sec[data-sec="open"] .card.board [data-act="bvote"]', (b) => /I’d go/.test(b.textContent)), 'the vote says I’d go', '');
     check(!(await page.$('.pp-sec[data-sec="open"] .tag-left')), 'a plan shows its when, not a countdown', '');
     await page.evaluate(() => import('/all-day/js/auth.js').then((a) => a.demoSignIn()));
-    await page.waitForFunction(() => !/Sign in to see/.test(document.querySelector('.pp-sec[data-sec="mine"]').innerText));
-    check(/haven’t posted a plan/.test(await ppText(page, 'mine')), 'signed in with no plans: says so', await ppText(page, 'mine'));
+    await page.waitForFunction(() => !/Sign in to see yours/.test(document.querySelector('.pp-sec[data-sec="mine"]').innerText));
+    check(/No plans posted yet/.test(await ppText(page, 'mine')), 'signed in with no plans: says so', await ppText(page, 'mine'));
     await page.click('.pp-sec[data-sec="open"] [data-post="people:plan"]');
     await page.waitForSelector('.sheet-body form.bform, .sheet-body .linkrow');
     const names = await page.$$eval('.sheet-body [name]', (n) => n.map((x) => x.name));
@@ -13406,7 +13406,7 @@ async function thePeopleApp(browser, base) {
       const got = await ppTitles(page, sec);
       const want = ks.flatMap(of);
       check(got.length && got.slice().sort().join('|') === want.slice().sort().join('|'), sec + ': its own kinds of post, all of them', JSON.stringify(got));
-      check(/The rules\./.test(await ppText(page, sec)), sec + ': with its rules', '');
+      check(!/The rules/.test(await ppText(page, sec)), sec + ': no rules on the tab face', '');
       check(!!(await page.$('.pp-sec[data-sec="' + sec + '"] [data-post^="neighbors:"]')), sec + ': and a post button', '');
     }
     const borrow = await ppTitles(page, 'borrow');
@@ -13421,6 +13421,7 @@ async function thePeopleApp(browser, base) {
     await page.evaluate(() => import('/all-day/js/boards.js').then((b) => b.setProfile({ display_name: 'Pat Q.' })));
     await page.click('.pp-sec[data-sec="borrow"] [data-post="neighbors:borrow"]');
     await page.waitForSelector('.sheet-body form.bform');
+    check(/To lend, never to rent\./.test(await page.$eval('.bform', (f) => f.innerText)), 'the board’s rule is one line in the form', '');
     await page.fill('.bform input[name=title]', 'A pressure washer for a deck');
     await page.fill('.bform input[name="m:item"]', 'Pressure washer');
     await page.click('.bform button[type=submit]');
@@ -13449,7 +13450,7 @@ async function thePeopleApp(browser, base) {
     const ev = await page.$$eval('.pp-sec[data-sec="meetups"] .card.event .c-title', (n) => n.map((x) => x.textContent));
     check(ev.includes('Howl-o-ween dog costume parade'), 'and the calendar’s pet events', JSON.stringify(ev));
     const vets = await ppText(page, 'vets');
-    check(/Vets you can afford/.test(vets) && /Coming soon/i.test(vets) && /Burlington With Your Dog/.test(vets), 'Vets: a placeholder that names what is coming, and the guide with the emergency vets', vets);
+    check(/Vets you can afford/.test(vets) && /Coming soon/i.test(vets) && /Emergency vets/.test(vets) && /Burlington With Your Dog/.test(vets), 'Vets: a placeholder that names what is coming, and the guide with the emergency vets', vets);
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
   });
@@ -13463,7 +13464,7 @@ async function thePeopleApp(browser, base) {
       check(hrefs.some((h) => /^https:\/\/t\.me\//.test(h)) && hrefs.some((h) => /btownbrief\.com\/community$/.test(h)) && hrefs.some((h) => /telegram\.html$/.test(h)), (demo ? 'demo' : 'live') + ': Telegram, the community and the how-to', '');
       const ask = await ppText(page, 'ask');
       check(/Ask a regular/.test(ask) && /Coming soon/i.test(ask), (demo ? 'demo' : 'live') + ': Ask a regular is a named placeholder', ask);
-      check(demo ? /invented examples/.test(ask) : !/invented examples/.test(ask), demo ? 'the demo previews invented questions, marked' : 'live shows no invented questions', '');
+      check(demo ? /Examples/.test(ask) : !/Examples/.test(ask), demo ? 'the demo previews invented questions' : 'live shows no invented questions', '');
       check(!(await page.$('.panel:not([hidden]) textarea, .panel:not([hidden]) input')), 'no chat box anywhere', '');
       check(!errors.length, 'no console errors', errors.join(' | '));
       await ctx.close();
@@ -13512,7 +13513,7 @@ async function thePeopleApp(browser, base) {
       const { ctx, page, errors } = await newPage(browser, base, { rpc: (fn, a) => (fn === 'nn_posts_list' && a.p_board !== 'people' ? answer : undefined) });
       await page.goto(base + '/people/#neighbors');
       await settle(page); await ppReady(page);
-      check(/opens once Stephen switches it on/.test(await ppText(page, 'borrow')) && /opens once Stephen switches it on/.test(await ppText(page, 'shifts')), 'Neighbors says the board opens once it is switched on', '');
+      check(/Opening soon/.test(await ppText(page, 'borrow')) && /Opening soon/.test(await ppText(page, 'shifts')), 'Neighbors says the board is opening soon', '');
       check(!(await page.$('.panel:not([hidden]) [data-post]:not([hidden])')) && !(await page.$$eval('.panel:not([hidden]) .addrow:not([hidden])', (n) => n.length)), 'and offers no post button that would be refused', '');
       check(!errors.filter((e) => !/40[04]/.test(e)).length, 'no console errors but the refusals themselves', errors.join(' | '));
       await ctx.close();

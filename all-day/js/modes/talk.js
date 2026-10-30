@@ -35,30 +35,26 @@ const mode = kit.tab({
   sections: [
     { key: 'telegram', label: 'Telegram',
       draw(b) {
-        kit.textCard(b, 'The Meetup group chat', [
-          'Somebody floats an idea, a few people say yes, and it happens. Trivia on Thursday, a sunset walk, brunch with people you haven’t met yet.',
-          'Free, on Telegram. Mute it from the chat’s name at the top, and leave anytime.',
-        ], [kit.linkBtn('Join the group chat', GROUP_CHAT, 'pkey'), kit.linkBtn('The Meetup group', kit.MEETUP_GROUP, 'ghost sm')], 'telegram');
-        b.appendChild(kit.outRow('New to Telegram?', 'How to get the app and join, on the guide', kit.TELEGRAM_PAGE, 'telegram-page'));
+        /* DESIGN.md §10.7: the button is the paragraph */
+        const r = el('div', 'linkrow chlinks');
+        r.dataset.card = 'telegram';
+        r.append(kit.linkBtn('Join the group chat', GROUP_CHAT, 'pkey'), kit.linkBtn('The Meetup group', kit.MEETUP_GROUP, 'ghost sm'));
+        b.appendChild(r);
+        b.appendChild(kit.outRow('New to Telegram?', '', kit.TELEGRAM_PAGE, 'telegram-page'));
       } },
     { key: 'community', label: 'Community',
       draw(b) {
-        kit.textCard(b, 'The Btown Brief community', [
-          'Random thoughts, good links, funny pictures and everyday questions, next to the Photo Wall and the recipes. It runs in your browser, no app needed.',
-        ], [kit.linkBtn('Join the community', COMMUNITY, 'pkey')], 'community');
-        kit.rowList(b, [
-          kit.outRow('Find Each Other', 'Looking for a running partner, a band, a book club', CH_FIND, 'ch-find'),
-          kit.outRow('Plans & Meetups', 'Hangouts people are planning this week', CH_PLANS, 'ch-plans'),
-        ]);
+        const r = el('div', 'linkrow chlinks');
+        r.dataset.card = 'community';
+        r.appendChild(kit.linkBtn('Join the community', COMMUNITY, 'pkey'));
+        b.appendChild(r);
+        kit.rowList(b, [kit.outRow('Find Each Other', '', CH_FIND, 'ch-find'), kit.outRow('Plans & Meetups', '', CH_PLANS, 'ch-plans')]);
       } },
     { key: 'ask', label: 'Ask a regular',
       draw(b) {
-        kit.soon(b, 'Ask a regular', [
-          'Ask anything about living here, like the best mechanic, a quiet place to work, or whether the ferry is worth it, and people who’ve been here for years answer.',
-          'It needs answers under a post, which the boards don’t do yet. Until then, ask in the group chat or the community.',
-        ], 'ask');
+        kit.soon(b, null, ['Ask anything about living here. People who’ve been here for years answer.'], 'ask');
         if (!S.asks.length) return;
-        b.appendChild(el('p', 'subh pad', '<b>What it will look like</b> <span class="bf-opt">invented examples</span>'));
+        b.appendChild(el('p', 'subh pad', '<b>Examples</b>'));
         kit.rowList(b, S.asks.map((q, i) => {
           const r = el('div', 'lrow');
           r.dataset.k = 'ask-' + i;

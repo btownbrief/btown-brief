@@ -54,13 +54,13 @@ function plans(host, list, empty) {
 
 function compose() {
   const fields = [
-    { key: 'when', label: 'When', placeholder: 'Saturday, 10 am', hint: 'A day and a time: “Thursday, 7 pm”.' },
+    { key: 'when', label: 'When', placeholder: 'Saturday, 10 am' },
     { key: 'spots', label: 'Spots', type: 'int', placeholder: '4' },
   ];
   if (S.round2) fields.push({ key: 'ages', label: 'Rough age band', type: 'enum', options: PEOPLE_RULES.ages.map((a) => [a, AGES[a]]), hint: 'On the plan only, never on your profile.' });
   return kit.postButton('Post a plan', { board: 'people', kind: 'plan', heading: 'A plan, open to strangers', title: 'What’s the plan', titlePlaceholder: 'Trivia at Three Needs, need a fifth',
     fields, place: 'Where', placePlaceholder: 'A bar, a park, a corner', body: 'Anything to know',
-    notes: ['Meet somewhere public. To put it on Meetup too, post it from the You tab.'] });
+    notes: ['To put it on Meetup too, post it from You.'] });
 }
 
 const mode = kit.tab({
@@ -72,27 +72,27 @@ const mode = kit.tab({
     { key: 'open', label: 'Open to strangers', newest: () => kit.newest(S.posts),
       draw(b) {
         b.appendChild(compose());
-        plans(b, upcoming().map((x) => x.p), 'No plans up yet. Post the first one.');
+        plans(b, upcoming().map((x) => x.p), 'No plans yet.');
       } },
     { key: 'week', label: 'This week', newest: () => kit.newest(S.posts),
       draw(b) {
         const end = Date.now() + 7 * kit.DAY;
-        plans(b, upcoming().filter((x) => x.at != null && x.at < end).map((x) => x.p), 'Nothing dated this week yet.');
+        plans(b, upcoming().filter((x) => x.at != null && x.at < end).map((x) => x.p), 'Nothing this week yet.');
       } },
     { key: 'mine', label: 'Mine', newest: () => 0,
       draw(b) {
         if (!app.user()) {
-          kit.textCard(b, null, ['Sign in to see the plans you posted, and who said they’d go.'], [button('Sign in', '', () => app.openSettings())], 'signin');
+          kit.textCard(b, null, ['Sign in to see yours.'], [button('Sign in', '', () => app.openSettings())], 'signin');
           return;
         }
         if (!S.mine) { b.appendChild(el('p', 'loading', 'One moment…')); return; }
-        if (!S.mine.length) { b.appendChild(el('p', 'note pad', 'You haven’t posted a plan yet.')); return; }
+        if (!S.mine.length) { b.appendChild(el('p', 'note pad', 'No plans posted yet.')); return; }
         kit.feed(b, S.mine, { tab: KEY, meta, noLeft: true, vote: 'I’d go' });
       } },
     { key: 'meetup', label: 'Down for Meetup', newest: () => kit.newest(S.posts.filter((p) => p.meta && p.meta.meetup)),
       draw(b) {
-        plans(b, upcoming().filter((x) => x.p.meta && x.p.meta.meetup).map((x) => x.p), 'No one has asked for Meetup this week.');
-        b.appendChild(kit.outRow('The Btown Brief Meetup group', 'Where these land once Stephen posts them.', kit.MEETUP_GROUP, 'meetup-group'));
+        plans(b, upcoming().filter((x) => x.p.meta && x.p.meta.meetup).map((x) => x.p), 'None this week.');
+        b.appendChild(kit.outRow('The Meetup group', '', kit.MEETUP_GROUP, 'meetup-group'));
       } },
   ],
 });

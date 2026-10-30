@@ -92,7 +92,6 @@ function under(p) {
 }
 function daySheet(p) {
   app.sheet('Days that work for you', (body) => {
-    body.appendChild(el('p', 'sheet-note', esc('For “' + p.title + '”. Kept on this phone for now; a count of everyone’s days comes with the next round of the board.')));
     const mine = new Set(myDays()[p.id] || []);
     const row = el('div', 'chips');
     row.dataset.daySheet = p.id;
@@ -117,11 +116,11 @@ function daySheet(p) {
 function firstGathering(p) {
   boards.compose({ board: 'gatherings', kind: 'gathering', heading: 'The first ' + p.title.replace(/^an? /i, ''), title: 'What it is', titlePlaceholder: p.title,
     fields: [
-      { key: 'when', label: 'When', placeholder: kit.etDay(Date.now() + 7 * kit.DAY) + ', 7 pm', hint: 'The date first, then the time.' },
+      { key: 'when', label: 'When', placeholder: kit.etDay(Date.now() + 7 * kit.DAY) + ', 7 pm' },
       { key: 'place', label: 'Where', placeholder: 'A café, a park, a back room' },
       { key: 'kind', label: 'What kind', type: 'enum', options: RULES.boards.gatherings.meta.kind.values.map((v) => [v, v === 'board-games' ? 'Board games' : v[0].toUpperCase() + v.slice(1)]) },
     ],
-    body: 'Anything to know', notes: ['Stephen looks at every gathering before it shows.'], cta: 'Send it' });
+    body: 'Anything to know', notes: ['Shows once approved.'], cta: 'Send it' });
 }
 
 function ideaFeed(host, list, empty, withUnder) {
@@ -129,14 +128,14 @@ function ideaFeed(host, list, empty, withUnder) {
   if (!list.length) { host.appendChild(el('p', 'note pad', empty)); return; }
   kit.feed(host, list, { tab: KEY, meta: ideaMeta, vote: 'I’m in', after: withUnder ? (p) => under(p) : null });
 }
-function ideaButton(label, kinds, note) {
+function ideaButton(label, kinds) {
   return kit.postButton(label, { board: 'clubs', kind: 'idea', heading: label, title: 'What you’d start', titlePlaceholder: kinds.length === 1 ? 'A folk jam, Tuesday nights' : 'A Sunday morning sketch club',
     fields: [
       { key: 'kind', label: 'What kind', type: 'enum', options: kinds.map((k) => [k, IDEA_KIND[k]]) },
       { key: 'days', label: 'Which days', placeholder: 'Tuesday nights' },
-      { key: 'size', label: 'How many to start', type: 'int', placeholder: '6', hint: 'When this many say they’re in, the first gathering can be planned.' },
+      { key: 'size', label: 'How many to start', type: 'int', placeholder: '6' },
     ],
-    body: 'What it would be like', notes: [note] });
+    body: kinds.length === 1 ? 'What you play' : 'What it would be like' });
 }
 
 /* the clubs page's list, one kind at a time */
@@ -156,7 +155,6 @@ function drawEvery(b) {
   })).dataset.every = S.kind;
   const r = el('div', 'linkrow chlinks');
   if (list.length > shown.length) r.appendChild(button('Show all ' + list.length, 'ghost sm', () => { S.all = true; mode.redraw(); }));
-  r.appendChild(kit.linkBtn('The clubs page', kit.CLUBS_PAGE, 'ghost sm'));
   r.appendChild(kit.linkBtn('Add your club', kit.CLUBS_PAGE + '#add', 'ghost sm'));
   b.appendChild(r);
 }
@@ -199,20 +197,17 @@ const mode = kit.tab({
     { key: 'run', label: 'Run clubs', draw: drawRun },
     { key: 'start', label: 'Start something', newest: () => kit.newest(S.ideas),
       draw(b) {
-        b.appendChild(el('p', 'note pad', 'Propose a club or a ritual. Say you’re in on someone else’s. When enough people are in, the first gathering gets planned.'));
-        b.appendChild(ideaButton('Start something', Object.keys(IDEA_KIND), 'Ideas stay up for 60 days.'));
-        ideaFeed(b, S.ideas.slice().sort((a, c) => ready(c) - ready(a) || Date.parse(c.created_at) - Date.parse(a.created_at)), 'No ideas yet. Be the first.', true);
+        b.appendChild(ideaButton('Start something', Object.keys(IDEA_KIND)));
+        ideaFeed(b, S.ideas.slice().sort((a, c) => ready(c) - ready(a) || Date.parse(c.created_at) - Date.parse(a.created_at)), 'No ideas yet.', true);
       } },
     { key: 'wanted', label: 'Wanted', newest: () => kit.newest(unstarted()),
       draw(b) {
-        b.appendChild(el('p', 'note pad', 'Ideas still waiting for their people, most wanted first.'));
-        ideaFeed(b, unstarted(), 'Every idea has found its people. Start a new one.');
+        ideaFeed(b, unstarted(), 'Nothing waiting.');
       } },
     { key: 'musicians', label: 'Musicians', newest: () => kit.newest(music()),
       draw(b) {
-        b.appendChild(el('p', 'note pad', 'Bands, jams and choirs looking for players. Say what you play in the post.'));
-        b.appendChild(ideaButton('Find musicians', ['music'], 'Say what you play and what you’re after.'));
-        ideaFeed(b, music(), 'No one is looking for players yet.');
+        b.appendChild(ideaButton('Find musicians', ['music']));
+        ideaFeed(b, music(), 'No one looking yet.');
       } },
   ],
 });
