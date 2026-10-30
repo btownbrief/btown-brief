@@ -13251,6 +13251,200 @@ async function theApps(browser, base) {
   });
 }
 
+/* ------------------------------------------------------------- the Play app */
+/* Play's own tabs (wave 1, 2026-10-29): Daily, City, Draw, Party and Boards,
+   js/modes/play-*.js. Each at 390 and 1280, light and dark, live and demo,
+   with the page rules and a screenshot (play-<tab>-<width>-<scheme>[-live]);
+   then what each tab promises: Daily's ticks and streaks kept on the phone,
+   City's missions read from What Now and its honest Coming soons, Draw's
+   Play that wakes up only when the arcade lists the game, Party's links,
+   and Boards' one read-only leaderboard call per pick. */
+const PLAY_TABS = { daily: ['Wordle', 'Crossings', 'News quiz', 'Higher or lower', 'Where in Btown', 'Real or fake'],
+  city: ['Missions', 'Streets', 'Lit', 'Dibs', 'Photo quests', 'Crews', 'Season'], draw: ['Aquarium', 'The truck', 'Gallery', 'Prompt of the week'],
+  party: ['Btown Party', 'Trivia', 'Arcade Night', 'Stay Awhile', 'Table Talk'], boards: ['Leaderboards', 'Predictions', 'Bracket', 'Playing', 'Looking for a group', 'Gamertags'] };
+const playPill = (page) => page.evaluate(() => [...document.querySelectorAll('#subnav [data-k], #subnav .secpill button, #subnav button[data-key]')].map((b) => b.textContent.trim()).filter(Boolean));
+
+async function thePlay(browser, base) {
+  for (const combo of COMBOS4) {
+    for (const demo of [false, true]) {
+      await group('play ' + combo.viewport.width + ' ' + combo.scheme + (demo ? ' demo' : ' live'), async () => {
+        const { ctx, page, errors } = await newPage(browser, base, combo);
+        for (const key of Object.keys(PLAY_TABS)) {
+          await page.goto(base + '/play/' + (demo ? '?demo=1' : '') + '#' + key, { waitUntil: 'domcontentloaded' });
+          await settle(page);
+          await page.waitForTimeout(250);
+          const st = await page.evaluate((k) => {
+            const p = document.querySelector('#panel-' + k);
+            return { shown: p && !p.hidden, err: !!p.querySelector('.errbox'), promise: !!p.querySelector('.promise'), secs: [...p.querySelectorAll('[data-sec]')].map((s) => s.dataset.sec),
+              title: document.getElementById('mast-title').textContent, pill: [...document.querySelectorAll('#subnav button')].map((b) => b.textContent.trim()).filter(Boolean) };
+          }, key);
+          check(st.shown && !st.err && !st.promise, key + ': draws its page, no error, no placeholder promise', JSON.stringify(st));
+          const want = PLAY_TABS[key];
+          check(want.every((w) => st.pill.includes(w)), key + ': the pill is the map’s top tabs', st.pill.join(' / '));
+          await pageRules(page, 'play/' + key, combo.viewport.width);
+          await page.screenshot({ path: path.join(SHOTS, 'play-' + key + '-' + combo.viewport.width + '-' + combo.scheme + (demo ? '' : '-live') + '.png') });
+        }
+        check(!errors.length, 'no console errors', errors.join(' | '));
+        await ctx.close();
+      });
+    }
+  }
+
+  await group('play: Daily keeps its ticks on the phone', async () => {
+    const { ctx, page, errors, supabase } = await newPage(browser, base);
+    const today = etKey(Date.now());
+    await page.addInitScript((d) => { if (!localStorage.getItem('play-daily')) localStorage.setItem('play-daily', JSON.stringify({ 'btown-wordle': [d[1], d[2]], 'news-quiz': [d[3]], '../x': ['nope'] })); },
+      [today, dayMinus(today, 1), dayMinus(today, 2), dayMinus(today, 3)]);
+    await page.goto(base + '/play/#daily');
+    await settle(page);
+    const P = '#panel-daily';
+    const cab = (slug) => page.evaluate(([p, s]) => { const c = document.querySelector(p + ' [data-k="daily:' + s + '"]'); return c && { streak: Number(c.querySelector('[data-streak]').dataset.streak), line: c.querySelector('.gm-champ').textContent,
+      on: c.querySelector('[data-tick]').getAttribute('aria-pressed'), play: c.querySelector('a.pillbtn').href, target: c.querySelector('a.pillbtn').target }; }, [P, slug]);
+    const n = await page.$$eval(P + ' [data-k^="daily:"]', (c) => c.map((x) => x.dataset.k));
+    check(JSON.stringify(n) === JSON.stringify(['btown-wordle', 'btown-crossings', 'news-quiz', 'higher-or-lower', 'where-in-btown', 'real-or-fake'].map((s) => 'daily:' + s)), 'the six daily puzzles, in the map’s order', n.join(', '));
+    let w = await cab('btown-wordle');
+    check(w.streak === 2 && /2 days in a row/.test(w.line) && w.on === 'false', 'yesterday and the day before: a two-day streak still open today', JSON.stringify(w));
+    check(w.play === 'https://play.btownbrief.com/btown-wordle/' && w.target === '_blank', 'Play opens the puzzle on the arcade in a new tab', w.play);
+    check((await cab('news-quiz')).streak === 0, 'three days ago and nothing since: no streak', '');
+    await page.click(P + ' [data-tick="btown-wordle"]');
+    w = await cab('btown-wordle');
+    check(w.streak === 3 && w.on === 'true', 'ticking today makes it three', JSON.stringify(w));
+    const kept = await page.evaluate(() => JSON.parse(localStorage.getItem('play-daily')));
+    check(JSON.stringify(kept['btown-wordle']) === JSON.stringify([dayMinus(today, 2), dayMinus(today, 1), today].sort()) && !kept['../x'], 'kept on the phone as Burlington dates, junk dropped', JSON.stringify(kept));
+    check(/1 of 6 played today/.test(await page.$eval(P + ' [data-sec="today"]', (s) => s.innerText)), 'the head counts today', '');
+    await page.reload();
+    await settle(page);
+    check((await cab('btown-wordle')).on === 'true', 'the tick survives a reload', '');
+    await page.click(P + ' [data-tick="btown-wordle"]');
+    check((await cab('btown-wordle')).streak === 2, 'taking the tick off gives back the open streak', '');
+    check(!supabase.length, 'Daily never calls Supabase', supabase.join(', '));
+    await page.goto(base + '/play/#daily/where-in-btown');
+    await settle(page);
+    check(await page.waitForFunction(() => { const c = document.querySelector('#panel-daily [data-sec="where-in-btown"]'); const r = c && c.getBoundingClientRect(); return r && r.top >= 0 && r.top < innerHeight; }, null, { timeout: 3000 }).then(() => true, () => false),
+      '#daily/where-in-btown jumps to that puzzle', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+    const d = await newPage(browser, base);
+    await d.page.goto(base + '/play/?demo=1#daily');
+    await settle(d.page);
+    const dw = await d.page.$eval('#panel-daily [data-k="daily:btown-wordle"] [data-streak]', (x) => Number(x.dataset.streak));
+    check(dw === 9, 'demo: Wordle’s nine-day run', dw);
+    await d.page.click('#panel-daily [data-tick="real-or-fake"]');
+    check(await d.page.evaluate(() => localStorage.getItem('play-daily')) === null, 'demo: a tick is never kept', '');
+    await d.ctx.close();
+  });
+
+  await group('play: City', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.addInitScript(() => { if (!localStorage.getItem('allday-missions')) localStorage.setItem('allday-missions', JSON.stringify({ m201: 1761000000, m202: 1761000000 })); });
+    await page.goto(base + '/play/#city');
+    await settle(page);
+    const P = '#panel-city';
+    const ms = JSON.parse(await readFile(path.join(REPO, 'data/missions.json'), 'utf8')).missions;
+    const head = await page.$eval(P + ' [data-sec="missions"] .sec p', (p) => p.textContent);
+    check(head === '2 done of ' + ms.length, 'the done count is What Now’s marks, read', head);
+    const rows = await page.$$eval(P + ' [data-k^="mission:"]', (r) => r.map((x) => ({ k: x.dataset.k, href: x.querySelector('a').getAttribute('href') })));
+    check(rows.length === 5 && rows.every((r) => r.href === '#whatnow/' + r.k.slice(8)) && !rows.some((r) => r.k === 'mission:m1' || r.k === 'mission:m2'), 'five missions not yet done, each a link to What Now', JSON.stringify(rows));
+    check(JSON.parse(await page.evaluate(() => localStorage.getItem('allday-missions'))).m201 === 1761000000, 'City never writes the marks', '');
+    const st = await page.evaluate((p) => {
+      const r = (k) => document.querySelector(p + ' [data-k="city:' + k + '"]');
+      const btn = (k) => { const b = r(k) && r(k).querySelector('.pillbtn'); return b && { tag: b.tagName, dis: !!b.disabled, text: b.textContent.trim(), href: b.getAttribute('href') }; };
+      return { streets: btn('every-street'), streetsWords: r('every-street').innerText, lit: btn('keep-burlington-lit'), dibs: btn('dibs'),
+        ph: ['photo-quests', 'crews', 'season'].map((k) => r(k) && r(k).dataset.placeholder === '1' && btn(k).dis), hunt: btn('photo-quests:now') };
+    }, P);
+    check(st.streets.dis && st.streets.text === 'Coming soon' && /runs only on a local copy today/.test(st.streetsWords), 'Streets: Every Street says plainly it runs only locally today, with no link', JSON.stringify(st.streets));
+    check(st.lit.href === 'https://play.btownbrief.com/keep-burlington-lit/' && st.dibs.href === 'https://play.btownbrief.com/dibs/', 'Lit and Dibs link to the arcade', JSON.stringify([st.lit, st.dibs]));
+    check(st.ph.every(Boolean), 'Photo quests, Crews and Season are placeholders that say Coming soon', JSON.stringify(st.ph));
+    check(st.hunt && st.hunt.href === 'https://play.btownbrief.com/btown-hunt/', 'and Photo quests points at Btown Hunt, live now', JSON.stringify(st.hunt));
+    await Promise.all([page.waitForURL((u) => u.pathname === '/out/'), page.click(P + ' [data-k="' + rows[0].k + '"] a')]);
+    await settle(page);
+    check(new URL(page.url()).hash === '#whatnow/' + rows[0].k.slice(8), 'a mission opens What Now in Out', page.url());
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('play: Draw', async () => {
+    for (const live of [false, true]) {
+      const cat = JSON.parse(await readFile(path.join(REPO, 'data/games-catalog.json'), 'utf8'));
+      if (live) cat.games.push({ slug: 'btown-draw', name: 'Btown Draw', emoji: '🐟', pitch: 'Draw it.', section: 'local-more', live: true, leaderboard: true, first_seen: '2026-10-30', live_since: '2026-10-30' });
+      const { ctx, page, errors } = await newPage(browser, base, { routes: [[/\/data\/games-catalog\.json$/, cat]] });
+      await page.goto(base + '/play/#draw');
+      await settle(page);
+      const st = await page.evaluate(() => {
+        const p = document.querySelector('#panel-draw');
+        return { buttons: [...p.querySelectorAll('[data-play]')].map((b) => ({ tag: b.tagName, dis: !!b.disabled, text: b.textContent.trim(), href: b.getAttribute('href') })),
+          shots: [...p.querySelectorAll('.gm-scr img')].map((i) => [i.getAttribute('src'), i.naturalWidth > 0, i.alt]), words: p.innerText };
+      });
+      await page.waitForFunction(() => [...document.querySelectorAll('#panel-draw .gm-scr img')].every((i) => i.complete && i.naturalWidth > 0), null, { timeout: 5000 }).catch(() => {});
+      const loaded = await page.$$eval('#panel-draw .gm-scr img', (is) => is.map((i) => i.naturalWidth));
+      check(st.shots.length === 2 && st.shots[0][0] === '../data/play/draw-lake.jpg' && st.shots[1][0] === '../data/play/draw-truck.jpg' && loaded.every((x) => x > 0), 'the Lake and the Truck, each with its screenshot', JSON.stringify(st.shots) + ' ' + loaded);
+      check(/The Lake/.test(st.words) && /The Truck/.test(st.words) && /fifteen house fish/.test(st.words) && /Winooski bridge/.test(st.words), 'what each one is, in a few lines', '');
+      if (!live) check(st.buttons.length === 3 && st.buttons.every((b) => b.tag === 'BUTTON' && b.dis && b.text === 'Coming soon'), 'not on the arcade yet: Play is disabled and says Coming soon', JSON.stringify(st.buttons));
+      else check(st.buttons.length === 3 && st.buttons.every((b) => b.tag === 'A' && b.href === 'https://play.btownbrief.com/btown-draw/#lake'), 'the day the arcade lists it live: Play opens play.btownbrief.com/btown-draw/#lake', JSON.stringify(st.buttons));
+      check(!errors.length, (live ? 'live' : 'not live') + ': no console errors', errors.join(' | '));
+      await ctx.close();
+    }
+  });
+
+  await group('play: Party', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/play/#party');
+    await settle(page);
+    const rows = await page.$$eval('#panel-party [data-k^="party:"]', (r) => r.map((x) => ({ k: x.dataset.k, when: (x.querySelector('.s b') || {}).textContent || '', links: [...x.querySelectorAll('a')].map((a) => a.href) })));
+    check(JSON.stringify(rows.map((r) => r.k)) === JSON.stringify(['party:btown-party', 'party:church-street-trivia', 'party:arcade-night', 'party:stay-awhile', 'party:table-talk']), 'the five, in the map’s order', rows.map((r) => r.k).join(', '));
+    check(rows.every((r) => /^For: /.test(r.when) && r.links.length >= 1), 'each says when to reach for it and has its link', JSON.stringify(rows.map((r) => r.when)));
+    check(rows[1].links.includes('https://play.btownbrief.com/church-street-trivia/host.html') && rows[4].links[0] === base + '/table.html', 'Trivia has its host page; Table Talk is the guide’s own table.html', JSON.stringify([rows[1].links, rows[4].links]));
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('play: Boards', async () => {
+    const asked = [];
+    const rpc = (fn, body) => {
+      if (fn !== 'get_leaderboard') return undefined;
+      asked.push(body.p_game);
+      if (body.p_game === 'church-street-skate') return ROWS(['Ada W.', 'Cy F.', 'Ada W.', 'Max T.']);
+      return [];
+    };
+    const { ctx, page, errors, supabase } = await newPage(browser, base, { rpc });
+    await page.goto(base + '/play/#boards');
+    await settle(page);
+    const P = '#panel-boards';
+    await page.waitForSelector(P + ' [data-board] .r', { timeout: 6000 });
+    const cat = JSON.parse(await readFile(path.join(REPO, 'data/games-catalog.json'), 'utf8'));
+    const first = cat.games.filter((g) => g.live && g.leaderboard)[0].slug;
+    const rows = await page.$$eval(P + ' [data-board] .r .t', (t) => t.map((x) => x.textContent));
+    check(first === 'church-street-skate' && asked.length === 1 && asked[0] === first, 'opening the tab asks for one board, not thirty', asked.join(', '));
+    check(JSON.stringify(rows) === JSON.stringify(['Ada W.', 'Cy F.', 'Max T.']), 'each player once, under their best', rows.join(', '));
+    await page.click(P + ' .pl-games [data-chip="creemee-drop"]');
+    await page.waitForFunction((p) => /No scores on Creemee Drop yet/.test(document.querySelector(p).innerText), P, { timeout: 4000 });
+    check(asked.length === 2 && asked[1] === 'creemee-drop', 'picking another game asks for that one board', asked.join(', '));
+    await page.click(P + ' .pl-games [data-chip="church-street-skate"]');
+    check(asked.length === 2, 'and a board already read is not asked again', asked.join(', '));
+    check(supabase.every((u) => /rpc\/(get_leaderboard|nn_)/.test(u) && !/nn_post_create|nn_vote/.test(u)), 'Boards only reads', supabase.join(', '));
+    const st = await page.evaluate((p) => ({ pred: document.querySelector(p + ' [data-k="boards:predictions"]')?.dataset.placeholder, predWords: document.querySelector(p + ' [data-sec="predictions"]')?.innerText || '',
+      bracket: document.querySelector(p + ' [data-k="boards:bracket"] a')?.href, every: document.querySelector(p + ' [data-sec="leaders"] a[href="#games/board"]') !== null,
+      opens: ['playing', 'lfg', 'tags'].map((k) => document.querySelector(p + ' [data-sec="' + k + '"] a[href="#games/' + k + '"]') !== null), tags: document.querySelector(p + ' [data-tags]')?.dataset.tags }), P);
+    check(st.pred === '1' && /First Snow/.test(st.predWords) && /not merged or live yet/.test(st.predWords), 'Predictions: a placeholder that names the First Snow league and says it isn’t live', st.predWords);
+    check(st.bracket === 'https://play.btownbrief.com/btown-bracket/', 'Bracket links to the Btown Bracket', st.bracket);
+    check(st.every && st.opens.every(Boolean), 'every board opens in full in Arcade', JSON.stringify(st.opens));
+    check(st.tags === 'out', 'signed out: the gamertags line asks to sign in', st.tags);
+    await Promise.all([page.waitForFunction(() => document.querySelector('#tab-games').getAttribute('aria-selected') === 'true'), page.click(P + ' a[href="#games/lfg"]')]);
+    check(new URL(page.url()).pathname === '/play/', 'Open the board stays in Play, on Arcade', page.url());
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+    const d = await newPage(browser, base);
+    await d.page.goto(base + '/play/?demo=1#boards');
+    await settle(d.page);
+    await d.page.waitForSelector('#panel-boards [data-board="creemee-drop"] .r', { timeout: 6000 });
+    const demo = await d.page.evaluate(() => ({ lb: document.querySelectorAll('#panel-boards [data-board] .r').length, play: document.querySelectorAll('#panel-boards [data-sec="playing"] [data-k^="b-"]').length,
+      lfg: document.querySelectorAll('#panel-boards [data-sec="lfg"] .card').length }));
+    check(demo.lb > 0 && demo.play > 0 && demo.lfg > 0, 'demo: a board, what people play and open groups, all from the demo copy', JSON.stringify(demo));
+    check(!d.supabase.length && !d.errors.length, 'demo: nothing calls Supabase, no console errors', d.supabase.join(', ') + d.errors.join(' | '));
+    await d.ctx.close();
+  });
+}
+
 /* ----------------------------------------------------------------- run */
 const t0 = Date.now();
 await mkdir(SHOTS, { recursive: true });
@@ -13296,6 +13490,7 @@ try {
   await run(theChallenge);
   await run(fullPagesAndAsks);
   await run(theApps);
+  await run(thePlay);
 } finally {
   await browser.close();
   proc.kill();

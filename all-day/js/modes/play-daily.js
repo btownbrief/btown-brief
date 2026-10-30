@@ -93,11 +93,12 @@ function cabinet(p) {
     p.url, 'gm-scr' + (SHOTS.has(p.slug) ? ' shot' : ''), 'Play ' + p.name);
   const img = scr.querySelector('img');
   if (img) img.addEventListener('error', () => { scr.classList.remove('shot'); img.insertAdjacentHTML('beforebegin', emo); img.remove(); }, { once: true });
-  const line = n ? (on ? streakWords(n) : n + (n === 1 ? ' day so far. Play today to keep it.' : ' days in a row. Play today to keep it.')) : 'No streak yet.';
+  /* short enough for one line in a two-up cabinet at 390 */
+  const line = n ? (n === 1 ? (on ? 'Day one' : '1 day, keep it going') : n + ' days in a row') : 'No streak yet';
   const body = el('div', 'gm-cab-b', '<h3 class="gm-name">' + esc(p.name) + '</h3><p class="gm-pitch">' + esc(p.line || '') + '</p>' +
     '<p class="gm-champ" data-streak="' + n + '">' + ICON.trophy + '<span>' + esc(line) + '</span></p>');
   const acts = el('div', 'gm-acts');
-  const tick = el('button', 'pillbtn' + (on ? ' on' : ''), (on ? ICON.check + ' ' : '') + esc(on ? 'Played' : 'Played today?'));
+  const tick = el('button', 'pillbtn' + (on ? ' on' : ''), (on ? ICON.check + ' ' : '') + esc(on ? 'Played' : 'Played?'));
   tick.type = 'button';
   tick.dataset.tick = p.slug;
   tick.setAttribute('aria-pressed', on ? 'true' : 'false');
