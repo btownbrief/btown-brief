@@ -296,7 +296,7 @@ function land() {
   const m = /^editions-t-([a-z]+)-/.exec(want);
   const t = m && P.TOPICS.find((x) => x.key === m[1]);
   if (t && S.stories) {
-    const at = S.stories.filter((s) => P.inTopic(t, s.h)).findIndex((s) => P.item(KEY, 't-' + t.key + '-' + s.u, { title: '', href: s.u }).k === want);
+    const at = S.stories.filter((s) => P.inTopic(t, s.h)).findIndex((s) => P.key(KEY, 't-' + t.key + '-' + s.u) === want);
     if (at >= 0) { S.topic = t.key; S.shown = Math.max(PAGE, Math.ceil((at + 1) / PAGE) * PAGE); draw(); if (app.flashHit(S.root, want)) return; }
   }
   app.toast('That’s not in Editions now.');

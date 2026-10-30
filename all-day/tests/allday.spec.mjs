@@ -13278,7 +13278,9 @@ const PAPER_GAMES = { sections: [{ id: 'arcade-action', title: 'Action & Arcade'
   games: [{ slug: 'queen-city-chess', name: 'Queen City Chess', emoji: '♛', pitch: 'Pass the phone, or race a friend.', section: 'board-card', live: true },
     { slug: 'creemee-drop', name: 'Creemee Drop', emoji: '🍦', pitch: 'Stack Vermont soft-serve to the sky.', section: 'arcade-action', live: true }] };
 const PAPER_INDEX = { pages: [{ title: 'Merch — BTown Brief store', url: 'https://merch.btownbrief.com/', keywords: 'shirts shop store' },
-  { title: 'History of Winooski', url: 'https://guide.btownbrief.com/history-winooski.html', keywords: 'onion city mills' }] };
+  { title: 'History of Winooski', url: 'https://guide.btownbrief.com/history-winooski.html', keywords: 'onion city mills' },
+  { title: '<img src=x onerror="window.__pwn=1">Hostile page', url: 'https://example.org/hostile', keywords: '<b>bold</b>' },
+  { title: 'Script page', url: 'javascript:window.__pwn=1', keywords: 'script' }] };
 async function paperPage(browser, base, opts = {}) {
   const A = opts.archive || paperArchive();
   const routes = [[/play\.btownbrief\.com\/games\.json/, PAPER_GAMES], [/play\.btownbrief\.com\/search-index\.json/, PAPER_INDEX]];
@@ -13438,9 +13440,15 @@ async function thePaper(browser, base) {
     check(d.keys === d.rows && d.lines === d.rows && eds[1] && firstLine.startsWith(eds[1].stories[0].t), 'each with its own key and its own stories', JSON.stringify(d) + ' ' + firstLine.slice(0, 60));
     /* a story's row shared from a timeline still opens on a cold load */
     const A2 = paperArchive();
+    /* two links that differ only after 80 characters are two items */
+    const longA = 'https://example.org/' + 'x'.repeat(90) + '/a', longB = 'https://example.org/' + 'x'.repeat(90) + '/b';
     const sport = A2.stories.filter((x) => /hockey/i.test(x.h))[20];
-    const k = ('editions-t-sports-' + sport.u.replace(/[^\w-]+/g, '-')).slice(0, 'editions-'.length + 80);
     const sp = await paperPage(browser, base, { archive: A2 });
+    await sp.page.goto(base + '/paper/');
+    await settle(sp.page);
+    const keys = await sp.page.evaluate(([u, a, b]) => import('/all-day/js/modes/paper-core.js').then((m) => [m.key('editions', 't-sports-' + u), m.key('editions', 't-sports-' + a), m.key('editions', 't-sports-' + b)]), [sport.u, longA, longB]);
+    const k = keys[0];
+    check(keys[1] !== keys[2], 'long links that differ at the end get different keys', JSON.stringify(keys));
     await sp.page.goto(base + '/paper/#editions/' + encodeURIComponent(k));
     await settle(sp.page);
     const lit = await sp.page.waitForFunction((key) => !!document.querySelector('#panel-editions [data-k="' + key + '"]'), k, { timeout: 8000 }).then(() => true, () => false);
@@ -13519,6 +13527,13 @@ async function thePaper(browser, base) {
     await page.fill('#panel-everything .pp-find input', 'onion city');
     const byIndex = await page.waitForFunction(() => [...document.querySelectorAll('#panel-everything .pp-results .pp-t')].some((t) => t.textContent === 'History of Winooski'), null, { timeout: 3000 }).then(() => true, () => false);
     check(byIndex, 'and the network search index’s pages and words (a page only the index has joins More)', '');
+    await page.fill('#panel-everything .pp-find input', 'shirts');
+    const folded = await page.waitForFunction(() => [...document.querySelectorAll('#panel-everything .pp-results .pp-t')].some((t) => t.textContent === 'Merch'), null, { timeout: 3000 }).then(() => true, () => false);
+    check(folded, 'and the index’s words find a page the shelves already have', '');
+    const inert = await page.evaluate(() => ({ pwn: window.__pwn, img: !!document.querySelector('#panel-everything img[src="x"]'),
+      bad: [...document.querySelectorAll('#panel-everything a[href]')].map((a) => a.getAttribute('href')).filter((u) => !/^(https?:|#|\/)/.test(u)),
+      shown: [...document.querySelectorAll('#panel-everything .pp-t')].some((t) => t.textContent.startsWith('<img')) }));
+    check(!inert.pwn && !inert.img && !inert.bad.length && inert.shown, 'index markup shows as text, and a non-web link never joins', JSON.stringify(inert));
 
     await goTab(page, 'story');
     const st = await page.evaluate(() => {

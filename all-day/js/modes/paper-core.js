@@ -157,8 +157,16 @@ export const inTopic = (t, h) => (t.test ? t.test(h) : t.re.test(h));
 /* ------------------------------------------------------------- items */
 /* Every row the Paper draws is an item the shell knows (save, share, peek,
    a deep link that flashes it): a key and a URL, always. */
+/* a key that reads like its source and never collides: the first 48
+   characters, then a short hash of the whole thing (two long links that
+   differ only at the end are two items) */
+const hash = (s) => { let h = 5381; for (let i = 0; i < s.length; i++) h = ((h << 5) + h + s.charCodeAt(i)) >>> 0; return h.toString(36); };
+export function key(tab, k) {
+  const s = String(k);
+  return tab + '-' + s.replace(/[^\w-]+/g, '-').slice(0, 48) + '-' + hash(s);
+}
 export function item(tab, k, o) {
-  return { kind: 'headline', ...o, k: tab + '-' + String(k).replace(/[^\w-]+/g, '-').slice(0, 80), href: safeHref(o.href) };
+  return { kind: 'headline', ...o, k: key(tab, k), href: safeHref(o.href) };
 }
 
 /* the Paper's list row: an optional emoji or date tile, the title, one
