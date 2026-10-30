@@ -11915,7 +11915,7 @@ async function railsHaveList(browser, base) {
 async function sectionPills(browser, base) {
   const PILLS = [
     ['watch', '--liq-watch', true], ['food', '--liq-food', true], ['people', '--liq-people', true], ['whatnow', '--liq-whatnow', true],
-    ['reddit', '--liq-reddit', false], ['habits', '--liq-habits', false], ['games', '--liq-games', true],
+    ['social', '--liq-reddit', false], ['habits', '--liq-habits', false], ['games', '--liq-games', true],
   ];
   /* where the water is: alpha and colour at each segment's centre, read off the canvas */
   const water = (page) => page.$eval('#subnav .secpill', (w) => {
