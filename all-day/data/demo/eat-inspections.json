@@ -1,0 +1,349 @@
+{
+ "_": "Demo data for ?demo=1: invented inspection records for the demo's invented places (data/demo/food.json). The plain-English lines are the real key's (data/eat/inspection-key.json); every date, note and record is invented. Shape is data/eat/inspections.json's.",
+ "updated": "2026-10-29",
+ "source_url": "https://www.healthvermont.gov/environment/food-lodging-program/inspection-reports",
+ "portal_url": "https://vtdoh.safefoodinspection.com/Inspection/PublicInspectionSearch.aspx",
+ "records": [
+  {
+   "restaurant_id": "demo-all-night-diner",
+   "portal_name": "DEMO",
+   "portal_address": "Demo",
+   "portal_key": "0",
+   "match": "demo",
+   "latest": {
+    "date": "2026-09-14",
+    "type": "Routine",
+    "violations": [
+     {
+      "item": "5",
+      "code": "demo",
+      "priority": null,
+      "corrected_on_site": true,
+      "correct_by": null,
+      "category": "Equipment able to keep food at temperature",
+      "critical": false,
+      "plain_english": "A cooler, hot-holding unit or other equipment wasn't able to keep food at a safe temperature, or there wasn't enough of it.",
+      "inspector_note": "Invented note: the line cooler read a few degrees warm and was turned down on the spot."
+     },
+     {
+      "item": "17",
+      "code": "demo",
+      "priority": null,
+      "corrected_on_site": false,
+      "correct_by": null,
+      "category": "Thermometers, sanitizer test kits, gauges",
+      "critical": false,
+      "plain_english": "The kitchen was missing food thermometers, fridge thermometers, or test strips to check that sanitizer is the right strength.",
+      "inspector_note": ""
+     }
+    ],
+    "critical_count": 0
+   },
+   "history": [
+    {
+     "date": "2025-09-14",
+     "type": "Routine"
+    },
+    {
+     "date": "2024-09-14",
+     "type": "Routine"
+    }
+   ],
+   "as_of": "2026-10-29",
+   "source_url": "https://vtdoh.safefoodinspection.com/Inspection/PublicInspectionSearch.aspx"
+  },
+  {
+   "restaurant_id": "demo-noodle-counter",
+   "portal_name": "DEMO",
+   "portal_address": "Demo",
+   "portal_key": "0",
+   "match": "demo",
+   "latest": {
+    "date": "2026-07-02",
+    "type": "Routine",
+    "violations": [],
+    "critical_count": 0
+   },
+   "history": [
+    {
+     "date": "2025-07-02",
+     "type": "Routine"
+    },
+    {
+     "date": "2024-07-02",
+     "type": "Routine"
+    }
+   ],
+   "as_of": "2026-10-29",
+   "source_url": "https://vtdoh.safefoodinspection.com/Inspection/PublicInspectionSearch.aspx"
+  },
+  {
+   "restaurant_id": "demo-lakeside-bar",
+   "portal_name": "DEMO",
+   "portal_address": "Demo",
+   "portal_key": "0",
+   "match": "demo",
+   "latest": {
+    "date": "2026-03-20",
+    "type": "Routine",
+    "violations": [
+     {
+      "item": "3",
+      "code": "demo",
+      "priority": null,
+      "corrected_on_site": true,
+      "correct_by": null,
+      "category": "Potentially hazardous food temperature",
+      "critical": true,
+      "plain_english": "Food that spoils fast (meat, dairy, cooked rice, cut produce) was found too warm in the fridge, not hot enough on the line, or cooled too slowly. This is the classic food-poisoning risk.",
+      "inspector_note": "Invented note: a tray of rice was cooling too slowly; it was moved to an ice bath."
+     },
+     {
+      "item": "36",
+      "code": "demo",
+      "priority": null,
+      "corrected_on_site": false,
+      "correct_by": null,
+      "category": "Floors",
+      "critical": false,
+      "plain_english": "Floors were dirty, damaged, or made of a material that's hard to clean.",
+      "inspector_note": ""
+     }
+    ],
+    "critical_count": 1
+   },
+   "history": [
+    {
+     "date": "2025-03-20",
+     "type": "Routine"
+    },
+    {
+     "date": "2024-03-20",
+     "type": "Routine"
+    }
+   ],
+   "as_of": "2026-10-29",
+   "source_url": "https://vtdoh.safefoodinspection.com/Inspection/PublicInspectionSearch.aspx"
+  },
+  {
+   "restaurant_id": "demo-pine-taqueria",
+   "portal_name": "DEMO",
+   "portal_address": "Demo",
+   "portal_key": "0",
+   "match": "demo",
+   "latest": {
+    "date": "2026-10-08",
+    "type": "Routine",
+    "violations": [],
+    "critical_count": 0
+   },
+   "history": [
+    {
+     "date": "2025-10-08",
+     "type": "Routine"
+    },
+    {
+     "date": "2024-10-08",
+     "type": "Routine"
+    }
+   ],
+   "as_of": "2026-10-29",
+   "source_url": "https://vtdoh.safefoodinspection.com/Inspection/PublicInspectionSearch.aspx"
+  },
+  {
+   "restaurant_id": "demo-south-end-kitchen",
+   "portal_name": "DEMO",
+   "portal_address": "Demo",
+   "portal_key": "0",
+   "match": "demo",
+   "latest": {
+    "date": "2025-11-30",
+    "type": "Routine",
+    "violations": [
+     {
+      "item": "24",
+      "code": "demo",
+      "priority": null,
+      "corrected_on_site": false,
+      "correct_by": null,
+      "category": "Cleaning of food-contact surfaces and utensils",
+      "critical": false,
+      "plain_english": "Equipment and utensils that touch food weren't clean, weren't cleaned often enough, or weren't air-dried before stacking.",
+      "inspector_note": ""
+     }
+    ],
+    "critical_count": 0
+   },
+   "history": [
+    {
+     "date": "2025-11-30",
+     "type": "Routine"
+    },
+    {
+     "date": "2024-11-30",
+     "type": "Routine"
+    }
+   ],
+   "as_of": "2026-10-29",
+   "source_url": "https://vtdoh.safefoodinspection.com/Inspection/PublicInspectionSearch.aspx"
+  },
+  {
+   "restaurant_id": "demo-church-bistro",
+   "portal_name": "DEMO",
+   "portal_address": "Demo",
+   "portal_key": "0",
+   "match": "demo",
+   "latest": {
+    "date": "2026-05-11",
+    "type": "Routine",
+    "violations": [
+     {
+      "item": "31",
+      "code": "demo",
+      "priority": null,
+      "corrected_on_site": true,
+      "correct_by": null,
+      "category": "Toilets and handwashing sinks",
+      "critical": true,
+      "plain_english": "A handwashing sink was missing, blocked, used for other things, or missing soap or paper towels, or the bathrooms weren't adequate.",
+      "inspector_note": "Invented note: a box was blocking the hand sink and was moved."
+     },
+     {
+      "item": "26",
+      "code": "demo",
+      "priority": null,
+      "corrected_on_site": false,
+      "correct_by": null,
+      "category": "Storage of clean equipment and utensils",
+      "critical": false,
+      "plain_english": "Clean dishes and utensils were stored where they could get dirty again, such as on the floor or uncovered near a hand sink.",
+      "inspector_note": ""
+     },
+     {
+      "item": "13",
+      "code": "demo",
+      "priority": null,
+      "corrected_on_site": false,
+      "correct_by": null,
+      "category": "Clean clothes and hair restraints",
+      "critical": false,
+      "plain_english": "Staff working with food weren't wearing clean outer clothing or a hat, hairnet or other hair restraint.",
+      "inspector_note": ""
+     }
+    ],
+    "critical_count": 1
+   },
+   "history": [
+    {
+     "date": "2025-05-11",
+     "type": "Routine"
+    },
+    {
+     "date": "2024-05-11",
+     "type": "Routine"
+    }
+   ],
+   "as_of": "2026-10-29",
+   "source_url": "https://vtdoh.safefoodinspection.com/Inspection/PublicInspectionSearch.aspx"
+  },
+  {
+   "restaurant_id": "demo-old-north-bakery",
+   "portal_name": "DEMO",
+   "portal_address": "Demo",
+   "portal_key": "0",
+   "match": "demo",
+   "latest": {
+    "date": "2026-08-19",
+    "type": "Routine",
+    "violations": [],
+    "critical_count": 0
+   },
+   "history": [
+    {
+     "date": "2025-08-19",
+     "type": "Routine"
+    },
+    {
+     "date": "2024-08-19",
+     "type": "Routine"
+    }
+   ],
+   "as_of": "2026-10-29",
+   "source_url": "https://vtdoh.safefoodinspection.com/Inspection/PublicInspectionSearch.aspx"
+  },
+  {
+   "restaurant_id": "demo-dumpling-house",
+   "portal_name": "DEMO",
+   "portal_address": "Demo",
+   "portal_key": "0",
+   "match": "demo",
+   "latest": {
+    "date": "2026-02-03",
+    "type": "Routine",
+    "violations": [
+     {
+      "item": "23",
+      "code": "demo",
+      "priority": null,
+      "corrected_on_site": false,
+      "correct_by": null,
+      "category": "Wiping cloths",
+      "critical": false,
+      "plain_english": "Wiping cloths weren't kept in sanitizer between uses, or the sanitizer bucket was too weak or dirty.",
+      "inspector_note": ""
+     }
+    ],
+    "critical_count": 0
+   },
+   "history": [
+    {
+     "date": "2025-02-03",
+     "type": "Routine"
+    },
+    {
+     "date": "2024-02-03",
+     "type": "Routine"
+    }
+   ],
+   "as_of": "2026-10-29",
+   "source_url": "https://vtdoh.safefoodinspection.com/Inspection/PublicInspectionSearch.aspx"
+  },
+  {
+   "restaurant_id": "demo-pho-shop",
+   "portal_name": "DEMO",
+   "portal_address": "Demo",
+   "portal_key": "0",
+   "match": "demo",
+   "latest": {
+    "date": "2026-06-25",
+    "type": "Routine",
+    "violations": [
+     {
+      "item": "8",
+      "code": "demo",
+      "priority": null,
+      "corrected_on_site": false,
+      "correct_by": null,
+      "category": "Food protected from contamination",
+      "critical": false,
+      "plain_english": "Food wasn't covered or was stored where it could get dirty, such as on the floor, under a dripping pipe, or uncovered in the walk-in.",
+      "inspector_note": ""
+     }
+    ],
+    "critical_count": 0
+   },
+   "history": [
+    {
+     "date": "2025-06-25",
+     "type": "Routine"
+    },
+    {
+     "date": "2024-06-25",
+     "type": "Routine"
+    }
+   ],
+   "as_of": "2026-10-29",
+   "source_url": "https://vtdoh.safefoodinspection.com/Inspection/PublicInspectionSearch.aspx"
+  }
+ ]
+}
