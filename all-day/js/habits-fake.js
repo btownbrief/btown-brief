@@ -8,7 +8,7 @@
    member, or nobody. Pods, goals and seasons are plain arrays a test (or
    the demo seed) fills in, the way Stephen fills them in the database. */
 
-import { HABIT_RULES, IMPORT_DAYS, dayKey, addDays, daysBetween, isKey, checkHabit, checkMe, clean, streak, bestStreak } from './habits-core.js';
+import { HABIT_RULES, IMPORT_DAYS, dayKey, addDays, daysBetween, midnightOf, isKey, checkHabit, checkMe, clean, streak, bestStreak } from './habits-core.js';
 import { FOREST_RULES, checkForest, seedOf, inWindow } from './forest.js';
 
 const fail = (code) => { const e = new Error(code); e.code = code; return e; };
@@ -318,7 +318,10 @@ export function seedDemo(f, uid) {
   friend('demo-forest-maya', 'Maya', true, [['Morning pages', 'daily', null, 46, (d) => d % 9 === 4], ['Swim', 'n_per_week', 3, 60, (d) => d % 2 === 1]]);
   friend('demo-forest-owl', 'Night Owl', false, [['Stretch', 'daily', null, 130, (d) => d === 0], ['Practice guitar', 'weekdays', null, 90, (d) => d % 7 === 5 || d % 7 === 6], ['Cold shower', 'daily', null, 12, () => false]]);
   friend('demo-forest-theo', 'Theo R.', true, [['No phone after 10', 'daily', null, 220, (d) => d % 17 === 3]]);
-  const kick = new Date(t + 23 * 86400000);
+  /* 23 Burlington calendar days from today, at 9 am: a kickoff set in
+     milliseconds lands a day short for an hour each night across a
+     daylight-saving change, and the tile said 22 */
+  const kick = new Date(midnightOf(addDays(today, 23)) + 9 * 3600000);
   f.seasons.push({ id: 'demo-season-0', city: 'burlington', name: 'Season 0', status: 'open', signup_opens: new Date(t - 86400000).toISOString(),
     kickoff_at: kick.toISOString(), party_at: new Date(kick.getTime() + 56 * 86400000).toISOString(), stripe_link: null });
   return f;
