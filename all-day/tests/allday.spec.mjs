@@ -4253,9 +4253,17 @@ async function theWhatNow(browser, base) {
     check(!/feels like/.test(wx) && /61° lake/.test(wx) && /6:06 sunset/.test(wx), 'the weather line: the lake and sunset (feels like is on the card)', wx);
     check(await page.$eval(wnPanel + ' .wx', (w) => w.getBoundingClientRect().height < 40), 'the weather line is one line at 390', '');
     check(await page.$$eval(wnPanel + ' .chips.paths .chip', (c) => c.map((x) => x.innerText).join('|')) === 'I’m broke|Get me outside|People, please|Two hours|Close by|Teach me something|Move with people', 'the seven path chips', '');
-    const first = await spinAnswer(page);
+    let first = await spinAnswer(page);
     check(first.length > 3, 'Spin returns an answer', first);
-    check(/^Because /.test(await page.$eval(wnPanel + ' .result .because', (p) => p.textContent).catch(() => '')), 'the answer spells out its reason', '');
+    /* only some answers have reasons the engine can name (an event's start, its price); which one comes
+       first rides on the random draw, which Out's shell takes its own share of, so spin on to one that does */
+    const reason = () => page.$eval(wnPanel + ' .result .because', (p) => p.textContent).catch(() => '');
+    for (let i = 0; i < 8 && !(await reason()); i++) {
+      await page.click(wnPanel + ' .result .another');
+      await page.waitForSelector(wnPanel + ' .result:not(.rolling) h3', { timeout: 8000 });
+      first = await page.$eval(wnPanel + ' .result h3', (h) => h.textContent);
+    }
+    check(/^Because /.test(await reason()), 'the answer spells out its reason', first);
     check(/^Right now · /.test(await page.$eval(wnPanel + ' .result .eyebrow', (e) => e.textContent)), 'the answer says it is for right now', '');
     await page.click(wnPanel + ' .result .another');
     await page.waitForSelector(wnPanel + ' .result:not(.rolling) h3', { timeout: 8000 });
