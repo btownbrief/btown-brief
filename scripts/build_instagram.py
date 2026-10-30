@@ -155,6 +155,14 @@ RUNS_PER_DAY = 2              # refresh-allday.yml's two crons; for the projecti
 TIER3_PERIOD_DAYS = 7         # tier 3: each account once a week
 TIERS = (1, 2, 3)
 PENDING_MAX_H = 6             # a --reserve older than this is not executed
+# Wall-clock budget for the account requests in one --execute. The workflow's
+# Build Instagram step is killed at 30 minutes, and a kill before the payload
+# is written loses every post this run paid for: the 154-account morning runs
+# of 2026-10-26, -28 and -29 hit that (Oct 27's finished in 28 minutes). Past
+# this budget the run stops asking, gives the unasked accounts their rotation
+# places back, and writes what it has, leaving ~10 minutes for the tagged
+# shelf, the kind calls and the write.
+FETCH_BUDGET_S = 20 * 60
 ONLY_MAX = 5                  # --only is a small local test, never a second schedule
 CATEGORIES = ("food", "venue", "events", "shop", "pets", "scenic", "other")
 
@@ -1230,8 +1238,15 @@ def fetch_and_build(args, picked: list[dict], want_tagged: bool,
     except ValueError:
         pass                    # not the main thread (a test harness)
     i = 0
+    started = time.monotonic()
     try:
         for i, a in enumerate(picked):
+            if time.monotonic() - started > FETCH_BUDGET_S:
+                log(f"fetch budget ({FETCH_BUDGET_S // 60} min) spent after {i} of "
+                    f"{len(picked)} account(s); writing what this run has")
+                if on_stop:
+                    on_stop([x["h"] for x in picked[i:]])
+                break
             h = a["h"]
             try:
                 items = fetch_handle(h, key)
@@ -1258,6 +1273,8 @@ def fetch_and_build(args, picked: list[dict], want_tagged: bool,
     finally:
         if old_term is not None:
             signal.signal(signal.SIGTERM, old_term)
+    log(f"asked {len(answered) + len(failed)} account(s) in "
+        f"{(time.monotonic() - started) / 60:.1f} min")
 
     # The tagged shelf: anyone's posts, so it is judged by its own window
     # and blocklist, and carried on its own — a rostered account that
