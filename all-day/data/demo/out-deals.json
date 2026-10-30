@@ -1,0 +1,97 @@
+{
+ "_": "Invented demo data for Out's Nightlife happy hours; every name, place, date and price is made up. Dates are days from today ('in'), times are Burlington's ('at').",
+ "deals": [
+  {
+   "id": "dd-0",
+   "business": "Lakeview Oyster Bar",
+   "restaurant_id": "demo-0",
+   "title": "Half-price oysters at the bar",
+   "type": "happy-hour",
+   "days": [
+    "sun",
+    "mon",
+    "tue",
+    "wed",
+    "thu",
+    "fri",
+    "sat"
+   ],
+   "start": "00:00",
+   "end": "23:59",
+   "all_day": false,
+   "price_note": "Half-price oysters at the bar",
+   "link": null,
+   "last_verified": "2026-10-01",
+   "needs_check": null
+  },
+  {
+   "id": "dd-1",
+   "business": "The Copper Kettle",
+   "restaurant_id": "demo-1",
+   "title": "$6 snack plates",
+   "type": "happy-hour",
+   "days": [
+    "sun",
+    "mon",
+    "tue",
+    "wed",
+    "thu",
+    "fri",
+    "sat"
+   ],
+   "start": "15:00",
+   "end": "23:59",
+   "all_day": false,
+   "price_note": "$6 snack plates",
+   "link": "https://example.org/out-demo/hh-1",
+   "last_verified": "2026-10-01",
+   "needs_check": null
+  },
+  {
+   "id": "dd-2",
+   "business": "Rook and Pawn Cafe",
+   "restaurant_id": "demo-2",
+   "title": "Free game rental with a pint",
+   "type": "happy-hour",
+   "days": [
+    "sun",
+    "mon",
+    "tue",
+    "wed",
+    "thu",
+    "fri",
+    "sat"
+   ],
+   "start": "00:00",
+   "end": "23:59",
+   "all_day": false,
+   "price_note": "Free game rental with a pint",
+   "link": null,
+   "last_verified": "2026-10-01",
+   "needs_check": null
+  },
+  {
+   "id": "dd-3",
+   "business": "Juniper Kitchen",
+   "restaurant_id": "demo-3",
+   "title": "Small plates hour",
+   "type": "happy-hour",
+   "days": [
+    "sun",
+    "mon",
+    "tue",
+    "wed",
+    "thu",
+    "fri",
+    "sat"
+   ],
+   "start": "16:00",
+   "end": "23:59",
+   "all_day": false,
+   "price_note": "Small plates hour",
+   "link": "https://example.org/out-demo/hh-3",
+   "last_verified": "2026-10-01",
+   "needs_check": null
+  }
+ ]
+}

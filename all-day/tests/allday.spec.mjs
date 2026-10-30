@@ -12897,7 +12897,8 @@ async function theApps(browser, base) {
               check(st.world === !!t.mixed, key + ': Real life / Online ' + (t.mixed ? 'shows' : 'stays away'), '');
             } else {
               check(!st.promise && st.cards > 0, key + ': the hosted mode draws its screen', JSON.stringify(st));
-              check(!st.world, key + ': no Real life / Online on a mode that does not mix', '');
+              /* a built mode mixes when its config line says so (Out's Events, wave 1) */
+              check(st.world === !!t.mixed, key + ': Real life / Online ' + (t.mixed ? 'shows' : 'stays away'), '');
             }
             if (a.id !== 'all-day') check(st.doc === (key === keys[0] ? a.name : t.label + ' · ' + a.name) + ' — Burlington Brief', key + ': the page title', st.doc);
             await pageRules(page, key, combo.viewport.width);
@@ -12918,28 +12919,40 @@ async function theApps(browser, base) {
   }
 
   await group('apps: top tabs stay, follow the scroll, lead with the freshest, and dot what is new', async () => {
-    const d = await demoApp('out');
-    const secs = d.tabs.events.sections.filter((s) => s.world !== 'online');
+    /* the shelf's own pill, on the first app with a shelf tab that has four
+       real-life sections in its demo (Out's Events was it until wave 1 built
+       Out's tabs; each wave 1 app that builds its shelves moves this along) */
+    let host = null;
+    for (const a of APPS.filter((x) => x.id !== 'all-day')) {
+      const dd = await demoApp(a.id).catch(() => null);
+      const t = dd && a.tabs.find((x) => !x.mode && dd.tabs[x.key] && dd.tabs[x.key].sections.filter((z) => z.world !== 'online').length >= 4
+        && dd.tabs[x.key].sections.some((z) => z.hours < 4));
+      if (t) { host = { a, t, d: dd }; break; }
+    }
+    if (!host) { check(true, 'no app has a shelf tab left to test the shelf pill on', ''); return; }
+    const { a: A, t: T, d } = host;
+    const K = T.key;
+    const secs = d.tabs[K].sections.filter((s) => s.world !== 'online');
     const byFresh = secs.map((s, i) => [s, i]).sort((x, y) => x[0].hours - y[0].hours || x[1] - y[1]).map((x) => x[0].key);
     const { ctx, page, errors } = await newPage(browser, base);
-    await page.goto(base + '/out/?demo=1#events');
+    await page.goto(base + '/' + A.id + '/?demo=1#' + K);
     await settle(page);
     await page.waitForTimeout(300);
-    const read = () => page.evaluate(() => ({ chips: [...document.querySelectorAll('#subnav .secpill .chip')].map((c) => c.dataset.chip),
+    const read = () => page.evaluate((k) => ({ chips: [...document.querySelectorAll('#subnav .secpill .chip')].map((c) => c.dataset.chip),
       on: (document.querySelector('#subnav .secpill .chip.on') || {}).dataset?.chip || null,
       dots: [...document.querySelectorAll('#subnav .secpill .chip[data-new] .nd')].map((n) => n.closest('.chip').dataset.chip),
-      page: [...document.querySelectorAll('#panel-events .shelf-sec')].filter((s) => s.offsetParent).map((s) => s.dataset.sec) }));
+      page: [...document.querySelectorAll('#panel-' + k + ' .shelf-sec')].filter((s) => s.offsetParent).map((s) => s.dataset.sec) }), K);
     let r = await read();
-    check(JSON.stringify(r.chips) === JSON.stringify(byFresh), 'the top tabs run freshest first', JSON.stringify(r.chips) + ' vs ' + JSON.stringify(byFresh));
+    check(JSON.stringify(r.chips) === JSON.stringify(byFresh), A.id + '/' + K + ': the top tabs run freshest first', JSON.stringify(r.chips) + ' vs ' + JSON.stringify(byFresh));
     check(JSON.stringify(r.page) === JSON.stringify(byFresh), 'and the page’s sections follow the same order', JSON.stringify(r.page));
-    check(byFresh[0] !== d.tabs.events.sections[0].key, 'which is not the config’s order', byFresh[0]);
+    check(byFresh[0] !== d.tabs[K].sections[0].key || byFresh.length < 2, 'which is not the config’s order', byFresh[0]);
     const fresh = secs.filter((s) => s.hours < 4).map((s) => s.key).sort();
     check(JSON.stringify([...r.dots].sort()) === JSON.stringify(fresh) && fresh.length > 0, 'a dot on each top tab with something new since the last visit', JSON.stringify(r.dots));
     check(r.on === byFresh[0], 'the first top tab is on at the top', r.on);
     /* sticky: scroll down, the mast's top line steps away, the top tabs stay */
-    await page.evaluate(() => document.querySelector('#panel-events').scrollBy(0, 400));
+    await page.evaluate((k) => document.querySelector('#panel-' + k).scrollBy(0, 400), K);
     await page.waitForTimeout(120);
-    await page.evaluate(() => document.querySelector('#panel-events').scrollBy(0, 400));
+    await page.evaluate((k) => document.querySelector('#panel-' + k).scrollBy(0, 400), K);
     await page.waitForTimeout(500);
     const stay = await page.evaluate(() => ({ away: document.body.classList.contains('chrome-away'), keep: document.body.classList.contains('keep-subnav'),
       top: document.querySelector('#subnav .secpill').getBoundingClientRect().top, mastRow: document.querySelector('.mast-row').getBoundingClientRect().bottom }));
@@ -12949,18 +12962,18 @@ async function theApps(browser, base) {
     await page.click('#subnav .secpill .chip[data-chip="' + third + '"]');
     await page.waitForTimeout(1200);
     r = await read();
-    const landed = await page.evaluate((k) => { const s = document.querySelector('#panel-events .shelf-sec[data-sec="' + k + '"]').getBoundingClientRect().top; const p = document.querySelector('#subnav .secpill').getBoundingClientRect().bottom; return [Math.round(s), Math.round(p)]; }, third);
+    const landed = await page.evaluate(([k, pk]) => { const s = document.querySelector('#panel-' + pk + ' .shelf-sec[data-sec="' + k + '"]').getBoundingClientRect().top; const p = document.querySelector('#subnav .secpill').getBoundingClientRect().bottom; return [Math.round(s), Math.round(p)]; }, [third, K]);
     check(r.on === third && landed[0] >= landed[1] - 8 && landed[0] < landed[1] + 90, 'a tapped top tab lands its section just under the pill and lights', JSON.stringify([r.on, landed]));
     const fourth = byFresh[3];
-    await page.evaluate((k) => { const p = document.querySelector('#panel-events'); const s = p.querySelector('.shelf-sec[data-sec="' + k + '"]'); p.scrollTo(0, s.offsetTop - 60); }, fourth);
+    await page.evaluate(([k, pk]) => { const p = document.querySelector('#panel-' + pk); const s = p.querySelector('.shelf-sec[data-sec="' + k + '"]'); p.scrollTo(0, s.offsetTop - 60); }, [fourth, K]);
     await page.waitForTimeout(900);
     r = await read();
     check(r.on === fourth, 'scrolling to the next section lights its top tab', r.on + ' vs ' + fourth);
     /* the bottom bar: its order never moves; a dot on each tab with something new */
     const bar = await page.$$eval('#tabbar button[data-tab]', (bs) => bs.map((b) => [b.dataset.tab, !!b.querySelector('.nd')]));
-    check(JSON.stringify(bar.map((b) => b[0])) === JSON.stringify(['whatnow', 'events', 'nightlife', 'sports', 'explore']), 'the bottom bar keeps its order', JSON.stringify(bar));
-    const wantDot = (k) => k !== 'events' && k !== 'whatnow' && d.tabs[k].sections.some((s) => s.hours < 4);
-    check(bar.filter((b) => b[0] !== 'whatnow').every(([k, dot]) => dot === wantDot(k)), 'a dot on every other tab with something new, none on the one you are on', JSON.stringify(bar));
+    check(JSON.stringify(bar.map((b) => b[0])) === JSON.stringify(A.tabs.map(keyOf)), 'the bottom bar keeps its order', JSON.stringify(bar));
+    const wantDot = (k) => k !== K && d.tabs[k].sections.some((s) => s.hours < 4);
+    check(bar.filter(([k]) => d.tabs[k] && !A.tabs.find((x) => keyOf(x) === k).mode).every(([k, dot]) => dot === wantDot(k)), 'a dot on every other shelf tab with something new, none on the one you are on', JSON.stringify(bar));
     /* the rule itself, for any mode: dated first, newest first, the rest in order */
     const order = await page.evaluate(() => import('/all-day/js/sections.js').then((m) => m.freshOrder([{ key: 'a' }, { key: 'b', newest: 10 }, { key: 'c' }, { key: 'd', newest: 30 }, { key: 'e', newest: 10 }]).map((x) => x.key).join('')));
     check(order === 'dbeac', 'freshOrder: newest first, ties and undated keep their order', order);
@@ -12975,27 +12988,28 @@ async function theApps(browser, base) {
   });
 
   await group('apps: Real life / Online on a tab that mixes them, and nowhere else', async () => {
-    const d = await demoApp('out');
-    const side = (w) => d.tabs.events.sections.filter((s) => s.world === w).map((s) => s.key).sort();
+    /* Out's Events (built in wave 1): its sections say their side on the page */
     const { ctx, page, errors } = await newPage(browser, base);
     await page.goto(base + '/out/?demo=1#events');
     await settle(page);
+    const sides = await page.$$eval('#panel-events .out-sec', (ss) => ss.map((x) => [x.dataset.sec, x.dataset.world || '']));
+    const side = (w) => sides.filter(([, x]) => x !== (w === 'irl' ? 'online' : 'irl')).map(([k]) => k).sort();
+    check(sides.some(([, x]) => x === 'online') && sides.some(([, x]) => x === 'irl'), 'Events has sections on both sides', JSON.stringify(sides));
     const look = () => page.evaluate(() => ({ world: document.body.dataset.world || null,
       on: [...document.querySelectorAll('#subnav .worldsw .localsw-half')].map((b) => b.classList.contains('on')),
-      shown: [...document.querySelectorAll('#panel-events .shelf-sec')].filter((s) => s.offsetParent).map((s) => s.dataset.sec).sort(),
+      shown: [...document.querySelectorAll('#panel-events .out-sec')].filter((s) => s.offsetParent).map((s) => s.dataset.sec).sort(),
       chips: [...document.querySelectorAll('#subnav .secpill .chip')].map((c) => c.dataset.chip).sort(),
       row: !!document.querySelector('#subnav .secbar .secrow .worldsw + .secpill') }));
     let s = await look();
     check(s.world === 'irl' && JSON.stringify(s.on) === '[true,false]' && s.row, 'it starts on Real life, beside the top tabs', JSON.stringify(s));
-    check(JSON.stringify(s.shown) === JSON.stringify(side('irl')) && JSON.stringify(s.chips) === JSON.stringify(side('irl')), 'Real life shows the real-life sections, and only their top tabs', JSON.stringify(s));
+    check(JSON.stringify(s.shown) === JSON.stringify(side('irl')) && JSON.stringify(s.chips) === JSON.stringify(side('irl')), 'Real life shows the real-life sections (and Submit), and only their top tabs', JSON.stringify(s));
     await page.click('#subnav .worldsw [data-world="online"]');
     await page.waitForTimeout(300);
     s = await look();
     check(s.world === 'online' && JSON.stringify(s.on) === '[false,true]' && JSON.stringify(s.shown) === JSON.stringify(side('online')) && JSON.stringify(s.chips) === JSON.stringify(side('online')),
-      'Online shows the online sections, and only their top tabs', JSON.stringify(s));
+      'Online shows the online sections (and Submit), and only their top tabs', JSON.stringify(s));
     await goTab(page, 'nightlife');
-    const night = await page.evaluate(() => ({ world: document.body.dataset.world, on: [...document.querySelectorAll('#subnav .worldsw .localsw-half')].map((b) => b.classList.contains('on')) }));
-    check(night.world === 'online' && JSON.stringify(night.on) === '[false,true]', 'one setting: Nightlife opens on Online too', JSON.stringify(night));
+    check(!(await page.$('#subnav .worldsw')) && !(await page.evaluate(() => document.body.dataset.world)), 'Nightlife does not mix: everything in it is a place to be tonight', '');
     await goTab(page, 'sports');
     check(!(await page.$('#subnav .worldsw')) && !(await page.evaluate(() => document.body.dataset.world)), 'Sports does not mix: no switch, nothing hidden', '');
     await goTab(page, 'whatnow');
@@ -13251,6 +13265,236 @@ async function theApps(browser, base) {
   });
 }
 
+/* ------------------------------------------------------------ Out, wave 1 */
+/* Out's four built tabs (2026-10-29): Events, Nightlife, Sports and Explore,
+   on the Out data lane's files live and on invented files with ?demo=1
+   (all-day/data/demo/out-*.json). Now is What Now, tested in theWhatNow.
+   Each tab is shot at 390 and 1280, light and dark (tests/shots/out-*.png). */
+const OUT_TABS = ['events', 'nightlife', 'sports', 'explore'];
+const outToast = (page) => page.waitForFunction(() => !document.getElementById('toast').hidden, null, { timeout: 5000 }).then(() => page.$eval('#toast', (t) => t.textContent));
+const outSecs = (page, tab) => page.$$eval('#panel-' + tab + ' .out-sec', (ss) => ss.map((s) => ({ key: s.dataset.sec, world: s.dataset.world || '',
+  cards: [...s.querySelectorAll('.card[data-k]')].map((c) => ({ k: c.dataset.k, own: !!c.querySelector('.tag-own'), href: (c.querySelector('a[data-open]') || {}).href || '',
+    title: (c.querySelector('.c-title') || {}).textContent || '', cta: (c.querySelector('[data-act="outbeen"]') || {}).textContent || '', live: !!c.querySelector('.tag-live') })) })));
+
+async function theOut(browser, base) {
+  await group('out: the plain rules (cost, the weekend)', async () => {
+    /* out-events.js imports the shell, which needs a page: read the two rules off the page instead */
+    const { ctx, page } = await newPage(browser, base);
+    await page.goto(base + '/out/?demo=1#events');
+    await settle(page);
+    const r = await page.evaluate(() => import('/all-day/js/modes/out-events.js').then((m) => ({
+      none: m._cost({ price: null, free: null }), free: m._cost({ price: null, free: true }), said: m._cost({ price: '$10; free for members.' }),
+      long: m._cost({ price: 'Prices $35 Adults Veterans $30 Senior Citizen $30 Children under 12 $15 Children' }),
+      thu: m._weekend('2026-10-29'), fri: m._weekend('2026-10-30'), sat: m._weekend('2026-10-31'), sun: m._weekend('2026-11-01'), mon: m._weekend('2026-11-02') })));
+    check(r.none === 'Cost on the listing', 'no price and not marked free: never a guessed "Free"', r.none);
+    check(r.free === 'Free' && r.said === '$10; free for members', 'free when the listing says so; otherwise its own words', JSON.stringify([r.free, r.said]));
+    check(r.long.length <= 40 && /…$/.test(r.long), 'a long price is cut at a word', r.long);
+    check(JSON.stringify([r.thu, r.fri, r.sat, r.sun, r.mon]) === JSON.stringify([['2026-10-30', '2026-11-01'], ['2026-10-30', '2026-11-01'], ['2026-10-31', '2026-11-01'], ['2026-11-01', '2026-11-01'], ['2026-11-06', '2026-11-08']]),
+      'This weekend: Friday to Sunday, or what is left of it', JSON.stringify(r));
+    await ctx.close();
+  });
+
+  await group('out: the config hosts four built tabs and What Now', async () => {
+    const { APPS } = await appsIndex();
+    const out = APPS.find((a) => a.id === 'out');
+    check(JSON.stringify(out.tabs.map((t) => t.mode)) === JSON.stringify(['whatnow', ...OUT_TABS]), 'every Out tab is a mode now, What Now first', JSON.stringify(out.tabs.map((t) => t.mode)));
+    check(out.tabs.filter((t) => t.mixed).map((t) => t.mode).join() === 'events', 'only Events mixes Real life and Online', '');
+    const ev0 = out.tabs.find((t) => t.mode === 'events');
+    check(ev0.top[0] === 'This weekend' && ev0.top.at(-1) === 'Submit' && ev0.top.includes('Been there'), 'Events: This weekend first, Submit last, Been there in between', ev0.top.join(', '));
+    for (const k of OUT_TABS) {
+      const entry = await readFile(path.join(APP, 'js/modes/' + k + '.js'), 'utf8');
+      check(new RegExp("import '\\./out-" + k + "\\.js';").test(entry), k + '.js is the one-line route to out-' + k + '.js', entry.slice(0, 80));
+    }
+  });
+
+  await group('out: live, on the data lane’s files', async () => {
+    const lanes = JSON.parse(await readFile(path.join(REPO, 'data/out/app-events.json'), 'utf8'));
+    const today = etKey(Date.now());
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/out/#events');
+    await settle(page);
+    let secs = await outSecs(page, 'events');
+    check(JSON.stringify(secs.map((s) => s.key)) === JSON.stringify(['weekend', 'live-music', 'open-mic', 'gallery', 'free', 'family', 'outdoors', 'civic', 'nightlife', 'online', 'been', 'submit']),
+      'Events: This weekend, the eight lanes, Online, Been there, Submit, in that order', secs.map((s) => s.key).join(', '));
+    const all = secs.flatMap((s) => s.cards);
+    check(all.every((c) => /^https:\/\//.test(c.href)), 'every event links to its own page', all.filter((c) => !/^https:/.test(c.href)).slice(0, 3).map((c) => c.k).join(', '));
+    const ownSoon = lanes.events.filter((e) => e.own && e.date >= today && e.date <= dayMinus(today, -7));
+    const wk = secs[0].cards;
+    check(!ownSoon.length || (wk.slice(0, ownSoon.length).every((c) => c.own)), 'Stephen’s own events of the coming week lead This weekend', JSON.stringify(wk.slice(0, 3)));
+    for (const t of OUT_TABS.slice(1)) {
+      await goTab(page, t);
+      secs = await outSecs(page, t);
+      check(secs.length >= 3 && !(await page.$('#panel-' + t + ' .promise')), t + ': its sections, not a promise', secs.map((s) => s.key).join(', '));
+      check(secs.flatMap((s) => s.cards).every((c) => c.href), t + ': every card has a link', '');
+    }
+    const sp = await outSecs(page, 'sports');
+    check(sp[0].key === 'pickup' && (sp[0].cards.find((c) => /pk-/.test(c.k)) || {}).k === 'pk-btown-brief-wednesday-pickup', 'Sports: the Wednesday basketball leads the pickup spots', JSON.stringify(sp[0].cards.slice(0, 2)));
+    check(!errors.length, 'no console errors', errors.slice(0, 5).join(' | '));
+    await ctx.close();
+  });
+
+  await group('out: Events on the demo (Been there, Submit, the online side)', async () => {
+    const { ctx, page, errors, supabase } = await newPage(browser, base);
+    await page.goto(base + '/out/?demo=1#events');
+    await settle(page);
+    let secs = await outSecs(page, 'events');
+    const wk = secs.find((s) => s.key === 'weekend');
+    check(wk.cards[0].own && wk.cards[1].own && /Coffee Club/.test(wk.cards[0].title), 'the Brief’s own events are pinned on top of This weekend', JSON.stringify(wk.cards.slice(0, 2)));
+    check(secs.filter((s) => s.world === 'irl').every((s) => s.cards.length || s.key === 'weekend'), 'every lane has its demo events', secs.filter((s) => s.world === 'irl' && !s.cards.length).map((s) => s.key).join(', '));
+    const started = secs.flatMap((s) => s.cards).filter((c) => c.cta === 'Been there');
+    check(started.length >= 2, 'an event that has started offers Been there', started.length);
+    const beenBefore = secs.find((s) => s.key === 'been').cards.length;
+    /* signed out, Been there asks for a sign-in; signed in, one tap logs it */
+    await page.click('#panel-events [data-act="outbeen"]');
+    check(/Sign in/.test(await outToast(page)), 'signed out: Been there asks you to sign in', '');
+    await page.evaluate(() => import('/all-day/js/auth.js').then((m) => m.demoSignIn()));
+    await page.waitForTimeout(2600);
+    const title = await page.$eval('#panel-events [data-act="outbeen"]', (b) => b.closest('.card').querySelector('.c-title').textContent);
+    await page.click('#panel-events [data-act="outbeen"]');
+    /* a reader with no name yet gives it once, then it logs */
+    await page.waitForSelector('#sheet:not([hidden]) [name="display_name"]');
+    await page.fill('#sheet [name="display_name"]', 'Sam');
+    await page.click('#sheet button[type="submit"]');
+    check(/Logged/.test(await outToast(page)), 'signed in: the first time asks a first name, then logs it', '');
+    await page.waitForTimeout(2600);
+    const second = await page.$$eval('#panel-events [data-act="outbeen"]', (bs) => bs.length > 1);
+    if (second) {
+      await page.$$eval('#panel-events [data-act="outbeen"]', (bs) => bs[bs.length - 1].click());
+      check(/Logged/.test(await outToast(page)), 'after that, one tap logs it', '');
+    }
+    await page.waitForFunction((n) => document.querySelectorAll('#panel-events .out-sec[data-sec="been"] .card').length > n, beenBefore);
+    secs = await outSecs(page, 'events');
+    const been = secs.find((s) => s.key === 'been').cards;
+    check(been.some((c) => c.title === title), 'and it shows in Been there, under its own title', JSON.stringify(been.map((c) => c.title)));
+    /* Log a show: the board's compose sheet with the stage board's fields */
+    await page.evaluate(() => document.querySelector('#panel-events .out-sec[data-sec="been"] .linkrow .btn').click());
+    await page.waitForSelector('#sheet:not([hidden]) .bform');
+    const names = await page.$$eval('#sheet .bform [name]', (ns) => ns.map((n) => n.name));
+    check(['title', 'm:venue', 'm:date', 'm:what', 'm:stars', 'body'].every((n) => names.includes(n)), 'Log a show asks where, when, what and stars', names.join(', '));
+    await page.waitForFunction(() => document.getElementById('toast').hidden, null, { timeout: 4000 }).catch(() => {});
+    await page.waitForTimeout(500);
+    await page.screenshot({ path: path.join(SHOTS, 'out-events-logshow-390.png') });
+    await page.keyboard.press('Escape');
+    await page.waitForTimeout(300);
+    /* Submit: the 17-field form, which checks and sends nothing */
+    await page.evaluate(() => document.querySelector('#panel-events .out-sec[data-sec="submit"] .linkrow .btn').click());
+    await page.waitForSelector('#sheet:not([hidden]) .bform .bf-row');
+    const spec = JSON.parse(await readFile(path.join(REPO, 'data/out/submit-event-spec.json'), 'utf8'));
+    const rows = await page.$$eval('#sheet .bform .bf-row', (rs) => rs.length);
+    check(spec.fields.length === 17 && rows === 17, 'Submit shows all 17 fields of the spec', rows);
+    check(/link to its own page/.test(await page.$eval('#sheet', (s) => s.textContent)), 'and says the rule up front: every event needs a link', '');
+    await page.waitForFunction(() => document.getElementById('toast').hidden, null, { timeout: 4000 }).catch(() => {});
+    await page.waitForTimeout(500);
+    await page.screenshot({ path: path.join(SHOTS, 'out-events-submit-390.png') });
+    const send = async () => { await page.click('#sheet .bform button[type="submit"]'); await page.waitForTimeout(150); return page.$eval('#sheet .bf-msg', (m) => [m.textContent, m.classList.contains('err')]); };
+    let m = await send();
+    check(m[1] && /link to its own page/.test(m[0]), 'sent empty, the first thing it asks for is the link', m[0]);
+    const fill = (n, v) => page.fill('#sheet .bform [name="' + n + '"]', v);
+    await fill('url', 'http://example.org/show');
+    await fill('title', 'Porch concert');
+    const later = new Date(Date.now() + 5 * 86400000).toISOString().slice(0, 16);
+    await fill('start', later);
+    for (const [n, v] of [['recurring', 'no'], ['price', 'Free'], ['organizer_relation', 'the organizer']]) await page.selectOption('#sheet .bform [name="' + n + '"]', v);
+    await fill('venue', 'A porch'); await fill('address', '1 Pine St, Burlington'); await fill('description', 'Songs on a porch.');
+    await fill('organizer_name', 'Sam'); await fill('contact_email', 'sam@example.org');
+    m = await send();
+    check(m[1] && /https/.test(m[0]), 'a link that is not https is refused', m[0]);
+    await fill('url', 'https://example.org/show');
+    m = await send();
+    check(!m[1] && /doesn’t send anything yet/.test(m[0]), 'filled in, it checks out and says plainly that nothing was sent', m[0]);
+    check(!supabase.some((x) => /^POST/.test(x)), 'and nothing was posted anywhere', supabase.filter((x) => /^POST/.test(x)).join(' | '));
+    await page.keyboard.press('Escape');
+    check(!errors.length, 'no console errors', errors.slice(0, 5).join(' | '));
+    await ctx.close();
+  });
+
+  await group('out: Nightlife, Sports and Explore on the demo', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/out/?demo=1#nightlife');
+    await settle(page);
+    let secs = await outSecs(page, 'nightlife');
+    check(JSON.stringify(secs.map((s) => s.key)) === JSON.stringify(['open', 'happy', 'mixers']), 'Nightlife: Open tonight, Happy hours, Mixers', secs.map((s) => s.key).join(', '));
+    check(secs[0].cards.length >= 3 && secs[0].cards.every((c) => /^b-/.test(c.k)), 'Open tonight is the nightlife board’s posts', secs[0].cards.length);
+    const meta = await page.$eval('#panel-nightlife .out-sec[data-sec="open"] .b-meta', (n) => n.textContent);
+    check(/until/.test(meta) && /spot/.test(meta) && /(20s|30s|40s|Any age)/.test(meta), 'each says where, until when, how many spots and a rough age', meta);
+    check(secs[1].cards.length >= 2 && secs[1].cards.some((c) => c.live), 'today’s happy hours, the ones on now marked live', JSON.stringify(secs[1].cards.map((c) => c.live)));
+    check(secs[2].cards.length >= 3, 'this week’s mixers from the events', secs[2].cards.length);
+    await page.evaluate(() => import('/all-day/js/auth.js').then((m) => m.demoSignIn()));
+    await page.evaluate(() => document.querySelector('#panel-nightlife .out-sec[data-sec="open"] .linkrow .btn').click());
+    await page.waitForSelector('#sheet:not([hidden]) .bform');
+    const names = await page.$$eval('#sheet .bform [name]', (ns) => ns.map((n) => n.name));
+    check(['m:where', 'm:until', 'm:spots', 'm:ages'].every((n) => names.includes(n)), 'the post form asks where, until when, spots and ages', names.join(', '));
+    if (await page.$('#sheet [name="display_name"]')) await page.fill('#sheet [name="display_name"]', 'Sam');
+    await page.fill('#sheet [name="title"]', 'Three of us at the pool hall');
+    await page.fill('#sheet [name="m:where"]', 'A pool hall on Main St');
+    await page.fill('#sheet [name="m:until"]', 'midnight');
+    await page.fill('#sheet [name="m:spots"]', '3');
+    await page.selectOption('#sheet [name="m:ages"]', 'thirties');
+    await page.waitForFunction(() => document.getElementById('toast').hidden, null, { timeout: 4000 }).catch(() => {});
+    await page.waitForTimeout(500);
+    await page.screenshot({ path: path.join(SHOTS, 'out-nightlife-post-390.png') });
+    await page.click('#sheet .bform button[type="submit"]');
+    await page.waitForFunction(() => [...document.querySelectorAll('#panel-nightlife .out-sec[data-sec="open"] .c-title')].some((t) => /pool hall/.test(t.textContent)), null, { timeout: 5000 });
+    check(true, 'a posted group shows in Open tonight', '');
+
+    await goTab(page, 'sports');
+    secs = await outSecs(page, 'sports');
+    check(JSON.stringify(secs.map((s) => s.key)) === JSON.stringify(['pickup', 'leagues', 'gameday', 'ass']), 'Sports: Pickup, Leagues, Game day, Adult Social Sports', secs.map((s) => s.key).join(', '));
+    const spot = secs[0].cards.find((c) => /^pk-/.test(c.k));
+    check(spot.k === 'pk-btown-brief-wednesday-pickup' && spot.own, 'the Wednesday basketball is pinned first and marked as the Brief’s', JSON.stringify(spot));
+    check(secs[1].cards[0].k === 'lg-lg-2', 'leagues: the nearest sign-up deadline first', secs[1].cards.map((c) => c.k).join(', '));
+    const days = await page.$$eval('#panel-sports .out-sec[data-sec="gameday"] .card', (cs) => cs.map((c) => Number(c.querySelector('.dom').textContent)));
+    check(days.length === 5, 'game day: UVM and the high schools together', days.length);
+    check(secs[3].cards[0].own && /members/.test(await page.$eval('#panel-sports .out-sec[data-sec="ass"] .c-text', (n) => n.textContent)), 'Adult Social Sports: the group, its size, then what it ran', '');
+
+    await goTab(page, 'explore');
+    secs = await outSecs(page, 'explore');
+    check(JSON.stringify(secs.map((s) => s.key)) === JSON.stringify(['walks', 'then', 'conditions', 'dogs']), 'Explore: Walks, Then, Conditions, Dog parks', secs.map((s) => s.key).join(', '));
+    await page.click('#panel-explore .card.video [data-play]');
+    check(/Playing/.test(await outToast(page)) && await page.evaluate(() => !document.getElementById('player').hidden), 'an Out Loud story plays in the dock', '');
+    check(secs[1].cards.length === 4 && /now a bookshop/.test(secs[1].cards[0].title), 'Then: by address, with what is there now', secs[1].cards.map((c) => c.title).join(' | '));
+    const beach = secs[2].cards.filter((c) => /^cd-b-/.test(c.k)).map((c) => c.title);
+    check(beach.length === 2 && beach.some((t) => /Open/.test(t)) && beach.some((t) => /Closed/.test(t)), 'Conditions: each beach open or closed', beach.join(' | '));
+    check(secs[3].cards.length === 2, 'Dog parks, with their rules', secs[3].cards.length);
+    check(!errors.length, 'no console errors', errors.slice(0, 5).join(' | '));
+    await ctx.close();
+  });
+
+  await group('out: deep links land', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/out/?demo=1#sports/leagues');
+    await settle(page);
+    await page.waitForTimeout(900);
+    const top = await page.evaluate(() => { const s = document.querySelector('#panel-sports .out-sec[data-sec="leagues"]').getBoundingClientRect().top; return Math.round(s); });
+    check(top > 0 && top < 220, '#sports/leagues opens on Leagues', top);
+    await page.evaluate(() => { location.hash = 'events/ev-d12'; });
+    await page.waitForFunction(() => !!document.querySelector('#panel-events .card.flash'), null, { timeout: 5000 }).then(() => check(true, '#events/<event> flashes that event', ''), () => check(false, '#events/<event> flashes that event', ''));
+    await page.evaluate(() => { location.hash = 'explore/nothing-here'; });
+    check(/gone from Explore/.test(await outToast(page)), 'an unknown key says so', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  /* the screenshots: each tab at its top, at 390 and 1280, light and dark */
+  for (const combo of COMBOS4) {
+    await group('out: shots ' + combo.viewport.width + ' ' + combo.scheme, async () => {
+      const { ctx, page, errors } = await newPage(browser, base, combo);
+      await page.goto(base + '/out/?demo=1#events');
+      await settle(page);
+      await page.evaluate(() => document.fonts.ready);
+      for (const t of OUT_TABS) {
+        if (t !== 'events') await goTab(page, t);
+        await page.evaluate(() => document.querySelector('.panel:not([hidden])').scrollTo(0, 0));
+        await page.waitForTimeout(350);
+        await pageRules(page, t, combo.viewport.width);
+        await page.screenshot({ path: path.join(SHOTS, 'out-' + t + '-' + combo.viewport.width + '-' + combo.scheme + '.png') });
+      }
+      check(!errors.length, 'no console errors', errors.slice(0, 5).join(' | '));
+      await ctx.close();
+    });
+  }
+}
+
 /* ----------------------------------------------------------------- run */
 const t0 = Date.now();
 await mkdir(SHOTS, { recursive: true });
@@ -13296,6 +13540,7 @@ try {
   await run(theChallenge);
   await run(fullPagesAndAsks);
   await run(theApps);
+  await run(theOut);
 } finally {
   await browser.close();
   proc.kill();

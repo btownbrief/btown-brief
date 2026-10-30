@@ -1,0 +1,177 @@
+{
+ "_": "Invented demo data for Out's Sports tab; every name, place, date and price is made up. Dates are days from today ('in'), times are Burlington's ('at').",
+ "pickup": [
+  {
+   "id": "btown-brief-wednesday-pickup",
+   "name": "Wednesday pickup basketball",
+   "venue": "Hillside Fieldhouse",
+   "town": "Burlington",
+   "hours": "Wednesdays 5:30-7:30pm",
+   "cost": "Free to RSVP; day pass $10",
+   "door": "just show up",
+   "source_url": "https://example.org/out-demo/pk-ours"
+  },
+  {
+   "id": "pk-2",
+   "name": "Lunchtime pickleball",
+   "venue": "Northgate Rec Center",
+   "town": "South Burlington",
+   "hours": "Tue and Thu 11am-1pm",
+   "cost": "$6 drop-in",
+   "door": "just show up",
+   "source_url": "https://example.org/out-demo/pk-2"
+  },
+  {
+   "id": "pk-3",
+   "name": "Sunday morning soccer, 18+",
+   "venue": "Riverside Fields",
+   "town": "Winooski",
+   "hours": "Sundays 9-11am",
+   "cost": "Free",
+   "door": "just show up",
+   "source_url": "https://example.org/out-demo/pk-3"
+  },
+  {
+   "id": "pk-4",
+   "name": "Stick and puck",
+   "venue": "Harbor Ice Arena",
+   "town": "Burlington",
+   "hours": null,
+   "cost": "$9 per player",
+   "day_pass": {
+    "price": "$9",
+    "where": "arena desk"
+   },
+   "source_url": "https://example.org/out-demo/pk-4"
+  }
+ ],
+ "leagues": [
+  {
+   "id": "lg-1",
+   "name": "Coed kickball, winter indoor",
+   "organizer": "Lakeside Social Leagues",
+   "venue": "Pine Street Dome",
+   "town": "Burlington",
+   "deadline_in": 6,
+   "start_in": 20,
+   "cost": "$60 a player",
+   "signup_url": "https://example.org/out-demo/lg-1"
+  },
+  {
+   "id": "lg-2",
+   "name": "Rec volleyball, Thursdays",
+   "organizer": "Northgate Rec",
+   "venue": "Northgate gym",
+   "town": "South Burlington",
+   "deadline_in": 3,
+   "start_in": 10,
+   "cost": "$45",
+   "signup_url": "https://example.org/out-demo/lg-2"
+  },
+  {
+   "id": "lg-3",
+   "name": "Broomball under the lights",
+   "organizer": "Harbor Ice Arena",
+   "venue": "Harbor Ice Arena",
+   "town": "Burlington",
+   "start_in": 14,
+   "cost": null,
+   "signup_url": "https://example.org/out-demo/lg-3"
+  }
+ ],
+ "uvm": {
+  "teams": [
+   {
+    "team": "Women's Hockey",
+    "sport": "hockey",
+    "schedule_url": "https://example.org/out-demo/uvm-whockey",
+    "tickets_url": "https://example.org/out-demo/tix",
+    "home_games": [
+     {
+      "in": 2,
+      "time": "7:00pm",
+      "opponent": "Granite State",
+      "venue": "Hillside Arena",
+      "url": "https://example.org/out-demo/g1"
+     },
+     {
+      "in": 9,
+      "time": "2:00pm",
+      "opponent": "Bay College",
+      "venue": "Hillside Arena",
+      "url": "https://example.org/out-demo/g2"
+     }
+    ]
+   },
+   {
+    "team": "Men's Basketball",
+    "sport": "basketball",
+    "schedule_url": "https://example.org/out-demo/uvm-mbb",
+    "tickets_url": "https://example.org/out-demo/tix",
+    "home_games": [
+     {
+      "in": 4,
+      "time": "7:00pm",
+      "opponent": "Coastal Tech",
+      "venue": "Hillside Gym",
+      "url": "https://example.org/out-demo/g3"
+     }
+    ]
+   }
+  ]
+ },
+ "high_school": {
+  "schools": [
+   {
+    "school": "Lakeview High School",
+    "schedule_source": "https://example.org/out-demo/lhs",
+    "home_venues": [
+     {
+      "name": "Lakeview gym"
+     }
+    ],
+    "upcoming_home_games": [
+     {
+      "in": 3,
+      "time": "6:30pm",
+      "sport": "Girls Basketball",
+      "level": "varsity",
+      "opponent": "Northgate HS",
+      "url": "https://example.org/out-demo/g4"
+     },
+     {
+      "in": 7,
+      "time": "7:00pm",
+      "sport": "Boys Hockey",
+      "level": "varsity",
+      "opponent": "Riverside HS",
+      "url": "https://example.org/out-demo/g5"
+     }
+    ]
+   }
+  ]
+ },
+ "adult_social_sports_meetup": {
+  "group_name": "Lakeside Adult Social Sports",
+  "url": "https://example.org/out-demo/ass",
+  "member_count": 1200,
+  "status": "dormant",
+  "last_event": "2025-06-01",
+  "past_event_formats": [
+   {
+    "format": "Coed indoor volleyball league",
+    "typical_day_time": "Thursdays 6:30-9:30pm",
+    "count_seen": 12,
+    "years": "2018-2024",
+    "source_url": "https://example.org/out-demo/ass-1"
+   },
+   {
+    "format": "Summer kickball on the grass",
+    "typical_day_time": "Tuesdays 6-8pm",
+    "count_seen": 5,
+    "years": "2019-2023",
+    "source_url": "https://example.org/out-demo/ass-2"
+   }
+  ]
+ }
+}

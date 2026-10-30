@@ -156,14 +156,41 @@ async function load(demo) {
 }
 
 /* ------------------------------------------------------------ Been there */
-app.onAct('outbeen', (it) => {
+app.onAct('outbeen', (it) => logIt(it));
+function logIt(it) {
   const ev = it.ev || {};
   boards.create('stage', { kind: 'logged', title: String(it.title).slice(0, 80), meta: { venue: String(ev.venue).slice(0, 60), date: ev.day } }).then((r) => {
-    if (!r.ok) { app.toast(r.error === 'not_signed_in' ? 'Sign in to log it.' : r.message); return; }
-    app.toast('Logged. It’s in Been there.');
-    if (mod) mod.reload();
+    if (r.ok) { app.toast('Logged. It’s in Been there.'); if (mod) mod.reload(); return; }
+    if (r.error === 'no_name') { nameFirst(it); return; }
+    app.toast(r.error === 'not_signed_in' ? 'Sign in to log it.' : r.message);
   });
-});
+}
+/* the first post of a reader with no name yet: the name, then the log */
+function nameFirst(it) {
+  app.sheet('Your first name', (body, card, close) => {
+    body.appendChild(el('p', 'sheet-note', esc('Been there shows it under your first name. Neighbors see it, nothing else.')));
+    const f = el('form', 'bform');
+    const row = el('div', 'bf-row');
+    const inp = el('input', 'field bf-in');
+    inp.name = 'display_name'; inp.maxLength = 32; inp.placeholder = 'Maya, or Maya R.'; inp.setAttribute('aria-label', 'Your first name');
+    const msg = el('p', 'bf-msg');
+    const go = button('Log it', '');
+    go.type = 'submit';
+    const foot = el('div', 'bf-go');
+    foot.append(go, msg);
+    row.appendChild(inp);
+    f.append(row, foot);
+    body.appendChild(f);
+    f.addEventListener('submit', (e) => {
+      e.preventDefault();
+      boards.setProfile({ display_name: inp.value }).then((r) => {
+        if (!r.ok) { msg.textContent = r.message; msg.classList.add('err'); return; }
+        close();
+        logIt(it);
+      });
+    });
+  });
+}
 
 function logShow() {
   boards.compose({
