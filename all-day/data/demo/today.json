@@ -1,0 +1,48 @@
+{
+  "_": "Demo data for Today on ?demo=1 (js/modes/today.js). Every item is invented and every link goes to example.org. Each payload is in its real shape (wire-today.json, all-day/data/whatnow.json, data/restaurants.json, data/weather/latest.json) with relative times the mode moves to the reader's day: `hours_ago` is that long before now, `at` and `until` are tonight's wall times in Burlington. Plans come from the boards' demo copy (boards-fake.js) and habits from habits-fake.js's demo reader.",
+  "weather": {
+    "now": { "description": "Mostly Cloudy", "temp_f": 54, "feels_like_f": 51 },
+    "lake_gage": { "water_temp_f": 52 },
+    "sun": { "at": "17:52" }
+  },
+  "wire": {
+    "v": 1,
+    "hours_ago": 0.5,
+    "sources": {},
+    "updates": [],
+    "picks": [
+      { "id": "td-w1", "ch": "local", "local": true, "src": "demo-daily", "name": "The Demo Daily", "title": "The Main Street rebuild gets a schedule, and the detours start in November", "url": "https://example.org/today/w1", "hours_ago": 1.5, "thumb": "street", "why": "Every downtown trip changes for two years.", "rank": 1 },
+      { "id": "td-w2", "ch": "local", "local": true, "src": "lake-weekly", "name": "Lake Weekly", "title": "School board weighs a later start for the high school next fall", "url": "https://example.org/today/w2", "hours_ago": 3, "thumb": "brick", "rank": 2 },
+      { "id": "td-w9", "ch": "world", "local": false, "src": "wire-national", "name": "National Wire", "title": "A national story that the local front page leaves to the Wire", "url": "https://example.org/today/w9", "hours_ago": 2, "rank": 3 },
+      { "id": "td-w3", "ch": "local", "local": true, "src": "demo-public-radio", "name": "Demo Public Radio", "title": "The ferry adds a late run on Fridays through the end of the year", "url": "https://example.org/today/w3", "hours_ago": 4, "thumb": "lake", "rank": 4 },
+      { "id": "td-w4", "ch": "local", "local": true, "src": "demo-daily", "name": "The Demo Daily", "title": "Two new murals go up on the bike path underpass this week", "url": "https://example.org/today/w4", "hours_ago": 6, "rank": 5 },
+      { "id": "td-w5", "ch": "local", "local": true, "src": "neighborhood-news", "name": "Neighborhood News", "title": "Winter parking ban rules return December 1, with one change", "url": "https://example.org/today/w5", "hours_ago": 7, "thumb": "slate", "rank": 6 },
+      { "id": "td-w6", "ch": "local", "local": true, "src": "lake-weekly", "name": "Lake Weekly", "title": "A sixth local pick, which the shelf leaves for the Wire", "url": "https://example.org/today/w6", "hours_ago": 8, "rank": 7 }
+    ]
+  },
+  "whatnow": {
+    "hours_ago": 5,
+    "events": [
+      { "id": "td-e1", "title": "Open mic night, sign-up at seven", "at": "19:00", "url": "https://example.org/today/e1", "venue": "The Demo Cafe", "town": "Burlington", "free": true, "status": "active" },
+      { "id": "td-e2", "title": "Lake Champlain Chamber Strings", "at": "19:30", "until": "21:30", "url": "https://example.org/today/e2", "venue": "Hall on the Hill", "town": "Burlington", "price": "$25" },
+      { "id": "td-e3", "title": "Trivia: the hard round", "at": "20:00", "url": "https://example.org/today/e3", "venue": "The Pub Downstairs", "town": "Burlington", "free": true },
+      { "id": "td-e4", "title": "Late show: the local band's record release", "at": "21:30", "url": "https://example.org/today/e4", "venue": "The Basement Room", "town": "Winooski", "price": "$12" },
+      { "id": "td-e5", "title": "Cancelled: poetry reading", "at": "18:00", "url": "https://example.org/today/e5", "venue": "The Bookshop", "town": "Burlington" },
+      { "id": "td-e6", "title": "Morning yoga in the park", "at": "08:00", "url": "https://example.org/today/e6", "venue": "Waterfront Park", "town": "Burlington", "free": true },
+      { "id": "td-e7", "title": "Gallery late hours", "at": "17:30", "until": "20:00", "url": "https://example.org/today/e7", "venue": "The Small Gallery", "town": "Burlington", "free": true },
+      { "id": "td-e8", "title": "A sixth evening listing, left for Out", "at": "22:00", "url": "https://example.org/today/e8", "venue": "The Late Room", "town": "Burlington" }
+    ]
+  },
+  "restaurants": {
+    "hours_ago": 20,
+    "restaurants": [
+      { "id": "td-all-night-diner", "name": "The All-Night Diner", "neighborhood": "Downtown", "coords": [44.4762, -73.2131], "blurb": "Pancakes at any hour, and a counter that never empties.", "hours": { "sun": [["00:00", "00:00"]], "mon": [["00:00", "00:00"]], "tue": [["00:00", "00:00"]], "wed": [["00:00", "00:00"]], "thu": [["00:00", "00:00"]], "fri": [["00:00", "00:00"]], "sat": [["00:00", "00:00"]] } },
+      { "id": "td-noodle-bar", "name": "Church Street Noodle Bar", "neighborhood": "Downtown", "coords": [44.4766, -73.2125], "blurb": "Hand-pulled noodles and a broth that takes two days.", "hours": { "sun": [["11:00", "21:00"]], "mon": [["11:00", "21:00"]], "tue": [["11:00", "21:00"]], "wed": [["11:00", "21:00"]], "thu": [["11:00", "22:00"]], "fri": [["11:00", "23:00"]], "sat": [["11:00", "23:00"]] } },
+      { "id": "td-north-end-cafe", "name": "North End Cafe", "neighborhood": "Old North End", "coords": [44.4851, -73.2152], "hours": { "sun": [["07:00", "15:00"]], "mon": [["07:00", "15:00"]], "tue": [["07:00", "15:00"]], "wed": [["07:00", "15:00"]], "thu": [["07:00", "15:00"]], "fri": [["07:00", "15:00"]], "sat": [["07:00", "15:00"]] } },
+      { "id": "td-lakeside-tacos", "name": "Lakeside Tacos", "neighborhood": "Waterfront", "coords": [44.4781, -73.2205], "blurb": "Fish tacos with a view of the ferry.", "hours": { "sun": [["11:30", "20:00"]], "mon": [["11:30", "20:00"]], "tue": [["11:30", "20:00"]], "wed": [["11:30", "20:00"]], "thu": [["11:30", "21:00"]], "fri": [["11:30", "22:00"]], "sat": [["11:30", "22:00"]] } },
+      { "id": "td-pine-st-pizza", "name": "Pine Street Pizza", "neighborhood": "South End", "coords": [44.4620, -73.2140], "hours": { "sun": [["12:00", "22:00"]], "mon": [["16:00", "22:00"]], "tue": [["16:00", "22:00"]], "wed": [["16:00", "22:00"]], "thu": [["16:00", "23:00"]], "fri": [["12:00", "02:00"]], "sat": [["12:00", "02:00"]] } },
+      { "id": "td-winooski-bakery", "name": "Winooski Falls Bakery", "neighborhood": "Winooski", "coords": [44.4910, -73.1860], "hours": { "sun": [["06:30", "14:00"]], "mon": [["06:30", "14:00"]], "tue": [["06:30", "14:00"]], "wed": [["06:30", "14:00"]], "thu": [["06:30", "14:00"]], "fri": [["06:30", "14:00"]], "sat": [["06:30", "14:00"]] } },
+      { "id": "td-closed-bistro", "name": "The Closed Bistro", "neighborhood": "Downtown", "coords": [44.4760, -73.2120], "closed": true, "hours": { "sun": [["00:00", "00:00"]] } }
+    ]
+  }
+}

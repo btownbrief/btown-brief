@@ -326,7 +326,10 @@ function paint(k) {
   host.innerHTML = '';
   ({ fit: paintFit, spotted: paintSpotted, newin: paintNewIn, shops: paintShops, swaps: paintSwaps, tees: paintTees, sent: paintSent })[k](host);
   if (panel() && app.activeTab() === KEY) panel().scrollTop = y;
-  if ((BEFORE_TEES.includes(k) || k === 'tees') && placeTees()) resettle();
+  if ((BEFORE_TEES.includes(k) || k === 'tees') && (placeTees() | placeTrio())) {
+    resettle();
+    if (app.activeTab() === KEY) app.paintSubnav();
+  }
 }
 
 /* Board posts, two up, on the shell's board card, or in a row (`rail`, its
@@ -383,7 +386,7 @@ function thanksLine() {
 
 function paintSpotted(host) {
   section(host, 'Spotted this week');
-  host.appendChild(el('p', 'note pad vwhy', esc('Saw something great that wasn’t your size? Post it so someone else can grab it.')));
+  host.appendChild(el('p', 'note pad vwhy', esc('Not your size? Post it for someone else.')));
   host.appendChild(thanksLine());
   host.appendChild(el('div', 'spacer'));
   if (S.spotted === null) host.appendChild(el('p', 'note pad', esc('Checking the racks…')));
@@ -747,7 +750,25 @@ function placeTees() {
   at.after(slots.tees, slots.sent);
   return true;
 }
+/* With all three of the trio empty (a new town, or a board not open yet)
+   the first screen would be three empty boxes, so the trio waits, together,
+   under New in and Make a tee: the shops' own posts lead. The moment any of
+   the three has a post the trio is back on top (wave 1, 2026-10-29). */
+const trioDown = () => TRIO.every((k) => S[k] !== null) && !TRIO.some(hasItems) && !!hasItems('newin');
+function placeTrio() {
+  if (!slots) return false;
+  if (trioDown()) {
+    if (slots.sent.nextElementSibling === slots.fit) return false;
+    slots.sent.after(slots.fit, slots.spotted, slots.swaps);
+  } else {
+    if (root.firstElementChild === slots.fit) return false;
+    root.prepend(slots.fit, slots.spotted, slots.swaps);
+  }
+  return true;
+}
+/* the pill's order is the page's */
 const sectionOrder = () => {
+  if (slots && root) return [...root.children].map((n) => n.dataset && n.dataset.sec).filter((k) => k && k !== 'sent').map((k) => SECTIONS.find(([x]) => x === k));
   const after = teeAfter();
   return SECTIONS.filter(([k]) => k !== 'tees').flatMap((x) => (x[0] === after ? [x, SECTIONS.find(([k]) => k === 'tees')] : [x]));
 };
