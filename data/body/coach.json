@@ -1,0 +1,54 @@
+{
+ "_comment": "Body app, Coach tab (wave 1, Oct 29, 2026). The voice-note capture how-to and what the coach will do. The iPhone steps follow Apple's own Shortcuts and Back Tap help pages; the Android lines are general and were not checked against Google's pages. None of the steps were run on a phone. No model is called in wave 1.",
+ "updated": "2026-10-29",
+ "capture": {
+  "tab": "Capture",
+  "intro": "Stephen records a voice note whenever he has an idea: one tap, talk, and the words land as text. Here is one way to set that up.",
+  "iphone": {
+   "name": "iPhone, with the Shortcuts app",
+   "steps": [
+    "Open Shortcuts (it comes with the iPhone) and tap + to make a new shortcut.",
+    "Add the action Dictate Text. It listens and turns what you say into words.",
+    "Add the action Append to Note, pick a note such as Ideas, and give it the Dictated Text.",
+    "Name it Voice note, then tap the share button and choose Add to Home Screen.",
+    "For one press from anywhere, set it on the Action button (Settings, Action Button, Shortcut) on phones that have one, or on Back Tap (Settings, Accessibility, Touch, Back Tap)."
+   ],
+   "sources": [
+    {
+     "title": "Apple, Shortcuts User Guide",
+     "url": "https://support.apple.com/guide/shortcuts/welcome/ios",
+     "says": "How to make a shortcut and add it to the Home Screen."
+    },
+    {
+     "title": "Apple, Run shortcuts by tapping the back of iPhone",
+     "url": "https://support.apple.com/guide/shortcuts/apd897693606/ios",
+     "says": "Settings, Accessibility, Touch, Back Tap, then pick Double Tap or Triple Tap and the shortcut."
+    },
+    {
+     "title": "Apple, Use Back Tap on your iPhone",
+     "url": "https://support.apple.com/111772",
+     "says": "Back Tap needs iOS 14 or later."
+    }
+   ]
+  },
+  "android": {
+   "name": "Android",
+   "steps": [
+    "Google Keep: tap the microphone, talk, and Keep saves the recording with its words written out.",
+    "On a Pixel, the Recorder app writes out what you say as you say it."
+   ]
+  },
+  "tip": "One place for every note. Once a week, read them over and move the good ones into your plan."
+ },
+ "chat": {
+  "tab": "Chat",
+  "status": "Coming. Nothing here talks to a model yet.",
+  "will": [
+   "Log what you tell it, the way you'd say it: \"chest press, 90 for 12, two left\" goes into your Train log.",
+   "A morning check-in: today's habits, your water and protein so far, and the one thing to do first.",
+   "Nudges you choose, like a breathing break at 1 pm or a glass of water at 3.",
+   "Answers about your own numbers: how your water's gone this month, your best streak, last time on the leg press."
+  ],
+  "privacy": "It will only read what you tell it and what the app already keeps for you, and you can turn it off."
+ }
+}
