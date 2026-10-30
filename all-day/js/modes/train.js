@@ -120,13 +120,14 @@ function drawRoutine(box, w, id) {
     if (d.name) divider(box, d.name, null);
     d.exercises.forEach((x, xi) => {
       const k = 'x-' + id + '-' + di + '-' + xi;
+      const last = lastFor(x.machine);
       const log = el('button', 'pillbtn', esc('Log'));
       log.type = 'button';
       log.setAttribute('aria-label', 'Log ' + x.machine);
       log.addEventListener('click', () => logSheet(w, x.machine));
       const rr = row({
         k, tile: { big: x.sets + '×', small: x.reps }, title: x.machine, done: S.done.has(k),
-        lines: [x.works && x.setup ? [x.works + '.', x.setup] : x.setup || x.works, x.how,
+        lines: [last ? ['Last time', lineOf(last)] : '', x.works && x.setup ? [x.works + '.', x.setup] : x.setup || x.works, x.how,
           'Stop with ' + x.left + ' left in the tank · rest ' + (x.rest_seconds >= 120 ? x.rest_seconds / 60 + ' min' : x.rest_seconds + ' s')],
         right: log,
         onOpen: (n) => { if (S.done.has(k)) S.done.delete(k); else S.done.add(k); n.classList.toggle('done', S.done.has(k)); },
@@ -215,7 +216,7 @@ function logSheet(w, machine) {
 }
 let redrawLog = () => {};
 function drawLog(box, w, ctx) {
-  redrawLog = () => ctx.redraw('log');
+  redrawLog = () => ['beginner', 'intermediate', 'hardcore', 'log'].forEach((k) => ctx.redraw(k));
   const list = logList();
   section(box, 'Log', null);
   if (!list.length) para(box, 'Nothing logged yet.');

@@ -310,6 +310,7 @@ export async function bodyTests(browser, base, h) {
     await page.reload();
     await ready(page, 'train');
     check((await page.$$(sec('train', 'log') + ' .lrow')).length === 1, 'kept on this phone through a reload', '');
+    check(/Last time .*90 lb/.test(await text(page, sec('train', 'beginner') + ' .lrow')), 'the machine’s row shows last time’s line', await text(page, sec('train', 'beginner') + ' .lrow'));
     await page.click(sec('train', 'log') + ' .addrow .btn');
     await page.fill('.sheet-card input[name="machine"]', first.machine);
     await page.dispatchEvent('.sheet-card input[name="machine"]', 'input');

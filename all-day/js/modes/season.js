@@ -71,6 +71,7 @@ export const vague = (t) => !!String(t || '').trim() && !/\d/.test(t) && !MONTHS
 
 /* ------------------------------------------------------------- the server */
 const fail = (code) => ({ ok: false, error: code, message: msg(code) });
+const isObj = (x) => !!x && typeof x === 'object' && !Array.isArray(x);
 function call(fn, args) {
   if (app.demo) return Promise.resolve().then(() => ({ ok: true, data: fake().call(fn, args || {}) })).catch((e) => fail(e.code || 'offline'));
   const signedIn = !!app.user();
@@ -188,14 +189,14 @@ function fake() {
 async function loadAll() {
   const signedIn = !!app.user();
   const [s, w] = await Promise.all([call('sz_season_get', { p_city: CITY }), call('sz_wall_list', { p_limit: 60 })]);
-  const ctx = { off: !s.ok && s.error === 'off', season: s.ok ? s.data : null, wall: w.ok && Array.isArray(w.data) ? w.data : [], me: null, goal: null, board: null, myTaps: new Set() };
+  const ctx = { off: !s.ok && s.error === 'off', season: s.ok && isObj(s.data) && s.data.kickoff_at ? s.data : null, wall: w.ok && Array.isArray(w.data) ? w.data.filter((x) => isObj(x) && x.id) : [], me: null, goal: null, board: null, myTaps: new Set() };
   /* before sz-SEASON.sql is pasted: the season the tracker already knows */
-  if (ctx.off) { const n = await call('sz_season_next', { p_city: CITY }); ctx.season = n.ok ? n.data : null; }
+  if (ctx.off) { const n = await call('sz_season_next', { p_city: CITY }); ctx.season = n.ok && isObj(n.data) && n.data.kickoff_at ? n.data : null; }
   if (signedIn && !ctx.off && ctx.season) {
     const [me, g, b] = await Promise.all([call('sz_me_get'), call('sz_goal_get', { p_city: CITY }), call('sz_board', { p_city: CITY })]);
-    ctx.me = me.ok ? me.data : null;
-    ctx.goal = g.ok ? g.data : null;
-    ctx.board = b.ok ? b.data : null;
+    ctx.me = me.ok && isObj(me.data) ? me.data : null;
+    ctx.goal = g.ok && isObj(g.data) ? g.data : null;
+    ctx.board = b.ok && isObj(b.data) ? b.data : null;
     const mine = ctx.board && (ctx.board.rows || []).find((r) => r.me);
     ctx.myTaps = new Set(mine ? mine.taps : []);
   }
@@ -207,7 +208,14 @@ const weekOf = (c) => (c.season && c.season.week) || 0;
 /* ------------------------------------------------------------------ top */
 function drawTop(box, c) {
   const s = c.season;
-  if (!s) { box.appendChild(el('p', 'hb-empty', 'No season scheduled yet.')); return; }
+  if (!s) {
+    /* no season yet: what one is, and nothing to press */
+    const t = el('section', 'hb-tile');
+    t.dataset.k = 'season-none';
+    t.innerHTML = '<p class="hb-kicker">' + esc('No season scheduled yet') + '</p><h2 class="hb-big">' + esc('Eight weeks, one goal, and a party at the end.') + '</h2>';
+    box.appendChild(t);
+    return;
+  }
   if (live(c) && c.goal && c.goal.habit) { goalTile(box, c); return; }
   const t = el('section', 'hb-tile');
   t.dataset.k = 'season-top';
