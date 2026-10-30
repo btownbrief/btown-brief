@@ -44,7 +44,7 @@ function drawToday(box, d) {
   const ev = ((d.changes && d.changes.events) || []).slice().sort((a, b) => epoch(b.ts) - epoch(a.ts));
   if (!ev.length) { line(box, 'Nothing has changed since the last check.'); return; }
   const rows = ev.map((e, i) => row({ k: 'chg-' + i + '-' + epoch(e.ts), href: e.url || '../changes.html', title: e.headline,
-    sub: esc([CAT[e.category] || e.category, e.detail, e.sourceName, ago(e.ts)].filter(Boolean).join(' · ')),
+    sub: esc([...new Set([CAT[e.category] || e.category, e.detail, e.sourceName, ago(e.ts)].filter(Boolean))].join(' · ')),
     tag: e.category === 'weather' ? ['Weather', 'live'] : null }));
   list(box, rows, 12);
   box.appendChild(links([{ label: 'Since You Checked, the full page', href: '../changes.html' }]));

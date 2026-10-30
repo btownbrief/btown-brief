@@ -173,13 +173,29 @@ export function quietForm(host, o) {
 }
 
 /* ------------------------------------------------------------ the mode */
+/* The demo files are static, so their dates are written relative to now
+   and filled in here: "@d+3" is the Burlington day three days out,
+   "@t-5h" and "@t-2d" are times that long ago, and "@m+3T18:00" is a
+   meeting's wall time on that day, in civic.json's own form. */
+const REL = /^@(d|t|m)([+-]\d+)(h|d)?(?:T(\d\d:\d\d))?$/;
+export function redate(v) {
+  if (Array.isArray(v)) return v.map(redate);
+  if (v && typeof v === 'object') { const o = {}; Object.entries(v).forEach(([k, x]) => { o[k] = redate(x); }); return o; }
+  const m = typeof v === 'string' && v.match(REL);
+  if (!m) return v;
+  const n = Number(m[2]);
+  if (m[1] === 'd') return plusDays(today(), n);
+  if (m[1] === 'm') return plusDays(today(), n) + 'T' + (m[4] || '18:00') + ':00Z';
+  return new Date(Date.now() + n * (m[3] === 'd' ? DAY : HOUR) * 1000).toISOString();
+}
+
 export function townMode(spec) {
   const S = { root: null, data: null, failed: false, slots: null, pending: null, ready: false, loading: null };
   const now = () => Math.floor(Date.now() / 1000);
 
   function load() {
     if (!S.loading) {
-      const p = app.demo ? app.demoJSON('data/demo/' + spec.demo + '.json') : spec.load();
+      const p = app.demo ? app.demoJSON('data/demo/' + spec.demo + '.json').then(redate) : spec.load();
       S.loading = p.then((d) => { S.data = d; }, (e) => { console.warn('[town] ' + spec.key + ': ' + (e && e.message)); S.failed = true; S.data = null; })
         .then(() => { S.ready = true; app.recount(); });
     }
