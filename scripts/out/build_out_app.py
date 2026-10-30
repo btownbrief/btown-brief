@@ -60,6 +60,8 @@ def number(address):
 
 def then():
     src = json.loads((OUT / "history-seed.json").read_text())
+    geo = OUT / "then-coords.json"  # scripts/out/geocode_then.py: exact house-number matches from OpenStreetMap
+    pins = json.loads(geo.read_text())["coords"] if geo.exists() else {}
     places = []
     for p in src["places"]:
         tl = [{"from": t.get("from"), "to": t.get("to"), "what": t.get("what"), "url": t.get("source_url"), "label": t.get("source_label")}
@@ -70,7 +72,7 @@ def then():
         places.append({
             "id": p["id"], "kind": p.get("kind"), "address": p.get("address"),
             "now": (p.get("now") or {}).get("name") if isinstance(p.get("now"), dict) else p.get("now"),
-            "lat": p.get("lat"), "lng": p.get("lng"), "n": number(p.get("address")), "timeline": tl,
+            "lat": p.get("lat") or pins.get(p["id"], {}).get("lat"), "lng": p.get("lng") or pins.get(p["id"], {}).get("lng"), "n": number(p.get("address")), "timeline": tl,
             "photos": len(p.get("photos") or []),  # counted, never hotlinked: the photos belong to their archives
         })
     places.sort(key=lambda p: (p["kind"] == "block", p["n"], p["address"] or ""))

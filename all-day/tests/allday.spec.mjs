@@ -13421,6 +13421,11 @@ async function theOut(browser, base) {
 
   await group('out: Nightlife, Sports and Explore on the demo', async () => {
     const { ctx, page, errors } = await newPage(browser, base);
+    /* a stand-in for Leaflet that records what the map was asked to draw (the real one carries an integrity hash) */
+    await page.addInitScript(() => { window.L = (() => { const made = [];
+      const layer = (kind, at, o) => ({ kind, at, o, addTo(m) { m.layers.push(this); return this; }, bindTooltip(t) { this.tip = t; return this; }, bindPopup(h) { this.pop = h; return this; } });
+      return { made, map(el) { const m = { el, layers: [], setView(c, z) { this.view = [c, z]; return this; }, invalidateSize() {}, remove() {} }; made.push(m); return m; },
+        tileLayer(u, o) { return layer('tiles', u, o); }, circleMarker(c, o) { return layer('pin', c, o); } }; })(); });
     await page.goto(base + '/out/?demo=1#nightlife');
     await settle(page);
     let secs = await outSecs(page, 'nightlife');
@@ -13464,6 +13469,17 @@ async function theOut(browser, base) {
     await page.click('#panel-explore .card.video [data-play]');
     check(/Playing/.test(await outToast(page)) && await page.evaluate(() => !document.getElementById('player').hidden), 'an Out Loud story plays in the dock', '');
     check(secs[1].cards.length === 4 && /now a bookshop/.test(secs[1].cards[0].title), 'Then: by address, with what is there now', secs[1].cards.map((c) => c.title).join(' | '));
+    /* the Living History Map: Leaflet only on the tap (a stand-in here), a pin per address, each pin's story with its sources */
+    check(await page.evaluate(() => !window.L.made.length), 'no map is drawn before the Map tap', '');
+    await page.click('#panel-explore .out-sec[data-sec="then"] .mapbtn');
+    await page.waitForFunction(() => window.L && window.L.made && window.L.made.length, null, { timeout: 6000 }).catch(() => {});
+    const map = await page.evaluate(() => { const m = window.L && window.L.made && window.L.made[0]; return m && { inSheet: !!m.el.closest('#sheet'), view: m.view,
+      pins: m.layers.filter((l) => l.kind === 'pin').map((l) => ({ at: l.at, tip: l.tip, pop: l.pop })), tiles: m.layers.filter((l) => l.kind === 'tiles').length }; });
+    check(map && map.inSheet && map.tiles === 1 && map.pins.length === 4, 'Map opens Church Street in a sheet, a pin per address', JSON.stringify(map && { n: map.pins.length, tiles: map.tiles }));
+    check(map && map.pins[0].tip === '2 Church St' && /Now: a bookshop/.test(map.pins[0].pop) && /href="https:\/\/example\.org\/out-demo\/th-a0"/.test(map.pins[0].pop),
+      'a pin is named by its address; its story says what is there now and links each line to its source', map && map.pins[0].pop);
+    await page.keyboard.press('Escape');
+    await page.waitForTimeout(300);
     const beach = secs[2].cards.filter((c) => /^cd-b-/.test(c.k)).map((c) => c.title);
     check(beach.length === 2 && beach.some((t) => /Open/.test(t)) && beach.some((t) => /Closed/.test(t)), 'Conditions: each beach open or closed', beach.join(' | '));
     check(secs[3].cards.length === 2, 'Dog parks, with their rules', secs[3].cards.length);
