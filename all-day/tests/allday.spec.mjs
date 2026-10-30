@@ -13347,6 +13347,10 @@ async function thePlay(browser, base) {
     check((await cab('btown-wordle')).on === 'true', 'the tick survives a reload', '');
     await page.click(P + ' [data-tick="btown-wordle"]');
     check((await cab('btown-wordle')).streak === 2, 'taking the tick off gives back the open streak', '');
+    for (const s of ['btown-wordle', 'btown-crossings', 'news-quiz', 'higher-or-lower', 'where-in-btown', 'real-or-fake']) {
+      if (await page.$eval(P + ' [data-tick="' + s + '"]', (b) => b.getAttribute('aria-pressed')) === 'false') await page.click(P + ' [data-tick="' + s + '"]');
+    }
+    check(await page.$eval('#toast', (t) => t.textContent) === 'All six today.' && /6 of 6 played today/.test(await page.$eval(P + ' [data-sec="today"]', (x) => x.innerText)), 'the sixth tick of the day says so', await page.$eval('#toast', (t) => t.textContent));
     check(!supabase.length, 'Daily never calls Supabase', supabase.join(', '));
     await page.goto(base + '/play/#daily/where-in-btown');
     await settle(page);

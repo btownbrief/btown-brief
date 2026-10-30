@@ -75,7 +75,8 @@ function toggle(p, btn) {
   if (set.has(day)) set.delete(day); else set.add(day);
   save();
   const on = set.has(day);
-  app.toast(on ? p.name + ': played. ' + streakWords(streak(set, day)) : p.name + ': not played.');
+  const all = on && D.puzzles.every((x) => ticked(x.slug, day));
+  app.toast(all ? 'All ' + (D.puzzles.length === 6 ? 'six' : D.puzzles.length) + ' today.' : on ? p.name + ': played. ' + streakWords(streak(set, day)) : p.name + ': not played.');
   mode.redraw(btn ? '[data-tick="' + p.slug + '"]' : null);
   app.recount();
 }
