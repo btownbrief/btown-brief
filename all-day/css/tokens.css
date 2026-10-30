@@ -81,6 +81,11 @@
      choice, the same in both themes so the words on them keep their ink:
      News amber, Photos coral, Square lake blue; On Air's TV amber,
      Podcasts violet, Playlists park green, Topics lake blue */
+  --so-x: #14171A;
+  --so-facebook: #1464D2;
+  --so-instagram: #B5316F;
+  --so-reddit: #C7400F;
+  --so-ink: #FFFFFF;
   --liq-news: #F2A93B;
   --liq-news-ink: #2B1606;
   --liq-photos: #D9644F;
@@ -316,6 +321,7 @@
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
+    --so-x: #3A4048;
     --rd-accent: #F08A63;
     color-scheme: dark;
     --lake: #16334F;
@@ -373,6 +379,7 @@
 }
 
 :root[data-theme="dark"] {
+  --so-x: #3A4048;
   --rd-accent: #F08A63;
   color-scheme: dark;
   --lake: #16334F;

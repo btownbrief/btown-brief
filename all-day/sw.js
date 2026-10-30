@@ -54,7 +54,7 @@ const SHELL_URLS = [
   /* the Btown Brief logo in the mast */
   './assets/brand/btown-brief-logo.png',
   /* Town (wave 1) */
-  './js/modes/reddit.js', './js/reddit-lib.js', './js/modes/body-kit.js', './js/modes/day.js', './js/modes/leagues.js', './js/modes/template.js', './js/modes/season.js', './js/modes/train.js', './js/modes/recover.js', './js/modes/fuel.js', './js/modes/town-kit.js', './js/modes/feed.js', './js/modes/alerts.js', './js/modes/cityhall.js', './js/modes/streets.js', './js/modes/guides.js', './js/modes/work.js',
+  './js/modes/reddit.js', './js/modes/social.js', './js/reddit-lib.js', './js/modes/body-kit.js', './js/modes/day.js', './js/modes/leagues.js', './js/modes/template.js', './js/modes/season.js', './js/modes/train.js', './js/modes/recover.js', './js/modes/fuel.js', './js/modes/town-kit.js', './js/modes/feed.js', './js/modes/alerts.js', './js/modes/cityhall.js', './js/modes/streets.js', './js/modes/guides.js', './js/modes/work.js',
 ];
 
 self.addEventListener('install', (e) => {

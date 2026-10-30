@@ -22,10 +22,11 @@ export default {
     { mode: 'people' },
     { mode: 'whatnow' },
     { mode: 'vintage' },
-    { mode: 'reddit' },
+    { mode: 'social' },
     { mode: 'onair' },
     { mode: 'games' },
   ],
+  hosted: { reddit: 'social' },
   /* The Build and Habits moved to Body on 2026-10-30, and the Reddit tab took
      their cell. Their old links land in Body (app.js sends a tab this app
      doesn't have to the app that does). */

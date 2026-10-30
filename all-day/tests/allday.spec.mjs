@@ -54,7 +54,7 @@ const REPO = path.resolve(APP, '..');
 const SHOTS = path.join(HERE, 'shots');
 /* The Build took Habits' cell on 2026-10-21; Habits is the other side of its
    Build | Habits switch, with its own panel and #habits links */
-const TABS = ['wire', 'watch', 'food', 'people', 'whatnow', 'vintage', 'reddit', 'onair', 'games'];
+const TABS = ['wire', 'watch', 'food', 'people', 'whatnow', 'vintage', 'social', 'onair', 'games'];
 
 /* Where a tab lives now: All Day when it has it, else the app that took it,
    the way the shell's cross-app rule (app.js elsewhere()) picks among the
@@ -84,7 +84,7 @@ function rehome(url) {
   const id = appOf(m[3]);
   return id === 'all-day' ? url : m[1] + '/' + id + '/' + (m[2] || '') + '#' + m[3] + m[4];
 }
-const LABELS = ['Wire', 'Watch', 'Food', 'People', 'What Now', 'Vintage', 'Reddit', 'On Air', 'Games'];
+const LABELS = ['Wire', 'Watch', 'Food', 'People', 'What Now', 'Vintage', 'Social', 'On Air', 'Games'];
 const PNG = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mN8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==', 'base64');
 
 /* ------------------------------------------------------------- reporting */
@@ -591,7 +591,7 @@ const COMBOS = [
 ];
 const PAPER = { light: 'rgb(247, 244, 238)', dark: 'rgb(12, 21, 32)' };
 /* tabs that are built: live, they draw their screen instead of the promise */
-const LIVE = new Set(['wire', 'watch', 'whatnow', 'onair', 'games', 'food', 'habits', 'build', 'vintage', 'people', 'reddit']);
+const LIVE = new Set(['wire', 'watch', 'whatnow', 'onair', 'games', 'food', 'habits', 'build', 'vintage', 'people', 'reddit', 'social']);
 
 async function matrix(browser, base) {
   for (const combo of COMBOS) {
@@ -13439,6 +13439,46 @@ function redditFresh(nowMs) {
     p('r9', 'New plan for the bike path', 50, { out: 'https://www.sevendaysvt.com/news/x/', kind: 'link' }),
   ] };
 }
+async function theSocial(browser, base) {
+  const panel = '#panel-social';
+  const now = Math.round(Date.now() / 1000);
+  const pulse = { v: 1, generated: new Date().toISOString(), sources: [], items: [], reddit: {}, photos: {}, inbox: {
+    x: { paused: false, items: [
+      { u: 'https://x.com/wcax/status/1', d: now - 600, from: '@wcax', name: 'Channel 3 News', summary: 'Newest of all', ch: 'x', local: true },
+      { u: 'https://x.com/wcax/status/2', d: now - 7200, from: '@wcax', name: 'Channel 3 News', summary: 'An earlier post', ch: 'x', local: true },
+      { u: 'https://x.com/Reuters/status/3', d: now - 300, from: '@Reuters', name: 'Reuters', summary: 'A national post', ch: 'x', local: false }] },
+    facebook: { paused: false, items: [{ u: 'https://facebook.com/groups/123/permalink/4/', d: now - 1200, from: 'Group', name: 'Burlington Group', summary: 'A group post', ch: 'facebook', local: true }] },
+    recaps: { paused: true, items: [] } } };
+  await group('Social: one block per account, the freshest on top', async () => {
+    const { ctx, page, errors } = await newPage(browser, base, { reddit: redditFresh(Date.now()) });
+    await page.route(/pulse\.json/, (r) => r.fulfill({ status: 200, body: JSON.stringify(pulse), contentType: 'application/json' }));
+    await page.goto(base + '/all-day/#social');
+    await page.waitForSelector(panel + ' .so-block');
+    await page.waitForTimeout(800);
+    const names = () => page.$$eval(panel + ' .so-name', (a) => a.map((n) => n.textContent));
+    const local = await names();
+    check(local.includes('Channel 3 News') && local.includes('Burlington Group') && !local.includes('Reuters'), 'Local leaves out the national accounts', local.join());
+    check(local.filter((n) => n === 'Channel 3 News').length === 1, 'an account is one block', local.join());
+    const c3 = await page.$eval(panel + ' .so-x', (c) => ({ top: c.querySelector('.so-text').textContent, rows: c.querySelectorAll('.so-row').length, href: c.querySelector('.so-text').href, target: c.querySelector('.so-text').target }));
+    check(c3.top === 'Newest of all' && c3.rows === 1, 'a block leads with its newest post and lists the one before it', JSON.stringify(c3));
+    check(c3.href.includes('/status/1') && c3.target === '_blank', 'a post opens on its platform', c3.href);
+    check(await page.$eval(panel + ' .so-block', (c) => !!c.querySelector('[data-act=share]') && !!c.querySelector('[data-act=save]') && !c.querySelector('[data-act=vote],[data-act=comment]')), 'star and share, no votes, no comments', '');
+    await page.click('.localsw-half:has-text("Everything")');
+    await page.waitForTimeout(300);
+    const every = await names();
+    check(every.indexOf('Reuters') >= 0 && every.indexOf('Reuters') < every.indexOf('Channel 3 News'), 'Everything brings them in, and the last to post goes first', every.join());
+    await page.click('#subnav .secpill .chip:has-text("Facebook"), #subnav button:has-text("Facebook")');
+    await page.waitForTimeout(300);
+    check((await names()).join() === 'Burlington Group', 'a platform pill leaves only that platform', (await names()).join());
+    await page.click('#subnav button:has-text("Reddit")');
+    await page.waitForSelector('#panel-reddit .rd-tile');
+    check(await page.$eval('#subnav', (n) => /Fresh/.test(n.textContent) && /Latest/.test(n.textContent)), 'Reddit opens under Social, with Fresh and Questions', '');
+    check(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), 'no sideways scroll', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+}
+
 async function theReddit(browser, base) {
   const panel = '#panel-reddit';
   const titles = (page) => page.$$eval(panel + ' .rd-tile .rd-title', (a) => a.map((n) => n.textContent));
@@ -13477,11 +13517,13 @@ async function theReddit(browser, base) {
     const { ctx, page, errors } = await newPage(browser, base, { reddit: redditFresh(now), listings });
     await page.addInitScript((t) => { localStorage.setItem('allday-reddit-seen', String(t)); }, now - 3.5 * 3600000);
     await page.goto(base + '/all-day/#wire');
-    await page.waitForSelector('#tab-reddit .nd.num', { timeout: 6000 });
-    check((await page.$eval('#tab-reddit .nd', (n) => n.textContent)) === '2', 'the Reddit cell shows the number of new threads', await page.$eval('#tab-reddit .nd', (n) => n.textContent));
-    await page.click('#tab-reddit');
+    await page.waitForSelector('#tab-social .nd.num', { timeout: 6000 });
+    check((await page.$eval('#tab-social .nd', (n) => n.textContent)) === '2', 'the Social cell shows the number of new threads', await page.$eval('#tab-social .nd', (n) => n.textContent));
+    await page.click('#tab-social');
+    await page.waitForSelector('#subnav button:has-text("Reddit")');
+    await page.click('#subnav button:has-text("Reddit")');
     await page.waitForSelector(panel + ' .rd-tile');
-    check(!(await page.$('#tab-reddit .nd')), 'landing clears the count', '');
+    check(!(await page.$('#tab-social .nd')), 'landing clears the count', '');
     const marks = await page.$$eval(panel + ' .rd-tile', (a) => a.map((c) => !!c.querySelector('.rd-new')));
     check(JSON.stringify(marks) === '[true,true,false,false]', 'only what arrived since the last look says New', JSON.stringify(marks));
     await page.click('#tab-wire');
@@ -13578,6 +13620,7 @@ try {
   await run(theWhatNow);
   await run(theFood);
   await run(theReddit);
+  await run(theSocial);
   await run(thePeople);
   await run(theClubs);
   await run(onAir);
