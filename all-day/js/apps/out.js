@@ -21,6 +21,5 @@ export default {
     whatnow: ['../things-to-do.html', 'the full things-to-do guide'],
     events: ['../events.html', 'the full events calendar'],
     sports: ['../sports.html', 'every team’s schedule'],
-    explore: ['../walking-tour.html', 'the walking tour'],
   },
 };

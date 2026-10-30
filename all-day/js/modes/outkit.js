@@ -1,4 +1,4 @@
-/* out-common.js — what Out's four built tabs share (wave 1, 2026-10-29).
+/* outkit.js — what Out's four built tabs share (wave 1, 2026-10-29).
 
    Events, Nightlife, Sports and Explore are each a page of sections under
    the shell's pill of top tabs, the same contract shelf.js shows in its
@@ -97,7 +97,7 @@ export function outMode(cfg) {
     if (!root) return;
     root.innerHTML = '';
     if (S.error || !S.secs) {
-      root.appendChild(cards.caught({ title: cfg.label + ' didn’t load', text: 'Check your connection and try again.', check: false,
+      root.appendChild(cards.caught({ title: cfg.label + ' didn’t load', check: false,
         buttons: [button('Try again', 'ghost', () => { reload(); })] }));
       return;
     }

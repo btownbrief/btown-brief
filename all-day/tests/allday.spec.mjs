@@ -13278,11 +13278,11 @@ const outSecs = (page, tab) => page.$$eval('#panel-' + tab + ' .out-sec', (ss) =
 
 async function theOut(browser, base) {
   await group('out: the plain rules (cost, the weekend)', async () => {
-    /* out-events.js imports the shell, which needs a page: read the two rules off the page instead */
+    /* events.js imports the shell, which needs a page: read the two rules off the page instead */
     const { ctx, page } = await newPage(browser, base);
     await page.goto(base + '/out/?demo=1#events');
     await settle(page);
-    const r = await page.evaluate(() => import('/all-day/js/modes/out-events.js').then((m) => ({
+    const r = await page.evaluate(() => import('/all-day/js/modes/events.js').then((m) => ({
       none: m._cost({ price: null, free: null }), free: m._cost({ price: null, free: true }), said: m._cost({ price: '$10; free for members.' }),
       long: m._cost({ price: 'Prices $35 Adults Veterans $30 Senior Citizen $30 Children under 12 $15 Children' }),
       thu: m._weekend('2026-10-29'), fri: m._weekend('2026-10-30'), sat: m._weekend('2026-10-31'), sun: m._weekend('2026-11-01'), mon: m._weekend('2026-11-02') })));
@@ -13292,7 +13292,7 @@ async function theOut(browser, base) {
     check(JSON.stringify([r.thu, r.fri, r.sat, r.sun, r.mon]) === JSON.stringify([['2026-10-30', '2026-11-01'], ['2026-10-30', '2026-11-01'], ['2026-10-31', '2026-11-01'], ['2026-11-01', '2026-11-01'], ['2026-11-06', '2026-11-08']]),
       'This weekend: Friday to Sunday, or what is left of it', JSON.stringify(r));
     /* Burlington's clock: summer and winter offsets, a bare date is the whole day, a bare end date runs through that day */
-    const t = await page.evaluate(() => import('/all-day/js/modes/out-common.js').then((m) => {
+    const t = await page.evaluate(() => import('/all-day/js/modes/outkit.js').then((m) => {
       const at = Date.parse('2026-11-10T15:00:00-05:00');
       const month = m.timing({ date: '2026-11-01', start: '2026-11-01', end: '2026-11-30' }, at);
       const oneDay = m.timing({ date: '2026-11-10', start: '2026-11-10', end: '2026-11-10' }, at);
@@ -13315,10 +13315,6 @@ async function theOut(browser, base) {
     check(out.tabs.filter((t) => t.mixed).map((t) => t.mode).join() === 'events', 'only Events mixes Real life and Online', '');
     const ev0 = out.tabs.find((t) => t.mode === 'events');
     check(ev0.top[0] === 'This weekend' && ev0.top.at(-1) === 'Submit' && ev0.top.includes('Been there'), 'Events: This weekend first, Submit last, Been there in between', ev0.top.join(', '));
-    for (const k of OUT_TABS) {
-      const entry = await readFile(path.join(APP, 'js/modes/' + k + '.js'), 'utf8');
-      check(new RegExp("import '\\./out-" + k + "\\.js';").test(entry), k + '.js is the one-line route to out-' + k + '.js', entry.slice(0, 80));
-    }
   });
 
   await group('out: live, on the data lane’s files', async () => {
@@ -13416,7 +13412,7 @@ async function theOut(browser, base) {
     check(m[1] && /https/.test(m[0]), 'a link that is not https is refused', m[0]);
     await fill('url', 'https://example.org/show');
     m = await send();
-    check(!m[1] && /doesn’t send anything yet/.test(m[0]), 'filled in, it checks out and says plainly that nothing was sent', m[0]);
+    check(!m[1] && /nothing was sent/.test(m[0]), 'filled in, it checks out and says plainly that nothing was sent', m[0]);
     check(!supabase.some((x) => /^POST/.test(x)), 'and nothing was posted anywhere', supabase.filter((x) => /^POST/.test(x)).join(' | '));
     await page.keyboard.press('Escape');
     check(!errors.length, 'no console errors', errors.slice(0, 5).join(' | '));
