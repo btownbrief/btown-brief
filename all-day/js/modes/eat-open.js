@@ -39,6 +39,7 @@ const FIRST_ROWS = 12;
 const INSP_FIRST = 12;
 const LATE = 23 * 60;
 const STALE_MS = 5 * 60000;
+const FLASH_MS = 2400;                     // ui.js's flash: how long a linked row glows
 const LEAFLET = {
   js: 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js', jsSri: 'sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=',
   css: 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css', cssSri: 'sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=',
@@ -50,7 +51,7 @@ const SECTIONS = [['open', 'Open now'], ['random', 'Randomizer'], ['insp', 'Insp
 const MOVED = { bite: 'bites', kitchens: 'bites', asks: 'bites', best: 'bites', add: 'bites', deals: 'deals' };
 
 const S = { f: 'open', all: false, meal: 'any', chose: false, me: null, drawn: 0, pick: null, q: '', inspAll: false };
-let root = null, slots = null, pending = null, ready = false, tick = 0;
+let root = null, slots = null, pending = null, ready = false, tick = 0, flashing = null;
 const F = () => E.F;
 
 /* ------------------------------------------------------------- the list */
@@ -128,6 +129,8 @@ function paint(k) {
   ({ open: paintOpen, random: paintRandom, insp: paintInsp })[k](host);
   if (p && app.activeTab() === KEY) p.scrollTop = y;
   if (k === 'open') app.paintSubnav();
+  /* a late load rebuilt the rows: the place just linked to keeps its flash */
+  if (k === 'open' && flashing && Date.now() - flashing.t < FLASH_MS) app.flashHit(root, flashing.k);
   resettle();
 }
 
@@ -423,6 +426,7 @@ function land() {
       const f = FILTERS.find((x) => x.test(r, t));
       S.f = f ? f.key : S.f; S.chose = true; S.all = true; paint('open');
     }
+    flashing = { k: key, t: Date.now() };
     app.flashHit(root, key);
     E.placeSheet(r);
     return;

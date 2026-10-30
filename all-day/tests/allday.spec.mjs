@@ -13355,6 +13355,13 @@ async function theEat(browser, base) {
     const { ctx, page, errors } = await eatOpen(browser, base, '/eat/?demo=1#food/deals');
     await page.waitForFunction(() => /^#deals/.test(location.hash), null, { timeout: 8000 });
     check(true, '#food/deals lands on Deals', '');
+    /* a place's link flashes its row, through the late loads that rebuild the list */
+    const p2 = await newPage(browser, base);
+    await p2.page.goto(base + '/eat/?demo=1#food/r-demo-all-night-diner');
+    const lit = await p2.page.waitForSelector(foodPanel + ' [data-k="r-demo-all-night-diner"].flash', { timeout: 3000 }).then(() => true, () => false);
+    await p2.page.waitForTimeout(1200);
+    check(lit && !!(await p2.page.$(foodPanel + ' [data-k="r-demo-all-night-diner"].flash')), '#food/r-<id> flashes its row, and it stays lit after the late loads', '');
+    await p2.ctx.close();
     for (const [from, to] of [['asks', 'bites'], ['add', 'bites'], ['bite', 'bites']]) {
       await page.evaluate((h) => { location.hash = h; }, 'food/' + from);
       await page.waitForFunction((t) => location.hash.startsWith('#' + t), to, { timeout: 8000 });
