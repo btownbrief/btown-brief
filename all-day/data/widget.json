@@ -1,30 +1,20 @@
 {
  "v": 1,
- "updated": "2026-10-30T21:59:27+00:00",
+ "updated": "2026-10-30T23:16:04+00:00",
  "app": "https://guide.btownbrief.com/all-day/",
  "weather": {
   "temp": 50,
   "sky": "Cloudy",
   "from": "airport",
-  "hi": 54,
+  "hi": 50,
   "lo": 34,
-  "rain": "Dry through tonight",
+  "rain": "Dry through Saturday",
   "obs": {
    "temp": 50,
    "sky": "Cloudy",
-   "at": "2026-10-30T21:20:00+00:00"
+   "at": "2026-10-30T22:40:00+00:00"
   },
   "hours": [
-   {
-    "t": "2026-10-30T17:00:00-04:00",
-    "temp": 53,
-    "sky": "Partly Sunny"
-   },
-   {
-    "t": "2026-10-30T18:00:00-04:00",
-    "temp": 50,
-    "sky": "Mostly Cloudy"
-   },
    {
     "t": "2026-10-30T19:00:00-04:00",
     "temp": 48,
@@ -44,28 +34,38 @@
     "t": "2026-10-30T22:00:00-04:00",
     "temp": 46,
     "sky": "Mostly Cloudy"
+   },
+   {
+    "t": "2026-10-30T23:00:00-04:00",
+    "temp": 45,
+    "sky": "Partly Cloudy"
+   },
+   {
+    "t": "2026-10-31T00:00:00-04:00",
+    "temp": 43,
+    "sky": "Partly Cloudy"
    }
   ],
   "link": "https://guide.btownbrief.com/weather.html"
  },
  "wire": [
   {
-   "title": "Vermont's school consolidation process is off to a rocky start",
+   "title": "Local votes excluded from some Vermont mail-in ballots",
+   "src": "WCAX",
+   "url": "https://www.wcax.com/2026/10/30/local-votes-excluded-some-vermont-mail-in-ballots/",
+   "link": "https://guide.btownbrief.com/all-day/#wire/f1d42974d81f"
+  },
+  {
+   "title": "Federal Election Monitors to Visit Polls in Burlington",
+   "src": "Seven Days",
+   "url": "https://www.sevendaysvt.com/news/federal-election-monitors-to-visit-polls-in-burlington/",
+   "link": "https://guide.btownbrief.com/all-day/#wire/1eec1be3b257"
+  },
+  {
+   "title": "A last-minute voter’s guide to the Vermont election",
    "src": "Vermont Public",
-   "url": "https://www.vermontpublic.org/local-news/2026-10-30/school-consolidation-process-rocky-start",
-   "link": "https://guide.btownbrief.com/all-day/#wire/8faa1f524da8"
-  },
-  {
-   "title": "GM collected data from tens of thousands of Vermonters and sold it to insurers and data brokers without drivers' consent, Vermont's attorney general says.",
-   "src": "VTDigger",
-   "url": "https://x.com/vtdigger/status/2115936719698546849",
-   "link": "https://guide.btownbrief.com/all-day/#wire/62e5854877cf"
-  },
-  {
-   "title": "Meet Winooski’s candidates for State Representative",
-   "src": "Community News Service",
-   "url": "https://vtcommunitynews.org/2026/10/30/meet-winooskis-candidates-for-state-representative/",
-   "link": "https://guide.btownbrief.com/all-day/#wire/2442efabb190"
+   "url": "https://www.vermontpublic.org/local-news/2026-10-30/last-minute-voters-guide-vermont-general-election-midterms",
+   "link": "https://guide.btownbrief.com/all-day/#wire/ef27689fa8e3"
   }
  ],
  "tonight": [
@@ -76,15 +76,6 @@
    "start": "2026-10-30T19:00:00-04:00",
    "end": null,
    "url": "https://events.uvm.edu/event/doom-service",
-   "link": "https://guide.btownbrief.com/all-day/#whatnow/tonight"
-  },
-  {
-   "title": "Barbacoa",
-   "time": "5 pm",
-   "venue": "Red Square",
-   "start": "2026-10-30T17:00:00-04:00",
-   "end": null,
-   "url": "https://community.sevendaysvt.com/event/barbacoa-45639977",
    "link": "https://guide.btownbrief.com/all-day/#whatnow/tonight"
   },
   {
@@ -104,16 +95,25 @@
    "end": null,
    "url": "https://events.uvm.edu/event/its-a-2000s-halloween-party-burlington",
    "link": "https://guide.btownbrief.com/all-day/#whatnow/tonight"
+  },
+  {
+   "title": "Jonathan \"Doc\" Kaplan",
+   "time": "5:30 pm",
+   "venue": "The S.P.A.C.E. Gallery",
+   "start": "2026-10-30T17:30:00-04:00",
+   "end": null,
+   "url": "https://community.sevendaysvt.com/event/jonathan-doc-kaplan-45639994",
+   "link": "https://guide.btownbrief.com/all-day/#whatnow/tonight"
   }
  ],
  "game": {
-  "title": "UVM Men's Soccer vs Binghamton",
-  "when": "Today 4 pm",
-  "start": "2026-10-30T20:00:00+00:00",
+  "title": "UVM Men's Ice Hockey vs New Hampshire",
+  "when": "Today 7 pm",
+  "start": "2026-10-30T23:00:00+00:00",
   "all_day": false,
   "home": true,
-  "tv": "AmericaEast.TV",
-  "url": "https://uvmathletics.com/calendar.aspx?game_id=6802&sport_id=8",
+  "tv": "ESPN+",
+  "url": "https://uvmathletics.com/calendar.aspx?game_id=6904&sport_id=5",
   "link": "https://guide.btownbrief.com/sports.html"
  }
 }
