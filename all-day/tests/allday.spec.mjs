@@ -13251,6 +13251,267 @@ async function theApps(browser, base) {
   });
 }
 
+/* ------------------------------------------------------------ The Paper */
+/* Wave 1 (2026-10-29): The Paper's six tabs are built (js/modes/paper-*.js).
+   Live, the archive's public files, the arcade's games.json and Beehiiv's
+   embed are answered here: the archive with a year and more of Mondays and
+   Fridays dated to the real clock (so "this week last year" has one), the
+   embed with a blank page. The repo's own data (newsletter.json, the
+   seeded data/paper/ files, chatter.json, best-of-reddit.json, catalog.json)
+   is read as it is. */
+function paperArchive() {
+  const eds = [], stories = [];
+  const words = ['Creemee stand closes for the season', 'City Council votes on the budget', 'Catamounts hockey opens at home', 'New café opens on Pine Street',
+    'Jazz festival lineup announced', 'Pizza place says goodbye after 30 years', 'Mayor proposes parking holiday', 'Farmers market moves indoors'];
+  for (let i = 0; i < 420; i++) {
+    const d = new Date(); d.setHours(12, 0, 0, 0); d.setDate(d.getDate() - i);
+    if (d.getDay() !== 1 && d.getDay() !== 5) continue;
+    const iso = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+    const slug = 'test-edition-' + iso;
+    eds.push({ slug, url: 'https://www.btownbrief.com/p/' + slug, title: 'Edition of ' + iso, date: iso });
+    for (let j = 0; j < 3; j++) stories.push({ h: words[(eds.length + j) % words.length] + ' (' + iso + ')', u: 'https://example.org/' + slug + '/' + j, e: slug, d: iso, g: 0 });
+  }
+  eds.reverse();
+  return { eds, stories };
+}
+const PAPER_GAMES = { sections: [{ id: 'arcade-action', title: 'Action & Arcade' }, { id: 'board-card', title: 'Board & Card Classics' }],
+  games: [{ slug: 'queen-city-chess', name: 'Queen City Chess', emoji: '♛', pitch: 'Pass the phone, or race a friend.', section: 'board-card', live: true },
+    { slug: 'creemee-drop', name: 'Creemee Drop', emoji: '🍦', pitch: 'Stack Vermont soft-serve to the sky.', section: 'arcade-action', live: true }] };
+async function paperPage(browser, base, opts = {}) {
+  const A = paperArchive();
+  const routes = [[/play\.btownbrief\.com\/games\.json/, PAPER_GAMES]];
+  if (!opts.archiveDown) routes.push([/play\.btownbrief\.com\/archive\/data\/editions\.json/, A.eds], [/play\.btownbrief\.com\/archive\/data\/stories-lite\.json/, A.stories]);
+  const P = await newPage(browser, base, { ...opts, routes });
+  if (opts.archiveDown) await P.page.route(/play\.btownbrief\.com\/archive\/data\//, (r) => r.fulfill({ status: 503, body: '' }));
+  await P.page.route(/embeds\.beehiiv\.com/, (r) => r.fulfill({ status: 200, body: '<!doctype html><title>Beehiiv</title><input placeholder="email">', contentType: 'text/html' }));
+  return { ...P, A };
+}
+
+async function thePaper(browser, base) {
+  const read = (f) => readFile(path.join(REPO, f), 'utf8').then(JSON.parse);
+  const latest = await read('data/newsletter.json');
+  const questions = (await read('data/paper/questions.json')).questions;
+  const picks = await read('data/paper/picks.json');
+  const MISSION = 'Know your town. Find your people. Make good things happen.';
+  const asks = await readFile(path.join(APP, 'js/asks.js'), 'utf8');
+  const EMBED = (asks.match(/BEEHIIV_EMBED = '([^']+)'/) || [])[1];
+
+  await group('paper: the seeded data', async () => {
+    check(questions.length === 12 && questions.every((q) => q.key && q.q && q.links.length >= 1 && q.links.length <= 4), 'twelve questions, each with one to four links', questions.map((q) => q.links.length).join(','));
+    check(questions.every((q) => q.links.every((l) => /^https:\/\//.test(l.href) && l.title)), 'every link a full address with a name', '');
+    check(!JSON.stringify(questions).includes('utm_source=hub'), 'links say they came from the Paper, not the hub', '');
+    check(picks.picks.length >= 5 && picks.picks.every((p) => p.title && p.why && /^https:/.test(p.href)), 'Stephen’s picks each carry a reason', picks.picks.length);
+    const ev = await read('data/paper/everything.json');
+    check(ev.shelves.reduce((n, s) => n + s.items.length, 0) >= 80 && ev.start.length === 8, 'the hub’s A to Z (80+) and its Start here (8)', ev.shelves.length);
+    const g = await read('data/paper/gossip-archive.json');
+    const txt = JSON.stringify(g);
+    check(g.weeks.length >= 3 && !/\bu\/[\w-]{2,}/.test(txt) && !/rumou?r/i.test(txt.replace(/"_note"[^\n]*/, '')), 'gossip by week, no usernames, no rumors', g.weeks.length);
+    const demo = await readFile(path.join(APP, 'data/demo/paper.json'), 'utf8');
+    check(!/btownbrief\.com\/p\/|reddit\.com/.test(demo), 'the demo is invented: no real edition or thread links', '');
+  });
+
+  await group('paper: the Front, live, at 390', async () => {
+    /* a reader who has not subscribed (the harness starts everyone subscribed) */
+    const { ctx, page, errors } = await paperPage(browser, base, { asks: true });
+    await page.goto(base + '/paper/');
+    await settle(page);
+    await page.waitForSelector('#panel-front .pp-lead .c-title');
+    const f = await page.evaluate(() => {
+      const p = document.querySelector('#panel-front');
+      const top = (s) => { const n = p.querySelector(s); return n ? Math.round(n.getBoundingClientRect().top) : -1; };
+      const fr = p.querySelector('.pp-mail iframe');
+      return { mission: p.querySelector('.pp-mission')?.textContent, missionTop: top('.pp-mission'), mailTop: top('.pp-mail'), qTop: top('.pp-qs'), leadTop: top('.pp-lead'),
+        frame: fr ? { src: fr.src, sandbox: fr.getAttribute('sandbox') } : null, qs: [...p.querySelectorAll('.pp-qs .chip')].map((c) => c.textContent),
+        lead: p.querySelector('.pp-lead .c-title')?.textContent, leadHref: p.querySelector('.pp-lead .c-title')?.getAttribute('href'),
+        rundown: p.querySelectorAll('.pp-rundown li').length, apps: p.querySelectorAll('.pp-apprail .pp-app').length, appsList: !!p.querySelector('.railmode [data-railmode="paper-apps"]'),
+        picks: p.querySelectorAll('[data-sec="picks"] .pp-row').length, spot: [...p.querySelectorAll('[data-sec="picks"] .eyebrow')].map((e) => e.textContent),
+        pill: [...document.querySelectorAll('#subnav .secpill .chip')].map((c) => c.textContent.trim()), h: innerHeight };
+    });
+    check(f.mission === MISSION, 'the mission line, word for word', f.mission);
+    check(f.missionTop > 0 && f.missionTop < f.mailTop && f.mailTop < f.qTop && f.qTop < f.leadTop && f.leadTop < f.h, 'first screen: mission, email strip, questions, then the lead peeking', JSON.stringify(f));
+    check(f.frame && f.frame.src === EMBED && /allow-forms/.test(f.frame.sandbox) && !/allow-top-navigation/.test(f.frame.sandbox), 'the email strip is the shell’s Beehiiv embed, sandboxed, never a form of ours', JSON.stringify(f.frame));
+    check(JSON.stringify(f.qs) === JSON.stringify(questions.map((q) => q.q)), 'the twelve questions, in the hub’s order', f.qs.length);
+    check(f.lead === latest.title && f.leadHref === latest.url, 'today’s lead is the latest edition', f.lead);
+    check(f.apps === 8 && f.appsList, 'the eight apps as a strip that can be a list', f.apps);
+    check(f.picks === 4 && f.spot.includes('Spotlight'), 'three of Stephen’s picks and the spotlight', JSON.stringify(f.spot));
+    check(JSON.stringify(f.pill) === JSON.stringify(['Today', 'Questions', 'The edition', 'Picks']), 'its top tabs, in page order', JSON.stringify(f.pill));
+    /* a question opens its answer as a sheet of up to four links */
+    await page.click('#panel-front .pp-qs .chip >> nth=1');
+    await page.waitForSelector('#sheet:not([hidden]) .sheet-row');
+    const sh = await page.evaluate(() => ({ title: document.querySelector('#sheet h2').textContent, rows: [...document.querySelectorAll('#sheet .sheet-row a')].map((a) => [a.firstChild.textContent, a.getAttribute('href'), a.target]) }));
+    const q1 = questions[1];
+    check(sh.title === q1.q && JSON.stringify(sh.rows.map((r) => r[1])) === JSON.stringify(q1.links.map((l) => l.href)) && sh.rows.every((r) => r[2] === '_blank'), 'a question opens its links as a sheet', JSON.stringify(sh));
+    check((await page.evaluate(() => window.__gc)).includes('paper-question-' + q1.key), 'and GoatCounter counts the question', '');
+    await page.keyboard.press('Escape');
+    /* a deep link to a question opens it; to a section lands there */
+    await page.evaluate((k) => { location.hash = 'front/' + k; }, questions[4].key);
+    await page.waitForSelector('#sheet:not([hidden]) .sheet-row');
+    check(await page.evaluate(() => document.querySelector('#sheet h2').textContent) === questions[4].q, '#front/<question> opens that question', '');
+    await page.keyboard.press('Escape');
+    /* I'm already subscribed: the strip says thanks and stays thanked */
+    await page.click('#panel-front .pp-mail .btn.ghost');
+    check(await page.evaluate(() => !!document.querySelector('#panel-front .pp-mail.in') && !document.querySelector('#panel-front .pp-mail iframe')), '“I’m already subscribed” turns the strip into a thank-you', '');
+    await page.screenshot({ path: path.join(SHOTS, 'paper-front-390-live.png') });
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+    /* a reader who already gets it is thanked, and no frame loads */
+    const sub = await paperPage(browser, base);
+    await sub.page.goto(base + '/paper/');
+    await settle(sub.page);
+    check(await sub.page.evaluate(() => !!document.querySelector('#panel-front .pp-mail.in') && !document.querySelector('iframe')), 'a subscriber sees a thank-you, and Beehiiv never loads', '');
+    await sub.ctx.close();
+  });
+
+  await group('paper: Editions, live', async () => {
+    const { ctx, page, errors, A } = await paperPage(browser, base);
+    await page.goto(base + '/paper/#editions');
+    await settle(page);
+    await page.waitForFunction(() => /headlines to search/.test(document.querySelector('#panel-editions [data-sec="search"]')?.textContent || ''));
+    const newest = A.eds[A.eds.length - 1];
+    const e = await page.evaluate(() => {
+      const p = document.querySelector('#panel-editions');
+      return { secs: [...p.querySelectorAll('.pp-sec')].map((s) => s.dataset.sec), big: p.querySelector('[data-sec="latest"] .pp-big h3 a')?.getAttribute('href'),
+        rows: p.querySelectorAll('[data-sec="latest"] .pp-row').length, days: p.querySelectorAll('.pp-day').length, months: p.querySelectorAll('.pp-month').length,
+        topics: [...p.querySelectorAll('[data-sec="interest"] .chip')].map((c) => c.textContent), food: p.querySelector('[data-sec="interest"] .pp-count')?.textContent,
+        lastyear: p.querySelectorAll('[data-sec="lastyear"] .pp-big').length, random: !!p.querySelector('[data-sec="random"] .pp-big'),
+        ask: p.querySelector('[data-sec="ask"] a.btn')?.getAttribute('href') };
+    });
+    check(JSON.stringify(e.secs) === JSON.stringify(['latest', 'bydate', 'interest', 'search', 'lastyear', 'random', 'ask']), 'the seven top tabs, in order', JSON.stringify(e.secs));
+    check(e.big === 'https://play.btownbrief.com/archive/e/' + newest.slug + '/' && e.rows === 6, 'Latest: the newest edition, on the archive’s page, then six more', e.big);
+    check(e.days === A.eds.length && e.months >= 13, 'By date: every edition, a month to a line', e.days + ' of ' + A.eds.length);
+    check(JSON.stringify(e.topics) === JSON.stringify(['Food', 'Civic', 'Music', 'Sports', 'Openings']) && /food stories/.test(e.food), 'By interest: five topics, food first', e.food);
+    check(e.lastyear >= 1 && e.random && e.ask === 'https://play.btownbrief.com/archive/#ask-form', 'this week last year, a random one, and Ask', JSON.stringify(e));
+    await page.click('#panel-editions [data-sec="interest"] .chip[data-chip="sports"]');
+    const sports = await page.evaluate(() => [...document.querySelectorAll('#panel-editions [data-sec="interest"] .pp-t')].map((t) => t.textContent));
+    check(sports.length > 0 && sports.every((t) => /hockey/i.test(t)), 'Sports shows only sports stories', sports.slice(0, 2).join(' | '));
+    await page.fill('#panel-editions [data-sec="search"] input', 'pizza place');
+    await page.waitForFunction(() => /headline/.test(document.querySelector('#panel-editions [data-sec="search"] .pp-count').textContent) && document.querySelector('#panel-editions [data-sec="search"] .pp-row'));
+    const hits = await page.evaluate(() => [...document.querySelectorAll('#panel-editions [data-sec="search"] .pp-t')].map((t) => t.textContent));
+    check(hits.length === 20 && hits.every((t) => /pizza place/i.test(t)), 'search finds headlines in the browser, newest 20', hits.length);
+    const r0 = await page.evaluate(() => document.querySelector('#panel-editions [data-sec="random"] .pp-big h3').textContent);
+    let changed = false;
+    for (let i = 0; i < 4 && !changed; i++) { await page.click('#panel-editions [data-sec="random"] > .pp-more button'); changed = r0 !== await page.evaluate(() => document.querySelector('#panel-editions [data-sec="random"] .pp-big h3').textContent); }
+    check(changed, 'Another one picks another edition', r0);
+    /* #editions/<topic> opens that timeline */
+    await page.evaluate(() => { location.hash = 'editions/music'; });
+    await page.waitForFunction(() => document.querySelector('#panel-editions [data-sec="interest"] .chip.on')?.dataset.chip === 'music');
+    check(true, '#editions/music opens the music timeline', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+    /* the archive down: the guide's own last eight, said plainly */
+    const down = await paperPage(browser, base, { archiveDown: true });
+    await down.page.goto(base + '/paper/#editions');
+    await settle(down.page);
+    await down.page.waitForFunction(() => document.querySelector('#panel-editions .pp-big'));
+    const d = await down.page.evaluate(() => ({ note: document.querySelector('#panel-editions [data-sec="latest"] .pp-note')?.textContent || '', rows: document.querySelectorAll('#panel-editions [data-sec="latest"] .pp-row').length }));
+    check(/didn’t answer/.test(d.note) && d.rows >= 1, 'with the archive down, the last few editions and a plain note', JSON.stringify(d));
+    check(!down.errors.filter((x) => !/Failed to load resource/.test(x)).length, 'and nothing breaks', down.errors.join(' | '));
+    await down.ctx.close();
+  });
+
+  await group('paper: Picks, Gossip, Everything and Story, live', async () => {
+    const { ctx, page, errors } = await paperPage(browser, base);
+    await page.goto(base + '/paper/#picks');
+    await settle(page);
+    const pk = await page.evaluate(() => ({ mine: document.querySelectorAll('#panel-picks [data-sec="mine"] .pp-row').length, best: document.querySelectorAll('#panel-picks [data-sec="bestof"] .pp-row').length,
+      month: document.querySelectorAll('#panel-picks [data-sec="month"] .pp-row').length, spot: document.querySelectorAll('#panel-picks [data-sec="spotlight"] .pp-row').length,
+      why: document.querySelector('#panel-picks [data-sec="mine"] .pp-s')?.textContent }));
+    check(pk.mine === picks.picks.length && pk.why === picks.picks[0].why, 'Stephen’s picks, each with its reason', JSON.stringify(pk));
+    check(pk.best === picks.bestof.length && pk.month > 0 && pk.spot === 4, 'Best of, this month’s stories, and the spotlight with three to come', JSON.stringify(pk));
+
+    await goTab(page, 'gossip');
+    const gs = await page.evaluate(() => {
+      const p = document.querySelector('#panel-gossip');
+      return { secs: [...p.querySelectorAll('.pp-sec')].map((s) => s.dataset.sec), text: p.innerText, eyebrows: [...p.querySelectorAll('.eyebrow')].map((e) => e.textContent),
+        threads: p.querySelectorAll('[data-sec="threads"] .pp-row').length, cats: p.querySelectorAll('[data-sec="threads"] .chip').length, weeks: p.querySelectorAll('[data-sec="archive"] .tdiv').length,
+        pill: [...document.querySelectorAll('#subnav .secpill .chip')].map((c) => c.dataset.chip) };
+    });
+    check(gs.secs.length === 3 && JSON.stringify(gs.pill) === JSON.stringify(gs.secs), 'three top tabs, the page in the pill’s order', JSON.stringify(gs));
+    check(!/\bu\/[\w-]{2,}/.test(gs.text) && !gs.eyebrows.some((e) => /rumou?r/i.test(e)), 'no usernames and no rumors', gs.eyebrows.join(', '));
+    check(gs.threads >= 5 && gs.cats >= 5 && gs.weeks >= 3, 'the settled questions by kind, and the weeks kept', JSON.stringify([gs.threads, gs.cats, gs.weeks]));
+
+    await goTab(page, 'everything');
+    const ev = await page.evaluate(() => {
+      const p = document.querySelector('#panel-everything');
+      return { apps: p.querySelectorAll('[data-sec="apps"] .pp-app').length, here: p.querySelector('[data-sec="apps"] .pp-app.on')?.dataset.app,
+        games: [...p.querySelectorAll('[data-sec="games"] .pp-t')].map((t) => t.textContent), letters: p.querySelectorAll('[data-sec="az"] .pp-tl-year').length,
+        start: p.querySelectorAll('[data-sec="start"] .pp-row').length, outHref: p.querySelector('[data-sec="apps"] .pp-app[data-app="out"]')?.getAttribute('href') };
+    });
+    check(ev.apps === 8 && ev.here === 'paper' && ev.outHref === '/out/', 'the eight apps up top, this one marked, each opening its folder', JSON.stringify(ev));
+    check(ev.games.includes('Queen City Chess') && ev.games.includes('Creemee Drop'), 'every game from games.json', ev.games.length);
+    check(ev.letters >= 15 && ev.start === 8, 'A to Z by letter, and Start here', JSON.stringify([ev.letters, ev.start]));
+    await page.fill('#panel-everything .pp-find input', 'chess');
+    await page.waitForFunction(() => /match/.test(document.querySelector('#panel-everything .pp-results .pp-count')?.textContent || ''));
+    const found = await page.evaluate(() => [...document.querySelectorAll('#panel-everything .pp-results .pp-t')].map((t) => t.textContent));
+    check(found.includes('Queen City Chess'), 'the search box finds a game by name', found.join(', '));
+    await page.fill('#panel-everything .pp-find input', 'catamounts');
+    const byKw = await page.waitForFunction(() => [...document.querySelectorAll('#panel-everything .pp-results .pp-t')].some((t) => t.textContent === 'Sports'), null, { timeout: 3000 }).then(() => true, () => false);
+    check(byKw, 'and a page by the hub’s keywords', '');
+
+    await goTab(page, 'story');
+    const st = await page.evaluate(() => {
+      const p = document.querySelector('#panel-story');
+      return { mission: p.querySelector('.pp-mission')?.textContent, creed: p.querySelector('.pp-creed')?.textContent, links: [...p.querySelectorAll('a.btn')].map((a) => a.getAttribute('href')) };
+    });
+    check(st.mission === MISSION && /take part and people to take part with/.test(st.creed), 'Story: the line and the creed', JSON.stringify(st));
+    check(['https://www.btownbrief.com/about-me', 'https://merch.btownbrief.com/', 'https://www.btownbrief.com/upgrade', '#coach/how-i-do-it'].every((h) => st.links.includes(h)), 'About, Merch, Support and How I live', st.links.join(' '));
+    await Promise.all([page.waitForURL((u) => u.pathname === '/body/'), page.click('#panel-story [data-howto]')]);
+    check(new URL(page.url()).hash === '#coach/how-i-do-it', 'How I do it opens in Body', page.url());
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('paper: every sideways row can be a list, nothing escapes its tab', async () => {
+    const { ctx, page, errors } = await paperPage(browser, base);
+    await page.goto(base + '/paper/');
+    await settle(page);
+    for (const t of ['front', 'editions', 'picks', 'gossip', 'everything', 'story']) {
+      if (t !== 'front') await goTab(page, t);
+      await page.waitForTimeout(400);
+      const bad = await page.evaluate(() => {
+        const out = [];
+        document.querySelectorAll('.panel:not([hidden]) *').forEach((n) => {
+          if (!/^(auto|scroll)$/.test(getComputedStyle(n).overflowX) || n.scrollWidth <= n.clientWidth + 4 || n.classList.contains('chips')) return;
+          const wrap = n.closest('.rail-wrap');
+          if (!(wrap && wrap.previousElementSibling && wrap.previousElementSibling.matches('.railmode'))) out.push(n.className);
+        });
+        const unk = [...document.querySelectorAll('.panel:not([hidden]) [data-k]')].filter((n) => !n.querySelector('a[href]') && n.tagName !== 'A').length;
+        return { out, unk };
+      });
+      check(!bad.out.length, t + ': every sideways row is chips or has See as a list', bad.out.join(', '));
+      check(!bad.unk, t + ': every item has a link', bad.unk);
+      await pageRules(page, t, 390);
+    }
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  /* the gallery: every tab in the demo, 390 and 1280, light and dark */
+  for (const combo of COMBOS4) {
+    await group('paper: the demo, ' + combo.viewport.width + ' ' + combo.scheme, async () => {
+      const { ctx, page, errors } = await paperPage(browser, base, combo);
+      const outside = [];
+      page.on('request', (r) => { if (/example\.com|play\.btownbrief\.com|beehiiv/.test(r.url())) outside.push(r.url()); });
+      await page.goto(base + '/paper/?demo=1');
+      await settle(page);
+      await page.evaluate(() => document.fonts.ready);
+      for (const t of ['front', 'editions', 'picks', 'gossip', 'everything', 'story']) {
+        if (t !== 'front') await goTab(page, t);
+        await page.waitForTimeout(t === 'editions' ? 700 : 300);
+        const st = await page.evaluate(() => { const p = document.querySelector('.panel:not([hidden])'); return { secs: p.querySelectorAll('.pp-sec').length, items: p.querySelectorAll('[data-k]').length, demo: !!p.querySelector('.pp-mail-row') }; });
+        check(st.secs >= 3 && (t === 'story' || st.items > 0), t + ': the demo draws its sections', JSON.stringify(st));
+        if (t === 'front') check(st.demo, 'front: the demo draws the strip without loading Beehiiv', '');
+        await page.evaluate(() => document.querySelector('.panel:not([hidden])').scrollTo(0, 0));
+        await page.waitForTimeout(250);
+        await page.screenshot({ path: path.join(SHOTS, 'paper-' + t + '-' + combo.viewport.width + '-' + combo.scheme + '.png') });
+      }
+      check(!outside.length, 'the demo fetches nothing from outside', outside.slice(0, 3).join(' '));
+      check(!errors.length, 'no console errors', errors.join(' | '));
+      await ctx.close();
+    });
+  }
+}
+
 /* ----------------------------------------------------------------- run */
 const t0 = Date.now();
 await mkdir(SHOTS, { recursive: true });
@@ -13296,6 +13557,7 @@ try {
   await run(theChallenge);
   await run(fullPagesAndAsks);
   await run(theApps);
+  await run(thePaper);
 } finally {
   await browser.close();
   proc.kill();
