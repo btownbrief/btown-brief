@@ -13363,31 +13363,54 @@ async function thePlay(browser, base) {
 
   await group('play: City', async () => {
     const { ctx, page, errors } = await newPage(browser, base);
-    await page.addInitScript(() => { if (!localStorage.getItem('allday-missions')) localStorage.setItem('allday-missions', JSON.stringify({ m201: 1761000000, m202: 1761000000 })); });
+    await page.addInitScript(() => { if (!localStorage.getItem('allday-missions')) localStorage.setItem('allday-missions', JSON.stringify({ m201: 1761000000, m202: 1761000000, m1: 1760000000 })); });
     await page.goto(base + '/play/#city');
     await settle(page);
     const P = '#panel-city';
     const ms = JSON.parse(await readFile(path.join(REPO, 'data/missions.json'), 'utf8')).missions;
-    const head = await page.$eval(P + ' [data-sec="missions"] .sec p', (p) => p.textContent);
-    check(head === '2 done of ' + ms.length, 'the done count is What Now’s marks, read', head);
-    const rows = await page.$$eval(P + ' [data-k^="mission:"]', (r) => r.map((x) => ({ k: x.dataset.k, href: x.querySelector('a').getAttribute('href') })));
-    check(rows.length === 5 && rows.every((r) => r.href === '#whatnow/' + r.k.slice(8)) && !rows.some((r) => r.k === 'mission:m1' || r.k === 'mission:m2'), 'five missions not yet done, each a link to What Now', JSON.stringify(rows));
-    check(JSON.parse(await page.evaluate(() => localStorage.getItem('allday-missions'))).m201 === 1761000000, 'City never writes the marks', '');
+    const head = () => page.$eval(P + ' [data-sec="missions"] .sec p', (p) => p.textContent);
+    check(await head() === '2 of ' + ms.length + ' done', 'the done count is What Now’s marks', await head());
+    const rows = await page.$$eval(P + ' [data-k^="mission:"]', (r) => r.map((x) => ({ k: x.dataset.k, href: x.querySelector('a').getAttribute('href'), mark: x.querySelector('[data-done]').dataset.done })));
+    check(rows.length === 5 && rows.every((r) => r.href === '#whatnow/' + r.k.slice(8)), 'five missions for today, each a link to What Now with a Done toggle', JSON.stringify(rows));
+    /* a check here is a mark in What Now's own map, and the old ones stay */
+    await page.click(P + ' [data-k="' + rows[0].k + '"] [data-done]');
+    let marks = JSON.parse(await page.evaluate(() => localStorage.getItem('allday-missions')));
+    check(marks[rows[0].mark] > 1761000000 && marks.m201 === 1761000000 && marks.m1 === 1760000000, 'marking done here writes What Now’s map, keeping every other mark', JSON.stringify(marks));
+    check(await head() === '3 of ' + ms.length + ' done' && await page.$eval(P + ' [data-k="' + rows[0].k + '"]', (r) => r.classList.contains('done')), 'the count and the row follow', await head());
+    check(JSON.stringify(await page.$$eval(P + ' [data-k^="mission:"]', (r) => r.map((x) => x.dataset.k))) === JSON.stringify(rows.map((r) => r.k)), 'and today’s five stay put', '');
+    await page.click(P + ' [data-k="' + rows[0].k + '"] [data-done]');
+    marks = JSON.parse(await page.evaluate(() => localStorage.getItem('allday-missions')));
+    check(!(rows[0].mark in marks) && await head() === '2 of ' + ms.length + ' done', 'a second tap takes it off', JSON.stringify(marks));
     const st = await page.evaluate((p) => {
       const r = (k) => document.querySelector(p + ' [data-k="city:' + k + '"]');
       const btn = (k) => { const b = r(k) && r(k).querySelector('.pillbtn'); return b && { tag: b.tagName, dis: !!b.disabled, text: b.textContent.trim(), href: b.getAttribute('href') }; };
       return { streets: btn('every-street'), streetsWords: r('every-street').innerText, lit: btn('keep-burlington-lit'), dibs: btn('dibs'),
-        ph: ['photo-quests', 'crews', 'season'].map((k) => r(k) && r(k).dataset.placeholder === '1' && btn(k).dis), hunt: btn('photo-quests:now') };
+        photos: r('photo-quests') && r('photo-quests').dataset.placeholder === '1' && btn('photo-quests').dis, hunt: btn('photo-quests:now'),
+        crewChips: document.querySelectorAll(p + ' .pl-crews [data-chip]').length, season: document.querySelector(p + ' [data-sec="season"]')?.dataset.season || '',
+        seasonHead: document.querySelector(p + ' [data-sec="season"] .sec')?.innerText || '', seasonRows: document.querySelectorAll(p + ' [data-k^="season:"]').length };
     }, P);
     check(st.streets.dis && st.streets.text === 'Coming soon' && /Runs only locally today/.test(st.streetsWords), 'Streets: Every Street says plainly it runs only locally today, with no link', JSON.stringify(st.streets));
     check(st.lit.href === 'https://play.btownbrief.com/keep-burlington-lit/' && st.dibs.href === 'https://play.btownbrief.com/dibs/', 'Lit and Dibs link to the arcade', JSON.stringify([st.lit, st.dibs]));
-    check(st.ph.every(Boolean), 'Photo quests, Crews and Season are placeholders that say Coming soon', JSON.stringify(st.ph));
-    check(st.hunt && st.hunt.href === 'https://play.btownbrief.com/btown-hunt/', 'and Photo quests points at Btown Hunt, live now', JSON.stringify(st.hunt));
+    check(st.photos && st.hunt && st.hunt.href === 'https://play.btownbrief.com/btown-hunt/', 'Photo quests is a placeholder, with Btown Hunt live now', JSON.stringify(st.hunt));
+    const play = JSON.parse(await readFile(path.join(REPO, 'data/play/play.json'), 'utf8'));
+    const t = etKey(Date.now());
+    const sn = play.city.seasons.find((x) => x.starts <= t && t <= x.ends);
+    check(sn ? st.season === sn.key && st.seasonRows === sn.marks.length && new RegExp('^' + sn.name).test(st.seasonHead) : st.season === '', 'Season: this season’s collection, with its count and end date', JSON.stringify(st));
+    check(st.crewChips === 12, 'no crew yet: the twelve neighborhoods to pick from', st.crewChips);
+    await page.click(P + ' .pl-crews [data-chip="south-end"]');
+    check(JSON.parse(await page.evaluate(() => localStorage.getItem('play-crew'))) === 'south-end' && await page.$eval(P + ' [data-crew]', (r) => r.dataset.crew + ' ' + r.querySelector('.t').textContent) === 'south-end South End',
+      'a crew is picked once and kept on the phone', '');
     await Promise.all([page.waitForURL((u) => u.pathname === '/out/'), page.click(P + ' [data-k="' + rows[0].k + '"] a')]);
     await settle(page);
-    check(new URL(page.url()).hash === '#whatnow/' + rows[0].k.slice(8), 'a mission opens What Now in Out', page.url());
+    check(new URL(page.url()).hash === '#whatnow/' + rows[0].k.slice(8), 'a mission opens in What Now, in Out', page.url());
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
+    const d = await newPage(browser, base);
+    await d.page.goto(base + '/play/?demo=1#city');
+    await settle(d.page);
+    await d.page.click('#panel-city [data-k^="mission:"] [data-done]');
+    check(await d.page.evaluate(() => localStorage.getItem('allday-missions')) === null && await d.page.$eval('#panel-city [data-crew]', (r) => r.dataset.crew) === 'old-north-end', 'demo: a crew, done missions, and nothing kept', '');
+    await d.ctx.close();
   });
 
   await group('play: Draw', async () => {

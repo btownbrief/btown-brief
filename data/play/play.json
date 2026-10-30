@@ -82,14 +82,50 @@
       "key": "crews",
       "name": "Crews",
       "emoji": "🚩",
-      "line": "Neighborhood crews and their boards."
+      "line": "Rep your neighborhood."
     },
     "season": {
       "key": "season",
       "name": "Season",
       "emoji": "🍂",
-      "line": "Seasonal collections and sponsored quests."
-    }
+      "line": "A collection each season."
+    },
+    "seasons": [
+      {
+        "key": "fall-2026",
+        "name": "Fall 2026",
+        "starts": "2026-09-22",
+        "ends": "2026-12-20",
+        "emoji": "🍂",
+        "marks": [
+          "m234",
+          "m264",
+          "m266",
+          "m217",
+          "m212",
+          "m270",
+          "m287",
+          "m289"
+        ]
+      },
+      {
+        "key": "winter-2027",
+        "name": "Winter 2027",
+        "starts": "2026-12-21",
+        "ends": "2027-03-19",
+        "emoji": "❄️",
+        "marks": [
+          "m232",
+          "m280",
+          "m281",
+          "m282",
+          "m283",
+          "m284",
+          "m285",
+          "m296"
+        ]
+      }
+    ]
   },
   "draw": {
     "slug": "btown-draw",
