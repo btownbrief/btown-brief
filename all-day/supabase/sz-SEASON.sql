@@ -61,18 +61,25 @@ drop trigger if exists sz_goals_lock on public.sz_goals;
 create trigger sz_goals_lock before update on public.sz_goals
   for each row execute function public.sz_goals_lock();
 
+-- A goal habit can't be made, changed, moved or archived once its goal is
+-- locked; and no habit can become one then.
 create or replace function public.sz_goal_habit_lock() returns trigger
 language plpgsql as $$
 begin
-  if auth.uid() is null or not old.is_goal or old.goal_id is null then return new; end if;
-  if public.sz_goal_locked(old.goal_id)
-     and (new.text, new.frequency, new.n, new.is_goal, new.goal_id, new.archived_at) is distinct from (old.text, old.frequency, old.n, old.is_goal, old.goal_id, old.archived_at) then
+  if auth.uid() is null then return new; end if;
+  if tg_op = 'INSERT' then
+    if new.goal_id is not null and public.sz_goal_locked(new.goal_id) then raise exception 'locked'; end if;
+    return new;
+  end if;
+  if (old.is_goal and old.goal_id is not null and public.sz_goal_locked(old.goal_id)
+      and (new.text, new.frequency, new.n, new.is_goal, new.goal_id, new.archived_at) is distinct from (old.text, old.frequency, old.n, old.is_goal, old.goal_id, old.archived_at))
+     or (new.goal_id is not null and new.goal_id is distinct from old.goal_id and public.sz_goal_locked(new.goal_id)) then
     raise exception 'locked';
   end if;
   return new;
 end $$;
 drop trigger if exists sz_goal_habit_lock on public.sz_habits;
-create trigger sz_goal_habit_lock before update on public.sz_habits
+create trigger sz_goal_habit_lock before insert or update on public.sz_habits
   for each row execute function public.sz_goal_habit_lock();
 
 -- --------------------------------------------------------------- helpers
@@ -91,9 +98,11 @@ language sql stable as $$
 $$;
 
 -- The week of the season, 1 to 8, from kickoff; 0 before it, 9 after.
+-- Counted in Burlington calendar days, so daylight saving never moves it.
 create or replace function public.sz_week(p_kickoff timestamptz) returns int
 language sql stable as $$
-  select case when now() < p_kickoff then 0 else least(9, floor(extract(epoch from now() - p_kickoff) / 604800)::int + 1) end
+  select case when now() < p_kickoff then 0
+              else least(9, (public.sz_today() - (p_kickoff at time zone 'America/New_York')::date) / 7 + 1) end
 $$;
 
 create or replace function public.sz_season_json(s public.sz_seasons) returns jsonb
@@ -156,7 +165,7 @@ begin
   if not exists (select 1 from public.sz_members where user_id = u) then raise exception 'no_member'; end if;
   s := public.sz_season_now(p_city);
   if s.id is null or s.status = 'done' then raise exception 'no_season'; end if;
-  if s.kickoff_at <= now() and not exists (select 1 from public.sz_goals where user_id = u and season_id = s.id) then raise exception 'locked'; end if;
+  if s.kickoff_at <= now() then raise exception 'locked'; end if;
   if p_category is not null and p_category not in ('fitness', 'creative', 'business', 'life_admin', 'learn') then raise exception 'bad_category'; end if;
   insert into public.sz_goals (user_id, season_id) values (u, s.id) on conflict (user_id, season_id) do nothing;
   select id into v_goal from public.sz_goals where user_id = u and season_id = s.id;
@@ -178,13 +187,11 @@ begin
     end if;
   end if;
   -- milestones: three slots
-  if s.kickoff_at > now() then
-    for i in 1..3 loop
-      v_m := left(public.sz_clean(coalesce(p_milestones ->> (i - 1), '')), 80);
-      insert into public.sz_milestones (goal_id, text, position) values (v_goal, v_m, i)
-      on conflict (goal_id, position) do update set text = excluded.text;
-    end loop;
-  end if;
+  for i in 1..3 loop
+    v_m := left(public.sz_clean(coalesce(p_milestones ->> (i - 1), '')), 80);
+    insert into public.sz_milestones (goal_id, text, position) values (v_goal, v_m, i)
+    on conflict (goal_id, position) do update set text = excluded.text;
+  end loop;
   return public.sz_goal_json(u, s.id);
 end $$;
 
@@ -230,6 +237,11 @@ begin
   update public.sz_goals set finished_at = case when p_done then coalesce(finished_at, now()) end
    where user_id = u and season_id = s.id;
   if not found then raise exception 'not_found'; end if;
+  -- not finished after all: the card comes off the Wall
+  if not p_done then
+    update public.sz_wall_cards set published_at = null
+     where goal_id = (select id from public.sz_goals where user_id = u and season_id = s.id);
+  end if;
   return public.sz_goal_json(u, s.id);
 end $$;
 
@@ -237,7 +249,7 @@ end $$;
 -- name, their goal habit's frequency and its taps since kickoff, how many
 -- reviews they sent and events they came to. Streaks and the show-up rate
 -- are worked out from these in the app, never stored. Your row says so,
--- and so do your podmates'. Signed-in only. No goal words, no milestones,
+-- and so do your podmates'. Only for a member of the season, from kickoff. No goal words, no milestones,
 -- no personal habits, no phone, ever.
 create or replace function public.sz_board(p_city text default 'burlington') returns jsonb
 language plpgsql stable security definer set search_path = public as $$
@@ -246,6 +258,8 @@ begin
   if u is null then raise exception 'not_signed_in'; end if;
   s := public.sz_season_now(p_city);
   if s.id is null then return null; end if;
+  -- members of this season only, and only once it has started
+  if s.kickoff_at > now() or not exists (select 1 from public.sz_goals where user_id = u and season_id = s.id) then return null; end if;
   select pod_id into v_pod from public.sz_members where user_id = u;
   return jsonb_build_object(
     'season', s.id,
@@ -281,7 +295,7 @@ language sql stable security definer set search_path = public as $$
       join public.sz_goals g on g.id = c.goal_id
       join public.sz_seasons s on s.id = g.season_id
       join public.sz_members m on m.user_id = g.user_id
-     where c.published_at is not null
+     where c.published_at is not null and g.finished_at is not null
      order by c.published_at desc
      limit least(greatest(coalesce(p_limit, 60), 1), 200)) x
 $$;

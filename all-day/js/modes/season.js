@@ -37,6 +37,7 @@ const CATS = [['fitness', 'Fitness'], ['creative', 'Creative'], ['business', 'Wo
 const FREQ = [['daily', 'Daily'], ['weekdays', 'Weekdays'], ['n_per_week', 'N a week']];
 const EVENT_WORD = { kickoff: 'Kickoff', midway: 'Midway', party: 'The party' };
 const ERR = {
+  not_today: 'Only today can be marked.',
   locked: 'Your goal is locked now.', no_member: 'Add your name first.', no_season: 'No season to join yet.', not_found: 'That’s gone.',
   no_review_week: 'Reviews open at kickoff.', not_finished: 'Finish your goal first.', not_started: 'The season hasn’t started.',
   not_signed_in: 'Sign in first.', off: 'The season isn’t open yet.', offline: 'You’re offline. Try again.',
@@ -130,7 +131,10 @@ function fake() {
       { id: 'w3', name: 'Priya', goal: 'Launch my pottery shop', line1: 'One hour at the wheel a day', line2: '60 pieces', line3: 'Sold out the first weekend', season: 'Season 0', published_at: new Date(now - 33 * D).toISOString() },
     ],
   };
-  const week = () => Math.min(9, Math.floor((Date.now() - Date.parse(db.season.kickoff_at)) / (7 * D)) + 1);
+  const started = () => Date.parse(db.season.kickoff_at) <= Date.now();
+  const week = () => (started() ? Math.min(9, Math.floor((Date.parse(dayKey(Date.now())) - Date.parse(dayKey(Date.parse(db.season.kickoff_at)))) / (7 * D)) + 1) : 0);
+  const today_ = (d) => { if (d !== dayKey(Date.now())) err('not_today'); };
+  const mine = (id) => { if (!db.goal.habit || id !== db.goal.habit.id) err('not_found'); };
   const goal = () => ({ ...db.goal, locked: Date.parse(db.season.kickoff_at) <= Date.now() });
   const signedIn = () => { const u = app.user(); if (!u) err('not_signed_in'); return u; };
   demoDb = {
@@ -146,19 +150,25 @@ function fake() {
         case 'sz_review_set': {
           signedIn();
           const w = week();
+          if (w < 1 || w > 8) err('no_review_week');
           db.goal.reviews = db.goal.reviews.filter((r) => r.week !== w).concat([{ week: w, said: a.p_said, did: a.p_did, next: a.p_next }]).sort((x, y) => x.week - y.week);
           return goal();
         }
         case 'sz_goal_set': {
           signedIn();
-          if (Date.parse(db.season.kickoff_at) <= Date.now()) err('locked');
+          if (started()) err('locked');
           const ht = String(a.p_habit_text || '').trim();
           Object.assign(db.goal, { text: a.p_text, finish_line: a.p_finish_line, proof: a.p_proof, category: a.p_category,
             habit: ht ? { id: 'demo-gh', text: ht, frequency: a.p_habit_frequency, n: a.p_habit_n, is_goal: true } : db.goal.habit,
             milestones: [0, 1, 2].map((i) => ({ position: i + 1, text: (a.p_milestones || [])[i] || '', hit_at: null })) });
           return goal();
         }
-        case 'sz_goal_finish': signedIn(); db.goal.finished_at = a.p_done ? new Date().toISOString() : null; return goal();
+        case 'sz_goal_finish':
+          signedIn();
+          if (!started()) err('not_started');
+          db.goal.finished_at = a.p_done ? new Date().toISOString() : null;
+          if (!a.p_done && db.goal.card) { db.goal.card.published_at = null; db.wall = db.wall.filter((c) => c.id !== 'w-me'); }
+          return goal();
         case 'sz_wall_card_set': {
           signedIn();
           if (!db.goal.finished_at) err('not_finished');
@@ -170,14 +180,15 @@ function fake() {
         }
         case 'sz_board': {
           signedIn();
+          if (!started()) return null;
           const rows = db.members.map((m) => ({ name: m.name, me: false, pod: m.pod, frequency: m.frequency, n: m.n, taps: m.taps, reviews: m.reviews, attended: m.attended }));
           rows.push({ name: db.me.name, me: true, pod: false, frequency: db.goal.habit.frequency, n: db.goal.habit.n, taps: db.myTaps.slice(), reviews: db.goal.reviews.length, attended: 1 });
           return { season: db.season.id, week: week(), events_held: db.season.events.filter((e) => Date.parse(e.starts_at) <= Date.now()).length, rows,
             pod: { category: 'fitness', meets_on: 'Sundays, 9 am, Oakledge', chat_url: 'https://chat.whatsapp.com/', names: NAMES.slice(0, 3) } };
         }
         case 'sz_wall_list': return db.wall.slice();
-        case 'sz_tap': signedIn(); if (!db.myTaps.includes(a.p_date)) db.myTaps.push(a.p_date); return { tapped: true };
-        case 'sz_untap': signedIn(); db.myTaps = db.myTaps.filter((d) => d !== a.p_date); return { tapped: false };
+        case 'sz_tap': signedIn(); mine(a.p_habit); today_(a.p_date); if (!db.myTaps.includes(a.p_date)) db.myTaps.push(a.p_date); return { tapped: true };
+        case 'sz_untap': signedIn(); mine(a.p_habit); today_(a.p_date); db.myTaps = db.myTaps.filter((d) => d !== a.p_date); return { tapped: false };
         default: return err('off');
       }
     },
@@ -236,7 +247,7 @@ function joinButton(c) {
   if (!app.user()) return button('Sign in to join', 'hb-go', () => app.openSettings());
   if (c.off) return button('Join', 'hb-go', () => app.toast('Sign-up opens soon.'));
   if (c.goal) return button('Your goal', 'hb-go', () => app.go(KEY, 'goal'));
-  return button('Join ' + c.season.name, 'hb-go', () => join(c));
+  return button(esc('Join ' + c.season.name), 'hb-go', () => join(c));
 }
 function join(c) {
   if (!c.me) { app.go(KEY, 'goal'); return; }
@@ -274,9 +285,12 @@ function goalTile(box, c) {
   };
   const num = el('p', 'hb-kicker sz-streak');
   num.setAttribute('aria-live', 'polite');
+  let busy = false;
   done.addEventListener('click', () => {
+    if (busy) return;
     const on = c.myTaps.has(today);
     const go = () => {
+      busy = true;
       if (on) c.myTaps.delete(today); else c.myTaps.add(today);
       paint();
       if (!on) {
@@ -284,7 +298,8 @@ function goalTile(box, c) {
         if (navigator.vibrate) try { navigator.vibrate(10); } catch (e) { /* no buzz */ }
       }
       call(on ? 'sz_untap' : 'sz_tap', { p_habit: h.id, p_date: today }).then((r) => {
-        if (r.ok) return;
+        busy = false;
+        if (r.ok) { syncMe(c); return; }
         if (on) c.myTaps.add(today); else c.myTaps.delete(today);
         paint();
         app.toast(r.message);
@@ -298,6 +313,15 @@ function goalTile(box, c) {
   if (pod.length) t.appendChild(el('p', 'hb-kicker sz-pod', esc(pod.map((r) => r.name + ' ' + r.streak).join(' · '))));
   paint();
   box.appendChild(t);
+}
+
+/* your row on the board follows your taps and reviews */
+function syncMe(c) {
+  const me = c.board && (c.board.rows || []).find((r) => r.me);
+  if (!me) return;
+  me.taps = [...c.myTaps].sort();
+  me.reviews = ((c.goal && c.goal.reviews) || []).length;
+  c.redraw('board');
 }
 
 /* ----------------------------------------------------------------- goal */
@@ -373,15 +397,19 @@ function goalForm(c) {
   if (lock) f.appendChild(lock);
   f.appendChild(saved);
   if (c.season && /^https:\/\//.test(c.season.stripe_link || '') && !g.paid) f.appendChild(ext('Pay to hold your spot', c.season.stripe_link, 'btn'));
-  let timer = 0;
+  let timer = 0, seq = 0, chain = Promise.resolve();
   const paintNudge = () => { nudge.textContent = vague(text.value) ? 'A number or a date makes it easier to finish.' : ''; };
   const save = () => {
     clearTimeout(timer);
     timer = setTimeout(() => {
       hn.hidden = hf.value !== 'n_per_week';
-      call('sz_goal_set', { p_text: text.value, p_finish_line: finish.value, p_proof: proof.value, p_category: cat.value || null,
+      /* one save at a time, in order; only the newest answer is shown */
+      const mine = ++seq;
+      const args = { p_text: text.value, p_finish_line: finish.value, p_proof: proof.value, p_category: cat.value || null,
         p_habit_text: ht.value, p_habit_frequency: hf.value, p_habit_n: hf.value === 'n_per_week' ? Number(hn.value) : null,
-        p_milestones: ms.map((m) => m.value), p_city: CITY }).then((r) => {
+        p_milestones: ms.map((m) => m.value), p_city: CITY };
+      chain = chain.then(() => (mine === seq ? call('sz_goal_set', args) : null)).then((r) => {
+        if (!r || mine !== seq) return;
         saved.classList.toggle('err', !r.ok);
         saved.textContent = r.ok ? 'Saved' : r.message;
         if (r.ok) c.goal = r.data;
@@ -449,7 +477,7 @@ function drawReview(box, c) {
     call('sz_review_set', { p_said: said.value, p_did: did.value, p_next: next.value, p_city: CITY }).then((r) => {
       m.classList.toggle('err', !r.ok);
       m.textContent = r.ok ? 'Sent' : r.message;
-      if (r.ok) { c.goal = r.data; go.textContent = 'Update'; }
+      if (r.ok) { c.goal = r.data; go.textContent = 'Update'; syncMe(c); }
     });
   });
   box.appendChild(f);

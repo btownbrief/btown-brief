@@ -185,7 +185,11 @@ export async function bodyTests(browser, base, h) {
     check(await page.$eval(done, (b) => b.getAttribute('aria-pressed')) === 'false' && (await page.$eval(done, (b) => b.getBoundingClientRect().height)) >= 64, 'the Done button, 64px or more, not yet done', '');
     await page.click(done);
     check(await page.$eval(done, (b) => b.getAttribute('aria-pressed')) === 'true' && /Done today/.test(await text(page, done)), 'one tap: done today', await text(page, done));
-    check(await page.evaluate(() => import('/all-day/js/modes/season.js').then((m) => m._fake().db)).then((d) => true), 'the tap reaches the server', '');
+    await sleep(150);
+    const stored = await page.evaluate(() => import('/all-day/js/modes/season.js').then((m) => m._fake().db.myTaps));
+    const todayKey = await page.evaluate(() => import('/all-day/js/habits-core.js').then((h) => h.dayKey(Date.now())));
+    check(stored.includes(todayKey), 'the tap reaches the server', JSON.stringify(stored.slice(-2)));
+    check(/\(you\)/.test(await text(page, sec('season', 'board') + ' [data-board="me"]')), 'and the board follows', '');
     const s1 = await text(page, '.sz-streak');
     check(s1 !== s0 || /\d/.test(s1), 'the streak shows', s0 + ' → ' + s1);
     await page.click(done);

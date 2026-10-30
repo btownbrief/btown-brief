@@ -28,8 +28,6 @@ const SHELL_URLS = [
   './js/modes/wire.js', './js/modes/wire-demo.js', './js/modes/wire-photos.js', './js/modes/wire-square.js', './js/modes/wire-recaps.js', './js/modes/watch.js', './js/modes/food.js',
   './js/modes/people.js', './js/modes/whatnow.js', './js/modes/vintage.js', './js/modes/habits.js',
   './js/modes/onair.js', './js/modes/onair-sports.js', './js/modes/games.js',
-  /* Body's tabs (wave 1, 2026-10-29) and the kit they share */
-  './js/modes/template.js', './js/modes/train.js', './js/modes/recover.js', './js/modes/fuel.js', './js/modes/coach.js', './js/modes/together.js', './js/modes/body-kit.js', './js/modes/season.js',
   /* The Build: the tab, its API (live, this phone, the demo) and the site */
   './js/modes/build.js', './js/build-core.js', './js/build-local.js', './js/build-fake.js', './js/build-site.js', './js/build-site-shared.js', './js/build-site-art.js', './js/build-site-world.js', './js/build-site-building.js', './js/build-site-crew.js', './js/build-site-director.js',
   './data/build-foreman.json', './data/build-config.json', './data/build-starters.json',
@@ -53,6 +51,8 @@ const SHELL_URLS = [
   './js/challenge.js', './js/challenge-core.js', './css/challenge.css',
   /* the Btown Brief logo in the mast */
   './assets/brand/btown-brief-logo.png',
+  /* Body (wave 1) */
+  './js/modes/template.js', './js/modes/season.js', './js/modes/train.js', './js/modes/recover.js', './js/modes/fuel.js', './js/modes/coach.js', './js/modes/together.js', './js/modes/body-kit.js',
 ];
 
 self.addEventListener('install', (e) => {
