@@ -1,30 +1,30 @@
 {
- "generated": "2026-10-29T20:21:30-04:00",
+ "generated": "2026-10-30T12:11:43-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
    "count": 8,
-   "seconds": 6.1
+   "seconds": 6.0
   },
   "breweries": {
    "label": "Breweries & Taprooms",
-   "count": 77,
-   "seconds": 2.1
+   "count": 80,
+   "seconds": 7.1
   },
   "brownell": {
    "label": "Brownell Library",
    "count": 91,
-   "seconds": 3.8
+   "seconds": 6.4
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
-   "count": 184,
-   "seconds": 3.9
+   "count": 179,
+   "seconds": 3.2
   },
   "churchst": {
    "label": "Church Street Marketplace",
    "count": 67,
-   "seconds": 2.0
+   "seconds": 1.6
   },
   "echo": {
    "label": "ECHO Leahy Center",
@@ -34,7 +34,7 @@
   "eventbrite": {
    "label": "Eventbrite",
    "count": 0,
-   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-10-29&end_date=2026-12-28&page=1 (HTTP Error 405: Not Allowed)"
+   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-10-30&end_date=2026-12-29&page=1 (HTTP Error 405: Not Allowed)"
   },
   "facebook": {
    "label": "Facebook (manual drops)",
@@ -44,22 +44,22 @@
   "farmersmarket": {
    "label": "Burlington Farmers Market",
    "count": 1,
-   "seconds": 0.5
+   "seconds": 0.2
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
-   "count": 203,
-   "seconds": 70.3
+   "count": 204,
+   "seconds": 65.7
   },
   "flynn": {
    "label": "The Flynn",
    "count": 12,
-   "seconds": 0.5
+   "seconds": 0.3
   },
   "generator": {
    "label": "Generator Makerspace",
-   "count": 9,
-   "seconds": 31.6
+   "count": 13,
+   "seconds": 33.7
   },
   "greenfc": {
    "label": "Vermont Green FC",
@@ -68,8 +68,8 @@
   },
   "helloburlington": {
    "label": "Hello Burlington",
-   "count": 600,
-   "seconds": 31.4
+   "count": 597,
+   "seconds": 29.4
   },
   "higherground": {
    "label": "Higher Ground",
@@ -79,27 +79,27 @@
   "instagram": {
    "label": "Instagram (Scrape Creators)",
    "count": 2,
-   "seconds": 49.3
+   "seconds": 55.0
   },
   "loveburlington": {
    "label": "Love Burlington",
-   "count": 386,
-   "seconds": 74.7
+   "count": 401,
+   "seconds": 73.4
   },
   "meetup": {
    "label": "Meetup",
    "count": 51,
-   "seconds": 96.6
+   "seconds": 98.2
   },
   "monkeyhouse": {
    "label": "The Monkey House",
    "count": 25,
-   "seconds": 0.4
+   "seconds": 1.7
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
-   "count": 73,
-   "seconds": 14.9
+   "count": 74,
+   "seconds": 15.3
   },
   "radiobean": {
    "label": "Radio Bean",
@@ -108,18 +108,18 @@
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
-   "count": 77,
-   "seconds": 5.4
+   "count": 71,
+   "seconds": 6.2
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
-   "count": 18,
-   "seconds": 20.8
+   "count": 17,
+   "seconds": 19.7
   },
   "sevendays": {
    "label": "Seven Days",
-   "count": 2919,
-   "seconds": 3.8
+   "count": 2872,
+   "seconds": 22.2
   },
   "shelburnemuseum": {
    "label": "Shelburne Museum",
@@ -128,109 +128,31 @@
   },
   "uvm": {
    "label": "UVM & Colleges",
-   "count": 457,
-   "seconds": 23.3
+   "count": 437,
+   "seconds": 32.9
   },
   "uvmbored": {
    "label": "UVM Bored",
-   "count": 281,
+   "count": 268,
    "seconds": 0.3
   },
   "vcc": {
    "label": "Vermont Comedy Club",
    "count": 48,
-   "seconds": 64.4
+   "seconds": 60.3
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
    "count": 45,
-   "seconds": 0.5
+   "seconds": 0.3
   }
  },
- "gathered": 5634,
- "afterDedup": 2582,
- "duplicatesMerged": 3052,
- "final": 2637,
- "firecrawlCalls": 1,
+ "gathered": 5563,
+ "afterDedup": 2527,
+ "duplicatesMerged": 3036,
+ "final": 2592,
+ "firecrawlCalls": 6,
  "mergeLog": [
-  {
-   "kept": {
-    "title": "Let's Talk at WAGE",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-12-01"
-  },
-  {
-   "kept": {
-    "title": "UPB Art Attack",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-12-01"
-  },
-  {
-   "kept": {
-    "title": "802sDay",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-12-01"
-  },
-  {
-   "kept": {
-    "title": "Open Studio",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington",
-    "sevendays"
-   ],
-   "date": "2026-12-01"
-  },
-  {
-   "kept": {
-    "title": "'Very Eric Carle' Exhibit",
-    "source": "sevendays"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "sevendays"
-   ],
-   "date": "2026-12-01"
-  },
-  {
-   "kept": {
-    "title": "Standup Open Mic",
-    "source": "vcc"
-   },
-   "merged_sources": [
-    "sevendays",
-    "vcc"
-   ],
-   "date": "2026-12-02"
-  },
-  {
-   "kept": {
-    "title": "Wine Down Wednesday",
-    "source": "churchst"
-   },
-   "merged_sources": [
-    "churchst",
-    "loveburlington"
-   ],
-   "date": "2026-12-02"
-  },
   {
    "kept": {
     "title": "TRIVIA NIGHT",
@@ -2401,50 +2323,101 @@
     "sevendays"
    ],
    "date": "2026-12-28"
+  },
+  {
+   "kept": {
+    "title": "Sing-Along with Linda Bassick",
+    "source": "fletcherfree"
+   },
+   "merged_sources": [
+    "fletcherfree",
+    "loveburlington",
+    "sevendays"
+   ],
+   "date": "2026-12-29"
+  },
+  {
+   "kept": {
+    "title": "Spanish Conversation",
+    "source": "fletcherfree"
+   },
+   "merged_sources": [
+    "fletcherfree",
+    "loveburlington",
+    "sevendays"
+   ],
+   "date": "2026-12-29"
+  },
+  {
+   "kept": {
+    "title": "Crafters Drop-In",
+    "source": "fletcherfree"
+   },
+   "merged_sources": [
+    "fletcherfree",
+    "loveburlington"
+   ],
+   "date": "2026-12-29"
+  },
+  {
+   "kept": {
+    "title": "Super Smash Tuesdays",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "churchst",
+    "loveburlington"
+   ],
+   "date": "2026-12-29"
+  },
+  {
+   "kept": {
+    "title": "802sDay",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-12-29"
+  },
+  {
+   "kept": {
+    "title": "'Very Eric Carle' Exhibit",
+    "source": "sevendays"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "sevendays"
+   ],
+   "date": "2026-12-29"
+  },
+  {
+   "kept": {
+    "title": "EZ Breezy Bike Rides",
+    "source": "sevendays"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "sevendays"
+   ],
+   "date": "2026-12-29"
   }
  ],
  "changes": [
   {
-   "id": "facf1687421d",
-   "title": "Retro Study Hall!",
-   "date": "2026-10-29",
-   "change": "missing",
-   "lastSeen": "2026-10-27T19:59:30-04:00"
-  },
-  {
-   "id": "463c072759bf",
-   "title": "Spotlight 802: Julia Kern",
-   "date": "2026-10-29",
-   "change": "missing",
-   "lastSeen": "2026-10-28T20:24:09-04:00"
-  },
-  {
-   "id": "c63aebc028b5",
-   "title": "Improv Class Performances!",
-   "date": "2026-10-29",
-   "change": "missing",
-   "lastSeen": "2026-10-29T12:24:04-04:00"
-  },
-  {
-   "id": "9c266bbfb779",
-   "title": "Trystan Bates",
-   "date": "2026-10-29",
-   "change": "missing",
-   "lastSeen": "2026-10-28T20:24:09-04:00"
-  },
-  {
-   "id": "abc473479d07",
+   "id": "966b15ad1c2f",
    "title": "Kathleen Schneider",
-   "date": "2026-10-29",
-   "change": "missing",
-   "lastSeen": "2026-10-28T20:24:09-04:00"
-  },
-  {
-   "id": "0bbf83e037a3",
-   "title": "Peter Harrigan's Barbies",
    "date": "2026-10-30",
    "change": "missing",
-   "lastSeen": "2026-10-28T20:24:09-04:00"
+   "lastSeen": "2026-10-29T20:21:30-04:00"
+  },
+  {
+   "id": "92acff3f3ecd",
+   "title": "Trystan Bates",
+   "date": "2026-10-30",
+   "change": "missing",
+   "lastSeen": "2026-10-29T20:21:30-04:00"
   },
   {
    "id": "d5cbac38854a",
@@ -2471,15 +2444,20 @@
    "id": "c79293771878",
    "title": "Mindfulness Meditation with The Writing Center featuring FirstGen@UVM",
    "date": "2026-11-03",
+   "change": "dropped"
+  },
+  {
+   "id": "5ff32f3a3825",
+   "title": "MATH Help Sessions",
+   "date": "2026-11-03",
    "change": "missing",
-   "lastSeen": "2026-10-27T11:31:29-04:00"
+   "lastSeen": "2026-10-29T20:21:30-04:00"
   },
   {
    "id": "021bd5164e9f",
    "title": "Rainbow Loom with SGA",
    "date": "2026-11-03",
-   "change": "missing",
-   "lastSeen": "2026-10-27T11:31:29-04:00"
+   "change": "dropped"
   },
   {
    "id": "aff1f567ee1d",
@@ -2492,34 +2470,26 @@
    "id": "4de0cd4a510d",
    "title": "Button Making Social with Prism",
    "date": "2026-11-04",
-   "change": "missing",
-   "lastSeen": "2026-10-27T11:31:29-04:00"
+   "change": "dropped"
   },
   {
-   "id": "0e4ad4617d0c",
-   "title": "KSC Library Night",
+   "id": "b850d115642d",
+   "title": "MATH Help Sessions",
    "date": "2026-11-04",
-   "change": "dropped"
-  },
-  {
-   "id": "1ac22db69afb",
-   "title": "State of the research on legume-only polyculture ft. Sandi Dincki",
-   "date": "2026-11-05",
-   "change": "dropped"
+   "change": "missing",
+   "lastSeen": "2026-10-29T20:21:30-04:00"
   },
   {
    "id": "4eb64205f710",
    "title": "Jeopardy with First-Gen",
    "date": "2026-11-05",
-   "change": "missing",
-   "lastSeen": "2026-10-27T11:31:29-04:00"
+   "change": "dropped"
   },
   {
    "id": "7383e0872216",
    "title": "UVM Engineering and Technology Fair",
    "date": "2026-11-05",
-   "change": "missing",
-   "lastSeen": "2026-10-27T11:31:29-04:00"
+   "change": "dropped"
   },
   {
    "id": "7f9bf5f36055",
@@ -2527,6 +2497,13 @@
    "date": "2026-11-05",
    "change": "missing",
    "lastSeen": "2026-10-27T19:59:30-04:00"
+  },
+  {
+   "id": "8906e688af74",
+   "title": "MATH Help Sessions",
+   "date": "2026-11-05",
+   "change": "missing",
+   "lastSeen": "2026-10-29T20:21:30-04:00"
   },
   {
    "id": "962b68f217da",
@@ -2599,6 +2576,13 @@
    "lastSeen": "2026-10-28T12:15:14-04:00"
   },
   {
+   "id": "167bfd958404",
+   "title": "MATH Help Sessions",
+   "date": "2026-11-09",
+   "change": "missing",
+   "lastSeen": "2026-10-29T20:21:30-04:00"
+  },
+  {
    "id": "f2728deb6183",
    "title": "Vets Town Hall: Charlotte, VT",
    "date": "2026-11-09",
@@ -2620,6 +2604,13 @@
    "lastSeen": "2026-10-27T19:59:30-04:00"
   },
   {
+   "id": "bf4dcf9e6cf2",
+   "title": "MATH Help Sessions",
+   "date": "2026-11-10",
+   "change": "missing",
+   "lastSeen": "2026-10-29T20:21:30-04:00"
+  },
+  {
    "id": "59d25cfef555",
    "title": "Me2 Orchestra, \"Autumn Leaves\"",
    "date": "2026-11-10",
@@ -2632,6 +2623,13 @@
    "date": "2026-11-11",
    "change": "missing",
    "lastSeen": "2026-10-27T19:59:30-04:00"
+  },
+  {
+   "id": "50fca8321fec",
+   "title": "MATH Help Sessions",
+   "date": "2026-11-11",
+   "change": "missing",
+   "lastSeen": "2026-10-29T20:21:30-04:00"
   },
   {
    "id": "7cdbafc8d9b1",
@@ -2648,11 +2646,25 @@
    "lastSeen": "2026-10-27T19:59:30-04:00"
   },
   {
+   "id": "202168631b0f",
+   "title": "MATH Help Sessions",
+   "date": "2026-11-12",
+   "change": "missing",
+   "lastSeen": "2026-10-29T20:21:30-04:00"
+  },
+  {
    "id": "fcb30887d346",
    "title": "Jasper Hill Fondue Nights with Special VT Winemakers",
    "date": "2026-11-13",
    "change": "missing",
    "lastSeen": "2026-10-28T20:24:09-04:00"
+  },
+  {
+   "id": "ada684707bc0",
+   "title": "MATH Help Sessions",
+   "date": "2026-11-16",
+   "change": "missing",
+   "lastSeen": "2026-10-29T20:21:30-04:00"
   },
   {
    "id": "71b908e81e94",
@@ -2662,11 +2674,25 @@
    "lastSeen": "2026-10-27T19:59:30-04:00"
   },
   {
+   "id": "3759a29b5f8d",
+   "title": "MATH Help Sessions",
+   "date": "2026-11-17",
+   "change": "missing",
+   "lastSeen": "2026-10-29T20:21:30-04:00"
+  },
+  {
    "id": "7a5702b0f123",
    "title": "Retro Study Hall!",
    "date": "2026-11-18",
    "change": "missing",
    "lastSeen": "2026-10-27T19:59:30-04:00"
+  },
+  {
+   "id": "16d2586f68ef",
+   "title": "MATH Help Sessions",
+   "date": "2026-11-18",
+   "change": "missing",
+   "lastSeen": "2026-10-29T20:21:30-04:00"
   },
   {
    "id": "6086afc3430b",
@@ -2676,11 +2702,25 @@
    "lastSeen": "2026-10-27T19:59:30-04:00"
   },
   {
+   "id": "c2fb21c26763",
+   "title": "MATH Help Sessions",
+   "date": "2026-11-19",
+   "change": "missing",
+   "lastSeen": "2026-10-29T20:21:30-04:00"
+  },
+  {
    "id": "d34520a0a140",
    "title": "Jasper Hill Fondue Nights with Special VT Winemakers",
    "date": "2026-11-20",
    "change": "missing",
    "lastSeen": "2026-10-28T20:24:09-04:00"
+  },
+  {
+   "id": "d8eeeddcfef8",
+   "title": "Joe Something",
+   "date": "2026-11-20",
+   "change": "missing",
+   "lastSeen": "2026-10-29T20:21:30-04:00"
   },
   {
    "id": "6af9ce4bac0a",
@@ -2704,11 +2744,25 @@
    "lastSeen": "2026-10-27T19:59:30-04:00"
   },
   {
+   "id": "fd42ac39974e",
+   "title": "MATH Help Sessions",
+   "date": "2026-11-30",
+   "change": "missing",
+   "lastSeen": "2026-10-29T20:21:30-04:00"
+  },
+  {
    "id": "b50982dfcd77",
    "title": "Retro Study Hall!",
    "date": "2026-12-01",
    "change": "missing",
    "lastSeen": "2026-10-27T19:59:30-04:00"
+  },
+  {
+   "id": "cf182e60d143",
+   "title": "MATH Help Sessions",
+   "date": "2026-12-01",
+   "change": "missing",
+   "lastSeen": "2026-10-29T20:21:30-04:00"
   },
   {
    "id": "b2bd3bcaa156",
@@ -2718,6 +2772,13 @@
    "lastSeen": "2026-10-27T19:59:30-04:00"
   },
   {
+   "id": "f2762f588188",
+   "title": "MATH Help Sessions",
+   "date": "2026-12-02",
+   "change": "missing",
+   "lastSeen": "2026-10-29T20:21:30-04:00"
+  },
+  {
    "id": "dc67245a4122",
    "title": "Retro Study Hall!",
    "date": "2026-12-03",
@@ -2725,11 +2786,25 @@
    "lastSeen": "2026-10-27T19:59:30-04:00"
   },
   {
+   "id": "3da775c39bd6",
+   "title": "MATH Help Sessions",
+   "date": "2026-12-03",
+   "change": "missing",
+   "lastSeen": "2026-10-29T20:21:30-04:00"
+  },
+  {
    "id": "8a7cf013c8ee",
    "title": "Dad Guild's Friday Hang",
    "date": "2026-12-04",
    "change": "missing",
    "lastSeen": "2026-10-28T20:24:09-04:00"
+  },
+  {
+   "id": "6069fba6e4ce",
+   "title": "MATH Help Sessions",
+   "date": "2026-12-07",
+   "change": "missing",
+   "lastSeen": "2026-10-29T20:21:30-04:00"
   },
   {
    "id": "3c9b12adf259",
@@ -2746,11 +2821,25 @@
    "lastSeen": "2026-10-27T19:59:30-04:00"
   },
   {
+   "id": "39eaab89d2b8",
+   "title": "MATH Help Sessions",
+   "date": "2026-12-08",
+   "change": "missing",
+   "lastSeen": "2026-10-29T20:21:30-04:00"
+  },
+  {
    "id": "6980beec1a14",
    "title": "Retro Study Hall!",
    "date": "2026-12-09",
    "change": "missing",
    "lastSeen": "2026-10-27T19:59:30-04:00"
+  },
+  {
+   "id": "75fc2603dda6",
+   "title": "MATH Help Sessions",
+   "date": "2026-12-09",
+   "change": "missing",
+   "lastSeen": "2026-10-29T20:21:30-04:00"
   },
   {
    "id": "18b59598f52d",
