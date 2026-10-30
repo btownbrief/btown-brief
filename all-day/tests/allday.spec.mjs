@@ -13571,21 +13571,20 @@ async function thePaper(browser, base) {
         await page.waitForTimeout(t === 'editions' ? 700 : 300);
         const st = await page.evaluate(() => { const p = document.querySelector('.panel:not([hidden])'); return { secs: p.querySelectorAll('.pp-sec').length, items: p.querySelectorAll('[data-k]').length, demo: !!p.querySelector('.pp-mail-row') }; });
         check(st.secs >= 3 && (t === 'story' || st.items > 0), t + ': the demo draws its sections', JSON.stringify(st));
-        if (t === 'front') {
-          check(st.demo, 'front: the demo draws the strip without loading Beehiiv', '');
-          /* a link out in the demo stays put and says where it would go */
-          await page.click('#panel-front .pp-qs .chip');
-          await page.waitForSelector('#sheet:not([hidden]) .sheet-row a');
-          const at = page.url();
-          await page.click('#sheet .sheet-row a');
-          await page.waitForTimeout(200);
-          check(page.url() === at && /Demo: opens/.test(await page.evaluate(() => document.getElementById('toast').textContent)), 'front: a question’s link in the demo toasts instead of leaving', page.url());
-          await page.keyboard.press('Escape');
-        }
+        if (t === 'front') check(st.demo, 'front: the demo draws the strip without loading Beehiiv', '');
         await page.evaluate(() => document.querySelector('.panel:not([hidden])').scrollTo(0, 0));
         await page.waitForTimeout(250);
         await page.screenshot({ path: path.join(SHOTS, 'paper-' + t + '-' + combo.viewport.width + '-' + combo.scheme + '.png') });
       }
+      /* a link out in the demo stays put and says where it would go (after the pictures, so no toast is in them) */
+      await goTab(page, 'front');
+      await page.click('#panel-front .pp-qs .chip');
+      await page.waitForSelector('#sheet:not([hidden]) .sheet-row a');
+      const at = page.url();
+      await page.click('#sheet .sheet-row a');
+      await page.waitForTimeout(200);
+      check(page.url() === at && /Demo: opens/.test(await page.evaluate(() => document.getElementById('toast').textContent)), 'a question’s link in the demo toasts instead of leaving', page.url());
+      await page.keyboard.press('Escape');
       check(!outside.length, 'the demo fetches nothing from outside', outside.slice(0, 3).join(' '));
       check(!errors.length, 'no console errors', errors.join(' | '));
       await ctx.close();
