@@ -13386,7 +13386,7 @@ async function thePeopleApp(browser, base) {
     check(friends.includes('New in town, looking for friends to try the climbing gym') && friends.every((t) => !/singles/i.test(t)), 'Friends: the friend-finder lane, never a singles plan', JSON.stringify(friends));
     const ev = await page.$$eval('.pp-sec[data-sec="events"] .card.event .c-title', (n) => n.map((x) => x.textContent));
     check(ev.includes('Speed dating, 30s and 40s') && ev.includes('Newcomers social and happy hour'), 'Events: singles nights and mixers from the calendar', JSON.stringify(ev));
-    check(await page.$eval('.pp-sec[data-sec="pitch"]', (s) => /Pitch a friend/.test(s.innerText) && [...s.querySelectorAll('a')].some((a) => /meetup\.com\/burlington-social-activites-group/.test(a.href))), 'Pitch a friend: the night, and the Meetup group', '');
+    check(await page.$eval('.pp-sec[data-sec="pitch"]', (s) => /RSVP on Meetup/.test(s.innerText) && /A back room on Church Street/.test(s.innerText) && [...s.querySelectorAll('a')].some((a) => /meetup\.com\/burlington-social-activites-group\/events\/demo-pitch/.test(a.href))), 'Pitch a friend: the next night from the Meetup calendar, with its RSVP', '');
     check(!!(await page.$('#subnav .worldsw')), 'Real life / Online shows', '');
     const vis = () => page.$$eval('.panel:not([hidden]) .pp-sec', (s) => s.filter((x) => x.offsetParent).map((x) => x.dataset.sec));
     check((await vis()).sort().join() === ['events', 'friends', 'pitch', 'singles'].join(), 'Real life: the four in-person lanes', JSON.stringify(await vis()));
@@ -13468,8 +13468,11 @@ async function thePeopleApp(browser, base) {
       const hrefs = await page.$$eval('.panel:not([hidden]) a', (a) => a.map((x) => x.href));
       check(hrefs.some((h) => /^https:\/\/t\.me\//.test(h)) && hrefs.some((h) => /btownbrief\.com\/community$/.test(h)) && hrefs.some((h) => /telegram\.html$/.test(h)), (demo ? 'demo' : 'live') + ': Telegram, the community and the how-to', '');
       const ask = await ppText(page, 'ask');
-      check(/Ask a regular/.test(ask) && /Coming soon/i.test(ask), (demo ? 'demo' : 'live') + ': Ask a regular is a named placeholder', ask);
-      check(demo ? /Examples/.test(ask) : !/Examples/.test(ask), demo ? 'the demo previews invented questions' : 'live shows no invented questions', '');
+      check(!!(await page.$('.pp-sec[data-sec="ask"] [data-post="square:ask"]')), (demo ? 'demo' : 'live') + ': Ask a question posts to the Square’s asks', '');
+      if (demo) {
+        const qs = await page.$$eval('.pp-sec[data-sec="ask"] .card.board', (c) => c.map((x) => [x.querySelector('.b-title').textContent, x.querySelector('[data-act="bvote"]').textContent, (x.querySelector('.linkrow a') || {}).href || '']));
+        check(qs.some(([t]) => /bike tuned up/.test(t)) && qs.every(([, v, a]) => /Me too/.test(v) && /^https:\/\/t\.me\//.test(a)), 'demo: the questions, each with Me too and an answer in the group chat', JSON.stringify(qs));
+      } else check(/No questions yet\./.test(ask), 'live, empty: a few words', ask);
       check(!(await page.$('.panel:not([hidden]) textarea, .panel:not([hidden]) input')), 'no chat box anywhere', '');
       check(!errors.length, 'no console errors', errors.join(' | '));
       await ctx.close();

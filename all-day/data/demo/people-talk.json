@@ -1,9 +1,39 @@
 {
- "_": "Invented questions for the Ask a regular preview on ?demo=1 (all-day/js/modes/talk.js). Made up; the real section needs replies on the boards first.",
- "posts": [],
- "asks": [
-  { "q": "Where can I get a bike tuned up this week without a two-week wait?", "a": "Three regulars named the same shop in the Old North End.", "n": 3 },
-  { "q": "Quiet place to work on a laptop that isn't a café?", "a": "The library's upstairs reading room, most mornings.", "n": 5 },
-  { "q": "Is the ferry to New York worth it for a day trip?", "a": "Yes, on a clear day. Bring a jacket, it's windy on the lake.", "n": 2 }
+ "_": "Invented questions for People · Talk · Ask a regular on ?demo=1 (all-day/js/modes/talk.js), posted to the demo Square board. Every name and question here is made up.",
+ "posts": [
+  {
+   "who": 2,
+   "board": "square",
+   "kind": "ask",
+   "title": "Where can I get a bike tuned up this week without a two-week wait?",
+   "ago": 3,
+   "votes": 4,
+   "meta": {
+    "topic": "recommend"
+   }
+  },
+  {
+   "who": 0,
+   "board": "square",
+   "kind": "ask",
+   "title": "Quiet place to work on a laptop that isn't a café?",
+   "ago": 9,
+   "votes": 6,
+   "meta": {
+    "topic": "recommend"
+   },
+   "body": "Somewhere I can stay three hours without buying a fourth coffee."
+  },
+  {
+   "who": 4,
+   "board": "square",
+   "kind": "ask",
+   "title": "Is the ferry to New York worth it for a day trip?",
+   "ago": 20,
+   "votes": 2,
+   "meta": {
+    "topic": "outdoors"
+   }
+  }
  ]
 }

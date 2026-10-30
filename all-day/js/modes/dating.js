@@ -15,8 +15,10 @@
      "friends" in the title.
    - Events: the calendar's singles nights and friend-making mixers
      (people-match.js's mixerKind: singles and socials), the next two weeks.
-   - Pitch a friend: the night, in a few lines, and the Meetup group where
-     its date goes up. No date is invented here.
+   - Pitch a friend: the night in a line. When Stephen's Meetup calendar
+     (Up For It's copy, the feed the You tab reads) has a Pitch a Friend
+     event coming, its date, place and RSVP; otherwise the Meetup group.
+     No date is invented here.
    Online:
    - Posts: the local ways to meet someone online and the dating headlines,
      from the hand-checked data/dating-pets.json. */
@@ -24,7 +26,7 @@
 import * as app from '../app.js';
 import { el, esc, safeHref, ICON } from '../ui.js';
 import { SINGLES, mixerKind } from '../people-match.js';
-import { whenMs } from './people.js';
+import { whenMs, whenLabel } from './people.js';
 import * as kit from './people-kit.js';
 
 const KEY = 'dating';
@@ -32,7 +34,15 @@ const FRIENDS = /\bfriends?\b|\bpals?\b|\bbuddy\b|\bnew (?:in|to) (?:town|burlin
 const PAST_GRACE = 3 * 3600000;
 const NEWS_DAYS = 180;
 const NEWS_DAY = new Intl.DateTimeFormat('en-US', { timeZone: 'UTC', month: 'short', day: 'numeric', year: 'numeric' });
-const S = { posts: [], r: null, events: null, dp: null };
+const MEETUP_FEED = 'https://play.btownbrief.com/up-for-it/data/meetup.json';
+const PITCH = /pitch[- ]?a[- ]?friend|friend pitch/i;
+const S = { posts: [], r: null, events: null, dp: null, pitch: null };
+/* the next Pitch a Friend night on Stephen's Meetup calendar, or null */
+function nextPitch(list) {
+  const now = Date.now();
+  return (list || []).map((e) => ({ title: String(e.title || ''), at: Date.parse(e.starts_at), where: String(e.location || ''), url: String(e.url || '') }))
+    .filter((e) => PITCH.test(e.title) && e.at > now && /^https:\/\//.test(e.url)).sort((a, b) => a.at - b.at)[0] || null;
+}
 
 const words = (p) => [p.title, p.body, p.place].filter(Boolean).join(' ');
 const upcoming = () => S.posts.filter((p) => { const at = whenMs((p.meta || {}).when, Date.parse(p.created_at)); return at == null || at > Date.now() - PAST_GRACE; });
@@ -42,7 +52,10 @@ const meta = (p) => { const m = p.meta || {}; return [m.when, m.spots ? m.spots 
 
 function load() {
   return Promise.all([
-    app.demo ? kit.demo('dating').then((d) => d.events || []) : null,
+    app.demo ? kit.demo('dating').then((d) => {
+      S.pitch = nextPitch((d.meetup || []).map((e) => ({ ...e, starts_at: new Date(Date.now() + e.day * kit.DAY).toISOString().slice(0, 10) + 'T' + e.time + ':00-05:00' })));
+      return d.events || [];
+    }) : kit.json(MEETUP_FEED).then((j) => { S.pitch = nextPitch(j && j.events); return null; }),
     kit.datingPets().then((j) => { S.dp = j; }),
   ]).then(([demoEvents]) => Promise.all([kit.events(demoEvents, (e) => { S.events = e; mode.redraw(); }).then((e) => { S.events = e; }), reload()]));
 }
@@ -85,9 +98,12 @@ const mode = kit.tab({
       } },
     { key: 'pitch', label: 'Pitch a friend', world: 'irl', newest: () => 0,
       draw(b) {
-        kit.textCard(b, null, [
+        const p = S.pitch;
+        const tc = kit.textCard(b, p ? whenLabel(p.at) : null, [
+          ...(p && p.where ? [p.where] : []),
           'Bring a single friend and sell them to the room: two minutes each, their best qualities, worst habits and one good story. Then everyone mingles.',
-        ], [kit.linkBtn('See it on Meetup', kit.MEETUP_GROUP, 'pkey')], 'pitch');
+        ], [p ? kit.linkBtn('RSVP on Meetup', p.url, 'pkey') : kit.linkBtn('See it on Meetup', kit.MEETUP_GROUP, 'pkey')], 'pitch');
+        if (p) tc.dataset.next = String(p.at);
       } },
     { key: 'posts', label: 'Posts', world: 'online', newest: () => 0,
       draw(b) {
