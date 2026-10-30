@@ -1,4 +1,4 @@
-/* Boards (Play app, wave 1, 2026-10-29): the arcade's scoreboards and the
+/* Boards, route key `ranks` so it never collides with js/boards.js (Play app, wave 1, 2026-10-29): the arcade's scoreboards and the
    games board, in one place.
 
    - Leaderboards: this month's board for one game at a time, picked from a
@@ -28,9 +28,9 @@ import * as store from '../store.js';
 import * as data from '../wire.js';
 import * as boards from '../boards.js';
 import { el, esc, mark, chips, cards } from '../ui.js';
-import { playData, demoOf, arr, plural, sec, link, soon, row, tab } from './play-kit.js';
+import { playData, demoOf, arr, plural, sec, link, soon, row, tab } from './playkit.js';
 
-const KEY = 'boards';
+const KEY = 'ranks';
 const BOARD = 'games';
 const CATALOG_URL = '../data/games-catalog.json';
 const SLUG = /^[a-z0-9-]{1,40}$/;

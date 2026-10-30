@@ -13253,7 +13253,7 @@ async function theApps(browser, base) {
 
 /* ------------------------------------------------------------- the Play app */
 /* Play's own tabs (wave 1, 2026-10-29): Daily, City, Draw, Party and Boards,
-   js/modes/play-*.js. Each at 390 and 1280, light and dark, live and demo,
+   js/modes/daily.js, city.js, draw.js, party.js, ranks.js. Each at 390 and 1280, light and dark, live and demo,
    with the page rules and a screenshot (play-<tab>-<width>-<scheme>[-live]);
    then what each tab promises: Daily's ticks and streaks kept on the phone,
    City's missions read from What Now and its honest Coming soons, Draw's
@@ -13261,7 +13261,7 @@ async function theApps(browser, base) {
    and Boards' one read-only leaderboard call per pick. */
 const PLAY_TABS = { daily: ['Wordle', 'Crossings', 'News quiz', 'Higher or lower', 'Where in Btown', 'Real or fake'],
   city: ['Missions', 'Streets', 'Lit', 'Dibs', 'Photo quests', 'Crews', 'Season'], draw: ['Aquarium', 'The truck', 'Gallery', 'Prompt of the week'],
-  party: ['Btown Party', 'Trivia', 'Arcade Night', 'Stay Awhile', 'Table Talk'], boards: ['Leaderboards', 'Predictions', 'Bracket', 'Playing', 'Looking for a group', 'Gamertags'] };
+  party: ['Btown Party', 'Trivia', 'Arcade Night', 'Stay Awhile', 'Table Talk'], ranks: ['Leaderboards', 'Predictions', 'Bracket', 'Playing', 'Looking for a group', 'Gamertags'] };
 const playPill = (page) => page.evaluate(() => [...document.querySelectorAll('#subnav [data-k], #subnav .secpill button, #subnav button[data-key]')].map((b) => b.textContent.trim()).filter(Boolean));
 
 async function thePlay(browser, base) {
@@ -13407,9 +13407,9 @@ async function thePlay(browser, base) {
       return [];
     };
     const { ctx, page, errors, supabase } = await newPage(browser, base, { rpc });
-    await page.goto(base + '/play/#boards');
+    await page.goto(base + '/play/#ranks');
     await settle(page);
-    const P = '#panel-boards';
+    const P = '#panel-ranks';
     await page.waitForSelector(P + ' [data-board] .r', { timeout: 6000 });
     const cat = JSON.parse(await readFile(path.join(REPO, 'data/games-catalog.json'), 'utf8'));
     const first = cat.games.filter((g) => g.live && g.leaderboard)[0].slug;
@@ -13434,11 +13434,11 @@ async function thePlay(browser, base) {
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
     const d = await newPage(browser, base);
-    await d.page.goto(base + '/play/?demo=1#boards');
+    await d.page.goto(base + '/play/?demo=1#ranks');
     await settle(d.page);
-    await d.page.waitForSelector('#panel-boards [data-board="creemee-drop"] .r', { timeout: 6000 });
-    const demo = await d.page.evaluate(() => ({ lb: document.querySelectorAll('#panel-boards [data-board] .r').length, play: document.querySelectorAll('#panel-boards [data-sec="playing"] [data-k^="b-"]').length,
-      lfg: document.querySelectorAll('#panel-boards [data-sec="lfg"] .card').length }));
+    await d.page.waitForSelector('#panel-ranks [data-board="creemee-drop"] .r', { timeout: 6000 });
+    const demo = await d.page.evaluate(() => ({ lb: document.querySelectorAll('#panel-ranks [data-board] .r').length, play: document.querySelectorAll('#panel-ranks [data-sec="playing"] [data-k^="b-"]').length,
+      lfg: document.querySelectorAll('#panel-ranks [data-sec="lfg"] .card').length }));
     check(demo.lb > 0 && demo.play > 0 && demo.lfg > 0, 'demo: a board, what people play and open groups, all from the demo copy', JSON.stringify(demo));
     check(!d.supabase.length && !d.errors.length, 'demo: nothing calls Supabase, no console errors', d.supabase.join(', ') + d.errors.join(' | '));
     await d.ctx.close();

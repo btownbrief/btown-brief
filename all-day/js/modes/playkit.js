@@ -1,5 +1,5 @@
-/* play-kit.js — what the Play app's own tabs share (wave 1, 2026-10-29):
-   Daily, City, Draw, Party and Boards (play-daily.js, play-city.js, …).
+/* playkit.js — what the Play app's own tabs share (wave 1, 2026-10-29):
+   Daily, City, Draw, Party and Boards (daily.js, city.js, draw.js, party.js, ranks.js).
 
    Each of those files hands tab() its key, its words, how to load and how
    to draw; tab() turns that into the shell's register() contract, the same
