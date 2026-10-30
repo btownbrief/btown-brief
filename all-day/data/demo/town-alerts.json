@@ -1,0 +1,479 @@
+{
+ "_": "Invented for ?demo=1: every headline, place, sale, job and post here is made up. Dates are relative (town-kit.js redate).",
+ "demoStreet": "North Winooski Ave",
+ "changes": {
+  "generated": "@t-1h",
+  "events": [
+   {
+    "ts": "@t-1h",
+    "category": "weather",
+    "headline": "Winter weather advisory for Chittenden County",
+    "detail": "Snow, 3 to 5 inches overnight",
+    "url": "https://www.burlingtonvt.gov/CivicAlerts.aspx",
+    "sourceName": "National Weather Service",
+    "kind": "added"
+   },
+   {
+    "ts": "@t-2h",
+    "category": "cityhall",
+    "headline": "City Council agenda posted",
+    "detail": "meets Monday",
+    "url": "https://www.burlingtonvt.gov/CivicAlerts.aspx",
+    "sourceName": "City meeting portal",
+    "kind": "added"
+   },
+   {
+    "ts": "@t-3h",
+    "category": "news",
+    "headline": "A new crosswalk is coming to a busy corner downtown",
+    "detail": "",
+    "url": "https://www.burlingtonvt.gov/CivicAlerts.aspx",
+    "sourceName": "Demo News",
+    "kind": "added"
+   },
+   {
+    "ts": "@t-4h",
+    "category": "roads",
+    "headline": "Lane closure on a North End street for water main work",
+    "detail": "through Friday",
+    "url": "https://www.burlingtonvt.gov/CivicAlerts.aspx",
+    "sourceName": "City construction map",
+    "kind": "added"
+   },
+   {
+    "ts": "@t-6h",
+    "category": "events",
+    "headline": "Free skate night added at the rink",
+    "detail": "Saturday, 6 pm",
+    "url": "https://www.burlingtonvt.gov/CivicAlerts.aspx",
+    "sourceName": "Events calendar",
+    "kind": "added"
+   },
+   {
+    "ts": "@t-9h",
+    "category": "food",
+    "headline": "A dumpling counter opens on a downtown block",
+    "detail": "",
+    "url": "https://www.burlingtonvt.gov/CivicAlerts.aspx",
+    "sourceName": "Demo News",
+    "kind": "added"
+   },
+   {
+    "ts": "@t-20h",
+    "category": "transit",
+    "headline": "Two bus routes detour around a closed street",
+    "detail": "until further notice",
+    "url": "https://www.burlingtonvt.gov/CivicAlerts.aspx",
+    "sourceName": "Green Mountain Transit",
+    "kind": "added"
+   },
+   {
+    "ts": "@t-1d",
+    "category": "cityhall",
+    "headline": "Development Review Board agenda posted",
+    "detail": "meets Wednesday",
+    "url": "https://www.burlingtonvt.gov/CivicAlerts.aspx",
+    "sourceName": "City meeting portal",
+    "kind": "added"
+   },
+   {
+    "ts": "@t-2d",
+    "category": "news",
+    "headline": "Library adds Sunday hours for the winter",
+    "detail": "",
+    "url": "https://www.burlingtonvt.gov/CivicAlerts.aspx",
+    "sourceName": "Demo News",
+    "kind": "added"
+   },
+   {
+    "ts": "@t-2d",
+    "category": "chatter",
+    "headline": "Anyone else hear the geese over the lake this morning?",
+    "detail": "",
+    "url": "https://www.burlingtonvt.gov/CivicAlerts.aspx",
+    "sourceName": "r/burlington",
+    "kind": "added"
+   },
+   {
+    "ts": "@t-3d",
+    "category": "roads",
+    "headline": "Paving finished on a South End block",
+    "detail": "",
+    "url": "https://www.burlingtonvt.gov/CivicAlerts.aspx",
+    "sourceName": "City construction map",
+    "kind": "added"
+   },
+   {
+    "ts": "@t-4d",
+    "category": "events",
+    "headline": "Holiday craft market announced for the waterfront",
+    "detail": "",
+    "url": "https://www.burlingtonvt.gov/CivicAlerts.aspx",
+    "sourceName": "Events calendar",
+    "kind": "added"
+   },
+   {
+    "ts": "@t-5d",
+    "category": "beaches",
+    "headline": "Beach season status: all beaches closed for the winter",
+    "detail": "",
+    "url": "https://www.burlingtonvt.gov/CivicAlerts.aspx",
+    "sourceName": "City parks",
+    "kind": "added"
+   },
+   {
+    "ts": "@t-6d",
+    "category": "news",
+    "headline": "Ice rink opening date set",
+    "detail": "",
+    "url": "https://www.burlingtonvt.gov/CivicAlerts.aspx",
+    "sourceName": "Demo News",
+    "kind": "added"
+   }
+  ]
+ },
+ "alerts": {
+  "sections": {
+   "recycling": {
+    "source_name": "Burlington DPW recycling pickup days",
+    "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+    "layer_last_edited": "2022-11-21",
+    "rules_url": "https://www.burlingtonvt.gov/315/Recycling-Solid-Waste-Collection",
+    "verified": "@d+0",
+    "items": [
+     {
+      "street": "Battery St",
+      "recycling_day": "Tuesday",
+      "parking_ban_zone": "F",
+      "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+      "verified": "@d+0"
+     },
+     {
+      "street": "Cherry St",
+      "recycling_day": "Tuesday",
+      "parking_ban_zone": "F",
+      "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+      "verified": "@d+0"
+     },
+     {
+      "street": "Church St",
+      "recycling_day": "Tuesday",
+      "parking_ban_zone": "F",
+      "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+      "verified": "@d+0"
+     },
+     {
+      "street": "College St",
+      "recycling_day": "Tuesday",
+      "parking_ban_zone": "F",
+      "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+      "verified": "@d+0"
+     },
+     {
+      "street": "Colchester Ave",
+      "recycling_day": "Thursday",
+      "parking_ban_zone": "C",
+      "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+      "verified": "@d+0"
+     },
+     {
+      "street": "Elmwood Ave",
+      "recycling_day": "Monday",
+      "parking_ban_zone": "D",
+      "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+      "verified": "@d+0"
+     },
+     {
+      "street": "Flynn Ave",
+      "recycling_day": "Friday",
+      "parking_ban_zone": "B",
+      "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+      "verified": "@d+0"
+     },
+     {
+      "street": "Lakeside Ave",
+      "recycling_day": "Friday",
+      "parking_ban_zone": "B",
+      "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+      "verified": "@d+0"
+     },
+     {
+      "street": "Maple St",
+      "recycling_day": "Wednesday",
+      "parking_ban_zone": "E",
+      "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+      "verified": "@d+0"
+     },
+     {
+      "street": "North Ave",
+      "recycling_day": "Monday",
+      "parking_ban_zone": "A",
+      "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+      "verified": "@d+0"
+     },
+     {
+      "street": "North Ave",
+      "recycling_day": "Tuesday",
+      "parking_ban_zone": "A",
+      "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+      "verified": "@d+0"
+     },
+     {
+      "street": "North Winooski Ave",
+      "recycling_day": "Monday",
+      "parking_ban_zone": "D",
+      "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+      "verified": "@d+0"
+     },
+     {
+      "street": "Pine St",
+      "recycling_day": "Friday",
+      "parking_ban_zone": "B",
+      "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+      "verified": "@d+0"
+     },
+     {
+      "street": "Pearl St",
+      "recycling_day": "Tuesday",
+      "parking_ban_zone": "F",
+      "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+      "verified": "@d+0"
+     },
+     {
+      "street": "Shelburne St",
+      "recycling_day": "Wednesday",
+      "parking_ban_zone": "E",
+      "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+      "verified": "@d+0"
+     },
+     {
+      "street": "Union St",
+      "recycling_day": "Wednesday",
+      "parking_ban_zone": "D",
+      "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+      "verified": "@d+0"
+     }
+    ]
+   },
+   "dropoff": {
+    "verified": "@d+0",
+    "items": [
+     {
+      "name": "CSWD Drop-Off Center in Burlington",
+      "address": "339 Pine St., Burlington",
+      "hours": "Tues. – Sat.: 8 a.m. to 3:30 p.m.",
+      "district_notice": "The Hinesburg Drop-Off Center is accessible only from Beecher Hill Road via Route 116, and the upper section of Beecher Hill Road (North Road side) is closed until further notice.",
+      "takes": "Blue-bin recycling, food scraps, small special items; no trailers or large loads",
+      "source_url": "https://cswd.net/cswd-location/cswd-drop-off-center-in-burlington/",
+      "verified": "2026-10-29"
+     }
+    ]
+   },
+   "parking_ban": {
+    "verified": "@d+0",
+    "status": "posted",
+    "items": [
+     {
+      "headline": "Winter parking ban tonight, 10 pm to 7 am",
+      "posted": "@t-2h",
+      "channel": "City Alert Center",
+      "says_lifted": false,
+      "source_url": "https://www.burlingtonvt.gov/628/Winter-Parking"
+     }
+    ],
+    "rules": {
+     "called_by": "3 PM the day of the ban",
+     "hours": "10 PM to 7 AM citywide; downtown Zone F midnight to 6 AM",
+     "penalty": "$75 ticket plus $75 tow",
+     "free_garages": "Marketplace, Downtown (College St) and Lakeview garages from 7 PM, out by 9 AM",
+     "surface_lots": "No overnight parking in municipal surface lots 2:30 to 6 AM, Dec 1 to Mar 15",
+     "sign_up": "https://www.burlingtonvt.gov/btv-alerts (VT-Alert text and email)",
+     "source_url": "https://www.burlingtonvt.gov/628/Winter-Parking",
+     "verified": "2026-10-29"
+    }
+   },
+   "greenway": {
+    "verified": "@d+0",
+    "items": [
+     {
+      "segment": "Echo Center to Harrison Ave",
+      "plowed_in_winter_program": true,
+      "skiable": false,
+      "notes": "Plowed and sanded this morning.",
+      "last_plowed": "@t-5h",
+      "updated": "@t-3h",
+      "source_url": "https://services1.arcgis.com/1bO0c7PxQdsGidPK/arcgis/rest/services/Greenway_Plowing_and_Condition_Status_Public/FeatureServer/0"
+     },
+     {
+      "segment": "Proctor Pl to Oakledge Park",
+      "plowed_in_winter_program": true,
+      "skiable": false,
+      "notes": "Plowed; icy patches by the underpass.",
+      "last_plowed": "@t-6h",
+      "updated": "@t-3h",
+      "source_url": "https://services1.arcgis.com/1bO0c7PxQdsGidPK/arcgis/rest/services/Greenway_Plowing_and_Condition_Status_Public/FeatureServer/0"
+     },
+     {
+      "segment": "Queen City Park Rd to Home Ave",
+      "plowed_in_winter_program": true,
+      "skiable": false,
+      "notes": "Plowing in progress.",
+      "last_plowed": "@t-1d",
+      "updated": "@t-3h",
+      "source_url": "https://services1.arcgis.com/1bO0c7PxQdsGidPK/arcgis/rest/services/Greenway_Plowing_and_Condition_Status_Public/FeatureServer/0"
+     },
+     {
+      "segment": "Harrison Ave to North Beach",
+      "plowed_in_winter_program": true,
+      "skiable": false,
+      "notes": "Plowed, some drifting.",
+      "last_plowed": "@t-7h",
+      "updated": "@t-3h",
+      "source_url": "https://services1.arcgis.com/1bO0c7PxQdsGidPK/arcgis/rest/services/Greenway_Plowing_and_Condition_Status_Public/FeatureServer/0"
+     },
+     {
+      "segment": "North Beach to the Winooski bridge",
+      "plowed_in_winter_program": false,
+      "skiable": false,
+      "notes": "Not plowed in winter; groomed for skiing when there is snow.",
+      "last_plowed": null,
+      "updated": "@t-3h",
+      "source_url": "https://services1.arcgis.com/1bO0c7PxQdsGidPK/arcgis/rest/services/Greenway_Plowing_and_Condition_Status_Public/FeatureServer/0"
+     }
+    ]
+   },
+   "closings": {
+    "verified": "@d+0",
+    "items": [
+     {
+      "org": "Burlington School District",
+      "status": "Delayed 2 hours",
+      "outlet": "NBC5",
+      "source_url": "https://www.mynbc5.com/weather/closings"
+     },
+     {
+      "org": "A preschool on the Hill",
+      "status": "Closed",
+      "outlet": "WCAX",
+      "source_url": "https://www.wcax.com/weather/closings/"
+     }
+    ],
+    "district_posts": [
+     {
+      "headline": "Two-hour delay this morning",
+      "posted": "@t-2h",
+      "outlet": "BSD news",
+      "source_url": "https://www.bsdvt.org/"
+     }
+    ]
+   },
+   "shelters": {
+    "verified": "@d+0",
+    "items": [
+     {
+      "headline": "Warming station open tonight as temperatures drop",
+      "posted": "@t-4h",
+      "channel": "City News Flash",
+      "source_url": "https://www.burlingtonvt.gov/1032/Housing-and-Shelter"
+     }
+    ]
+   }
+  }
+ },
+ "signups": {
+  "programs": [
+   {
+    "id": "ice",
+    "name": "Learn-to-skate lessons, winter session",
+    "org": "City parks and recreation",
+    "season": "Winter",
+    "next_opens": "@d+2",
+    "next_deadline": null,
+    "date_basis": "published",
+    "page": "https://www.burlingtonvt.gov/737/Recreation"
+   },
+   {
+    "id": "vac",
+    "name": "February break day camp",
+    "org": "A community center",
+    "season": "February break",
+    "next_opens": "@d+5",
+    "next_deadline": "@d+60",
+    "date_basis": "published",
+    "page": "https://www.burlingtonvt.gov/737/Recreation"
+   },
+   {
+    "id": "ski",
+    "name": "Saturday ski and ride program",
+    "org": "A school ski club",
+    "season": "Winter",
+    "next_opens": "@d-10",
+    "next_deadline": "@d+12",
+    "date_basis": "published",
+    "page": "https://www.burlingtonvt.gov/737/Recreation"
+   },
+   {
+    "id": "hoops",
+    "name": "Youth basketball clinics",
+    "org": "City parks and recreation",
+    "season": "Winter",
+    "next_opens": "@d+9",
+    "next_deadline": "@d+40",
+    "date_basis": "published",
+    "page": "https://www.burlingtonvt.gov/737/Recreation"
+   },
+   {
+    "id": "swim",
+    "name": "Swim lessons, next session",
+    "org": "A downtown pool",
+    "season": "Winter",
+    "next_opens": "@d+14",
+    "next_deadline": null,
+    "date_basis": "published",
+    "page": "https://www.burlingtonvt.gov/737/Recreation"
+   },
+   {
+    "id": "story",
+    "name": "Toddler storytime, registration week",
+    "org": "The library",
+    "season": "Winter",
+    "next_opens": "@d+21",
+    "next_deadline": null,
+    "date_basis": "published",
+    "page": "https://www.burlingtonvt.gov/737/Recreation"
+   }
+  ]
+ },
+ "shelters": {
+  "places": [
+   {
+    "id": "cots-waystation",
+    "name": "COTS Waystation",
+    "what": "Year-round overnight shelter, adults",
+    "phone": "802-864-7402",
+    "source_url": "https://www.burlingtonvt.gov/1032/Housing-and-Shelter"
+   },
+   {
+    "id": "cots-warming",
+    "name": "COTS Winter Warming Station",
+    "what": "Winter season, roughly January to May",
+    "phone": "802-864-7402",
+    "source_url": "https://www.burlingtonvt.gov/1032/Housing-and-Shelter"
+   },
+   {
+    "id": "anew-elmwood",
+    "name": "ANEW Place, Elmwood Community Shelter",
+    "what": "Year-round, low barrier",
+    "phone": null,
+    "source_url": "https://www.burlingtonvt.gov/1032/Housing-and-Shelter"
+   },
+   {
+    "id": "dcf-adverse-weather",
+    "name": "State emergency housing (adverse weather)",
+    "what": "Motel vouchers on adverse-weather nights",
+    "phone": "2-1-1",
+    "source_url": "https://dcf.vermont.gov/benefits/crisis-housing"
+   }
+  ]
+ }
+}
