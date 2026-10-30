@@ -244,7 +244,7 @@ export function player(title, steps) {
 export function page(o) {
   const S = { root: null, ctx: null, slots: null, pending: null, ready: false, failed: false };
   let loading = null;
-  const load = () => (loading = loading || Promise.resolve().then(o.load).then((c) => { S.ctx = c || {}; S.failed = false; }, (e) => {
+  const load = () => (loading = loading || Promise.resolve().then(o.load).then((c) => { S.ctx = c || {}; S.ctx.redraw = drawOne; S.failed = false; }, (e) => {
     console.warn('[body] ' + o.key + ' did not load', e);
     S.failed = true; loading = null;
   }).then(() => { S.ready = true; app.recount(); }));
@@ -296,7 +296,7 @@ export function page(o) {
     mount(root) {
       S.root = root;
       root.appendChild(el('p', 'loading', esc('Loading ' + o.label + '…')));
-      load().then(() => { if (S.ctx) S.ctx.redraw = drawOne; draw(); land(); });
+      load().then(() => { draw(); land(); });
     },
     activate(param) { S.pending = param || null; land(); if (o.activate) o.activate(param, S.ctx); },
     refresh() { if (S.ready && !S.failed) draw(); },

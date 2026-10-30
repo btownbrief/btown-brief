@@ -55,10 +55,10 @@ function drawCapture(box, c) {
 function drawChat(box, c) {
   const ch = c.chat;
   section(box, 'Chat', null);
-  const p = el('div', 'promise');
+  /* Habits' "coming" block, not the shell's promise: this tab is built, its chat is not */
+  const p = el('div', 'hb-soon');
   p.dataset.coach = 'soon';
-  p.innerHTML = '<div class="big">' + ICON.comment + '</div><h2>' + esc('The coach is coming') + '</h2><p>' + esc(ch.status) + '</p>' +
-    '<span class="soon">' + esc('Coming soon') + '</span>';
+  p.innerHTML = '<p><b>' + esc('The coach is coming') + '</b></p><p>' + esc(ch.status) + '</p>';
   box.appendChild(p);
   bullets(box, ch.will, 'What it will do');
   para(box, ch.privacy, 'note');
