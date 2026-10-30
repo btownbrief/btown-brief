@@ -2691,3 +2691,101 @@ body.bd-full { overflow: hidden; }
 .homehow { padding: 0 0 var(--s3); }
 .homehow .ask-how { margin-top: 0; }
 .homerow .t .i { width: 16px; height: 16px; vertical-align: -3px; color: var(--good); }
+
+/* ============================================================ the eight apps */
+/* Wave 0 (2026-10-29): the same shell runs eight apps (js/apps/). */
+
+/* five to seven tabs share the phone's bar evenly, with bigger words than
+   nine can have; All Day's nine keep their grid above */
+.tabbar[data-n] { grid-template-columns: repeat(var(--tab-n), minmax(0, 1fr)); }
+.tabbar[data-n] button { font-size: var(--fs-nav-few); }
+/* seven share a 390 phone as tightly as nine nearly do ("Neighbors") */
+.tabbar[data-n="7"] button { font-size: var(--fs-nav); }
+@media (min-width: 1024px) { .tabbar[data-n] button { font-size: var(--fs-lead); } }
+
+/* the switcher's button: small, right after the wordmark (and the rail's
+   name), so the mast keeps its line */
+.installbtn { width: 30px; position: relative; color: var(--lake-muted); }
+.installbtn::after { content: ""; position: absolute; inset: 0 -6px; }
+.installbtn .i { width: 19px; height: 19px; }
+/* the room it takes, while it shows, comes out of the gap before the logo
+   and around Saved, so All Day's wordmark still fits a 390 phone */
+.mast-row:has(.installbtn:not([hidden])) .brandlink { margin-left: 6px; }
+.mast-row:has(.installbtn:not([hidden])) .savedbtn { margin: 0 2px; }
+/* a longer app name than the row holds: Saved keeps its star, drops its word */
+.mast.tight .savedbtn { width: 36px; padding: 0; justify-content: center; }
+.mast.tight .savedbtn > span { display: none; }
+
+/* the switcher: hold the bar's centre cell. The browser's own long-press
+   menu and text selection stay off it */
+.tabbar .holdcell { -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; }
+/* the countdown under the finger: a ring that fills, 3, 2, 1 */
+.holdring { position: fixed; z-index: 70; width: 92px; height: 92px; margin: -46px 0 0 -46px; pointer-events: none;
+  display: grid; place-items: center; border-radius: var(--r-round); background: var(--dock-glass);
+  backdrop-filter: var(--dock-filter); -webkit-backdrop-filter: var(--dock-filter); box-shadow: var(--dock-shadow); }
+.holdring svg { position: absolute; inset: 0; width: 100%; height: 100%; transform: rotate(-90deg); }
+.holdring circle { fill: none; stroke-width: 5; }
+.holdring .hr-track { stroke: var(--dock-edge); }
+.holdring .hr-fill { stroke: var(--sunset); stroke-linecap: round; stroke-dasharray: 100; stroke-dashoffset: 100;
+  animation: holdring-fill var(--hold-ms) linear forwards; }
+.holdring .hr-n { position: relative; font-family: var(--serif); font-size: var(--fs-hero); font-weight: 600; color: var(--dock-ink); }
+@keyframes holdring-fill { to { stroke-dashoffset: 0; } }
+@media (prefers-reduced-motion: reduce) { .holdring .hr-fill { animation: none; stroke-dashoffset: 0; } }
+/* the bubble above the pill: the eight apps, this one marked */
+.appbubble { position: fixed; z-index: 60; left: var(--dock-inset); right: var(--dock-inset); max-width: 440px; margin-inline: auto;
+  padding: var(--s2); border-radius: var(--r-sheet); background: var(--paper); color: var(--ink);
+  border: 1px solid var(--line); box-shadow: var(--shadow-float); }
+.appbubble.side { right: auto; width: 360px; margin: 0; }
+.ab-list { display: grid; gap: 2px; }
+.ab-row { position: relative; display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: var(--s3);
+  min-height: 52px; padding: var(--s1) var(--s2); border-radius: var(--r-media); }
+.ab-row:hover, .ab-row:focus-visible { background: var(--paper-2); }
+.ab-row.on { background: var(--paper-2); }
+.ab-row.on .apptile { box-shadow: 0 0 0 2px var(--paper), 0 0 0 4px var(--tile-pop); }
+.ab-words { display: grid; min-width: 0; }
+.ab-name { font-size: var(--fs-lead); font-weight: 600; line-height: var(--lh-tight); }
+.ab-line { font-size: var(--fs-meta); color: var(--ink-3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ab-row .nd { width: 8px; height: 8px; border-radius: var(--r-round); background: var(--sunset); }
+.ab-here .i { width: 18px; height: 18px; color: var(--ink-3); }
+/* once, on a first visit: the coach mark over the centre cell */
+.coachmark { position: fixed; z-index: 55; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: var(--s1);
+  max-width: calc(100vw - 32px); padding: var(--s1) var(--s1) var(--s1) var(--s4); border-radius: var(--r-pill);
+  background: var(--lake); color: var(--lake-ink); font-size: var(--fs-button); font-weight: 600; box-shadow: var(--shadow-float); white-space: nowrap; }
+.coachmark .iconbtn { color: var(--lake-ink); }
+.coachmark.side { transform: none; }
+
+/* the sheet: eight tiles, this one ringed, then the home-screen card */
+.appgrid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--s4) var(--s2); padding: var(--s2) 0 var(--s4); }
+.appcell { display: grid; justify-items: center; gap: 6px; padding: var(--s1) 0; border-radius: var(--r-media); text-align: center; }
+.appcell:hover .appname { text-decoration: underline; }
+.appname { font-size: var(--fs-meta); font-weight: 600; color: var(--ink); line-height: var(--lh-tight); }
+.appcell.on .appname { font-weight: 700; }
+.apptile { display: grid; place-items: center; width: 56px; height: 56px; border-radius: var(--r-sheet);
+  background: var(--tile); color: var(--lake-ink); box-shadow: inset 0 0 0 1px var(--lake-line); }
+.apptile .i { width: 28px; height: 28px; stroke-width: 1.9; }
+.appcell.on .apptile { box-shadow: 0 0 0 2px var(--paper), 0 0 0 4px var(--tile-pop); }
+.apptile.sm { width: 40px; height: 40px; border-radius: var(--r-media); }
+.apptile.sm .i { width: 22px; height: 22px; }
+.installcard { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; gap: var(--s3);
+  padding: var(--s3); border: 1px solid var(--line); border-radius: var(--r-media); background: var(--paper-2); }
+.ic-words b { font-size: var(--fs-lead); font-weight: 600; line-height: var(--lh-tight); }
+.ic-row { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: center; gap: var(--s2); }
+.ic-row .ask-how { margin-top: 0; }
+.howto + .howto { margin-top: var(--s4); }
+.howto-steps { list-style: none; display: grid; gap: var(--s2); }
+.howto-steps li { display: flex; align-items: center; gap: var(--s3); font-size: var(--fs-lead); }
+
+/* a shelf: a tab not built yet. Live, its promise and the top tabs to come */
+.promise-tops { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; margin-top: var(--s4); }
+.promise-tops .chip { cursor: default; }
+.shelf-sec + .shelf-sec { margin-top: var(--s2); }
+
+/* a dot on a top tab with something new since the last visit */
+.secpill .chip .nd, .secsheet-row .nd { width: 7px; height: 7px; border-radius: var(--r-round); background: var(--sunset); flex: 0 0 auto; }
+.secpill .chip .nd { align-self: flex-start; margin: 9px 0 0 -1px; }
+.secbar.lead > .secpill .chip .nd { margin-top: 12px; }
+.secpill .chip.on .nd { background: currentColor; }
+
+/* Real life / Online: the Local / Everything switch in its own two waters */
+.worldsw { --local: var(--liq-irl); --local-ink: var(--liq-irl-ink); --every: var(--liq-online); --every-ink: var(--liq-online-ink); }
+body[data-world="irl"] .panel [data-world="online"], body[data-world="online"] .panel [data-world="irl"] { display: none; }

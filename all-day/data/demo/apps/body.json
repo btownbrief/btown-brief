@@ -1,0 +1,734 @@
+{
+  "_": "Invented demo data for Body’s tabs that are not built yet; every name, place detail and post is made up.",
+  "tabs": {
+    "train": {
+      "sections": [
+        {
+          "key": "gyms",
+          "label": "Gyms",
+          "hours": 60,
+          "items": [
+            {
+              "k": "hl-1",
+              "kind": "headline",
+              "src": "Gym guide",
+              "title": "Ironwood Strength: racks, platforms and a day pass",
+              "ago": "2d",
+              "thumb": "slate"
+            },
+            {
+              "k": "hl-2",
+              "kind": "headline",
+              "src": "Gym guide",
+              "title": "Lakeview Fitness: the quiet hours and the good treadmills",
+              "ago": "4d",
+              "thumb": "lake"
+            },
+            {
+              "k": "hl-3",
+              "kind": "headline",
+              "src": "Gym guide",
+              "title": "Foundry Climbing: bouldering, plus a small weight room",
+              "ago": "6d",
+              "thumb": "brick"
+            }
+          ]
+        },
+        {
+          "key": "beginner",
+          "label": "Beginner",
+          "hours": 2.5,
+          "items": [
+            {
+              "k": "pk-1",
+              "kind": "pick",
+              "src": "Btown Brief",
+              "eyebrow": "Beginner",
+              "title": "Three days a week, full body, forty minutes",
+              "why": "Enough to get stronger without dreading the next session.",
+              "media": "dawn"
+            },
+            {
+              "k": "pk-2",
+              "kind": "pick",
+              "src": "Btown Brief",
+              "eyebrow": "Beginner",
+              "title": "How to walk into a gym the first time",
+              "why": "Pick one machine, learn it well, and leave feeling good.",
+              "media": "sand"
+            }
+          ]
+        },
+        {
+          "key": "intermediate",
+          "label": "Intermediate",
+          "hours": 20,
+          "items": [
+            {
+              "k": "pk-3",
+              "kind": "pick",
+              "src": "Btown Brief",
+              "eyebrow": "Intermediate",
+              "title": "Upper and lower, four days, with a deload week",
+              "why": "When the beginner plan stops moving the numbers.",
+              "media": "teal"
+            },
+            {
+              "k": "pk-4",
+              "kind": "pick",
+              "src": "Btown Brief",
+              "eyebrow": "Intermediate",
+              "title": "Adding intervals without wrecking your legs",
+              "why": "Two short sessions beat one long miserable one.",
+              "media": "field"
+            }
+          ]
+        },
+        {
+          "key": "hardcore",
+          "label": "Hardcore",
+          "hours": 9,
+          "items": [
+            {
+              "k": "pk-5",
+              "kind": "pick",
+              "src": "Btown Brief",
+              "eyebrow": "Hardcore",
+              "title": "Five days, heavy singles and a long Sunday run",
+              "why": "For people who already log every set.",
+              "media": "night"
+            },
+            {
+              "k": "pk-6",
+              "kind": "pick",
+              "src": "Btown Brief",
+              "eyebrow": "Hardcore",
+              "title": "The hill repeat ladder on Main Street",
+              "why": "Steep, close to downtown, and honest about your fitness.",
+              "media": "street"
+            }
+          ]
+        },
+        {
+          "key": "sprints",
+          "label": "Sprints",
+          "hours": 1,
+          "items": [
+            {
+              "k": "pk-7",
+              "kind": "pick",
+              "src": "Btown Brief",
+              "eyebrow": "Sprints",
+              "title": "Six hill sprints, full rest, done in twenty",
+              "why": "Short and fast keeps sprinting fun instead of a chore.",
+              "media": "foliage"
+            },
+            {
+              "k": "pk-8",
+              "kind": "pick",
+              "src": "Btown Brief",
+              "eyebrow": "Sprints",
+              "title": "Track night: four by one hundred, walk back",
+              "why": "A flat, lit track makes the cold evenings easier.",
+              "media": "rink"
+            }
+          ]
+        },
+        {
+          "key": "log",
+          "label": "Log",
+          "hours": 0.4,
+          "items": [
+            {
+              "k": "po-1",
+              "kind": "post",
+              "author": "Dana K.",
+              "title": "Monday lift",
+              "text": "Squat up five pounds, first time in a month. Slept eight hours, which probably helped.",
+              "ago": "24m",
+              "comments": "3"
+            },
+            {
+              "k": "po-2",
+              "kind": "post",
+              "author": "Ezra M.",
+              "title": "Sprints in the rain",
+              "text": "Three hill sprints before the rain. Legs feel like jelly in a good way.",
+              "ago": "2h",
+              "comments": "1"
+            }
+          ]
+        },
+        {
+          "key": "book-stephen",
+          "label": "Book Stephen",
+          "hours": 140,
+          "items": [
+            {
+              "k": "pk-9",
+              "kind": "pick",
+              "src": "Btown Brief",
+              "eyebrow": "Book Stephen",
+              "title": "One session, one gym, the whole walkthrough",
+              "why": "You leave knowing which machines to use and in what order.",
+              "media": "mustard"
+            },
+            {
+              "k": "pk-10",
+              "kind": "pick",
+              "src": "Btown Brief",
+              "eyebrow": "Book Stephen",
+              "title": "Bring a friend to the walkthrough",
+              "why": "Two people learn faster and keep each other coming back.",
+              "media": "plum"
+            }
+          ]
+        }
+      ]
+    },
+    "recover": {
+      "sections": [
+        {
+          "key": "stretch",
+          "label": "Stretch",
+          "hours": 30,
+          "items": [
+            {
+              "k": "pk-11",
+              "kind": "pick",
+              "src": "Btown Brief",
+              "eyebrow": "Stretch",
+              "title": "Ten minutes on the floor after work",
+              "why": "Hips, hamstrings and shoulders, the desk-day trio.",
+              "media": "sand"
+            },
+            {
+              "k": "pk-12",
+              "kind": "pick",
+              "src": "Btown Brief",
+              "eyebrow": "Stretch",
+              "title": "The morning wake-up routine, five moves",
+              "why": "Gets you out of bed stiff and into the day loose.",
+              "media": "dawn"
+            }
+          ]
+        },
+        {
+          "key": "yoga",
+          "label": "Yoga",
+          "hours": 8,
+          "items": [
+            {
+              "k": "ev-1",
+              "kind": "event",
+              "src": "Willow Studio",
+              "title": "Slow flow for stiff runners",
+              "dow": "Thu",
+              "dom": "5",
+              "when": "6 pm",
+              "where": "Willow Studio, Pine St",
+              "price": "$15",
+              "going": "14"
+            },
+            {
+              "k": "ev-2",
+              "kind": "event",
+              "src": "Willow Studio",
+              "title": "Sunday candlelit yin",
+              "dow": "Sun",
+              "dom": "8",
+              "when": "5 pm",
+              "where": "Willow Studio, Pine St",
+              "price": "$18",
+              "going": "21"
+            }
+          ]
+        },
+        {
+          "key": "roll",
+          "label": "Roll",
+          "hours": 70,
+          "items": [
+            {
+              "k": "pk-13",
+              "kind": "pick",
+              "src": "Btown Brief",
+              "eyebrow": "Roll",
+              "title": "Foam rolling the calves after a long run",
+              "why": "Two minutes a side and the stairs stop hurting.",
+              "media": "pine"
+            },
+            {
+              "k": "pk-14",
+              "kind": "pick",
+              "src": "Btown Brief",
+              "eyebrow": "Roll",
+              "title": "A lacrosse ball for tight shoulders",
+              "why": "Cheap, portable, and it fits in a desk drawer.",
+              "media": "cherry"
+            }
+          ]
+        },
+        {
+          "key": "sauna-cold",
+          "label": "Sauna & cold",
+          "hours": 2,
+          "items": [
+            {
+              "k": "ev-3",
+              "kind": "event",
+              "src": "Cold Lake Club",
+              "title": "Sunday cold dip, five minutes max",
+              "dow": "Sun",
+              "dom": "8",
+              "when": "9 am",
+              "where": "North Beach",
+              "price": "Free",
+              "going": "23"
+            },
+            {
+              "k": "ev-4",
+              "kind": "event",
+              "src": "Ember Sauna",
+              "title": "Mobile sauna by the lake, book a slot",
+              "dow": "Sat",
+              "dom": "14",
+              "when": "4 pm",
+              "where": "Oakledge Park lot",
+              "price": "$20",
+              "going": "16"
+            }
+          ]
+        },
+        {
+          "key": "breathe",
+          "label": "Breathe",
+          "hours": 1.2,
+          "items": [
+            {
+              "k": "pk-15",
+              "kind": "pick",
+              "src": "Btown Brief",
+              "eyebrow": "Breathe",
+              "title": "Box breathing, four counts each, with a timer",
+              "why": "A two-minute reset that works on the bus.",
+              "media": "teal"
+            },
+            {
+              "k": "pk-16",
+              "kind": "pick",
+              "src": "Btown Brief",
+              "eyebrow": "Breathe",
+              "title": "Long exhale before bed",
+              "why": "Slower breathing tells your body the day is over.",
+              "media": "night"
+            }
+          ]
+        },
+        {
+          "key": "sleep",
+          "label": "Sleep",
+          "hours": 200,
+          "items": [
+            {
+              "k": "hl-4",
+              "kind": "headline",
+              "src": "Body guide",
+              "title": "Why sleep matters more than the workout you skipped",
+              "ago": "1w",
+              "thumb": "night"
+            },
+            {
+              "k": "hl-5",
+              "kind": "headline",
+              "src": "Body guide",
+              "title": "Which sleep trackers are worth wearing",
+              "ago": "2w",
+              "thumb": "plum"
+            }
+          ]
+        }
+      ]
+    },
+    "fuel": {
+      "sections": [
+        {
+          "key": "water",
+          "label": "Water",
+          "hours": 12,
+          "items": [
+            {
+              "k": "po-3",
+              "kind": "post",
+              "author": "Lucia B.",
+              "title": "Water streak",
+              "text": "Eight glasses by 4 pm, a first for me. The big jar on the desk is doing the work.",
+              "ago": "12h",
+              "comments": "4"
+            },
+            {
+              "k": "po-4",
+              "kind": "post",
+              "author": "Kip A.",
+              "title": "Does tea count?",
+              "text": "Cold weather makes me forget water entirely. Tea counts, right?",
+              "ago": "20h",
+              "comments": "9"
+            }
+          ]
+        },
+        {
+          "key": "protein",
+          "label": "Protein",
+          "hours": 3,
+          "items": [
+            {
+              "k": "pk-17",
+              "kind": "pick",
+              "src": "Btown Brief",
+              "eyebrow": "Protein",
+              "title": "A protein breakfast in five minutes",
+              "why": "Eggs, yogurt and berries, no blender needed.",
+              "media": "dawn"
+            },
+            {
+              "k": "pk-18",
+              "kind": "pick",
+              "src": "Btown Brief",
+              "eyebrow": "Protein",
+              "title": "Shakes that taste like dessert",
+              "why": "Peanut butter and banana make the powder disappear.",
+              "media": "mustard"
+            }
+          ]
+        },
+        {
+          "key": "calories",
+          "label": "Calories",
+          "hours": 0.7,
+          "items": [
+            {
+              "k": "po-5",
+              "kind": "post",
+              "author": "Ana R.",
+              "title": "Photo log",
+              "text": "Logged lunch with one photo. Way easier than weighing everything.",
+              "ago": "42m",
+              "comments": "2"
+            },
+            {
+              "k": "po-6",
+              "kind": "post",
+              "author": "Jesse L.",
+              "title": "Week two",
+              "text": "Week two of logging. Turns out my afternoon snacks were a whole meal.",
+              "ago": "3h",
+              "comments": "6"
+            }
+          ]
+        },
+        {
+          "key": "basics",
+          "label": "Basics",
+          "hours": 48,
+          "items": [
+            {
+              "k": "hl-6",
+              "kind": "headline",
+              "src": "Body guide",
+              "title": "Protein, creatine and plain food: the basics page",
+              "ago": "2d",
+              "thumb": "paper"
+            },
+            {
+              "k": "hl-7",
+              "kind": "headline",
+              "src": "Body guide",
+              "title": "How much to eat when you start lifting",
+              "ago": "3d",
+              "thumb": "field"
+            }
+          ]
+        },
+        {
+          "key": "supplements",
+          "label": "Supplements",
+          "hours": 90,
+          "items": [
+            {
+              "k": "hl-8",
+              "kind": "headline",
+              "src": "Body guide",
+              "title": "Caffeine and theanine: what the studies actually say",
+              "ago": "4d",
+              "thumb": "coffee"
+            },
+            {
+              "k": "hl-9",
+              "kind": "headline",
+              "src": "Body guide",
+              "title": "Creatine questions, answered in plain words",
+              "ago": "6d",
+              "thumb": "slate"
+            }
+          ]
+        }
+      ]
+    },
+    "coach": {
+      "sections": [
+        {
+          "key": "chat",
+          "label": "Chat",
+          "hours": 9,
+          "items": [
+            {
+              "k": "po-7",
+              "kind": "post",
+              "author": "Dana K.",
+              "title": "Plan B",
+              "text": "Told the coach I skipped the gym. It suggested a twenty-minute walk instead, and I took it.",
+              "ago": "9h",
+              "comments": "2"
+            },
+            {
+              "k": "po-8",
+              "kind": "post",
+              "author": "Max T.",
+              "title": "Before the run",
+              "text": "Asked what to eat before an early run. Toast and a banana, it said, which I can manage.",
+              "ago": "15h",
+              "comments": "1"
+            }
+          ]
+        },
+        {
+          "key": "morning",
+          "label": "Morning",
+          "hours": 0.5,
+          "items": [
+            {
+              "k": "pk-19",
+              "kind": "pick",
+              "src": "Btown Brief",
+              "eyebrow": "Morning nudge",
+              "title": "Water, a short walk, then the hard thing",
+              "why": "Three small wins before nine set the tone for the day.",
+              "media": "dawn"
+            },
+            {
+              "k": "pk-20",
+              "kind": "pick",
+              "src": "Btown Brief",
+              "eyebrow": "Morning nudge",
+              "title": "Yesterday you slept seven hours, aim for eight",
+              "why": "One more hour tonight makes tomorrow’s lift easier.",
+              "media": "night"
+            }
+          ]
+        },
+        {
+          "key": "capture",
+          "label": "Capture",
+          "hours": 3,
+          "items": [
+            {
+              "k": "hl-10",
+              "kind": "headline",
+              "src": "Btown Brief",
+              "title": "Log a workout by voice in ten seconds",
+              "ago": "3h",
+              "thumb": "teal"
+            },
+            {
+              "k": "hl-11",
+              "kind": "headline",
+              "src": "Btown Brief",
+              "title": "The phone shortcut that sends your notes to the coach",
+              "ago": "5h",
+              "thumb": "slate"
+            }
+          ]
+        },
+        {
+          "key": "how-i-do-it",
+          "label": "How I do it",
+          "hours": 100,
+          "items": [
+            {
+              "k": "pk-21",
+              "kind": "pick",
+              "src": "Btown Brief",
+              "eyebrow": "How I do it",
+              "title": "Stephen’s daily template, every habit in order",
+              "why": "The list this whole app started from, copy it and edit.",
+              "media": "paper"
+            },
+            {
+              "k": "pk-22",
+              "kind": "pick",
+              "src": "Btown Brief",
+              "eyebrow": "How I do it",
+              "title": "The gym, the sprints and the sleep rule",
+              "why": "What stayed after a year of trying everything.",
+              "media": "pine"
+            }
+          ]
+        }
+      ]
+    },
+    "together": {
+      "sections": [
+        {
+          "key": "this-week",
+          "label": "This week",
+          "hours": 15,
+          "items": [
+            {
+              "k": "ev-5",
+              "kind": "event",
+              "src": "Adult Social Sports",
+              "title": "Lunch-hour walk along the waterfront",
+              "dow": "Wed",
+              "dom": "4",
+              "when": "12 pm",
+              "where": "Waterfront Park",
+              "price": "Free",
+              "going": "15"
+            },
+            {
+              "k": "ev-6",
+              "kind": "event",
+              "src": "Lakeside Runners",
+              "title": "Thursday 5K, every pace",
+              "dow": "Thu",
+              "dom": "5",
+              "when": "6 pm",
+              "where": "Waterfront Park",
+              "price": "Free",
+              "going": "34"
+            }
+          ]
+        },
+        {
+          "key": "work-out",
+          "label": "Work out",
+          "hours": 1.5,
+          "items": [
+            {
+              "k": "ev-7",
+              "kind": "event",
+              "src": "Btown Body",
+              "title": "Saturday partner workout, bring a friend",
+              "dow": "Sat",
+              "dom": "7",
+              "when": "9 am",
+              "where": "Ironwood Strength, Pine St",
+              "price": "$10",
+              "going": "12"
+            },
+            {
+              "k": "ev-8",
+              "kind": "event",
+              "src": "Btown Body",
+              "title": "Stairs at the Hill, then coffee",
+              "dow": "Tue",
+              "dom": "10",
+              "when": "7 am",
+              "where": "Main St hill, by UVM",
+              "price": "Free",
+              "going": "9"
+            }
+          ]
+        },
+        {
+          "key": "recover",
+          "label": "Recover",
+          "hours": 3,
+          "items": [
+            {
+              "k": "ev-9",
+              "kind": "event",
+              "src": "Cold Lake Club",
+              "title": "Group cold dip and sauna",
+              "dow": "Sun",
+              "dom": "8",
+              "when": "9 am",
+              "where": "North Beach",
+              "price": "$10",
+              "going": "19"
+            },
+            {
+              "k": "ev-10",
+              "kind": "event",
+              "src": "Willow Studio",
+              "title": "Stretch night for lifters",
+              "dow": "Thu",
+              "dom": "12",
+              "when": "7 pm",
+              "where": "Willow Studio, Pine St",
+              "price": "$12",
+              "going": "11"
+            }
+          ]
+        },
+        {
+          "key": "adult-social",
+          "label": "Adult Social Sports",
+          "hours": 40,
+          "items": [
+            {
+              "k": "ev-11",
+              "kind": "event",
+              "src": "Adult Social Sports",
+              "title": "Pickleball for beginners, paddles provided",
+              "dow": "Mon",
+              "dom": "9",
+              "when": "6 pm",
+              "where": "Miller Center, Ethan Allen Pkwy",
+              "price": "$5",
+              "going": "22"
+            },
+            {
+              "k": "ev-12",
+              "kind": "event",
+              "src": "Adult Social Sports",
+              "title": "Snowshoe night with headlamps",
+              "dow": "Sat",
+              "dom": "14",
+              "when": "6 pm",
+              "where": "Centennial Woods",
+              "price": "Free",
+              "going": "17"
+            }
+          ]
+        },
+        {
+          "key": "join",
+          "label": "Join",
+          "hours": 120,
+          "items": [
+            {
+              "k": "pk-23",
+              "kind": "pick",
+              "src": "Btown Brief",
+              "eyebrow": "Join",
+              "title": "Find a workout buddy by time of day",
+              "why": "Early birds and night owls rarely train well together.",
+              "media": "rink"
+            },
+            {
+              "k": "pk-24",
+              "kind": "pick",
+              "src": "Btown Brief",
+              "eyebrow": "Join",
+              "title": "Post a session and let people tap in",
+              "why": "The easiest way to make a habit is to promise someone.",
+              "media": "sand"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

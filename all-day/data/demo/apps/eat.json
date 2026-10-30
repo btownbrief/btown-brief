@@ -1,0 +1,674 @@
+{
+  "_": "Invented demo data for Eat’s tabs that are not built yet; every name, place detail and post is made up.",
+  "tabs": {
+    "deals": {
+      "sections": [
+        {
+          "key": "today",
+          "label": "Today",
+          "hours": 3,
+          "items": [
+            {
+              "k": "hl-1",
+              "kind": "headline",
+              "src": "Juniper Noodle Bar",
+              "title": "Half-off dumplings until 5, today only",
+              "ago": "3h",
+              "thumb": "cherry"
+            },
+            {
+              "k": "hl-2",
+              "kind": "headline",
+              "src": "Marble Street Bakery",
+              "title": "Day-old loaves two for one after 3",
+              "ago": "5h",
+              "thumb": "coffee"
+            }
+          ]
+        },
+        {
+          "key": "happy-hour",
+          "label": "Happy hour",
+          "hours": 0.7,
+          "items": [
+            {
+              "k": "hl-3",
+              "kind": "headline",
+              "src": "Copper Kettle Taproom",
+              "title": "Four to six: local drafts and a pretzel deal",
+              "ago": "42m",
+              "thumb": "mustard"
+            },
+            {
+              "k": "hl-4",
+              "kind": "headline",
+              "src": "Harbor Lane Grill",
+              "title": "Oysters and half-price wings, 5 to 7",
+              "ago": "3h",
+              "thumb": "lake"
+            },
+            {
+              "k": "hl-5",
+              "kind": "headline",
+              "src": "The Maple Room",
+              "title": "Late happy hour after 9 on weeknights",
+              "ago": "5h",
+              "thumb": "night"
+            }
+          ]
+        },
+        {
+          "key": "under-ten",
+          "label": "Under $10",
+          "hours": 9,
+          "items": [
+            {
+              "k": "hl-6",
+              "kind": "headline",
+              "src": "Fern Hill Tacos",
+              "title": "Three tacos and a drink for $9",
+              "ago": "9h",
+              "thumb": "sand"
+            },
+            {
+              "k": "hl-7",
+              "kind": "headline",
+              "src": "North Avenue Deli",
+              "title": "The $8 sandwich that fills a whole afternoon",
+              "ago": "15h",
+              "thumb": "brick"
+            }
+          ]
+        },
+        {
+          "key": "dine-card",
+          "label": "Dine card",
+          "hours": 60,
+          "items": [
+            {
+              "k": "pk-1",
+              "kind": "pick",
+              "src": "Btown Brief",
+              "eyebrow": "On the Dine Card",
+              "title": "Ten restaurants, one first-visit discount each",
+              "why": "A reason to finally try the places you keep walking past.",
+              "media": "paper"
+            },
+            {
+              "k": "pk-2",
+              "kind": "pick",
+              "src": "Btown Brief",
+              "eyebrow": "New on the card",
+              "title": "Fern Hill Tacos joins the Dine Card",
+              "why": "The card’s first taco stop, ten minutes from Church Street.",
+              "media": "mustard"
+            }
+          ]
+        },
+        {
+          "key": "perks",
+          "label": "Perks",
+          "hours": 22,
+          "items": [
+            {
+              "k": "hl-8",
+              "kind": "headline",
+              "src": "Marble Street Bakery",
+              "title": "First visit: a free cookie with any coffee",
+              "ago": "22h",
+              "thumb": "coffee"
+            },
+            {
+              "k": "hl-9",
+              "kind": "headline",
+              "src": "Juniper Noodle Bar",
+              "title": "Show the Brief at the counter for a free side",
+              "ago": "2d",
+              "thumb": "cherry"
+            }
+          ]
+        }
+      ]
+    },
+    "new": {
+      "sections": [
+        {
+          "key": "just-opened",
+          "label": "Just opened",
+          "hours": 8,
+          "items": [
+            {
+              "k": "hl-10",
+              "kind": "headline",
+              "src": "Openings radar",
+              "title": "Sorrel & Salt opens on North Winooski Avenue",
+              "ago": "8h",
+              "thumb": "brick"
+            },
+            {
+              "k": "hl-11",
+              "kind": "headline",
+              "src": "Openings radar",
+              "title": "A Korean lunch counter lands in the South End",
+              "ago": "14h",
+              "thumb": "street"
+            }
+          ]
+        },
+        {
+          "key": "coming-soon",
+          "label": "Coming soon",
+          "hours": 2.5,
+          "items": [
+            {
+              "k": "hl-12",
+              "kind": "headline",
+              "src": "Openings radar",
+              "title": "Paper signs up at the old print shop: a wine bar",
+              "ago": "2h",
+              "thumb": "paper"
+            },
+            {
+              "k": "hl-13",
+              "kind": "headline",
+              "src": "Openings radar",
+              "title": "Hollow Brook Creamery plans a scoop shop by the lake",
+              "ago": "4h",
+              "thumb": "lake"
+            }
+          ]
+        },
+        {
+          "key": "closing-soon",
+          "label": "Closing soon",
+          "hours": 1,
+          "items": [
+            {
+              "k": "hl-14",
+              "kind": "headline",
+              "src": "Openings radar",
+              "title": "Birchwood Diner’s last breakfast is in two weeks",
+              "ago": "1h",
+              "thumb": "dawn"
+            },
+            {
+              "k": "hl-15",
+              "kind": "headline",
+              "src": "Openings radar",
+              "title": "Lantern Ramen closes at the end of the month",
+              "ago": "3h",
+              "thumb": "night"
+            }
+          ]
+        },
+        {
+          "key": "closed",
+          "label": "Closed",
+          "hours": 30,
+          "items": [
+            {
+              "k": "hl-16",
+              "kind": "headline",
+              "src": "Openings radar",
+              "title": "The Copperleaf Cafe has closed after nine years",
+              "ago": "1d",
+              "thumb": "slate"
+            },
+            {
+              "k": "hl-17",
+              "kind": "headline",
+              "src": "Openings radar",
+              "title": "Elm Street Pizza served its last slice Sunday",
+              "ago": "2d",
+              "thumb": "brick"
+            }
+          ]
+        },
+        {
+          "key": "last-month",
+          "label": "Last month",
+          "hours": 200,
+          "items": [
+            {
+              "k": "hl-18",
+              "kind": "headline",
+              "src": "Openings radar",
+              "title": "October: five openings, two closings, one move",
+              "ago": "1w",
+              "thumb": "foliage"
+            },
+            {
+              "k": "hl-19",
+              "kind": "headline",
+              "src": "Openings radar",
+              "title": "The month in new menus, from noodles to pierogi",
+              "ago": "2w",
+              "thumb": "coffee"
+            }
+          ]
+        },
+        {
+          "key": "reminisce",
+          "label": "Reminisce",
+          "hours": 90,
+          "items": [
+            {
+              "k": "hl-20",
+              "kind": "headline",
+              "src": "Btown Brief archive",
+              "title": "The late-night falafel window everyone still misses",
+              "ago": "4d",
+              "thumb": "neon"
+            },
+            {
+              "k": "hl-21",
+              "kind": "headline",
+              "src": "Btown Brief archive",
+              "title": "When Birchwood Diner opened, and the line that formed",
+              "ago": "6d",
+              "thumb": "dawn"
+            }
+          ]
+        }
+      ]
+    },
+    "bites": {
+      "sections": [
+        {
+          "key": "weekly-bite",
+          "label": "Weekly Bite",
+          "hours": 26,
+          "items": [
+            {
+              "k": "pk-3",
+              "kind": "pick",
+              "src": "Btown Brief",
+              "eyebrow": "Weekly Bite",
+              "title": "The cardamom bun at Marble Street Bakery",
+              "why": "Warm by eight, gone by ten, worth the alarm.",
+              "media": "coffee"
+            },
+            {
+              "k": "pk-4",
+              "kind": "pick",
+              "src": "Btown Brief",
+              "eyebrow": "Weekly Bite",
+              "title": "Sorrel & Salt’s squash soup with brown butter",
+              "why": "The best five dollars of a cold lunch hour.",
+              "media": "foliage"
+            }
+          ]
+        },
+        {
+          "key": "own-words",
+          "label": "In their own words",
+          "hours": 0.4,
+          "items": [
+            {
+              "k": "hl-22",
+              "kind": "headline",
+              "src": "Juniper Noodle Bar",
+              "title": "We hand-fold every dumpling, about nine hundred a day",
+              "ago": "24m",
+              "thumb": "cherry"
+            },
+            {
+              "k": "hl-23",
+              "kind": "headline",
+              "src": "Fern Hill Tacos",
+              "title": "Our tortillas come from a farm forty minutes north",
+              "ago": "2h",
+              "thumb": "field"
+            }
+          ]
+        },
+        {
+          "key": "photos",
+          "label": "Photos",
+          "hours": 3,
+          "items": [
+            {
+              "k": "po-1",
+              "kind": "post",
+              "author": "Iris J.",
+              "title": "Lunch with a view",
+              "text": "The window seat at Sorrel & Salt, soup, rain on the glass.",
+              "ago": "3h",
+              "comments": "4"
+            },
+            {
+              "k": "po-2",
+              "kind": "post",
+              "author": "Caleb W.",
+              "text": "Morning bun haul for the office. Two did not survive the walk.",
+              "ago": "5h",
+              "comments": "7"
+            }
+          ]
+        },
+        {
+          "key": "menus",
+          "label": "Menus",
+          "hours": 70,
+          "items": [
+            {
+              "k": "hl-24",
+              "kind": "headline",
+              "src": "Menus",
+              "title": "Sorrel & Salt posts its winter menu",
+              "ago": "3d",
+              "thumb": "paper"
+            },
+            {
+              "k": "hl-25",
+              "kind": "headline",
+              "src": "Menus",
+              "title": "Lantern Ramen’s last menu, with the specials",
+              "ago": "5d",
+              "thumb": "night"
+            }
+          ]
+        },
+        {
+          "key": "reddit",
+          "label": "Asked on Reddit",
+          "hours": 11,
+          "items": [
+            {
+              "k": "po-3",
+              "kind": "post",
+              "author": "Noah G.",
+              "title": "Late pho?",
+              "text": "Where’s a good bowl of pho after 9 pm? The replies point to two spots on North Winooski.",
+              "ago": "11h",
+              "comments": "23"
+            },
+            {
+              "k": "po-4",
+              "kind": "post",
+              "author": "Elena V.",
+              "title": "Birthday dinner",
+              "text": "Best birthday dinner under $40 a person. A long thread, mostly about one tasting menu.",
+              "ago": "19h",
+              "comments": "31"
+            }
+          ]
+        }
+      ]
+    },
+    "market": {
+      "sections": [
+        {
+          "key": "this-week",
+          "label": "This week",
+          "hours": 14,
+          "items": [
+            {
+              "k": "ev-1",
+              "kind": "event",
+              "src": "Old North End Market",
+              "title": "Indoor winter market, twenty farms",
+              "dow": "Sat",
+              "dom": "7",
+              "when": "10 am",
+              "where": "Pine Street warehouse, South End",
+              "price": "Free",
+              "going": "46"
+            },
+            {
+              "k": "ev-2",
+              "kind": "event",
+              "src": "Intervale Growers",
+              "title": "Root vegetable stand and cider tasting",
+              "dow": "Sat",
+              "dom": "14",
+              "when": "9 am",
+              "where": "The Intervale",
+              "price": "Free",
+              "going": "22"
+            }
+          ]
+        },
+        {
+          "key": "in-season",
+          "label": "In season",
+          "hours": 50,
+          "items": [
+            {
+              "k": "pk-5",
+              "kind": "pick",
+              "src": "Btown Brief",
+              "eyebrow": "In season",
+              "title": "Storage apples, the crisp ones",
+              "why": "November is when they taste the most like apples.",
+              "media": "cherry"
+            },
+            {
+              "k": "pk-6",
+              "kind": "pick",
+              "src": "Btown Brief",
+              "eyebrow": "In season",
+              "title": "Squash of every shape",
+              "why": "Roast two kinds and compare, it is a cheap fun dinner.",
+              "media": "foliage"
+            }
+          ]
+        },
+        {
+          "key": "farms",
+          "label": "Farms",
+          "hours": 120,
+          "items": [
+            {
+              "k": "hl-26",
+              "kind": "headline",
+              "src": "Farms",
+              "title": "Hollow Brook Farm takes winter share orders online",
+              "ago": "5d",
+              "thumb": "field"
+            },
+            {
+              "k": "hl-27",
+              "kind": "headline",
+              "src": "Farms",
+              "title": "Three Pines Farm: eggs and greens at the farm stand",
+              "ago": "1w",
+              "thumb": "pine"
+            }
+          ]
+        },
+        {
+          "key": "fridge",
+          "label": "Fridge",
+          "hours": 1.8,
+          "items": [
+            {
+              "k": "bd-1",
+              "kind": "board",
+              "author": "Rosa T.",
+              "title": "Community fridge needs bread and milk",
+              "metaLine": "Needs · bread, milk · tonight",
+              "text": "Shelves are bare after the weekend, anything sealed helps.",
+              "place": "Community fridge, North St",
+              "ago": "2h",
+              "left": "10h left"
+            },
+            {
+              "k": "bd-2",
+              "kind": "board",
+              "author": "Ben S.",
+              "title": "Dropped off soup and two dozen eggs",
+              "metaLine": "Stocked · soup, eggs · today",
+              "text": "Labeled with today’s date, top shelf.",
+              "place": "Community fridge, North St",
+              "ago": "4h",
+              "left": "1d left"
+            }
+          ]
+        },
+        {
+          "key": "rescue",
+          "label": "Rescue",
+          "hours": 0.3,
+          "items": [
+            {
+              "k": "bd-3",
+              "kind": "board",
+              "author": "Tess K.",
+              "title": "Twelve loaves and a tray of scones at close",
+              "metaLine": "At 6 pm · 12 bags · pay what you can",
+              "text": "Ring the side door after six.",
+              "place": "Marble Street Bakery, St Paul St",
+              "ago": "18m",
+              "left": "3h left"
+            },
+            {
+              "k": "bd-4",
+              "kind": "board",
+              "author": "Wen L.",
+              "title": "Leftover dumplings and noodles at close",
+              "metaLine": "At 9 pm · 8 bags · $5",
+              "text": "Bring a bag if you can.",
+              "place": "Juniper Noodle Bar, N Winooski Ave",
+              "ago": "2h",
+              "left": "6h left"
+            }
+          ]
+        }
+      ]
+    },
+    "dinner": {
+      "sections": [
+        {
+          "key": "next-dinner",
+          "label": "Next dinner",
+          "hours": 18,
+          "items": [
+            {
+              "k": "ev-3",
+              "kind": "event",
+              "src": "Dinner Club",
+              "title": "November table: six strangers, four courses",
+              "dow": "Thu",
+              "dom": "12",
+              "when": "6:30 pm",
+              "where": "Sorrel & Salt, N Winooski Ave",
+              "price": "$45",
+              "going": "30"
+            },
+            {
+              "k": "ev-4",
+              "kind": "event",
+              "src": "Dinner Club",
+              "title": "Second seating for the overflow list",
+              "dow": "Sat",
+              "dom": "14",
+              "when": "7 pm",
+              "where": "Marble Street Kitchen, St Paul St",
+              "price": "$45",
+              "going": "12"
+            }
+          ]
+        },
+        {
+          "key": "sign-up",
+          "label": "Sign up",
+          "hours": 2,
+          "items": [
+            {
+              "k": "pk-7",
+              "kind": "pick",
+              "src": "Btown Brief",
+              "eyebrow": "Sign up",
+              "title": "Ten questions, then a table of six",
+              "why": "We match by appetite and conversation, not by age alone.",
+              "media": "plum"
+            },
+            {
+              "k": "pk-8",
+              "kind": "pick",
+              "src": "Btown Brief",
+              "eyebrow": "Last call",
+              "title": "Sign-up for November closes Sunday",
+              "why": "Tables are set on Monday and invites go out that night.",
+              "media": "mustard"
+            }
+          ]
+        },
+        {
+          "key": "past-dinners",
+          "label": "Past dinners",
+          "hours": 160,
+          "items": [
+            {
+              "k": "hl-28",
+              "kind": "headline",
+              "src": "Dinner Club",
+              "title": "October’s table: soup, strangers and a three-hour dinner",
+              "ago": "7d",
+              "thumb": "foliage"
+            },
+            {
+              "k": "hl-29",
+              "kind": "headline",
+              "src": "Dinner Club",
+              "title": "September on the patio, the last warm night",
+              "ago": "2w",
+              "thumb": "dawn"
+            }
+          ]
+        },
+        {
+          "key": "host-a-table",
+          "label": "Host a table",
+          "hours": 3.5,
+          "items": [
+            {
+              "k": "po-5",
+              "kind": "post",
+              "author": "Mira C.",
+              "title": "What I learned hosting",
+              "text": "Hosted my first table last month. Bring one question you actually want answered.",
+              "ago": "4h",
+              "comments": "5"
+            },
+            {
+              "k": "po-6",
+              "kind": "post",
+              "author": "Jon E.",
+              "title": "December host",
+              "text": "Happy to host December if someone else picks the wine.",
+              "ago": "6h",
+              "comments": "2"
+            }
+          ]
+        },
+        {
+          "key": "restaurants",
+          "label": "Restaurants",
+          "hours": 40,
+          "items": [
+            {
+              "k": "pk-9",
+              "kind": "pick",
+              "src": "Btown Brief",
+              "eyebrow": "Host with us",
+              "title": "How a restaurant hosts a Dinner Club night",
+              "why": "One long table, a set menu, and six new regulars.",
+              "media": "brick"
+            },
+            {
+              "k": "pk-10",
+              "kind": "pick",
+              "src": "Btown Brief",
+              "eyebrow": "Past hosts",
+              "title": "The kitchens that have set our table so far",
+              "why": "Each one had a different idea of a good night out.",
+              "media": "coffee"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

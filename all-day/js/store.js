@@ -39,7 +39,7 @@ const SAVED_KEY = 'allday-saved';
 const SET_KEY = 'allday-settings';
 const HEARD_KEY = 'allday-heard';        // { episodeKey: seconds }
 const TRAIL_KEY = 'allday-trail';
-const VISIT_KEY = 'allday-visit';
+let VISIT_KEY = 'allday-visit';
 const THEME_KEY = 'allday-theme';        // 'light' | 'dark' | absent = follow the phone
 const VOTED_KEY = 'allday-voted';        // optimistic mirror of what you upvoted
 const WELCOME_KEY = 'allday-welcomed';   // the intro card, shown once
@@ -49,6 +49,20 @@ const SAVED_CAP = 400;
 const HEARD_CAP = 300;
 const TRAIL_CAP = 40;
 const VISIT_GAP = 1800; // 30 quiet minutes starts a new visit
+
+/* ---------------------------------------------------------------- the app */
+/* The eight apps share one origin, so one reader's saves, mutes, reads,
+   theme and settings are the same in all of them. What is each app's own:
+   the visit ("new since you last looked" is since you last looked HERE),
+   and whether it is on the home screen. All Day keeps its old keys. */
+let APP_ID = 'all-day';
+export function setApp(id) {
+  APP_ID = String(id || 'all-day');
+  VISIT_KEY = APP_ID === 'all-day' ? 'allday-visit' : 'allday-visit-' + APP_ID;
+}
+export const appId = () => APP_ID;
+/* the asks' home-screen flag, per app */
+export const installedKey = () => (APP_ID === 'all-day' ? 'installed' : 'installed-' + APP_ID);
 
 /* ------------------------------------------------------------ primitives */
 

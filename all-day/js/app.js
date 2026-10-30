@@ -18,6 +18,12 @@
        keepSubnav: true,         optional: the row under the mast stays while the mast steps away
      });
 
+   Since 2026-10-29 (wave 0 of the eight apps) the shell runs any of eight
+   apps. Which tabs it shows, in what order, under what names, is the app's
+   config (js/apps/<id>.js, read through js/apps/index.js); a mode registers
+   once under its own key and any app can host it. A tab whose mode is not
+   built yet is a shelf (js/shelf.js): its promise live, a demo on ?demo=1.
+
    On a wide screen (1024 and up) the page is a centred grid: the nine tabs
    on the left, the tab in a 720px column, and at 1280 and up a 300px rail
    on the right with what the tab's aside() hands back (a tab without one
@@ -32,9 +38,11 @@
 import * as store from './store.js';
 import * as auth from './auth.js';
 import { bindGestures } from './gestures.js';
-import { el, esc, safeHref, ICON, art, mark, cards, pills, button, setPalette, setJump } from './ui.js';
+import { el, esc, safeHref, ICON, art, mark, cards, pills, button, setPalette, setJump, worldSwitch, world } from './ui.js';
 import { bindShell, spy as spySections } from './sections.js';
 import * as asks from './asks.js';
+import { APPS, current as currentApp, keyOf, problems } from './apps/index.js';
+import * as switcher from './switcher.js';
 
 const $ = (id) => document.getElementById(id);
 const root = document.documentElement;
@@ -44,35 +52,45 @@ const root = document.documentElement;
 export const demo = new URLSearchParams(location.search).get('demo') === '1';
 store.setDemo(demo);
 
-/* The bar's order is the shell's call. What Now sits fifth of nine, dead
-   centre, in the one wider cell so its two words never wrap. All nine show
-   on a phone too (Stephen, 2026-10-19, undoing the five-and-More bar: "I'd
-   either like to keep them or only merge two together tops"). */
-export const TABS = ['wire', 'watch', 'food', 'people', 'whatnow', 'vintage', 'build', 'onair', 'games'];
-/* A tab can live inside another tab's slot: The Build took Habits' cell on
-   2026-10-21 (newsletter repo, reference/drafts/new-nine-2026-10/the-build),
-   and Habits, untouched, is the other side of its Build | Habits switch. A
-   hosted tab keeps its own panel, deep links (#habits, #habits/forests) and
-   scroll; the bar lights its host, and the host's frame() puts the switch
-   on top of the hosted tab's own row under the mast. */
-export const HOSTED = { habits: 'build' };
-/* Each tab's full page on the guide, where one exists (Stephen, 2026-10-22:
-   "every main page should basically link out to its main page ... so if
-   they just wanted the news they don't have to have this UI"). The shell
-   draws one small "Full page" link at the top of the tab, so the tabs
-   carry none of it. Watch, Vintage, The Build, Habits and On Air have no
-   page of their own to go to: tv.html, listen.html and playlist.html now
-   redirect here, and the shop guide and The Build only live in this app. */
-export const FULL = {
-  wire: ['../pulse.html', 'The Pulse, the full news page'],
-  food: ['../restaurants.html', 'the full restaurant guide'],
-  people: ['../clubs.html', 'every club, league and pickup game'],
-  whatnow: ['../things-to-do.html', 'the full things-to-do guide'],
-  games: ['https://play.btownbrief.com/', 'the BTown Games arcade'],
-};
+/* The app this page is (apps/index.js), and from it the bar: its tabs in
+   their fixed order, the tabs that live inside another's cell, and the
+   tabs' full pages. All Day's config is the nine it has had since
+   2026-10-21: Wire · Watch · Food · People · What Now · Vintage · Build ·
+   On Air · Games, What Now dead centre in the one wider cell (Stephen,
+   2026-10-19: "I'd either like to keep them or only merge two together
+   tops"), Habits inside The Build's cell (its Build | Habits switch), and
+   the Full page links for Wire, Food, People, What Now and Games. */
+export const APP = currentApp();
+const bad = problems(APP);
+if (bad.length) console.warn('[all-day] app config: ' + bad.join('; '));
+store.setApp(APP.id);
+document.documentElement.dataset.app = APP.id;
+export const TABS = APP.tabs.map(keyOf);
+export const HOSTED = APP.hosted || {};
+export const FULL = APP.full || {};
+/* GoatCounter's event names: All Day's as they always were (all-day-tab-wire),
+   every other app's under its own id (out-tab-events) */
+const count = (what) => APP.id + '-' + what + '-';
+/* the first tab is home: the wordmark's tap, an unknown link, the bare app */
+export const HOME = TABS[0];
+const TAB_CFG = Object.create(null);
+APP.tabs.forEach((t) => { TAB_CFG[keyOf(t)] = t; });
+/* a tab's line in the app's config, or null (a hosted tab has none) */
+export const tabConfig = (key) => TAB_CFG[key] || null;
+/* the modes this app loads (main.js imports each), hosted ones included */
+export const modes = () => [...new Set(APP.tabs.filter((t) => t.mode).map((t) => t.mode).concat(Object.keys(HOSTED)))];
 const known = (key) => TABS.includes(key) || Object.prototype.hasOwnProperty.call(HOSTED, key);
 const barKey = (key) => HOSTED[key] || key;
 const REQUIRED = ['label', 'icon', 'promise', 'mount', 'activate', 'refresh', 'newSince'];
+/* the words and icon a tab shows in this app: the config's, else the mode's */
+export function labelOf(key) {
+  const c = TAB_CFG[key], mod = registry[key];
+  return (c && c.label) || (mod && mod.label) || key;
+}
+function iconOf(key) {
+  const c = TAB_CFG[key], mod = registry[key];
+  return (c && c.icon && ICON[c.icon]) || (mod && mod.icon) || ICON.more;
+}
 
 const registry = Object.create(null);
 const mounted = Object.create(null);
@@ -86,12 +104,13 @@ let active = null;
 let started = false;
 
 export function register(key, mod) {
-  if (!known(key)) throw new Error('[all-day] unknown tab ' + key);
+  if (!known(key)) throw new Error('[all-day] ' + APP.name + ' has no tab ' + key);
   const missing = REQUIRED.filter((f) => mod[f] == null);
   if (missing.length) throw new Error('[all-day] tab ' + key + ' is missing ' + missing.join(', '));
   registry[key] = mod;
 }
 export const activeTab = () => active;
+export const registered = (key) => !!registry[key];
 /* The signed-in reader as { id }, or null; never an email (auth.js keeps
    none). onAuth(fn) runs fn(user) on every sign-in, sign-out and lost
    session, and returns the unsubscribe. */
@@ -142,6 +161,13 @@ function fetchDemo(name) {
   return demoCache[name];
 }
 let shellDemo = null;
+/* a demo file by its path (a shelf's data/demo/apps/<app>.json), once the
+   placeholder palettes are in; nothing stamped */
+export function demoJSON(file) {
+  if (!shellDemo) shellDemo = fetchDemo('shell').then((j) => { setPalette(j.palette); return j; });
+  if (!demoCache[file]) demoCache[file] = fetch(file).then((r) => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); });
+  return Promise.all([shellDemo, demoCache[file]]).then(([, j]) => j);
+}
 export function demoData(tab) {
   if (!shellDemo) shellDemo = fetchDemo('shell').then((j) => { setPalette(j.palette); return j; });
   return Promise.all([shellDemo, fetchDemo(tab)]).then(([, j]) => {
@@ -161,9 +187,10 @@ export function promise(host, key) {
   const mod = registry[key];
   host.innerHTML = '';
   const p = el('div', 'promise');
-  p.innerHTML = '<div class="big">' + mod.icon + '</div><h2>' + esc(mod.label) + '</h2><p>' + esc(mod.promise) + '</p>' +
-    '<span class="soon">Coming in the rebuild</span>' +
-    '<a class="demo" href="?demo=1#' + esc(key) + '">See what it will look like</a>';
+  p.innerHTML = '<div class="big">' + iconOf(key) + '</div><h2>' + esc(labelOf(key)) + '</h2><p>' + esc(mod.promise) + '</p>' +
+    '<span class="soon">' + esc(mod.soon || 'Coming in the rebuild') + '</span>' +
+    /* the document's own address: every app but All Day has a <base> */
+    '<a class="demo" href="' + esc(location.pathname + '?demo=1#' + key) + '">See what it will look like</a>';
   host.appendChild(p);
 }
 
@@ -172,13 +199,13 @@ export function promise(host, key) {
    the hash, so a text from a neighbour lands the reader inside All Day. Native
    share sheet where phones have one; the clipboard everywhere else. */
 export function share(tab, key, title) {
-  const base = demo ? location.origin + location.pathname + '?demo=1' : 'https://guide.btownbrief.com/all-day/';
+  const base = demo ? location.origin + location.pathname + '?demo=1' : APP.url;
   const url = base + '#' + tab + (key ? '/' + encodeURIComponent(key) : '');
   if (!demo && window.goatcounter && window.goatcounter.count) {
-    window.goatcounter.count({ path: 'all-day-share-' + tab, title: 'All Day share: ' + tab, event: true });
+    window.goatcounter.count({ path: count('share') + tab, title: APP.name + ' share: ' + tab, event: true });
   }
   if (navigator.share) {
-    navigator.share({ title: title || 'All Day — Burlington Brief', url }).catch(() => {});
+    navigator.share({ title: title || APP.name + ' — Burlington Brief', url }).catch(() => {});
     return;
   }
   if (navigator.clipboard && navigator.clipboard.writeText) {
@@ -289,7 +316,7 @@ export function mute(sid, it) {
   const name = (it && (it.src || it.author)) || sourceName(sid);
   confirmBox({
     title: 'Mute ' + name + '?',
-    body: 'You won’t see ' + name + ' anywhere in All Day. Bring it back any time in Settings.',
+    body: 'You won’t see ' + name + ' anywhere in ' + APP.name + '. Bring it back any time in Settings.',
     yes: 'Mute',
     onYes() {
       store.setMuted(sid, true);
@@ -512,6 +539,14 @@ function settingsSheet() {
     body.appendChild(el('div', 'sheet-h', 'Appearance'));
     body.appendChild(pills([['auto', 'Follow phone'], ['light', 'Light'], ['dark', 'Dark']], store.theme(), (v) => { store.setTheme(v); paintThemeBtn(); }));
 
+    /* the keyboard's and the screen reader's way to the switcher (the pill's hold is the thumb's) */
+    body.appendChild(el('div', 'sheet-h', 'Btown apps'));
+    const apps = el('div', 'sheet-row', '<div class="t">' + esc('Switch apps') + '</div>');
+    const sw = button('Show all eight', 'ghost sm', () => { closeSheet(); switcher.open(); });
+    sw.dataset.apps = '1';
+    apps.appendChild(sw);
+    body.appendChild(apps);
+
     body.appendChild(el('div', 'sheet-h', 'Your account'));
     const acct = el('div');
     body.appendChild(acct);
@@ -589,7 +624,7 @@ function settingsSheet() {
     body.appendChild(el('div', 'sheet-h', 'About'));
     body.appendChild(el('p', 'sheet-note', demo
       ? 'This is the demo. Everything in it is invented, and nothing you do here is saved.'
-      : 'All Day is the Btown Brief’s app for the rest of the day.'));
+      : APP.id === 'all-day' ? 'All Day is the Btown Brief’s app for the rest of the day.' : APP.name + ' is one of the Btown Brief’s apps.'));
     body.appendChild(el('p', 'sheet-note', 'Saves, mutes, what you have read, your Watch dots and list, your People tile and quiz, your arcade name and your missions stay on this phone. '
       + 'Signed in, your tile, interests, Watch dots, missions and habits also go to your account. Your email is never shown to anyone.'));
     const tmdb = el('p', 'sheet-note');
@@ -848,6 +883,11 @@ function paintSavedBtn() { $('saved-btn').classList.toggle('on', store.saved().l
 /* ------------------------------------------------------------------ chrome */
 const mast = $('mast');
 export function measure() {
+  /* an app name longer than the mast's row has room for (The Paper on a
+     390 phone): Saved drops its word, as it does under 380 */
+  const wm = $('wordmark');
+  mast.classList.remove('tight');
+  if (wm && wm.offsetParent && wm.scrollWidth > wm.clientWidth + 1) mast.classList.add('tight');
   root.style.setProperty('--mast-total', mast.offsetHeight + 'px');
   root.style.setProperty('--player-h', dock.hidden ? '0px' : (dock.offsetHeight + 8) + 'px');
 }
@@ -880,6 +920,9 @@ export function paintSubnav() {
   /* a hosted tab's row sits under its host's switch */
   const host = HOSTED[active] ? registry[HOSTED[active]] : null;
   if (host && host.frame) n = host.frame(active, n);
+  /* a tab that mixes doing and reading gets Real life / Online beside its
+     section pill (ui.js worldSwitch), unless it placed the switch itself */
+  if (n && isMixed(active) && !n.querySelector('.worldsw')) n = withWorld(n);
   if (n) s.appendChild(n);
   /* a tab can keep its row under the mast while the reader scrolls */
   document.body.classList.toggle('keep-subnav', !!(n && mod && mod.keepSubnav));
@@ -888,6 +931,39 @@ export function paintSubnav() {
   /* a section pill follows the scroll (sections.js) */
   if (n) spySections(s, panels[active]);
 }
+
+/* Real life / Online. Shown only on a tab that says it mixes the two (its
+   config's `mixed`, or the mode's own `mixed: true`). A section tagged
+   data-world="irl" or "online" shows only on its side (app.css, keyed off
+   body[data-world]); an untagged one always shows. The pill leaves the
+   other side's sections out (sections.js). */
+export const isMixed = (key) => !!((TAB_CFG[key] && TAB_CFG[key].mixed) || (registry[key] && registry[key].mixed));
+function paintWorld() {
+  if (isMixed(active)) document.body.dataset.world = world();
+  else delete document.body.dataset.world;
+}
+function withWorld(n) {
+  /* the sections follow by CSS, so the tab is not redrawn; the pill is,
+     and the keyboard stays on the side just chosen */
+  const sw = worldSwitch((w) => {
+    paintWorld();
+    paintSubnav();
+    const b = document.querySelector('#subnav .worldsw [data-world="' + w + '"]');
+    if (b) b.focus({ preventScroll: true });
+  });
+  const bar = n.matches('.secbar') ? n : n.querySelector('.secbar');
+  if (!bar) { const wrap = el('div', 'secbar'); const row = el('div', 'secrow'); row.appendChild(sw); wrap.append(row, n); return wrap; }
+  /* the pill and the switch share one row, the switch first */
+  const pill = bar.querySelector(':scope > .secpill');
+  bar.classList.remove('lead');
+  const row = el('div', 'secrow');
+  row.appendChild(sw);
+  if (pill) { bar.insertBefore(row, pill); row.appendChild(pill); } else bar.insertBefore(row, bar.firstChild);
+  return n;
+}
+window.addEventListener('allday-world', () => {
+  Object.keys(mounted).forEach((t) => { if (t !== active) stale[t] = true; });
+});
 
 /* the wide screen's right-hand rail: the tab's aside(), or nothing, and
    then the tab's column takes the rail's width too */
@@ -1023,9 +1099,24 @@ function legacy(h) {
   return { ig: 'wire', music: 'whatnow/tonight', wander: 'whatnow' }[m[1]];
 }
 
+/* A link to a tab this app has not got, that another app has (a
+   restaurant card's #food/<key> read in Out), opens in that app: the app
+   the map gives it before All Day, which still hosts its nine until wave
+   1. True when the page is on its way there. */
+const hostsTab = (a, k) => a.tabs.some((t) => keyOf(t) === k) || Object.prototype.hasOwnProperty.call(a.hosted || {}, k);
+function elsewhere(h) {
+  const k = (h.match(/^([a-z]+)(\/|$)/) || [])[1];
+  if (!k || known(k)) return false;
+  const there = APPS.filter((a) => a.id !== APP.id && hostsTab(a, k)).sort((a, b) => (a.id === 'all-day') - (b.id === 'all-day'))[0];
+  if (!there) return false;
+  location.replace(new URL(there.href, document.baseURI).pathname + (demo ? '?demo=1' : '') + '#' + h);
+  return true;
+}
+
 function parseHash() {
   let h = location.hash.replace(/^#/, '');
-  const moved = legacy(h);
+  if (elsewhere(h)) return { tab: null, param: null };
+  const moved = APP.id === 'all-day' ? legacy(h) : null;
   if (moved) { history.replaceState(null, '', location.pathname + location.search + '#' + moved); h = moved; }
   const m = h.match(/^([a-z]+)\/(.*)$/);
   if (m && known(m[1]) && registry[m[1]]) {
@@ -1035,7 +1126,7 @@ function parseHash() {
     try { param = decodeURIComponent(m[2]); } catch (e) { param = m[2]; }
     return { tab: m[1], param: param || null };
   }
-  return { tab: known(h) && registry[h] ? h : 'wire', param: null };
+  return { tab: known(h) && registry[h] ? h : HOME, param: null };
 }
 
 function paintTabs() {
@@ -1049,6 +1140,7 @@ function paintTabs() {
 
 export function route() {
   const { tab, param } = parseHash();
+  if (!tab) return;
   const mod = registry[tab];
   if (!mod) return;
   /* a new address is a new place: a sheet left open (Settings, a mission,
@@ -1072,10 +1164,11 @@ export function route() {
     else if (stale[tab]) { delete stale[tab]; mod.refresh(); }
   } catch (e) { console.error('[all-day] ' + tab + ' mount threw', e); }
   paintTabs();
+  paintWorld();
   paintSubnav();
-  const named = registry[barKey(tab)] || mod;
-  $('mast-title').textContent = named.label;
-  document.title = (tab === 'wire' ? 'All Day' : named.label + ' · All Day') + ' — Burlington Brief';
+  const named = registry[barKey(tab)] ? barKey(tab) : tab;
+  $('mast-title').textContent = labelOf(named);
+  document.title = (tab === HOME ? APP.name : labelOf(named) + ' · ' + APP.name) + ' — Burlington Brief';
   /* a phone keeps each tab's place; a wide screen opens a tab at its top
      (the reviewers, 2026-10-19: Watch and What Now opened mid-page) */
   if (switched) panels[tab].scrollTop = wide.matches ? 0 : scrollMemory[tab] || 0;
@@ -1094,8 +1187,8 @@ export function route() {
      app. */
   if ((switched || first) && window.goatcounter && window.goatcounter.count) {
     window.goatcounter.count({
-      path: 'all-day-tab-' + tab,
-      title: 'All Day tab: ' + tab,
+      path: count('tab') + tab,
+      title: APP.name + ' tab: ' + tab,
       event: true,
     });
   }
@@ -1113,7 +1206,7 @@ function fullLink(key) {
   a.setAttribute('aria-label', 'Full page: ' + what + ' (opens in a new tab)');
   a.addEventListener('click', () => {
     if (!demo && window.goatcounter && window.goatcounter.count) {
-      window.goatcounter.count({ path: 'all-day-fullpage-' + key, title: 'All Day full page: ' + key, event: true });
+      window.goatcounter.count({ path: count('fullpage') + key, title: APP.name + ' full page: ' + key, event: true });
     }
   });
   row.appendChild(a);
@@ -1128,11 +1221,15 @@ export function start() {
   const app = $('app');
   const bar = $('tabbar');
   /* a wide screen hides the mast's wordmark, so the rail carries the name and the logo */
-  const brand = el('div', 'rail-brand', '<span>All Day</span>');
+  const brand = el('div', 'rail-brand', '<span>' + esc(APP.name) + '</span>');
   const logo = $('brand').cloneNode(true);
   logo.removeAttribute('id');
   brand.appendChild(logo);
   bar.appendChild(brand);
+  /* All Day's nine keep their grid (What Now's wider centre cell); any
+     other app's five to seven share the bar evenly */
+  if (!APP.nine) { bar.dataset.n = String(TABS.length); bar.style.setProperty('--tab-n', String(TABS.length)); }
+  bar.setAttribute('aria-label', APP.name + ' sections');
   TABS.concat(Object.keys(HOSTED)).forEach((key) => {
     const mod = registry[key];
     if (!mod) return;
@@ -1159,7 +1256,7 @@ export function start() {
     watchScroll(p);
     if (HOSTED[key]) return;   // no cell of its own: its host's lights up
 
-    const b = el('button', null, mod.icon + '<span>' + esc(mod.label) + '</span>');
+    const b = el('button', null, iconOf(key) + '<span>' + esc(labelOf(key)) + '</span>');
     b.id = 'tab-' + key;
     b.dataset.tab = key;
     b.setAttribute('role', 'tab');
@@ -1173,10 +1270,15 @@ export function start() {
     bar.appendChild(b);
   });
 
+  /* the eight apps: hold the bar's centre cell (switcher.js) */
+  const cells = bar.querySelectorAll('button[data-tab]');
+  if (cells.length) switcher.bindHold(cells[switcher.centreIndex(cells.length)]);
+
   /* visits, time on screen, and a reader arriving from the newsletter */
-  asks.boot(demo, toast);
+  asks.boot(demo, toast, APP);
 
   /* the emailed sign-in link lands on a hash the router must not see */
+  auth.setHome(HOME);
   const signin = auth.consumeHash();
   if (signin) signin.then((msg) => { if (msg) toast(msg); });
   else auth.refresh();
@@ -1185,7 +1287,9 @@ export function start() {
   route();
   /* the No-algorithm challenge: its card on the Wire and #challenge. Loaded
      after the first route, so it can never hold up or break the boot. */
-  import('./challenge.js').then((m) => m.start(panels.wire)).catch((e) => console.error('[all-day] challenge', e));
+  /* once, on a first visit: "Hold the middle button to switch apps" */
+  setTimeout(() => switcher.coach(), 800);
+  if (panels.wire) import('./challenge.js').then((m) => m.start(panels.wire)).catch((e) => console.error('[all-day] challenge', e));
 }
 
 store.applyTheme(store.theme());
@@ -1205,10 +1309,68 @@ $('vbox-close').innerHTML = ICON.x;
 paintSavedBtn();
 paintPlayButtons();
 
+$('wordmark').textContent = APP.name;
+$('wordmark').setAttribute('href', '#' + HOME);
 $('wordmark').addEventListener('click', (e) => {
   e.preventDefault();
-  if (active === 'wire') { scrollTop(true); checkNew(); } else go('wire');
+  if (active === HOME) { scrollTop(true); checkNew(); } else go(HOME);
 });
+/* the home-screen card, from the mast, until this app is on the home
+   screen; the switcher's bubble and what is new in the other apps */
+const installBtn = switcher.installButton();
+installBtn.hidden = asks.installed();
+$('theme-btn').before(installBtn);
+switcher.bind({ sheet, toast, app: APP, demo, newIn });
+
+/* Whether another app has something new since the reader last looked
+   there, for the dot in the switcher. Honest and cheap: a tab of that app
+   whose mode is loaded here too (All Day's Food is Eat's Open now) answers
+   newSince() against that app's own last visit; on ?demo=1 the shelves'
+   demo files say (the demo pretends the last look was four hours ago).
+   Anything else is unknown, and unknown is no dot. */
+const otherDemo = Object.create(null);
+function newIn(a) {
+  if (demo) {
+    const d = otherDemo[a.id];
+    return !!(d && Object.values(d.tabs || {}).some((t) => (t.sections || []).some((s) => Number(s.hours) < 4)));
+  }
+  const base = switcher.visitBaseOf(a.id);
+  if (!base) return false;
+  return a.tabs.some((t) => {
+    const mod = t.mode && registry[t.mode];
+    try { return !!mod && Number(mod.newSince(base)) > 0; } catch (e) { return false; }
+  });
+}
+if (demo) setTimeout(() => APPS.forEach((a) => { if (a.id !== 'all-day') demoJSON('data/demo/apps/' + a.id + '.json').then((j) => { otherDemo[a.id] = j; }, () => {}); }), 1200);
+
+/* -------------------------------------------------- one shell, eight doors */
+/* Every app but All Day has <base href="../all-day/">, so the shared code's
+   relative paths (data/…, css/…, ../pulse.html) mean the same thing from
+   /out/ as from /all-day/. Two things a <base> would also move are put
+   back here: a link that is only a #fragment (a card's #food/<key>) stays
+   in this app instead of opening All Day, and a mode's history.replaceState
+   with a relative address ('?demo=1#whatnow/spin') keeps this app's path. */
+const based = !!document.querySelector('base[href]');
+if (based) {
+  /* a #link's real address is this app's, so a long-press, a middle click,
+     "open in new tab" or a copied link carry /out/#sports, not /all-day/#sports */
+  const own = (e) => {
+    const a = e.target.closest && e.target.closest('a[href^="#"]');
+    if (a) a.setAttribute('href', location.pathname + location.search + a.getAttribute('href'));
+  };
+  ['pointerdown', 'focusin', 'contextmenu', 'auxclick'].forEach((t) => document.addEventListener(t, own, true));
+  document.addEventListener('click', (e) => {
+    if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    const a = e.target.closest && e.target.closest('a[href^="#"]');
+    if (!a || a.target === '_blank') return;
+    e.preventDefault();
+    location.hash = a.getAttribute('href').slice(1);
+  });
+  ['pushState', 'replaceState'].forEach((f) => {
+    const real = history[f].bind(history);
+    history[f] = (state, title, url) => real(state, title, url == null ? url : new URL(String(url), location.href).href);
+  });
+}
 
 /* A picture that fails to load disappears instead of leaving a grey hole; a
    row whose thumbnail fails reflows to full width. Error events do not

@@ -1,0 +1,35 @@
+/* People: find your people (APP-MAP.html, app 4). The People mode is hosted
+   whole on You until wave 1 splits it across Plans, Dating & Friends and
+   Pets. */
+export default {
+  id: 'people',
+  name: 'People',
+  short: 'People',
+  icon: 'people',
+  accent: '--app-people',
+  href: '../people/',
+  url: 'https://guide.btownbrief.com/people/',
+  line: 'Find your people.',
+  tabs: [
+    { mode: 'people', label: 'You', icon: 'user', top: ['Who you are', 'Interests', 'Your profile', 'Directory'] },
+    { key: 'plans', label: 'Plans', icon: 'calendar',
+      promise: 'Plans open to strangers this week, with room for you.',
+      top: ['Open to strangers', 'This week', 'Mine', 'Down for Meetup'] },
+    { key: 'clubs', label: 'Clubs', icon: 'flag',
+      promise: 'Every club in town, and the ones still being started.',
+      top: ['Every club', 'Run clubs', 'Start something', 'Wanted', 'Musicians'] },
+    { key: 'dating', label: 'Dating', icon: 'heart', mixed: true,
+      promise: 'Friends and dating, in real life and online.',
+      top: ['Singles', 'Friends', 'Events', 'Pitch a friend', 'Posts'] },
+    { key: 'neighbors', label: 'Neighbors', icon: 'hand',
+      promise: 'Borrow a ladder, give a couch, grab a two-hour shift.',
+      top: ['Borrow', 'Free', 'Favor', 'Lost & found', 'Shifts'] },
+    { key: 'pets', label: 'Pets', icon: 'paw',
+      promise: 'Dog-park meetups, lost pets and vets you can afford.',
+      top: ['Dog parks', 'Meetups', 'Lost', 'Vets'] },
+    { key: 'talk', label: 'Talk', icon: 'comment',
+      promise: 'Ask a regular, and the town’s group chats.',
+      top: ['Telegram', 'Community', 'Ask a regular'] },
+  ],
+  full: { people: ['../clubs.html', 'every club, league and pickup game'] },
+};

@@ -1,0 +1,825 @@
+{
+  "_": "Invented demo data for Town’s tabs that are not built yet; every name, place detail and post is made up.",
+  "tabs": {
+    "alerts": {
+      "sections": [
+        {
+          "key": "today",
+          "label": "Today",
+          "hours": 3,
+          "items": [
+            {
+              "k": "hl-1",
+              "kind": "headline",
+              "src": "Town alerts",
+              "title": "Fog on the lake this morning, slow going on the causeway",
+              "ago": "3h",
+              "thumb": "lake"
+            },
+            {
+              "k": "hl-2",
+              "kind": "headline",
+              "src": "Town alerts",
+              "title": "How leaf pickup works, and when your street is up",
+              "ago": "5h",
+              "thumb": "foliage"
+            }
+          ]
+        },
+        {
+          "key": "trash-parking",
+          "label": "Trash & parking",
+          "hours": 0.4,
+          "items": [
+            {
+              "k": "hl-3",
+              "kind": "headline",
+              "src": "Public Works",
+              "title": "Your street’s trash and recycling day, and what moved",
+              "ago": "24m",
+              "thumb": "street"
+            },
+            {
+              "k": "hl-4",
+              "kind": "headline",
+              "src": "Public Works",
+              "title": "How winter parking bans work on the Hill",
+              "ago": "2h",
+              "thumb": "slate"
+            }
+          ]
+        },
+        {
+          "key": "plows",
+          "label": "Plows",
+          "hours": 8,
+          "items": [
+            {
+              "k": "hl-5",
+              "kind": "headline",
+              "src": "Plow tracker",
+              "title": "Plow route map for the Hill and downtown",
+              "ago": "8h",
+              "thumb": "rink"
+            },
+            {
+              "k": "hl-6",
+              "kind": "headline",
+              "src": "Plow tracker",
+              "title": "Which streets get plowed first, and why",
+              "ago": "14h",
+              "thumb": "slate"
+            }
+          ]
+        },
+        {
+          "key": "schools",
+          "label": "Schools",
+          "hours": 20,
+          "items": [
+            {
+              "k": "hl-7",
+              "kind": "headline",
+              "src": "School alerts",
+              "title": "How delays and closings get announced, and where",
+              "ago": "20h",
+              "thumb": "dawn"
+            },
+            {
+              "k": "hl-8",
+              "kind": "headline",
+              "src": "School alerts",
+              "title": "This week’s school lunch menu, with allergens",
+              "ago": "1d",
+              "thumb": "paper"
+            }
+          ]
+        },
+        {
+          "key": "shelters",
+          "label": "Shelters",
+          "hours": 1.5,
+          "items": [
+            {
+              "k": "hl-9",
+              "kind": "headline",
+              "src": "Shelter alerts",
+              "title": "Warming shelter hours when the temperature drops",
+              "ago": "2h",
+              "thumb": "night"
+            },
+            {
+              "k": "hl-10",
+              "kind": "headline",
+              "src": "Shelter alerts",
+              "title": "Where to get a warm meal on a cold evening",
+              "ago": "4h",
+              "thumb": "brick"
+            }
+          ]
+        },
+        {
+          "key": "signups",
+          "label": "Signups",
+          "hours": 30,
+          "items": [
+            {
+              "k": "hl-11",
+              "kind": "headline",
+              "src": "Signup alerts",
+              "title": "Winter swim lessons: how sign-up day usually goes",
+              "ago": "1d",
+              "thumb": "teal"
+            },
+            {
+              "k": "hl-12",
+              "kind": "headline",
+              "src": "Signup alerts",
+              "title": "Youth basketball registration, and the waitlist trick",
+              "ago": "2d",
+              "thumb": "rink"
+            }
+          ]
+        },
+        {
+          "key": "since",
+          "label": "Since you checked",
+          "hours": 50,
+          "items": [
+            {
+              "k": "hl-13",
+              "kind": "headline",
+              "src": "Since you checked",
+              "title": "Two agendas posted, one road reopened, beaches closed",
+              "ago": "2d",
+              "thumb": "paper"
+            },
+            {
+              "k": "hl-14",
+              "kind": "headline",
+              "src": "Since you checked",
+              "title": "Three new permits and a bus detour",
+              "ago": "4d",
+              "thumb": "street"
+            }
+          ]
+        }
+      ]
+    },
+    "cityhall": {
+      "sections": [
+        {
+          "key": "meetings",
+          "label": "Meetings",
+          "hours": 12,
+          "items": [
+            {
+              "k": "hl-15",
+              "kind": "headline",
+              "src": "City Hall",
+              "title": "Ward 3 NPA meets Tuesday: parking and a new crosswalk",
+              "ago": "12h",
+              "thumb": "brick"
+            },
+            {
+              "k": "hl-16",
+              "kind": "headline",
+              "src": "City Hall",
+              "title": "What the parks commission talks about this month",
+              "ago": "20h",
+              "thumb": "pine"
+            }
+          ]
+        },
+        {
+          "key": "votes",
+          "label": "Votes",
+          "hours": 2,
+          "items": [
+            {
+              "k": "hl-17",
+              "kind": "headline",
+              "src": "City Hall",
+              "title": "How each councilor voted on the bike lane plan",
+              "ago": "2h",
+              "thumb": "street"
+            },
+            {
+              "k": "hl-18",
+              "kind": "headline",
+              "src": "City Hall",
+              "title": "The vote scorecard, explained in one page",
+              "ago": "4h",
+              "thumb": "paper"
+            }
+          ]
+        },
+        {
+          "key": "elections",
+          "label": "Elections",
+          "hours": 70,
+          "items": [
+            {
+              "k": "hl-19",
+              "kind": "headline",
+              "src": "City Hall",
+              "title": "Who’s running in your ward, and which seats are open",
+              "ago": "3d",
+              "thumb": "plum"
+            },
+            {
+              "k": "hl-20",
+              "kind": "headline",
+              "src": "City Hall",
+              "title": "The nobody’s-running alert, and how open seats work",
+              "ago": "5d",
+              "thumb": "slate"
+            }
+          ]
+        },
+        {
+          "key": "money",
+          "label": "Money",
+          "hours": 26,
+          "items": [
+            {
+              "k": "hl-21",
+              "kind": "headline",
+              "src": "City Hall",
+              "title": "Your tax bill, line by line, in plain English",
+              "ago": "1d",
+              "thumb": "mustard"
+            },
+            {
+              "k": "hl-22",
+              "kind": "headline",
+              "src": "City Hall",
+              "title": "Where the parks budget goes, from mowing to lifeguards",
+              "ago": "2d",
+              "thumb": "field"
+            }
+          ]
+        },
+        {
+          "key": "calendar",
+          "label": "Calendar",
+          "hours": 3.5,
+          "items": [
+            {
+              "k": "hl-23",
+              "kind": "headline",
+              "src": "City Hall",
+              "title": "Two committees meet this week, both open to the public",
+              "ago": "4h",
+              "thumb": "paper"
+            },
+            {
+              "k": "hl-24",
+              "kind": "headline",
+              "src": "City Hall",
+              "title": "How to speak at public comment in three minutes",
+              "ago": "6h",
+              "thumb": "brick"
+            }
+          ]
+        },
+        {
+          "key": "vote-together",
+          "label": "Vote together",
+          "hours": 0.6,
+          "items": [
+            {
+              "k": "po-1",
+              "kind": "post",
+              "author": "Paula G.",
+              "title": "Results night potluck",
+              "text": "Hosting a results-night potluck in the Old North End. Bring a dish and a guess.",
+              "ago": "36m",
+              "comments": "8"
+            },
+            {
+              "k": "po-2",
+              "kind": "post",
+              "author": "Simon K.",
+              "title": "Walk to the polls",
+              "text": "Walking to the polls together from the South End, anyone in?",
+              "ago": "3h",
+              "comments": "5"
+            }
+          ]
+        }
+      ]
+    },
+    "streets": {
+      "sections": [
+        {
+          "key": "going-in",
+          "label": "Going in",
+          "hours": 7,
+          "items": [
+            {
+              "k": "hl-25",
+              "kind": "headline",
+              "src": "Permits",
+              "title": "Permits this week: a four-story on Pine Street",
+              "ago": "7h",
+              "thumb": "brick"
+            },
+            {
+              "k": "hl-26",
+              "kind": "headline",
+              "src": "Permits",
+              "title": "A bakery and six apartments where the garage was",
+              "ago": "12h",
+              "thumb": "coffee"
+            }
+          ]
+        },
+        {
+          "key": "torn-up",
+          "label": "Torn up",
+          "hours": 1,
+          "items": [
+            {
+              "k": "hl-27",
+              "kind": "headline",
+              "src": "Streets",
+              "title": "One block of North Avenue down to one lane",
+              "ago": "1h",
+              "thumb": "street"
+            },
+            {
+              "k": "hl-28",
+              "kind": "headline",
+              "src": "Streets",
+              "title": "The water main project, a living page",
+              "ago": "3h",
+              "thumb": "slate"
+            }
+          ]
+        },
+        {
+          "key": "report",
+          "label": "Report",
+          "hours": 0.3,
+          "items": [
+            {
+              "k": "bd-1",
+              "kind": "board",
+              "author": "Tara B.",
+              "title": "Pothole that eats bike tires",
+              "metaLine": "Pothole · deep · bike lane",
+              "text": "Right where the bike lane meets the crosswalk.",
+              "place": "Pearl St at N Winooski Ave",
+              "ago": "18m",
+              "left": "5d left"
+            },
+            {
+              "k": "bd-2",
+              "kind": "board",
+              "author": "Will S.",
+              "title": "Streetlight out for a week",
+              "metaLine": "Streetlight · out · dark corner",
+              "text": "The whole corner is pitch black after six.",
+              "place": "Elmwood Ave, Old North End",
+              "ago": "2h",
+              "left": "6d left"
+            }
+          ]
+        },
+        {
+          "key": "sold",
+          "label": "Sold",
+          "hours": 150,
+          "items": [
+            {
+              "k": "hl-29",
+              "kind": "headline",
+              "src": "Sold list",
+              "title": "This week’s sold list: nine homes, two out-of-state buyers",
+              "ago": "6d",
+              "thumb": "sand"
+            },
+            {
+              "k": "hl-30",
+              "kind": "headline",
+              "src": "Sold list",
+              "title": "The duplex that sold twice in one year",
+              "ago": "2w",
+              "thumb": "brick"
+            }
+          ]
+        },
+        {
+          "key": "blotter",
+          "label": "Blotter",
+          "hours": 20,
+          "items": [
+            {
+              "k": "hl-31",
+              "kind": "headline",
+              "src": "Blotter",
+              "title": "A quiet week: two fender benders and a loose goat",
+              "ago": "20h",
+              "thumb": "field"
+            },
+            {
+              "k": "hl-32",
+              "kind": "headline",
+              "src": "Blotter",
+              "title": "Fire crews answer a chimney call on the Hill",
+              "ago": "1d",
+              "thumb": "cherry"
+            }
+          ]
+        },
+        {
+          "key": "wish-list",
+          "label": "Wish list",
+          "hours": 3,
+          "items": [
+            {
+              "k": "po-3",
+              "kind": "post",
+              "author": "Jen O.",
+              "title": "What goes in the old store",
+              "text": "The old furniture store on Pine should become a covered market.",
+              "ago": "3h",
+              "comments": "27"
+            },
+            {
+              "k": "po-4",
+              "kind": "post",
+              "author": "Rafi N.",
+              "title": "Late diner wish",
+              "text": "A late-night diner downtown, please. Somewhere to go after a show.",
+              "ago": "5h",
+              "comments": "19"
+            }
+          ]
+        }
+      ]
+    },
+    "guides": {
+      "sections": [
+        {
+          "key": "restrooms",
+          "label": "Restrooms",
+          "hours": 30,
+          "items": [
+            {
+              "k": "hl-33",
+              "kind": "headline",
+              "src": "Town guides",
+              "title": "Public restrooms downtown, with hours",
+              "ago": "1d",
+              "thumb": "street"
+            },
+            {
+              "k": "hl-34",
+              "kind": "headline",
+              "src": "Town guides",
+              "title": "Restrooms along the bike path, mile by mile",
+              "ago": "2d",
+              "thumb": "lake"
+            }
+          ]
+        },
+        {
+          "key": "playgrounds",
+          "label": "Playgrounds",
+          "hours": 70,
+          "items": [
+            {
+              "k": "hl-35",
+              "kind": "headline",
+              "src": "Town guides",
+              "title": "Playgrounds with shade, fences and a bathroom",
+              "ago": "3d",
+              "thumb": "field"
+            },
+            {
+              "k": "hl-36",
+              "kind": "headline",
+              "src": "Town guides",
+              "title": "The best winter playgrounds, plowed and sunny",
+              "ago": "5d",
+              "thumb": "rink"
+            }
+          ]
+        },
+        {
+          "key": "study-spots",
+          "label": "Study spots",
+          "hours": 2,
+          "items": [
+            {
+              "k": "hl-37",
+              "kind": "headline",
+              "src": "Town guides",
+              "title": "Quiet study spots with outlets and good light",
+              "ago": "2h",
+              "thumb": "coffee"
+            },
+            {
+              "k": "hl-38",
+              "kind": "headline",
+              "src": "Town guides",
+              "title": "Where to study late when the libraries close",
+              "ago": "4h",
+              "thumb": "night"
+            }
+          ]
+        },
+        {
+          "key": "new-here",
+          "label": "New here",
+          "hours": 9,
+          "items": [
+            {
+              "k": "hl-39",
+              "kind": "headline",
+              "src": "Town guides",
+              "title": "Your first 30 days in Burlington",
+              "ago": "9h",
+              "thumb": "dawn"
+            },
+            {
+              "k": "hl-40",
+              "kind": "headline",
+              "src": "Town guides",
+              "title": "Which neighborhood fits you, in one page",
+              "ago": "15h",
+              "thumb": "foliage"
+            }
+          ]
+        },
+        {
+          "key": "childcare",
+          "label": "Childcare",
+          "hours": 160,
+          "items": [
+            {
+              "k": "hl-41",
+              "kind": "headline",
+              "src": "Town guides",
+              "title": "Childcare finder: openings, waitlists and how to ask",
+              "ago": "7d",
+              "thumb": "sand"
+            },
+            {
+              "k": "hl-42",
+              "kind": "headline",
+              "src": "Town guides",
+              "title": "What childcare costs here, and the help that exists",
+              "ago": "2w",
+              "thumb": "mustard"
+            }
+          ]
+        },
+        {
+          "key": "rent",
+          "label": "Rent",
+          "hours": 0.8,
+          "items": [
+            {
+              "k": "hl-43",
+              "kind": "headline",
+              "src": "Town guides",
+              "title": "The true-rent calculator: heat, parking and fees",
+              "ago": "48m",
+              "thumb": "brick"
+            },
+            {
+              "k": "hl-44",
+              "kind": "headline",
+              "src": "Town guides",
+              "title": "Getting your deposit back: a move-out checklist",
+              "ago": "3h",
+              "thumb": "paper"
+            }
+          ]
+        },
+        {
+          "key": "who-to-call",
+          "label": "Who to call",
+          "hours": 45,
+          "items": [
+            {
+              "k": "hl-45",
+              "kind": "headline",
+              "src": "Town guides",
+              "title": "Who to call for a dead streetlight, a pothole or a tree",
+              "ago": "2d",
+              "thumb": "slate"
+            },
+            {
+              "k": "hl-46",
+              "kind": "headline",
+              "src": "Town guides",
+              "title": "Readers’ picks for plumbers and electricians",
+              "ago": "3d",
+              "thumb": "teal"
+            }
+          ]
+        },
+        {
+          "key": "wiki",
+          "label": "Wiki",
+          "hours": 3.5,
+          "items": [
+            {
+              "k": "hl-47",
+              "kind": "headline",
+              "src": "Town wiki",
+              "title": "How to get a parking permit, written by a neighbor",
+              "ago": "4h",
+              "thumb": "street"
+            },
+            {
+              "k": "hl-48",
+              "kind": "headline",
+              "src": "Town wiki",
+              "title": "The unwritten rules of the bike path",
+              "ago": "6h",
+              "thumb": "lake"
+            }
+          ]
+        }
+      ]
+    },
+    "work": {
+      "sections": [
+        {
+          "key": "jobs",
+          "label": "Jobs",
+          "hours": 6,
+          "items": [
+            {
+              "k": "hl-49",
+              "kind": "headline",
+              "src": "Jobs board",
+              "title": "Line cook, evenings, at Sorrel & Salt",
+              "ago": "6h",
+              "thumb": "brick"
+            },
+            {
+              "k": "hl-50",
+              "kind": "headline",
+              "src": "Jobs board",
+              "title": "Front desk at Ironwood Strength, mornings",
+              "ago": "10h",
+              "thumb": "slate"
+            }
+          ]
+        },
+        {
+          "key": "whos-hiring",
+          "label": "Who’s hiring",
+          "hours": 1,
+          "items": [
+            {
+              "k": "hl-51",
+              "kind": "headline",
+              "src": "Who’s hiring",
+              "title": "Six cafes looking for weekend baristas",
+              "ago": "1h",
+              "thumb": "coffee"
+            },
+            {
+              "k": "hl-52",
+              "kind": "headline",
+              "src": "Who’s hiring",
+              "title": "Seasonal hiring on Church Street starts early",
+              "ago": "3h",
+              "thumb": "street"
+            }
+          ]
+        },
+        {
+          "key": "shops",
+          "label": "Shops",
+          "hours": 20,
+          "items": [
+            {
+              "k": "pk-1",
+              "kind": "pick",
+              "src": "Btown Brief",
+              "eyebrow": "Shop local",
+              "title": "Pine Street Yarn Co., the punch-card shop",
+              "why": "Ten visits gets you a free skein and a chat.",
+              "media": "plum"
+            },
+            {
+              "k": "pk-2",
+              "kind": "pick",
+              "src": "Btown Brief",
+              "eyebrow": "Shop local",
+              "title": "North Avenue Hardware, open late on Thursdays",
+              "why": "The kind of store where someone helps you find one screw.",
+              "media": "mustard"
+            }
+          ]
+        },
+        {
+          "key": "businesses",
+          "label": "Businesses",
+          "hours": 90,
+          "items": [
+            {
+              "k": "hl-53",
+              "kind": "headline",
+              "src": "Business help",
+              "title": "List your business on the Brief for free",
+              "ago": "4d",
+              "thumb": "paper"
+            },
+            {
+              "k": "hl-54",
+              "kind": "headline",
+              "src": "Business help",
+              "title": "Grants and loans for small shops, in one place",
+              "ago": "6d",
+              "thumb": "field"
+            }
+          ]
+        },
+        {
+          "key": "website",
+          "label": "Get a website",
+          "hours": 200,
+          "items": [
+            {
+              "k": "pk-3",
+              "kind": "pick",
+              "src": "Btown Brief",
+              "eyebrow": "Get a website",
+              "title": "A simple site with hours and online ordering",
+              "why": "Most local shops still lose customers at a missing menu.",
+              "media": "teal"
+            },
+            {
+              "k": "pk-4",
+              "kind": "pick",
+              "src": "Btown Brief",
+              "eyebrow": "Get a website",
+              "title": "How we build a shop’s site in a week",
+              "why": "One call, one draft, one round of changes.",
+              "media": "slate"
+            }
+          ]
+        },
+        {
+          "key": "tees",
+          "label": "Tees for your team",
+          "hours": 3,
+          "items": [
+            {
+              "k": "pk-5",
+              "kind": "pick",
+              "src": "Btown Brief",
+              "eyebrow": "Tees",
+              "title": "Custom tees for your league or crew",
+              "why": "Your team’s name on a shirt that says Burlington too.",
+              "media": "cherry"
+            },
+            {
+              "k": "pk-6",
+              "kind": "pick",
+              "src": "Btown Brief",
+              "eyebrow": "Tees",
+              "title": "Event shirts for a fundraiser or a 5K",
+              "why": "Small runs welcome, from a dozen to a few hundred.",
+              "media": "pine"
+            }
+          ]
+        },
+        {
+          "key": "sponsor",
+          "label": "Sponsor",
+          "hours": 300,
+          "items": [
+            {
+              "k": "pk-7",
+              "kind": "pick",
+              "src": "Btown Brief",
+              "eyebrow": "Sponsor",
+              "title": "Sponsor an edition of the Btown Brief",
+              "why": "Readers here open the email and act on it.",
+              "media": "paper"
+            },
+            {
+              "k": "pk-8",
+              "kind": "pick",
+              "src": "Btown Brief",
+              "eyebrow": "Sponsor",
+              "title": "Sponsor a game or a city quest",
+              "why": "Put your shop on the map of a walk people take on purpose.",
+              "media": "neon"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
