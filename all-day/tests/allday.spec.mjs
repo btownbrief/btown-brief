@@ -13251,6 +13251,315 @@ async function theApps(browser, base) {
   });
 }
 
+/* ------------------------------------------------------------- the Play app */
+/* Play's own tabs (wave 1, 2026-10-29): Daily, City, Draw, Party and Boards,
+   js/modes/daily.js, city.js, draw.js, party.js, ranks.js. Each at 390 and 1280, light and dark, live and demo,
+   with the page rules and a screenshot (play-<tab>-<width>-<scheme>[-live]);
+   then what each tab promises: Daily's ticks and streaks kept on the phone,
+   City's missions read from What Now and its honest Coming soons, Draw's
+   Play that wakes up only when the arcade lists the game, Party's links,
+   and Boards' one read-only leaderboard call per pick. */
+const PLAY_TABS = { daily: ['Wordle', 'Crossings', 'News quiz', 'Higher or lower', 'Where in Btown', 'Real or fake'],
+  city: ['Missions', 'Streets', 'Lit', 'Dibs', 'Photo quests', 'Crews', 'Season'], draw: ['Aquarium', 'The truck', 'Gallery', 'Prompt of the week'],
+  party: ['Btown Party', 'Trivia', 'Arcade Night', 'Stay Awhile', 'Table Talk'], ranks: ['Leaderboards', 'Predictions', 'Bracket', 'Playing', 'Looking for a group', 'Gamertags'] };
+/* each top tab's section key, in the pill's order: every one is a deep link */
+const PLAY_SECS = { daily: ['btown-wordle', 'btown-crossings', 'news-quiz', 'higher-or-lower', 'where-in-btown', 'real-or-fake'],
+  city: ['missions', 'streets', 'lit', 'dibs', 'photos', 'crews', 'season'], draw: ['lake', 'truck', 'gallery', 'prompt'],
+  party: ['btown-party', 'church-street-trivia', 'arcade-night', 'stay-awhile', 'table-talk'], ranks: ['leaders', 'predictions', 'bracket', 'playing', 'lfg', 'tags'] };
+/* everything Boards may ask Supabase: reads only */
+const PLAY_READS = new Set(['get_leaderboard', 'nn_posts_list', 'nn_handles_recent', 'nn_rules', 'nn_rules_version']);
+
+async function thePlay(browser, base) {
+  for (const combo of COMBOS4) {
+    for (const demo of [false, true]) {
+      await group('play ' + combo.viewport.width + ' ' + combo.scheme + (demo ? ' demo' : ' live'), async () => {
+        const { ctx, page, errors } = await newPage(browser, base, combo);
+        for (const key of Object.keys(PLAY_TABS)) {
+          await page.goto(base + '/play/' + (demo ? '?demo=1' : '') + '#' + key, { waitUntil: 'domcontentloaded' });
+          await settle(page);
+          await page.waitForTimeout(250);
+          const st = await page.evaluate((k) => {
+            const p = document.querySelector('#panel-' + k);
+            return { shown: p && !p.hidden, err: !!p.querySelector('.errbox'), promise: !!p.querySelector('.promise'), secs: [...p.querySelectorAll('[data-sec]')].map((s) => s.dataset.sec),
+              title: document.getElementById('mast-title').textContent, pill: [...document.querySelectorAll('#subnav button')].map((b) => b.textContent.trim()).filter(Boolean) };
+          }, key);
+          check(st.shown && !st.err && !st.promise, key + ': draws its page, no error, no placeholder promise', JSON.stringify(st));
+          const want = PLAY_TABS[key];
+          check(want.every((w) => st.pill.includes(w)), key + ': the pill is the map’s top tabs', st.pill.join(' / '));
+          await pageRules(page, 'play/' + key, combo.viewport.width);
+          await page.screenshot({ path: path.join(SHOTS, 'play-' + key + '-' + combo.viewport.width + '-' + combo.scheme + (demo ? '' : '-live') + '.png') });
+        }
+        check(!errors.length, 'no console errors', errors.join(' | '));
+        await ctx.close();
+      });
+    }
+  }
+
+  await group('play: every top tab is a deep link', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    for (const [tab, keys] of Object.entries(PLAY_SECS)) {
+      for (const k of keys) {
+        await page.goto(base + '/play/#' + tab + '/' + k);
+        await settle(page);
+        const seen = await page.waitForFunction(([t, key]) => {
+          const n = [...document.querySelectorAll('#panel-' + t + ' [data-sec]')].find((x) => x.dataset.sec === key);
+          const r = n && n.getBoundingClientRect();
+          return !!r && r.top < innerHeight - 40 && r.bottom > 60;
+        }, [tab, k], { timeout: 4000 }).then(() => true, () => false);
+        check(seen, '#' + tab + '/' + k + ' lands on its section', '');
+      }
+    }
+    await page.goto(base + '/play/#daily/%22%5D');
+    await settle(page);
+    await page.waitForTimeout(300);
+    check(/gone from Daily/.test(await page.$eval('#toast', (t) => t.textContent)), 'a link to nothing says so', await page.$eval('#toast', (t) => t.textContent));
+    check(!errors.length, 'no console errors, even for a mangled link', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('play: Daily keeps its ticks on the phone', async () => {
+    const { ctx, page, errors, supabase } = await newPage(browser, base);
+    const today = etKey(Date.now());
+    await page.addInitScript((d) => { if (!localStorage.getItem('play-daily')) localStorage.setItem('play-daily', JSON.stringify({ 'btown-wordle': [d[1], d[2]], 'news-quiz': [d[3]], 'real-or-fake': [d[10], d[11], d[12], d[13], d[1]], '../x': ['nope'] })); },
+      [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13].map((n) => (n ? dayMinus(today, n) : today)));
+    await page.goto(base + '/play/#daily');
+    await settle(page);
+    const P = '#panel-daily';
+    const cab = (slug) => page.evaluate(([p, s]) => { const c = document.querySelector(p + ' [data-k="daily:' + s + '"]'); return c && { streak: Number(c.querySelector('[data-streak]').dataset.streak), line: c.querySelector('.gm-champ').textContent,
+      on: c.querySelector('[data-tick]').getAttribute('aria-pressed'), play: c.querySelector('a.pillbtn').href, target: c.querySelector('a.pillbtn').target }; }, [P, slug]);
+    const n = await page.$$eval(P + ' [data-k^="daily:"]', (c) => c.map((x) => x.dataset.k));
+    check(JSON.stringify(n) === JSON.stringify(['btown-wordle', 'btown-crossings', 'news-quiz', 'higher-or-lower', 'where-in-btown', 'real-or-fake'].map((s) => 'daily:' + s)), 'the six daily puzzles, in the map’s order', n.join(', '));
+    let w = await cab('btown-wordle');
+    check(w.streak === 2 && /^○○○○●●○2 in a row$/.test(w.line) && w.on === 'false', 'yesterday and the day before: a two-day streak still open today', JSON.stringify(w));
+    check(w.play === 'https://play.btownbrief.com/btown-wordle/' && w.target === '_blank', 'Play opens the puzzle on the arcade in a new tab', w.play);
+    check((await cab('news-quiz')).streak === 0 && (await cab('news-quiz')).line === '○○○●○○○', 'three days ago and nothing since: no streak, one dot', (await cab('news-quiz')).line);
+    const rf = await cab('real-or-fake');
+    check(rf.streak === 1 && rf.line === '○○○○○●○best 4', 'an old four-day run and yesterday: the week, and the best run', rf.line);
+    check(await page.$eval(P + ' [data-k="daily:where-in-btown"] [data-streak]', (x) => x.hidden), 'never played: no line at all', '');
+    await page.click(P + ' [data-tick="btown-wordle"]');
+    w = await cab('btown-wordle');
+    check(w.streak === 3 && w.on === 'true', 'ticking today makes it three', JSON.stringify(w));
+    const kept = await page.evaluate(() => JSON.parse(localStorage.getItem('play-daily')));
+    check(JSON.stringify(kept['btown-wordle']) === JSON.stringify([dayMinus(today, 2), dayMinus(today, 1), today].sort()) && !kept['../x'], 'kept on the phone as Burlington dates, junk dropped', JSON.stringify(kept));
+    check(/1 of 6 played today/.test(await page.$eval(P + ' [data-sec="today"]', (s) => s.innerText)), 'the head counts today', '');
+    await page.reload();
+    await settle(page);
+    check((await cab('btown-wordle')).on === 'true', 'the tick survives a reload', '');
+    await page.click(P + ' [data-tick="btown-wordle"]');
+    check((await cab('btown-wordle')).streak === 2, 'taking the tick off gives back the open streak', '');
+    for (const s of ['btown-wordle', 'btown-crossings', 'news-quiz', 'higher-or-lower', 'where-in-btown', 'real-or-fake']) {
+      if (await page.$eval(P + ' [data-tick="' + s + '"]', (b) => b.getAttribute('aria-pressed')) === 'false') await page.click(P + ' [data-tick="' + s + '"]');
+    }
+    check(await page.$eval('#toast', (t) => t.textContent) === 'All six today.' && /6 of 6 played today/.test(await page.$eval(P + ' [data-sec="today"]', (x) => x.innerText)), 'the sixth tick of the day says so', await page.$eval('#toast', (t) => t.textContent));
+    check(!supabase.length, 'Daily never calls Supabase', supabase.join(', '));
+    await page.goto(base + '/play/#daily/where-in-btown');
+    await settle(page);
+    check(await page.waitForFunction(() => { const c = document.querySelector('#panel-daily [data-sec="where-in-btown"]'); const r = c && c.getBoundingClientRect(); return r && r.top >= 0 && r.top < innerHeight; }, null, { timeout: 3000 }).then(() => true, () => false),
+      '#daily/where-in-btown jumps to that puzzle', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+    const d = await newPage(browser, base);
+    await d.page.goto(base + '/play/?demo=1#daily');
+    await settle(d.page);
+    const dw = await d.page.$eval('#panel-daily [data-k="daily:btown-wordle"] [data-streak]', (x) => Number(x.dataset.streak));
+    check(dw === 9, 'demo: Wordle’s nine-day run', dw);
+    await d.page.click('#panel-daily [data-tick="real-or-fake"]');
+    check(await d.page.evaluate(() => localStorage.getItem('play-daily')) === null, 'demo: a tick is never kept', '');
+    await d.ctx.close();
+  });
+
+  await group('play: a phone left open past midnight', async () => {
+    /* 11:58 pm in Burlington with Wordle played; then 12:02 am: the tick is yesterday's */
+    const today = etKey(Date.now());
+    const at = (key, h, m) => { const g = Date.parse(key + 'T' + String(h).padStart(2, '0') + ':' + String(m).padStart(2, '0') + ':00Z'); return g + ((24 + h - Number(etParts(g).hour)) % 24) * 3600000; };
+    const { ctx, page, errors } = await newPage(browser, base, { timezoneId: 'Asia/Tokyo' });
+    await page.clock.setFixedTime(at(today, 23, 58));
+    await page.goto(base + '/play/#daily');
+    await settle(page);
+    await page.click('#panel-daily [data-tick="btown-wordle"]');
+    const before = await page.$eval('#panel-daily [data-tick="btown-wordle"]', (b) => b.getAttribute('aria-pressed'));
+    /* the phone wakes after midnight with the tab showing (visibilitychange) */
+    await page.clock.setFixedTime(at(dayMinus(today, -1), 0, 2));
+    await page.evaluate(() => document.dispatchEvent(new Event('visibilitychange')));
+    await page.waitForTimeout(300);
+    const read = () => page.evaluate(() => ({ on: document.querySelector('#panel-daily [data-tick="btown-wordle"]').getAttribute('aria-pressed'), head: document.querySelector('#panel-daily [data-sec="today"] .sec p').textContent }));
+    const after = await read();
+    check(before === 'true' && after.on === 'false' && after.head === '0 of 6 played today', 'waking after midnight redraws Daily: yesterday’s tick is yesterday’s', JSON.stringify({ before, after }));
+    /* another day on, by coming back to the tab; what was stored meanwhile is read again */
+    const next = dayMinus(today, -2);
+    await page.evaluate((d) => localStorage.setItem('play-daily', JSON.stringify({ 'btown-wordle': [d] })), next);
+    await page.clock.setFixedTime(at(next, 9, 0));
+    await goTab(page, 'city');
+    await page.evaluate(() => { location.hash = 'daily/news-quiz'; });
+    await page.waitForTimeout(600);
+    const later = await read();
+    check(later.on === 'true' && later.head === '1 of 6 played today', 'coming back to the tab a day later loads it again', JSON.stringify(later));
+    check(await page.evaluate(() => { const c = document.querySelector('#panel-daily [data-sec="news-quiz"]').getBoundingClientRect(); return c.top >= 0 && c.top < innerHeight; }), 'and a deep link given then lands on the fresh page', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('play: City', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.addInitScript(() => { if (!localStorage.getItem('allday-missions')) localStorage.setItem('allday-missions', JSON.stringify({ m201: 1761000000, m202: 1761000000, m1: 1760000000 })); });
+    await page.goto(base + '/play/#city');
+    await settle(page);
+    const P = '#panel-city';
+    const ms = JSON.parse(await readFile(path.join(REPO, 'data/missions.json'), 'utf8')).missions;
+    const head = () => page.$eval(P + ' [data-sec="missions"] .sec p', (p) => p.textContent);
+    check(await head() === '2 of ' + ms.length + ' done', 'the done count is What Now’s marks', await head());
+    let marks = JSON.parse(await page.evaluate(() => localStorage.getItem('allday-missions')));
+    check(!('m1' in marks) && marks.m201 === 1761000000 && marks.m202 === 1761000000, 'an old rank mark (m1) moves onto its mission’s stable mark, as What Now does', JSON.stringify(marks));
+    const rows = await page.$$eval(P + ' [data-k^="mission:"]', (r) => r.map((x) => ({ k: x.dataset.k, href: x.querySelector('a').getAttribute('href'), mark: x.querySelector('[data-done]').dataset.done })));
+    check(rows.length === 5 && rows.every((r) => r.href === '#whatnow/' + r.k.slice(8)), 'five missions for today, each a link to What Now with a Done toggle', JSON.stringify(rows));
+    /* a check here is a mark in What Now's own map, and the others stay */
+    const pick = rows.find((r) => !['m201', 'm202'].includes(r.mark));
+    await page.click(P + ' [data-k="' + pick.k + '"] [data-done]');
+    marks = JSON.parse(await page.evaluate(() => localStorage.getItem('allday-missions')));
+    check(marks[pick.mark] > 1761000000 && marks.m201 === 1761000000 && marks.m202 === 1761000000, 'marking done here writes What Now’s map, keeping every other mark', JSON.stringify(marks));
+    check(await head() === '3 of ' + ms.length + ' done' && await page.$eval(P + ' [data-k="' + pick.k + '"]', (r) => r.classList.contains('done')), 'the count and the row follow', await head());
+    check(await page.evaluate((m) => document.activeElement && document.activeElement.dataset.done === m, pick.mark), 'focus stays on the Done button just pressed', '');
+    check(JSON.stringify(await page.$$eval(P + ' [data-k^="mission:"]', (r) => r.map((x) => x.dataset.k))) === JSON.stringify(rows.map((r) => r.k)), 'and today’s five stay put', '');
+    await page.click(P + ' [data-k="' + pick.k + '"] [data-done]');
+    marks = JSON.parse(await page.evaluate(() => localStorage.getItem('allday-missions')));
+    check(!(pick.mark in marks) && await head() === '2 of ' + ms.length + ' done', 'a second tap takes it off', JSON.stringify(marks));
+    const st = await page.evaluate((p) => {
+      const r = (k) => document.querySelector(p + ' [data-k="city:' + k + '"]');
+      const btn = (k) => { const b = r(k) && r(k).querySelector('.pillbtn'); return b && { tag: b.tagName, dis: !!b.disabled, text: b.textContent.trim(), href: b.getAttribute('href') }; };
+      return { streets: btn('every-street'), streetsWords: r('every-street').innerText, lit: btn('keep-burlington-lit'), dibs: btn('dibs'),
+        photos: r('photo-quests') && r('photo-quests').dataset.placeholder === '1' && btn('photo-quests').dis, hunt: btn('photo-quests:now'),
+        crewChips: document.querySelectorAll(p + ' .pl-crews [data-chip]').length, season: document.querySelector(p + ' [data-sec="season"]')?.dataset.season || '',
+        seasonHead: document.querySelector(p + ' [data-sec="season"] .sec')?.innerText || '', seasonRows: document.querySelectorAll(p + ' [data-k^="season:"]').length };
+    }, P);
+    check(st.streets.dis && st.streets.text === 'Coming soon' && /Runs only locally today/.test(st.streetsWords), 'Streets: Every Street says plainly it runs only locally today, with no link', JSON.stringify(st.streets));
+    check(st.lit.href === 'https://play.btownbrief.com/keep-burlington-lit/' && st.dibs.href === 'https://play.btownbrief.com/dibs/', 'Lit and Dibs link to the arcade', JSON.stringify([st.lit, st.dibs]));
+    check(st.photos && st.hunt && st.hunt.href === 'https://play.btownbrief.com/btown-hunt/', 'Photo quests is a placeholder, with Btown Hunt live now', JSON.stringify(st.hunt));
+    const play = JSON.parse(await readFile(path.join(REPO, 'data/play/play.json'), 'utf8'));
+    const t = etKey(Date.now());
+    const sn = play.city.seasons.find((x) => x.starts <= t && t <= x.ends);
+    check(sn ? st.season === sn.key && st.seasonRows === sn.marks.length && new RegExp('^' + sn.name).test(st.seasonHead) : st.season === '', 'Season: this season’s collection, with its count and end date', JSON.stringify(st));
+    check(st.crewChips === 12, 'no crew yet: the twelve neighborhoods to pick from', st.crewChips);
+    await page.click(P + ' .pl-crews [data-chip="south-end"]');
+    check(JSON.parse(await page.evaluate(() => localStorage.getItem('play-crew'))) === 'south-end' && await page.$eval(P + ' [data-crew]', (r) => r.dataset.crew + ' ' + r.querySelector('.t').textContent) === 'south-end South End',
+      'a crew is picked once and kept on the phone', '');
+    await Promise.all([page.waitForURL((u) => u.pathname === '/out/'), page.click(P + ' [data-k="' + pick.k + '"] a')]);
+    await settle(page);
+    check(new URL(page.url()).hash === '#whatnow/' + pick.k.slice(8), 'a mission opens in What Now, in Out', page.url());
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+    const d = await newPage(browser, base);
+    await d.page.goto(base + '/play/?demo=1#city');
+    await settle(d.page);
+    await d.page.click('#panel-city [data-k^="mission:"] [data-done]');
+    check(await d.page.evaluate(() => localStorage.getItem('allday-missions')) === null && await d.page.$eval('#panel-city [data-crew]', (r) => r.dataset.crew) === 'old-north-end', 'demo: a crew, done missions, and nothing kept', '');
+    await d.ctx.close();
+  });
+
+  await group('play: Draw', async () => {
+    for (const live of [false, true]) {
+      const cat = JSON.parse(await readFile(path.join(REPO, 'data/games-catalog.json'), 'utf8'));
+      if (live) cat.games.push({ slug: 'btown-draw', name: 'Btown Draw', emoji: '🐟', pitch: 'Draw it.', section: 'local-more', live: true, leaderboard: true, first_seen: '2026-10-30', live_since: '2026-10-30' });
+      const asked = [];
+      const rpc = (fn, body) => { if (fn !== 'get_leaderboard') return undefined; asked.push(body.p_game + ' ' + body.p_month); return ROWS(['Ada W.', 'Cy F.', 'Ada W.']); };
+      const { ctx, page, errors } = await newPage(browser, base, { routes: [[/\/data\/games-catalog\.json$/, cat]], rpc });
+      await page.goto(base + '/play/#draw');
+      await settle(page);
+      const st = await page.evaluate(() => {
+        const p = document.querySelector('#panel-draw');
+        return { buttons: [...p.querySelectorAll('[data-play]')].map((b) => ({ tag: b.tagName, dis: !!b.disabled, text: b.textContent.trim(), href: b.getAttribute('href') })),
+          shots: [...p.querySelectorAll('.gm-scr img')].map((i) => [i.getAttribute('src'), i.naturalWidth > 0, i.alt]), words: p.innerText };
+      });
+      await page.waitForFunction(() => [...document.querySelectorAll('#panel-draw .gm-scr img')].every((i) => i.complete && i.naturalWidth > 0), null, { timeout: 5000 }).catch(() => {});
+      const loaded = await page.$$eval('#panel-draw .gm-scr img', (is) => is.map((i) => i.naturalWidth));
+      check(st.shots.length === 2 && st.shots[0][0] === '../data/play/draw-lake.jpg' && st.shots[1][0] === '../data/play/draw-truck.jpg' && loaded.every((x) => x > 0), 'the Lake and the Truck, each with its screenshot', JSON.stringify(st.shots) + ' ' + loaded);
+      check(/The Lake/.test(st.words) && /The Truck/.test(st.words) && /fifteen house fish/.test(st.words) && /Winooski bridge/.test(st.words), 'what each one is, in a few lines', '');
+      if (!live) check(st.buttons.length === 1 && st.buttons.every((b) => b.tag === 'BUTTON' && b.dis && b.text === 'Coming soon'), 'not on the arcade yet: Play is disabled and says Coming soon', JSON.stringify(st.buttons));
+      if (!live) check(!asked.length && !(await page.$('#panel-draw [data-sec="board"]')), 'not live: no board, and nothing asked', asked.join(', '));
+      if (live) {
+        const hrefs = st.buttons.map((b) => b.href);
+        check(st.buttons.every((b) => b.tag === 'A') && hrefs[0] === 'https://play.btownbrief.com/btown-draw/#lake' && ['#lake', '#truck', '#gallery', '#prompt'].every((h) => hrefs.includes('https://play.btownbrief.com/btown-draw/' + h)),
+          'the day the arcade lists it live: Play, the two pictures and Gallery and Prompt open the game at their own places', JSON.stringify(hrefs));
+        const board = await page.$$eval('#panel-draw [data-board="btown-draw"] .r', (r) => r.map((x) => x.querySelector('.t').textContent + ' ' + x.querySelector('.sc').textContent));
+        check(asked.length === 1 && asked[0] === 'btown-draw ' + etKey(Date.now()).slice(0, 7) && JSON.stringify(board) === JSON.stringify(['Ada W. 1,000 m', 'Cy F. 990 m']), 'and the truck’s monthly board shows, each player once, in metres', JSON.stringify(board));
+      }
+      check(!errors.length, (live ? 'live' : 'not live') + ': no console errors', errors.join(' | '));
+      await ctx.close();
+    }
+  });
+
+  await group('play: Party', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/play/#party');
+    await settle(page);
+    const rows = (sec) => page.$$eval('#panel-party [data-sec="' + sec + '"] [data-k^="party:"]', (r) => r.map((x) => ({ k: x.dataset.k, n: (x.querySelector('.num') || {}).textContent || '', when: (x.querySelector('.s') || {}).textContent || '',
+      links: [...x.querySelectorAll('a')].map((a) => [a.textContent.trim(), a.href]) })));
+    const night = await rows('night');
+    check(JSON.stringify(night.map((r) => r.k + ' ' + r.n)) === JSON.stringify(['party:btown-party 1', 'party:church-street-trivia 2', 'party:arcade-night 3', 'party:stay-awhile 4']), 'game night, numbered in the order to run it', night.map((r) => r.k + ' ' + r.n).join(', '));
+    check(night.every((r) => r.when.length > 5 && r.links.length >= 1), 'each step says when, in one line, and has its link', JSON.stringify(night.map((r) => r.when)));
+    const tv = Object.fromEntries(night.map((r) => [r.k, (r.links.find((l) => l[0] === 'On the TV') || [])[1] || '']));
+    check(tv['party:btown-party'] === 'https://play.btownbrief.com/btown-party/screen.html' && tv['party:church-street-trivia'] === 'https://play.btownbrief.com/church-street-trivia/host.html' && tv['party:arcade-night'] === 'https://play.btownbrief.com/arcade-night/',
+      'On the TV opens what the TV shows: Btown Party’s screen, Trivia’s host page, Arcade Night', JSON.stringify(tv));
+    check(night[0].links.some((l) => l[0] === 'Host' && l[1] === 'https://play.btownbrief.com/btown-party/host.html'), 'Btown Party’s host runs from a phone', JSON.stringify(night[0].links));
+    const table = await rows('table');
+    check(JSON.stringify(table.map((r) => r.k)) === JSON.stringify(['party:table-talk', 'party:stay-awhile-home']) && table[0].links[0][1] === base + '/table.html' && table[1].links[0][1] === 'https://play.btownbrief.com/stay-awhile/',
+      'at a table: Table Talk (the guide’s own table.html) and Stay Awhile', JSON.stringify(table));
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('play: Boards', async () => {
+    const asked = [];
+    const rpc = (fn, body) => {
+      if (fn !== 'get_leaderboard') return undefined;
+      asked.push(body.p_game);
+      if (body.p_game === 'pothole-patrol') return ROWS(['Ada W.', 'Cy F.', 'Ada W.', 'Max T.']);
+      return [];
+    };
+    /* this month's champions: Pothole Patrol the busiest board, so Boards opens on it */
+    const champions = { updated: new Date().toISOString(), month: etKey(Date.now()).slice(0, 7), monthLabel: '', royalty: [],
+      games: [{ slug: 'pothole-patrol', name: 'Pothole Patrol', champ: 'Ada W.', score: 1000, players: 3 }, { slug: 'filed', name: 'FILED!', champ: 'Cy', score: 9, players: 1 }] };
+    const { ctx, page, errors, supabase } = await newPage(browser, base, { rpc, champions });
+    await page.goto(base + '/play/#ranks');
+    await settle(page);
+    const P = '#panel-ranks';
+    await page.waitForSelector(P + ' [data-board] .r', { timeout: 6000 });
+    const cat = JSON.parse(await readFile(path.join(REPO, 'data/games-catalog.json'), 'utf8'));
+    const first = 'pothole-patrol';
+    const chipOrder = await page.$$eval(P + ' .pl-games [data-chip]', (c) => c.map((x) => x.dataset.chip));
+    check(chipOrder[0] === 'pothole-patrol' && chipOrder[1] === 'filed' && chipOrder.length === cat.games.filter((g) => g.live && g.leaderboard).length, 'the busiest boards this month come first', chipOrder.slice(0, 4).join(', '));
+    const rows = await page.$$eval(P + ' [data-board] .r .t', (t) => t.map((x) => x.textContent));
+    check(asked.length === 1 && asked[0] === first, 'opening the tab asks for one board, not thirty: the busiest', asked.join(', '));
+    check(JSON.stringify(rows) === JSON.stringify(['Ada W.', 'Cy F.', 'Max T.']), 'each player once, under their best', rows.join(', '));
+    await page.click(P + ' .pl-games [data-chip="creemee-drop"]');
+    await page.waitForFunction((p) => /No scores yet/.test(document.querySelector(p).innerText), P, { timeout: 4000 });
+    check(asked.length === 2 && asked[1] === 'creemee-drop', 'picking another game asks for that one board', asked.join(', '));
+    await page.click(P + ' .pl-games [data-chip="pothole-patrol"]');
+    check(asked.length === 2, 'and a board already read is not asked again', asked.join(', '));
+    const fns = supabase.map((u) => (u.match(/\/rpc\/(\w+)/) || [])[1] || (/^GET /.test(u) ? 'GET' : u));
+    check(fns.every((f) => f === 'GET' || PLAY_READS.has(f)), 'Boards only reads (an exact list of read calls)', [...new Set(fns)].join(', '));
+    const st = await page.evaluate((p) => ({ pred: document.querySelector(p + ' [data-k="boards:predictions"]')?.dataset.placeholder, predWords: document.querySelector(p + ' [data-sec="predictions"]')?.innerText || '',
+      bracket: document.querySelector(p + ' [data-k="boards:bracket"] a')?.href, every: document.querySelector(p + ' [data-sec="leaders"] a[href="#games/board"]') !== null,
+      opens: ['playing', 'lfg', 'tags'].map((k) => document.querySelector(p + ' [data-sec="' + k + '"] a[href="#games/' + k + '"]') !== null), tags: document.querySelector(p + ' [data-tags]')?.dataset.tags }), P);
+    check(st.pred === '1' && /First snow/.test(st.predWords) && /Coming soon/.test(st.predWords), 'Predictions: a placeholder that names what is coming', st.predWords);
+    check(st.bracket === 'https://play.btownbrief.com/btown-bracket/', 'Bracket links to the Btown Bracket', st.bracket);
+    check(st.every && st.opens.every(Boolean), 'every board opens in full in Arcade', JSON.stringify(st.opens));
+    check(st.tags === 'out', 'signed out: the gamertags line asks to sign in', st.tags);
+    await Promise.all([page.waitForFunction(() => document.querySelector('#tab-games').getAttribute('aria-selected') === 'true'), page.click(P + ' a[href="#games/lfg"]')]);
+    check(new URL(page.url()).pathname === '/play/', 'Open the board stays in Play, on Arcade', page.url());
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+    const d = await newPage(browser, base);
+    await d.page.goto(base + '/play/?demo=1#ranks');
+    await settle(d.page);
+    await d.page.waitForSelector('#panel-ranks [data-board="creemee-drop"] .r', { timeout: 6000 });
+    const demo = await d.page.evaluate(() => ({ lb: document.querySelectorAll('#panel-ranks [data-board] .r').length, play: document.querySelectorAll('#panel-ranks [data-sec="playing"] [data-k^="b-"]').length,
+      lfg: document.querySelectorAll('#panel-ranks [data-sec="lfg"] .card').length }));
+    check(demo.lb > 0 && demo.play > 0 && demo.lfg > 0, 'demo: a board, what people play and open groups, all from the demo copy', JSON.stringify(demo));
+    check(!d.supabase.length && !d.errors.length, 'demo: nothing calls Supabase, no console errors', d.supabase.join(', ') + d.errors.join(' | '));
+    await d.ctx.close();
+  });
+}
+
 /* ----------------------------------------------------------------- run */
 /* account-data.js: deleting the account from an app that does not load
    Habits or The Build still deletes their server data (wave 0 bug found by
@@ -13340,6 +13649,7 @@ try {
   await run(theChallenge);
   await run(fullPagesAndAsks);
   await run(theApps);
+  await run(thePlay);
   await run(accountData);
 } finally {
   await browser.close();

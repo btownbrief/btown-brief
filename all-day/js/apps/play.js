@@ -1,5 +1,8 @@
 /* Play: the arcade, the city game, the drawing world and the boards
-   (APP-MAP.html, app 7). Games is hosted on Arcade as it is. */
+   (APP-MAP.html, app 7). Games is hosted on Arcade as it is; wave 1
+   (2026-10-29) built the other five as modes, each named by its route key:
+   js/modes/daily.js, city.js, draw.js, party.js and ranks.js (Boards; not
+   `boards`, which would collide with js/boards.js), sharing playkit.js. */
 export default {
   id: 'play',
   name: 'Play',
@@ -11,21 +14,11 @@ export default {
   line: 'The arcade, the city game, the drawing world and the boards.',
   tabs: [
     { mode: 'games', label: 'Arcade', top: ['New', 'Sections', 'Champs', 'Challenge a neighbor', 'Out in Burlington'] },
-    { key: 'daily', label: 'Daily', icon: 'calcheck',
-      promise: 'Today’s puzzles on one shelf, a streak for each.',
-      top: ['Wordle', 'Crossings', 'News quiz', 'Higher or lower', 'Where in Btown', 'Real or fake'] },
-    { key: 'city', label: 'City', icon: 'flag',
-      promise: 'Claim your streets, one walk at a time.',
-      top: ['Missions', 'Streets', 'Lit', 'Dibs', 'Photo quests', 'Crews', 'Season'] },
-    { key: 'draw', label: 'Draw', icon: 'pencil',
-      promise: 'Draw a fish and watch it swim in the shared tank.',
-      top: ['Aquarium', 'The truck', 'Gallery', 'Prompt of the week'] },
-    { key: 'party', label: 'Party', icon: 'party',
-      promise: 'Party games for the whole room.',
-      top: ['Btown Party', 'Trivia', 'Arcade Night', 'Stay Awhile', 'Table Talk'] },
-    { key: 'boards', label: 'Boards', icon: 'trophy',
-      promise: 'Leaderboards, predictions and who’s playing what.',
-      top: ['Leaderboards', 'Predictions', 'Bracket', 'Playing', 'Looking for a group', 'Gamertags'] },
+    { mode: 'daily', label: 'Daily', icon: 'calcheck', top: ['Wordle', 'Crossings', 'News quiz', 'Higher or lower', 'Where in Btown', 'Real or fake'] },
+    { mode: 'city', label: 'City', icon: 'flag', top: ['Missions', 'Streets', 'Lit', 'Dibs', 'Photo quests', 'Crews', 'Season'] },
+    { mode: 'draw', label: 'Draw', icon: 'pencil', top: ['Aquarium', 'The truck', 'Gallery', 'Prompt of the week'] },
+    { mode: 'party', label: 'Party', icon: 'party', top: ['Btown Party', 'Trivia', 'Arcade Night', 'Stay Awhile', 'Table Talk'] },
+    { mode: 'ranks', label: 'Boards', icon: 'trophy', top: ['Leaderboards', 'Predictions', 'Bracket', 'Playing', 'Looking for a group', 'Gamertags'] },
   ],
   full: { games: ['https://play.btownbrief.com/', 'the BTown Games arcade'] },
 };

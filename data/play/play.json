@@ -1,0 +1,222 @@
+{
+  "_about": "What the Play app's Daily, City, Draw, Party and Boards tabs show (all-day/js/modes/play-*.js). Hand-edited. Links are the live arcade's; a thing with \"soon\" set has no working link yet and its button says Coming soon. Written Oct 29, 2026.",
+  "daily": [
+    {
+      "slug": "btown-wordle",
+      "name": "Btown Wordle",
+      "emoji": "🟩",
+      "line": "A Burlington word puzzle, fresh every day.",
+      "url": "https://play.btownbrief.com/btown-wordle/"
+    },
+    {
+      "slug": "btown-crossings",
+      "name": "Crossings",
+      "emoji": "🔡",
+      "line": "Word tiles: Church Street doubles your word, the Waterfront triples a letter.",
+      "url": "https://play.btownbrief.com/btown-crossings/"
+    },
+    {
+      "slug": "news-quiz",
+      "name": "The News Quiz",
+      "emoji": "🗞️",
+      "line": "Five questions from this week’s Brief. One minute.",
+      "url": "https://play.btownbrief.com/news-quiz/"
+    },
+    {
+      "slug": "higher-or-lower",
+      "name": "Higher or Lower",
+      "emoji": "📊",
+      "line": "One Burlington number, then another. Higher or lower?",
+      "url": "https://play.btownbrief.com/higher-or-lower/"
+    },
+    {
+      "slug": "where-in-btown",
+      "name": "Where in Btown",
+      "emoji": "📍",
+      "line": "One local photo, one guess: name the spot.",
+      "url": "https://play.btownbrief.com/where-in-btown/"
+    },
+    {
+      "slug": "real-or-fake",
+      "name": "Real or Fake",
+      "emoji": "📰",
+      "line": "A real Burlington headline, or one we made up?",
+      "url": "https://play.btownbrief.com/real-or-fake/"
+    }
+  ],
+  "city": {
+    "streets": {
+      "key": "every-street",
+      "name": "Every Street",
+      "emoji": "🟨",
+      "line": "Every block of named street starts dark. Walk one end to end and it turns gold.",
+      "honest": "Runs only locally today.",
+      "soon": true
+    },
+    "lit": {
+      "key": "keep-burlington-lit",
+      "name": "Keep Burlington Lit",
+      "emoji": "🔦",
+      "line": "Light the city’s portals with the code word on each card.",
+      "url": "https://play.btownbrief.com/keep-burlington-lit/"
+    },
+    "dibs": {
+      "key": "dibs",
+      "name": "Dibs",
+      "emoji": "🔷",
+      "line": "Stand in a block, tap, it’s yours until someone takes it.",
+      "url": "https://play.btownbrief.com/dibs/"
+    },
+    "photos": {
+      "key": "photo-quests",
+      "name": "Photo quests",
+      "emoji": "📸",
+      "line": "Quests you finish with a photo.",
+      "now": {
+        "name": "Btown Hunt",
+        "line": "Walk-and-collect packs.",
+        "url": "https://play.btownbrief.com/btown-hunt/"
+      }
+    },
+    "crews": {
+      "key": "crews",
+      "name": "Crews",
+      "emoji": "🚩",
+      "line": "Rep your neighborhood."
+    },
+    "season": {
+      "key": "season",
+      "name": "Season",
+      "emoji": "🍂",
+      "line": "A collection each season."
+    },
+    "seasons": [
+      {
+        "key": "fall-2026",
+        "name": "Fall 2026",
+        "starts": "2026-09-22",
+        "ends": "2026-12-20",
+        "emoji": "🍂",
+        "marks": [
+          "m234",
+          "m264",
+          "m266",
+          "m217",
+          "m212",
+          "m270",
+          "m287",
+          "m289"
+        ]
+      },
+      {
+        "key": "winter-2027",
+        "name": "Winter 2027",
+        "starts": "2026-12-21",
+        "ends": "2027-03-19",
+        "emoji": "❄️",
+        "marks": [
+          "m232",
+          "m280",
+          "m281",
+          "m282",
+          "m283",
+          "m284",
+          "m285",
+          "m296"
+        ]
+      }
+    ]
+  },
+  "draw": {
+    "slug": "btown-draw",
+    "name": "Btown Draw",
+    "play": "https://play.btownbrief.com/btown-draw/#lake",
+    "lake": {
+      "title": "The Lake",
+      "line": "Draw a fish and release it into a shared Lake Champlain, with fifteen house fish and Champ.",
+      "shot": "../data/play/draw-lake.jpg"
+    },
+    "truck": {
+      "title": "The Truck",
+      "line": "Draw a wheel and drive it. Its shape is how it rolls: Church Street bricks, North Ave potholes, the Winooski bridge.",
+      "shot": "../data/play/draw-truck.jpg"
+    },
+    "more": [
+      {
+        "key": "gallery",
+        "emoji": "🖼️",
+        "title": "Gallery",
+        "line": "Everything people drew."
+      },
+      {
+        "key": "prompt",
+        "emoji": "🗓️",
+        "title": "Prompt of the week",
+        "line": "One thing to draw each week. The winner goes on the truck’s billboard."
+      }
+    ]
+  },
+  "party": {
+    "night": [
+      {
+        "key": "btown-party",
+        "name": "Btown Party",
+        "emoji": "🎪",
+        "when": "Start here: everyone joins with one code",
+        "tv": "https://play.btownbrief.com/btown-party/screen.html",
+        "host": "https://play.btownbrief.com/btown-party/host.html"
+      },
+      {
+        "key": "church-street-trivia",
+        "name": "Church Street Trivia",
+        "emoji": "🍻",
+        "when": "Then trivia, team by table",
+        "tv": "https://play.btownbrief.com/church-street-trivia/host.html",
+        "play": "https://play.btownbrief.com/church-street-trivia/"
+      },
+      {
+        "key": "arcade-night",
+        "name": "Arcade Night",
+        "emoji": "🏆",
+        "when": "Finals: best scores on the TV",
+        "tv": "https://play.btownbrief.com/arcade-night/"
+      },
+      {
+        "key": "stay-awhile",
+        "name": "Stay Awhile",
+        "emoji": "🎡",
+        "when": "Last call: questions for the table",
+        "play": "https://play.btownbrief.com/stay-awhile/"
+      }
+    ],
+    "table": [
+      {
+        "key": "table-talk",
+        "name": "Table Talk",
+        "emoji": "🍽️",
+        "when": "A dinner table or a meetup",
+        "play": "../table.html"
+      },
+      {
+        "key": "stay-awhile-home",
+        "name": "Stay Awhile",
+        "emoji": "🎡",
+        "when": "People you just met",
+        "play": "https://play.btownbrief.com/stay-awhile/"
+      }
+    ]
+  },
+  "boards": {
+    "predictions": {
+      "name": "Guess the date",
+      "emoji": "❄️",
+      "line": "First snow, the lake freezing, the first 80° day."
+    },
+    "bracket": {
+      "name": "Btown Bracket",
+      "emoji": "🥇",
+      "line": "Sixteen go in, one comes out.",
+      "url": "https://play.btownbrief.com/btown-bracket/"
+    }
+  }
+}
