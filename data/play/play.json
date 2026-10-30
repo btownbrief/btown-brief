@@ -1,0 +1,41 @@
+{
+  "_about": "What the Play app's Daily, City, Draw, Party and Boards tabs show (all-day/js/modes/play-*.js). Hand-edited. Links are the live arcade's; a thing with \"soon\" set has no working link yet and its button says Coming soon. Written Oct 29, 2026.",
+  "daily": [
+    { "slug": "btown-wordle", "name": "Btown Wordle", "emoji": "🟩", "line": "A Burlington word puzzle, fresh every day.", "url": "https://play.btownbrief.com/btown-wordle/" },
+    { "slug": "btown-crossings", "name": "Crossings", "emoji": "🔡", "line": "Word tiles: Church Street doubles your word, the Waterfront triples a letter.", "url": "https://play.btownbrief.com/btown-crossings/" },
+    { "slug": "news-quiz", "name": "The News Quiz", "emoji": "🗞️", "line": "Five questions from this week’s Brief. One minute.", "url": "https://play.btownbrief.com/news-quiz/" },
+    { "slug": "higher-or-lower", "name": "Higher or Lower", "emoji": "📊", "line": "One Burlington number, then another. Higher or lower?", "url": "https://play.btownbrief.com/higher-or-lower/" },
+    { "slug": "where-in-btown", "name": "Where in Btown", "emoji": "📍", "line": "One local photo, one guess: name the spot.", "url": "https://play.btownbrief.com/where-in-btown/" },
+    { "slug": "real-or-fake", "name": "Real or Fake", "emoji": "📰", "line": "A real Burlington headline, or one we made up?", "url": "https://play.btownbrief.com/real-or-fake/" }
+  ],
+  "city": {
+    "streets": { "key": "every-street", "name": "Every Street", "emoji": "🟨", "line": "Burlington has 1,191 blocks of named street. They all start dark; walk one end to end and it turns gold for good.", "honest": "Built and working, but it runs only on a local copy today. It isn’t on the arcade yet, so there’s nothing to open.", "soon": true },
+    "lit": { "key": "keep-burlington-lit", "name": "Keep Burlington Lit", "emoji": "🔦", "line": "Thirty-five portals around town. Stand at one, type the code word from its card, and it lights. The whole town tries to keep 80% lit through the season.", "honest": "Unlisted: it isn’t in the arcade’s list yet, but the link works.", "url": "https://play.btownbrief.com/keep-burlington-lit/" },
+    "dibs": { "key": "dibs", "name": "Dibs", "emoji": "🔷", "line": "Burlington cut into 920 blocks. Stand in one, tap, it’s yours until someone takes it back.", "url": "https://play.btownbrief.com/dibs/" },
+    "photos": { "key": "photo-quests", "name": "Photo quests", "emoji": "📸", "line": "Coming here: quests you finish with a photo. Find the mural, visit a business you’ve never walked into, clean up a block.", "now": { "name": "Btown Hunt", "line": "Walk-and-collect packs with one passport, live now.", "url": "https://play.btownbrief.com/btown-hunt/" } },
+    "crews": { "key": "crews", "name": "Crews", "emoji": "🚩", "line": "Coming here: neighborhood crews, so the streets, blocks and quests you claim count for the Old North End or the South End, with a board for each." },
+    "season": { "key": "season", "name": "Season", "emoji": "🍂", "line": "Coming here: a season of the city game, with collections that change with the weather and sponsored quests from local places." }
+  },
+  "draw": {
+    "slug": "btown-draw",
+    "name": "Btown Draw",
+    "play": "https://play.btownbrief.com/btown-draw/#lake",
+    "lake": { "title": "The Lake", "line": "Draw a fish with your finger, sign it or don’t, and release it. It swims in a shared Lake Champlain with everyone else’s, and the lake is never empty: fifteen house fish live there from day one. Tap any fish to see who drew it. Champ glides past now and then.", "shot": "../data/play/draw-lake.jpg" },
+    "truck": { "title": "The Truck", "line": "Draw a wheel, and the game rolls the shape you actually drew: round is smooth, a square clunks. Drive Church Street’s bricks, the plow pile, North Ave’s potholes and the Winooski bridge. Distance goes on the arcade’s monthly board.", "shot": "../data/play/draw-truck.jpg" },
+    "more": [
+      { "key": "gallery", "emoji": "🖼️", "title": "Gallery", "line": "Everything people drew, newest first. Drive anyone’s truck from it." },
+      { "key": "prompt", "emoji": "🗓️", "title": "Prompt of the week", "line": "One thing to draw each week. Most likes by Sunday wins, and the winner goes up on the truck’s billboard." }
+    ]
+  },
+  "party": [
+    { "key": "btown-party", "name": "Btown Party", "emoji": "🎪", "when": "A room of 10 to 60 at a mixer", "line": "Everyone scans one code and answers a few tiny questions; the payoff lands on a shared screen. Phones go back in pockets.", "url": "https://play.btownbrief.com/btown-party/" },
+    { "key": "church-street-trivia", "name": "Church Street Trivia", "emoji": "🍻", "when": "A bar with a TV", "line": "Bar trivia where every table’s phone is the buzzer, so the back of a loud room can play. The host runs it from a laptop on the TV.", "url": "https://play.btownbrief.com/church-street-trivia/", "host": "https://play.btownbrief.com/church-street-trivia/host.html" },
+    { "key": "arcade-night", "name": "Arcade Night", "emoji": "🏆", "when": "Game night on a big screen", "line": "Pick tonight’s games, put the scoreboard on the TV. People play on their own phones and their best scores land on the wall.", "url": "https://play.btownbrief.com/arcade-night/" },
+    { "key": "stay-awhile", "name": "Stay Awhile", "emoji": "🎡", "when": "A table of people you just met", "line": "Three questions, ask them out loud, find out who you’re sitting with. One button deals three more.", "url": "https://play.btownbrief.com/stay-awhile/" },
+    { "key": "table-talk", "name": "Table Talk", "emoji": "🍽️", "when": "A dinner table or a meetup", "line": "Prop a phone on the table: icebreakers, weekend picks, friendly local debates, one big card at a time. Sync puts every phone on the same card.", "url": "../table.html" }
+  ],
+  "boards": {
+    "predictions": { "name": "Predictions", "emoji": "❄️", "line": "Coming here: the Predictions League. First up is First Snow 2026: guess the day Burlington gets its first measurable snow, with the inches as a tiebreaker. Then the lake freezing over and the first 80° day.", "honest": "The First Snow page is built and staged but not merged or live yet." },
+    "bracket": { "name": "Btown Bracket", "emoji": "🥇", "line": "Readers nominate, readers vote: sixteen go in, one comes out. A season at a time.", "url": "https://play.btownbrief.com/btown-bracket/" }
+  }
+}
