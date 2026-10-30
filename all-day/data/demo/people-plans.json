@@ -1,5 +1,5 @@
 {
- "_": "Invented plans for People · Plans on ?demo=1 (all-day/js/modes/plans.js). Every name and plan here is made up. on: [days from today, hour, minute] (the plan's when); ago: hours since it was posted; who: one of people-kit.js's demo neighbors.",
+ "_": "Invented plans for People · Plans on ?demo=1 (all-day/js/modes/plans.js). Every name and plan here is made up. on: [days from today, hour, minute] (the plan's when); ago: hours since it was posted; who: one of people-kit.js's demo neighbors. events: day (days from today) and time (24-hour).",
  "posts": [
   {
    "who": 0,
@@ -94,6 +94,38 @@
     17,
     0
    ]
+  }
+ ],
+ "events": [
+  {
+   "id": "pd1",
+   "title": "Newcomers mixer at the waterfront",
+   "day": 1,
+   "time": "18:00",
+   "venue": "Harbor Taproom",
+   "town": "Burlington",
+   "url": "https://example.org/demo-newcomers-mixer",
+   "free": true
+  },
+  {
+   "id": "pd2",
+   "title": "Board game night, all welcome",
+   "day": 3,
+   "time": "19:00",
+   "venue": "A game café",
+   "town": "Burlington",
+   "url": "https://example.org/demo-game-night",
+   "free": true
+  },
+  {
+   "id": "pd3",
+   "title": "BTown Coffee Club",
+   "day": 2,
+   "time": "10:00",
+   "venue": "A brewery in the South End",
+   "town": "Burlington",
+   "url": "https://www.meetup.com/burlington-social-activites-group/events/demo-plans-1/",
+   "free": true
   }
  ]
 }

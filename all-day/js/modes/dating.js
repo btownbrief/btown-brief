@@ -62,7 +62,7 @@ function planButton(label, placeholder, word) {
 const calendarItems = () => kit.eventItems(S.events || [], (e) => { const k = mixerKind(e); return k === 'singles' || k === 'social' || SINGLES.test(e.title); }, 'dt-');
 
 const mode = kit.tab({
-  key: KEY, label: 'Dating', icon: 'heart', mixed: true, boards: ['people'],
+  key: KEY, label: 'Dating', icon: 'heart', mixed: true, fresh: true, boards: ['people'],
   promise: 'Friends and dating, in real life and online.',
   load, reload,
   count: (ts) => kit.newer(singles().concat(friends()), ts),
@@ -77,7 +77,7 @@ const mode = kit.tab({
         b.appendChild(planButton('Post a friends plan', 'Looking for friends to try the climbing gym with', 'friends'));
         lane(b, friends(), 'No friend posts yet.');
       } },
-    { key: 'events', label: 'Events', world: 'irl', newest: () => 0,
+    { key: 'events', label: 'Events', world: 'irl', newest: () => (calendarItems().length ? kit.calendarAt() : 0),
       draw(b) {
         if (S.events === null) { b.appendChild(el('p', 'note pad', 'Didn’t load.')); return; }
         kit.eventList(b, calendarItems(), 'Nothing in the next two weeks.');

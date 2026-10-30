@@ -25,10 +25,18 @@ import * as kit from './people-kit.js';
 const KEY = 'neighbors';
 const VOLUNTEER_PAGE = '../volunteer.html';
 const WHAT = { pet: 'A pet', keys: 'Keys', phone: 'A phone', wallet: 'A wallet', bike: 'A bike', bag: 'A bag', other: 'Something else' };
-const S = { posts: [], r: null, shifts: [], rs: null };
+const ORGS_URL = '../data/volunteers/orgs.json';   // the volunteer page's hand-checked directory
+const ORGS_SHOWN = 5;
+const S = { posts: [], r: null, shifts: [], rs: null, orgs: [], orgsAt: 0, allOrgs: false };
 
 function load() {
-  return (app.demo ? kit.demo('neighbors') : Promise.resolve()).then(reload);
+  return Promise.all([
+    app.demo ? kit.demo('neighbors') : null,
+    kit.json(ORGS_URL).then((j) => {
+      S.orgs = ((j && j.organizations) || []).filter((o) => o && o.org && /^https:\/\//.test(String(o.url || '')));
+      S.orgsAt = Math.max(0, ...S.orgs.map((o) => Math.floor((Date.parse(o.last_checked) || 0) / 1000)));
+    }),
+  ]).then(reload);
 }
 function reload() {
   return Promise.all([
@@ -92,15 +100,23 @@ const mode = kit.tab({
         b.appendChild(r);
         lane(b, S.r, of('lost', 'found'), { meta, map: true, vote: 'I’ll look', ratio: 'r169', after: doneButton }, 'Nothing lost or found.');
       } },
-    { key: 'shifts', label: 'Shifts', newest: () => kit.newest(S.shifts),
+    { key: 'shifts', label: 'Shifts', newest: () => Math.max(kit.newest(S.shifts), S.orgsAt),
       draw(b) {
         b.appendChild(kit.postButton('Post a shift', { board: 'shifts', kind: 'shift', heading: 'A volunteer shift', title: 'What the shift is', titlePlaceholder: 'Two hours sorting at the food shelf',
           fields: [{ key: 'org', label: 'The nonprofit', placeholder: 'The food shelf' }, { key: 'when', label: 'When', placeholder: kit.etDay(Date.now() + 3 * kit.DAY) + ', 9 am' },
             { key: 'hours', label: 'Hours', type: 'int', placeholder: '2' }, { key: 'slots', label: 'People needed', type: 'int', placeholder: '6' },
             { key: 'link', label: 'Sign-up link', type: 'url', placeholder: 'https://' }],
           place: 'Where', body: 'What to bring', notes: ['Nonprofits only. Shows once approved.'] }));
-        lane(b, S.rs, S.shifts, { meta: shiftMeta, vote: 'I’m going', after: (p) => ((p.meta || {}).link ? signUp(p.meta.link) : null) }, 'No shifts this week.');
-        b.appendChild(kit.outRow('More ways to help', '', VOLUNTEER_PAGE, 'volunteer'));
+        if (S.shifts.length || !S.orgs.length || (S.rs && !S.rs.ok)) lane(b, S.rs, S.shifts, { meta: shiftMeta, vote: 'I’m going', after: (p) => ((p.meta || {}).link ? signUp(p.meta.link) : null) }, 'No shifts this week.');
+        if (!S.orgs.length) return;
+        /* where to volunteer any week: the volunteer page's own list */
+        b.appendChild(el('p', 'subh pad', '<b>Where to volunteer</b>'));
+        const shown = S.allOrgs ? S.orgs : S.orgs.slice(0, ORGS_SHOWN);
+        kit.rowList(b, shown.map((o) => kit.outRow(o.org, (o.categories || []).join(' · '), o.url, 'vo:' + o.org.toLowerCase().replace(/[^a-z0-9]+/g, '-')))).dataset.orgs = '1';
+        const r = el('div', 'linkrow chlinks');
+        if (shown.length < S.orgs.length) r.appendChild(button('Show all ' + S.orgs.length, 'ghost sm', () => { S.allOrgs = true; mode.redraw(); }));
+        r.appendChild(kit.linkBtn('The volunteer page', VOLUNTEER_PAGE, 'ghost sm'));
+        b.appendChild(r);
       } },
   ],
 });

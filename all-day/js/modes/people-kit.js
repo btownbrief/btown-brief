@@ -25,7 +25,7 @@ import * as boards from '../boards.js';
 import { el, esc, safeHref, ICON, mark, section, button, cards, world, setWorld } from '../ui.js';
 import { sectionBar } from '../sections.js';
 import { RULES, KIND_LABELS, expiresAt, photoRequired } from '../boards-core.js';
-import { whenLabel, et, etWall } from './people.js';
+import { whenLabel, et, etWall, isOwnEvent } from './people.js';
 
 const HOUR = 3600000;
 export const DAY = 86400000;
@@ -278,8 +278,12 @@ export function demo(name) {
 /* ------------------------------------------------------ the calendar */
 /* The guide's events (wire.js's whatnow file, rebuilt daily) live; on
    ?demo=1, the tab's own demo events dated `day` days from today. */
+/* when the calendar file was built, epoch seconds: its sections' "newest" */
+let eventsAt = 0;
+export const calendarAt = () => eventsAt;
 export function events(demoEvents, onChange) {
   if (app.demo) {
+    eventsAt = nowSec() - 2 * 3600;
     const t = Date.now();
     return Promise.resolve((demoEvents || []).map((e) => {
       const date = etDay(t + (Number(e.day) || 0) * DAY);
@@ -291,6 +295,7 @@ export function events(demoEvents, onChange) {
   let first = true;
   return new Promise((res) => data.load('whatnow', (j) => {
     const list = (j && j.events) || [];
+    eventsAt = Math.floor((Date.parse(j && j.generated) || Date.now()) / 1000);
     if (first) { first = false; res(list); } else if (onChange) onChange(list);
   }, () => { if (first) { first = false; res(null); } }));
 }
@@ -316,9 +321,9 @@ export function eventItems(list, keep, prefix, days = 14) {
     if (seen.has(k)) return;
     seen.add(k);
     const d = new Date(at);
-    out.push({ k: prefix + String(e.id || e.date + '-' + out.length), kind: 'event', title: String(e.title), href: e.url, at,
+    out.push({ k: prefix + String(e.id || e.date + '-' + out.length), kind: 'event', title: String(e.title), href: e.url, at, own: isOwnEvent(e),
       src: e.venue || 'The calendar', dow: EV_DOW.format(d), dom: EV_DOM.format(d),
-      when: allDay ? 'All day' : EV_TIME.format(d), where: [e.venue, e.town].filter(Boolean).join(', ') || 'Burlington', price: e.price || (e.free ? 'Free' : 'See the page') });
+      when: allDay ? 'All day' : EV_TIME.format(d), where: [e.venue, e.town].filter(Boolean).join(', ') || 'Burlington', price: e.price || (e.free ? 'Free' : '') });
   });
   return out.sort((a, b) => a.at - b.at);
 }

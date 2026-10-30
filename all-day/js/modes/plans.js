@@ -20,12 +20,13 @@ import * as app from '../app.js';
 import * as boards from '../boards.js';
 import { el, button } from '../ui.js';
 import { whenMs, PEOPLE_RULES } from './people.js';
+import { mixerKind } from '../people-match.js';
 import * as kit from './people-kit.js';
 
 const KEY = 'plans';
 const PAST_GRACE = 3 * 3600000;
 const AGES = { twenties: 'Mostly 20s', thirties: 'Mostly 30s', forties: 'Mostly 40s', fifties: '50 and up', any: 'Any age' };
-const S = { posts: [], r: null, mine: null, round2: false };
+const S = { posts: [], r: null, mine: null, round2: false, events: [] };
 
 const at = (p) => whenMs((p.meta || {}).when, Date.parse(p.created_at));
 const upcoming = () => S.posts.map((p) => ({ p, at: at(p) })).filter((x) => x.at == null || x.at > Date.now() - PAST_GRACE)
@@ -35,7 +36,8 @@ const meta = (p) => { const m = p.meta || {}; return [m.when, m.spots ? plural(m
 
 function load() {
   return Promise.all([
-    app.demo ? kit.demo('plans') : null,
+    (app.demo ? kit.demo('plans').then((d) => d.events || []) : Promise.resolve(null))
+      .then((demoEvents) => kit.events(demoEvents, (e) => { S.events = e; mode.redraw(); })).then((e) => { S.events = e || []; }),
     boards.roundTwo().then((v) => { S.round2 = v === true; }),
   ]).then(reload);
 }
@@ -72,7 +74,13 @@ const mode = kit.tab({
     { key: 'open', label: 'Open to strangers', newest: () => kit.newest(S.posts),
       draw(b) {
         b.appendChild(compose());
-        plans(b, upcoming().map((x) => x.p), 'No plans yet.');
+        /* readers' plans first; then this week's mixers on the calendar, which
+           are open to strangers too (Stephen's own marked Btown Brief) */
+        const cal = kit.eventItems(S.events, (e) => !!mixerKind(e), 'pc-', 7);
+        if (upcoming().length || !cal.length) plans(b, upcoming().map((x) => x.p), 'No plans yet.');
+        if (!cal.length) return;
+        b.appendChild(el('p', 'subh pad', '<b>On the calendar</b>'));
+        kit.eventList(b, cal, '');
       } },
     { key: 'week', label: 'This week', newest: () => kit.newest(S.posts),
       draw(b) {

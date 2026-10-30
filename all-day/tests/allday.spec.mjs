@@ -13295,7 +13295,8 @@ async function thePeopleApp(browser, base) {
         await settle(page);
         await ppReady(page);
         const secs = await ppSecs(page);
-        check(JSON.stringify(secs) === JSON.stringify(KEYS[t]) || (t === 'neighbors' && secs.slice().sort().join() === KEYS[t].slice().sort().join()), 'a section for each top tab', JSON.stringify(secs));
+        /* Neighbors and Dating run freshest first, so only the set is fixed */
+        check(JSON.stringify(secs) === JSON.stringify(KEYS[t]) || ((t === 'neighbors' || t === 'dating') && secs.slice().sort().join() === KEYS[t].slice().sort().join()), 'a section for each top tab', JSON.stringify(secs));
         const heads = await page.$$eval('.panel:not([hidden]) .pp-sec > .sec h2', (h) => h.map((x) => x.textContent));
         const top = cfg.tabs.find((x) => x.mode === t).top;
         check(heads.every((h) => top.includes(h)) && heads.length === top.length, 'headed by the config’s top tabs', JSON.stringify(heads));
@@ -13320,6 +13321,8 @@ async function thePeopleApp(browser, base) {
       'This week keeps the next seven days; Open to strangers has the rest too', JSON.stringify(week));
     check(meetup.length >= 3 && meetup.every((x) => open.includes(x)) && !meetup.includes('Thursday trivia, our team needs a sixth'), 'Down for Meetup: only the plans that asked', JSON.stringify(meetup));
     check(/Sign in to see yours/.test(await ppText(page, 'mine')), 'Mine asks a stranger to sign in', '');
+    const cal = await page.$$eval('.pp-sec[data-sec="open"] .card.event', (c) => c.map((x) => [x.querySelector('.c-title').textContent, !!x.querySelector('.tag-own')]));
+    check(cal.some(([t, own]) => t === 'BTown Coffee Club' && own) && cal.some(([t]) => t === 'Newcomers mixer at the waterfront'), 'Open to strangers: this week’s calendar mixers under the plans, Stephen’s own marked', JSON.stringify(cal));
     check(await page.$eval('.pp-sec[data-sec="open"] .card.board [data-act="bvote"]', (b) => /I’d go/.test(b.textContent)), 'the vote says I’d go', '');
     check(!(await page.$('.pp-sec[data-sec="open"] .tag-left')), 'a plan shows its when, not a countdown', '');
     await page.evaluate(() => import('/all-day/js/auth.js').then((a) => a.demoSignIn()));
@@ -13386,7 +13389,7 @@ async function thePeopleApp(browser, base) {
     check(await page.$eval('.pp-sec[data-sec="pitch"]', (s) => /Pitch a friend/.test(s.innerText) && [...s.querySelectorAll('a')].some((a) => /meetup\.com\/burlington-social-activites-group/.test(a.href))), 'Pitch a friend: the night, and the Meetup group', '');
     check(!!(await page.$('#subnav .worldsw')), 'Real life / Online shows', '');
     const vis = () => page.$$eval('.panel:not([hidden]) .pp-sec', (s) => s.filter((x) => x.offsetParent).map((x) => x.dataset.sec));
-    check(JSON.stringify(await vis()) === JSON.stringify(['singles', 'friends', 'events', 'pitch']), 'Real life: the four in-person lanes', JSON.stringify(await vis()));
+    check((await vis()).sort().join() === ['events', 'friends', 'pitch', 'singles'].join(), 'Real life: the four in-person lanes', JSON.stringify(await vis()));
     await page.click('#subnav .worldsw button:has-text("Online")');
     await page.waitForTimeout(300);
     check(JSON.stringify(await vis()) === JSON.stringify(['posts']), 'Online: the ways to meet someone online', JSON.stringify(await vis()));
@@ -13416,6 +13419,8 @@ async function thePeopleApp(browser, base) {
     const shifts = await page.$$eval('.pp-sec[data-sec="shifts"] .card.board', (cs) => cs.map((c) => [c.querySelector('.b-title').textContent, (c.querySelector('.pp-signup a') || {}).href || '']));
     check(shifts.length >= 3 && !shifts.some(([t]) => t === 'Waiting for a look'), 'Shifts: the approved ones, never one waiting for Stephen', JSON.stringify(shifts.map((s) => s[0])));
     check(shifts.filter(([, h]) => h).every(([, h]) => /^https:\/\//.test(h)) && shifts.some(([, h]) => h), 'a shift with a link has its Sign up', '');
+    const orgs = await page.$$eval('.pp-sec[data-sec="shifts"] [data-orgs] .lrow', (r) => r.map((x) => x.href));
+    check(orgs.length === 5 && orgs.every((h) => /^https:\/\//.test(h)), 'Shifts: the volunteer page’s places to help, five then Show all', JSON.stringify(orgs));
     /* posting: sign in, name yourself, ask to borrow, and it is in the lane */
     await page.evaluate(() => import('/all-day/js/auth.js').then((a) => a.demoSignIn()));
     await page.evaluate(() => import('/all-day/js/boards.js').then((b) => b.setProfile({ display_name: 'Pat Q.' })));
