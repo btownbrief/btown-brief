@@ -158,6 +158,8 @@ function sideSwitch(on) {
   const sw = pills(sides.map(([k, l]) => [k, l]), on, (v) => (v === 'template' ? app.go(KEY, 'stephen') : app.go(v)), 'oa-sideswitch bd-sideswitch');
   sw.setAttribute('role', 'group');
   sw.setAttribute('aria-label', 'Today');
+  /* the shell's side switch is drawn for two; this one has three (a shell class would be better) */
+  sw.style.gridTemplateColumns = 'repeat(' + sides.length + ', minmax(0, 1fr))';
   [...sw.children].forEach((b, i) => { b.dataset.side = sides[i][0]; b.setAttribute('aria-pressed', String(sides[i][0] === on)); });
   liquify(sw, { key: 'body-side', idx: Math.max(0, sides.findIndex(([k]) => k === on)), colors: sides.map((x) => x[2]) });
   r.appendChild(sw);
