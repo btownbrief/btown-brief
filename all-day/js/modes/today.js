@@ -22,14 +22,17 @@
      opens the plan in People (#people/b-<id>).
    - Your habits. What is due today from the habits kept on this phone
      (habits-local.js, the signed-out Habits), each with today's tick or
-     its streak. With none, an invitation to Body.
+     its streak. With none, "No habits yet." and the way to Body.
 
    The shelves are freshest first (the shell's `fresh` rule): each one's
    time is when its newest thing arrived, and the pill of top tabs and the
-   page take that order. Your habits has no such time and sits last. Every
-   shelf with nothing to show says what will appear there, never a blank.
+   page take that order. Your habits has no such time and sits last. An
+   empty shelf says so in a few words and keeps its link (DESIGN.md §10:
+   a section is a title, no captions, no counts the button already says).
 
-   The page waits for every source to answer, at most WAIT_MS, so it is
+   Nothing is fetched until the tab first opens (a reader who lands on a
+   Wire link never pays for the restaurant list). The page then waits for
+   every source to answer, at most WAIT_MS, so it is
    drawn once in its order; a source that answers later fills its own shelf
    in place without moving the others.
 
@@ -62,15 +65,15 @@ const CHURCH_ST = [44.4758, -73.2128];
 /* the five shelves, in the order they have when none has a time yet */
 const SHELVES = [
   { key: 'matters', label: 'What matters', more: ['wire', 'More in the Wire'],
-    empty: 'Today’s local picks from the Wire land here after its first update of the morning.' },
+    empty: 'No picks yet today.' },
   { key: 'tonight', label: 'Tonight', more: ['whatnow/tonight', 'More in Out'],
-    empty: 'Shows, talks and things to do from 5 pm on show here once the calendar has them.' },
+    empty: 'Nothing listed tonight.' },
   { key: 'open', label: 'Open now', more: ['food', 'More in Eat'],
-    empty: 'Nothing is open this minute. Restaurants open right now show here; Eat has what opens next.' },
+    empty: 'Nothing open right now.' },
   { key: 'plans', label: 'Open plans', more: ['people', 'More in People'],
-    empty: 'Plans people post on the People board for this week show here: a run, a pickup game, a walk.' },
+    empty: 'No plans this week.' },
   { key: 'habits', label: 'Your habits', more: ['habits', 'More in Body'],
-    empty: 'Habits you keep in Body show here on the days they’re due. Start one there: a walk, twenty pages, water.' },
+    empty: 'No habits yet.' },
 ];
 
 /* ---------------------------------------------------------------- time */
@@ -204,7 +207,7 @@ function matters(p) {
     return { k: String(x.id), href: x.url, title: x.title, sub: [src, ms ? ago(ms) : ''].filter(Boolean).join(' · '), thumb: x.thumb || '', mark: src, out: true };
   });
   const newest = Math.max(0, ...picks.map((x) => Date.parse(x.posted_at) || 0));
-  return { rows, newest: sec(newest), sub: p.date && p.date !== today ? 'The Wire’s picks from ' + DAYWORD.format(new Date(p.date + 'T12:00:00Z')) : 'The Wire’s local picks' };
+  return { rows, newest: sec(newest), sub: p.date && p.date !== today && rows.length ? 'From ' + DAYWORD.format(new Date(p.date + 'T12:00:00Z')) : '' };
 }
 
 function tonight(j) {
@@ -229,7 +232,7 @@ function tonight(j) {
     const where = e.venue || e.town || 'Burlington';
     return { k: 'e-' + e.id, href: '#whatnow/e-' + e.id, title: e.title.replace(/^['‘’"“]+|['‘’"“]+$/g, ''), sub: [where, e.free ? 'Free' : ''].filter(Boolean).join(' · '), tile: [n, ap] };
   });
-  return { rows, newest: sec(Date.parse(j.generated) || 0), sub: list.length ? list.length + (list.length === 1 ? ' thing' : ' things') + ' from 5 pm on' : '' };
+  return { rows, newest: sec(Date.parse(j.generated) || 0), sub: '' };
 }
 
 function openNow(j) {
@@ -250,7 +253,7 @@ function openNow(j) {
     const until = allNight ? 'Open all night' : 'Open until ' + hhmm(F.closingTime(r.hours, t.day, t.minutes));
     return { k: 'r-' + r.id, href: '#food/r-' + r.id, title: r.name, sub: [until, r.neighborhood].filter(Boolean).join(' · '), mark: r.name, ok: true };
   });
-  return { rows, newest: sec(Date.parse(j.generated) || 0), sub: open.length ? open.length + ' open right now' : '' };
+  return { rows, newest: sec(Date.parse(j.generated) || 0), sub: '' };
 }
 
 function plans(r) {
@@ -262,7 +265,7 @@ function plans(r) {
   }).filter((x) => x.at && x.at > now - 2 * 3600000 && x.at < now + WEEK).sort((a, b) => a.at - b.at);
   const rows = list.slice(0, MAX).map(({ p }) => ({ k: 'b-' + p.id, href: '#people/b-' + p.id, title: p.title,
     sub: [p.meta && p.meta.when, p.place].filter(Boolean).join(' · '), mark: p.author || p.title }));
-  return { rows, newest: sec(Math.max(0, ...list.map((x) => x.created))), sub: list.length ? list.length + ' this week' : '' };
+  return { rows, newest: sec(Math.max(0, ...list.map((x) => x.created))), sub: '' };
 }
 
 function habits() {
@@ -279,10 +282,10 @@ function habits() {
   const rows = due.slice(0, MAX).map((h) => {
     const mine = tapsOf(h.id), done = mine.includes(today), n = streak(h, mine, now);
     return { k: 'h-' + h.id, href: '#habits', title: h.text, done,
-      sub: done ? 'Done today' : 'Due today' + (n ? ' · ' + n + (h.frequency === 'n_per_week' ? (n === 1 ? ' week' : ' weeks') : (n === 1 ? ' day' : ' days')) + ' in a row' : ''), check: true };
+      sub: done ? 'Done' : n ? n + (h.frequency === 'n_per_week' ? (n === 1 ? ' week' : ' weeks') : (n === 1 ? ' day' : ' days')) + ' in a row' : '', check: true };
   });
   const left = due.filter((h) => !tapsOf(h.id).includes(today)).length;
-  return { rows, newest: 0, sub: due.length ? (left ? left + ' left today' : 'All done today') : '' };
+  return { rows, newest: 0, sub: due.length && !left ? 'All done' : '' };
 }
 
 /* -------------------------------------------------------------- render */
@@ -297,7 +300,7 @@ function row(r) {
     : r.thumb ? el('span', 'th', art(r.thumb))
       : r.check ? el('span', 'th bare', r.done ? ICON.check : ICON.habits)
         : el('span', 'th bare', mark(r.mark, 'round'));
-  const words = el('div', '', '<div class="t">' + esc(r.title) + '</div><div class="s one">' + (r.ok ? '<span class="ok">' + esc(r.sub.split(' · ')[0]) + '</span>' + esc(r.sub.slice(r.sub.split(' · ')[0].length)) : esc(r.sub)) + '</div>');
+  const words = el('div', '', '<div class="t">' + esc(r.title) + '</div>' + (r.sub ? '<div class="s one">' + (r.ok ? '<span class="ok">' + esc(r.sub.split(' · ')[0]) + '</span>' + esc(r.sub.slice(r.sub.split(' · ')[0].length)) : esc(r.sub)) + '</div>' : ''));
   a.append(th, words, el('span', '', r.out ? ICON.ext : ICON.right));
   if (r.out && app.demo) a.addEventListener('click', (e) => { e.preventDefault(); app.toast('Opens the story in the real build'); });
   return a;
@@ -316,7 +319,7 @@ function paintShelf(sh) {
   if (got === undefined) { box.appendChild(el('p', 'note pad', esc('Loading…'))); return; }
   if (!got || !got.rows.length) {
     const signedIn = sh.key === 'habits' && app.user();
-    box.appendChild(el('p', 'note pad empty-shelf', esc(signedIn ? 'Your habits are kept on your account. Open them in Body to tick off today’s.' : sh.empty)));
+    box.appendChild(el('p', 'note pad empty-shelf', esc(signedIn ? 'Your habits are in Body.' : sh.empty)));
     return;
   }
   const list = el('div', 'today-rows');
@@ -432,8 +435,6 @@ app.register(KEY, {
     return SHELVES.filter((sh) => S.got[sh.key] && S.got[sh.key].newest > base).length;
   },
 });
-
-load();
 
 /* for the tests */
 export const _state = () => ({ ready: S.ready, order: order().map((s) => s.key),
