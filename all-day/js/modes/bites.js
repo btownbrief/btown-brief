@@ -33,7 +33,7 @@ import * as E from './eat-lib.js';
 const KEY = 'bites';
 const RAIL_MAX = 12;
 const DISH_FIRST = 9;
-const MENU_FIRST = 24;
+const MENU_FIRST = 12;
 const Q_FIRST = 12;
 const ASKS_STALE = 15 * 60000;
 const SUB_URL = 'https://www.reddit.com/r/burlington/';
@@ -85,14 +85,16 @@ function paintKitchens(host) {
   const food = E.kitchenFood();
   const clipsList = food.filter((p) => E.hasClip(p, nowS)).slice(0, RAIL_MAX);
   section(host, 'In their own words');
-  if (clipsList.length) {
+  if (!food.length) { host.appendChild(el('p', 'note pad', 'Nothing new this week.')); return; }
+  /* three reels or more make a row of reels; fewer, and every post shows as a
+     picture (a reel among them still plays) */
+  if (clipsList.length >= 3) {
     const r = listRail(host, { name: 'eat-clips', label: 'In their own words', cells: 140 });
     clipsList.forEach((p) => r.appendChild(clipCard(p)));
     return;
   }
-  if (!food.length) { host.appendChild(el('p', 'note pad', 'Nothing new this week.')); return; }
   const r = listRail(host, { name: 'eat-kphotos', label: 'In their own words', cells: 140 });
-  food.slice(0, RAIL_MAX).forEach((p) => r.appendChild(photoCard(p)));
+  food.slice(0, RAIL_MAX).forEach((p) => r.appendChild(photoCard(p, nowS)));
 }
 
 function clipCard(p) {
@@ -106,14 +108,16 @@ function clipCard(p) {
   return c;
 }
 
-function photoCard(p) {
+function photoCard(p, nowS) {
+  const clip = E.hasClip(p, nowS || Date.now() / 1000);
   const c = el('a', 'vcard w150');
   c.href = safeHref(p.u);
   c.target = '_blank';
   c.rel = 'noopener';
   c.dataset.k = E.keyOf(p);
-  c.innerHTML = '<span class="c-media r11">' + art(p.i) + '</span><span class="t">' + esc(E.who(p)) + '</span><span class="s">' + esc([E.trim(p.c, 50), E.when(p)].filter(Boolean).join(' · ')) + '</span>';
-  if (app.demo) c.addEventListener('click', (e) => { e.preventDefault(); app.toast('Opens the post on Instagram in the real build'); });
+  c.innerHTML = '<span class="c-media r11">' + art(p.i) + (clip ? '<span class="play">' + ICON.play + '</span>' : '') + '</span><span class="t">' + esc(E.who(p)) + '</span><span class="s">' + esc([E.trim(p.c, 50), E.when(p)].filter(Boolean).join(' · ')) + '</span>';
+  if (clip) c.addEventListener('click', (e) => { e.preventDefault(); E.openClip(p); });
+  else if (app.demo) c.addEventListener('click', (e) => { e.preventDefault(); app.toast('Opens the post on Instagram in the real build'); });
   return c;
 }
 
@@ -256,14 +260,15 @@ function paintMenus(host) {
     const want = S.menuQ.trim().toLowerCase();
     const list = all.filter((m) => !want || m.name.toLowerCase().includes(want));
     const shown = S.menuAll || want ? list : list.slice(0, MENU_FIRST);
-    const chipsRow = el('div', 'chips wrap menus');
+    const grid = el('div', 'qgrid menus');
     shown.forEach((m) => {
-      const a = E.outLink(m.name, m.url, 'chip');
+      const a = E.outLink(m.name, m.url, 'qcard');
+      a.innerHTML = '<span class="t">' + esc(m.name) + '</span><span class="s">' + esc(E.trim([(m.cuisine || [])[0], m.walk ? m.walk + ' min walk' : ''].filter(Boolean).join(' · ') || 'Menu', 40)) + ' ' + ICON.ext + '</span>';
       a.dataset.k = 'mn-' + m.id;
       a.setAttribute('aria-label', 'Menu for ' + m.name);
-      chipsRow.appendChild(a);
+      grid.appendChild(a);
     });
-    box.appendChild(chipsRow);
+    box.appendChild(grid);
     if (!list.length) box.appendChild(el('p', 'note pad', esc('No menu by that name.')));
     else if (list.length > shown.length) box.appendChild(button('All ' + list.length + ' ' + ICON.arrow, 'ghost more', () => { S.menuAll = true; draw(); }));
     else if (S.menuAll && !want && list.length > MENU_FIRST) box.appendChild(collapseBar('the menus', () => { S.menuAll = false; draw(); jump('menus'); }));

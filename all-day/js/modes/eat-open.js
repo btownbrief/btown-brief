@@ -251,13 +251,19 @@ function paintRandom(host) {
   section(host, 'Randomizer');
   if (!list.length) { host.appendChild(el('p', 'note pad', esc('Nothing to pick from.'))); return; }
   if (S.pick && !list.includes(S.pick)) S.pick = null;
-  const box = el('div', 'places spinbox');
-  if (S.pick) box.appendChild(placeRow(S.pick, t, 'spun'));
-  host.appendChild(box);
-  const row = el('div', 'linkrow');
-  row.appendChild(button((S.pick ? 'Spin again' : 'Pick one for me') + ' ' + ICON.arrow, S.pick ? 'ghost sm' : 'sm', () => spin(list)));
-  if (S.pick) row.appendChild(button('The place', 'ghost sm', () => E.placeSheet(S.pick)));
-  host.appendChild(row);
+  const r = S.pick;
+  const card = el('div', 'textcard spin');
+  card.dataset.k = r ? 'spun-' + r.id : 'spin';
+  if (r) {
+    const st = E.status(r, t);
+    card.innerHTML = '<h3 class="serif">' + esc(r.name) + '</h3><p>' + esc([r.neighborhood, E.kind(r), E.milesText(r.mi)].filter(Boolean).join(' · ')) + '</p>' +
+      '<p>' + esc(st.text) + '</p>';
+  }
+  const row = el('div', 'row');
+  row.appendChild(button((r ? 'Spin again' : 'Pick one for me') + ' ' + ICON.arrow, r ? 'ghost sm' : '', () => spin(list)));
+  if (r) row.appendChild(button('The place', 'ghost sm', () => E.placeSheet(r)));
+  card.appendChild(row);
+  host.appendChild(card);
 }
 function spin(list) {
   const others = list.length > 1 ? list.filter((r) => r !== S.pick) : list;

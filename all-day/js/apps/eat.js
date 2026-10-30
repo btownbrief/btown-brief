@@ -28,5 +28,4 @@ export default {
     { mode: 'dinner', label: 'Dinner Club', icon: 'table',
       top: ['Next dinner', 'Sign up', 'Past dinners', 'Host a table', 'Restaurants'] },
   ],
-  full: { food: ['../restaurants.html', 'the full restaurant guide'] },
 };

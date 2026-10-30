@@ -242,9 +242,9 @@ function whenBack(m, today) {
   if (next) return (w._dates[0] < today ? 'Next winter market ' : 'Winter market from ') + dayShort(next);
   if (w) {
     const days = (w.days || []).map((d) => DAY_PLURAL[d]).filter(Boolean).join(' and ');
-    return 'Winter market' + (days ? ' on ' + days : '') + (w.hours ? ', ' + hoursText(w.hours) : '') + '. This winter’s dates aren’t posted yet.';
+    return 'Winter market' + (days ? ' on ' + days : '') + (w.hours ? ', ' + hoursText(w.hours) : '') + ', dates to come';
   }
-  return s && today > s.end ? 'Season over. Next season’s dates aren’t posted yet.' : 'No dates posted.';
+  return s && today > s.end ? 'Season over' : 'No dates yet';
 }
 
 function paintWeek(box) {
@@ -274,7 +274,6 @@ function paintWeek(box) {
         lines: [{ html: esc([m.town, DAY_PLURAL[(m.days || [])[0]], hoursText(m.hours)].filter(Boolean).join(' · ')) }, { html: '<b>' + esc(whenBack(m, today)) + '</b>' }],
         onOpen: () => marketSheet(key, { m, name: m.name, hours: m.hours, where: m.address, accepts: m.accepts || [], vendors: m.vendors || [],
           vendorsUrl: m.vendors_url, source: m.source_url, website: m.website, season: m.season_dates ? 'Summer season: ' + m.season_dates : '', back: whenBack(m, today) }),
-        pills: [pillLink('Source', m.source_url, 'Source for ' + m.name)],
       }));
     });
   }
@@ -292,7 +291,7 @@ function weekRow(x) {
       x.accepts.length ? { html: (snap ? '<span class="ok">' + esc('Takes SNAP') + '</span> · ' : '') + esc(x.accepts.filter((a) => !/snap/i.test(a)).join(', ')), one: true } : null,
     ],
     onOpen: () => marketSheet(key, x),
-    pills: [pillButton('Vendors', 'Vendors at ' + x.name, () => vendorSheet(x)), pillLink('Source', x.source, 'Source for ' + x.name)],
+    pills: [pillButton('Vendors', 'Vendors at ' + x.name, () => vendorSheet(x))],
   });
 }
 function marketSheet(key, x) {
@@ -337,16 +336,12 @@ function paintSeason(box) {
   if (!S.market) { failNote(box, 'The produce chart'); return; }
   const m = Number(todayIso().slice(5, 7));
   const months = S.market.in_season || [];
-  const now = months.find((x) => x.month === m), next = months.find((x) => x.month === (m % 12) + 1);
+  const now = months.find((x) => x.month === m);
   if (!now) { box.appendChild(el('p', 'note pad', esc('No produce chart for this month.'))); return; }
   const key = 'm-season-' + m;
   const tc = el('div', 'textcard');
   tc.dataset.k = key;
-  tc.innerHTML = '<h3 class="serif">' + esc(now.month_name) + '</h3><p>' + esc((now.produce || []).join(' · ')) + '</p>' +
-    (next ? '<p class="fine">' + esc('In ' + next.month_name + ': ' + (next.produce || []).join(' · ')) + '</p>' : '');
-  const row = el('div', 'row');
-  row.appendChild(outLink('Source: ' + esc(host(now.source_url)), now.source_url));
-  tc.appendChild(row);
+  tc.innerHTML = '<h3 class="serif">' + esc(now.month_name) + '</h3><p>' + esc((now.produce || []).join(' · ')) + '</p>';
   box.appendChild(tc);
 }
 
@@ -364,7 +359,7 @@ function paintFarms(box) {
       title: f.name,
       lines: [{ html: esc([f.town, sells].filter(Boolean).join(' · ')), one: true }, f.how_to_order ? { html: esc(firstLine(f.how_to_order)), one: true } : null],
       onOpen: () => farmSheet(key, f, sells),
-      pills: [f.website ? pillLink('Website', f.website, f.name + ' website') : pillLink('Source', f.source_url, 'Source for ' + f.name)],
+      pills: [f.website ? pillLink('Website', f.website, f.name + ' website') : null],
     }));
   });
   if (!S.farmsAll && all.length > FIRST_FARMS) {
@@ -395,7 +390,6 @@ function paintFridge(box) {
       lines: [{ html: esc(String(f.address || '').split(',').slice(0, 2).map((s) => s.trim()).join(', ')), one: true },
         f.hours ? { html: esc(firstLine(f.hours, 90)), one: true } : null],
       onOpen: () => shelfSheet(key, f),
-      pills: [pillLink('Source', f.source_url, 'Source for ' + shortName(f.name))],
     }));
   });
   box.appendChild(el('div', 'tdiv', '<span>' + esc('Community fridges') + '</span>'));
@@ -408,7 +402,6 @@ function paintFridge(box) {
       title: shortName(f.name),
       lines: [{ html: esc([f.address, f.hours].filter(Boolean).join(' · ')), one: true }, f.operator ? { html: esc('Kept by ' + f.operator), one: true } : null],
       onOpen: () => fridgeSheet(key, f),
-      pills: [pillLink('Source', f.source_url, 'Source for ' + shortName(f.name))],
     }));
   });
   if (!ok.length) {
@@ -485,7 +478,7 @@ function paintRescue(box) {
       title: shortName(o.name),
       lines: [{ html: esc(firstLine(o.what_they_do)), one: true }, o.area ? { html: esc(o.area), one: true } : null],
       onOpen: () => orgSheet(key, o),
-      pills: [pillLink(o.website ? 'Website' : 'Source', o.website || o.source_url, shortName(o.name))],
+      pills: [o.website ? pillLink('Website', o.website, shortName(o.name)) : null],
     }));
   });
 
@@ -499,7 +492,7 @@ function paintRescue(box) {
       lines: [{ html: (a.serves_burlington === true ? '<span class="ok">' + esc(word) + '</span>' : '<b>' + esc(word) + '</b>') + ' · ' + esc(firstLine(a.what_it_is, 90)), one: true }],
       label: a.name + ': ' + word,
       onOpen: () => appSheet(key, a),
-      pills: [pillLink('Source', a.source_url || a.website, 'Source for ' + a.name)],
+      pills: [a.website ? pillLink('Website', a.website, a.name) : null],
     }));
   });
 }

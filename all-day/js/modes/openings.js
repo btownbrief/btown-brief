@@ -166,32 +166,44 @@ function outLink(label, href, ours) {
 }
 function editionLabel(ed) {
   const p = parse(ed.date);
-  return 'In the Brief, ' + (ed.title || (p ? plainDay(p) : 'an edition')) + (p && p.y !== thisYear() && !/\d{4}/.test(ed.title || '') ? ', ' + p.y : '');
+  return 'The Brief, ' + (p ? plainDay(p) : ed.title || 'an edition');
 }
-function row(e) {
-  const r = el('div', 'lrow');
+/* the date the row is about, as a tile: the last day, the day it closed or
+   opened, the day it's expected, else the day it was announced */
+function tileDate(e) {
+  const P = e.P;
+  const d = e.status === 'closing_soon' ? P.c : e.status === 'closed' ? P.x || P.c : e.status === 'coming_soon' ? (P.e && P.e.n >= S.today ? P.e : P.a)
+    : P.o || P.a;
+  if (!d) return '<b>' + esc('·') + '</b>';
+  return d.month ? '<b>' + esc(MONTHS[d.m - 1].slice(0, 3)) + '</b><span>' + esc(String(d.y)) + '</span>'
+    : '<b>' + esc(String(d.d)) + '</b><span>' + esc(MONTHS[d.m - 1].slice(0, 3)) + '</span>';
+}
+/* the street and the town, once: "Riverside Ave, Burlington" and "317
+   Riverside Ave" are one place */
+function whereOf(e) {
+  const hood = String(e.neighborhood || '');
+  const town = hood.includes(',') ? hood.split(',').pop().trim() : hood;
+  return [e.address, town].filter(Boolean).filter((x, i, a) => a.indexOf(x) === i).join(' · ');
+}
+function row(e, memory) {
+  const r = el('div', 'lrow meet');
   r.dataset.k = e.k;
-  const where = [e.neighborhood, e.address].filter(Boolean).map(esc).join(' · ');
+  const where = whereOf(e);
   const body = el('div', 'open',
     '<div class="t">' + esc(e.name) + '</div>' +
-    (where ? '<div class="s">' + where + '</div>' : '') +
+    (where ? '<div class="s">' + esc(where) + '</div>' : '') +
     '<div class="s"><b>' + esc(dateLine(e)) + '</b></div>' +
     (e.note ? '<div class="s">' + esc(e.note) + '</div>' : ''));
   const links = el('div', 'linkrow');
+  if (memory && e.edition) links.appendChild(outLink(editionLabel(e.edition), e.edition.archive_url));
   if (e.source) links.appendChild(outLink(e.source_name || 'The story', e.source));
-  if (e.edition) links.appendChild(outLink(editionLabel(e.edition), e.edition.archive_url));
   if (e.restaurant_id && (e.status === 'open' || e.status === 'just_opened')) links.appendChild(outLink('Open now', '#food/r-' + e.restaurant_id, true));
   if (links.children.length) body.appendChild(links);
-  r.append(el('span', 'th bare', mark(e.name, 'round')), body);
+  r.append(el('span', 'th tm', tileDate(e)), body);
   return r;
 }
-/* Reminisce: the edition first, the place under it */
-function memoryRow(e) {
-  const r = row(e);
-  const t = r.querySelector('.s b');
-  if (t) t.textContent = editionLabel(e.edition) + ' · ' + dateLine(e).replace(/^C/, 'c');
-  return r;
-}
+/* Reminisce: the edition that covered it leads the links */
+const memoryRow = (e) => row(e, true);
 
 /* ---------------------------------------------------------------- render */
 const plural = (n, one, many) => n + ' ' + (n === 1 ? one : many);
