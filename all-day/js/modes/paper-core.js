@@ -116,7 +116,7 @@ export const readMins = (words) => Math.max(1, Math.round((Number(words) || 0) /
 /* ------------------------------------------------------------- editions */
 /* The archive's edition page: the paper look the archive already draws
    (play.btownbrief.com/archive/e/<slug>/), else the email's own page. */
-export const editionHref = (e) => (e && e.slug ? ARCHIVE + 'e/' + encodeURIComponent(e.slug) + '/' : (e && e.url) || ARCHIVE);
+export const editionHref = (e) => safeHref(e && e.slug ? ARCHIVE + 'e/' + encodeURIComponent(e.slug) + '/' : (e && e.url) || ARCHIVE);
 /* the archive's list, newest first, each with a key and a Date */
 export function editionList(j) {
   const list = (Array.isArray(j) ? j : (j && j.editions) || []).filter((e) => e && e.slug && isoDay(e.date));
@@ -130,14 +130,13 @@ export function editionList(j) {
 const OPEN = /\b(open(s|ed|ing)?|debut(s|ed)?|launch(es|ed)?|coming to|arriv(es|ing)|new location|grand opening|clos(es|ed|ing)|shutter(s|ed|ing)?|last day|says goodbye|final (day|weekend)|shuts? down|out of business|calls it quits)\b/i;
 const BIZ = /restaurant|caf[eé]|brewer|bakery|creemee|\bfood\b|pizza|coffee|taproom|\bmenu\b|\bchef|cidery|distill|food truck|deli\b|diner\b|cocktail|business|\bstore\b|\bshop\b|market\b|bar\b/i;
 export const TOPICS = [
-  { key: 'food', label: 'Food', archive: 'food-drink', re: /restaurant|caf[eé]|brewer|bakery|creemee|\bfood\b|pizza|coffee|taproom|\bmenu\b|\bchef|cidery|distill|farmers market|food truck|deli\b|diner\b|cocktail|maple/i },
-  { key: 'civic', label: 'Civic', archive: 'politics', re: /city council|mayor|ballot|election|\bvote\b|legislature|statehouse|governor|selectboard|budget|\btax(es)?\b|town meeting|senator|congress|school board|zoning/i },
-  { key: 'music', label: 'Music', archive: 'arts-music', re: /concert|\bmusic\b|\bband\b|festival|jazz|\bsongs?\b|\balbum\b|\bsinger|\bdj\b|higher ground|the flynn|orchestra|symphony/i },
-  { key: 'sports', label: 'Sports', archive: 'sports', re: /catamounts?|hockey|basketball|soccer|baseball|lake monsters|vermont green|athletics|playoff|champion|\bmarathon\b|\bski(ing)?\b/i },
-  { key: 'openings', label: 'Openings', archive: 'business', test: (h) => OPEN.test(h) && BIZ.test(h) },
+  { key: 'food', label: 'Food', re: /restaurant|caf[eé]|brewer|bakery|creemee|\bfood\b|pizza|coffee|taproom|\bmenu\b|\bchef|cidery|distill|farmers market|food truck|deli\b|diner\b|cocktail|maple/i },
+  { key: 'civic', label: 'Civic', re: /city council|mayor|ballot|election|\bvote\b|legislature|statehouse|governor|selectboard|budget|\btax(es)?\b|town meeting|senator|congress|school board|zoning/i },
+  { key: 'music', label: 'Music', re: /concert|\bmusic\b|\bband\b|festival|jazz|\bsongs?\b|\balbum\b|\bsinger|\bdj\b|higher ground|the flynn|orchestra|symphony/i },
+  { key: 'sports', label: 'Sports', re: /catamounts?|hockey|basketball|soccer|baseball|lake monsters|vermont green|athletics|playoff|champion|\bmarathon\b|\bski(ing)?\b/i },
+  { key: 'openings', label: 'Openings', test: (h) => OPEN.test(h) && BIZ.test(h) },
 ];
 export const inTopic = (t, h) => (t.test ? t.test(h) : t.re.test(h));
-export const archiveTopic = (t) => ARCHIVE + 'topics/' + t.archive + '/';
 
 /* ------------------------------------------------------------- items */
 /* Every row the Paper draws is an item the shell knows (save, share, peek,
@@ -233,9 +232,7 @@ const CSS = `
 .pp-mail .ask-embed { margin-top: var(--s1); }
 .pp-mail-row { display: flex; align-items: center; gap: var(--s2); margin-top: var(--s2); }
 .pp-mail-row .field { background: var(--raised); }
-.pp-mail-foot { display: flex; align-items: center; justify-content: space-between; gap: var(--s2); margin-top: var(--s1); }
-.pp-mail-foot a { font-size: var(--fs-meta); color: var(--ink-2); text-decoration: underline; text-underline-offset: 2px; }
-.pp-mail.in { background: var(--paper-2); }
+.pp-mail-foot { display: flex; justify-content: flex-end; margin-top: var(--s1); }
 .chips.pp-qs { padding-top: var(--s1); }
 .chips.pp-qs .chip { height: auto; min-height: var(--hit); padding: var(--s2) var(--s3); white-space: normal; max-width: 220px; text-align: left; line-height: 1.25; border-radius: var(--r-media); background: var(--raised); border: 1px solid var(--line); color: var(--ink); font-weight: 600; }
 .chips.pp-qs .chip:hover { border-color: var(--ink-3); }
@@ -292,20 +289,19 @@ body.has-aside .pp-apps-sec { display: none; }
 .pp-search .field { background: var(--raised); }
 .pp-count { padding: 0 var(--gutter); font-size: var(--fs-meta); color: var(--ink-3); }
 .pp-shelf h3 { padding: var(--s4) var(--gutter) var(--s1); font-family: var(--serif); font-size: var(--fs-date); font-weight: 500; border-bottom: 1px solid var(--line); }
-.pp-shelf h3 span { font-family: var(--sans); font-size: var(--fs-meta); color: var(--ink-3); font-weight: 500; margin-left: var(--s1); }
 .pp-story p { padding: 0 var(--gutter) var(--s3); line-height: 1.55; color: var(--ink-2); }
-.pp-story p b { color: var(--ink); }
-.pp-random { padding: 0 var(--gutter); }
+.pp-story .pp-mission { padding-top: var(--s5); }
+.pp-story p a { color: var(--ink); text-decoration: underline; text-underline-offset: 2px; }
+.pp-story .pp-credit { color: var(--ink-3); font-size: var(--fs-meta); }
+.pp-gap { height: var(--s3); }
 .pp-big { margin: 0 var(--gutter); padding: var(--s4); border: 1px solid var(--line); border-radius: var(--r-media); background: var(--raised); }
 .pp-big .eyebrow { display: block; margin-bottom: var(--s1); }
 .pp-big h3 { font-family: var(--serif); font-size: var(--fs-w-lead); font-weight: 500; line-height: 1.2; }
 .pp-big h3 a:hover { text-decoration: underline; }
 .pp-big p { margin-top: var(--s1); color: var(--ink-2); line-height: 1.5; }
-.pp-big .pp-meta { font-size: var(--fs-meta); color: var(--ink-3); margin-top: var(--s2); }
 .pp-big .pp-more { padding: var(--s3) 0 0; }
 .pp-qsheet .sheet-row a.t { color: var(--ink); }
 .aside .pp-aside h3 { font-family: var(--serif); font-size: var(--fs-section); font-weight: 500; padding: 0 0 var(--s2); }
-.aside .pp-aside p { font-size: var(--fs-meta); color: var(--ink-3); padding: 0 0 var(--s3); }
 @media (min-width: 1280px) { .pp-mission { font-size: var(--fs-w-lead-xl); } }
 `;
 let styled = false;

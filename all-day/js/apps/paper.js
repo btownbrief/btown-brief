@@ -1,5 +1,5 @@
 /* The Paper: the news outlet and the front door (APP-MAP.html, app 8).
-   Wave 1 (2026-10-29): every tab is built (js/modes/paper-*.js); the top
+   Wave 1 (2026-10-29): every tab is built (js/modes/front.js … story.js, sharing paper-core.js); the top
    tabs are in page order. */
 export default {
   id: 'paper',
@@ -22,6 +22,6 @@ export default {
     { mode: 'everything', label: 'Everything', icon: 'grid',
       top: ['Apps', 'Pages', 'Games', 'A to Z', 'Start here'] },
     { mode: 'story', label: 'Story', icon: 'heart',
-      top: ['Mission', 'About', 'Merch', 'Support', 'How I live'] },
+      top: ['Mission', 'How to use this', 'About', 'Merch', 'Support', 'How I live'] },
   ],
 };

@@ -13348,17 +13348,17 @@ async function thePaper(browser, base) {
     await page.waitForSelector('#sheet:not([hidden]) .sheet-row');
     check(await page.evaluate(() => document.querySelector('#sheet h2').textContent) === questions[4].q, '#front/<question> opens that question', '');
     await page.keyboard.press('Escape');
-    /* I'm already subscribed: the strip says thanks and stays thanked */
+    /* I'm already subscribed: the strip goes, and stays gone */
     await page.click('#panel-front .pp-mail .btn.ghost');
-    check(await page.evaluate(() => !!document.querySelector('#panel-front .pp-mail.in') && !document.querySelector('#panel-front .pp-mail iframe')), '“I’m already subscribed” turns the strip into a thank-you', '');
+    check(await page.evaluate(() => !document.querySelector('#panel-front .pp-mail')), '“I’m already subscribed” takes the strip away', '');
     await page.screenshot({ path: path.join(SHOTS, 'paper-front-390-live.png') });
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
-    /* a reader who already gets it is thanked, and no frame loads */
+    /* a reader who already gets it sees no strip, and no frame loads */
     const sub = await paperPage(browser, base);
     await sub.page.goto(base + '/paper/');
     await settle(sub.page);
-    check(await sub.page.evaluate(() => !!document.querySelector('#panel-front .pp-mail.in') && !document.querySelector('iframe')), 'a subscriber sees a thank-you, and Beehiiv never loads', '');
+    check(await sub.page.evaluate(() => !document.querySelector('#panel-front .pp-mail') && !document.querySelector('iframe') && !!document.querySelector('#panel-front .pp-mission')), 'a subscriber sees no strip, and Beehiiv never loads', '');
     await sub.ctx.close();
   });
 
@@ -13366,7 +13366,7 @@ async function thePaper(browser, base) {
     const { ctx, page, errors, A } = await paperPage(browser, base);
     await page.goto(base + '/paper/#editions');
     await settle(page);
-    await page.waitForFunction(() => /headlines to search/.test(document.querySelector('#panel-editions [data-sec="search"]')?.textContent || ''));
+    await page.waitForFunction(() => /\d+ stories/.test(document.querySelector('#panel-editions [data-sec="interest"] .pp-count')?.textContent || ''));
     const newest = A.eds[A.eds.length - 1];
     const e = await page.evaluate(() => {
       const p = document.querySelector('#panel-editions');
@@ -13379,13 +13379,13 @@ async function thePaper(browser, base) {
     check(JSON.stringify(e.secs) === JSON.stringify(['latest', 'bydate', 'interest', 'search', 'lastyear', 'random', 'ask']), 'the seven top tabs, in order', JSON.stringify(e.secs));
     check(e.big === 'https://play.btownbrief.com/archive/e/' + newest.slug + '/' && e.rows === 6, 'Latest: the newest edition, on the archive’s page, then six more', e.big);
     check(e.days === A.eds.length && e.months >= 13, 'By date: every edition, a month to a line', e.days + ' of ' + A.eds.length);
-    check(JSON.stringify(e.topics) === JSON.stringify(['Food', 'Civic', 'Music', 'Sports', 'Openings']) && /food stories/.test(e.food), 'By interest: five topics, food first', e.food);
+    check(JSON.stringify(e.topics) === JSON.stringify(['Food', 'Civic', 'Music', 'Sports', 'Openings']) && /^\d+ stories$/.test(e.food), 'By interest: five topics, food first', e.food);
     check(e.lastyear >= 1 && e.random && e.ask === 'https://play.btownbrief.com/archive/#ask-form', 'this week last year, a random one, and Ask', JSON.stringify(e));
     await page.click('#panel-editions [data-sec="interest"] .chip[data-chip="sports"]');
     const sports = await page.evaluate(() => [...document.querySelectorAll('#panel-editions [data-sec="interest"] .pp-t')].map((t) => t.textContent));
     check(sports.length > 0 && sports.every((t) => /hockey/i.test(t)), 'Sports shows only sports stories', sports.slice(0, 2).join(' | '));
     await page.fill('#panel-editions [data-sec="search"] input', 'pizza place');
-    await page.waitForFunction(() => /headline/.test(document.querySelector('#panel-editions [data-sec="search"] .pp-count').textContent) && document.querySelector('#panel-editions [data-sec="search"] .pp-row'));
+    await page.waitForFunction(() => /headline/.test(document.querySelector('#panel-editions [data-sec="search"] .pp-count')?.textContent || '') && document.querySelector('#panel-editions [data-sec="search"] .pp-row'));
     const hits = await page.evaluate(() => [...document.querySelectorAll('#panel-editions [data-sec="search"] .pp-t')].map((t) => t.textContent));
     check(hits.length === 20 && hits.every((t) => /pizza place/i.test(t)), 'search finds headlines in the browser, newest 20', hits.length);
     const r0 = await page.evaluate(() => document.querySelector('#panel-editions [data-sec="random"] .pp-big h3').textContent);
@@ -13404,7 +13404,7 @@ async function thePaper(browser, base) {
     await settle(down.page);
     await down.page.waitForFunction(() => document.querySelector('#panel-editions .pp-big'));
     const d = await down.page.evaluate(() => ({ note: document.querySelector('#panel-editions [data-sec="latest"] .pp-note')?.textContent || '', rows: document.querySelectorAll('#panel-editions [data-sec="latest"] .pp-row').length }));
-    check(/didn’t answer/.test(d.note) && d.rows >= 1, 'with the archive down, the last few editions and a plain note', JSON.stringify(d));
+    check(/last few editions/.test(d.note) && d.rows >= 1, 'with the archive down, the last few editions and a plain note', JSON.stringify(d));
     check(!down.errors.filter((x) => !/Failed to load resource/.test(x)).length, 'and nothing breaks', down.errors.join(' | '));
     await down.ctx.close();
   });
@@ -13417,7 +13417,7 @@ async function thePaper(browser, base) {
       month: document.querySelectorAll('#panel-picks [data-sec="month"] .pp-row').length, spot: document.querySelectorAll('#panel-picks [data-sec="spotlight"] .pp-row').length,
       why: document.querySelector('#panel-picks [data-sec="mine"] .pp-s')?.textContent }));
     check(pk.mine === picks.picks.length && pk.why === picks.picks[0].why, 'Stephen’s picks, each with its reason', JSON.stringify(pk));
-    check(pk.best === picks.bestof.length && pk.month > 0 && pk.spot === 4, 'Best of, this month’s stories, and the spotlight with three to come', JSON.stringify(pk));
+    check(pk.best === picks.bestof.length && pk.month > 0 && pk.spot === 1, 'Best of, this month’s stories, and the day’s spotlight', JSON.stringify(pk));
 
     await goTab(page, 'gossip');
     const gs = await page.evaluate(() => {
@@ -13441,9 +13441,11 @@ async function thePaper(browser, base) {
     check(ev.games.includes('Queen City Chess') && ev.games.includes('Creemee Drop'), 'every game from games.json', ev.games.length);
     check(ev.letters >= 15 && ev.start === 8, 'A to Z by letter, and Start here', JSON.stringify([ev.letters, ev.start]));
     await page.fill('#panel-everything .pp-find input', 'chess');
-    await page.waitForFunction(() => /match/.test(document.querySelector('#panel-everything .pp-results .pp-count')?.textContent || ''));
-    const found = await page.evaluate(() => [...document.querySelectorAll('#panel-everything .pp-results .pp-t')].map((t) => t.textContent));
-    check(found.includes('Queen City Chess'), 'the search box finds a game by name', found.join(', '));
+    const found = await page.waitForFunction(() => [...document.querySelectorAll('#panel-everything .pp-results .pp-t')].some((t) => t.textContent === 'Queen City Chess'), null, { timeout: 3000 }).then(() => true, () => false);
+    check(found, 'the search box finds a game by name', '');
+    await page.fill('#panel-everything .pp-find input', 'zzqx');
+    const none = await page.waitForFunction(() => document.querySelector('#panel-everything .pp-results .pp-count')?.textContent === 'No matches.', null, { timeout: 3000 }).then(() => true, () => false);
+    check(none, 'and says so in two words when nothing matches', '');
     await page.fill('#panel-everything .pp-find input', 'catamounts');
     const byKw = await page.waitForFunction(() => [...document.querySelectorAll('#panel-everything .pp-results .pp-t')].some((t) => t.textContent === 'Sports'), null, { timeout: 3000 }).then(() => true, () => false);
     check(byKw, 'and a page by the hub’s keywords', '');
@@ -13451,8 +13453,16 @@ async function thePaper(browser, base) {
     await goTab(page, 'story');
     const st = await page.evaluate(() => {
       const p = document.querySelector('#panel-story');
-      return { mission: p.querySelector('.pp-mission')?.textContent, creed: p.querySelector('.pp-creed')?.textContent, links: [...p.querySelectorAll('a.btn')].map((a) => a.getAttribute('href')) };
+      const how = p.querySelector('[data-sec="howto"]');
+      return { mission: p.querySelector('.pp-mission')?.textContent, creed: p.querySelector('.pp-creed')?.textContent, links: [...p.querySelectorAll('a.btn')].map((a) => a.getAttribute('href')),
+        how: [...how.querySelectorAll('p')].map((x) => x.textContent).join(' '), apps: [...how.querySelectorAll('a[data-app]')].map((a) => [a.textContent, a.getAttribute('href')]),
+        credit: !!how.querySelector('.pp-credit em'), secs: [...p.querySelectorAll('.pp-sec')].map((s) => s.dataset.sec) };
     });
+    const lessons = await readFile(path.join(REPO, '..', 'newsletter/reference/drafts/apps-2026-10/scroll-lessons.md'), 'utf8').catch(() => '');
+    const want = lessons ? lessons.slice(lessons.indexOf('**How to use this**') + 19, lessons.indexOf('Where: The Paper')).replace(/\*/g, '').replace(/\s+/g, ' ').trim() : '';
+    check(!want || st.how.replace(/\s+/g, ' ').trim() === want, 'How to use this, word for word', st.how.slice(0, 80));
+    check(JSON.stringify(st.apps) === JSON.stringify([['Wire', '#wire'], ['Out', '/out/'], ['People', '/people/']]) && st.credit, 'its Wire, Out and People open their apps, and the credit is in italics', JSON.stringify(st.apps));
+    check(JSON.stringify(st.secs) === JSON.stringify(['mission', 'howto', 'about', 'merch', 'support', 'howilive']), 'How to use this sits under the mission', st.secs.join(','));
     check(st.mission === MISSION && /take part and people to take part with/.test(st.creed), 'Story: the line and the creed', JSON.stringify(st));
     check(['https://www.btownbrief.com/about-me', 'https://merch.btownbrief.com/', 'https://www.btownbrief.com/upgrade', '#coach/how-i-do-it'].every((h) => st.links.includes(h)), 'About, Merch, Support and How I live', st.links.join(' '));
     await Promise.all([page.waitForURL((u) => u.pathname === '/body/'), page.click('#panel-story [data-howto]')]);
