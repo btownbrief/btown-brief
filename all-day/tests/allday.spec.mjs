@@ -13251,6 +13251,373 @@ async function theApps(browser, base) {
   });
 }
 
+/* ------------------------------------------------------------ The Paper */
+/* Wave 1 (2026-10-29): The Paper's six tabs are built (js/modes/paper-*.js).
+   Live, the archive's public files, the arcade's games.json and Beehiiv's
+   embed are answered here: the archive with a year and more of Mondays and
+   Fridays dated to the real clock (so "this week last year" has one), the
+   embed with a blank page. The repo's own data (newsletter.json, the
+   seeded data/paper/ files, chatter.json, best-of-reddit.json, catalog.json)
+   is read as it is. */
+function paperArchive() {
+  const eds = [], stories = [];
+  const words = ['Creemee stand closes for the season', 'City Council votes on the budget', 'Catamounts hockey opens at home', 'New café opens on Pine Street',
+    'Jazz festival lineup announced', 'Pizza place says goodbye after 30 years', 'Mayor proposes parking holiday', 'Farmers market moves indoors'];
+  for (let i = 0; i < 420; i++) {
+    const d = new Date(); d.setHours(12, 0, 0, 0); d.setDate(d.getDate() - i);
+    if (d.getDay() !== 1 && d.getDay() !== 5) continue;
+    const iso = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+    const slug = 'test-edition-' + iso;
+    eds.push({ slug, url: 'https://www.btownbrief.com/p/' + slug, title: 'Edition of ' + iso, date: iso });
+    for (let j = 0; j < 3; j++) stories.push({ h: words[(eds.length + j) % words.length] + ' (' + iso + ')', u: 'https://example.org/' + slug + '/' + j, e: slug, d: iso, g: 0 });
+  }
+  eds.reverse();
+  return { eds, stories };
+}
+const PAPER_GAMES = { sections: [{ id: 'arcade-action', title: 'Action & Arcade' }, { id: 'board-card', title: 'Board & Card Classics' }],
+  games: [{ slug: 'queen-city-chess', name: 'Queen City Chess', emoji: '♛', pitch: 'Pass the phone, or race a friend.', section: 'board-card', live: true },
+    { slug: 'creemee-drop', name: 'Creemee Drop', emoji: '🍦', pitch: 'Stack Vermont soft-serve to the sky.', section: 'arcade-action', live: true }] };
+const PAPER_INDEX = { pages: [{ title: 'Merch — BTown Brief store', url: 'https://merch.btownbrief.com/', keywords: 'shirts shop store' },
+  { title: 'History of Winooski', url: 'https://guide.btownbrief.com/history-winooski.html', keywords: 'onion city mills' },
+  { title: '<img src=x onerror="window.__pwn=1">Hostile page', url: 'https://example.org/hostile', keywords: '<b>bold</b>' },
+  { title: 'Script page', url: 'javascript:window.__pwn=1', keywords: 'script' }] };
+async function paperPage(browser, base, opts = {}) {
+  const A = opts.archive || paperArchive();
+  const routes = [[/play\.btownbrief\.com\/games\.json/, PAPER_GAMES], [/play\.btownbrief\.com\/search-index\.json/, PAPER_INDEX]];
+  if (!opts.archiveDown) routes.push([/play\.btownbrief\.com\/archive\/data\/editions\.json/, A.eds]);
+  if (!opts.archiveDown && !opts.storiesDown) routes.push([/play\.btownbrief\.com\/archive\/data\/stories-lite\.json/, A.stories]);
+  const P = await newPage(browser, base, { ...opts, routes });
+  if (opts.archiveDown || opts.storiesDown) await P.page.route(opts.archiveDown ? /play\.btownbrief\.com\/archive\/data\// : /stories-lite\.json/, (r) => r.fulfill({ status: 503, body: '' }));
+  await P.page.route(/embeds\.beehiiv\.com/, (r) => r.fulfill({ status: 200, body: '<!doctype html><title>Beehiiv</title><input placeholder="email">', contentType: 'text/html' }));
+  return { ...P, A };
+}
+
+async function thePaper(browser, base) {
+  const read = (f) => readFile(path.join(REPO, f), 'utf8').then(JSON.parse);
+  const latest = await read('data/newsletter.json');
+  const questions = (await read('data/paper/questions.json')).questions;
+  const picks = await read('data/paper/picks.json');
+  const MISSION = 'Know your town. Find your people. Make good things happen.';
+  const asks = await readFile(path.join(APP, 'js/asks.js'), 'utf8');
+  const EMBED = (asks.match(/BEEHIIV_EMBED = '([^']+)'/) || [])[1];
+
+  await group('paper: the seeded data', async () => {
+    check(questions.length === 12 && questions.every((q) => q.key && q.q && q.links.length >= 1 && q.links.length <= 4), 'twelve questions, each with one to four links', questions.map((q) => q.links.length).join(','));
+    check(questions.every((q) => q.links.every((l) => /^https:\/\//.test(l.href) && l.title)), 'every link a full address with a name', '');
+    check(!JSON.stringify(questions).includes('utm_source=hub'), 'links say they came from the Paper, not the hub', '');
+    check(picks.picks.length >= 5 && picks.picks.every((p) => p.title && p.why && /^https:/.test(p.href)), 'Stephen’s picks each carry a reason', picks.picks.length);
+    const ev = await read('data/paper/everything.json');
+    check(ev.shelves.reduce((n, s) => n + s.items.length, 0) >= 80 && ev.start.length === 8, 'the hub’s A to Z (80+) and its Start here (8)', ev.shelves.length);
+    const g = await read('data/paper/gossip-archive.json');
+    const txt = JSON.stringify(g);
+    check(g.weeks.length >= 3 && !/\bu\/[\w-]{2,}/.test(txt) && !/rumou?r/i.test(txt.replace(/"_note"[^\n]*/, '')), 'gossip by week, no usernames, no rumors', g.weeks.length);
+    const demo = await readFile(path.join(APP, 'data/demo/paper.json'), 'utf8');
+    check(!/btownbrief\.com\/p\/|reddit\.com/.test(demo), 'the demo is invented: no real edition or thread links', '');
+  });
+
+  await group('paper: the Front, live, at 390', async () => {
+    /* a reader who has not subscribed (the harness starts everyone subscribed) */
+    const { ctx, page, errors } = await paperPage(browser, base, { asks: true });
+    await page.goto(base + '/paper/');
+    await settle(page);
+    await page.waitForSelector('#panel-front .pp-lead .pp-lead-t');
+    const f = await page.evaluate(() => {
+      const p = document.querySelector('#panel-front');
+      const top = (s) => { const n = p.querySelector(s); return n ? Math.round(n.getBoundingClientRect().top) : -1; };
+      const fr = p.querySelector('.pp-mail iframe');
+      return { mission: p.querySelector('.pp-mission')?.textContent, missionTop: top('.pp-mission'), mailTop: top('.pp-mail'), qTop: top('.pp-qs'), leadTop: top('.pp-lead'),
+        frame: fr ? { src: fr.src, sandbox: fr.getAttribute('sandbox') } : null, qs: [...p.querySelectorAll('.pp-qs .chip')].map((c) => c.textContent),
+        lead: p.querySelector('.pp-lead .pp-lead-t')?.textContent, leadHref: p.querySelector('.pp-lead .pp-lead-t')?.getAttribute('href'),
+        rundown: p.querySelectorAll('.pp-rundown li').length, apps: [...p.querySelectorAll('.pp-apprail .pp-app')].filter((a) => a.offsetParent).length, appsList: !!p.querySelector('.railmode [data-railmode="paper-apps"]'),
+        picks: p.querySelectorAll('[data-sec="picks"] .pp-row').length, spot: [...p.querySelectorAll('[data-sec="picks"] .eyebrow')].map((e) => e.textContent),
+        pill: [...document.querySelectorAll('#subnav .secpill .chip')].map((c) => c.textContent.trim()), h: innerHeight };
+    });
+    /* the first screen a first-time reader sees, before anything is touched */
+    await page.waitForTimeout(700);
+    await page.screenshot({ path: path.join(SHOTS, 'paper-front-390-live.png') });
+    check(f.mission === MISSION, 'the mission line, word for word', f.mission);
+    check(f.missionTop > 0 && f.missionTop < f.mailTop && f.mailTop < f.qTop && f.qTop < f.leadTop && f.leadTop < f.h, 'first screen: mission, email strip, questions, then the lead peeking', JSON.stringify(f));
+    check(f.frame && f.frame.src === EMBED && /allow-forms/.test(f.frame.sandbox) && !/allow-top-navigation/.test(f.frame.sandbox), 'the email strip is the shell’s Beehiiv embed, sandboxed, never a form of ours', JSON.stringify(f.frame));
+    check(JSON.stringify(f.qs) === JSON.stringify(questions.map((q) => q.q)), 'the twelve questions, in the hub’s order', f.qs.length);
+    check(f.lead === latest.title && f.leadHref === latest.url, 'today’s lead is the latest edition', f.lead);
+    check(f.apps === 8 && f.appsList, 'the eight apps as a strip that can be a list', f.apps);
+    check(f.picks === 4 && f.spot.includes('Spotlight'), 'three of Stephen’s picks and the spotlight', JSON.stringify(f.spot));
+    check(JSON.stringify(f.pill) === JSON.stringify(['Today', 'Questions', 'The edition', 'Picks']), 'its top tabs, in page order', JSON.stringify(f.pill));
+    /* a question opens its answer as a sheet of up to four links */
+    await page.click('#panel-front .pp-qs .chip >> nth=1');
+    await page.waitForSelector('#sheet:not([hidden]) .sheet-row');
+    const sh = await page.evaluate(() => ({ title: document.querySelector('#sheet h2').textContent, rows: [...document.querySelectorAll('#sheet .sheet-row a')].map((a) => [a.firstChild.textContent, a.getAttribute('href'), a.target]) }));
+    const q1 = questions[1];
+    check(sh.title === q1.q && JSON.stringify(sh.rows.map((r) => r[1])) === JSON.stringify(q1.links.map((l) => l.href)) && sh.rows.every((r) => r[2] === '_blank'), 'a question opens its links as a sheet', JSON.stringify(sh));
+    check((await page.evaluate(() => window.__gc)).includes('paper-question-' + q1.key), 'and GoatCounter counts the question', '');
+    await page.keyboard.press('Escape');
+    /* a deep link to a question opens it; to a section lands there */
+    await page.evaluate((k) => { location.hash = 'front/' + k; }, questions[4].key);
+    await page.waitForSelector('#sheet:not([hidden]) .sheet-row');
+    check(await page.evaluate(() => document.querySelector('#sheet h2').textContent) === questions[4].q, '#front/<question> opens that question', '');
+    await page.keyboard.press('Escape');
+    /* I'm already subscribed: the strip goes, and stays gone */
+    await page.focus('#panel-front .pp-mail .pp-already');
+    await page.keyboard.press('Enter');
+    check(await page.evaluate(() => document.activeElement && document.activeElement.matches('.pp-qs .chip')), 'and keyboard focus goes on to the questions', '');
+    check(await page.evaluate(() => !document.querySelector('#panel-front .pp-mail')), '“I’m already subscribed” takes the strip away', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+    /* when the shell's own newsletter card picks this landing, the strip steps aside: one ask, not two */
+    const both = await paperPage(browser, base, { asks: true });
+    await both.page.addInitScript(() => { try { if (!sessionStorage.getItem('seeded')) { sessionStorage.setItem('seeded', '1'); localStorage.setItem('allday-use', JSON.stringify({ visits: 5, last: Math.floor(Date.now() / 1000) - 7200, days: ['2026-01-01', '2026-01-02'], secs: 900 })); localStorage.setItem('allday-asks', JSON.stringify({ 'installed-paper': true })); } } catch (e) { /* blocked */ } });
+    await both.page.goto(base + '/paper/');
+    await settle(both.page);
+    await both.page.waitForTimeout(400);
+    const asks2 = await both.page.evaluate(() => ({ shell: document.querySelectorAll('#panel-front .askcard[data-ask="news"]:not(.pp-mail)').length, strip: document.querySelectorAll('#panel-front .pp-mail').length }));
+    check(asks2.shell === 1 && asks2.strip === 0, 'the shell’s newsletter card and the strip never show together', JSON.stringify(asks2));
+    await both.ctx.close();
+    /* a reader who already gets it sees no strip, and no frame loads */
+    const sub = await paperPage(browser, base);
+    await sub.page.goto(base + '/paper/');
+    await settle(sub.page);
+    check(await sub.page.evaluate(() => !document.querySelector('#panel-front .pp-mail') && !document.querySelector('iframe') && !!document.querySelector('#panel-front .pp-mission')), 'a subscriber sees no strip, and Beehiiv never loads', '');
+    await sub.ctx.close();
+  });
+
+  await group('paper: Editions, live', async () => {
+    const { ctx, page, errors, A } = await paperPage(browser, base);
+    await page.goto(base + '/paper/#editions');
+    await settle(page);
+    await page.waitForFunction(() => /\d+ stories/.test(document.querySelector('#panel-editions [data-sec="interest"] .pp-count')?.textContent || ''));
+    const newest = A.eds[A.eds.length - 1];
+    const e = await page.evaluate(() => {
+      const p = document.querySelector('#panel-editions');
+      return { secs: [...p.querySelectorAll('.pp-sec')].map((s) => s.dataset.sec), big: p.querySelector('[data-sec="latest"] .pp-big h3 a')?.getAttribute('href'),
+        rows: p.querySelectorAll('[data-sec="latest"] .pp-row').length, days: p.querySelectorAll('.pp-day').length, months: p.querySelectorAll('.pp-month').length,
+        topics: [...p.querySelectorAll('[data-sec="interest"] .chip')].map((c) => c.textContent), food: p.querySelector('[data-sec="interest"] .pp-count')?.textContent,
+        lastyear: p.querySelectorAll('[data-sec="lastyear"] .pp-row').length, random: !!p.querySelector('[data-sec="random"] .pp-big'),
+        ask: p.querySelector('[data-sec="ask"] a.btn')?.getAttribute('href') };
+    });
+    check(JSON.stringify(e.secs) === JSON.stringify(['latest', 'bydate', 'interest', 'search', 'lastyear', 'random', 'ask']), 'the seven top tabs, in order', JSON.stringify(e.secs));
+    check(e.big === 'https://play.btownbrief.com/archive/e/' + newest.slug + '/' && e.rows === 6, 'Latest: the newest edition, on the archive’s page, then six more', e.big);
+    check(e.days === A.eds.length && e.months >= 13, 'By date: every edition, a month to a line', e.days + ' of ' + A.eds.length);
+    check(JSON.stringify(e.topics) === JSON.stringify(['Food', 'Civic', 'Music', 'Sports', 'Openings']) && /^\d+ stories$/.test(e.food), 'By interest: five topics, food first', e.food);
+    check(e.lastyear >= 1 && e.random && e.ask === 'https://play.btownbrief.com/archive/#ask-form', 'this week last year, a random one, and Ask', JSON.stringify(e));
+    await page.click('#panel-editions [data-sec="interest"] .chip[data-chip="sports"]');
+    const sports = await page.evaluate(() => [...document.querySelectorAll('#panel-editions [data-sec="interest"] .pp-t')].map((t) => t.textContent));
+    check(sports.length > 0 && sports.every((t) => /hockey/i.test(t)), 'Sports shows only sports stories', sports.slice(0, 2).join(' | '));
+    await page.fill('#panel-editions [data-sec="search"] input', 'pizza place');
+    await page.waitForFunction(() => /headline/.test(document.querySelector('#panel-editions [data-sec="search"] .pp-count')?.textContent || '') && document.querySelector('#panel-editions [data-sec="search"] .pp-row'));
+    const hits = await page.evaluate(() => [...document.querySelectorAll('#panel-editions [data-sec="search"] .pp-t')].map((t) => t.textContent));
+    check(hits.length === 20 && hits.every((t) => /pizza place/i.test(t)), 'search finds headlines in the browser, newest 20', hits.length);
+    const r0 = await page.evaluate(() => document.querySelector('#panel-editions [data-sec="random"] .pp-big h3').textContent);
+    let changed = false;
+    for (let i = 0; i < 4 && !changed; i++) { await page.click('#panel-editions [data-sec="random"] > .pp-more button'); changed = r0 !== await page.evaluate(() => document.querySelector('#panel-editions [data-sec="random"] .pp-big h3').textContent); }
+    check(changed, 'Another one picks another edition', r0);
+    /* #editions/<topic> opens that timeline */
+    await page.evaluate(() => { location.hash = 'editions/music'; });
+    await page.waitForFunction(() => document.querySelector('#panel-editions [data-sec="interest"] .chip.on')?.dataset.chip === 'music');
+    check(true, '#editions/music opens the music timeline', '');
+    /* and a cold open of that link lands there, and stays there once the stories arrive */
+    const cold = await paperPage(browser, base);
+    await cold.page.goto(base + '/paper/#editions/music');
+    await settle(cold.page);
+    await cold.page.waitForFunction(() => /\d+ stories/.test(document.querySelector('#panel-editions [data-sec="interest"] .pp-count')?.textContent || ''));
+    await cold.page.waitForTimeout(900);
+    const where = await cold.page.evaluate(() => { const p = document.querySelector('#panel-editions'); const s = p.querySelector('[data-sec="interest"]'); return [Math.round(s.getBoundingClientRect().top - p.getBoundingClientRect().top), document.querySelector('#panel-editions [data-sec="interest"] .chip.on')?.dataset.chip]; });
+    check(where[1] === 'music' && where[0] >= 0 && where[0] < 200, 'a cold #editions/music lands on the music timeline', JSON.stringify(where));
+    await cold.ctx.close();
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+    /* the archive down: the guide's own last eight, said plainly */
+    const down = await paperPage(browser, base, { archiveDown: true });
+    await down.page.goto(base + '/paper/#editions');
+    await settle(down.page);
+    await down.page.waitForFunction(() => document.querySelector('#panel-editions .pp-big'));
+    const d = await down.page.evaluate(() => {
+      const rows = [...document.querySelectorAll('#panel-editions [data-sec="latest"] .pp-row')];
+      return { note: document.querySelector('#panel-editions [data-sec="latest"] .pp-note')?.textContent || '', rows: rows.length,
+        keys: new Set(rows.map((r) => r.dataset.k)).size, lines: new Set(rows.map((r) => r.querySelector('.pp-s')?.textContent)).size };
+    });
+    check(/last few editions/.test(d.note) && d.rows >= 1, 'with the archive down, the last few editions and a plain note', JSON.stringify(d));
+    const np = await read('data/newsletter-picks.json');
+    const eds = np.editions.slice().sort((x, y) => y.d - x.d);
+    const firstLine = await down.page.evaluate(() => document.querySelector('#panel-editions [data-sec="latest"] .pp-row .pp-s')?.textContent || '');
+    check(d.keys === d.rows && d.lines === d.rows && eds[1] && firstLine.startsWith(eds[1].stories[0].t), 'each with its own key and its own stories', JSON.stringify(d) + ' ' + firstLine.slice(0, 60));
+    /* a story's row shared from a timeline still opens on a cold load */
+    const A2 = paperArchive();
+    /* two links that differ only after 80 characters are two items */
+    const longA = 'https://example.org/' + 'x'.repeat(90) + '/a', longB = 'https://example.org/' + 'x'.repeat(90) + '/b';
+    const sport = A2.stories.filter((x) => /hockey/i.test(x.h))[20];
+    const sp = await paperPage(browser, base, { archive: A2 });
+    await sp.page.goto(base + '/paper/');
+    await settle(sp.page);
+    const keys = await sp.page.evaluate(([u, a, b]) => import('/all-day/js/modes/paper-core.js').then((m) => [m.key('editions', 't-sports-' + u), m.key('editions', 't-sports-' + a), m.key('editions', 't-sports-' + b)]), [sport.u, longA, longB]);
+    const k = keys[0];
+    check(keys[1] !== keys[2], 'long links that differ at the end get different keys', JSON.stringify(keys));
+    await sp.page.goto(base + '/paper/#editions/' + encodeURIComponent(k));
+    await settle(sp.page);
+    const lit = await sp.page.waitForFunction((key) => !!document.querySelector('#panel-editions [data-k="' + key + '"]'), k, { timeout: 8000 }).then(() => true, () => false);
+    check(lit, 'a shared story row, 21st in Sports, opens on a cold load', k);
+    await sp.ctx.close();
+    check(!down.errors.filter((x) => !/Failed to load resource/.test(x)).length, 'and nothing breaks', down.errors.join(' | '));
+    await down.ctx.close();
+  });
+
+  await group('paper: hostile data and a stories-only outage', async () => {
+    const A = paperArchive();
+    A.eds[A.eds.length - 1].title = '<img src=x onerror="window.__pwn=1">Hostile';
+    A.stories.unshift({ h: '<b id="pwn">bold</b> pizza place', u: 'javascript:window.__pwn=1', e: A.eds[A.eds.length - 1].slug, d: A.eds[A.eds.length - 1].date, g: 0 });
+    const { ctx, page, errors } = await paperPage(browser, base, { archive: A });
+    await page.goto(base + '/paper/#editions');
+    await settle(page);
+    await page.waitForFunction(() => /\d+ stories/.test(document.querySelector('#panel-editions [data-sec="interest"] .pp-count')?.textContent || ''));
+    await page.fill('#panel-editions [data-sec="search"] input', 'pizza place');
+    await page.waitForFunction(() => document.querySelector('#panel-editions [data-sec="search"] .pp-row'));
+    const h = await page.evaluate(() => ({ pwn: window.__pwn, img: !!document.querySelector('#panel-editions img[src="x"], #pwn'),
+      bad: [...document.querySelectorAll('#panel-editions a[href]')].map((a) => a.getAttribute('href')).filter((u) => !/^(https?:|#)/.test(u)),
+      shown: document.querySelector('#panel-editions [data-sec="latest"] .pp-big h3')?.textContent }));
+    check(!h.pwn && !h.img && /^<img/.test(h.shown || ''), 'markup in a title shows as text, never runs', JSON.stringify(h));
+    check(!h.bad.length, 'and every link is http(s) or in the app', h.bad.join(' '));
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+    const so = await paperPage(browser, base, { storiesDown: true });
+    await so.page.goto(base + '/paper/#editions');
+    await settle(so.page);
+    const msg = await so.page.waitForFunction(() => /Couldn’t load the stories/.test(document.querySelector('#panel-editions [data-sec="interest"]')?.textContent || ''), null, { timeout: 8000 }).then(() => true, () => false);
+    check(msg, 'stories down: By interest says so, the editions still show', '');
+    check(await so.page.evaluate(() => document.querySelectorAll('.pp-day').length > 50), 'and By date is whole', '');
+    await so.ctx.close();
+  });
+
+  await group('paper: Picks, Gossip, Everything and Story, live', async () => {
+    const { ctx, page, errors } = await paperPage(browser, base);
+    await page.goto(base + '/paper/#picks');
+    await settle(page);
+    const pk = await page.evaluate(() => ({ mine: document.querySelectorAll('#panel-picks [data-sec="mine"] .pp-row').length, best: document.querySelectorAll('#panel-picks [data-sec="bestof"] .pp-row').length,
+      month: document.querySelectorAll('#panel-picks [data-sec="month"] .pp-row').length, spot: document.querySelectorAll('#panel-picks [data-sec="spotlight"] .pp-row').length,
+      why: document.querySelector('#panel-picks [data-sec="mine"] .pp-s')?.textContent }));
+    check(pk.mine === picks.picks.length && pk.why === picks.picks[0].why, 'Stephen’s picks, each with its reason', JSON.stringify(pk));
+    check(pk.best === picks.bestof.length && pk.month > 0 && pk.spot === 1, 'Best of, this month’s stories, and the day’s spotlight', JSON.stringify(pk));
+
+    await goTab(page, 'gossip');
+    const gs = await page.evaluate(() => {
+      const p = document.querySelector('#panel-gossip');
+      return { secs: [...p.querySelectorAll('.pp-sec')].map((s) => s.dataset.sec), text: p.innerText, eyebrows: [...p.querySelectorAll('.eyebrow')].map((e) => e.textContent),
+        threads: p.querySelectorAll('[data-sec="threads"] .pp-row').length, cats: p.querySelectorAll('[data-sec="threads"] .chip').length, weeks: p.querySelectorAll('[data-sec="archive"] .tdiv').length,
+        pill: [...document.querySelectorAll('#subnav .secpill .chip')].map((c) => c.dataset.chip) };
+    });
+    check(gs.secs.length === 3 && JSON.stringify(gs.pill) === JSON.stringify(gs.secs), 'three top tabs, the page in the pill’s order', JSON.stringify(gs));
+    check(!/\bu\/[\w-]{2,}/.test(gs.text) && !gs.eyebrows.some((e) => /rumou?r/i.test(e)), 'no usernames and no rumors', gs.eyebrows.join(', '));
+    check(gs.threads >= 5 && gs.cats >= 5 && gs.weeks >= 3, 'the settled questions by kind, and the weeks kept', JSON.stringify([gs.threads, gs.cats, gs.weeks]));
+
+    await goTab(page, 'everything');
+    const ev = await page.evaluate(() => {
+      const p = document.querySelector('#panel-everything');
+      return { apps: p.querySelectorAll('[data-sec="apps"] .pp-app').length, here: p.querySelector('[data-sec="apps"] .pp-app.on')?.dataset.app,
+        games: [...p.querySelectorAll('[data-sec="games"] .pp-t')].map((t) => t.textContent), letters: p.querySelectorAll('[data-sec="az"] .pp-tl-year').length,
+        start: p.querySelectorAll('[data-sec="start"] .pp-row').length, outHref: p.querySelector('[data-sec="apps"] .pp-app[data-app="out"]')?.getAttribute('href') };
+    });
+    check(ev.apps === 8 && ev.here === 'paper' && ev.outHref === '/out/', 'the eight apps up top, this one marked, each opening its folder', JSON.stringify(ev));
+    check(ev.games.includes('Queen City Chess') && ev.games.includes('Creemee Drop'), 'every game from games.json', ev.games.length);
+    check(ev.letters >= 15 && ev.start === 8, 'A to Z by letter, and Start here', JSON.stringify([ev.letters, ev.start]));
+    await page.fill('#panel-everything .pp-find input', 'chess');
+    const found = await page.waitForFunction(() => [...document.querySelectorAll('#panel-everything .pp-results .pp-t')].some((t) => t.textContent === 'Queen City Chess'), null, { timeout: 3000 }).then(() => true, () => false);
+    check(found, 'the search box finds a game by name', '');
+    await page.fill('#panel-everything .pp-find input', 'zzqx');
+    const none = await page.waitForFunction(() => document.querySelector('#panel-everything .pp-results .pp-count')?.textContent === 'No matches.', null, { timeout: 3000 }).then(() => true, () => false);
+    check(none, 'and says so in two words when nothing matches', '');
+    await page.fill('#panel-everything .pp-find input', 'catamounts');
+    const byKw = await page.waitForFunction(() => [...document.querySelectorAll('#panel-everything .pp-results .pp-t')].some((t) => t.textContent === 'Sports'), null, { timeout: 3000 }).then(() => true, () => false);
+    check(byKw, 'and a page by the hub’s keywords', '');
+    await page.fill('#panel-everything .pp-find input', 'onion city');
+    const byIndex = await page.waitForFunction(() => [...document.querySelectorAll('#panel-everything .pp-results .pp-t')].some((t) => t.textContent === 'History of Winooski'), null, { timeout: 3000 }).then(() => true, () => false);
+    check(byIndex, 'and the network search index’s pages and words (a page only the index has joins More)', '');
+    await page.fill('#panel-everything .pp-find input', 'shirts');
+    const folded = await page.waitForFunction(() => [...document.querySelectorAll('#panel-everything .pp-results .pp-t')].some((t) => t.textContent === 'Merch'), null, { timeout: 3000 }).then(() => true, () => false);
+    check(folded, 'and the index’s words find a page the shelves already have', '');
+    const inert = await page.evaluate(() => ({ pwn: window.__pwn, img: !!document.querySelector('#panel-everything img[src="x"]'),
+      bad: [...document.querySelectorAll('#panel-everything a[href]')].map((a) => a.getAttribute('href')).filter((u) => !/^(https?:|#|\/)/.test(u)),
+      shown: [...document.querySelectorAll('#panel-everything .pp-t')].some((t) => t.textContent.startsWith('<img')) }));
+    check(!inert.pwn && !inert.img && !inert.bad.length && inert.shown, 'index markup shows as text, and a non-web link never joins', JSON.stringify(inert));
+
+    await goTab(page, 'story');
+    const st = await page.evaluate(() => {
+      const p = document.querySelector('#panel-story');
+      const how = p.querySelector('[data-sec="howto"]');
+      return { mission: p.querySelector('.pp-mission')?.textContent, creed: p.querySelector('.pp-creed')?.textContent, links: [...p.querySelectorAll('a.btn')].map((a) => a.getAttribute('href')),
+        how: [...how.querySelectorAll('p')].map((x) => x.textContent).join(' '), apps: [...how.querySelectorAll('a[data-app]')].map((a) => [a.textContent, a.getAttribute('href')]),
+        credit: !!how.querySelector('.pp-credit em'), secs: [...p.querySelectorAll('.pp-sec')].map((s) => s.dataset.sec) };
+    });
+    const lessons = await readFile(path.join(REPO, '..', 'newsletter/reference/drafts/apps-2026-10/scroll-lessons.md'), 'utf8').catch(() => '');
+    const want = lessons ? lessons.slice(lessons.indexOf('**How to use this**') + 19, lessons.indexOf('Where: The Paper')).replace(/\*/g, '').replace(/\s+/g, ' ').trim() : '';
+    check(!want || st.how.replace(/\s+/g, ' ').trim() === want, 'How to use this, word for word', st.how.slice(0, 80));
+    check(JSON.stringify(st.apps) === JSON.stringify([['Wire', '#wire'], ['Out', '/out/'], ['People', '/people/']]) && st.credit, 'its Wire, Out and People open their apps, and the credit is in italics', JSON.stringify(st.apps));
+    check(JSON.stringify(st.secs) === JSON.stringify(['mission', 'howto', 'about', 'merch', 'support', 'howilive']), 'How to use this sits under the mission', st.secs.join(','));
+    check(st.mission === MISSION && /take part and people to take part with/.test(st.creed), 'Story: the line and the creed', JSON.stringify(st));
+    check(['https://www.btownbrief.com/about-me', 'https://merch.btownbrief.com/', 'https://www.btownbrief.com/upgrade', '#coach/how-i-do-it'].every((h) => st.links.includes(h)), 'About, Merch, Support and How I live', st.links.join(' '));
+    await Promise.all([page.waitForURL((u) => u.pathname === '/body/'), page.click('#panel-story [data-howto]')]);
+    check(new URL(page.url()).hash === '#coach/how-i-do-it', 'How I do it opens in Body', page.url());
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('paper: every sideways row can be a list, nothing escapes its tab', async () => {
+    const { ctx, page, errors } = await paperPage(browser, base);
+    await page.goto(base + '/paper/');
+    await settle(page);
+    for (const t of ['front', 'editions', 'picks', 'gossip', 'everything', 'story']) {
+      if (t !== 'front') await goTab(page, t);
+      await page.waitForTimeout(400);
+      const bad = await page.evaluate(() => {
+        const out = [];
+        document.querySelectorAll('.panel:not([hidden]) *').forEach((n) => {
+          if (!/^(auto|scroll)$/.test(getComputedStyle(n).overflowX) || n.scrollWidth <= n.clientWidth + 4 || n.classList.contains('chips')) return;
+          const wrap = n.closest('.rail-wrap');
+          if (!(wrap && wrap.previousElementSibling && wrap.previousElementSibling.matches('.railmode'))) out.push(n.className);
+        });
+        const unk = [...document.querySelectorAll('.panel:not([hidden]) [data-k]')].filter((n) => !n.querySelector('a[href]') && n.tagName !== 'A').length;
+        return { out, unk };
+      });
+      check(!bad.out.length, t + ': every sideways row is chips or has See as a list', bad.out.join(', '));
+      check(!bad.unk, t + ': every item has a link', bad.unk);
+      await pageRules(page, t, 390);
+    }
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  /* the gallery: every tab in the demo, 390 and 1280, light and dark */
+  for (const combo of COMBOS4) {
+    await group('paper: the demo, ' + combo.viewport.width + ' ' + combo.scheme, async () => {
+      const { ctx, page, errors } = await paperPage(browser, base, combo);
+      const outside = [];
+      page.on('request', (r) => { if (/example\.com|play\.btownbrief\.com|beehiiv/.test(r.url())) outside.push(r.url()); });
+      await page.goto(base + '/paper/?demo=1');
+      await settle(page);
+      await page.evaluate(() => document.fonts.ready);
+      for (const t of ['front', 'editions', 'picks', 'gossip', 'everything', 'story']) {
+        if (t !== 'front') await goTab(page, t);
+        await page.waitForTimeout(t === 'editions' ? 700 : 300);
+        const st = await page.evaluate(() => { const p = document.querySelector('.panel:not([hidden])'); return { secs: p.querySelectorAll('.pp-sec').length, items: p.querySelectorAll('[data-k]').length, demo: !!p.querySelector('.pp-mail-row') }; });
+        check(st.secs >= 3 && (t === 'story' || st.items > 0), t + ': the demo draws its sections', JSON.stringify(st));
+        if (t === 'front') check(st.demo, 'front: the demo draws the strip without loading Beehiiv', '');
+        await page.evaluate(() => document.querySelector('.panel:not([hidden])').scrollTo(0, 0));
+        await page.waitForTimeout(250);
+        await page.screenshot({ path: path.join(SHOTS, 'paper-' + t + '-' + combo.viewport.width + '-' + combo.scheme + '.png') });
+      }
+      /* a link out in the demo stays put and says where it would go (after the pictures, so no toast is in them) */
+      await goTab(page, 'front');
+      await page.click('#panel-front .pp-qs .chip');
+      await page.waitForSelector('#sheet:not([hidden]) .sheet-row a');
+      const at = page.url();
+      await page.click('#sheet .sheet-row a');
+      await page.waitForTimeout(200);
+      check(page.url() === at && /Demo: opens/.test(await page.evaluate(() => document.getElementById('toast').textContent)), 'a question’s link in the demo toasts instead of leaving', page.url());
+      await page.keyboard.press('Escape');
+      check(!outside.length, 'the demo fetches nothing from outside', outside.slice(0, 3).join(' '));
+      check(!errors.length, 'no console errors', errors.join(' | '));
+      await ctx.close();
+    });
+  }
+}
+
 /* ----------------------------------------------------------------- run */
 /* account-data.js: deleting the account from an app that does not load
    Habits or The Build still deletes their server data (wave 0 bug found by
@@ -13341,6 +13708,7 @@ try {
   await run(fullPagesAndAsks);
   await run(theApps);
   await run(accountData);
+  await run(thePaper);
 } finally {
   await browser.close();
   proc.kill();

@@ -1,0 +1,530 @@
+{
+ "_note": "The hub's A to Z shelves (hub.btownbrief.com #everything, Oct 29, 2026). The Paper adds any guide page from data/catalog.json and any game from play.btownbrief.com/games.json that is not here yet, so a new launch needs no edit. start: the first eight of the hub's Start here page (hub start-here.html, \"Bookmark these\").",
+ "start": [
+  "https://guide.btownbrief.com/pulse.html",
+  "https://guide.btownbrief.com/weather.html",
+  "https://play.btownbrief.com/lake-breath/",
+  "https://guide.btownbrief.com/events.html",
+  "https://guide.btownbrief.com/changes.html",
+  "https://play.btownbrief.com/what-now/",
+  "https://play.btownbrief.com/btown-wordle/",
+  "https://play.btownbrief.com/maple-scramble/"
+ ],
+ "shelves": [
+  {
+   "key": "now",
+   "label": "Right now",
+   "items": [
+    {
+     "title": "What Now",
+     "line": "The anti-feed: one good answer, then put the phone down.",
+     "href": "https://play.btownbrief.com/what-now/"
+    },
+    {
+     "title": "Open Right Now",
+     "line": "Live hours for 281 places — patios, late-night kitchens.",
+     "href": "https://guide.btownbrief.com/restaurants.html"
+    },
+    {
+     "title": "Events",
+     "line": "26 sources, one calendar — tonight, the weekend, beyond.",
+     "href": "https://guide.btownbrief.com/events.html"
+    },
+    {
+     "title": "Sports",
+     "line": "UVM, the high school and the local clubs — every game, and where to watch.",
+     "href": "https://guide.btownbrief.com/sports.html",
+     "kw": "uvm catamounts burlington high seahorses red sox bruins celtics patriots canadiens hockey basketball soccer football baseball lacrosse schedule scores game"
+    },
+    {
+     "title": "Burlington Weather & Lake",
+     "line": "Conditions, lake temps, can-I-swim — and Steve's read.",
+     "href": "https://guide.btownbrief.com/weather.html"
+    },
+    {
+     "title": "Food & Drink Deals",
+     "line": "Happy hours, specials, the cheap-night standbys.",
+     "href": "https://guide.btownbrief.com/deals.html"
+    },
+    {
+     "title": "Small Bites",
+     "line": "Every menu near Church Street, one filterable list.",
+     "href": "https://guide.btownbrief.com/small-bites.html"
+    },
+    {
+     "title": "Openings & Closings",
+     "line": "What just opened, what's gone — every entry sourced.",
+     "href": "https://guide.btownbrief.com/openings.html"
+    },
+    {
+     "title": "Since You Checked",
+     "line": "What changed since your last look: beaches, roads, agendas.",
+     "href": "https://guide.btownbrief.com/changes.html"
+    },
+    {
+     "title": "Burlington Pulse",
+     "line": "Local headlines next to the national wire — and LIVE.",
+     "href": "https://guide.btownbrief.com/pulse.html"
+    },
+    {
+     "title": "All Day",
+     "line": "The news that matters, all day.",
+     "href": "https://guide.btownbrief.com/all-day/",
+     "kw": "reader feed wire news x facebook reddit podcasts tv on air watch films food restaurants instagram people plans vintage thrift art photos music what now missions games arcade leaderboard"
+    }
+   ]
+  },
+  {
+   "key": "evening",
+   "label": "Evening",
+   "items": [
+    {
+     "title": "Tonight's Sunset",
+     "line": "A scored forecast, and where to watch it from.",
+     "href": "https://guide.btownbrief.com/sunset.html"
+    },
+    {
+     "title": "BTown TV",
+     "line": "One curated page of video, nightly.",
+     "href": "https://guide.btownbrief.com/tv.html"
+    },
+    {
+     "title": "Pulse LIVE",
+     "line": "Headlines rolling on their own — the lean-back board.",
+     "href": "https://guide.btownbrief.com/live.html"
+    },
+    {
+     "title": "Lake Breath",
+     "line": "Two minutes with the lake — the 8:02, together.",
+     "href": "https://play.btownbrief.com/lake-breath/"
+    }
+   ]
+  },
+  {
+   "key": "go",
+   "label": "Go and do",
+   "items": [
+    {
+     "title": "Things To Do",
+     "line": "206+ — breweries, beaches, trails, the definitive top 100.",
+     "href": "https://guide.btownbrief.com/things-to-do.html"
+    },
+    {
+     "title": "Burlington Days",
+     "line": "Take a day somebody already had — rebuilt for your date, hours and weather checked.",
+     "href": "https://play.btownbrief.com/burlington-days/",
+     "kw": "itinerary plan day visiting visitors parents trip weekend saturday"
+    },
+    {
+     "title": "Btown Out Loud",
+     "line": "Earbuds in — 49 stories the city tells you when you arrive.",
+     "href": "https://guide.btownbrief.com/out-loud/"
+    },
+    {
+     "title": "The Walking Tour",
+     "line": "1.7 miles, 14 stops, the history woven in.",
+     "href": "https://guide.btownbrief.com/walking-tour.html"
+    },
+    {
+     "title": "Lake & Beaches",
+     "line": "Every swim spot, plus a 23-stop shore hunt.",
+     "href": "https://guide.btownbrief.com/beaches.html"
+    },
+    {
+     "title": "Vermont Hobbies",
+     "line": "39 on-ramps to what this place is built for.",
+     "href": "https://guide.btownbrief.com/hobbies.html"
+    },
+    {
+     "title": "Btown Challenges",
+     "line": "Real Burlington challenges — eat it, climb it, streak it.",
+     "href": "https://play.btownbrief.com/challenges/"
+    },
+    {
+     "title": "Dibs",
+     "line": "920 blocks. Stand in one, tap, it's yours.",
+     "href": "https://play.btownbrief.com/dibs/",
+     "emoji": "🔷"
+    }
+   ]
+  },
+  {
+   "key": "table",
+   "label": "At the table",
+   "items": [
+    {
+     "title": "Heads Up, Btown!",
+     "line": "Easygoing charades: 36 general decks, 8 larger local collections, teams, and 36 challenge levels.",
+     "href": "https://play.btownbrief.com/heads-up-btown/",
+     "emoji": "🧠",
+     "kw": "forehead charades party game familiar easy general decks burlington vermont teams co-op custom decks photos offline no repeats forbidden words humming challenge levels"
+    },
+    {
+     "title": "Stay Awhile",
+     "line": "273 questions worth staying at the table for.",
+     "href": "https://play.btownbrief.com/stay-awhile/",
+     "emoji": "🎡"
+    },
+    {
+     "title": "Table Talk",
+     "line": "Prop a phone up — same card on every phone.",
+     "href": "https://guide.btownbrief.com/table.html",
+     "emoji": "☕"
+    },
+    {
+     "title": "Btown Party",
+     "line": "A whole room, one code — reveals land on the big screen.",
+     "href": "https://play.btownbrief.com/btown-party/",
+     "emoji": "🎪"
+    },
+    {
+     "title": "Maples to Maples (Apples to Apples)",
+     "line": "One prompt, your best answer, the town votes weekly.",
+     "href": "https://play.btownbrief.com/maples-to-maples/",
+     "emoji": "🗳️"
+    }
+   ]
+  },
+  {
+   "key": "people",
+   "label": "People",
+   "items": [
+    {
+     "title": "Common Ground",
+     "line": "Private pilot: three-minute text chats with Burlington neighbors, mutual connections, and themed gatherings. Voice and video still need setup.",
+     "href": "https://btown-common-ground.stephenvdavis.chatgpt.site/",
+     "kw": "common ground burlington neighbors local random chat omegle text conversation icebreakers mutual connections themed gatherings rsvp adults private pilot"
+    },
+    {
+     "title": "The Meetup",
+     "line": "Btown Brief IRL — showing up alone is normal here.",
+     "href": "https://www.meetup.com/burlington-social-activites-group/"
+    },
+    {
+     "title": "Who's Playing",
+     "line": "Find a partner, or the standing pickup game.",
+     "href": "https://play.btownbrief.com/whos-playing/"
+    },
+    {
+     "title": "Up For It",
+     "line": "Say what you'd go to — five taps and a host picks it up.",
+     "href": "https://play.btownbrief.com/up-for-it/"
+    },
+    {
+     "title": "Community Chat",
+     "line": "The Telegram group — there when you need it.",
+     "href": "https://guide.btownbrief.com/telegram.html",
+     "kw": "groupchat group chat telegram"
+    },
+    {
+     "title": "Clubs & Groups",
+     "line": "Run clubs, board games, book clubs, pickup.",
+     "href": "https://guide.btownbrief.com/clubs.html"
+    },
+    {
+     "title": "Community Photos",
+     "line": "Send one in — it may run in the Brief.",
+     "href": "https://guide.btownbrief.com/photos.html"
+    },
+    {
+     "title": "Community Playlist",
+     "line": "Share a song, find Vermont artists.",
+     "href": "https://guide.btownbrief.com/playlist.html"
+    },
+    {
+     "title": "Local Projects",
+     "line": "Other people's Burlington things. Add yours.",
+     "href": "https://guide.btownbrief.com/projects.html"
+    },
+    {
+     "title": "Caption This",
+     "line": "The weekly caption contest — swipe or write.",
+     "href": "https://play.btownbrief.com/caption-this/"
+    }
+   ]
+  },
+  {
+   "key": "live",
+   "label": "Live here",
+   "items": [
+    {
+     "title": "Jobs This Week",
+     "line": "13 boards, one list — Mon · Wed · Fri.",
+     "href": "https://guide.btownbrief.com/jobs.html"
+    },
+    {
+     "title": "Find an Apartment",
+     "line": "Every property manager, contacts included.",
+     "href": "https://guide.btownbrief.com/housing.html"
+    },
+    {
+     "title": "Civic Meetings",
+     "line": "Every public meeting — agendas, packets, video.",
+     "href": "https://guide.btownbrief.com/civic.html"
+    },
+    {
+     "title": "Best of r/burlington",
+     "line": "232 settled arguments, linked to the threads.",
+     "href": "https://guide.btownbrief.com/best-of-reddit.html"
+    },
+    {
+     "title": "Volunteer",
+     "line": "Help this week, sized to the time you've got.",
+     "href": "https://guide.btownbrief.com/volunteer.html"
+    },
+    {
+     "title": "The Gift Guide",
+     "line": "Every gift from a local shop or maker.",
+     "href": "https://guide.btownbrief.com/gifts.html"
+    },
+    {
+     "title": "Merch",
+     "line": "87 Burlington designs on tees, hoodies, totes and stickers.",
+     "href": "https://merch.btownbrief.com/",
+     "emoji": "👕"
+    }
+   ]
+  },
+  {
+   "key": "reading",
+   "label": "Reading",
+   "items": [
+    {
+     "title": "The Brief",
+     "line": "The newsletter itself — Mondays & Fridays, free.",
+     "href": "https://www.btownbrief.com?utm_source=paper&utm_medium=referral&utm_campaign=az"
+    },
+    {
+     "title": "The Archives",
+     "line": "Every issue ever written, searchable.",
+     "href": "https://play.btownbrief.com/archive/"
+    },
+    {
+     "title": "Burlington, Briefly",
+     "line": "The city's whole story in five minutes.",
+     "href": "https://guide.btownbrief.com/history.html"
+    },
+    {
+     "title": "r/GoodBurlington",
+     "line": "The good-news corner of Burlington Reddit.",
+     "href": "https://guide.btownbrief.com/goodburlington.html"
+    },
+    {
+     "title": "About Me",
+     "line": "It really is just one guy. And the dog.",
+     "href": "https://www.btownbrief.com/about-me"
+    }
+   ]
+  },
+  {
+   "key": "daily",
+   "label": "Daily puzzles",
+   "items": [
+    {
+     "title": "BTown Wordle",
+     "line": "A Burlington word every midnight.",
+     "href": "https://play.btownbrief.com/btown-wordle/",
+     "emoji": "🟩"
+    },
+    {
+     "title": "Maple Scramble",
+     "line": "16 tiles, one sprint, the same board for the whole town.",
+     "href": "https://play.btownbrief.com/maple-scramble/",
+     "emoji": "🔠"
+    },
+    {
+     "title": "Where in BTown? (GeoGuessr)",
+     "line": "One photo, one guess, 74 spots.",
+     "href": "https://play.btownbrief.com/where-in-btown/",
+     "emoji": "📍"
+    },
+    {
+     "title": "Trivia Ladder",
+     "line": "One wrong rung and you fall.",
+     "href": "https://play.btownbrief.com/trivia-ladder/",
+     "emoji": "🪜"
+    },
+    {
+     "title": "News Quiz",
+     "line": "Did you actually read this week's Brief?",
+     "href": "https://play.btownbrief.com/news-quiz/",
+     "emoji": "🗞️"
+    },
+    {
+     "title": "Real or Fake",
+     "line": "Real headline, or did we make it up?",
+     "href": "https://play.btownbrief.com/real-or-fake/",
+     "emoji": "📰"
+    },
+    {
+     "title": "Earlier or Later",
+     "line": "Which moment in Burlington history came first?",
+     "href": "https://play.btownbrief.com/earlier-or-later/",
+     "emoji": "⏳"
+    },
+    {
+     "title": "Higher or Lower",
+     "line": "One stat, then another — keep the streak.",
+     "href": "https://play.btownbrief.com/higher-or-lower/",
+     "emoji": "📊"
+    },
+    {
+     "title": "Rank What You Know",
+     "line": "Put Burlington things in order. It isn't easy.",
+     "href": "https://play.btownbrief.com/rank-what-you-know/",
+     "emoji": "🔢"
+    }
+   ]
+  },
+  {
+   "key": "arcade",
+   "label": "Arcade",
+   "items": [
+    {
+     "title": "Church Street Runners",
+     "line": "Dodge dogs, grab creemees, down the Marketplace.",
+     "href": "https://play.btownbrief.com/church-street-runner/",
+     "emoji": "🏃"
+    },
+    {
+     "title": "FILED!",
+     "line": "Survive the World's Tallest Filing Cabinet.",
+     "href": "https://play.btownbrief.com/filed/",
+     "emoji": "🗄️"
+    },
+    {
+     "title": "Flappy Champ",
+     "line": "Flap Champ through the schooner sails.",
+     "href": "https://play.btownbrief.com/flappy-champ/",
+     "emoji": "🐉"
+    },
+    {
+     "title": "Champlain Glider",
+     "line": "Ride the sunset across Vermont, outrun the night.",
+     "href": "https://play.btownbrief.com/champlain-glider/",
+     "emoji": "🐦"
+    },
+    {
+     "title": "Tap the Maple (Knife Hit)",
+     "line": "Tap taps into the maple — don't hit the taps.",
+     "href": "https://play.btownbrief.com/tap-the-maple/",
+     "emoji": "🍁"
+    },
+    {
+     "title": "Creemee Drop",
+     "line": "Stack Vermont soft-serve to the sky.",
+     "href": "https://play.btownbrief.com/creemee-drop/",
+     "emoji": "🍦"
+    },
+    {
+     "title": "Pothole Patrol",
+     "line": "Patch the streets before mud season wins.",
+     "href": "https://play.btownbrief.com/pothole-patrol/",
+     "emoji": "🕳️"
+    },
+    {
+     "title": "Snowball Slinger",
+     "line": "Sling snowballs at squirrel forts in 3D.",
+     "href": "https://play.btownbrief.com/snowball-slinger/",
+     "emoji": "☃️"
+    },
+    {
+     "title": "Church Street Skate",
+     "line": "Skate real downtown Burlington in 3D.",
+     "href": "https://play.btownbrief.com/church-street-skate/",
+     "emoji": "🛹"
+    }
+   ]
+  },
+  {
+   "key": "board",
+   "label": "Board & card",
+   "items": [
+    {
+     "title": "Four in a Rowboat (Connect 4)",
+     "line": "Line up four across the lake.",
+     "href": "https://play.btownbrief.com/four-in-a-rowboat/",
+     "emoji": "🚣"
+    },
+    {
+     "title": "Queen City Chess",
+     "line": "Pass the phone, or race a friend.",
+     "href": "https://play.btownbrief.com/queen-city-chess/",
+     "emoji": "♛"
+    },
+    {
+     "title": "Church Street Checkers",
+     "line": "On the Marketplace bricks. No mercy.",
+     "href": "https://play.btownbrief.com/church-street-checkers/",
+     "emoji": "🔴"
+    },
+    {
+     "title": "Battle on the Lake (Battleship)",
+     "line": "Hide your fleet on Champlain, sink theirs.",
+     "href": "https://play.btownbrief.com/battle-on-the-lake/",
+     "emoji": "⛵"
+    },
+    {
+     "title": "Crazy Eights (Uno)",
+     "line": "Eights are wild on the Burlington deck.",
+     "href": "https://play.btownbrief.com/crazy-eights/",
+     "emoji": "🃏"
+    },
+    {
+     "title": "Kings Corner",
+     "line": "Shed your hand around City Hall Park.",
+     "href": "https://play.btownbrief.com/kings-corner/",
+     "emoji": "👑"
+    },
+    {
+     "title": "Btown Cribbage",
+     "line": "The app does all the counting.",
+     "href": "https://play.btownbrief.com/btown-cribbage/",
+     "emoji": "🏔️"
+    },
+    {
+     "title": "Maple Mancala",
+     "line": "Sow maple candies, capture the sweet side.",
+     "href": "https://play.btownbrief.com/maple-mancala/",
+     "emoji": "🌰"
+    },
+    {
+     "title": "Front Porch Dominoes",
+     "line": "First to 100 wins the porch.",
+     "href": "https://play.btownbrief.com/front-porch-dominoes/",
+     "emoji": "🁵"
+    },
+    {
+     "title": "North Star Hop (Chinese Checkers)",
+     "line": "Hop marbles under the northern lights.",
+     "href": "https://play.btownbrief.com/north-star-hop/",
+     "emoji": "⭐"
+    },
+    {
+     "title": "Sugarbush Squares (Dots & Boxes)",
+     "line": "Close a box, plant a maple, go again.",
+     "href": "https://play.btownbrief.com/sugarbush-squares/",
+     "emoji": "🌳"
+    },
+    {
+     "title": "Peak Foliage (Othello)",
+     "line": "Flip the forest green or red.",
+     "href": "https://play.btownbrief.com/peak-foliage/",
+     "emoji": "🍂"
+    },
+    {
+     "title": "Btown Crossings",
+     "line": "Our own word-tile board — Church St doubles your word.",
+     "href": "https://play.btownbrief.com/btown-crossings/",
+     "emoji": "🔡"
+    },
+    {
+     "title": "The Leaderboards",
+     "line": "Every game's best scores — reset monthly, champions in the Brief.",
+     "href": "https://play.btownbrief.com/leaderboards/",
+     "emoji": "🏆"
+    }
+   ]
+  }
+ ]
+}
