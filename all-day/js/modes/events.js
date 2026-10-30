@@ -44,12 +44,12 @@ const PER_DAY = 10;
 /* a listing's own words for the cost, short enough for the card. Never "Free" unless it says so. */
 function cost(e) {
   let p = String(e.price || '').trim().replace(/\.$/, '');
-  if (!p) return e.free ? 'Free' : 'Cost on the listing';
+  if (!p) return e.free ? 'Free' : '';
   if (p.length > 40) p = p.slice(0, 38).replace(/[\s,;:]+\S*$/, '') + '…';
   return p;
 }
 
-function card(e, today, nowMs) {
+function card(e, today, nowMs, canLog) {
   const t = timing(e, nowMs);
   /* an exhibit that runs for weeks shows on today, not on the day it opened */
   const day = t.lastDay && e.date < today ? today : e.date;
@@ -57,7 +57,7 @@ function card(e, today, nowMs) {
   return {
     k: 'ev-' + e.id, kind: 'event', src: e.src || 'Listing', sid: 'out-' + (e.src || 'listing'), own: !!e.own, title: e.title, href: e.url,
     dow: dowOf(day), dom: domOf(day), when, where: [e.venue, e.town].filter(Boolean).join(', ') || 'Where it is: on the listing', price: cost(e),
-    cta: t.started ? 'Been there' : null, act: t.started ? 'outbeen' : null, ev: { venue: e.venue || e.town || 'Burlington', day: e.date > today ? today : day },
+    cta: canLog && t.started ? 'Been there' : null, act: canLog && t.started ? 'outbeen' : null, ev: { venue: e.venue || e.town || 'Burlington', day: e.date > today ? today : day },
   };
 }
 
@@ -94,7 +94,8 @@ async function load(demo) {
   const today = etNow(nowMs).day;
   const live = (data.events || []).filter((e) => e && e.url && e.title && !timing(e, nowMs).over);
   const ownFirst = (list) => list.filter((e) => e.own).concat(list.filter((e) => !e.own));
-  const cardsOf = (list) => list.map((e) => card(e, today, nowMs));
+  /* Been there, and Log a show, only once the stage board answers */
+  const cardsOf = (list) => list.map((e) => card(e, today, nowMs, stage.ok));
   const more = (n) => (box) => { if (n > 0) buttons(box, [linkButton(n + ' more', FULL)]); };
 
   /* This weekend: Stephen's own events of the coming week pinned on top, then up to ten a day */
@@ -128,12 +129,12 @@ async function load(demo) {
 
   const posts = stage.ok ? stage.posts : [];
   const logged = posts.map(stageItem);
-  secs.push({
+  if (stage.ok) secs.push({
     key: 'been', label: 'Been there', world: 'online',
     newest: logged.length ? Math.max(...logged.map((it) => it.created)) : undefined,
     items: logged,
     draw(box) {
-      if (!logged.length) box.appendChild(el('p', 'note pad', esc(stage.ok ? 'No shows logged yet.' : 'Opens soon.')));
+      if (!logged.length) box.appendChild(el('p', 'note pad', esc('No shows logged yet.')));
       buttons(box, [button('Log a show', 'sm', () => logShow())]);
     },
   });

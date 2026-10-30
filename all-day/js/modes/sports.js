@@ -104,9 +104,8 @@ async function load(demo) {
     newest: playing.length ? Math.max(...playing.map((it) => it.created)) : undefined,
     items: playing.concat(open.pickup ? spots : spots.slice(0, FIRST)),
     draw(box, list) {
-      const head = el('p', 'note pad', esc(playing.length ? '' : sess.ok ? 'No games posted yet.' : 'Opens soon.'));
-      if (!playing.length) box.insertBefore(head, list);
-      buttons(box, [button('Post a game', 'sm', () => postSession()),
+      if (sess.ok && !playing.length) box.insertBefore(el('p', 'note pad', esc('No games posted yet.')), list);
+      buttons(box, [sess.ok ? button('Post a game', 'sm', () => postSession()) : null,
         !open.pickup && spots.length > FIRST ? button('All ' + spots.length + ' spots', 'ghost sm', () => { open.pickup = true; mod.reload(); }) : null]);
     },
   }];

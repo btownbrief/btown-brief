@@ -13286,7 +13286,7 @@ async function theOut(browser, base) {
       none: m._cost({ price: null, free: null }), free: m._cost({ price: null, free: true }), said: m._cost({ price: '$10; free for members.' }),
       long: m._cost({ price: 'Prices $35 Adults Veterans $30 Senior Citizen $30 Children under 12 $15 Children' }),
       thu: m._weekend('2026-10-29'), fri: m._weekend('2026-10-30'), sat: m._weekend('2026-10-31'), sun: m._weekend('2026-11-01'), mon: m._weekend('2026-11-02') })));
-    check(r.none === 'Cost on the listing', 'no price and not marked free: never a guessed "Free"', r.none);
+    check(r.none === '', 'no price and not marked free: no price line, never a guessed "Free"', r.none);
     check(r.free === 'Free' && r.said === '$10; free for members', 'free when the listing says so; otherwise its own words', JSON.stringify([r.free, r.said]));
     check(r.long.length <= 40 && /…$/.test(r.long), 'a long price is cut at a word', r.long);
     check(JSON.stringify([r.thu, r.fri, r.sat, r.sun, r.mon]) === JSON.stringify([['2026-10-30', '2026-11-01'], ['2026-10-30', '2026-11-01'], ['2026-10-31', '2026-11-01'], ['2026-11-01', '2026-11-01'], ['2026-11-06', '2026-11-08']]),
@@ -13334,7 +13334,7 @@ async function theOut(browser, base) {
     for (const t of OUT_TABS.slice(1)) {
       await goTab(page, t);
       secs = await outSecs(page, t);
-      check(secs.length >= 3 && !(await page.$('#panel-' + t + ' .promise')), t + ': its sections, not a promise', secs.map((s) => s.key).join(', '));
+      check(secs.length >= (t === 'nightlife' ? 1 : 3) && !(await page.$('#panel-' + t + ' .promise')), t + ': its sections, not a promise', secs.map((s) => s.key).join(', '));
       check(secs.flatMap((s) => s.cards).every((c) => c.href), t + ': every card has a link', '');
       await pageRules(page, t + ' live', 390);
     }

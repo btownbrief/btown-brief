@@ -52,7 +52,7 @@ function mixerItem(e, today) {
   return {
     k: 'mx-' + e.id, kind: 'event', src: e.src || 'Listing', sid: 'out-' + (e.src || 'listing'), own: !!e.own, title: e.title, href: e.url,
     dow: dowOf(e.date), dom: domOf(e.date), when: clock(e.start) || 'All day', where: [e.venue, e.town].filter(Boolean).join(', ') || 'Where it is: on the listing',
-    price: String(e.price || '').replace(/\.$/, '').slice(0, 40) || (e.free ? 'Free' : 'Cost on the listing'),
+    price: String(e.price || '').replace(/\.$/, '').slice(0, 40) || (e.free ? 'Free' : ''),
   };
 }
 
@@ -71,19 +71,22 @@ async function load(demo) {
   /* Open tonight */
   const posts = open.ok ? open.posts : [];
   const opens = posts.map(openItem);
-  const secs = [{
+  /* a section shows when it has something, or something to do: Open tonight
+     once the board answers, Happy hours while one is left today */
+  const secs = [];
+  if (open.ok) secs.push({
     key: 'open', label: 'Open tonight',
     newest: opens.length ? Math.max(...opens.map((it) => it.created)) : undefined, items: opens,
     draw(box) {
-      if (!opens.length) box.appendChild(el('p', 'note pad', esc(open.ok ? 'No groups out yet.' : 'Opens soon.')));
+      if (!opens.length) box.appendChild(el('p', 'note pad', esc('No groups out yet.')));
       buttons(box, [button('My group is out tonight', 'sm', () => postGroup())]);
     },
-  }];
+  });
 
   /* Happy hours, today */
   const hh = (deals.deals || []).filter((d) => d.type === 'happy-hour' && (d.days || []).includes(dayKey) && (toMin(d.end) == null || toMin(d.end) > nowMin))
     .map((d) => hhItem(d, nowMin)).sort((a, b) => a.start - b.start);
-  secs.push({ key: 'happy', label: 'Happy hours', items: hh, empty: 'None left today.' });
+  if (hh.length) secs.push({ key: 'happy', label: 'Happy hours', items: hh });
 
   /* Mixers, this week */
   const data = demo ? { events: (evs.events || []).map((e) => ({ ...e, date: demoDay(e.in), start: demoDay(e.in) + 'T' + (e.at || '19:00') + ':00-04:00' })) } : evs;
