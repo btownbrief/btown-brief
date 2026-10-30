@@ -1,36 +1,55 @@
-/* Party (Play app, wave 1, 2026-10-29): the games for a room of people,
-   each a row with when to reach for it and its link: Btown Party, Church
-   Street Trivia (unlisted on the arcade; its host page too), Arcade Night,
-   Stay Awhile and Table Talk (the guide's own table.html). The words are
+/* Party (Play app, 2026-10-29): a game-night kit. The words and links are
    data/play/play.json's `party`.
 
-   Nothing here is invented, so ?demo=1 shows the same page. */
+   - Game night: a bar night in order, numbered: Btown Party to start (its
+     screen on the TV, the host on a phone), Church Street Trivia (the host
+     page is what goes on the TV), Arcade Night's finals, Stay Awhile at
+     last call. Each step has its one line and its buttons: On the TV for
+     the page the TV shows, Host or Play for phones.
+   - At home: Table Talk, and Stay Awhile for a table of new people.
+
+   Each game is its own top tab (the row is the section). Nothing here is
+   invented, so ?demo=1 shows the same page. */
 
 import * as app from '../app.js';
-import { esc } from '../ui.js';
+import { el, esc } from '../ui.js';
 import { playData, arr, sec, link, row, tab } from './playkit.js';
 
 const KEY = 'party';
-/* the pill's word for each game, the map's top tabs */
+const SLUG = /^[a-z0-9-]{1,40}$/;
 const TOPS = [['btown-party', 'Btown Party'], ['church-street-trivia', 'Trivia'], ['arcade-night', 'Arcade Night'], ['stay-awhile', 'Stay Awhile'], ['table-talk', 'Table Talk']];
 
-const P = { games: [] };
+const P = { night: [], table: [] };
 
-function draw(page) {
-  const box = sec(page, 'games', 'Games for a room');
-  P.games.forEach((g) => {
-    const lines = [esc(g.when)];
-    const buttons = [link('Open', g.url, 'pillbtn on', 'Open ' + g.name)];
-    if (g.host) buttons.push(link('Host', g.host, 'pillbtn', 'Host ' + g.name + ' from a laptop on the TV'));
-    const r = row('party:' + g.key, g.emoji, g.name, lines, buttons);
-    r.dataset.sec = g.key;
-    box.appendChild(r);
-  });
+function gameRow(g, n) {
+  const buttons = [];
+  if (g.tv) buttons.push(link('On the TV', g.tv, 'pillbtn on', g.name + ': open on the TV'));
+  if (g.host) buttons.push(link('Host', g.host, 'pillbtn', g.name + ': host from a phone'));
+  if (g.play) buttons.push(link(g.tv ? 'Phones' : 'Open', g.play, g.tv ? 'pillbtn' : 'pillbtn on', 'Open ' + g.name));
+  const r = row('party:' + g.key, g.emoji, g.name, [esc(g.when || '')], buttons);
+  if (n) {
+    const t = r.querySelector('.th');
+    t.className = 'num';
+    t.textContent = String(n);
+  }
+  if (TOPS.some(([k]) => k === g.key)) r.dataset.sec = g.key;
+  return r;
 }
 
+function draw(page) {
+  const night = sec(page, 'night', 'Game night');
+  P.night.forEach((g, i) => night.appendChild(gameRow(g, i + 1)));
+  if (!P.table.length) return;
+  const home = sec(page, 'table', 'At a table');
+  P.table.forEach((g) => home.appendChild(gameRow(g, 0)));
+}
+
+const ok = (g) => g && SLUG.test(String(g.key || '')) && g.name && (g.tv || g.play);
 function load() {
   return playData().then((j) => {
-    P.games = arr(j.party).filter((g) => g && /^[a-z0-9-]{1,40}$/.test(String(g.key || '')) && g.name && g.url);
+    const p = j.party || {};
+    P.night = arr(p.night).filter(ok);
+    P.table = arr(p.table).filter(ok);
   });
 }
 

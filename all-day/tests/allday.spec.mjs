@@ -13441,10 +13441,17 @@ async function thePlay(browser, base) {
     const { ctx, page, errors } = await newPage(browser, base);
     await page.goto(base + '/play/#party');
     await settle(page);
-    const rows = await page.$$eval('#panel-party [data-k^="party:"]', (r) => r.map((x) => ({ k: x.dataset.k, when: (x.querySelector('.s') || {}).textContent || '', links: [...x.querySelectorAll('a')].map((a) => a.href) })));
-    check(JSON.stringify(rows.map((r) => r.k)) === JSON.stringify(['party:btown-party', 'party:church-street-trivia', 'party:arcade-night', 'party:stay-awhile', 'party:table-talk']), 'the five, in the map’s order', rows.map((r) => r.k).join(', '));
-    check(rows.every((r) => r.when.length > 5 && r.links.length >= 1), 'each says when to reach for it, in one line, and has its link', JSON.stringify(rows.map((r) => r.when)));
-    check(rows[1].links.includes('https://play.btownbrief.com/church-street-trivia/host.html') && rows[4].links[0] === base + '/table.html', 'Trivia has its host page; Table Talk is the guide’s own table.html', JSON.stringify([rows[1].links, rows[4].links]));
+    const rows = (sec) => page.$$eval('#panel-party [data-sec="' + sec + '"] [data-k^="party:"]', (r) => r.map((x) => ({ k: x.dataset.k, n: (x.querySelector('.num') || {}).textContent || '', when: (x.querySelector('.s') || {}).textContent || '',
+      links: [...x.querySelectorAll('a')].map((a) => [a.textContent.trim(), a.href]) })));
+    const night = await rows('night');
+    check(JSON.stringify(night.map((r) => r.k + ' ' + r.n)) === JSON.stringify(['party:btown-party 1', 'party:church-street-trivia 2', 'party:arcade-night 3', 'party:stay-awhile 4']), 'game night, numbered in the order to run it', night.map((r) => r.k + ' ' + r.n).join(', '));
+    check(night.every((r) => r.when.length > 5 && r.links.length >= 1), 'each step says when, in one line, and has its link', JSON.stringify(night.map((r) => r.when)));
+    const tv = Object.fromEntries(night.map((r) => [r.k, (r.links.find((l) => l[0] === 'On the TV') || [])[1] || '']));
+    check(tv['party:btown-party'] === 'https://play.btownbrief.com/btown-party/screen.html' && tv['party:church-street-trivia'] === 'https://play.btownbrief.com/church-street-trivia/host.html' && tv['party:arcade-night'] === 'https://play.btownbrief.com/arcade-night/',
+      'On the TV opens what the TV shows: Btown Party’s screen, Trivia’s host page, Arcade Night', JSON.stringify(tv));
+    check(night[0].links.some((l) => l[0] === 'Host' && l[1] === 'https://play.btownbrief.com/btown-party/host.html'), 'Btown Party’s host runs from a phone', JSON.stringify(night[0].links));
+    const table = await rows('table');
+    check(table[0].k === 'party:table-talk' && table[0].links[0][1] === base + '/table.html', 'at a table: Table Talk, the guide’s own table.html', JSON.stringify(table));
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
   });

@@ -156,44 +156,56 @@
       }
     ]
   },
-  "party": [
-    {
-      "key": "btown-party",
-      "name": "Btown Party",
-      "emoji": "🎪",
-      "when": "A room of 10 to 60 at a mixer",
-      "url": "https://play.btownbrief.com/btown-party/"
-    },
-    {
-      "key": "church-street-trivia",
-      "name": "Church Street Trivia",
-      "emoji": "🍻",
-      "when": "A bar with a TV",
-      "url": "https://play.btownbrief.com/church-street-trivia/",
-      "host": "https://play.btownbrief.com/church-street-trivia/host.html"
-    },
-    {
-      "key": "arcade-night",
-      "name": "Arcade Night",
-      "emoji": "🏆",
-      "when": "Game night on a big screen",
-      "url": "https://play.btownbrief.com/arcade-night/"
-    },
-    {
-      "key": "stay-awhile",
-      "name": "Stay Awhile",
-      "emoji": "🎡",
-      "when": "A table of people you just met",
-      "url": "https://play.btownbrief.com/stay-awhile/"
-    },
-    {
-      "key": "table-talk",
-      "name": "Table Talk",
-      "emoji": "🍽️",
-      "when": "A dinner table or a meetup",
-      "url": "../table.html"
-    }
-  ],
+  "party": {
+    "night": [
+      {
+        "key": "btown-party",
+        "name": "Btown Party",
+        "emoji": "🎪",
+        "when": "Start here: everyone joins with one code",
+        "tv": "https://play.btownbrief.com/btown-party/screen.html",
+        "host": "https://play.btownbrief.com/btown-party/host.html"
+      },
+      {
+        "key": "church-street-trivia",
+        "name": "Church Street Trivia",
+        "emoji": "🍻",
+        "when": "Then trivia, team by table",
+        "tv": "https://play.btownbrief.com/church-street-trivia/host.html",
+        "play": "https://play.btownbrief.com/church-street-trivia/"
+      },
+      {
+        "key": "arcade-night",
+        "name": "Arcade Night",
+        "emoji": "🏆",
+        "when": "Finals: best scores on the TV",
+        "tv": "https://play.btownbrief.com/arcade-night/"
+      },
+      {
+        "key": "stay-awhile",
+        "name": "Stay Awhile",
+        "emoji": "🎡",
+        "when": "Last call: questions for the table",
+        "play": "https://play.btownbrief.com/stay-awhile/"
+      }
+    ],
+    "table": [
+      {
+        "key": "table-talk",
+        "name": "Table Talk",
+        "emoji": "🍽️",
+        "when": "A dinner table or a meetup",
+        "play": "../table.html"
+      },
+      {
+        "key": "stay-awhile-home",
+        "name": "Stay Awhile",
+        "emoji": "🎡",
+        "when": "People you just met",
+        "play": "https://play.btownbrief.com/stay-awhile/"
+      }
+    ]
+  },
   "boards": {
     "predictions": {
       "name": "Predictions",
