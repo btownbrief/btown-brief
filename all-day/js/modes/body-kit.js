@@ -85,6 +85,13 @@ export function tabLink(label, hash, cls) {
   a.href = '#' + hash;
   return a;
 }
+/* a small outlined button, the look of the Map pill on a meet row */
+export function pill(label, onClick) {
+  const b = el('button', 'pillbtn', label);
+  b.type = 'button';
+  if (onClick) b.addEventListener('click', onClick);
+  return b;
+}
 export function links(host, nodes) {
   const w = el('div', 'addrow');
   const r = el('div', 'linkrow');
@@ -98,7 +105,8 @@ export function links(host, nodes) {
    control on the right. tile: { big, small } or { icon }. lines: strings,
    or [bold, rest]. onOpen makes the middle a button. */
 export function row({ k, tile, title, lines, right, onOpen, done }) {
-  const r = el('div', 'lrow' + (done ? ' done' : ''));
+  /* .meet: the time-tile row People's week draws (a big number over a small word) */
+  const r = el('div', 'lrow' + (tile && !tile.icon ? ' meet' : '') + (done ? ' done' : ''));
   if (k) r.dataset.k = k;
   const th = tile && tile.icon ? el('span', 'th bare', tile.icon)
     : el('span', 'th tm', '<b>' + esc(tile ? tile.big : '') + '</b><span>' + esc(tile ? tile.small || '' : '') + '</span>');
