@@ -31,7 +31,7 @@ export default {
     { mode: 'streets', label: 'Streets', icon: 'cone',
       top: ['Going in', 'Torn up', 'Report', 'Sold', 'Blotter', 'Wish list'] },
     { mode: 'guides', label: 'Guides', icon: 'book',
-      top: ['All guides', 'New here', 'Help', 'Childcare', 'Schools', 'Rent', 'Vets', 'Who to call', 'Wiki'] },
+      top: ['All guides', 'New here', 'Local news', 'Help', 'Childcare', 'Schools', 'Rent', 'Vets', 'Who to call', 'Wiki'] },
     { mode: 'work', label: 'Work', icon: 'briefcase',
       top: ['Jobs', 'Who’s hiring', 'Shops', 'Businesses', 'Get a website', 'Tees for your team', 'Sponsor'] },
   ],

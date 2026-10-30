@@ -119,8 +119,7 @@ function drawMoney(box, d) {
   const top = tx.fy27_municipal_components_top || {};
   card(box, { k: 'city-rate-parts', title: 'The biggest pieces of the city rate',
     paras: [esc('Of the city’s $' + r.municipal.toFixed(2) + ': $' + top.general_city.toFixed(2) + ' runs the city, $' + top.retirement.toFixed(2) + ' pays pensions, $' + top.debt_service.toFixed(2) + ' pays down debt.')],
-    links: [{ label: 'FY27 budget', href: 'https://www.burlingtonvt.gov/1225/Fiscal-Year-2027-Budget', primary: true }, { label: 'Rate sheet', href: 'https://www.burlingtonvt.gov/DocumentCenter/View/12141' },
-      { label: 'Tax rates', href: 'https://www.burlingtonvt.gov/215/Tax-Rates-Calculations' }, { label: 'School budget', href: 'https://www.bsdvt.org/district/budget/' },
+    links: [{ label: 'City budget', href: 'https://www.burlingtonvt.gov/1225/Fiscal-Year-2027-Budget' }, { label: 'School budget', href: 'https://www.bsdvt.org/district/budget/' },
       { label: 'Property tax credit', href: 'https://tax.vermont.gov/ptc' }] });
 }
 

@@ -44,8 +44,23 @@ const FIRST30 = [
   { id: 'library', title: 'Get a library card', href: 'https://www.fletcherfree.org/' },
   { id: 'renting', title: 'Know where to look for a place', href: '../housing.html' },
   { id: 'history', title: 'Learn the town’s story', href: '../history.html' },
-  { id: 'brief', title: 'Get the Brief', href: 'https://www.btownbrief.com/subscribe' },
+  { id: 'news', title: 'Pick your local news', href: '#guides/news' },
 ];
+
+/* how to follow local news, from the r/vermont consensus Stephen shared on
+   Oct 29: NBC5 for breaking news, VTDigger, Seven Days and Vermont Public
+   for depth, free TV over an antenna or the station apps. Front Porch
+   Forum stays out (his rule: never in reader copy). */
+const NEWS = [
+  { id: 'brief', title: 'The Btown Brief', sub: 'Monday and Friday, free', href: 'https://www.btownbrief.com/subscribe' },
+  { id: 'nbc5', title: 'NBC5', sub: 'Breaking news', href: 'https://www.mynbc5.com/' },
+  { id: 'vtdigger', title: 'VTDigger', sub: 'State politics, in depth', href: 'https://vtdigger.org/' },
+  { id: 'sevendays', title: 'Seven Days', sub: 'Burlington news, food and arts; the Daily 7 email', href: 'https://www.sevendaysvt.com/' },
+  { id: 'vpr', title: 'Vermont Public', sub: 'Radio and reporting', href: 'https://www.vermontpublic.org/' },
+  { id: 'tv', title: 'Free local TV', sub: 'An antenna, or the WCAX and NBC5 apps', href: 'https://www.fcc.gov/media/engineering/dtvmaps' },
+  { id: 'vtalert', title: 'VT-Alert', sub: 'Parking bans and emergencies, by text', href: 'https://www.burlingtonvt.gov/btv-alerts' },
+];
+const drawNews = (box) => NEWS.forEach((x) => box.appendChild(row({ k: 'news-' + x.id, href: x.href, icon: ICON.paper, title: x.title, sub: esc(x.sub) })));
 
 const PLACEHOLDERS = [
   { key: 'help', label: 'Help', title: 'Benefits finder', paras: ['The help your household likely qualifies for, and where to apply.'],
@@ -103,5 +118,6 @@ app.register('guides', townMode({
   sections: [
     { key: 'all', label: 'All guides', draw: drawAll },
     { key: 'newhere', label: 'New here', sub: 'Your first 30 days', draw: drawNew },
+    { key: 'news', label: 'Local news', draw: drawNews },
   ].concat(PLACEHOLDERS.map((p) => ({ key: p.key, label: p.label, draw: placeholder(p) }))),
 }));

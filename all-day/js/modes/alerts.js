@@ -71,10 +71,16 @@ function drawToday(box, d, ctx) {
   const seen = new Set();
   const ev = ((d.changes && d.changes.events) || []).filter((e) => CIVIC.has(e.category)).sort((a, b) => epoch(b.ts) - epoch(a.ts))
     .filter((e) => { const k = e.category + same(e.headline); if (seen.has(k)) return false; seen.add(k); return true; });
+  /* the construction map adds projects by the dozen: one row that opens Torn up */
+  const NEWPROJ = /^New on the city construction map:\s*/;
+  const proj = ev.filter((e) => NEWPROJ.test(e.headline));
+  const rest = ev.filter((e) => !NEWPROJ.test(e.headline));
   divider(box, 'What changed');
-  if (d.changes.failed) line(box, NOT_LOADED);
-  else if (!ev.length) line(box, 'Nothing new.');
-  else list(box, ev.map((e, i) => row({ k: 'chg-' + i + '-' + epoch(e.ts), href: e.url || '../changes.html', title: same(e.headline),
+  if (d.changes.failed) { line(box, NOT_LOADED); return; }
+  if (!ev.length) { line(box, 'Nothing new.'); return; }
+  if (proj.length > 1) box.appendChild(row({ k: 'chg-projects', href: '#streets/torn', icon: ICON.cone, title: proj.length + ' new projects on the city’s construction map',
+    sub: esc(proj.slice(0, 2).map((e) => e.headline.replace(NEWPROJ, '')).join(', ') + (proj.length > 2 ? '…' : '')) }));
+  list(box, (proj.length > 1 ? rest : ev).map((e, i) => row({ k: 'chg-' + i + '-' + epoch(e.ts), href: e.url || '../changes.html', title: same(e.headline),
     sub: esc([...new Set([CAT[e.category] || e.category, e.detail, ago(e.ts)].filter(Boolean))].join(' · ')),
     tag: e.category === 'weather' ? ['Weather', 'live'] : null })), 8);
   box.appendChild(links([{ label: 'Since You Checked', href: '../changes.html' }]));
