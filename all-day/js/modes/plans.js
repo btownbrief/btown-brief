@@ -69,6 +69,7 @@ const mode = kit.tab({
   key: KEY, label: 'Plans', icon: 'calendar', boards: ['people'],
   promise: 'Plans open to strangers this week, with room for you.',
   load, reload,
+  posts: () => S.posts,
   count: (ts) => kit.newer(S.posts, ts),
   sections: [
     { key: 'open', label: 'Open to strangers', newest: () => kit.newest(S.posts),

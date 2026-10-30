@@ -13415,6 +13415,8 @@ async function thePeopleApp(browser, base) {
     check(shifts.filter(([, h]) => h).every(([, h]) => /^https:\/\//.test(h)) && shifts.some(([, h]) => h), 'a shift with a link has its Sign up', '');
     const orgs = await page.$$eval('.pp-sec[data-sec="shifts"] [data-orgs] .lrow', (r) => r.map((x) => x.href));
     check(orgs.length === 5 && orgs.every((h) => /^https:\/\//.test(h)), 'Shifts: the volunteer page’s places to help, five then Show all', JSON.stringify(orgs));
+    await page.click('.pp-sec[data-sec="shifts"] button:has-text("Show all")');
+    check((await page.$$('.pp-sec[data-sec="shifts"] [data-orgs] .lrow')).length > 5, 'Show all opens the rest', '');
     /* posting: sign in, name yourself, ask to borrow, and it is in the lane */
     await page.evaluate(() => import('/all-day/js/auth.js').then((a) => a.demoSignIn()));
     await page.evaluate(() => import('/all-day/js/boards.js').then((b) => b.setProfile({ display_name: 'Pat Q.' })));
@@ -13510,6 +13512,41 @@ async function thePeopleApp(browser, base) {
     await page.waitForTimeout(400);
     check(/gone from Neighbors/.test(await page.$eval('#toast', (t) => t.textContent)), 'a post that has gone says so', '');
     check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('people: live, the calendar and the Meetup feed', async () => {
+    /* two Pitch a Friend events on the feed: one off Meetup (refused), one the group's own */
+    const soon = (d, h) => new Date(Date.now() + d * 86400000 + h * 3600000).toISOString();
+    const feed = { fetched: new Date().toISOString(), events: [
+      { title: 'Pitch a Friend night', starts_at: soon(2, 0), location: 'Somewhere else', url: 'https://example.com/pitch' },
+      { title: 'Pitch a Friend night', starts_at: soon(5, 0), location: 'A back room downtown', url: 'https://www.meetup.com/burlington-social-activites-group/events/987654321/' },
+      { title: 'BTown Coffee Club', starts_at: soon(1, 0), location: 'Zero Gravity', url: 'https://www.meetup.com/burlington-social-activites-group/events/111/' } ] };
+    const { ctx, page, errors } = await newPage(browser, base, { routes: [[/play\.btownbrief\.com\/up-for-it\/data\/meetup\.json/, feed]] });
+    await page.goto(base + '/people/#dating');
+    await settle(page); await ppReady(page);
+    const secs = await page.$$eval('.panel:not([hidden]) .pp-sec', (s) => s.filter((x) => x.offsetParent).map((x) => x.dataset.sec));
+    check(secs[0] === 'events', 'with nobody posting yet, Dating opens on the calendar’s events', JSON.stringify(secs));
+    const pitch = await page.$eval('.pp-sec[data-sec="pitch"]', (s) => ({ text: s.innerText, href: (s.querySelector('a.btn') || {}).href }));
+    check(/A back room downtown/.test(pitch.text) && /RSVP on Meetup/.test(pitch.text) && pitch.href === 'https://www.meetup.com/burlington-social-activites-group/events/987654321/',
+      'Pitch a friend: the next night on the group’s Meetup, never a look-alike link', JSON.stringify(pitch));
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('people: a refresh that fails keeps the page (live)', async () => {
+    let fail = false;
+    const post = { id: '00000000-0000-4000-8000-000000000abc', board: 'neighbors', kind: 'free', title: 'A box of jars', body: '', place: '', meta: {}, author: 'Ana', author_arch: null,
+      created_at: new Date(Date.now() - 3600000).toISOString(), expires_at: null, votes: 0, voted: false, mine: false, photo: null };
+    const { ctx, page, errors } = await newPage(browser, base, { rpc: (fn, a) => (fn === 'nn_posts_list' ? (fail ? { status: 500, body: { message: 'boom' } } : (a.p_board === 'neighbors' ? [post] : [])) : undefined) });
+    await page.goto(base + '/people/#neighbors');
+    await settle(page); await ppReady(page);
+    check(await page.$$eval('.pp-sec[data-sec="free"] .b-title', (t) => t.some((x) => x.textContent === 'A box of jars')), 'the post is up', '');
+    fail = true;
+    await page.click('#tab-neighbors');
+    await page.waitForFunction(() => /Couldn’t refresh/.test(document.getElementById('toast').textContent), null, { timeout: 5000 });
+    check(await page.$$eval('.pp-sec[data-sec="free"] .b-title', (t) => t.some((x) => x.textContent === 'A box of jars')), 'a failed refresh says so and keeps what was there', '');
+    check(!errors.filter((e) => !/500/.test(e)).length, 'no console errors but the refusal', errors.join(' | '));
     await ctx.close();
   });
 

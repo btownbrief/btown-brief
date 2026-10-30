@@ -58,6 +58,7 @@ const mode = kit.tab({
   key: KEY, label: 'Pets', icon: 'paw', boards: ['people', 'neighbors'],
   promise: 'Dog-park meetups, lost pets and vets you can afford.',
   load, reload,
+  posts: () => S.plans.concat(S.lost),
   count: (ts) => kit.newer(petPlans().concat(S.lost), ts),
   sections: [
     { key: 'parks', label: 'Dog parks',

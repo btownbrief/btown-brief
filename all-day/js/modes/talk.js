@@ -35,6 +35,7 @@ const mode = kit.tab({
   key: KEY, label: 'Talk', icon: 'comment', boards: ['square'],
   promise: 'Ask a regular, and the town’s group chats.',
   load, reload,
+  posts: () => S.asks,
   count: (ts) => kit.newer(S.asks, ts),
   sections: [
     { key: 'telegram', label: 'Telegram',

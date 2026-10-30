@@ -67,7 +67,7 @@ export function tab(o) {
       if (o.votesCount) wrap.addEventListener('click', (e) => {
         if (!e.target.closest('[data-act="bvote"]')) return;
         clearTimeout(S.voteT);
-        S.voteT = setTimeout(() => Promise.resolve(o.reload && o.reload()).then(draw), 800);
+        S.voteT = setTimeout(() => again().then(draw), 800);
       });
     }
     secs.forEach((s) => {
@@ -97,6 +97,9 @@ export function tab(o) {
     if (!app.flashHit(S.root, want)) app.toast('That’s gone from ' + app.labelOf(o.key) + ' now.');
   }
 
+  /* reloads run one after another, so an older answer never lands on a newer one */
+  let chain = Promise.resolve();
+  const again = () => (chain = chain.then(() => o.reload && o.reload()).catch((e) => console.error('[people] ' + o.key + ' reload', e)));
   let loading = null;
   function load() {
     if (!loading) loading = Promise.resolve().then(o.load).catch((e) => console.error('[people] ' + o.key + ' load', e))
@@ -109,8 +112,8 @@ export function tab(o) {
   /* a board changed (a post, a vote, a delete): reload the boards this tab reads */
   window.addEventListener('allday-boards', (e) => {
     const b = e && e.detail && e.detail.board;
-    if (!S.root || !o.boards || (b && !o.boards.includes(b))) return;
-    Promise.resolve(o.reload && o.reload()).then(draw);
+    if (!o.boards || (b && !o.boards.includes(b))) return;
+    again().then(draw);
   });
 
   return {
@@ -118,7 +121,8 @@ export function tab(o) {
     icon: ICON[o.icon] || ICON.people,
     promise: o.promise,
     mixed: !!o.mixed,
-    mount(root) { S.root = root; S.slots = null; draw(); load(); },
+    /* loaded at start for the dot; opened later, it reads the boards again */
+    mount(root) { S.root = root; S.slots = null; draw(); if (S.ready) again().then(draw); else load(); },
     activate(param) { S.pending = param || null; land(); },
     refresh() { if (S.slots) draw(); },
     deactivate() {},
@@ -133,8 +137,14 @@ export function tab(o) {
        word when something new came in (the shell says "Nothing new" else) */
     pull() {
       if (!o.reload) return null;
-      const before = o.count ? o.count(0) : 0;
-      return Promise.resolve(o.reload()).then(() => { draw(); const n = (o.count ? o.count(0) : 0) - before; return n > 0 ? (n === 1 ? 'One new post' : n + ' new posts') : null; });
+      const seen = new Set((o.posts ? o.posts() : []).map((p) => p.id));
+      refreshFailed = false;
+      return again().then(() => {
+        draw();
+        if (refreshFailed) return 'Couldn’t refresh.';
+        const n = (o.posts ? o.posts() : []).filter((p) => !seen.has(p.id)).length;
+        return n > 0 ? (n === 1 ? 'One new post' : n + ' new posts') : null;
+      });
     },
     newSince(ts) { return o.count ? o.count(Number(ts) || nowSec() - 4 * 3600) : 0; },
     redraw: draw,
@@ -147,11 +157,16 @@ export function tab(o) {
    answers bad_board; the PostgREST function missing altogether is 'off'.
    Both mean "not switched on", and its post buttons stay away. */
 const offBoards = new Set();
+/* the last good read of each list: a refresh that fails keeps it on screen */
+const lastGood = new Map();
+let refreshFailed = false;
 export function listBoard(board, opts = {}) {
+  const key = board + '|' + (opts.kind || '');
   return boards.list(board, { limit: 60, ...opts }).then((r) => {
-    if (r.ok) { offBoards.delete(board); return { ok: true, posts: r.posts }; }
+    if (r.ok) { offBoards.delete(board); lastGood.set(key, r.posts); return { ok: true, posts: r.posts }; }
     const off = r.error === 'off' || r.error === 'bad_board';
     if (off) offBoards.add(board);
+    else if (lastGood.has(key)) { refreshFailed = true; return { ok: true, posts: lastGood.get(key) }; }
     return { ok: false, posts: [], error: off ? 'off' : r.error, message: r.message };
   });
 }
@@ -249,6 +264,14 @@ const DEMO_FOLK = [
 let nextId = 0;
 const ETD = new Intl.DateTimeFormat('en-CA', { timeZone: 'America/New_York', year: 'numeric', month: '2-digit', day: '2-digit' });
 export const etDay = (ms) => ETD.format(new Date(ms));
+/* n calendar days from today in Burlington, as 2026-11-07 (never 24-hour blocks) */
+export function dayFromToday(n) {
+  const x = et(Date.now());
+  const noon = etWall(x.y, x.mo, x.d, 12, 0);
+  return etDay(noon + Number(n || 0) * DAY);
+}
+/* a Burlington wall time on that day, as an ISO string with its own offset */
+export const wallISO = (date, hhmm) => date + 'T' + hhmm + ':00' + offset(date);
 export function seed(name, posts) {
   const f = boards._fake();
   if (!f || seeded.has(name)) return;
@@ -258,8 +281,8 @@ export function seed(name, posts) {
   (posts || []).forEach((o) => {
     const created = t - (Number(o.ago) || 1) * HOUR;
     const meta = { ...(o.meta || {}) };
-    if (o.on) { const x = et(t + Number(o.on[0]) * DAY); meta.when = whenLabel(etWall(x.y, x.mo, x.d, Number(o.on[1]) || 0, Number(o.on[2]) || 0)); }
-    if (o.day != null) meta.when = etDay(t + Number(o.day) * DAY) + (o.at ? ', ' + o.at : '');
+    if (o.on) { const [y, m, d] = dayFromToday(o.on[0]).split('-').map(Number); meta.when = whenLabel(etWall(y, m - 1, d, Number(o.on[1]) || 0, Number(o.on[2]) || 0)); }
+    if (o.day != null) meta.when = dayFromToday(o.day) + (o.at ? ', ' + o.at : '');
     if (o.photo) f.addPhoto(o.photo, 'approved');
     const id = '00000000-0000-4000-8000-' + String(++nextId + 700000).padStart(12, '0');
     f.posts.push({
@@ -291,10 +314,9 @@ export const calendarAt = () => eventsAt;
 export function events(demoEvents, onChange) {
   if (app.demo) {
     eventsAt = nowSec() - 2 * 3600;
-    const t = Date.now();
     return Promise.resolve((demoEvents || []).map((e) => {
-      const date = etDay(t + (Number(e.day) || 0) * DAY);
-      return { ...e, date, start: e.time ? date + 'T' + e.time + ':00' + offset(date) : date, allDay: !e.time };
+      const date = dayFromToday(e.day);
+      return { ...e, date, start: e.time ? wallISO(date, e.time) : date, allDay: !e.time };
     }));
   }
   /* wire.js hands every later refresh to the same callback: after the

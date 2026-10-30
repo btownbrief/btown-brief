@@ -150,6 +150,7 @@ const mode = kit.tab({
   key: KEY, label: 'Clubs', icon: 'flag', boards: ['clubs'], votesCount: true,
   promise: 'Every club in town, and the ones still being started.',
   load, reload,
+  posts: () => S.ideas,
   count: (ts) => kit.newer(S.ideas, ts),
   sections: [
     { key: 'every', label: 'Every club', draw: drawEvery },

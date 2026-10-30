@@ -69,6 +69,7 @@ const mode = kit.tab({
   key: KEY, label: 'Neighbors', icon: 'hand', fresh: true, boards: ['neighbors', 'shifts'],
   promise: 'Borrow a ladder, give a couch, grab a two-hour shift.',
   load, reload,
+  posts: () => S.posts.concat(S.shifts),
   count: (ts) => kit.newer(S.posts.concat(S.shifts), ts),
   sections: [
     { key: 'borrow', label: 'Borrow', newest: () => kit.newest(of('borrow')),

@@ -36,12 +36,14 @@ const NEWS_DAYS = 180;
 const NEWS_DAY = new Intl.DateTimeFormat('en-US', { timeZone: 'UTC', month: 'short', day: 'numeric', year: 'numeric' });
 const MEETUP_FEED = 'https://play.btownbrief.com/up-for-it/data/meetup.json';
 const PITCH = /pitch[- ]?a[- ]?friend|friend pitch/i;
+/* "RSVP on Meetup" only ever opens one of the group's own event pages */
+const MEETUP_EVENT = /^https:\/\/(?:www\.)?meetup\.com\/burlington-social-activites-group\/events\/[\w-]+\/?$/;
 const S = { posts: [], r: null, events: null, dp: null, pitch: null };
 /* the next Pitch a Friend night on Stephen's Meetup calendar, or null */
 function nextPitch(list) {
   const now = Date.now();
   return (list || []).map((e) => ({ title: String(e.title || ''), at: Date.parse(e.starts_at), where: String(e.location || ''), url: String(e.url || '') }))
-    .filter((e) => PITCH.test(e.title) && e.at > now && /^https:\/\//.test(e.url)).sort((a, b) => a.at - b.at)[0] || null;
+    .filter((e) => PITCH.test(e.title) && e.at > now && MEETUP_EVENT.test(e.url)).sort((a, b) => a.at - b.at)[0] || null;
 }
 
 const words = (p) => [p.title, p.body, p.place].filter(Boolean).join(' ');
@@ -53,7 +55,7 @@ const meta = (p) => { const m = p.meta || {}; return [m.when, m.spots ? m.spots 
 function load() {
   return Promise.all([
     app.demo ? kit.demo('dating').then((d) => {
-      S.pitch = nextPitch((d.meetup || []).map((e) => ({ ...e, starts_at: new Date(Date.now() + e.day * kit.DAY).toISOString().slice(0, 10) + 'T' + e.time + ':00-05:00' })));
+      S.pitch = nextPitch((d.meetup || []).map((e) => ({ ...e, starts_at: kit.wallISO(kit.dayFromToday(e.day), e.time) })));
       return d.events || [];
     }) : kit.json(MEETUP_FEED).then((j) => { S.pitch = nextPitch(j && j.events); return null; }),
     kit.datingPets().then((j) => { S.dp = j; }),
@@ -78,6 +80,7 @@ const mode = kit.tab({
   key: KEY, label: 'Dating', icon: 'heart', mixed: true, fresh: true, boards: ['people'],
   promise: 'Friends and dating, in real life and online.',
   load, reload,
+  posts: () => S.posts,
   count: (ts) => kit.newer(singles().concat(friends()), ts),
   sections: [
     { key: 'singles', label: 'Singles', world: 'irl', newest: () => kit.newest(singles()),
