@@ -104,7 +104,7 @@ export function card(host, o) {
 
 /* buttons that are links: [{ label, href, primary }] */
 export function links(list, inCard) {
-  const r = el('div', inCard ? 'row' : 'linkrow');
+  const r = el('div', inCard ? 'row' : 'linkrow todaylinks');
   list.filter((l) => l && l.href).forEach((l) => {
     const a = el('a', 'btn sm' + (l.primary ? '' : ' ghost'), esc(l.label) + (isOut(l.href) ? ' ' + ICON.ext : ''));
     a.href = l.href;
@@ -171,7 +171,7 @@ export function quietForm(host, o) {
   const said = el('p', 'bf-note', esc(o.after));
   said.hidden = true;
   f.appendChild(said);
-  f.addEventListener('submit', (e) => { e.preventDefault(); said.hidden = false; app.toast('Nothing was sent. This form goes live soon.'); });
+  f.addEventListener('submit', (e) => { e.preventDefault(); said.hidden = false; app.toast('Not sent'); });
   host.appendChild(f);
   return f;
 }

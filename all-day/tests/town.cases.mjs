@@ -72,7 +72,7 @@ export async function townCases(h) {
     await page.fill('#panel-alerts input[name="street"]', 'Nowhere Such Rd');
     check(/No street by that name/.test(await page.$eval('#panel-alerts [data-k="street-lookup"]', (n) => n.innerText)), 'an unknown street says so', '');
     const txt = await page.$eval('#panel-alerts [data-sec="trash"]', (n) => n.innerText);
-    check(/no city trash day/.test(txt) && /802-658-SNOW/.test(txt), 'trash is the hauler’s day, and the ban’s official word is named', '');
+    check(/no city trash day/.test(txt) && /802-658-SNOW/.test(txt), 'trash is the hauler’s day, and the ban’s official word is named', txt.slice(0, 200));
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
     const d = await newPage(browser, base);
@@ -93,7 +93,7 @@ export async function townCases(h) {
     check(rows.length === su.length && su.every((p) => rows.includes('su-' + p.id)), 'Signups: every published date from today on, and only those', rows.length + ' vs ' + su.length);
     const a = (await json('data/town/alerts.json')).sections;
     const sch = await page.$eval('#panel-alerts [data-sec="schools"]', (n) => n.innerText);
-    if (!a.closings.items.length && !a.closings.district_posts.length) check(/No closings or delays/.test(sch) && /official word/.test(sch), 'Schools: none, said plainly, with the official word', sch.slice(0, 120));
+    if (!a.closings.items.length && !a.closings.district_posts.length) check(/No closings or delays/.test(sch) && /As of /.test(sch), 'Schools: none, said plainly, as of when', sch.slice(0, 120));
     const plows = await page.$eval('#panel-alerts [data-sec="plows"]', (n) => n.innerText);
     check(/no street plow tracker/i.test(plows), 'Plows: the plain line that the city has no street tracker', '');
     const sh = await page.$eval('#panel-alerts [data-sec="shelters"]', (n) => n.innerText);
@@ -159,12 +159,12 @@ export async function townCases(h) {
     await goTab(page, 'work');
     for (const k of ['listing-form', 'website-form']) {
       await page.click('#panel-work [data-k="' + k + '"] button');
-      check(await page.$eval('#panel-work [data-k="' + k + '"] .bf-note', (n) => !n.hidden && /nothing was sent/.test(n.textContent)), k + ': says nothing was sent', '');
+      check(await page.$eval('#panel-work [data-k="' + k + '"] .bf-note', (n) => !n.hidden && /^Not sent/.test(n.textContent)), k + ': says it was not sent', '');
     }
     check(!!(await page.$('#panel-work [data-k="listing-form"] select[name="sponsor"]')), 'the listing asks the sponsor question', '');
     check(!sent.length, 'the forms post nowhere', sent.join(', '));
     const shops = await page.$eval('#panel-work [data-sec="shops"]', (n) => n.innerText);
-    check(/4 of 5 vintage, thrift and book shops open right now/.test(shops), 'Shops: open now, from each shop’s own hours (the demo’s Saturday at 2 pm: one shop closed at noon)', shops.slice(0, 120));
+    check(/4 of 5 open now/.test(shops), 'Shops: open now, from each shop’s own hours (the demo’s Saturday at 2 pm: one shop closed at noon)', shops.slice(0, 120));
     const groups = await page.$$eval('#panel-work [data-sec="jobs"] .tdiv > span:first-child', (n) => n.map((x) => x.textContent));
     check(JSON.stringify(groups.slice(0, 3)) === '["Today","This week","Earlier"]', 'Jobs: Today, This week, Earlier', JSON.stringify(groups));
     check(!errors.length, 'no console errors', errors.join(' | '));

@@ -57,25 +57,24 @@ function drawMeetings(box, d) {
   const up = (c.upcoming || []).slice().sort((a, b) => a.start.localeCompare(b.start));
   const past = (c.past || []).slice().sort((a, b) => b.start.localeCompare(a.start));
   if (up.length) list(box, up.map((m, i) => meetingRow(m, i, false)), 6);
-  else line(box, 'No meetings posted for the next two weeks yet.');
+  else line(box, 'No meetings posted yet.');
   if (past.length) {
-    divider(box, 'Recent meetings', 'minutes once they’re posted');
+    divider(box, 'Recent meetings');
     list(box, past.map((m, i) => meetingRow(m, i, true)), 4);
   }
-  box.appendChild(links([{ label: 'The full civic calendar', href: '../civic.html' }, { label: 'City meeting portal', href: PORTAL }]));
+  box.appendChild(links([{ label: 'Civic calendar', href: '../civic.html' }, { label: 'City meeting portal', href: PORTAL }]));
 }
 
 /* ---------------------------------------------------------------- Votes */
 function drawVotes(box, d) {
   card(box, { k: 'how-votes', title: 'How a vote gets to the council',
-    paras: [esc('Most things the city decides start in a committee or a board, then land on a City Council agenda. Money goes through the Board of Finance first. Big changes to the charter go to voters on Town Meeting Day.'),
-      esc('Agendas post a few days before each meeting, with a public forum where anyone can speak. The agenda says how to join.')],
+    paras: [esc('Committees send most decisions to a City Council agenda. Money goes through the Board of Finance first; charter changes go to voters in March.')],
     links: [{ label: 'City Council', href: 'https://www.burlingtonvt.gov/413/City-Council' }, { label: 'Watch on Town Meeting TV', href: 'https://www.cctv.org/watch-tv/series/burlington-city-council' }] });
   const up = ((d.civic || {}).upcoming || []).filter((m) => /city council|board of finance/i.test(m.body + ' ' + m.title)).sort((a, b) => a.start.localeCompare(b.start));
   if (up.length) list(box, up.map((m, i) => meetingRow(m, 'v' + i, false)), 4);
-  else line(box, 'No council or Board of Finance meeting posted yet for the next two weeks.');
+  else line(box, 'No council meetings posted yet.');
   const q = (((d.cityhall || {}).derived || {}).town_meeting_day_2027 || {}).ballot_questions_seen || [];
-  if (q.length) card(box, { k: 'ballot-seen', title: 'Already headed for the March ballot', paras: q.map((x) => esc(x)), fine: esc('From council agendas this fall. The final ballot is set in January.') });
+  if (q.length) card(box, { k: 'ballot-seen', title: 'Already headed for the March ballot', paras: q.map((x) => esc(x.replace(/\s*\(.*\)$/, ''))) });
 }
 
 /* ------------------------------------------------------------ Elections */
@@ -88,11 +87,9 @@ function drawElections(box, d) {
   stats(box, [[n > 0 ? String(n) : '0', n === 1 ? 'day to Town Meeting Day' : 'days to Town Meeting Day'], [fmtDay(fd).replace(/^\w+, /, ''), 'Filing deadline, to confirm'], ['150', 'Signatures to run for mayor']]);
   card(box, { k: 'tmd-2027', title: 'Town Meeting Day, ' + fmtLong(t.election_date),
     paras: ['To get on the ballot, file a petition with the city clerk by <b>' + esc(fmtLong(fd)) + (ft ? ' at 5 pm' : '') + '</b>. The last day to withdraw is ' + esc(fmtLong(wd)) + '.',
-      esc('Those two dates are worked out from state law and last year’s calendar. The clerk hasn’t posted 2027 dates yet, so confirm with the Clerk/Treasurer’s office at 802-865-7000 before you count on them.'),
-      esc('Signatures: ' + (t.petition_signatures || '').replace(/\s*\(.*?\)/g, '') + '.')],
+      esc('Worked out from state law. Confirm with the clerk, 802-865-7000.')],
     links: [{ label: 'City elections page', href: 'https://www.burlingtonvt.gov/986/Elections', primary: true }, { label: 'The state law', href: 'https://legislature.vermont.gov/statutes/section/17/055/02681' }] });
   list(box, (t.offices_expected || []).map((o, i) => row({ k: 'office-' + i, href: 'https://www.burlingtonvt.gov/986/Elections', icon: ICON.columns, title: o.replace(/\s*\(.*\)$/, ''), sub: esc((o.match(/\((.*)\)$/) || [])[1] || 'Up in March 2027') })), 6);
-  line(box, 'Who’s running comes after the filing deadline: the clerk posts no list before the election, so the Brief will ask.');
 }
 
 /* ---------------------------------------------------------------- Money */
@@ -103,8 +100,7 @@ function drawMoney(box, d) {
   const rate = r.homestead_education + r.municipal + r.local_agreement;
   stats(box, [[r.municipal.toFixed(4), 'City rate per $100'], [r.homestead_education.toFixed(4), 'School rate per $100 (homestead)'], [rate.toFixed(4), 'Together']]);
   const c = card(box, { k: 'tax-estimate', title: 'What your tax bill is made of',
-    paras: [esc('Your bill is your home’s appraised value, divided by 100, times the rates above. Bills are paid in four parts, due the 12th of August, November, March and June.'),
-      esc('Type a value for a rough yearly bill before any state credit. Nothing you type leaves this page.')] });
+    paras: [esc('Appraised value ÷ 100 × the rates above. Due in four parts: the 12th of August, November, March and June.')] });
   const r2 = el('div', 'row');
   const input = el('input', 'field');
   input.type = 'number'; input.inputMode = 'numeric'; input.min = '0'; input.step = '1000'; input.name = 'value';
@@ -120,23 +116,21 @@ function drawMoney(box, d) {
   });
   const top = tx.fy27_municipal_components_top || {};
   card(box, { k: 'city-rate-parts', title: 'The biggest pieces of the city rate',
-    paras: [esc('General city services ' + top.general_city + ', retirement ' + top.retirement + ', and paying down debt ' + top.debt_service + ', per $100 of value.'), esc(tx.fy27_status || '')],
+    paras: [esc('General city services ' + top.general_city + ', retirement ' + top.retirement + ', debt ' + top.debt_service + ', per $100.')],
     links: [{ label: 'FY27 budget', href: 'https://www.burlingtonvt.gov/1225/Fiscal-Year-2027-Budget', primary: true }, { label: 'Rate sheet', href: 'https://www.burlingtonvt.gov/DocumentCenter/View/12141' },
       { label: 'Tax rates', href: 'https://www.burlingtonvt.gov/215/Tax-Rates-Calculations' }, { label: 'School budget', href: 'https://www.bsdvt.org/district/budget/' },
-      { label: 'Property tax credit', href: 'https://tax.vermont.gov/ptc' }],
-    fine: esc('Checked ' + fmtDay(tx.verified) + '. Contract awards and where the money goes come next.') });
+      { label: 'Property tax credit', href: 'https://tax.vermont.gov/ptc' }] });
 }
 
 /* -------------------------------------------------------- Vote together */
 function drawTogether(box, d, ctx) {
-  const intro = card(box, { k: 'vote-together', paras: [esc('Results night, a debate, Town Meeting Day: plans to watch together, posted on People’s board.')],
-    links: [{ label: 'Post a plan in People', href: '#plans', primary: true }] });
+  const intro = box.appendChild(links([{ label: 'Post a plan in People', href: '#plans', primary: true }]));
   const host = el('div', 'plist');
   box.appendChild(host);
   const draw = (posts) => {
     host.innerHTML = '';
     const mine = posts.filter((p) => VOTEY.test((p.title || '') + ' ' + (p.body || '')));
-    if (!mine.length) { host.appendChild(el('p', 'note pad', esc('No watch parties posted yet. Results nights fill up close to the day.'))); return; }
+    if (!mine.length) { host.appendChild(el('p', 'note pad', esc('No watch parties yet.'))); return; }
     mine.forEach((p) => host.appendChild(row({ k: 'vt-' + p.id, href: '#plans/b-' + p.id, icon: ICON.calendar, title: p.title,
       sub: esc([(p.meta || {}).when, p.place, p.author ? 'from ' + p.author : ''].filter(Boolean).join(' · ')) })));
   };
@@ -154,10 +148,10 @@ app.register('cityhall', townMode({
   demo: 'town-cityhall',
   load: () => Promise.all([getJSON('../data/civic.json'), getJSON('../data/town/cityhall-sources.json').catch(() => ({}))]).then(([civic, cityhall]) => ({ civic, cityhall })),
   sections: [
-    { key: 'meetings', label: 'Meetings', sub: 'Agendas, minutes and video', draw: drawMeetings, newest: (d) => epoch((d.civic || {}).generated) },
+    { key: 'meetings', label: 'Meetings', draw: drawMeetings, newest: (d) => epoch((d.civic || {}).generated) },
     { key: 'votes', label: 'Votes', draw: drawVotes },
-    { key: 'elections', label: 'Elections', sub: 'Town Meeting Day 2027', draw: drawElections },
-    { key: 'money', label: 'Money', sub: 'Your tax bill and the budget', draw: drawMoney },
+    { key: 'elections', label: 'Elections', draw: drawElections },
+    { key: 'money', label: 'Money', draw: drawMoney },
     { key: 'together', label: 'Vote together', draw: drawTogether },
   ],
 }));

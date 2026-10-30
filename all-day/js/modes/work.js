@@ -34,12 +34,13 @@ function drawJobs(box, d) {
   const groups = [['Today', (j) => j.posted >= t], ['This week', (j) => j.posted < t && j.posted >= wk], ['Earlier', (j) => j.posted < wk]];
   groups.forEach(([name, test]) => {
     const g = jobs.filter(test);
-    divider(box, name, g.length ? g.length + ' posted' : '');
-    if (!g.length) { line(box, name === 'Today' ? 'Nothing new posted yet today.' : 'Nothing from these days.'); return; }
+    if (!g.length && name !== 'Today') return;
+    divider(box, name, g.length ? String(g.length) : '');
+    if (!g.length) { line(box, 'Nothing yet today.'); return; }
     list(box, g.map((j) => row({ k: 'job-' + j.id, href: j.url, date: j.posted, title: j.title,
       sub: esc([j.employer, pay(j), CAT[j.cat] || '', j.source && j.source !== j.employer ? 'via ' + j.source : ''].filter(Boolean).join(' · ')) })), name === 'Earlier' ? 4 : 6);
   });
-  box.appendChild(links([{ label: 'The full job board, with filters', href: '../jobs.html' }]));
+  box.appendChild(links([{ label: 'Job board', href: '../jobs.html' }]));
 }
 
 /* --------------------------------------------------------- Who's hiring */
@@ -73,52 +74,48 @@ function drawShops(box, d, ctx) {
   const at = ctx.demo && d.demoNow ? d.demoNow : nowET();
   const rows = shops.map((s) => ({ s, st: openState(s.week, at) })).sort((a, b) => b.st.open - a.st.open || a.s.name.localeCompare(b.s.name));
   const n = rows.filter((x) => x.st.open).length;
-  line(box, n + ' of ' + rows.length + ' vintage, thrift and book shops open right now, by the hours on their own pages.');
+  line(box, n + ' of ' + rows.length + ' open now');
   if (rows.length) list(box, rows.map(({ s, st }) => row({ k: 'shop-' + s.id, href: s.website || '#vintage', icon: ICON.tag, title: s.name,
     sub: esc([st.words, s.neighborhood, (s.kinds || []).join(', ')].filter(Boolean).join(' · ')), tag: st.open ? ['Open', 'local'] : st.unknown ? null : ['Closed', 'left'] })), 8);
-  card(box, { k: 'shops-more', paras: [esc('Restaurants, cafes and bars are in Eat’s Open now. Other shops join this list once their hours are kept up, with daily specials and a punch card to come.')],
-    links: [{ label: 'Open now in Eat', href: '#food' }] });
+  box.appendChild(links([{ label: 'Food: Open now in Eat', href: '#food' }]));
 }
 
 /* ------------------------------------------------------------ Businesses */
 function drawBusinesses(box) {
   quietForm(box, { k: 'listing-form', title: 'List your business, free',
-    intro: 'A free listing in the Town app: what you do, where, your hours and a link. Stephen reads each one before it goes up.',
+    intro: 'Stephen reads each one before it goes up.',
     fields: [{ name: 'name', label: 'Business name' }, { name: 'what', label: 'What you do, in a line' }, { name: 'where', label: 'Street address, or “online only”' },
       { name: 'hours', label: 'Hours', placeholder: 'Tue–Sat 10 to 6' }, { name: 'link', label: 'Website or Instagram', type: 'url', placeholder: 'https://' },
       { name: 'email', label: 'Your email, so Stephen can confirm', type: 'email' },
       { name: 'sponsor', label: 'Would you like to hear about sponsoring the Brief?', type: 'select', options: ['Not now', 'Yes, send me the details', 'Maybe later'] }],
     button: 'Send my listing',
-    after: 'Thanks. This form isn’t connected yet, so nothing was sent. For now, email btownbrief@gmail.com and Stephen will add you.' });
+    after: 'Not sent: this form isn’t live yet. Email btownbrief@gmail.com.' });
 }
 
 /* --------------------------------------------------------- Get a website */
 function drawWebsite(box) {
   card(box, { k: 'website-what', title: 'A website for your business',
-    paras: [esc('A simple, fast site with your hours, your menu or services, a map and a way to order or book, kept up for you. Built by the Brief, for Burlington businesses.'),
-      esc('Tell us what you need and Stephen will write back with what it would take.')],
-    fine: esc('The package and the price are coming.') });
+    paras: [esc('Your hours, menu, map and ordering, kept up for you.')] });
   quietForm(box, { k: 'website-form', title: 'What do you need?',
     fields: [{ name: 'name', label: 'Business name' }, { name: 'now', label: 'Your site today, if you have one', type: 'url', placeholder: 'https://' },
       { name: 'need', label: 'What it should do', type: 'select', options: ['Show who we are and our hours', 'Take orders', 'Take bookings', 'Something else'] },
       { name: 'more', label: 'Anything else', type: 'textarea' }, { name: 'email', label: 'Your email', type: 'email' }],
     button: 'Ask about a website',
-    after: 'Thanks. This form isn’t connected yet, so nothing was sent. For now, email btownbrief@gmail.com.' });
+    after: 'Not sent: this form isn’t live yet. Email btownbrief@gmail.com.' });
 }
 
 /* ------------------------------------------------------ Tees for your team */
 function drawTees(box) {
   card(box, { k: 'team-tees', title: 'Tees for your team',
-    paras: [esc('Custom shirts for a rec league team, a run club, a race or a work crew, printed with your name on Burlington designs.'), esc('Team orders are coming. The shop is open now.')],
+    paras: [esc('Shirts for a league team, a run club or a race. Team orders are coming.')],
     links: [{ label: 'The Brief’s merch shop', href: 'https://merch.btownbrief.com/', primary: true }, { label: 'Make a tee in Vintage', href: '#vintage' }] });
 }
 
 /* --------------------------------------------------------------- Sponsor */
 function drawSponsor(box) {
   card(box, { k: 'sponsor-soon', title: 'Sponsor the Brief',
-    paras: [esc('The newsletter, the guide and these apps reach Burlington every week. The sponsor page, with what a spot includes and how to book one, is coming here.'),
-      esc('Until then, email btownbrief@gmail.com.')],
-    fine: esc('Coming soon') });
+    paras: [esc('Email btownbrief@gmail.com.')],
+    fine: 'Coming soon' });
 }
 
 app.register('work', townMode({
@@ -126,9 +123,9 @@ app.register('work', townMode({
   demo: 'town-work',
   load: () => Promise.all([getJSON('../data/jobs.json'), getJSON('../data/vintage-shops.json').catch(() => ({ shops: [] }))]).then(([jobs, shops]) => ({ jobs, shops })),
   sections: [
-    { key: 'jobs', label: 'Jobs', sub: 'From thirteen local boards, refreshed daily', draw: drawJobs, newest: (d) => epoch((d.jobs || {}).updated) },
+    { key: 'jobs', label: 'Jobs', draw: drawJobs, newest: (d) => epoch((d.jobs || {}).updated) },
     { key: 'hiring', label: 'Who’s hiring', draw: drawHiring },
-    { key: 'shops', label: 'Shops', sub: 'Open now', draw: drawShops },
+    { key: 'shops', label: 'Shops', draw: drawShops },
     { key: 'businesses', label: 'Businesses', draw: drawBusinesses },
     { key: 'website', label: 'Get a website', draw: drawWebsite },
     { key: 'tees', label: 'Tees for your team', draw: drawTees },

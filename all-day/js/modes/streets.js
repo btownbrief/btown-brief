@@ -56,10 +56,9 @@ function drawGoing(box, d) {
     seen.add(key);
     return true;
   });
-  if (!jobs.length) line(box, 'Nothing notable filed in the last six weeks.');
+  if (!jobs.length) line(box, 'Nothing notable lately.');
   else list(box, jobs.map((x) => row({ k: 'pm-' + x.permit_no, href: x.source_url, date: x.applied, title: jobName(x),
     sub: esc([x.address, (x.notable_reasons || []).map((r) => REASON[r] || r).join(', '), x.est_cost ? money(x.est_cost) : '', x.status].filter(Boolean).join(' · ')) })), 6);
-  line(box, 'From the city’s weekly permit export, last updated ' + fmtDay(p.export_date) + ', so the newest week is always missing.');
 }
 
 /* ------------------------------------------------------------- Torn up */
@@ -67,18 +66,16 @@ const ORDER = { 'Under Construction': 0, 'Approved/In-Design': 1, 'In Design': 2
 function drawTorn(box, d) {
   const pr = (sec(d, 'projects').items || []).slice().sort((a, b) => (ORDER[a.status] ?? 6) - (ORDER[b.status] ?? 6) || String(b.last_edited).localeCompare(String(a.last_edited)));
   const n = pr.filter((x) => x.status === 'Under Construction').length;
-  line(box, n + ' under construction now, of ' + pr.length + ' city projects on the books.');
+  line(box, n + ' under construction');
   list(box, pr.map((x) => row({ k: 'pj-' + x.slug, href: (x.links || [])[0] || x.source_url, icon: ICON.cone, title: x.name,
     sub: esc([x.type, x.department, [...new Set((x.wards || []).join(';').split(/[;,]/).map((w) => w.trim()).filter(Boolean))].join(', '), x.construction_year && /^\d{4}$/.test(x.construction_year) ? 'Build ' + x.construction_year : ''].filter(Boolean).join(' · ')),
     tag: [x.status || 'Unknown', x.status === 'Under Construction' ? 'live' : x.status === 'Completed' ? 'local' : 'left'] })), 10);
-  box.appendChild(links([{ label: 'The city’s construction portal', href: 'https://www.burlingtonvt.gov/323/Construction-Portal' }]));
+  box.appendChild(links([{ label: 'Construction portal', href: 'https://www.burlingtonvt.gov/323/Construction-Portal' }]));
 }
 
 /* --------------------------------------------------------------- Report */
 function drawReport(box) {
-  const intro = card(box, { k: 'report-how', paras: [esc('A pothole, a dark streetlight, a crosswalk worn away. Drop a pin and a photo here so neighbors can see it, and Stephen looks at each one before it shows. Report it to the city too: that’s how a crew gets sent.')],
-    links: [{ label: 'Report it to the city (See, Click, Fix)', href: CONCERN }] });
-  const row2 = intro.querySelector('.row');
+  const row2 = box.appendChild(links([{ label: 'Tell the city (See, Click, Fix)', href: CONCERN }]));
   const post = el('button', 'btn sm', ICON.plus + ' Report a street problem');
   post.addEventListener('click', () => boards.compose({ board: 'streets', kind: 'report', heading: 'Report a street problem', title: 'What’s wrong', titlePlaceholder: 'Deep pothole in the bike lane',
     body: 'Anything a crew would want to know',
@@ -95,10 +92,10 @@ function drawReport(box) {
     boards.list('streets', { kind: 'report', limit: 30 }).then((r) => {
       host.innerHTML = '';
       if (!r.ok) {
-        host.appendChild(el('p', 'note pad', esc(r.error === 'off' || r.error === 'bad_board' || r.error === 'bad_kind' ? 'Street reports open once the board is switched on. Until then, the city’s form above is the way.' : r.message)));
+        host.appendChild(el('p', 'note pad', esc(r.error === 'off' || r.error === 'bad_board' || r.error === 'bad_kind' ? 'Street reports open soon.' : r.message)));
         return;
       }
-      if (!r.posts.length) { host.appendChild(el('p', 'note pad', esc('No street reports yet. Be the first.'))); return; }
+      if (!r.posts.length) { host.appendChild(el('p', 'note pad', esc('No reports yet.'))); return; }
       const items = boards.draw(host, r.posts, { tab: 'streets', meta, ratio: 'r169' });
       items.forEach((it, i) => {
         const fixed = !!(r.posts[i].meta || {}).fixed;
@@ -123,14 +120,13 @@ function drawSold(box, d) {
   sales.forEach((x) => { const w = weekOf(x.closed); const o = weeks.get(w) || { n: 0, out: 0 }; o.n += 1; if (x.out_of_state_buyer) o.out += 1; weeks.set(w, o); });
   const wl = [...weeks.entries()].sort((a, b) => b[0].localeCompare(a[0])).slice(0, 6);
   if (wl.length) {
-    divider(box, 'Out-of-state buyers', 'each week, by mailing address');
+    divider(box, 'Out-of-state buyers');
     list(box, wl.map(([w, o]) => row({ k: 'wk-' + w, href: s.items[0] ? s.items[0].source_url : 'https://geodata.vermont.gov/', date: w, title: 'Week of ' + fmtDay(w).replace(/^\w+, /, ''),
       sub: esc(o.out + ' of ' + o.n + ' sale' + (o.n === 1 ? '' : 's') + ' to an out-of-state address') })), 6);
   }
-  if (!sales.length) line(box, 'No arm’s-length sales posted in the last 60 days.');
+  if (!sales.length) line(box, 'No sales posted lately.');
   else list(box, sales.map((x) => row({ k: 'sale-' + x.return_id, href: x.source_url, date: x.closed, title: x.address,
     sub: '<b>' + esc(money(x.price)) + '</b> · ' + esc([cls(x.property_class), x.buyer_entity ? 'bought by a company' : ''].filter(Boolean).join(' · ')) })), 8);
-  line(box, 'From Vermont’s property transfer returns, posted about a week after closing (latest ' + fmtDay(s.latest_posted) + '). Gifts, family transfers and $0 deeds are left out. No names.');
 }
 
 /* -------------------------------------------------------------- Blotter */
@@ -153,14 +149,12 @@ function drawBlotter(box, d) {
     divider(box, 'What the police were called for', mon(pi.month));
     list(box, groups.map(([k, v]) => row({ k: 'pc-' + k.toLowerCase().replace(/\W+/g, '-'), href: pi.source_url, title: k, sub: esc(v.toLocaleString('en-US') + ' calls') })), 6);
   }
-  line(box, 'The city publishes no daily log, and these counts are a month behind and anonymous. A written weekly column comes later.');
 }
 
 /* ------------------------------------------------------------ Wish list */
 function drawWish(box) {
   card(box, { k: 'wish-poll', title: 'What do you want in the old ___?',
-    paras: [esc('Once a year, the Brief asks what you want in the empty storefronts and lots around town, and shows the votes by block. The first poll opens in 2027.')],
-    fine: esc('Coming soon') });
+    paras: [esc('The annual poll for empty storefronts and lots. Opens in 2027.')] });
 }
 
 app.register('streets', townMode({
@@ -168,10 +162,10 @@ app.register('streets', townMode({
   demo: 'town-streets',
   load: () => getJSON('../data/town/streets.json').then((streets) => ({ streets })),
   sections: [
-    { key: 'going', label: 'Going in', sub: 'Permits worth knowing about', draw: drawGoing, newest: (d) => epoch(sec(d, 'permits').export_date) },
-    { key: 'torn', label: 'Torn up', sub: 'City construction, one project per row', draw: drawTorn, newest: (d) => (sec(d, 'projects').items || []).reduce((m, x) => Math.max(m, epoch(x.last_edited)), 0) },
+    { key: 'going', label: 'Going in', draw: drawGoing, newest: (d) => epoch(sec(d, 'permits').export_date) },
+    { key: 'torn', label: 'Torn up', draw: drawTorn, newest: (d) => (sec(d, 'projects').items || []).reduce((m, x) => Math.max(m, epoch(x.last_edited)), 0) },
     { key: 'report', label: 'Report', draw: drawReport },
-    { key: 'sold', label: 'Sold', sub: 'The last 60 days of sales', draw: drawSold, newest: (d) => epoch(sec(d, 'sales').latest_posted) },
+    { key: 'sold', label: 'Sold', sub: 'Last 60 days', draw: drawSold, newest: (d) => epoch(sec(d, 'sales').latest_posted) },
     { key: 'blotter', label: 'Blotter', draw: drawBlotter, newest: (d) => (sec(d, 'blotter').press_releases || []).reduce((m, x) => Math.max(m, epoch(x.posted)), 0) },
     { key: 'wish', label: 'Wish list', draw: drawWish },
   ],
