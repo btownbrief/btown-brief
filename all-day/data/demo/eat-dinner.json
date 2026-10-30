@@ -1,0 +1,18 @@
+{
+ "_": "Demo data for Eat · Dinner Club on ?demo=1. Every dinner, place and link is invented. days_from_now dates each dinner from the reader's now; photo is a palette name from shell.json.",
+ "group": "https://www.meetup.com/burlington-social-activites-group/",
+ "next": {
+  "uid": "demo-next-dinner",
+  "title": "Btown Bites: dinner at a noodle bar",
+  "days_from_now": 5,
+  "time": "19:00",
+  "location": "A noodle bar on Church St, Burlington",
+  "url": "https://www.meetup.com/burlington-social-activites-group/events/demo-next/"
+ },
+ "past": [
+  { "id": "bbq", "title": "Btown Bites at a barbecue joint", "place": "Pine St", "days_from_now": -21, "time": "19:00", "photo": "brick", "seats": 6 },
+  { "id": "ramen", "title": "Ramen night", "place": "Downtown", "days_from_now": -49, "time": "19:00", "photo": "night", "seats": 12 },
+  { "id": "patio", "title": "Last patio dinner of summer", "place": "The waterfront", "days_from_now": -77, "time": "18:30", "photo": "lake", "seats": 6 },
+  { "id": "tacos", "title": "Tacos and a long table", "place": "Old North End", "days_from_now": -105, "time": "19:00", "photo": "mustard", "seats": 18 }
+ ]
+}
