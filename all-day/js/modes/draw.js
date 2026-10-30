@@ -50,17 +50,13 @@ function part(key, p) {
   /* the line is the whole description here, not a two-line teaser */
   body.querySelector('.gm-pitch').style.webkitLineClamp = 'unset';
   body.querySelector('.gm-pitch').style.display = 'block';
-  const acts = el('div', 'gm-acts');
-  acts.appendChild(playButton('pillbtn on'));
-  body.appendChild(acts);
   c.append(scr, body);
   return c;
 }
 
 function draw(page) {
   const d = W.draw;
-  const top = sec(page, 'about', d.name, W.live ? 'On the arcade now' : 'Built, not on the arcade yet');
-  top.appendChild(el('p', 'note pad', esc('Draw something and it lives in the game: a fish swims in the shared lake, a wheel you draw is the wheel your truck rolls on.')));
+  const top = sec(page, 'about', d.name);
   const go = el('div', 'addrow');
   go.appendChild(playButton('btn'));
   top.appendChild(go);
@@ -72,7 +68,7 @@ function draw(page) {
   page.appendChild(el('div', 'spacer'));
   page.appendChild(grid);
   /* the gallery, then the prompt, the map's order */
-  const more = sec(page, 'gallery', 'Gallery and the weekly prompt');
+  const more = sec(page, 'gallery', 'Every week');
   arr(d.more).forEach((m) => {
     const r = row('draw:' + m.key, m.emoji, m.title, [esc(m.line)], []);
     if (m.key === 'prompt') r.dataset.sec = 'prompt';

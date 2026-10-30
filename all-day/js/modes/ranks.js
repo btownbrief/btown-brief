@@ -70,7 +70,7 @@ function onePerName(rows) {
   return arr(rows).filter((r) => { const n = String((r && r.name) || '').trim().toLowerCase(); if (!r || seen.has(n)) return false; seen.add(n); return true; });
 }
 function drawLeaders(page) {
-  const box = sec(page, 'leaders', 'Leaderboards', monthName() + ', best this month');
+  const box = sec(page, 'leaders', 'Leaderboards', monthName());
   const list = boardGames();
   if (!B.catalog) { box.appendChild(el('p', 'note pad', esc('The game list didn’t load.'))); return; }
   if (!list.length) { box.appendChild(el('p', 'note pad', esc('No game keeps a board right now.'))); return; }
@@ -84,7 +84,7 @@ function drawLeaders(page) {
   b.dataset.board = B.pick;
   if (rows === 'loading') box.appendChild(el('p', 'note pad', esc('Loading ' + g.name + '’s board…')));
   else if (rows === null) box.appendChild(el('p', 'note pad', esc('That board didn’t load.')));
-  else if (!rows.length) box.appendChild(el('p', 'note pad', esc('No scores on ' + g.name + ' yet this month. First one in is the champ.')));
+  else if (!rows.length) box.appendChild(el('p', 'note pad', esc('No scores yet.')));
   else {
     onePerName(rows).slice(0, TOP).forEach((r, i) => {
       const x = el('div', 'r');
@@ -94,7 +94,7 @@ function drawLeaders(page) {
     box.appendChild(b);
   }
   const go = el('div', 'linkrow');
-  go.append(link(esc('Play ' + g.name), 'https://play.btownbrief.com/' + g.slug + '/', 'btn sm'), link('Every board', '#games/board', 'btn ghost sm'));
+  go.appendChild(link('Every board', '#games/board', 'btn ghost sm'));
   box.appendChild(el('div', 'addrow')).appendChild(go);
 }
 
@@ -126,24 +126,23 @@ function drawPlaying(page) {
   const box = sec(page, 'playing', 'What people are playing', null, link('Open the board', '#games/playing', 'btn ghost sm'));
   const posts = B.posts && B.posts.playing;
   if (!posts) { quiet(box, 'The board didn’t load.'); return; }
-  if (!posts.length) { box.appendChild(el('p', 'note pad', esc('Nobody’s posted yet. Add yours in Arcade.'))); return; }
+  if (!posts.length) { box.appendChild(el('p', 'note pad', esc('Nobody’s posted yet.'))); return; }
   const top = posts.map((p) => [p, 1 + (Number(p.votes) || 0)]).sort((a, b) => b[1] - a[1]).slice(0, PLAYS);
   top.forEach(([p, n], i) => {
     const plat = PLAT[p.meta && p.meta.platform] || '';
-    const r = row('b-' + p.id, '', gameOf(p), [esc([plat, plural(n, 'person', 'people')].filter(Boolean).join(' · '))], [link('Me too', '#games/b-' + p.id, 'pillbtn', 'Me too on ' + gameOf(p) + ', in Arcade')]);
+    const r = row('b-' + p.id, '', gameOf(p), [esc([plat, plural(n, 'person', 'people')].filter(Boolean).join(' · '))], []);
     const t = r.querySelector('.th');
     t.className = 'num';
     t.textContent = String(i + 1);
     box.appendChild(r);
   });
-  if (posts.length > PLAYS) box.appendChild(el('p', 'note pad', esc(plural(posts.length - PLAYS, 'more game', 'more games') + ' on the board.')));
 }
 
 function drawLfg(page) {
   const box = sec(page, 'lfg', 'Looking for a group', null, link('All groups', '#games/lfg', 'btn ghost sm'));
   const posts = B.posts && B.posts.lfg;
   if (!posts) { quiet(box, 'The board didn’t load.'); return; }
-  if (!posts.length) { box.appendChild(el('p', 'note pad', esc('No open groups. Start one in Arcade.'))); return; }
+  if (!posts.length) { box.appendChild(el('p', 'note pad', esc('No open groups.'))); return; }
   const feed = el('div', 'feed');
   posts.slice(0, GROUPS).forEach((p) => {
     const it = boards.item(p, { tab: 'games', meta: (x) => [gameOf(x), PLAT[x.meta && x.meta.platform] || '', String((x.meta && x.meta.when) || '').slice(0, 60)].filter(Boolean).join(' · ') });
@@ -152,14 +151,13 @@ function drawLfg(page) {
     if (n) feed.appendChild(n);
   });
   box.appendChild(feed);
-  if (posts.length > GROUPS) box.appendChild(el('p', 'note pad', esc(plural(posts.length - GROUPS, 'more group', 'more groups') + ' in Arcade.')));
 }
 
 function drawTags(page) {
   const box = sec(page, 'tags', 'Gamertags', null, link('See them', '#games/tags', 'btn ghost sm'));
   const T = B.tags || { state: 'out' };
-  const words = T.state === 'out' ? 'Sign in to see the neighbors who share their PSN, Xbox, Steam or Discord name, and to add yours.'
-    : T.state === 'ok' ? (T.n ? plural(T.n, 'neighbor shares', 'neighbors share') + ' a gamertag. Tap one in Arcade to copy it.' : 'No gamertags yet. Add yours in Arcade.')
+  const words = T.state === 'out' ? 'Sign in to see gamertags.'
+    : T.state === 'ok' ? (T.n ? plural(T.n, 'neighbor', 'neighbors') : 'No gamertags yet.')
       : T.state === 'off' ? 'Coming soon.' : 'They didn’t load.';
   const p = el('p', 'note pad', esc(words));
   p.dataset.tags = T.state;
@@ -173,7 +171,7 @@ function draw(page) {
   drawLeaders(page);
   const pred = w.predictions || {};
   const pbox = sec(page, 'predictions', 'Predictions');
-  const pr = row('boards:predictions', pred.emoji, pred.name || 'Predictions', [esc(pred.line || ''), pred.honest ? '<b>' + esc(pred.honest) + '</b>' : ''], [soon()]);
+  const pr = row('boards:predictions', pred.emoji, pred.name || 'Predictions', [esc(pred.line || '')], [soon()]);
   pr.dataset.placeholder = '1';
   pbox.appendChild(pr);
   const br = w.bracket || {};

@@ -49,7 +49,6 @@ function drawMissions(page) {
   const all = missions();
   const box = sec(page, 'missions', 'Missions', C.missions ? plural(all.filter(isDone).length, 'done', 'done') + ' of ' + all.length : '');
   if (!C.missions) { box.appendChild(el('p', 'note pad', esc('The missions didn’t load.'))); return; }
-  box.appendChild(el('p', 'note pad', esc('The Top 100+ as missions. Five for today; mark them done in What Now.')));
   const list = el('div', 'missions');
   todays().forEach((m) => {
     const r = row('mission:' + m.k, '', m.title, [m.teaser ? esc(m.teaser) : ''], [link('Go', '#whatnow/' + m.k, 'pillbtn on', 'Mission ' + m.n + ': ' + m.title + ', in What Now')]);
@@ -60,7 +59,6 @@ function drawMissions(page) {
   });
   box.appendChild(list);
   const more = el('div', 'linkrow');
-  more.classList.add('pl-more');
   more.appendChild(link('All the missions', '#whatnow/missions', 'btn ghost sm'));
   box.appendChild(el('div', 'addrow')).appendChild(more);
 }
@@ -82,7 +80,7 @@ function drawSoon(page, key, title, g) {
   const r = row('city:' + g.key, g.emoji, title, [esc(g.line || '')], [soon()]);
   r.dataset.placeholder = '1';
   box.appendChild(r);
-  if (g.now && g.now.url) box.appendChild(row('city:' + g.key + ':now', '🪙', g.now.name, [esc('Live now: ' + (g.now.line || ''))], [link('Play', g.now.url, 'pillbtn on', 'Play ' + g.now.name)]));
+  if (g.now && g.now.url) box.appendChild(row('city:' + g.key + ':now', '🪙', g.now.name, [esc(g.now.line || '')], [link('Play', g.now.url, 'pillbtn on', 'Play ' + g.now.name)]));
 }
 
 function draw(page) {

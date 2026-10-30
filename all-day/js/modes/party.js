@@ -4,24 +4,22 @@
    Stay Awhile and Table Talk (the guide's own table.html). The words are
    data/play/play.json's `party`.
 
-   ?demo=1 reads data/demo/play-party.json: invented "last played" lines,
-   so the rows show what a busier page would carry. */
+   Nothing here is invented, so ?demo=1 shows the same page. */
 
 import * as app from '../app.js';
 import { esc } from '../ui.js';
-import { playData, demoOf, arr, sec, link, row, tab } from './playkit.js';
+import { playData, arr, sec, link, row, tab } from './playkit.js';
 
 const KEY = 'party';
 /* the pill's word for each game, the map's top tabs */
 const TOPS = [['btown-party', 'Btown Party'], ['church-street-trivia', 'Trivia'], ['arcade-night', 'Arcade Night'], ['stay-awhile', 'Stay Awhile'], ['table-talk', 'Table Talk']];
 
-const P = { games: [], extra: {} };
+const P = { games: [] };
 
 function draw(page) {
-  const box = sec(page, 'games', 'Games for a room', 'Pick by where you are.');
+  const box = sec(page, 'games', 'Games for a room');
   P.games.forEach((g) => {
-    const lines = ['<b>' + esc('For: ' + g.when) + '</b>', esc(g.line || '')];
-    if (P.extra[g.key]) lines.push(esc(P.extra[g.key]));
+    const lines = [esc(g.when)];
     const buttons = [link('Open', g.url, 'pillbtn on', 'Open ' + g.name)];
     if (g.host) buttons.push(link('Host', g.host, 'pillbtn', 'Host ' + g.name + ' from a laptop on the TV'));
     const r = row('party:' + g.key, g.emoji, g.name, lines, buttons);
@@ -31,9 +29,8 @@ function draw(page) {
 }
 
 function load() {
-  return Promise.all([playData(), demoOf('play-party')]).then(([j, demo]) => {
+  return playData().then((j) => {
     P.games = arr(j.party).filter((g) => g && /^[a-z0-9-]{1,40}$/.test(String(g.key || '')) && g.name && g.url);
-    P.extra = (demo && demo.lines) || {};
   });
 }
 

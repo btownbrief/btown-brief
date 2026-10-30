@@ -73,13 +73,13 @@ function toggle(p, btn) {
   if (set.has(day)) set.delete(day); else set.add(day);
   save();
   const on = set.has(day);
-  app.toast(on ? p.name + ': played today. ' + streakWords(streak(set, day)) : p.name + ': tick taken off.');
+  app.toast(on ? p.name + ': played. ' + streakWords(streak(set, day)) : p.name + ': not played.');
   mode.redraw();
   const again = document.querySelector('#panel-' + KEY + ' [data-tick="' + p.slug + '"]');
   if (again && btn) again.focus({ preventScroll: true });
   app.recount();
 }
-const streakWords = (n) => (n >= 2 ? n + ' days in a row.' : n === 1 ? 'Day one of a streak.' : '');
+const streakWords = (n) => (n >= 2 ? n + ' days in a row.' : '');
 
 function cabinet(p) {
   const day = today();
@@ -94,9 +94,9 @@ function cabinet(p) {
   const img = scr.querySelector('img');
   if (img) img.addEventListener('error', () => { scr.classList.remove('shot'); img.insertAdjacentHTML('beforebegin', emo); img.remove(); }, { once: true });
   /* short enough for one line in a two-up cabinet at 390 */
-  const line = n ? (n === 1 ? (on ? 'Day one' : '1 day, keep it going') : n + ' days in a row') : 'No streak yet';
+  const line = n ? plural(n, 'day', 'days') + ' in a row' : '';
   const body = el('div', 'gm-cab-b', '<h3 class="gm-name">' + esc(p.name) + '</h3><p class="gm-pitch">' + esc(p.line || '') + '</p>' +
-    '<p class="gm-champ" data-streak="' + n + '">' + ICON.trophy + '<span>' + esc(line) + '</span></p>');
+    '<p class="gm-champ" data-streak="' + n + '"' + (n ? '' : ' hidden') + '>' + ICON.trophy + '<span>' + esc(line) + '</span></p>');
   const acts = el('div', 'gm-acts');
   const tick = el('button', 'pillbtn' + (on ? ' on' : ''), (on ? ICON.check + ' ' : '') + esc(on ? 'Played' : 'Played?'));
   tick.type = 'button';
@@ -117,13 +117,6 @@ function draw(page) {
   const grid = el('div', 'gm-grid');
   D.puzzles.forEach((p) => grid.appendChild(cabinet(p)));
   head.appendChild(grid);
-  const best = D.puzzles.map((p) => [p, streak(D.ticks[p.slug] || [], day)]).sort((a, b) => b[1] - a[1])[0];
-  const foot = el('p', 'note pad');
-  foot.dataset.keep = 'phone';
-  foot.innerHTML = (best && best[1] >= 2 ? esc('Your longest run going: ' + best[0].name + ', ' + plural(best[1], 'day', 'days') + '. ') : '') +
-    esc('Ticks and streaks are kept on this phone only. The arcade can’t tell this app what you played, so tick it here.');
-  page.appendChild(el('div', 'spacer'));
-  page.appendChild(foot);
 }
 
 function load() {

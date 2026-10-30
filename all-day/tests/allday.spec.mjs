@@ -13379,7 +13379,7 @@ async function thePlay(browser, base) {
       return { streets: btn('every-street'), streetsWords: r('every-street').innerText, lit: btn('keep-burlington-lit'), dibs: btn('dibs'),
         ph: ['photo-quests', 'crews', 'season'].map((k) => r(k) && r(k).dataset.placeholder === '1' && btn(k).dis), hunt: btn('photo-quests:now') };
     }, P);
-    check(st.streets.dis && st.streets.text === 'Coming soon' && /runs only on a local copy today/.test(st.streetsWords), 'Streets: Every Street says plainly it runs only locally today, with no link', JSON.stringify(st.streets));
+    check(st.streets.dis && st.streets.text === 'Coming soon' && /Runs only locally today/.test(st.streetsWords), 'Streets: Every Street says plainly it runs only locally today, with no link', JSON.stringify(st.streets));
     check(st.lit.href === 'https://play.btownbrief.com/keep-burlington-lit/' && st.dibs.href === 'https://play.btownbrief.com/dibs/', 'Lit and Dibs link to the arcade', JSON.stringify([st.lit, st.dibs]));
     check(st.ph.every(Boolean), 'Photo quests, Crews and Season are placeholders that say Coming soon', JSON.stringify(st.ph));
     check(st.hunt && st.hunt.href === 'https://play.btownbrief.com/btown-hunt/', 'and Photo quests points at Btown Hunt, live now', JSON.stringify(st.hunt));
@@ -13406,8 +13406,8 @@ async function thePlay(browser, base) {
       const loaded = await page.$$eval('#panel-draw .gm-scr img', (is) => is.map((i) => i.naturalWidth));
       check(st.shots.length === 2 && st.shots[0][0] === '../data/play/draw-lake.jpg' && st.shots[1][0] === '../data/play/draw-truck.jpg' && loaded.every((x) => x > 0), 'the Lake and the Truck, each with its screenshot', JSON.stringify(st.shots) + ' ' + loaded);
       check(/The Lake/.test(st.words) && /The Truck/.test(st.words) && /fifteen house fish/.test(st.words) && /Winooski bridge/.test(st.words), 'what each one is, in a few lines', '');
-      if (!live) check(st.buttons.length === 3 && st.buttons.every((b) => b.tag === 'BUTTON' && b.dis && b.text === 'Coming soon'), 'not on the arcade yet: Play is disabled and says Coming soon', JSON.stringify(st.buttons));
-      else check(st.buttons.length === 3 && st.buttons.every((b) => b.tag === 'A' && b.href === 'https://play.btownbrief.com/btown-draw/#lake'), 'the day the arcade lists it live: Play opens play.btownbrief.com/btown-draw/#lake', JSON.stringify(st.buttons));
+      if (!live) check(st.buttons.length === 1 && st.buttons.every((b) => b.tag === 'BUTTON' && b.dis && b.text === 'Coming soon'), 'not on the arcade yet: Play is disabled and says Coming soon', JSON.stringify(st.buttons));
+      else check(st.buttons.length === 1 && st.buttons.every((b) => b.tag === 'A' && b.href === 'https://play.btownbrief.com/btown-draw/#lake'), 'the day the arcade lists it live: Play opens play.btownbrief.com/btown-draw/#lake', JSON.stringify(st.buttons));
       check(!errors.length, (live ? 'live' : 'not live') + ': no console errors', errors.join(' | '));
       await ctx.close();
     }
@@ -13417,9 +13417,9 @@ async function thePlay(browser, base) {
     const { ctx, page, errors } = await newPage(browser, base);
     await page.goto(base + '/play/#party');
     await settle(page);
-    const rows = await page.$$eval('#panel-party [data-k^="party:"]', (r) => r.map((x) => ({ k: x.dataset.k, when: (x.querySelector('.s b') || {}).textContent || '', links: [...x.querySelectorAll('a')].map((a) => a.href) })));
+    const rows = await page.$$eval('#panel-party [data-k^="party:"]', (r) => r.map((x) => ({ k: x.dataset.k, when: (x.querySelector('.s') || {}).textContent || '', links: [...x.querySelectorAll('a')].map((a) => a.href) })));
     check(JSON.stringify(rows.map((r) => r.k)) === JSON.stringify(['party:btown-party', 'party:church-street-trivia', 'party:arcade-night', 'party:stay-awhile', 'party:table-talk']), 'the five, in the map’s order', rows.map((r) => r.k).join(', '));
-    check(rows.every((r) => /^For: /.test(r.when) && r.links.length >= 1), 'each says when to reach for it and has its link', JSON.stringify(rows.map((r) => r.when)));
+    check(rows.every((r) => r.when.length > 5 && r.links.length >= 1), 'each says when to reach for it, in one line, and has its link', JSON.stringify(rows.map((r) => r.when)));
     check(rows[1].links.includes('https://play.btownbrief.com/church-street-trivia/host.html') && rows[4].links[0] === base + '/table.html', 'Trivia has its host page; Table Talk is the guide’s own table.html', JSON.stringify([rows[1].links, rows[4].links]));
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
@@ -13444,7 +13444,7 @@ async function thePlay(browser, base) {
     check(first === 'church-street-skate' && asked.length === 1 && asked[0] === first, 'opening the tab asks for one board, not thirty', asked.join(', '));
     check(JSON.stringify(rows) === JSON.stringify(['Ada W.', 'Cy F.', 'Max T.']), 'each player once, under their best', rows.join(', '));
     await page.click(P + ' .pl-games [data-chip="creemee-drop"]');
-    await page.waitForFunction((p) => /No scores on Creemee Drop yet/.test(document.querySelector(p).innerText), P, { timeout: 4000 });
+    await page.waitForFunction((p) => /No scores yet/.test(document.querySelector(p).innerText), P, { timeout: 4000 });
     check(asked.length === 2 && asked[1] === 'creemee-drop', 'picking another game asks for that one board', asked.join(', '));
     await page.click(P + ' .pl-games [data-chip="church-street-skate"]');
     check(asked.length === 2, 'and a board already read is not asked again', asked.join(', '));
@@ -13453,7 +13453,7 @@ async function thePlay(browser, base) {
     const st = await page.evaluate((p) => ({ pred: document.querySelector(p + ' [data-k="boards:predictions"]')?.dataset.placeholder, predWords: document.querySelector(p + ' [data-sec="predictions"]')?.innerText || '',
       bracket: document.querySelector(p + ' [data-k="boards:bracket"] a')?.href, every: document.querySelector(p + ' [data-sec="leaders"] a[href="#games/board"]') !== null,
       opens: ['playing', 'lfg', 'tags'].map((k) => document.querySelector(p + ' [data-sec="' + k + '"] a[href="#games/' + k + '"]') !== null), tags: document.querySelector(p + ' [data-tags]')?.dataset.tags }), P);
-    check(st.pred === '1' && /First Snow/.test(st.predWords) && /not merged or live yet/.test(st.predWords), 'Predictions: a placeholder that names the First Snow league and says it isn’t live', st.predWords);
+    check(st.pred === '1' && /First snow/.test(st.predWords) && /Coming soon/.test(st.predWords), 'Predictions: a placeholder that names what is coming', st.predWords);
     check(st.bracket === 'https://play.btownbrief.com/btown-bracket/', 'Bracket links to the Btown Bracket', st.bracket);
     check(st.every && st.opens.every(Boolean), 'every board opens in full in Arcade', JSON.stringify(st.opens));
     check(st.tags === 'out', 'signed out: the gamertags line asks to sign in', st.tags);
