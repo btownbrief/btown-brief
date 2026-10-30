@@ -9,11 +9,10 @@
    import this file, so it loads with them; if it ever failed to load, Eat
    would show food.js whole, which still works. All Day never loads it.
 
-   - Open now: food.js's list, moved here as it was: the filter chips (Open
-     now, Open late, Patios, Happy hour, Under $15, Deals, each with its
-     count), Breakfast / Lunch / Dinner, the sorts (nearest Church Street,
-     closest to me, open latest, price, newest), Opening next in the small
-     hours, the Map button (Leaflet on the first tap; the reader's position
+   - Open now: food.js's list: the filter chips (Open now, Open late,
+     Patios, Happy hour, Under $15, Deals, each with its count), Breakfast /
+     Lunch / Dinner, nearest Church Street (nearest the reader once they
+     allow it on the map), Opening next in the small hours, the Map button (Leaflet on the first tap; the reader's position
      in memory only) and each place's sheet.
    - Randomizer: one place picked at random from the list as filtered, and
      Spin again (restaurants.html's dinner randomizer, the tab's way).
@@ -50,7 +49,7 @@ const SECTIONS = [['open', 'Open now'], ['random', 'Randomizer'], ['insp', 'Insp
 /* where food's other sections live in Eat */
 const MOVED = { bite: 'bites', kitchens: 'bites', asks: 'bites', best: 'bites', add: 'bites', deals: 'deals' };
 
-const S = { f: 'open', all: false, sort: 'near', meal: 'any', chose: false, me: null, drawn: 0, pick: null, q: '', inspAll: false };
+const S = { f: 'open', all: false, meal: 'any', chose: false, me: null, drawn: 0, pick: null, q: '', inspAll: false };
 let root = null, slots = null, pending = null, ready = false, tick = 0;
 const F = () => E.F;
 
@@ -76,7 +75,7 @@ function openingNext(t) {
 }
 function shownPlaces(t) {
   if (nothingOpen(t)) return { next: true, list: openingNext(t) };
-  return { next: false, list: sorted(listFor(S.f, t), t) };
+  return { next: false, list: sorted(listFor(S.f, t)) };
 }
 
 const MEALS = [['any', 'Any time'], ['breakfast', 'Breakfast'], ['lunch', 'Lunch'], ['dinner', 'Dinner']];
@@ -92,29 +91,16 @@ function servesMeal(r, meal, day) {
   return spill || (r.hours[day] || []).some(([o, c]) => { const x = win(o, c); return x && enough(x[0], x[1] > x[0] ? x[1] : x[1] + 1440); });
 }
 
-const PRICE = { '$': 1, '$$': 2, '$$$': 3, '$$$$': 4 };
-const SORTS = [
-  { key: 'near', label: 'Nearest Church St', sub: 'nearest first' },
-  { key: 'me', label: 'Closest to me', sub: 'closest to you' },
-  { key: 'late', label: 'Open latest', sub: 'open latest first' },
-  { key: 'price', label: 'Price', sub: 'cheapest first' },
-  { key: 'new', label: 'Newest', sub: 'newest first', when: () => E.S.places.some((r) => r.opened) },
-];
-const sortOf = (k) => SORTS.find((x) => x.key === k) || SORTS[0];
+/* Nearest Church Street is the list's own order (eat-lib); once the reader
+   has allowed their position (the map's Near me), nearest them. The old
+   sorts each repeated a filter (Open late, Under $15) or a tab (New). */
 const fromMe = (r) => (S.me && r.coords && r.coords.length === 2 ? E.miles(r.coords, S.me) : null);
-function sorted(list, t) {
-  const k = S.sort === 'me' && !S.me ? 'near' : S.sort;
-  if (k === 'near') return list;
-  const key = {
-    me: (r) => { const m = fromMe(r); return m == null ? 1e6 : m; },
-    late: (r) => { const c = E.hasHours(r) ? F().latestCloseTonight(r.hours, t.day) : null; return c == null ? 1e6 : -c; },
-    price: (r) => PRICE[r.price] || 9,
-    new: (r) => (/^\d{4}-\d{2}/.test(r.opened || '') ? -Number(r.opened.slice(0, 4) + r.opened.slice(5, 7)) : 1e6),
-  }[k];
+function sorted(list) {
+  if (!S.me) return list;
+  const d = (r) => { const m = fromMe(r); return m == null ? 1e6 : m; };
   const at = new Map(list.map((r, i) => [r, i]));
-  return list.slice().sort((a, b) => key(a) - key(b) || at.get(a) - at.get(b));
+  return list.slice().sort((a, b) => d(a) - d(b) || at.get(a) - at.get(b));
 }
-const openedText = (ym) => { const [y, m] = String(ym || '').split('-').map(Number); return y && m ? 'opened ' + E.MONTHS[m - 1] + ' ' + y : ''; };
 
 /* ---------------------------------------------------------------- render */
 function render() {
@@ -149,24 +135,13 @@ function paintOpen(host) {
   const t = E.now();
   const f = filterOf(S.f);
   const { next, list } = shownPlaces(t);
-  const by = S.sort === 'me' && !S.me ? sortOf('near') : sortOf(S.sort);
   section(host, next ? 'Opening next' : 'Open now', null, mapButton(list));
   host.appendChild(chips(FILTERS.map((x) => ({ key: x.key, label: x.label, n: listFor(x.key, t).length })), next ? null : S.f,
     (k) => { S.f = k; S.chose = true; S.all = false; S.pick = null; paint('open'); paint('random'); }, 'filters'));
   const tools = el('div', 'toolrow foodtools');
   const meal = pills(MEALS, S.meal, (v) => { S.meal = v; S.all = false; S.pick = null; paint('open'); paint('random'); }, 'meals');
   meal.setAttribute('aria-label', 'Meal');
-  const sel = el('select', 'field fsort');
-  sel.setAttribute('aria-label', 'Sort');
-  SORTS.filter((x) => !x.when || x.when()).forEach((x) => {
-    const o = el('option', '', esc(x.label));
-    o.value = x.key;
-    o.selected = x.key === by.key;
-    sel.appendChild(o);
-  });
-  sel.addEventListener('change', () => setSort(sel.value));
   tools.append(meal);
-  if (!next) tools.appendChild(sel);
   host.appendChild(tools);
   const box = el('div', 'places');
   const shown = S.all ? list : list.slice(0, FIRST_ROWS);
@@ -183,15 +158,6 @@ function paintOpen(host) {
   if (list.length <= shown.length) r.appendChild(E.outLink('All restaurants', E.GUIDE_URL, 'btn ghost sm', true));
   r.appendChild(button('Feature your restaurant', 'ghost sm owner', () => E.ownerSheet(null)));
   host.appendChild(r);
-}
-
-function setSort(k) {
-  if (k !== 'me') { S.sort = k; S.all = false; paint('open'); return; }
-  locate().then(() => { S.sort = 'me'; S.all = false; paint('open'); })
-    .catch((e) => {
-      S.sort = 'near'; paint('open');
-      app.toast(e && e.far ? 'You’re not near Burlington. Sorted from Church St.' : 'Location is off. Sorted from Church St.');
-    });
 }
 
 /* The reader's position: asked for only on a tap, kept in this module for
@@ -214,9 +180,8 @@ function placeRow(r, t, cls) {
   const st = E.status(r, t);
   const row = el('div', 'lrow place' + (cls ? ' ' + cls : ''));
   row.dataset.k = (cls ? cls + '-' : 'r-') + r.id;
-  const mi = S.sort === 'me' && S.me ? fromMe(r) : r.mi;
-  const extra = S.sort === 'price' ? r.price : S.sort === 'new' ? openedText(r.opened) : '';
-  const meta = [r.neighborhood, E.kind(r), extra, E.milesText(mi)].filter(Boolean).map(esc).join(' · ');
+  const mi = S.me ? fromMe(r) : r.mi;
+  const meta = [r.neighborhood, E.kind(r), E.milesText(mi)].filter(Boolean).map(esc).join(' · ');
   const order = E.orderLine(r);
   /* the latest health inspection's age, plainly; its sheet is a tap away */
   const rec = E.inspOf(r);
