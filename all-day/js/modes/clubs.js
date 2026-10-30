@@ -51,7 +51,7 @@ function load() {
     return Promise.all([
       app.demoData('people').then((d) => { S.groups = d.groups || []; }, () => { S.groups = []; }),
       app.demoData('run-clubs').then((j) => { S.rc = cw.redateDemo(j, Date.now()).clubs; }, () => { S.rc = []; }),
-      app.demoJSON('data/demo/people-clubs.json').then((d) => kit.seed('clubs', d.posts), () => {}),
+      kit.demo('clubs'),
     ]).then(reload);
   }
   return Promise.all([

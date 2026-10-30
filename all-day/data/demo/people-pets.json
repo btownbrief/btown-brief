@@ -1,0 +1,13 @@
+{
+ "_": "Invented posts and events for People · Pets on ?demo=1 (all-day/js/modes/pets.js). Every name, venue and event here is made up. on: [days from today, hour, minute]; day: days from today; time: 24-hour Burlington time.",
+ "posts": [
+  { "who": 3, "board": "people", "kind": "plan", "title": "Small dog meetup, under 25 pounds", "place": "Starr Farm Dog Park", "on": [1, 8, 30], "ago": 3, "votes": 4, "meta": { "spots": 8 }, "body": "Our pups are shy around the big guys." },
+  { "who": 1, "board": "people", "kind": "plan", "title": "Puppy playdate, under a year old", "place": "A dog park in South Burlington", "on": [3, 16, 0], "ago": 10, "votes": 6, "meta": { "spots": 6 } },
+  { "who": 4, "board": "neighbors", "kind": "found", "title": "Small brown dog, no collar, very friendly", "ago": 4, "votes": 7, "meta": { "what": "pet", "seen": "Pine Street by the bike path", "when": "Last night" }, "place": "Pine Street and Lakeside Avenue", "photo": "submissions/demo-sand.jpg", "body": "Safe at my place. Describe her and she's yours." }
+ ],
+ "events": [
+  { "id": "pe1", "title": "Dog-friendly brewery afternoon", "day": 2, "time": "14:00", "venue": "Harbor Taproom", "town": "Burlington", "url": "https://example.org/demo-dog-brewery", "free": true },
+  { "id": "pe2", "title": "Adoption day for shelter dogs and cats", "day": 4, "time": "11:00", "venue": "An animal shelter", "town": "South Burlington", "url": "https://example.org/demo-adoption-day", "free": true },
+  { "id": "pe3", "title": "Howl-o-ween dog costume parade", "day": 1, "time": "10:00", "venue": "Battery Park", "town": "Burlington", "url": "https://example.org/demo-dog-parade", "price": "$5" }
+ ]
+}

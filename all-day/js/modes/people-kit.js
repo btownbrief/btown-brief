@@ -132,7 +132,7 @@ export const newest = (posts) => posts.reduce((m, p) => Math.max(m, Math.floor((
    (Lost & found). */
 export function feed(host, posts, opts = {}) {
   const f = el('div', 'feed');
-  const items = boards.draw(f, posts, { tab: opts.tab, meta: opts.meta });
+  const items = boards.draw(f, posts, { tab: opts.tab, meta: opts.meta, ratio: opts.ratio });
   items.forEach((it) => {
     const card = f.querySelector('.card[data-k="' + CSS.escape(it.k) + '"]');
     if (!card) return;
@@ -172,7 +172,10 @@ export function mapPill(place, lat, lng) {
 /* When a board's posts didn't come: why, in a line */
 export function boardNote(host, r, empty) {
   if (r && r.ok === false) {
-    host.appendChild(el('p', 'note pad', r.error === 'off' ? 'This board opens once Stephen switches it on.' : (r.message || 'The posts didn’t load.')));
+    /* a read that never reached the server comes back "sign in first" (boards.js
+       reads a failed fetch as a lost session); for a list, it is the connection */
+    host.appendChild(el('p', 'note pad', r.error === 'off' ? 'This board opens once Stephen switches it on.'
+      : r.error === 'not_signed_in' || r.error === 'offline' ? 'The posts didn’t load. Check your connection and pull to refresh.' : (r.message || 'The posts didn’t load.')));
     return;
   }
   host.appendChild(el('p', 'note pad', empty));
@@ -234,6 +237,17 @@ export function seed(name, posts) {
     });
     for (let i = 0; i < (Number(o.votes) || 0); i++) f.votes.add(id + '|p_pp' + String(i).padStart(4, '0'));
   });
+}
+
+/* Every People demo file, seeded together before any tab lists a board,
+   so a post one tab seeds (Neighbors' lost dog) is there for another
+   (Pets) however the tabs race. demo(name) resolves that file's JSON. */
+const DEMO_FILES = ['plans', 'clubs', 'dating', 'neighbors', 'pets', 'talk'];
+let demoAll = null;
+export function demo(name) {
+  if (!demoAll) demoAll = Promise.all(DEMO_FILES.map((n) => app.demoJSON('data/demo/people-' + n + '.json').catch(() => ({}))))
+    .then((files) => { const by = {}; files.forEach((d, i) => { by[DEMO_FILES[i]] = d || {}; seed(DEMO_FILES[i], (d || {}).posts); }); return by; });
+  return demoAll.then((by) => by[name] || {});
 }
 
 /* ------------------------------------------------------ the calendar */

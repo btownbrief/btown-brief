@@ -35,7 +35,7 @@ const meta = (p) => { const m = p.meta || {}; return [m.when, m.spots ? plural(m
 
 function load() {
   return Promise.all([
-    app.demo ? app.demoJSON('data/demo/people-plans.json').then((d) => kit.seed('plans', d.posts), () => {}) : null,
+    app.demo ? kit.demo('plans') : null,
     boards.roundTwo().then((v) => { S.round2 = v !== false; }),
   ]).then(reload);
 }
