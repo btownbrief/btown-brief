@@ -57,7 +57,7 @@ async function load(demo) {
   const thenItems = places.map((p) => {
     const tl = p.timeline;
     const last = tl.slice(-3).reverse();
-    return { k: 'th-' + p.id, kind: 'post', src: p.kind === 'block' ? 'Church Street' : 'Church St', sid: 'out-then', title: p.address + (p.now ? ' · now ' + p.now : ''),
+    return { k: 'th-' + p.id, kind: 'post', src: p.kind === 'block' ? 'Church Street' : 'Church St', sid: 'out-then', title: p.address + (typeof p.now === 'string' && p.now ? ' · now ' + p.now : ''),
       text: last.map((t) => years(t) + t.what).join('. ') + '.' + (tl.length > 3 ? ' ' + (tl.length - 3) + ' more on the record.' : '') + (p.photos ? ' ' + p.photos + (p.photos === 1 ? ' old photo' : ' old photos') + ' in the archives.' : ''),
       href: tl[tl.length - 1].url };
   });

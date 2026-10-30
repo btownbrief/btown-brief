@@ -68,7 +68,8 @@ def then():
             continue
         tl.sort(key=lambda t: str(t["from"] or ""))
         places.append({
-            "id": p["id"], "kind": p.get("kind"), "address": p.get("address"), "now": p.get("now"),
+            "id": p["id"], "kind": p.get("kind"), "address": p.get("address"),
+            "now": (p.get("now") or {}).get("name") if isinstance(p.get("now"), dict) else p.get("now"),
             "lat": p.get("lat"), "lng": p.get("lng"), "n": number(p.get("address")), "timeline": tl,
             "photos": len(p.get("photos") or []),  # counted, never hotlinked: the photos belong to their archives
         })

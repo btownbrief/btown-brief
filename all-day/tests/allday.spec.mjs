@@ -13326,6 +13326,7 @@ async function theOut(browser, base) {
       secs = await outSecs(page, t);
       check(secs.length >= 3 && !(await page.$('#panel-' + t + ' .promise')), t + ': its sections, not a promise', secs.map((s) => s.key).join(', '));
       check(secs.flatMap((s) => s.cards).every((c) => c.href), t + ': every card has a link', '');
+      await pageRules(page, t + ' live', 390);
     }
     const sp = await outSecs(page, 'sports');
     check(sp[0].key === 'pickup' && (sp[0].cards.find((c) => /pk-/.test(c.k)) || {}).k === 'pk-btown-brief-wednesday-pickup', 'Sports: the Wednesday basketball leads the pickup spots', JSON.stringify(sp[0].cards.slice(0, 2)));
