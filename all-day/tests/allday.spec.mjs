@@ -12897,7 +12897,7 @@ async function theApps(browser, base) {
               check(st.world === !!t.mixed, key + ': Real life / Online ' + (t.mixed ? 'shows' : 'stays away'), '');
             } else {
               check(!st.promise && st.cards > 0, key + ': the hosted mode draws its screen', JSON.stringify(st));
-              check(!st.world, key + ': no Real life / Online on a mode that does not mix', '');
+              check(st.world === !!t.mixed, key + ': Real life / Online ' + (t.mixed ? 'shows on a mode that mixes' : 'stays off a mode that does not mix'), '');
             }
             if (a.id !== 'all-day') check(st.doc === (key === keys[0] ? a.name : t.label + ' · ' + a.name) + ' — Burlington Brief', key + ': the page title', st.doc);
             await pageRules(page, key, combo.viewport.width);
@@ -13252,6 +13252,275 @@ async function theApps(browser, base) {
 }
 
 /* ----------------------------------------------------------------- run */
+/* ------------------------------------------------------- the People app */
+/* Wave 1 (2026-10-29): People's six tabs beyond You, each its own mode
+   (plans, clubs, dating, neighbors, pets, talk) on modes/people-kit.js.
+   Each draws its top tabs as sections on the demo and live, lands deep
+   links, keeps to the shell's rules, and does what its lane promises. */
+const PEOPLE_TABS = ['plans', 'clubs', 'dating', 'neighbors', 'pets', 'talk'];
+const ppReady = (page) => page.waitForFunction(() => {
+  const p = document.querySelector('.panel:not([hidden])');
+  return p && p.querySelector('.pp-tab') && !p.querySelector('.pp-body .loading');
+}, null, { timeout: 15000 });
+const ppSecs = (page) => page.evaluate(() => [...document.querySelectorAll('.panel:not([hidden]) .pp-sec')].map((s) => s.dataset.sec));
+const ppText = (page, sec) => page.$eval('.panel:not([hidden]) .pp-sec[data-sec="' + sec + '"]', (s) => s.innerText);
+const ppTitles = (page, sec) => page.$$eval('.panel:not([hidden]) .pp-sec[data-sec="' + sec + '"] .card.board .b-title', (n) => n.map((x) => x.textContent));
+async function thePeopleApp(browser, base) {
+  const { APPS, keyOf } = await appsIndex();
+  const cfg = APPS.find((a) => a.id === 'people');
+  const KEYS = { plans: ['open', 'week', 'mine', 'meetup'], clubs: ['every', 'run', 'start', 'wanted', 'musicians'], dating: ['singles', 'friends', 'events', 'pitch', 'posts'],
+    neighbors: ['borrow', 'free', 'favor', 'lost', 'shifts'], pets: ['parks', 'meetups', 'lost', 'vets'], talk: ['telegram', 'community', 'ask'] };
+
+  await group('people: the config and the source', async () => {
+    check(JSON.stringify(cfg.tabs.map(keyOf)) === JSON.stringify(['people'].concat(PEOPLE_TABS)), 'You hosts people.js; the other six are modes of their own', cfg.tabs.map(keyOf).join(', '));
+    check(cfg.tabs.every((t) => t.mode), 'no tab is a placeholder shelf any more', '');
+    check(cfg.tabs.find((t) => t.mode === 'dating').mixed === true && cfg.tabs.filter((t) => t.mixed).length === 1, 'Dating & Friends alone mixes Real life and Online', '');
+    for (const f of PEOPLE_TABS.concat(['people-kit'])) {
+      const src = (await readFile(path.join(APP, 'js/modes/' + f + '.js'), 'utf8')).replace(/\/\*[\s\S]*?\*\//g, '');
+      const lit = src.match(/#[0-9a-fA-F]{6}\b|rgba?\(|font-size|text-transform|position:\s*(fixed|sticky)|monospace/g) || [];
+      check(!lit.length, 'modes/' + f + '.js: no colour, type size, caps, fixed position or monospace of its own', lit.join(' '));
+      check(!/supabase|\/rest\/v1/.test(src), 'modes/' + f + '.js: posts only through boards.js', '');
+    }
+    for (const f of PEOPLE_TABS) {
+      const d = JSON.parse(await readFile(path.join(APP, 'data/demo/people-' + f + '.json'), 'utf8'));
+      check(typeof d._ === 'string' && /made up|Invented/i.test(d._), 'data/demo/people-' + f + '.json says it is invented', '');
+    }
+  });
+
+  for (const t of PEOPLE_TABS) {
+    for (const demo of [true, false]) {
+      await group('people: ' + t + (demo ? ' (demo)' : ' (live)'), async () => {
+        const { ctx, page, errors } = await newPage(browser, base);
+        await page.goto(base + '/people/' + (demo ? '?demo=1' : '') + '#' + t);
+        await settle(page);
+        await ppReady(page);
+        const secs = await ppSecs(page);
+        check(JSON.stringify(secs) === JSON.stringify(KEYS[t]) || (t === 'neighbors' && secs.slice().sort().join() === KEYS[t].slice().sort().join()), 'a section for each top tab', JSON.stringify(secs));
+        const heads = await page.$$eval('.panel:not([hidden]) .pp-sec > .sec h2', (h) => h.map((x) => x.textContent));
+        const top = cfg.tabs.find((x) => x.mode === t).top;
+        check(heads.every((h) => top.includes(h)) && heads.length === top.length, 'headed by the config’s top tabs', JSON.stringify(heads));
+        const pill = await page.$$eval('#subnav .secpill .chip', (c) => c.map((x) => x.dataset.chip));
+        /* a tab that mixes lists the side it is on (Real life, the starting side) */
+        const want = t === 'dating' ? KEYS[t].filter((k) => k !== 'posts') : KEYS[t];
+        check(pill.slice().sort().join() === want.slice().sort().join(), 'the pill lists them', JSON.stringify(pill));
+        check(!(await page.$('.panel:not([hidden]) .promise')), 'not the placeholder', '');
+        await pageRules(page, t, 390);
+        check(!errors.length, 'no console errors', errors.slice(0, 4).join(' | '));
+        await ctx.close();
+      });
+    }
+  }
+
+  await group('people: Plans (demo)', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/people/?demo=1#plans');
+    await settle(page); await ppReady(page);
+    const open = await ppTitles(page, 'open'), week = await ppTitles(page, 'week'), meetup = await ppTitles(page, 'meetup');
+    check(open.includes('Potluck for people new in town') && !week.includes('Potluck for people new in town') && week.includes('Board games at the library, new faces welcome'),
+      'This week keeps the next seven days; Open to strangers has the rest too', JSON.stringify(week));
+    check(meetup.length >= 3 && meetup.every((x) => open.includes(x)) && !meetup.includes('Thursday trivia, our team needs a sixth'), 'Down for Meetup: only the plans that asked', JSON.stringify(meetup));
+    check(/Sign in to see the plans you posted/.test(await ppText(page, 'mine')), 'Mine asks a stranger to sign in', '');
+    check(await page.$eval('.pp-sec[data-sec="open"] .card.board [data-act="bvote"]', (b) => /I’d go/.test(b.textContent)), 'the vote says I’d go', '');
+    check(!(await page.$('.pp-sec[data-sec="open"] .tag-left')), 'a plan shows its when, not a countdown', '');
+    await page.evaluate(() => import('/all-day/js/auth.js').then((a) => a.demoSignIn()));
+    await page.waitForFunction(() => !/Sign in to see/.test(document.querySelector('.pp-sec[data-sec="mine"]').innerText));
+    check(/haven’t posted a plan/.test(await ppText(page, 'mine')), 'signed in with no plans: says so', await ppText(page, 'mine'));
+    await page.click('.pp-sec[data-sec="open"] [data-post="people:plan"]');
+    await page.waitForSelector('.sheet-body form.bform, .sheet-body .linkrow');
+    const names = await page.$$eval('.sheet-body [name]', (n) => n.map((x) => x.name));
+    check(['title', 'm:when', 'm:spots', 'm:ages', 'place'].every((n) => names.includes(n)), 'the plan form: what, when, spots, an age band, where', names.join(','));
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('people: Clubs (demo)', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/people/?demo=1#clubs');
+    await settle(page); await ppReady(page);
+    const kinds = await page.$$eval('.pp-sec[data-sec="every"] [data-kinds] .chip', (c) => c.map((x) => x.dataset.chip));
+    check(kinds[0] === 'all' && kinds.length > 3, 'Every club: a chip per kind', kinds.join(','));
+    await page.click('.pp-sec[data-sec="every"] [data-kinds] .chip[data-chip="books"]');
+    const books = await page.$$eval('.pp-sec[data-sec="every"] [data-every] .lrow .s', (n) => n.map((x) => x.textContent));
+    check(books.length && books.every((s) => /^Books/.test(s)), 'a chip shows that kind only', JSON.stringify(books));
+    check(await page.$eval('.pp-sec[data-sec="every"]', (s) => [...s.querySelectorAll('a')].some((a) => /clubs\.html#add$/.test(a.getAttribute('href')))), 'Add your club opens the clubs page’s form', '');
+    const ideas = await page.evaluate(() => import('/all-day/js/modes/clubs.js').then((m) => m._peek().ideas));
+    const ready = ideas.filter((x) => x.ready).map((x) => x.title);
+    const firsts = await page.$$eval('.pp-sec[data-sec="start"] [data-first]', (b) => b.map((x) => x.closest('.card').querySelector('.b-title').textContent));
+    check(ready.length >= 1 && firsts.slice().sort().join() === ready.slice().sort().join(), 'Propose the first gathering on exactly the ideas with enough people in', JSON.stringify([ready, firsts]));
+    const wanted = await ppTitles(page, 'wanted');
+    const wv = wanted.map((t) => ideas.find((x) => x.title === t).votes);
+    check(wanted.length && wanted.every((t) => !ready.includes(t)) && wv.every((v, i) => !i || v <= wv[i - 1]), 'Wanted: the unstarted ideas, most wanted first', JSON.stringify(wanted));
+    const music = await ppTitles(page, 'musicians');
+    check(music.length >= 2 && music.includes('Bass player for a garage soul band') && !music.includes('A sketching club at the waterfront'), 'Musicians: the music ideas only', JSON.stringify(music));
+    await page.click('.pp-sec[data-sec="start"] [data-days]');
+    await page.waitForSelector('.sheet-body [data-day-sheet] .chip[data-day="tue"]');
+    await page.click('.sheet-body .chip[data-day="tue"]');
+    await page.click('.sheet-body .chip[data-day="thu"]');
+    await page.keyboard.press('Escape');
+    await page.waitForTimeout(300);
+    check(/Your days: Tue, Thu/.test(await page.$eval('.pp-sec[data-sec="start"] [data-days]', (b) => b.textContent)), 'the days that work for you, kept and shown on the idea', '');
+    await page.click('.pp-sec[data-sec="start"] [data-first]');
+    await page.waitForSelector('.sheet-body');
+    check(/Propose|first|Sign in to post/i.test(await page.$eval('.sheet', (s) => s.innerText)), 'the first gathering opens the gatherings form', '');
+    await page.keyboard.press('Escape');
+    await page.waitForTimeout(300);
+    const meet = await page.$('.pp-sec[data-sec="run"] .lrow.meet .open');
+    if (meet) {
+      await meet.click();
+      await page.waitForFunction(() => /^#people\/rc-/.test(location.hash), null, { timeout: 5000 });
+      check(true, 'a run club meet opens its sheet on You (#people/rc-…)', '');
+    } else check(/Nothing/.test(await ppText(page, 'run')), 'Run clubs: a day with no meets says so', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('people: Dating & Friends (demo)', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/people/?demo=1#dating');
+    await settle(page); await ppReady(page);
+    const singles = await ppTitles(page, 'singles'), friends = await ppTitles(page, 'friends');
+    check(singles.includes('Singles bowling, three of us so far') && !singles.some((t) => friends.includes(t)), 'Singles: the singles plans', JSON.stringify(singles));
+    check(friends.includes('New in town, looking for friends to try the climbing gym') && friends.every((t) => !/singles/i.test(t)), 'Friends: the friend-finder lane, never a singles plan', JSON.stringify(friends));
+    const ev = await page.$$eval('.pp-sec[data-sec="events"] .card.event .c-title', (n) => n.map((x) => x.textContent));
+    check(ev.includes('Speed dating, 30s and 40s') && ev.includes('Newcomers social and happy hour'), 'Events: singles nights and mixers from the calendar', JSON.stringify(ev));
+    check(await page.$eval('.pp-sec[data-sec="pitch"]', (s) => /Pitch a friend/.test(s.innerText) && [...s.querySelectorAll('a')].some((a) => /meetup\.com\/burlington-social-activites-group/.test(a.href))), 'Pitch a friend: the night, and the Meetup group', '');
+    check(!!(await page.$('#subnav .worldsw')), 'Real life / Online shows', '');
+    const vis = () => page.$$eval('.panel:not([hidden]) .pp-sec', (s) => s.filter((x) => x.offsetParent).map((x) => x.dataset.sec));
+    check(JSON.stringify(await vis()) === JSON.stringify(['singles', 'friends', 'events', 'pitch']), 'Real life: the four in-person lanes', JSON.stringify(await vis()));
+    await page.click('#subnav .worldsw button:has-text("Online")');
+    await page.waitForTimeout(300);
+    check(JSON.stringify(await vis()) === JSON.stringify(['posts']), 'Online: the ways to meet someone online', JSON.stringify(await vis()));
+    check((await page.$$('.pp-sec[data-sec="posts"] .lrow')).length >= 2, 'with its rows', '');
+    await page.click('#subnav .worldsw button:has-text("Real life")');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('people: Neighbors (demo)', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/people/?demo=1#neighbors');
+    await settle(page); await ppReady(page);
+    const kinds = await page.evaluate(() => import('/all-day/js/modes/neighbors.js').then((m) => m._peek().kinds));
+    const of = (k) => kinds.filter((x) => x.startsWith(k + ':')).map((x) => x.slice(k.length + 1));
+    for (const [sec, ks] of [['borrow', ['borrow']], ['free', ['free']], ['favor', ['favor']], ['lost', ['lost', 'found']]]) {
+      const got = await ppTitles(page, sec);
+      const want = ks.flatMap(of);
+      check(got.length && got.slice().sort().join('|') === want.slice().sort().join('|'), sec + ': its own kinds of post, all of them', JSON.stringify(got));
+      check(/The rules\./.test(await ppText(page, sec)), sec + ': with its rules', '');
+      check(!!(await page.$('.pp-sec[data-sec="' + sec + '"] [data-post^="neighbors:"]')), sec + ': and a post button', '');
+    }
+    const borrow = await ppTitles(page, 'borrow');
+    check(borrow[borrow.length - 1] === 'Tent for a two-night trip' && /Lent/.test(await ppText(page, 'borrow')), 'a lent thing says so and sinks to the end', JSON.stringify(borrow));
+    const maps = await page.$$eval('.pp-sec[data-sec="lost"] .card.board', (cs) => cs.map((c) => [!!c.querySelector('.b-place'), c.querySelector('[data-map] ') ? c.querySelector('[data-map]').href : '']));
+    check(maps.length && maps.every(([place, href]) => !place || /google\.com\/maps\/search/.test(href)), 'Lost & found: a map pin on every post with a place', JSON.stringify(maps));
+    const shifts = await page.$$eval('.pp-sec[data-sec="shifts"] .card.board', (cs) => cs.map((c) => [c.querySelector('.b-title').textContent, (c.querySelector('.pp-signup a') || {}).href || '']));
+    check(shifts.length >= 3 && !shifts.some(([t]) => t === 'Waiting for a look'), 'Shifts: the approved ones, never one waiting for Stephen', JSON.stringify(shifts.map((s) => s[0])));
+    check(shifts.filter(([, h]) => h).every(([, h]) => /^https:\/\//.test(h)) && shifts.some(([, h]) => h), 'a shift with a link has its Sign up', '');
+    /* posting: sign in, name yourself, ask to borrow, and it is in the lane */
+    await page.evaluate(() => import('/all-day/js/auth.js').then((a) => a.demoSignIn()));
+    await page.evaluate(() => import('/all-day/js/boards.js').then((b) => b.setProfile({ display_name: 'Pat Q.' })));
+    await page.click('.pp-sec[data-sec="borrow"] [data-post="neighbors:borrow"]');
+    await page.waitForSelector('.sheet-body form.bform');
+    await page.fill('.bform input[name=title]', 'A pressure washer for a deck');
+    await page.fill('.bform input[name="m:item"]', 'Pressure washer');
+    await page.click('.bform button[type=submit]');
+    await page.waitForSelector('#sheet[hidden]', { state: 'attached' });
+    await page.waitForFunction(() => [...document.querySelectorAll('.pp-sec[data-sec="borrow"] .b-title')].some((t) => t.textContent === 'A pressure washer for a deck'), null, { timeout: 5000 });
+    check(true, 'a borrow post lands in Borrow', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('people: Pets (demo)', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/people/?demo=1#pets');
+    await settle(page); await ppReady(page);
+    const parks = await page.$$eval('.pp-sec[data-sec="parks"] [data-parks] .lrow', (r) => r.map((x) => [x.querySelector('.t').textContent, x.querySelector('a.open').href, x.querySelector('[data-map]').href]));
+    check(parks.length >= 3 && parks.every(([, a, m]) => /^https:\/\//.test(a) && /^https:\/\/www\.google\.com\/maps\/search\/\?api=1&query=/.test(m)) && parks.some(([, , m]) => /query=4\d\.\d+,-7\d\.\d+$/.test(m)), 'Dog parks: each with its rules and its place on the map (its point where it has one)', JSON.stringify(parks.slice(0, 2)));
+    const lost = await ppTitles(page, 'lost');
+    check(lost.includes('Black lab mix, red collar, answers to Juno') && lost.includes('Small brown dog, no collar, very friendly') && !lost.includes('Keys on a green carabiner'),
+      'Lost: the neighbors board’s pets, lost and found, never keys', JSON.stringify(lost));
+    const meet = await ppTitles(page, 'meetups');
+    check(meet.includes('Small dog meetup, under 25 pounds') && !meet.includes('Thursday trivia, our team needs a sixth'), 'Meetups: dog park plans only', JSON.stringify(meet));
+    const ev = await page.$$eval('.pp-sec[data-sec="meetups"] .card.event .c-title', (n) => n.map((x) => x.textContent));
+    check(ev.includes('Howl-o-ween dog costume parade'), 'and the calendar’s pet events', JSON.stringify(ev));
+    const vets = await ppText(page, 'vets');
+    check(/Vets you can afford/.test(vets) && /Coming soon/i.test(vets) && /Burlington With Your Dog/.test(vets), 'Vets: a placeholder that names what is coming, and the guide with the emergency vets', vets);
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('people: Talk (demo and live)', async () => {
+    for (const demo of [true, false]) {
+      const { ctx, page, errors } = await newPage(browser, base);
+      await page.goto(base + '/people/' + (demo ? '?demo=1' : '') + '#talk');
+      await settle(page); await ppReady(page);
+      const hrefs = await page.$$eval('.panel:not([hidden]) a', (a) => a.map((x) => x.href));
+      check(hrefs.some((h) => /^https:\/\/t\.me\//.test(h)) && hrefs.some((h) => /btownbrief\.com\/community$/.test(h)) && hrefs.some((h) => /telegram\.html$/.test(h)), (demo ? 'demo' : 'live') + ': Telegram, the community and the how-to', '');
+      const ask = await ppText(page, 'ask');
+      check(/Ask a regular/.test(ask) && /Coming soon/i.test(ask), (demo ? 'demo' : 'live') + ': Ask a regular is a named placeholder', ask);
+      check(demo ? /invented examples/.test(ask) : !/invented examples/.test(ask), demo ? 'the demo previews invented questions, marked' : 'live shows no invented questions', '');
+      check(!(await page.$('.panel:not([hidden]) textarea, .panel:not([hidden]) input')), 'no chat box anywhere', '');
+      check(!errors.length, 'no console errors', errors.join(' | '));
+      await ctx.close();
+    }
+  });
+
+  await group('people: deep links land', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    for (const [t, sec] of [['neighbors', 'shifts'], ['clubs', 'musicians'], ['pets', 'vets'], ['plans', 'meetup']]) {
+      await page.goto(base + '/people/?demo=1#' + t + '/' + sec);
+      await settle(page); await ppReady(page);
+      await page.waitForTimeout(1500);   // a smooth scroll down a long tab
+      /* the last section of a short tab can't reach the top: then the panel is scrolled to its end */
+      const y = await page.$eval('.panel:not([hidden]) .pp-sec[data-sec="' + sec + '"]', (s) => { const p = s.closest('.panel'); const top = s.getBoundingClientRect().top;
+        return top > -40 && (top < 320 || p.scrollTop >= p.scrollHeight - p.clientHeight - 2) ? 'ok' : top; });
+      check(y === 'ok', '#' + t + '/' + sec + ' lands on its section', y);
+    }
+    await page.goto(base + '/people/?demo=1#neighbors');
+    await settle(page); await ppReady(page);
+    const k = await page.$eval('.pp-sec[data-sec="free"] .card.board', (c) => c.dataset.k);
+    await page.goto(base + '/people/?demo=1#neighbors/' + k);
+    await settle(page); await ppReady(page);
+    await page.waitForTimeout(400);
+    check(await page.$eval('.card[data-k="' + k + '"]', (c) => { const r = c.getBoundingClientRect(); return r.top > -40 && r.top < 700; }), 'a post’s own link lands on it', k);
+    await page.goto(base + '/people/?demo=1#neighbors/b-gone');
+    await settle(page); await ppReady(page);
+    await page.waitForTimeout(400);
+    check(/gone from Neighbors/.test(await page.$eval('#toast', (t) => t.textContent)), 'a post that has gone says so', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('people: the boards not switched on yet (live)', async () => {
+    const { ctx, page, errors } = await newPage(browser, base, { rpc: (fn, a) => (fn === 'nn_posts_list' && a.p_board !== 'people' ? { status: 404, body: { code: 'PGRST202', message: 'no' } } : undefined) });
+    await page.goto(base + '/people/#neighbors');
+    await settle(page); await ppReady(page);
+    check(/opens once Stephen switches it on/.test(await ppText(page, 'borrow')) && /opens once Stephen switches it on/.test(await ppText(page, 'shifts')), 'Neighbors says the board opens once it is switched on', '');
+    check(!errors.filter((e) => !/404/.test(e)).length, 'no console errors but the 404s themselves', errors.join(' | '));
+    await ctx.close();
+  });
+
+  /* the gallery: each tab at 390 and 1280, light and dark, on the demo */
+  for (const combo of COMBOS4) {
+    await group('people: shots ' + combo.viewport.width + ' ' + combo.scheme, async () => {
+      const { ctx, page, errors } = await newPage(browser, base, combo);
+      await page.goto(base + '/people/?demo=1#plans');
+      await settle(page);
+      for (const t of PEOPLE_TABS) {
+        await goTab(page, t);
+        await ppReady(page);
+        await page.evaluate(() => document.querySelector('.panel:not([hidden])').scrollTo(0, 0));
+        await page.waitForTimeout(300);
+        await pageRules(page, t, combo.viewport.width);
+        await page.screenshot({ path: path.join(SHOTS, 'people-' + t + '-' + combo.viewport.width + '-' + combo.scheme + '.png') });
+      }
+      check(!errors.length, 'no console errors', errors.join(' | '));
+      await ctx.close();
+    });
+  }
+}
+
 const t0 = Date.now();
 await mkdir(SHOTS, { recursive: true });
 await staticChecks();
@@ -13296,6 +13565,7 @@ try {
   await run(theChallenge);
   await run(fullPagesAndAsks);
   await run(theApps);
+  await run(thePeopleApp);
 } finally {
   await browser.close();
   proc.kill();

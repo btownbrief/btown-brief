@@ -131,6 +131,7 @@ export const newest = (posts) => posts.reduce((m, p) => Math.max(m, Math.floor((
    meta line; opts.map adds a Map pill under a post that names a place
    (Lost & found). */
 export function feed(host, posts, opts = {}) {
+  host.appendChild(el('div', 'spacer'));
   const f = el('div', 'feed');
   const items = boards.draw(f, posts, { tab: opts.tab, meta: opts.meta, ratio: opts.ratio });
   items.forEach((it) => {
@@ -183,8 +184,8 @@ export function boardNote(host, r, empty) {
 
 /* the board's house rules, short */
 export function rules(host, lines) {
-  const p = el('p', 'note pad pp-rules', '<b>The rules.</b> ' + lines.map(esc).join(' '));
-  host.appendChild(p);
+  host.appendChild(el('div', 'spacer'));
+  host.appendChild(el('p', 'note pad pp-rules', '<b>The rules.</b> ' + lines.map(esc).join(' ')));
 }
 
 /* a bright Post button that opens boards.compose */
