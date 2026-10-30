@@ -1,30 +1,30 @@
 {
- "generated": "2026-10-29T12:24:04-04:00",
+ "generated": "2026-10-29T20:21:30-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
    "count": 8,
-   "seconds": 5.8
+   "seconds": 6.1
   },
   "breweries": {
    "label": "Breweries & Taprooms",
-   "count": 75,
-   "seconds": 5.7
+   "count": 77,
+   "seconds": 2.1
   },
   "brownell": {
    "label": "Brownell Library",
    "count": 91,
-   "seconds": 3.9
+   "seconds": 3.8
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
-   "count": 180,
-   "seconds": 2.7
+   "count": 184,
+   "seconds": 3.9
   },
   "churchst": {
    "label": "Church Street Marketplace",
    "count": 67,
-   "seconds": 1.8
+   "seconds": 2.0
   },
   "echo": {
    "label": "ECHO Leahy Center",
@@ -44,12 +44,12 @@
   "farmersmarket": {
    "label": "Burlington Farmers Market",
    "count": 1,
-   "seconds": 0.2
+   "seconds": 0.5
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
-   "count": 194,
-   "seconds": 71.8
+   "count": 203,
+   "seconds": 70.3
   },
   "flynn": {
    "label": "The Flynn",
@@ -59,7 +59,7 @@
   "generator": {
    "label": "Generator Makerspace",
    "count": 9,
-   "seconds": 31.4
+   "seconds": 31.6
   },
   "greenfc": {
    "label": "Vermont Green FC",
@@ -68,8 +68,8 @@
   },
   "helloburlington": {
    "label": "Hello Burlington",
-   "count": 596,
-   "seconds": 38.7
+   "count": 600,
+   "seconds": 31.4
   },
   "higherground": {
    "label": "Higher Ground",
@@ -79,48 +79,47 @@
   "instagram": {
    "label": "Instagram (Scrape Creators)",
    "count": 2,
-   "seconds": 51.0
+   "seconds": 49.3
   },
   "loveburlington": {
    "label": "Love Burlington",
    "count": 386,
-   "seconds": 73.0
+   "seconds": 74.7
   },
   "meetup": {
    "label": "Meetup",
    "count": 51,
-   "seconds": 97.6
+   "seconds": 96.6
   },
   "monkeyhouse": {
    "label": "The Monkey House",
    "count": 25,
-   "seconds": 1.5
+   "seconds": 0.4
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
    "count": 73,
-   "seconds": 15.5
+   "seconds": 14.9
   },
   "radiobean": {
    "label": "Radio Bean",
    "count": 0,
-   "error": "HTTP Error 404: Not Found",
-   "staleDays": 21
+   "error": "HTTP Error 404: Not Found"
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
    "count": 77,
-   "seconds": 6.1
+   "seconds": 5.4
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
    "count": 18,
-   "seconds": 21.4
+   "seconds": 20.8
   },
   "sevendays": {
    "label": "Seven Days",
    "count": 2919,
-   "seconds": 75.2
+   "seconds": 3.8
   },
   "shelburnemuseum": {
    "label": "Shelburne Museum",
@@ -129,42 +128,31 @@
   },
   "uvm": {
    "label": "UVM & Colleges",
-   "count": 456,
-   "seconds": 48.9
+   "count": 457,
+   "seconds": 23.3
   },
   "uvmbored": {
    "label": "UVM Bored",
-   "count": 280,
-   "seconds": 0.2
+   "count": 281,
+   "seconds": 0.3
   },
   "vcc": {
    "label": "Vermont Comedy Club",
-   "count": 52,
-   "seconds": 72.0
+   "count": 48,
+   "seconds": 64.4
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
    "count": 45,
-   "seconds": 0.4
+   "seconds": 0.5
   }
  },
- "gathered": 5617,
- "afterDedup": 2568,
- "duplicatesMerged": 3049,
- "final": 2620,
- "firecrawlCalls": 16,
+ "gathered": 5634,
+ "afterDedup": 2582,
+ "duplicatesMerged": 3052,
+ "final": 2637,
+ "firecrawlCalls": 1,
  "mergeLog": [
-  {
-   "kept": {
-    "title": "UVM Costa Rica Davis Center Atrium Tabling",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-12-01"
-  },
   {
    "kept": {
     "title": "Let's Talk at WAGE",
@@ -397,6 +385,17 @@
     "churchst",
     "loveburlington",
     "sevendays"
+   ],
+   "date": "2026-12-03"
+  },
+  {
+   "kept": {
+    "title": "Spotlight 802: Laura Sorkin - CEO of Runamok Maple",
+    "source": "sbrec"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "sbrec"
    ],
    "date": "2026-12-03"
   },
@@ -2406,30 +2405,6 @@
  ],
  "changes": [
   {
-   "id": "3706e8dc3b77",
-   "title": "Girl Winter Film Tour",
-   "date": "2026-11-05",
-   "change": "time",
-   "was": "2026-11-05T18:00:00-05:00",
-   "now": "2026-11-05T19:00:00-05:00"
-  },
-  {
-   "id": "eaee24c478b4",
-   "title": "Diwali",
-   "date": "2026-11-08",
-   "change": "time",
-   "was": "2026-11-08",
-   "now": "2026-11-08T17:30:00-05:00"
-  },
-  {
-   "id": "5481e2ddf423",
-   "title": "With a Penetrating Gaze from the Sidelines: Reflections on the 100th Centenary of the Birth of Raul Hilberg",
-   "date": "2026-11-08",
-   "change": "time",
-   "was": "2026-11-08T12:00:00-05:00",
-   "now": "2026-11-08T13:00:00-05:00"
-  },
-  {
    "id": "facf1687421d",
    "title": "Retro Study Hall!",
    "date": "2026-10-29",
@@ -2442,6 +2417,13 @@
    "date": "2026-10-29",
    "change": "missing",
    "lastSeen": "2026-10-28T20:24:09-04:00"
+  },
+  {
+   "id": "c63aebc028b5",
+   "title": "Improv Class Performances!",
+   "date": "2026-10-29",
+   "change": "missing",
+   "lastSeen": "2026-10-29T12:24:04-04:00"
   },
   {
    "id": "9c266bbfb779",
@@ -2470,13 +2452,6 @@
    "date": "2026-10-31",
    "change": "missing",
    "lastSeen": "2026-10-28T20:24:09-04:00"
-  },
-  {
-   "id": "88db379efc65",
-   "title": "Radio Bean Presents: SHEBAD @ Foam",
-   "date": "2026-10-31",
-   "change": "dropped",
-   "lastSeen": "2026-10-07T20:24:11-04:00"
   },
   {
    "id": "3df2d7ff08b0",
@@ -2524,22 +2499,13 @@
    "id": "0e4ad4617d0c",
    "title": "KSC Library Night",
    "date": "2026-11-04",
-   "change": "missing",
-   "lastSeen": "2026-10-26T20:04:15-04:00"
-  },
-  {
-   "id": "aa2da2a62757",
-   "title": "Darryl Rahn",
-   "date": "2026-11-04",
-   "change": "dropped",
-   "lastSeen": "2026-10-07T20:24:11-04:00"
+   "change": "dropped"
   },
   {
    "id": "1ac22db69afb",
    "title": "State of the research on legume-only polyculture ft. Sandi Dincki",
    "date": "2026-11-05",
-   "change": "missing",
-   "lastSeen": "2026-10-26T20:04:15-04:00"
+   "change": "dropped"
   },
   {
    "id": "4eb64205f710",
@@ -2568,13 +2534,6 @@
    "date": "2026-11-05",
    "change": "missing",
    "lastSeen": "2026-10-28T20:24:09-04:00"
-  },
-  {
-   "id": "c5c93bd8ff50",
-   "title": "The Lowest Pair",
-   "date": "2026-11-05",
-   "change": "dropped",
-   "lastSeen": "2026-10-07T20:24:11-04:00"
   },
   {
    "id": "7f855af00ac8",
@@ -2668,12 +2627,6 @@
    "lastSeen": "2026-10-28T20:24:09-04:00"
   },
   {
-   "id": "5c820b11a748",
-   "title": "Play Time",
-   "date": "2026-11-11",
-   "change": "dropped"
-  },
-  {
    "id": "d9498697be2a",
    "title": "Retro Study Hall!",
    "date": "2026-11-11",
@@ -2700,12 +2653,6 @@
    "date": "2026-11-13",
    "change": "missing",
    "lastSeen": "2026-10-28T20:24:09-04:00"
-  },
-  {
-   "id": "da32301c0624",
-   "title": "Dungeons & Dragons",
-   "date": "2026-11-13",
-   "change": "dropped"
   },
   {
    "id": "71b908e81e94",
@@ -2748,18 +2695,6 @@
    "date": "2026-11-25",
    "change": "missing",
    "lastSeen": "2026-10-27T19:59:30-04:00"
-  },
-  {
-   "id": "60696549db63",
-   "title": "The Library closes early due to the Thanksgiving holiday",
-   "date": "2026-11-26",
-   "change": "dropped"
-  },
-  {
-   "id": "32df1d98283d",
-   "title": "Story Time",
-   "date": "2026-11-26",
-   "change": "dropped"
   },
   {
    "id": "843a5cc75481",
@@ -2825,12 +2760,6 @@
    "lastSeen": "2026-10-27T19:59:30-04:00"
   },
   {
-   "id": "37a4ba5067e6",
-   "title": "Dungeons & Dragons",
-   "date": "2026-12-11",
-   "change": "dropped"
-  },
-  {
    "id": "c9818f5455ce",
    "title": "Retro Study Hall!",
    "date": "2026-12-15",
@@ -2843,6 +2772,34 @@
    "date": "2026-12-16",
    "change": "missing",
    "lastSeen": "2026-10-27T19:59:30-04:00"
+  },
+  {
+   "id": "2cbc172e1fd4",
+   "title": "Holiday 2026 Closure!",
+   "date": "2026-12-23",
+   "change": "missing",
+   "lastSeen": "2026-10-29T12:24:04-04:00"
+  },
+  {
+   "id": "208831c9035e",
+   "title": "Holiday 2026 Closure!",
+   "date": "2026-12-24",
+   "change": "missing",
+   "lastSeen": "2026-10-29T12:24:04-04:00"
+  },
+  {
+   "id": "5115dd499d54",
+   "title": "Holiday 2026 Closure!",
+   "date": "2026-12-25",
+   "change": "missing",
+   "lastSeen": "2026-10-29T12:24:04-04:00"
+  },
+  {
+   "id": "576725efc68a",
+   "title": "Holiday 2026 Closure!",
+   "date": "2026-12-26",
+   "change": "missing",
+   "lastSeen": "2026-10-29T12:24:04-04:00"
   }
  ]
 }
