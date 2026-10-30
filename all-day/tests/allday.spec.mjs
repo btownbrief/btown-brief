@@ -13330,9 +13330,10 @@ async function thePlay(browser, base) {
     const n = await page.$$eval(P + ' [data-k^="daily:"]', (c) => c.map((x) => x.dataset.k));
     check(JSON.stringify(n) === JSON.stringify(['btown-wordle', 'btown-crossings', 'news-quiz', 'higher-or-lower', 'where-in-btown', 'real-or-fake'].map((s) => 'daily:' + s)), 'the six daily puzzles, in the map’s order', n.join(', '));
     let w = await cab('btown-wordle');
-    check(w.streak === 2 && /2 days in a row/.test(w.line) && w.on === 'false', 'yesterday and the day before: a two-day streak still open today', JSON.stringify(w));
+    check(w.streak === 2 && /^○○○○●●○2 in a row$/.test(w.line) && w.on === 'false', 'yesterday and the day before: a two-day streak still open today', JSON.stringify(w));
     check(w.play === 'https://play.btownbrief.com/btown-wordle/' && w.target === '_blank', 'Play opens the puzzle on the arcade in a new tab', w.play);
-    check((await cab('news-quiz')).streak === 0, 'three days ago and nothing since: no streak', '');
+    check((await cab('news-quiz')).streak === 0 && (await cab('news-quiz')).line === '○○○●○○○', 'three days ago and nothing since: no streak, one dot', (await cab('news-quiz')).line);
+    check(await page.$eval(P + ' [data-k="daily:real-or-fake"] [data-streak]', (x) => x.hidden), 'never played: no line at all', '');
     await page.click(P + ' [data-tick="btown-wordle"]');
     w = await cab('btown-wordle');
     check(w.streak === 3 && w.on === 'true', 'ticking today makes it three', JSON.stringify(w));

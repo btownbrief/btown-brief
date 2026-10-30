@@ -11,6 +11,8 @@
      Burlington dates each puzzle was ticked, the last 400), never sent.
    - A streak is the run of days in a row ending today, or ending yesterday
      while today's is still to play, so a streak is not lost at breakfast.
+     Under it: the last seven days as dots, and the best run when the
+     current one is shorter.
    - The bar's dot: once a new Burlington day has started since the last
      visit, the puzzles not yet ticked today are new.
 
@@ -80,11 +82,23 @@ function toggle(p, btn) {
   app.recount();
 }
 const streakWords = (n) => (n >= 2 ? n + ' days in a row.' : '');
+/* the longest run ever in the ticks */
+export function best(dates) {
+  const days = [...(dates instanceof Set ? dates : new Set(arr(dates)))].sort();
+  let top = 0, run = 0, prev = '';
+  days.forEach((d) => { run = prev && addDays(prev, 1) === d ? run + 1 : 1; top = Math.max(top, run); prev = d; });
+  return top;
+}
+/* the last seven days, oldest first, as filled and empty dots */
+const week = (set, day) => [6, 5, 4, 3, 2, 1, 0].map((n) => (set.has(addDays(day, -n)) ? '●' : '○')).join('');
 
 function cabinet(p) {
   const day = today();
   const on = ticked(p.slug, day);
-  const n = streak(D.ticks[p.slug] || [], day);
+  const set = D.ticks[p.slug] || new Set();
+  const n = streak(set, day);
+  const top = best(set);
+  const recent = [0, 1, 2, 3, 4, 5, 6].some((k) => set.has(addDays(day, -k)));
   const c = el('article', 'gm-cab' + (on ? ' done' : ''));
   c.dataset.k = 'daily:' + p.slug;
   c.dataset.sec = p.slug;
@@ -94,9 +108,12 @@ function cabinet(p) {
   const img = scr.querySelector('img');
   if (img) img.addEventListener('error', () => { scr.classList.remove('shot'); img.insertAdjacentHTML('beforebegin', emo); img.remove(); }, { once: true });
   /* short enough for one line in a two-up cabinet at 390 */
-  const line = n ? plural(n, 'day', 'days') + ' in a row' : '';
+  const run = n >= 2 ? n + ' in a row' : '';
+  const line = run + (top > n && top > 1 ? (run ? ' · ' : '') + 'best ' + top : '');
   const body = el('div', 'gm-cab-b', '<h3 class="gm-name">' + esc(p.name) + '</h3><p class="gm-pitch">' + esc(p.line || '') + '</p>' +
-    '<p class="gm-champ" data-streak="' + n + '"' + (n ? '' : ' hidden') + '>' + ICON.trophy + '<span>' + esc(line) + '</span></p>');
+    '<p class="gm-champ" data-streak="' + n + '" data-best="' + top + '"' + (recent || top > 1 ? '' : ' hidden') + '>' +
+    '<span class="pl-week" aria-label="' + esc(plural([0, 1, 2, 3, 4, 5, 6].filter((k) => set.has(addDays(day, -k))).length, 'day', 'days') + ' played this week') + '">' + week(set, day) + '</span>' +
+    (line ? '<span>' + esc(line) + '</span>' : '') + '</p>');
   const acts = el('div', 'gm-acts');
   const tick = el('button', 'pillbtn' + (on ? ' on' : ''), (on ? ICON.check + ' ' : '') + esc(on ? 'Played' : 'Played?'));
   tick.type = 'button';
