@@ -65,7 +65,7 @@ def then():
     places = []
     for p in src["places"]:
         tl = [{"from": t.get("from"), "to": t.get("to"), "what": t.get("what"), "url": t.get("source_url"), "label": t.get("source_label")}
-              for t in p.get("timeline") or [] if t.get("source_url") and t.get("what")]
+              for t in p.get("timeline") or [] if str(t.get("source_url") or "").startswith("https://") and t.get("what")]
         if not tl:
             continue
         tl.sort(key=lambda t: str(t["from"] or ""))

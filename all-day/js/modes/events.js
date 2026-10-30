@@ -129,8 +129,8 @@ async function load(demo) {
 
   const posts = stage.ok ? stage.posts : [];
   const logged = posts.map(stageItem);
-  if (stage.ok) secs.push({
-    key: 'been', label: 'Been there', world: 'online',
+  secs.push({
+    key: 'been', label: 'Been there', hidden: !stage.ok, world: 'online',
     newest: logged.length ? Math.max(...logged.map((it) => it.created)) : undefined,
     items: logged,
     draw(box) {

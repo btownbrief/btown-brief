@@ -74,8 +74,8 @@ async function load(demo) {
   /* a section shows when it has something, or something to do: Open tonight
      once the board answers, Happy hours while one is left today */
   const secs = [];
-  if (open.ok) secs.push({
-    key: 'open', label: 'Open tonight',
+  secs.push({
+    key: 'open', label: 'Open tonight', hidden: !open.ok,
     newest: opens.length ? Math.max(...opens.map((it) => it.created)) : undefined, items: opens,
     draw(box) {
       if (!opens.length) box.appendChild(el('p', 'note pad', esc('No groups out yet.')));
@@ -86,7 +86,7 @@ async function load(demo) {
   /* Happy hours, today */
   const hh = (deals.deals || []).filter((d) => d.type === 'happy-hour' && (d.days || []).includes(dayKey) && (toMin(d.end) == null || toMin(d.end) > nowMin))
     .map((d) => hhItem(d, nowMin)).sort((a, b) => a.start - b.start);
-  if (hh.length) secs.push({ key: 'happy', label: 'Happy hours', items: hh });
+  secs.push({ key: 'happy', label: 'Happy hours', items: hh, hidden: !hh.length });
 
   /* Mixers, this week */
   const data = demo ? { events: (evs.events || []).map((e) => ({ ...e, date: demoDay(e.in), start: demoDay(e.in) + 'T' + (e.at || '19:00') + ':00-04:00' })) } : evs;

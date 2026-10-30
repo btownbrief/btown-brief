@@ -19,7 +19,7 @@
 
 import * as app from '../app.js';
 import { outMode, readJSON, buttons } from './outkit.js';
-import { el, esc, button } from '../ui.js';
+import { el, esc, safeHref, button } from '../ui.js';
 
 const FIRST = { walks: 12, then: 15 };
 const open = { walks: false, then: false };
@@ -35,8 +35,8 @@ const LEAFLET = {
   js: 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js', jsSri: 'sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=',
   css: 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css', cssSri: 'sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=',
 };
-const TILES = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
-const TILE_CREDIT = '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>';
+const TILES = 'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
+const TILE_CREDIT = '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors';
 const STREET = [44.4772, -73.2125];   // the middle of Church Street, Main to Pearl
 let leafletP = null;
 function loadLeaflet() {
@@ -61,25 +61,26 @@ function loadLeaflet() {
 /* a pin's story: the address, what is there now, every dated line with its source */
 function story(p) {
   return '<b>' + esc(p.address) + '</b>' + (typeof p.now === 'string' && p.now ? '<br>Now: ' + esc(p.now) : '') +
-    p.timeline.slice().reverse().map((t) => '<br><a href="' + esc(t.url) + '" target="_blank" rel="noopener">' + esc(years(t) + t.what) + '</a>').join('');
+    p.timeline.slice().reverse().map((t) => '<br><a href="' + esc(safeHref(t.url)) + '" target="_blank" rel="noopener">' + esc(years(t) + t.what) + '</a>').join('');
 }
 let M = null;
+function dropMap() { if (M) { try { M.remove(); } catch (e) { /* already gone */ } M = null; } }
 function openMap(pinned) {
   app.sheet('Church Street, then', (body) => {
     const box = el('div', 'foodmap');
     box.dataset.k = 'then-map';
     body.appendChild(box);
-    if (M) { try { M.remove(); } catch (e) { /* gone */ } M = null; }
+    dropMap();
     loadLeaflet().then((L) => {
       if (!box.isConnected) return;
-      M = L.map(box, { zoomControl: true, attributionControl: true }).setView(STREET, 17);
+      const map = M = L.map(box, { zoomControl: true, attributionControl: true }).setView(STREET, 17);
       L.tileLayer(TILES, { maxZoom: 19, attribution: TILE_CREDIT }).addTo(M);
       pinned.forEach((p) => {
         const pin = L.circleMarker([p.lat, p.lng], { radius: 7, weight: 2, className: 'fm-pin open' }).addTo(M);
         pin.bindTooltip(esc(p.address));
         pin.bindPopup(story(p), { maxWidth: 260 });
       });
-      setTimeout(() => { if (M) M.invalidateSize(); }, 80);
+      setTimeout(() => { if (M === map && box.isConnected) map.invalidateSize(); }, 80);
     }).catch(() => { if (box.isConnected) box.replaceWith(el('p', 'note pad', esc('The map didn’t load.'))); });
   });
 }
@@ -164,5 +165,5 @@ async function load(demo) {
   return secs;
 }
 
-mod = outMode({ key: 'explore', label: 'Explore', icon: 'pin', promise: 'Walks, old stories on every corner, and the trail report.', load });
+mod = outMode({ key: 'explore', label: 'Explore', icon: 'pin', promise: 'Walks, old stories on every corner, and the trail report.', load, leave: dropMap });
 app.register('explore', mod);

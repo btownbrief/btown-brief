@@ -81,7 +81,11 @@ export function outMode(cfg) {
   function load() {
     if (!S.loading) {
       S.loading = Promise.resolve().then(() => cfg.load(app.demo)).then((secs) => {
-        S.secs = (secs || []).filter((s) => s && s.key && s.label);
+        /* a section with nothing to show right now is left out, but its key
+           is kept so a link to it lands quietly on the tab */
+        const all = (secs || []).filter((s) => s && s.key && s.label);
+        S.secs = all.filter((s) => !s.hidden);
+        S.quiet = new Set(all.filter((s) => s.hidden).map((s) => s.key));
         S.error = false;
       }).catch((e) => {
         console.error('[out] ' + key + ' did not load', e);
@@ -137,6 +141,7 @@ export function outMode(cfg) {
     if (!want || !S.ready || !S.slots) return;
     S.pending = null;
     if (S.slots[want]) { app.jumpTo(S.slots[want]); return; }
+    if (S.quiet && S.quiet.has(want)) return;
     if (!app.flashHit(S.root, want)) app.toast('That’s gone from ' + cfg.label + ' now.');
   }
 
@@ -160,7 +165,7 @@ export function outMode(cfg) {
     },
     activate(param) { S.pending = param || null; land(); },
     refresh() { if (S.ready) draw(); },
-    deactivate() {},
+    deactivate() { if (cfg.leave) cfg.leave(); },
     reload,
     subnav() {
       if (!S.secs || !S.secs.length) return null;
