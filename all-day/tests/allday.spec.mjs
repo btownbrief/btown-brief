@@ -13291,6 +13291,20 @@ async function theOut(browser, base) {
     check(r.long.length <= 40 && /…$/.test(r.long), 'a long price is cut at a word', r.long);
     check(JSON.stringify([r.thu, r.fri, r.sat, r.sun, r.mon]) === JSON.stringify([['2026-10-30', '2026-11-01'], ['2026-10-30', '2026-11-01'], ['2026-10-31', '2026-11-01'], ['2026-11-01', '2026-11-01'], ['2026-11-06', '2026-11-08']]),
       'This weekend: Friday to Sunday, or what is left of it', JSON.stringify(r));
+    /* Burlington's clock: summer and winter offsets, a bare date is the whole day, a bare end date runs through that day */
+    const t = await page.evaluate(() => import('/all-day/js/modes/out-common.js').then((m) => {
+      const at = Date.parse('2026-11-10T15:00:00-05:00');
+      const month = m.timing({ date: '2026-11-01', start: '2026-11-01', end: '2026-11-30' }, at);
+      const oneDay = m.timing({ date: '2026-11-10', start: '2026-11-10', end: '2026-11-10' }, at);
+      const gone = m.timing({ date: '2026-11-09', start: '2026-11-09', end: '2026-11-09' }, at);
+      const show = m.timing({ date: '2026-11-10', start: '2026-11-10T19:30:00-05:00', end: null }, at);
+      return { summer: m.etTime('2026-07-01', 18) === Date.parse('2026-07-01T18:00:00-04:00'), winter: m.etTime('2026-12-01', 18) === Date.parse('2026-12-01T18:00:00-05:00'),
+        month: [month.started, month.over, month.lastDay], oneDay: [oneDay.started, oneDay.over], gone: gone.over, show: [show.started, show.over] };
+    }));
+    check(t.summer && t.winter, 'a Burlington wall time is right in summer and in winter', JSON.stringify(t));
+    check(JSON.stringify(t.month) === '[true,false,"2026-11-30"]' && JSON.stringify(t.oneDay) === '[true,false]' && t.gone,
+      'a month-long listing runs to its last day; a bare date is the whole of that day, and gone the next', JSON.stringify(t));
+    check(JSON.stringify(t.show) === '[false,false]', 'an evening show has not started at 3 pm', JSON.stringify(t.show));
     await ctx.close();
   });
 

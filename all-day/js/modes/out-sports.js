@@ -17,7 +17,7 @@
 import * as app from '../app.js';
 import * as boards from '../boards.js';
 import { el, esc, button } from '../ui.js';
-import { outMode, readJSON, etNow, dowOf, domOf, dateWords, clock, demoDay, buttons, linkButton } from './out-common.js';
+import { outMode, readJSON, isDay, etNow, dowOf, domOf, dateWords, clock, demoDay, buttons, linkButton } from './out-common.js';
 
 const OURS = 'btown-brief-wednesday-pickup';
 const SPORTS = ['basketball', 'soccer', 'volleyball', 'tennis', 'pickleball', 'frisbee', 'hockey', 'run', 'ride', 'climb', 'workout', 'yoga', 'recovery', 'other'];
@@ -46,9 +46,10 @@ function spotItem(p) {
 }
 
 function leagueItem(l, today) {
-  const by = l.registration_deadline && l.registration_deadline >= today ? 'Sign up by ' + dateWords(l.registration_deadline)
-    : l.registration_opens && l.registration_opens > today ? 'Sign-up opens ' + dateWords(l.registration_opens) : '';
-  const starts = l.season_start ? (l.season_start >= today ? 'Starts ' : 'Started ') + dateWords(l.season_start) : '';
+  /* a month alone ('2026-10') is not a day to print */
+  const by = isDay(l.registration_deadline) && l.registration_deadline >= today ? 'Sign up by ' + dateWords(l.registration_deadline)
+    : isDay(l.registration_opens) && l.registration_opens > today ? 'Sign-up opens ' + dateWords(l.registration_opens) : '';
+  const starts = isDay(l.season_start) ? (l.season_start >= today ? 'Starts ' : 'Started ') + dateWords(l.season_start) : '';
   return {
     k: 'lg-' + l.id, kind: 'post', src: l.organizer || 'League', sid: 'out-lg-' + (l.organizer || l.id), title: l.name,
     text: [by, starts, [l.venue, l.town].filter(Boolean).join(', '), l.cost].filter(Boolean).join(' · ') || short(l.season_note, 140) || 'Dates on their page.',
@@ -72,7 +73,9 @@ function games(s, today) {
   (((s.high_school || {}).schools) || []).forEach((sc) => (sc.upcoming_home_games || []).forEach((g, i) => out.push({
     key: sc.school.replace(/\W+/g, '-').toLowerCase() + '-' + g.date + '-' + i, src: sc.school.replace(/ High School$| HS$/, ''),
     title: (g.level && g.level !== 'varsity' ? cap(g.level) + ' ' : '') + g.sport + ' vs ' + String(g.opponent || '').replace(/ HS$/, ''),
-    date: g.date, time: g.time, venue: (sc.home_venues && sc.home_venues[0] && sc.home_venues[0].name) || '', url: g.url || sc.schedule_source })));
+    date: g.date, time: g.time, url: g.url || sc.schedule_source,
+    /* the game's own venue; a school's only venue when it has just one; otherwise the schedule says */
+    venue: short(g.venue ? g.venue.replace(new RegExp('^(' + sc.school + '\\s*)+'), '') : sc.home_venues && sc.home_venues.length === 1 ? sc.home_venues[0].name : '', 60) || 'Venue on the schedule' })));
   return out.filter((g) => g.date >= today && g.url).sort((a, b) => a.date.localeCompare(b.date) || String(a.time).localeCompare(String(b.time)));
 }
 

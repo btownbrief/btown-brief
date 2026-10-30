@@ -28,7 +28,7 @@
 import * as app from '../app.js';
 import * as boards from '../boards.js';
 import { el, esc, button } from '../ui.js';
-import { outMode, readJSON, etNow, addDays, dowOf, domOf, dateWords, clock, demoDay, now, buttons, linkButton } from './out-common.js';
+import { outMode, readJSON, timing, etNow, addDays, dowOf, domOf, dateWords, clock, demoDay, now, buttons, linkButton } from './out-common.js';
 
 const FILE = '../data/out/app-events.json';
 const SPEC = '../data/out/submit-event-spec.json';
@@ -49,20 +49,11 @@ function cost(e) {
   return p;
 }
 
-/* an event's live state: has it started (Been there), is it over (dropped) */
-function timing(e, nowMs, today) {
-  /* a bare date ('2026-10-30') is that whole day in Burlington, not midnight in London */
-  const dayOnly = !/T/.test(e.start || '');
-  const start = dayOnly ? Date.parse(e.date + 'T00:00:00-05:00') : Date.parse(e.start);
-  const end = e.until ? Date.parse(e.until + 'T23:59:00-05:00') : Date.parse(e.end || '') || start + (dayOnly ? 24 : 3) * 3600 * 1000;
-  return { started: start <= nowMs || (e.until && e.date <= today), over: end < nowMs && !(e.until && e.until >= today) };
-}
-
 function card(e, today, nowMs) {
-  const t = timing(e, nowMs, today);
+  const t = timing(e, nowMs);
   /* an exhibit that runs for weeks shows on today, not on the day it opened */
-  const day = e.until && e.date < today ? today : e.date;
-  const when = e.until ? 'Through ' + dateWords(e.until) : e.allDay || !clock(e.start) ? 'All day' : clock(e.start);
+  const day = t.lastDay && e.date < today ? today : e.date;
+  const when = t.lastDay && t.lastDay > e.date ? 'Through ' + dateWords(t.lastDay) : e.allDay || !clock(e.start) ? 'All day' : clock(e.start);
   return {
     k: 'ev-' + e.id, kind: 'event', src: e.src || 'Listing', sid: 'out-' + (e.src || 'listing'), own: !!e.own, title: e.title, href: e.url,
     dow: dowOf(day), dom: domOf(day), when, where: [e.venue, e.town].filter(Boolean).join(', ') || 'Where it is: on the listing', price: cost(e),
@@ -101,8 +92,7 @@ async function load(demo) {
   const data = demo ? undemo(raw) : raw;
   const nowMs = Date.now();
   const today = etNow(nowMs).day;
-  const all = (data.events || []).filter((e) => e && e.url && e.title && (e.date >= today || (e.until && e.until >= today)));
-  const live = all.filter((e) => !timing(e, nowMs, today).over);
+  const live = (data.events || []).filter((e) => e && e.url && e.title && !timing(e, nowMs).over);
   const ownFirst = (list) => list.filter((e) => e.own).concat(list.filter((e) => !e.own));
   const cardsOf = (list) => list.map((e) => card(e, today, nowMs));
   const more = (n, what) => (box) => { if (n > 0) buttons(box, [linkButton(n + ' more ' + what + ' on the events page', FULL)]); };

@@ -21,7 +21,7 @@
 import * as app from '../app.js';
 import * as boards from '../boards.js';
 import { el, esc, button } from '../ui.js';
-import { outMode, readJSON, etNow, addDays, dowOf, domOf, clock, demoDay, buttons, linkButton } from './out-common.js';
+import { outMode, readJSON, timing, etNow, addDays, dowOf, domOf, clock, demoDay, buttons, linkButton } from './out-common.js';
 
 const AGES = [['twenties', '20s'], ['thirties', '30s'], ['forties', '40s'], ['fifties', '50s and up'], ['any', 'Any age']];
 const AGE_WORD = Object.fromEntries(AGES);
@@ -65,7 +65,7 @@ async function load(demo) {
     boards.list('nightlife', { kind: 'open_tonight', limit: 30 }),
   ]);
   const t = etNow();
-  const nowMin = t.hour * 60 + new Date().getMinutes();
+  const nowMin = t.hour * 60 + t.minute;
   const dayKey = DAY_KEYS[['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].indexOf(t.dow)];
 
   /* Open tonight */
@@ -89,7 +89,7 @@ async function load(demo) {
   /* Mixers, this week */
   const data = demo ? { events: (evs.events || []).map((e) => ({ ...e, date: demoDay(e.in), start: demoDay(e.in) + 'T' + (e.at || '19:00') + ':00-04:00' })) } : evs;
   const week = addDays(t.day, 7);
-  const soon = (data.events || []).filter((e) => e.url && e.date >= t.day && e.date <= week && !e.online && !(e.date === t.day && toMin(String(e.start).slice(11, 16)) < nowMin - 60));
+  const soon = (data.events || []).filter((e) => e.url && e.date >= t.day && e.date <= week && !e.online && !timing(e).over);
   const hourOf = (e) => Number(String(e.start).slice(11, 13)) || 0;
   /* a coffee meetup at 9 am is not a night out; a mixer is, whenever it starts */
   const named = soon.filter((e) => MIXER.test(e.title) && (hourOf(e) >= 16 || STRONG.test(e.title)));

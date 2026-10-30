@@ -30,10 +30,30 @@ export const HOUR = 3600;
 export const now = () => Math.floor(Date.now() / 1000);
 
 /* Burlington's clock, whatever the phone's zone: 'YYYY-MM-DD' and the hour */
-const ET = new Intl.DateTimeFormat('en-CA', { timeZone: 'America/New_York', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', hourCycle: 'h23', weekday: 'short' });
+const ET = new Intl.DateTimeFormat('en-CA', { timeZone: 'America/New_York', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hourCycle: 'h23', weekday: 'short' });
 export function etNow(ms = Date.now()) {
   const p = Object.fromEntries(ET.formatToParts(new Date(ms)).map((x) => [x.type, x.value]));
-  return { day: p.year + '-' + p.month + '-' + p.day, hour: Number(p.hour), dow: p.weekday };
+  return { day: p.year + '-' + p.month + '-' + p.day, hour: Number(p.hour), minute: Number(p.minute), dow: p.weekday };
+}
+/* the instant a Burlington wall time happens: 'YYYY-MM-DD', 0 to 23, DST included */
+export function etTime(day, hour = 0, minute = 0) {
+  const [y, m, d] = day.split('-').map(Number);
+  let t = Date.UTC(y, m - 1, d, hour + 5, minute);      // EST; an hour early in summer
+  if (etNow(t).hour !== hour) t -= 3600 * 1000;
+  return t;
+}
+const DAY = /^\d{4}-\d{2}-\d{2}$/;
+export const isDay = (s) => DAY.test(String(s || ''));
+/* an event's timing, in Burlington: when it starts and ends, whether it has
+   started (Been there) or is over (dropped). A bare date ('2026-10-30') is
+   that whole day; a bare end date is the end of that day; `until` is the
+   last day of something that runs for weeks. */
+export function timing(e, nowMs = Date.now()) {
+  const dayOnly = !/T/.test(e.start || '');
+  const start = dayOnly ? etTime(e.date) : Date.parse(e.start);
+  const lastDay = e.until || (isDay(e.end) ? e.end : null);
+  const end = lastDay ? etTime(addDays(lastDay, 1)) : Date.parse(e.end || '') || start + (dayOnly ? 24 : 3) * 3600 * 1000;
+  return { start, end, lastDay, started: start <= nowMs, over: end <= nowMs };
 }
 export const addDays = (day, n) => {
   const [y, m, d] = day.split('-').map(Number);
@@ -159,9 +179,13 @@ export function outMode(cfg) {
 }
 
 /* the JSON a tab reads: its live file, or on ?demo=1 its invented one */
+const fetched = Object.create(null);
 export function readJSON(live, demoFile) {
   const url = app.demo && demoFile ? 'data/demo/' + demoFile : live;
-  return fetch(url).then((r) => { if (!r.ok) throw new Error(url + ' HTTP ' + r.status); return r.json(); });
+  /* once per visit: Events and Nightlife share the events file, and a "show all" redraw reads it again */
+  if (!fetched[url]) fetched[url] = fetch(url).then((r) => { if (!r.ok) throw new Error(url + ' HTTP ' + r.status); return r.json(); });
+  fetched[url].catch(() => { delete fetched[url]; });
+  return fetched[url];
 }
 
 /* a row of plain buttons at the foot of a section */
