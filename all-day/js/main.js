@@ -14,6 +14,9 @@ import * as app from './app.js';
 /* boards.js wires the board cards' buttons and Settings → Your account,
    so it loads before any tab that draws a board. */
 import './boards.js';
+/* account-data.js deletes Habits' and The Build's server data with the
+   account in the apps that don't load those modes */
+import './account-data.js';
 import { shelf } from './shelf.js';
 import { keyOf } from './apps/index.js';
 

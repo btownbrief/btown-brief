@@ -13484,6 +13484,50 @@ async function todayApp(browser, base) {
 }
 
 /* ----------------------------------------------------------------- run */
+/* account-data.js: deleting the account from an app that does not load
+   Habits or The Build still deletes their server data (wave 0 bug found by
+   the w1-allday session, 2026-10-29). */
+async function accountData(browser, base) {
+  await group('account data: delete my account from an app without Habits or The Build', async () => {
+    const calls = [];
+    const { ctx, page, errors } = await newPage(browser, base, {
+      rpc: (fn, args, h) => {
+        calls.push({ fn, auth: h.authorization || null });
+        return /_delete_me$/.test(fn) ? {} : undefined;
+      },
+    });
+    await page.goto(base + '/eat/');
+    await settle(page);
+    await page.evaluate((s) => localStorage.setItem('allday-auth', s), SESSION());
+    await page.reload();
+    await settle(page);
+    const here = await page.evaluate(() => import('/all-day/js/account-data.js').then((m) => m.handledHere()));
+    check(JSON.stringify(here) === JSON.stringify(['sz_delete_me', 'bd_delete_me']), 'Eat loads neither mode, so both deletions are handled here', JSON.stringify(here));
+    await settingsText(page);
+    await page.click('.sheet-body button:has-text("Delete my account and posts")');
+    await page.click('#confirm [data-yes]');
+    await page.waitForTimeout(400);
+    const fns = calls.map((c) => c.fn);
+    check(fns.includes('sz_delete_me') && fns.includes('bd_delete_me') && fns.includes('nn_delete_me'), 'the habits, Build and board deletions all go over the wire', fns.join(', '));
+    check(fns.filter((f) => f === 'sz_delete_me').length === 1 && fns.filter((f) => f === 'bd_delete_me').length === 1, 'each of them once', fns.join(', '));
+    check(calls.filter((c) => /_delete_me$/.test(c.fn)).every((c) => c.auth === 'Bearer a.b.c'), 'each carries the reader’s token', JSON.stringify(calls.filter((c) => /_delete_me$/.test(c.fn))));
+    check(fns.lastIndexOf('nn_delete_me') > fns.indexOf('sz_delete_me') && fns.lastIndexOf('nn_delete_me') > fns.indexOf('bd_delete_me'), 'the account row goes last', fns.join(', '));
+    check(/Deleted\. You’re signed out\./.test(await page.$eval('#toast', (t) => t.textContent)), 'and Settings says so', await page.$eval('#toast', (t) => t.textContent));
+    const real = errors.filter((e) => !/Failed to load resource/.test(e));
+    check(!real.length, 'no console errors', real.join(' | '));
+    await ctx.close();
+  });
+
+  await group('account data: an app that loads the modes leaves the deleting to them', async () => {
+    const { ctx, page } = await newPage(browser, base, {});
+    await page.goto(base + '/all-day/#wire');
+    await settle(page);
+    const here = await page.evaluate(() => import('/all-day/js/account-data.js').then((m) => m.handledHere()));
+    check(here.length === 0, 'All Day loads Habits and The Build, so their own hooks delete and nothing runs twice', JSON.stringify(here));
+    await ctx.close();
+  });
+}
+
 const t0 = Date.now();
 await mkdir(SHOTS, { recursive: true });
 await staticChecks();
@@ -13531,6 +13575,7 @@ try {
   await run(fullPagesAndAsks);
   await run(todayApp);
   await run(theApps);
+  await run(accountData);
 } finally {
   await browser.close();
   proc.kill();
