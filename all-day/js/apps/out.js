@@ -1,0 +1,27 @@
+/* Out: tonight and this weekend, in real life (APP-MAP.html, app 2). */
+export default {
+  id: 'out',
+  name: 'Out',
+  short: 'Out',
+  icon: 'out',
+  accent: '--app-out',
+  href: '../out/',
+  url: 'https://guide.btownbrief.com/out/',
+  line: 'Tonight and this weekend, in real life.',
+  tabs: [
+    { mode: 'whatnow', label: 'Now', top: ['Spin', 'Missions', 'Tonight', 'Weather'] },
+    { key: 'events', label: 'Events', icon: 'calendar', mixed: true,
+      promise: 'Every show, open mic and gallery night, lane by lane.',
+      top: ['This weekend', 'Live music', 'Open mics', 'Galleries', 'Free', 'Family', 'Been there', 'Submit'] },
+    { key: 'nightlife', label: 'Nightlife', icon: 'moon', mixed: true,
+      promise: 'Whose group is out tonight, and where to join them.',
+      top: ['Open tonight', 'Happy hours', 'Mixers', 'Dinner nights', 'By age'] },
+    { key: 'sports', label: 'Sports', icon: 'ball',
+      promise: 'Pickup games, leagues and game day, in one place.',
+      top: ['Pickup', 'Leagues', 'Game day', 'Local hoops', 'Adult Social Sports'] },
+    { key: 'explore', label: 'Explore', icon: 'pin',
+      promise: 'Walks, old stories on every corner, and the trail report.',
+      top: ['Walks', 'Then', 'Audio', 'Conditions', 'Beaches'] },
+  ],
+  full: { whatnow: ['../things-to-do.html', 'the full things-to-do guide'] },
+};

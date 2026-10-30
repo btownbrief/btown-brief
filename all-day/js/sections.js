@@ -30,10 +30,58 @@
                 scroll; left out on a view switch
 
    The segments are buttons with the shared chip markup (data-chip, the
-   label, an optional count), so a tab reads and is tested the same way. */
+   label, an optional count), so a tab reads and is tested the same way.
+
+   Top tabs (2026-10-29, wave 0 of the eight apps). The pill is each bottom
+   tab's row of top tabs, under the mast on every tab and still there as
+   you scroll (the shell keeps any tab's .secbar when the mast steps away).
+   Three shell rules any tab can use:
+
+     fresh    true: freshest first. Each item carries `newest` (epoch
+              seconds, the time of its section's newest thing); the pill
+              sorts by it, newest first (items without one keep their order
+              after the dated ones), and with `find` the page's sections
+              are moved into the same order, so the section with the
+              newest thing leads the tab. Food has done this by hand since
+              2026-10-18 and still does; this is that rule for everyone.
+     newest   on any item, fresh or not: a dot on the segment when it is
+              newer than the reader's last visit to this app.
+     world    'irl' | 'online' on an item: on a tab that mixes the two
+              (Real life / Online, ui.js worldSwitch) the pill leaves out
+              the side that is not showing, as the page does. */
 
 import { el, esc, ICON } from './ui.js';
 import { liquify } from './liquid.js';
+import * as store from './store.js';
+
+/* the reader's last visit to this app, as epoch seconds (0: a first visit,
+   when nothing is "new"). The demo pretends it was four hours ago. */
+export const since = () => (store.isDemo() ? Math.floor(Date.now() / 1000) - 4 * 3600 : store.visitBase());
+const isNew = (it) => { const s = since(); return s > 0 && Number(it.newest) > s; };
+/* freshest first: dated items newest first, then the rest in their order */
+export function freshOrder(items) {
+  return items.map((it, i) => [it, i]).sort((a, b) => {
+    const ta = Number(a[0].newest) || 0, tb = Number(b[0].newest) || 0;
+    if (ta && tb && ta !== tb) return tb - ta;
+    if (!ta !== !tb) return ta ? -1 : 1;
+    return a[1] - b[1];
+  }).map((x) => x[0]);
+}
+/* Put the page's sections in the pill's order, moving only those out of
+   place (a form a reader is typing in is never redrawn, only moved when it
+   must be). Sections that do not share one parent are left where they are. */
+export function placeSections(keys, find) {
+  const nodes = keys.map((k) => find(k)).filter((n) => n && n.isConnected);
+  if (nodes.length < 2) return false;
+  const parent = nodes[0].parentNode;
+  if (!nodes.every((n) => n.parentNode === parent)) return false;
+  let moved = false;
+  nodes.forEach((n, i) => {
+    const at = [...parent.children].filter((c) => nodes.includes(c))[i];
+    if (at !== n) { parent.insertBefore(n, at); moved = true; }
+  });
+  return moved;
+}
 
 let shell = { sheet: null };
 /* the shell hands over its sheet (app.js owns sheets) */
@@ -45,8 +93,11 @@ const locks = Object.create(null);    // a tap's scroll in flight, per pill: the
 const reduced = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 export function pill(o) {
-  const items = (o.items || []).filter((it) => it && it.key != null);
+  const side = document.body.dataset.world;
+  let items = (o.items || []).filter((it) => it && it.key != null && !(side && it.world && it.world !== side));
+  if (o.fresh) items = freshOrder(items);
   if (!items.length) return null;
+  if (o.fresh && typeof o.find === 'function') placeSections(items.map((it) => String(it.key)), o.find);
   const P = { key: o.key, title: o.title || 'Sections', items, keys: items.map((it) => String(it.key)), colors: items.map(() => o.color),
     onPick: o.onPick || (() => {}), find: typeof o.find === 'function' ? o.find : null, on: null };
   const wrap = el('div', 'secpill');
@@ -58,9 +109,11 @@ export function pill(o) {
   track.setAttribute('aria-label', P.title + (P.find ? ' sections' : ''));
   items.forEach((it) => {
     const n = it.n != null && it.n !== '' ? '<span class="n">' + esc(it.n) + '</span>' : '';
-    const b = el('button', 'chip', (it.icon || '') + '<span>' + esc(it.label) + '</span>' + n);
+    const dot = isNew(it) ? '<i class="nd" aria-label="New"></i>' : '';
+    const b = el('button', 'chip', (it.icon || '') + '<span>' + esc(it.label) + '</span>' + n + dot);
     b.type = 'button';
     b.dataset.chip = String(it.key);
+    if (dot) b.dataset.new = '1';
     b.addEventListener('click', () => pick(P, String(it.key)));
     track.appendChild(b);
   });
@@ -209,7 +262,8 @@ function allSheet(P) {
     P.items.forEach((it) => {
       const k = String(it.key);
       const n = it.n != null && it.n !== '' ? '<span class="n">' + esc(it.n) + '</span>' : '';
-      const b = el('button', 'secsheet-row' + (k === P.on ? ' on' : ''), (it.icon || '') + '<span class="t">' + esc(it.label) + '</span>' + n);
+      const b = el('button', 'secsheet-row' + (k === P.on ? ' on' : ''), (it.icon || '') + '<span class="t">' + esc(it.label) + '</span>' + n +
+        (isNew(it) ? '<i class="nd" aria-label="New"></i>' : ''));
       b.type = 'button';
       b.dataset.chip = k;
       if (k === P.on) b.setAttribute('aria-current', 'true');
@@ -234,4 +288,5 @@ export function sectionBar(o) {
 }
 
 /* for the tests: the pill's state */
-export const _state = (key) => { const P = livePill(key); return P ? { on: P.on, keys: P.keys.slice(), locked: !!locks[key], over: P.wrap.classList.contains('over') } : null; };
+export const _state = (key) => { const P = livePill(key); return P ? { on: P.on, keys: P.keys.slice(), locked: !!locks[key], over: P.wrap.classList.contains('over'),
+  fresh: P.items.filter((it) => isNew(it)).map((it) => String(it.key)) } : null; };

@@ -1,0 +1,32 @@
+{
+  "name": "The Paper — Btown Brief",
+  "short_name": "The Paper",
+  "description": "The Btown Brief: the front page, every edition, picks, gossip, everything we make, and the story.",
+  "id": "/paper/",
+  "start_url": "/paper/?source=pwa",
+  "scope": "/paper/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#26221D",
+  "theme_color": "#26221D",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

@@ -31,6 +31,9 @@ out-loud/decisions*.json
 desk.html
 desk-state.json
 
+# Town's geocoder cache: hashes of guessable addresses. The workflow keeps it in actions/cache.
+data/town/geo-cache.json
+
 # Stephen's taste prompts are private (scripts/private_prompts.py): Actions
 # secrets in CI, ~/btownbrief/newsletter/allday-prompts/ on his Mac. Never
 # commit them here again.

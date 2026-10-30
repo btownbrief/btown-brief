@@ -1,0 +1,710 @@
+{
+  "_": "Invented demo data for The Paper’s tabs that are not built yet; every name, place detail and post is made up.",
+  "tabs": {
+    "front": {
+      "sections": [
+        {
+          "key": "today",
+          "label": "Today",
+          "hours": 2,
+          "items": [
+            {
+              "k": "hl-1",
+              "kind": "headline",
+              "src": "Btown Brief",
+              "title": "Today in Burlington: fog, a free film and a new bakery",
+              "ago": "2h",
+              "thumb": "dawn"
+            },
+            {
+              "k": "hl-2",
+              "kind": "headline",
+              "src": "Btown Brief",
+              "title": "The weekend in one list, from shows to markets",
+              "ago": "4h",
+              "thumb": "street"
+            }
+          ]
+        },
+        {
+          "key": "edition",
+          "label": "The edition",
+          "hours": 0.5,
+          "items": [
+            {
+              "k": "hl-3",
+              "kind": "headline",
+              "src": "Btown Brief",
+              "title": "The Friday edition: six shows and the first cold snap",
+              "ago": "30m",
+              "thumb": "night"
+            },
+            {
+              "k": "hl-4",
+              "kind": "headline",
+              "src": "Btown Brief",
+              "title": "The lead: what happens to the old print shop",
+              "ago": "2h",
+              "thumb": "paper"
+            }
+          ]
+        },
+        {
+          "key": "questions",
+          "label": "Questions",
+          "hours": 8,
+          "items": [
+            {
+              "k": "po-1",
+              "kind": "post",
+              "author": "Ruby S.",
+              "title": "Winter sunsets",
+              "text": "Where can I watch the sunset in winter without freezing?",
+              "ago": "8h",
+              "comments": "14"
+            },
+            {
+              "k": "po-2",
+              "kind": "post",
+              "author": "Theo B.",
+              "title": "Late Monday",
+              "text": "What’s open after 10 pm on a Monday?",
+              "ago": "14h",
+              "comments": "11"
+            }
+          ]
+        },
+        {
+          "key": "picks",
+          "label": "Picks",
+          "hours": 30,
+          "items": [
+            {
+              "k": "pk-1",
+              "kind": "pick",
+              "src": "Btown Brief",
+              "eyebrow": "Today’s pick",
+              "title": "The cardamom bun at Marble Street Bakery",
+              "why": "Warm by eight, gone by ten.",
+              "media": "coffee"
+            },
+            {
+              "k": "pk-2",
+              "kind": "pick",
+              "src": "Btown Brief",
+              "eyebrow": "Today’s pick",
+              "title": "A free film night at the library",
+              "why": "A cozy room and a good reason to leave the house.",
+              "media": "plum"
+            }
+          ]
+        }
+      ]
+    },
+    "editions": {
+      "sections": [
+        {
+          "key": "latest",
+          "label": "Latest",
+          "hours": 3,
+          "items": [
+            {
+              "k": "hl-5",
+              "kind": "headline",
+              "src": "Btown Brief",
+              "title": "The Friday edition: six shows and the first cold snap",
+              "ago": "3h",
+              "thumb": "night"
+            },
+            {
+              "k": "hl-6",
+              "kind": "headline",
+              "src": "Btown Brief",
+              "title": "The Wednesday edition: everything else this week",
+              "ago": "5h",
+              "thumb": "mustard"
+            }
+          ]
+        },
+        {
+          "key": "by-date",
+          "label": "By date",
+          "hours": 30,
+          "items": [
+            {
+              "k": "hl-7",
+              "kind": "headline",
+              "src": "Btown Brief",
+              "title": "Monday: the farmers market moves inside",
+              "ago": "1d",
+              "thumb": "field"
+            },
+            {
+              "k": "hl-8",
+              "kind": "headline",
+              "src": "Btown Brief",
+              "title": "Friday: a haunted walk and four openings",
+              "ago": "2d",
+              "thumb": "foliage"
+            }
+          ]
+        },
+        {
+          "key": "by-interest",
+          "label": "By interest",
+          "hours": 70,
+          "items": [
+            {
+              "k": "hl-9",
+              "kind": "headline",
+              "src": "Btown Brief",
+              "title": "Food: every opening and closing this fall",
+              "ago": "3d",
+              "thumb": "brick"
+            },
+            {
+              "k": "hl-10",
+              "kind": "headline",
+              "src": "Btown Brief",
+              "title": "Music: the shows we told you about, all year",
+              "ago": "5d",
+              "thumb": "neon"
+            }
+          ]
+        },
+        {
+          "key": "search",
+          "label": "Search",
+          "hours": 9,
+          "items": [
+            {
+              "k": "hl-11",
+              "kind": "headline",
+              "src": "Btown Brief",
+              "title": "Most searched this week: soup, sledding, ramen",
+              "ago": "9h",
+              "thumb": "paper"
+            },
+            {
+              "k": "hl-12",
+              "kind": "headline",
+              "src": "Btown Brief",
+              "title": "Every edition that mentioned the waterfront",
+              "ago": "15h",
+              "thumb": "lake"
+            }
+          ]
+        },
+        {
+          "key": "last-year",
+          "label": "This week last year",
+          "hours": 2,
+          "items": [
+            {
+              "k": "hl-13",
+              "kind": "headline",
+              "src": "Btown Brief",
+              "title": "Last year this week: the first flurries and a pie contest",
+              "ago": "2h",
+              "thumb": "rink"
+            },
+            {
+              "k": "hl-14",
+              "kind": "headline",
+              "src": "Btown Brief",
+              "title": "Last year this week: three openings on North Winooski",
+              "ago": "4h",
+              "thumb": "street"
+            }
+          ]
+        },
+        {
+          "key": "random",
+          "label": "Random",
+          "hours": 200,
+          "items": [
+            {
+              "k": "hl-15",
+              "kind": "headline",
+              "src": "Btown Brief",
+              "title": "A summer edition: swimming holes and a sandcastle contest",
+              "ago": "1w",
+              "thumb": "sand"
+            },
+            {
+              "k": "hl-16",
+              "kind": "headline",
+              "src": "Btown Brief",
+              "title": "A spring edition: mud season and the best boots",
+              "ago": "2w",
+              "thumb": "pine"
+            }
+          ]
+        },
+        {
+          "key": "ask",
+          "label": "Ask",
+          "hours": 0.4,
+          "items": [
+            {
+              "k": "po-3",
+              "kind": "post",
+              "author": "Gwen T.",
+              "title": "Dinner Club history",
+              "text": "When did the Brief first write about the Dinner Club?",
+              "ago": "24m",
+              "comments": "2"
+            },
+            {
+              "k": "po-4",
+              "kind": "post",
+              "author": "Arun P.",
+              "title": "Cheap lunches",
+              "text": "Which edition had the list of cheap lunches downtown?",
+              "ago": "2h",
+              "comments": "4"
+            }
+          ]
+        }
+      ]
+    },
+    "picks": {
+      "sections": [
+        {
+          "key": "stephens-picks",
+          "label": "Stephen’s picks",
+          "hours": 6,
+          "items": [
+            {
+              "k": "pk-3",
+              "kind": "pick",
+              "src": "Btown Brief",
+              "eyebrow": "Stephen’s pick",
+              "title": "The bike path at four o’clock",
+              "why": "The light on the lake is the best show in town.",
+              "media": "lake"
+            },
+            {
+              "k": "pk-4",
+              "kind": "pick",
+              "src": "Btown Brief",
+              "eyebrow": "Stephen’s pick",
+              "title": "A Sunday at the Intervale",
+              "why": "Farms, a river and nobody in a hurry.",
+              "media": "field"
+            },
+            {
+              "k": "pk-5",
+              "kind": "pick",
+              "src": "Btown Brief",
+              "eyebrow": "Stephen’s pick",
+              "title": "Late jazz on a Tuesday",
+              "why": "A small room where the music is the point.",
+              "media": "night"
+            }
+          ]
+        },
+        {
+          "key": "best-of",
+          "label": "Best of",
+          "hours": 50,
+          "items": [
+            {
+              "k": "pk-6",
+              "kind": "pick",
+              "src": "Btown Brief",
+              "eyebrow": "Best of",
+              "title": "The best bagels, ranked by readers",
+              "why": "Thousands of votes and one surprise winner.",
+              "media": "coffee"
+            },
+            {
+              "k": "pk-7",
+              "kind": "pick",
+              "src": "Btown Brief",
+              "eyebrow": "Best of",
+              "title": "The best walks under an hour",
+              "why": "For when you need air but not an expedition.",
+              "media": "foliage"
+            }
+          ]
+        },
+        {
+          "key": "this-month",
+          "label": "This month",
+          "hours": 0.7,
+          "items": [
+            {
+              "k": "pk-8",
+              "kind": "pick",
+              "src": "Btown Brief",
+              "eyebrow": "This month",
+              "title": "November: soup, sweaters and shows",
+              "why": "The month to stay out a little later.",
+              "media": "plum"
+            },
+            {
+              "k": "pk-9",
+              "kind": "pick",
+              "src": "Btown Brief",
+              "eyebrow": "This month",
+              "title": "The first skate of the season",
+              "why": "The rink is open and the music is loud.",
+              "media": "rink"
+            }
+          ]
+        },
+        {
+          "key": "spotlight",
+          "label": "Spotlight",
+          "hours": 3,
+          "items": [
+            {
+              "k": "pk-10",
+              "kind": "pick",
+              "src": "Btown Brief",
+              "eyebrow": "Spotlight",
+              "title": "Pine Street Yarn Co. and its knitting circle",
+              "why": "A shop that turned into a weekly gathering.",
+              "media": "mustard"
+            },
+            {
+              "k": "pk-11",
+              "kind": "pick",
+              "src": "Btown Brief",
+              "eyebrow": "Spotlight",
+              "title": "The neighbors who run the community fridge",
+              "why": "Quiet work that feeds a lot of people.",
+              "media": "teal"
+            }
+          ]
+        }
+      ]
+    },
+    "gossip": {
+      "sections": [
+        {
+          "key": "this-week",
+          "label": "This week",
+          "hours": 2,
+          "items": [
+            {
+              "k": "hl-17",
+              "kind": "headline",
+              "src": "Overheard",
+              "title": "Everyone has an opinion about the new crosswalk",
+              "ago": "2h",
+              "thumb": "street"
+            },
+            {
+              "k": "hl-18",
+              "kind": "headline",
+              "src": "Overheard",
+              "title": "The great parking spot argument of the Old North End",
+              "ago": "4h",
+              "thumb": "brick"
+            }
+          ]
+        },
+        {
+          "key": "threads",
+          "label": "Threads",
+          "hours": 0.5,
+          "items": [
+            {
+              "k": "hl-19",
+              "kind": "headline",
+              "src": "Thread of the week",
+              "title": "Where to find the best soup in town, 200 replies",
+              "ago": "30m",
+              "thumb": "coffee"
+            },
+            {
+              "k": "hl-20",
+              "kind": "headline",
+              "src": "Thread of the week",
+              "title": "The person who returns lost mittens to fences",
+              "ago": "2h",
+              "thumb": "rink"
+            }
+          ]
+        },
+        {
+          "key": "archive",
+          "label": "Archive",
+          "hours": 100,
+          "items": [
+            {
+              "k": "hl-21",
+              "kind": "headline",
+              "src": "Gossip archive",
+              "title": "The summer of the runaway goat",
+              "ago": "4d",
+              "thumb": "field"
+            },
+            {
+              "k": "hl-22",
+              "kind": "headline",
+              "src": "Gossip archive",
+              "title": "When the whole town argued about a mural",
+              "ago": "1w",
+              "thumb": "cherry"
+            }
+          ]
+        }
+      ]
+    },
+    "everything": {
+      "sections": [
+        {
+          "key": "apps",
+          "label": "Apps",
+          "hours": 20,
+          "items": [
+            {
+              "k": "pk-12",
+              "kind": "pick",
+              "src": "Btown Brief",
+              "eyebrow": "Apps",
+              "title": "Out: tonight and this weekend, in real life",
+              "why": "Start here when you want to leave the house.",
+              "media": "night"
+            },
+            {
+              "k": "pk-13",
+              "kind": "pick",
+              "src": "Btown Brief",
+              "eyebrow": "Apps",
+              "title": "Eat: where to eat right now",
+              "why": "Open now, new, closing and the Dinner Club.",
+              "media": "cherry"
+            }
+          ]
+        },
+        {
+          "key": "pages",
+          "label": "Pages",
+          "hours": 2,
+          "items": [
+            {
+              "k": "hl-23",
+              "kind": "headline",
+              "src": "Btown Brief",
+              "title": "The things-to-do guide, updated weekly",
+              "ago": "2h",
+              "thumb": "street"
+            },
+            {
+              "k": "hl-24",
+              "kind": "headline",
+              "src": "Btown Brief",
+              "title": "The restaurant guide, with hours that are right",
+              "ago": "4h",
+              "thumb": "brick"
+            }
+          ]
+        },
+        {
+          "key": "games",
+          "label": "Games",
+          "hours": 9,
+          "items": [
+            {
+              "k": "pk-14",
+              "kind": "pick",
+              "src": "Btown Brief",
+              "eyebrow": "Games",
+              "title": "The arcade, all in one place",
+              "why": "Short games you can finish on a bus ride.",
+              "media": "neon"
+            },
+            {
+              "k": "pk-15",
+              "kind": "pick",
+              "src": "Btown Brief",
+              "eyebrow": "Games",
+              "title": "The city game, one walk at a time",
+              "why": "Claim your streets and see your town anew.",
+              "media": "street"
+            }
+          ]
+        },
+        {
+          "key": "a-to-z",
+          "label": "A to Z",
+          "hours": 150,
+          "items": [
+            {
+              "k": "hl-25",
+              "kind": "headline",
+              "src": "Btown Brief",
+              "title": "Everything the Brief makes, from Arcade to Wiki",
+              "ago": "6d",
+              "thumb": "paper"
+            },
+            {
+              "k": "hl-26",
+              "kind": "headline",
+              "src": "Btown Brief",
+              "title": "New this month: four pages and two games",
+              "ago": "2w",
+              "thumb": "mustard"
+            }
+          ]
+        },
+        {
+          "key": "start-here",
+          "label": "Start here",
+          "hours": 3.5,
+          "items": [
+            {
+              "k": "pk-16",
+              "kind": "pick",
+              "src": "Btown Brief",
+              "eyebrow": "Start here",
+              "title": "New in town: read these five things first",
+              "why": "The quickest way to feel at home here.",
+              "media": "dawn"
+            },
+            {
+              "k": "pk-17",
+              "kind": "pick",
+              "src": "Btown Brief",
+              "eyebrow": "Start here",
+              "title": "The three apps most readers open daily",
+              "why": "Out, Eat and The Paper cover most days.",
+              "media": "lake"
+            }
+          ]
+        }
+      ]
+    },
+    "story": {
+      "sections": [
+        {
+          "key": "mission",
+          "label": "Mission",
+          "hours": 300,
+          "items": [
+            {
+              "k": "pk-18",
+              "kind": "pick",
+              "src": "Btown Brief",
+              "eyebrow": "Mission",
+              "title": "A town you know, and people you know in it",
+              "why": "Why the Brief exists, in a sentence.",
+              "media": "dawn"
+            },
+            {
+              "k": "pk-19",
+              "kind": "pick",
+              "src": "Btown Brief",
+              "eyebrow": "Mission",
+              "title": "Five problems worth solving where you live",
+              "why": "Health, friends, housing, money and fun.",
+              "media": "pine"
+            }
+          ]
+        },
+        {
+          "key": "about",
+          "label": "About",
+          "hours": 120,
+          "items": [
+            {
+              "k": "hl-27",
+              "kind": "headline",
+              "src": "Btown Brief",
+              "title": "How the Brief started, and who writes it",
+              "ago": "5d",
+              "thumb": "paper"
+            },
+            {
+              "k": "hl-28",
+              "kind": "headline",
+              "src": "Btown Brief",
+              "title": "How an edition gets made, start to finish",
+              "ago": "1w",
+              "thumb": "slate"
+            }
+          ]
+        },
+        {
+          "key": "merch",
+          "label": "Merch",
+          "hours": 1.5,
+          "items": [
+            {
+              "k": "pk-20",
+              "kind": "pick",
+              "src": "Btown Brief",
+              "eyebrow": "Merch",
+              "title": "The lake tee, in winter gray",
+              "why": "Soft, simple and very Burlington.",
+              "media": "slate"
+            },
+            {
+              "k": "pk-21",
+              "kind": "pick",
+              "src": "Btown Brief",
+              "eyebrow": "Merch",
+              "title": "The tote for the farmers market",
+              "why": "Holds two squash and a loaf of bread.",
+              "media": "field"
+            }
+          ]
+        },
+        {
+          "key": "support",
+          "label": "Support",
+          "hours": 30,
+          "items": [
+            {
+              "k": "pk-22",
+              "kind": "pick",
+              "src": "Btown Brief",
+              "eyebrow": "Support",
+              "title": "Keep the Brief free for everyone",
+              "why": "Readers who chip in keep it going.",
+              "media": "teal"
+            },
+            {
+              "k": "pk-23",
+              "kind": "pick",
+              "src": "Btown Brief",
+              "eyebrow": "Support",
+              "title": "Gift a membership to a neighbor",
+              "why": "A good welcome for someone new in town.",
+              "media": "plum"
+            }
+          ]
+        },
+        {
+          "key": "how-i-live",
+          "label": "How I live",
+          "hours": 3,
+          "items": [
+            {
+              "k": "pk-24",
+              "kind": "pick",
+              "src": "Btown Brief",
+              "eyebrow": "How I live",
+              "title": "The daily template, habit by habit",
+              "why": "What a regular day looks like, start to finish.",
+              "media": "sand"
+            },
+            {
+              "k": "pk-25",
+              "kind": "pick",
+              "src": "Btown Brief",
+              "eyebrow": "How I live",
+              "title": "The gym, the lake and early nights",
+              "why": "The routine behind the newsletter.",
+              "media": "lake"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

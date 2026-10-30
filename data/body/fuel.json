@@ -1,0 +1,124 @@
+{
+ "_comment": "Body app, Fuel tab. The basics page (protein, creatine, diet and weight), how to log calories by photo in MacroFactor, editable water and protein-shake defaults for the tap counters, the 'less of' counter, and supplement notes on NAC, caffeine and L-theanine. Research behind the numbers, kept off the screen: protein, ISSN position stand, Jager et al. 2017, pubmed.ncbi.nlm.nih.gov/28642676; creatine, NIH ODS, ods.od.nih.gov/factsheets/ExerciseAndAthleticPerformance-Consumer, and ISSN, Kreider et al. 2017, pubmed.ncbi.nlm.nih.gov/28615996; weight loss pace, CDC, cdc.gov/healthy-weight-growth/losing-weight; calorie target, NIDDK Body Weight Planner, niddk.nih.gov/bwp; water, National Academies 2004 report on dietary intake levels for water, salt and potassium; caffeine, FDA, 'Spilling the Beans', fda.gov/consumers/consumer-updates/spilling-beans-how-much-caffeine-too-much; L-theanine, Owen et al. 2008, pubmed.ncbi.nlm.nih.gov/18681988, and Giesbrecht et al. 2010, pubmed.ncbi.nlm.nih.gov/21040626; NAC, Al Alaili, PLoS One 2026, pubmed.ncbi.nlm.nih.gov/42853821. General information only, never medical advice.",
+ "updated": "2026-10-30",
+ "doctor_line": "Not medical advice. Ask your doctor before any supplement, especially if you're pregnant, take medication, or have a heart, kidney or liver condition.",
+ "basics": {
+  "tab": "Basics",
+  "intro": "",
+  "sections": [
+   {
+    "id": "protein",
+    "title": "Protein",
+    "how_much": "0.65 to 0.9 grams per pound of body weight, every day.",
+    "when": "Spread it across meals, 20 to 40 grams each.",
+    "calculator": {"input": "weight_lb", "low_per_lb": 0.65, "high_per_lb": 0.9, "label": "Daily protein in grams"},
+    "easy_sources": ["Greek yogurt", "Eggs", "Chicken, turkey and fish", "Lean beef", "Tofu and edamame", "Cottage cheese", "Beans and lentils", "A protein shake"],
+    "sources": []
+   },
+   {
+    "id": "creatine",
+    "title": "Creatine",
+    "how_much": "3 to 5 grams of creatine monohydrate a day.",
+    "when": "Any time. Every day, rest days included.",
+    "what_it_does": "Fuels short, hard efforts like lifting and sprinting.",
+    "heads_up": "Expect a couple of pounds of water weight early on.",
+    "sources": []
+   },
+   {
+    "id": "diet-and-weight",
+    "title": "Diet and weight",
+    "how_much": "Eat a little less than you burn to lose. A little more to gain. Aim for 1 to 2 pounds a week.",
+    "how": "Start with the NIH Body Weight Planner. Log for two weeks. Adjust by 100 to 200 calories a day.",
+    "simple_rules": [
+     "Protein at every meal.",
+     "Fruit or vegetables at most meals.",
+     "Mostly water, coffee or tea.",
+     "Watch your weekly average weight."
+    ],
+    "sources": []
+   }
+  ]
+ },
+ "calories": {
+  "tab": "Calories",
+  "intro": "",
+  "app": {"name": "MacroFactor", "url": "https://macrofactor.com/", "how_url": "https://macrofactor.com/ai-food-logging/", "price": null, "price_note": "Free trial, then a paid subscription."},
+  "photo_steps": [
+   "Open the food logger and tap AI.",
+   "Take a photo of your meal.",
+   "Check the foods it finds.",
+   "Fix any amounts, add anything it missed.",
+   "Log it."
+  ],
+  "photo_tips": [
+   "Shoot from above in good light.",
+   "Spread the food out.",
+   "Put a fork in the frame for scale.",
+   "Scan the barcode on packaged food."
+  ],
+  "in_app": {"what": "Daily total and a photo.", "fields": ["photo", "calories", "protein_g", "note"]},
+  "sources": []
+ },
+ "defaults": {
+  "_comment": "Starting values for the Water and Protein tap counters. Every one is editable by the reader and saved on their phone or account.",
+  "water": {
+   "goal_oz": 96,
+   "tap_oz": 16,
+   "unit_options": ["oz", "ml"],
+   "why": "A round starting goal. Drink more on gym days and hot days.",
+   "history_days": 30,
+   "sources": []
+  },
+  "protein_shake": {
+   "goal_per_day": 1,
+   "grams_per_shake": 30,
+   "protein_goal_g": 140,
+   "why": "One shake covers a big piece of your protein.",
+   "add_creatine_reminder": true
+  },
+  "creatine": {"grams_per_day": 5, "tap": true}
+ },
+ "less_of": {
+  "tab": "Less of",
+  "what": "A counter you set yourself. Nothing is preset.",
+  "fields": [
+   {"key": "name", "label": "What you want less of", "hint": "Scrolling after dinner"},
+   {"key": "limit", "label": "Limit", "hint": "1"},
+   {"key": "per", "label": "Per", "options": ["day", "week"]},
+   {"key": "swap", "label": "What you'll do instead", "hint": "A walk, a book, a call"}
+  ],
+  "stephen_example": {"name": "Scrolling after dinner", "limit": 0, "per": "day", "swap": "A walk, a book, a call."}
+ },
+ "supplements": {
+  "tab": "Supplements",
+  "intro": "",
+  "items": [
+   {
+    "id": "caffeine",
+    "name": "Caffeine",
+    "what": "The stimulant in coffee, tea and energy drinks.",
+    "how_much": "The FDA cites 400 milligrams a day for most healthy adults. That's two to three 12-ounce coffees.",
+    "timing": "Stop eight hours before bed.",
+    "watch_for": "Jitters, racing heart, upset stomach, bad sleep.",
+    "sources": []
+   },
+   {
+    "id": "l-theanine",
+    "name": "L-theanine",
+    "what": "An amino acid in tea, sold as a capsule. Often paired with caffeine.",
+    "how_much": "Studies used about 100 milligrams with 50 milligrams of caffeine.",
+    "evidence": "Two small studies found better focus and alertness.",
+    "sources": []
+   },
+   {
+    "id": "nac",
+    "name": "NAC (N-acetylcysteine)",
+    "what": "A form of the amino acid cysteine. A medicine for decades, also sold as a supplement.",
+    "how_much": null,
+    "how_much_note": "Ask a doctor or pharmacist.",
+    "evidence": "Lots of research, uneven quality. Not in standard guidelines for everyday use.",
+    "sources": []
+   }
+  ]
+ }
+}

@@ -1,0 +1,163 @@
+{
+ "_about": "Invented for the demo. Every street, business, meeting and number here is made up; none of it is a real record.",
+ "status": {
+  "ban": null,
+  "ban_url": null,
+  "schools": 0
+ },
+ "median": 510000,
+ "tiles": [
+  {
+   "id": "signup-demo-1",
+   "kind": "signup",
+   "ageHours": 1,
+   "title": "Pretend Swim Lessons",
+   "day": null,
+   "n": 3,
+   "org": "Demo Rec",
+   "url": "https://example.com/signup"
+  },
+  {
+   "id": "city-demo-1",
+   "kind": "city",
+   "ageHours": 2,
+   "title": "City Council",
+   "day": null,
+   "agenda": true,
+   "url": "https://example.com/council"
+  },
+  {
+   "id": "cityweek-demo",
+   "kind": "cityweek",
+   "ageHours": 3,
+   "n": 6,
+   "url": "#cityhall",
+   "rows": [
+    [
+     null,
+     "Pretend Commission",
+     "https://example.com/a"
+    ],
+    [
+     null,
+     "Made-Up Review Board",
+     "https://example.com/b"
+    ],
+    [
+     null,
+     "Sample Subcommittee",
+     "https://example.com/c"
+    ]
+   ]
+  },
+  {
+   "id": "road-demo-1",
+   "kind": "road",
+   "ageHours": 5,
+   "title": "Tamarack Way Water Main",
+   "what": "Water main",
+   "n": 1,
+   "url": "https://example.com/road"
+  },
+  {
+   "id": "food-demo-1",
+   "kind": "food",
+   "ageHours": 7,
+   "title": "Invented Diner to Close After 20 Years",
+   "url": "https://example.com/food"
+  },
+  {
+   "id": "reddit-demo-1",
+   "kind": "reddit",
+   "ageHours": 8,
+   "title": "Sample thread everyone has an opinion on",
+   "score": 64,
+   "comments": 31,
+   "url": "https://example.com/thread"
+  },
+  {
+   "id": "sold-demo-1",
+   "kind": "sold",
+   "ageHours": 9,
+   "title": "House on Juniper Court",
+   "price": 462500,
+   "assessed": 302200,
+   "closed": null
+  },
+  {
+   "id": "jobs-demo-1",
+   "kind": "jobs",
+   "ageHours": 30,
+   "n": 14,
+   "url": "#work",
+   "rows": [
+    [
+     "Demo Hospital",
+     5
+    ],
+    [
+     "Sample College",
+     3
+    ],
+    [
+     "Pretend Credit Union",
+     2
+    ]
+   ]
+  },
+  {
+   "id": "going-demo-1",
+   "kind": "going",
+   "ageHours": 48,
+   "title": "Sample Bagels",
+   "where": "12 Harbor View Place",
+   "what": "Restaurant fit-out",
+   "cost": 85000,
+   "url": "https://example.com/permit"
+  },
+  {
+   "id": "week-demo-1",
+   "kind": "week",
+   "ageHours": 60,
+   "n": 101,
+   "cost": 1800000,
+   "bars": [
+    [
+     "Building",
+     42
+    ],
+    [
+     "Zoning permit",
+     31
+    ],
+    [
+     "Electrical",
+     20
+    ],
+    [
+     "Mechanical",
+     8
+    ]
+   ],
+   "url": null
+  },
+  {
+   "id": "sold-demo-2",
+   "kind": "sold",
+   "ageHours": 80,
+   "title": "Condo on Birchwood Avenue",
+   "price": 1250000,
+   "assessed": null,
+   "closed": null
+  },
+  {
+   "id": "road-demo-2",
+   "kind": "road",
+   "ageHours": 100,
+   "title": "Larkspur Lane Outfall",
+   "what": null,
+   "n": 3,
+   "url": "https://example.com/road2"
+  }
+ ]
+}

@@ -1,0 +1,192 @@
+{
+ "_comment": "Body app, Train tab. Three routines (beginner on machines and cables, intermediate adds dumbbells, hardcore on free weights), a sprint session, the effort scale, the log format and the first-day walkthrough. Every routine fits 20 to 30 minutes including rest, counted at 45 seconds a set (90 for a-side moves and back-to-back pairs), the listed rest after every set, plus warm-up and cool-down. The key 'machine' holds any exercise, free weights included, because train.js and the reader's log key on it. book_stephen is kept as an empty stub; nothing reads it. Not medical advice.",
+ "updated": "2026-10-30",
+ "principles": [
+  "Effort is the whole point.",
+  "Hard has a signal: your reps slow down.",
+  "Slowing reps mean you're near your max.",
+  "Machines and cables are the easy way in. Free weights work too.",
+  "Thirty minutes, tops.",
+  "Log every set."
+ ],
+ "effort": {
+  "name": "Know what hard is",
+  "how": "Hard has a signal: your reps slow down. That's how you know you're near your max. After each set, count the clean reps you had left.",
+  "scale": [
+   {"left": 5, "feels": "Easy. Every rep feels the same.", "use": "Warm-up sets."},
+   {"left": 3, "feels": "Working. The last rep starts to slow.", "use": "Beginner target."},
+   {"left": 2, "feels": "Hard. Your reps are clearly slowing.", "use": "Intermediate target."},
+   {"left": 1, "feels": "Very hard. The last rep grinds.", "use": "Hardcore target."},
+   {"left": 0, "feels": "All out. The weight stops moving.", "use": "Cables, curls and raises. Never under a bar."}
+  ],
+  "rule": "Top of the range with reps to spare? Add weight. Can't reach the bottom? Go lighter."
+ },
+ "log": {
+  "how": "One line per exercise: settings, weight, reps, what was left.",
+  "fields": [
+   {"key": "date", "label": "Date"},
+   {"key": "machine", "label": "Exercise"},
+   {"key": "settings", "label": "Settings", "hint": "Seat 4, back pad 2"},
+   {"key": "weight", "label": "Weight", "hint": "Pin at 90"},
+   {"key": "reps", "label": "Reps per set", "hint": "12, 11, 10"},
+   {"key": "left", "label": "Left in the tank", "hint": "2"},
+   {"key": "note", "label": "Note", "hint": "Go up next time"}
+  ],
+  "example": "Chest press, seat 5, 90 lb, 12 / 11 / 10, 2 left."
+ },
+ "setup_basics": [
+  {"step": "Seat height", "how": "Line the handles or pads up with the muscle doing the work."},
+  {"step": "Pivot point", "how": "Match the colored dot to the joint that moves."},
+  {"step": "Pads and range", "how": "Snug the pads. Start with a stretch. Nothing should pinch."},
+  {"step": "Weight", "how": "Do eight easy reps, then adjust."},
+  {"step": "Tempo", "how": "One second out, two seconds back. Don't let the stack slam."},
+  {"step": "Breathing", "how": "Out on the push, in on the return."}
+ ],
+ "routines": [
+  {
+   "id": "beginner",
+   "name": "Beginner",
+   "who": "New, or back after a long break. Machines and cables are the easy way in.",
+   "days_per_week": 3,
+   "schedule": "Any three days, with a rest day between.",
+   "minutes": 25,
+   "warmup": "Three easy minutes on a bike or treadmill.",
+   "progression": "Hard means your reps start to slow. Get there every set. Hit 12 on both sets? Add weight.",
+   "exercises": [
+    {"machine": "Leg press", "works": "Thighs and glutes", "setup": "Back flat on the pad, feet shoulder width.", "how": "Push through your whole foot. Don't lock your knees. Lower slowly.", "sets": 2, "reps": "10 to 12", "left": 3, "rest_seconds": 60},
+    {"machine": "Chest press", "works": "Chest, shoulders, triceps", "setup": "Handles at mid chest, back on the pad.", "how": "Press until your arms are nearly straight. Return slowly.", "sets": 2, "reps": "10 to 12", "left": 3, "rest_seconds": 60},
+    {"machine": "Lat pulldown", "works": "Back and biceps", "setup": "Thigh pad snug. Grip a little wider than your shoulders.", "how": "Pull the bar to your upper chest. Let it rise slowly.", "sets": 2, "reps": "10 to 12", "left": 3, "rest_seconds": 60},
+    {"machine": "Seated row", "works": "Mid back", "setup": "Cable station or row machine. Sit tall.", "how": "Pull to your stomach, elbows close. Reach forward slowly.", "sets": 2, "reps": "10 to 12", "left": 3, "rest_seconds": 60},
+    {"machine": "Seated leg curl", "works": "Hamstrings", "setup": "Knee on the pivot dot, pad just above your heels.", "how": "Curl down and back, pause, return slowly.", "sets": 2, "reps": "10 to 12", "left": 3, "rest_seconds": 60}
+   ],
+   "cooldown": "Two minutes of easy walking."
+  },
+  {
+   "id": "intermediate",
+   "name": "Intermediate",
+   "who": "Two months of steady training. Time to add dumbbells.",
+   "days_per_week": 3,
+   "schedule": "Alternate Day A and Day B.",
+   "minutes": 30,
+   "warmup": "Three easy minutes, then one light set of the first move.",
+   "progression": "Your reps should clearly slow by the end of every set. Hit the top of the range on all sets? Add weight.",
+   "days": [
+    {
+     "name": "Day A, legs and push",
+     "exercises": [
+      {"machine": "Leg press or hack squat", "works": "Thighs and glutes", "setup": "Feet shoulder width, knees over your toes.", "how": "Go deep while your lower back stays on the pad.", "sets": 3, "reps": "8 to 12", "left": 2, "rest_seconds": 90},
+      {"machine": "Dumbbell bench press", "works": "Chest and triceps", "setup": "Flat bench, dumbbells at your chest.", "how": "Press up. Lower slowly to a stretch.", "sets": 3, "reps": "8 to 12", "left": 2, "rest_seconds": 90},
+      {"machine": "Dumbbell shoulder press", "works": "Shoulders", "setup": "Seated, back supported, dumbbells at your shoulders.", "how": "Press up. Lower under control.", "sets": 3, "reps": "8 to 12", "left": 2, "rest_seconds": 90},
+      {"machine": "Cable triceps pushdown", "works": "Triceps", "setup": "Rope on the high pulley, elbows at your sides.", "how": "Push down until your arms are straight. Control the way up.", "sets": 2, "reps": "10 to 15", "left": 2, "rest_seconds": 60}
+     ]
+    },
+    {
+     "name": "Day B, back and legs",
+     "exercises": [
+      {"machine": "Lat pulldown", "works": "Back and biceps", "setup": "Thigh pad snug. Grip a little wider than your shoulders.", "how": "Pull to your upper chest. Slow on the way up.", "sets": 3, "reps": "8 to 12", "left": 2, "rest_seconds": 90},
+      {"machine": "Seated row", "works": "Mid back", "setup": "Cable station or row machine. Sit tall.", "how": "Pull to your stomach. Squeeze your shoulder blades.", "sets": 3, "reps": "8 to 12", "left": 2, "rest_seconds": 90},
+      {"machine": "Dumbbell Romanian deadlift", "works": "Hamstrings and glutes", "setup": "Dumbbells at your thighs, knees soft.", "how": "Push your hips back until your hamstrings pull. Keep your back flat. Stand tall.", "sets": 3, "reps": "8 to 12", "left": 2, "rest_seconds": 90},
+      {"machine": "Cable curl", "works": "Biceps", "setup": "Low pulley, elbows at your sides.", "how": "Curl up. Lower all the way.", "sets": 2, "reps": "10 to 15", "left": 2, "rest_seconds": 60}
+     ]
+    }
+   ],
+   "cooldown": "Two minutes of easy walking."
+  },
+  {
+   "id": "hardcore",
+   "name": "Hardcore",
+   "who": "A year of steady training. You've moved past the machines.",
+   "days_per_week": 5,
+   "schedule": "Push, Pull, Legs, rest, Upper, Lower, rest. Only three days? Run Push, Pull, Legs.",
+   "minutes": 30,
+   "warmup": "Five minutes: easy cardio, then two light sets of the first lift.",
+   "progression": "Every set ends with the bar slowing down. Top of the range? Add weight. Every sixth week, halve the sets.",
+   "days": [
+    {
+     "name": "Push",
+     "exercises": [
+      {"machine": "Barbell bench press", "sets": 3, "reps": "5 to 8", "left": 1, "rest_seconds": 150},
+      {"machine": "Standing overhead press", "sets": 3, "reps": "6 to 10", "left": 1, "rest_seconds": 90},
+      {"machine": "Dips", "sets": 2, "reps": "8 to 12", "left": 1, "rest_seconds": 75}
+     ]
+    },
+    {
+     "name": "Pull",
+     "exercises": [
+      {"machine": "Pull-ups", "sets": 3, "reps": "6 to 10", "left": 1, "rest_seconds": 120},
+      {"machine": "Barbell row", "sets": 3, "reps": "6 to 10", "left": 1, "rest_seconds": 90},
+      {"machine": "Cable face pull", "sets": 2, "reps": "12 to 15", "left": 0, "rest_seconds": 60},
+      {"machine": "Dumbbell curl", "sets": 2, "reps": "10 to 12", "left": 0, "rest_seconds": 60}
+     ]
+    },
+    {
+     "name": "Legs",
+     "exercises": [
+      {"machine": "Barbell back squat", "sets": 3, "reps": "5 to 8", "left": 1, "rest_seconds": 150},
+      {"machine": "Romanian deadlift", "sets": 3, "reps": "8 to 10", "left": 1, "rest_seconds": 90},
+      {"machine": "Walking lunges", "sets": 2, "reps": "10 a side", "left": 1, "rest_seconds": 75}
+     ]
+    },
+    {
+     "name": "Upper",
+     "exercises": [
+      {"machine": "Incline dumbbell press", "sets": 3, "reps": "8 to 12", "left": 1, "rest_seconds": 90},
+      {"machine": "Chin-ups", "sets": 3, "reps": "6 to 10", "left": 1, "rest_seconds": 90},
+      {"machine": "Dumbbell lateral raise", "sets": 2, "reps": "12 to 15", "left": 0, "rest_seconds": 60},
+      {"machine": "Cable curl and pushdown, back to back", "sets": 2, "reps": "12 to 15", "left": 0, "rest_seconds": 60}
+     ]
+    },
+    {
+     "name": "Lower",
+     "exercises": [
+      {"machine": "Deadlift", "sets": 3, "reps": "3 to 5", "left": 1, "rest_seconds": 150},
+      {"machine": "Bulgarian split squat", "sets": 2, "reps": "8 a side", "left": 1, "rest_seconds": 90},
+      {"machine": "Hanging leg raise", "sets": 3, "reps": "10 to 15", "left": 1, "rest_seconds": 60}
+     ]
+    }
+   ],
+   "notes": "Under a bar, stop at one left and use a spotter or safety pins. Zero left is for cables, curls and raises.",
+   "cooldown": "Two minutes of easy walking."
+  }
+ ],
+ "sprints": {
+  "id": "sprints",
+  "name": "Sprint session",
+  "why": "Short, fast bursts build speed and conditioning.",
+  "days_per_week": "Once or twice, away from heavy leg days",
+  "where": "A track, a flat path or a gentle hill. Bike or rower when it's icy.",
+  "warmup": [
+   {"what": "Easy jog or bike", "minutes": 4},
+   {"what": "Leg swings, lunges and high knees", "minutes": 2},
+   {"what": "Three 15-second build-ups, each one faster", "minutes": 3}
+  ],
+  "main": {
+   "rounds": 6,
+   "work_seconds": 12,
+   "rest_seconds": 90,
+   "rest_how": "Walk back slowly. Go when your breathing settles.",
+   "effort": "About 90 percent. Fast and relaxed.",
+   "progression": "Add a round a week, up to ten. Then go to 15 seconds."
+  },
+  "cooldown": {"what": "Easy walk", "minutes": 3},
+  "log": "Rounds, time and how it felt.",
+  "safety": "Never skip the warm-up. Stop if anything pulls."
+ },
+ "first_day": {
+  "id": "first-day",
+  "name": "Your first day at the gym",
+  "who": "For anyone who's never lifted.",
+  "minutes": 30,
+  "bring": ["Photo ID", "Water bottle", "Sneakers", "Your phone", "A small towel"],
+  "steps": [
+   {"title": "Get in the door", "minutes": 3, "how": "Buy a day pass and find the machines. Nobody is watching you."},
+   {"title": "Warm up", "minutes": 3, "how": "Easy pace on a bike or treadmill."},
+   {"title": "Learn one machine", "minutes": 5, "how": "Start with the chest press. Set the seat, pick a light weight, do eight slow reps."},
+   {"title": "Learn what hard is", "minutes": 5, "how": "Add weight until your reps start to slow. That's near your max. Stop with three left."},
+   {"title": "Run the circuit", "minutes": 12, "how": "One set on each of the five beginner machines. Log each one."},
+   {"title": "Book the next two", "minutes": 2, "how": "Put two more sessions in your calendar."}
+  ],
+  "after": "Soreness for a day or two is normal. Go back within three days.",
+  "book_stephen": {"what": null, "price": null, "price_note": null, "status": null}
+ }
+}

@@ -1,0 +1,22 @@
+{
+  "_": "Invented demo data for the Body app: the reader's own side (the effort log, the water and protein counters, a less-of counter). The gyms, routines, recovery spots and fuel notes in the demo are the real files under data/body/; Together's posts come from boards-fake.js and its clubs from data/demo/run-clubs.json.",
+  "log": [
+    { "daysAgo": 0, "machine": "Chest press", "settings": "Seat 5", "weight": "90 lb", "reps": "12, 11, 10", "left": 2, "note": "Go up next time" },
+    { "daysAgo": 0, "machine": "Leg press", "settings": "Sled at 3", "weight": "180 lb", "reps": "12, 12", "left": 3, "note": "" },
+    { "daysAgo": 2, "machine": "Lat pulldown", "settings": "Thigh pad 4", "weight": "100 lb", "reps": "10, 10", "left": 2, "note": "" },
+    { "daysAgo": 2, "machine": "Chest press", "settings": "Seat 5", "weight": "90 lb", "reps": "11, 10, 9", "left": 2, "note": "" },
+    { "daysAgo": 4, "machine": "Seated row", "settings": "Chest pad 3", "weight": "85 lb", "reps": "12, 11", "left": 3, "note": "Felt easy" }
+  ],
+  "fuel": [
+    { "daysAgo": 0, "water": 48, "protein": 60, "shakes": 1, "creatine": true },
+    { "daysAgo": 1, "water": 96, "protein": 135, "shakes": 1, "creatine": true },
+    { "daysAgo": 2, "water": 80, "protein": 120, "shakes": 1, "creatine": true },
+    { "daysAgo": 3, "water": 64, "protein": 90, "shakes": 0, "creatine": false },
+    { "daysAgo": 4, "water": 112, "protein": 150, "shakes": 2, "creatine": true },
+    { "daysAgo": 5, "water": 96, "protein": 140, "shakes": 1, "creatine": true },
+    { "daysAgo": 6, "water": 32, "protein": 70, "shakes": 0, "creatine": true }
+  ],
+  "less": [
+    { "name": "Energy drinks", "limit": 1, "per": "week", "gives": "Bored", "swap": "Coffee with L-theanine before noon", "counts": [{ "daysAgo": 1, "n": 1 }] }
+  ]
+}

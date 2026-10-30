@@ -35,7 +35,28 @@
    rest, each checked against its own pattern (`handles` below; never a
    link, never an @). Two new field types: `url` (a link, only on a board
    Stephen pre-moderates, since links are how spam arrives) and the `until`
-   rule on a kind. */
+   rule on a kind.
+
+   The eight apps (2026-10-29, wave 0; the map's "new post kinds ... on the
+   existing boards framework with its moderation") add eight boards and
+   twelve kinds, with no new field type and nothing taken away, so the
+   rules stay at version 3 and the SQL is one function (nn-APPS.sql):
+     nightlife  open_tonight   Out · Nightlife · Open tonight: "my group is
+                               out tonight", where, until when, spots, ages
+     sports     session        Out · Sports · Pickup and Body · Together:
+                               "anyone at the courts at 6?"
+     stage      logged         Out · Events · Been there: a show you saw
+     neighbors  borrow, free, favor, lost, found
+                               People · Neighbors: the Neighbor Exchange and
+                               Lost & found (pets and things)
+     shifts     shift          People · Neighbors · Shifts: a nonprofit's
+                               two-hour slot; Stephen looks first (a link)
+     clubs      idea           People · Clubs · Start something
+     streets    report         Town · Streets · Report: a pothole, a dark
+                               streetlight; Stephen looks first (places)
+     rescue     rescue         Eat · Market · Rescue: food left at closing
+   A same-day kind lasts a day or two (`days`); a shift ends after its date
+   (`until`). */
 
 export const RULES = {
   version: 3,
@@ -217,6 +238,132 @@ export const RULES = {
         link: { type: 'url', max: 200 },
       },
     },
+    /* ---- the eight apps (2026-10-29) ---- */
+    /* Out · Nightlife: a group that is out tonight and has room. A day, then gone. */
+    nightlife: {
+      premod: false,
+      gallery: false,
+      kinds: {
+        open_tonight: { days: 1, photo: 'none', needs: ['where', 'until'] },
+      },
+      meta: {
+        where: { type: 'text', max: 60 },
+        until: { type: 'text', max: 20 },
+        spots: { type: 'int', min: 1, max: 20 },
+        ages: { type: 'enum', values: ['twenties', 'thirties', 'forties', 'fifties', 'any'] },
+      },
+    },
+    /* Out · Sports (pickup) and Body · Together (a workout, a recovery
+       session): who, what, where and when, for the next two days */
+    sports: {
+      premod: false,
+      gallery: false,
+      kinds: {
+        session: { days: 2, photo: 'none', needs: ['sport', 'where', 'when'] },
+      },
+      meta: {
+        sport: { type: 'enum', values: ['basketball', 'soccer', 'volleyball', 'tennis', 'pickleball', 'frisbee', 'hockey', 'run', 'ride',
+          'climb', 'workout', 'yoga', 'recovery', 'other'] },
+        where: { type: 'text', max: 60 },
+        when: { type: 'text', max: 60 },
+        spots: { type: 'int', min: 1, max: 30 },
+        level: { type: 'enum', values: ['easy', 'any', 'competitive'] },
+      },
+    },
+    /* Out · Events · Been there: the Stage Log, a show or play you saw. Kept. */
+    stage: {
+      premod: false,
+      gallery: false,
+      kinds: {
+        logged: { days: null, photo: 'optional', needs: ['venue', 'date'] },
+      },
+      meta: {
+        venue: { type: 'text', max: 60 },
+        date: { type: 'text', max: 20 },
+        what: { type: 'enum', values: ['show', 'play', 'comedy', 'film', 'talk', 'game', 'other'] },
+        stars: { type: 'int', min: 1, max: 5 },
+      },
+    },
+    /* People · Neighbors: borrow a ladder, give away a couch, ask an hour's
+       help, a lost or found pet or thing. `got` marks it done (lent, given,
+       home again). */
+    neighbors: {
+      premod: false,
+      gallery: false,
+      kinds: {
+        borrow: { days: 14, photo: 'none', needs: ['item'] },
+        free: { days: 14, photo: 'optional', needs: [] },
+        favor: { days: 7, photo: 'none', needs: [] },
+        lost: { days: 30, photo: 'optional', needs: ['what', 'seen'] },
+        found: { days: 30, photo: 'optional', needs: ['what', 'seen'] },
+      },
+      meta: {
+        item: { type: 'text', max: 60 },
+        what: { type: 'enum', values: ['pet', 'keys', 'phone', 'wallet', 'bike', 'bag', 'other'] },
+        seen: { type: 'text', max: 60 },
+        when: { type: 'text', max: 60 },
+        got: { type: 'bool' },
+      },
+    },
+    /* People · Neighbors · Shifts: a nonprofit's slot, with its sign-up
+       link, so Stephen looks first. Ends the day after its date. */
+    shifts: {
+      premod: true,
+      gallery: false,
+      kinds: {
+        shift: { days: 30, photo: 'none', needs: ['org', 'when', 'hours'], until: 'when' },
+      },
+      meta: {
+        org: { type: 'text', max: 60 },
+        when: { type: 'text', max: 60 },
+        hours: { type: 'int', min: 1, max: 8 },
+        slots: { type: 'int', min: 1, max: 50 },
+        link: { type: 'url', max: 200 },
+      },
+    },
+    /* People · Clubs · Start something: a club or ritual someone wants;
+       votes are "I'm in", and `size` is how many it needs to start */
+    clubs: {
+      premod: false,
+      gallery: false,
+      kinds: {
+        idea: { days: 60, photo: 'none', needs: ['kind'] },
+      },
+      meta: {
+        kind: { type: 'enum', values: ['sport', 'outdoors', 'music', 'books', 'food', 'games', 'making', 'social', 'learning', 'other'] },
+        days: { type: 'text', max: 40 },
+        size: { type: 'int', min: 2, max: 50 },
+      },
+    },
+    /* Town · Streets · Report: a pothole or a dark streetlight on the
+       public fixed-or-not map. Places and photos of streets, so Stephen
+       looks first. `fixed` is the poster's (or his) tick. */
+    streets: {
+      premod: true,
+      gallery: false,
+      kinds: {
+        report: { days: 90, photo: 'optional', needs: ['what', 'where'] },
+      },
+      meta: {
+        what: { type: 'enum', values: ['pothole', 'streetlight', 'sidewalk', 'crosswalk', 'sign', 'graffiti', 'trash', 'tree', 'other'] },
+        where: { type: 'text', max: 80 },
+        fixed: { type: 'bool' },
+      },
+    },
+    /* Eat · Market · Rescue: food a kitchen has left at closing, tonight */
+    rescue: {
+      premod: false,
+      gallery: false,
+      kinds: {
+        rescue: { days: 1, photo: 'optional', needs: ['spot', 'until'] },
+      },
+      meta: {
+        spot: { type: 'text', max: 60 },
+        until: { type: 'text', max: 20 },
+        price: { type: 'int', min: 0, max: 100 },
+        portions: { type: 'int', min: 1, max: 100 },
+      },
+    },
   },
 };
 
@@ -231,7 +378,11 @@ export const REASON_LABELS = { spam: 'Spam, or not from around here', unkind: 'R
 export const INTEREST_LABELS = { sports: 'Pickup sports', running: 'Running', outdoors: 'The outdoors', games: 'Games', music: 'Live music',
   dance: 'Dancing', books: 'Books', making: 'Making things', languages: 'Languages', food: 'Food and drink' };
 export const BOARD_LABELS = { people: 'People', vintage: 'Vintage', art: 'Art', watch: 'Watchlist', games: 'Games', square: 'The Square', gatherings: 'Gatherings',
-  playlists: 'Playlists' };
+  playlists: 'Playlists', nightlife: 'Open tonight', sports: 'Pickup', stage: 'Been there', neighbors: 'Neighbors', shifts: 'Shifts',
+  clubs: 'Start something', streets: 'Street reports', rescue: 'Food rescue' };
+/* the kinds' words, for a compose sheet and the boards desk */
+export const KIND_LABELS = { open_tonight: 'Open tonight', session: 'A game or a session', logged: 'Been there', borrow: 'Borrow', free: 'Free',
+  favor: 'A favor', lost: 'Lost', found: 'Found', shift: 'A shift', idea: 'Start something', report: 'Report', rescue: 'Food to rescue' };
 export const HANDLE_LABELS = {
   instagram: 'Instagram', spotify: 'Spotify', strava: 'Strava', letterboxd: 'Letterboxd', goodreads: 'Goodreads', beli: 'Beli',
   untappd: 'Untappd', psn: 'PlayStation', xbox: 'Xbox', steam: 'Steam', switch: 'Switch', discord: 'Discord', epic: 'Epic',

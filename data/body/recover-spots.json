@@ -1,0 +1,647 @@
+{
+ "_comment": "Body app, Recover tab, Sauna & cold (and massage). Saunas, cold plunges, float tanks, recovery studios and massage in and near Burlington. Prices and hours as published on each business's own site or its own booking page on the date in 'verified'; 'verified' is null when the address and at least one price could not both be confirmed there. Yoga studios live in gyms.json (kind 'yoga'); 'yoga_studios' below points at them so this tab can list them without a second copy. The 'unverified' arrays are empty on purpose: the sheet would show them to readers.",
+ "updated": "2026-10-30",
+ "kinds": {
+  "sauna": "Sauna",
+  "cold-plunge": "Cold plunge",
+  "bathhouse": "Bathhouse",
+  "float": "Float",
+  "infrared": "Infrared sauna",
+  "cryo": "Cryo",
+  "recovery-studio": "Recovery studio",
+  "massage": "Massage",
+  "spa": "Spa"
+ },
+ "spots": [
+  {
+   "id": "savu-lakeside",
+   "name": "Savu Sauna Lakeside",
+   "kind": "sauna",
+   "town": "Burlington",
+   "address": "50 Lakeside Ave, Burlington, VT",
+   "offers": "Wood-fired lakeside sauna rented privately by the hour, plus a weekly community session (Hula Happy Hour) where you sweat, dip in Lake Champlain, and rest.",
+   "prices": [
+    {
+     "item": "Private sauna, 60 minutes",
+     "price": "$77 plus tax"
+    },
+    {
+     "item": "Private sauna, additional hour",
+     "price": "$60 plus tax"
+    },
+    {
+     "item": "Private sauna, additional person",
+     "price": "$30 plus tax"
+    },
+    {
+     "item": "Hula Happy Hour community session (Tue and Wed, 5:30 to 6:30 pm)",
+     "price": "$20 per person"
+    },
+    {
+     "item": "Robe rental add-on",
+     "price": "$5 plus tax"
+    }
+   ],
+   "hours": "Mon to Thu 12 to 8; Fri to Sun 9 to 8",
+   "season": null,
+   "url": "https://savu.cc/lakeside",
+   "source_urls": [
+    "https://savu.cc",
+    "https://savu.cc/lakeside",
+    "https://savu.as.me/?appointmentType=category:SAVU%20Lakeside"
+   ],
+   "verified": "2026-10-29",
+   "unverified": [],
+   "notes": "Book ahead online. Bring a towel and water bottle to Hula Happy Hour."
+  },
+  {
+   "id": "stella-blue-sauna-pinery",
+   "name": "Stella Blue Sauna Co. (Pine Street sessions)",
+   "kind": "sauna",
+   "town": "Burlington",
+   "address": "377 Pine St, Burlington, VT 05401 (The Pinery); mobile rentals delivered elsewhere",
+   "offers": "Mobile wood-fired cedar sauna for 6 to 8 people. Book a shared public 50-minute sauna slot or a private buyout at The Pinery on Pine Street, or rent the sauna delivered to your site.",
+   "prices": [
+    {
+     "item": "Public Sauna Club, 50 minutes, per person",
+     "price": "$30"
+    },
+    {
+     "item": "Private sauna buyout, 50 minutes, up to 8 people",
+     "price": "$150"
+    },
+    {
+     "item": "Delivered rental, weekday 24 hours (Mon to Thu)",
+     "price": "$400"
+    },
+    {
+     "item": "Delivered rental, weekend 24 hours (Fri to Sun)",
+     "price": "$450"
+    },
+    {
+     "item": "Delivered rental, full week",
+     "price": "$1,100"
+    }
+   ],
+   "hours": "By appointment",
+   "season": null,
+   "url": "https://stellabluesaunaco.as.me/community-sauna",
+   "source_urls": [
+    "https://www.stellabluesaunaco.com/",
+    "https://www.stellabluesaunaco.com/mobile-sauna-rental",
+    "https://www.stellabluesaunaco.com/faqs",
+    "https://stellabluesaunaco.as.me/community-sauna",
+    "https://stellabluesaunaco.as.me/private-group-sauna"
+   ],
+   "verified": "2026-10-29",
+   "unverified": [],
+   "notes": "Swimsuit or athletic attire required; bring a towel, water bottle and slides. Under 18 must be with an adult and a guardian signs the waiver. Based in Hinesburg; delivery free within 20 miles of Hinesburg, $3.50 per mile beyond. Community socials announced on Instagram."
+  },
+  {
+   "id": "northern-kin-sauna",
+   "name": "Northern Kin Sauna Co.",
+   "kind": "sauna",
+   "town": "Charlotte (serves Burlington area)",
+   "address": "Mobile; location varies",
+   "offers": "Mobile sauna delivered and set up at your location, plus occasional pop-up community sauna rituals and sauna socials.",
+   "prices": [
+    {
+     "item": "Cold plunge, 15 minutes",
+     "price": "$10"
+    }
+   ],
+   "hours": "By appointment",
+   "season": null,
+   "url": "https://www.northernkinsauna.com/",
+   "source_urls": [
+    "https://www.northernkinsauna.com/",
+    "https://www.northernkinsauna.com/events",
+    "https://northernkinsauna.as.me/"
+   ],
+   "verified": "2026-10-29",
+   "unverified": [],
+   "notes": "Based in Charlotte, serving Burlington and nearby towns. Event dates post on its booking page and Instagram @kin.ritual."
+  },
+  {
+   "id": "float-away-williston",
+   "name": "Float Away Wellness Spa",
+   "kind": "float",
+   "town": "Williston",
+   "address": "300 Cornerstone Dr, Suite 115, Williston, VT 05495",
+   "offers": "Private Epsom-salt float suites with in-room showers, plus a vibroacoustic lounge and combo sessions.",
+   "prices": [
+    {
+     "item": "Float, 60 minutes",
+     "price": "$89"
+    },
+    {
+     "item": "Float, 90 minutes",
+     "price": "$119"
+    },
+    {
+     "item": "Vibroacoustic, 30 minutes",
+     "price": "$39"
+    },
+    {
+     "item": "Vibroacoustic, 60 minutes",
+     "price": "$69"
+    },
+    {
+     "item": "Vibro 30 plus Float 60",
+     "price": "$115"
+    },
+    {
+     "item": "Spa for two, 2 hours",
+     "price": "$219"
+    }
+   ],
+   "hours": "Wed to Sun 9 am to 6 pm; closed Mon and Tue",
+   "season": "Year round",
+   "url": "https://vtfloataway.com/services/",
+   "source_urls": [
+    "https://vtfloataway.com/services/",
+    "https://vtfloataway.com/about/"
+   ],
+   "verified": "2026-10-29",
+   "unverified": [],
+   "notes": "By appointment only; book online. Owner bought the tanks from the former Satori float spa in Shelburne, which has closed."
+  },
+  {
+   "id": "bijou-blu-south-burlington",
+   "name": "Bijou Blu Medical & Wellness",
+   "kind": "recovery-studio",
+   "town": "South Burlington",
+   "address": "234 Market St, South Burlington, VT 05403",
+   "offers": "Cold plunge and hot tub contrast therapy, Sunlighten infrared sauna, Rapid Reboot compression boots, localized cryotherapy, cupping, and massage. Also IV drips and cosmetic cryo facials.",
+   "prices": [
+    {
+     "item": "Cold plunge, first time",
+     "price": "$39"
+    },
+    {
+     "item": "Cold Plunge Monday special",
+     "price": "$25"
+    },
+    {
+     "item": "Infrared sauna, 30 minutes",
+     "price": "$35"
+    },
+    {
+     "item": "Rapid Reboot compression, 30 minutes",
+     "price": "$30"
+    },
+    {
+     "item": "Localized cryotherapy, 15 minutes",
+     "price": "$40"
+    },
+    {
+     "item": "Swedish massage, 60 minutes",
+     "price": "$135"
+    },
+    {
+     "item": "Deep tissue massage, 60 minutes",
+     "price": "$155"
+    },
+    {
+     "item": "Recovery membership, 8 sessions a month (cold plunge, sauna, compression)",
+     "price": "$125 per month, 3-month commitment"
+    }
+   ],
+   "hours": "Mon 10 to 2; Tue 12 to 6; Wed and Thu 10 to 6; Fri 10 to 4; Sat 9 to 1; Sun closed",
+   "season": "Year round",
+   "url": "https://www.bijoubluspa.com/pricing",
+   "source_urls": [
+    "https://www.bijoubluspa.com/",
+    "https://www.bijoubluspa.com/pricing",
+    "https://www.bijoubluspa.com/cold-plunge",
+    "https://www.bijoubluspa.com/infrared-sauna",
+    "https://www.bijoubluspa.com/athletic-recovery",
+    "https://www.bijoubluspa.com/local-cryo",
+    "https://www.bijoubluspa.com/massage"
+   ],
+   "verified": "2026-10-29",
+   "unverified": [],
+   "notes": "Prices differ across its site, so confirm when you book. Wellness Wednesday: $25 cold plunge, infrared sauna or compression. 24-hour cancellation on massages."
+  },
+  {
+   "id": "tight-club-williston",
+   "name": "Tight Club Williston",
+   "kind": "cryo",
+   "town": "Williston",
+   "address": "135 Allen Brook Ln, Suite 102, Williston, VT 05495",
+   "offers": "Fascia and lymphatic studio using targeted cryo-stimulation, red light, vibration plate and manual fascia work, aimed at pain, injury recovery and body contouring.",
+   "prices": [
+    {
+     "item": "New client consultation, 60 minutes",
+     "price": "$99"
+    },
+    {
+     "item": "PainRx targeted cryo, one area, 60 minutes",
+     "price": "$90"
+    },
+    {
+     "item": "FasciaRx, 90 minutes",
+     "price": "$200"
+    },
+    {
+     "item": "Red LightRx, 30 minutes",
+     "price": "$45"
+    }
+   ],
+   "hours": "Mon 8 to 5; Wed 8 to 5; Fri 8:30 to 5; closed Tue, Thu, Sat, Sun",
+   "season": "Year round",
+   "url": "https://tightclubwilliston.glossgenius.com/services",
+   "source_urls": [
+    "https://tightclubwilliston.glossgenius.com/",
+    "https://tightclubwilliston.glossgenius.com/services"
+   ],
+   "verified": "2026-10-29",
+   "unverified": [],
+   "notes": "Part of a multi-location brand. Booked appointments only."
+  },
+  {
+   "id": "spa-at-the-essex",
+   "name": "The Spa at The Essex",
+   "kind": "spa",
+   "town": "Essex",
+   "address": "70 Essex Way, Essex, VT 05452",
+   "offers": "Resort spa with massage menu, saunas, steam rooms, indoor pool, hot tub and relaxation lounges. Day passes available.",
+   "prices": [
+    {
+     "item": "Essex Signature massage, 50 minutes",
+     "price": "$175 Sun to Thu, $185 Fri and Sat, plus 22% service charge"
+    },
+    {
+     "item": "Essex Deep Tissue, 50 minutes",
+     "price": "$200 Sun to Thu, $210 Fri and Sat, plus 22% service charge"
+    },
+    {
+     "item": "Spa amenity access add-on with a treatment (saunas, steam, pools, lounges)",
+     "price": "$20"
+    },
+    {
+     "item": "'On Your Own' day pass",
+     "price": "$60 Mon to Wed, $75 Thu to Sun"
+    }
+   ],
+   "hours": "Spa Mon to Wed 10 am to 6 pm; Thu to Sun 8 am to 8 pm",
+   "season": "Year round",
+   "url": "https://www.essexresort.com/vermont-spa/treatments",
+   "source_urls": [
+    "https://www.essexresort.com/spa",
+    "https://www.essexresort.com/vermont-spa/treatments"
+   ],
+   "verified": "2026-10-29",
+   "unverified": [],
+   "notes": "Confirm the day pass price when you book. Steam rooms, saunas and spa lounges are 16 and older; under 18 must be with a parent or guardian. Wellness Pass members get $99 massages Sunday to Thursday."
+  },
+  {
+   "id": "oasis-day-spa-williston",
+   "name": "Oasis Day Spa",
+   "kind": "massage",
+   "town": "Williston",
+   "address": "300 Cornerstone Dr, #220, Williston, VT 05495",
+   "offers": "Full-service day spa: Swedish, deep tissue, hot stone, prenatal and chair massage, reflexology, soft pack (dry) float body treatments, facials and salon services.",
+   "prices": [
+    {
+     "item": "Swedish massage, 1 hour",
+     "price": "$105"
+    },
+    {
+     "item": "Swedish massage, 1.5 hours",
+     "price": "$145"
+    },
+    {
+     "item": "Deep tissue massage, 1 hour",
+     "price": "$115"
+    },
+    {
+     "item": "Hot stone, 70 minutes",
+     "price": "$135"
+    },
+    {
+     "item": "Chair massage, 20 minutes",
+     "price": "$39"
+    },
+    {
+     "item": "Soft pack float body treatment",
+     "price": "$145 to $160"
+    }
+   ],
+   "hours": "Mon 9 am to 4 pm; Tue to Sat 8:30 am to 7 pm; Sun closed",
+   "season": "Year round",
+   "url": "https://www.oasisdayspavt.com/products/massage",
+   "source_urls": [
+    "https://www.oasisdayspavt.com/",
+    "https://www.oasisdayspavt.com/products/massage",
+    "https://www.oasisdayspavt.com/products/soft-pack-float"
+   ],
+   "verified": "2026-10-29",
+   "unverified": [],
+   "notes": "Its soft pack float is a warm dry-float body treatment, not a saltwater float tank. Same building as Float Away."
+  },
+  {
+   "id": "rod-cain-massage",
+   "name": "Rod Cain Massage Therapy",
+   "kind": "massage",
+   "town": "Burlington",
+   "address": "1 Mill St, Suites 224 and 242, Burlington, VT 05401",
+   "offers": "Multi-therapist studio in the Chace Mill focused on deep tissue, sports and rehabilitative massage; also Swedish, prenatal and couples.",
+   "prices": [
+    {
+     "item": "Custom massage, 60 minutes",
+     "price": "$110"
+    },
+    {
+     "item": "Custom massage, 90 minutes",
+     "price": "$155"
+    },
+    {
+     "item": "Custom massage, 120 minutes",
+     "price": "$200"
+    },
+    {
+     "item": "Couples massage, 90 minutes",
+     "price": "$310"
+    }
+   ],
+   "hours": null,
+   "season": null,
+   "url": "https://www.rodcainmassage.com/",
+   "source_urls": [
+    "https://www.rodcainmassage.com/"
+   ],
+   "verified": "2026-10-29",
+   "unverified": [],
+   "notes": "Free parking at the Chace Mill. Hot towels included. Texting 802-355-5585 is the studio's preferred contact."
+  },
+  {
+   "id": "green-mountain-massage",
+   "name": "Green Mountain Massage & Bodywork",
+   "kind": "massage",
+   "town": "Burlington",
+   "address": "209 College St, Burlington, VT 05401",
+   "offers": "Team of therapists offering custom massage, short tune-ups, cupping and other bodywork, with a no-questions-asked sliding scale.",
+   "prices": [
+    {
+     "item": "Custom massage, 60 minutes",
+     "price": "$112"
+    },
+    {
+     "item": "Custom massage, 90 minutes",
+     "price": "$150"
+    },
+    {
+     "item": "Tune-up massage, 30 minutes",
+     "price": "$60"
+    },
+    {
+     "item": "Sliding scale massage, 60 minutes (minimum)",
+     "price": "$70"
+    },
+    {
+     "item": "Sliding scale massage, 90 minutes (minimum)",
+     "price": "$110"
+    }
+   ],
+   "hours": null,
+   "season": null,
+   "url": "https://gmmb.as.me/",
+   "source_urls": [
+    "http://btvmassage.com/",
+    "https://btvmassage.com/sliding-scale",
+    "https://gmmb.as.me/",
+    "https://gmmb.as.me/SlidingScale"
+   ],
+   "verified": "2026-10-29",
+   "unverified": [],
+   "notes": "Good budget pick: the sliding scale lets you pay a set minimum with no proof of income. 24 hours notice required to cancel."
+  },
+  {
+   "id": "homebody-massage-yoga",
+   "name": "Homebody Massage + Yoga",
+   "kind": "massage",
+   "town": "Burlington",
+   "address": "337 College St, Burlington, VT",
+   "offers": "Small practice offering relaxation and therapeutic massage, Reiki and Abhyanga, with nervous-system-focused bodywork.",
+   "prices": [
+    {
+     "item": "Relaxation massage, 60 minutes",
+     "price": "$95"
+    },
+    {
+     "item": "Relaxation massage, 90 minutes",
+     "price": "$140"
+    },
+    {
+     "item": "Therapeutic massage, 60 minutes",
+     "price": "$125"
+    },
+    {
+     "item": "Therapeutic massage, 90 minutes",
+     "price": "$175"
+    }
+   ],
+   "hours": "By appointment, Monday to Friday",
+   "season": null,
+   "url": "https://homebodymassageyoga.as.me",
+   "source_urls": [
+    "https://www.homebodyvt.com/",
+    "https://www.homebodyvt.com/massage",
+    "https://homebodymassageyoga.as.me"
+   ],
+   "verified": "2026-10-29",
+   "unverified": [],
+   "notes": "Second-floor office with stairs; off-street parking. 24-hour cancellation policy; late arrivals are not extended. Also has a Montpelier location."
+  },
+  {
+   "id": "soma-vt-massage",
+   "name": "SOMA VT (massage therapy)",
+   "kind": "massage",
+   "town": "South Burlington",
+   "address": "2069 Williston Rd, South Burlington, VT 05403",
+   "offers": "Training gym with an orthopedic massage therapist: sports and deep tissue massage, active release, cupping, kinesio taping.",
+   "prices": [
+    {
+     "item": "Massage, 60 minutes",
+     "price": "$130"
+    },
+    {
+     "item": "Massage, 90 minutes",
+     "price": "$185"
+    }
+   ],
+   "hours": null,
+   "season": null,
+   "url": "https://www.somavt.com/massage-therapy",
+   "source_urls": [
+    "https://www.somavt.com/massage-therapy"
+   ],
+   "verified": "2026-10-29",
+   "unverified": [],
+   "notes": "Sports and injury focus, aimed at lifters and athletes."
+  },
+  {
+   "id": "thrive-movement-massage",
+   "name": "Thrive Movement",
+   "kind": "massage",
+   "town": "Burlington",
+   "address": "255 South Champlain St, 2nd Floor, Burlington, VT 05401",
+   "offers": "Therapeutic, sports and orthopedic massage from a movement therapist, with IASTM, myofascial release and active release available.",
+   "prices": [
+    {
+     "item": "Massage, 60 minutes",
+     "price": "$110"
+    },
+    {
+     "item": "Massage, 90 minutes",
+     "price": "$140"
+    },
+    {
+     "item": "Massage, 120 minutes",
+     "price": "$175"
+    },
+    {
+     "item": "Five 60-minute sessions",
+     "price": "$525"
+    }
+   ],
+   "hours": "Mon 9 to 7; Tue 9 to 4:30; Wed 9 to 7; Thu 9 to 4:30; Fri 10 to 5; Sat closed; Sun 11 to 5",
+   "season": "Year round",
+   "url": "https://www.thrivemovementvermont.com/pricing",
+   "source_urls": [
+    "https://www.thrivemovementvermont.com/massage",
+    "https://www.thrivemovementvermont.com/pricing"
+   ],
+   "verified": "2026-10-29",
+   "unverified": [],
+   "notes": "Good fit for injury or mobility problems; massage can be paired with movement therapy."
+  },
+  {
+   "id": "cyntheas-spa",
+   "name": "Cynthea's Spa",
+   "kind": "massage",
+   "town": "Burlington",
+   "address": "129 St. Paul St, Burlington, VT",
+   "offers": "Downtown day spa with Swedish, deep tissue, aromatherapy, sports, prenatal and couples massage, plus facials, waxing and nails.",
+   "prices": [],
+   "hours": null,
+   "season": null,
+   "url": "https://cyntheaspa.com/massage.html",
+   "source_urls": [
+    "https://cyntheaspa.com/massage.html"
+   ],
+   "verified": null,
+   "unverified": [],
+   "notes": "Has a couples suite. Gratuities must be left in cash only. Phone 802-238-7524."
+  }
+ ],
+ "gym_saunas": [
+  {
+   "gym_id": "edge-essex-gauthier-drive",
+   "name": "The EDGE Sports & Fitness (Gauthier Drive, Essex)",
+   "note": "Comes with a membership or day pass."
+  },
+  {
+   "gym_id": "edge-south-burlington-eastwood-drive",
+   "name": "The EDGE Sports & Fitness (Eastwood Drive, South Burlington)",
+   "note": "Comes with a membership or day pass."
+  },
+  {
+   "gym_id": "edge-south-burlington-twin-oaks",
+   "name": "The EDGE Sports & Fitness (West Twin Oaks Terrace, South Burlington)",
+   "note": "Comes with a membership or day pass."
+  },
+  {
+   "gym_id": "greater-burlington-ymca",
+   "name": "Greater Burlington YMCA (Pomerleau Family Y)",
+   "note": "Pool-deck sauna. Comes with a membership or day pass."
+  },
+  {
+   "gym_id": "hwpo-gym-vt",
+   "name": "HWPO Gym VT (formerly 802 CrossFit)",
+   "note": "Sauna and cold plunge come with an unlimited membership."
+  }
+ ],
+ "yoga_studios": [
+  {
+   "gym_id": "grow-prenatal-family-center",
+   "name": "GROW Prenatal & Family Center",
+   "drop_in": "$29 drop-in"
+  },
+  {
+   "gym_id": "hot-yoga-burlington",
+   "name": "Hot Yoga Burlington",
+   "drop_in": "$15 single class; $5 online single class"
+  },
+  {
+   "gym_id": "iyengar-yoga-center-of-vermont",
+   "name": "Iyengar Yoga Center of Vermont",
+   "drop_in": "$20 single class"
+  },
+  {
+   "gym_id": "laughing-river-yoga",
+   "name": "Laughing River Yoga",
+   "drop_in": "$15 live single class; $13 virtual single class"
+  },
+  {
+   "gym_id": "sangha-studio-north",
+   "name": "Sangha Studio (North)",
+   "drop_in": "Donation-based drop-in (pay what you can)"
+  },
+  {
+   "gym_id": "second-circle-yoga",
+   "name": "Second Circle",
+   "drop_in": "$15 suggested, pay what you can"
+  },
+  {
+   "gym_id": "soulshine-power-yoga-burlington",
+   "name": "SoulShine Power Yoga (Downtown Burlington)",
+   "drop_in": "$16 drop-in"
+  },
+  {
+   "gym_id": "soulshine-power-yoga-essex",
+   "name": "SoulShine Power Yoga (Essex)",
+   "drop_in": "$16 drop-in"
+  },
+  {
+   "gym_id": "yogasix-south-burlington",
+   "name": "YogaSix South Burlington",
+   "drop_in": null
+  },
+  {
+   "gym_id": "sangha-studio-williston",
+   "name": "Sangha Studio (Williston)",
+   "drop_in": "Donation-based drop-in (pay what you can)"
+  },
+  {
+   "gym_id": "williston-hot-yoga",
+   "name": "Williston Hot Yoga",
+   "drop_in": "$22 per class"
+  }
+ ],
+ "checked_not_listed": [
+  {
+   "name": "Satori Float & Mind Spa, Shelburne",
+   "why": "Closed; news coverage says the owner retired and Float Away bought the tanks."
+  },
+  {
+   "name": "GoFloat Studios",
+   "why": "It is in Burlington, Ontario. Directories list it as Vermont by mistake."
+  },
+  {
+   "name": "SweatHouz Burlington",
+   "why": "It is in Burlington, Massachusetts."
+  },
+  {
+   "name": "Savu's Flynn Ave bathhouse",
+   "why": "Seven Days reported it for fall 2026, but savu.cc does not mention it yet."
+  }
+ ],
+ "leads_to_check": [
+  "Soma Detoxx Spa, 359 Dorset St, South Burlington (infrared sauna and salt room; no website of its own found)",
+  "Origins Massage & Wellness, 2 Church St (MassageBook page only)",
+  "Rick Lothrop Massage, Chace Mill (site has no prices)",
+  "Local Branch Cryo & Wellness (a directory says Burlington; no address found)"
+ ]
+}

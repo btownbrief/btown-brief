@@ -89,6 +89,40 @@ export const ICON = {
   more: svg('<circle cx="5.5" cy="12" r="1.6" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.6" fill="currentColor" stroke="none"/><circle cx="18.5" cy="12" r="1.6" fill="currentColor" stroke="none"/>'),
   down: svg('<path d="m6 9.5 6 6 6-6"/>'),
   trash: svg('<path d="M4.5 7h15M9.5 7V4.5h5V7M6.5 7l1 13h9l1-13M10 11v5.5M14 11v5.5"/>'),
+  /* the eight apps (2026-10-29): All Day is the Wire's pulse, Eat is Food's
+     fork and knife, People and Play are People's and Games' own */
+  out: svg('<path d="M18.5 14.6A7.3 7.3 0 0 1 9.4 5.5a7.3 7.3 0 1 0 9.1 9.1z"/><path d="M17 3.5v3M15.5 5h3M20.5 8.5v2M19.5 9.5h2"/>'),
+  body: svg('<path d="M12 20s-7.5-4.6-7.5-10A4.3 4.3 0 0 1 12 7.6 4.3 4.3 0 0 1 19.5 10c0 5.4-7.5 10-7.5 10z"/><path d="M7.5 12.5h2.6l1.2-2.2 1.8 3.6 1.2-1.4h2.2"/>'),
+  town: svg('<path d="M3.5 20.5h17M5 20.5V10l4-3 4 3v10.5M13 20.5V6.5l3.5-3 3.5 3v14"/><path d="M8 13.5h2M8 16.5h2M16 9.5h1M16 12.5h1M16 15.5h1"/>'),
+  paper: svg('<path d="M5 4.5h12v14a2 2 0 0 0 2 2H6.5A1.5 1.5 0 0 1 5 19z"/><path d="M17 8.5h2.5V18.5a2 2 0 0 1-2 2M8 8h6M8 11.5h6M8 15h4"/>'),
+  /* the bottom tabs the map adds */
+  calendar: svg('<rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/>'),
+  calcheck: svg('<rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4M9 15l2 2 4-4.5"/>'),
+  ball: svg('<circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17M12 3.5v17M6 6a9 9 0 0 1 0 12M18 6a9 9 0 0 0 0 12"/>'),
+  tag: svg('<path d="M3.5 12.2V4.5h7.7l9.3 9.3-7.7 7.7z"/><circle cx="8" cy="9" r="1.4"/>'),
+  reddit: svg('<ellipse cx="12" cy="14.5" rx="8.5" ry="5.8"/><path d="M12 8.7 13 4l4 1"/><circle cx="18.4" cy="5.2" r="1.4"/><circle cx="8.8" cy="13.6" r="1" fill="currentColor" stroke="none"/><circle cx="15.2" cy="13.6" r="1" fill="currentColor" stroke="none"/><path d="M9 17c1.9 1 4.1 1 6 0"/>'),
+  spark: svg('<path d="M12 3.5 13.9 10 20.5 12l-6.6 2L12 20.5 10.1 14 3.5 12l6.6-2z"/>'),
+  bowl: svg('<path d="M3.5 11.5h17a8.5 8.5 0 0 1-17 0zM9 20h6M8.5 8c0-1.6 1.4-1.6 1.4-3.2M13.5 8c0-1.6 1.4-1.6 1.4-3.2"/>'),
+  basket: svg('<path d="M3.5 10h17l-2 9.5h-13zM8 10l3-6M16 10l-3-6M9 13.5v3M15 13.5v3M12 13.5v3"/>'),
+  table: svg('<path d="M3.5 9.5h17M6 9.5 4.5 20M18 9.5l1.5 10.5M8 14h8"/><circle cx="8" cy="5" r="1.6"/><circle cx="12" cy="4.5" r="1.6"/><circle cx="16" cy="5" r="1.6"/>'),
+  user: svg('<circle cx="12" cy="8" r="3.8"/><path d="M4.5 20.5a7.5 7.5 0 0 1 15 0"/>'),
+  hand: svg('<path d="M8 12V5.5a1.5 1.5 0 0 1 3 0V11M11 10.5v-6a1.5 1.5 0 0 1 3 0v6M14 10.5V6a1.5 1.5 0 0 1 3 0v7c0 4.2-2.6 7.5-6.5 7.5-2.7 0-4.2-1.6-5.6-3.8L3.6 13.9a1.4 1.4 0 0 1 2.3-1.6L8 15"/>'),
+  paw: svg('<circle cx="7" cy="10" r="1.8"/><circle cx="10.5" cy="6.2" r="1.8"/><circle cx="14.5" cy="6.2" r="1.8"/><circle cx="18" cy="10" r="1.8"/><path d="M12.5 11.5c-2.6 0-5.5 4-5.5 6.3 0 1.6 1.3 2.4 2.7 2.4 1.2 0 1.8-.6 2.8-.6s1.6.6 2.8.6c1.4 0 2.7-.8 2.7-2.4 0-2.3-2.9-6.3-5.5-6.3z"/>'),
+  dumbbell: svg('<path d="M3 12h18M6 8v8M3.5 9.5v5M18 8v8M20.5 9.5v5M8 12h8"/>'),
+  leaf: svg('<path d="M5 19c0-8 5.5-13.5 15-14-.4 9.5-6 15-14 15M5 19l7-7"/>'),
+  drop: svg('<path d="M12 3.5s-6.5 7-6.5 11.2a6.5 6.5 0 0 0 13 0C18.5 10.5 12 3.5 12 3.5z"/>'),
+  bell: svg('<path d="M6 16.5V11a6 6 0 0 1 12 0v5.5l1.5 2h-15zM10 20.5a2.2 2.2 0 0 0 4 0"/>'),
+  columns: svg('<path d="M3.5 9 12 4l8.5 5zM4.5 20.5h15M6.5 11v7M10 11v7M14 11v7M17.5 11v7"/>'),
+  cone: svg('<path d="M10 4h4l4.5 14.5h-13zM8 11h8M6.7 15h10.6M3.5 20.5h17"/>'),
+  book: svg('<path d="M4.5 5.5c3-1.4 5.5-1.4 7.5.5 2-1.9 4.5-1.9 7.5-.5v13c-3-1.4-5.5-1.4-7.5.5-2-1.9-4.5-1.9-7.5-.5zM12 6v13"/>'),
+  briefcase: svg('<rect x="3.5" y="7.5" width="17" height="12" rx="2"/><path d="M9 7.5V5.5h6v2M3.5 12.5h17"/>'),
+  pencil: svg('<path d="M4 20l1-4.5L15.5 5a2.1 2.1 0 0 1 3 3L8 18.5zM13.5 7l3 3"/>'),
+  party: svg('<path d="M4 20.5 8.5 7l8.5 8.5zM14 4.5c0 1.5 1.5 1.5 1.5 3M19.5 9c-1.5 0-1.5 1.5-3 1.5M11 3.5v1.5M20.5 13h-1.5"/>'),
+  stack: svg('<path d="M12 4 3.5 8.5 12 13l8.5-4.5zM3.5 12.5 12 17l8.5-4.5M3.5 16.5 12 21l8.5-4.5"/>'),
+  grid: svg('<rect x="4" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1.5"/>'),
+  /* the mast's app switcher, and Add to home screen */
+  apps: svg('<circle cx="6" cy="6" r="1.7"/><circle cx="12" cy="6" r="1.7"/><circle cx="18" cy="6" r="1.7"/><circle cx="6" cy="12" r="1.7"/><circle cx="12" cy="12" r="1.7"/><circle cx="18" cy="12" r="1.7"/><circle cx="6" cy="18" r="1.7"/><circle cx="12" cy="18" r="1.7"/><circle cx="18" cy="18" r="1.7"/>'),
+  home: svg('<path d="M4 11 12 4l8 7M6 9.5V20h12V9.5"/><path d="M12 11.5v6M9 14.5h6"/>'),
 };
 
 /* ------------------------------------------------------------------- time */
@@ -331,6 +365,43 @@ export function localSwitch(onChange) {
   };
   bar.append(make(true, '<span class="localsw-leaf" aria-hidden="true">\u{1F341}</span><span>Local</span>'), make(false, '<span>Everything</span>'));
   pour(bar, { key: 'local', n: 2, idx: on ? 0 : 1, prop: on ? '--local' : '--every', fallback: on ? '#16704E' : '#A63A2C' });
+  return bar;
+}
+
+/* ------------------------------------------------ the Real life / Online switch */
+/* The second shared switch (2026-10-29, Stephen's memo: "online / real-life
+   toggle, plus Local / Everything"), drawn and poured like Local /
+   Everything and shown only on a tab that mixes doing and reading (the
+   shell decides: app.isMixed). One shared setting, store.settings().world,
+   'irl' (the start) or 'online'; flipping it announces 'allday-world'. A
+   section says which side it is with data-world="irl" | "online"; the
+   shell shows only that side's sections and leaves untagged ones alone. */
+export const world = () => (store.settings().world === 'online' ? 'online' : 'irl');
+export function setWorld(w) {
+  const next = w === 'online' ? 'online' : 'irl';
+  if (world() === next) return;
+  store.setSetting('world', next);
+  window.dispatchEvent(new CustomEvent('allday-world', { detail: next }));
+}
+export function worldSwitch(onChange) {
+  const on = world() === 'irl';
+  const bar = el('div', 'localsw worldsw' + (on ? ' is-on' : ''));
+  bar.setAttribute('role', 'group');
+  bar.setAttribute('aria-label', 'Real life or online');
+  const make = (wantOn, label, side) => {
+    const b = el('button', 'localsw-half' + (on === wantOn ? ' on' : ''), label);
+    b.type = 'button';
+    b.dataset.world = side;
+    b.setAttribute('aria-pressed', on === wantOn ? 'true' : 'false');
+    b.addEventListener('click', () => {
+      if (on === wantOn) return;
+      setWorld(side);
+      if (onChange) onChange(world());
+    });
+    return b;
+  };
+  bar.append(make(true, '<span>Real life</span>', 'irl'), make(false, '<span>Online</span>', 'online'));
+  pour(bar, { key: 'world', n: 2, idx: on ? 0 : 1, prop: on ? '--liq-irl' : '--liq-online', fallback: on ? '#F2A93B' : '#7A5BB0' });
   return bar;
 }
 

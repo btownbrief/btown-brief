@@ -13,7 +13,7 @@
    audio — episodes are large and the browser's own HTTP cache handles them
    better than we would. */
 
-const VERSION = 'all-day-v99';   // the shell: Full page links, the two asks, bigger pills, the Btown Brief logo
+const VERSION = 'all-day-v109';   // account-data.js: Habits' and The Build's data go with the account in every app
 const SHELL = VERSION + '-shell';
 const DATA = 'all-day-data';   // unversioned on purpose: survives shell bumps
 
@@ -21,6 +21,10 @@ const SHELL_URLS = [
   './', './index.html', './manifest.webmanifest', './css/tokens.css', './css/app.css',
   './js/main.js', './js/app.js', './js/store.js', './js/wire.js', './js/ui.js',
   './js/liquid.js', './js/sections.js', './js/gestures.js', './js/auth.js', './js/asks.js',
+  /* the eight apps (2026-10-29): their configs, the shelf a tab gets until
+     its mode is built, the switcher, and the shelves' demo */
+  './js/apps/index.js', './js/apps/all-day.js', './js/apps/out.js', './js/apps/eat.js', './js/apps/people.js', './js/apps/body.js',
+  './js/apps/town.js', './js/apps/play.js', './js/apps/paper.js', './js/shelf.js', './js/switcher.js',
   './js/modes/wire.js', './js/modes/wire-demo.js', './js/modes/wire-photos.js', './js/modes/wire-square.js', './js/modes/wire-recaps.js', './js/modes/watch.js', './js/modes/food.js',
   './js/modes/people.js', './js/modes/whatnow.js', './js/modes/vintage.js', './js/modes/habits.js',
   './js/modes/onair.js', './js/modes/onair-sports.js', './js/modes/games.js',
@@ -41,12 +45,16 @@ const SHELL_URLS = [
   './js/food-asks.js',
   /* the boards: imported by main.js, so every tab can draw one offline */
   './js/boards.js', './js/boards-core.js', './js/boards-fake.js',
+  /* Habits' and The Build's server data go with the account in every app, imported by main.js */
+  './js/account-data.js',
   /* Watch's starter list, so the tab has films to show offline */
   './data/films-seed.json',
   /* the No-algorithm challenge, loaded by app.js after the first route */
   './js/challenge.js', './js/challenge-core.js', './css/challenge.css',
   /* the Btown Brief logo in the mast */
   './assets/brand/btown-brief-logo.png',
+  /* Town (wave 1) */
+  './js/modes/reddit.js', './js/reddit-lib.js', './js/modes/body-kit.js', './js/modes/day.js', './js/modes/leagues.js', './js/modes/template.js', './js/modes/season.js', './js/modes/train.js', './js/modes/recover.js', './js/modes/fuel.js', './js/modes/town-kit.js', './js/modes/feed.js', './js/modes/alerts.js', './js/modes/cityhall.js', './js/modes/streets.js', './js/modes/guides.js', './js/modes/work.js',
 ];
 
 self.addEventListener('install', (e) => {

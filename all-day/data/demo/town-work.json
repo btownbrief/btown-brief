@@ -1,0 +1,226 @@
+{
+ "_": "Invented for ?demo=1: every headline, place, sale, job and post here is made up. Dates are relative (town-kit.js redate).",
+ "jobs": {
+  "updated": "@t-2h",
+  "jobs": [
+   {
+    "id": "j1",
+    "title": "Line cook, evenings",
+    "employer": "A noodle bar downtown",
+    "pay": "$20/hr",
+    "pay_hr": null,
+    "posted": "@d+0",
+    "url": "https://www.example.com/jobs/j1",
+    "source": "A noodle bar downtown",
+    "cat": "other",
+    "tags": []
+   },
+   {
+    "id": "j2",
+    "title": "Front desk, part time",
+    "employer": "A climbing gym",
+    "pay": "$17/hr",
+    "pay_hr": null,
+    "posted": "@d+0",
+    "url": "https://www.example.com/jobs/j2",
+    "source": "A climbing gym",
+    "cat": "community",
+    "tags": []
+   },
+   {
+    "id": "j3",
+    "title": "Nurse, night shift",
+    "employer": "A community clinic",
+    "pay": null,
+    "pay_hr": null,
+    "posted": "@d-1",
+    "url": "https://www.example.com/jobs/j3",
+    "source": "A community clinic",
+    "cat": "healthcare",
+    "tags": []
+   },
+   {
+    "id": "j4",
+    "title": "Junior web developer",
+    "employer": "A software studio on Pine St",
+    "pay": "$70,000",
+    "pay_hr": null,
+    "posted": "@d-2",
+    "url": "https://www.example.com/jobs/j4",
+    "source": "A software studio on Pine St",
+    "cat": "tech",
+    "tags": []
+   },
+   {
+    "id": "j5",
+    "title": "Bike mechanic",
+    "employer": "A bike shop",
+    "pay": "$22/hr",
+    "pay_hr": null,
+    "posted": "@d-3",
+    "url": "https://www.example.com/jobs/j5",
+    "source": "A bike shop",
+    "cat": "trades",
+    "tags": []
+   },
+   {
+    "id": "j6",
+    "title": "Program coordinator",
+    "employer": "A youth nonprofit",
+    "pay": null,
+    "pay_hr": null,
+    "posted": "@d-4",
+    "url": "https://www.example.com/jobs/j6",
+    "source": "A youth nonprofit",
+    "cat": "community",
+    "tags": []
+   },
+   {
+    "id": "j7",
+    "title": "Teacher, grade 3",
+    "employer": "A public school",
+    "pay": null,
+    "pay_hr": null,
+    "posted": "@d-5",
+    "url": "https://www.example.com/jobs/j7",
+    "source": "A public school",
+    "cat": "education",
+    "tags": []
+   },
+   {
+    "id": "j8",
+    "title": "Barista, mornings",
+    "employer": "A cafe on Church St",
+    "pay": "$18/hr",
+    "pay_hr": null,
+    "posted": "@d-9",
+    "url": "https://www.example.com/jobs/j8",
+    "source": "A cafe on Church St",
+    "cat": "other",
+    "tags": []
+   },
+   {
+    "id": "j9",
+    "title": "Electrician apprentice",
+    "employer": "An electrical contractor",
+    "pay": "$21/hr",
+    "pay_hr": null,
+    "posted": "@d-12",
+    "url": "https://www.example.com/jobs/j9",
+    "source": "An electrical contractor",
+    "cat": "trades",
+    "tags": []
+   },
+   {
+    "id": "j10",
+    "title": "Office manager",
+    "employer": "A design firm",
+    "pay": "$55,000",
+    "pay_hr": null,
+    "posted": "@d-14",
+    "url": "https://www.example.com/jobs/j10",
+    "source": "A design firm",
+    "cat": "office",
+    "tags": []
+   }
+  ]
+ },
+ "shops": {
+  "shops": [
+   {
+    "id": "demo-thread",
+    "name": "Second Thread",
+    "kinds": [
+     "Thrift"
+    ],
+    "neighborhood": "Downtown / Church St",
+    "website": "https://www.example.com/demo-thread",
+    "week": {
+     "mon": null,
+     "tue": "10:00-18:00",
+     "wed": "10:00-18:00",
+     "thu": "10:00-18:00",
+     "fri": "10:00-19:00",
+     "sat": "10:00-19:00",
+     "sun": "12:00-17:00"
+    }
+   },
+   {
+    "id": "demo-attic",
+    "name": "The Attic Door",
+    "kinds": [
+     "Vintage"
+    ],
+    "neighborhood": "Downtown / Church St",
+    "website": "https://www.example.com/demo-attic",
+    "week": {
+     "mon": null,
+     "tue": null,
+     "wed": "11:00-18:00",
+     "thu": "11:00-18:00",
+     "fri": "11:00-18:00",
+     "sat": "11:00-18:00",
+     "sun": "11:00-16:00"
+    }
+   },
+   {
+    "id": "demo-paper",
+    "name": "Paper Moon Books",
+    "kinds": [
+     "Used books"
+    ],
+    "neighborhood": "Downtown / Church St",
+    "website": "https://www.example.com/demo-paper",
+    "week": {
+     "mon": "10:00-18:00",
+     "tue": "10:00-18:00",
+     "wed": "10:00-18:00",
+     "thu": "10:00-18:00",
+     "fri": "10:00-18:00",
+     "sat": "10:00-18:00",
+     "sun": null
+    }
+   },
+   {
+    "id": "demo-loft",
+    "name": "Loft Consignment",
+    "kinds": [
+     "Consignment"
+    ],
+    "neighborhood": "Downtown / Church St",
+    "website": "https://www.example.com/demo-loft",
+    "week": {
+     "mon": null,
+     "tue": null,
+     "wed": null,
+     "thu": "12:00-18:00",
+     "fri": "12:00-18:00",
+     "sat": "09:00-12:00",
+     "sun": null
+    }
+   },
+   {
+    "id": "demo-relic",
+    "name": "Relic & Co.",
+    "kinds": [
+     "Antiques"
+    ],
+    "neighborhood": "Downtown / Church St",
+    "website": "https://www.example.com/demo-relic",
+    "week": {
+     "mon": null,
+     "tue": null,
+     "wed": null,
+     "thu": null,
+     "fri": "10:00-16:00",
+     "sat": "10:00-16:00",
+     "sun": "10:00-16:00"
+    }
+   }
+  ]
+ },
+ "demoNow": {
+  "day": "sat",
+  "min": 840
+ }
+}

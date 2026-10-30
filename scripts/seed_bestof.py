@@ -185,7 +185,7 @@ def main():
             labels_used = {}
             for s in sorted(entry["sources"], key=lambda x: (-x["year"], x["thread_url"])):
                 if s["label"].startswith("Comment by"):
-                    label = s["label"]  # the one comment-mined source
+                    label = "Comment on the 2025 list"  # the one comment-mined source; never the username
                 else:
                     label = label_from_url(s["thread_url"]) or s["label"]
                 # Different threads sometimes share an identical slug
@@ -258,7 +258,7 @@ def main():
             "one click away — and, where Seven Days readers picked a winner in the "
             "same category, shows the Seven Daysies pick for comparison."
         ),
-        "sources": meta["sources"],
+        "sources": {k: {f: v for f, v in src.items() if f != "author"} for k, src in meta["sources"].items()},
         "counts": counts,
         "categories": categories,
     }

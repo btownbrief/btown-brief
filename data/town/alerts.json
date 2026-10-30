@@ -1,0 +1,4022 @@
+{
+ "generated": "2026-10-30T15:42:57+00:00",
+ "sources_file": "data/town/alerts-sources.json",
+ "sections": {
+  "recycling": {
+   "source_name": "Burlington DPW recycling pickup days (ArcGIS)",
+   "source_url": "https://services1.arcgis.com/1bO0c7PxQdsGidPK/arcgis/rest/services/Recycling_Streets/FeatureServer/1",
+   "layer_last_edited": "2022-11-21",
+   "notes": "City DPW collects residential recycling weekly in covered carts, out by 7am. Trash is collected by private haulers, so there is no city trash day. No pickup on Memorial Day, July 4, Labor Day, Thanksgiving, Christmas. A street can appear twice when its segments differ; the layer has no house-number ranges.",
+   "rules_url": "https://www.burlingtonvt.gov/315/Recycling-Solid-Waste-Collection",
+   "verified": "2026-10-30",
+   "items": [
+    {
+     "street": "Adams Ct",
+     "recycling_day": "Monday",
+     "parking_ban_zone": "D",
+     "address_from": null,
+     "route_zone": 1,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Adams St",
+     "recycling_day": "Wednesday",
+     "parking_ban_zone": "D",
+     "address_from": null,
+     "route_zone": 1,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Adams St",
+     "recycling_day": "Wednesday",
+     "parking_ban_zone": "F",
+     "address_from": null,
+     "route_zone": 1,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Adsit Ct",
+     "recycling_day": "Tuesday",
+     "parking_ban_zone": "E",
+     "address_from": null,
+     "route_zone": 3,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Alder Ln",
+     "recycling_day": "Monday",
+     "parking_ban_zone": "C",
+     "address_from": null,
+     "route_zone": 2,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Alexis Dr",
+     "recycling_day": "Friday",
+     "parking_ban_zone": "B",
+     "address_from": null,
+     "route_zone": 3,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Alfred St",
+     "recycling_day": "Monday",
+     "parking_ban_zone": "D",
+     "address_from": null,
+     "route_zone": 1,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Algird St",
+     "recycling_day": "Friday",
+     "parking_ban_zone": "A",
+     "address_from": null,
+     "route_zone": 1,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Allen St",
+     "recycling_day": "Wednesday",
+     "parking_ban_zone": "G",
+     "address_from": null,
+     "route_zone": 2,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Ambrose Pl",
+     "recycling_day": "Monday",
+     "parking_ban_zone": "C",
+     "address_from": null,
+     "route_zone": 3,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Appletree Point Ln",
+     "recycling_day": "Friday",
+     "parking_ban_zone": "B",
+     "address_from": null,
+     "route_zone": 3,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Appletree Point Rd",
+     "recycling_day": "Friday",
+     "parking_ban_zone": "B",
+     "address_from": null,
+     "route_zone": 2,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Archibald St",
+     "recycling_day": "Tuesday",
+     "parking_ban_zone": "E",
+     "address_from": null,
+     "route_zone": 2,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Archibald St",
+     "recycling_day": "Tuesday",
+     "parking_ban_zone": "G",
+     "address_from": null,
+     "route_zone": 2,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Arlington Ct",
+     "recycling_day": "Thursday",
+     "parking_ban_zone": "A",
+     "address_from": null,
+     "route_zone": 2,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Arthur Ct",
+     "recycling_day": "Monday",
+     "parking_ban_zone": "C",
+     "address_from": null,
+     "route_zone": 3,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Austin Dr",
+     "recycling_day": "Monday",
+     "parking_ban_zone": "C",
+     "address_from": null,
+     "route_zone": 3,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Avenue A",
+     "recycling_day": "Thursday",
+     "parking_ban_zone": "A",
+     "address_from": null,
+     "route_zone": 2,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Avenue B",
+     "recycling_day": "Thursday",
+     "parking_ban_zone": "A",
+     "address_from": null,
+     "route_zone": 2,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Avenue C",
+     "recycling_day": "Thursday",
+     "parking_ban_zone": "A",
+     "address_from": null,
+     "route_zone": 2,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Baird St",
+     "recycling_day": "Monday",
+     "parking_ban_zone": "C",
+     "address_from": null,
+     "route_zone": 3,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Balsam St",
+     "recycling_day": "Friday",
+     "parking_ban_zone": "B",
+     "address_from": null,
+     "route_zone": 3,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Bank St",
+     "recycling_day": "Wednesday",
+     "parking_ban_zone": "F",
+     "address_from": "109",
+     "route_zone": 2,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Barley Rd",
+     "recycling_day": "Friday",
+     "parking_ban_zone": "A",
+     "address_from": null,
+     "route_zone": 1,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Barrett St",
+     "recycling_day": "Tuesday",
+     "parking_ban_zone": "E",
+     "address_from": null,
+     "route_zone": 3,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Batchelder St",
+     "recycling_day": "Monday",
+     "parking_ban_zone": "C",
+     "address_from": null,
+     "route_zone": 3,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Battery St",
+     "recycling_day": "N/A",
+     "parking_ban_zone": "F",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Bayview St",
+     "recycling_day": "Wednesday",
+     "parking_ban_zone": "D",
+     "address_from": null,
+     "route_zone": 1,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Beachcrest Dr",
+     "recycling_day": "Thursday",
+     "parking_ban_zone": "B",
+     "address_from": null,
+     "route_zone": 3,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Beech St",
+     "recycling_day": "Wednesday",
+     "parking_ban_zone": "D",
+     "address_from": null,
+     "route_zone": 1,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Bennington Ct",
+     "recycling_day": "Thursday",
+     "parking_ban_zone": "A",
+     "address_from": null,
+     "route_zone": 3,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Berry St",
+     "recycling_day": "Thursday",
+     "parking_ban_zone": "G",
+     "address_from": null,
+     "route_zone": 1,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Billings Ct",
+     "recycling_day": "Thursday",
+     "parking_ban_zone": "A",
+     "address_from": null,
+     "route_zone": 3,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Bilodeau Ct",
+     "recycling_day": "Tuesday",
+     "parking_ban_zone": "E",
+     "address_from": null,
+     "route_zone": 3,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Bilodeau Pkwy",
+     "recycling_day": "Tuesday",
+     "parking_ban_zone": "E",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Birch Ct",
+     "recycling_day": "Thursday",
+     "parking_ban_zone": "A",
+     "address_from": null,
+     "route_zone": 3,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Birchcliff Pkwy",
+     "recycling_day": "Monday",
+     "parking_ban_zone": "C",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Birchwood Ln",
+     "recycling_day": "Thursday",
+     "parking_ban_zone": "B",
+     "address_from": null,
+     "route_zone": 3,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Bittersweet Ln",
+     "recycling_day": "Monday",
+     "parking_ban_zone": "C",
+     "address_from": null,
+     "route_zone": 2,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Blodgett St",
+     "recycling_day": "Thursday",
+     "parking_ban_zone": "G",
+     "address_from": null,
+     "route_zone": 1,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Blondin Cir",
+     "recycling_day": "Thursday",
+     "parking_ban_zone": "A",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Booth St",
+     "recycling_day": "Wednesday",
+     "parking_ban_zone": "G",
+     "address_from": null,
+     "route_zone": 3,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Borestone Ln",
+     "recycling_day": "Friday",
+     "parking_ban_zone": "A",
+     "address_from": null,
+     "route_zone": 1,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Bradley St",
+     "recycling_day": "Wednesday",
+     "parking_ban_zone": "F",
+     "address_from": null,
+     "route_zone": 3,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Brandywine St",
+     "recycling_day": "Thursday",
+     "parking_ban_zone": "A",
+     "address_from": null,
+     "route_zone": 3,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Brierwood Ln",
+     "recycling_day": "Friday",
+     "parking_ban_zone": "B",
+     "address_from": null,
+     "route_zone": 3,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Briggs St",
+     "recycling_day": "Monday",
+     "parking_ban_zone": "C",
+     "address_from": null,
+     "route_zone": 3,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Bright St",
+     "recycling_day": "Tuesday",
+     "parking_ban_zone": "G",
+     "address_from": null,
+     "route_zone": 2,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Brook Dr",
+     "recycling_day": "Thursday",
+     "parking_ban_zone": "A",
+     "address_from": null,
+     "route_zone": 3,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Brookes Ave",
+     "recycling_day": "Tuesday",
+     "parking_ban_zone": "E",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Browe Ct",
+     "recycling_day": "Friday",
+     "parking_ban_zone": "B",
+     "address_from": null,
+     "route_zone": 1,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Browns Ct",
+     "recycling_day": "Wednesday",
+     "parking_ban_zone": "F",
+     "address_from": null,
+     "route_zone": 1,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Buell St",
+     "recycling_day": "Wednesday",
+     "parking_ban_zone": "F",
+     "address_from": null,
+     "route_zone": 3,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Burlington Sq",
+     "recycling_day": "N/A",
+     "parking_ban_zone": "F",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Calarco Ct",
+     "recycling_day": "Tuesday",
+     "parking_ban_zone": "E",
+     "address_from": null,
+     "route_zone": 3,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Canfield St",
+     "recycling_day": "Thursday",
+     "parking_ban_zone": "G",
+     "address_from": null,
+     "route_zone": 1,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Caroline St",
+     "recycling_day": "Monday",
+     "parking_ban_zone": "C",
+     "address_from": null,
+     "route_zone": 2,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Carrigan Dr",
+     "recycling_day": "N/A",
+     "parking_ban_zone": "E",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Case Pkwy",
+     "recycling_day": "Tuesday",
+     "parking_ban_zone": "E",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Catamount Dr",
+     "recycling_day": "N/A",
+     "parking_ban_zone": "E",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Cathedral Sq",
+     "recycling_day": "N/A",
+     "parking_ban_zone": "F",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Catherine St",
+     "recycling_day": "Monday",
+     "parking_ban_zone": "C",
+     "address_from": null,
+     "route_zone": 2,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Cayuga Ct",
+     "recycling_day": "Thursday",
+     "parking_ban_zone": "A",
+     "address_from": null,
+     "route_zone": 3,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Cedar Ln",
+     "recycling_day": "N/A",
+     "parking_ban_zone": "D",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Cedar St",
+     "recycling_day": "Tuesday",
+     "parking_ban_zone": "G",
+     "address_from": null,
+     "route_zone": 1,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Centennial Ct",
+     "recycling_day": "Tuesday",
+     "parking_ban_zone": "E",
+     "address_from": null,
+     "route_zone": 3,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Center St",
+     "recycling_day": "Wednesday",
+     "parking_ban_zone": "F",
+     "address_from": null,
+     "route_zone": 3,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Central Ave",
+     "recycling_day": "Monday",
+     "parking_ban_zone": "C",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Charity St",
+     "recycling_day": "Thursday",
+     "parking_ban_zone": "A",
+     "address_from": null,
+     "route_zone": 2,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Charles St",
+     "recycling_day": "Tuesday",
+     "parking_ban_zone": "G",
+     "address_from": null,
+     "route_zone": 2,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Charlotte St",
+     "recycling_day": "Monday",
+     "parking_ban_zone": "C",
+     "address_from": null,
+     "route_zone": 2,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Chase Ln",
+     "recycling_day": "Tuesday",
+     "parking_ban_zone": "E",
+     "address_from": null,
+     "route_zone": 3,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Chase St",
+     "recycling_day": "Tuesday",
+     "parking_ban_zone": "E",
+     "address_from": null,
+     "route_zone": 3,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Cherry Ln",
+     "recycling_day": "Monday",
+     "parking_ban_zone": "C",
+     "address_from": null,
+     "route_zone": 2,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Cherry St",
+     "recycling_day": "Wednesday",
+     "parking_ban_zone": "F",
+     "address_from": "2",
+     "route_zone": 2,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Chestnut Ter",
+     "recycling_day": "Monday",
+     "parking_ban_zone": "D",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Chittenden Dr",
+     "recycling_day": "Monday",
+     "parking_ban_zone": "D",
+     "address_from": null,
+     "route_zone": 1,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Church St",
+     "recycling_day": "Wednesday",
+     "parking_ban_zone": "F",
+     "address_from": "1",
+     "route_zone": 2,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Claire Point Rd",
+     "recycling_day": "Friday",
+     "parking_ban_zone": "B",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Clarke St",
+     "recycling_day": "Wednesday",
+     "parking_ban_zone": "F",
+     "address_from": null,
+     "route_zone": 3,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Cliff St",
+     "recycling_day": "Wednesday",
+     "parking_ban_zone": "D",
+     "address_from": null,
+     "route_zone": 1,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Cloarec Ct",
+     "recycling_day": "Tuesday",
+     "parking_ban_zone": "G",
+     "address_from": null,
+     "route_zone": 1,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Clover Ln",
+     "recycling_day": "Friday",
+     "parking_ban_zone": "A",
+     "address_from": null,
+     "route_zone": 1,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Clymer St",
+     "recycling_day": "Monday",
+     "parking_ban_zone": "D",
+     "address_from": null,
+     "route_zone": 1,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Colchester Ave",
+     "recycling_day": "Tuesday",
+     "parking_ban_zone": "E",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Colchester Ct",
+     "recycling_day": "Tuesday",
+     "parking_ban_zone": "E",
+     "address_from": null,
+     "route_zone": 3,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "College St",
+     "recycling_day": "Tuesday",
+     "parking_ban_zone": "E",
+     "address_from": "360",
+     "route_zone": 3,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "College St",
+     "recycling_day": "Wednesday",
+     "parking_ban_zone": "F",
+     "address_from": "360",
+     "route_zone": 3,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Colonial Sq",
+     "recycling_day": "Tuesday",
+     "parking_ban_zone": "E",
+     "address_from": null,
+     "route_zone": 2,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Conger Ave",
+     "recycling_day": "Monday",
+     "parking_ban_zone": "C",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Convent Sq",
+     "recycling_day": "Thursday",
+     "parking_ban_zone": "G",
+     "address_from": null,
+     "route_zone": 1,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Converse Ct",
+     "recycling_day": "Wednesday",
+     "parking_ban_zone": "G",
+     "address_from": null,
+     "route_zone": 3,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Cottage Grv",
+     "recycling_day": "Friday",
+     "parking_ban_zone": "B",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Country Club Rd",
+     "recycling_day": "N/A",
+     "parking_ban_zone": null,
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Crescent Beach Dr",
+     "recycling_day": "Friday",
+     "parking_ban_zone": "B",
+     "address_from": null,
+     "route_zone": 3,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Crescent Rd",
+     "recycling_day": "Monday",
+     "parking_ban_zone": "D",
+     "address_from": null,
+     "route_zone": 1,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Crescent Ter",
+     "recycling_day": "Monday",
+     "parking_ban_zone": "D",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Crombie St",
+     "recycling_day": "Tuesday",
+     "parking_ban_zone": "G",
+     "address_from": null,
+     "route_zone": 2,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Cross Pkwy",
+     "recycling_day": "Friday",
+     "parking_ban_zone": "B",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Crowley St",
+     "recycling_day": "Thursday",
+     "parking_ban_zone": "G",
+     "address_from": null,
+     "route_zone": 1,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Cumberland Rd",
+     "recycling_day": "Friday",
+     "parking_ban_zone": "B",
+     "address_from": null,
+     "route_zone": 2,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Curtis Ave",
+     "recycling_day": "Friday",
+     "parking_ban_zone": "B",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Dale Rd",
+     "recycling_day": "Friday",
+     "parking_ban_zone": "B",
+     "address_from": null,
+     "route_zone": 3,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Dan'S Ct",
+     "recycling_day": "Tuesday",
+     "parking_ban_zone": "E",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Davis Rd",
+     "recycling_day": "N/A",
+     "parking_ban_zone": null,
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Davis Rd",
+     "recycling_day": "N/A",
+     "parking_ban_zone": null,
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Decatur St",
+     "recycling_day": "Tuesday",
+     "parking_ban_zone": "G",
+     "address_from": null,
+     "route_zone": 2,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Deforest Hts",
+     "recycling_day": "Monday",
+     "parking_ban_zone": "D",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Deforest Rd",
+     "recycling_day": "Monday",
+     "parking_ban_zone": "D",
+     "address_from": null,
+     "route_zone": 1,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Depot St",
+     "recycling_day": "Wednesday",
+     "parking_ban_zone": "G",
+     "address_from": null,
+     "route_zone": 2,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Derway Dr",
+     "recycling_day": "Friday",
+     "parking_ban_zone": "B",
+     "address_from": null,
+     "route_zone": 1,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Dewey Dr",
+     "recycling_day": "Friday",
+     "parking_ban_zone": "B",
+     "address_from": null,
+     "route_zone": 1,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Dodds Ct",
+     "recycling_day": "Friday",
+     "parking_ban_zone": "B",
+     "address_from": null,
+     "route_zone": 3,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Dorset Ln",
+     "recycling_day": "Thursday",
+     "parking_ban_zone": "A",
+     "address_from": null,
+     "route_zone": 3,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Drew St",
+     "recycling_day": "Thursday",
+     "parking_ban_zone": "G",
+     "address_from": null,
+     "route_zone": 1,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Driftwood Ln",
+     "recycling_day": "Thursday",
+     "parking_ban_zone": "B",
+     "address_from": null,
+     "route_zone": 3,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Dunder Rd",
+     "recycling_day": "Monday",
+     "parking_ban_zone": "C",
+     "address_from": null,
+     "route_zone": 3,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "E Village Dr",
+     "recycling_day": "Tuesday",
+     "parking_ban_zone": "E",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "East Ave",
+     "recycling_day": "Tuesday",
+     "parking_ban_zone": "E",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Eastman Farm Rd",
+     "recycling_day": "Friday",
+     "parking_ban_zone": "B",
+     "address_from": null,
+     "route_zone": 2,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Eastman Way",
+     "recycling_day": "Monday",
+     "parking_ban_zone": "C",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Edgemoor Dr",
+     "recycling_day": "Thursday",
+     "parking_ban_zone": "A",
+     "address_from": null,
+     "route_zone": 3,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Edgewood Ln",
+     "recycling_day": "Monday",
+     "parking_ban_zone": "D",
+     "address_from": null,
+     "route_zone": 1,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Edinborough Dr",
+     "recycling_day": "Friday",
+     "parking_ban_zone": "B",
+     "address_from": null,
+     "route_zone": 2,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Edson St",
+     "recycling_day": "Friday",
+     "parking_ban_zone": "B",
+     "address_from": null,
+     "route_zone": 1,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Elm Ter",
+     "recycling_day": "Wednesday",
+     "parking_ban_zone": "C",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Elmwood Ave",
+     "recycling_day": "Tuesday",
+     "parking_ban_zone": "G",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Elmwood Ave",
+     "recycling_day": "Wednesday",
+     "parking_ban_zone": "F",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Elmwood Ave",
+     "recycling_day": "Wednesday",
+     "parking_ban_zone": "G",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Ent/Ext Interstate",
+     "recycling_day": "N/A",
+     "parking_ban_zone": null,
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Ent/Ext Ramp Town Hwy",
+     "recycling_day": "N/A",
+     "parking_ban_zone": "A",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Ethan Allen Homestead",
+     "recycling_day": "N/A",
+     "parking_ban_zone": "A",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Ethan Allen Pkwy",
+     "recycling_day": "Thursday",
+     "parking_ban_zone": "A",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Fairfield Dr",
+     "recycling_day": "Friday",
+     "parking_ban_zone": "B",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Fairmont Pl",
+     "recycling_day": "Thursday",
+     "parking_ban_zone": "A",
+     "address_from": null,
+     "route_zone": 3,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Fairmount St",
+     "recycling_day": "Monday",
+     "parking_ban_zone": "D",
+     "address_from": null,
+     "route_zone": 1,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Faith St",
+     "recycling_day": "Thursday",
+     "parking_ban_zone": "A",
+     "address_from": null,
+     "route_zone": 2,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Farrington Pkwy",
+     "recycling_day": "Thursday",
+     "parking_ban_zone": "A",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Ferguson Ave",
+     "recycling_day": "Monday",
+     "parking_ban_zone": "C",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Fern St",
+     "recycling_day": "Friday",
+     "parking_ban_zone": "B",
+     "address_from": null,
+     "route_zone": 3,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Fletcher Pl",
+     "recycling_day": "Tuesday",
+     "parking_ban_zone": "E",
+     "address_from": null,
+     "route_zone": 3,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Flynn Ave",
+     "recycling_day": "Monday",
+     "parking_ban_zone": "C",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Forest St",
+     "recycling_day": "Friday",
+     "parking_ban_zone": "A",
+     "address_from": null,
+     "route_zone": 1,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Foster St",
+     "recycling_day": "Monday",
+     "parking_ban_zone": "C",
+     "address_from": null,
+     "route_zone": 3,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Franklin Sq",
+     "recycling_day": "Thursday",
+     "parking_ban_zone": "A",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Franklin Sq",
+     "recycling_day": "Thursday",
+     "parking_ban_zone": "H",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Front St",
+     "recycling_day": "Wednesday",
+     "parking_ban_zone": "G",
+     "address_from": null,
+     "route_zone": 2,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Gazo Ave",
+     "recycling_day": "Thursday",
+     "parking_ban_zone": "A",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "George St",
+     "recycling_day": "Wednesday",
+     "parking_ban_zone": "F",
+     "address_from": null,
+     "route_zone": 2,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Germain St",
+     "recycling_day": "Tuesday",
+     "parking_ban_zone": "E",
+     "address_from": null,
+     "route_zone": 2,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Glen Rd",
+     "recycling_day": "Monday",
+     "parking_ban_zone": "D",
+     "address_from": null,
+     "route_zone": 1,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Glenwood Ln",
+     "recycling_day": "Friday",
+     "parking_ban_zone": "B",
+     "address_from": null,
+     "route_zone": 3,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Golden Pl",
+     "recycling_day": "Monday",
+     "parking_ban_zone": "C",
+     "address_from": null,
+     "route_zone": 2,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Gosse Ct",
+     "recycling_day": "Thursday",
+     "parking_ban_zone": "A",
+     "address_from": null,
+     "route_zone": 2,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Gove Ct",
+     "recycling_day": "Monday",
+     "parking_ban_zone": "C",
+     "address_from": null,
+     "route_zone": 2,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Grant St",
+     "recycling_day": "Wednesday",
+     "parking_ban_zone": "F",
+     "address_from": null,
+     "route_zone": 2,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Green Acres Dr",
+     "recycling_day": "Friday",
+     "parking_ban_zone": "B",
+     "address_from": null,
+     "route_zone": 2,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Green Meadows Dr",
+     "recycling_day": "Friday",
+     "parking_ban_zone": "B",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Greene St",
+     "recycling_day": "Wednesday",
+     "parking_ban_zone": "G",
+     "address_from": null,
+     "route_zone": 3,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Grey Meadow Dr",
+     "recycling_day": "Friday",
+     "parking_ban_zone": "B",
+     "address_from": null,
+     "route_zone": 2,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Grove St",
+     "recycling_day": "Tuesday",
+     "parking_ban_zone": "E",
+     "address_from": null,
+     "route_zone": 3,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Hale Ct",
+     "recycling_day": "Thursday",
+     "parking_ban_zone": "A",
+     "address_from": null,
+     "route_zone": 3,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Handy Ct",
+     "recycling_day": "Tuesday",
+     "parking_ban_zone": "E",
+     "address_from": null,
+     "route_zone": 3,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Harborwatch Rd",
+     "recycling_day": "Monday",
+     "parking_ban_zone": "C",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Hardy Ave",
+     "recycling_day": "Friday",
+     "parking_ban_zone": "B",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Harrington Ter",
+     "recycling_day": "Wednesday",
+     "parking_ban_zone": "D",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Harrison Ave",
+     "recycling_day": "Monday",
+     "parking_ban_zone": "C",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Haswell St",
+     "recycling_day": "Thursday",
+     "parking_ban_zone": "G",
+     "address_from": null,
+     "route_zone": 1,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Hayward St",
+     "recycling_day": "Monday",
+     "parking_ban_zone": "C",
+     "address_from": "76",
+     "route_zone": 2,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Hayward St",
+     "recycling_day": "Wednesday",
+     "parking_ban_zone": "C",
+     "address_from": "76",
+     "route_zone": 2,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Heineberg Rd",
+     "recycling_day": "Thursday",
+     "parking_ban_zone": "A",
+     "address_from": null,
+     "route_zone": 2,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Henderson Ter",
+     "recycling_day": "Wednesday",
+     "parking_ban_zone": "D",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Henry St",
+     "recycling_day": "Tuesday",
+     "parking_ban_zone": "E",
+     "address_from": null,
+     "route_zone": 3,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Hickok Pl",
+     "recycling_day": "Wednesday",
+     "parking_ban_zone": "G",
+     "address_from": null,
+     "route_zone": 3,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "High Grove Ct",
+     "recycling_day": "Tuesday",
+     "parking_ban_zone": "E",
+     "address_from": null,
+     "route_zone": 2,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Hildred Dr",
+     "recycling_day": "Tuesday",
+     "parking_ban_zone": "E",
+     "address_from": null,
+     "route_zone": 2,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Hillcrest Rd",
+     "recycling_day": "Monday",
+     "parking_ban_zone": "D",
+     "address_from": null,
+     "route_zone": 1,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Hillside Ter",
+     "recycling_day": "N/A",
+     "parking_ban_zone": "E",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Holly Ln",
+     "recycling_day": "Friday",
+     "parking_ban_zone": "B",
+     "address_from": null,
+     "route_zone": 3,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Holt St",
+     "recycling_day": "Monday",
+     "parking_ban_zone": "D",
+     "address_from": null,
+     "route_zone": 1,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Home Ave",
+     "recycling_day": "Monday",
+     "parking_ban_zone": "C",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Hoover St",
+     "recycling_day": "Monday",
+     "parking_ban_zone": "D",
+     "address_from": null,
+     "route_zone": 1,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Hope St",
+     "recycling_day": "Thursday",
+     "parking_ban_zone": "A",
+     "address_from": null,
+     "route_zone": 2,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Howard St",
+     "recycling_day": "Monday",
+     "parking_ban_zone": "C",
+     "address_from": "30",
+     "route_zone": 2,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Howard St",
+     "recycling_day": "Wednesday",
+     "parking_ban_zone": "D",
+     "address_from": "30",
+     "route_zone": 2,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Hungerford Ter",
+     "recycling_day": "Wednesday",
+     "parking_ban_zone": "F",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Hyde St",
+     "recycling_day": "Tuesday",
+     "parking_ban_zone": "G",
+     "address_from": null,
+     "route_zone": 2,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Industrial Pkwy",
+     "recycling_day": "Monday",
+     "parking_ban_zone": "C",
+     "address_from": null,
+     "route_zone": 3,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Institute Rd",
+     "recycling_day": "Thursday",
+     "parking_ban_zone": "B",
+     "address_from": null,
+     "route_zone": 1,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Interstate 189 N",
+     "recycling_day": "N/A",
+     "parking_ban_zone": null,
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Interstate 189 S",
+     "recycling_day": "N/A",
+     "parking_ban_zone": null,
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Intervale Ave",
+     "recycling_day": "Tuesday",
+     "parking_ban_zone": "G",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Intervale Rd",
+     "recycling_day": "Tuesday",
+     "parking_ban_zone": null,
+     "address_from": null,
+     "route_zone": 2,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Intervale Rd",
+     "recycling_day": "Tuesday",
+     "parking_ban_zone": "E",
+     "address_from": null,
+     "route_zone": 2,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Ira Ln",
+     "recycling_day": "Thursday",
+     "parking_ban_zone": "A",
+     "address_from": null,
+     "route_zone": 2,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Iranistan Rd",
+     "recycling_day": "Monday",
+     "parking_ban_zone": "D",
+     "address_from": null,
+     "route_zone": 1,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Isham St",
+     "recycling_day": "Wednesday",
+     "parking_ban_zone": "G",
+     "address_from": null,
+     "route_zone": 3,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Ivy Ln",
+     "recycling_day": "Friday",
+     "parking_ban_zone": "B",
+     "address_from": null,
+     "route_zone": 3,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Jackson Ct",
+     "recycling_day": "Wednesday",
+     "parking_ban_zone": "D",
+     "address_from": null,
+     "route_zone": 1,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "James Ave",
+     "recycling_day": "Thursday",
+     "parking_ban_zone": "A",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Janet Cir",
+     "recycling_day": "Thursday",
+     "parking_ban_zone": "A",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Johnson St",
+     "recycling_day": "Wednesday",
+     "parking_ban_zone": "F",
+     "address_from": null,
+     "route_zone": 2,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Juniper Ter",
+     "recycling_day": "Wednesday",
+     "parking_ban_zone": "D",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Kilburn St",
+     "recycling_day": "N/A",
+     "parking_ban_zone": "F",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Killarney Dr",
+     "recycling_day": "Thursday",
+     "parking_ban_zone": "B",
+     "address_from": null,
+     "route_zone": 3,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "King St",
+     "recycling_day": "Wednesday",
+     "parking_ban_zone": "F",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Kingsland Ter",
+     "recycling_day": "Wednesday",
+     "parking_ban_zone": "D",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Lafayette Pl",
+     "recycling_day": "Wednesday",
+     "parking_ban_zone": "F",
+     "address_from": null,
+     "route_zone": 3,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Lafountain St",
+     "recycling_day": "Tuesday",
+     "parking_ban_zone": "G",
+     "address_from": null,
+     "route_zone": 1,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Lake Forest Dr",
+     "recycling_day": "Monday",
+     "parking_ban_zone": "C",
+     "address_from": null,
+     "route_zone": 3,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Lake St",
+     "recycling_day": "Wednesday",
+     "parking_ban_zone": "F",
+     "address_from": null,
+     "route_zone": 2,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Lakeside Ave",
+     "recycling_day": "Monday",
+     "parking_ban_zone": "C",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Lakeview Ter",
+     "recycling_day": "Thursday",
+     "parking_ban_zone": "G",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Lakewood Pkwy",
+     "recycling_day": "Thursday",
+     "parking_ban_zone": "B",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Latham Ct",
+     "recycling_day": "Tuesday",
+     "parking_ban_zone": "E",
+     "address_from": null,
+     "route_zone": 3,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Laurel Ct",
+     "recycling_day": "Friday",
+     "parking_ban_zone": "B",
+     "address_from": null,
+     "route_zone": 3,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Lavalley Ln",
+     "recycling_day": "N/A",
+     "parking_ban_zone": "F",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Lawson Ln",
+     "recycling_day": "N/A",
+     "parking_ban_zone": "F",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Leddy Park Rd",
+     "recycling_day": "N/A",
+     "parking_ban_zone": "B",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Ledge Rd",
+     "recycling_day": "Monday",
+     "parking_ban_zone": "D",
+     "address_from": null,
+     "route_zone": 1,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Ledgemere St",
+     "recycling_day": "Monday",
+     "parking_ban_zone": "C",
+     "address_from": null,
+     "route_zone": 2,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Leonard St",
+     "recycling_day": "Thursday",
+     "parking_ban_zone": "B",
+     "address_from": null,
+     "route_zone": 3,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Linden Ter",
+     "recycling_day": "Monday",
+     "parking_ban_zone": "C",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Little Eagle Bay Rd",
+     "recycling_day": "N/A",
+     "parking_ban_zone": "B",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Loaldo Dr",
+     "recycling_day": "Friday",
+     "parking_ban_zone": "B",
+     "address_from": null,
+     "route_zone": 2,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Locust St",
+     "recycling_day": "Monday",
+     "parking_ban_zone": "C",
+     "address_from": null,
+     "route_zone": 2,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Locust Ter",
+     "recycling_day": "Monday",
+     "parking_ban_zone": "C",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Loomis St",
+     "recycling_day": "Tuesday",
+     "parking_ban_zone": "E",
+     "address_from": "94",
+     "route_zone": 3,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Loomis St",
+     "recycling_day": "Wednesday",
+     "parking_ban_zone": "G",
+     "address_from": "94",
+     "route_zone": 3,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Lopes Ave",
+     "recycling_day": "Thursday",
+     "parking_ban_zone": "A",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Lori Ln",
+     "recycling_day": "Thursday",
+     "parking_ban_zone": "A",
+     "address_from": null,
+     "route_zone": 2,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Luck St",
+     "recycling_day": "Tuesday",
+     "parking_ban_zone": "G",
+     "address_from": null,
+     "route_zone": 1,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Ludwig Ct",
+     "recycling_day": "Monday",
+     "parking_ban_zone": "D",
+     "address_from": null,
+     "route_zone": 1,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Lyman Ave",
+     "recycling_day": "Monday",
+     "parking_ban_zone": "C",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Main St",
+     "recycling_day": "Tuesday",
+     "parking_ban_zone": "E",
+     "address_from": "360",
+     "route_zone": 3,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Main St",
+     "recycling_day": "Wednesday",
+     "parking_ban_zone": "F",
+     "address_from": "360",
+     "route_zone": 3,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Manhattan Dr",
+     "recycling_day": "Thursday",
+     "parking_ban_zone": "G",
+     "address_from": "39",
+     "route_zone": 1,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Manhattan Dr",
+     "recycling_day": "Tuesday",
+     "parking_ban_zone": "G",
+     "address_from": "39",
+     "route_zone": 1,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Mansfield Ave",
+     "recycling_day": "Tuesday",
+     "parking_ban_zone": "E",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Maple St",
+     "recycling_day": "Wednesday",
+     "parking_ban_zone": "D",
+     "address_from": "1",
+     "route_zone": 2,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Maple St",
+     "recycling_day": "Wednesday",
+     "parking_ban_zone": "F",
+     "address_from": "1",
+     "route_zone": 2,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Marble Ave",
+     "recycling_day": "Wednesday",
+     "parking_ban_zone": "C",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Margaret St",
+     "recycling_day": "Monday",
+     "parking_ban_zone": "C",
+     "address_from": null,
+     "route_zone": 2,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Marian St",
+     "recycling_day": "Monday",
+     "parking_ban_zone": "C",
+     "address_from": null,
+     "route_zone": 2,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Markhams Ln",
+     "recycling_day": "N/A",
+     "parking_ban_zone": "F",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Marshall Dr",
+     "recycling_day": "Thursday",
+     "parking_ban_zone": "A",
+     "address_from": null,
+     "route_zone": 2,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Matthew Ave",
+     "recycling_day": "Thursday",
+     "parking_ban_zone": "A",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Mechanics Ln",
+     "recycling_day": "N/A",
+     "parking_ban_zone": "F",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Meridian St",
+     "recycling_day": "Thursday",
+     "parking_ban_zone": "A",
+     "address_from": null,
+     "route_zone": 3,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Mill St",
+     "recycling_day": "Tuesday",
+     "parking_ban_zone": "E",
+     "address_from": null,
+     "route_zone": 3,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Monroe St",
+     "recycling_day": "Wednesday",
+     "parking_ban_zone": "F",
+     "address_from": null,
+     "route_zone": 2,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Moore Ct",
+     "recycling_day": "Thursday",
+     "parking_ban_zone": "A",
+     "address_from": null,
+     "route_zone": 2,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Moore Dr",
+     "recycling_day": "Thursday",
+     "parking_ban_zone": "A",
+     "address_from": null,
+     "route_zone": 2,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Morgan St",
+     "recycling_day": "Friday",
+     "parking_ban_zone": "A",
+     "address_from": null,
+     "route_zone": 1,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Morrill Dr",
+     "recycling_day": "Thursday",
+     "parking_ban_zone": "A",
+     "address_from": null,
+     "route_zone": 3,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Morse Pl",
+     "recycling_day": "Monday",
+     "parking_ban_zone": "C",
+     "address_from": null,
+     "route_zone": 3,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Mount View Ct",
+     "recycling_day": "Monday",
+     "parking_ban_zone": "D",
+     "address_from": null,
+     "route_zone": 1,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Muirfield Rd",
+     "recycling_day": "Friday",
+     "parking_ban_zone": "B",
+     "address_from": null,
+     "route_zone": 2,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Murray St",
+     "recycling_day": "Wednesday",
+     "parking_ban_zone": "G",
+     "address_from": null,
+     "route_zone": 2,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Myrtle St",
+     "recycling_day": "Thursday",
+     "parking_ban_zone": "G",
+     "address_from": null,
+     "route_zone": 1,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "N Champlain St",
+     "recycling_day": "Tuesday",
+     "parking_ban_zone": "G",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "N Champlain St",
+     "recycling_day": "Wednesday",
+     "parking_ban_zone": "F",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "N Champlain St",
+     "recycling_day": "Wednesday",
+     "parking_ban_zone": "G",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "N Cove Rd",
+     "recycling_day": "Friday",
+     "parking_ban_zone": null,
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "N Prospect St",
+     "recycling_day": "Tuesday",
+     "parking_ban_zone": "E",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "N Union St",
+     "recycling_day": "Tuesday",
+     "parking_ban_zone": "G",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "N Union St",
+     "recycling_day": "Wednesday",
+     "parking_ban_zone": "F",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "N Union St",
+     "recycling_day": "Wednesday",
+     "parking_ban_zone": "G",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "N View Dr",
+     "recycling_day": "Friday",
+     "parking_ban_zone": "A",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "N Willard St",
+     "recycling_day": "Tuesday",
+     "parking_ban_zone": "E",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "N Williams St",
+     "recycling_day": "Tuesday",
+     "parking_ban_zone": "E",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "N Winooski Ave",
+     "recycling_day": "Tuesday",
+     "parking_ban_zone": "G",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "N Winooski Ave",
+     "recycling_day": "Wednesday",
+     "parking_ban_zone": "F",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "N Winooski Ave",
+     "recycling_day": "Wednesday",
+     "parking_ban_zone": "G",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Nash Pl",
+     "recycling_day": "Tuesday",
+     "parking_ban_zone": "E",
+     "address_from": null,
+     "route_zone": 3,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "North Ave",
+     "recycling_day": "Friday",
+     "parking_ban_zone": "A(East)/B(West)",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "North Ave",
+     "recycling_day": "N/A",
+     "parking_ban_zone": null,
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "North Ave",
+     "recycling_day": "Thursday",
+     "parking_ban_zone": "G",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "North Ave",
+     "recycling_day": "Thursday",
+     "parking_ban_zone": "A(East)/B(West)",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "North Ave",
+     "recycling_day": "Wednesday",
+     "parking_ban_zone": "G",
+     "address_from": null,
+     "route_zone": 2,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "North St",
+     "recycling_day": "Thursday",
+     "parking_ban_zone": "G",
+     "address_from": "18",
+     "route_zone": 1,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "North St",
+     "recycling_day": "Tuesday",
+     "parking_ban_zone": "E",
+     "address_from": "18",
+     "route_zone": 1,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "North St",
+     "recycling_day": "Tuesday",
+     "parking_ban_zone": "G",
+     "address_from": "18",
+     "route_zone": 1,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Northgate Rd",
+     "recycling_day": "Check",
+     "parking_ban_zone": "B",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Northshore Dr",
+     "recycling_day": "Friday",
+     "parking_ban_zone": "B",
+     "address_from": null,
+     "route_zone": 1,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Nottingham Ln",
+     "recycling_day": "Friday",
+     "parking_ban_zone": "B",
+     "address_from": null,
+     "route_zone": 2,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Oak Beach Dr",
+     "recycling_day": "Monday",
+     "parking_ban_zone": "C",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Oak St",
+     "recycling_day": "Tuesday",
+     "parking_ban_zone": "G",
+     "address_from": null,
+     "route_zone": 1,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Oakcrest Dr",
+     "recycling_day": "Thursday",
+     "parking_ban_zone": "B",
+     "address_from": null,
+     "route_zone": 3,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Oakland Ter",
+     "recycling_day": "Friday",
+     "parking_ban_zone": "B",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Oakledge Dr",
+     "recycling_day": "Monday",
+     "parking_ban_zone": "C",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Oakledge Park",
+     "recycling_day": "Monday",
+     "parking_ban_zone": "C",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Orchard Ter",
+     "recycling_day": "Wednesday",
+     "parking_ban_zone": "F",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Overlake Park",
+     "recycling_day": "Monday",
+     "parking_ban_zone": "D",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Park St",
+     "recycling_day": "Thursday",
+     "parking_ban_zone": "G",
+     "address_from": "137",
+     "route_zone": 1,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Park St",
+     "recycling_day": "Wednesday",
+     "parking_ban_zone": "F",
+     "address_from": "137",
+     "route_zone": 1,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Park St",
+     "recycling_day": "Wednesday",
+     "parking_ban_zone": "G",
+     "address_from": "137",
+     "route_zone": 1,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Pearl St",
+     "recycling_day": "Tuesday",
+     "parking_ban_zone": "E",
+     "address_from": "327",
+     "route_zone": 3,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Pearl St",
+     "recycling_day": "Wednesday",
+     "parking_ban_zone": "F",
+     "address_from": "327",
+     "route_zone": 3,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Pennington Dr",
+     "recycling_day": "Friday",
+     "parking_ban_zone": "A",
+     "address_from": null,
+     "route_zone": 1,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Penny Ln",
+     "recycling_day": "N/A",
+     "parking_ban_zone": "F",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Perrotta Pl",
+     "recycling_day": "Monday",
+     "parking_ban_zone": "D",
+     "address_from": null,
+     "route_zone": 1,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Peru St",
+     "recycling_day": "Wednesday",
+     "parking_ban_zone": "F",
+     "address_from": null,
+     "route_zone": 2,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Pfg Rd",
+     "recycling_day": "N/A",
+     "parking_ban_zone": null,
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Pine Pl",
+     "recycling_day": "Wednesday",
+     "parking_ban_zone": "C",
+     "address_from": null,
+     "route_zone": 2,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Pine St",
+     "recycling_day": "Monday",
+     "parking_ban_zone": "C",
+     "address_from": "444",
+     "route_zone": 2,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Pine St",
+     "recycling_day": "Wednesday",
+     "parking_ban_zone": "F",
+     "address_from": "444",
+     "route_zone": 2,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Pine St",
+     "recycling_day": "Wednesday",
+     "parking_ban_zone": "C",
+     "address_from": "444",
+     "route_zone": 2,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Pitkin St",
+     "recycling_day": "Thursday",
+     "parking_ban_zone": "G",
+     "address_from": null,
+     "route_zone": 1,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Plattsburg Ave",
+     "recycling_day": "Friday",
+     "parking_ban_zone": "A",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Pleasant Ave",
+     "recycling_day": "Friday",
+     "parking_ban_zone": "B",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Poirier Pl",
+     "recycling_day": "Thursday",
+     "parking_ban_zone": "A",
+     "address_from": null,
+     "route_zone": 2,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Pomeroy St",
+     "recycling_day": "Tuesday",
+     "parking_ban_zone": "E",
+     "address_from": null,
+     "route_zone": 2,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Pomeroy St",
+     "recycling_day": "Tuesday",
+     "parking_ban_zone": "G",
+     "address_from": null,
+     "route_zone": 2,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Poplar St",
+     "recycling_day": "Thursday",
+     "parking_ban_zone": "G",
+     "address_from": null,
+     "route_zone": 1,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Proctor Pl",
+     "recycling_day": "Monday",
+     "parking_ban_zone": "C",
+     "address_from": null,
+     "route_zone": 2,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Prospect Hl",
+     "recycling_day": "Tuesday",
+     "parking_ban_zone": "E",
+     "address_from": null,
+     "route_zone": 2,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Prospect Pkwy",
+     "recycling_day": "Monday",
+     "parking_ban_zone": "D",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Queen City Park Rd",
+     "recycling_day": "Monday",
+     "parking_ban_zone": "C",
+     "address_from": null,
+     "route_zone": 3,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Railway Ln",
+     "recycling_day": "N/A",
+     "parking_ban_zone": "F",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Randy Ln",
+     "recycling_day": "Thursday",
+     "parking_ban_zone": "A",
+     "address_from": null,
+     "route_zone": 2,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Raymond Pl",
+     "recycling_day": "Monday",
+     "parking_ban_zone": "C",
+     "address_from": null,
+     "route_zone": 3,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Redstone Condo",
+     "recycling_day": "Check",
+     "parking_ban_zone": "C",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Redstone Ter",
+     "recycling_day": "Monday",
+     "parking_ban_zone": "D",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Revere Ct",
+     "recycling_day": "Thursday",
+     "parking_ban_zone": "A",
+     "address_from": null,
+     "route_zone": 3,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Richardson St",
+     "recycling_day": "Monday",
+     "parking_ban_zone": "C",
+     "address_from": null,
+     "route_zone": 3,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Ridgewood Dr",
+     "recycling_day": "Friday",
+     "parking_ban_zone": "B",
+     "address_from": null,
+     "route_zone": 3,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "River'S Edge Dr",
+     "recycling_day": "Friday",
+     "parking_ban_zone": "A",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Rivermount Ter",
+     "recycling_day": "Thursday",
+     "parking_ban_zone": "A",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Riverside Ave",
+     "recycling_day": "Tuesday",
+     "parking_ban_zone": "E",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Riverside Ave",
+     "recycling_day": "Tuesday",
+     "parking_ban_zone": "G",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Riverview Dr",
+     "recycling_day": "Friday",
+     "parking_ban_zone": "A",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Robinson Pkwy",
+     "recycling_day": "Wednesday",
+     "parking_ban_zone": "D",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Rock Point Rd",
+     "recycling_day": "N/A",
+     "parking_ban_zone": null,
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Rockland St",
+     "recycling_day": "Thursday",
+     "parking_ban_zone": "A",
+     "address_from": null,
+     "route_zone": 3,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Rose St",
+     "recycling_day": "Tuesday",
+     "parking_ban_zone": "G",
+     "address_from": null,
+     "route_zone": 1,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Roseade Pkwy",
+     "recycling_day": "Thursday",
+     "parking_ban_zone": "A",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Rumsey Ln",
+     "recycling_day": "Tuesday",
+     "parking_ban_zone": "E",
+     "address_from": null,
+     "route_zone": 3,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Russell St",
+     "recycling_day": "Tuesday",
+     "parking_ban_zone": "G",
+     "address_from": null,
+     "route_zone": 2,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "S Champlain St",
+     "recycling_day": "Wednesday",
+     "parking_ban_zone": "F",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "S Cove Rd",
+     "recycling_day": "Monday",
+     "parking_ban_zone": "C",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "S Crest Dr",
+     "recycling_day": "Monday",
+     "parking_ban_zone": "C",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "S Meadow Dr",
+     "recycling_day": "Monday",
+     "parking_ban_zone": "C",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "S Prospect St",
+     "recycling_day": "Monday",
+     "parking_ban_zone": "D",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "S Prospect St",
+     "recycling_day": "Tuesday",
+     "parking_ban_zone": "E",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "S Prospect St",
+     "recycling_day": "Wednesday",
+     "parking_ban_zone": "D",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "S Union St",
+     "recycling_day": "Wednesday",
+     "parking_ban_zone": "D",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "S Union St",
+     "recycling_day": "Wednesday",
+     "parking_ban_zone": "F",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "S Willard St",
+     "recycling_day": "Monday",
+     "parking_ban_zone": "D",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "S Willard St",
+     "recycling_day": "Tuesday",
+     "parking_ban_zone": "F",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "S Willard St",
+     "recycling_day": "Wednesday",
+     "parking_ban_zone": "F",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "S Willard St",
+     "recycling_day": "Wednesday",
+     "parking_ban_zone": "D",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "S Williams St",
+     "recycling_day": "Tuesday",
+     "parking_ban_zone": "E",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "S Winooski Ave",
+     "recycling_day": "Wednesday",
+     "parking_ban_zone": "C",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "S Winooski Ave",
+     "recycling_day": "Wednesday",
+     "parking_ban_zone": "F",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Saint Francis Park",
+     "recycling_day": "Thursday",
+     "parking_ban_zone": "A",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Saint Louis St",
+     "recycling_day": "Tuesday",
+     "parking_ban_zone": "G",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Saint Marys St",
+     "recycling_day": "Tuesday",
+     "parking_ban_zone": "G",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Saint Paul St",
+     "recycling_day": "Wednesday",
+     "parking_ban_zone": "C",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Saint Paul St",
+     "recycling_day": "Wednesday",
+     "parking_ban_zone": "D",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Saint Paul St",
+     "recycling_day": "Wednesday",
+     "parking_ban_zone": "F",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Sandra Cir",
+     "recycling_day": "Thursday",
+     "parking_ban_zone": "A",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Sandy Ln",
+     "recycling_day": "Thursday",
+     "parking_ban_zone": "A",
+     "address_from": null,
+     "route_zone": 2,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Saratoga Ave",
+     "recycling_day": "Thursday",
+     "parking_ban_zone": "A",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Scarff Ave",
+     "recycling_day": "Monday",
+     "parking_ban_zone": "C",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "School St",
+     "recycling_day": "Tuesday",
+     "parking_ban_zone": "G",
+     "address_from": "60",
+     "route_zone": 2,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "School St",
+     "recycling_day": "Wednesday",
+     "parking_ban_zone": "G",
+     "address_from": "60",
+     "route_zone": 2,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Sears Ln",
+     "recycling_day": "Monday",
+     "parking_ban_zone": "C",
+     "address_from": null,
+     "route_zone": 2,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Shelburne Rd",
+     "recycling_day": "Monday",
+     "parking_ban_zone": "C(West)/D(East)",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Shelburne Rd",
+     "recycling_day": "Monday",
+     "parking_ban_zone": "C",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Sherman St",
+     "recycling_day": "Wednesday",
+     "parking_ban_zone": "F",
+     "address_from": null,
+     "route_zone": 2,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Shore Rd",
+     "recycling_day": "Friday",
+     "parking_ban_zone": "B",
+     "address_from": null,
+     "route_zone": 3,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Simms St",
+     "recycling_day": "Friday",
+     "parking_ban_zone": "B",
+     "address_from": null,
+     "route_zone": 1,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Sky Dr",
+     "recycling_day": "Thursday",
+     "parking_ban_zone": "A",
+     "address_from": null,
+     "route_zone": 3,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "South St",
+     "recycling_day": "Monday",
+     "parking_ban_zone": "D",
+     "address_from": null,
+     "route_zone": 1,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Southwind Dr",
+     "recycling_day": "Monday",
+     "parking_ban_zone": "C",
+     "address_from": null,
+     "route_zone": 3,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Spring St",
+     "recycling_day": "Tuesday",
+     "parking_ban_zone": "G",
+     "address_from": null,
+     "route_zone": 1,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Spruce Ct",
+     "recycling_day": "Wednesday",
+     "parking_ban_zone": "C",
+     "address_from": null,
+     "route_zone": 1,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Spruce St",
+     "recycling_day": "Wednesday",
+     "parking_ban_zone": "C",
+     "address_from": null,
+     "route_zone": 1,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Spruce St",
+     "recycling_day": "Wednesday",
+     "parking_ban_zone": "D",
+     "address_from": null,
+     "route_zone": 1,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Stanbury Rd",
+     "recycling_day": "Friday",
+     "parking_ban_zone": "B",
+     "address_from": null,
+     "route_zone": 3,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Staniford Rd",
+     "recycling_day": "Friday",
+     "parking_ban_zone": "B",
+     "address_from": null,
+     "route_zone": 2,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Starr Farm Bch",
+     "recycling_day": "Friday",
+     "parking_ban_zone": "B",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Starr Farm Rd",
+     "recycling_day": "Friday",
+     "parking_ban_zone": "B",
+     "address_from": null,
+     "route_zone": 2,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Steele St",
+     "recycling_day": "N/A",
+     "parking_ban_zone": "F",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Stirling Pl",
+     "recycling_day": "Friday",
+     "parking_ban_zone": "B",
+     "address_from": null,
+     "route_zone": 3,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Strong St",
+     "recycling_day": "Thursday",
+     "parking_ban_zone": "G",
+     "address_from": null,
+     "route_zone": 1,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Summer St",
+     "recycling_day": "Wednesday",
+     "parking_ban_zone": "G",
+     "address_from": null,
+     "route_zone": 2,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Summit Rdg",
+     "recycling_day": "Wednesday",
+     "parking_ban_zone": "D",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Summit St",
+     "recycling_day": "Wednesday",
+     "parking_ban_zone": "D",
+     "address_from": null,
+     "route_zone": 1,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Sunset Cliff Rd",
+     "recycling_day": "Friday",
+     "parking_ban_zone": "B",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Sunset Ct",
+     "recycling_day": "Thursday",
+     "parking_ban_zone": "G",
+     "address_from": null,
+     "route_zone": 1,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Sunset Dr",
+     "recycling_day": "Thursday",
+     "parking_ban_zone": "A",
+     "address_from": null,
+     "route_zone": 3,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Surf Rd",
+     "recycling_day": "Friday",
+     "parking_ban_zone": "B",
+     "address_from": null,
+     "route_zone": 3,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Tallwood Ln",
+     "recycling_day": "Thursday",
+     "parking_ban_zone": "B",
+     "address_from": null,
+     "route_zone": 3,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Temple St",
+     "recycling_day": "Thursday",
+     "parking_ban_zone": "A",
+     "address_from": null,
+     "route_zone": 3,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Thibault Pkwy",
+     "recycling_day": "Tuesday",
+     "parking_ban_zone": "E",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Tower Ter",
+     "recycling_day": "Wednesday",
+     "parking_ban_zone": "D",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Tracy Dr",
+     "recycling_day": "Friday",
+     "parking_ban_zone": "B",
+     "address_from": null,
+     "route_zone": 2,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Turf Rd",
+     "recycling_day": "Friday",
+     "parking_ban_zone": "A",
+     "address_from": null,
+     "route_zone": 1,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "University Heights Rd",
+     "recycling_day": "Tuesday",
+     "parking_ban_zone": "E",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "University Pl",
+     "recycling_day": "N/A",
+     "parking_ban_zone": "E",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "University Rd",
+     "recycling_day": "N/A",
+     "parking_ban_zone": "E",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "University Ter",
+     "recycling_day": "Tuesday",
+     "parking_ban_zone": null,
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Valade Park",
+     "recycling_day": "Thursday",
+     "parking_ban_zone": "A",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Van Patten Pkwy",
+     "recycling_day": "Thursday",
+     "parking_ban_zone": "A",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Venus Ave",
+     "recycling_day": "Thursday",
+     "parking_ban_zone": "A",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Vermont Park",
+     "recycling_day": "Check",
+     "parking_ban_zone": "E",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Vest Haven Dr",
+     "recycling_day": "Friday",
+     "parking_ban_zone": "A",
+     "address_from": null,
+     "route_zone": 1,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Village Grn",
+     "recycling_day": "Thursday",
+     "parking_ban_zone": "A",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Vine St",
+     "recycling_day": "Friday",
+     "parking_ban_zone": "B",
+     "address_from": null,
+     "route_zone": 3,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Volz St",
+     "recycling_day": "Thursday",
+     "parking_ban_zone": "G",
+     "address_from": null,
+     "route_zone": 1,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Vt Route 127",
+     "recycling_day": "N/A",
+     "parking_ban_zone": "A",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Walnut St",
+     "recycling_day": "Tuesday",
+     "parking_ban_zone": "G",
+     "address_from": null,
+     "route_zone": 1,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Ward St",
+     "recycling_day": "Thursday",
+     "parking_ban_zone": "G",
+     "address_from": null,
+     "route_zone": 1,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Washington St",
+     "recycling_day": "Thursday",
+     "parking_ban_zone": "G",
+     "address_from": null,
+     "route_zone": 1,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Wells St",
+     "recycling_day": "Monday",
+     "parking_ban_zone": "C",
+     "address_from": null,
+     "route_zone": 3,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "West Rd",
+     "recycling_day": "Friday",
+     "parking_ban_zone": "B",
+     "address_from": null,
+     "route_zone": 2,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Western Ave",
+     "recycling_day": "Friday",
+     "parking_ban_zone": "B",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Westminster Dr",
+     "recycling_day": "Friday",
+     "parking_ban_zone": "B",
+     "address_from": null,
+     "route_zone": 2,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Weston St",
+     "recycling_day": "Tuesday",
+     "parking_ban_zone": "E",
+     "address_from": null,
+     "route_zone": 3,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Westward Dr",
+     "recycling_day": "Friday",
+     "parking_ban_zone": "B",
+     "address_from": null,
+     "route_zone": 1,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Wildwood Dr",
+     "recycling_day": "Friday",
+     "parking_ban_zone": "B",
+     "address_from": null,
+     "route_zone": 3,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Willow St",
+     "recycling_day": "Tuesday",
+     "parking_ban_zone": "G",
+     "address_from": null,
+     "route_zone": 1,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Wilson St",
+     "recycling_day": "Tuesday",
+     "parking_ban_zone": "E",
+     "address_from": null,
+     "route_zone": 3,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Wing St",
+     "recycling_day": "Friday",
+     "parking_ban_zone": "B",
+     "address_from": null,
+     "route_zone": 1,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Wood St",
+     "recycling_day": "Friday",
+     "parking_ban_zone": "A",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Woodbury Rd",
+     "recycling_day": "Friday",
+     "parking_ban_zone": "B",
+     "address_from": null,
+     "route_zone": 3,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Woodcrest Ln",
+     "recycling_day": "Monday",
+     "parking_ban_zone": "D",
+     "address_from": null,
+     "route_zone": 1,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Woodlawn Rd",
+     "recycling_day": "Friday",
+     "parking_ban_zone": "B",
+     "address_from": null,
+     "route_zone": 3,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Woodridge Dr",
+     "recycling_day": "Thursday",
+     "parking_ban_zone": "B",
+     "address_from": null,
+     "route_zone": 3,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "Wright Ave",
+     "recycling_day": "Monday",
+     "parking_ban_zone": "C",
+     "address_from": null,
+     "route_zone": null,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    },
+    {
+     "street": "York Dr",
+     "recycling_day": "Friday",
+     "parking_ban_zone": "B",
+     "address_from": null,
+     "route_zone": 2,
+     "source_url": "https://burlingtonvt.maps.arcgis.com/apps/webappviewer/index.html?id=724c74c720c24fb28c72c1eab435956a",
+     "verified": "2026-10-30"
+    }
+   ],
+   "ok": true,
+   "stale": false
+  },
+  "dropoff": {
+   "verified": "2026-10-30",
+   "items": [
+    {
+     "name": "CSWD Drop-Off Center in Burlington",
+     "address": "339 Pine St., Burlington",
+     "hours": "Tues. – Sat.: 8 a.m. to 3:30 p.m.",
+     "district_notice": "The Hinesburg Drop-Off Center is accessible only from Beecher Hill Road via Route 116, and the upper section of Beecher Hill Road (North Road side) is closed until further notice.",
+     "takes": "Blue-bin recycling, food scraps, small special items; no trailers or large loads",
+     "source_url": "https://cswd.net/cswd-location/cswd-drop-off-center-in-burlington/",
+     "verified": "2026-10-30"
+    }
+   ],
+   "ok": true,
+   "stale": false
+  },
+  "parking_ban": {
+   "verified": "2026-10-30",
+   "status": "none_posted_72h",
+   "status_note": "Read from the city's own web channels. The official signal is the overhead parking-ban lights plus 802-658-SNOW, VT-Alert texts and DPW social media, which this script cannot read; show the headline, not a verdict.",
+   "rules": {
+    "called_by": "3 PM the day of the ban",
+    "hours": "10 PM to 7 AM citywide; downtown Zone F midnight to 6 AM",
+    "penalty": "$75 ticket plus $75 tow",
+    "free_garages": "Marketplace, Downtown (College St) and Lakeview garages from 7 PM, out by 9 AM",
+    "surface_lots": "No overnight parking in municipal surface lots 2:30 to 6 AM, Dec 1 to Mar 15",
+    "sign_up": "https://www.burlingtonvt.gov/btv-alerts (VT-Alert text and email)",
+    "source_url": "https://www.burlingtonvt.gov/628/Winter-Parking",
+    "verified": "2026-10-30"
+   },
+   "items": [],
+   "ok": true,
+   "stale": false
+  },
+  "greenway": {
+   "verified": "2026-10-30",
+   "notes": "The city publishes no street-plow tracker. This Parks layer covers the five Greenway (bike path) segments and is updated in winter only. A 'Plow_Data_sample' layer of DPW truck tracks exists from a January 2026 trial but is not a live public feed.",
+   "items": [
+    {
+     "segment": "Echo Center to Harrison Ave",
+     "plowed_in_winter_program": true,
+     "skiable": false,
+     "notes": "Mostly dry pavement with some occasional snowy patches on sides of path.",
+     "last_plowed": "2026-03-21T15:00:00+00:00",
+     "updated": "2026-03-25T15:40:34.529000+00:00",
+     "source_url": "https://services1.arcgis.com/1bO0c7PxQdsGidPK/arcgis/rest/services/Greenway_Plowing_and_Condition_Status_Public/FeatureServer/0",
+     "verified": "2026-10-30"
+    },
+    {
+     "segment": "Proctor Pl to Oakledge Park",
+     "plowed_in_winter_program": true,
+     "skiable": false,
+     "notes": "Mostly dry pavement with some wet snowy stretches.",
+     "last_plowed": "2026-03-21T15:30:00+00:00",
+     "updated": "2026-03-25T15:43:23.676000+00:00",
+     "source_url": "https://services1.arcgis.com/1bO0c7PxQdsGidPK/arcgis/rest/services/Greenway_Plowing_and_Condition_Status_Public/FeatureServer/0",
+     "verified": "2026-10-30"
+    },
+    {
+     "segment": "Queen City Park Rd to Home Ave",
+     "plowed_in_winter_program": true,
+     "skiable": false,
+     "notes": "Mixed patches of dry and wet snowy pavement.",
+     "last_plowed": "2026-03-23T17:45:00+00:00",
+     "updated": "2026-03-25T15:45:12.969000+00:00",
+     "source_url": "https://services1.arcgis.com/1bO0c7PxQdsGidPK/arcgis/rest/services/Greenway_Plowing_and_Condition_Status_Public/FeatureServer/0",
+     "verified": "2026-10-30"
+    },
+    {
+     "segment": "Waterfront Park to Echo Center",
+     "plowed_in_winter_program": true,
+     "skiable": false,
+     "notes": "Path is mostly clear in this area",
+     "last_plowed": "2026-03-20T18:30:00+00:00",
+     "updated": "2026-03-23T18:53:38.583000+00:00",
+     "source_url": "https://services1.arcgis.com/1bO0c7PxQdsGidPK/arcgis/rest/services/Greenway_Plowing_and_Condition_Status_Public/FeatureServer/0",
+     "verified": "2026-10-30"
+    },
+    {
+     "segment": "Winooski River to Waterfront Park",
+     "plowed_in_winter_program": true,
+     "skiable": false,
+     "notes": "Wet snow on Eastern side of path, occasional stretches of open pavement.",
+     "last_plowed": "2026-03-20T18:30:00+00:00",
+     "updated": "2026-03-25T15:37:02.725000+00:00",
+     "source_url": "https://services1.arcgis.com/1bO0c7PxQdsGidPK/arcgis/rest/services/Greenway_Plowing_and_Condition_Status_Public/FeatureServer/0",
+     "verified": "2026-10-30"
+    }
+   ],
+   "ok": true,
+   "stale": false
+  },
+  "closings": {
+   "verified": "2026-10-30",
+   "notes": "NBC5 list total 0; WCAX shows no closings. The district's own call or ParentSquare message is the official word; TV lists are relays.",
+   "items": [],
+   "district_posts": [],
+   "ok": true,
+   "stale": false
+  },
+  "shelters": {
+   "verified": "2026-10-30",
+   "notes": "Announcements only, last 14 days. Standing year-round shelters and the state's adverse-weather motel rule are listed in alerts-sources.json; call 2-1-1 or COTS 802-864-7402 to confirm a bed.",
+   "items": [],
+   "ok": true,
+   "stale": false
+  }
+ }
+}

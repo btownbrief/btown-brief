@@ -2,7 +2,8 @@
 
 Six short jobs in the Supabase dashboard, about twenty-one minutes in all. Do them in order. Until
 each one is done, All Day keeps working and says so plainly; nothing breaks. Parts A to D are
-done (October 2026); parts E and F are the new ones.
+done (October 2026), apart from step 5 of part A, which Body and Town need; parts E and F are the
+new ones.
 
 Project: the shared one, **jnouvwxomrcffqwilqkq** (the same project Small Talk, Who's Playing,
 the games and the photo queue use). Sign in at https://supabase.com/dashboard and open it.
@@ -27,10 +28,13 @@ the games and the photo queue use). Sign in at https://supabase.com/dashboard an
 3. Leave **Site URL** as it is.
 4. Under **Redirect URLs**, click **Add URL**, type `https://guide.btownbrief.com/all-day/` and
    click **Save URLs**.
-5. Click **Add URL** again, type `http://localhost:*/**` and click **Save URLs**; then once more
+5. Click **Add URL** again, type `https://guide.btownbrief.com/body/` and click **Save URLs**;
+   then once more with `https://guide.btownbrief.com/town/`. Each app sends its own address as
+   the return address, so Body and Town need their own lines.
+6. Click **Add URL** again, type `http://localhost:*/**` and click **Save URLs**; then once more
    with `http://127.0.0.1:*/**`. These let a test copy on a laptop receive its link. (Small Talk
    may already have added the localhost one; skip any that are already in the list.)
-6. Optional check: under **Configuration**, click **Sign In / Providers**, then **Email**. "Enable
+7. Optional check: under **Configuration**, click **Sign In / Providers**, then **Email**. "Enable
    Email provider" should be on. Do not change anything else on that screen.
 
 All Day never offers a password: the only way in is the emailed link. There is no separate
@@ -38,7 +42,8 @@ All Day never offers a password: the only way in is the emailed link. There is n
 
 **Before part A is done:** a reader who asks for a link from All Day gets the email, but the
 link opens Small Talk instead of All Day (Supabase sends unknown return addresses to the Site
-URL). So do part A before the New Nine goes live.
+URL). So do part A before the New Nine goes live. Step 5 is the same for Body and Town: do it
+before they go live, or a sign-in from either one lands in Small Talk.
 
 ## B. Install the boards (3 minutes)
 

@@ -42,21 +42,22 @@ export const OUT = [
 ];
 
 let demo = false;
+let appName = 'All Day';
 let deferred = null;     // Chrome's install prompt, held until the reader asks
 let shown = false;       // one ask per page load
 let toastFn = () => {};
 
 window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferred = e; });
-window.addEventListener('appinstalled', () => { deferred = null; store.setAsk('installed', true); });
+window.addEventListener('appinstalled', () => { deferred = null; store.setAsk(store.installedKey(), true); });
 
 const ua = () => navigator.userAgent || '';
-const isIOS = () => /iPhone|iPad|iPod/.test(ua()) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-const isAndroid = () => /Android/.test(ua());
-const isMac = () => /Mac/.test(navigator.platform || ua());
+export const isIOS = () => /iPhone|iPad|iPod/.test(ua()) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+export const isAndroid = () => /Android/.test(ua());
+export const isMac = () => /Mac/.test(navigator.platform || ua());
 
 export function installed() {
   try { if (matchMedia('(display-mode: standalone)').matches || navigator.standalone === true) return true; } catch (e) { /* old browser */ }
-  return /[?&]source=pwa(&|$)/.test(location.search) || !!store.asks().installed;
+  return /[?&]source=pwa(&|$)/.test(location.search) || !!store.asks()[store.installedKey()];
 }
 export const subscribed = () => !!store.asks().subscribed;
 
@@ -67,8 +68,9 @@ export function newsDue(now = Date.now()) { return !demo && !subscribed() && due
 export function homeDue(now = Date.now()) { return !demo && !installed() && due('homeNext', now) && store.use().visits >= 3; }
 
 /* once, before the first route */
-export function boot(isDemo, toast) {
+export function boot(isDemo, toast, app) {
   demo = !!isDemo;
+  if (app && app.name) appName = app.name;
   if (toast) toastFn = toast;
   if (demo) return;
   let q = null;
@@ -83,7 +85,7 @@ export function boot(isDemo, toast) {
       try { history.replaceState(null, '', location.pathname + (rest ? '?' + rest : '') + location.hash); } catch (e) { /* fine */ }
     }
   }
-  if (installed()) store.setAsk('installed', true);
+  if (installed()) store.setAsk(store.installedKey(), true);
   store.countVisit();
   setInterval(() => { if (document.visibilityState === 'visible') store.addUse(15); }, 15000);
   window.addEventListener('message', (e) => {
@@ -130,19 +132,21 @@ function card(kind, title, onClose) {
 
 /* ------------------------------------------------------- home screen */
 function homeCard() {
-  const c = card('home', 'Keep All Day on your home screen', () => store.setAsk('homeNext', Date.now() + 7 * DAY_MS));
+  const c = card('home', 'Keep ' + appName + ' on your home screen', () => store.setAsk('homeNext', Date.now() + 7 * DAY_MS));
   c.appendChild(howTo(() => c.remove()));
   return c;
 }
 
 /* the browser's own install prompt, if it offered one: false when it didn't */
-function promptInstall(done) {
+/* whether the browser has offered its own install prompt */
+export const canPrompt = () => !!deferred;
+export function promptInstall(done) {
   if (!deferred) return false;
   const p = deferred;
   deferred = null;
   try { p.prompt(); } catch (e) { return false; }
   Promise.resolve(p.userChoice).then((r) => {
-    if (r && r.outcome === 'accepted') { store.setAsk('installed', true); toastFn('Added'); if (done) done(); }
+    if (r && r.outcome === 'accepted') { store.setAsk(store.installedKey(), true); toastFn('Added'); if (done) done(); }
   }).catch(() => {});
   return true;
 }

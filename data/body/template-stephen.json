@@ -1,0 +1,189 @@
+{
+  "_comment": "Body app, Today tab, Template. A daily list anyone can copy, in the habits schema from all-day/js/habits-core.js. Each habit has text (60 characters or fewer), frequency ('daily', 'weekdays' or 'n_per_week'), n (1 to 6, only for n_per_week, otherwise null), shared (false by default) and a category from HABIT_RULES.categories. 'why' and 'links' are extra fields for the template card; the habits tab ignores them when it copies a habit in. Keep sixteen habits with Gym at position 6 and Sleep at position 13: the tests pin the first two and recover.js links to template/t-13.",
+  "updated": "2026-10-30",
+  "id": "stephen",
+  "name": "The daily list",
+  "by": "Btown Brief",
+  "blurb": "",
+  "page": "how-i-do-it.md",
+  "habits": [
+    {
+      "text": "Brush teeth",
+      "frequency": "daily",
+      "n": null,
+      "shared": false,
+      "category": "life_admin",
+      "why": "Two minutes, morning and night."
+    },
+    {
+      "text": "Floss",
+      "frequency": "n_per_week",
+      "n": 3,
+      "shared": false,
+      "category": "life_admin",
+      "why": "Start with three a week."
+    },
+    {
+      "text": "Skin care",
+      "frequency": "daily",
+      "n": null,
+      "shared": false,
+      "category": "life_admin",
+      "why": "Wash and moisturize, morning and night."
+    },
+    {
+      "text": "Breathing break (double inhale)",
+      "frequency": "daily",
+      "n": null,
+      "shared": false,
+      "category": "fitness",
+      "why": "Long breaths out calm you down.",
+      "links": [
+        {
+          "label": "Breathing timer",
+          "tab": "recover/breathe"
+        }
+      ]
+    },
+    {
+      "text": "Gym",
+      "frequency": "n_per_week",
+      "n": 3,
+      "shared": false,
+      "category": "fitness",
+      "why": "Three hard sessions. Thirty minutes each.",
+      "links": [
+        {
+          "label": "Workouts",
+          "tab": "train/beginner"
+        },
+        {
+          "label": "Gyms",
+          "tab": "train/gyms"
+        }
+      ]
+    },
+    {
+      "text": "Sprints",
+      "frequency": "n_per_week",
+      "n": 1,
+      "shared": false,
+      "category": "fitness",
+      "why": "Twenty minutes, once a week.",
+      "links": [
+        {
+          "label": "Sprint session",
+          "tab": "train/sprints"
+        }
+      ]
+    },
+    {
+      "text": "Stretch or foam roll",
+      "frequency": "n_per_week",
+      "n": 3,
+      "shared": false,
+      "category": "fitness",
+      "why": "Ten minutes keeps you moving well.",
+      "links": [
+        {
+          "label": "Recover routines",
+          "tab": "recover/stretch"
+        }
+      ]
+    },
+    {
+      "text": "Hit the water goal",
+      "frequency": "daily",
+      "n": null,
+      "shared": false,
+      "category": "fitness",
+      "why": "Easy to forget. Easy to track.",
+      "links": [
+        {
+          "label": "Water",
+          "tab": "fuel/water"
+        }
+      ]
+    },
+    {
+      "text": "Protein shake",
+      "frequency": "daily",
+      "n": null,
+      "shared": false,
+      "category": "fitness",
+      "why": "An easy 30 grams.",
+      "links": [
+        {
+          "label": "Protein",
+          "tab": "fuel/protein"
+        }
+      ]
+    },
+    {
+      "text": "Creatine",
+      "frequency": "daily",
+      "n": null,
+      "shared": false,
+      "category": "fitness",
+      "why": "Five grams, every day.",
+      "links": [
+        {
+          "label": "The basics",
+          "tab": "fuel/basics"
+        }
+      ]
+    },
+    {
+      "text": "Log calories",
+      "frequency": "daily",
+      "n": null,
+      "shared": false,
+      "category": "fitness",
+      "why": "Calories decide your weight. A photo takes seconds.",
+      "links": [
+        {
+          "label": "Calories",
+          "tab": "fuel/calories"
+        }
+      ]
+    },
+    {
+      "text": "Sleep 7+ hours (tracked)",
+      "frequency": "daily",
+      "n": null,
+      "shared": false,
+      "category": "fitness",
+      "why": "Seven hours is the floor.",
+      "links": [
+        {
+          "label": "Sleep",
+          "tab": "recover/sleep"
+        }
+      ]
+    },
+    {
+      "text": "Read",
+      "frequency": "daily",
+      "n": null,
+      "shared": false,
+      "category": "learn",
+      "why": "Ten pages a day is a book a month."
+    },
+    {
+      "text": "Record a voice note",
+      "frequency": "daily",
+      "n": null,
+      "shared": false,
+      "category": "creative",
+      "why": "Catch the idea before it's gone."
+    },
+    {
+      "text": "Plan the day",
+      "frequency": "daily",
+      "n": null,
+      "shared": false,
+      "category": "business",
+      "why": "Write down what matters before the day starts."
+    }
+  ]
+}

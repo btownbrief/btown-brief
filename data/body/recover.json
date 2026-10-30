@@ -1,0 +1,179 @@
+{
+ "_comment": "Body app, Recover tab. Mat routines (stretch, yoga, roll) with durations in seconds so the app can run them as timers, the breathing exercise with its timer spec, sleep basics, and a comparison of sleep trackers. Tracker prices were read on each maker's own US store on 2026-10-29. Places to sauna, plunge and get a massage are in recover-spots.json. Research behind the numbers, kept off the screen: cyclic sighing, Balban et al., Cell Reports Medicine 2023, pubmed.ncbi.nlm.nih.gov/36630953; adult sleep, CDC, cdc.gov/sleep/about. General wellness information, not medical advice.",
+ "updated": "2026-10-30",
+ "why": "Muscles grow on the days off.",
+ "routines": [
+  {
+   "id": "stretch-10",
+   "name": "Ten-minute stretch",
+   "tab": "Stretch",
+   "when": "After a workout, or at night.",
+   "total_seconds": 600,
+   "cue": "Ease in. Back off if anything pinches.",
+   "moves": [
+    {"name": "Calf stretch", "seconds": 60, "sides": 2, "how": "Hands on a wall. One foot back, heel down."},
+    {"name": "Quad stretch", "seconds": 60, "sides": 2, "how": "Hold a wall. Pull one heel to your butt."},
+    {"name": "Hamstring stretch", "seconds": 60, "sides": 2, "how": "On your back, towel around one foot. Lift the leg."},
+    {"name": "Hip flexor stretch", "seconds": 60, "sides": 2, "how": "One knee down. Squeeze that glute, hips forward."},
+    {"name": "Figure four", "seconds": 60, "sides": 2, "how": "On your back, ankle over knee. Pull the bottom leg in."},
+    {"name": "Child's pose", "seconds": 60, "sides": 1, "how": "Knees wide, hips to heels, arms long."},
+    {"name": "Chest stretch", "seconds": 60, "sides": 2, "how": "Forearm on a door frame. Step through."},
+    {"name": "Shoulder stretch", "seconds": 60, "sides": 2, "how": "Pull one arm across your chest."},
+    {"name": "Seated twist", "seconds": 60, "sides": 2, "how": "Sit tall, foot over the other knee. Turn toward it."},
+    {"name": "Neck stretch", "seconds": 60, "sides": 2, "how": "Ear toward shoulder. Other hand reaches down."}
+   ]
+  },
+  {
+   "id": "yoga-20",
+   "name": "Twenty-minute yoga",
+   "tab": "Yoga",
+   "when": "Rest days, mornings, or when you're stiff.",
+   "total_seconds": 1200,
+   "cue": "Move with your breath. Rest in child's pose anytime.",
+   "moves": [
+    {"name": "Easy seat", "seconds": 90, "sides": 1, "how": "Sit cross-legged. Slow breaths through your nose."},
+    {"name": "Cat and cow", "seconds": 90, "sides": 1, "how": "Hands and knees. Round on the exhale, arch on the inhale."},
+    {"name": "Thread the needle", "seconds": 90, "sides": 2, "how": "Slide one arm under you. Rest that shoulder down."},
+    {"name": "Downward dog", "seconds": 60, "sides": 1, "how": "Hips up and back, knees soft. Pedal your heels."},
+    {"name": "Low lunge", "seconds": 120, "sides": 2, "how": "Foot between your hands, back knee down. Chest up."},
+    {"name": "Half split", "seconds": 90, "sides": 2, "how": "From the lunge, hips back. Straighten the front leg."},
+    {"name": "Lizard", "seconds": 120, "sides": 2, "how": "Foot outside your hand, back knee down. Sink your hips."},
+    {"name": "Pigeon or figure four", "seconds": 120, "sides": 2, "how": "Front shin across the mat, fold forward. Knee hurts? Do figure four."},
+    {"name": "Bridge", "seconds": 60, "sides": 1, "how": "On your back, feet flat. Lift your hips, hold, lower. Repeat."},
+    {"name": "Supine twist", "seconds": 120, "sides": 2, "how": "On your back, drop both knees to one side."},
+    {"name": "Happy baby", "seconds": 60, "sides": 1, "how": "On your back, hold your feet. Rock side to side."},
+    {"name": "Lying still", "seconds": 180, "sides": 1, "how": "Flat on your back. Let your breath slow."}
+   ]
+  },
+  {
+   "id": "roll-10",
+   "name": "Ten-minute foam roll",
+   "tab": "Roll",
+   "when": "Before or after a workout, or on rest days.",
+   "total_seconds": 600,
+   "cue": "Roll slowly. Pause on tender spots. Skip your lower back and bones.",
+   "moves": [
+    {"name": "Calves", "seconds": 90, "sides": 2, "how": "Roller under one calf, other leg on top."},
+    {"name": "Hamstrings", "seconds": 90, "sides": 1, "how": "Roller under your thighs, hands behind you."},
+    {"name": "Quads", "seconds": 90, "sides": 1, "how": "Face down on your forearms, roller under your thighs."},
+    {"name": "Outer hip", "seconds": 60, "sides": 2, "how": "On your side, top foot on the floor."},
+    {"name": "Glutes", "seconds": 90, "sides": 2, "how": "Sit on the roller, ankle over knee. Lean that way."},
+    {"name": "Upper back", "seconds": 90, "sides": 1, "how": "Roller across your shoulder blades, hands behind your head."},
+    {"name": "Lats", "seconds": 90, "sides": 2, "how": "On your side, arm overhead, roller under your armpit."}
+   ],
+   "gear": "A medium-density foam roller."
+  }
+ ],
+ "breathe": {
+  "id": "double-inhale",
+  "name": "The double inhale",
+  "tab": "Breathe",
+  "aka": "Cyclic sighing, also called the physiological sigh.",
+  "what": "Two breaths in through your nose. One long breath out.",
+  "timer": {
+   "phases": [
+    {"key": "inhale", "label": "Breathe in through your nose", "seconds": 3},
+    {"key": "top_up", "label": "Sip in a little more", "seconds": 1},
+    {"key": "exhale", "label": "Slowly out through your mouth", "seconds": 6}
+   ],
+   "round_seconds": 10,
+   "presets": [
+    {"key": "one", "label": "Three sighs", "rounds": 3, "minutes": 0.5, "use": "Anytime you're stressed."},
+    {"key": "quick", "label": "Two minutes", "rounds": 12, "minutes": 2, "use": "Between meetings, or after coffee."},
+    {"key": "full", "label": "Five minutes", "rounds": 30, "minutes": 5, "use": "Once a day. This is the studied dose."}
+   ],
+   "editable": ["inhale", "top_up", "exhale", "rounds"],
+   "rule": "Breathe out longer than you breathe in. Light-headed? Stop.",
+   "cues": "A chime and a tap."
+  },
+  "nudges": {
+   "habit": "Breathing break",
+   "suggested_times": ["09:30", "13:00", "16:00", "21:30"],
+   "note": "Small moments count."
+  },
+  "meditation": [
+   {"name": "One-minute reset", "seconds": 60, "how": "Eyes closed. Count ten slow breaths. Lose count? Start over."},
+   {"name": "Three-minute body scan", "seconds": 180, "how": "Feet, legs, belly, chest, shoulders, jaw, face. Soften each one."},
+   {"name": "Five-minute walk", "seconds": 300, "how": "Outside, phone away. Notice what you see and hear."}
+  ],
+  "sources": []
+ },
+ "sleep": {
+  "tab": "Sleep",
+  "why": "Adults need seven hours or more.",
+  "basics": [
+   "Wake at the same time every day.",
+   "Get outside light within an hour of waking.",
+   "No caffeine within eight hours of bed.",
+   "Keep the bedroom cool, dark and quiet.",
+   "Phone across the room. Thirty screen-free minutes before bed.",
+   "No big meals or alcohol close to bed.",
+   "Awake after twenty minutes? Get up until you're sleepy."
+  ],
+  "habit": {"text": "Track sleep", "target_hours": 7.5, "editable": true},
+  "sources": [],
+  "trackers": [
+   {
+    "id": "apple-watch",
+    "name": "Apple Watch",
+    "form": "Watch",
+    "measures": "Sleep stages, heart rate, breathing, wrist temperature.",
+    "cost": "SE 3 from $249, Series 12 from $399. No subscription.",
+    "best_for": "iPhone users who want one device.",
+    "tradeoff": "Needs charging most days.",
+    "url": "https://www.apple.com/shop/buy-watch/apple-watch-se",
+    "verified": "2026-10-29",
+    "unverified": []
+   },
+   {
+    "id": "google-fitbit",
+    "name": "Google Fitbit and Pixel Watch",
+    "form": "Band or watch",
+    "measures": "Sleep stages and score, heart rate, HRV, blood oxygen.",
+    "cost": "Fitbit Air from $99.99, Pixel Watch from $399.99. Premium from $9.99 a month.",
+    "best_for": "Android users who want a cheap band.",
+    "tradeoff": "Deeper insights need Premium.",
+    "url": "https://store.google.com/us/category/watches_trackers",
+    "verified": "2026-10-29",
+    "unverified": []
+   },
+   {
+    "id": "oura",
+    "name": "Oura Ring",
+    "form": "Ring",
+    "measures": "Sleep score and stages, resting heart rate, HRV, body temperature.",
+    "cost": "Ring 4 from $349, Ring 5 from $399, plus $5.99 a month.",
+    "best_for": "People who hate sleeping in a watch.",
+    "tradeoff": "Most insights need the membership.",
+    "url": "https://ouraring.com/store",
+    "verified": "2026-10-29",
+    "unverified": []
+   },
+   {
+    "id": "whoop",
+    "name": "WHOOP",
+    "form": "Screenless band",
+    "measures": "Sleep, strain and recovery scores, HRV, skin temperature.",
+    "cost": "Membership from $199 a year, band included.",
+    "best_for": "Heavy trainers who want a daily recovery score.",
+    "tradeoff": "No screen. You pay every year.",
+    "url": "https://www.whoop.com/us/en/membership/",
+    "verified": "2026-10-29",
+    "unverified": []
+   },
+   {
+    "id": "phone-apps",
+    "name": "Phone apps",
+    "form": "Phone",
+    "measures": "Time in bed and estimated sleep.",
+    "cost": "Free to start. Built into iPhone and Android.",
+    "best_for": "Trying tracking before you buy.",
+    "tradeoff": "Rougher than a wearable.",
+    "url": null,
+    "verified": null,
+    "unverified": []
+   }
+  ],
+  "tracker_tip": "Start with one number: hours slept."
+ }
+}

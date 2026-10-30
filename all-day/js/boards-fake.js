@@ -515,5 +515,35 @@ export function seedDemo(fake) {
   add(4, 'playlists', 'playlist', 'Maya on Spotify', { ago: 50, meta: { link: 'https://open.spotify.com/user/demo.maya' }, votes: 1 });
   add(8, 'playlists', 'playlist', 'Waiting for a look', { ago: 2, meta: { link: 'https://open.spotify.com/playlist/DemoBtownBriefWait0001' }, status: 'pending' });
   add(7, 'gatherings', 'gathering', 'Open fiddle jam', { ago: 1, meta: { when: day(6) + ', 6 pm', place: 'Radio Bean', kind: 'music' }, status: 'pending' });
+  /* the eight apps' boards (2026-10-29): nothing posts to them yet, but
+     the demo has a few on each so the tabs that will have something to
+     draw. Their photos are the three palettes no other demo seeds (field, rink,
+     paper), so they never take a photo Vintage's demo needs. */
+  add(2, 'nightlife', 'open_tonight', 'Four of us at a brewery, room for two', { ago: 1, meta: { where: 'A brewery on Pine St', until: '11 pm', spots: 2, ages: 'thirties' }, votes: 3 });
+  add(9, 'nightlife', 'open_tonight', 'Trivia team short a player', { ago: 2, meta: { where: 'A pub on Church St', until: '10 pm', spots: 1, ages: 'any' }, votes: 2 });
+  add(6, 'nightlife', 'open_tonight', 'Dancing after the show', { ago: 3, meta: { where: 'Downtown', until: '1 am', spots: 4, ages: 'twenties' }, votes: 5 });
+  add(1, 'sports', 'session', 'Anyone at the courts at 6?', { ago: 1, meta: { sport: 'basketball', where: 'Leddy Park courts', when: 'Today, 6 pm', spots: 4, level: 'any' }, votes: 4 });
+  add(0, 'sports', 'session', 'Easy 5k, then the sauna', { ago: 3, meta: { sport: 'run', where: 'Oakledge Park lot', when: 'Tomorrow, 7 am', level: 'easy' }, votes: 6 });
+  add(10, 'sports', 'session', 'Stretch and roll on the waterfront', { ago: 5, meta: { sport: 'recovery', where: 'Waterfront Park', when: 'Saturday, 9 am', spots: 10 }, votes: 2 });
+  add(4, 'stage', 'logged', 'The winter play at the Flynn', { ago: 8, meta: { venue: 'The Flynn', date: day(-1), what: 'play', stars: 4 }, body: 'The second act is the one.', votes: 3 });
+  add(5, 'stage', 'logged', 'A late set at Radio Bean', { ago: 20, meta: { venue: 'Radio Bean', date: day(-2), what: 'show', stars: 5 }, votes: 6 });
+  add(8, 'stage', 'logged', 'Open mic comedy night', { ago: 40, meta: { venue: 'Downtown', date: day(-3), what: 'comedy', stars: 3 }, votes: 1 });
+  add(3, 'neighbors', 'borrow', 'A tall ladder for a Saturday', { ago: 2, meta: { item: 'Extension ladder' }, place: 'Old North End', votes: 1 });
+  add(5, 'neighbors', 'free', 'A couch, you carry it', { ago: 6, place: 'Winooski', photo: 'submissions/demo-field.jpg', votes: 4 });
+  add(7, 'neighbors', 'lost', 'Grey cat, white socks', { ago: 9, meta: { what: 'pet', seen: 'North Ave by the school' }, photo: 'submissions/demo-rink.jpg', votes: 8 });
+  add(11, 'neighbors', 'favor', 'An hour of help moving a dresser', { ago: 12, place: 'South End', votes: 2 });
+  add(9, 'shifts', 'shift', 'Two hours at the food shelf', { ago: 4, meta: { org: 'A food shelf', when: day(3) + ', 9 am', hours: 2, slots: 6, link: 'https://example.org/food-shelf-shift' }, votes: 3 });
+  add(2, 'shifts', 'shift', 'Trail cleanup crew', { ago: 10, meta: { org: 'A parks group', when: day(5) + ', 10 am', hours: 3, slots: 12 }, votes: 5 });
+  add(6, 'shifts', 'shift', 'Front desk at the animal shelter', { ago: 15, meta: { org: 'An animal shelter', when: day(7) + ', 1 pm', hours: 2, slots: 2 }, votes: 1 });
+  add(8, 'shifts', 'shift', 'Waiting for a look', { ago: 1, meta: { org: 'A library', when: day(4) + ', 3 pm', hours: 2 }, status: 'pending' });
+  add(4, 'clubs', 'idea', 'A slow-reading book club', { ago: 5, meta: { kind: 'books', days: 'Sunday mornings', size: 6 }, body: 'One short book a month, read out loud.', votes: 9 });
+  add(1, 'clubs', 'idea', 'Weeknight pickleball for beginners', { ago: 14, meta: { kind: 'sport', days: 'Weeknights', size: 8 }, votes: 12 });
+  add(10, 'clubs', 'idea', 'A choir for people who can’t sing', { ago: 30, meta: { kind: 'music', size: 10 }, votes: 7 });
+  add(0, 'streets', 'report', 'Deep pothole in the bike lane', { ago: 3, meta: { what: 'pothole', where: 'North Winooski Ave at Union' }, photo: 'submissions/demo-paper.jpg', votes: 11 });
+  add(3, 'streets', 'report', 'Streetlight out for a week', { ago: 26, meta: { what: 'streetlight', where: 'Elmwood Ave, the middle block' }, votes: 4 });
+  add(5, 'streets', 'report', 'Crosswalk paint is gone', { ago: 50, meta: { what: 'crosswalk', where: 'Pine St at Maple', fixed: true }, votes: 6 });
+  add(2, 'rescue', 'rescue', 'Eight bowls of noodles at close', { ago: 1, meta: { spot: 'A noodle bar on Church St', until: '10 pm', price: 0, portions: 8 }, votes: 5 });
+  add(6, 'rescue', 'rescue', 'Day-old bread, half price', { ago: 2, meta: { spot: 'A bakery in the Old North End', until: '7 pm', price: 3, portions: 12 }, votes: 3 });
+  add(9, 'rescue', 'rescue', 'Soup at the end of the night', { ago: 4, meta: { spot: 'A cafe on Pine St', until: '9 pm', price: 4, portions: 6 }, votes: 2 });
   return fake;
 }

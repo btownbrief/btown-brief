@@ -1,7 +1,7 @@
 // The boards' pure rules, and the fake backend's mirror of the SQL.
 //
 //   node --test scripts/test-boards-core.mjs
-//   node scripts/test-boards-core.mjs --write-sql   (copy RULES into nn-ROUND4.sql)
+//   node scripts/test-boards-core.mjs --write-sql   (copy RULES into nn-ROUND4.sql, nn-PLAYLISTS.sql and nn-APPS.sql)
 //
 // Three copies of one set of rules must agree: all-day/js/boards-core.js,
 // nn_rules() and the checks in the SQL (all-day/supabase/nn-SETUP.sql, with
@@ -28,6 +28,7 @@ const SETUP_PATH = path.join(ROOT, 'all-day/supabase/nn-SETUP.sql');
 const ROUND2_PATH = path.join(ROOT, 'all-day/supabase/nn-ROUND2.sql');
 const ROUND4_PATH = path.join(ROOT, 'all-day/supabase/nn-ROUND4.sql');
 const PLAYLISTS_PATH = path.join(ROOT, 'all-day/supabase/nn-PLAYLISTS.sql');
+const APPS_PATH = path.join(ROOT, 'all-day/supabase/nn-APPS.sql');
 const RULES_RE = /\$json\$([\s\S]*?)\$json\$/;
 
 if (process.argv.includes('--write-sql')) {
@@ -35,7 +36,9 @@ if (process.argv.includes('--write-sql')) {
   writeFileSync(ROUND4_PATH, sql.replace(RULES_RE, () => '$json$' + JSON.stringify(core.RULES) + '$json$'));
   const pl = readFileSync(PLAYLISTS_PATH, 'utf8');
   writeFileSync(PLAYLISTS_PATH, pl.replace(RULES_RE, () => '$json$' + JSON.stringify(core.RULES) + '$json$'));
-  console.log('nn_rules() in nn-ROUND4.sql and nn-PLAYLISTS.sql now matches boards-core.js RULES');
+  const ap = readFileSync(APPS_PATH, 'utf8');
+  writeFileSync(APPS_PATH, ap.replace(RULES_RE, () => '$json$' + JSON.stringify(core.RULES) + '$json$'));
+  console.log('nn_rules() in nn-ROUND4.sql, nn-PLAYLISTS.sql and nn-APPS.sql now matches boards-core.js RULES');
   process.exit(0);
 }
 const SETUP = readFileSync(SETUP_PATH, 'utf8');
@@ -78,6 +81,47 @@ test('nn-PLAYLISTS.sql replaces only nn_rules(), with exactly RULES', () => {
   assert.ok(!/\b(drop|delete|truncate|alter|grant|revoke|insert|update)\b/i.test(code.replace(RULES_RE, '')), 'nothing but the one function');
   const b = core.RULES.boards.playlists;
   assert.ok(b && b.premod === true && b.meta.link.type === 'url' && b.kinds.playlist.needs.includes('link'), 'a link, and Stephen looks first');
+});
+
+/* the eight apps' boards (2026-10-29) are pasted on their own too: one
+   function, the same JSON, nothing dropped or deleted, and the twelve kinds
+   the map names, each on its board */
+test('nn-APPS.sql replaces only nn_rules(), with exactly RULES, and adds the twelve kinds', () => {
+  const sql = readFileSync(APPS_PATH, 'utf8');
+  const m = sql.match(RULES_RE);
+  assert.ok(m, 'nn-APPS.sql has a $json$ block');
+  assert.deepEqual(JSON.parse(m[1]), core.RULES, 'run: node scripts/test-boards-core.mjs --write-sql');
+  const code = sql.replace(/--[^\n]*/g, '');
+  assert.deepEqual([...code.matchAll(/create or replace function public\.(\w+)/g)].map((x) => x[1]), ['nn_rules']);
+  assert.ok(!/\b(drop|delete|truncate|alter|grant|revoke|insert|update)\b/i.test(code.replace(RULES_RE, '')), 'nothing but the one function');
+  const B = core.RULES.boards;
+  const want = { nightlife: ['open_tonight'], sports: ['session'], stage: ['logged'], neighbors: ['borrow', 'free', 'favor', 'lost', 'found'],
+    shifts: ['shift'], clubs: ['idea'], streets: ['report'], rescue: ['rescue'] };
+  for (const [b, kinds] of Object.entries(want)) {
+    assert.ok(B[b], 'board ' + b);
+    assert.deepEqual(Object.keys(B[b].kinds), kinds, b + ' kinds');
+    assert.ok(core.BOARD_LABELS[b], b + ' has words');
+    kinds.forEach((k) => assert.ok(core.KIND_LABELS[k], k + ' has words'));
+    /* every field a kind needs is one of its board's fields */
+    for (const [k, kr] of Object.entries(B[b].kinds)) kr.needs.forEach((f) => assert.ok(B[b].meta[f], b + '/' + k + ' needs ' + f));
+    /* a link only where Stephen looks first */
+    for (const f of Object.values(B[b].meta)) if (f.type === 'url') assert.equal(B[b].premod, true, b + ' has a link field, so it is premod');
+  }
+  assert.equal(B.shifts.kinds.shift.until, 'when');
+  /* a real post on each new kind passes the same checks the server runs */
+  const ok = (b, kind, meta, photo) => core.checkPost(core.RULES, b, { kind, title: 'A post', meta, photo_path: photo || null });
+  assert.ok(ok('nightlife', 'open_tonight', { where: 'Foam Brewers', until: '11 pm', spots: 3, ages: 'thirties' }).ok);
+  assert.equal(ok('nightlife', 'open_tonight', { where: 'Foam Brewers' }).error, 'needs_meta');
+  assert.ok(ok('sports', 'session', { sport: 'basketball', where: 'Leddy Park courts', when: '6 pm', level: 'any' }).ok);
+  assert.equal(ok('sports', 'session', { sport: 'curling', where: 'x', when: 'y' }).error, 'bad_meta');
+  assert.ok(ok('stage', 'logged', { venue: 'The Flynn', date: '2026-10-24', what: 'play', stars: 4 }, 'submissions/aaaa-0001.jpg').ok);
+  assert.ok(ok('neighbors', 'borrow', { item: 'A tall ladder' }).ok);
+  assert.ok(ok('neighbors', 'lost', { what: 'pet', seen: 'North Ave by the school' }).ok);
+  assert.ok(ok('shifts', 'shift', { org: 'The food shelf', when: '2026-11-07, 9 am', hours: 2, link: 'https://example.org/signup' }).ok);
+  assert.ok(ok('clubs', 'idea', { kind: 'books', days: 'weeknights', size: 6 }).ok);
+  assert.ok(ok('streets', 'report', { what: 'pothole', where: 'North Winooski at Union' }).ok);
+  assert.ok(ok('rescue', 'rescue', { spot: 'Juniper Noodle Bar', until: '10 pm', price: 0, portions: 8 }).ok);
+  assert.equal(ok('rescue', 'rescue', { spot: 'x', until: 'y', price: 500 }).error, 'bad_meta');
 });
 
 /* every board, kind, field, limit and list an older copy of the rules
