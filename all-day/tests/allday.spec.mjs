@@ -6905,9 +6905,12 @@ async function boards(browser, base) {
     await page.waitForTimeout(200);
     const after = await fakeOf(page, `(f) => ({ posts: f.posts.filter((p) => p.user_id === 'demo-0000-4000-8000-00000000me00').length, profile: f.profiles.has('demo-0000-4000-8000-00000000me00') })`);
     check(after.posts === 0 && !after.profile, 'everything of theirs is gone', JSON.stringify(after));
-    /* Habits registers its own deletion when its mode loads; an app that does not host Habits never does (since wave 1, All Day) */
-    const habitsGone = await page.evaluate(() => import('/all-day/js/modes/habits.js').then((h) => { const f = h._fake(); return !f.members.has('demo-0000-4000-8000-00000000me00') && !f.habits.some((x) => x.user_id === 'demo-0000-4000-8000-00000000me00'); }, () => 'not loaded'));
-    check(habitsGone === true, 'and so are their habits and taps (sz_delete_me)', habitsGone === 'not loaded' ? 'Habits is not loaded in this app, so nothing deleted them: the shell must register the deletion in every app (wave 1 All Day report)' : '');
+    /* Habits deletes its own where its mode loads (Body); everywhere else, All Day since wave 1, the shell's
+       account-data.js makes the same call (proven against the server by the accountData group) */
+    const habitsGone = await page.evaluate(() => import('/all-day/js/app.js').then((a) => a.modes().includes('habits')
+      ? import('/all-day/js/modes/habits.js').then((h) => { const f = h._fake(); return !f.members.has('demo-0000-4000-8000-00000000me00') && !f.habits.some((x) => x.user_id === 'demo-0000-4000-8000-00000000me00'); })
+      : import('/all-day/js/account-data.js').then((m) => m.handledHere().includes('sz_delete_me'))));
+    check(habitsGone === true, 'and so are their habits and taps (sz_delete_me, by Habits or, where it is not loaded, by account-data.js)', '');
     check(/Deleted\. You’re signed out\./.test(await page.$eval('#toast', (t) => t.textContent)) && await page.evaluate(() => import('/all-day/js/app.js').then((a) => a.user())) === null, 'and they are signed out', '');
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
@@ -13520,10 +13523,16 @@ async function accountData(browser, base) {
 
   await group('account data: an app that loads the modes leaves the deleting to them', async () => {
     const { ctx, page } = await newPage(browser, base, {});
-    await page.goto(base + '/all-day/#wire');
+    /* since wave 1 Habits lives in Body, and The Build joins it with apps/w1-body; All Day loads neither */
+    await page.goto(base + '/body/');
     await settle(page);
     const here = await page.evaluate(() => import('/all-day/js/account-data.js').then((m) => m.handledHere()));
-    check(here.length === 0, 'All Day loads Habits and The Build, so their own hooks delete and nothing runs twice', JSON.stringify(here));
+    const want = hostedAnywhere('build') ? [] : ['bd_delete_me'];
+    check(JSON.stringify(here) === JSON.stringify(want), 'Body loads Habits' + (want.length ? '' : ' and The Build') + ', so their own hooks delete and nothing runs twice', JSON.stringify(here));
+    await page.goto(base + '/all-day/');
+    await settle(page);
+    const ad = await page.evaluate(() => import('/all-day/js/account-data.js').then((m) => m.handledHere()));
+    check(JSON.stringify(ad) === JSON.stringify(['sz_delete_me', 'bd_delete_me']), 'All Day loads neither, so account-data.js deletes both', JSON.stringify(ad));
     await ctx.close();
   });
 }
