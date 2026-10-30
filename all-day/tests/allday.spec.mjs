@@ -13290,6 +13290,11 @@ async function theEat(browser, base) {
       const got = await foodFilter(page, k);
       check(got.rows.length === at9[k].length && got.n === at9[k].length, 'the ' + k + ' chip lists its ' + at9[k].length + ' places', got.rows.length + ' rows, chip ' + got.n);
     }
+    /* each matched place's row says how long ago it was inspected, in plain words */
+    await page.waitForSelector(foodPanel + ' [data-sec="open"] .insp-age', { timeout: 15000 });
+    const ages = await page.$$eval(foodPanel + ' [data-sec="open"] .lrow.place', (rs) => rs.map((r) => [r.dataset.k.slice(2), (r.querySelector('.insp-age') || {}).textContent || '']));
+    check(ages.length && ages.every(([id, t]) => (matched.has(id) ? /^Inspected (today|yesterday|\d+ (days|weeks|months) ago|\d+ years?(, \d+ months?)? ago)$/.test(t) : t === '')),
+      'a matched place’s row says when it was inspected; an unmatched one says nothing', JSON.stringify(ages.slice(0, 3)));
     /* the randomizer picks from the list as filtered */
     const open = (await foodFilter(page, 'open')).rows;
     await page.click(foodPanel + ' [data-sec="random"] .btn');

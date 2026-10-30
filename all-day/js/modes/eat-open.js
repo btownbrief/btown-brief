@@ -218,8 +218,11 @@ function placeRow(r, t, cls) {
   const extra = S.sort === 'price' ? r.price : S.sort === 'new' ? openedText(r.opened) : '';
   const meta = [r.neighborhood, E.kind(r), extra, E.milesText(mi)].filter(Boolean).map(esc).join(' · ');
   const order = E.orderLine(r);
+  /* the latest health inspection's age, plainly; its sheet is a tap away */
+  const rec = E.inspOf(r);
+  const insp = rec ? '<div class="s insp-age">' + esc('Inspected ' + E.ageWords(rec.latest.date, Date.now())) + '</div>' : '';
   const open = el('button', 'open', '<div class="t">' + esc(r.name) + '</div><div class="s">' + meta + ' · <span class="' + (st.open ? 'ok' : '') + '">' + esc(st.text) + '</span></div>' +
-    (order ? '<div class="s">' + esc(order) + '</div>' : ''));
+    (order ? '<div class="s">' + esc(order) + '</div>' : '') + insp);
   open.setAttribute('aria-label', r.name + ', ' + st.text + '. More about it');
   open.addEventListener('click', () => E.placeSheet(r));
   const fd = E.foodOf(r);
@@ -465,7 +468,7 @@ function land() {
    inspections fill their section */
 E.onData((what) => {
   if (!ready) return;
-  if (what === 'insp') { paint('insp'); land(); }
+  if (what === 'insp') { paint('insp'); paint('open'); land(); }
   else if (what === 'menus' || what === 'kitchens' || what === 'dishes') { paint('open'); if (S.pick) paint('random'); }
 });
 
