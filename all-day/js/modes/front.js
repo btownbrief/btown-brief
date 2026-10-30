@@ -31,7 +31,9 @@ function mailStrip() {
   box.dataset.ask = 'news';
   box.setAttribute('role', 'region');
   box.setAttribute('aria-label', 'Get the Btown Brief');
-  box.appendChild(el('p', 'ask-t', esc('Get the Brief, free')));
+  /* the title and the way out share one line */
+  const head = el('div', 'pp-mail-head', '<p class="ask-t">' + esc('Get the Brief, free') + '</p>');
+  box.appendChild(head);
   if (app.demo) {
     /* the demo draws the strip's shape; the real one is Beehiiv's own form */
     const r = el('div', 'pp-mail-row', '<input class="field" type="email" placeholder="Your email" aria-label="Your email (demo)" disabled>');
@@ -53,16 +55,14 @@ function mailStrip() {
     f.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox');
     box.appendChild(f);
   }
-  const foot = el('div', 'pp-mail-foot');
-  const already = el('button', 'btn ghost sm', esc('I’m already subscribed'));
+  const already = el('button', 'pp-already', esc('Already subscribed'));
   already.type = 'button';
   already.addEventListener('click', () => {
     if (!app.demo) store.setAsk('subscribed', true);
     app.toast('Thanks for reading');
     box.remove();
   });
-  foot.appendChild(already);
-  box.appendChild(foot);
+  head.appendChild(already);
   return box;
 }
 

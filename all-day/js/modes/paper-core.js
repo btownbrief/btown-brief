@@ -256,7 +256,8 @@ const CSS = `
 .pp-mail .ask-embed { margin-top: var(--s1); }
 .pp-mail-row { display: flex; align-items: center; gap: var(--s2); margin-top: var(--s2); }
 .pp-mail-row .field { background: var(--raised); }
-.pp-mail-foot { display: flex; justify-content: flex-end; margin-top: var(--s1); }
+.pp-mail-head { display: flex; align-items: baseline; justify-content: space-between; gap: var(--s2); }
+.pp-already { flex: 0 0 auto; min-height: var(--hit); margin: calc(var(--s2) * -1) 0; padding: 0 var(--s1); background: none; border: 0; font-size: var(--fs-meta); color: var(--ink-2); text-decoration: underline; text-underline-offset: 2px; cursor: pointer; }
 /* the questions: two rows that swipe together, so four or more show at once */
 .chips.pp-qs { display: grid; grid-auto-flow: column; grid-template-rows: auto auto; grid-auto-columns: max-content; gap: var(--s2); padding-top: var(--s1); }
 .chips.pp-qs::after { display: none; }
@@ -334,7 +335,13 @@ const CSS = `
 .pp-big .pp-more { padding: var(--s3) 0 0; }
 .pp-qsheet .sheet-row a.t { color: var(--ink); }
 .aside .pp-aside h3 { font-family: var(--serif); font-size: var(--fs-section); font-weight: 500; padding: 0 0 var(--s2); }
-@media (min-width: 1024px) { .pp-mission { font-size: var(--fs-count); } }
+@media (min-width: 1024px) {
+  .pp-mission { font-size: var(--fs-count); }
+  /* a wide screen has room for every question, and for the edition in two columns */
+  .chips.pp-qs { display: flex; flex-wrap: wrap; overflow: visible; }
+  .pp-rundown { display: grid; grid-template-columns: 1fr 1fr; column-gap: var(--s5); }
+  .pp-rundown li:nth-last-child(2):nth-child(odd) { border-bottom: 0; }
+}
 /* the first screen settles in once, gently; never for a reader who asks for less motion */
 .pp.arrive .pp-mission, .pp.arrive .pp-mail, .pp.arrive [data-sec="questions"], .pp.arrive .pp-lead { animation: rise .45s cubic-bezier(.2, .7, .2, 1) both; }
 .pp.arrive .pp-mail { animation-delay: .06s; }

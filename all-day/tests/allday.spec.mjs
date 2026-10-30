@@ -13350,7 +13350,7 @@ async function thePaper(browser, base) {
     check(await page.evaluate(() => document.querySelector('#sheet h2').textContent) === questions[4].q, '#front/<question> opens that question', '');
     await page.keyboard.press('Escape');
     /* I'm already subscribed: the strip goes, and stays gone */
-    await page.click('#panel-front .pp-mail .btn.ghost');
+    await page.click('#panel-front .pp-mail .pp-already');
     check(await page.evaluate(() => !document.querySelector('#panel-front .pp-mail')), '“I’m already subscribed” takes the strip away', '');
     await page.screenshot({ path: path.join(SHOTS, 'paper-front-390-live.png') });
     check(!errors.length, 'no console errors', errors.join(' | '));
