@@ -150,8 +150,8 @@ function load() {
   return data('template-stephen.json').then((j) => { S.tpl = j; }, () => { S.failed = true; }).then(paint);
 }
 
-/* ------------------------------------------------ Habits · Template · Build */
-const SIDES = [['habits', 'Habits', '--liq-habits'], ['template', 'Template', '--app-body-pop'], ['build', 'Build', '--liq-build']];
+/* ---------------------------------------- Habits · Season · Template · Build */
+const SIDES = [['habits', 'Habits', '--liq-habits'], ['season', 'Season', '--app-body-pop'], ['template', 'Template', '--liq-habits'], ['build', 'Build', '--liq-build']];
 function sideSwitch(on) {
   const r = el('div', 'secrow oa-sidesrow bd-sidesrow');
   const sides = SIDES.filter(([k]) => k === 'template' || app.registered(k));
@@ -197,7 +197,7 @@ app.register(KEY, {
   deactivate() {},
   subnav() { return wrapRow(sideSwitch('template'), null); },
   /* Habits' own row, under the switch */
-  frame(child, inner) { return child === 'habits' ? wrapRow(sideSwitch('habits'), inner) : child === 'build' ? buildRow(inner) : inner; },
+  frame(child, inner) { return child === 'build' ? buildRow(inner) : wrapRow(sideSwitch(child), inner); },
   landing() { return 'habits'; },
   keepSubnav: true,
   newSince() { return 0; },

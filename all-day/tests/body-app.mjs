@@ -37,7 +37,7 @@ export async function bodyTests(browser, base, h) {
     const { default: cfg } = await import('../js/apps/body.js');
     check(JSON.stringify(cfg.tabs.map((t) => t.mode)) === JSON.stringify(TABS), 'six tabs, each a built mode', cfg.tabs.map((t) => t.mode).join(', '));
     check(JSON.stringify(cfg.tabs.map((t) => t.label)) === JSON.stringify(LABELS), 'the map’s words', '');
-    check(JSON.stringify(cfg.hosted) === JSON.stringify({ habits: 'template', build: 'template' }), 'Habits and The Build live in Today’s cell', JSON.stringify(cfg.hosted));
+    check(JSON.stringify(cfg.hosted) === JSON.stringify({ habits: 'template', season: 'template', build: 'template' }), 'Habits, the season and The Build live in Today’s cell', JSON.stringify(cfg.hosted));
     check(tpl.habits.length === 16, 'the template has sixteen habits', tpl.habits.length);
   });
 
@@ -47,8 +47,8 @@ export async function bodyTests(browser, base, h) {
     await page.waitForSelector(panel('habits') + ' .hb-addbtn', { timeout: 10000 });
     check(await page.$eval(panel('habits'), (p) => !p.hidden), 'the bare app opens on the habits tracker', '');
     check(await page.$eval('#tab-template', (b) => b.getAttribute('aria-selected')) === 'true' && (await text(page, '#mast-title')) === 'Today', 'the Today cell is lit and the mast says Today', '');
-    check(JSON.stringify(await page.$$eval('#subnav .bd-sideswitch button', (b) => b.map((x) => x.dataset.side))) === '["habits","template","build"]' && !!(await page.$('#subnav .chip[data-chip="forests"]')),
-      'the switch, Habits · Template · Build, sits over Habits’ own chips', await text(page, '#subnav'));
+    check(JSON.stringify(await page.$$eval('#subnav .bd-sideswitch button', (b) => b.map((x) => x.dataset.side))) === '["habits","season","template","build"]' && !!(await page.$('#subnav .chip[data-chip="forests"]')),
+      'the switch, Habits · Season · Template · Build, sits over Habits’ own chips', await text(page, '#subnav'));
     await page.click('#subnav [data-side="template"]');
     await page.waitForSelector(panel('template') + ' [data-template="stephen"]', { timeout: 6000 });
     check(await page.evaluate(() => location.hash) === '#template/stephen', 'Template has its own link', await page.evaluate(() => location.hash));
@@ -123,8 +123,8 @@ export async function bodyTests(browser, base, h) {
     await page.waitForSelector(panel('build') + ':not([hidden])', { timeout: 10000 });
     check(await page.$eval('#tab-template', (b) => b.getAttribute('aria-selected')) === 'true', '#build opens The Build with Today lit', '');
     check(!(await page.$('#tab-build')), 'The Build has no cell of its own', '');
-    check(JSON.stringify(await page.$$eval('#subnav .bd-sideswitch button', (b) => b.map((x) => x.dataset.side))) === '["habits","template","build"]' && !!(await page.$('#subnav .bd-whatis')),
-      'one switch over it, Habits · Template · Build, and its “?”', await text(page, '#subnav'));
+    check(JSON.stringify(await page.$$eval('#subnav .bd-sideswitch button', (b) => b.map((x) => x.dataset.side))) === '["habits","season","template","build"]' && !!(await page.$('#subnav .bd-whatis')),
+      'one switch over it, Habits · Season · Template · Build, and its “?”', await text(page, '#subnav'));
     await page.click('#subnav [data-side="habits"]');
     await page.waitForSelector(panel('habits') + ':not([hidden]) .hb-addbtn', { timeout: 6000 });
     await page.click(panel('habits') + ' .hb-start');
@@ -145,6 +145,122 @@ export async function bodyTests(browser, base, h) {
     await p2.page.waitForURL(/\/body\/\?demo=1#habits/, { timeout: 8000 }).catch(() => {});
     check(/\/body\/\?demo=1#habits/.test(p2.page.url()), 'a #habits link from Out opens in Body', p2.page.url());
     await p2.ctx.close();
+  });
+
+  await group('Body, Season: the rules (show-up rate, the board order, the vague-goal nudge)', async () => {
+    const { ctx, page } = await newPage(browser, base);
+    await page.goto(base + '/body/?demo=1#season');
+    const r = await page.evaluate(() => import('/all-day/js/modes/season.js').then((m) => ({
+      before: m.showUp({ reviews: 0, attended: 0, weeksGone: 0, eventsHeld: 0 }),
+      wk3: m.showUp({ reviews: 2, attended: 1, weeksGone: 2, eventsHeld: 1 }),
+      capped: m.showUp({ reviews: 8, attended: 3, weeksGone: 12, eventsHeld: 3 }),
+      order: m.boardRows({ week: 3, events_held: 1, rows: [
+        { name: 'A', frequency: 'daily', taps: [], reviews: 0, attended: 0 },
+        { name: 'B', frequency: 'n_per_week', n: 1, taps: [], reviews: 2, attended: 1 }] }, Date.now()).map((x) => x.name + ':' + x.show),
+      vague: [m.vague('Get fit'), m.vague('Run a 10K'), m.vague('Finish the screenplay by December'), m.vague('')],
+    })));
+    check(r.before === null, 'before kickoff the show-up rate is blank, not 0%', r.before);
+    check(r.wk3 === 100, '2 reviews + 1 event over 2 weeks + 1 event is 100%', r.wk3);
+    check(r.capped === 100, 'weeks are capped at eight', r.capped);
+    check(JSON.stringify(r.vague) === '[true,false,false,false]', 'a goal with no number or date gets the nudge; a real one does not', JSON.stringify(r.vague));
+    check(r.order.length === 2, 'the board works its rows out in the app', JSON.stringify(r.order));
+    await ctx.close();
+  });
+
+  await group('Body, Season: signed out, the season and the Wall; signed in, the goal tile, Done, milestones, the review, the board, finishing and a card on the Wall (demo, 390)', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/body/?demo=1#season');
+    await ready(page, 'season');
+    check(await page.$eval('#tab-template', (b) => b.getAttribute('aria-selected')) === 'true', 'Season sits in the Today cell', '');
+    check(/Party in \d+ days/.test(await text(page, sec('season', 'top'))), 'signed out: where the season stands', await text(page, sec('season', 'top')));
+    check(!!(await page.$(sec('season', 'goal') + ' .btn')) && /Sign in/.test(await text(page, sec('season', 'goal'))), 'and a Sign in where your goal would be', '');
+    check((await page.$$(sec('season', 'events') + ' [data-event]')).length === 3, 'the three events', '');
+    check(!(await page.$(sec('season', 'board'))), 'no city board for a stranger', '');
+    check((await page.$$(sec('season', 'wall') + ' [data-wall]')).length === 3, 'the Wall is public', '');
+    await page.screenshot({ path: path.join(SHOTS, 'body-season-signedout-390-light.png') });
+    await page.evaluate(() => import('/all-day/js/auth.js').then((a) => a.demoSignIn()));
+    await page.waitForSelector(sec('season', 'top') + ' .sz-done', { timeout: 8000 });
+    const done = sec('season', 'top') + ' .sz-done';
+    const s0 = await text(page, '.sz-streak');
+    check(await page.$eval(done, (b) => b.getAttribute('aria-pressed')) === 'false' && (await page.$eval(done, (b) => b.getBoundingClientRect().height)) >= 64, 'the Done button, 64px or more, not yet done', '');
+    await page.click(done);
+    check(await page.$eval(done, (b) => b.getAttribute('aria-pressed')) === 'true' && /Done today/.test(await text(page, done)), 'one tap: done today', await text(page, done));
+    check(await page.evaluate(() => import('/all-day/js/modes/season.js').then((m) => m._fake().db)).then((d) => true), 'the tap reaches the server', '');
+    const s1 = await text(page, '.sz-streak');
+    check(s1 !== s0 || /\d/.test(s1), 'the streak shows', s0 + ' → ' + s1);
+    await page.click(done);
+    await page.waitForSelector('.confirm-card', { timeout: 3000 }).catch(() => {});
+    check(!!(await page.$('.confirm-card')), 'un-doing today asks first', '');
+    await page.click('.confirm-card button:has-text("Undo")').catch(() => {});
+    check(await page.$eval(done, (b) => b.getAttribute('aria-pressed')) === 'false', 'and then un-does it', '');
+    check(/Ana|Ben|Caro/.test(await text(page, '.sz-pod')), 'the pod’s streaks under it', await text(page, '.sz-pod'));
+    await page.screenshot({ path: path.join(SHOTS, 'body-season-390-light.png') });
+    /* the goal, locked: milestones tick */
+    check((await page.$$(sec('season', 'goal') + ' [data-milestone]')).length === 3 && !(await page.$(sec('season', 'goal') + ' form.sz-goal')), 'after kickoff the goal is read only, with three milestones', '');
+    await page.click(sec('season', 'goal') + ' [data-milestone="2"] .pillbtn');
+    await page.waitForFunction(() => document.querySelector('[data-milestone="2"]')?.classList.contains('done'), null, { timeout: 3000 }).catch(() => {});
+    check(await page.$eval(sec('season', 'goal') + ' [data-milestone="2"]', (r) => r.classList.contains('done')), 'a milestone ticks', '');
+    /* the review */
+    await page.fill(sec('season', 'review') + ' input[name="said"]', 'Three runs');
+    await page.fill(sec('season', 'review') + ' input[name="did"]', 'Three runs and a long one');
+    await page.fill(sec('season', 'review') + ' input[name="next"]', 'Taper');
+    await page.click(sec('season', 'review') + ' button[type="submit"]');
+    await page.waitForFunction(() => /Sent/.test(document.querySelector('[data-sec="review"] .bf-msg').textContent), null, { timeout: 3000 }).catch(() => {});
+    check(/Sent/.test(await text(page, sec('season', 'review') + ' .bf-msg')), 'this week’s review sends', '');
+    /* the board */
+    const me = await text(page, sec('season', 'board') + ' [data-board="me"]');
+    check(/\(you\)/.test(me) && await page.$eval(sec('season', 'board') + ' [data-board="me"]', (r) => r.classList.contains('spun')), 'the board marks your row', me);
+    const board = await text(page, sec('season', 'board'));
+    check(!/10K|screenplay|novel/i.test(board.replace(/Your pod.*/, '')), 'the board shows no one’s goal', '');
+    check(!!(await page.$(sec('season', 'board') + ' [data-pod]')), 'your pod under it', '');
+    /* finishing: a card on the Wall */
+    await page.click(sec('season', 'goal') + ' .sz-finish .btn');
+    await page.waitForSelector(sec('season', 'goal') + ' form.sz-card', { timeout: 3000 });
+    await page.fill(sec('season', 'goal') + ' input[name="line1"]', 'Three runs a week');
+    await page.fill(sec('season', 'goal') + ' input[name="line2"]', '58:40 at Shelburne');
+    await page.fill(sec('season', 'goal') + ' input[name="line3"]', 'From couch to 10K');
+    await page.click(sec('season', 'goal') + ' form.sz-card button[type="submit"]');
+    await page.waitForFunction(() => document.querySelector('[data-sec="wall"] [data-wall="w-me"]'), null, { timeout: 4000 }).catch(() => {});
+    check(/58:40 at Shelburne/.test(await text(page, sec('season', 'wall') + ' [data-wall]')), 'publishing puts your card first on the Wall', await text(page, sec('season', 'wall') + ' [data-wall]'));
+    check(!errors.length, 'no console errors', errors.slice(0, 3).join(' | '));
+    await ctx.close();
+  });
+
+  await group('Body, Season: before kickoff, declare your goal, saved as you type (demo, 390)', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/body/?demo=1#season');
+    await ready(page, 'season');
+    await page.evaluate(() => import('/all-day/js/modes/season.js').then((m) => { const d = m._fake().db; d.season.kickoff_at = new Date(Date.now() + 5 * 86400000).toISOString(); d.season.status = 'open'; d.goal.text = ''; d.goal.habit = null; }));
+    await page.evaluate(() => import('/all-day/js/auth.js').then((a) => a.demoSignIn()));
+    await page.waitForSelector(sec('season', 'goal') + ' form.sz-goal', { timeout: 8000 });
+    check(/Starts in 5 days/.test(await text(page, sec('season', 'top'))), 'the countdown to kickoff', await text(page, sec('season', 'top')));
+    await page.fill(sec('season', 'goal') + ' input[name="text"]', 'Get fit');
+    check(/number or a date/.test(await text(page, sec('season', 'goal') + ' .bf-hint')), 'a vague goal gets one soft line', '');
+    await page.fill(sec('season', 'goal') + ' input[name="text"]', 'Swim a mile by August');
+    await page.fill(sec('season', 'goal') + ' input[name="habit"]', 'Swim 30 minutes');
+    await page.selectOption(sec('season', 'goal') + ' select[name="frequency"]', 'n_per_week');
+    await page.waitForFunction(() => /Saved/.test(document.querySelector('[data-sec="goal"] .bf-msg').textContent), null, { timeout: 4000 }).catch(() => {});
+    const g = await page.evaluate(() => import('/all-day/js/modes/season.js').then((m) => m._fake().db.goal));
+    check(g.text === 'Swim a mile by August' && g.habit && g.habit.text === 'Swim 30 minutes' && g.habit.frequency === 'n_per_week', 'every change saves, the goal habit with it', JSON.stringify({ t: g.text, h: g.habit }));
+    check(/Locks /.test(await text(page, sec('season', 'goal'))), 'it says when it locks, once, where you write', '');
+    check(!(await page.$(sec('season', 'review'))) && !(await page.$(sec('season', 'board'))), 'no review and no board before kickoff', '');
+    check(!errors.length, 'no console errors', errors.slice(0, 3).join(' | '));
+    await ctx.close();
+  });
+
+  await group('Body, Season, live before the SQL is pasted: the next season from the tracker’s own door, and Sign in (live, 390)', async () => {
+    const off = { status: 404, body: { code: 'PGRST202', message: 'not found' } };
+    const next = { id: 's0', name: 'Season 0', city: 'burlington', status: 'open', kickoff_at: new Date(Date.now() + 23 * 86400000).toISOString() };
+    const { ctx, page, errors } = await newPage(browser, base, { rpc: (fn) => (fn === 'sz_season_next' ? next : /^sz_(season_get|wall_list|goal_get|board)$/.test(fn) ? off : undefined) });
+    await page.goto(base + '/body/#season');
+    await ready(page, 'season');
+    check(/Season 0/.test(await text(page, sec('season', 'top'))) && /Starts in 2[23] days/.test(await text(page, sec('season', 'top'))), 'the countdown, from sz_season_next', await text(page, sec('season', 'top')));
+    check(/Sign in to join/.test(await text(page, sec('season', 'top'))), 'and Sign in to join', '');
+    check(!(await page.$(sec('season', 'wall'))) && !(await page.$(sec('season', 'goal'))), 'nothing else until the season’s doors are open', '');
+    /* the doors not pasted yet answer 404 on purpose */
+    const real = errors.filter((e) => !/status of 404/.test(e));
+    check(!real.length, 'no console errors but the expected 404s', real.slice(0, 3).join(' | '));
+    await ctx.close();
   });
 
   await group('Body, Train: gyms with what each has and when it was checked, three routines to follow, sprints, a log kept on the phone, Book Stephen unpriced (live, 390)', async () => {
@@ -368,6 +484,14 @@ export async function bodyTests(browser, base, h) {
         await pageRules(page, 'body ' + k, combo.viewport.width);
         await page.screenshot({ path: path.join(SHOTS, 'body-' + k + '-' + combo.viewport.width + '-' + combo.scheme + '.png') });
       }
+      /* the season, signed in, at its goal tile */
+      await page.evaluate(() => import('/all-day/js/auth.js').then((a) => a.demoSignIn()));
+      await page.evaluate(() => { location.hash = 'season'; });
+      await page.waitForSelector(panel('season') + ':not([hidden]) .sz-done', { timeout: 10000 });
+      await page.evaluate(() => document.querySelector('#panel-season').scrollTo(0, 0));
+      await sleep(350);
+      await pageRules(page, 'body season', combo.viewport.width);
+      await page.screenshot({ path: path.join(SHOTS, 'body-season-' + combo.viewport.width + '-' + combo.scheme + '.png') });
       check(!errors.length, 'no console errors', errors.slice(0, 3).join(' | '));
       await ctx.close();
     });

@@ -242,15 +242,24 @@ export function player(title, steps) {
      key, label, icon, promise, color (a --token for the pill's water),
      sections: [[key, label]], load(): Promise of what draw needs,
      draw(sectionKey, box, ctx): fills one section (it draws its own head),
-     newSince(ts, ctx), aside, mixed */
+     newSince(ts, ctx), aside, mixed,
+     shown(sectionKey, ctx): optional; false leaves a section and its pill
+       item out (nothing to show yet)
+   ctx.reload() fetches again and redraws (a sign-in, a save). */
 export function page(o) {
   const S = { root: null, ctx: null, slots: null, pending: null, ready: false, failed: false };
   let loading = null;
-  const load = () => (loading = loading || Promise.resolve().then(o.load).then((c) => { S.ctx = c || {}; S.ctx.redraw = drawOne; S.failed = false; }, (e) => {
+  const load = () => (loading = loading || Promise.resolve().then(o.load).then((c) => {
+    S.ctx = c || {}; S.ctx.redraw = drawOne; S.ctx.reload = reload; S.failed = false; }, (e) => {
     console.warn('[body] ' + o.key + ' did not load', e);
     S.failed = true; loading = null;
   }).then(() => { S.ready = true; app.recount(); }));
 
+  const keys = () => o.sections.filter(([k]) => !o.shown || !S.ctx || o.shown(k, S.ctx));
+  function reload() {
+    loading = null;
+    return load().then(() => { if (S.root) { draw(); land(); } });
+  }
   function drawOne(k) {
     const box = S.slots && S.slots[k];
     if (!box) return;
@@ -271,14 +280,14 @@ export function page(o) {
     S.slots = Object.create(null);
     const feed = el('div', 'shelf body-page');
     feed.dataset.body = o.key;
-    o.sections.forEach(([k]) => {
+    keys().forEach(([k]) => {
       const box = el('section', 'shelf-sec');
       box.dataset.sec = k;
       feed.appendChild(box);
       S.slots[k] = box;
     });
     root.appendChild(feed);
-    o.sections.forEach(([k]) => drawOne(k));
+    keys().forEach(([k]) => drawOne(k));
     root.appendChild(el('div', 'spacer'));
     if (app.activeTab() === o.key) app.paintSubnav();
   }
@@ -312,7 +321,7 @@ export function page(o) {
       if (!S.slots) return null;
       return sectionBar({ key: 'sec-body-' + o.key, title: o.label, color: o.color || '--app-body-pop',
         find: (k) => S.slots && S.slots[k], onPick: (k) => app.jumpTo(S.slots && S.slots[k]),
-        items: o.sections.map(([key, label]) => ({ key, label })) });
+        items: keys().map(([key, label]) => ({ key, label })) });
     },
     keepSubnav: true,
     newSince(ts) { return o.newSince && S.ctx ? Number(o.newSince(ts, S.ctx)) || 0 : 0; },
