@@ -229,6 +229,9 @@ function lessForm(f, ctx) {
   own.addEventListener('input', () => { if (own.value.trim()) { gives = ''; [...chipRow.children].forEach((c) => { c.classList.remove('on'); c.setAttribute('aria-pressed', 'false'); }); } });
   const givesRow = el('div', 'bf-row');
   givesRow.append(el('p', 'bf-label', 'What it gives you'), chipRow, own);
+  /* the form lines its rows up at the start; this one spans it, so the chips scroll inside it */
+  givesRow.style.alignSelf = 'stretch';
+  givesRow.style.minWidth = '0';
   const swap = input('swap', { placeholder: byKey.swap.hint, max: 80 });
   form.append(field(byKey.name.label, name), field(byKey.limit.label, limit), field(byKey.per.label, per), givesRow, field('What gives you that too', swap));
   const msg = el('p', 'bf-msg err');
