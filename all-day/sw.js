@@ -13,7 +13,7 @@
    audio — episodes are large and the browser's own HTTP cache handles them
    better than we would. */
 
-const VERSION = 'all-day-v100';   // the shell runs eight apps: per-app configs, shelves, the switcher, Real life / Online
+const VERSION = 'all-day-v101';   // account-data.js: Habits' and The Build's data go with the account in every app
 const SHELL = VERSION + '-shell';
 const DATA = 'all-day-data';   // unversioned on purpose: survives shell bumps
 
@@ -45,12 +45,22 @@ const SHELL_URLS = [
   './js/food-asks.js',
   /* the boards: imported by main.js, so every tab can draw one offline */
   './js/boards.js', './js/boards-core.js', './js/boards-fake.js',
+  /* Habits' and The Build's server data go with the account in every app, imported by main.js */
+  './js/account-data.js',
   /* Watch's starter list, so the tab has films to show offline */
   './data/films-seed.json',
   /* the No-algorithm challenge, loaded by app.js after the first route */
   './js/challenge.js', './js/challenge-core.js', './css/challenge.css',
   /* the Btown Brief logo in the mast */
   './assets/brand/btown-brief-logo.png',
+  /* The Paper (wave 1) */
+  './js/modes/front.js',
+  './js/modes/editions.js',
+  './js/modes/picks.js',
+  './js/modes/gossip.js',
+  './js/modes/everything.js',
+  './js/modes/story.js',
+  './js/modes/paper-core.js',
 ];
 
 self.addEventListener('install', (e) => {
