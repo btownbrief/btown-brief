@@ -202,6 +202,8 @@ function load() {
     B.words = j.boards || {};
     if (app.demo) { B.catalog = cat && cat.catalog; B.demoBoards = (cat && cat.boards) || {}; B.pick = (demo && demo.pick) || ''; }
     else { B.catalog = cat && Array.isArray(cat.games) ? cat : null; B.champs = champs; }
+    /* a new month opens on its own busiest board */
+    if (!app.demo) B.pick = '';
     return Promise.all([loadPosts(), loadTags()]);
   });
 }
@@ -209,7 +211,7 @@ function load() {
 const mode = tab({
   key: KEY, label: 'Boards', icon: 'trophy', promise: 'Leaderboards, predictions and who’s playing what.',
   tops: [['leaders', 'Leaderboards'], ['predictions', 'Predictions'], ['bracket', 'Bracket'], ['playing', 'Playing'], ['lfg', 'Looking for a group'], ['tags', 'Gamertags']],
-  load, draw,
+  load, draw, stamp: monthKey,
 });
 app.register(KEY, mode);
 /* signing in or out changes the gamertags line; a post in Arcade changes the board */

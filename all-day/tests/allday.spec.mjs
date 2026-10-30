@@ -13320,8 +13320,8 @@ async function thePlay(browser, base) {
   await group('play: Daily keeps its ticks on the phone', async () => {
     const { ctx, page, errors, supabase } = await newPage(browser, base);
     const today = etKey(Date.now());
-    await page.addInitScript((d) => { if (!localStorage.getItem('play-daily')) localStorage.setItem('play-daily', JSON.stringify({ 'btown-wordle': [d[1], d[2]], 'news-quiz': [d[3]], '../x': ['nope'] })); },
-      [today, dayMinus(today, 1), dayMinus(today, 2), dayMinus(today, 3)]);
+    await page.addInitScript((d) => { if (!localStorage.getItem('play-daily')) localStorage.setItem('play-daily', JSON.stringify({ 'btown-wordle': [d[1], d[2]], 'news-quiz': [d[3]], 'real-or-fake': [d[10], d[11], d[12], d[13], d[1]], '../x': ['nope'] })); },
+      [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13].map((n) => (n ? dayMinus(today, n) : today)));
     await page.goto(base + '/play/#daily');
     await settle(page);
     const P = '#panel-daily';
@@ -13333,7 +13333,9 @@ async function thePlay(browser, base) {
     check(w.streak === 2 && /^○○○○●●○2 in a row$/.test(w.line) && w.on === 'false', 'yesterday and the day before: a two-day streak still open today', JSON.stringify(w));
     check(w.play === 'https://play.btownbrief.com/btown-wordle/' && w.target === '_blank', 'Play opens the puzzle on the arcade in a new tab', w.play);
     check((await cab('news-quiz')).streak === 0 && (await cab('news-quiz')).line === '○○○●○○○', 'three days ago and nothing since: no streak, one dot', (await cab('news-quiz')).line);
-    check(await page.$eval(P + ' [data-k="daily:real-or-fake"] [data-streak]', (x) => x.hidden), 'never played: no line at all', '');
+    const rf = await cab('real-or-fake');
+    check(rf.streak === 1 && rf.line === '○○○○○●○best 4', 'an old four-day run and yesterday: the week, and the best run', rf.line);
+    check(await page.$eval(P + ' [data-k="daily:where-in-btown"] [data-streak]', (x) => x.hidden), 'never played: no line at all', '');
     await page.click(P + ' [data-tick="btown-wordle"]');
     w = await cab('btown-wordle');
     check(w.streak === 3 && w.on === 'true', 'ticking today makes it three', JSON.stringify(w));
@@ -13362,6 +13364,26 @@ async function thePlay(browser, base) {
     await d.ctx.close();
   });
 
+  await group('play: a phone left open past midnight', async () => {
+    /* 11:58 pm in Burlington with Wordle played; then 12:02 am: the tick is yesterday's */
+    const today = etKey(Date.now());
+    const at = (key, h, m) => { const g = Date.parse(key + 'T' + String(h).padStart(2, '0') + ':' + String(m).padStart(2, '0') + ':00Z'); return g + ((24 + h - Number(etParts(g).hour)) % 24) * 3600000; };
+    const { ctx, page, errors } = await newPage(browser, base, { timezoneId: 'Asia/Tokyo' });
+    await page.clock.setFixedTime(at(today, 23, 58));
+    await page.goto(base + '/play/#daily');
+    await settle(page);
+    await page.click('#panel-daily [data-tick="btown-wordle"]');
+    const before = await page.$eval('#panel-daily [data-tick="btown-wordle"]', (b) => b.getAttribute('aria-pressed'));
+    await page.clock.setFixedTime(at(dayMinus(today, -1), 0, 2));
+    await goTab(page, 'city');
+    await goTab(page, 'daily');
+    await page.waitForTimeout(300);
+    const after = await page.evaluate(() => ({ on: document.querySelector('#panel-daily [data-tick="btown-wordle"]').getAttribute('aria-pressed'), head: document.querySelector('#panel-daily [data-sec="today"] .sec p').textContent }));
+    check(before === 'true' && after.on === 'false' && after.head === '0 of 6 played today', 'a new Burlington day redraws Daily: yesterday’s tick is yesterday’s', JSON.stringify({ before, after }));
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
   await group('play: City', async () => {
     const { ctx, page, errors } = await newPage(browser, base);
     await page.addInitScript(() => { if (!localStorage.getItem('allday-missions')) localStorage.setItem('allday-missions', JSON.stringify({ m201: 1761000000, m202: 1761000000, m1: 1760000000 })); });
@@ -13371,17 +13393,21 @@ async function thePlay(browser, base) {
     const ms = JSON.parse(await readFile(path.join(REPO, 'data/missions.json'), 'utf8')).missions;
     const head = () => page.$eval(P + ' [data-sec="missions"] .sec p', (p) => p.textContent);
     check(await head() === '2 of ' + ms.length + ' done', 'the done count is What Now’s marks', await head());
+    let marks = JSON.parse(await page.evaluate(() => localStorage.getItem('allday-missions')));
+    check(!('m1' in marks) && marks.m201 === 1761000000 && marks.m202 === 1761000000, 'an old rank mark (m1) moves onto its mission’s stable mark, as What Now does', JSON.stringify(marks));
     const rows = await page.$$eval(P + ' [data-k^="mission:"]', (r) => r.map((x) => ({ k: x.dataset.k, href: x.querySelector('a').getAttribute('href'), mark: x.querySelector('[data-done]').dataset.done })));
     check(rows.length === 5 && rows.every((r) => r.href === '#whatnow/' + r.k.slice(8)), 'five missions for today, each a link to What Now with a Done toggle', JSON.stringify(rows));
-    /* a check here is a mark in What Now's own map, and the old ones stay */
-    await page.click(P + ' [data-k="' + rows[0].k + '"] [data-done]');
-    let marks = JSON.parse(await page.evaluate(() => localStorage.getItem('allday-missions')));
-    check(marks[rows[0].mark] > 1761000000 && marks.m201 === 1761000000 && marks.m1 === 1760000000, 'marking done here writes What Now’s map, keeping every other mark', JSON.stringify(marks));
-    check(await head() === '3 of ' + ms.length + ' done' && await page.$eval(P + ' [data-k="' + rows[0].k + '"]', (r) => r.classList.contains('done')), 'the count and the row follow', await head());
-    check(JSON.stringify(await page.$$eval(P + ' [data-k^="mission:"]', (r) => r.map((x) => x.dataset.k))) === JSON.stringify(rows.map((r) => r.k)), 'and today’s five stay put', '');
-    await page.click(P + ' [data-k="' + rows[0].k + '"] [data-done]');
+    /* a check here is a mark in What Now's own map, and the others stay */
+    const pick = rows.find((r) => !['m201', 'm202'].includes(r.mark));
+    await page.click(P + ' [data-k="' + pick.k + '"] [data-done]');
     marks = JSON.parse(await page.evaluate(() => localStorage.getItem('allday-missions')));
-    check(!(rows[0].mark in marks) && await head() === '2 of ' + ms.length + ' done', 'a second tap takes it off', JSON.stringify(marks));
+    check(marks[pick.mark] > 1761000000 && marks.m201 === 1761000000 && marks.m202 === 1761000000, 'marking done here writes What Now’s map, keeping every other mark', JSON.stringify(marks));
+    check(await head() === '3 of ' + ms.length + ' done' && await page.$eval(P + ' [data-k="' + pick.k + '"]', (r) => r.classList.contains('done')), 'the count and the row follow', await head());
+    check(await page.evaluate((m) => document.activeElement && document.activeElement.dataset.done === m, pick.mark), 'focus stays on the Done button just pressed', '');
+    check(JSON.stringify(await page.$$eval(P + ' [data-k^="mission:"]', (r) => r.map((x) => x.dataset.k))) === JSON.stringify(rows.map((r) => r.k)), 'and today’s five stay put', '');
+    await page.click(P + ' [data-k="' + pick.k + '"] [data-done]');
+    marks = JSON.parse(await page.evaluate(() => localStorage.getItem('allday-missions')));
+    check(!(pick.mark in marks) && await head() === '2 of ' + ms.length + ' done', 'a second tap takes it off', JSON.stringify(marks));
     const st = await page.evaluate((p) => {
       const r = (k) => document.querySelector(p + ' [data-k="city:' + k + '"]');
       const btn = (k) => { const b = r(k) && r(k).querySelector('.pillbtn'); return b && { tag: b.tagName, dis: !!b.disabled, text: b.textContent.trim(), href: b.getAttribute('href') }; };
@@ -13401,9 +13427,9 @@ async function thePlay(browser, base) {
     await page.click(P + ' .pl-crews [data-chip="south-end"]');
     check(JSON.parse(await page.evaluate(() => localStorage.getItem('play-crew'))) === 'south-end' && await page.$eval(P + ' [data-crew]', (r) => r.dataset.crew + ' ' + r.querySelector('.t').textContent) === 'south-end South End',
       'a crew is picked once and kept on the phone', '');
-    await Promise.all([page.waitForURL((u) => u.pathname === '/out/'), page.click(P + ' [data-k="' + rows[0].k + '"] a')]);
+    await Promise.all([page.waitForURL((u) => u.pathname === '/out/'), page.click(P + ' [data-k="' + pick.k + '"] a')]);
     await settle(page);
-    check(new URL(page.url()).hash === '#whatnow/' + rows[0].k.slice(8), 'a mission opens in What Now, in Out', page.url());
+    check(new URL(page.url()).hash === '#whatnow/' + pick.k.slice(8), 'a mission opens in What Now, in Out', page.url());
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
     const d = await newPage(browser, base);
@@ -13418,7 +13444,9 @@ async function thePlay(browser, base) {
     for (const live of [false, true]) {
       const cat = JSON.parse(await readFile(path.join(REPO, 'data/games-catalog.json'), 'utf8'));
       if (live) cat.games.push({ slug: 'btown-draw', name: 'Btown Draw', emoji: '🐟', pitch: 'Draw it.', section: 'local-more', live: true, leaderboard: true, first_seen: '2026-10-30', live_since: '2026-10-30' });
-      const { ctx, page, errors } = await newPage(browser, base, { routes: [[/\/data\/games-catalog\.json$/, cat]] });
+      const asked = [];
+      const rpc = (fn, body) => { if (fn !== 'get_leaderboard') return undefined; asked.push(body.p_game); return ROWS(['Ada W.', 'Cy F.', 'Ada W.']); };
+      const { ctx, page, errors } = await newPage(browser, base, { routes: [[/\/data\/games-catalog\.json$/, cat]], rpc });
       await page.goto(base + '/play/#draw');
       await settle(page);
       const st = await page.evaluate(() => {
@@ -13431,7 +13459,14 @@ async function thePlay(browser, base) {
       check(st.shots.length === 2 && st.shots[0][0] === '../data/play/draw-lake.jpg' && st.shots[1][0] === '../data/play/draw-truck.jpg' && loaded.every((x) => x > 0), 'the Lake and the Truck, each with its screenshot', JSON.stringify(st.shots) + ' ' + loaded);
       check(/The Lake/.test(st.words) && /The Truck/.test(st.words) && /fifteen house fish/.test(st.words) && /Winooski bridge/.test(st.words), 'what each one is, in a few lines', '');
       if (!live) check(st.buttons.length === 1 && st.buttons.every((b) => b.tag === 'BUTTON' && b.dis && b.text === 'Coming soon'), 'not on the arcade yet: Play is disabled and says Coming soon', JSON.stringify(st.buttons));
-      else check(st.buttons.length === 1 && st.buttons.every((b) => b.tag === 'A' && b.href === 'https://play.btownbrief.com/btown-draw/#lake'), 'the day the arcade lists it live: Play opens play.btownbrief.com/btown-draw/#lake', JSON.stringify(st.buttons));
+      if (!live) check(!asked.length && !(await page.$('#panel-draw [data-sec="board"]')), 'not live: no board, and nothing asked', asked.join(', '));
+      if (live) {
+        const hrefs = st.buttons.map((b) => b.href);
+        check(st.buttons.every((b) => b.tag === 'A') && hrefs[0] === 'https://play.btownbrief.com/btown-draw/#lake' && ['#lake', '#truck', '#gallery', '#prompt'].every((h) => hrefs.includes('https://play.btownbrief.com/btown-draw/' + h)),
+          'the day the arcade lists it live: Play, the two pictures and Gallery and Prompt open the game at their own places', JSON.stringify(hrefs));
+        const board = await page.$$eval('#panel-draw [data-board="btown-draw"] .r', (r) => r.map((x) => x.querySelector('.t').textContent + ' ' + x.querySelector('.sc').textContent));
+        check(asked.length === 1 && asked[0] === 'btown-draw' && JSON.stringify(board) === JSON.stringify(['Ada W. 1,000 m', 'Cy F. 990 m']), 'and the truck’s monthly board shows, each player once, in metres', JSON.stringify(board));
+      }
       check(!errors.length, (live ? 'live' : 'not live') + ': no console errors', errors.join(' | '));
       await ctx.close();
     }

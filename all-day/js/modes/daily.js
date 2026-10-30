@@ -76,9 +76,7 @@ function toggle(p, btn) {
   save();
   const on = set.has(day);
   app.toast(on ? p.name + ': played. ' + streakWords(streak(set, day)) : p.name + ': not played.');
-  mode.redraw();
-  const again = document.querySelector('#panel-' + KEY + ' [data-tick="' + p.slug + '"]');
-  if (again && btn) again.focus({ preventScroll: true });
+  mode.redraw(btn ? '[data-tick="' + p.slug + '"]' : null);
   app.recount();
 }
 const streakWords = (n) => (n >= 2 ? n + ' days in a row.' : '');
@@ -156,6 +154,6 @@ function newSince(ts) {
 
 const mode = tab({
   key: KEY, label: 'Daily', icon: 'calcheck', promise: 'Today’s puzzles on one shelf, a streak for each.',
-  tops: Object.entries(TOPS), load, draw, newSince,
+  tops: Object.entries(TOPS), load, draw, newSince, stamp: today,
 });
 app.register(KEY, mode);

@@ -43,6 +43,29 @@ const isDone = (m) => !!C.done[markOf(m)];
 const endFmt = new Intl.DateTimeFormat('en-US', { timeZone: 'UTC', month: 'short', day: 'numeric' });
 const endName = (date) => endFmt.format(new Date(date + 'T12:00:00Z'));
 
+/* What Now's own move from old marks to stable ones (whatnow.js
+   migrateMarks, which cannot be imported: it is inside that mode). An old
+   mark is a rank, m1 to m199; each moves onto the mission whose `was`
+   names it, at the latest time, and the old key goes; an old rank no
+   mission claims is dropped. Kept here too, so City never reads a done
+   mission as not done, nor leaves an old key that could come back. */
+const LEGACY = /^m(\d{1,3})$/;
+const isLegacy = (k) => { const x = LEGACY.exec(k); return !!x && Number(x[1]) >= 1 && Number(x[1]) < 200; };
+function migrate() {
+  if (!missions().some((m) => markOf(m) !== m.k)) return;
+  const to = new Map();
+  missions().forEach((m) => { if (markOf(m) !== m.k) arr(m.was).forEach((k) => to.set(k, markOf(m))); });
+  let moved = false;
+  Object.keys(C.done).forEach((k) => {
+    if (!isLegacy(k)) return;
+    const mk = to.get(k);
+    if (mk) C.done[mk] = Math.max(Number(C.done[mk]) || 0, Number(C.done[k]) || 0) || Math.floor(Date.now() / 1000);
+    delete C.done[k];
+    moved = true;
+  });
+  if (moved) store.write(DONE_KEY, { ...C.done });
+}
+
 /* the same five all day: a window over the list that moves by five each
    Burlington day, so marking one done does not swap it for another */
 function todays() {
@@ -68,7 +91,7 @@ function toggle(m) {
     store.write(DONE_KEY, map);
   }
   app.toast(C.done[k] ? 'Done: ' + m.title : 'Not done: ' + m.title);
-  mode.redraw();
+  mode.redraw('[data-done="' + k + '"]');
 }
 
 /* a mission as a row: its number, its title and line (a link to the
@@ -132,14 +155,14 @@ function setCrew(k) {
   C.crew = NEIGHBORHOOD_LABELS[k] ? k : '';
   C.picking = false;
   if (!app.demo) store.write(CREW_KEY, C.crew);
-  mode.redraw();
+  mode.redraw('[data-crew] .pillbtn');
 }
 function drawCrews(page, g) {
   const box = sec(page, 'crews', 'Crews');
   if (C.crew && !C.picking) {
     const change = el('button', 'pillbtn', 'Change');
     change.type = 'button';
-    change.addEventListener('click', () => { C.picking = true; mode.redraw(); });
+    change.addEventListener('click', () => { C.picking = true; mode.redraw('.pl-crews .chip.on, .pl-crews .chip'); });
     const r = row('city:crew', '🚩', NEIGHBORHOOD_LABELS[C.crew], [esc('Your crew')], [change]);
     r.dataset.crew = C.crew;
     box.appendChild(r);
@@ -188,6 +211,7 @@ function load() {
     C.done = Object.create(null);
     if (Array.isArray(marks)) marks.forEach((k) => { C.done[k] = 1; });
     else if (marks && typeof marks === 'object') Object.keys(marks).forEach((k) => { if (marks[k]) C.done[k] = Number(marks[k]) || 1; });
+    if (!demo) migrate();
     const crew = demo ? demo.crew : store.read(CREW_KEY, '');
     C.crew = NEIGHBORHOOD_LABELS[crew] ? crew : '';
   });
@@ -196,6 +220,6 @@ function load() {
 const mode = tab({
   key: KEY, label: 'City', icon: 'flag', promise: 'Claim your streets, one walk at a time.',
   tops: [['missions', 'Missions'], ['streets', 'Streets'], ['lit', 'Lit'], ['dibs', 'Dibs'], ['photos', 'Photo quests'], ['crews', 'Crews'], ['season', 'Season']],
-  load, draw,
+  load, draw, stamp: today,
 });
 app.register(KEY, mode);

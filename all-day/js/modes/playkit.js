@@ -79,12 +79,18 @@ export function row(k, emoji, name, lines, buttons) {
          tops: [[sectionKey, pill label], …]   the top tabs, in page order
          load() → Promise                        everything the page needs
          draw(root)                              the page, after load()
-         newSince(ts) → n                        optional: the bar's dot }
+         newSince(ts) → n                        optional: the bar's dot
+         stamp() → string                        optional: the day or month the page
+                                                 is for; when it changes (a phone left
+                                                 open past midnight), the tab loads
+                                                 and draws again on its next showing }
    Returns the mode; the caller registers it under its key. */
 export function tab(o) {
-  const S = { root: null, ready: false, failed: false, pending: null };
+  const S = { root: null, ready: false, failed: false, pending: null, stamp: '' };
 
-  function render() {
+  /* focus: a selector inside the tab to give focus back to after the redraw
+     (the button that was just pressed is replaced by a new one) */
+  function render(focus) {
     if (!S.root) return;
     S.root.innerHTML = '';
     if (S.failed) { S.root.appendChild(el('div', 'errbox', '<b>' + esc(o.label) + ' didn’t load.</b> Try again in a minute.')); return; }
@@ -95,7 +101,20 @@ export function tab(o) {
     S.root.appendChild(el('div', 'spacer'));
     app.bindFeed(page);
     if (app.activeTab() === o.key) app.paintSubnav();
+    const back = focus && page.querySelector(focus);
+    if (back) back.focus({ preventScroll: true });
   }
+  function load() {
+    return Promise.resolve().then(o.load).then(() => { S.ready = true; S.failed = false; S.stamp = o.stamp ? o.stamp() : ''; },
+      (e) => { console.error('[play] ' + o.key, e); S.failed = true; });
+  }
+  /* a new day (or month) since the page was drawn: load it again */
+  function fresh() {
+    if (!o.stamp || !S.ready || S.stamp === o.stamp()) return;
+    S.stamp = o.stamp();
+    load().then(() => { render(); app.recount(); });
+  }
+  document.addEventListener('visibilitychange', () => { if (!document.hidden && app.activeTab() === o.key) fresh(); });
   /* by comparing, not a selector, so any text in a link is safe to look up */
   const find = (k) => (S.root ? [...S.root.querySelectorAll('[data-sec]')].find((n) => n.dataset.sec === k) || null : null);
   /* only while this tab is the one showing: a slow load must not scroll or toast another */
@@ -116,10 +135,9 @@ export function tab(o) {
     mount(root) {
       S.root = root;
       render();
-      Promise.resolve().then(o.load).then(() => { S.ready = true; }, (e) => { console.error('[play] ' + o.key, e); S.failed = true; })
-        .then(() => { render(); land(); app.recount(); });
+      load().then(() => { render(); land(); app.recount(); });
     },
-    activate(param) { S.pending = param || null; land(); },
+    activate(param) { S.pending = param || null; fresh(); land(); },
     refresh() { render(); },
     redraw: render,
     deactivate() {},
