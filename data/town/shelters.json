@@ -1,0 +1,11 @@
+{
+  "about": "The year-round shelter list for Town · Alerts · Shelters, from the city's Housing and Shelter resource page and the state's emergency-housing page (alerts-sources.json: btv-housing-shelter, vt-dcf-adverse-weather, vt-211). Hand-kept; re-read yearly. Warming and cooling openings during cold snaps are checked by hand and are not in this file.",
+  "verified": "2026-10-29",
+  "places": [
+    { "id": "cots-waystation", "name": "COTS Waystation", "what": "Year-round overnight shelter for adults; COTS answers 24/7", "phone": "802-864-7402", "source_url": "https://www.burlingtonvt.gov/1032/Housing-and-Shelter" },
+    { "id": "cots-warming", "name": "COTS Winter Warming Station", "what": "Open in the winter season, roughly January to May; dates are announced each year", "phone": "802-864-7402", "source_url": "https://www.burlingtonvt.gov/1032/Housing-and-Shelter" },
+    { "id": "anew-elmwood", "name": "ANEW Place, Elmwood Community Shelter", "what": "Year-round, low-barrier shelter", "phone": null, "source_url": "https://www.burlingtonvt.gov/1032/Housing-and-Shelter" },
+    { "id": "dcf-adverse-weather", "name": "State emergency housing (adverse weather)", "what": "On nights the state declares adverse weather, motel vouchers open through the Department for Children and Families", "phone": "2-1-1", "source_url": "https://dcf.vermont.gov/benefits/crisis-housing" },
+    { "id": "vt-211", "name": "Vermont 2-1-1", "what": "Call 2-1-1 for tonight's open beds and the state's adverse-weather nights", "phone": "2-1-1", "source_url": "https://vermont211.org/" }
+  ]
+}
