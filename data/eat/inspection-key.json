@@ -1,0 +1,236 @@
+{
+ "updated": "2026-10-29",
+ "verified": "2026-10-29",
+ "source_url": "https://www.healthvermont.gov/environment/food-lodging-program/inspection-reports",
+ "form_source": "Item numbers and labels as printed on a Vermont Department of Health retail food inspection report (form seen 2026-10-29 on vtdoh.safefoodinspection.com). Starred items on the form are critical.",
+ "guide_url": "http://www.healthvermont.gov/sites/default/files/documents/pdf/ENV_FL_How%20to%20Read%20a%20Food%20Service%20Inspection%20Report%20110818.pdf",
+ "note": "Plain-English lines are the Btown Brief's own explanations of each form item, not the Health Department's wording. Critical items are the ones most directly tied to foodborne illness. Passing: score of 70 or higher and no uncorrected critical violations (Health Department FAQ). The 'code' on each violation (like 5-208.24) is a section of the Vermont Health Regulations for Food Service Establishments.",
+ "scoring": "Each inspection starts at 100 and loses the item's debit points for each violation. Debit points per item are printed on the form; we do not hard-code them because the PDF layout makes them unreliable to read.",
+ "items": {
+  "1": {
+   "form_label": "Supervision: person in charge present and knowledgeable",
+   "critical": false,
+   "plain_english": "Nobody on shift was clearly in charge of food safety, or the person in charge couldn't answer basic food-safety questions."
+  },
+  "1(a)": {
+   "form_label": "Food from sound, approved sources",
+   "critical": true,
+   "plain_english": "Some food came from a source that isn't approved (for example, home-made or unlabeled supplier food) or arrived damaged or spoiled."
+  },
+  "2": {
+   "form_label": "Food in proper containers, properly labeled",
+   "critical": false,
+   "plain_english": "Food was stored in the wrong kind of container or wasn't labeled with what it is (or, for packaged food, missing required label details)."
+  },
+  "3": {
+   "form_label": "Potentially hazardous food temperature",
+   "critical": true,
+   "plain_english": "Food that spoils fast (meat, dairy, cooked rice, cut produce) was found too warm in the fridge, not hot enough on the line, or cooled too slowly. This is the classic food-poisoning risk."
+  },
+  "4": {
+   "form_label": "Preventing cross-contamination",
+   "critical": true,
+   "plain_english": "Raw food (like raw chicken) could drip on or touch ready-to-eat food, or the same surfaces or tools were used for both without cleaning."
+  },
+  "5": {
+   "form_label": "Equipment able to keep food at temperature",
+   "critical": false,
+   "plain_english": "A cooler, hot-holding unit or other equipment wasn't able to keep food at a safe temperature, or there wasn't enough of it."
+  },
+  "6": {
+   "form_label": "Thawing potentially hazardous food",
+   "critical": false,
+   "plain_english": "Frozen food was thawed the wrong way, such as sitting out on the counter instead of in the fridge, under cold running water, or in the microwave right before cooking."
+  },
+  "7": {
+   "form_label": "Unwrapped food: no return and re-service",
+   "critical": true,
+   "plain_english": "Food that had already been served to a customer, like an unwrapped bread basket, was being served again."
+  },
+  "8": {
+   "form_label": "Food protected from contamination",
+   "critical": false,
+   "plain_english": "Food wasn't covered or was stored where it could get dirty, such as on the floor, under a dripping pipe, or uncovered in the walk-in."
+  },
+  "9": {
+   "form_label": "Handling of food minimized",
+   "critical": false,
+   "plain_english": "Staff touched ready-to-eat food with bare hands, or food was handled more than it needed to be."
+  },
+  "10": {
+   "form_label": "In-use utensils and dispensing equipment",
+   "critical": false,
+   "plain_english": "Scoops, ladles or tongs in use were stored in a way that could contaminate food, such as with the handle down in the ice or flour."
+  },
+  "11": {
+   "form_label": "Sick employees restricted",
+   "critical": true,
+   "plain_english": "Staff with symptoms like vomiting, diarrhea, or an infected cut weren't kept away from food, or the business had no policy for it."
+  },
+  "12": {
+   "form_label": "Good hygiene: handwashing, eating, drinking",
+   "critical": true,
+   "plain_english": "Staff weren't washing hands when required, or were eating, drinking or smoking where food is prepared."
+  },
+  "13": {
+   "form_label": "Clean clothes and hair restraints",
+   "critical": false,
+   "plain_english": "Staff working with food weren't wearing clean outer clothing or a hat, hairnet or other hair restraint."
+  },
+  "14": {
+   "form_label": "Food and ice contact surfaces",
+   "critical": false,
+   "plain_english": "Surfaces that touch food or ice (cutting boards, ice machines, slicers) were worn, cracked, hard to clean or made of the wrong material."
+  },
+  "15": {
+   "form_label": "Non-food-contact surfaces",
+   "critical": false,
+   "plain_english": "Equipment surfaces that don't touch food (outsides of coolers, shelving) were damaged or hard to clean."
+  },
+  "16": {
+   "form_label": "Dishwashing facilities",
+   "critical": false,
+   "plain_english": "The dishwasher or the three-bay sink setup wasn't adequate, working right, or set up correctly."
+  },
+  "17": {
+   "form_label": "Thermometers, sanitizer test kits, gauges",
+   "critical": false,
+   "plain_english": "The kitchen was missing food thermometers, fridge thermometers, or test strips to check that sanitizer is the right strength."
+  },
+  "18": {
+   "form_label": "Single-use items stored properly",
+   "critical": false,
+   "plain_english": "Disposable cups, straws, lids or to-go containers were stored where they could get dirty, such as on the floor or unwrapped."
+  },
+  "19": {
+   "form_label": "No re-use of single-use items",
+   "critical": false,
+   "plain_english": "Items meant to be used once (like disposable containers) were being washed and reused."
+  },
+  "20": {
+   "form_label": "Pre-cleaning of dishes",
+   "critical": false,
+   "plain_english": "Dishes and utensils weren't scraped or pre-rinsed before washing."
+  },
+  "21": {
+   "form_label": "Washing and rinsing",
+   "critical": false,
+   "plain_english": "Dishes weren't washed and rinsed properly, such as dirty wash water or the wrong water temperature."
+  },
+  "22": {
+   "form_label": "Sanitizing",
+   "critical": true,
+   "plain_english": "Dishes, utensils or food surfaces weren't being sanitized, or the sanitizer was too weak or the dishwasher's final rinse wasn't hot enough to kill germs."
+  },
+  "23": {
+   "form_label": "Wiping cloths",
+   "critical": false,
+   "plain_english": "Wiping cloths weren't kept in sanitizer between uses, or the sanitizer bucket was too weak or dirty."
+  },
+  "24": {
+   "form_label": "Cleaning of food-contact surfaces and utensils",
+   "critical": false,
+   "plain_english": "Equipment and utensils that touch food weren't clean, weren't cleaned often enough, or weren't air-dried before stacking."
+  },
+  "25": {
+   "form_label": "Cleaning of non-food-contact surfaces",
+   "critical": false,
+   "plain_english": "The outsides of equipment, shelves, or hood filters had built-up grease, dust or food debris."
+  },
+  "26": {
+   "form_label": "Storage of clean equipment and utensils",
+   "critical": false,
+   "plain_english": "Clean dishes and utensils were stored where they could get dirty again, such as on the floor or uncovered near a hand sink."
+  },
+  "27": {
+   "form_label": "Safe water supply",
+   "critical": true,
+   "plain_english": "The water wasn't from an approved source, wasn't tested as required (common with private wells), or hot and cold water weren't available."
+  },
+  "28": {
+   "form_label": "Sewage disposal",
+   "critical": true,
+   "plain_english": "Wastewater wasn't draining into an approved sewer or septic system, or sewage was backing up."
+  },
+  "29": {
+   "form_label": "Plumbing properly installed and maintained",
+   "critical": false,
+   "plain_english": "There was a leak, a clogged or dirty drain, or plumbing that wasn't installed to code."
+  },
+  "30": {
+   "form_label": "No cross-connection or backflow",
+   "critical": true,
+   "plain_english": "Dirty water could flow back into the clean water supply, for example a hose sitting in a mop bucket or a missing air gap or backflow device."
+  },
+  "31": {
+   "form_label": "Toilets and handwashing sinks",
+   "critical": true,
+   "plain_english": "A handwashing sink was missing, blocked, used for other things, or missing soap or paper towels, or the bathrooms weren't adequate."
+  },
+  "32": {
+   "form_label": "Toilet and handwashing: other",
+   "critical": false,
+   "plain_english": "A smaller restroom or handwashing issue, such as no handwashing sign, no covered trash can in a restroom, or a door that doesn't close."
+  },
+  "33": {
+   "form_label": "Garbage facilities",
+   "critical": false,
+   "plain_english": "There weren't enough trash or recycling containers, or the dumpster area wasn't adequate."
+  },
+  "34": {
+   "form_label": "Garbage containers clean and covered",
+   "critical": false,
+   "plain_english": "Trash containers or the dumpster area were dirty, overflowing, or uncovered."
+  },
+  "35": {
+   "form_label": "Free of insects, rodents and pests",
+   "critical": true,
+   "plain_english": "Signs of mice, rats, cockroaches or flies were found, or doors and gaps weren't sealed to keep pests out."
+  },
+  "36": {
+   "form_label": "Floors",
+   "critical": false,
+   "plain_english": "Floors were dirty, damaged, or made of a material that's hard to clean."
+  },
+  "37": {
+   "form_label": "Walls and ceilings",
+   "critical": false,
+   "plain_english": "Walls, ceilings or attached fixtures were dirty, damaged, or hard to clean (dust, cobwebs, missing ceiling tiles)."
+  },
+  "38": {
+   "form_label": "Lighting",
+   "critical": false,
+   "plain_english": "Lights weren't bright enough to work and clean safely, or bulbs over food weren't shielded in case they break."
+  },
+  "39": {
+   "form_label": "Ventilation",
+   "critical": false,
+   "plain_english": "The hood or exhaust fans weren't working well or were dirty, letting grease, steam or smoke build up."
+  },
+  "40": {
+   "form_label": "Staff changing areas",
+   "critical": false,
+   "plain_english": "Staff had nowhere suitable to store coats and personal items, so belongings were kept in food areas."
+  },
+  "41": {
+   "form_label": "Poisonous or toxic materials",
+   "critical": true,
+   "plain_english": "Cleaning chemicals, pesticides or other toxic items were stored near or above food, or weren't labeled."
+  },
+  "42": {
+   "form_label": "Premises free of rubbish and clutter",
+   "critical": false,
+   "plain_english": "The building or grounds had trash, broken equipment or unnecessary items lying around, which can attract pests."
+  },
+  "43": {
+   "form_label": "Separation from living or other areas",
+   "critical": false,
+   "plain_english": "Food prep wasn't kept separate from living quarters or other non-food uses of the building."
+  },
+  "44": {
+   "form_label": "Clean and soiled linens",
+   "critical": false,
+   "plain_english": "Clean linens and aprons weren't stored properly, or dirty ones weren't kept apart from food."
+  }
+ }
+}
