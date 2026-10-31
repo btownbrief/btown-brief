@@ -1,28 +1,28 @@
 {
- "updated": "2026-10-31T13:12:47+00:00",
+ "updated": "2026-10-31T15:29:44+00:00",
  "sections_updated": {
-  "now": "2026-10-31T13:12:47+00:00",
-  "forecast": "2026-10-31T13:12:47+00:00",
-  "hourly": "2026-10-31T13:12:47+00:00",
-  "alerts": "2026-10-31T13:12:47+00:00",
-  "afd": "2026-10-31T13:12:47+00:00",
-  "lake_forecast": "2026-10-31T13:12:47+00:00",
-  "lake_gage": "2026-10-31T13:12:47+00:00",
-  "air": "2026-10-31T13:12:47+00:00",
-  "sun": "2026-10-31T13:12:47+00:00",
-  "models": "2026-10-31T13:12:47+00:00"
+  "now": "2026-10-31T15:29:44+00:00",
+  "forecast": "2026-10-31T15:29:44+00:00",
+  "hourly": "2026-10-31T15:29:44+00:00",
+  "alerts": "2026-10-31T15:29:44+00:00",
+  "afd": "2026-10-31T15:29:44+00:00",
+  "lake_forecast": "2026-10-31T15:29:44+00:00",
+  "lake_gage": "2026-10-31T15:29:44+00:00",
+  "air": "2026-10-31T15:29:44+00:00",
+  "sun": "2026-10-31T15:29:44+00:00",
+  "models": "2026-10-31T15:29:44+00:00"
  },
  "now": {
-  "observed_at": "2026-10-31T12:45:00+00:00",
+  "observed_at": "2026-10-31T14:55:00+00:00",
   "station": "KBTV",
-  "description": "Mostly Clear",
-  "temp_f": 39,
-  "feels_like_f": 39,
-  "humidity": 70,
-  "dewpoint_f": 30,
-  "wind_mph": 0,
+  "description": "Clear",
+  "temp_f": 45,
+  "feels_like_f": 40,
+  "humidity": 53,
+  "dewpoint_f": 28,
+  "wind_mph": 8,
   "wind_gust_mph": null,
-  "wind_dir": "N",
+  "wind_dir": "NNW",
   "precip_last_hr_in": null
  },
  "forecast": {
@@ -30,13 +30,13 @@
   "periods": [
    {
     "name": "Today",
-    "start": "2026-10-31T07:00:00-04:00",
+    "start": "2026-10-31T11:00:00-04:00",
     "is_day": true,
     "temp_f": 47,
     "pop": 0,
     "wind": "NW 6 to 9 mph",
-    "short": "Sunny",
-    "detailed": "Sunny, with a high near 47. Northwest wind 6 to 9 mph."
+    "short": "Mostly Sunny",
+    "detailed": "Mostly sunny, with a high near 47. Northwest wind 6 to 9 mph."
    },
    {
     "name": "Tonight",
@@ -173,34 +173,6 @@
  "hourly": {
   "updated": "2026-10-31T10:14:03+00:00",
   "hours": [
-   {
-    "t": "2026-10-31T09:00:00-04:00",
-    "temp_f": 39,
-    "feels_f": 34,
-    "pop": 0,
-    "humidity": 67,
-    "wind_mph": 7,
-    "wind_dir": "NW",
-    "sky": 12,
-    "short": "Sunny",
-    "qpf_in": 0.0,
-    "snow_in": 0.0,
-    "gust_mph": 13
-   },
-   {
-    "t": "2026-10-31T10:00:00-04:00",
-    "temp_f": 41,
-    "feels_f": 36,
-    "pop": 0,
-    "humidity": 59,
-    "wind_mph": 8,
-    "wind_dir": "NW",
-    "sky": 11,
-    "short": "Sunny",
-    "qpf_in": 0.0,
-    "snow_in": 0.0,
-    "gust_mph": 14
-   },
    {
     "t": "2026-10-31T11:00:00-04:00",
     "temp_f": 43,
@@ -676,6 +648,34 @@
     "qpf_in": 0.0,
     "snow_in": 0.0,
     "gust_mph": 14
+   },
+   {
+    "t": "2026-11-01T20:00:00-05:00",
+    "temp_f": 49,
+    "feels_f": 46,
+    "pop": 0,
+    "humidity": 71,
+    "wind_mph": 8,
+    "wind_dir": "S",
+    "sky": 12,
+    "short": "Mostly Clear",
+    "qpf_in": 0.0,
+    "snow_in": 0.0,
+    "gust_mph": 14
+   },
+   {
+    "t": "2026-11-01T21:00:00-05:00",
+    "temp_f": 46,
+    "feels_f": 42,
+    "pop": 0,
+    "humidity": 79,
+    "wind_mph": 8,
+    "wind_dir": "S",
+    "sky": 24,
+    "short": "Mostly Clear",
+    "qpf_in": 0.0,
+    "snow_in": 0.0,
+    "gust_mph": 14
    }
   ],
   "days": [
@@ -957,17 +957,17 @@
  },
  "lake_gage": {
   "water_temp_f": 52,
-  "water_temp_at": "2026-10-31T09:00:00.000-04:00",
-  "level_ft": 93.91,
-  "level_at": "2026-10-31T09:00:00.000-04:00",
+  "water_temp_at": "2026-10-31T11:00:00.000-04:00",
+  "level_ft": 93.93,
+  "level_at": "2026-10-31T11:00:00.000-04:00",
   "level_status": "normal"
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 21,
+  "aqi": 22,
   "category": "Good",
   "pollutant": "OZONE",
-  "observed": "10/31/26 8:00",
+  "observed": "10/31/26 11:00",
   "discussion": "On Saturday, October 31st, expect generally good air quality across Vermont."
  },
  "sun": {
@@ -1006,7 +1006,7 @@
      "ICON": 56
     },
     "pop_max": {
-     "GFS": 1,
+     "GFS": 2,
      "Euro": 0,
      "ICON": 0
     },
@@ -1025,8 +1025,8 @@
      "ICON": 64
     },
     "pop_max": {
-     "GFS": 2,
-     "Euro": 4,
+     "GFS": 6,
+     "Euro": 2,
      "ICON": 5
     },
     "precip_in": {
@@ -1040,22 +1040,22 @@
  },
  "brief": {
   "date": "2026-10-31",
-  "generated": "2026-10-31T13:12:51+00:00",
-  "text": "Sunny today, high 47. Mostly clear tonight, low 30. Sunday, sunny and warmer, high 57.",
+  "generated": "2026-10-31T15:29:47+00:00",
+  "text": "Mostly sunny today, high 47. Mostly clear tonight, low 30. Sunday, sunny and warmer, high 57.",
   "periods": [
    {
     "label": "Today",
     "name": "Today",
     "is_day": true,
     "temp_f": 47,
-    "sky": "sunny",
-    "start": "2026-10-31T13:00:00+00:00",
+    "sky": "mostly sunny",
+    "start": "2026-10-31T11:00:00-04:00",
     "end": "2026-10-31T18:00:00-04:00",
     "precip": null,
     "wind": null,
-    "feels_lo": 34,
+    "feels_lo": 38,
     "feels_hi": 44,
-    "text": "Sunny today, high 47."
+    "text": "Mostly sunny today, high 47."
    },
    {
     "label": "Tonight",
