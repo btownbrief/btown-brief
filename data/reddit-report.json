@@ -1,0 +1,522 @@
+{
+ "v": 1,
+ "generated": "2026-10-31T12:12:06+00:00",
+ "window_hours": 24,
+ "intake_generated": "2026-10-31T12:12:06+00:00",
+ "intake_state": {
+  "paused": false,
+  "since": null,
+  "newest_first_seen": "2026-10-31T12:12:06+00:00",
+  "pause_after_hours": 36,
+  "routes_live": [
+   "inoreader",
+   "rss",
+   "shreddit"
+  ],
+  "reason": "posts arriving"
+ },
+ "subs": {
+  "r/burlington": {
+   "new_24h": 23,
+   "made_24h": 23,
+   "overlap": {
+    "inoreader+rss+shreddit": 15,
+    "rss": 1,
+    "rss+shreddit": 7
+   },
+   "routes": {
+    "inoreader": {
+     "new_24h": 15,
+     "new_prior_6d": 91,
+     "last_new": "2026-10-31T01:15:06+00:00",
+     "found_of_made_24h": 15,
+     "only_route": 0,
+     "median_lag_minutes": 250,
+     "runs": {
+      "ok": 47
+     },
+     "last_error": null
+    },
+    "rss": {
+     "new_24h": 23,
+     "new_prior_6d": 101,
+     "last_new": "2026-10-31T12:12:06+00:00",
+     "found_of_made_24h": 23,
+     "only_route": 1,
+     "median_lag_minutes": 0,
+     "runs": {
+      "ok": 47
+     },
+     "last_error": null
+    },
+    "oauth": {
+     "new_24h": 0,
+     "new_prior_6d": 0,
+     "last_new": null,
+     "found_of_made_24h": 0,
+     "only_route": 0,
+     "median_lag_minutes": null,
+     "runs": {},
+     "last_error": null
+    },
+    "shreddit": {
+     "new_24h": 22,
+     "new_prior_6d": 98,
+     "last_new": "2026-10-31T12:12:06+00:00",
+     "found_of_made_24h": 22,
+     "only_route": 0,
+     "median_lag_minutes": 0,
+     "runs": {
+      "ok": 47
+     },
+     "last_error": null
+    }
+   }
+  },
+  "r/vermont": {
+   "new_24h": 24,
+   "made_24h": 23,
+   "overlap": {
+    "inoreader+rss+shreddit": 21,
+    "rss+shreddit": 2
+   },
+   "routes": {
+    "inoreader": {
+     "new_24h": 26,
+     "new_prior_6d": 108,
+     "last_new": "2026-10-31T04:54:05+00:00",
+     "found_of_made_24h": 21,
+     "only_route": 0,
+     "median_lag_minutes": 94,
+     "runs": {
+      "ok": 47
+     },
+     "last_error": null
+    },
+    "rss": {
+     "new_24h": 24,
+     "new_prior_6d": 136,
+     "last_new": "2026-10-31T11:40:05+00:00",
+     "found_of_made_24h": 23,
+     "only_route": 0,
+     "median_lag_minutes": 0,
+     "runs": {
+      "ok": 47
+     },
+     "last_error": null
+    },
+    "oauth": {
+     "new_24h": 0,
+     "new_prior_6d": 0,
+     "last_new": null,
+     "found_of_made_24h": 0,
+     "only_route": 0,
+     "median_lag_minutes": null,
+     "runs": {},
+     "last_error": null
+    },
+    "shreddit": {
+     "new_24h": 24,
+     "new_prior_6d": 135,
+     "last_new": "2026-10-31T11:40:05+00:00",
+     "found_of_made_24h": 23,
+     "only_route": 0,
+     "median_lag_minutes": 0,
+     "runs": {
+      "ok": 47
+     },
+     "last_error": null
+    }
+   }
+  },
+  "r/news": {
+   "new_24h": 21,
+   "made_24h": 20,
+   "overlap": {
+    "shreddit": 20
+   },
+   "routes": {
+    "inoreader": {
+     "new_24h": 0,
+     "new_prior_6d": 0,
+     "last_new": null,
+     "found_of_made_24h": 0,
+     "only_route": 0,
+     "median_lag_minutes": null,
+     "runs": {},
+     "last_error": null
+    },
+    "rss": {
+     "new_24h": 0,
+     "new_prior_6d": 0,
+     "last_new": null,
+     "found_of_made_24h": 0,
+     "only_route": 0,
+     "median_lag_minutes": null,
+     "runs": {},
+     "last_error": null
+    },
+    "oauth": {
+     "new_24h": 0,
+     "new_prior_6d": 0,
+     "last_new": null,
+     "found_of_made_24h": 0,
+     "only_route": 0,
+     "median_lag_minutes": null,
+     "runs": {},
+     "last_error": null
+    },
+    "shreddit": {
+     "new_24h": 21,
+     "new_prior_6d": 101,
+     "last_new": "2026-10-31T12:12:06+00:00",
+     "found_of_made_24h": 20,
+     "only_route": 20,
+     "median_lag_minutes": null,
+     "runs": {
+      "skipped": 35,
+      "ok": 12
+     },
+     "last_error": "not due this run"
+    }
+   }
+  },
+  "r/worldnews": {
+   "new_24h": 38,
+   "made_24h": 36,
+   "overlap": {
+    "shreddit": 36
+   },
+   "routes": {
+    "inoreader": {
+     "new_24h": 0,
+     "new_prior_6d": 0,
+     "last_new": null,
+     "found_of_made_24h": 0,
+     "only_route": 0,
+     "median_lag_minutes": null,
+     "runs": {},
+     "last_error": null
+    },
+    "rss": {
+     "new_24h": 0,
+     "new_prior_6d": 0,
+     "last_new": null,
+     "found_of_made_24h": 0,
+     "only_route": 0,
+     "median_lag_minutes": null,
+     "runs": {},
+     "last_error": null
+    },
+    "oauth": {
+     "new_24h": 0,
+     "new_prior_6d": 0,
+     "last_new": null,
+     "found_of_made_24h": 0,
+     "only_route": 0,
+     "median_lag_minutes": null,
+     "runs": {},
+     "last_error": null
+    },
+    "shreddit": {
+     "new_24h": 38,
+     "new_prior_6d": 240,
+     "last_new": "2026-10-31T12:12:06+00:00",
+     "found_of_made_24h": 36,
+     "only_route": 36,
+     "median_lag_minutes": null,
+     "runs": {
+      "skipped": 35,
+      "ok": 12
+     },
+     "last_error": "not due this run"
+    }
+   }
+  },
+  "r/technology": {
+   "new_24h": 31,
+   "made_24h": 25,
+   "overlap": {
+    "shreddit": 25
+   },
+   "routes": {
+    "inoreader": {
+     "new_24h": 0,
+     "new_prior_6d": 0,
+     "last_new": null,
+     "found_of_made_24h": 0,
+     "only_route": 0,
+     "median_lag_minutes": null,
+     "runs": {},
+     "last_error": null
+    },
+    "rss": {
+     "new_24h": 0,
+     "new_prior_6d": 0,
+     "last_new": null,
+     "found_of_made_24h": 0,
+     "only_route": 0,
+     "median_lag_minutes": null,
+     "runs": {},
+     "last_error": null
+    },
+    "oauth": {
+     "new_24h": 0,
+     "new_prior_6d": 0,
+     "last_new": null,
+     "found_of_made_24h": 0,
+     "only_route": 0,
+     "median_lag_minutes": null,
+     "runs": {},
+     "last_error": null
+    },
+    "shreddit": {
+     "new_24h": 31,
+     "new_prior_6d": 195,
+     "last_new": "2026-10-31T10:06:05+00:00",
+     "found_of_made_24h": 25,
+     "only_route": 25,
+     "median_lag_minutes": null,
+     "runs": {
+      "skipped": 35,
+      "ok": 12
+     },
+     "last_error": "not due this run"
+    }
+   }
+  },
+  "r/science": {
+   "new_24h": 23,
+   "made_24h": 22,
+   "overlap": {
+    "shreddit": 22
+   },
+   "routes": {
+    "inoreader": {
+     "new_24h": 0,
+     "new_prior_6d": 0,
+     "last_new": null,
+     "found_of_made_24h": 0,
+     "only_route": 0,
+     "median_lag_minutes": null,
+     "runs": {},
+     "last_error": null
+    },
+    "rss": {
+     "new_24h": 0,
+     "new_prior_6d": 0,
+     "last_new": null,
+     "found_of_made_24h": 0,
+     "only_route": 0,
+     "median_lag_minutes": null,
+     "runs": {},
+     "last_error": null
+    },
+    "oauth": {
+     "new_24h": 0,
+     "new_prior_6d": 0,
+     "last_new": null,
+     "found_of_made_24h": 0,
+     "only_route": 0,
+     "median_lag_minutes": null,
+     "runs": {},
+     "last_error": null
+    },
+    "shreddit": {
+     "new_24h": 23,
+     "new_prior_6d": 129,
+     "last_new": "2026-10-31T12:12:06+00:00",
+     "found_of_made_24h": 22,
+     "only_route": 22,
+     "median_lag_minutes": null,
+     "runs": {
+      "skipped": 35,
+      "ok": 12
+     },
+     "last_error": "not due this run"
+    }
+   }
+  },
+  "r/artificial": {
+   "new_24h": 29,
+   "made_24h": 29,
+   "overlap": {
+    "shreddit": 29
+   },
+   "routes": {
+    "inoreader": {
+     "new_24h": 0,
+     "new_prior_6d": 0,
+     "last_new": null,
+     "found_of_made_24h": 0,
+     "only_route": 0,
+     "median_lag_minutes": null,
+     "runs": {},
+     "last_error": null
+    },
+    "rss": {
+     "new_24h": 0,
+     "new_prior_6d": 0,
+     "last_new": null,
+     "found_of_made_24h": 0,
+     "only_route": 0,
+     "median_lag_minutes": null,
+     "runs": {},
+     "last_error": null
+    },
+    "oauth": {
+     "new_24h": 0,
+     "new_prior_6d": 0,
+     "last_new": null,
+     "found_of_made_24h": 0,
+     "only_route": 0,
+     "median_lag_minutes": null,
+     "runs": {},
+     "last_error": null
+    },
+    "shreddit": {
+     "new_24h": 29,
+     "new_prior_6d": 160,
+     "last_new": "2026-10-31T12:12:06+00:00",
+     "found_of_made_24h": 29,
+     "only_route": 29,
+     "median_lag_minutes": null,
+     "runs": {
+      "skipped": 35,
+      "ok": 12
+     },
+     "last_error": "not due this run"
+    }
+   }
+  },
+  "r/Jokes": {
+   "new_24h": 24,
+   "made_24h": 24,
+   "overlap": {
+    "shreddit": 24
+   },
+   "routes": {
+    "inoreader": {
+     "new_24h": 0,
+     "new_prior_6d": 0,
+     "last_new": null,
+     "found_of_made_24h": 0,
+     "only_route": 0,
+     "median_lag_minutes": null,
+     "runs": {},
+     "last_error": null
+    },
+    "rss": {
+     "new_24h": 0,
+     "new_prior_6d": 0,
+     "last_new": null,
+     "found_of_made_24h": 0,
+     "only_route": 0,
+     "median_lag_minutes": null,
+     "runs": {},
+     "last_error": null
+    },
+    "oauth": {
+     "new_24h": 0,
+     "new_prior_6d": 0,
+     "last_new": null,
+     "found_of_made_24h": 0,
+     "only_route": 0,
+     "median_lag_minutes": null,
+     "runs": {},
+     "last_error": null
+    },
+    "shreddit": {
+     "new_24h": 24,
+     "new_prior_6d": 151,
+     "last_new": "2026-10-31T12:12:06+00:00",
+     "found_of_made_24h": 24,
+     "only_route": 24,
+     "median_lag_minutes": null,
+     "runs": {
+      "skipped": 35,
+      "ok": 12
+     },
+     "last_error": "not due this run"
+    }
+   }
+  },
+  "r/nba": {
+   "new_24h": 57,
+   "made_24h": 55,
+   "overlap": {
+    "shreddit": 55
+   },
+   "routes": {
+    "inoreader": {
+     "new_24h": 0,
+     "new_prior_6d": 0,
+     "last_new": null,
+     "found_of_made_24h": 0,
+     "only_route": 0,
+     "median_lag_minutes": null,
+     "runs": {},
+     "last_error": null
+    },
+    "rss": {
+     "new_24h": 0,
+     "new_prior_6d": 0,
+     "last_new": null,
+     "found_of_made_24h": 0,
+     "only_route": 0,
+     "median_lag_minutes": null,
+     "runs": {},
+     "last_error": null
+    },
+    "oauth": {
+     "new_24h": 0,
+     "new_prior_6d": 0,
+     "last_new": null,
+     "found_of_made_24h": 0,
+     "only_route": 0,
+     "median_lag_minutes": null,
+     "runs": {},
+     "last_error": null
+    },
+    "shreddit": {
+     "new_24h": 57,
+     "new_prior_6d": 260,
+     "last_new": "2026-10-31T10:38:06+00:00",
+     "found_of_made_24h": 55,
+     "only_route": 55,
+     "median_lag_minutes": null,
+     "runs": {
+      "skipped": 36,
+      "ok": 11
+     },
+     "last_error": "not due this run"
+    }
+   }
+  }
+ },
+ "routes": {
+  "inoreader": {
+   "status": "live",
+   "new_24h": 41,
+   "error": null
+  },
+  "rss": {
+   "status": "live",
+   "new_24h": 47,
+   "error": null
+  },
+  "oauth": {
+   "status": "no runs",
+   "new_24h": 0,
+   "error": null
+  },
+  "shreddit": {
+   "status": "live",
+   "new_24h": 269,
+   "error": "not due this run"
+  }
+ },
+ "alarms": [],
+ "level": "green",
+ "brief_line": "Reddit: green, 270 new posts in 24h (Inoreader 41, RSS 47, Reddit web 269)"
+}
