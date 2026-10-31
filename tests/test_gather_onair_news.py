@@ -83,6 +83,18 @@ class TitleRules(unittest.TestCase):
         self.assertFalse(recap("fallon", "Keri Russell Got Sick on Her 50th Birthday, Shares Why She Doesn't Like Winning Awards (Extended)", "2026-10-09 00:02"))
         self.assertFalse(recap("fallon", "Hailee Steinfeld Talks Avengers Rumors and Hexed Role as a New Mom", "2026-10-17 09:00"))
 
+    def test_cnn_10_is_a_dated_daily(self):
+        self.assertTrue(recap("cnn10", "America welcomes its 64th National Park in Arizona | October 27, 2026", "2026-10-27 00:00"))
+        self.assertFalse(recap("cnn10", "A quick explainer on the park", "2026-10-27 12:00"))
+
+    def test_league_lists_not_the_rest(self):
+        self.assertTrue(recap("nhl", "Best NHL Goals of Week 4 | 2026-27 Season", "2026-10-27 14:00"))
+        self.assertFalse(recap("nhl", "Senators vs. Kings | NHL Highlights | Oct 29, 2026", "2026-10-30 01:00"))
+        self.assertFalse(recap("nhl", "Hardest NHL Hits: Week 3 & Week 4", "2026-10-29 14:00"))
+        self.assertTrue(recap("mlb", "The Top 10 BEST PLAYS from the 2026 World Series! 🔥 (Brewers win it all & MORE!)", "2026-10-29 17:00"))
+        self.assertTrue(recap("mlb", "TOP 20 fielding plays from the 2026 Postseason 😲 (Mitchell's home run robbery & MORE!)", "2026-10-30 12:00"))
+        self.assertFalse(recap("mlb", "Brewers vs. Rays World Series Game 5 Shorts Recap", "2026-10-29 01:00"))
+
     def test_seth_and_snl(self):
         self.assertTrue(recap("seth", "Trump Meets with Election Denier Tina Peters, Allies Plot Midterm \"Plan,\" Martial Law: A Closer Look", "2026-10-07 21:00"))
         self.assertTrue(recap("seth", "Trump's \"Dumocrat\" Obsession and Gas Price Excuses: Late Night News of the Week", "2026-10-09 13:46"))
@@ -108,6 +120,13 @@ class EpisodeTitle(unittest.TestCase):
     def test_no_date_in_the_title_goes_by_the_upload(self):
         self.assertEqual(self.ep("abc", "ABC World News Tonight Full Broadcast", "2026-10-15 19:00"), "Full broadcast · Thursday, Oct. 15")
         self.assertEqual(self.ep("abc", "ABC World News Tonight Full Broadcast", "2026-10-15 00:05"), "Full broadcast · Wednesday, Oct. 14")
+
+    def test_recap_lane_titles_are_clean(self):
+        self.assertEqual(self.ep("cnn10", "America welcomes its 64th National Park in Arizona | October 27, 2026", "2026-10-27 00:00"),
+                         "America welcomes its 64th National Park in Arizona")
+        self.assertEqual(self.ep("nhl", "Best NHL Goals of Week 3 | 2026-27 Season", "2026-10-20 14:00"), "Best NHL Goals of Week 3")
+        self.assertEqual(self.ep("mlb", "The Top 10 BEST PLAYS from the 2026 World Series! 🔥 (Brewers win it all & MORE!)", "2026-10-29 17:00"),
+                         "The Top 10 BEST PLAYS from the 2026 World Series!")
 
     def test_the_show_name_comes_off(self):
         self.assertEqual(self.ep("lwt", "S13 E26: Kimberly Guilfoyle & Generic Drugs: 10/11/26: Last Week Tonight with John Oliver", "2026-10-11 23:00"),

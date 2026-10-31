@@ -77,6 +77,8 @@
   --local-soft: rgba(22, 112, 78, .10);
   --local-ink: #FFFFFF;             /* text on the Local water */
   --every: #A63A2C;                 /* the Everything water in the switch; used nowhere else */
+  --national: #2A5DA8;              /* the National water in the switch */
+  --national-ink: #FFFFFF;
   /* the poured water of the main switches (2026-10-19), one colour per
      choice, the same in both themes so the words on them keep their ink:
      News amber, Photos coral, Square lake blue; On Air's TV amber,
@@ -278,7 +280,7 @@
   --fs-w-title-xl: 1.125rem; /* 18, the same on a wide screen */
   --fs-w-dek: 0.9375rem;     /* 15, a top story's one-line reason, a post's words */
   --fs-w-meta: 0.8125rem;    /* 13, Source · 3h */
-  --fs-w-seg: 1rem;          /* 16, News · Photos · Square */
+  --fs-w-seg: 1rem;          /* 16, News · Recaps · Square · Photos */
   --lh-tight: 1.15;
   --lh-title: 1.3;
   --lh-body: 1.45;
@@ -358,6 +360,8 @@
     --local-ink: #06251A;
     --every: #F09B8A;
     --every-ink: #2C120C;
+    --national: #8FB8F0;
+    --national-ink: #0B1E38;
     --now: #E8A33D;
     --now-ink: #0D0E10;
     --now-soft: rgba(232, 163, 61, .18);
@@ -416,6 +420,8 @@
   --local-ink: #06251A;
   --every: #F09B8A;
   --every-ink: #2C120C;
+  --national: #8FB8F0;
+  --national-ink: #0B1E38;
   --now: #E8A33D;
   --now-ink: #0D0E10;
   --now-soft: rgba(232, 163, 61, .18);

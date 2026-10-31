@@ -41,7 +41,7 @@ export async function bodyTests(browser, base, h) {
     await page.waitForSelector('.dy-wrap');
     await sleep(300);
     const ring = () => page.$eval('.dy-ring b', (n) => n.textContent);
-    const order = () => page.$$eval('.dy-tile', (n) => n.map((x) => x.dataset.tile));
+    const order = () => page.$$eval('.dy-tile:not(.dy-live)', (n) => n.map((x) => x.dataset.tile));
     check((await ring()) === '0/6', 'six things to do today', await ring());
     check(JSON.stringify((await order()).slice(0, 3)) === '["water","protein","train"]' || (await order()).length === 8, 'every tile draws', (await order()).join());
     check(!(await page.$('#panel-day input, #panel-day textarea')), 'nothing to type', '');
@@ -80,6 +80,164 @@ export async function bodyTests(browser, base, h) {
     await d.page.click('[data-tick="train"]');
     check(!before && !(await d.page.evaluate(() => localStorage.getItem('allday-body-day'))), 'the demo writes nothing', '');
     await d.ctx.close();
+  });
+
+  /* Today on stub files: what each case says exists, and everything else 404s */
+  const inHours = (h) => new Date(Date.now() + h * 3600000).toISOString();
+  const DOT = Buffer.from('R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7', 'base64');
+  const WEATHER = () => ({ now: { temp_f: 61, observed_at: inHours(-1) }, lake_gage: { water_temp_f: 54, water_temp_at: inHours(-1) },
+    sun: { sunrise: inHours(-5), sunset: inHours(5), sunrise_tomorrow: inHours(19), sunset_tomorrow: inHours(29) },
+    air: { aqi: 40 }, hourly: { hours: [[1, 60, 20], [2, 0, 5], [3, 30, 10], [20, 0, 5]].map(([h, pop, wind]) => ({ t: new Date(Math.floor(Date.now() / 3600000) * 3600000 + h * 3600000).toISOString(), pop, wind_mph: wind, sky: 50, temp_f: 60 })) } });
+  const ONE_CLUB = { clubs: [{ id: 'c', name: 'Sample Run Club', kind: 'run', url: 'https://example.com/c',
+    meets: ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'].map((day) => ({ day, time: '23:59', where: 'Sample Green', lat: 44.5, lng: -73.2 })) }] };
+  const MOVES = () => ({ events: [{ at: inHours(2), title: 'Open Gym', where: 'The Gym', url: 'https://example.com/g' }, { at: inHours(-2), title: 'Gone Already', where: 'The Gym', url: 'https://example.com/x' }],
+    aerials: {}, scene: [{ id: 'dead', h: 'first', pic: base + '/pics/dead.jpg', url: 'https://example.com/1', ts: 1 }, { id: 'ok', h: 'second', pic: base + '/pics/ok.jpg', url: 'https://example.com/2', ts: 1 }] });
+  const dayAfter = (n) => daysBack(-n);
+  const LEAGUES = () => ({ organizers: [{ id: 'o', name: 'Sample Org', sports: [{ sport: 'Volleyball', signup_open: true, signup_until: dayAfter(5), url: 'https://example.com/v' }, { sport: 'Volleyball', signup_open: true, signup_until: dayAfter(9) }, { sport: 'Soccer', signup_open: true, signup_until: dayAfter(40) }, { sport: 'Tennis', signup_open: false, signup_until: dayAfter(2) }, { sport: 'Pool', signup_open: true }, { sport: 'Cricket', signup_open: true, signup_until: dayAfter(-1) }, { sport: 'Rugby', signup_open: true, ends: dayAfter(-1) }] }] });
+  const RACES = () => ({ races: [{ id: '1', name: 'Near Race', day: dayAfter(2), town: 'Burlington', url: 'https://example.com/r' }, { id: '2', name: 'Far Race', day: dayAfter(30), town: 'Burlington', url: 'https://example.com/f' }, { id: '3', name: 'Past Race', day: dayAfter(-1), town: 'Burlington', url: 'https://example.com/p' }, { id: '4', name: 'Too Far Race', day: dayAfter(95), town: 'Burlington', url: 'https://example.com/t' }] });
+  async function todayPage(files) {
+    const p = await newPage(browser, base);
+    const serve = (re, body) => p.page.route(re, (r) => (body ? r.fulfill({ json: body }) : r.fulfill({ status: 404, body: 'no' })));
+    await serve(/data\/weather\/latest\.json/, files.weather);
+    await serve(/data\/town\/moves\.json/, files.moves);
+    await serve(/data\/town\/races\.json/, files.races);
+    await serve(/data\/run-clubs\.json/, files.clubs);
+    await serve(/data\/body\/leagues\.json/, files.leagues);
+    await p.page.route(/\/pics\/ok/, (r) => r.fulfill({ contentType: 'image/gif', body: DOT }));
+    await p.page.route(/\/pics\/dead/, (r) => r.fulfill({ status: 403, body: 'no' }));
+    await p.page.goto(base + '/body/');
+    await p.page.waitForSelector('.dy-wrap');
+    await sleep(500);
+    return p;
+  }
+  const chipsOf = (page) => page.$$eval('.dy-hero .tf-chip.wx', (n) => n.map((x) => x.textContent));
+  const liveTiles = (page) => page.$$eval('.dy-live', (n) => n.map((x) => x.dataset.tile));
+  const scoreBoard = (page) => page.evaluate(() => ({ ring: document.querySelector('.dy-ring b').textContent, streak: document.querySelector('.dy-hero .tf-chip.run')?.textContent || '', week: document.querySelectorAll('.dy-week i.on').length }));
+
+  await group('Body, Today: Outside now, Moving this week, Scene pictures and Races, with the day’s score untouched', async () => {
+    const seedDays = (page) => page.evaluate(([y]) => { localStorage.setItem('allday-body-day-score', JSON.stringify({ [y]: 4 })); }, [daysBack(1)]);
+    const none = await todayPage({});
+    await seedDays(none.page);
+    await none.page.reload();
+    await none.page.waitForSelector('.dy-wrap');
+    await sleep(400);
+    await none.page.click('[data-tick="train"]');
+    const without = await scoreBoard(none.page);
+    check(!(await liveTiles(none.page)).length && !(await chipsOf(none.page)).length, 'no files: no live tiles, no chips, no empty box', JSON.stringify(await liveTiles(none.page)));
+    check((await none.page.$$('.dy-tile:not(.dy-live)')).length === 8 && !!(await none.page.$('.dy-hero .dy-ring')), 'and Today still works', '');
+    check(!none.errors.filter((e) => !/404|Failed to load/.test(e)).length, 'no console errors', none.errors.join(' | ').slice(0, 200));
+    await none.ctx.close();
+
+    const all = await todayPage({ weather: WEATHER(), moves: MOVES(), races: RACES(), clubs: ONE_CLUB, leagues: LEAGUES() });
+    await seedDays(all.page);
+    await all.page.reload();
+    await all.page.waitForSelector('.dy-live');
+    await sleep(500);
+    await all.page.click('[data-tick="train"]');
+    const withAll = await scoreBoard(all.page);
+    check(JSON.stringify(withAll) === JSON.stringify(without), 'the ring, the streak and the week read the same with every live tile showing', JSON.stringify([without, withAll]));
+    check(JSON.stringify(await liveTiles(all.page)) === '["moves","scene","soon"]', 'the three live tiles, above the tools', (await liveTiles(all.page)).join());
+    check((await all.page.$eval('.dy-wrap', (n) => n.children[1].dataset.tile)) === 'moves', 'Moving this week comes first', '');
+    const chips = await chipsOf(all.page);
+    check(chips[0] === '61°' && chips[1] === 'Lake 54°' && /^Sunset \d/.test(chips[2]) && /^Best hour \d+ [AP]M$/.test(chips[3]) && chips.length === 4, 'Outside now: the four chips, no air chip on a clean day', chips.join(' | '));
+    const best = new Date(Math.floor(Date.now() / 3600000) * 3600000 + 2 * 3600000).toLocaleTimeString('en-US', { hour: 'numeric', timeZone: 'America/New_York' });
+    check(chips[3] === 'Best hour ' + best, 'the best hour is the driest, calmest one left', chips[3] + ' vs ' + best);
+    const moves = await all.page.$$eval('.dy-moves li:not([hidden]) .n', (n) => n.map((x) => x.firstChild.textContent));
+    check(moves[0] === 'Open Gym' && moves.includes('Sample Run Club') && !moves.includes('Gone Already') && moves.length === 8, 'clubs and classes together, nothing that has started, eight rows', moves.join());
+    check(/Moving this week/.test(await all.page.$eval('.dy-moves h3', (n) => n.textContent)), 'its title', '');
+    await all.page.waitForSelector('.dy-scene .tf-pic.on');
+    const scene = await all.page.$eval('.dy-scene', (n) => n.innerText);
+    check(/@second/.test(scene) && !/@first/.test(scene), 'a dead picture gives way to the next post', scene);
+    check((await all.page.$eval('.dy-scene', (n) => n.dataset.k)) === 'dy-scene-ok', 'a star belongs to its post, not to the tile', '');
+    const soon = await all.page.$$eval('.dy-soon .n', (n) => n.map((x) => x.firstChild.textContent));
+    check(JSON.stringify(soon) === JSON.stringify(['Near Race', 'Sample Org Volleyball', 'Far Race', 'Sample Org Soccer', 'Sample Org Pool']), 'Races and signups: by date, open only, none past or closed, undated last', soon.join());
+    check(!soon.includes('Too Far Race') && !soon.includes('Sample Org Tennis'), 'nothing past 90 days, no closed signup', soon.join());
+    const soonDays = await all.page.$$eval('.dy-soon .d', (n) => n.map((x) => x.textContent));
+    check(soonDays[0] === '2 days', 'a countdown', soonDays.join());
+    check(/^[A-Z][a-z]{2} \d{1,2}$/.test(soonDays[2]) && soonDays[4] === 'Open', 'past two weeks the date; a signup with no close says Open', soonDays.join());
+    check(!(await all.page.$('.dy-soon [data-more]')), 'five rows: no Show more', '');
+    const acts = await all.page.$$eval('.dy-live', (n) => n.map((x) => !!x.querySelector('[data-act="share"]') && !!x.querySelector('[data-act="save"]') && !x.querySelector('[data-act="comment"]')));
+    check(acts.every(Boolean), 'share and star, no comments', '');
+    check(!(await all.page.$$eval('.dy-live', (n) => n.some((x) => /undefined|NaN/.test(x.innerText)))), 'no undefined', '');
+    await pageRules(all.page, 'body/day', 390);
+    await all.ctx.close();
+
+    /* the long week: eight then Show more, six then Show more, the score untouched */
+    const longMoves = { ...MOVES(), events: Array.from({ length: 19 }, (_, i) => ({ at: inHours(i + 1), title: 'Thing ' + i, where: 'The Gym', url: 'https://example.com/' + i })).concat({ at: inHours(1), title: 'Thing-0!', where: 'The Gym', url: 'https://example.com/twin' }) };
+    const longRaces = { races: Array.from({ length: 9 }, (_, i) => ({ id: 'r' + i, name: 'Race ' + i, day: dayAfter(80 - i * 8), town: 'Burlington', url: 'https://example.com/r' + i })) };
+    const long = await todayPage({ moves: longMoves, races: longRaces, clubs: { clubs: [] } });
+    const shown = (sel) => long.page.$$eval(sel + ' li:not([hidden]) .n', (n) => n.map((x) => x.firstChild.textContent));
+    const board = await scoreBoard(long.page);
+    check((await long.page.$$('.dy-moves li')).length === 19, 'the same thing listed twice shows once, punctuation or no', '');
+    check((await shown('.dy-moves')).length === 8 && (await long.page.$eval('.dy-moves [data-more]', (b) => b.textContent)) === 'Show more', 'Moving: eight rows, then Show more', (await shown('.dy-moves')).join());
+    const tall = await long.page.$eval('.dy-moves [data-more]', (b) => b.getBoundingClientRect().height);
+    check(tall >= 44, 'Show more is a real target', String(tall));
+    await long.page.click('.dy-moves [data-more]');
+    check((await shown('.dy-moves')).length === 16 && await long.page.$eval('.dy-moves', (c) => c.contains(document.activeElement) && document.activeElement.tagName === 'A'), 'a tap opens eight more and lands on the first of them', '');
+    await long.page.click('[data-tick="train"]');
+    check((await shown('.dy-moves')).length === 16, 'ticking a tile keeps them open', '');
+    await long.page.click('[data-tick="train"]');
+    await long.page.click('.dy-moves [data-more]');
+    check((await shown('.dy-moves')).length === 19 && !(await long.page.$('.dy-moves [data-more]')), 'the last rows take the button away', '');
+    const raceRows = await shown('.dy-soon');
+    check(raceRows.length === 6 && raceRows[0] === 'Race 8' && raceRows[5] === 'Race 3', 'Races: six rows, soonest first', raceRows.join());
+    await long.page.click('.dy-soon [data-more]');
+    check((await shown('.dy-soon')).length === 9 && !(await long.page.$('.dy-soon [data-more]')), 'Show more opens the rest', '');
+    check(JSON.stringify(await scoreBoard(long.page)) === JSON.stringify(board), 'Show more moves neither the ring nor the streak', JSON.stringify(board));
+    await pageRules(long.page, 'body/day long', 390);
+    await long.ctx.close();
+
+    const onlyLeagues = await todayPage({ leagues: LEAGUES() });
+    check((await liveTiles(onlyLeagues.page)).join() === 'soon', 'only the league file: the signups tile and nothing empty', (await liveTiles(onlyLeagues.page)).join());
+    await onlyLeagues.ctx.close();
+
+    const friday = await todayPage({ moves: MOVES(), clubs: { clubs: [] } });
+    check((await friday.page.$$eval('.dy-moves .n', (n) => n.map((x) => x.firstChild.textContent))).join() === 'Open Gym', 'a day with no clubs still has the events', '');
+    await friday.ctx.close();
+
+    const dead = { ...MOVES(), scene: [{ id: 'a', h: 'first', pic: base + '/pics/dead.jpg', url: 'https://example.com/1', ts: 1 }] };
+    const gone = await todayPage({ moves: dead });
+    check(!(await gone.page.$('.dy-scene')), 'the last dead picture takes the tile', '');
+    await gone.ctx.close();
+
+    const late = WEATHER();
+    late.sun = { sunrise: inHours(-20), sunset: inHours(-3), sunrise_tomorrow: inHours(8), sunset_tomorrow: inHours(30) };
+    const eve = await todayPage({ weather: late });
+    check((await chipsOf(eve.page)).some((c) => /^Best hour tomorrow \d+ [AP]M$/.test(c)), 'after sunset the best hour is tomorrow’s', (await chipsOf(eve.page)).join(' | '));
+    await eve.ctx.close();
+
+    const smoke = await todayPage({ weather: { ...WEATHER(), air: { aqi: 151 } } });
+    check((await chipsOf(smoke.page)).includes('Air 151'), 'bad air earns a chip', (await chipsOf(smoke.page)).join(' | '));
+    await smoke.ctx.close();
+
+    const demo = await newPage(browser, base);
+    const out = [];
+    demo.page.on('request', (r) => { if (/fbcdn|cdninstagram|ytimg|runsignup|data\/town\/|latest\.json/.test(r.url())) out.push(r.url()); });
+    await demo.page.goto(base + '/body/?demo=1');
+    await demo.page.waitForSelector('.dy-live');
+    await sleep(400);
+    check(JSON.stringify(await liveTiles(demo.page)) === '["moves","scene","soon"]' && (await chipsOf(demo.page)).length >= 3, 'the demo shows them all', (await liveTiles(demo.page)).join());
+    check(!out.length, 'the demo reads no live file', out.slice(0, 2).join(' '));
+    check(!demo.errors.length, 'no console errors', demo.errors.join(' | ').slice(0, 200));
+    await demo.ctx.close();
+  });
+
+  await group('Body, Leagues: whatever closes soonest sits on top', async () => {
+    const row = (sport, more) => ({ sport, level: 'Open', season: 'Jan', url: 'https://example.com/' + sport, signup_open: true, ...more });
+    const file = { organizers: [
+      { id: 'late', name: 'Late Org', town: 'Burlington', sports: [row('Soccer', { signup_until: daysBack(-30) })] },
+      { id: 'none', name: 'Open Org', town: 'Burlington', sports: [row('Golf'), row('Golf')] },
+      { id: 'soon', name: 'Soon Org', town: 'Burlington', sports: [row('Bowling'), row('Volleyball', { signup_until: daysBack(-6) }), row('Hockey', { signup_until: daysBack(-3) }), row('Darts', { signup_until: daysBack(1) })] },
+    ] };
+    const { ctx, page } = await newPage(browser, base);
+    await page.route(/data\/body\/leagues\.json/, (r) => r.fulfill({ json: file }));
+    await page.goto(base + '/body/#leagues');
+    await page.waitForSelector('.lg-org');
+    const orgs = await page.$$eval('.lg-org', (n) => n.map((x) => x.dataset.org));
+    check(orgs.join() === 'soon,late,none', 'the organizer closing soonest leads', orgs.join());
+    const sports = await page.$$eval('[data-org="soon"] summary span:first-child', (n) => n.map((x) => x.textContent));
+    check(sports.slice(0, 2).join() === 'Hockey,Volleyball', 'and the sport inside it, a past date out of the running', sports.join());
+    await ctx.close();
   });
 
   await group('Body, Today: a streak runs past 61 days', async () => {

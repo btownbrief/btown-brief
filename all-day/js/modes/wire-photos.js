@@ -2,7 +2,7 @@
    newest first, one full-width picture at a time (Stephen, 2026-10-17: "I
    really should try to become the new LOCAL INSTAGRAM").
 
-   The News · Photos · Square switch at the top of the Wire turns it on
+   The News · Recaps · Square · Photos switch at the top of the Wire turns it on
    (Stephen's girlfriend, 2026-10-17: the old list/photo icons "looked like
    the same information"); the choice is kept on the phone (localStorage
    `allday-wire-view`). #wire/photos opens it, and so do the old #art and
@@ -25,10 +25,11 @@
    Photos is not news (Stephen, 2026-10-18: "Photos is more for like
    Instagram or vibe checks or Food or event posters ... Not for like the
    local news"): no story's lead image, no Facebook or Reddit post. Local
-   is every picture below; Everything (Stephen, 2026-10-19: "this sort of
-   new Everything Photos tab") adds the day's pictures from everywhere, the
-   wire payload's `photos_world` list (curated photo feeds and the Grok
-   "Pictures of the day" recap). Without that list, Everything is Local.
+   is every local picture below; Everything (Stephen, 2026-10-19: "this sort
+   of new Everything Photos tab") adds the national Instagram accounts and the
+   day's pictures from everywhere, the wire payload's `photos_world` list
+   (curated photo feeds and the Grok "Pictures of the day" recap). National
+   is those two alone.
 
    What it draws from, each picture once (by key, and by its link):
      - neighbors' photo and art posts on the `art` board (boards.js), with
@@ -58,6 +59,7 @@ import { el, esc, safeHref, ICON, art, mark, cards, button, listRail } from '../
 
 const VIEW_KEY = 'allday-wire-view';
 const BOARD = 'art';
+const NATIONAL_TITLE = 'The country in photos';
 const FIRST = 10;              // pictures on the first screenful
 const CHUNK = 10;              // then ten at a time as the reader nears the bottom
 const AHEAD = 1800;            // px below the screen where the next ten start drawing
@@ -109,7 +111,8 @@ const P = {
      redraw()         draw the mode again, where the reader was
      onMute(sid, it)  the Wire's mute
      squareOk()       is the Square board live (boards.roundFour)
-     everything()     the Local / Everything switch is on Everything
+     wide()           the switch is on National or Everything
+     national()       the switch is on National
      world()          the day's pictures from everywhere (raw payload rows), or []
      compose()        open Post a photo */
 export function init(c) { ctx = c; }
@@ -280,7 +283,7 @@ function seed(d) {
       place: p.place || '', expires_at: at + RULES.boards.art.kinds.notice.days * DAY, created_at: at }, 0);
   });
   /* Instagram, in build_instagram.py's shape; the picture is a palette name */
-  demoIg = (d.instagram || []).map((p) => ({ h: p.h, ts: Math.round((now - (p.hours || 1) * 3600000) / 1000), i: p.palette, u: p.u, c: p.c || '', s: p.s || 'see', ...(p.f ? { f: 1 } : {}) }));
+  demoIg = (d.instagram || []).map((p) => ({ h: p.h, ts: Math.round((now - (p.hours || 1) * 3600000) / 1000), i: p.palette, u: p.u, c: p.c || '', s: p.s || 'see', ...(p.f ? { f: 1 } : {}), ...(p.n ? { n: 1 } : {}) }));
 }
 function demoGallery(d) {
   const now = clockNow();
@@ -327,14 +330,16 @@ function igView(p) {
   let it = igKeys.get(k);
   if (!it) {
     it = { k, kind: 'image', href: p.u, media: p.i, ratio: 'r45', title: short(cap) || handle, text: squash(cap),
-      src: handle, sid: 'ig:' + p.h, local: true, d: Number(p.ts) || 0, open: 'Open on Instagram' };
+      src: handle, sid: 'ig:' + p.h, local: !p.n, d: Number(p.ts) || 0, open: 'Open on Instagram' };
     igKeys.set(k, it);
     app.know([it]);
   }
   it.ago = it.d ? ctx.ago(it.d * 1000) : '';
   return { it, k, from: 'instagram', media: it.media, ratio: 'r45', cap: oneLine(cap) || handle, alt: squash(cap).slice(0, 250) || 'Instagram photo from ' + handle,
-    src: handle, sid: it.sid, local: true, d: it.d, url: p.u, cats: igCats(p) };
+    src: handle, sid: it.sid, local: !p.n, d: it.d, url: p.u, cats: igCats(p) };
 }
+/* an Instagram post that exists but sits on the other side of the switch */
+export const igHidden = (k) => (app.demo ? demoIg : P.ig || []).map(igView).some((v) => v && v.k === k && !ctx.visible(v));
 /* The posts as the News list's Instagram chip draws them: newest first,
    each with its picture still working, the same registered item the photo
    feed uses (so a save or a vote is one thing). */
@@ -392,7 +397,7 @@ function worldView(p) {
     src, sid: it.sid, local: false, d: it.d, url, credit, cats: new Set(['world']) };
 }
 const worldRows = () => {
-  if (!ctx || !ctx.everything()) return [];
+  if (!ctx || !ctx.wide()) return [];
   const rows = ctx.world();
   return Array.isArray(rows) ? rows : [];
 };
@@ -443,7 +448,8 @@ export function build() {
     if (i >= 0) { lead = list[i]; list.splice(i, 1); list.unshift(lead); }
   }
   P.list = list; P.lead = lead; P.built++;
-  P.pets = every.filter((v) => v.cats.has('pets'));
+  P.pets = every.filter((v) => v.local && v.cats.has('pets'));
+  P.away = every.some((v) => !v.local);
   return { list, lead };
 }
 export const count = () => (P.list ? P.list.length : null);
@@ -607,8 +613,9 @@ const near = (run) => {
    add photo to the feed"). */
 function header() {
   const h = el('div', 'pm-head');
-  /* on Everything, and only when the day's pictures from everywhere came */
-  const world = P.counts && P.counts.world > 0;
+  if (ctx.national()) { h.innerHTML = '<h2>' + esc(NATIONAL_TITLE) + '</h2>'; return h; }
+  /* on Everything, and only when something from away came */
+  const world = P.away;
   h.innerHTML = world ? '<h2>Burlington and the world in photos</h2><p>' + esc('Local Instagram, photos people post here, and the day’s best pictures from everywhere.') + '</p>'
     : '<h2>Burlington in photos</h2><p>' + esc('Local Instagram plus photos people post here.') + '</p>';
   const b = button(ICON.plus + ' Post a photo to the Burlington feed', 'pm-post', () => wall.compose('photo'));

@@ -532,6 +532,12 @@ body.chrome-away .mast { transform: translateY(-100%); }
 .localsw { position: relative; display: grid; grid-template-columns: auto auto; gap: 4px; padding: 3px; width: 184px;
   border-radius: var(--r-pill); background: var(--paper-2); border: 1px solid var(--line-soft);
   transition: background .2s ease, border-color .2s ease; }
+/* Local · National · Everything: three segments, the rules below read
+   --every, so National only has to change that one colour */
+.localsw.geosw { grid-template-columns: auto auto auto; width: auto; gap: 1px; }
+.localsw.geosw .localsw-half { padding: 0 8px; gap: 4px; }
+@media (max-width: 359px) { .localsw.geosw .localsw-half { padding: 0 5px; } .localsw.geosw .localsw-leaf, .wband-top .wday-nav .w { display: none; } }
+.localsw.is-nat { --every: var(--national); --every-ink: var(--national-ink); }
 .localsw.liquid { overflow: hidden; }
 /* the water's canvas: liquid.js places it on the switch's inner box (inside
    the padding, where the buttons are) and clips the drawing to that
@@ -700,8 +706,6 @@ body.chrome-away .mast { transform: translateY(-100%); }
 .vcard .c-media { margin: 0; }
 .vcard .t { display: block; font-size: var(--fs-sub); font-weight: 600; line-height: 1.3; margin-top: 8px; }
 .vcard .s { display: block; font-size: var(--fs-small); color: var(--ink-3); margin-top: 2px; line-height: 1.4; }
-.vcard.vert { width: 136px; }
-.vcard.vert .c-media { aspect-ratio: 9 / 16; }
 .vcard.w150 { width: 150px; } .vcard.w170 { width: 170px; } .vcard.w180 { width: 180px; }
 .vcard.w220 { width: 220px; } .vcard.w250 { width: 250px; }
 .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 0 var(--gutter); }
@@ -1036,6 +1040,21 @@ body.chrome-away .mast { transform: translateY(-100%); }
 .ownlist .owntile { width: auto; }
 .mixdays { padding-top: 4px; }
 .hostcard { background: var(--paper-2); border-color: transparent; }
+/* Btown Brief IRL: the big block that opens People, the soonest event largest */
+.irl { margin: var(--s2) var(--gutter) var(--s3); padding: var(--s4); border-radius: var(--r-sheet); background: var(--liq-people); color: var(--liq-people-ink); }
+.irlhead { display: flex; align-items: center; justify-content: space-between; gap: var(--s3); }
+.irlhead:not(:last-child) { padding-bottom: var(--s3); }
+.irl h2 { font-family: var(--serif); font-size: var(--fs-empty); font-weight: 500; line-height: var(--lh-title); }
+.irl .btn.ghost { background: transparent; border-color: currentColor; color: currentColor; }
+.irl .ownlist { padding: 0; }
+.irl .owntile { width: auto; border-color: transparent; background: var(--paper); color: var(--ink); }
+.irl .owntile b { font-size: var(--fs-title); }
+.irl .owntile.lead { padding: var(--s3) var(--s4) var(--s4); }
+.irl .owntile.lead b { font-family: var(--serif); font-size: var(--fs-hero); font-weight: 500; }
+.irl .owntile.lead .s { font-size: var(--fs-body); white-space: normal; }
+/* This week: one list, a label on each day */
+.mixlabel { padding: var(--s4) var(--gutter) var(--s1); font-family: var(--serif); font-size: var(--fs-date); font-weight: 500; }
+.mixlinks { display: flex; flex-wrap: wrap; gap: var(--s2); }
 /* People here: handles that open the app, interests as small tiles */
 .plist { padding: 0 var(--gutter); }
 .plist .lrow.prow { align-items: start; border-bottom: 1px solid var(--line-soft); }
@@ -1512,6 +1531,7 @@ button.fr-tree:hover { background: var(--paper-2); }
   --w-x: var(--ink);
   --w-facebook: color-mix(in srgb, var(--mark-4) 75%, var(--ink));
   --w-reddit: color-mix(in srgb, var(--every) 75%, var(--accent));
+  --w-vermont: color-mix(in srgb, var(--local) 85%, var(--ink));
   --w-instagram: color-mix(in srgb, var(--mark-6) 75%, var(--ink));
   --w-newsletters: color-mix(in srgb, var(--mark-5) 75%, var(--ink));
   --w-local-tint: color-mix(in srgb, var(--local) 7%, transparent);
@@ -1528,6 +1548,7 @@ button.fr-tree:hover { background: var(--paper-2); }
 .w-src-x { --w-src: var(--w-x); }
 .w-src-facebook { --w-src: var(--w-facebook); }
 .w-src-reddit { --w-src: var(--w-reddit); }
+.w-sub-vermont { --w-src: var(--w-vermont); }
 .w-src-instagram { --w-src: var(--w-instagram); }
 .w-src-newsletters { --w-src: var(--w-newsletters); }
 .chip.w-pets { color: var(--w-pets); }
@@ -1557,13 +1578,13 @@ button.fr-tree:hover { background: var(--paper-2); }
 /* ------------------------------------------- the Wire, rebuilt (2026-10-19) */
 /* Stephen: "simple, everything filled to the screen, like Instagram or
    TikTok ... glanceable ... hard to read if I have trouble seeing". Under
-   the mast, News · Photos · Square as a floating pill; at the top of the
+   the mast, News · Recaps · Square · Photos as a floating pill; at the top of the
    paper a banner with the day, Local / Everything and the chips, which
    scrolls away (the rail holds the chips on a wide screen). Two cards: a top story with its
    picture full width and a Lora headline, and a story row with a 104px
    picture on the left. One meta line, Source · time, then ⋯ and the star. */
 .wbar { display: flex; align-items: center; }
-/* News · Photos · Square: a big segmented control, the reader's first
+/* News · Recaps · Square · Photos: a big segmented control, the reader's first
    choice (Stephen, 2026-10-19: the words were "so small and easy to miss;
    someone might never reach Photos or Square"). Equal thirds of the row,
    40px pills, the chosen one filled. */
@@ -1578,7 +1599,7 @@ button.fr-tree:hover { background: var(--paper-2); }
    always within reach */
 body.chrome-away.keep-subnav .mast { transform: translateY(calc(-1 * var(--mast-h))); }
 
-/* News · Photos · Square floats (Stephen, 2026-10-19: it stays on screen
+/* News · Recaps · Square · Photos floats (Stephen, 2026-10-19: it stays on screen
    "that's how important it is"): on the Wire the mast's navy is only the
    top line, and the row under it is see-through, so the pill floats over
    the paper as the tab bar does at the bottom. Every other tab's section
@@ -1627,9 +1648,9 @@ body.wire-float .wfloat { opacity: 1; visibility: visible; transform: none; tran
   border: 1px solid var(--dock-edge); box-shadow: var(--dock-shadow); color: var(--dock-ink); }
 .wfloat .localsw:not(.is-on) .localsw-half:not(.on), .wfloat .localsw.is-on .localsw-half:not(.on) { color: var(--dock-ink); }
 
-/* the day: ‹ Monday, October 19 ›, as tall as the Local / Everything
-   pill. The way back is green and nudges gently toward yesterday (Stephen:
-   "they should know: just go to yesterday's"); still under reduced motion. */
+/* the day: ‹ Thu  Friday, October 30 ›, as tall as the Local / Everything
+   pill. The way back is green and names the day it goes to (Stephen: "they
+   should know: just go to yesterday's"). */
 .wday { flex: 0 1 auto; min-width: 0; display: inline-flex; align-items: center; height: 40px; border-radius: var(--r-pill);
   border: 1px solid var(--line-soft); background: var(--paper-2); }
 .wday .t { min-width: 0; padding: 0 2px; font-size: var(--fs-button); font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -1640,12 +1661,6 @@ body.wire-float .wfloat { opacity: 1; visibility: visible; transform: none; tran
 .wday-nav .i { width: 22px; height: 22px; stroke-width: 2.6; }
 .wday-nav:hover { background: var(--paper-2); }
 .wday-nav:disabled { color: var(--ink-3); opacity: .35; cursor: default; background: none; }
-.wday-nav.prev:not(:disabled) .i { animation: wday-nudge 2.6s ease-in-out infinite; }
-@keyframes wday-nudge {
-  0%, 60%, 100% { transform: translateX(0); filter: drop-shadow(0 0 1px var(--local-soft)); }
-  30% { transform: translateX(-3px); filter: drop-shadow(0 0 5px var(--local)); }
-}
-@media (prefers-reduced-motion: reduce) { .wday-nav.prev:not(:disabled) .i { animation: none; filter: drop-shadow(0 0 3px var(--local)); } }
 .wband-top .localsw, .wfloat .localsw { flex: 0 0 auto; width: auto; }
 .wband-top .localsw-half, .wfloat .localsw-half { padding: 0 10px; }
 @media (max-width: 429px) { .wday .t .d-l { display: none; } .wday .t .d-m { display: inline; } }
@@ -1653,6 +1668,30 @@ body.wire-float .wfloat { opacity: 1; visibility: visible; transform: none; tran
 /* wire.js fitDay: the day's own width picks the form when the breakpoint's is too long */
 .wday[data-fit] .t > span { display: none; }
 .wday[data-fit="m"] .t .d-m, .wday[data-fit="s"] .t .d-s { display: inline; }
+
+/* ---- the Wire, Oct 30: the worded pager, the turn of a day, newsletters in Recaps ---- */
+.wday .t .d-x { display: none; }
+.wday[data-fit="x"] .t .d-x { display: inline; }
+.wday-nav.prev { width: auto; min-width: 34px; padding-right: var(--s2); font-size: var(--fs-button); font-weight: 700; }
+.wday-nav.prev .i { margin-right: -2px; }
+.wday-nav.next:disabled { display: none; }
+.wday.last .t { padding-right: var(--s3); }
+.wturn-done { margin-top: var(--s6); padding: var(--s4) var(--gutter) 0; border-top: 1px solid var(--line); font-size: var(--fs-meta); font-weight: 600; color: var(--ink-3); }
+.feed.wire .wturn-done + .sec { padding-top: var(--s1); }
+@media (max-width: 359px) { .wband-top .localsw-half, .wfloat .localsw-half { padding: 0 6px; } }
+.wturn-days { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: 2px; padding: var(--s1) var(--gutter) var(--s3); }
+.wturn-day { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: var(--hit); padding: var(--s1) 0; border: 2px solid transparent;
+  border-radius: var(--r-tile); background: var(--paper-2); font-size: var(--fs-tag); font-weight: 600; color: var(--ink-2); line-height: 1.2; }
+.wturn-day b { font-size: var(--fs-button); font-weight: 700; color: var(--ink); }
+.wturn-day.read { border-color: var(--liq-news); }
+.wturn-day.before { background: var(--liq-news); color: var(--liq-news-ink); }
+.wturn-day.before b { color: var(--liq-news-ink); }
+@media (max-width: 359px) { .wturn-day.spare { display: none; } }
+.wrow .w-line { margin-top: var(--s1); font-size: var(--fs-w-meta); line-height: 1.4; color: var(--ink-2); }
+.wl-head { display: flex; align-items: center; gap: var(--s2); margin-bottom: var(--s1); }
+.wl-head .srcbtn { flex: 0 1 auto; min-width: 0; min-height: var(--hit); margin: calc(-1 * var(--s2)) 0; font-size: var(--fs-w-meta); font-weight: 600; color: var(--ink-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.wl-head .rc-when { margin-left: auto; }
+.wletter .w-who { visibility: hidden; }
 
 /* the banner at the top of the paper: the day and Local / Everything, the
    chips (each row scrolls sideways; .wrap lays them all out), then
@@ -1795,7 +1834,6 @@ body.wire-float .wfloat { opacity: 1; visibility: visible; transform: none; tran
 .rc-bn b { font-weight: 700; color: var(--recap); margin-right: 6px; }
 .rcap .rc-all { width: 100%; height: var(--hit); margin: var(--s1) 0 var(--s2); font-size: var(--fs-button); border-color: var(--recap-line); }
 .rcap .collapsebar { margin: 0 calc(-1 * var(--s4)); }
-.wrecaps .wrc-prev { margin-top: var(--s2); }
 .wrecaps .wrc-empty { padding: var(--s8) var(--gutter); }
 
 /* News' strip: the newest recap of each kind, small, in a row; "See as a
@@ -1923,7 +1961,7 @@ body.wire-float .wfloat { opacity: 1; visibility: visible; transform: none; tran
    posts as full cards and the outside threads as compact ones */
 .sq-compose { max-width: var(--col); margin: 0 auto; padding: var(--s3) var(--gutter) var(--s4); border-bottom: 1px solid var(--line); }
 .sq-compose h2 { font-family: var(--serif); font-size: var(--fs-sec); font-weight: 500; line-height: var(--lh-tight); }
-.sq-compose p { font-size: var(--fs-body); color: var(--ink-2); margin-top: var(--s1); }
+.sq-types { max-width: var(--col); margin: 0 auto; padding-top: var(--s3); }
 .sq-kinds { display: flex; flex-wrap: wrap; gap: var(--s2); margin-top: var(--s3); }
 .card.sq-out { padding: 10px var(--gutter) 10px 20px; }
 .sq-out-h { display: flex; align-items: center; gap: var(--s2); font-size: var(--fs-small); color: var(--ink-3); }
@@ -2135,12 +2173,13 @@ body.desk { overflow: auto; }
 .oa-all { margin: var(--s2) var(--gutter) 0; }
 /* News recaps: two sideways rows of cards, the show over the episode, Watch now under it */
 .oa-newsgroup + .oa-newsgroup { margin-top: var(--s4); }
-.oa-newscard .eyebrow { display: block; margin-top: 10px; }
-.oa-newscard .t { margin-top: 2px; font-size: var(--fs-title); display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
-.oa-newscard .s { font-size: var(--fs-meta); margin-top: 4px; }
-.oa-newscard .oa-acts { margin-top: var(--s2); }
-.rail.aslist > .oa-newscard .eyebrow { margin-top: 0; }
-.rail.aslist > .oa-newscard .t { font-size: var(--fs-title); }
+.oa-recap .c-media { cursor: pointer; }
+.oa-recap .eyebrow { display: block; margin-top: var(--s2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.rail.tworow .oa-recap .t { margin-top: 2px; cursor: pointer; min-height: 2.6em; }
+.oa-recapfoot { display: flex; align-items: center; justify-content: space-between; min-height: var(--s5); }
+.oa-recapfoot .oa-more { margin-right: calc(var(--s2) * -1); }
+.rail.aslist > .oa-recap .eyebrow { margin-top: 0; }
+.rail.aslist > .oa-recap .t { min-height: 0; }
 .oa-rows.insheet { border-top: 0; margin: 0 calc(-1 * var(--gutter)); }
 .oa-rows.insheet .oa-row { grid-template-columns: 128px minmax(0, 1fr); }
 .oa-menu { display: flex; flex-direction: column; padding-bottom: var(--s2); }
@@ -2719,7 +2758,7 @@ body.bd-full { overflow: hidden; }
 /* the switcher: hold the bar's centre cell. The browser's own long-press
    menu and text selection stay off it */
 .tabbar .holdcell { -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; }
-/* the countdown under the finger: a ring that fills, 3, 2, 1 */
+/* under the finger: a ring that fills */
 .holdring { position: fixed; z-index: 70; width: 92px; height: 92px; margin: -46px 0 0 -46px; pointer-events: none;
   display: grid; place-items: center; border-radius: var(--r-round); background: var(--dock-glass);
   backdrop-filter: var(--dock-filter); -webkit-backdrop-filter: var(--dock-filter); box-shadow: var(--dock-shadow); }
@@ -2728,7 +2767,6 @@ body.bd-full { overflow: hidden; }
 .holdring .hr-track { stroke: var(--dock-edge); }
 .holdring .hr-fill { stroke: var(--sunset); stroke-linecap: round; stroke-dasharray: 100; stroke-dashoffset: 100;
   animation: holdring-fill var(--hold-ms) linear forwards; }
-.holdring .hr-n { position: relative; font-family: var(--serif); font-size: var(--fs-hero); font-weight: 600; color: var(--dock-ink); }
 @keyframes holdring-fill { to { stroke-dashoffset: 0; } }
 @media (prefers-reduced-motion: reduce) { .holdring .hr-fill { animation: none; stroke-dashoffset: 0; } }
 /* the bubble above the pill: the eight apps, this one marked */
@@ -2747,12 +2785,6 @@ body.bd-full { overflow: hidden; }
 .ab-line { font-size: var(--fs-meta); color: var(--ink-3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .ab-row .nd { width: 8px; height: 8px; border-radius: var(--r-round); background: var(--sunset); }
 .ab-here .i { width: 18px; height: 18px; color: var(--ink-3); }
-/* once, on a first visit: the coach mark over the centre cell */
-.coachmark { position: fixed; z-index: 55; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: var(--s1);
-  max-width: calc(100vw - 32px); padding: var(--s1) var(--s1) var(--s1) var(--s4); border-radius: var(--r-pill);
-  background: var(--lake); color: var(--lake-ink); font-size: var(--fs-button); font-weight: 600; box-shadow: var(--shadow-float); white-space: nowrap; }
-.coachmark .iconbtn { color: var(--lake-ink); }
-.coachmark.side { transform: none; }
 
 /* the sheet: eight tiles, this one ringed, then the home-screen card */
 .appgrid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--s4) var(--s2); padding: var(--s2) 0 var(--s4); }
@@ -2895,11 +2927,22 @@ body[data-world="irl"] .panel [data-world="online"], body[data-world="online"] .
   .tf-pic, .tf-opt { transition: none; }
 }
 
-/* which cell to hold (Stephen, 2026-10-30): a small grabber on it */
+/* ------------------------------------ which cell to hold, and the hold shown */
+/* three dots on the cell, one per app in the bubble (switcher.js) */
 .holdcell { position: relative; }
-.holdcell::after { content: ""; position: absolute; top: 5px; left: 50%; width: 18px; height: 3px; margin-left: -9px; border-radius: var(--r-hair); background: currentColor; opacity: .6; pointer-events: none; }
+.holdcell::after { content: ""; position: absolute; top: 2px; left: 50%; width: 5px; height: 5px; margin-left: -2.5px; border-radius: var(--r-round);
+  background: var(--app-body-pop); box-shadow: -8px 0 0 var(--app-all-day-pop), 8px 0 0 var(--app-town-pop); pointer-events: none; }
 .ab-row.hot { background: var(--paper-2); }
 @media (min-width: 1024px) { .holdcell::after { display: none; } }
+/* the first three opens: a soft press settles on the cell, and the bubble rises and drops back */
+.holdghost { position: fixed; z-index: 71; width: 44px; height: 44px; margin: -22px 0 0 -22px; border-radius: var(--r-round);
+  background: var(--dock-ink); opacity: .34; pointer-events: none; animation: holdghost-in .3s ease-out both; }
+@keyframes holdghost-in { from { opacity: 0; transform: scale(1.6); } }
+.appbubble.ab-rise { animation: ab-rise .2s ease-out both; }
+.appbubble.ab-rise.ab-drop { animation: ab-drop .18s ease-in both; }
+@keyframes ab-rise { from { opacity: 0; transform: translateY(10px); } }
+@keyframes ab-drop { to { opacity: 0; transform: translateY(10px); } }
+@media (prefers-reduced-motion: reduce) { .holdghost, .appbubble.ab-rise, .appbubble.ab-rise.ab-drop { animation: none; } }
 
 /* ---------------------------------------- Town's other tabs, in Now's look */
 /* One colour per tab, the same rounded tiles, bigger type, alternating shades. */
@@ -2996,6 +3039,45 @@ body[data-world="irl"] .panel [data-world="online"], body[data-world="online"] .
   .dy-ring .f, .dy-bar i, .dy-tick, .dy-add, .dy-tile { transition: none; }
 }
 
+
+/* --------------------------------------------- Now and Today: the live layer */
+.tf-chip.wx::before { display: none; }
+/* The camera's frame has black bars and a sponsor strip; a wide hero's slice
+   misses both, and a phone's narrow one needs the zoom to. */
+.tf-cam { object-position: 50% 40%; }
+@media (max-width: 599px) {
+  .tf-cam { transform: scale(1.47); transform-origin: 50% 14%; }
+}
+.card.tf-tonight { --tf-bg: var(--tf-jobs); }
+.card.tf-calendar { --tf-bg: var(--tf-city); }
+.card.tf-news { --tf-bg: var(--tf-weather); }
+.card.tf-photo { --tf-bg: var(--tf-black); }
+.tf .ph { z-index: -2; }
+.tf-photo.has-pic .tf-frame { aspect-ratio: 1; }
+.tf-tonight .tf-rows .d { min-width: 72px; }
+.tf-street .tf-opts { grid-template-columns: minmax(0, 1fr); }
+.tf-street .tf-opt { height: auto; min-height: 46px; padding: 10px 12px; }
+.tf-street .tf-price { font-size: var(--fs-tf-title); letter-spacing: -.006em; }
+
+.dy-hero .tf-chips { margin-top: 0; }
+.dy-hero .tf-chips .tf-chip { margin-top: 0; }
+.dy-live { position: relative; isolation: isolate; overflow: hidden; gap: 8px; min-height: 0; }
+.dy-moves { --dy-bg: var(--tf-city); }
+.dy-scene { --dy-bg: var(--tf-black); --dy-ink: var(--tf-white); aspect-ratio: 4 / 3; }
+.dy-soon { --dy-bg: var(--tf-going); }
+.dy-live .tf-pic, .dy-live .ph { z-index: -2; }
+.dy-live.has-pic::after { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, var(--tf-shade-1) 0%, var(--tf-shade-4) 62%, var(--tf-shade-4) 100%); }
+.dy-scene.has-pic::after { background: linear-gradient(180deg, var(--tf-shade-1) 0%, var(--tf-shade-2) 34%, var(--tf-shade-3) 60%, var(--tf-shade-4) 100%); }
+.dy-scene { justify-content: flex-end; }
+.dy-scene .dy-sub { margin: 0; }
+.dy-moves .tf-rows .d { min-width: 96px; }
+.dy-soon .tf-rows .d { min-width: 76px; }
+.dy-live .dy-more { position: relative; z-index: 2; min-height: 44px; margin: 0; padding: 0; border: 0; background: none; cursor: pointer; }
+.dy-live .tf-rows { position: relative; z-index: 2; }
+.dy-live .act { color: inherit; }
+.dy-live .act:hover { background: var(--tf-glass); color: inherit; }
+.dy-live .act.on { color: inherit; }
+.dy-live .tf-acts { margin: 0 -8px 0 0; }
 
 /* ============================================================ Reddit */
 /* Type does the work here: big serif headlines on the two surfaces in turn,
@@ -3107,10 +3189,11 @@ body[data-world="irl"] .panel [data-world="online"], body[data-world="online"] .
 .so-pic img { display: block; width: 100%; height: 100%; object-fit: cover; }
 .so-text { font-family: var(--serif); font-size: var(--fs-rd-title); font-weight: 500; line-height: 1.24; letter-spacing: 0; overflow-wrap: anywhere; color: var(--ink); }
 .card.is-read .so-text { font-weight: 400; }
+.so-text.long { font-family: var(--sans); font-size: var(--fs-body); font-weight: 400; line-height: 1.4; }
 .so-earlier { list-style: none; margin: 0; padding: 0; }
 .so-earlier li { border-top: 1px solid var(--line); }
 .so-row { display: flex; justify-content: space-between; gap: var(--s3); padding: 8px 0; font-size: var(--fs-body); color: var(--ink-2); }
-.so-row span:first-child { min-width: 0; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; overflow-wrap: anywhere; }
+.so-row span:first-child { min-width: 0; overflow-wrap: anywhere; }
 .so-foot { display: flex; align-items: center; gap: var(--s3); min-height: 36px; }
 .so-foot .sp { flex: 1; }
 .so-foot .act { margin: 0; }
@@ -3120,3 +3203,46 @@ body[data-world="irl"] .panel [data-world="online"], body[data-world="online"] .
   .so-block.alt { background: var(--paper); }
   .so-block.alt-w { background: var(--paper-2); }
 }
+/* Social, X pictures: charts and maps keep their whole picture */
+.so-x .so-pic { aspect-ratio: auto; align-self: start; }
+.so-x .so-pic img { height: auto; max-height: 460px; object-fit: contain; }
+
+/* Watch: the trailer card, Next up, and Previous and Next in the video box */
+.wt-drop { padding: var(--s2) var(--gutter) 0; }
+.wt-drop-media { position: relative; aspect-ratio: 16 / 9; border-radius: var(--r-media); overflow: hidden; background: var(--paper-2); touch-action: pan-y; }
+.wt-drop-pic { position: absolute; inset: 0; display: block; }
+.wt-drop-img, .wt-drop-pic .ph { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.wt-drop-age { position: absolute; left: 8px; top: 8px; font-size: var(--fs-small); font-weight: 600; padding: 3px 7px; border-radius: var(--r-sm);
+  background: var(--media-chip); color: var(--on-media); pointer-events: none; }
+.wt-drop-step { position: absolute; top: 50%; width: var(--hit); height: var(--hit); margin-top: calc(var(--hit) / -2); border-radius: var(--r-round);
+  background: var(--media-disc); color: var(--on-media); display: flex; align-items: center; justify-content: center; }
+.wt-drop-step[data-step="-1"] { left: 6px; }
+.wt-drop-step[data-step="1"] { right: 6px; }
+.wt-drop-step:disabled { visibility: hidden; }
+.wt-drop-foot { display: flex; align-items: center; gap: 2px; padding-top: var(--s2); }
+.wt-drop-text { flex: 1; min-width: 0; }
+.wt-drop-text .t { font-size: var(--fs-body); font-weight: 600; line-height: 1.25; }
+.wt-drop-text .s { font-size: var(--fs-small); color: var(--ink-3); margin-top: 2px; }
+.wt-tl-open { display: flex; justify-content: flex-end; padding: var(--s1) var(--gutter) 0; }
+.wt-tl-head { display: flex; align-items: center; justify-content: space-between; gap: var(--s2); padding-bottom: var(--s2); }
+.wt-tl-head .btn { margin-left: auto; }
+.wt-tl-genres .chips { margin: 0 calc(var(--gutter) * -1); }
+.wt-tl { display: flex; align-items: center; gap: var(--s3); width: 100%; padding: var(--s2) 0; text-align: left; border-bottom: 1px solid var(--line-soft); }
+.wt-tl-pic { position: relative; flex: 0 0 112px; aspect-ratio: 16 / 9; border-radius: var(--r-sm); overflow: hidden; background: var(--paper-2); }
+.wt-tl-pic img, .wt-tl-pic .ph { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.wt-tl-pic .play { width: 30px; height: 30px; margin: -15px 0 0 -15px; }
+.wt-tl-pic .play .i { width: 15px; height: 15px; margin-left: 2px; }
+.wt-tl-text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.wt-tl-text .t { font-size: var(--fs-body); font-weight: 600; line-height: 1.25; color: var(--ink); display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; }
+.wt-tl-text .s { font-size: var(--fs-small); color: var(--ink-3); }
+.wt-tl-list > .btn { display: flex; margin: var(--s3) auto 0; }
+.wt-next { padding: var(--s3) var(--gutter) 0; }
+.wt-next-row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--s2); margin-top: var(--s2); }
+.wt-next-i { display: flex; flex-direction: column; gap: 2px; min-width: 0; padding: var(--s2); text-align: left; border: 1px solid var(--line); border-radius: var(--r-box); }
+.wt-next-i .h { font-size: var(--fs-meta); font-weight: 700; color: var(--ink); }
+.wt-next-i .t { font-size: var(--fs-small); font-weight: 600; line-height: 1.25; color: var(--ink-2); display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; }
+.wt-next-i .s { font-size: var(--fs-small); color: var(--ink-3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.vbox-foot:has(.vbox-step:not([hidden])) { flex-wrap: wrap; }
+.vbox-foot:has(.vbox-step:not([hidden])) .note { flex-basis: 100%; }
+.vbox-foot #vbox-prev { margin-left: auto; }
+.vbox-foot .vbox-step:disabled { color: var(--ink-3); opacity: .4; }

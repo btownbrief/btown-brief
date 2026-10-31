@@ -214,10 +214,15 @@ export function share(tab, key, title) {
 }
 
 /* Scroll a shared-in card into view and let it glow once. Returns whether the
-   key was found, so the caller can say something honest when it wasn't. */
+   key was found, so the caller can say something honest when it wasn't. A
+   tile folded behind See more (ui.js moreGrid) is opened to first. */
 export function flashHit(host, key) {
   const hit = [...(host || document).querySelectorAll('[data-k]')].find((n) => n.dataset.k === key);
   if (!hit) return false;
+  const grid = hit.hidden && hit.closest('[data-grid]');
+  const more = grid && grid.parentNode.querySelector('[data-more="' + grid.dataset.grid + '"]');
+  for (let i = 0; more && hit.hidden && i < 100; i++) more.click();
+  if (hit.hidden) return false;
   requestAnimationFrame(() => {
     hit.scrollIntoView({ block: 'center' });
     hit.classList.remove('flash');
@@ -715,10 +720,13 @@ function showDock(it) {
 }
 
 /* Play anything: a YouTube id opens the video box, an audio URL plays in the
-   dock, a demo item pretends. Pressing play on what is playing pauses it. */
-export function play(it) {
+   dock, a demo item pretends. Pressing play on what is playing pauses it.
+   nav ({ prev, next }, either null at an end) puts Previous and Next in the
+   box for a caller walking a list; the demo shows that box with the poster. */
+export function play(it, nav) {
   if (!it) return;
-  if (it.yt && !demo) { showVideo(it.yt, it.title); return; }
+  if (it.yt && !demo) { showVideo(it.yt, it.title, nav); return; }
+  if (demo && nav) { showClip({ poster: it.media, title: it.title, href: it.href }); videoNav(nav); return; }
   if (playing && playing.k === it.k) { togglePause(); return; }
   stopFake();
   if (it.src_audio && !demo) {
@@ -804,7 +812,16 @@ $('p-bar').addEventListener('click', (e) => {
 const YT_RE = /^[A-Za-z0-9_-]{11}$/;
 export const isVideoId = (id) => YT_RE.test(String(id || ''));
 let hintTimer = 0;
-export function showVideo(id, title) {
+/* A tap on Previous or Next moves on; nothing here advances by itself. */
+function videoNav(nav) {
+  [['vbox-prev', nav && nav.prev], ['vbox-next', nav && nav.next]].forEach(([id, go]) => {
+    const b = $(id);
+    b.hidden = !nav;
+    b.disabled = !go;
+    b.onclick = go || null;
+  });
+}
+export function showVideo(id, title, nav) {
   if (!YT_RE.test(id)) return;
   $('vbox-title').textContent = title || '';
   const frame = $('vbox-frame');
@@ -819,6 +836,7 @@ export function showVideo(id, title) {
   $('vbox-open').textContent = 'Open in YouTube ↗';
   $('vbox-hint').hidden = true;
   $('vbox').hidden = false;
+  videoNav(nav);
   audio.pause();
   stopFake();
   silenceForeign();
@@ -878,6 +896,7 @@ export function closeVideo() {
   frame.classList.remove('vertical');
   $('vbox-open').textContent = 'Open in YouTube ↗';
   $('vbox').hidden = true;
+  videoNav(null);
 }
 $('vbox-close').addEventListener('click', closeVideo);
 $('vbox').addEventListener('click', (e) => { if (e.target === $('vbox')) closeVideo(); });
@@ -1302,8 +1321,8 @@ export function start() {
   route();
   /* the No-algorithm challenge: its card on the Wire and #challenge. Loaded
      after the first route, so it can never hold up or break the boot. */
-  /* once, on a first visit: "Hold the middle button to switch apps" */
-  setTimeout(() => switcher.coach(), 800);
+  /* the first three opens: the app does the hold itself */
+  setTimeout(() => switcher.coach(), 1400);
   if (panels.wire) import('./challenge.js').then((m) => m.start(panels.wire)).catch((e) => console.error('[all-day] challenge', e));
 }
 
@@ -1321,6 +1340,18 @@ $('saved-btn').addEventListener('click', savedSheet);
 $('settings-btn').addEventListener('click', settingsSheet);
 $('p-close').innerHTML = ICON.x;
 $('vbox-close').innerHTML = ICON.x;
+/* Previous and Next are made here, not in the markup: every app's shell has
+   its own copy of the box and shares this file. */
+[['vbox-prev', 'Previous', ICON.left], ['vbox-next', 'Next', ICON.right]].forEach(([id, label, icon]) => {
+  const b = document.createElement('button');
+  b.type = 'button';
+  b.className = 'iconbtn vbox-step';
+  b.id = id;
+  b.hidden = true;
+  b.setAttribute('aria-label', label);
+  b.innerHTML = icon;
+  $('vbox-open').parentElement.appendChild(b);
+});
 paintSavedBtn();
 paintPlayButtons();
 

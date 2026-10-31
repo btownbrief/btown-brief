@@ -6,10 +6,9 @@
      The shared Reddit intake (scripts/reddit_intake.py, hourly, on the
      orphan reddit-data branch: r/burlington and r/vermont, titles, links and
      times only, a 10-day store) narrowed to the threads that ask for a food
-     or drink recommendation, newest first. r/vermont counts only when the
-     title names a Burlington-area place. Link posts (articles), removed
-     posts, NSFW posts and anything negative are left out. Nothing from a
-     thread is copied but its title.
+     or drink recommendation, plus the food threads people are talking
+     about, newest first. Removed posts, NSFW posts and anything negative
+     are left out. Nothing from a thread is copied but its title.
 
    directoryFrom(bestOf)
      data/best-of-reddit.json's food, coffee and drink questions ("Best
@@ -22,6 +21,8 @@
    to…, or a short question) about a food or drink word. Cheap and visible;
    a miss costs one thread, never a wrong claim, because every row is the
    thread's own title and links to it. */
+
+import { held } from './reddit-lib.js';
 
 const DAY = 86400000;
 export const MAX_AGE_DAYS = 14;   // the store holds 10; past this, a stalled bridge empties the list instead of aging it
@@ -70,9 +71,12 @@ const AREA = /\b(burlington|btv|winooski|so ?bu|south burlington|essex|colcheste
 const words = (t) => t.split(/\s+/).filter(Boolean).length;
 
 /* Is this title somebody asking where to eat or drink? */
+/* words the food list catches outside food: the language, the street */
+const NOT_FOOD = /\bspeak\b|\bmaple st\b/i;
+
 export function isFoodAsk(title) {
   const t = String(title || '').replace(/\s+/g, ' ').trim();
-  if (!t || !FOOD.test(t) || NOT_ASK.test(t) || NEGATIVE.test(t)) return false;
+  if (!t || !FOOD.test(t) || NOT_FOOD.test(t) || NOT_ASK.test(t) || NEGATIVE.test(t)) return false;
   if (ASK.test(t)) return true;
   if (/\?/.test(t) && VENUE.test(t)) return true;
   /* "Apple Cider Donuts?": the thing itself and a question mark */
@@ -83,6 +87,14 @@ export const burlingtonArea = (title) => AREA.test(String(title || ''));
 
 const SUB_IDS = { 'r/burlington': 'r-burlington', 'r/vermont': 'r-vermont' };
 const REDDIT = /^https:\/\/(www\.|old\.)?reddit\.com\/r\/[A-Za-z0-9_]+\/comments\/[a-z0-9]+\//i;
+
+/* A food thread people are actually talking about: a closing, an opening, a
+   dish. Not an ask, so it needs the comments to show it landed, and a short
+   title keeps long personal posts that only mention a meal out of the feed. */
+const TALK_MIN_COMMENTS = 5;
+const TALK_MAX_TITLE = 80;
+const isFoodTalk = (p) => Number(p.comments) >= TALK_MIN_COMMENTS && p.title.length <= TALK_MAX_TITLE
+  && FOOD.test(p.title) && !NOT_FOOD.test(p.title) && !NEGATIVE.test(p.title) && !held(p.title, p.flair);
 
 /* The intake's posts that are food asks, newest first. Each one:
    { k, url, title, sub, sid, d (epoch seconds), comments (number or null) } */
@@ -95,11 +107,11 @@ export function asksFrom(intake, nowMs) {
   posts.forEach((p) => {
     if (!p || typeof p.title !== 'string' || typeof p.url !== 'string' || !REDDIT.test(p.url)) return;
     const sub = String(p.sub || '').toLowerCase();
-    if (!SUB_IDS[sub] || gone[p.id] || p.nsfw === true || p.kind === 'link') return;
+    if (!SUB_IDS[sub] || gone[p.id] || p.nsfw === true) return;
     const ms = Date.parse(p.created || '');
     if (!Number.isFinite(ms) || ms > now + 3600000 || now - ms > MAX_AGE_DAYS * DAY) return;
-    if (!isFoodAsk(p.title)) return;
-    if (sub === 'r/vermont' && !burlingtonArea(p.title)) return;
+    const ask = isFoodAsk(p.title) && p.kind !== 'link';
+    if (!ask && !isFoodTalk(p)) return;
     if (seen.has(p.url)) return;
     seen.add(p.url);
     const n = Number(p.comments);

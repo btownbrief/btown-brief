@@ -2,25 +2,25 @@
    card in the mast (wave 0, 2026-10-29).
 
    The switcher (Stephen, 2026-10-29 evening: not in the mast; on the
-   floating pill). Hold the pill's centre cell and a ring under the finger
-   counts 3, 2, 1; on 0 a bubble opens above the pill with the eight apps:
-   each one's icon, name and one line from the map, a dot when it has
+   floating pill). Hold the pill's centre cell and a ring fills under the
+   finger; when it closes a bubble opens above the pill with the eight
+   apps: each one's icon, name and one line from the map, a dot when it has
    something new since the reader last looked there, and this one marked.
-   A plain tap on the centre cell still opens its tab. A short grace
-   (GRACE_MS) passes before the ring shows, so a quick tap never flashes
-   it, and a slower one, lifted before TAP_MS, still opens the tab. Lifting
-   after that, or sliding off once the ring shows, cancels it, with no
-   bubble and no change of tab. HOLD_MS is the whole
-   countdown, the one number to change (Stephen may want 3000 after trying
-   it on his phone); the ring always ticks 3, 2, 1, each a third of it.
-   The phone buzzes lightly when the bubble opens, where it can. The
-   browser's own long-press menu is kept off that one cell. A mouse gets
-   the same on press-and-hold; a keyboard or a screen reader gets "Btown
-   apps" in Settings, which opens the same bubble.
+   A short grace (GRACE_MS) passes before the ring shows, so a quick tap
+   never flashes it. Any lift before the bubble opens is a tap and opens
+   the cell's tab; sliding off once the ring shows cancels, with no bubble
+   and no change of tab. GRACE_MS + HOLD_MS is the whole hold, 450 ms
+   (Stephen, 2026-10-30: quicker; the 3, 2, 1 went with it, three ticks at
+   100 ms being a strobe). The phone buzzes lightly when the bubble opens,
+   where it can. The browser's own long-press menu is kept off that one
+   cell. A mouse gets the same on press-and-hold; a keyboard or a screen
+   reader gets "Btown apps" in Settings, which opens the same bubble.
 
-   A coach mark says so once, on a reader's first visit ("Hold the middle
-   button to switch apps"), and never again once it is closed or the hold
-   has been used, in any of the eight apps.
+   Three dots on the cell, one per app, say there is more here. On the
+   first three opens, across every app, the app does the hold itself with
+   no words: a soft disc settles on the cell, the real ring fills, the real
+   bubble rises, stays and drops back. Any touch, scroll or key stops it at
+   once, and it ends for good the first time the hold is used.
 
    The everyday way between apps is still a card: a restaurant in Town
    opens in All Day, a habit in Body (app.js sends a link to a tab this app
@@ -37,12 +37,15 @@ import { el, esc, ICON, button } from './ui.js';
 import { APPS, SWITCH_APPS } from './apps/index.js';
 import * as asks from './asks.js';
 
-export const HOLD_MS = 750;        // the whole countdown: three ticks of 250 ms (Stephen, 2026-10-30: 1500 was too long)
-export const HOLD_TICKS = 3;       // the ring counts 3, 2, 1, then opens
+export const HOLD_MS = 300;        // the ring's fill (Stephen, 2026-10-30: 1500, then 750, were too long)
 export const GRACE_MS = 150;       // a plain tap is over before the ring shows
-const TAP_MS = 380;                // a lift before this is a tap, ring or no ring
 const SLOP = 12;                   // px a resting finger may drift
-const COACH_KEY = 'allday-coach-apps';
+const COACH_KEY = 'allday-coach-apps'; // plays so far; a timestamp from the old coach mark counts as done
+const SHOW_PLAYS = 3;              // the first three opens
+const SHOW_SETTLE_MS = 350;        // the disc settles
+const SHOW_RING_MS = 500;          // the ring, slowed so the eye can catch it
+const SHOW_UP_MS = 1400;           // the bubble stays
+const SHOW_DROP_MS = 180;          // and drops back (app.css .ab-drop)
 
 let S = { sheet: null, toast: () => {}, app: null, demo: false, newIn: () => false };
 export function bind(o) { S = { ...S, ...o }; }
@@ -58,30 +61,24 @@ export function tile(a, cls) {
 }
 
 /* ---------------------------------------------------------------- the hold */
-let ring = null, holdTimer = 0, tickTimer = 0, graceTimer = 0, heldTimer = 0, held = false, start = null;
-/* held: the press outlasted TAP_MS or was cancelled, so the click that ends
-   it is a hold's (finished or let go), never a tap on the tab */
+let ring = null, holdTimer = 0, graceTimer = 0, held = false, start = null;
+/* held: the press reached the bubble or slid off, so the click that ends it
+   is never a tap on the tab */
 
 function stopHold() {
-  clearTimeout(graceTimer); clearTimeout(heldTimer); clearTimeout(holdTimer); clearInterval(tickTimer);
-  graceTimer = heldTimer = holdTimer = tickTimer = 0;
+  clearTimeout(graceTimer); clearTimeout(holdTimer);
+  graceTimer = holdTimer = 0;
   start = null;
   if (ring) { ring.remove(); ring = null; }
 }
-function showRing(x, y) {
+function showRing(x, y, ms = HOLD_MS) {
   ring = el('div', 'holdring');
   ring.setAttribute('aria-hidden', 'true');
-  ring.style.setProperty('--hold-ms', HOLD_MS + 'ms');
+  ring.style.setProperty('--hold-ms', ms + 'ms');
   ring.style.left = x + 'px';
   ring.style.top = y + 'px';
-  ring.innerHTML = '<svg viewBox="0 0 64 64"><circle class="hr-track" cx="32" cy="32" r="28"/><circle class="hr-fill" cx="32" cy="32" r="28" pathLength="100"/></svg>' +
-    '<b class="hr-n">' + HOLD_TICKS + '</b>';
+  ring.innerHTML = '<svg viewBox="0 0 64 64"><circle class="hr-track" cx="32" cy="32" r="28"/><circle class="hr-fill" cx="32" cy="32" r="28" pathLength="100"/></svg>';
   document.body.appendChild(ring);
-  let n = HOLD_TICKS;
-  tickTimer = setInterval(() => {
-    n -= 1;
-    if (ring && n > 0) ring.querySelector('.hr-n').textContent = String(n);
-  }, HOLD_MS / HOLD_TICKS);
 }
 
 /* the finger that opened the bubble can stay down: slide up to an app, let go
@@ -124,19 +121,22 @@ export function bindHold(cell) {
   cell.classList.add('holdcell');
   cell.style.touchAction = 'none';
   cell.setAttribute('aria-description', 'Hold to switch apps');
-  cell.addEventListener('contextmenu', (e) => e.preventDefault());
-  /* a press that ends any way but a lift cancels the hold once the ring shows */
+  /* Android's long press can beat the hold; its lift brings no click of its own */
+  let longPress = false;
+  cell.addEventListener('contextmenu', (e) => { e.preventDefault(); longPress = !!start; });
+  /* a press that ends any way but a lift cancels the hold once the ring shows;
+     a lift before the bubble is a tap, so its click goes on to the bar */
   const cancelHold = () => { if (ring) held = true; stopHold(); };
   cell.addEventListener('pointerdown', (e) => {
     if (e.pointerType === 'mouse' && e.button !== 0) return;
     stopHold();
     held = false;
+    longPress = false;
     start = { x: e.clientX, y: e.clientY };
     graceTimer = setTimeout(() => {
       graceTimer = 0;
       if (start) showRing(start.x, start.y);
     }, GRACE_MS);
-    heldTimer = setTimeout(() => { heldTimer = 0; held = true; }, TAP_MS);
     holdTimer = setTimeout(() => {
       holdTimer = 0;
       held = true;
@@ -149,7 +149,7 @@ export function bindHold(cell) {
   cell.addEventListener('pointermove', (e) => {
     if (start && (Math.abs(e.clientX - start.x) > SLOP || Math.abs(e.clientY - start.y) > SLOP)) cancelHold();
   });
-  cell.addEventListener('pointerup', () => { if (start) { stopHold(); clearHeld(); } });
+  cell.addEventListener('pointerup', () => { if (start) { stopHold(); clearHeld(); if (longPress) cell.click(); } });
   ['pointercancel', 'pointerleave'].forEach((t) => cell.addEventListener(t, () => { if (start) { cancelHold(); clearHeld(); } }));
   /* the click that ends a hold opens no tab; capture runs before the bar's own */
   cell.addEventListener('click', (e) => {
@@ -173,9 +173,9 @@ function outside(e) { if (bubble && !bubble.contains(e.target)) close(); }
 function onKey(e) { if (e.key === 'Escape') { e.stopPropagation(); close(); } }
 export const isOpen = () => !!bubble;
 
-export function open() {
+export function open({ quiet = false } = {}) {
   close();
-  dismissCoach();
+  if (!quiet) { endShow(); setPlays(SHOW_PLAYS); }
   const me = S.app || APPS[0];
   const b = el('div', 'appbubble');
   b.setAttribute('role', 'dialog');
@@ -202,6 +202,7 @@ export function open() {
     document.addEventListener('pointerdown', outside, true);
     document.addEventListener('keydown', onKey, true);
   }, 0);
+  if (quiet) return;
   const first = b.querySelector('.ab-row.on') || b.querySelector('.ab-row');
   if (first) first.focus({ preventScroll: true });
 }
@@ -221,37 +222,54 @@ function place(b) {
   }
 }
 
-/* ------------------------------------------------------------ the coach mark */
-let coachEl = null;
-const coached = () => { try { return !!localStorage.getItem(COACH_KEY); } catch (e) { return true; } };
-export function dismissCoach() {
-  try { localStorage.setItem(COACH_KEY, String(Date.now())); } catch (e) { /* the next visit says it again */ }
-  if (coachEl) { coachEl.remove(); coachEl = null; }
+/* -------------------------------------------------- the hold, shown wordlessly */
+let showing = false, showTimer = 0, ghost = null;
+const plays = () => { try { return Number(localStorage.getItem(COACH_KEY)) || 0; } catch (e) { return SHOW_PLAYS; } };
+const setPlays = (n) => { try { localStorage.setItem(COACH_KEY, String(n)); } catch (e) { /* the next open plays it again */ } };
+
+/* any touch, scroll or key ends it: a finger already down only shows up as
+   a scroll. A press on the bubble leaves the bubble up, so a tap on a row
+   still works */
+const SHOW_STOPS = ['pointerdown', 'keydown', 'wheel', 'scroll'];
+function endShow(e) {
+  if (!showing) return;
+  showing = false;
+  clearTimeout(showTimer);
+  showTimer = 0;
+  SHOW_STOPS.forEach((t) => document.removeEventListener(t, endShow, true));
+  if (ghost) { ghost.remove(); ghost = null; }
+  if (ring) { ring.remove(); ring = null; }
+  if (bubble && e && bubble.contains(e.target)) bubble.classList.remove('ab-rise', 'ab-drop');
+  else close();
 }
-/* once, on a first visit: a small card above the centre cell */
 export function coach() {
-  if (coached() || coachEl) return;
-  const bar = document.getElementById('tabbar');
-  const cell = bar && bar.querySelector('.holdcell');
+  const covered = ['sheet', 'vbox', 'confirm'].some((id) => { const n = document.getElementById(id); return n && !n.hidden; });
+  if (showing || bubble || start || document.hidden || covered || plays() >= SHOW_PLAYS) return;
+  const cell = document.querySelector('#tabbar .holdcell');
   if (!cell || !cell.offsetParent) return;
-  const c = el('div', 'coachmark', '<span>' + esc('Hold ' + (cell.textContent.trim() || 'the middle button') + ' to switch apps') + '</span>');
-  c.setAttribute('role', 'status');
-  const x = el('button', 'iconbtn', ICON.x);
-  x.type = 'button';
-  x.setAttribute('aria-label', 'Got it');
-  x.addEventListener('click', dismissCoach);
-  c.appendChild(x);
-  document.body.appendChild(c);
+  setPlays(plays() + 1);
+  showing = true;
   const r = cell.getBoundingClientRect();
-  if (matchMedia('(min-width: 1024px)').matches) {
-    c.classList.add('side');
-    c.style.left = (bar.getBoundingClientRect().right + 12) + 'px';
-    c.style.top = Math.round(r.top + r.height / 2 - c.offsetHeight / 2) + 'px';
-  } else {
-    c.style.bottom = (innerHeight - bar.getBoundingClientRect().top + 12) + 'px';
-    c.style.setProperty('--arrow-x', Math.round(r.left + r.width / 2 - c.getBoundingClientRect().left) + 'px');
-  }
-  coachEl = c;
+  const x = r.left + r.width / 2, y = r.top + r.height / 2;
+  ghost = el('div', 'holdghost');
+  ghost.setAttribute('aria-hidden', 'true');
+  ghost.style.left = x + 'px';
+  ghost.style.top = y + 'px';
+  document.body.appendChild(ghost);
+  SHOW_STOPS.forEach((t) => document.addEventListener(t, endShow, { capture: true, passive: true }));
+  showTimer = setTimeout(() => {
+    showRing(x, y, SHOW_RING_MS);
+    showTimer = setTimeout(() => {
+      ring.remove(); ring = null;
+      ghost.remove(); ghost = null;
+      open({ quiet: true });
+      bubble.classList.add('ab-rise');
+      showTimer = setTimeout(() => {
+        bubble.classList.add('ab-drop');
+        showTimer = setTimeout(endShow, SHOW_DROP_MS);
+      }, SHOW_UP_MS);
+    }, SHOW_RING_MS);
+  }, SHOW_SETTLE_MS);
 }
 
 /* ------------------------------------------------- the home-screen card (mast) */

@@ -555,7 +555,7 @@ class FableRuleTests(unittest.TestCase):
         feature = item(3, "Horse logging, a 200-year Vermont tradition", topic="environment")
         rate = item(4, "Vermont regulators finalize rate increase for every GMP customer",
                     topic="economy")
-        btv = [item(10 + k, f"Burlington council story {k}", topic="city-government", src=f"b{k}")
+        btv = [item(10 + k, f"Burlington housing story {k}", topic="housing", src=f"b{k}")
                for k in range(3)]
         ranked = cw.order_picks([notch, feature, rate] + btv)
         titles = [pick["title"] for pick in ranked]
@@ -568,10 +568,11 @@ class FableRuleTests(unittest.TestCase):
         # national. The tier sort reorders the local picks among the local
         # slots only; every national pick stays exactly where the editor put it.
         feature = item(1, "Horse logging, a 200-year Vermont tradition", topic="environment")
-        btv = [item(10 + k, f"Burlington council story {k}", topic="city-government", src=f"b{k}")
+        btv = [item(10 + k, f"Burlington housing story {k}", topic="housing", src=f"b{k}")
                for k in range(3)]
         fed = item(20, "Fed holds rates steady", ch="world", local=False, src="ap")
-        senate = item(21, "Senate advances the stopgap bill", ch="world", local=False, src="reuters")
+        senate = item(21, "Astronomers find a sixth dwarf planet", ch="world", local=False, src="reuters",
+                      topic="science")   # a light story up top, so the slot-3 rule stays out of this
         asked = [feature, fed, btv[0], senate, btv[1], btv[2]]
         ranked = cw.order_picks(asked)
         self.assertEqual([p["local"] for p in ranked], [p["local"] for p in asked])

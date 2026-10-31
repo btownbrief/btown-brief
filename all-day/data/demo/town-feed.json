@@ -1,11 +1,69 @@
 {
  "_about": "Invented for the demo. Every street, business, meeting and number here is made up; none of it is a real record.",
  "status": {
-  "ban": null,
+  "ban": "Pretend parking ban tonight",
   "ban_url": null,
-  "schools": 0
+  "schools": 1,
+  "outages": 40
  },
  "median": 510000,
+ "weather": {
+  "now": {
+   "temp_f": 54
+  },
+  "lake_gage": {
+   "water_temp_f": 51
+  }
+ },
+ "tonight": {
+  "id": "tonight-demo",
+  "kind": "tonight",
+  "day": null,
+  "rows": [
+   [
+    2,
+    "Pretend Trivia Night",
+    "The Made-Up Tavern",
+    "https://example.com/tonight-1"
+   ],
+   [
+    3,
+    "Sample Band at the Hall",
+    "Demo Hall",
+    "https://example.com/tonight-2"
+   ],
+   [
+    3.5,
+    "Invented Comedy Hour",
+    "The Fake Room",
+    "https://example.com/tonight-3"
+   ],
+   [
+    4,
+    "Placeholder Film Night",
+    "Test Theater",
+    "https://example.com/tonight-4"
+   ],
+   [
+    26,
+    "Tomorrow’s Pretend Market",
+    "Sample Green",
+    "https://example.com/tonight-5"
+   ]
+  ]
+ },
+ "street": {
+  "id": "street-demo",
+  "kind": "street",
+  "day": null,
+  "art": "field",
+  "answer": "Made-Up Park",
+  "options": [
+   "Demo Beach",
+   "Made-Up Park",
+   "Sample Green"
+  ]
+ },
  "tiles": [
   {
    "id": "signup-demo-1",
@@ -60,11 +118,53 @@
    "url": "https://example.com/road"
   },
   {
+   "id": "news-demo-1",
+   "kind": "news",
+   "ageHours": 5,
+   "title": "Burlington pretend library adds Sunday hours",
+   "src": "Demo Daily",
+   "url": "https://example.com/news-1"
+  },
+  {
+   "id": "photo-demo-1",
+   "kind": "photo",
+   "ageHours": 6,
+   "title": "@pretend.sunsets",
+   "art": "dawn",
+   "url": "https://example.com/photo-1"
+  },
+  {
    "id": "food-demo-1",
    "kind": "food",
    "ageHours": 7,
    "title": "Invented Diner to Close After 20 Years",
    "url": "https://example.com/food"
+  },
+  {
+   "id": "calendar-demo-1",
+   "kind": "calendar",
+   "ageHours": 7,
+   "n": 12,
+   "rows": [
+    [
+     50,
+     "Pretend Open Mic",
+     "The Made-Up Tavern",
+     "https://example.com/cal-1"
+    ],
+    [
+     74,
+     "Sample Book Swap",
+     "Demo Library",
+     "https://example.com/cal-2"
+    ],
+    [
+     98,
+     "Invented Craft Fair",
+     "Sample Green",
+     "https://example.com/cal-3"
+    ]
+   ]
   },
   {
    "id": "reddit-demo-1",
@@ -104,6 +204,22 @@
      2
     ]
    ]
+  },
+  {
+   "id": "news-demo-2",
+   "kind": "news",
+   "ageHours": 30,
+   "title": "Sample bus route returns to the Old North End",
+   "src": "Made-Up Press",
+   "url": "https://example.com/news-2"
+  },
+  {
+   "id": "photo-demo-2",
+   "kind": "photo",
+   "ageHours": 31,
+   "title": "@sample.shelter",
+   "art": "lake",
+   "url": "https://example.com/photo-2"
   },
   {
    "id": "going-demo-1",

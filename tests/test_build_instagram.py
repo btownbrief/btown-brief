@@ -9,6 +9,7 @@ Run: python3 -m unittest tests.test_build_instagram
 
 import json
 import os
+import re
 from datetime import datetime
 import sys
 import tempfile
@@ -156,6 +157,31 @@ class Roster(unittest.TestCase):
                   "eatvermont", "skinnypancake", "poppy.cafe", "burlsdowntown"):
             self.assertEqual(tier[h], 2, h)
         self.assertEqual(sum(1 for a in bi.load_roster() if a["category"] == "food" and a["tier"] == 2), 20)
+
+    def test_national_accounts_stay_off_the_local_tabs(self):
+        """National is its own category and never food, so Food, Vintage,
+        People and Town, which read categories, handles and `f`, cannot get it."""
+        national = [a for a in bi.load_roster() if a["national"]]
+        self.assertGreaterEqual(len(national), 20)
+        for h in ("newyorkercartoons", "theonion", "nytcooking", "thedogist", "nasa", "nprmusic", "planetmoney"):
+            self.assertIn(h, {a["h"] for a in national})
+        for a in national:
+            self.assertEqual(a["category"], "national", a)
+            self.assertFalse(a["food"], a)
+        raw = {a["h"]: a for a in json.loads(bi.ROSTER.read_text(encoding="utf-8"))["accounts"]}
+        for a in national:   # what food.js reads off the roster itself
+            self.assertNotEqual(raw[a["h"]]["category"], "food")
+            self.assertNotIn("food", raw[a["h"]])
+        shops = (bi.ROOT / "data" / "vintage-shops.json").read_text(encoding="utf-8").lower()
+        for a in national:
+            self.assertIsNone(re.search(r"instagram\.com/" + re.escape(a["h"]) + r"\b", shops), a)
+
+    def test_a_national_flag_wins_over_its_food_category(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            p = Path(tmp) / "r.json"
+            p.write_text(json.dumps({"accounts": [{"h": "a", "tier": 2, "category": "food", "national": True, "food": True}]}))
+            a = bi.load_roster(p)[0]
+        self.assertEqual((a["category"], a["food"], a["national"]), ("national", False, True))
 
     def test_bad_values_fail_cheap(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -308,6 +334,26 @@ class Budget(unittest.TestCase):
         proj = bi.projection(bi.load_roster())
         self.assertLessEqual(proj["per_month"], bi.MONTHLY_CREDIT_BUDGET, proj)
 
+    def test_a_capped_month_reaches_every_tier(self):
+        """Two capped runs a day through a 30-day month: tier 2 daily, and the
+        whole of tier 3 turned over, not starved behind tier 2."""
+        accounts = bi.load_roster()
+        led = {"month": "2026-11", "spent": 0, "last": {}}
+        tier = {a["h"]: a["tier"] for a in accounts}
+        hits = {a["h"]: 0 for a in accounts}
+        for day in range(1, 31):
+            for hour in (9, 19):
+                now = datetime(2026, 11, day, hour, tzinfo=bi.TZ).timestamp()
+                credits = min(bi.allowance(led, now, bi.MONTHLY_CREDIT_BUDGET), bi.RUN_MAX)
+                picked, tagged, _ = bi.plan(accounts, led["last"], now, credits)
+                led["spent"] += len(picked) + (1 if tagged else 0)
+                for a in picked:
+                    led["last"][a["h"]] = int(now)
+                    hits[a["h"]] += 1
+        self.assertLessEqual(led["spent"], bi.MONTHLY_CREDIT_BUDGET)
+        self.assertGreaterEqual(min(n for h, n in hits.items() if tier[h] == 2), 28, led["spent"])
+        self.assertGreaterEqual(min(n for h, n in hits.items() if tier[h] == 3), 3, led["spent"])
+
 
 class Build(unittest.TestCase):
     """main() end to end on the fixture: the payload carries video, food and
@@ -332,6 +378,24 @@ class Build(unittest.TestCase):
             code = bi.main()
         return code, (json.loads(out.read_text()) if out.exists() else None), \
             (json.loads(led.read_text()) if led.exists() else None)
+
+    def test_a_national_post_carries_its_flag(self):
+        doc = answer()
+        now = doc["fetched_at"]
+        roster = [{"h": "away", "tier": 1, "category": "national", "national": True},
+                  {"h": "here", "tier": 1, "category": "food"}]
+        with tempfile.TemporaryDirectory() as tmp:
+            fetch = lambda h, k: [{**it, "code": h + str(i)} for i, it in enumerate(doc["items"])]
+            _, _, led = self.run_main(tmp, roster, ["--reserve", "--no-tagged"], fetch, now,
+                                      {"month": bi.month_key(bi.local_day(now)), "spent": 0, "last": {}})
+            code, got, _ = self.run_main(tmp, roster, ["--execute", "--no-carry"], fetch, now + 60, led)
+        self.assertEqual(code, 0)
+        away = [p for p in got["posts"] if p["h"] == "away"]
+        here = [p for p in got["posts"] if p["h"] == "here"]
+        self.assertTrue(away and here)
+        self.assertTrue(all(p["n"] == 1 and p["category"] == "national" and "f" not in p for p in away))
+        self.assertTrue(all("n" not in p and p["f"] == 1 for p in here))
+        self.assertEqual(got["national"], len(away))
 
     def test_payload(self):
         doc = answer()
@@ -468,6 +532,17 @@ class Build(unittest.TestCase):
         self.assertEqual(led["spent"], 103)
         self.assertEqual(led["pending"], {"handles": ["a", "b"], "tagged": True, "at": int(now),
                                           "month": "2026-10", "prev": {"a": 0, "b": 0}})
+
+    def test_a_run_reserves_no_more_than_it_can_fetch(self):
+        now = at(2026, 10, 17)
+        accounts = [{"h": f"h{i}", "tier": 2, "category": "food"} for i in range(bi.RUN_MAX + 20)]
+        with tempfile.TemporaryDirectory() as tmp:
+            code, _, led = self.run_main(tmp, accounts, ["--reserve"],
+                                         lambda h, k: self.fail("fetched while reserving"), now,
+                                         {"month": "2026-10", "spent": 100, "last": {}})
+        self.assertEqual(code, 0)
+        self.assertEqual(led["spent"], 100 + bi.RUN_MAX)
+        self.assertEqual(len(led["pending"]["handles"]), bi.RUN_MAX - 1)     # the tagged shelf is one
 
     def test_execute_spends_exactly_the_reservation_once(self):
         doc = answer()

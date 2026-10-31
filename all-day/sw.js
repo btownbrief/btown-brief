@@ -13,7 +13,7 @@
    audio — episodes are large and the browser's own HTTP cache handles them
    better than we would. */
 
-const VERSION = 'all-day-v110';   // account-data.js: Habits' and The Build's data go with the account in every app
+const VERSION = 'all-day-v112';   // account-data.js: Habits' and The Build's data go with the account in every app
 const SHELL = VERSION + '-shell';
 const DATA = 'all-day-data';   // unversioned on purpose: survives shell bumps
 
@@ -39,6 +39,8 @@ const SHELL_URLS = [
   './js/photo-wall.js',
   /* the run clubs' week, imported by ui.js, People and What Now */
   './js/clubs-week.js',
+  /* what it's like outside, imported by Now and Today */
+  './js/outside.js',
   /* what People's tiles mean and which events are mixers, imported by People */
   './js/people-match.js',
   /* Food's Reddit asks and Best of r/burlington shapers, imported by modes/food.js */
@@ -54,7 +56,7 @@ const SHELL_URLS = [
   /* the Btown Brief logo in the mast */
   './assets/brand/btown-brief-logo.png',
   /* Town (wave 1) */
-  './js/modes/reddit.js', './js/modes/social.js', './js/reddit-lib.js', './js/modes/body-kit.js', './js/modes/day.js', './js/modes/leagues.js', './js/modes/template.js', './js/modes/season.js', './js/modes/train.js', './js/modes/recover.js', './js/modes/fuel.js', './js/modes/town-kit.js', './js/modes/feed.js', './js/modes/alerts.js', './js/modes/cityhall.js', './js/modes/streets.js', './js/modes/guides.js', './js/modes/work.js',
+  './js/modes/reddit.js', './js/modes/social.js', './js/reddit-lib.js', './js/modes/body-kit.js', './js/modes/day.js', './js/modes/leagues.js', './js/modes/template.js', './js/modes/season.js', './js/modes/train.js', './js/modes/recover.js', './js/modes/fuel.js', './js/modes/town-kit.js', './js/modes/feed.js', './js/modes/alerts.js', './js/modes/cityhall.js', './js/modes/streets.js', './js/modes/square.js', './js/modes/guides.js', './js/modes/work.js',
 ];
 
 self.addEventListener('install', (e) => {

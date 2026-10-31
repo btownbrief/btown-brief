@@ -14,7 +14,7 @@
    Since 2026-10-19 (Stephen: "have that effect for the main ones I want
    people switching through across the tabs") any switch can pour:
    liquify(bar, { key, idx, colors }) with one colour token per segment
-   (the Wire's News · Photos · Square, On Air's TV · Podcasts · Playlists
+   (the Wire's News · Recaps · Square · Photos, On Air's TV · Podcasts · Playlists
    and Feed · Topics). The bar's buttons are the segments, in order; the
    bar is built again on each pick and liquified again, and the same key
    carries the water across.

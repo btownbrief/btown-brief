@@ -14,8 +14,16 @@ hour they go up. Research and the evidence for every rule:
 reference/drafts/new-nine-2026-10/research/onair-news-recaps-2026-10-19.md in
 the newsletter repo.
 
+Stephen, 2026-10-30: a Recaps lane on top of On Air, the newest per show, with
+"NFL, NHL, MLB in season" and a daily news summary. CNN 10 is that summary. The
+NHL and MLB post no nightly recap: their weekly and postseason best-of lists
+are kind "sports", which only the lane reads. A league out of season simply
+has nothing in the last seven days.
+
 Discovery is YouTube's free RSS (15 newest uploads a channel, or a playlist's
-15). NBC News posts about 1.5 videos an hour, so its feed holds roughly ten
+15), and for the two leagues the API's uploads playlist when there are
+credentials (one quota unit for 50): they post dozens of Shorts a day, so a
+weekly list falls off the feed fast. NBC News posts about 1.5 videos an hour, so its feed holds roughly ten
 hours: that is why this runs every three hours (refresh-onair-finds.yml),
 not once a day. A candidate that passes the title rule is measured once with
 videos.list (one quota unit per fifty ids); what fails is remembered in
@@ -24,7 +32,7 @@ videos.list (one quota unit per fifty ids); what fails is remembered in
 
 Output, all-day/data/onair-news.json:
   items: [{id, t, ep (the card's episode title), show, sk, ch,
-           kind: "newscast" | "comedy", topic: "news",
+           kind: "newscast" | "comedy" | "sports", topic: "news" | "sports",
            sec, dur, d (upload time, epoch seconds)}], newest first, the last
            seven days, at most PER_SHOW from one show.
 
@@ -41,6 +49,7 @@ import os
 import re
 import sys
 import time
+import urllib.parse
 import xml.etree.ElementTree as ET
 from datetime import datetime, timedelta, timezone
 
@@ -63,14 +72,17 @@ SEEN_DAYS = 10
 PER_SHOW = 8
 
 
-def show(key, name, kind, feed, match, min_min, hours=None, reject=None, hours_unless=None):
+def show(key, name, kind, feed, match, min_min, hours=None, reject=None, hours_unless=None, pages=0):
     return {"key": key, "name": name, "kind": kind, "feed": feed, "match": re.compile(match, re.I),
             "min": int(min_min * 60), "hours": set(hours) if hours else None,
             "reject": re.compile(reject, re.I) if reject else None,
-            "hours_unless": re.compile(hours_unless) if hours_unless else None}
+            "hours_unless": re.compile(hours_unless) if hours_unless else None, "pages": pages}
 
 
-# feed: "channel_id=UC…" or "playlist_id=PL…"; hours: upload hours, Eastern
+MONTH_NAME = r"(?:January|February|March|April|May|June|July|August|September|October|November|December)"
+
+# feed: "channel_id=UC…" or "playlist_id=PL…"; hours: upload hours, Eastern;
+# pages: 50-a-page reads of the channel's uploads, when there are credentials
 SHOWS = [
     show("abc", "ABC World News Tonight", "newscast", "playlist_id=PLQOa26lW-uI9Ja7WDOHBJecZXTC9fm__C",
          r"\bfull broadcast\b", 12),
@@ -82,6 +94,8 @@ SHOWS = [
          r"\bfull episode\b", 20),
     show("reuters", "Reuters World News", "newscast", "channel_id=UChqUTb7kYRX8-EiaN3XFrSQ",
          r"\|\s*Reuters World News\s*$", 5),
+    show("cnn10", "CNN 10", "newscast", "channel_id=UCTOoRgpHTjAQPk6Ak70u-pA",
+         r"\|\s*" + MONTH_NAME + r" \d{1,2}, \d{4}\s*$", 7),
     show("dailyshow", "The Daily Show", "comedy", "channel_id=UCwWhs_6x42TyRM4Wstoq8HA",
          r"\|\s*The Daily Show\s*$", 8, hours=[h for h in range(24) if h != 23], hours_unless=r"^Jon Stewart"),
     show("lwt", "Last Week Tonight", "comedy", "channel_id=UC3XTzVzaHQEd30rQbuvCtTQ",
@@ -94,6 +108,10 @@ SHOWS = [
          r".", 6, hours=[23], reject=r"\|\s*The Tonight Show|\(Extended\)"),
     show("snl", "SNL Weekend Update", "comedy", "channel_id=UCqFzWxSCi39LnW1JKFR3efg",
          r"^Weekend Update\b", 6),
+    show("nhl", "NHL", "sports", "channel_id=UCqFMzb-4AUf6WAIbl132QKA",
+         r"^(Best|Top) NHL Goals of Week \d+", 2, pages=2),
+    show("mlb", "MLB", "sports", "channel_id=UCoLrcjPV5PbUrUyXq5mjc_A",
+         r"^(The )?Top \d+\b.*\bplays\b|\bdaily recap\b", 2, pages=2),
 ]
 SHOW = {s["key"]: s for s in SHOWS}
 
@@ -124,6 +142,34 @@ def parse_feed(xml_text):
     return out
 
 
+def api_uploads(s, auth):
+    """A busy channel's newest uploads through its uploads playlist."""
+    params, headers = auth
+    out, token = [], None
+    playlist = "UU" + s["feed"].split("=", 1)[1][2:]
+    for _ in range(s["pages"]):
+        q = dict(params, part="snippet,contentDetails", playlistId=playlist, maxResults=50)
+        if token:
+            q["pageToken"] = token
+        data = finds.fetch_json(finds.API + "/playlistItems?" + urllib.parse.urlencode(q), headers=headers)
+        for it in data.get("items", []):
+            sn, cd = it.get("snippet") or {}, it.get("contentDetails") or {}
+            title = finds.clean(sn.get("title"), 160)
+            d = parse_time(cd.get("videoPublishedAt") or sn.get("publishedAt"))
+            if finds.ID_RE.match(str(cd.get("videoId", ""))) and title and d:
+                out.append({"id": cd["videoId"], "title": title, "d": d})
+        token = data.get("nextPageToken")
+        if not token:
+            break
+    return out
+
+
+def entries_of(s, auth):
+    if s["pages"] and auth and auth[0] is not None:
+        return api_uploads(s, auth)
+    return parse_feed(finds.fetch(FEED + s["feed"], accept="application/atom+xml"))
+
+
 def is_recap(s, title, d):
     """The title and upload-hour rules, before anything is measured."""
     if finds.SHORTS_RE.search(title) or not s["match"].search(title):
@@ -139,7 +185,9 @@ AP_MONTH = ["Jan.", "Feb.", "March", "April", "May", "June", "July", "Aug.", "Se
 MONTH_RE = re.compile(r"\b(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\.? (\d{1,2})\b")
 # the show's own name and series tags, which the card already says
 TAILS = re.compile(r"\s*(\|\s*The Daily Show|\|\s*Reuters World News|-\s*SNL|:\s*A Closer Look|"
+                   r"\|\s*" + MONTH_NAME + r" \d{1,2}, \d{4}|\|\s*\d{4}-\d{2} Season|"
                    r":\s*\d{1,2}/\d{1,2}/\d{2,4}:\s*Last Week Tonight.*)\s*$", re.I)
+EMOJI = re.compile("[\U0001F000-\U0001FFFF\u2600-\u27BF\uFE0F]")
 
 
 def episode_title(s, title, d):
@@ -160,6 +208,8 @@ def episode_title(s, title, d):
                 pass
         return "Full broadcast · " + when.strftime("%A") + ", " + AP_MONTH[when.month - 1] + " " + str(when.day)
     ep = TAILS.sub("", re.sub(r"^S\d+ E\d+:\s*", "", title))
+    if s["kind"] == "sports":     # "… World Series! 🔥 (Brewers win it all & MORE!)"
+        ep = re.sub(r"\s*\([^()]*\)\s*$", "", EMOJI.sub("", ep)).strip()
     if s["key"] == "nbc":
         ep = re.sub(r"^[A-Z][a-z]{2,4}\.? \d{1,2}:\s*", "", ep)
     return ep.strip() or title
@@ -180,7 +230,7 @@ def gate(s, cand, detail):
     sec = detail["sec"]
     title = detail["t"] or cand["title"]
     return {"id": cand["id"], "t": title, "ep": episode_title(s, title, cand["d"]), "show": s["name"], "sk": s["key"],
-            "ch": detail["ch"], "kind": s["kind"], "topic": "news", "sec": sec,
+            "ch": detail["ch"], "kind": s["kind"], "topic": "sports" if s["kind"] == "sports" else "news", "sec": sec,
             "dur": finds.fmt_seconds(sec), "d": cand["d"]}, None
 
 
@@ -211,8 +261,9 @@ def run(args):
                 and int(c.get("d", 0)) >= now - PENDING_DAYS * 86400 and c["id"] not in known):
             cands[c["id"]] = c
     report = {}
+    auth = finds.safe("youtube-auth", finds.youtube_auth, report)
     for s in SHOWS:
-        entries = finds.safe(s["key"], lambda: parse_feed(finds.fetch(FEED + s["feed"], accept="application/atom+xml")), report)
+        entries = finds.safe(s["key"], lambda: entries_of(s, auth), report)
         for e in entries or []:
             if e["d"] < keep or e["id"] in known or e["id"] in seen or e["id"] in cands:
                 continue
@@ -221,7 +272,6 @@ def run(args):
 
     details = {}
     if cands:
-        auth = finds.safe("youtube-auth", finds.youtube_auth, report)
         if auth and auth[0] is not None:
             details = finds.safe("youtube", lambda: finds.youtube_details(list(cands), auth), report) or {}
         else:

@@ -18,5 +18,35 @@
   ],
   "less": [
     { "name": "Energy drinks", "limit": 1, "per": "week", "gives": "Bored", "swap": "Coffee with L-theanine before noon", "counts": [{ "daysAgo": 1, "n": 1 }] }
-  ]
+  ],
+  "outside": {
+    "weather": { "now": { "temp_f": 58 }, "lake_gage": { "water_temp_f": 52 } },
+    "moves": [
+      { "inHours": 2, "title": "Pretend Open Gym", "where": "Sample Rec Center", "url": "https://example.com/move-1" },
+      { "inHours": 20, "title": "Made-Up Yoga in the Park", "where": "Demo Green", "url": "https://example.com/move-2" },
+      { "inHours": 26, "title": "Pretend Pickup Soccer", "where": "Sample Field", "url": "https://example.com/move-3" },
+      { "inHours": 30, "title": "Made-Up Contra Dance", "where": "Demo Hall", "url": "https://example.com/move-4" },
+      { "inHours": 44, "title": "Pretend Climbing Night", "where": "Sample Wall", "url": "https://example.com/move-5" },
+      { "inHours": 50, "title": "Made-Up Hike", "where": "Demo Ridge", "url": "https://example.com/move-6" },
+      { "inHours": 68, "title": "Pretend Bike Ride", "where": "Sample Path", "url": "https://example.com/move-7" },
+      { "inHours": 74, "title": "Made-Up Pickleball", "where": "Demo Courts", "url": "https://example.com/move-8" },
+      { "inHours": 92, "title": "Pretend Boot Camp", "where": "Sample Park", "url": "https://example.com/move-9" },
+      { "inHours": 98, "title": "Made-Up Open Gym", "where": "Demo Gym", "url": "https://example.com/move-10" }
+    ],
+    "scene": [
+      { "id": "demo-scene", "h": "pretend.runclub", "art": "field", "url": "https://example.com/scene-1" }
+    ],
+    "races": [
+      { "inDays": 3, "name": "Pretend Turkey Trot", "town": "Sample Town", "url": "https://example.com/race-1" },
+      { "inDays": 10, "name": "Made-Up Trail 10K", "town": "Demo Hills", "url": "https://example.com/race-2" },
+      { "inDays": 24, "name": "Pretend Jingle Run", "town": "Sample Town", "url": "https://example.com/race-3" },
+      { "inDays": 38, "name": "Made-Up Cyclocross", "town": "Demo Farm", "url": "https://example.com/race-4" },
+      { "inDays": 61, "name": "Pretend New Year 5K", "town": "Sample Town", "url": "https://example.com/race-5" },
+      { "inDays": 80, "name": "Made-Up Snowshoe Race", "town": "Demo Ridge", "url": "https://example.com/race-6" }
+    ],
+    "signups": [
+      { "inDays": 6, "name": "Made-Up League Volleyball", "signup_open": true, "url": "https://example.com/league-1" },
+      { "inDays": 30, "name": "Pretend League Pickleball", "signup_open": true, "url": "https://example.com/league-2" }
+    ]
+  }
 }

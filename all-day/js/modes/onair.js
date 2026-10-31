@@ -13,6 +13,10 @@
    "is there a way to make it smaller again without having to scroll?").
 
    TV, top to bottom:
+   - Recaps (Stephen, 2026-10-30): the newest of each show, the NBA's nightly
+     recap first, sideways in two rows. Sports from data/onair-sports.json,
+     the rest from data/onair-news.json; a show with nothing in the last
+     eight days (a league out of season) drops out by itself.
    - Btown TV: the nightly curated edition (scripts/curate_tv.py, on the
      btown-tv branch), labelled by the night it was made ("Btown TV tonight",
      "Last night on Btown TV" in the morning: the outside reviews of
@@ -71,7 +75,7 @@ import * as store from '../store.js';
 import * as data from '../wire.js';
 import * as boards from '../boards.js';
 import { RULES } from '../boards-core.js';
-import { el, esc, safeHref, ICON, svg, art, section, chips, pills, divider, cards, button, localSwitch, geo, setGeo, agoShort, listRail } from '../ui.js';
+import { el, esc, safeHref, ICON, svg, art, section, chips, pills, divider, cards, button, localSwitch, geo, geoKeeps, setGeo, agoShort, listRail } from '../ui.js';
 import { liquify } from '../liquid.js';
 import { pill } from '../sections.js';
 import * as sports from './onair-sports.js';
@@ -273,7 +277,7 @@ const LENGTHS = [
 const LEN = Object.assign(Object.create(null), Object.fromEntries(LENGTHS.map((l) => [l.key, l])));   // no inherited keys: a file's "constructor" is not a length
 const TRAILER_RE = /\b(trailer|teaser)\b/i;
 const MIN_SEC = 120;
-const BUCKET_SHOW = 3;      // rows per length on the All view
+const BUCKET_SHOW = 8;      // rows per length, and per news recap group, on the All view
 const CHUNK = 40;           // an opened list draws this many rows at a time (DESIGN §9.14), all of them in the end
 const TONIGHT_ROWS = 6;     // rows under the feature before "Watch the whole edition"
 const secsOf = (dur) => {
@@ -297,7 +301,8 @@ const isLocalVideo = (v) => !!v && (!!v.vt || v.g === 'vt' || v.shelf === LOCAL_
 const PINNED_LIVE = new Set(['zl1woMXGGmQ']);   // Church Street Market Place
 const AMBIENCE_RE = /\b(jazz|lo-?fi|relaxing|ambient|ambience|sleep|study)\b|\bcaf[eé](?![a-z])/i;
 const isAmbience = (v) => AMBIENCE_RE.test(String(v && v.t || ''));
-const isLocalCam = (v) => !!v && (v.cam === 1 || isLocalVideo(v) || PINNED_LIVE.has(v.id));
+const VT_CAM = /vermont|stowe|mad river|sugarbush/i;   // the state's own streams, named but not flagged
+const isLocalCam = (v) => !!v && (v.cam === 1 || isLocalVideo(v) || PINNED_LIVE.has(v.id) || VT_CAM.test(String(v.t || '') + ' ' + String(v.ch || '')));
 const shelvesOf = (tv) => arr(tv && tv.shelves).filter((s) => s && typeof s === 'object');
 
 function videoItem(v, opts = {}) {
@@ -416,6 +421,7 @@ function row(it, list, opts = {}) {
   const c = el('article', 'oa-row');
   c.dataset.k = it.k;
   if (opts.wider) c.dataset.wider = '1';
+  if (opts.run) c.dataset.run = opts.run;
   c.innerHTML = '<span class="c-media r169" data-watch role="button" tabindex="0" aria-label="Watch ' + esc(it.title) + '">' + art(it.media) +
     (it.dur ? '<span class="dur">' + esc(it.dur) + '</span>' : '') + '</span>' +
     '<div class="b"><span class="t">' + esc(it.title) + '</span>' +
@@ -425,7 +431,7 @@ function row(it, list, opts = {}) {
   return c;
 }
 /* channel, then who found it when it was not us */
-const metaOf = (it) => [it.src, it.sec ? minutes(it.sec) : '', it.via && it.via !== 'Btown TV' ? 'via ' + it.via : ''].filter(Boolean).join(' · ');
+const metaOf = (it) => [it.src, it.sec ? minutes(it.sec) : '', it.via && it.via !== 'Btown TV' ? 'via ' + it.via : '', it.news ? newsDay(it.d) : ''].filter(Boolean).join(' · ');
 const watchRow = (it, cls) => '<div class="oa-acts"><button class="' + cls + ' oa-watch" data-watch aria-label="Watch ' + esc(it.title) + '">' + ICON.play + ' Watch now</button>' +
   '<button class="iconbtn oa-more" data-more aria-label="More for ' + esc(it.title) + '">' + MORE_ICON + '</button></div>';
 
@@ -660,14 +666,14 @@ function tvNights() {
    order a phone reads best, less what the reader passed on. */
 function nightList(ed) {
   const local = localTonight(ed);
-  if (geo() !== 'everything') return local;
+  if (geo() === 'local') return local;
   const seen = new Set(local.map((x) => x.v.id));
   const shelves = shelvesOf(ed);
   const ordered = WIDER_ORDER.map((k) => shelves.find((s) => s.key === k)).filter(Boolean)
     .concat(shelves.filter((s) => !WIDER_ORDER.includes(s.key)));
-  const out = local.slice();
+  const out = geo() === 'national' ? [] : local.slice();
   [ed.pick, ...ordered.flatMap((s) => arr(s.items))].forEach((v) => {
-    if (v && app.isVideoId(v.id) && v.t && !seen.has(v.id) && !skipped(v)) { seen.add(v.id); out.push({ v, swapped: false, wider: true }); }
+    if (v && app.isVideoId(v.id) && v.t && !seen.has(v.id) && !skipped(v) && geoKeeps(isLocalVideo(v))) { seen.add(v.id); out.push({ v, swapped: false, wider: true }); }
   });
   return out;
 }
@@ -677,7 +683,6 @@ function nightList(ed) {
    curators take turns (newest first within each), so one busy curator does
    not fill a length; tonight's edition is left out, it has its own block. */
 function library() {
-  const every = geo() === 'everything';
   const nights = tvNights();
   const tonight = new Set(nights.length ? nightList(nights[0].ed).map((x) => 'yt:' + x.v.id) : []);
   const seen = new Set(tonight);
@@ -688,8 +693,8 @@ function library() {
     (groups[it.via] = groups[it.via] || []).push(it);
   };
   nights.slice(1).forEach(({ date, ed }) => [ed.pick, ...shelvesOf(ed).flatMap((s) => arr(s.items))]
-    .forEach((v) => { if (v && (every || isLocalVideo(v)) && !skipped(v)) put1(nightItem(v, date)); }));
-  if (every) arr(O.finds && O.finds.items).map(findItem).sort((a, b) => (b ? b.d : 0) - (a ? a.d : 0)).forEach(put1);
+    .forEach((v) => { if (v && geoKeeps(isLocalVideo(v)) && !skipped(v)) put1(nightItem(v, date)); }));
+  if (geo() !== 'local') arr(O.finds && O.finds.items).map(findItem).sort((a, b) => (b ? b.d : 0) - (a ? a.d : 0)).forEach((it) => { if (it && geoKeeps(it.local)) put1(it); });
   const lanes = Object.values(groups);
   const out = [];
   for (let i = 0; lanes.some((l) => i < l.length); i++) lanes.forEach((l) => { if (l[i]) out.push(l[i]); });
@@ -754,7 +759,7 @@ function drawTV(host) {
   const items = list.map((x) => x.it);
   app.know(items);
   if (!list.length) {
-    host.appendChild(el('p', 'note pad', esc(geo() === 'everything' ? 'Nothing in that edition.' : 'No local videos ' + said(night) + '.')));
+    host.appendChild(el('p', 'note pad', esc(geo() === 'local' ? 'No local videos ' + said(night) + '.' : 'Nothing in that edition.')));
   } else {
     host.appendChild(feature(list[0].it, items));
     const box = el('div', 'oa-rows');
@@ -782,7 +787,7 @@ function wholeCard(ed, n, night) {
   b.addEventListener('click', () => editionSheet(ed, (night === 'Tonight' ? 'Tonight' : night) + '’s edition'));
   return b;
 }
-const editionVideos = (ed, localOnly) => [ed.pick, ...shelvesOf(ed).flatMap((s) => arr(s.items))].filter((v) => !localOnly || isLocalVideo(v)).map((v) => videoItem(v)).filter(Boolean);
+const editionVideos = (ed, bySwitch) => [ed.pick, ...shelvesOf(ed).flatMap((s) => arr(s.items))].filter((v) => !bySwitch || geoKeeps(isLocalVideo(v))).map((v) => videoItem(v)).filter(Boolean);
 
 /* Flip the TV block in place, keeping the reader's place: the arrow they
    pressed, or the other one at an end. Only this block redraws. */
@@ -826,7 +831,7 @@ function playLink(url, label, cls, which) {
 
 /* One edition, in a sheet: the night's TV playlist, then every video as a
    row; a row's Watch opens the player on the whole edition from there. */
-function editionSheet(ed, title, localOnly) {
+function editionSheet(ed, title, bySwitch) {
   app.sheet(title, (body) => {
     const url = playlistOf(ed);
     if (url) {
@@ -834,7 +839,7 @@ function editionSheet(ed, title, localOnly) {
       r.appendChild(playLink(url, 'Play it on your TV', 'btn', 'sheet'));
       body.appendChild(r);
     }
-    const items = editionVideos(ed, localOnly);
+    const items = editionVideos(ed, bySwitch);
     app.know(items);
     const box = el('div', 'oa-rows insheet');
     items.forEach((it) => box.appendChild(row(it, items)));
@@ -987,7 +992,7 @@ const TOPICS = [
 ];
 const TOPIC = Object.assign(Object.create(null), Object.fromEntries(TOPICS));
 const TOPIC_MIN = 3;
-const TOPIC_SHOW = 4;
+const TOPIC_SHOW = 8;
 const NEW_DAYS = 7;
 /* channels whose topic is plain from the name (lowercase, straight quotes) */
 const BY_CHANNEL = {
@@ -1130,12 +1135,12 @@ function vcard(it, w, list) {
 }
 
 function drawLive(host) {
-  const live = arr(O.tv && O.tv.live).filter((v) => v && app.isVideoId(v.id) && !isAmbience(v) && (geo() === 'everything' || isLocalCam(v)));
+  const live = arr(O.tv && O.tv.live).filter((v) => v && app.isVideoId(v.id) && !isAmbience(v) && geoKeeps(isLocalCam(v)));
   if (!live.length) return false;
   sec(host, 'Live', '', 'live');
   const r = videoRail(host, 'live');
   const items = live.map((v) => videoItem(v, { live: true })).filter(Boolean);
-  items.forEach((it) => r.appendChild(vcard(it, 'w220', items)));
+  items.forEach((it) => r.appendChild(vcard(it, 'w170', items)));
   app.know(items);
   return true;
 }
@@ -1146,14 +1151,14 @@ function drawLive(host) {
    recaps like Reuters and ABC World News Tonight … Full recap videos, not
    just one-off stories." scripts/gather_onair_news.py → data/onair-news.json:
    each show's full broadcast, monologue or headlines block, from the show's
-   own YouTube channel, the last seven days, newest first. Two sideways rows
-   right after Btown TV, the newscasts and late night, each with "See as a
-   list". They are national on purpose and plainly named, so they show on
+   own YouTube channel, the last seven days, newest first. Two lists right
+   after Btown TV, the newscasts and late night, in the same rows as Snack size
+   (Stephen, 2026-10-30: a sideways row of wide cards showed one and a half
+   videos at phone width). They are national on purpose and plainly named, so they show on
    Local too: hiding them behind the switch (Local is the default) would hide
    the section itself. In Topics they join News & politics. */
 const NEWS_URL = 'data/onair-news.json';
-const NEWS_GROUPS = [['newscast', 'news-cast', 'Tonight’s newscasts'], ['comedy', 'news-late', 'Late-night and comedy']];
-Object.assign(RAIL_NAMES, Object.fromEntries(NEWS_GROUPS.map(([, name, label]) => [name, label])));
+const NEWS_GROUPS = [['newscast', 'Tonight’s newscasts'], ['comedy', 'Late-night and comedy']];
 function loadNews(ok, fail) {
   if (app.demo) { load('news', ok, fail); return; }
   fetch(NEWS_URL, { cache: 'no-cache' }).then((r) => (r.ok ? r.json() : Promise.reject(new Error(String(r.status)))))
@@ -1161,7 +1166,7 @@ function loadNews(ok, fail) {
 }
 /* the file is ours, but its titles came off YouTube: every field is checked */
 function newsItem(f) {
-  if (!f || !app.isVideoId(f.id) || !f.t || !NEWS_GROUPS.some(([kind]) => kind === f.kind)) return null;
+  if (!f || !app.isVideoId(f.id) || !f.t || !(f.kind === 'sports' || NEWS_GROUPS.some(([kind]) => kind === f.kind))) return null;
   const sec = Math.max(0, Math.round(Number(f.sec) || 0));
   const show = clip(f.show, 60) || clip(f.ch, 60) || 'YouTube';
   const d = Number(f.d) || 0;
@@ -1170,44 +1175,72 @@ function newsItem(f) {
     href: 'https://www.youtube.com/watch?v=' + f.id,
     media: app.demo && f.art ? f.art : 'https://i.ytimg.com/vi/' + f.id + '/hqdefault.jpg',
     dur: sec ? fmtClock(sec) : '', sec, len: lengthOf(sec, ''), why: '', via: '', viaUrl: '',
-    ago: d ? agoShort(d) : '', d, topic: 'news', news: f.kind,
+    ago: d ? agoShort(d) : '', d, topic: f.kind === 'sports' ? 'sports' : 'news', news: f.kind, sk: String(f.sk || show),
   };
 }
-const newsPool = () => arr(O.news && O.news.items).map(newsItem).filter(Boolean).sort((a, b) => b.d - a.d);
+const newsAll = () => arr(O.news && O.news.items).map(newsItem).filter(Boolean);
+const newsPool = () => newsAll().filter((it) => it.news !== 'sports').sort((a, b) => b.d - a.d);
 /* the day it went up, as a reader says it: Today, Yesterday, Thursday */
 function newsDay(d) {
   if (!d) return '';
   const day = etDay(d * 1000);
   return day === todayKey() ? 'Today' : day === addDays(todayKey(), -1) ? 'Yesterday' : weekday(day);
 }
-/* a card: the show, the episode, its length and day, Watch now and ⋯ */
-function newsCard(it, list, run) {
-  const c = el('article', 'vcard w250 oa-newscard');
-  c.dataset.k = it.k;
-  c.dataset.run = run;
-  c._list = list;
-  c.innerHTML = '<span class="c-media r169" data-watch role="button" tabindex="0" aria-label="Watch ' + esc(it.src + ', ' + it.title) + '">' + art(it.media) +
-    (it.dur ? '<span class="dur">' + esc(it.dur) + '</span>' : '') + '</span>' +
-    '<span class="eyebrow">' + esc(it.src) + '</span><span class="t">' + esc(it.title) + '</span>' +
-    '<span class="s">' + esc([it.sec ? minutes(it.sec) : '', newsDay(it.d)].filter(Boolean).join(' · ')) + '</span>' + watchRow(it, 'pillbtn');
-  return c;
-}
 function drawNews(host) {
   const all = newsPool();
   if (!all.length) return false;
   sec(host, 'News recaps', '', 'news');
-  NEWS_GROUPS.forEach(([kind, name, label]) => {
+  NEWS_GROUPS.forEach(([kind, label]) => {
     const list = all.filter((it) => it.news === kind);
     if (!list.length) return;
-    /* each row in its own box, so an opened list's Collapse bar stays with it */
+    /* each list in its own box, so an opened list's Collapse bar stays with it */
     const g = el('div', 'oa-newsgroup');
     g.dataset.news = kind;
     host.appendChild(g);
-    divider(g, label);
-    const r = videoRail(g, name);
-    list.forEach((it) => r.appendChild(newsCard(it, list, label)));
+    const key = 'news:' + kind;
+    divider(g, label).dataset.openHead = key;
+    openable(g, key, label, list, BUCKET_SHOW, (it) => row(it, list, { run: label }), 'oa-rows');
   });
   app.know(all);
+  return true;
+}
+
+/* ----------------------------------------------------------------- recaps */
+const RECAP_DAYS = 8;
+const RECAPS_TITLE = 'Recaps';
+/* the lane's order; a show not named here follows, newest first */
+const RECAP_ORDER = ['nba:recap', 'nba:top', 'nfl:top', 'nhl', 'mlb', 'cnn10', 'reuters', 'abc', 'nbc', 'cbs', 'pbs',
+  'dailyshow', 'lwt', 'kimmel', 'seth', 'fallon', 'snl'];
+RAIL_NAMES.recaps = RECAPS_TITLE;
+/* the newest of each show that has one this week */
+function recaps() {
+  const since = Date.now() / 1000 - RECAP_DAYS * 86400;
+  const best = Object.create(null);
+  const put = (key, it) => { if (it.d >= since && (!best[key] || it.d > best[key].d)) best[key] = it; };
+  sports.items(O.sports).forEach((it) => { if (it.clipKind !== 'game') put(it.sport + ':' + it.clipKind, it); });
+  newsAll().forEach((it) => put(it.sk, it));
+  const named = RECAP_ORDER.filter((key) => best[key]).map((key) => best[key]);
+  return named.concat(Object.keys(best).filter((key) => !RECAP_ORDER.includes(key)).map((key) => best[key]).sort((a, b) => b.d - a.d));
+}
+function recapCard(it, list) {
+  const c = el('article', 'vcard oa-recap');
+  c.dataset.k = it.k;
+  c.dataset.run = RECAPS_TITLE;
+  c._list = list;
+  c.innerHTML = '<span class="c-media r169" data-watch role="button" tabindex="0" aria-label="Watch ' + esc(it.src + ', ' + it.title) + '">' + art(it.media) +
+    (it.dur ? '<span class="dur">' + esc(it.dur) + '</span>' : '') + '</span>' +
+    '<span class="eyebrow">' + esc(it.src) + '</span><span class="t" data-watch>' + esc(it.title) + '</span>' +
+    '<div class="oa-recapfoot"><span class="s">' + esc(newsDay(it.d)) + '</span>' +
+    '<button class="iconbtn oa-more" data-more aria-label="More for ' + esc(it.title) + '">' + MORE_ICON + '</button></div>';
+  return c;
+}
+function drawRecaps(host) {
+  const list = recaps();
+  if (!list.length) return false;
+  sec(host, RECAPS_TITLE, '', 'recaps');
+  const r = videoRail(host, 'recaps', 'tworow');
+  list.forEach((it) => r.appendChild(recapCard(it, list)));
+  app.know(list);
   return true;
 }
 
@@ -1217,7 +1250,7 @@ function drawNews(host) {
    visitor: the newsletter, not a summary of it. */
 function drawBrief(host) {
   const c = currentClip();
-  if (!c) return false;
+  if (!c || geo() === 'national') return false;
   const it = clipItem(c);
   app.know([it]);
   sec(host, 'The Brief, out loud', '', 'brief');
@@ -1410,21 +1443,20 @@ function registerEmbed(frame) {
 }
 
 function drawPodsHead(host) {
-  const every = geo() === 'everything';
-  sec(host, every ? 'Podcasts' : 'Local podcasts', '', 'pods');
+  sec(host, geo() === 'local' ? 'Local podcasts' : 'Podcasts', '', 'pods');
 }
 
 function drawPods(host) {
   const list = shows();
-  const local = list.filter((s) => s.local);
-  const away = geo() === 'everything' ? list.filter((s) => !s.local).slice(0, NATIONAL) : [];
+  const local = geo() === 'national' ? [] : list.filter((s) => s.local);
+  const away = geo() === 'local' ? [] : list.filter((s) => !s.local).slice(0, NATIONAL);
   const add = (s, opts) => {
     host.appendChild(showRow(s, opts));
     if (O.open[s.id]) host.appendChild(showEpisodes(s));
   };
   local.forEach((s) => add(s));
   if (away.length) {
-    divider(host, 'From away');
+    if (local.length) divider(host, 'From away');
     away.forEach((s) => add(s, { national: true }));
   }
   if (!local.length && !away.length && O.settled.pulse) host.appendChild(el('p', 'note pad', esc(O.failed.pulse ? 'The podcast feed didn’t load. It rides the same wire as the headlines and comes back on its own.' : 'No episodes right now.')));
@@ -1662,7 +1694,7 @@ function tvPlaylist() {
   return it;
 }
 function boardsList() {
-  if (geo() !== 'everything') return [];   // Local means local
+  if (geo() === 'local') return [];   // Local means local
   return arr(O.finds && O.finds.boards).map((b) => {
     if (!b || !b.t || !/^[a-z0-9-]{1,120}$/.test(String(b.slug || ''))) return null;
     const clips = arr(b.clips).filter((c) => c && app.isVideoId(c.id) && c.t).map((c) => {
@@ -1731,14 +1763,13 @@ function drawListsSide() {
 
 function drawPast(host) {
   const tv = O.tv;
-  const every = geo() === 'everything';
   const since = addDays(todayKey(), -PAST_DAYS);
   const nights = arr(O.tvEditions && O.tvEditions.editions)
     .filter((e) => e && isDate(e.edition) && e.edition >= since && (!tv || e.edition !== tv.edition))
     .sort((a, b) => (a.edition < b.edition ? 1 : -1))
     .map((e) => {
       /* Local means local: on Local a night is only its local videos, here and in its sheet */
-      const vids = [e.pick, ...shelvesOf(e).flatMap((s) => arr(s.items))].filter((v) => v && app.isVideoId(v.id) && (every || isLocalVideo(v)));
+      const vids = [e.pick, ...shelvesOf(e).flatMap((s) => arr(s.items))].filter((v) => v && app.isVideoId(v.id) && geoKeeps(isLocalVideo(v)));
       const n = vids.length;
       const lead = (e.pick && vids.includes(e.pick) ? e.pick : vids[0]) || null;
       return { e, n, lead };
@@ -1814,8 +1845,9 @@ function setLen(k) {
 
 function drawTVSide() {
   const S = O.slots;
-  ['pick', 'tv', 'news', 'more', 'topics', 'live', 'past', 'tvEnd'].forEach((n) => { S[n].innerHTML = ''; });
+  ['pick', 'recaps', 'tv', 'news', 'more', 'topics', 'live', 'past', 'tvEnd'].forEach((n) => { S[n].innerHTML = ''; });
   S.pick.hidden = !drawPick(S.pick);
+  S.recaps.hidden = !!O.len || !drawRecaps(S.recaps);
   const topics = view() === 'topics';
   S.topics.hidden = !topics || !drawTopics(S.topics);
   if (topics) {
@@ -1853,7 +1885,7 @@ function render() {
     const sportSide = side('sports');
     const mk = (host, name) => { const s = el('div'); s.dataset.slot = name; host.appendChild(s); return s; };
     O.slots = { tvSide, podSide, listSide,
-      pick: mk(tvSide, 'pick'), tv: mk(tvSide, 'tv'), news: mk(tvSide, 'news'), more: mk(tvSide, 'more'), topics: mk(tvSide, 'topics'), live: mk(tvSide, 'live'), past: mk(tvSide, 'past'), tvEnd: mk(tvSide, 'end'),
+      pick: mk(tvSide, 'pick'), recaps: mk(tvSide, 'recaps'), tv: mk(tvSide, 'tv'), news: mk(tvSide, 'news'), more: mk(tvSide, 'more'), topics: mk(tvSide, 'topics'), live: mk(tvSide, 'live'), past: mk(tvSide, 'past'), tvEnd: mk(tvSide, 'end'),
       brief: mk(podSide, 'brief'), podsHead: mk(podSide, 'pods-head'), own: mk(podSide, 'own'), pods: mk(podSide, 'pods'), podEnd: mk(podSide, 'end'),
       lists: mk(listSide, 'lists'), boards: mk(listSide, 'boards'), listEnd: mk(listSide, 'end'),
       sportSide, sports: mk(sportSide, 'sports'), sportEnd: mk(sportSide, 'end') };
@@ -1923,7 +1955,7 @@ function onClick(e) {
   if (night) {
     e.preventDefault();
     const ed = arr(O.tvEditions && O.tvEditions.editions).find((x) => x && x.edition === night.dataset.night);
-    if (ed) editionSheet(ed, nightOf(ed.edition) + (geo() === 'everything' ? '’s edition' : ', from here'), geo() !== 'everything');
+    if (ed) editionSheet(ed, nightOf(ed.edition) + (geo() === 'local' ? ', from here' : '’s edition'), true);
     return;
   }
   const show = e.target.closest('[data-show]');
@@ -1963,9 +1995,10 @@ function land() {
   if (k === 'brief') { const c = currentClip(); if (c) k = 'brief:' + c.date; }   // the old #listen/brief
   let hit = findHit(k);
   if (!hit && /^yt:/.test(k) && newsPool().some((x) => x.k === k)) {
-    /* a shared news recap: its row is in the feed, with every length */
+    /* a shared news recap: its row is in the feed, with every length, in its opened list */
     O.len = '';
     if (view() === 'topics') viewMem = 'feed';
+    O.exp['news:' + newsPool().find((x) => x.k === k).news] = 1;
     drawTVSide();
     hit = findHit(k);
   }
@@ -1982,14 +2015,14 @@ function land() {
        feed (Topics would hide where it is). */
     const it = allVideos().find((x) => x.k === k);
     if (it) {
-      if (!it.local && geo() !== 'everything') setGeo('everything');
+      if (!geoKeeps(it.local)) setGeo('everything');
       if (it.len) { O.len = it.len; O.focus = k; }
       if (view() === 'topics') viewMem = 'feed';
       drawTVSide();
       hit = findHit(k);
     }
   }
-  if (!hit && /^board:[a-z0-9-]{1,120}$/.test(k) && geo() !== 'everything' && arr(O.finds && O.finds.boards).some((b) => b && 'board:' + b.slug === k)) {
+  if (!hit && /^board:[a-z0-9-]{1,120}$/.test(k) && geo() === 'local' && arr(O.finds && O.finds.boards).some((b) => b && 'board:' + b.slug === k)) {
     /* a shared Clipsboard board, for a reader on Local: boards are Everything's */
     setGeo('everything');
     drawListsSide();
@@ -2044,7 +2077,7 @@ app.register(KEY, {
   promise: '',
   mount,
   activate(param) {
-    if (param === 'local' || param === 'everything') {
+    if (param === 'local' || param === 'national' || param === 'everything') {
       /* a link can set the shared switch: #onair/everything */
       O.pending = null;   // an explicit route replaces a link still waiting for its data
       setGeo(param);

@@ -1,6 +1,19 @@
 {
- "_": "Demo data for ?demo=1, in the shapes the live tab reads. Every person, plan and group here is invented. Plans are what nn_post_create takes (author, title, body, place, meta) plus the People table's extras (ages, meetup) and how many said they'd go; seeded into the demo board when the tab opens, posted `ago` hours ago, and starting `starts_in` hours from now (written into meta.when the way the compose sheet writes it, so the demo never shows a plan that has passed). Events are all-day/data/whatnow.json's shape, dated from _anchor and moved to the reader's day: four are Stephen's own Meetup group, the rest are the calendar's other events, mixers and not (a toddler music time that must never count as one). Groups are data/groups.json's shape. Directory rows are what nn_people_directory() reads (the opt-in table joined to the profile), with `on` saying whether they joined: only the on ones may ever show.",
+ "_": "Demo data for ?demo=1, in the shapes the live tab reads. Every person, plan and group here is invented. Plans are what nn_post_create takes (author, title, body, place, meta) plus the People table's extras (ages, meetup) and how many said they'd go; seeded into the demo board when the tab opens, posted `ago` hours ago, and starting `starts_in` hours from now (written into meta.when the way the compose sheet writes it, so the demo never shows a plan that has passed). Events are all-day/data/whatnow.json's shape, dated from _anchor and moved to the reader's day: six are Stephen's own Meetup group, the rest are the calendar's other events, mixers and not (a toddler music time that must never count as one). Groups are data/groups.json's shape. Directory rows are what nn_people_directory() reads (the opt-in table joined to the profile), with `on` saying whether they joined: only the on ones may ever show.",
  "_anchor": "2026-10-16",
+ "sceneHandles": ["demo_pickuplakeside", "demo_quietreaders", "demo_goldenhoursocial", "demo_youngprosbtv", "demo_openmicsundays"],
+ "instagramPosts": [
+  {"h": "demo_pickuplakeside", "ts": 1792148400, "i": "mustard", "u": "https://www.instagram.com/p/DemoScene1/", "w": 480, "c": "Pickup soccer Sunday morning. All levels, bring a light and a dark shirt.", "s": "do", "kind": "poster"},
+  {"h": "demo_quietreaders", "ts": 1792094400, "i": "plum", "u": "https://www.instagram.com/p/DemoScene2/", "w": 480, "c": "Bring your book. An hour of reading, then whoever wants to stays and talks.", "s": "do", "kind": "poster"},
+  {"h": "demo_goldenhoursocial", "ts": 1792058400, "i": "dawn", "u": "https://www.instagram.com/p/DemoScene3/", "w": 480, "c": "Thirty and up dance night at the old mill. Doors at eight.", "s": "do", "kind": "poster"},
+  {"h": "demo_youngprosbtv", "ts": 1791979200, "i": "teal", "u": "https://www.instagram.com/p/DemoScene4/", "w": 480, "c": "Our next meet-up is at the waterfront. Come say hello and bring a friend.", "s": "do", "kind": "poster"},
+  {"h": "demo_openmicsundays", "ts": 1791914400, "i": "neon", "u": "https://www.instagram.com/p/DemoScene5/", "w": 480, "c": "Open mic was packed last night. Sign-ups start at seven next week too.", "s": "do", "kind": "vibe"},
+  {"h": "demo_pickuplakeside", "ts": 1791770400, "i": "field", "u": "https://www.instagram.com/p/DemoScene6/", "w": 480, "c": "Sunset game on the lower field. Twelve showed up and nobody kept score.", "s": "do", "kind": "vibe"},
+  {"h": "demo_quietreaders", "ts": 1791662400, "i": "coffee", "u": "https://www.instagram.com/p/DemoScene7/", "w": 480, "c": "New spot for November: the back room with the good chairs.", "s": "do", "kind": "poster"},
+  {"h": "demo_goldenhoursocial", "ts": 1790438400, "i": "night", "u": "https://www.instagram.com/p/DemoScene8/", "w": 480, "c": "Last month's party.", "s": "do", "kind": "poster"},
+  {"h": "demo_youngprosbtv", "ts": 1792137600, "i": "lake", "u": "https://www.instagram.com/p/DemoScene9/", "w": 480, "c": "A view from the office.", "s": "do", "kind": "scenic"},
+  {"h": "demo_a_restaurant", "ts": 1792144800, "i": "cherry", "u": "https://www.instagram.com/p/DemoScene10/", "w": 480, "c": "Soup of the day.", "s": "do", "kind": "poster"}
+ ],
  "plans": [
   {
    "author": {
@@ -99,6 +112,36 @@
   }
  ],
  "events": [
+  {
+   "id": "dm7",
+   "title": "Sunday walk at Oakledge",
+   "start": "2026-10-25T10:00:00-04:00",
+   "date": "2026-10-25",
+   "end": "2026-10-25T11:30:00-04:00",
+   "url": "https://www.meetup.com/burlington-social-activites-group/events/demo-7/",
+   "category": "outdoors",
+   "allDay": false,
+   "venue": "Oakledge Park",
+   "town": "Burlington",
+   "tags": [
+    "social"
+   ]
+  },
+  {
+   "id": "dm8",
+   "title": "Game night with the crew",
+   "start": "2026-10-27T18:30:00-04:00",
+   "date": "2026-10-27",
+   "end": "2026-10-27T20:30:00-04:00",
+   "url": "https://www.meetup.com/burlington-social-activites-group/events/demo-8/",
+   "category": "games",
+   "allDay": false,
+   "venue": "The Boardroom",
+   "town": "Burlington",
+   "tags": [
+    "social"
+   ]
+  },
   {
    "id": "dm1",
    "title": "BTown Coffee Club",

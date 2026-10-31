@@ -84,7 +84,17 @@ const iso = (hoursAgo) => new Date(NOW - hoursAgo * 3600000).toISOString();
 const post = (id, sub, title, hoursAgo, extra = {}) => ({ id, sub, title, url: 'https://www.reddit.com/' + sub + '/comments/' + id + '/x/',
   kind: 'self', comments: null, nsfw: null, created: iso(hoursAgo), ...extra });
 
-test('asksFrom: food asks only, newest first, r/vermont only when it is Burlington', () => {
+test('asksFrom: a food thread people talk about counts, and words outside food do not', () => {
+  const got = asksFrom({ v: 1, posts: [
+    post('t1', 'r/burlington', 'Bluebird BBQ closing.', 2, { comments: 246, kind: 'link' }),
+    post('t2', 'r/burlington', 'Bluebird BBQ closing soon', 3, { comments: 2 }),
+    post('t3', 'r/vermont', 'Do people in Vermont speak French?', 3, { comments: 150 }),
+    post('t4', 'r/burlington', 'Confirming my hatred of the pine/maple st. light', 3, { comments: 69 }),
+  ] }, NOW);
+  assert.deepEqual(got.map((a) => a.title), ['Bluebird BBQ closing.']);
+});
+
+test('asksFrom: food asks and talked-about food threads, newest first', () => {
   const intake = { v: 1, removed: { gone1: '2026-10-18T00:00:00Z' }, posts: [
     post('a1', 'r/burlington', 'Sushi recs', 30, { comments: 12 }),
     post('a2', 'r/burlington', 'Best ramen', 2),
@@ -100,9 +110,9 @@ test('asksFrom: food asks only, newest first, r/vermont only when it is Burlingt
     post('a2', 'r/burlington', 'Best ramen', 2),
   ] };
   const got = asksFrom(intake, NOW);
-  assert.deepEqual(got.map((a) => a.title), ['Best ramen', 'Where to get good dumplings in Winooski?', 'Sushi recs']);
-  assert.deepEqual(got.map((a) => a.sid), ['r-burlington', 'r-vermont', 'r-burlington']);
-  assert.equal(got[2].comments, 12);
+  assert.deepEqual(got.map((a) => a.title), ['Best ramen', 'Where to take her for Sunday brunch?', 'Where to get good dumplings in Winooski?', 'Sushi recs']);
+  assert.deepEqual(got.map((a) => a.sid), ['r-burlington', 'r-vermont', 'r-vermont', 'r-burlington']);
+  assert.equal(got[3].comments, 12);
   assert.equal(got[0].comments, null);
   assert.equal(got[0].k, got[0].url);
   assert.equal(got[0].d, Math.floor((NOW - 2 * 3600000) / 1000));

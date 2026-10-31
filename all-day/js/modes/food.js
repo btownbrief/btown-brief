@@ -6,7 +6,7 @@
 
    Top to bottom, and the chip row is the table of contents. The freshest
    section leads whatever is listed here (2026-10-18): Asked on Reddit while
-   it has a thread under three days old, else In their own words while it has
+   it has a thread under three days old, then In their own words while it has
    pictures; otherwise the order below. Open now is the same list all day, so
    it comes after.
 
@@ -53,12 +53,14 @@
      questions, most asked first: a card per question, a sheet with its
      threads and the Seven Daysies pick where the directory has one. The
      answers live in the threads; nothing here picks a winner.
-   - In their own words. Reels from the kitchens and food accounts tagged in
-     data/instagram-handles.json (`food`) or listed in the directory, from
-     all-day/data/instagram.json, minus the directory's `not_food` accounts.
-     A reel plays only on a tap, in the shell's one video box. Its MP4 is
-     signed for about a day and a half, so one about to lapse is shown as a
-     photo instead; with no reels at all, the accounts' latest photos.
+   - In their own words. Photos and reels from the kitchens and food accounts
+     tagged in data/instagram-handles.json (`food`) or listed in the directory,
+     from all-day/data/instagram.json, minus the directory's `not_food`
+     accounts and any post whose `kind` says it is not about food: the last
+     two weeks, newest first, one square grid (ui.js moreGrid) that opens on
+     six tiles (Stephen, 2026-10-30). A reel plays only on a tap, in the
+     shell's one video box. Its MP4 is signed for about a day and a half, so
+     one about to lapse is shown as a photo instead.
    - Feature a dish. One photo, one line, where it is from, the consent box.
      A dish you loved somewhere or one you made at home: the form asks which
      (At a place / Made at home). The photo queue has no field for that, and
@@ -74,7 +76,7 @@
 import * as app from '../app.js';
 import * as store from '../store.js';
 import * as data from '../wire.js';
-import { el, esc, safeHref, ICON, art, mark, section, listRail, collapseBar, chips, pills, button, agoShort, cards as feedCards, put } from '../ui.js';
+import { el, esc, safeHref, ICON, art, mark, section, moreGrid, collapseBar, chips, pills, button, agoShort, cards as feedCards, put } from '../ui.js';
 import { asksFrom, directoryFrom, GROUPS } from '../food-asks.js';
 import { sectionBar } from '../sections.js';
 
@@ -106,7 +108,10 @@ const FAR_MI = 40;                         // a reader further than this from Ch
 const CHURCH_ST = [44.4758, -73.2128];   // food-lib's anchor for "walkable"
 const FIRST_ROWS = 12;                     // the list opens in place past these
 const DECK_MAX = 12;                       // cards before the deck's end card
-const RAIL_MAX = 12;
+const RAIL_MAX = 12;                       // a place's own "Their food" sheet
+const FEED_DAYS = 14;                      // In their own words looks back this far
+const FEED_MAX = 48;                       // and holds this many tiles
+const FEED_KINDS = new Set(['food', 'vibe']);   // the builder's `kind`; a post without one stays in
 const LINE_MAX = 140;
 const VIDEO_MARGIN = 30 * 60;              // a reel this close to lapsing shows as a photo
 const LATE = 23 * 60;                      // "Open late": until 11 pm or later (restaurants.html)
@@ -115,7 +120,7 @@ const ASKS_STALE = 15 * 60000;             // the Reddit asks are fetched again 
 const DEAL_DAYS = 60;                      // a deal last verified longer ago than this is not shown
 const Q_FIRST = 12;                        // Best of r/burlington opens in place past these
 
-const SECTIONS = [['bite', 'The Bite'], ['open', 'Open now'], ['deals', 'Deals'], ['asks', 'Asked'], ['best', 'Best of'], ['kitchens', 'Kitchens'], ['add', 'Feature a dish']];
+const SECTIONS = [['bite', 'The Bite'], ['open', 'Open now'], ['deals', 'Deals'], ['asks', 'Reddit'], ['best', 'Best of'], ['kitchens', 'Kitchens'], ['add', 'Feature a dish']];
 const FRESH_ASK_DAYS = 3;                  // an ask this young is fresh enough to lead the tab
 
 /* ------------------------------------------------------------------ state */
@@ -214,6 +219,7 @@ function loadAsks() {
 function takeBest(j) {
   S.best = directoryFrom(j);
   if (!S.best.length) { S.best = null; S.bestFailed = true; }
+  paint('asks');
 }
 
 /* restaurants.json lists a dozen places twice (two names for one Google
@@ -533,15 +539,13 @@ function render() {
 
 /* The freshest thing leads (Stephen, 2026-10-18: "when someone opens a tab,
    the fresh content is the first thing they see"): the Reddit asks while one
-   is under three days old, else In their own words while it has anything,
-   else the tab's old order. Open now is a list that is always the same, so
+   is under three days old, then In their own words while it has anything,
+   then the tab's old order. Open now is a list that is always the same, so
    it comes after. */
 const freshAsk = () => asksShown().some((a) => Date.now() / 1000 - a.d <= FRESH_ASK_DAYS * 86400);
-const leadKey = () => (freshAsk() ? 'asks' : kitchenFood().length ? 'kitchens' : null);
 function order() {
-  const lead = leadKey();
-  const keys = SECTIONS.map(([k]) => k);
-  return lead ? [lead].concat(keys.filter((k) => k !== lead)) : keys;
+  const lead = (freshAsk() ? ['asks'] : []).concat(kitchenFood().length ? ['kitchens'] : []);
+  return lead.concat(SECTIONS.map(([k]) => k).filter((k) => !lead.includes(k)));
 }
 /* put the slots in order() without redrawing any of them; a no-op while
    they already are */
@@ -990,22 +994,38 @@ function tint(id) {
 const askItem = (a) => ({ k: a.k, kind: 'headline', href: a.url, title: a.title, src: a.sub, sid: a.sid, local: true,
   ago: agoShort(a.d), d: a.d, comments: a.comments == null ? '' : a.comments, open: 'Open the thread' });
 const asksShown = () => (S.asks || []).filter((a) => !store.isMuted(a.sid));
+/* under the last ten days, the threads the Best of keeps, newest year first */
+const ASKS_FIRST = 16;
+function olderThreads(fresh) {
+  if (!S.best || store.isMuted('r-burlington')) return [];
+  const seen = new Set(fresh.map((a) => a.url));
+  const out = [];
+  S.best.forEach((q) => q.threads.forEach((t) => {
+    if (seen.has(t.url)) return;
+    seen.add(t.url);
+    out.push({ k: t.url, kind: 'headline', href: t.url, title: t.label, src: 'r/burlington', sid: 'r-burlington', local: true,
+      ago: t.year ? String(t.year) : '', year: t.year || 0, comments: '', open: 'Open the thread' });
+  }));
+  return out.sort((a, b) => b.year - a.year);
+}
 
 function paintAsks(host) {
   const sub = outLink('r/burlington', SUB_URL, 'btn ghost sm');
   if (!S.asks) {
-    section(host, 'Asked on Reddit', null, sub);
+    section(host, 'On Reddit', null, sub);
     host.appendChild(S.asksFailed ? el('p', 'note pad', esc('Didn’t load. Try again later.')) : el('p', 'loading', 'Loading the threads…'));
     return;
   }
   const list = asksShown();
-  section(host, 'Asked on Reddit', list.length ? '<b>' + esc(plural(list.length, 'thread', 'threads')) + '</b> · newest first' : null, sub);
-  if (!list.length) { host.appendChild(el('p', 'note pad', esc(S.asks.length ? 'You muted these subreddits.' : 'No new food questions.'))); return; }
-  const items = app.know(list.map(askItem));
+  const older = olderThreads(list);
+  const all = app.know(list.map(askItem).concat(older));
+  section(host, 'On Reddit', all.length ? '<b>' + esc(plural(all.length, 'thread', 'threads')) + '</b> · newest first' : null, sub);
+  if (!all.length) { host.appendChild(el('p', 'note pad', esc(S.asks.length ? 'You muted these subreddits.' : 'No new food questions.'))); return; }
   const feed = el('div', 'feed asks');
-  items.forEach((it) => put(feed, feedCards.row(it, { noComments: it.comments === '', greenLocal: true })));
+  (S.asksAll ? all : all.slice(0, Math.max(ASKS_FIRST, list.length))).forEach((it) => put(feed, feedCards.row(it, { noComments: it.comments === '', greenLocal: true })));
   app.bindFeed(feed);
   host.appendChild(feed);
+  if (!S.asksAll && all.length > Math.max(ASKS_FIRST, list.length)) host.appendChild(button('All ' + all.length + ' ' + ICON.arrow, 'ghost more', () => { S.asksAll = true; paint('asks'); }));
 }
 
 /* ---------------------------------------------------- Best of r/burlington */
@@ -1093,42 +1113,35 @@ const isFood = (p) => {
 const keyOf = (p) => { const m = /\/(?:p|reel)\/([A-Za-z0-9_-]+)/.exec(p.u); return 'ig-' + (m ? m[1] : p.h + '-' + p.ts); };
 const hasClip = (p, nowS) => typeof p.vu === 'string' && /^https:\/\//.test(p.vu) && Number(p.ve) - nowS > VIDEO_MARGIN;
 
-/* the kitchens' pictures worth showing, newest first (none while they load) */
+/* the kitchens' posts worth showing, newest first (none while they load) */
 function kitchenFood() {
   if (!S.posts || !S.foodSet || !S.dir) return [];
   const nowS = Date.now() / 1000;
-  return S.posts.filter((p) => isFood(p) && pictureOk(p, nowS)).sort((a, b) => b.ts - a.ts);
+  const since = nowS - FEED_DAYS * 86400;
+  return S.posts.filter((p) => isFood(p) && pictureOk(p, nowS) && Number(p.ts) > since && (!p.kind || FEED_KINDS.has(p.kind)))
+    .sort((a, b) => b.ts - a.ts).slice(0, FEED_MAX);
 }
 
 function paintKitchens(host) {
+  const head = section(host, 'In their own words');
   if (!S.posts || !S.foodSet || !S.dir) {
-    section(host, 'In their own words');
     host.appendChild(S.igFailed ? el('p', 'note pad', esc('Didn’t load. Try again later.')) : el('p', 'loading', 'Loading the kitchens…'));
     return;
   }
-  const nowS = Date.now() / 1000;
   const food = kitchenFood();
-  const clipsList = food.filter((p) => hasClip(p, nowS)).slice(0, RAIL_MAX);
-  if (clipsList.length) {
-    section(host, 'In their own words');
-    const r = listRail(host, { name: 'food-clips', label: 'In their own words', cells: 140 });
-    clipsList.forEach((p) => r.appendChild(clipCard(p)));
-    return;
-  }
-  section(host, 'In their own words');
   if (!food.length) { host.appendChild(el('p', 'note pad', 'Nothing new this week.')); return; }
-  const r = listRail(host, { name: 'food-photos', label: 'In their own words', cells: 140 });
-  food.slice(0, RAIL_MAX).forEach((p) => r.appendChild(photoCard(p)));
+  const nowS = Date.now() / 1000;
+  moreGrid(host, { name: 'kitchens', label: 'In their own words', head, cells: food.map((p) => (hasClip(p, nowS) ? clipCard(p) : photoCard(p))) });
 }
 
 const who = (p) => trim('@' + p.h, 18);
 const when = (p) => (Number(p.ts) ? agoShort(p.ts) : '');
 
 function clipCard(p) {
-  const c = el('a', 'vcard vert clip');
+  const c = el('a', 'vcard clip');
   c.href = safeHref(p.u);
   c.dataset.k = keyOf(p);
-  c.innerHTML = '<span class="c-media">' + art(p.i) + '<span class="play">' + ICON.play + '</span>' + (p.vd ? '<span class="dur">' + esc(mmss(p.vd)) + '</span>' : '') + '</span>' +
+  c.innerHTML = '<span class="c-media r11">' + art(p.i) + '<span class="play">' + ICON.play + '</span>' + (p.vd ? '<span class="dur">' + esc(mmss(p.vd)) + '</span>' : '') + '</span>' +
     '<span class="t">' + esc(who(p)) + '</span><span class="s">' + esc([trim(p.c, 60), when(p)].filter(Boolean).join(' · ')) + '</span>';
   c.setAttribute('aria-label', 'Play the video from ' + who(p));
   c.addEventListener('click', (e) => { e.preventDefault(); openClip(p); });
@@ -1136,7 +1149,7 @@ function clipCard(p) {
 }
 
 function photoCard(p) {
-  const c = el('a', 'vcard w150');
+  const c = el('a', 'vcard');
   c.href = safeHref(p.u);
   c.target = '_blank';
   c.rel = 'noopener';

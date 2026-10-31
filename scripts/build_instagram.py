@@ -70,6 +70,12 @@ FOOD. A post gets `f: 1` when its account's category is `food`, or when the
 account carries `"food": true` (a bar, a brewery or a market that belongs on
 the Food tab too). Food reads it.
 
+NATIONAL. An account with `"national": true` is from away. It takes the
+category `national` whatever else its entry says and never `f`, so nothing
+that reads a category or the food flag can pick it up; its posts carry `n: 1`,
+which the switch (Local, National, Everything) reads. It has its own cap, so
+it cannot push a local post out.
+
 KIND. Every post also carries `kind`, what the PICTURE is, for the Photos
 chips: vibe (a room, a crowd, a night out), poster (a flyer for a dated
 event), food, pets, scenic, other. The account's category is only the first
@@ -163,14 +169,19 @@ PENDING_MAX_H = 6             # a --reserve older than this is not executed
 # places back, and writes what it has, leaving ~10 minutes for the tagged
 # shelf, the kind calls and the write.
 FETCH_BUDGET_S = 20 * 60
+# What one run reserves. A run gets through about 92 accounts inside
+# FETCH_BUDGET_S (about 13 seconds each, 2026-10-30), and credits reserved past
+# that stay spent with no request behind them. Two runs a day at this cap cover
+# the roster's 173 a day: tier 2 daily, tier 3 about weekly.
+RUN_MAX = 92
 ONLY_MAX = 5                  # --only is a small local test, never a second schedule
-CATEGORIES = ("food", "venue", "events", "shop", "pets", "scenic", "other")
+CATEGORIES = ("food", "venue", "events", "shop", "pets", "scenic", "other", "national")
 
 # One cap per category, so a chip never comes up empty because another kind
-# of account posts more. About 1.25 KB a post: the caps total ~600 posts,
-# ~750 KB, against 388 posts and 483 KB before the bigger roster.
+# of account posts more. About 1.25 KB a post: the caps total ~630 posts,
+# ~790 KB, against 388 posts and 483 KB before the bigger roster.
 CAP = {"food": 150, "venue": 90, "events": 100, "shop": 60, "pets": 50,
-       "scenic": 90, "other": 60}
+       "scenic": 90, "other": 90, "national": 132}
 TAGGED_CAP = 12
 
 # @btownbrief's numeric id (the tagged-posts endpoint takes ids, not handles).
@@ -357,7 +368,7 @@ def tagged_record(it: dict, cutoff: float, now: float | None = None) -> dict | N
         rec["w"] = w
     cap = caption_of(it)
     if cap:
-        rec["c"] = cap[:400]
+        rec["c"] = cap[:1000]
     if it.get("media_type") == 2 or it.get("is_video"):
         rec["v"] = 1
         add_video(rec, it, now if now is not None else time.time())
@@ -480,7 +491,7 @@ def post_record(h: str, it: dict, cutoff: float, now: float | None = None) -> di
         rec["w"] = w
     cap = caption_of(it)
     if cap:
-        rec["c"] = cap[:400]
+        rec["c"] = cap[:1000]
     if it.get("media_type") == 2 or it.get("is_video"):
         rec["v"] = 1
         add_video(rec, it, now if now is not None else time.time())
@@ -542,8 +553,8 @@ def fair_cap(recs: list[dict], n: int) -> list[dict]:
 
 def load_roster(path: pathlib.Path | None = None) -> list[dict]:
     """The roster's `accounts`, cleaned: one dict per handle with `h`, `tier`,
-    `category`, `s` (`do` or `see`, kept on posts for older readers) and
-    `food`.
+    `category`, `s` (`do` or `see`, kept on posts for older readers), `food`
+    and `national`.
 
     A typo must not stop a build or cost money, so bad values fail CHEAP: an
     unknown tier becomes 3 (the least often fetched), an unknown category
@@ -570,9 +581,13 @@ def load_roster(path: pathlib.Path | None = None) -> list[dict]:
         if cat not in CATEGORIES:
             fixed.append(f"{h}: category {cat!r} -> other")
             cat = "other"
+        national = a.get("national") is True or cat == "national"
+        if national:
+            cat = "national"
         out.append({"h": h, "tier": tier, "category": cat,
                     "s": "see" if a.get("s") == "see" else "do",
-                    "food": cat == "food" or a.get("food") is True})
+                    "food": not national and (cat == "food" or a.get("food") is True),
+                    "national": national})
     if dupes:
         log(f"WARNING: {len(dupes)} duplicate handle(s), first entry kept: {', '.join(dupes[:6])}")
     if fixed:
@@ -1072,6 +1087,7 @@ def main() -> int:
         skipped = [a["h"] for a in pool[credits:]]
         want_tagged = False         # "just these": never the tagged shelf
     else:
+        credits = min(credits, RUN_MAX)
         picked, want_tagged, skipped = plan(accounts, ledger["last"], now, credits,
                                             tagged=not args.no_tagged)
 
@@ -1211,6 +1227,7 @@ def fetch_and_build(args, picked: list[dict], want_tagged: bool,
     cat_of = {a["h"]: a["category"] for a in accounts}
     seg_of = {a["h"]: a["s"] for a in accounts}
     food = {a["h"] for a in accounts if a["food"]}
+    national = {a["h"] for a in accounts if a["national"]}
     cutoff = now - KEEP_DAYS * 86400
 
     # Read the previous payload. Which of its posts we KEEP is decided after
@@ -1341,6 +1358,10 @@ def fetch_and_build(args, picked: list[dict], want_tagged: bool,
             rec["f"] = 1
         else:
             rec.pop("f", None)
+        if rec["h"] in national:
+            rec["n"] = 1
+        else:
+            rec.pop("n", None)
         # A post URL identifies a post. The account URL does not — it is the
         # fallback for a post with no shortcode, and keying on it would fold
         # every shortcode-less post from that handle into one.
@@ -1350,6 +1371,8 @@ def fetch_and_build(args, picked: list[dict], want_tagged: bool,
     tagged_by_key = {}
     for rec in tagged:
         rec["category"] = cat_of.get(rec["h"], "other")
+        if rec["h"] in national:
+            rec["n"] = 1
         tagged_by_key[rec.get("u") or f"{rec['h']}:{rec['ts']}"] = rec
 
     # Cap each category on its own, one post per account at a time, then
@@ -1402,6 +1425,7 @@ def fetch_and_build(args, picked: list[dict], want_tagged: bool,
         # Posts that carry a playable MP4 right now, and the food-tagged ones.
         "videos": sum(1 for r in posts if r.get("vu")),
         "food": sum(1 for r in posts if r.get("f")),
+        "national": sum(1 for r in posts if r.get("n")),
         "posts": posts,
     }
 

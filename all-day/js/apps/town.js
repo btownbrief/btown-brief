@@ -1,5 +1,5 @@
-/* Town: living here (APP-MAP.html, app 6). Wave 1 (2026-10-29) built all
-   five tabs as modes, one file each in js/modes/ named by the tab's key
+/* Town: living here (APP-MAP.html, app 6). Wave 1 (2026-10-29) built the
+   tabs as modes, one file each in js/modes/ named by the tab's key
    (main.js loads modes/<key>.js), sharing js/modes/town-kit.js:
 
      feed      everything that changed, one feed, newest first: home sales
@@ -10,6 +10,8 @@
                the budget, watch parties from People's board
      streets   notable permits, construction projects, the street-report
                board, the 60-day sold list, the blotter's counts
+     square    the Wire's Square, the same code (modes/square.js hosts
+               modes/wire-square.js); All Day's Wire stays home for #wire
      guides    the City Guide's guide pages, a first-30-days checklist,
                and the guides still to come
      work      jobs by day and who's hiring
@@ -32,6 +34,7 @@ export default {
       top: ['Meetings', 'Votes', 'Elections', 'Money', 'Vote together'] },
     { mode: 'streets', label: 'Streets', icon: 'cone',
       top: ['Going in', 'Torn up', 'Report', 'Sold', 'Blotter'] },
+    { mode: 'square', label: 'Square', icon: 'people' },
     { mode: 'guides', label: 'Guides', icon: 'book',
       top: ['All guides', 'New here', 'Local news'] },
     { mode: 'work', label: 'Jobs', icon: 'briefcase',

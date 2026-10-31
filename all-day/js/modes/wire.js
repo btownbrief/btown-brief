@@ -25,8 +25,9 @@
      divider, lead first then newest first, the picks left out, the
      "N new since you were here" line
    - then, with no stop, yesterday's frozen edition, the day before, and so on
-     as far as the archive goes (30 days), each day under its head with its
-     own What mattered block first. The river is long by design (up to
+     as far as the archive goes (30 days), each day under its turn (the day
+     just read, the head, a week of days as buttons) with its own What
+     mattered block first. The river is long by design (up to
      300 a day), so it is drawn in chunks as the reader nears the bottom; the
      time dividers and the day heads are the landmarks. When the editions run
      out the page says so.
@@ -34,8 +35,8 @@
    Unfiltered is a sub-view of this tab, not a tab: every headline on
    pulse.json, newest first or by outlet, the outlet chips, search.
 
-   Photo mode (wire-photos.js) is the other way to read the tab: the News ·
-   Photos · Square switch turns the paper into one feed of pictures
+   Photo mode (wire-photos.js) is another way to read the tab: the News ·
+   Recaps · Square · Photos switch turns the paper into one feed of pictures
    (neighbors' photos and art, the gallery, local Instagram; never the
    news), newest first. The choice is kept on the phone; #wire/photos opens
    it, and the old #art and #photos land there too.
@@ -51,7 +52,7 @@ import * as photos from './wire-photos.js';
 import * as square from './wire-square.js';
 import * as recaps from './wire-recaps.js';
 import * as boards from '../boards.js';
-import { el, esc, safeHref, ICON, mark, cards, chips, pills, button, divider, section, localSwitch, geo, setGeo, put, collapseBar } from '../ui.js';
+import { el, esc, safeHref, ICON, mark, cards, chips, pills, button, divider, section, localSwitch, geo, geoKeeps, setGeo, put, collapseBar } from '../ui.js';
 import { liquify } from '../liquid.js';
 
 const FIRST = 60;        // cards on the first screenful (DESIGN.md §9 rule 14: sixty in under 100ms)
@@ -102,9 +103,12 @@ const SPORT_ORDER = ['nba', 'nfl', 'nhl', 'tennis', 'mlb', 'local', 'college'];
 const NEWS_KEY = 'allday-wire-news';   // Feed or Topics, kept on the phone
 /* the three ways to read the tab, in words (his girlfriend, 2026-10-17:
    the list and photo icons "looked like the same information") */
-const MODES = [['news', 'News'], ['photos', 'Photos'], ['square', 'Square'], ['recaps', 'Recaps']];
+const MODES = [['news', 'News'], ['recaps', 'Recaps'], ['square', 'Square'], ['photos', 'Photos']];
 /* each word's water, a colour token */
-const MODE_WATER = ['--liq-news', '--liq-photos', '--liq-square', '--liq-recaps'];
+const MODE_WATER = ['--liq-news', '--liq-recaps', '--liq-square', '--liq-photos'];
+/* the words of a day's end */
+const TURN_DONE = (day) => 'That’s ' + day;
+const WEEK_TILES = 7;
 const NUMBER = ['none', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve', 'thirteen',
   'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen'];
 const TENS = ['', '', 'twenty', 'thirty', 'forty', 'fifty', 'sixty', 'seventy', 'eighty', 'ninety'];
@@ -218,11 +222,12 @@ function toCard(it, sources, isToday) {
        anything else, is `other`, which has no chip) */
     chip: SPORTS[it.sport] ? String(it.sport) : it.sport ? 'other' : '',
     site: String(it.site || (sources[it.src] && sources[it.src].site) || ''),
+    line: it.ch === 'newsletters' && typeof it.line === 'string' ? it.line : '',
   };
   if (Number(it.votes)) c.votes = Number(it.votes);      // demo only; real counts come from the shell
   if (c.ch === 'x' || c.ch === 'facebook') {
     /* the bot's one-line summary is the text; the link is always the original post */
-    Object.assign(c, { kind: 'post', text: c.ch === 'facebook' ? ownVoice(it.title) : it.title, title: '', via: KIND_LABEL[c.ch], open: c.ch === 'x' ? 'Open on X' : 'Open the post' });
+    Object.assign(c, { kind: 'post', text: c.ch === 'facebook' ? square.ownVoice(it.title) : it.title, title: '', via: KIND_LABEL[c.ch], open: c.ch === 'x' ? 'Open on X' : 'Open the post' });
     if (it.handle) c.handle = it.handle;
   }
   if (Number.isInteger(it.comments) && it.comments > 0) {
@@ -236,24 +241,6 @@ function toCard(it, sources, isToday) {
     if (poster && (yt || app.demo)) Object.assign(c, { kind: 'video', media: poster, thumb: '', yt });
   }
   return c;
-}
-
-/* Muse writes each Facebook post up as "Someone is sharing the 1877 map
-   ...", "Someone is asking for ...": a robot narrating a neighbour, four
-   times in a row (the reviewers, 2026-10-19). Until its brief asks for the
-   post's own words (wire-inbox/briefs/muse-task.md), the river drops the
-   narrator: "Someone is sharing the 1877 map" reads "The 1877 map", and
-   "Someone is asking for a plumber" reads "Asking for a plumber". Nothing
-   is added; a line this does not recognise is left as it came. */
-const NARRATOR = /^(?:someone|a member|a user|a neighbou?r|the poster|one member)\s+(?:is|was)\s+/i;
-const SAYS = /^(?:sharing|announcing|promoting|posting|recounting|showing|highlighting|advertising|offering|reporting|noting|celebrating|reminding (?:people|everyone|members) (?:of|about|that)|pointing out|warning(?: people| everyone| members)? (?:about|of|that))\s+(?:that\s+)?/i;
-function ownVoice(t) {
-  const s = String(t || '').trim();
-  if (!NARRATOR.test(s)) return s;
-  let rest = s.replace(NARRATOR, '');
-  if (SAYS.test(rest)) rest = rest.replace(SAYS, '');
-  if (rest.length < 12) return s;
-  return rest.charAt(0).toUpperCase() + rest.slice(1);
 }
 
 /* A payload, once, as days of cards. Cached on the payload object. */
@@ -316,7 +303,7 @@ function loadMutes() {
   MUTE = Object.create(null);
   Object.keys(store.muted()).forEach((id) => { MUTE[id] = 1; MUTE[canon(id)] = 1; });
 }
-const seen = (c) => !MUTE[c.sid] && (geo() === 'everything' || c.local || !!follows[c.sid]);
+const seen = (c) => !MUTE[c.sid] && (geoKeeps(c.local) || (geo() === 'local' && !!follows[c.sid]));
 const shows = (c) => seen(c) && (W.ch === 'all' || c.ch === W.ch) && (W.topic === 'all' || c.topic === W.topic) &&
   (W.topic !== 't:sports' || W.sport === 's:all' || c.chip === W.sport.slice(2));
 /* Sports and Markets read their lanes, the rest the river */
@@ -331,9 +318,8 @@ const greenOf = (c) => !!c.local && geo() === 'everything';
 /* Chip counts: the pipeline's own, unless a mute or a follow changes what
    this reader sees that day, in which case they are counted here. */
 function countsOf(d) {
-  const scope = geo() === 'local' ? 'local' : 'everything';
   const touched = d.all.some((c) => MUTE[c.sid] || (follows[c.sid] && !c.local));
-  const given = d.counts[scope];
+  const given = d.counts[geo()];   // the pipeline counts Local and Everything, National is counted here
   if (given && !touched && given.all === d.all.filter(seen).length) return given;
   const out = { all: 0 };
   d.all.forEach((c) => { if (seen(c)) { out.all++; out[c.ch] = (out[c.ch] || 0) + 1; } });
@@ -392,7 +378,7 @@ function loadEdition(date) {
 }
 
 /* --------------------------------------------------------------- subnav */
-/* News · Photos · Square is a pill that floats over the paper and stays
+/* News · Recaps · Square · Photos is a pill that floats over the paper and stays
    on screen as you scroll (Stephen, 2026-10-19: "that's how important it
    is"). Once the banner at the top of the paper has scrolled away, a small
    second row floats under it with the same two controls the banner leads
@@ -407,7 +393,7 @@ function modeRow() {
   g.setAttribute('aria-label', 'Read the Wire as');
   /* the Square holds its place, unseen, until the board answers; once it
      has said it is not open, its place goes, so four words never show a
-     hole between Photos and Recaps */
+     hole between Recaps and Photos */
   const modes = MODES.map((m, i) => [...m, MODE_WATER[i]]).filter(([key]) => key !== 'square' || W.squareOk !== false);
   modes.forEach(([key, label]) => {
     const on = W.mode === key && W.view === 'paper';
@@ -471,7 +457,7 @@ const dayRowShown = () => W.view === 'paper' && ((W.mode === 'news' && W.ch !== 
 /* the row that floats: the day and the switch on News, the switch alone on
    Photos (Local is Burlington's pictures, Everything adds the world's), the
    day alone on Recaps (a recap is the whole of X, never local or not) */
-const topRowShown = () => dayRowShown() || (W.view === 'paper' && W.mode === 'photos');
+const topRowShown = () => W.view === 'paper' && (W.mode === 'news' || W.mode === 'recaps' || W.mode === 'photos');
 function topRow(cls) {
   const row = el('div', cls);
   row.append(dayRowShown() ? dayPager() : el('span', 'wtop-sp'));
@@ -482,7 +468,7 @@ function dayPager() {
   const row = el('div', 'wday');
   row.setAttribute('role', 'group');
   row.setAttribute('aria-label', 'Edition');
-  const prev = el('button', 'wday-nav prev', ICON.left);
+  const prev = el('button', 'wday-nav prev', ICON.left + '<span class="w"></span>');
   const next = el('button', 'wday-nav next', ICON.right);
   prev.type = next.type = 'button';
   prev.setAttribute('aria-label', 'Earlier day');
@@ -500,17 +486,23 @@ function fillPager(row) {
   const date = W.reading || W.start || W.shownDay || tk;
   row.dataset.of = date;
   /* as long as the width allows: "Monday, October 19", "Monday, Oct 19",
-     "Mon, Oct 19" (the CSS shows one) */
+     "Mon, Oct 19", "Oct 19" (the CSS shows one) */
   const wd = weekday(date);
   row.querySelector('.t').innerHTML = '<span class="d-l">' + esc(dayName(date)) + '</span><span class="d-m">' + esc(wd + ', ' + shortDay(date)) +
-    '</span><span class="d-s">' + esc(wd.slice(0, 3) + ', ' + shortDay(date)) + '</span>';
-  fitDay(row);
-  row.querySelector('.prev').disabled = !olderThan(date);
+    '</span><span class="d-s">' + esc(wd.slice(0, 3) + ', ' + shortDay(date)) + '</span><span class="d-x">' + esc(shortDay(date)) + '</span>';
+  /* the way back says where it goes; the way forward shows only when there is one */
+  const prev = row.querySelector('.prev');
+  const older = olderThan(date);
+  prev.disabled = !older;
+  prev.querySelector('.w').textContent = older ? weekday(older).slice(0, 3) : '';
   /* the paper is leading with an earlier day because today has nothing yet:
      there is no later day to go to */
-  row.querySelector('.next').disabled = date >= tk || (!W.start && !!W.shownDay && date === W.shownDay);
+  const next = row.querySelector('.next');
+  next.disabled = date >= tk || (!W.start && !!W.shownDay && date === W.shownDay);
+  row.classList.toggle('last', next.disabled);
+  fitDay(row);
 }
-/* the longest of the three that fits beside Local / Everything: a long
+/* the longest of these that fits beside Local / Everything: a long
    weekday ("Wednesday, Oct 21") at 390 takes the short form instead of
    pushing the switch off the screen. Hidden (nothing laid out) it keeps
    the CSS's pick, and the pill's ellipsis is the net for anything longer. */
@@ -518,7 +510,7 @@ function fitDay(row) {
   const t = row.querySelector('.t');
   delete row.dataset.fit;
   if (!t || !t.clientWidth || t.scrollWidth <= t.clientWidth + 1) return;
-  for (const f of ['m', 's']) {
+  for (const f of ['m', 's', 'x']) {
     row.dataset.fit = f;
     if (t.scrollWidth <= t.clientWidth + 1) return;
   }
@@ -673,7 +665,7 @@ function filtersUI(band) {
   if (W.view === 'paper' && W.mode === 'square') {
     if (square.loaded()) {
       h('Kind of post');
-      f.appendChild(chips(square.typeChips().map((c) => ({ ...c, icon: c.cls ? DOT : '' })), square.type(), (k) => { square.setType(k); changed(); }));
+      f.appendChild(chips(square.typeChips(), square.type(), (k) => { square.setType(k); changed(); }));
     }
     clear();
     return f;
@@ -681,7 +673,7 @@ function filtersUI(band) {
   loadMutes();
   const d = startDay();
   const counts = d ? countsOf(d) : {};
-  if (chipHidden(d, W.ch)) W.ch = 'all';
+  if (chipHidden(d, W.ch) || (geo() === 'national' && (W.ch === 'facebook' || W.ch === 'reddit'))) W.ch = 'all';
   /* a kind with nothing in it today is left out, unless it is the one on */
   const kinds = KINDS.filter(([k]) => !chipHidden(d, k))
     .map(([key, lab]) => ({ key, label: lab, n: key === 'all' ? null : key === 'instagram' ? igCount() : (counts[key] || 0),
@@ -797,13 +789,15 @@ square.init({
 });
 /* ------------------------------------------------------------- Recaps */
 /* The day's recaps, newest first, each a big card (wire-recaps.js). The
-   day pager walks the frozen editions, which keep their recaps. Before
-   today's first recap the page shows the latest day that has some, as the
-   paper does with its top stories. */
+   day pager walks the frozen editions, which keep their recaps. The day's
+   newsletter editions run among them by time. Before today's first the page
+   shows the latest day that has some, as the paper does with its top
+   stories. */
 recaps.init({
   clock,
   open: (id) => openRecap(id),
   all: () => setMode('recaps'),
+  letters: (p) => dayOf(p).all.filter((c) => c.ch === 'newsletters' && !MUTE[c.sid]).sort((a, b) => b.d - a.d),
 });
 /* the day Recaps shows, and its payload; `need` is an earlier edition
    that has to load before the page can say whether to lead with it */
@@ -811,10 +805,10 @@ function recapDay() {
   const tk = todayKey();
   if (W.start) return { date: W.start, p: payloadFor(W.start) };
   const p = payloadFor(tk);
-  if (p && recaps.recapsOf(p).length) return { date: tk, p };
+  if (p && recaps.feedOf(p).length) return { date: tk, p };
   const prev = W.noEarlier === tk ? null : olderThan(tk);
   const pp = prev && payloadFor(prev);
-  if (pp && recaps.recapsOf(pp).length) return { date: prev, p: pp, borrowed: true };
+  if (pp && recaps.feedOf(pp).length) return { date: prev, p: pp, borrowed: true };
   return { date: tk, p, need: prev && !pp ? prev : null };
 }
 let recapSeq = 0;
@@ -841,29 +835,41 @@ function renderRecaps() {
   const feed = el('div', 'feed wire wrecaps');
   root.appendChild(feed);
   paperTop(root);
-  const all = r.p ? recaps.recapsOf(r.p) : [];
-  if (W.rkind !== 'all' && !all.some((x) => x.kind === W.rkind)) W.rkind = 'all';
-  const list = W.rkind === 'all' ? all : all.filter((x) => x.kind === W.rkind);
+  const all = r.p ? recaps.feedOf(r.p) : [];
+  const ofKind = (x) => (W.rkind === recaps.LETTERS ? !!x.letter : !!x.recap && x.recap.kind === W.rkind);
+  if (W.rkind !== 'all' && !all.some(ofKind)) W.rkind = 'all';
+  const list = W.rkind === 'all' ? all : all.filter(ofKind);
   const isToday = r.date === tk;
   const h = el('div', 'whead');
   h.innerHTML = '<h2>' + esc((isToday ? 'Today’s' : weekday(r.date) + '’s') + ' recaps') + '</h2>';
-  if (all.length) h.appendChild(el('div', 'whead-row', '<span class="s">' + esc(plural(all.length, 'recap', 'recaps') + (all[0].at ? ' · latest ' + clock(all[0].at) : '')) + '</span>'));
+  const nLetters = all.filter((x) => x.letter).length;
+  const said = [all.length > nLetters && plural(all.length - nLetters, 'recap', 'recaps'), nLetters && plural(nLetters, 'newsletter', 'newsletters'),
+    all.length && all[0].at && 'latest ' + clock(all[0].at)].filter(Boolean).join(' · ');
+  if (said) h.appendChild(el('div', 'whead-row', '<span class="s">' + esc(said) + '</span>'));
   feed.appendChild(h);
   if (!list.length) feed.appendChild(el('p', 'empty wrc-empty', esc(isToday ? 'No recaps yet today.' : 'No recaps that day.')));
-  list.forEach((x) => feed.appendChild(recapCard(x)));
-  /* the day before, one tap away */
+  list.forEach((x) => feed.appendChild(x.letter ? letterCard(x.letter) : recapCard(x.recap)));
+  /* the days before, one tap away */
   const prev = olderThan(r.date);
-  if (prev) {
-    const b = button(ICON.left + ' ' + esc(weekday(prev) + '’s recaps'), 'ghost wmore-btn wrc-prev', () => goDay(prev));
-    b.type = 'button';
-    feed.appendChild(b);
-  }
+  if (prev) feed.appendChild(weekOfDays(r.date, prev));
+  app.bindFeed(feed, { onSource: sourceSheet, onMute: muteSource });
+  hydrateVotes(feed, list.filter((x) => x.letter).map((x) => x.letter.k));
   painted(root);
   if (W.rFlash) {
     const k = 'rc:' + W.rFlash;
     W.rFlash = null;
     if (!app.flashHit(root, k)) app.toast('That recap has moved on.');
   }
+}
+/* a newsletter edition in Recaps: who sent it and when, the subject linking
+   out, the sender's one line, star and share */
+function letterCard(c) {
+  const node = cards.story({ ...c, thumb: '', via: '' }, { cls: 'wletter' });
+  if (!node) return node;
+  const head = el('div', 'wl-head', mark(c.src) + '<button type="button" class="srcbtn" data-src="' + esc(c.sid) + '">' + esc(c.src) + '</button>' +
+    '<span class="rc-when">' + esc(c.d ? clock(c.d * 1000) : '') + '</span>');
+  node.querySelector('.w-body').prepend(head);
+  return node;
 }
 /* a recap's card; "Show all N" and Collapse redraw just that card */
 function recapCard(x) {
@@ -960,6 +966,8 @@ function renderPhotos(opts = {}) {
 function landPhoto() {
   const k = W.photoOpen;
   if (!k) return;
+  /* a shared post from the other side of the switch: flip it and draw again */
+  if (geo() !== 'everything' && photos.igHidden(k)) { setGeo('everything'); app.paintSubnav(); render(); return; }
   W.photoOpen = null;
   if (app.flashHit(W.root, k) && photos.openPicture(k)) return;
   app.toast('That photo has moved on.');
@@ -969,7 +977,7 @@ photos.init({
   now: () => SRC.now(),
   clockReady: () => (app.demo ? demo.init() : Promise.resolve()),
   ago,
-  visible: (v) => !(v.sid && MUTE[v.sid]),
+  visible: (v) => !(v.sid && MUTE[v.sid]) && geoKeeps(v.local),
   green: () => true,
   hydrate: (host, keys) => hydrateVotes(host, keys),
   panel: () => W.panel,
@@ -979,7 +987,8 @@ photos.init({
   squareOk: () => !!W.squareOk,
   squareReady: () => squareReady(),
   pickCat: (k) => pickCat(k),
-  everything: () => geo() === 'everything',
+  wide: () => geo() !== 'local',
+  national: () => geo() === 'national',
   /* the day's pictures from everywhere (the payload key may still settle) */
   world: () => (W.today && (W.today.photos_world || W.today.world_photos)) || [],
 });
@@ -997,6 +1006,30 @@ function startDay() {
   return p ? dayOf(p) : null;
 }
 
+/* A week of days as buttons, oldest on the left: the day before filled, the
+   day being read outlined. The newer days stay on it, so a reader far back
+   can come forward. The tile the narrowest phone drops is never either. */
+function weekOfDays(read, before) {
+  const tk = todayKey();
+  const dates = [tk].concat(editionDates().filter((d) => d < tk));
+  const at = Math.max(0, dates.indexOf(read));
+  const from = Math.max(0, Math.min(at - 2, dates.length - WEEK_TILES));
+  const week = dates.slice(from, from + WEEK_TILES).reverse();
+  const spare = week.length === WEEK_TILES ? week.find((d) => d !== read && d !== before) : null;
+  const row = el('div', 'wturn-days');
+  row.setAttribute('role', 'group');
+  row.setAttribute('aria-label', 'Days');
+  week.forEach((d) => {
+    const b = el('button', 'wturn-day' + (d === before ? ' before' : '') + (d === read ? ' read' : '') + (d === spare ? ' spare' : ''),
+      '<span>' + esc(weekday(d).slice(0, 3)) + '</span><b>' + Number(d.slice(8)) + '</b>');
+    b.type = 'button';
+    b.setAttribute('aria-label', dayName(d));
+    if (d === read) b.setAttribute('aria-current', 'date');
+    b.addEventListener('click', () => goDay(d));
+    row.appendChild(b);
+  });
+  return row;
+}
 function goDay(date) {
   const tk = todayKey();
   W.start = !date || date >= tk ? null : date;
@@ -1309,7 +1342,7 @@ function briefPin(d) {
   return wireCls(cards.lead({ ...d.brief, media: '', thumb: '', why: '' }, { tag: 'The Brief', greenLocal: greenOf(d.brief), meta: geoMeta(d.brief) }), d.brief);
 }
 function mattersOf(d) {
-  const keep = (x) => seen(x.c) && (x.c.local || geo() === 'everything');
+  const keep = (x) => seen(x.c) && (x.c.local || geo() !== 'local');
   return { list: d.picks.filter(keep), earlier: d.earlier.filter(keep) };
 }
 const mattersKeys = (d) => { const { list, earlier } = mattersOf(d); return list.concat(earlier).map((x) => x.c.k); };
@@ -1347,7 +1380,7 @@ function asItStood(d, at) {
     else { out.push({ ...carried[ci], n: r }); ci++; }
     r++;
   }
-  const keep = (x) => seen(x.c) && (x.c.local || geo() === 'everything');
+  const keep = (x) => seen(x.c) && (x.c.local || geo() !== 'local');
   return out.filter(keep);
 }
 /* Morning · Midday · Evening, in Filters; only when there was more than
@@ -1513,7 +1546,7 @@ function entriesFor(run, date, p) {
     const n = p ? countsOf(dayOf(p)).all : 0;
     const yest = date === dayBefore(tk);
     const parts = dayName(date).split(', ');
-    out.push({ head: date, title: yest ? 'Yesterday' : parts[0],
+    out.push({ head: date, after: run.lastDate, title: yest ? 'Yesterday' : parts[0],
       sub: (yest ? dayName(date) : parts[1] || '') + ' · ' + (!p || p.final ? plural(n, 'story', 'stories') : 'as it stood at ' + clock(Date.parse(p.updated))) });
   }
   const d = p ? dayOf(p) : null;
@@ -1572,7 +1605,7 @@ function entriesFor(run, date, p) {
     const kind = (W.ch === 'all' ? '' : ' from ' + (KINDS.find((x) => x[0] === W.ch) || ['', W.ch])[1]) + topic;
     out.push({ note: date === tk
       ? (unfiltered() && !(d && d.all.length) ? 'Nothing yet today.' : 'Nothing' + kind + ' today so far.')
-      : 'Nothing' + (kind || (geo() === 'local' ? ' local' : '')) + ' that day.' });
+      : 'Nothing' + (kind || (geo() === 'everything' ? '' : ' ' + geo())) + ' that day.' });
   }
   return out;
 }
@@ -1595,7 +1628,7 @@ function loadIg() {
   return W.igP;
 }
 function igRows() {
-  return photos.igList(W.ig).filter((v) => !MUTE[v.sid]);
+  return photos.igList(W.ig).filter((v) => !MUTE[v.sid] && geoKeeps(v.local));
 }
 function igCount() { return W.ig ? igRows().length : null; }
 let igRun = null;
@@ -1696,9 +1729,10 @@ function fill(run) {
           run.loading = true;
           run.sentinel.textContent = 'Loading ' + weekday(date) + '…';
           loadEdition(date).then(() => { run.loading = false; fill(run); }, () => {
+            const after = run.lastDate;
             run.loading = false;
             run.lastDate = date;
-            run.queue.push({ head: date, title: dayName(date), sub: 'didn’t load' }, { note: 'That edition didn’t load. The next one is below.' });
+            run.queue.push({ head: date, after, title: dayName(date), sub: 'didn’t load' }, { note: 'That edition didn’t load. The next one is below.' });
             fill(run);
           });
         }
@@ -1711,11 +1745,16 @@ function fill(run) {
     const e = run.queue.shift();
     let node = null;
     if (e.head) {
+      /* the turn of the day: the one just read, the head, the week. The
+         reader who scrolls on simply keeps going into it */
+      if (e.after) run.feed.insertBefore(el('p', 'wturn-done', esc(TURN_DONE(weekday(e.after)))), run.sentinel);
       const h = el('div');
       section(h, e.title, esc(e.sub));
-      node = h.firstChild;
-      node.dataset.day = e.head;
-      run.breaks.push({ date: e.head, node });
+      const head = h.firstChild;
+      head.dataset.day = e.head;
+      run.feed.insertBefore(head, run.sentinel);
+      run.breaks.push({ date: e.head, node: head });
+      node = weekOfDays(e.after || e.head, e.head);
     } else if (e.divider) {
       const h = el('div');
       divider(h, e.divider, e.sub);
@@ -2090,7 +2129,7 @@ function landPhotos(p) {
   if (W.mode !== 'photos') { W.mode = 'photos'; photos.remember('photos'); }
   /* a shared picture is found under All; one from everywhere, on Everything */
   if (k) photos.setCat('all');
-  if (/^pw:/.test(k) && geo() !== 'everything') setGeo('everything');
+  if (/^pw:/.test(k) && geo() === 'local') setGeo('everything');
   W.photoOpen = k || null;
   app.paintSubnav(); render();
   if (!k) app.scrollTop();
@@ -2104,6 +2143,7 @@ function landSquareParam(p) {
     W.view = 'paper';
     if (W.mode !== 'square') { W.mode = 'square'; photos.remember('square'); }
     W.squareOpen = p.startsWith('square/') ? p.slice(7) : null;
+    if (W.squareOpen) square.showAll();
     app.paintSubnav(); render();
     if (!W.squareOpen) app.scrollTop();
   });
@@ -2116,7 +2156,7 @@ function land() {
   if (!p || (!W.today && !W.failed) || !W.idxDone) return;
   W.pending = null;
   W.wantSquare = false;
-  if (p === 'local' || p === 'everything') { setGeo(p); W.view = 'paper'; app.paintSubnav(); render(); return; }
+  if (p === 'local' || p === 'national' || p === 'everything') { setGeo(p); W.view = 'paper'; app.paintSubnav(); render(); return; }
   if (p === 'news') { if (W.mode !== 'news') setMode('news'); return; }
   /* #wire/recaps, #wire/recaps/<date>, #wire/recaps/<recap id> */
   if (p === 'recaps' || p.startsWith('recaps/')) {
@@ -2242,7 +2282,7 @@ function mount(root) {
     /* today has no ranking yet: the page can now lead with the latest day that does */
     if (W.view === 'paper' && W.mode === 'news' && !W.start && W.ch !== 'instagram' && (!W.panel || W.panel.scrollTop < 120) && needsEarlier()) render();
     /* Recaps with none yet today can now lead with the day before */
-    if (W.view === 'paper' && W.mode === 'recaps' && !W.start && W.today && !recaps.recapsOf(W.today).length) render();
+    if (W.view === 'paper' && W.mode === 'recaps' && !W.start && W.today && !recaps.feedOf(W.today).length) render();
     if (app.activeTab() === 'wire') paintFilters();
     /* the day's ‹ can now see the days before */
     if (W.reading) paintDateline(W.reading);

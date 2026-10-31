@@ -6,16 +6,23 @@
 
    Top to bottom, and the chip row is the table of contents:
 
+   - New in. The shops' own Instagram posts from the last two weeks
+     (all-day/data/instagram.json, the accounts data/vintage-shops.json
+     names), each a photo credited to its account and linked to the post.
+     It leads because it is the one section that changes on its own every
+     day (Stephen, 2026-10-30). No posts, no section. A grid that grows down
+     on purpose (Stephen, 2026-10-22: "I want to see more rows"): three rows
+     of two on a phone, then "See more" for the next rows, and the shell's
+     Collapse bar folds it back once it has grown. Make a tee's designs grow
+     the same way (ui.js moreGrid).
    - Fit checks. `fit` posts with an approved photo, newest first, as a row
-     of photo tiles at the very top, so the first screen at 390 wide shows
-     the fits and the start of Spotted this week. A tile opens the post's
-     own board card in a sheet, where the vote ("Love this fit"), share,
-     report and delete live. "Post" in the row's head is the same fit
-     check form as before; a fit check needs a photo and lasts 60 days.
+     of photo tiles. A tile opens the post's own board card in a sheet,
+     where the vote ("Love this fit"), share, report and delete live.
+     "Post" in the row's head is the fit check form; a fit check needs a
+     photo and lasts 60 days.
    - Spotted this week. Vintage board posts of kind `spotted` (boards.js):
      a reader saw something on a rack that wasn't their size and posted it
-     so someone else can get it; one plain line under the head says so,
-     because a first-time reader asked what it was for. Two up, the shop, size and price, days
+     so someone else can get it. Two up, the shop, size and price, days
      left, the board's vote as "I'd want this", share and report. A post
      lasts three weeks (boards-core.js). The poster can mark their own find
      "Someone got it": boards.put() ticks the post's `got` box, it leaves
@@ -23,16 +30,9 @@
      posted here found a home lately (the board's got finds, plus, for this
      month, ones this device took down before the box existed). That line
      is the whole of "thrift points" at launch.
-   - Swaps, right under Spotted (Stephen, 2026-10-17: "I should probably
-     put that up top"). Board posts of kind `swap`: what I have, what I'd
-     take, size.
-   - New in. The shops' own Instagram posts from the last two weeks
-     (all-day/data/instagram.json, the accounts data/vintage-shops.json
-     names), each a photo credited to its account and linked to the post.
-     No posts, no section. A grid that grows down on purpose (Stephen,
-     2026-10-22: "I want to see more rows"): three rows of two on a phone,
-     then "See more" for the next rows, and the shell's Collapse bar folds
-     it back once it has grown. Make a tee's designs grow the same way.
+   - Swaps. Board posts of kind `swap`: what I have, what I'd take, size.
+     An empty board is its head and its Post button, nothing else.
+   - Make a tee, then Top designs. See below.
    - The shop guide. data/vintage-shops.json (scripts/build_vintage_shops.py
      from data/things.json): every vintage, thrift, consignment and antique
      shop in greater Burlington the Brief's guide has a street address for,
@@ -61,9 +61,8 @@
      (all-day/data/merch-designs.json, scripts/build_merch_rail.py), each a
      link to its page in the shop, where the Printify mockups on a model
      live, the shop itself the row's last tile. "Send in your design" is the
-     button in that same head, one block (2026-10-18), and the block sits
-     right after the first section with items rather than last. It is one
-     image through the photo queue
+     button in that same head, one block (2026-10-18), above the shop guide.
+     It is one image through the photo queue
      with the consent box, a name, a line, and free shirts or store credit
      (never cash): a `design` post, the choice in its `thanks` field.
      Stephen sees it in the photo desk and the boards desk. Approved ones
@@ -87,7 +86,7 @@ import * as data from '../wire.js';
 import * as boards from '../boards.js';
 import { message } from '../boards-core.js';
 import { sectionBar } from '../sections.js';
-import { el, esc, safeHref, ICON, art, section, button, pills, cards, agoShort, listRail, collapseBar } from '../ui.js';
+import { el, esc, safeHref, ICON, art, section, button, pills, cards, agoShort, listRail, moreGrid } from '../ui.js';
 
 const KEY = 'vintage';
 const SHOPS_URL = '../data/vintage-shops.json';
@@ -102,17 +101,10 @@ const NEW_IN_DAYS = 14;
 const NEW_IN_MAX = 48;       // New in grows down on purpose now, so it holds more than a row
 const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
-const SECTIONS = [['fit', 'Fit checks'], ['spotted', 'Spotted'], ['swaps', 'Swaps'], ['newin', 'New in'], ['shops', 'Shops'], ['tees', 'Make a tee']];
-/* the slots, in their resting order: `sent` is the designs neighbors sent
-   in, as Top designs, and always follows `tees` */
-const SLOTS = ['fit', 'spotted', 'swaps', 'newin', 'shops', 'tees', 'sent'];
-/* Make a tee (with the Top designs row under it) is not last any more
-   (Stephen, 2026-10-18: "so far down"). Fit checks, Spotted and Swaps are
-   the neighbors' trio he asked to keep together at the top, so while any of
-   the three has items the block follows the trio; otherwise it follows the
-   first of New in and Shops that has items, and the end while none does. */
-const TRIO = ['fit', 'spotted', 'swaps'];
-const BEFORE_TEES = TRIO.concat(['newin', 'shops']);
+const SECTIONS = [['newin', 'New in'], ['fit', 'Fit checks'], ['spotted', 'Spotted'], ['swaps', 'Swaps'], ['tees', 'Make a tee'], ['shops', 'Shops']];
+/* the slots, in page order: `sent` is the designs neighbors sent in, as Top
+   designs, and always follows `tees` */
+const SLOTS = ['newin', 'fit', 'spotted', 'swaps', 'tees', 'sent', 'shops'];
 
 /* the guide's own map stack, as Food loads it (events.html, things-to-do.html):
    Leaflet from unpkg with its integrity hashes, OpenStreetMap's tiles, on the
@@ -234,7 +226,12 @@ function loadLive() {
     paint('newin');
     paint('shops');               // a shop with no photo of its own takes its newest post
     if (app.activeTab() === KEY) app.paintSubnav();
-  }, () => { S.posts = []; });
+  }, () => {
+    S.posts = [];
+    paint('newin');
+    paint('shops');
+    if (app.activeTab() === KEY) app.paintSubnav();
+  });
   data.fetchJSON(DESIGNS_URL, 8000).then((j) => { S.designs = Array.isArray(j && j.designs) ? j.designs : []; S.designsTotal = Number(j && j.total) || null; })
     .catch(() => { S.designsFailed = true; })
     .then(() => { paint('tees'); land(); });
@@ -255,6 +252,7 @@ const panel = () => (root ? root.closest('.panel') : null);
 /* A section the reader was just sent to (a chip, a deep link) is scrolled
    to once more if a late load moves sections around it, settled after the
    whole batch of paints; the reader taking the scroll over cancels it. */
+const SETTLE_MS = 20000;         // a slow New in can land this late: fetchJSON waits 8s before its fallback
 let jumped = null, settleT = 0, watching = null;
 function jump(k) {
   if (!slots || !slots[k]) return;
@@ -262,14 +260,14 @@ function jump(k) {
   const p = panel();
   if (p && watching !== p) {
     watching = p;
-    ['wheel', 'touchstart', 'keydown'].forEach((ev) => p.addEventListener(ev, () => { jumped = null; }, { passive: true }));
+    ['wheel', 'touchstart', 'pointerdown', 'keydown'].forEach((ev) => p.addEventListener(ev, () => { jumped = null; }, { passive: true }));
   }
   app.jumpTo(slots[k]);
 }
 function resettle() {
   clearTimeout(settleT);
   settleT = setTimeout(() => {
-    if (jumped && Date.now() - jumped.t < 6000 && app.activeTab() === KEY && slots && slots[jumped.k]) app.jumpTo(slots[jumped.k]);
+    if (jumped && Date.now() - jumped.t < SETTLE_MS && app.activeTab() === KEY && slots && slots[jumped.k]) app.jumpTo(slots[jumped.k]);
   }, 60);
 }
 
@@ -326,7 +324,7 @@ function paint(k) {
   host.innerHTML = '';
   ({ fit: paintFit, spotted: paintSpotted, newin: paintNewIn, shops: paintShops, swaps: paintSwaps, tees: paintTees, sent: paintSent })[k](host);
   if (panel() && app.activeTab() === KEY) panel().scrollTop = y;
-  if ((BEFORE_TEES.includes(k) || k === 'tees') && placeTees()) resettle();
+  resettle();                     // New in sits on top: anything drawn late moves what is under it
 }
 
 /* Board posts, two up, on the shell's board card, or in a row (`rail`, its
@@ -360,16 +358,18 @@ const findMeta = (p) => [p.meta.shop, p.meta.size ? 'Size ' + p.meta.size : '', 
 const swapMeta = (p) => [p.meta.want ? 'For ' + p.meta.want : '', p.meta.size ? 'Size ' + p.meta.size : ''].filter(Boolean).join(' · ');
 const noMeta = () => '';
 
-function boardNote(host, what, failed) {
+/* An empty board is its head and its Post button; this only speaks up when
+   the board itself is off or didn't load. */
+function boardNote(host, failed) {
   if (S.off) host.appendChild(el('p', 'note pad', esc('Posting opens soon.')));
   else if (failed) host.appendChild(el('p', 'note pad', esc('The board didn’t load.')));
-  else host.appendChild(el('p', 'note pad', esc(what)));
 }
 
-function addRow(host, label, fn) {
-  const r = el('div', 'linkrow addrow');
-  r.appendChild(button(ICON.plus + ' ' + esc(label), '', fn));
-  host.appendChild(r);
+/* the Post button in a board's head */
+function postBtn(label, act, fn) {
+  const b = button(ICON.plus + ' ' + esc(label), 'ghost sm', fn);
+  b.dataset.act = act;
+  return b;
 }
 
 /* ------------------------------------------------------- Spotted this week */
@@ -382,14 +382,12 @@ function thanksLine() {
 }
 
 function paintSpotted(host) {
-  section(host, 'Spotted this week');
-  host.appendChild(el('p', 'note pad vwhy', esc('Saw something great that wasn’t your size? Post it so someone else can grab it.')));
+  section(host, 'Spotted this week', null, postBtn('Post a find', 'vfind', composeFind));
   host.appendChild(thanksLine());
+  if (S.spotted === null) { host.appendChild(el('p', 'note pad', esc('Checking the racks…'))); return; }
+  if (!S.spotted.length) { boardNote(host, S.failed); return; }
   host.appendChild(el('div', 'spacer'));
-  if (S.spotted === null) host.appendChild(el('p', 'note pad', esc('Checking the racks…')));
-  else if (!S.spotted.length) boardNote(host, 'Nothing spotted right now.', S.failed);
-  else grid(host, S.spotted, { name: 'spotted', meta: findMeta, vote: 'I’d want this', got: true });
-  addRow(host, 'Post a find', composeFind);
+  grid(host, S.spotted, { name: 'spotted', meta: findMeta, vote: 'I’d want this', got: true });
 }
 
 function composeFind() {
@@ -719,12 +717,8 @@ function shopSheet(i, view) {
 }
 
 /* ------------------------------------------------------------------- Swaps */
-function paintSwaps(host) {
-  section(host, 'Swaps');
-  if (S.swaps === null) host.appendChild(el('p', 'note pad', esc('Checking the swap shelf…')));
-  else if (!S.swaps.length) boardNote(host, 'No swaps right now.', S.swapsFailed);
-  else grid(host, S.swaps, { name: 'swaps', meta: swapMeta, vote: 'I’d take this' });
-  addRow(host, 'Post a swap', () => boards.compose({
+function composeSwap() {
+  boards.compose({
     board: KEY, kind: 'swap', heading: 'Post a swap', title: 'What you have', titlePlaceholder: 'M crewneck, forest green',
     fields: [
       { key: 'want', label: 'What you’d take for it', placeholder: 'An L flannel, or free', max: 80 },
@@ -733,24 +727,15 @@ function paintSwaps(host) {
     body: 'More', bodyPlaceholder: 'Condition, and when you can meet', place: 'Neighborhood', placePlaceholder: 'Old North End',
     notes: ['A trade or free, no money. Up for three weeks.'],
     cta: 'Post the swap',
-  }));
+  });
 }
 
-/* Where Make a tee then Top designs go (see TRIO); the chips use the same order. */
-const hasItems = (k) => ({ fit: S.fit && S.fit.length, spotted: S.spotted && S.spotted.length, swaps: S.swaps && S.swaps.length,
-  newin: newIn().length, shops: S.shops && S.shops.length })[k];
-const teeAfter = () => (TRIO.some(hasItems) ? 'swaps' : ['newin', 'shops'].find(hasItems) || 'shops');
-function placeTees() {
-  if (!slots || !slots.tees) return false;
-  const at = slots[teeAfter()];
-  if (at.nextElementSibling === slots.tees && slots.tees.nextElementSibling === slots.sent) return false;
-  at.after(slots.tees, slots.sent);
-  return true;
+function paintSwaps(host) {
+  section(host, 'Swaps', null, postBtn('Post a swap', 'vswap', composeSwap));
+  if (S.swaps === null) host.appendChild(el('p', 'note pad', esc('Checking the swap shelf…')));
+  else if (!S.swaps.length) boardNote(host, S.swapsFailed);
+  else grid(host, S.swaps, { name: 'swaps', meta: swapMeta, vote: 'I’d take this' });
 }
-const sectionOrder = () => {
-  const after = teeAfter();
-  return SECTIONS.filter(([k]) => k !== 'tees').flatMap((x) => (x[0] === after ? [x, SECTIONS.find(([k]) => k === 'tees')] : [x]));
-};
 
 /* -------------------------------------------------------------- Make a tee */
 /* One block: the designs, and "Send in your design" as the button in its
@@ -823,7 +808,7 @@ function paintSent(host) {
 }
 
 /* --------------------------------------------------------------- Fit check */
-/* A row of photo tiles at the top. A tile is the post's picture, title and
+/* A row of photo tiles. A tile is the post's picture, title and
    first name; tapping it opens the post's own board card in a sheet, so
    the vote, share, report and delete are the board's, as everywhere. */
 function paintFit(host) {
@@ -832,7 +817,7 @@ function paintFit(host) {
   post.setAttribute('aria-label', 'Post a fit check');
   section(host, 'Fit checks', null, post);
   if (S.fit === null) { host.appendChild(el('p', 'note pad', esc('Loading the fits…'))); return; }
-  if (!S.fit.length) { boardNote(host, 'No fit checks yet.', S.failed); return; }
+  if (!S.fit.length) { boardNote(host, S.failed); return; }
   const items = S.fit.map((p) => boards.item(p, { tab: KEY, ratio: 'r45', meta: noMeta }));
   app.know(items);
   const r = listRail(host, { name: 'vintage-fit', label: 'Fit checks', cells: 150 });
@@ -886,53 +871,13 @@ function newIn() {
     .sort((a, b) => b.ts - a.ts).slice(0, NEW_IN_MAX);
 }
 
-/* A grid that grows down on purpose (Stephen, 2026-10-22: "I only see one
-   row but I want to see more rows ... a see more at the end so you can keep
-   on going down ... you're choosing to"). It opens on three rows of two on a
-   phone (two rows of three, or of four on a wide screen: .vgrid's columns),
-   "See more" adds as many again, and once it has grown the shell's Collapse
-   bar rides the bottom of the screen and folds it back to its first rows
-   and its heading. `last` (Make a tee's whole-shop tile) always ends what
-   shows. How far a grid is open lasts the visit, across repaints. */
-const grown = Object.create(null);
-const pageSize = () => {
-  const cols = window.matchMedia('(min-width: 1024px)').matches ? 4 : window.matchMedia('(min-width: 560px)').matches ? 3 : 2;
-  return cols * (cols === 2 ? 3 : 2);
-};
-function moreGrid(host, o) {
-  const g = el('div', 'vgrid');
-  g.dataset.grid = o.name;
-  o.cells.forEach((c) => g.appendChild(c));
-  if (o.last) g.appendChild(o.last);
-  host.appendChild(g);
-  const step = pageSize();
-  const first = step - (o.last ? 1 : 0);
-  const row = el('div', 'linkrow vmore');
-  const more = button(esc('See more'), 'ghost');
-  more.type = 'button';
-  more.dataset.more = o.name;
-  more.setAttribute('aria-label', 'See more of ' + o.label);
-  row.appendChild(more);
-  const foot = collapseBar(o.label, () => {
-    grown[o.name] = 0;
-    paint();
-    app.jumpTo(o.head || g);
-    more.focus({ preventScroll: true });
-  });
-  foot.classList.add('foot');
-  host.append(row, foot);
-  function paint() {
-    const shown = Math.max(first, grown[o.name] || 0);
-    o.cells.forEach((c, i) => { c.hidden = i >= shown; });
-    row.hidden = shown >= o.cells.length;
-    foot.hidden = shown <= first;
-  }
-  more.addEventListener('click', () => { grown[o.name] = Math.max(first, grown[o.name] || 0) + step; paint(); });
-  paint();
-  return g;
-}
-
 function paintNewIn(host) {
+  /* the head holds the top of the tab while the posts and the guide's list of shops are on their way */
+  if (!S.posts || (!S.handles && !S.shopsFailed)) {
+    section(host, 'New in');
+    host.appendChild(el('p', 'loading', 'One moment…'));
+    return;
+  }
   const posts = newIn();
   if (!posts.length) return;
   const head = section(host, 'New in');
@@ -1162,12 +1107,11 @@ app.register(KEY, {
   deactivate() { route++; if (M && !M.getContainer().isConnected) dropMap(); },
   subnav() {
     if (!ready) return null;
-    placeTees();
     const n = { spotted: S.spotted && S.spotted.length, shops: S.shops && S.shops.length, swaps: S.swaps && S.swaps.length, fit: S.fit && S.fit.length };
     const fresh = newIn().length;
     /* the sections as a floating pill in the tab's water, following the scroll (sections.js) */
     return sectionBar({ key: 'sec-vintage', title: 'Vintage', color: '--liq-vintage', find: (k) => slots && slots[k], onPick: (k) => jump(k),
-      items: sectionOrder().filter(([key]) => key !== 'newin' || fresh).map(([key, label]) => ({ key, label, n: key === 'newin' ? fresh : n[key] || null })) });
+      items: SECTIONS.filter(([key]) => key !== 'newin' || fresh).map(([key, label]) => ({ key, label, n: key === 'newin' ? fresh : n[key] || null })) });
   },
   keepSubnav: true,
   /* reader posts newer than the last visit: finds, swaps and fit checks */

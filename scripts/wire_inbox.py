@@ -9,6 +9,8 @@ Two bots drop files in the private repo btownbrief/wire-inbox:
   grok/recaps.json    Grok's packed recaps (Morning briefing, AI & tech, Sports...):
                       each a short intro plus linked bullets, 2026-10-19; and
                       "Pictures of the day", X posts whose picture is the point
+  grok/voices.json    posts in an account's own words from a second shortlist,
+                      for the Social tab only, 2026-10-30
 
 refresh_pulse.py calls read_inbox() each run. This module fetches both files
 through the GitHub contents API with the WIRE_INBOX_TOKEN secret, checks them
@@ -20,8 +22,9 @@ merges the surviving posts into pulse.json under its own `inbox` key:
     "x":        {"paused": false, "reason": null, "updated_at": "...",
                  "checked": "...", "pause_after_hours": 18, "n": 12,
                  "items": [{"u", "d", "fd", "from", "name", "summary",
-                            "kind", "ch": "x", "local": false}, ...]},
+                            "kind", "ch": "x", "local": false, "media"?}, ...]},
     "facebook": {...same shape, "ch": "facebook"...},
+    "voices":   {...same shape, "ch": "voices", at most VOICE_KEEP an account...},
     "recaps":   {"paused": false, "reason": null, "updated_at": "...", "checked": "...",
                  "pause_after_hours": 18, "n": 5,
                  "items": [{"id", "kind", "title", "posted_at", "d", "intro", "basis",
@@ -44,7 +47,7 @@ Honesty rules, same as the Reddit bridge's pause:
   * This module never raises into refresh_pulse: every failure is a state.
 
 CLI:
-  --file CH PATH   check a local file as if it were fetched (CH is x or facebook)
+  --file CH PATH   check a local file as if it were fetched (CH is x, facebook or voices)
   --selftest       run the offline checks and exit
 """
 
@@ -68,6 +71,8 @@ TOKEN_ENV = "WIRE_INBOX_TOKEN"
 FILES = {
     "x": ("grok/x.json", "grok-x"),
     "facebook": ("muse/facebook.json", "muse-facebook"),
+    # Social only: wire_common.wire_items reads x and facebook, never this key
+    "voices": ("grok/voices.json", "grok-voices"),
 }
 PAUSE_HOURS = 18     # README: "paused if updated_at is older than 18 hours"
 # The Wire keeps its own store (pulse.json's inbox key) and only reads the
@@ -81,7 +86,7 @@ BAD_SHARE = 0.5      # more than half the posts failing = a bad file
 CLOCK_SKEW_MINUTES = 10
 
 # --- the contract, ported from wire-inbox/scripts/validate_inbox.py --------
-SOURCES = {"grok-x", "muse-facebook"}
+SOURCES = {"grok-x", "muse-facebook", "grok-voices"}
 KINDS = {"post", "recap", "listing"}
 # 2026-10-19: was 300 items and 7 days, which a busy X list outgrew in three
 # days ("the file will reach the 300-item limit tomorrow"). The bots now keep
@@ -91,6 +96,11 @@ MAX_ITEMS = 1000
 MAX_SUMMARY = 200
 MAX_AGE_DAYS = 7
 HTTPS = re.compile(r"^https://[^\s]+$")
+# A post's `media`, optional: only X's own picture host reaches a reader's
+# phone. Anything else loses the field and keeps the post.
+MEDIA = re.compile(r"^https://pbs\.twimg\.com/[^\s]{1,250}\Z")
+VOICE_LOCAL = {"@noahkahan", "@wvnywfff", "@govphilscott", "@btvschools"}
+VOICE_KEEP = 4       # posts held per voice: Social shows an account's newest three
 EMAIL = re.compile(r"[\w.+-]+@[\w-]+\.[\w.-]+")
 PHONE = re.compile(r"(?<!\d)(?:\+?1[\s.-]?)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}(?!\d)")
 SHOUTY = re.compile(r"\bBREAKING\b|#\w+|[\U0001F300-\U0001FAFF]")
@@ -160,7 +170,8 @@ def check(data, now):
         if not isinstance(s, str) or not s.strip() or len(s) > MAX_SUMMARY:
             bad.append(f"summary must be 1 to {MAX_SUMMARY} characters")
         else:
-            if SHOUTY.search(s):
+            # grok/voices.json keeps the account's own words, emoji and all
+            if data.get("source") != "grok-voices" and SHOUTY.search(s):
                 bad.append("summary has a hashtag, emoji or BREAKING")
             if EMAIL.search(s) or PHONE.search(s):
                 bad.append("summary contains an email or phone number")
@@ -437,6 +448,15 @@ def iso(dt):
     return dt.replace(microsecond=0).isoformat() if dt else None
 
 
+def small_picture(url):
+    """A post's picture at the feed's size, or None if it is not an X picture.
+    name=orig is about four times the bytes. Only the name changes: format=jpg
+    has to stay, because ?name=small alone is a 404."""
+    if not isinstance(url, str) or not MEDIA.match(url):
+        return None
+    return re.sub(r"([?&]name=)\w+", r"\1small", url) if "/media/" in url else url
+
+
 def read_one(ch, raw, now):
     """One fetched file -> (state, fresh_items). state is the page-facing
     dict without `items`; fresh_items are pulse-shaped posts."""
@@ -475,7 +495,7 @@ def read_one(ch, raw, now):
     for i, it in enumerate(items):
         if i in per_item:
             continue
-        fresh.append({
+        post = {
             "u": it["url"],
             "d": int(parse_ts(it["posted_at"]).timestamp()),
             "fd": int(parse_ts(it["found_at"]).timestamp()),
@@ -484,8 +504,13 @@ def read_one(ch, raw, now):
             "summary": re.sub(r"\s+", " ", it["summary"]).strip(),
             "kind": it["kind"],
             "ch": ch,
-            "local": local_guess(ch, it["summary"]),
-        })
+            "local": local_guess(ch, it["summary"])
+                     or (ch == "voices" and it["from"].strip().lower() in VOICE_LOCAL),
+        }
+        media = small_picture(it.get("media"))
+        if media:
+            post["media"] = media
+        fresh.append(post)
     state["paused"] = False
     if per_item:
         state["dropped"] = len(per_item)
@@ -509,19 +534,21 @@ def local_guess(ch, summary):
     return region in ("btv", "away", "vt")
 
 
-def merge_items(previous, fresh, now):
+def merge_items(previous, fresh, now, per_from=0):
     """Union by URL, newest first, last KEEP_DAYS, at most CAP. A post seen
-    again takes the bot's newest wording but keeps its first-seen time."""
+    again takes the bot's newest wording but keeps its first-seen time.
+    per_from > 0 also holds at most that many posts an account, so a rare
+    poster keeps its place for the whole KEEP_DAYS."""
     by_url = {}
     for item in previous or []:
         if isinstance(item, dict) and item.get("u"):
             by_url[item["u"]] = dict(item)
-    added = 0
+    new = set()
     for item in fresh:
         held = by_url.get(item["u"])
         if held is None:
             by_url[item["u"]] = dict(item)
-            added += 1
+            new.add(item["u"])
         else:
             fd = min(held.get("fd", item["fd"]), item["fd"])
             held.update(item)
@@ -529,7 +556,19 @@ def merge_items(previous, fresh, now):
     cutoff = int((now - timedelta(days=KEEP_DAYS)).timestamp())
     kept = [item for item in by_url.values() if item.get("d", 0) >= cutoff]
     kept.sort(key=lambda item: item.get("d", 0), reverse=True)
-    return kept[:CAP], added
+    if per_from:
+        seen = {}
+        trimmed = []
+        for item in kept:
+            who = str(item.get("from")).lower()
+            seen[who] = seen.get(who, 0) + 1
+            if seen[who] <= per_from:
+                trimmed.append(item)
+        kept = trimmed
+    kept = kept[:CAP]
+    # counted after the trims: a post they drop comes back in the next file
+    # and is not new then either
+    return kept, sum(item["u"] in new for item in kept)
 
 
 def read_inbox(previous_inbox, now=None, token=None, fetch=fetch_file):
@@ -557,7 +596,7 @@ def read_inbox(previous_inbox, now=None, token=None, fetch=fetch_file):
                                     else f"{path} could not be fetched ({status})"),
                          "checked": iso(now), "pause_after_hours": PAUSE_HOURS}
                 fresh = []
-        items, added = merge_items(prev.get("items"), fresh, now)
+        items, added = merge_items(prev.get("items"), fresh, now, VOICE_KEEP if ch == "voices" else 0)
         state["n"] = len(items)
         state["items"] = items
         out[ch] = state
@@ -658,6 +697,17 @@ def selftest():
                                  else ("missing", None))
     assert added == 2 and not inbox["x"]["paused"] and inbox["facebook"]["paused"]
     assert inbox["facebook"]["reason"] == "muse/facebook.json is missing"
+    # voices: their own words stay, a picture comes down to size, a bad one goes
+    orig = "https://pbs.twimg.com/media/A?format=jpg&name=orig"
+    voice = json.loads(_fixture(now, source="grok-voices"))
+    voice["items"][0].update({"from": "@GovPhilScott", "summary": "Happy Friday #Vermont", "media": orig})
+    voice["items"][1]["media"] = "https://example.com/a.jpg"
+    state, fresh = read_one("voices", json.dumps(voice).encode(), now)
+    assert not state["paused"] and len(fresh) == 2, state
+    assert fresh[0]["media"].endswith("?format=jpg&name=small") and "media" not in fresh[1]
+    assert fresh[0]["local"] is True and fresh[1]["local"] is False
+    assert small_picture("https://pbs.twimg.com/media/A?name=orig&format=jpg") \
+        == "https://pbs.twimg.com/media/A?name=small&format=jpg"
     print("selftest ok")
 
 

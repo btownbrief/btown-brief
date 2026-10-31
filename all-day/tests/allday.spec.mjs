@@ -136,7 +136,7 @@ async function staticChecks() {
     const js = [];
     const walk = async (dir) => { for (const f of await readdir(dir, { withFileTypes: true })) { const p = path.join(dir, f.name); if (f.isDirectory()) await walk(p); else if (/\.(js|css|html)$/.test(f.name)) js.push(p); } };
     await walk(path.join(APP, 'js')); await walk(path.join(APP, 'css'));
-    const NEW = ['reddit.js', 'reddit-lib.js', 'app.js', 'ui.js', 'store.js', 'auth.js', 'asks.js', 'liquid.js', 'main.js', 'wire.js', 'wire-demo.js', 'wire-photos.js', 'wire-square.js', 'wire-recaps.js', 'watch.js', 'food.js', 'people.js', 'whatnow.js', 'vintage.js', 'habits.js', 'build.js', 'habits-core.js', 'habits-fake.js', 'photo-wall.js', 'onair.js', 'onair-sports.js', 'games.js', 'clubs-week.js', 'people-match.js', 'food-asks.js', 'tokens.css', 'app.css'];
+    const NEW = ['reddit.js', 'reddit-lib.js', 'app.js', 'ui.js', 'store.js', 'auth.js', 'asks.js', 'liquid.js', 'main.js', 'wire.js', 'wire-demo.js', 'wire-photos.js', 'wire-square.js', 'square.js', 'wire-recaps.js', 'watch.js', 'food.js', 'people.js', 'whatnow.js', 'vintage.js', 'habits.js', 'build.js', 'habits-core.js', 'habits-fake.js', 'photo-wall.js', 'onair.js', 'onair-sports.js', 'games.js', 'clubs-week.js', 'people-match.js', 'food-asks.js', 'tokens.css', 'app.css'];
     const OLD = new Set(['sun.js', 'whatnow-engine.js', 'whatnow-data.js']);
     for (const f of js) {
       const name = path.basename(f);
@@ -196,6 +196,7 @@ function wireDay(date, n, opts) {
       url: 'https://example.org/' + tag + '/' + i, posted_at: new Date(top - (top - bottom) * (i / n)).toISOString() };
     if (ch === 'x') it.handle = '@wcax';
     if (ch === 'reddit' || ch === 'facebook') it.comments = 12;
+    if (ch === 'newsletters' && i % 2) it.line = 'The sender’s line for edition ' + i + '.';   // an even one has none
     /* a thread's link is its subreddit's, as tag_wire.py's input has it:
        some r/burlington, some r/news (the Square keeps only the first) */
     if (ch === 'reddit') it.url = 'https://www.reddit.com/r/' + (i % 2 ? 'burlington' : 'news') + '/comments/' + tag + i + '/x/';
@@ -280,12 +281,15 @@ function pass2Day(date, items, top, bottom) {
 const wireCache = new Map();
 function wireFiles(opts = {}) {
   const o = { inbox: !!opts.inbox, brief: opts.brief !== false, topics: !!opts.topics, pass2: !!opts.pass2 };
-  const key = JSON.stringify(o) + etKey(Date.now());
+  const key = JSON.stringify(o) + !!opts.week + etKey(Date.now());
   if (!wireCache.has(key)) {
     const today = etKey(Date.now());
     const y1 = dayMinus(today, 1), y2 = dayMinus(today, 2);
     const files = { 'wire-today.json': wireDay(today, 160, o), [y1 + '.json']: wireDay(y1, 90, { ...o, brief: true }), [y2 + '.json']: wireDay(y2, 90, { ...o, brief: false }) };
-    files['index.json'] = { v: 1, editions: [y1, y2].map((d) => ({ date: d, count: files[d + '.json'].count, picks: files[d + '.json'].picks.length,
+    /* opts.week: a fuller archive, for the week of days at a day's turn */
+    const older = opts.week ? [3, 4, 5, 6, 7, 8].map((n) => dayMinus(today, n)) : [];
+    older.forEach((d) => { files[d + '.json'] = wireDay(d, 30, { ...o, brief: false }); });
+    files['index.json'] = { v: 1, editions: [y1, y2, ...older].map((d) => ({ date: d, count: files[d + '.json'].count, picks: files[d + '.json'].picks.length,
       picks_total: files[d + '.json'].picks.length + files[d + '.json'].picks_earlier.length })) };
     wireCache.set(key, files);
   }
@@ -457,6 +461,13 @@ async function newPage(browser, base, opts = {}) {
      starter list; here the branch answers with that same starter list (a 404
      would log a console error), unless a group passes opts.films: a payload,
      or null for the 404 itself. */
+  /* Watch's trailer card: the pulse-youtube branch answers an empty file unless
+     a group passes opts.trailers (a payload, or null for a 404, which sends the
+     page to the repo's copy, opts.trailersLocal, itself a 404 by default) */
+  const tLive = opts.trailers === undefined ? { v: 1, fresh: [], past: [], skip: [] } : opts.trailers;
+  const tJson = (r, body) => (body == null ? r.fulfill({ status: 404, body: '' }) : r.fulfill({ status: 200, body: JSON.stringify(body), contentType: 'application/json' }));
+  await page.route(/127\.0\.0\.1:\d+\/data\/trailers\.json$/, (r) => tJson(r, opts.trailersLocal));
+  await page.route(/raw\.githubusercontent\.com\/btownbrief\/btown-brief\/pulse-youtube\/data\/trailers\.json$/, (r) => tJson(r, tLive));
   const films = opts.films === undefined ? await readFile(path.join(APP, 'data/films-seed.json'), 'utf8') : opts.films;
   await page.route(/raw\.githubusercontent\.com\/btownbrief\/btown-brief\/films-data\/data\/films\.json$/, (r) => (films === null
     ? r.fulfill({ status: 404, body: '' })
@@ -511,8 +522,8 @@ async function newPage(browser, base, opts = {}) {
   /* The shell's two asks (asks.js: home screen, newsletter) wait for real
      use, which a group that runs the clock forward can reach by accident;
      every group but the asks' own starts as a subscribed, installed reader */
-  /* the switcher's coach mark shows once per phone; groups not about it start past it (opts.coach: a new phone) */
-  if (!opts.coach) await page.addInitScript(() => { try { if (!localStorage.getItem('allday-coach-apps')) localStorage.setItem('allday-coach-apps', '1'); } catch (e) { /* blocked */ } });
+  /* the switcher shows its hold on a phone's first three opens; groups not about it start past them (opts.coach: a new phone) */
+  if (!opts.coach) await page.addInitScript(() => { try { if (!localStorage.getItem('allday-coach-apps')) localStorage.setItem('allday-coach-apps', '3'); } catch (e) { /* blocked */ } });
   if (!opts.asks) await page.addInitScript(() => { try { if (!localStorage.getItem('allday-asks')) localStorage.setItem('allday-asks', JSON.stringify({ subscribed: true, installed: true, 'installed-out': true, 'installed-eat': true, 'installed-people': true,
     'installed-body': true, 'installed-town': true, 'installed-play': true, 'installed-paper': true })); } catch (e) { /* blocked */ } });
   /* GoatCounter's own script is stubbed; this records what the app asks it to count */
@@ -701,10 +712,11 @@ async function matrix(browser, base) {
 /* ------------------------------------------------------------- deep links */
 async function flashes(page, key) {
   return page.waitForFunction((k) => {
-    const n = [...document.querySelectorAll('.panel:not([hidden]) [data-k]')].find((x) => x.dataset.k === k);
-    if (!n || !n.classList.contains('flash')) return false;
-    const r = n.getBoundingClientRect();
-    return r.bottom > 0 && r.top < innerHeight;
+    /* a card can sit in two lists (People's own events are in the day and the Btown Brief row): any one of them will do */
+    return [...document.querySelectorAll('.panel:not([hidden]) [data-k]')].filter((x) => x.dataset.k === k && x.classList.contains('flash')).some((n) => {
+      const r = n.getBoundingClientRect();
+      return r.bottom > 0 && r.top < innerHeight;
+    });
   }, key, { timeout: 6000 }).then(() => true, () => false);
 }
 
@@ -779,7 +791,7 @@ async function deepLinks(browser, base) {
     supabase.length = 0;
     await page.goto(base + '/all-day/?demo=1#wire');
     await settle(page);
-    await page.click(BAND + ' .localsw-half:not(.on)');
+    await page.click(BAND + ' .localsw-half:not(.on):not([data-geo=national])');
     await page.click('#settings-btn');
     const txt = await page.$eval('.sheet-body', (b) => b.innerText);
     check(!/reader@example\.com|Sign out/.test(txt), 'demo Settings does not show the real account', '');
@@ -848,6 +860,149 @@ const topKeys = (page) => page.evaluate(() => {
   return out;
 });
 
+/* Local, National, Everything: one switch across the Wire, Photos, On Air and Social */
+async function threeWay(browser, base) {
+  const SEG = (g) => '.panel:not([hidden]) .localsw-half[data-geo="' + g + '"]';
+  const flip = async (page, g) => { await page.click('.localsw-half[data-geo="' + g + '"]:visible'); await page.waitForTimeout(350); };
+  const geoNow = (page) => page.evaluate(() => import('/all-day/js/ui.js').then((m) => m.geo()));
+  const demoFile = async (f) => JSON.parse(await readFile(path.join(APP, 'data/demo', f), 'utf8'));
+  await group('Three-way switch: the Wire', async () => {
+    const wire = await demoFile('wire.json');
+    const items = wire.today.updates.flatMap((u) => u.items);
+    const localT = new Set(items.filter((it) => it.local).map((it) => it.title));
+    const awayT = new Set(items.filter((it) => !it.local).map((it) => it.title));
+    const { ctx, page, errors } = await newPage(browser, base, {});
+    await page.goto(base + '/all-day/?demo=1#wire');
+    await settle(page);
+    const names = await page.$$eval(BAND + ' .localsw-half', (bs) => bs.map((b) => b.innerText.replace(/[^A-Za-z]/g, '')));
+    check(JSON.stringify(names) === '["Local","National","Everything"]', 'three segments, in order, in one control', JSON.stringify(names));
+    const titles = () => page.$$eval('#panel-wire .card .c-title', (ts) => ts.map((t) => t.textContent.trim()));
+    await flip(page, 'national');
+    check(await page.$eval(SEG('national'), (b) => b.classList.contains('on') && b.getAttribute('aria-pressed') === 'true'), 'National takes the switch', '');
+    const nat = await titles();
+    check(nat.length > 0 && !nat.some((t) => localT.has(t)), 'National: nothing local on the Wire', JSON.stringify(nat.slice(0, 6)));
+    await flip(page, 'everything');
+    const all = await titles();
+    check(all.some((t) => localT.has(t)) && all.some((t) => awayT.has(t)), 'Everything: both', String(all.length));
+    await flip(page, 'local');
+    const loc = await titles();
+    check(loc.length > 0 && !loc.some((t) => awayT.has(t)), 'Local: nothing national', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+  await group('Three-way switch: Photos', async () => {
+    const { ctx, page, errors } = await newPage(browser, base, {});
+    await page.goto(base + '/all-day/?demo=1#wire/photos');
+    await page.waitForSelector(pmPanel + ' .card.pm');
+    const loc = await pmState(page);
+    check(loc.list.length > 0 && loc.list.every((x) => x.local), 'Local: every picture is local', '');
+    check(!loc.list.some((x) => /DemoPark11|DemoSky12/.test(x.k)), 'Local: no national Instagram', '');
+    await flip(page, 'national');
+    const nat = await pmState(page);
+    check(nat.list.length === 2 && nat.list.every((x) => !x.local && x.from === 'instagram'), 'National: only the national accounts', JSON.stringify(nat.list.map((x) => x.k)));
+    check(!nat.pets.length, 'national pets are not Pets of Burlington', '');
+    check(await page.$eval(pmPanel + ' .pm-head h2', (h) => h.textContent) === 'The country in photos' && !(await page.$(pmPanel + ' .pm-head p, ' + pmPanel + ' .pm-post')), 'National: its own title, no line under it, no Burlington post button', '');
+    await flip(page, 'everything');
+    const ev = await pmState(page);
+    check(ev.list.length === loc.list.length + 2, 'Everything: local and national in one feed', '');
+    check(/^Burlington and the world/.test(await page.$eval(pmPanel + ' .pm-head h2', (h) => h.textContent)), 'Everything says so', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+  await group('Three-way switch: a shared post lands across the switch', async () => {
+    const { ctx, page } = await newPage(browser, base, {});
+    await page.goto(base + '/all-day/?demo=1#wire/photos/ig:DemoPark11');
+    await page.waitForSelector('.sheet-body', { timeout: 8000 }).catch(() => {});
+    check(await geoNow(page) === 'everything', 'a national post shared to a Local reader flips the switch', await geoNow(page));
+    check(!!(await page.$('.sheet-body')), 'and opens', '');
+    await ctx.close();
+  });
+  await group('Three-way switch: Social', async () => {
+    const { ctx, page, errors } = await newPage(browser, base, {});
+    await page.goto(base + '/all-day/?demo=1#social');
+    await page.waitForSelector('#panel-social .so-block');
+    const names = () => page.$$eval('#panel-social .so-name', (n) => n.map((x) => x.textContent));
+    check(!(await names()).includes('@demo_nationalparks'), 'Local: no national Instagram', '');
+    await flip(page, 'national');
+    const nat = await names();
+    check(nat.includes('@demo_nationalparks') && !nat.includes('@lakeside.pottery') && !nat.includes('The Lantern Diner'), 'National: non-local only', JSON.stringify(nat));
+    await flip(page, 'everything');
+    const all = await names();
+    check(all.includes('@demo_nationalparks') && all.includes('@lakeside.pottery'), 'Everything: both', JSON.stringify(all));
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+  await group('Three-way switch: Social with no national post leaves the plain line', async () => {
+    const { ctx, page } = await newPage(browser, base, {});
+    await page.addInitScript(() => localStorage.setItem('allday-settings', JSON.stringify({ localOnly: false, nationalOnly: true })));
+    for (const re of [/pulse\.json/, /data\/instagram\.json/, /reddit-intake/]) await page.route(re, (r) => r.fulfill({ status: 500, body: '' }));
+    await page.goto(base + '/all-day/#social');
+    await page.waitForSelector('#panel-social .rd-empty');
+    await page.waitForFunction(() => document.querySelector('#panel-social .rd-empty')?.textContent === 'Nothing here yet');
+    check(!(await page.$('#panel-social .so-block')), 'no blocks, no empty boxes', '');
+    await ctx.close();
+  });
+  await group('Three-way switch: On Air', async () => {
+    const onair = await demoFile('onair.json');
+    const isLocal = (v) => !!v && (v.vt || v.g === 'vt');
+    const vids = onair.tv.shelves.flatMap((s) => (s.items || []).map((v) => (s.key === 'vt' ? { ...v, vt: 1 } : v)));
+    const localT = vids.filter(isLocal).map((v) => v.t);
+    const { ctx, page, errors } = await newPage(browser, base, {});
+    await page.goto(base + '/all-day/?demo=1#onair');
+    await page.waitForSelector('#panel-onair [data-slot="tv"] .oa-rows, #panel-onair [data-slot="tv"] .note');
+    await flip(page, 'national');
+    const txt = await page.$eval('#panel-onair', (p) => p.innerText);
+    check(!localT.some((t) => txt.includes(t)), 'National: no Burlington video', JSON.stringify(localT.filter((t) => txt.includes(t))));
+    check(!(await page.$('#panel-onair [data-slot="tv"] .wholeed')), 'National: no whole-edition card, which holds the local ones', '');
+    check(!/Local podcasts/.test(await page.$eval('#panel-onair', (p) => p.textContent)), 'National: not Local podcasts', '');
+    await flip(page, 'everything');
+    check(!!(await page.$('#panel-onair [data-slot="tv"] .wholeed')), 'Everything: the whole edition is back', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+  await group('Three-way switch: a stored choice and a link', async () => {
+    for (const [stored, want] of [[{ localOnly: true }, 'local'], [{ localOnly: false }, 'everything'], [null, 'local']]) {
+      const { ctx, page } = await newPage(browser, base, {});
+      if (stored) await page.addInitScript((s) => localStorage.setItem('allday-settings', s), JSON.stringify(stored));
+      await page.goto(base + '/all-day/?demo=0#social');
+      await page.waitForSelector('#subnav .localsw');
+      check(await geoNow(page) === want, 'stored ' + JSON.stringify(stored) + ' reads ' + want, await geoNow(page));
+      await ctx.close();
+    }
+    const { ctx, page } = await newPage(browser, base, {});
+    await page.goto(base + '/all-day/#social');
+    await page.waitForSelector('#subnav .localsw');
+    await page.click('#subnav .localsw-half[data-geo="national"]');
+    await page.reload();
+    await page.waitForSelector('#subnav .localsw');
+    check(await geoNow(page) === 'national', 'National survives a reload', '');
+    check(await page.evaluate(() => JSON.parse(localStorage.getItem('allday-settings')).localOnly === false), 'and an older build reads it as not Local', '');
+    await ctx.close();
+    const u = await newPage(browser, base, {});
+    await u.page.goto(base + '/all-day/?demo=1#wire/national');
+    await settle(u.page);
+    check(await geoNow(u.page) === 'national', '#wire/national sets the switch', '');
+    await u.ctx.close();
+  });
+  await group('Three-way switch: it fits a phone, light and dark', async () => {
+    for (const [width, scheme] of [[390, 'light'], [390, 'dark'], [320, 'light']]) {
+      for (const hash of ['wire', 'wire/photos', 'onair', 'social']) {
+        const { ctx, page } = await newPage(browser, base, { viewport: { width, height: 800 }, scheme });
+        await page.goto(base + '/all-day/?demo=1#' + hash);
+        await page.waitForSelector('.localsw.geosw:visible');
+        await page.waitForTimeout(300);
+        const fit = await page.evaluate(() => {
+          const sw = [...document.querySelectorAll('.localsw.geosw')].find((s) => s.getClientRects().length && s.getBoundingClientRect().width);
+          const r = sw.getBoundingClientRect();
+          return { left: r.left, right: r.right, vw: innerWidth, page: document.documentElement.scrollWidth, cut: [...sw.children].filter((b) => b.scrollWidth > b.clientWidth + 1 && b.tagName === 'BUTTON').map((b) => b.textContent) };
+        });
+        check(fit.left >= 0 && fit.right <= fit.vw && fit.page <= fit.vw && !fit.cut.length, hash + ' at ' + width + ' ' + scheme, JSON.stringify(fit));
+        await ctx.close();
+      }
+    }
+  });
+}
+
 async function theWire(browser, base) {
   await group('the Wire, live', async () => {
     const files = wireFiles();
@@ -886,7 +1041,7 @@ async function theWire(browser, base) {
     check(JSON.stringify(chrome.kids) === '["wbar"]' && JSON.stringify(chrome.inner) === '["wmodes","wfloat"]' && !chrome.filters, 'under the mast: the pill, and no Filters button', JSON.stringify(chrome));
     check(chrome.floatHidden, 'at the top the floating day row is hidden: the banner shows the same two controls', JSON.stringify(chrome));
     check(chrome.bottom <= 130, 'the chrome above the banner is 130px or less (' + chrome.bottom + ')', chrome.bottom);
-    check(JSON.stringify(chrome.modes.filter((m) => m !== 'square')) === '["news","photos","recaps"]', 'the words are there from the first paint (the Square’s only while it may open)', JSON.stringify(chrome.modes));
+    check(JSON.stringify(chrome.modes.filter((m) => m !== 'square')) === '["news","recaps","photos"]', 'the words are there from the first paint (the Square’s only while it may open)', JSON.stringify(chrome.modes));
 
     /* the chips: kinds only, X and Facebook hidden while paused, no Video,
        a kind with nothing in it left out; Unfiltered is a button under them */
@@ -968,7 +1123,7 @@ async function theWire(browser, base) {
       check(/^Showing /.test(f) && /Clear$/.test(f), 'with a filter on, the head says so, with a Clear', f);
     }
     await chipTo(page, 'all');
-    await page.click(BAND + ' .localsw-half:not(.on)');
+    await page.click(BAND + ' .localsw-half:not(.on):not([data-geo=national])');
     await page.waitForTimeout(150);
     await openFilters(page);
     const every = await sheetChips(page);
@@ -994,6 +1149,7 @@ async function theWire(browser, base) {
     const yBlock = await page.evaluate((date) => {
       const h = document.querySelector('.panel:not([hidden]) [data-day="' + date + '"]');
       let n = h && h.nextElementSibling;
+      if (n && n.matches('.wturn-days')) n = n.nextElementSibling;   // the week of days sits under the head
       const pin = n && n.matches('.card.wlead') ? { k: n.dataset.k, eyebrow: (n.querySelector('.eyebrow') || {}).textContent || '' } : null;
       while (n && !n.classList.contains('wleads') && !n.dataset.day) n = n.nextElementSibling;
       if (!n || !n.classList.contains('wleads')) return { pin };
@@ -1248,7 +1404,7 @@ async function theWire(browser, base) {
     check(!look.bars && !look.alt && !look.initials, 'no left colour bars, no alternate tints, no source initials', JSON.stringify([look.bars, look.alt, look.initials]));
     check(!look.green && !look.national && !look.tint, 'on Local, no green names, no National, no tint: everything here is local', JSON.stringify([look.green, look.national, look.tint]));
     await toTop(page);
-    await page.click(BAND + ' .localsw-half:not(.on)');
+    await page.click(BAND + ' .localsw-half:not(.on):not([data-geo=national])');
     await page.waitForTimeout(200);
     await drawToday(page);
     const ev = await page.evaluate(() => {
@@ -1392,7 +1548,7 @@ async function theWire(browser, base) {
     await v.page.route(/wire-data\/data\/wire-today\.json$/, (r) => r.fulfill({ status: 200, body: JSON.stringify(today), contentType: 'application/json' }));
     await v.page.goto(base + '/all-day/');
     await v.page.waitForSelector('.panel:not([hidden]) .wleads', { timeout: 15000 });
-    await v.page.click(BAND + ' .localsw-half:not(.on)');
+    await v.page.click(BAND + ' .localsw-half:not(.on):not([data-geo=national])');
     await v.page.waitForTimeout(150);
     await openFilters(v.page);
     const slots = () => v.page.$$eval(BAND + ' .wf .wm-slot', (bs) => bs.map((b) => ({ k: b.dataset.slot, on: b.getAttribute('aria-pressed'), dis: b.disabled, t: b.innerText.replace(/\s+/g, ' ').trim() })));
@@ -1544,7 +1700,22 @@ async function theWire(browser, base) {
     check(cards[0].board, 'a neighbor’s post sorts ahead of outside talk of the same age', JSON.stringify(cards.slice(0, 3)));
     await openFilters(page);
     const chipKeys = await page.$$eval(BAND + ' .wf .chip', (cs) => cs.map((c) => c.dataset.chip));
-    check(JSON.stringify(chipKeys) === '["all","post","show","ask","free","pets","facebook","reddit"]', 'Filters: the kinds of post as chips', JSON.stringify(chipKeys));
+    check(JSON.stringify(chipKeys) === '["all","post","show","ask","free","pets","facebook","burlington","vermont"]', 'Filters: the kinds of post, Facebook and each subreddit as chips', JSON.stringify(chipKeys));
+    const dots = await page.$$eval(BAND + ' .wf .chip .sdot', (ds) => Object.fromEntries(ds.map((d) => [d.closest('.chip').dataset.chip, getComputedStyle(d).backgroundColor])));
+    check(dots.burlington && dots.vermont && dots.burlington !== dots.vermont, 'r/burlington and r/vermont are different colours', JSON.stringify(dots));
+    await page.click(BAND + ' .wf .chip[data-chip="vermont"]');
+    await page.waitForTimeout(150);
+    const justVt = (await sqState(page)).list;
+    check(justVt.length > 0 && justVt.every((x) => x.type === 'vermont') && await page.evaluate(() => localStorage.getItem('allday-square-type')) === 'vermont', 'r/vermont alone, and the pick is kept', JSON.stringify(justVt));
+    await page.reload();
+    await settle(page);
+    await page.waitForSelector('#panel-wire .sq-feed', { timeout: 8000 }).catch(() => {});
+    check((await sqState(page)).list.every((x) => x.type === 'vermont'), 'a reload keeps it', '');
+    await openFilters(page);
+    await page.click(BAND + ' .wf .chip[data-chip="burlington"]');
+    await page.waitForTimeout(150);
+    const justBtv = (await sqState(page)).list;
+    check(justBtv.length > 0 && justBtv.every((x) => x.type === 'burlington'), 'r/burlington alone', JSON.stringify(justBtv));
     await page.click(BAND + ' .wf .chip[data-chip="pets"]');
     await page.waitForTimeout(150);
     check(JSON.stringify((await sqState(page)).list.map((x) => x.type)) === '["pets"]', 'Pets narrows it to the pets', '');
@@ -1588,8 +1759,8 @@ async function theWire(browser, base) {
     await live.page.waitForSelector('.panel:not([hidden]) .wleads', { timeout: 15000 });
     await live.page.waitForTimeout(400);
     const words = await live.page.$$eval('#subnav .wmode', (bs) => bs.map((b) => [b.dataset.view, getComputedStyle(b).visibility, b.tabIndex]));
-    check(JSON.stringify(words.map((w) => w[0])) === '["news","photos","recaps"]' && words.every((w) => w[1] === 'visible'),
-      'live before the Square’s SQL: once the board says no, its place goes (no hole between Photos and Recaps)', JSON.stringify(words));
+    check(JSON.stringify(words.map((w) => w[0])) === '["news","recaps","photos"]' && words.every((w) => w[1] === 'visible'),
+      'live before the Square’s SQL: once the board says no, its place goes (no hole between Recaps and Photos)', JSON.stringify(words));
     check(!(await live.page.$('#panel-wire .sq-compose')), 'and a kept Square opens on News', '');
     check(!live.errors.length, 'no console errors', live.errors.join(' | '));
     await live.ctx.close();
@@ -1662,7 +1833,7 @@ async function wirePass2(browser, base) {
     await page.goto(base + '/all-day/');
     await page.waitForSelector('.panel:not([hidden]) .wleads', { timeout: 15000 });
     const sw = await page.$$eval('#subnav .wbar > .wmodes .wmode', (bs) => bs.map((b) => { const r = b.getBoundingClientRect(); return { t: b.textContent, w: Math.round(r.width), h: Math.round(r.height), fit: b.scrollWidth <= b.clientWidth }; }));
-    check(JSON.stringify(sw.map((b) => b.t)) === '["News","Photos","Recaps"]' && sw.every((b) => b.w >= 44 && b.h >= 44 && b.fit), 'Recaps joins the words (live here before the Square’s SQL), each a 44px target with its word whole', JSON.stringify(sw));
+    check(JSON.stringify(sw.map((b) => b.t)) === '["News","Recaps","Photos"]' && sw.every((b) => b.w >= 44 && b.h >= 44 && b.fit), 'Recaps joins the words (live here before the Square’s SQL), each a 44px target with its word whole', JSON.stringify(sw));
     await page.click('#subnav .wmode[data-view="recaps"]');
     await page.waitForSelector('#panel-wire .rcap', { timeout: 8000 });
     const v = await page.evaluate(() => {
@@ -1672,15 +1843,15 @@ async function wirePass2(browser, base) {
           when: c.querySelector('.rc-when').textContent, n: c.querySelectorAll('.rc-b').length, all: (c.querySelector('.rc-all') || {}).textContent || '',
           links: [...c.querySelectorAll('a.rc-b')].every((a) => /^https:/.test(a.href) && a.target === '_blank' && /noopener/.test(a.rel)) })),
         kinds: [...p.querySelectorAll('.wband .w-rkinds .chip')].map((c) => c.dataset.chip),
-        local: !!p.querySelector('.wband-top .localsw'), day: !!p.querySelector('.wband-top .wday'), river: !!p.querySelector('.card.wrow, .wleads') };
+        local: !!p.querySelector('.wband-top .localsw'), day: !!p.querySelector('.wband-top .wday'), river: !!p.querySelector('.card.wrow:not(.wletter), .wleads') };
     });
     check(v.hash === '#wire/recaps' && v.kept === 'recaps', 'Recaps has its address and is kept on the phone', v.hash + ' ' + v.kept);
-    check(v.h2 === 'Today’s recaps' && !v.river, 'the page is today’s recaps, and only them', v.h2);
+    check(v.h2 === 'Today’s recaps' && !v.river, 'the page is today’s recaps and newsletters, and no river', v.h2);
     check(JSON.stringify(v.cards.map((c) => c.t)) === '["AI & tech","Sports","Morning briefing"]', 'every recap of the day, newest first, under its kind’s title', JSON.stringify(v.cards.map((c) => c.t)));
     check(v.cards.every((c) => /^\d{1,2}:\d{2} [ap]m$/.test(c.when) && c.links), 'each with its time, and its headlines link out in a new tab', JSON.stringify(v.cards.map((c) => c.when)));
     check(v.cards[0].from === 'From posts on X' && v.cards[2].from === 'From X trending summaries' && v.cards.every((c) => !/\bAI\b/.test(c.from)), 'where it came from, never “AI”', JSON.stringify(v.cards.map((c) => c.from)));
     check(v.cards[2].n === 5 && /^Show all 13/.test(v.cards[2].all) && v.cards[0].n === 4 && !v.cards[0].all, 'five headlines show; a longer recap says “Show all 13”', JSON.stringify(v.cards.map((c) => [c.n, c.all])));
-    check(JSON.stringify(v.kinds) === '["all","r:morning","r:ai","r:sports"]', 'the banner offers each kind the day has, in the payload’s order of kinds', JSON.stringify(v.kinds));
+    check(JSON.stringify(v.kinds) === '["all","r:morning","r:ai","r:sports","r:newsletters"]', 'the banner offers each kind the day has, in the payload’s order of kinds, then its newsletters', JSON.stringify(v.kinds));
     check(v.day && !v.local, 'the banner keeps the day; a recap is never Local or not', JSON.stringify(v));
     const sp = await page.$$eval('#panel-wire .rcap[data-kind="sports"] .rc-bn b', (bs) => bs.map((b) => b.textContent));
     check(sp.join(',') === 'NBA,NFL,NHL,Tennis,Vermont', 'a Sports recap names each headline’s league', sp.join(','));
@@ -1848,7 +2019,7 @@ async function wirePass2(browser, base) {
     const mks = await page.$$eval('#panel-wire .feed.wire .card[data-k]', (cs) => cs.map((c) => c.querySelector('.c-title').textContent));
     check(mks.filter((t) => t.endsWith(todayName)).length === 3 && mks.every((t) => /^Markets story/.test(t)), 'Markets shows its whole lane', JSON.stringify(mks));
     await toTop(page);
-    await page.click(BAND + ' .localsw-half:not(.on)');
+    await page.click(BAND + ' .localsw-half:not(.on):not([data-geo=national])');
     await page.waitForTimeout(200);
     const loc = await sheetChips(page, '.w-topics');
     check(!loc.some((c) => c[0] === 't:markets'), 'on Local there are no markets', JSON.stringify(loc));
@@ -1888,7 +2059,7 @@ async function wirePass2(browser, base) {
     await page.screenshot({ path: path.join(SHOTS, 'wirep2-photos-world-390.png') });
     /* Local: Burlington's pictures alone */
     await toTop(page);
-    await page.click('.panel:not([hidden]) .wband .localsw-half:not(.on)');
+    await page.click('.panel:not([hidden]) .wband .localsw-half:not(.on):not([data-geo=national])');
     await page.waitForTimeout(400);
     check(!(await page.$(pmPanel + ' .card.pm-world, ' + pmPanel + ' .card.pm-x')), 'on Local, none of the world’s', '');
     check(!errors.length, 'no console errors', errors.join(' | '));
@@ -1960,6 +2131,96 @@ async function wirePass2(browser, base) {
     await n.ctx.close();
   });
 
+  /* Stephen, 2026-10-30: he never noticed the way back, and the river ran
+     into yesterday without a word */
+  const WEEK = { pass2: true, topics: true, week: true };
+  await group('The Wire, Oct 30: the pager names the day, and the day turns (390 and 320, live)', async () => {
+    wireFiles(WEEK);
+    const tk = etKey(Date.now()), y1 = dayMinus(tk, 1), y3 = dayMinus(tk, 3);
+    const dayWord = (d) => nameOf(d).split(',')[0];
+    for (const [width, tiles] of [[390, 7], [320, 6]]) {
+      const { ctx, page, errors } = await newPage(browser, base, { wire: WEEK, viewport: { width, height: 800 } });
+      await page.goto(base + '/all-day/');
+      await page.waitForSelector('.panel:not([hidden]) .wleads', { timeout: 15000 });
+      await page.waitForTimeout(400);
+      const pg = await page.evaluate(() => {
+        const w = document.querySelector('#panel-wire .wband-top .wday'), t = w.querySelector('.t'), prev = w.querySelector('.prev'), next = w.querySelector('.next');
+        const sw = document.querySelector('#panel-wire .wband-top .localsw').getBoundingClientRect();
+        return { word: prev.querySelector('.w').textContent, h: Math.round(prev.getBoundingClientRect().height), still: getComputedStyle(prev.querySelector('.i')).animationName,
+          next: !!next && next.disabled && getComputedStyle(next).display, fit: t.scrollWidth <= t.clientWidth + 1, clear: w.getBoundingClientRect().right <= sw.left + 1, sw: document.documentElement.scrollWidth, vw: innerWidth };
+      });
+      check(pg.word === dayWord(y1).slice(0, 3) && pg.still === 'none', width + ': the way back says the day it goes to, and stays still', JSON.stringify(pg));
+      check(pg.next === 'none', width + ': on today there is no way forward to show', JSON.stringify(pg));
+      check(pg.fit && pg.clear && pg.sw <= pg.vw, width + ': the day fits beside Local / Everything, nothing sideways', JSON.stringify(pg));
+      await drawToday(page);
+      const turn = await page.evaluate((date) => {
+        const h = document.querySelector('.panel:not([hidden]) [data-day="' + date + '"]'), g = h.nextElementSibling;
+        const shown = [...g.querySelectorAll('button')].filter((b) => getComputedStyle(b).display !== 'none');
+        const before = g.querySelector('.before'), read = g.querySelector('.read');
+        return { done: h.previousElementSibling.textContent, doneCls: h.previousElementSibling.className, grid: g.className, n: shown.length,
+          big: shown.every((b) => { const r = b.getBoundingClientRect(); return r.width >= 44 && r.height >= 44; }), right: Math.round(g.getBoundingClientRect().right), order: shown.map((b) => b.getAttribute('aria-label')),
+          before: before && before.getAttribute('aria-label'), filled: before && getComputedStyle(before).backgroundColor !== getComputedStyle(shown.find((b) => b !== before && b !== read)).backgroundColor,
+          read: read && read.getAttribute('aria-current'), sw: document.documentElement.scrollWidth, vw: innerWidth };
+      }, y1);
+      check(turn.done === 'That’s ' + dayWord(tk) && turn.doneCls === 'wturn-done', width + ': the day ends in words', JSON.stringify(turn));
+      check(turn.grid === 'wturn-days' && turn.n === tiles && turn.big, width + ': ' + tiles + ' days as 44px buttons, no sideways scroll', JSON.stringify(turn));
+      check(turn.order[turn.n - 1] === nameOf(tk) && turn.before === nameOf(y1) && turn.filled && turn.read === 'date', width + ': newest on the right, the day before filled, today marked', JSON.stringify(turn));
+      check(turn.sw <= turn.vw, width + ': nothing sideways', JSON.stringify(turn));
+      await page.click('.panel:not([hidden]) [data-day="' + y1 + '"] + .wturn-days button[aria-label="' + nameOf(y3) + '"]');
+      await page.waitForFunction((d) => location.hash === '#wire/' + d, y3, { timeout: 8000 });
+      await page.waitForSelector('#panel-wire .wband-top .wday[data-of="' + y3 + '"]', { timeout: 8000 });
+      const on = await page.evaluate(() => { const w = document.querySelector('#panel-wire .wband-top .wday'), n = w.querySelector('.next'); return { t: w.dataset.of, next: getComputedStyle(n).display !== 'none', word: w.querySelector('.prev .w').textContent }; });
+      check(on.t === y3 && on.next && on.word === dayWord(dayMinus(tk, 4)).slice(0, 3), width + ': a day’s button opens that day, and now there is a way forward', JSON.stringify(on));
+      check(!errors.length, width + ': no console errors', errors.join(' | '));
+      await ctx.close();
+    }
+  });
+  await group('The Wire, Oct 30: newsletters among the recaps, by time (390, live and demo)', async () => {
+    const files = wireFiles(WEEK);
+    const today = files['wire-today.json'];
+    const tk = etKey(Date.now()), y1 = dayMinus(tk, 1);
+    const editions = today.updates.flatMap((u) => u.items).filter((it) => it.ch === 'newsletters');
+    const want = editions.map((it) => [Date.parse(it.posted_at), it.id]).concat(today.recaps.map((r) => [Date.parse(r.posted_at), 'rc:' + r.id]))
+      .sort((a, b) => b[0] - a[0]).map((x) => x[1]);
+    const { ctx, page, errors } = await newPage(browser, base, { wire: WEEK });
+    await page.goto(base + '/all-day/#wire/recaps');
+    await page.waitForSelector('#panel-wire .wletter', { timeout: 15000 });
+    await page.waitForTimeout(300);
+    const v = await page.evaluate(() => {
+      const p = document.querySelector('#panel-wire');
+      const c = p.querySelector('.wletter:has(.w-line)'), bare = p.querySelector('.wletter:not(:has(.w-line))');
+      const a = c.querySelector('a.c-title, .c-title a, a');
+      return { keys: [...p.querySelectorAll('.wrecaps > [data-k]')].map((n) => n.dataset.k), sub: p.querySelector('.whead-row .s').textContent,
+        head: !!c.querySelector('.wl-head .mark') && c.querySelector('.wl-head .srcbtn').textContent, when: c.querySelector('.wl-head .rc-when').textContent, title: !!c.querySelector('.c-title'), line: c.querySelector('.w-line').textContent,
+        href: a.href, target: a.target, acts: [...c.querySelectorAll('[data-act]')].map((b) => b.dataset.act), hidden: getComputedStyle(c.querySelector('.w-who')).visibility,
+        word: /newsletter/i.test(c.textContent.replace(c.querySelector('.c-title').textContent, '')), bare: !!bare && !bare.querySelector('.w-line'), days: p.querySelectorAll('.wrecaps .wturn-days button').length, before: (p.querySelector('.wrecaps .wturn-days .before') || { getAttribute() {} }).getAttribute('aria-label') };
+    });
+    check(JSON.stringify(v.keys) === JSON.stringify(want), 'recaps and newsletter editions run together, newest first', JSON.stringify([v.keys, want]));
+    check(/recaps · \d+ newsletters? · latest /.test(v.sub) && v.head === 'Love Burlington' && /^\d{1,2}:\d{2} [ap]m$/.test(v.when), 'a letter says who sent it and when', JSON.stringify(v));
+    check(v.title && /^The sender’s line/.test(v.line) && /^https:/.test(v.href) && v.target === '_blank', 'its subject links out, with the sender’s one line', JSON.stringify(v));
+    check(v.acts.includes('share') && v.acts.includes('save') && !v.acts.includes('comment'), 'star and share, no comments', JSON.stringify(v.acts));
+    check(v.hidden === 'hidden' && !v.word && v.bare, 'no second byline, no “newsletter” label, and with no line the title stands alone', JSON.stringify(v));
+    check(v.days === 7 && v.before === nameOf(y1), 'the foot of the page is the same week of days', JSON.stringify(v));
+    await page.click('#panel-wire .wband .w-rkinds .chip[data-chip="r:newsletters"]');
+    await page.waitForTimeout(150);
+    const only = await page.$$eval('#panel-wire .wrecaps > [data-k]', (ns) => ns.map((n) => n.dataset.k));
+    check(only.length === editions.length && only.every((k) => !k.startsWith('rc:')), 'the Newsletters chip shows only the editions', JSON.stringify(only));
+    await page.click('#panel-wire .wband .w-rkinds .chip[data-chip="all"]');
+    await page.waitForTimeout(150);
+    await page.click('#panel-wire .wletter [data-act="save"]');
+    check(await page.$eval('#panel-wire .wletter [data-act="save"]', (b) => b.getAttribute('aria-pressed') === 'true'), 'the star keeps a letter', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+    /* the demo has a letter too */
+    const n = await newPage(browser, base, {});
+    await n.page.goto(base + '/all-day/?demo=1#wire/recaps');
+    await n.page.waitForSelector('#panel-wire .whead', { timeout: 15000 });
+    await n.page.waitForTimeout(300);
+    check(await n.page.$eval('#panel-wire .wletter .w-line', (l) => l.textContent.length > 0), 'the demo shows a letter with its line', '');
+    check(!n.errors.length, 'no console errors', n.errors.join(' | '));
+    await n.ctx.close();
+  });
+
   await group('Wire pass 2: deep links into Recaps, and the wide screen (1440, live)', async () => {
     const tk = etKey(Date.now());
     const { ctx, page, errors } = await newPage(browser, base, { wire: W2, viewport: { width: 1440, height: 900 } });
@@ -1971,7 +2232,7 @@ async function wirePass2(browser, base) {
     await page.waitForTimeout(300);
     await page.screenshot({ path: path.join(SHOTS, 'wirep2-recaps-1440.png') });
     const aside = await page.$$eval('#aside .w-rkinds .chip', (cs) => cs.length);
-    check(aside === 4, 'the wide screen’s rail holds the kinds', String(aside));
+    check(aside === 5, 'the wide screen’s rail holds the kinds and the Newsletters chip', String(aside));
     await page.goto(base + '/all-day/#wire/news');
     await page.waitForSelector('#panel-wire .rc-strip', { timeout: 15000 });
     await page.evaluate(() => { document.querySelector('.panel:not([hidden])').scrollTop = 0; });
@@ -1995,20 +2256,20 @@ async function thePhotos(browser, base) {
     await page.goto(base + '/all-day/?demo=1#wire');
     await settle(page);
     const sw = await page.$$eval('#subnav .wbar > .wmodes .wmode', (bs) => bs.map((b) => { const r = b.getBoundingClientRect(); return { v: b.dataset.view, t: b.textContent, w: Math.round(r.width), h: Math.round(r.height), p: b.getAttribute('aria-pressed') }; }));
-    check(JSON.stringify(sw.map((b) => b.t)) === '["News","Photos","Square","Recaps"]' && sw.every((b) => b.w >= 44 && b.h >= 44), 'the switch says News, Photos, Square, Recaps in words, each a 44px target', JSON.stringify(sw));
+    check(JSON.stringify(sw.map((b) => b.t)) === '["News","Recaps","Square","Photos"]' && sw.every((b) => b.w >= 44 && b.h >= 44), 'the switch says News, Recaps, Square, Photos in words, each a 44px target', JSON.stringify(sw));
     check(sw[0].p === 'true' && sw.slice(1).every((b) => b.p === 'false'), 'it opens on News, said by aria-pressed', JSON.stringify(sw));
     check(await page.$eval('#subnav > :first-child', (n) => n.classList.contains('wbar') && n.firstElementChild.classList.contains('wmodes')), 'and it leads the one row under the mast', '');
     check(!(await page.$('#subnav .viewsw, #subnav .viewsw-b')), 'the old list and photo icons are gone', '');
     await page.click('#subnav .wmode[data-view="photos"]');
     check(await pmOn(page), 'Photos turns the paper into the photo feed', '');
-    check(await viewPressed(page) === 'news:false photos:true square:false recaps:false', 'and the switch says so', await viewPressed(page));
+    check(await viewPressed(page) === 'news:false recaps:false square:false photos:true', 'and the switch says so', await viewPressed(page));
     check(await page.evaluate(() => location.hash) === '#wire/photos', 'the address says #wire/photos', await page.evaluate(() => location.hash));
     check(await page.evaluate(() => localStorage.getItem('allday-wire-view')) === 'photos', 'the choice is kept on the phone', '');
     check(JSON.stringify(await page.$eval('#subnav', (s) => [...s.children].map((n) => n.className))) === '["wbar"]', 'Photo mode keeps the one row: the pill', '');
     check(!(await page.$(pmPanel + ' .wleads, ' + pmPanel + ' .card.wrow')), 'the paper’s list is gone', '');
     await page.reload();
     await settle(page);
-    check(await pmOn(page) && await viewPressed(page) === 'news:false photos:true square:false recaps:false', 'a reload opens on the photos again', await viewPressed(page));
+    check(await pmOn(page) && await viewPressed(page) === 'news:false recaps:false square:false photos:true', 'a reload opens on the photos again', await viewPressed(page));
     await page.goto(base + '/all-day/?demo=1');
     await settle(page);
     check(await pmOn(page), 'and so does a bare visit to the app', '');
@@ -2019,7 +2280,7 @@ async function thePhotos(browser, base) {
     check(await page.evaluate(() => document.activeElement && document.activeElement.dataset.view) === 'news', 'focus stays on the switch', '');
     await page.reload();
     await settle(page);
-    check(!(await page.$(pmPanel + ' .card.pm')) && await viewPressed(page) === 'news:true photos:false square:false recaps:false', 'a reload opens on News', await viewPressed(page));
+    check(!(await page.$(pmPanel + ' .card.pm')) && await viewPressed(page) === 'news:true recaps:false square:false photos:false', 'a reload opens on News', await viewPressed(page));
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
   });
@@ -2351,7 +2612,7 @@ async function thePhotos(browser, base) {
     const geoTo = async (page, want) => {
       await toTop(page);
       const on = await page.$eval(BAND + ' .localsw', (s) => s.classList.contains('is-on'));
-      if ((want === 'local') !== on) await page.click(BAND + ' .localsw-half:not(.on)');
+      if ((want === 'local') !== on) await page.click(BAND + ' .localsw-half:not(.on):not([data-geo=national])');
       await page.waitForTimeout(300);
       await pmAll(page);
     };
@@ -2363,7 +2624,9 @@ async function thePhotos(browser, base) {
     await geoTo(v.page, 'everything');
     const ev = await pmState(v.page);
     const wk = ev.list.filter((x) => x.from === 'world').map((x) => x.k);
-    check(wk.length === 5 && !wk.includes('pw:bad') && ev.list.length === loc.list.length + 5, 'Everything adds the world’s five good pictures to the same feed', JSON.stringify(wk));
+    const awayIg = (s) => s.list.filter((x) => x.from === 'instagram' && !x.local).length;
+    check(!awayIg(loc), 'Local has no national Instagram', '');
+    check(wk.length === 5 && !wk.includes('pw:bad') && ev.list.length === loc.list.length + 5 + awayIg(ev), 'Everything adds the world’s five good pictures and the national accounts to the same feed', JSON.stringify(wk));
     check(ev.list.filter((x) => x.from === 'world').every((x) => !x.local), 'they are not marked local', '');
     const w1 = await v.page.$eval(pmPanel + ' .card.pm-world', (c) => ({ src: c.querySelector('.c-src').textContent, green: c.querySelector('.c-src').classList.contains('is-local'), href: c.querySelector('.pm-pic').getAttribute('href') }));
     check(/NASA APOD|In Focus/.test(w1.src) && !w1.green && /^https:\/\/example\.org\/world\/page/.test(w1.href), 'a world picture names its source and links to its page', JSON.stringify(w1));
@@ -2391,8 +2654,8 @@ async function thePhotos(browser, base) {
     const u = await open({ ...base0 });
     await geoTo(u.page, 'everything');
     const plain = await pmState(u.page);
-    check(plain.list.length === loc.list.length && !plain.list.some((x) => x.from === 'world') && !(await u.page.$(pmPanel + ' .pm-empty')) &&
-      /^Burlington in photos/.test(await u.page.$eval(pmPanel + ' .pm-head h2', (h) => h.textContent)), 'without photos_world, Everything shows what Local does', JSON.stringify([plain.list.length, loc.list.length]));
+    check(plain.list.length === loc.list.length + awayIg(plain) && !plain.list.some((x) => x.from === 'world') && !(await u.page.$(pmPanel + ' .pm-empty')) &&
+      (awayIg(plain) ? /^Burlington and the world/ : /^Burlington in photos/).test(await u.page.$eval(pmPanel + ' .pm-head h2', (h) => h.textContent)), 'without photos_world, Everything shows Local plus the national accounts', JSON.stringify([plain.list.length, loc.list.length]));
     check(!u.errors.length, 'no console errors', u.errors.join(' | '));
     await u.ctx.close();
   });
@@ -2507,7 +2770,7 @@ const tvHead = (page) => page.$eval('#panel-onair [data-sec="tv"]', (h) => {
     prev: b('Earlier night'), next: b('Later night'), focus: document.activeElement && document.activeElement.getAttribute('aria-label') };
 });
 const toSide = async (page, side) => { await toTop(page); await page.click('#subnav .oa-sideswitch [data-side="' + side + '"]'); await page.waitForTimeout(200); };
-const toEverything = async (page) => { await toTop(page); await page.click('#subnav .localsw-half:not(.on)'); await page.waitForTimeout(250); };
+const toEverything = async (page) => { await toTop(page); await page.click('#subnav .localsw-half:has-text("Everything")'); await page.waitForTimeout(250); };
 const visibleSecs = (page) => page.$$eval('#panel-onair [data-sec]', (s) => s.filter((x) => x.offsetParent !== null).map((x) => x.dataset.sec));
 /* every demo video's key, by whether it is from here */
 async function demoKeys() {
@@ -2536,13 +2799,14 @@ async function onAir(browser, base) {
     check(chipsTV[0] === 'All lengths' && chipsTV.slice(1).every((c) => ['Under 15 min', '15–30 min', '30 min+', 'Trailers'].includes(c)) && chipsTV.length >= 3,
       'on TV the chip row is lengths, in minutes', JSON.stringify(chipsTV));
     const order = await visibleSecs(page);
-    check(order[0] === 'tv' && order.indexOf('live') < order.indexOf('past') && !order.includes('boards') && !order.includes('brief') && !order.includes('pods'),
-      'TV: Btown TV first, then more, Live and Past nights; no podcasts on this side', JSON.stringify(order));
+    check(order[0] === 'recaps' && order[1] === 'tv' && order.indexOf('live') < order.indexOf('past') && !order.includes('boards') && !order.includes('brief') && !order.includes('pods'),
+      'TV: Recaps first, then Btown TV, more, Live and Past nights; no podcasts on this side', JSON.stringify(order));
     const pick = await page.$eval('#panel-onair [data-pick]', (b) => { const r = b.getBoundingClientRect(); return { text: b.textContent.trim(), top: r.top, w: r.width, h: r.height }; });
     check(pick.text === 'Pick a vid for me' && pick.h >= 44 && pick.w >= 200, '“Pick a vid for me”, a big button', JSON.stringify(pick));
     const vsw = await page.$$eval('#panel-onair .oa-viewswitch button', (bs) => bs.map((b) => b.textContent + '|' + b.getAttribute('aria-pressed')));
     check(JSON.stringify(vsw) === JSON.stringify(['Feed|true', 'Topics|false']), 'beside it, one small Feed | Topics switch, Feed on', JSON.stringify(vsw));
-    check(await page.$eval('#panel-onair [data-sec="tv"]', (h) => h.getBoundingClientRect().top < 330), 'Btown TV high on the first screen, under the pick button', '');
+    check(await page.$eval('#panel-onair [data-sec="recaps"]', (h) => h.getBoundingClientRect().top < 330), 'Recaps high on the first screen, under the pick button', '');
+    check(await page.$eval('#panel-onair [data-sec="tv"]', (h) => h.getBoundingClientRect().top < 844), 'and Btown TV still on the first screen, under Recaps', '');
     const subs = await page.$$eval('#panel-onair [data-sec] p', (p) => p.filter((x) => x.offsetParent !== null).map((x) => x.textContent));
     check(!subs.length, 'no section carries an explanatory subtitle', JSON.stringify(subs));
 
@@ -2598,7 +2862,7 @@ async function onAir(browser, base) {
     const eps = await page.$$eval('#panel-onair [data-eps="' + showId + '"] .lrow', (r) => r.length);
     check(eps > 0 && eps <= 5, 'a show opens in place to its newest episodes (' + eps + ')', eps);
     await toTop(page);
-    await page.click('#subnav .localsw-half:not(.on)');
+    await page.click('#subnav .localsw-half:not(.on):not([data-geo=national])');
     await page.waitForTimeout(250);
     const localRows = await podRows(page);
     check(localRows[0][0] === 'btown-brief' && localRows.length > 2 && localRows.every((r) => !r[1]), 'Local: every local show, no national ones', JSON.stringify(localRows));
@@ -2644,7 +2908,7 @@ async function onAir(browser, base) {
     check(JSON.stringify(groups) === JSON.stringify(['snack:Snack size Under 15 min', 'commute:Commute length 15–30 min', 'sit:Sit-down 30 min+', 'trailer:Trailers']),
       'More to watch: his words for each length, with the minutes', JSON.stringify(groups));
     const per = await page.$$eval('#panel-onair [data-slot="more"] [data-rows]', (bs) => bs.map((b) => b.children.length));
-    check(per.every((n) => n >= 1 && n <= 3), 'three of each on the All view', JSON.stringify(per));
+    check(per.every((n) => n >= 1 && n <= 8) && per.some((n) => n > 3), 'up to eight of each on the All view', JSON.stringify(per));
     for (const key of ['commute', 'trailer']) {
       await page.click('#subnav .chip[data-chip="' + key + '"]');
       await page.waitForTimeout(250);
@@ -2965,11 +3229,11 @@ async function onAir(browser, base) {
     await settle(page);
     await page.waitForSelector('#panel-onair [data-sec="past"]', { timeout: 8000 });
     const sideways = await page.$$eval('#panel-onair .rail', (rs) => rs.map((r) => r.dataset.rail || '(none)'));
-    check(JSON.stringify(sideways) === JSON.stringify(['news-cast', 'news-late', 'live', 'past']), 'the only sideways rows on the tab are the two news recap rows, Live and Past nights', JSON.stringify(sideways));
+    check(JSON.stringify(sideways) === JSON.stringify(['recaps', 'live', 'past']), 'the only sideways rows on the tab are Recaps, Live and Past nights', JSON.stringify(sideways));
     const tops = await page.$$eval('#panel-onair .railmode:not(.foot) [data-railmode]', (bs) => bs.map((b) => b.textContent + '|' + b.getAttribute('aria-pressed') + '|' + Math.round(b.getBoundingClientRect().height)));
-    check(tops.length === 4 && tops.every((t) => /^See as a list\|false\|\d+$/.test(t) && Number(t.split('|')[2]) >= 30), 'and each has “See as a list” above it', JSON.stringify(tops));
+    check(tops.length === 3 && tops.every((t) => /^See as a list\|false\|\d+$/.test(t) && Number(t.split('|')[2]) >= 30), 'and each has “See as a list” above it', JSON.stringify(tops));
     const names = await page.$$eval('#panel-onair .railmode:not(.foot) [data-railmode]', (bs) => bs.map((b) => b.getAttribute('aria-label')));
-    check(JSON.stringify(names) === JSON.stringify(['See as a list: Tonight’s newscasts', 'See as a list: Late-night and comedy', 'See as a list: Live', 'See as a list: Past nights']), 'each button names its row for a screen reader', JSON.stringify(names));
+    check(JSON.stringify(names) === JSON.stringify(['See as a list: Recaps', 'See as a list: Live', 'See as a list: Past nights']), 'each button names its row for a screen reader', JSON.stringify(names));
     const measure = () => page.$eval('#panel-onair [data-rail="past"]', (r) => {
       const cs = [...r.querySelectorAll(':scope > .vcard')];
       const boxes = cs.map((c) => c.getBoundingClientRect());
@@ -3001,37 +3265,34 @@ async function onAir(browser, base) {
     const order = await visibleSecs(page);
     check(order.indexOf('news') === order.indexOf('tv') + 1, 'News recaps sit right after Btown TV, on Local too (national, and plainly named)', JSON.stringify(order));
     const groups = await page.$$eval('#panel-onair [data-slot="news"] .oa-newsgroup', (gs) => gs.map((g) => ({ kind: g.dataset.news, label: g.querySelector('.tdiv').textContent.trim(),
-      shows: [...g.querySelectorAll('.oa-newscard .eyebrow')].map((e) => e.textContent) })));
+      shows: [...g.querySelectorAll('.oa-row .s')].map((e) => e.textContent.split(' · ')[0]) })));
     check(JSON.stringify(groups.map((g) => [g.kind, g.label])) === JSON.stringify([['newscast', 'Tonight’s newscasts'], ['comedy', 'Late-night and comedy']]), 'two groups: the newscasts, then late night', JSON.stringify(groups));
     const want = (kind) => d.news.items.filter((f) => f.kind === kind).sort((a, b) => b.d - a.d).map((f) => f.show);
-    check(JSON.stringify(groups[0].shows) === JSON.stringify(want('newscast')) && JSON.stringify(groups[1].shows) === JSON.stringify(want('comedy')),
+    check(JSON.stringify(groups[0].shows) === JSON.stringify(want('newscast').slice(0, 8)) && JSON.stringify(groups[1].shows) === JSON.stringify(want('comedy').slice(0, 8)),
       'every recap in its group, newest first', JSON.stringify(groups));
-    const card = await page.$eval('#panel-onair [data-slot="news"] .oa-newscard', (c) => ({ show: c.querySelector('.eyebrow').textContent, t: c.querySelector('.t').textContent,
+    const card = await page.$eval('#panel-onair [data-slot="news"] .oa-row', (c) => ({ t: c.querySelector('.t').textContent,
       s: c.querySelector('.s').textContent, dur: c.querySelector('.dur')?.textContent, buttons: [...c.querySelectorAll('button')].map((b) => b.textContent.trim() || b.getAttribute('aria-label')),
       size: parseFloat(getComputedStyle(c.querySelector('.t')).fontSize) }));
-    check(card.show && card.t && /^\d+ min · (Today|Yesterday|[A-Z][a-z]+day)$/.test(card.s) && /^\d+:\d\d$/.test(card.dur) && card.buttons[0] === 'Watch now' && card.buttons.length === 2 && card.size >= 16,
-      'a card: the show, the episode in a readable size, its length and day, Watch now and ⋯', JSON.stringify(card));
-    const abc = await page.$eval('#panel-onair .oa-newscard[data-k="yt:demo-nw-001"] .t', (t) => t.textContent);
+    check(card.t && /^.+ · \d+ min · (Today|Yesterday|[A-Z][a-z]+day)$/.test(card.s) && /^\d+:\d\d$/.test(card.dur) && card.buttons[0] === 'Watch now' && card.buttons.length === 2 && card.size >= 16,
+      'a row: the episode in a readable size, the show, its length and day, Watch now and ⋯', JSON.stringify(card));
+    /* Stephen, 2026-10-30: late night showed one and a half videos and then
+       empty space, where Snack size shows three on a phone */
+    const fit = await page.evaluate(() => {
+      const box = (sel) => { const rs = [...document.querySelectorAll(sel)].map((r) => r.getBoundingClientRect()); return { n: rs.length, w: Math.round(rs[0].width), right: Math.round(Math.max(...rs.map((r) => r.right))), h: Math.round(rs[0].height) }; };
+      return { late: box('#panel-onair [data-news="comedy"] .oa-row'), snack: box('#panel-onair [data-slot="more"] [data-rows="snack"] .oa-row'), wide: innerWidth, over: document.documentElement.scrollWidth - innerWidth };
+    });
+    check(fit.late.n >= 3 && fit.late.w === fit.snack.w && fit.late.w === fit.wide && fit.late.right <= fit.wide && fit.over <= 0,
+      'late night fills the page the way Snack size does, at 390', JSON.stringify(fit));
+    const abc = await page.$eval('#panel-onair [data-slot="news"] .oa-row[data-k="yt:demo-nw-001"] .t', (t) => t.textContent);
     check(abc === 'Full broadcast · Thursday, Oct. 15', 'a newscast reads as its date, not its show name twice', abc);
     /* Watch now plays the row in On Air's own player */
-    await page.click('#panel-onair .oa-newscard[data-k="yt:demo-nw-001"] .oa-watch');
+    await page.click('#panel-onair [data-slot="news"] .oa-row[data-k="yt:demo-nw-001"] .oa-watch');
     await page.waitForSelector('.sheet-card.oa-player', { timeout: 3000 });
     const player = await page.evaluate(() => ({ title: document.querySelector('.sheet-card.oa-player')?.getAttribute('aria-label'), q: document.querySelectorAll('.sheet-card .oa-q').length }));
     const casts = d.news.items.filter((f) => f.kind === 'newscast').sort((a, b) => b.d - a.d);
     const after = Math.min(5, casts.length - 1 - casts.findIndex((f) => f.id === 'demo-nw-001'));
     check(player.title === 'Tonight’s newscasts' && player.q === after, 'it opens the player on that row, the newscasts after it up next', JSON.stringify({ player, after }));
     await page.keyboard.press('Escape');
-    /* "See as a list", and the Collapse bar while it is open */
-    await page.click('#panel-onair .railmode:not(.foot) [data-railmode="news-cast"]');
-    const listed = await page.$eval('#panel-onair [data-rail="news-cast"]', (r) => {
-      const boxes = [...r.querySelectorAll(':scope > .vcard')].map((c) => c.getBoundingClientRect());
-      const foot = r.closest('.rail-wrap').nextElementSibling;
-      return { list: r.classList.contains('aslist'), down: boxes.every((b, i) => !i || b.top >= boxes[i - 1].bottom - 1), inside: boxes.every((b) => b.left >= 0 && b.right <= innerWidth + 0.5),
-        bar: !foot.hidden && foot.matches('.collapsebar') && getComputedStyle(foot).position === 'sticky', comedy: document.querySelector('[data-rail="news-late"]').classList.contains('aslist') };
-    });
-    check(listed.list && listed.down && listed.inside && listed.bar && !listed.comedy, 'the newscasts become a list, the Collapse bar under it; late night stays a row', JSON.stringify(listed));
-    await page.evaluate(() => document.querySelector('[data-rail="news-cast"]').closest('.rail-wrap').nextElementSibling.querySelector('[data-collapse]').click());
-    check(!(await page.$eval('#panel-onair [data-rail="news-cast"]', (r) => r.classList.contains('aslist'))), 'Collapse folds it back to a row', '');
     /* Topics: a News & politics shelf, not a flood in New this week */
     await page.click('#panel-onair .oa-viewswitch [data-view="topics"]');
     await page.waitForSelector('#panel-onair [data-topic="news"]', { timeout: 3000 });
@@ -3042,6 +3303,57 @@ async function onAir(browser, base) {
     await page.click('#panel-onair .oa-viewswitch [data-view="feed"]');
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
+  });
+
+  /* Stephen, 2026-10-30: a Recaps lane on top, real recap videos, the newest per show */
+  await group('On Air, the Recaps lane', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/all-day/?demo=1#onair');
+    await settle(page);
+    await page.waitForSelector('#panel-onair [data-rail="recaps"] .oa-recap', { timeout: 8000 });
+    const order = await visibleSecs(page);
+    check(order[0] === 'recaps' && order[1] === 'tv', 'Recaps come first, then Btown TV', JSON.stringify(order));
+    const cards = await page.$$eval('#panel-onair [data-rail="recaps"] .oa-recap', (cs) => cs.map((c) => ({ k: c.dataset.k, show: c.querySelector('.eyebrow').textContent, t: c.querySelector('.t').textContent, s: c.querySelector('.s').textContent })));
+    const shows = cards.map((c) => c.show);
+    check(cards[0].show === 'NBA' && /^Nightly recap/.test(cards[0].t), 'the NBA’s nightly recap leads', JSON.stringify(cards[0]));
+    check(cards[1].show === 'NBA' && /Top 10/i.test(cards[1].t) && ['NFL', 'NHL', 'MLB', 'CNN 10', 'Reuters World News'].every((n) => shows.includes(n)) && shows.includes('The Daily Show'),
+      'then the other leagues, the news and the comedy', JSON.stringify(shows));
+    check(new Set(cards.map((c) => c.k)).size === cards.length && shows.filter((n) => n === 'NBA').length === 2 && new Set(shows.filter((n) => n !== 'NBA')).size === shows.length - 2, 'one per show (the NBA’s recap and top plays are two)', JSON.stringify(shows));
+    const seen = await page.evaluate(() => [...document.querySelectorAll('#panel-onair [data-rail="recaps"] .oa-recap')].filter((c) => { const r = c.getBoundingClientRect(); return r.left >= 0 && r.right <= innerWidth; }).length);
+    check(seen >= 4, 'four or more whole recaps across at 390', String(seen));
+    await page.click('#panel-onair .oa-recap .t');
+    await page.waitForSelector('.sheet-card.oa-player', { timeout: 3000 });
+    check(await page.evaluate(() => document.querySelector('.sheet-card.oa-player')?.getAttribute('aria-label')) === 'Recaps', 'a tap plays the lane in On Air’s own player', '');
+    await page.keyboard.press('Escape');
+    await page.click('#panel-onair .oa-recap .oa-more');
+    await page.waitForSelector('.oa-menu', { timeout: 3000 });
+    const menu = await page.$$eval('.oa-menu .oa-mi span', (m) => m.map((x) => x.textContent));
+    check(menu.includes('Save') && menu.includes('Share'), '⋯ saves and shares', JSON.stringify(menu));
+    await page.keyboard.press('Escape');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+    /* a league out of season, and no sources at all */
+    const now = Math.floor(Date.now() / 1000);
+    const p1 = await newPage(browser, base);
+    await p1.page.route(/\/all-day\/data\/onair-news\.json/, (r) => r.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ v: 1, items: [
+      { id: 'RecapNew001', t: 'Best NHL Goals of Week 2', show: 'NHL', sk: 'nhl', kind: 'sports', sec: 300, d: now - 3 * 86400 },
+      { id: 'RecapNew002', t: 'Best NHL Goals of Week 1', show: 'NHL', sk: 'nhl', kind: 'sports', sec: 300, d: now - 4 * 86400 },
+      { id: 'RecapOff001', t: 'The Top 10 plays of the World Series', show: 'MLB', sk: 'mlb', kind: 'sports', sec: 300, d: now - 20 * 86400 },
+    ] }) }));
+    await p1.page.route(/\/all-day\/data\/onair-sports\.json/, (r) => r.fulfill({ status: 404, body: '' }));
+    await p1.page.goto(base + '/all-day/#onair');
+    await p1.page.waitForSelector('#panel-onair .oa-recap', { timeout: 15000 });
+    const live = await p1.page.$$eval('#panel-onair .oa-recap', (cs) => cs.map((c) => c.dataset.k));
+    check(JSON.stringify(live) === JSON.stringify(['yt:RecapNew001']), 'the newest per show, and a league out of season drops out', JSON.stringify(live));
+    check(!(await p1.page.$('#panel-onair [data-slot="news"]:not([hidden])')), 'a sports recap stays out of the news lists', '');
+    await p1.ctx.close();
+    const p2 = await newPage(browser, base);
+    await p2.page.route(/\/all-day\/data\/onair-(news|sports)\.json/, (r) => r.fulfill({ status: 404, body: '' }));
+    await p2.page.goto(base + '/all-day/#onair');
+    await p2.page.waitForSelector('#panel-onair [data-sec="tv"]', { timeout: 15000 });
+    await p2.page.waitForTimeout(400);
+    check(await p2.page.$eval('#panel-onair [data-slot="recaps"]', (s) => s.hidden && !s.children.length), 'with neither file there is no Recaps box', '');
+    await p2.ctx.close();
   });
 
   await group('On Air, news recaps are checked', async () => {
@@ -3055,12 +3367,12 @@ async function onAir(browser, base) {
     const { ctx, page, errors } = await newPage(browser, base);
     await page.route(/\/all-day\/data\/onair-news\.json/, (r) => r.fulfill({ status: 200, body: JSON.stringify(file), contentType: 'application/json' }));
     await page.goto(base + '/all-day/#onair');
-    await page.waitForSelector('#panel-onair [data-slot="news"] .oa-newscard', { timeout: 15000 });
+    await page.waitForSelector('#panel-onair [data-slot="news"] .oa-row', { timeout: 15000 });
     const keys = await page.$$eval('#panel-onair [data-slot="news"] [data-k]', (cs) => cs.map((c) => c.dataset.k));
     check(JSON.stringify(keys) === JSON.stringify(['yt:NewsGood001', 'yt:NewsGood002']), 'live: real recaps show; a bad id or an unknown kind is left out', JSON.stringify(keys));
     await page.waitForTimeout(300);
     const xss = await page.evaluate(() => ({ flag: window.__xss || 0, imgs: [...document.querySelectorAll('#panel-onair [data-slot="news"] img')].filter((i) => !/^https:\/\/i\.ytimg\.com\//.test(i.src)).length,
-      show: document.querySelector('#panel-onair [data-k="yt:NewsGood002"] .eyebrow').textContent }));
+      show: document.querySelector('#panel-onair [data-slot="news"] [data-k="yt:NewsGood002"] .s').textContent.split(' · ')[0] }));
     check(!xss.flag && !xss.imgs && xss.show === '<b>Kimmel</b>', 'a title or show name from the file is text, never markup', JSON.stringify(xss));
     await ctx.close();
     /* no file, or an empty one: no section, nothing broken */
@@ -3521,7 +3833,7 @@ async function onAir(browser, base) {
       stored: localStorage.getItem('allday-onair-view'),
     }));
     check(t.shelves[0] === 'new' && t.shelves.length >= 3 && t.counts.every((c, i) => c >= (i ? 3 : 1)), 'Topics: New this week first, then each topic with three or more', JSON.stringify(t));
-    check(t.firstTiles === Math.min(4, t.counts[0]) && !t.feed.length && t.stored === 'topics', 'four tiles a shelf; the feed’s sections step aside; the choice is kept on this phone', JSON.stringify(t));
+    check(t.firstTiles === Math.min(8, t.counts[0]) && !t.feed.length && t.stored === 'topics', 'eight tiles a shelf; the feed’s sections step aside; the choice is kept on this phone', JSON.stringify(t));
     /* a topic's All N opens in place with the bar */
     const key = await page.$eval('#panel-onair [data-slot="topics"] [data-expand]', (b) => b.dataset.expand);
     const n = Number((/^All (\d+)/.exec(await page.$eval('#panel-onair [data-expand="' + key + '"]', (b) => b.textContent)) || [])[1]);
@@ -4200,7 +4512,7 @@ async function interactions(browser, base) {
     await page.waitForTimeout(200);
     /* the switch to Everything: a full page of rows, drawn from scratch */
     const ms = await page.evaluate(() => {
-      const half = document.querySelector('.panel:not([hidden]) .wband .localsw-half:not(.on)');
+      const half = document.querySelector('.panel:not([hidden]) .wband .localsw-half:not(.on):not([data-geo=national])');
       const t = performance.now();
       half.click();
       return performance.now() - t;
@@ -4273,6 +4585,8 @@ async function theWhatNow(browser, base) {
     check(await page.$$eval(wnPanel + ' .chips.paths .chip', (c) => c.map((x) => x.innerText).join('|')) === 'I’m broke|Get me outside|People, please|Two hours|Close by|Teach me something|Move with people', 'the seven path chips', '');
     const first = await spinAnswer(page);
     check(first.length > 3, 'Spin returns an answer', first);
+    /* not every pick has a reason to give, and the seed's stream moves with whatever else calls Math.random, so spin until one does */
+    for (let i = 0; i < 8 && !(await page.$(wnPanel + ' .result .because')); i += 1) await spinAnswer(page).catch(() => '');
     check(/^Because /.test(await page.$eval(wnPanel + ' .result .because', (p) => p.textContent).catch(() => '')), 'the answer spells out its reason', '');
     check(/^Right now · /.test(await page.$eval(wnPanel + ' .result .eyebrow', (e) => e.textContent)), 'the answer says it is for right now', '');
     await page.click(wnPanel + ' .result .another');
@@ -4960,7 +5274,8 @@ async function theFood(browser, base) {
     await page.goto(base + '/all-day/#food/kitchens');
     await page.waitForSelector(foodPanel + ' .vcard.clip', { timeout: 15000 });
     const keys = await page.$$eval(foodPanel + ' [data-sec="kitchens"] .vcard', (c) => c.map((x) => x.dataset.k));
-    check(JSON.stringify(keys) === JSON.stringify(['ig-FoodReelA', 'ig-FoodReelB']), 'the rail holds the food reels, newest first; a reel about to lapse and a non-food account are left out', keys.join(', '));
+    check(JSON.stringify(keys) === JSON.stringify(['ig-FoodReelLapsing', 'ig-FoodReelA', 'ig-FoodPhoto', 'ig-FoodReelB']), 'one grid of photos and reels, newest first; a non-food account is left out', keys.join(', '));
+    check(await page.$eval(foodPanel + ' [data-k="ig-FoodReelLapsing"]', (a) => !a.classList.contains('clip') && !a.querySelector('.play')) && await page.$$eval(foodPanel + ' [data-grid="kitchens"] .vcard.clip .play', (p) => p.length) === 2, 'a reel about to lapse is a plain photo tile; the others keep their play badge', '');
     check(await page.$$eval('video', (v) => v.length) === 0 && !mp4.length, 'before a tap: no video on the page and nothing fetched', mp4.join(', '));
     check(await page.$eval('#vbox', (b) => b.hidden), 'and the video box is closed', '');
     await page.click(foodPanel + ' [data-k="ig-FoodReelA"]');
@@ -4991,6 +5306,43 @@ async function theFood(browser, base) {
       'with no videos it shows the food accounts’ latest photos, and no explanation', tiles.join(', '));
     check(!p2.errors.length, 'no console errors', p2.errors.join(' | '));
     await p2.ctx.close();
+  });
+
+  await group('Food, In their own words is a grid that opens on six tiles and keeps to food from the last two weeks (live, 390)', async () => {
+    const ig = foodInstagram(true);
+    const base0 = ig.posts[3];
+    const now = Math.floor(Date.now() / 1000);
+    const extra = (code, hrs, more) => ({ ...base0, u: 'https://www.instagram.com/p/' + code + '/', ts: now - hrs * 3600, ...more });
+    for (let i = 0; i < 8; i++) ig.posts.push(extra('Grid' + i, 6 + i, { kind: i % 2 ? 'food' : 'vibe' }));
+    ig.posts.push(extra('NotAboutFood', 1, { kind: 'other' }), extra('APoster', 1, { kind: 'poster' }), extra('Stale', 15 * 24, { kind: 'food' }));
+    const { ctx, page, errors } = await newPage(browser, base, { viewport: { width: 390, height: 844 } });
+    await page.route(/\/all-day\/data\/instagram\.json/, (r) => r.fulfill({ status: 200, body: JSON.stringify(ig), contentType: 'application/json' }));
+    await page.goto(base + '/all-day/#food/kitchens');
+    await page.waitForSelector(foodPanel + ' [data-grid="kitchens"] .vcard', { timeout: 15000 });
+    const state = () => page.evaluate((p) => {
+      const cells = [...document.querySelectorAll(p + ' [data-grid="kitchens"] .vcard')], on = cells.filter((c) => !c.hidden);
+      const media = on.map((c) => { const r = c.querySelector('.c-media').getBoundingClientRect(); return [Math.round(r.width), Math.round(r.height)]; });
+      return { n: cells.length, shown: on.length, keys: cells.map((c) => c.dataset.k), square: media.every(([w, h]) => w === h), cols: new Set(on.map((c) => Math.round(c.getBoundingClientRect().left))).size,
+        more: !document.querySelector(p + ' [data-sec="kitchens"] .vmore').hidden, bar: !document.querySelector(p + ' [data-sec="kitchens"] .collapsebar').hidden, rail: !!document.querySelector(p + ' [data-sec="kitchens"] .rail') };
+    }, foodPanel);
+    const a = await state();
+    check(a.n === 12 && a.shown === 6 && a.cols === 2 && a.square && a.more && !a.bar && !a.rail, 'twelve tiles, six showing, two across, square, See more under them, and no sideways rail', JSON.stringify(a));
+    check(!a.keys.some((k) => /NotAboutFood|APoster|Stale/.test(k)), 'a post of another kind and one over two weeks old stay out', a.keys.join(' '));
+    await page.click(foodPanel + ' [data-more="kitchens"]');
+    const b = await state();
+    check(b.shown === 12 && !b.more && b.bar, 'See more opens the rest, and Collapse appears', JSON.stringify(b));
+    await page.click(foodPanel + ' [data-sec="kitchens"] .collapsebar button');
+    const c = await state();
+    check(c.shown === 6 && c.more && !c.bar, 'Collapse folds it back', JSON.stringify(c));
+    await pageRules(page, 'food', 390);
+    await page.screenshot({ path: path.join(SHOTS, 'live-food-grid-390.png') });
+    /* a link to a tile folded behind See more opens the grid to it */
+    await page.evaluate((k) => { location.hash = 'food/' + k; }, a.keys[8]);
+    await page.waitForTimeout(600);
+    const linked = await page.$eval(foodPanel + ' [data-k="' + a.keys[8] + '"]', (t) => ({ hidden: t.hidden, top: Math.round(t.getBoundingClientRect().top) }));
+    check(!linked.hidden && linked.top >= 0 && linked.top < 844, 'a link to the ninth tile lands on it', JSON.stringify(linked));
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
   });
 
   await group('Food, the Weekly Bite and Feature a dish (live)', async () => {
@@ -5100,7 +5452,7 @@ async function theFood(browser, base) {
     await page.click('.sheet-head .iconbtn').catch(() => {});
     await toTop(page);
     const toc = await page.$$eval('#subnav .chip', (c) => c.map((x) => x.dataset.chip));
-    check(JSON.stringify(toc) === JSON.stringify(['asks', 'bite', 'open', 'deals', 'best', 'kitchens', 'add']), 'the chip row is the table of contents in page order, the fresh Asked first: Asked, Bite, Open now, Deals, Best of, Kitchens, Feature a dish', toc.join(', '));
+    check(JSON.stringify(toc) === JSON.stringify(['asks', 'kitchens', 'bite', 'open', 'deals', 'best', 'add']), 'the chip row is the table of contents in page order, the fresh Asked first, then Kitchens, Bite, Open now, Deals, Best of, Feature a dish', toc.join(', '));
     await page.click('#subnav .chip[data-chip="add"]');
     await page.waitForTimeout(1200);
     /* the last section of a short page cannot reach the top; then the panel is scrolled to its end */
@@ -5415,11 +5767,12 @@ async function theFood(browser, base) {
     const first = (page) => page.waitForSelector(foodPanel + ' [data-sec="kitchens"] .vcard, ' + foodPanel + ' [data-sec="kitchens"] .note', { timeout: 15000 });
     /* a thread from this morning: Asked on Reddit leads, Open now sits below it */
     const a = await newPage(browser, base);
+    await a.page.route(/\/all-day\/data\/instagram\.json/, (r) => r.fulfill({ status: 200, body: JSON.stringify(foodInstagram(true)), contentType: 'application/json' }));
     await a.page.goto(base + '/all-day/#food');
     await a.page.waitForSelector(foodPanel + ' [data-sec="asks"] .card', { timeout: 15000 });
     await first(a.page);
     const oa = await order(a.page);
-    check(oa[0] === 'asks' && oa.indexOf('open') > oa.indexOf('asks') && oa.join() === 'asks,bite,open,deals,best,kitchens,add', 'a thread under three days old: Asked on Reddit is the first thing on the tab, Open now below it', oa.join());
+    check(oa.join() === 'asks,kitchens,bite,open,deals,best,add', 'a thread under three days old: Asked on Reddit is the first thing on the tab, In their own words right after it, Open now below', oa.join());
     check((await chipOrder(a.page))[0] === 'asks', 'and the chip row follows the page', (await chipOrder(a.page)).join());
     await a.page.goto(base + '/all-day/#food/open');
     check(await a.page.$eval(foodPanel + ' [data-sec="open"]', (s) => !!s.querySelector('.lrow.place')), 'the deep link #food/open still lands on Open now', '');
@@ -5463,19 +5816,19 @@ async function theFood(browser, base) {
     await page.waitForSelector(foodPanel + ' [data-sec="asks"] .card', { timeout: 15000 });
     const rows = await page.$$eval(foodPanel + ' [data-sec="asks"] .card', (cs) => cs.map((c) => ({ k: c.dataset.k, text: c.innerText,
       href: c.querySelector('a.c-title').getAttribute('href'), target: c.querySelector('a.c-title').target })));
-    const want = [redditUrl('t1'), redditUrl('t3', 'r/vermont'), redditUrl('t5'), redditUrl('t8')];
-    check(JSON.stringify(rows.map((r) => r.k)) === JSON.stringify(want),
-      'only the food asks, newest first: not the non-food thread, the r/vermont ask outside Burlington, the link post, the sale or the removed post', rows.map((r) => r.k).join(', '));
-    check(rows.every((r, i) => r.href === want[i] && r.target === '_blank'), 'each title links out to its own thread', JSON.stringify(rows.map((r) => [r.href, r.target])));
+    const want = [redditUrl('t1'), redditUrl('t3', 'r/vermont'), redditUrl('t4', 'r/vermont'), redditUrl('t5'), redditUrl('t8')];
+    check(JSON.stringify(rows.slice(0, want.length).map((r) => r.k)) === JSON.stringify(want),
+      'the food threads newest first: not the non-food thread, a quiet link post, the sale or the removed post', rows.map((r) => r.k).join(', '));
+    check(rows.every((r) => r.href === r.k && r.target === '_blank'), 'each title links out to its own thread', JSON.stringify(rows.map((r) => [r.href, r.target])));
     check(/^Best ramen/.test(rows[0].text) && /r\/burlington/.test(rows[0].text) && /\b2h\b/.test(rows[0].text) && /\b31\b/.test(rows[0].text),
       'a row: the thread title, its subreddit, its age and its comment count', rows[0].text);
     check(/r\/vermont/.test(rows[1].text) && !/\b\d+\b(?!h)/.test(rows[1].text.replace(/Winooski\?/, '')), 'an r/vermont ask names its subreddit; no count when the intake has none', rows[1].text);
     const head = await page.$eval(foodPanel + ' [data-sec="asks"] .sec', (h) => ({ h2: h.querySelector('h2').textContent, sub: h.querySelector('p')?.textContent || '',
       link: h.querySelector('a')?.getAttribute('href') || '', target: h.querySelector('a')?.target }));
-    check(head.h2 === 'Asked on Reddit' && head.sub === '4 threads · newest first', 'the head: Asked on Reddit, 4 threads, newest first', JSON.stringify(head));
+    check(head.h2 === 'On Reddit' && /^\d+ threads · newest first$/.test(head.sub), 'the head: Asked on Reddit, 4 threads, newest first', JSON.stringify(head));
     check(head.link === 'https://www.reddit.com/r/burlington/' && head.target === '_blank', 'and an r/burlington link out', JSON.stringify(head));
     const chip = await page.$eval('#subnav .chip[data-chip="asks"]', (c) => ({ label: c.querySelector('span').textContent, n: c.querySelector('.n')?.textContent }));
-    check(chip.label === 'Asked' && chip.n === '4', 'its chip in the table of contents counts the threads', JSON.stringify(chip));
+    check(chip.label === 'Reddit' && Number(chip.n) >= 4, 'its chip in the table of contents counts the threads', JSON.stringify(chip));
 
     /* a thread's link lands on its row */
     await page.evaluate((u) => { location.hash = '#food/' + encodeURIComponent(u); }, want[2]);
@@ -5491,7 +5844,7 @@ async function theFood(browser, base) {
     await m.page.goto(base + '/all-day/#food/asks');
     await m.page.waitForSelector(foodPanel + ' [data-sec="asks"] .card', { timeout: 15000 });
     const mk = await m.page.$$eval(foodPanel + ' [data-sec="asks"] .card', (cs) => cs.map((c) => c.dataset.k));
-    check(JSON.stringify(mk) === JSON.stringify([want[0], want[2], want[3]]), 'with r/vermont muted, its ask is not shown', mk.join(', '));
+    check(!mk.some((k) => k.includes('/r/vermont/')) && mk[0] === want[0] && mk.includes(want[3]), 'with r/vermont muted, its threads are not shown', mk.join(', '));
     await m.page.evaluate((u) => { location.hash = '#food/' + encodeURIComponent(u); }, want[1]);
     await m.page.waitForSelector('#toast:not([hidden])', { timeout: 4000 }).catch(() => {});
     const tm = await m.page.evaluate(() => document.getElementById('toast')?.textContent || '');
@@ -6108,7 +6461,9 @@ async function theWatch(browser, base) {
     await page.click('#subnav [data-side="up"]');
     await page.waitForSelector(wPanel + ' [data-sec="soon"]', { timeout: 4000 });
     const soon = await page.$$eval(wPanel + ' [data-sec="soon"] + .railmode + .rail-wrap .poster', (n) => n.length);
-    check(soon === d.films.soon.length + d.films.now.length && soon === 10, 'Coming soon: ten trailers', soon);
+    const near = (f) => Math.abs(wDayNum(f.d) - wDayNum(d._anchor)) <= 7;
+    const week = new Set([...d.films.now, ...d.films.soon, ...d.films.stream, ...d.films.tv_stream, ...d.films.tv_air].filter(near).map((f) => f.id));
+    check(soon === week.size && soon >= 5, 'Out this week: everything a week either side of today', soon + ' of ' + week.size);
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
   });
@@ -6253,9 +6608,9 @@ async function theWatch(browser, base) {
     const far = d.films.top[57];
     await page.goto(base + '/all-day/?demo=1#watch/f' + far.id);
     check(await flashes(page, 'f' + far.id), 'a film far down the list lands and flashes', '');
-    await page.goto(base + '/all-day/?demo=1#watch/soon:' + d.films.soon[3].id);
+    await page.goto(base + '/all-day/?demo=1#watch/soon:' + d.films.soon[0].id);
     await page.reload();
-    check(await flashes(page, 'soon:' + d.films.soon[3].id), 'a coming-soon poster lands and flashes', '');
+    check(await flashes(page, 'soon:' + d.films.soon[0].id), 'a coming-soon poster lands and flashes', '');
     await page.goto(base + '/all-day/?demo=1#watch/f1');
     await page.reload();
     await page.waitForSelector('#toast:not([hidden])', { timeout: 6000 }).catch(() => {});
@@ -6271,7 +6626,7 @@ async function theWatch(browser, base) {
     await page.waitForSelector(wPanel + ' [data-kind]', { timeout: 15000 });
     const kinds = await page.$$eval(wPanel + ' [data-kind] button', (n) => n.map((b) => [b.textContent, b.classList.contains('on')]));
     check(JSON.stringify(kinds) === '[["Movies",true],["TV",false]]', 'a Movies / TV switch at the top, on Movies', JSON.stringify(kinds));
-    check(await page.$eval(wPanel, (p) => p.querySelector('[data-slot]').dataset.slot) === 'kind', 'and it is the first thing on the tab', '');
+    check(JSON.stringify(await page.$$eval(wPanel + ' [data-slot]', (n) => n.slice(0, 3).map((x) => x.dataset.slot))) === '["drop","next","kind"]', 'and it is the first control on the tab, under the card and Next up', '');
     await page.click(wPanel + ' [data-kind] button:has-text("TV")');
     await page.waitForFunction(() => /On TV now/.test(document.querySelector('#panel-watch [data-sec="soon"]')?.innerText || ''), null, { timeout: 4000 }).catch(() => {});
     const air = await page.$$eval(wPanel + ' [data-sec="soon"] + .railmode + .rail-wrap .poster', (n) => n.map((a) => [a.querySelector('.t').textContent, a.querySelector('.s').textContent]));
@@ -6597,8 +6952,8 @@ async function theWatch(browser, base) {
       row: g.closest('.secrow').classList.contains('oa-sidesrow'), next: !!g.closest('.secbar').querySelector(':scope > .secrow + .secpill') }));
     check(sw.liquid && sw.canvas && sw.label === 'Upcoming or past' && sw.row && sw.next, 'Upcoming | Past is poured like Build | Habits, with the side’s sections in the small pill under it', JSON.stringify(sw));
     const slots = await page.$$eval(wPanel + ' [data-slot]', (n) => n.map((x) => x.dataset.slot));
-    check(JSON.stringify(slots) === '["kind","theaters","soon","cta","stream","vote","chat"]', 'Upcoming: the switch, showtimes, coming to theaters, coming to streaming, the screening vote, chat', JSON.stringify(slots));
-    check(await page.$eval(wPanel + ' [data-sec="soon"] h2', (h) => h.textContent) === 'Coming to theaters' && await page.$eval(wPanel + ' [data-sec="stream"] h2', (h) => h.textContent) === 'Coming to streaming',
+    check(JSON.stringify(slots) === '["drop","next","kind","theaters","soon","cta","stream","vote","chat"]', 'Upcoming: the trailer card, Next up, the switch, showtimes, out this week, coming to streaming, the screening vote, chat', JSON.stringify(slots));
+    check(await page.$eval(wPanel + ' [data-sec="soon"] h2', (h) => h.textContent) === 'Out this week' && await page.$eval(wPanel + ' [data-sec="stream"] h2', (h) => h.textContent) === 'Coming to streaming',
       'the two rows say where: theaters, streaming', '');
     const stream = await page.$$eval(wPanel + ' [data-stream] .poster', (n) => n.map((a) => [a.dataset.k, a.querySelector('.s').textContent]));
     const when = (k) => { const nd = new Date((wDayNum(k) + wDayNum(wToday()) - wDayNum(d._anchor)) * W_DAY + 12 * 3600000).toISOString().slice(0, 10);
@@ -6684,7 +7039,7 @@ async function theWatch(browser, base) {
     check(/^Streaming from [A-Z][a-z]{2} \d+$/.test(await page.$eval('.sheet-body [data-streams]', (n) => n.textContent)), 'a film with no service named: Streaming from its day', '');
     await page.click('.sheet-head .iconbtn');
     const toc = await page.$$eval('#subnav .secpill .chip', (c) => c.map((x) => x.textContent));
-    check(JSON.stringify(toc) === '["Theaters","Coming soon","Streaming","Next screening","Chat"]', 'Streaming joins Upcoming’s contents', toc.join(' / '));
+    check(JSON.stringify(toc) === '["Theaters","This week","Streaming","Next screening","Chat"]', 'Streaming joins Upcoming’s contents', toc.join(' / '));
     await page.click(wPanel + ' [data-kind] button:has-text("TV")');
     await page.waitForSelector(wPanel + ' [data-stream="tv"] .poster', { timeout: 4000 });
     check(/^Season 3 · HBO Max · [A-Z][a-z]{2} \d+$/.test(await page.$eval(wPanel + ' [data-stream="tv"] .poster .s', (n) => n.textContent)) && !(await page.$(wPanel + ' [data-slot="stream"] [data-jw]')),
@@ -6712,6 +7067,448 @@ async function theWatch(browser, base) {
 }
 
 const VMETA = (p) => [p.meta.shop, p.meta.size, p.meta.price != null ? '$' + p.meta.price : ''].filter(Boolean).join(' · ');
+/* trailers.json in the shape build_trailers.py writes, around the film list
+   watchFilms() gives: two new this week, one past, one film's key skipped */
+function watchTrailers(films) {
+  const now = Math.floor(Date.now() / 1000);
+  const day = (n) => new Date(Date.now() + n * W_DAY).toISOString().slice(0, 10);
+  const row = (id, t, yt, ago, extra) => ({ id, t, y: 2026, d: day(40), g: ['Drama'], o: 'An overview.', rt: 120, p: '', yt, where: 'theaters', at: now - Math.floor(ago * 86400), ch: 'Sony', ...extra });
+  return { v: 1, built: new Date().toISOString(), source: 'YouTube, TMDB',
+    fresh: [row(880001, 'Fresh One', 'freshTrail1', 2.3), row(880002, 'Fresh Two', 'freshTrail2', 0.25, { where: 'streaming', on: 'Netflix', d: day(5) })],
+    past: [row(880003, 'Past One', 'pastTrailr1', 30, { d: '' })],
+    skip: [films.top[3].yt] };
+}
+const wCard = (page) => page.$eval(wPanel + ' .wt-drop', (c) => ({ key: c.dataset.trailer, k: c.dataset.k, t: c.querySelector('.t').textContent, s: c.querySelector('.s').textContent,
+  age: (c.querySelector('.wt-drop-age') || {}).textContent || '', prev: !c.querySelector('[data-step="-1"]').disabled, next: !c.querySelector('[data-step="1"]').disabled }));
+const wStep = (page, by) => page.click(wPanel + ' .wt-drop [data-step="' + by + '"]');
+async function wWalk(page) {
+  const keys = [];
+  for (let i = 0; i < 80; i++) {
+    const c = await wCard(page);
+    keys.push(c.key);
+    if (!c.next) break;
+    await wStep(page, 1);
+  }
+  return keys;
+}
+
+async function theWatchTrailers(browser, base) {
+  await group('Watch, the trailer card: first thing, in order, one video box (live)', async () => {
+    const films = await watchFilms();
+    const trailers = watchTrailers(films);
+    const { ctx, page, errors } = await newPage(browser, base, { films, trailers });
+    await page.route(/youtube-nocookie\.com/, (r) => r.fulfill({ status: 200, body: '<!doctype html><title>YouTube</title>', contentType: 'text/html' }));
+    /* the first ask, because the spec's 1px stub sends the card on to the 480 picture */
+    const thumbs = [];
+    page.on('request', (r) => { if (/i\.ytimg\.com/.test(r.url())) thumbs.push(r.url()); });
+    await page.goto(base + '/all-day/#watch');
+    await page.waitForSelector(wPanel + ' .wt-drop');
+    const order = await page.$$eval(wPanel + ' [data-slot]', (n) => n.filter((x) => x.children.length).map((x) => x.dataset.slot));
+    check(order[0] === 'drop', 'the card is the first thing under the bar', order.join(','));
+    /* the hottest new trailer the file ranks first */
+    let c = await wCard(page);
+    check(c.t === 'Fresh One' && c.key === 'freshTrail1' && /^New · 2d$/.test(c.age) && !c.prev && c.next, 'it opens on the file’s first new trailer, tagged with its age, and there is nothing behind it', JSON.stringify(c));
+    check(/^[A-Z][a-z]{2} \d{1,2} · theaters$/.test(c.s), 'one date line', c.s);
+    check(thumbs[0] === 'https://i.ytimg.com/vi/freshTrail1/maxresdefault.jpg', 'the picture is YouTube’s thumbnail', thumbs[0]);
+    const text = await page.$eval(wPanel + ' .wt-drop', (n) => n.innerText);
+    check(text.split('\n').filter(Boolean).length === 3, 'the tag, the title, the date: no other words on the card', JSON.stringify(text));
+    check(await page.$$eval(wPanel + ' .wt-drop .act', (n) => n.map((b) => b.getAttribute('aria-label')).join()) === 'Share,Save', 'share and star only: no comments', '');
+    check(!(await page.$('#vbox-frame iframe')) && await page.$eval('#vbox', (b) => b.hidden), 'nothing plays before a tap', '');
+    await wStep(page, 1);
+    c = await wCard(page);
+    check(c.t === 'Fresh Two' && c.age === 'New · 6h' && c.prev && /· Netflix$/.test(c.s), 'the next new one, in hours, on its service', JSON.stringify(c));
+    await wStep(page, 1);
+    c = await wCard(page);
+    check(!c.age, 'past this week there is no New tag', JSON.stringify(c));
+    await wStep(page, -1);
+    check((await wCard(page)).t === 'Fresh Two', '‹ goes back', '');
+    await wStep(page, -1);
+    /* the box walks the same list */
+    await page.click(wPanel + ' .wt-drop-pic');
+    await page.waitForSelector('#vbox:not([hidden]) #vbox-frame iframe');
+    const src = () => page.$eval('#vbox-frame iframe', (f) => f.getAttribute('src'));
+    check(await src() === 'https://www.youtube-nocookie.com/embed/freshTrail1?autoplay=1&rel=0&playsinline=1', 'a tap plays it in the shell’s video box', await src());
+    const nav = () => page.$eval('#vbox', () => ['vbox-prev', 'vbox-next'].map((id) => { const b = document.getElementById(id); return [b.hidden, b.disabled]; }));
+    check(JSON.stringify(await nav()) === '[[false,true],[false,false]]', 'the box has Previous and Next, Previous off on the first', JSON.stringify(await nav()));
+    await page.click('#vbox-next');
+    await page.waitForFunction(() => /freshTrail2/.test(document.querySelector('#vbox-frame iframe')?.src || ''));
+    check((await page.$eval('#vbox-title', (t) => t.textContent)) === 'Fresh Two · trailer' && (await wCard(page)).t === 'Fresh Two', 'Next plays the next one and the card follows it', await page.$eval('#vbox-title', (t) => t.textContent));
+    await page.click('#vbox-prev');
+    await page.waitForFunction(() => /freshTrail1/.test(document.querySelector('#vbox-frame iframe')?.src || ''));
+    check((await page.$$('iframe')).length === 1, 'Previous goes back, in the one box', '');
+    await page.click('#vbox-close');
+    check(JSON.stringify(await nav()) === '[[true,true],[true,true]]', 'closed, the buttons go with it', JSON.stringify(await nav()));
+    /* a trailer from a rail has no walk, so no buttons */
+    await page.click(wPanel + ' [data-k="soon:' + films.now[0].id + '"]');
+    await page.waitForSelector('#vbox:not([hidden]) #vbox-frame iframe');
+    check((await nav())[0][0] === true && (await nav())[1][0] === true, 'a trailer played from a rail has no Next', '');
+    await page.click('#vbox-close');
+    /* the whole walk */
+    const keys = await wWalk(page);
+    check(new Set(keys).size === keys.length, 'nothing twice', JSON.stringify(keys));
+    check(!keys.includes(films.top[3].yt), 'a key the file skips never shows', films.top[3].yt);
+    const topKeys = new Set(films.top.map((f) => f.yt));
+    check(keys.slice(2).slice(0, 8).filter((k, i) => (i + 1) % 4 === 0).every((k) => topKeys.has(k)), 'every fourth past the new ones comes from the top list', JSON.stringify(keys.slice(2)));
+    check(keys.includes('pastTrailr1') && keys.includes(films.soon[0].yt), 'the file’s past trailers and the shelves’ all feed it', JSON.stringify(keys));
+    /* star and share */
+    await page.reload();
+    await page.waitForSelector(wPanel + ' .wt-drop');
+    const before = await wCard(page);
+    await page.click(wPanel + ' .wt-drop .act.star');
+    check(await page.$eval(wPanel + ' .wt-drop .act.star', (b) => b.classList.contains('on') && b.getAttribute('aria-pressed') === 'true') &&
+      await page.evaluate((k) => JSON.parse(localStorage.getItem('allday-saved') || '[]').some((s) => s.k === k), before.k), 'the star saves it', before.k);
+    await page.click(wPanel + ' .wt-drop .act.sh');
+    await page.waitForFunction(() => /Link copied|Couldn’t copy/.test(document.getElementById('toast').textContent));
+    check(true, 'share answers', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await pageRules(page, 'watch', 390);
+    await ctx.close();
+  });
+
+  await group('Watch, the trailer card: fresh on every open (live)', async () => {
+    const films = await watchFilms();
+    const trailers = watchTrailers(films);
+    const { ctx, page, errors } = await newPage(browser, base, { films, trailers });
+    await page.goto(base + '/all-day/#watch');
+    await page.waitForSelector(wPanel + ' .wt-drop');
+    const first = await wCard(page);
+    await page.reload();
+    await page.waitForSelector(wPanel + ' .wt-drop');
+    const second = await wCard(page);
+    check(first.key === 'freshTrail1' && second.key === 'freshTrail2' && second.prev, 'a reload opens on the next one not yet shown, and ‹ still goes back', JSON.stringify([first, second]));
+    const stored = await page.evaluate(() => JSON.parse(localStorage.getItem('allday-watch')).tr);
+    check(JSON.stringify(stored) === '["freshTrail1","freshTrail2"]', 'what was shown is remembered on this phone', JSON.stringify(stored));
+    await page.goto(base + '/all-day/#wire');
+    await page.waitForFunction(() => document.getElementById('panel-watch').hidden);
+    await page.goto(base + '/all-day/#watch');
+    await page.waitForFunction(() => !document.getElementById('panel-watch').hidden);
+    await page.waitForFunction((k) => document.querySelector('#panel-watch .wt-drop').dataset.trailer !== k, second.key);
+    check(true, 'back on the tab, a new card', '');
+    /* a long memory stays short */
+    await page.evaluate(() => { const o = JSON.parse(localStorage.getItem('allday-watch')); o.tr = Array.from({ length: 500 }, (_, i) => 'k' + i); localStorage.setItem('allday-watch', JSON.stringify(o)); });
+    await page.reload();
+    await page.waitForSelector(wPanel + ' .wt-drop');
+    check(await page.evaluate(() => JSON.parse(localStorage.getItem('allday-watch')).tr.length) === 300, 'the memory stops at 300', '');
+    /* a shared card opens on that card */
+    await page.goto(base + '/all-day/#watch/tr:880003');
+    await page.reload();
+    await page.waitForSelector(wPanel + ' .wt-drop[data-trailer="pastTrailr1"]');
+    check((await wCard(page)).t === 'Past One', 'a shared trailer lands on its card', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Watch, the trailer card without its file (live)', async () => {
+    const films = await watchFilms();
+    const local = watchTrailers(films);
+    local.fresh[0].t = 'From The Repo';
+    /* the file is missing from the branch: the repo's copy */
+    let p = await newPage(browser, base, { films, trailers: null, trailersLocal: local });
+    await p.page.goto(base + '/all-day/#watch');
+    await p.page.waitForSelector(wPanel + ' .wt-drop');
+    check((await wCard(p.page)).t === 'From The Repo', 'a 404 on the branch falls back to ../data/trailers.json', '');
+    await p.ctx.close();
+    /* neither: what is coming soon, and nothing else is hurt */
+    p = await newPage(browser, base, { films, trailers: null, trailersLocal: null });
+    await p.page.goto(base + '/all-day/#watch');
+    await p.page.waitForSelector(wPanel + ' .wt-drop');
+    await p.page.waitForTimeout(300);
+    const c = await wCard(p.page);
+    check(c.t === 'Harbor Lights' && !c.age, 'no file at all: the card starts on what is coming soon', JSON.stringify(c));
+    check(await p.page.$(wPanel + ' [data-sec="theaters"]') !== null, 'and the rest of the page is there', '');
+    check(p.errors.every((e) => /404/.test(e)), 'only the two 404s themselves', p.errors.join(' | '));
+    await p.ctx.close();
+    /* a broken file is no file */
+    p = await newPage(browser, base, { films, trailers: { nonsense: 1 }, trailersLocal: { fresh: 'x' } });
+    await p.page.goto(base + '/all-day/#watch');
+    await p.page.waitForSelector(wPanel + ' .wt-drop');
+    check((await wCard(p.page)).t === 'Harbor Lights', 'a broken file is the same', '');
+    await p.ctx.close();
+    /* a slow file does not hold the page, and swaps in when it lands */
+    p = await newPage(browser, base, { films });
+    await p.page.route(/pulse-youtube\/data\/trailers\.json$/, async (r) => { await new Promise((res) => { setTimeout(res, 2500); }); await r.fulfill({ status: 200, body: JSON.stringify(local), contentType: 'application/json' }); });
+    await p.page.goto(base + '/all-day/#watch');
+    await p.page.waitForSelector(wPanel + ' .wt-drop');
+    const early = (await wCard(p.page)).t;
+    await p.page.waitForFunction(() => document.querySelector('#panel-watch .wt-drop .t').textContent === 'From The Repo', null, { timeout: 5000 });
+    check(early === 'Harbor Lights', 'a slow file: the page draws, then the card swaps', early);
+    await p.ctx.close();
+    /* no trailer anywhere: no card and no empty box */
+    const bare = await watchFilms();
+    ['top', 'now', 'soon'].forEach((k) => { bare[k] = bare[k].map((f) => ({ ...f, yt: '' })); });
+    p = await newPage(browser, base, { films: bare });
+    await p.page.goto(base + '/all-day/#watch');
+    await p.page.waitForSelector(wPanel + ' [data-sec="theaters"]');
+    check(!(await p.page.$(wPanel + ' .wt-drop')) && await p.page.$eval(wPanel + ' [data-slot="drop"]', (s) => !s.children.length && s.getBoundingClientRect().height === 0), 'no trailer anywhere: no card and no gap', '');
+    check(!p.errors.length, 'no console errors', p.errors.join(' | '));
+    await p.ctx.close();
+    /* the 1280 thumbnail missing: YouTube's 404 carries a real 120-wide grey
+       image, which loads, and a 404 with no body fails outright */
+    const grey = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAHgAAABaCAIAAAD8YgW4AAAAiklEQVR42u3QQREAAAwCIPtnM5QtdntABFJORIFo0YgWLRrRohEtWjSiRSNatGhEi0a0aNGIFo1o0aIRLRrRokUjWjSiRYtGtGhEixaNaNGIFi0a0aIRLVo0okUjWrRoRItGtGjRiBaNaNGiES0a0aJFI1o0okWLRrRoRIsWjWjRiBYtGtGiEf3FAM2G4J0Zy1uqAAAAAElFTkSuQmCC', 'base64');
+    for (const body of [grey, '']) {
+      p = await newPage(browser, base, { films, trailers: local });
+      await p.page.route(/maxresdefault/, (r) => r.fulfill({ status: 404, body, contentType: 'image/png' }));
+      await p.page.route(/hqdefault/, (r) => r.fulfill({ status: 200, body: grey, contentType: 'image/png' }));
+      await p.page.goto(base + '/all-day/#watch');
+      await p.page.waitForFunction(() => /hqdefault/.test(document.querySelector('#panel-watch .wt-drop img')?.src || ''));
+      check(true, 'no 1280 picture: the 480 one' + (body ? ', from the grey 404' : ', from the empty 404'), '');
+      await p.ctx.close();
+    }
+  });
+
+  await group('Watch, every trailer as a list: Recent, Past, genres, Surprise me (live)', async () => {
+    const films = await watchFilms();
+    const trailers = watchTrailers(films);
+    const back = (n, g) => ({ id: 881000 + n, t: 'Old Film ' + n, y: 1950 + n, d: (1950 + n) + '-05-01', g, rt: 100, p: '', yt: 'oldTrailr' + String(n).padStart(2, '0') });
+    trailers.past.push(back(1, ['Western']), back(2, ['Western', 'Drama']));
+    for (let i = 3; i < 60; i++) trailers.past.push(back(i, ['Musical']));
+    const { ctx, page, errors } = await newPage(browser, base, { films, trailers });
+    await page.goto(base + '/all-day/#watch');
+    await page.waitForSelector(wPanel + ' .wt-drop');
+    await page.click(wPanel + ' [data-trailer-sheet]');
+    await page.waitForSelector('.sheet-body [data-trailer-list] .wt-tl');
+    const rows = () => page.$$eval('.sheet-body .wt-tl', (r) => r.map((x) => ({ key: x.dataset.trailer, t: x.querySelector('.t').textContent, s: (x.querySelector('.s') || {}).textContent || '' })));
+    const side = (label) => page.click('.sheet-body [data-trailer-side] button:text-is("' + label + '")');
+    const words = await page.$eval('.sheet-card', (c) => c.innerText);
+    check(/Recent/.test(words) && /Past/.test(words) && /Surprise me/.test(words), 'the sheet has Recent, Past and Surprise me', words.slice(0, 80));
+    const recent = await rows();
+    check(recent[0].key === 'freshTrail2' && recent[1].key === 'freshTrail1', 'Recent opens newest first', JSON.stringify(recent.slice(0, 2)));
+    check(!recent.some((r) => /^Old Film|^Past One/.test(r.t)), 'nothing past on Recent', JSON.stringify(recent.map((r) => r.t)));
+    /* a row plays in the one box, and Next walks the rows */
+    await page.click('.sheet-body .wt-tl[data-trailer="freshTrail1"]');
+    await page.waitForSelector('#vbox:not([hidden]) #vbox-frame iframe');
+    check(/freshTrail1/.test(await page.$eval('#vbox-frame iframe', (f) => f.src)) && (await page.$$('iframe')).length === 1, 'a row plays in the one video box', '');
+    await page.click('#vbox-next');
+    await page.waitForFunction((k) => document.querySelector('#vbox-frame iframe')?.src.includes(k), recent[2].key);
+    check(true, 'Next is the next row', recent[2].key);
+    await page.click('#vbox-close');
+    check(await page.$('.sheet-body [data-trailer-list]') !== null, 'closing the video goes back to the list', '');
+    /* Past: the channels' and the back catalogue, with a year for a line */
+    await side('Past');
+    const past = await rows();
+    check(past[0].key === 'pastTrailr1' && past.some((r) => r.t === 'Old Film 59' && r.s === '2009'), 'Past: the uploads first, then the back catalogue by date, its line the year', JSON.stringify(past.slice(0, 3)));
+    check(past.length === 40 && await page.$('.sheet-body [data-trailer-more]') !== null, 'a long list draws in pages', String(past.length));
+    await page.click('.sheet-body [data-trailer-more]');
+    check((await rows()).length > 40, 'Show more adds to it', '');
+    /* genres */
+    await page.click('.sheet-body .chip[data-chip="Western"]');
+    const west = (await rows()).map((r) => r.t).sort();
+    check(JSON.stringify(west) === '["Old Film 1","Old Film 2"]', 'a genre chip narrows to that genre', JSON.stringify(west));
+    check(await page.$('.sheet-body [data-trailer-more]') === null, 'no Show more on a short list', '');
+    await side('Recent');
+    check(await page.$eval('.sheet-body .chip[data-chip="all"]', (c) => c.classList.contains('on')) && !(await page.$('.sheet-body .chip[data-chip="Western"]')), 'a genre the other side lacks falls back to All', '');
+    /* Surprise me */
+    await side('Past');
+    const before = (await rows()).map((r) => r.key);
+    await page.click('.sheet-body [data-trailer-surprise]');
+    await page.waitForSelector('#vbox:not([hidden]) #vbox-frame iframe');
+    const mixed = (await rows()).map((r) => r.key);
+    check(JSON.stringify(mixed) !== JSON.stringify(before), 'Surprise me reorders the list', '');
+    check((await page.$eval('#vbox-frame iframe', (f) => f.src)).includes(mixed[0]), 'and plays the first of the new order', mixed[0]);
+    await page.click('#vbox-next');
+    await page.waitForFunction((k) => document.querySelector('#vbox-frame iframe')?.src.includes(k), mixed[1]);
+    await page.click('#vbox-close');
+    await pageRules(page, 'watch', 390);
+    await page.click('.sheet-card .iconbtn');
+    /* Next on the card reaches the past and the back catalogue */
+    const keys = new Set();
+    for (let i = 0; i < 300; i++) {
+      const c = await wCard(page);
+      keys.add(c.key);
+      if (!c.next) break;
+      await wStep(page, 1);
+    }
+    check(['pastTrailr1', 'oldTrailr01', 'oldTrailr02', 'oldTrailr59'].every((k) => keys.has(k)), 'Next on the card reaches past trailers', String(keys.size));
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+    /* one trailer: no list to open. No file: the list still opens. */
+    const none = await newPage(browser, base, { films, trailers: null, trailersLocal: null });
+    await none.page.goto(base + '/all-day/#watch');
+    await none.page.waitForSelector(wPanel + ' [data-trailer-sheet]');
+    await none.page.click(wPanel + ' [data-trailer-sheet]');
+    await none.page.waitForSelector('.sheet-body .wt-tl');
+    check((await none.page.$$('.sheet-body [data-trailer-side] button')).length === 2, 'no file: the list runs off films.json', '');
+    await none.ctx.close();
+    /* the demo */
+    const demo = await newPage(browser, base, {});
+    await demo.page.goto(base + '/all-day/?demo=1#watch');
+    await demo.page.waitForSelector(wPanel + ' [data-trailer-sheet]');
+    await demo.page.click(wPanel + ' [data-trailer-sheet]');
+    await demo.page.waitForSelector('.sheet-body .wt-tl');
+    await demo.page.click('.sheet-body [data-trailer-side] button:text-is("Past")');
+    check((await demo.page.$$('.sheet-body .wt-tl')).length > 1 && (await demo.page.$$('.sheet-body .chip')).length > 1, 'the demo has Past rows and genres', '');
+    await demo.page.click('.sheet-body .wt-tl');
+    await demo.page.waitForSelector('#vbox:not([hidden])');
+    check(!demo.errors.length, 'demo: no console errors', demo.errors.join(' | '));
+    await demo.ctx.close();
+  });
+
+  await group('Watch, the trailer card: a sideways swipe (live, touch)', async () => {
+    const films = await watchFilms();
+    const { ctx, page, errors } = await newPage(browser, base, { films, trailers: watchTrailers(films), touch: true });
+    await page.goto(base + '/all-day/#watch');
+    await page.waitForSelector(wPanel + ' .wt-drop');
+    const swipe = (dx, dy) => page.$eval(wPanel + ' .wt-drop-media', (m, [x, y]) => {
+      const touch = (cx, cy) => new Touch({ identifier: 1, target: m, clientX: cx, clientY: cy });
+      m.dispatchEvent(new TouchEvent('touchstart', { touches: [touch(200, 200)], changedTouches: [touch(200, 200)], bubbles: true }));
+      m.dispatchEvent(new TouchEvent('touchend', { touches: [], changedTouches: [touch(200 + x, 200 + y)], bubbles: true }));
+    }, [dx, dy]);
+    await swipe(-90, 6);
+    check((await wCard(page)).t === 'Fresh Two', 'a swipe left is the next card', '');
+    await swipe(90, 6);
+    check((await wCard(page)).t === 'Fresh One', 'a swipe right is the last one', '');
+    await swipe(-20, 0);
+    await swipe(-60, 70);
+    check((await wCard(page)).t === 'Fresh One', 'a short drag or a scroll moves nothing', '');
+    check(await page.$eval(wPanel + ' .wt-drop-media', (m) => getComputedStyle(m).touchAction) === 'pan-y', 'and the page still scrolls under a finger', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Watch, Next up (live)', async () => {
+    const films = await watchFilms();
+    const today = wToday();
+    const clock = Date.parse(today + 'T19:00:00Z');   // 3 pm in Burlington through the summer, 2 pm after
+    const hour = Number(new Intl.DateTimeFormat('en-GB', { timeZone: 'America/New_York', hour: '2-digit', hourCycle: 'h23' }).format(new Date(clock)));
+    const at = (h) => String(hour + h).padStart(2, '0') + ':00';
+    const earlier = String(hour - 1).padStart(2, '0') + ':00';
+    const showtimes = { v: 1, theaters: [
+      { id: 'partizanfilm', ok: true, closed: true, back: '2099-01-01', days: { [today]: [{ t: 'Closed Doors', times: [at(1)] }] } },
+      { id: 'majestic10', ok: true, closed: false, days: { [today]: [{ t: 'Morning Show', times: [earlier] }, { t: 'Second Show', times: [at(2), at(5)] }] } },
+      { id: 'essex', ok: true, closed: false, days: { [today]: [{ t: 'First Show', times: [at(1)] }, { t: 'Third Show', times: [at(3)] }] } },
+    ] };
+    const { ctx, page, errors } = await newPage(browser, base, { films, trailers: watchTrailers(films), showtimes, clock });
+    await page.goto(base + '/all-day/#watch');
+    await page.waitForSelector(wPanel + ' [data-next]');
+    const rows = await page.$$eval(wPanel + ' .wt-next-i', (n) => n.map((b) => [b.querySelector('.t').textContent, b.querySelector('.s').textContent]));
+    check(JSON.stringify(rows) === JSON.stringify([['First Show', 'Essex Cinemas'], ['Second Show', 'Majestic 10'], ['Third Show', 'Essex Cinemas']]),
+      'the next three screenings across the theaters, past shows and a closed theater left out', JSON.stringify(rows));
+    check(await page.$eval(wPanel + ' .wt-next .eyebrow', (e) => e.textContent) === 'Next up', 'under its one label', '');
+    const order = await page.$$eval(wPanel + ' [data-slot]', (n) => n.filter((x) => x.children.length).map((x) => x.dataset.slot));
+    check(order.indexOf('next') === order.indexOf('drop') + 1, 'right under the card', order.join(','));
+    await page.click(wPanel + ' .wt-next-i >> nth=1');
+    await page.waitForSelector(wPanel + ' [data-showing="majestic10"]');
+    check(true, 'a tap opens that theater', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+    /* the phone app coming back redraws the card and the strip */
+    const back = await newPage(browser, base, { films, trailers: watchTrailers(films), showtimes, clock });
+    await back.page.goto(base + '/all-day/#watch');
+    await back.page.waitForSelector(wPanel + ' [data-next]');
+    const firstCard = (await wCard(back.page)).t;
+    await back.page.clock.setFixedTime(clock + 3.5 * 3600000);
+    await back.page.evaluate(() => { Object.defineProperty(document, 'hidden', { configurable: true, get: () => true }); document.dispatchEvent(new Event('visibilitychange')); });
+    await back.page.evaluate(() => { delete document.hidden; document.dispatchEvent(new Event('visibilitychange')); });
+    const later = await back.page.$$eval(wPanel + ' .wt-next-i .t', (n) => n.map((t) => t.textContent));
+    check(JSON.stringify(later) === JSON.stringify(['Second Show']), 'back in the app: Next up has moved with the clock', JSON.stringify(later));
+    check((await wCard(back.page)).t !== firstCard, 'back in the app: the first unseen card', firstCard);
+    await back.ctx.close();
+    /* late at night: a theater with one show left keeps its tomorrow */
+    const tomorrow = new Date(Date.parse(today + 'T12:00:00Z') + W_DAY).toISOString().slice(0, 10);
+    const lateNight = await newPage(browser, base, { films, trailers: watchTrailers(films), clock, showtimes: { v: 1, theaters: [
+      { id: 'majestic10', ok: true, closed: false, days: { [today]: [{ t: 'Last Tonight', times: [at(1)] }], [tomorrow]: [{ t: 'Early One', times: ['10:50'] }, { t: 'Early Two', times: ['11:00'] }] } },
+      { id: 'essex', ok: true, closed: false, days: { [tomorrow]: [{ t: 'Noon Show', times: ['12:00', '12:30'] }] } },
+    ] } });
+    await lateNight.page.goto(base + '/all-day/#watch');
+    await lateNight.page.waitForSelector(wPanel + ' [data-next]');
+    const soonest = await lateNight.page.$$eval(wPanel + ' .wt-next-i .t', (n) => n.map((t) => t.textContent));
+    check(JSON.stringify(soonest) === JSON.stringify(['Last Tonight', 'Early One', 'Early Two']), 'the true next three, across days', JSON.stringify(soonest));
+    await lateNight.ctx.close();
+    /* nothing to show: no strip */
+    const none = await newPage(browser, base, { films: await watchFilms(), showtimes: null });
+    await none.page.goto(base + '/all-day/#watch');
+    await none.page.waitForSelector(wPanel + ' [data-sec="theaters"]');
+    await none.page.waitForTimeout(300);
+    check(!(await none.page.$(wPanel + ' [data-next]')), 'no showtimes: no strip', '');
+    await none.ctx.close();
+  });
+
+  await group('Watch, Out this week (live)', async () => {
+    const films = await watchFilms();
+    const day = (n) => new Date(Date.parse(wToday() + 'T12:00:00Z') + n * W_DAY).toISOString().slice(0, 10);
+    const seed = films.top[0];
+    const row = (id, t, d, extra) => ({ ...seed, id, t, d, y: Number(d.slice(0, 4)), ...extra });
+    films.now = [row(990101, 'Opened Today', day(0), { where: 'theaters' }), row(990102, 'Long Gone', day(-30), { where: 'theaters' })];
+    films.soon = [row(990103, 'Five Ahead', day(5), { where: 'theaters' }), row(990104, 'Far Off', day(20), { where: 'theaters' })];
+    films.stream = [row(990105, 'Streams Tomorrow', day(1), { where: 'streaming', on: 'Netflix' })];
+    films.tv_top = [row(70001, 'A Show', '2024-01-01', {})];
+    films.tv_stream = [row(70002, 'New Show', day(-2), { on: 'Hulu', ns: 1 })];
+    films.tv_air = [row(70003, 'Old Show', day(-6), { ns: 3 })];
+    const { ctx, page, errors } = await newPage(browser, base, { films });
+    await page.goto(base + '/all-day/#watch');
+    await page.waitForSelector(wPanel + ' [data-sec="soon"]');
+    check(await page.$eval(wPanel + ' [data-sec="soon"] h2', (h) => h.textContent) === 'Out this week', 'the rail is Out this week', '');
+    const rail = await page.$$eval(wPanel + ' [data-sec="soon"] + .railmode + .rail-wrap .poster', (n) => n.map((a) => [a.querySelector('.t').textContent, a.querySelector('.s').textContent]));
+    check(JSON.stringify(rail.map((x) => x[0])) === JSON.stringify(['Opened Today', 'Streams Tomorrow', 'New Show', 'Five Ahead', 'Old Show']),
+      'a week either side of today, across theaters, streaming and shows, nearest first', JSON.stringify(rail));
+    check(/^[A-Z][a-z]{2} \d{1,2} · theaters$/.test(rail[0][1]) && /^Netflix · /.test(rail[1][1]) && /^New series · Hulu/.test(rail[2][1]), 'each says when and where', JSON.stringify(rail));
+    const toc = await page.$$eval('#subnav .secpill .chip', (c) => c.map((x) => x.textContent));
+    check(toc.includes('This week') && !toc.includes('Coming soon'), 'the chip row says so', toc.join(' / '));
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Watch, the card and the strip in the demo', async () => {
+    const asked = [];
+    for (const scheme of ['light', 'dark']) {
+      const { ctx, page, errors } = await newPage(browser, base, { scheme });
+      page.on('request', (r) => { if (/ytimg|youtube|pulse-youtube/.test(r.url())) asked.push(r.url()); });
+      await page.goto(base + '/all-day/?demo=1#watch');
+      await page.waitForSelector(wPanel + ' .wt-drop');
+      const c = await wCard(page);
+      check(c.t === 'The Last Ferry' && /^New · /.test(c.age), scheme + ': the card opens on the demo’s new trailer', JSON.stringify(c));
+      const keys = await wWalk(page);
+      check(keys.length > 40 && new Set(keys).size === keys.length && !keys.includes('demoTrail99'), scheme + ': › walks the new ones, then everything else', keys.length);
+      check(await page.$(wPanel + ' [data-next]') !== null, scheme + ': the demo has Next up', '');
+      await page.reload();
+      await page.waitForSelector(wPanel + ' .wt-drop');
+      await page.click(wPanel + ' .wt-drop-pic');
+      await page.waitForSelector('#vbox:not([hidden])');
+      check(await page.$eval('#vbox-title', (t) => t.textContent) === 'The Last Ferry · trailer' && !(await page.$('#vbox-frame iframe')), scheme + ': the box opens on the poster, with no player', '');
+      await page.click('#vbox-next');
+      await page.waitForFunction(() => document.getElementById('vbox-title').textContent === 'Salt Road · trailer');
+      check((await wCard(page)).t === 'Salt Road', scheme + ': the box’s Next works, and the card follows', '');
+      await page.click('#vbox-close');
+      await page.click(wPanel + ' [data-kind] button:has-text("TV")');
+      await page.waitForFunction(() => !document.querySelector('#panel-watch [data-next]'));
+      const tv = await wCard(page);
+      check(['Ferry Crossing', 'Night Market', 'Spring Ice', 'Backcountry'].includes(tv.t) && !tv.age, scheme + ': TV’s card is new shows, and Next up leaves', JSON.stringify(tv));
+      await page.click(wPanel + ' [data-kind] button:has-text("Movies")');
+      await page.waitForSelector(wPanel + ' [data-next]');
+      check((await wCard(page)).t === 'Salt Road', scheme + ': Movies keeps its place', '');
+      await pageRules(page, 'watch', 390);
+      check(!errors.length, scheme + ': no console errors', errors.join(' | '));
+      await ctx.close();
+    }
+    check(!asked.length, 'the demo asks nothing of YouTube', asked.join(' '));
+  });
+
+  /* every app's shell has its own copy of the box and shares app.js */
+  await group('The video box in the other apps’ shells', async () => {
+    for (const shell of ['body', 'eat', 'out', 'paper', 'people', 'play', 'town']) {
+      const { ctx, page, errors } = await newPage(browser, base);
+      await page.gotoRaw(base + '/' + shell + '/?demo=1');
+      await page.waitForFunction(() => document.getElementById('vbox-prev'), null, { timeout: 8000 }).catch(() => {});
+      const got = await page.evaluate(() => ['vbox-prev', 'vbox-next'].map((id) => { const b = document.getElementById(id); return b && b.hidden && !!b.querySelector('svg'); }));
+      check(JSON.stringify(got) === '[true,true]', shell + ': the box’s Previous and Next are there, hidden', JSON.stringify(got));
+      check(!errors.some((e) => /pageerror/.test(e)), shell + ': the app starts', errors.join(' | '));
+      await ctx.close();
+    }
+  });
+
+  await group('Watch, the card on the wide screen', async () => {
+    const films = await watchFilms();
+    const { ctx, page, errors } = await newPage(browser, base, { films, trailers: watchTrailers(films), viewport: { width: 1280, height: 800 } });
+    await page.goto(base + '/all-day/#watch');
+    await page.waitForSelector(wPanel + ' .wt-drop');
+    const m = await page.$eval(wPanel + ' .wt-drop-media', (b) => { const r = b.getBoundingClientRect(); return { ratio: Math.round(r.width / r.height * 100) / 100, bottom: r.bottom, h: innerHeight }; });
+    check(m.ratio === 1.78 && m.bottom < m.h, 'still 16:9, and on the screen', JSON.stringify(m));
+    await pageRules(page, 'watch', 1280);
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+}
+
 async function drawBoard(page, board, extra) {
   await page.evaluate(async ({ board, extra }) => {
     const B = await import('/all-day/js/boards.js');
@@ -7225,13 +8022,13 @@ async function theVintage(browser, base) {
     check(votes.every((v) => v === 'I’d want this'), 'the vote on a find is “I’d want this”', JSON.stringify(votes.slice(0, 2)));
     check(!(await page.$(vslot('spotted') + ' [data-act=vgot]')), 'nobody signed in owns a find, so no “Someone got it”', '');
     const chipsRow = await page.$$eval('#subnav .chip', (cs) => cs.map((c) => c.dataset.chip));
-    check(JSON.stringify(chipsRow) === JSON.stringify(['fit', 'spotted', 'swaps', 'tees', 'newin', 'shops']), 'the chip row is the table of contents, in page order: Fit checks, Spotted, Swaps (up top, by Spotted), then Make a tee (moved up from the bottom), New in, Shops', JSON.stringify(chipsRow));
+    check(JSON.stringify(chipsRow) === JSON.stringify(['newin', 'fit', 'spotted', 'swaps', 'tees', 'shops']), 'the chip row is the table of contents, in page order: New in, Fit checks, Spotted, Swaps, Make a tee, Shops', JSON.stringify(chipsRow));
     await page.click('#subnav .chip[data-chip="tees"]');
     /* a smooth scroll, and the fourteen shops above Make a tee make it a long one */
     await page.waitForFunction((sel) => { const t = document.querySelector(sel).getBoundingClientRect().top; return t >= 0 && t < 300; }, vslot('tees'), { timeout: 4000 }).catch(() => {});
     const teeTop = await page.$eval(vslot('tees'), (s) => Math.round(s.getBoundingClientRect().top));
     check(teeTop >= 0 && teeTop < 300, 'a chip scrolls its section up under the mast', teeTop);
-    await page.click(vslot('spotted') + ' .addrow button');
+    await page.click(vslot('spotted') + ' .sec [data-act=vfind]');
     await page.waitForSelector('.sheet-body .linkrow');
     check(/Sign in to post\./.test(await page.$eval('.sheet-body', (b) => b.innerText)) && !(await page.$('.sheet-body form')), 'Post a find, signed out: the sign-in note and no form', '');
     await page.click('.sheet-head .iconbtn');
@@ -7249,23 +8046,22 @@ async function theVintage(browser, base) {
     await ctx.close();
   });
 
-  await group('Vintage, fit checks and Spotted share the first screen at 390; a tile opens the fit’s own card; New in is the shops’ own posts (demo)', async () => {
+  await group('Vintage opens on New in; a tile opens the fit’s own card; New in is the shops’ own posts (demo)', async () => {
     const { ctx, page, errors } = await vintageDemo(browser, base, { viewport: { width: 390, height: 844 } });
     await page.waitForSelector(vslot('fit') + ' .ftile');
     const top = await page.evaluate(() => {
       const q = (k) => document.querySelector('.panel:not([hidden]) [data-sec="' + k + '"]');
       return { vh: innerHeight, order: [...q('fit').parentElement.children].map((c) => c.dataset.sec).filter(Boolean),
-        fitHead: q('fit').querySelector('.sec h2').textContent, fitBottom: q('fit').querySelector('.ftile').getBoundingClientRect().bottom,
-        spotHead: q('spotted').querySelector('.sec h2').textContent, spotHeadBottom: q('spotted').querySelector('.sec').getBoundingClientRect().bottom,
-        spotCard: q('spotted').querySelector('.card.board').getBoundingClientRect().top };
+        newHead: q('newin').querySelector('.sec h2').textContent, newTile: q('newin').querySelector('.vcard').getBoundingClientRect().bottom,
+        fitHead: q('fit').querySelector('.sec h2').textContent, spotHead: q('spotted').querySelector('.sec h2').textContent };
     });
-    check(JSON.stringify(top.order) === '["fit","spotted","swaps","tees","sent","newin","shops"]' && top.fitHead === 'Fit checks' && top.spotHead === 'Spotted this week', 'Fit checks leads the tab, then Spotted this week, then Swaps (moved up from the bottom), then Make a tee with Top designs under it (moved up from the end), then New in and the shops', JSON.stringify(top));
+    check(JSON.stringify(top.order) === '["newin","fit","spotted","swaps","tees","sent","shops"]' && top.newHead === 'New in' && top.fitHead === 'Fit checks' && top.spotHead === 'Spotted this week', 'New in leads the tab, then Fit checks, Spotted this week, Swaps, Make a tee with Top designs under it, and the shops', JSON.stringify(top));
+    check(top.newTile <= top.vh, 'at 390 by 844 the first shop posts are on the first screen', JSON.stringify(top));
     const tee = await page.$eval(vslot('tees'), (s) => ({ head: s.querySelector('.sec h2').textContent, btn: (s.querySelector('.sec button') || {}).textContent || '', cards: s.querySelectorAll('.textcard').length, top: Math.round(s.getBoundingClientRect().top), h: Math.round(s.getBoundingClientRect().height) }));
     check(tee.head === 'Make a tee' && /Send in your design/.test(tee.btn) && tee.cards === 0, 'Make a tee and Send in your design are one block: the button sits in the head, there is no card of its own', JSON.stringify(tee));
-    const why = await page.$eval(vslot('spotted') + ' .sec + p', (p) => p.textContent).catch(() => '');
-    check(why === 'Saw something great that wasn’t your size? Post it so someone else can grab it.', 'one plain line under Spotted this week says what it is for', why);
-    check(top.fitBottom <= top.vh && top.spotHeadBottom <= top.vh && top.spotCard < top.vh, 'at 390 by 844 the fit tiles, the Spotted head and the first find are all on the first screen', JSON.stringify(top));
-    const tiles = await page.$$eval(vslot('fit') + ' .ftile', (ts) => ts.map((t) => ({ k: t.dataset.k, pic: !!t.querySelector('.c-media.r45 .ph, .c-media.r45 img'), t: t.querySelector('.t').textContent, s: t.querySelector('.s').textContent })));
+    check(!(await page.$(vslot('spotted') + ' .vwhy')), 'no line of explanation under Spotted this week', '');
+    check(await page.$eval(vslot('spotted'), (s) => /Post a find/.test(s.querySelector('.sec').textContent) && !s.querySelector('.addrow')) && await page.$eval(vslot('swaps'), (s) => /Post a swap/.test(s.querySelector('.sec').textContent) && !s.querySelector('.addrow')), 'Post a find and Post a swap sit in their heads', '');
+    const tiles =await page.$$eval(vslot('fit') + ' .ftile', (ts) => ts.map((t) => ({ k: t.dataset.k, pic: !!t.querySelector('.c-media.r45 .ph, .c-media.r45 img'), t: t.querySelector('.t').textContent, s: t.querySelector('.s').textContent })));
     check(tiles.length === 3 && tiles.every((t) => t.pic && /^b-/.test(t.k) && t.t && t.s), 'each fit check is a photo tile with its title and first name', JSON.stringify(tiles));
     await page.click(vslot('fit') + ' .ftile');
     await page.waitForSelector('.sheet-body .card.board');
@@ -7284,6 +8080,41 @@ async function theVintage(browser, base) {
     check(chipN === String(fresh.length), 'the New in chip counts them', chipN);
     await pageRules(page, 'vintage', 390);
     await page.screenshot({ path: path.join(SHOTS, 'demo-vintage-top-390.png') });
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Vintage, empty boards are a head and a button, and New in failing leaves nothing behind (live)', async () => {
+    const { ctx, page, errors } = await newPage(browser, base, { viewport: { width: 390, height: 844 } });
+    await page.route(/\/all-day\/data\/instagram\.json/, (r) => r.fulfill({ status: 500, body: '' }));
+    await page.route(/\/data\/vintage-shops\.json/, (r) => r.fulfill({ status: 500, body: '' }));
+    await page.goto(base + '/all-day/#vintage');
+    await page.waitForFunction((s) => { const n = document.querySelector(s); return n && !n.querySelector('.loading') && !n.innerText.trim(); }, vslot('newin'), { timeout: 15000 });
+    const b = await page.evaluate((secs) => secs.map(([k, act]) => { const s = document.querySelector('.panel:not([hidden]) [data-sec="' + k + '"]');
+      return { k, btn: !!s.querySelector('.sec [data-act="' + act + '"]'), notes: [...s.querySelectorAll('p')].filter((p) => !p.hidden).length, cards: s.querySelectorAll('.card, .vcard').length, rows: s.querySelectorAll('.addrow').length }; }),
+    [['fit', 'vfitpost'], ['spotted', 'vfind'], ['swaps', 'vswap']]);
+    check(b.every((x) => x.btn && !x.notes && !x.cards && !x.rows), 'an empty Fit checks, Spotted and Swaps: a head with its Post button, and nothing else', JSON.stringify(b));
+    check(!(await page.$('#subnav .chip[data-chip="newin"]')), 'no New in, no chip', '');
+    await pageRules(page, 'vintage', 390);
+    const realErrors = errors.filter((e) => !/status of 500/.test(e));   // the two refused here on purpose
+    check(!realErrors.length, 'no console errors', realErrors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Vintage, New in arriving late keeps a reader sent to the shops on the shops (live, 390)', async () => {
+    const file = await vintageShops();
+    const now = Math.floor(Date.now() / 1000);
+    const posts = Array.from({ length: 8 }, (_, i) => ({ h: file.instagram[0], ts: now - (i + 1) * 3600, i: 'https://scontent.example/s' + i + '.jpg', u: 'https://www.instagram.com/p/Slow' + i + '/', w: 480, c: 'New rack', s: 'do' }));
+    const { ctx, page, errors } = await newPage(browser, base, { viewport: { width: 390, height: 844 } });
+    await page.route(/\/all-day\/data\/instagram\.json/, async (r) => {
+      await new Promise((res) => setTimeout(res, 7000));   // a slow connection: later than the first few seconds
+      await r.fulfill({ status: 200, body: JSON.stringify({ generated: new Date().toISOString(), handles: [], posts }), contentType: 'application/json' }).catch(() => {});
+    });
+    await page.goto(base + '/all-day/#vintage/shops');
+    await page.waitForSelector(vslot('newin') + ' [data-grid=newin] .vcard', { timeout: 15000 });
+    await page.waitForTimeout(1200);
+    const top = await page.$eval(vslot('shops'), (s) => Math.round(s.getBoundingClientRect().top));
+    check(top >= 0 && top < 300, 'the shops are still under the mast', top);
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
   });
@@ -7353,7 +8184,7 @@ async function theVintage(browser, base) {
     const { ctx, page, errors } = await vintageDemo(browser, base, { viewport: { width: 1280, height: 800 }, scheme: 'dark' });
     await signInAs(page, 'Kara');
     const t0 = await thanksOf(page);
-    await page.click(vslot('spotted') + ' .addrow button');
+    await page.click(vslot('spotted') + ' .sec [data-act=vfind]');
     await page.waitForSelector('.sheet-body form.bform input[name="m:shop"]');
     await page.waitForFunction(() => document.querySelector('.sheet-body input[name="m:shop"]').getAttribute('list') === 'vintage-shop-list');
     const list = await page.$$eval('#vintage-shop-list option', (os) => os.map((o) => o.value));
@@ -9816,7 +10647,7 @@ async function shellFixes(browser, base) {
     for (const v of ['photos', 'news', 'photos', 'news', 'photos']) await page.click('#subnav .wmode[data-view="' + v + '"]');
     await page.waitForTimeout(1600);
     r = await sample(MODES);
-    check(inPlace(r) && r.on === 1 && clear(r), 'five quick taps: the water lands under Photos', JSON.stringify(r));
+    check(inPlace(r) && r.on === 3 && clear(r), 'five quick taps: the water lands under Photos', JSON.stringify(r));
     /* the steady lap: seven seconds on, with the reader still here, the water still moves */
     await page.waitForTimeout(5500);
     await page.keyboard.press('Shift');
@@ -9847,7 +10678,7 @@ async function shellFixes(browser, base) {
     await page.click('#subnav .wmode[data-view="photos"]');
     await page.waitForTimeout(1600);
     r = await sample(MODES);
-    check(inPlace(r) && r.on === 1, 'back on the Wire, a tap still pours', JSON.stringify(r));
+    check(inPlace(r) && r.on === 3, 'back on the Wire, a tap still pours', JSON.stringify(r));
     /* turned sideways and back: the water follows its segment */
     await page.setViewportSize({ width: 844, height: 390 });
     await page.waitForTimeout(900);
@@ -9863,7 +10694,7 @@ async function shellFixes(browser, base) {
     await page.evaluate(() => import('/all-day/js/liquid.js').then((m) => m._rest()));
     await page.waitForTimeout(6500);
     const LOCAL = '.panel:not([hidden]) .wband .localsw';
-    if (!(await page.$eval(LOCAL, (x) => x.classList.contains('is-on')))) { await page.click(LOCAL + ' .localsw-half:not(.on)'); await page.waitForTimeout(6500); }
+    if (!(await page.$eval(LOCAL, (x) => x.classList.contains('is-on')))) { await page.click(LOCAL + ' .localsw-half:not(.on):not([data-geo=national])'); await page.waitForTimeout(6500); }
     const tone = (sel) => page.$eval(sel, (bar) => getComputedStyle(bar).getPropertyValue('--local').trim());
     const near = (rgb, hex) => { const h = hex.replace('#', ''); const t = [0, 2, 4].map((i) => parseInt(h.slice(i, i + 2), 16)); return rgb && rgb.every((v, i) => Math.abs(v - t[i]) <= 45); };
     await page.evaluate(() => { document.documentElement.setAttribute('data-theme', 'dark'); });
@@ -9991,7 +10822,7 @@ const BTV_DAY = new Intl.DateTimeFormat('en-CA', { timeZone: 'America/New_York',
 const BTV_LABEL = new Intl.DateTimeFormat('en-US', { timeZone: 'America/New_York', weekday: 'short', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' });
 /* a moment as the compose sheet writes it, in Burlington: "Sat, Oct 17, 7:30 pm" */
 const btvWhen = (ms) => BTV_LABEL.format(new Date(Math.ceil(ms / 1800000) * 1800000)).replace(/ at |, (?=\d{1,2}:)/, ', ').replace(':00', '').replace(/\s?([AP])M$/, (x, a) => ' ' + a.toLowerCase() + 'm');
-const peopleReady = (page) => page.waitForSelector(peoplePanel + ' [data-plans], ' + peoplePanel + ' [data-sec="plans"] .textcard', { timeout: 15000 });
+const peopleReady = (page) => page.waitForSelector(peoplePanel + ' [data-sec="plans"]:not(:has(.loading)) .sec', { timeout: 15000 });
 const planCards = (page) => page.$$eval(peoplePanel + ' [data-plans] .card.board', (cs) => cs.map((c) => ({
   k: c.dataset.k, title: c.querySelector('.b-title').textContent, meta: (c.querySelector('.b-meta') || {}).textContent || '',
   who: c.querySelector('.c-head').innerText, going: (c.querySelector('.going') || {}).textContent || '' })));
@@ -9999,7 +10830,7 @@ const clubCats = (page) => page.$$eval(peoplePanel + ' [data-clubs] .lrow', (rs)
 /* the For you strip under the tiles: its rows, or null when it isn't showing */
 const forYou = (page) => page.evaluate((s) => { const b = document.querySelector(s + ' [data-sec="foryou"]'); if (!b || b.hidden || !b.querySelector('[data-foryou]')) return null;
   return [...b.querySelectorAll('.lrow')].map((r) => ({ kind: r.dataset.kind, name: r.querySelector('.t').textContent })); }, peoplePanel);
-const mixRows = (page) => page.$$eval(peoplePanel + ' [data-mix-day] .lrow', (rs) => rs.map((r) => ({ k: r.dataset.k, kind: r.dataset.kind, reader: r.dataset.reader === '1',
+const mixRows = (page, day) => page.$$eval(peoplePanel + (day ? ' [data-mix-day="' + day + '"]' : ' [data-mix-day]') + ' .lrow', (rs) => rs.map((r) => ({ k: r.dataset.k, kind: r.dataset.kind, reader: r.dataset.reader === '1',
   title: r.querySelector('.t').textContent, href: r.getAttribute('href'), text: r.innerText })));
 const peek = (page) => page.evaluate(() => import('/all-day/js/modes/people.js').then((m) => m._peek()));
 /* Stephen's own events, as the tab picks them: the repo's calendar plus his Meetup group's feed, every one from now to two weeks out, once each */
@@ -10036,8 +10867,9 @@ async function thePeople(browser, base) {
     await page.goto(base + '/all-day/#people');
     await peopleReady(page);
     await page.waitForFunction((s) => !document.querySelector(s + ' [data-sec="mix"] .loading'), peoplePanel, { timeout: 10000 });
+    if (await page.$(peoplePanel + ' [data-own-all]')) await page.click(peoplePanel + ' [data-own-all]');
     const mix = await page.$$eval(peoplePanel + ' [data-mixers] .owntile', (cs) => cs.map((c) => ({ k: c.dataset.k, href: c.getAttribute('href'), title: c.querySelector('b').textContent, text: c.innerText })));
-    check(mix.length === own.length, 'every one of Stephen’s own events in the next two weeks shows, first, as a short row (' + own.length + ')', mix.length + ': ' + mix.map((m) => m.title).join(', '));
+    check(mix.length === own.length, 'every one of Stephen’s own events in the next two weeks shows as a short row (' + own.length + ')', mix.length + ': ' + mix.map((m) => m.title).join(', '));
     check(own.every((e) => mix.some((m) => m.href === e.url)), 'none is missed', own.filter((e) => !mix.some((m) => m.href === e.url)).map((e) => e.title).join(', '));
     check(mix.every((m) => OWN_URL_T.test(m.href) || OWN_NAME_T.test(m.title)), 'and nothing that isn’t his', mix.map((m) => m.href).join(' '));
     check(mix.some((m) => m.href === feed[0].url && /Place on Meetup/.test(m.text)), 'one thirteen days out, only on his Meetup calendar, shows (place: on Meetup, never guessed)', '');
@@ -10048,31 +10880,37 @@ async function thePeople(browser, base) {
     const today = BTV_DAY.format(new Date());
     const calToday = w.events.filter((e) => e.date === today && PM.mixerKind(e) && !(OWN_URL_T.test(e.url) || OWN_NAME_T.test([e.title, e.venue, (e.tags || []).join(' ')].join(' '))));
     const strip = await page.$$eval(peoplePanel + ' [data-sec="mix"] .mixdays button', (bs) => bs.map((b) => ({ day: b.dataset.day, n: b.querySelector('.n').textContent, on: b.classList.contains('on') })));
-    check(strip.length === 7 && strip[0].day === today, 'the mixers: seven days from today', JSON.stringify(strip.map((d) => d.day)));
+    check(strip.length === 7 && strip[0].day === today, 'This week: seven days from today', JSON.stringify(strip.map((d) => d.day)));
     const weekN = strip.reduce((n, d) => n + Number(d.n || 0), 0);
     check(weekN >= 10, 'with the calendar’s mixers counted on each (' + weekN + ' this week)', JSON.stringify(strip));
     const busy = strip.find((d) => d.on);
     await page.click(peoplePanel + ' [data-sec="mix"] .mixdays button[data-day="' + busy.day + '"]');
-    const rows = await mixRows(page);
-    check(rows.length === Number(busy.n) && rows.every((r) => /^https?:/.test(r.href) && r.kind !== 'own'), 'a day’s rows: each links to its event page, none of them his', JSON.stringify(rows.slice(0, 3)));
+    const rows = await mixRows(page, busy.day);
+    const calRows = rows.filter((r) => r.kind !== 'own' && r.kind !== 'club' && r.kind !== 'plan');
+    check(rows.length === Number(busy.n) && rows.filter((r) => r.kind !== 'club' && r.kind !== 'plan').every((r) => /^https?:/.test(r.href)), 'a day’s rows: the strip’s count, and each event links to its page', JSON.stringify(rows.slice(0, 3)));
     check(rows.every((r) => !/\b(kids?|toddler|teens?|storytime|homeschool)\b/i.test(r.title)), 'and no kids’ or teens’ event is a mixer', rows.map((r) => r.title).join(' | '));
-    if (busy.day === today) check(rows.length <= calToday.length, 'today’s are the calendar’s, past ones gone', rows.length + ' of ' + calToday.length);
+    if (busy.day === today) check(calRows.length <= calToday.length, 'today’s are the calendar’s, past ones gone', calRows.length + ' of ' + calToday.length);
+    const firstIn = await page.$eval(peoplePanel + ' [data-sec="mix"]', (s) => { const m = [...s.children]; return { strip: m.findIndex((n) => n.classList.contains('mixdays')), list: m.findIndex((n) => n.dataset.mixList), cal: m.findIndex((n) => n.querySelector('[data-calendar]')), post: !!s.querySelector('.sec [data-post]') }; });
+    check(firstIn.post && firstIn.strip >= 0 && firstIn.strip < firstIn.list && firstIn.list < firstIn.cal, 'the head’s button is Post a plan; the strip, then the list, then the calendar link at the end', JSON.stringify(firstIn));
+    const help = await page.$eval(peoplePanel + ' [data-sec="mix"] .mixlinks [data-help-host]', (a) => [a.textContent.trim(), a.getAttribute('href')]);
+    check(help[0] === 'Interested in helping host events?' && help[1] === 'mailto:btownbrief@gmail.com', 'beside the calendar link, the ask to help host, an email to btownbrief@gmail.com', JSON.stringify(help));
     const cal = await page.$eval(peoplePanel + ' [data-sec="mix"] [data-calendar]', (a) => ({ href: a.href, text: a.textContent.trim() }));
     check(cal.href === base + '/events.html' && /^Full events calendar/.test(cal.text), 'a clear Full events calendar link to the guide’s events page', JSON.stringify(cal));
     const host = await page.$eval(peoplePanel + ' [data-host]', (c) => ({ text: c.innerText, mail: c.querySelector('a.btn').getAttribute('href'), ps: c.querySelectorAll('p').length }));
     check(/Host something with the crew/.test(host.text) && /^mailto:btownbrief@gmail\.com\?subject=/.test(host.mail) && host.ps === 2, 'the host card: a title, two short lines and a prefilled email to Stephen', JSON.stringify(host));
     const order = await page.$$eval(peoplePanel + ' [data-sec]', (ss) => ss.map((x) => x.dataset.sec));
-    check(order.indexOf('host') === order.indexOf('mix') + 1, 'right under the mixers', order.join(' '));
+    check(order.slice(0, 5).join(' ') === 'irl host mix scene plans', 'Btown Brief IRL opens the tab with the host card under it, then This week, From the groups and the plans', order.join(' '));
     const steve = await page.$eval(peoplePanel + ' [data-host] a.btn', (a) => [a.textContent.trim(), decodeURIComponent(a.getAttribute('href'))]);
     check(steve[0] === 'Email Steve' && /Hi Steve,/.test(steve[1]) && !/Stephen/.test(steve.join(' ')), 'it says Steve, not Stephen (Stephen, 2026-10-18)', JSON.stringify(steve));
-    if (!own.length) check(/No Btown Brief meetups/.test(await panelText(page)), 'with none on the calendar it says so and links the group', '');
+    if (!own.length) check(await page.$(peoplePanel + ' [data-own] a') !== null, 'with none on the calendar it links the group', '');
     const groupsJson = JSON.parse(await readFile(path.join(REPO, 'data/groups.json'), 'utf8')).groups;
     const crows = await clubCats(page);
     check(crows.length === 6 && crows.every((r) => groupsJson.some((c) => c.name === r.name)), 'six clubs from data/groups.json', JSON.stringify(crows));
     check(crows[0].name === groupsJson.find((c) => c.featured).name, 'with nothing picked, the featured club leads', crows[0] && crows[0].name);
     check(await forYou(page) === null, 'and nothing picked, no For you strip', '');
     const txt = await panelText(page);
-    check(/No plans yet this week/.test(txt), 'an empty board says so and offers the first plan', '');
+    const planHead = await page.$eval(peoplePanel + ' [data-sec="plans"]', (s) => ({ kids: s.children.length, post: !!s.querySelector('.sec [data-post]'), text: s.innerText }));
+    check(planHead.kids === 1 && planHead.post && !/No plans/.test(planHead.text), 'an empty board is its head and its Post a plan button', JSON.stringify(planHead));
     check(!/email sign-in|one email/.test(txt), 'signed out, the tab says nothing about sign-in (the Post sheet does)', '');
     check(/12 neighbors in it/.test(txt) && await page.$(peoplePanel + ' [data-dir="out"] button') !== null, 'People here: the count for anyone, a Sign in button for the people', '');
     check(/Sign in to see who’s here\./.test(await page.$eval(peoplePanel + ' [data-dir="out"]', (c) => c.innerText)), 'signed out: one line and the button', '');
@@ -10081,7 +10919,7 @@ async function thePeople(browser, base) {
       /^Plans & Meetups/.test(doors[1][0]) && doors[1][1] === 'https://www.btownbrief.com/community/channels/meetups-hangouts' &&
       /^Telegram/.test(doors[2][0]) && doors[2][1] === base + '/telegram.html', 'one door card: Find Each Other, Plans & Meetups, Telegram', JSON.stringify(doors));
     const chipsTxt = await page.$$eval('#subnav .chip', (cs) => cs.map((c) => c.textContent));
-    check(JSON.stringify(chipsTxt) === JSON.stringify(['Who you are', 'Run clubs', 'Open to strangers', 'Mixers', 'Dating', 'Pets', 'Clubs', 'Quiz', 'People here']), 'the chip row is the table of contents', JSON.stringify(chipsTxt));
+    check(JSON.stringify(chipsTxt.filter((c) => c !== 'From the groups')) === JSON.stringify(['IRL', 'This week', 'Open to strangers', 'Run clubs', 'Group chat', 'Who you are', 'Dating', 'Pets', 'Clubs', 'Quiz', 'People here']), 'the chip row is the table of contents', JSON.stringify(chipsTxt));
     await page.evaluate(() => document.querySelector('#panel-people').scrollTo(0, 0));
     await page.waitForTimeout(400);
     await page.click('#subnav .chip[data-chip="quiz"]');
@@ -10231,7 +11069,7 @@ async function thePeople(browser, base) {
     await page.waitForSelector(peoplePanel + ' [data-sec="pets"] [data-parks]', { timeout: 15000 });
     await page.waitForFunction((s) => !document.querySelector(s + ' [data-sec="dating"] .loading, ' + s + ' [data-sec="pets"] .loading'), peoplePanel, { timeout: 10000 });
     const order = await secOrder(page);
-    check(order.indexOf('dating') === order.indexOf('host') + 1 && order.indexOf('pets') === order.indexOf('dating') + 1, 'Dating, then Pets, under the mixers and the host card', order.join(' '));
+    check(order.indexOf('dating') === order.indexOf('foryou') + 1 && order.indexOf('pets') === order.indexOf('dating') + 1, 'Dating, then Pets, under who you are', order.join(' '));
     /* singles nights: the calendar's, from now on */
     const PM = await import(path.join(APP, 'js/people-match.js'));
     const w = JSON.parse(await readFile(path.join(APP, 'data/whatnow.json'), 'utf8'));
@@ -10355,7 +11193,7 @@ async function thePeople(browser, base) {
     const { ctx, page, errors } = await newPage(browser, base, { clock: SAT_1PM });
     await page.goto(base + '/all-day/?demo=1#people');
     await page.waitForSelector(peoplePanel + ' [data-plans] .card.board');
-    await page.waitForSelector(peoplePanel + ' [data-sec="clubs"] .days button');
+    await page.waitForSelector(peoplePanel + ' [data-sec="clubs"] [data-club-week]');
     const order = await secOrder(page);
     check(order.indexOf('foryou') === order.indexOf('arch') + 1, 'the strip’s place is directly under the tiles', order.join(' '));
     const tap = async (sel) => { await page.click(peoplePanel + ' ' + sel); await page.waitForTimeout(120); };
@@ -10415,15 +11253,15 @@ async function thePeople(browser, base) {
     await tap('[data-tags] .chip[data-chip="running"]');
     await tap('[data-tags] .chip[data-chip="grad"]');
     await page.click(peoplePanel + ' [data-sec="mix"] .mixdays button[data-day="2026-10-17"]');
-    const rows = await mixRows(page);
+    const rows = await mixRows(page, '2026-10-17');
     check(rows.length && /For you/.test(rows[0].text), 'a mixer that fits what you picked leads its day, marked For you', JSON.stringify(rows.map((r) => r.title)));
     await pageRules(page, 'people', 390);
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
   });
 
-  /* the group chat card: near the top, and only for a real t.me link. The constant lives in people.js; the test swaps it in the served file. */
-  await group('People: the group chat card shows only for a real t.me link, at the top', async () => {
+  /* the group chat card: a chip away on the pill, and only for a real t.me link. The constant lives in people.js; the test swaps it in the served file. */
+  await group('People: the group chat card shows only for a real t.me link, and the pill reaches it', async () => {
     const withChat = async (value) => {
       const c = await newPage(browser, base, { clock: SAT_1PM });
       await c.page.route(/\/all-day\/js\/modes\/people\.js(\?.*)?$/, async (route) => {
@@ -10440,6 +11278,7 @@ async function thePeople(browser, base) {
     const todo = await withChat('TODO');
     const t = await card(todo.page);
     check(t.hidden && !t.href, 'with the TODO value the card is hidden', JSON.stringify(t));
+    check(!(await todo.page.$('#subnav .chip[data-chip="chat"]')), 'and the pill has no chip for it', '');
     await todo.ctx.close();
     const bad = await withChat('https://example.com/join');
     check((await card(bad.page)).hidden, 'a link that is not t.me is hidden too', '');
@@ -10448,7 +11287,15 @@ async function thePeople(browser, base) {
     const l = await card(live.page);
     check(!l.hidden && l.href === 'https://t.me/+AbCdEf12345' && /Join the group chat/.test(l.text) && /Join on Telegram/.test(l.text), 'with a real-looking t.me link the card shows, linking it', JSON.stringify(l));
     const order = await secOrder(live.page);
-    check(order[0] === 'chat' && order[1] === 'arch', 'and it is the first thing on the tab, above who you are', order.join(' '));
+    check(order.indexOf('chat') === order.indexOf('clubs') + 1 && order.indexOf('arch') === order.indexOf('chat') + 1, 'and it sits under the club week, above who you are', order.join(' '));
+    await live.page.click('#subnav .chip[data-chip="chat"]');
+    await live.page.waitForFunction((s) => { const t = document.querySelector(s + ' [data-sec="chat"]').getBoundingClientRect().top; return t >= 0 && t < 300; }, peoplePanel, { timeout: 4000 }).catch(() => {});
+    const chatTop = await live.page.$eval(peoplePanel + ' [data-sec="chat"]', (s) => Math.round(s.getBoundingClientRect().top));
+    check(chatTop >= 0 && chatTop < 300, 'the Group chat chip scrolls to it', chatTop);
+    await live.page.goto(base + '/all-day/?demo=1#people/chat');
+    await live.page.waitForFunction((s) => { const t = document.querySelector(s + ' [data-sec="chat"]').getBoundingClientRect().top; return t >= 0 && t < 300; }, peoplePanel, { timeout: 6000 }).catch(() => {});
+    const linkTop = await live.page.$eval(peoplePanel + ' [data-sec="chat"]', (s) => Math.round(s.getBoundingClientRect().top));
+    check(linkTop >= 0 && linkTop < 300, '#people/chat lands on it', linkTop);
     check(await live.page.$eval(peoplePanel + ' [data-chat]', (c) => c.querySelectorAll('p').length) === 1, 'a title, one line and a button', '');
     await live.ctx.close();
     /* as shipped: the file's own value is a real t.me link, and it is not the movie / TV watch chat */
@@ -10468,45 +11315,89 @@ async function thePeople(browser, base) {
     await page.goto(base + '/all-day/?demo=1#people/mix');
     await page.waitForSelector(peoplePanel + ' [data-sec="mix"] .mixdays button');
     const own = await page.$$eval(peoplePanel + ' [data-mixers] .owntile', (cs) => cs.map((c) => c.dataset.k));
-    check(own.length >= 3 && own.every((k) => /^mx-dm/.test(k)), 'Stephen’s own lead the section, as a short row', own.join(' '));
+    check(own.length === 3 && own.every((k) => /^mx-dm/.test(k)), 'Stephen’s next three lead the big block', own.join(' '));
+    check(await page.$$eval(peoplePanel + ' [data-mixers] .owntile.lead', (t) => t.length) === 1 && await page.$eval(peoplePanel + ' [data-mixers] .owntile', (t) => t.classList.contains('lead')), 'the soonest one largest', '');
     /* Stephen, 2026-10-18: a button opens the row into a list that scrolls down, and a Collapse bar folds it back */
     const ownBtn = () => page.$eval(peoplePanel + ' [data-own-all]', (b) => [b.textContent, b.dataset.ownAll, b.getAttribute('aria-expanded')]);
-    check(JSON.stringify(await ownBtn()) === JSON.stringify(['Show all ' + own.length, 'closed', 'false']) && !!(await page.$(peoplePanel + ' .rail[data-mixers]')), 'his row has a Show all button', JSON.stringify(await ownBtn()));
+    const ownN = 6;   // the demo's six
+    check(JSON.stringify(await ownBtn()) === JSON.stringify(['Show all ' + ownN, 'closed', 'false']), 'the block has a Show all button', JSON.stringify(await ownBtn()));
     await page.click(peoplePanel + ' [data-own-all]');
     const list = await page.evaluate(() => { const l = document.querySelector('#panel-people .ownlist[data-mixers]'); if (!l) return null;
       const r = [...l.querySelectorAll('.owntile')].map((t) => t.getBoundingClientRect());
       return { n: r.length, rail: !!l.closest('.rail-wrap'), down: r.every((x, i) => !i || x.top >= r[i - 1].bottom), left: new Set(r.map((x) => Math.round(x.left))).size, wide: r.every((x) => x.width > 300),
         bar: (l.parentElement.querySelector('.collapsebar [data-collapse]') || {}).ariaLabel || '' }; });
-    check(list && list.n === own.length && !list.rail && list.down && list.left === 1 && list.wide && list.bar === 'Collapse Btown Brief IRL',
+    check(list && list.n === ownN && !list.rail && list.down && list.left === 1 && list.wide && list.bar === 'Collapse Btown Brief IRL',
       'Show all stacks every one, full width, in a list that scrolls down, with a Collapse bar', JSON.stringify(list));
     check(JSON.stringify(await ownBtn()) === JSON.stringify(['Show less', 'open', 'true']), 'and the button says Show less', JSON.stringify(await ownBtn()));
-    await page.click(peoplePanel + ' [data-sec="mix"] [data-collapse]');
+    await page.click(peoplePanel + ' [data-sec="irl"] [data-collapse]');
     await page.waitForTimeout(700);
-    const back = await page.evaluate(() => { const h = document.querySelector('#panel-people [data-sec="mix"] .sec').getBoundingClientRect().top;
-      return { rail: !!document.querySelector('#panel-people .rail[data-mixers]'), bar: !!document.querySelector('#panel-people .collapsebar'), ok: h >= 0 && h < innerHeight / 2,
+    const back = await page.evaluate(() => { const h = document.querySelector('#panel-people [data-sec="irl"] .irl').getBoundingClientRect().top;
+      return { n: document.querySelectorAll('#panel-people [data-mixers] .owntile').length, bar: !!document.querySelector('#panel-people [data-sec="irl"] .collapsebar'), ok: h >= 0 && h < innerHeight / 2,
         focus: (document.activeElement && document.activeElement.dataset.ownAll) || '' }; });
-    check(back.rail && !back.bar && back.ok && back.focus === 'closed', 'Collapse folds it back into the row, lands on the Mixers head, and the keyboard is on Show all', JSON.stringify(back));
+    check(back.n === 3 && !back.bar && back.ok && back.focus === 'closed', 'Collapse folds it back to the next three, lands on the block’s head, and the keyboard is on Show all', JSON.stringify(back));
     const days = await page.$$eval(peoplePanel + ' [data-sec="mix"] .mixdays button', (bs) => bs.map((b) => [b.dataset.day, b.querySelector('.wd').textContent, b.querySelector('.n').textContent]));
     check(days[0][0] === '2026-10-17' && days[0][1] === 'Today' && days.length === 7, 'seven days, today first', JSON.stringify(days));
-    let rows = await mixRows(page);
+    /* Stephen, 2026-10-30: one list across the coming days, ten rows, then Show more in steps */
+    const weekN = days.reduce((n, d) => n + Number(d[2] || 0), 0);
+    const groups = () => page.$$eval(peoplePanel + ' [data-mix-list] [data-mix-day]', (gs) => gs.map((g) => ({ day: g.dataset.mixDay, head: g.querySelector('.mixlabel').textContent, n: g.querySelectorAll('.lrow').length })));
+    const wk = await groups();
+    check(weekN > 20 && wk.reduce((n, g) => n + g.n, 0) === 10 && wk.length > 1, 'the list opens on ten rows across more than one day', JSON.stringify({ weekN, wk }));
+    check(wk[0].head === 'Today' && wk[1].head === 'Tomorrow' && JSON.stringify(wk.map((g) => g.day)) === JSON.stringify([...wk.map((g) => g.day)].sort()), 'each day labelled, in order', JSON.stringify(wk));
+    await page.click(peoplePanel + ' [data-mix-more]');
+    check((await mixRows(page)).length === 20 && await page.$eval(peoplePanel + ' [data-mix-more]', (b) => b === document.activeElement), 'Show more adds ten more and keeps the keyboard on the button', '');
+    const late = days.filter((d) => d[2]).pop()[0];
+    await page.click(peoplePanel + ' [data-sec="mix"] .mixdays button[data-day="' + late + '"]');
+    await page.waitForTimeout(700);
+    const hit = await page.$eval(peoplePanel + ' [data-mix-day="' + late + '"]', (g) => { const r = g.getBoundingClientRect(); return { top: r.top < innerHeight && r.top >= 0, n: g.querySelectorAll('.lrow').length }; });
+    check(hit.top && hit.n === Number(days.find((d) => d[0] === late)[2]) && (await peek(page)).mixDay === late, 'the strip jumps to a day, past the rows on show, and brings the whole day', JSON.stringify(hit));
+    const showAll = async () => { while (await page.$(peoplePanel + ' [data-mix-more]')) await page.click(peoplePanel + ' [data-mix-more]'); };
+    await showAll();
+    check((await mixRows(page)).length === weekN, 'Show more reaches every row the strip counts', '');
+    check(!(await page.$(peoplePanel + ' [data-sec="clubs"] .lrow.meet')), 'the club meets are in this list, not repeated in Run clubs', '');
+    let rows = await mixRows(page, days[0][0]);
     check(rows.some((r) => /Singles Mixer/.test(r.title) && /Singles/.test(r.text)), 'today: the singles mixer, named for its kind', JSON.stringify(rows.map((r) => r.title)));
-    check(!rows.some((r) => /Coffee Club/.test(r.title)), 'and his own are not listed twice', '');
-    await page.click(peoplePanel + ' [data-sec="mix"] .mixdays button[data-day="2026-10-21"]');
     rows = await mixRows(page);
     check(rows.some((r) => /BTV Tech Tuesday/.test(r.title) && /Networking/.test(r.text)), 'a tech meetup counts', JSON.stringify(rows.map((r) => r.title)));
     /* the readers' gatherings: the approved ones, marked */
-    await page.click(peoplePanel + ' [data-sec="mix"] .mixdays button[data-day="2026-10-19"]');
-    rows = await mixRows(page);
-    const g = rows.find((r) => r.reader);
+    rows = await mixRows(page, '2026-10-19');
+    const g = rows.find((r) => r.kind === 'reader');
     check(g && /Pickup ultimate at Leddy/.test(g.title) && /Reader-posted/.test(g.text), 'an approved reader gathering is on its day, marked reader-posted', JSON.stringify(rows.map((r) => r.title + (r.reader ? ' (reader)' : ''))));
-    const all = [];
-    for (const [d] of days) { await page.click(peoplePanel + ' [data-sec="mix"] .mixdays button[data-day="' + d + '"]'); all.push(...(await mixRows(page))); }
+    const all = await mixRows(page);
     check(!all.some((r) => /fiddle jam/i.test(r.title)), 'one still waiting for Stephen never shows', '');
     check(!all.some((r) => /Toddler|Wolf Kahn/.test(r.title)), 'a toddler music time and an exhibit are not mixers', '');
     check(all.some((r) => /Spanish Conversation/.test(r.title)) && all.some((r) => /Run Club Social/.test(r.title)) && all.some((r) => /Founders/.test(r.title)), 'a language table, a run club social and a networking night all are', '');
     check(all.some((r) => r.reader && r.href && /^https:\/\/example\.com/.test(r.href)), 'a gathering with its own link links out', '');
+    /* his own, on the days they fall: pinned first, once, and counted on the strip */
+    const ownDays = [];
+    for (const [d, , n] of days) {
+      const day = await mixRows(page, d);
+      if (day.some((r) => r.kind === 'own')) ownDays.push({ day, n });
+    }
+    check(ownDays.length && ownDays.every(({ day }) => day[0].kind === 'own' && /^mx-dm/.test(day[0].k) && new Set(day.map((r) => r.k)).size === day.length && day.filter((r) => /Coffee Club/.test(r.title)).length <= 1), 'his own is pinned first in its day, once', JSON.stringify(ownDays.map(({ day }) => day.map((r) => r.title))));
+    check(ownDays.every(({ day, n }) => Number(n) === day.length), 'and counted on the strip', JSON.stringify(ownDays.map((x) => x.n)));
+    const clubRow = all.find((r) => r.kind === 'club');
+    check(clubRow && !clubRow.href && /Run club|Fitness/.test(clubRow.text), 'a run or fitness meet is on its day', JSON.stringify(clubRow));
+    const planRow = all.find((r) => r.kind === 'plan');
+    check(planRow && !planRow.href && /Reader-posted/.test(planRow.text), 'a dated plan is on its day, marked reader-posted', JSON.stringify(planRow));
+    const dayOf = (k) => page.$eval(peoplePanel + ' [data-mix-day] [data-k="' + k + '"]', (r) => r.closest('[data-mix-day]').dataset.mixDay);
+    await page.click(peoplePanel + ' [data-mix-day] [data-k="' + clubRow.k + '"]');
+    await page.waitForSelector('.sheet-body[data-club-sheet]');
+    check(true, 'a meet’s row opens the club’s sheet', '');
+    await page.keyboard.press('Escape');
+    await page.click(peoplePanel + ' [data-mix-day] [data-k="' + planRow.k + '"]');
+    check(await flashes(page, 'b-' + planRow.k.slice(3)), 'a plan’s row flashes its card', planRow.k);
+    /* just after landing on This week: the card keeps the reader, no jump back */
+    const planDay = await dayOf(planRow.k);
+    await page.reload();
+    await page.waitForSelector(peoplePanel + ' [data-sec="mix"] .mixdays button');
+    await page.$eval(peoplePanel + ' [data-sec="mix"] .mixdays button[data-day="' + planDay + '"]', (b) => b.click());
+    await page.$eval(peoplePanel + ' [data-mix-day] [data-k="' + planRow.k + '"]', (r) => r.click());
+    await page.waitForTimeout(1000);
+    const cardTop = await page.$eval(peoplePanel + ' [data-k="b-' + planRow.k.slice(3) + '"]', (c) => Math.round(c.getBoundingClientRect().top));
+    check(cardTop >= 0 && cardTop < 800, 'a plan’s row just after landing stays on its card', cardTop);
+    await page.evaluate(() => document.querySelector('#panel-people').scrollTo(0, 0));
     await page.click(peoplePanel + ' [data-sec="mix"] .mixdays button[data-day="2026-10-19"]');
-    await page.click(peoplePanel + ' [data-mix-day] button.lrow[data-reader="1"]');
+    await page.click(peoplePanel + ' [data-mix-day="2026-10-19"] button.lrow[data-kind="reader"]');
     await page.waitForSelector('.sheet-body[data-gathering]');
     check(/Leddy Park/.test(await page.$eval('.sheet-body', (b) => b.innerText)), 'one without a link opens its own sheet: when, where, what', '');
     await page.keyboard.press('Escape');
@@ -10514,6 +11405,69 @@ async function thePeople(browser, base) {
     check(await flashes(page, 'mc-dc6'), 'a calendar mixer’s link picks its day and flashes it', '');
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
+  });
+
+  await group('People opens on Btown Brief IRL, then This week and From the groups (demo, 390)', async () => {
+    const { ctx, page, errors } = await newPage(browser, base, { clock: SAT_1PM, viewport: { width: 390, height: 844 } });
+    await page.goto(base + '/all-day/?demo=1#people');
+    await page.waitForSelector(peoplePanel + ' [data-grid="scene"] .vcard');
+    const d = JSON.parse(await readFile(path.join(APP, 'data/demo/people.json'), 'utf8'));
+    const nowS = SAT_1PM / 1000;
+    const shift = Math.round((Date.parse('2026-10-17T12:00:00Z') - Date.parse(d._anchor + 'T12:00:00Z')) / 1000);
+    const want = d.instagramPosts.filter((p) => d.sceneHandles.includes(p.h) && ['poster', 'vibe'].includes(p.kind) && p.ts + shift > nowS - 14 * 86400).sort((a, b) => b.ts - a.ts);
+    const s = await page.evaluate((p) => { const sec = document.querySelector(p + ' [data-sec="scene"]'), cells = [...sec.querySelectorAll('.vcard')];
+      return { head: sec.querySelector('.sec h2').textContent, hrefs: cells.map((c) => c.getAttribute('href')), shown: cells.filter((c) => !c.hidden).length, more: !sec.querySelector('.vmore').hidden }; }, peoplePanel);
+    check(s.head === 'From the groups' && JSON.stringify(s.hrefs) === JSON.stringify(want.map((p) => p.u)), 'the groups’ own posters and photos, newest first; another kind, an old post and another account stay out', JSON.stringify(s.hrefs));
+    check(s.shown === 6 && s.more && want.length > 6, 'six tiles, then See more', JSON.stringify(s));
+    const top = await page.$eval(peoplePanel + ' .irl', (n) => { const r = n.getBoundingClientRect(); return { top: r.top, h: r.height, big: parseFloat(getComputedStyle(n.querySelector('h2')).fontSize) }; });
+    check(top.top < 220 && top.h > 300 && top.big >= 26 && (await secOrder(page))[0] === 'irl', 'Btown Brief IRL is the big block at the very top', JSON.stringify(top));
+    check(await page.$eval(peoplePanel + ' [data-host]', (c, irl) => c.getBoundingClientRect().top - irl < 24, await page.$eval(peoplePanel + ' .irl', (n) => n.getBoundingClientRect().bottom)), 'with the host card right under it', '');
+    const chips0 = await page.$$eval('#subnav .chip', (cs) => cs.map((c) => c.dataset.chip));
+    check(chips0.slice(0, 3).join() === 'irl,mix,scene', 'the pill follows the page', chips0.join());
+    await page.screenshot({ path: path.join(SHOTS, 'demo-people-top-390.png') });
+    await pageRules(page, 'people', 390);
+    /* left open overnight: the way back in starts the strip on the new day */
+    await goTab(page, 'food');
+    await page.clock.setFixedTime(SAT_1PM + 86400000);
+    await goTab(page, 'people');
+    const first = await page.$eval(peoplePanel + ' [data-sec="mix"] .mixdays button', (b) => b.dataset.day);
+    check(first === '2026-10-18', 'a tab left open overnight moves to the new day', first);
+    /* and left open on People itself: coming back to the phone does the same */
+    await page.clock.setFixedTime(SAT_1PM + 2 * 86400000);
+    await page.evaluate(() => document.dispatchEvent(new Event('visibilitychange')));
+    const resumed = await page.$eval(peoplePanel + ' [data-sec="mix"] .mixdays button', (b) => b.dataset.day);
+    check(resumed === '2026-10-19', 'coming back to the app on People moves to the new day', resumed);
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('People, From the groups hides below four posts, and failing feeds leave the tab whole (live)', async () => {
+    const now = Math.floor(Date.now() / 1000);
+    const thin = { generated: new Date().toISOString(), handles: [], posts: ['A', 'B', 'C'].map((c, i) => ({ h: 'socialsports_vt', ts: now - i * 3600, i: 'https://scontent.example/' + c + '.jpg', u: 'https://www.instagram.com/p/Thin' + c + '/', w: 480, c: 'Pickup', s: 'do', kind: 'poster' })) };
+    const a = await newPage(browser, base, { viewport: { width: 390, height: 844 } });
+    await a.page.route(/\/all-day\/data\/instagram\.json/, (r) => r.fulfill({ status: 200, body: JSON.stringify(thin), contentType: 'application/json' }));
+    await a.page.goto(base + '/all-day/#people');
+    await peopleReady(a.page);
+    await a.page.waitForTimeout(500);
+    check(await a.page.$eval(peoplePanel + ' [data-sec="scene"]', (s) => s.hidden && !s.children.length) && !(await a.page.$('#subnav .chip[data-chip="scene"]')), 'three posts: no section and no chip', '');
+    await a.ctx.close();
+    const four = { ...thin, posts: thin.posts.concat({ ...thin.posts[0], u: 'https://www.instagram.com/p/ThinD/' }) };
+    const b = await newPage(browser, base, { viewport: { width: 390, height: 844 } });
+    await b.page.route(/\/all-day\/data\/instagram\.json/, (r) => r.fulfill({ status: 200, body: JSON.stringify(four), contentType: 'application/json' }));
+    await b.page.goto(base + '/all-day/#people');
+    await b.page.waitForSelector(peoplePanel + ' [data-grid="scene"] .vcard', { timeout: 15000 });
+    check(await b.page.$$eval(peoplePanel + ' [data-grid="scene"] .vcard', (c) => c.length) === 4 && !!(await b.page.$('#subnav .chip[data-chip="scene"]')), 'four posts: the section and its chip', '');
+    check(!b.errors.length, 'no console errors', b.errors.join(' | '));
+    await b.ctx.close();
+    const c = await newPage(browser, base, { viewport: { width: 390, height: 844 }, routes: [[/play\.btownbrief\.com\/up-for-it\/data\/meetup\.json/, { fetched: new Date().toISOString(), events: [] }]] });
+    for (const re of [/\/all-day\/data\/instagram\.json/, /\/all-day\/data\/whatnow\.json/, /\/data\/run-clubs\.json/]) await c.page.route(re, (r) => r.fulfill({ status: 500, body: '' }));
+    await c.page.goto(base + '/all-day/#people');
+    await peopleReady(c.page);
+    await c.page.waitForFunction((s) => !document.querySelector(s + ' [data-sec="mix"] .loading'), peoplePanel, { timeout: 15000 });
+    const m = await c.page.$eval(peoplePanel + ' [data-sec="mix"]', (s) => ({ text: s.innerText, post: !!s.querySelector('.sec [data-post]'), cal: !!s.querySelector('[data-calendar]'), group: !!document.querySelector('#panel-people [data-sec="irl"] [data-own] a') }));
+    check(/The calendar didn’t load\./.test(m.text) && m.post && m.cal && m.group, 'with every feed down This week still has its head, its button and its links', JSON.stringify(m));
+    await pageRules(c.page, 'people', 390);
+    await c.ctx.close();
   });
 
   await group('People, demo: the plans filter by Meetup, age and activity', async () => {
@@ -10698,8 +11652,8 @@ async function thePeople(browser, base) {
     check(!off.some((n) => txt.includes(n)), 'only opted-in rows: ' + off.join(' and ') + ' never show', '');
     check(/Robin \(you\)/.test(rows[0]) && /South End/.test(rows[0]) && /Trail person/.test(rows[0]) && /Running/.test(rows[0]), 'your row first: first name, neighborhood, tile, interests', rows[0]);
     check(!/LGBTQ|lgbtq/.test(txt), 'the who-you-are tags never reach the directory', '');
-    const html = await page.$eval(peoplePanel, (p) => { const c = p.cloneNode(true); c.querySelectorAll('[data-host]').forEach((x) => x.remove()); return c.innerHTML + c.innerText; });
-    check(!/@/.test(html), 'no email anywhere on the tab (Stephen’s own, on the host card, aside)', (html.match(/.{20}@.{20}/) || [''])[0]);
+    const html = await page.$eval(peoplePanel, (p) => { const c = p.cloneNode(true); c.querySelectorAll('[data-host], [data-help-host], [data-grid="scene"]').forEach((x) => x.remove()); return c.innerHTML + c.innerText; });
+    check(!/@/.test(html), 'no email anywhere on the tab (Stephen’s own, on the host card and the help-host button, and the groups’ Instagram handles aside)', (html.match(/.{20}@.{20}/) || [''])[0]);
     await page.click(peoplePanel + ' [data-sec="dir"] button:has-text("Leave the directory")');
     await page.waitForSelector(peoplePanel + ' [data-dir="join"]');
     check(new RegExp(on.length + ' neighbors in it').test(await page.$eval(peoplePanel + ' [data-sec="dir"]', (s) => s.innerText)), 'leaving takes you out of the count', '');
@@ -10804,12 +11758,15 @@ async function theClubs(browser, base) {
   await group('Run clubs, People: the week strip, the sheet and I’m going (demo, 390)', async () => {
     const { ctx, page, errors } = await newPage(browser, base, { clock: SAT_1PM });
     await page.goto(base + '/all-day/?demo=1#people');
+    await page.waitForSelector(clubsSec + ' [data-club-week]');
+    check(!(await page.$(clubsSec + ' .days')) && /^Every club and league in town/.test(await page.$eval(clubsSec + ' [data-every-club] a', (a) => a.textContent.trim())), 'the meets are in This week: shut, this is the way to every club and the club week', '');
+    await page.click(clubsSec + ' [data-club-week]');
     await page.waitForSelector(clubsSec + ' .days button');
     check(await page.$eval(clubsSec + ' .sec h2', (h) => h.textContent) === 'Run clubs this week', 'the section is “Run clubs this week”, a title and nothing under it',
       await page.$eval(clubsSec + ' .sec', (h) => h.innerText));
     check(!(await page.$(clubsSec + ' .sec p')), 'no subtitle', '');
     const order = await secOrder(page);
-    check(order.indexOf('clubs') === order.indexOf('foryou') + 1 && order.indexOf('foryou') === order.indexOf('arch') + 1 && order.indexOf('clubs') < order.indexOf('plans'), 'it sits near the top, under who you are (and For you)', order.join(' '));
+    check(order.indexOf('clubs') === order.indexOf('plans') + 1 && order.indexOf('foryou') === order.indexOf('arch') + 1 && order.indexOf('clubs') < order.indexOf('arch'), 'it sits under the plans, above who you are (and For you)', order.join(' '));
     const every = await page.$eval(clubsSec + ' [data-every-club] a', (a) => ({ text: a.textContent.trim(), href: a.href }));
     check(/^Every club and league in town/.test(every.text) && every.href === base + '/clubs.html', 'right under the week: Every club and league in town, to clubs.html', JSON.stringify(every));
     const days = await page.$$eval(clubsSec + ' .days button', (bs) => bs.map((b) => ({ day: b.dataset.day, wd: b.querySelector('.wd').textContent, n: b.querySelector('.n').textContent, on: b.classList.contains('on') })));
@@ -10839,7 +11796,7 @@ async function theClubs(browser, base) {
     await page.click(peoplePanel + ' [data-tags="I’m into…"] .chip[data-chip="running"]');
     await page.waitForTimeout(150);
     const o2 = await secOrderBelowChat(page);
-    check(o2[0] === 'arch' && o2[1] === 'foryou' && o2[2] === 'clubs', 'A runner: nothing jumps; For you, then the club week, right under the tiles', o2.join(' '));
+    check(o2.indexOf('foryou') === o2.indexOf('arch') + 1 && o2.indexOf('clubs') < o2.indexOf('arch'), 'A runner: nothing jumps; For you right under the tiles', o2.join(' '));
     check(((await forYou(page)) || [])[0]?.kind === 'run', 'and For you leads with a run club', JSON.stringify(await forYou(page)));
     await page.evaluate(() => document.querySelector('#panel-people').scrollTo(0, 0));
     await page.waitForTimeout(250);
@@ -12842,7 +13799,7 @@ async function theApps(browser, base) {
       eat: ['Open now', 'Deals', 'New', 'Bites', 'Market', 'Dinner Club'],
       people: ['You', 'Plans', 'Clubs', 'Dating', 'Neighbors', 'Pets', 'Talk'],
       body: ['Today', 'Habits', 'Train', 'Leagues', 'Recover', 'Fuel'],
-      town: ['Now', 'Alerts', 'City Hall', 'Streets', 'Guides', 'Jobs'],
+      town: ['Now', 'Alerts', 'City Hall', 'Streets', 'Square', 'Guides', 'Jobs'],
       play: ['Arcade', 'Daily', 'City', 'Draw', 'Party', 'Boards'],
       paper: ['Front', 'Editions', 'Picks', 'Gossip', 'Everything', 'Story'],
     };
@@ -13085,24 +14042,19 @@ async function theApps(browser, base) {
     await ad.ctx.close();
   });
 
-  await group('apps: hold the pill’s centre to switch apps (a 3, 2, 1 ring, then the bubble)', async () => {
+  await group('apps: hold the pill’s centre to switch apps (a ring, then the bubble)', async () => {
     const SW = await readFile(path.join(APP, 'js/switcher.js'), 'utf8');
     const HOLD = Number((SW.match(/export const HOLD_MS = (\d+);/) || [])[1]);
     const GRACE = Number((SW.match(/export const GRACE_MS = (\d+);/) || [])[1]);
-    check(HOLD === 750 && GRACE === 150 && /export const HOLD_TICKS = 3;/.test(SW), 'one named hold: 0.75 s in three ticks, after a 150 ms grace', HOLD + ' ' + GRACE);
-    const { ctx, page, errors } = await newPage(browser, base, { coach: true });
+    check(HOLD === 300 && GRACE === 150 && !/HOLD_TICKS|TAP_MS|hr-n/.test(SW), 'one named hold: 450 ms in all, a 300 ms ring after a 150 ms grace, no digits', HOLD + ' ' + GRACE);
+    const { ctx, page, errors } = await newPage(browser, base);
     await page.addInitScript(() => { window.__buzz = []; navigator.vibrate = (ms) => { window.__buzz.push(ms); return true; }; });
     await page.goto(base + '/town/?demo=1#alerts');
     await settle(page);
-    /* the coach mark, once, on a first visit */
-    await page.waitForSelector('.coachmark', { timeout: 4000 }).catch(() => null);
-    const coachText = await page.evaluate(() => (document.querySelector('.coachmark') || {}).textContent || '');
-    check(coachText === 'Hold Streets to switch apps', 'a first visit gets the coach mark, naming the cell', coachText);
     const cell = await page.$eval('#tabbar .holdcell', (b) => { const r = b.getBoundingClientRect(); return { id: b.id, x: r.left + r.width / 2, y: r.top + r.height / 2 }; });
     check(cell.id === 'tab-streets', 'the centre cell of Town’s six is Streets, the fourth', cell.id);
     const cm = await page.evaluate(() => { const e = new MouseEvent('contextmenu', { bubbles: true, cancelable: true }); document.querySelector('#tabbar .holdcell').dispatchEvent(e); return e.defaultPrevented; });
     check(cm, 'the browser’s long-press menu is kept off the centre cell', '');
-    await page.screenshot({ path: path.join(SHOTS, 'app-switch-coach-390.png') });
     /* a plain tap opens its tab, with no ring and no bubble */
     await page.mouse.click(cell.x, cell.y);
     await page.waitForTimeout(GRACE + 150);
@@ -13123,7 +14075,16 @@ async function theApps(browser, base) {
     const slow = await page.evaluate(() => ({ tab: document.querySelector('#tabbar button[aria-selected="true"]').dataset.tab, ring: !!document.querySelector('.holdring'), bubble: !!document.querySelector('.appbubble') }));
     check(ringAtSlow && slow.tab === 'streets' && !slow.ring && !slow.bubble, 'a 250 ms press with the mouse still opens Streets', JSON.stringify([ringAtSlow, slow]));
     await backToAlerts();
-    /* sliding off once the ring shows cancels it, even before a tap's time is up */
+    /* any lift before the bubble opens is a tap */
+    await page.mouse.move(cell.x, cell.y);
+    await page.mouse.down();
+    await page.waitForTimeout(GRACE + HOLD - 60);
+    await page.mouse.up();
+    await page.waitForTimeout(150);
+    const late = await page.evaluate(() => ({ tab: document.querySelector('#tabbar button[aria-selected="true"]').dataset.tab, ring: !!document.querySelector('.holdring'), bubble: !!document.querySelector('.appbubble') }));
+    check(late.tab === 'streets' && !late.ring && !late.bubble, 'a 390 ms press with the mouse still opens Streets', JSON.stringify(late));
+    await backToAlerts();
+    /* sliding off once the ring shows cancels it */
     await page.mouse.move(cell.x, cell.y);
     await page.mouse.down();
     await page.waitForTimeout(250);
@@ -13133,32 +14094,37 @@ async function theApps(browser, base) {
     const slid = await page.evaluate(() => ({ tab: document.querySelector('#tabbar button[aria-selected="true"]').dataset.tab, ring: !!document.querySelector('.holdring') }));
     check(slid.tab === 'alerts' && !slid.ring, 'sliding off at 250 ms cancels it: no change of tab', JSON.stringify(slid));
     await page.waitForTimeout(400);
-    /* hold: the ring shows after the grace, counts 3, 2, 1; lifting early cancels it */
+    /* hold: the ring shows after the grace, with no digits, under the finger */
     await page.mouse.move(cell.x, cell.y);
     await page.mouse.down();
     await page.waitForTimeout(80);
     const early = await page.evaluate(() => !!document.querySelector('.holdring'));
-    await page.waitForTimeout(GRACE + 120);
-    const n3 = await page.evaluate(() => (document.querySelector('.holdring .hr-n') || {}).textContent || '');
-    await page.waitForTimeout(HOLD / 3);
-    const n2 = await page.evaluate(() => (document.querySelector('.holdring .hr-n') || {}).textContent || '');
+    await page.waitForFunction(() => !!document.querySelector('.holdring'));
+    const ringText = await page.$eval('.holdring', (x) => x.textContent);
     const at = await page.$eval('.holdring', (r) => { const b = r.getBoundingClientRect(); return [Math.round(b.left + b.width / 2), Math.round(b.top + b.height / 2)]; });
-    await page.screenshot({ path: path.join(SHOTS, 'app-switch-countdown-390.png') });
+    await page.waitForFunction(() => !!document.querySelector('.appbubble'));
     await page.mouse.up();
-    await page.waitForTimeout(HOLD);
-    const cancel = await page.evaluate(() => ({ ring: !!document.querySelector('.holdring'), bubble: !!document.querySelector('.appbubble'), buzz: window.__buzz.length }));
+    await page.waitForTimeout(150);
     check(!early, 'no ring during the grace, so a tap never flashes it', '');
-    check(n3 === '3' && n2 === '2', 'the ring counts down: 3, then 2', n3 + ' ' + n2);
+    check(ringText === '', 'the ring carries no digits', ringText);
     check(Math.abs(at[0] - cell.x) <= 2 && Math.abs(at[1] - cell.y) <= 2, 'the ring sits under the finger', JSON.stringify([at, cell]));
-    const stay = await page.evaluate(() => document.querySelector('#tabbar button[aria-selected="true"]').dataset.tab);
-    check(!cancel.ring && !cancel.bubble && !cancel.buzz && stay === 'alerts', 'lifting once the ring shows cancels it: no bubble, no buzz, no change of tab', JSON.stringify([cancel, stay]));
-    /* the whole hold: the bubble opens on 0, with a light buzz; the tab under the finger does not change */
+    await page.keyboard.press('Escape');
+    /* the ring part-way, for the shot */
+    await page.mouse.down();
+    await page.waitForFunction(() => !!document.querySelector('.holdring'));
+    await page.screenshot({ path: path.join(SHOTS, 'app-switch-countdown-390.png') });
+    await page.mouse.move(cell.x + 16, cell.y);
+    await page.mouse.up();
+    await page.waitForTimeout(400);
+    await page.evaluate(() => { window.__buzz.length = 0; });
+    await page.mouse.move(cell.x, cell.y);
+    /* the whole hold: the bubble opens when the ring closes, with a light buzz; the tab under the finger does not change */
     await page.mouse.down();
     await page.waitForTimeout(GRACE + HOLD + 250);
     await page.mouse.up();
     await page.waitForTimeout(200);
     const b = await page.evaluate(() => ({ rows: [...document.querySelectorAll('.appbubble .ab-row')].map((r) => [r.dataset.app, r.querySelector('.ab-name').textContent, r.querySelector('.ab-line').textContent,
-      new URL(r.href).pathname + new URL(r.href).search, r.getAttribute('aria-current'), !!r.dataset.new]), buzz: window.__buzz, coach: !!document.querySelector('.coachmark'),
+      new URL(r.href).pathname + new URL(r.href).search, r.getAttribute('aria-current'), !!r.dataset.new]), buzz: window.__buzz,
       tab: document.querySelector('#tabbar button[aria-selected="true"]').dataset.tab,
       above: document.querySelector('.appbubble').getBoundingClientRect().bottom <= document.getElementById('tabbar').getBoundingClientRect().top }));
     check(JSON.stringify(b.rows.map((r) => r[0])) === '["all-day","body","town"]', 'the bubble: All Day, Town and Body, the apps that have earned a place', JSON.stringify(b.rows.map((r) => r[0])));
@@ -13166,15 +14132,11 @@ async function theApps(browser, base) {
     check(b.rows.every((r) => r[3] === '/' + r[0] + '/?demo=1'), 'each opens its own folder (the demo stays a demo)', JSON.stringify(b.rows.map((r) => r[3])));
     check(b.rows.filter((r) => r[4] === 'page').map((r) => r[0]).join() === 'town', 'this app is marked', '');
     check(JSON.stringify(b.buzz) === '[12]' && b.above && b.tab === 'alerts', 'a light buzz as it opens, above the pill, and the tab stays put', JSON.stringify([b.buzz, b.above, b.tab]));
-    check(!b.coach, 'using the hold retires the coach mark', '');
     await page.screenshot({ path: path.join(SHOTS, 'app-switch-bubble-390.png') });
     await page.keyboard.press('Escape');
     check(!(await page.$('.appbubble')), 'Escape closes it', '');
-    /* the coach mark never comes back, in any app */
     await page.goto(base + '/eat/?demo=1');
     await settle(page);
-    await page.waitForTimeout(1100);
-    check(!(await page.$('.coachmark')), 'and the coach mark stays gone, in every app', '');
     /* a tile opens that app */
     const eatCell = await page.$eval('#tabbar .holdcell', (x) => { const r = x.getBoundingClientRect(); return { id: x.id, x: r.left + r.width / 2, y: r.top + r.height / 2 }; });
     check(eatCell.id === 'tab-bites', 'Eat’s centre cell of six is Bites, the fourth', eatCell.id);
@@ -13182,7 +14144,7 @@ async function theApps(browser, base) {
     await page.waitForSelector('.appbubble');
     await Promise.all([page.waitForURL(/\/town\/\?demo=1$/), page.click('.appbubble .ab-row[data-app="town"]')]);
     await settle(page);
-    check((await page.$$eval('#tabbar button[data-tab]', (bs) => bs.map((x) => x.textContent.trim()))).join() === 'Now,Alerts,City Hall,Streets,Guides,Jobs', 'a row opens that app', '');
+    check((await page.$$eval('#tabbar button[data-tab]', (bs) => bs.map((x) => x.textContent.trim()))).join() === 'Now,Alerts,City Hall,Streets,Square,Guides,Jobs', 'a row opens that app', '');
     /* slide up to pick: the finger that held stays down, moves to a row, lifts */
     const townCell = await page.$eval('#tabbar .holdcell', (x) => { const r = x.getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2 }; });
     await page.mouse.move(townCell.x, townCell.y); await page.mouse.down(); await page.waitForTimeout(GRACE + HOLD + 250);
@@ -13195,18 +14157,11 @@ async function theApps(browser, base) {
     check((await page.$$eval('#tabbar button[data-tab]', (bs) => bs.length)) === 9, 'letting go opens that app', '');
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
-    /* a coach mark closed with its x is gone for good */
     const c2 = await newPage(browser, base, { coach: true });
     await c2.page.goto(base + '/all-day/');
     await settle(c2.page);
-    await c2.page.waitForSelector('.coachmark', { timeout: 4000 }).catch(() => null);
     const adCell = await c2.page.$eval('#tabbar .holdcell', (x) => x.id);
     check(adCell === 'tab-whatnow', 'All Day’s centre cell is What Now, fifth of nine', adCell);
-    await c2.page.click('.coachmark button');
-    await c2.page.reload();
-    await settle(c2.page);
-    await c2.page.waitForTimeout(1100);
-    check(!(await c2.page.$('.coachmark')), 'dismissed, the coach mark never comes back', '');
     /* the keyboard's way: Settings → Btown apps opens the same bubble */
     await c2.page.click('#settings-btn');
     await c2.page.click('.sheet-body [data-apps]');
@@ -13226,17 +14181,17 @@ async function theApps(browser, base) {
     check(side, 'wide: the bubble opens beside the rail', '');
     await w.page.screenshot({ path: path.join(SHOTS, 'app-switch-bubble-1280.png') });
     await w.ctx.close();
-    /* under reduced motion the ring still counts, without the sweep */
+    /* under reduced motion the ring shows whole, without the sweep */
     const r = await newPage(browser, base, { motion: 'reduce' });
     await r.page.goto(base + '/town/');
     await settle(r.page);
     const rc = await r.page.$eval('#tabbar .holdcell', (x) => { const b = x.getBoundingClientRect(); return { id: x.id, x: b.left + b.width / 2, y: b.top + b.height / 2 }; });
     await r.page.mouse.move(rc.x, rc.y); await r.page.mouse.down(); await r.page.waitForTimeout(GRACE + 150);
-    const rm = await r.page.evaluate(() => ({ n: document.querySelector('.holdring .hr-n').textContent, anim: getComputedStyle(document.querySelector('.holdring .hr-fill')).animationName }));
+    const rm = await r.page.evaluate(() => ({ text: document.querySelector('.holdring').textContent, anim: getComputedStyle(document.querySelector('.holdring .hr-fill')).animationName }));
     await r.page.mouse.up();
-    check(rc.id === 'tab-streets' && rm.n === '3' && rm.anim === 'none', 'reduced motion: the numbers count, the ring does not sweep', JSON.stringify([rc.id, rm]));
+    check(rc.id === 'tab-streets' && rm.text === '' && rm.anim === 'none', 'reduced motion: no digits, and the ring does not sweep', JSON.stringify([rc.id, rm]));
     await r.ctx.close();
-    /* a finger, not a mouse: the same 250 ms press opens the tab, and a longer one does not */
+    /* a finger, not a mouse: the same presses open the tab, and a full hold opens the bubble in time */
     const t = await newPage(browser, base, { touch: true });
     await t.page.goto(base + '/town/?demo=1#alerts');
     await settle(t.page);
@@ -13249,12 +14204,277 @@ async function theApps(browser, base) {
       await t.page.waitForTimeout(500);
       return t.page.evaluate(() => document.querySelector('#tabbar button[aria-selected="true"]').dataset.tab);
     };
-    const long = await press(GRACE + 350);
+    const toAlerts = async () => {
+      await t.page.evaluate(() => { location.hash = 'alerts'; });
+      await t.page.waitForFunction(() => document.querySelector('#tab-alerts').getAttribute('aria-selected') === 'true');
+    };
     const short = await press(250);
-    check(long === 'alerts' && short === 'streets', 'a finger: a 500 ms lift cancels, a 250 ms press opens Streets', JSON.stringify([long, short]));
+    await toAlerts();
+    const lateF = await press(GRACE + HOLD - 60);
+    await toAlerts();
+    check(short === 'streets' && lateF === 'streets', 'a finger: a 250 ms and a 390 ms press both open Streets', JSON.stringify([short, lateF]));
+    /* the full hold, press to bubble, on a touch screen */
+    await t.page.evaluate(() => {
+      window.__hold = {};
+      document.addEventListener('pointerdown', () => {
+        window.__hold.down = performance.now();
+        new MutationObserver((ms, o) => { if (document.querySelector('.appbubble')) { window.__hold.open = performance.now(); o.disconnect(); } }).observe(document.body, { childList: true });
+      }, { capture: true, once: true });
+    });
+    await cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [tc] });
+    await t.page.waitForSelector('.appbubble');
+    const took = await t.page.evaluate(() => window.__hold.open - window.__hold.down);
+    await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
+    await t.page.waitForTimeout(500);
+    const heldTab = await t.page.evaluate(() => document.querySelector('#tabbar button[aria-selected="true"]').dataset.tab);
+    check(took >= GRACE + HOLD - 20 && took <= GRACE + HOLD + 100 && heldTab === 'alerts', 'a finger: the bubble opens about 450 ms after the press, and the tab stays put', JSON.stringify([took, heldTab]));
+    await t.page.keyboard.press('Escape');
+    /* Android's own long press can come first, and its lift brings no click: the lift still lands */
+    await t.page.evaluate(() => { const c = document.querySelector('#tabbar .holdcell'); c.click = function () { window.__lifted = (window.__lifted || 0) + 1; HTMLElement.prototype.click.call(this); }; });
+    await press(100);
+    await toAlerts();
+    const plain = await t.page.evaluate(() => window.__lifted || 0);
+    await cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [tc] });
+    await t.page.waitForTimeout(100);
+    await t.page.evaluate(() => document.querySelector('#tabbar .holdcell').dispatchEvent(new MouseEvent('contextmenu', { bubbles: true, cancelable: true })));
+    await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
+    await t.page.waitForTimeout(300);
+    const lifted = await t.page.evaluate(() => ({ n: window.__lifted || 0, tab: document.querySelector('#tabbar button[aria-selected="true"]').dataset.tab }));
+    check(plain === 0 && lifted.n === 1 && lifted.tab === 'streets', 'a lift after the browser’s long press still opens Streets', JSON.stringify([plain, lifted]));
     await t.ctx.close();
   });
 
+  await group('apps: the first three opens show the hold, with no words, and three dots mark the cell', async () => {
+    const SW = await readFile(path.join(APP, 'js/switcher.js'), 'utf8');
+    const num = (name) => Number((SW.match(new RegExp('const ' + name + ' = (\\d+);')) || [])[1]);
+    const [SETTLE, RING, UP, DROP] = ['SHOW_SETTLE_MS', 'SHOW_RING_MS', 'SHOW_UP_MS', 'SHOW_DROP_MS'].map(num);
+    check(RING === 500 && UP === 1400, 'the show’s ring takes 500 ms and the bubble stays 1.4 s', RING + ' ' + UP);
+    const WAIT = 1400 + SETTLE + RING + 900;   /* past where a show would have reached its bubble */
+    /* every step of a show, as the page saw it */
+    const watch = (page) => page.addInitScript(() => {
+      window.__show = [];
+      new MutationObserver((ms) => { for (const m of ms) {
+        for (const n of m.addedNodes) if (n.classList) ['holdghost', 'holdring', 'appbubble'].forEach((c) => { if (n.classList.contains(c)) window.__show.push([c, performance.now(), c === 'appbubble' ? '' : n.textContent]); });
+        for (const n of m.removedNodes) if (n.classList && n.classList.contains('appbubble')) window.__show.push(['gone', performance.now(), '']);
+      } }).observe(document, { childList: true, subtree: true });
+    });
+    const steps = (page) => page.evaluate(() => window.__show.map((s) => s[0]).join());
+    const stage = (page) => page.evaluate(() => ({ ghost: !!document.querySelector('.holdghost'), ring: !!document.querySelector('.holdring'), bubble: !!document.querySelector('.appbubble'),
+      key: localStorage.getItem('allday-coach-apps'), tab: document.querySelector('#tabbar button[aria-selected="true"]').dataset.tab }));
+    const none = (st) => !st.ghost && !st.ring && !st.bubble;
+    /* a new phone: the disc, the real ring, the real bubble, then nothing */
+    const a = await newPage(browser, base, { coach: true });
+    await watch(a.page);
+    await a.page.goto(base + '/town/?demo=1#alerts');
+    await a.page.waitForSelector('.holdring');
+    await a.page.screenshot({ path: path.join(SHOTS, 'app-switch-show-ring-390.png') });
+    await a.page.waitForSelector('.appbubble');
+    await a.page.screenshot({ path: path.join(SHOTS, 'app-switch-show-bubble-390.png') });
+    const quiet = await a.page.evaluate(() => !(document.activeElement && document.activeElement.closest('.appbubble')));
+    await a.page.waitForFunction(() => window.__show.some((s) => s[0] === 'gone'), null, { timeout: 6000 });
+    const ran = await a.page.evaluate(() => window.__show);
+    const gap = (i) => ran[i + 1][1] - ran[i][1];
+    check(ran.map((s) => s[0]).join() === 'holdghost,holdring,appbubble,gone', 'a new phone sees the disc, then the ring, then the bubble, which goes by itself', ran.map((s) => s[0]).join());
+    check(ran.every((s) => s[2] === ''), 'the disc and the ring carry no words', JSON.stringify(ran));
+    check(gap(0) >= SETTLE - 30 && gap(0) <= SETTLE + 400 && gap(1) >= RING - 30 && gap(1) <= RING + 400 && gap(2) >= UP + DROP - 30 && gap(2) <= UP + DROP + 400, 'each step takes its own time', JSON.stringify([gap(0), gap(1), gap(2)]));
+    check(quiet, 'the show never takes the focus', '');
+    const after = await stage(a.page);
+    check(none(after) && after.tab === 'alerts' && after.key === '1', 'it leaves the page as it was, one play counted', JSON.stringify(after));
+    check(!(await a.page.$('.coachmark')) && !(await a.page.$('#toast:not([hidden])')), 'and there is no toast', '');
+    check(!a.errors.length, 'no console errors', a.errors.join(' | '));
+    /* any touch stops it at once: during the disc, and with the bubble up */
+    await a.page.reload();
+    await a.page.waitForSelector('.holdghost');
+    await a.page.mouse.move(2, 300);
+    await a.page.mouse.down();
+    const stopped = await stage(a.page);
+    await a.page.mouse.up();
+    await a.page.waitForTimeout(RING + SETTLE + 200);
+    const stoppedLater = await stage(a.page);
+    check(none(stopped) && none(stoppedLater), 'a press anywhere stops it at once, and it does not start again', JSON.stringify([stopped, stoppedLater]));
+    await a.page.reload();
+    await a.page.waitForSelector('.appbubble');
+    await a.page.mouse.down();
+    const stoppedUp = await stage(a.page);
+    await a.page.mouse.up();
+    check(none(stoppedUp), 'a press off the bubble closes it at once', JSON.stringify(stoppedUp));
+    await a.ctx.close();
+    /* a finger stops it the same way */
+    const f = await newPage(browser, base, { coach: true, touch: true });
+    await f.page.goto(base + '/town/?demo=1#alerts');
+    await f.page.waitForSelector('.holdghost');
+    await f.page.touchscreen.tap(2, 300);
+    const stoppedF = await stage(f.page);
+    await f.page.waitForTimeout(RING + SETTLE + 200);
+    check(none(stoppedF) && none(await stage(f.page)), 'a finger stops it too', JSON.stringify(stoppedF));
+    await f.ctx.close();
+    /* a finger already down and scrolling the feed makes no new press; the scroll stops it, as a wheel does */
+    const sc = await newPage(browser, base, { coach: true, touch: true });
+    await watch(sc.page);
+    await sc.page.goto(base + '/town/?demo=1#alerts');
+    await settle(sc.page);
+    const cdp = await sc.ctx.newCDPSession(sc.page);
+    const touch = (type, y) => cdp.send('Input.dispatchTouchEvent', { type, touchPoints: type === 'touchEnd' ? [] : [{ x: 195, y }] });
+    const downFirst = await steps(sc.page) === '';
+    await touch('touchStart', 700);
+    for (let y = 697, end = Date.now() + WAIT; Date.now() < end; y -= 3) { await touch('touchMove', y); await sc.page.waitForTimeout(30); }
+    const scrolled = await steps(sc.page);
+    await touch('touchEnd');
+    check(downFirst && scrolled === 'holdghost', 'a finger already down and scrolling stops it at the disc', JSON.stringify([downFirst, scrolled]));
+    await sc.page.reload();
+    await sc.page.waitForSelector('.holdghost');
+    await sc.page.mouse.move(195, 400);
+    await sc.page.mouse.wheel(0, 120);
+    await sc.page.waitForTimeout(RING + SETTLE + 200);
+    check(none(await stage(sc.page)) && !/appbubble/.test(await steps(sc.page)), 'a wheel stops it too', await steps(sc.page));
+    await sc.ctx.close();
+    /* a tap on a row while it is up still works, and the bubble stops going */
+    const g = await newPage(browser, base, { coach: true });
+    await g.page.goto(base + '/all-day/?demo=1');
+    await g.page.waitForSelector('.appbubble');
+    await g.page.hover('.appbubble .ab-row[data-app="town"]');
+    await g.page.mouse.down();
+    await g.page.waitForTimeout(UP + DROP + 200);
+    check(!!(await g.page.$('.appbubble')), 'a press on the bubble keeps it up', '');
+    await Promise.all([g.page.waitForURL(/\/town\/\?demo=1$/), g.page.mouse.up()]);
+    await g.ctx.close();
+    /* a press during the drop: the row stays solid, with no fade back in */
+    const dr = await newPage(browser, base, { coach: true });
+    await dr.page.goto(base + '/all-day/?demo=1');
+    await dr.page.waitForSelector('.appbubble');
+    const caught = await dr.page.evaluate((ms) => new Promise((res) => {
+      const b = document.querySelector('.appbubble');
+      new MutationObserver((_, o) => {
+        if (!b.classList.contains('ab-drop')) return;
+        o.disconnect();
+        setTimeout(() => {
+          b.querySelector('.ab-row').dispatchEvent(new PointerEvent('pointerdown', { bubbles: true }));
+          requestAnimationFrame(() => { const s = getComputedStyle(b); res({ opacity: s.opacity, anim: s.animationName }); });
+        }, ms);
+      }).observe(b, { attributes: true });
+    }), DROP / 3);
+    await dr.page.waitForTimeout(DROP + 200);
+    check(caught.opacity === '1' && caught.anim === 'none' && !!(await dr.page.$('.appbubble')), 'a press during the drop keeps the bubble solid and up', JSON.stringify(caught));
+    await dr.ctx.close();
+    /* the first three opens, across the apps, and never a fourth */
+    const n = await newPage(browser, base, { coach: true });
+    await watch(n.page);
+    const keys = [];
+    for (const id of ['all-day', 'town', 'body']) {
+      await n.page.goto(base + '/' + id + '/?demo=1');
+      await n.page.waitForFunction(() => window.__show.length > 0, null, { timeout: 8000 });
+      keys.push(await n.page.evaluate(() => localStorage.getItem('allday-coach-apps')));
+    }
+    check(keys.join() === '1,2,3', 'it plays on opens 1, 2 and 3, across all the apps', keys.join());
+    await n.page.goto(base + '/eat/?demo=1');
+    await settle(n.page);
+    await n.page.waitForTimeout(WAIT);
+    check(await steps(n.page) === '', 'and not on the fourth', await steps(n.page));
+    await n.ctx.close();
+    /* one real hold ends it for good */
+    const h = await newPage(browser, base, { coach: true });
+    await watch(h.page);
+    await h.page.goto(base + '/town/?demo=1#alerts');
+    await h.page.waitForSelector('.holdghost');
+    const hc = await h.page.$eval('#tabbar .holdcell', (x) => { const r = x.getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2 }; });
+    await h.page.mouse.move(hc.x, hc.y);
+    await h.page.mouse.down();
+    await h.page.waitForSelector('.appbubble');
+    await h.page.mouse.up();
+    await h.page.waitForTimeout(UP + DROP + 300);
+    check((await stage(h.page)).bubble, 'a real hold during the show is the reader’s: the bubble stays', '');
+    await h.page.reload();
+    await settle(h.page);
+    await h.page.waitForTimeout(WAIT);
+    check(await steps(h.page) === '' && (await stage(h.page)).key === '3', 'one real hold ends it for good', JSON.stringify([await steps(h.page), await stage(h.page)]));
+    await h.ctx.close();
+    /* an old timestamp, a blocked store, a hidden page and an open sheet play nothing, and break nothing */
+    const old = await newPage(browser, base, { coach: true });
+    await watch(old.page);
+    await old.page.addInitScript(() => { if (!localStorage.getItem('allday-coach-apps')) localStorage.setItem('allday-coach-apps', '1761860000000'); });
+    await old.page.goto(base + '/town/?demo=1');
+    await settle(old.page);
+    await old.page.waitForTimeout(WAIT);
+    check(await steps(old.page) === '' && (await stage(old.page)).key === '1761860000000', 'an old coach mark’s timestamp never plays it', await steps(old.page));
+    await old.ctx.close();
+    const blocked = await newPage(browser, base, { coach: true });
+    await watch(blocked.page);
+    await blocked.page.addInitScript(() => { const get = Storage.prototype.getItem; Storage.prototype.getItem = function (k) { if (k === 'allday-coach-apps') throw new Error('blocked'); return get.call(this, k); }; });
+    await blocked.page.goto(base + '/town/?demo=1');
+    await settle(blocked.page);
+    await blocked.page.waitForTimeout(WAIT);
+    check(await steps(blocked.page) === '' && !blocked.errors.length, 'a blocked store plays nothing and throws nothing', blocked.errors.join(' | '));
+    await blocked.ctx.close();
+    const hid = await newPage(browser, base, { coach: true });
+    await watch(hid.page);
+    await hid.page.addInitScript(() => { Object.defineProperty(document, 'hidden', { get: () => true }); });
+    await hid.page.goto(base + '/town/?demo=1');
+    await settle(hid.page);
+    await hid.page.waitForTimeout(WAIT);
+    const hidKey = await hid.page.evaluate(() => localStorage.getItem('allday-coach-apps'));
+    check(await steps(hid.page) === '' && hidKey === null, 'a hidden page plays nothing and spends no play', await steps(hid.page));
+    await hid.ctx.close();
+    const sh = await newPage(browser, base, { coach: true });
+    await watch(sh.page);
+    await sh.page.goto(base + '/town/?demo=1');
+    await sh.page.click('#settings-btn');
+    await sh.page.waitForSelector('.sheet-body');
+    await sh.page.waitForTimeout(WAIT);
+    const shKey = await sh.page.evaluate(() => localStorage.getItem('allday-coach-apps'));
+    check(await steps(sh.page) === '' && shKey === null, 'an open sheet plays nothing and spends no play', await steps(sh.page));
+    await sh.ctx.close();
+    const vb = await newPage(browser, base, { coach: true });
+    await watch(vb.page);
+    await vb.page.goto(base + '/all-day/?demo=1#watch');
+    await vb.page.click('#panel-watch .wt-drop-pic');
+    await vb.page.waitForSelector('#vbox:not([hidden])');
+    await vb.page.waitForTimeout(WAIT);
+    const vbKey = await vb.page.evaluate(() => localStorage.getItem('allday-coach-apps'));
+    check(await steps(vb.page) === '' && vbKey === null, 'an open video box plays nothing and spends no play', await steps(vb.page));
+    await vb.page.reload();
+    await vb.page.evaluate(() => { document.getElementById('confirm').hidden = false; });
+    await vb.page.waitForTimeout(WAIT);
+    const cfKey = await vb.page.evaluate(() => localStorage.getItem('allday-coach-apps'));
+    check(await steps(vb.page) === '' && cfKey === null, 'an open confirm box plays nothing and spends no play', await steps(vb.page));
+    await vb.ctx.close();
+    /* reduced motion: the same steps, nothing animated */
+    const rm = await newPage(browser, base, { coach: true, motion: 'reduce' });
+    await rm.page.goto(base + '/town/?demo=1');
+    await rm.page.waitForSelector('.holdghost');
+    const rmGhost = await rm.page.$eval('.holdghost', (x) => getComputedStyle(x).animationName);
+    await rm.page.waitForSelector('.holdring');
+    const rmRing = await rm.page.$eval('.holdring .hr-fill', (x) => getComputedStyle(x).animationName);
+    await rm.page.waitForSelector('.appbubble');
+    const rmBubble = await rm.page.$eval('.appbubble', (x) => getComputedStyle(x).animationName);
+    check(rmGhost === 'none' && rmRing === 'none' && rmBubble === 'none', 'reduced motion: the same steps, with no animation', JSON.stringify([rmGhost, rmRing, rmBubble]));
+    await rm.page.waitForSelector('.appbubble', { state: 'detached', timeout: 4000 });
+    await rm.ctx.close();
+    /* wide: the bubble beside the rail, and no dots on the rail */
+    const w = await newPage(browser, base, { coach: true, viewport: { width: 1280, height: 800 } });
+    await w.page.goto(base + '/all-day/?demo=1');
+    await w.page.waitForSelector('.appbubble');
+    const wide = await w.page.evaluate(() => ({ side: document.querySelector('.appbubble').getBoundingClientRect().left >= document.getElementById('tabbar').getBoundingClientRect().right,
+      dots: getComputedStyle(document.querySelector('#tabbar .holdcell'), '::after').display }));
+    check(wide.side && wide.dots === 'none', 'wide: the show opens beside the rail, which has no dots', JSON.stringify(wide));
+    await w.ctx.close();
+    /* the dots: three, one per app, on every phone bar, in both themes */
+    const rgb = (name) => { const h = tok(name); return 'rgb(' + [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16)).join(', ') + ')'; };
+    const dots = await newPage(browser, base);
+    for (const scheme of ['light', 'dark']) for (const id of ['all-day', 'town', 'body']) {
+      await dots.page.emulateMedia({ colorScheme: scheme });
+      await dots.page.goto(base + '/' + id + '/?demo=1');
+      await settle(dots.page);
+      const d = await dots.page.$eval('#tabbar .holdcell', (x) => { const s = getComputedStyle(x, '::after'); const c = x.getBoundingClientRect(); const i = x.querySelector('.i').getBoundingClientRect();
+        return { w: s.width, h: s.height, top: s.top, bg: s.backgroundColor, shadow: s.boxShadow, glyph: i.top - c.top }; });
+      check(d.w === '5px' && d.h === '5px' && d.top === '2px' && d.bg === rgb('app-body-pop') && d.shadow.includes(rgb('app-all-day-pop') + ' -8px') && d.shadow.includes(rgb('app-town-pop') + ' 8px') && d.glyph >= 7,
+        id + ', ' + scheme + ': three 5 px dots in the apps’ colours, clear of the icon', JSON.stringify(d));
+    }
+    await dots.page.emulateMedia({ colorScheme: 'light' });
+    await dots.page.goto(base + '/all-day/?demo=1');
+    await settle(dots.page);
+    await dots.page.screenshot({ path: path.join(SHOTS, 'app-switch-dots-390.png'), clip: { x: 0, y: 720, width: 390, height: 124 } });
+    await dots.ctx.close();
+  });
   await group('apps: the home-screen card in every mast', async () => {
     const IPHONE = 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0 Mobile/15E148 Safari/604.1';
     const ANDROID = 'Mozilla/5.0 (Linux; Android 15; Pixel 9) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Mobile Safari/537.36';
@@ -13478,6 +14698,123 @@ async function theSocial(browser, base) {
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
   });
+  await group('Social: voices, X pictures and a paused source', async () => {
+    const wide = await readFile(path.join(APP, 'assets/aerial/town-hero.jpg'));
+    const voices = { v: 1, generated: new Date().toISOString(), sources: [], items: [], reddit: {}, photos: {}, inbox: {
+      x: { paused: true, reason: 'grok/x.json last written 20h ago (limit 18h)', items: [
+        { u: 'https://x.com/wcax/status/1', d: now - 72000, from: '@wcax', name: 'Channel 3 News', summary: 'Held through the pause', ch: 'x', local: true, media: 'https://pbs.twimg.com/media/WIDE?format=jpg&name=small' }] },
+      voices: { paused: false, items: [
+        { u: 'https://x.com/GovPhilScott/status/5', d: now - 400, from: '@GovPhilScott', name: 'Gov. Phil Scott', summary: 'A Vermont voice #Vermont', ch: 'voices', local: true, media: 'https://pbs.twimg.com/media/GONE?format=jpg&name=small' },
+        { u: 'https://x.com/TerribleMaps/status/6', d: now - 300, from: '@TerribleMaps', name: 'Terrible Maps', summary: 'A national voice', ch: 'voices', local: false }] },
+      facebook: { paused: true, items: [] },
+      recaps: { paused: true, items: [] } } };
+    const { ctx, page, errors } = await newPage(browser, base, { reddit: redditFresh(Date.now()) });
+    await page.route(/pulse\.json/, (r) => r.fulfill({ status: 200, body: JSON.stringify(voices), contentType: 'application/json' }));
+    await page.route(/pbs\.twimg\.com\/media\/WIDE/, (r) => r.fulfill({ status: 200, body: wide, contentType: 'image/jpeg' }));
+    await page.route(/pbs\.twimg\.com\/media\/GONE/, (r) => r.fulfill({ status: 404, body: '' }));
+    await page.goto(base + '/all-day/#social');
+    await page.waitForSelector(panel + ' .so-block');
+    await page.waitForSelector(panel + ' .so-pic img');
+    await page.waitForTimeout(800);
+    const names = () => page.$$eval(panel + ' .so-name', (a) => a.map((n) => n.textContent));
+    const local = await names();
+    check(local.includes('Gov. Phil Scott') && !local.includes('Terrible Maps'), 'Local keeps a Vermont voice and hides a national one', local.join());
+    check(local.includes('Channel 3 News'), 'a paused source keeps its held posts', local.join());
+    await page.$eval(panel + ' .so-x .so-pic img', (i) => i.scrollIntoView());
+    await page.waitForFunction((p) => document.querySelector(p + ' .so-x .so-pic img')?.naturalWidth > 0, panel);
+    const shot = await page.$eval(panel + ' .so-x .so-pic img', (i) => ({ w: i.clientWidth, h: i.clientHeight, fit: getComputedStyle(i).objectFit, a: i.closest('a').href, ref: i.referrerPolicy }));
+    check(shot.fit === 'contain' && Math.abs(shot.w / shot.h - 1000 / 640) < 0.03, 'an X picture keeps its own shape', JSON.stringify(shot));
+    check(shot.a.includes('/status/1') && shot.ref === 'no-referrer', 'a picture opens its post and sends no referrer', JSON.stringify(shot));
+    const gov = await page.$$eval(panel + ' .so-block', (a) => a.filter((c) => /Gov\. Phil Scott/.test(c.textContent)).map((c) => ({ pic: !!c.querySelector('.so-pic'), text: c.querySelector('.so-text').textContent })));
+    check(gov.length === 1 && !gov[0].pic && gov[0].text === 'A Vermont voice #Vermont', 'a picture that fails leaves the post and no hole', JSON.stringify(gov));
+    await page.click('.localsw-half:has-text("Everything")');
+    await page.waitForSelector(panel + ' .so-name:has-text("Terrible Maps")');
+    check((await names())[0] === 'Terrible Maps', 'Everything brings the national voice in, under X', (await names()).join());
+    await page.click('#subnav button:has-text("X")');
+    await page.waitForTimeout(300);
+    check((await names()).length === 3, 'the X pill holds the voices and the held posts', (await names()).join());
+    check(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), 'no sideways scroll', '');
+    const real = errors.filter((e) => !/Failed to load resource: the server responded with a status of 404/.test(e));
+    check(!real.length, 'no console errors but the picture that was gone', real.join(' | '));
+    await ctx.close();
+  });
+  await group('Social: an inbox from before voices, and every source down', async () => {
+    const older = { ...pulse, inbox: { x: pulse.inbox.x, facebook: pulse.inbox.facebook } };
+    {
+      const { ctx, page, errors } = await newPage(browser, base, { reddit: redditFresh(Date.now()) });
+      await page.route(/pulse\.json/, (r) => r.fulfill({ status: 200, body: JSON.stringify(older), contentType: 'application/json' }));
+      await page.goto(base + '/all-day/#social');
+      await page.waitForSelector(panel + ' .so-x');
+      check(!(await page.$(panel + ' .so-x .so-pic')), 'no voices key and no media draw as before', '');
+      check(!errors.length, 'no console errors', errors.join(' | '));
+      await ctx.close();
+    }
+    const { ctx, page, errors } = await newPage(browser, base, {});
+    for (const re of [/pulse\.json/, /data\/instagram\.json/, /reddit-intake/]) await page.route(re, (r) => r.fulfill({ status: 500, body: '' }));
+    await page.goto(base + '/all-day/#social');
+    await page.waitForFunction((p) => /Nothing here yet/.test(document.querySelector(p + ' .rd-empty')?.textContent || ''), panel, { timeout: 15000 });
+    check(!(await page.$(panel + ' .so-block')), 'all down: one plain line and no blocks', '');
+    const real = errors.filter((e) => !/Failed to load resource/.test(e));
+    check(!real.length, 'no console errors but the failed files', real.join(' | '));
+    await ctx.close();
+  });
+  await group('Social: a dead picture takes only itself', async () => {
+    const now = Math.round(Date.now() / 1000);
+    const bare = { x: { paused: true, items: [] }, facebook: { paused: true, items: [] }, recaps: { paused: true, items: [] } };
+    const post = (n, c) => ({ h: 'deadpics', ts: now - n * 1000, i: 'https://cdn.example/gone-' + n + '.jpg', u: 'https://www.instagram.com/p/' + n + '/', c, category: 'food' });
+    const open = async (posts) => {
+      const { ctx, page, errors } = await newPage(browser, base, {});
+      await page.route(/pulse\.json/, (r) => r.fulfill({ status: 200, body: JSON.stringify({ ...pulse, inbox: bare }), contentType: 'application/json' }));
+      await page.route(/data\/instagram\.json/, (r) => r.fulfill({ status: 200, body: JSON.stringify({ posts, fetched_at: now }), contentType: 'application/json' }));
+      await page.route(/reddit-intake/, (r) => r.fulfill({ status: 500, body: '' }));
+      await page.route(/cdn\.example/, (r) => r.fulfill({ status: 403, body: '' }));
+      await page.goto(base + '/all-day/#social');
+      await page.waitForFunction((p) => document.querySelector(p + ' .so-feed, ' + p + ' .rd-empty'), panel);
+      await page.waitForFunction((p) => !document.querySelector(p + ' .so-pic'), panel);
+      return { ctx, page, errors };
+    };
+    {
+      const { ctx, page, errors } = await open([post(1, ''), post(2, 'Earlier one'), post(3, 'Earlier two')]);
+      check((await page.$$eval(panel + ' .so-row', (a) => a.length)) === 2, 'a block with no words on top keeps its earlier posts', '');
+      check(!(await page.$(panel + ' .so-pic')), 'and loses the picture', '');
+      check(!errors.filter((e) => !/Failed to load resource/.test(e)).length, 'no console errors but the picture', errors.join(' | '));
+      await ctx.close();
+    }
+    const { ctx, page } = await open([post(1, '')]);
+    await page.waitForFunction((p) => /Nothing here yet/.test(document.querySelector(p + ' .rd-empty')?.textContent || ''), panel, { timeout: 5000 });
+    check(!(await page.$(panel + ' .so-block')), 'the last block going leaves the plain line, not a blank tab', '');
+    await ctx.close();
+  });
+  await group('Social: a wide X picture beside a taller block has no band under it', async () => {
+    const now = Math.round(Date.now() / 1000);
+    const svg = '<svg xmlns="http://www.w3.org/2000/svg" width="800" height="200"><rect width="800" height="200" fill="#369"/></svg>';
+    const inbox = { x: { paused: true, items: [] }, facebook: { paused: true, items: [] }, recaps: { paused: true, items: [] }, voices: { paused: false, items: [
+      { u: 'https://x.com/a/status/1', d: now - 100, from: '@a', name: 'A', summary: 'short', ch: 'voices', local: true, media: 'https://pbs.twimg.com/media/BAND?format=jpg&name=small' },
+      ...[2, 3, 4, 5].map((n) => ({ u: 'https://x.com/b/status/' + n, d: now - 100 * n, from: '@b', name: 'B', summary: n + ' A long post that runs on so its block stands taller than the picture beside it. '.repeat(4), ch: 'voices', local: true }))] } };
+    const { ctx, page } = await newPage(browser, base, { viewport: { width: 1280, height: 900 } });
+    await page.route(/pulse\.json/, (r) => r.fulfill({ status: 200, body: JSON.stringify({ ...pulse, inbox }), contentType: 'application/json' }));
+    for (const re of [/data\/instagram\.json/, /reddit-intake/]) await page.route(re, (r) => r.fulfill({ status: 500, body: '' }));
+    await page.route(/pbs\.twimg\.com\/media\/BAND/, (r) => r.fulfill({ status: 200, body: svg, contentType: 'image/svg+xml' }));
+    await page.goto(base + '/all-day/#social');
+    await page.waitForFunction((p) => document.querySelector(p + ' .so-pic img')?.naturalWidth > 0, panel);
+    const m = await page.$eval(panel + ' .so-pic', (a) => ({ box: a.getBoundingClientRect().height, img: a.querySelector('img').getBoundingClientRect().height, block: a.closest('.so-block').getBoundingClientRect().height }));
+    check(m.block > m.box + 40 && Math.abs(m.box - m.img) < 2, 'the frame is the picture\'s height', JSON.stringify(m));
+    await ctx.close();
+  });
+  await group('Social: ?demo=1', async () => {
+    const { ctx, page, errors } = await newPage(browser, base, {});
+    await page.goto(base + '/all-day/?demo=1#social');
+    await page.waitForSelector(panel + ' .so-x .so-pic img');
+    await page.click('.localsw-half:has-text("Everything")');
+    await page.waitForTimeout(300);
+    const look = await page.$eval(panel, (p) => ({ names: [...p.querySelectorAll('.so-name')].map((n) => n.textContent), plats: [...new Set([...p.querySelectorAll('.so-plat')].map((n) => n.textContent))], pics: p.querySelectorAll('.so-x .so-pic img').length }));
+    check(look.names.includes('The Lantern Diner') && look.names.includes('Queen City Parks') && look.names.includes('Maps of Nothing') && look.pics === 2, 'a paused source’s held posts, a local voice and a national voice with pictures', JSON.stringify(look));
+    check(['X', 'Facebook', 'Instagram', 'Reddit'].every((n) => look.plats.includes(n)), 'every platform has a block', look.plats.join());
+    await page.click(panel + ' .so-x .so-text');
+    await page.waitForSelector('.toast, #toast', { timeout: 3000 }).catch(() => {});
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
 }
 
 async function theReddit(browser, base) {
@@ -13622,12 +14959,14 @@ try {
   await run(theFood);
   await run(theReddit);
   await run(theSocial);
+  await run(threeWay);
   await run(thePeople);
   await run(theClubs);
   await run(onAir);
   await run(onAirSports);
   await run(theGames);
   await run(theWatch);
+  await run(theWatchTrailers);
   await run(interactions);
   await run(shellFixes);
   await run(accounts);

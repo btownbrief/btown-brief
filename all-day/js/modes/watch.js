@@ -8,15 +8,31 @@
    machine, the town's ratings, the list. The chat closes both. The side is
    not remembered: every visit opens on Upcoming. Top to bottom:
 
+   - The trailer card: one 16:9 card, first thing on the page. This week's
+     new trailers (scripts/build_trailers.py, trailers.json on the
+     pulse-youtube branch, the repo's own copy if that will not load), then
+     every other trailer we hold, shuffled fresh on each load, with every
+     fourth from the top list. With no file it starts on what is coming soon.
+     The card opens on the first one this phone has not been shown; ‹ › and a
+     sideways swipe walk the rest. A tap plays it in the one video box, whose
+     own Previous and Next walk the same list. On TV it is new shows and
+     seasons with a trailer. See as a list, under the card, opens them all in
+     a sheet: Recent (uploaded in the last 30 days, or on a current shelf) and
+     Past, newest first, a chip per genre, and Surprise me, which shuffles what
+     is showing and plays the first; Previous and Next walk the rows.
+   - Next up (Movies): the next three screenings across the three theaters,
+     read off the same showtimes and the clock. A tap opens that theater.
    - Movies | TV: one switch, in colour so the eye finds it first (Stephen,
      2026-10-22). Everything below shows that kind;
      the dots, the want list and the town ratings work the same for both.
      On Movies, today's showtimes come first (fresh first, 2026-10-19),
      opening on the first theater with shows still to come today.
-   - Coming soon (Movies): a rail of 2:3 posters, what is in US theaters now
-     and what opens next, labelled theaters or streaming. A tap plays the
-     trailer in the shell's one video box (never on its own); a film with no
-     trailer on TMDB opens its sheet instead. Right under it, the call to
+   - Out this week (Movies): a rail of 2:3 posters, everything within a week
+     either side of today across theaters, streaming and shows, nearest day
+     first. With nothing in that window it is Coming to theaters, what is in
+     US theaters now and what opens next. A tap plays the trailer in the
+     shell's one video box (never on its own); a film with no trailer on
+     TMDB opens its sheet instead. Right under it, the call to
      vote for the next screening, which scrolls to the ballot, with the one
      line a first-time visitor needs: Steve (Stephen's name on the page)
      hosts the movie night (a link to his Meetup group), and this picks the film.
@@ -102,6 +118,8 @@ const FILMS_URL = DATA + 'films.json';
 const TM_URL = DATA + 'time-machine.json';
 const SHOWTIMES_URL = DATA + 'showtimes.json';
 const SEED_URL = 'data/films-seed.json';
+const TRAILERS_URL = 'https://raw.githubusercontent.com/btownbrief/btown-brief/pulse-youtube/data/trailers.json';
+const TRAILERS_LOCAL = '../data/trailers.json';
 /* Talk: the Telegram watch chat first, the community channel second */
 const TELEGRAM_URL = 'https://t.me/+39fLB9cqY684ZmVh';
 const CHAT_URL = 'https://www.btownbrief.com/community/channels/meetups-hangouts';
@@ -120,6 +138,19 @@ const GOAL = 5;             // votes before Stephen books it
 const RATING_PAGES = 10;    // 600 ratings read back for the averages
 const DAY = 86400000;
 const WEEK = 7 * DAY;
+const TRAILER_WAIT = 1200;  // the first card holds this long for trailers.json
+const SEEN_MAX = 300;       // trailers this phone remembers being shown
+const TOP_EVERY = 4;        // every fourth card past the new ones is from the top list
+const NEXT_UP = 3;          // screenings on the Next up strip
+const SWIPE = 40;           // sideways travel that moves the card
+const RECENT = 30 * DAY;    // an upload this new is on the list's Recent side
+const ROWS = 40;            // trailer rows drawn at a time
+/* the words on the card, the strip and the rail */
+const WORDS = {
+  play: 'Play the trailer for ', prev: 'Previous trailer', next: 'Next trailer', save: 'Save', share: 'Share', fresh: 'New', trailer: ' trailer',
+  list: 'See as a list', listOf: 'Trailers', recent: 'Recent', past: 'Past', allGenres: 'All', surprise: 'Surprise me', more: 'Show more',
+  nextUp: 'Next up', week: 'Out this week', weekChip: 'This week', theaters: 'Coming to theaters', soonChip: 'Coming soon',
+};
 const YT = /^[A-Za-z0-9_-]{11}$/;
 const POSTER = /^\/[A-Za-z0-9_-]+\.(jpg|png)$/;
 const ISO_DAY = /^\d{4}-\d{2}-\d{2}$/;
@@ -168,6 +199,11 @@ let D = null;               // the demo file
 let F = null;               // the payload: films and shows, by shelf
 let TM = null;              // the time machine: { months: [{ m, movie: [..], tv: [..] }] }, newest first
 let ST = null;              // showtimes: { theaters: [...] }, or null
+let T = null;               // trailers.json: { fresh, past, skip }, or null
+let trailersIn = false;     // trailers.json has answered, one way or the other
+let awayFromTab = false;
+const TRAILER_SEED = (Date.now() ^ (Math.random() * 4294967296)) >>> 0;   // a new order on each load
+const Q = { movie: null, tv: null };   // the card's walk per kind: { list, at, moved }
 const byId = new Map();     // id -> title (films and shows; a show's id is TV_BASE + its TMDB id)
 const byKey = new Map();    // "title|year" -> title
 const byTitle = new Map();  // "title" -> title, or null when two share it
@@ -281,6 +317,28 @@ function defaultMonth() {
   return list.slice().sort((a, b) => Math.abs(monthIndex(a.m) - want) - Math.abs(monthIndex(b.m) - want))[0].m;
 }
 
+/* ------------------------------------------------------------ trailers */
+/* trailers.json: entries in the films.json shape, plus at (uploaded, epoch
+   seconds) and ch (the channel). `dated` is a release date the builder really
+   has: film() invents a mid-year one for a title with only a year. */
+function setTrailers(j) {
+  T = null;
+  if (!j || typeof j !== 'object' || !Array.isArray(j.fresh) || !Array.isArray(j.past)) return;
+  const one = (x) => film(x, { shelf: 'drop', at: Number(x && x.at) || 0, dated: ISO_DAY.test(String(x && x.d)) ? x.d : '' }, 'movie');
+  const list = (rows) => uniq(rows.map(one)).filter((f) => app.demo || f.yt);
+  T = { fresh: list(j.fresh), past: list(j.past), skip: new Set(arr(j.skip).filter((k) => typeof k === 'string')) };
+}
+/* the live file, then the repo's copy; nothing at all is a card off films.json */
+function fetchTrailers() {
+  const ok = (j) => { if (!j || !Array.isArray(j.fresh) || !Array.isArray(j.past)) throw new Error('bad trailers'); return j; };
+  return fetchJSON(TRAILERS_URL, 6000).then(ok).catch(() => fetchJSON(TRAILERS_LOCAL, 4000).then(ok)).catch(() => null);
+}
+function gotTrailers(j) {
+  trailersIn = true;
+  setTrailers(j);
+  if (!Q.movie || !Q.movie.moved) Q.movie = null;
+}
+
 /* ----------------------------------------------------------- showtimes */
 function setShowtimes(j) {
   ST = null;
@@ -345,7 +403,9 @@ function redate(d) {
   const tm = d.tm && { ...d.tm, months: arr(d.tm.months).map((m) => ({ ...m, m: monthOf(monthIndex(m.m) + mshift) })) };
   const st = d.showtimes && { ...d.showtimes, theaters: arr(d.showtimes.theaters).map((t) => ({ ...t, back: t.back ? moveDay(t.back) : '',
     days: Object.fromEntries(Object.entries(t.days || {}).map(([k, v]) => [moveDay(k), v])) })) };
-  return { films: out, tm, st };
+  const lift = (f) => ({ ...move(f), at: (f.at || 0) + shift * 86400 });
+  const trailers = d.trailers && { ...d.trailers, fresh: arr(d.trailers.fresh).map(lift), past: arr(d.trailers.past).map(lift) };
+  return { films: out, tm, st, trailers };
 }
 
 function loadFilms() {
@@ -366,19 +426,21 @@ function loadExtras(got) {
 
 /* ------------------------------------------------------- this device */
 /* { mode: 'us' | 'me', partner: 'Sam', seen: { id: [me, them] }, want: { id: ts },
-   rated: { id: { post, stars } }, kind: 'movie' | 'tv' }, plus the sync's own two: dirty (films
+   rated: { id: { post, stars } }, kind: 'movie' | 'tv', tr: [trailer keys shown] },
+   plus the sync's own two: dirty (films
    changed here and not yet saved to the account) and syncedFor (the account
    this phone last joined its dots with). The demo keeps its copy for the visit. */
 let memory = null;
 function loadLocal() {
-  const raw = app.demo ? (memory = memory || { mode: 'us', partner: String(D.partner || ''), seen: dotsOf(D.dots), want: {}, rated: {} }) : store.read(LOCAL_KEY, {});
+  const raw = app.demo ? (memory = memory || { mode: 'us', partner: String(D.partner || ''), seen: dotsOf(D.dots), want: {}, rated: {}, tr: [] }) : store.read(LOCAL_KEY, {});
   const o = raw && typeof raw === 'object' ? raw : {};
   const obj = (v) => (v && typeof v === 'object' && !Array.isArray(v) ? v : {});
   const seen = {};
   Object.entries(obj(o.seen)).forEach(([id, v]) => { if (/^\d+$/.test(id) && Array.isArray(v) && (v[0] || v[1])) seen[id] = [v[0] ? 1 : 0, v[1] ? 1 : 0]; });
   const partner = cleanName(o.partner);
   return { mode: o.mode === 'us' && partner ? 'us' : 'me', partner, seen, want: obj(o.want), rated: obj(o.rated), kind: o.kind === 'tv' ? 'tv' : 'movie',
-    nameDirty: !!o.nameDirty, dirty: obj(o.dirty), syncedFor: typeof o.syncedFor === 'string' ? o.syncedFor : '' };
+    nameDirty: !!o.nameDirty, dirty: obj(o.dirty), syncedFor: typeof o.syncedFor === 'string' ? o.syncedFor : '',
+    tr: arr(o.tr).filter((k) => typeof k === 'string').slice(-SEEN_MAX) };
 }
 function dotsOf(d) {
   const out = {};
@@ -388,7 +450,7 @@ function dotsOf(d) {
 function saveLocal() {
   if (app.demo) { memory = L; return; }
   store.write(LOCAL_KEY, { mode: L.mode, partner: L.partner, seen: L.seen, want: L.want, rated: L.rated, kind: L.kind,
-    nameDirty: L.nameDirty, dirty: L.dirty, syncedFor: L.syncedFor });
+    nameDirty: L.nameDirty, dirty: L.dirty, syncedFor: L.syncedFor, tr: L.tr });
 }
 const cleanName = (s) => String(s || '').replace(/[@<>]/g, '').replace(/\s+/g, ' ').trim().slice(0, 32);
 const us = () => L.mode === 'us' && !!L.partner;
@@ -572,17 +634,17 @@ const sec = (host, title, sub, key, right) => { const s = section(host, title, s
    today's showtimes, then what is coming to theaters and to streaming;
    on Past, the time machine, the town's ratings, then the long list */
 const SIDES = {
-  up: ['kind', 'theaters', 'soon', 'cta', 'stream', 'vote', 'chat'],
+  up: ['drop', 'next', 'kind', 'theaters', 'soon', 'cta', 'stream', 'vote', 'chat'],
   past: ['kind', 'back', 'town', 'list', 'chat'],
 };
-const SIDE_OF = { theaters: 'up', soon: 'up', cta: 'up', stream: 'up', vote: 'up', back: 'past', town: 'past', list: 'past' };
+const SIDE_OF = { drop: 'up', next: 'up', theaters: 'up', soon: 'up', cta: 'up', stream: 'up', vote: 'up', back: 'past', town: 'past', list: 'past' };
 const SECTIONS = [...new Set([...SIDES.up, ...SIDES.past])];
 
 function draw(name) {
   const host = slots[name];
   if (!host) return;
   host.innerHTML = '';
-  ({ kind: drawKind, soon: drawSoon, cta: drawCta, stream: drawStream, theaters: drawTheaters, back: drawBack, list: drawList,
+  ({ drop: drawDrop, next: drawNext, kind: drawKind, soon: drawSoon, cta: drawCta, stream: drawStream, theaters: drawTheaters, back: drawBack, list: drawList,
     town: drawTown, vote: drawVote, chat: drawChat })[name](host);
 }
 
@@ -654,6 +716,266 @@ function credit(inSheet) {
   return c;
 }
 
+/* ---------------------------------------------------- the trailer card */
+const keyOfTrailer = (f) => f.yt || String(f.id);
+const isFresh = (f) => !!f.at && Date.now() - f.at * 1000 <= WEEK;
+function oneTrailerEach(list) {
+  const seen = new Set();
+  return list.filter((f) => { const k = keyOfTrailer(f); return !seen.has(k) && seen.add(k); });
+}
+/* Movies: this week's new trailers in the file's order, or what is coming
+   soon when there is no file. Then everything else shuffled, every fourth
+   from the top list. TV: new shows and seasons, then what is airing. */
+function trailerList(kind) {
+  const plays = (f) => hasTrailer(f) && !(T && T.skip.has(f.yt));
+  if (kind === 'tv') return oneTrailerEach(uniq([...F.tvStream, ...F.tvAir]).filter(plays));
+  const first = (T ? T.fresh.filter(isFresh) : F.soon).filter(plays);
+  /* a back-catalogue row (no at) comes last so a shelf's own copy and label win, and leaves the top list's films to the top list */
+  const rest = T ? [...T.fresh.filter((f) => !isFresh(f)), ...T.past.filter((f) => f.at)] : [];
+  const onTop = new Set(F.top.map((f) => f.id));
+  const back = T ? T.past.filter((f) => !f.at && !onTop.has(f.id)) : [];
+  const pool = shuffled(uniq([...rest, ...F.now, ...F.soon, ...F.trend, ...F.stream, ...back]).filter(plays), TRAILER_SEED);
+  const top = shuffled(F.top.filter(plays), TRAILER_SEED + 1);
+  const mixed = [];
+  while (pool.length || top.length) {
+    const fromTop = (mixed.length + 1) % TOP_EVERY === 0 ? top : pool;
+    mixed.push((fromTop.length ? fromTop : pool.length ? pool : top).shift());
+  }
+  return oneTrailerEach(uniq([...first, ...mixed]));
+}
+const firstUnseen = (list) => Math.max(0, list.findIndex((f) => !L.tr.includes(keyOfTrailer(f))));
+function walk() {
+  if (!Q[V.kind]) { const list = trailerList(V.kind); Q[V.kind] = { list, at: firstUnseen(list), moved: false }; }
+  return Q[V.kind];
+}
+function shownTrailer(f) {
+  const k = keyOfTrailer(f);
+  if (app.activeTab() !== KEY || L.tr.includes(k)) return;
+  L.tr = [...L.tr, k].slice(-SEEN_MAX);
+  saveLocal();
+}
+const thumbOf = (f) => 'https://i.ytimg.com/vi/' + f.yt + '/maxresdefault.jpg';
+/* the card as the shell's video, saved and shared: the picture is the thumbnail */
+const trailerItem = (f) => ({ ...trailer(f), media: !app.demo && f.yt ? thumbOf(f) : posterUrl(f, 'w342') || 'paper' });
+/* "Dec 16 · theaters", "Nov 5 · Netflix"; a title from the other shelves says what its rail says */
+const trailerLine = (f) => (f.shelf === 'drop' && f.dated && f.at ? dateLabel(f.dated) + ' · ' + (f.on || f.where || 'theaters') : f.shelf === 'drop' ? f.on || String(f.y || '')
+  : f.shelf ? railLabel(f) : String(f.y || ''));
+function ageTag(f) {
+  if (!isFresh(f)) return '';
+  const h = Math.max(1, Math.floor((Date.now() - f.at * 1000) / 3600000));
+  return WORDS.fresh + ' · ' + (h < 24 ? h + 'h' : Math.floor(h / 24) + 'd');
+}
+function stepTrailer(by) {
+  const q = walk();
+  const at = q.at + by;
+  if (at < 0 || at >= q.list.length) return false;
+  q.at = at;
+  q.moved = true;
+  draw('drop');
+  return true;
+}
+function playCard() {
+  const q = walk();
+  const step = (by) => (q.at + by >= 0 && q.at + by < q.list.length ? () => { stepTrailer(by); playCard(); } : null);
+  app.play(trailerItem(q.list[q.at]), { prev: step(-1), next: step(1) });
+}
+function drawDrop(host) {
+  const q = walk();
+  const f = q.list[q.at];
+  if (!f) return;
+  shownTrailer(f);
+  const it = trailerItem(f);
+  const c = el('article', 'wt-drop');
+  c.dataset.k = it.k;
+  c.dataset.trailer = keyOfTrailer(f);
+  const age = ageTag(f);
+  const saved = store.isSaved(it.k);
+  c.innerHTML = '<div class="wt-drop-media"><a class="wt-drop-pic" href="' + esc(safeHref(it.href)) + '" aria-label="' + esc(WORDS.play + f.t) + '">' +
+      (app.demo || !f.yt ? art(f.art || 'paper') : '<img class="wt-drop-img" src="' + esc(it.media) + '" alt="" decoding="async" referrerpolicy="no-referrer">') + '<span class="play">' + ICON.play + '</span></a>' +
+      (age ? '<span class="wt-drop-age">' + esc(age) + '</span>' : '') +
+      '<button type="button" class="wt-drop-step" data-step="-1" aria-label="' + esc(WORDS.prev) + '"' + (q.at > 0 ? '' : ' disabled') + '>' + ICON.left + '</button>' +
+      '<button type="button" class="wt-drop-step" data-step="1" aria-label="' + esc(WORDS.next) + '"' + (q.at < q.list.length - 1 ? '' : ' disabled') + '>' + ICON.right + '</button></div>' +
+    '<div class="wt-drop-foot"><div class="wt-drop-text"><div class="t">' + esc(f.t) + '</div><div class="s">' + esc(trailerLine(f)) + '</div></div>' +
+      '<button type="button" class="act sh" aria-label="' + esc(WORDS.share) + '">' + ICON.share + '</button>' +
+      '<button type="button" class="act star' + (saved ? ' on' : '') + '" aria-label="' + esc(WORDS.save) + '" aria-pressed="' + saved + '">' + ICON.star + '</button></div>';
+  /* a film with no 1280 picture has the 480 one. YouTube answers a missing
+     1280 with a 404 that carries a real 120-wide grey image, so that case
+     loads rather than fails. Its own class, because the shell takes a failed
+     .pic off the page before this could try again. */
+  const img = c.querySelector('.wt-drop-img');
+  if (img) {
+    const big = () => /maxresdefault/.test(img.src);
+    const smaller = () => { img.src = img.src.replace('maxresdefault', 'hqdefault'); };
+    img.addEventListener('load', () => { if (big() && img.naturalWidth <= 120) smaller(); });
+    img.addEventListener('error', () => { if (big()) smaller(); else img.remove(); });
+  }
+  c.querySelector('.wt-drop-pic').addEventListener('click', (e) => { e.preventDefault(); playCard(); });
+  c.querySelectorAll('[data-step]').forEach((b) => b.addEventListener('click', () => {
+    const by = Number(b.dataset.step);
+    if (!stepTrailer(by)) return;
+    const again = host.querySelector('[data-step="' + by + '"]');
+    if (again) (again.disabled ? host.querySelector('.wt-drop-pic') : again).focus({ preventScroll: true });
+  }));
+  c.querySelector('.act.sh').addEventListener('click', () => app.share(KEY, it.k, f.t + WORDS.trailer));
+  c.querySelector('.act.star').addEventListener('click', () => app.toggleSave(it));
+  swipeable(c.querySelector('.wt-drop-media'));
+  host.appendChild(c);
+  if (q.list.length < 2) return;
+  const top = el('div', 'wt-tl-open');
+  const b = button(esc(WORDS.list), 'sm ghost', trailerSheet);
+  b.type = 'button';
+  b.dataset.trailerSheet = '1';
+  b.setAttribute('aria-label', WORDS.list + ': ' + WORDS.listOf);
+  top.appendChild(b);
+  host.appendChild(top);
+}
+
+/* ---------------------------------------------------- every trailer, as a list */
+const isRecent = (f) => (f.kind === 'tv' ? f.shelf === 'stream' || f.shelf === 'air'
+  : (!!f.at && Date.now() - f.at * 1000 <= RECENT) || f.shelf === 'now' || f.shelf === 'soon' || f.shelf === 'stream' || (f.dated && f.dated >= todayKey()));
+const newestFirst = (a, b) => (b.at || 0) - (a.at || 0) || b.d.localeCompare(a.d) || a.t.localeCompare(b.t);
+/* the card's own walk, sorted and split in two. TV's Past is the shows the card does not walk. */
+function trailerSides() {
+  const all = oneTrailerEach(uniq([...trailerList(V.kind), ...(V.kind === 'tv' ? [...F.tvTrend, ...F.tvTop].filter((f) => hasTrailer(f) && !(T && T.skip.has(f.yt))) : [])]));
+  return { recent: all.filter(isRecent).sort(newestFirst), past: all.filter((f) => !isRecent(f)).sort(newestFirst) };
+}
+/* a row's Previous and Next walk the rows on show */
+function playRow(rows, i) {
+  shownTrailer(rows[i]);
+  app.play(trailerItem(rows[i]), { prev: i > 0 ? () => playRow(rows, i - 1) : null, next: i < rows.length - 1 ? () => playRow(rows, i + 1) : null });
+}
+function trailerRow(rows, i) {
+  const f = rows[i];
+  const b = el('button', 'wt-tl', '<span class="wt-tl-pic">' + (app.demo || !f.yt ? art(f.art || 'paper')
+    : '<img src="https://i.ytimg.com/vi/' + esc(f.yt) + '/mqdefault.jpg" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer">') + '<span class="play">' + ICON.play + '</span></span>' +
+    '<span class="wt-tl-text"><span class="t">' + esc(f.t) + '</span>' + (trailerLine(f) ? '<span class="s">' + esc(trailerLine(f)) + '</span>' : '') + '</span>');
+  b.type = 'button';
+  b.dataset.trailer = keyOfTrailer(f);
+  b.setAttribute('aria-label', WORDS.play + f.t);
+  const img = b.querySelector('img');
+  if (img) img.addEventListener('error', () => img.remove());
+  b.addEventListener('click', () => playRow(rows, i));
+  return b;
+}
+function trailerSheet() {
+  const sides = trailerSides();
+  const S = { side: sides.recent.length ? 'recent' : 'past', genre: 'all', mixed: 0, shown: ROWS };
+  app.sheet(WORDS.listOf, (body) => {
+    const shelf = () => sides[S.side];
+    const showing = () => {
+      const rows = shelf().filter((f) => S.genre === 'all' || f.g.includes(S.genre));
+      return S.mixed ? shuffled(rows, S.mixed) : rows;
+    };
+    const head = el('div', 'wt-tl-head');
+    const filters = el('div', 'wt-tl-genres');
+    const list = el('div', 'wt-tl-list');
+    list.dataset.trailerList = '1';
+    const paintRows = () => {
+      const rows = showing();
+      list.innerHTML = '';
+      rows.slice(0, S.shown).forEach((f, i) => list.appendChild(trailerRow(rows, i)));
+      if (rows.length > S.shown) {
+        const more = button(esc(WORDS.more), 'sm ghost', () => { S.shown += ROWS; paintRows(); });
+        more.type = 'button';
+        more.dataset.trailerMore = '1';
+        list.appendChild(more);
+      }
+    };
+    const paintGenres = () => {
+      const count = new Map();
+      shelf().forEach((f) => f.g.forEach((g) => count.set(g, (count.get(g) || 0) + 1)));
+      filters.innerHTML = '';
+      if (!count.has(S.genre)) S.genre = 'all';
+      const genres = [...count.keys()].sort((a, b) => count.get(b) - count.get(a) || a.localeCompare(b));
+      if (genres.length) filters.appendChild(chips([{ key: 'all', label: WORDS.allGenres }, ...genres.map((g) => ({ key: g, label: g, n: count.get(g) }))], S.genre, (g) => {
+        S.genre = g; S.mixed = 0; S.shown = ROWS; paintGenres(); paintRows(); body.scrollTop = 0;
+      }));
+    };
+    if (sides.recent.length && sides.past.length) {
+      const side = pills([['recent', WORDS.recent], ['past', WORDS.past]], S.side, (v) => { S.side = v; S.mixed = 0; S.shown = ROWS; paintGenres(); paintRows(); body.scrollTop = 0; });
+      side.dataset.trailerSide = '1';
+      head.appendChild(side);
+    }
+    const surprise = button(ICON.shuffle + ' ' + esc(WORDS.surprise), 'sm ghost', () => {
+      S.mixed = (Date.now() ^ (Math.random() * 4294967296)) >>> 0 || 1;
+      S.shown = ROWS;
+      paintRows();
+      body.scrollTop = 0;
+      const rows = showing();
+      if (rows.length) playRow(rows, 0);
+    });
+    surprise.type = 'button';
+    surprise.dataset.trailerSurprise = '1';
+    head.appendChild(surprise);
+    body.append(head, filters, list);
+    paintGenres();
+    paintRows();
+  });
+}
+
+function swipeable(box) {
+  let x0 = null, y0 = 0;
+  box.addEventListener('touchstart', (e) => { x0 = e.touches[0].clientX; y0 = e.touches[0].clientY; }, { passive: true });
+  box.addEventListener('touchend', (e) => {
+    if (x0 === null) return;
+    const dx = e.changedTouches[0].clientX - x0, dy = e.changedTouches[0].clientY - y0;
+    x0 = null;
+    if (Math.abs(dx) >= SWIPE && Math.abs(dx) > Math.abs(dy) * 1.5) stepTrailer(dx < 0 ? 1 : -1);
+  }, { passive: true });
+}
+
+/* --------------------------------------------------------------- next up */
+/* every screening still to come at every open theater, soonest first */
+function nextShows() {
+  const today = todayKey(), hm = nowHM();
+  const rows = [];
+  theaters().filter((t) => t.ok).forEach((t) => {
+    Object.keys(t.days).filter((day) => day >= today && (!t.closed || (t.back && day >= t.back))).forEach((day) => {
+      t.days[day].forEach((x) => x.times.filter((h) => day > today || h >= hm).forEach((h) => rows.push({ day, h, t: (x.id && byId.has(x.id) && byId.get(x.id).t) || x.t, th: t })));
+    });
+  });
+  return rows.sort((a, b) => a.day.localeCompare(b.day) || a.h.localeCompare(b.h) || a.t.localeCompare(b.t)).slice(0, NEXT_UP);
+}
+function drawNext(host) {
+  if (V.kind !== 'movie') return;
+  const rows = nextShows();
+  if (!rows.length) return;
+  const box = el('div', 'wt-next');
+  box.dataset.next = '1';
+  box.setAttribute('role', 'group');
+  box.setAttribute('aria-label', WORDS.nextUp);
+  box.appendChild(el('div', 'eyebrow', esc(WORDS.nextUp)));
+  const row = el('div', 'wt-next-row');
+  rows.forEach((x) => {
+    const when = (x.day === todayKey() ? '' : dayName.format(new Date(x.day + 'T12:00:00Z')).slice(0, 3) + ' ') + timesLabel([x.h]);
+    const b = el('button', 'wt-next-i', '<span class="h">' + esc(when) + '</span><span class="t">' + esc(x.t) + '</span><span class="s">' + esc(x.th.name) + '</span>');
+    b.type = 'button';
+    b.dataset.nextTheater = x.th.id;
+    b.addEventListener('click', () => {
+      V.theater = x.th.id;
+      V.picked = true;
+      draw('theaters');
+      app.jumpTo(root.querySelector('[data-sec="theaters"]'));
+    });
+    row.appendChild(b);
+  });
+  box.appendChild(row);
+  host.appendChild(box);
+}
+
+/* back on the tab or the phone app: the next trailer not yet shown, and the clock has moved */
+function freshenTop() {
+  const q = walk();
+  q.at = firstUnseen(q.list);
+  draw('drop');
+  draw('next');
+}
+document.addEventListener('visibilitychange', () => {
+  const box = document.getElementById('vbox');
+  if (document.hidden || !ready || V.side !== 'up' || app.activeTab() !== KEY || (box && !box.hidden)) return;
+  freshenTop();
+});
+
 /* ------------------------------------------------------- coming soon */
 /* TMDB's now-playing list carries re-releases under their first year (Endgame,
    2019): a film three or more years old is back, not new */
@@ -670,25 +992,38 @@ const railLabel = (f) => (f.shelf === 'air' ? airLabel(f) : f.shelf === 'now' ? 
   : (f.d ? dateLabel(f.d) + ' · ' : '') + (f.where === 'streaming' ? 'streaming' : 'theaters'));
 
 /* a poster on an upcoming rail: a tap plays the trailer, or opens the sheet */
-function railPoster(f, key) {
+function railPoster(f, key, label = railLabel(f)) {
   const a = el('a', 'poster');
   a.href = '#watch/' + key;
   a.dataset.k = key;
-  a.setAttribute('aria-label', (hasTrailer(f) ? 'Play the trailer for ' : '') + f.t + ', ' + railLabel(f));
+  a.setAttribute('aria-label', (hasTrailer(f) ? WORDS.play : '') + f.t + ', ' + label);
   a.innerHTML = '<span class="c-media">' + picture(f, 'w342') +
     (hasTrailer(f) ? '<span class="play">' + ICON.play + '</span>' + (f.dur ? '<span class="dur">' + esc(f.dur) + '</span>' : '') : '') + '</span>' +
-    '<span class="t">' + esc(f.t) + '</span><span class="s">' + esc(railLabel(f)) + '</span>';
+    '<span class="t">' + esc(f.t) + '</span><span class="s">' + esc(label) + '</span>';
   a.addEventListener('click', (e) => { e.preventDefault(); if (hasTrailer(f)) playTrailer(f); else filmSheet(f); });
   return a;
 }
 
+/* everything within a week of today, theaters, streaming and shows, nearest
+   day first and the one still ahead before the one just gone. The two lists
+   move every day even though films.json is built twice a week. */
+function weekList() {
+  const t = dayNum(todayKey());
+  const away = (f) => Math.abs(dayNum(f.d) - t);
+  return uniq([...F.now, ...F.soon, ...F.stream, ...F.tvStream, ...F.tvAir]).filter((f) => f.d && away(f) <= 7)
+    .sort((a, b) => away(a) - away(b) || b.d.localeCompare(a.d) || a.t.localeCompare(b.t));
+}
+/* "Oct 30 · theaters" on a film already out; everything else says what its own rail says */
+const weekLabel = (f) => (f.shelf === 'now' ? dateLabel(f.d) + ' · theaters' : railLabel(f));
+
 function drawSoon(host) {
-  const list = V.kind === 'tv' ? F.tvAir : [...F.now, ...F.soon];
+  const week = V.kind === 'movie' ? weekList() : [];
+  const list = V.kind === 'tv' ? F.tvAir : week.length ? week : [...F.now, ...F.soon];
   if (!list.length) return;
-  const title = V.kind === 'tv' ? 'On TV now' : 'Coming to theaters';
+  const title = V.kind === 'tv' ? 'On TV now' : week.length ? WORDS.week : WORDS.theaters;
   sec(host, title, null, 'soon');
   const r = listRail(host, { name: V.kind === 'tv' ? 'watch-tv-now' : 'watch-soon', label: title, cells: 104 });
-  list.forEach((f) => r.appendChild(railPoster(f, 'soon:' + f.id)));
+  list.forEach((f) => r.appendChild(week.length ? railPoster(f, 'soon:' + f.id, weekLabel(f)) : railPoster(f, 'soon:' + f.id)));
 }
 
 /* what is still ahead, or out this past week: a file a few days old never
@@ -1512,12 +1847,12 @@ function drawChat(host) {
 
 /* ------------------------------------------------------------ landing */
 const TOC = () => (V.side === 'past' ? [['back', 'Back then'], ['town', 'Town'], ['list', 'The list'], ['chat', 'Chat']]
-  : [['theaters', 'Theaters'], ['soon', V.kind === 'tv' ? 'On TV now' : 'Coming soon'], ['stream', 'Streaming'], ['vote', 'Next screening'], ['chat', 'Chat']]);
+  : [['theaters', 'Theaters'], ['soon', V.kind === 'tv' ? 'On TV now' : weekList().length ? WORDS.weekChip : WORDS.soonChip], ['stream', 'Streaming'], ['vote', 'Next screening'], ['chat', 'Chat']]);
 
 /* the side a deep link's card lives on */
 function sideOfKey(k) {
   if (SIDE_OF[k]) return SIDE_OF[k];
-  if (/^(soon|stream|pick|th):/.test(k)) return 'up';
+  if (/^(soon|stream|pick|th|tr):/.test(k)) return 'up';
   if (/^(town|g|back):/.test(k)) return 'past';
   return '';
 }
@@ -1529,6 +1864,24 @@ function land() {
   /* #watch/upcoming and #watch/past pick the side, #watch/tv and #watch/movies the kind */
   if (k === 'upcoming' || k === 'past') { setSide(k === 'past' ? 'past' : 'up', true); app.scrollTop(); return; }
   if (k === 'tv' || k === 'movies') { setKind(k === 'tv' ? 'tv' : 'movie'); app.scrollTop(); return; }
+  /* a shared trailer opens on the card, wherever it sits in the walk */
+  const tr = /^tr:(\d+)$/.exec(k);
+  if (tr) {
+    if (!trailersIn) { pending = k; return; }
+    const id = Number(tr[1]);
+    const f = [...(T ? [...T.fresh, ...T.past] : []), ...byId.values()].find((x) => x.id === id);
+    if (!f) { app.toast('That one has moved on.'); return; }
+    setSide('up', true);
+    if (f.kind !== V.kind) setKind(f.kind);
+    const q = walk();
+    let at = q.list.findIndex((x) => x.id === id);
+    if (at < 0) { q.list.splice(q.at, 0, f); at = q.at; }
+    q.at = at;
+    q.moved = true;
+    draw('drop');
+    app.scrollTop();
+    return;
+  }
   const bm = /^back:(\d{4}-\d{2})$/.exec(k);
   /* the time machine and the theaters' times arrive after the list */
   if (!extras && (bm || k === 'back' || k === 'theaters')) { pending = k; return; }
@@ -1574,7 +1927,15 @@ app.register(KEY, {
   mount(r) {
     root = r;
     r.innerHTML = '<p class="loading">Loading…</p>';
-    loadFilms().then((got) => {
+    /* the first card should be a new trailer, so the page holds a moment for
+       the file; a slow file swaps in when it lands, unless the reader has
+       already moved the card */
+    const trailers = app.demo ? null : fetchTrailers();
+    const held = (got) => (app.demo ? (gotTrailers(got.trailers), got) : Promise.race([
+      trailers.then((j) => { gotTrailers(j); }),
+      new Promise((done) => { setTimeout(done, TRAILER_WAIT); }),
+    ]).then(() => got));
+    loadFilms().then(held).then((got) => {
       setFilms(got.films);
       if (!F.top.length) throw new Error('no films');
       L = loadLocal();
@@ -1583,12 +1944,14 @@ app.register(KEY, {
       render();
       if (app.activeTab() === KEY) app.paintSubnav();
       land();
+      if (trailers && !trailersIn) trailers.then((j) => { gotTrailers(j); if (V.side === 'up') draw('drop'); land(); });
       loadExtras(got).then(() => {
         extras = true;
         V.month = defaultMonth();
         /* ratings counted before the time machine named its titles: count again */
         if (P.state === 'ok') { tally(); draw('town'); draw('vote'); }
         draw('theaters');
+        draw('next');
         draw('back');
         if (app.activeTab() === KEY) app.paintSubnav();
         land();
@@ -1599,9 +1962,14 @@ app.register(KEY, {
       r.innerHTML = '<div class="errbox"><b>' + (app.demo ? 'The demo didn’t load.' : 'The film list didn’t load.') + '</b></div>';
     });
   },
-  activate(param) { pending = param || null; land(); },
+  activate(param) {
+    pending = param || null;
+    if (ready && awayFromTab && !pending && V.side === 'up') freshenTop();
+    awayFromTab = false;
+    land();
+  },
   refresh() { if (ready && root) render(); },
-  deactivate() {},
+  deactivate() { awayFromTab = true; },
   /* the sections as a floating pill in the tab's water, following the scroll (sections.js) */
   /* two rows floating over the paper, like Build | Habits: Upcoming |
      Past poured in water, then the side's sections as the small pill */

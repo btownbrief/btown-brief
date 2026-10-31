@@ -139,7 +139,7 @@ class ReadInboxTests(unittest.TestCase):
         def never(path, token):
             raise AssertionError("must not fetch without a token")
         inbox, added, changed = wi.read_inbox(None, NOW, token="", fetch=never)
-        self.assertEqual(set(inbox), {"x", "facebook", "recaps"})
+        self.assertEqual(set(inbox), {"x", "facebook", "voices", "recaps"})
         for state in inbox.values():
             self.assertTrue(state["paused"])
             self.assertEqual(state["reason"], "no WIRE_INBOX_TOKEN secret")
@@ -189,6 +189,161 @@ class ReadInboxTests(unittest.TestCase):
         line = wi.summary_line(inbox)
         self.assertIn("x ok (3 held)", line)
         self.assertIn("facebook paused", line)
+
+    def test_missing_voices_file_leaves_the_rest_alone(self):
+        inbox, added, _ = wi.read_inbox(None, NOW, token="t", fetch=fetcher({
+            "grok/x.json": "x-good.json"}))
+        self.assertTrue(inbox["voices"]["paused"])
+        self.assertEqual(inbox["voices"]["reason"], "grok/voices.json is missing")
+        self.assertEqual(inbox["voices"]["items"], [])
+        self.assertFalse(inbox["x"]["paused"])
+        self.assertEqual(added, 3)
+
+
+class VoicesTests(unittest.TestCase):
+    PIC = "https://pbs.twimg.com/media/HV3T8GnWcAAsOCS"
+
+    def voices(self):
+        return json.loads(raw("voices-good.json"))
+
+    def read(self, data):
+        return wi.read_one("voices", json.dumps(data).encode(), NOW)
+
+    def test_good_file(self):
+        state, fresh = wi.read_one("voices", raw("voices-good.json"), NOW)
+        self.assertFalse(state["paused"])
+        self.assertEqual(state.get("dropped"), None)
+        self.assertEqual(len(fresh), 4)
+        self.assertEqual({item["ch"] for item in fresh}, {"voices"})
+
+    def test_own_words_keep_their_hashtags_and_emoji(self):
+        _, fresh = wi.read_one("voices", raw("voices-good.json"), NOW)
+        self.assertIn("#Vermont", fresh[0]["summary"])
+        self.assertTrue(fresh[1]["summary"].startswith("BREAKING"))
+
+    def test_the_x_file_still_refuses_them(self):
+        data = self.voices()
+        data["source"] = "grok-x"
+        _, per_item = wi.check(data, NOW)
+        self.assertIn("summary has a hashtag, emoji or BREAKING", per_item[0])
+
+    def test_a_phone_number_still_drops_a_voice(self):
+        data = self.voices()
+        data["items"][0]["summary"] = "Call the office at 802-555-0142 today"
+        state, fresh = self.read(data)
+        self.assertEqual(state["dropped"], 1)
+        self.assertEqual(len(fresh), 3)
+
+    def test_vermont_voices_are_local_and_the_rest_are_not(self):
+        _, fresh = wi.read_one("voices", raw("voices-good.json"), NOW)
+        self.assertEqual([item["local"] for item in fresh], [True, False, False, True])
+
+    def test_the_vermont_list_is_for_voices_only(self):
+        data = json.loads(raw("x-good.json"))
+        data["items"][0]["from"] = "@WVNYWFFF"
+        _, fresh = wi.read_one("x", json.dumps(data).encode(), NOW)
+        self.assertFalse(fresh[0]["local"])
+
+    def test_a_voices_file_in_the_x_slot_pauses(self):
+        state, _ = wi.read_one("x", raw("voices-good.json"), NOW)
+        self.assertTrue(state["paused"])
+        self.assertIn("expected 'grok-x'", state["reason"])
+
+    def test_a_picture_comes_down_to_the_feed_size(self):
+        for given, want in (
+                (self.PIC + ".jpg?name=orig", self.PIC + ".jpg?name=small"),
+                (self.PIC + "?format=jpg&name=orig", self.PIC + "?format=jpg&name=small"),
+                (self.PIC + "?name=orig&format=png", self.PIC + "?name=small&format=png"),
+                (self.PIC + ".jpg", self.PIC + ".jpg"),
+                ("https://pbs.twimg.com/ext_tw_video_thumb/1/pu/img/a.jpg?name=orig",
+                 "https://pbs.twimg.com/ext_tw_video_thumb/1/pu/img/a.jpg?name=orig")):
+            self.assertEqual(wi.small_picture(given), want)
+
+    def test_a_bad_picture_loses_the_field_not_the_post(self):
+        data = self.voices()
+        bad = ["http://pbs.twimg.com/media/a.jpg", "https://example.com/a.jpg",
+               "https://pbs.twimg.com.evil.example/a.jpg", "https://pbs.twimg.com/a b",
+               "https://pbs.twimg.com/a\n", "https://pbs.twimg.com/" + "a" * 251, 7, {"url": "x"}, ""]
+        for value in bad:
+            data["items"][0]["media"] = value
+            state, fresh = self.read(data)
+            self.assertFalse(state["paused"], value)
+            self.assertEqual(len(fresh), 4, value)
+            self.assertNotIn("media", fresh[0], value)
+
+    def test_no_picture_means_no_key(self):
+        _, fresh = wi.read_one("voices", raw("voices-good.json"), NOW)
+        self.assertEqual(["media" in item for item in fresh], [True, False, False, False])
+
+    def test_x_posts_carry_pictures_too_and_counts_are_ignored(self):
+        data = json.loads(raw("x-good.json"))
+        data["counts"] = {"@MyNBC5": {"seen": 16, "saved": 0}}
+        data["items"][0]["media"] = self.PIC + "?format=jpg&name=orig"
+        state, fresh = wi.read_one("x", json.dumps(data).encode(), NOW)
+        self.assertFalse(state["paused"])
+        self.assertEqual(fresh[0]["media"], self.PIC + "?format=jpg&name=small")
+        self.assertNotIn("counts", state)
+
+    def test_an_account_keeps_four_and_a_rare_poster_keeps_its_place(self):
+        data = {"source": "grok-voices", "updated_at": (NOW - timedelta(hours=1)).isoformat(), "items": []}
+        for i in range(8):
+            data["items"].append({
+                "url": f"https://x.com/MikeReiss/status/{i}", "from": "@MikeReiss", "name": "Mike Reiss",
+                "summary": f"Practice note {i}", "kind": "post",
+                "posted_at": (NOW - timedelta(hours=2 + i)).isoformat(),
+                "found_at": (NOW - timedelta(hours=1)).isoformat()})
+        data["items"].append({
+            "url": "https://x.com/GovPhilScott/status/1", "from": "@GovPhilScott", "name": "Gov. Phil Scott",
+            "summary": "A statement on the budget", "kind": "post",
+            "posted_at": (NOW - timedelta(days=6)).isoformat(),
+            "found_at": (NOW - timedelta(hours=1)).isoformat()})
+        files = {"grok/voices.json": json.dumps(data).encode()}
+        fetch = lambda path, token: ("ok", files[path]) if path in files else ("missing", None)  # noqa: E731
+        inbox, _, _ = wi.read_inbox(None, NOW, token="t", fetch=fetch)
+        held = inbox["voices"]["items"]
+        self.assertEqual(sum(item["from"] == "@MikeReiss" for item in held), wi.VOICE_KEEP)
+        self.assertEqual(held[0]["u"], "https://x.com/MikeReiss/status/0")     # the newest four
+        self.assertEqual(held[-1]["from"], "@GovPhilScott")
+
+    def test_a_file_over_the_limit_is_not_new_on_the_next_read(self):
+        data = {"source": "grok-voices", "updated_at": (NOW - timedelta(hours=1)).isoformat(), "items": []}
+        for i in range(8):
+            data["items"].append({
+                "url": f"https://x.com/MikeReiss/status/{i + 1}", "from": "@MikeReiss", "name": "Mike Reiss",
+                "summary": f"Practice note {i}", "kind": "post",
+                "posted_at": (NOW - timedelta(hours=2 + i)).isoformat(),
+                "found_at": (NOW - timedelta(hours=1)).isoformat()})
+        files = {"grok/voices.json": json.dumps(data).encode()}
+        fetch = lambda path, token: ("ok", files[path]) if path in files else ("missing", None)  # noqa: E731
+        first, added, _ = wi.read_inbox(None, NOW, token="t", fetch=fetch)
+        self.assertEqual(added, wi.VOICE_KEEP)
+        second, added, changed = wi.read_inbox(first, NOW + timedelta(minutes=10), token="t", fetch=fetch)
+        self.assertEqual(added, 0)
+        self.assertFalse(changed)
+        data["items"].append(dict(data["items"][0], url="https://x.com/MikeReiss/status/99",
+                                  posted_at=(NOW - timedelta(hours=1)).isoformat()))
+        files["grok/voices.json"] = json.dumps(data).encode()
+        _, added, changed = wi.read_inbox(second, NOW + timedelta(minutes=20), token="t", fetch=fetch)
+        self.assertEqual(added, 1)
+        self.assertTrue(changed)
+
+    def test_the_x_channel_has_no_per_account_limit(self):
+        data = json.loads(raw("x-good.json"))
+        for item in data["items"]:
+            item["from"] = "@wcax"
+        files = {"grok/x.json": json.dumps(data).encode()}
+        fetch = lambda path, token: ("ok", files[path]) if path in files else ("missing", None)  # noqa: E731
+        inbox, _, _ = wi.read_inbox(None, NOW, token="t", fetch=fetch)
+        self.assertEqual(inbox["x"]["n"], 3)
+
+    def test_held_voices_stay_through_a_pause(self):
+        files = {"grok/voices.json": "voices-good.json"}
+        first, _, _ = wi.read_inbox(None, NOW, token="t", fetch=fetcher(files))
+        self.assertEqual(first["voices"]["n"], 4)
+        second, _, _ = wi.read_inbox(first, NOW + timedelta(hours=30), token="t", fetch=fetcher(files))
+        self.assertTrue(second["voices"]["paused"])
+        self.assertEqual(second["voices"]["n"], 4)
+        self.assertEqual(second["voices"]["items"][0].get("media"), first["voices"]["items"][0].get("media"))
 
 
 RECAP_FIXTURES = os.path.join(HERE, "fixtures", "wire-recaps")
@@ -328,7 +483,11 @@ class ValidatorParityTests(unittest.TestCase):
         spec.loader.exec_module(validator)
         from pathlib import Path
         now = datetime.now(timezone.utc)
+        with open(VALIDATOR, encoding="utf-8") as src:
+            knows_voices = "grok-voices" in src.read()
         for name in sorted(os.listdir(FIXTURES)):
+            if name.startswith("voices") and not knows_voices:
+                continue        # this wire-inbox checkout predates grok/voices.json
             theirs = set(validator.check(Path(FIXTURES, name)))
             file_level, per_item = wi.check(json.loads(raw(name)), now)
             ours = set(file_level)

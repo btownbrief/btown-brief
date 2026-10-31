@@ -1,11 +1,13 @@
 /* Town · Now: everything that changed in Burlington, in one feed.
 
    data/town/feed.json, which scripts/town/build_feed.py writes, holds every
-   tile, newest arrival first. This file draws them. The hero says how many
-   are new since this phone last looked and whether anything is wrong. Under
-   it, the day's house to guess, then the feed, with a "You're caught up"
-   line where the new ones stop. The pill filters by kind, freshest kind
-   first.
+   tile, newest arrival first. This file draws them. The hero is what's going
+   on right now: Church Street's camera over the aerial, how many tiles are new
+   since this phone last looked, the weather, and a ban, a closing or an
+   outage only while one is on. Under it, Tonight, the day's house to guess
+   (the day's street once the houses run out), then the feed, with a "You're
+   caught up" line where the new ones stop. The pill filters by kind, freshest
+   kind first.
 
    Tiles with a place show the state's aerial photo of it, stored with the site
    in data/town/aerials so a reader never calls the state's server. A private
@@ -13,15 +15,17 @@
    this file its house number.
 
    Guess the price: a sale keeps its price back until the reader picks one of
-   three. Picks and the run are kept on this phone.
+   three. Guess the street: the aerial of a public place and three names from
+   its neighborhood. Picks and the run are kept on this phone.
 
    Every reader-facing word of the tab is in COPY. */
 
 import * as app from '../app.js';
 import * as store from '../store.js';
-import { el, esc, ICON, agoShort, safeHref } from '../ui.js';
+import { el, esc, ICON, agoShort, safeHref, art } from '../ui.js';
 import { sectionBar } from '../sections.js';
-import { getJSON, fmtDay, money, shortMoney, daysTo, today, plusDays } from './town-kit.js';
+import { getJSON, fmtDay, money, shortMoney, daysTo, today, plusDays, dayOf } from './town-kit.js';
+import { chips as outsideChips, WEATHER_URL } from '../outside.js';
 
 const COPY = {
   label: 'Now',
@@ -35,13 +39,17 @@ const COPY = {
   fresh: (n) => (n === 1 ? '1 new' : n + ' new'),
   since: 'since you checked',
   quiet: 'Nothing new yet',
-  noBan: 'No ban posted',
   ban: 'Parking ban',
-  noClosings: 'No school closings or delays',
   closings: (n) => (n === 1 ? '1 school closing or delay' : n + ' school closings or delays'),
+  outages: (n) => n.toLocaleString('en-US') + ' without power',
   run: (n) => n + ' in a row',
   got: (n) => (n === 1 ? '1 new tile' : n + ' new tiles'),
   guess: 'Guess the price',
+  street: 'Guess the street',
+  tonight: 'Tonight',
+  tomorrow: 'Tomorrow',
+  calendar: (n) => n + ' ' + COPY.calendarWord,
+  calendarWord: 'new on the calendar',
   hot: 'Most talked about',
   guessLabel: (v) => 'Guess ' + v,
   right: 'You got it',
@@ -69,11 +77,14 @@ const COPY = {
   source: 'Town',
   openSource: 'Open the source',
   tags: { sold: 'Sold', going: 'Going in', week: 'Permits', city: 'City Hall', cityweek: 'City Hall', road: 'Construction',
-    food: 'Food', jobs: 'Jobs', signup: 'Signups', weather: 'Weather', reddit: 'r/burlington' },
+    food: 'Food', jobs: 'Jobs', signup: 'Signups', weather: 'Weather', reddit: 'r/burlington',
+    news: 'News', photo: 'Pictures', calendar: 'Calendar', street: 'Guess the street' },
 };
 
 /* the pill's kinds; Signups and Weather only show under All */
 const LANES = [
+  { key: 'photos', label: 'Pictures', kinds: ['photo'] },
+  { key: 'news', label: 'News', kinds: ['news'] },
   { key: 'homes', label: 'Homes', kinds: ['sold'] },
   { key: 'going', label: 'Going in', kinds: ['going', 'week'] },
   { key: 'city', label: 'City Hall', kinds: ['city', 'cityweek'] },
@@ -84,6 +95,11 @@ const LANES = [
 ];
 
 const FEED_URL = '../data/town/feed.json';
+const CAM = 'https://i.ytimg.com/vi/zl1woMXGGmQ/sddefault_live.jpg';
+const CAM_EVERY = 5 * 60000;       // YouTube turns this picture over about this often
+const CAM_BLANK = 120;             // the width of what it sends for a stream that's gone
+const OUTAGE_MAP = 'https://vtoutages.org/';
+const TONIGHT_ROWS = 4;
 const SEEN_KEY = 'town-feed-seen';
 const BASE_KEY = 'town-feed-base';
 const GUESS_KEY = 'town-feed-guess';
@@ -101,11 +117,15 @@ const keep = {
   put: (k, v) => { if (app.demo) mem.set(k, v); else store.write(k, v); },
 };
 
-const S = { root: null, tiles: [], status: {}, pick: null, hot: null, filter: 'all', base: 0, loaded: false, failed: false, at: 0, pending: null, version: '', next: null, left: 0, rebase: 0, first: false };
+const S = { root: null, tiles: [], status: {}, weather: null, tonight: null, street: null, dead: new Set(), pick: null, hot: null, filter: 'all', base: 0, loaded: false, failed: false, at: 0, pending: null, version: '', next: null, left: 0, rebase: 0, first: false };
 
 /* ------------------------------------------------------------- the aerials */
-const hasPic = (t) => !app.demo && !!t.img;
-const pic = (t) => '<img class="tf-pic" src="../data/town/aerials/' + esc(t.img) + '" alt="" loading="lazy" decoding="async">';
+const hasPic = (t) => !app.demo && !!(t.img || t.pic);
+const pic = (t) => (t.img ? '<img class="tf-pic" src="../data/town/aerials/' + esc(t.img) + '" alt="" loading="lazy" decoding="async">'
+  : '<img class="tf-pic" src="' + esc(safeHref(t.pic)) + '" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer">');
+/* the demo paints its pictures: no photo here is real */
+const shot = (t) => (hasPic(t) ? pic(t) : app.demo && t.art ? art(t.art) : '');
+const hasShot = (t) => hasPic(t) || (app.demo && !!t.art);
 
 /* ----------------------------------------------------------- guess the price */
 const hash = (s) => [...String(s)].reduce((h, c) => (h * 31 + c.charCodeAt(0)) >>> 0, 7);
@@ -178,6 +198,33 @@ function paintRun() {
   if (chip) { chip.hidden = n < 2; chip.textContent = COPY.run(n); }
 }
 
+/* --------------------------------------------------------- guess the street */
+function streetBar(t) {
+  const mine = guesses()[t.id];
+  if (mine !== undefined) return streetResult(t, mine, false);
+  return '<div class="tf-opts">' + t.options.map((v) => '<button class="tf-opt" data-place="' + esc(v) + '" aria-label="' + esc(COPY.guessLabel(v)) + '">' + esc(v) + '</button>').join('') + '</div>';
+}
+function streetResult(t, mine, justNow) {
+  const hit = mine === t.answer;
+  const n = run();
+  const said = justNow ? (hit ? (n > 1 ? COPY.rightRun(n) : COPY.right) : COPY.wrong) : '';
+  return '<div class="tf-result' + (hit ? ' hit' : ' miss') + '"><b class="tf-price">' + esc(t.answer) + '</b>' + (said ? '<span class="tf-said">' + esc(said) + '</span>' : '') + '</div>';
+}
+function pickPlace(btn) {
+  const t = S.street;
+  const c = btn.closest('[data-id]');
+  if (!t || !c) return;
+  const v = btn.dataset.place;
+  const hit = v === t.answer;
+  const g = guesses();
+  g[t.id] = v;
+  keep.put(GUESS_KEY, g);
+  keep.put(RUN_KEY, hit ? run() + 1 : 0);
+  c.querySelector('.tf-guess').innerHTML = streetResult(t, v, true);
+  if (hit && navigator.vibrate) navigator.vibrate(14);
+  paintRun();
+}
+
 /* --------------------------------------------------------------- the tiles */
 const ms = (t) => Date.parse(t.ts) || 0;
 const fresh = (t) => ms(t) > S.base;
@@ -185,9 +232,10 @@ const stamp = (t) => {
   const when = ms(t), age = Date.now() - when;
   return age < 2 * DAY ? agoShort(when / 1000) : new Date(when).toLocaleDateString('en-US', { month: 'short', day: 'numeric', timeZone: 'America/New_York' });
 };
-const titleOf = (t) => ({ jobs: COPY.jobs(t.n), week: COPY.permits(t.n), cityweek: COPY.meetings }[t.kind] || t.title);
-const head = (t) => '<div class="tf-head"><span class="tf-tag eyebrow">' + esc(t === S.pick ? COPY.guess : t === S.hot ? COPY.hot : COPY.tags[t.kind]) + '</span>' +
-  (fresh(t) ? '<span class="tf-new">' + esc(COPY.isNew) + '</span>' : '') + '<span class="tf-when">' + esc(stamp(t)) + '</span></div>';
+const titleOf = (t) => ({ jobs: COPY.jobs(t.n), week: COPY.permits(t.n), cityweek: COPY.meetings, calendar: COPY.calendar(t.n), street: COPY.street }[t.kind] || t.title);
+const tagOf = (t) => (t === S.pick && t.kind === 'sold' ? COPY.guess : t === S.hot ? COPY.hot : t.src || COPY.tags[t.kind]);
+const head = (t) => '<div class="tf-head"><span class="tf-tag eyebrow">' + esc(tagOf(t)) + '</span>' +
+  (fresh(t) ? '<span class="tf-new">' + esc(COPY.isNew) + '</span>' : '') + (ms(t) ? '<span class="tf-when">' + esc(stamp(t)) + '</span>' : '') + '</div>';
 function acts(it) {
   const on = store.isSaved(it.k);
   return '<span class="tf-acts"><button class="act sh" data-act="share" aria-label="' + esc(COPY.share) + '">' + ICON.share + '</button>' +
@@ -196,7 +244,7 @@ function acts(it) {
 /* the whole tile is the link; buttons sit above it */
 const out = (t) => (t.url ? '<a class="tf-go" href="' + esc(safeHref(t.url)) + '"' + (/^https?:/.test(t.url) ? ' target="_blank" rel="noopener" data-open' : '') + ' aria-label="' + esc(titleOf(t)) + '"></a>' : '');
 const words = (t, sub) => '<div class="tf-words"><h3 class="tf-title">' + esc(titleOf(t)) + '</h3>' + (sub ? '<p class="tf-sub">' + esc(sub) + '</p>' : '') + '</div>';
-const frame = (t, it, inner, sub, big) => '<div class="tf-frame">' + (hasPic(t) ? pic(t) : '') + head(t) + (inner || '') +
+const frame = (t, it, inner, sub, big) => '<div class="tf-frame">' + shot(t) + head(t) + (inner || '') +
   '<div class="tf-foot">' + words(t, sub) + (big ? '<b class="tf-big">' + esc(big) + '</b>' : '') + acts(it) + '</div></div>';
 const dateBox = (day) => { const [, m, d] = fmtDayParts(day); return '<span class="tf-date"><span class="eyebrow">' + esc(m) + '</span><b>' + esc(d) + '</b></span>'; };
 function fmtDayParts(day) {
@@ -205,7 +253,17 @@ function fmtDayParts(day) {
   return m ? [m[1], m[2], m[3]] : ['', '', ''];
 }
 
+const when = (at) => new Date(at).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZone: 'America/New_York' }).replace(':00', '');
+const eventRow = (d, name, venue, url) => '<li><a href="' + esc(safeHref(url)) + '" target="_blank" rel="noopener"' + (app.demo ? ' data-open' : '') + '><span class="d">' + esc(d) + '</span><span class="n">' + esc(name) + (venue ? '<span class="tf-sub">' + esc(venue) + '</span>' : '') + '</span></a></li>';
+
 const DRAW = {
+  news: (t, it) => frame(t, it, out(t)),
+  photo: (t, it) => frame(t, it, out(t)),
+  street: (t, it) => '<div class="tf-frame">' + shot(t) + head(t) + '<div class="tf-foot"><span class="sp"></span>' + acts(it) + '</div></div><div class="tf-guess">' + streetBar(t) + '</div>',
+  tonight: (t, it) => '<div class="tf-frame"><div class="tf-foot"><div class="tf-words"><h3 class="tf-title">' + esc(t.title) + '</h3></div>' + acts(it) + '</div><ul class="tf-rows">' +
+    t.rows.map(([at, name, venue, url]) => eventRow(when(at), name, venue, url)).join('') + '</ul></div>',
+  calendar: (t, it) => '<div class="tf-frame">' + head(t) + '<div class="tf-count"><b class="tf-huge">' + esc(t.n) + '</b><span>' + esc(COPY.calendarWord) + '</span></div><ul class="tf-rows">' +
+    t.rows.map(([at, name, venue, url]) => { const [wd, , d] = fmtDayParts(dayOf(at)); return eventRow(wd + ' ' + d, name, venue, url); }).join('') + '</ul><div class="tf-foot"><span class="sp"></span>' + acts(it) + '</div></div>',
   sold: (t, it) => frame(t, it, '', t.closed ? COPY.sold(fmtDay(t.closed).replace(/^\w+, /, '')) : '') + '<div class="tf-guess">' + guessBar(t) + '</div>',
   going: (t, it) => frame(t, it, out(t), [t.where, t.what !== t.title ? t.what : ''].filter(Boolean).join(' · '), t.cost >= 1000 ? shortMoney(t.cost) : ''),
   road: (t, it) => frame(t, it, out(t), [t.what, t.n > 1 ? COPY.sites(t.n) : ''].filter(Boolean).join(' · ')),
@@ -229,7 +287,7 @@ function tile(t) {
   const k = 'tf-' + t.id;
   const it = { k, kind: 'post', title: titleOf(t), text: '', href: t.url || '#feed/' + k, src: COPY.source, ago: stamp(t), open: COPY.openSource };
   app.know([it]);
-  const c = el('article', 'card tf tf-' + t.kind + (hasPic(t) ? ' has-pic' : ''));
+  const c = el('article', 'card tf tf-' + t.kind + (hasShot(t) ? ' has-pic' : ''));
   c.dataset.k = k;
   c.dataset.id = t.id;
   c.innerHTML = (DRAW[t.kind] || DRAW.food)(t, it);
@@ -239,22 +297,42 @@ function tile(t) {
 /* ---------------------------------------------------------------- the page */
 /* the city's headline; a file from before headlines has only true */
 const banWords = (b) => (typeof b === 'string' ? b : b ? COPY.ban : '');
-function hero() {
-  const fresh_ = S.tiles.filter(fresh).length;
+const camUrl = () => CAM + '?t=' + Math.floor(Date.now() / CAM_EVERY);
+/* only what's on: a clear day has no chip to say so */
+function alarmChips() {
   const st = S.status || {};
   const ban = banWords(st.ban);
   const schools = Number(st.schools ?? st.closings) || 0;
+  const outs = Number(st.outages) || 0;
+  return (ban ? '<a class="tf-chip on" href="#alerts/trash">' + esc(ban) + '</a>' : '') +
+    (schools ? '<a class="tf-chip on" href="#alerts/schools">' + esc(COPY.closings(schools)) + '</a>' : '') +
+    (outs ? '<a class="tf-chip on" href="' + (app.demo ? '#alerts' : OUTAGE_MAP + '" target="_blank" rel="noopener') + '">' + esc(COPY.outages(outs)) + '</a>' : '');
+}
+function hero() {
+  const fresh_ = S.tiles.filter(fresh).length;
+  const ban = banWords((S.status || {}).ban);
   const day = new Date().toLocaleDateString('en-US', { weekday: 'long', timeZone: 'America/New_York' });
   const h = el('header', 'tf-hero' + (ban ? ' alarm' : ''));
-  h.innerHTML = (app.demo ? '' : '<img class="tf-pic" src="assets/aerial/town-hero.jpg" alt="" decoding="async">') +
+  h.innerHTML = (app.demo ? '' : '<img class="tf-pic" src="assets/aerial/town-hero.jpg" alt="" decoding="async">' +
+      '<img class="tf-pic tf-cam" src="' + esc(camUrl()) + '" alt="" decoding="async" referrerpolicy="no-referrer">') +
     '<div class="tf-day">' + esc(day) + '</div>' +
     '<p class="tf-tally">' + (fresh_ ? '<b>' + esc(COPY.fresh(fresh_)) + '</b>' + (S.first ? '' : ' ' + esc(COPY.since)) : esc(COPY.quiet)) + '</p>' +
     '<div class="tf-chips">' +
-      '<a class="tf-chip' + (ban ? ' on' : '') + '" href="#alerts/trash">' + esc(ban || COPY.noBan) + '</a>' +
-      '<a class="tf-chip' + (schools ? ' on' : '') + '" href="#alerts/schools">' + esc(schools ? COPY.closings(schools) : COPY.noClosings) + '</a>' +
+      alarmChips() +
+      outsideChips(S.weather).map((c) => '<span class="tf-chip wx">' + esc(c) + '</span>').join('') +
       '<span class="tf-chip run"' + (run() < 2 ? ' hidden' : '') + '>' + esc(COPY.run(run())) + '</span>' +
     '</div>';
   return h;
+}
+/* what's left of tonight, soonest first; tomorrow's once tonight's have all started */
+function tonightTile() {
+  const t = S.tonight;
+  const left = t && Array.isArray(t.rows) ? t.rows.filter((r) => Date.parse(r[0]) > Date.now()) : [];
+  if (!left.length) return null;
+  const day = dayOf(left[0][0]);
+  const rows = left.filter((r) => dayOf(r[0]) === day).slice(0, TONIGHT_ROWS).sort((a, b) => Date.parse(a[0]) - Date.parse(b[0]));
+  const now = today();
+  return { ...t, title: day === now ? COPY.tonight : day === plusDays(now, 1) ? COPY.tomorrow : fmtDay(day), rows };
 }
 function inLane(t) {
   if (S.filter === 'all') return true;
@@ -270,10 +348,12 @@ function draw() {
   const wrap = el('div', 'tf-wrap');
   if (S.filter === 'all') {
     wrap.appendChild(hero());
-    if (S.pick) wrap.appendChild(tile(S.pick));
+    const night = tonightTile();
+    if (night) wrap.appendChild(tile(night));
+    if (S.pick && !S.dead.has(S.pick.id)) wrap.appendChild(tile(S.pick));
     if (S.hot) wrap.appendChild(tile(S.hot));
   }
-  const list = S.tiles.filter((t) => inLane(t) && !(S.filter === 'all' && (t === S.pick || t === S.hot)));
+  const list = S.tiles.filter((t) => inLane(t) && !S.dead.has(t.id) && !(S.filter === 'all' && (t === S.pick || t === S.hot)));
   let marked = S.filter !== 'all' || !list.some(fresh);
   list.forEach((t) => {
     if (!marked && !fresh(t)) { wrap.appendChild(el('div', 'tf-caught', esc(COPY.caught))); marked = true; }
@@ -296,17 +376,28 @@ function demoFile() {
   return app.demoJSON('data/demo/town-feed.json').then((j) => {
     const now = Date.now();
     const soon = (n) => plusDays(today(), n);
-    return { ...j, tiles: j.tiles.map((t, i) => ({ ...t, ts: new Date(now - t.ageHours * 3600000).toISOString(),
-      day: t.kind === 'city' || t.kind === 'signup' ? soon(3) : t.day, closed: t.kind === 'sold' ? soon(-12) : t.closed,
-      rows: t.kind === 'cityweek' ? t.rows.map((r, n) => [soon(n + 1), ...r.slice(1)]) : t.rows })) };
+    const at = (h) => new Date(now + h * 3600000).toISOString();
+    const w = j.weather || {};
+    return { ...j,
+      weather: { ...w, now: { ...w.now, observed_at: at(-0.5) }, lake_gage: { ...w.lake_gage, water_temp_at: at(-1) },
+        sun: { sunrise: at(-6), sunset: at(4), sunrise_tomorrow: at(18), sunset_tomorrow: at(28) } },
+      tonight: j.tonight && { ...j.tonight, day: soon(0), rows: j.tonight.rows.map((r) => [at(r[0]), ...r.slice(1)]) },
+      street: j.street && { ...j.street, id: 'street-' + soon(0), day: soon(0) },
+      tiles: j.tiles.map((t, i) => ({ ...t, ts: new Date(now - t.ageHours * 3600000).toISOString(),
+        day: t.kind === 'city' || t.kind === 'signup' ? soon(3) : t.day, closed: t.kind === 'sold' ? soon(-12) : t.closed,
+        rows: t.kind === 'cityweek' ? t.rows.map((r, n) => [soon(n + 1), ...r.slice(1)]) : t.kind === 'calendar' ? t.rows.map((r) => [at(r[0]), ...r.slice(1)]) : t.rows })) };
   });
 }
 function take(d) {
   S.tiles = Array.isArray(d.tiles) ? d.tiles : [];
   S.status = d.status || {};
+  S.weather = d.weather || S.weather;
+  S.tonight = d.tonight || null;
   S.version = d.generated || '';
   const had = guesses();
-  S.pick = S.tiles.find((t) => t.kind === 'sold' && t.price && had[t.id] === undefined) || null;
+  /* yesterday's copy of the file has no street for today */
+  S.street = d.street && d.street.day === today() && Array.isArray(d.street.options) ? d.street : null;
+  S.pick = S.tiles.find((t) => t.kind === 'sold' && t.price && had[t.id] === undefined) || S.street;
   /* the thread Burlington is arguing about, up top for as long as it's the biggest */
   const recent = Date.now() - HOT_DAYS * DAY;
   S.hot = S.tiles.filter((t) => t.kind === 'reddit' && t.comments >= HOT_MIN && ms(t) > recent).sort((a, b) => b.comments - a.comments)[0] || null;
@@ -314,7 +405,8 @@ function take(d) {
   S.failed = false;
   S.at = Date.now();
 }
-const fetchFeed = () => (app.demo ? demoFile() : getJSON(FEED_URL));
+/* the weather is a bonus: no file, no chips, and the feed still loads */
+const fetchFeed = () => (app.demo ? demoFile() : Promise.all([getJSON(FEED_URL), getJSON(WEATHER_URL).catch(() => null)]).then(([d, weather]) => ({ ...d, weather })));
 /* a fresh copy, taken in now. How many tiles are new to this screen. */
 function load() {
   const before = new Set(S.tiles.map((t) => t.id));
@@ -348,10 +440,22 @@ document.addEventListener('visibilitychange', () => {
   const stale = Date.now() - S.at >= STALE;
   (stale ? fetchFeed().catch(() => null) : Promise.resolve(null)).then((d) => {
     if (d && d.generated !== S.version) S.next = d;
+    else if (d) S.weather = d.weather || S.weather;
     /* a reader mid-scroll keeps their page; it catches up when they come back to the tab */
     if (atTop()) catchUp();
   });
 });
+
+/* the camera's next picture, swapped in once it has landed so the hero never blinks */
+setInterval(() => {
+  const c = S.root && !document.hidden && S.root.querySelector('.tf-cam');
+  const next = camUrl();
+  if (!c || c.getAttribute('src') === next) return;
+  const im = new Image();
+  im.referrerPolicy = 'no-referrer';
+  im.onload = () => { if (im.naturalWidth > CAM_BLANK) c.src = next; };
+  im.src = next;
+}, 60000);
 
 function land(param) {
   if (!S.loaded) { S.pending = param; return; }
@@ -372,13 +476,26 @@ app.register('feed', {
     S.root = root;
     S.base = firstBase();
     app.bindFeed(root, { onPeek() {} });
-    root.addEventListener('click', (e) => { const b = e.target.closest('[data-pick]'); if (b) { e.preventDefault(); pickPrice(b); } });
-    /* an aerial fades in when it lands; one that never does leaves the tile's own colour */
-    root.addEventListener('load', (e) => { if (e.target.classList && e.target.classList.contains('tf-pic')) e.target.classList.add('on'); }, true);
+    root.addEventListener('click', (e) => {
+      const b = e.target.closest('[data-pick]');
+      const p = e.target.closest('[data-place]');
+      if (b) { e.preventDefault(); pickPrice(b); }
+      if (p) { e.preventDefault(); pickPlace(p); }
+    });
+    /* an aerial fades in when it lands; one that never does leaves the tile's own colour.
+       The camera sits over the hero's aerial, so a dead stream just shows the aerial. */
+    root.addEventListener('load', (e) => {
+      const n = e.target;
+      if (!n.classList || !n.classList.contains('tf-pic')) return;
+      if (n.classList.contains('tf-cam') && n.naturalWidth <= CAM_BLANK) n.remove();
+      else n.classList.add('on');
+    }, true);
     root.addEventListener('error', (e) => {
       const n = e.target;
       if (!n.classList || !n.classList.contains('tf-pic')) return;
       const c = n.closest('.tf');
+      /* a picture tile is nothing without its picture, and neither is a street to guess */
+      if (c && (c.classList.contains('tf-photo') || c.classList.contains('tf-street'))) { S.dead.add(c.dataset.id); c.remove(); return; }
       if (c) c.classList.remove('has-pic');
       n.remove();
     }, true);

@@ -1,6 +1,6 @@
 {
-  "_comment": "Instagram accounts the All Day photo feed reads (the Wire's Photos view, Food's Their food, Vintage's New in). HAND-CURATED: nobody's posts get in unless their handle is here, except the @btownbrief tagged shelf. One object per account. `tier` is how often we pay one Scrape Creators credit to check it: 1 = every run (twice a day), 2 = once a Burlington day, 3 = once a week, rotating, an even slice a day. `category` is what kind of picture it is, for the Photos chips: food, venue (bars, cafes, music venues: the vibe checks), events (posters and the accounts that post them), shop (vintage), pets, scenic (photographers, city and landscape accounts), other. `food: true` puts a non-food account's posts on the Food tab as well (a bar, a brewery). `s: see` marks the creator accounts the retired Instagram tab showed in its SEE half; it is carried on posts for older readers and means nothing else. The monthly credit budget is MONTHLY_CREDIT_BUDGET in scripts/build_instagram.py; `python3 scripts/build_instagram.py --dry-run` prints what a roster costs. Vetting: the original DO handles in the newsletter's reference/instagram-sources.md, SEE handles 2026-08-30 against the live profile API, restaurants (PR #308) and vintage shops (PR #311) as linked from each business's own website, and the 2026-10-17 venue, events, pets and scenic additions the same way. A dormant account still costs its credit, so prune ones that stop posting.",
-  "updated": "2026-10-18",
+  "_comment": "Instagram accounts the All Day photo feed reads (the Wire's Photos view, Food's Their food, Vintage's New in). HAND-CURATED: nobody's posts get in unless their handle is here, except the @btownbrief tagged shelf. One object per account. `tier` is how often we pay one Scrape Creators credit to check it: 1 = every run (twice a day), 2 = once a Burlington day, 3 = once a week, rotating, an even slice a day. `category` is what kind of picture it is, for the Photos chips: food, venue (bars, cafes, music venues: the vibe checks), events (posters and the accounts that post them), shop (vintage), pets, scenic (photographers, city and landscape accounts), other. `food: true` puts a non-food account's posts on the Food tab as well (a bar, a brewery). `s: see` marks the creator accounts the retired Instagram tab showed in its SEE half; it is carried on posts for older readers and means nothing else. The monthly credit budget is MONTHLY_CREDIT_BUDGET in scripts/build_instagram.py; `python3 scripts/build_instagram.py --dry-run` prints what a roster costs. Vetting: the original DO handles in the newsletter's reference/instagram-sources.md, SEE handles 2026-08-30 against the live profile API, restaurants (PR #308) and vintage shops (PR #311) as linked from each business's own website, and the 2026-10-17 venue, events, pets and scenic additions the same way. `national: true` (with category `national`) marks an account from away: its posts carry `n: 1`, show under National and Everything only, and never reach Food, Vintage, People or Town. The 22 national accounts were each confirmed on Instagram on 2026-10-30 from a public profile page; 27 quiet local accounts moved from tier 2 to tier 3 the same day to pay for them. A dormant account still costs its credit, so prune ones that stop posting.",
+  "updated": "2026-10-30",
   "tagged_block": [],
   "accounts": [
     {
@@ -10,7 +10,7 @@
     },
     {
       "h": "btvmusicrevival",
-      "tier": 1,
+      "tier": 3,
       "category": "events"
     },
     {
@@ -30,7 +30,7 @@
     },
     {
       "h": "getdownvt",
-      "tier": 1,
+      "tier": 3,
       "category": "events"
     },
     {
@@ -55,12 +55,7 @@
     },
     {
       "h": "sunsetwatchersclub",
-      "tier": 1,
-      "category": "events"
-    },
-    {
-      "h": "theframe.btv",
-      "tier": 1,
+      "tier": 3,
       "category": "events"
     },
     {
@@ -96,17 +91,17 @@
     },
     {
       "h": "bigheavyworldvt",
-      "tier": 2,
+      "tier": 3,
       "category": "events"
     },
     {
       "h": "boltersrun",
-      "tier": 2,
+      "tier": 3,
       "category": "events"
     },
     {
       "h": "burlingtonyoungprofessionals",
-      "tier": 2,
+      "tier": 3,
       "category": "events"
     },
     {
@@ -122,7 +117,7 @@
     },
     {
       "h": "hulalakeside",
-      "tier": 2,
+      "tier": 3,
       "category": "events"
     },
     {
@@ -132,12 +127,12 @@
     },
     {
       "h": "nightlifeartsvt",
-      "tier": 2,
+      "tier": 3,
       "category": "events"
     },
     {
       "h": "sb3cvt",
-      "tier": 2,
+      "tier": 3,
       "category": "events"
     },
     {
@@ -147,7 +142,7 @@
     },
     {
       "h": "silentbookclubbtv",
-      "tier": 2,
+      "tier": 3,
       "category": "events"
     },
     {
@@ -157,12 +152,12 @@
     },
     {
       "h": "sundaysessionsvt",
-      "tier": 2,
+      "tier": 3,
       "category": "events"
     },
     {
       "h": "thesodaplant",
-      "tier": 2,
+      "tier": 3,
       "category": "events"
     },
     {
@@ -172,7 +167,7 @@
     },
     {
       "h": "vtpoc_network",
-      "tier": 2,
+      "tier": 3,
       "category": "events"
     },
     {
@@ -229,7 +224,7 @@
     },
     {
       "h": "_kate_kush",
-      "tier": 2,
+      "tier": 3,
       "category": "other",
       "s": "see"
     },
@@ -241,31 +236,31 @@
     },
     {
       "h": "davidchief_",
-      "tier": 2,
+      "tier": 3,
       "category": "other",
       "s": "see"
     },
     {
       "h": "itsaribobari",
-      "tier": 2,
+      "tier": 3,
       "category": "other",
       "s": "see"
     },
     {
       "h": "jackthurstonvt",
-      "tier": 2,
+      "tier": 3,
       "category": "other",
       "s": "see"
     },
     {
       "h": "kickinitwithkachishow",
-      "tier": 2,
+      "tier": 3,
       "category": "other",
       "s": "see"
     },
     {
       "h": "maari99nbrs",
-      "tier": 2,
+      "tier": 3,
       "category": "other",
       "s": "see"
     },
@@ -283,25 +278,25 @@
     },
     {
       "h": "rydermanske",
-      "tier": 2,
+      "tier": 3,
       "category": "other",
       "s": "see"
     },
     {
       "h": "senatorrocket",
-      "tier": 2,
+      "tier": 3,
       "category": "other",
       "s": "see"
     },
     {
       "h": "stuckinvermont",
-      "tier": 2,
+      "tier": 3,
       "category": "other",
       "s": "see"
     },
     {
       "h": "wej12",
-      "tier": 2,
+      "tier": 3,
       "category": "other",
       "s": "see"
     },
@@ -312,7 +307,7 @@
     },
     {
       "h": "passion4pawsvt",
-      "tier": 2,
+      "tier": 3,
       "category": "pets"
     },
     {
@@ -332,7 +327,7 @@
     },
     {
       "h": "burlingtonvtsunsets",
-      "tier": 2,
+      "tier": 3,
       "category": "scenic",
       "s": "see"
     },
@@ -356,7 +351,7 @@
     },
     {
       "h": "michaelwoodphoto",
-      "tier": 2,
+      "tier": 3,
       "category": "scenic",
       "s": "see"
     },
@@ -367,13 +362,13 @@
     },
     {
       "h": "therealvermont",
-      "tier": 2,
+      "tier": 3,
       "category": "scenic",
       "s": "see"
     },
     {
       "h": "winooskivt",
-      "tier": 2,
+      "tier": 3,
       "category": "scenic"
     },
     {
@@ -383,7 +378,7 @@
     },
     {
       "h": "bar_renee_vt",
-      "tier": 2,
+      "tier": 3,
       "category": "venue",
       "food": true
     },
@@ -394,36 +389,25 @@
       "food": true
     },
     {
-      "h": "burlyaxebeach",
-      "tier": 2,
-      "category": "venue"
-    },
-    {
-      "h": "citizencider",
-      "tier": 2,
-      "category": "venue",
-      "food": true
-    },
-    {
       "h": "deviltakesaholiday",
-      "tier": 2,
+      "tier": 3,
       "category": "venue"
     },
     {
       "h": "maydayvt",
-      "tier": 2,
+      "tier": 3,
       "category": "venue",
       "food": true
     },
     {
       "h": "monkeyhouse_vt",
-      "tier": 2,
+      "tier": 3,
       "category": "venue",
       "food": true
     },
     {
       "h": "spotonthedock",
-      "tier": 2,
+      "tier": 3,
       "category": "venue",
       "food": true
     },
@@ -788,11 +772,6 @@
       "category": "food"
     },
     {
-      "h": "feldmansbagels",
-      "tier": 3,
-      "category": "food"
-    },
-    {
       "h": "flatbreadbtv",
       "tier": 3,
       "category": "food"
@@ -909,11 +888,6 @@
     },
     {
       "h": "leonardos__pizza",
-      "tier": 3,
-      "category": "food"
-    },
-    {
-      "h": "leunigsbistro",
       "tier": 3,
       "category": "food"
     },
@@ -1780,12 +1754,6 @@
       "category": "venue"
     },
     {
-      "h": "fiddleheadbrewing",
-      "tier": 3,
-      "category": "venue",
-      "food": true
-    },
-    {
       "h": "finniganspubvt",
       "tier": 3,
       "category": "venue",
@@ -1816,12 +1784,6 @@
     },
     {
       "h": "lareprisewines",
-      "tier": 3,
-      "category": "venue",
-      "food": true
-    },
-    {
-      "h": "madriverdistillers",
       "tier": 3,
       "category": "venue",
       "food": true
@@ -1858,12 +1820,6 @@
     },
     {
       "h": "queencitybrewery",
-      "tier": 3,
-      "category": "venue",
-      "food": true
-    },
-    {
-      "h": "radiobean",
       "tier": 3,
       "category": "venue",
       "food": true
@@ -1911,12 +1867,6 @@
     },
     {
       "h": "standing_stone_wines_vt",
-      "tier": 3,
-      "category": "venue",
-      "food": true
-    },
-    {
-      "h": "switchbackbeer",
       "tier": 3,
       "category": "venue",
       "food": true
@@ -2088,7 +2038,7 @@
     },
     {
       "h": "buckleyprojects",
-      "tier": 2,
+      "tier": 3,
       "category": "other"
     },
     {
@@ -2128,8 +2078,220 @@
     },
     {
       "h": "unnecessaryinventions",
+      "tier": 3,
+      "category": "other"
+    },
+    {
+      "h": "mayorbtv",
       "tier": 2,
       "category": "other"
+    },
+    {
+      "h": "loveburlington",
+      "tier": 2,
+      "category": "other"
+    },
+    {
+      "h": "uvmmhockey",
+      "tier": 2,
+      "category": "events"
+    },
+    {
+      "h": "tinafriml",
+      "tier": 2,
+      "category": "other"
+    },
+    {
+      "h": "sevendaysvt",
+      "tier": 2,
+      "category": "other"
+    },
+    {
+      "h": "vermontpublic",
+      "tier": 2,
+      "category": "other"
+    },
+    {
+      "h": "ski_vt",
+      "tier": 2,
+      "category": "scenic"
+    },
+    {
+      "h": "rachelinvermont",
+      "tier": 2,
+      "category": "scenic"
+    },
+    {
+      "h": "calebkenna",
+      "tier": 2,
+      "category": "scenic"
+    },
+    {
+      "h": "vtfishandwildlife",
+      "tier": 2,
+      "category": "scenic"
+    },
+    {
+      "h": "jonny_wanzer",
+      "tier": 2,
+      "category": "other"
+    },
+    {
+      "h": "uvmwbb",
+      "tier": 2,
+      "category": "events"
+    },
+    {
+      "h": "uvmwhockey",
+      "tier": 2,
+      "category": "events"
+    },
+    {
+      "h": "ben.0gden",
+      "tier": 2,
+      "category": "other"
+    },
+    {
+      "h": "paulamoltzan",
+      "tier": 2,
+      "category": "other"
+    },
+    {
+      "h": "eveoschaub",
+      "tier": 2,
+      "category": "other"
+    },
+    {
+      "h": "newyorkercartoons",
+      "tier": 2,
+      "category": "national",
+      "national": true
+    },
+    {
+      "h": "theonion",
+      "tier": 2,
+      "category": "national",
+      "national": true
+    },
+    {
+      "h": "reductress",
+      "tier": 2,
+      "category": "national",
+      "national": true
+    },
+    {
+      "h": "middleclassfancy",
+      "tier": 2,
+      "category": "national",
+      "national": true
+    },
+    {
+      "h": "nytcooking",
+      "tier": 2,
+      "category": "national",
+      "national": true
+    },
+    {
+      "h": "smittenkitchen",
+      "tier": 2,
+      "category": "national",
+      "national": true
+    },
+    {
+      "h": "seriouseats",
+      "tier": 2,
+      "category": "national",
+      "national": true
+    },
+    {
+      "h": "thedogist",
+      "tier": 2,
+      "category": "national",
+      "national": true
+    },
+    {
+      "h": "weratedogs",
+      "tier": 2,
+      "category": "national",
+      "national": true
+    },
+    {
+      "h": "thedodo",
+      "tier": 2,
+      "category": "national",
+      "national": true
+    },
+    {
+      "h": "montereybayaquarium",
+      "tier": 2,
+      "category": "national",
+      "national": true
+    },
+    {
+      "h": "nasa",
+      "tier": 2,
+      "category": "national",
+      "national": true
+    },
+    {
+      "h": "nasawebb",
+      "tier": 2,
+      "category": "national",
+      "national": true
+    },
+    {
+      "h": "houseofhighlights",
+      "tier": 2,
+      "category": "national",
+      "national": true
+    },
+    {
+      "h": "bleacherreport",
+      "tier": 2,
+      "category": "national",
+      "national": true
+    },
+    {
+      "h": "nprmusic",
+      "tier": 2,
+      "category": "national",
+      "national": true
+    },
+    {
+      "h": "colorsxstudios",
+      "tier": 2,
+      "category": "national",
+      "national": true
+    },
+    {
+      "h": "kexp",
+      "tier": 2,
+      "category": "national",
+      "national": true
+    },
+    {
+      "h": "natgeotravel",
+      "tier": 2,
+      "category": "national",
+      "national": true
+    },
+    {
+      "h": "nationalparkservice",
+      "tier": 2,
+      "category": "national",
+      "national": true
+    },
+    {
+      "h": "cntraveler",
+      "tier": 2,
+      "category": "national",
+      "national": true
+    },
+    {
+      "h": "planetmoney",
+      "tier": 2,
+      "category": "national",
+      "national": true
     }
   ],
   "photo_categories": {

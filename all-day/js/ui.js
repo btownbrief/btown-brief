@@ -316,6 +316,54 @@ export function listRail(host, o) {
   return r;
 }
 
+/* A grid that grows down on purpose (Stephen, 2026-10-22: "I only see one
+   row but I want to see more rows ... a see more at the end so you can keep
+   on going down ... you're choosing to"). It opens on three rows of two on a
+   phone (two rows of three, or of four on a wide screen: .vgrid's columns),
+   "See more" adds as many again, and once it has grown the shell's Collapse
+   bar rides the bottom of the screen and folds it back to its first rows
+   and its heading. `last` (a closing tile, as Make a tee's whole shop)
+   always ends what shows. How far a grid is open lasts the visit, across
+   repaints, so `name` is unique across the tabs.
+     moreGrid(host, { name, label, head, cells, last }) */
+const grown = Object.create(null);
+const pageSize = () => {
+  const cols = window.matchMedia('(min-width: 1024px)').matches ? 4 : window.matchMedia('(min-width: 560px)').matches ? 3 : 2;
+  return cols * (cols === 2 ? 3 : 2);
+};
+export function moreGrid(host, o) {
+  const g = el('div', 'vgrid');
+  g.dataset.grid = o.name;
+  o.cells.forEach((c) => g.appendChild(c));
+  if (o.last) g.appendChild(o.last);
+  host.appendChild(g);
+  const step = pageSize();
+  const first = step - (o.last ? 1 : 0);
+  const row = el('div', 'linkrow vmore');
+  const more = button(esc('See more'), 'ghost');
+  more.type = 'button';
+  more.dataset.more = o.name;
+  more.setAttribute('aria-label', 'See more of ' + o.label);
+  row.appendChild(more);
+  const foot = collapseBar(o.label, () => {
+    grown[o.name] = 0;
+    paint();
+    jumpFn(o.head || g);
+    more.focus({ preventScroll: true });
+  });
+  foot.classList.add('foot');
+  host.append(row, foot);
+  function paint() {
+    const shown = Math.max(first, grown[o.name] || 0);
+    o.cells.forEach((c, i) => { c.hidden = i >= shown; });
+    row.hidden = shown >= o.cells.length;
+    foot.hidden = shown <= first;
+  }
+  more.addEventListener('click', () => { grown[o.name] = Math.max(first, grown[o.name] || 0) + step; paint(); });
+  paint();
+  return g;
+}
+
 export function divider(host, label, sub) {
   const d = el('div', 'tdiv', '<span>' + esc(label) + '</span>' + (sub ? '<span class="s">' + esc(sub) + '</span>' : ''));
   host.appendChild(d);
@@ -335,36 +383,53 @@ export function dateline({ title, sub, prev, next }) {
   return d;
 }
 
-/* ---------------------------------------------- the Local / Everything switch */
-/* One shared setting (store.settings().localOnly) and one shared body of
-   water, the same first control on every tab that has a local half. Flipping
-   it writes the setting and announces 'allday-geo'; the shell marks every
-   other mounted tab stale so it redraws on the way in. */
-export const geo = () => (store.settings().localOnly ? 'local' : 'everything');
+/* ------------------------------- the Local / National / Everything switch */
+/* Two shared settings and one shared body of water, the same first control on
+   every tab that has a local half. localOnly is the one every reader already
+   has, so a stored choice keeps meaning what it meant; nationalOnly is only
+   ever true with localOnly false. Flipping it writes the settings and
+   announces 'allday-geo'; the shell marks every other mounted tab stale so it
+   redraws on the way in. */
+export const geo = () => {
+  const s = store.settings();
+  return s.localOnly ? 'local' : s.nationalOnly ? 'national' : 'everything';
+};
+/* does the switch let this item through? National is everything not local */
+export const geoKeeps = (isLocal) => {
+  const g = geo();
+  return g === 'everything' || (g === 'local') === !!isLocal;
+};
 export function setGeo(g) {
-  const local = g !== 'everything';
-  if ((geo() === 'local') === local) return;
-  store.setSetting('localOnly', local);
+  const to = g === 'national' || g === 'everything' ? g : 'local';
+  if (to === geo()) return;
+  store.setSetting('nationalOnly', to === 'national');
+  store.setSetting('localOnly', to === 'local');
   window.dispatchEvent(new CustomEvent('allday-geo', { detail: geo() }));
 }
 
+const GEO_SEGS = [
+  ['local', '<span class="localsw-leaf" aria-hidden="true">\u{1F341}</span><span>Local</span>', '--local', '#16704E'],
+  ['national', '<span>National</span>', '--national', '#2A5DA8'],
+  ['everything', '<span>Everything</span>', '--every', '#A63A2C'],
+];
 export function localSwitch(onChange) {
-  const on = geo() === 'local';
-  const bar = el('div', 'localsw' + (on ? ' is-on' : ''));
+  const now = geo();
+  const bar = el('div', 'localsw geosw' + (now === 'local' ? ' is-on' : now === 'national' ? ' is-nat' : ''));
   bar.setAttribute('role', 'group');
-  bar.setAttribute('aria-label', 'Local or everything');
-  const make = (wantOn, label) => {
-    const b = el('button', 'localsw-half' + (on === wantOn ? ' on' : ''), label);
-    b.setAttribute('aria-pressed', on === wantOn ? 'true' : 'false');
+  bar.setAttribute('aria-label', 'Local, national or everything');
+  GEO_SEGS.forEach(([g, label]) => {
+    const b = el('button', 'localsw-half' + (g === now ? ' on' : ''), label);
+    b.dataset.geo = g;
+    b.setAttribute('aria-pressed', g === now ? 'true' : 'false');
     b.addEventListener('click', () => {
-      if (on === wantOn) return;
-      setGeo(wantOn ? 'local' : 'everything');
+      if (g === now) return;
+      setGeo(g);
       if (onChange) onChange(geo());
     });
-    return b;
-  };
-  bar.append(make(true, '<span class="localsw-leaf" aria-hidden="true">\u{1F341}</span><span>Local</span>'), make(false, '<span>Everything</span>'));
-  pour(bar, { key: 'local', n: 2, idx: on ? 0 : 1, prop: on ? '--local' : '--every', fallback: on ? '#16704E' : '#A63A2C' });
+    bar.appendChild(b);
+  });
+  const idx = GEO_SEGS.findIndex(([g]) => g === now);
+  pour(bar, { key: 'local', n: GEO_SEGS.length, idx, prop: GEO_SEGS[idx][2], fallback: GEO_SEGS[idx][3] });
   return bar;
 }
 
@@ -604,7 +669,8 @@ function story(it, o = {}) {
   const words = !it.title && it.text;
   const c = shell(it, 'wrow' + (it.thumb ? ' has-thumb' : '') + (words ? ' wpost' : '') + (o.cls ? ' ' + o.cls : ''));
   c.innerHTML = (it.thumb ? '<a class="w-thumb" ' + linkAttrs(it) + ' tabindex="-1" aria-hidden="true">' + art(it.thumb) + '</a>' : '') +
-    '<div class="w-body">' + (o.tag ? '<span class="eyebrow">' + esc(o.tag) + '</span>' : '') + title(it) + wmeta(it, o) + '</div>';
+    '<div class="w-body">' + (o.tag ? '<span class="eyebrow">' + esc(o.tag) + '</span>' : '') + title(it) +
+    (it.line ? '<p class="w-line">' + esc(it.line) + '</p>' : '') + wmeta(it, o) + '</div>';
   return c;
 }
 

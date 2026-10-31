@@ -377,6 +377,8 @@ def wire_items(pulse, now_ts, window_hours):
         }
         if own:
             entry["own"] = True
+        if entry["ch"] == "newsletters" and clean_line(item.get("l"), title):
+            entry["line"] = clean_line(item["l"], title)
         if source.get("site"):
             entry["site"] = source["site"]   # the source sheet's "Open the site"
         if item.get("i"):
@@ -414,6 +416,31 @@ def wire_items(pulse, now_ts, window_hours):
         seen.add(entry["id"])
         unique.append(entry)
     return unique
+
+
+LINE_MAX = 140
+LINE_MIN = 12
+LINE_CLIPPED = 90       # a long line with no end stop was cut by its sender (Semafor, mid-word)
+# A line comes from Stephen's own copy of an email, and pulse.json is public:
+# anything that could be him, an address, or the email's plumbing is no line.
+NOT_A_LINE_RE = re.compile(r"@|stephen|\bdavis\b|https?:|www\.|unsubscribe|view (?:this|in|as|online)|"
+                           r"read online|sign up|presented by|sponsored|^advertisement", re.I)
+
+
+def clean_line(text, title=""):
+    """The sender's preheader as the line under an edition's title, or "":
+    at most LINE_MAX characters, cut at a word, and never a line that says
+    nothing the title does not."""
+    line = re.sub(r"\s+", " ", text or "").strip()
+    if len(line) < LINE_MIN or NOT_A_LINE_RE.search(line):
+        return ""
+    if re.sub(r"\W+", "", line).lower() == re.sub(r"\W+", "", title or "").lower():
+        return ""
+    if LINE_CLIPPED <= len(line) <= LINE_MAX and line[-1].isalnum():
+        return line.rsplit(" ", 1)[0].rstrip(" ,;:-") + "…"
+    if len(line) <= LINE_MAX and line[-1] in ",;:-":   # cut at a word this time
+        return line.rstrip(" ,;:-") + "…"
+    return trim(line, LINE_MAX)
 
 
 def trim(value, limit):

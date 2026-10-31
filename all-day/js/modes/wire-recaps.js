@@ -12,11 +12,13 @@
    Nothing here rewrites a recap's words; they are drawn as they came.
 
    Two places draw them:
-     - Recaps mode (News · Photos · Square · Recaps): the day's recaps, each a
+     - Recaps mode (News · Recaps · Square · Photos): the day's recaps, each a
        big card with its kind, its time, where it came from ("From X trending
        summaries" or "From posts on X", never "AI"), the intro and the
        bullets as rows, a headline that links out and its one line. Five
-       bullets show; "Show all N" opens the rest, with the Collapse bar.
+       bullets show; "Show all N" opens the rest, with the Collapse bar. The
+       day's newsletter editions run among them by time (feedOf), each a
+       subject, the sender's one line and a link, never the email itself.
      - the strip on News, after the top stories: the newest recap of each
        kind as a small card, tapping into Recaps at that recap. A bullet the
        river already carries (same id) is not repeated on the small card.
@@ -33,6 +35,9 @@ const MINI = 2;            // bullets on a small card in News' strip
 const FROM = { trending: 'From X trending summaries', accounts: 'From posts on X' };
 const SAYS_AI = /\b(?:A\.?I\.?|artificial intelligence|grok|generated|model)\b/i;
 const SPORT = { nba: 'NBA', nfl: 'NFL', nhl: 'NHL', mlb: 'MLB', tennis: 'Tennis', college: 'College', local: 'Vermont', soccer: 'Soccer' };
+/* the banner's chip for the day's newsletter editions, beside the recap kinds */
+export const LETTERS = 'newsletters';
+const LETTERS_LABEL = 'Newsletters';
 const isUrl = (u) => /^https?:\/\//i.test(String(u || ''));
 const trim = (s) => String(s == null ? '' : s).replace(/\s+/g, ' ').trim();
 
@@ -40,7 +45,8 @@ let ctx = null;
 /* ctx, from modes/wire.js:
      clock(ms)        "9:56 am", Burlington time
      open(id)         Recaps mode at that recap (the strip's small cards)
-     all()            Recaps mode at its top (the strip's "All" button) */
+     all()            Recaps mode at its top (the strip's "All" button)
+     letters(p)       a payload's newsletter editions as story cards, newest first */
 export function init(c) { ctx = c; }
 
 /* ------------------------------------------------------------- the data */
@@ -73,14 +79,25 @@ export function latestOf(p) {
   const kinds = new Set();
   return recapsOf(p).filter((r) => !kinds.has(r.kind) && (kinds.add(r.kind), true));
 }
-/* the kinds a day has, in the payload's own order, for the banner's chips */
+/* The Recaps page: the day's recaps and newsletter editions, newest first,
+   each { at, recap } or { at, letter } */
+export function feedOf(p) {
+  if (!p) return [];
+  return recapsOf(p).map((r) => ({ at: r.at, recap: r }))
+    .concat(ctx.letters(p).map((c) => ({ at: c.d * 1000, letter: c })))
+    .sort((a, b) => b.at - a.at);
+}
+/* the kinds a day has, in the payload's own order, then its newsletters, for
+   the banner's chips */
 export function kindsOf(p) {
   const list = recapsOf(p);
   const order = (Array.isArray(p && p.recap_kinds) ? p.recap_kinds : []).map((k) => k && k.kind);
   const n = Object.create(null);
   list.forEach((r) => { n[r.kind] = (n[r.kind] || 0) + 1; });
-  return Object.keys(n).sort((a, b) => ((order.indexOf(a) + 1 || 99) - (order.indexOf(b) + 1 || 99)))
+  const kinds = Object.keys(n).sort((a, b) => ((order.indexOf(a) + 1 || 99) - (order.indexOf(b) + 1 || 99)))
     .map((kind) => ({ key: kind, label: list.find((r) => r.kind === kind).title, n: n[kind] }));
+  const letters = p ? ctx.letters(p).length : 0;
+  return letters ? kinds.concat({ key: LETTERS, label: LETTERS_LABEL, n: letters }) : kinds;
 }
 export const find = (p, id) => recapsOf(p).find((r) => r.id === id) || null;
 

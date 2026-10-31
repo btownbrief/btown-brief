@@ -1,4 +1,4 @@
-/* Body · Today: the day as tiles you tap.
+/* Body · Today: the day as tiles you tap, under what's going on outside.
 
    Each tile is one thing to do today, and doing it is one tap. Water and
    protein count up from the same record the Fuel tab keeps. Train, Sprints,
@@ -6,11 +6,22 @@
    on top; a finished tile sinks to the bottom. The hero's ring fills as the
    day does, and a day with DAY_WON or more tiles done keeps the streak alive.
 
+   Above the tools, three tiles from outside the phone: the next places to
+   move with other people this week (club meets from run-clubs.json, events
+   and league nights from data/town/moves.json), the newest picture from
+   Body's accounts, and races and league signups still open, in date order
+   (a signup with no closing date last). They are never scored: list()
+   holds what the ring and the streak count, and these aren't in it. Any file
+   that doesn't load takes only its own tile with it.
+
    Everything is kept on this phone. Every reader-facing word is in COPY. */
 
 import * as app from '../app.js';
-import { el, esc, ICON } from '../ui.js';
-import { today, addDays, keep, put, seed, data } from './body-kit.js';
+import * as store from '../store.js';
+import { el, esc, ICON, safeHref, art } from '../ui.js';
+import { today, addDays, keep, put, seed, data, demoData, shortDay } from './body-kit.js';
+import { meetsInWindow, redateDemo } from '../clubs-week.js';
+import { chips as outsideChips, moreChips, WEATHER_URL } from '../outside.js';
 
 const COPY = {
   label: 'Today',
@@ -35,6 +46,16 @@ const COPY = {
   habits: 'Your habits',
   build: 'The Build',
   open: 'Open',
+  moving: 'Moving this week',
+  races: 'Races and signups',
+  closes: (d) => 'Signups close ' + d,
+  signupOpen: 'Open',
+  inDays: (n) => (n <= 0 ? 'Today' : n === 1 ? 'Tomorrow' : n + ' days'),
+  more: 'Show more',
+  share: 'Share',
+  save: 'Save',
+  source: 'Body',
+  openSource: 'Open the source',
 };
 
 const FUEL = 'allday-body-fuel';          // the Fuel tab's own day record
@@ -43,8 +64,19 @@ const DONE = 'allday-body-day';           // { 'YYYY-MM-DD': ['train', ...] }
 const SCORE = 'allday-body-day-score';    // { 'YYYY-MM-DD': tiles done }, so a new goal can't rewrite old days; never pruned, the streak walks it
 const DAY_WON = 4;                        // tiles done that keep the streak alive
 const KEEP = 60;
+const MOVES_URL = '../data/town/moves.json';
+const RACES_URL = '../data/town/races.json';
+const CLUBS_URL = '../data/run-clubs.json';
+const MOVE_DAYS = 7;
+const SOON_DAYS = 90;                     // a race shows this close
+const COUNTDOWN = 14;                     // inside this many days a row counts down; past it, the date
+const STEP = { moves: 8, soon: 6 };       // rows that show, and how many Show more adds
+const RELOAD = 15 * 60000;                // the outside files are this old before a tab change refetches them
+const HOUR = 3600000;
+const TZ = 'America/New_York';
 
-const S = { root: null, goals: { water: 96, tap: 16, protein: 140, shake: 30 }, defaults: {}, day: '' };
+const S = { root: null, goals: { water: 96, tap: 16, protein: 140, shake: 30 }, defaults: {}, day: '',
+  weather: null, moves: [], aerials: {}, scene: [], clubs: [], races: [], signups: [], dead: new Set(), at: 0, shown: { ...STEP } };
 
 const obj = (v) => (v && typeof v === 'object' && !Array.isArray(v) ? v : {});
 const fuelDay = (k) => { const d = obj(obj(keep(FUEL, {}))[k]); return { water: Number(d.water) || 0, protein: Number(d.protein) || 0, shakes: Number(d.shakes) || 0, creatine: d.creatine === true }; };
@@ -127,6 +159,137 @@ function tile(t) {
   return c;
 }
 
+/* ------------------------------------------------- from outside the phone */
+const CLOCK = new Intl.DateTimeFormat('en-US', { timeZone: TZ, hour: 'numeric', minute: '2-digit' });
+const WEEKDAY = new Intl.DateTimeFormat('en-US', { timeZone: TZ, weekday: 'short' });
+const YMD = new Intl.DateTimeFormat('en-CA', { timeZone: TZ, year: 'numeric', month: '2-digit', day: '2-digit' });
+const dayKey = (at) => YMD.format(new Date(at));
+const clock = (at) => CLOCK.format(new Date(at)).replace(':00', '');
+/* today's rows need only the time; the rest say the day */
+const whenOf = (at) => (dayKey(at) === today() ? '' : WEEKDAY.format(new Date(at)) + ' ') + clock(at);
+/* clubs and classes together, soonest first; the same thing listed twice shows once */
+function nextMoves() {
+  const now = Date.now();
+  const meets = meetsInWindow(S.clubs, now, now + MOVE_DAYS * 24 * HOUR).map((o) => ({ at: o.at, title: o.club.name, where: o.meet.where,
+    url: o.club.url, img: S.aerials[o.meet.lat + ',' + o.meet.lng] }));
+  const rows = S.moves.map((m) => ({ ...m, at: Date.parse(m.at) })).filter((m) => m.at > now);
+  const seen = new Map();
+  return meets.concat(rows).sort((a, b) => a.at - b.at).filter((m) => {
+    const t = String(m.title).toLowerCase().replace(/[^a-z0-9]/g, '');
+    const same = seen.get(m.at) || [];
+    if (same.some((o) => o.includes(t) || t.includes(o))) return false;
+    seen.set(m.at, same.concat(t));
+    return true;
+  });
+}
+/* a league still taking signups, one row a sport at its soonest close; 'z' sorts after any date */
+function openSignups(t) {
+  const by = new Map();
+  S.signups.filter((x) => x.signup_open === true && (x.signup_until || 'z') >= t && (x.ends || 'z') >= t)
+    .sort((a, b) => (a.signup_until || 'z').localeCompare(b.signup_until || 'z'))
+    .forEach((x) => { if (!by.has(x.name)) by.set(x.name, x); });
+  return [...by.values()];
+}
+function nextSoon() {
+  const t = today(), last = addDays(t, SOON_DAYS);
+  const races = S.races.filter((r) => r.day >= t && r.day <= last).map((r) => ({ day: r.day, name: r.name, sub: r.town, url: r.url }));
+  const signups = openSignups(t).map((x) => ({ day: x.signup_until || 'z', name: x.name, sub: x.signup_until ? COPY.closes(shortDay(x.signup_until)) : '', url: x.url || '#leagues' }));
+  return races.concat(signups).sort((a, b) => a.day.localeCompare(b.day));
+}
+const daysUntil = (d) => { let n = 0; for (let k = today(); k < d && n <= COUNTDOWN; k = addDays(k, 1)) n += 1; return n; };
+const whenSoon = (d) => { if (d === 'z') return COPY.signupOpen; const n = daysUntil(d); return n > COUNTDOWN ? shortDay(d) : COPY.inDays(n); };
+
+function acts(it) {
+  const on = store.isSaved(it.k);
+  return '<span class="tf-acts"><button class="act sh" data-act="share" aria-label="' + esc(COPY.share) + '">' + ICON.share + '</button>' +
+    '<button class="act star' + (on ? ' on' : '') + '" data-act="save" aria-label="' + esc(COPY.save) + '" aria-pressed="' + on + '">' + ICON.star + '</button></span>';
+}
+const link = (url) => { const out = /^https?:/.test(url || ''); return '<a href="' + esc(safeHref(url)) + '"' + (out ? ' target="_blank" rel="noopener"' : '') + (app.demo && out ? ' data-open' : '') + '>'; };
+const row = (d, name, sub, url, off) => '<li' + (off ? ' hidden' : '') + '>' + link(url) + '<span class="d">' + esc(d) + '</span><span class="n">' + esc(name) + (sub ? '<span class="tf-sub">' + esc(sub) + '</span>' : '') + '</span></a></li>';
+const moreBtn = (id, n) => (n > S.shown[id] ? '<button class="tf-more dy-more" data-more="' + id + '">' + esc(COPY.more) + '</button>' : '');
+function liveTile(id, cls, title, inner, href, pic, key = id) {
+  const k = 'dy-' + key;
+  const it = { k, kind: 'post', title, text: '', href: href || '#day/' + k, src: COPY.source, ago: '', open: COPY.openSource };
+  app.know([it]);
+  const c = el('article', 'dy-tile dy-live dy-' + cls + ' wide' + (pic ? ' has-pic' : ''));
+  c.dataset.tile = id;
+  c.dataset.k = k;
+  c.innerHTML = (pic || '') + inner(it);
+  return c;
+}
+function movingTile() {
+  const rows = nextMoves();
+  if (!rows.length) return null;
+  const first = rows[0];
+  const pic = !app.demo && first.img ? '<img class="tf-pic" src="../data/town/aerials/' + esc(first.img) + '" alt="" loading="lazy" decoding="async">' : '';
+  return liveTile('moves', 'moves', COPY.moving, (it) => '<div class="dy-top"><h3>' + esc(COPY.moving) + '</h3>' + acts(it) + '</div><ul class="tf-rows">' +
+    rows.map((m, i) => row(whenOf(m.at), m.title, m.where, m.url, i >= S.shown.moves)).join('') + '</ul>' + moreBtn('moves', rows.length), '', pic);
+}
+function sceneTile() {
+  const p = S.scene.find((x) => !S.dead.has(x.id));
+  if (!p) return null;
+  const pic = app.demo ? art(p.art) : '<img class="tf-pic" src="' + esc(safeHref(p.pic)) + '" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer">';
+  const name = '@' + p.h;
+  const c = liveTile('scene', 'scene', name, (it) => '<a class="tf-go" href="' + esc(safeHref(p.url)) + '" target="_blank" rel="noopener"' + (app.demo ? ' data-open' : '') + ' aria-label="' + esc(name) + '"></a>' +
+    '<div class="dy-top"><p class="dy-sub">' + esc(name) + '</p>' + acts(it) + '</div>', p.url, pic, 'scene-' + p.id);
+  c.dataset.post = p.id;
+  return c;
+}
+function soonTile() {
+  const rows = nextSoon();
+  if (!rows.length) return null;
+  return liveTile('soon', 'soon', COPY.races, (it) => '<div class="dy-top"><h3>' + esc(COPY.races) + '</h3>' + acts(it) + '</div><ul class="tf-rows">' +
+    rows.map((r, i) => row(whenSoon(r.day), r.name, r.sub, r.url, i >= S.shown.soon)).join('') + '</ul>' + moreBtn('soon', rows.length));
+}
+/* opens the next rows where they are; a redraw here would flash the picture */
+function showMore(b) {
+  const id = b.dataset.more;
+  const before = S.shown[id];
+  S.shown[id] += STEP[id];
+  const rows = [...b.closest('.dy-live').querySelectorAll('.tf-rows li')];
+  rows.forEach((li, i) => { li.hidden = i >= S.shown[id]; });
+  const next = rows[before] && rows[before].querySelector('a');
+  if (S.shown[id] >= rows.length) b.remove();
+  if (next) next.focus({ preventScroll: true });
+}
+const json = (url) => fetch(url).then((r) => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); });
+function takeMoves(m) {
+  S.moves = Array.isArray(m && m.events) ? m.events : [];
+  S.aerials = (m && m.aerials) || {};
+  S.scene = Array.isArray(m && m.scene) ? m.scene : [];
+}
+const leagueRows = (d) => ((d && d.organizers) || []).flatMap((o) => (o.sports || []).map((x) => ({ ...x, name: o.name.includes(x.sport) ? o.name : o.name + ' ' + x.sport })));
+function loadDemo() {
+  return Promise.all([demoData(), app.demoData('run-clubs')]).then(([d, rc]) => {
+    const now = Date.now();
+    const at = (h) => new Date(now + h * HOUR).toISOString();
+    const o = d.outside || {};
+    const w = o.weather || {};
+    S.weather = { ...w, now: { ...w.now, observed_at: at(-0.5) }, lake_gage: { ...w.lake_gage, water_temp_at: at(-1) },
+      sun: { sunrise: at(-6), sunset: at(4), sunrise_tomorrow: at(18), sunset_tomorrow: at(28) },
+      hourly: { hours: [1, 2, 3].map((h, i) => ({ t: at(h), pop: i * 20, wind_mph: 6 + i * 3, sky: 40, temp_f: 58 })) } };
+    takeMoves({ events: (o.moves || []).map((m) => ({ ...m, at: at(m.inHours) })), scene: o.scene });
+    S.races = (o.races || []).map((r) => ({ ...r, day: addDays(today(), r.inDays) }));
+    S.signups = (o.signups || []).map((x) => ({ ...x, signup_until: addDays(today(), x.inDays) }));
+    S.clubs = redateDemo(rc, now).clubs;
+  }).catch(() => {});
+}
+function loadLive() {
+  const quiet = (p) => p.catch(() => null);
+  return Promise.all([quiet(json(WEATHER_URL)), quiet(json(MOVES_URL)), quiet(json(CLUBS_URL)), quiet(json(RACES_URL)), quiet(data('leagues.json'))])
+    .then(([w, m, rc, races, leagues]) => {
+      S.weather = w || S.weather;
+      if (m) takeMoves(m);
+      S.clubs = (rc && rc.clubs) || S.clubs;
+      S.races = (races && races.races) || S.races;
+      if (leagues) S.signups = leagueRows(leagues);
+    });
+}
+function loadOutside() {
+  S.at = Date.now();
+  return (app.demo ? loadDemo() : loadLive()).then(draw);
+}
+
 /* ---------------------------------------------------------------- the hero */
 function hero(items) {
   const scored = items.filter((t) => !t.link);
@@ -143,8 +306,13 @@ function hero(items) {
       (n === all ? '<p class="tf-tally"><b>' + esc(COPY.won) + '</b></p>' : '') +
       (s ? '<span class="tf-chip run">' + esc(COPY.streak(s)) + '</span>' : '') + '</div>' +
       '<div class="dy-ring" role="img" aria-label="' + esc(COPY.of(n, all)) + '"><svg viewBox="0 0 80 80"><circle class="t" cx="40" cy="40" r="' + R + '"/><circle class="f" cx="40" cy="40" r="' + R + '" stroke-dasharray="' + C.toFixed(1) + '" stroke-dashoffset="' + (C * (1 - n / all)).toFixed(1) + '"/></svg><b>' + esc(n + '/' + all) + '</b></div></div>' +
-    '<div class="dy-week">' + week.map((k) => '<i class="' + (scoreOf(k) >= DAY_WON ? 'on' : '') + (k === t ? ' now' : '') + '"></i>').join('') + '</div>';
+    outside() + '<div class="dy-week">' + week.map((k) => '<i class="' + (scoreOf(k) >= DAY_WON ? 'on' : '') + (k === t ? ' now' : '') + '"></i>').join('') + '</div>';
   return h;
+}
+
+function outside() {
+  const all = outsideChips(S.weather).concat(moreChips(S.weather));
+  return all.length ? '<div class="tf-chips">' + all.map((c) => '<span class="tf-chip wx">' + esc(c) + '</span>').join('') + '</div>' : '';
 }
 
 function draw() {
@@ -156,6 +324,7 @@ function draw() {
   root.innerHTML = '';
   const wrap = el('div', 'dy-wrap');
   wrap.appendChild(hero(items));
+  [movingTile(), sceneTile(), soonTile()].filter(Boolean).forEach((c) => wrap.appendChild(c));
   items.filter((t) => !t.done).forEach((t) => wrap.appendChild(tile(t)));
   items.filter((t) => t.done).forEach((t) => wrap.appendChild(tile(t)));
   root.appendChild(wrap);
@@ -163,6 +332,8 @@ function draw() {
 }
 
 function onTap(e) {
+  const more = e.target.closest('[data-more]');
+  if (more) { showMore(more); return; }
   const add = e.target.closest('[data-add]');
   if (add) {
     const f = fuelDay(today());
@@ -199,12 +370,30 @@ app.register('day', {
   promise: COPY.promise,
   mount(root) {
     S.root = root;
+    app.bindFeed(root, { onPeek() {} });
     root.addEventListener('click', onTap);
+    /* a picture that won't load gives way to the next post, or the tile goes */
+    root.addEventListener('load', (e) => { if (e.target.classList && e.target.classList.contains('tf-pic') && e.target.closest('.dy-live')) e.target.classList.add('on'); }, true);
+    root.addEventListener('error', (e) => {
+      const n = e.target;
+      const c = n.closest && n.closest('.dy-live');
+      if (!c || n.tagName !== 'IMG') return;
+      if (c.dataset.post) { S.dead.add(c.dataset.post); draw(); return; }
+      c.classList.remove('has-pic');
+      n.remove();
+    }, true);
     if (app.demo) seed(FUEL, { [today()]: { water: 48, protein: 60, shakes: 1, creatine: false } });
     draw();
     data('fuel.json').then((f) => { S.defaults = f.defaults || {}; readGoals(); draw(); }).catch(() => {});
+    loadOutside();
   },
-  activate() { if (S.root) { readGoals(); draw(); } },
+  activate(param) {
+    if (!S.root) return;
+    readGoals();
+    draw();
+    if (Date.now() - S.at > RELOAD) loadOutside();
+    if (param) app.flashHit(S.root, param);
+  },
   refresh() { draw(); },
   newSince() { return 0; },
 });

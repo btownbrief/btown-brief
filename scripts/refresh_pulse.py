@@ -58,7 +58,7 @@ from email.utils import parsedate_to_datetime
 # standard library only and never raise into this run.
 import wire_inbox
 import wire_photos
-from wire_common import mechanical_channel
+from wire_common import clean_line, mechanical_channel
 
 ROOT = os.path.join(os.path.dirname(__file__), "..")
 OUT = os.path.join(ROOT, "data", "pulse.json")
@@ -128,7 +128,8 @@ WEBCOPY_TEXT_RE = re.compile(
     r'(?:view|read|open)[^<]{0,60}?(?:browser|online|web|email)', re.I | re.S)
 WEBCOPY_URL_RE = re.compile(
     r'href="(https?://[^"]*?(?:campaign-archive\.com[^"]*|mailchi\.mp/[^"]+'
-    r'|substack\.com/p/[^"]+|beehiiv\.com/p/[^"]+|/p_v\.php[^"]*'
+    r'|substack\.com/p/[^"]+|open\.substack\.com/pub/[^"/]+/p/[^"]+'
+    r'|beehiiv\.com/p/[^"]+|/p_v\.php[^"]*'
     r'|link\.join1440\.com/view/[^"]+|/web-version[^"]*))"', re.I)
 # WordPress.com post emails (the VPO) wrap "Read on blog" in a click tracker
 # whose redirect_to is the public post URL itself.
@@ -167,7 +168,24 @@ NEWSLETTER_NOISE_RE = re.compile(
     r"^welcome to\b|confirm your|verify your|set (?:a new )?password|"
     r"subscription (?:confirmed|received)|you[’']?re on the list|"
     r"^you[’']?re in\b|you[’']?ve subscribed|complete your sign ?up|"
-    r"^sign in\b|here[’']?s your free gift|login details", re.I)
+    r"^sign in\b|here[’']?s your free gift|login details|"
+    r"\$\d+ offer|\b\d+% off\b|friends & family sale|template test", re.I)
+
+# The hidden preheader a sender writes for the inbox preview: the one line of
+# an edition the Wire shows, under its title (wire_common.clean_line decides
+# whether it may). Nothing else of the body ever leaves this function: the
+# body is the sender's, and pulse.json is public. A hidden block with no words
+# (a tracking pixel) is passed over for the next one; the first with words is
+# the preheader, whatever it says. It is no line when it is the post itself:
+# WordPress.com fills it with the post's opening, and other senders' tools can
+# too. A dek repeated in the body (Compass, Tangle) stands alone as its own
+# block; an opening runs on past it, or runs across blocks.
+HIDDEN_RE = re.compile(r'<(?:div|span|td|table|p)\b[^>]*style="[^"]*display:\s*none[^"]*"[^>]*>', re.I)
+HIDDEN_END_RE = re.compile(r'</(?:div|span|td|p)>', re.I)
+INVISIBLE_RE = re.compile("[\u00a0\u00ad\u034f\u200b-\u200f\u2060\ufeff]")
+BLOCK_RE = re.compile(r'</?(?:p|div|td|tr|table|h[1-6]|li|ul|ol|blockquote|br)\b[^>]*>', re.I)
+PREHEADER_WITHIN = 6000     # it sits at the top of the email; nothing further down counts
+OPENING_PROBE = 40          # this many characters found in the body means it repeats there
 
 # The Burlington subs ride along via their public per-tag streams (kept from
 # the chatter era) until they live in the local folder proper. Each entry:
@@ -323,6 +341,8 @@ SHORT_NAMES = {
     "load-in-through-the-back": "Load-In",
     "local-news-2310": "Vermont Public",
     "local-news-a7bd": "VPR Legacy",
+    "7days": "Seven Days",
+    "vtdigger-dd84": "VTDigger",
     "burlington-tasting-room": "Tasting Room",
     "money-stuff-1": "Money Stuff",
     "vermont-poltical-observer": "The VPO",
@@ -758,6 +778,9 @@ def parse_stream(raw):
                 item[field] = "" if is_opaque(media) else media
             if NEWSLETTER_NOISE_RE.search(item["title"]):
                 item["noise"] = True
+            line = "" if WPCOM_READ_RE.search(desc) else preheader(desc, item["title"])
+            if line:
+                item["line"] = line
         elif "reddit.com" in site or "ycombinator.com" in site:
             desc = node.findtext("description") or ""
             if "reddit.com" in site:
@@ -782,6 +805,27 @@ def parse_stream(raw):
     return items
 
 
+def preheader(body, title=""):
+    """An email body's preheader as a publishable line, or ""."""
+    head = body[:PREHEADER_WITHIN]
+    for match in HIDDEN_RE.finditer(head):
+        end = HIDDEN_END_RE.search(head, match.end())
+        words = strip_html(head[match.end():end.start() if end else None])
+        words = clean_space(INVISIBLE_RE.sub(" ", words))
+        if words:
+            return "" if is_opening(words, body[end.end() if end else match.end():]) \
+                else clean_line(words, title)
+    return ""
+
+
+def is_opening(words, rest):
+    """True when a preheader is the start of the post: its first words are in
+    the visible `rest` of the email, and not as a block of their own."""
+    blocks = [clean_space(INVISIBLE_RE.sub(" ", strip_html(part))) for part in BLOCK_RE.split(rest)]
+    blocks = [block for block in blocks if block]
+    return words not in blocks and words[:OPENING_PROBE] in " ".join(blocks)
+
+
 def strip_recipient(url, params=RECIPIENT_PARAMS):
     """A newsletter link without the params that identify its subscriber."""
     try:
@@ -793,6 +837,8 @@ def strip_recipient(url, params=RECIPIENT_PARAMS):
         return ""
     query = "&".join(pair for pair in parts.query.split("&")
                      if pair and pair.split("=", 1)[0].lower() not in params)
+    if parts.netloc == "open.substack.com":
+        query = ""   # r, token and action are his; the path alone opens the post
     return urllib.parse.urlunsplit(
         (parts.scheme, parts.netloc, parts.path, query, ""))
 
@@ -1120,6 +1166,8 @@ def merge_source(previous, incoming, now_ts, cap=ITEM_CAP):
                  "d": ts}
         if item.get("email") and not item.get("webcopy"):
             fresh["x"] = 1   # no public copy — the page renders it unlinked
+        elif item.get("line"):
+            fresh["l"] = item["line"]
         if item.get("audio"):
             fresh["a"] = item["audio"]
         if item.get("image"):
@@ -1143,10 +1191,19 @@ def merge_source(previous, incoming, now_ts, cap=ITEM_CAP):
             # that re-stamp pubDate on edits would otherwise yo-yo to the top.
             held["t"] = fresh["t"]
             held["d"] = min(held.get("d", ts), ts)
-            for field in ("a", "i", "o", "du", "dn"):
+            for field in ("a", "i", "o", "du", "dn", "l"):
                 if fresh.get(field) is not None:
                     held[field] = fresh[field]  # dn: comment counts move, keep newest
     reconcile_backfill(by_key)
+    # an edition that has found its public copy leaves its unlinked row behind
+    linked = {entry["t"] for entry in by_key.values() if not entry.get("x")}
+    for key in [key for key, entry in by_key.items() if entry.get("x") and entry["t"] in linked]:
+        del by_key[key]
+    # a line two editions share is the sender's tagline, not news of either
+    lines = Counter(entry["l"].lower() for entry in by_key.values() if entry.get("l"))
+    for entry in by_key.values():
+        if lines[entry.get("l", "").lower()] > 1:
+            del entry["l"]
     merged = sorted(by_key.values(), key=lambda entry: entry.get("d", 0),
                     reverse=True)
     # Only stories that SURVIVE the cap count as new: a deep podcast feed
@@ -1535,7 +1592,9 @@ def run(args):
         if section and not section_ok(section, item.get("u", "")):
             continue
         kept = {k: item[k] for k in ("t", "u", "d", "a", "i", "o", "du", "dn",
-                                     "r", "h", "hc", "x") if k in item}
+                                     "r", "h", "hc", "x", "l") if k in item}
+        if "l" in kept and not clean_line(kept["l"], kept.get("t")):
+            del kept["l"]   # the same goes for a stored line when the rule widens
         if item.get("s") in newsletter_ids and not item.get("x"):
             # and the subscriber-token scrub: a stored web copy that names
             # Stephen loses the params, or leaves the store if it still

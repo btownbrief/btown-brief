@@ -14,10 +14,12 @@ import scripts.town.build_feed as build_feed
 import scripts.town.geo as geo_module
 import scripts.town.redact as redact_module
 
-from .build_feed import _job_name, _meeting_day, _seen_key, city_tiles, food_tiles, reddit_tiles, sold_tiles, status, write_feed
+from .build_feed import (_job_name, _meeting_day, _seen_key, calendar_tiles, city_tiles, food_tiles, guard, league_rows, move_rows, news_tiles,
+                         photo_tiles, reddit_tiles, scene_posts, sold_tiles, status, street_place, tonight_tile, write_feed)
 from .common import ROOT
 from .geo import Geo, street_of
 from .redact import is_business, publish_permits, publish_sales
+from .signups import bikereg_rows, merge_races, race_rows, ultrasignup_rows
 from .title_guard import CONTACT, held
 
 
@@ -212,11 +214,25 @@ def main():
     # the ban shows only while the city's post stands, and only the closings list counts
     ban = {"sections": {"parking_ban": {"status": "ban_announcement_posted", "items": [{"headline": "Winter parking ban tonight", "source_url": "u"}]},
                         "closings": {"items": [{"name": "A School"}, {"name": "B School"}], "district_posts": [{"headline": "Message to families"}]}}}
-    assert status(ban) == {"ban": "Winter parking ban tonight", "ban_url": "u", "schools": 2}
+    assert status(ban) == {"ban": "Winter parking ban tonight", "ban_url": "u", "schools": 2, "outages": 0}
+    assert status(ban, 40)["outages"] == 40
     for word in ("lifted_or_cancelled_posted", "older_announcement_only", "none_posted_72h"):
         ban["sections"]["parking_ban"]["status"] = word
         assert status(ban)["ban"] is None and status(ban)["ban_url"] is None
-    assert status({}) == {"ban": None, "ban_url": None, "schools": 0}
+    assert status({}) == {"ban": None, "ban_url": None, "schools": 0, "outages": 0}
+
+    # only the towns around Burlington count, a handful is no news, and a dead feed reads as zero
+    real_get = build_feed.get_json
+    build_feed.get_json = lambda url, **kw: [{"code": "burlington", "totalCustomers": "30"}, {"code": "newbury", "totalCustomers": "900"}]
+    assert build_feed.outages() == 30
+    build_feed.get_json = lambda url, **kw: [{"code": "burlington", "totalCustomers": "24"}]
+    assert build_feed.outages() == 0
+    def down(url, **kw):
+        raise RuntimeError("GET failed")
+    build_feed.get_json = down
+    with contextlib.redirect_stdout(io.StringIO()):
+        assert build_feed.outages() == 0
+    build_feed.get_json = real_get
 
     # feed.json is left alone when only its stamp would change
     with tempfile.TemporaryDirectory() as tmp:
@@ -228,12 +244,13 @@ def main():
         assert json.load(open(build_feed.FEED_PATH))["generated"] == "three"
         # a skipped build still carries the ban: only status moves
         real_load, build_feed.load_json = build_feed.load_json, lambda path, default=None: real_load(path, default) if path == build_feed.FEED_PATH else default
+        real_out, build_feed.outages = build_feed.outages, lambda: 60
         out = io.StringIO()
         with contextlib.redirect_stdout(out):
             build_feed.build()
-        build_feed.load_json = real_load
+        build_feed.load_json, build_feed.outages = real_load, real_out
         kept = json.load(open(build_feed.FEED_PATH))
-        assert kept["tiles"] == [2] and kept["status"] == {"ban": None, "ban_url": None, "schools": 0}
+        assert kept["tiles"] == [2] and kept["status"] == {"ban": None, "ban_url": None, "schools": 0, "outages": 60}
         build_feed.FEED_PATH = real_path
 
     # one story, however many outlets ran it
@@ -303,7 +320,166 @@ def main():
     reddit = reddit_tiles(changes, cutoff, intake)
     assert [t["title"] for t in reddit] == ["Fort Club ok"] and reddit[0]["score"] == 42 and reddit[0]["comments"] == 6
     assert reddit_tiles(changes, cutoff, None) == []
+    feeds_new()
     print("build_feed: all checks passed")
+
+
+def feeds_new():
+    now = dt.datetime(2026, 10, 30, 18, 0, tzinfo=dt.timezone.utc)  # 2 pm in Burlington
+    today = dt.date(2026, 10, 30)
+
+    # Local news: a local place, no crime story however it is worded, one tile a story
+    def story(headline, ts="2026-10-29T12:00:00+00:00", **kw):
+        return {"category": "news", "ts": ts, "headline": headline, "sourceName": "Seven Days", "url": "https://example.com/" + str(hash(headline)), **kw}
+    news = news_tiles([
+        story("Burlington library adds Sunday hours"),
+        story("Burlington Library Adds Sunday Hours", ts="2026-10-29T15:00:00+00:00"),
+        story("Sunday hours added to national parks"),
+        story("Zephyr Tolliver pleads not guilty in Burlington case"),
+        story("Burlington police seek driver after crash"),
+        story("Sam Smith of Burlington wins a prize"),
+        story("Opinion: Burlington should add Sunday hours again"),
+        story("Mayor names new Burlington police chief"),
+        story("Old Burlington story", ts="2026-10-01T12:00:00+00:00"),
+    ], today)
+    assert [t["title"] for t in news] == ["Burlington library adds Sunday hours", "Mayor names new Burlington police chief"], news
+    assert news[0]["src"] == "Seven Days"
+    # a name held() has never heard of: the crime words alone stop these
+    crimes = ["Burlington man Xavier Dupuis shot outside bar", "Essex man Xavier Dupuis detained after standoff", "Winooski teen Xavier Dupuis kidnapped",
+              "Arson suspected in Burlington fire set by Xavier Dupuis", "Xavier Dupuis, of Burlington, held without bail", "Burlington DUI: Xavier Dupuis",
+              "UVM student Xavier Dupuis attacked on campus", "Xavier Dupuis trafficked heroin in Burlington, feds say", "Hit-and-run in Essex leaves Xavier Dupuis hurt",
+              "Shots fired in Winooski, Xavier Dupuis sought", "Xavier Dupuis of Colchester gets parole", "Burlington vandalism: Xavier Dupuis cited",
+              "Threats made at Essex school by Xavier Dupuis", "Xavier Dupuis of Shelburne in custody", "Burlington bookkeeper Xavier Dupuis ran a scam"]
+    assert news_tiles([story(c) for c in crimes], today) == [], news_tiles([story(c) for c in crimes], today)
+    assert len(news_tiles([story("Burlington stable reopens after a muggy summer"), story("Traffic changes coming to Winooski roundabout"),
+                           story("Shelburne methods class fills up")], today)) == 3, "a crime word's near neighbors stay"
+
+    # Pictures: fresh, by kind, capped by account, and never a post that names someone
+    stamp = int(now.timestamp())
+    def post(h, age=0.5, **kw):
+        return {"h": h, "ts": stamp - int(age * 86400), "i": "https://example.com/i.jpg", "u": f"https://www.instagram.com/p/{h}{int(age * 10)}/",
+                "c": "Sunset over the lake", "category": "scenic", "kind": "scenic", **kw}
+    shots = photo_tiles({"posts": [post("sun"), post("sun", 0.6), post("sun", 0.7), post("old", 3.5), post("flyer", kind="poster"), post("shop", category="shop"),
+                                   post("named", c="Meet Sarah Johnson at the pier"), post("win", c="GIVEAWAY time"), post("dog", category="pets", kind="pets")]}, now)
+    assert [t["title"] for t in shots] == ["@sun", "@dog", "@sun"], shots
+    assert shots[0]["id"] == "photo-sun5" and "c" not in shots[0] and set(shots[0]) == {"id", "kind", "ts", "title", "pic", "url"}
+    assert [p["h"] for p in scene_posts({"posts": [post("dadguild"), post("sun"), post("skirackvt", c="Jane Doe arrested")]}, now)] == ["dadguild"]
+    # a paid post is out of Pictures and Scene however the mark is written
+    for paid in ("[A D] @helloburlington", "[ad] fall trip", "Great spot #ad", "x [AD] y", "Sponsored by the lake"):
+        assert not photo_tiles({"posts": [post("sun", c=paid)]}, now) and not scene_posts({"posts": [post("dadguild", c=paid)]}, now), paid
+    assert photo_tiles({"posts": [post("sun", c="Road trip #adirondacks")]}, now), "a hashtag that starts with ad stays"
+    # a takedown reaches Body's Scene as well as Town's tiles
+    scene = [post("dadguild"), post("skirackvt")]
+    assert [p["h"] for p in scene_posts({"posts": scene}, now, {"dadguild5"})] == ["skirackvt"]
+
+    # Tonight: staff picks first, then the crowd; nothing recurring, in a series, unconfirmed or past
+    def event(title, start, **kw):
+        return {"id": title, "title": title, "start": start, "allDay": False, "status": "active", "recurring": None, "tags": [], "signals": {},
+                "venue": "The Hall", "url": "https://example.com", **kw}
+    tonight = [event("Early", "2026-10-30T12:00:00-04:00"), event("Crowd", "2026-10-30T19:00:00-04:00", signals={"meetup_going": 9}),
+               event("Pick", "2026-10-30T21:00:00-04:00", signals={"staff_pick": True}), event("Plain", "2026-10-30T18:00:00-04:00"),
+               event("Weekly", "2026-10-30T18:00:00-04:00", recurring="Fridays"), event("Series", "2026-10-30T18:00:00-04:00", tags=["series"]),
+               event("Maybe", "2026-10-30T18:00:00-04:00", status="unconfirmed"), event("Sam Smith arrested", "2026-10-30T18:00:00-04:00"),
+               event("At home", "2026-10-30T18:00:00-04:00", venue="12 Sample Road"), event("Campus", "2026-10-30T18:00:00-04:00", venue="IDX Student Life Center"),
+               event("Hidden", "2026-10-30T18:00:00-04:00"), event("Next day", "2026-10-31T10:00:00-04:00")]
+    tile = tonight_tile(tonight, today, now, {"Hidden"})
+    assert [r[1] for r in tile["rows"]] == ["Pick", "Crowd", "Plain", "Next day"], tile
+    assert tonight_tile([], today, now) is None
+    bare = tonight_tile([event("Quiet", "2026-10-30T19:00:00-04:00", venue="Ethan Allen Homestead")], today, now)
+    assert bare["rows"][0][2] is None, "a venue that trips the guard prints no venue"
+
+    # New on the calendar: one tile a day, counted by when each landed
+    fresh = [event(f"New {i}", "2026-11-02T19:00:00-04:00", firstSeen="2026-10-30T09:00:00-04:00") for i in range(6)]
+    cal = calendar_tiles(fresh + [event("Yesterday's", "2026-11-02T19:00:00-04:00", firstSeen="2026-10-29T09:00:00-04:00"),
+                                  event("Long ago", "2026-11-02T19:00:00-04:00", firstSeen="2026-10-20T09:00:00-04:00")], today, now)
+    assert sorted((t["id"], t["n"], len(t["rows"])) for t in cal) == [("calendar-2026-10-29", 1, 1), ("calendar-2026-10-30", 6, 4)], cal
+
+    # Guess the street: checked places at their checked points, decoys from one neighborhood, never the same photo, never a repeat in a lap
+    def place(i, hood="South End", **kw):
+        return {"id": f"p{i}", "name": f"Place {i}", "group": "Outdoors", "neighborhood": hood, "coords": [0, 0], **kw}
+    real_places = build_feed.STREET_PLACES
+    build_feed.STREET_PLACES = {**{f"p{i}": (44.4 + i / 100, -73.2) for i in (0, 1, 2, 3, 4, 10, 12, 13, 14)}, "p15": (44.4, -73.2)}
+    things = [place(i) for i in range(5)] + [place(9), place(10, closed=True), place(12, "Essex"), place(13, "Essex"), place(15)]
+    laps = [street_place(things, today + dt.timedelta(days=d)) for d in range(6)]
+    assert sorted(l[0]["id"] for l in laps[:6]) == ["p0", "p1", "p15", "p2", "p3", "p4"], [l[0]["id"] for l in laps]
+    for chosen, others in laps:
+        assert chosen not in others and len(others) == 2 and all(o["neighborhood"] == "South End" for o in others)
+        assert chosen["coords"] == build_feed.STREET_PLACES[chosen["id"]], "the checked point, never the pin in things.json"
+        assert {chosen["id"], others[0]["id"]} != {"p0", "p15"} and {chosen["id"], others[1]["id"]} != {"p0", "p15"}
+    assert street_place([place(1), place(2)], today) is None
+    build_feed.STREET_PLACES = real_places
+    # the real list: every id in things.json, open, no festival, and every place takes its turn
+    real = json.load(open(build_feed.THINGS_PATH, encoding="utf-8"))
+    listed = [p for p in real if p["id"] in real_places]
+    festivals = {"discover-jazz-festival", "vermont-brewers-festival", "grand-point-north", "south-end-art-hop", "south-end-get-down", "leddy-beach-bites", "champlain-valley-fair", "burlington-farmers-market"}
+    assert len(listed) == len(real_places) and not any(p.get("closed") for p in listed) and not festivals & set(real_places), sorted(set(real_places) - {p["id"] for p in listed})
+    assert {street_place(real, today + dt.timedelta(days=d))[0]["id"] for d in range(len(real_places))} == set(real_places), "a place with no two decoys never comes up"
+
+    # Moving: something to go and do, not a game to watch or a student's class
+    real_fetch, build_feed.fetch = build_feed.fetch, lambda lat, lon, m: "aerial.jpg"
+    moves = move_rows([event("Open Gym Basketball", "2026-10-30T19:00:00-04:00", category="sports", recurring="Weekly", tags=["series"], lat=44.5, lng=-73.2),
+                       event("Men's Hockey vs Maine", "2026-10-30T19:00:00-04:00", category="sports"),
+                       event("Soccer Intramurals", "2026-10-30T19:00:00-04:00", category="wellness"),
+                       event("Morning Yoga", "2026-10-30T19:00:00-04:00", category="wellness", venue="IDX Student Life Center"),
+                       event("Kids Yoga", "2026-10-30T19:00:00-04:00", category="wellness", tags=["kids"]),
+                       event("Book Club Walk", "2026-10-30T19:00:00-04:00", category="words"),
+                       event("Trail Run", "2026-11-20T19:00:00-04:00", category="outdoors"),
+                       event("Latin Dance Night", "2026-10-31T19:00:00-04:00", category="other"),
+                       event("Pick-up Basketball", "2026-10-31T19:00:00-04:00", category="theater", source="meetup"),
+                       event("Wednesday Walks", "2026-10-31T19:00:00-04:00", category="other", source="uvm"),
+                       event("Spooky Youth Fun Run", "2026-10-31T19:00:00-04:00", category="community"),
+                       event("Ski & Ride Sale", "2026-10-31T19:00:00-04:00", category="sports"),
+                       event("Bike Basics", "2026-10-31T19:00:00-04:00", category="learning"),
+                       event("Yoga at Home", "2026-10-31T19:00:00-04:00", category="wellness", venue="12 Maple Street", lat=44.5, lng=-73.2)], today, now)
+    build_feed.fetch = real_fetch
+    assert [m["title"] for m in moves] == ["Open Gym Basketball", "Latin Dance Night", "Pick-up Basketball", "Yoga at Home"] and moves[0]["img"] == "aerial.jpg", moves
+    assert moves[3]["where"] is None and "img" not in moves[3], "a street number stays out, and so does its picture"
+
+    # league nights: open for signups, inside a dated season, on this week's weekday
+    leagues = {"organizers": [{"name": "Game On", "sports": [
+        {"sport": "Broomball", "day": "Saturdays 7:30, 8:15 or 9pm", "season": "Oct 2 to Dec 4, then Jan 8 to Apr 2", "signup_open": True, "where": "Leddy Park, Burlington", "url": "u"},
+        {"sport": "Broomball", "day": "Saturdays 7:30pm", "season": "Oct 2 to Dec 4", "signup_open": True, "url": "u2"},
+        {"sport": "Hockey", "day": "Sundays or Thursdays 3 to 8pm", "season": "Nov 1 to Dec 20, no games Nov 1", "signup_open": True, "url": "u"},
+        {"sport": "Closed", "day": "Sundays 6pm", "season": "Oct 2 to Dec 4", "signup_open": False, "url": "u"},
+        {"sport": "Over", "day": "Sundays 6pm", "season": "Oct 2 to Dec 4", "signup_open": True, "signup_until": "2026-10-01", "url": "u"},
+        {"sport": "Undated", "day": "Sundays 6pm", "season": "Fall 2026 session", "signup_open": True, "url": "u"},
+        {"sport": "Winter", "day": "Sundays 6pm", "season": "Jan 8 to Apr 2", "signup_open": True, "url": "u"},
+        {"sport": "Clockless", "day": "Sundays", "season": "Oct 2 to Dec 4", "signup_open": True, "url": "u"}]}]}
+    nights = league_rows(leagues, today, now)
+    assert [(n["at"], n["title"], n["where"]) for n in nights] == [("2026-10-31T19:30:00-04:00", "Game On Broomball", "Leddy Park"),
+                                                                  ("2026-11-05T15:00:00-05:00", "Game On Hockey", None)], nights
+
+    # the last look: a takedown's id, and held() on every title the other guards don't read
+    tiles = [{"id": "news-a", "kind": "news", "title": "Fine"}, {"id": "news-b", "kind": "news", "title": "Fine too"},
+             {"id": "food-c", "kind": "food", "title": "Sam Smith opens a bar"}, {"id": "sold-d", "kind": "sold", "title": "12 Pine Street"}]
+    assert [t["id"] for t in guard(tiles, {"b"})] == ["news-a", "sold-d"]
+
+    # races: near Burlington, upcoming, public, and no street address
+    def race(name, town, day="11/26/2026", **kw):
+        return {"race": {"race_id": 1, "name": name, "next_date": day, "is_private_race": "F", "is_draft_race": "F", "url": "https://example.com",
+                         "address": {"street": "20 Gable Place", "city": town, "state": kw.pop("state", "VT")}, **kw}}
+    rows = race_rows({"races": [race("GMAA Trot", "Burlington"), race("Far Trot", "Boston", state="MA"), race("Albany Trot", "Albany", state="NY"), race("Paint and Sip", "Stowe"), race("Brattleboro Trot", "Brattleboro", day="11/27/2026"), race("Done", "Burlington", day="10/01/2026"),
+                                race("Late Trot", "Burlington", day="03/01/2027"),
+                                race("Sam Smith Arrested 5K", "Essex"), race("Secret", "Essex", is_private_race="T"), race("Youth Fun Run", "Essex"),
+                                race("Spelled", "St.Albans", day="11/01/2026"), race("Lake Run", "Lake Placid", day="11/02/2026", state="NY")]}, today)
+    assert [r["name"] for r in rows] == ["Spelled", "Lake Run", "GMAA Trot", "Brattleboro Trot"] and rows[2]["day"] == "2026-11-26", rows
+    assert rows[1]["town"] == "Lake Placid, NY" and rows[0]["town"] == "St.Albans", rows
+    assert set(rows[0]) == {"id", "name", "day", "town", "url"}, "no street"
+
+    # BikeReg and UltraSignup: the same fields, the same guards, and one row for a race on two lists
+    bike = bikereg_rows({"MatchingEvents": [{"EventId": 7, "EventName": "Unrouted", "EventDate": "/Date(1793505600000-0400)/", "EventCity": "Jericho", "EventState": "VT", "EventAddress": "20 Gable Place", "EventUrl": "https://b"},
+                                            {"EventId": 8, "EventName": "Gone CX - CANCELED", "EventDate": "/Date(1793505600000-0400)/", "EventCity": "Jericho", "EventState": "VT", "EventUrl": "https://b"},
+                                            {"EventId": 9, "EventName": "Far Ride", "EventDate": "/Date(1793505600000-0400)/", "EventCity": "Boston", "EventState": "MA", "EventUrl": "https://b"}]}, today)
+    assert [(r["id"], r["day"], r["town"]) for r in bike] == [("br-7", "2026-11-01", "Jericho")], bike
+    ultra = ultrasignup_rows([{"EventDateId": 1, "EventName": "RutFest", "EventDate": "11/21/2026", "City": "Williston", "State": "VT"},
+                              {"EventDateId": 2, "EventName": "Off", "EventDate": "11/21/2026", "City": "Williston", "State": "VT", "Cancelled": True},
+                              {"EventDateId": 3, "EventName": "Online", "EventDate": "11/21/2026", "City": "Williston", "State": "VT", "VirtualEvent": True}], today)
+    assert [r["url"] for r in ultra] == ["https://ultrasignup.com/register.aspx?did=1"], ultra
+    twin = {**rows[2], "id": "us-5", "name": "GMAA Trot 2026"}
+    both = merge_races([rows, [twin, {**twin, "town": "Essex", "name": "Other Trot"}], ultra])
+    assert [r["name"] for r in both] == ["Spelled", "Lake Run", "RutFest", "GMAA Trot", "Other Trot", "Brattleboro Trot"], both
+    # a takedown holds for a race too, and takes its twin on the other list with it
+    assert "GMAA Trot" not in [r["name"] for r in merge_races([rows, [twin]], {rows[2]["id"]})]
 
 
 if __name__ == "__main__":

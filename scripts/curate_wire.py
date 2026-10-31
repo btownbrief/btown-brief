@@ -159,6 +159,23 @@ WORLD_MIN_SCORE = 3        # national items the tagger scored lower never reach 
 # their own lane so the news never crowds them out (or they the news)
 SPORTS_MIN_SCORE = 2
 NEW_MAX_SPORTS = 30
+# The light lane (Stephen, 2026-10-30): the tagger scores soft features 1 to 3,
+# so WORLD_MIN_SCORE kept nearly every national culture and science story from
+# the editor. They reach it from a lower bar in their own lane, and when it
+# takes too few, the best of the rest are added.
+LIGHT_TOPICS = ("arts-culture", "music", "science", "food-drink", "media", "environment", "events")
+LIGHT_MIN_SCORE = 1
+NEW_MAX_SOFT = 30
+LIGHT_RIVER_WANT = 25      # national light stories a day before the top-up stops
+LIGHT_TOPUP_HOURLY = 3     # and at most this many an hour
+NATIONAL_POLITICS_RIVER_MAX = 35   # a day; past it they stay in Unfiltered. Picks are outside the cap
+# The picks' head: at most this many politics in the first n
+PICK_POLITICS = ("city-government", "state-politics", "national-politics")
+PICK_POLITICS_MAX = ((5, 2), (10, 3))
+# and one of these at slot 3 when the first five have none
+PICK_LIGHT = LIGHT_TOPICS + ("sports", "community", "weather")
+PICK_LIGHT_TOP = 5
+PICK_LIGHT_SLOT = 3
 # Stephen, later on 2026-10-19: "Sports: keep it light. Main feed shows only the
 # biggest moments (cap ~3-5/day); everything else lives behind sport chips + the
 # daily Sports recap."
@@ -197,7 +214,7 @@ LABELS = (("morning", "Morning", 0), ("midday", "Midday", 11),
           ("afternoon", "Afternoon", 14), ("evening", "Evening", 18))
 ITEM_KEYS = ("id", "ch", "local", "src", "name", "title", "url", "posted_at",
              "thumb", "media", "handle", "discuss", "site", "topic", "kind", "own",
-             "town", "comments", "sport")
+             "town", "comments", "sport", "line")
 REDDIT_INTAKE_URL = ("https://raw.githubusercontent.com/btownbrief/btown-brief/"
                      "reddit-data/data/reddit-intake.json")
 REDDIT_POST_ID_RE = re.compile(r"/comments/([a-z0-9]+)", re.I)
@@ -417,13 +434,15 @@ def annotate(item, comments=None):
 def apply_tags(items, tags, comments=None):
     """Fold the tagger's verdict into each item. Untagged items keep their
     mechanical channel and a default score; junk is removed. The mechanical
-    place rules run last, so they win over the tagger."""
+    place rules run last, so they win over the tagger. A newsletter edition is
+    never junked here: the tagger sees only its subject, and "Daybreak
+    Thursday" reads as noise. refresh_pulse's filter takes the sales emails."""
     out = []
     for item in items:
         tag = tags.get(item["id"])
         item = dict(item)
         if isinstance(tag, dict):
-            if tag.get("junk") not in (None, "none"):
+            if tag.get("junk") not in (None, "none") and item.get("ch") != "newsletters":
                 continue
             item["ch"] = tag.get("ch") or item["ch"]
             item["local"] = bool(tag.get("local", item["local"]))
@@ -506,13 +525,27 @@ def evict_stale_editions(day, since):
     return sorted(gone)
 
 
+def is_light(item):
+    """A national culture, science or food story: the light lane. A sports or
+    markets story stays in its own lane, under that lane's cap."""
+    return not item.get("local") and item.get("topic") in LIGHT_TOPICS \
+        and item.get("ch") in ("world", "x") and not lane_of(item)
+
+
+def is_national_politics(item):
+    """A national politics story under the daily cap. Editions and the Brief
+    are not: every one of them runs, and none uses up the cap."""
+    return not item.get("local") and item.get("topic") == "national-politics" \
+        and item.get("ch") != "newsletters" and not item.get("own")
+
+
 def select_new(pool, in_river, considered, reserved_ids, reserved_urls, editions_in=None):
     """The NEW list: eligible, not yet in the river, not passed on, not run
     before. Returns (new_items, auto_passed_ids). Newsletter editions skip
     the score bar and the caps: apply_answer adds every one of them, but
     only today's (sent inside `editions_in`, see edition_window). National
-    sports items have their own lane and a lower score bar."""
-    local, world, auto, editions, sports = [], [], [], [], []
+    sports and light items each have their own lane and a lower score bar."""
+    local, world, auto, editions, sports, soft = [], [], [], [], [], []
     for item in pool:
         if item["id"] in in_river or item["id"] in considered:
             continue
@@ -523,17 +556,19 @@ def select_new(pool, in_river, considered, reserved_ids, reserved_urls, editions
                 editions.append(item)
             continue
         national_sport = not item["local"] and item.get("sport") and item.get("ch") in ("world", "x")
-        bar = SPORTS_MIN_SCORE if national_sport else WORLD_MIN_SCORE
+        light = not national_sport and is_light(item)
+        bar = SPORTS_MIN_SCORE if national_sport else LIGHT_MIN_SCORE if light else WORLD_MIN_SCORE
         if not item["local"] and item["_score"] < bar:
             auto.append(item["id"])
             continue
-        (local if item["local"] else sports if national_sport else world).append(item)
+        (local if item["local"] else sports if national_sport else soft if light else world).append(item)
     rank = lambda item: (-item["_score"], -item["d"])  # noqa: E731
     local.sort(key=rank)
     world.sort(key=rank)
     sports.sort(key=rank)
+    soft.sort(key=rank)
     return (local[:NEW_MAX_LOCAL] + world[:NEW_MAX_WORLD] + sports[:NEW_MAX_SPORTS]
-            + editions), auto
+            + soft[:NEW_MAX_SOFT] + editions), auto
 
 
 def age_label(item, now_ts):
@@ -725,6 +760,46 @@ def order_update(items, lead_id=None, fresh=()):
     return lead + spread_river(new + held, lead)
 
 
+def is_pick_politics(pick):
+    return pick.get("topic") in PICK_POLITICS
+
+
+def lift_light(picks):
+    """Bring the best light story up to slot PICK_LIGHT_SLOT when the head of
+    the list has none. A thread stays below its own floor."""
+    if any(pick.get("topic") in PICK_LIGHT for pick in picks[:PICK_LIGHT_TOP]):
+        return list(picks)
+    at = next((k for k, pick in enumerate(picks) if k >= PICK_LIGHT_TOP
+               and pick.get("topic") in PICK_LIGHT and pick.get("ch") not in wc.THREAD_CHANNELS), None)
+    if at is None:
+        return list(picks)
+    out = list(picks)
+    out.insert(PICK_LIGHT_SLOT - 1, out.pop(at))
+    return out
+
+
+def seat_picks(picks):
+    """The ranking read top down, holding PICK_POLITICS_MAX. A politics story
+    past a limit waits for the first slot it fits; whatever fills in keeps
+    the outlet and thread rules when it can. Everything else keeps its order."""
+    out, rest = [], list(picks)
+
+    def fits(pick, outlet=True):
+        limit = next((cap for n, cap in PICK_POLITICS_MAX if len(out) < n), None)
+        if limit is not None and is_pick_politics(pick) and sum(map(is_pick_politics, out)) >= limit:
+            return False
+        if pick.get("ch") in wc.THREAD_CHANNELS and len(out) < wc.THREAD_TOP_RANK - 1:
+            return False
+        return not (outlet and out and out[-1]["src"] == pick["src"])
+
+    while rest:
+        at = next((k for k, pick in enumerate(rest) if fits(pick)), None)
+        if at is None:
+            at = next((k for k, pick in enumerate(rest) if fits(pick, outlet=False)), 0)
+        out.append(rest.pop(at))
+    return out
+
+
 def order_picks(picks):
     """The house rules on the editor's ranking, applied in order:
 
@@ -735,9 +810,13 @@ def order_picks(picks):
        local and national by importance stands (Stephen, 2026-10-17: the
        Everything view should mix both, the most important up top)
     2. never two from one outlet back to back
-    3. at most THREAD_PICKS_MAX threads, and none above THREAD_TOP_RANK"""
+    3. at most THREAD_PICKS_MAX threads, and none above THREAD_TOP_RANK
+    4. the head of the list is not all politics (Stephen, 2026-10-30): at most
+       PICK_POLITICS_MAX, and a light story at slot PICK_LIGHT_SLOT when the
+       first five have none. Local gets its own pass first, because the Local
+       view reads the local picks as a list of their own."""
     slots = [i for i, pick in enumerate(picks) if pick.get("local")]
-    local = sorted((picks[i] for i in slots), key=wc.pick_tier)
+    local = lift_light(seat_picks(sorted((picks[i] for i in slots), key=wc.pick_tier)))
     out = list(picks)
     for slot, pick in zip(slots, local):
         out[slot] = pick
@@ -754,7 +833,7 @@ def order_picks(picks):
         at = next(i for i, p in enumerate(out) if p is pick)
         rest.insert(min(max(at, floor), len(rest)), pick)
         floor += 1
-    return rest
+    return seat_picks(lift_light(rest))
 
 
 def retire_picks(old, earlier, new, previous_at=None):
@@ -957,10 +1036,19 @@ def apply_answer(day, answer, numbered_river, new, want_picks, et, now, previous
                 break
 
     picked = {index for index, _ in picks}
+    # National politics (Stephen, 2026-10-30) has a daily cap too, picks first:
+    # a pick always runs, so election night still leads, and the editor's
+    # adds, in its order, take what is left. The rest stay in Unfiltered.
+    politics_room = NATIONAL_POLITICS_RIVER_MAX - sum(map(is_national_politics, river(day))) \
+        - sum(1 for index in picked if index >= offset and is_national_politics(by_index[index]))
     kept = []
     for index in adds:
         item = by_index[index]
         lane = lane_of(item)
+        if index not in picked and is_national_politics(item):
+            if politics_room <= 0:
+                continue
+            politics_room -= 1
         if index in picked or not lane or not counted([item], lane):
             kept.append(index)
         elif room[lane] > 0:
@@ -979,6 +1067,15 @@ def apply_answer(day, answer, numbered_river, new, want_picks, et, now, previous
             to_shelf.append(index)
             listed += 1
     shelved = shelve(day, [by_index[index] for index in to_shelf])
+
+    # The light top-up: the editor's taste runs hard, so when the day is short
+    # of national light stories, the best it passed on this hour join anyway
+    light_short = LIGHT_RIVER_WANT - sum(map(is_light, river(day))) \
+        - sum(1 for index in adds if is_light(by_index[index]))
+    spare = [index for index in range(offset, total)
+             if is_light(by_index[index]) and index not in adds and index not in to_shelf]
+    spare.sort(key=lambda index: (-by_index[index].get("_score", 0), -by_index[index].get("d", 0)))
+    adds += spare[:max(0, min(LIGHT_TOPUP_HOURLY, light_short))]
 
     # the current update: create it if this is the period's first run
     updates = day.setdefault("updates", [])

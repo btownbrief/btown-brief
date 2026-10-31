@@ -72,6 +72,11 @@ PULSE = {
              "from": "@wcax", "name": "WCAX Channel 3", "summary": "I-89 closed at exit 14.",
              "kind": "post", "ch": "x", "local": True}]},
         "facebook": {"paused": True, "reason": "no WIRE_INBOX_TOKEN secret", "items": []},
+        "voices": {"paused": False, "items": [
+            {"u": "https://x.com/TerribleMaps/status/9", "d": NOW_TS - 200, "fd": NOW_TS - 100,
+             "from": "@TerribleMaps", "name": "Terrible Maps", "summary": "Every state is Ohio.",
+             "kind": "post", "ch": "voices", "local": False,
+             "media": "https://pbs.twimg.com/media/A?format=jpg&name=small"}]},
     },
 }
 
@@ -128,6 +133,10 @@ class WireItemsTests(unittest.TestCase):
         self.assertEqual(post["handle"], "@wcax")
         self.assertEqual(post["name"], "WCAX Channel 3")
         self.assertEqual(post["site"], "https://x.com/wcax")
+
+    def test_voices_stay_out_of_the_wire(self):
+        self.assertNotIn("Every state is Ohio.", self.by_title)
+        self.assertFalse([item for item in self.items if "TerribleMaps" in item["url"]])
 
     def test_media_and_thumbs(self):
         self.assertEqual(self.by_title["Council votes 9 to 3"]["thumb"], "https://img/a.jpg")

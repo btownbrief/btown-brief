@@ -127,7 +127,9 @@ def load_store(data_dir):
 
 def river_titles(data_dir, rebuilding=False):
     """[(id, title)] of today's river, for judging duplicates. Empty when
-    today is being rebuilt: the old river is about to be thrown away."""
+    today is being rebuilt: the old river is about to be thrown away. A
+    newsletter edition is left out: its subject is the sender's lead story,
+    and an outlet's own article must not read as a duplicate of its email."""
     if rebuilding:
         return []
     today = wc.load_json(os.path.join(data_dir, "wire-today.json"), {})
@@ -136,7 +138,7 @@ def river_titles(data_dir, rebuilding=False):
     titles = []
     for update in today.get("updates") or []:
         for item in update.get("items") or []:
-            if item.get("title"):
+            if item.get("title") and item.get("ch") != "newsletters":
                 titles.append((item.get("id"), item["title"]))
     return titles[:RIVER_TITLES]
 

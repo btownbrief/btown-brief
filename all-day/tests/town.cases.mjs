@@ -13,18 +13,22 @@
 //   - the demo's states: a ban headline, a closing, report cards with a
 //     status chip, watch parties that open People's Plans
 //   - Now: the feed, Guess the price, the filters, and no house number on a home
+//   - Now's live top, Tonight, Pictures, Local news and Guess the street
 //   - New here's ticks stay on the phone, and not in the demo
 //   - screenshots of every tab at 390 and 1280, light and dark
 
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 
-const TABS = ['feed', 'alerts', 'cityhall', 'streets', 'guides', 'work'];
+const TABS = ['feed', 'alerts', 'cityhall', 'streets', 'square', 'guides', 'work'];
 const COMBOS = [
   { viewport: { width: 390, height: 844 }, scheme: 'light' }, { viewport: { width: 390, height: 844 }, scheme: 'dark' },
   { viewport: { width: 1280, height: 800 }, scheme: 'light' }, { viewport: { width: 1280, height: 800 }, scheme: 'dark' },
 ];
 const ymd = new Intl.DateTimeFormat('en-CA', { timeZone: 'America/New_York', year: 'numeric', month: '2-digit', day: '2-digit' });
+/* a 1x1 picture, and one wide enough to pass for the camera's frame */
+const DOT = Buffer.from('R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7', 'base64');
+const DOT_WIDE = Buffer.from('R0lGODlhQAEBAIAAAAAAAP///yH5BAEAAAAALAAAAABAAQEAAAIDhI8FADs=', 'base64');
 
 export async function townCases(h) {
   const { browser, base, group, check, newPage, settle, goTab, pageRules, SHOTS, REPO } = h;
@@ -40,8 +44,10 @@ export async function townCases(h) {
     const f = await json('all-day/data/demo/town-feed.json');
     const iso = (h) => new Date(Date.now() - h * 3600000).toISOString();
     const day = (n) => ymd.format(new Date(Date.now() + n * 864e5));
-    const stub = { status: f.status, median: f.median, tiles: f.tiles.map((t) => ({ ...t, ts: iso(t.ageHours), day: t.kind === 'city' || t.kind === 'signup' ? day(3) : t.day,
-      closed: t.kind === 'sold' ? day(-12) : t.closed, rows: t.kind === 'cityweek' ? t.rows.map((r, n) => [day(n + 1), r[1], r[2]]) : t.rows })) };
+    const stub = { status: { ban: null, ban_url: null, schools: 0, outages: 0 }, median: f.median,
+      tonight: { id: 'tonight-x', kind: 'tonight', day: day(0), rows: f.tonight.rows.map((r) => [iso(-r[0]), ...r.slice(1)]) },
+      tiles: f.tiles.map((t) => ({ ...t, ts: iso(t.ageHours), day: t.kind === 'city' || t.kind === 'signup' ? day(3) : t.day,
+        closed: t.kind === 'sold' ? day(-12) : t.closed, rows: t.kind === 'cityweek' ? t.rows.map((r, n) => [day(n + 1), r[1], r[2]]) : t.kind === 'calendar' ? t.rows.map((r) => [iso(-r[0]), ...r.slice(1)]) : t.rows })) };
     const { ctx, page, errors } = await newPage(browser, base);
     await page.route(/data\/town\/feed\.json/, (r) => r.fulfill({ json: stub }));
     await page.route(/maps\.vcgi\.vermont\.gov/, (r) => r.abort());
@@ -49,14 +55,14 @@ export async function townCases(h) {
     await settle(page);
     await page.waitForSelector('.tf-wrap');
     const first = await page.evaluate(() => ({ tab: document.querySelector('#tabbar button[aria-selected="true"]').dataset.tab,
-      hero: document.querySelector('.tf-hero').innerText, kids: [...document.querySelector('.tf-wrap').children].slice(0, 3).map((n) => n.className),
-      tag: document.querySelector('.tf-wrap > .tf .tf-tag').textContent }));
+      hero: document.querySelector('.tf-hero').innerText, kids: [...document.querySelector('.tf-wrap').children].slice(0, 4).map((n) => n.className),
+      alarms: document.querySelectorAll('.tf-hero .tf-chip.on').length, tag: document.querySelector('.tf-wrap > .tf .tf-tag').textContent }));
     check(first.tab === 'feed', 'Town opens on Now', first.tab);
-    check(/\d+ new/.test(first.hero) && !/since you checked/.test(first.hero) && /No ban posted/.test(first.hero) && /No school closings or delays/.test(first.hero), 'the hero on a first open: the count, and the two answers', first.hero);
-    check(/tf-hero/.test(first.kids[0]) && /tf-sold/.test(first.kids[1]) && first.tag === 'Guess the price', 'the day’s house comes straight after the hero', JSON.stringify(first));
+    check(/\d+ new/.test(first.hero) && !/since you checked/.test(first.hero) && !/No ban|No school/.test(first.hero) && first.alarms === 0, 'the hero on a first open: the count, and no chip for a clear day', first.hero);
+    check(/tf-hero/.test(first.kids[0]) && /tf-tonight/.test(first.kids[1]) && /tf-sold/.test(first.kids[2]) && first.tag === 'Guess the price', 'Tonight, then the day’s house, straight after the hero', JSON.stringify(first));
     const kinds = await page.$$eval('.tf-wrap > .tf', (n) => n.map((x) => x.dataset.id));
-    check(kinds.length === f.tiles.length && new Set(kinds).size === kinds.length, 'every tile once', JSON.stringify(kinds));
-    const TOP = '.tf-wrap > article.tf:first-of-type';
+    check(kinds.length === f.tiles.length + 1 && new Set(kinds).size === kinds.length, 'every tile once', JSON.stringify(kinds));
+    const TOP = '.tf-wrap > article.tf:nth-of-type(2)';
     const opts = () => page.$$eval(TOP + ' .tf-opt', (b) => b.map((x) => Number(x.dataset.pick)));
     const o = await opts();
     check(o.length === 3 && o.every((v, i) => !i || v > o[i - 1]), 'three prices, low to high', JSON.stringify(o));
@@ -96,6 +102,172 @@ export async function townCases(h) {
     await ctx.close();
   });
 
+  /* a page on a stub feed: the street, the weather and the camera as each case says */
+  const nowDay = (n = 0) => ymd.format(new Date(Date.now() + n * 864e5));
+  const inHours = (h) => new Date(Date.now() + h * 3600000).toISOString();
+  const WEATHER = () => ({ now: { temp_f: 47.4, observed_at: inHours(-1) }, lake_gage: { water_temp_f: 53, water_temp_at: inHours(-2) }, sun: { sunrise: inHours(-5), sunset: inHours(2), sunrise_tomorrow: inHours(16), sunset_tomorrow: inHours(26) } });
+  const tile = (id, kind, more) => ({ id, kind, ts: inHours(-1), title: id, url: 'https://example.com/' + id, ...more });
+  const sale = (id) => tile(id, 'sold', { title: 'House on Sample Street', price: 400000, closed: nowDay(-9), url: null });
+  async function feedPage(feed, { weather, cam, query = '' } = {}) {
+    const p = await newPage(browser, base);
+    await p.page.route(/data\/town\/feed\.json/, (r) => r.fulfill({ json: { status: {}, tiles: [], ...feed } }));
+    await p.page.route(/data\/weather\/latest\.json/, (r) => (weather ? r.fulfill({ json: weather }) : r.fulfill({ status: 404, body: 'no' })));
+    await p.page.route(/i\.ytimg\.com/, cam || ((r) => r.fulfill({ status: 404, body: 'no' })));
+    await p.page.route(/data\/town\/aerials\//, (r) => r.fulfill({ contentType: 'image/gif', body: DOT }));
+    await p.page.route(/\/pics\/ok/, (r) => r.fulfill({ contentType: 'image/gif', body: DOT }));
+    await p.page.route(/\/pics\/dead/, (r) => r.fulfill({ status: 403, body: 'no' }));
+    await p.page.goto(base + '/town/' + query);
+    await settle(p.page);
+    await p.page.waitForSelector('.tf-wrap');
+    await p.page.waitForTimeout(300);
+    return p;
+  }
+  const hero = (page) => page.evaluate(() => ({ chips: [...document.querySelectorAll('.tf-hero .tf-chip:not([hidden])')].map((c) => c.textContent), cams: document.querySelectorAll('.tf-cam').length,
+    camOn: !!document.querySelector('.tf-cam.on'), aerial: document.querySelectorAll('.tf-hero img[src*="town-hero"]').length, text: document.querySelector('.tf-hero').innerText }));
+
+  await group('town: the live top, the camera over the aerial and only what’s on', async () => {
+    const quiet = await feedPage({ tiles: [tile('a', 'food')], status: { ban: null, schools: 0, outages: 0 } }, { weather: WEATHER(), cam: (r) => r.fulfill({ contentType: 'image/gif', body: DOT_WIDE }) });
+    const a = await hero(quiet.page);
+    check(/^47°$/.test(a.chips[0]) && a.chips[1] === 'Lake 53°' && /^Sunset \d+:\d\d$/.test(a.chips[2]) && a.chips.length === 3, 'a clear day: the weather and nothing else', a.chips.join(' | '));
+    check(a.camOn && a.aerial === 1, 'the camera sits over the aerial', JSON.stringify(a));
+    check(/sddefault_live\.jpg\?t=\d+$/.test(await quiet.page.$eval('.tf-cam', (n) => n.src)), 'the picture’s address turns over with the clock', '');
+    await quiet.ctx.close();
+    const on = await feedPage({ tiles: [tile('a', 'food')], status: { ban: 'Winter parking ban tonight', schools: 2, outages: 130 } }, { weather: WEATHER() });
+    const b = await hero(on.page);
+    check(JSON.stringify(b.chips.slice(0, 3)) === JSON.stringify(['Winter parking ban tonight', '2 school closings or delays', '130 without power']), 'what’s on comes first', b.chips.join(' | '));
+    check(b.cams === 0 && b.aerial === 1, 'a dead camera leaves the aerial', JSON.stringify(b));
+    await on.ctx.close();
+    const blank = await feedPage({ tiles: [tile('a', 'food')] }, { weather: WEATHER(), cam: (r) => r.fulfill({ contentType: 'image/gif', body: DOT }) });
+    check((await hero(blank.page)).cams === 0, 'YouTube’s little blank picture counts as dead', '');
+    await blank.ctx.close();
+    const dark = await feedPage({ tiles: [tile('a', 'food')] }, {});
+    const c = await hero(dark.page);
+    check(!c.chips.length && /Nothing new|new/.test(c.text) && c.aerial === 1, 'no weather file: no chips, and the hero stands', JSON.stringify(c));
+    await dark.ctx.close();
+    const stale = await feedPage({ tiles: [tile('a', 'food')] }, { weather: { ...WEATHER(), now: { temp_f: 47, observed_at: inHours(-9) }, lake_gage: { water_temp_f: 53, water_temp_at: inHours(-30) } } });
+    check((await hero(stale.page)).chips.length === 1, 'a stale reading and a stale lake leave out', JSON.stringify(await hero(stale.page)));
+    await stale.ctx.close();
+    const night = WEATHER();
+    night.sun = { sunrise: inHours(-20), sunset: inHours(-3), sunrise_tomorrow: inHours(8), sunset_tomorrow: inHours(18) };
+    const late = await feedPage({ tiles: [tile('a', 'food')] }, { weather: night });
+    check((await hero(late.page)).chips.some((x) => /^Sunrise \d/.test(x)), 'after sunset, the next sunrise', (await hero(late.page)).chips.join(' | '));
+    await late.ctx.close();
+  });
+
+  await group('town: Tonight drops what has started, and hands over to tomorrow', async () => {
+    const row = (h, name) => [inHours(h), name, 'The Hall', 'https://example.com/' + name];
+    /* all still tonight, whatever hour the test runs: fractions of what's left of the day */
+    const clock = new Date(new Date().toLocaleString('en-US', { timeZone: 'America/New_York' }));
+    const left = 24 - clock.getHours() - clock.getMinutes() / 60;
+    const six = [row(left * 0.1, 'One'), row(left * 0.2, 'Two'), row(left * 0.3, 'Three'), row(left * 0.4, 'Four'), row(left * 0.5, 'Five'), row(left + 12, 'Later')];
+    /* the build ranks; the tile keeps its top four and puts them in time order */
+    const a = await feedPage({ tiles: [tile('a', 'food')], tonight: { id: 'tonight-x', kind: 'tonight', day: nowDay(), rows: [six[4], six[0], six[1], six[3], six[2], six[5]] } }, {});
+    const names = () => a.page.$$eval('.tf-tonight .n', (n) => n.map((x) => x.firstChild.textContent));
+    check(JSON.stringify(await names()) === '["One","Two","Four","Five"]', 'four rows, the build’s best, in time order', (await names()).join());
+    check(!!(await a.page.$('.tf-tonight [data-act="share"]')) && !!(await a.page.$('.tf-tonight [data-act="save"]')), 'share and star', '');
+    await a.ctx.close();
+    const past = [row(-2, 'Gone'), row(1, 'Left')];
+    const b = await feedPage({ tiles: [tile('a', 'food')], tonight: { id: 'tonight-x', kind: 'tonight', day: nowDay(), rows: past } }, {});
+    check(JSON.stringify(await b.page.$$eval('.tf-tonight .n', (n) => n.map((x) => x.firstChild.textContent))) === '["Left"]', 'a row that has started leaves', '');
+    await b.ctx.close();
+    const d = nowDay(1);
+    const noon = new Date(new Date(d + 'T12:00:00Z').getTime() + 4 * 3600000).toISOString();
+    const c = await feedPage({ tiles: [tile('a', 'food')], tonight: { id: 'tonight-x', kind: 'tonight', day: nowDay(), rows: [row(-1, 'Gone'), [noon, 'Next', 'The Hall', 'https://example.com/n']] } }, {});
+    check((await c.page.$eval('.tf-tonight .tf-title', (n) => n.textContent)) === 'Tomorrow', 'all started: tomorrow takes over', '');
+    await c.ctx.close();
+    const e = await feedPage({ tiles: [tile('a', 'food')], tonight: { id: 'tonight-x', kind: 'tonight', day: nowDay(-1), rows: [row(-30, 'Old')] } }, {});
+    check(!(await e.page.$('.tf-tonight')), 'nothing left: no tile, no empty box', '');
+    check(!!(await e.page.$('.tf-food')), 'and the feed draws', '');
+    await e.ctx.close();
+  });
+
+  await group('town: Pictures and News are lanes, and a dead picture takes its whole tile', async () => {
+    const { ctx, page, errors } = await feedPage({ tiles: [tile('photo-ok', 'photo', { title: '@sample', pic: base + '/pics/ok.jpg' }), tile('photo-dead', 'photo', { title: '@gone', pic: base + '/pics/dead.jpg' }),
+      tile('news-a', 'news', { title: 'A Burlington story', src: 'Seven Days' }), tile('food-a', 'food')] }, {});
+    await page.waitForSelector('.tf-photo .tf-pic.on');
+    const ids = await page.$$eval('.tf-wrap > .tf', (n) => n.map((x) => x.dataset.id));
+    check(ids.includes('photo-ok') && !ids.includes('photo-dead'), 'the tile whose picture fails is gone', ids.join());
+    check((await page.$eval('[data-id="news-a"] .tf-tag', (n) => n.textContent)) === 'Seven Days', 'a story wears its outlet', '');
+    check(/@sample/.test(await page.$eval('[data-id="photo-ok"]', (n) => n.innerText)) && !!(await page.$('[data-id="photo-ok"] [data-act="save"]')), 'a picture has its account, a star and a share', '');
+    await page.click('#subnav .secpill .chip:has-text("Pictures")');
+    await page.waitForTimeout(250);
+    const lane = await page.$$eval('.tf-wrap > *', (n) => n.map((x) => x.className));
+    check(lane.length === 1 && /tf-photo/.test(lane[0]), 'the Pictures lane holds pictures, and the dead one stays gone', lane.join(' | '));
+    await page.click('#subnav .secpill .chip:has-text("News")');
+    await page.waitForTimeout(250);
+    check((await page.$$('.tf-wrap > .tf-news')).length === 1 && !(await page.$('.tf-hero')), 'the News lane', '');
+    check(!errors.filter((e) => !/Failed to load resource/.test(e)).length, 'no console errors', errors.join(' | ').slice(0, 200));
+    await ctx.close();
+  });
+
+  await group('town: Guess the street fills the slot when the houses run out', async () => {
+    const street = (more) => ({ id: 'street-' + nowDay(), kind: 'street', day: nowDay(), img: 'x.jpg', answer: 'Oakledge Park', options: ['Oakledge Park', 'Red Rocks Park', 'Sample Beach'], ...more });
+    const a = await feedPage({ tiles: [sale('sold-1'), tile('food-1', 'food')], street: street() }, {});
+    check(!!(await a.page.$('[data-id="sold-1"] .tf-opt')) && !(await a.page.$('.tf-street')), 'an unguessed house still comes first', '');
+    await a.ctx.close();
+    const b = await feedPage({ tiles: [tile('food-1', 'food')], street: street() }, {});
+    const face = await b.page.evaluate(() => ({ tag: document.querySelector('.tf-street .tf-tag').textContent, opts: [...document.querySelectorAll('.tf-street .tf-opt')].map((x) => x.textContent),
+      pic: document.querySelector('.tf-street .tf-pic').getAttribute('src'), order: [...document.querySelector('.tf-wrap').children].map((n) => n.className).slice(0, 2), text: document.querySelector('.tf-street').innerText }));
+    check(face.tag === 'Guess the street' && face.opts.length === 3 && /aerials\/x\.jpg$/.test(face.pic) && /tf-street/.test(face.order[1]), 'its tag, three names, the aerial, straight under the hero', JSON.stringify(face));
+    check(!!(await b.page.$('.tf-street [data-act="share"]')) && !!(await b.page.$('.tf-street [data-act="save"]')), 'share and star', '');
+    await b.page.click('.tf-street .tf-opt[data-place="Red Rocks Park"]');
+    await b.page.waitForTimeout(150);
+    const miss = await b.page.evaluate(() => ({ text: document.querySelector('.tf-street .tf-guess').innerText, cls: document.querySelector('.tf-street .tf-result').className, run: localStorage.getItem('town-feed-run') }));
+    check(/Oakledge Park/.test(miss.text) && /Not this one/.test(miss.text) && /miss/.test(miss.cls) && miss.run === '0', 'a wrong name shows the place and ends the run', JSON.stringify(miss));
+    await b.page.reload();
+    await settle(b.page);
+    await b.page.waitForSelector('.tf-street');
+    await b.page.waitForTimeout(200);
+    check(!(await b.page.$('.tf-street .tf-opt')) && /Oakledge Park/.test(await b.page.$eval('.tf-street .tf-guess', (n) => n.innerText)), 'guessed stays guessed', '');
+    await b.page.evaluate(() => { localStorage.removeItem('town-feed-guess'); localStorage.setItem('town-feed-run', '1'); });
+    await b.page.reload();
+    await settle(b.page);
+    await b.page.waitForSelector('.tf-street .tf-opt');
+    await b.page.click('.tf-street .tf-opt[data-place="Oakledge Park"]');
+    await b.page.waitForTimeout(150);
+    const hit = await b.page.evaluate(() => ({ said: document.querySelector('.tf-street .tf-said').textContent, chip: document.querySelector('.tf-chip.run').textContent, shown: !document.querySelector('.tf-chip.run').hidden }));
+    check(hit.said === '2 in a row' && hit.shown && hit.chip === '2 in a row', 'a right name counts on the same run', JSON.stringify(hit));
+    await b.ctx.close();
+    const c = await feedPage({ tiles: [tile('food-1', 'food')], street: street({ day: nowDay(-1) }) }, {});
+    check(!(await c.page.$('.tf-street')), 'yesterday’s file has no street for today', '');
+    await c.ctx.close();
+    const d = await newPage(browser, base);
+    await d.page.route(/data\/town\/feed\.json/, (r) => r.fulfill({ json: { status: {}, street: street(), tiles: [tile('food-1', 'food')] } }));
+    await d.page.route(/data\/town\/aerials\//, (r) => r.fulfill({ status: 404, body: 'no' }));
+    await d.page.goto(base + '/town/');
+    await settle(d.page);
+    await d.page.waitForSelector('.tf-food');
+    await d.page.waitForTimeout(400);
+    check(!(await d.page.$('.tf-street')), 'no aerial, no game', '');
+    await d.ctx.close();
+    const f = await json('all-day/data/demo/town-feed.json');
+    const demo = await newPage(browser, base);
+    await demo.page.route(/data\/demo\/town-feed\.json/, (r) => r.fulfill({ json: { ...f, tiles: f.tiles.filter((t) => t.kind !== 'sold') } }));
+    await demo.page.goto(base + '/town/?demo=1');
+    await settle(demo.page);
+    await demo.page.waitForSelector('.tf-street');
+    check(!!(await demo.page.$('.tf-street .ph')) && (await demo.page.$$('.tf-street .tf-opt')).length === 3, 'the demo paints its street', '');
+    await demo.page.click('.tf-street .tf-opt[data-place="' + f.street.answer + '"]');
+    await demo.page.waitForTimeout(150);
+    check(/You got it/.test(await demo.page.$eval('.tf-street .tf-guess', (n) => n.innerText)), 'and it plays', '');
+    await demo.ctx.close();
+  });
+
+  await group('town: the new files print no home and no public-record name', async () => {
+    const feed = await json('data/town/feed.json');
+    const moves = await json('data/town/moves.json');
+    const { races } = await json('data/town/races.json');
+    const HOUSE = /\b\d+[a-z]?\s+(?:[A-Z][a-z.]+\s+){1,3}(?:St|Street|Ave|Avenue|Rd|Road|Dr|Drive|Ln|Lane|Ct|Court|Pl|Place)\b/;
+    const texts = [...(feed.tonight ? feed.tonight.rows.flatMap((r) => [r[1], r[2]]) : []), ...feed.tiles.filter((t) => ['news', 'photo', 'calendar'].includes(t.kind)).flatMap((t) => [t.title, ...(t.rows || []).flatMap((r) => [r[1], r[2]])]),
+      ...moves.events.flatMap((m) => [m.title, m.where]), ...races.map((r) => r.name)].filter(Boolean);
+    const bad = texts.filter((x) => HOUSE.test(x));
+    check(texts.length > 0 && !bad.length, 'no street address in any new tile', bad.slice(0, 3).join(' | '));
+    check(feed.tiles.filter((t) => t.kind === 'news').every((t) => !/police|arrest|charged|court|suspect/i.test(t.title.replace(/police chief/i, ''))), 'no crime story in Local news', '');
+    check(!feed.tiles.some((t) => t.c !== undefined) && !JSON.stringify(moves.scene).includes('"c"'), 'no Instagram caption goes out', '');
+    check(races.every((r) => r.street === undefined && r.address === undefined), 'a race keeps only its town', '');
+    if (feed.street) check(feed.street.options.includes(feed.street.answer) && feed.street.options.length === 3 && !feed.street.options.some((x) => /^\d/.test(x)), 'Guess the street: named places only', feed.street.options.join());
+  });
+
   await group('town: Now, new marks, caught up, the filters', async () => {
     const { ctx, page, errors } = await newPage(browser, base);
     const out = [];
@@ -105,11 +277,18 @@ export async function townCases(h) {
     await page.waitForSelector('.tf-wrap');
     const order = await page.$$eval('.tf-wrap > *', (n) => n.map((x) => (x.classList.contains('tf-caught') ? 'caught' : x.classList.contains('tf-hero') ? 'hero' : x.querySelector('.tf-new') ? 'new' : 'old')));
     const at = order.indexOf('caught');
-    check(at > 0 && !order.slice(at + 1).includes('new') && order.slice(2, at).every((x) => x === 'new'), 'New tiles first, then “You’re caught up”, then the rest', order.join());
-    const hot = await page.$$eval('.tf-wrap > .tf', (n) => n.slice(0, 2).map((x) => x.querySelector('.tf-tag').textContent));
+    check(at > 0 && !order.slice(at + 1).includes('new') && order.slice(3, at).every((x) => x === 'new'), 'New tiles first, then “You’re caught up”, then the rest', order.join());
+    const hot = await page.$$eval('.tf-wrap > .tf', (n) => n.slice(1, 3).map((x) => x.querySelector('.tf-tag').textContent));
     check(hot[1] === 'Most talked about', 'the busiest thread sits under the day’s house', hot.join());
     const pills = await page.$$eval('#subnav .secpill .chip', (c) => c.map((x) => x.textContent.trim()));
-    check(pills[0] === 'Latest' && pills.includes('Homes') && pills.includes('Jobs'), 'the pill: Latest first, then the kinds', pills.join());
+    check(pills[0] === 'Latest' && pills.includes('Homes') && pills.includes('Jobs') && pills.includes('Pictures') && pills.includes('News'), 'the pill: Latest first, then the kinds', pills.join());
+    const top = await page.evaluate(() => ({ chips: [...document.querySelectorAll('.tf-hero .tf-chip:not([hidden])')].map((c) => c.textContent), cam: document.querySelectorAll('.tf-cam').length,
+      night: [...document.querySelectorAll('.tf-tonight .tf-rows .n')].length, title: document.querySelector('.tf-tonight .tf-title').textContent, rollup: document.querySelector('.tf-calendar .tf-count').innerText,
+      photo: !!document.querySelector('.tf-photo .ph'), news: document.querySelector('.tf-news .tf-tag').textContent }));
+    check(JSON.stringify(top.chips.slice(0, 3)) === JSON.stringify(['Pretend parking ban tonight', '1 school closing or delay', '40 without power']) && top.chips.includes('54°') && top.chips.includes('Lake 51°') && top.chips.some((c) => /^Sunset \d/.test(c)), 'the demo’s top: a ban, a closing, an outage, the weather', top.chips.join(' | '));
+    check(!top.cam, 'the demo makes no call to the camera', '');
+    check(top.night >= 3 && top.title === 'Tonight', 'the demo’s Tonight has its rows', JSON.stringify(top));
+    check(/12\s+new on the calendar/.test(top.rollup) && top.photo && top.news === 'Demo Daily', 'the demo has a rollup, a painted picture and a news tile', JSON.stringify(top));
     await page.click('#subnav .secpill .chip[data-chip="homes"], #subnav .secpill .chip:has-text("Homes")');
     await page.waitForTimeout(250);
     const homes = await page.$$eval('.tf-wrap > *', (n) => n.map((x) => x.className));
@@ -240,7 +419,7 @@ export async function townCases(h) {
     const homes = f.tiles.filter((t) => t.kind === 'sold' && /^(House|Condo|Multi-family|Mobile home) on /.test(t.title));
     check(homes.length > 0 && homes.every((t) => !/\d/.test(t.title)), 'a home is shown by street, never by number', homes.map((t) => t.title).slice(0, 4).join(' | '));
     check(f.tiles.every((t) => t.lat === undefined && t.lon === undefined), 'the feed carries no map points', '');
-    const allowed = new Set(['id', 'kind', 'ts', 'title', 'price', 'assessed', 'closed', 'img', 'url', 'where', 'what', 'cost', 'n', 'bars', 'rows', 'day', 'agenda', 'org', 'score', 'comments', 'sub']);
+    const allowed = new Set(['id', 'kind', 'ts', 'title', 'price', 'assessed', 'closed', 'img', 'url', 'where', 'what', 'cost', 'n', 'bars', 'rows', 'day', 'agenda', 'org', 'score', 'comments', 'sub', 'src', 'pic']);
     const extra = [...new Set(f.tiles.flatMap((t) => Object.keys(t)))].filter((k) => !allowed.has(k));
     check(!extra.length, 'the feed carries only the fields the tiles draw', extra.join());
     check(!JSON.stringify(f).match(/buyer|seller|applicant|contractor|description/i), 'no buyer, seller, applicant, contractor or description', '');
@@ -248,17 +427,75 @@ export async function townCases(h) {
     const state = [];
     page.on('request', (r) => { if (/vcgi/.test(r.url())) state.push(r.url()); });
     await page.route(/data\/town\/aerials\/|assets\/aerial\//, (r) => r.abort());
+    await page.route(/cdninstagram|fbcdn/, (r) => r.fulfill({ contentType: 'image/gif', body: DOT }));
     await page.goto(base + '/town/');
     await settle(page);
     await page.waitForSelector('.tf-wrap');
     check(!state.length, 'a reader’s phone never calls the state’s server', state[0] || '');
-    const n = await page.$$eval('.tf-wrap > .tf', (x) => x.length);
+    const n = await page.$$eval('.tf-wrap > .tf:not(.tf-tonight)', (x) => x.length);
     check(n === f.tiles.length, 'every tile in the file draws', n + ' of ' + f.tiles.length);
     await page.evaluate(() => { const p = document.querySelector('.panel:not([hidden])'); p.scrollTo(0, p.scrollHeight); });
     await page.waitForTimeout(600);
-    check(!!(await page.$('.tf-frame')) && !(await page.$('.tf-pic.on')), 'a tile whose aerial never comes keeps its colour', '');
+    check(!!(await page.$('.tf-frame')) && !(await page.$('.tf-pic.on[src*="aerial"]')), 'a tile whose aerial never comes keeps its colour', '');
     await pageRules(page, 'town/feed', 390);
     check(!errors.filter((e) => !/ERR_FAILED|Failed to load resource/.test(e)).length, 'no console errors', errors.join(' | ').slice(0, 200));
+    await ctx.close();
+  });
+
+  await group('town: the Square, the Wire’s own, as a seventh tab (demo)', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/town/?demo=1');
+    await settle(page);
+    const bar = await page.$$eval('#tabbar button', (bs) => bs.map((b) => b.textContent.trim()));
+    check(JSON.stringify(bar) === '["Now","Alerts","City Hall","Streets","Square","Guides","Jobs"]', 'the bar: seven tabs, Streets in the centre cell', JSON.stringify(bar));
+    await goTab(page, 'square');
+    await page.waitForSelector('#panel-square .sq-feed', { timeout: 8000 }).catch(() => {});
+    const look = await page.evaluate(async () => {
+      const m = await import('/all-day/js/modes/wire-square.js');
+      const bg = (c) => { const n = document.querySelector('#panel-square .sq-out.' + c + ' .sq-chip'); return n ? getComputedStyle(n).backgroundColor : ''; };
+      return { state: m._state(), burlington: bg('w-sub-burlington'), vermont: bg('w-sub-vermont'), facebook: bg('w-src-facebook'),
+        compose: !!document.querySelector('#panel-square .sq-compose'), board: document.querySelectorAll('#panel-square .card.board').length,
+        link: (document.querySelector('#panel-square .card.board a[href^="#"]') || {}).getAttribute?.('href') || '' };
+    });
+    check(look.compose && look.board > 0, 'the Square draws here: the five ways to post and the neighbors’ cards', JSON.stringify(look.state.counts));
+    check(look.burlington && look.vermont && look.burlington !== look.vermont && look.facebook !== look.vermont, 'r/burlington, r/vermont and Facebook each in its own colour', JSON.stringify([look.burlington, look.vermont, look.facebook]));
+    const keys = await page.$$eval('#panel-square .sq-types .chip', (cs) => cs.map((c) => c.dataset.chip));
+    check(JSON.stringify(keys) === '["all","post","show","ask","free","pets","facebook","burlington","vermont"]', 'the chips at the top of the tab', JSON.stringify(keys));
+    await page.click('#panel-square .sq-types .chip[data-chip="vermont"]');
+    await page.waitForTimeout(150);
+    const on = await page.evaluate(() => import('/all-day/js/modes/wire-square.js').then((m) => m._state().list.map((x) => x.type)));
+    check(on.length > 0 && on.every((t) => t === 'vermont'), 'r/vermont alone', JSON.stringify(on));
+    await page.reload();
+    await settle(page);
+    await page.waitForSelector('#panel-square .sq-types', { timeout: 8000 }).catch(() => {});
+    check(await page.$eval('#panel-square .sq-types .chip.on', (c) => c.dataset.chip) === 'vermont', 'the pick is kept through a reload', '');
+    await page.goto(base + '/all-day/?demo=1#wire/square');
+    await settle(page);
+    check((await page.evaluate(() => import('/all-day/js/modes/wire-square.js').then((m) => m.type()))) === 'vermont', 'and All Day’s Wire keeps the same pick', '');
+    await page.goto(base + '/town/?demo=1#square/b-nothing-here');
+    await settle(page);
+    await page.waitForTimeout(200);
+    check(/moved on/.test(await page.$eval('#toast', (t) => t.textContent)), 'a link to a post that has gone says so', '');
+    check(await page.evaluate(() => localStorage.getItem('allday-square-type')) === 'vermont', 'and a link leaves the kept pick alone', '');
+    await page.goto(base + '/town/?demo=1#wire/square');
+    await page.waitForURL(/\/all-day\/\?demo=1#wire\/square$/, { timeout: 8000 }).catch(() => {});
+    check(/\/all-day\/\?demo=1#wire\/square$/.test(page.url()), '#wire links still go home to All Day’s Wire', page.url());
+    await pageRules(page, 'town/square', 390);
+    check(!errors.length, 'no console errors', errors.slice(0, 5).join(' | '));
+    await ctx.close();
+  });
+
+  await group('town: the Square with every live source down, and before its SQL', async () => {
+    const { ctx, page } = await newPage(browser, base);
+    await page.route(/wire-data\/data\/wire-today\.json|pulse-data\/data\/pulse\.json|data\/wire-today\.json|data\/pulse\.json/, (r) => r.abort());
+    await page.goto(base + '/town/#square');
+    await settle(page);
+    await page.waitForSelector('#panel-square .sq-empty', { timeout: 8000 }).catch(() => {});
+    const s = await page.evaluate(() => {
+      const p = document.querySelector('#panel-square');
+      return { compose: !!p.querySelector('.sq-compose'), empty: !!p.querySelector('.sq-empty'), chips: !!p.querySelector('.sq-types'), feed: !!p.querySelector('.sq-feed'), loading: !!p.querySelector('.loading') };
+    });
+    check(s.empty && !s.compose && !s.chips && !s.feed && !s.loading, 'a line, no box, no chips and no posting on a board that isn’t open', JSON.stringify(s));
     await ctx.close();
   });
 
@@ -267,7 +504,8 @@ export async function townCases(h) {
       const { ctx, page, errors } = await newPage(browser, base);
       await page.goto(base + '/town/' + (demo ? '?demo=1' : ''));
       await settle(page);
-      for (const t of cfg.tabs.filter((x) => x.mode !== 'feed')) {
+      /* Now and the Square are feeds, with no sections; each has its own group */
+      for (const t of cfg.tabs.filter((x) => x.mode !== 'feed' && x.mode !== 'square')) {
         await goTab(page, t.mode);
         await page.waitForTimeout(demo ? 200 : 400);
         const s = await sections(page);

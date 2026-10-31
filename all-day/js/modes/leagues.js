@@ -3,7 +3,8 @@
    data/body/leagues.json holds them by organizer, read from each organizer's
    own pages. An organizer is a tile. Its sports are small rows inside it, and a
    row opens to that sport's leagues: when, what it costs, how to sign up. The
-   pill filters by sport, the most-offered first. A league leaves the tab the
+   pill filters by sport, the most-offered first. Whatever closes for signups
+   soonest sits on top: the organizer, and the sport inside it. A league leaves the tab the
    day after its `ends` date; one with no `ends` stays. The link says Sign up
    only when `signup_open` is true and today in Burlington is not past
    `signup_until`.
@@ -41,10 +42,12 @@ const league = (x) => '<div class="lg-one">' +
   (x.signup ? '<p>' + esc(x.signup) + '</p>' : '') +
   (x.url ? '<a class="lg-go" href="' + esc(safeHref(x.url)) + '" target="_blank" rel="noopener">' + esc(canJoin(x) ? COPY.signup : COPY.details) + ICON.right + '</a>' : '') + '</div>';
 
+/* the soonest signup still open among these leagues; 'z' sorts after any date */
+const closes = (list) => list.filter((x) => canJoin(x) && x.signup_until).map((x) => x.signup_until).sort()[0] || 'z';
 function sportsOf(o) {
   const by = new Map();
   running(o).forEach((x) => { if (!by.has(x.sport)) by.set(x.sport, []); by.get(x.sport).push(x); });
-  return [...by.entries()].sort((a, b) => b[1].length - a[1].length || a[0].localeCompare(b[0]));
+  return [...by.entries()].sort((a, b) => closes(a[1]).localeCompare(closes(b[1])) || b[1].length - a[1].length || a[0].localeCompare(b[0]));
 }
 function tile(o) {
   const sports = sportsOf(o).filter(([s]) => S.filter === 'all' || s === S.filter);
@@ -68,7 +71,8 @@ function draw() {
     return;
   }
   const wrap = el('div', 'lg-wrap');
-  S.orgs.filter((o) => running(o).some((x) => S.filter === 'all' || x.sport === S.filter)).forEach((o) => wrap.appendChild(tile(o)));
+  const shown = (o) => running(o).filter((x) => S.filter === 'all' || x.sport === S.filter);
+  S.orgs.filter((o) => shown(o).length).sort((a, b) => closes(shown(a)).localeCompare(closes(shown(b)))).forEach((o) => wrap.appendChild(tile(o)));
   root.appendChild(wrap);
   root.appendChild(el('div', 'spacer'));
 }
