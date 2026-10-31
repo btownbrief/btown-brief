@@ -6,6 +6,7 @@ and turns it into data/town/feed.json, the one file the app's Now tab reads:
   data/town/streets.json     permits, home sales, construction projects
   data/town/alerts.json      parking ban, school closings
   data/town/signups.json     registration openings
+  data/town/council.json     the newest City Council summary, one tile
   data/changes/changes.json  agendas, road work, food news, weather, the
                              threads taking off on r/burlington
   data/jobs.json             new jobs, rolled up by day
@@ -48,6 +49,7 @@ FEED_PATH = os.path.join(OUT_DIR, "feed.json")
 SEEN_PATH = os.path.join(OUT_DIR, "feed-seen.json")
 MOVES_PATH = os.path.join(OUT_DIR, "moves.json")
 INSTAGRAM_PATH = os.path.join(ROOT, "all-day", "data", "instagram.json")
+COUNCIL_PATH = os.path.join(OUT_DIR, "council.json")
 EVENTS_PATH = os.path.join(ROOT, "data", "events", "events.json")
 THINGS_PATH = os.path.join(ROOT, "data", "things.json")
 CLUBS_PATH = os.path.join(ROOT, "data", "run-clubs.json")
@@ -308,6 +310,19 @@ def city_tiles(changes, today, cutoff):
                     "rows": [[m["day"], m["title"], m["url"]] + ([m["sub"]] if m.get("sub") else []) for m in rest[:5]],
                     "n": len(rest), "url": "#cityhall"})
     return big
+
+
+def council_tile(council, cutoff):
+    """The newest summary, timed when it was written: the news is the minutes
+    arriving, days after the meeting. Its words passed council_summaries.py's gate."""
+    meetings = [m for m in (council or {}).get("meetings") or [] if m.get("date") and m.get("top") and m.get("generated")]
+    if not meetings:
+        return []
+    m = max(meetings, key=lambda x: x["date"])
+    if _ts(m["generated"]).astimezone(BTV_TZ).date() < cutoff:
+        return []
+    return [{"id": f"council-{m['date']}", "kind": "council", "ts": m["generated"], "title": m["top"],
+             "day": m["date"], "url": "#cityhall/council"}]
 
 
 def road_tiles(changes, streets, geo, cutoff):
@@ -761,7 +776,7 @@ def build():
 
     geo = Geo()
     tiles = (sold_tiles(streets, cutoff) + going_tiles(streets, cutoff) + week_tiles(streets, cutoff) +
-             city_tiles(changes, today, cutoff) + road_tiles(changes, streets, geo, cutoff) +
+             city_tiles(changes, today, cutoff) + council_tile(load_json(COUNCIL_PATH, {}), cutoff) + road_tiles(changes, streets, geo, cutoff) +
              food_tiles(changes, cutoff) + reddit_tiles(changes, cutoff, load_intake()) + weather_tiles(changes, now) +
              job_tiles(jobs, today) + signup_tiles(signups, today) + news_tiles(changes, today) +
              photo_tiles(instagram, now) + calendar_tiles(events, today, now, gone))

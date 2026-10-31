@@ -1,9 +1,11 @@
-/* Burlington government meetings — renders data/civic.json. */
+/* Burlington government meetings — renders data/civic.json, with City Hall in 5
+   from data/town/council.json under each council meeting that has one. */
 (function () {
   'use strict';
 
   var esc = window.BTBC.esc;
   var TZ = 'America/New_York';
+  var councilByDay = {};
 
   function safeUrl(url) {
     return /^https?:\/\//i.test(url || '') ? url : '#';
@@ -40,7 +42,12 @@
   function meetingHTML(meeting, recent) {
     var distinctTitle = meeting.title && meeting.title.toLowerCase() !== meeting.body.toLowerCase();
     var summary = '';
-    if (recent && meeting.summary_text) {
+    var council = recent && meeting.body_id === 'city-council' ? councilByDay[dayKey(meeting.start)] : null;
+    if (council) {
+      summary = '<p class="civic-summary"><strong>' + esc(council.top) + '</strong></p>' + (council.bullets || []).map(function (bullet) {
+        return '<p class="civic-summary"><strong>' + esc(bullet.head) + '.</strong> ' + esc(bullet.text) + '</p>';
+      }).join('') + (council.next ? '<p class="civic-summary"><strong>Next.</strong> ' + esc(council.next) + '</p>' : '');
+    } else if (recent && meeting.summary_text) {
       summary = '<p class="civic-summary">' + esc(meeting.summary_text) + '</p>';
     } else if (recent && meeting.summary_status === 'pending') {
       summary = '<p class="civic-summary-pending">Summary coming.</p>';
@@ -77,7 +84,12 @@
       '</div></article>';
   }
 
-  window.BTBC.fetchJSON('data/civic.json').then(function (data) {
+  Promise.all([
+    window.BTBC.fetchJSON('data/civic.json'),
+    Promise.resolve().then(function () { return window.BTBC.fetchJSON('data/town/council.json'); }).catch(function () { return {}; }),
+  ]).then(function (files) {
+    var data = files[0];
+    ((files[1] || {}).meetings || []).forEach(function (meeting) { councilByDay[meeting.date] = meeting; });
     var upcoming = Array.isArray(data.upcoming) ? data.upcoming.slice().sort(function (a, b) { return a.start.localeCompare(b.start); }) : [];
     var past = Array.isArray(data.past) ? data.past.slice().sort(function (a, b) { return b.start.localeCompare(a.start); }) : [];
     var bodies = Array.isArray(data.bodies) ? data.bodies : [];

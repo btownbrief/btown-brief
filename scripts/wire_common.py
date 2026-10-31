@@ -532,7 +532,7 @@ class ModelError(RuntimeError):
     pass
 
 
-def ask_json(engine, system, user, schema, max_tokens, attempts=2, log_prefix="wire"):
+def ask_json(engine, system, user, schema, max_tokens, attempts=2, log_prefix="wire", effort="low"):
     """One structured-output call, retried once. -> (parsed_json, usage).
 
     usage is summed over every attempt, failed ones included, because a
@@ -549,7 +549,7 @@ def ask_json(engine, system, user, schema, max_tokens, attempts=2, log_prefix="w
     last = None
     for attempt in range(1, attempts + 1):
         try:
-            response = _create(client, engine, system, user, schema, max_tokens, attempt)
+            response = _create(client, engine, system, user, schema, max_tokens, attempt, effort)
             got = getattr(response, "usage", None)
             if got is not None:
                 add_usage(usage, got)
@@ -617,7 +617,7 @@ def add_usage(usage, got):
         usage[key] = usage.get(key, 0) + value
 
 
-def _create(client, engine, system, user, schema, max_tokens, attempt):
+def _create(client, engine, system, user, schema, max_tokens, attempt, effort="low"):
     model = engine["model"]
     fmt = {"type": "json_schema",
            "schema": schema if engine["provider"] == "openrouter" else portable_schema(schema)}
@@ -642,11 +642,12 @@ def _create(client, engine, system, user, schema, max_tokens, attempt):
             output_config={"effort": "low", "format": fmt},
         )
     # Claude Opus 5.5: thinking cannot be disabled on this model (a 400 at
-    # every effort), so `thinking` is omitted and effort low keeps it short.
+    # every effort), so `thinking` is omitted and effort low keeps it short
+    # (council_summaries.py asks for more: its accuracy outweighs the cost).
     # The first attempt opts into the server-side refusal fallback; the retry
     # goes without it, so a 400 on the beta can never block the run.
     params = dict(model=model, max_tokens=max_tokens, system=system, messages=messages,
-                  output_config={"effort": "low", "format": fmt})
+                  output_config={"effort": effort, "format": fmt})
     if attempt == 1:
         return client.beta.messages.create(
             betas=["server-side-fallback-2026-07-01"], fallbacks="default", **params)
@@ -678,7 +679,7 @@ def over_budget(data_dir, now=None, cap=MONTH_CAP_USD):
     return usd >= cap, usd
 
 
-def record_cost(data_dir, script, engine, usage, now=None):
+def record_cost(data_dir, script, engine, usage, now=None, cap=MONTH_CAP_USD):
     """Add one run to the month's ledger, print it, and put it in the step
     summary. Returns the run's estimated dollars."""
     now = now or utcnow()
@@ -696,7 +697,7 @@ def record_cost(data_dir, script, engine, usage, now=None):
     line = (f"{script}: {engine['model']} · {usage.get('calls', 0)} call(s) · "
             f"{usage.get('in', 0):,} in / {usage.get('out', 0):,} out tokens · "
             f"${usd:.4f} this run · ${ledger['usd']:.2f} month to date "
-            f"(cap ${MONTH_CAP_USD:.0f})")
+            f"(cap ${cap:.0f})")
     print(line)
     step_summary("- " + line)
     return usd

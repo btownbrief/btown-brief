@@ -1,6 +1,12 @@
 /* Town · City Hall: every meeting and vote, in plain English (APP-MAP.html,
    Town; ideas 4, 13 and 16). Top to bottom:
 
+   - Council. What the City Council did, newest meeting on top, from
+     data/town/council.json (scripts/council_summaries.py writes it from the
+     city's minutes and checks every bullet against them). Each block is the
+     date, the one line to read, two bullets with the rest behind Show all,
+     what's next, and the minutes and video. Three meetings, then See more.
+     The section is gone when the file is.
    - Meetings. The civic calendar civic.html reads (data/civic.json, from
      the city's CivicClerk portal): what meets next, with its agenda,
      packet and video, then the last week's meetings with their minutes.
@@ -22,11 +28,26 @@
 
 import * as app from '../app.js';
 import * as boards from '../boards.js';
+import * as store from '../store.js';
 import { el, esc, safeHref, ICON, divider } from '../ui.js';
-import { townMode, getJSON, maybeJSON, NOT_LOADED, row, card, links, line, list, stats, today, fmtDay, fmtLong, epoch, daysTo, money } from './town-kit.js';
+import { townMode, getJSON, maybeJSON, NOT_LOADED, row, card, links, line, list, stats, today, fmtDay, fmtLong, epoch, daysTo, money, tile } from './town-kit.js';
 
 const VOTEY = /\b(vote|voting|votes|election|elections|results|ballot|debate|town meeting|watch party|candidate|mayor|council)\b/i;
 const PORTAL = 'https://burlingtonvt.portal.civicclerk.com/';
+const COUNCIL = {
+  one: 'If you only read one',
+  next: 'Next',
+  all: (n) => 'Show all ' + n,
+  more: 'See more',
+  minutes: 'Minutes',
+  video: 'Video',
+  source: 'City Hall',
+  open: 'Open the minutes',
+  share: 'Share',
+  save: 'Save',
+};
+const COUNCIL_SHOWN = 3;
+const BULLETS_SHOWN = 2;
 
 /* The city's portal gives each meeting's local wall time marked as UTC,
    and scripts/refresh_civic.py converts it to Burlington time a second
@@ -49,6 +70,44 @@ function meetingRow(m, i, past) {
   return row({ k: 'mtg-' + (past ? 'p' : 'u') + i + '-' + key, href: m.agenda_url || m.video_url || PORTAL, date: key, title: m.title,
     sub: esc([fmtDay(key) + ', ' + when(m), String(m.venue || '').replace(/,?\s*Burlington,?\s*VT,?\s*\d{0,5}\s*$/i, '')].filter(Boolean).join(' · ')) + (docs ? '<br>' + docs : ''),
     tag: !past && key === today() ? ['Today', 'live'] : null });
+}
+
+/* -------------------------------------------------------------- Council */
+const councilMeetings = (d) => ((d.council || {}).meetings || []).slice().sort((a, b) => b.date.localeCompare(a.date));
+function councilBlock(m) {
+  const k = 'council-' + m.id;
+  app.know([{ k, kind: 'post', title: m.top, text: '', href: m.minutes_url || '#cityhall/' + k, src: COUNCIL.source, ago: fmtDay(m.date), open: COUNCIL.open }]);
+  const saved = store.isSaved(k);
+  const bullets = m.bullets || [];
+  const block = el('article', 'cc');
+  block.dataset.k = k;
+  block.innerHTML = '<div class="cc-top">' + tile(m.date) + '<span class="eyebrow">' + esc(COUNCIL.one) + '</span><h3>' + esc(m.top) + '</h3></div>' +
+    '<ul class="cc-list">' + bullets.map((b, i) => '<li' + (i >= BULLETS_SHOWN ? ' hidden' : '') + '><b>' + esc(b.head) + '</b> ' + esc(b.text) + '</li>').join('') + '</ul>' +
+    (m.next ? '<p class="cc-next"><b>' + esc(COUNCIL.next) + '</b> ' + esc(m.next) + '</p>' : '');
+  if (bullets.length > BULLETS_SHOWN) {
+    const all = el('button', 'cc-all', esc(COUNCIL.all(bullets.length)));
+    all.type = 'button';
+    all.addEventListener('click', () => { block.querySelectorAll('.cc-list li').forEach((li) => { li.hidden = false; }); all.remove(); });
+    block.querySelector('.cc-list').after(all);
+  }
+  const foot = links([{ label: COUNCIL.minutes, href: m.minutes_url }, { label: COUNCIL.video, href: m.video_url }], true);
+  foot.insertAdjacentHTML('beforeend', '<span class="sp"></span><span class="tf-acts"><button class="act sh" data-act="share" aria-label="' + esc(COUNCIL.share) + '">' + ICON.share + '</button>' +
+    '<button class="act star' + (saved ? ' on' : '') + '" data-act="save" aria-label="' + esc(COUNCIL.save) + '" aria-pressed="' + saved + '">' + ICON.star + '</button></span>');
+  block.appendChild(foot);
+  return block;
+}
+function drawCouncil(box, d) {
+  const blocks = councilMeetings(d).map(councilBlock);
+  const host = el('div', 'cclist');
+  host.dataset.grid = 'council';
+  blocks.forEach((b, i) => { b.hidden = i >= COUNCIL_SHOWN; host.appendChild(b); });
+  box.appendChild(host);
+  if (blocks.length > COUNCIL_SHOWN) {
+    const more = el('button', 'btn ghost more', esc(COUNCIL.more));
+    more.dataset.more = 'council';
+    more.addEventListener('click', () => { blocks.forEach((b) => { b.hidden = false; }); more.remove(); });
+    box.appendChild(more);
+  }
 }
 
 /* ------------------------------------------------------------- Meetings */
@@ -148,8 +207,9 @@ app.register('cityhall', townMode({
   color: '--tf-city',
   key: 'cityhall', label: 'City Hall', icon: 'columns', promise: 'Every meeting and vote, in plain English.',
   demo: 'town-cityhall',
-  load: () => Promise.all([getJSON('../data/civic.json'), maybeJSON('../data/town/cityhall-sources.json')]).then(([civic, cityhall]) => ({ civic, cityhall })),
+  load: () => Promise.all([getJSON('../data/civic.json'), maybeJSON('../data/town/cityhall-sources.json'), maybeJSON('../data/town/council.json')]).then(([civic, cityhall, council]) => ({ civic, cityhall, council })),
   sections: [
+    { key: 'council', label: 'Council', draw: drawCouncil, hide: (d) => !councilMeetings(d).length, newest: (d) => epoch((councilMeetings(d)[0] || {}).generated) },
     { key: 'meetings', label: 'Meetings', draw: drawMeetings, newest: (d) => epoch((d.civic || {}).generated) },
     { key: 'votes', label: 'Votes', draw: drawVotes },
     { key: 'elections', label: 'Elections', draw: drawElections },

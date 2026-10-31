@@ -15069,6 +15069,108 @@ const theBody = (browser, base) => bodyTests(browser, base, { group, check, newP
 
 const theTown = (browser, base) => townCases({ browser, base, group, check, newPage, settle, goTab, pageRules, SHOTS, REPO });
 
+/* City Hall's Council section (scripts/council_summaries.py writes the file):
+   newest first, three meetings then See more, two bullets then Show all; gone
+   with the file; one tile in Town's Now; the same words on civic.html. */
+async function theCouncil(browser, base) {
+  const file = JSON.parse(await readFile(path.join(REPO, 'data/town/council.json'), 'utf8'));
+  const list = file.meetings.slice().sort((a, b) => b.date.localeCompare(a.date));
+  const blocks = (page) => page.$$eval('#panel-cityhall .cc', (ns) => ns.filter((n) => n.offsetHeight).map((n) => ({ text: n.innerText, li: [...n.querySelectorAll('.cc-list li')].filter((x) => x.offsetHeight).length })));
+
+  await group('council: the section on City Hall', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/town/#cityhall/council');
+    await settle(page);
+    const first = await page.$eval('#panel-cityhall .shelf-sec', (n) => n.dataset.sec);
+    check(first === 'council', 'Council is first in the tab', first);
+    const pill = await page.$$eval('#subnav .secpill .chip', (cs) => cs.map((c) => c.textContent.trim()));
+    check(pill[0] === 'Council', 'and first in the pill', pill.join(','));
+    let b = await blocks(page);
+    check(b.length === 3, 'three meetings show', String(b.length));
+    check(b[0].text.includes(list[0].top) && b[1].text.includes(list[1].top), 'newest on top', b[0].text.slice(0, 80));
+    check(/If you only read one/i.test(b[0].text), 'the one line to read', '');
+    check(b.every((x) => x.li === 2), 'two bullets each', b.map((x) => x.li).join(','));
+    check(b[0].text.includes(list[0].next), 'Next', '');
+    const links = await page.$$eval('#panel-cityhall .cc:first-child .row a', (as) => as.map((a) => a.textContent.trim() + ' ' + a.href));
+    check(links.some((l) => l.startsWith('Minutes') && l.includes(list[0].minutes_url)) && links.some((l) => l.startsWith('Video')), 'links to minutes and video', links.join(' | '));
+    await page.click('#panel-cityhall .cc:first-child .cc-all');
+    b = await blocks(page);
+    check(b[0].li === list[0].bullets.length, 'Show all opens every bullet', String(b[0].li));
+    await page.click('#panel-cityhall [data-more="council"]');
+    b = await blocks(page);
+    check(b.length === list.length, 'See more shows the rest', String(b.length));
+    const words = await page.$eval('#panel-cityhall [data-sec="council"]', (n) => n.innerText);
+    check(!/\bAI\b|summari[sz]ed by|generated/i.test(words), 'no line about how it was made', '');
+    await page.click('#panel-cityhall .cc:first-child [data-act="save"]');
+    check(await page.$eval('#panel-cityhall .cc:first-child [data-act="save"]', (n) => n.getAttribute('aria-pressed') === 'true' || n.classList.contains('on')), 'the star holds', '');
+    await pageRules(page, 'town/cityhall/council', 390);
+    check(!errors.length, 'no console errors', errors.slice(0, 5).join(' | '));
+    await ctx.close();
+  });
+
+  await group('council: a shared link to an older meeting opens it', async () => {
+    const { ctx, page } = await newPage(browser, base);
+    const old = list[list.length - 1];
+    await page.goto(base + '/town/#cityhall/council-' + old.id);
+    await settle(page);
+    check(await page.$eval('#panel-cityhall [data-k="council-' + old.id + '"]', (n) => !!n.offsetHeight), 'the block behind See more is open', '');
+    await ctx.close();
+  });
+
+  await group('council: no file, no section', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.route('**/data/town/council.json', (r) => r.fulfill({ status: 404, body: '' }));
+    await page.goto(base + '/town/#cityhall');
+    await settle(page);
+    const secs = await page.$$eval('#panel-cityhall .shelf-sec', (ns) => ns.map((n) => n.dataset.sec));
+    check(secs[0] === 'meetings' && !secs.includes('council'), 'the tab starts at Meetings', secs.join(','));
+    const pill = await page.$$eval('#subnav .secpill .chip', (cs) => cs.map((c) => c.textContent.trim()));
+    check(!pill.includes('Council'), 'the pill has no Council', pill.join(','));
+    check(!errors.filter((e) => !/404/.test(e)).length, 'no console errors', errors.slice(0, 3).join(' | '));
+    await ctx.close();
+  });
+
+  await group('council: one dated tile in Now', async () => {
+    const { ctx, page } = await newPage(browser, base);
+    const real = JSON.parse(await readFile(path.join(REPO, 'data/town/feed.json'), 'utf8'));
+    const tile = { id: 'council-' + list[0].date, kind: 'council', ts: new Date().toISOString(), title: list[0].top, day: list[0].date, url: '#cityhall/council' };
+    await page.route('**/data/town/feed.json*', (r) => r.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ ...real, tiles: [tile, ...real.tiles] }) }));
+    await page.goto(base + '/town/');
+    await settle(page);
+    const c = await page.$eval('#panel-feed .tf-council', (n) => ({ text: n.innerText, href: n.querySelector('.tf-go').getAttribute('href') }));
+    check(c.text.includes(list[0].top) && /City Council/i.test(c.text), 'the newest summary, tagged', c.text.slice(0, 80));
+    check(c.href === '#cityhall/council', 'opens the Council section', c.href);
+    await page.click('#panel-feed .tf-council .tf-go');
+    await page.waitForTimeout(500);
+    check(await page.$eval('#panel-cityhall [data-sec="council"]', (n) => !!n.offsetHeight), 'and it lands there', '');
+    await ctx.close();
+  });
+
+  await group('council: civic.html carries the summary', async () => {
+    const civic = JSON.parse(await readFile(path.join(REPO, 'data/civic.json'), 'utf8'));
+    const hit = list.find((m) => civic.past.some((p) => p.body_id === 'city-council' && p.start.startsWith(m.date)));
+    const { ctx, page } = await newPage(browser, base);
+    await page.gotoRaw(base + '/civic.html');
+    await page.waitForSelector('#civic-past .civic-meeting');
+    const txt = await page.$eval('#civic-past', (n) => n.innerText);
+    check(!hit || (txt.includes(hit.top) && txt.includes(hit.bullets[0].text)), 'the summary sits under its meeting', hit ? hit.date : 'no meeting in the window');
+    await ctx.close();
+  });
+
+  const shots = process.env.COUNCIL_SHOTS;
+  if (shots) {
+    for (const [viewport, scheme] of [[{ width: 390, height: 844 }, 'light'], [{ width: 390, height: 844 }, 'dark'], [{ width: 390, height: 664 }, 'light'], [{ width: 390, height: 664 }, 'dark']]) {
+      const { ctx, page } = await newPage(browser, base, { viewport, scheme });
+      await page.goto(base + '/town/#cityhall/council');
+      await settle(page);
+      await page.screenshot({ path: path.join(shots, 'council-' + viewport.height + '-' + scheme + '.png') });
+      await page.click('#panel-cityhall .cc:first-child .cc-all');
+      await page.screenshot({ path: path.join(shots, 'council-open-' + viewport.height + '-' + scheme + '.png') });
+      await ctx.close();
+    }
+  }
+}
+
 /* ----------------------------------------------------------------- run */
 /* account-data.js: deleting the account from an app that does not load
    Habits or The Build still deletes their server data (wave 0 bug found by
@@ -15533,6 +15635,7 @@ try {
   await run(theApps);
   await run(accountData);
   await run(theTown);
+  await run(theCouncil);
   await run(theBody);
 } finally {
   await browser.close();
