@@ -1,25 +1,25 @@
 {
- "generated": "2026-10-30T12:11:43-04:00",
+ "generated": "2026-10-30T20:03:30-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
    "count": 8,
-   "seconds": 6.0
+   "seconds": 5.8
   },
   "breweries": {
    "label": "Breweries & Taprooms",
-   "count": 80,
-   "seconds": 7.1
+   "count": 83,
+   "seconds": 2.4
   },
   "brownell": {
    "label": "Brownell Library",
    "count": 91,
-   "seconds": 6.4
+   "seconds": 3.8
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
-   "count": 179,
-   "seconds": 3.2
+   "count": 180,
+   "seconds": 2.7
   },
   "churchst": {
    "label": "Church Street Marketplace",
@@ -48,18 +48,18 @@
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
-   "count": 204,
-   "seconds": 65.7
+   "count": 205,
+   "seconds": 70.8
   },
   "flynn": {
    "label": "The Flynn",
    "count": 12,
-   "seconds": 0.3
+   "seconds": 0.5
   },
   "generator": {
    "label": "Generator Makerspace",
    "count": 13,
-   "seconds": 33.7
+   "seconds": 31.0
   },
   "greenfc": {
    "label": "Vermont Green FC",
@@ -69,7 +69,7 @@
   "helloburlington": {
    "label": "Hello Burlington",
    "count": 597,
-   "seconds": 29.4
+   "seconds": 32.1
   },
   "higherground": {
    "label": "Higher Ground",
@@ -78,28 +78,28 @@
   },
   "instagram": {
    "label": "Instagram (Scrape Creators)",
-   "count": 2,
-   "seconds": 55.0
+   "count": 4,
+   "seconds": 38.5
   },
   "loveburlington": {
    "label": "Love Burlington",
    "count": 401,
-   "seconds": 73.4
+   "seconds": 74.6
   },
   "meetup": {
    "label": "Meetup",
-   "count": 51,
-   "seconds": 98.2
+   "count": 50,
+   "seconds": 95.6
   },
   "monkeyhouse": {
    "label": "The Monkey House",
    "count": 25,
-   "seconds": 1.7
+   "seconds": 0.2
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
-   "count": 74,
-   "seconds": 15.3
+   "count": 73,
+   "seconds": 15.9
   },
   "radiobean": {
    "label": "Radio Bean",
@@ -109,17 +109,17 @@
   "sblibrary": {
    "label": "South Burlington Public Library",
    "count": 71,
-   "seconds": 6.2
+   "seconds": 2.0
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
    "count": 17,
-   "seconds": 19.7
+   "seconds": 21.0
   },
   "sevendays": {
    "label": "Seven Days",
    "count": 2872,
-   "seconds": 22.2
+   "seconds": 3.5
   },
   "shelburnemuseum": {
    "label": "Shelburne Museum",
@@ -128,18 +128,18 @@
   },
   "uvm": {
    "label": "UVM & Colleges",
-   "count": 437,
-   "seconds": 32.9
+   "count": 435,
+   "seconds": 24.4
   },
   "uvmbored": {
    "label": "UVM Bored",
-   "count": 268,
+   "count": 266,
    "seconds": 0.3
   },
   "vcc": {
    "label": "Vermont Comedy Club",
    "count": 48,
-   "seconds": 60.3
+   "seconds": 65.4
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
@@ -147,11 +147,11 @@
    "seconds": 0.3
   }
  },
- "gathered": 5563,
+ "gathered": 5564,
  "afterDedup": 2527,
- "duplicatesMerged": 3036,
- "final": 2592,
- "firecrawlCalls": 6,
+ "duplicatesMerged": 3037,
+ "final": 2578,
+ "firecrawlCalls": 1,
  "mergeLog": [
   {
    "kept": {
@@ -2406,6 +2406,28 @@
  ],
  "changes": [
   {
+   "id": "2a1c7633f5af",
+   "title": "Thanksgiving Day",
+   "date": "2026-11-26",
+   "change": "time",
+   "was": "2026-11-26",
+   "now": "2026-11-26T12:00:00-05:00"
+  },
+  {
+   "id": "6ca2d815a6ec",
+   "title": "Lunch with the Poets",
+   "date": "2026-10-30",
+   "change": "missing",
+   "lastSeen": "2026-10-30T12:11:43-04:00"
+  },
+  {
+   "id": "1e6ffe041adc",
+   "title": "Itty Bitty Spooky Skate",
+   "date": "2026-10-30",
+   "change": "missing",
+   "lastSeen": "2026-10-30T12:11:43-04:00"
+  },
+  {
    "id": "966b15ad1c2f",
    "title": "Kathleen Schneider",
    "date": "2026-10-30",
@@ -2437,13 +2459,6 @@
    "id": "44839d2e93d1",
    "title": "Retro Study Hall!",
    "date": "2026-11-03",
-   "change": "missing",
-   "lastSeen": "2026-10-27T19:59:30-04:00"
-  },
-  {
-   "id": "c79293771878",
-   "title": "Mindfulness Meditation with The Writing Center featuring FirstGen@UVM",
-   "date": "2026-11-03",
    "change": "dropped"
   },
   {
@@ -2454,21 +2469,8 @@
    "lastSeen": "2026-10-29T20:21:30-04:00"
   },
   {
-   "id": "021bd5164e9f",
-   "title": "Rainbow Loom with SGA",
-   "date": "2026-11-03",
-   "change": "dropped"
-  },
-  {
    "id": "aff1f567ee1d",
    "title": "Retro Study Hall!",
-   "date": "2026-11-04",
-   "change": "missing",
-   "lastSeen": "2026-10-27T19:59:30-04:00"
-  },
-  {
-   "id": "4de0cd4a510d",
-   "title": "Button Making Social with Prism",
    "date": "2026-11-04",
    "change": "dropped"
   },
@@ -2480,23 +2482,10 @@
    "lastSeen": "2026-10-29T20:21:30-04:00"
   },
   {
-   "id": "4eb64205f710",
-   "title": "Jeopardy with First-Gen",
-   "date": "2026-11-05",
-   "change": "dropped"
-  },
-  {
-   "id": "7383e0872216",
-   "title": "UVM Engineering and Technology Fair",
-   "date": "2026-11-05",
-   "change": "dropped"
-  },
-  {
    "id": "7f9bf5f36055",
    "title": "Retro Study Hall!",
    "date": "2026-11-05",
-   "change": "missing",
-   "lastSeen": "2026-10-27T19:59:30-04:00"
+   "change": "dropped"
   },
   {
    "id": "8906e688af74",
@@ -2530,8 +2519,7 @@
    "id": "f8889b65eb66",
    "title": "Pack the Gut: Women's Hockey v.s. Northeastern",
    "date": "2026-11-06",
-   "change": "missing",
-   "lastSeen": "2026-10-27T19:59:30-04:00"
+   "change": "dropped"
   },
   {
    "id": "fd7948ea656b",
@@ -2600,8 +2588,7 @@
    "id": "3b829748f6e0",
    "title": "Retro Study Hall!",
    "date": "2026-11-10",
-   "change": "missing",
-   "lastSeen": "2026-10-27T19:59:30-04:00"
+   "change": "dropped"
   },
   {
    "id": "bf4dcf9e6cf2",
@@ -2621,8 +2608,7 @@
    "id": "d9498697be2a",
    "title": "Retro Study Hall!",
    "date": "2026-11-11",
-   "change": "missing",
-   "lastSeen": "2026-10-27T19:59:30-04:00"
+   "change": "dropped"
   },
   {
    "id": "50fca8321fec",
@@ -2630,6 +2616,13 @@
    "date": "2026-11-11",
    "change": "missing",
    "lastSeen": "2026-10-29T20:21:30-04:00"
+  },
+  {
+   "id": "dc37559434bd",
+   "title": "The F-Word",
+   "date": "2026-11-11",
+   "change": "missing",
+   "lastSeen": "2026-10-30T12:11:43-04:00"
   },
   {
    "id": "7cdbafc8d9b1",
@@ -2642,8 +2635,7 @@
    "id": "dd98c4255e05",
    "title": "Retro Study Hall!",
    "date": "2026-11-12",
-   "change": "missing",
-   "lastSeen": "2026-10-27T19:59:30-04:00"
+   "change": "dropped"
   },
   {
    "id": "202168631b0f",
@@ -2660,6 +2652,13 @@
    "lastSeen": "2026-10-28T20:24:09-04:00"
   },
   {
+   "id": "ac98755ba8ea",
+   "title": "Chamber Orchestra & Symphony Orchestra",
+   "date": "2026-11-14",
+   "change": "missing",
+   "lastSeen": "2026-10-30T12:11:43-04:00"
+  },
+  {
    "id": "ada684707bc0",
    "title": "MATH Help Sessions",
    "date": "2026-11-16",
@@ -2670,8 +2669,7 @@
    "id": "71b908e81e94",
    "title": "Retro Study Hall!",
    "date": "2026-11-17",
-   "change": "missing",
-   "lastSeen": "2026-10-27T19:59:30-04:00"
+   "change": "dropped"
   },
   {
    "id": "3759a29b5f8d",
@@ -2684,8 +2682,14 @@
    "id": "7a5702b0f123",
    "title": "Retro Study Hall!",
    "date": "2026-11-18",
+   "change": "dropped"
+  },
+  {
+   "id": "5fd2d297ed4b",
+   "title": "Make Your Own First Aid Kit",
+   "date": "2026-11-18",
    "change": "missing",
-   "lastSeen": "2026-10-27T19:59:30-04:00"
+   "lastSeen": "2026-10-30T12:11:43-04:00"
   },
   {
    "id": "16d2586f68ef",
@@ -2698,8 +2702,7 @@
    "id": "6086afc3430b",
    "title": "Retro Study Hall!",
    "date": "2026-11-19",
-   "change": "missing",
-   "lastSeen": "2026-10-27T19:59:30-04:00"
+   "change": "dropped"
   },
   {
    "id": "c2fb21c26763",
@@ -2723,25 +2726,36 @@
    "lastSeen": "2026-10-29T20:21:30-04:00"
   },
   {
+   "id": "d22bf6110ed1",
+   "title": "Linnea's Garden & Cozy Throne",
+   "date": "2026-11-21",
+   "change": "missing",
+   "lastSeen": "2026-10-30T12:11:43-04:00"
+  },
+  {
    "id": "6af9ce4bac0a",
    "title": "Retro Study Hall!",
    "date": "2026-11-24",
-   "change": "missing",
-   "lastSeen": "2026-10-27T19:59:30-04:00"
+   "change": "dropped"
   },
   {
    "id": "7fdaee6574a5",
    "title": "Retro Study Hall!",
    "date": "2026-11-25",
+   "change": "dropped"
+  },
+  {
+   "id": "ac5bb27ec70b",
+   "title": "Half Priced Wings",
+   "date": "2026-11-26",
    "change": "missing",
-   "lastSeen": "2026-10-27T19:59:30-04:00"
+   "lastSeen": "2026-10-30T12:11:43-04:00"
   },
   {
    "id": "843a5cc75481",
    "title": "Retro Study Hall!",
    "date": "2026-11-26",
-   "change": "missing",
-   "lastSeen": "2026-10-27T19:59:30-04:00"
+   "change": "dropped"
   },
   {
    "id": "fd42ac39974e",
@@ -2754,8 +2768,7 @@
    "id": "b50982dfcd77",
    "title": "Retro Study Hall!",
    "date": "2026-12-01",
-   "change": "missing",
-   "lastSeen": "2026-10-27T19:59:30-04:00"
+   "change": "dropped"
   },
   {
    "id": "cf182e60d143",
@@ -2768,8 +2781,7 @@
    "id": "b2bd3bcaa156",
    "title": "Retro Study Hall!",
    "date": "2026-12-02",
-   "change": "missing",
-   "lastSeen": "2026-10-27T19:59:30-04:00"
+   "change": "dropped"
   },
   {
    "id": "f2762f588188",
@@ -2782,8 +2794,7 @@
    "id": "dc67245a4122",
    "title": "Retro Study Hall!",
    "date": "2026-12-03",
-   "change": "missing",
-   "lastSeen": "2026-10-27T19:59:30-04:00"
+   "change": "dropped"
   },
   {
    "id": "3da775c39bd6",
@@ -2817,8 +2828,7 @@
    "id": "ae6eb425e5b0",
    "title": "Retro Study Hall!",
    "date": "2026-12-08",
-   "change": "missing",
-   "lastSeen": "2026-10-27T19:59:30-04:00"
+   "change": "dropped"
   },
   {
    "id": "39eaab89d2b8",
@@ -2831,8 +2841,7 @@
    "id": "6980beec1a14",
    "title": "Retro Study Hall!",
    "date": "2026-12-09",
-   "change": "missing",
-   "lastSeen": "2026-10-27T19:59:30-04:00"
+   "change": "dropped"
   },
   {
    "id": "75fc2603dda6",
@@ -2845,22 +2854,19 @@
    "id": "18b59598f52d",
    "title": "Retro Study Hall!",
    "date": "2026-12-10",
-   "change": "missing",
-   "lastSeen": "2026-10-27T19:59:30-04:00"
+   "change": "dropped"
   },
   {
    "id": "c9818f5455ce",
    "title": "Retro Study Hall!",
    "date": "2026-12-15",
-   "change": "missing",
-   "lastSeen": "2026-10-27T19:59:30-04:00"
+   "change": "dropped"
   },
   {
    "id": "98619e88f30b",
    "title": "Retro Study Hall!",
    "date": "2026-12-16",
-   "change": "missing",
-   "lastSeen": "2026-10-27T19:59:30-04:00"
+   "change": "dropped"
   },
   {
    "id": "2cbc172e1fd4",
