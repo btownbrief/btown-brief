@@ -14,7 +14,9 @@
    with nothing of its own takes a card from another, so the decks still deal
    with the Wire down, and the Wire with the decks down.
 
-   Each card's Answer button opens the town's answers in a sheet (answers.js).
+   Each card's Answer button opens the town's answers in a sheet (answers.js),
+   in place in the Seen list so that list keeps its spot. With answers in, the
+   button is a bubble and the count.
    Every hand this phone is dealt is kept, the last 100: Back steps through
    them, Forward returns, Seen lists their cards by day. A past hand is only
    looked at; a swap on one carries it to the table and swaps there, as a new
@@ -177,22 +179,22 @@ function foot(c, seat) {
   return f;
 }
 
-function answerBtn(c) {
+function answerBtn(c, open) {
   const qid = answers.qidOf(c);
   if (!qid) return null;
   const b = el('button', 'act tk-ans');
   b.type = 'button';
   b.dataset.qid = qid;
   countOn(b);
-  b.addEventListener('click', () => answerSheet(c));
+  b.addEventListener('click', () => (open || answerSheet)(c));
   return b;
 }
 function countOn(b) {
   const n = answers.count(b.dataset.qid);
-  b.innerHTML = '<span>' + esc(answers.WORDS.answer) + '</span>' + (n ? '<span class="n">' + esc(n) + '</span>' : '');
+  b.innerHTML = n ? ICON.comment + '<span class="n">' + esc(n) + '</span>' : '<span>' + esc(answers.WORDS.answer) + '</span>';
   b.setAttribute('aria-label', n ? answers.WORDS.answer + ', ' + answers.WORDS.many(n) : answers.WORDS.answer);
 }
-const paintCounts = () => { if (box) box.querySelectorAll('.tk-ans').forEach(countOn); };
+const paintCounts = () => document.querySelectorAll('.tk-ans').forEach(countOn);
 
 function answerSheet(c) {
   app.sheet(answers.WORDS.answers, (body) => { body.append(el('h3', 'tk-q ans-q', esc(c.q)), answers.panel(answers.qidOf(c))); });
@@ -400,7 +402,10 @@ function seenSheet() {
         if (d !== lastDay) { lastDay = d; more.before(el('div', 'sheet-h', esc(d))); }
         const r = el('div', 'sheet-row tk-seen', '<div class="t">' + esc(c.q) + '<div class="d">' + esc(eyebrow(c)) + '</div></div>');
         r.dataset.card = c.id;
-        const a = answerBtn(c);
+        const a = answerBtn(c, () => {
+          const was = r.querySelector('.ans');
+          if (was) was.remove(); else r.appendChild(answers.panel(a.dataset.qid));
+        });
         if (a) r.appendChild(a);
         more.before(r);
       });

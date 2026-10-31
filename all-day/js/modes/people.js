@@ -826,7 +826,8 @@ const linkBtn = (label, href, cls) => {
 
 /* A section the reader was just sent to (a chip, a deep link) is scrolled to
    once more if a late load changes the height above it, settled after the
-   whole batch of draws; the reader taking the scroll over cancels it. */
+   whole batch of draws; the reader taking the scroll over cancels it. A deep
+   link's own block takes over as the target (node) once it is open. */
 let jumped = null, settleT = 0, watching = null;
 function jump(k) {
   if (!slots || !slots[k]) return;
@@ -842,7 +843,7 @@ function jump(k) {
 function resettle() {
   clearTimeout(settleT);
   settleT = setTimeout(() => {
-    if (jumped && Date.now() - jumped.t < 6000 && app.activeTab() === KEY && slots && slots[jumped.k]) app.jumpTo(slots[jumped.k]);
+    if (jumped && Date.now() - jumped.t < 6000 && app.activeTab() === KEY && slots && slots[jumped.k]) app.jumpTo(jumped.node || slots[jumped.k], !!jumped.node);
   }, 60);
 }
 
@@ -2113,7 +2114,10 @@ function land() {
   if (isQid(k)) {
     pending = null;
     jump('board');
-    board.open(k).then((found) => { if (!found) app.toast('That one has passed.'); });
+    board.open(k).then((n) => {
+      if (!n) { app.toast('That one has passed.'); return; }
+      if (jumped) { jumped = { k: 'board', t: Date.now(), node: n }; app.jumpTo(n, true); }
+    });
     return;
   }
   /* a club's meet (What Now's cards) or a club: wait for the club week */

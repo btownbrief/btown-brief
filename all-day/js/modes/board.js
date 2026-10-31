@@ -6,7 +6,8 @@
    answers table to Talk's deck and the day's questions. A question that has
    left both is dropped, and a heavy card stays in Deep. Ordered by last
    answer; a prompt nobody has answered goes by its own time, and a pin
-   stays first. Answering anywhere moves that block to the top, at once.
+   stays first. Answering anywhere moves that block to the top, at once, and
+   the reader who answered it goes with it.
 
    Each block is a prompt, its count and last answer, and the tease; tapping
    opens the answers component in place (answers.js holds the reveal). Eight
@@ -29,7 +30,7 @@ const CATALOG_WAIT_MS = 2500;
 const WORDS = { title: 'The Board', steve: 'Steve asks', more: 'See more', share: 'Share', star: 'Save', first: 'Be the first.', answer: 'Answer', answers: 'Answers' };
 
 const reduced = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
-let box = null, list = null, more = null, loading = null, failed = false;
+let box = null, list = null, more = null, loading = null, failed = false, settle = null;
 let shown = SHOW, prompts = [], known = new Map(), catalog = null;
 const nodes = new Map();                 // qid -> a block's node, kept so an open block survives a move
 
@@ -56,13 +57,19 @@ export function load() {
   if (loading) return loading;
   const fed = () => answers.feed().then(teases);
   /* the prompts and the answers draw the Board; Talk's cards join when they land */
-  catalog = talk.catalog().then((m) => { known = m; if (list) place(); }).catch(() => {});
+  catalog = talk.catalog().then((m) => { known = m; if (list) { place(); if (settle) settle(); } }).catch(() => {});
   loading = Promise.all([
     data.fetchJSON(PROMPTS_URL, 8000).then((j) => { prompts = (j && Array.isArray(j.prompts) ? j.prompts : []).filter((p) => p && answers.isQid(p.id) && p.q); }).catch(() => { failed = true; }),
     answers.activity(),
     fed(),
   ]);
-  answers.on(() => { fed().then(() => { if (list) place(); }); });
+  /* after the panel has painted, so a jump measures the block as it will stand */
+  answers.on(({ qid, reported }) => {
+    setTimeout(() => {
+      if (list) place(reported ? null : qid);
+      fed().then(() => { if (list) place(); });
+    }, 0);
+  });
   return loading;
 }
 export const has = () => !failed || !!prompts.length;
@@ -125,8 +132,10 @@ function blockNode(b) {
 }
 
 /* the list in the order it now stands: only what moved is touched, so a box
-   someone is typing in stays put, and what moved glides to its new place */
-function place() {
+   someone is typing in stays put, and what moved glides to its new place.
+   `lead` is the block just answered: if it is open the scroll goes with it at
+   once and only that block glides, from where the reader last saw it. */
+function place(lead) {
   const all = blocks();
   const open = [...nodes.entries()].filter(([, n]) => n.querySelector('.ans')).map(([q]) => q);
   const keep = all.filter((b, i) => i < shown || open.includes(b.qid));
@@ -141,8 +150,10 @@ function place() {
   while (list.children.length > keep.length) list.lastChild.remove();
   more.hidden = keep.length >= all.length;
   box.hidden = !all.length;
+  const hit = lead && nodes.get(lead) && nodes.get(lead).querySelector('.ans') ? nodes.get(lead) : null;
+  if (hit) app.jumpTo(hit, true);
   if (reduced()) return;
-  [...list.children].forEach((n) => {
+  (hit ? [hit] : [...list.children]).forEach((n) => {
     const from = was.get(n);
     const dy = from == null ? 0 : from - n.getBoundingClientRect().top;
     if (dy) n.animate([{ transform: 'translateY(' + dy + 'px)' }, { transform: 'none' }], { duration: MOVE_MS, easing: 'cubic-bezier(.2, .8, .3, 1)' });
@@ -151,6 +162,7 @@ function place() {
 
 /* draws into People's Board section; a second visit keeps what is open */
 export function render(host, onHeight) {
+  settle = onHeight;
   if (box) { if (box.parentNode !== host) host.appendChild(box); return; }
   box = el('div', 'tb-sec');
   section(box, WORDS.title);
@@ -159,11 +171,6 @@ export function render(host, onHeight) {
   more.hidden = true;
   box.append(list, more);
   host.appendChild(box);
-  /* answering here takes the block to the top, and the reader with it */
-  answers.on(({ qid }) => {
-    const n = nodes.get(qid);
-    if (n && n.querySelector('.ans')) setTimeout(() => { place(); app.jumpTo(n); }, 0);
-  });
   load().then(() => {
     place();
     if (app.activeTab() === TAB) app.paintSubnav();
@@ -171,7 +178,8 @@ export function render(host, onHeight) {
   });
 }
 
-/* a question's own link: its block, opened. False if the Board has no such block. */
+/* a question's own link: its block, opened, for People to land on. False if
+   the Board has no such block. */
 export function open(qid) {
   return load().then(() => (blocks().some((b) => b.qid === qid) ? null : catalog)).then(() => {
     const all = blocks(), at = all.findIndex((b) => b.qid === qid);
@@ -180,7 +188,7 @@ export function open(qid) {
     place();
     const n = nodes.get(qid);
     if (!n.querySelector('.ans')) toggle(n, all[at]);
-    app.flashHit(list, qid);
-    return true;
+    app.flashHit(list, qid, true);
+    return n;
   });
 }

@@ -1,7 +1,9 @@
 /* Table Talk — one huge card at a time for a phone propped on a meetup table,
    and the whole deck to browse. It wears All Day: tokens.css and app.css load
    first (Talk's card colours, .chip, .btn, .act, .eyebrow, the answers and the
-   Board's block), and this file holds only the page's own frame. The card is
+   Board's block), and this file holds only the page's own frame. Those sheets
+   also carry the shell's .panel, .embed and .deck, so names here stay clear of
+   them or undo them. The card is
    read from across a table, so everything on it is bigger and slower. */
 
 html, body { height: 100%; }
@@ -51,13 +53,15 @@ body { height: 100dvh; display: flex; flex-direction: column; overflow: hidden; 
 .tt-sp { flex: 1; }
 .lgroup { display: flex; flex-wrap: wrap; gap: var(--s2); }
 .lopt { display: inline-flex; align-items: center; height: 32px; padding: 0 12px; border: 1px solid var(--line); border-radius: var(--r-pill); color: var(--ink); font-size: var(--fs-button); font-weight: 600; }
-.lopt.on, .lopt.deck[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: var(--on-ink); }
-.lopt.deck[aria-pressed="false"] { color: var(--ink-3); text-decoration: line-through; }
+.lopt.on, .lopt.tt-deck[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: var(--on-ink); }
+.lopt.tt-deck[aria-pressed="false"] { color: var(--ink-3); text-decoration: line-through; }
 .lopt[disabled] { opacity: .4; cursor: default; }
 
 /* ---------- panels ---------- */
 .scrim { position: fixed; inset: 0; z-index: 8; background: var(--scrim); }
 .panel { position: fixed; left: 50%; top: 50%; z-index: 9; transform: translate(-50%, -50%); width: min(480px, calc(100vw - 2 * var(--gutter))); max-height: 84dvh; overflow-y: auto; padding: var(--s4) var(--gutter) var(--s5); border-radius: var(--r-sheet); background: var(--raised); box-shadow: var(--shadow-float); }
+.panel { right: auto; bottom: auto; }
+.panel::before { display: none; }
 .panel-head { display: flex; align-items: center; justify-content: space-between; gap: var(--s3); }
 .panel-head h2 { font-family: var(--serif); font-size: var(--fs-section); font-weight: 500; }
 .panel-close { display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; margin-right: -8px; color: var(--ink-2); }
@@ -84,6 +88,7 @@ html[data-view="all"] .stage, html[data-view="all"] .lbarwrap { display: none; }
 html:not([data-view="all"]) .browse { display: none; }
 
 /* ---------- a board on a screen: just the card ---------- */
+body.embed { display: flex; border-radius: 0; background: var(--paper); }
 body.embed .tt-mast, body.embed .tt-views, body.tv .tt-mast, body.tv .tt-views, body.tv .lbarwrap { display: none; }
 body.tv .stage, body.embed .stage { padding: 0; }
 body.tv .tt-card, body.embed .tt-card { border-radius: 0; }

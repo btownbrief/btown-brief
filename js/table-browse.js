@@ -14,7 +14,7 @@ import { el, esc, ICON, button, chips, agoShort } from '../all-day/js/ui.js';
 const DECK_URL = 'data/talk-deck.json';
 const APP_URL = 'https://guide.btownbrief.com/all-day/';
 const STEP = 30;
-const SPORTS = /\b(sports?|ski\w*|snowboard\w*|hockey|baseball|softball|basketball|soccer|football|tennis|golf\w*|pickleball|team|teams|coach\w*|catamounts?|lake monsters|marathon|red sox|bruins|celtics|patriots)\b/i;
+const SPORTS = /\b(sports?|ski|skis|skier|skiers|skiing|snowboard\w*|hockey|baseball|softball|basketball|soccer|football|tennis|golf\w*|pickleball|team|teams|coach\w*|catamounts?|lake monsters|marathon|red sox|bruins|celtics|patriots)\b/i;
 const WORDS = {
   search: 'Search', none: 'Nothing matches.', more: 'Show more', answer: 'Answer', answers: 'Answers', share: 'Share', star: 'Save',
   ice: 'Icebreaker', deep: 'Deep', debate: 'Debate', head: 'Headline', sports: 'Sports', local: 'Local',
@@ -38,11 +38,21 @@ function matches(c) {
   if (bubble === 'sports') return c.b === 'sports' || SPORTS.test(c.q);
   return true;
 }
-const ranked = () => cards.filter(matches).map((c, i) => [c, i]).sort((a, b) => has(b[0]) - has(a[0]) || a[1] - b[1]).map((x) => x[0]);
+const ranked = () => cards.filter((c) => answers.qidOf(c) && matches(c)).map((c, i) => [c, i]).sort((a, b) => has(b[0]) - has(a[0]) || a[1] - b[1]).map((x) => x[0]);
 
+/* one node per card, so an open answer box and its draft survive a repaint */
+const tiles = new Map();
 function tile(c, i) {
   const qid = answers.qidOf(c);
-  const n = el('article', 'card tb' + (i % 2 ? ' alt' : '') + ((Math.floor(i / 2) + (i % 2)) % 2 ? ' alt-w' : ''));
+  if (!tiles.has(qid)) tiles.set(qid, tileNode(c, qid));
+  const n = tiles.get(qid);
+  n.classList.toggle('alt', i % 2 === 1);
+  n.classList.toggle('alt-w', (Math.floor(i / 2) + (i % 2)) % 2 === 1);
+  return n;
+}
+
+function tileNode(c, qid) {
+  const n = el('article', 'card tb');
   n.dataset.k = 't-' + c.id;
   n.dataset.qid = qid;
   const q = el('button', 'tb-q', esc(c.q));
@@ -84,7 +94,7 @@ function tile(c, i) {
 
 function paint() {
   const all = ranked();
-  list.replaceChildren(...all.filter((c) => answers.qidOf(c)).slice(0, upto).map(tile));
+  list.replaceChildren(...all.slice(0, upto).map(tile));
   if (!all.length) list.replaceChildren(el('p', 'tt-none', esc(WORDS.none)));
   more.hidden = upto >= all.length;
 }

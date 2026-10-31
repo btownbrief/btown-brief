@@ -5239,12 +5239,15 @@ async function theAnswers(browser, base) {
     const open = await page.$$eval(sc + ' .ans-row', (r) => r.map((x) => x.innerText));
     check(open.length === 3 && /griddle by the lake/.test(open[0]) && /You/.test(open[0]), 'yours lands on top, marked', JSON.stringify(open));
     check(open.some((t) => /taking questions/.test(t)) && open.some((t) => /Dee/.test(t)), 'every answer in full, with names', JSON.stringify(open));
-    check(await page.$eval(sc + ' .ans-count', (n) => n.textContent === '3 answers') && /^3 answers/.test(await page.$eval(sc + ' .tb-meta', (n) => n.textContent)), 'the count went up', '');
+    await page.waitForFunction((p) => /^3 answers/.test(document.querySelector(p + ' .tb-meta').textContent), sc);
+    check(await page.$eval(sc + ' .ans-count', (n) => n.textContent === '3 answers'), 'the count went up', '');
     check(!(await page.$eval(sc + ' .ans-form', (f) => !f.hidden)), 'the box is gone', '');
     await page.click(sc + ' .ans-row:nth-child(2) .ans-heart');
     check(await page.$eval(sc + ' .ans-row:nth-child(2) .ans-heart', (b) => b.disabled && b.classList.contains('on')), 'a heart sticks', '');
     await page.click(sc + ' .ans-row:nth-child(3) .ans-report');
     check((await page.$$(sc + ' .ans-row')).length === 2, 'a report hides it here', '');
+    await page.waitForFunction((p) => /^2 answers/.test(document.querySelector(p + ' .tb-meta').textContent), sc);
+    check(await page.$eval(sc + ' .ans-count', (n) => n.textContent === '2 answers'), 'and the count comes down with it', '');
     await page.waitForFunction((p) => document.querySelector(p + ' .tb').dataset.k === 'd9', bd);
     check((await blockIds(page))[0] === 'd9', 'answering takes the block to the top', (await blockIds(page)).join());
     check(!errors.length, 'no console errors', errors.join(' | '));
@@ -5322,6 +5325,66 @@ async function theAnswers(browser, base) {
     check((await z.page.$$(bd + ' .tb')).length === 8 && !z.errors.filter((e) => !/Failed to load|net::/.test(e)).length, 'backend down: the prompts still show', z.errors.join(' | '));
     await z.ctx.close();
   });
+  await group('Answers: a tease gives nothing whole (360 and 390, demo)', async () => {
+    const giant = 'x'.repeat(600);
+    const rows = [['bd001', giant], ['bd002', 'Flynn'], ['bd003', 'Red Rocks'], ['bd004', 'https://example.org/' + 'a'.repeat(300)], ['bd005', 'word '.repeat(40) + 'end']]
+      .map(([qid, body], i) => ({ qid, id: 'g' + i, name: null, body, hearts: 0, ageHours: i * 0.1 }));
+    for (const width of [360, 390]) {
+      const { ctx, page, errors } = await newPage(browser, base, { viewport: { width, height: 844 } });
+      await page.route('**/data/demo/answers.json', (r) => r.fulfill({ json: { rows } }));
+      await page.goto(base + '/all-day/?demo=1#people/board');
+      await page.waitForSelector(bd + ' [data-k="bd001"] .ans-cut');
+      const cuts = await page.$$eval(bd + ' .tb', (ns) => Object.fromEntries(ns.map((n) => [n.dataset.k, (n.querySelector('.ans-cut') || {}).textContent])));
+      if (width === 390) {
+        check(cuts.bd002 === 'Fl…' && !cuts.bd002.includes('Flynn'), 'one word: two letters', cuts.bd002);
+        check(cuts.bd003 === 'Red…', 'two words: never the last', cuts.bd003);
+        check(cuts.bd001.length <= 61 && cuts.bd005.split(' ').length === 7, 'a giant word and a long answer are capped', cuts.bd001.length + ' ' + cuts.bd005);
+      }
+      const fit = (p) => page.$eval(p, (n) => ({ w: n.scrollWidth, c: n.clientWidth }));
+      const board = await fit('#panel-people');
+      check(board.w <= board.c, 'the Board keeps its width at ' + width, JSON.stringify(board));
+      const go = await page.$eval(bd + ' [data-k="bd001"] .tb-go', (b) => b.getBoundingClientRect().right);
+      check(go <= width, 'the buttons stay on screen', String(go));
+      await page.goto(base + '/all-day/?demo=1#social');
+      await page.waitForSelector('#panel-social .so-board .ans-cut');
+      const social = await fit('#panel-social');
+      check(social.w <= social.c, 'Social keeps its width at ' + width, JSON.stringify(social));
+      check(!errors.length, 'no console errors', errors.join(' | '));
+      await ctx.close();
+    }
+  });
+  await group('Answers: the reader goes with the block (motion on, touch)', async () => {
+    for (const height of [844, 664]) {
+      const { ctx, page, errors } = await newPage(browser, base, { viewport: { width: 390, height }, touch: true });
+      await page.goto(base + '/all-day/?demo=1#people/board');
+      await page.waitForSelector(bd + ' .tb:nth-child(8)');
+      const k = await page.$eval(bd + ' .tb:nth-child(8)', (n) => n.dataset.k);
+      const sc = bd + ' [data-k="' + k + '"]';
+      await page.click(sc + ' .tb-go');
+      await page.fill(sc + ' .ans-box', 'Answered from far down the Board.');
+      await page.click(sc + ' .ans-go');
+      await page.waitForFunction(([p, id]) => document.querySelector(p + ' .tb').dataset.k === id, [bd, k]);
+      const moving = await page.$eval(sc, (n) => n.getAnimations().length);
+      check(moving === 1, 'the block glides', String(moving));
+      await page.waitForTimeout(1200);
+      const at = await page.$eval(sc, (n) => n.getBoundingClientRect().top);
+      check(at > 0 && at < height / 2, 'it is on screen at the top, at ' + height, String(at));
+      check(await page.$eval(sc + ' .ans-row.mine', (r) => { const b = r.getBoundingClientRect(); return b.top < innerHeight && b.bottom > 0; }), 'your answer is in view', '');
+      check(!errors.length, 'no console errors', errors.join(' | '));
+      await ctx.close();
+    }
+  });
+  await group('Answers: a cold link lands on its block', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/all-day/?demo=1#people/bd012');
+    const sc = bd + ' [data-k="bd012"]';
+    await page.waitForSelector(sc + ' .ans');
+    const seen = [];
+    for (let i = 0; i < 4; i += 1) { await page.waitForTimeout(800); seen.push(await page.$eval(sc, (n) => Math.round(n.getBoundingClientRect().top))); }
+    check(seen.every((t) => t > 0 && t < 400), 'it lands, and stays through the late loads', seen.join());
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
   await group('Talk: going back (live deck, remembered)', async () => {
     const { ctx, page, errors } = await newPage(browser, base);
     await page.goto(base + '/all-day/?demo=1#people/talk');
@@ -5358,6 +5421,9 @@ async function theAnswers(browser, base) {
     const seen = await page.$$eval('.sheet-card .tk-seen', (r) => r.map((x) => x.dataset.card));
     check(seen.includes(first[1].id) && new Set(seen).size === seen.length, 'Seen lists each card once', seen.join());
     check(await page.$eval('.sheet-card .sheet-h', (h) => h.textContent === 'Today'), 'by day', '');
+    await page.click('.sheet-card .tk-seen:nth-of-type(3) .tk-ans');
+    await page.waitForSelector('.sheet-card .tk-seen .ans');
+    check(await page.$eval('.sheet-card', (c) => !!c.querySelector('.sheet-h') && c.querySelectorAll('.tk-seen').length > 1), 'an answer opens in place, Seen stays', '');
     await page.click('.sheet-card .iconbtn');
     check(await page.$eval(tk + ' .tk-all', (a) => /table\.html#all$/.test(a.getAttribute('href'))), 'All cards goes to table.html', '');
     const tile = await page.$eval(tk + ' .hu-card', (c) => c.innerText);
@@ -5391,6 +5457,22 @@ async function theAnswers(browser, base) {
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
   });
+  await group('Talk: the card row keeps its label', async () => {
+    const ids = JSON.parse(await readFile(path.join(REPO, 'data/talk-deck.json'), 'utf8')).cards.map((c) => c.id);
+    for (const width of [360, 375, 390, 393]) {
+      for (const n of [3, 42, 1200]) {
+        const { ctx, page } = await newPage(browser, base, { viewport: { width, height: 844 } });
+        const act = ids.map((qid) => ({ qid, n, last_at: new Date().toISOString() }));
+        await page.route(/\/rest\/v1\/rpc\/btb_sa_/, (r) => r.fulfill({ json: /activity/.test(r.request().url()) ? act : [], headers: { 'access-control-allow-origin': '*' } }));
+        await page.goto(base + '/all-day/#people/talk');
+        await talkReady(page);
+        await page.waitForSelector(tk + ' .tk-ans .n');
+        const cut = await page.$$eval(tk + ' .tk-foot .eyebrow', (e) => e.filter((x) => x.scrollWidth > x.clientWidth).map((x) => x.textContent + ' ' + x.scrollWidth + '/' + x.clientWidth));
+        check(!cut.length, 'whole at ' + width + ' with ' + n + ' answers', cut.join());
+        await ctx.close();
+      }
+    }
+  });
   await group('Table Talk: the page (390 and desktop)', async () => {
     const { ctx, page, errors } = await newPage(browser, base);
     await page.route(/raw\.githubusercontent\.com|play\.btownbrief\.com/, (r) => r.abort());
@@ -5407,6 +5489,9 @@ async function theAnswers(browser, base) {
     await page.click('#sync-badge');
     await page.click('#set-btn');
     check(await page.$$eval('#deck-group .lopt', (b) => b.length === 8), 'Settings holds the pace and the decks', '');
+    check(await page.$$eval('#deck-group .lopt', (b) => b.every((x) => x.scrollWidth <= x.clientWidth && x.offsetWidth > 50)), 'each deck can be read', JSON.stringify(await page.$$eval('#deck-group .lopt', (b) => b.map((x) => x.offsetWidth))));
+    const set = await page.$eval('#set-panel', (n) => { const b = n.getBoundingClientRect(); return { top: b.top, bottom: b.bottom, gap: n.querySelector('.panel-head').getBoundingClientRect().top - b.top }; });
+    check(set.top >= 0 && set.bottom <= 844 && set.gap < 40, 'the panel holds its content, on screen', JSON.stringify(set));
     await page.click('#set-panel .panel-close');
     await page.click('.tt-views [data-view="all"]');
     await page.waitForSelector('#browse .tb');
@@ -5415,7 +5500,19 @@ async function theAnswers(browser, base) {
     check((await page.$eval('#browse .tb', (n) => n.innerText)).includes('How did you end up in Burlington?'), 'an answered card leads', '');
     await page.click('#browse .chip[data-chip="deep"]');
     await page.waitForFunction(() => [...document.querySelectorAll('#browse .eyebrow')].every((e) => e.textContent === 'Deep'));
+    await page.click('#browse .chip[data-chip="sports"]');
+    await page.waitForFunction(() => document.querySelector('#browse .tb'));
+    await page.waitForTimeout(50);
+    const sport = await page.$$eval('#browse .tb-q', (q) => q.map((x) => x.textContent));
+    check(!sport.some((q) => /\bskill|\bskip/i.test(q)), 'Sports is sports', sport.join(' | '));
     await page.click('#browse .chip[data-chip="mix"]');
+    await page.waitForFunction(() => document.querySelectorAll('#browse .tb').length === 30);
+    await page.click('#browse .tb:nth-child(2) .tb-go');
+    await page.fill('#browse .tb:nth-child(2) .ans-box', 'A draft in progress');
+    await page.click('#browse .tb-more');
+    await page.waitForFunction(() => document.querySelectorAll('#browse .tb').length === 60);
+    check((await page.$eval('#browse .tb:nth-child(2) .ans-box', (b) => b.value)) === 'A draft in progress', 'Show more keeps an open box and its draft', '');
+    await page.click('#browse .tb:nth-child(2) .tb-q');
     await page.fill('#browse .tt-search', 'zzzqqq');
     await page.waitForSelector('#browse .tt-none');
     await page.fill('#browse .tt-search', 'Burlington');

@@ -652,7 +652,7 @@
     $('sync-badge').setAttribute('aria-pressed', on ? 'true' : 'false');
     $('sync-badge-label').textContent = on ? 'Synced' : 'Sync';
     /* pace + decks are pinned while synced — every phone must agree */
-    document.querySelectorAll('#pace-group .lopt, .lopt.deck, #prev-btn, #next-btn')
+    document.querySelectorAll('#pace-group .lopt, .lopt.tt-deck, #prev-btn, #next-btn')
       .forEach(function (b) { b.disabled = on; });
     saveSet();
     showNext();
@@ -714,7 +714,7 @@
     CATS.forEach(function (c) {
       var b = document.createElement('button');
       b.type = 'button';
-      b.className = 'lopt deck';
+      b.className = 'lopt tt-deck';
       b.textContent = c.label;
       b.setAttribute('aria-pressed', state.enabled[c.key] ? 'true' : 'false');
       b.addEventListener('click', function () {

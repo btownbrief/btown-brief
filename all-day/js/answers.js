@@ -28,7 +28,9 @@ const ANSWERED_KEY = 'allday-answered';  // { qid: { id, at } }
 const QID = /^(q[0-9]{3,4}|tt[0-9]{3,4}|bd[0-9]{3,4}|n[0-9a-f]{12})$/;
 const FRESH_MS = 60000;
 const TEASE_WORDS = 7;
-const TEASE_SHARE = 0.6;                 // a short answer is never given away whole
+const TEASE_SHARE = 0.6;
+const TEASE_CHARS = 60;                  // however long the words
+const TEASE_LETTERS = 2;                 // all that a one-word answer shows
 const TEASED = 2;
 const MAX_BODY = 600;
 const MAX_NAME = 24;
@@ -93,7 +95,9 @@ function demoLoad() {
 let act = new Map();                     // qid -> { n, last } with last in ms
 let actAt = 0, actP = null, feedAt = 0, feedP = null, feedRows = [];
 
-export const count = (qid) => (act.get(qid) || { n: 0 }).n;
+/* one report stays up on the server, so what this phone reported comes off here */
+const reported = (qid) => Object.values(recall(FLAGGED_KEY)).filter((v) => v === qid).length;
+export const count = (qid) => Math.max(0, (act.get(qid) || { n: 0 }).n - reported(qid));
 export const lastAt = (qid) => (act.get(qid) || { last: 0 }).last;
 export const entries = () => [...act.entries()];
 
@@ -145,11 +149,14 @@ export function qidOf(c) {
 }
 export const isQid = (k) => QID.test(String(k || ''));
 
-/* the words of a tease: cut, fading, nameless */
+/* the words of a tease: cut, fading, nameless. The last word never shows, so
+   no answer is given away whole, and a one-word answer shows two letters. */
 export function cut(body) {
   const words = String(body || '').trim().split(/\s+/).filter(Boolean);
-  const keepN = Math.min(TEASE_WORDS, Math.max(1, Math.ceil(words.length * TEASE_SHARE)));
-  return words.slice(0, keepN).join(' ') + '…';
+  const keepN = Math.min(TEASE_WORDS, words.length - 1, Math.ceil(words.length * TEASE_SHARE));
+  const one = [...(words[0] || '')];
+  const shown = keepN ? words.slice(0, keepN).join(' ') : one.slice(0, Math.min(TEASE_LETTERS, Math.floor(one.length / 2))).join('');
+  return [...shown].slice(0, TEASE_CHARS).join('').trim() + '…';
 }
 export const teased = (rows) => rows.filter(liveId).slice().sort(best).slice(0, TEASED);
 const teaseNode = (r) => el('p', 'ans-cut', esc(cut(r.body)));
@@ -188,15 +195,16 @@ function heart(id) {
   keep(HEARTED_KEY, h);
   if (!demo()) call('btb_sa_heart', { p_answer: id, p_voter: voter() }).catch(() => {});
 }
-function flag(id) {
+function flag(id, qid) {
   const f = recall(FLAGGED_KEY);
-  f[id] = 1;
+  f[id] = qid;
   keep(FLAGGED_KEY, f);
   if (!demo()) call('btb_sa_flag', { p_answer: id, p_voter: voter() }).catch(() => {});
+  window.dispatchEvent(new CustomEvent(EVENT, { detail: { qid, reported: true } }));
 }
 
 /* ----------------------------------------------------------------- the panel */
-function rowNode(r, mine) {
+function rowNode(r, mine, onReport) {
   const li = el('li', 'ans-row' + (mine ? ' mine' : ''));
   li.dataset.id = r.id;
   li.append(el('p', 'ans-body', esc(r.body)));
@@ -219,7 +227,7 @@ function rowNode(r, mine) {
   if (!mine) {
     const f = el('button', 'ans-report', esc(WORDS.report));
     f.type = 'button';
-    f.addEventListener('click', () => { flag(r.id); li.remove(); });
+    f.addEventListener('click', onReport);
     foot.append(f);
   }
   li.append(foot);
@@ -282,7 +290,7 @@ export function panel(qid) {
     head.textContent = open ? WORDS.many(n) : rows && !n ? WORDS.first : n ? WORDS.unlock(n) : '';
     if (!open) { teaseNodes(tease, rows || []); return; }
     const shown = (rows || []).filter(liveId);
-    out.replaceChildren(...shown.filter((r) => r.id === mine).concat(shown.filter((r) => r.id !== mine)).map((r) => rowNode(r, r.id === mine)));
+    out.replaceChildren(...shown.filter((r) => r.id === mine).concat(shown.filter((r) => r.id !== mine)).map((r) => rowNode(r, r.id === mine, () => { flag(r.id, qid); paint(); })));
   };
   box.append(head, tease, form, out);
   paint();
