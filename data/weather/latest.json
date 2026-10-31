@@ -1,28 +1,28 @@
 {
- "updated": "2026-10-31T02:44:35+00:00",
+ "updated": "2026-10-31T03:59:38+00:00",
  "sections_updated": {
-  "now": "2026-10-31T02:44:35+00:00",
-  "forecast": "2026-10-31T02:44:35+00:00",
-  "hourly": "2026-10-31T02:44:35+00:00",
-  "alerts": "2026-10-31T02:44:35+00:00",
-  "afd": "2026-10-31T02:44:35+00:00",
-  "lake_forecast": "2026-10-31T02:44:35+00:00",
-  "lake_gage": "2026-10-31T02:44:35+00:00",
-  "air": "2026-10-31T02:44:35+00:00",
-  "sun": "2026-10-31T02:44:35+00:00",
-  "models": "2026-10-31T02:44:35+00:00"
+  "now": "2026-10-31T03:59:38+00:00",
+  "forecast": "2026-10-31T03:59:38+00:00",
+  "hourly": "2026-10-31T03:59:38+00:00",
+  "alerts": "2026-10-31T03:59:38+00:00",
+  "afd": "2026-10-31T03:59:38+00:00",
+  "lake_forecast": "2026-10-31T03:59:38+00:00",
+  "lake_gage": "2026-10-31T03:59:38+00:00",
+  "air": "2026-10-31T03:59:38+00:00",
+  "sun": "2026-10-31T03:59:38+00:00",
+  "models": "2026-10-31T03:59:38+00:00"
  },
  "now": {
-  "observed_at": "2026-10-31T02:00:00+00:00",
+  "observed_at": "2026-10-31T03:00:00+00:00",
   "station": "KBTV",
   "description": "Cloudy",
   "temp_f": 46,
   "feels_like_f": 41,
-  "humidity": 66,
-  "dewpoint_f": 36,
-  "wind_mph": 11,
+  "humidity": 61,
+  "dewpoint_f": 34,
+  "wind_mph": 10,
   "wind_gust_mph": null,
-  "wind_dir": "NNE",
+  "wind_dir": "N",
   "precip_last_hr_in": null
  },
  "forecast": {
@@ -30,13 +30,13 @@
   "periods": [
    {
     "name": "Tonight",
-    "start": "2026-10-30T22:00:00-04:00",
+    "start": "2026-10-30T23:00:00-04:00",
     "is_day": false,
     "temp_f": 35,
-    "pop": 12,
+    "pop": 10,
     "wind": "NW 12 to 17 mph",
-    "short": "Mostly Cloudy",
-    "detailed": "Mostly cloudy, with a low around 35. Northwest wind 12 to 17 mph, with gusts as high as 31 mph."
+    "short": "Partly Cloudy",
+    "detailed": "Partly cloudy, with a low around 35. Northwest wind 12 to 17 mph, with gusts as high as 31 mph."
    },
    {
     "name": "Saturday",
@@ -173,20 +173,6 @@
  "hourly": {
   "updated": "2026-10-31T00:52:41+00:00",
   "hours": [
-   {
-    "t": "2026-10-30T22:00:00-04:00",
-    "temp_f": 39,
-    "feels_f": 30,
-    "pop": 12,
-    "humidity": 96,
-    "wind_mph": 17,
-    "wind_dir": "NW",
-    "sky": 90,
-    "short": "Cloudy",
-    "qpf_in": 0.0,
-    "snow_in": 0.0,
-    "gust_mph": 30
-   },
    {
     "t": "2026-10-30T23:00:00-04:00",
     "temp_f": 38,
@@ -676,6 +662,20 @@
     "qpf_in": 0.0,
     "snow_in": 0.0,
     "gust_mph": 9
+   },
+   {
+    "t": "2026-11-01T09:00:00-05:00",
+    "temp_f": 40,
+    "feels_f": 36,
+    "pop": 0,
+    "humidity": 85,
+    "wind_mph": 6,
+    "wind_dir": "S",
+    "sky": 4,
+    "short": "Sunny",
+    "qpf_in": 0.0,
+    "snow_in": 0.0,
+    "gust_mph": 10
    }
   ],
   "days": [
@@ -1003,17 +1003,17 @@
  },
  "lake_gage": {
   "water_temp_f": 53,
-  "water_temp_at": "2026-10-30T22:00:00.000-04:00",
-  "level_ft": 93.91,
-  "level_at": "2026-10-30T22:00:00.000-04:00",
+  "water_temp_at": "2026-10-30T23:00:00.000-04:00",
+  "level_ft": 93.94,
+  "level_at": "2026-10-30T23:00:00.000-04:00",
   "level_status": "normal"
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 18,
+  "aqi": 20,
   "category": "Good",
   "pollutant": "OZONE",
-  "observed": "10/30/26 22:00",
+  "observed": "10/30/26 23:00",
   "discussion": "On Saturday, October 31st, expect generally good air quality across Vermont."
  },
  "sun": {
@@ -1047,13 +1047,13 @@
    {
     "date": "2026-10-31",
     "high_f": {
-     "GFS": 47,
+     "GFS": 48,
      "Euro": 50,
-     "ICON": 47
+     "ICON": 46
     },
     "pop_max": {
      "GFS": 1,
-     "Euro": 2,
+     "Euro": 4,
      "ICON": 3
     },
     "precip_in": {
@@ -1061,14 +1061,14 @@
      "Euro": 0.01,
      "ICON": 0.0
     },
-    "high_spread_f": 3
+    "high_spread_f": 4
    },
    {
     "date": "2026-11-01",
     "high_f": {
      "GFS": 56,
      "Euro": 55,
-     "ICON": 56
+     "ICON": 55
     },
     "pop_max": {
      "GFS": 0,
@@ -1086,16 +1086,16 @@
  },
  "brief": {
   "date": "2026-10-30",
-  "generated": "2026-10-31T02:44:39+00:00",
-  "text": "Mostly cloudy tonight, windy with gusts to 31 mph, low 35. Saturday, mostly sunny, high 48.",
+  "generated": "2026-10-31T03:59:46+00:00",
+  "text": "Partly cloudy tonight, windy with gusts to 31 mph, low 35. Saturday, mostly sunny, high 48.",
   "periods": [
    {
     "label": "Tonight",
     "name": "Tonight",
     "is_day": false,
     "temp_f": 35,
-    "sky": "mostly cloudy",
-    "start": "2026-10-30T22:00:00-04:00",
+    "sky": "partly cloudy",
+    "start": "2026-10-30T23:00:00-04:00",
     "end": "2026-10-31T06:00:00-04:00",
     "precip": null,
     "wind": {
@@ -1103,8 +1103,8 @@
      "gust_mph": 31
     },
     "feels_lo": 26,
-    "feels_hi": 30,
-    "text": "Mostly cloudy tonight, windy with gusts to 31 mph, low 35."
+    "feels_hi": 29,
+    "text": "Partly cloudy tonight, windy with gusts to 31 mph, low 35."
    },
    {
     "label": "Saturday",
