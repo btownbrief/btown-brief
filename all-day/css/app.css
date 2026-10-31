@@ -3407,8 +3407,7 @@ body[data-world="irl"] .panel [data-world="online"], body[data-world="online"] .
 .rs-check .box .i { width: 16px; height: 16px; }
 .rs-check.on .box { background: var(--accent); border-color: var(--accent); color: var(--paper); }
 .rs-order { position: relative; }
-.rs-row { display: flex; align-items: center; gap: 4px; min-height: 56px; padding: 6px 0; border-bottom: 1px solid var(--line-soft); background: var(--paper); }
-.rs-row .iconbtn { flex: 0 0 auto; width: 36px; height: 36px; }
+.rs-row { display: flex; align-items: center; min-height: 56px; padding: 6px 0; border-bottom: 1px solid var(--line-soft); background: var(--raised); }
 .rs-row .iconbtn[disabled] { opacity: .3; }
 .rs-num { flex: 0 0 26px; font-family: var(--serif); font-size: var(--fs-date); color: var(--ink-3); }
 .rs-handle { flex: 0 0 44px; height: 44px; display: flex; align-items: center; justify-content: center; color: var(--ink-3); cursor: grab; touch-action: none; -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; }

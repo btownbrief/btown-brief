@@ -15713,6 +15713,114 @@ async function theRank(browser, base) {
     await b.ctx.close();
   });
 
+  await group('Rank: Back, a held save, and focus', async () => {
+    const srv = server();
+    const { ctx, page, errors } = await newPage(browser, base, { rpc: (fn, x) => srv.rpc(fn, x) });
+    await page.goto(base + '/all-day/#food');
+    await toRank(page);
+    await page.click(foodPanel + ' [data-k="rank-2026-07"] .rb-foot .btn');
+    for (const n of ['Shy Guy Gelato', 'The Village Scoop', 'Mr Creemee']) await page.locator('.rs-check', { hasText: n }).click();
+    await page.click('.rs-foot .btn');
+    await page.waitForSelector('.rs-row');
+    const names = () => page.$$eval('.rs-row', (n) => n.map((r) => r.dataset.name));
+    await page.locator('.rs-row').last().locator('[data-move="up"]').click();
+    await page.locator('.rs-row').nth(1).locator('[data-move="up"]').click();
+    const set = await names();
+    await page.click('.rs-foot .btn:first-child');
+    await page.waitForSelector('.rs-check');
+    await page.locator('.rs-check', { hasText: 'Burlington Bay Market' }).click();
+    await page.click('.rs-foot .btn');
+    await page.waitForSelector('.rs-row');
+    const again = await names();
+    check(JSON.stringify(again.slice(0, 3)) === JSON.stringify(set) && /Burlington Bay/.test(again[3]), 'Back keeps the order you set, and a new pick goes after it', again.join());
+    /* a save that hangs until the call gives up */
+    const rpc = srv.rpc;
+    srv.rpc = (fn, b) => (fn === 'submit_ballot' ? { hang: true } : rpc(fn, b));
+    await page.click('.rs-foot .btn:last-child');
+    check(await page.$eval('.rs-foot .btn:first-child', (b) => b.disabled) && await page.$eval('.ranksheet .sheet-body', (b) => b.inert), 'while it saves, Back and the rows are held', '');
+    await page.waitForFunction(() => /Couldn’t save/.test(document.getElementById('toast')?.textContent || ''), null, { timeout: 12000 });
+    check(!(await page.$eval('.rs-foot .btn:first-child', (b) => b.disabled)) && !(await page.$eval('.ranksheet .sheet-body', (b) => b.inert)), 'and let go if it fails', '');
+    srv.rpc = rpc;
+    await page.click('.rs-foot .btn:last-child');
+    await page.waitForSelector('.rs-bar');
+    await page.click('#sheet .sheet-head .iconbtn');
+    await page.waitForFunction(() => document.querySelector('.rankblk')?.dataset.k === 'rank-2026-07');
+    const focused = await page.evaluate(() => { const a = document.activeElement; return (a.closest('.rankblk') || {}).dataset?.k + ':' + a.textContent; });
+    check(focused === 'rank-2026-07:Edit', 'after the rise, focus is on the block’s Edit', focused);
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Rank: a shared link shows the ranking', async () => {
+    const srv = server();
+    const { ctx, page, errors } = await newPage(browser, base, { rpc: srv.rpc });
+    await page.goto(base + '/all-day/#food/rank-2026-07');
+    await page.waitForSelector('.ranksheet .rs-bar', { timeout: 15000 });
+    const text = await page.innerText('.ranksheet .sheet-body');
+    check(/Shy Guy Gelato/.test(text) && /Burlington’s list/.test(text) && !/with Burlington/.test(text), 'no ballot, a list with a chart opens on the community list, with no match', text.slice(0, 80));
+    check((await page.innerText('.rs-foot .btn:first-child')) === 'Rank it', 'with Rank it', '');
+    await page.screenshot({ path: path.join(RANK_SHOTS, 'link-no-ballot.png') });
+    await page.click('.rs-foot .btn:first-child');
+    await page.waitForSelector('.rs-check');
+    await page.click('#sheet .sheet-head .iconbtn');
+    await page.click(foodPanel + ' [data-k="rank-2026-07"] .rb-title');
+    await page.waitForSelector('.ranksheet .rs-bar');
+    check(true, 'the title does the same', '');
+    await page.click('#sheet .sheet-head .iconbtn');
+    await page.click(foodPanel + ' [data-k="rank-2027-02"] .rb-title');
+    await page.waitForSelector('.ranksheet .rs-check');
+    check(true, 'a list with no chart still opens on the checklist', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Rank: the list file fails once', async () => {
+    const srv = server();
+    const { ctx, page } = await newPage(browser, base, { rpc: srv.rpc });
+    let tries = 0;
+    await page.route(/data\/rank-lists\.json/, (r) => (tries++ ? r.fallback() : r.abort()));
+    await page.goto(base + '/all-day/#food');
+    await page.waitForSelector(foodPanel + ' .slot[data-sec="rank"]', { state: 'attached', timeout: 15000 });
+    await page.waitForTimeout(800);
+    check(!(await page.$(foodPanel + ' .rankblk')) && tries === 1, 'the section hides', tries);
+    await page.evaluate(() => { location.hash = 'town'; });
+    await page.waitForTimeout(300);
+    await page.evaluate(() => { location.hash = 'food'; });
+    await page.waitForTimeout(300);
+    check(tries === 1, 'and doesn’t try again straight away', tries);
+    await page.evaluate(() => { const real = Date.now; Date.now = () => real() + 3600000; location.hash = 'town'; });
+    await page.waitForTimeout(300);
+    await page.evaluate(() => { location.hash = 'food'; });
+    await page.waitForSelector(foodPanel + ' .rankblk', { timeout: 8000 });
+    const pill = await page.$$eval('#subnav .secpill .chip', (n) => n.map((x) => x.dataset.chip));
+    check(pill.includes('rank'), 'coming back later brings the blocks and the pill back', pill.join());
+    await ctx.close();
+  });
+
+  await group('Rank: the order step at 360', async () => {
+    const srv = server();
+    const { ctx, page, errors } = await newPage(browser, base, { rpc: srv.rpc, viewport: { width: 360, height: 740 } });
+    await page.goto(base + '/all-day/#food');
+    await toRank(page);
+    await page.click(foodPanel + ' [data-k="rank-2026-07"] .rb-foot .btn');
+    for (const n of ['Burlington Bay Market', 'Shy Guy Gelato', 'The Village Scoop']) await page.locator('.rs-check', { hasText: n }).click();
+    await page.click('.rs-foot .btn');
+    await page.waitForSelector('.rs-row');
+    const m = await page.evaluate(() => {
+      const row = document.querySelector('.rs-row'), css = (n) => getComputedStyle(n).backgroundColor;
+      return { hits: [...row.querySelectorAll('.iconbtn')].map((b) => [b.offsetWidth, b.offsetHeight]), same: css(row) === css(document.querySelector('.sheet-card')),
+        fits: row.scrollWidth <= row.clientWidth, paths: [...row.querySelectorAll('.iconbtn path')].map((p) => p.getAttribute('d').split(/[Mm]/).length) };
+    });
+    check(m.hits.flat().every((n) => n >= 44), 'up and down are full tap targets', JSON.stringify(m.hits));
+    check(m.same, 'the rows are the sheet’s colour', '');
+    check(m.fits, 'and fit at 360', '');
+    check(m.paths[0] === m.paths[1], 'up and down are the same drawing', JSON.stringify(m.paths));
+    await page.screenshot({ path: path.join(RANK_SHOTS, '360-order.png') });
+    await pageRules(page, 'food rank 360', 360);
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
   await group('Rank: ?demo=1, and at phone size', async () => {
     for (const [scheme, height] of [['light', 844], ['dark', 844], ['light', 664], ['dark', 664]]) {
       const { ctx, page, errors, supabase } = await newPage(browser, base, { scheme, viewport: { width: 390, height } });

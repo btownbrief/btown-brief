@@ -16,7 +16,8 @@
    closes, the block rises to the top, and the tab scrolls there. Your
    ballot stays on this phone (rwyk-ballot-<key>, the arcade's own key) and
    prefills the next time; Edit reopens it. #food/rank-<key> lands on a block
-   and opens it.
+   and opens it: on the community list if it has one or you've ranked it, so
+   a shared link shows what was shared, on the checklist if not.
 
    Who you are is the arcade's btown-player-id and btown-player-token.
    submit_ballot wants a UUID and All Day mints p_xxxx ids (store.playerId),
@@ -47,6 +48,7 @@ const TOKEN_KEY = 'btown-player-token';
 const NAME_KEY = 'btown-player-name';
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const GRIP = svg('<path d="M5 8h14M5 12h14M5 16h14"/>');
+const DOWN = svg('<path d="M12 5v14M5.5 12.5 12 19l6.5-6.5"/>');   // ICON.up turned over; ICON.down is a chevron
 
 const WORDS = {
   head: 'Ranked by Burlington',
@@ -98,6 +100,7 @@ export function bind(hooks) { H = { ...H, ...hooks }; }
 
 const blockKey = (l) => 'rank-' + l.key;
 const ballotKey = (l) => 'rwyk-ballot-' + l.key;
+const firstStep = (l) => (mineOf(l).length || chartOf(S.rows[l.key], l).length ? 'result' : 'check');
 const reduced = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 export const settled = () => S.settled;
@@ -198,10 +201,12 @@ export function load(demoFile) {
   return S.loading;
 }
 
-/* the way back into the tab: other people may have ranked */
+/* the way back into the tab: other people may have ranked, and a list file
+   that failed gets another try, since a phone can keep the app open for days */
 export function revisit() {
-  if (app.demo || !hasLists() || Date.now() - S.at < STALE_MS) return;
-  fetchBlocks().then(() => { if (!document.querySelector('.ranksheet')) H.paint(); });
+  if (app.demo || !S.settled || Date.now() - S.at < STALE_MS) return;
+  if (!hasLists()) S.loading = null;
+  (hasLists() ? fetchBlocks() : load()).then(() => { if (!document.querySelector('.ranksheet')) H.paint(); });
 }
 
 /* ----------------------------------------------------------------- blocks */
@@ -228,7 +233,7 @@ function block(l) {
   const top = el('div', 'rb-head');
   const name = el('button', 'rb-title', esc(l.title));
   name.type = 'button';
-  name.addEventListener('click', () => openSheet(l, mine.length ? 'result' : 'check'));
+  name.addEventListener('click', () => openSheet(l, firstStep(l)));
   const share = el('button', 'act sh', ICON.share);
   share.type = 'button';
   share.setAttribute('aria-label', WORDS.share + ' ' + l.title);
@@ -265,7 +270,7 @@ export function open(k) {
   const l = (S.lists || []).find((x) => blockKey(x) === k);
   if (!l) return false;
   app.flashHit(H.slot(), k);
-  openSheet(l, mineOf(l).length ? 'result' : 'check');
+  openSheet(l, firstStep(l));
   return true;
 }
 
@@ -292,6 +297,8 @@ function rise(l) {
   }
   app.flashHit(host, k, true);
   if (away) H.jump();
+  /* the repaint took the button focus went back to */
+  if (document.getElementById('sheet').hidden) hit.querySelector('.rb-foot .btn').focus({ preventScroll: true });
 }
 
 /* ------------------------------------------------------------------ sheet */
@@ -350,7 +357,7 @@ function drawCheck(V) {
 
 function drawOrder(V) {
   reset(V, WORDS.order);
-  V.order = startOrder(V.checked, V.l, mineOf(V.l));
+  V.order = startOrder(V.checked, V.l, V.order.length ? V.order : mineOf(V.l));
   const list = el('div', 'rs-list rs-order');
   const sync = () => {
     V.order = [...list.children].map((r) => r.dataset.name);
@@ -364,7 +371,7 @@ function drawOrder(V) {
     const it = V.l.items.find((x) => x.name === name);
     const r = el('div', 'rs-row', '<span class="rs-num"></span><span class="w"><span class="t">' + esc(name) + '</span><span class="d">' + esc((it && it.where) || '') + '</span></span>' +
       '<button type="button" class="iconbtn" data-move="up" aria-label="' + esc(WORDS.moveUp(name)) + '">' + ICON.up + '</button>' +
-      '<button type="button" class="iconbtn" data-move="down" aria-label="' + esc(WORDS.moveDown(name)) + '">' + ICON.down + '</button>' +
+      '<button type="button" class="iconbtn" data-move="down" aria-label="' + esc(WORDS.moveDown(name)) + '">' + DOWN + '</button>' +
       '<span class="rs-handle" aria-hidden="true">' + GRIP + '</span>');
     r.dataset.name = name;
     list.appendChild(r);
@@ -374,28 +381,32 @@ function drawOrder(V) {
   sync();
   const back = button(esc(WORDS.back), 'ghost', () => drawCheck(V));
   back.type = 'button';
-  const save = button(esc(WORDS.save), '', () => saveBallot(V, save));
+  const save = button(esc(WORDS.save), '', () => saveBallot(V, save, back));
   save.type = 'button';
   V.foot.append(back, save);
 }
 
-async function saveBallot(V, btn) {
+async function saveBallot(V, btn, back) {
   const l = V.l;
-  btn.disabled = true;
-  btn.textContent = WORDS.saving;
+  /* the order is what's being sent: nothing moves or goes Back until it lands */
+  const hold = (on) => {
+    btn.disabled = back.disabled = V.body.inert = on;
+    btn.textContent = on ? WORDS.saving : WORDS.save;
+  };
+  hold(true);
   const had = mineOf(l).length > 0;
   if (app.demo) app.toast(WORDS.demo);
   else {
     try {
       await call('submit_ballot', { p_month: l.key, p_player: ballotId(), p_token: ballotToken(), p_name: playerName(), p_ranking: V.order });
     } catch (e) {
-      btn.disabled = false;
-      btn.textContent = WORDS.save;
+      hold(false);
       app.toast(WORDS.down);
       return;
     }
     await fetchRows(l).catch(() => {});
   }
+  hold(false);
   keepMine(l, V.order.slice());
   const a = S.activity[l.key];
   S.activity[l.key] = { ballots: ((a && a.ballots) || 0) + (had ? 0 : 1), last_at: new Date().toISOString() };
