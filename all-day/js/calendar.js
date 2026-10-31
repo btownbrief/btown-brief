@@ -209,7 +209,7 @@ function paint(s) {
   if (!j || !j.total) { node.hidden = true; return; }
   node.hidden = false;
   const box = el('section', 'cal');
-  box.dataset.calendar = o.name;
+  box.dataset.calBlock = o.name;
   box.setAttribute('aria-label', WORDS.title);
   box.appendChild(el('div', 'calhead', '<b class="caln">' + j.total.toLocaleString('en-US') + '</b><div><h2>' + esc(WORDS.title) + '</h2><p>' + esc(WORDS.count) + '</p></div>'));
   if (o.strip !== false) box.appendChild(strip(j.strip, j.today));

@@ -1000,12 +1000,14 @@
 
   function renderMonths() {
     const counts = new Map();
+    const c = nowCtx();
     state.events.forEach((e) => {
       if (!matchesNonDate(e)) return;
+      if (e.date === c.todayKey && !stillOn(e, c.now)) return;
       counts.set(e.date, (counts.get(e.date) || 0) + 1);
     });
 
-    const todayKey = dkey(new Date());
+    const todayKey = c.todayKey;
     const lo = (state.meta && state.meta.windowStart) || todayKey;
     const hi = (state.meta && state.meta.windowEnd) || todayKey;
 

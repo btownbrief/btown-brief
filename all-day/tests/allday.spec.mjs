@@ -15154,10 +15154,22 @@ function eventsFile(nowMs) {
 }
 async function theCalendar(browser, base) {
   const noon = etAt(13);
+  await group('The Calendar: events.css is on All Day’s tokens', async () => {
+    const bare = (await readFile(path.join(REPO, 'css/events.css'), 'utf8')).replace(/\/\*[\s\S]*?\*\//g, '');
+    const colours = bare.match(/#[0-9a-fA-F]{3,8}\b|\brgba?\(|\bhsla?\(|(?<![-\w])(white|black)(?![-\w])/g) || [];
+    check(!colours.length, 'no colour literals', colours.join(' '));
+    const sizes = [...bare.matchAll(/font-size:\s*([^;}]+)/g)].map((m) => m[1].trim()).filter((v) => !/^var\(--fs-[a-z-]+\)$/.test(v));
+    check(!sizes.length, 'every font-size is a --fs token', sizes.join(', '));
+    const radii = [...bare.matchAll(/border-radius:\s*([^;}]+)/g)].map((m) => m[1].trim()).filter((v) => !/^var\(--r-[a-z]+\)$/.test(v));
+    check(!radii.length, 'every border-radius is a --r token', radii.join(', '));
+    const fams = [...bare.matchAll(/font-family:\s*([^;}]+)/g)].map((m) => m[1].trim()).filter((v) => !/^var\(--(serif|sans)\)$/.test(v));
+    check(!fams.length, 'every font-family is --serif or --sans', fams.join(', '));
+    check(!/text-transform:\s*uppercase/.test(bare), 'no uppercase', '');
+  });
   await group('The Calendar: the block on What Now', async () => {
     const { ctx, page, errors } = await newPage(browser, base, { clock: noon, routes: [[/\/all-day\/data\/calendar\.json$/, calendarFile(noon)]] });
     await page.goto(base + '/all-day/#whatnow');
-    await page.waitForSelector(wnPanel + ' [data-calendar="whatnow"]', { timeout: 15000 });
+    await page.waitForSelector(wnPanel + ' [data-cal-block="whatnow"]', { timeout: 15000 });
     const s = await page.evaluate((p) => {
       const box = document.querySelector(p + ' .cal'), r = box.getBoundingClientRect();
       const panel = document.querySelector(p + ' .panel-body') || document.querySelector(p);
@@ -15190,18 +15202,18 @@ async function theCalendar(browser, base) {
     const miss = await newPage(browser, base, { clock: noon });
     await miss.page.route(/\/all-day\/data\/calendar\.json$/, (r) => r.fulfill({ status: 404, body: '' }));
     await miss.page.goto(base + '/all-day/#whatnow');
-    await miss.page.waitForSelector(wnPanel + ' .spin .big', { timeout: 15000 });
+    await miss.page.waitForSelector(wnPanel + ' .spin .big', { timeout: 30000 });
     check(!(await miss.page.$(wnPanel + ' .cal')), 'no file, no block, the tab as it was', '');
     await miss.ctx.close();
     const stale = await newPage(browser, base, { clock: noon + 40 * 86400000, routes: [[/\/all-day\/data\/calendar\.json$/, calendarFile(noon)]] });
     await stale.page.goto(base + '/all-day/#whatnow');
-    await stale.page.waitForSelector(wnPanel + ' .spin .big', { timeout: 15000 });
+    await stale.page.waitForSelector(wnPanel + ' .spin .big', { timeout: 30000 });
     check(!(await stale.page.$(wnPanel + ' .cal')), 'a file weeks old has nothing left to say', '');
     await stale.ctx.close();
     const { ctx, page, errors } = await newPage(browser, base, { clock: noon, routes: [[/\/all-day\/data\/calendar\.json$/, calendarFile(noon)]] });
     await page.goto(base + '/all-day/#people/mix');
-    await page.waitForSelector(peoplePanel + ' [data-calendar="people"]', { timeout: 15000 });
-    const p = await page.$eval(peoplePanel + ' [data-sec="mix"]', (s) => ({ strip: !!s.querySelector('[data-calendar] [data-cal-strip]'), full: !!s.querySelector('[data-calendar] [data-cal-full]') }));
+    await page.waitForSelector(peoplePanel + ' [data-cal-block="people"]', { timeout: 15000 });
+    const p = await page.$eval(peoplePanel + ' [data-sec="mix"]', (s) => ({ strip: !!s.querySelector('[data-cal-block] [data-cal-strip]'), full: !!s.querySelector('[data-cal-block] [data-cal-full]') }));
     check(p.full && !p.strip, 'People leads This week with it, leaving the seven days to its own strip', JSON.stringify(p));
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();

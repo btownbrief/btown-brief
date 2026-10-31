@@ -25,6 +25,8 @@
   padding: var(--s4) var(--gutter) var(--s8);
 }
 
+.events-body .site-header { background: var(--paper); box-shadow: none; }
+
 /* header nav links reuse .mode-btn; make anchors look right */
 .mode-nav a.mode-btn { text-decoration: none; display: inline-flex; align-items: center; }
 .mode-nav a.mode-btn:hover { text-decoration: none; }
@@ -107,11 +109,10 @@
 .ev-fort-wd { font-size: var(--fs-small); font-weight: 600; white-space: nowrap; }
 .ev-fort-dd { font-family: var(--serif); font-size: var(--fs-date); font-weight: 500; line-height: 1.15; color: var(--lake-ink); }
 .ev-fort-n { font-size: var(--fs-small); font-weight: 600; color: var(--lake-ink); font-variant-numeric: tabular-nums; }
-.ev-fort-day[aria-pressed="true"], .ev-fort-day.is-now {
-  background: var(--sunset); color: var(--sunset-ink);
-}
-.ev-fort-day[aria-pressed="true"] .ev-fort-dd, .ev-fort-day[aria-pressed="true"] .ev-fort-n,
+.ev-fort-day.is-now { background: var(--sunset); color: var(--sunset-ink); }
 .ev-fort-day.is-now .ev-fort-dd, .ev-fort-day.is-now .ev-fort-n { color: var(--sunset-ink); }
+.ev-fort-day[aria-pressed="true"] { background: var(--lake-ink); color: var(--lake); }
+.ev-fort-day[aria-pressed="true"] .ev-fort-dd, .ev-fort-day[aria-pressed="true"] .ev-fort-n { color: var(--lake); }
 .ev-fort-day.is-empty { opacity: 0.5; }
 
 /* "Right now" lenses: count-chips that wrap */
