@@ -12,9 +12,10 @@
        demo      the ?demo=1 file, data/demo/<demo>.json: invented data in
                  the same shape load() resolves, so one drawing path runs both
        load      () => Promise of the live data (the repo's data/ files)
-       sections  [{ key, label, sub, draw(box, data, ctx), newest(data) }]
+       sections  [{ key, label, sub, draw(box, data, ctx), newest(data), hide(data) }]
                  draw() appends into the section's box; newest() is the epoch
-                 seconds of its newest thing, for the dot (optional)
+                 seconds of its newest thing, for the dot (optional); hide()
+                 true leaves the section and its pill out (optional)
 
    Live data that fails to load never leaves a blank: each section says so
    in a line. Every row carries a key and a link (rule 4), and in the demo a
@@ -206,13 +207,14 @@ export function townMode(spec) {
   }
 
   const ctx = { get demo() { return app.demo; }, root: () => S.root, redraw: () => draw() };
+  const shown = () => spec.sections.filter((s) => !(S.data && s.hide && s.hide(S.data)));
 
   function draw() {
     const root = S.root;
     root.innerHTML = '';
     S.slots = Object.create(null);
     const feed = el('div', 'shelf feed');
-    spec.sections.forEach((sec) => {
+    shown().forEach((sec) => {
       const box = el('section', 'shelf-sec');
       box.dataset.sec = sec.key;
       section(box, sec.label, sec.sub ? esc(sec.sub) : null);
@@ -278,7 +280,7 @@ export function townMode(spec) {
       if (!S.slots) return null;
       return sectionBar({ key: 'sec-town-' + spec.key, title: spec.label, color: spec.color || '--app-town-pop',
         find: (k) => S.slots && S.slots[k], onPick: (k) => app.jumpTo(S.slots && S.slots[k]),
-        items: spec.sections.map((s) => ({ key: s.key, label: s.label, newest: S.data && s.newest ? s.newest(S.data) || 0 : 0 })) });
+        items: shown().map((s) => ({ key: s.key, label: s.label, newest: S.data && s.newest ? s.newest(S.data) || 0 : 0 })) });
     },
     keepSubnav: true,
     newSince(ts) {

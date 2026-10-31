@@ -6,7 +6,8 @@
    since this phone last looked, the weather, and a ban, a closing or an
    outage only while one is on. Under it, Tonight, the day's house to guess
    (the day's street once the houses run out), then the feed, with a "You're
-   caught up" line where the new ones stop. The pill filters by kind, freshest
+   caught up" line where the new ones stop. The newest council summary is one
+   tile, dated, and opens City Hall's Council section. The pill filters by kind, freshest
    kind first.
 
    Tiles with a place show the state's aerial photo of it, stored with the site
@@ -76,7 +77,7 @@ const COPY = {
   save: 'Save',
   source: 'Town',
   openSource: 'Open the source',
-  tags: { sold: 'Sold', going: 'Going in', week: 'Permits', city: 'City Hall', cityweek: 'City Hall', road: 'Construction',
+  tags: { sold: 'Sold', going: 'Going in', week: 'Permits', city: 'City Hall', cityweek: 'City Hall', council: 'City Council', road: 'Construction',
     food: 'Food', jobs: 'Jobs', signup: 'Signups', weather: 'Weather', reddit: 'r/burlington',
     news: 'News', photo: 'Pictures', calendar: 'Calendar', street: 'Guess the street' },
 };
@@ -87,7 +88,7 @@ const LANES = [
   { key: 'news', label: 'News', kinds: ['news'] },
   { key: 'homes', label: 'Homes', kinds: ['sold'] },
   { key: 'going', label: 'Going in', kinds: ['going', 'week'] },
-  { key: 'city', label: 'City Hall', kinds: ['city', 'cityweek'] },
+  { key: 'city', label: 'City Hall', kinds: ['city', 'cityweek', 'council'] },
   { key: 'roads', label: 'Roads', kinds: ['road'] },
   { key: 'food', label: 'Food', kinds: ['food'] },
   { key: 'jobs', label: 'Jobs', kinds: ['jobs'] },
@@ -272,6 +273,7 @@ const DRAW = {
   weather: (t, it) => frame(t, it, out(t)),
   signup: (t, it) => frame(t, it, out(t), COPY.opens(daysTo(t.day)) + COPY.more(t.n)),
   city: (t, it) => '<div class="tf-frame">' + head(t) + out(t) + '<div class="tf-foot">' + dateBox(t.day) + words(t, [t.sub, t.agenda ? COPY.agenda : COPY.dated].filter(Boolean).join(' · ')) + acts(it) + '</div></div>',
+  council: (t, it) => '<div class="tf-frame">' + head(t) + out(t) + '<h3 class="tf-title">' + esc(t.title) + '</h3><div class="tf-foot"><span class="tf-sub">' + esc(fmtDay(t.day)) + '</span><span class="sp"></span>' + acts(it) + '</div></div>',
   cityweek: (t, it) => '<div class="tf-frame">' + head(t) + '<h3 class="tf-title">' + esc(COPY.meetings) + '</h3><ul class="tf-rows">' +
     t.rows.map(([day, name, url, note]) => { const [wd, , d] = fmtDayParts(day); return '<li><a href="' + esc(safeHref(url)) + '" target="_blank" rel="noopener"><span class="d">' + esc(wd + ' ' + d) + '</span><span class="n">' + esc(name) + (note ? '<span class="tf-sub">' + esc(note) + '</span>' : '') + '</span></a></li>'; }).join('') +
     '</ul><div class="tf-foot"><a class="tf-more" href="#cityhall">' + esc(COPY.allMeetings(t.n)) + ICON.right + '</a>' + acts(it) + '</div></div>',

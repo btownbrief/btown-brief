@@ -3012,6 +3012,27 @@ body[data-world="irl"] .panel [data-world="online"], body[data-world="online"] .
 :root[data-app="town"] .plist .lrow .th.bare .i { width: 26px; height: 26px; }
 :root[data-app="town"] .plist .lrow .th.tl-pic { width: 76px; height: 76px; }
 .tl-pic img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.cclist { margin: 0 12px; overflow: hidden; border-radius: var(--r-tf); background: var(--paper-2); }
+.cc { padding: 16px 14px 10px; }
+.cc:nth-child(even) { background: var(--line-soft); }
+.cc-top { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; gap: 12px 12px; }
+.cc-top .th { display: grid; place-content: center; width: 48px; height: 48px; border-radius: var(--r-box); background: var(--tone); text-align: center; }
+.cc-top .th b, .cc-top .th span { display: block; color: var(--tf-white); }
+.cc-top .th b { font: 600 var(--fs-sec)/1 var(--serif); }
+.cc-top .th span { margin-top: 1px; font: 700 var(--fs-caps)/1 var(--sans); }
+.cc-top .eyebrow { color: var(--ink-3); }
+.cc-top h3 { grid-column: 1 / -1; margin: 0; font: 600 var(--fs-sec)/1.25 var(--serif); letter-spacing: -.006em; text-wrap: pretty; }
+.cc-list { margin: 12px 0 0; padding: 0; list-style: none; }
+.cc-list li { padding: 10px 0; border-top: 1px solid var(--line); color: var(--ink-2); font-size: var(--fs-body); line-height: var(--lh-body); }
+.cc-list li b { display: block; color: var(--ink); font-weight: 600; }
+.cc-all { display: block; width: 100%; padding: 10px 0; border: 0; border-top: 1px solid var(--line); background: none; color: var(--ink); font: 600 var(--fs-button)/1.2 var(--sans); text-align: left; cursor: pointer; }
+.cc-next { margin: 0; padding: 10px 0; border-top: 1px solid var(--line); color: var(--ink-2); font-size: var(--fs-body); line-height: var(--lh-body); }
+.cc-next b { color: var(--ink); font-weight: 600; }
+.cc .row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding-top: 6px; }
+.cc .sp { flex: 1; }
+.cc .tf-acts { margin: 0 -8px 0 0; }
+.tf-council .tf-title { font-size: var(--fs-sec); line-height: 1.25; }
+.tf-council .tf-foot { align-items: center; margin-top: -8px; }
 :root[data-app="town"] .stat { padding: 0 12px; }
 :root[data-app="town"] .stat div { border: 0; border-radius: var(--r-box); background: var(--tone); color: var(--tf-white); }
 :root[data-app="town"] .stat b { font-weight: 600; }

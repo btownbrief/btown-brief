@@ -78,10 +78,14 @@ def location_text(value):
     return None
 
 
-def file_url(value):
-    if not value:
+def file_url(event, item):
+    """The city's own viewer for one published file. It opens the PDF in the page,
+    on a phone too, and every file type lives under /files/agenda/. The API's direct
+    link downloads instead, and the `url` a file record carries (stream/...pdf) is
+    404 for every file (checked 2026-10-31)."""
+    if event.get("id") is None or item.get("fileId") is None:
         return None
-    return urllib.parse.urljoin("https://burlingtonvt.api.civicclerk.com/", str(value))
+    return PORTAL_URL + "event/{}/files/agenda/{}".format(event["id"], item["fileId"])
 
 
 def document_links(event):
@@ -89,11 +93,10 @@ def document_links(event):
     for item in event.get("publishedFiles") or []:
         if not isinstance(item, dict):
             continue
-        label = " ".join(str(item.get(key) or "") for key in ("name", "fileName", "title", "documentType")).lower()
-        raw_url = next((item.get(key) for key in ("url", "fileUrl", "streamUrl", "path") if item.get(key)), None)
-        url = file_url(raw_url)
+        url = file_url(event, item)
         if not url:
             continue
+        label = str(item.get("type") or item.get("name") or "").lower()   # a name can be just "City Council Meeting V7"
         if "minute" in label:
             links["minutes_url"] = url
         elif "packet" in label:

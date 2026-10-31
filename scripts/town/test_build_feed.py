@@ -14,7 +14,7 @@ import scripts.town.build_feed as build_feed
 import scripts.town.geo as geo_module
 import scripts.town.redact as redact_module
 
-from .build_feed import (_job_name, _meeting_day, _seen_key, calendar_tiles, city_tiles, food_tiles, guard, league_rows, move_rows, news_tiles,
+from .build_feed import (_job_name, _meeting_day, _seen_key, calendar_tiles, city_tiles, council_tile, food_tiles, guard, league_rows, move_rows, news_tiles,
                          photo_tiles, reddit_tiles, scene_posts, sold_tiles, status, street_place, tonight_tile, write_feed)
 from .common import ROOT
 from .geo import Geo, street_of
@@ -34,6 +34,18 @@ class NoGeo:
 
 
 def main():
+    council = {"meetings": [{"date": "2026-10-05", "top": "Older", "generated": "2026-10-09T10:00:00+00:00"},
+                            {"date": "2026-10-26", "top": "The council did a thing.", "generated": "2026-10-30T10:00:00+00:00"}]}
+    tile = council_tile(council, dt.date(2026, 10, 1))
+    assert len(tile) == 1 and tile[0]["day"] == "2026-10-26" and tile[0]["title"] == "The council did a thing." and tile[0]["kind"] == "council"
+    assert council_tile(council, dt.date(2026, 11, 15)) == [], "a summary past the window is no tile"
+    assert council_tile({}, dt.date(2026, 10, 1)) == [] and council_tile(None, dt.date(2026, 10, 1)) == []
+    # the last look: a name or a phone number, not the crime words a council item can carry
+    def council_kept(title):
+        return bool(guard([{"id": "council-2026-10-26", "kind": "council", "title": title}], set()))
+    assert council_kept("The council adopted a policy on harassment at public meetings."), "council news is not a crime story"
+    assert not council_kept("Bruce Wilson got the council to refer the ordinance."), "a name in the headline never runs"
+    assert not council_kept("Call 802-555-0134 about the ordinance."), "nor a phone number"
     assert street_of("12 SAMPLE RD") == "Sample Road"
     assert street_of("34 N SAMPLE ST") == "North Sample Street"
     assert street_of("8-34 Pine St") == "Pine Street"

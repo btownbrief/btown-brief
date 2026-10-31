@@ -21,11 +21,25 @@ jobs:
       - name: Refresh civic meetings
         run: python3 scripts/refresh_civic.py
 
+      # City Hall in 5 for the Town app. Calls Claude Opus only when the city has
+      # published new minutes (about 20 cents a meeting; council_summaries.py stops
+      # at $5 a month). Anything going wrong here leaves the civic refresh alone.
+      - name: Summarize new council minutes
+        continue-on-error: true
+        timeout-minutes: 15
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          PROMPT_COUNCIL_SUMMARY: ${{ secrets.PROMPT_COUNCIL_SUMMARY }}
+        run: |
+          python3 -m pip install --quiet 'anthropic>=0.116,<1' 'pypdf>=6,<7'
+          python3 -m unittest tests.test_council_summaries
+          python3 scripts/council_summaries.py
+
       - name: Commit if changed
         run: |
           git config user.name "btown-brief-bot"
           git config user.email "actions@users.noreply.github.com"
-          git add data/civic.json
+          git add data/civic.json data/town/council.json data/town/wire-cost.json
           if git diff --cached --quiet; then
             echo "No civic meeting changes."
           else
