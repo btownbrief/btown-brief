@@ -1,25 +1,25 @@
 {
- "generated": "2026-10-31T11:29:08-04:00",
+ "generated": "2026-10-31T19:43:35-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
    "count": 8,
-   "seconds": 5.4
+   "seconds": 5.9
   },
   "breweries": {
    "label": "Breweries & Taprooms",
    "count": 79,
-   "seconds": 2.2
+   "seconds": 3.9
   },
   "brownell": {
    "label": "Brownell Library",
    "count": 94,
-   "seconds": 5.1
+   "seconds": 3.7
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
    "count": 191,
-   "seconds": 4.1
+   "seconds": 3.5
   },
   "churchst": {
    "label": "Church Street Marketplace",
@@ -44,12 +44,12 @@
   "farmersmarket": {
    "label": "Burlington Farmers Market",
    "count": 1,
-   "seconds": 0.3
+   "seconds": 0.4
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
    "count": 206,
-   "seconds": 68.7
+   "seconds": 74.8
   },
   "flynn": {
    "label": "The Flynn",
@@ -59,7 +59,7 @@
   "generator": {
    "label": "Generator Makerspace",
    "count": 13,
-   "seconds": 30.4
+   "seconds": 30.7
   },
   "greenfc": {
    "label": "Vermont Green FC",
@@ -68,8 +68,8 @@
   },
   "helloburlington": {
    "label": "Hello Burlington",
-   "count": 590,
-   "seconds": 30.2
+   "count": 583,
+   "seconds": 33.5
   },
   "higherground": {
    "label": "Higher Ground",
@@ -78,29 +78,28 @@
   },
   "instagram": {
    "label": "Instagram (Scrape Creators)",
-   "count": 0,
-   "error": "skipped by design: once-daily gate, Instagram fetches on the afternoon run only",
-   "staleDays": 0
+   "count": 1,
+   "seconds": 45.7
   },
   "loveburlington": {
    "label": "Love Burlington",
    "count": 402,
-   "seconds": 72.7
+   "seconds": 72.6
   },
   "meetup": {
    "label": "Meetup",
    "count": 51,
-   "seconds": 96.0
+   "seconds": 94.7
   },
   "monkeyhouse": {
    "label": "The Monkey House",
    "count": 24,
-   "seconds": 0.6
+   "seconds": 0.5
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
    "count": 74,
-   "seconds": 15.0
+   "seconds": 16.0
   },
   "radiobean": {
    "label": "Radio Bean",
@@ -110,17 +109,17 @@
   "sblibrary": {
    "label": "South Burlington Public Library",
    "count": 70,
-   "seconds": 2.3
+   "seconds": 2.1
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
    "count": 17,
-   "seconds": 20.1
+   "seconds": 21.5
   },
   "sevendays": {
    "label": "Seven Days",
    "count": 2824,
-   "seconds": 25.7
+   "seconds": 2.7
   },
   "shelburnemuseum": {
    "label": "Shelburne Museum",
@@ -129,31 +128,75 @@
   },
   "uvm": {
    "label": "UVM & Colleges",
-   "count": 420,
-   "seconds": 29.1
+   "count": 426,
+   "seconds": 21.4
   },
   "uvmbored": {
    "label": "UVM Bored",
-   "count": 254,
-   "seconds": 0.2
+   "count": 260,
+   "seconds": 0.3
   },
   "vcc": {
    "label": "Vermont Comedy Club",
    "count": 47,
-   "seconds": 61.5
+   "seconds": 62.9
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
    "count": 44,
-   "seconds": 0.5
+   "seconds": 0.3
   }
  },
- "gathered": 5489,
- "afterDedup": 2461,
- "duplicatesMerged": 3028,
- "final": 2538,
- "firecrawlCalls": 5,
+ "gathered": 5495,
+ "afterDedup": 2462,
+ "duplicatesMerged": 3033,
+ "final": 2541,
+ "firecrawlCalls": 1,
  "mergeLog": [
+  {
+   "kept": {
+    "title": "Literacy policy, practice, and partnerships: Building on our shared strengths",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-12-02"
+  },
+  {
+   "kept": {
+    "title": "Coloring in the Marble Court",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-12-02"
+  },
+  {
+   "kept": {
+    "title": "BOOST Sessions",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-12-02"
+  },
+  {
+   "kept": {
+    "title": "Wednesday Write-Ins",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-12-02"
+  },
   {
    "kept": {
     "title": "Board Game Night",
@@ -1409,45 +1452,12 @@
   },
   {
    "kept": {
-    "title": "5K Fun Run/Walk: Ugly Sweater Run Adult Registration 2026",
-    "source": "sbrec"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "sbrec"
-   ],
-   "date": "2026-12-13"
-  },
-  {
-   "kept": {
     "title": "'Very Eric Carle' Exhibit",
     "source": "sevendays"
    },
    "merged_sources": [
     "helloburlington",
     "sevendays"
-   ],
-   "date": "2026-12-13"
-  },
-  {
-   "kept": {
-    "title": "Sensory-Friendly Sunday",
-    "source": "sevendays"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "sevendays"
-   ],
-   "date": "2026-12-13"
-  },
-  {
-   "kept": {
-    "title": "J. Wail",
-    "source": "helloburlington"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "helloburlington"
    ],
    "date": "2026-12-13"
   },
@@ -1482,17 +1492,6 @@
    "merged_sources": [
     "uvm",
     "uvmbored"
-   ],
-   "date": "2026-12-14"
-  },
-  {
-   "kept": {
-    "title": "Industry Day",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
    ],
    "date": "2026-12-14"
   },
@@ -2407,20 +2406,12 @@
  ],
  "changes": [
   {
-   "id": "827aecc12c2e",
-   "title": "Jefferson Hamer",
-   "date": "2026-11-08",
+   "id": "312019d1b490",
+   "title": "J.WAIL",
+   "date": "2026-12-13",
    "change": "time",
-   "was": "2026-11-08",
-   "now": "2026-11-08T13:00:00-05:00"
-  },
-  {
-   "id": "5de83e65a3cd",
-   "title": "The American Revolution and the Fate of the World",
-   "date": "2026-11-15",
-   "change": "time",
-   "was": "2026-11-15T14:00:00-05:00",
-   "now": "2026-11-15T15:00:00-05:00"
+   "was": "2026-12-13T19:00:00-05:00",
+   "now": "2026-12-13T19:30:00-05:00"
   },
   {
    "id": "d5cbac38854a",
@@ -2428,6 +2419,13 @@
    "date": "2026-10-31",
    "change": "missing",
    "lastSeen": "2026-10-28T20:24:09-04:00"
+  },
+  {
+   "id": "d74ff56a591a",
+   "title": "BTown Coffee Club",
+   "date": "2026-10-31",
+   "change": "missing",
+   "lastSeen": "2026-10-31T11:29:08-04:00"
   },
   {
    "id": "782e919eb2b6",
@@ -2470,6 +2468,13 @@
    "date": "2026-11-04",
    "change": "missing",
    "lastSeen": "2026-10-29T20:21:30-04:00"
+  },
+  {
+   "id": "26aa935be4d7",
+   "title": "Tapestry Weaving - 3 Week Class!",
+   "date": "2026-11-04",
+   "change": "missing",
+   "lastSeen": "2026-10-31T11:29:08-04:00"
   },
   {
    "id": "8906e688af74",
@@ -2545,8 +2550,7 @@
    "id": "4f8c37eb4077",
    "title": "Parks Department w/ Jordan Meeker",
    "date": "2026-11-08",
-   "change": "missing",
-   "lastSeen": "2026-10-28T12:15:14-04:00"
+   "change": "dropped"
   },
   {
    "id": "bb8287d19ca5",
@@ -2619,11 +2623,17 @@
    "lastSeen": "2026-10-30T12:11:43-04:00"
   },
   {
+   "id": "b76a9d82d7df",
+   "title": "Tapestry Weaving - 3 Week Class!",
+   "date": "2026-11-11",
+   "change": "missing",
+   "lastSeen": "2026-10-31T11:29:08-04:00"
+  },
+  {
    "id": "7cdbafc8d9b1",
    "title": "Sierra Hotel w/ New Speaker",
    "date": "2026-11-11",
-   "change": "missing",
-   "lastSeen": "2026-10-28T12:15:14-04:00"
+   "change": "dropped"
   },
   {
    "id": "202168631b0f",
@@ -2638,13 +2648,6 @@
    "date": "2026-11-13",
    "change": "missing",
    "lastSeen": "2026-10-28T20:24:09-04:00"
-  },
-  {
-   "id": "ac98755ba8ea",
-   "title": "Chamber Orchestra & Symphony Orchestra",
-   "date": "2026-11-14",
-   "change": "missing",
-   "lastSeen": "2026-10-30T12:11:43-04:00"
   },
   {
    "id": "b0ed80c97d2a",
@@ -2682,18 +2685,18 @@
    "lastSeen": "2026-10-30T20:03:30-04:00"
   },
   {
-   "id": "5fd2d297ed4b",
-   "title": "Make Your Own First Aid Kit",
-   "date": "2026-11-18",
-   "change": "missing",
-   "lastSeen": "2026-10-30T12:11:43-04:00"
-  },
-  {
    "id": "16d2586f68ef",
    "title": "MATH Help Sessions",
    "date": "2026-11-18",
    "change": "missing",
    "lastSeen": "2026-10-29T20:21:30-04:00"
+  },
+  {
+   "id": "a53f862e20bc",
+   "title": "Tapestry Weaving - 3 Week Class!",
+   "date": "2026-11-18",
+   "change": "missing",
+   "lastSeen": "2026-10-31T11:29:08-04:00"
   },
   {
    "id": "c2fb21c26763",
@@ -2864,11 +2867,25 @@
    "lastSeen": "2026-10-29T20:21:30-04:00"
   },
   {
+   "id": "8495d7635778",
+   "title": "Acoustic Brunch",
+   "date": "2026-12-13",
+   "change": "missing",
+   "lastSeen": "2026-10-31T11:29:08-04:00"
+  },
+  {
    "id": "0033ee661172",
    "title": "Public Skate",
    "date": "2026-12-13",
    "change": "missing",
    "lastSeen": "2026-10-30T20:03:30-04:00"
+  },
+  {
+   "id": "2afe93de28fc",
+   "title": "Karaoke Sundays!",
+   "date": "2026-12-13",
+   "change": "missing",
+   "lastSeen": "2026-10-31T11:29:08-04:00"
   },
   {
    "id": "15062797b05e",
