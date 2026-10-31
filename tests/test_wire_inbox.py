@@ -507,37 +507,48 @@ class FreeTests(unittest.TestCase):
         for url in ("http://www.facebook.com/groups/1/posts/2/", "https://www.facebook.com/groups/123/",
                     "https://www.facebook.com/marketplace/burlington/free/", "https://facebook.com.evil.example/groups/1/posts/2/",
                     "https://example.com/groups/1/posts/2/", "https://www.facebook.com/search/top?q=free",
-                    "https://www.facebook.com/groups/1/posts/2/ x", 7, None):
+                    "https://www.facebook.com/groups/1/posts/2/ x", "https://www.facebook.com/share/g/abc/",
+                    "https://www.facebook.com/share/p/1Ab2/", 7, None):
             state, fresh = self.fresh(offer(u=url))
             self.assertEqual((state.get("dropped"), len(fresh)), (1, 2), url)
         for url in ("https://www.facebook.com/groups/burlingtonfree/permalink/99/", "https://m.facebook.com/marketplace/item/5/",
-                    "https://facebook.com/groups/1/posts/2", "https://www.facebook.com/share/p/1Ab2/"):
+                    "https://facebook.com/groups/1/posts/2"):
             state, fresh = self.fresh(offer(u=url))
             self.assertEqual(len(fresh), 3, url)
 
     def test_requests_are_not_offers(self):
         for title in ("ISO a crib", "In search of moving boxes", "Wanted: snow tires", "Looking for a couch",
-                      "WTB bike", "Anyone have a spare ladder?", "Does anyone have boxes?"):
+                      "WTB bike", "Anyone have a spare ladder?", "Does anyone have boxes?", "Need a crib",
+                      "In need of a stroller", "Anyone got a bike", "Anybody have a crib?", "Would love a crib",
+                      "Request: crib", "Hoping to find a crib"):
             state, fresh = self.fresh(offer(title=title))
             self.assertEqual(state.get("dropped"), 1, title)
-        _, fresh = self.fresh(offer(title="Couch looking for a new home"))
-        self.assertEqual(len(fresh), 3)
+        for title in ("Couch looking for a new home", "Couch in need of a new home", "Dresser needs a home",
+                      "Couch would love a good home", "Need this gone by Friday"):
+            _, fresh = self.fresh(offer(title=title))
+            self.assertEqual(len(fresh), 3, title)
         state, _ = self.fresh(offer(kind="post"))
         self.assertEqual(state.get("dropped"), 1)
 
     def test_people_and_contacts_never_get_through(self):
         for title in ("Crib from Sarah Jones", "Text Mike for the couch", "Sarah's bookshelf", "Couch at 12 Main St",
-                      "Couch, call 802-555-0134", "Couch, hello@example.com", "Coach Miller's old skis"):
+                      "Couch, call 802-555-0134", "Couch, hello@example.com", "Coach Miller's old skis",
+                      "Crib from Charlotte Smith", "Ask for Charlotte", "Charlotte's crib", "Ethan Allen Jones",
+                      "Ralph Lauren Smith", "couch from sarah", "text sarah", "Smith family crib", "Curb at 12 Pine",
+                      "Apt 3, 90 College", "jane at gmail dot com"):
             state, fresh = self.fresh(offer(title=title))
             self.assertEqual(state.get("dropped"), 1, title)
-        state, _ = self.fresh(offer(where="44 Elm Street"))
-        self.assertEqual(state.get("dropped"), 1)
+        for where in ("44 Elm Street", "Pearl Street", "North Avenue", "Church St."):
+            state, _ = self.fresh(offer(where=where))
+            self.assertEqual(state.get("dropped"), 1, where)
 
     def test_a_brand_or_a_town_is_not_a_person(self):
-        for title in ("Ethan Allen dresser", "Ashley Furniture recliner", "Harry Potter books", "Mr Coffee maker"):
+        for title in ("Ethan Allen dresser", "Ashley Furniture recliner", "Harry Potter books", "Mr Coffee maker",
+                      "Jack Daniels sign", "Tommy Hilfiger coat", "Mark Twain books", "Kelly Moore paint", "Tiffany Lamp",
+                      "Mason Jars, about 40", "Couch in Charlotte", "Large family tent", "Pickup at 5 Monday"):
             _, fresh = self.fresh(offer(title=title))
             self.assertEqual(len(fresh), 3, title)
-        for where in ("Charlotte", "Ethan Allen Park", "South Burlington"):
+        for where in ("Charlotte", "Charlotte VT", "Ethan Allen Park", "South Burlington", "Saint Michael's", "Old North End"):
             _, fresh = self.fresh(offer(where=where))
             self.assertEqual(len(fresh), 3, where)
 
@@ -568,6 +579,14 @@ class FreeTests(unittest.TestCase):
     def test_tracking_is_cut_and_a_repeat_is_one_offer(self):
         url = "https://www.facebook.com/marketplace/item/77/"
         _, fresh = wi.read_free(free_file(offer(u=url + "?ref=search"), offer(u=url + "?ref=feed")), NOW)
+        kept, added = wi.merge_free(None, fresh, NOW, True)
+        self.assertEqual(([item["u"] for item in kept], added), ([url], 1))
+
+    def test_one_listing_is_one_offer_however_facebook_spells_it(self):
+        url = "https://www.facebook.com/marketplace/item/77/"
+        _, fresh = wi.read_free(free_file(*[offer(u=u) for u in (
+            url, "https://m.facebook.com/marketplace/item/77", "https://web.facebook.com/marketplace/item/77/?ref=x",
+            "https://facebook.com/marketplace/item/77")]), NOW)
         kept, added = wi.merge_free(None, fresh, NOW, True)
         self.assertEqual(([item["u"] for item in kept], added), ([url], 1))
 
@@ -690,9 +709,18 @@ class ValidatorParityTests(unittest.TestCase):
                       ("Ethan Allen sofa", "Charlotte"), ("Sarah's desk", "Essex"), ("Couch at 12 Main St", "Essex"),
                       ("Couch, call 802-555-0134", "Essex"), ("Text Mike for the couch", "Essex"),
                       ("Couch looking for a new home", "Ethan Allen Park"), ("Skis", "44 Elm Street"),
-                      ("Coach Miller's old skis", "Essex"), ("Free couch #free", "Essex"), ("x" * 71, "Essex")))]
+                      ("Coach Miller's old skis", "Essex"), ("Free couch #free", "Essex"), ("x" * 71, "Essex"),
+                      ("Crib from Charlotte Smith", "Essex"), ("Ask for Charlotte", "Essex"), ("Charlotte's crib", "Essex"),
+                      ("Ethan Allen Jones", "Essex"), ("Ralph Lauren Smith", "Essex"), ("Curb at 12 Pine", "Essex"),
+                      ("Apt 3, 90 College", "Essex"), ("jane at gmail dot com", "Essex"), ("couch from sarah", "Essex"),
+                      ("text sarah", "Essex"), ("Smith family crib", "Essex"), ("Need a crib", "Essex"),
+                      ("In need of a stroller", "Essex"), ("Anybody have a crib?", "Essex"), ("Request: crib", "Essex"),
+                      ("Would love a crib", "Essex"), ("Hoping to find a crib", "Essex"), ("Need this gone", "Essex"),
+                      ("Tiffany Lamp", "Saint Michael's"), ("Mason Jars, about 40", "Charlotte VT"), ("Skis", "Pearl Street"),
+                      ("Jack Daniels sign", "North Avenue"), ("Tommy Hilfiger coat", "Essex")))]
         offers += [offer(posted_at=stamp, group="Other"), offer(posted_at=stamp, kind="post", u=offers[0]["u"]),
                    offer(posted_at=stamp, u="https://www.facebook.com/groups/123/"),
+                   offer(posted_at=stamp, u="https://www.facebook.com/share/g/abc/"),
                    offer(posted_at=(now - timedelta(days=6)).strftime("%Y-%m-%dT%H:%M:%SZ"))]
         for data in (json.loads(free_file(*offers, updated_at=stamp)), json.loads(free_file(updated_at="soon", items="x")),
                      json.loads(free_file(updated_at=stamp, run_note="a\nb"))):

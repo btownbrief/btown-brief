@@ -360,7 +360,7 @@ export function moreGrid(host, o) {
     const shown = Math.max(first, grown[o.name] || 0);
     o.cells.forEach((c, i) => { c.hidden = i >= shown; });
     row.hidden = shown >= o.cells.length;
-    foot.hidden = shown <= first;
+    foot.hidden = shown <= first || o.cells.length <= first;
   }
   more.addEventListener('click', () => { grown[o.name] = Math.max(first, grown[o.name] || 0) + step; paint(); });
   paint();

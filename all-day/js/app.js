@@ -197,7 +197,8 @@ export function promise(host, key) {
 /* ------------------------------------------------------------------ share */
 /* One card, one link. The URL is this app with the tab and the card's key in
    the hash, so a text from a neighbour lands the reader inside All Day. Native
-   share sheet where phones have one; the clipboard everywhere else. */
+   share sheet where phones have one; the clipboard everywhere else. A card
+   shown away from its home tab names it (it.shareTab), so the link lands. */
 export function share(tab, key, title) {
   const base = demo ? location.origin + location.pathname + '?demo=1' : APP.url;
   const url = base + '#' + tab + (key ? '/' + encodeURIComponent(key) : '');
@@ -256,7 +257,7 @@ export function bindFeed(host, h = {}) {
       const a = act.dataset.act;
       if (a === 'up') toggleVote(it);
       else if (a === 'comment') comments(it);
-      else if (a === 'share') share(active, it.k, it.title || it.text);
+      else if (a === 'share') share(it.shareTab || active, it.k, it.title || it.text);
       else if (a === 'save') (h.onSave || toggleSave)(it);
       else if (ACTS[a]) ACTS[a](it, act);
       return;

@@ -15187,6 +15187,69 @@ async function theFree(browser, base) {
     await ctx.close();
   });
 
+  await group('Free: no swipe to mute, a filter that fits has no Collapse (live)', async () => {
+    const { ctx, page, errors } = await open(eight, '#vintage');
+    await page.waitForSelector(vslot('free') + ' .froffer');
+    const swipe = async (sel) => {
+      await page.$eval(sel, (c) => c.scrollIntoView({ block: 'center' }));
+      const r = await page.$eval(sel, (c) => { const b = c.getBoundingClientRect(); return { x: b.left + b.width * 0.7, y: b.top + 30 }; });
+      await page.mouse.move(r.x, r.y); await page.mouse.down();
+      for (let i = 1; i <= 8; i++) await page.mouse.move(r.x - i * 14, r.y);
+      const hint = !!(await page.$('.fi-hint'));
+      await page.mouse.up();
+      return hint;
+    };
+    check(!(await swipe(vslot('free') + ' .froffer')), 'a swipe on a tile starts nothing', '');
+    await page.waitForTimeout(250);
+    check(!(await page.evaluate(() => /Mute /.test(document.body.innerText))), 'and no mute question', '');
+    await page.click(vslot('free') + ' [data-more="free"]');
+    check(!!(await page.$(vslot('free') + ' .collapsebar:not([hidden])')), 'See more grows, with Collapse', '');
+    await page.click(vslot('free') + ' [data-free] .chip:has-text("Gifting")');
+    check(!(await page.$(vslot('free') + ' .collapsebar:not([hidden])')), 'a filter that fits has nothing to collapse', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Free: landing late above the reader moves nothing they are reading (live)', async () => {
+    const { ctx, page, errors } = await newPage(browser, base, { viewport: { width: 390, height: 844 } });
+    let release; const gate = new Promise((res) => { release = res; });
+    await page.route(/pulse\.json/, async (r) => { await gate; r.fulfill({ status: 200, body: JSON.stringify(pulseWith(eight)), contentType: 'application/json' }); });
+    await page.goto(base + '/all-day/#vintage');
+    await page.waitForSelector(vslot('spotted') + ' .sec');
+    await page.waitForTimeout(800);
+    const mark = vslot('shops') + ' .sec h2';
+    await page.evaluate(() => { document.querySelector('#panel-vintage').scrollTop = 600; });
+    await page.waitForTimeout(100);
+    const at = (s) => page.$eval(s, (n) => Math.round(n.getBoundingClientRect().top));
+    const before = await at(mark);
+    release();
+    await page.waitForSelector(vslot('free') + ' .froffer');
+    await page.waitForTimeout(100);
+    const after = await at(mark);
+    check(Math.abs(after - before) <= 2 && await page.$eval('#panel-vintage', (p) => p.scrollTop) > 600, 'Free paints above and the page holds still', before + ' ' + after);
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Free: Social’s block shares into Vintage and has no swipe (live)', async () => {
+    const facebook = { paused: false, items: [{ u: fb + 'groups/123/permalink/4/', d: now - 7200, from: 'Group', name: 'Burlington Group', summary: 'A group post', ch: 'facebook', local: true }] };
+    const { ctx, page, errors } = await open([offer(1, 1, 'Oak dresser', 'Buy Nothing', true)], '#social', { facebook });
+    await page.waitForSelector('#panel-social .so-facebook');
+    await page.evaluate(() => { navigator.share = (o) => { window.sharedUrl = o.url; return Promise.resolve(); }; });
+    const block = page.locator('#panel-social .so-facebook', { hasText: 'Free this week' });
+    await block.locator('[data-act=share]').click();
+    const url = await page.evaluate(() => window.sharedUrl);
+    check(/#vintage\/fr-/.test(url || ''), 'its link lands on the offer in Vintage', String(url));
+    check(!(await block.evaluate((c) => c.classList.contains('fi'))), 'no swipe on Free', '');
+    check(await page.locator('#panel-social .so-facebook', { hasText: 'Burlington Group' }).evaluate((c) => c.classList.contains('fi')), 'a group keeps its swipe', '');
+    await page.goto(url.replace(/^.*#/, base + '/all-day/?x=1#'));
+    await page.waitForSelector(vslot('free') + ' .froffer');
+    await page.waitForFunction(() => document.querySelector('.froffer.flash'), null, { timeout: 4000 }).catch(() => {});
+    check(!!(await page.$('.froffer.flash')), 'and opened fresh, it flashes there', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
   await group('Free: no photos are clean rows, one kind has no filters, a shared offer lands (live)', async () => {
     const { ctx, page, errors } = await open([offer(1, 1, 'Oak dresser', 'Gifting'), offer(2, 2, 'Porch chairs', 'Gifting')], '#vintage');
     await page.waitForSelector(vslot('free') + ' .frrows .froffer');

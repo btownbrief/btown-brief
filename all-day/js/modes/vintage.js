@@ -337,12 +337,15 @@ function render() {
 
 function paint(k) {
   if (!ready || !slots || !slots[k]) return;
-  const host = slots[k];
-  const y = panel() ? panel().scrollTop : 0;
+  const host = slots[k], p = panel();
+  const y = p ? p.scrollTop : 0;
+  /* a slot wholly above the reader keeps their place when it changes height */
+  const above = !!p && y > 0 && host.getBoundingClientRect().bottom <= p.getBoundingClientRect().top;
+  const was = host.offsetHeight;
   host.innerHTML = '';
   ({ free: paintFree, fit: paintFit, spotted: paintSpotted, newin: paintNewIn, shops: paintShops, swaps: paintSwaps, tees: paintTees, sent: paintSent })[k](host);
-  if (panel() && app.activeTab() === KEY) panel().scrollTop = y;
-  resettle();                     // New in sits on top: anything drawn late moves what is under it
+  if (p && app.activeTab() === KEY) p.scrollTop = y + (above ? host.offsetHeight - was : 0);
+  resettle();                     // anything drawn late moves what is under it
 }
 
 /* Board posts, two up, on the shell's board card, or in a row (`rail`, its
@@ -392,11 +395,12 @@ function postBtn(label, act, fn) {
 
 /* -------------------------------------------------------------------- Free */
 /* One offer, as a tile or a row. The title is the one link and covers the
-   tile, so the whole thing opens Facebook; star and share sit above it. */
+   tile, so the whole thing opens Facebook; star and share sit above it. No
+   .fi, so no swipe: Buy Nothing is a kind of post, not a source to mute. */
 function offerCell(x, tiles) {
-  const it = { k: x.k, kind: 'post', title: x.title, text: '', href: x.u, src: x.group, ago: agoShort(x.d), open: WORDS.openOn, thumb: x.photo || '' };
+  const it = { k: x.k, kind: 'post', title: x.title, text: '', href: x.u, src: x.group, ago: agoShort(x.d), open: WORDS.openOn, thumb: x.photo || '', shareTab: KEY };
   const saved = store.isSaved(it.k);
-  const c = el('article', 'card fi froffer' + (tiles && !x.photo ? ' bare' : '') + (store.isRead(it.k) ? ' is-read' : ''));
+  const c = el('article', 'card froffer' + (tiles && !x.photo ? ' bare' : '') + (store.isRead(it.k) ? ' is-read' : ''));
   c.dataset.k = it.k;
   c.innerHTML = (tiles && x.photo ? '<span class="c-media r11">' + art(x.photo) + '</span>' : '') +
     '<a class="c-title" href="' + esc(safeHref(x.u)) + '" target="_blank" rel="noopener" data-open>' + esc(x.title) + '</a>' +

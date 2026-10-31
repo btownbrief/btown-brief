@@ -13,7 +13,8 @@
    has one, and its two before that; a thread is one post, so it has none
    before it. Everything opens on the platform it came from. Free stuff is one
    block among the Facebook groups: its posts open Facebook, its name opens
-   Vintage's Free section.
+   Vintage's Free section, its link shares into Vintage, and it has no swipe
+   (it is not a source to mute).
 
    X and Facebook are the bots' files (pulse.json's inbox: x, voices, facebook
    and free), Instagram is all-day/data/instagram.json, Reddit is the shared
@@ -75,7 +76,7 @@ function gather() {
     const g = /^https:\/\/(?:www\.)?facebook\.com\/groups\/[^/]+/.exec(x.u || '');
     put('facebook', x.name || x.from, x.name || x.from, g ? g[0] : 'https://www.facebook.com/', post(x.u, x.d * 1000, x.summary, '', true));
   });
-  data.freeOffers(S.pulse).forEach((x) => put('facebook', 'free', COPY.free, '#vintage/free', { ...post(x.u, x.d * 1000, x.title + ' · ' + x.where, x.photo || '', true), k: x.k }));
+  data.freeOffers(S.pulse).forEach((x) => put('facebook', 'free', COPY.free, '#vintage/free', { ...post(x.u, x.d * 1000, x.title + ' · ' + x.where, x.photo || '', true), k: x.k, shareTab: 'vintage' }));
   ((S.ig && S.ig.posts) || []).forEach((x) => put('instagram', x.h, '@' + x.h, 'https://www.instagram.com/' + x.h + '/', post(x.u, x.ts * 1000, x.c, x.i, !x.n)));
   /* a subreddit is many people, not one account, so each thread people answered is its own block */
   (S.reddit || []).filter((x) => Number(x.comments) >= THREAD_MIN).forEach((x) => put('reddit', x.id || x.url, x.sub, 'https://www.reddit.com/' + x.sub + '/', post(x.url, x.ts, x.title, '', true)));
@@ -104,12 +105,13 @@ function acts(it) {
 const wideShade = (n) => (Math.floor(n / 2) + (n % 2)) % 2;
 function block(b, i) {
   const top = b.posts[0];
-  const it = { k: top.k, kind: 'post', title: top.text || b.name, text: '', href: top.href, src: b.name, sid: b.key, ago: stamp(top.ts), open: 'Open on ' + NAME[b.plat], thumb: top.pic };
+  const it = { k: top.k, kind: 'post', title: top.text || b.name, text: '', href: top.href, src: b.name, sid: b.key, ago: stamp(top.ts), open: 'Open on ' + NAME[b.plat], thumb: top.pic, shareTab: top.shareTab };
   app.know([it]);
-  const c = el('article', 'card fi so-block so-' + b.plat + (i % 2 ? ' alt' : '') + (wideShade(i) ? ' alt-w' : '') + (store.isRead(it.k) ? ' is-read' : ''));
+  const own = b.home[0] === '#';
+  const c = el('article', 'card ' + (own ? '' : 'fi ') + 'so-block so-' + b.plat + (i % 2 ? ' alt' : '') + (wideShade(i) ? ' alt-w' : '') + (store.isRead(it.k) ? ' is-read' : ''));
   c.dataset.k = it.k;
   const earlier = b.posts.slice(1, 1 + EARLIER).filter((p) => p.text);
-  const name = b.home[0] === '#' ? '<a class="so-name" href="' + esc(b.home) + '">' + esc(b.name) + '</a>' : link(b.home, 'so-name', esc(b.name));
+  const name = own ? '<a class="so-name" href="' + esc(b.home) + '">' + esc(b.name) + '</a>' : link(b.home, 'so-name', esc(b.name));
   c.innerHTML = '<div class="so-head">' + name +
       (top.ts > S.base ? '<span class="so-new">' + esc(COPY.isNew) + '</span>' : '') + '<span class="so-when">' + esc(it.ago) + '</span></div>' +
     (top.pic ? link(top.href, 'so-pic', picture(top.pic)) : '') +

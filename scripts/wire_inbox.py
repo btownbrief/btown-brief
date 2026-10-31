@@ -66,7 +66,7 @@ import urllib.request
 from datetime import datetime, timedelta, timezone
 
 import wire_common as wc
-from talk_questions import CONTACT, FIRST, names_person
+from talk_questions import CONTACT, FIRST, NOT_SURNAME, names_person
 
 REPO = "btownbrief/wire-inbox"
 API = "https://api.github.com/repos/" + REPO + "/contents/"
@@ -439,27 +439,58 @@ FREE_TITLE_MAX = 70
 FREE_WHERE_MAX = 40
 FREE_URL_MAX = 300
 # the post itself: a group post or a Marketplace listing, never a group's front
-# page, a search or a guess
+# page, a search or a guess. No share/ links: they hide which group a post is in,
+# and a group that goes private is cleared from the file by its id
 FREE_POST = re.compile(r"^https://(?:www\.|m\.|web\.)?facebook\.com/"
-                       r"(?:groups/[^/\s?#]+/(?:posts|permalink)/[^\s]+|marketplace/item/\d+[^\s]*|share/[^\s]+)$")
+                       r"(?:groups/[^/\s?#]+/(?:posts|permalink)/[^\s]+|marketplace/item/\d+[^\s]*)$")
 # only Facebook's own picture host reaches a reader's phone; anything else
 # loses the field and keeps the offer
 FREE_PHOTO = re.compile(r"^https://[a-z0-9-]+(?:\.[a-z0-9-]+)*\.fbcdn\.net/[^\s]{1,600}\Z")
-# a request, not an offer. "Looking for a new home" is how couches talk.
-FREE_WANTED = re.compile(r"\b(?:iso|in search of|wtb|wanted|seeking|anyone have|does anyone have|"
-                         r"looking for(?! (?:a )?(?:new |good |loving )*home))\b", re.I)
-# brands and towns the name check would take for a person
-FREE_NOT_PEOPLE = re.compile(r"\b(?:Ethan Allen|Ashley (?:Furniture|Home)|Tommy Bahama|Ralph Lauren|Harry Potter|"
-                             r"Herman Miller|Martha Stewart|Mr\.? Coffee|Dr\.? Seuss|Charlotte)\b")
-# one first name, where a listing would say who to ask or whose it is
-FREE_CUE = re.compile(r"(?:\b(?i:from|ask for|contact|message|text|call|pm|dm)\s+|\b(?=[A-Z][a-z]+[’']s\b))"
-                      r"([A-Z][a-z]+)\b", re.A)
+# a request, not an offer. "Looking for a new home" is how couches talk, and
+# "need this gone" is how a mover does.
+FREE_HOME = r"(?:a |to find a )?(?:new |good |loving )*home"
+FREE_WANTED = re.compile(r"\b(?:iso|in search of|wtb|wanted|seeking|request|any(?:one|body) (?:have|got|has)|"
+                         rf"(?:looking for|hoping to find|would love)(?! {FREE_HOME})|"
+                         rf"need(?! (?:of )?{FREE_HOME})(?! (?:it|this|these|them|to|gone|out|removed)\b))\b", re.I)
+# brands and places the name check would take for a person. Charlotte the town is
+# not here: alone it trips nothing, and a Charlotte before a surname is a person.
+FREE_NOT_PEOPLE = re.compile(r"\b(?:Ethan Allen|Ashley (?:Furniture|Home)|Tommy Bahama|Tommy Hilfiger|Ralph Lauren|"
+                             r"Harry Potter|Herman Miller|Martha Stewart|Mr\.? Coffee|Dr\.? Seuss|Jack Daniel[’']?s|"
+                             r"Mark Twain|Kelly Moore|Kate Spade|Michael Kors|Calvin Klein|Ann Taylor|Eddie Bauer|"
+                             r"Vera Bradley|Kenneth Cole|Thomas Kinkade|Tiffany [Ll]amps?|Mason [Jj]ars?|"
+                             r"(?:Saint|St\.?) Michael[’']s|Charlotte(?=,? (?:VT|Vermont)\b))(?![\w’'-])")
+# one first name, in any case, where a listing would say who to ask or whose it is
+FREE_CUE = re.compile(r"(?:\b(?:from|ask(?: for)?|contact|message|text|call|pm|dm)\s+|\b(?=[a-z]+[’']s\b))([a-z]+)\b",
+                      re.I | re.A)
+# a household by surname, past the words that only say how big it is
+FREE_FAMILY = re.compile(r"\b(?!(?:Large|Big|Small|Huge|Little|Whole|Full|Single|Our|My|The|This|Modern|Royal)\b)"
+                         r"[A-Z][a-z]+ [Ff]amily\b", re.A)
+# what CONTACT cannot see: an email said aloud, an apartment, a house number with
+# no street word after it. A weekday after the number is a pickup time.
+FREE_CONTACT = re.compile(r"\b(?i:gmail|yahoo|hotmail|outlook|icloud|aol|dot (?:com|net|org|edu)|apt\.?\s*#?\d|"
+                          r"apartment\s+#?\d|curb(?:\s+(?:at|on))?[,:]?\s+\d)|"
+                          r"\b(?i:at|on)[,:]?\s+\d+[a-z]?\s+(?!(?:Mon|Tues?|Wed|Thu|Fri|Sat|Sun)[a-z]*\b)[A-Z][a-z]+", re.A)
+# `where` is a neighborhood or a town, never a street
+FREE_STREET = re.compile(r"\b(?:st|street|ave|avenue|rd|road|dr|drive|ln|lane|ct|court|pl|place|pkwy|parkway|"
+                         r"ter|terrace|cir|circle|way|blvd|boulevard)\.?\s*\Z", re.I)
+
+
+def free_url(url):
+    """The one spelling of a post's link: www, no query, one trailing slash."""
+    path = re.sub(r"^https://(?:www\.|m\.|web\.)?facebook\.com/", "", re.split(r"[?#]", url)[0])
+    return "https://www.facebook.com/" + path.rstrip("/") + "/"
 
 
 def free_private(text):
     """Does this line name a person, or give a phone, email or street address?"""
-    text = FREE_NOT_PEOPLE.sub(" ", str(text or ""))
-    if CONTACT.search(text) or names_person(text):
+    line = str(text or "")
+
+    def brand(match):      # "Ethan Allen Jones" is a man, "Ethan Allen Park" a park
+        after = re.match(r"\s+([A-Z][a-z’'-]+)", line[match.end():])
+        return match.group(0) if after and after.group(1).lower() not in NOT_SURNAME else " "
+
+    text = FREE_NOT_PEOPLE.sub(brand, line)
+    if CONTACT.search(text) or FREE_CONTACT.search(text) or FREE_FAMILY.search(text) or names_person(text):
         return True
     return any(match.group(1).lower() in FIRST for match in FREE_CUE.finditer(text))
 
@@ -478,7 +509,8 @@ def check_free_item(it, now):
     if isinstance(title, str) and FREE_WANTED.search(title):
         bad.append("title is a request, not an offer")
     clean_text(it.get("where"), FREE_WHERE_MAX, "where", bad)
-    if any(free_private(it.get(key)) for key in ("title", "where")):
+    if any(free_private(it.get(key)) for key in ("title", "where")) \
+            or (isinstance(it.get("where"), str) and FREE_STREET.search(it["where"])):
         bad.append("names a person, or gives a phone, email or street address")
     if it.get("group") not in FREE_GROUPS:
         bad.append(f"group must be one of {list(FREE_GROUPS)}")
@@ -555,7 +587,7 @@ def read_free(raw, now):
     for i, it in enumerate(items):
         if i in per:
             continue
-        offer = {"u": re.split(r"[?#]", it["u"])[0],   # one offer, however it was reached
+        offer = {"u": free_url(it["u"]),               # one offer, however it was reached
                  "d": int(parse_ts(it["posted_at"]).timestamp()),
                  "title": re.sub(r"\s+", " ", it["title"]).strip(),
                  "where": re.sub(r"\s+", " ", it["where"]).strip(),
@@ -887,7 +919,9 @@ def selftest():
     assert not state["paused"] and state["dropped"] == 1 and len(fresh) == 2, state
     assert fresh[1]["u"] == offer["u"] and "photo" not in fresh[1]
     assert free_private("Couch, ask for Sarah") and free_private("Crib from Sarah Jones") and free_private("Bike at 12 Main St")
+    assert free_private("Ask for Charlotte") and free_private("Ethan Allen Jones") and free_private("Curb at 12 Pine")
     assert not free_private("Ethan Allen dresser") and not free_private("Charlotte") and not free_private("Oak desk from Target")
+    assert free_url("https://m.facebook.com/marketplace/item/1?ref=x") == "https://www.facebook.com/marketplace/item/1/"
     kept, added = merge_free([{"u": "gone", "d": int(now.timestamp())}], fresh, now, True)
     assert [item["u"] for item in kept] == [offer["u"]] and added == 1, kept
     kept, added = merge_free(kept, [], now, False)
