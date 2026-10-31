@@ -1,4 +1,4 @@
-/* Social: X, Facebook, Instagram and Reddit, on one scroll.
+/* Social: X, Facebook, Instagram, Reddit and The Board, on one scroll.
 
    One section for each platform, the platform with the newest post on top,
    and a platform with nothing under the Local, National, Everything switch
@@ -16,6 +16,9 @@
    Vintage's Free section, its link shares into Vintage, and it has no swipe
    (it is not a source to mute).
 
+   The Board is one block: its freshest prompt and a tease, placed by its
+   latest answer, opening People's Board (board.js).
+
    X and Facebook are the bots' files (pulse.json's inbox: x, voices, facebook
    and free), Instagram is all-day/data/instagram.json, Reddit is the shared
    intake. A paused source keeps its held posts, each with its honest age.
@@ -28,6 +31,7 @@ import { el, esc, ICON, agoShort, localSwitch, geo, geoKeeps } from '../ui.js';
 import { sectionBar } from '../sections.js';
 import { freshFrom } from '../reddit-lib.js';
 import { _state as redditState } from './reddit.js';
+import { freshest } from './board.js';
 
 const COPY = {
   label: 'Social',
@@ -39,7 +43,8 @@ const COPY = {
   free: 'Free this week',
   got: (n) => (n === 1 ? '1 new post' : n + ' new posts'),
 };
-const PLATS = [['reddit', 'Reddit'], ['facebook', 'Facebook'], ['instagram', 'Instagram'], ['x', 'X']];
+const PLATS = [['reddit', 'Reddit'], ['facebook', 'Facebook'], ['instagram', 'Instagram'], ['x', 'X'], ['board', 'The Board']];
+const BOARD_LINK = '#people/board';
 const NAME = Object.fromEntries(PLATS);
 const INTAKE_URL = 'https://raw.githubusercontent.com/btownbrief/btown-brief/reddit-data/data/reddit-intake.json';
 const SEEN_KEY = 'allday-social-seen';
@@ -53,7 +58,7 @@ const LONG = 140;   // past this a post reads as a paragraph, not a headline
 const DESKS = new Set(['abc', 'cbsnews', 'nbcnews', 'reuters', 'business', 'wsj', 'washingtonpost', 'axios', 'nytimes']);
 
 const SOURCES = 3;
-const S = { sections: [], open: {}, dead: new Set(), loaded: false, tried: 0, base: 0, root: null, pulse: null, ig: null, reddit: null };
+const S = { sections: [], open: {}, dead: new Set(), loaded: false, tried: 0, base: 0, root: null, pulse: null, ig: null, reddit: null, board: null };
 const seenAt = () => Number(store.read(SEEN_KEY, 0)) || Date.now() - FIRST_LOOK;
 
 /* --------------------------------------------------------------- the blocks */
@@ -80,6 +85,8 @@ function gather() {
   ((S.ig && S.ig.posts) || []).forEach((x) => put('instagram', x.h, '@' + x.h, 'https://www.instagram.com/' + x.h + '/', post(x.u, x.ts * 1000, x.c, x.i, !x.n)));
   /* a subreddit is many people, not one account, so each thread people answered is its own block */
   (S.reddit || []).filter((x) => Number(x.comments) >= THREAD_MIN).forEach((x) => put('reddit', x.id || x.url, x.sub, 'https://www.reddit.com/' + x.sub + '/', post(x.url, x.ts, x.title, '', true)));
+  const b = S.board;
+  if (b) map.set('board', { key: 'board', plat: 'board', name: NAME.board, home: BOARD_LINK, posts: [{ ...post(BOARD_LINK, b.ts, b.q, '', true), tease: b.tease }] });
   return [...map.values()];
 }
 function rebuild() {
@@ -103,7 +110,19 @@ function acts(it) {
 }
 /* a wide screen sets blocks two across, so its shading follows row and column */
 const wideShade = (n) => (Math.floor(n / 2) + (n % 2)) % 2;
+function boardBlock(b) {
+  const top = b.posts[0];
+  const it = { k: 'so-board', kind: 'talk', title: top.text, src: b.name, sid: b.key, href: BOARD_LINK };
+  app.know([it]);
+  const c = el('article', 'card so-block so-board');
+  c.dataset.k = it.k;
+  c.innerHTML = '<a class="c-title so-text" href="' + BOARD_LINK + '">' + esc(top.text) + '</a>' +
+    top.tease.map((t) => '<p class="ans-cut">' + esc(t) + '</p>').join('') +
+    '<div class="so-foot"><span class="sp"></span>' + acts(it) + '</div>';
+  return c;
+}
 function block(b, i) {
+  if (b.plat === 'board') return boardBlock(b);
   const top = b.posts[0];
   const it = { k: top.k, kind: 'post', title: top.text || b.name, text: '', href: top.href, src: b.name, sid: b.key, ago: stamp(top.ts), open: 'Open on ' + NAME[b.plat], thumb: top.pic, shareTab: top.shareTab };
   app.know([it]);
@@ -162,7 +181,7 @@ function draw() {
 }
 
 /* --------------------------------------------------------------------- data */
-const newCount = () => gather().reduce((n, b) => n + b.posts.filter((p) => p.ts > S.base && geoKeeps(p.local)).length, 0);
+const newCount = () => gather().reduce((n, b) => n + b.posts.filter((p) => b.plat !== 'board' && p.ts > S.base && geoKeeps(p.local)).length, 0);
 function loaded() {
   S.tried += 1;
   S.loaded = !!(S.pulse || S.ig || S.reddit);
@@ -196,6 +215,7 @@ app.register('social', {
     S.root = root;
     S.base = seenAt();
     draw();
+    freshest().then((b) => { S.board = b; draw(); }).catch(() => {});
     if (app.demo) loadDemo();
     else {
       data.load('pulse', (j) => { S.pulse = j; loaded(); }, loaded);

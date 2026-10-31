@@ -24,7 +24,13 @@
 
    normal(raw), addGroup, removeGroup, startOver, markUsed, unmarkUsed
      What a phone remembers: { groups, on, used: { groupId: { cardId: time } } }.
-     Every reader has the default group, so a card is always used by someone. */
+     Every reader has the default group, so a card is always used by someone.
+
+   normalHands(raw), addHand(hands, cards, amend), seenCards(hands)
+     The hands this phone has been dealt, newest first, each { at, c: [three
+     seats] } with its cards copied in, since a news card leaves the paper.
+     A hand once kept is never changed but to fill a seat still empty (amend),
+     so going back through them cannot disturb anything. */
 
 import { held } from './reddit-lib.js';
 
@@ -36,6 +42,7 @@ const STORY_CHANNELS = new Set(['local', 'world']);
 const LEFT_TOPICS = new Set(['public-safety', 'courts', 'markets']);
 const MAX_TITLE = 130;                   // past this it is a post, not a headline
 const QUESTIONS_DAYS = 2;                // a file this old has stopped being news
+export const HANDS_KEPT = 100;
 
 const HEAVY = /\b(kill(?:s|ed|ing|er|ers)?|dead|dies?|died|dying|deaths?|deadly|fatal\w*|pass(?:es|ed)? away|obituar\w*|tributes?|funeral|mourn\w*|memorial|vigil|remembers|tragic|tragedy|tragedies|victims?|suicid\w*|overdos\w*|drown\w*|missing|crash\w*|collision|wreck\w*|rollover|injur\w*|hospitali[sz]ed|critical condition|rescued|wildfires?|fires?|burn|blaze|inferno|hurricanes?|typhoons?|tornado\w*|earthquakes?|tsunami|floods?|flooding|landslides?|avalanche|disasters?|catastroph\w*|evacuat\w*|explosions?|bombs?|bombing|blast|attacks?|attacked|ambush\w*|airstrikes?|missiles?|drones?|troops|invasion|massacre|genocid\w*|battered|wars?|gunman|gunmen|gunfire|guns?|shot|shoots?|shooter|knife|hostages?|terror\w*|crimes?|criminal|robber\w*|burglar\w*|theft|kidnap\w*|trafficking|sexual|prison|jail\w*|inmates?|detainees?|police|lawsuit|sued|trial|verdict|guilty|cancer|dementia|miscarriages?|outbreak|epidemic|pandemic|flesh-eating|cruel\w*|hate|plead\w*|plea|suspects?|suspected|cited|looting|riot\w*|violen\w*|execution|espionage|sabotage|shackled|blood clots?|fuck\w*|epstein)\b/i;
 
@@ -165,4 +172,33 @@ export function unmarkUsed(T, cardId) {
   const left = { ...usedBy(T) };
   delete left[cardId];
   T.used[T.on] = left;
+}
+
+/* ---------------------------------------------------------------- hands */
+const CARD_KEYS = ['id', 'q', 'b', 'hl', 'src', 'sid', 'url', 'local', 'd', 'story', 'heavy'];
+function copy(c) {
+  if (!c || !c.id || !c.q) return null;
+  const o = {};
+  CARD_KEYS.forEach((k) => { if (c[k] != null && c[k] !== false) o[k] = c[k]; });
+  return o;
+}
+export function normalHands(raw) {
+  return (Array.isArray(raw) ? raw : [])
+    .filter((h) => h && Array.isArray(h.c) && h.c.some(Boolean) && Number(h.at))
+    .map((h) => ({ at: Number(h.at), c: h.c.map(copy) }))
+    .slice(0, HANDS_KEPT);
+}
+const handKey = (cards) => cards.map((c) => (c ? c.id : '')).join();
+export function addHand(hands, cards, amend = false, at = Date.now()) {
+  if (!cards.some(Boolean)) return hands;
+  const c = cards.map(copy), top = hands[0];
+  if (top && handKey(top.c) === handKey(c)) return hands;
+  if (amend && top) return [{ at: top.at, c }].concat(hands.slice(1));
+  return [{ at: Math.floor(at / 1000), c }].concat(hands).slice(0, HANDS_KEPT);
+}
+/* each card once, where it was last seen, newest first */
+export function seenCards(hands) {
+  const seen = new Set(), out = [];
+  hands.forEach((h) => h.c.forEach((c) => { if (c && !seen.has(c.id)) { seen.add(c.id); out.push({ c, at: h.at }); } }));
+  return out;
 }

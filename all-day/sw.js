@@ -33,6 +33,7 @@ const SHELL_URLS = [
   './data/build-foreman.json', './data/build-config.json', './data/build-starters.json',
   /* Talk, What Now's card deck, and its deck, so it deals offline */
   './js/modes/talk.js', './js/talk-core.js', '../data/talk-deck.json',
+  './js/answers.js', './js/modes/board.js',
   /* What Now's engine and its feeds' loader, imported by modes/whatnow.js */
   './js/whatnow-engine.js', './js/whatnow-data.js', './js/sun.js',
   /* Habits' rules, its demo server, the signed-out phone's copy and its trees, imported by modes/habits.js */

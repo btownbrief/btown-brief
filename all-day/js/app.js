@@ -933,9 +933,10 @@ export function scrollTop(smooth) {
 }
 /* scroll a panel so a node lands just under the mast. Where the row under
    the mast stays as the mast's top line steps away (keepSubnav), a jump
-   down lands under the row alone, since the top line will have gone. */
+   down lands under the row alone, since the top line will have gone.
+   instant skips the glide, for a list moving under the reader or a cold link. */
 let lastJump = { node: null, down: false, t: 0 };
-export function jumpTo(node) {
+export function jumpTo(node, instant) {
   const p = panels[active];
   if (!p || !node) return;
   const at = node.getBoundingClientRect().top - p.getBoundingClientRect().top + p.scrollTop;
@@ -945,7 +946,7 @@ export function jumpTo(node) {
   const down = again ? lastJump.down : top > p.scrollTop + 8;
   lastJump = { node, down, t: Date.now() };
   if (document.body.classList.contains('keep-subnav') && down && top > 120) top += mast.querySelector('.mast-row').offsetHeight;
-  p.scrollTo({ top: Math.max(0, top), behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+  p.scrollTo({ top: Math.max(0, top), behavior: instant || matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
   /* the pill settles on where the scroll landed, even with no scroll after it */
   const settle = () => { if (p === panels[active]) spySections($('subnav'), p); };
   p.addEventListener('scrollend', settle, { once: true });

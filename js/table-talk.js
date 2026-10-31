@@ -10,7 +10,11 @@
    every deck, and slot k walks the same weighted sequence on every device.
    Headlines only join sync once they're an hour old, so two devices whose
    data snapshots differ by a few minutes still agree. All other state is
-   localStorage-local. */
+   localStorage-local.
+
+   This file is the Table view. js/table-browse.js is the All cards view. The
+   page wears All Day's tokens and type, and every word here is in sentence
+   case; the one caps rule is .eyebrow. */
 (function () {
   'use strict';
 
@@ -34,38 +38,38 @@
 
   /* categories: key -> chip label, pick weight, card tag, palette */
   var CATS = [
-    { key: 'talk',   label: 'TALK',       w: 0.30 },
-    { key: 'room',   label: 'THE ROOM',   w: 0.10 },
-    { key: 'fight',  label: 'FIGHTS',     w: 0.10 },
-    { key: 'pick',   label: 'PICK ONE',   w: 0.10 },
-    { key: 'event',  label: 'WEEKEND',    w: 0.14 },
-    { key: 'news',   label: 'HEADLINES',  w: 0.12 },
-    { key: 'hobby',  label: 'HOBBIES',    w: 0.07 },
-    { key: 'btown',  label: 'BTOWN',      w: 0.07 },
+    { key: 'talk',   label: 'Talk',       w: 0.30 },
+    { key: 'room',   label: 'The room',   w: 0.10 },
+    { key: 'fight',  label: 'Fights',     w: 0.10 },
+    { key: 'pick',   label: 'Pick one',   w: 0.10 },
+    { key: 'event',  label: 'Weekend',    w: 0.14 },
+    { key: 'news',   label: 'Headlines',  w: 0.12 },
+    { key: 'hobby',  label: 'Hobbies',    w: 0.07 },
+    { key: 'btown',  label: 'Btown',      w: 0.07 },
   ];
 
   var KIND_TAG = {
-    ice: 'ICEBREAKER', room: 'THE ROOM', fight: 'FRIENDLY FIGHT',
-    pick: 'PICK ONE', event: 'THIS WEEK', news: 'TALK ABOUT IT',
-    hobby: 'HOBBY IDEA', history: 'BTOWN 101', weather: 'WEATHER',
+    ice: 'Icebreaker', room: 'The room', fight: 'Friendly fight',
+    pick: 'Pick one', event: 'This week', news: 'Talk about it',
+    hobby: 'Hobby idea', history: 'Btown 101', weather: 'Weather',
   };
   var KIND_KICKER = {
-    room: 'EVERYONE PLAYS', pick: 'QUICK ONE — AROUND THE TABLE',
-    fight: 'SETTLE IT AS A TABLE',
+    room: 'Everyone plays', pick: 'Quick one, around the table',
+    fight: 'Settle it as a table',
   };
   var KIND_COLORS = {
-    ice: ['bg-orange', 'bg-cream', 'bg-brown', 'bg-black-cream'],
-    room: ['bg-teal'],
-    fight: ['bg-orange', 'bg-brown'],
-    pick: ['bg-black', 'bg-cream'],
-    event: ['bg-cream', 'bg-teal'],
-    news: ['bg-black-cream', 'bg-brown'],
-    hobby: ['bg-brown', 'bg-cream'],
-    history: ['bg-black-cream'],
-    weather: ['bg-cream'],
+    ice: ['tk-ice', 'tk-head', 'tk-local'],
+    room: ['tk-sports'],
+    fight: ['tk-debate', 'tk-local'],
+    pick: ['tk-deep', 'tk-head'],
+    event: ['tk-head', 'tk-sports'],
+    news: ['tk-head', 'tk-deep'],
+    hobby: ['tk-deep', 'tk-head'],
+    history: ['tk-ice'],
+    weather: ['tk-head'],
   };
-  var NEWS_KICKERS = ['WHAT DOES THE TABLE THINK?', 'ANYONE FOLLOWING THIS?',
-                      'GOOD NEWS OR BAD NEWS?', 'WHO HAS A TAKE?'];
+  var NEWS_KICKERS = ['What does the table think?', 'Anyone following this?',
+                      'Good news or bad news?', 'Who has a take?'];
   /* the wire carries everything; a coffee table shouldn't. Violence, tragedy
      and hot-button national politics don't become icebreakers because a
      kicker asks nicely — screen them out up front. Crude but effective;
@@ -197,7 +201,7 @@
         : p.kind === 'either' ? 'pick' : 'talk';
       decks[cat].push({
         id: 'tt:' + p.id, kind: cat === 'talk' ? 'ice' : cat,
-        text: p.q, src: 'BTOWN BRIEF TABLE DECK',
+        text: p.q, src: 'Table deck',
       });
     });
 
@@ -214,7 +218,7 @@
       if (t.indexOf('love') !== -1 || t.indexOf('confess') !== -1) return;
       if (f.indexOf('room') !== -1 || f.indexOf('heavy') !== -1) return;
       decks.talk.push({
-        id: 'sa:' + q.id, kind: 'ice', text: q.q, src: 'STAY AWHILE',
+        id: 'sa:' + q.id, kind: 'ice', text: q.q, src: 'Stay Awhile',
       });
     });
 
@@ -239,8 +243,8 @@
         decks.event.push({
           id: 'evn:' + day.date, kind: 'event',
           text: day.n + ' things to do in Burlington ' + when,
-          kicker: day.t ? ('LIKE: ' + day.t).toUpperCase() : '',
-          src: 'BTOWN EVENTS',
+          kicker: day.t ? 'Like: ' + day.t : '',
+          src: 'Btown events',
         });
       });
       rail.days.forEach(function (day) {
@@ -260,8 +264,8 @@
             id: 'evp:' + (day.date || '') + ':' + j, kind: 'event',
             text: p.t + (p.v && p.v.toLowerCase() !== p.t.toLowerCase()
               ? ' — ' + p.v : ''),
-            kicker: (when + (start ? ' · ' + fmt12(start) : '')).toUpperCase(),
-            src: 'BTOWN EVENTS',
+            kicker: when + (start ? ' · ' + fmt12(start) : ''),
+            src: 'Btown events',
           });
         });
       });
@@ -279,7 +283,7 @@
         if (s.length < 8) return;
         decks.event.push({
           id: 'evw:' + (dy.date || dy.label), kind: 'event', text: s,
-          kicker: String(dy.label).toUpperCase(), src: 'BTOWN BRIEF PICKS',
+          kicker: String(dy.label), src: 'Btown Brief picks',
         });
       });
     }
@@ -312,7 +316,7 @@
         decks.news.push({
           id: 'nw:' + it.u, kind: 'news', text: title, d: it.d || 0,
           kicker: NEWS_KICKERS[hashStr(it.u) % NEWS_KICKERS.length],
-          src: ((src && src.short) || 'THE PULSE').toUpperCase(),
+          src: (src && src.short) || 'The Pulse',
           local: topic === 'local',
         });
       });
@@ -327,8 +331,8 @@
       decks.hobby.push({
         id: 'hb:' + (h.id || h.name), kind: 'hobby',
         text: (h.emoji ? h.emoji + ' ' : '') + h.name + ' — anyone at this table into it?',
-        kicker: firstSentence(h.what, 90).toUpperCase(),
-        src: 'VERMONT HOBBIES',
+        kicker: firstSentence(h.what, 90),
+        src: 'Vermont hobbies',
       });
     });
 
@@ -342,7 +346,7 @@
         // fact's identity under a synced table
         decks.btown.push({
           id: 'hf:' + hashStr(t), kind: 'history', text: t,
-          kicker: 'DID EVERYONE KNOW THIS?', src: (f.src || 'BTOWN HISTORY').toUpperCase(),
+          kicker: 'Did everyone know this?', src: f.src || 'Btown history',
         });
       });
     }
@@ -352,7 +356,7 @@
       if (rs.length >= 8) {
         decks.btown.push({
           id: 'wx:read', kind: 'weather', text: rs,
-          kicker: 'THE WEATHER READ', src: 'BTOWN BRIEF WEATHER',
+          kicker: 'The weather read', src: 'Btown Brief weather',
         });
       }
     }
@@ -361,12 +365,12 @@
         if (!w || !w.blurb || !w.date) return;
         var diff = dayDiff(w.date);
         if (diff === null || diff < 0 || diff > 2) return;
-        var when = diff === 0 ? 'TODAY' : diff === 1 ? 'TOMORROW'
+        var when = diff === 0 ? 'Today' : diff === 1 ? 'Tomorrow'
           : new Date(w.date + 'T12:00:00')
-              .toLocaleDateString('en-US', { weekday: 'long' }).toUpperCase();
+              .toLocaleDateString('en-US', { weekday: 'long' });
         decks.btown.push({
           id: 'wx:' + w.date, kind: 'weather', text: w.blurb,
-          kicker: when, src: 'BTOWN BRIEF WEATHER',
+          kicker: when, src: 'Btown Brief weather',
         });
       });
     }
@@ -504,8 +508,8 @@
   /* ---------- rendering ---------- */
 
   function cardColor(card) {
-    var palette = KIND_COLORS[card.kind] || ['bg-brown'];
-    if (card.kind === 'news' && card.local) return 'bg-teal';
+    var palette = KIND_COLORS[card.kind] || ['tk-deep'];
+    if (card.kind === 'news' && card.local) return 'tk-sports';
     return palette[hashStr(card.id) % palette.length];
   }
 
@@ -525,8 +529,8 @@
     if (!card) return;
     state.current = card;
     var el = $('card');
-    el.className = 'card ' + cardColor(card) + (state.held ? ' held' : '');
-    $('kind-tag').textContent = KIND_TAG[card.kind] || 'CARD';
+    el.className = 'tt-card ' + cardColor(card) + (state.held ? ' held' : '');
+    $('kind-tag').textContent = KIND_TAG[card.kind] || 'Card';
     var big = $('big');
     big.textContent = card.text;
     $('kicker').textContent = card.kicker || KIND_KICKER[card.kind] || '';
@@ -582,7 +586,7 @@
     }
     if (!card) {
       state.current = null;      // stranded — a deck toggle or refresh restarts
-      $('big').textContent = 'NOTHING TO DEAL — TURN A DECK BACK ON BELOW';
+      $('big').textContent = 'Nothing to deal. Turn a deck back on.';
       return;
     }
     state.shownAt = Date.now();
@@ -646,9 +650,9 @@
     setHeld(false);
     $('sync-badge').classList.toggle('on', on);
     $('sync-badge').setAttribute('aria-pressed', on ? 'true' : 'false');
-    $('sync-badge-label').textContent = on ? 'SYNCED' : 'SYNC';
+    $('sync-badge-label').textContent = on ? 'Synced' : 'Sync';
     /* pace + decks are pinned while synced — every phone must agree */
-    document.querySelectorAll('#pace-group .lopt, .lopt.deck, #prev-btn, #next-btn')
+    document.querySelectorAll('#pace-group .lopt, .lopt.tt-deck, #prev-btn, #next-btn')
       .forEach(function (b) { b.disabled = on; });
     saveSet();
     showNext();
@@ -710,7 +714,7 @@
     CATS.forEach(function (c) {
       var b = document.createElement('button');
       b.type = 'button';
-      b.className = 'lopt deck';
+      b.className = 'lopt tt-deck';
       b.textContent = c.label;
       b.setAttribute('aria-pressed', state.enabled[c.key] ? 'true' : 'false');
       b.addEventListener('click', function () {
@@ -736,11 +740,11 @@
 
     function togglePanel(id) {
       var p = $(id), open = p.hidden;
-      ['help-panel', 'join-panel'].forEach(function (x) { $(x).hidden = true; });
+      ['set-panel', 'join-panel'].forEach(function (x) { $(x).hidden = true; });
       p.hidden = !open;
       $('panel-scrim').hidden = !open;
     }
-    $('help-btn').addEventListener('click', function () { togglePanel('help-panel'); });
+    $('set-btn').addEventListener('click', function () { togglePanel('set-panel'); });
     $('join-btn').addEventListener('click', function () { togglePanel('join-panel'); });
 
     var JOIN_URL = 'https://guide.btownbrief.com/table.html?sync=1';
@@ -748,8 +752,8 @@
       var b = $('copy-link');
       (navigator.clipboard ? navigator.clipboard.writeText(JOIN_URL)
         : Promise.reject()).then(function () {
-        b.textContent = 'COPIED';
-        setTimeout(function () { b.textContent = 'COPY LINK'; }, 1600);
+        b.textContent = 'Copied';
+        setTimeout(function () { b.textContent = 'Copy link'; }, 1600);
       }).catch(function () {});
     });
     if (navigator.share && $('share-link')) {
@@ -759,7 +763,7 @@
       });
     }
     $('panel-scrim').addEventListener('click', function () {
-      ['help-panel', 'join-panel'].forEach(function (x) { $(x).hidden = true; });
+      ['set-panel', 'join-panel'].forEach(function (x) { $(x).hidden = true; });
       $('panel-scrim').hidden = true;
     });
     document.querySelectorAll('.panel-close').forEach(function (b) {
@@ -844,7 +848,7 @@
     loadAll(true).then(function () {
       var any = CATS.some(function (c) { return (state.decks[c.key] || []).length; });
       if (!any) {
-        $('big').textContent = 'NO SIGNAL — CHECK YOUR CONNECTION';
+        $('big').textContent = 'No signal. Check your connection.';
         return;
       }
       var kickoff = function () {

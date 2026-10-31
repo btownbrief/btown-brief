@@ -14,24 +14,40 @@
    with nothing of its own takes a card from another, so the decks still deal
    with the Wire down, and the Wire with the decks down.
 
+   Each card's Answer button opens the town's answers in a sheet (answers.js),
+   in place in the Seen list so that list keeps its spot. With answers in, the
+   button is a bubble and the count.
+   Every hand this phone is dealt is kept, the last 100: Back steps through
+   them, Forward returns, Seen lists their cards by day. A past hand is only
+   looked at; a swap on one carries it to the table and swaps there, as a new
+   hand, so the old one stays as it was. All cards opens the full deck on
+   table.html, and Heads Up, Btown sits under the cards.
+
    Demo runs on data/demo/talk.json and nothing is remembered. */
 
 import * as app from '../app.js';
 import * as store from '../store.js';
 import * as data from '../wire.js';
 import { el, esc, safeHref, ICON, chips, button, agoShort, section } from '../ui.js';
-import { BUBBLES, SEATS, GROUP_COLORS, DEFAULT_GROUP, stories, questions, ask, deckCards, pools, seatOf, normal, groupOf, usedBy, usedCount, addGroup, removeGroup, startOver, markUsed, unmarkUsed } from '../talk-core.js';
+import * as answers from '../answers.js';
+import { BUBBLES, SEATS, GROUP_COLORS, DEFAULT_GROUP, stories, questions, ask, deckCards, pools, seatOf, normal, groupOf, usedBy, usedCount, addGroup, removeGroup, startOver, markUsed, unmarkUsed, normalHands, addHand, seenCards } from '../talk-core.js';
 
 const TAB = 'people';
 const KEY = 'allday-talk';
+const HANDS_KEY = 'allday-talk-hands';
 const DECK_URL = '../data/talk-deck.json';
+const HEADS_UP_URL = '../data/heads-up-tease.json';
+const ALL_CARDS_URL = '../table.html#all';
 const STAGGER_MS = 70;
+const SEEN_STEP = 30;
 
 /* every word a reader sees */
 const WORDS = {
   title: 'Talk', ice: 'Icebreaker', deep: 'Deep', debate: 'Debate', head: 'Headline', sports: 'Sports', local: 'Local',
   everyone: 'Everyone', groups: 'Groups', newGroup: 'New group', name: 'Name', add: 'Add',
   used: 'Used', swap: 'Swap', deal: 'Deal three', star: 'Save', share: 'Share', startOver: 'Start over', remove: 'Remove',
+  back: 'Back', forward: 'Forward', seen: 'Seen', allCards: 'All cards', showMore: 'Show more', today: 'Today', yesterday: 'Yesterday',
+  headsUp: 'Heads Up, Btown', play: 'Play', nextCard: 'Next card',
   allDone: 'That’s all of them.', noLoad: 'Couldn’t load.', tryAgain: 'Try again',
   overTitle: (n) => 'Start ' + n + ' over?', overBody: (c) => c + (c === 1 ? ' card comes' : ' cards come') + ' back.',
   removeTitle: (n) => 'Remove ' + n + '?', removeBody: 'Its used cards come back if you make it again.',
@@ -39,13 +55,16 @@ const WORDS = {
 
 const reduced = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
 let T = normal(app.demo ? null : store.read(KEY, null));
+let H = normalHands(app.demo ? null : store.read(HANDS_KEY, null));   // the hands kept, newest first; H[0] is the table
+let back = 0, looked = false;            // how far behind the table the reader is; the table has been on screen
 let deck = null, deckFailed = false, news = { head: [], sports: [] };
 let paper = null, asked = null, paperIn = false, askedIn = false;
 let bubble = 'mix', pool = { news: [], ice: [], other: [] }, hand = [null, null, null], loading = null, settled = false;
 let decked = null;                       // the deck has landed: its two seats do not wait for the Wire
-let box = null, table = null, bar = null, groupBtn = null, live = null, dealBtn = null;
+let box = null, table = null, bar = null, groupBtn = null, live = null, dealBtn = null, backBtn = null, fwdBtn = null, whenLine = null;
 
 const save = () => { if (!app.demo) store.write(KEY, T); };
+const shown = () => (back ? H[back].c : hand);
 const groupName = (g) => g.name || WORDS.everyone;
 const dot = (g) => '<i class="tk-dot" style="--gc:var(--talk-g' + esc(g.color) + ')"></i>';
 const kindOf = (c) => (c.b === 'head' && c.local ? 'local' : c.b);
@@ -54,13 +73,23 @@ const isUsed = (c) => !!usedBy(T)[c.id];
 const newsIn = () => paperIn && askedIn;
 const itemOf = (c) => ({ k: 't-' + c.id, kind: 'talk', title: c.q, src: c.src || eyebrow(c), href: c.url || '#' + TAB + '/t-' + c.id });
 
+/* the table as a hand kept; amend only fills in a seat that was still empty */
+function remember(amend) {
+  if (!looked || !settled) return;
+  const next = addHand(H, hand, !!amend);
+  if (next === H) return;
+  H = next;
+  if (!app.demo) store.write(HANDS_KEY, H);
+}
+
 /* ---------------------------------------------------------------- loading */
 function mergeNews() {
   if (!newsIn()) return;
   news = ask(stories(paper, store.muted()), questions(asked, store.muted()));
   if (!settled) return;
   refill();
-  paint(hand.map(() => false));
+  remember(true);
+  paint(shown().map(() => false));
 }
 
 function loadDemo() {
@@ -113,7 +142,7 @@ function draw(seat) {
    seat waits rather than dealing a deck card that would have to leave. */
 function fill() { hand.forEach((c, i) => { if (!c && (i !== 0 || newsIn())) hand[i] = draw(i); }); }
 function refill() { pool = pools(bubble, deck || [], news, usedBy(T)); fill(); }
-function dealAll() { hand = [null, null, null]; refill(); }
+function dealAll() { back = 0; hand = [null, null, null]; refill(); }
 
 /* a card leaving the table goes to the back of its line, unless it was used */
 function putBack(c) { if (c && !isUsed(c)) pool[SEATS[seatOf(c)]].push(c); }
@@ -143,8 +172,32 @@ function foot(c, seat) {
   const it = itemOf(c);
   const sh = iconBtn('sh', ICON.share, WORDS.share, null, () => app.share(TAB, it.k, c.q));
   const st = iconBtn('star', ICON.star, WORDS.star, store.isSaved(it.k), () => app.toggleSave(it));
-  f.append(el('span', 'tk-sp'), u, sw, sh, st);
+  f.append(el('span', 'tk-sp'));
+  const a = answerBtn(c);
+  if (a) f.appendChild(a);
+  f.append(u, sw, sh, st);
   return f;
+}
+
+function answerBtn(c, open) {
+  const qid = answers.qidOf(c);
+  if (!qid) return null;
+  const b = el('button', 'act tk-ans');
+  b.type = 'button';
+  b.dataset.qid = qid;
+  countOn(b);
+  b.addEventListener('click', () => (open || answerSheet)(c));
+  return b;
+}
+function countOn(b) {
+  const n = answers.count(b.dataset.qid);
+  b.innerHTML = n ? ICON.comment + '<span class="n">' + esc(n) + '</span>' : '<span>' + esc(answers.WORDS.answer) + '</span>';
+  b.setAttribute('aria-label', n ? answers.WORDS.answer + ', ' + answers.WORDS.many(n) : answers.WORDS.answer);
+}
+const paintCounts = () => document.querySelectorAll('.tk-ans').forEach(countOn);
+
+function answerSheet(c) {
+  app.sheet(answers.WORDS.answers, (body) => { body.append(el('h3', 'tk-q ans-q', esc(c.q)), answers.panel(answers.qidOf(c))); });
 }
 
 function cardNode(c, seat, turn, order) {
@@ -181,14 +234,29 @@ function emptyNode(seat) {
 function paint(turns) {
   if (!table) return;
   const done = settled && newsIn();
-  const nodes = hand.map((c, i) => {
+  const nodes = shown().map((c, i) => {
     const turn = turns[i] && !reduced();
     return c ? cardNode(c, i, turn, turn ? i : 0) : done ? null : emptyNode(i);
   }).filter(Boolean);
   table.replaceChildren(...(nodes.length ? nodes : [emptyNode(0)]));
   dealBtn.hidden = done && !hand.some(Boolean);
-  live.textContent = turns.some(Boolean) ? hand.filter(Boolean).map((c) => c.q).join('. ') : '';
+  live.textContent = turns.some(Boolean) ? shown().filter(Boolean).map((c) => c.q).join('. ') : '';
   paintGroup();
+  paintSteps();
+}
+
+function paintSteps() {
+  backBtn.disabled = back >= H.length - 1;
+  fwdBtn.hidden = !back;
+  whenLine.hidden = !back;
+  whenLine.textContent = back ? stamp(H[back].at) : '';
+}
+const stamp = (at) => new Date(at * 1000).toLocaleString('en-US', { weekday: 'short', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' });
+
+/* moving through the kept hands: nothing is dealt, marked or kept */
+function step(by) {
+  back = Math.max(0, Math.min(H.length - 1, back + by));
+  paint(shown().map(() => true));
 }
 
 function paintGroup() {
@@ -199,27 +267,36 @@ function paintGroup() {
 }
 
 function toggleUsed(seat) {
-  const c = hand[seat];
+  const c = shown()[seat];
   if (!c) return;
   if (isUsed(c)) unmarkUsed(T, c.id); else markUsed(T, c.id);
   save();
-  paint(hand.map(() => false));
+  paint(shown().map(() => false));
 }
 
 function swap(seat) {
+  if (back) {
+    const old = hand;
+    hand = H[back].c.slice();
+    back = 0;
+    old.forEach((c) => { if (c && !inHand(c)) putBack(c); });
+  }
   const c = hand[seat];
   hand[seat] = null;
   const next = draw(seat);
   putBack(c);
   hand[seat] = next || draw(seat);
+  remember();
   paint(hand.map((h, i) => i === seat));
 }
 
 function dealThree() {
   const old = hand;
+  back = 0;
   hand = [null, null, null];
   old.forEach(putBack);
   fill();
+  remember();
   paint(hand.map(() => true));
 }
 
@@ -228,12 +305,12 @@ function askOver() {
   const g = groupOf(T), n = usedCount(T);
   if (!n) return;
   app.confirmBox({ title: WORDS.overTitle(groupName(g)), body: WORDS.overBody(n), yes: WORDS.startOver, onYes() {
-    startOver(T); save(); dealAll(); paint(hand.map(() => true));
+    startOver(T); save(); dealAll(); remember(); paint(hand.map(() => true));
     if (sheetPaint) sheetPaint();
   } });
 }
 
-const redeal = () => { save(); dealAll(); paint(hand.map(() => true)); };
+const redeal = () => { save(); dealAll(); remember(); paint(hand.map(() => true)); };
 
 let sheetPaint = null;
 function groupsSheet() {
@@ -304,10 +381,73 @@ function pick(b) {
     c.setAttribute('aria-pressed', on ? 'true' : 'false');
   });
   dealAll();
+  remember();
   paint(hand.map(() => true));
 }
 
-function build() {
+/* ---------------------------------------------------------------- what was seen */
+function dayOf(at) {
+  const d = new Date(at * 1000), day = (x) => new Date(x.getFullYear(), x.getMonth(), x.getDate()).getTime();
+  const gone = Math.round((day(new Date()) - day(d)) / 864e5);
+  return gone === 0 ? WORDS.today : gone === 1 ? WORDS.yesterday : d.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' });
+}
+function seenSheet() {
+  const all = seenCards(H);
+  app.sheet(WORDS.seen, (body) => {
+    let upto = 0, lastDay = '';
+    const more = button(esc(WORDS.showMore), 'ghost sm tk-more', () => draw30());
+    const draw30 = () => {
+      all.slice(upto, upto + SEEN_STEP).forEach(({ c, at }) => {
+        const d = dayOf(at);
+        if (d !== lastDay) { lastDay = d; more.before(el('div', 'sheet-h', esc(d))); }
+        const r = el('div', 'sheet-row tk-seen', '<div class="t">' + esc(c.q) + '<div class="d">' + esc(eyebrow(c)) + '</div></div>');
+        r.dataset.card = c.id;
+        const a = answerBtn(c, () => {
+          const was = r.querySelector('.ans');
+          if (was) was.remove(); else r.appendChild(answers.panel(a.dataset.qid));
+        });
+        if (a) r.appendChild(a);
+        more.before(r);
+      });
+      upto += SEEN_STEP;
+      more.hidden = upto >= all.length;
+    };
+    body.appendChild(more);
+    draw30();
+  });
+}
+
+/* ---------------------------------------------------------------- Heads Up */
+function headsUp(onHeight) {
+  const tile = el('section', 'hu');
+  tile.hidden = true;
+  data.fetchJSON(HEADS_UP_URL, 8000).then((j) => {
+    const cards = (j && Array.isArray(j.cards) ? j.cards : []).filter((c) => c && c.t);
+    if (!cards.length || !/^https:/.test(j.url || '')) return;
+    let at = 0;
+    const card = el('button', 'hu-card');
+    card.type = 'button';
+    card.setAttribute('aria-label', WORDS.nextCard);
+    const paintCard = (turn) => {
+      const c = cards[at];
+      card.innerHTML = '<span class="eyebrow">' + esc(c.deck || '') + '</span><span class="hu-t">' + esc(c.t) + '</span><span class="hu-h">' + esc(c.h || '') + '</span>';
+      card.classList.remove('turn');
+      if (turn && !reduced()) { void card.offsetWidth; card.classList.add('turn'); }
+    };
+    card.addEventListener('click', () => { at = (at + 1) % cards.length; paintCard(true); });
+    const head = el('div', 'hu-head', '<h3>' + esc(WORDS.headsUp) + '</h3>');
+    const play = el('a', 'btn', esc(WORDS.play));
+    play.href = safeHref(j.url); play.target = '_blank'; play.rel = 'noopener';
+    head.appendChild(play);
+    paintCard(false);
+    tile.append(head, card);
+    tile.hidden = false;
+    if (onHeight) onHeight();
+  }).catch(() => {});
+  return tile;
+}
+
+function build(onHeight) {
   box = el('div', 'talk');
   groupBtn = el('button', 'tk-group');
   groupBtn.addEventListener('click', groupsSheet);
@@ -315,16 +455,29 @@ function build() {
   bar = chips(BUBBLES.map(([key, label]) => ({ key, label })), bubble, pick, 'tk-bubbles');
   table = el('div', 'tk-table');
   dealBtn = button(esc(WORDS.deal), 'tk-deal', dealThree);
+  backBtn = button(ICON.left + '<span>' + esc(WORDS.back) + '</span>', 'ghost tk-step tk-prev', () => step(1));
+  fwdBtn = button('<span>' + esc(WORDS.forward) + '</span>' + ICON.arrow, 'ghost tk-step tk-fwd', () => step(-1));
+  whenLine = el('p', 'tk-when');
+  const row = el('div', 'tk-row');
+  row.append(backBtn, dealBtn, fwdBtn);
+  const seenBtn = button(esc(WORDS.seen), 'ghost sm tk-seen-btn', seenSheet);
+  const allCards = el('a', 'btn ghost sm tk-all', esc(WORDS.allCards));
+  allCards.href = ALL_CARDS_URL;
+  const links = el('div', 'tk-links');
+  links.append(seenBtn, allCards);
   live = el('div', 'sr');
   live.setAttribute('aria-live', 'polite');
-  box.append(bar, table, dealBtn, live);
+  box.append(bar, table, whenLine, row, links, live, headsUp(onHeight));
   paintGroup();
+  answers.on(paintCounts);
+  answers.activity().then(paintCounts);
 }
 
-/* draws into People's Talk section; a second visit keeps the cards that were dealt */
-export function render(host) {
+/* draws into People's Talk section; a second visit keeps the cards that were
+   dealt. onHeight: what is drawn late has changed the page's height. */
+export function render(host, onHeight) {
   const first = !box;
-  if (first) build();
+  if (first) build(onHeight);
   if (box.parentNode !== host) host.appendChild(box);
   if (!first) return;
   paint(hand.map(() => false));
@@ -332,9 +485,31 @@ export function render(host) {
   decked.then(() => {
     settled = true;
     dealAll();
+    remember();
     paint(hand.map(() => false));
   });
+  /* a hand counts as seen once the table has been on screen */
+  const eye = new IntersectionObserver((seen) => {
+    if (!seen.some((e) => e.isIntersecting)) return;
+    eye.disconnect();
+    looked = true;
+    remember();
+    paintSteps();
+  });
+  eye.observe(table);
 }
+
+/* every question Talk can ask, by its answers id, for the Board */
+export function catalog() {
+  return load().then(() => {
+    const m = new Map();
+    const put = (c) => { const q = answers.qidOf(c); if (q) m.set(q, c); };
+    (deck || []).forEach(put);
+    news.head.concat(news.sports).forEach(put);
+    return m;
+  });
+}
+export const kindWord = (c) => eyebrow(c);
 
 /* a card's own link: dealt into its seat, even if the group has used it.
    Resolves false when the card is not in the deck or today's paper. */
@@ -344,7 +519,9 @@ export function open(id) {
     const c = all.find((x) => x.id === id);
     if (!c) return false;
     const seat = seatOf(c);
+    back = 0;
     if (!inHand(c)) hand[seat] = c;
+    remember();
     paint(hand.map((h) => !!h && h.id === id));
     app.flashHit(table, 't-' + id, true);
     return true;
