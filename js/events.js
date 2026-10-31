@@ -26,6 +26,7 @@
   const CAT_ALIAS = { food: 'food-drink', kids: 'family', theatre: 'theater' };
   const CATS_SHOWN = 6;     // the kinds on show on a phone, before More
   const SPAN = 14;          // the hero's two weeks
+  const APP_NAMES = { 'all-day': 'All Day', town: 'Town', body: 'Body' };
 
   /* Quick filters: multi-select toggles. Each is a plain predicate. */
   const QUICK = [
@@ -414,7 +415,7 @@
           `${e.venue ? ' · ' + esc(e.venue) : ''}</span>` +
         `</span>`;
       const img = btn.querySelector('img');
-      if (img) img.addEventListener('error', () => { img.remove(); img.parentNode?.classList.remove('has-photo'); }, { once: true });
+      if (img) img.addEventListener('error', () => { img.parentNode.classList.remove('has-photo'); img.remove(); }, { once: true });
       btn.addEventListener('click', () => openEvent(e.id, { scroll: true }));
       row.appendChild(btn);
     });
@@ -1166,11 +1167,17 @@
       });
     });
 
-    // back to the app the reader came from, on the tab they left
+    // back to the app the reader came from, on the tab they left where there
+    // is a page to go back to; in a tab of its own, the link opens the app
     const back = $('ev-back');
-    if (/\/(all-day|town|body)\//.test(document.referrer)) {
+    const from = /\/(all-day|town|body)\//.exec(document.referrer);
+    if (from) {
+      back.href = from[1] + '/';
+      back.textContent = '‹ ' + APP_NAMES[from[1]];
       back.hidden = false;
-      back.addEventListener('click', (ev) => { ev.preventDefault(); history.back(); });
+      back.addEventListener('click', (ev) => {
+        if (history.length > 1) { ev.preventDefault(); history.back(); }
+      });
     }
 
     // a day or a kind linked from a page that is already open

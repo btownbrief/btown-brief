@@ -759,7 +759,7 @@ body.chrome-away .mast { transform: translateY(-100%); }
 /* The Calendar (calendar.js): the brand's headline tile, on the mast's navy,
    leading What Now and People's This week. The mast's own remap of the ink
    tokens, so the shared pieces inside read on it. */
-.cal { margin: 6px var(--gutter) 8px; padding: var(--s3); display: flex; flex-direction: column; gap: var(--s2); border-radius: var(--r-sheet);
+.cal { margin: 6px var(--gutter) 2px; padding: var(--s3); display: flex; flex-direction: column; gap: var(--s2); border-radius: var(--r-sheet);
   background: var(--lake); color: var(--lake-ink); --ink: var(--lake-ink); --ink-2: var(--lake-muted); --ink-3: var(--lake-muted);
   --paper-2: var(--lake-hover); --line: var(--lake-line); --accent: var(--sunset); box-shadow: var(--shadow-pill); }
 .calhead { display: flex; align-items: center; gap: var(--s3); padding: 0 var(--s1); }
@@ -774,27 +774,30 @@ body.chrome-away .mast { transform: translateY(-100%); }
 .calstrip .n { min-height: 0; color: var(--ink); font-weight: 600; font-variant-numeric: tabular-nums; }
 .calfeed { display: flex; flex-direction: column; }
 .calrow { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; border-radius: var(--r-thumb); }
+.calacts { display: flex; align-items: center; }
+.calacts .act { min-width: 32px; padding: 0 6px; }
 .calrow:nth-child(odd) { background: var(--dock-sheen); }
 .calopen { display: flex; align-items: center; gap: var(--s3); min-width: 0; padding: var(--s1); }
-.calth { flex: 0 0 auto; display: block; width: 44px; height: 44px; border-radius: var(--r-tile); overflow: hidden; background: var(--paper-2); }
+.calth { flex: 0 0 auto; display: block; width: 40px; height: 40px; border-radius: var(--r-tile); overflow: hidden; background: var(--paper-2); }
 .calth img { display: block; width: 100%; height: 100%; object-fit: cover; }
-.caltm { display: flex; flex-direction: column; width: 100%; height: 100%; align-items: center; justify-content: center; font-size: var(--fs-tag); line-height: 1.1; color: var(--on-media); background: var(--cat, var(--lake-hover)); }
+.caltm { display: flex; flex-direction: column; width: 100%; height: 100%; align-items: center; justify-content: center; font-size: var(--fs-tag); line-height: 1.1; color: var(--cat-on, var(--on-media)); background: var(--cat, var(--lake-hover)); }
 .caltm b { font-family: var(--serif); font-size: var(--fs-date); font-weight: 500; }
 .calt { display: block; min-width: 0; }
 .calt b { display: block; font-size: var(--fs-body); font-weight: 600; line-height: var(--lh-title); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .calt .s { display: block; font-size: var(--fs-meta); color: var(--ink-2); line-height: var(--lh-title); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.calmore { align-self: center; height: 28px; padding: 0 var(--s3); font-size: var(--fs-meta); font-weight: 600; color: var(--sunset); }
-.calchips { display: flex; flex-wrap: wrap; gap: 6px; max-height: 66px; overflow: hidden; }
+.calmore { flex: none; height: 48px; padding: 0 var(--s3); font-size: var(--fs-meta); font-weight: 600; color: var(--sunset); }
+.calchips { display: flex; flex-wrap: wrap; gap: 6px; }
 .calchips .chip { height: 30px; padding: 0 10px; font-size: var(--fs-meta); }
-.calgo { display: flex; align-items: center; justify-content: center; gap: var(--s2); height: 48px; border-radius: var(--r-box); background: var(--sunset); color: var(--sunset-ink); font-size: var(--fs-title); font-weight: 600; }
+.calfoot { display: flex; align-items: center; gap: var(--s1); }
+.calgo { flex: 1 1 auto; display: flex; align-items: center; justify-content: center; gap: var(--s2); height: 48px; border-radius: var(--r-box); background: var(--sunset); color: var(--sunset-ink); font-size: var(--fs-title); font-weight: 600; }
 .calgo:active { transform: scale(.98); }
 .calgo .i { width: 20px; height: 20px; }
 [data-cat="music"] { --cat: var(--cat-music); } [data-cat="comedy"] { --cat: var(--cat-comedy); } [data-cat="theater"] { --cat: var(--cat-theater); }
-[data-cat="art"] { --cat: var(--cat-art); } [data-cat="film"] { --cat: var(--cat-film); } [data-cat="food-drink"] { --cat: var(--cat-food-drink); }
-[data-cat="outdoors"] { --cat: var(--cat-outdoors); } [data-cat="sports"] { --cat: var(--cat-sports); } [data-cat="family"] { --cat: var(--cat-family); }
+[data-cat="art"] { --cat: var(--cat-art); } [data-cat="film"] { --cat: var(--cat-film); --cat-on: var(--cat-film-on); } [data-cat="food-drink"] { --cat: var(--cat-food-drink); --cat-on: var(--cat-pale-on); }
+[data-cat="outdoors"] { --cat: var(--cat-outdoors); } [data-cat="sports"] { --cat: var(--cat-sports); } [data-cat="family"] { --cat: var(--cat-family); --cat-on: var(--cat-pale-on); }
 [data-cat="market"] { --cat: var(--cat-market); } [data-cat="community"] { --cat: var(--cat-community); } [data-cat="learning"] { --cat: var(--cat-learning); }
-[data-cat="games"] { --cat: var(--cat-games); } [data-cat="wellness"] { --cat: var(--cat-wellness); } [data-cat="words"] { --cat: var(--cat-words); }
-[data-cat="other"] { --cat: var(--cat-other); }
+[data-cat="games"] { --cat: var(--cat-games); } [data-cat="wellness"] { --cat: var(--cat-wellness); --cat-on: var(--cat-pale-on); } [data-cat="words"] { --cat: var(--cat-words); }
+[data-cat="other"] { --cat: var(--cat-other); --cat-on: var(--cat-pale-on); }
 .clubsheet .sheet-row .t b { font-weight: 600; }
 .clubsheet .go { margin-top: var(--s4); }
 .pillbtn { height: 30px; padding: 0 10px; white-space: nowrap; flex: 0 0 auto; border-radius: var(--r-pill); border: 1px solid var(--line); font-size: var(--fs-meta); font-weight: 600; color: var(--ink-2); display: inline-flex; align-items: center; gap: 4px; }
@@ -983,7 +986,7 @@ body.chrome-away .mast { transform: translateY(-100%); }
    pills on the left and the weather card on the right, Spin under both */
 .wxtop { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px 10px; align-items: center; padding: 10px var(--gutter) 6px; }
 .wxtop .wx { grid-column: 1 / -1; padding: 0; }
-.wxtop .toolrow { padding: 0; min-width: 0; }
+.wxtop .toolrow { padding: 0; min-width: 0; align-self: start; }
 .wxtop .toolrow .pills { gap: 2px; }
 .wxtop .toolrow .pills button { padding: 0 6px; font-size: var(--fs-meta); }
 .wxcard { display: flex; flex-direction: column; gap: 6px; width: 158px; padding: 8px 10px; border-radius: var(--r-box); background: var(--accent-soft); color: var(--ink); }
@@ -1009,7 +1012,7 @@ body.chrome-away .mast { transform: translateY(-100%); }
 .wxc-h .i { width: 14px; height: 14px; color: var(--ink-2); }
 .wxc-h b { font-size: var(--fs-small); font-weight: 600; }
 /* today in plain words and the Full weather link, under the pills and the card */
-.wxbrief { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; }
+.wxbrief { padding: 10px var(--gutter) 0; display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; }
 .wxb-t { flex: 1 1 240px; margin: 0; font-size: var(--fs-body); line-height: 1.4; color: var(--ink-2); }
 .wxb-go { flex: none; }
 /* a phone narrower than 380: the card takes its own row under the pills */

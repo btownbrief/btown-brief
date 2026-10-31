@@ -29,10 +29,10 @@
   }
 
   function apply(rise, set) {
-    if (manual) return;
+    var html = document.documentElement;
+    if (manual || html.hasAttribute('data-theme-held')) return;   // events.html can hold All Day's theme
     var now = Date.now();
     var isDay = now >= rise && now < set;
-    var html = document.documentElement;
     var want = isDay ? 'light' : 'dark';
     if (html.getAttribute('data-theme') !== want) {
       html.setAttribute('data-theme', want);

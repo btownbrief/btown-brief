@@ -104,8 +104,8 @@
   transition: transform .12s ease;
 }
 .ev-fort-day:hover { transform: translateY(-1px); }
-.ev-fort-day.heat-2 { background: color-mix(in srgb, var(--lake-blue) 34%, var(--lake-hover)); }
-.ev-fort-day.heat-3 { background: color-mix(in srgb, var(--lake-blue) 70%, var(--lake-hover)); }
+.ev-fort-day.heat-2 { background: color-mix(in srgb, var(--lake-blue) 24%, var(--lake-hover)); }
+.ev-fort-day.heat-3 { background: color-mix(in srgb, var(--lake-blue) 48%, var(--lake-hover)); color: var(--lake-ink); }
 .ev-fort-wd { font-size: var(--fs-small); font-weight: 600; white-space: nowrap; }
 .ev-fort-dd { font-family: var(--serif); font-size: var(--fs-date); font-weight: 500; line-height: 1.15; color: var(--lake-ink); }
 .ev-fort-n { font-size: var(--fs-small); font-weight: 600; color: var(--lake-ink); font-variant-numeric: tabular-nums; }
@@ -167,14 +167,14 @@
 .ev-pick-art {
   position: relative; display: block; width: 100%; aspect-ratio: 2 / 1;
   background: linear-gradient(155deg, var(--cat, var(--lake)), color-mix(in srgb, var(--cat, var(--lake)) 55%, var(--lake)));
-  color: var(--on-media);
+  color: var(--cat-on, var(--on-media));
 }
+.ev-pick-art.has-photo { color: var(--on-media); }
 .ev-pick-art img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 .ev-pick-date {
   position: absolute; left: var(--s3); bottom: var(--s2);
   display: flex; align-items: baseline; gap: var(--s1);
   font-size: var(--fs-sub); font-weight: 600;
-  text-shadow: 0 1px 3px var(--media-chip);
 }
 .ev-pick-date b { font-family: var(--serif); font-size: var(--fs-tf-day); font-weight: 500; line-height: 1; }
 .ev-pick-art.has-photo .ev-pick-date {
@@ -182,7 +182,6 @@
   padding: 2px var(--s2);
   border-radius: var(--r-sm);
   background: var(--media-chip);
-  text-shadow: none;
 }
 .ev-pick-art.has-photo .ev-pick-date b { font-size: var(--fs-date); }
 .ev-pick-body { display: flex; flex-direction: column; gap: var(--s1); flex: 1; padding: var(--s3); }
@@ -344,18 +343,18 @@
 .ev-cat-comedy     { --cat: var(--cat-comedy); }
 .ev-cat-theater    { --cat: var(--cat-theater); }
 .ev-cat-art        { --cat: var(--cat-art); }
-.ev-cat-film       { --cat: var(--cat-film); }
-.ev-cat-food-drink { --cat: var(--cat-food-drink); }
+.ev-cat-film       { --cat: var(--cat-film); --cat-on: var(--cat-film-on); }
+.ev-cat-food-drink { --cat: var(--cat-food-drink); --cat-on: var(--cat-pale-on); }
 .ev-cat-outdoors   { --cat: var(--cat-outdoors); }
 .ev-cat-sports     { --cat: var(--cat-sports); }
-.ev-cat-family     { --cat: var(--cat-family); }
+.ev-cat-family     { --cat: var(--cat-family); --cat-on: var(--cat-pale-on); }
 .ev-cat-market     { --cat: var(--cat-market); }
 .ev-cat-community  { --cat: var(--cat-community); }
 .ev-cat-learning   { --cat: var(--cat-learning); }
 .ev-cat-games      { --cat: var(--cat-games); }
-.ev-cat-wellness   { --cat: var(--cat-wellness); }
+.ev-cat-wellness   { --cat: var(--cat-wellness); --cat-on: var(--cat-pale-on); }
 .ev-cat-words      { --cat: var(--cat-words); }
-.ev-cat-other      { --cat: var(--cat-other); }
+.ev-cat-other      { --cat: var(--cat-other); --cat-on: var(--cat-pale-on); }
 
 /* ---------------- day groups + rows ---------------- */
 
@@ -579,11 +578,11 @@
   padding: var(--s5);
   border-radius: var(--r-box);
   background: var(--paper-2);
-  color: var(--ink-2);
   font-size: var(--fs-sub);
 }
-.ev-submit-note h2 { font-family: var(--serif); font-size: var(--fs-title); font-weight: 500; margin-bottom: var(--s2); }
-.ev-submit-note a { color: var(--local); font-weight: 600; }
+.ev-submit-note summary { cursor: pointer; font-family: var(--serif); font-size: var(--fs-title); font-weight: 500; color: var(--ink); }
+.ev-submit-links { display: flex; flex-wrap: wrap; gap: var(--s2) var(--s4); margin-top: var(--s3); }
+.ev-submit-links a { color: var(--local); font-weight: 600; }
 
 .ev-support {
   display: grid;
@@ -592,7 +591,7 @@
   margin-top: var(--s6);
 }
 .ev-support-card {
-  display: flex; gap: var(--s3); align-items: flex-start;
+  display: flex; gap: var(--s3); align-items: center;
   padding: var(--s4);
   border-radius: var(--r-box);
   background: var(--raised);

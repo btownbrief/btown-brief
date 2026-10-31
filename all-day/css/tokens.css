@@ -228,6 +228,8 @@
   --cat-film: #455A64; --cat-food-drink: #D97A3A; --cat-outdoors: #2E8A5F; --cat-sports: #00695C;
   --cat-family: #C9A227; --cat-market: #558B2F; --cat-community: #5C7A6A; --cat-learning: #3A7CA5;
   --cat-games: #8E6C3A; --cat-wellness: #4A9A8A; --cat-words: #7A5C99; --cat-other: #9AAABB;
+  /* text on those tiles: white, except on the kinds too pale to carry it */
+  --cat-pale-on: #16191D; --cat-film-on: var(--on-media);
 
   /* shell: source marks. A hash of the source name picks one of eight, so a
      source keeps its colour everywhere without anyone choosing it. */
@@ -332,7 +334,7 @@
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     --so-x: #3A4048;
-    --cat-family: #E0B93F; --cat-film: #9BB0BC;
+    --cat-family: #E0B93F; --cat-film: #9BB0BC; --cat-film-on: var(--cat-pale-on);
     --talk-ice: #23495F; --talk-ice-ink: #E4F2FB;
     --talk-deep: #37306B; --talk-deep-ink: #F3EFFF;
     --talk-debate: #8A3D22; --talk-debate-ink: #FFE9DF;
@@ -399,7 +401,7 @@
 
 :root[data-theme="dark"] {
   --so-x: #3A4048;
-  --cat-family: #E0B93F; --cat-film: #9BB0BC;
+  --cat-family: #E0B93F; --cat-film: #9BB0BC; --cat-film-on: var(--cat-pale-on);
   --talk-ice: #23495F; --talk-ice-ink: #E4F2FB;
   --talk-deep: #37306B; --talk-deep-ink: #F3EFFF;
   --talk-debate: #8A3D22; --talk-debate-ink: #FFE9DF;

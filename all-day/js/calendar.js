@@ -3,18 +3,21 @@
 
    A headline tile on the mast's navy: how many events are on in the next 14
    days, set big; seven days with their counts; the best of tonight and
-   tomorrow as a feed, folded to two rows; the categories with their counts;
-   and one big button. A day opens the calendar on that day (?date=), a chip
-   on that filter (?cat=), a row on that event (?e=).
+   tomorrow as a feed, folded to two rows, each with its star and share; one
+   big button; and See more beside it, for the rest of the feed and the
+   categories with their counts. A day opens the calendar on that day (?date=), a chip on
+   that filter (?cat=), a row or a shared link on that event (?e=).
 
    All of it comes from data/calendar.json (scripts/build_whatnow.py, every
    morning). It counts what events.html lists, so a number here is the number
    the calendar opens on. Everything is worked out against the clock as it
    paints, in Burlington's time: a day that has gone drops out, today loses
    what has finished, and a past event never shows, however old the file is.
-   With no file, or nothing left in it, the block is simply not there.
+   It paints again when the phone comes back to an open app, and the file is
+   fetched again once it is a few hours old or if it failed. With no file, or
+   nothing left in it, the block is simply not there.
 
-     load()           the payload or null; fetched once, never rejects
+     load()           the payload or null; refetched as above, never rejects
      mount(slot, o)   paints the block into slot, now or when the file lands
                       o.name  'whatnow' | 'people', its own folded state
                       o.strip false leaves out the seven days, where the tab
@@ -36,6 +39,7 @@ const STRIP = 7;
 const FOLDED = 2;
 const PER_DAY = 4;          // best of tonight, best of tomorrow, opened
 const CHIPS = 8;
+const KEEP = 3 * 3600000;   // how long a file stands before a tab asks again
 const EVENING = 16;         // the calendar's own line for tonight
 
 const WORDS = {
@@ -68,6 +72,7 @@ const fmtTime = (t) => { const h = t.hour % 12 || 12; return h + (t.minute ? ':'
 
 /* ------------------------------------------------------------------ load */
 let file = null;
+let fetched = 0;
 let loading = null;
 const slots = new Set();
 
@@ -83,10 +88,18 @@ function redate(d) {
 }
 const usable = (j) => (j && Array.isArray(j.days) && Array.isArray(j.picks) ? j : null);
 
+const fresh = () => !!file && Date.now() - fetched < KEEP;
+
+/* a failed fetch keeps what it had, and the next one tries again */
 export function load() {
   if (loading) return loading;
+  if (fresh()) return Promise.resolve(file);
   const got = app.demo ? app.demoData('calendar').then(redate) : data.fetchJSON(FILE, 8000);
-  loading = got.then((j) => { file = usable(j); return file; }).catch(() => null);
+  loading = got.then((j) => {
+    const u = usable(j);
+    if (u) { file = u; fetched = Date.now(); }
+    return file;
+  }).catch(() => file).finally(() => { loading = null; });
   return loading;
 }
 
@@ -123,21 +136,24 @@ function chipsOf(cats) {
   return LEAD.filter(known).concat(rest).slice(0, CHIPS).map((key) => ({ key, label: CATS[key], n: cats[key] }));
 }
 
-/* tonight's best and tomorrow's: the file has them best first. Each night
-   reads in time order; folded, its best stands for it, the best with a
-   photo when there is one. */
+/* tonight's best and tomorrow's: the file has them best first. Stephen's own
+   event is always in, whatever the hour. Each night reads in time order;
+   folded, its best stands for it: his own, then a staff pick, then the best
+   with a photo. One night alone folds to its best two. */
 function feedOf(picks, now, today) {
   const tomorrow = addDays(today, 1);
   const hour = (p) => et(Date.parse(p.start)).hour;
   const live = picks.filter((p) => p && p.id && p.title && Date.parse(p.start) && Number(p.end) * 1000 > now);
   const on = live.filter((p) => p.date === today);
-  const night = on.filter((p) => hour(p) >= EVENING);
-  const first = (night.length ? night : on).slice(0, PER_DAY);
+  const night = on.some((p) => hour(p) >= EVENING);
+  const first = (night ? on.filter((p) => p.own || hour(p) >= EVENING) : on).slice(0, PER_DAY);
   const second = live.filter((p) => p.date === tomorrow).slice(0, PER_DAY);
   const inTime = (a, b) => Date.parse(a.start) - Date.parse(b.start);
   const open = first.slice().sort(inTime).concat(second.slice().sort(inTime));
-  const lead = (list) => list.find((p) => p.image) || list[0];
-  const folded = (first.length && second.length ? [lead(first), lead(second)] : open).slice(0, FOLDED);
+  const lead = (list) => list.find((p) => p.own) || list.find((p) => p.pick) || list.find((p) => p.image) || list[0];
+  const only = first.length ? first : second;
+  const folded = first.length && second.length ? [lead(first), lead(second)]
+    : [lead(only), ...only.filter((p) => p !== lead(only))].filter(Boolean).slice(0, FOLDED).sort(inTime);
   return { open, folded, today, tomorrow };
 }
 
@@ -183,10 +199,12 @@ function row(p, f) {
   const line = dayWord(p, f) + (pic ? ' ' + fmtTime(et(Date.parse(p.start))) : '') + (place ? ' · ' + place : '');
   r.innerHTML = '<a class="calopen" href="' + esc(href) + '"><span class="calth">' + thumb + '</span><span class="calt"><b>' + esc(title) + '</b>' +
     '<span class="s">' + esc(line) + '</span></span></a>' +
-    '<button class="act star' + (saved ? ' on' : '') + '" data-act="save" aria-label="Save" aria-pressed="' + saved + '">' + ICON.star + '</button>';
+    '<span class="calacts"><button class="act sh" data-act="share" aria-label="Share">' + ICON.share + '</button>' +
+    '<button class="act star' + (saved ? ' on' : '') + '" data-act="save" aria-label="Save" aria-pressed="' + saved + '">' + ICON.star + '</button></span>';
   const img = r.querySelector('img');
   if (img) img.addEventListener('error', () => { img.closest('.calth').innerHTML = timeTile(p); });
-  app.know([{ k, href: new URL(href, location.href).href, kind: 'event', title, src: place || 'Calendar', sid: 'venue:' + (place || 'calendar').toLowerCase() }]);
+  const url = new URL(href, location.href).href;
+  app.know([{ k, href: url, shareUrl: url, kind: 'event', title, src: place || 'Calendar', sid: 'venue:' + (place || 'calendar').toLowerCase() }]);
   return r;
 }
 
@@ -219,20 +237,22 @@ function paint(s) {
     rows.forEach((p) => feed.appendChild(row(p, j.feed)));
     app.bindFeed(feed);
     box.appendChild(feed);
-    if (j.feed.open.length > FOLDED) {
-      const more = el('button', 'calmore', esc(s.open ? WORDS.less : WORDS.more));
-      more.type = 'button';
-      more.dataset.calMore = '1';
-      more.setAttribute('aria-expanded', s.open ? 'true' : 'false');
-      more.addEventListener('click', () => { s.open = !s.open; paint(s); const b = s.node.querySelector('[data-cal-more]'); if (b) b.focus({ preventScroll: true }); });
-      box.appendChild(more);
-    }
   }
-  box.appendChild(chips(j.cats));
+  if (s.open) box.appendChild(chips(j.cats));
+  const foot = el('div', 'calfoot');
+  if (j.feed.open.length > FOLDED || j.cats.length) {
+    const more = el('button', 'calmore', esc(s.open ? WORDS.less : WORDS.more));
+    more.type = 'button';
+    more.dataset.calMore = '1';
+    more.setAttribute('aria-expanded', s.open ? 'true' : 'false');
+    more.addEventListener('click', () => { s.open = !s.open; paint(s); const b = s.node.querySelector('[data-cal-more]'); if (b) b.focus({ preventScroll: true }); });
+    foot.appendChild(more);
+  }
   const go = el('a', 'calgo', '<span>' + esc(WORDS.full) + '</span>' + ICON.arrow);
   go.href = link();
   go.dataset.calFull = '1';
-  box.appendChild(go);
+  foot.appendChild(go);
+  box.appendChild(foot);
   node.appendChild(box);
 }
 
@@ -243,9 +263,15 @@ export function mount(node, o = {}) {
   slots.add(s);
   node.hidden = true;
   if (file) paint(s);
-  else load().then(() => { if (slots.has(s)) paint(s); });
+  if (!fresh()) load().then(() => { if (slots.has(s)) paint(s); });
 }
 
+const paintAll = () => slots.forEach((s) => { if (s.node.isConnected) paint(s); });
 export function repaint() {
-  slots.forEach((s) => { if (s.node.isConnected) paint(s); });
+  paintAll();
+  if (!fresh()) load().then(paintAll);
 }
+
+/* the phone back on an open app, or the back button back from the calendar */
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') repaint(); });
+window.addEventListener('pageshow', (e) => { if (e.persisted) repaint(); });
