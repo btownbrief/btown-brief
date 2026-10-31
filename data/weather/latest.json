@@ -1,19 +1,19 @@
 {
- "updated": "2026-10-31T22:50:47+00:00",
+ "updated": "2026-10-31T23:33:14+00:00",
  "sections_updated": {
-  "now": "2026-10-31T22:50:47+00:00",
-  "forecast": "2026-10-31T22:50:47+00:00",
-  "hourly": "2026-10-31T22:50:47+00:00",
-  "alerts": "2026-10-31T22:50:47+00:00",
-  "afd": "2026-10-31T22:50:47+00:00",
-  "lake_forecast": "2026-10-31T22:50:47+00:00",
-  "lake_gage": "2026-10-31T22:50:47+00:00",
-  "air": "2026-10-31T22:50:47+00:00",
-  "sun": "2026-10-31T22:50:47+00:00",
-  "models": "2026-10-31T22:50:47+00:00"
+  "now": "2026-10-31T23:33:14+00:00",
+  "forecast": "2026-10-31T23:33:14+00:00",
+  "hourly": "2026-10-31T23:33:14+00:00",
+  "alerts": "2026-10-31T23:33:14+00:00",
+  "afd": "2026-10-31T23:33:14+00:00",
+  "lake_forecast": "2026-10-31T23:33:14+00:00",
+  "lake_gage": "2026-10-31T23:33:14+00:00",
+  "air": "2026-10-31T23:33:14+00:00",
+  "sun": "2026-10-31T23:33:14+00:00",
+  "models": "2026-10-31T23:33:14+00:00"
  },
  "now": {
-  "observed_at": "2026-10-31T22:30:00+00:00",
+  "observed_at": "2026-10-31T22:55:00+00:00",
   "station": "KBTV",
   "description": "Cloudy",
   "temp_f": 43,
@@ -30,7 +30,7 @@
   "periods": [
    {
     "name": "Tonight",
-    "start": "2026-10-31T18:00:00-04:00",
+    "start": "2026-10-31T19:00:00-04:00",
     "is_day": false,
     "temp_f": 33,
     "pop": 0,
@@ -173,20 +173,6 @@
  "hourly": {
   "updated": "2026-10-31T18:18:59+00:00",
   "hours": [
-   {
-    "t": "2026-10-31T18:00:00-04:00",
-    "temp_f": 47,
-    "feels_f": 44,
-    "pop": 0,
-    "humidity": 51,
-    "wind_mph": 7,
-    "wind_dir": "N",
-    "sky": 68,
-    "short": "Mostly Cloudy",
-    "qpf_in": 0.0,
-    "snow_in": 0.0,
-    "gust_mph": 10
-   },
    {
     "t": "2026-10-31T19:00:00-04:00",
     "temp_f": 44,
@@ -676,6 +662,20 @@
     "qpf_in": 0.0,
     "snow_in": 0.0,
     "gust_mph": 14
+   },
+   {
+    "t": "2026-11-02T05:00:00-05:00",
+    "temp_f": 43,
+    "feels_f": 38,
+    "pop": 0,
+    "humidity": 79,
+    "wind_mph": 9,
+    "wind_dir": "S",
+    "sky": 67,
+    "short": "Mostly Cloudy",
+    "qpf_in": 0.0,
+    "snow_in": 0.0,
+    "gust_mph": 14
    }
   ],
   "days": [
@@ -705,13 +705,13 @@
   "active": []
  },
  "afd": {
-  "issued": "2026-10-31T18:36:00+00:00",
+  "issued": "2026-10-31T23:12:00+00:00",
   "key_messages": [
    "Expect a warming trend and mainly dry weather through the next several days.",
    "Gusty winds mid week followed by a cold front late week."
   ],
   "what_changed": "As of 236 PM EDT Saturday... No significant changes.",
-  "raw": "\n000\nFXUS61 KBTV 311836\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n236 PM EDT Sat Oct 31 2026\n\n.WHAT HAS CHANGED...\nAs of 236 PM EDT Saturday...\n\nNo significant changes.\n\n&&\n\n.KEY MESSAGES...\nAs of 236 PM EDT Saturday...\n\n1. Expect a warming trend and mainly dry weather through the \nnext several days. \n\n2. Gusty winds mid week followed by a cold front late week.\n\n&&\n\n.DISCUSSION...\nAs of 236 PM EDT Saturday...\n\nKEY MESSAGE 1: Temperatures today are running just a little below \nseasonal norms for Halloween, with chilly 850 millibar temperatures \nin the -4 to -6 Celsius range close to where a subsidence inversion \nis present east of a ridge of high pressure. This is where our \nshallow clouds are, and the prevalence of stratocumulus this \nafternoon has been much more widespread than modeled. In turn, \nmaximum temperatures are going to underachieve a bit in many areas \nwith highs mainly in the low to mid 40s. That said, this should have \nlittle bearing on tonight's temperatures. In fact, have noted the \nNational Blend of Models (NBM) looks perhaps too cold with influence \nof recent warm bias correction during a dry and calm pattern. Have \nnudged temperatures a touch warmer noting some lingering breezes and \nposition of high pressure south of the region rather than overhead, \nbut otherwise clearing skies and decoupling in most locations should \nresult in a cold start to November.\n\nThereafter, nearly continuous warm air advection is expected from \nthe west and southwest, leading to above normal temperatures Sunday \nthrough Tuesday. Through this period, the warmest air will remain to \nour west so we're not looking at anything unusually warm. Any \npotential rain will be tied to the trajectory of a feed of deep \nmoisture/decaying Atmospheric River entering the southwestern US \ntonight. Some of the moisture will rapidly push northeastward as a \ndeep trough lifts across the Rockies and a Colorado low forms \ntomorrow night. The storm track will be quite amplified/stay well to \nour west through midweek and anomalous moisture stays to our north. \nTrends have continued to suggest that the polar jet gets absorbed \ninto this system by Tuesday morning while high pressure builds back \nover our region following slightly enhanced gradient flow on Monday. \n\nHowever, frontal forcing for light rain may make its closest \napproach Tuesday afternoon, as some low level moisture gets pulled \nnorthward around the ridge of high pressure centered over the \nwestern mid-Atlantic region to support increasing rain chances. In \nany case, where clouds wind up being thick and persistent, \ntemperatures will end up being a bit lower than currently forecast. \nGreatest chances of the cooler/cloudier scenario is over the \nnorthern St. Lawrence Valley, and secondarily across north \ncentral/northeastern Vermont and the remainder of northern New York. \nOtherwise, most likely highs both Monday and Tuesday will be about \n10 to 15 degrees above normal in the upper 50s to mid 60s.\n\nKEY MESSAGE 2: The next significant weather maker will be a large \ntrough / cold front late next week. Models are coming into agreement \nthat the trough will come off the Rocky Mountains on Tuesday or \nWednesday and begin to develop into a large area of low pressure \nover the Plains. The timing and intensity of this front remains \nhighly questionable, as it will need to work around a ridge of high \npressure off the Atlantic Coast. The current thinking is we'll see \nwinds ramp up on Wednesday and Thursday as the pressure gradient \nbetween the ridge and trough tightens. The setup favors channeled \nflow into the Champlain Valley, with southerly winds bringing gusts \nup to 30mph. The main low pressure system will then slide into the \nnortheast sometime between Friday and next Sunday. The GFS solution \nhas the low moving quicker, with less intensity while the Euro is \nshowing the low becoming more pronounced and bringing precipitation \nto northern New York and Vermont through Sunday. We do have some \ntime before the impacts arrive and will continue to update the \nforecast as the forecast comes into focus.\n\n&&\n\n.AVIATION /18Z SATURDAY THROUGH THURSDAY/...\nThrough 18Z Sunday...A widespread cumulus field has developed this\nafternoon, with cloud bases primarily just above the VFR/MVFR\nboundary. The Cu field will continue until diurnal heating shuts off\nnear sunset then rapidly decrease. High clouds could persist at our\nnorthern terminals until around 03z as clouds are advected in from\nour north of the International Border. Tomorrow, cloud cover will be\nharder to come by, with drier air and a west/southwest component to\nthe wind.\n\nOutlook...\n\nSunday Night: VFR. NO SIG WX.\nMonday: VFR. NO SIG WX.\nMonday Night: VFR. NO SIG WX.\nTuesday: VFR. Slight chance SHRA.\nTuesday Night: VFR. Chance SHRA.\nWednesday: VFR. Slight chance SHRA.\nWednesday Night: VFR. Chance SHRA.\nThursday: Mainly VFR, with areas MVFR possible. Chance SHRA.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Kutikoff\nDISCUSSION...Langbauer/Kutikoff\nAVIATION...Langbauer\n"
+  "raw": "\n000\nFXUS61 KBTV 312312\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n712 PM EDT Sat Oct 31 2026\n\n.WHAT HAS CHANGED...\nAs of 236 PM EDT Saturday...\n\nNo significant changes.\n\n&&\n\n.KEY MESSAGES...\nAs of 236 PM EDT Saturday...\n\n1. Expect a warming trend and mainly dry weather through the \nnext several days. \n\n2. Gusty winds mid week followed by a cold front late week.\n\n&&\n\n.DISCUSSION...\nAs of 236 PM EDT Saturday...\n\nKEY MESSAGE 1: Temperatures today are running just a little below \nseasonal norms for Halloween, with chilly 850 millibar temperatures \nin the -4 to -6 Celsius range close to where a subsidence inversion \nis present east of a ridge of high pressure. This is where our \nshallow clouds are, and the prevalence of stratocumulus this \nafternoon has been much more widespread than modeled. In turn, \nmaximum temperatures are going to underachieve a bit in many areas \nwith highs mainly in the low to mid 40s. That said, this should have \nlittle bearing on tonight's temperatures. In fact, have noted the \nNational Blend of Models (NBM) looks perhaps too cold with influence \nof recent warm bias correction during a dry and calm pattern. Have \nnudged temperatures a touch warmer noting some lingering breezes and \nposition of high pressure south of the region rather than overhead, \nbut otherwise clearing skies and decoupling in most locations should \nresult in a cold start to November.\n\nThereafter, nearly continuous warm air advection is expected from \nthe west and southwest, leading to above normal temperatures Sunday \nthrough Tuesday. Through this period, the warmest air will remain to \nour west so we're not looking at anything unusually warm. Any \npotential rain will be tied to the trajectory of a feed of deep \nmoisture/decaying Atmospheric River entering the southwestern US \ntonight. Some of the moisture will rapidly push northeastward as a \ndeep trough lifts across the Rockies and a Colorado low forms \ntomorrow night. The storm track will be quite amplified/stay well to \nour west through midweek and anomalous moisture stays to our north. \nTrends have continued to suggest that the polar jet gets absorbed \ninto this system by Tuesday morning while high pressure builds back \nover our region following slightly enhanced gradient flow on Monday. \n\nHowever, frontal forcing for light rain may make its closest \napproach Tuesday afternoon, as some low level moisture gets pulled \nnorthward around the ridge of high pressure centered over the \nwestern mid-Atlantic region to support increasing rain chances. In \nany case, where clouds wind up being thick and persistent, \ntemperatures will end up being a bit lower than currently forecast. \nGreatest chances of the cooler/cloudier scenario is over the \nnorthern St. Lawrence Valley, and secondarily across north \ncentral/northeastern Vermont and the remainder of northern New York. \nOtherwise, most likely highs both Monday and Tuesday will be about \n10 to 15 degrees above normal in the upper 50s to mid 60s.\n\nKEY MESSAGE 2: The next significant weather maker will be a large \ntrough / cold front late next week. Models are coming into agreement \nthat the trough will come off the Rocky Mountains on Tuesday or \nWednesday and begin to develop into a large area of low pressure \nover the Plains. The timing and intensity of this front remains \nhighly questionable, as it will need to work around a ridge of high \npressure off the Atlantic Coast. The current thinking is we'll see \nwinds ramp up on Wednesday and Thursday as the pressure gradient \nbetween the ridge and trough tightens. The setup favors channeled \nflow into the Champlain Valley, with southerly winds bringing gusts \nup to 30mph. The main low pressure system will then slide into the \nnortheast sometime between Friday and next Sunday. The GFS solution \nhas the low moving quicker, with less intensity while the Euro is \nshowing the low becoming more pronounced and bringing precipitation \nto northern New York and Vermont through Sunday. We do have some \ntime before the impacts arrive and will continue to update the \nforecast as the forecast comes into focus.\n\n&&\n\n.AVIATION /00Z SUNDAY THROUGH THURSDAY/...\nThrough 00Z Monday...VFR through the forecast period with no\nprecipitation expected as high pressure continues to build into\nthe region. Lingering SCT/BKN cigs in the 035-060 AGL range to \ntrend SKC at all terminals in the 00-06Z time frame under light \nand variable winds. SKC conditions continue through Sunday with\nwinds trending light south to southwesterly from 4-8 kts by\nafternoon.\n\nOutlook...\n\nSunday Night: VFR. NO SIG WX.\nMonday: VFR. NO SIG WX.\nMonday Night: VFR. NO SIG WX.\nTuesday: VFR. Slight chance SHRA.\nTuesday Night: VFR. Slight chance SHRA.\nWednesday: VFR. NO SIG WX.\nWednesday Night: VFR. Chance SHRA.\nThursday: Mainly VFR, with areas MVFR possible. Chance SHRA.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Kutikoff\nDISCUSSION...Kutikoff/Langbauer\nAVIATION...JMG\n"
  },
  "lake_forecast": {
   "issued": "2026-10-31T18:20:00+00:00",
@@ -983,17 +983,17 @@
  },
  "lake_gage": {
   "water_temp_f": 52,
-  "water_temp_at": "2026-10-31T18:00:00.000-04:00",
+  "water_temp_at": "2026-10-31T19:00:00.000-04:00",
   "level_ft": 93.92,
-  "level_at": "2026-10-31T18:00:00.000-04:00",
+  "level_at": "2026-10-31T19:00:00.000-04:00",
   "level_status": "normal"
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 25,
+  "aqi": 26,
   "category": "Good",
   "pollutant": "OZONE",
-  "observed": "10/31/26 18:00",
+  "observed": "10/31/26 19:00",
   "discussion": "On Monday, November 1st, expect moderate levels of fine particle matter in valley locations with nearby air emission sources, expect good air quality elsewhere in Vermont."
  },
  "sun": {
@@ -1046,13 +1046,13 @@
    {
     "date": "2026-11-02",
     "high_f": {
-     "GFS": 61,
+     "GFS": 63,
      "Euro": 61,
      "ICON": 64
     },
     "pop_max": {
      "GFS": 6,
-     "Euro": 2,
+     "Euro": 4,
      "ICON": 3
     },
     "precip_in": {
@@ -1066,7 +1066,7 @@
  },
  "brief": {
   "date": "2026-10-31",
-  "generated": "2026-10-31T22:50:51+00:00",
+  "generated": "2026-10-31T23:33:18+00:00",
   "text": "Partly cloudy tonight, low 33. Sunday, sunny, high 57.",
   "periods": [
    {
@@ -1075,12 +1075,12 @@
     "is_day": false,
     "temp_f": 33,
     "sky": "partly cloudy",
-    "start": "2026-10-31T18:00:00-04:00",
+    "start": "2026-10-31T19:00:00-04:00",
     "end": "2026-11-01T06:00:00-05:00",
     "precip": null,
     "wind": null,
     "feels_lo": 30,
-    "feels_hi": 44,
+    "feels_hi": 43,
     "text": "Partly cloudy tonight, low 33."
    },
    {
