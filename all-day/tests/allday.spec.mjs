@@ -278,6 +278,9 @@ function pass2Day(date, items, top, bottom) {
     markets, markets_count: { local: 0, everything: 3 }, photos_world: photos,
   };
 }
+/* Talk's questions, in talk_questions.py's contract */
+const talkToday = () => ({ v: 1, date: etKey(Date.now()), slot: 'midday', updated: new Date().toISOString(), items: [1, 2, 3, 4, 5].map((n) => ({ id: 'tq' + n, b: n === 5 ? 'sports' : 'head',
+  q: 'What would you change about place ' + n + '?', title: 'Town story number ' + n, name: 'Seven Days', src: 'seven-days', url: 'https://example.org/talk/tq' + n, local: n === 1, posted_at: new Date().toISOString() })) });
 const wireCache = new Map();
 function wireFiles(opts = {}) {
   const o = { inbox: !!opts.inbox, brief: opts.brief !== false, topics: !!opts.topics, pass2: !!opts.pass2 };
@@ -289,6 +292,7 @@ function wireFiles(opts = {}) {
     /* opts.week: a fuller archive, for the week of days at a day's turn */
     const older = opts.week ? [3, 4, 5, 6, 7, 8].map((n) => dayMinus(today, n)) : [];
     older.forEach((d) => { files[d + '.json'] = wireDay(d, 30, { ...o, brief: false }); });
+    files['talk-today.json'] = talkToday();
     files['index.json'] = { v: 1, editions: [y1, y2, ...older].map((d) => ({ date: d, count: files[d + '.json'].count, picks: files[d + '.json'].picks.length,
       picks_total: files[d + '.json'].picks.length + files[d + '.json'].picks_earlier.length })) };
     wireCache.set(key, files);
@@ -5167,13 +5171,13 @@ function foodInstagram(withVideo) {
   return { generated: new Date().toISOString(), expires_hint_days: 4, handles: [...new Set(posts.map((p) => p.h))], posts };
 }
 
-/* Talk, What Now's card deck */
-const talkCard = (page) => page.$eval(wnPanel + ' .tk-card', (n) => ({ id: n.dataset.card || '', q: n.querySelector('.tk-q').textContent, eyebrow: (n.querySelector('.eyebrow') || {}).textContent || '' }));
-const talkReady = (page) => page.waitForSelector(wnPanel + ' .tk-card:not(.fly-r):not(.fly-l)', { timeout: 15000 });
-const talkNext = async (page, button) => { const before = (await talkCard(page)).id; await page.click(wnPanel + ' ' + button); await page.waitForFunction(([p, id]) => { const n = document.querySelector(p + ' .tk-card'); return n && n.dataset.card !== id && !n.classList.contains('fly-r') && !n.classList.contains('fly-l'); }, [wnPanel, before]); return talkCard(page); };
-const talkBubble = async (page, k) => { await page.click(wnPanel + ' .tk-bubbles .chip[data-chip="' + k + '"]'); await page.waitForFunction(([p, b]) => document.querySelector(p + ' .tk-bubbles .chip[data-chip="' + b + '"]').classList.contains('on'), [wnPanel, k]); await talkReady(page); };
-const talkCount = (page) => page.$eval(wnPanel + ' .tk-group', (b) => Number((b.querySelector('b') || {}).textContent || 0));
-async function talkWalk(page) { const seen = []; for (let i = 0; i < 40; i += 1) { const c = await talkCard(page).catch(() => null); if (!c || !c.id) break; seen.push(c.q); await page.keyboard.press('ArrowRight'); await page.waitForFunction(([p, id]) => { const n = document.querySelector(p + ' .tk-card'); return n && n.dataset.card !== id && !n.classList.contains('fly-r'); }, [wnPanel, c.id]); } return seen; }
+/* Talk, People's three cards */
+const tk = '#panel-people [data-sec="talk"]';
+const talkHand = (page) => page.$$eval(tk + ' .tk-card', (ns) => ns.map((n) => ({ id: n.dataset.card || '', seat: n.dataset.seat, q: (n.querySelector('.tk-q') || {}).textContent || '', eyebrow: (n.querySelector('.eyebrow') || {}).textContent || '', used: n.classList.contains('used') })));
+const talkReady = (page) => page.waitForFunction((p) => { const c = [...document.querySelectorAll(p + ' .tk-card')]; return c.length === 3 && !c.some((n) => n.classList.contains('tk-wait')); }, tk, { timeout: 20000 });
+const talkSwapped = async (page, seat) => { const before = (await talkHand(page))[seat].id; await page.click(tk + ' .tk-card:nth-child(' + (seat + 1) + ') .tk-swap'); await page.waitForFunction(([p, n, id]) => document.querySelector(p + ' .tk-card:nth-child(' + n + ')').dataset.card !== id, [tk, seat + 1, before]); return talkHand(page); };
+const talkBubble = async (page, k) => { await page.click(tk + ' .tk-bubbles .chip[data-chip="' + k + '"]'); await page.waitForFunction(([p, b]) => document.querySelector(p + ' .tk-bubbles .chip[data-chip="' + b + '"]').classList.contains('on'), [tk, k]); await talkReady(page); };
+const talkCount = (page) => page.$eval(tk + ' .tk-group', (b) => Number((b.querySelector('b') || {}).textContent || 0));
 
 async function theTalk(browser, base) {
   await group('Talk: the deck', async () => {
@@ -5186,84 +5190,140 @@ async function theTalk(browser, base) {
     check(ids.has('q207'), 'q207 is in the deck', '');
     check(deck.filter((c) => c.heavy).every((c) => c.b === 'deep'), 'heavy cards are Deep cards', '');
     const core = await import('../js/talk-core.js');
-    check(!core.queue('mix', deck, { head: [], sports: [] }).some((c) => c.heavy), 'Mix never deals a heavy card', '');
-    check(core.queue('deep', deck, { head: [], sports: [] }).some((c) => c.heavy), 'Deep does', '');
+    const none = { head: [], sports: [] };
+    const seats = (b, used) => core.pools(b, deck, none, used);
+    const mix = seats('mix');
+    check(mix.ice.every((c) => c.b === 'ice') && mix.other.every((c) => ['debate', 'deep'].includes(c.b)) && mix.other.some((c) => c.b === 'debate') && mix.other.some((c) => c.b === 'deep'), 'an icebreaker seat, and a debate or deep seat', '');
+    check(!mix.other.concat(mix.ice).some((c) => c.heavy), 'Mix never deals a heavy card', '');
+    check(seats('deep').other.some((c) => c.heavy) && seats('deep').other.every((c) => c.b === 'deep'), 'Deep does', '');
+    check(seats('local').ice[0].local && seats('local').other[0].local, 'Local leads with local cards', '');
+    check(!seats('mix', { [mix.ice[0].id]: 1 }).ice.some((c) => c.id === mix.ice[0].id), 'a used card is in no pool', '');
     check(!core.fit('Jennifer Whitlock opens up about her neighbor') && !core.fit('Man dies in Route 7 crash') && !core.fit('Fine story', 'public-safety') && core.fit('Church Street keeps outdoor dining'), 'the dinner guard', '');
-    check(!core.fit('Jim’s Obituary Corner’s tribute') && !core.fit('Town pays tribute to a beloved teacher') && !core.fit('Barn fires spread') && !core.fit('Maria Lopez') && !core.fit('Sato Kenji is back') && !core.fit('Sato Kenji has news') && core.fit('The Beatles has a new mix') && core.fit('Sato Kenji opens a bakery'), 'the wider guard', '');
-    const paper = { sources: { s: { name: 'Seven Days' } }, updates: [{ items: [{ id: 'ob', title: 'Remembering a neighbor', url: 'https://x.example/obituaries/a', ch: 'local', src: 's' }, { id: 'ok', title: 'Church Street keeps outdoor dining', url: 'https://x.example/news/a', ch: 'local', src: 's' }] }] };
-    check(core.stories(paper).head.map((c) => c.id).join() === 'ok', 'an obituary page is out by its address', '');
+    const paper = { sources: { s: { name: 'Seven Days' } }, updates: [{ items: [{ id: 'ob', title: 'Remembering a neighbor', url: 'https://x.example/obituaries/a', ch: 'local', src: 's' }, { id: 'ok', title: 'Church Street keeps outdoor dining', url: 'https://x.example/ok', ch: 'local', src: 's' }, { id: 'pl', title: 'The ferry adds a late boat', url: 'https://x.example/pl', ch: 'local', src: 's' }] }] };
+    check(core.stories(paper).head.map((c) => c.id).join() === 'ok,pl', 'an obituary page is out by its address', '');
+    const now = Date.parse('2026-10-16T18:00:00Z');
+    const file = { updated: '2026-10-16T12:00:00Z', items: [{ id: 'ok', b: 'head', q: 'Who eats outside in October?', title: 'Church Street keeps outdoor dining', name: 'Seven Days', src: 's', url: 'https://x.example/ok', posted_at: '2026-10-16T11:00:00Z' }, { id: 'bad', b: 'head', q: 'Why?', title: 'Man dies in Route 7 crash', name: 'X', src: 's', url: 'https://x.example/b' }] };
+    const asked = core.questions(file, {}, now);
+    check(asked.head.length === 1 && asked.head[0].q === 'Who eats outside in October?' && asked.head[0].hl === 'Church Street keeps outdoor dining', 'a question is the card, its headline under it, and the guard still holds', '');
+    check(!core.questions(file, {}, now + 3 * 864e5).head.length, 'a file three days old is ignored', '');
+    check(!core.questions(file, { s: 1 }, now).head.length, 'a muted source stays out', '');
+    check(!core.questions(null, {}, now).head.length, 'no file, no questions', '');
+    const merged = core.ask(core.stories(paper), asked);
+    check(merged.head.map((c) => c.id).join() === 'ok,pl', 'a story with a question is not dealt twice; the rest stay headlines', merged.head.map((c) => c.id).join());
+    const dealt = core.pools('mix', [], merged).news;
+    check(dealt.length === 1 && dealt[0].id === 'ok', 'while there are questions, only questions', dealt.map((c) => c.id).join());
+    const bareDeal = core.pools('mix', [], core.ask(core.stories(paper), core.questions(null, {}, now))).news;
+    check(bareDeal.some((c) => c.id === 'pl'), 'plain headlines only when there are no questions at all', bareDeal.map((c) => c.id).join());
   });
-  await group('Talk: the card (demo, 390)', async () => {
+  await group('Talk: three cards in People (demo, 390)', async () => {
     const { ctx, page, errors } = await newPage(browser, base);
-    await page.goto(base + '/all-day/?demo=1#whatnow/talk');
+    await page.goto(base + '/all-day/?demo=1#people/talk');
     await talkReady(page);
-    check(await page.$eval('#subnav .chip.on', (b) => /Talk/.test(b.innerText)), '#whatnow/talk opens Talk, a word in the mode switch', '');
-    check((await page.$$eval(wnPanel + ' .tk-bubbles .chip', (c) => c.map((x) => x.innerText).join('|'))) === 'Mix|Headlines|Sports|Local|Icebreakers|Deep|Debates', 'the bubbles, Mix first', '');
-    check(await page.$eval(wnPanel + ' .tk-bubbles .chip.on', (b) => b.dataset.chip === 'mix'), 'Mix is on', '');
-    check((await page.$$(wnPanel + ' .tk-card')).length === 1, 'one card at a time', '');
-    const size = await page.evaluate((p) => { const c = document.querySelector(p + ' .tk-card').getBoundingClientRect(), y = document.querySelector(p + ' .tk-yes').getBoundingClientRect(); return { w: c.width, h: c.height, btm: y.bottom, vh: innerHeight, over: document.documentElement.scrollWidth - innerWidth, tab: document.querySelector('#tabs, .tabs, nav')?.getBoundingClientRect().top }; }, wnPanel);
-    check(size.w === 358 && size.h > 400 && size.over <= 0, 'big, and no sideways scroll at 390', JSON.stringify(size));
-    const a = await talkCard(page);
-    const b = await talkNext(page, '.tk-yes');
-    check(a.id !== b.id && (await talkCount(page)) === 1, 'the check marks it used, counts it, and deals the next', JSON.stringify([a, b]));
-    const c = await talkNext(page, '.tk-no');
-    check((await talkCount(page)) === 1 && c.id !== b.id, 'the x skips and counts nothing', '');
-    await page.keyboard.press('ArrowRight');
-    await page.waitForFunction((n) => document.querySelector(n + ' .tk-group b').textContent === '2', wnPanel);
+    check(await page.$eval(peoplePanel, (p) => { const k = [...p.querySelectorAll('[data-sec]')].map((s) => s.dataset.sec); return k.indexOf('talk') === k.indexOf('host') + 1 && k.indexOf('host') === k.indexOf('irl') + 1; }), 'Talk sits right after the Btown Brief IRL and host block', '');
+    const pill = await page.$$eval('#subnav .chip', (c) => c.map((x) => x.dataset.chip));
+    check(pill[0] === 'irl' && pill[1] === 'talk', 'it has its own chip on the pill, after IRL', pill.join());
+    const landed = await page.waitForFunction(() => /Talk/.test(document.querySelector('#subnav .chip.on')?.innerText || ''), null, { timeout: 5000 }).catch(() => null);
+    check(!!landed, '#people/talk lands on it', await page.$eval('#subnav .chip.on', (b) => b.innerText));
+    check((await page.$$eval(tk + ' .tk-bubbles .chip', (c) => c.map((x) => x.innerText).join('|'))) === 'Mix|Local|Sports|Deep', 'a small row of bubbles, Mix first', '');
+    const hand = await talkHand(page);
+    check(hand.length === 3 && hand.map((c) => c.seat).join() === 'news,ice,other', 'three cards: news, icebreaker, other', JSON.stringify(hand));
+    check(/Headline|Local|Sports/.test(hand[0].eyebrow) && hand[1].eyebrow === 'Icebreaker' && /Debate|Deep/.test(hand[2].eyebrow), 'each with a small label', JSON.stringify(hand));
+    const geo = await page.evaluate((p) => { const r = [...document.querySelectorAll(p + ' .tk-card')].map((n) => n.getBoundingClientRect());
+      return { w: r.map((x) => x.width), stacked: r[0].bottom <= r[1].top && r[1].bottom <= r[2].top, over: document.documentElement.scrollWidth - innerWidth,
+        q: [...document.querySelectorAll(p + ' .tk-q')].every((q) => { const s = getComputedStyle(q); return q.getBoundingClientRect().height > 0 && s.visibility === 'visible' && s.opacity === '1'; }),
+        ground: new Set([...document.querySelectorAll(p + ' .tk-card')].map((n) => getComputedStyle(n).backgroundColor)).size }; }, tk);
+    check(geo.stacked && geo.w.every((w) => w === 358) && geo.over <= 0, 'stacked full width at 390, no sideways scroll', JSON.stringify(geo));
+    check(geo.q, 'all three readable with no tapping', JSON.stringify(geo));
+    check(geo.ground === 3, 'each its own colour', JSON.stringify(geo));
+    const fit = await page.evaluate((p) => { const bar = document.getElementById('tabbar'); const edge = bar ? bar.getBoundingClientRect().top : innerHeight; return [...document.querySelectorAll(p + ' .tk-card')].every((c) => c.getBoundingClientRect().bottom <= edge + 1); }, tk);
+    check(fit, 'all three on the screen at once', '');
+    await page.click(tk + ' .tk-card:nth-child(2) .tk-used');
+    await page.waitForFunction((p) => document.querySelector(p + ' .tk-card:nth-child(2)').classList.contains('used'), tk);
+    const marked = await talkHand(page);
+    check(marked[1].id === hand[1].id && (await talkCount(page)) === 1, 'the check marks it used, counts it, and it stays on the table', '');
+    check(await page.$eval(tk + ' .tk-card:nth-child(2) .tk-used', (b) => b.getAttribute('aria-pressed') === 'true'), 'and says so', '');
+    await page.click(tk + ' .tk-card:nth-child(2) .tk-used');
+    await page.waitForFunction((p) => !document.querySelector(p + ' .tk-card:nth-child(2)').classList.contains('used'), tk);
+    check((await talkCount(page)) === 0, 'a second tap takes it back', '');
+    const before = await talkHand(page);
+    const after = await talkSwapped(page, 2);
+    check(after[2].id !== before[2].id && after[0].id === before[0].id && after[1].id === before[1].id, 'a swap changes just that card', JSON.stringify(after));
+    check(await page.$eval(tk + ' .tk-card:nth-child(3)', (n) => n.classList.contains('turn') && getComputedStyle(n).animationName === 'tk-turn'), 'and it turns over', '');
+    const old = await talkHand(page);
+    await page.click(tk + ' .tk-deal');
+    await page.waitForFunction(([p, ids]) => [...document.querySelectorAll(p + ' .tk-card')].every((n, i) => n.dataset.card !== ids[i]), [tk, old.map((c) => c.id)]);
+    const delays = await page.$$eval(tk + ' .tk-card', (ns) => ns.map((n) => getComputedStyle(n).animationDelay));
+    check(delays.join() === '0s,0.07s,0.14s', 'Deal three redeals all of them, one after another', delays.join());
+    const dealt = await talkHand(page);
+    check(new Set(dealt.map((c) => c.id)).size === 3, 'three different cards', '');
+    await page.click(tk + ' .tk-card:nth-child(2) .act.star');
+    check(await page.$eval(tk + ' .tk-card:nth-child(2) .act.star', (s) => s.classList.contains('on')), 'a card stars', '');
+    check(!!(await page.$(tk + ' .tk-card:nth-child(2) .act.sh')), 'and shares', '');
+    check(!(await page.$(tk + ' .tk-card [data-act="comment"]')), 'no comments', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+  await group('Talk: three across on a wide screen, narrowed by a bubble (demo)', async () => {
+    const { ctx, page, errors } = await newPage(browser, base, { viewport: { width: 1280, height: 800 } });
+    await page.goto(base + '/all-day/?demo=1#people/talk');
     await talkReady(page);
-    check(true, 'the right arrow marks it used', '');
-    const skipFrom = (await talkCard(page)).id;
-    await page.keyboard.press('ArrowLeft');
-    await page.waitForFunction(([p, id]) => document.querySelector(p + ' .tk-card').dataset.card !== id, [wnPanel, skipFrom]);
-    await talkReady(page);
-    check((await talkCount(page)) === 2, 'the left arrow skips', '');
-    await page.waitForTimeout(700);
-    const box = await page.$eval(wnPanel + ' .tk-card', (n) => { const r = n.getBoundingClientRect(); return { x: r.x, y: r.y, w: r.width, h: r.height }; });
-    const drag = async (dx) => { await page.mouse.move(box.x + box.w / 2, box.y + box.h / 2); await page.mouse.down(); await page.mouse.move(box.x + box.w / 2 + dx / 2, box.y + box.h / 2, { steps: 4 }); await page.mouse.move(box.x + box.w / 2 + dx, box.y + box.h / 2, { steps: 4 }); await page.mouse.up(); };
-    await drag(30);
-    await page.waitForTimeout(350);
-    check((await talkCount(page)) === 2, 'a short drag springs back', '');
-    await drag(120);
-    await page.waitForFunction((n) => document.querySelector(n + ' .tk-group b').textContent === '3', wnPanel);
-    check(true, 'a swipe right marks it used', '');
-    await talkReady(page);
-    await page.waitForTimeout(700);
-    const before = (await talkCard(page)).id;
-    await drag(-120);
-    await page.waitForFunction(([p, id]) => document.querySelector(p + ' .tk-card').dataset.card !== id, [wnPanel, before]);
-    check((await talkCount(page)) === 3, 'a swipe left skips', '');
-    await talkReady(page);
-    await page.click(wnPanel + ' .tk-card .act.star');
-    check(await page.$eval(wnPanel + ' .tk-card .act.star', (s) => s.classList.contains('on')), 'a card stars', '');
-    check(!(await page.$(wnPanel + ' .tk-card [data-act="comment"]')), 'no comments', '');
+    const r = await page.$$eval(tk + ' .tk-card', (ns) => ns.map((n) => n.getBoundingClientRect()).map((x) => ({ l: x.left, t: x.top, w: x.width, h: x.height })));
+    check(r[0].t === r[1].t && r[1].t === r[2].t && r[0].l < r[1].l && r[1].l < r[2].l && Math.abs(r[0].w - r[1].w) < 1 && r[0].h === r[2].h, 'three across, the same size', JSON.stringify(r));
+    check(r[0].w > 240, 'wide enough to read', JSON.stringify(r));
+    await talkBubble(page, 'sports');
+    check((await talkHand(page))[0].eyebrow === 'Sports', 'Sports narrows the news seat', '');
+    await talkBubble(page, 'local');
+    const loc = await talkHand(page);
+    check(['t1', 't3', 't6', 'p1'].includes(loc[0].id), 'Local narrows it too', JSON.stringify(loc));
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
   });
   await group('Talk: the news is fit for dinner (demo)', async () => {
     const { ctx, page, errors } = await newPage(browser, base);
-    await page.goto(base + '/all-day/?demo=1#whatnow/talk');
+    await page.goto(base + '/all-day/?demo=1#people/talk');
     await talkReady(page);
-    await talkBubble(page, 'head');
-    const first = await page.$eval(wnPanel + ' .tk-card', (n) => ({ src: n.querySelector('.tk-src').textContent, href: n.querySelector('.tk-src').href, text: n.innerText }));
-    check(/Seven Days · \d+(m|h)/.test(first.src) && /example\.org/.test(first.href), 'source, age and a link to the story', JSON.stringify(first));
-    check(!/Not shown/.test(first.text), 'no written line on a story', first.text);
-    const head = await talkWalk(page);
-    const bad = /stabbing|Earthquake|Whitlock|Wildfire|dies|CSA share/;
-    check(head.length === 6 && !head.some((t) => bad.test(t)), 'crime, deaths, disasters, private people and posts stay out', head.join(' | '));
-    await page.click(wnPanel + ' .tk-bubbles .chip[data-chip="sports"]');
-    await talkReady(page);
-    const sports = await talkWalk(page);
-    check(sports.some((t) => /Catamounts/.test(t)) && sports.some((t) => /Patriots/.test(t)) && !sports.some((t) => /arrested/.test(t)), 'Sports has the local team and the national ones', sports.join(' | '));
+    const seen = [], plain = [];
+    for (let i = 0; i < 14; i += 1) {
+      const c = await page.$eval(tk + ' .tk-card:nth-child(1)', (n) => ({ id: n.dataset.card, q: n.querySelector('.tk-q').textContent, hl: (n.querySelector('.tk-hl') || {}).textContent || '', from: (n.querySelector('.tk-from') || {}).textContent || '', href: (n.querySelector('.tk-src') || {}).href || '', text: n.innerText, size: [parseFloat(getComputedStyle(n.querySelector('.tk-q')).fontSize), n.querySelector('.tk-hl') ? parseFloat(getComputedStyle(n.querySelector('.tk-hl')).fontSize) : 0] }));
+      if (!seen.some((x) => x.id === c.id)) (c.hl ? seen : plain).push(c);
+      await talkSwapped(page, 0);
+    }
+    const one = seen[0];
+    check(/\?$/.test(one.q) && one.hl && one.size[0] > one.size[1] * 1.25, 'the question big, the headline small', JSON.stringify(one));
+    check(/(Seven Days|AP|VTDigger|NPR|BBC|WCAX|\w+) · \d+(m|h)/.test(one.from) && /example\.org/.test(one.href), 'the source, its age and a link', JSON.stringify(one));
+    check(!seen.some((c) => /Not shown/.test(c.text)), 'no written line on a story', '');
+    const words = seen.concat(plain).map((c) => c.q + ' ' + c.hl).join(' | ');
+    check(!/stabbing|Earthquake|Whitlock|Wildfire|dies|CSA share|arrested/.test(words), 'crime, deaths, disasters, private people and posts stay out', words);
+    check(!plain.length, 'while there are questions, no plain headlines come up', JSON.stringify(plain.map((c) => c.q)));
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
   });
+  await group('Talk: live questions and no file (live)', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/all-day/#people/talk');
+    await talkReady(page);
+    const live = await page.$eval(tk + ' .tk-card:nth-child(1)', (n) => ({ q: n.querySelector('.tk-q').textContent, hl: (n.querySelector('.tk-hl') || {}).textContent || '', href: n.querySelector('.tk-src').href }));
+    check(/^What would you change about place \d\?$/.test(live.q) && /^Town story number \d$/.test(live.hl) && /example\.org\/talk\/tq/.test(live.href), 'the loader reads talk-today.json from the wire-data branch', JSON.stringify(live));
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+    const n = await newPage(browser, base);
+    await n.page.route(/talk-today\.json/, (r) => r.fulfill({ status: 404, body: '' }));
+    await n.page.goto(base + '/all-day/#people/talk');
+    await talkReady(n.page);
+    const bare = await n.page.$eval(tk + ' .tk-card:nth-child(1)', (x) => ({ id: x.dataset.card, seat: x.dataset.seat, hl: !!x.querySelector('.tk-hl'), src: !!x.querySelector('.tk-src') }));
+    check(bare.src && !bare.hl, 'no file: the news card is a plain headline with its source', JSON.stringify(bare));
+    await n.ctx.close();
+  });
   await group('Talk: groups survive a reload (live)', async () => {
     const { ctx, page, errors } = await newPage(browser, base);
-    await page.goto(base + '/all-day/#whatnow/talk');
+    /* a small deck, so a whole group's cards can be walked */
+    const cards = [...Array(12)].map((_, i) => ({ id: 'c' + i, q: 'Card ' + i + '?', b: i < 6 ? 'ice' : i < 9 ? 'debate' : 'deep' }));
+    await page.route(/data\/talk-deck\.json/, (r) => r.fulfill({ status: 200, body: JSON.stringify({ cards }), contentType: 'application/json' }));
+    await page.route(/wire-today\.json|talk-today\.json/, (r) => r.fulfill({ status: 404, body: '' }));
+    await page.goto(base + '/all-day/#people/talk');
     await talkReady(page);
-    await talkBubble(page, 'debate');
     const name = async (g, color) => {
-      await page.click(wnPanel + ' .tk-group');
+      await page.click(tk + ' .tk-group');
       await page.fill('#sheet .tk-input', g);
       await page.click('#sheet .tk-swatch:nth-child(' + color + ')');
       await page.click('#sheet .tk-new .btn');
@@ -5271,87 +5331,77 @@ async function theTalk(browser, base) {
     };
     await name('Family', 3);
     await talkReady(page);
-    check(/Family/.test(await page.$eval(wnPanel + ' .tk-group', (b) => b.innerText)), 'a new group is the one on', '');
-    check(await page.$eval(wnPanel + ' .tk-group .tk-dot', (d) => getComputedStyle(d).backgroundColor === 'rgb(47, 158, 110)'), 'its dot is its colour', '');
-    const used = [];
-    for (let i = 0; i < 3; i += 1) { used.push((await talkCard(page)).id); await talkNext(page, '.tk-yes'); }
+    check(/Family/.test(await page.$eval(tk + ' .tk-group', (b) => b.innerText)), 'a new group is the one on', '');
+    check(await page.$eval(tk + ' .tk-group .tk-dot', (d) => getComputedStyle(d).backgroundColor === 'rgb(47, 158, 110)'), 'its dot is its colour', '');
+    const used = (await talkHand(page)).map((c) => c.id);
+    for (let i = 1; i <= 3; i += 1) await page.click(tk + ' .tk-card:nth-child(' + i + ') .tk-used');
+    await page.waitForFunction((p) => document.querySelector(p + ' .tk-group b')?.textContent === '3', tk);
     await page.reload();
     await talkReady(page);
-    check(/Family/.test(await page.$eval(wnPanel + ' .tk-group', (b) => b.innerText)) && (await talkCount(page)) === 3, 'the group and its count survive a reload', '');
-    await talkBubble(page, 'debate');
-    const left = [];
-    for (let i = 0; i < 40; i += 1) { const c = await talkCard(page).catch(() => null); if (!c || !c.id || left.includes(c.id)) break; left.push(c.id); await talkNext(page, '.tk-no'); }
-    check(left.length === 32 && !left.some((id) => used.includes(id)), 'a used card never comes back for that group', left.length + ' left');
+    check(/Family/.test(await page.$eval(tk + ' .tk-group', (b) => b.innerText)) && (await talkCount(page)) === 3, 'the group and its count survive a reload', '');
+    const walk = async () => { const seen = new Set(); for (let i = 0; i < 30; i += 1) { (await talkHand(page)).forEach((c) => { if (c.id) seen.add(c.id); }); await page.click(tk + ' .tk-deal'); await page.waitForTimeout(20); } return [...seen]; };
+    const left = await walk();
+    check(left.length === 9 && !left.some((id) => used.includes(id)), 'a used card never comes back for that group', left.join());
     await name('Work crew', 4);
     await talkReady(page);
-    const other = [];
-    for (let i = 0; i < 40; i += 1) { const c = await talkCard(page).catch(() => null); if (!c || !c.id || other.includes(c.id)) break; other.push(c.id); await talkNext(page, '.tk-no'); }
-    check(other.length === 35 && used.every((id) => other.includes(id)), 'another group still sees it', other.length + ' cards');
-    await page.click(wnPanel + ' .tk-group');
+    const other = await walk();
+    check(other.length === 12, 'another group still sees it', other.join());
+    await page.click(tk + ' .tk-group');
     await page.click('#sheet [data-group]:has-text("Family") .tk-gname');
     await page.waitForSelector('#sheet', { state: 'hidden' });
-    await page.click(wnPanel + ' .tk-group');
+    await page.click(tk + ' .tk-group');
     await page.click('#sheet .tk-over');
     await page.click('#confirm [data-yes]');
-    await page.waitForFunction((p) => !document.querySelector(p + ' .tk-group b'), wnPanel);
+    await page.waitForFunction((p) => !document.querySelector(p + ' .tk-group b'), tk);
     check(true, 'start over clears that group', '');
-    check(!errors.length, 'no console errors', errors.join(' | '));
+    check(!errors.filter((e) => !/Failed to load/.test(e)).length, 'no console errors', errors.join(' | '));
     await ctx.close();
   });
   await group('Talk: when a source fails', async () => {
     const { ctx, page, errors } = await newPage(browser, base);
-    await page.route(/wire-today\.json/, (r) => r.abort());
-    await page.goto(base + '/all-day/#whatnow/talk');
+    await page.route(/wire-today\.json|talk-today\.json/, (r) => r.abort());
+    await page.goto(base + '/all-day/#people/talk');
     await talkReady(page);
-    check(!!(await talkCard(page)).id, 'the decks still deal in Mix with the Wire down', '');
-    await page.click(wnPanel + ' .tk-bubbles .chip[data-chip="head"]');
-    await page.waitForFunction((p) => /No headlines/.test(document.querySelector(p + ' .tk-card').innerText), wnPanel, { timeout: 20000 });
-    await page.click(wnPanel + ' .tk-empty .btn');
-    await talkReady(page);
-    check(!!(await talkCard(page)).id, 'Headlines says so, and leads to the decks', '');
+    const hand = await talkHand(page);
+    check(hand.every((c) => c.id) && hand[0].eyebrow === 'Icebreaker', 'with the Wire down the decks still deal all three', JSON.stringify(hand));
     await ctx.close();
     const n = await newPage(browser, base);
     await n.page.route(/data\/talk-deck\.json/, (r) => r.abort());
-    await n.page.goto(base + '/all-day/#whatnow/talk');
+    await n.page.goto(base + '/all-day/#people/talk');
     await talkReady(n.page);
-    await n.page.waitForFunction((p) => document.querySelector(p + ' .tk-card').dataset.card, wnPanel, { timeout: 15000 });
-    check(true, 'the Wire still deals with the decks down', '');
-    await n.page.click(wnPanel + ' .tk-yes');
-    await n.page.waitForSelector(wnPanel + ' .tk-group b');
-    await n.page.click(wnPanel + ' .tk-bubbles [data-chip="ice"]');
-    await n.page.waitForSelector(wnPanel + ' .tk-empty');
-    const failed = await n.page.$eval(wnPanel + ' .tk-empty', (e) => e.innerText);
-    check(/Couldn’t load/.test(failed) && /Try again/.test(failed) && !/Start over/.test(failed), 'a failed deck says so, with a used card too: Try again, no Start over', failed);
+    check((await talkHand(n.page)).every((c) => c.id), 'with the decks down the Wire still deals', '');
     await n.ctx.close();
+    const z = await newPage(browser, base);
+    await z.page.route(/data\/talk-deck\.json|wire-today\.json|talk-today\.json/, (r) => r.abort());
+    await z.page.goto(base + '/all-day/#people/talk');
+    await z.page.waitForFunction((p) => /Couldn’t load/.test(document.querySelector(p + ' .tk-card')?.innerText || ''), tk, { timeout: 25000 });
+    const failed = await z.page.$eval(tk + ' .tk-empty', (e) => e.innerText);
+    check(/Try again/.test(failed) && !/Start over/.test(failed), 'everything down: it says so, with Try again', failed);
+    await z.ctx.close();
     check(!errors.filter((e) => !/ERR_FAILED|Failed to load/.test(e)).length, 'no console errors but the failed fetch', errors.join(' | '));
   });
-  await group('Talk: a small phone (360x640)', async () => {
-    const { ctx, page, errors } = await newPage(browser, base, { viewport: { width: 360, height: 640 } });
-    await page.goto(base + '/all-day/?demo=1#whatnow/talk');
+  await group('Talk: reduced motion, dark', async () => {
+    const { ctx, page, errors } = await newPage(browser, base, { motion: 'reduce', scheme: 'dark' });
+    await page.goto(base + '/all-day/?demo=1#people/talk');
     await talkReady(page);
-    const m = await page.evaluate((p) => {
-      const q = document.querySelector(p + ' .tk-q');
-      q.textContent = 'x '.repeat(65).trim();
-      q.classList.add('long');
-      return { btns: document.querySelector(p + ' .tk-btns').getBoundingClientRect().bottom, bar: document.getElementById('tabbar').getBoundingClientRect().top,
-        foot: document.querySelector(p + ' .tk-foot').getBoundingClientRect().bottom, card: document.querySelector(p + ' .tk-card').getBoundingClientRect().bottom };
-    }, wnPanel);
-    check(m.btns <= m.bar, 'the buttons clear the bar', JSON.stringify(m));
-    check(m.foot <= m.card, 'the longest headline stays on the card', JSON.stringify(m));
+    const a = await talkHand(page);
+    await page.click(tk + ' .tk-deal');
+    const b = await talkHand(page);
+    check(a[0].id !== b[0].id, 'reduced motion: the new cards are there at once', '');
+    check(await page.$eval(tk + ' .tk-card', (n) => getComputedStyle(n).animationName === 'none'), 'reduced motion: no turn', '');
+    const ink = await page.$eval(tk + ' .tk-card', (n) => getComputedStyle(n).backgroundColor);
+    check(!/^rgb\(255|^rgba\(0, 0, 0, 0/.test(ink), 'dark: the card has its ground', ink);
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
   });
-  await group('Talk: reduced motion, dark, Games', async () => {
-    const { ctx, page, errors } = await newPage(browser, base, { motion: 'reduce', scheme: 'dark' });
+  await group('Talk: the old links follow it', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
     await page.goto(base + '/all-day/?demo=1#whatnow/talk');
     await talkReady(page);
-    const a = await talkCard(page);
-    await page.keyboard.press('ArrowRight');
-    const b = await talkCard(page);
-    check(a.id !== b.id, 'reduced motion: the next card is there at once', '');
-    check(await page.$eval(wnPanel + ' .tk-card', (n) => getComputedStyle(n).animationName === 'none'), 'reduced motion: no turn', '');
-    const ink = await page.$eval(wnPanel + ' .tk-card', (n) => getComputedStyle(n).backgroundColor);
-    check(!/^rgb\(255|^rgba\(0, 0, 0, 0/.test(ink), 'dark: the card has its ground', ink);
+    check(/#people\/talk$/.test(page.url()), '#whatnow/talk lands in People', page.url());
+    await page.goto(base + '/all-day/?demo=1#whatnow');
+    await page.waitForSelector('#subnav .chip[data-chip="tonight"]', { timeout: 15000 });
+    check(!(await page.$('#subnav .chip[data-chip="talk"]')), 'What Now has no Talk chip', '');
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
     const g = await newPage(browser, base);
@@ -5359,23 +5409,29 @@ async function theTalk(browser, base) {
     await g.page.waitForSelector('#panel-games .gm-grid .more, #panel-games .ghost.more', { timeout: 15000 });
     await g.page.click('#panel-games .ghost.more');
     const play = g.page.locator('[data-slug="stay-awhile"] .gm-acts a').first();
-    check((await play.getAttribute('href')) === '#whatnow/talk' && !(await play.getAttribute('target')), 'Stay Awhile’s Play in Games leads to Talk', '');
+    check((await play.getAttribute('href')) === '#people/talk' && !(await play.getAttribute('target')), 'Stay Awhile’s Play in Games leads to Talk', '');
     await play.click();
     await talkReady(g.page);
-    check(await g.page.$eval('#subnav .chip.on', (b) => /Talk/.test(b.innerText)), 'and lands there', '');
+    const there = await g.page.waitForFunction(() => /Talk/.test(document.querySelector('#subnav .chip.on')?.innerText || ''), null, { timeout: 5000 }).catch(() => null);
+    check(!!there, 'and lands there', await g.page.$eval('#subnav .chip.on', (b) => b.innerText));
     await g.ctx.close();
   });
   await group('Talk: links and coming back', async () => {
     const { ctx, page, errors } = await newPage(browser, base);
-    await page.goto(base + '/all-day/?demo=1#whatnow/t-d9');
-    await page.waitForFunction((p) => document.querySelector(p + ' .tk-card')?.dataset.card === 'd9', wnPanel, { timeout: 15000 });
+    const dealt = (id) => page.waitForFunction(([p, k]) => [...document.querySelectorAll(p + ' .tk-card')].some((n) => n.dataset.card === k), [tk, id], { timeout: 15000 });
+    await page.goto(base + '/all-day/?demo=1#people/t-d9');
+    await dealt('d9');
     check(true, 'a card’s link deals that card', '');
-    await page.click('#subnav .chip[data-chip="tonight"]');
-    await page.waitForSelector(wnPanel + ' [data-sec="tonight"]');
-    await page.click('#subnav .chip[data-chip="talk"]');
-    await page.waitForFunction((p) => document.querySelector(p + ' .tk-card')?.dataset.card === 'd9', wnPanel);
-    check(true, 'leaving and coming back keeps the card', '');
-    await page.goto(base + '/all-day/?demo=1#whatnow/t-nothing');
+    await page.goto(base + '/all-day/?demo=1#whatnow/t-d6');
+    await page.reload();
+    await dealt('d6');
+    check(/#people\/t-d6$/.test(page.url()), 'an old card link follows it', page.url());
+    await page.click('#tabbar [data-tab="whatnow"], #tabbar a[href$="#whatnow"]');
+    await page.waitForSelector(wnPanel + ' .spinner, ' + wnPanel + ' [data-sec="missions"]', { timeout: 15000 });
+    await page.click('#tabbar [data-tab="people"], #tabbar a[href$="#people"]');
+    await dealt('d6');
+    check(true, 'leaving and coming back keeps the cards', '');
+    await page.goto(base + '/all-day/?demo=1#people/t-nothing');
     await page.reload();
     await page.waitForFunction(() => /passed/.test(document.getElementById('toast').textContent), null, { timeout: 15000 });
     check(true, 'a card that is gone says so', '');
@@ -11374,7 +11430,7 @@ async function thePeople(browser, base) {
     const host = await page.$eval(peoplePanel + ' [data-host]', (c) => ({ text: c.innerText, mail: c.querySelector('a.btn').getAttribute('href'), ps: c.querySelectorAll('p').length }));
     check(/Host something with the crew/.test(host.text) && /^mailto:btownbrief@gmail\.com\?subject=/.test(host.mail) && host.ps === 2, 'the host card: a title, two short lines and a prefilled email to Stephen', JSON.stringify(host));
     const order = await page.$$eval(peoplePanel + ' [data-sec]', (ss) => ss.map((x) => x.dataset.sec));
-    check(order.slice(0, 5).join(' ') === 'irl host mix scene plans', 'Btown Brief IRL opens the tab with the host card under it, then This week, From the groups and the plans', order.join(' '));
+    check(order.slice(0, 6).join(' ') === 'irl host talk mix scene plans', 'Btown Brief IRL opens the tab with the host card under it, then Talk, This week, From the groups and the plans', order.join(' '));
     const steve = await page.$eval(peoplePanel + ' [data-host] a.btn', (a) => [a.textContent.trim(), decodeURIComponent(a.getAttribute('href'))]);
     check(steve[0] === 'Email Steve' && /Hi Steve,/.test(steve[1]) && !/Stephen/.test(steve.join(' ')), 'it says Steve, not Stephen (Stephen, 2026-10-18)', JSON.stringify(steve));
     if (!own.length) check(await page.$(peoplePanel + ' [data-own] a') !== null, 'with none on the calendar it links the group', '');
@@ -11389,12 +11445,12 @@ async function thePeople(browser, base) {
     check(!/email sign-in|one email/.test(txt), 'signed out, the tab says nothing about sign-in (the Post sheet does)', '');
     check(/12 neighbors in it/.test(txt) && await page.$(peoplePanel + ' [data-dir="out"] button') !== null, 'People here: the count for anyone, a Sign in button for the people', '');
     check(/Sign in to see who’s here\./.test(await page.$eval(peoplePanel + ' [data-dir="out"]', (c) => c.innerText)), 'signed out: one line and the button', '');
-    const doors = await page.$$eval(peoplePanel + ' [data-sec="talk"] a.btn', (as) => as.map((a) => [a.textContent.trim(), a.href]));
+    const doors = await page.$$eval(peoplePanel + ' [data-sec="rooms"] a.btn', (as) => as.map((a) => [a.textContent.trim(), a.href]));
     check(doors.length === 3 && /^Find Each Other/.test(doors[0][0]) && doors[0][1] === 'https://www.btownbrief.com/community/channels/music' &&
       /^Plans & Meetups/.test(doors[1][0]) && doors[1][1] === 'https://www.btownbrief.com/community/channels/meetups-hangouts' &&
       /^Telegram/.test(doors[2][0]) && doors[2][1] === base + '/telegram.html', 'one door card: Find Each Other, Plans & Meetups, Telegram', JSON.stringify(doors));
     const chipsTxt = await page.$$eval('#subnav .chip', (cs) => cs.map((c) => c.textContent));
-    check(JSON.stringify(chipsTxt.filter((c) => c !== 'From the groups')) === JSON.stringify(['IRL', 'This week', 'Open to strangers', 'Run clubs', 'Group chat', 'Who you are', 'Dating', 'Pets', 'Clubs', 'Quiz', 'People here']), 'the chip row is the table of contents', JSON.stringify(chipsTxt));
+    check(JSON.stringify(chipsTxt.filter((c) => c !== 'From the groups')) === JSON.stringify(['IRL', 'Talk', 'This week', 'Open to strangers', 'Run clubs', 'Group chat', 'Who you are', 'Dating', 'Pets', 'Clubs', 'Quiz', 'People here']), 'the chip row is the table of contents', JSON.stringify(chipsTxt));
     await page.evaluate(() => document.querySelector('#panel-people').scrollTo(0, 0));
     await page.waitForTimeout(400);
     await page.click('#subnav .chip[data-chip="quiz"]');
@@ -11898,7 +11954,7 @@ async function thePeople(browser, base) {
     check(top.top < 220 && top.h > 300 && top.big >= 26 && (await secOrder(page))[0] === 'irl', 'Btown Brief IRL is the big block at the very top', JSON.stringify(top));
     check(await page.$eval(peoplePanel + ' [data-host]', (c, irl) => c.getBoundingClientRect().top - irl < 24, await page.$eval(peoplePanel + ' .irl', (n) => n.getBoundingClientRect().bottom)), 'with the host card right under it', '');
     const chips0 = await page.$$eval('#subnav .chip', (cs) => cs.map((c) => c.dataset.chip));
-    check(chips0.slice(0, 3).join() === 'irl,mix,scene', 'the pill follows the page', chips0.join());
+    check(chips0.slice(0, 4).join() === 'irl,talk,mix,scene', 'the pill follows the page', chips0.join());
     await page.screenshot({ path: path.join(SHOTS, 'demo-people-top-390.png') });
     await pageRules(page, 'people', 390);
     /* left open overnight: the way back in starts the strip on the new day */

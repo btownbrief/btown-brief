@@ -1,5 +1,5 @@
 {
- "_": "Talk's fake day. Every item is invented. x1 to x7 are what the dinner guard must leave out.",
+ "_": "Talk's fake day. Every item is invented. x1 to x7 are what the dinner guard must leave out. asked is data/talk-today.json's shape; t6 has no question, so it stays a plain headline.",
  "deck": {
   "cards": [
    {
@@ -280,5 +280,90 @@
    ]
   },
   "sources": {}
+ },
+ "asked": {
+  "v": 1,
+  "date": "2026-10-16",
+  "slot": "midday",
+  "updated": "2026-10-16T18:00:00+00:00",
+  "items": [
+   {
+    "id": "t1",
+    "b": "head",
+    "q": "How long would you wait for a street that finally works?",
+    "title": "The Main Street rebuild gets a real schedule",
+    "name": "Seven Days",
+    "src": "seven-days",
+    "url": "https://example.org/talk/t1",
+    "local": true,
+    "posted_at": "2026-10-16T17:39:00+00:00"
+   },
+   {
+    "id": "t2",
+    "b": "head",
+    "q": "What makes you feel small in a good way?",
+    "title": "Scientists map a galaxy older than anyone expected",
+    "name": "AP",
+    "src": "ap",
+    "url": "https://example.org/talk/t2",
+    "local": false,
+    "posted_at": "2026-10-16T17:14:00+00:00"
+   },
+   {
+    "id": "t3",
+    "b": "head",
+    "q": "What’s the coldest you’ve ever eaten outside on purpose?",
+    "title": "Church Street keeps outdoor dining through Halloween",
+    "name": "VTDigger",
+    "src": "vtdigger",
+    "url": "https://example.org/talk/t3",
+    "local": true,
+    "posted_at": "2026-10-16T16:39:00+00:00"
+   },
+   {
+    "id": "t4",
+    "b": "head",
+    "q": "Which hobby did you swear you’d never try?",
+    "title": "Why every town suddenly wants a pickleball court",
+    "name": "NPR",
+    "src": "npr",
+    "url": "https://example.org/talk/t4",
+    "local": false,
+    "posted_at": "2026-10-16T15:59:00+00:00"
+   },
+   {
+    "id": "t5",
+    "b": "head",
+    "q": "What would you do with a three-day weekend, every week?",
+    "title": "A four-day week goes nationwide in one more country",
+    "name": "BBC",
+    "src": "bbc",
+    "url": "https://example.org/talk/t5",
+    "local": false,
+    "posted_at": "2026-10-16T15:29:00+00:00"
+   },
+   {
+    "id": "p1",
+    "b": "sports",
+    "q": "Which team did you inherit, and could you ever quit it?",
+    "title": "Catamounts open the season with a home win",
+    "name": "WCAX",
+    "src": "wcax",
+    "url": "https://example.org/talk/p1",
+    "local": true,
+    "posted_at": "2026-10-16T17:24:00+00:00"
+   },
+   {
+    "id": "p2",
+    "b": "sports",
+    "q": "When did you know it was time to trade up?",
+    "title": "Patriots trade for a new left tackle before the deadline",
+    "name": "ESPN",
+    "src": "espn",
+    "url": "https://example.org/talk/p2",
+    "local": false,
+    "posted_at": "2026-10-16T17:04:00+00:00"
+   }
+  ]
  }
 }

@@ -1,5 +1,5 @@
-/* talk-core.js — what Talk deals, worked out from the deck and the Wire. No
-   DOM, so node can test it.
+/* talk-core.js — what Talk deals, worked out from the deck, the Wire and the
+   day's questions. No DOM, so node can test it.
 
    stories(today, muted)
      Today's edition as cards: its picks and river for Headlines, its sports
@@ -7,27 +7,35 @@
      (no posts, threads or newsletters), and only what people can talk about
      over dinner: fit() is held(), the guard the Reddit tab uses, plus a list
      of crime, deaths, tragedy and disaster words and a title that is only a
-     name. Obituary pages go by their address. A miss costs one card.
+     name. Obituary pages go by their address. A miss costs one card. The
+     same rules run in scripts/talk_questions.py.
 
-   queue(bubble, deck, news, used)
-     The cards a group has not used, in the order they will be dealt. Heavy
-     cards are dealt only in Deep, the Stay Awhile rule that they appear only
-     when someone asked for deep water. Mix takes one from each bubble in turn.
+   questions(json, muted, nowMs)
+     data/talk-today.json as cards, each with its headline. Past
+     QUESTIONS_DAYS the file is ignored.
 
-   normal(raw), addGroup, removeGroup, startOver, markUsed
+   ask(news, asked)
+     The news with its questions first; a story with none stays a headline.
+
+   pools(bubble, deck, news, used)
+     What each of the three seats can deal for a group, in order: { news, ice,
+     other }, never a used card. Heavy cards are dealt only in Deep, the Stay
+     Awhile rule that they appear only when someone asked for deep water.
+
+   normal(raw), addGroup, removeGroup, startOver, markUsed, unmarkUsed
      What a phone remembers: { groups, on, used: { groupId: { cardId: time } } }.
      Every reader has the default group, so a card is always used by someone. */
 
 import { held } from './reddit-lib.js';
 
-export const BUBBLES = [['mix', 'Mix'], ['head', 'Headlines'], ['sports', 'Sports'], ['local', 'Local'],
-  ['ice', 'Icebreakers'], ['deep', 'Deep'], ['debate', 'Debates']];
+export const BUBBLES = [['mix', 'Mix'], ['local', 'Local'], ['sports', 'Sports'], ['deep', 'Deep']];
+export const SEATS = ['news', 'ice', 'other'];
 export const DEFAULT_GROUP = 'everyone';
 export const GROUP_COLORS = 6;           // --talk-g1 to --talk-g6
-const MIX_ORDER = ['ice', 'head', 'debate', 'sports', 'deep'];
 const STORY_CHANNELS = new Set(['local', 'world']);
 const LEFT_TOPICS = new Set(['public-safety', 'courts', 'markets']);
 const MAX_TITLE = 130;                   // past this it is a post, not a headline
+const QUESTIONS_DAYS = 2;                // a file this old has stopped being news
 
 const HEAVY = /\b(kill(?:s|ed|ing|er|ers)?|dead|dies?|died|dying|deaths?|deadly|fatal\w*|pass(?:es|ed)? away|obituar\w*|tributes?|funeral|mourn\w*|memorial|vigil|remembers|tragic|tragedy|tragedies|victims?|suicid\w*|overdos\w*|drown\w*|missing|crash\w*|collision|wreck\w*|rollover|injur\w*|hospitali[sz]ed|critical condition|rescued|wildfires?|fires?|burn|blaze|inferno|hurricanes?|typhoons?|tornado\w*|earthquakes?|tsunami|floods?|flooding|landslides?|avalanche|disasters?|catastroph\w*|evacuat\w*|explosions?|bombs?|bombing|blast|attacks?|attacked|ambush\w*|airstrikes?|missiles?|drones?|troops|invasion|massacre|genocid\w*|battered|wars?|gunman|gunmen|gunfire|guns?|shot|shoots?|shooter|knife|hostages?|terror\w*|crimes?|criminal|robber\w*|burglar\w*|theft|kidnap\w*|trafficking|sexual|prison|jail\w*|inmates?|detainees?|police|lawsuit|sued|trial|verdict|guilty|cancer|dementia|miscarriages?|outbreak|epidemic|pandemic|flesh-eating|cruel\w*|hate|plead\w*|plea|suspects?|suspected|cited|looting|riot\w*|violen\w*|execution|espionage|sabotage|shackled|blood clots?|fuck\w*|epstein)\b/i;
 
@@ -66,6 +74,25 @@ export function stories(today, muted = {}) {
   return { head, sports: sports.filter((c) => c.local).sort(byNew).concat(sports.filter((c) => !c.local).sort(byNew)) };
 }
 
+export function questions(json, muted = {}, nowMs = Date.now()) {
+  const p = json && typeof json === 'object' ? json : {};
+  const list = Array.isArray(p.items) ? p.items : [];
+  const out = { head: [], sports: [] };
+  if (nowMs - Date.parse(p.updated) > QUESTIONS_DAYS * 864e5) return out;
+  list.forEach((it) => {
+    if (!it || !it.id || !it.q || !it.title || !it.name || !/^https?:/i.test(String(it.url || '')) || muted[it.src] || !fit(it.title)) return;
+    const b = it.b === 'sports' ? 'sports' : 'head';
+    out[b].push({ id: String(it.id), q: String(it.q), hl: String(it.title), b, src: it.name, sid: it.src || it.name, url: it.url, local: !!it.local, d: (Date.parse(it.posted_at) || 0) / 1000, story: true });
+  });
+  return out;
+}
+
+export function ask(news, asked) {
+  const has = new Set(asked.head.concat(asked.sports).map((c) => c.id));
+  const rest = (list) => (list || []).filter((c) => !has.has(c.id));
+  return { head: asked.head.concat(rest(news.head)), sports: asked.sports.concat(rest(news.sports)) };
+}
+
 export function deckCards(json) {
   const list = json && Array.isArray(json.cards) ? json.cards : [];
   return list.filter((c) => c && c.id && c.q && ['ice', 'deep', 'debate'].includes(c.b));
@@ -85,21 +112,22 @@ function turns(lists) {
   return out;
 }
 
-export function queue(bubble, deck, news, used = {}, rnd = Math.random) {
+const whose = (c) => (c.story ? 'news' : c.b === 'ice' ? 'ice' : 'other');
+export const seatOf = (c) => SEATS.indexOf(whose(c));
+
+export function pools(bubble, deck, news, used = {}, rnd = Math.random) {
   const open = (c) => !used[c.id];
-  const fromDeck = (b) => shuffle(deck.filter((c) => c.b === b && open(c) && (!c.heavy || bubble === 'deep')), rnd);
-  const head = (news.head || []).filter(open), sports = (news.sports || []).filter(open);
-  if (bubble === 'head') return head;
-  if (bubble === 'sports') return sports;
-  if (bubble === 'local') {
-    const seen = new Set();
-    const local = head.concat(sports).filter((c) => c.local && !seen.has(c.id) && seen.add(c.id));
-    return turns([shuffle(deck.filter((c) => c.local && !c.heavy && open(c)), rnd), local]);
-  }
-  if (bubble !== 'mix') return fromDeck(bubble);
-  const pools = { ice: fromDeck('ice'), debate: fromDeck('debate'), deep: fromDeck('deep'), head, sports };
+  const fromDeck = (test) => shuffle(deck.filter((c) => open(c) && test(c)), rnd);
+  /* questions in any order; plain headlines only when there are none at all */
+  const lead = (list) => { const asked = list.filter((c) => c.hl); return asked.length ? shuffle(asked.filter(open), rnd) : list.filter(open); };
   const seen = new Set();
-  return turns(MIX_ORDER.map((k) => pools[k])).filter((c) => !seen.has(c.id) && seen.add(c.id));
+  const stories1 = (news.head || []).concat(news.sports || []).filter((c) => !seen.has(c.id) && seen.add(c.id));
+  const localFirst = (list) => (bubble === 'local' ? list.filter((c) => c.local).concat(list.filter((c) => !c.local)) : list);
+  const ice = localFirst(fromDeck((c) => c.b === 'ice'));
+  const calm = (b) => fromDeck((c) => c.b === b && !c.heavy);
+  const other = bubble === 'deep' ? fromDeck((c) => c.b === 'deep') : localFirst(turns([calm('debate'), calm('deep')]));
+  const story = bubble === 'sports' ? lead(news.sports || []) : bubble === 'local' ? lead(stories1.filter((c) => c.local)) : lead(stories1);
+  return { news: story, ice, other };
 }
 
 /* ---------------------------------------------------------------- groups */
@@ -132,4 +160,9 @@ export function removeGroup(T, id) {
 export function startOver(T, id = T.on) { delete T.used[id]; }
 export function markUsed(T, cardId, at = Date.now()) {
   T.used[T.on] = { ...usedBy(T), [cardId]: Math.floor(at / 1000) };
+}
+export function unmarkUsed(T, cardId) {
+  const left = { ...usedBy(T) };
+  delete left[cardId];
+  T.used[T.on] = left;
 }

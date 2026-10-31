@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 """Stephen's taste prompts, kept out of this public repo (2026-10-22).
 
-wire-taste.md, wire-tags.md, tv-taste.md and weather-read.md describe his
+wire-taste.md, wire-tags.md, tv-taste.md, weather-read.md and talk-questions.md describe his
 editorial taste, so they no longer live in prompts/ here (prompts/ is now
 gitignored). Where a script finds one at run time, first hit wins:
 
   1. GitHub Actions: an Actions secret named PROMPT_<NAME> (PROMPT_WIRE_TASTE,
-     PROMPT_WIRE_TAGS, PROMPT_TV_TASTE, PROMPT_WEATHER_READ), passed to the
+     PROMPT_WIRE_TAGS, PROMPT_TV_TASTE, PROMPT_WEATHER_READ, PROMPT_TALK_QUESTIONS), passed to the
      step as an environment variable of the same name.
   2. Stephen's Mac: the folder in $BTOWN_PROMPTS_DIR, else
      ~/btownbrief/newsletter/allday-prompts/ (inside the private newsletter
@@ -28,7 +28,7 @@ import os
 import subprocess
 import sys
 
-NAMES = ("wire-taste.md", "wire-tags.md", "tv-taste.md", "weather-read.md")
+NAMES = ("wire-taste.md", "wire-tags.md", "tv-taste.md", "weather-read.md", "talk-questions.md")
 DEFAULT_DIR = os.path.expanduser("~/btownbrief/newsletter/allday-prompts")
 REPO = "btownbrief/btown-brief"
 

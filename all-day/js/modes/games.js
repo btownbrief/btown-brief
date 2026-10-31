@@ -128,10 +128,10 @@ const arr = (v) => (Array.isArray(v) ? v : []);
 const plural = (n, one, many) => n + ' ' + (n === 1 ? one : many);
 const num = (n) => Number(n || 0).toLocaleString('en-US');
 const playUrl = (slug) => (SLUG.test(slug) ? ARCADE + slug + '/' : ARCADE);
-/* Where a game's Play goes. Stay Awhile's questions now deal in What Now's
+/* Where a game's Play goes. Stay Awhile's questions now deal in People's
    Talk, so in All Day that is where its Play leads; the game itself stays up. */
 function playLink(a, slug) {
-  if (slug === 'stay-awhile' && app.TABS.includes('whatnow')) { a.href = '#whatnow/talk'; return a; }
+  if (slug === 'stay-awhile' && app.TABS.includes('people')) { a.href = '#people/talk'; return a; }
   a.href = playUrl(slug); a.target = '_blank'; a.rel = 'noopener';
   return a;
 }

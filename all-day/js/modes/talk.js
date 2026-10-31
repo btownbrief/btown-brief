@@ -1,69 +1,66 @@
-/* Talk: something to talk about, one big card at a time. What Now's fourth
-   view (#whatnow/talk); a card's own link is #whatnow/t-<id>.
+/* Talk: something to talk about, three cards at once. A section of People
+   (#people/talk); a card's own link is #people/t-<id>.
 
-   talk-core.js decides what is dealt. This file holds the card: a swipe right
-   or the check marks it used for the group (kept on this phone), a swipe left
-   or the x sends it to the back, the arrow keys do the same, and the next
-   card turns over from its back in the group's colour. The decks come from
-   data/talk-deck.json; Headlines and Sports from the Wire's own payload, so
-   they refresh when it does, and the dealt card stays put when they do. With
-   the Wire down the decks still deal, and with the decks down the Wire does.
+   talk-core.js decides what can be dealt. This file holds the three seats: a
+   news question, an icebreaker and a debate or deep question, all readable
+   with no tapping. The check marks a card used for the group (kept on this
+   phone) and it stays on the table until it is swapped, a swap changes that
+   one seat, and Deal three changes all of them. A used card never comes back
+   for that group.
+
+   The decks come from data/talk-deck.json, Headlines and Sports from the
+   Wire's own payload, their questions from data/talk-today.json, so they
+   refresh when those do, and the dealt cards stay put when they do. A seat
+   with nothing of its own takes a card from another, so the decks still deal
+   with the Wire down, and the Wire with the decks down.
 
    Demo runs on data/demo/talk.json and nothing is remembered. */
 
 import * as app from '../app.js';
 import * as store from '../store.js';
 import * as data from '../wire.js';
-import { el, esc, safeHref, ICON, chips, button, agoShort } from '../ui.js';
-import { BUBBLES, GROUP_COLORS, DEFAULT_GROUP, stories, deckCards, queue, normal, groupOf, usedBy, usedCount, addGroup, removeGroup, startOver, markUsed } from '../talk-core.js';
+import { el, esc, safeHref, ICON, chips, button, agoShort, section } from '../ui.js';
+import { BUBBLES, SEATS, GROUP_COLORS, DEFAULT_GROUP, stories, questions, ask, deckCards, pools, seatOf, normal, groupOf, usedBy, usedCount, addGroup, removeGroup, startOver, markUsed, unmarkUsed } from '../talk-core.js';
 
-const TAB = 'whatnow';
+const TAB = 'people';
 const KEY = 'allday-talk';
 const DECK_URL = '../data/talk-deck.json';
-const COMMIT = 72;                       // the same travel that commits a swipe on a feed row
-const START = 10;
-const FLY_MS = 220;
-const LONG_TEXT = 56;
+const STAGGER_MS = 70;
 
 /* every word a reader sees */
 const WORDS = {
-  ice: 'Icebreaker', deep: 'Deep', debate: 'Debate', head: 'Headline', sports: 'Sports', local: 'Local',
+  title: 'Talk', ice: 'Icebreaker', deep: 'Deep', debate: 'Debate', head: 'Headline', sports: 'Sports', local: 'Local',
   everyone: 'Everyone', groups: 'Groups', newGroup: 'New group', name: 'Name', add: 'Add',
-  used: 'Used', skip: 'Skip', star: 'Save', share: 'Share', startOver: 'Start over', remove: 'Remove',
-  allDone: 'That’s all of them.', noHead: 'No headlines right now.', noSports: 'No sports right now.',
-  noLoad: 'Couldn’t load.', tryAgain: 'Try again', icebreakers: 'Icebreakers',
+  used: 'Used', swap: 'Swap', deal: 'Deal three', star: 'Save', share: 'Share', startOver: 'Start over', remove: 'Remove',
+  allDone: 'That’s all of them.', noLoad: 'Couldn’t load.', tryAgain: 'Try again',
   overTitle: (n) => 'Start ' + n + ' over?', overBody: (c) => c + (c === 1 ? ' card comes' : ' cards come') + ' back.',
   removeTitle: (n) => 'Remove ' + n + '?', removeBody: 'Its used cards come back if you make it again.',
 };
 
 const reduced = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
 let T = normal(app.demo ? null : store.read(KEY, null));
-let deck = null, deckFailed = false, news = { head: [], sports: [] }, today = null, wireFailed = false, wireSeen = false;
-let bubble = 'mix', cards = [], busy = false, loading = null, settled = false;
-let decked = null;                       // the deck has landed: the Wire is not waited for
-let box = null, stage = null, bar = null, groupBtn = null, live = null, yes = null, no = null, under = null;
+let deck = null, deckFailed = false, news = { head: [], sports: [] };
+let paper = null, asked = null, paperIn = false, askedIn = false;
+let bubble = 'mix', pool = { news: [], ice: [], other: [] }, hand = [null, null, null], loading = null, settled = false;
+let decked = null;                       // the deck has landed: its two seats do not wait for the Wire
+let box = null, table = null, bar = null, groupBtn = null, live = null, dealBtn = null;
 
 const save = () => { if (!app.demo) store.write(KEY, T); };
 const groupName = (g) => g.name || WORDS.everyone;
 const dot = (g) => '<i class="tk-dot" style="--gc:var(--talk-g' + esc(g.color) + ')"></i>';
 const kindOf = (c) => (c.b === 'head' && c.local ? 'local' : c.b);
-const faceClass = (c) => 'tk-' + kindOf(c);
 const eyebrow = (c) => WORDS[kindOf(c)];
+const isUsed = (c) => !!usedBy(T)[c.id];
+const newsIn = () => paperIn && askedIn;
 const itemOf = (c) => ({ k: 't-' + c.id, kind: 'talk', title: c.q, src: c.src || eyebrow(c), href: c.url || '#' + TAB + '/t-' + c.id });
 
 /* ---------------------------------------------------------------- loading */
-function takeNews(j) {
-  today = j;
-  wireSeen = true;
-  wireFailed = false;
-  news = stories(j, store.muted());
+function mergeNews() {
+  if (!newsIn()) return;
+  news = ask(stories(paper, store.muted()), questions(asked, store.muted()));
   if (!settled) return;
-  /* the dealt card stays: a fresh paper only changes what comes after it */
-  const dealt = cards[0];
-  deal();
-  if (dealt && dealt.id !== (cards[0] && cards[0].id)) cards = [dealt].concat(cards.filter((c) => c.id !== dealt.id));
-  if (!dealt) paint(false);
-  else paintNext();
+  refill();
+  paint(hand.map(() => false));
 }
 
 function loadDemo() {
@@ -75,8 +72,8 @@ function loadDemo() {
       return v;
     };
     deck = deckCards(d.deck);
-    wireSeen = true;
-    news = stories(move(d.today), store.muted());
+    news = ask(stories(move(d.today), store.muted()), questions(move(d.asked), store.muted(), Date.parse(d.asked.updated)));
+    paperIn = askedIn = true;
   });
 }
 
@@ -92,90 +89,105 @@ function loadDeck() {
 function load() {
   if (loading) return loading;
   if (app.demo) { loading = decked = loadDemo(); return loading; }
-  const wire = new Promise((res) => data.load('today', (j) => { takeNews(j); res(); }, () => {
-    wireFailed = true;
-    res();
-    if (settled && !cards.length) paint(false);
-  }));
+  const wire = new Promise((res) => data.load('today', (j) => { paper = j; paperIn = true; mergeNews(); res(); }, () => { paperIn = true; mergeNews(); res(); }));
+  const qs = new Promise((res) => data.load('talkToday', (j) => { asked = j; askedIn = true; mergeNews(); res(); }, () => { askedIn = true; mergeNews(); res(); }));
   decked = loadDeck();
-  loading = Promise.all([decked, wire]);
+  loading = Promise.all([decked, wire, qs]);
   return loading;
 }
 
 /* ------------------------------------------------------------------ dealing */
-function deal() { cards = queue(bubble, deck || [], news, usedBy(T)); }
+const inHand = (c) => hand.some((h) => h && h.id === c.id);
 
-function act(c) {
-  const foot = el('div', 'tk-foot');
-  if (c.story) {
-    const a = el('a', 'tk-src', esc(c.src) + (c.d ? ' · ' + esc(agoShort(c.d)) : '') + ' ' + ICON.ext);
-    a.href = safeHref(c.url); a.target = '_blank'; a.rel = 'noopener';
-    if (app.demo) a.addEventListener('click', (e) => { e.preventDefault(); app.toast('Opens the article in the real build'); });
-    foot.appendChild(a);
-  } else foot.appendChild(el('span', 'tk-sp'));
-  const it = itemOf(c);
-  const sh = el('button', 'act sh', ICON.share);
-  sh.setAttribute('aria-label', WORDS.share);
-  sh.addEventListener('click', () => app.share(TAB, it.k, c.q));
-  const on = store.isSaved(it.k);
-  const st = el('button', 'act star' + (on ? ' on' : ''), ICON.star);
-  st.setAttribute('aria-label', WORDS.star);
-  st.setAttribute('aria-pressed', on ? 'true' : 'false');
-  st.addEventListener('click', () => app.toggleSave(it));
-  foot.append(sh, st);
-  return foot;
+/* a seat's own pool first, then the others, so a seat with nothing left still deals */
+function draw(seat) {
+  const order = SEATS.slice(seat).concat(SEATS.slice(0, seat));
+  for (const k of order) {
+    const p = pool[k];
+    while (p.length) { const c = p.shift(); if (!inHand(c) && !isUsed(c)) return c; }
+  }
+  return null;
 }
 
-function front(c) {
-  const f = el('div', 'tk-face tk-front');
-  const long = c.q.length > LONG_TEXT;
-  f.innerHTML = '<div class="eyebrow">' + esc(eyebrow(c)) + '</div><h3 class="tk-q' + (long ? ' long' : '') + '">' + esc(c.q) + '</h3>';
-  f.appendChild(act(c));
+/* the empty seats only: what is on the table stays. Until the news is in, its
+   seat waits rather than dealing a deck card that would have to leave. */
+function fill() { hand.forEach((c, i) => { if (!c && (i !== 0 || newsIn())) hand[i] = draw(i); }); }
+function refill() { pool = pools(bubble, deck || [], news, usedBy(T)); fill(); }
+function dealAll() { hand = [null, null, null]; refill(); }
+
+/* a card leaving the table goes to the back of its line, unless it was used */
+function putBack(c) { if (c && !isUsed(c)) pool[SEATS[seatOf(c)]].push(c); }
+
+/* ------------------------------------------------------------------ a card */
+function source(c) {
+  if (!c.story) return null;
+  const a = el('a', 'tk-src', (c.hl ? '<span class="tk-hl">' + esc(c.hl) + '</span>' : '') +
+    '<span class="tk-from">' + esc(c.src) + (c.d ? ' · ' + esc(agoShort(c.d)) : '') + ' ' + ICON.ext + '</span>');
+  a.href = safeHref(c.url); a.target = '_blank'; a.rel = 'noopener';
+  if (app.demo) a.addEventListener('click', (e) => { e.preventDefault(); app.toast('Opens the article in the real build'); });
+  return a;
+}
+
+function iconBtn(cls, icon, label, on, onClick) {
+  const b = el('button', 'act ' + cls + (on ? ' on' : ''), icon);
+  b.setAttribute('aria-label', label);
+  if (on !== null) b.setAttribute('aria-pressed', on ? 'true' : 'false');
+  b.addEventListener('click', onClick);
+  return b;
+}
+
+function foot(c, seat) {
+  const f = el('div', 'tk-foot', '<div class="eyebrow">' + esc(eyebrow(c)) + '</div>');
+  const u = iconBtn('tk-used', ICON.check, WORDS.used, isUsed(c), () => toggleUsed(seat));
+  const sw = iconBtn('tk-swap', ICON.shuffle, WORDS.swap, null, () => swap(seat));
+  const it = itemOf(c);
+  const sh = iconBtn('sh', ICON.share, WORDS.share, null, () => app.share(TAB, it.k, c.q));
+  const st = iconBtn('star', ICON.star, WORDS.star, store.isSaved(it.k), () => app.toggleSave(it));
+  f.append(el('span', 'tk-sp'), u, sw, sh, st);
   return f;
 }
 
-function cardNode(c, turn) {
-  const n = el('div', 'tk-card ' + faceClass(c) + (turn ? ' turn' : ''));
+function cardNode(c, seat, turn, order) {
+  const n = el('div', 'tk-card tk-' + kindOf(c) + (turn ? ' turn' : '') + (isUsed(c) ? ' used' : ''));
   n.dataset.k = 't-' + c.id;
   n.dataset.card = c.id;
+  n.dataset.seat = SEATS[seat];
   n.setAttribute('role', 'group');
   n.style.setProperty('--gc', 'var(--talk-g' + groupOf(T).color + ')');
-  n.append(front(c), el('div', 'tk-face tk-back'));
-  n.addEventListener('pointerdown', grab);
+  if (order) n.style.setProperty('--tk-delay', order * STAGGER_MS + 'ms');
+  const f = el('div', 'tk-front');
+  f.appendChild(foot(c, seat));
+  f.appendChild(el('h3', 'tk-q', esc(c.q)));
+  const src = source(c);
+  if (src) f.appendChild(src);
+  n.append(el('div', 'tk-back'), f);
   return n;
 }
 
-/* a card with nothing to deal: the words and the one thing to do next */
-function emptyNode() {
+/* nothing to deal: the words and the one thing to do next, once for the table */
+function emptyNode(seat) {
   const n = el('div', 'tk-card tk-empty');
+  n.dataset.seat = SEATS[seat];
+  if (!settled || (seat === 0 && !newsIn())) { n.classList.add('tk-wait'); return n; }
   let words = WORDS.noLoad, btn = null;
-  const toDeck = () => (deck && deck.length ? button(esc(WORDS.icebreakers), '', () => pick('ice')) : null);
-  const news1 = bubble === 'head' ? news.head : bubble === 'sports' ? news.sports : null;
-  if (news1 && !news1.length && !wireSeen && !wireFailed) words = '…';
-  else if (news1 && !news1.length) { words = bubble === 'head' ? WORDS.noHead : WORDS.noSports; btn = toDeck(); }
-  else if (deckFailed) btn = button(esc(WORDS.tryAgain), '', () => { loadDeck().then(() => { deal(); paint(true); }); });
+  if (deckFailed) btn = button(esc(WORDS.tryAgain), '', () => { loadDeck().then(() => { dealAll(); paint(hand.map(() => true)); }); });
   else if (usedCount(T)) { words = WORDS.allDone; btn = button(esc(WORDS.startOver), '', askOver); }
   n.appendChild(el('h3', 'tk-q', esc(words)));
   if (btn) n.appendChild(btn);
   return n;
 }
 
-function paintNext() {
-  if (!under) return;
-  const c = cards[1];
-  under.className = 'tk-under' + (c ? ' ' + faceClass(c) : '');
-  under.hidden = !c;
-}
-
-function paint(turn) {
-  if (!stage) return;
-  stage.querySelectorAll('.tk-card').forEach((n) => n.remove());
-  const c = cards[0];
-  const has = !!c;
-  stage.appendChild(has ? cardNode(c, turn && !reduced()) : emptyNode());
-  paintNext();
-  yes.disabled = no.disabled = !has;
-  live.textContent = has ? c.q : '';
+/* turns says which seats turn over as they land */
+function paint(turns) {
+  if (!table) return;
+  const done = settled && newsIn();
+  const nodes = hand.map((c, i) => {
+    const turn = turns[i] && !reduced();
+    return c ? cardNode(c, i, turn, turn ? i : 0) : done ? null : emptyNode(i);
+  }).filter(Boolean);
+  table.replaceChildren(...(nodes.length ? nodes : [emptyNode(0)]));
+  dealBtn.hidden = done && !hand.some(Boolean);
+  live.textContent = turns.some(Boolean) ? hand.filter(Boolean).map((c) => c.q).join('. ') : '';
   paintGroup();
 }
 
@@ -186,70 +198,29 @@ function paintGroup() {
   groupBtn.setAttribute('aria-label', groupName(g) + ', ' + n + ' used. ' + WORDS.groups);
 }
 
-/* the dealt card leaves, the next turns over */
-function done(used) {
-  const c = cards[0];
-  if (!c || busy) return;
-  busy = true;
-  const after = () => {
-    busy = false;
-    if (used) { markUsed(T, c.id); save(); }
-    if (cards[0] && cards[0].id === c.id) { const top = cards.shift(); if (!used) cards.push(top); }
-    paint(true);
-  };
-  const n = stage.querySelector('.tk-card');
-  if (reduced() || !n) { after(); return; }
-  n.style.removeProperty('--dx');
-  n.classList.remove('dragging');
-  n.classList.add(used ? 'fly-r' : 'fly-l');
-  setTimeout(after, FLY_MS);
+function toggleUsed(seat) {
+  const c = hand[seat];
+  if (!c) return;
+  if (isUsed(c)) unmarkUsed(T, c.id); else markUsed(T, c.id);
+  save();
+  paint(hand.map(() => false));
 }
 
-/* ----------------------------------------------------------------- swipe */
-function grab(e) {
-  if (busy || e.button > 0 || e.target.closest('a, button')) return;
-  const n = e.currentTarget;
-  const x0 = e.clientX, y0 = e.clientY, pid = e.pointerId;
-  let dx = 0, live2 = false;
-  const move = (m) => {
-    if (m.pointerId !== pid) return;
-    dx = m.clientX - x0;
-    if (!live2) {
-      if (Math.abs(m.clientY - y0) > Math.abs(dx) && Math.abs(m.clientY - y0) > START) { stop(); return; }
-      if (Math.abs(dx) < START) return;
-      live2 = true;
-      n.classList.add('dragging');
-      try { n.setPointerCapture(pid); } catch (err) { /* the pointer already went */ }
-    }
-    n.style.setProperty('--dx', dx + 'px');
-    n.style.setProperty('--tilt', (dx / 24).toFixed(2) + 'deg');
-    n.classList.toggle('to-r', dx >= COMMIT);
-    n.classList.toggle('to-l', dx <= -COMMIT);
-  };
-  const stop = () => {
-    n.removeEventListener('pointermove', move);
-    n.removeEventListener('pointerup', up);
-    n.removeEventListener('pointercancel', cancel);
-  };
-  const reset = () => {
-    n.classList.remove('dragging', 'to-r', 'to-l');
-    n.style.removeProperty('--dx');
-    n.style.removeProperty('--tilt');
-  };
-  const up = () => { stop(); if (Math.abs(dx) >= COMMIT && live2) done(dx > 0); else reset(); };
-  const cancel = () => { stop(); reset(); };
-  n.addEventListener('pointermove', move);
-  n.addEventListener('pointerup', up);
-  n.addEventListener('pointercancel', cancel);
+function swap(seat) {
+  const c = hand[seat];
+  hand[seat] = null;
+  const next = draw(seat);
+  putBack(c);
+  hand[seat] = next || draw(seat);
+  paint(hand.map((h, i) => i === seat));
 }
 
-function onKey(e) {
-  if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
-  if (!box || !box.isConnected || app.activeTab() !== TAB) return;
-  if (e.target.closest && e.target.closest('input, textarea, [contenteditable]')) return;
-  if (document.querySelector('#sheet:not([hidden]), #confirm:not([hidden])')) return;
-  e.preventDefault();
-  done(e.key === 'ArrowRight');
+function dealThree() {
+  const old = hand;
+  hand = [null, null, null];
+  old.forEach(putBack);
+  fill();
+  paint(hand.map(() => true));
 }
 
 /* ---------------------------------------------------------------- groups */
@@ -257,16 +228,18 @@ function askOver() {
   const g = groupOf(T), n = usedCount(T);
   if (!n) return;
   app.confirmBox({ title: WORDS.overTitle(groupName(g)), body: WORDS.overBody(n), yes: WORDS.startOver, onYes() {
-    startOver(T); save(); deal(); paint(true);
+    startOver(T); save(); dealAll(); paint(hand.map(() => true));
     if (sheetPaint) sheetPaint();
   } });
 }
+
+const redeal = () => { save(); dealAll(); paint(hand.map(() => true)); };
 
 let sheetPaint = null;
 function groupsSheet() {
   app.sheet(WORDS.groups, (body, card, close) => {
     let color = (T.groups.length % GROUP_COLORS) + 1;
-    const choose = (id) => { if (id !== T.on) { T.on = id; save(); deal(); paint(true); } close(); };
+    const choose = (id) => { if (id !== T.on) { T.on = id; redeal(); } close(); };
     const paintList = () => {
       body.innerHTML = '';
       T.groups.forEach((g) => {
@@ -283,7 +256,7 @@ function groupsSheet() {
           const x = el('button', 'iconbtn tk-del', ICON.x);
           x.setAttribute('aria-label', WORDS.remove + ' ' + g.name);
           x.addEventListener('click', () => app.confirmBox({ title: WORDS.removeTitle(g.name), body: WORDS.removeBody, yes: WORDS.remove, onYes() {
-            removeGroup(T, g.id); save(); deal(); paint(true); paintList();
+            removeGroup(T, g.id); redeal(); paintList();
           } }));
           r.appendChild(x);
         }
@@ -311,7 +284,7 @@ function groupsSheet() {
       f.addEventListener('submit', (e) => {
         e.preventDefault();
         if (!addGroup(T, inp.value, color)) return;
-        save(); deal(); paint(true); close();
+        redeal(); close();
       });
       body.appendChild(f);
     };
@@ -329,59 +302,51 @@ function pick(b) {
     const on = c.dataset.chip === b;
     c.classList.toggle('on', on);
     c.setAttribute('aria-pressed', on ? 'true' : 'false');
-    if (on && c.scrollIntoView) c.scrollIntoView({ block: 'nearest', inline: 'center', behavior: reduced() ? 'auto' : 'smooth' });
   });
-  deal();
-  paint(true);
+  dealAll();
+  paint(hand.map(() => true));
 }
 
 function build() {
   box = el('div', 'talk');
-  bar = chips(BUBBLES.map(([key, label]) => ({ key, label })), bubble, pick, 'tk-bubbles');
-  stage = el('div', 'tk-stage');
-  under = el('div', 'tk-under');
-  under.hidden = true;
-  stage.appendChild(under);
-  no = el('button', 'tk-btn tk-no', ICON.x);
-  no.setAttribute('aria-label', WORDS.skip);
-  no.addEventListener('click', () => done(false));
-  yes = el('button', 'tk-btn tk-yes', ICON.check);
-  yes.setAttribute('aria-label', WORDS.used);
-  yes.addEventListener('click', () => done(true));
   groupBtn = el('button', 'tk-group');
   groupBtn.addEventListener('click', groupsSheet);
-  const btns = el('div', 'tk-btns');
-  btns.append(no, groupBtn, yes);
+  section(box, WORDS.title, '', groupBtn);
+  bar = chips(BUBBLES.map(([key, label]) => ({ key, label })), bubble, pick, 'tk-bubbles');
+  table = el('div', 'tk-table');
+  dealBtn = button(esc(WORDS.deal), 'tk-deal', dealThree);
   live = el('div', 'sr');
   live.setAttribute('aria-live', 'polite');
-  box.append(bar, stage, btns, live);
-  document.addEventListener('keydown', onKey);
+  box.append(bar, table, dealBtn, live);
+  paintGroup();
 }
 
-/* draws into What Now's root; a second visit keeps the card that was dealt */
-export function render(root) {
+/* draws into People's Talk section; a second visit keeps the cards that were dealt */
+export function render(host) {
   const first = !box;
   if (first) build();
-  root.appendChild(box);
+  if (box.parentNode !== host) host.appendChild(box);
   if (!first) return;
+  paint(hand.map(() => false));
   load();
   decked.then(() => {
     settled = true;
-    deal();
-    paint(false);
+    dealAll();
+    paint(hand.map(() => false));
   });
 }
 
-/* a card's own link: dealt on top, even if the group has used it. Resolves
-   false when the card is not in the deck or today's paper. */
+/* a card's own link: dealt into its seat, even if the group has used it.
+   Resolves false when the card is not in the deck or today's paper. */
 export function open(id) {
   return load().then(() => {
     const all = (deck || []).concat(news.head, news.sports);
     const c = all.find((x) => x.id === id);
     if (!c) return false;
-    if (!box) return true;
-    cards = [c].concat(cards.filter((x) => x.id !== id));
-    paint(true);
+    const seat = seatOf(c);
+    if (!inHand(c)) hand[seat] = c;
+    paint(hand.map((h) => !!h && h.id === id));
+    app.flashHit(table, 't-' + id, true);
     return true;
   });
 }

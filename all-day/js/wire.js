@@ -43,6 +43,16 @@ const FILES = {
       JSON.stringify(a.status || null) === JSON.stringify(b.status || null) &&
       (a.brief && a.brief.id) === (b.brief && b.brief.id),
   },
+  /* Talk's news questions (scripts/talk_questions.py, three times a day, same
+     branch). No copy ships on main; a miss leaves plain headlines. */
+  talkToday: {
+    live: LIVE + 'wire-data/data/talk-today.json',
+    local: '../data/talk-today.json',
+    liveFirst: true,
+    poll: true,
+    ok: (j) => j && Array.isArray(j.items),
+    same: (a, b) => a.updated === b.updated,
+  },
   /* the frozen editions, newest first; a new one appears after midnight */
   wireIndex: {
     live: LIVE + 'wire-data/data/wire/index.json',

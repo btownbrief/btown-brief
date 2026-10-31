@@ -216,7 +216,7 @@ export function share(tab, key, title) {
 /* Scroll a shared-in card into view and let it glow once. Returns whether the
    key was found, so the caller can say something honest when it wasn't. A
    tile folded behind See more (ui.js moreGrid) is opened to first. */
-export function flashHit(host, key) {
+export function flashHit(host, key, stay) {
   const hit = [...(host || document).querySelectorAll('[data-k]')].find((n) => n.dataset.k === key);
   if (!hit) return false;
   const grid = hit.hidden && hit.closest('[data-grid]');
@@ -224,7 +224,7 @@ export function flashHit(host, key) {
   for (let i = 0; more && hit.hidden && i < 100; i++) more.click();
   if (hit.hidden) return false;
   requestAnimationFrame(() => {
-    hit.scrollIntoView({ block: 'center' });
+    if (!stay) hit.scrollIntoView({ block: 'center' });
     hit.classList.remove('flash');
     void hit.offsetWidth;
     hit.classList.add('flash');
@@ -932,13 +932,22 @@ export function scrollTop(smooth) {
 /* scroll a panel so a node lands just under the mast. Where the row under
    the mast stays as the mast's top line steps away (keepSubnav), a jump
    down lands under the row alone, since the top line will have gone. */
+let lastJump = { node: null, down: false, t: 0 };
 export function jumpTo(node) {
   const p = panels[active];
   if (!p || !node) return;
   const at = node.getBoundingClientRect().top - p.getBoundingClientRect().top + p.scrollTop;
   let top = at - mast.offsetHeight - 4;
-  if (document.body.classList.contains('keep-subnav') && top > p.scrollTop + 8 && top > 120) top += mast.querySelector('.mast-row').offsetHeight;
+  /* a re-settle onto the same section aims where the first jump did */
+  const again = lastJump.node === node && Date.now() - lastJump.t < 6000;
+  const down = again ? lastJump.down : top > p.scrollTop + 8;
+  lastJump = { node, down, t: Date.now() };
+  if (document.body.classList.contains('keep-subnav') && down && top > 120) top += mast.querySelector('.mast-row').offsetHeight;
   p.scrollTo({ top: Math.max(0, top), behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+  /* the pill settles on where the scroll landed, even with no scroll after it */
+  const settle = () => { if (p === panels[active]) spySections($('subnav'), p); };
+  p.addEventListener('scrollend', settle, { once: true });
+  setTimeout(settle, 900);
 }
 setJump(jumpTo);
 bindShell({ sheet, panel: () => panels[active] || null });
@@ -1118,9 +1127,11 @@ window.addEventListener('allday-geo', () => {
    moved into the Wire's Photo mode: #art and the older #photos open it, and
    a picture's key (#art/b-<post id>, #art/g-<gallery id>) opens that
    picture there. Any other old key or section means nothing now and is
-   dropped. The address bar is rewritten so the next share carries the new
-   link. */
+   dropped. Talk moved from What Now to People on 2026-10-30: #whatnow/talk
+   and a card's #whatnow/t-<id> follow it. The address bar is rewritten so the
+   next share carries the new link. */
 function legacy(h) {
+  if (/^whatnow\/(talk$|t-)/.test(h)) return 'people/' + h.slice(8);
   if (h === 'listen' || h.startsWith('listen/')) return 'onair' + h.slice(6);
   if (/^watch\/yt:/.test(h)) return 'onair/' + h.slice(6);
   if (h.startsWith('reddit/') && !/^reddit\/(fresh|questions|rd-[a-z0-9]+|q-[\w-]+)?$/.test(h)) return 'wire/' + h.slice(7);

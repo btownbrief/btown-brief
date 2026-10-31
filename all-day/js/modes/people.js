@@ -77,8 +77,11 @@
      app), newest first in a "Just joined" row, and the opt-in directory
      (first name, neighborhood, archetype, what you're into). Never an email
      or an account id. Signed out: one line and Sign in.
-   - Where the talking happens: one card with the two community channels and
-     Telegram. Nothing on this tab is a chat.
+   - Talk: three cards to talk about, right after the IRL block. It moved here
+     from What Now on 2026-10-30 and lives in talk.js. #people/talk lands on it,
+     #people/t-<id> deals a card.
+   - Where the talking happens (#people/rooms): one card with the two community
+     channels and Telegram. Nothing on this tab is a chat.
 
    Data, live: posts through boards.js (the foundation, never Supabase
    directly), a plan's Meetup box and age band in its own fields (meta
@@ -101,6 +104,7 @@ import * as cw from '../clubs-week.js';
 import { sectionBar } from '../sections.js';
 import { MATCH, KIND_WORDS, bestFor, fitsText, mixerKind, MIXER_WORDS, handleLink, gatheringWhen, SINGLES, petEvent } from '../people-match.js';
 import { RULES, ARCHETYPE_LABELS, NEIGHBORHOOD_LABELS, HANDLE_LABELS, message, checkPost } from '../boards-core.js';
+import * as talk from './talk.js';
 
 const KEY = 'people';
 const GROUPS_URL = '../data/groups.json';
@@ -254,9 +258,9 @@ const S = {
   dp: null, dpFailed: false,           // data/dating-pets.json
 };
 let root = null, slots = null, pending = null, demoD = null, plansRun = 0, mixDrawn = null;
-const SECS = [['irl', 'IRL'], ['mix', 'This week'], ['scene', 'From the groups'], ['plans', 'Open to strangers'], ['clubs', 'Run clubs'], ['chat', 'Group chat'], ['arch', 'Who you are'],
+const SECS = [['irl', 'IRL'], ['talk', 'Talk'], ['mix', 'This week'], ['scene', 'From the groups'], ['plans', 'Open to strangers'], ['clubs', 'Run clubs'], ['chat', 'Group chat'], ['arch', 'Who you are'],
   ['dating', 'Dating'], ['pets', 'Pets'], ['groups', 'Clubs'], ['quiz', 'Quiz'], ['dir', 'People here']];
-const SLOT_ORDER = ['irl', 'host', 'mix', 'scene', 'plans', 'clubs', 'chat', 'arch', 'foryou', 'dating', 'pets', 'groups', 'quiz', 'dir', 'talk'];
+const SLOT_ORDER = ['irl', 'host', 'talk', 'mix', 'scene', 'plans', 'clubs', 'chat', 'arch', 'foryou', 'dating', 'pets', 'groups', 'quiz', 'dir', 'rooms'];
 /* every tile and tag the reader has picked, as MATCH keys: the archetype
    as 'a:<tile>', then the tags, then what the quiz learned */
 const picks = () => (S.arch ? ['a:' + S.arch] : []).concat(S.tags, S.quizTags.filter((t) => !S.tags.includes(t))).filter((k) => MATCH[k]);
@@ -845,7 +849,8 @@ function render() {
     SLOT_ORDER.forEach((k) => { const s = el('div'); s.dataset.sec = k; slots[k] = s; root.appendChild(s); });
     root.appendChild(el('div', 'spacer'));
   }
-  drawMix(); drawScene(); drawPlans(); drawHost(); drawClubs(); drawChat(); drawArch(); drawForYou(); drawDating(); drawPets(); drawGroups(); drawQuiz(); drawDir(); drawTalk();
+  drawMix(); drawScene(); drawPlans(); drawHost(); drawClubs(); drawChat(); drawArch(); drawForYou(); drawDating(); drawPets(); drawGroups(); drawQuiz(); drawDir(); drawRooms();
+  if (slots.talk) talk.render(slots.talk);
 }
 
 /* The group chat: a title, one line, one button, and a chip on the pill.
@@ -1918,8 +1923,8 @@ function join(on) {
   };
 }
 
-function drawTalk() {
-  const s = slots && slots.talk;
+function drawRooms() {
+  const s = slots && slots.rooms;
   if (!s) return;
   s.innerHTML = '';
   sec(s, 'Where the talking happens', '');
@@ -2086,9 +2091,16 @@ function land() {
   /* Dating and Pets sit under the plans and the mixers: wait until what is
      above them, and they themselves, have their height */
   if ((k === 'dating' || k === 'pets') && ((!S.dp && !S.dpFailed) || !(S.events || S.eventsFailed) || S.plansState === 'loading')) return;
-  if (SECS.some(([key]) => key === k) || k === 'talk' || k === 'host') {
+  if (SECS.some(([key]) => key === k) || k === 'rooms' || k === 'host') {
     pending = null;
     jump(k);
+    return;
+  }
+  /* a Talk card's own link */
+  if (/^t-/.test(k)) {
+    pending = null;
+    jump('talk');
+    talk.open(k.slice(2)).then((found) => { if (!found) app.toast('That one has passed.'); });
     return;
   }
   /* a club's meet (What Now's cards) or a club: wait for the club week */

@@ -5,6 +5,8 @@ name: Curate the Wire
 #   scripts/curate_wire.py -> data/wire-today.json  (the picks and the river)
 #                             data/wire/YYYY-MM-DD.json + index.json (frozen days, 30 kept)
 #                             data/wire-state.json, data/wire-cost.json (bookkeeping)
+#   scripts/talk_questions.py -> data/talk-today.json (Talk's news questions, three
+#                             times a day; every other tick stops at its stamp)
 # all on the `wire-data` branch, force-pushed as one orphan commit each run,
 # the way pulse-top is published, so the page reads raw.githubusercontent.com
 # and a new hour never queues a Pages deploy.
@@ -126,6 +128,19 @@ jobs:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
         run: python3 scripts/curate_wire.py --data-dir /tmp/wire/data ${{ inputs.rebuild && '--rebuild-today' || '' }}
+
+      - name: Ask Talk's news questions
+        # Morning, Midday and Evening only. Never fails the paper: a miss keeps
+        # the last talk-today.json, which this run carries forward.
+        continue-on-error: true
+        timeout-minutes: 5
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          PROMPT_TALK_QUESTIONS: ${{ secrets.PROMPT_TALK_QUESTIONS }}
+        run: |
+          python3 -m unittest tests.test_talk_questions
+          python3 scripts/talk_questions.py --data-dir /tmp/wire/data
 
       - name: Force-push the single-commit wire-data branch
         # Also after a failed curate step: the tags and the cost ledger it
