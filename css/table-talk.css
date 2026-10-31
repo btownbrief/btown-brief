@@ -1,480 +1,96 @@
-/* Table Talk — one huge card at a time for a phone propped on a meetup table.
-   Sibling of pulse-live.css and deliberately in the same clothes: one dark
-   look in both themes, never scrolls, InterBlack display over wide-tracked
-   mono labels, the Btown Brief palette (orange / cream / brown / teal).
-   Where Pulse Live is a four-cell wire, this is a single stage: the card is
-   read from across a table, so everything is bigger and slower. */
-
-@font-face {
-  font-family: 'InterBlack';
-  src: url('../assets/fonts/inter-900-latin.woff2') format('woff2');
-  font-weight: 900;
-  font-style: normal;
-  font-display: swap;
-}
-
-* { box-sizing: border-box; }
-
-html { -webkit-text-size-adjust: 100%; }
+/* Table Talk — one huge card at a time for a phone propped on a meetup table,
+   and the whole deck to browse. It wears All Day: tokens.css and app.css load
+   first (Talk's card colours, .chip, .btn, .act, .eyebrow, the answers and the
+   Board's block), and this file holds only the page's own frame. The card is
+   read from across a table, so everything on it is bigger and slower. */
 
 html, body { height: 100%; }
-
-body {
-  margin: 0;
-  height: 100dvh;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  background: #000;
-  color: var(--cream);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-               Helvetica, Arial, sans-serif;
-  --display: 'InterBlack', -apple-system, BlinkMacSystemFont, "Segoe UI",
-             Roboto, Helvetica, Arial, sans-serif;
-  --mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
-  --orange: #fc560a;
-  --cream: #efd9b9;
-  --brown: #4e342e;
-  --teal: #077f80;
-  --ink: #140d08;
-  padding-left: env(safe-area-inset-left);
-  padding-right: env(safe-area-inset-right);
-}
-
-button { font: inherit; background: none; border: 0; padding: 0; color: inherit; cursor: pointer; }
-
-:focus-visible { outline: 2px solid var(--orange); outline-offset: -2px; }
+body { height: 100dvh; display: flex; flex-direction: column; overflow: hidden; padding-left: env(safe-area-inset-left); padding-right: env(safe-area-inset-right); }
 
 /* ---------- masthead ---------- */
-
-.bar {
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
-  align-items: center;
-  gap: 14px;
-  padding: 8px 14px;
-  padding-top: max(8px, env(safe-area-inset-top));
-  border-bottom: 3px solid var(--orange);
-  white-space: nowrap;
-}
-
-.brand {
-  justify-self: start;
-  font-family: var(--display);
-  font-weight: 900;
-  font-size: 13px;
-  letter-spacing: .3em;
-  color: var(--cream);
-  text-decoration: none;
-  text-transform: uppercase;
-}
-.brand b { color: var(--orange); font-weight: 900; }
-
-.clock {
-  justify-self: center;
-  font-family: var(--mono);
-  font-weight: 700;
-  font-size: 15px;
-  letter-spacing: .18em;
-  font-variant-numeric: tabular-nums;
-}
-
-.status {
-  justify-self: end;
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.ic-bar {
-  font-family: var(--mono);
-  font-weight: 700;
-  font-size: 13px;
-  width: 26px;
-  height: 26px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border: 1.5px solid rgba(239, 217, 185, .5);
-  color: var(--cream);
-  opacity: .8;
-}
-.ic-bar:hover { opacity: 1; }
-
-/* READ | WATCH | TABLE — the same switch Pulse Live carries, so the pair of
-   boards reads as one thing you can flip between rather than two pages that
-   happen to look alike. Deliberately identical to css/pulse-live.css. */
-.modes {
-  display: flex;
-  border: 1px solid rgba(252, 86, 10, .4);
-  overflow: hidden;
-}
-.mode {
-  font-family: var(--mono);
-  font-weight: 700;
-  font-size: 10px;
-  letter-spacing: .14em;
-  padding: 6px 9px;
-  color: var(--orange);
-  opacity: .75;
-  text-decoration: none;
-  white-space: nowrap;
-}
-.mode + .mode { border-left: 1px solid rgba(252, 86, 10, .4); }
-.mode.on { background: var(--orange); color: var(--ink); opacity: 1; }
-a.mode:hover { opacity: 1; }
-
-/* SYNC badge — the LIVE badge's cousin; pulses while devices march together */
-.sync-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  font-family: var(--mono);
-  font-weight: 700;
-  font-size: 11px;
-  letter-spacing: .22em;
-  padding: 5px 10px;
-  border: 1.5px solid var(--orange);
-  color: var(--cream);
-}
-.sync-badge i {
-  width: 8px; height: 8px;
-  background: var(--orange);
-  border-radius: 50%;
-}
-.sync-badge.on { background: var(--orange); color: var(--ink); }
-.sync-badge.on i { background: var(--ink); animation: syncpulse 1.6s ease-in-out infinite; }
+.tt-mast { display: flex; align-items: center; gap: var(--s2); padding: max(8px, env(safe-area-inset-top)) var(--gutter) 8px 6px; background: var(--lake); color: var(--lake-ink); }
+.tt-home, .tt-ic { display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: var(--r-pill); color: inherit; }
+.tt-brand { flex: 1; min-width: 0; font-family: var(--serif); font-size: var(--fs-wordmark); font-weight: 500; line-height: 1.1; }
+.clock { display: none; font-size: var(--fs-button); font-variant-numeric: tabular-nums; color: var(--lake-muted); }
+.tt-status { display: inline-flex; align-items: center; gap: var(--s1); }
+.sync-badge { display: inline-flex; align-items: center; gap: 7px; height: 32px; padding: 0 12px; border: 1px solid var(--lake-line); border-radius: var(--r-pill); color: var(--lake-ink); font-size: var(--fs-button); font-weight: 600; }
+.sync-badge i { width: 8px; height: 8px; border-radius: var(--r-round); background: var(--lake-muted); }
+.sync-badge.on { background: var(--sunset); border-color: var(--sunset); color: var(--sunset-ink); }
+.sync-badge.on i { background: var(--sunset-ink); animation: syncpulse 1.6s ease-in-out infinite; }
 @keyframes syncpulse { 50% { opacity: .25; } }
+@media (min-width: 800px) { .clock { display: inline; } }
 
-/* phones: the brand and the SYNC badge matter more than the clock */
-@media (max-width: 800px) {
-  .bar { grid-template-columns: 1fr auto; gap: 8px; }
-  .clock { display: none; }
-  .brand { font-size: 11px; letter-spacing: .22em; }
-  .status { gap: 7px; }
-  /* The board switch has to fit beside SYNC, which is the whole multi-phone
-     feature and must never be the thing that falls off the edge. "BTOWN
-     BRIEF" is the part the reader can spare — the page is still titled, and
-     the shared nav above already says whose site this is. */
-  .brand-pre { display: none; }
-  .modes { flex: 0 0 auto; }
-  .mode { font-size: 9px; letter-spacing: .1em; padding: 5px 6px; }
-  .ic-bar { width: 24px; height: 24px; font-size: 12px; }
-}
-
-/* Below a laptop the switch keeps the two boards you would actually leave
-   running on a screen. READ is a scan-and-filter page, it is one tap away in
-   the shared nav above, and dropping it is what buys WATCH, TABLE and the
-   SYNC badge their room. Same rule, same width, as Pulse Live. */
-/* Phones: the switch moves to its own row under the bar, all four boards. */
-.modes-row { display: none; }
-@media (max-width: 800px) {
-  .modes { display: none; }
-  .modes-row {
-    display: flex;
-    border-bottom: 1px solid rgba(252, 86, 10, .28);
-  }
-  .modes-row .mode {
-    flex: 1;
-    text-align: center;
-    padding: 8px 4px;
-    font-size: 10px;
-    letter-spacing: .18em;
-  }
-  .modes-row .mode + .mode { border-left: 1px solid rgba(252, 86, 10, .18); }
-}
+.tt-views { flex: 0 0 auto; padding-top: var(--s3); padding-bottom: var(--s3); overflow: visible; }
+.tt-views::after { display: none; }
 
 /* ---------- the card ---------- */
+.stage { flex: 1; min-height: 0; display: flex; padding: 0 var(--gutter); }
+.tt-card { flex: 1; min-width: 0; min-height: 0; position: relative; overflow: hidden; display: grid; grid-template-rows: auto 1fr auto; row-gap: clamp(8px, 1.8vh, 22px);
+  padding: clamp(16px, 3.2vw, 44px) clamp(18px, 4vw, 56px) clamp(12px, 2.6vw, 32px); border-radius: var(--r-sheet); background: var(--tk-bg); color: var(--tk-ink); cursor: pointer;
+  -webkit-tap-highlight-color: transparent; transition: background-color .6s cubic-bezier(.45, .05, .25, 1), color .6s cubic-bezier(.45, .05, .25, 1); }
+.tt-card .eyebrow { color: inherit; opacity: .9; }
 
-.stage {
-  flex: 1;
-  min-height: 0;
-  display: flex;
-}
+/* a thin fuse burning along the top edge */
+.fuse { position: absolute; top: 0; left: 0; height: 5px; width: 100%; transform-origin: left; background: currentColor; opacity: .35; pointer-events: none; }
+.tt-card .top { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
+.tt-card .hold-tag { opacity: 0; transition: opacity .3s ease; }
+.tt-card.held .hold-tag { opacity: .9; }
+.tt-card.held .fuse { opacity: .12; }
+.tt-card .body { min-height: 0; min-width: 0; display: flex; flex-direction: column; justify-content: center; gap: clamp(10px, 2vh, 26px); }
 
-.card {
-  flex: 1;
-  min-width: 0;
-  min-height: 0;
-  position: relative;
-  overflow: hidden;
-  display: grid;
-  grid-template-rows: auto 1fr auto;
-  row-gap: clamp(8px, 1.8vh, 22px);
-  padding: clamp(16px, 3.2vw, 44px) clamp(18px, 4vw, 56px) clamp(12px, 2.6vw, 32px);
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-  transition: background-color .6s cubic-bezier(.45,.05,.25,1),
-              color .6s cubic-bezier(.45,.05,.25,1);
-}
-
-.bg-orange      { background: var(--orange); color: var(--ink); }
-.bg-cream       { background: var(--cream);  color: var(--brown); }
-.bg-brown       { background: var(--brown);  color: var(--cream); }
-.bg-teal        { background: var(--teal);   color: var(--cream); }
-.bg-black       { background: #0d0d0d;       color: var(--orange); }
-.bg-black-cream { background: #0d0d0d;       color: var(--cream); }
-
-/* progress: a thin fuse burning along the top edge of the card */
-.fuse {
-  position: absolute;
-  top: 0; left: 0;
-  height: 5px;
-  width: 100%;
-  transform-origin: left;
-  background: currentColor;
-  opacity: .35;
-  pointer-events: none;
-}
-
-.card .top {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 10px;
-  font-family: var(--mono);
-  font-weight: 700;
-  font-size: clamp(11px, 1.5vw, 15px);
-  letter-spacing: .26em;
-  text-transform: uppercase;
-}
-.card .kind-tag::before {
-  content: "";
-  display: inline-block;
-  width: .55em; height: .55em;
-  background: currentColor;
-  margin-right: .7em;
-  vertical-align: 1px;
-}
-.card .hold-tag { opacity: 0; transition: opacity .3s ease; }
-.card.held .hold-tag { opacity: .85; }
-.card.held .fuse { opacity: .12; }
-
-.card .body {
-  min-height: 0;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: clamp(10px, 2vh, 26px);
-}
-
-/* the question itself — sized by autoFit in JS, this is just the ceiling */
-.card .big {
-  font-family: var(--display);
-  font-weight: 900;
-  line-height: 1.04;
-  letter-spacing: -0.015em;
-  text-wrap: balance;
-  /* never break inside a word — autoFit reads the overflow and shrinks
-     instead, so "Foraging" can't become "Foragin / g" */
-  overflow-wrap: normal;
-  margin: 0;
-}
-
-/* a second voice under the big line: headline kickers, event times */
-.card .kicker {
-  font-family: var(--mono);
-  font-weight: 700;
-  font-size: clamp(13px, 2.2vw, 22px);
-  letter-spacing: .12em;
-  text-transform: uppercase;
-  opacity: .75;
-}
-.card .kicker:empty { display: none; }
-
-.card .meta {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  gap: 10px;
-  font-family: var(--mono);
-  font-weight: 700;
-  font-size: clamp(10px, 1.2vw, 13px);
-  letter-spacing: .2em;
-  text-transform: uppercase;
-  opacity: .7;
-  min-width: 0;
-}
-.card .meta .src {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
+/* the question itself — sized by autoFit in JS. Never break inside a word:
+   autoFit reads the overflow and shrinks instead. */
+.tt-card .big { font-family: var(--serif); font-weight: 500; line-height: 1.1; text-wrap: balance; overflow-wrap: normal; margin: 0; }
+.tt-card .kicker { font-size: var(--fs-lead); font-weight: 500; opacity: .85; }
+.tt-card .kicker:empty { display: none; }
+.tt-card .meta { display: flex; align-items: baseline; min-width: 0; font-size: var(--fs-meta); font-weight: 500; opacity: .85; }
+.tt-card .meta .src { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
 /* ---------- control bar ---------- */
+.lbar { display: flex; align-items: center; gap: var(--s2); padding: var(--s3) var(--gutter); padding-bottom: max(12px, env(safe-area-inset-bottom)); }
+.tt-sp { flex: 1; }
+.lgroup { display: flex; flex-wrap: wrap; gap: var(--s2); }
+.lopt { display: inline-flex; align-items: center; height: 32px; padding: 0 12px; border: 1px solid var(--line); border-radius: var(--r-pill); color: var(--ink); font-size: var(--fs-button); font-weight: 600; }
+.lopt.on, .lopt.deck[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: var(--on-ink); }
+.lopt.deck[aria-pressed="false"] { color: var(--ink-3); text-decoration: line-through; }
+.lopt[disabled] { opacity: .4; cursor: default; }
 
-.lbarwrap { position: relative; }
+/* ---------- panels ---------- */
+.scrim { position: fixed; inset: 0; z-index: 8; background: var(--scrim); }
+.panel { position: fixed; left: 50%; top: 50%; z-index: 9; transform: translate(-50%, -50%); width: min(480px, calc(100vw - 2 * var(--gutter))); max-height: 84dvh; overflow-y: auto; padding: var(--s4) var(--gutter) var(--s5); border-radius: var(--r-sheet); background: var(--raised); box-shadow: var(--shadow-float); }
+.panel-head { display: flex; align-items: center; justify-content: space-between; gap: var(--s3); }
+.panel-head h2 { font-family: var(--serif); font-size: var(--fs-section); font-weight: 500; }
+.panel-close { display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; margin-right: -8px; color: var(--ink-2); }
+.join-url { margin: var(--s3) 0; color: var(--accent); font-family: var(--serif); font-size: var(--fs-hero); line-height: 1.25; word-break: break-all; user-select: all; -webkit-user-select: all; }
+.join-actions { display: flex; gap: var(--s2); }
 
-.lbar {
-  display: flex;
-  align-items: center;
-  gap: 18px;
-  padding: 9px 14px;
-  padding-bottom: max(9px, env(safe-area-inset-bottom));
-  border-top: 3px solid var(--orange);
-  overflow-x: auto;
-  scrollbar-width: none;
-  white-space: nowrap;
-}
-.lbar::-webkit-scrollbar { display: none; }
-
-.lgroup { display: inline-flex; align-items: center; gap: 4px; }
-
-.llbl {
-  font-family: var(--mono);
-  font-weight: 700;
-  font-size: 10px;
-  letter-spacing: .22em;
-  opacity: .55;
-  margin-right: 6px;
-}
-
-.lopt {
-  font-family: var(--mono);
-  font-weight: 700;
-  font-size: 11px;
-  letter-spacing: .16em;
-  padding: 6px 10px;
-  border: 1.5px solid rgba(239, 217, 185, .35);
-  color: var(--cream);
-  opacity: .75;
-}
-.lopt:hover { opacity: 1; }
-.lopt.on {
-  background: var(--orange);
-  border-color: var(--orange);
-  color: var(--ink);
-  opacity: 1;
-}
-.lopt[disabled] { opacity: .3; cursor: default; }
-
-/* deck chips — struck through when off, like the Pulse Live topic row */
-.lopt.deck[aria-pressed="false"] {
-  opacity: .38;
-  text-decoration: line-through;
-  text-decoration-thickness: 2px;
-}
-.lopt.deck[aria-pressed="true"] {
-  background: var(--orange);
-  border-color: var(--orange);
-  color: var(--ink);
-  opacity: 1;
+/* ---------- All cards ---------- */
+.browse { flex: 1; min-height: 0; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+.tt-tools { display: grid; gap: var(--s2); padding: 0 0 var(--s2); }
+.tt-search { display: block; width: calc(100% - 2 * var(--gutter)); height: 44px; margin: 0 var(--gutter); padding: 0 14px; border: 1px solid var(--line); border-radius: var(--r-box); background: var(--raised); color: var(--ink); font-family: var(--sans); font-size: var(--fs-lead); }
+.tt-tools .chips { padding-bottom: 0; }
+.tt-list { min-width: 0; }
+.tt-list .tb { width: 100%; max-width: none; margin: 0; }
+.tt-none { padding: var(--s6) var(--gutter); color: var(--ink-3); text-align: center; }
+.browse .tb-more { margin-bottom: max(16px, env(safe-area-inset-bottom)); }
+@media (min-width: 900px) {
+  .tt-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: stretch; }
+  .tt-list .tb.alt { background: var(--paper); }
+  .tt-list .tb.alt-w { background: var(--paper-2); }
 }
 
-.lstep {
-  font-size: 14px;
-  padding: 5px 12px;
-}
+/* which view is on */
+html[data-view="all"] .stage, html[data-view="all"] .lbarwrap { display: none; }
+html:not([data-view="all"]) .browse { display: none; }
 
-.lright {
-  margin-left: auto;
-  display: inline-flex;
-  align-items: center;
-  gap: 14px;
-  font-family: var(--mono);
-  font-weight: 700;
-  font-size: 10px;
-  letter-spacing: .18em;
-  opacity: .8;
-}
-.lexit { color: var(--cream); text-decoration: none; }
-.lexit:hover { color: var(--orange); }
+/* ---------- a board on a screen: just the card ---------- */
+body.embed .tt-mast, body.embed .tt-views, body.tv .tt-mast, body.tv .tt-views, body.tv .lbarwrap { display: none; }
+body.tv .stage, body.embed .stage { padding: 0; }
+body.tv .tt-card, body.embed .tt-card { border-radius: 0; }
 
-/* ---------- panels (help / join) ---------- */
-
-.scrim {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, .6);
-  z-index: 8;
-}
-
-.panel {
-  position: fixed;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  width: min(560px, calc(100vw - 28px));
-  max-height: 84dvh;
-  overflow-y: auto;
-  background: #0d0d0d;
-  border: 3px solid var(--orange);
-  padding: 18px 20px 22px;
-  z-index: 9;
-}
-.panel-head {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 12px;
-}
-.panel-title {
-  font-family: var(--display);
-  font-weight: 900;
-  font-size: 15px;
-  letter-spacing: .22em;
-}
-.panel-close {
-  font-family: var(--mono);
-  font-weight: 700;
-  font-size: 14px;
-  width: 28px; height: 28px;
-  border: 1.5px solid rgba(239, 217, 185, .5);
-}
-.help-list {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  font-family: var(--mono);
-  font-size: 12px;
-  letter-spacing: .06em;
-  line-height: 2.1;
-}
-.help-list b { color: var(--orange); }
-.panel-note {
-  font-family: var(--mono);
-  font-size: 11px;
-  letter-spacing: .08em;
-  line-height: 1.8;
-  opacity: .75;
-  margin: 12px 0 0;
-}
-
-/* JOIN: the url in poster type, readable across a table */
-.join-url {
-  font-family: var(--display);
-  font-weight: 900;
-  font-size: clamp(20px, 5.4vw, 34px);
-  line-height: 1.2;
-  color: var(--orange);
-  word-break: break-all;
-  margin: 6px 0 2px;
-  user-select: all;
-  -webkit-user-select: all;
-}
-
-.join-actions {
-  display: flex;
-  gap: 10px;
-  margin: 10px 0 0;
-}
-
-/* ---------- TV mode: just the card ---------- */
-
-body.embed .bar,
-body.embed .modes-row,
-body.tv .bar,
-body.tv .lbarwrap { display: none; }
-
-.noscript {
-  padding: 40px 20px;
-  font-family: var(--mono);
-  text-align: center;
-}
+.noscript { padding: var(--s8) var(--gutter); text-align: center; }
 
 @media (prefers-reduced-motion: reduce) {
   .sync-badge.on i { animation: none; }
-  .card, .fuse { transition: none; }
+  .tt-card, .fuse { transition: none; }
 }

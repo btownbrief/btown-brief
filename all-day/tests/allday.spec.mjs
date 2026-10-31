@@ -443,6 +443,8 @@ async function newPage(browser, base, opts = {}) {
   /* What Now's sunset score asks Open-Meteo; here it gets nothing usable, so the engine runs ungated, as it does offline */
   await page.route(/open-meteo\.com/, (r) => r.fulfill({ status: 200, body: '{}', contentType: 'application/json' }));
   await page.route(/bandcamp\.com/, (r) => r.fulfill({ status: 200, body: '<!doctype html><title>Bandcamp</title>', contentType: 'text/html' }));
+  /* the town's answers: nobody has said anything yet, unless a group fakes them */
+  await page.route(/\/rest\/v1\/rpc\/btb_sa_/, (r) => r.fulfill({ status: 200, body: '[]', contentType: 'application/json', headers: { 'access-control-allow-origin': '*' } }).catch(() => {}));
   /* the People tab's Meetup calendar (Up For It's meetup.json): empty unless a group routes its own */
   await page.route(/play\.btownbrief\.com\/up-for-it\/data\/meetup\.json/, (r) => r.fulfill({ status: 200, body: JSON.stringify({ fetched: new Date().toISOString(), events: [] }), contentType: 'application/json' }));
   if (opts.routes) for (const [re, body] of opts.routes) await page.route(re, (r) => r.fulfill({ status: 200, body: JSON.stringify(body), contentType: 'application/json' }));
@@ -5179,6 +5181,264 @@ const talkSwapped = async (page, seat) => { const before = (await talkHand(page)
 const talkBubble = async (page, k) => { await page.click(tk + ' .tk-bubbles .chip[data-chip="' + k + '"]'); await page.waitForFunction(([p, b]) => document.querySelector(p + ' .tk-bubbles .chip[data-chip="' + b + '"]').classList.contains('on'), [tk, k]); await talkReady(page); };
 const talkCount = (page) => page.$eval(tk + ' .tk-group', (b) => Number((b.querySelector('b') || {}).textContent || 0));
 
+/* The town's answers, the Board, going back through hands, Heads Up and table.html */
+const bd = '#panel-people [data-sec="board"]';
+const blockIds = (page) => page.$$eval(bd + ' .tb', (ns) => ns.map((n) => n.dataset.k));
+async function fakeAnswers(page, rows, opts = {}) {
+  const calls = [];
+  await page.route(/\/rest\/v1\/rpc\/btb_sa_/, (r) => {
+    const fn = /btb_sa_\w+/.exec(r.request().url())[0], args = JSON.parse(r.request().postData() || '{}');
+    calls.push({ fn, args });
+    const json = (body, status = 200) => r.fulfill({ status, body: JSON.stringify(body), contentType: 'application/json', headers: { 'access-control-allow-origin': '*' } }).catch(() => {});
+    if (fn === 'btb_sa_activity') { const m = {}; rows.forEach((x) => { m[x.qid] = m[x.qid] || { qid: x.qid, n: 0, last_at: x.created_at }; m[x.qid].n += 1; }); return json(Object.values(m)); }
+    if (fn === 'btb_sa_feed') return json(rows);
+    if (fn === 'btb_sa_list') return json(rows.filter((x) => x.qid === args.p_qid));
+    if (fn === 'btb_sa_submit') {
+      if (opts.refuse) return json({ message: opts.refuse }, 400);
+      const id = '00000000-0000-4000-8000-00000000000' + (rows.length % 10);
+      rows.unshift({ qid: args.p_qid, id, name: args.p_name || null, body: args.p_body, hearts: 0, created_at: new Date().toISOString() });
+      return json(id);
+    }
+    return json(1);
+  });
+  return calls;
+}
+async function theAnswers(browser, base) {
+  await group('Answers: core (no browser)', async () => {
+    const core = await import('../js/talk-core.js');
+    const c = (id) => ({ id, q: 'Q ' + id, b: 'ice' });
+    let h = [];
+    for (let i = 0; i < 105; i += 1) h = core.addHand(h, [c('a' + i), c('b' + i), null], false, 1000 * (i + 1));
+    check(h.length === core.HANDS_KEPT && h[0].c[0].id === 'a104', 'the last 100 hands are kept, newest first', String(h.length));
+    check(core.addHand(h, h[0].c) === h, 'the same hand is not kept twice', '');
+    const amended = core.addHand([{ at: 5, c: [null, c('x'), c('y')] }], [c('n'), c('x'), c('y')], true);
+    check(amended.length === 1 && amended[0].at === 5 && amended[0].c[0].id === 'n', 'a seat still empty is filled in place', JSON.stringify(amended));
+    const seen = core.seenCards([{ at: 9, c: [c('a'), c('b'), null] }, { at: 5, c: [c('a'), c('c'), null] }]);
+    check(seen.map((x) => x.c.id).join() === 'a,b,c' && seen[0].at === 9, 'Seen is each card once, where it was last seen', JSON.stringify(seen));
+    check(core.normalHands('junk').length === 0 && core.normalHands([{ at: 1, c: [null] }, { c: [c('a')] }]).length === 0, 'a corrupt store reads as none', '');
+    const deck = JSON.parse(await readFile(path.join(REPO, 'data/board-prompts.json'), 'utf8')).prompts;
+    check(deck.length >= 14 && new Set(deck.map((p) => p.id)).size === deck.length && deck.every((p) => /^bd\d{3}$/.test(p.id) && Date.parse(p.at) && /\?$/.test(p.q)), 'board prompts are well formed', '');
+    check(!deck.some((p) => /^(is|are|do|does|did|should|would|will|can|has|have)\b/i.test(p.q)), 'no yes-or-no prompts', '');
+  });
+  await group('Answers: the reveal on a Talk card (demo, 390)', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/all-day/?demo=1#people/board');
+    const sc = bd + ' [data-k="d9"]';
+    await page.waitForSelector(sc);
+    await page.click(sc + ' .tb-go');
+    await page.waitForSelector(bd + ' .ans .ans-cut');
+    const locked = await page.$eval(sc, (n) => n.innerText);
+    check(/2 answers\. Yours unlocks them\./.test(locked), 'the count and the unlock line', locked);
+    check(/The place with the line/.test(locked) && !/will not be taking questions/.test(locked), 'the top answer is cut', locked);
+    check(!/Dee/.test(locked), 'no names before you answer', locked);
+    check(!/taking questions|calls you hon/.test(await page.$eval(sc, (n) => n.innerHTML)), 'the rest is not in the page at all', '');
+    check(!(await page.$(sc + ' .ans-heart')), 'no hearts yet', '');
+    await page.fill(sc + ' .ans-box', 'The griddle by the lake, every time.');
+    await page.click(sc + ' .ans-go');
+    await page.waitForSelector(sc + ' .ans-row.mine');
+    const open = await page.$$eval(sc + ' .ans-row', (r) => r.map((x) => x.innerText));
+    check(open.length === 3 && /griddle by the lake/.test(open[0]) && /You/.test(open[0]), 'yours lands on top, marked', JSON.stringify(open));
+    check(open.some((t) => /taking questions/.test(t)) && open.some((t) => /Dee/.test(t)), 'every answer in full, with names', JSON.stringify(open));
+    check(await page.$eval(sc + ' .ans-count', (n) => n.textContent === '3 answers') && /^3 answers/.test(await page.$eval(sc + ' .tb-meta', (n) => n.textContent)), 'the count went up', '');
+    check(!(await page.$eval(sc + ' .ans-form', (f) => !f.hidden)), 'the box is gone', '');
+    await page.click(sc + ' .ans-row:nth-child(2) .ans-heart');
+    check(await page.$eval(sc + ' .ans-row:nth-child(2) .ans-heart', (b) => b.disabled && b.classList.contains('on')), 'a heart sticks', '');
+    await page.click(sc + ' .ans-row:nth-child(3) .ans-report');
+    check((await page.$$(sc + ' .ans-row')).length === 2, 'a report hides it here', '');
+    await page.waitForFunction((p) => document.querySelector(p + ' .tb').dataset.k === 'd9', bd);
+    check((await blockIds(page))[0] === 'd9', 'answering takes the block to the top', (await blockIds(page)).join());
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+  await group('Answers: the Board (demo, 390)', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/all-day/?demo=1#people/board');
+    await page.waitForSelector(bd + ' .tb');
+    const pill = await page.$$eval('#subnav .chip', (c) => c.map((x) => x.dataset.chip));
+    check(pill[1] === 'talk' && pill[2] === 'board', 'its own pill, right after Talk', pill.join());
+    const order = await page.$$eval(bd + ' .tb', (ns) => ns.map((n) => ({ k: n.dataset.k, brow: n.querySelector('.eyebrow').textContent, meta: n.querySelector('.tb-meta').textContent })));
+    check(order.length === 8, 'eight show', String(order.length));
+    check(order[0].k === 'bd003' && /^3 answers · /.test(order[0].meta), 'freshest answer on top, with its count and time', JSON.stringify(order[0]));
+    check(order[0].brow === 'Steve asks' && order.some((o) => o.brow !== 'Steve asks'), 'his prompts say so; Talk cards say what they are', JSON.stringify(order));
+    const zero = await page.$eval(bd + ' .tb:last-child', (n) => n.innerText);
+    check(/Be the first\./.test(zero), 'with no answers, Be the first', zero);
+    await page.click(bd + ' .tb-more');
+    await page.waitForFunction((p) => document.querySelectorAll(p + ' .tb').length > 8, bd);
+    check((await page.$$(bd + ' .tb')).length > 8, 'See more shows more', '');
+    const last = await page.$eval(bd + ' .tb:nth-child(9)', (n) => n.dataset.k);
+    await page.click(bd + ' .tb:nth-child(9) .tb-go');
+    await page.fill(bd + ' [data-k="' + last + '"] .ans-box', 'A first answer here.');
+    await page.click(bd + ' [data-k="' + last + '"] .ans-go');
+    await page.waitForFunction(([p, k]) => document.querySelector(p + ' .tb').dataset.k === k, [bd, last]);
+    check(true, 'a block from far down jumps to the top', last);
+    check(await page.$eval(bd + ' .tb', (n) => !!n.querySelector('.ans-row.mine') && /You/.test(n.innerText)), 'still open, with your answer', '');
+    const geo = await page.evaluate((p) => { const b = document.querySelector(p + ' .tb').getBoundingClientRect(); return { l: b.left, w: b.width, over: document.documentElement.scrollWidth - innerWidth }; }, bd);
+    check(geo.l === 0 && geo.w === 390 && geo.over <= 0, 'blocks run edge to edge, no sideways scroll', JSON.stringify(geo));
+    check(!!(await page.$(bd + ' .tb .act.star')) && !!(await page.$(bd + ' .tb .act.sh')), 'star and share stay on', '');
+    await page.goto(base + '/all-day/?demo=1#people/bd014');
+    await page.waitForSelector(bd + ' [data-k="bd014"] .ans');
+    check(true, '#people/bd014 lands on a block past See more, open', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+  await group('Answers: live, through the RPCs (faked)', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    const rows = [{ qid: 'bd002', id: '10000000-0000-4000-8000-000000000001', name: 'Sam', body: 'The one by the hospital with four lights and no plan at all', hearts: 3, created_at: new Date(Date.now() - 3600e3).toISOString() }];
+    const calls = await fakeAnswers(page, rows);
+    await page.goto(base + '/all-day/#people/bd002');
+    await page.waitForSelector(bd + ' [data-k="bd002"] .ans .ans-cut');
+    const sc = bd + ' [data-k="bd002"]';
+    check((await blockIds(page))[0] === 'bd002', 'the answered prompt leads', (await blockIds(page)).join());
+    await page.fill(sc + ' .ans-box', 'Five corners.');
+    await page.fill(sc + ' .ans-name', 'Robin');
+    await page.click(sc + ' .ans-go');
+    await page.waitForSelector(sc + ' .ans-row.mine');
+    const sent = calls.find((c) => c.fn === 'btb_sa_submit');
+    check(sent && sent.args.p_qid === 'bd002' && sent.args.p_body === 'Five corners.' && sent.args.p_name === 'Robin' && String(sent.args.p_voter).length >= 8, 'it posts through btb_sa_submit with a voter', JSON.stringify(sent));
+    const voter = await page.evaluate(() => JSON.parse(localStorage.getItem('sa-visitor')));
+    check(voter === sent.args.p_voter, 'on Stay Awhile’s voter key', '');
+    await page.reload();
+    await page.waitForSelector(sc + ' .ans-row.mine');
+    check(await page.$eval(sc + ' .ans-row', (r) => /You/.test(r.innerText) && /Five corners/.test(r.innerText)), 'remembered: a reload stays unlocked, yours first', '');
+    await page.click(sc + ' .ans-row:nth-child(2) .ans-report');
+    await page.waitForFunction(() => true);
+    await page.waitForTimeout(100);
+    check(calls.some((c) => c.fn === 'btb_sa_flag'), 'a report reaches the shared moderation', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+    const n = await newPage(browser, base);
+    await fakeAnswers(n.page, [], { refuse: 'slow down' });
+    await n.page.goto(base + '/all-day/#people/bd001');
+    await n.page.waitForSelector(bd + ' [data-k="bd001"] .ans-form');
+    await n.page.fill(bd + ' [data-k="bd001"] .ans-box', 'Too many of these.');
+    await n.page.click(bd + ' [data-k="bd001"] .ans-go');
+    await n.page.waitForFunction((p) => !document.querySelector(p + ' [data-k="bd001"] .ans-err').hidden, bd);
+    check((await n.page.$eval(bd + ' [data-k="bd001"] .ans-err', (e) => e.textContent)) === 'Slow down a minute.' && (await n.page.$eval(bd + ' [data-k="bd001"] .ans-box', (b) => b.value)) === 'Too many of these.', 'refused: it says why and keeps your words', '');
+    await n.ctx.close();
+    const z = await newPage(browser, base);
+    await z.page.route(/\/rest\/v1\/rpc\/btb_sa_/, (r) => r.abort());
+    await z.page.goto(base + '/all-day/#people/board');
+    await z.page.waitForSelector(bd + ' .tb');
+    check((await z.page.$$(bd + ' .tb')).length === 8 && !z.errors.filter((e) => !/Failed to load|net::/.test(e)).length, 'backend down: the prompts still show', z.errors.join(' | '));
+    await z.ctx.close();
+  });
+  await group('Talk: going back (live deck, remembered)', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/all-day/?demo=1#people/talk');
+    await talkReady(page);
+    await page.waitForFunction((p) => !document.querySelector(p + ' .tk-prev').disabled || true, tk);
+    const first = await talkHand(page);
+    await page.click(tk + ' .tk-deal');
+    await page.waitForFunction(([p, id]) => document.querySelector(p + ' .tk-card:nth-child(2)').dataset.card !== id, [tk, first[1].id]);
+    await page.waitForTimeout(60);
+    const second = await talkHand(page);
+    await talkSwapped(page, 1);
+    const third = await talkHand(page);
+    check(await page.$eval(tk + ' .tk-fwd', (b) => b.hidden), 'Forward only shows when you have gone back', '');
+    await page.click(tk + ' .tk-prev');
+    await page.waitForFunction(([p, id]) => document.querySelector(p + ' .tk-card:nth-child(2)').dataset.card === id, [tk, second[1].id]);
+    check(true, 'Back steps to the hand before a swap', '');
+    check(await page.$eval(tk + ' .tk-when', (w) => !w.hidden && /\d/.test(w.textContent)), 'dated', '');
+    await page.click(tk + ' .tk-prev');
+    await page.waitForFunction(([p, id]) => document.querySelector(p + ' .tk-card:nth-child(2)').dataset.card === id, [tk, first[1].id]);
+    check((await talkHand(page)).map((c) => c.id).join() === first.map((c) => c.id).join(), 'and again to the first hand, whole', '');
+    check(await page.$eval(tk + ' .tk-prev', (b) => b.disabled), 'Back stops at the oldest', '');
+    check((await talkCount(page)) === 0, 'going back marks nothing', '');
+    const swapped = await talkSwapped(page, 2);
+    check(swapped[0].id === first[0].id && swapped[1].id === first[1].id && swapped[2].id !== first[2].id, 'a swap on a past hand carries it to the table', JSON.stringify(swapped));
+    check(await page.$eval(tk + ' .tk-fwd', (b) => b.hidden), 'which is the present', '');
+    await page.click(tk + ' .tk-prev');
+    await page.waitForFunction(([p, id]) => document.querySelector(p + ' .tk-card:nth-child(2)').dataset.card === id, [tk, third[1].id]);
+    check((await talkHand(page)).map((c) => c.id).join() === third.map((c) => c.id).join(), 'and the hands behind it are untouched', '');
+    await page.click(tk + ' .tk-fwd');
+    await page.waitForFunction(([p, id]) => document.querySelector(p + ' .tk-card:nth-child(3)').dataset.card === id, [tk, swapped[2].id]);
+    check(true, 'Forward returns', '');
+    await page.click(tk + ' .tk-seen-btn');
+    await page.waitForSelector('.sheet-card .tk-seen');
+    const seen = await page.$$eval('.sheet-card .tk-seen', (r) => r.map((x) => x.dataset.card));
+    check(seen.includes(first[1].id) && new Set(seen).size === seen.length, 'Seen lists each card once', seen.join());
+    check(await page.$eval('.sheet-card .sheet-h', (h) => h.textContent === 'Today'), 'by day', '');
+    await page.click('.sheet-card .iconbtn');
+    check(await page.$eval(tk + ' .tk-all', (a) => /table\.html#all$/.test(a.getAttribute('href'))), 'All cards goes to table.html', '');
+    const tile = await page.$eval(tk + ' .hu-card', (c) => c.innerText);
+    await page.click(tk + ' .hu-card');
+    check(tile !== await page.$eval(tk + ' .hu-card', (c) => c.innerText), 'Heads Up flips to the next card', tile);
+    check(/heads-up-btown\/$/.test(await page.$eval(tk + ' .hu a.btn', (a) => a.href)), 'and Play opens the game', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+    const n = await newPage(browser, base);
+    await n.page.goto(base + '/all-day/#people/talk');
+    await talkReady(n.page);
+    await n.page.click(tk + ' .tk-deal');
+    await n.page.waitForFunction((p) => !document.querySelector(p + ' .tk-prev').disabled, tk);
+    const kept = await n.page.evaluate(() => JSON.parse(localStorage.getItem('allday-talk-hands')).length);
+    await n.page.reload();
+    await talkReady(n.page);
+    await n.page.waitForFunction((p) => !document.querySelector(p + ' .tk-prev').disabled, tk);
+    check(kept >= 2, 'hands survive a reload', String(kept));
+    await n.ctx.close();
+  });
+  await group('Answers: the Board in Social (demo)', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/all-day/?demo=1#social');
+    await page.waitForSelector('#panel-social .so-sec[data-plat="board"]');
+    const t = await page.$eval('#panel-social .so-board', (n) => n.innerText);
+    check(/Which closed Burlington spot/.test(t) && !/Pat/.test(t), 'one block: the freshest prompt and a tease', t);
+    check(await page.$eval('#panel-social .so-board .so-text', (a) => a.getAttribute('href') === '#people/board'), 'it opens the Board', '');
+    await page.click('#panel-social .so-board .so-text');
+    await page.waitForSelector(bd + ' .tb');
+    check(/#people\/board$/.test(page.url()), 'and lands there', page.url());
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+  await group('Table Talk: the page (390 and desktop)', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.route(/raw\.githubusercontent\.com|play\.btownbrief\.com/, (r) => r.abort());
+    const rows = [{ qid: 'tt001', id: '10000000-0000-4000-8000-000000000002', name: 'Sam', body: 'A van, a job offer and a very bad February', hearts: 1, created_at: new Date().toISOString() }];
+    await fakeAnswers(page, rows);
+    await page.goto(base + '/table.html');
+    await page.waitForFunction(() => !/Pulling up a chair/.test(document.getElementById('big').textContent));
+    check(await page.evaluate(() => getComputedStyle(document.getElementById('big')).fontFamily.includes('Lora') && document.getElementById('card').classList.contains('tt-card')), 'the Table wears All Day’s type', '');
+    await page.click('#card');
+    check(await page.$eval('#card', (c) => c.classList.contains('held')), 'a tap still holds the card', '');
+    await page.click('#card');
+    await page.click('#sync-badge');
+    check(await page.$eval('#sync-badge', (b) => b.classList.contains('on') && /Synced/.test(b.textContent)), 'Sync still syncs', '');
+    await page.click('#sync-badge');
+    await page.click('#set-btn');
+    check(await page.$$eval('#deck-group .lopt', (b) => b.length === 8), 'Settings holds the pace and the decks', '');
+    await page.click('#set-panel .panel-close');
+    await page.click('.tt-views [data-view="all"]');
+    await page.waitForSelector('#browse .tb');
+    check(/#all$/.test(page.url()), 'All cards has its own address', page.url());
+    check((await page.$$eval('#browse .chip', (c) => c.map((x) => x.innerText).join('|'))) === 'Mix|Local|Sports|Deep', 'Talk’s filters', '');
+    check((await page.$eval('#browse .tb', (n) => n.innerText)).includes('How did you end up in Burlington?'), 'an answered card leads', '');
+    await page.click('#browse .chip[data-chip="deep"]');
+    await page.waitForFunction(() => [...document.querySelectorAll('#browse .eyebrow')].every((e) => e.textContent === 'Deep'));
+    await page.click('#browse .chip[data-chip="mix"]');
+    await page.fill('#browse .tt-search', 'zzzqqq');
+    await page.waitForSelector('#browse .tt-none');
+    await page.fill('#browse .tt-search', 'Burlington');
+    await page.waitForFunction(() => document.querySelectorAll('#browse .tb').length > 3 && [...document.querySelectorAll('#browse .tb-q')].every((q) => /burlington/i.test(q.textContent)));
+    check(true, 'search narrows the deck', '');
+    await page.click('#browse .tb .tb-go');
+    await page.waitForSelector('#browse .tb .ans-form');
+    await page.fill('#browse .tb .ans-box', 'Drove up for a weekend. Stayed.');
+    await page.click('#browse .tb .ans-go');
+    await page.waitForSelector('#browse .tb .ans-row.mine');
+    check(true, 'the answer component works here', '');
+    check(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), 'no sideways scroll', '');
+    await page.click('.tt-views [data-view="table"]');
+    await page.waitForFunction(() => document.getElementById('card').offsetHeight > 100 && parseFloat(document.getElementById('big').style.fontSize) > 20);
+    check(true, 'back to the Table, the card refits', '');
+    check(!errors.filter((e) => !/Failed to load|net::/.test(e)).length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+    const tv = await newPage(browser, base);
+    await tv.page.goto(base + '/table.html?tv=1');
+    check(await tv.page.evaluate(() => getComputedStyle(document.querySelector('.tt-mast')).display === 'none' && document.documentElement.getAttribute('data-theme') === 'dark'), 'TV is just the card, dark', '');
+    await tv.ctx.close();
+  });
+}
 async function theTalk(browser, base) {
   await group('Talk: the deck', async () => {
     const deck = JSON.parse(await readFile(path.join(REPO, 'data/talk-deck.json'), 'utf8')).cards;
@@ -11430,7 +11690,7 @@ async function thePeople(browser, base) {
     const host = await page.$eval(peoplePanel + ' [data-host]', (c) => ({ text: c.innerText, mail: c.querySelector('a.btn').getAttribute('href'), ps: c.querySelectorAll('p').length }));
     check(/Host something with the crew/.test(host.text) && /^mailto:btownbrief@gmail\.com\?subject=/.test(host.mail) && host.ps === 2, 'the host card: a title, two short lines and a prefilled email to Stephen', JSON.stringify(host));
     const order = await page.$$eval(peoplePanel + ' [data-sec]', (ss) => ss.map((x) => x.dataset.sec));
-    check(order.slice(0, 6).join(' ') === 'irl host talk mix scene plans', 'Btown Brief IRL opens the tab with the host card under it, then Talk, This week, From the groups and the plans', order.join(' '));
+    check(order.slice(0, 7).join(' ') === 'irl host talk board mix scene plans', 'Btown Brief IRL opens the tab with the host card under it, then Talk, The Board, This week, From the groups and the plans', order.join(' '));
     const steve = await page.$eval(peoplePanel + ' [data-host] a.btn', (a) => [a.textContent.trim(), decodeURIComponent(a.getAttribute('href'))]);
     check(steve[0] === 'Email Steve' && /Hi Steve,/.test(steve[1]) && !/Stephen/.test(steve.join(' ')), 'it says Steve, not Stephen (Stephen, 2026-10-18)', JSON.stringify(steve));
     if (!own.length) check(await page.$(peoplePanel + ' [data-own] a') !== null, 'with none on the calendar it links the group', '');
@@ -11450,11 +11710,11 @@ async function thePeople(browser, base) {
       /^Plans & Meetups/.test(doors[1][0]) && doors[1][1] === 'https://www.btownbrief.com/community/channels/meetups-hangouts' &&
       /^Telegram/.test(doors[2][0]) && doors[2][1] === base + '/telegram.html', 'one door card: Find Each Other, Plans & Meetups, Telegram', JSON.stringify(doors));
     const chipsTxt = await page.$$eval('#subnav .chip', (cs) => cs.map((c) => c.textContent));
-    check(JSON.stringify(chipsTxt.filter((c) => c !== 'From the groups')) === JSON.stringify(['IRL', 'Talk', 'This week', 'Open to strangers', 'Run clubs', 'Group chat', 'Who you are', 'Dating', 'Pets', 'Clubs', 'Quiz', 'People here']), 'the chip row is the table of contents', JSON.stringify(chipsTxt));
+    check(JSON.stringify(chipsTxt.filter((c) => c !== 'From the groups')) === JSON.stringify(['IRL', 'Talk', 'The Board', 'This week', 'Open to strangers', 'Run clubs', 'Group chat', 'Who you are', 'Dating', 'Pets', 'Clubs', 'Quiz', 'People here']), 'the chip row is the table of contents', JSON.stringify(chipsTxt));
     await page.evaluate(() => document.querySelector('#panel-people').scrollTo(0, 0));
     await page.waitForTimeout(400);
     await page.click('#subnav .chip[data-chip="quiz"]');
-    await page.waitForTimeout(1200);
+    await page.waitForTimeout(2400);
     const top = await page.$eval(peoplePanel + ' [data-sec="quiz"]', (s) => { const p = s.closest('.panel'); return { top: Math.round(s.getBoundingClientRect().top), end: p.scrollTop >= p.scrollHeight - p.clientHeight - 2 }; });
     check(top.top < 260 || top.end, 'a chip scrolls to its section', JSON.stringify(top));
     await page.screenshot({ path: path.join(SHOTS, 'live-people-quiz.png') });
@@ -11954,7 +12214,7 @@ async function thePeople(browser, base) {
     check(top.top < 220 && top.h > 300 && top.big >= 26 && (await secOrder(page))[0] === 'irl', 'Btown Brief IRL is the big block at the very top', JSON.stringify(top));
     check(await page.$eval(peoplePanel + ' [data-host]', (c, irl) => c.getBoundingClientRect().top - irl < 24, await page.$eval(peoplePanel + ' .irl', (n) => n.getBoundingClientRect().bottom)), 'with the host card right under it', '');
     const chips0 = await page.$$eval('#subnav .chip', (cs) => cs.map((c) => c.dataset.chip));
-    check(chips0.slice(0, 4).join() === 'irl,talk,mix,scene', 'the pill follows the page', chips0.join());
+    check(chips0.slice(0, 5).join() === 'irl,talk,board,mix,scene', 'the pill follows the page', chips0.join());
     await page.screenshot({ path: path.join(SHOTS, 'demo-people-top-390.png') });
     await pageRules(page, 'people', 390);
     /* left open overnight: the way back in starts the strip on the new day */
@@ -15137,6 +15397,12 @@ function redditFresh(nowMs) {
     p('r9', 'New plan for the bike path', 50, { out: 'https://www.sevendaysvt.com/news/x/', kind: 'link' }),
   ] };
 }
+/* the platforms' groups: The Board is its own group's business (theAnswers) */
+const socialPage = async (...a) => {
+  const n = await newPage(...a);
+  await n.page.route(/data\/board-prompts\.json/, (r) => r.fulfill({ status: 200, body: '{"prompts":[]}', contentType: 'application/json' }));
+  return n;
+};
 async function theSocial(browser, base) {
   const panel = '#panel-social';
   const now = Math.round(Date.now() / 1000);
@@ -15149,7 +15415,7 @@ async function theSocial(browser, base) {
     facebook: { paused: false, items: [{ u: 'https://facebook.com/groups/123/permalink/4/', d: now - 1200, from: 'Group', name: 'Burlington Group', summary: 'A group post', ch: 'facebook', local: true }] },
     recaps: { paused: true, items: [] } } };
   await group('Social: a section per platform, the freshest on top', async () => {
-    const { ctx, page, errors } = await newPage(browser, base, { reddit: redditFresh(Date.now()) });
+    const { ctx, page, errors } = await socialPage(browser, base, { reddit: redditFresh(Date.now()) });
     await page.route(/pulse\.json/, (r) => r.fulfill({ status: 200, body: JSON.stringify(pulse), contentType: 'application/json' }));
     await page.goto(base + '/all-day/#social');
     await page.waitForSelector(panel + ' .so-block');
@@ -15201,7 +15467,7 @@ async function theSocial(browser, base) {
       { ...r1, id: 't3', url: redditUrl('t3'), title: 'Two replies', comments: 2, score: 5 },
       { ...r1, id: 't4', url: redditUrl('t4'), title: 'No replies', comments: 0, score: 5 },
     ];
-    const { ctx, page, errors } = await newPage(browser, base, { reddit: { ...fresh, posts } });
+    const { ctx, page, errors } = await socialPage(browser, base, { reddit: { ...fresh, posts } });
     await page.route(/pulse\.json/, (r) => r.fulfill({ status: 200, body: JSON.stringify({ ...pulse, inbox: { x: { paused: true, items: [] }, facebook: { paused: true, items: [] }, recaps: { paused: true, items: [] } } }), contentType: 'application/json' }));
     await page.route(/data\/instagram\.json/, (r) => r.fulfill({ status: 500, body: '' }));
     await page.goto(base + '/all-day/#social');
@@ -15227,7 +15493,7 @@ async function theSocial(browser, base) {
         { u: 'https://x.com/TerribleMaps/status/6', d: now - 300, from: '@TerribleMaps', name: 'Terrible Maps', summary: 'A national voice', ch: 'voices', local: false }] },
       facebook: { paused: true, items: [] },
       recaps: { paused: true, items: [] } } };
-    const { ctx, page, errors } = await newPage(browser, base, { reddit: redditFresh(Date.now()) });
+    const { ctx, page, errors } = await socialPage(browser, base, { reddit: redditFresh(Date.now()) });
     await page.route(/pulse\.json/, (r) => r.fulfill({ status: 200, body: JSON.stringify(voices), contentType: 'application/json' }));
     await page.route(/data\/instagram\.json/, (r) => r.fulfill({ status: 200, body: JSON.stringify({ posts: [], fetched_at: now }), contentType: 'application/json' }));
     await page.route(/pbs\.twimg\.com\/media\/WIDE/, (r) => r.fulfill({ status: 200, body: wide, contentType: 'image/jpeg' }));
@@ -15260,7 +15526,7 @@ async function theSocial(browser, base) {
   await group('Social: an inbox from before voices, and every source down', async () => {
     const older = { ...pulse, inbox: { x: pulse.inbox.x, facebook: pulse.inbox.facebook } };
     {
-      const { ctx, page, errors } = await newPage(browser, base, { reddit: redditFresh(Date.now()) });
+      const { ctx, page, errors } = await socialPage(browser, base, { reddit: redditFresh(Date.now()) });
       await page.route(/pulse\.json/, (r) => r.fulfill({ status: 200, body: JSON.stringify(older), contentType: 'application/json' }));
       await page.goto(base + '/all-day/#social');
       await page.waitForSelector(panel + ' .so-x');
@@ -15268,7 +15534,7 @@ async function theSocial(browser, base) {
       check(!errors.length, 'no console errors', errors.join(' | '));
       await ctx.close();
     }
-    const { ctx, page, errors } = await newPage(browser, base, {});
+    const { ctx, page, errors } = await socialPage(browser, base, {});
     for (const re of [/pulse\.json/, /data\/instagram\.json/, /reddit-intake/]) await page.route(re, (r) => r.fulfill({ status: 500, body: '' }));
     await page.goto(base + '/all-day/#social');
     await page.waitForFunction((p) => /Nothing here yet/.test(document.querySelector(p + ' .rd-empty')?.textContent || ''), panel, { timeout: 15000 });
@@ -15283,7 +15549,7 @@ async function theSocial(browser, base) {
     const bare = { x: { paused: true, items: [] }, facebook: { paused: true, items: [] }, recaps: { paused: true, items: [] } };
     const post = (n, c) => ({ h: 'deadpics', ts: now - n * 1000, i: 'https://cdn.example/gone-' + n + '.jpg', u: 'https://www.instagram.com/p/' + n + '/', c, category: 'food' });
     const open = async (posts) => {
-      const { ctx, page, errors } = await newPage(browser, base, {});
+      const { ctx, page, errors } = await socialPage(browser, base, {});
       await page.route(/pulse\.json/, (r) => r.fulfill({ status: 200, body: JSON.stringify({ ...pulse, inbox: bare }), contentType: 'application/json' }));
       await page.route(/data\/instagram\.json/, (r) => r.fulfill({ status: 200, body: JSON.stringify({ posts, fetched_at: now }), contentType: 'application/json' }));
       await page.route(/reddit-intake/, (r) => r.fulfill({ status: 500, body: '' }));
@@ -15308,7 +15574,7 @@ async function theSocial(browser, base) {
   await group('Social: All opens in steps, and an empty platform has no section', async () => {
     const many = [...Array(17)].map((_, n) => ({ u: 'https://x.com/a' + n + '/status/' + n, d: now - 100 * (n + 1), from: '@a' + n, name: 'Account ' + n, summary: 'Post ' + n, ch: 'x', local: !!(n % 2) || n < 12 }));
     const inbox = { x: { paused: false, items: many }, facebook: { paused: false, items: [{ u: 'https://facebook.com/groups/1/permalink/2/', d: now - 10, from: 'Group', name: 'Newest group', summary: 'Newest of all', ch: 'facebook', local: true }] }, recaps: { paused: true, items: [] } };
-    const { ctx, page, errors } = await newPage(browser, base, {});
+    const { ctx, page, errors } = await socialPage(browser, base, {});
     await page.addInitScript(() => localStorage.setItem('allday-settings', JSON.stringify({ localOnly: false, nationalOnly: false })));
     await page.route(/pulse\.json/, (r) => r.fulfill({ status: 200, body: JSON.stringify({ ...pulse, inbox }), contentType: 'application/json' }));
     for (const re of [/data\/instagram\.json/, /reddit-intake/]) await page.route(re, (r) => r.fulfill({ status: 500, body: '' }));
@@ -15335,7 +15601,7 @@ async function theSocial(browser, base) {
     const inbox = { x: { paused: true, items: [] }, facebook: { paused: true, items: [] }, recaps: { paused: true, items: [] }, voices: { paused: false, items: [
       { u: 'https://x.com/a/status/1', d: now - 100, from: '@a', name: 'A', summary: 'short', ch: 'voices', local: true, media: 'https://pbs.twimg.com/media/BAND?format=jpg&name=small' },
       ...[2, 3, 4, 5].map((n) => ({ u: 'https://x.com/b/status/' + n, d: now - 100 * n, from: '@b', name: 'B', summary: n + ' A long post that runs on so its block stands taller than the picture beside it. '.repeat(4), ch: 'voices', local: true }))] } };
-    const { ctx, page } = await newPage(browser, base, { viewport: { width: 1280, height: 900 } });
+    const { ctx, page } = await socialPage(browser, base, { viewport: { width: 1280, height: 900 } });
     await page.route(/pulse\.json/, (r) => r.fulfill({ status: 200, body: JSON.stringify({ ...pulse, inbox }), contentType: 'application/json' }));
     for (const re of [/data\/instagram\.json/, /reddit-intake/]) await page.route(re, (r) => r.fulfill({ status: 500, body: '' }));
     await page.route(/pbs\.twimg\.com\/media\/BAND/, (r) => r.fulfill({ status: 200, body: svg, contentType: 'image/svg+xml' }));
@@ -15346,7 +15612,7 @@ async function theSocial(browser, base) {
     await ctx.close();
   });
   await group('Social: ?demo=1', async () => {
-    const { ctx, page, errors } = await newPage(browser, base, {});
+    const { ctx, page, errors } = await socialPage(browser, base, {});
     await page.goto(base + '/all-day/?demo=1#social');
     await page.waitForSelector(panel + ' .so-x .so-pic img');
     await page.click('.localsw-half:has-text("Everything")');
@@ -15502,6 +15768,7 @@ try {
   await run(thePhotos);
   await run(theWhatNow);
   await run(theTalk);
+  await run(theAnswers);
   await run(theFood);
   await run(theReddit);
   await run(theSocial);

@@ -80,6 +80,9 @@
    - Talk: three cards to talk about, right after the IRL block. It moved here
      from What Now on 2026-10-30 and lives in talk.js. #people/talk lands on it,
      #people/t-<id> deals a card.
+   - The Board: the town answering Stephen's prompts and Talk's questions,
+     freshest on top, in board.js. #people/board lands on it, #people/<qid>
+     (bd001) on a block.
    - Where the talking happens (#people/rooms): one card with the two community
      channels and Telegram. Nothing on this tab is a chat.
 
@@ -105,6 +108,8 @@ import { sectionBar } from '../sections.js';
 import { MATCH, KIND_WORDS, bestFor, fitsText, mixerKind, MIXER_WORDS, handleLink, gatheringWhen, SINGLES, petEvent } from '../people-match.js';
 import { RULES, ARCHETYPE_LABELS, NEIGHBORHOOD_LABELS, HANDLE_LABELS, message, checkPost } from '../boards-core.js';
 import * as talk from './talk.js';
+import * as board from './board.js';
+import { isQid } from '../answers.js';
 
 const KEY = 'people';
 const GROUPS_URL = '../data/groups.json';
@@ -258,9 +263,9 @@ const S = {
   dp: null, dpFailed: false,           // data/dating-pets.json
 };
 let root = null, slots = null, pending = null, demoD = null, plansRun = 0, mixDrawn = null;
-const SECS = [['irl', 'IRL'], ['talk', 'Talk'], ['mix', 'This week'], ['scene', 'From the groups'], ['plans', 'Open to strangers'], ['clubs', 'Run clubs'], ['chat', 'Group chat'], ['arch', 'Who you are'],
+const SECS = [['irl', 'IRL'], ['talk', 'Talk'], ['board', 'The Board'], ['mix', 'This week'], ['scene', 'From the groups'], ['plans', 'Open to strangers'], ['clubs', 'Run clubs'], ['chat', 'Group chat'], ['arch', 'Who you are'],
   ['dating', 'Dating'], ['pets', 'Pets'], ['groups', 'Clubs'], ['quiz', 'Quiz'], ['dir', 'People here']];
-const SLOT_ORDER = ['irl', 'host', 'talk', 'mix', 'scene', 'plans', 'clubs', 'chat', 'arch', 'foryou', 'dating', 'pets', 'groups', 'quiz', 'dir', 'rooms'];
+const SLOT_ORDER = ['irl', 'host', 'talk', 'board', 'mix', 'scene', 'plans', 'clubs', 'chat', 'arch', 'foryou', 'dating', 'pets', 'groups', 'quiz', 'dir', 'rooms'];
 /* every tile and tag the reader has picked, as MATCH keys: the archetype
    as 'a:<tile>', then the tags, then what the quiz learned */
 const picks = () => (S.arch ? ['a:' + S.arch] : []).concat(S.tags, S.quizTags.filter((t) => !S.tags.includes(t))).filter((k) => MATCH[k]);
@@ -850,7 +855,8 @@ function render() {
     root.appendChild(el('div', 'spacer'));
   }
   drawMix(); drawScene(); drawPlans(); drawHost(); drawClubs(); drawChat(); drawArch(); drawForYou(); drawDating(); drawPets(); drawGroups(); drawQuiz(); drawDir(); drawRooms();
-  if (slots.talk) talk.render(slots.talk);
+  if (slots.talk) talk.render(slots.talk, resettle);
+  if (slots.board) board.render(slots.board, resettle);
 }
 
 /* The group chat: a title, one line, one button, and a chip on the pill.
@@ -2103,6 +2109,13 @@ function land() {
     talk.open(k.slice(2)).then((found) => { if (!found) app.toast('That one has passed.'); });
     return;
   }
+  /* a question's own link lands on its Board block */
+  if (isQid(k)) {
+    pending = null;
+    jump('board');
+    board.open(k).then((found) => { if (!found) app.toast('That one has passed.'); });
+    return;
+  }
   /* a club's meet (What Now's cards) or a club: wait for the club week */
   if (/^(rc|club)-/.test(k)) {
     if (!S.rc && !S.rcFailed) return;
@@ -2192,7 +2205,7 @@ app.register(KEY, {
   /* the sections as a floating pill in the tab's water, following the scroll (sections.js) */
   subnav() {
     if (!root || !slots) return null;
-    const shown = SECS.filter(([key]) => (key !== 'scene' || scenePosts().length) && (key !== 'chat' || chatLink(GROUP_CHAT_URL)));
+    const shown = SECS.filter(([key]) => (key !== 'scene' || scenePosts().length) && (key !== 'chat' || chatLink(GROUP_CHAT_URL)) && (key !== 'board' || board.has()));
     return sectionBar({ key: 'sec-people', title: 'People', items: shown.map(([key, label]) => ({ key, label })), color: '--liq-people',
       find: (k) => slots && slots[k], onPick: (k) => jump(k) });
   },
