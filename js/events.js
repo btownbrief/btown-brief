@@ -1,6 +1,9 @@
 /* ============================================================
-   EVENTS PAGE — time-aware lenses, picks, sticky day strip,
-   a time-railed list, chips for filters, month + map views.
+   EVENTS PAGE — The Calendar: the count and two weeks of days, time-aware
+   lenses, photo picks, sticky day strip, a time-railed list, chips for
+   filters, month + map views.
+   Deep links: ?date=YYYY-MM-DD (or the older ?d=), ?cat=, ?when=, ?e=<id>,
+   and #date= / #cat=, which All Day's Calendar block opens the page with.
    Data: data/events/events.json (built by scripts/events/update.py)
          data/weather/latest.json (for the header weather chip)
    All "what day / what hour is it" logic runs in Burlington time
@@ -20,6 +23,9 @@
   const CAT_ORDER = ['music', 'comedy', 'food-drink', 'family', 'outdoors', 'market', 'art',
     'theater', 'film', 'games', 'words', 'learning', 'community', 'wellness', 'sports', 'other'];
   const WHENS = ['all', 'today', 'tomorrow', 'weekend', 'week', 'twoweeks', 'month', 'day'];
+  const CAT_ALIAS = { food: 'food-drink', kids: 'family', theatre: 'theater' };
+  const CATS_SHOWN = 6;     // the kinds on show on a phone, before More
+  const SPAN = 14;          // the hero's two weeks
 
   /* Quick filters: multi-select toggles. Each is a plain predicate. */
   const QUICK = [
@@ -42,6 +48,8 @@
     map: null,
     mapLayer: null,
     openId: null,
+    catsOpen: false,
+    jump: false,         // arrived on a day or a filter: land on the list, not the hero
     // soon = starting in the next 2 hours; evening = 4pm or later (the "tonight" lens)
     filters: { when: 'all', day: null, q: '', cat: '', town: '', quick: new Set(), soon: false, evening: false },
   };
@@ -149,6 +157,11 @@
     if (s.staff_pick) return '7d';
     return null;
   }
+  /* Only a picture over https goes on the page: feed data, as with links. */
+  function photoOf(e) {
+    const u = safeUrl((e.signals || {}).image);
+    return /^https:/.test(u) ? u : '';
+  }
 
   /* ---------------- data load ---------------- */
 
@@ -191,6 +204,12 @@
     setView(state.view);
     renderAll();
     if (deep) openEvent(deep, { scroll: true });
+    else if (state.jump) {
+      // and again once the network bar above the header has come in
+      const land = () => $('ev-bar').scrollIntoView({ block: 'start' });
+      land();
+      setTimeout(land, 600);
+    }
   }
 
   function loadWeather() {
@@ -263,12 +282,58 @@
     return { defs: defs.filter((d) => d.list.length > 0), ctx: c, tonightCount: tonight.length };
   }
 
+  /* What is on each of the next two weeks' days, today less what has finished:
+     the same count as the day strip with no filters on. */
+  function fortnight(c) {
+    const days = Array.from({ length: SPAN }, (_, i) => ({ key: addDaysKey(c.todayKey, i), n: 0 }));
+    const at = new Map(days.map((d) => [d.key, d]));
+    state.events.forEach((e) => {
+      const d = at.get(e.date);
+      if (d && (e.date !== c.todayKey || stillOn(e, c.now))) d.n += 1;
+    });
+    return days;
+  }
+
+  function renderCount(days) {
+    const total = days.reduce((a, d) => a + d.n, 0);
+    $('ev-hero-count').innerHTML = total ? `<b>${total.toLocaleString('en-US')}</b><span>events in the next 14 days</span>` : '';
+  }
+
+  function renderFort() {
+    const c = nowCtx();
+    const f = state.filters;
+    const days = fortnight(c);
+    const busiest = Math.max(1, ...days.map((d) => d.n));
+    const wrap = $('ev-fort');
+    wrap.innerHTML = '';
+    days.forEach((d, i) => {
+      const p = kparts(d.key);
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'ev-fort-day heat-' + Math.max(1, Math.ceil((d.n / busiest) * 3)) + (i === 0 ? ' is-now' : '') + (d.n ? '' : ' is-empty');
+      b.dataset.day = d.key;
+      b.setAttribute('aria-pressed', String(f.when === 'day' && f.day === d.key));
+      b.setAttribute('aria-label', `${longDay(d.key)}: ${d.n} event${d.n === 1 ? '' : 's'}`);
+      b.innerHTML = `<span class="ev-fort-wd">${i === 0 ? 'Today' : DAY_SHORT[p.dow]}</span><span class="ev-fort-dd">${p.d}</span><span class="ev-fort-n">${d.n}</span>`;
+      b.addEventListener('click', () => {
+        resetFilters();
+        f.when = 'day'; f.day = d.key;
+        setView('list');
+        renderAll();
+        $('ev-bar').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+      wrap.appendChild(b);
+    });
+    return days;
+  }
+
   function renderHero() {
     const { defs, ctx, tonightCount } = lensDefs();
     const h = ctx.np.h;
     $('ev-hero-sub').textContent =
       `${DAY_NAMES[ctx.np.dow]} ${h >= 17 ? 'evening' : h >= 12 ? 'afternoon' : 'morning'} in Burlington` +
       (tonightCount ? ` · ${tonightCount} things ${ctx.dayWord}` : '');
+    renderCount(renderFort());
 
     const wrap = $('ev-now');
     wrap.innerHTML = '';
@@ -319,26 +384,37 @@
   function renderPicks() {
     const c = nowCtx();
     const hi = addDaysKey(c.todayKey, 13);
+    // the staff picks, his own, and any one-off show with a poster to its name
     const picks = state.events
-      .filter((e) => pickKind(e) && e.date >= c.todayKey && e.date <= hi && (e.date !== c.todayKey || stillOn(e, c.now)))
+      .filter((e) => (pickKind(e) || (photoOf(e) && !hasTag(e, 'series'))) &&
+        e.date >= c.todayKey && e.date <= hi && (e.date !== c.todayKey || stillOn(e, c.now)))
       .sort((a, b) => a._start - b._start)
-      .slice(0, 10);
+      .slice(0, 12);
     const sec = $('ev-picks');
     if (picks.length < 2) { sec.hidden = true; return; }
     sec.hidden = false;
-    $('ev-picks-sub').textContent = 'Seven Days staff picks + Steve’s own Meetup, next two weeks';
     const row = $('ev-picks-row');
     row.innerHTML = '';
     picks.forEach((e) => {
       const kind = pickKind(e);
+      const photo = photoOf(e);
+      const p = kparts(e.date);
+      const tag = kind === 'own' ? 'Steve’s Meetup' : kind === '7d' ? '7 Days pick' : (CATEGORY_LABELS[e.category] || '');
       const btn = document.createElement('button');
       btn.className = 'ev-pick-card';
       btn.type = 'button';
       btn.innerHTML =
-        `<span class="ev-pick-tag${kind === 'own' ? ' is-own' : ''}">${kind === 'own' ? 'Steve’s Meetup' : '7 Days pick'}</span>` +
-        `<span class="ev-pick-title">${esc(e.title)}</span>` +
-        `<span class="ev-pick-meta"><b>${esc(relDay(e.date, c.todayKey, c.tomorrowKey))}</b> · ${esc(e.allDay ? 'All day' : fmtHM(e._h, e._m))}` +
-        `${e.venue ? ' · ' + esc(e.venue) : ''}</span>`;
+        `<span class="ev-pick-art ev-cat-${esc(e.category || 'other')}${photo ? ' has-photo' : ''}">` +
+          (photo ? `<img src="${esc(photo)}" alt="" loading="lazy" referrerpolicy="no-referrer">` : '') +
+          `<span class="ev-pick-date"><b>${p.d}</b>${esc(DAY_SHORT[p.dow])}</span></span>` +
+        `<span class="ev-pick-body">` +
+          `<span class="ev-pick-tag${kind === 'own' ? ' is-own' : ''}">${esc(tag)}</span>` +
+          `<span class="ev-pick-title">${esc(e.title)}</span>` +
+          `<span class="ev-pick-meta"><b>${esc(relDay(e.date, c.todayKey, c.tomorrowKey))}</b> · ${esc(e.allDay ? 'All day' : fmtHM(e._h, e._m))}` +
+          `${e.venue ? ' · ' + esc(e.venue) : ''}</span>` +
+        `</span>`;
+      const img = btn.querySelector('img');
+      if (img) img.addEventListener('error', () => { img.remove(); img.parentNode?.classList.remove('has-photo'); }, { once: true });
       btn.addEventListener('click', () => openEvent(e.id, { scroll: true }));
       row.appendChild(btn);
     });
@@ -364,13 +440,20 @@
     state.daysShown = 7;
   }
 
+  const HASH_LINK = /^#(date|cat)=/;
+
   function readParams() {
     const p = new URLSearchParams(location.search);
+    const h = HASH_LINK.test(location.hash) ? new URLSearchParams(location.hash.slice(1)) : new URLSearchParams();
     const f = state.filters;
     const when = p.get('when');
     if (when && WHENS.includes(when) && when !== 'day') f.when = when;
-    if (p.get('d') && /^\d{4}-\d{2}-\d{2}$/.test(p.get('d'))) { f.when = 'day'; f.day = p.get('d'); }
-    if (p.get('cat') && CATEGORY_LABELS[p.get('cat')]) f.cat = p.get('cat');
+    // a day that has gone would open on an empty page, so it opens on today's calendar
+    const day = h.get('date') || p.get('date') || p.get('d');
+    if (day && /^\d{4}-\d{2}-\d{2}$/.test(day) && day >= nowCtx().todayKey) { f.when = 'day'; f.day = day; state.jump = true; }
+    const rawCat = h.get('cat') || p.get('cat');
+    const cat = CAT_ALIAS[rawCat] || rawCat;
+    if (cat && CATEGORY_LABELS[cat]) { f.cat = cat; state.jump = true; }
     if (p.get('town')) { f.town = p.get('town'); $('ev-f-town').value = f.town; if ($('ev-f-town').value !== f.town) f.town = ''; }
     if (p.get('q')) { f.q = p.get('q').toLowerCase(); $('ev-search').value = p.get('q'); }
     if (p.get('price') === 'free') f.quick.add('free');          // legacy links
@@ -396,7 +479,8 @@
     if (state.view !== 'list') p.set('view', state.view);
     if (state.openId) p.set('e', state.openId);
     const qs = p.toString();
-    const url = location.pathname + (qs ? '?' + qs : '') + location.hash;
+    // the filters are the query now; a #date= link is spent once it has been read
+    const url = location.pathname + (qs ? '?' + qs : '') + (HASH_LINK.test(location.hash) ? '' : location.hash);
     try { history.replaceState(null, '', url); } catch (e) { /* file:// etc. */ }
   }
 
@@ -511,8 +595,8 @@
     });
     const sel = wrap.querySelector('[aria-pressed="true"]');
     if (sel && wrap.scrollWidth > wrap.clientWidth) {
-      const left = sel.offsetLeft - 12;
-      if (left < wrap.scrollLeft || sel.offsetLeft + sel.offsetWidth > wrap.scrollLeft + wrap.clientWidth - 28)
+      const left = sel.offsetLeft - wrap.offsetLeft - 12;
+      if (left < wrap.scrollLeft || left + sel.offsetWidth + 40 > wrap.scrollLeft + wrap.clientWidth)
         wrap.scrollTo({ left: Math.max(0, left), behavior: 'auto' });
     }
   }
@@ -547,6 +631,7 @@
     // category chips — single select, counted against everything but category
     const cw = $('ev-cats');
     cw.innerHTML = '';
+    cw.classList.toggle('is-open', state.catsOpen);
     const catCounts = new Map();
     inWin.forEach((e) => { if (matchesNonDate(e, { ignoreCat: true })) catCounts.set(e.category || 'other', (catCounts.get(e.category || 'other') || 0) + 1); });
     const allN = [...catCounts.values()].reduce((a, b) => a + b, 0);
@@ -563,8 +648,19 @@
     CAT_ORDER.forEach((k) => {
       const n = catCounts.get(k) || 0;
       if (!n && f.cat !== k && !state.events.some((e) => e.category === k)) return;
-      cw.appendChild(mk(k, CATEGORY_LABELS[k], n));
+      const chip = mk(k, CATEGORY_LABELS[k], n);
+      if (cw.children.length > CATS_SHOWN && f.cat !== k) chip.classList.add('is-extra');
+      cw.appendChild(chip);
     });
+    if (cw.querySelector('.is-extra')) {
+      const more = document.createElement('button');
+      more.type = 'button';
+      more.className = 'ev-chip ev-chip-more';
+      more.textContent = state.catsOpen ? 'Less' : 'More';
+      more.setAttribute('aria-expanded', String(state.catsOpen));
+      more.addEventListener('click', () => { state.catsOpen = !state.catsOpen; renderChips(); $('ev-cats').querySelector('.ev-chip-more')?.focus(); });
+      cw.appendChild(more);
+    }
     $('ev-f-town').dataset.on = String(!!f.town);
   }
 
@@ -590,16 +686,18 @@
     if (e.venue) meta.push(`<span class="ev-row-venue">${esc(e.venue)}</span>`);
     if (e.town && e.town !== 'Burlington') meta.push(`<span>${esc(e.town)}</span>`);
     else if (!e.venue && e.town) meta.push(`<span>${esc(e.town)}</span>`);
-    if (e.category && e.category !== 'other')
-      meta.push(`<span class="ev-row-cat ev-cat-${esc(e.category)}"><span class="ev-dot" aria-hidden="true"></span>${esc(CATEGORY_LABELS[e.category] || e.category)}</span>`);
+    const cat = e.category && e.category !== 'other'
+      ? ` <span class="ev-row-cat ev-cat-${esc(e.category)}"><span class="ev-dot" aria-hidden="true"></span>${esc(CATEGORY_LABELS[e.category] || e.category)}</span>` : '';
     const flags = [];
     if (hasTag(e, 'series')) flags.push('<span class="ev-row-flag" title="A weekly regular">↻ regular</span>');
     if (e.age && !/all ages/i.test(e.age)) flags.push(`<span class="ev-row-flag">${esc(e.age)}</span>`);
-    const metaHtml = meta.join('<span class="ev-sep">·</span>') + (flags.length ? ' ' + flags.join(' ') : '');
+    const metaHtml = meta.join('<span class="ev-sep">·</span>') + cat + (flags.length ? ' ' + flags.join(' ') : '');
 
     const price = shortPrice(e);
     const kind = pickKind(e);
+    const photo = photoOf(e);
     const side =
+      (photo ? `<img class="ev-row-img" src="${esc(photo)}" alt="" loading="lazy" referrerpolicy="no-referrer">` : '') +
       (price.text ? `<span class="ev-price ${price.cls}">${esc(price.text)}</span>` : '') +
       (kind ? `<span class="ev-pick-badge${kind === 'own' ? ' is-own' : ''}">${kind === 'own' ? 'Steve’s' : 'Pick'}</span>` : '');
 
@@ -610,6 +708,7 @@
         `<p class="ev-row-meta">${metaHtml}</p>` +
       `</div>` +
       `<div class="ev-row-side">${side}</div>`;
+    el.querySelector('.ev-row-img')?.addEventListener('error', (ev) => ev.target.remove(), { once: true });
 
     // the title is the real (keyboard-reachable) toggle; the rest of the row
     // is a bigger click target for the same thing, minus links and buttons
@@ -818,7 +917,7 @@
       const frag = document.createDocumentFragment();
       groups.get(k)
         .sort((a, b) => (a.allDay && b.allDay) ? a.title.localeCompare(b.title)
-          : a.allDay ? -1 : b.allDay ? 1 : a._start - b._start)
+          : a.allDay ? 1 : b.allDay ? -1 : a._start - b._start)
         .forEach((e) => frag.appendChild(row(e, c)));
       g.appendChild(frag);
       listEl.appendChild(g);
@@ -857,6 +956,7 @@
   }
 
   function renderAll() {
+    renderFort();
     renderDays();
     renderChips();
     if (state.view === 'list') renderList();
@@ -966,7 +1066,7 @@
     counts.forEach((n, k) => { if (k >= lo && k <= hi) total += n; });
     const fl = kparts(lo), fh = kparts(hi);
     $('ev-month-note').textContent =
-      `${total} events between ${MON_NAMES[fl.mo]} ${fl.d} and ${MON_NAMES[fh.mo]} ${fh.d}. Click any day to open it.`;
+      `${total} events between ${MON_NAMES[fl.mo]} ${fl.d} and ${MON_NAMES[fh.mo]} ${fh.d}.`;
   }
 
   /* ---------------- map ---------------- */
@@ -1062,6 +1162,23 @@
       if (el) el.addEventListener('focusin', (ev) => {
         if (ev.target.scrollIntoView) ev.target.scrollIntoView({ block: 'nearest', inline: 'nearest' });
       });
+    });
+
+    // back to the app the reader came from, on the tab they left
+    const back = $('ev-back');
+    if (/\/(all-day|town|body)\//.test(document.referrer)) {
+      back.hidden = false;
+      back.addEventListener('click', (ev) => { ev.preventDefault(); history.back(); });
+    }
+
+    // a day or a kind linked from a page that is already open
+    window.addEventListener('hashchange', () => {
+      if (!HASH_LINK.test(location.hash) || !state.events.length) return;
+      resetFilters();
+      readParams();
+      setView('list');
+      renderAll();
+      $('ev-bar').scrollIntoView({ block: 'start' });
     });
 
     $('dark-toggle').addEventListener('click', () => {

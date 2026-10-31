@@ -222,6 +222,13 @@
   --talk-g1: #E0533F; --talk-g2: #E8A33D; --talk-g3: #2F9E6E; --talk-g4: #2F7FD1; --talk-g5: #7A5BD6; --talk-g6: #D64F9A;
   --talk-yes: #2F9E6E; --talk-no: #E0533F;
 
+  /* The Calendar: one colour per kind of event, its dots, tiles and month
+     heat here and on events.html */
+  --cat-music: #7B5EA7; --cat-comedy: #B26A00; --cat-theater: #C94F6D; --cat-art: #4263A8;
+  --cat-film: #455A64; --cat-food-drink: #D97A3A; --cat-outdoors: #2E8A5F; --cat-sports: #00695C;
+  --cat-family: #C9A227; --cat-market: #558B2F; --cat-community: #5C7A6A; --cat-learning: #3A7CA5;
+  --cat-games: #8E6C3A; --cat-wellness: #4A9A8A; --cat-words: #7A5C99; --cat-other: #9AAABB;
+
   /* shell: source marks. A hash of the source name picks one of eight, so a
      source keeps its colour everywhere without anyone choosing it. */
   --mark-0: hsl(18 28% 42%);
@@ -325,6 +332,7 @@
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     --so-x: #3A4048;
+    --cat-family: #E0B93F; --cat-film: #9BB0BC;
     --talk-ice: #23495F; --talk-ice-ink: #E4F2FB;
     --talk-deep: #37306B; --talk-deep-ink: #F3EFFF;
     --talk-debate: #8A3D22; --talk-debate-ink: #FFE9DF;
@@ -391,6 +399,7 @@
 
 :root[data-theme="dark"] {
   --so-x: #3A4048;
+  --cat-family: #E0B93F; --cat-film: #9BB0BC;
   --talk-ice: #23495F; --talk-ice-ink: #E4F2FB;
   --talk-deep: #37306B; --talk-deep-ink: #F3EFFF;
   --talk-debate: #8A3D22; --talk-debate-ink: #FFE9DF;

@@ -5,8 +5,9 @@
      the soonest largest ("Steve" on the page), Show all opens every one in
      the next two weeks into a longer list with a Collapse bar. The host card
      sits right under it.
-   - This week. One list across the coming seven days, a label on each day,
-     about ten rows and then Show more in steps. Stephen's own events are
+   - This week. The Calendar leads it (calendar.js, without its seven days:
+     the section's own strip is right below). Then one list across the
+     coming seven days, a label on each day, about ten rows and then Show more in steps. Stephen's own events are
      pinned first in their day (the newsletter's golden rule: never missed,
      with no Meetup interest counts), then every mixer on the guide's events
      calendar (all-day/data/whatnow.json, which refresh-allday rebuilds daily:
@@ -105,6 +106,7 @@ import { sectionBar } from '../sections.js';
 import { MATCH, KIND_WORDS, bestFor, fitsText, mixerKind, MIXER_WORDS, handleLink, gatheringWhen, SINGLES, petEvent } from '../people-match.js';
 import { RULES, ARCHETYPE_LABELS, NEIGHBORHOOD_LABELS, HANDLE_LABELS, message, checkPost } from '../boards-core.js';
 import * as talk from './talk.js';
+import * as calendar from '../calendar.js';
 
 const KEY = 'people';
 const GROUPS_URL = '../data/groups.json';
@@ -1346,6 +1348,9 @@ function drawWeek() {
   const post = button(ICON.plus + ' Post a plan', 'ghost sm', () => planSheet());
   post.dataset.post = '1';
   sec(s, 'This week', '', post);
+  const lead = el('div');
+  s.appendChild(lead);
+  calendar.mount(lead, { name: 'people', strip: false });
   resettle();
   const settled = (S.events || S.eventsFailed) && (app.demo || S.feed);
   if (!mixers().length && !settled) { s.appendChild(el('p', 'loading', 'Reading the calendar…')); return; }
@@ -2186,6 +2191,7 @@ app.register(KEY, {
     rollover();
     pending = param || null;
     land();
+    calendar.repaint();
   },
   refresh() { render(); },
   deactivate() {},

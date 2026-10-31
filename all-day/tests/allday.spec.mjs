@@ -4457,7 +4457,8 @@ async function interactions(browser, base) {
     await page.keyboard.press('Escape');
     check(await page.$('.peek') === null, 'Escape closes the peek', '');
 
-    await page.click('#theme-btn');
+    /* on a phone the calendar has the sun's seat; the button is the wide mast's */
+    await page.$eval('#theme-btn', (b) => b.click());
     check(await page.evaluate(() => document.documentElement.getAttribute('data-theme')) === 'dark', 'the mast toggle switches to dark', '');
     await page.reload();
     check(await page.evaluate(() => document.documentElement.getAttribute('data-theme')) === 'dark', 'the theme survives a reload, painted before first paint', '');
@@ -11309,7 +11310,7 @@ async function shellFixes(browser, base) {
       const m = await page.evaluate(() => {
         const box = (n) => { const r = n.getBoundingClientRect(); return { l: r.left, r: r.right, t: r.top, b: r.bottom, w: r.width, h: r.height }; };
         const row = document.querySelector('#mast .mast-row'), a = document.getElementById('brand'), img = a.querySelector('img');
-        const kids = ['wordmark', 'brand', 'theme-btn', 'saved-btn', 'settings-btn'].map((id) => [id, box(document.getElementById(id))]);
+        const kids = ['wordmark', 'brand', 'cal-btn', 'saved-btn', 'settings-btn'].map((id) => [id, box(document.getElementById(id))]);
         const overlaps = [];
         for (let i = 1; i < kids.length; i++) if (kids[i][1].l < kids[i - 1][1].r - 0.5) overlaps.push(kids[i - 1][0] + '/' + kids[i][0]);
         return { href: a.href, target: a.target, rel: a.rel, loaded: img.complete && img.naturalWidth > 0, img: box(img), row: box(row),
@@ -15116,6 +15117,153 @@ async function accountData(browser, base) {
 
 const t0 = Date.now();
 await mkdir(SHOTS, { recursive: true });
+/* --------------------------------------------------------------- The Calendar */
+/* The block on What Now and People, the mast's button, and events.html's
+   hero and links. Everything is built against the frozen clock, so a past
+   event and a finished one are really in the file. */
+function calendarFile(nowMs) {
+  const hour = 3600;
+  const nowS = Math.floor(nowMs / 1000);
+  const today = etKey(nowMs);
+  const key = (n) => new Date(Date.parse(today + 'T12:00:00Z') + n * 86400000).toISOString().slice(0, 10);
+  const pick = (id, title, n, h, x = {}) => ({ id, title, date: key(n), start: new Date(nowMs + h * hour * 1000).toISOString(), end: nowS + (h + 2) * hour, category: 'music', venue: 'The Room', town: 'Burlington', ...x });
+  const days = Array.from({ length: 21 }, (_, i) => ({ date: key(i), cats: { music: 10, art: 4, 'food-drink': 3, family: 2, sports: 1 } }));
+  /* a day already gone stays in the file: a stale copy must not count it */
+  days.unshift({ date: key(-1), cats: { music: 500 } });
+  days[1].cats.other = 1;
+  days[1].ends = { music: [nowS - hour, nowS - 2 * hour, nowS + hour], other: [nowS - hour] };
+  return { days, picks: [
+    pick('gone', 'The One That Finished', 0, -3),
+    pick('t1', 'Tonight Best', 0, 4),
+    pick('t2', 'Tonight Poster', 0, 5, { image: 'https://example.com/poster.jpg', category: 'art' }),
+    pick('t3', 'Tonight Third', 0, 6),
+    pick('m1', 'Tomorrow Best', 1, 20),
+    pick('m2', 'Tomorrow Second', 1, 22),
+  ] };
+}
+function eventsFile(nowMs) {
+  const today = etKey(nowMs);
+  const key = (n) => new Date(Date.parse(today + 'T12:00:00Z') + n * 86400000).toISOString().slice(0, 10);
+  const ev = (id, n, h, x = {}) => ({ id, title: 'Event ' + id, start: new Date(nowMs + (n * 24 + h) * 3600000).toISOString(), end: null, allDay: false, date: key(n), venue: 'The Room', address: '1 Main St', town: 'Burlington',
+    lat: null, lng: null, price: '$10', free: false, minPrice: 10, age: null, indoorOutdoor: null, category: 'music', tags: [], description: 'A night out.', recurring: null, url: 'https://example.com/' + id, source: 'sevendays', signals: {}, sources: [{ source: 'sevendays', url: 'https://example.com/' + id }], status: 'active', ...x });
+  return { generated: new Date(nowMs).toISOString(), windowStart: today, windowEnd: key(20), events: [
+    ev('a', 0, 1, { signals: { staff_pick: true } }), ev('b', 0, 2, { category: 'art', signals: { image: 'https://example.com/p.jpg' } }), ev('over', 0, -5),
+    ev('c', 1, 1, { category: 'food-drink' }), ev('d', 2, 1), ev('e', 2, 2, { free: true, price: 'Free', minPrice: 0 }), ev('late', 13, 1), ev('after', 14, 1),
+    ev('show', 3, 1, { tags: ['ongoing'] }), ev('maybe', 3, 1, { status: 'unconfirmed' }),
+  ] };
+}
+async function theCalendar(browser, base) {
+  const noon = etAt(13);
+  await group('The Calendar: the block on What Now', async () => {
+    const { ctx, page, errors } = await newPage(browser, base, { clock: noon, routes: [[/\/all-day\/data\/calendar\.json$/, calendarFile(noon)]] });
+    await page.goto(base + '/all-day/#whatnow');
+    await page.waitForSelector(wnPanel + ' [data-calendar="whatnow"]', { timeout: 15000 });
+    const s = await page.evaluate((p) => {
+      const box = document.querySelector(p + ' .cal'), r = box.getBoundingClientRect();
+      const panel = document.querySelector(p + ' .panel-body') || document.querySelector(p);
+      return { first: panel.contains(box) && !(box.compareDocumentPosition(document.querySelector(p + ' .wxtop')) & 2), n: box.querySelector('.caln').textContent, title: box.querySelector('h2').textContent,
+        days: [...box.querySelectorAll('[data-cal-strip] a')].map((a) => a.querySelector('.n').textContent), first7: box.querySelector('[data-cal-strip] a').getAttribute('href'),
+        rows: [...box.querySelectorAll('.calt b')].map((b) => b.textContent), chips: [...box.querySelectorAll('[data-cal-chips] a')].map((a) => a.textContent), chip: box.querySelector('[data-cal-chips] a').getAttribute('href'),
+        full: box.querySelector('[data-cal-full]').getAttribute('href'), h: r.height, top: r.top, img: box.querySelectorAll('.calth img').length,
+        pills: document.querySelector(p + ' .wxtop .pills').getBoundingClientRect().top, bar: document.querySelector('#tabbar').getBoundingClientRect().top, scroll: document.documentElement.scrollWidth, vw: innerWidth };
+    }, wnPanel);
+    check(s.first, 'it leads the tab, above the weather and Spin', '');
+    check(s.title === 'The Calendar' && s.n === String(14 * 20 + 1 - 3), 'the count is the next 14 days, less what has finished, without a day already gone', JSON.stringify(s.n));
+    check(s.days.join() === '18,20,20,20,20,20,20', 'seven days with their real counts; today has lost its three finished', s.days.join());
+    check(s.rows.join() === 'Tonight Poster,Tomorrow Best', 'folded to two rows, tonight’s and tomorrow’s, a photo first; the finished one never shows', s.rows.join());
+    check(s.img === 1, 'with its photo', String(s.img));
+    check(/events\.html\?date=\d{4}-\d{2}-\d{2}$/.test(s.first7) && /events\.html\?cat=music&when=twoweeks$/.test(s.chip) && /events\.html$/.test(s.full), 'a day, a chip and the button open the calendar there', JSON.stringify([s.first7, s.chip, s.full]));
+    check(s.chips.join() === 'Music138,Food42,Art56,Family28,Sports14', 'the chips carry their real counts, the lead five in order', s.chips.join());
+    check(s.h / 844 <= 0.6, 'it takes at most 60% of a 390x844 first screen', String(s.h));
+    check(s.pills < s.bar && s.scroll <= s.vw, 'and What Now’s pills are still on it, nothing sideways', JSON.stringify(s));
+    await page.click(wnPanel + ' [data-cal-more]');
+    const open = await page.$$eval(wnPanel + ' .calt b', (b) => b.map((x) => x.textContent));
+    check(open.join() === 'Tonight Best,Tonight Poster,Tonight Third,Tomorrow Best,Tomorrow Second', 'See more opens the feed, each night in time order', open.join());
+    await page.click(wnPanel + ' [data-cal-more]');
+    check((await page.$$(wnPanel + ' .calrow')).length === 2, 'and folds again', '');
+    await page.click(wnPanel + ' .calrow .act.star');
+    check(await page.$eval(wnPanel + ' .calrow .act.star', (b) => b.classList.contains('on')), 'the star saves', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+  await group('The Calendar: gone quietly with no file, and a lead on People', async () => {
+    const miss = await newPage(browser, base, { clock: noon });
+    await miss.page.route(/\/all-day\/data\/calendar\.json$/, (r) => r.fulfill({ status: 404, body: '' }));
+    await miss.page.goto(base + '/all-day/#whatnow');
+    await miss.page.waitForSelector(wnPanel + ' .spin .big', { timeout: 15000 });
+    check(!(await miss.page.$(wnPanel + ' .cal')), 'no file, no block, the tab as it was', '');
+    await miss.ctx.close();
+    const stale = await newPage(browser, base, { clock: noon + 40 * 86400000, routes: [[/\/all-day\/data\/calendar\.json$/, calendarFile(noon)]] });
+    await stale.page.goto(base + '/all-day/#whatnow');
+    await stale.page.waitForSelector(wnPanel + ' .spin .big', { timeout: 15000 });
+    check(!(await stale.page.$(wnPanel + ' .cal')), 'a file weeks old has nothing left to say', '');
+    await stale.ctx.close();
+    const { ctx, page, errors } = await newPage(browser, base, { clock: noon, routes: [[/\/all-day\/data\/calendar\.json$/, calendarFile(noon)]] });
+    await page.goto(base + '/all-day/#people/mix');
+    await page.waitForSelector(peoplePanel + ' [data-calendar="people"]', { timeout: 15000 });
+    const p = await page.$eval(peoplePanel + ' [data-sec="mix"]', (s) => ({ strip: !!s.querySelector('[data-calendar] [data-cal-strip]'), full: !!s.querySelector('[data-calendar] [data-cal-full]') }));
+    check(p.full && !p.strip, 'People leads This week with it, leaving the seven days to its own strip', JSON.stringify(p));
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+  await group('The Calendar: a way in from the mast, All Day only', async () => {
+    for (const width of [390, 360]) {
+      const { ctx, page, errors } = await newPage(browser, base, { viewport: { width, height: 844 } });
+      await page.goto(base + '/all-day/?demo=1#wire');
+      await settle(page);
+      const m = await page.evaluate(() => { const b = document.getElementById('cal-btn'), row = document.querySelector('.mast-row'), wm = document.getElementById('wordmark'); const r = b.getBoundingClientRect();
+        return { href: b.getAttribute('href'), icon: !!b.querySelector('svg'), w: r.width, h: r.height, over: row.scrollWidth - row.clientWidth, wm: wm.scrollWidth - wm.clientWidth, name: b.getAttribute('aria-label') }; });
+      check(/events\.html$/.test(m.href) && m.icon && m.name === 'Full calendar' && m.h >= 44, width + ': the button opens the calendar', JSON.stringify(m));
+      check(m.over <= 0 && m.wm <= 0, width + ': the row fits and All Day is whole', JSON.stringify(m));
+      check(!errors.length, 'no console errors', errors.join(' | '));
+      await ctx.close();
+    }
+    const { ctx, page } = await newPage(browser, base, { viewport: { width: 390, height: 844 } });
+    await page.goto(base + '/town/?demo=1');
+    await settle(page);
+    check(!(await page.$('#cal-btn')) && await page.$eval('#theme-btn', (b) => b.offsetWidth > 0), 'Town has no button and keeps its sun', '');
+    await ctx.close();
+  });
+  await group('The Calendar: events.html opens where it was asked to', async () => {
+    const file = eventsFile(noon);
+    const day2 = file.events.find((e) => e.id === 'd').date;
+    const open = async (q) => {
+      const o = await newPage(browser, base, { clock: noon, routes: [[/\/data\/events\/events\.json$/, file], [/\/data\/weather\/latest\.json$/, {}]] });
+      await o.page.route(/play\.btownbrief\.com|unpkg\.com/, (r) => r.abort());
+      await o.page.goto(base + '/events.html' + q);
+      await o.page.waitForSelector('#ev-fort .ev-fort-day', { timeout: 15000 });
+      return o;
+    };
+    let o = await open('');
+    const h = await o.page.evaluate(() => ({ title: document.getElementById('ev-hero-title').textContent, n: document.querySelector('#ev-hero-count b').textContent, days: document.querySelectorAll('#ev-fort button').length,
+      counts: [...document.querySelectorAll('#ev-fort .ev-fort-n')].map((x) => x.textContent), picks: document.querySelectorAll('.ev-pick-card').length, img: document.querySelectorAll('.ev-pick-card img').length, rowImg: document.querySelectorAll('.ev-row-img').length,
+      meta: document.querySelector('meta[property="og:url"]').content, pixel: /fbq\('init'/.test(document.head.innerHTML), scroll: document.documentElement.scrollWidth, vw: innerWidth }));
+    check(h.title === 'The Calendar' && h.n === '6' && h.days === 14, 'the hero: the 14-day count, without the finished, the exhibits, the unconfirmed or day fifteen', JSON.stringify(h));
+    check(h.counts[0] === '2' && h.counts[2] === '2' && h.counts[13] === '1', 'and two weeks of real days', h.counts.join());
+    check(h.picks === 2 && h.img === 1 && h.rowImg === 1, 'photos on the tile and the row', JSON.stringify(h));
+    check(/events\.html$/.test(h.meta) && h.pixel && h.scroll <= h.vw, 'URL, meta and pixel kept, nothing sideways', JSON.stringify(h));
+    await o.page.click('#ev-fort .ev-fort-day:nth-child(3)');
+    check(await o.page.$eval('#ev-count', (n) => /^2 events/.test(n.textContent)) && /[?&]d=/.test(o.page.url()), 'a day tile filters to that day', o.page.url());
+    await o.page.click('.ev-row .ev-row-tbtn');
+    const d = await o.page.evaluate(() => ({ ics: !!document.querySelector('[data-act="ics"]'), gcal: !!document.querySelector('[data-act="gcal"]'), share: !!document.querySelector('[data-act="share"]'), link: !!document.querySelector('.ev-act-primary') }));
+    check(d.ics && d.gcal && d.share && d.link, 'an open event keeps tickets, Google, .ics and share', JSON.stringify(d));
+    const real = o.errors.filter((e) => !/Failed to load|ERR_/.test(e));
+    check(!real.length, 'no console errors', real.join(' | '));
+    await o.ctx.close();
+    for (const [q, want, label] of [['?date=' + day2, /^2 events/, '?date='], ['#date=' + day2, /^2 events/, '#date='], ['?cat=art&when=twoweeks', /^1 event /, '?cat='], ['?cat=food', /^1 event /, 'a short ?cat='], ['#cat=art', /^1 event /, '#cat=']]) {
+      o = await open(q);
+      check(await o.page.$eval('#ev-count', (n, s) => new RegExp(s).test(n.textContent), want.source), label + ' opens on it', await o.page.$eval('#ev-count', (n) => n.textContent));
+      await o.ctx.close();
+    }
+    o = await open('?date=2020-01-01');
+    check(await o.page.$eval('#ev-count', (n) => /^7 events/.test(n.textContent)), 'a day that has gone opens on the calendar, not on nothing', await o.page.$eval('#ev-count', (n) => n.textContent));
+    await o.ctx.close();
+    o = await open('?d=' + day2);
+    check(await o.page.$eval('#ev-count', (n) => /^2 events/.test(n.textContent)), 'the old ?d= links still work', '');
+    await o.ctx.close();
+  });
+}
+
 await staticChecks();
 const { base, proc } = await serve();
 const browser = await chromium.launch();
@@ -15534,6 +15682,7 @@ try {
   await run(accountData);
   await run(theTown);
   await run(theBody);
+  await run(theCalendar);
 } finally {
   await browser.close();
   proc.kill();

@@ -1,6 +1,6 @@
 /* What Now: one answer, then put the phone down.
 
-   A weather line at the top (feels like, the lake when the gage is fresh,
+   The Calendar leads the Spin view (calendar.js), then a weather line at the top (feels like, the lake when the gage is fresh,
    sunset), then two views behind the chip row: Spin with the Missions list
    right under it (the Missions chip jumps down to the list), and Tonight.
 
@@ -78,6 +78,7 @@ import { sectionBar, hold } from '../sections.js';
 import { loadAll } from '../whatnow-data.js';
 import { buildContext, buildPool, pick, fmtTime, outdoorRisks } from '../whatnow-engine.js';
 import { sunScore } from '../sun.js';
+import * as calendar from '../calendar.js';
 
 const KEY = 'whatnow';
 const MODES = ['spin', 'missions', 'tonight'];
@@ -155,7 +156,7 @@ function load() {
       D = redate(d);
       S.weather = D.weather; S.events = D.events; S.music = D.music; S.missions = D.missions; S.challenges = D.challenges || null;
       S.feeds = { ...D.feeds, weather: D.weather, events: D.events };
-      return app.demoData('run-clubs').then((j) => { S.rc = cw.redateDemo(j, Date.now()).clubs; }, () => { S.rc = []; });
+      return Promise.all([app.demoData('run-clubs').then((j) => { S.rc = cw.redateDemo(j, Date.now()).clubs; }, () => { S.rc = []; }), calendar.load()]);
     });
   }
   /* the wire may hand a payload over again later (a retry after a failed
@@ -180,6 +181,7 @@ function load() {
       if (!j || !Array.isArray(j.clubs)) throw new Error('bad shape');
       S.rc = j.clubs;
     }).catch(() => { S.rc = []; }),
+    calendar.load(),
   ];
   sunScore(data).then((sun) => { S.sun = sun; paintWx(); });
   return Promise.all(parts);
@@ -234,7 +236,12 @@ function render() {
     const wx = weatherLine(true);
     if (wx) root.appendChild(wx);
     renderTonight();
-  } else { renderSpin(); renderToday(); renderChallenges(); renderMissions(); }
+  } else {
+    const lead = el('div');
+    root.appendChild(lead);
+    calendar.mount(lead, { name: 'whatnow' });
+    renderSpin(); renderToday(); renderChallenges(); renderMissions();
+  }
 }
 
 /* One line: what it feels like, the lake when the gage is fresh, sunset.
@@ -1344,7 +1351,7 @@ app.register(KEY, {
       app.recount();
     }).catch(() => { r.innerHTML = '<div class="errbox"><b>What Now didn’t load.</b></div>'; });
   },
-  activate(param) { pending = param || null; land(); paintSky(); skyTick(true); },
+  activate(param) { pending = param || null; land(); paintSky(); skyTick(true); calendar.repaint(); },
   refresh() { if (ready) render(); },
   deactivate() { stopReel(); closeBandcamp(); app.closePeek(); skyTick(false); },
   /* Spin · Missions · Tonight as a floating pill in What Now's amber. Spin

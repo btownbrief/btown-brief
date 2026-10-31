@@ -39,6 +39,8 @@ const SHELL_URLS = [
   './js/habits-core.js', './js/habits-fake.js', './js/habits-local.js', './js/forest.js',
   /* the photo wall's helpers, imported by the Wire's Photo mode */
   './js/photo-wall.js',
+  /* The Calendar's block, imported by What Now and People */
+  './js/calendar.js', './data/calendar.json',
   /* the run clubs' week, imported by ui.js, People and What Now */
   './js/clubs-week.js',
   /* what it's like outside, imported by Now and Today */

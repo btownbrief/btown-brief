@@ -1376,7 +1376,9 @@ $('wordmark').addEventListener('click', (e) => {
    screen; the switcher's bubble and what is new in the other apps */
 const installBtn = switcher.installButton();
 installBtn.hidden = asks.installed();
-$('theme-btn').before(installBtn);
+const calBtn = $('cal-btn');   // All Day's page has it; Town's and Body's do not
+if (calBtn) calBtn.innerHTML = ICON.calendar;
+(calBtn || $('theme-btn')).before(installBtn);
 switcher.bind({ sheet, toast, app: APP, demo, newIn });
 
 /* Whether another app has something new since the reader last looked
