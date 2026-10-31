@@ -15093,6 +15093,7 @@ async function theCouncil(browser, base) {
     check(b[0].text.includes(list[0].next), 'Next', '');
     const links = await page.$$eval('#panel-cityhall .cc:first-child .row a', (as) => as.map((a) => a.textContent.trim() + ' ' + a.href));
     check(links.some((l) => l.startsWith('Minutes') && l.includes(list[0].minutes_url)) && links.some((l) => l.startsWith('Video')), 'links to minutes and video', links.join(' | '));
+    check(list.every((m) => /^https:\/\/burlingtonvt\.portal\.civicclerk\.com\/event\/\d+\/files\/agenda\/\d+$/.test(m.minutes_url)), 'every Minutes link opens the city viewer on that file', list[0].minutes_url);
     await page.click('#panel-cityhall .cc:first-child .cc-all');
     b = await blocks(page);
     check(b[0].li === list[0].bullets.length, 'Show all opens every bullet', String(b[0].li));
@@ -15127,6 +15128,32 @@ async function theCouncil(browser, base) {
     const pill = await page.$$eval('#subnav .secpill .chip', (cs) => cs.map((c) => c.textContent.trim()));
     check(!pill.includes('Council'), 'the pill has no Council', pill.join(','));
     check(!errors.filter((e) => !/404/.test(e)).length, 'no console errors', errors.slice(0, 3).join(' | '));
+    await ctx.close();
+  });
+
+  await group('council: an entry with no date leaves the tab standing', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.route('**/data/town/council.json', (r) => r.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ meetings: [{ id: 1, top: 'No date' }, { id: 2, date: '2026-10-05' }, ...file.meetings.slice(0, 2)] }) }));
+    await page.goto(base + '/town/#cityhall');
+    await settle(page);
+    const secs = await page.$$eval('#panel-cityhall .shelf-sec', (ns) => ns.map((n) => n.dataset.sec));
+    check(secs.length > 1 && secs[0] === 'council', 'the sections all draw', secs.join(','));
+    check((await blocks(page)).length === 2, 'only whole entries show', '');
+    check(!errors.length, 'no console errors', errors.slice(0, 3).join(' | '));
+    await ctx.close();
+  });
+
+  await group('council: the calendar failing leaves Council up', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.route('**/data/civic.json', (r) => r.fulfill({ status: 500, body: '' }));
+    await page.goto(base + '/town/#cityhall');
+    await settle(page);
+    check((await blocks(page)).length === 3, 'Council shows what it has', '');
+    const meetings = await page.$eval('#panel-cityhall [data-sec="meetings"]', (n) => n.innerText);
+    check(/Didn.t load/.test(meetings), 'Meetings says so', meetings.slice(0, 60));
+    const votes = await page.$eval('#panel-cityhall [data-sec="votes"]', (n) => n.innerText);
+    check(/Didn.t load/.test(votes) && /How a vote gets to the council/.test(votes), 'Votes keeps its card and says so', votes.slice(0, 60));
+    check(!errors.filter((e) => !/500/.test(e)).length, 'no console errors', errors.slice(0, 3).join(' | '));
     await ctx.close();
   });
 

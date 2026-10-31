@@ -39,7 +39,7 @@ import json
 import os
 import re
 
-from .title_guard import held, names_person
+from .title_guard import CONTACT, held, names_person
 from .aerials import fetch, prune
 from .redact import hidden
 from .common import BTV_TZ, OUT_DIR, ROOT, get_json, load_json, now_iso, today_btv, write_json
@@ -314,7 +314,8 @@ def city_tiles(changes, today, cutoff):
 
 def council_tile(council, cutoff):
     """The newest summary, timed when it was written: the news is the minutes
-    arriving, days after the meeting. Its words passed council_summaries.py's gate."""
+    arriving, days after the meeting. Its words passed council_summaries.py's gate,
+    names included, and guard() looks at them once more."""
     meetings = [m for m in (council or {}).get("meetings") or [] if m.get("date") and m.get("top") and m.get("generated")]
     if not meetings:
         return []
@@ -742,11 +743,16 @@ def write_feed(payload):
 
 # a title from a source no other guard has read; a home's or a sale's comes through redact.py
 GUARDED = {"road", "food", "reddit", "weather", "signup", "city", "news"}
+# held() less its crime words: a council item on harassment or assault is the news
+NAMES_GUARDED = {"council"}
 
 
 def guard(tiles, gone):
     """The last look before anything is written: a takedown's id, and held() on every title."""
-    return [t for t in tiles if t["id"].split("-", 1)[-1] not in gone and not (t["kind"] in GUARDED and held(t.get("title")))]
+    def blocked(t):
+        title = t.get("title")
+        return (t["kind"] in GUARDED and held(title)) or (t["kind"] in NAMES_GUARDED and (names_person(title) or CONTACT.search(str(title or ""))))
+    return [t for t in tiles if t["id"].split("-", 1)[-1] not in gone and not blocked(t)]
 
 
 # ------------------------------------------------------------------- the feed

@@ -30,7 +30,7 @@ import * as app from '../app.js';
 import * as boards from '../boards.js';
 import * as store from '../store.js';
 import { el, esc, safeHref, ICON, divider } from '../ui.js';
-import { townMode, getJSON, maybeJSON, NOT_LOADED, row, card, links, line, list, stats, today, fmtDay, fmtLong, epoch, daysTo, money, tile } from './town-kit.js';
+import { townMode, maybeJSON, NOT_LOADED, row, card, links, line, list, stats, today, fmtDay, fmtLong, epoch, daysTo, money, tile } from './town-kit.js';
 
 const VOTEY = /\b(vote|voting|votes|election|elections|results|ballot|debate|town meeting|watch party|candidate|mayor|council)\b/i;
 const PORTAL = 'https://burlingtonvt.portal.civicclerk.com/';
@@ -73,7 +73,7 @@ function meetingRow(m, i, past) {
 }
 
 /* -------------------------------------------------------------- Council */
-const councilMeetings = (d) => ((d.council || {}).meetings || []).slice().sort((a, b) => b.date.localeCompare(a.date));
+const councilMeetings = (d) => ((d.council || {}).meetings || []).filter((m) => m && m.top && typeof m.date === 'string').sort((a, b) => b.date.localeCompare(a.date));
 function councilBlock(m) {
   const k = 'council-' + m.id;
   app.know([{ k, kind: 'post', title: m.top, text: '', href: m.minutes_url || '#cityhall/' + k, src: COUNCIL.source, ago: fmtDay(m.date), open: COUNCIL.open }]);
@@ -113,6 +113,7 @@ function drawCouncil(box, d) {
 /* ------------------------------------------------------------- Meetings */
 function drawMeetings(box, d) {
   const c = d.civic || {};
+  if (c.failed) { line(box, NOT_LOADED); return; }
   const up = (c.upcoming || []).slice().sort((a, b) => a.start.localeCompare(b.start));
   const past = (c.past || []).slice().sort((a, b) => b.start.localeCompare(a.start));
   if (up.length) list(box, up.map((m, i) => meetingRow(m, i, false)), 6);
@@ -131,7 +132,7 @@ function drawVotes(box, d) {
     links: [{ label: 'City Council', href: 'https://www.burlingtonvt.gov/413/City-Council' }, { label: 'Watch on Town Meeting TV', href: 'https://www.cctv.org/watch-tv/series/burlington-city-council' }] });
   const up = ((d.civic || {}).upcoming || []).filter((m) => /city council|board of finance/i.test(m.body + ' ' + m.title)).sort((a, b) => a.start.localeCompare(b.start));
   if (up.length) list(box, up.map((m, i) => meetingRow(m, 'v' + i, false)), 4);
-  else line(box, 'No council meetings posted yet.');
+  else line(box, (d.civic || {}).failed ? NOT_LOADED : 'No council meetings posted yet.');
   const q = (((d.cityhall || {}).derived || {}).town_meeting_day_2027 || {}).ballot_questions_seen || [];
   if (q.length) card(box, { k: 'ballot-seen', title: 'Already headed for the March ballot', paras: q.map((x) => esc(x.replace(/\s*\(.*\)$/, ''))) });
 }
@@ -207,7 +208,7 @@ app.register('cityhall', townMode({
   color: '--tf-city',
   key: 'cityhall', label: 'City Hall', icon: 'columns', promise: 'Every meeting and vote, in plain English.',
   demo: 'town-cityhall',
-  load: () => Promise.all([getJSON('../data/civic.json'), maybeJSON('../data/town/cityhall-sources.json'), maybeJSON('../data/town/council.json')]).then(([civic, cityhall, council]) => ({ civic, cityhall, council })),
+  load: () => Promise.all(['../data/civic.json', '../data/town/cityhall-sources.json', '../data/town/council.json'].map(maybeJSON)).then(([civic, cityhall, council]) => ({ civic, cityhall, council })),
   sections: [
     { key: 'council', label: 'Council', draw: drawCouncil, hide: (d) => !councilMeetings(d).length, newest: (d) => epoch((councilMeetings(d)[0] || {}).generated) },
     { key: 'meetings', label: 'Meetings', draw: drawMeetings, newest: (d) => epoch((d.civic || {}).generated) },

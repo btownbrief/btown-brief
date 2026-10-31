@@ -13,18 +13,26 @@ The gate is the point of this file. A bullet is dropped unless:
   - its quote is found word for word in the minutes (whitespace evened out),
     and sits under the agenda item the bullet says it came from
   - every number in it, in digits or in words, appears in the minutes
+  - it agrees with what the minutes record for that item: the outcome line
+    (a quote proves nothing here, the minutes repeat each item's recommended
+    action whether or not it passed), the tally, and "unanimously"
   - the quote does not contradict it (passed against failed)
-  - it names only the council, the mayor or a councilor: forum speakers and
-    "Others present" are read out of the minutes and refused by name, and the
-    Town feed's own name guard runs too
+  - it names only the council, the mayor or a councilor. That is an allowlist:
+    a capitalised word mid-sentence must be a member, an ordinary word, a word
+    from an item's heading, or part of an organisation or place. Forum speakers,
+    "Others present", agenda presenters and anyone else the minutes name are read
+    out and refused alone, by surname too. The Town feed's own name guard runs last.
   - it carries no phone number and no street number
 
+A sentence that talks about the document instead of the meeting is cut first.
 Fewer than MIN_BULLETS left means nothing is published for that meeting; it
 tries again on later runs, RETRIES more times, and the count stays in the file.
-The headline line may restate only a bullet that survived, or it becomes that
-bullet's first sentence. The Next line's date comes from the city's calendar.
+The last bullets go if the whole runs over MAX_WORDS. The headline line may
+restate only a bullet that survived and goes through the same people, contact
+and outcome checks, or it becomes that bullet's first sentence. The Next line's
+date comes from the city's calendar.
 
-The speakers' names never reach the model at all: scrub() swaps them out of the
+The people's names never reach the model at all: scrub() swaps them out of the
 copy it reads, and the gate still checks quotes against the real minutes.
 
 Cost goes to data/town/wire-cost.json (wire_common's ledger, its own file and
@@ -50,7 +58,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 import wire_common as wc  # noqa: E402
 from refresh_civic import API_URL, BTV_TZ, USER_AGENT, document_links, video_url  # noqa: E402
-from town.title_guard import CONTACT, names_person  # noqa: E402
+from town.title_guard import CONTACT, FIRST, names_person  # noqa: E402
 
 OUT_DIR = os.path.join(wc.ROOT, "data", "town")
 OUT = os.path.join(OUT_DIR, "council.json")
@@ -69,6 +77,7 @@ MIN_MINUTES = 1500      # shorter than this is not the minutes of a meeting
 MIN_QUOTE = 25
 MAX_BULLET_WORDS = 70
 MAX_TOP_WORDS = 32
+MAX_WORDS = 200          # the headline, the bullets and Next together
 MAX_MINUTES_CHARS = 120_000
 MAX_AGENDA_CHARS = 30_000
 
@@ -108,14 +117,53 @@ FORUM_START = re.compile(r"^[ \t]*(?:\d+\.\d+\.[ \t]+)?Verbal Comments\b", re.M)
 NAME = r"[A-Z][\w.'’-]*(?:[ \t]+(?:(?:von|van|de)[ \t]+)?[A-Z][\w.'’-]*){0,3}"
 SPEAKER = re.compile(r"(?:(?<=^)|(?<=[ \t]))(" + NAME + r"):")
 NAME_ONLY = re.compile(r"^[ \t]*" + NAME + r"[ \t]*$")
-NOT_A_SPEAKER = re.compile(r"^(?:Ayes|Nays|Abstain\w*|Absent|Recused|Motion|Note|Non-BTV|BTV)\b")
-OTHERS = re.compile(r"Others? present:(.*?)(?=\nSubject\b|\n\d+\.|\Z)", re.S | re.I)
+NOT_A_SPEAKER = re.compile(r"^(?:Ayes?|Nays?|Abstain\w*|Absent|Recused|Moti\w+|Note|Non-BTV|BTV)\b")
+OTHERS = re.compile(r"Others?(?: members?)? present:(.*?)(?=\nSubject\b|\n\d+\.|\Z)", re.S | re.I)
+# "VCJR Members A, B and C spoke to this agenda item.", "City Staff X and Y were also present."
+PRESENTERS = re.compile(r"\b(?:was|were|spoke|commented|presented)\b.*\b(?:agenda item|present)\b")
+PERSONNEL = re.compile(r"\b(?:Appoint\w*|Reappoint\w*|Communication|Resign\w*|Nominat\w*|Oath|Honoring|Recogni\w*|Memoriam)\b", re.I)
+POSSESSIVE = r"['’]s$"
+HEADING = re.compile(r"^(Subject[ \t]+)?\d+\.\d+\.[ \t]+(.+)$", re.M)
+ACTION = re.compile(r"^Recommended Action[ \t]+(.+(?:\n.+){0,4})", re.M)
+CAPITAL = r"[A-Z][a-zA-Z'’]*[a-z][a-zA-Z'’]*(?:-[ \t]?[A-Z][a-zA-Z'’]+)*"
+CAPITALISED = re.compile(r"(?<![\w'’-])" + CAPITAL + r"(?![\w-])")
+# "authorize Jane Doe, Director of...", "re-appoint Jane Doe as..."
+TITLED = re.compile(r"(" + CAPITAL + r")[ \t]+(" + CAPITAL + r"),[ \t]+(?:the[ \t]+)?(?:[A-Z][\w-]*[ \t]+){0,3}"
+                    r"(?:Director|Manager|Chief|Attorney|Engineer|Officer|Clerk|Treasurer|Coordinator|Specialist|Administrator|Superintendent|Planner)\b")
+ENGAGED = re.compile(r"\b(?:authorize|appoint|re-?app\w*|confirm|nominate)[ \t]+(" + CAPITAL + r")[ \t]+(" + CAPITAL + r")")
+TWO_CAPS = re.compile(r"(?<![\w'’-])(" + CAPITAL + r")[ \t]+(?:[A-Z]\.[ \t]+)?(?=(" + CAPITAL + r")(?![\w-]))")
+# words of a title, never a name
+TITLE_WORDS = frozenset("""Acting Assistant Attorney Chief City Clerk Commissioner Consultant Council Councilor Councilors Deputy
+    Director Executive Interim Manager Mayor Member Members Officer Planner President Resident Residents Staff Treasurer""".split())
+# proper nouns a Burlington summary may always use
+PROPER = frozenset("""Burlington Vermont Vermonters Champlain England American Latin Abenaki Annual Racial State Monday Tuesday
+    Wednesday Thursday Friday Saturday Sunday January February March April May June July August September October
+    November December""".split())
+# a run of capitals ending in one of these is a place or a body, not a person
+BODIES = (r"Street|St|Road|Rd|Avenue|Ave|Drive|Lane|Way|Parkway|Bridge|Park|Pier|Beach|Square|Plaza|Garage|Center|Centre|"
+          r"Building|Hall|Library|School|College|University|Academy|Church|Hospital|Bank|Energy|Transit|Trust|Fund|District|"
+          r"Department|Office|Board|Commission|Committee|Council|Corporation|Association|Alliance|Coalition|Company|Partners|"
+          r"Group|Housing|Inc|LLC|Corp|Nation|Tribe|Act|Plan|Project|Program|Ordinance|Charter|Code|Marketplace|Airport|"
+          r"Valley|Station|Mountain|Lake|River|Network|Authority|Agency|Foundation|Institute|Society|Union|Services?|Works|Workers|"
+          r"Finance|Equity|Inclusion|Belonging|Election|Route|Friends|Reform|Partnership|YMCA")
+BODY_WORD = re.compile(BODIES)
+BODY_RUN = re.compile(r"(?<![\w'’-])(?:" + CAPITAL + r"[ \t]+(?:(?:of|the|for|and|&)[ \t]+)?){1,5}(?:" + BODIES + r")\b")
 # officials and the places named for people
 ALLOWED_TITLES = re.compile(r"\b(?:City Council President|Council President|Councilors?|Mayor)\s+(?:[A-Z][\w'’-]+)")
 ALLOWED_PLACES = re.compile(r"\b(?:Robert Miller|Ethan Allen|Ira Allen|Howard Center|Howard Dean|Fletcher Allen|Fletcher Free|Dorothy Day)\b")
 PUBLIC_ADDRESSES = re.compile(r"\b(?:149 Church Street|645 Pine Street)\b", re.I)
 PASSED = re.compile(r"\b(?:approved|adopted|passed|authorized|ratified)\b", re.I)
-SAID_FAILED = re.compile(r"\b(?:failed|defeated|rejected|voted down|did not pass|not approved)\b", re.I)
+SAID_FAILED = re.compile(r"\b(?:failed|defeated|rejected|voted down|did not pass|not approved|against)\b", re.I)
+# what the minutes record: "Motion passed: 10:1:1", "Amendment passed: 9:3", "Motion failed 11:1", "Motioin passed unanimously"
+OUTCOME = re.compile(r"\b(?:Moti\w+|Amendment)\s+(passed|failed)\b[:\s]*(?:(\d+):(\d+)(?::\d+)?(?!\s*[ap]\.?m))?\s*(unanimo)?", re.I)
+DELAYS = re.compile(r"\bto (?:waive [\w ]*reading and )?(?:postpone|refer|table|lay )", re.I)
+SAID_ADOPTED = re.compile(r"\b(?:approved|adopted|ratified)\b", re.I)
+SAID_YES = re.compile(r"\b(?:approved|adopted|passed|authorized|ratified|accepted|voted (?:\d+-\d+ )?to)\b", re.I)
+SAID_ALL = re.compile(r"\bunanimous(?:ly)?\b", re.I)
+TALLY = re.compile(r"(?<![\d$.,-])(\d{1,2})-(\d{1,2})(?![\d-])")
+A_VOTE = re.compile(r"\b(?:vote[ds]?|passed|failed|tally|motion|referral|amendment)\b", re.I)
+# a sentence about the document rather than the meeting
+NOTE = re.compile(r"\bthe minutes\b|\bno vote\b|\bdiscussion item\b|\bno action was taken\b|\b(?:was|were) not adopted\b", re.I)
 
 
 def squash(text):
@@ -189,27 +237,118 @@ def others_present(minutes):
 def councilors(minutes):
     """Surnames of the members, who are the only people a summary may name."""
     names = set()
-    for found in re.findall(r"Members? (?:present|absent):(.*?)(?=Members? (?:present|absent):|Others? present:|\n[ \t]*\n)", minutes, re.S):
+    for found in re.findall(r"Members? (?:present|absent):(.*?)(?=Members? (?:present|absent):|Others?(?: members?)? present:|\n[ \t]*\n)", minutes, re.S):
         names.update(re.findall(r"[A-Z][\w'’-]+(?:-\s*[A-Z][\w'’-]+)?", found))
     return {re.sub(r"\s+", "", name) for name in names}
 
 
+def mayors(minutes):
+    return {re.sub(r"\s+", "", name) for name in re.findall(r"\bMayor\s+(" + CAPITAL + ")", minutes)}
+
+
+def words_of(minutes):
+    """Every word the minutes use in lower case: if they say "housing", then
+    "Housing" is a word and not a name."""
+    return set(re.findall(r"(?<![\w'’-])[a-z][a-z'’-]+", minutes))
+
+
+def heading_words(minutes):
+    """The capitalised words of the items' titles, leaving out any about a person
+    (an appointment, a letter from a resident)."""
+    found = set()
+    for match in HEADING.finditer(minutes):
+        wrapped = minutes[match.end():].split("\n", 2)[1:2] if match.group(1) else []
+        title = " ".join([match.group(2)] + [line for line in wrapped if line and not line.startswith(("Meeting", "Subject"))])
+        if not PERSONNEL.search(title):
+            found.update(CAPITALISED.findall(title))
+    return {re.sub(POSSESSIVE, "", word) for word in found}
+
+
+def action_words(minutes):
+    """The capitalised words of the items' recommended actions. These can hold a
+    person ("authorize Jane Doe, Director of..."), so bad_people asks people_of first."""
+    found = set()
+    for match in ACTION.finditer(minutes):
+        if not PERSONNEL.search(match.group(1)):
+            found.update(CAPITALISED.findall(match.group(1)))
+    return {re.sub(POSSESSIVE, "", word) for word in found}
+
+
+def presenters(minutes):
+    """Everyone a line says spoke to or was present for an agenda item: the last
+    two names in each part of the list, with their titles taken off."""
+    names, lines, ordinary = set(), minutes.splitlines(), words_of(minutes)
+    for number, line in enumerate(lines):
+        match = PRESENTERS.search(line)
+        if not match:
+            continue
+        clause = line[:match.start()]
+        before = lines[number - 1].rstrip() if number else ""
+        if clause[:1].islower() or before.endswith((",", " and", "&", "(")):
+            clause = before + " " + clause
+        clause = re.split(r"[.:;][ \t]", re.sub(r"\(.*?(?:\)|$)", " ", clause))[-1]
+        for part in re.split(r",|\band\b|&", clause):
+            tokens = CAPITALISED.findall(part)
+            people = [token for token in tokens if token not in TITLE_WORDS][-2:]
+            if len(people) == 1 and len(tokens) == 1 and people[0].lower() in ordinary:
+                continue
+            names.update(people)
+    return names
+
+
+def named_in_passing(minutes):
+    """A known first name and a surname anywhere in the minutes, or anyone a sentence
+    gives a job title or an appointment. A body ("Ethan Allen Homestead") is taken
+    out before looking."""
+    names = set()
+    for first, last in TWO_CAPS.findall(BODY_RUN.sub(" ", ALLOWED_PLACES.sub(" ", minutes))):
+        if first.lower() in FIRST and not ({first, last} & TITLE_WORDS) and last not in PROPER and not NOT_A_SPEAKER.match(last):
+            names.update((first, last))
+    text = squash(minutes)
+    for found in TITLED.findall(text) + ENGAGED.findall(text):
+        names.update(found)
+    return names
+
+
+def people_of(minutes):
+    """Each word that is part of a person's name in these minutes, the members and
+    the mayor apart: what may never be printed, alone or together."""
+    names = {part for name in forum_names(minutes) for part in name.split()[-2:]} | others_present(minutes)
+    names |= presenters(minutes) | named_in_passing(minutes)
+    for match in re.finditer(r"\bCommunication:\s+([^,\n]+),", minutes):
+        names.update(CAPITALISED.findall(match.group(1)))
+    names |= {piece for name in names for piece in re.split(r"-\s*", name)}
+    names = {re.sub(r"[ \t]+", "", name) for name in names}
+    members = councilors(minutes) | mayors(minutes)
+    members |= {piece for name in members for piece in name.split("-")}
+    return {name for name in names if name not in TITLE_WORDS and name not in PROPER and len(name) > 2} - members
+
+
+def mask(text, names):
+    """A copy of `text` with each run of those names replaced."""
+    if not names:
+        return text
+    words = "|".join(re.escape(name) for name in sorted(names, key=len, reverse=True))
+    return re.sub(r"(?<![\w-])(?:" + words + r")(?:[ \t]+(?:" + words + r"))*(?![\w-])", "a speaker", text)
+
+
 def scrub(minutes):
     """The copy the model reads: "Speaker:" where the minutes list one, and "a
-    speaker" wherever else they name one."""
+    speaker" wherever else they name someone."""
+    names = people_of(minutes)
     block = forum_block(minutes)
     if not block:
-        return minutes
-    names = forum_names(minutes)
+        return mask(minutes, names)
+    forum = forum_names(minutes)
     lines = []
     for line in minutes[block[0]:block[1]].split("\n"):
         if NAME_ONLY.match(line) and not NOT_A_SPEAKER.match(line.strip()):
             continue
         lines.append(SPEAKER.sub(lambda m: m.group(0) if NOT_A_SPEAKER.match(m.group(1)) else "Speaker:", line))
     text = minutes[:block[0]] + "\n".join(lines) + minutes[block[1]:]
-    for name in sorted((one for one in names if " " in one), key=len, reverse=True):
+    for name in sorted((one for one in forum if " " in one), key=len, reverse=True):
         text = text.replace(name, "a speaker")
-    return text
+    return mask(text, names)
 
 
 def item_at(minutes, position):
@@ -224,6 +363,36 @@ def item_at(minutes, position):
         if "." in number or int(number) in (section, section + 1):
             current, section = number, int(number.split(".")[0])
     return current
+
+
+def item_blocks(minutes):
+    """Each agenda item's stretch of the minutes, by number, the same way item_at
+    reads them."""
+    spans, current, section, start = {}, None, 0, 0
+    for match in ITEM.finditer(minutes):
+        number = match.group(1)
+        if "." in number or int(number) in (section, section + 1):
+            if number != current:
+                if current:
+                    spans[current] = spans.get(current, "") + minutes[start:match.start()]
+                current, start = number, match.start()
+            section = int(number.split(".")[0])
+    if current:
+        spans[current] = spans.get(current, "") + minutes[start:]
+    return spans
+
+
+def outcomes(block):
+    """What the minutes record for one item, in order: [{passed, tally, all, delay}]."""
+    found, last = [], 0
+    text = squash(block)
+    for match in OUTCOME.finditer(text):
+        tally = (int(match.group(2)), int(match.group(3))) if match.group(2) else None
+        motion = " ".join(part for part in re.split(r"(?<=[.!?])\s+", text[last:match.start()]) if not re.search(r"\bwithdr[ae]w", part, re.I))
+        found.append({"passed": match.group(1).lower() == "passed", "tally": tally, "all": bool(match.group(4)),
+                      "delay": bool(DELAYS.search(re.split(r"\b[Mm]ade by\b", motion)[-1]))})
+        last = match.end()
+    return found
 
 
 def find_quote(minutes, quote):
@@ -257,7 +426,18 @@ class Record:
         self.numbers = numbers(minutes)
         self.spelled = spelled(minutes)
         self.forum = forum_names(minutes)
-        self.others = others_present(minutes) - councilors(minutes)
+        self.members = councilors(minutes) | mayors(minutes)
+        self.others = others_present(minutes) - self.members
+        self.people = people_of(minutes)
+        self.words = words_of(minutes)
+        self.headings = heading_words(minutes) | action_words(minutes)
+        self.outcomes = {number: outcomes(block) for number, block in item_blocks(minutes).items()}
+
+    def ordinary(self, token):
+        """A word that is no one's name: in the minutes in lower case, or in an item's title."""
+        lower = token.lower()
+        return (lower in self.words or lower + "s" in self.words or lower.rstrip("s") in self.words or token in PROPER
+                or token in self.headings or bool(BODY_WORD.fullmatch(token)) or bool(NOT_A_SPEAKER.match(token)))
 
 
 def bad_numbers(text, record):
@@ -271,15 +451,25 @@ def bad_numbers(text, record):
 
 
 def bad_people(text, record):
-    """The first person `text` may not name, or None."""
+    """The first person `text` may not name, or None. Only what is shown to be
+    someone else's, or to be no name at all, gets through."""
     for name in record.forum:
         if re.search(r"(?<![\w-])" + re.escape(name) + r"(?![\w-])", text):
             return name
-    for name in record.others:
-        if re.search(r"(?<![\w-])" + re.escape(name) + r"(?![\w-])", text):
-            return name
-    clear = ALLOWED_PLACES.sub(" ", ALLOWED_TITLES.sub(" ", text))
-    return "a person's name" if names_person(clear) else None
+    clear = BODY_RUN.sub(" ", ALLOWED_PLACES.sub(" ", ALLOWED_TITLES.sub(" ", text)))
+    if names_person(clear):
+        return "a person's name"
+    for match in CAPITALISED.finditer(clear):
+        token = re.sub(POSSESSIVE, "", match.group(0))
+        pieces = re.split(r"-\s*", token)
+        if token in record.members or token in TITLE_WORDS:
+            continue
+        if token in record.people or any(piece in record.people for piece in pieces):
+            return token
+        before = clear[:match.start()].rstrip()   # anything may open a sentence, unless the minutes name it
+        if before and before[-1] not in ".!?:;\"'(" and not any(record.ordinary(piece) for piece in [token, *pieces]):
+            return token
+    return None
 
 
 def bad_contact(text):
@@ -295,9 +485,42 @@ def contradicts(text, quote):
     return bool((said_yes and not said_no and quote_no and not quote_yes) or (said_no and not said_yes and quote_yes and not quote_no))
 
 
+def outcome_fault(text, locator, record):
+    """Where `text` disagrees with what the minutes record for that item, or None.
+    An item with no outcome of its own (a consent item, a work session) has nothing
+    to disagree with here; the quote check above still applies."""
+    wanted = ITEM_NUMBER.search(locator or "")
+    recorded = record.outcomes.get(wanted.group(0)) if wanted else None
+    if not recorded:
+        return None
+    yes, no = bool(SAID_YES.search(text)), bool(SAID_FAILED.search(text))
+    if yes and not no and not recorded[-1]["passed"]:
+        return "contradicts the recorded outcome: failed"
+    if no and not yes and all(one["passed"] for one in recorded):
+        return "contradicts the recorded outcome: passed"
+    if SAID_ADOPTED.search(text) and not no and all(one["delay"] for one in recorded if one["passed"]):
+        return "contradicts the recorded outcome: postponed or referred"
+    if SAID_ALL.search(text) and not any(one["all"] for one in recorded) and any(one["tally"] for one in recorded):
+        return "contradicts the recorded outcome: not unanimous"
+    for sentence in re.split(r"(?<=[.!?])\s+", text):
+        if not A_VOTE.search(sentence):
+            continue
+        for ayes, nays in TALLY.findall(sentence):
+            pair = (int(ayes), int(nays))
+            if 2 <= sum(pair) <= 13 and not any(one["tally"] == pair or (one["tally"] == pair[::-1] and not one["passed"]) for one in recorded):
+                return f"contradicts the recorded outcome: no {ayes}-{nays} vote"
+    return None
+
+
+def without_notes(text):
+    """The bullet without any sentence about the document."""
+    return " ".join(part for part in re.split(r"(?<=[.!?])\s+", text) if not NOTE.search(part))
+
+
 def bullet_fault(bullet, record):
     """Why a bullet may not run, or None."""
     head, text, quote = (squash(bullet.get(key)) for key in ("head", "text", "quote"))
+    text = without_notes(text)
     locator = str(bullet.get("locator") or "")
     if not head or not text:
         return "empty"
@@ -313,9 +536,12 @@ def bullet_fault(bullet, record):
     missing = bad_numbers(words, record)
     if missing:
         return f"not in the minutes: {', '.join(missing)}"
+    outcome = outcome_fault(text, locator, record)
+    if outcome:
+        return outcome
     if contradicts(text, quote):
         return "quote contradicts the bullet"
-    for part in (words, quote):
+    for part in (head, text, quote):
         person = bad_people(part, record)
         if person:
             return f"names {person}"
@@ -330,15 +556,16 @@ def first_sentence(text):
     return match.group(1) if match else text
 
 
-def choose_top(answer, kept, picked):
-    """The headline line. It restates a bullet that survived, adding no figure, or
-    it is that bullet's first sentence."""
+def choose_top(answer, kept, picked, record):
+    """The headline line. It restates a bullet that survived, adding no figure and
+    naming no one, or it is that bullet's first sentence."""
     top = squash(answer.get("top"))
     bullet = kept[picked] if picked is not None else kept[0]
     source = bullet["text"]
     usable = (top and picked is not None and len(top.split()) <= MAX_TOP_WORDS
               and not numbers(top) - numbers(source) and not spelled(top) - spelled(source)
-              and wc.restates(top, source))
+              and wc.restates(top, source) and not bad_people(top, record) and not bad_contact(top)
+              and not outcome_fault(top, bullet["locator"], record))
     return top if usable else first_sentence(source)
 
 
@@ -365,11 +592,18 @@ def gate(answer, minutes, next_when=""):
             continue
         if number == want_top:
             picked = len(kept)
-        kept.append({"head": squash(bullet["head"]), "text": squash(bullet["text"]),
+        kept.append({"head": squash(bullet["head"]), "text": without_notes(squash(bullet["text"])),
                      "quote": squash(bullet["quote"]), "locator": squash(bullet["locator"])})
     if len(kept) < MIN_BULLETS:
         return None, faults
-    return {"top": choose_top(answer, kept, picked), "bullets": kept, "next": next_line(answer, record, next_when)}, faults
+    top, nxt = choose_top(answer, kept, picked, record), next_line(answer, record, next_when)
+    while len(kept) > MIN_BULLETS and len(" ".join([top, nxt] + [one["text"] for one in kept]).split()) > MAX_WORDS:
+        spare = len(kept) - 1 if picked != len(kept) - 1 else len(kept) - 2
+        if picked is not None and spare < picked:
+            picked -= 1
+        faults.append("a bullet went over the word limit")
+        del kept[spare]
+    return {"top": top, "bullets": kept, "next": nxt}, faults
 
 
 # ----------------------------------------------------------------------
@@ -445,7 +679,7 @@ def format_meeting(event, minutes, agenda, next_when):
     return (f"Meeting: {event.get('eventName')}, {event['startDateTime'][:10]}\n"
             f"Next meeting on the city calendar: {next_when or 'not posted'}\n\n"
             f"<minutes>\n{scrub(minutes)[:MAX_MINUTES_CHARS]}\n</minutes>\n\n"
-            f"<agenda>\n{agenda[:MAX_AGENDA_CHARS]}\n</agenda>\n")
+            f"<agenda>\n{mask(agenda, people_of(minutes))[:MAX_AGENDA_CHARS]}\n</agenda>\n")
 
 
 # ----------------------------------------------------------------------
