@@ -1,0 +1,144 @@
+{
+ "_comment": "Body app, Fuel tab. The basics page (protein, creatine, diet and weight), how to log calories by photo in MacroFactor, editable water and protein-shake defaults for the tap counters, the 'less of' counter, and supplement notes on NAC, caffeine and L-theanine. Every number comes from a cited source read on 2026-10-29. General information only, never medical advice; every supplement note ends with the same check-with-a-doctor line.",
+ "updated": "2026-10-29",
+ "doctor_line": "This is general information, not medical advice. Check with your doctor before starting a supplement, especially if you take medication, are pregnant, or have a heart, kidney or liver condition.",
+ "basics": {
+  "tab": "Basics",
+  "intro": "Food matters as much as the workout, especially if you're trying to lose weight, which is the biggest change most people can make in how they look and feel. Two things matter most when you're starting, enough protein and a steady calorie target. Creatine is the one supplement with real backing.",
+  "sections": [
+   {
+    "id": "protein",
+    "title": "Protein",
+    "how_much": "1.4 to 2.0 grams per kilogram of body weight a day, which works out to about 0.65 to 0.9 grams per pound. A 180-pound person is aiming for roughly 115 to 165 grams.",
+    "when": "Spread it across the day in meals of about 20 to 40 grams each. A shake after the gym makes the math easy.",
+    "calculator": {"input": "weight_lb", "low_per_lb": 0.65, "high_per_lb": 0.9, "label": "Your daily protein range in grams"},
+    "easy_sources": ["Greek yogurt", "Eggs", "Chicken, turkey and fish", "Lean beef", "Tofu, tempeh and edamame", "Cottage cheese", "Beans and lentils", "A protein shake"],
+    "sources": [
+     {"title": "International Society of Sports Nutrition position stand, protein and exercise (Jäger et al., 2017)", "url": "https://pubmed.ncbi.nlm.nih.gov/28642676/", "says": "1.4 to 2.0 g/kg/day is enough for most exercising people building or keeping muscle; about 0.25 g/kg or 20 to 40 g per meal."}
+    ]
+   },
+   {
+    "id": "creatine",
+    "title": "Creatine",
+    "how_much": "3 to 5 grams of creatine monohydrate a day. Some people load with about 20 grams a day, split into four doses, for five to seven days first, but you get to the same place in about a month without loading.",
+    "when": "Any time of day, every day, including rest days. Stir it into your shake or water. Consistency matters more than timing.",
+    "what_it_does": "It helps with short, hard efforts like lifting and sprinting. It doesn't do much for long runs or rides.",
+    "heads_up": "Expect a couple of pounds on the scale in the first weeks. That's water your muscles are holding, and it settles.",
+    "sources": [
+     {"title": "NIH Office of Dietary Supplements, Dietary Supplements for Exercise and Athletic Performance", "url": "https://ods.od.nih.gov/factsheets/ExerciseAndAthleticPerformance-Consumer/", "says": "Studies often used about 20 g a day for 5 to 7 days, then 3 to 5 g a day. Safe for healthy adults for weeks to years; usually some water weight gain."},
+     {"title": "International Society of Sports Nutrition position stand, safety and efficacy of creatine supplementation (Kreider et al., 2017)", "url": "https://pubmed.ncbi.nlm.nih.gov/28615996/", "says": "Short and long-term supplementation, up to 30 g a day for five years, has been safe and well tolerated in healthy people."}
+    ]
+   },
+   {
+    "id": "diet-and-weight",
+    "title": "Diet and weight",
+    "how_much": "Your weight follows calories over weeks. Eat a little less than you burn to lose, a little more to gain. A steady pace of about 1 to 2 pounds a week is the one that tends to stick.",
+    "how": "Get a starting number from the NIH Body Weight Planner or MacroFactor, log for two weeks, and adjust by about 100 to 200 calories a day based on what the scale's weekly average does. Keep protein high while you cut so the weight you lose is mostly fat.",
+    "simple_rules": [
+     "Protein at every meal.",
+     "Fruit or vegetables at most meals.",
+     "Most of your drinks are water, coffee or tea.",
+     "Weigh yourself a few mornings a week and watch the weekly average."
+    ],
+    "sources": [
+     {"title": "CDC, Steps for Losing Weight", "url": "https://www.cdc.gov/healthy-weight-growth/losing-weight/index.html", "says": "People who lose about 1 to 2 pounds a week are more likely to keep it off."},
+     {"title": "NIH (NIDDK) Body Weight Planner", "url": "https://www.niddk.nih.gov/bwp", "says": "A free calculator for the calories you need to reach and keep a goal weight."}
+    ]
+   }
+  ]
+ },
+ "calories": {
+  "tab": "Calories",
+  "intro": "Calories are just as important as working out, and logging them doesn't have to eat your time. Stephen uses MacroFactor because you can snap a photo of your plate and it fills in the meal for you.",
+  "app": {"name": "MacroFactor", "url": "https://macrofactor.com/", "how_url": "https://macrofactor.com/ai-food-logging/", "price": null, "price_note": "Free trial, then a paid subscription. Price not checked; see the App Store or Google Play listing."},
+  "photo_steps": [
+   "Open the food logger and tap AI.",
+   "Take a photo of your meal. For a dish it might not recognize, choose Photo and Text and add a few words.",
+   "MacroFactor breaks the meal into foods and puts them on your plate with portions.",
+   "Tap any item to fix the amount, and add anything it missed with search or another scan.",
+   "Check it over, then log it."
+  ],
+  "photo_tips": [
+   "Shoot from above in good light.",
+   "Spread things out so nothing is hidden.",
+   "Put your fist or a fork in the frame for scale.",
+   "For a packaged food, scanning the barcode is faster and more exact."
+  ],
+  "in_app": {"what": "The Calories tap here keeps a quick daily total and a photo, and links out to MacroFactor for the full log.", "fields": ["photo", "calories", "protein_g", "note"]},
+  "sources": [
+   {"title": "MacroFactor, AI food logging", "url": "https://macrofactor.com/ai-food-logging/", "says": "Tap AI, take a photo (or Photo and Text), review the foods it puts on your plate, edit and log. The photo feature is labeled beta."}
+  ]
+ },
+ "defaults": {
+  "_comment": "Starting values for the Water and Protein tap counters. Every one is editable by the reader and saved on their phone or account.",
+  "water": {
+   "goal_oz": 96,
+   "tap_oz": 16,
+   "unit_options": ["oz", "ml"],
+   "why": "The National Academies found adequately hydrated men average about 125 ounces of total water a day and women about 91, from food and drinks combined, with about 80 percent from drinks. Ninety-six ounces of drinks is a round starting goal; drink more on gym days and hot days.",
+   "history_days": 30,
+   "sources": [
+    {"title": "National Academies, Report Sets Dietary Intake Levels for Water, Salt, and Potassium (2004)", "url": "https://www.nationalacademies.org/news/2004/02/report-sets-dietary-intake-levels-for-water-salt-and-potassium-to-maintain-health-and-reduce-chronic-disease-risk", "says": "About 3.7 liters (125 oz) of total water a day for men and 2.7 liters (91 oz) for women; about 80 percent comes from beverages, caffeinated ones included."}
+   ]
+  },
+  "protein_shake": {
+   "goal_per_day": 1,
+   "grams_per_shake": 30,
+   "protein_goal_g": 140,
+   "why": "One shake a day, especially on gym days, covers a big piece of your protein. Set your own daily protein goal with the calculator on the Basics tab.",
+   "add_creatine_reminder": true
+  },
+  "creatine": {"grams_per_day": 5, "tap": true}
+ },
+ "less_of": {
+  "tab": "Less of",
+  "what": "A counter you set yourself for something you want to do less of. You choose the thing, the daily or weekly limit and whether anyone else can see it. Nothing is preset and nothing is shared unless you share it.",
+  "fields": [
+   {"key": "name", "label": "What you want less of", "hint": "Scrolling after dinner"},
+   {"key": "limit", "label": "Limit", "hint": "1"},
+   {"key": "per", "label": "Per", "options": ["day", "week"]},
+   {"key": "swap", "label": "What you'll do instead", "hint": "Coffee with L-theanine, a walk, the breathing exercise"}
+  ],
+  "stephen_example": {"name": "Scrolling after dinner", "limit": 0, "per": "day", "swap": "A walk, the breathing exercise, a few pages of a book."}
+ },
+ "supplements": {
+  "tab": "Supplements",
+  "intro": "Three things Stephen is trying or thinking about. Read these as notes to bring to your doctor. Creatine is covered on the Basics tab.",
+  "items": [
+   {
+    "id": "caffeine",
+    "name": "Caffeine",
+    "what": "The stimulant in coffee, tea and energy drinks. Stephen is using more of it on purpose as a daytime pick-me-up.",
+    "how_much": "The FDA cites 400 milligrams a day, about two to three 12-ounce cups of coffee, as an amount not generally linked to negative effects for most healthy adults. People vary a lot, so less may be plenty.",
+    "timing": "Earlier in the day. Stop about eight hours before bed so it doesn't cut into your sleep.",
+    "watch_for": "Jitters, a racing heart, an upset stomach or trouble sleeping mean you've had too much.",
+    "sources": [
+     {"title": "FDA, Spilling the Beans, How Much Caffeine Is Too Much?", "url": "https://www.fda.gov/consumers/consumer-updates/spilling-beans-how-much-caffeine-too-much", "says": "For most adults, 400 mg a day is not generally associated with negative effects; sensitivity varies widely."},
+     {"title": "NIH Office of Dietary Supplements, Dietary Supplements for Exercise and Athletic Performance", "url": "https://ods.od.nih.gov/factsheets/ExerciseAndAthleticPerformance-Consumer/", "says": "Moderate caffeine might raise energy and reduce fatigue for several hours; it helps endurance more than sprinting or lifting."}
+    ]
+   },
+   {
+    "id": "l-theanine",
+    "name": "L-theanine",
+    "what": "An amino acid found in tea, sold as a capsule. People pair it with caffeine to take the edge off the jitters.",
+    "how_much": "Studies of the combination used small doses, about 100 milligrams of L-theanine with 50 milligrams of caffeine, or 97 with 40.",
+    "evidence": "In two small studies the pair improved focus on attention-switching tasks and alertness compared with a placebo. That's promising, the studies were small, and they measured focus only.",
+    "sources": [
+     {"title": "Owen et al., The combined effects of L-theanine and caffeine on cognitive performance and mood, Nutritional Neuroscience, 2008", "url": "https://pubmed.ncbi.nlm.nih.gov/18681988/", "says": "50 mg caffeine with 100 mg L-theanine improved speed and accuracy of attention switching and reduced distraction in 27 adults."},
+     {"title": "Giesbrecht et al., The combination of L-theanine and caffeine improves cognitive performance and increases subjective alertness, Nutritional Neuroscience, 2010", "url": "https://pubmed.ncbi.nlm.nih.gov/21040626/", "says": "97 mg L-theanine with 40 mg caffeine improved task-switching accuracy and alertness and reduced tiredness in 44 young adults."}
+    ]
+   },
+   {
+    "id": "nac",
+    "name": "NAC (N-acetylcysteine)",
+    "what": "A form of the amino acid cysteine. Doctors have used it for decades as a medicine, and it's also sold over the counter as an antioxidant supplement. Stephen is considering it.",
+    "how_much": null,
+    "how_much_note": "No standard supplement dose is given here on purpose. Ask a doctor or pharmacist.",
+    "evidence": "There's a lot of research on NAC across many conditions, and a 2026 review of 140 reviews found about half of the strongest ones supported it, but the quality was uneven and it isn't part of standard guidelines for any everyday use.",
+    "sources": [
+     {"title": "Al Alaili, Repurposing landscape of N-acetylcysteine, a scoping review of reviews, PLoS One, 2026", "url": "https://pubmed.ncbi.nlm.nih.gov/42853821/", "says": "140 reviews across 17 clinical areas; about half of the 63 meta-analyses supported NAC, but inconsistent certainty keeps it out of clinical guidelines."}
+    ]
+   }
+  ]
+ }
+}
