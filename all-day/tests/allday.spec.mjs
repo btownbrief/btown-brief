@@ -15590,7 +15590,8 @@ async function theRank(browser, base) {
     const up = await names();
     check(up.indexOf('Mr Creemee') === start.indexOf('Mr Creemee') - 1, 'the up button moves a place', up.join());
     check(await page.$eval('.rs-row:first-child [data-move="up"]', (b) => b.disabled), 'the top row can’t go up', '');
-    /* the mouse: the last row dragged to the top */
+    /* the mouse: the last row dragged to the top, once the rows have stopped gliding */
+    await page.waitForTimeout(300);
     const last = page.locator('.rs-row').last();
     const first = page.locator('.rs-row').first();
     const grip = await last.locator('.rs-handle').boundingBox();
