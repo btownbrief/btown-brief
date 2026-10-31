@@ -47,6 +47,8 @@ const SHELL_URLS = [
   './js/people-match.js',
   /* Food's Reddit asks and Best of r/burlington shapers, imported by modes/food.js */
   './js/food-asks.js',
+  /* Food's Rank section, imported by modes/food.js */
+  './js/modes/rank.js', './js/rank-core.js',
   /* the boards: imported by main.js, so every tab can draw one offline */
   './js/boards.js', './js/boards-core.js', './js/boards-fake.js',
   /* Habits' and The Build's server data go with the account in every app, imported by main.js */

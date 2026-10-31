@@ -5723,7 +5723,7 @@ async function theFood(browser, base) {
     await page.click('.sheet-head .iconbtn').catch(() => {});
     await toTop(page);
     const toc = await page.$$eval('#subnav .chip', (c) => c.map((x) => x.dataset.chip));
-    check(JSON.stringify(toc) === JSON.stringify(['asks', 'kitchens', 'bite', 'open', 'deals', 'best', 'add']), 'the chip row is the table of contents in page order, the fresh Asked first, then Kitchens, Bite, Open now, Deals, Best of, Feature a dish', toc.join(', '));
+    check(JSON.stringify(toc) === JSON.stringify(['asks', 'kitchens', 'bite', 'open', 'deals', 'rank', 'best', 'add']), 'the chip row is the table of contents in page order, the fresh Asked first, then Kitchens, Bite, Open now, Deals, Rank, Best of, Feature a dish', toc.join(', '));
     await page.click('#subnav .chip[data-chip="add"]');
     await page.waitForTimeout(1200);
     /* the last section of a short page cannot reach the top; then the panel is scrolled to its end */
@@ -6043,7 +6043,7 @@ async function theFood(browser, base) {
     await a.page.waitForSelector(foodPanel + ' [data-sec="asks"] .card', { timeout: 15000 });
     await first(a.page);
     const oa = await order(a.page);
-    check(oa.join() === 'asks,kitchens,bite,open,deals,best,add', 'a thread under three days old: Asked on Reddit is the first thing on the tab, In their own words right after it, Open now below', oa.join());
+    check(oa.join() === 'asks,kitchens,bite,open,deals,rank,best,add', 'a thread under three days old: Asked on Reddit is the first thing on the tab, In their own words right after it, Open now below', oa.join());
     check((await chipOrder(a.page))[0] === 'asks', 'and the chip row follows the page', (await chipOrder(a.page)).join());
     await a.page.goto(base + '/all-day/#food/open');
     check(await a.page.$eval(foodPanel + ' [data-sec="open"]', (s) => !!s.querySelector('.lrow.place')), 'the deep link #food/open still lands on Open now', '');
@@ -6068,7 +6068,7 @@ async function theFood(browser, base) {
     await k.page.waitForSelector(foodPanel + ' [data-sec="kitchens"] .vcard', { timeout: 15000 });
     await k.page.waitForSelector(foodPanel + ' [data-sec="asks"] .card', { timeout: 15000 });
     const ok = await order(k.page);
-    check(ok.join() === 'kitchens,bite,open,deals,asks,best,add', 'threads older than three days: In their own words leads', ok.join());
+    check(ok.join() === 'kitchens,bite,open,deals,rank,asks,best,add', 'threads older than three days: In their own words leads', ok.join());
     await k.ctx.close();
     /* nothing fresh anywhere: the tab keeps its old order */
     const n = await newPage(browser, base, { reddit: redditIntake(Date.now() - 5 * 86400000) });
@@ -6077,7 +6077,7 @@ async function theFood(browser, base) {
     await n.page.waitForSelector(foodPanel + ' [data-sec="asks"] .card', { timeout: 15000 });
     await n.page.waitForFunction((p) => !document.querySelector(p + ' [data-sec="kitchens"] .loading'), foodPanel, { timeout: 15000 });
     const on = await order(n.page);
-    check(on.join() === 'bite,open,deals,asks,best,kitchens,add', 'with no fresh thread and no pictures: the old order', on.join());
+    check(on.join() === 'bite,open,deals,rank,asks,best,kitchens,add', 'with no fresh thread and no pictures: the old order', on.join());
     await n.ctx.close();
   });
 
@@ -15486,6 +15486,275 @@ async function theReddit(browser, base) {
   });
 }
 
+/* Food's Rank section (modes/rank.js, rank-core.js): the arithmetic, the
+   list file, the blocks in freshest order, the sheet by mouse, buttons and
+   touch, the ballot sent, the rise, and Supabase down. */
+const RANK_SHOTS = process.env.RANK_SHOTS || SHOTS;
+async function theRank(browser, base) {
+  const R = await import('../js/rank-core.js');
+  const FILE = JSON.parse(await readFile(path.join(REPO, 'data/rank-lists.json'), 'utf8')).lists;
+  const GUIDE = JSON.parse(await readFile(path.join(REPO, 'data/restaurants.json'), 'utf8')).restaurants;
+
+  await group('Rank: the arithmetic', async () => {
+    const l = { key: '2026-11', items: ['A', 'B', 'C', 'D'].map((name) => ({ name, where: '' })) };
+    const rows = [{ item: 'B', ballot_count: 3, score: '0.6' }, { item: 'A', ballot_count: 5, score: 0.9 }, { item: 'Gone', ballot_count: 9, score: 1 }, { item: 'C', ballot_count: 2, score: 0.99 }];
+    check(R.chartOf(rows, l).map((r) => r.item).join() === 'A,B', 'charts at 3 ballots, best first, numeric scores, and a closed place never shows', '');
+    check(R.pendingOf(rows, l).map((r) => r.item).join() === 'C', 'under 3 ballots waits', '');
+    check(R.needsMore([], l) === 3 && R.needsMore([{ item: 'A', ballot_count: 2, score: 1 }], l) === 1 && R.needsMore(rows, l) === 0, 'Needs N more counts down to a first place', '');
+    const lists = ['x', 'y', 'z', 'w'].map((key) => ({ key }));
+    const order = R.orderLists(lists, { y: { ballots: 2, last_at: '2026-10-01T00:00:00Z' }, w: { ballots: 1, last_at: '2026-10-30T00:00:00Z' } });
+    check(order.map((x) => x.key).join() === 'w,y,x,z', 'freshest ballot first, no ballots after in file order', order.map((x) => x.key).join());
+    check(R.matchPercent(['A', 'B', 'C'], ['A', 'B', 'C']) === 100 && R.matchPercent(['C', 'B', 'A'], ['A', 'B', 'C']) === 0 && R.matchPercent(['A'], ['A', 'B']) === null, 'the match runs 0 to 100, and needs two in common', '');
+    check(R.cleanBallot(['A', 'Gone', 'A', 'B'], l).join() === 'A,B', 'a saved ballot loses places off the list', '');
+    check(R.startOrder(new Set(['D', 'B', 'A']), l, ['D', 'Gone', 'B']).join() === 'D,B,A', 'the order step keeps your last order, new picks after', '');
+  });
+
+  await group('Rank: the list file', async () => {
+    const keys = FILE.map((l) => l.key);
+    check(new Set(keys).size === keys.length && keys.every((k) => /^\d{4}-\d{2}$/.test(k)), 'keys are unique and fit submit_ballot', keys.join());
+    check(['2026-07', '2026-11', '2026-12', '2027-02', '2027-03', '2027-04', '2027-05', '2027-06'].every((k) => keys.includes(k)), 'the eight food months keep their keys', '');
+    check(!keys.some((k) => ['2026-08', '2026-09', '2026-10', '2027-01'].includes(k)), 'hikes, swimming, bikes and sledding stay out', '');
+    check(FILE.every((l) => l.items.length >= 4 && l.items.length <= 30 && new Set(l.items.map((i) => i.name)).size === l.items.length && l.items.every((i) => i.name.length <= 80)), 'each list fits a ballot: 4 to 30 distinct places', '');
+    const norm = (s) => String(s).toLowerCase().replace(/[^a-z0-9]/g, '');
+    const closed = new Set(GUIDE.filter((r) => r.closed).map((r) => norm(r.name)));
+    const hit = FILE.flatMap((l) => l.items.filter((i) => closed.has(norm(i.name))).map((i) => i.name));
+    check(!hit.length, 'no place the guide marks closed', hit.join());
+  });
+
+  const NOW = Date.now();
+  const ago = (h) => new Date(NOW - h * 3600000).toISOString();
+  const ACT = [{ category_month: '2027-02', ballots: 2, last_at: ago(1) }, { category_month: '2026-07', ballots: 5, last_at: ago(48) },
+    { category_month: '2026-08', ballots: 4, last_at: ago(60) }];
+  const CREEMEE = [{ item: 'Shy Guy Gelato', ballot_count: 3, score: 0.8056 }, { item: 'Burlington Bay Market & Café', ballot_count: 3, score: 0.7778 }, { item: 'The Village Scoop', ballot_count: 3, score: 0.7222 },
+    { item: 'Al’s', ballot_count: 1, score: 0.5 }, { item: 'Off Beat Creemee', ballot_count: 3, score: 0.9 }, { item: "Al's French Frys", ballot_count: 5, score: 0.5857 }, { item: 'Mr Creemee', ballot_count: 2, score: 0.48 }];
+  const server = () => {
+    const S = { sent: [], rows: { '2026-07': CREEMEE, '2027-02': [{ item: "Folino's", ballot_count: 2, score: 0.7 }] } };
+    S.rpc = (fn, b) => {
+      if (fn === 'rank_activity') return ACT;
+      if (fn === 'get_rankings') return S.rows[b.p_month] || [];
+      if (fn === 'submit_ballot') { S.sent.push(b); return null; }
+      return undefined;
+    };
+    return S;
+  };
+  const blocks = (page) => page.$$eval(foodPanel + ' .rankblk', (n) => n.filter((x) => !x.hidden).map((x) => ({ k: x.dataset.k, t: x.innerText })));
+  const toRank = async (page) => { await page.waitForSelector(foodPanel + ' .rankblk', { timeout: 15000 }); await page.locator(foodPanel + ' .rankgrid').scrollIntoViewIfNeeded(); };
+
+  await group('Rank: the blocks, freshest first', async () => {
+    const srv = server();
+    const { ctx, page, errors } = await newPage(browser, base, { rpc: srv.rpc });
+    await page.goto(base + '/all-day/#food');
+    await toRank(page);
+    const b = await blocks(page);
+    check(b.length === 6, 'six blocks, then See more', b.length);
+    check(b[0].k === 'rank-2027-02' && b[1].k === 'rank-2026-07', 'the list ranked last leads', b.map((x) => x.k).join());
+    check(b[2].k === 'rank-2026-11', 'lists with no ballots follow, in file order', b[2].k);
+    check(!b.some((x) => /2026-08/.test(x.k)), 'a non-food month has no block', '');
+    check(/Needs 1 more/.test(b[0].t) && /2 ballots/.test(b[0].t), 'a list under three shows Needs N more and its ballots', b[0].t);
+    check(/Shy Guy Gelato[\s\S]*Burlington Bay Market & Café[\s\S]*The Village Scoop/.test(b[1].t) && /5 ballots · 2d/.test(b[1].t), 'a charted list shows its top three, ballots and last ballot', b[1].t);
+    check(!/Off Beat/.test(b[1].t), 'a closed place is left off the results', b[1].t);
+    check(/Needs 3 more/.test(b[2].t) && /Rank it/.test(b[2].t), 'an unranked list says Needs 3 more and Rank it', b[2].t);
+    const pill = await page.$$eval('#subnav .secpill .chip', (n) => n.map((x) => x.dataset.chip));
+    check(pill.includes('rank') && pill.indexOf('rank') === pill.indexOf('deals') + 1, 'Rank has its own segment, after Deals', pill.join());
+    await page.click(foodPanel + ' [data-more="food-rank"]');
+    check((await blocks(page)).length === Math.min(12, FILE.length), 'See more adds six', '');
+    while (await page.isVisible(foodPanel + ' [data-more="food-rank"]')) await page.click(foodPanel + ' [data-more="food-rank"]');
+    check((await blocks(page)).length === FILE.length, 'and goes on to the end', '');
+    await page.click(foodPanel + ' [data-k="rank-2026-11"] .act.star');
+    await page.waitForFunction(() => document.querySelector('[data-k="rank-2026-11"] .act.star').classList.contains('on'));
+    const saved = await page.evaluate(() => JSON.parse(localStorage.getItem('allday-saved') || '[]'));
+    check(JSON.stringify(saved).includes('#food/rank-2026-11'), 'the star saves a link back to the block', JSON.stringify(saved).slice(0, 120));
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Rank: the sheet, a ballot, the rise', async () => {
+    const srv = server();
+    const { ctx, page, errors } = await newPage(browser, base, { rpc: srv.rpc });
+    /* a reader All Day met first: a p_ id, which submit_ballot's uuid would refuse */
+    await page.addInitScript(() => { try { localStorage.setItem('btown-player-id', 'p_abc12345xyz1'); } catch (e) { /* blocked */ } });
+    await page.goto(base + '/all-day/#food');
+    await toRank(page);
+    await page.click(foodPanel + ' [data-k="rank-2026-07"] .rb-foot .btn');
+    await page.waitForSelector('.ranksheet .rs-check');
+    check((await page.$$('.ranksheet .rs-check')).length === FILE.find((l) => l.key === '2026-07').items.length, 'every place on the list to check', '');
+    check(await page.$eval('.rs-foot .btn', (b) => b.disabled), 'Next waits for a pick', '');
+    for (const n of ['Shy Guy Gelato', 'The Village Scoop', 'Mr Creemee', "Al's French Frys"]) await page.locator('.rs-check', { hasText: n }).click();
+    check((await page.innerText('.rs-foot .btn')) === 'Rank your 4', 'and counts them', '');
+    await page.click('.rs-foot .btn');
+    await page.waitForSelector('.rs-row');
+    const names = () => page.$$eval('.rs-row', (n) => n.map((r) => r.dataset.name));
+    const start = await names();
+    check(start[0] === "Al's French Frys", 'the order starts in list order', start.join());
+    await page.locator('.rs-row', { hasText: 'Mr Creemee' }).locator('[data-move="up"]').click();
+    const up = await names();
+    check(up.indexOf('Mr Creemee') === start.indexOf('Mr Creemee') - 1, 'the up button moves a place', up.join());
+    check(await page.$eval('.rs-row:first-child [data-move="up"]', (b) => b.disabled), 'the top row can’t go up', '');
+    /* the mouse: the last row dragged to the top */
+    const last = page.locator('.rs-row').last();
+    const first = page.locator('.rs-row').first();
+    const grip = await last.locator('.rs-handle').boundingBox();
+    const top = await first.boundingBox();
+    const dragged = await last.getAttribute('data-name');
+    await page.mouse.move(grip.x + 20, grip.y + 20);
+    await page.mouse.down();
+    await page.mouse.move(grip.x + 20, grip.y - 30, { steps: 5 });
+    await page.mouse.move(grip.x + 20, top.y + 4, { steps: 8 });
+    await page.mouse.up();
+    await page.waitForTimeout(250);
+    const now = await names();
+    check(now[0] === dragged && now.length === 4 && new Set(now).size === 4, 'a drag puts the last place first', now.join());
+    const numbers = await page.$$eval('.rs-row .rs-num', (n) => n.map((x) => x.textContent).join());
+    check(numbers === '1,2,3,4', 'the numbers follow', numbers);
+
+    srv.rows['2026-07'] = CREEMEE.concat([]);
+    await page.click('.rs-foot .btn:last-child');
+    await page.waitForSelector('.rs-bar');
+    check(srv.sent.length === 1 && srv.sent[0].p_month === '2026-07' && JSON.stringify(srv.sent[0].p_ranking) === JSON.stringify(now), 'Save sends the ballot, best first', JSON.stringify(srv.sent[0]));
+    check(/^[0-9a-f-]{36}$/.test(srv.sent[0].p_player) && srv.sent[0].p_token.length >= 16, 'under a real UUID and a token, whatever id All Day minted', srv.sent[0].p_player);
+    const id = await page.evaluate(() => localStorage.getItem('btown-player-id'));
+    check(id === 'p_abc12345xyz1', 'the phone’s own id is left alone', id);
+    const res = await page.innerText('.ranksheet .sheet-body');
+    check(/\d+%/.test(res) && /with Burlington/.test(res), 'the answer is your % match', res.slice(0, 80));
+    check(/Shy Guy Gelato/.test(res) && /You: /.test(res) && /Mr Creemee/.test(res) && /Needs more ballots/.test(res), 'and the full community list, your place beside each', res);
+    check(!/Ranker/.test(res), 'no voter is named', '');
+    const kept = await page.evaluate(() => JSON.parse(localStorage.getItem('rwyk-ballot-2026-07')));
+    check(JSON.stringify(kept) === JSON.stringify(now), 'the ballot stays on the phone', '');
+    await page.screenshot({ path: path.join(RANK_SHOTS, 'live-result.png') });
+    await page.click('#sheet .sheet-head .iconbtn');
+    await page.waitForFunction(() => document.querySelector('.rankblk')?.dataset.k === 'rank-2026-07');
+    check(true, 'the block rises to the top when the sheet closes', '');
+    await page.waitForTimeout(900);
+    const seen = await page.$eval('.rankblk', (n) => { const r = n.getBoundingClientRect(); return { top: r.top, h: innerHeight }; });
+    check(seen.top >= 60 && seen.top < seen.h - 200, 'and the tab scrolls to it', JSON.stringify(seen));
+    const risen = await blocks(page);
+    check(risen[1].k === 'rank-2027-02', 'and the rest step down', risen[1].k);
+    check(/\d+% match/.test(risen[0].t) && /Edit/.test(risen[0].t) && !/Rank it/.test(risen[0].t), 'a ranked list shows your match and Edit', risen[0].t);
+    check(/5 ballots · now/.test(risen[0].t) === false && /6 ballots · now/.test(risen[0].t), 'its count and time move', risen[0].t);
+    await page.click(foodPanel + ' [data-k="rank-2026-07"] .rb-foot .btn');
+    await page.waitForSelector('.rs-check.on');
+    check((await page.$$('.rs-check.on')).length === 4, 'Edit prefills your ballot', '');
+    await page.click('.rs-foot .btn');
+    await page.waitForSelector('.rs-row');
+    check(JSON.stringify(await names()) === JSON.stringify(now), 'in your order', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Rank: a finger on the handle', async () => {
+    const srv = server();
+    const { ctx, page, errors } = await newPage(browser, base, { rpc: srv.rpc, touch: true });
+    await page.addInitScript(() => { try { localStorage.setItem('rwyk-ballot-2026-11', JSON.stringify(['August First', "Handy's Lunch", 'Sneakers Bistro', 'The Friendly Toast', 'The Skinny Pancake', 'Mirabelles Bakery & Café', 'The Parkway Diner', 'Parkway Diner', "Chef's Corner Café", 'Scout', 'Poppy Café & Market', 'Kountry Kart Deli', "Henry's Diner", 'Pingala Café'])); } catch (e) { /* blocked */ } });
+    await page.goto(base + '/all-day/#food/rank-2026-11');
+    await page.waitForSelector('.ranksheet');
+    await page.click('.ranksheet .rs-foot .btn');           // Edit
+    await page.waitForSelector('.rs-check.on');
+    await page.click('.rs-foot .btn');
+    await page.waitForSelector('.rs-row');
+    const cdp = await ctx.newCDPSession(page);
+    const names = () => page.$$eval('.rs-row', (n) => n.map((r) => r.dataset.name));
+    const was = await names();
+    const box = await page.locator('.rs-row').nth(1).locator('.rs-handle').boundingBox();
+    const x = box.x + 22, y = box.y + 22;
+    const touch = (type, py) => cdp.send('Input.dispatchTouchEvent', { type, touchPoints: type === 'touchEnd' ? [] : [{ x, y: py }] });
+    await touch('touchStart', y);
+    for (let i = 1; i <= 8; i++) { await touch('touchMove', y + i * 15); await page.waitForTimeout(16); }
+    const under = await page.$eval('.rs-row.dragging', (r) => r.dataset.name).catch(() => null);
+    await touch('touchEnd');
+    await page.waitForTimeout(250);
+    const after = await names();
+    check(under === was[1], 'a touch on the handle picks the row up', String(under));
+    check(after.indexOf(was[1]) >= 2 && new Set(after).size === was.length, 'and carries it down the list', after.join());
+    /* a long list scrolls under the finger near the sheet's foot */
+    const body = page.locator('.ranksheet .sheet-body');
+    const box2 = await page.locator('.rs-row').nth(1).locator('.rs-handle').boundingBox();
+    const foot = await body.boundingBox();
+    const x2 = box2.x + 22;
+    const t2 = (type, py) => cdp.send('Input.dispatchTouchEvent', { type, touchPoints: type === 'touchEnd' ? [] : [{ x: x2, y: py }] });
+    await t2('touchStart', box2.y + 22);
+    await t2('touchMove', foot.y + foot.height - 10);
+    await page.waitForFunction(() => document.querySelector('.ranksheet .sheet-body').scrollTop > 40, null, { timeout: 4000 }).catch(() => {});
+    const st = await body.evaluate((n) => n.scrollTop);
+    await t2('touchEnd');
+    check(st > 40, 'a drag near the sheet’s edge scrolls it', st);
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Rank: links, and Supabase down', async () => {
+    const srv = server();
+    const a = await newPage(browser, base, { rpc: srv.rpc });
+    await a.page.goto(base + '/all-day/#food/rank-2030-09');
+    await a.page.waitForSelector('.ranksheet .rs-check', { timeout: 15000 });
+    check((await a.page.innerText('.ranksheet .sheet-head h2')) === 'Cheap Eats', 'a link lands on a list behind See more and opens it', '');
+    await a.page.click('#sheet .sheet-head .iconbtn');
+    check(await a.page.$eval('[data-k="rank-2030-09"]', (n) => !n.hidden), 'and its block is showing', '');
+    await a.page.goto(base + '/all-day/#food/rank-2026-08');
+    await a.page.waitForFunction(() => /isn’t in the list/.test(document.getElementById('toast')?.textContent || ''));
+    check(true, 'a list not in Food says so', '');
+    check(!a.errors.length, 'no console errors', a.errors.join(' | '));
+    await a.ctx.close();
+
+    const b = await newPage(browser, base, { rpc: (fn) => (/rank_|get_rankings|submit_ballot/.test(fn) ? { status: 503, body: {} } : undefined) });
+    await b.page.goto(base + '/all-day/#food');
+    await toRank(b.page);
+    const list = await blocks(b.page);
+    check(list.length === 6 && list[0].k === 'rank-2026-07', 'down, the lists still show in file order', list.map((x) => x.k).join());
+    check(!/Needs/.test(list[0].t) && /Rank it/.test(list[0].t), 'and claim no ballot count they couldn’t read', list[0].t);
+    await b.page.click(foodPanel + ' [data-k="rank-2026-07"] .rb-foot .btn');
+    await b.page.locator('.rs-check', { hasText: 'Shy Guy Gelato' }).click();
+    await b.page.click('.rs-foot .btn');
+    await b.page.waitForSelector('.rs-row');
+    await b.page.click('.rs-foot .btn:last-child');
+    await b.page.waitForFunction(() => /Couldn’t save/.test(document.getElementById('toast')?.textContent || ''));
+    check(!(await b.page.evaluate(() => localStorage.getItem('rwyk-ballot-2026-07'))), 'Save toasts and keeps nothing', '');
+    check(!!(await b.page.$('.rs-row')) && (await b.page.innerText('.rs-foot .btn:last-child')) === 'Save', 'and the reader can try again', '');
+    await b.ctx.close();
+  });
+
+  await group('Rank: ?demo=1, and at phone size', async () => {
+    for (const [scheme, height] of [['light', 844], ['dark', 844], ['light', 664], ['dark', 664]]) {
+      const { ctx, page, errors, supabase } = await newPage(browser, base, { scheme, viewport: { width: 390, height } });
+      await page.goto(base + '/all-day/?demo=1#food');
+      await toRank(page);
+      await page.evaluate(() => document.fonts.ready);
+      const name = scheme + height;
+      await page.locator(foodPanel + ' .slot[data-sec="rank"]').scrollIntoViewIfNeeded();
+      await page.evaluate(() => document.querySelector('.slot[data-sec="rank"]').scrollIntoView());
+      await page.waitForTimeout(200);
+      await page.screenshot({ path: path.join(RANK_SHOTS, name + '-blocks.png') });
+      await page.locator('.rankblk', { hasText: 'Sandwich Counters' }).locator('.rb-foot .btn').click();
+      await page.waitForSelector('.rs-check');
+      for (const n of ['Old North End bakery', 'The Church Street bistro', 'The pub on Main']) await page.locator('.rs-check', { hasText: n }).click();
+      await page.screenshot({ path: path.join(RANK_SHOTS, name + '-check.png') });
+      await page.click('.rs-foot .btn');
+      await page.waitForSelector('.rs-row');
+      await page.screenshot({ path: path.join(RANK_SHOTS, name + '-order.png') });
+      await page.click('.rs-foot .btn:last-child');
+      await page.waitForSelector('.rb-need, .rs-bar');
+      await page.click('#sheet .sheet-head .iconbtn');
+      await page.waitForFunction(() => /Sandwich Counters/.test(document.querySelector('.rankblk')?.innerText || ''));
+      await page.waitForTimeout(600);
+      await page.screenshot({ path: path.join(RANK_SHOTS, name + '-rose.png') });
+      await page.locator('.rankblk', { hasText: 'Breakfast Spots' }).locator('.rb-foot .btn').click();
+      await page.waitForSelector('.rs-check');
+      await page.locator('.rs-check', { hasText: 'Old North End bakery' }).click();
+      await page.locator('.rs-check', { hasText: 'The Church Street bistro' }).click();
+      await page.locator('.rs-check', { hasText: 'The all-night diner on Main' }).click();
+      await page.click('.rs-foot .btn');
+      await page.waitForSelector('.rs-row');
+      await page.click('.rs-foot .btn:last-child');
+      await page.waitForSelector('.rs-score');
+      await page.waitForTimeout(700);
+      await page.screenshot({ path: path.join(RANK_SHOTS, name + '-result.png') });
+      await pageRules(page, 'food rank ' + name, 390);
+      check(!supabase.some((u) => /submit_ballot/.test(u)), name + ': the demo sends nothing', supabase.join());
+      check(!errors.length, name + ': no console errors', errors.join(' | '));
+      await ctx.close();
+    }
+  });
+}
+
 /* ONLY=shellFixes,boards runs just those groups while iterating; the full
    matrix is the one that counts. */
 const ONLY = (process.env.ONLY || '').split(',').filter(Boolean);
@@ -15534,6 +15803,7 @@ try {
   await run(accountData);
   await run(theTown);
   await run(theBody);
+  await run(theRank);
 } finally {
   await browser.close();
   proc.kill();
