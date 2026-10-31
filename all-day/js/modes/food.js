@@ -1,8 +1,9 @@
 /* Food: where to eat right now, the deals worth crossing town for, the
    kitchens in their own words, and the dishes readers would tell a friend
-   about. We feature, we don't review: no stars, no scores, no rankings and
-   nothing negative anywhere on the tab; every place links out to its Google
-   page for the full reviews.
+   about. The Brief features, it doesn't review: no stars, no scores of ours
+   and nothing negative anywhere on the tab; every place links out to its
+   Google page for the full reviews. The one ranking here is the town's own
+   (Rank, below): community ballots, results only.
 
    Top to bottom, and the chip row is the table of contents. The freshest
    section leads whatever is listed here (2026-10-18): Asked on Reddit while
@@ -43,6 +44,10 @@
      then later today, then the untimed ones. Tap the right side (or the ›)
      for the next card, the left for the previous. The verified date is on
      every card, and the place's own food picture behind it when it has one.
+   - Rank. Burlington's own rankings, Rank What You Know brought in: a block
+     per food list, the list anyone ranked last on top. modes/rank.js has it
+     all; it comes after the sections that change by the hour and before the
+     Reddit lists, the other half of what the town recommends.
    - Asked on Reddit. The r/burlington threads (and r/vermont ones that
      name a Burlington-area place) asking where to eat or drink, newest
      first, from the shared Reddit intake (scripts/reddit_intake.py, hourly,
@@ -79,6 +84,7 @@ import * as data from '../wire.js';
 import { el, esc, safeHref, ICON, art, mark, section, moreGrid, collapseBar, chips, pills, button, agoShort, cards as feedCards, put } from '../ui.js';
 import { asksFrom, directoryFrom, GROUPS } from '../food-asks.js';
 import { sectionBar } from '../sections.js';
+import * as Rank from './rank.js';
 
 const KEY = 'food';
 const RESTAURANTS_URL = '../data/restaurants.json';
@@ -120,8 +126,9 @@ const ASKS_STALE = 15 * 60000;             // the Reddit asks are fetched again 
 const DEAL_DAYS = 60;                      // a deal last verified longer ago than this is not shown
 const Q_FIRST = 12;                        // Best of r/burlington opens in place past these
 
-const SECTIONS = [['bite', 'The Bite'], ['open', 'Open now'], ['deals', 'Deals'], ['asks', 'Reddit'], ['best', 'Best of'], ['kitchens', 'Kitchens'], ['add', 'Feature a dish']];
+const SECTIONS = [['bite', 'The Bite'], ['open', 'Open now'], ['deals', 'Deals'], ['rank', 'Rank'], ['asks', 'Reddit'], ['best', 'Best of'], ['kitchens', 'Kitchens'], ['add', 'Feature a dish']];
 const FRESH_ASK_DAYS = 3;                  // an ask this young is fresh enough to lead the tab
+Rank.bind({ paint: () => paint('rank'), jump: () => jump('rank'), slot: () => (slots ? slots.rank : null) });
 
 /* ------------------------------------------------------------------ state */
 const S = {
@@ -175,6 +182,7 @@ function load() {
 }
 
 function loadLater() {
+  Rank.load(demoFile).then(() => { paint('rank'); resettle(); land(); });
   if (app.demo) {
     demoFile().then((d) => {
       takeMenus(d.menus); takeRoster(d.roster); takeDirectory(d.directory); takeInstagram(d.instagram);
@@ -568,10 +576,10 @@ function paint(k) {
   if (k === 'add' && host.firstChild) return;   // the form is drawn once; a redraw would eat what was typed
   const y = panel() ? panel().scrollTop : 0;
   host.innerHTML = '';
-  ({ bite: paintBite, open: paintOpen, deals: paintDeals, asks: paintAsks, best: paintBest, kitchens: paintKitchens, add: paintAdd })[k](host);
+  ({ bite: paintBite, open: paintOpen, deals: paintDeals, rank: Rank.paint, asks: paintAsks, best: paintBest, kitchens: paintKitchens, add: paintAdd })[k](host);
   if (panel() && app.activeTab() === KEY) panel().scrollTop = y;
   if ((k === 'asks' || k === 'kitchens') && placeSlots()) resettle();
-  if (k === 'open' || k === 'deals' || k === 'asks' || k === 'kitchens') app.paintSubnav();
+  if (k === 'open' || k === 'deals' || k === 'rank' || k === 'asks' || k === 'kitchens') app.paintSubnav();
 }
 
 /* ------------------------------------------------------- the Weekly Bite */
@@ -1285,11 +1293,12 @@ function resettle() {
   }, 60);
 }
 
-/* #food/bite|open|deals|asks|best|kitchens|add jumps to a section; #food/map opens
+/* #food/bite|open|deals|rank|asks|best|kitchens|add jumps to a section; #food/map opens
    the map; a filter key
    (late, patio, hh, cheap, deal) sets the filter; r-<id> opens a place;
    d-<id> turns the deck to that deal; ig-<code> a kitchen's post; q-<id>
-   opens a Best of question; a thread's URL flashes its Reddit ask. */
+   opens a Best of question; rank-<key> opens a ranking; a thread's URL
+   flashes its Reddit ask. */
 function land() {
   if (!pending || !ready) return;
   const k = pending; pending = null;
@@ -1303,6 +1312,11 @@ function land() {
     if (!slots.best.querySelector('[data-k="' + CSS.escape(k) + '"]')) { S.bestGroup = 'all'; S.bestAll = true; paint('best'); }
     app.flashHit(root, k);
     qSheet(q);
+    return;
+  }
+  if (/^rank-/.test(k)) {
+    if (!Rank.settled()) { pending = k; return; }   // still loading: land when it arrives
+    if (!Rank.open(k)) app.toast('That ranking isn’t in the list any more.');
     return;
   }
   if (/^https:\/\/(www\.|old\.)?reddit\.com\//.test(k)) {
@@ -1356,9 +1370,10 @@ app.register(KEY, {
     if (ready && Date.now() - S.drawn > STALE_MS) { paint('open'); paint('deals'); S.drawn = Date.now(); }
     if (ready) placeSlots();            // a thread may have turned three days old while the tab was away
     if (ready && !app.demo && Date.now() - S.asksAt > ASKS_STALE) loadAsks();
+    if (ready) Rank.revisit();
     land();
   },
-  refresh() { if (ready) { paint('bite'); paint('open'); paint('deals'); paint('asks'); paint('best'); paint('kitchens'); } },
+  refresh() { if (ready) { paint('bite'); paint('open'); paint('deals'); paint('rank'); paint('asks'); paint('best'); paint('kitchens'); } },
   deactivate() { app.closeVideo(); if (M && !M.getContainer().isConnected) dropMap(); },
   subnav() {
     if (!ready) return null;
@@ -1367,7 +1382,7 @@ app.register(KEY, {
     const next = nothingOpen(t);
     /* the sections as a floating pill in the tab's water, following the scroll (sections.js) */
     return sectionBar({ key: 'sec-food', title: 'Food', color: '--liq-food', find: (k) => slots && slots[k], onPick: (k) => jump(k),
-      items: order().map((k) => SECTIONS.find(([key]) => key === k)).map(([key, label]) => ({
+      items: order().filter((k) => k !== 'rank' || Rank.hasLists()).map((k) => SECTIONS.find(([key]) => key === k)).map(([key, label]) => ({
         key, label: key === 'open' && next ? 'Opening next' : label,
         n: key === 'open' ? (next ? null : listFor('open', t).length) : key === 'deals' ? deck(t).length : key === 'asks' && S.asks ? asksShown().length : null,
       })) });

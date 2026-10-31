@@ -1,5 +1,5 @@
 {
- "_": "Demo data for ?demo=1. Every place, deal, dish and account is invented; the shapes are the real payloads' (data/restaurants.json, data/deals.json, data/small-bites.json, data/instagram-handles.json, all-day/data/instagram.json, the reader dishes as js/photos-lib.js normalizes them, all-day/data/food-directory.json, the Reddit intake from the reddit-data branch, and data/best-of-reddit.json). The Reddit threads, questions and Seven Daysies picks are invented too. Pictures are palette names. The Instagram times and video expiries move with the reader's clock (anchor).",
+ "_": "Demo data for ?demo=1. Every place, deal, dish and account is invented; the shapes are the real payloads' (data/restaurants.json, data/deals.json, data/small-bites.json, data/instagram-handles.json, all-day/data/instagram.json, the reader dishes as js/photos-lib.js normalizes them, all-day/data/food-directory.json, the Reddit intake from the reddit-data branch, data/best-of-reddit.json, and the rank_activity and get_rankings answers beside data/rank-lists.json, with hours since the last ballot in place of a date). The Reddit threads, questions and Seven Daysies picks are invented too. Pictures are palette names. The Instagram times and video expiries move with the reader's clock (anchor).",
  "anchor": "2026-10-16T12:00:00-04:00",
  "restaurants": {
   "generated": "2026-10-16",
@@ -1676,5 +1676,267 @@
     ]
    }
   ]
+ },
+ "rank": {
+  "lists": [
+   {
+    "key": "2026-11",
+    "title": "Breakfast Spots",
+    "items": [
+     {
+      "name": "The all-night diner on Main",
+      "where": "Burlington"
+     },
+     {
+      "name": "Old North End bakery",
+      "where": "Old North End"
+     },
+     {
+      "name": "The Church Street bistro",
+      "where": "Burlington"
+     },
+     {
+      "name": "A South End kitchen",
+      "where": "South End"
+     },
+     {
+      "name": "The pub on Main",
+      "where": "Burlington"
+     }
+    ]
+   },
+   {
+    "key": "2026-07",
+    "title": "Creemee Stands",
+    "items": [
+     {
+      "name": "The creemee window",
+      "where": "Waterfront"
+     },
+     {
+      "name": "The lakeside bar",
+      "where": "Waterfront"
+     },
+     {
+      "name": "Old North End bakery",
+      "where": "Old North End"
+     },
+     {
+      "name": "Pine Street taqueria",
+      "where": "South End"
+     }
+    ]
+   },
+   {
+    "key": "2026-12",
+    "title": "Coffee Shops",
+    "items": [
+     {
+      "name": "Old North End bakery",
+      "where": "Old North End"
+     },
+     {
+      "name": "A South End kitchen",
+      "where": "South End"
+     },
+     {
+      "name": "The Church Street bistro",
+      "where": "Burlington"
+     },
+     {
+      "name": "The creemee window",
+      "where": "Waterfront"
+     }
+    ]
+   },
+   {
+    "key": "2027-02",
+    "title": "Pizza Joints",
+    "items": [
+     {
+      "name": "The Winooski brewery",
+      "where": "Winooski"
+     },
+     {
+      "name": "The pub on Main",
+      "where": "Burlington"
+     },
+     {
+      "name": "A South End kitchen",
+      "where": "South End"
+     }
+    ]
+   },
+   {
+    "key": "2027-04",
+    "title": "Sandwich Counters",
+    "items": [
+     {
+      "name": "Old North End bakery",
+      "where": "Old North End"
+     },
+     {
+      "name": "The Church Street bistro",
+      "where": "Burlington"
+     },
+     {
+      "name": "The pub on Main",
+      "where": "Burlington"
+     }
+    ]
+   },
+   {
+    "key": "2027-05",
+    "title": "Burgers",
+    "items": [
+     {
+      "name": "The pub on Main",
+      "where": "Burlington"
+     },
+     {
+      "name": "The Winooski brewery",
+      "where": "Winooski"
+     },
+     {
+      "name": "The all-night diner on Main",
+      "where": "Burlington"
+     }
+    ]
+   },
+   {
+    "key": "2027-06",
+    "title": "Bar Patios",
+    "items": [
+     {
+      "name": "The lakeside bar",
+      "where": "Waterfront"
+     },
+     {
+      "name": "The Winooski brewery",
+      "where": "Winooski"
+     },
+     {
+      "name": "Pine Street taqueria",
+      "where": "South End"
+     }
+    ]
+   },
+   {
+    "key": "2030-01",
+    "title": "Dumplings",
+    "items": [
+     {
+      "name": "The dumpling house",
+      "where": "Burlington"
+     },
+     {
+      "name": "The noodle counter on Bank",
+      "where": "Burlington"
+     },
+     {
+      "name": "The pho shop on North Ave",
+      "where": "New North End"
+     }
+    ]
+   }
+  ],
+  "activity": {
+   "2026-11": {
+    "ballots": 14,
+    "hours_ago": 2
+   },
+   "2026-07": {
+    "ballots": 9,
+    "hours_ago": 30
+   },
+   "2026-12": {
+    "ballots": 6,
+    "hours_ago": 200
+   },
+   "2027-02": {
+    "ballots": 2,
+    "hours_ago": 300
+   }
+  },
+  "rankings": {
+   "2026-11": [
+    {
+     "item": "Old North End bakery",
+     "ballot_count": 12,
+     "score": 0.83
+    },
+    {
+     "item": "The all-night diner on Main",
+     "ballot_count": 11,
+     "score": 0.71
+    },
+    {
+     "item": "The Church Street bistro",
+     "ballot_count": 9,
+     "score": 0.58
+    },
+    {
+     "item": "A South End kitchen",
+     "ballot_count": 7,
+     "score": 0.44
+    },
+    {
+     "item": "The pub on Main",
+     "ballot_count": 2,
+     "score": 0.5
+    }
+   ],
+   "2026-07": [
+    {
+     "item": "The creemee window",
+     "ballot_count": 9,
+     "score": 0.9
+    },
+    {
+     "item": "Pine Street taqueria",
+     "ballot_count": 6,
+     "score": 0.6
+    },
+    {
+     "item": "The lakeside bar",
+     "ballot_count": 5,
+     "score": 0.52
+    },
+    {
+     "item": "Old North End bakery",
+     "ballot_count": 3,
+     "score": 0.4
+    }
+   ],
+   "2026-12": [
+    {
+     "item": "Old North End bakery",
+     "ballot_count": 5,
+     "score": 0.8
+    },
+    {
+     "item": "A South End kitchen",
+     "ballot_count": 4,
+     "score": 0.65
+    },
+    {
+     "item": "The creemee window",
+     "ballot_count": 3,
+     "score": 0.3
+    }
+   ],
+   "2027-02": [
+    {
+     "item": "The Winooski brewery",
+     "ballot_count": 2,
+     "score": 0.75
+    },
+    {
+     "item": "The pub on Main",
+     "ballot_count": 1,
+     "score": 0.5
+    }
+   ]
+  }
  }
 }
