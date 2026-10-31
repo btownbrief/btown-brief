@@ -196,12 +196,13 @@ export function promise(host, key) {
 
 /* ------------------------------------------------------------------ share */
 /* One card, one link. The URL is this app with the tab and the card's key in
-   the hash, so a text from a neighbour lands the reader inside All Day. Native
-   share sheet where phones have one; the clipboard everywhere else. A card
-   shown away from its home tab names it (it.shareTab), so the link lands. */
-export function share(tab, key, title) {
+   the hash, so a text from a neighbour lands the reader inside All Day. A card
+   with a page of its own passes that link instead (to). Native share sheet
+   where phones have one; the clipboard everywhere else. A card shown away
+   from its home tab names it (it.shareTab), so the link lands. */
+export function share(tab, key, title, to) {
   const base = demo ? location.origin + location.pathname + '?demo=1' : APP.url;
-  const url = base + '#' + tab + (key ? '/' + encodeURIComponent(key) : '');
+  const url = to || base + '#' + tab + (key ? '/' + encodeURIComponent(key) : '');
   if (!demo && window.goatcounter && window.goatcounter.count) {
     window.goatcounter.count({ path: count('share') + tab, title: APP.name + ' share: ' + tab, event: true });
   }
@@ -257,7 +258,7 @@ export function bindFeed(host, h = {}) {
       const a = act.dataset.act;
       if (a === 'up') toggleVote(it);
       else if (a === 'comment') comments(it);
-      else if (a === 'share') share(it.shareTab || active, it.k, it.title || it.text);
+      else if (a === 'share') share(it.shareTab || active, it.k, it.title || it.text, it.shareUrl);
       else if (a === 'save') (h.onSave || toggleSave)(it);
       else if (ACTS[a]) ACTS[a](it, act);
       return;
@@ -1377,7 +1378,9 @@ $('wordmark').addEventListener('click', (e) => {
    screen; the switcher's bubble and what is new in the other apps */
 const installBtn = switcher.installButton();
 installBtn.hidden = asks.installed();
-$('theme-btn').before(installBtn);
+const calBtn = $('cal-btn');   // All Day's page has it; Town's and Body's do not
+if (calBtn) calBtn.innerHTML = ICON.calendar;
+(calBtn || $('theme-btn')).before(installBtn);
 switcher.bind({ sheet, toast, app: APP, demo, newIn });
 
 /* Whether another app has something new since the reader last looked

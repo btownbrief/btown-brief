@@ -1,6 +1,6 @@
 /* What Now: one answer, then put the phone down.
 
-   A weather line at the top (feels like, the lake when the gage is fresh,
+   The Calendar leads the Spin view (calendar.js), then a weather line at the top (feels like, the lake when the gage is fresh,
    sunset), then two views behind the chip row: Spin with the Missions list
    right under it (the Missions chip jumps down to the list), and Tonight.
 
@@ -52,9 +52,10 @@
      Over it, a strip of sky (2026-10-17, Stephen: "recreate it, with how
      the sun moves"): weather.html's sun arc in miniature, the sun or the
      moon where it really is, the sky's colour by the hour and a light
-     overlay for what the weather is doing. Under the pills and the card,
+     overlay for what the weather is doing. Under Spin and its answer,
      today in two or three plain sentences (latest.json's brief, see
-     wxBrief) and a Full weather link to that page (2026-10-19).
+     wxBrief) and a Full weather link to that page (2026-10-19), there so
+     Spin stays on the first screen under The Calendar.
      Under the answer, Happening today: the rest of today's calendar from
      data/whatnow.json (the events calendar, trimmed), in Burlington's clock,
      daytime first and then tonight's, each opening its own listing, and a
@@ -78,6 +79,7 @@ import { sectionBar, hold } from '../sections.js';
 import { loadAll } from '../whatnow-data.js';
 import { buildContext, buildPool, pick, fmtTime, outdoorRisks } from '../whatnow-engine.js';
 import { sunScore } from '../sun.js';
+import * as calendar from '../calendar.js';
 
 const KEY = 'whatnow';
 const MODES = ['spin', 'missions', 'tonight'];
@@ -155,7 +157,7 @@ function load() {
       D = redate(d);
       S.weather = D.weather; S.events = D.events; S.music = D.music; S.missions = D.missions; S.challenges = D.challenges || null;
       S.feeds = { ...D.feeds, weather: D.weather, events: D.events };
-      return app.demoData('run-clubs').then((j) => { S.rc = cw.redateDemo(j, Date.now()).clubs; }, () => { S.rc = []; });
+      return Promise.all([app.demoData('run-clubs').then((j) => { S.rc = cw.redateDemo(j, Date.now()).clubs; }, () => { S.rc = []; }), calendar.load()]);
     });
   }
   /* the wire may hand a payload over again later (a retry after a failed
@@ -180,6 +182,7 @@ function load() {
       if (!j || !Array.isArray(j.clubs)) throw new Error('bad shape');
       S.rc = j.clubs;
     }).catch(() => { S.rc = []; }),
+    calendar.load(),
   ];
   sunScore(data).then((sun) => { S.sun = sun; paintWx(); });
   return Promise.all(parts);
@@ -234,7 +237,12 @@ function render() {
     const wx = weatherLine(true);
     if (wx) root.appendChild(wx);
     renderTonight();
-  } else { renderSpin(); renderToday(); renderChallenges(); renderMissions(); }
+  } else {
+    const lead = el('div');
+    root.appendChild(lead);
+    calendar.mount(lead, { name: 'whatnow' });
+    renderSpin(); renderToday(); renderChallenges(); renderMissions();
+  }
 }
 
 /* One line: what it feels like, the lake when the gage is fresh, sunset.
@@ -485,7 +493,7 @@ function renderSpin() {
   const tools = el('div', 'toolrow');
   tools.appendChild(pills(WINDOWS, S.window, (v) => { S.window = v; S.answer = null; S.did = false; if (moving()) spin(); else render(); }));
   top.appendChild(tools);
-  if (card) { top.appendChild(card); top.appendChild(wxBrief()); }
+  if (card) top.appendChild(card);
   root.appendChild(top);
 
   const s = el('div', 'spin');
@@ -511,6 +519,7 @@ function renderSpin() {
   if (S.did && S.answer) root.appendChild(doneCard(S.answer));
   else if (S.answer || (S.ctx && !S.rolling)) root.appendChild(answerCard());
   if (S.ctx && !S.did) root.appendChild(el('p', 'note pad', esc(poolLine())));
+  if (card) root.appendChild(wxBrief());
   meetsBlock(S.window);
 }
 
@@ -1344,7 +1353,7 @@ app.register(KEY, {
       app.recount();
     }).catch(() => { r.innerHTML = '<div class="errbox"><b>What Now didn’t load.</b></div>'; });
   },
-  activate(param) { pending = param || null; land(); paintSky(); skyTick(true); },
+  activate(param) { pending = param || null; land(); paintSky(); skyTick(true); calendar.repaint(); },
   refresh() { if (ready) render(); },
   deactivate() { stopReel(); closeBandcamp(); app.closePeek(); skyTick(false); },
   /* Spin · Missions · Tonight as a floating pill in What Now's amber. Spin

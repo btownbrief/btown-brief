@@ -25,15 +25,28 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Archivo:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
   <link rel="stylesheet" href="css/style.css?v=20260904a">
-  <link rel="stylesheet" href="css/events.css?v=20260821a">
+  <link rel="stylesheet" href="all-day/css/tokens.css?v=20261031b">
+  <link rel="stylesheet" href="css/events.css?v=20261031b">
   <script>
-    /* Theme before first paint, from the cached sunrise/sunset. js/auto-theme.js
-       refreshes the cache; this only avoids the white flash after dark. */
+    /* Theme before first paint: All Day's own setting when it has one, the
+       phone's on the way in from the apps (so the screen doesn't flip), or
+       else the cached sunrise/sunset. js/auto-theme.js refreshes that cache;
+       this only avoids the white flash after dark. */
     (function () {
       try {
+        var html = document.documentElement;
+        var t = localStorage.getItem('allday-theme');
+        if (t !== 'light' && t !== 'dark' && /\/(all-day|town|body)\//.test(document.referrer)) {
+          t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        }
+        if (t === 'light' || t === 'dark') {
+          html.setAttribute('data-theme', t);
+          html.setAttribute('data-theme-held', '');
+          return;
+        }
         var c = JSON.parse(localStorage.getItem('btown-sun') || 'null');
         if (!c) return;
         var today = new Intl.DateTimeFormat('en-CA', { timeZone: 'America/New_York',
@@ -96,15 +109,18 @@ src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
 
   <main class="ev-main">
 
-    <!-- HERO: what's on, right now -->
+    <!-- HERO: the count, the next two weeks, what's on right now -->
     <section class="ev-hero" aria-labelledby="ev-hero-title">
+      <a class="ev-back" id="ev-back" href="all-day/" hidden>‹ All Day</a>
       <div class="ev-hero-row">
         <div class="ev-hero-text">
-          <h1 class="ev-hero-title" id="ev-hero-title">What's happening</h1>
+          <h1 class="ev-hero-title" id="ev-hero-title">The Calendar</h1>
           <p class="ev-hero-sub" id="ev-hero-sub"><!-- “Friday evening in Burlington · 30 things tonight” --></p>
         </div>
         <a class="ev-wx" id="ev-wx" href="weather.html" hidden aria-label="Burlington weather right now"></a>
       </div>
+      <p class="ev-hero-count" id="ev-hero-count"><!-- the next 14 days, counted --></p>
+      <div class="ev-fort" id="ev-fort" role="group" aria-label="The next 14 days"><!-- two weeks of day tiles --></div>
       <div class="ev-now" id="ev-now" role="list" aria-label="Right now"><!-- time-aware lenses --></div>
     </section>
 
@@ -112,7 +128,6 @@ src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
     <section class="ev-picks" id="ev-picks" hidden aria-labelledby="ev-picks-title">
       <div class="ev-picks-head">
         <h2 class="ev-picks-title" id="ev-picks-title">Worth planning around</h2>
-        <span class="ev-picks-sub" id="ev-picks-sub"></span>
       </div>
       <div class="ev-picks-row" id="ev-picks-row"></div>
     </section>
@@ -132,9 +147,9 @@ src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
       <div class="ev-tools-row">
         <label class="ev-search-wrap">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-          <input class="ev-search" id="ev-search" type="search" placeholder="Search events, venues…" aria-label="Search events" autocomplete="off">
+          <input class="ev-search" id="ev-search" type="search" placeholder="Search events" aria-label="Search events" autocomplete="off">
         </label>
-        <select class="ev-town" id="ev-f-town" aria-label="Town"><option value="">All towns</option></select>
+        <span class="ev-town-wrap"><select class="ev-town" id="ev-f-town" aria-label="Town"><option value="">All towns</option></select></span>
       </div>
       <div class="ev-chips" id="ev-quick" role="group" aria-label="Quick filters"><!-- quick chips --></div>
       <div class="ev-chips ev-chips-cats" id="ev-cats" role="group" aria-label="Category"><!-- category chips --></div>
@@ -172,7 +187,6 @@ src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
 
       <div class="ev-empty" id="ev-empty" hidden>
         <p class="ev-empty-title">Nothing matches.</p>
-        <p>Try another day or clear a filter.</p>
       </div>
 
       <div class="ev-loading" id="ev-loading">Loading the calendar…</div>
@@ -181,36 +195,35 @@ src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
     <div class="ev-toast" id="ev-toast" role="status" aria-live="polite" hidden></div>
 
     <!-- LIST-YOUR-EVENT NOTE -->
-    <section class="ev-submit-note">
-      <h2>Want your event listed here?</h2>
-      <p>This calendar sweeps the places Burlington already posts events:
-         <a href="https://www.sevendaysvt.com/vermont/EventSubmission" target="_blank" rel="noopener">Seven Days</a>,
-         the <a href="https://frontporchforum.com" target="_blank" rel="noopener">Front Porch Forum</a> calendar,
-         Facebook events, <a href="https://www.helloburlingtonvt.com" target="_blank" rel="noopener">Hello Burlington</a>,
-         <a href="https://loveburlington.org" target="_blank" rel="noopener">Love Burlington</a>,
-         <a href="https://www.meetup.com" target="_blank" rel="noopener">Meetup</a>,
-         <a href="https://www.eventbrite.com" target="_blank" rel="noopener">Eventbrite</a>,
-         <a href="https://churchstmarketplace.com" target="_blank" rel="noopener">Church St Marketplace</a>,
-         the <a href="https://www.flynnvt.org" target="_blank" rel="noopener">Flynn</a>,
-         <a href="https://highergroundmusic.com" target="_blank" rel="noopener">Higher Ground</a>, and
-         <a href="https://vermontcomedyclub.com" target="_blank" rel="noopener">Vermont Comedy Club</a> —
-         plus the libraries, the colleges, and the venues' own sites.
-         Post your event on any of them and I'll catch it on the next sweep.</p>
-    </section>
+    <details class="ev-submit-note">
+      <summary>List your event on any of these</summary>
+      <div class="ev-submit-links">
+        <a href="https://www.sevendaysvt.com/vermont/EventSubmission" target="_blank" rel="noopener">Seven Days</a>
+        <a href="https://frontporchforum.com" target="_blank" rel="noopener">Front Porch Forum</a>
+        <a href="https://www.helloburlingtonvt.com" target="_blank" rel="noopener">Hello Burlington</a>
+        <a href="https://loveburlington.org" target="_blank" rel="noopener">Love Burlington</a>
+        <a href="https://www.meetup.com" target="_blank" rel="noopener">Meetup</a>
+        <a href="https://www.eventbrite.com" target="_blank" rel="noopener">Eventbrite</a>
+        <a href="https://churchstmarketplace.com" target="_blank" rel="noopener">Church St Marketplace</a>
+        <a href="https://www.flynnvt.org" target="_blank" rel="noopener">The Flynn</a>
+        <a href="https://highergroundmusic.com" target="_blank" rel="noopener">Higher Ground</a>
+        <a href="https://vermontcomedyclub.com" target="_blank" rel="noopener">Vermont Comedy Club</a>
+      </div>
+    </details>
 
     <!-- SUPPORT STRIP -->
     <section class="ev-support">
       <a class="ev-support-card" href="https://btownbrief.com?utm_source=guide&utm_medium=referral&utm_campaign=site_capture" target="_blank" rel="noopener">
         <span class="ev-support-emoji">📬</span>
-        <span><strong>The Burlington Brief</strong><br>The twice-a-week local newsletter behind this page. Free — sign up.</span>
+        <strong>The Burlington Brief</strong>
       </a>
       <a class="ev-support-card" href="https://ko-fi.com/btownbrief" target="_blank" rel="noopener">
         <span class="ev-support-emoji">❤️</span>
-        <span><strong>Chip in on Ko-fi</strong><br>Keeps the calendar sweeping every local source, every day.</span>
+        <strong>Chip in on Ko-fi</strong>
       </a>
       <a class="ev-support-card" href="https://www.btownbrief.com/about-me" target="_blank" rel="noopener">
         <span class="ev-support-emoji">👋</span>
-        <span><strong>It's just me making all this</strong><br>Meet Steve.</span>
+        <strong>Meet Steve</strong>
       </a>
     </section>
 
@@ -237,8 +250,8 @@ src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
   <script src="js/rail-dots.js?v=20260904a"></script>
-  <script src="js/events.js?v=20260821a"></script>
-  <script src="js/auto-theme.js?v=20260711k"></script>
+  <script src="js/events.js?v=20261031b"></script>
+  <script src="js/auto-theme.js?v=20261031b"></script>
   <script>window.BtownRailDots.attach(document.getElementById('ev-picks-row'), { label: 'Event picks' });</script>
   <script src="https://play.btownbrief.com/nav.js" defer></script>
 </body>
