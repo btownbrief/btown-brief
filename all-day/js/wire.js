@@ -310,6 +310,18 @@ export function load(key, onOk, onFail) {
 
 export const peek = (key) => cache[key] || null;
 
+/* The free offers in pulse.json (wire_inbox.py reads them from Muse), newest
+   first. Vintage's Free section and Social's block both read them here, so
+   the five days and the star's key are one rule. */
+const FREE_MS = 5 * 86400000;
+const offerKey = (u) => { let h = 5381; for (let i = 0; i < u.length; i += 1) h = (h * 33 + u.charCodeAt(i)) | 0; return 'fr-' + (h >>> 0).toString(36); };
+export function freeOffers(pulse) {
+  const box = pulse && pulse.inbox && pulse.inbox.free;
+  const items = box && Array.isArray(box.items) ? box.items : [];
+  return items.filter((x) => x && /^https:\/\/([a-z]+\.)?facebook\.com\//.test(x.u || '') && x.title && Date.now() - Number(x.d) * 1000 < FREE_MS)
+    .sort((a, b) => b.d - a.d).map((x) => ({ ...x, k: offerKey(x.u) }));
+}
+
 /* Check the live copy now (a pull to refresh) rather than at the next poll.
    Resolves true when a different payload came back and was offered to the
    reader through the fresh gate. */

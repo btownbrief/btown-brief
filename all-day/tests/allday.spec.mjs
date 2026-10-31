@@ -8553,7 +8553,7 @@ async function theVintage(browser, base) {
     check(votes.every((v) => v === 'I’d want this'), 'the vote on a find is “I’d want this”', JSON.stringify(votes.slice(0, 2)));
     check(!(await page.$(vslot('spotted') + ' [data-act=vgot]')), 'nobody signed in owns a find, so no “Someone got it”', '');
     const chipsRow = await page.$$eval('#subnav .chip', (cs) => cs.map((c) => c.dataset.chip));
-    check(JSON.stringify(chipsRow) === JSON.stringify(['newin', 'fit', 'spotted', 'swaps', 'tees', 'shops']), 'the chip row is the table of contents, in page order: New in, Fit checks, Spotted, Swaps, Make a tee, Shops', JSON.stringify(chipsRow));
+    check(JSON.stringify(chipsRow) === JSON.stringify(['free', 'newin', 'fit', 'spotted', 'swaps', 'tees', 'shops']), 'the chip row is the table of contents, in page order: Free, New in, Fit checks, Spotted, Swaps, Make a tee, Shops', JSON.stringify(chipsRow));
     await page.click('#subnav .chip[data-chip="tees"]');
     /* a smooth scroll, and the fourteen shops above Make a tee make it a long one */
     await page.waitForFunction((sel) => { const t = document.querySelector(sel).getBoundingClientRect().top; return t >= 0 && t < 300; }, vslot('tees'), { timeout: 4000 }).catch(() => {});
@@ -8583,11 +8583,11 @@ async function theVintage(browser, base) {
     const top = await page.evaluate(() => {
       const q = (k) => document.querySelector('.panel:not([hidden]) [data-sec="' + k + '"]');
       return { vh: innerHeight, order: [...q('fit').parentElement.children].map((c) => c.dataset.sec).filter(Boolean),
-        newHead: q('newin').querySelector('.sec h2').textContent, newTile: q('newin').querySelector('.vcard').getBoundingClientRect().bottom,
+        newHead: q('newin').querySelector('.sec h2').textContent, freeTile: q('free').querySelector('.card').getBoundingClientRect().bottom,
         fitHead: q('fit').querySelector('.sec h2').textContent, spotHead: q('spotted').querySelector('.sec h2').textContent };
     });
-    check(JSON.stringify(top.order) === '["newin","fit","spotted","swaps","tees","sent","shops"]' && top.newHead === 'New in' && top.fitHead === 'Fit checks' && top.spotHead === 'Spotted this week', 'New in leads the tab, then Fit checks, Spotted this week, Swaps, Make a tee with Top designs under it, and the shops', JSON.stringify(top));
-    check(top.newTile <= top.vh, 'at 390 by 844 the first shop posts are on the first screen', JSON.stringify(top));
+    check(JSON.stringify(top.order) === '["free","newin","fit","spotted","swaps","tees","sent","shops"]' && top.newHead === 'New in' && top.fitHead === 'Fit checks' && top.spotHead === 'Spotted this week', 'Free leads the tab, then New in, Fit checks, Spotted this week, Swaps, Make a tee with Top designs under it, and the shops', JSON.stringify(top));
+    check(top.freeTile <= top.vh, 'at 390 by 844 the first free things are on the first screen', JSON.stringify(top));
     const tee = await page.$eval(vslot('tees'), (s) => ({ head: s.querySelector('.sec h2').textContent, btn: (s.querySelector('.sec button') || {}).textContent || '', cards: s.querySelectorAll('.textcard').length, top: Math.round(s.getBoundingClientRect().top), h: Math.round(s.getBoundingClientRect().height) }));
     check(tee.head === 'Make a tee' && /Send in your design/.test(tee.btn) && tee.cards === 0, 'Make a tee and Send in your design are one block: the button sits in the head, there is no card of its own', JSON.stringify(tee));
     check(!(await page.$(vslot('spotted') + ' .vwhy')), 'no line of explanation under Spotted this week', '');
@@ -15137,6 +15137,134 @@ function redditFresh(nowMs) {
     p('r9', 'New plan for the bike path', 50, { out: 'https://www.sevendaysvt.com/news/x/', kind: 'link' }),
   ] };
 }
+/* Free: Muse's offers through pulse.json, on Vintage and in one Social block. */
+async function theFree(browser, base) {
+  const fb = 'https://www.facebook.com/';
+  const now = Math.round(Date.now() / 1000);
+  const offer = (n, hours, title, group, photo) => ({ u: fb + 'marketplace/item/' + n + '/', d: now - hours * 3600, title, where: 'Winooski', group, kind: 'offer', ...(photo ? { photo: 'https://scontent.xx.fbcdn.net/' + n + '.jpg' } : {}) });
+  const pulseWith = (items, extra) => ({ v: 1, generated: new Date().toISOString(), sources: [], items: [], reddit: {}, photos: {}, inbox: { free: { paused: false, items }, ...extra } });
+  const open = async (items, hash, extra) => {
+    const o = await newPage(browser, base, { viewport: { width: 390, height: 844 } });
+    await o.page.route(/pulse\.json/, (r) => r.fulfill({ status: 200, body: JSON.stringify(pulseWith(items, extra)), contentType: 'application/json' }));
+    await o.page.goto(base + '/all-day/' + hash);
+    return o;
+  };
+  const eight = [offer(1, 1, 'Oak dresser', 'Buy Nothing', true), offer(2, 2, 'Porch chairs', 'Marketplace', true), offer(3, 3, 'Canning jars', 'Gifting'),
+    offer(4, 4, 'Kids bike', 'Marketplace', true), offer(5, 5, 'Wool blankets', 'Buy Nothing', true), offer(6, 6, 'Floor lamp', 'Gifting', true),
+    offer(7, 7, 'Upright piano', 'Marketplace', true), offer(8, 8, 'Moving boxes', 'Buy Nothing', true), offer(9, 24 * 5 + 1, 'Too old', 'Gifting', true)];
+  const titles = (page) => page.$$eval(vslot('free') + ' .froffer:not([hidden]) .c-title', (a) => a.map((n) => n.textContent));
+
+  await group('Free: newest first, five days, six and See more, filters, star and share (live)', async () => {
+    const { ctx, page, errors } = await open(eight.slice().reverse(), '#vintage');
+    await page.waitForSelector(vslot('free') + ' .froffer');
+    check(await page.$eval('#subnav .chip', (c) => c.dataset.chip) === 'free', 'Free is first in the row', '');
+    check(await page.$eval(vslot('free') + ' .sec h2', (h) => h.textContent) === 'Free this week', 'its head', '');
+    const six = await titles(page);
+    check(six.join() === 'Oak dresser,Porch chairs,Canning jars,Kids bike,Wool blankets,Floor lamp', 'newest first, the first six, nothing past five days', six.join());
+    await page.click(vslot('free') + ' [data-more="free"]');
+    const all = await titles(page);
+    check(all.length === 8 && !all.includes('Too old'), 'See more shows the rest, and the old one never', all.join());
+    await page.click(vslot('free') + ' .collapsebar:not([hidden]) button');
+    const tile = await page.$eval(vslot('free') + ' .froffer', (c) => ({ href: c.querySelector('.c-title').href, target: c.querySelector('.c-title').target, img: !!c.querySelector('img'), meta: c.querySelector('.frmeta').textContent, share: !!c.querySelector('[data-act=share]'), star: !!c.querySelector('[data-act=save]'), wide: c.querySelector('.c-title').getBoundingClientRect().width }));
+    check(tile.href === fb + 'marketplace/item/1/' && tile.target === '_blank', 'a tile opens the post on Facebook', tile.href);
+    check(tile.img && tile.share && tile.star && /^Winooski · (60m|1h) · Buy Nothing$/.test(tile.meta), 'its photo, where, age and group, star and share', JSON.stringify(tile));
+    const covers = await page.$eval(vslot('free') + ' .froffer', (c) => { c.scrollIntoView({ block: 'center' }); const r = c.querySelector('.c-media').getBoundingClientRect(); return document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2).closest('a')?.className; });
+    check(covers === 'c-title', 'a tap on the photo is a tap on the link', String(covers));
+    const chipNames = await page.$$eval(vslot('free') + ' [data-free] .chip', (c) => c.map((x) => x.textContent));
+    check(chipNames.join() === 'All,Buy Nothing,Gifting,Marketplace', 'the filters', chipNames.join());
+    const fits = await page.$eval(vslot('free') + ' [data-free]', (r) => [...r.children].every((c) => c.getBoundingClientRect().right <= innerWidth));
+    check(fits, 'the four fit on a phone', '');
+    await page.click(vslot('free') + ' [data-free] .chip:has-text("Gifting")');
+    check((await titles(page)).join() === 'Canning jars,Floor lamp', 'a filter shows its own, newest first', (await titles(page)).join());
+    await page.click(vslot('free') + ' .froffer [data-act=save]');
+    await page.waitForFunction((s) => document.querySelector(s + ' .froffer [data-act=save]').classList.contains('on'), vslot('free'));
+    check(true, 'the star sticks', '');
+    await page.click(vslot('free') + ' [data-free] .chip:has-text("All")');
+    check((await titles(page)).length === 6, 'All comes back', '');
+    check(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), 'no sideways scroll', '');
+    await pageRules(page, 'vintage', 390);
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Free: no photos are clean rows, one kind has no filters, a shared offer lands (live)', async () => {
+    const { ctx, page, errors } = await open([offer(1, 1, 'Oak dresser', 'Gifting'), offer(2, 2, 'Porch chairs', 'Gifting')], '#vintage');
+    await page.waitForSelector(vslot('free') + ' .frrows .froffer');
+    check(!(await page.$(vslot('free') + ' .froffer img')) && !(await page.$(vslot('free') + ' [data-free]')), 'rows with no pictures, and no filter for one kind', '');
+    const [one, two] = await page.$$eval(vslot('free') + ' .froffer', (c) => c.map((n) => getComputedStyle(n).backgroundColor));
+    check(one !== two, 'rows alternate their shading', one + ' ' + two);
+    const key = await page.$eval(vslot('free') + ' .froffer:nth-child(2)', (c) => c.dataset.k);
+    await page.evaluate((k) => { location.hash = 'vintage/' + k; }, key);
+    await page.waitForFunction((k) => document.querySelector('[data-k="' + k + '"]').classList.contains('flash'), key, { timeout: 4000 }).catch(() => {});
+    check(await page.$eval('[data-k="' + key + '"]', (c) => c.classList.contains('flash')), 'a shared offer lands and flashes', key);
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Free: no offers, no section, no chip; a missing inbox is the same (live)', async () => {
+    for (const items of [[], [offer(9, 24 * 6, 'Too old', 'Gifting')]]) {
+      const { ctx, page, errors } = await open(items, '#vintage');
+      await page.waitForSelector(vslot('spotted'));
+      await page.waitForTimeout(600);
+      check(!(await page.$(vslot('free') + ' .sec')) && !(await page.$('#subnav .chip[data-chip="free"]')), 'nothing to show, nothing shown', String(items.length));
+      check(!errors.length, 'no console errors', errors.join(' | '));
+      await ctx.close();
+    }
+    const { ctx, page, errors } = await newPage(browser, base, { viewport: { width: 390, height: 844 } });
+    await page.route(/pulse\.json/, (r) => r.fulfill({ status: 500, body: '' }));
+    await page.goto(base + '/all-day/#vintage');
+    await page.waitForSelector(vslot('spotted') + ' .sec');
+    await page.waitForTimeout(600);
+    check(!(await page.$(vslot('free') + ' .sec')), 'a pulse that will not load hides it too', '');
+    const real = errors.filter((e) => !/status of 500/.test(e));
+    check(!real.length, 'no console errors', real.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Free: one block among Social’s Facebook groups, opening Vintage (live)', async () => {
+    const facebook = { paused: false, items: [{ u: fb + 'groups/123/permalink/4/', d: now - 7200, from: 'Group', name: 'Burlington Group', summary: 'A group post', ch: 'facebook', local: true }] };
+    const { ctx, page, errors } = await open([offer(1, 1, 'Oak dresser', 'Buy Nothing', true), offer(2, 3, 'Porch chairs', 'Marketplace')], '#social', { facebook });
+    await page.waitForSelector('#panel-social .so-facebook');
+    await page.waitForTimeout(500);
+    const names = await page.$$eval('#panel-social .so-facebook .so-name', (a) => a.map((n) => n.textContent));
+    check(names.join() === 'Free this week,Burlington Group', 'one block, freshest first', names.join());
+    const b = await page.$eval('#panel-social .so-facebook', (c) => ({ text: c.querySelector('.so-text').textContent, href: c.querySelector('.so-text').href, rows: c.querySelectorAll('.so-row').length, pic: !!c.querySelector('.so-pic img'), name: c.querySelector('.so-name').getAttribute('href'), target: c.querySelector('.so-name').target }));
+    check(b.text === 'Oak dresser · Winooski' && b.href === fb + 'marketplace/item/1/' && b.rows === 1 && b.pic, 'its newest offer, with the one before it', JSON.stringify(b));
+    check(b.name === '#vintage/free' && !b.target, 'its name stays in the app', JSON.stringify(b));
+    await page.click('#panel-social .so-facebook .so-name');
+    await page.waitForSelector(vslot('free') + ' .froffer');
+    check(await page.evaluate(() => location.hash === '#vintage/free'), 'and lands on Free', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Free: the demo, and pictures of it', async () => {
+    const shots = [[390, 844, 'light'], [390, 664, 'light'], [390, 844, 'dark'], [390, 664, 'dark']];
+    for (const [width, height, scheme] of shots) {
+      const { ctx, page, errors } = await newPage(browser, base, { viewport: { width, height }, scheme });
+      await page.goto(base + '/all-day/?demo=1#vintage');
+      await page.waitForSelector(vslot('free') + ' .froffer');
+      await page.waitForTimeout(500);
+      await page.screenshot({ path: path.join(SHOTS, 'free-' + height + '-' + scheme + '.png') });
+      if (height === 844) {
+        await page.goto(base + '/all-day/?demo=1#social');
+        await page.waitForSelector('#panel-social .so-facebook');
+        await page.$eval('#panel-social .so-sec[data-plat="facebook"]', (n) => n.scrollIntoView());
+        await page.waitForTimeout(300);
+        await page.screenshot({ path: path.join(SHOTS, 'free-social-' + scheme + '.png') });
+      }
+      check(!errors.length, 'no console errors, ' + height + ' ' + scheme, errors.join(' | '));
+      await ctx.close();
+    }
+    const { ctx, page, errors } = await open([offer(1, 1, 'Oak dresser', 'Gifting'), offer(2, 2, 'Porch chairs, need a coat of paint', 'Gifting'), offer(3, 3, 'Canning jars', 'Marketplace')], '#vintage');
+    await page.waitForSelector(vslot('free') + ' .froffer');
+    await page.waitForTimeout(400);
+    await page.screenshot({ path: path.join(SHOTS, 'free-rows.png') });
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+}
+
 async function theSocial(browser, base) {
   const panel = '#panel-social';
   const now = Math.round(Date.now() / 1000);
@@ -15534,6 +15662,7 @@ try {
   await run(accountData);
   await run(theTown);
   await run(theBody);
+  await run(theFree);
 } finally {
   await browser.close();
   proc.kill();

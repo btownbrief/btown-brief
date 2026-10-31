@@ -6,11 +6,18 @@
 
    Top to bottom, and the chip row is the table of contents:
 
+   - Free. What neighbors are giving away: public Buy Nothing and gifting
+     groups and Facebook Marketplace's free listings, read by Muse
+     (pulse.json's inbox.free, scripts/wire_inbox.py). Newest first, nothing
+     past five days (wire.js freeOffers), filtered by where it was posted,
+     star and share on each. A two-up grid of tiles when any has a photo,
+     clean rows when none does, six and then "See more" either way. A tile
+     opens the post on Facebook. No offers, no section and no chip.
    - New in. The shops' own Instagram posts from the last two weeks
      (all-day/data/instagram.json, the accounts data/vintage-shops.json
      names), each a photo credited to its account and linked to the post.
-     It leads because it is the one section that changes on its own every
-     day (Stephen, 2026-10-30). No posts, no section. A grid that grows down
+     It sits near the top because it changes on its own every day (Stephen,
+     2026-10-30). No posts, no section. A grid that grows down
      on purpose (Stephen, 2026-10-22: "I want to see more rows"): three rows
      of two on a phone, then "See more" for the next rows, and the shell's
      Collapse bar folds it back once it has grown. Make a tee's designs grow
@@ -78,7 +85,8 @@
 
    ?demo=1 runs this same file: data/demo/vintage.json adds its finds, swaps
    and fit checks to the demo boards (boards-fake.js) and carries six of the
-   real shops and designs, and invented shop posts for New in. */
+   real shops and designs, and invented shop posts for New in and offers
+   for Free. */
 
 import * as app from '../app.js';
 import * as store from '../store.js';
@@ -86,8 +94,12 @@ import * as data from '../wire.js';
 import * as boards from '../boards.js';
 import { message } from '../boards-core.js';
 import { sectionBar } from '../sections.js';
-import { el, esc, safeHref, ICON, art, section, button, pills, cards, agoShort, listRail, moreGrid } from '../ui.js';
+import { el, esc, safeHref, ICON, art, section, button, pills, chips, cards, agoShort, listRail, moreGrid } from '../ui.js';
 
+const WORDS = {
+  free: 'Free', freeHead: 'Free this week', everything: 'All', openOn: 'Open on Facebook',
+};
+const FREE_GROUPS = ['Buy Nothing', 'Gifting', 'Marketplace'];
 const KEY = 'vintage';
 const SHOPS_URL = '../data/vintage-shops.json';
 const DESIGNS_URL = 'data/merch-designs.json';
@@ -101,10 +113,10 @@ const NEW_IN_DAYS = 14;
 const NEW_IN_MAX = 48;       // New in grows down on purpose now, so it holds more than a row
 const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
-const SECTIONS = [['newin', 'New in'], ['fit', 'Fit checks'], ['spotted', 'Spotted'], ['swaps', 'Swaps'], ['tees', 'Make a tee'], ['shops', 'Shops']];
+const SECTIONS = [['free', WORDS.free], ['newin', 'New in'], ['fit', 'Fit checks'], ['spotted', 'Spotted'], ['swaps', 'Swaps'], ['tees', 'Make a tee'], ['shops', 'Shops']];
 /* the slots, in page order: `sent` is the designs neighbors sent in, as Top
    designs, and always follows `tees` */
-const SLOTS = ['newin', 'fit', 'spotted', 'swaps', 'tees', 'sent', 'shops'];
+const SLOTS = ['free', 'newin', 'fit', 'spotted', 'swaps', 'tees', 'sent', 'shops'];
 
 /* the guide's own map stack, as Food loads it (events.html, things-to-do.html):
    Leaflet from unpkg with its integrity hashes, OpenStreetMap's tiles, on the
@@ -125,13 +137,13 @@ const KINDS = [['vintage', 'Vintage', /vintage/i], ['thrift', 'Thrift', /thrift|
   ['antique', 'Antiques', /antique/i], ['books', 'Used books', /book/i]];
 const kindKey = (k) => { const hit = KINDS.find(([, , re]) => re.test(String(k || ''))); return hit ? hit[0] : 'thrift'; };
 const kindOf = (s) => kindKey((s.kinds || [])[0]);
-const FEEDS = new Set(['spotted', 'swaps', 'sent']);
+const FEEDS = new Set(['free', 'spotted', 'swaps', 'sent']);
 
 /* ------------------------------------------------------------------ state */
 const S = {
   shops: null, shopsFailed: false, designs: null, designsTotal: null, designsFailed: false,
   spotted: null, swaps: null, fit: null, sent: null, got: 0, off: false, failed: false, homesDemo: 0,
-  handles: null, posts: null,
+  handles: null, posts: null, free: null, freeGroup: 'all',
 };
 let root = null, slots = null, pending = null, ready = false;
 
@@ -232,6 +244,12 @@ function loadLive() {
     paint('shops');
     if (app.activeTab() === KEY) app.paintSubnav();
   });
+  data.load('pulse', (j) => {
+    S.free = data.freeOffers(j);
+    paint('free');
+    if (app.activeTab() === KEY) app.paintSubnav();
+    land();
+  }, () => { S.free = S.free || []; land(); });
   data.fetchJSON(DESIGNS_URL, 8000).then((j) => { S.designs = Array.isArray(j && j.designs) ? j.designs : []; S.designsTotal = Number(j && j.total) || null; })
     .catch(() => { S.designsFailed = true; })
     .then(() => { paint('tees'); land(); });
@@ -322,7 +340,7 @@ function paint(k) {
   const host = slots[k];
   const y = panel() ? panel().scrollTop : 0;
   host.innerHTML = '';
-  ({ fit: paintFit, spotted: paintSpotted, newin: paintNewIn, shops: paintShops, swaps: paintSwaps, tees: paintTees, sent: paintSent })[k](host);
+  ({ free: paintFree, fit: paintFit, spotted: paintSpotted, newin: paintNewIn, shops: paintShops, swaps: paintSwaps, tees: paintTees, sent: paintSent })[k](host);
   if (panel() && app.activeTab() === KEY) panel().scrollTop = y;
   resettle();                     // New in sits on top: anything drawn late moves what is under it
 }
@@ -370,6 +388,40 @@ function postBtn(label, act, fn) {
   const b = button(ICON.plus + ' ' + esc(label), 'ghost sm', fn);
   b.dataset.act = act;
   return b;
+}
+
+/* -------------------------------------------------------------------- Free */
+/* One offer, as a tile or a row. The title is the one link and covers the
+   tile, so the whole thing opens Facebook; star and share sit above it. */
+function offerCell(x, tiles) {
+  const it = { k: x.k, kind: 'post', title: x.title, text: '', href: x.u, src: x.group, ago: agoShort(x.d), open: WORDS.openOn, thumb: x.photo || '' };
+  const saved = store.isSaved(it.k);
+  const c = el('article', 'card fi froffer' + (tiles && !x.photo ? ' bare' : '') + (store.isRead(it.k) ? ' is-read' : ''));
+  c.dataset.k = it.k;
+  c.innerHTML = (tiles && x.photo ? '<span class="c-media r11">' + art(x.photo) + '</span>' : '') +
+    '<a class="c-title" href="' + esc(safeHref(x.u)) + '" target="_blank" rel="noopener" data-open>' + esc(x.title) + '</a>' +
+    '<div class="frmeta">' + esc([x.where, it.ago, x.group].filter(Boolean).join(' · ')) + '</div>' +
+    '<div class="frfoot"><button class="act sh" data-act="share" aria-label="Share">' + ICON.share + '</button>' +
+    '<button class="act star' + (saved ? ' on' : '') + '" data-act="save" aria-label="Save" aria-pressed="' + saved + '">' + ICON.star + '</button></div>';
+  return { it, c };
+}
+
+function paintFree(host) {
+  const all = S.free || [];
+  if (!all.length) return;
+  const head = section(host, WORDS.freeHead);
+  const groups = FREE_GROUPS.filter((g) => all.some((x) => x.group === g));
+  if (!groups.includes(S.freeGroup)) S.freeGroup = 'all';
+  if (groups.length > 1) {
+    const row = chips([{ key: 'all', label: WORDS.everything }, ...groups.map((g) => ({ key: g, label: g }))], S.freeGroup, (k) => { S.freeGroup = k; paint('free'); });
+    row.dataset.free = '';
+    host.appendChild(row);
+  }
+  const list = S.freeGroup === 'all' ? all : all.filter((x) => x.group === S.freeGroup);
+  const tiles = list.some((x) => x.photo);
+  const made = list.map((x) => offerCell(x, tiles));
+  app.know(made.map((m) => m.it));
+  moreGrid(host, { name: 'free', label: WORDS.free, head, cells: made.map((m) => m.c) }).classList.add(tiles ? 'frtiles' : 'frrows');
 }
 
 /* ------------------------------------------------------- Spotted this week */
@@ -1043,9 +1095,10 @@ function shirtSheet(p) {
 }
 
 /* -------------------------------------------------------------- deep links */
-/* #vintage/fit|spotted|swaps|newin|shops|tees jumps to a section; map opens
-   the shop map; b-<id> is a post (or an Art post on its way to a shirt),
-   s-<id> a shop, d-<id> a design. A key waits for its list to load. */
+/* #vintage/free|fit|spotted|swaps|newin|shops|tees jumps to a section; map
+   opens the shop map; b-<id> is a post (or an Art post on its way to a shirt),
+   s-<id> a shop, d-<id> a design, fr-<hash> a free offer. A key waits for its
+   list to load. */
 /* a find comes down when someone gets it or its three weeks end; an Art
    piece can be taken down by its maker: the words fit both */
 const GONE = 'That post has gone.';
@@ -1061,9 +1114,10 @@ function land() {
     openMap();
     return;
   }
-  const loaded = /^b-/.test(k) ? S.spotted !== null : /^s-/.test(k) ? !!S.shops || S.shopsFailed : /^d-/.test(k) ? !!S.designs || S.designsFailed : true;
+  const loaded = /^fr-/.test(k) ? S.free !== null : /^b-/.test(k) ? S.spotted !== null : /^s-/.test(k) ? !!S.shops || S.shopsFailed : /^d-/.test(k) ? !!S.designs || S.designsFailed : true;
   if (!loaded) return;
   pending = null;
+  if (/^fr-/.test(k) && S.freeGroup !== 'all') { S.freeGroup = 'all'; paint('free'); }
   if (app.flashHit(root, k)) return;
   if (/^b-/.test(k)) {
     const at = route;
@@ -1094,6 +1148,7 @@ app.register(KEY, {
       S.designs = d.designs || [];
       S.designsTotal = Number(d.designsTotal) || null;
       S.homesDemo = Number(d.homesThisMonth) || 0;
+      S.free = data.freeOffers({ inbox: { free: { items: (d.free || []).map((x) => ({ ...x, d: Math.round(Date.now() / 1000 - x.ageHours * 3600) })) } } });
       return loadPosts();
     }).then(() => {
       ready = true;
@@ -1107,16 +1162,17 @@ app.register(KEY, {
   deactivate() { route++; if (M && !M.getContainer().isConnected) dropMap(); },
   subnav() {
     if (!ready) return null;
-    const n = { spotted: S.spotted && S.spotted.length, shops: S.shops && S.shops.length, swaps: S.swaps && S.swaps.length, fit: S.fit && S.fit.length };
+    const n = { free: S.free && S.free.length, spotted: S.spotted && S.spotted.length, shops: S.shops && S.shops.length, swaps: S.swaps && S.swaps.length, fit: S.fit && S.fit.length };
     const fresh = newIn().length;
     /* the sections as a floating pill in the tab's water, following the scroll (sections.js) */
     return sectionBar({ key: 'sec-vintage', title: 'Vintage', color: '--liq-vintage', find: (k) => slots && slots[k], onPick: (k) => jump(k),
-      items: SECTIONS.filter(([key]) => key !== 'newin' || fresh).map(([key, label]) => ({ key, label, n: key === 'newin' ? fresh : n[key] || null })) });
+      items: SECTIONS.filter(([key]) => (key !== 'newin' || fresh) && (key !== 'free' || n.free)).map(([key, label]) => ({ key, label, n: key === 'newin' ? fresh : n[key] || null })) });
   },
   keepSubnav: true,
-  /* reader posts newer than the last visit: finds, swaps and fit checks */
+  /* newer than the last visit: finds, swaps, fit checks and free offers */
   newSince(ts) {
     const t = Number(ts) * 1000 || 0;
-    return [S.spotted, S.swaps, S.fit].reduce((a, l) => a + (l || []).filter((p) => Date.parse(p.created_at) > t).length, 0);
+    return [S.spotted, S.swaps, S.fit].reduce((a, l) => a + (l || []).filter((p) => Date.parse(p.created_at) > t).length, 0) +
+      (S.free || []).filter((x) => x.d * 1000 > t).length;
   },
 });

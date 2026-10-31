@@ -11,6 +11,9 @@ Two bots drop files in the private repo btownbrief/wire-inbox:
                       "Pictures of the day", X posts whose picture is the point
   grok/voices.json    posts in an account's own words from a second shortlist,
                       for the Social tab only, 2026-10-30
+  muse/free.json      free stuff offered in public Facebook groups and on
+                      Marketplace, for Vintage's Free section and one block in
+                      Social, 2026-10-31
 
 refresh_pulse.py calls read_inbox() each run. This module fetches both files
 through the GitHub contents API with the WIRE_INBOX_TOKEN secret, checks them
@@ -28,7 +31,9 @@ merges the surviving posts into pulse.json under its own `inbox` key:
     "recaps":   {"paused": false, "reason": null, "updated_at": "...", "checked": "...",
                  "pause_after_hours": 18, "n": 5,
                  "items": [{"id", "kind", "title", "posted_at", "d", "intro", "basis",
-                            "bullets": [{"text", "url", "note", "sport"?}, ...]}, ...]}
+                            "bullets": [{"text", "url", "note", "sport"?}, ...]}, ...]},
+    "free":     {...the same state, "items": [{"u", "d", "title", "where", "group",
+                                               "kind": "offer", "photo"?}, ...]}
   }
 
 The posts live under their own key, not in `items`, so pages that predate the
@@ -47,7 +52,7 @@ Honesty rules, same as the Reddit bridge's pause:
   * This module never raises into refresh_pulse: every failure is a state.
 
 CLI:
-  --file CH PATH   check a local file as if it were fetched (CH is x, facebook or voices)
+  --file CH PATH   check a local file as if it were fetched (CH is x, facebook, voices or free)
   --selftest       run the offline checks and exit
 """
 
@@ -61,6 +66,7 @@ import urllib.request
 from datetime import datetime, timedelta, timezone
 
 import wire_common as wc
+from talk_questions import CONTACT, FIRST, names_person
 
 REPO = "btownbrief/wire-inbox"
 API = "https://api.github.com/repos/" + REPO + "/contents/"
@@ -422,6 +428,158 @@ def merge_recaps(previous, fresh, now):
     return kept, added
 
 
+# --- free stuff (muse/free.json), ported from the validator too --------------
+
+FREE_PATH, FREE_SOURCE = "muse/free.json", "muse-free"
+FREE_GROUPS = ("Buy Nothing", "Gifting", "Marketplace")
+FREE_KEEP_DAYS = 5     # free things go fast: nothing older is held or shown
+FREE_CAP = 120
+FREE_MAX = 200         # items in the file; Muse should never come near it
+FREE_TITLE_MAX = 70
+FREE_WHERE_MAX = 40
+FREE_URL_MAX = 300
+# the post itself: a group post or a Marketplace listing, never a group's front
+# page, a search or a guess
+FREE_POST = re.compile(r"^https://(?:www\.|m\.|web\.)?facebook\.com/"
+                       r"(?:groups/[^/\s?#]+/(?:posts|permalink)/[^\s]+|marketplace/item/\d+[^\s]*|share/[^\s]+)$")
+# only Facebook's own picture host reaches a reader's phone; anything else
+# loses the field and keeps the offer
+FREE_PHOTO = re.compile(r"^https://[a-z0-9-]+(?:\.[a-z0-9-]+)*\.fbcdn\.net/[^\s]{1,600}\Z")
+# a request, not an offer. "Looking for a new home" is how couches talk.
+FREE_WANTED = re.compile(r"\b(?:iso|in search of|wtb|wanted|seeking|anyone have|does anyone have|"
+                         r"looking for(?! (?:a )?(?:new |good |loving )*home))\b", re.I)
+# brands and towns the name check would take for a person
+FREE_NOT_PEOPLE = re.compile(r"\b(?:Ethan Allen|Ashley (?:Furniture|Home)|Tommy Bahama|Ralph Lauren|Harry Potter|"
+                             r"Herman Miller|Martha Stewart|Mr\.? Coffee|Dr\.? Seuss|Charlotte)\b")
+# one first name, where a listing would say who to ask or whose it is
+FREE_CUE = re.compile(r"(?:\b(?i:from|ask for|contact|message|text|call|pm|dm)\s+|\b(?=[A-Z][a-z]+[’']s\b))"
+                      r"([A-Z][a-z]+)\b", re.A)
+
+
+def free_private(text):
+    """Does this line name a person, or give a phone, email or street address?"""
+    text = FREE_NOT_PEOPLE.sub(" ", str(text or ""))
+    if CONTACT.search(text) or names_person(text):
+        return True
+    return any(match.group(1).lower() in FIRST for match in FREE_CUE.finditer(text))
+
+
+def check_free_item(it, now):
+    """Problems with one offer, as a list (empty when it is fine)."""
+    if not isinstance(it, dict):
+        return ["must be an object"]
+    bad = []
+    url = it.get("u")
+    if not isinstance(url, str) or len(url) > FREE_URL_MAX or not FREE_POST.match(url) \
+            or SEARCH_URL.search(url):
+        bad.append("u must be the post's own https://facebook.com link")
+    title = it.get("title")
+    clean_text(title, FREE_TITLE_MAX, "title", bad)
+    if isinstance(title, str) and FREE_WANTED.search(title):
+        bad.append("title is a request, not an offer")
+    clean_text(it.get("where"), FREE_WHERE_MAX, "where", bad)
+    if any(free_private(it.get(key)) for key in ("title", "where")):
+        bad.append("names a person, or gives a phone, email or street address")
+    if it.get("group") not in FREE_GROUPS:
+        bad.append(f"group must be one of {list(FREE_GROUPS)}")
+    if it.get("kind") != "offer":
+        bad.append("kind must be 'offer'")
+    posted = parse_ts(it.get("posted_at"))
+    if posted is None:
+        bad.append("posted_at must be ISO 8601 with a timezone")
+    else:
+        if posted - now > timedelta(minutes=CLOCK_SKEW_MINUTES):
+            bad.append("posted_at is in the future")
+        if now - posted > timedelta(days=FREE_KEEP_DAYS):
+            bad.append(f"older than {FREE_KEEP_DAYS} days; drop it")
+    return bad
+
+
+def check_free(data, now):
+    """-> (file_problems, {item_index: problems}), the validator's rules."""
+    if not isinstance(data, dict):
+        return ["top level must be an object"], {}
+    problems = []
+    if data.get("source") != FREE_SOURCE:
+        problems.append(f"source must be {FREE_SOURCE!r}, got {data.get('source')!r}")
+    if parse_ts(data.get("updated_at")) is None:
+        problems.append("updated_at must be ISO 8601 with a timezone")
+    note = data.get("run_note", "")
+    if not isinstance(note, str) or "\n" in note or len(note) > 300:
+        problems.append("run_note must be one line of at most 300 characters")
+    items = data.get("items")
+    if not isinstance(items, list):
+        return problems + ["items must be a list"], {}
+    if len(items) > FREE_MAX:
+        problems.append(f"{len(items)} items; the cap is {FREE_MAX}")
+    per, urls = {}, set()
+    for i, it in enumerate(items):
+        bad = check_free_item(it, now)
+        if isinstance(it, dict) and isinstance(it.get("u"), str):
+            if it["u"] in urls:
+                bad.append(f"duplicate u {it['u']}")
+            urls.add(it["u"])
+        if bad:
+            per[i] = bad
+    return problems, per
+
+
+def read_free(raw, now):
+    """muse/free.json -> (state, fresh_offers), the same posture as read_one."""
+    state = {"paused": True, "reason": None, "updated_at": None,
+             "checked": iso(now), "pause_after_hours": PAUSE_HOURS}
+    try:
+        data = json.loads(raw.decode("utf-8"))
+    except (ValueError, UnicodeDecodeError) as exc:
+        state["reason"] = f"{FREE_PATH} is not valid JSON ({exc.__class__.__name__})"
+        return state, []
+    problems, per = check_free(data, now)
+    if problems:
+        state["reason"] = f"{FREE_PATH} fails the contract: {problems[0]}"
+        return state, []
+    updated = parse_ts(data["updated_at"])
+    state["updated_at"] = iso(updated)
+    items = data["items"]
+    if items and len(per) > BAD_SHARE * len(items):
+        state["reason"] = (f"{FREE_PATH}: {len(per)} of {len(items)} offers fail the "
+                           f"contract (first: {next(iter(per.values()))[0]})")
+        return state, []
+    if updated - now > timedelta(minutes=CLOCK_SKEW_MINUTES):
+        state["reason"] = f"{FREE_PATH} claims it was written in the future ({iso(updated)})"
+        return state, []
+    if now - updated > timedelta(hours=PAUSE_HOURS):
+        hours = (now - updated).total_seconds() / 3600
+        state["reason"] = f"{FREE_PATH} last written {hours:.0f}h ago (limit {PAUSE_HOURS}h)"
+        return state, []
+    fresh = []
+    for i, it in enumerate(items):
+        if i in per:
+            continue
+        offer = {"u": re.split(r"[?#]", it["u"])[0],   # one offer, however it was reached
+                 "d": int(parse_ts(it["posted_at"]).timestamp()),
+                 "title": re.sub(r"\s+", " ", it["title"]).strip(),
+                 "where": re.sub(r"\s+", " ", it["where"]).strip(),
+                 "group": it["group"], "kind": "offer"}
+        if isinstance(it.get("photo"), str) and FREE_PHOTO.match(it["photo"]):
+            offer["photo"] = it["photo"]
+        fresh.append(offer)
+    state["paused"] = False
+    if per:
+        state["dropped"] = len(per)
+    return state, fresh
+
+
+def merge_free(previous, fresh, now, live):
+    """While Muse is writing, its file is the truth: an offer it drops was taken
+    or removed, so it goes. Paused, the held offers stay and age out."""
+    seen = {item["u"]: item for item in previous or [] if isinstance(item, dict) and item.get("u")}
+    pool = {item["u"]: item for item in fresh} if live else seen
+    cutoff = int((now - timedelta(days=FREE_KEEP_DAYS)).timestamp())
+    kept = sorted((item for item in pool.values() if item.get("d", 0) >= cutoff),
+                  key=lambda item: item.get("d", 0), reverse=True)[:FREE_CAP]
+    return kept, sum(item["u"] not in seen for item in kept)
+
+
 # --- fetching ----------------------------------------------------------------
 
 def fetch_file(path, token, timeout=20):
@@ -571,6 +729,18 @@ def merge_items(previous, fresh, now, per_from=0):
     return kept, sum(item["u"] in new for item in kept)
 
 
+def read_own(path, reader, prev, now, token, fetch):
+    """A file with its own shape -> (state, fresh), paused when it cannot be read."""
+    state = {"paused": True, "reason": f"no {TOKEN_ENV} secret", "updated_at": prev.get("updated_at"),
+             "checked": iso(now), "pause_after_hours": PAUSE_HOURS}
+    if token:
+        status, raw = fetch(path, token)
+        if status == "ok":
+            return reader(raw, now)
+        state["reason"] = f"{path} is missing" if status == "missing" else f"{path} could not be fetched ({status})"
+    return state, []
+
+
 def read_inbox(previous_inbox, now=None, token=None, fetch=fetch_file):
     """-> (inbox_dict, added_count, changed). `previous_inbox` is the last
     payload's `inbox` key (or None). `changed` is true when a source paused,
@@ -605,20 +775,7 @@ def read_inbox(previous_inbox, now=None, token=None, fetch=fetch_file):
             changed = True
     # Grok's recaps: their own file and shape, the same pause rules
     prev = previous_inbox.get("recaps") if isinstance(previous_inbox.get("recaps"), dict) else {}
-    if not token:
-        state, fresh = {"paused": True, "reason": f"no {TOKEN_ENV} secret",
-                        "updated_at": prev.get("updated_at"), "checked": iso(now),
-                        "pause_after_hours": PAUSE_HOURS}, []
-    else:
-        status, raw = fetch(RECAP_PATH, token)
-        if status == "ok":
-            state, fresh = read_recaps(raw, now)
-        else:
-            state = {"paused": True, "updated_at": prev.get("updated_at"),
-                     "reason": (f"{RECAP_PATH} is missing" if status == "missing"
-                                else f"{RECAP_PATH} could not be fetched ({status})"),
-                     "checked": iso(now), "pause_after_hours": PAUSE_HOURS}
-            fresh = []
+    state, fresh = read_own(RECAP_PATH, read_recaps, prev, now, token, fetch)
     recaps, added = merge_recaps(prev.get("items"), fresh, now)
     state["n"] = len(recaps)
     state["items"] = recaps
@@ -627,6 +784,17 @@ def read_inbox(previous_inbox, now=None, token=None, fetch=fetch_file):
     # a recap file that is still missing (the bot has not written one yet)
     # changes nothing worth a publish on its own
     if added or (prev and bool(prev.get("paused")) != state["paused"]):
+        changed = True
+    # Muse's free stuff: the same again, and an offer leaving is a change too
+    prev = previous_inbox.get("free") if isinstance(previous_inbox.get("free"), dict) else {}
+    state, fresh = read_own(FREE_PATH, read_free, prev, now, token, fetch)
+    offers, added = merge_free(prev.get("items"), fresh, now, not state["paused"])
+    state["n"] = len(offers)
+    state["items"] = offers
+    out["free"] = state
+    added_total += added
+    if added or len(offers) != len(prev.get("items") or []) \
+            or (prev and bool(prev.get("paused")) != state["paused"]):
         changed = True
     return out, added_total, changed
 
@@ -708,6 +876,22 @@ def selftest():
     assert fresh[0]["local"] is True and fresh[1]["local"] is False
     assert small_picture("https://pbs.twimg.com/media/A?name=orig&format=jpg") \
         == "https://pbs.twimg.com/media/A?name=small&format=jpg"
+    # free: an offer stands, a request, a name or an address does not
+    offer = {"u": "https://www.facebook.com/marketplace/item/123/", "title": "Oak dresser, three drawers",
+             "where": "Old North End", "group": "Marketplace", "kind": "offer",
+             "posted_at": iso(now - timedelta(hours=2))}
+    free = json.dumps({"source": "muse-free", "updated_at": iso(now - timedelta(hours=1)), "items": [
+        offer, dict(offer, u=offer["u"] + "?ref=x", title="Ethan Allen sofa, needs a home", photo="https://example.com/a.jpg"),
+        dict(offer, u="https://www.facebook.com/marketplace/item/9/", title="ISO a crib")]}).encode()
+    state, fresh = read_free(free, now)
+    assert not state["paused"] and state["dropped"] == 1 and len(fresh) == 2, state
+    assert fresh[1]["u"] == offer["u"] and "photo" not in fresh[1]
+    assert free_private("Couch, ask for Sarah") and free_private("Crib from Sarah Jones") and free_private("Bike at 12 Main St")
+    assert not free_private("Ethan Allen dresser") and not free_private("Charlotte") and not free_private("Oak desk from Target")
+    kept, added = merge_free([{"u": "gone", "d": int(now.timestamp())}], fresh, now, True)
+    assert [item["u"] for item in kept] == [offer["u"]] and added == 1, kept
+    kept, added = merge_free(kept, [], now, False)
+    assert len(kept) == 1 and added == 0
     print("selftest ok")
 
 
@@ -722,7 +906,8 @@ def main():
     if args.file:
         ch, path = args.file
         with open(path, "rb") as src:
-            state, fresh = read_one(ch, src.read(), datetime.now(timezone.utc))
+            raw, now = src.read(), datetime.now(timezone.utc)
+        state, fresh = read_free(raw, now) if ch == "free" else read_one(ch, raw, now)
         print(json.dumps(dict(state, fresh=len(fresh)), indent=1))
         return
     inbox, added, _ = read_inbox(None)

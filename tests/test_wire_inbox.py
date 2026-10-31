@@ -139,7 +139,7 @@ class ReadInboxTests(unittest.TestCase):
         def never(path, token):
             raise AssertionError("must not fetch without a token")
         inbox, added, changed = wi.read_inbox(None, NOW, token="", fetch=never)
-        self.assertEqual(set(inbox), {"x", "facebook", "voices", "recaps"})
+        self.assertEqual(set(inbox), {"x", "facebook", "voices", "recaps", "free"})
         for state in inbox.values():
             self.assertTrue(state["paused"])
             self.assertEqual(state["reason"], "no WIRE_INBOX_TOKEN secret")
@@ -473,6 +473,160 @@ class RecapTests(unittest.TestCase):
         self.assertEqual((again, added), (kept, 0))      # the capped-out ones are not "new" each run
 
 
+def offer(**over):
+    item = {"u": "https://www.facebook.com/groups/123/posts/456/", "title": "Oak dresser, three drawers",
+            "where": "Old North End", "group": "Buy Nothing", "kind": "offer",
+            "posted_at": (NOW - timedelta(hours=2)).isoformat()}
+    item.update(over)
+    return item
+
+
+def free_file(*items, **over):
+    data = {"source": "muse-free", "updated_at": (NOW - timedelta(hours=1)).isoformat(),
+            "run_note": "2 new", "items": list(items)}
+    data.update(over)
+    return json.dumps(data).encode()
+
+
+class FreeTests(unittest.TestCase):
+    def fresh(self, *items):
+        keep = offer(u="https://www.facebook.com/marketplace/item/1/", title="Box of canning jars")
+        pad = offer(u="https://www.facebook.com/marketplace/item/2/", title="Two porch chairs")
+        return wi.read_free(free_file(keep, pad, *items), NOW)
+
+    def test_a_good_offer_reads_through(self):
+        state, fresh = wi.read_free(free_file(offer(group="Gifting")), NOW)
+        self.assertFalse(state["paused"])
+        self.assertEqual(state["pause_after_hours"], wi.PAUSE_HOURS)
+        self.assertEqual(fresh, [{"u": "https://www.facebook.com/groups/123/posts/456/",
+                                  "d": int((NOW - timedelta(hours=2)).timestamp()),
+                                  "title": "Oak dresser, three drawers", "where": "Old North End",
+                                  "group": "Gifting", "kind": "offer"}])
+
+    def test_only_a_post_of_facebooks_own_is_a_link(self):
+        for url in ("http://www.facebook.com/groups/1/posts/2/", "https://www.facebook.com/groups/123/",
+                    "https://www.facebook.com/marketplace/burlington/free/", "https://facebook.com.evil.example/groups/1/posts/2/",
+                    "https://example.com/groups/1/posts/2/", "https://www.facebook.com/search/top?q=free",
+                    "https://www.facebook.com/groups/1/posts/2/ x", 7, None):
+            state, fresh = self.fresh(offer(u=url))
+            self.assertEqual((state.get("dropped"), len(fresh)), (1, 2), url)
+        for url in ("https://www.facebook.com/groups/burlingtonfree/permalink/99/", "https://m.facebook.com/marketplace/item/5/",
+                    "https://facebook.com/groups/1/posts/2", "https://www.facebook.com/share/p/1Ab2/"):
+            state, fresh = self.fresh(offer(u=url))
+            self.assertEqual(len(fresh), 3, url)
+
+    def test_requests_are_not_offers(self):
+        for title in ("ISO a crib", "In search of moving boxes", "Wanted: snow tires", "Looking for a couch",
+                      "WTB bike", "Anyone have a spare ladder?", "Does anyone have boxes?"):
+            state, fresh = self.fresh(offer(title=title))
+            self.assertEqual(state.get("dropped"), 1, title)
+        _, fresh = self.fresh(offer(title="Couch looking for a new home"))
+        self.assertEqual(len(fresh), 3)
+        state, _ = self.fresh(offer(kind="post"))
+        self.assertEqual(state.get("dropped"), 1)
+
+    def test_people_and_contacts_never_get_through(self):
+        for title in ("Crib from Sarah Jones", "Text Mike for the couch", "Sarah's bookshelf", "Couch at 12 Main St",
+                      "Couch, call 802-555-0134", "Couch, hello@example.com", "Coach Miller's old skis"):
+            state, fresh = self.fresh(offer(title=title))
+            self.assertEqual(state.get("dropped"), 1, title)
+        state, _ = self.fresh(offer(where="44 Elm Street"))
+        self.assertEqual(state.get("dropped"), 1)
+
+    def test_a_brand_or_a_town_is_not_a_person(self):
+        for title in ("Ethan Allen dresser", "Ashley Furniture recliner", "Harry Potter books", "Mr Coffee maker"):
+            _, fresh = self.fresh(offer(title=title))
+            self.assertEqual(len(fresh), 3, title)
+        for where in ("Charlotte", "Ethan Allen Park", "South Burlington"):
+            _, fresh = self.fresh(offer(where=where))
+            self.assertEqual(len(fresh), 3, where)
+
+    def test_lines_stay_short_and_plain(self):
+        for bad in (offer(title="x" * 71), offer(title="Free couch #free"), offer(where="x" * 41),
+                    offer(where=""), offer(group="Free Stuff")):
+            state, _ = self.fresh(bad)
+            self.assertEqual(state.get("dropped"), 1, bad)
+
+    def test_five_days_and_no_later(self):
+        state, fresh = self.fresh(offer(posted_at=(NOW - timedelta(days=5, minutes=1)).isoformat()))
+        self.assertEqual((state.get("dropped"), len(fresh)), (1, 2))
+        _, fresh = self.fresh(offer(posted_at=(NOW - timedelta(days=4, hours=23)).isoformat()))
+        self.assertEqual(len(fresh), 3)
+        state, _ = self.fresh(offer(posted_at=(NOW + timedelta(hours=1)).isoformat()))
+        self.assertEqual(state.get("dropped"), 1)
+
+    def test_a_photo_is_facebooks_or_it_goes(self):
+        good = "https://scontent-bos5-1.xx.fbcdn.net/v/t45/1.jpg?oe=abc"
+        _, fresh = wi.read_free(free_file(offer(photo=good)), NOW)
+        self.assertEqual(fresh[0]["photo"], good)
+        for bad in ("http://scontent.xx.fbcdn.net/a.jpg", "https://example.com/a.jpg", "https://fbcdn.net.evil.example/a.jpg", 7, ""):
+            state, fresh = wi.read_free(free_file(offer(photo=bad)), NOW)
+            self.assertFalse(state["paused"])
+            self.assertEqual(len(fresh), 1)
+            self.assertNotIn("photo", fresh[0])
+
+    def test_tracking_is_cut_and_a_repeat_is_one_offer(self):
+        url = "https://www.facebook.com/marketplace/item/77/"
+        _, fresh = wi.read_free(free_file(offer(u=url + "?ref=search"), offer(u=url + "?ref=feed")), NOW)
+        kept, added = wi.merge_free(None, fresh, NOW, True)
+        self.assertEqual(([item["u"] for item in kept], added), ([url], 1))
+
+    def test_a_stale_or_broken_file_pauses_and_keeps_what_is_held(self):
+        stale = free_file(offer(), updated_at=(NOW - timedelta(hours=19)).isoformat())
+        state, fresh = wi.read_free(stale, NOW)
+        self.assertTrue(state["paused"])
+        self.assertIn("19h ago", state["reason"])
+        self.assertEqual(fresh, [])
+        for raw_file in (b"{not json", free_file(source="muse-facebook"), free_file(items="none"),
+                         free_file(offer(group="x"), offer(group="y"), offer())):
+            state, fresh = wi.read_free(raw_file, NOW)
+            self.assertTrue(state["paused"], raw_file)
+            self.assertEqual(fresh, [])
+        held = [{"u": "a", "d": int((NOW - timedelta(hours=3)).timestamp())},
+                {"u": "b", "d": int((NOW - timedelta(days=6)).timestamp())}]
+        kept, added = wi.merge_free(held, [], NOW, False)
+        self.assertEqual(([item["u"] for item in kept], added), (["a"], 0))
+
+    def test_while_muse_writes_its_file_is_the_truth(self):
+        _, fresh = wi.read_free(free_file(offer()), NOW)
+        held = [{"u": "taken", "d": int((NOW - timedelta(hours=3)).timestamp())}]
+        kept, added = wi.merge_free(held, fresh, NOW, True)
+        self.assertEqual((len(kept), added), (1, 1))
+        self.assertNotEqual(kept[0]["u"], "taken")
+
+    def test_the_store_is_newest_first_and_capped(self):
+        offers = [{"u": str(i), "d": int((NOW - timedelta(minutes=i)).timestamp())} for i in range(wi.FREE_CAP + 5)]
+        kept, _ = wi.merge_free(None, list(reversed(offers)), NOW, True)
+        self.assertEqual(len(kept), wi.FREE_CAP)
+        self.assertEqual(kept[0]["u"], "0")
+
+    def test_read_inbox_carries_it_and_a_missing_file_changes_nothing(self):
+        files = {"muse/free.json": free_file(offer())}
+        fetch = lambda path, token: ("ok", files[path]) if path in files else ("missing", None)  # noqa: E731
+        inbox, added, changed = wi.read_inbox(None, NOW, token="t", fetch=fetch)
+        self.assertEqual((inbox["free"]["n"], added, inbox["free"]["paused"]), (1, 1, False))
+        self.assertTrue(changed)
+        again, added, changed = wi.read_inbox(inbox, NOW + timedelta(minutes=10), token="t", fetch=fetch)
+        self.assertEqual((added, changed), (0, False))
+        files["muse/free.json"] = free_file()      # taken: its leaving is worth a publish
+        _, added, changed = wi.read_inbox(again, NOW + timedelta(minutes=20), token="t", fetch=fetch)
+        self.assertEqual((added, changed), (0, True))
+        files.clear()
+        inbox, _, _ = wi.read_inbox(None, NOW, token="t", fetch=fetch)
+        self.assertEqual(inbox["free"]["reason"], "muse/free.json is missing")
+        self.assertEqual(inbox["free"]["items"], [])
+        settled, _, changed = wi.read_inbox(inbox, NOW + timedelta(minutes=10), token="t", fetch=fetch)
+        self.assertFalse(changed)
+
+    def test_no_token_pauses_it(self):
+        inbox, _, _ = wi.read_inbox(None, NOW, token="")
+        self.assertIn("no WIRE_INBOX_TOKEN", inbox["free"]["reason"])
+
+    def test_the_summary_line_says_how_it_stands(self):
+        inbox, _, _ = wi.read_inbox(None, NOW, token="")
+        self.assertIn("free paused", wi.summary_line(inbox))
+
+
 @unittest.skipUnless(os.path.exists(VALIDATOR), "wire-inbox checkout not on this machine")
 class ValidatorParityTests(unittest.TestCase):
     """The port must flag exactly what the inbox's own validator flags."""
@@ -519,6 +673,35 @@ class ValidatorParityTests(unittest.TestCase):
             file_level, per = wi.check_recaps(data, now)
             ours = set(file_level) | {f"recaps[{i}]: {p}" for i, ps in per.items() for p in ps}
             self.assertEqual(ours, theirs, name)
+
+    def test_free_same_problems_as_the_inbox_validator(self):
+        with open(VALIDATOR, encoding="utf-8") as src:
+            if "muse-free" not in src.read():
+                self.skipTest("this wire-inbox checkout predates muse/free.json")
+        spec = importlib.util.spec_from_file_location("validate_inbox", VALIDATOR)
+        validator = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(validator)
+        from pathlib import Path
+        now = datetime.now(timezone.utc)
+        stamp = now.strftime("%Y-%m-%dT%H:%M:%SZ")
+        offers = [offer(posted_at=stamp, u=f"https://www.facebook.com/marketplace/item/{i}/", title=title, where=where)
+                  for i, (title, where) in enumerate((
+                      ("Oak dresser", "Winooski"), ("ISO a crib", "Essex"), ("Crib from Sarah Jones", "Essex"),
+                      ("Ethan Allen sofa", "Charlotte"), ("Sarah's desk", "Essex"), ("Couch at 12 Main St", "Essex"),
+                      ("Couch, call 802-555-0134", "Essex"), ("Text Mike for the couch", "Essex"),
+                      ("Couch looking for a new home", "Ethan Allen Park"), ("Skis", "44 Elm Street"),
+                      ("Coach Miller's old skis", "Essex"), ("Free couch #free", "Essex"), ("x" * 71, "Essex")))]
+        offers += [offer(posted_at=stamp, group="Other"), offer(posted_at=stamp, kind="post", u=offers[0]["u"]),
+                   offer(posted_at=stamp, u="https://www.facebook.com/groups/123/"),
+                   offer(posted_at=(now - timedelta(days=6)).strftime("%Y-%m-%dT%H:%M:%SZ"))]
+        for data in (json.loads(free_file(*offers, updated_at=stamp)), json.loads(free_file(updated_at="soon", items="x")),
+                     json.loads(free_file(updated_at=stamp, run_note="a\nb"))):
+            path = Path(self.tmp_dir(), "free.json")
+            path.write_text(json.dumps(data), encoding="utf-8")
+            theirs = set(validator.check(path))
+            file_level, per = wi.check_free(data, now)
+            ours = set(file_level) | {f"items[{i}]: {p}" for i, ps in per.items() for p in ps}
+            self.assertEqual(ours, theirs)
 
     def tmp_dir(self):
         import tempfile
